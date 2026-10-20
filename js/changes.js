@@ -29,7 +29,12 @@
   function rolling() { return answers.roll === 'Yes' || ['Tummy to back', 'Back to tummy', 'Both ways'].includes(answers.rollDirection); }
   function tryingToRoll() { return answers.rollDirection === 'Trying to roll'; }
 
-  function sleepStage(m) { return m < 2 ? 0 : m < 4 ? 1 : m < 6 ? 2 : 3; }
+  function sleepStage(m) {
+    // A check-in answer about the late catnap beats the age default.
+    if (isCurrent() && answers.twoNaps === 'Yes' && m >= 5) return 3;
+    if (isCurrent() && answers.twoNaps === 'No' && m >= 4 && m < 10) return 2;
+    return m < 2 ? 0 : m < 4 ? 1 : m < 6 ? 2 : 3;
+  }
   function sleepEvents(m) { return m >= 3 && m < 6 ? [0] : m >= 8 && m <= 11 ? [1] : []; }
   // Feeding never moves into solids on age alone: a parent answer moves it.
   function feedStage(m) {
