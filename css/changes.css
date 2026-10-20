@@ -1,0 +1,135 @@
+/* Ahead · Sleep and Feeding change pages.
+   Built only from the app's tokens (--year-*, --ink, --muted, --line, --white, fonts),
+   so each category keeps its own palette and the pages sit beside Safety and Development. */
+
+#shell:has(#main>.chg-page)>.top { display: none }
+#main .chg-page { --chg-gap: 26px }
+#main .chg-page .chg-rail .journey-stage { flex: 1 0 96px; min-width: 96px; white-space: normal }
+#main .chg-page .chg-rail .journey-stage > span:not(.journey-stage-node) { max-width: 92px; min-height: 30px; text-align: center }
+#main .chg-page .experience-hero { margin-bottom: var(--chg-gap) }
+
+/* Section rhythm */
+#main .chg-section { margin: 0 0 var(--chg-gap) }
+#main .chg-section-head { margin: 0 0 11px }
+#main .chg-section-head h2 { font: 600 20px/1.3 var(--ui-font); letter-spacing: -.3px; color: var(--ink); margin: 0 }
+#main .chg-section-head p { font-size: 12.5px; line-height: 1.5; color: var(--muted); margin: 3px 0 0 }
+#main .chg-section-head.is-row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px }
+
+/* Cards and rows */
+#main .chg-card { background: var(--white); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; margin: 0; padding: 0; list-style: none }
+#main .chg-card.chg-pad { padding: 16px }
+#main .chg-row { display: flex; gap: 12px; align-items: flex-start; padding: 15px 16px }
+#main .chg-row + .chg-row { border-top: 1px solid var(--line) }
+#main .chg-row.is-tint { background: var(--year-pale) }
+#main .chg-row.is-stack { flex-direction: column; gap: 4px }
+#main .chg-row h3, #main .chg-steps h3 { font: 600 14.5px/1.4 var(--ui-font); color: var(--ink); margin: 0 0 3px }
+#main .chg-row p, #main .chg-steps p { font-size: 14px; line-height: 1.6; color: var(--muted); margin: 0 }
+#main .chg-page p.chg-ink { color: var(--ink) }
+#main .chg-label { display: block; font: 700 11px/1.4 var(--ui-font); letter-spacing: .02em; color: var(--year-ink); margin: 0 0 3px }
+#main .chg-mark { display: grid; place-items: center; flex: none; width: 36px; height: 36px; border-radius: 12px; background: var(--year-pale); color: var(--year-ink) }
+#main .chg-mark svg { width: 18px; height: 18px }
+#main .chg-dot { flex: none; width: 6px; height: 6px; border-radius: 50%; background: var(--year-accent); margin-top: 9px }
+
+/* Must-know card: the one thing to act on, shown only when it applies */
+#main .chg-alert { display: flex; gap: 12px; padding: 15px 16px; margin: calc(var(--chg-gap) * -1 + 12px) 0 var(--chg-gap); background: var(--white); border-radius: 18px; box-shadow: inset 0 0 0 1.5px var(--year-accent) }
+#main .chg-alert small { display: block; font: 700 11.5px/1.4 var(--ui-font); color: var(--year-ink) }
+#main .chg-alert h3 { font: 600 15px/1.35 var(--ui-font); color: var(--ink); margin: 2px 0 3px }
+#main .chg-alert p { font-size: 13.5px; line-height: 1.5; color: var(--muted); margin: 0 }
+
+/* Buttons */
+#main .chg-btn { display: inline-flex; align-items: center; justify-content: center; min-height: 40px; padding: 0 16px; margin-top: 10px; border-radius: 999px; background: var(--year-ink); color: var(--white); font: 600 13.5px/1 var(--ui-font) }
+#main .chg-btn.is-quiet { display: flex; width: 100%; min-height: 48px; margin: 0 0 var(--chg-gap); background: var(--year-pale); color: var(--year-ink); font-size: 14px }
+#main .chg-section + .chg-btn.is-quiet { margin-top: 0 }
+#main .chg-inline { min-height: 0; padding: 0; font: 600 12.5px/1.5 var(--ui-font); color: var(--year-ink); text-decoration: underline; text-underline-offset: 3px }
+
+/* Wake windows: a day read top to bottom */
+#main .chg-day { list-style: none; margin: 0 0 12px; padding: 0; position: relative }
+#main .chg-day li { display: flex; align-items: center; gap: 10px; min-height: 36px; position: relative; padding-left: 20px }
+#main .chg-day li:before { content: ''; position: absolute; left: 5px; top: 0; bottom: 0; width: 2px; background: var(--line) }
+#main .chg-day li:first-child:before { top: 50% }
+#main .chg-day li:last-child:before { bottom: 50% }
+#main .chg-day li:after { content: ''; position: absolute; left: 1px; top: 50%; width: 10px; height: 10px; margin-top: -5px; border-radius: 50%; box-sizing: border-box; background: var(--year-ink) }
+#main .chg-day li.is-awake:after { background: var(--white); border: 2px solid #e2c27a }
+#main .chg-day li.is-bed:after { background: var(--ink) }
+#main .chg-day-pill { flex: none; font: 700 12.5px/1 var(--ui-font); padding: 6px 10px; border-radius: 999px; background: var(--year-pale); color: var(--year-ink) }
+#main .chg-day li.is-awake .chg-day-pill { background: #fbf1d9; color: #74581f }
+#main .chg-day li.is-bed .chg-day-pill { background: var(--ink); color: var(--white) }
+#main .chg-day-rule { flex: 1; border-top: 1px dotted var(--line) }
+#main .chg-day b { font: 600 14px/1.3 var(--ui-font); color: var(--ink) }
+#main .chg-day li.is-awake b { color: #74581f }
+
+/* Feeding amounts */
+#main .chg-amounts { margin: 0 0 12px }
+#main .chg-amounts > div { display: flex; gap: 12px; align-items: baseline; padding: 9px 0; border-bottom: 1px solid var(--line) }
+#main .chg-amounts > div:first-child { padding-top: 0 }
+#main .chg-amounts dt { flex: none; width: 108px; font: 700 13px/1.4 var(--ui-font); color: var(--year-ink) }
+#main .chg-amounts dd { margin: 0; font: 600 14px/1.45 var(--ui-font); color: var(--ink) }
+#main .chg-page p.chg-note { font-size: 12.5px; line-height: 1.5; color: var(--muted); margin: 0 }
+#main .chg-close { display: flex; gap: 12px; align-items: flex-start; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line) }
+#main .chg-close .chg-mark { width: 32px; height: 32px; border-radius: 10px }
+
+/* What helps */
+#main .chg-steps li { display: flex; gap: 12px; padding: 15px 16px }
+#main .chg-steps li + li { border-top: 1px solid var(--line) }
+#main .chg-num { display: grid; place-items: center; flex: none; width: 26px; height: 26px; border-radius: 50%; background: var(--year-bg); color: var(--year-ink); font: 700 12.5px/1 var(--ui-font) }
+
+/* Call card uses Health's palette, like the app's other "call your pediatrician" moments */
+#main .chg-call { display: flex; gap: 12px; padding: 15px 16px; margin: 0 0 var(--chg-gap); border-radius: 18px; background: #eef8f1; --year-pale: #ddf1e5; --year-ink: #356651 }
+#main .chg-call.is-soft { background: var(--year-pale); --year-pale: var(--white) }
+#main .chg-call small { display: block; font: 700 11.5px/1.4 var(--ui-font); color: var(--year-ink); margin-bottom: 2px }
+#main .chg-call h3 { font: 600 15px/1.35 var(--ui-font); color: var(--ink); margin: 0 0 3px }
+#main .chg-call p { font-size: 14px; line-height: 1.55; color: var(--ink); margin: 0 }
+#main .chg-page .chg-call.is-soft { background: color-mix(in srgb, var(--year-pale) 100%, transparent) }
+
+/* Also common around now / coming up / questions */
+#main .chg-event, #main .chg-next { display: flex; align-items: center; gap: 12px; width: 100%; padding: 14px 16px; border-radius: 18px; text-align: left; color: var(--ink) }
+#main .chg-event { background: var(--year-pale) }
+#main .chg-event + .chg-event { margin-top: 8px }
+#main .chg-event .chg-mark { background: var(--white) }
+#main .chg-next { margin: 0 0 var(--chg-gap); background: var(--white); border: 1.5px dashed var(--year-accent) }
+#main :is(.chg-event, .chg-next) > span:not(.chg-mark) { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0 }
+#main :is(.chg-event, .chg-next) small { font: 700 11.5px/1.4 var(--ui-font); color: var(--year-ink) }
+#main :is(.chg-event, .chg-next) b { font: 600 15px/1.35 var(--ui-font) }
+#main :is(.chg-event, .chg-next) em { font-style: normal; font-size: 13px; line-height: 1.45; color: var(--muted) }
+#main :is(.chg-event, .chg-next, .chg-q, .chg-link) > svg { flex: none; width: 17px; height: 17px; color: var(--year-ink) }
+#main .chg-q { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 64px; padding: 12px 16px; text-align: left; color: var(--ink) }
+#main .chg-q + .chg-q { border-top: 1px solid var(--line) }
+#main .chg-q b { flex: 1; font: 600 14.5px/1.4 var(--ui-font) }
+
+/* Link rows */
+#main .chg-links { margin-bottom: 4px }
+#main .chg-link { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 58px; padding: 12px 16px; text-align: left; color: var(--ink) }
+#main .chg-link + .chg-link { border-top: 1px solid var(--line) }
+#main .chg-link > span { flex: 1; display: flex; flex-direction: column; gap: 2px }
+#main .chg-link b { font: 600 14.5px/1.4 var(--ui-font) }
+#main .chg-link small { font-size: 12.5px; line-height: 1.4; color: var(--muted) }
+#main .chg-page p.chg-foot { font-size: 11.5px; line-height: 1.6; color: var(--muted); text-align: center; margin: 14px 0 0 }
+#main .chg-page p.chg-foot.is-left { text-align: left; margin-top: 4px }
+
+/* Detail screens */
+#main .chg-detail .chg-card + .chg-section, #main .chg-detail .chg-section-head + .chg-card { margin-top: 0 }
+#main .chg-detail > .chg-card, #main .chg-detail > .chg-section-head + .chg-card { margin-bottom: var(--chg-gap) }
+#main .chg-check { display: grid; place-items: center; flex: none; width: 26px; height: 26px; min-height: 26px; padding: 0; margin-top: 1px; border-radius: 8px; border: 1.5px solid var(--year-accent); background: var(--white); color: var(--white) }
+#main .chg-check.is-on { background: var(--year-ink); border-color: var(--year-ink) }
+#main .chg-check svg { width: 16px; height: 16px; stroke-width: 2.4 }
+#main .chg-tag { display: inline-block; vertical-align: 1px; margin-left: 6px; font: 700 11px/1 var(--ui-font); padding: 4px 8px; border-radius: 999px; background: var(--year-pale); color: var(--year-ink) }
+#main .chg-chip { display: inline-block; font: 700 11.5px/1 var(--ui-font); padding: 5px 10px; border-radius: 999px; margin-bottom: 8px }
+#main .chg-chip.is-normal { background: #e3f3ea; color: #2f6550 }
+#main .chg-chip.is-watch { background: #fbf1d9; color: #74581f }
+#main .chg-chip.is-call { background: #f7dfe8; color: #884866 }
+#main .chg-chip.is-urgent { background: var(--ink); color: var(--white) }
+#main .chg-row ul { margin: 0; padding-left: 18px }
+#main .chg-row li { font-size: 14px; line-height: 1.6; color: var(--ink) }
+#main .chg-ask { margin-bottom: 14px }
+#main .chg-ask h3 { font: 600 15px/1.4 var(--ui-font); color: var(--ink); margin: 0 0 12px }
+#main .chg-ask > div { display: flex; flex-direction: column; gap: 8px }
+#main .chg-choice { min-height: 48px; padding: 0 14px; border-radius: 14px; border: 1.5px solid var(--line); background: var(--white); text-align: left; font: 600 14.5px/1.3 var(--ui-font); color: var(--ink) }
+#main .chg-choice.is-on { background: var(--year-ink); border-color: var(--year-ink); color: var(--white) }
+#main .chg-detail .chg-card:not(.chg-ask) + .chg-btn { margin-top: 14px }
+#main .chg-detail .chg-ask + .chg-card { margin-bottom: 4px }
+#main .chg-detail .chg-btn:not(.is-quiet) { width: 100%; min-height: 48px; margin: 14px 0 12px }
+#main .chg-detail .chg-btn.is-quiet { margin: 14px 0 18px }
+
+#main .chg-checkin-choices { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px }
+#main .chg-checkin-choices button { min-height: 40px; padding: 0 14px; border-radius: 999px; border: 1.5px solid var(--year-accent); background: var(--white); font: 600 13.5px/1 var(--ui-font); color: var(--year-ink) }
+#main .chg-checkin-choices button:hover { background: var(--year-pale) }
