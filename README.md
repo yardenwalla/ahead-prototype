@@ -31,21 +31,6 @@ The app looks and works the same as the previous prototype, with two exceptions:
   - Telling Home that Maya is trying to roll shows "Time to stop swaddling" on Sleep.
   - Feeding never moves into solids based on age alone. From 6 months it asks "Has Maya started solids?", and the answer moves the guide.
 
-## Home recommendation engine
-
-Home now runs the engine from the "Ahead · Home recommendation engine spec" doc.
-
-- **Every possible card is written once as a rule** in `js/home-engine.js`: its category, type, tier, hard filters, reason line, copy and where it opens.
-- **The same pipeline runs on every render:** collect every rule → hard filters → rank → caps → Home.
-  - Ranking: must-know first, then a parent's own report over age-based timing, then dated items.
-  - Caps: at most 3 cards, one per category, and one check-in at a time.
-- **Each card says why it's shown** ("You said Maya is trying to roll"). It has one action, plus "Not for us", which hides the card for its cooldown.
-- **Check-ins answer in place** and confirm what changed, for example "Feeding moved to Starting solids".
-- **"How Home chose these"** under the cards lists every rule that was held back and why. It also shows whether a notification would go out under the spec's limits: must-know only, never 2 in 48 hours, quiet 8 pm–8 am.
-- **Tapping another month on the strip previews Home by age.** Answers only apply to today.
-
-To try it: open Home as Maya at 5 months and answer "Trying" to "Is Maya trying to roll?". Stop swaddling moves to the top, Safety's rolling checks appear, and Sleep shows the same must-know card.
-
 ## Files
 
 | Path | What it is |
@@ -56,8 +41,6 @@ To try it: open Home as Maya at 5 months and answer "Trying" to "Is Maya trying 
 | `js/app.js` | The existing app. Small edits route Sleep and Feeding to the new pages. |
 | `js/changes-data.js` | All Sleep and Feeding copy and data. Edit content here. |
 | `js/changes.js` | Renders the stage pages and detail screens |
-| `js/home-engine.js` | Home rules and pipeline |
-| `css/home-engine.css` | Home card styles |
 | `js/boot.js` | Starts the app after every module has loaded |
 | `tools/screenshot.py` | Playwright helper for screenshotting app states |
 
