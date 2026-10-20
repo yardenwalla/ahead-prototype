@@ -31,6 +31,24 @@ The app looks and works the same as the previous prototype, with two exceptions:
   - Telling Home that Maya is trying to roll shows "Time to stop swaddling" on Sleep.
   - Feeding never moves into solids based on age alone. From 6 months it asks "Has Maya started solids?", and the answer moves the guide.
 
+## Home rules
+
+Home looks the same as before. `js/home-rules.js` applies the Home recommendation engine spec to the existing components, deciding which rows show and what they say:
+
+- **Reason in each label.** Every row's small label now says why it's there, for example "Sleep · You said Maya is trying to roll" or "Feeding · Most babies start solids around 6 months".
+- **Ranking and caps.**
+  - Rows are ranked must-know first, then what a parent reported, then dated items, then age-based ones.
+  - The main card holds at most 3 rows, one per category.
+  - Play ideas are nice-to-know, so they stay on their own page.
+  - "Prepare for next" shows up to 2 coming-up items from categories not already above.
+- **Filters and timing.**
+  - Feeding rows follow the new Feeding stages and never assume solids until a parent says so.
+  - A checkup moves up from "Prepare for next" only when it's within 14 days.
+  - The solids check-in waits until 6 months.
+- **Copy updates.** The rows and check-ins have new copy, written to match the content guide.
+
+Call `homeRulesDebug()` in the browser console to see what was shown, what was held back and why.
+
 ## Files
 
 | Path | What it is |
@@ -41,6 +59,7 @@ The app looks and works the same as the previous prototype, with two exceptions:
 | `js/app.js` | The existing app. Small edits route Sleep and Feeding to the new pages. |
 | `js/changes-data.js` | All Sleep and Feeding copy and data. Edit content here. |
 | `js/changes.js` | Renders the stage pages and detail screens |
+| `js/home-rules.js` | Home rules: which rows show and their reason labels |
 | `js/boot.js` | Starts the app after every module has loaded |
 | `tools/screenshot.py` | Playwright helper for screenshotting app states |
 

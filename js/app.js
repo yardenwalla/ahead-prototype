@@ -2383,7 +2383,7 @@ function homeQuestion(){
  if(month<4&&(!milk||milk==='Prefer not to say')&&!ui.skipped.milk)return 'milk';
  const moving=answers.crawl==='Yes'||answers.pullUp==='Yes',rolling=answers.roll==='Yes'||['Tummy to back','Back to tummy','Both ways'].includes(answers.rollDirection);
  if(age>=3&&age<=6&&!moving&&!rolling&&!ui.skipped.movement&&(!hasMovementAnswer()||ui.asked.movement!==undefined&&ui.asked.movement<month))return 'movement';
- if(month>=4&&!hasFoodAnswer()&&!ui.skipped.food)return 'food';
+ if(month>=6&&!hasFoodAnswer()&&!ui.skipped.food)return 'food';
  if(age>=7&&age<=10&&!moving&&!ui.skipped.crawl&&(!answers.crawl||ui.asked.crawl!==undefined&&ui.asked.crawl<month))return 'crawl';
  if(age>=9&&answers.crawl==='Yes'&&answers.pullUp!=='Yes'&&!ui.skipped.stand&&(!answers.pullUp||ui.asked.stand!==undefined&&ui.asked.stand<month))return 'stand';
  return null;
@@ -2392,10 +2392,10 @@ function liveHomeCheckin(){
  const key=homeQuestion();if(!key)return '';
  const questions={
   milk:{title:`What milk is ${name()} having?`,why:'Use the feeding reference that fits your day.',choices:[['Breast milk','Breast milk'],['Formula','Formula'],['Both','Both']]},
-  movement:{title:`Is ${name()} trying to roll?`,why:'This changes which safety setup to highlight.',choices:[['not_yet','Not yet'],['trying','Trying'],['rolling','Rolling']]},
-  food:{title:'Where are you with solids?',why:'Preparation and first-food practice need different guidance.',choices:[['preparing','Not started'],['new','First foods'],['established','Building meals']]},
-  crawl:{title:`Has ${name()} started crawling?`,why:'Moving across the floor changes which spaces need attention.',choices:[['Not yet','Not yet'],['Yes','Yes']]},
-  stand:{title:`Is ${name()} pulling up to stand?`,why:'A new reach changes which surfaces and furniture matter.',choices:[['Not yet','Not yet'],['Yes','Yes']]}
+  movement:{title:`Is ${name()} trying to roll?`,why:'Your answer updates Sleep and Safety.',choices:[['not_yet','Not yet'],['trying','Trying'],['rolling','Rolling']]},
+  food:{title:'Where are you with solids?',why:'Feeding only moves to solids when you tell us.',choices:[['preparing','Not started'],['new','First foods'],['established','Building meals']]},
+  crawl:{title:`Has ${name()} started crawling?`,why:'Your answer updates Safety for a baby on the move.',choices:[['Not yet','Not yet'],['Yes','Yes']]},
+  stand:{title:`Is ${name()} pulling up to stand?`,why:'Your answer updates Sleep and Safety for standing.',choices:[['Not yet','Not yet'],['Yes','Yes']]}
  };
  const q=questions[key];return `<section class="connected-checkin"><div><h2>${q.title}</h2><button class="connected-skip" onclick="skipHomeQuestion()">Skip</button></div><p>${q.why}</p><div class="connected-checkin-choices">${q.choices.map(([value,label])=>`<button onclick="answerHomeQuestion('${key}','${value}')">${label}</button>`).join('')}</div></section>`;
 }
