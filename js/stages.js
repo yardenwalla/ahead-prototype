@@ -136,11 +136,30 @@
     if (preview || !isCurrent() || String(page).endsWith(':preview')) return '';
     const guides = safetyOwnedGuides(), keys = Object.keys(guides), i = keys.indexOf(owner);
     let h = '';
-    const earlier = keys.slice(0, i).flatMap(k => safetyPendingIds(guides[k].ids).map(id => [k, id]));
+    // Only checklists this family actually opened carry forward. Someone who joins at 8 months
+    // is assumed to have done the earlier ones; Safety is about getting ahead of what's next.
+    const opened = safetyGuideOrigins();
+    const earlier = keys.slice(0, i).filter(k => opened[k]).flatMap(k => safetyPendingIds(guides[k].ids).map(id => [k, id]));
     if (earlier.length) h += `<section class="safety-check-section safety-carry"><div class="safety-check-section-head"><h3>Still to do from earlier</h3><span class="safety-check-progress">${earlier.length} left</span></div>${safetyCheckGroup(earlier.slice(0, 3).map(x => x[1]), () => 'reference', 3)}${earlier.length > 3 ? `<button class="textlink" onclick="openSafetyChecklist('${earlier[0][0]}',true)">See all ${earlier.length} →</button>` : ''}</section>`;
     const next = keys[i + 1];
     if (next) h += `<section class="sleep-phase-ahead"><h3>Coming up</h3><article><h4>${guides[next].title}</h4><p>${guides[next].intro}</p></article><button class="textlink chg-headsup-link" onclick="openSafetyChecklist('${next}',true)">See the checklist →</button></section>`;
     return h;
+  };
+
+  /* ---------- Development: the same navigation rule ----------
+     Current checkpoint: a "Coming up" card for the next one. Another checkpoint: a way back. */
+  const baseDev = developmentJourneyOverview;
+  window.developmentJourneyOverview = developmentJourneyOverview = function () {
+    const html = baseDev.apply(this, arguments);
+    const ref = Number((html.match(/data-development-guide="(\d+)"/) || [])[1]);
+    if (!ref || !isCurrent()) return html;
+    const now = devRef(developmentMonth(actualMonth())), keys = Object.keys(DEV_STAGES).map(Number);
+    if (ref !== now) return html.replace('</nav>', `</nav><div class="chg-browse-links" style="${yearTheme('Development')}"><button class="textlink chg-back-now" onclick="navigate('categories');openPage('topic:Development')">← Back to where ${name()} is now</button></div>`);
+    const next = keys[keys.indexOf(ref) + 1];
+    if (!next) return html;
+    const card = `<section class="sleep-phase-ahead" style="${yearTheme('Development')}"><h3>Coming up · ${DEV_STAGES[next].rail}</h3><article><h4>${DEV_STAGES[next].title}</h4><p>${DEV_STAGES[next].body}</p></article><button class="textlink chg-headsup-link" onclick="openPage('development-stage:${next}')">See what’s next →</button></section>`;
+    const src = devGuideSources(ref);
+    return html.includes(src) ? html.replace(src, card + src) : html.replace(/<\/div>$/, card + '</div>');
   };
 
   /* ---------- Which age a page uses ---------- */

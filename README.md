@@ -64,8 +64,8 @@ Call `homeRulesDebug()` in the browser console to see what was shown, what was h
   - Any other stage they're viewing has "This is where Maya is now" and "← Back to where Maya is now".
 - **Navigating between stages** uses the timeline at the top of each category.
   - No Previous/Next links.
-  - Coming up cards only in Sleep, Feeding, Safety and Development.
-  - Safety's current checklist shows up to 3 unfinished checks from earlier checklists.
+  - Coming up cards only in Sleep, Feeding, Safety and Development (each checkpoint points to the next one).
+  - Safety's current checklist shows up to 3 unfinished checks from earlier checklists, but only ones the family actually opened. Someone who joins at 8 months is assumed to have done the earlier ones.
 - **Which age is used:** adjusted age for everything developmental (until age 2), birthday age for Health. Pages say which one they use.
 
 ## QA
