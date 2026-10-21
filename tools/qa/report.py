@@ -126,6 +126,12 @@ p {{ margin: 0; max-width: 68ch }}
 .fix {{ font-size: 13px; padding: 0 16px 6px 78px }}
 .ex {{ margin: 0; padding: 0 16px 14px 94px; font-size: 12px; color: var(--muted) }}
 .empty {{ padding: 16px; color: var(--muted); font-size: 14px }}
+.asks {{ padding: 6px 16px }}
+.ask-row {{ display: grid; grid-template-columns: 70px minmax(0, 1fr) 76px; gap: 12px; align-items: center; padding: 8px 0; font-size: 13px }}
+.ask-row + .ask-row {{ border-top: 1px solid var(--line) }}
+.ask-row .bar {{ height: 8px; border-radius: 999px; background: var(--accent-pale); overflow: hidden }}
+.ask-row .bar i {{ display: block; height: 100%; background: var(--accent); border-radius: 999px }}
+.ask-row .num {{ color: var(--muted); font-variant-numeric: tabular-nums; text-align: right }}
 .who-list {{ margin: 8px 0 0; padding-left: 18px; font-size: 14px; color: var(--muted); columns: 2 280px }}
 .who-list b {{ color: var(--ink) }}
 .tabs {{ display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 14px }}
@@ -150,12 +156,14 @@ footer {{ font-size: 12px; color: var(--muted) }}
 <main>
   <header>
     <div class="eyebrow">Ahead prototype · run {E(run_date)}</div>
-    <h1>QA report: onboarding to the first birthday</h1>
-    <p class="lede">Seven example families signed up through the real setup screens. A script then moved the clock forward one week at a time to 12 months. Each week it read Home, Sleep and Feeding the way a parent would and answered whatever check-in was showing, the way that family would. Once a month it opened every link on Home and every category page.</p>
+    <h1>QA report: stage rules, onboarding to the first birthday</h1>
+    <p class="lede">{stats.get("personas", 0)} example families signed up through the real setup screens. A script then moved the clock forward one week at a time to 12 months. Each week it read Home, Sleep and Feeding the way a parent would and answered whatever check-in was showing, the way that family would. Once a month it opened every link on Home and every category page.</p>
     <div class="facts"><span><b>{stats.get('personas', 0)}</b> families</span><span><b>{stats.get('weeks', 0)}</b> family-weeks</span><span><b>{stats.get('pages', 0):,}</b> pages read</span><span><b>{stats.get('links', 0):,}</b> links opened</span></div>
   </header>
   <section><div class="scores">{''.join(card(*g) for g in GROUPS)}</div></section>
-  <section><div class="section-head"><h2>Still open</h2><p>No bugs are left. These two notes need a product decision rather than a code fix.</p></div>
+  <section><div class="section-head"><h2>How often parents are asked</h2><p>Weeks in which Home showed a check-in, out of the weeks each family used the app.</p></div>
+    <div class="findings asks">{''.join(f'<div class="ask-row"><b>{E(next(r["persona"]["name"] for r in results if r["persona"]["id"] == k))}</b><span class="bar"><i style="width:{round(100 * v / max(1, stats["family_weeks"][k]))}%"></i></span><span class="num">{v} of {stats["family_weeks"][k]}</span></div>' for k, v in stats.get('checkin_weeks', {}).items())}</div></section>
+  <section><div class="section-head"><h2>Still open</h2><p>No bugs are left. These notes are product decisions rather than code fixes.</p></div>
     <div class="findings">{''.join(finding_row(f).replace('<details ', '<details open ', 1) for f in open_bugs + notes) or '<p class="empty">Nothing open.</p>'}</div></section>
   <section><div class="section-head"><h2>Found and fixed</h2><p>What the first run caught, and what changed.</p></div>
     <div class="findings">{''.join(finding_row(dict(f, severity=f['severity']), True).replace('class="finding ', 'class="finding fixed ', 1) for f in fixed) or '<p class="empty">Nothing needed fixing.</p>'}</div></section>

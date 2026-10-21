@@ -48,7 +48,8 @@
 
   /* ---------- candidates ---------- */
   const mo = n => `${n} ${n === 1 ? 'month' : 'months'}`;
-  const ageReason = () => `Common at ${mo(month)}`;
+  // Developmental rows name the age they're based on: adjusted age for babies born early.
+  const ageReason = () => profile.early && developmentMonth(month) !== month ? `Common at ${mo(developmentMonth(month))} adjusted` : `Common at ${mo(month)}`;
   // A parent's answer is only the reason when the row is about that skill.
   const relevant = (mv, title) => ({ trying: /roll/i, rolling: /roll/i, crawling: /crawl|mov/i, pulling: /pull|stand|cruis/i }[mv] || /$^/).test(title || '');
 
@@ -84,7 +85,8 @@
     // Sleep: the current stage (a reference row, so it ranks below actions)
     const si = stageIndex('Sleep');
     out.push({ topic: 'Sleep', title: SLEEP_ROW[si][0], body: SLEEP_ROW[si][1], action: "openPage('topic:Sleep')",
-      tier: 'should', reference: true, reason: si === 0 ? 'For the first weeks' : ageReason() });
+      tier: 'should', reference: !(live() && si === 3 && (answers.twoNaps === 'Yes' || chgSleepAuto())), reported: live() && si === 3 && answers.twoNaps === 'Yes',
+      reason: si === 0 ? 'For the first weeks' : live() && si === 3 && answers.twoNaps === 'Yes' ? `You said ${name()} is skipping the catnap` : live() && si === 3 && chgSleepAuto() ? 'Most babies are on two naps by now' : ageReason() });
 
     // Health: the next visit, ranked up when it's close
     let age = healthJourneyFocus();
@@ -106,7 +108,7 @@
       : !mv && m >= 7 && saf && /reaching and rolling/i.test(saf.title)
         ? { title: 'Before crawling', body: 'Gates, storage, outlets and furniture anchors.', action: `openSafetyChecklist('mobile',false)`, art: 0 } : {};
     if (saf && !(priority && priority.type === 'check'))
-      out.push({ ...saf, ...rollGuide, tier: 'should', reported: !!mv, prep: !mv, upcoming: !mv && m < 4, reason: mv ? said(mv) : m < 6 ? 'Most babies roll by 6 months' : 'Before she’s on the move' });
+      out.push({ ...saf, ...rollGuide, tier: 'should', reported: !!mv, prep: !mv, upcoming: !mv && m < 4, reason: mv && !safetyAgeForward() ? said(mv) : safetyAgeForward() === 'moving' ? 'Most babies crawl by now' : safetyAgeForward() === 'rolling' ? 'Most babies roll by now' : m < 6 ? 'Most babies roll by 6 months' : 'Before she’s on the move' });
 
     // Play ideas are nice-to-know: they live on the Play page, not Home
     const play = byTopic('Daily rhythm');

@@ -23,16 +23,47 @@
   function save() { try { localStorage.setItem(STORE, JSON.stringify(local)); } catch (e) {} }
 
   const T = s => esc(String(s == null ? '' : s)).replace(/Maya/g, name());
-  const ageNow = () => actualMonth();
+  // Everything developmental follows adjusted age for babies born early (until age 2).
+  const ageNow = () => developmentMonth(actualMonth());
 
   /* ---------- where is this baby? ---------- */
   function rolling() { return answers.roll === 'Yes' || ['Tummy to back', 'Back to tummy', 'Both ways'].includes(answers.rollDirection); }
   function tryingToRoll() { return answers.rollDirection === 'Trying to roll'; }
 
-  function sleepStage(m) { return m < 2 ? 0 : m < 4 ? 1 : m < 6 ? 2 : 3; }
+  /* Stage rules
+     Age moves a stage when there's nothing to report (newborn → days and nights → naps).
+     A parent's answer moves a stage you can see (two naps, solids, finger foods).
+     Once the usual window has passed: Sleep moves on by itself with an undo, Feeding keeps asking.
+     A parent can always say "This is where she is now" (an override that lasts until age moves past it). */
+  const live = () => typeof isCurrent !== 'function' || isCurrent();
+  function overridden(cat, computed) {
+    const o = live() && local.override && local.override[cat];
+    if (!o) return computed;
+    if (o.base !== computed) { delete local.override[cat]; save(); return computed; }
+    return o.i;
+  }
+  function sleepComputed(m) {
+    if (m < 2) return 0;
+    if (m < 4) return 1;
+    const said = live() ? answers.twoNaps : null;
+    if (said === 'Yes' && m >= 5) return 3;
+    if (m >= 9 && said !== 'Stay') return 3;          // window passed: move on, with an undo
+    if (!live() && m >= 6) return 3;                  // previewing another month: typical age
+    return 2;
+  }
+  function sleepStage(m) { return overridden('Sleep', sleepComputed(m)); }
+  // The "we moved her" notice shows for three weeks after the move, then the page simply carries on.
+  function autoNoticeFresh() {
+    const t = (typeof NOW !== 'undefined' ? NOW : new Date()).getTime();
+    local.autoSeen = local.autoSeen || {};
+    const k = profile.dob; if (!local.autoSeen[k]) { local.autoSeen[k] = t; save(); }
+    return t - local.autoSeen[k] <= 21 * 864e5;
+  }
+  window.chgSleepAuto = function () { const m = ageNow(); return live() && sleepComputed(m) === 3 && answers.twoNaps !== 'Yes' && m >= 9; };
   function sleepEvents(m) { return m >= 3 && m < 6 ? [0] : m >= 8 && m <= 11 ? [1] : []; }
   // Feeding never moves into solids on age alone: a parent answer moves it.
-  function feedStage(m) {
+  function feedStage(m) { return overridden('Feeding', feedComputed(m)); }
+  function feedComputed(m) {
     const fs = typeof foodStage === 'function' ? foodStage() : 'preparing';
     if (m < 2) return 0;
     if (m < 4) return 1;
@@ -127,11 +158,18 @@
     h += `<header class="experience-hero"><div class="experience-hero-copy"><div class="eyebrow">${esc(eyebrow)}</div><h2>${T(C.title)}</h2></div><span class="experience-hero-art" aria-hidden="true">${yearIllustration(cat, 1)}</span><p class="experience-hero-description">${T(C.lead)}</p></header>`;
 
     // One observable check-in moves Feeding into solids; age alone never does.
-    if (cat === 'Feeding' && !isEv && view === cur && cur === 2 && m >= 6)
-      h += `<section class="connected-checkin chg-checkin"><div><h2>${m >= 9 ? 'Most babies have started solids by now' : `Has ${name()} started solids?`}</h2></div><p>${m >= 9 ? `Tell us where ${name()} is, and this guide will catch up.` : 'Your answer moves this guide to the right stage.'}</p><div class="connected-checkin-choices"><button onclick="setFeedingStage('preparing')">Not yet</button><button onclick="setFeedingStage('new')">First foods</button><button onclick="setFeedingStage('established')">Eating meals</button></div></section>`;
+    if (cat === 'Feeding' && !isEv && view === cur && cur === 2 && m >= 6 && (typeof checkinDue !== 'function' || checkinDue('food', ['preparing'])))
+      h += `<section class="connected-checkin chg-checkin"><div><h2>${m >= 9 ? 'Most babies have started solids by now' : `Has ${name()} started solids?`}</h2></div><p>${m >= 9 ? `Tell us where ${name()} is, and this guide will catch up.` : 'Your answer moves this guide to the right stage.'}${profile.early ? ' Born early? Your care team may suggest a different time.' : ''}</p><div class="connected-checkin-choices"><button onclick="chgAnswerCheckin('food','preparing')">Not yet</button><button onclick="chgAnswerCheckin('food','new')">First foods</button><button onclick="chgAnswerCheckin('food','established')">Eating meals</button></div></section>`;
 
     if (cat === 'Feeding' && !isEv && view === cur && (cur === 3 && m >= 7 || cur === 4 && foodStage() === 'new') && !(local.notYet && local.notYet.fingerFoods && local.notYet.fingerFoods > Date.now() - 14 * 864e5))
       h += `<section class="connected-checkin chg-checkin"><div><h2>Is ${name()} eating soft finger foods yet?</h2></div><p>Your answer moves this guide to textures and finger foods.</p><div class="connected-checkin-choices"><button onclick="chgNotYet('fingerFoods')">Not yet</button><button onclick="setFeedingStage('established')">Yes</button></div></section>`;
+
+    if (cat === 'Sleep' && !isEv && view === cur && chgSleepAuto() && autoNoticeFresh())
+      h += headsUp(`Most babies are on two naps by now`, `We moved ${name()} to Two naps`, '', `<button class="textlink chg-headsup-link" onclick="setAnswer('twoNaps','Stay')">Still on three naps? Keep ${name()} on Naps find a rhythm →</button>`);
+    if (cat === 'Sleep' && !isEv && view === cur && cur === 2 && m >= 6 && live() && answers.twoNaps !== 'Stay' && (typeof checkinDue !== 'function' || checkinDue('naps', ['Not yet'])))
+      h += `<section class="connected-checkin chg-checkin"><div><h2>Is ${name()} skipping the late catnap most days?</h2></div><p>Your answer moves this guide to two naps when she’s ready.</p><div class="connected-checkin-choices"><button onclick="chgAnswerCheckin('naps','Not yet')">Not yet</button><button onclick="chgAnswerCheckin('naps','Yes')">Yes</button></div></section>`;
+    if (!isEv && view !== cur && live() && (cat === 'Sleep' || cat === 'Feeding'))
+      h += `<button class="textlink chg-override" onclick="chgSetStage('${cat}',${view})">This is where ${name()} is now</button>`;
 
     if (A) h += headsUp(T(A.reason), T(A.title), T(A.body), A.done
       ? `<div class="home-action-tools"><button class="home-inline-check" onclick="${A.go}"><span aria-hidden="true"></span>${esc(A.act)}</button></div>`
@@ -251,6 +289,27 @@
   window.positionChgRail = function () {
     const r = document.getElementById('chg-rail'), s = r && (r.querySelector('[aria-current="step"]') || r.querySelector('[data-relevant="true"]'));
     if (r && s) r.scrollLeft = s.offsetLeft - (r.clientWidth - s.offsetWidth) / 2;
+  };
+  // "This is where she is now": sets the parent's answer where one exists, otherwise an override.
+  window.chgSetStage = function (cat, i) {
+    const m = ageNow();
+    if (cat === 'Sleep') {
+      if (i === 3) { if (local.override) delete local.override.Sleep; save(); return setAnswer('twoNaps', 'Yes'); }
+      if (i === 2 && m >= 4) { if (local.override) delete local.override.Sleep; save(); answers.twoNaps = 'Stay'; persist(); }
+      else { local.override = Object.assign({}, local.override, { Sleep: { i, base: sleepComputed(m) } }); save(); }
+    }
+    if (cat === 'Feeding') {
+      if (local.override) delete local.override.Feeding;
+      if (i >= 3) { save(); setFeedingStage(i === 3 ? 'new' : 'established'); if (i === 5 && feedComputed(m) !== 5) { local.override = Object.assign({}, local.override, { Feeding: { i, base: feedComputed(m) } }); save(); } }
+      else if (i === 2 && m >= 4) { save(); setFeedingStage('preparing'); }
+      else { local.override = Object.assign({}, local.override, { Feeding: { i, base: feedComputed(m) } }); save(); }
+    }
+    page = 'topic:' + cat; render(); window.scrollTo(0, 0);
+  };
+  window.chgAnswerCheckin = function (key, value) {
+    if (typeof recordCheckin === 'function') recordCheckin(key, value);
+    if (key === 'naps') setAnswer('twoNaps', value === 'Yes' ? 'Yes' : 'Not yet');
+    if (key === 'food') setFeedingStage(value);
   };
   window.chgStageIndex = function (cat) { return CFG[cat].stage(ageNow()); };
   window.chgStageLabel = function (cat) { const c = DATA[cat].CH[CFG[cat].stage(ageNow())]; return c ? c.rail : ''; };

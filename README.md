@@ -49,6 +49,22 @@ Home looks the same as before. `js/home-rules.js` applies the Home recommendatio
 
 Call `homeRulesDebug()` in the browser console to see what was shown, what was held back and why.
 
+## When stages move
+
+- **Age moves a stage when there's nothing to report.** That covers Development, Play, Health checkups, and the early Sleep and Feeding stages.
+- **A parent's answer moves the stages you can see.** That covers rolling, crawling, pulling up, two naps, solids and finger foods.
+- **Check-in timing:**
+  - Questions start when the usual window opens.
+  - "Not yet" or "Trying" comes back after a week.
+  - An unanswered question shows for two weeks, then rests until next month.
+  - A parent who ignores two questions gets one question a month.
+- **Once the usual window has passed:**
+  - Sleep moves to two naps by itself, with a three-week notice and a one-tap undo.
+  - Safety moves the checklist forward without claiming the skill.
+  - Feeding keeps asking.
+- **Parents can always override.** Any stage they're viewing has "This is where she is now" (Sleep, Feeding, Safety).
+- **Which age is used:** adjusted age for everything developmental (until age 2), birthday age for Health. Pages say which one they use.
+
 ## QA
 
 `tools/qa` plays seven example families week by week from onboarding to 12 months, answering check-ins the way each family would. It checks three things: nothing is broken or empty, everything follows the right order and stays useful, and the right personalization appears and disappears. The latest report is in `docs/qa-report.html`.
@@ -69,6 +85,7 @@ To rerun it after any change:
 | `js/changes-data.js` | All Sleep and Feeding copy and data. Edit content here. |
 | `js/changes.js` | Renders the stage pages and detail screens |
 | `js/home-rules.js` | Home rules: which rows show and their reason labels |
+| `js/stages.js` | When stages move: weekly re-ask, no-nag rules, Safety moving forward on age, adjusted age labels |
 | `js/timeline.js`, `css/timeline.css` | Timeline entries in their category colors; removes the Year Ahead tab (each category's stage rail covers the year) |
 | `js/boot.js` | Starts the app after every module has loaded |
 | `tools/screenshot.py` | Playwright helper for screenshotting app states |

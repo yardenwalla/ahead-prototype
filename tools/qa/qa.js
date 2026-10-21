@@ -46,6 +46,7 @@ window.__qa = (function () {
     const m = $m();
     const heads = all('.sleep-phase-ahead', m).map(s => ({ label: txt(s.querySelector('h3')), title: txt(s.querySelector('h4')) }));
     return {
+      header: txt(m.querySelector('.monthly-page-header p')),
       current: txt(m.querySelector('.chg-rail [data-relevant="true"] > span:not(.journey-stage-node)')),
       selected: txt(m.querySelector('.chg-rail [aria-current="step"] > span:not(.journey-stage-node)')),
       eyebrow: txt(m.querySelector('.experience-hero .eyebrow')), title: txt(m.querySelector('.experience-hero h2')),

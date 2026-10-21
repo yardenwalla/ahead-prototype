@@ -22,19 +22,23 @@ BIRTH = dt.datetime(2026, 1, 5, 10, 0)
 # The script only tells the app when the app asks, the way a real parent would.
 PERSONAS = [
     dict(id='maya', name='Maya', who='Typical: nursing, rolls at 5 months, solids at 6', feed='Breast milk',
-         roll_try=18, roll=21, swaddle_delay=1, solids=26, meals=34, crawl=36, pull=42),
+         roll_try=18, roll=21, swaddle_delay=1, solids=26, meals=34, crawl=36, pull=42, naps=30),
     dict(id='leo', name='Leo', who='Born 5 weeks early, formula', feed='Formula', early_days=35,
-         roll_try=22, roll=26, swaddle_delay=0, solids=30, meals=38, crawl=42, pull=48),
+         roll_try=22, roll=26, swaddle_delay=0, solids=30, meals=38, crawl=42, pull=48, naps=38),
     dict(id='ava', links=False, name='Ava', who='Formula, early roller (3 months)', feed='Formula',
-         roll_try=13, roll=15, swaddle_delay=2, solids=25, meals=33, crawl=33, pull=39),
+         roll_try=13, roll=15, swaddle_delay=2, solids=25, meals=33, crawl=33, pull=39, naps=28),
     dict(id='noah', links=False, name='Noah', who='Breast milk and formula, starts solids late (7 months)', feed='Both',
-         roll_try=17, roll=20, swaddle_delay=1, solids=31, meals=40, crawl=38, pull=46),
+         roll_try=17, roll=20, swaddle_delay=1, solids=31, meals=40, crawl=38, pull=46, naps=32),
     dict(id='zoe', links=False, name='Zoe', who='Fast mover: crawls at 6½ months, pulls up at 7½', feed='Breast milk',
-         roll_try=12, roll=14, swaddle_delay=0, solids=26, meals=30, crawl=28, pull=32),
+         roll_try=12, roll=14, swaddle_delay=0, solids=26, meals=30, crawl=28, pull=32, naps=27),
     dict(id='mia', links=False, name='Mia', who='Never answers a check-in', feed='Breast milk', silent=True,
-         roll_try=18, roll=21, solids=26, meals=34, crawl=36, pull=42),
+         roll_try=18, roll=21, solids=26, meals=34, crawl=36, pull=42, naps=30),
+    dict(id='ivy', links=False, name='Ivy', who='Late napper: keeps 3 naps until 10½ months', feed='Breast milk',
+         roll_try=17, roll=20, swaddle_delay=1, solids=26, meals=34, crawl=37, pull=44, naps=46),
+    dict(id='rosa', links=False, name='Rosa', who='Born 8 weeks early, formula', feed='Formula', early_days=56,
+         roll_try=24, roll=28, swaddle_delay=0, solids=34, meals=42, crawl=46, pull=52, naps=44),
     dict(id='sam', name='Sam', who='Joins at 8 months with nothing filled in', feed='Breast milk', join=35,
-         roll_try=16, roll=19, swaddle_delay=0, solids=27, meals=35, crawl=37, pull=45),
+         roll_try=16, roll=19, swaddle_delay=0, solids=27, meals=35, crawl=37, pull=45, naps=33),
 ]
 
 
@@ -60,6 +64,8 @@ def answer_for(question, p, w):
         return 'Yes' if mv in ('crawling', 'pulling') else 'Not yet'
     if 'pulling up' in q:
         return 'Yes' if mv == 'pulling' else 'Not yet'
+    if 'catnap' in q:
+        return 'Yes' if w >= p['naps'] else 'Not yet'
     if 'what milk' in q:
         return p['feed']
     return None
@@ -151,8 +157,28 @@ async def run_persona(browser, p):
                 await mloc.click()
                 rec['answered'].append(dict(where='Home', q='Crib mattress lowered', a='Mark done'))
 
-        # 3. Category pages, plus the Feeding check-in if it's showing
+        # 3. Category pages, plus any check-in or auto-move notice showing on them
         rec['sleep'] = await pg.evaluate("__qa.cat('Sleep')")
+        if not p.get('silent'):
+            sl = rec['sleep']
+            if sl['checkin']:
+                a = answer_for(sl['checkin'], p, w)
+                if a and await click_text(pg, '.chg-checkin', a):
+                    rec['answered'].append(dict(where='Sleep', q=sl['checkin'], a=a))
+            if any('We moved' in x['title'] for x in sl['alerts']) and w < p['naps']:
+                await pg.evaluate("navigate('categories');openPage('topic:Sleep')")
+                loc = pg.locator('.sleep-phase-ahead button', has_text='Still on three naps').first
+                if await loc.count():
+                    await loc.click()
+                    rec['answered'].append(dict(where='Sleep', q='We moved her to two naps', a='Keep on three naps'))
+            sl2 = await pg.evaluate("__qa.cat('Sleep')")
+            if w >= p['naps'] + 1 and sl2['current'] != 'Two naps':
+                await pg.evaluate("navigate('categories');openPage('topic:Sleep');chgGo('chg:Sleep:s:3')")
+                loc = pg.locator('.chg-override').first
+                if await loc.count():
+                    await loc.click()
+                    rec['answered'].append(dict(where='Sleep', q='This is where she is now', a='Two naps'))
+            rec['sleep_after'] = await pg.evaluate("__qa.cat('Sleep')")
         rec['feed'] = await pg.evaluate("__qa.cat('Feeding')")
         if rec['feed']['checkin'] and not p.get('silent'):
             a = answer_for(rec['feed']['checkin'], p, w)
