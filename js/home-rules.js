@@ -47,6 +47,11 @@
   ];
 
   /* ---------- candidates ---------- */
+  const mo = n => `${n} ${n === 1 ? 'month' : 'months'}`;
+  const ageReason = () => `Common at ${mo(month)}`;
+  // A parent's answer is only the reason when the row is about that skill.
+  const relevant = (mv, title) => ({ trying: /roll/i, rolling: /roll/i, crawling: /crawl|mov/i, pulling: /pull|stand|cruis/i }[mv] || /$^/).test(title || '');
+
   function candidates() {
     const m = ageM(), mv = movement(), out = [];
     const base = conceptConnections();               // the app's own rows for this month
@@ -56,13 +61,16 @@
     // Must-know actions a parent's answer triggered
     if (priority && priority.type === 'swaddle')
       out.push({ topic: 'Sleep', kind: 'swaddle', tier: 'must', reported: true, reason: said(mv || 'trying'), priority });
+    if (live() && answers.pullUp === 'Yes' && answers.mattressLowest !== 'Yes')
+      out.push({ topic: 'Sleep', kind: 'mattress', tier: 'must', reported: true, reason: said('pulling') });
     if (priority && priority.type === 'check')
       out.push({ topic: 'Safety', kind: 'check', tier: 'must', reported: true, reason: mv ? said(mv) : 'Before she starts to move', priority });
 
     // Development: the skill to watch now
     const dev = byTopic('Development');
-    if (dev) out.push({ ...dev, tier: 'should', reported: !!mv,
-      reason: mv === 'trying' ? 'Rolling is starting' : mv ? said(mv) : `Common at ${monthLabel(month).toLowerCase()}`,
+    const devHit = !!mv && relevant(mv, dev && dev.title);
+    if (dev) out.push({ ...dev, tier: 'should', reported: devHit,
+      reason: devHit ? (mv === 'trying' ? 'Rolling is starting' : said(mv)) : ageReason(),
       body: mv === 'rolling' ? 'What to notice, and how floor play helps her practise.' : mv === 'trying' ? 'What to notice as she starts, and how floor play helps.' : dev.body });
 
     // Feeding: the stage from the new Feeding guide. Solids only after a parent says so.
@@ -70,27 +78,33 @@
     out.push({ topic: 'Feeding', title: FEED_ROW[fi][0], body: FEED_ROW[fi][1], action: "openPage('topic:Feeding')",
       tier: 'should', reported: fi >= 3 && !!food,
       prep: fi === 2,
-      reason: fi === 0 ? 'For the first weeks' : fi === 2 ? (m >= 6 && live() ? `Tell us when ${name()} starts solids` : 'Most babies start solids around 6 months') : fi >= 3 && food ? `You said ${name()} ${food === 'new' ? 'has started solids' : 'is eating meals'}` : `Common at ${monthLabel(month).toLowerCase()}`,
+      reason: fi === 0 ? 'For the first weeks' : fi === 2 ? (m >= 6 && live() ? `Tell us when ${name()} starts solids` : 'Most babies start solids around 6 months') : fi >= 3 && food ? `You said ${name()} ${food === 'new' ? 'has started solids' : 'is eating meals'}` : ageReason(),
       reference: fi === 1 });
 
     // Sleep: the current stage (a reference row, so it ranks below actions)
     const si = stageIndex('Sleep');
     out.push({ topic: 'Sleep', title: SLEEP_ROW[si][0], body: SLEEP_ROW[si][1], action: "openPage('topic:Sleep')",
-      tier: 'should', reference: true, reason: si === 0 ? 'For the first weeks' : `Common at ${monthLabel(month).toLowerCase()}` });
+      tier: 'should', reference: true, reason: si === 0 ? 'For the first weeks' : ageReason() });
 
     // Health: the next visit, ranked up when it's close
-    const age = healthJourneyFocus(), rec = healthRecord(age);
+    let age = healthJourneyFocus();
+    // The first-week visit has passed after about 10 days; look ahead to the 1-month visit.
+    if (age === 0 && live() && (NOW - parse(profile.dob)) / 864e5 > 10) age = 1;
+    const rec = healthRecord(age);
     const due = addMonths(parse(profile.dob), age), days = Math.round((rec?.status === 'planned' ? parse(rec.date) : due) - NOW) / 864e5;
     if (rec?.status !== 'attended' && age >= month)
       out.push({ topic: 'Health', title: healthJourneyLabel(age), action: `openPage('health-visit:${age}')`,
         body: rec?.status === 'planned' ? 'Your questions and notes are saved with this visit.' : 'Preview the checks and pick the questions you want to ask.',
         tier: 'should', dated: true, days, upcoming: days > 14, prep: true,
-        reason: rec?.status === 'planned' ? `Saved for ${journeyDateLabel(rec.date)}` : age === 0 ? 'In the first week' : age === month ? `Due at ${age} months` : `Due around ${age} months` });
+        reason: rec?.status === 'planned' ? `Saved for ${journeyDateLabel(rec.date)}` : age === 0 ? 'In the first week' : age === month ? `Due at ${mo(age)}` : `Due around ${mo(age)}` });
 
     // Safety: the guide for how she moves now (when no specific check is pending)
     const saf = byTopic('Safety');
     const rollGuide = mv === 'trying' || mv === 'rolling'
-      ? { title: 'Make room for rolling', body: 'Nearby objects, floor space and diaper changes.', action: `openSafetyChecklist('reach',false)`, art: 0 } : {};
+      ? { title: 'Make room for rolling', body: 'Nearby objects, floor space and diaper changes.', action: `openSafetyChecklist('reach',false)`, art: 0 }
+      // An older baby with no movement answers gets the next checklist, never an earlier one.
+      : !mv && m >= 7 && saf && /reaching and rolling/i.test(saf.title)
+        ? { title: 'Before crawling', body: 'Gates, storage, outlets and furniture anchors.', action: `openSafetyChecklist('mobile',false)`, art: 0 } : {};
     if (saf && !(priority && priority.type === 'check'))
       out.push({ ...saf, ...rollGuide, tier: 'should', reported: !!mv, prep: !mv, upcoming: !mv && m < 4, reason: mv ? said(mv) : m < 6 ? 'Most babies roll by 6 months' : 'Before she’s on the move' });
 
@@ -139,19 +153,34 @@
     const row = { topic: 'Sleep', title: 'Time to stop swaddling', body: 'Use regular sleepwear or an unweighted sleep sack with arms free.', action: "openPage('topic:Sleep')", art: 0, reason: c.reason };
     return `<div class="home-connected-sleep" style="${yearTheme('Sleep')}">${homeRow(row)}<div class="home-connected-actions">${homePriorityTools(c.priority)}</div></div>`;
   }
+  function mattressRow(c) {
+    const row = { topic: 'Sleep', title: 'Set the crib mattress to its lowest', body: 'Remove mobiles and anything she can reach from standing.', action: "openPage('chg:Sleep:safe')", art: 0, reason: c.reason };
+    return `<div class="home-connected-sleep" style="${yearTheme('Sleep')}">${conceptRow(row)}<div class="home-connected-actions"><div class="home-action-tools"><button class="home-inline-check" aria-label="Mark done: crib mattress lowered" onclick="setAnswer('mattressLowest','Yes')"><span aria-hidden="true"></span>Mark done</button></div></div></div>`;
+  }
   function checkRow(c) {
     const html = homePriorityRow(c.priority);
     return html.replace(/<small>Safety · [^<]*<\/small>/, `<small>Safety · ${esc(c.reason)}</small>`);
   }
 
+  // No nagging: an unanswered check-in shows for two weeks, then rests until next month.
+  const baseQuestion = homeQuestion;
+  window.homeQuestion = homeQuestion = function () {
+    const k = baseQuestion(); if (!k) return k;
+    const store = 'ahead-v2-checkin-shown:' + journeyKey();
+    let shown = {}; try { shown = JSON.parse(localStorage.getItem(store)) || {}; } catch (e) {}
+    const s = shown[k], now = NOW.getTime();
+    if (!s || s.month !== month) { shown[k] = { at: now, month }; try { localStorage.setItem(store, JSON.stringify(shown)); } catch (e) {} return k; }
+    return now - s.at > 14 * 864e5 ? null : k;
+  };
+
   window.adaptiveHome = homeAtlas = function () {
     const raw = connectedHomeBeforeBehavior(), start = raw.indexOf('<section class="connected-now"'), end = raw.indexOf('<section class="connected-browse"');
     const { main, next } = choose();
     const focus = homeCurrentFocus(), summary = month === 5 && !focus.confirmed ? focus.body.split(/(?<=[.!?])\s+/)[0] : focus.body;
-    const rows = main.filter(c => c.kind !== 'check').map(c => c.kind === 'swaddle' ? swaddleRow(c) : homeRow(c)).join('');
+    const rows = main.filter(c => c.kind !== 'check').map(c => c.kind === 'swaddle' ? swaddleRow(c) : c.kind === 'mattress' ? mattressRow(c) : conceptRow(c)).join('');
     const check = main.find(c => c.kind === 'check');
     const hero = `<section class="connected-now" aria-label="What matters now"><div class="connected-summary"><div class="home-summary connected-summary-intro"><div class="home-summary-heading"><div class="home-month-eyebrow">${month === 0 || focus.confirmed ? 'What matters now' : 'Likely around now'}</div><h1>${focus.title}</h1></div><span class="home-summary-art" aria-hidden="true">${homeMonthArt(month)}</span><p class="heroanswer">${summary}</p><div class="home-summary-spectrum" aria-hidden="true">${TOPICS.map(([topic]) => `<span style="background:${YEAR_PALETTES[topic].bg}"></span>`).join('')}</div></div>${rows ? `<div class="connected-summary-links">${rows}</div>` : ''}</div>${check ? checkRow(check) : ''}${homeMomentRow()}</section>`;
-    const preparation = next.length ? `<section class="connected-ahead" aria-label="Prepare for next"><div class="connected-section-heading"><h2>Prepare for next</h2><button class="textlink" onclick="openPage('ahead')">See all →</button></div><div class="connected-ahead-list">${next.map(row => homeRow(row)).join('')}</div></section>` : '';
+    const preparation = next.length ? `<section class="connected-ahead" aria-label="Prepare for next"><div class="connected-section-heading"><h2>Prepare for next</h2><button class="textlink" onclick="openPage('ahead')">See all →</button></div><div class="connected-ahead-list">${next.map(row => conceptRow(row)).join('')}</div></section>` : '';
     return raw.slice(0, start) + liveHomeCheckin() + hero + preparation + raw.slice(end);
   };
 })();

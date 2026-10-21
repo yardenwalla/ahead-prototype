@@ -1,0 +1,11 @@
+{
+ "Reason line doesn’t match the card it’s on": "Home only uses “You said she’s rolling / crawling / pulling up” when the card is about that skill. Otherwise the reason is her age (“Common at 7 months”).",
+ "Grammar: “1 months”": "Reason lines now say “1 month” and “2 months”.",
+ "First-week checkup still showing after the first weeks": "After about 10 days, Home moves on to the 1-month checkup.",
+ "Said she’s pulling up, but Home doesn’t show the crib mattress step": "Added a must-know Home card, “Set the crib mattress to its lowest”, with Mark done. It matches the alert on the Sleep page.",
+ "Never asked about eating meals, so it never personalized": "Feeding now asks “Is she eating soft finger foods yet?” once she’s been on solids a while. “Yes” moves her to Textures and finger foods. “Not yet” rests the question for two weeks.",
+ "Same check-in shown 6+ weeks in a row": "An unanswered check-in now shows for two weeks, then rests until the next month.",
+ "Took 7 weeks to find out about pulling up": "The “pulling up to stand” check-in now starts at 7 months for babies already crawling, not 9.",
+ "Home suggests an earlier stage’s checklist": "When a baby is 7 months or older and nobody has said she’s moving, Home suggests “Before crawling” instead of the rolling checklist.",
+ "Home unchanged for 7+ weeks in a row": "Fixed by the other changes. Feeding now moves on to Family meals, and Safety moves to the next check as parents tick each one off."
+}

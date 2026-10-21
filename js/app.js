@@ -2385,7 +2385,7 @@ function homeQuestion(){
  if(age>=3&&age<=6&&!moving&&!rolling&&!ui.skipped.movement&&(!hasMovementAnswer()||ui.asked.movement!==undefined&&ui.asked.movement<month))return 'movement';
  if(month>=6&&!hasFoodAnswer()&&!ui.skipped.food)return 'food';
  if(age>=7&&age<=10&&!moving&&!ui.skipped.crawl&&(!answers.crawl||ui.asked.crawl!==undefined&&ui.asked.crawl<month))return 'crawl';
- if(age>=9&&answers.crawl==='Yes'&&answers.pullUp!=='Yes'&&!ui.skipped.stand&&(!answers.pullUp||ui.asked.stand!==undefined&&ui.asked.stand<month))return 'stand';
+ if(age>=7&&answers.crawl==='Yes'&&answers.pullUp!=='Yes'&&!ui.skipped.stand&&(!answers.pullUp||ui.asked.stand!==undefined&&ui.asked.stand<month))return 'stand';
  return null;
 }
 function liveHomeCheckin(){

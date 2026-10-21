@@ -49,6 +49,15 @@ Home looks the same as before. `js/home-rules.js` applies the Home recommendatio
 
 Call `homeRulesDebug()` in the browser console to see what was shown, what was held back and why.
 
+## QA
+
+`tools/qa` plays seven example families week by week from onboarding to 12 months, answering check-ins the way each family would. It checks three things: nothing is broken or empty, everything follows the right order and stays useful, and the right personalization appears and disappears. The latest report is in `docs/qa-report.html`.
+
+To rerun it after any change:
+1. `python3 tools/qa/run_qa.py` plays the families (takes about 25 minutes).
+2. `python3 tools/qa/checks.py` turns the run into findings.
+3. `python3 tools/qa/report.py` builds the report.
+
 ## Files
 
 | Path | What it is |

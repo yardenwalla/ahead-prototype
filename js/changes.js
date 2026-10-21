@@ -130,6 +130,9 @@
     if (cat === 'Feeding' && !isEv && view === cur && cur === 2 && m >= 6)
       h += `<section class="connected-checkin chg-checkin"><div><h2>Has ${name()} started solids?</h2></div><p>Your answer moves this guide to the right stage.</p><div class="connected-checkin-choices"><button onclick="setFeedingStage('preparing')">Not yet</button><button onclick="setFeedingStage('new')">First foods</button><button onclick="setFeedingStage('established')">Eating meals</button></div></section>`;
 
+    if (cat === 'Feeding' && !isEv && view === cur && (cur === 3 && m >= 7 || cur === 4 && foodStage() === 'new') && !(local.notYet && local.notYet.fingerFoods && local.notYet.fingerFoods > Date.now() - 14 * 864e5))
+      h += `<section class="connected-checkin chg-checkin"><div><h2>Is ${name()} eating soft finger foods yet?</h2></div><p>Your answer moves this guide to textures and finger foods.</p><div class="connected-checkin-choices"><button onclick="chgNotYet('fingerFoods')">Not yet</button><button onclick="setFeedingStage('established')">Yes</button></div></section>`;
+
     if (A) h += headsUp(T(A.reason), T(A.title), T(A.body), A.done
       ? `<div class="home-action-tools"><button class="home-inline-check" onclick="${A.go}"><span aria-hidden="true"></span>${esc(A.act)}</button></div>`
       : `<button class="textlink chg-headsup-link" onclick="${A.go}">${esc(A.act)} →</button>`);
@@ -241,6 +244,7 @@
   // Rail taps switch views in place, like tabs; the back button still leaves the category.
   window.chgGo = function (p) { const [, cat, , a] = p.split(':'); page = Number(a) === CFG[cat].stage(ageNow()) ? 'topic:' + cat : p; render(); window.scrollTo(0, 0); };
   window.chgToggleSafe = function (cat, i) { local.safe[cat][i] = !local.safe[cat][i]; save(); const y = scrollY; render(); scrollTo(0, y); };
+  window.chgNotYet = function (k) { local.notYet = Object.assign({}, local.notYet, { [k]: Date.now() }); save(); const y = scrollY; render(); scrollTo(0, y); };
   window.chgOpen = function (key, open) { if (open) local.open = key; else if (local.open === key) local.open = null; };
   window.chgAnswer = function (key, i) { local.ans[key] = i; local.open = key; save(); const y = scrollY; render(); scrollTo(0, y); };
   window.chgCycleMethod = function () { local.method = { nurse: 'bottle', bottle: 'both', both: 'nurse' }[method()]; save(); const y = scrollY; render(); scrollTo(0, y); };

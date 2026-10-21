@@ -1,0 +1,205 @@
+"""Turn results.json into findings, in three groups:
+
+  works        nothing broken or empty: errors, empty sections, dead links, back buttons
+  order        chronology and value: right stage for the age, never backwards, windows,
+               Home caps, reason labels that match the age, nothing stale
+  personal     the right personalization at the right time: reported changes show up
+               (and go away) on Home and the category pages; check-ins catch real changes
+"""
+import json, os, re
+from collections import defaultdict
+
+OUT = os.path.join(os.path.dirname(__file__), 'out')
+SLEEP = ['Newborn sleep', 'Days and nights', 'Naps find a rhythm', 'Two naps']
+FEED = ['Newborn feeding', 'Feeds find a rhythm', 'Getting ready for solids', 'Starting solids', 'Textures and finger foods', 'Family meals']
+WINDOWS = {  # come-and-go phases: months they may appear in
+    'The 4-month sleep regression': (3, 5), 'Separation anxiety': (8, 11),
+    'Cluster feeding and growth spurts': (0, 2), 'Distracted feeding': (3, 6), 'Teething and feeding': (7, 12)}
+
+
+def exp_sleep(m):
+    return SLEEP[0 if m < 2 else 1 if m < 4 else 2 if m < 6 else 3]
+
+
+def exp_feed(m, food):
+    if m < 2: return FEED[0]
+    if m < 4: return FEED[1]
+    if food in (None, 'preparing'): return FEED[2]
+    if food == 'new': return FEED[4] if m >= 8 else FEED[3]
+    return FEED[5] if m >= 10 else FEED[4]
+
+
+class Findings:
+    def __init__(self):
+        self.items = defaultdict(lambda: dict(weeks=set(), personas=set(), examples=[]))
+
+    def add(self, group, sev, title, persona, week, example=''):
+        k = (group, sev, title)
+        it = self.items[k]
+        it['weeks'].add(week); it['personas'].add(persona)
+        if example and len(it['examples']) < 4 and example not in it['examples']:
+            it['examples'].append(example)
+
+    def rows(self):
+        out = []
+        for (g, s, t), v in self.items.items():
+            out.append(dict(group=g, severity=s, title=t, personas=sorted(v['personas']), weeks=sorted(v['weeks']), examples=v['examples']))
+        order = {'bug': 0, 'warning': 1}
+        return sorted(out, key=lambda r: (r['group'], order[r['severity']], -len(r['weeks'])))
+
+
+def all_home_items(h):
+    return [('row', x) for x in h['rows']] + [('action', x) for x in h['actions']] + [('next', x) for x in h['next']]
+
+
+def check(results):
+    F = Findings()
+    stats = dict(weeks=0, pages=0, links=0, personas=len(results))
+    for r in results:
+        p = r['persona']; pid = p['id']
+        reported = dict(mv='none', food=None, swaddle_done=False, mattress_done=False)
+        learned = {}
+        prev_sleep = prev_feed = -1
+        sig_run, last_sig, ci_run, last_ci = 0, None, 0, None
+        for w in r['weeks']:
+            stats['weeks'] += 1; stats['pages'] += 3; stats['links'] += len(w['clicks'])
+            wk, m = w['week'], w['month']
+            def apply(answers):
+              for a in answers:
+                  q, ans = a['q'].lower(), a['a']
+                  if 'mattress' in q: reported['mattress_done'] = True; continue
+                  if 'safety check' in q: continue
+                  if 'finger foods' in q:
+                      if ans == 'Yes': reported['food'] = 'established'
+                      continue
+                  if 'roll' in q and 'swaddl' not in q:
+                      reported['mv'] = {'Trying': 'trying', 'Rolling': 'rolling'}.get(ans, reported['mv'])
+                  elif 'crawl' in q and ans == 'Yes': reported['mv'] = 'crawling'
+                  elif 'pulling up' in q and ans == 'Yes': reported['mv'] = 'pulling'
+                  elif 'solids' in q:
+                      reported['food'] = {'Not started': 'preparing', 'Not yet': 'preparing', 'First foods': 'new', 'Building meals': 'established', 'Eating meals': 'established'}[ans]
+                  elif 'swaddl' in q: reported['swaddle_done'] = True
+            apply([a for a in w['answered'] if a['where'] == 'Home'])
+            def learn():
+              for k, v in (('roll_try', reported['mv'] in ('trying', 'rolling', 'crawling', 'pulling')), ('roll', reported['mv'] in ('rolling', 'crawling', 'pulling')),
+                           ('crawl', reported['mv'] in ('crawling', 'pulling')), ('pull', reported['mv'] == 'pulling'),
+                           ('solids', reported['food'] in ('new', 'established')), ('meals', reported['food'] == 'established')):
+                  if v and k not in learned: learned[k] = wk
+            learn()
+
+            h = w.get('home_after', w['home']); s = w['sleep']; f = w['feed']
+            where = f'{pid} · week {wk} ({m} mo)'
+
+            # ---------- works ----------
+            for e in w['errors']: F.add('works', 'bug', f'Script error: {e[:90]}', pid, wk, where)
+            for name, pg in (('Home', w['home']), ('Sleep', s), ('Feeding', w['feed'])):
+                for pr in pg['problems']: F.add('works', 'bug', f'{name}: {pr}', pid, wk, where)
+            for c in w['clicks']:
+                tgt = c['to']
+                for e in c['errors']: F.add('works', 'bug', f'Tapping a link throws an error ({c["from"]})', pid, wk, f'{where}: {c["onclick"][:60]} → {e[:80]}')
+                for pr in c['problems']: F.add('works', 'bug', f'Opens to a broken page: {pr}', pid, wk, f'{where}: from {c["from"]} → {tgt}')
+                if not c['backOk']: F.add('works', 'bug', 'Back button leads to an empty page', pid, wk, f'{where}: {c["onclick"][:60]}')
+
+            # ---------- order ----------
+            es, ef = exp_sleep(m), exp_feed(m, reported['food'])
+            if s['current'] != es: F.add('order', 'bug', 'Sleep shows the wrong stage for the age', pid, wk, f'{where}: shows “{s["current"]}”, expected “{es}”')
+            if f['current'] != ef: F.add('order', 'bug', 'Feeding shows the wrong stage for the age and answers', pid, wk, f'{where}: shows “{f["current"]}”, expected “{ef}”')
+            si = SLEEP.index(s['current']) if s['current'] in SLEEP else -1
+            fi = FEED.index(f['current']) if f['current'] in FEED else -1
+            if si < prev_sleep: F.add('order', 'bug', 'Sleep stage went backwards', pid, wk, where)
+            if fi < prev_feed: F.add('order', 'bug', 'Feeding stage went backwards', pid, wk, where)
+            prev_sleep, prev_feed = max(prev_sleep, si), max(prev_feed, fi)
+            for name, pg, lst in (('Sleep', s, SLEEP), ('Feeding', f, FEED)):
+                if not pg['eyebrow'].startswith('Around now'): F.add('order', 'bug', f'{name} hero doesn’t say “Around now” for the current stage', pid, wk, f'{where}: “{pg["eyebrow"]}”')
+                last = pg['current'] == lst[-1]
+                if not last and not pg['comingUp']: F.add('order', 'bug', f'{name}: no “Coming up” card before the last stage', pid, wk, where)
+                if last and not pg['after']: F.add('order', 'warning', f'{name}: last stage has no “after the first birthday” note', pid, wk, where)
+                for ev in pg['events']:
+                    lo, hi = WINDOWS.get(ev, (0, 12))
+                    if not lo <= m <= hi: F.add('order', 'bug', f'{name}: “{ev}” shows outside its usual window', pid, wk, f'{where}')
+                when = re.search(r'(\d+)\s*months?$', pg['eyebrow'].replace('–', '-')) or re.search(r'-(\d+)\s*months', pg['eyebrow'].replace('–', '-'))
+                if when and int(when.group(1)) + 2 < m: F.add('order', 'warning', f'{name}: still on a stage whose usual window ended 3+ months ago', pid, wk, f'{where}: “{pg["eyebrow"]}”')
+                if not pg['questions'] and pg['current'] not in ('Feeds find a rhythm',): F.add('order', 'warning', f'{name}: no common questions on the current stage', pid, wk, f'{where}: {pg["current"]}')
+
+            cards = h['rows'] + h['actions']
+            if not cards: F.add('order', 'bug', 'Home has no cards this week', pid, wk, where)
+            if len(cards) > 3: F.add('order', 'bug', 'Home shows more than 3 cards', pid, wk, f'{where}: {len(cards)}')
+            cats = [x['label'].split(' · ')[0] for x in cards]
+            if len(cats) != len(set(cats)): F.add('order', 'bug', 'Home shows two cards from the same category', pid, wk, f'{where}: {cats}')
+            titles = [x['title'] for _, x in all_home_items(h)]
+            if len(titles) != len(set(titles)): F.add('order', 'bug', 'Home shows the same card twice', pid, wk, f'{where}: {titles}')
+            for kind, x in all_home_items(h):
+                if ' · ' not in x['label']: F.add('order', 'warning', 'Home card without a reason line', pid, wk, f'{where}: {x["label"]} · {x["title"]}')
+                n = re.search(r'Common at (\d+) months?', x['label'])
+                if n and int(n.group(1)) != m: F.add('order', 'bug', 'Reason line names the wrong age', pid, wk, f'{where}: {x["label"]}')
+                n = re.search(r'Due at (\d+) months?', x['label'])
+                if n and int(n.group(1)) != m: F.add('order', 'bug', 'Checkup says “Due at” the wrong month', pid, wk, f'{where}: {x["label"]}')
+                n = re.match(r'(\d+)-month checkup', x['title'])
+                if n and int(n.group(1)) < m: F.add('order', 'bug', 'Home shows a checkup for an age already passed', pid, wk, f'{where}: {x["title"]}')
+                if re.search(r'\b1 months\b', x['label'] + ' ' + x['title']): F.add('order', 'bug', 'Grammar: “1 months”', pid, wk, f'{where}: {x["label"]}')
+                said = re.search(r'You said \w+ (is trying to roll|is rolling|is crawling|is pulling up)', x['label'])
+                topic = x['label'].split(' · ')[0]
+                if said and topic == 'Development' and not re.search({'is trying to roll': 'roll', 'is rolling': 'roll', 'is crawling': 'crawl|mov', 'is pulling up': 'pull|stand|cruis'}[said.group(1)], x['title'], re.I):
+                    F.add('order', 'bug', 'Reason line doesn’t match the card it’s on', pid, wk, f'{where}: {x["label"]} — {x["title"]}')
+                if re.search(r'reaching and rolling', x['title'], re.I) and m >= 7: F.add('order', 'bug', 'Home suggests an earlier stage’s checklist', pid, wk, f'{where}: {x["title"]}')
+                if x['title'] == 'First-week checkup' and wk >= 2: F.add('order', 'bug', 'First-week checkup still showing after the first weeks', pid, wk, where)
+                if 'Rolling is starting' in x['label'] and reported['mv'] != 'trying': F.add('order', 'bug', '“Rolling is starting” shows when the parent hasn’t said so', pid, wk, f'{where}')
+            sig = json.dumps([titles, (h['checkin'] or {}).get('q')])
+            sig_run = sig_run + 1 if sig == last_sig else 1; last_sig = sig
+            if sig_run == 7: F.add('order', 'warning', 'Home unchanged for 7+ weeks in a row', pid, wk, f'{where}: {titles}')
+
+            # ---------- personal ----------
+            mv = reported['mv']
+            swaddle_due = mv in ('trying', 'rolling') and not reported['swaddle_done']
+            home_sw, sleep_sw = w['home']['swaddle'], any('swaddl' in a['title'].lower() for a in s['alerts'])
+            if swaddle_due and w.get('home_after'): home_sw = w['home_after']['swaddle']
+            if swaddle_due and not home_sw: F.add('personal', 'bug', 'Said she’s rolling, but Home doesn’t show “stop swaddling”', pid, wk, where)
+            if swaddle_due and not sleep_sw: F.add('personal', 'bug', 'Said she’s rolling, but Sleep doesn’t show “stop swaddling”', pid, wk, where)
+            if reported['swaddle_done'] and (sleep_sw or w['home']['swaddle']) and not any('swaddl' in a['q'].lower() for a in w['answered']):
+                F.add('personal', 'bug', '“Stop swaddling” comes back after it was marked done', pid, wk, where)
+            if not swaddle_due and not reported['swaddle_done'] and (sleep_sw or home_sw):
+                F.add('personal', 'bug', '“Stop swaddling” shows without a rolling answer', pid, wk, where)
+            text_home = ' '.join(x['label'] + ' ' + x['title'] for _, x in all_home_items(h)).lower()
+            if mv in ('crawling', 'pulling') and not re.search(r'crawl|stair|gate|move|pull', text_home):
+                F.add('personal', 'bug', 'Said she’s crawling, but nothing on Home reflects it', pid, wk, where)
+            if mv == 'pulling' and not reported['mattress_done']:
+                if not any('mattress' in a['title'].lower() for a in s['alerts']): F.add('personal', 'bug', 'Said she’s pulling up, but Sleep doesn’t show the mattress alert', pid, wk, where)
+                if 'mattress' not in text_home: F.add('personal', 'bug', 'Said she’s pulling up, but Home doesn’t show the crib mattress step', pid, wk, where)
+            vit = any('vitamin d' in a['title'].lower() for a in f['alerts'])
+            if f['current'] == FEED[0]:
+                if p['feed'] != 'Formula' and not vit: F.add('personal', 'bug', 'Nursing newborn, but no vitamin D reminder', pid, wk, where)
+                if p['feed'] == 'Formula' and vit: F.add('personal', 'bug', 'Formula-fed baby gets the vitamin D reminder', pid, wk, where)
+            if f['current'] == FEED[4] and not any('choking' in a['title'].lower() for a in f['alerts']):
+                F.add('personal', 'warning', 'Eating finger foods, but no choking-hazards alert', pid, wk, where)
+            if reported['food'] in (None, 'preparing') and re.search(r'starting solids|first foods|textures|allergen|finger', text_home):
+                F.add('personal', 'bug', 'Home shows solids content before the parent said solids started', pid, wk, f'{where}: {text_home[:120]}')
+            for x in h['rows']:
+                if x['label'].startswith('Feeding') and reported['food'] in ('new', 'established') and 'You said' not in x['label']:
+                    F.add('personal', 'warning', 'Feeding row doesn’t mention what the parent told us', pid, wk, f'{where}: {x["label"]}')
+            apply([a for a in w['answered'] if a['where'] != 'Home']); learn()
+            ci = (w['home']['checkin'] or {}).get('q')
+            ci_run = ci_run + 1 if ci and ci == last_ci else (1 if ci else 0); last_ci = ci
+            if ci_run == 6: F.add('personal', 'warning', 'Same check-in shown 6+ weeks in a row', pid, wk, f'{where}: “{ci}”')
+
+        # How quickly did the app learn about real changes?
+        if not p.get('silent'):
+            for k, label in (('roll_try', 'trying to roll'), ('roll', 'rolling'), ('crawl', 'crawling'), ('pull', 'pulling up'), ('solids', 'starting solids'), ('meals', 'eating meals')):
+                tw = max(p[k], p.get('join', 0))
+                if tw > 52: continue
+                lw = learned.get(k)
+                if k == 'roll_try' and p.get('join', 0) > p['roll']: continue
+                if k == 'roll' and p.get('join', 0) > p['roll']: continue
+                if lw is None: F.add('personal', 'bug', f'Never asked about {label}, so it never personalized', pid, tw, f'{pid}: {label} at week {tw}')
+                elif lw - tw > 3: F.add('personal', 'warning', f'Took {lw - tw} weeks to find out about {label}', pid, tw, f'{pid}: happened week {tw}, learned week {lw}')
+    return F.rows(), stats
+
+
+if __name__ == '__main__':
+    import sys
+    src, dst = (sys.argv[1:3] + ['results.json', 'findings.json'][len(sys.argv[1:3]):])
+    res = json.load(open(os.path.join(OUT, src)))
+    rows, stats = check(res)
+    json.dump(dict(findings=rows, stats=stats), open(os.path.join(OUT, dst), 'w'), ensure_ascii=False, indent=1)
+    print(stats)
+    for r in rows:
+        print(f"[{r['group']:8s}] {r['severity']:7s} {r['title']}  — {','.join(r['personas'])} · {len(r['weeks'])} wks · e.g. {r['examples'][:1]}")
