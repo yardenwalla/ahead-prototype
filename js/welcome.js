@@ -1,24 +1,20 @@
 /* Ahead · Welcome and setup
    Same layout as the original welcome, new copy, and the app's colors and type. */
 (function () {
-  // The original welcome layout (mark, eyebrow, headline, promise, three points, button),
-  // with the app's colors: each point uses its category's color and illustration.
+  // The original welcome layout and icons, with the app's type.
   const POINTS = [
-    ['Development', 'One change, everything it touches', 'When your baby starts rolling, see what it means for sleep, safety and play.'],
-    ['Sleep', 'Only what matters now', 'A few things for this month, not a book to read.'],
-    ['Health', 'From trusted sources', 'Based on AAP and CDC guidance, with links so you can check.']
+    ['spark', 'Everything in one place', 'Sleep, feeding, development, play, safety and checkups. One guide for the first year.'],
+    ['dev', 'Know how to support your baby', 'Clear, digestible guidance on what they need and what you can do—without hours of research.'],
+    ['explore', 'For your baby, as they grow', 'What’s relevant now and what to prepare for next, based on their age and what you’ve shared.']
   ];
-  const SPECTRUM = ['#e5e0fc', '#f7d9e5', '#d9e5fc', '#ddf1e5', '#f7e6c4', '#cceee7'];
 
   function welcomeHtml() {
     return `<section class="welcome aw">
-      <div class="aw-mark" aria-hidden="true">${SPECTRUM.map(c => `<span style="background:${c}"></span>`).join('')}</div>
       <div class="eyebrow">Your baby’s first year</div>
-      <h1>Know what’s coming,<br>before it happens.</h1>
-      <p class="aw-lead">Ahead follows your baby’s age and shows what’s next a few weeks early, along with everything it changes.</p>
-      <div class="aw-points">${POINTS.map(([t, h, d]) => `<div class="promise aw-point" style="${yearTheme(t)}"><span class="connected-row-icon" aria-hidden="true">${yearIllustration(t, 1)}</span><div><h3>${h}</h3><p>${d}</p></div></div>`).join('')}</div>
-      <button class="primary aw-start" onclick="startSetup()">Set up your baby’s timeline →</button>
-      <small>About a minute. Your answers stay on this device.</small>
+      <h1>Less searching.<br>More confidence in what’s next.</h1>
+      <p class="aw-lead">Know what matters now and feel ready for what’s next, with guidance tailored to your baby.</p>
+      <div class="aw-points">${POINTS.map(([i, h, d]) => `<div class="promise aw-point">${icon(i)}<div><h3>${h}</h3><p>${d}</p></div></div>`).join('')}</div>
+      <button class="primary aw-start" onclick="startSetup()">Set up your baby’s guide →</button>
     </section>`;
   }
 

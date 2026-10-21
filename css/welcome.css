@@ -1,16 +1,14 @@
 /* Welcome and setup: the original layout, in the app's own type and colors */
 #main .aw { padding-top: 22px }
-#main .aw-mark { display: flex; width: 66px; height: 10px; border-radius: 999px; overflow: hidden; margin-bottom: 22px }
-#main .aw-mark span { flex: 1 }
-#main.is-onboarding .eyebrow { font-size: 10px; letter-spacing: .07em; font-weight: 600; color: var(--muted) }
+#main.is-onboarding .eyebrow { font-size: 10px; letter-spacing: .1em; font-weight: 600; color: var(--muted) }
 #main.is-onboarding h1 { font: 800 30px/1.14 var(--display-font); letter-spacing: -.4px; color: var(--ink); margin-top: 12px }
-#main .aw-lead { margin-top: 14px; font-size: 15px; line-height: 1.6; color: var(--muted) }
-#main .aw-points { margin-top: 22px }
-#main .aw-point { display: grid; grid-template-columns: 38px minmax(0, 1fr); gap: 13px; align-items: start; padding: 16px 0; border-bottom: 1px solid var(--line) }
-#main .aw-point h3 { font: 700 15px/1.35 var(--display-font); color: var(--year-ink) }
-#main .aw-point p { font-size: 13px; line-height: 1.5; margin-top: 3px; color: var(--muted) }
-#main .aw-start { width: 100%; margin-top: 26px }
-#main .aw small { display: block; font-size: 12px; color: var(--muted); text-align: center; margin-top: 12px }
+#main .aw-lead { margin-top: 16px; font-size: 15px; line-height: 1.6; color: var(--muted) }
+#main .aw-points { margin-top: 20px }
+#main .aw-point { display: flex; gap: 14px; padding: 18px 0; border-bottom: 1px solid var(--line) }
+#main .aw-point svg { flex: none; width: 20px; height: 20px; color: var(--muted); margin-top: 2px }
+#main .aw-point h3 { font: 600 15px/1.4 var(--ui-font); color: var(--ink) }
+#main .aw-point p { font-size: 13px; line-height: 1.55; margin-top: 4px; color: var(--muted) }
+#main .aw-start { width: 100%; margin-top: 24px }
 
 /* Setup: same layout, inputs that look like the app's cards */
 #main.is-onboarding .progress span { height: 5px; width: 34px; border-radius: 999px; background: var(--line) }
