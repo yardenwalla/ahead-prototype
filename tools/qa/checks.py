@@ -37,7 +37,8 @@ def exp_safety(m, mv):
 def exp_feed(m, food):
     if m < 2: return FEED[0]
     if m < 4: return FEED[1]
-    if food in (None, 'preparing'): return FEED[2]
+    if food is None: return FEED[3] if m >= 6 else FEED[2]   # unknown: Starting solids, and the check-in asks
+    if food == 'preparing': return FEED[2]
     if food == 'new': return FEED[5] if m >= 10 else FEED[4] if m >= 8 else FEED[3]
     return FEED[5] if m >= 10 else FEED[4]
 
@@ -151,7 +152,7 @@ def check(results):
             if fi < prev_feed: F.add('order', 'bug', 'Feeding stage went backwards', pid, wk, where)
             prev_sleep, prev_feed = (si if reported['naps'] == 'Stay' else max(prev_sleep, si)), max(prev_feed, fi)
             for name, pg, lst in (('Sleep', s, SLEEP), ('Feeding', f, FEED)):
-                if not pg['eyebrow'].startswith('Around now'): F.add('order', 'bug', f'{name} hero doesn’t say “Around now” for the current stage', pid, wk, f'{where}: “{pg["eyebrow"]}”')
+                if not (pg['eyebrow'].startswith('Around now') or pg['eyebrow'] == 'Current guide'): F.add('order', 'bug', f'{name} hero doesn’t say “Around now” for the current stage', pid, wk, f'{where}: “{pg["eyebrow"]}”')
                 last = pg['current'] == lst[-1]
                 if not last and not pg['comingUp']: F.add('order', 'bug', f'{name}: no “Coming up” card before the last stage', pid, wk, where)
                 if last and not pg['after']: F.add('order', 'warning', f'{name}: last stage has no “after the first birthday” note', pid, wk, where)
@@ -222,7 +223,7 @@ def check(results):
                 if p['feed'] == 'Formula' and vit: F.add('personal', 'bug', 'Formula-fed baby gets the vitamin D reminder', pid, wk, where)
             if f['current'] == FEED[4] and not any('choking' in a['title'].lower() for a in f['alerts']):
                 F.add('personal', 'warning', 'Eating finger foods, but no choking-hazards alert', pid, wk, where)
-            if reported['food'] in (None, 'preparing') and re.search(r'starting solids|first foods|textures|allergen|finger', text_home):
+            if (reported['food'] == 'preparing' or (reported['food'] is None and dmo < 6)) and re.search(r'starting solids|first foods|textures|allergen|finger', text_home):
                 F.add('personal', 'bug', 'Home shows solids content before the parent said solids started', pid, wk, f'{where}: {text_home[:120]}')
             for x in h['rows']:
                 if x['label'].startswith('Feeding') and reported['food'] in ('new', 'established') and 'You said' not in x['label'] and not any(a['q'].startswith('Already there: starting') for a in w['answered']):
@@ -236,7 +237,7 @@ def check(results):
             solids_q = any('solids' in q for q in asked_here)
             if solids_q and last_no is not None and wk - last_no < 4 and not any('solids' in a['q'] and a['a'] == 'Not yet' and wk == last_no for a in w['answered']):
                 F.add('personal', 'bug', 'Solids question came back within a month of “Not yet”', pid, wk, f'{where}: answered week {last_no}')
-            if not p.get('silent') and last_no is not None and not solids_q and wk - last_no > 6 and f['current'] == FEED[2]:
+            if not p.get('silent') and last_no is not None and not solids_q and wk - last_no > 6 and f['current'] in (FEED[2], FEED[3]) and reported['food'] in (None, 'preparing'):
                 F.add('personal', 'warning', 'Solids question didn’t come back within 6 weeks', pid, last_no, f'{pid}: “Not yet” in week {last_no}'); last_no = wk
             for a in w['answered']:
                 if 'solids' in a['q'] and a['a'] == 'Not yet': last_no = wk

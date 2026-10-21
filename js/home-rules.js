@@ -62,7 +62,7 @@
 
     // Must-know actions a parent's answer triggered
     if (priority && priority.type === 'swaddle')
-      out.push({ topic: 'Sleep', kind: 'swaddle', tier: 'must', reported: !!mv, reason: mv ? said(mv) : 'Before she tries to roll', priority });
+      out.push({ topic: 'Sleep', kind: 'swaddle', tier: 'must', reported: !!mv, reason: mv ? 'Stop swaddling now' : 'Before the first attempt to roll', priority });
     if (live() && (answers.pullUp === 'Yes' || m >= 8) && answers.mattressLowest !== 'Yes')
       out.push({ topic: 'Sleep', kind: 'mattress', tier: 'must', reported: answers.pullUp === 'Yes', reason: answers.pullUp === 'Yes' ? said('pulling') : 'Before she pulls up' });
     if (priority && priority.type === 'check')
@@ -80,7 +80,7 @@
     out.push({ topic: 'Feeding', title: FEED_ROW[fi][0], body: FEED_ROW[fi][1], action: "openPage('topic:Feeding')",
       tier: 'should', reported: fi >= 3 && !!food,
       prep: fi === 2,
-      reason: fi === 0 ? 'For the first weeks' : fi === 2 ? (m >= 6 && live() ? `Tell us when ${name()} starts solids` : 'Most babies start solids around 6 months') : fi >= 3 && food ? `You said ${name()} ${food === 'new' ? 'has started solids' : 'is eating meals'}` : ageReason(),
+      reason: fi === 0 ? 'For the first weeks' : fi === 2 ? (m >= 6 && live() ? `Tell us when ${name()} starts solids` : 'Most babies start solids around 6 months') : fi === 3 && !food ? 'Most babies start solids around 6 months' : fi >= 3 && food ? `You said ${name()} ${food === 'new' ? 'has started solids' : 'is eating meals'}` : ageReason(),
       reference: fi === 1 });
 
     // Sleep: the current stage (a reference row, so it ranks below actions)
@@ -98,7 +98,7 @@
     if (rec?.status !== 'attended' && age >= month)
       out.push({ topic: 'Health', title: healthJourneyLabel(age), action: `openPage('health-visit:${age}')`,
         // The visit summary stays visible when an appointment is saved; the date shows in the label.
-        body: age === 6 && month === 5 ? 'At the 6-month visit: growth, first foods, tooth care and vaccines—including whether flu vaccination is due.' : 'Preview the checks and pick the questions you want to ask.',
+        body: age === 6 && month === 5 ? 'At the 6-month checkup: growth, first foods, tooth care and vaccines—including whether flu vaccination is due.' : 'Preview the checks and pick the questions you want to ask.',
         tier: 'should', dated: true, days, upcoming: days > 14, prep: true,
         reason: rec?.status === 'planned' ? `Saved for ${journeyDateLabel(rec.date)}` : age === 0 ? 'In the first week' : age === month ? `Due at ${mo(age)}` : `Due around ${mo(age)}` });
 
@@ -154,7 +154,7 @@
   };
 
   function swaddleRow(c) {
-    const row = { topic: 'Sleep', title: 'Time to stop swaddling', body: 'Use regular sleepwear or an unweighted sleep sack with arms free.', action: "openPage('topic:Sleep')", art: 0, reason: c.reason };
+    const row = { topic: 'Sleep', title: 'Stop swaddling at the first attempt to roll', body: 'Use regular sleepwear or an unweighted sleep sack with arms free.', action: "openPage('topic:Sleep')", art: 0, reason: c.reason };
     return `<div class="home-connected-sleep" style="${yearTheme('Sleep')}">${homeRow(row)}<div class="home-connected-actions">${homePriorityTools(c.priority)}</div></div>`;
   }
   function mattressRow(c) {

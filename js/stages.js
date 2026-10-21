@@ -27,7 +27,7 @@
   function candidates() {
     const d = load(), a = dm(), out = [];
     if (month < 4 && (!profile.feed || profile.feed === 'Prefer not to say') && !d.skip.milk && !d.last.milk) out.push('milk');
-    if (a >= 6 && chgStageIndex('Feeding') === 2 && due(d, 'food', ['preparing'])) out.push('food');
+    if (a >= 6 && (!hasFoodAnswer() || foodStage() === 'preparing') && chgStageIndex('Feeding') <= 3 && due(d, 'food', ['preparing'])) out.push('food');
     return out;
   }
   // No nagging: an unanswered question shows for two weeks, then rests until next month.
@@ -157,7 +157,7 @@
     if (ref !== now) return html.replace('</nav>', `</nav><div class="chg-browse-links" style="${yearTheme('Development')}"><button class="textlink chg-back-now" onclick="navigate('categories');openPage('topic:Development')">← Back to where ${name()} is now</button></div>`);
     const next = keys[keys.indexOf(ref) + 1];
     if (!next) return html;
-    const card = `<section class="sleep-phase-ahead" style="${yearTheme('Development')}"><h3>Coming up · ${DEV_STAGES[next].rail}</h3><article><h4>${DEV_STAGES[next].title}</h4><p>${DEV_STAGES[next].body}</p></article><button class="textlink chg-headsup-link" onclick="openPage('development-stage:${next}')">See what’s next →</button></section>`;
+    const card = `<section class="sleep-phase-ahead" style="${yearTheme('Development')}"><h3>Coming up · By ${next} months</h3><article><h4>${DEV_STAGES[next].title}</h4><p>${DEV_STAGES[next].body}</p></article><button class="textlink chg-headsup-link" onclick="openPage('development-stage:${next}')">See what’s next →</button></section>`;
     const src = devGuideSources(ref);
     return html.includes(src) ? html.replace(src, card + src) : html.replace(/<\/div>$/, card + '</div>');
   };

@@ -67,6 +67,10 @@
     const fs = typeof foodStage === 'function' ? foodStage() : 'preparing';
     if (m < 2) return 0;
     if (m < 4) return 1;
+    // Unknown solids status from 6 months: show Starting solids and let the check-in find out.
+    // Only a parent's "Not yet" keeps the Getting ready guide.
+    const known = typeof hasFoodAnswer !== 'function' || hasFoodAnswer();
+    if (!known && live()) return m >= 6 ? 3 : 2;
     if (fs === 'preparing') return 2;
     if (fs === 'new') return m >= 10 ? 5 : m >= 8 ? 4 : 3;   // once solids start, age moves textures and meals
     return m >= 10 ? 5 : 4;
@@ -93,7 +97,7 @@
       if (cur === 0) { const n = Object.values(local.safe.Sleep).filter(Boolean).length; return { reason: 'Safe sleep setup', title: n + ' of ' + DATA.Sleep.SAFE.length + ' checked', body: 'Back to sleep, a clear crib in your room, and never on a sofa.', act: 'Open checklist', go: "openPage('chg:Sleep:safe')" }; }
       // Age is enough: these come before the skill, and a parent's answer only changes the label.
       if ((rolling() || tryingToRoll() || m >= 3) && answers.swaddleStopped !== 'Yes' && (m <= 6 || answers.swaddleStopped === 'No'))
-        return { reason: rolling() ? 'You said ' + name() + ' is rolling' : tryingToRoll() ? 'You said ' + name() + ' is trying to roll' : 'Before she tries to roll', title: 'Stop swaddling at the first attempt to roll', body: 'Use regular sleepwear or an unweighted sleep sack with arms free.', act: 'Mark done', done: true, go: "setAnswer('swaddleStopped','Yes')" };
+        return { reason: rolling() || tryingToRoll() ? 'Stop swaddling now' : 'Before the first attempt to roll', title: 'Stop swaddling at the first attempt to roll', body: 'Use regular sleepwear or an unweighted sleep sack with arms free.', act: 'Mark done', done: true, go: "setAnswer('swaddleStopped','Yes')" };
       if ((answers.pullUp === 'Yes' || m >= 8) && answers.mattressLowest !== 'Yes')
         return { reason: answers.pullUp === 'Yes' ? 'You said ' + name() + ' is pulling up' : 'Before she pulls up', title: 'Set the crib mattress to its lowest', body: 'Remove mobiles and anything she can reach from standing.', act: 'Mark done', done: true, go: "setAnswer('mattressLowest','Yes')" };
       return null;
@@ -144,13 +148,20 @@
     return `<ol class="chg-day">${rows.map(r => { const k = r[0] === 'Awake' ? 'awake' : r[0] === 'Bedtime' ? 'bed' : 'sleep'; return `<li class="is-${k}"><span>${esc(r[0])}</span><time>${esc(r[1])}</time></li>`; }).join('')}</ol>`;
   }
 
+  // The last age in a label like "Usually 4–6 months", "Usually around 6 months" or "Birth–6 weeks", in months.
+  function rangeEnd(when) {
+    const x = String(when || '').match(/(\d+)\s*(months?|weeks?)\s*$/);
+    return x ? (/week/.test(x[2]) ? Number(x[1]) / 4.3 : Number(x[1])) : null;
+  }
+
   /* ---------- the category page ---------- */
   function mainPage(cat, view, ev) {
     const D = DATA[cat], cfg = CFG[cat], m = ageNow(), cur = cfg.stage(m);
     if (view == null) view = cur;
     const isEv = ev != null, C = isEv ? D.EV[ev] : D.CH[view], N = isEv ? null : D.CH[view + 1];
     const rel = view < cur ? 'past' : view === cur ? 'now' : 'next';
-    const eyebrow = isEv ? C.label + ' · ' + C.when : (rel === 'now' ? 'Around now · ' : rel === 'past' ? 'Earlier · ' : 'Coming up · ') + C.when;
+    const pastRange = rel === 'now' && rangeEnd(C.when) != null && m > rangeEnd(C.when);
+    const eyebrow = isEv ? C.label + ' · ' + C.when : pastRange ? 'Current guide' : (rel === 'now' ? 'Around now · ' : rel === 'past' ? 'Earlier · ' : 'Coming up · ') + C.when;
     const A = isEv ? null : alertFor(cat, cur, view);
     const meth = method();
 
@@ -159,7 +170,7 @@
     h += `<header class="experience-hero"><div class="experience-hero-copy"><div class="eyebrow">${esc(eyebrow)}</div><h2>${T(C.title)}</h2></div><span class="experience-hero-art" aria-hidden="true">${yearIllustration(cat, 1)}</span><p class="experience-hero-description">${T(C.lead)}</p></header>`;
 
     // One check-in moves Feeding into solids, at most once a month; age alone never does.
-    if (cat === 'Feeding' && !isEv && view === cur && cur === 2 && m >= 6 && (typeof checkinDue !== 'function' || checkinDue('food', ['preparing'])))
+    if (cat === 'Feeding' && !isEv && view === cur && (cur === 2 || cur === 3 && !hasFoodAnswer()) && m >= 6 && (typeof checkinDue !== 'function' || checkinDue('food', ['preparing'])))
       h += `<section class="connected-checkin chg-checkin"><div><h2>${m >= 9 ? 'Most babies have started solids by now' : `Has ${name()} started solids?`}</h2></div><p>${m >= 9 ? `Tell us where ${name()} is, and this guide will catch up.` : 'Your answer moves this guide to the right stage. We’ll check again next month.'}${profile.early ? ' Born early? Your care team may suggest a different time.' : ''}</p><div class="connected-checkin-choices"><button onclick="chgAnswerCheckin('food','preparing')">Not yet</button><button onclick="chgAnswerCheckin('food','new')">First foods</button><button onclick="chgAnswerCheckin('food','established')">Eating meals</button></div></section>`;
 
     if (cat === 'Sleep' && !isEv && view === cur && chgSleepAuto() && autoNoticeFresh())
