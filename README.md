@@ -36,10 +36,10 @@ Home looks the same as before. `js/home-rules.js` applies the Home recommendatio
 - **Ranking and caps.**
   - Rows are ranked must-know first, then what a parent reported, then dated items, then age-based ones.
   - The main card holds at most 3 rows, one per category.
-  - Play ideas are nice-to-know, so they stay on their own page.
+  - A practical Play activity can earn a main-card slot, within the same three-row cap.
   - "Prepare for next" shows up to 2 coming-up items from categories not already above.
 - **Filters and timing.**
-  - Feeding rows follow the new Feeding stages and never assume solids until a parent says so.
+  - Feeding rows distinguish the suggested guide from what the parent actually reported. Unknown solids status is labeled as unknown.
   - A checkup moves up from "Prepare for next" only when it's within 14 days.
   - The solids check-in waits until 6 months.
 - **Copy updates.** The rows and check-ins have new copy, written to match the content guide.
@@ -69,6 +69,9 @@ Call `homeRulesDebug()` in the browser console to see what was shown, what was h
 - **Which age is used:** adjusted age for everything developmental (until age 2), birthday age for Health. Pages say which one they use.
 
 ## QA
+
+The content and personalization regression pass is documented in `docs/content-qa-2026-10-21.md`.
+Run `node tools/qa/content-journeys.cjs` for the fast template/handler checks across 100 scripted families and 13 monthly checkpoints. This does not replace browser, editorial or pediatric review.
 
 `tools/qa` plays nine example families week by week from onboarding to 12 months. Each family answers the solids question its own way, and some also save moments or tap “Already there?”. It checks three things: nothing is broken or empty, everything follows the right order and stays useful, and the right personalization appears and disappears. The latest report is in `docs/qa-report.html`.
 
@@ -100,3 +103,4 @@ Older Sleep and Feeding routes from the previous prototype redirect to the new p
 All Sleep and Feeding copy lives in `js/changes-data.js`. Write and review it with the ahead-content-editor skill so terms, tone and chronology stay consistent.
 
 _Prototype. Pediatric review pending._
+

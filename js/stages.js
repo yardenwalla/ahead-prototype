@@ -108,8 +108,8 @@
   window.chgSetSafety = function (key) {
     if (key === 'setup' || key === 'reaching') { answers.roll = 'Not yet'; answers.rollDirection = 'Not yet'; delete answers.crawl; delete answers.pullUp; }
     if (key === 'rolling') { answers.roll = 'Yes'; delete answers.crawl; delete answers.pullUp; }
-    if (key === 'moving') { answers.roll = 'Yes'; answers.crawl = 'Yes'; delete answers.pullUp; }
-    if (key === 'pulling') { answers.roll = 'Yes'; answers.crawl = 'Yes'; answers.pullUp = 'Yes'; }
+    if (key === 'moving') { answers.crawl = 'Yes'; delete answers.pullUp; }
+    if (key === 'pulling') { answers.pullUp = 'Yes'; }
     persist(); page = 'topic:Safety'; render(); window.scrollTo(0, 0);
   };
   // No standing "Update baby's movement" toggle: the timeline, "This is where she is now" and saved moments cover it.
@@ -167,3 +167,4 @@
     return profile.early && t !== 'Health' ? monthLabel(developmentMonth()) + ' adjusted' : monthLabel(month);
   };
 })();
+
