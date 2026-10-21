@@ -12,6 +12,8 @@ window.__qa = (function () {
     const m = $m(), out = [], t = txt(m);
     if (t.length < 60) out.push('Page is empty or nearly empty');
     const bad = t.match(BAD); if (bad) out.push(`Shows “${bad[0]}” on screen`);
+    if (/review pending|pediatrician-reviewed|pediatric (advisor )?review/i.test(t)) out.push('Mentions pediatric review');
+    if (/Previous checklist|Next: (Before|Your first)/.test(t)) out.push('Has a Previous/Next link between stages');
     // headings with nothing under them
     all('section, .sleep-phase-help, .common-questions, .sleep-snapshot-patterns').forEach(s => {
       const h = s.querySelector('h2,h3'); if (!h) return;

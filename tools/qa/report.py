@@ -23,6 +23,7 @@ GROUPS = [('works', 'Everything works', 'Nothing broken or empty: script errors,
           ('order', 'Order and value', 'The right stage for the age, never going backwards, phases in their window, Home limits, reason lines that match the age, nothing stale.'),
           ('personal', 'Personalization', 'What a parent tells the app shows up, in the right places, and goes away when it’s done. Check-ins catch real changes.')]
 
+BEFORE_ASKS = dict(maya=26, leo=27, ava=15, noah=29, zoe=6, mia=20, ivy=27, rosa=25, sam=11)
 key = lambda f: (f['group'], f['title'])
 after_keys = {key(f) for f in after['findings']}
 before_by = {key(f): f for f in before['findings']}
@@ -127,7 +128,8 @@ p {{ margin: 0; max-width: 68ch }}
 .ex {{ margin: 0; padding: 0 16px 14px 94px; font-size: 12px; color: var(--muted) }}
 .empty {{ padding: 16px; color: var(--muted); font-size: 14px }}
 .asks {{ padding: 6px 16px }}
-.ask-row {{ display: grid; grid-template-columns: 70px minmax(0, 1fr) 76px; gap: 12px; align-items: center; padding: 8px 0; font-size: 13px }}
+.ask-row s {{ color: var(--muted); opacity: .7; margin-left: 4px }}
+.ask-row {{ display: grid; grid-template-columns: 70px minmax(0, 1fr) 100px; gap: 12px; align-items: center; padding: 8px 0; font-size: 13px }}
 .ask-row + .ask-row {{ border-top: 1px solid var(--line) }}
 .ask-row .bar {{ height: 8px; border-radius: 999px; background: var(--accent-pale); overflow: hidden }}
 .ask-row .bar i {{ display: block; height: 100%; background: var(--accent); border-radius: 999px }}
@@ -156,16 +158,16 @@ footer {{ font-size: 12px; color: var(--muted) }}
 <main>
   <header>
     <div class="eyebrow">Ahead prototype · run {E(run_date)}</div>
-    <h1>QA report: stage rules, onboarding to the first birthday</h1>
-    <p class="lede">{stats.get("personas", 0)} example families signed up through the real setup screens. A script then moved the clock forward one week at a time to 12 months. Each week it read Home, Sleep and Feeding the way a parent would and answered whatever check-in was showing, the way that family would. Once a month it opened every link on Home and every category page.</p>
+    <h1>QA report: stages that move on their own</h1>
+    <p class="lede">{stats.get("personas", 0)} example families signed up through the real setup screens. A script then moved the clock forward one week at a time to 12 months. Each week it read Home, Sleep and Feeding the way a parent would. Stages now move on age; the only question left is “Has she started solids?”, at most once a month. Families answered it their own way, and some also saved moments (first roll, pulling up) or tapped “Already there?”. Once a month it opened every link on Home and every category page.</p>
     <div class="facts"><span><b>{stats.get('personas', 0)}</b> families</span><span><b>{stats.get('weeks', 0)}</b> family-weeks</span><span><b>{stats.get('pages', 0):,}</b> pages read</span><span><b>{stats.get('links', 0):,}</b> links opened</span></div>
   </header>
   <section><div class="scores">{''.join(card(*g) for g in GROUPS)}</div></section>
-  <section><div class="section-head"><h2>How often parents are asked</h2><p>Weeks in which Home showed a check-in, out of the weeks each family used the app.</p></div>
-    <div class="findings asks">{''.join(f'<div class="ask-row"><b>{E(next(r["persona"]["name"] for r in results if r["persona"]["id"] == k))}</b><span class="bar"><i style="width:{round(100 * v / max(1, stats["family_weeks"][k]))}%"></i></span><span class="num">{v} of {stats["family_weeks"][k]}</span></div>' for k, v in stats.get('checkin_weeks', {}).items())}</div></section>
+  <section><div class="section-head"><h2>How often parents are asked</h2><p>Weeks in which Home showed a question, out of the weeks each family used the app. The grey number is the last version, which asked about rolling, crawling, standing and naps every week.</p></div>
+    <div class="findings asks">{''.join(f'<div class="ask-row"><b>{E(next(r["persona"]["name"] for r in results if r["persona"]["id"] == k))}</b><span class="bar"><i style="width:{round(100 * v / max(1, stats["family_weeks"][k]))}%"></i></span><span class="num">{v} of {stats["family_weeks"][k]} <s>{BEFORE_ASKS.get(k, "")}</s></span></div>' for k, v in stats.get('checkin_weeks', {}).items())}</div></section>
   <section><div class="section-head"><h2>Still open</h2><p>No bugs are left. These notes are product decisions rather than code fixes.</p></div>
     <div class="findings">{''.join(finding_row(f).replace('<details ', '<details open ', 1) for f in open_bugs + notes) or '<p class="empty">Nothing open.</p>'}</div></section>
-  <section><div class="section-head"><h2>Found and fixed</h2><p>What the first run caught, and what changed.</p></div>
+  <section><div class="section-head"><h2>Found and fixed</h2><p>What this run caught, and what changed.</p></div>
     <div class="findings">{''.join(finding_row(dict(f, severity=f['severity']), True).replace('class="finding ', 'class="finding fixed ', 1) for f in fixed) or '<p class="empty">Nothing needed fixing.</p>'}</div></section>
   <section><div class="section-head"><h2>Week by week</h2><p>What each family saw every week. Pick a family to see what the app asked, what the parent answered, and what Home, Sleep and Feeding showed.</p></div>
     <ul class="who-list">{who}</ul>

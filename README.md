@@ -26,10 +26,7 @@ The app looks and works the same as the previous prototype, with two exceptions:
 - **Detail screens:**
   - Sleep: safe sleep setup, settling and sleep training, when to ask for help
   - Feeding: milk and formula basics, feeding safety and first aid, introducing allergens, when to ask for help
-- **Tracking uses the app's existing check-ins.**
-  - Age sets the default stage.
-  - Telling Home that Maya is trying to roll shows "Time to stop swaddling" on Sleep.
-  - Feeding never moves into solids based on age alone. From 6 months it asks "Has Maya started solids?", and the answer moves the guide.
+- **Stages move on age.** Parents correct them with "Already there?" on the Coming up card or "This is where she is now" on any other stage. The only question is "Has Maya started solids?" (see below).
 
 ## Home rules
 
@@ -51,23 +48,29 @@ Call `homeRulesDebug()` in the browser console to see what was shown, what was h
 
 ## When stages move
 
-- **Age moves a stage when there's nothing to report.** That covers Development, Play, Health checkups, and the early Sleep and Feeding stages.
-- **A parent's answer moves the stages you can see.** That covers rolling, crawling, pulling up, two naps, solids and finger foods.
-- **Check-in timing:**
-  - Questions start when the usual window opens.
-  - "Not yet" or "Trying" comes back after a week.
-  - An unanswered question shows for two weeks, then rests until next month.
-  - A parent who ignores two questions gets one question a month.
-- **Once the usual window has passed:**
-  - Sleep moves to two naps by itself, with a three-week notice and a one-tap undo.
-  - Safety moves the checklist forward without claiming the skill.
-  - Feeding keeps asking.
-- **Parents can always override.** Any stage they're viewing has "This is where she is now" (Sleep, Feeding, Safety).
+- **Age moves every stage by itself, with no question.** That covers Development, Play, Health, Sleep (Two naps at 9 months), Safety, and Feeding once solids have started (Textures and finger foods at 8 months, Family meals at 10).
+- **One question is left: "Has Maya started solids?"** From 6 months, at most once a month. If nobody answers, it shows for two weeks, then rests until next month. Feeding never moves into solids on age alone, because a wrong guess means advice about allergens and finger foods for a baby who hasn't started.
+- **Safety runs ahead of the usual age,** because extra babyproofing is the safe mistake:
+  - reaching and rolling from 3 months
+  - crawling prep from 5 months
+  - babyproofing from 8 months
+  - furniture reach from 9 months
+  - "Stop swaddling" from 3 months
+  - "Lower the crib mattress" from 8 months
+- **Saved moments count.** Saving "Rolls tummy to back" or "Pulls up to stand" in the timeline moves Safety and changes the labels to "You said…".
+- **When Sleep moves to two naps on its own,** a notice says so for three weeks, with a one-tap undo ("Still on three naps?").
+- **Parents can always correct a stage.**
+  - The Coming up card has "Already there? Move Maya to …".
+  - Any other stage they're viewing has "This is where Maya is now" and "← Back to where Maya is now".
+- **Navigating between stages** uses the timeline at the top of each category.
+  - No Previous/Next links.
+  - Coming up cards only in Sleep, Feeding, Safety and Development.
+  - Safety's current checklist shows up to 3 unfinished checks from earlier checklists.
 - **Which age is used:** adjusted age for everything developmental (until age 2), birthday age for Health. Pages say which one they use.
 
 ## QA
 
-`tools/qa` plays seven example families week by week from onboarding to 12 months, answering check-ins the way each family would. It checks three things: nothing is broken or empty, everything follows the right order and stays useful, and the right personalization appears and disappears. The latest report is in `docs/qa-report.html`.
+`tools/qa` plays nine example families week by week from onboarding to 12 months. Each family answers the solids question its own way, and some also save moments or tap “Already there?”. It checks three things: nothing is broken or empty, everything follows the right order and stays useful, and the right personalization appears and disappears. The latest report is in `docs/qa-report.html`.
 
 To rerun it after any change:
 1. `python3 tools/qa/run_qa.py` plays the families (takes about 25 minutes).

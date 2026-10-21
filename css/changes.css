@@ -63,3 +63,9 @@
 #main .chg-page .common-questions { margin-bottom: 22px }
 
 #main .chg-override { display: block; width: 100%; min-height: 44px; margin: 0 0 18px; border-radius: 999px; border: 1.5px solid var(--year-accent); background: var(--white); font-size: 13.5px; font-weight: 600; color: var(--year-ink); text-decoration: none }
+/* Browsing another stage: correct it, or go back */
+#main .chg-browse-links { display: flex; flex-direction: column; align-items: center; gap: 4px; margin: 0 0 18px }
+#main .chg-browse-links .chg-override { margin: 0 }
+#main .chg-back-now, #main .chg-already { min-height: 40px; font-size: 13.5px; font-weight: 600; color: var(--year-ink) }
+#main .sleep-phase-ahead .chg-already { display: block; margin-top: 2px; text-align: left; font-weight: 500; opacity: .85 }
+#main .safety-carry { margin-top: 18px }

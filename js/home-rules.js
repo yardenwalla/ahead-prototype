@@ -53,6 +53,7 @@
   // A parent's answer is only the reason when the row is about that skill.
   const relevant = (mv, title) => ({ trying: /roll/i, rolling: /roll/i, crawling: /crawl|mov/i, pulling: /pull|stand|cruis/i }[mv] || /$^/).test(title || '');
 
+  const relevantCheck = mv => !safetyAgeForward();
   function candidates() {
     const m = ageM(), mv = movement(), out = [];
     const base = conceptConnections();               // the app's own rows for this month
@@ -61,11 +62,11 @@
 
     // Must-know actions a parent's answer triggered
     if (priority && priority.type === 'swaddle')
-      out.push({ topic: 'Sleep', kind: 'swaddle', tier: 'must', reported: true, reason: said(mv || 'trying'), priority });
-    if (live() && answers.pullUp === 'Yes' && answers.mattressLowest !== 'Yes')
-      out.push({ topic: 'Sleep', kind: 'mattress', tier: 'must', reported: true, reason: said('pulling') });
+      out.push({ topic: 'Sleep', kind: 'swaddle', tier: 'must', reported: !!mv, reason: mv ? said(mv) : 'Before she tries to roll', priority });
+    if (live() && (answers.pullUp === 'Yes' || m >= 8) && answers.mattressLowest !== 'Yes')
+      out.push({ topic: 'Sleep', kind: 'mattress', tier: 'must', reported: answers.pullUp === 'Yes', reason: answers.pullUp === 'Yes' ? said('pulling') : 'Before she pulls up' });
     if (priority && priority.type === 'check')
-      out.push({ topic: 'Safety', kind: 'check', tier: 'must', reported: true, reason: mv ? said(mv) : 'Before she starts to move', priority });
+      out.push({ topic: 'Safety', kind: 'check', tier: 'must', reported: !!mv, reason: mv && relevantCheck(mv) ? said(mv) : priority.owner === 'mobile' ? 'Before she’s on the move' : 'Before she starts to roll', priority });
 
     // Development: the skill to watch now
     const dev = byTopic('Development');
@@ -105,10 +106,10 @@
     const rollGuide = mv === 'trying' || mv === 'rolling'
       ? { title: 'Make room for rolling', body: 'Nearby objects, floor space and diaper changes.', action: `openSafetyChecklist('reach',false)`, art: 0 }
       // An older baby with no movement answers gets the next checklist, never an earlier one.
-      : !mv && m >= 7 && saf && /reaching and rolling/i.test(saf.title)
+      : ['rolling', 'moving', 'pulling'].includes(safetyStageNow()) && !(mv === 'trying' || mv === 'rolling') && saf && /reaching and rolling/i.test(saf.title)
         ? { title: 'Before crawling', body: 'Gates, storage, outlets and furniture anchors.', action: `openSafetyChecklist('mobile',false)`, art: 0 } : {};
     if (saf && !(priority && priority.type === 'check'))
-      out.push({ ...saf, ...rollGuide, tier: 'should', reported: !!mv, prep: !mv, upcoming: !mv && m < 4, reason: mv && !safetyAgeForward() ? said(mv) : safetyAgeForward() === 'moving' ? 'Most babies crawl by now' : safetyAgeForward() === 'rolling' ? 'Most babies roll by now' : m < 6 ? 'Most babies roll by 6 months' : 'Before she’s on the move' });
+      out.push({ ...saf, ...rollGuide, tier: 'should', reported: !!mv, prep: !mv, upcoming: !mv && m < 4, reason: mv && !safetyAgeForward() ? said(mv) : m < 5 ? 'Most babies roll by 6 months' : 'Before she’s on the move' });
 
     // Play ideas are nice-to-know: they live on the Play page, not Home
     const play = byTopic('Daily rhythm');

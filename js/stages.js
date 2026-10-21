@@ -1,8 +1,9 @@
 /* Ahead · When stages move
-   - Check-ins: start when the usual window opens. "Not yet" or "Trying" → ask again in a week.
-     Unanswered → show for two weeks, then rest until next month. Skip → rest a month.
-   - Safety: a parent's answer moves it. Once the usual window has passed, the checklist moves
-     forward on age (extra babyproofing is the safe mistake) without claiming the skill.
+   - Stages move on age by themselves. Parents can always say "This is where she is now",
+     and a saved moment (first roll, pulling up) moves Safety too.
+   - The one question left: "Has she started solids?", at most once a month from 6 months,
+     because a wrong guess there means the wrong advice. Unanswered → show for two weeks.
+   - Safety moves ahead of the usual age (extra babyproofing is the safe mistake), never claiming the skill.
    - Adjusted age for everything developmental (until age 2); birthday age for Health. */
 (function () {
   const DAY = 864e5;
@@ -15,21 +16,18 @@
   window.recordCheckin = function (key, value) { const d = load(); d.last[key] = { value, at: nowMs() }; delete d.shown[key]; d.ignored = 0; keep(d); };
 
   const rolling = () => answers.roll === 'Yes' || ['Tummy to back', 'Back to tummy', 'Both ways'].includes(answers.rollDirection);
-  // Is a key due? Never asked, or the last "not yet / trying" answer is a week old.
+  // Is a key due? Never asked, or the last "not yet" answer is a month old.
+  const WAIT = 28 * DAY;
   function due(d, key, waitingValues) {
     const l = d.last[key];
-    if (d.skip[key] && nowMs() - d.skip[key] < 30 * DAY) return false;
+    if (d.skip[key] && nowMs() - d.skip[key] < WAIT) return false;
     if (!l) return true;
-    return waitingValues.includes(l.value) && nowMs() - l.at >= 7 * DAY;
+    return waitingValues.includes(l.value) && nowMs() - l.at >= WAIT;
   }
   function candidates() {
     const d = load(), a = dm(), out = [];
     if (month < 4 && (!profile.feed || profile.feed === 'Prefer not to say') && !d.skip.milk && !d.last.milk) out.push('milk');
-    if (a >= 3 && a <= 7 && !rolling() && answers.crawl !== 'Yes' && due(d, 'movement', ['not_yet', 'trying'])) out.push('movement');
-    if (a >= 6 && answers.solids !== 'Yes' && due(d, 'food', ['preparing'])) out.push('food');
-    if (a >= 7 && a <= 11 && answers.crawl !== 'Yes' && answers.pullUp !== 'Yes' && due(d, 'crawl', ['Not yet'])) out.push('crawl');
-    if (a >= 7 && answers.crawl === 'Yes' && answers.pullUp !== 'Yes' && due(d, 'stand', ['Not yet'])) out.push('stand');
-    if (a >= 6 && a < 9 && !['Yes', 'Stay'].includes(answers.twoNaps) && chgStageIndex('Sleep') === 2 && due(d, 'naps', ['Not yet'])) out.push('naps');
+    if (a >= 6 && chgStageIndex('Feeding') === 2 && due(d, 'food', ['preparing'])) out.push('food');
     return out;
   }
   // No nagging: an unanswered question shows for two weeks, then rests until next month.
@@ -52,8 +50,8 @@
     if (!isCurrent() || homeConceptDismissed) return null;
     return candidates().find(visible) || null;
   };
-  // Category pages ask the same questions in context; skip them if answered in the last week.
-  window.checkinDue = function (key, waiting) { const d = load(), l = d.last[key]; return !l || (waiting.includes(l.value) && nowMs() - l.at >= 7 * DAY); };
+  // Category pages ask the same question in context, on the same monthly rhythm.
+  window.checkinDue = function (key, waiting) { const d = load(); return due(d, key, waiting); };
 
   const baseAnswer = answerHomeQuestion, baseLive = liveHomeCheckin;
   window.answerHomeQuestion = answerHomeQuestion = function (key, value) {
@@ -83,8 +81,9 @@
     if (rolling() || answers.rollDirection === 'Trying to roll') return 'rolling';
     return null;
   }
-  // Past the usual window, the checklist moves forward on age, without claiming the skill.
-  function byAge(a) { return a >= 10 ? 'moving' : a >= 7 ? 'rolling' : a >= 3 ? 'reaching' : 'setup'; }
+  // The checklist moves ahead of the usual age, without claiming the skill:
+  // reaching and rolling from 3 months, crawling prep from 5, babyproofing from 8, furniture reach from 9.
+  function byAge(a) { return a >= 9 ? 'pulling' : a >= 8 ? 'moving' : a >= 5 ? 'rolling' : a >= 3 ? 'reaching' : 'setup'; }
   window.safetyAgeForward = function () { const s = answered(), g = byAge(dm()); return !s || ORDER.indexOf(g) > ORDER.indexOf(s) ? (ORDER.indexOf(g) > 1 ? g : null) : null; };
   function stageNow() {
     const s = answered(), g = byAge(dm());
@@ -92,6 +91,17 @@
     return ORDER.indexOf(g) > ORDER.indexOf(s) && ORDER.indexOf(g) > 1 ? g : s;
   }
   window.currentSafetyMovementStage = currentSafetyMovementStage = stageNow;
+  window.safetyStageNow = stageNow;
+
+  // Must-know actions come from age as well as answers: stop swaddling before rolling, one safety check at a time.
+  window.homePriority = homePriority = function () {
+    if (!isCurrent()) return null;
+    const a = dm(), roll = rolling() || answers.rollDirection === 'Trying to roll';
+    if ((roll || a >= 3) && answers.swaddleStopped !== 'Yes' && (a <= 6 || answers.swaddleStopped === 'No')) return { topic: 'Sleep', type: 'swaddle' };
+    const st = stageNow(), mobile = st === 'moving' || st === 'pulling';
+    const owner = mobile ? 'mobile' : st === 'rolling' || roll ? 'reach' : null, ids = mobile ? safetyOwnedGuides().mobile.ids : owner ? ['rollspace', 'changing'] : [];
+    const id = safetyPendingIds(ids)[0]; return id ? { topic: 'Safety', type: 'check', owner, id } : null;
+  };
   window.safetyCurrentGuideStage = safetyCurrentGuideStage = stageNow;
 
   // "This is where she is now" on a Safety stage you're browsing
@@ -102,11 +112,35 @@
     if (key === 'pulling') { answers.roll = 'Yes'; answers.crawl = 'Yes'; answers.pullUp = 'Yes'; }
     persist(); page = 'topic:Safety'; render(); window.scrollTo(0, 0);
   };
+  // No standing "Update baby's movement" toggle: the timeline, "This is where she is now" and saved moments cover it.
+  window.safetyMovementUpdate = safetyMovementUpdate = function () { return ''; };
+  window.safetyBackToNow = function () { page = 'topic:Safety'; render(); window.scrollTo(0, 0); };
+  const browseLinks = key => `<div class="chg-browse-links" style="${yearTheme('Safety')}">${key ? `<button class="textlink chg-override" onclick="chgSetSafety('${key}')">This is where ${name()} is now</button>` : ''}<button class="textlink chg-back-now" onclick="safetyBackToNow()">← Back to where ${name()} is now</button></div>`;
   const baseGuide = safetyMovementGuide;
   window.safetyMovementGuide = safetyMovementGuide = function (key) {
     const html = baseGuide.apply(this, arguments);
     if (!key || !isCurrent() || key === stageNow() || !ORDER.includes(key)) return html;
-    return html.replace('</nav>', `</nav><button class="textlink chg-override" style="${yearTheme('Safety')}" onclick="chgSetSafety('${key}')">This is where ${name()} is now</button>`);
+    return html.replace('</nav>', '</nav>' + browseLinks(key));
+  };
+  // A checklist opened from "Coming up" is a preview: offer the way back.
+  const baseOwner = safetyOwnerChecklist;
+  window.safetyOwnerChecklist = safetyOwnerChecklist = function (owner, stage, preview) {
+    const html = baseOwner.apply(this, arguments);
+    if (!isCurrent() || !String(page).endsWith(':preview') || page === 'topic:Safety') return html;
+    return html.replace('</nav>', '</nav>' + browseLinks(null));
+  };
+
+  /* Navigation between stages is the timeline at the top. At the bottom of the current checklist:
+     unfinished checks from earlier checklists (at most 3), then one "Coming up" card. No Previous/Next links. */
+  window.safetyGuidePagination = safetyGuidePagination = function (owner, preview) {
+    if (preview || !isCurrent() || String(page).endsWith(':preview')) return '';
+    const guides = safetyOwnedGuides(), keys = Object.keys(guides), i = keys.indexOf(owner);
+    let h = '';
+    const earlier = keys.slice(0, i).flatMap(k => safetyPendingIds(guides[k].ids).map(id => [k, id]));
+    if (earlier.length) h += `<section class="safety-check-section safety-carry"><div class="safety-check-section-head"><h3>Still to do from earlier</h3><span class="safety-check-progress">${earlier.length} left</span></div>${safetyCheckGroup(earlier.slice(0, 3).map(x => x[1]), () => 'reference', 3)}${earlier.length > 3 ? `<button class="textlink" onclick="openSafetyChecklist('${earlier[0][0]}',true)">See all ${earlier.length} →</button>` : ''}</section>`;
+    const next = keys[i + 1];
+    if (next) h += `<section class="sleep-phase-ahead"><h3>Coming up</h3><article><h4>${guides[next].title}</h4><p>${guides[next].intro}</p></article><button class="textlink chg-headsup-link" onclick="openSafetyChecklist('${next}',true)">See the checklist →</button></section>`;
+    return h;
   };
 
   /* ---------- Which age a page uses ---------- */

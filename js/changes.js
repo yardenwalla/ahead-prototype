@@ -68,7 +68,7 @@
     if (m < 2) return 0;
     if (m < 4) return 1;
     if (fs === 'preparing') return 2;
-    if (fs === 'new') return m >= 8 ? 4 : 3;
+    if (fs === 'new') return m >= 10 ? 5 : m >= 8 ? 4 : 3;   // once solids start, age moves textures and meals
     return m >= 10 ? 5 : 4;
   }
   function feedEvents(m) { return m < 3 ? [0] : m < 7 ? [1] : [2]; }
@@ -91,10 +91,11 @@
     const m = ageNow();
     if (cat === 'Sleep') {
       if (cur === 0) { const n = Object.values(local.safe.Sleep).filter(Boolean).length; return { reason: 'Safe sleep setup', title: n + ' of ' + DATA.Sleep.SAFE.length + ' checked', body: 'Back to sleep, a clear crib in your room, and never on a sofa.', act: 'Open checklist', go: "openPage('chg:Sleep:safe')" }; }
-      if ((rolling() || tryingToRoll()) && answers.swaddleStopped !== 'Yes' && m < 9)
-        return { reason: 'You said ' + name() + (rolling() ? ' is rolling' : ' is trying to roll'), title: 'Time to stop swaddling', body: 'Use regular sleepwear or an unweighted sleep sack with arms free.', act: 'Mark done', done: true, go: "setAnswer('swaddleStopped','Yes')" };
-      if (answers.pullUp === 'Yes' && answers.mattressLowest !== 'Yes')
-        return { reason: 'You said ' + name() + ' is pulling up', title: 'Set the crib mattress to its lowest', body: 'Remove mobiles and anything she can reach from standing.', act: 'Mark done', done: true, go: "setAnswer('mattressLowest','Yes')" };
+      // Age is enough: these come before the skill, and a parent's answer only changes the label.
+      if ((rolling() || tryingToRoll() || m >= 3) && answers.swaddleStopped !== 'Yes' && (m <= 6 || answers.swaddleStopped === 'No'))
+        return { reason: rolling() ? 'You said ' + name() + ' is rolling' : tryingToRoll() ? 'You said ' + name() + ' is trying to roll' : 'Before she tries to roll', title: 'Stop swaddling at the first attempt to roll', body: 'Use regular sleepwear or an unweighted sleep sack with arms free.', act: 'Mark done', done: true, go: "setAnswer('swaddleStopped','Yes')" };
+      if ((answers.pullUp === 'Yes' || m >= 8) && answers.mattressLowest !== 'Yes')
+        return { reason: answers.pullUp === 'Yes' ? 'You said ' + name() + ' is pulling up' : 'Before she pulls up', title: 'Set the crib mattress to its lowest', body: 'Remove mobiles and anything she can reach from standing.', act: 'Mark done', done: true, go: "setAnswer('mattressLowest','Yes')" };
       return null;
     }
     const A = DATA.Feeding.ALERT, key = cur === 0 ? 'newborn' : cur === 2 ? '5' : cur === 4 ? '8' : null;
@@ -157,19 +158,15 @@
     h += monthlyPageHeader(cat) + rail(cat, view, cur, isEv);
     h += `<header class="experience-hero"><div class="experience-hero-copy"><div class="eyebrow">${esc(eyebrow)}</div><h2>${T(C.title)}</h2></div><span class="experience-hero-art" aria-hidden="true">${yearIllustration(cat, 1)}</span><p class="experience-hero-description">${T(C.lead)}</p></header>`;
 
-    // One observable check-in moves Feeding into solids; age alone never does.
+    // One check-in moves Feeding into solids, at most once a month; age alone never does.
     if (cat === 'Feeding' && !isEv && view === cur && cur === 2 && m >= 6 && (typeof checkinDue !== 'function' || checkinDue('food', ['preparing'])))
-      h += `<section class="connected-checkin chg-checkin"><div><h2>${m >= 9 ? 'Most babies have started solids by now' : `Has ${name()} started solids?`}</h2></div><p>${m >= 9 ? `Tell us where ${name()} is, and this guide will catch up.` : 'Your answer moves this guide to the right stage.'}${profile.early ? ' Born early? Your care team may suggest a different time.' : ''}</p><div class="connected-checkin-choices"><button onclick="chgAnswerCheckin('food','preparing')">Not yet</button><button onclick="chgAnswerCheckin('food','new')">First foods</button><button onclick="chgAnswerCheckin('food','established')">Eating meals</button></div></section>`;
-
-    if (cat === 'Feeding' && !isEv && view === cur && (cur === 3 && m >= 7 || cur === 4 && foodStage() === 'new') && !(local.notYet && local.notYet.fingerFoods && local.notYet.fingerFoods > Date.now() - 14 * 864e5))
-      h += `<section class="connected-checkin chg-checkin"><div><h2>Is ${name()} eating soft finger foods yet?</h2></div><p>Your answer moves this guide to textures and finger foods.</p><div class="connected-checkin-choices"><button onclick="chgNotYet('fingerFoods')">Not yet</button><button onclick="setFeedingStage('established')">Yes</button></div></section>`;
+      h += `<section class="connected-checkin chg-checkin"><div><h2>${m >= 9 ? 'Most babies have started solids by now' : `Has ${name()} started solids?`}</h2></div><p>${m >= 9 ? `Tell us where ${name()} is, and this guide will catch up.` : 'Your answer moves this guide to the right stage. We’ll check again next month.'}${profile.early ? ' Born early? Your care team may suggest a different time.' : ''}</p><div class="connected-checkin-choices"><button onclick="chgAnswerCheckin('food','preparing')">Not yet</button><button onclick="chgAnswerCheckin('food','new')">First foods</button><button onclick="chgAnswerCheckin('food','established')">Eating meals</button></div></section>`;
 
     if (cat === 'Sleep' && !isEv && view === cur && chgSleepAuto() && autoNoticeFresh())
       h += headsUp(`Most babies are on two naps by now`, `We moved ${name()} to Two naps`, '', `<button class="textlink chg-headsup-link" onclick="setAnswer('twoNaps','Stay')">Still on three naps? Keep ${name()} on Naps find a rhythm →</button>`);
-    if (cat === 'Sleep' && !isEv && view === cur && cur === 2 && m >= 6 && live() && answers.twoNaps !== 'Stay' && (typeof checkinDue !== 'function' || checkinDue('naps', ['Not yet'])))
-      h += `<section class="connected-checkin chg-checkin"><div><h2>Is ${name()} skipping the late catnap most days?</h2></div><p>Your answer moves this guide to two naps when she’s ready.</p><div class="connected-checkin-choices"><button onclick="chgAnswerCheckin('naps','Not yet')">Not yet</button><button onclick="chgAnswerCheckin('naps','Yes')">Yes</button></div></section>`;
-    if (!isEv && view !== cur && live() && (cat === 'Sleep' || cat === 'Feeding'))
-      h += `<button class="textlink chg-override" onclick="chgSetStage('${cat}',${view})">This is where ${name()} is now</button>`;
+    // Browsing another stage: correct it, or go back to where she is now.
+    if (!isEv && view !== cur && live())
+      h += `<div class="chg-browse-links"><button class="textlink chg-override" onclick="chgSetStage('${cat}',${view})">This is where ${name()} is now</button><button class="textlink chg-back-now" onclick="chgGo('chg:${cat}:s:${cur}')">← Back to where ${name()} is now</button></div>`;
 
     if (A) h += headsUp(T(A.reason), T(A.title), T(A.body), A.done
       ? `<div class="home-action-tools"><button class="home-inline-check" onclick="${A.go}"><span aria-hidden="true"></span>${esc(A.act)}</button></div>`
@@ -205,7 +202,8 @@
     }
 
     if (!isEv && !N && C.after) h += headsUp(`After the first birthday · ${esc(C.after[0])}`, T(C.after[1]), T(C.after[2]));
-    if (!isEv && N && rel !== 'next') h += headsUp(`Coming up · ${esc(N.when)}`, T(N.title), `Signs it’s starting: ${T(N.signs)}`, `<button class="textlink chg-headsup-link" onclick="chgGo('chg:${cat}:s:${view + 1}')">See what changes →</button>`);
+    // Coming up: what's next, and a one-tap way to say she's already there.
+    if (!isEv && N && rel !== 'next') h += headsUp(`Coming up · ${esc(N.when)}`, T(N.title), `Signs it’s starting: ${T(N.signs)}`, `<button class="textlink chg-headsup-link" onclick="chgGo('chg:${cat}:s:${view + 1}')">See what changes →</button>${rel === 'now' && live() ? `<button class="textlink chg-already" onclick="chgSetStage('${cat}',${view + 1})">Already there? Move ${name()} to ${esc(N.rail)}</button>` : ''}`);
 
     let links = '';
     if (cat === 'Sleep') {
