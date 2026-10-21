@@ -69,7 +69,7 @@ To rerun it after any change:
 | `js/changes-data.js` | All Sleep and Feeding copy and data. Edit content here. |
 | `js/changes.js` | Renders the stage pages and detail screens |
 | `js/home-rules.js` | Home rules: which rows show and their reason labels |
-| `js/year.js`, `css/year.css` | Year Ahead in the app's shared style; Timeline entries in their category colors |
+| `js/timeline.js`, `css/timeline.css` | Timeline entries in their category colors; removes the Year Ahead tab (each category's stage rail covers the year) |
 | `js/boot.js` | Starts the app after every module has loaded |
 | `tools/screenshot.py` | Playwright helper for screenshotting app states |
 

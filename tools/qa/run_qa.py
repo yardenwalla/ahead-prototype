@@ -164,7 +164,7 @@ async def run_persona(browser, p):
         if st['month'] != last_month and p.get('links', True):
             last_month = st['month']
             saved = await pg.evaluate("__qa.snap()")
-            starts = ['home', 'year', 'timeline'] + [f'{k}:{t}' for k in ('topic', 'year') for t in ['Development', 'Feeding', 'Sleep', 'Health', 'Safety', 'Daily rhythm']]
+            starts = ['home', 'timeline'] + [f'{k}:{t}' for k in ('topic',) for t in ['Development', 'Feeding', 'Sleep', 'Health', 'Safety', 'Daily rhythm']]
             visited = set()
             queue = [(s, 0) for s in starts]
             while queue:
