@@ -1,0 +1,29 @@
+/* Welcome and setup, in the app's own type and colors */
+#main.is-onboarding { padding-top: 12px }
+#main .aw { display: flex; flex-direction: column; gap: 22px; padding-bottom: 8px }
+#main .aw-hero { border: 1px solid #eed8c1; border-radius: 24px; padding: 21px 18px 26px }
+#main .aw-hero h1 { font: 800 28px/1.15 var(--display-font); letter-spacing: -.4px }
+#main .aw-example .connected-section-heading h2 { font: 700 19px/1.3 var(--display-font); letter-spacing: -.2px }
+#main .aw-sub { font-size: 13px; color: var(--muted); margin: 4px 0 6px }
+#main .aw-rows { background: var(--white, #fffefb); border: 1px solid var(--line); border-radius: 20px; padding: 2px 16px }
+#main .aw-row { cursor: default }
+#main .aw-points { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px }
+#main .aw-points li { display: grid; gap: 2px; padding-left: 16px; position: relative }
+#main .aw-points li::before { content: ''; position: absolute; left: 0; top: 7px; width: 7px; height: 7px; border-radius: 50%; background: #b4a5dc }
+#main .aw-points li:nth-child(2)::before { background: #9fb8df }
+#main .aw-points li:nth-child(3)::before { background: #9bc7ac }
+#main .aw-points b { font: 700 15px/1.35 var(--display-font) }
+#main .aw-points span { font-size: 13px; line-height: 1.5; color: var(--muted) }
+#main .aw-start { width: 100%; margin-top: 2px }
+#main .aw-note { font-size: 12px; color: var(--muted); text-align: center; margin-top: -12px }
+
+/* Setup: same type, inputs that look like the app's cards */
+#main.is-onboarding .eyebrow { font-size: 10px; letter-spacing: .07em; font-weight: 600; color: var(--muted) }
+#main.is-onboarding h1 { font: 800 28px/1.15 var(--display-font); letter-spacing: -.4px; color: var(--ink) }
+#main.is-onboarding .progress span { height: 5px; width: 34px; border-radius: 999px; background: var(--line) }
+#main.is-onboarding .progress .on { background: #b4a5dc }
+#main.is-onboarding .form label { font-size: 13px; font-weight: 600; color: var(--ink) }
+#main.is-onboarding .form input:not([type=checkbox]), #main.is-onboarding .form select { border: 1px solid var(--line); border-radius: 14px; background: var(--white, #fffefb); padding: 13px 14px; min-height: 48px; font-size: 15px }
+#main.is-onboarding .form .checkbox { font-weight: 500; margin-top: 18px }
+#main.is-onboarding .form input[type=checkbox] { accent-color: #625084 }
+#main.is-onboarding .form .primary { margin-top: 26px }

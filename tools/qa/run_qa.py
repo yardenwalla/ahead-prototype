@@ -82,7 +82,7 @@ async def onboard(pg, p):
     await pg.evaluate("localStorage.clear()")
     await pg.reload()
     await pg.evaluate("page='welcome';render()")
-    await pg.click('text=Meet your month')
+    await pg.click('.aw-start')
     await pg.fill('#babyName', p['name'])
     dob = BIRTH.date().isoformat()
     await pg.fill('#dob', dob)
