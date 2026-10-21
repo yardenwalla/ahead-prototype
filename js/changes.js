@@ -128,7 +128,7 @@
 
     // One observable check-in moves Feeding into solids; age alone never does.
     if (cat === 'Feeding' && !isEv && view === cur && cur === 2 && m >= 6)
-      h += `<section class="connected-checkin chg-checkin"><div><h2>Has ${name()} started solids?</h2></div><p>Your answer moves this guide to the right stage.</p><div class="connected-checkin-choices"><button onclick="setFeedingStage('preparing')">Not yet</button><button onclick="setFeedingStage('new')">First foods</button><button onclick="setFeedingStage('established')">Eating meals</button></div></section>`;
+      h += `<section class="connected-checkin chg-checkin"><div><h2>${m >= 9 ? 'Most babies have started solids by now' : `Has ${name()} started solids?`}</h2></div><p>${m >= 9 ? `Tell us where ${name()} is, and this guide will catch up.` : 'Your answer moves this guide to the right stage.'}</p><div class="connected-checkin-choices"><button onclick="setFeedingStage('preparing')">Not yet</button><button onclick="setFeedingStage('new')">First foods</button><button onclick="setFeedingStage('established')">Eating meals</button></div></section>`;
 
     if (cat === 'Feeding' && !isEv && view === cur && (cur === 3 && m >= 7 || cur === 4 && foodStage() === 'new') && !(local.notYet && local.notYet.fingerFoods && local.notYet.fingerFoods > Date.now() - 14 * 864e5))
       h += `<section class="connected-checkin chg-checkin"><div><h2>Is ${name()} eating soft finger foods yet?</h2></div><p>Your answer moves this guide to textures and finger foods.</p><div class="connected-checkin-choices"><button onclick="chgNotYet('fingerFoods')">Not yet</button><button onclick="setFeedingStage('established')">Yes</button></div></section>`;
@@ -180,7 +180,7 @@
       links += refRow("openPage('chg:Feeding:help')", 'health', 'When to ask for feeding help');
     }
     h += `<div class="sleep-reference-area"><p class="sleep-reference-label">References</p>${links}${sources(cat)}</div>`;
-    h += `<p class="exp-footer">Ages are typical. Every baby moves at their own pace. Pediatric review pending.</p></div>`;
+    h += `<p class="exp-footer">Ages are typical. Every baby moves at their own pace.</p></div>`;
     return h;
   }
 
@@ -209,25 +209,25 @@
   function sub(cat, screen, a, b) {
     const D = DATA[cat];
     if (cat === 'Sleep' && screen === 'safe') return detail(cat, 'Safe sleep', 'Safe sleep setup', 'Set this up once, before birth or in the first days. It applies to every nap and every night, whichever way you settle baby.',
-      checklist(cat) + helpList('As baby grows', D.GROW), 'Based on AAP safe sleep guidance, 2022. Pediatric review pending.');
+      checklist(cat) + helpList('As baby grows', D.GROW), 'Based on AAP safe sleep guidance, 2022.');
     if (cat === 'Sleep' && screen === 'settle') return detail(cat, 'Your choice · from 4–6 months', 'Settling and sleep training', 'Helping Maya fall asleep by feeding, rocking or holding is normal at any age. You only need to change it if it isn’t working for your family.',
       helpList('When to consider it', [['', 'Most families who try sleep training wait until at least 4–6 months. Check with your pediatrician first, especially if Maya was born early or growth has been a question.']]) +
       helpList('The approaches', D.METH.map(x => [x[0] + ' · ' + x[1], x[2]])) + helpList('Before you start', D.SETTLE_BEFORE.map(t => ['', t])) +
-      callout('Good to know', 'Most methods help within 1–2 weeks', 'Studies that followed families for years haven’t found lasting harm from sleep training, or from choosing not to.'), 'Pediatric review pending.');
+      callout('Good to know', 'Most methods help within 1–2 weeks', 'Studies that followed families for years haven’t found lasting harm from sleep training, or from choosing not to.'), '');
     if (screen === 'help') return detail(cat, cat, cat === 'Sleep' ? 'When to ask for sleep help' : 'When to ask for feeding help',
       cat === 'Sleep' ? 'Most sleep changes are normal and pass. Here’s how to tell when something is worth a call.' : 'Most feeding ups and downs are normal. Here’s how to tell when something is worth a call.',
       helpList('How to tell', D.TRIAGE.map(x => [x[0], x[1].split(' · ').join('. ') + '.'])) +
       (cat === 'Sleep' ? callout('For you', 'Look after yourself too', 'If exhaustion or low mood is getting hard to manage, talk to your own doctor, or call or text the National Maternal Mental Health Hotline: 1-833-852-6262.')
         : callout('For you', 'Feeding is hard work', 'If nursing hurts or feeding feels overwhelming, a lactation consultant can help, and is often covered by insurance. Asking for help is normal.')),
-      (cat === 'Sleep' ? 'Before a visit, note a few nights of bedtime, wakes and feeds.' : 'Before a visit, note a day of feeds and wet diapers.') + ' It helps your pediatrician see the pattern. Pediatric review pending.');
+      (cat === 'Sleep' ? 'Before a visit, note a few nights of bedtime, wakes and feeds.' : 'Before a visit, note a day of feeds and wet diapers.') + ' It helps your pediatrician see the pattern.');
     if (cat === 'Feeding' && screen === 'safe') return detail(cat, 'Before solids · Usually 4–6 months', 'Feeding safety and first aid', 'Set up once, before the first bite. Then keep the hazards list in mind as she moves to finger foods.',
-      checklist(cat) + helpList('Once she’s eating', D.GROW), 'Based on AAP and CDC guidance. Pediatric review pending.');
+      checklist(cat) + helpList('Once she’s eating', D.GROW), 'Based on AAP and CDC guidance.');
     if (cat === 'Feeding' && screen === 'milk') return detail(cat, 'Breast milk, formula or both', 'Breast milk and formula basics', 'Every way of feeding works. Here’s how to store, mix and serve milk safely.',
       helpList('The essentials', D.METH.map(x => [x[0] + ' · ' + x[1], x[2]])) + helpList('Every bottle', D.BOTTLE_STEPS.map(t => ['', t])) +
-      callout('Good to know', 'Combination feeding counts too', 'Many families use both breast milk and formula. Choose what works for you, and change if you need to.'), 'Pediatric review pending.');
+      callout('Good to know', 'Combination feeding counts too', 'Many families use both breast milk and formula. Choose what works for you, and change if you need to.'), '');
     if (cat === 'Feeding' && screen === 'allergy') { const G = D.ALLERGY; return detail(cat, 'Starting solids · Usually around 6 months', 'Introducing allergens', 'Offering common allergens early, and often, lowers the chance of food allergy.',
       helpList('The common ones', [['', G.foods]]) + helpList('How to start', G.how.map(t => ['', t])) + helpList('If she reacts', [['Mild', G.mild], ['Serious', G.serious]]) +
-      callout('Before you start', '', T(G.ask)), 'Based on NIAID and AAP guidance. Pediatric review pending.'); }
+      callout('Before you start', '', T(G.ask)), 'Based on NIAID and AAP guidance.'); }
     if (screen === 'q') { const v = Number(a), st = D.CH[v]; if (st) local.open = cat + ':' + st.key + ':' + Number(b); return mainPage(cat, v === CFG[cat].stage(ageNow()) ? null : v, null); }
     return mainPage(cat, null, null);
   }
