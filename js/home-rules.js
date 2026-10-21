@@ -153,8 +153,8 @@
   /* ---------- the same markup Home already uses ---------- */
   const baseRow = conceptRow;
   window.conceptRow = conceptRow = function (row, extra = '') {
-    const html = baseRow(row, extra);
-    return row.reason ? html.replace(`<small>${displayTopic(row.topic)}</small>`, `<small>${displayTopic(row.topic)} · ${esc(row.reason)}</small>`) : html;
+    const html = baseRow({ ...row, title: babyCopy(row.title), body: babyCopy(row.body || '') }, extra);
+    return row.reason ? html.replace(`<small>${displayTopic(row.topic)}</small>`, `<small>${displayTopic(row.topic)} · ${esc(babyCopy(row.reason))}</small>`) : html;
   };
 
   function swaddleRow(c) {

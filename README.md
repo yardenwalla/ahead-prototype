@@ -73,6 +73,8 @@ Call `homeRulesDebug()` in the browser console to see what was shown, what was h
 The content and personalization regression pass is documented in `docs/content-qa-2026-10-21.md`.
 Run `node tools/qa/content-journeys.cjs` for the fast template/handler checks across 100 scripted families and 13 monthly checkpoints. This does not replace browser, editorial or pediatric review.
 
+The handoff log is `docs/claude-change-log.md`. Setup optionally records he/him, she/her or they/them for baby-specific wording; older profiles use neutral wording. Run `node tools/qa/pronouns.cjs` to check authored copy, verb agreement, persistence and unchanged personal notes.
+
 `tools/qa` plays nine example families week by week from onboarding to 12 months. Each family answers the solids question its own way, and some also save moments or tap “Already there?”. It checks three things: nothing is broken or empty, everything follows the right order and stays useful, and the right personalization appears and disappears. The latest report is in `docs/qa-report.html`.
 
 To rerun it after any change:

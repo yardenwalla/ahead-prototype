@@ -24,7 +24,7 @@
   function save() { try { localStorage.setItem(STORE, JSON.stringify(local)); } catch (e) {} }
   window.resetBabyChanges = function () { local = freshState(); save(); };
 
-  const T = s => esc(String(s == null ? '' : s)).replace(/Maya/g, name());
+  const T = s => esc(babyCopy(String(s == null ? '' : s))).replace(/Maya/g, name());
   // Everything developmental follows adjusted age for babies born early (until age 2).
   const ageNow = () => developmentMonth(actualMonth());
 
@@ -269,17 +269,17 @@
       callout('Choosing an approach', 'Make a plan you can follow', 'Decide how you’ll respond at bedtime and to night waking, including any feeds baby still needs. You can pause and reassess if the approach isn’t working for your family.'), '');
     if (screen === 'help') return detail(cat, cat, cat === 'Sleep' ? 'When to ask for sleep help' : 'When to ask for feeding help',
       cat === 'Sleep' ? 'Most sleep changes are normal and pass. Here’s how to tell when something is worth a call.' : 'Most feeding ups and downs are normal. Here’s how to tell when something is worth a call.',
-      helpList('How to tell', D.TRIAGE.map(x => [x[0], x[1].split(' · ').join('. ') + '.'])) +
+      helpList('How to tell', D.TRIAGE.map(x => [x[0], babyCopy(x[1]).split(' · ').join('. ') + '.'])) +
       (cat === 'Sleep' ? callout('For you', 'Look after yourself too', 'If exhaustion or low mood is getting hard to manage, talk to your own doctor, or call or text the National Maternal Mental Health Hotline: 1-833-852-6262.')
         : callout('For you', 'Feeding is hard work', 'If nursing hurts or feeding feels overwhelming, a lactation consultant can help, and is often covered by insurance. Asking for help is normal.')),
       (cat === 'Sleep' ? 'Before a visit, note a few nights of bedtime, wakes and feeds.' : 'Before a visit, note a day of feeds and wet diapers.') + ' It helps your pediatrician see the pattern.');
     if (cat === 'Feeding' && screen === 'safe') return detail(cat, 'Before the first bite', 'Feeding safety and first aid', 'Prepare the seat and learn first aid before starting. Revisit food preparation as textures and self-feeding change.',
-      checklist(cat) + helpList('Once she’s eating', D.GROW), 'Based on AAP and CDC guidance.');
+      checklist(cat) + helpList('Once baby is eating', D.GROW), 'Based on AAP and CDC guidance.');
     if (cat === 'Feeding' && screen === 'milk') return detail(cat, 'Breast milk, formula or both', 'Breast milk and formula basics', 'Every way of feeding works. Here’s how to store, mix and serve milk safely.',
       helpList('The essentials', D.METH.map(x => [x[0] + ' · ' + x[1], x[2]])) + helpList('Every bottle', D.BOTTLE_STEPS.map(t => ['', t])) +
       callout('Good to know', 'Combination feeding counts too', 'Many families use both breast milk and formula. Choose what works for you, and change if you need to.'), '');
     if (cat === 'Feeding' && screen === 'allergy') { const G = D.ALLERGY; return detail(cat, 'Starting solids · Usually around 6 months', 'Introducing allergens', 'Offering common allergens early, and often, lowers the chance of food allergy.',
-      helpList('The common ones', [['', G.foods]]) + helpList('How to start', G.how.map(t => ['', t])) + helpList('If she reacts', [['Mild', G.mild], ['Serious', G.serious]]) +
+      helpList('The common ones', [['', G.foods]]) + helpList('How to start', G.how.map(t => ['', t])) + helpList('If baby reacts', [['Mild', G.mild], ['Serious', G.serious]]) +
       callout('Before you start', '', T(G.ask)), 'Based on NIAID and AAP guidance.'); }
     if (screen === 'q') { const v = Number(a), st = D.CH[v]; if (st) local.open = cat + ':' + st.key + ':' + Number(b); return mainPage(cat, v === CFG[cat].stage(ageNow()) ? null : v, null); }
     return mainPage(cat, null, null);
