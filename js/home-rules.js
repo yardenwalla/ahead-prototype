@@ -97,7 +97,8 @@
     const due = addMonths(parse(profile.dob), age), days = Math.round((rec?.status === 'planned' ? parse(rec.date) : due) - NOW) / 864e5;
     if (rec?.status !== 'attended' && age >= month)
       out.push({ topic: 'Health', title: healthJourneyLabel(age), action: `openPage('health-visit:${age}')`,
-        body: rec?.status === 'planned' ? 'Your questions and notes are saved with this visit.' : 'Preview the checks and pick the questions you want to ask.',
+        // The visit summary stays visible when an appointment is saved; the date shows in the label.
+        body: age === 6 && month === 5 ? 'At the 6-month visit: growth, first foods, tooth care and vaccines—including whether flu vaccination is due.' : 'Preview the checks and pick the questions you want to ask.',
         tier: 'should', dated: true, days, upcoming: days > 14, prep: true,
         reason: rec?.status === 'planned' ? `Saved for ${journeyDateLabel(rec.date)}` : age === 0 ? 'In the first week' : age === month ? `Due at ${mo(age)}` : `Due around ${mo(age)}` });
 
