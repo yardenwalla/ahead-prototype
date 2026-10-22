@@ -18,11 +18,13 @@
 
   /* ---------- state that belongs to these pages ---------- */
   const STORE = 'ahead-v2-changes';
-  let local = { safe: { Sleep: { 0: true, 1: true }, Feeding: { 0: true } }, method: null, dismissed: {}, ans: {} };
+  const freshState = () => ({ safe: { Sleep: {}, Feeding: {} }, method: null, dismissed: {}, ans: {} });
+  let local = freshState();
   try { local = Object.assign(local, JSON.parse(localStorage.getItem(STORE)) || {}); } catch (e) {}
   function save() { try { localStorage.setItem(STORE, JSON.stringify(local)); } catch (e) {} }
+  window.resetBabyChanges = function () { local = freshState(); save(); };
 
-  const T = s => esc(String(s == null ? '' : s)).replace(/Maya/g, name());
+  const T = s => esc(babyCopy(String(s == null ? '' : s))).replace(/Maya/g, name());
   // Everything developmental follows adjusted age for babies born early (until age 2).
   const ageNow = () => developmentMonth(actualMonth());
 
@@ -108,7 +110,7 @@
     const a = A[key]; let title = a[1];
     if (key === '5') { const n = Object.values(local.safe.Feeding).filter(Boolean).length; title = n + ' of ' + DATA.Feeding.SAFE.length + ' ready'; }
     const screen = { settle: 'milk', safe: 'safe' }[a[4]] || 'safe';
-    return { reason: a[0], title, body: a[2], act: a[3], go: "openPage('chg:Feeding:" + screen + "')" };
+    return { reason: key === '8' ? 'As textures and self-feeding develop' : a[0], title, body: a[2], act: a[3], go: "openPage('chg:Feeding:" + screen + "')" };
   }
 
   /* ---------- builders: only the app's own components ----------
@@ -141,7 +143,7 @@
     const unit = awake.length && /min/.test(awake[0]) ? ' min' : ' h';
     const lo = awake.length ? num(awake[0])[0] : '', hi = awake.length ? num(awake[awake.length - 1]).slice(-1)[0] : '';
     const span = awake.length ? (lo === hi ? lo : lo + '–' + hi) + unit : '';
-    const cells = [['Total', total ? total + ' h' : '—'], ['Naps', C.key === 'clock' ? 'Many' : naps || '—'], ['Awake', span || '—'], ['Bedtime', bed || 'Varies']];
+    const cells = [['Total', total ? total + ' h' : '—'], ['Naps', C.key === 'clock' ? 'Many' : C.key === 'daynight' ? 'Varies' : naps || '—'], ['Awake', span || '—'], ['Bedtime', bed || 'Varies']];
     return `<section class="sleep-phase-metrics chg-metrics" aria-label="Sleep at a glance">${cells.map(([k, v]) => `<div><span>${k}</span><strong>${esc(String(v))}</strong></div>`).join('')}<p>Typical range · Includes naps</p></section>`;
   }
   function dayOrder(rows) {
@@ -167,14 +169,16 @@
 
     let h = `<div class="quiet-category parent-guide sleep-snapshot chg-page" data-overview="${cat}" style="${yearTheme(cat)}">`;
     h += monthlyPageHeader(cat) + rail(cat, view, cur, isEv);
-    h += `<header class="experience-hero"><div class="experience-hero-copy"><div class="eyebrow">${esc(eyebrow)}</div><h2>${T(C.title)}</h2></div><span class="experience-hero-art" aria-hidden="true">${yearIllustration(cat, 1)}</span><p class="experience-hero-description">${T(C.lead)}</p></header>`;
+    const unknownFood = cat === 'Feeding' && !isEv && view === cur && m >= 6 && !hasFoodAnswer();
+    const lead = unknownFood ? 'Whether you’re preparing or have already begun, find readiness signs, safe first foods and ways to keep milk feeds alongside.' : C.lead;
+    h += `<header class="experience-hero"><div class="experience-hero-copy"><div class="eyebrow">${esc(eyebrow)}</div><h2>${T(C.title)}</h2></div><span class="experience-hero-art" aria-hidden="true">${yearIllustration(cat, 1)}</span><p class="experience-hero-description">${T(lead)}</p></header>`;
 
     // One check-in moves Feeding into solids, at most once a month; age alone never does.
     if (cat === 'Feeding' && !isEv && view === cur && (cur === 2 || cur === 3 && !hasFoodAnswer()) && m >= 6 && (typeof checkinDue !== 'function' || checkinDue('food', ['preparing'])))
-      h += `<section class="connected-checkin chg-checkin"><div><h2>${m >= 9 ? 'Most babies have started solids by now' : `Has ${name()} started solids?`}</h2></div><p>${m >= 9 ? `Tell us where ${name()} is, and this guide will catch up.` : 'Your answer moves this guide to the right stage. We’ll check again next month.'}${profile.early ? ' Born early? Your care team may suggest a different time.' : ''}</p><div class="connected-checkin-choices"><button onclick="chgAnswerCheckin('food','preparing')">Not yet</button><button onclick="chgAnswerCheckin('food','new')">First foods</button><button onclick="chgAnswerCheckin('food','established')">Eating meals</button></div></section>`;
+      h += `<section class="connected-checkin chg-checkin"><div><h2>Has ${name()} started solids?</h2></div><p>Choose guidance for preparing, first bites or building meals.${profile.early ? ' Your pediatrician can help with individual timing after early birth.' : ''}</p><div class="connected-checkin-choices"><button onclick="chgAnswerCheckin('food','preparing')">Not yet</button><button onclick="chgAnswerCheckin('food','new')">First foods</button><button onclick="chgAnswerCheckin('food','established')">Eating meals</button></div></section>`;
 
     if (cat === 'Sleep' && !isEv && view === cur && chgSleepAuto() && autoNoticeFresh())
-      h += headsUp(`Most babies are on two naps by now`, `We moved ${name()} to Two naps`, '', `<button class="textlink chg-headsup-link" onclick="setAnswer('twoNaps','Stay')">Still on three naps? Keep ${name()} on Naps find a rhythm →</button>`);
+      h += headsUp('A guide for this age', 'Two-nap guidance', '', `<button class="textlink chg-headsup-link" onclick="setAnswer('twoNaps','Stay')">Still on three naps? Show Naps find a rhythm →</button>`);
     // Browsing another stage: correct it, or go back to where she is now.
     if (!isEv && view !== cur && live())
       h += `<div class="chg-browse-links"><button class="textlink chg-override" onclick="chgSetStage('${cat}',${view})">This is where ${name()} is now</button><button class="textlink chg-back-now" onclick="chgGo('chg:${cat}:s:${cur}')">← Back to where ${name()} is now</button></div>`;
@@ -187,7 +191,7 @@
     h += helpList('Why it’s happening', [['', C.why]].concat(isEv && C.lasts ? [['How long it lasts', C.lasts]] : []));
 
     // Rhythm card
-    const rows = (C.rhythm || []).filter(r => !r[2] || r[2] === 'all' || meth === 'both' || r[2] === meth);
+    const rows = (C.rhythm || []).filter(r => !r[2] || r[2] === 'all' || meth === 'both' || r[2] === meth).map(r => cat === 'Feeding' && C.key === 'meals' && m < 12 && r[0] === 'Milk' && r[2] === 'bottle' ? [r[0], 'About 24 oz a day; follow hunger and fullness cues', r[2]] : r);
     const title = isEv ? (cat === 'Sleep' ? 'Naps and nights' : 'Feeds right now') : cfg.rhythmTitle;
     const sub = !isEv && cat === 'Sleep' ? 'How long baby is awake between sleeps.' : !isEv && cat === 'Feeding' ? `${esc(C.total || '')} Shown for ${{ nurse: 'nursing', bottle: 'bottle feeding', both: 'nursing and bottles' }[meth]}. <button class="textlink chg-inline" onclick="chgCycleMethod()">Change</button>` : '';
     let card = `<div class="chg-card-head"><h2>${title}</h2>${sub ? `<p>${sub}</p>` : ''}</div>`;
@@ -219,7 +223,7 @@
     let links = '';
     if (cat === 'Sleep') {
       links += refRow("openPage('chg:Sleep:safe')", 'safety', 'Safe sleep setup');
-      if (cur > 0) links += refRow("openPage('chg:Sleep:settle')", 'moon', 'Settling and sleep training');
+      links += refRow("openPage('chg:Sleep:settle')", 'moon', m < 4 ? 'Helping baby settle' : 'Settling and sleep training');
       links += refRow("openPage('chg:Sleep:help')", 'health', 'When to ask for sleep help');
     } else {
       links += refRow("openPage('chg:Feeding:milk')", 'feed', 'Breast milk and formula basics');
@@ -257,23 +261,25 @@
     const D = DATA[cat];
     if (cat === 'Sleep' && screen === 'safe') return detail(cat, 'Safe sleep', 'Safe sleep setup', 'Set this up once, before birth or in the first days. It applies to every nap and every night, whichever way you settle baby.',
       checklist(cat) + helpList('As baby grows', D.GROW), 'Based on AAP safe sleep guidance, 2022.');
+    if (cat === 'Sleep' && screen === 'settle' && ageNow() < 4) return detail(cat, 'The early months', 'Helping baby settle', 'Feeding, rocking or holding can help baby fall asleep while sleep patterns are still developing.',
+      helpList('A gentle routine', [['Follow sleepy cues', 'Try settling when baby gets quieter, looks away or yawns. Timing can vary between sleeps.'], ['Keep the steps familiar', 'A feed, diaper change and a quiet song can become a short routine. Keep responding to hunger and comfort needs.']]) + refRow("openPage('chg:Sleep:safe')", 'safety', 'Safe sleep setup'), '');
     if (cat === 'Sleep' && screen === 'settle') return detail(cat, 'Your choice · from 4–6 months', 'Settling and sleep training', 'Helping Maya fall asleep by feeding, rocking or holding is normal at any age. You only need to change it if it isn’t working for your family.',
       helpList('When to consider it', [['', 'Most families who try sleep training wait until at least 4–6 months. Check with your pediatrician first, especially if Maya was born early or growth has been a question.']]) +
       helpList('The approaches', D.METH.map(x => [x[0] + ' · ' + x[1], x[2]])) + helpList('Before you start', D.SETTLE_BEFORE.map(t => ['', t])) +
-      callout('Good to know', 'Most methods help within 1–2 weeks', 'Studies that followed families for years haven’t found lasting harm from sleep training, or from choosing not to.'), '');
+      callout('Choosing an approach', 'Make a plan you can follow', 'Decide how you’ll respond at bedtime and to night waking, including any feeds baby still needs. You can pause and reassess if the approach isn’t working for your family.'), '');
     if (screen === 'help') return detail(cat, cat, cat === 'Sleep' ? 'When to ask for sleep help' : 'When to ask for feeding help',
       cat === 'Sleep' ? 'Most sleep changes are normal and pass. Here’s how to tell when something is worth a call.' : 'Most feeding ups and downs are normal. Here’s how to tell when something is worth a call.',
-      helpList('How to tell', D.TRIAGE.map(x => [x[0], x[1].split(' · ').join('. ') + '.'])) +
+      helpList('How to tell', D.TRIAGE.map(x => [x[0], babyCopy(x[1]).split(' · ').join('. ') + '.'])) +
       (cat === 'Sleep' ? callout('For you', 'Look after yourself too', 'If exhaustion or low mood is getting hard to manage, talk to your own doctor, or call or text the National Maternal Mental Health Hotline: 1-833-852-6262.')
         : callout('For you', 'Feeding is hard work', 'If nursing hurts or feeding feels overwhelming, a lactation consultant can help, and is often covered by insurance. Asking for help is normal.')),
       (cat === 'Sleep' ? 'Before a visit, note a few nights of bedtime, wakes and feeds.' : 'Before a visit, note a day of feeds and wet diapers.') + ' It helps your pediatrician see the pattern.');
-    if (cat === 'Feeding' && screen === 'safe') return detail(cat, 'Before solids · Usually 4–6 months', 'Feeding safety and first aid', 'Set up once, before the first bite. Then keep the hazards list in mind as she moves to finger foods.',
-      checklist(cat) + helpList('Once she’s eating', D.GROW), 'Based on AAP and CDC guidance.');
+    if (cat === 'Feeding' && screen === 'safe') return detail(cat, 'Before the first bite', 'Feeding safety and first aid', 'Prepare the seat and learn first aid before starting. Revisit food preparation as textures and self-feeding change.',
+      checklist(cat) + helpList('Once baby is eating', D.GROW), 'Based on AAP and CDC guidance.');
     if (cat === 'Feeding' && screen === 'milk') return detail(cat, 'Breast milk, formula or both', 'Breast milk and formula basics', 'Every way of feeding works. Here’s how to store, mix and serve milk safely.',
       helpList('The essentials', D.METH.map(x => [x[0] + ' · ' + x[1], x[2]])) + helpList('Every bottle', D.BOTTLE_STEPS.map(t => ['', t])) +
       callout('Good to know', 'Combination feeding counts too', 'Many families use both breast milk and formula. Choose what works for you, and change if you need to.'), '');
     if (cat === 'Feeding' && screen === 'allergy') { const G = D.ALLERGY; return detail(cat, 'Starting solids · Usually around 6 months', 'Introducing allergens', 'Offering common allergens early, and often, lowers the chance of food allergy.',
-      helpList('The common ones', [['', G.foods]]) + helpList('How to start', G.how.map(t => ['', t])) + helpList('If she reacts', [['Mild', G.mild], ['Serious', G.serious]]) +
+      helpList('The common ones', [['', G.foods]]) + helpList('How to start', G.how.map(t => ['', t])) + helpList('If baby reacts', [['Mild', G.mild], ['Serious', G.serious]]) +
       callout('Before you start', '', T(G.ask)), 'Based on NIAID and AAP guidance.'); }
     if (screen === 'q') { const v = Number(a), st = D.CH[v]; if (st) local.open = cat + ':' + st.key + ':' + Number(b); return mainPage(cat, v === CFG[cat].stage(ageNow()) ? null : v, null); }
     return mainPage(cat, null, null);
@@ -340,3 +346,4 @@
   window.openFeedingFiveGuide = toFeeding;
   window.openSleepPhase = () => openPage('topic:Sleep');
 })();
+

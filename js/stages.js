@@ -70,7 +70,7 @@
   window.liveHomeCheckin = liveHomeCheckin = function () {
     const key = homeQuestion(); if (!key) return '';
     if (key !== 'naps') return baseLive().replace('This changes which safety setup to highlight.', 'Your answer updates Sleep and Safety.');
-    return `<section class="connected-checkin"><div><h2>Is ${name()} skipping the late catnap most days?</h2><button class="connected-skip" onclick="skipHomeQuestion()">Skip</button></div><p>Your answer moves Sleep to two naps when she’s ready.</p><div class="connected-checkin-choices"><button onclick="answerHomeQuestion('naps','Not yet')">Not yet</button><button onclick="answerHomeQuestion('naps','Yes')">Yes</button></div></section>`;
+    return `<section class="connected-checkin"><div><h2>Is ${name()} skipping the late catnap most days?</h2><button class="connected-skip" onclick="skipHomeQuestion()">Skip</button></div><p>Your answer updates the nap guidance.</p><div class="connected-checkin-choices"><button onclick="answerHomeQuestion('naps','Not yet')">Not yet</button><button onclick="answerHomeQuestion('naps','Yes')">Yes</button></div></section>`;
   };
 
   /* ---------- Safety ---------- */
@@ -108,8 +108,8 @@
   window.chgSetSafety = function (key) {
     if (key === 'setup' || key === 'reaching') { answers.roll = 'Not yet'; answers.rollDirection = 'Not yet'; delete answers.crawl; delete answers.pullUp; }
     if (key === 'rolling') { answers.roll = 'Yes'; delete answers.crawl; delete answers.pullUp; }
-    if (key === 'moving') { answers.roll = 'Yes'; answers.crawl = 'Yes'; delete answers.pullUp; }
-    if (key === 'pulling') { answers.roll = 'Yes'; answers.crawl = 'Yes'; answers.pullUp = 'Yes'; }
+    if (key === 'moving') { answers.crawl = 'Yes'; delete answers.pullUp; }
+    if (key === 'pulling') { answers.pullUp = 'Yes'; }
     persist(); page = 'topic:Safety'; render(); window.scrollTo(0, 0);
   };
   // No standing "Update baby's movement" toggle: the timeline, "This is where she is now" and saved moments cover it.
@@ -167,3 +167,4 @@
     return profile.early && t !== 'Health' ? monthLabel(developmentMonth()) + ' adjusted' : monthLabel(month);
   };
 })();
+

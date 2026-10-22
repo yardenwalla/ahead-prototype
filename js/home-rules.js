@@ -6,7 +6,7 @@
      • Every row is a candidate with a tier, a reason and copy.
      • Hard filters drop rows that don't fit this baby (e.g. solids before a parent says so).
      • Rank: must-know first, then what a parent told us, then dated items, then age-based.
-     • Caps: 3 rows in the main card, one per category. Nice-to-know (play ideas) stays on its page.
+     • Caps: 3 rows in the main card, one per category, including a timely play activity.
      • Each row's small label says why it's there: "Sleep · You said Maya is trying to roll".
      • "Prepare for next" shows up to 2 coming-up items from categories not already above. */
 
@@ -32,18 +32,18 @@
 
   /* Copy for each stage, written to the content skill: verb-first, one line, no jargon. */
   const SLEEP_ROW = [
-    ['Newborn sleep', 'Short sleeps around the clock are normal. Start settling at the first yawn.'],
-    ['Days and nights sort out', 'Bright days and dim nights help one longer night stretch appear.'],
-    ['Naps find a rhythm', 'Naps start landing at similar times, about 2 hours apart.'],
-    ['Two naps a day', 'The late catnap drops. An earlier bedtime helps during the switch.']
+    ['Newborn sleep', 'Recognize sleepy cues and understand short sleeps around the clock.'],
+    ['Days and nights sort out', 'Use daylight and a short evening routine as nights begin to take shape.'],
+    ['Naps find a rhythm', 'Find awake-time guidance and a sample day for this stage.'],
+    ['Two naps a day', 'See how the day can fit around two naps, and what helps during the transition.']
   ];
   const FEED_ROW = [
-    ['Newborn feeding', 'Feed on demand, 8–12 times a day. Wet diapers tell you it’s enough.'],
-    ['Feeds find a rhythm', 'Feeds spread out and get quicker. Milk is still everything she needs.'],
+    ['Newborn feeding', 'Recognize hunger and fullness cues, and the signs milk intake is on track.'],
+    ['Feeds find a rhythm', 'Understand changing feeds and how milk intake and growth fit together.'],
     ['Getting ready for solids', 'Spot the readiness signs and get set up before the first bite.'],
-    ['Starting solids', 'Start with iron-rich foods, and offer peanut and egg early.'],
-    ['Textures and finger foods', 'Move to soft finger foods, and keep choking hazards off her plate.'],
-    ['Family meals', 'Three meals a day alongside milk. Cups come next.']
+    ['Starting solids', 'Choose a way to offer food, prepare it safely and keep milk feeds alongside.'],
+    ['Textures and finger foods', 'Build on first foods with textures and self-feeding practice suited to your baby.'],
+    ['Family meals', 'Bring meals, milk feeds and cup practice together as eating skills grow.']
   ];
 
   /* ---------- candidates ---------- */
@@ -66,41 +66,41 @@
     if (live() && (answers.pullUp === 'Yes' || m >= 8) && answers.mattressLowest !== 'Yes')
       out.push({ topic: 'Sleep', kind: 'mattress', tier: 'must', reported: answers.pullUp === 'Yes', reason: answers.pullUp === 'Yes' ? said('pulling') : 'Before she pulls up' });
     if (priority && priority.type === 'check')
-      out.push({ topic: 'Safety', kind: 'check', tier: 'must', reported: !!mv, reason: mv && relevantCheck(mv) ? said(mv) : priority.owner === 'mobile' ? 'Before she’s on the move' : 'Before she starts to roll', priority });
+      out.push({ topic: 'Safety', kind: 'check', tier: 'must', reported: !!mv && relevantCheck(mv), reason: mv && relevantCheck(mv) ? said(mv) : priority.owner === 'mobile' ? 'Secure spaces within reach' : 'Prepare space for rolling', priority });
 
     // Development: the skill to watch now
     const dev = byTopic('Development');
     const devHit = !!mv && relevant(mv, dev && dev.title);
     if (dev) out.push({ ...dev, tier: 'should', reported: devHit,
       reason: devHit ? (mv === 'trying' ? 'Rolling is starting' : said(mv)) : ageReason(),
-      body: mv === 'rolling' ? 'What to notice, and how floor play helps her practise.' : mv === 'trying' ? 'What to notice as she starts, and how floor play helps.' : dev.body });
+      body: devHit && mv === 'rolling' ? 'Recognize rolling skills and ways to support them through floor play.' : devHit && mv === 'trying' ? 'Recognize early rolling attempts and ways to support them through floor play.' : dev.body });
 
-    // Feeding: the stage from the new Feeding guide. Solids only after a parent says so.
+    // A guide may be suggested by age; a "You said" label must use the actual answer.
     const fi = stageIndex('Feeding'), food = live() && hasFoodAnswer() ? foodStage() : null;
     out.push({ topic: 'Feeding', title: FEED_ROW[fi][0], body: FEED_ROW[fi][1], action: "openPage('topic:Feeding')",
       tier: 'should', reported: fi >= 3 && !!food,
       prep: fi === 2,
-      reason: fi === 0 ? 'For the first weeks' : fi === 2 ? (m >= 6 && live() ? `Tell us when ${name()} starts solids` : 'Most babies start solids around 6 months') : fi === 3 && !food ? 'Most babies start solids around 6 months' : fi >= 3 && food ? `You said ${name()} ${food === 'new' ? 'has started solids' : 'is eating meals'}` : ageReason(),
+      reason: fi === 0 ? 'For the first weeks' : fi === 1 ? ageReason() : fi === 2 ? (food === 'preparing' ? `You said ${name()} hasn’t started solids` : 'Prepare before the first bite') : !food ? 'Solids status not shared yet' : `You said ${name()} ${food === 'new' ? 'has started solids' : 'is eating meals'}`,
       reference: fi === 1 });
 
     // Sleep: the current stage (a reference row, so it ranks below actions)
     const si = stageIndex('Sleep');
     out.push({ topic: 'Sleep', title: SLEEP_ROW[si][0], body: SLEEP_ROW[si][1], action: "openPage('topic:Sleep')",
       tier: 'should', reference: !(live() && si === 3 && (answers.twoNaps === 'Yes' || chgSleepAuto())), reported: live() && si === 3 && answers.twoNaps === 'Yes',
-      reason: si === 0 ? 'For the first weeks' : live() && si === 3 && answers.twoNaps === 'Yes' ? `You said ${name()} is skipping the catnap` : live() && si === 3 && chgSleepAuto() ? 'Most babies are on two naps by now' : ageReason() });
+      reason: si === 0 ? 'For the first weeks' : live() && si === 3 && answers.twoNaps === 'Yes' ? `You said ${name()} is on two naps` : si === 3 ? 'Two-nap guidance for this stage' : ageReason() });
 
     // Health: the next visit, ranked up when it's close
     let age = healthJourneyFocus();
     // The first-week visit has passed after about 10 days; look ahead to the 1-month visit.
     if (age === 0 && live() && (NOW - parse(profile.dob)) / 864e5 > 10) age = 1;
     const rec = healthRecord(age);
-    const due = addMonths(parse(profile.dob), age), days = Math.round((rec?.status === 'planned' ? parse(rec.date) : due) - NOW) / 864e5;
-    if (rec?.status !== 'attended' && age >= month)
+    const due = addMonths(parse(profile.dob), age), days = Math.round(((rec?.status === 'planned' ? parse(rec.date) : due) - NOW) / 864e5);
+    if (rec?.status !== 'attended' && (age >= month || rec?.status === 'planned'))
       out.push({ topic: 'Health', title: healthJourneyLabel(age), action: `openPage('health-visit:${age}')`,
         // The visit summary stays visible when an appointment is saved; the date shows in the label.
-        body: age === 6 && month === 5 ? 'At the 6-month checkup: growth, first foods, tooth care and vaccines—including whether flu vaccination is due.' : 'Preview the checks and pick the questions you want to ask.',
+        body: conceptHealthSummary(age),
         tier: 'should', dated: true, days, upcoming: days > 14, prep: true,
-        reason: rec?.status === 'planned' ? `Saved for ${journeyDateLabel(rec.date)}` : age === 0 ? 'In the first week' : age === month ? `Due at ${mo(age)}` : `Due around ${mo(age)}` });
+        reason: rec?.status === 'planned' ? `${rec.date < iso(NOW) ? 'Saved date passed · ' : 'Saved for '}${journeyDateLabel(rec.date)}` : age === 0 ? 'In the first week' : `Usually around ${mo(age)}` });
 
     // Safety: the guide for how she moves now (when no specific check is pending)
     const saf = byTopic('Safety');
@@ -110,11 +110,12 @@
       : ['rolling', 'moving', 'pulling'].includes(safetyStageNow()) && !(mv === 'trying' || mv === 'rolling') && saf && /reaching and rolling/i.test(saf.title)
         ? { title: 'Before crawling', body: 'Gates, storage, outlets and furniture anchors.', action: `openSafetyChecklist('mobile',false)`, art: 0 } : {};
     if (saf && !(priority && priority.type === 'check'))
-      out.push({ ...saf, ...rollGuide, tier: 'should', reported: !!mv, prep: !mv, upcoming: !mv && m < 4, reason: mv && !safetyAgeForward() ? said(mv) : m < 5 ? 'Most babies roll by 6 months' : 'Before she’s on the move' });
+      out.push({ ...saf, ...rollGuide, tier: 'should', reported: !!mv && !safetyAgeForward(), prep: !mv, upcoming: !mv && m < 4, reason: mv && !safetyAgeForward() ? said(mv) : m < 3 ? 'For the first weeks' : m < 5 ? 'Prepare space for reaching and rolling' : 'Prepare for the next movement' });
 
-    // Play ideas are nice-to-know: they live on the Play page, not Home
-    const play = byTopic('Daily rhythm');
-    if (play) out.push({ ...play, tier: 'nice', reason: '' });
+    // A practical activity earns a place alongside guidance; keep the same three-row cap.
+    const model = playStageModel(), idea = model.primary[0];
+    const play = byTopic('Daily rhythm') || (idea ? { topic: 'Daily rhythm', title: idea.title, body: conceptPlaySuggestion(idea), action: `openPage('play-activity:${model.phase.lo}:${idea.id}')` } : null);
+    if (play) out.push({ ...play, tier: 'should', activity: true, reason: 'An activity for this stage' });
     return out;
   }
 
@@ -123,6 +124,7 @@
     if (c.reported) s += 100;                       // reported beats suggested
     if (c.dated) s += c.days <= 14 ? 120 : -40;
     if (c.reference) s -= 30;
+    if (c.activity) s += 10;
     if (c.upcoming) s -= 60;
     return s;
   }
@@ -141,6 +143,8 @@
     const next = [];
     const pool = [...held.filter(h => h.c.upcoming || h.c.prep).map(h => h.c),
       ...connectedHomeSections().next.filter(r => !['Sleep', 'Feeding', 'Health'].includes(r.topic))];
+    // A checkup in the coming month must not disappear behind undated references.
+    pool.sort((a, b) => Number(!!b.dated && b.days <= 35) - Number(!!a.dated && a.days <= 35));
     pool.forEach(r => { if (next.length < 2 && !used[r.topic] && !next.some(n => n.topic === r.topic) && r.topic !== 'Daily rhythm') next.push({ ...r, reason: r.reason || 'Coming up' }); });
     return { main, next, held };
   }
@@ -149,8 +153,8 @@
   /* ---------- the same markup Home already uses ---------- */
   const baseRow = conceptRow;
   window.conceptRow = conceptRow = function (row, extra = '') {
-    const html = baseRow(row, extra);
-    return row.reason ? html.replace(`<small>${displayTopic(row.topic)}</small>`, `<small>${displayTopic(row.topic)} · ${esc(row.reason)}</small>`) : html;
+    const html = baseRow({ ...row, title: babyCopy(row.title), body: babyCopy(row.body || '') }, extra);
+    return row.reason ? html.replace(`<small>${displayTopic(row.topic)}</small>`, `<small>${displayTopic(row.topic)} · ${esc(babyCopy(row.reason))}</small>`) : html;
   };
 
   function swaddleRow(c) {
@@ -188,3 +192,4 @@
     return raw.slice(0, start) + liveHomeCheckin() + hero + preparation + raw.slice(end);
   };
 })();
+

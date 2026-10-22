@@ -109,13 +109,13 @@ window.AHEAD_CHANGES = {
     "rail": "Naps find a rhythm",
     "when": "Usually 4–6 months",
     "title": "Naps find a rhythm",
-    "lead": "Naps start happening at similar times each day. This is when a nap schedule starts to work, not before.",
+    "lead": "Naps may begin to follow a pattern. A familiar routine can help, while timing still varies from day to day.",
     "looks": [
      "Naps start at roughly the same times most days",
      "Usually 3 naps: two longer ones and a short late catnap",
      "Sleepy after about 2 hours awake"
     ],
-    "why": "Baby’s body clock now works, so sleepiness arrives at similar times each day. Before this, a nap schedule wouldn’t have stuck.",
+    "why": "As sleep matures, sleepy times may become easier to recognize. Short naps and night waking can still happen alongside a growing routine.",
     "lasts": "The pattern holds and slowly stretches, until the third nap no longer fits.",
     "rhythm": [
      [
@@ -362,15 +362,15 @@ window.AHEAD_CHANGES = {
   "TRIAGE": [
    [
     "Normal",
-    "Waking at night through the first year · Short naps until about 6 months · Noisy, irregular breathing in newborns"
+    "Waking at night through the first year · Short naps while sleep patterns develop"
    ],
    [
     "Keep an eye on it",
-    "Snoring most nights · Sleep that gets worse for more than 2 weeks · Hard to settle most of the day"
+    "Note a pattern of harder settling or more waking, including feeds and any signs of discomfort"
    ],
    [
     "Call your pediatrician if",
-    "Snoring with pauses or gasping · Sleep changes with fever, ear pulling or poor feeding · A newborn who is hard to wake for feeds"
+    "Snoring most nights or pauses and gasping during sleep · Sleep changes with fever or poor feeding · A newborn who is hard to wake for feeds"
    ],
    [
     "Call 911 if",
@@ -654,7 +654,7 @@ window.AHEAD_CHANGES = {
     "when": "Birth–6 weeks",
     "title": "Newborn feeding: little and often",
     "lead": "Feeds come often, day and night, while you and baby figure it out together. Small, frequent feeds are exactly right.",
-    "why": "A newborn’s stomach starts out about the size of a cherry, so feeds are small and frequent. If you’re nursing, feeding often also builds your milk supply.",
+    "why": "Newborns need frequent feeds as they grow. If you’re nursing, feeding often also helps build your milk supply.",
     "total": "A guide, not a target.",
     "rhythm": [
      [
@@ -682,7 +682,7 @@ window.AHEAD_CHANGES = {
      ],
      [
       "Let her end the feed",
-      "Turning away, relaxed hands or falling asleep mean she’s full. She doesn’t need to finish a bottle."
+      "Turning away, slowing down or closing her mouth can mean she’s had enough. Sleepiness alone doesn’t tell you she took enough milk. She doesn’t need to finish a bottle."
      ],
      [
       "Get help early if nursing hurts",
@@ -701,7 +701,7 @@ window.AHEAD_CHANGES = {
     "when": "Usually 6 weeks–4 months",
     "title": "Feeds find a rhythm",
     "lead": "After the newborn weeks, feeds get bigger and further apart, and a pattern starts to show.",
-    "why": "Her stomach has grown and she feeds more efficiently, so each feed lasts her longer. Quicker nursing sessions are a sign of skill, not low supply.",
+    "why": "Some babies take milk more efficiently as they grow. Shorter feeds alone don’t tell you how much milk she’s getting; growth and wet diapers help show the overall pattern.",
     "total": "A guide, not a target.",
     "rhythm": [
      [
@@ -742,7 +742,7 @@ window.AHEAD_CHANGES = {
     "rail": "Getting ready for solids",
     "when": "Usually 4–6 months",
     "title": "Getting ready for solids",
-    "lead": "Feeds have settled into a pattern, and milk is still everything she needs. Now it’s about spotting readiness and getting set up.",
+    "lead": "Before first foods, learn the readiness signs and choose how you’d like to begin. Keep usual milk feeds while you prepare.",
     "why": "Until about 6 months, milk gives her everything she needs, and her mouth and body are still learning to handle food. Readiness depends on skills, not a birthday.",
     "total": "A guide, not a target.",
     "rhythm": [
@@ -836,7 +836,7 @@ window.AHEAD_CHANGES = {
     "rail": "Textures and finger foods",
     "when": "Usually 7–9 months",
     "title": "Textures and finger foods",
-    "lead": "Once spoonfuls are going well, food gets lumpier and she starts feeding herself. The mess is part of how she learns.",
+    "lead": "Build on the foods she can manage with soft lumps and finger foods, whether you began with purées, self-feeding or both.",
     "why": "Chewing and the pincer grasp develop now. Moving on from smooth textures by about 9 months makes eating easier later.",
     "total": "A guide, not a target.",
     "rhythm": [
@@ -1031,7 +1031,7 @@ window.AHEAD_CHANGES = {
    ],
    [
     "Know gagging from choking",
-    "Gagging is noisy, with coughing and a red face, and usually clears itself. Choking is silent: she can’t cry, cough or breathe. Call 911 and start first aid."
+    "Gagging can happen while learning to eat. Trouble breathing or a weak or absent cough can mean choking, even if there’s some sound. Call 911 and use infant choking first aid you’ve learned."
    ],
    [
     "Have a soft spoon and an open cup",
@@ -1288,7 +1288,7 @@ window.AHEAD_CHANGES = {
       [
        "Yes",
        "That’s gagging. It’s noisy and normal while she learns. Stay calm and let her work it out.",
-       "Choking is silent: she can’t cry, cough or breathe. Know infant choking first aid.",
+       "Trouble breathing or an ineffective cough can mean choking. Know infant choking first aid.",
        null
       ],
       [
@@ -1344,7 +1344,7 @@ window.AHEAD_CHANGES = {
       [
        "Gags, then keeps going",
        "Gagging is normal while she learns. Keep offering soft lumps alongside foods she likes.",
-       "Gagging is noisy; choking is silent. Know infant choking first aid.",
+       "Trouble breathing or an ineffective cough can mean choking, even if there’s some sound. Know infant choking first aid.",
        null
       ],
       [
@@ -1465,7 +1465,7 @@ window.AHEAD_CHANGES = {
    "Wash your hands before making a bottle, and clean bottles after every feed.",
    "Hold her semi-upright and pace the feed; pause every few minutes.",
    "Never prop a bottle or put her to bed with one.",
-   "Throw away what’s left within 1–2 hours of the feed starting."
+   "Formula: discard leftovers within 1 hour of starting the feed. Breast milk: use leftovers within 2 hours after the feed ends, then discard."
   ],
   "SOURCES": [
    [
@@ -1507,3 +1507,4 @@ window.AHEAD_CHANGES = {
   ]
  }
 };
+
