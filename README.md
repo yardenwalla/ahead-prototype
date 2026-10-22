@@ -26,7 +26,7 @@ The app looks and works the same as the previous prototype, with two exceptions:
 - **Detail screens:**
   - Sleep: safe sleep setup, settling and sleep training, when to ask for help
   - Feeding: milk and formula basics, feeding safety and first aid, introducing allergens, when to ask for help
-- **Stages move on age.** Parents correct them with "Already there?" on the Coming up card or "This is where she is now" on any other stage. The only question is "Has Maya started solids?" (see below).
+- **Age suggests stages; parent reports take precedence.** Parents can correct guidance with "Already there?" or "This is where she is now." An explicit first-foods answer stays on Starting solids until eating experience is updated.
 
 ## Home rules
 
@@ -48,7 +48,8 @@ Call `homeRulesDebug()` in the browser console to see what was shown, what was h
 
 ## When stages move
 
-- **Age moves every stage by itself, with no question.** That covers Development, Play, Health, Sleep (Two naps at 9 months), Safety, and Feeding once solids have started (Textures and finger foods at 8 months, Family meals at 10).
+- **Age provides default guidance.** Development, Play and Health follow their age references. Sleep suggests Two naps at 9 months; Safety respects explicitly selected movement stages and reported abilities. Feeding suggests textures at 8 months and family meals at 10 only after established eating is reported. A first-foods answer remains Starting solids regardless of age.
+- **Newborn Sleep and Feeding transition after six weeks**, using actual days for the current baby rather than waiting for the two-month birthday. Monthly previews use the typical stage for that month.
 - **One question is left: "Has Maya started solids?"** From 6 months, at most once a month. If nobody answers, it shows for two weeks, then rests until next month. Feeding never moves into solids on age alone, because a wrong guess means advice about allergens and finger foods for a baby who hasn't started.
 - **Safety runs ahead of the usual age,** because extra babyproofing is the safe mistake:
   - reaching and rolling from 3 months
@@ -56,7 +57,7 @@ Call `homeRulesDebug()` in the browser console to see what was shown, what was h
   - babyproofing from 8 months
   - furniture reach from 9 months
   - "Stop swaddling" from 3 months
-  - "Lower the crib mattress" from 8 months
+  - lower the crib mattress before sitting, following its manual; lowest before standing
 - **Saved moments count.** Saving "Rolls tummy to back" or "Pulls up to stand" in the timeline moves Safety and changes the labels to "You said…".
 - **When Sleep moves to two naps on its own,** a notice says so for three weeks, with a one-tap undo ("Still on three naps?").
 - **Parents can always correct a stage.**
@@ -72,6 +73,8 @@ Call `homeRulesDebug()` in the browser console to see what was shown, what was h
 
 The content and personalization regression pass is documented in `docs/content-qa-2026-10-21.md`.
 Run `node tools/qa/content-journeys.cjs` for the fast template/handler checks across 100 scripted families and 13 monthly checkpoints. This does not replace browser, editorial or pediatric review.
+
+The latest pre-beta fixes and actual browser checks are documented in `docs/beta-readiness-2026-10-22.md`. Run `node tools/qa/check-all.cjs` (Node 20+) for syntax, local assets and all three regression suites, then `python3 tools/qa/link-check.py` for external URLs. These are scripted checks, not 100 human usability sessions.
 
 The handoff log is `docs/claude-change-log.md`. Setup optionally records he/him, she/her or they/them for baby-specific wording; older profiles use neutral wording. Run `node tools/qa/pronouns.cjs` to check authored copy, verb agreement, persistence and unchanged personal notes.
 
@@ -96,6 +99,7 @@ To rerun it after any change:
 | `js/stages.js` | When stages move: weekly re-ask, no-nag rules, Safety moving forward on age, adjusted age labels |
 | `js/timeline.js`, `css/timeline.css` | Timeline entries in their category colors; removes the Year Ahead tab (each category's stage rail covers the year) |
 | `js/boot.js` | Starts the app after every module has loaded |
+| `js/navigation.js` | Browser Back/Forward and reload restoration without putting baby details in URLs |
 | `tools/screenshot.py` | Playwright helper for screenshotting app states |
 
 Older Sleep and Feeding routes from the previous prototype redirect to the new pages.

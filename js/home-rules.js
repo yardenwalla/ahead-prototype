@@ -25,9 +25,7 @@
   const said = mv => `You said ${name()} ${{ trying: 'is trying to roll', rolling: 'is rolling', crawling: 'is crawling', pulling: 'is pulling up' }[mv]}`;
 
   function stageIndex(cat) {
-    if (live()) return chgStageIndex(cat);
-    const m = ageM();
-    return cat === 'Sleep' ? (m < 2 ? 0 : m < 4 ? 1 : m < 6 ? 2 : 3) : (m < 2 ? 0 : m < 4 ? 1 : m < 6 ? 2 : m < 8 ? 3 : m < 10 ? 4 : 5);
+    return chgStageIndex(cat);
   }
 
   /* Copy for each stage, written to the content skill: verb-first, one line, no jargon. */

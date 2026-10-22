@@ -1,6 +1,12 @@
 # Ahead · Change log for Claude
 
-Review pull request #1 against `main` in `yardenwalla/ahead-prototype`. These changes are implemented on the PR branch, not merged. Please review the diff rather than reimplementing this list from an older HTML export.
+The original changes below were merged in pull request #1. The new pre-beta QA changes are documented in **`docs/beta-readiness-2026-10-22.md`**, with concrete findings, resulting behavior, verification and limits. Review the new PR diff against main rather than reimplementing either list from an older HTML export. Claude's main-branch copy updates through `6b02109a4fba5bdf8829db29f59c14057537ec85` are preserved.
+
+## Latest pre-beta pass
+
+The new pass fixes saved-guide routes, browser navigation/reload, birthday-edit data continuity, invalid profile recovery, six-week and preview-age rules, explicit feeding/movement choices, repetitive Home movement summaries, Safety context and links, tailored Sleep support, milk-reference ambiguity and milk-specific detail content, plus month-2 Play variety. It retains the current design treatment. The full report above is the source of truth; automated coverage and actual browser checks are listed separately.
+
+The older sections below describe the previous pass and retain its historical validation boundaries.
 
 ## Home
 

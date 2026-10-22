@@ -87,8 +87,9 @@
   window.safetyAgeForward = function () { const s = answered(), g = byAge(dm()); return !s || ORDER.indexOf(g) > ORDER.indexOf(s) ? (ORDER.indexOf(g) > 1 ? g : null) : null; };
   function stageNow() {
     const s = answered(), g = byAge(dm());
-    if (!s) return g;
-    return ORDER.indexOf(g) > ORDER.indexOf(s) && ORDER.indexOf(g) > 1 ? g : s;
+    const chosen = ORDER.includes(answers.movementGuide) ? answers.movementGuide : null;
+    if (chosen) return s && ORDER.indexOf(s) > ORDER.indexOf(chosen) ? s : chosen;
+    return s || g;
   }
   window.currentSafetyMovementStage = currentSafetyMovementStage = stageNow;
   window.safetyStageNow = stageNow;
@@ -106,6 +107,9 @@
 
   // "This is where she is now" on a Safety stage you're browsing
   window.chgSetSafety = function (key) {
+    if (!ORDER.includes(key)) return;
+    answers.movementGuide = key;
+    markStage('movement');
     if (key === 'setup' || key === 'reaching') { answers.roll = 'Not yet'; answers.rollDirection = 'Not yet'; delete answers.crawl; delete answers.pullUp; }
     if (key === 'rolling') { answers.roll = 'Yes'; delete answers.crawl; delete answers.pullUp; }
     if (key === 'moving') { answers.crawl = 'Yes'; delete answers.pullUp; }

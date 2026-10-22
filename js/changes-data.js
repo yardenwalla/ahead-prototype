@@ -321,7 +321,7 @@ window.AHEAD_CHANGES = {
    ],
    [
     "Before baby can sit",
-    "Lower the crib mattress to the middle setting."
+    "Lower the crib mattress before baby can sit. Follow the crib manual for the right position."
    ],
    [
     "Before baby can pull up",
@@ -621,6 +621,10 @@ window.AHEAD_CHANGES = {
     "https://www.healthychildren.org/English/ages-stages/baby/diapers-clothing/Pages/Swaddling-Is-it-Safe.aspx"
    ],
    [
+    "AAP · Crib height and room safety",
+    "https://www.healthychildren.org/English/safety-prevention/at-home/Pages/Make-Babys-Room-Safe.aspx"
+   ],
+   [
     "AAP · Getting your baby to sleep",
     "https://www.healthychildren.org/English/ages-stages/baby/sleep/Pages/Getting-Your-Baby-to-Sleep.aspx"
    ],
@@ -767,7 +771,7 @@ window.AHEAD_CHANGES = {
     "helps": [
      [
       "Watch for the readiness signs",
-      "Steady head, sits with support, opens for a spoon, and swallows instead of pushing food out. Watching you eat isn’t a sign on its own."
+      "Steady head, sits with support, opens for offered food, and swallows instead of pushing food out. Watching you eat isn’t a sign on its own."
      ],
      [
       "Bring her to the table",
@@ -873,7 +877,7 @@ window.AHEAD_CHANGES = {
       "A few sips of water at meals. Spills are part of learning."
      ]
     ],
-    "signs": "Eating easily from a spoon and picking food up herself.",
+    "signs": "Getting comfortable with first foods and beginning to manage more texture or pick food up.",
     "looks": [],
     "lasts": "",
     "label": ""
@@ -1060,7 +1064,7 @@ window.AHEAD_CHANGES = {
    [
     "Breast milk storage",
     "CDC",
-    "Room temperature up to 4 hours, fridge up to 4 days, freezer 6–12 months. Use thawed milk within 24 hours, don’t refreeze it, and use leftovers within 2 hours of a feed."
+    "Room temperature: up to 4 hours. Fridge: up to 4 days. Freezer: within 6 months is best; up to 12 months is acceptable. Use refrigerated thawed milk within 24 hours after it is fully thawed; don’t refreeze fully thawed milk."
    ],
    [
     "Making formula",
@@ -1070,12 +1074,12 @@ window.AHEAD_CHANGES = {
    [
     "Pumping and bottles",
     "If you nurse",
-    "Offer a bottle once nursing is going well, often around 3–6 weeks. Someone else giving it can help. When you’re apart, pump about as often as she’d feed."
+    "While you’re apart or exclusively pumping, pump about as often as baby feeds. If you also nurse, introducing bottles can take practice; another caregiver can try a calm feed."
    ],
    [
     "Choosing formula",
-    "Any standard formula",
-    "Any iron-fortified infant formula works; store brands meet the same rules. Switching is fine. Ask before using a specialty formula."
+    "For most babies",
+    "Standard iron-fortified infant formula, including store brands, suits most babies. If baby has a prescribed formula or feeding plan for early birth, growth or allergy concerns, check before changing it."
    ],
    [
     "Warming bottles",
@@ -1085,7 +1089,7 @@ window.AHEAD_CHANGES = {
    [
     "Vitamin D",
     "Ask your pediatrician",
-    "Breastfed and partly breastfed babies need vitamin D drops every day. Formula already contains it."
+    "Under 12 months, babies need 400 IU a day. Breastfed and partly breastfed babies need daily drops; formula-fed babies may too if intake is below about 32 oz a day. From age one, the daily need is 600 IU. Ask your pediatrician which supplement fits."
    ]
   ],
   "TRIAGE": [
@@ -1491,6 +1495,10 @@ window.AHEAD_CHANGES = {
    [
     "AAP · Starting solid foods",
     "https://www.healthychildren.org/English/ages-stages/baby/feeding-nutrition/Pages/Starting-Solid-Foods.aspx"
+   ],
+   [
+    "AAP · Introducing allergens",
+    "https://www.healthychildren.org/English/healthy-living/nutrition/Pages/when-to-introduce-egg-peanut-butter-and-other-common-food-allergens-to-your-baby-food-allergy-prevention-tips.aspx?form=HealthyChildren"
    ],
    [
     "CDC · When, what and how to introduce solids",
