@@ -164,7 +164,7 @@ window.AHEAD_CHANGES = {
     ],
     "signs": "Naps landing at similar times most days.",
     "total": "About 12–16 hours of sleep in 24",
-    "night": "Most babies this age still wake to feed once or more. Dropping a night feed is a separate decision; ask your pediatrician first."
+    "night": "Night feeds can continue alongside a nap routine. Dropping a night feed is a separate decision; ask your pediatrician first."
    },
    {
     "key": "two",
@@ -693,7 +693,7 @@ window.AHEAD_CHANGES = {
       "Pain past the first few seconds, or trouble latching, is worth a lactation visit now."
      ]
     ],
-    "call": "She’s hard to wake for feeds, her skin or eyes look more yellow, or wet diapers drop below 6 a day.",
+    "call": "Baby is hard to wake for feeds, skin or eyes look more yellow, or wet diapers are fewer than expected for the day of life. After day 5, expect at least 6 wet diapers a day.",
     "signs": "",
     "looks": [],
     "lasts": "",
@@ -821,6 +821,10 @@ window.AHEAD_CHANGES = {
     "rhythmNote": "Offer solids when she’s alert and not too hungry.",
     "night": "Milk still carries her growth. At meals, watch her interest and fullness, not how much she eats.",
     "helps": [
+     [
+      "Make one food manageable",
+      "For spoon-feeding, mash or purée an iron-rich food. For self-feeding, offer food soft enough to mash with a fork, in a shape baby can grasp. You can use both approaches."
+     ],
      [
       "Introduce peanut and egg early",
       "Offer them in a safe form, then keep them in her diet. See Introducing allergens for how."
@@ -1229,18 +1233,18 @@ window.AHEAD_CHANGES = {
     ],
     [
      "Why won’t she take a bottle?",
-     "Who’s offering it?",
+     "Does baby take it from anyone?",
      [
       [
-       "The person who nurses her",
-       "Have someone else offer it, ideally when you’re out of the room.",
-       "Try when she’s a little hungry, not starving, and try a few different nipples.",
+       "Yes, from another caregiver",
+       "Let that caregiver offer a familiar bottle while baby gets used to the change.",
+       "Try when baby is a little hungry, rather than very upset. Pause if baby turns away.",
        null
       ],
       [
-       "Someone else, and she still refuses",
-       "Try a slower-flow nipple, warm the milk slightly, and offer it in a different position or while walking.",
-       "A cup or spoon can work for short separations. Ask your pediatrician if she’s refusing for days.",
+       "No, whoever offers it",
+       "Try a calm feed before baby is very hungry. Check whether the nipple flow seems hard to manage; don’t push baby to finish.",
+       "If refusal reduces usual milk intake or wet diapers, contact your pediatrician rather than waiting for the next checkup.",
        null
       ]
      ]

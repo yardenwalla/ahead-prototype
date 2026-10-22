@@ -1059,7 +1059,7 @@ function safetyReferenceModel(){const m=month,moving=isCurrent()&&answers.crawl=
 function currentSafetyMovementStage(){if(answers.pullUp==='Yes')return 'pulling';if(answers.crawl==='Yes')return 'moving';if(answers.roll==='Yes'||['Trying to roll','Tummy to back','Back to tummy','Both ways'].includes(answers.rollDirection))return 'rolling';return actualMonth()<3?'setup':'reaching';}
 function safetyMovementStage(){if(isCurrent())return currentSafetyMovementStage();return month<3?'setup':month<6?'rolling':month<9?'moving':'pulling';}
 function setSafetyMovement(stage){if(!isCurrent()||safetyBrowsing()||!['reaching','rolling','moving','pulling'].includes(stage))return;
-markStage('movement');resetReadingSection('safety-prep');if(stage==='reaching'){answers.rollDirection='Not yet';answers.roll='Not yet';answers.crawl='Not yet';answers.pullUp='Not yet';}
+answers.movementGuide=stage;markStage('movement');resetReadingSection('safety-prep');if(stage==='reaching'){answers.rollDirection='Not yet';answers.roll='Not yet';answers.crawl='Not yet';answers.pullUp='Not yet';}
 else if(stage==='rolling'){if(answers.roll!=='Yes'&&!['Trying to roll','Tummy to back','Back to tummy','Both ways'].includes(answers.rollDirection)){answers.rollDirection='Trying to roll';answers.roll='Not yet';}answers.crawl='Not yet';answers.pullUp='Not yet';}
 else if(stage==='moving'){answers.crawl='Yes';answers.pullUp='Not yet';}else answers.pullUp='Yes';
 persist();const y=window.scrollY;render();window.scrollTo(0,y);}
@@ -1987,7 +1987,7 @@ function healthJourneyQuestions(age){return {
 2:['What are you looking for in baby’s responses to faces, sounds and movement?','Does our feeding and growth pattern support changing any scheduled feeds?','Which reactions to these vaccines are expected, and when should we call?','Does anything need a recheck before the 4-month visit?'],
 4:['Do head control, reaching and interaction need any follow-up?','Which readiness signs should we use before starting solids?','Does our milk-feeding plan call for vitamin D or iron support?','How should we handle feeding needs while sleep patterns change?'],
 6:['How should milk and food fit together for my baby?','Do you see any growth, movement or feeding concerns needing follow-up?','How should we introduce allergens given our baby’s history?','What is our plan for first-tooth care and seasonal protection?'],
-9:['What did the developmental screening show?','Does trouble with textures, hearing or vision need a closer assessment?','Which vaccine doses are still due based on the actual record?','If you recommend support, who will arrange it and when should we follow up?'],
+9:['What did the development questionnaire tell us?','Does trouble with textures, hearing or vision need a closer assessment?','Which vaccine doses are still due based on the actual record?','If you recommend support, who will arrange it and when should we follow up?'],
 12:['Which anemia or lead tests are being done, and when will we get results?','How should we approach formula, cups or milk changes for our child?','Do gestures, sounds or movement need follow-up?','Which vaccine doses and dental appointments should we arrange next?']
 }[age];}
 function healthPreparationItems(age){const specific={
@@ -2422,7 +2422,7 @@ function answerHomeQuestion(key,value){
  const allowed={milk:['Breast milk','Formula','Both'],movement:['not_yet','trying','rolling'],food:['preparing','new','established'],crawl:['Not yet','Yes'],stand:['Not yet','Yes']};
  if(!allowed[key]?.includes(value))return;
  const ui=homeInputs();ui.asked[key]=month;if(['movement','crawl','stand'].includes(key))ui.reported={key,value,month};saveHomeInputs(ui);
- if(key==='milk'){profile.feed=value;milkReference=null;try{localStorage.removeItem('ahead-v2-milk-reference');}catch{}persist();render();}
+ if(key==='milk'){profile.feed=value;if(typeof resetMilkMethod==='function')resetMilkMethod();milkReference=null;try{localStorage.removeItem('ahead-v2-milk-reference');}catch{}persist();render();}
  if(key==='movement'){if(value==='rolling')setAnswer('roll','Yes');else setAnswer('rollDirection',value==='trying'?'Trying to roll':'Not yet');}
  if(key==='food')setFeedingStage(value);
  if(key==='crawl')setAnswer('crawl',value);

@@ -102,14 +102,14 @@
     if (view !== cur) return null;
     const m = ageNow();
     if (cat === 'Sleep') {
-      if (cur === 0) { const n = Object.values(local.safe.Sleep).filter(Boolean).length; return { reason: 'Safe sleep setup', title: n + ' of ' + DATA.Sleep.SAFE.length + ' checked', body: 'Back to sleep, a clear crib in your room, and never on a sofa.', act: 'Open checklist', go: "openPage('chg:Sleep:safe')" }; }
       // Age is enough: these come before the skill, and a parent's answer only changes the label.
       if ((rolling() || tryingToRoll() || m >= 3) && answers.swaddleStopped !== 'Yes' && (m <= 6 || answers.swaddleStopped === 'No'))
         return { reason: rolling() || tryingToRoll() ? 'Stop swaddling now' : 'Before the first attempt to roll', title: 'Stop swaddling at the first attempt to roll', body: 'Use regular sleepwear or an unweighted sleep sack with arms free.', act: 'Mark done', done: true, go: "setAnswer('swaddleStopped','Yes')" };
+      if (cur === 0) { const n = Object.values(local.safe.Sleep).filter(Boolean).length; return n === DATA.Sleep.SAFE.length ? null : { reason: 'Safe sleep setup', title: n + ' of ' + DATA.Sleep.SAFE.length + ' checked', body: 'Back to sleep, a clear crib in your room, and never on a sofa.', act: 'Open checklist', go: "openPage('chg:Sleep:safe')" }; }
       if ((answers.pullUp === 'Yes' || m >= 8) && answers.mattressLowest !== 'Yes')
         return { reason: answers.pullUp === 'Yes' ? 'You said ' + (profile.name || 'your baby') + ' is pulling up' : 'Before she pulls up', title: 'Set the crib mattress to its lowest', body: 'Remove mobiles and anything she can reach from standing.', act: 'Mark done', done: true, go: "setAnswer('mattressLowest','Yes')" };
-      if (m >= 5 && answers.mattressLowered !== 'Yes' && answers.mattressLowest !== 'Yes')
-        return { reason: 'Prepare before baby can sit up', title: 'Lower the crib mattress', body: 'Move it down before baby can sit. Follow the crib manual for the right position; use the lowest setting before pulling up.', act: 'Mark done', done: true, go: "setAnswer('mattressLowered','Yes')" };
+      if ((m >= 5 || answers.sit === 'Yes') && answers.mattressLowered !== 'Yes' && answers.mattressLowest !== 'Yes')
+        return { reason: answers.sit === 'Yes' ? 'You said baby can sit without support' : 'Prepare before baby can sit up', title: 'Lower the crib mattress', body: 'Move it down before baby can sit. Follow the crib manual for the right position; use the lowest setting before pulling up.', act: 'Mark done', done: true, go: "setAnswer('mattressLowered','Yes')" };
       return null;
     }
     const A = DATA.Feeding.ALERT, key = cur === 0 ? 'newborn' : cur === 2 ? '5' : cur === 4 ? '8' : null;
@@ -169,7 +169,14 @@
   function mainPage(cat, view, ev) {
     const D = DATA[cat], cfg = CFG[cat], m = ageNow(), cur = cfg.stage(m);
     if (view == null) view = cur;
-    const isEv = ev != null, C = isEv ? D.EV[ev] : D.CH[view], N = isEv ? null : D.CH[view + 1];
+    const isEv = ev != null, original = isEv ? D.EV[ev] : D.CH[view], N = isEv ? null : D.CH[view + 1];
+    const establishedTwoNaps = cat === 'Sleep' && !isEv && view === 3 && m >= 10;
+    const C = establishedTwoNaps ? {...original,
+      lead: 'A morning nap and an afternoon nap make up the day. New skills or a short nap may change the timing without changing the number of naps.',
+      why: 'Longer awake periods make room for two naps. A disrupted day does not by itself mean baby is ready to drop another nap.',
+      rhythmNote: 'Use the morning and afternoon naps as anchors; timing can shift after a short nap.',
+      helps: [['After a short or missed nap', 'Offer the next sleep earlier if baby is tired. One disrupted day does not mean the two-nap routine has stopped working.'],
+        ['When new skills interrupt sleep', 'Practice new movements during awake time and keep the bedtime sequence familiar. The routine support below covers changes after illness or travel too.']]} : original;
     const rel = view < cur ? 'past' : view === cur ? 'now' : 'next';
     const pastRange = rel === 'now' && rangeEnd(C.when) != null && m > rangeEnd(C.when);
     const eyebrow = isEv ? C.label + ' · ' + C.when : pastRange ? 'Current guide' : (rel === 'now' ? 'Around now · ' : rel === 'past' ? 'Earlier · ' : 'Coming up · ') + C.when;
@@ -205,7 +212,7 @@
       if (r[0] === 'Feeds a day') return ['Total milk feeds', r[1]];
       if (r[0] === 'Milk' && r[2] === 'nurse') return ['Nursing', r[1]];
       if (r[0] === 'Milk' && r[2] === 'bottle') return ['Bottles', m < 12 ? 'Amounts depend on how much baby nurses; follow hunger and fullness cues.' : 'Extra milk depends on nursing and meals. Discuss the transition at the 12-month checkup.'];
-      if (r[0] === 'Bottles' && r[2] === 'bottle') return ['A bottle-only feed', r[1]];
+      if (r[0] === 'Bottles' && r[2] === 'bottle') return ['A bottle-only feed', r[1].replace(', up to 32 oz a day', '')];
       return r;
     });
     const title = isEv ? (cat === 'Sleep' ? 'Naps and nights' : 'Feeds right now') : cfg.rhythmTitle;
@@ -219,6 +226,10 @@
     h += `<section class="sleep-snapshot-patterns chg-rhythm">${card}</section>`;
 
     h += helpList('What helps', C.helps);
+    if (cat === 'Feeding' && !isEv && C.key === 'first')
+      h += sourceLink('https://www.cdc.gov/infant-toddler-nutrition/foods-and-drinks/when-what-and-how-to-introduce-solid-foods.html', 'CDC · Food preparation and texture examples');
+    if (cat === 'Feeding' && !isEv && view === cur && m >= 9 && hasFoodAnswer() && ['preparing', 'new'].includes(foodStage()))
+      h += resourceRow("openHealthDetail(healthJourneyFocus(),'questions')", 'health', 'Bring your feeding experience to the checkup', 'If first foods are only beginning now, discuss readiness, iron and a plan for building textures.');
 
     if (cat === 'Sleep' && !isEv && view === cur && m >= 4)
       h += resourceRow("openPage('chg:Sleep:settle')", 'moon', 'Settling and sleep training', 'Compare approaches, get help while trying, or keep a routine working.');

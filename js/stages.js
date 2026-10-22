@@ -160,7 +160,8 @@
     const now = devRef(developmentMonth(actualMonth())), keys = Object.keys(DEV_STAGES).map(Number);
     if (ref !== now) return html.replace('</nav>', `</nav><div class="chg-browse-links" style="${yearTheme('Development')}"><button class="textlink chg-back-now" onclick="navigate('categories');openPage('topic:Development')">← Back to where ${name()} is now</button></div>`);
     const next = keys[keys.indexOf(ref) + 1];
-    if (!next) return html;
+    // The rail keeps later guides available. Do not present distant skills as preparation due now.
+    if (!next || next - developmentMonth(actualMonth()) > 1) return html;
     const card = `<section class="sleep-phase-ahead" style="${yearTheme('Development')}"><h3>Coming up · By ${next} months</h3><article><h4>${DEV_STAGES[next].title}</h4><p>${DEV_STAGES[next].body}</p></article><button class="textlink chg-headsup-link" onclick="openPage('development-stage:${next}')">See what’s next →</button></section>`;
     const src = devGuideSources(ref);
     return html.includes(src) ? html.replace(src, card + src) : html.replace(/<\/div>$/, card + '</div>');

@@ -74,7 +74,9 @@ Call `homeRulesDebug()` in the browser console to see what was shown, what was h
 The content and personalization regression pass is documented in `docs/content-qa-2026-10-21.md`.
 Run `node tools/qa/content-journeys.cjs` for the fast template/handler checks across 100 scripted families and 13 monthly checkpoints. This does not replace browser, editorial or pediatric review.
 
-The latest pre-beta fixes and actual browser checks are documented in `docs/beta-readiness-2026-10-22.md`. Run `node tools/qa/check-all.cjs` (Node 20+) for syntax, local assets and all three regression suites, then `python3 tools/qa/link-check.py` for external URLs. These are scripted checks, not 100 human usability sessions.
+The latest pre-beta fixes and actual browser checks are documented in `docs/beta-readiness-2026-10-22.md`. Run `node tools/qa/check-all.cjs` (Node 20+) for syntax, local assets and all regression suites, then `python3 tools/qa/link-check.py` for external URLs. These are scripted checks, not 100 human usability sessions.
+
+The follow-up recommendation acceptance review is `docs/recommendation-quality-2026-10-22.md`. The runner now also includes `recommendation-quality.cjs`: reason/action contracts, preparation timing and observable responses to parent information. Historical report counts refer to their respective snapshots.
 
 The handoff log is `docs/claude-change-log.md`. Setup optionally records he/him, she/her or they/them for baby-specific wording; older profiles use neutral wording. Run `node tools/qa/pronouns.cjs` to check authored copy, verb agreement, persistence and unchanged personal notes.
 

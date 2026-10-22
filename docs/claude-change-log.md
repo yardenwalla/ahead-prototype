@@ -4,6 +4,8 @@ The original changes below were merged in pull request #1. The new pre-beta QA c
 
 ## Latest pre-beta pass
 
+Follow-up acceptance review: **`docs/recommendation-quality-2026-10-22.md`** records the reason/action/timing/personalization findings, exact behavior changes and category acceptance matrix. Its regression suite is included in `node tools/qa/check-all.cjs`. This adds targeted fixes on PR #2, not a separate redesign. The original QA report below describes the preceding snapshot; use the new report and current generated summaries for the latest test results.
+
 The new pass fixes saved-guide routes, browser navigation/reload, birthday-edit data continuity, invalid profile recovery, six-week and preview-age rules, explicit feeding/movement choices, repetitive Home movement summaries, Safety context and links, tailored Sleep support, milk-reference ambiguity and milk-specific detail content, plus month-2 Play variety. It retains the current design treatment. The full report above is the source of truth; automated coverage and actual browser checks are listed separately.
 
 The older sections below describe the previous pass and retain its historical validation boundaries.

@@ -52,6 +52,11 @@
   const relevant = (mv, title) => ({ trying: /roll/i, rolling: /roll/i, crawling: /crawl|mov/i, pulling: /pull|stand|cruis/i }[mv] || /$^/).test(title || '');
 
   const relevantCheck = mv => !safetyAgeForward();
+  function unfinishedSafety(row) {
+    if (row.topic !== 'Safety') return true;
+    const owner = row.priority?.owner || row.action?.match(/openSafetyChecklist\('([^']+)'/)?.[1] || safetyOwnerForStage(safetyStageNow());
+    return safetyPendingIds(safetyOwnedGuides()[owner].ids).length > 0;
+  }
   function candidates() {
     const m = ageM(), mv = movement(), out = [];
     const base = conceptConnections();               // the app's own rows for this month
@@ -63,6 +68,8 @@
       out.push({ topic: 'Sleep', kind: 'swaddle', tier: 'must', reported: !!mv, reason: mv ? 'Stop swaddling now' : 'Before the first attempt to roll', priority });
     if (live() && (answers.pullUp === 'Yes' || m >= 8) && answers.mattressLowest !== 'Yes')
       out.push({ topic: 'Sleep', kind: 'mattress', tier: 'must', reported: answers.pullUp === 'Yes', reason: answers.pullUp === 'Yes' ? said('pulling') : 'Before she pulls up' });
+    else if (live() && answers.sit === 'Yes' && answers.mattressLowered !== 'Yes' && answers.mattressLowest !== 'Yes')
+      out.push({ topic: 'Sleep', kind: 'mattressLower', tier: 'must', reported: true, reason: `You said ${name()} sits without support` });
     if (priority && priority.type === 'check')
       out.push({ topic: 'Safety', kind: 'check', tier: 'must', reported: !!mv && relevantCheck(mv), reason: mv && relevantCheck(mv) ? said(mv) : priority.owner === 'mobile' ? 'Secure spaces within reach' : 'Prepare space for rolling', priority });
 
@@ -75,11 +82,13 @@
 
     // A guide may be suggested by age; a "You said" label must use the actual answer.
     const fi = stageIndex('Feeding'), food = live() && hasFoodAnswer() ? foodStage() : null;
-    out.push({ topic: 'Feeding', title: FEED_ROW[fi][0], body: FEED_ROW[fi][1], action: "openPage('topic:Feeding')",
-      tier: 'should', reported: fi >= 3 && !!food,
-      prep: fi === 2,
+    const milkAnswered = live() && fi < 2 && homeInputs().asked.milk === month;
+    const milkRow = fi < 2 && ['Breast milk', 'Formula', 'Both'].includes(profile.feed) ? homeMilkData() : null;
+    out.push({ topic: 'Feeding', title: milkRow ? milkRow.title : FEED_ROW[fi][0], body: milkRow ? milkRow.body : FEED_ROW[fi][1], action: "openPage('topic:Feeding')",
+      tier: 'should', reported: milkAnswered || fi >= 3 && !!food,
+      prep: fi === 2 && m >= 5,
       reason: fi === 0 ? 'For the first weeks' : fi === 1 ? ageReason() : fi === 2 ? (food === 'preparing' ? `You said ${name()} hasn’t started solids` : 'Prepare before the first bite') : !food ? 'Solids status not shared yet' : `You said ${name()} ${food === 'new' ? 'has started solids' : 'is eating meals'}`,
-      reference: fi === 1 });
+      reference: fi === 1 && !milkAnswered });
 
     // Sleep: the current stage (a reference row, so it ranks below actions)
     const si = stageIndex('Sleep');
@@ -102,13 +111,13 @@
 
     // Safety: the guide for how she moves now (when no specific check is pending)
     const saf = byTopic('Safety');
-    const rollGuide = mv === 'trying' || mv === 'rolling'
+    const rollGuide = (mv === 'trying' || mv === 'rolling') && safetyPendingIds(safetyOwnedGuides().reach.ids).length
       ? { title: 'Make room for rolling', body: 'Nearby objects, floor space and diaper changes.', action: `openSafetyChecklist('reach',false)`, art: 0 }
       // An older baby with no movement answers gets the next checklist, never an earlier one.
       : ['rolling', 'moving', 'pulling'].includes(safetyStageNow()) && !(mv === 'trying' || mv === 'rolling') && saf && /reaching and rolling/i.test(saf.title)
         ? { title: 'Before crawling', body: 'Gates, storage, outlets and furniture anchors.', action: `openSafetyChecklist('mobile',false)`, art: 0 } : {};
-    if (saf && !(priority && priority.type === 'check'))
-      out.push({ ...saf, ...rollGuide, tier: 'should', reported: !!mv && !safetyAgeForward(), prep: !mv, upcoming: !mv && m < 4, reason: mv && !safetyAgeForward() ? said(mv) : m < 3 ? 'For the first weeks' : m < 5 ? 'Prepare space for reaching and rolling' : 'Prepare for the next movement' });
+    const safetyRow = saf && { ...saf, ...rollGuide, tier: 'should', reported: !!mv && !safetyAgeForward(), prep: !mv, upcoming: !mv && m < 4, reason: mv && !safetyAgeForward() ? said(mv) : m < 3 ? 'For the first weeks' : m < 5 ? 'Prepare space for reaching and rolling' : 'Prepare for the next movement' };
+    if (safetyRow && !(priority && priority.type === 'check') && unfinishedSafety(safetyRow)) out.push(safetyRow);
 
     // A practical activity earns a place alongside guidance; keep the same three-row cap.
     const model = playStageModel(), idea = model.primary[0];
@@ -140,13 +149,16 @@
     // Prepare for next: coming-up items from categories not already in the main card
     const next = [];
     const pool = [...held.filter(h => h.c.upcoming || h.c.prep).map(h => h.c),
-      ...connectedHomeSections().next.filter(r => !['Sleep', 'Feeding', 'Health'].includes(r.topic))];
+      ...connectedHomeSections().next.filter(r => !['Sleep', 'Feeding', 'Health'].includes(r.topic))]
+      .filter(r => (!r.dated || r.days <= 35) && unfinishedSafety(r));
     // A checkup in the coming month must not disappear behind undated references.
     pool.sort((a, b) => Number(!!b.dated && b.days <= 35) - Number(!!a.dated && a.days <= 35));
-    pool.forEach(r => { if (next.length < 2 && !used[r.topic] && !next.some(n => n.topic === r.topic) && r.topic !== 'Daily rhythm') next.push({ ...r, reason: r.reason || 'Coming up' }); });
+    pool.forEach(r => { if (next.length < 2 && !used[r.topic] && !next.some(n => n.topic === r.topic) && r.topic !== 'Daily rhythm') next.push({ ...r, reason: r.reason || (r.topic === 'Safety' ? 'Before baby can reach the next space' : 'Coming up') }); });
     return { main, next, held };
   }
   window.homeRulesDebug = () => { const r = choose(); return { main: r.main.map(c => c.topic + ': ' + (c.title || c.kind) + ' — ' + c.reason), next: r.next.map(c => c.topic + ': ' + c.title), held: r.held.map(h => h.c.topic + ': ' + (h.c.title || h.c.kind) + ' — ' + h.why) }; };
+  // Read-only diagnostics for reason/action/timing regression tests.
+  window.homeRecommendationAudit = () => { const r = choose(); return {current: r.main, preparation: r.next}; };
 
   /* ---------- the same markup Home already uses ---------- */
   const baseRow = conceptRow;
@@ -160,12 +172,14 @@
     return `<div class="home-connected-sleep" style="${yearTheme('Sleep')}">${homeRow(row)}<div class="home-connected-actions">${homePriorityTools(c.priority)}</div></div>`;
   }
   function mattressRow(c) {
-    const row = { topic: 'Sleep', title: 'Set the crib mattress to its lowest', body: 'Remove mobiles and anything she can reach from standing.', action: "openPage('chg:Sleep:safe')", art: 0, reason: c.reason };
-    return `<div class="home-connected-sleep" style="${yearTheme('Sleep')}">${conceptRow(row)}<div class="home-connected-actions"><div class="home-action-tools"><button class="home-inline-check" aria-label="Mark done: crib mattress lowered" onclick="setAnswer('mattressLowest','Yes')"><span aria-hidden="true"></span>Mark done</button></div></div></div>`;
+    const lowest = c.kind === 'mattress', key = lowest ? 'mattressLowest' : 'mattressLowered';
+    const row = { topic: 'Sleep', title: lowest ? 'Set the crib mattress to its lowest' : 'Lower the crib mattress', body: lowest ? 'Remove mobiles and anything she can reach from standing.' : 'Follow the crib manual for the right position; lower it before baby can sit.', action: "openPage('chg:Sleep:safe')", art: 0, reason: c.reason };
+    return `<div class="home-connected-sleep" style="${yearTheme('Sleep')}">${conceptRow(row)}<div class="home-connected-actions"><div class="home-action-tools"><button class="home-inline-check" aria-label="Mark done: crib mattress lowered" onclick="setAnswer('${key}','Yes')"><span aria-hidden="true"></span>Mark done</button></div></div></div>`;
   }
   function checkRow(c) {
     const html = homePriorityRow(c.priority);
-    return html.replace(/<small>Safety · [^<]*<\/small>/, `<small>Safety · ${esc(c.reason)}</small>`);
+    const reason = c.priority.id === 'gates' ? 'If your home has stairs · Before baby reaches them' : c.reason;
+    return html.replace(/<small>Safety · [^<]*<\/small>/, `<small>Safety · ${esc(reason)}</small>`);
   }
 
   // No nagging: an unanswered check-in shows for two weeks, then rests until next month.
@@ -183,7 +197,7 @@
     const raw = connectedHomeBeforeBehavior(), start = raw.indexOf('<section class="connected-now"'), end = raw.indexOf('<section class="connected-browse"');
     const { main, next } = choose();
     const focus = homeCurrentFocus(), summary = month === 5 && !focus.confirmed ? focus.body.split(/(?<=[.!?])\s+/)[0] : focus.body;
-    const rows = main.filter(c => c.kind !== 'check').map(c => c.kind === 'swaddle' ? swaddleRow(c) : c.kind === 'mattress' ? mattressRow(c) : conceptRow(c)).join('');
+    const rows = main.filter(c => c.kind !== 'check').map(c => c.kind === 'swaddle' ? swaddleRow(c) : ['mattress', 'mattressLower'].includes(c.kind) ? mattressRow(c) : conceptRow(c)).join('');
     const check = main.find(c => c.kind === 'check');
     const hero = `<section class="connected-now" aria-label="What matters now"><div class="connected-summary"><div class="home-summary connected-summary-intro"><div class="home-summary-heading"><div class="home-month-eyebrow">${month === 0 || focus.confirmed ? 'What matters now' : 'Likely around now'}</div><h1>${focus.title}</h1></div><span class="home-summary-art" aria-hidden="true">${homeMonthArt(month)}</span><p class="heroanswer">${summary}</p><div class="home-summary-spectrum" aria-hidden="true">${TOPICS.map(([topic]) => `<span style="background:${YEAR_PALETTES[topic].bg}"></span>`).join('')}</div></div>${rows ? `<div class="connected-summary-links">${rows}</div>` : ''}</div>${check ? checkRow(check) : ''}${homeMomentRow()}</section>`;
     const preparation = next.length ? `<section class="connected-ahead" aria-label="Prepare for next"><div class="connected-section-heading"><h2>Prepare for next</h2><button class="textlink" onclick="openPage('ahead')">See all →</button></div><div class="connected-ahead-list">${next.map(row => conceptRow(row)).join('')}</div></section>` : '';

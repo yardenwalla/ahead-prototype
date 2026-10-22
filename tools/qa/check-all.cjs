@@ -8,7 +8,7 @@ const html=fs.readFileSync('index.html','utf8');
 for(const match of html.matchAll(/(?:src|href)="((?:js|css)\/[^"?]+)"/g))
   if(!fs.existsSync(match[1]))throw Error('Missing asset '+match[1]);
 console.log('JavaScript syntax and local assets: passed');
-for(const script of ['content-journeys.cjs','pronouns.cjs','beta-readiness.cjs']) {
+for(const script of ['content-journeys.cjs','pronouns.cjs','beta-readiness.cjs','recommendation-quality.cjs']) {
   const run=spawnSync(process.execPath,[path.join(__dirname,script)],{stdio:'inherit'});
   if(run.status!==0)process.exit(run.status||1);
 }
