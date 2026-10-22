@@ -142,7 +142,7 @@ def check(results):
             # Window passed: Sleep moves on by itself and says so, with an undo
             if s['current'] == SLEEP[3] and reported['naps'] not in ('Yes',) and dmo >= 9:
                 auto_first = auto_first if auto_first is not None else wk
-                if wk == auto_first and not any('We moved' in a['title'] for a in s['alerts']): F.add('personal', 'bug', 'Sleep moved to two naps on its own without saying so', pid, wk, where)
+                if wk == auto_first and not any(re.search(r'We moved|two-nap guidance', a['title'] + ' ' + a['label'], re.I) for a in s['alerts']): F.add('personal', 'bug', 'Sleep moved to two naps on its own without saying so', pid, wk, where)
             if s['current'] != es: F.add('order', 'bug', 'Sleep shows the wrong stage for the age', pid, wk, f'{where}: shows “{s["current"]}”, expected “{es}”')
             if f['current'] != ef: F.add('order', 'bug', 'Feeding shows the wrong stage for the age and answers', pid, wk, f'{where}: shows “{f["current"]}”, expected “{ef}”')
             si = SLEEP.index(s['current']) if s['current'] in SLEEP else -1
@@ -212,7 +212,7 @@ def check(results):
                 said_mv = re.search(r'You said \w+ is (crawling|pulling up|rolling|trying to roll)', x['label'])
                 if said_mv and {'crawling': ('crawling', 'pulling'), 'pulling up': ('pulling',), 'rolling': ('rolling', 'crawling', 'pulling'), 'trying to roll': ('trying',)}[said_mv.group(1)] and mv not in {'crawling': ('crawling', 'pulling'), 'pulling up': ('pulling',), 'rolling': ('rolling', 'crawling', 'pulling'), 'trying to roll': ('trying', 'rolling', 'crawling', 'pulling')}[said_mv.group(1)]:
                     F.add('personal', 'bug', 'Home claims the parent said something they didn’t', pid, wk, f'{where}: {x["label"]}')
-            if mv in ('crawling', 'pulling') and not re.search(r'crawl|stair|gate|move|pull', text_home):
+            if mv in ('crawling', 'pulling') and not moment_now and not re.search(r'crawl|stair|gate|move|pull', text_home):
                 F.add('personal', 'bug', 'Said she’s crawling, but nothing on Home reflects it', pid, wk, where)
             if (mv == 'pulling' or dmo >= 8) and not reported['mattress_done']:
                 if not any('mattress' in a['title'].lower() for a in s['alerts']): F.add('personal', 'bug', 'From 8 months (or a pulling-up moment), Sleep doesn’t show the mattress step', pid, wk, where)
@@ -246,7 +246,7 @@ def check(results):
             qs = [a['q'] for a in w['answered'] if a['a'] in ('Not yet', 'Yes', 'Trying', 'Rolling', 'First foods', 'Not started', 'Eating meals', 'Building meals')]
             norm = lambda q: 'solids' if 'solids' in q else 'catnap' if 'catnap' in q else q
             if len(qs) != len(set(map(norm, qs))): F.add('personal', 'warning', 'Asked the same question twice in one week (Home and a category page)', pid, wk, f'{where}: {qs}')
-            if any('We moved' in a['title'] for a in s['alerts']):
+            if any(re.search(r'We moved|two-nap guidance', a['title'], re.I) for a in s['alerts']):
                 notice_weeks += 1
                 if notice_weeks == 5: F.add('personal', 'bug', '“We moved her to two naps” notice stays longer than a month', pid, wk, where)
             ci = (w['home']['checkin'] or {}).get('q')

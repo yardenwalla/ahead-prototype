@@ -172,7 +172,7 @@ async def run_persona(browser, p):
             sl = rec['sleep']
             if sl['checkin']:
                 rec['answered'].append(dict(where='Sleep', q='UNEXPECTED: ' + sl['checkin'], a='-'))
-            if any('We moved' in x['title'] for x in sl['alerts']) and w < p['naps']:
+            if any(('We moved' in x['title'] or 'two-nap guidance' in x['title'].lower()) for x in sl['alerts']) and w < p['naps']:
                 await pg.evaluate("navigate('categories');openPage('topic:Sleep')")
                 loc = pg.locator('.sleep-phase-ahead button', has_text='Still on three naps').first
                 if await loc.count():
