@@ -72,16 +72,16 @@ This choice changes wording only. It must not change clinical guidance, recorded
 
 Baby-specific Sleep/Feeding copy uses explicit authored templates for subject, object, possessive and reflexive forms, with the matching verbs. Examples: “Is he fed and changed?”, “Are they fed and changed?”, “Can I give him water?” and “Can I give them water?” Generic educational wording may remain neutral. Personal notes are never rewritten.
 
-## Design review — recommendations only
+## Onboarding design — applied
 
-The live welcome and details screens share the app’s cream background, type and input/button treatment. Welcome is visually plainer than Home because it relies on muted icons and divider rows.
+Welcome now shares the main app’s cream canvas, pastel icon backgrounds, existing baby illustration and six-color accent. The agreed headline and three benefits are unchanged; deliberate line breaks avoid a stranded final word.
 
-Suggested next design pass: reuse the app’s pastel icon backgrounds, one existing baby illustration and the subtle rainbow accent. Preserve compact spacing and the current setup flow. This visual redesign has not been applied; the only form addition is the optional pronoun question.
+The existing two-step setup now uses labeled progress, compact illustrated title cards and shared rounded inputs. Baby details use a warm neutral card; milk feeding uses the Feeding pink and existing bottle illustration. The early-birth checkbox has a compact mint treatment. All form fields, validation, optional pronouns, saved values and profile-editing behavior remain intact. Onboarding styles are scoped so category screens retain their design.
 
 ## Validation and boundaries
 
 The first pass covered 100 scripted families across 1,300 monthly checkpoints, all six categories and linked guides. The separate pronoun pass covers all three choices, old profiles, conditional answers, saving/reloading/editing, and preservation of personal notes. See `docs/content-qa-2026-10-21.md` and the scripts under `tools/qa/`.
 
-The current live onboarding was visually inspected. The updated local form could not be opened in the cloud browser; its markup, rendering and handlers were tested instead. This is not pediatric approval or a full visual QA pass.
+The redesigned welcome and both setup steps were visually inspected in a managed browser preview. Setup progression, back navigation, retained answers and completion into personalized Home were checked. The pronoun regression suite passes 1,584 checks across 419 renders. This is not pediatric approval or a full visual QA pass of every app screen.
 
-Existing age-based guide advancement remains a product decision: suggested guidance is distinct from confirmed skill mastery. No CSS or illustration redesign, merge or production deployment is included.
+Existing age-based guide advancement remains a product decision: suggested guidance is distinct from confirmed skill mastery. This update includes onboarding-only visual changes, with no merge or production deployment.
