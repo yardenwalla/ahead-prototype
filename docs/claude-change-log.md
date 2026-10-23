@@ -14,6 +14,7 @@ Content owner: Claude, per Yarden. Supersedes the stage-name and unknown-solids 
 | Meta copy | Removed "This section uses your baby's current age" and the "Whether you're preparing or have already begun…" lead. Back links on come-and-go pages say "Back to your guide". |
 | Leftover hedges | 4-month regression duration, two-naps lead and why, separation-anxiety why, teething, bottle refusal and textures rewritten short and specific. |
 | Health | Growth-exam detail says what to do (ask to see the chart). "How you're doing" now includes the National Maternal Mental Health Hotline. |
+| Safety babyproofing | Still one saved checklist, now grouped by part of the home: Stairs and doorways, Furniture and windows, Cupboards and outlets, Baby gear. |
 | Verified, unchanged | The fever rule from 3 months (call if over 24 hours, sooner above 104°F repeatedly) matches the AAP page it cites. |
 
 ## Latest pre-beta pass
