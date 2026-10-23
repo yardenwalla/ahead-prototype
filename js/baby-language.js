@@ -474,14 +474,6 @@ const BABY_COPY_TEMPLATES = new Map([
     "A cup or spoon can work for short separations. Ask your pediatrician if {s} {is} refusing for days."
   ],
   [
-    "She seems hungrier. Should we start solids early?",
-    "{S} {seems} hungrier. Should we start solids early?"
-  ],
-  [
-    "No, she just seems hungry",
-    "No, {s} just {seems} hungry"
-  ],
-  [
     "Let her open her mouth for the spoon rather than pushing it in.",
     "Let {o} open {p} mouth for the spoon rather than pushing it in."
   ],
@@ -682,7 +674,6 @@ BABY_COPY_TEMPLATES.set("If she protests when you leave, use a familiar short go
 BABY_COPY_TEMPLATES.set("Keep the room dark and quiet at dawn. Feed her if she’s hungry, then keep things calm until she’s ready to start the day.","Keep the room dark and quiet at dawn. Feed {o} if {s} {is} hungry, then keep things calm until {s} {is} ready to start the day.");
 BABY_COPY_TEMPLATES.set("Check whether dawn light or noise wakes her. A darker, quieter room may help. Also look at when the last nap ends and how tired she seems at bedtime.","Check whether dawn light or noise wakes {o}. A darker, quieter room may help. Also look at when the last nap ends and how tired {s} {seems} at bedtime.");
 BABY_COPY_TEMPLATES.set("Rooting, lip smacking and hands to mouth can come before crying. Offer milk when you see them, even if she ate an hour ago.","Rooting, lip smacking and hands to mouth can come before crying. Offer milk when you see them, even if {s} ate an hour ago.");
-BABY_COPY_TEMPLATES.set("Offer milk at hunger cues. Extra hunger alone isn’t a sign she’s ready for solids.","Offer milk at hunger cues. Extra hunger alone isn’t a sign {s} {is} ready for solids.");
 BABY_COPY_TEMPLATES.set("She’s tasting her first foods. Breast milk or formula is still her main food.","{S} {is} tasting {p} first foods. Breast milk or formula is still {p} main food.");
 BABY_COPY_TEMPLATES.set("Try mashed beans, iron-fortified infant cereal mixed with breast milk or formula, or soft shredded meat. Offer small spoonfuls or let her hold a spoon you’ve loaded.","Try mashed beans, iron-fortified infant cereal mixed with breast milk or formula, or soft shredded meat. Offer small spoonfuls or let {o} hold a spoon you’ve loaded.");
 BABY_COPY_TEMPLATES.set("She’s managing first tastes and trying soft lumps or finger foods. Build on foods she can handle, whether you started with purées, self-feeding or both.","{S} {is} managing first tastes and trying soft lumps or finger foods. Build on foods {s} can handle, whether you started with purées, self-feeding or both.");
@@ -714,7 +705,6 @@ BABY_COPY_TEMPLATES.set("Less than her usual wake window","Less than {p} usual w
 BABY_COPY_TEMPLATES.set("If she falls asleep in the car, move her to her sleep space when you get home.","If {s} {falls} asleep in the car, move {o} to {p} sleep space when you get home.");
 BABY_COPY_TEMPLATES.set("Check the wake window above before changing her naps.","Check the wake window above before changing {p} naps.");
 BABY_COPY_TEMPLATES.set("Plan night feeds with your pediatrician. Sleep training changes how she falls asleep, not whether she eats.","Plan night feeds with your pediatrician. Sleep training changes how {s} {falls} asleep, not whether {s} {eats}.");
-BABY_COPY_TEMPLATES.set("Milk is still her whole diet. Now’s the time to learn the readiness signs and choose how you’d like to start.","Milk is still {p} whole diet. Now’s the time to learn the readiness signs and choose how you’d like to start.");
 BABY_COPY_TEMPLATES.set("Steady growth at checkups. At meals, follow her interest and fullness, not how much she eats.","Steady growth at checkups. At meals, follow {p} interest and fullness, not how much {s} {eats}.");
 BABY_COPY_TEMPLATES.set("Some days she wants to feed almost constantly, often in the evening. It’s normal, and her usual pattern comes back.","Some days {s} {wants} to feed almost constantly, often in the evening. It’s normal, and {p} usual pattern comes back.");
 BABY_COPY_TEMPLATES.set("Standard iron-fortified infant formula, including store brands, suits most babies. If she has a prescribed formula or a feeding plan for early birth, growth or allergy, check with your pediatrician before changing it.","Standard iron-fortified infant formula, including store brands, suits most babies. If {s} {has} a prescribed formula or a feeding plan for early birth, growth or allergy, check with your pediatrician before changing it.");
@@ -726,3 +716,5 @@ BABY_COPY_TEMPLATES.set("Most babies are ready around 6 months, once head contro
 BABY_COPY_TEMPLATES.set("Amounts depend on how much she nurses. Follow hunger and fullness cues.","Amounts depend on how much {s} {nurses}. Follow hunger and fullness cues.");
 BABY_COPY_TEMPLATES.set("She now moves between light and deep sleep. Between cycles she may wake more fully and need help getting back to sleep.","{S} now {moves} between light and deep sleep. Between cycles {s} may wake more fully and need help getting back to sleep.");
 BABY_COPY_TEMPLATES.set("You’re here when she skips the late catnap most days and stays happy until bedtime. A morning nap and an afternoon nap now make the day.","You’re here when {s} {skips} the late catnap most days and {stays} happy until bedtime. A morning nap and an afternoon nap now make the day.");
+BABY_COPY_TEMPLATES.set("Milk is still her whole diet. Most babies start first foods around 6 months, once they show the readiness signs below.","Milk is still {p} whole diet. Most babies start first foods around 6 months, once they show the readiness signs below.");
+BABY_COPY_TEMPLATES.set("Most babies do best waiting until about 6 months and the readiness signs. Until then, milk is all she needs.","Most babies do best waiting until about 6 months and the readiness signs. Until then, milk is all {s} {needs}.");

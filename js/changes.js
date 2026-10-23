@@ -239,7 +239,7 @@
     if (isEv && C.looks && C.looks.length) h += helpList('What you might notice', C.looks.map(t => ['', t]));
     // These two sleep introductions already explain the change; don't repeat it
     // in a second section before the numbers parents came to find.
-    if (!(cat === 'Sleep' && !isEv && ['rhythm','two'].includes(C.key)))
+    if (!(cat === 'Sleep' && !isEv && ['rhythm','two'].includes(C.key)) && !(cat === 'Feeding' && !isEv && C.key === 'ready'))
       h += helpList('Why it’s happening', [['', C.why]].concat(isEv && C.lasts ? [['How long it lasts', C.lasts]] : []));
 
     if (!isEv) {
@@ -399,8 +399,10 @@
       (cat === 'Sleep' ? callout('For you', 'Look after yourself too', 'If exhaustion or low mood is getting hard to manage, talk to your own doctor, or call or text the National Maternal Mental Health Hotline: 1-833-852-6262.')
         : callout('For you', 'Feeding is hard work', 'If nursing hurts or feeding feels overwhelming, a lactation consultant can help, and is often covered by insurance. Asking for help is normal.')),
       (cat === 'Sleep' ? 'Before a checkup, note a few nights of bedtime, wakes and feeds.' : 'Before a checkup, note a day of feeds and wet diapers.') + ' It helps your pediatrician see the pattern.');
-    if (cat === 'Feeding' && screen === 'safe') return detail(cat, 'Before the first bite', 'Feeding safety and first aid', 'Prepare the seat and learn first aid before starting. Revisit food preparation as textures and self-feeding change.',
-      checklist(cat) + helpList('Once baby is eating', D.GROW), 'AAP and CDC · Feeding guidance');
+    // Preparation shows only the setup checks; food preparation joins once first foods have started.
+    if (cat === 'Feeding' && screen === 'safe') { const eating = feedStage(ageNow()) >= 3;
+      return detail(cat, eating ? 'Feeding safety' : 'Before the first bite', 'Feeding safety and first aid', eating ? 'Your setup checks, plus how to prepare food safely now that first foods have started.' : 'Four things to set up before the first bite.',
+      checklist(cat) + (eating ? helpList('Preparing food safely', D.GROW) : ''), 'AAP and CDC · Feeding guidance'); }
     if (cat === 'Feeding' && screen === 'milk') {
       const type = profile.feed;
       const items = D.METH.filter(x => type === 'Formula' ? !/Breast milk|Pumping/.test(x[0]) : type === 'Breast milk' ? !/formula/i.test(x[0]) : true);

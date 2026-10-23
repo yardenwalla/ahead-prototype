@@ -766,7 +766,7 @@ window.AHEAD_CHANGES = {
     "rail": "Getting ready for solids",
     "when": "Usually 4–6 months",
     "title": "Getting ready for solids",
-    "lead": "Milk is still her whole diet. Now’s the time to learn the readiness signs and choose how you’d like to start.",
+    "lead": "Milk is still her whole diet. Most babies start first foods around 6 months, once they show the readiness signs below.",
     "why": "Most babies are ready around 6 months, once head control, sitting and swallowing catch up. Until then, breast milk or formula is all the food she needs.",
     "total": "A guide, not a target.",
     "rhythm": [
@@ -786,12 +786,12 @@ window.AHEAD_CHANGES = {
       "bottle"
      ]
     ],
-    "rhythmNote": "Offer milk at hunger cues. Extra hunger alone isn’t a sign she’s ready for solids.",
+    "rhythmNote": "Offer milk at hunger cues. Hungrier days are common.",
     "night": "Steady growth and regular wet diapers.",
     "helps": [
      [
       "Watch for the readiness signs",
-      "Steady head, sits with support, opens for offered food, and swallows instead of pushing food out. Watching you eat isn’t a sign on its own."
+      "Steady head, sits with support, opens for offered food, and swallows instead of pushing food out. Extra hunger or watching you eat aren’t signs on their own."
      ]
     ],
     "signs": "A steadier head and starting to sit with support.",
@@ -1058,7 +1058,7 @@ window.AHEAD_CHANGES = {
    ],
    [
     "Know gagging from choking",
-    "Gagging can happen while learning to eat. Trouble breathing or a weak or absent cough can mean choking, even if there’s some sound. Call 911 and use infant choking first aid you’ve learned."
+    "Gagging is normal while learning to eat. Trouble breathing or a weak or silent cough can mean choking, even if there’s some sound. Start infant choking first aid right away, and have someone call 911."
    ],
    [
     "Have a soft spoon and an open cup",
@@ -1271,19 +1271,19 @@ window.AHEAD_CHANGES = {
    ],
    "ready": [
     [
-     "She seems hungrier. Should we start solids early?",
-     "Has your pediatrician suggested starting early?",
+     "Can we start before 6 months?",
+     "Has your pediatrician suggested it?",
      [
       [
        "Yes",
-       "Follow their plan, especially if early peanut was recommended for eczema.",
-       "Get set up first: high chair and a choking first-aid class.",
+       "Follow their plan. It often comes up for babies with severe eczema, to start peanut early.",
+       "Get set up first with the Before the first bite checklist.",
        null
       ],
       [
-       "No, she just seems hungry",
-       "Offer milk at hunger cues. Extra hunger alone isn’t a sign she’s ready for solids.",
-       "Most babies start solids around 6 months, once they show the readiness signs.",
+       "No",
+       "Most babies do best waiting until about 6 months and the readiness signs. Until then, milk is all she needs.",
+       "Skip cereal in a bottle, even if someone suggests it.",
        null
       ]
      ]
