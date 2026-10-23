@@ -21,7 +21,7 @@ The checks were:
 
 Coverage includes newborn–12-month Home and category overviews; all 59 Development skills; all 78 default monthly Play slots; movement-dependent play; seven Health visit guides and their expectation, vaccine, question and help pages; all Sleep/Feeding stages, transient changes, FAQ answer branches, settling choices and references; and Safety's 17 stable checklist items and carry-forward behavior. Profile and completion state were checked where they change what a parent reads.
 
-`editorial-acceptance-register.json` captures 361 inventory entries, including repeated monthly views and individual answer branches. **That is an inventory count, not 361 independent expert approvals.** The register stores actual text/source content, route, timing context and hashes so later changes can be identified. It includes the four milk-reference variants. The judgment and reasons are in this report.
+`editorial-acceptance-register.json` captures 362 inventory entries, including repeated monthly views and individual answer branches. **That is an inventory count, not 362 independent expert approvals.** The register stores actual text/source content, route, timing context and hashes so later changes can be identified. It includes the four milk-reference variants. The judgment and reasons are in this report.
 
 ## Decisions by category
 
@@ -86,6 +86,21 @@ These are the places where repeat availability earns its place:
 | Returning parent with completed checks | Useful references and new preparation, without treating reading as completion or asking for the same safety work twice. |
 
 ## Verification and maintainability
+
+### Approved copy refinement before merge
+
+The revised recommended-copy document was adopted selectively, with the adjustments agreed with Yarden. Sleep and Feeding now use shorter, more direct language, natural profile pronouns and concrete actions. The original structural fixes, separate milk references, charts and visual treatment remain.
+
+- Keep **Naps and bedtime** and **Changing milk feeds**; use **Days and nights** for the early sleep guide. Avoid a "Regular naps" achievement label.
+- Make sharing overnight work practical for a parent who handles the feeds, and restore a short cluster-feeding support tip.
+- Describe sleep-cycle maturation without implying that cycles begin at four months. Keep conditional two-nap readiness and remove promised recovery times from new-skill waking.
+- Simplify troubleshooting; change one sleep variable at a time, and avoid a universal 6 am rule or a promised age for better crib naps.
+- Preserve the purées/BLW/mixed explanations together in one expanded comparison, readiness context and practical choice criteria. Keep brief eating-experience descriptions rather than adding more check-ins.
+- Keep usual milk alongside meals. Do not reinstate a blanket instruction to offer food before milk as the solution to eating very little.
+- Use plain next steps for repeated vomiting/refusal and clearer wording for milk intake concerns. Preserve the honey/added-sugar distinction after one.
+- Update explicitly authored he/she/they language variants for every new personalized string. Pronoun checks include the revised FAQ answers and reference screens.
+
+This is a copy refinement, not a new vaccine schedule, sleep-number range or stage engine. The register was regenerated after the changes; the additional entry is the third nap-settling answer branch. All six suites passed again, including 1,948 pronoun checks. Chrome verification opened the new three-choice nap answer, first-food guide and expanded feeding comparison in the existing layout.
 
 - `node tools/qa/check-all.cjs` checks syntax/assets and all six suites: chronological journeys, pronouns, route/readiness checks, recommendation contracts, saved-once progression and editorial regression contracts.
 - The editorial suite now protects the newborn Home setup, preparation timing, respecting a chosen sleep approach, browsing versus reporting, example-day/nap-count agreement, the distinct milk references, legacy activity routes and continued access to spit-up help. It does not pretend to measure usefulness.
