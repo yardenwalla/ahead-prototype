@@ -7,7 +7,7 @@ window.AHEAD_CHANGES = {
     "key": "clock",
     "rail": "Newborn sleep",
     "when": "Birth–6 weeks",
-    "title": "Newborn sleep: around the clock",
+    "title": "Newborn sleep",
     "lead": "Short sleeps of 1–3 hours, day and night, with feeds in between. No pattern yet, and that’s expected.",
     "looks": [
      "14–17 hours of sleep, in short stretches",
@@ -56,10 +56,10 @@ window.AHEAD_CHANGES = {
    },
    {
     "key": "daynight",
-    "rail": "Days and nights",
+    "rail": "Nights stretch out",
     "when": "Usually 6 weeks–3 months",
-    "title": "Days and nights",
-    "lead": "Many babies start telling day from night now. A longer stretch often shows up at night, though timing varies.",
+    "title": "Nights stretch out",
+    "lead": "You’re here when one stretch of 3–5 hours shows up at night. Days get more alert, while naps still move around.",
     "looks": [
      "One stretch of 3–5 hours at night",
      "More alert, social time in the day",
@@ -106,10 +106,10 @@ window.AHEAD_CHANGES = {
    },
    {
     "key": "rhythm",
-    "rail": "Three naps",
+    "rail": "Naps settle in",
     "when": "Usually 4–6 months",
-    "title": "Three naps",
-    "lead": "Naps start to land at similar times most days, usually 3 of them. A familiar routine helps, even when the times shift.",
+    "title": "Naps settle in",
+    "lead": "You’re here when naps land at similar times most days, usually 3, with a short late catnap. A familiar routine helps, even when the times shift.",
     "looks": [
      "Naps start at roughly the same times most days",
      "Usually 3 naps: two longer ones and a short late catnap",
@@ -168,10 +168,10 @@ window.AHEAD_CHANGES = {
    },
    {
     "key": "two",
-    "rail": "Two naps",
+    "rail": "Naps drop to two",
     "when": "Usually 6–9 months",
-    "title": "Two naps a day",
-    "lead": "A morning nap and an afternoon nap replace the 3-nap day. When she skips the late catnap most days and stays happy until bedtime, it’s time to switch.",
+    "title": "Naps drop to two",
+    "lead": "You’re here when she skips the late catnap most days and stays happy until bedtime. A morning nap and an afternoon nap now make the day.",
     "looks": [
      "The catnap keeps getting skipped",
      "Longer morning and afternoon naps",

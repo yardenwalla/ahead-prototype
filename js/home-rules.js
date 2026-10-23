@@ -31,9 +31,9 @@
   /* Copy for each stage, written to the content skill: verb-first, one line, no jargon. */
   const SLEEP_ROW = [
     ['Newborn sleep', 'Recognize sleepy cues and understand short sleeps around the clock.'],
-    ['Days and nights', 'Use daylight and a short evening routine as nights begin to take shape.'],
-    ['Three naps', 'Find awake-time guidance and a sample day for this stage.'],
-    ['Two naps a day', 'See how the day can fit around two naps, and what helps during the transition.']
+    ['Nights stretch out', 'Use daylight and a short evening routine as nights begin to take shape.'],
+    ['Naps settle in', 'Find awake-time guidance and a sample day for this stage.'],
+    ['Naps drop to two', 'See how the day can fit around two naps, and what helps during the transition.']
   ];
   const FEED_ROW = [
     ['Newborn feeding', 'Recognize hunger and fullness cues, and the signs milk intake is on track.'],

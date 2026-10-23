@@ -33,7 +33,7 @@ Use these words, and only these, for these things.
 
 | Use | Not |
 | --- | --- |
-| checkup ("the 6-month checkup") | visit, well visit, appointment |
+| checkup in titles and labels ("the 6-month checkup") | visit and appointment are fine in sentences |
 | pediatrician | doctor, provider, care team (care team only for a plan from several clinicians) |
 | sleep space | crib, bassinet, sleep surface, when the advice covers all of them |
 | wake window | awake time, time between sleeps (parents search "wake windows") |
@@ -51,7 +51,7 @@ Use these words, and only these, for these things.
 
 Use exactly these, everywhere.
 
-- **Sleep:** Newborn sleep (Birth–6 weeks) → Days and nights (Usually 6 weeks–3 months) → Three naps (Usually 4–6 months) → Two naps (Usually 6–9 months). Come and go: The 4-month sleep regression, Separation anxiety.
+- **Sleep:** Newborn sleep (Birth–6 weeks) → Nights stretch out (Usually 6 weeks–3 months) → Naps settle in (Usually 4–6 months) → Naps drop to two (Usually 6–9 months). After the first birthday: Naps drop to one. Each name after the first says what changes, and each stage opens with "You’re here when…" so parents can recognize it. Come and go: The 4-month sleep regression, Separation anxiety.
 - **Feeding:** Newborn feeding → Changing milk feeds → Getting ready for solids → Starting solids → Textures and finger foods → Family meals. Come and go: Cluster feeding and growth spurts, Distracted feeding, Teething and feeding.
 - **Checkups:** first-week, 1, 2, 4, 6, 9 and 12 months.
 - **Safety:** First setup → Reaching and rolling → Before crawling → Crawling and scooting → Before pulling up.
@@ -78,7 +78,7 @@ Titles are statements, except in Common questions. Tips are actions, not situati
 
 - Sentence case everywhere. No ALL CAPS.
 - Periods on body sentences; none on titles, buttons, labels or chips.
-- Numerals always ("3 naps"), except in the stage names Three naps and Two naps. Ranges with an en dash ("4–6 months"). "7:30 pm". "°F" with "°C" only in fever thresholds.
+- Numerals always ("3 naps"), except in stage names ("Naps drop to two"). Ranges with an en dash ("4–6 months"). "7:30 pm". "°F" with "°C" only in fever thresholds.
 - Contractions ("you'll", "she's", "don't").
 - No parentheses in body copy, no ellipses, no semicolons where two sentences work.
 
