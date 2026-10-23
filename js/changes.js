@@ -74,10 +74,10 @@
     const fs = typeof foodStage === 'function' ? foodStage() : 'preparing';
     if (inFirstSixWeeks(m)) return 0;
     if (m < 4) return 1;
-    // Unknown solids status from 6 months: show Starting solids and let the check-in find out.
-    // Only a parent's "Not yet" keeps the Getting ready guide.
+    // Unknown solids status: show the stage typical for her age and keep asking with the check-in.
+    // A parent's answer always wins; "Not yet" keeps the Getting ready guide.
     const known = typeof hasFoodAnswer !== 'function' || hasFoodAnswer();
-    if (!known && live()) return m >= 6 ? 3 : 2;
+    if (!known && live()) return m >= 10 ? 5 : m >= 8 ? 4 : m >= 6 ? 3 : 2;
     if (fs === 'preparing') return 2;
     if (fs === 'new') return 3; // First bites are an experience, not an age. Let the parent move on.
     if (fs === 'textures') return 4;
@@ -211,21 +211,21 @@
         ['When new skills interrupt sleep', 'Practice new movements during awake time and keep the bedtime sequence familiar. The routine support below covers changes after illness or travel too.']]} : original;
     const rel = view < cur ? 'past' : view === cur ? 'now' : 'next';
     const chosenSleepGuide = cat === 'Sleep' && live() && local.override?.Sleep;
-    const eyebrow = isEv ? C.when : rel === 'now' ? (cat === 'Feeding' ? (view <= 1 ? 'Recommended for this age' : hasFoodAnswer() ? 'Based on what you shared' : 'Your feeding guide') : chosenSleepGuide ? 'Your selected sleep guide' : answers.twoNaps === 'Yes' || answers.twoNaps === 'Stay' ? 'Based on your nap pattern' : 'Recommended for this age') : (rel === 'past' ? 'Earlier · ' : 'Coming up · ') + C.when;
+    const eyebrow = isEv ? C.when : rel === 'now' ? (cat === 'Feeding' ? (view <= 1 ? 'Recommended for this age' : hasFoodAnswer() ? 'Based on what you shared' : view >= 3 ? 'Typical for this age' : 'Your feeding guide') : chosenSleepGuide ? 'Your selected sleep guide' : answers.twoNaps === 'Yes' || answers.twoNaps === 'Stay' ? 'Based on your nap pattern' : 'Recommended for this age') : (rel === 'past' ? 'Earlier · ' : 'Coming up · ') + C.when;
     const A = isEv ? null : alertFor(cat, cur, view);
     const meth = method();
 
     let h = `<div class="quiet-category parent-guide sleep-snapshot chg-page" data-overview="${cat}" style="${yearTheme(cat)}">`;
     h += monthlyPageHeader(cat) + rail(cat, view, cur, isEv);
     const unknownFood = cat === 'Feeding' && !isEv && view === cur && m >= 6 && !hasFoodAnswer();
-    const lead = unknownFood ? 'Whether you’re preparing or have already begun, find readiness signs, safe first foods and ways to keep milk feeds alongside.' : C.lead;
+    const lead = unknownFood ? (cur >= 5 ? 'Most babies are eating regular meals by now, with milk alongside.' : cur === 4 ? 'Most babies are moving on to soft lumps and finger foods by now, with milk alongside.' : 'Many babies start first foods around now, once they show the readiness signs.') : C.lead;
     h += `<header class="experience-hero"><div class="experience-hero-copy"><div class="eyebrow">${esc(eyebrow)}</div><h2>${T(C.title)}</h2></div><span class="experience-hero-art" aria-hidden="true">${yearIllustration(cat, 1)}</span><p class="experience-hero-description">${T(lead)}</p></header>`;
 
     if (cat === 'Feeding' && !isEv && view === cur && typeof feedingCheckinMarkup === 'function')
       h += feedingCheckinMarkup();
 
     if (cat === 'Sleep' && !isEv && view === cur && chgSleepAuto() && autoNoticeFresh())
-      h += headsUp('Updated for this age', 'Showing two-nap guidance', '', `<button class="textlink chg-headsup-link" onclick="setAnswer('twoNaps','Stay')">Still on three naps? Show Naps and bedtime →</button>`);
+      h += headsUp('Updated for this age', 'Showing two-nap guidance', '', `<button class="textlink chg-headsup-link" onclick="setAnswer('twoNaps','Stay')">Still taking three naps? Show three-nap guidance →</button>`);
     // Parents can explore any age. Only an appropriate, observable change
     // offers an update; reading a future age guide is not a stage selection.
     const canUpdate = cat === 'Feeding' ? m >= 4 && view >= 2 : m >= 5 && [2,3].includes(view);
@@ -296,7 +296,7 @@
       if (evs.length) h += `<section class="chg-also"><h3 class="chg-h3">Also common around now</h3>${evs.map(k => { const e = D.EV[k]; return resourceRow(`openPage('chg:${cat}:e:${k}')`, cfg.evIcon, T(e.title), `${esc(e.when)}. ${T(e.signs)}`); }).join('')}</section>`;
     }
 
-    if (isEv) h += `<button class="textlink chg-back-link" onclick="back()">← Back to ${esc(D.CH[cur].rail.toLowerCase())}</button>`;
+    if (isEv) h += `<button class="textlink chg-back-link" onclick="back()">← Back to your guide</button>`;
     else {
       const Q = D.DEC[C.key] || [];
       if (Q.length) h += `<section class="common-questions"><h2>${rel === 'now' ? 'Common questions right now' : 'Common questions at this stage'}</h2>${Q.map((q, i) => question(cat, C.key, i, q)).join('')}</section>`;

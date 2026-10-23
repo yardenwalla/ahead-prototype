@@ -2,6 +2,114 @@
    Generic guidance and quotations stay neutral. Pronouns do not change clinical guidance. */
 const BABY_COPY_TEMPLATES = new Map([
   [
+    "Keep meals calm and offer textures she can manage. If she refuses most foods or finds them hard, call your pediatrician for a feeding review.",
+    "Keep meals calm and offer textures {s} can manage. If {s} {refuses} most foods or {finds} them hard, call your pediatrician for a feeding review."
+  ],
+  [
+    "Try a calm feed before she gets very hungry. Check whether the nipple flow is too fast or slow for her, and don’t push her to finish.",
+    "Try a calm feed before {s} {gets} very hungry. Check whether the nipple flow is too fast or slow for {o}, and don’t push {o} to finish."
+  ],
+  [
+    "Try before she gets very hungry or upset. Pause if she turns away.",
+    "Try before {s} {gets} very hungry or upset. Pause if {s} {turns} away."
+  ],
+  [
+    "Let that caregiver offer a familiar bottle while she gets used to it.",
+    "Let that caregiver offer a familiar bottle while {s} {gets} used to it."
+  ],
+  [
+    "Does she take it from anyone?",
+    "{Does} {s} take it from anyone?"
+  ],
+  [
+    "Changes in feeding length or appetite: note feeds, wet diapers and how she seems. A shorter feed alone doesn’t show how much milk she took",
+    "Changes in feeding length or appetite: note feeds, wet diapers and how {s} {seems}. A shorter feed alone doesn’t show how much milk {s} took"
+  ],
+  [
+    "Call your pediatrician if she takes much less milk, has fewer wet diapers or seems unwell.",
+    "Call your pediatrician if {s} {takes} much less milk, {has} fewer wet diapers or {seems} unwell."
+  ],
+  [
+    "Smaller feeds for a few days are common. Keep offering her usual feeds.",
+    "Smaller feeds for a few days are common. Keep offering {p} usual feeds."
+  ],
+  [
+    "Set aside her portion before adding salt. Include an iron-rich food, a soft vegetable or fruit and a starchy food, cut and cooked so she can manage them.",
+    "Set aside {p} portion before adding salt. Include an iron-rich food, a soft vegetable or fruit and a starchy food, cut and cooked so {s} can manage them."
+  ],
+  [
+    "Move from smooth food to mashed food with soft lumps. Add soft finger foods she can grab and squash.",
+    "Move from smooth food to mashed food with soft lumps. Add soft finger foods {s} can grab and squash."
+  ],
+  [
+    "She is hard to wake for feeds, her skin or eyes look more yellow, or she has fewer wet diapers than expected. After day 5, expect at least 6 wet diapers a day.",
+    "{S} {is} hard to wake for feeds, {p} skin or eyes look more yellow, or {s} {has} fewer wet diapers than expected. After day 5, expect at least 6 wet diapers a day."
+  ],
+  [
+    "If she seems happy, give it a few days before changing anything.",
+    "If {s} {seems} happy, give it a few days before changing anything."
+  ],
+  [
+    "Keep placing her on her back for every sleep. Once she rolls both ways, you don’t need to turn her back. Keep the sleep space clear.",
+    "Keep placing {o} on {p} back for every sleep. Once {s} {rolls} both ways, you don’t need to turn {o} back. Keep the sleep space clear."
+  ],
+  [
+    "Look for hunger cues and offer a feed if she seems hungry. Also check her diaper and whether she needs help settling.",
+    "Look for hunger cues and offer a feed if {s} {seems} hungry. Also check {p} diaper and whether {s} {needs} help settling."
+  ],
+  [
+    "She has learned that you still exist when out of sight, but not yet that you always come back.",
+    "{S} {has} learned that you still exist when out of sight, but not yet that you always come back."
+  ],
+  [
+    "Sometimes called the 8-month sleep regression. She now notices when you leave, and may protest at bedtime and in the night.",
+    "Sometimes called the 8-month sleep regression. {S} now {notices} when you leave, and may protest at bedtime and in the night."
+  ],
+  [
+    "Offer a feed when she shows hunger cues. More waking doesn’t mean every wake needs a feed.",
+    "Offer a feed when {s} {shows} hunger cues. More waking doesn’t mean every wake needs a feed."
+  ],
+  [
+    "Sleep now works in cycles, like an adult’s. She may wake more fully between cycles and need help getting back to sleep.",
+    "Sleep now works in cycles, like an adult’s. {S} may wake more fully between cycles and need help getting back to sleep."
+  ],
+  [
+    "She can stay awake longer between sleeps, so the late catnap stops fitting before bedtime.",
+    "{S} can stay awake longer between sleeps, so the late catnap stops fitting before bedtime."
+  ],
+  [
+    "A morning nap and an afternoon nap replace the three-nap day. When she skips the late catnap most days and stays happy until bedtime, it’s time to switch.",
+    "A morning nap and an afternoon nap replace the three-nap day. When {s} {skips} the late catnap most days and {stays} happy until bedtime, it’s time to switch."
+  ],
+  [
+    "Once your pediatrician says you can stop waking her, let her wake you. Most babies still feed 2–3 times a night.",
+    "Once your pediatrician says you can stop waking {o}, let {o} wake you. Most babies still feed 2–3 times a night."
+  ],
+  [
+    "Her body clock is starting to respond to daylight, so night sleep gets longer before naps get organized.",
+    "{P} body clock is starting to respond to daylight, so night sleep gets longer before naps get organized."
+  ],
+  [
+    "Wake her to feed until your pediatrician says you can stop, usually once birth weight is back.",
+    "Wake {o} to feed until your pediatrician says you can stop, usually once birth weight is back."
+  ],
+  [
+    "She is hard to wake for feeds, or has a temperature of 100.4°F or higher.",
+    "{S} {is} hard to wake for feeds, or {has} a temperature of 100.4°F or higher."
+  ],
+  [
+    "Feeding, rocking or holding her to sleep is normal and fine now.",
+    "Feeding, rocking or holding {o} to sleep is normal and fine now."
+  ],
+  [
+    "Help her fall asleep",
+    "Help {o} fall asleep"
+  ],
+  [
+    "Her body clock hasn’t switched on yet, so day and night feel the same. Hunger sets the pace.",
+    "{P} body clock hasn’t switched on yet, so day and night feel the same. Hunger sets the pace."
+  ],
+  [
     "Notice when she gets sleepy",
     "Notice when {s} {gets} sleepy"
   ],
@@ -633,7 +741,7 @@ BABY_COPY_TEMPLATES.set("Talk to your pediatrician about how much milk she takes
 BABY_COPY_TEMPLATES.set("Yes. Her gums can mash soft food. Choose the shape and size for her grasp; use the food-preparation guide for examples.","Yes. {P} gums can mash soft food. Choose the shape and size for {p} grasp; use the food-preparation guide for examples.");
 BABY_COPY_TEMPLATES.set("Teeth alone don’t decide whether she’s ready for finger foods.","Teeth alone don’t decide whether {s} {is} ready for finger foods.");
 BABY_COPY_TEMPLATES.set("She’s old enough for honey now, though it still counts as added sugar to avoid. Keep preparing choking hazards safely.","{S} {is} old enough for honey now, though it still counts as added sugar to avoid. Keep preparing choking hazards safely.");
-const BABY_VERBS = {gets:'get',adjusts:'adjust',wakes:'wake',rolls:'roll',settles:'settle',falls:'fall',wants:'want',naps:'nap',skips:'skip',needs:'need',eats:'eat',asks:'ask',pulls:'pull',feeds:'feed',stops:'stop',makes:'make',refuses:'refuse',seems:'seem',sits:'sit',learns:'learn',goes:'go',spits:'spit',likes:'like',comes:'come',tolerates:'tolerate',stays:'stay',protests:'protest',takes:'take',brings:'bring',decides:'decide',becomes:'become'};
+const BABY_VERBS = {gets:'get',adjusts:'adjust',wakes:'wake',rolls:'roll',settles:'settle',falls:'fall',wants:'want',naps:'nap',skips:'skip',needs:'need',eats:'eat',asks:'ask',pulls:'pull',feeds:'feed',stops:'stop',makes:'make',refuses:'refuse',seems:'seem',sits:'sit',learns:'learn',goes:'go',spits:'spit',likes:'like',comes:'come',tolerates:'tolerate',stays:'stay',protests:'protest',takes:'take',brings:'bring',decides:'decide',becomes:'become',shows:'show',notices:'notice',turns:'turn',finds:'find'};
 function babyPronouns(){const key=profile.pronouns;return key==='he'?{s:'he',o:'him',p:'his',r:'himself',is:'is',has:'has',does:'does'}:key==='she'?{s:'she',o:'her',p:'her',r:'herself',is:'is',has:'has',does:'does'}:{s:'they',o:'them',p:'their',r:'themselves',is:'are',has:'have',does:'do'};}
 function babyPronounLabel(){return profile.pronouns==='he'?'He/him':profile.pronouns==='she'?'She/her':'They/them';}
 function babyCopy(source){const template=BABY_COPY_TEMPLATES.get(source);if(!template)return source;const p=babyPronouns();return template.replace(/\{([A-Za-z]+)\}/g,(token,key)=>{const lower=key.toLowerCase();let value=p[lower]||(BABY_VERBS[lower]?(p.s==='they'?BABY_VERBS[lower]:lower):null);if(!value)throw new Error('Unknown baby-copy token: '+key);return key[0]===key[0].toUpperCase()?value[0].toUpperCase()+value.slice(1):value;});}

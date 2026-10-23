@@ -179,7 +179,7 @@ async def run_persona(browser, p):
                     await loc.click()
                     rec['answered'].append(dict(where='Sleep', q='We moved her to two naps', a='Keep on three naps'))
             sl2 = await pg.evaluate("__qa.cat('Sleep')")
-            if w >= p['naps'] + 1 and sl2['current'] == 'Naps and bedtime':
+            if w >= p['naps'] + 1 and sl2['current'] == 'Three naps':
                 await pg.evaluate("navigate('categories');openPage('topic:Sleep')")
                 loc = pg.locator('.chg-already').first
                 if await loc.count():

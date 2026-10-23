@@ -23,7 +23,7 @@ Start with [the consolidated first-year acceptance report](docs/editorial-accept
 
 ## How guidance moves
 
-- Sleep: **Newborn sleep → Day and night sleep → Naps and bedtime → Two naps**. Age chooses the default; appropriate nap reports can change it. Optional sleep training is a separate choice. Browsing a future age never assigns that pattern to a newborn.
+- Sleep: **Newborn sleep → Days and nights → Three naps → Two naps**. Age chooses the default; appropriate nap reports can change it. Optional sleep training is a separate choice. Browsing a future age never assigns that pattern to a newborn.
 - Feeding: **Newborn feeding → Changing milk feeds → Getting ready for solids → Starting solids → Textures and finger foods → Family meals**. Eating experience comes from a parent's answer. Time prompts a follow-up; it does not invent progress. The milk selector separates nursing, expressed milk, formula and nursing with bottles.
 - Safety separates **reported movement** from **preparation**. Preparation advances with age even if the only saved movement is an old roll. It never reports crawling or standing, or inserts standing play, without that information.
 - Newborn Sleep/Feeding use the actual six-week boundary, not the two-month birthday. Developmental guidance uses adjusted age after early birth; Health follows birthday age. An individual milk/supplement plan takes priority over general references.
