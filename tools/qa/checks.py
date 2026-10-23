@@ -10,8 +10,8 @@ import json, os, re
 from collections import defaultdict
 
 OUT = os.path.join(os.path.dirname(__file__), 'out')
-SLEEP = ['Newborn sleep', 'Days and nights', 'Naps find a rhythm', 'Two naps']
-FEED = ['Newborn feeding', 'Feeds find a rhythm', 'Getting ready for solids', 'Starting solids', 'Textures and finger foods', 'Family meals']
+SLEEP = ['Newborn sleep', 'Day and night sleep', 'Naps and bedtime', 'Two naps']
+FEED = ['Newborn feeding', 'Changing milk feeds', 'Getting ready for solids', 'Starting solids', 'Textures and finger foods', 'Family meals']
 WINDOWS = {  # come-and-go phases: months they may appear in
     'The 4-month sleep regression': (3, 5), 'Separation anxiety': (8, 11),
     'Cluster feeding and growth spurts': (0, 2), 'Distracted feeding': (3, 6), 'Teething and feeding': (7, 12)}
@@ -161,7 +161,7 @@ def check(results):
                     if not lo <= dmo <= hi: F.add('order', 'bug', f'{name}: “{ev}” shows outside its usual window', pid, wk, f'{where}')
                 when = re.search(r'(\d+)\s*months?$', pg['eyebrow'].replace('–', '-')) or re.search(r'-(\d+)\s*months', pg['eyebrow'].replace('–', '-'))
                 if when and int(when.group(1)) + 2 < dmo and not (name == 'Sleep' and reported['naps'] == 'Stay'): F.add('order', 'warning', f'{name}: still on a stage whose usual window ended 3+ months ago', pid, wk, f'{where}: “{pg["eyebrow"]}”')
-                if not pg['questions'] and pg['current'] not in ('Feeds find a rhythm',): F.add('order', 'warning', f'{name}: no common questions on the current stage', pid, wk, f'{where}: {pg["current"]}')
+                if not pg['questions'] and pg['current'] not in ('Changing milk feeds',): F.add('order', 'warning', f'{name}: no common questions on the current stage', pid, wk, f'{where}: {pg["current"]}')
 
             cards = h['rows'] + h['actions']
             if not cards: F.add('order', 'bug', 'Home has no cards this week', pid, wk, where)
@@ -275,3 +275,4 @@ if __name__ == '__main__':
     print(stats)
     for r in rows:
         print(f"[{r['group']:8s}] {r['severity']:7s} {r['title']}  — {','.join(r['personas'])} · {len(r['weeks'])} wks · e.g. {r['examples'][:1]}")
+

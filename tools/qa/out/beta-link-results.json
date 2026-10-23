@@ -265,9 +265,8 @@
   },
   {
     "url": "https://www.childproofingexperts.com/find-a-professional/",
-    "status": 200,
-    "final": "https://www.childproofingexperts.com/find-a-professional/",
-    "result": "reachable"
+    "status": 503,
+    "result": "unverified"
   },
   {
     "url": "https://www.chop.edu/centers-programs/injury-prevention-program/choking-and-suffocation",

@@ -156,7 +156,7 @@
   // No standing "Update baby's movement" toggle: the timeline, "This is where she is now" and saved moments cover it.
   window.safetyMovementUpdate = safetyMovementUpdate = function () { return ''; };
   window.safetyBackToNow = function () { page = 'topic:Safety'; render(); window.scrollTo(0, 0); };
-  const browseLinks = key => `<div class="chg-browse-links" style="${yearTheme('Safety')}">${key ? `<button class="textlink chg-override" onclick="chgSetSafety('${key}')">This is where ${name()} is now</button>` : ''}<button class="textlink chg-back-now" onclick="safetyBackToNow()">← Back to where ${name()} is now</button></div>`;
+  const browseLinks = key => `<div class="chg-browse-links" style="${yearTheme('Safety')}"><button class="textlink chg-back-now" onclick="safetyBackToNow()">← Back to your guide</button></div>`;
   const baseGuide = safetyMovementGuide;
   window.safetyMovementGuide = safetyMovementGuide = function (key) {
     const html = baseGuide.apply(this, arguments);

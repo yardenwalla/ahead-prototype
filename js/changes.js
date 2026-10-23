@@ -180,8 +180,8 @@
       helps: [['After a short or missed nap', 'Offer the next sleep earlier if baby is tired. One disrupted day does not mean the two-nap routine has stopped working.'],
         ['When new skills interrupt sleep', 'Practice new movements during awake time and keep the bedtime sequence familiar. The routine support below covers changes after illness or travel too.']]} : original;
     const rel = view < cur ? 'past' : view === cur ? 'now' : 'next';
-    const pastRange = rel === 'now' && rangeEnd(C.when) != null && m > rangeEnd(C.when);
-    const eyebrow = isEv ? C.label + ' · ' + C.when : pastRange ? 'Current guide' : (rel === 'now' ? 'Around now · ' : rel === 'past' ? 'Earlier · ' : 'Coming up · ') + C.when;
+    const chosenSleepGuide = cat === 'Sleep' && live() && local.override?.Sleep;
+    const eyebrow = isEv ? C.label + ' · ' + C.when : rel === 'now' ? (cat === 'Feeding' ? (view <= 1 ? 'Recommended for this age' : hasFoodAnswer() ? 'Based on what you shared' : 'Your feeding guide') : chosenSleepGuide ? 'Your selected sleep guide' : answers.twoNaps === 'Yes' || answers.twoNaps === 'Stay' ? 'Based on your nap pattern' : 'Recommended for this age') : (rel === 'past' ? 'Earlier · ' : 'Coming up · ') + C.when;
     const A = isEv ? null : alertFor(cat, cur, view);
     const meth = method();
 
@@ -195,17 +195,20 @@
       h += feedingCheckinMarkup();
 
     if (cat === 'Sleep' && !isEv && view === cur && chgSleepAuto() && autoNoticeFresh())
-      h += headsUp('Updated for this age', 'Showing two-nap guidance', '', `<button class="textlink chg-headsup-link" onclick="setAnswer('twoNaps','Stay')">Still on three naps? Show Naps find a rhythm →</button>`);
+      h += headsUp('Updated for this age', 'Showing two-nap guidance', '', `<button class="textlink chg-headsup-link" onclick="setAnswer('twoNaps','Stay')">Still on three naps? Show Naps and bedtime →</button>`);
     // Browsing another stage: correct it, or go back to where she is now.
     if (!isEv && view !== cur && live())
-      h += `<div class="chg-browse-links"><button class="textlink chg-override" onclick="chgSetStage('${cat}',${view})">This is where ${name()} is now</button><button class="textlink chg-back-now" onclick="chgGo('chg:${cat}:s:${cur}')">← Back to where ${name()} is now</button></div>`;
+      h += `<div class="chg-browse-links"><button class="textlink chg-override" onclick="chgSetStage('${cat}',${view})">${cat === 'Sleep' ? 'Use this sleep guide' : 'Update to this feeding stage'}</button><button class="textlink chg-back-now" onclick="chgGo('chg:${cat}:s:${cur}')">← Back to your guide</button></div>`;
 
     if (A) h += headsUp(T(A.reason), T(A.title), T(A.body), A.done
       ? `<div class="home-action-tools"><button class="home-inline-check" onclick="${A.go}"><span aria-hidden="true"></span>${esc(A.act)}</button></div>`
       : `<button class="textlink chg-headsup-link" onclick="${A.go}">${esc(A.act)} →</button>`);
 
     if (isEv && C.looks && C.looks.length) h += helpList('What you might notice', C.looks.map(t => ['', t]));
-    h += helpList('Why it’s happening', [['', C.why]].concat(isEv && C.lasts ? [['How long it lasts', C.lasts]] : []));
+    // These two sleep introductions already explain the change; don't repeat it
+    // in a second section before the numbers parents came to find.
+    if (!(cat === 'Sleep' && !isEv && ['rhythm','two'].includes(C.key)))
+      h += helpList('Why it’s happening', [['', C.why]].concat(isEv && C.lasts ? [['How long it lasts', C.lasts]] : []));
 
     // Rhythm card
     let rows = (C.rhythm || []).filter(r => !r[2] || r[2] === 'all' || meth === 'both' || r[2] === meth).map(r => cat === 'Feeding' && C.key === 'meals' && m < 12 && r[0] === 'Milk' && r[2] === 'bottle' ? [r[0], 'About 24 oz a day; follow hunger and fullness cues', r[2]] : r);
@@ -252,7 +255,7 @@
     // Coming up: what's next, and a one-tap way to say she's already there.
     if (!isEv && N && rel !== 'next') {
       const elapsed = rangeEnd(N.when) != null && m > rangeEnd(N.when);
-      h += headsUp(elapsed ? 'Next step · When baby is ready' : `Coming up · ${esc(N.when)}`, T(N.title), `Signs it’s starting: ${T(N.signs)}`, `<button class="textlink chg-headsup-link" onclick="chgGo('chg:${cat}:s:${view + 1}')">See what changes →</button>${rel === 'now' && live() ? `<button class="textlink chg-already" onclick="chgSetStage('${cat}',${view + 1})">Already there? Move ${name()} to ${esc(N.rail)}</button>` : ''}`);
+      h += headsUp(elapsed ? 'Next step · When baby is ready' : `Coming up · ${esc(N.when)}`, T(N.title), `Signs it’s starting: ${T(N.signs)}`, `<button class="textlink chg-headsup-link" onclick="chgGo('chg:${cat}:s:${view + 1}')">See what changes →</button>${rel === 'now' && live() ? `<button class="textlink chg-already" onclick="chgSetStage('${cat}',${view + 1})">${cat === 'Feeding' ? ({1:'Use the changing milk feeds guide',2:'Still milk-only? Prepare for solids',3:'Already started solids? Update your guide',4:'Managing soft lumps or finger foods? Update your guide',5:'Eating regular meals? Update your guide'}[view + 1]) : view === 2 ? 'Taking two naps? Update your guide' : 'Use the next sleep guide'}</button>` : ''}`);
     }
 
     let links = '';
@@ -276,7 +279,7 @@
     const open = local.open === key ? ' open' : '';
     let inner = `<p>${T(q[1])}</p><div class="chg-choices">${q[2].map((x, j) => `<button class="${ans === j ? 'is-on' : ''}" aria-pressed="${ans === j}" onclick="chgAnswer('${key}',${j})">${T(x[0])}</button>`).join('')}</div>`;
     if (o) {
-      inner += `<p class="chg-answer"><b>Try this:</b> ${T(o[1])}</p><p class="chg-answer"><b>Good to know:</b> ${T(o[2])}</p>`;
+      inner += `<p class="chg-answer"><b>${cat === 'Feeding' && stageKey === 'first' && i === 0 && ans === 1 ? 'Act now:' : 'Try this:'}</b> ${T(o[1])}</p><p class="chg-answer"><b>Good to know:</b> ${T(o[2])}</p>`;
       if (o[3] != null) inner += `<button class="textlink chg-answer-link" onclick="openPage('chg:${cat}:e:${o[3]}')">Read about ${T(DATA[cat].EV[o[3]].title.replace(/^The /, 'the '))} →</button>`;
     }
     return `<details class="faq-toggle"${open} ontoggle="chgOpen('${key}',this.open)"><summary><span>${T(q[0])}</span><span class="faq-plus" aria-hidden="true">＋</span></summary><div class="faq-answer">${inner}</div></details>`;
