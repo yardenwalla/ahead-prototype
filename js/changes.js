@@ -116,7 +116,7 @@
       if ((answers.pullUp === 'Yes' || m >= 8) && answers.mattressLowest !== 'Yes')
         return { reason: answers.pullUp === 'Yes' ? 'You said ' + (profile.name || 'your baby') + ' is pulling up' : 'Before she pulls up', title: 'Set the crib mattress to its lowest', body: 'Remove mobiles and anything she can reach from standing.', act: 'Mark done', done: true, go: "setAnswer('mattressLowest','Yes')" };
       if ((m >= 5 || answers.sit === 'Yes') && answers.mattressLowered !== 'Yes' && answers.mattressLowest !== 'Yes')
-        return { reason: answers.sit === 'Yes' ? 'You said baby can sit without support' : 'Prepare before baby can sit up', title: 'Lower the crib mattress', body: 'Move it down before baby can sit. Follow the crib manual for the right position; use the lowest setting before pulling up.', act: 'Mark done', done: true, go: "setAnswer('mattressLowered','Yes')" };
+        return { reason: answers.sit === 'Yes' ? 'You said baby can sit without support' : 'Prepare before baby can sit up', title: 'Lower the crib mattress', body: 'Move it down before baby can sit. Follow the crib manual for the right position. Use the lowest setting before pulling up.', act: 'Mark done', done: true, go: "setAnswer('mattressLowered','Yes')" };
       return null;
     }
     const A = DATA.Feeding.ALERT, key = cur === 0 ? 'newborn' : cur === 2 ? '5' : cur === 4 ? '8' : null;
@@ -159,7 +159,7 @@
     const unit = awake.length && /min/.test(awake[0]) ? ' min' : ' h';
     const lo = awake.length ? num(awake[0])[0] : '', hi = awake.length ? num(awake[awake.length - 1]).slice(-1)[0] : '';
     const span = awake.length ? (lo === hi ? lo : lo + '–' + hi) + unit : '';
-    const cells = [['Total', total ? total + ' h' : '—'], ['Naps', C.key === 'clock' ? 'Many' : C.key === 'daynight' ? 'Varies' : naps || '—'], ['Awake', span || '—'], ['Bedtime', bed || 'Varies']];
+    const cells = [['Total', total ? total + ' h' : '—'], ['Naps', C.key === 'clock' ? 'Many' : C.key === 'daynight' ? 'Varies' : naps || '—'], ['Wake window', span || '—'], ['Bedtime', bed || 'Varies']];
     return `<section class="sleep-phase-metrics chg-metrics" aria-label="Sleep at a glance">${cells.map(([k, v]) => `<div><span>${k}</span><strong>${esc(String(v))}</strong></div>`).join('')}<p>Typical range · Includes naps</p></section>`;
   }
   function dayOrder(rows) {
@@ -171,7 +171,7 @@
   // a second, unrelated schedule. Early sleep remains a flexible loop.
   function sampleDay(C) {
     if (['clock', 'daynight'].includes(C.key))
-      return `<p class="chg-card-note chg-flexible-day">${C.key === 'clock' ? 'A day follows a loop: feed, a short awake time, then sleep. Repeat through the night; there is no clock-time schedule yet.' : 'Feed, a short awake time, then another sleep. Repeat as needed; naps do not need fixed start times yet.'}</p>`;
+      return `<p class="chg-card-note chg-flexible-day">${C.key === 'clock' ? 'A day follows a loop: feed, a short awake time, then sleep. Repeat through the night. There is no clock-time schedule yet.' : 'Feed, a short awake time, then another sleep. Repeat as needed; naps do not need fixed start times yet.'}</p>`;
     const minutes = value => {
       const normalized = value.replace(/~/g, '').replace(/½/g,'.5').replace(/¼/g,'.25').replace(/¾/g,'.75');
       const values = normalized.match(/\d+(?:\.\d+)?/g).map(Number);
@@ -206,7 +206,7 @@
     const C = establishedTwoNaps ? {...original,
       lead: 'A morning nap and an afternoon nap make up the day. New skills or a short nap may change the timing without changing the number of naps.',
       why: 'Longer awake periods make room for two naps. A disrupted day does not by itself mean baby is ready to drop another nap.',
-      rhythmNote: 'Use the morning and afternoon naps as anchors; timing can shift after a short nap.',
+      rhythmNote: 'Use the morning and afternoon naps as anchors. Timing can shift after a short nap.',
       helps: [['After a short or missed nap', 'Offer the next sleep earlier if baby is tired. One disrupted day does not mean the two-nap routine has stopped working.'],
         ['When new skills interrupt sleep', 'Practice new movements during awake time and keep the bedtime sequence familiar. The routine support below covers changes after illness or travel too.']]} : original;
     const rel = view < cur ? 'past' : view === cur ? 'now' : 'next';
@@ -244,7 +244,7 @@
 
     if (!isEv) {
     // Rhythm card
-    let rows = (C.rhythm || []).filter(r => !r[2] || r[2] === 'all' || meth === 'both' || r[2] === meth).map(r => cat === 'Feeding' && C.key === 'meals' && m < 12 && r[0] === 'Milk' && r[2] === 'bottle' ? [r[0], 'About 24 oz a day; follow hunger and fullness cues', r[2]] : cat === 'Feeding' && C.key === 'meals' && m >= 12 && r[0] === 'Milk' && r[2] === 'bottle' ? ['Cow’s milk, if used', '16–24 oz a day; plan the change from formula with your pediatrician', r[2]] : r);
+    let rows = (C.rhythm || []).filter(r => !r[2] || r[2] === 'all' || meth === 'both' || r[2] === meth).map(r => cat === 'Feeding' && C.key === 'meals' && m < 12 && r[0] === 'Milk' && r[2] === 'bottle' ? [r[0], 'About 24 oz a day. Follow hunger and fullness cues', r[2]] : cat === 'Feeding' && C.key === 'meals' && m >= 12 && r[0] === 'Milk' && r[2] === 'bottle' ? ['Cow’s milk, if used', '16–24 oz a day. Plan the change from formula with your pediatrician', r[2]] : r);
     if (cat === 'Feeding' && meth === 'expressed' && !isEv) {
       rows = rows.filter(r => r[0] !== 'Feeds a day');
       const milkAge = live() ? actualMonth() : m;
@@ -257,12 +257,12 @@
     if (cat === 'Feeding' && meth === 'both') rows = rows.filter(r => !(r[0] === 'Feeds a day' && r[2] === 'bottle')).map(r => {
       if (r[0] === 'Feeds a day') return ['Total milk feeds', r[1]];
       if (r[0] === 'Milk' && r[2] === 'nurse') return ['Nursing', r[1]];
-      if (r[0] === 'Milk' && r[2] === 'bottle') return ['Bottles', m < 12 ? 'Amounts depend on how much baby nurses; follow hunger and fullness cues.' : 'Extra milk depends on nursing and meals. Discuss the transition at the 12-month checkup.'];
+      if (r[0] === 'Milk' && r[2] === 'bottle') return ['Bottles', m < 12 ? 'Amounts depend on how much baby nurses. Follow hunger and fullness cues.' : 'Extra milk depends on nursing and meals. Discuss the transition at the 12-month checkup.'];
       if (r[0] === 'Bottles' && r[2] === 'bottle') return ['Formula-only bottle', r[1].replace(', up to 32 oz a day', '')];
       return r;
     });
     const title = isEv ? (cat === 'Sleep' ? 'Naps and nights' : 'Feeds right now') : cfg.rhythmTitle;
-    const sub = !isEv && cat === 'Sleep' ? 'Awake time is the stretch between sleeps.' : !isEv && cat === 'Feeding' ? profile.early ? 'General reference. After early birth, follow your pediatrician’s milk and supplement plan.' : esc(C.total || '') : '';
+    const sub = !isEv && cat === 'Sleep' ? 'A wake window is how long baby is awake between sleeps.' : !isEv && cat === 'Feeding' ? profile.early ? 'General reference. After early birth, follow your pediatrician’s milk and supplement plan.' : esc(C.total || '') : '';
     let card = `<div class="chg-card-head"><h2>${title}</h2>${sub ? `<p>${sub}</p>` : ''}</div>`;
     if (cat === 'Feeding' && !isEv) card += `<div class="chg-milk-reference"><label for="milk-reference-choice">Milk reference</label><select id="milk-reference-choice" onchange="chgChooseMethod(this.value)">${[['nurse','Nursing'],['expressed','Breast-milk bottles'],['bottle',C.key==='meals'&&m>=12?'Formula to milk':'Formula bottles'],['both','Nursing and bottles']].map(([v,label])=>`<option value="${v}" ${meth===v?'selected':''}>${label}</option>`).join('')}</select></div>`;
     if (cat === 'Sleep' && !isEv) card += sleepMetrics(C);
@@ -398,7 +398,7 @@
       helpList('How to tell', D.TRIAGE.map(x => [x[0], babyCopy(x[1]).split(' · ').join('. ') + '.'])) +
       (cat === 'Sleep' ? callout('For you', 'Look after yourself too', 'If exhaustion or low mood is getting hard to manage, talk to your own doctor, or call or text the National Maternal Mental Health Hotline: 1-833-852-6262.')
         : callout('For you', 'Feeding is hard work', 'If nursing hurts or feeding feels overwhelming, a lactation consultant can help, and is often covered by insurance. Asking for help is normal.')),
-      (cat === 'Sleep' ? 'Before a visit, note a few nights of bedtime, wakes and feeds.' : 'Before a visit, note a day of feeds and wet diapers.') + ' It helps your pediatrician see the pattern.');
+      (cat === 'Sleep' ? 'Before a checkup, note a few nights of bedtime, wakes and feeds.' : 'Before a checkup, note a day of feeds and wet diapers.') + ' It helps your pediatrician see the pattern.');
     if (cat === 'Feeding' && screen === 'safe') return detail(cat, 'Before the first bite', 'Feeding safety and first aid', 'Prepare the seat and learn first aid before starting. Revisit food preparation as textures and self-feeding change.',
       checklist(cat) + helpList('Once baby is eating', D.GROW), 'Based on AAP and CDC guidance.');
     if (cat === 'Feeding' && screen === 'milk') {

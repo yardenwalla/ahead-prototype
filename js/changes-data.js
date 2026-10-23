@@ -38,7 +38,7 @@ window.AHEAD_CHANGES = {
     "helps": [
      [
       "Start settling at the first yawn",
-      "Watch for a yawn, a glazed stare or turning away. Use the awake-time range above as a guide, alongside her cues."
+      "Watch for a yawn, a glazed stare or turning away. Use the wake window above as a rough guide."
      ],
      [
       "Help her fall asleep",
@@ -109,13 +109,13 @@ window.AHEAD_CHANGES = {
     "rail": "Three naps",
     "when": "Usually 4–6 months",
     "title": "Three naps",
-    "lead": "Naps may begin to follow a pattern. A familiar routine can help, while timing still varies from day to day.",
+    "lead": "Naps start to land at similar times most days, usually 3 of them. A familiar routine helps, even when the times shift.",
     "looks": [
      "Naps start at roughly the same times most days",
      "Usually 3 naps: two longer ones and a short late catnap",
      "Sleepy after about 2 hours awake"
     ],
-    "why": "As sleep matures, sleepy times may become easier to recognize. Short naps and night waking can still happen alongside a growing routine.",
+    "why": "Her body clock is maturing, so sleepy times get easier to predict. Short naps and night waking still happen.",
     "lasts": "The pattern holds and slowly stretches, until the third nap no longer fits.",
     "rhythm": [
      [
@@ -151,11 +151,11 @@ window.AHEAD_CHANGES = {
       "often 7–8 pm"
      ]
     ],
-    "rhythmNote": "Awake time gets a little longer as the day goes on.",
+    "rhythmNote": "Wake windows get a little longer as the day goes on.",
     "helps": [
      [
       "Notice when she gets sleepy",
-      "Watch for her quieter gaze, yawning or turning away. Start winding down before she becomes upset; a short nap may bring the next sleepy time sooner."
+      "Watch for her quieter gaze, yawning or turning away. Start winding down before she becomes upset. A short nap may bring the next sleepy time sooner."
      ],
      [
       "Use a familiar wind-down",
@@ -164,7 +164,7 @@ window.AHEAD_CHANGES = {
     ],
     "signs": "Naps landing at similar times most days.",
     "total": "About 12–16 hours of sleep in 24",
-    "night": "Night feeds can continue alongside a nap routine. Dropping a night feed is a separate decision; ask your pediatrician first."
+    "night": "Night feeds can continue alongside a nap routine. Dropping a night feed is a separate decision. Ask your pediatrician first."
    },
    {
     "key": "two",
@@ -209,14 +209,14 @@ window.AHEAD_CHANGES = {
     "helps": [
      [
       "Look for a pattern, not one day",
-      "One skipped catnap isn’t a transition. If she skips it most days and stays comfortable until bedtime, she may be ready to try two naps. A third nap may still help after short naps."
+      "One skipped catnap isn’t a transition. If she skips it most days and stays happy until bedtime, it’s time to try two naps. After short naps, a third nap may still help."
      ],
      [
       "Move bedtime earlier during the switch",
       "Two-nap days make for a long afternoon. Try bedtime 30 minutes earlier."
      ]
     ],
-    "signs": "Skipping the late catnap most days and staying comfortable until bedtime.",
+    "signs": "Skipping the late catnap most days and staying happy until bedtime.",
     "after": [
      "usually 13–18 months",
      "Two naps to one",
@@ -229,11 +229,11 @@ window.AHEAD_CHANGES = {
   "EV": [
    {
     "key": "four",
-    "supportNote": "Keep needed night feeds. If waking comes with fever, poor feeding or signs of pain, contact your pediatrician rather than assuming it is the sleep change.",
+    "supportNote": "Keep any night feeds she still needs. If waking comes with fever, poor feeding or signs of pain, call your pediatrician.",
     "rail": "4-month sleep regression",
     "when": "Usually 3–5 months",
     "title": "The 4-month sleep regression",
-    "lead": "Around 4 months, sleep cycles become more mature. Some babies wake more or take shorter naps; others barely notice the change.",
+    "lead": "Around 4 months, sleep cycles become more mature. Some babies wake more or take shorter naps. Others barely notice the change.",
     "looks": [
      "More night waking than a few weeks ago",
      "Naps that end after 30–45 minutes",
@@ -273,7 +273,7 @@ window.AHEAD_CHANGES = {
     "why": "She has learned that you still exist when out of sight, but not yet that you always come back.",
     "lasts": "It comes and goes. It often peaks around 9–10 months and can return in the second year.",
     "rhythm": [],
-    "rhythmNote": "Keep the usual nap pattern while you respond to harder goodbyes. Separation anxiety alone is not a reason to drop a nap.",
+    "rhythmNote": "No change to naps is needed. Harder goodbyes alone aren’t a reason to drop one.",
     "helps": [
      [
       "Use the same short goodbye",
@@ -319,7 +319,7 @@ window.AHEAD_CHANGES = {
   "GROW": [
    [
     "When baby tries to roll",
-    "Stop swaddling. Use sleepwear or a sleep sack that leaves arms free. Keep placing baby on their back; once she rolls both ways, you can leave her."
+    "Stop swaddling. Use sleepwear or a sleep sack that leaves arms free. Keep placing baby on their back. Once she rolls both ways, you can leave her."
    ],
    [
     "Before baby can sit",
@@ -368,7 +368,7 @@ window.AHEAD_CHANGES = {
    ],
    [
     "Keep an eye on it",
-    "Note a pattern of harder settling or more waking, including feeds and any signs of discomfort"
+    "A new pattern of harder settling or more waking: jot down bedtime, wakes and feeds"
    ],
    [
     "Call your pediatrician if",
@@ -500,15 +500,15 @@ window.AHEAD_CHANGES = {
      "How long has she been awake?",
      [
       [
-       "Less than her usual awake time",
+       "Less than her usual wake window",
        "She may not be tired yet. Try a little quiet play, then offer the nap when tired cues appear.",
-       "Use the awake-time range above as a guide, alongside her cues.",
+       "Use the wake window above as a rough guide.",
        null
       ],
       [
        "About her usual time",
        "Check for hunger, discomfort or a noisy room, then try your usual help settling.",
-       "Awake times are guides, not deadlines.",
+       "Wake windows are guides, not deadlines.",
        null
       ],
       [
@@ -526,13 +526,13 @@ window.AHEAD_CHANGES = {
       [
        "Fine until bedtime",
        "She may be starting the 3-to-2 nap transition. On days she skips it, move bedtime earlier.",
-       "Look for several days of managing comfortably until bedtime, rather than deciding from one skipped nap.",
+       "One skipped catnap isn’t a transition. Skipping it most days usually is.",
        null
       ],
       [
        "Melts down by evening",
        "Offer a short nap in her sleep space with your usual help. If it doesn’t happen, move bedtime earlier.",
-       "A car seat or swing is not a substitute for a flat, firm sleep space at home.",
+       "If she falls asleep in the car, move her to her sleep space when you get home.",
        null
       ]
      ]
@@ -564,7 +564,7 @@ window.AHEAD_CHANGES = {
       [
        "Later than usual",
        "If she’s still alert, try bedtime 15–30 minutes later tonight and see how she does.",
-       "Check the awake-time range above and her tired cues before changing the nap routine.",
+       "Check the wake window above before changing her naps.",
        null
       ],
       [
@@ -593,8 +593,8 @@ window.AHEAD_CHANGES = {
       ],
       [
        "None of these, or not sure",
-       "Jot down bedtime, naps, wakes and feeds for a few nights. This can help you spot a pattern and decide what to try.",
-       "Snoring most nights, pauses in breathing or ongoing feeding or growth concerns deserve a pediatrician review.",
+       "Jot down bedtime, naps, wakes and feeds for a few nights. A pattern usually shows what to change.",
+       "Snoring most nights or pauses in breathing are worth raising with your pediatrician.",
        null
       ]
      ]
@@ -612,12 +612,12 @@ window.AHEAD_CHANGES = {
       [
        "Before 7 pm",
        "Keep the room dark and quiet at dawn. Feed her if she’s hungry, then keep things calm until she’s ready to start the day.",
-       "Choose a consistent morning start she can comfortably manage.",
+       "Pick a regular wake-up time and keep to it.",
        null
       ],
       [
        "Between 7 and 8 pm",
-       "Check whether dawn light or noise wakes her. A darker, quieter room may help; also look at when the last nap ends and how tired she seems at bedtime.",
+       "Check whether dawn light or noise wakes her. A darker, quieter room may help. Also look at when the last nap ends and how tired she seems at bedtime.",
        "Change one thing at a time and watch the pattern over a few days.",
        null
       ]
@@ -627,7 +627,7 @@ window.AHEAD_CHANGES = {
   },
   "SETTLE_BEFORE": [
    "Pick one approach every caregiver can stick with.",
-   "Plan night feeds with your pediatrician. Sleep training changes how baby falls asleep, not whether she eats.",
+   "Plan night feeds with your pediatrician. Sleep training changes how she falls asleep, not whether she eats.",
    "Give it about a week before judging it.",
    "Pause if she’s sick, teething or it stops feeling right. You can stop anytime."
   ],
@@ -725,7 +725,7 @@ window.AHEAD_CHANGES = {
     "when": "Usually 6 weeks–4 months",
     "title": "Changing milk feeds",
     "lead": "After the newborn weeks, many babies feed more quickly or further apart. Hungrier days still happen.",
-    "why": "Some babies take milk more efficiently as they grow. Shorter feeds alone don’t tell you how much milk she’s getting; growth and wet diapers help show the overall pattern.",
+    "why": "Some babies take milk more efficiently as they grow. Shorter feeds alone don’t tell you how much milk she’s getting. Growth and wet diapers help show the overall pattern.",
     "total": "A guide, not a target.",
     "rhythm": [
      [
@@ -766,8 +766,8 @@ window.AHEAD_CHANGES = {
     "rail": "Getting ready for solids",
     "when": "Usually 4–6 months",
     "title": "Getting ready for solids",
-    "lead": "Before first foods, learn the readiness signs and choose how you’d like to begin. Keep usual milk feeds while you prepare.",
-    "why": "Breast milk or formula stays the main nutrition while head control, sitting and swallowing skills develop. Around 6 months is a common starting point, alongside readiness signs.",
+    "lead": "Milk is still her whole diet. Now’s the time to learn the readiness signs and choose how you’d like to start.",
+    "why": "Most babies are ready around 6 months, once head control, sitting and swallowing catch up. Until then, breast milk or formula covers everything she needs.",
     "total": "A guide, not a target.",
     "rhythm": [
      [
@@ -805,7 +805,7 @@ window.AHEAD_CHANGES = {
     "when": "Usually around 6 months",
     "title": "Starting solids",
     "lead": "She’s tasting her first foods. Breast milk or formula is still her main food.",
-    "why": "Around 6 months, iron-rich foods become an important part of the diet alongside milk. Early introduction of peanut and well-cooked egg may help prevent those allergies.",
+    "why": "Around 6 months, babies need more iron than milk alone gives them. Offering peanut and well-cooked egg early can lower the chance of those allergies.",
     "total": "A guide, not a target.",
     "rhythm": [
      [
@@ -835,7 +835,7 @@ window.AHEAD_CHANGES = {
      ]
     ],
     "rhythmNote": "Offer solids when she’s alert and not too hungry.",
-    "night": "Milk still carries her growth. At meals, watch her interest and fullness, not how much she eats.",
+    "night": "Steady growth at checkups. At meals, follow her interest and fullness, not how much she eats.",
     "helps": [
      [
       "Start with an iron-rich food",
@@ -897,7 +897,7 @@ window.AHEAD_CHANGES = {
       "A few sips of water at meals. Spills are part of learning."
      ]
     ],
-    "signs": "Getting comfortable with first foods and beginning to manage more texture or pick food up.",
+    "signs": "Handling first tastes and starting to pick food up or try soft lumps.",
     "looks": [],
     "lasts": "",
     "label": ""
@@ -907,7 +907,7 @@ window.AHEAD_CHANGES = {
     "rail": "Family meals",
     "when": "Usually 9–12 months",
     "title": "Family meals",
-    "lead": "She’s eating regular meals and varied textures, with milk alongside. Keep breast milk or formula through the first year; breastfeeding can continue after that.",
+    "lead": "She’s eating regular meals and varied textures, with milk alongside. Keep breast milk or formula through the first year. Breastfeeding can continue after that.",
     "why": "As she eats more food, she needs a little less milk. Eating together helps her learn by copying you.",
     "total": "A guide, not a target.",
     "rhythm": [
@@ -963,13 +963,13 @@ window.AHEAD_CHANGES = {
     "label": "Comes and goes",
     "when": "Often around 3 weeks, 6 weeks and 3 months",
     "title": "Cluster feeding and growth spurts",
-    "lead": "Some days she wants several feeds close together, often in the evening. Watch wet diapers, growth and how feeding feels alongside the frequent feeds.",
+    "lead": "Some days she wants to feed almost constantly, often in the evening. It’s normal, and her usual pattern comes back.",
     "looks": [
      "Feeding every hour or more often for a few hours",
      "Fussy between feeds, especially in the evening",
      "Waking more at night"
     ],
-    "why": "Frequent feeds can reflect changing needs. When nursing, feeding more often also stimulates milk supply.",
+    "why": "Growth spurts and changing needs drive more feeding. If you’re nursing, frequent feeds also build your milk supply.",
     "lasts": "Usually 2–3 days at a time.",
     "rhythm": [],
     "rhythmNote": "Feed when she asks, even if it feels constant. Her usual pattern comes back.",
@@ -1002,7 +1002,7 @@ window.AHEAD_CHANGES = {
     "why": "She’s noticing more around her, which can interrupt feeds.",
     "lasts": "A few weeks for most babies.",
     "rhythm": [],
-    "rhythmNote": "Offer calm opportunities to feed and watch the overall intake, wet diapers and growth. Do not assume night feeding will make up for missed milk.",
+    "rhythmNote": "Offer calm feeds through the day, rather than counting on night feeds to make up the difference.",
     "night": "Wet diapers and growth matter more than any single short feed.",
     "helps": [
      [
@@ -1087,7 +1087,7 @@ window.AHEAD_CHANGES = {
    [
     "Breast milk storage",
     "CDC",
-    "Room temperature: up to 4 hours. Fridge: up to 4 days. Freezer: within 6 months is best; up to 12 months is acceptable. Use refrigerated thawed milk within 24 hours after it is fully thawed; don’t refreeze fully thawed milk."
+    "Room temperature: up to 4 hours. Fridge: up to 4 days. Freezer: within 6 months is best. Up to 12 months is acceptable. Use refrigerated thawed milk within 24 hours after it is fully thawed. Don’t refreeze fully thawed milk."
    ],
    [
     "Making formula",
@@ -1097,12 +1097,12 @@ window.AHEAD_CHANGES = {
    [
     "Pumping and bottles",
     "If you express milk",
-    "While you’re apart or exclusively pumping, pump about as often as baby feeds. If you also nurse, introducing bottles can take practice; another caregiver can try a calm feed."
+    "While you’re apart or exclusively pumping, pump about as often as baby feeds. If you also nurse, introducing bottles can take practice. Another caregiver can try a calm feed."
    ],
    [
     "Choosing formula",
     "For most babies",
-    "Standard iron-fortified infant formula, including store brands, suits most babies. If baby has a prescribed formula or feeding plan for early birth, growth or allergy concerns, check before changing it."
+    "Standard iron-fortified infant formula, including store brands, suits most babies. If she has a prescribed formula or a feeding plan for early birth, growth or allergy, check with your pediatrician before changing it."
    ],
    [
     "Warming bottles",
@@ -1112,7 +1112,7 @@ window.AHEAD_CHANGES = {
    [
     "Vitamin D",
     "Ask your pediatrician",
-    "Under 12 months, babies need 400 IU a day. Breastfed and partly breastfed babies need daily drops; formula-fed babies may too if intake is below about 32 oz a day. From age one, the daily need is 600 IU. Ask your pediatrician which supplement fits."
+    "Under 12 months, babies need 400 IU a day. Breastfed and partly breastfed babies need daily drops. Formula-fed babies may too if intake is below about 32 oz a day. From age one, the daily need is 600 IU. Ask your pediatrician which supplement fits."
    ]
   ],
   "TRIAGE": [
@@ -1126,7 +1126,7 @@ window.AHEAD_CHANGES = {
    ],
    [
     "Call your pediatrician if",
-    "Fewer wet diapers than usual · Not back to birth weight by 2 weeks · Repeated vomiting or refusal with textures · Little interest in food after 9 months · Reduced milk intake or repeated feed refusal · Hives or vomiting after a new food · Blood in baby’s stool"
+    "Fewer wet diapers than usual · Not back to birth weight by 2 weeks · Taking much less milk or refusing feeds · Repeated vomiting or refusal with textures · Little interest in food after 9 months · Hives or vomiting after a new food · Blood in her poop"
    ],
    [
     "Call 911 if",
@@ -1220,7 +1220,7 @@ window.AHEAD_CHANGES = {
      [
       [
        "Yes",
-       "Offer milk at hunger cues. Hungrier days can happen; watch wet diapers and growth as well as how often she feeds.",
+       "Offer milk at hunger cues. Hungrier days can happen. Watch wet diapers and growth as well as how often she feeds.",
        "Extra hunger alone doesn’t mean she needs solids or that your milk supply is low.",
        0
       ],
@@ -1263,7 +1263,7 @@ window.AHEAD_CHANGES = {
       [
        "No, whoever offers it",
        "Try a calm feed before she gets very hungry. Check whether the nipple flow is too fast or slow for her, and don’t push her to finish.",
-       "If refusal reduces usual milk intake or wet diapers, contact your pediatrician rather than waiting for the next checkup.",
+       "If she’s taking less milk overall or has fewer wet diapers, call your pediatrician now.",
        null
       ]
      ]
@@ -1294,7 +1294,7 @@ window.AHEAD_CHANGES = {
      [
       [
        "Purées",
-       "You offer small spoonfuls and adjust the texture. This takes your help for each bite; move toward mashed and lumpier food as she learns.",
+       "You offer small spoonfuls and adjust the texture. This takes your help for each bite. Move toward mashed and lumpier food as she learns.",
        "",
        null
       ],
@@ -1323,7 +1323,7 @@ window.AHEAD_CHANGES = {
       [
        "Yes",
        "That’s gagging. It’s noisy and normal while she learns. Stay calm and let her work it out.",
-       "Trouble breathing or an ineffective cough can mean choking. Know infant choking first aid.",
+       "Trouble breathing or a weak or silent cough can mean choking. Know infant choking first aid.",
        null
       ],
       [
@@ -1365,7 +1365,7 @@ window.AHEAD_CHANGES = {
       [
        "Many times, and she refuses most food",
        "Keep meals calm and offer textures she can manage. If she refuses most foods or finds them hard, call your pediatrician for a feeding review.",
-       "Mention coughing, vomiting, discomfort or trouble swallowing; these need more than repeated food exposure.",
+       "Mention coughing, vomiting, discomfort or trouble swallowing. These need more than repeated food exposure.",
        null
       ]
      ]
@@ -1379,12 +1379,12 @@ window.AHEAD_CHANGES = {
       [
        "Gags, then keeps going",
        "Gagging is normal while she learns. Keep offering soft lumps alongside foods she likes.",
-       "Trouble breathing or an ineffective cough can mean choking, even if there’s some sound. Know infant choking first aid.",
+       "Trouble breathing or a weak or silent cough can mean choking, even if there’s some sound. Know infant choking first aid.",
        null
       ],
       [
        "Gags and vomits often, or refuses",
-       "Offer textures she can manage, and contact your pediatrician about repeated vomiting or refusal. Ask whether a feeding assessment would help.",
+       "Offer textures she can manage, and call your pediatrician about repeated vomiting or refusal. Ask whether a feeding assessment would help.",
        "",
        null
       ]
@@ -1395,7 +1395,7 @@ window.AHEAD_CHANGES = {
      "How are meals going?",
      [
       [
-       "Milk is going well; food varies",
+       "Milk is going well. Food varies",
        "Keep regular milk feeds and offer meals when she’s alert and interested. Leave some space between milk and food so she isn’t too full or very hungry.",
        "Breast milk or infant formula remains important through the first year. Food gradually takes a bigger role.",
        null
@@ -1414,7 +1414,7 @@ window.AHEAD_CHANGES = {
      [
       [
        "Yes",
-       "Yes. Her gums can mash soft food. Choose the shape and size for her grasp; use the food-preparation guide for examples.",
+       "Yes. Her gums can mash soft food. Choose the shape and size for her grasp. Use the food-preparation guide for examples.",
        "Teeth alone don’t decide whether she’s ready for finger foods.",
        null
       ],
@@ -1467,7 +1467,7 @@ window.AHEAD_CHANGES = {
       [
        "She just turned 1",
        "She’s old enough for honey now, though it still counts as added sugar to avoid. Keep preparing choking hazards safely.",
-       "If you offer cow’s milk, discuss how it fits alongside meals and any breastfeeding.",
+       "Whole cow’s milk can replace formula now. Ask at the 12-month checkup how much fits alongside meals.",
        null
       ]
      ]
@@ -1506,7 +1506,7 @@ window.AHEAD_CHANGES = {
   },
   "BOTTLE_STEPS": [
    "Wash your hands before making a bottle, and clean bottles after every feed.",
-   "Hold her semi-upright and pace the feed; pause every few minutes.",
+   "Hold her semi-upright and pace the feed. Pause every few minutes.",
    "Never prop a bottle or put her to bed with one.",
    "Formula: discard leftovers within 1 hour of starting the feed. Breast milk: use leftovers within 2 hours after the feed ends, then discard."
   ],

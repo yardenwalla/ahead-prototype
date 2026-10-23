@@ -40,8 +40,8 @@
     ['Changing milk feeds', 'Understand changing feeds and how milk intake and growth fit together.'],
     ['Getting ready for solids', 'Spot the readiness signs and get set up before the first bite.'],
     ['Starting solids', 'Choose a way to offer food, prepare it safely and keep milk feeds alongside.'],
-    ['Textures and finger foods', 'Build on first foods with textures and self-feeding practice suited to your baby.'],
-    ['Family meals', 'Bring meals, milk feeds and cup practice together as eating skills grow.']
+    ['Textures and finger foods', 'Move on from first tastes to soft lumps and finger foods.'],
+    ['Family meals', 'Meals, milk feeds and cup practice, as eating skills grow.']
   ];
 
   /* ---------- candidates ---------- */
@@ -103,9 +103,9 @@
 
     // Give learning a timely route from Home, before the parent needs to make
     // the decision. These are previews, never instructions to start or drop a nap.
-    if (m === 3) out.push({topic:'Sleep',title:'The 4-month sleep change',body:'See what more waking or short naps can look like, and how to respond if they happen.',action:"openPage('chg:Sleep:e:0')",tier:'should',prep:true,upcoming:true,reason:'Coming up · Around 4 months'});
-    if (m === 4 && chgSettlingGuide() === 'learn') out.push({topic:'Sleep',title:'Learn about sleep training',body:'Understand the optional methods before deciding whether to try. Learning about them is not a decision to start.',action:"openPage('chg:Sleep:settle')",tier:'should',prep:true,upcoming:true,reason:'An optional decision · Around 4–6 months'});
-    if ([7,8].includes(m) && !['Yes','Stay'].includes(answers.twoNaps)) out.push({topic:'Sleep',title:'Before dropping the catnap',body:'Look for repeated days when the late nap no longer fits and baby manages comfortably until bedtime.',action:"openPage('chg:Sleep:s:3')",tier:'should',prep:true,upcoming:true,reason:'As the late catnap stops fitting'});
+    if (m === 3) out.push({topic:'Sleep',title:'The 4-month sleep regression',body:'More night waking and short naps are common for a few weeks. Here’s what helps.',action:"openPage('chg:Sleep:e:0')",tier:'should',prep:true,upcoming:true,reason:'Coming up · Around 4 months'});
+    if (m === 4 && chgSettlingGuide() === 'learn') out.push({topic:'Sleep',title:'Learn about sleep training',body:'Compare the optional methods before deciding whether to try one. Reading about them isn’t a decision to start.',action:"openPage('chg:Sleep:settle')",tier:'should',prep:true,upcoming:true,reason:'An optional decision · Around 4–6 months'});
+    if ([7,8].includes(m) && !['Yes','Stay'].includes(answers.twoNaps)) out.push({topic:'Sleep',title:'Before dropping the catnap',body:'When she skips the late catnap most days and stays happy until bedtime, it’s time to try two naps.',action:"openPage('chg:Sleep:s:3')",tier:'should',prep:true,upcoming:true,reason:'As the late catnap stops fitting'});
 
     // Health: the next visit, ranked up when it's close
     let age = healthJourneyFocus();
@@ -185,7 +185,7 @@
   }
   function mattressRow(c) {
     const lowest = c.kind === 'mattress', key = lowest ? 'mattressLowest' : 'mattressLowered';
-    const row = { topic: 'Sleep', title: lowest ? 'Set the crib mattress to its lowest' : 'Lower the crib mattress', body: lowest ? 'Remove mobiles and anything she can reach from standing.' : 'Follow the crib manual for the right position; lower it before baby can sit.', action: "openPage('chg:Sleep:safe')", art: 0, reason: c.reason };
+    const row = { topic: 'Sleep', title: lowest ? 'Set the crib mattress to its lowest' : 'Lower the crib mattress', body: lowest ? 'Remove mobiles and anything she can reach from standing.' : 'Follow the crib manual for the right position. Lower it before baby can sit.', action: "openPage('chg:Sleep:safe')", art: 0, reason: c.reason };
     return `<div class="home-connected-sleep" style="${yearTheme('Sleep')}">${conceptRow(row)}<div class="home-connected-actions"><div class="home-action-tools"><button class="home-inline-check" aria-label="Mark done: crib mattress lowered" onclick="setAnswer('${key}','Yes')"><span aria-hidden="true"></span>Mark done</button></div></div></div>`;
   }
   function checkRow(c) {
