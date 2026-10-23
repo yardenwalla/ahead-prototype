@@ -171,7 +171,7 @@ window.AHEAD_CHANGES = {
     "rail": "Two naps",
     "when": "Usually 6–9 months",
     "title": "Two naps a day",
-    "lead": "A morning nap and an afternoon nap replace the three-nap day. When she skips the late catnap most days and stays happy until bedtime, it’s time to switch.",
+    "lead": "A morning nap and an afternoon nap replace the 3-nap day. When she skips the late catnap most days and stays happy until bedtime, it’s time to switch.",
     "looks": [
      "The catnap keeps getting skipped",
      "Longer morning and afternoon naps",
@@ -219,8 +219,8 @@ window.AHEAD_CHANGES = {
     "signs": "Skipping the late catnap most days and staying happy until bedtime.",
     "after": [
      "usually 13–18 months",
-     "Two naps to one",
-     "Most babies still need two naps at their first birthday."
+     "The 2-to-1 nap transition",
+     "Most babies still need 2 naps at their first birthday."
     ],
     "total": "About 12–16 hours of sleep in 24",
     "night": "Some babies still feed at night with two naps. Talk to your pediatrician before dropping a night feed."
@@ -233,13 +233,13 @@ window.AHEAD_CHANGES = {
     "rail": "4-month sleep regression",
     "when": "Usually 3–5 months",
     "title": "The 4-month sleep regression",
-    "lead": "Around 4 months, sleep cycles become more mature. Some babies wake more or take shorter naps. Others barely notice the change.",
+    "lead": "It’s called a regression, but it’s a step forward: sleep now works in cycles, like an adult’s. Many babies wake more for a few weeks. Some barely notice.",
     "looks": [
      "More night waking than a few weeks ago",
      "Naps that end after 30–45 minutes",
      "Harder to put down asleep"
     ],
-    "why": "Sleep now works in cycles, like an adult’s. She may wake more fully between cycles and need help getting back to sleep.",
+    "why": "She now moves between light and deep sleep. Between cycles she may wake more fully and need help getting back to sleep.",
     "lasts": "A few weeks for most babies. If waking comes with fever or poor feeding, call your pediatrician.",
     "rhythm": [],
     "rhythmNote": "Nap lengths may wobble for a few weeks. Go by tired signs until things settle.",
@@ -297,15 +297,15 @@ window.AHEAD_CHANGES = {
    ],
    [
     "Same room, separate sleep space",
-    "Keep the crib or bassinet in your room for at least the first 6 months."
+    "Keep baby’s sleep space in your room for at least the first 6 months."
    ],
    [
     "Never sleep with baby on a sofa or armchair",
     "It’s the most dangerous place to fall asleep with a baby. If you might doze while feeding, an adult bed cleared of pillows and blankets is less risky. Move baby back to their own space when you wake."
    ],
    [
-    "Move her to a flat sleep space after the car",
-    "Car seats are for travel. When you arrive, move her to her own flat, firm sleep space. Swings aren’t for sleep."
+    "Move baby to a flat sleep space after the car",
+    "Car seats are for travel. When you arrive, move baby to their own flat, firm sleep space. Swings aren’t for sleep."
    ],
    [
     "Keep baby from overheating",
@@ -319,7 +319,7 @@ window.AHEAD_CHANGES = {
   "GROW": [
    [
     "When baby tries to roll",
-    "Stop swaddling. Use sleepwear or a sleep sack that leaves arms free. Keep placing baby on their back. Once she rolls both ways, you can leave her."
+    "Stop swaddling. Use sleepwear or a sleep sack that leaves arms free. Keep placing baby on their back. Once baby rolls both ways, you can leave them in the position they choose."
    ],
    [
     "Before baby can sit",
@@ -327,7 +327,7 @@ window.AHEAD_CHANGES = {
    ],
    [
     "Before baby can pull up",
-    "Set the mattress to its lowest and remove mobiles and anything she can reach."
+    "Set the mattress to its lowest and remove mobiles and anything baby can reach."
    ],
    [
     "Moving to her own room",
@@ -368,7 +368,7 @@ window.AHEAD_CHANGES = {
    ],
    [
     "Keep an eye on it",
-    "A new pattern of harder settling or more waking: jot down bedtime, wakes and feeds"
+    "A new pattern of harder settling or more waking: jot down bedtime, wakes and feeds."
    ],
    [
     "Call your pediatrician if",
@@ -395,7 +395,7 @@ window.AHEAD_CHANGES = {
    "newborn": [
     "Safe sleep setup",
     "2 of 6 checked",
-    "Back to sleep, a clear crib in your room, and never on a sofa.",
+    "Back to sleep, a clear sleep space in your room, and never on a sofa.",
     "Open checklist"
    ]
   },
@@ -594,7 +594,7 @@ window.AHEAD_CHANGES = {
       [
        "None of these, or not sure",
        "Jot down bedtime, naps, wakes and feeds for a few nights. A pattern usually shows what to change.",
-       "Snoring most nights or pauses in breathing are worth raising with your pediatrician.",
+       "Call your pediatrician about snoring most nights or pauses in breathing during sleep.",
        null
       ]
      ]
@@ -710,7 +710,7 @@ window.AHEAD_CHANGES = {
      ],
      [
       "Get help early if nursing hurts",
-      "Pain past the first few seconds, or trouble latching, is worth a lactation visit now."
+      "Pain past the first few seconds, or trouble latching, is a reason to see a lactation consultant now."
      ]
     ],
     "call": "She is hard to wake for feeds, her skin or eyes look more yellow, or she has fewer wet diapers than expected. After day 5, expect at least 6 wet diapers a day.",
@@ -756,7 +756,7 @@ window.AHEAD_CHANGES = {
       "Hold the bottle more level and pause every few minutes so she can decide when she’s full. Never prop a bottle."
      ]
     ],
-    "signs": "Milk feeds may become quicker or further apart, with hungrier days now and then.",
+    "signs": "Shorter or more spaced-out feeds, with hungrier days now and then.",
     "looks": [],
     "lasts": "",
     "label": ""
@@ -767,7 +767,7 @@ window.AHEAD_CHANGES = {
     "when": "Usually 4–6 months",
     "title": "Getting ready for solids",
     "lead": "Milk is still her whole diet. Now’s the time to learn the readiness signs and choose how you’d like to start.",
-    "why": "Most babies are ready around 6 months, once head control, sitting and swallowing catch up. Until then, breast milk or formula covers everything she needs.",
+    "why": "Most babies are ready around 6 months, once head control, sitting and swallowing catch up. Until then, breast milk or formula is all the food she needs.",
     "total": "A guide, not a target.",
     "rhythm": [
      [
@@ -941,13 +941,13 @@ window.AHEAD_CHANGES = {
      ],
      [
       "Plan the milk change at 12 months",
-      "Whole cow’s milk can replace formula, about 16–24 oz a day from a cup. Breastfeeding can continue as long as you both want."
+      "Whole cow’s milk can replace formula, about 16–24 oz a day from a cup. Nursing can continue as long as you both want."
      ]
     ],
     "after": [
      "usually 12–18 months",
      "Bottles to cups",
-     "Most babies move off bottles between 12 and 18 months."
+     "Swap bottles for an open or straw cup, one feed at a time."
     ],
     "signs": "Eating at regular mealtimes and managing several textures.",
     "looks": [],
@@ -977,7 +977,7 @@ window.AHEAD_CHANGES = {
     "helps": [
      [
       "Feed on demand",
-      "Offer milk at hunger cues and pause at fullness cues. Bottle amounts do not have to increase at every feed."
+      "Offer milk at hunger cues and pause at fullness cues. Bottle amounts don’t have to increase at every feed."
      ],
      [
       "Set yourself up",
@@ -1130,14 +1130,14 @@ window.AHEAD_CHANGES = {
    ],
    [
     "Call 911 if",
-    "Trouble breathing or swelling of lips or tongue after a food · Choking that doesn’t clear · She’s limp or won’t wake"
+    "Trouble breathing, swelling of lips or tongue, or repeated vomiting after a food · Choking that doesn’t clear · She’s limp, pale or won’t wake"
    ]
   ],
   "ALERT": {
    "newborn": [
     "If you’re nursing",
     "Ask about vitamin D drops",
-    "Breastfed and partly breastfed babies need vitamin D drops every day, starting in the first days.",
+    "Breastfed and partly breastfed babies need vitamin D drops every day from the first days. Formula-fed babies may too, until they take about 32 oz a day.",
     "See milk basics",
     "settle"
    ],
@@ -1151,7 +1151,7 @@ window.AHEAD_CHANGES = {
    "8": [
     "You said Maya eats finger foods",
     "Keep choking hazards off her plate",
-    "Whole grapes, nuts, popcorn and hard raw vegetables need preparing first.",
+    "Skip whole nuts and popcorn. Quarter grapes lengthwise and cook hard vegetables until soft.",
     "See the list",
     "safe"
    ]
@@ -1207,7 +1207,7 @@ window.AHEAD_CHANGES = {
       [
        "Upset, arching or not gaining",
        "Talk to your pediatrician. Call right away for green or forceful vomiting.",
-       "Forceful vomiting after every feed needs a same-day call.",
+       "Forceful vomiting after feeds, or green or bloody vomit, needs a call to your pediatrician right away.",
        null
       ]
      ]
@@ -1328,7 +1328,7 @@ window.AHEAD_CHANGES = {
       ],
       [
        "She goes quiet or can’t breathe",
-       "That could be choking. Call 911 and start infant choking first aid.",
+       "That could be choking. Start infant choking first aid right away, and have someone call 911.",
        "Set up before the first bite with the feeding safety checklist.",
        null
       ]
@@ -1460,7 +1460,7 @@ window.AHEAD_CHANGES = {
      [
       [
        "Yes",
-       "Skip honey, cow’s milk as a drink, juice, and added salt or sugar. Keep preparing choking hazards.",
+       "Skip honey, cow’s milk as a drink, juice, and added salt or sugar. Keep cutting up or avoiding choking hazards.",
        "Whole nuts, whole grapes and popcorn stay off the menu for a few more years.",
        null
       ],
@@ -1479,7 +1479,7 @@ window.AHEAD_CHANGES = {
       [
        "Yes, a little",
        "Start replacing one bottle a day with a cup, often the midday one first.",
-       "Most babies move off bottles between 12 and 18 months.",
+       "Most babies move off bottles at 12–18 months.",
        null
       ],
       [

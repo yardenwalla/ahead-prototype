@@ -2,6 +2,22 @@
 
 The original changes below were merged in pull request #1. The new pre-beta QA changes are documented in **`docs/beta-readiness-2026-10-22.md`**, with concrete findings, resulting behavior, verification and limits. Review the new PR diff against main rather than reimplementing either list from an older HTML export. Claude's main-branch copy updates through `6b02109a4fba5bdf8829db29f59c14057537ec85` are preserved.
 
+## Full content sweep (2026-10-23)
+
+One deliberate pass over every string a parent can see, judged against `docs/content-spec.md`. `tools/qa/content-crawl.cjs` renders every main route across pronouns, feeding methods, solids answers, movement answers and early birth, so copy can be audited in every state.
+
+| Area | What changed |
+| --- | --- |
+| Spec | New `docs/content-spec.md`: voice, personal vs generic copy, glossary, stage names, component limits, mechanics, medical rules. |
+| Glossary | checkup (not visit or appointment), call your pediatrician (not contact), wake window, sleep space, nursing. |
+| Play | All 78 activity summaries and page intros rewritten in plain language; month intros rewritten; semicolons removed. |
+| Health | Every "What to expect" detail now says what to bring or ask; questions rewritten in the parent's voice; checkup wording throughout; when-to-call copy tightened. |
+| Home | Month intros rewritten with fewer hedges; Home rows use canonical names (The 4-month sleep regression, 3-to-2 nap transition). |
+| Sleep and Feeding | Stage leads and whys tightened; wake-window wording; 4-month regression framed as a step forward; choking, jaundice, vomiting, breathing and allergy escalation lines made explicit and consistent. |
+| Safety | Poison Control number with the lock-away check; ER step for swallowed button batteries; room-by-room intro. |
+| Mechanics | Semicolons replaced, contractions, numerals, no "based on" lines, no app-describing copy. |
+| Independent review | A separate reviewer audited all live strings against the spec; 48 findings applied, 2 declined (°C in parentheses for fever, and the "Usually around 6 months" label, which matches every other stage label). |
+
 ## Launch content polish (2026-10-23)
 
 Content owner: Claude, per Yarden. Supersedes the stage-name and unknown-solids decisions in `docs/editorial-acceptance-2026-10-23.md`.

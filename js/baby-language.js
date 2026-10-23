@@ -70,16 +70,8 @@ const BABY_COPY_TEMPLATES = new Map([
     "Offer a feed when {s} {shows} hunger cues. More waking doesn’t mean every wake needs a feed."
   ],
   [
-    "Sleep now works in cycles, like an adult’s. She may wake more fully between cycles and need help getting back to sleep.",
-    "Sleep now works in cycles, like an adult’s. {S} may wake more fully between cycles and need help getting back to sleep."
-  ],
-  [
     "She can stay awake longer between sleeps, so the late catnap stops fitting before bedtime.",
     "{S} can stay awake longer between sleeps, so the late catnap stops fitting before bedtime."
-  ],
-  [
-    "A morning nap and an afternoon nap replace the three-nap day. When she skips the late catnap most days and stays happy until bedtime, it’s time to switch.",
-    "A morning nap and an afternoon nap replace the three-nap day. When {s} {skips} the late catnap most days and {stays} happy until bedtime, it’s time to switch."
   ],
   [
     "Once your pediatrician says you can stop waking her, let her wake you. Most babies still feed 2–3 times a night.",
@@ -124,14 +116,6 @@ const BABY_COPY_TEMPLATES = new Map([
   [
     "Offer comfort when she wakes, then use the same short goodbye.",
     "Offer comfort when {s} {wakes}, then use the same short goodbye."
-  ],
-  [
-    "Stop swaddling. Use sleepwear or a sleep sack that leaves arms free. Keep placing baby on their back. Once she rolls both ways, you can leave her.",
-    "Stop swaddling. Use sleepwear or a sleep sack that leaves arms free. Keep placing baby on {p} back. Once {s} {rolls} both ways, you can leave {o}."
-  ],
-  [
-    "Set the mattress to its lowest and remove mobiles and anything she can reach.",
-    "Set the mattress to its lowest and remove mobiles and anything {s} can reach."
   ],
   [
     "Moving to her own room",
@@ -396,10 +380,6 @@ const BABY_COPY_TEMPLATES = new Map([
   [
     "Fewer wet diapers than usual · Not back to birth weight by 2 weeks · Refusing most feeds for a day · Hives or vomiting after a new food · Blood in her stool",
     "Fewer wet diapers than usual · Not back to birth weight by 2 weeks · Refusing most feeds for a day · Hives or vomiting after a new food · Blood in {p} stool"
-  ],
-  [
-    "Trouble breathing or swelling of lips or tongue after a food · Choking that doesn’t clear · She’s limp or won’t wake",
-    "Trouble breathing or swelling of lips or tongue after a food · Choking that doesn’t clear · {S} {is} limp or won’t wake"
   ],
   [
     "Keep choking hazards off her plate",
@@ -688,8 +668,6 @@ BABY_COPY_TEMPLATES.set('Sleep · Before she pulls up','Sleep · Before {s} {pul
 BABY_COPY_TEMPLATES.set("If someone can help, take turns changing and settling her. If you handle the feeds, they can bring her to you and settle her afterward so you can rest.","If someone can help, take turns changing and settling {o}. If you handle the feeds, they can bring {o} to you and settle {o} afterward so you can rest.");
 BABY_COPY_TEMPLATES.set("Watch for her quieter gaze, yawning or turning away. Start winding down before she becomes upset. A short nap may bring the next sleepy time sooner.","Watch for {p} quieter gaze, yawning or turning away. Start winding down before {s} {becomes} upset. A short nap may bring the next sleepy time sooner.");
 BABY_COPY_TEMPLATES.set("Use your familiar bedtime routine and the help she needs to settle. You don’t need to start sleep training to handle this change.","Use your familiar bedtime routine and the help {s} {needs} to settle. You don’t need to start sleep training to handle this change.");
-BABY_COPY_TEMPLATES.set("Move her to a flat sleep space after the car","Move {o} to a flat sleep space after the car");
-BABY_COPY_TEMPLATES.set("Car seats are for travel. When you arrive, move her to her own flat, firm sleep space. Swings aren’t for sleep.","Car seats are for travel. When you arrive, move {o} to {p} own flat, firm sleep space. Swings aren’t for sleep.");
 BABY_COPY_TEMPLATES.set("Contact naps are common. Stay fully awake while holding her, and try a nap in her own flat, firm sleep space when you’re ready.","Contact naps are common. Stay fully awake while holding {o}, and try a nap in {p} own flat, firm sleep space when you’re ready.");
 BABY_COPY_TEMPLATES.set("After settling her, try a gentle transfer to her own flat, firm sleep space. If she wakes, soothe her and try again.","After settling {o}, try a gentle transfer to {p} own flat, firm sleep space. If {s} {wakes}, soothe {o} and try again.");
 BABY_COPY_TEMPLATES.set("How long has she been awake?","How long {has} {s} been awake?");
@@ -725,7 +703,7 @@ BABY_COPY_TEMPLATES.set("Talk to your pediatrician about how much milk she takes
 BABY_COPY_TEMPLATES.set("Yes. Her gums can mash soft food. Choose the shape and size for her grasp. Use the food-preparation guide for examples.","Yes. {P} gums can mash soft food. Choose the shape and size for {p} grasp. Use the food-preparation guide for examples.");
 BABY_COPY_TEMPLATES.set("Teeth alone don’t decide whether she’s ready for finger foods.","Teeth alone don’t decide whether {s} {is} ready for finger foods.");
 BABY_COPY_TEMPLATES.set("She’s old enough for honey now, though it still counts as added sugar to avoid. Keep preparing choking hazards safely.","{S} {is} old enough for honey now, though it still counts as added sugar to avoid. Keep preparing choking hazards safely.");
-const BABY_VERBS = {gets:'get',adjusts:'adjust',wakes:'wake',rolls:'roll',settles:'settle',falls:'fall',wants:'want',naps:'nap',skips:'skip',needs:'need',eats:'eat',asks:'ask',pulls:'pull',feeds:'feed',stops:'stop',makes:'make',refuses:'refuse',seems:'seem',sits:'sit',learns:'learn',goes:'go',spits:'spit',likes:'like',comes:'come',tolerates:'tolerate',stays:'stay',protests:'protest',takes:'take',brings:'bring',decides:'decide',becomes:'become',shows:'show',notices:'notice',turns:'turn',finds:'find'};
+const BABY_VERBS = {gets:'get',adjusts:'adjust',wakes:'wake',rolls:'roll',settles:'settle',falls:'fall',wants:'want',naps:'nap',skips:'skip',needs:'need',eats:'eat',asks:'ask',pulls:'pull',feeds:'feed',stops:'stop',makes:'make',refuses:'refuse',seems:'seem',sits:'sit',learns:'learn',goes:'go',spits:'spit',likes:'like',comes:'come',tolerates:'tolerate',stays:'stay',protests:'protest',takes:'take',brings:'bring',decides:'decide',becomes:'become',shows:'show',notices:'notice',turns:'turn',finds:'find',nurses:'nurse',moves:'move'};
 function babyPronouns(){const key=profile.pronouns;return key==='he'?{s:'he',o:'him',p:'his',r:'himself',is:'is',has:'has',does:'does'}:key==='she'?{s:'she',o:'her',p:'her',r:'herself',is:'is',has:'has',does:'does'}:{s:'they',o:'them',p:'their',r:'themselves',is:'are',has:'have',does:'do'};}
 function babyPronounLabel(){return profile.pronouns==='he'?'He/him':profile.pronouns==='she'?'She/her':'They/them';}
 function babyCopy(source){const template=BABY_COPY_TEMPLATES.get(source);if(!template)return source;const p=babyPronouns();return template.replace(/\{([A-Za-z]+)\}/g,(token,key)=>{const lower=key.toLowerCase();let value=p[lower]||(BABY_VERBS[lower]?(p.s==='they'?BABY_VERBS[lower]:lower):null);if(!value)throw new Error('Unknown baby-copy token: '+key);return key[0]===key[0].toUpperCase()?value[0].toUpperCase()+value.slice(1):value;});}
@@ -737,11 +715,14 @@ BABY_COPY_TEMPLATES.set("If she falls asleep in the car, move her to her sleep s
 BABY_COPY_TEMPLATES.set("Check the wake window above before changing her naps.","Check the wake window above before changing {p} naps.");
 BABY_COPY_TEMPLATES.set("Plan night feeds with your pediatrician. Sleep training changes how she falls asleep, not whether she eats.","Plan night feeds with your pediatrician. Sleep training changes how {s} {falls} asleep, not whether {s} {eats}.");
 BABY_COPY_TEMPLATES.set("Milk is still her whole diet. Now’s the time to learn the readiness signs and choose how you’d like to start.","Milk is still {p} whole diet. Now’s the time to learn the readiness signs and choose how you’d like to start.");
-BABY_COPY_TEMPLATES.set("Most babies are ready around 6 months, once head control, sitting and swallowing catch up. Until then, breast milk or formula covers everything she needs.","Most babies are ready around 6 months, once head control, sitting and swallowing catch up. Until then, breast milk or formula covers everything {s} {needs}.");
 BABY_COPY_TEMPLATES.set("Steady growth at checkups. At meals, follow her interest and fullness, not how much she eats.","Steady growth at checkups. At meals, follow {p} interest and fullness, not how much {s} {eats}.");
 BABY_COPY_TEMPLATES.set("Some days she wants to feed almost constantly, often in the evening. It’s normal, and her usual pattern comes back.","Some days {s} {wants} to feed almost constantly, often in the evening. It’s normal, and {p} usual pattern comes back.");
 BABY_COPY_TEMPLATES.set("Standard iron-fortified infant formula, including store brands, suits most babies. If she has a prescribed formula or a feeding plan for early birth, growth or allergy, check with your pediatrician before changing it.","Standard iron-fortified infant formula, including store brands, suits most babies. If {s} {has} a prescribed formula or a feeding plan for early birth, growth or allergy, check with your pediatrician before changing it.");
 BABY_COPY_TEMPLATES.set("Fewer wet diapers than usual · Not back to birth weight by 2 weeks · Taking much less milk or refusing feeds · Repeated vomiting or refusal with textures · Little interest in food after 9 months · Hives or vomiting after a new food · Blood in her poop","Fewer wet diapers than usual · Not back to birth weight by 2 weeks · Taking much less milk or refusing feeds · Repeated vomiting or refusal with textures · Little interest in food after 9 months · Hives or vomiting after a new food · Blood in {p} poop");
 BABY_COPY_TEMPLATES.set("If she’s taking less milk overall or has fewer wet diapers, call your pediatrician now.","If {s} {is} taking less milk overall or {has} fewer wet diapers, call your pediatrician now.");
 BABY_COPY_TEMPLATES.set("Offer textures she can manage, and call your pediatrician about repeated vomiting or refusal. Ask whether a feeding assessment would help.","Offer textures {s} can manage, and call your pediatrician about repeated vomiting or refusal. Ask whether a feeding assessment would help.");
-BABY_COPY_TEMPLATES.set("When she skips the late catnap most days and stays happy until bedtime, it’s time to try two naps.","When {s} {skips} the late catnap most days and {stays} happy until bedtime, it’s time to try two naps.");
+BABY_COPY_TEMPLATES.set("Trouble breathing, swelling of lips or tongue, or repeated vomiting after a food · Choking that doesn’t clear · She’s limp, pale or won’t wake","Trouble breathing, swelling of lips or tongue, or repeated vomiting after a food · Choking that doesn’t clear · {S} {is} limp, pale or won’t wake");
+BABY_COPY_TEMPLATES.set("Most babies are ready around 6 months, once head control, sitting and swallowing catch up. Until then, breast milk or formula is all the food she needs.","Most babies are ready around 6 months, once head control, sitting and swallowing catch up. Until then, breast milk or formula is all the food {s} {needs}.");
+BABY_COPY_TEMPLATES.set("A morning nap and an afternoon nap replace the 3-nap day. When she skips the late catnap most days and stays happy until bedtime, it’s time to switch.","A morning nap and an afternoon nap replace the 3-nap day. When {s} {skips} the late catnap most days and {stays} happy until bedtime, it’s time to switch.");
+BABY_COPY_TEMPLATES.set("Amounts depend on how much she nurses. Follow hunger and fullness cues.","Amounts depend on how much {s} {nurses}. Follow hunger and fullness cues.");
+BABY_COPY_TEMPLATES.set("She now moves between light and deep sleep. Between cycles she may wake more fully and need help getting back to sleep.","{S} now {moves} between light and deep sleep. Between cycles {s} may wake more fully and need help getting back to sleep.");

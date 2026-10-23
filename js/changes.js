@@ -112,7 +112,7 @@
       // Age is enough: these come before the skill, and a parent's answer only changes the label.
       if ((rolling() || tryingToRoll() || m >= 3) && answers.swaddleStopped !== 'Yes' && (m <= 6 || answers.swaddleStopped === 'No'))
         return { reason: rolling() || tryingToRoll() ? 'Stop swaddling now' : 'Before the first attempt to roll', title: 'Stop swaddling at the first attempt to roll', body: 'Use regular sleepwear or an unweighted sleep sack with arms free.', act: 'Mark done', done: true, go: "setAnswer('swaddleStopped','Yes')" };
-      if (cur === 0) { const n = Object.values(local.safe.Sleep).filter(Boolean).length; return n === DATA.Sleep.SAFE.length ? null : { reason: 'Safe sleep setup', title: n + ' of ' + DATA.Sleep.SAFE.length + ' checked', body: 'Back to sleep, a clear crib in your room, and never on a sofa.', act: 'Open checklist', go: "openPage('chg:Sleep:safe')" }; }
+      if (cur === 0) { const n = Object.values(local.safe.Sleep).filter(Boolean).length; return n === DATA.Sleep.SAFE.length ? null : { reason: 'Safe sleep setup', title: n + ' of ' + DATA.Sleep.SAFE.length + ' checked', body: 'Back to sleep, a clear sleep space in your room, and never on a sofa.', act: 'Open checklist', go: "openPage('chg:Sleep:safe')" }; }
       if ((answers.pullUp === 'Yes' || m >= 8) && answers.mattressLowest !== 'Yes')
         return { reason: answers.pullUp === 'Yes' ? 'You said ' + (profile.name || 'your baby') + ' is pulling up' : 'Before she pulls up', title: 'Set the crib mattress to its lowest', body: 'Remove mobiles and anything she can reach from standing.', act: 'Mark done', done: true, go: "setAnswer('mattressLowest','Yes')" };
       if ((m >= 5 || answers.sit === 'Yes') && answers.mattressLowered !== 'Yes' && answers.mattressLowest !== 'Yes')
@@ -159,7 +159,7 @@
     const unit = awake.length && /min/.test(awake[0]) ? ' min' : ' h';
     const lo = awake.length ? num(awake[0])[0] : '', hi = awake.length ? num(awake[awake.length - 1]).slice(-1)[0] : '';
     const span = awake.length ? (lo === hi ? lo : lo + '–' + hi) + unit : '';
-    const cells = [['Total', total ? total + ' h' : '—'], ['Naps', C.key === 'clock' ? 'Many' : C.key === 'daynight' ? 'Varies' : naps || '—'], ['Wake window', span || '—'], ['Bedtime', bed || 'Varies']];
+    const cells = [['Total', total ? total + ' h' : '—'], ['Naps', C.key === 'clock' ? 'Many' : C.key === 'daynight' ? 'Varies' : naps || '—'], ['Awake', span || '—'], ['Bedtime', bed || 'Varies']];
     return `<section class="sleep-phase-metrics chg-metrics" aria-label="Sleep at a glance">${cells.map(([k, v]) => `<div><span>${k}</span><strong>${esc(String(v))}</strong></div>`).join('')}<p>Typical range · Includes naps</p></section>`;
   }
   function dayOrder(rows) {
@@ -171,7 +171,7 @@
   // a second, unrelated schedule. Early sleep remains a flexible loop.
   function sampleDay(C) {
     if (['clock', 'daynight'].includes(C.key))
-      return `<p class="chg-card-note chg-flexible-day">${C.key === 'clock' ? 'A day follows a loop: feed, a short awake time, then sleep. Repeat through the night. There is no clock-time schedule yet.' : 'Feed, a short awake time, then another sleep. Repeat as needed; naps do not need fixed start times yet.'}</p>`;
+      return `<p class="chg-card-note chg-flexible-day">${C.key === 'clock' ? 'A day follows a loop: feed, a short awake time, then sleep. Repeat through the night. There is no clock-time schedule yet.' : 'Feed, a short awake time, then another sleep. Repeat as needed; naps don’t need fixed start times yet.'}</p>`;
     const minutes = value => {
       const normalized = value.replace(/~/g, '').replace(/½/g,'.5').replace(/¼/g,'.25').replace(/¾/g,'.75');
       const values = normalized.match(/\d+(?:\.\d+)?/g).map(Number);
@@ -205,10 +205,10 @@
     const establishedTwoNaps = cat === 'Sleep' && !isEv && view === 3 && m >= 10;
     const C = establishedTwoNaps ? {...original,
       lead: 'A morning nap and an afternoon nap make up the day. New skills or a short nap may change the timing without changing the number of naps.',
-      why: 'Longer awake periods make room for two naps. A disrupted day does not by itself mean baby is ready to drop another nap.',
+      why: 'Longer awake periods make room for two naps. A disrupted day doesn’t by itself mean baby is ready to drop another nap.',
       rhythmNote: 'Use the morning and afternoon naps as anchors. Timing can shift after a short nap.',
-      helps: [['After a short or missed nap', 'Offer the next sleep earlier if baby is tired. One disrupted day does not mean the two-nap routine has stopped working.'],
-        ['When new skills interrupt sleep', 'Practice new movements during awake time and keep the bedtime sequence familiar. The routine support below covers changes after illness or travel too.']]} : original;
+      helps: [['After a short or missed nap', 'Offer the next sleep earlier if baby is tired. One disrupted day doesn’t mean the two-nap routine has stopped working.'],
+        ['When new skills interrupt sleep', 'Practice new movements during awake time and keep the bedtime routine familiar. The same routine helps after illness or travel too.']]} : original;
     const rel = view < cur ? 'past' : view === cur ? 'now' : 'next';
     const chosenSleepGuide = cat === 'Sleep' && live() && local.override?.Sleep;
     const eyebrow = isEv ? C.when : rel === 'now' ? (cat === 'Feeding' ? (view <= 1 ? 'Recommended for this age' : hasFoodAnswer() ? 'Based on what you shared' : view >= 3 ? 'Typical for this age' : 'Your feeding guide') : chosenSleepGuide ? 'Your selected sleep guide' : answers.twoNaps === 'Yes' || answers.twoNaps === 'Stay' ? 'Based on your nap pattern' : 'Recommended for this age') : (rel === 'past' ? 'Earlier · ' : 'Coming up · ') + C.when;
@@ -257,12 +257,12 @@
     if (cat === 'Feeding' && meth === 'both') rows = rows.filter(r => !(r[0] === 'Feeds a day' && r[2] === 'bottle')).map(r => {
       if (r[0] === 'Feeds a day') return ['Total milk feeds', r[1]];
       if (r[0] === 'Milk' && r[2] === 'nurse') return ['Nursing', r[1]];
-      if (r[0] === 'Milk' && r[2] === 'bottle') return ['Bottles', m < 12 ? 'Amounts depend on how much baby nurses. Follow hunger and fullness cues.' : 'Extra milk depends on nursing and meals. Discuss the transition at the 12-month checkup.'];
+      if (r[0] === 'Milk' && r[2] === 'bottle') return ['Bottles', m < 12 ? 'Bottle amounts depend on how much nursing happens. Follow hunger and fullness cues.' : 'Extra milk depends on nursing and meals. Discuss the transition at the 12-month checkup.'];
       if (r[0] === 'Bottles' && r[2] === 'bottle') return ['Formula-only bottle', r[1].replace(', up to 32 oz a day', '')];
       return r;
     });
     const title = isEv ? (cat === 'Sleep' ? 'Naps and nights' : 'Feeds right now') : cfg.rhythmTitle;
-    const sub = !isEv && cat === 'Sleep' ? 'A wake window is how long baby is awake between sleeps.' : !isEv && cat === 'Feeding' ? profile.early ? 'General reference. After early birth, follow your pediatrician’s milk and supplement plan.' : esc(C.total || '') : '';
+    const sub = !isEv && cat === 'Sleep' ? 'Awake shows the wake window: how long baby is awake between sleeps.' : !isEv && cat === 'Feeding' ? profile.early ? 'General reference. After early birth, follow your pediatrician’s milk and supplement plan.' : esc(C.total || '') : '';
     let card = `<div class="chg-card-head"><h2>${title}</h2>${sub ? `<p>${sub}</p>` : ''}</div>`;
     if (cat === 'Feeding' && !isEv) card += `<div class="chg-milk-reference"><label for="milk-reference-choice">Milk reference</label><select id="milk-reference-choice" onchange="chgChooseMethod(this.value)">${[['nurse','Nursing'],['expressed','Breast-milk bottles'],['bottle',C.key==='meals'&&m>=12?'Formula to milk':'Formula bottles'],['both','Nursing and bottles']].map(([v,label])=>`<option value="${v}" ${meth===v?'selected':''}>${label}</option>`).join('')}</select></div>`;
     if (cat === 'Sleep' && !isEv) card += sleepMetrics(C);
@@ -368,13 +368,13 @@
     const options = [['learn','Compare sleep-training methods'],['trying','Support while trying sleep training'],['routine','Keep a routine working'],['help','Settle with my help']];
     let content = '';
     if (choice === 'learn') content = `<p class="chg-settling-intro">Sleep training is optional and is usually considered from 4–6 months. Ask your pediatrician about readiness, especially after early birth or with feeding or growth concerns.</p>` + sleepMethodLearningContent(false) +
-      `<details class="guide-detail"><summary>Before you start <span aria-hidden="true">＋</span></summary>${helpList('', [['Choose a response you can repeat', 'Think about how much hands-on soothing you want to offer and what each caregiver can sustain.'],['Keep needed night feeds', 'Choose how to respond between feeds. Learning to settle does not mean baby no longer needs to eat.'],['Know when to pause', 'Respond to illness, discomfort and hunger. If the approach feels unmanageable, stop and review the plan rather than pushing through.']])}</details>`;
+      `<details class="guide-detail"><summary>Before you start <span aria-hidden="true">＋</span></summary>${helpList('', [['Choose a response you can repeat', 'Think about how much hands-on soothing you want to offer and what each caregiver can sustain.'],['Keep needed night feeds', 'Choose how to respond between feeds. Learning to settle doesn’t mean baby no longer needs to eat.'],['Know when to pause', 'Respond to illness, discomfort and hunger. If the approach feels unmanageable, stop and review the plan rather than pushing through.']])}</details>`;
     if (choice === 'trying') content = helpList('Look for progress in settling', [
       ['Compare a few nights', 'Is baby taking less time to settle or needing less help? A needed night feed can still be part of progress.'],
-      ['After a difficult night', 'Respond to hunger, discomfort or illness. Once those needs are met, use your chosen settling response. One rough night does not call for a new method.'],
-      ['If it isn’t getting easier', 'Pause if settling is not improving or the response feels hard to sustain. Bring a few nights of bedtime, wakes and feeds to your pediatrician to review what may be getting in the way.']]);
+      ['After a difficult night', 'Respond to hunger, discomfort or illness. Once those needs are met, use your chosen settling response. One rough night doesn’t call for a new method.'],
+      ['If it isn’t getting easier', 'Pause if settling isn’t improving or the response feels hard to sustain. Bring a few nights of bedtime, wakes and feeds to your pediatrician to review what may be getting in the way.']]);
     if (choice === 'routine') {
-      const timing = m < 8 ? 'If naps are short and baby is tired again, keep offering the extra sleep. Don’t drop a nap just because bedtime has improved.' : m < 12 ? 'New movements and separation anxiety can disrupt settling. Practice new skills during awake time and keep the bedtime sequence familiar.' : 'One refused nap does not mean baby is ready for one nap. Look for a repeated pattern before changing the day.';
+      const timing = m < 8 ? 'If naps are short and baby is tired again, keep offering the extra sleep. Don’t drop a nap just because bedtime has improved.' : m < 12 ? 'New movements and separation anxiety can disrupt settling. Practice new skills during awake time and keep the bedtime sequence familiar.' : 'One refused nap doesn’t mean baby is ready for one nap. Look for a repeated pattern before changing the day.';
       content = helpList('Keep what works', [['When naps change', timing], ['After illness or travel', 'Offer the comfort baby needs during the disruption. When it passes, return to familiar bedtime steps and adjust timing around the day’s naps.'],['If sleep stays difficult', 'Notice whether the problem is falling asleep, waking between feeds or staying asleep. Discuss a persistent change, especially with discomfort, feeding or growth concerns.']]);
     }
     if (choice === 'help') content = helpList('Build a routine around your help', [
@@ -389,7 +389,7 @@
   function sub(cat, screen, a, b) {
     const D = DATA[cat];
     if (cat === 'Sleep' && screen === 'safe') return detail(cat, 'Safe sleep', 'Safe sleep setup', 'Set this up once, before birth or in the first days. It applies to every nap and every night, whichever way you settle baby.',
-      checklist(cat) + helpList('As baby grows', D.GROW).replace('<h4>When baby tries to roll</h4>','<h4 id="sleep-rolling">When baby tries to roll</h4>').replace('<h4>Before baby can sit</h4>','<h4 id="sleep-crib-height">Before baby can sit</h4>') + sources(cat, /AAP/), 'Based on AAP safe sleep guidance, 2022.');
+      checklist(cat) + helpList('As baby grows', D.GROW).replace('<h4>When baby tries to roll</h4>','<h4 id="sleep-rolling">When baby tries to roll</h4>').replace('<h4>Before baby can sit</h4>','<h4 id="sleep-crib-height">Before baby can sit</h4>') + sources(cat, /AAP/), 'AAP · Safe sleep guidance, 2022');
     if (cat === 'Sleep' && screen === 'settle' && ageNow() < 4) return detail(cat, 'The early months', 'Helping baby settle', 'Feeding, rocking or holding can help baby fall asleep while sleep patterns are still developing.',
       helpList('A gentle routine', [['Follow sleepy cues', 'Try settling when baby gets quieter, looks away or yawns. Timing can vary between sleeps.'], ['Keep the steps familiar', 'A feed, diaper change and a quiet song can become a short routine. Keep responding to hunger and comfort needs.']]) + refRow("openPage('chg:Sleep:safe')", 'safety', 'Safe sleep setup'), '');
     if (cat === 'Sleep' && screen === 'settle') return settlingPage();
@@ -400,7 +400,7 @@
         : callout('For you', 'Feeding is hard work', 'If nursing hurts or feeding feels overwhelming, a lactation consultant can help, and is often covered by insurance. Asking for help is normal.')),
       (cat === 'Sleep' ? 'Before a checkup, note a few nights of bedtime, wakes and feeds.' : 'Before a checkup, note a day of feeds and wet diapers.') + ' It helps your pediatrician see the pattern.');
     if (cat === 'Feeding' && screen === 'safe') return detail(cat, 'Before the first bite', 'Feeding safety and first aid', 'Prepare the seat and learn first aid before starting. Revisit food preparation as textures and self-feeding change.',
-      checklist(cat) + helpList('Once baby is eating', D.GROW), 'Based on AAP and CDC guidance.');
+      checklist(cat) + helpList('Once baby is eating', D.GROW), 'AAP and CDC · Feeding guidance');
     if (cat === 'Feeding' && screen === 'milk') {
       const type = profile.feed;
       const items = D.METH.filter(x => type === 'Formula' ? !/Breast milk|Pumping/.test(x[0]) : type === 'Breast milk' ? !/formula/i.test(x[0]) : true);
@@ -409,7 +409,7 @@
       return detail(cat, 'Your milk reference', title, 'Store, prepare and offer milk safely. Follow any feeding plan your pediatrician has given you.',
         `<section class="common-questions">${question('Feeding','learn',2,D.DEC.learn[2])}</section>` + helpList('The essentials', items.map(x => [x[0] + ' · ' + x[1], x[2]])) + helpList('Every bottle', bottleSteps.map(t => ['', t])) + sources(cat, /storage|preparation|Vitamin D|Spit-up/), '');
     }
-    if (cat === 'Feeding' && screen === 'allergy') { const G = D.ALLERGY; return detail(cat, 'Starting solids · Usually around 6 months', 'Introducing allergens', 'Introducing peanut and well-cooked egg alongside other first foods may help prevent those allergies.',
+    if (cat === 'Feeding' && screen === 'allergy') { const G = D.ALLERGY; return detail(cat, 'Starting solids · Usually around 6 months', 'Introducing allergens', 'Offering peanut and well-cooked egg early, with other first foods, can lower the chance of those allergies.',
       helpList('The common ones', [['', G.foods]]) + helpList('How to start', G.how.map(t => ['', t])) + helpList('If baby reacts', [['Mild', G.mild], ['Serious', G.serious]]) +
       callout('Before you start', '', T(G.ask)) + sources(cat, /allergens|Starting solid/), 'Based on NIAID and AAP guidance.'); }
     if (screen === 'q') { const v = Number(a), st = D.CH[v]; if (st) local.open = cat + ':' + st.key + ':' + Number(b); return mainPage(cat, v === CFG[cat].stage(ageNow()) ? null : v, null); }

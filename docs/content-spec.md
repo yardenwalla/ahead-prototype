@@ -78,7 +78,7 @@ Titles are statements, except in Common questions. Tips are actions, not situati
 
 - Sentence case everywhere. No ALL CAPS.
 - Periods on body sentences; none on titles, buttons, labels or chips.
-- Numerals always ("3 naps"). Ranges with an en dash ("4–6 months"). "7:30 pm". "°F" with "°C" only in fever thresholds.
+- Numerals always ("3 naps"), except in the stage names Three naps and Two naps. Ranges with an en dash ("4–6 months"). "7:30 pm". "°F" with "°C" only in fever thresholds.
 - Contractions ("you'll", "she's", "don't").
 - No parentheses in body copy, no ellipses, no semicolons where two sentences work.
 

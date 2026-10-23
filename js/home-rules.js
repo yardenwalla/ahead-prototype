@@ -66,7 +66,7 @@
     // Foundational guidance belongs at the beginning, without becoming a
     // permanent warning. Reuse the actual Sleep checklist and its saved state.
     if (live() && stageIndex('Sleep') === 0 && chgSafeRemaining('Sleep') > 0)
-      out.push({topic:'Sleep',title:'Set up baby’s sleep space',body:'Back sleeping, a clear flat sleep space and room-sharing: six checks for the first nights at home.',action:"openPage('chg:Sleep:safe')",tier:'must',reason:'For the first nights at home'});
+      out.push({topic:'Sleep',title:'Set up baby’s sleep space',body:'Back sleeping, a clear flat sleep space and room-sharing: 6 checks for the first nights at home.',action:"openPage('chg:Sleep:safe')",tier:'must',reason:'For the first nights at home'});
 
     // Must-know actions a parent's answer triggered
     if (priority && priority.type === 'swaddle')
@@ -76,7 +76,7 @@
     else if (live() && answers.sit === 'Yes' && answers.mattressLowered !== 'Yes' && answers.mattressLowest !== 'Yes')
       out.push({ topic: 'Sleep', kind: 'mattressLower', tier: 'must', reported: true, reason: `You said ${name()} sits without support` });
     if (priority && priority.type === 'check')
-      out.push({ topic: 'Safety', kind: 'check', tier: 'must', reported: !!mv && relevantCheck(mv), reason: mv && relevantCheck(mv) ? said(mv) : priority.owner === 'mobile' ? (safetyAgeForward()==='pulling'?'Prepare for a higher reach':'Prepare before scooting or crawling') : 'Prepare space for rolling', priority });
+      out.push({ topic: 'Safety', kind: 'check', tier: 'must', reported: !!mv && relevantCheck(mv), reason: mv && relevantCheck(mv) ? said(mv) : priority.owner === 'mobile' ? (safetyAgeForward()==='pulling'?'Prepare for a higher reach':'Prepare before crawling') : 'Prepare space for reaching and rolling', priority });
 
     // Development: the skill to watch now
     const dev = byTopic('Development');
@@ -105,7 +105,7 @@
     // the decision. These are previews, never instructions to start or drop a nap.
     if (m === 3) out.push({topic:'Sleep',title:'The 4-month sleep regression',body:'More night waking and short naps are common for a few weeks. Here’s what helps.',action:"openPage('chg:Sleep:e:0')",tier:'should',prep:true,upcoming:true,reason:'Coming up · Around 4 months'});
     if (m === 4 && chgSettlingGuide() === 'learn') out.push({topic:'Sleep',title:'Learn about sleep training',body:'Compare the optional methods before deciding whether to try one. Reading about them isn’t a decision to start.',action:"openPage('chg:Sleep:settle')",tier:'should',prep:true,upcoming:true,reason:'An optional decision · Around 4–6 months'});
-    if ([7,8].includes(m) && !['Yes','Stay'].includes(answers.twoNaps)) out.push({topic:'Sleep',title:'Before dropping the catnap',body:'When she skips the late catnap most days and stays happy until bedtime, it’s time to try two naps.',action:"openPage('chg:Sleep:s:3')",tier:'should',prep:true,upcoming:true,reason:'As the late catnap stops fitting'});
+    if ([7,8].includes(m) && !['Yes','Stay'].includes(answers.twoNaps)) out.push({topic:'Sleep',title:'Before dropping the catnap',body:'Ready for the 3-to-2 nap transition? See what to watch for.',action:"openPage('chg:Sleep:s:3')",tier:'should',prep:true,upcoming:true,reason:'As the late catnap stops fitting'});
 
     // Health: the next visit, ranked up when it's close
     let age = healthJourneyFocus();
