@@ -31,13 +31,13 @@
   /* Copy for each stage, written to the content skill: verb-first, one line, no jargon. */
   const SLEEP_ROW = [
     ['Newborn sleep', 'Recognize sleepy cues and understand short sleeps around the clock.'],
-    ['Days and nights sort out', 'Use daylight and a short evening routine as nights begin to take shape.'],
-    ['Naps find a rhythm', 'Find awake-time guidance and a sample day for this stage.'],
+    ['Day and night sleep', 'Use daylight and a short evening routine as nights begin to take shape.'],
+    ['Naps and bedtime', 'Find awake-time guidance and a sample day for this stage.'],
     ['Two naps a day', 'See how the day can fit around two naps, and what helps during the transition.']
   ];
   const FEED_ROW = [
     ['Newborn feeding', 'Recognize hunger and fullness cues, and the signs milk intake is on track.'],
-    ['Feeds find a rhythm', 'Understand changing feeds and how milk intake and growth fit together.'],
+    ['Changing milk feeds', 'Understand changing feeds and how milk intake and growth fit together.'],
     ['Getting ready for solids', 'Spot the readiness signs and get set up before the first bite.'],
     ['Starting solids', 'Choose a way to offer food, prepare it safely and keep milk feeds alongside.'],
     ['Textures and finger foods', 'Build on first foods with textures and self-feeding practice suited to your baby.'],
@@ -63,6 +63,11 @@
     const byTopic = t => base.find(r => r.topic === t);
     const priority = homePriority();                 // swaddle or a safety check, from answers
 
+    // Foundational guidance belongs at the beginning, without becoming a
+    // permanent warning. Reuse the actual Sleep checklist and its saved state.
+    if (live() && stageIndex('Sleep') === 0 && chgSafeRemaining('Sleep') > 0)
+      out.push({topic:'Sleep',title:'Set up baby’s sleep space',body:'Back sleeping, a clear flat sleep space and room-sharing: six checks for the first nights at home.',action:"openPage('chg:Sleep:safe')",tier:'must',reason:'For the first nights at home'});
+
     // Must-know actions a parent's answer triggered
     if (priority && priority.type === 'swaddle')
       out.push({ topic: 'Sleep', kind: 'swaddle', tier: 'must', reported: !!mv, reason: mv ? 'Stop swaddling now' : 'Before the first attempt to roll', priority });
@@ -85,7 +90,7 @@
     const milkAnswered = live() && fi < 2 && homeInputs().asked.milk === month;
     const milkRow = fi < 2 && ['Breast milk', 'Formula', 'Both'].includes(profile.feed) ? homeMilkData() : null;
     out.push({ topic: 'Feeding', title: milkRow ? milkRow.title : FEED_ROW[fi][0], body: milkRow ? milkRow.body : FEED_ROW[fi][1], action: "openPage('topic:Feeding')",
-      tier: 'should', reported: milkAnswered || fi >= 3 && !!food,
+      tier: 'should', essential: fi === 0, reported: milkAnswered || fi >= 3 && !!food,
       prep: fi === 2 && m >= 5,
       reason: fi === 0 ? 'For the first weeks' : fi === 1 ? ageReason() : fi === 2 ? (food === 'preparing' ? `You said ${name()} hasn’t started solids` : 'Prepare before the first bite') : !food ? 'Solids status not shared yet' : `You said ${name()} ${food === 'new' ? 'has started solids' : food === 'textures' ? 'is managing more textures' : 'is eating meals'}`,
       reference: fi === 1 && !milkAnswered });
@@ -95,6 +100,12 @@
     out.push({ topic: 'Sleep', title: SLEEP_ROW[si][0], body: SLEEP_ROW[si][1], action: "openPage('topic:Sleep')",
       tier: 'should', reference: !(live() && si === 3 && (answers.twoNaps === 'Yes' || chgSleepAuto())), reported: live() && si === 3 && answers.twoNaps === 'Yes',
       reason: si === 0 ? 'For the first weeks' : live() && si === 3 && answers.twoNaps === 'Yes' ? `You said ${name()} is on two naps` : si === 3 ? 'Two-nap guidance for this stage' : ageReason() });
+
+    // Give learning a timely route from Home, before the parent needs to make
+    // the decision. These are previews, never instructions to start or drop a nap.
+    if (m === 3) out.push({topic:'Sleep',title:'The 4-month sleep change',body:'See what more waking or short naps can look like, and how to respond if they happen.',action:"openPage('chg:Sleep:e:0')",tier:'should',prep:true,upcoming:true,reason:'Coming up · Around 4 months'});
+    if (m === 4 && chgSettlingGuide() === 'learn') out.push({topic:'Sleep',title:'Learn about sleep training',body:'Understand the optional methods before deciding whether to try. Learning about them is not a decision to start.',action:"openPage('chg:Sleep:settle')",tier:'should',prep:true,upcoming:true,reason:'An optional decision · Around 4–6 months'});
+    if ([7,8].includes(m) && !['Yes','Stay'].includes(answers.twoNaps)) out.push({topic:'Sleep',title:'Before dropping the catnap',body:'Look for repeated days when the late nap no longer fits and baby manages comfortably until bedtime.',action:"openPage('chg:Sleep:s:3')",tier:'should',prep:true,upcoming:true,reason:'As the late catnap stops fitting'});
 
     // Health: the next visit, ranked up when it's close
     let age = healthJourneyFocus();
@@ -132,6 +143,7 @@
     if (c.dated) s += c.days <= 14 ? 120 : -40;
     if (c.reference) s -= 30;
     if (c.activity) s += 10;
+    if (c.essential) s += 50;
     if (c.upcoming) s -= 60;
     return s;
   }
