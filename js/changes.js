@@ -26,7 +26,7 @@
 
   const T = s => esc(babyCopy(String(s == null ? '' : s))).replace(/Maya/g, name());
   // Everything developmental follows adjusted age for babies born early (until age 2).
-  const ageNow = () => developmentMonth(actualMonth());
+  const ageNow = () => developmentMonth();
 
   /* ---------- where is this baby? ---------- */
   function rolling() { return answers.roll === 'Yes' || ['Tummy to back', 'Back to tummy', 'Both ways'].includes(answers.rollDirection); }
@@ -38,6 +38,7 @@
      Once the usual window has passed: Sleep moves on by itself with an undo, Feeding keeps asking.
      A parent can always say "This is where she is now" (an override that lasts until age moves past it). */
   const live = () => typeof isCurrent !== 'function' || isCurrent();
+  const inFirstSixWeeks = m => m < 2 && (!live() || (NOW - parse(profile.early && profile.due ? profile.due : profile.dob)) / 864e5 < 42);
   function overridden(cat, computed) {
     const o = live() && local.override && local.override[cat];
     if (!o) return computed;
@@ -45,12 +46,11 @@
     return o.i;
   }
   function sleepComputed(m) {
-    if (m < 2) return 0;
+    if (inFirstSixWeeks(m)) return 0;
     if (m < 4) return 1;
     const said = live() ? answers.twoNaps : null;
     if (said === 'Yes' && m >= 5) return 3;
     if (m >= 9 && said !== 'Stay') return 3;          // window passed: move on, with an undo
-    if (!live() && m >= 6) return 3;                  // previewing another month: typical age
     return 2;
   }
   function sleepStage(m) { return overridden('Sleep', sleepComputed(m)); }
@@ -58,7 +58,7 @@
   function autoNoticeFresh() {
     const t = (typeof NOW !== 'undefined' ? NOW : new Date()).getTime();
     local.autoSeen = local.autoSeen || {};
-    const k = profile.dob; if (!local.autoSeen[k]) { local.autoSeen[k] = t; save(); }
+    const k = profile.id || profile.dob; if (!local.autoSeen[k]) { local.autoSeen[k] = t; save(); }
     return t - local.autoSeen[k] <= 21 * 864e5;
   }
   window.chgSleepAuto = function () { const m = ageNow(); return live() && sleepComputed(m) === 3 && answers.twoNaps !== 'Yes' && m >= 9; };
@@ -67,14 +67,15 @@
   function feedStage(m) { return overridden('Feeding', feedComputed(m)); }
   function feedComputed(m) {
     const fs = typeof foodStage === 'function' ? foodStage() : 'preparing';
-    if (m < 2) return 0;
+    if (inFirstSixWeeks(m)) return 0;
     if (m < 4) return 1;
     // Unknown solids status from 6 months: show Starting solids and let the check-in find out.
     // Only a parent's "Not yet" keeps the Getting ready guide.
     const known = typeof hasFoodAnswer !== 'function' || hasFoodAnswer();
     if (!known && live()) return m >= 6 ? 3 : 2;
     if (fs === 'preparing') return 2;
-    if (fs === 'new') return m >= 10 ? 5 : m >= 8 ? 4 : 3;   // once solids start, age moves textures and meals
+    if (fs === 'new') return 3; // First bites are an experience, not an age. Let the parent move on.
+    if (fs === 'textures') return 4;
     return m >= 10 ? 5 : 4;
   }
   function feedEvents(m) { return m < 3 ? [0] : m < 7 ? [1] : [2]; }
@@ -90,18 +91,27 @@
     if (local.method) return local.method;
     return { 'Formula': 'bottle', 'Both': 'both' }[profile.feed] || 'nurse';
   }
+  window.resetMilkMethod = function () { delete local.method; save(); };
+  window.resetFeedingStageOverride = function () { if (local.override?.Feeding) { delete local.override.Feeding; save(); } };
+  window.chgChooseMethod = function (value) {
+    if (!['nurse','bottle','both'].includes(value)) return;
+    local.method = value; save(); const y = scrollY; render(); scrollTo(0, y);
+    document.getElementById('milk-reference-choice')?.focus();
+  };
 
   /* ---------- the must-know card ---------- */
   function alertFor(cat, cur, view) {
     if (view !== cur) return null;
     const m = ageNow();
     if (cat === 'Sleep') {
-      if (cur === 0) { const n = Object.values(local.safe.Sleep).filter(Boolean).length; return { reason: 'Safe sleep setup', title: n + ' of ' + DATA.Sleep.SAFE.length + ' checked', body: 'Back to sleep, a clear crib in your room, and never on a sofa.', act: 'Open checklist', go: "openPage('chg:Sleep:safe')" }; }
       // Age is enough: these come before the skill, and a parent's answer only changes the label.
       if ((rolling() || tryingToRoll() || m >= 3) && answers.swaddleStopped !== 'Yes' && (m <= 6 || answers.swaddleStopped === 'No'))
         return { reason: rolling() || tryingToRoll() ? 'Stop swaddling now' : 'Before the first attempt to roll', title: 'Stop swaddling at the first attempt to roll', body: 'Use regular sleepwear or an unweighted sleep sack with arms free.', act: 'Mark done', done: true, go: "setAnswer('swaddleStopped','Yes')" };
+      if (cur === 0) { const n = Object.values(local.safe.Sleep).filter(Boolean).length; return n === DATA.Sleep.SAFE.length ? null : { reason: 'Safe sleep setup', title: n + ' of ' + DATA.Sleep.SAFE.length + ' checked', body: 'Back to sleep, a clear crib in your room, and never on a sofa.', act: 'Open checklist', go: "openPage('chg:Sleep:safe')" }; }
       if ((answers.pullUp === 'Yes' || m >= 8) && answers.mattressLowest !== 'Yes')
-        return { reason: answers.pullUp === 'Yes' ? 'You said ' + name() + ' is pulling up' : 'Before she pulls up', title: 'Set the crib mattress to its lowest', body: 'Remove mobiles and anything she can reach from standing.', act: 'Mark done', done: true, go: "setAnswer('mattressLowest','Yes')" };
+        return { reason: answers.pullUp === 'Yes' ? 'You said ' + (profile.name || 'your baby') + ' is pulling up' : 'Before she pulls up', title: 'Set the crib mattress to its lowest', body: 'Remove mobiles and anything she can reach from standing.', act: 'Mark done', done: true, go: "setAnswer('mattressLowest','Yes')" };
+      if ((m >= 5 || answers.sit === 'Yes') && answers.mattressLowered !== 'Yes' && answers.mattressLowest !== 'Yes')
+        return { reason: answers.sit === 'Yes' ? 'You said baby can sit without support' : 'Prepare before baby can sit up', title: 'Lower the crib mattress', body: 'Move it down before baby can sit. Follow the crib manual for the right position; use the lowest setting before pulling up.', act: 'Mark done', done: true, go: "setAnswer('mattressLowered','Yes')" };
       return null;
     }
     const A = DATA.Feeding.ALERT, key = cur === 0 ? 'newborn' : cur === 2 ? '5' : cur === 4 ? '8' : null;
@@ -117,7 +127,7 @@
      experience-hero · sleep-phase-help (heading + list) · sleep-phase-ahead (heads-up panel)
      sleep-snapshot-patterns + sleep-phase-metrics (data card) · guide-resource-row
      common-questions + faq-toggle · sleep-reference-row · safety-check-list · sources-disclosure */
-  const helpList = (title, items) => `<section class="sleep-phase-help"><h3>${title}</h3><ul>${items.map(([t, b]) => `<li>${t ? `<h4>${T(t)}</h4>` : ''}${b ? `<p>${T(b)}</p>` : ''}</li>`).join('')}</ul></section>`;
+  const helpList = (title, items) => `<section class="sleep-phase-help">${title ? "<h3>"+title+"</h3>" : ""}<ul>${items.map(([t, b]) => `<li>${t ? `<h4>${T(t)}</h4>` : ''}${b ? `<p>${T(b)}</p>` : ''}</li>`).join('')}</ul></section>`;
   const headsUp = (label, title, body, extra = '') => `<section class="sleep-phase-ahead"><h3>${label}</h3><article>${title ? `<h4>${title}</h4>` : ''}${body ? `<p>${body}</p>` : ''}</article>${extra}</section>`;
   const resourceRow = (go, mk, title, sub, arrow = '→') => `<button class="guide-resource-row" onclick="${go}"><span class="guide-resource-mark" aria-hidden="true">${icon(mk)}</span><span><b>${title}</b>${sub ? `<small>${sub}</small>` : ''}</span><span aria-hidden="true">${arrow}</span></button>`;
   const refRow = (go, mk, label) => `<button class="textlink sleep-reference-row" onclick="${go}"><span class="sleep-reference-mark" aria-hidden="true">${icon(mk)}</span><span>${label}</span><span aria-hidden="true">→</span></button>`;
@@ -130,8 +140,9 @@
     }).join('')}</nav>`;
   }
 
-  function sources(cat) {
-    return `<details class="sources-disclosure"><summary>Sources behind this guide <span aria-hidden="true">＋</span></summary><div class="source-line">${DATA[cat].SOURCES.map(([t, u]) => `<p><a href="${u}" target="_blank" rel="noopener">${esc(t)} ↗</a></p>`).join('')}</div></details>`;
+  function sources(cat, filter = null) {
+    const selected = DATA[cat].SOURCES.filter(([title]) => !filter || filter.test(title));
+    return `<details class="sources-disclosure"><summary>Sources behind this guide <span aria-hidden="true">＋</span></summary><div class="source-line">${selected.map(([t, u]) => `<p><a href="${u}" target="_blank" rel="noopener">${esc(t)} ↗</a></p>`).join('')}</div></details>`;
   }
 
   // Sleep's rhythm card: the app's four-number strip, then the day in order.
@@ -160,7 +171,14 @@
   function mainPage(cat, view, ev) {
     const D = DATA[cat], cfg = CFG[cat], m = ageNow(), cur = cfg.stage(m);
     if (view == null) view = cur;
-    const isEv = ev != null, C = isEv ? D.EV[ev] : D.CH[view], N = isEv ? null : D.CH[view + 1];
+    const isEv = ev != null, original = isEv ? D.EV[ev] : D.CH[view], N = isEv ? null : D.CH[view + 1];
+    const establishedTwoNaps = cat === 'Sleep' && !isEv && view === 3 && m >= 10;
+    const C = establishedTwoNaps ? {...original,
+      lead: 'A morning nap and an afternoon nap make up the day. New skills or a short nap may change the timing without changing the number of naps.',
+      why: 'Longer awake periods make room for two naps. A disrupted day does not by itself mean baby is ready to drop another nap.',
+      rhythmNote: 'Use the morning and afternoon naps as anchors; timing can shift after a short nap.',
+      helps: [['After a short or missed nap', 'Offer the next sleep earlier if baby is tired. One disrupted day does not mean the two-nap routine has stopped working.'],
+        ['When new skills interrupt sleep', 'Practice new movements during awake time and keep the bedtime sequence familiar. The routine support below covers changes after illness or travel too.']]} : original;
     const rel = view < cur ? 'past' : view === cur ? 'now' : 'next';
     const pastRange = rel === 'now' && rangeEnd(C.when) != null && m > rangeEnd(C.when);
     const eyebrow = isEv ? C.label + ' · ' + C.when : pastRange ? 'Current guide' : (rel === 'now' ? 'Around now · ' : rel === 'past' ? 'Earlier · ' : 'Coming up · ') + C.when;
@@ -173,9 +191,8 @@
     const lead = unknownFood ? 'Whether you’re preparing or have already begun, find readiness signs, safe first foods and ways to keep milk feeds alongside.' : C.lead;
     h += `<header class="experience-hero"><div class="experience-hero-copy"><div class="eyebrow">${esc(eyebrow)}</div><h2>${T(C.title)}</h2></div><span class="experience-hero-art" aria-hidden="true">${yearIllustration(cat, 1)}</span><p class="experience-hero-description">${T(lead)}</p></header>`;
 
-    // One check-in moves Feeding into solids, at most once a month; age alone never does.
-    if (cat === 'Feeding' && !isEv && view === cur && (cur === 2 || cur === 3 && !hasFoodAnswer()) && m >= 6 && (typeof checkinDue !== 'function' || checkinDue('food', ['preparing'])))
-      h += `<section class="connected-checkin chg-checkin"><div><h2>Has ${name()} started solids?</h2></div><p>Choose guidance for preparing, first bites or building meals.${profile.early ? ' Your pediatrician can help with individual timing after early birth.' : ''}</p><div class="connected-checkin-choices"><button onclick="chgAnswerCheckin('food','preparing')">Not yet</button><button onclick="chgAnswerCheckin('food','new')">First foods</button><button onclick="chgAnswerCheckin('food','established')">Eating meals</button></div></section>`;
+    if (cat === 'Feeding' && !isEv && view === cur && typeof feedingCheckinMarkup === 'function')
+      h += feedingCheckinMarkup();
 
     if (cat === 'Sleep' && !isEv && view === cur && chgSleepAuto() && autoNoticeFresh())
       h += headsUp('Updated for this age', 'Showing two-nap guidance', '', `<button class="textlink chg-headsup-link" onclick="setAnswer('twoNaps','Stay')">Still on three naps? Show Naps find a rhythm →</button>`);
@@ -191,17 +208,32 @@
     h += helpList('Why it’s happening', [['', C.why]].concat(isEv && C.lasts ? [['How long it lasts', C.lasts]] : []));
 
     // Rhythm card
-    const rows = (C.rhythm || []).filter(r => !r[2] || r[2] === 'all' || meth === 'both' || r[2] === meth).map(r => cat === 'Feeding' && C.key === 'meals' && m < 12 && r[0] === 'Milk' && r[2] === 'bottle' ? [r[0], 'About 24 oz a day; follow hunger and fullness cues', r[2]] : r);
+    let rows = (C.rhythm || []).filter(r => !r[2] || r[2] === 'all' || meth === 'both' || r[2] === meth).map(r => cat === 'Feeding' && C.key === 'meals' && m < 12 && r[0] === 'Milk' && r[2] === 'bottle' ? [r[0], 'About 24 oz a day; follow hunger and fullness cues', r[2]] : r);
+    if (cat === 'Feeding' && meth === 'both') rows = rows.filter(r => !(r[0] === 'Feeds a day' && r[2] === 'bottle')).map(r => {
+      if (r[0] === 'Feeds a day') return ['Total milk feeds', r[1]];
+      if (r[0] === 'Milk' && r[2] === 'nurse') return ['Nursing', r[1]];
+      if (r[0] === 'Milk' && r[2] === 'bottle') return ['Bottles', m < 12 ? 'Amounts depend on how much baby nurses; follow hunger and fullness cues.' : 'Extra milk depends on nursing and meals. Discuss the transition at the 12-month checkup.'];
+      if (r[0] === 'Bottles' && r[2] === 'bottle') return ['A bottle-only feed', r[1].replace(', up to 32 oz a day', '')];
+      return r;
+    });
     const title = isEv ? (cat === 'Sleep' ? 'Naps and nights' : 'Feeds right now') : cfg.rhythmTitle;
-    const sub = !isEv && cat === 'Sleep' ? 'How long baby is awake between sleeps.' : !isEv && cat === 'Feeding' ? `${esc(C.total || '')} Shown for ${{ nurse: 'nursing', bottle: 'bottle feeding', both: 'nursing and bottles' }[meth]}. <button class="textlink chg-inline" onclick="chgCycleMethod()">Change</button>` : '';
+    const sub = !isEv && cat === 'Sleep' ? 'How long baby is awake between sleeps.' : !isEv && cat === 'Feeding' ? esc(C.total || '') : '';
     let card = `<div class="chg-card-head"><h2>${title}</h2>${sub ? `<p>${sub}</p>` : ''}</div>`;
+    if (cat === 'Feeding' && !isEv) card += `<div class="chg-milk-reference"><label for="milk-reference-choice">Milk reference</label><select id="milk-reference-choice" onchange="chgChooseMethod(this.value)">${[['nurse','Nursing'],['bottle','Bottles'],['both','Nursing and bottles']].map(([v,label])=>`<option value="${v}" ${meth===v?'selected':''}>${label}</option>`).join('')}</select></div>`;
     if (cat === 'Sleep' && !isEv) card += sleepMetrics(C);
     if (rows.length) card += cat === 'Sleep' ? dayOrder(rows) : `<dl class="chg-amounts">${rows.map(r => `<div><dt>${esc(r[0])}</dt><dd>${esc(r[1])}</dd></div>`).join('')}</dl>`;
     if (C.rhythmNote) card += `<p class="chg-card-note">${T(C.rhythmNote)}</p>`;
-    if (C.night) card += `<div class="chg-card-foot"><b>${cfg.closeTitle}</b><p>${T(C.night)}</p></div>`;
+    if (C.night) card += `<div class="chg-card-foot" id="${cat === 'Sleep' ? 'sleep-night-feeds' : 'feeding-enough'}"><b>${cfg.closeTitle}</b><p>${T(C.night)}</p></div>`;
     h += `<section class="sleep-snapshot-patterns chg-rhythm">${card}</section>`;
 
     h += helpList('What helps', C.helps);
+    if (cat === 'Feeding' && !isEv && C.key === 'first')
+      h += sourceLink('https://www.cdc.gov/infant-toddler-nutrition/foods-and-drinks/when-what-and-how-to-introduce-solid-foods.html', 'CDC · Food preparation and texture examples');
+    if (cat === 'Feeding' && !isEv && view === cur && m >= 9 && hasFoodAnswer() && ['preparing', 'new'].includes(foodStage()))
+      h += resourceRow("openHealthDetail(healthJourneyFocus(),'questions')", 'health', 'Bring your feeding experience to the checkup', 'If first foods are only beginning now, discuss readiness, iron and a plan for building textures.');
+
+    if (cat === 'Sleep' && !isEv && view === cur && m >= 4)
+      h += resourceRow("openPage('chg:Sleep:settle')", 'moon', 'Settling and sleep training', 'Compare approaches, get help while trying, or keep a routine working.');
 
     if (C.call) h += resourceRow("openPage('chg:" + cat + ":help')", 'health', 'Call your pediatrician if', T(C.call));
 
@@ -218,12 +250,15 @@
 
     if (!isEv && !N && C.after) h += headsUp(`After the first birthday · ${esc(C.after[0])}`, T(C.after[1]), T(C.after[2]));
     // Coming up: what's next, and a one-tap way to say she's already there.
-    if (!isEv && N && rel !== 'next') h += headsUp(`Coming up · ${esc(N.when)}`, T(N.title), `Signs it’s starting: ${T(N.signs)}`, `<button class="textlink chg-headsup-link" onclick="chgGo('chg:${cat}:s:${view + 1}')">See what changes →</button>${rel === 'now' && live() ? `<button class="textlink chg-already" onclick="chgSetStage('${cat}',${view + 1})">Already there? Move ${name()} to ${esc(N.rail)}</button>` : ''}`);
+    if (!isEv && N && rel !== 'next') {
+      const elapsed = rangeEnd(N.when) != null && m > rangeEnd(N.when);
+      h += headsUp(elapsed ? 'Next step · When baby is ready' : `Coming up · ${esc(N.when)}`, T(N.title), `Signs it’s starting: ${T(N.signs)}`, `<button class="textlink chg-headsup-link" onclick="chgGo('chg:${cat}:s:${view + 1}')">See what changes →</button>${rel === 'now' && live() ? `<button class="textlink chg-already" onclick="chgSetStage('${cat}',${view + 1})">Already there? Move ${name()} to ${esc(N.rail)}</button>` : ''}`);
+    }
 
     let links = '';
     if (cat === 'Sleep') {
       links += refRow("openPage('chg:Sleep:safe')", 'safety', 'Safe sleep setup');
-      links += refRow("openPage('chg:Sleep:settle')", 'moon', m < 4 ? 'Helping baby settle' : 'Settling and sleep training');
+      if (m < 4 || isEv || view !== cur) links += refRow("openPage('chg:Sleep:settle')", 'moon', m < 4 ? 'Helping baby settle' : 'Settling and sleep training');
       links += refRow("openPage('chg:Sleep:help')", 'health', 'When to ask for sleep help');
     } else {
       links += refRow("openPage('chg:Feeding:milk')", 'feed', 'Breast milk and formula basics');
@@ -257,16 +292,47 @@
   }
   const callout = (label, title, body) => headsUp(label, title, body);
 
+  function settlingGuide() {
+    const valid = ['learn', 'trying', 'routine', 'help'];
+    if (valid.includes(local.settlingGuide)) return local.settlingGuide;
+    return {in_progress: 'trying', tried: 'trying', trained: 'routine', not_planning: 'help'}[answers.sleepTraining] || 'learn';
+  }
+  window.chgChooseSettling = function (value) {
+    if (!['learn', 'trying', 'routine', 'help'].includes(value)) return;
+    local.settlingGuide = value; save();
+    const y = scrollY; render(); scrollTo(0, y);
+    document.getElementById('settling-guide')?.focus();
+  };
+  function settlingPage() {
+    const choice = settlingGuide(), m = ageNow();
+    const options = [['learn','Compare sleep-training methods'],['trying','Support while trying sleep training'],['routine','Keep a routine working'],['help','Settle with my help']];
+    let content = '';
+    if (choice === 'learn') content = `<p class="chg-settling-intro">Sleep training is optional and is usually considered from 4–6 months. Ask your pediatrician about readiness, especially after early birth or with feeding or growth concerns.</p>` + sleepMethodLearningContent(false) +
+      `<details class="guide-detail"><summary>Before you start <span aria-hidden="true">＋</span></summary>${helpList('', [['Choose a response you can repeat', 'Think about how much hands-on soothing you want to offer and what each caregiver can sustain.'],['Keep needed night feeds', 'Choose how to respond between feeds. Learning to settle does not mean baby no longer needs to eat.'],['Know when to pause', 'Respond to illness, discomfort and hunger. If the approach feels unmanageable, stop and review the plan rather than pushing through.']])}</details>`;
+    if (choice === 'trying') content = helpList('Look for progress in settling', [
+      ['Compare a few nights', 'Is baby taking less time to settle or needing less help? A needed night feed can still be part of progress.'],
+      ['After a difficult night', 'Respond to hunger, discomfort or illness. Once those needs are met, use your chosen settling response. One rough night does not call for a new method.'],
+      ['If it isn’t getting easier', 'Pause if settling is not improving or the response feels hard to sustain. Bring a few nights of bedtime, wakes and feeds to your pediatrician to review what may be getting in the way.']]);
+    if (choice === 'routine') {
+      const timing = m < 8 ? 'If naps are short and baby is tired again, keep offering the extra sleep. Don’t drop a nap just because bedtime has improved.' : m < 12 ? 'New movements and separation anxiety can disrupt settling. Practice new skills during awake time and keep the bedtime sequence familiar.' : 'One refused nap does not mean baby is ready for one nap. Look for a repeated pattern before changing the day.';
+      content = helpList('Keep what works', [['When naps change', timing], ['After illness or travel', 'Offer the comfort baby needs during the disruption. When it passes, return to familiar bedtime steps and adjust timing around the day’s naps.'],['If sleep stays difficult', 'Notice whether the problem is falling asleep, waking between feeds or staying asleep. Discuss a persistent change, especially with discomfort, feeding or growth concerns.']]);
+    }
+    if (choice === 'help') content = helpList('Build a routine around your help', [
+      ['Keep the lead-in familiar', 'Use a short sequence you can repeat: a feed, diaper change, then a quiet song or book. Feeding, rocking or holding to sleep can remain part of it.'],
+      ['Make it repeatable for another caregiver', 'Show them the same steps and the soothing baby responds to. They can offer comfort their own way while keeping familiar cues.'],
+      ['If settling is taking longer', 'Check hunger, discomfort and whether the last nap changed. Adjust bedtime to tiredness before adding more steps to the routine.']]);
+    const picker = `<div class="chg-settling-picker"><label for="settling-guide">What would help right now?</label><select id="settling-guide" onchange="chgChooseSettling(this.value)">${options.map(([v,t])=>`<option value="${v}" ${choice===v?'selected':''}>${t}</option>`).join('')}</select></div>`;
+    return detail('Sleep', 'Your approach · Optional', 'Settling and sleep training', 'Choose the guidance you need. Helping baby fall asleep can remain part of your routine.', picker + `<div data-settling-guide="${choice}">${content}</div>` +
+      `<details class="sources-disclosure"><summary>Sources behind this guide <span aria-hidden="true">＋</span></summary><p><a href="https://www.healthychildren.org/English/ages-stages/baby/sleep/Pages/Getting-Your-Baby-to-Sleep.aspx" target="_blank" rel="noopener">AAP · Settling and nighttime needs ↗</a></p><p><a href="https://health.clevelandclinic.org/when-and-how-to-sleep-train-your-baby" target="_blank" rel="noopener">Cleveland Clinic · Timing and approaches ↗</a></p></details>`, '');
+  }
+
   function sub(cat, screen, a, b) {
     const D = DATA[cat];
     if (cat === 'Sleep' && screen === 'safe') return detail(cat, 'Safe sleep', 'Safe sleep setup', 'Set this up once, before birth or in the first days. It applies to every nap and every night, whichever way you settle baby.',
-      checklist(cat) + helpList('As baby grows', D.GROW), 'Based on AAP safe sleep guidance, 2022.');
+      checklist(cat) + helpList('As baby grows', D.GROW).replace('<h4>When baby tries to roll</h4>','<h4 id="sleep-rolling">When baby tries to roll</h4>').replace('<h4>Before baby can sit</h4>','<h4 id="sleep-crib-height">Before baby can sit</h4>') + sources(cat, /AAP/), 'Based on AAP safe sleep guidance, 2022.');
     if (cat === 'Sleep' && screen === 'settle' && ageNow() < 4) return detail(cat, 'The early months', 'Helping baby settle', 'Feeding, rocking or holding can help baby fall asleep while sleep patterns are still developing.',
       helpList('A gentle routine', [['Follow sleepy cues', 'Try settling when baby gets quieter, looks away or yawns. Timing can vary between sleeps.'], ['Keep the steps familiar', 'A feed, diaper change and a quiet song can become a short routine. Keep responding to hunger and comfort needs.']]) + refRow("openPage('chg:Sleep:safe')", 'safety', 'Safe sleep setup'), '');
-    if (cat === 'Sleep' && screen === 'settle') return detail(cat, 'Your choice · from 4–6 months', 'Settling and sleep training', 'Helping Maya fall asleep by feeding, rocking or holding is normal at any age. You only need to change it if it isn’t working for your family.',
-      helpList('When to consider it', [['', 'Most families who try sleep training wait until at least 4–6 months. Check with your pediatrician first, especially if Maya was born early or growth has been a question.']]) +
-      helpList('The approaches', D.METH.map(x => [x[0] + ' · ' + x[1], x[2]])) + helpList('Before you start', D.SETTLE_BEFORE.map(t => ['', t])) +
-      callout('Choosing an approach', 'Make a plan you can follow', 'Decide how you’ll respond at bedtime and to night waking, including any feeds baby still needs. You can pause and reassess if the approach isn’t working for your family.'), '');
+    if (cat === 'Sleep' && screen === 'settle') return settlingPage();
     if (screen === 'help') return detail(cat, cat, cat === 'Sleep' ? 'When to ask for sleep help' : 'When to ask for feeding help',
       cat === 'Sleep' ? 'Most sleep changes are normal and pass. Here’s how to tell when something is worth a call.' : 'Most feeding ups and downs are normal. Here’s how to tell when something is worth a call.',
       helpList('How to tell', D.TRIAGE.map(x => [x[0], babyCopy(x[1]).split(' · ').join('. ') + '.'])) +
@@ -275,12 +341,17 @@
       (cat === 'Sleep' ? 'Before a visit, note a few nights of bedtime, wakes and feeds.' : 'Before a visit, note a day of feeds and wet diapers.') + ' It helps your pediatrician see the pattern.');
     if (cat === 'Feeding' && screen === 'safe') return detail(cat, 'Before the first bite', 'Feeding safety and first aid', 'Prepare the seat and learn first aid before starting. Revisit food preparation as textures and self-feeding change.',
       checklist(cat) + helpList('Once baby is eating', D.GROW), 'Based on AAP and CDC guidance.');
-    if (cat === 'Feeding' && screen === 'milk') return detail(cat, 'Breast milk, formula or both', 'Breast milk and formula basics', 'Every way of feeding works. Here’s how to store, mix and serve milk safely.',
-      helpList('The essentials', D.METH.map(x => [x[0] + ' · ' + x[1], x[2]])) + helpList('Every bottle', D.BOTTLE_STEPS.map(t => ['', t])) +
-      callout('Good to know', 'Combination feeding counts too', 'Many families use both breast milk and formula. Choose what works for you, and change if you need to.'), '');
-    if (cat === 'Feeding' && screen === 'allergy') { const G = D.ALLERGY; return detail(cat, 'Starting solids · Usually around 6 months', 'Introducing allergens', 'Offering common allergens early, and often, lowers the chance of food allergy.',
+    if (cat === 'Feeding' && screen === 'milk') {
+      const type = profile.feed;
+      const items = D.METH.filter(x => type === 'Formula' ? !/Breast milk|Pumping/.test(x[0]) : type === 'Breast milk' ? !/formula/i.test(x[0]) : true);
+      const title = type === 'Formula' ? 'Formula basics' : type === 'Breast milk' ? 'Breast milk basics' : 'Breast milk and formula basics';
+      const bottleSteps = D.BOTTLE_STEPS.map(t => type === 'Formula' ? t.replace(/ Breast milk:.*$/, '') : type === 'Breast milk' ? t.replace(/^Formula:.*? Breast milk:/, 'Breast milk:') : t);
+      return detail(cat, 'Your milk reference', title, 'Store, prepare and offer milk safely. Follow any feeding plan your pediatrician has given you.',
+        helpList('The essentials', items.map(x => [x[0] + ' · ' + x[1], x[2]])) + helpList('Every bottle', bottleSteps.map(t => ['', t])) + sources(cat, /storage|preparation|Vitamin D/), '');
+    }
+    if (cat === 'Feeding' && screen === 'allergy') { const G = D.ALLERGY; return detail(cat, 'Starting solids · Usually around 6 months', 'Introducing allergens', 'Introducing peanut and well-cooked egg alongside other first foods may help prevent those allergies.',
       helpList('The common ones', [['', G.foods]]) + helpList('How to start', G.how.map(t => ['', t])) + helpList('If baby reacts', [['Mild', G.mild], ['Serious', G.serious]]) +
-      callout('Before you start', '', T(G.ask)), 'Based on NIAID and AAP guidance.'); }
+      callout('Before you start', '', T(G.ask)) + sources(cat, /allergens|Starting solid/), 'Based on NIAID and AAP guidance.'); }
     if (screen === 'q') { const v = Number(a), st = D.CH[v]; if (st) local.open = cat + ':' + st.key + ':' + Number(b); return mainPage(cat, v === CFG[cat].stage(ageNow()) ? null : v, null); }
     return mainPage(cat, null, null);
   }
@@ -289,9 +360,9 @@
   window.changesPage = function (cat) { return mainPage(cat, null, null); };
   window.changesRoute = function (p) {
     const [, cat, screen, a, b] = p.split(':');
-    if (!DATA[cat]) return '';
-    if (screen === 's') { const v = Number(a); return mainPage(cat, v === CFG[cat].stage(ageNow()) ? null : v, null); }
-    if (screen === 'e') return mainPage(cat, null, Number(a));
+    if (!DATA[cat]) return journeyCategories();
+    if (screen === 's') { const v = Number(a); return mainPage(cat, Number.isInteger(v) && DATA[cat].CH[v] ? v : null, null); }
+    if (screen === 'e') { const v = Number(a); return mainPage(cat, null, Number.isInteger(v) && DATA[cat].EV[v] ? v : null); }
     return sub(cat, screen, a, b);
   };
   // Rail taps switch views in place, like tabs; the back button still leaves the category.
@@ -315,16 +386,18 @@
     }
     if (cat === 'Feeding') {
       if (local.override) delete local.override.Feeding;
-      if (i >= 3) { save(); setFeedingStage(i === 3 ? 'new' : 'established'); if (i === 5 && feedComputed(m) !== 5) { local.override = Object.assign({}, local.override, { Feeding: { i, base: feedComputed(m) } }); save(); } }
+      if (i >= 3) { save(); setFeedingStage(i === 3 ? 'new' : i === 4 ? 'textures' : 'established'); if (i === 5 && feedComputed(m) !== 5) { local.override = Object.assign({}, local.override, { Feeding: { i, base: feedComputed(m) } }); save(); } }
       else if (i === 2 && m >= 4) { save(); setFeedingStage('preparing'); }
       else { local.override = Object.assign({}, local.override, { Feeding: { i, base: feedComputed(m) } }); save(); }
     }
     page = 'topic:' + cat; render(); window.scrollTo(0, 0);
   };
   window.chgAnswerCheckin = function (key, value) {
+    if (!['food','food-progress','naps'].includes(key)) return;
+    if (key !== 'naps' && !['preparing','new','textures','established'].includes(value)) return;
     if (typeof recordCheckin === 'function') recordCheckin(key, value);
     if (key === 'naps') setAnswer('twoNaps', value === 'Yes' ? 'Yes' : 'Not yet');
-    if (key === 'food') setFeedingStage(value);
+    if (key === 'food' || key === 'food-progress') setFeedingStage(value);
   };
   window.chgStageIndex = function (cat) { return CFG[cat].stage(ageNow()); };
   window.chgStageLabel = function (cat) { const c = DATA[cat].CH[CFG[cat].stage(ageNow())]; return c ? c.rail : ''; };
@@ -332,12 +405,27 @@
 
 /* Older Sleep and Feeding routes from the previous prototype now land on the new pages. */
 (function () {
+  window.canonicalSavedRoute = function (data) {
+    const p = data.route, m = developmentMonth(data.month);
+    if (p.startsWith('sleep-phase:')) {
+      const i = {newborn:0,daynight:1,maturing:2,naps:2,twonaps:3}[p.split(':')[1]];
+      return 'chg:Sleep:s:' + (i == null ? m < 2 ? 0 : m < 4 ? 1 : m < 9 ? 2 : 3 : i);
+    }
+    if (p.startsWith('sleep-stage:')) return 'chg:Sleep:settle';
+    if (p.startsWith('sleep-age')) return 'chg:Sleep:s:' + (m < 2 ? 0 : m < 4 ? 1 : m < 9 ? 2 : 3);
+    if (p.startsWith('feeding-guide:')) {
+      const i = {milk:m < 2 ? 0 : 1,preparing:2,new:3,established:m < 10 ? 4 : 5}[p.split(':')[1]];
+      return 'chg:Feeding:s:' + (i == null ? 2 : i);
+    }
+    return p;
+  };
   window.chgLegacy = function (p) {
     if (/^sleep-detail:.*:(space|rolling)/.test(p)) return 'chg:Sleep:safe';
     if (/^sleep-detail:.*:help/.test(p)) return 'chg:Sleep:help';
     if (p === 'sleep-stage:prepare' || /^sleep-detail:.*:(training|method|prepare)/.test(p)) return 'chg:Sleep:settle';
-    if (/^sleep-(age|stage|phase|detail)/.test(p)) return 'topic:Sleep';
-    if (/^feeding-(guide|update)/.test(p)) return 'topic:Feeding';
+    if (/^sleep-(age|stage|phase)/.test(p) || p.startsWith('feeding-guide:')) return canonicalSavedRoute({route:p,month});
+    if (/^sleep-detail/.test(p)) return 'topic:Sleep';
+    if (p === 'feeding-update') return p;
     return p;
   };
   const toFeeding = () => openPage('topic:Feeding');
@@ -345,5 +433,22 @@
   window.openFeedingGuide = toFeeding;
   window.openFeedingFiveGuide = toFeeding;
   window.openSleepPhase = () => openPage('topic:Sleep');
+
+  const previousSection = openSection;
+  window.openSection = openSection = function (topic, id) {
+    if (topic === 'Sleep') {
+      const part = ['sleep-setup','sleep-rolling','sleep-crib-height'].includes(id) ? 'safe' :
+        id === 'sleep-training' ? 'settle' : id === 'sleep-help' ? 'help' : null;
+      openPage(part ? 'chg:Sleep:' + part : 'topic:Sleep');
+      if (['sleep-night-feeds','sleep-rolling','sleep-crib-height'].includes(id)) revealSection(id);
+      return;
+    }
+    if (topic === 'Feeding') {
+      const part = id === 'bottle-handling' || id === 'milk-reference' ? 'milk' :
+        /allerg/.test(id) ? 'allergy' : /safety|choking/.test(id) ? 'safe' : null;
+      if (part) { openPage('chg:Feeding:' + part); return; }
+    }
+    return previousSection.apply(this, arguments);
+  };
 })();
 

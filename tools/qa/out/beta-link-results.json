@@ -1,0 +1,758 @@
+[
+  {
+    "url": "https://health.clevelandclinic.org/chair-method-sleep-training",
+    "status": 200,
+    "final": "https://health.clevelandclinic.org/chair-method-sleep-training",
+    "result": "reachable"
+  },
+  {
+    "url": "https://health.clevelandclinic.org/cry-it-out-method",
+    "status": 200,
+    "final": "https://health.clevelandclinic.org/cry-it-out-method",
+    "result": "reachable"
+  },
+  {
+    "url": "https://health.clevelandclinic.org/ferber-method",
+    "status": 200,
+    "final": "https://health.clevelandclinic.org/ferber-method",
+    "result": "reachable"
+  },
+  {
+    "url": "https://health.clevelandclinic.org/pick-up-put-down-method",
+    "status": 200,
+    "final": "https://health.clevelandclinic.org/pick-up-put-down-method",
+    "result": "reachable"
+  },
+  {
+    "url": "https://health.clevelandclinic.org/the-4-month-sleep-regression-what-parents-need-to-know",
+    "status": 200,
+    "final": "https://health.clevelandclinic.org/the-4-month-sleep-regression-what-parents-need-to-know",
+    "result": "reachable"
+  },
+  {
+    "url": "https://health.clevelandclinic.org/wake-windows-by-age",
+    "status": 200,
+    "final": "https://health.clevelandclinic.org/wake-windows-by-age",
+    "result": "reachable"
+  },
+  {
+    "url": "https://health.clevelandclinic.org/when-and-how-to-sleep-train-your-baby",
+    "status": 200,
+    "final": "https://health.clevelandclinic.org/when-and-how-to-sleep-train-your-baby",
+    "result": "reachable"
+  },
+  {
+    "url": "https://pubmed.ncbi.nlm.nih.gov/27221288/",
+    "status": 203,
+    "final": "https://pubmed.ncbi.nlm.nih.gov/27221288/",
+    "result": "reachable"
+  },
+  {
+    "url": "https://solidstarts.com/app/",
+    "status": 200,
+    "final": "https://solidstarts.com/app/",
+    "result": "reachable"
+  },
+  {
+    "url": "https://solidstarts.gorgias.help/en-US/what-is-the-difference-between-the-%E2%80%9Cfree%E2%80%9D-version-of-the-app-and-the-paid-subscription-1326530",
+    "status": 200,
+    "final": "https://solidstarts.gorgias.help/en-US/what-is-the-difference-between-the-%E2%80%9Cfree%E2%80%9D-version-of-the-app-and-the-paid-subscription-1326530",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.anchorit.gov/how-to-anchor/how-to-install-a-kit/",
+    "status": 200,
+    "final": "https://www.anchorit.gov/how-to-anchor/how-to-install-a-kit/",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.cambspborochildrenshealth.nhs.uk/moving-and-being-active/early-years-movement-skills-and-development/learning-to-move/",
+    "status": 200,
+    "final": "https://www.cambspborochildrenshealth.nhs.uk/moving-and-being-active/early-years-movement-skills-and-development/learning-to-move/",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.cdc.gov/act-early/media/images/1-Year-Pulls-up-to-stand.png",
+    "status": 200,
+    "final": "https://www.cdc.gov/act-early/media/images/1-Year-Pulls-up-to-stand.png",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.cdc.gov/act-early/media/images/2-Months_Looks-at-a-toy-for-several-seconds.jpg",
+    "status": 200,
+    "final": "https://www.cdc.gov/act-early/media/images/2-Months_Looks-at-a-toy-for-several-seconds.jpg",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.cdc.gov/act-early/media/images/2-months_Calms-down-when-spoken-to-or-picked-up-1.png",
+    "status": 200,
+    "final": "https://www.cdc.gov/act-early/media/images/2-months_Calms-down-when-spoken-to-or-picked-up-1.png",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.cdc.gov/act-early/media/images/2-months_Holds-head-up-when-on-tummy.png",
+    "status": 200,
+    "final": "https://www.cdc.gov/act-early/media/images/2-months_Holds-head-up-when-on-tummy.png",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.cdc.gov/act-early/media/images/2-months_Looks-at-your-face.png",
+    "status": 200,
+    "final": "https://www.cdc.gov/act-early/media/images/2-months_Looks-at-your-face.png",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.cdc.gov/act-early/media/images/2-months_Seems-Happy-to-See-You.png",
+    "status": 200,
+    "final": "https://www.cdc.gov/act-early/media/images/2-months_Seems-Happy-to-See-You.png",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.cdc.gov/act-early/media/images/4-months-If-hungry-opens-mouth-when-she-sees-breast-or-bottle.png",
+    "status": 200,
+    "final": "https://www.cdc.gov/act-early/media/images/4-months-If-hungry-opens-mouth-when-she-sees-breast-or-bottle.png",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.cdc.gov/act-early/media/images/4-months_-pushes-up-onto-elbows-forearms-when-on-tummy.png",
+    "status": 200,
+    "final": "https://www.cdc.gov/act-early/media/images/4-months_-pushes-up-onto-elbows-forearms-when-on-tummy.png",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.cdc.gov/act-early/media/images/6-Months_Knows-familiar-people-1.png",
+    "status": 200,
+    "final": "https://www.cdc.gov/act-early/media/images/6-Months_Knows-familiar-people-1.png",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.cdc.gov/act-early/media/images/6-Months_Likes-to-look-at-self-in-a-mirror.png",
+    "status": 200,
+    "final": "https://www.cdc.gov/act-early/media/images/6-Months_Likes-to-look-at-self-in-a-mirror.png",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.cdc.gov/act-early/media/images/6-Months_Pushes-up-with-straight-arms-when-on-tummy.png",
+    "status": 200,
+    "final": "https://www.cdc.gov/act-early/media/images/6-Months_Pushes-up-with-straight-arms-when-on-tummy.png",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.cdc.gov/act-early/media/images/6-Months_Puts-things-in-her-mouth-to-explore-them.png",
+    "status": 200,
+    "final": "https://www.cdc.gov/act-early/media/images/6-Months_Puts-things-in-her-mouth-to-explore-them.png",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.cdc.gov/act-early/media/images/6-Months_Reaches-to-grab-a-toy-she-wants.png",
+    "status": 200,
+    "final": "https://www.cdc.gov/act-early/media/images/6-Months_Reaches-to-grab-a-toy-she-wants.png",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.cdc.gov/act-early/media/images/6-months_Leans-on-hands-to-support-herself-when-sitting.png",
+    "status": 200,
+    "final": "https://www.cdc.gov/act-early/media/images/6-months_Leans-on-hands-to-support-herself-when-sitting.png",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.cdc.gov/act-early/media/images/9-Months_Moves-things-from-one-hand-to-the-other_1.png",
+    "status": 200,
+    "final": "https://www.cdc.gov/act-early/media/images/9-Months_Moves-things-from-one-hand-to-the-other_1.png",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.cdc.gov/act-early/media/images/9-Months_Sits-without-support.png",
+    "status": 200,
+    "final": "https://www.cdc.gov/act-early/media/images/9-Months_Sits-without-support.png",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.cdc.gov/act-early/media/images/9-months-shows-several-facial-expressions_2.png",
+    "status": 200,
+    "final": "https://www.cdc.gov/act-early/media/images/9-months-shows-several-facial-expressions_2.png",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.cdc.gov/act-early/media/images/9-months_smiles-or-laughs-when-you-play-peekaboo_1.png",
+    "status": 200,
+    "final": "https://www.cdc.gov/act-early/media/images/9-months_smiles-or-laughs-when-you-play-peekaboo_1.png",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.cdc.gov/act-early/milestones/",
+    "status": 200,
+    "final": "https://www.cdc.gov/act-early/milestones/",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.cdc.gov/act-early/milestones/1-year.html",
+    "status": 200,
+    "final": "https://www.cdc.gov/act-early/milestones/1-year.html",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.cdc.gov/act-early/milestones/2-months.html",
+    "status": 200,
+    "final": "https://www.cdc.gov/act-early/milestones/2-months.html",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.cdc.gov/act-early/milestones/4-months.html",
+    "status": 200,
+    "final": "https://www.cdc.gov/act-early/milestones/4-months.html",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.cdc.gov/act-early/milestones/6-months.html",
+    "status": 200,
+    "final": "https://www.cdc.gov/act-early/milestones/6-months.html",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.cdc.gov/act-early/milestones/9-months.html",
+    "status": 200,
+    "final": "https://www.cdc.gov/act-early/milestones/9-months.html",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.cdc.gov/breastfeeding/breast-milk-preparation-and-storage/handling-breastmilk.html",
+    "status": 200,
+    "final": "https://www.cdc.gov/breastfeeding/breast-milk-preparation-and-storage/handling-breastmilk.html",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.cdc.gov/infant-toddler-nutrition/breastfeeding/how-much-and-how-often.html",
+    "status": 200,
+    "final": "https://www.cdc.gov/infant-toddler-nutrition/breastfeeding/how-much-and-how-often.html",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.cdc.gov/infant-toddler-nutrition/foods-and-drinks/choking-hazards.html",
+    "status": 200,
+    "final": "https://www.cdc.gov/infant-toddler-nutrition/foods-and-drinks/choking-hazards.html",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.cdc.gov/infant-toddler-nutrition/foods-and-drinks/when-what-and-how-to-introduce-solid-foods.html",
+    "status": 200,
+    "final": "https://www.cdc.gov/infant-toddler-nutrition/foods-and-drinks/when-what-and-how-to-introduce-solid-foods.html",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.cdc.gov/infant-toddler-nutrition/formula-feeding/how-much-and-how-often.html",
+    "status": 200,
+    "final": "https://www.cdc.gov/infant-toddler-nutrition/formula-feeding/how-much-and-how-often.html",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.cdc.gov/infant-toddler-nutrition/formula-feeding/preparation-and-storage.html",
+    "status": 200,
+    "final": "https://www.cdc.gov/infant-toddler-nutrition/formula-feeding/preparation-and-storage.html",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.cdc.gov/infant-toddler-nutrition/vitamins-minerals/vitamin-d.html",
+    "status": 200,
+    "final": "https://www.cdc.gov/infant-toddler-nutrition/vitamins-minerals/vitamin-d.html",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.cdc.gov/sleep/about/index.html",
+    "status": 200,
+    "final": "https://www.cdc.gov/sleep/about/index.html",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.childproofingexperts.com/find-a-professional/",
+    "status": 200,
+    "final": "https://www.childproofingexperts.com/find-a-professional/",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.chop.edu/centers-programs/injury-prevention-program/choking-and-suffocation",
+    "status": 200,
+    "final": "https://www.chop.edu/centers-programs/injury-prevention-program/choking-and-suffocation",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.chop.edu/primary-care/infant-sleep",
+    "status": 200,
+    "final": "https://www.chop.edu/primary-care/infant-sleep",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.cpsc.gov/safety-education/safety-guides/kids-and-babies/Childproofing-Your-Home",
+    "status": 200,
+    "final": "https://www.cpsc.gov/safety-education/safety-guides/kids-and-babies/Childproofing-Your-Home",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.healthychildren.org/English/ages-stages/Your-Childs-Checkups/Pages/Your-Checkup-Checklist-1-month-old.aspx",
+    "status": 200,
+    "final": "https://www.healthychildren.org/English/ages-stages/Your-Childs-Checkups/Pages/Your-Checkup-Checklist-1-month-old.aspx",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.healthychildren.org/English/ages-stages/Your-Childs-Checkups/Pages/Your-Checkup-Checklist-12-Months-Old.aspx",
+    "status": 200,
+    "final": "https://www.healthychildren.org/English/ages-stages/Your-Childs-Checkups/Pages/Your-Checkup-Checklist-12-Months-Old.aspx",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.healthychildren.org/English/ages-stages/Your-Childs-Checkups/Pages/Your-Checkup-Checklist-2-Months-Old.aspx",
+    "status": 200,
+    "final": "https://www.healthychildren.org/English/ages-stages/Your-Childs-Checkups/Pages/Your-Checkup-Checklist-2-Months-Old.aspx",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.healthychildren.org/English/ages-stages/Your-Childs-Checkups/Pages/Your-Checkup-Checklist-4-Months-Old.aspx",
+    "status": 200,
+    "final": "https://www.healthychildren.org/English/ages-stages/Your-Childs-Checkups/Pages/Your-Checkup-Checklist-4-Months-Old.aspx",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.healthychildren.org/English/ages-stages/Your-Childs-Checkups/Pages/Your-Checkup-Checklist-6-months-old.aspx",
+    "status": 200,
+    "final": "https://www.healthychildren.org/English/ages-stages/Your-Childs-Checkups/Pages/Your-Checkup-Checklist-6-months-old.aspx",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.healthychildren.org/English/ages-stages/Your-Childs-Checkups/Pages/Your-Checkup-Checklist-9-months-old.aspx",
+    "status": 200,
+    "final": "https://www.healthychildren.org/English/ages-stages/Your-Childs-Checkups/Pages/Your-Checkup-Checklist-9-months-old.aspx",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.healthychildren.org/English/ages-stages/Your-Childs-Checkups/Pages/Your-Checkup-Checklist-Newborn-Visit-2-to-5-days-old.aspx",
+    "status": 200,
+    "final": "https://www.healthychildren.org/English/ages-stages/Your-Childs-Checkups/Pages/Your-Checkup-Checklist-Newborn-Visit-2-to-5-days-old.aspx",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.healthychildren.org/English/ages-stages/baby/Pages/How-Active-is-Your-Baby.aspx",
+    "status": 200,
+    "final": "https://www.healthychildren.org/English/ages-stages/baby/Pages/How-Active-is-Your-Baby.aspx",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.healthychildren.org/English/ages-stages/baby/Pages/Movement-4-to-7-Months.aspx",
+    "status": 200,
+    "final": "https://www.healthychildren.org/English/ages-stages/baby/Pages/Movement-4-to-7-Months.aspx",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.healthychildren.org/English/ages-stages/baby/Pages/default.aspx",
+    "status": 200,
+    "final": "https://www.healthychildren.org/English/ages-stages/baby/Pages/default.aspx",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.healthychildren.org/English/ages-stages/baby/diapers-clothing/Pages/Swaddling-Is-it-Safe.aspx",
+    "status": 200,
+    "final": "https://www.healthychildren.org/English/ages-stages/baby/diapers-clothing/Pages/Swaddling-Is-it-Safe.aspx",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.healthychildren.org/English/ages-stages/baby/feeding-nutrition/Pages/Starting-Solid-Foods.aspx",
+    "status": 200,
+    "final": "https://www.healthychildren.org/English/ages-stages/baby/feeding-nutrition/Pages/Starting-Solid-Foods.aspx",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.healthychildren.org/English/ages-stages/baby/feeding-nutrition/pages/Discontinuing-the-Bottle.aspx",
+    "status": 200,
+    "final": "https://www.healthychildren.org/English/ages-stages/baby/feeding-nutrition/pages/Discontinuing-the-Bottle.aspx",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.healthychildren.org/English/ages-stages/baby/preemie/Pages/Corrected-Age-For-Preemies.aspx",
+    "status": 200,
+    "final": "https://www.healthychildren.org/English/ages-stages/baby/preemie/Pages/Corrected-Age-For-Preemies.aspx",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.healthychildren.org/English/ages-stages/baby/sleep/Pages/A-Parents-Guide-to-Safe-Sleep.aspx",
+    "status": 200,
+    "final": "https://www.healthychildren.org/English/ages-stages/baby/sleep/Pages/A-Parents-Guide-to-Safe-Sleep.aspx",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.healthychildren.org/English/ages-stages/baby/sleep/Pages/Getting-Your-Baby-to-Sleep.aspx",
+    "status": 200,
+    "final": "https://www.healthychildren.org/English/ages-stages/baby/sleep/Pages/Getting-Your-Baby-to-Sleep.aspx",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.healthychildren.org/English/family-life/health-management/Pages/Well-Child-Care-A-Check-Up-for-Success.aspx",
+    "status": 200,
+    "final": "https://www.healthychildren.org/English/family-life/health-management/Pages/Well-Child-Care-A-Check-Up-for-Success.aspx",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.healthychildren.org/English/family-life/power-of-play/Pages/the-power-of-play-how-fun-and-games-help-children-thrive.aspx",
+    "status": 200,
+    "final": "https://www.healthychildren.org/English/family-life/power-of-play/Pages/the-power-of-play-how-fun-and-games-help-children-thrive.aspx",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.healthychildren.org/English/health-issues/conditions/COVID-19/Pages/when-can-kids-get-the-COVID-vaccine-or-booster.aspx",
+    "status": 200,
+    "final": "https://www.healthychildren.org/English/health-issues/conditions/COVID-19/Pages/when-can-kids-get-the-COVID-vaccine-or-booster.aspx",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.healthychildren.org/English/health-issues/conditions/fever/Pages/When-to-Call-the-Pediatrician.aspx",
+    "status": 200,
+    "final": "https://www.healthychildren.org/English/health-issues/conditions/fever/Pages/When-to-Call-the-Pediatrician.aspx",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.healthychildren.org/English/healthy-living/nutrition/Pages/when-to-introduce-egg-peanut-butter-and-other-common-food-allergens-to-your-baby-food-allergy-prevention-tips.aspx?form=HealthyChildren",
+    "status": 200,
+    "final": "https://www.healthychildren.org/English/healthy-living/nutrition/Pages/when-to-introduce-egg-peanut-butter-and-other-common-food-allergens-to-your-baby-food-allergy-prevention-tips.aspx?form=HealthyChildren",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.healthychildren.org/English/healthy-living/sleep/Pages/separation-anxiety-and-sleeping.aspx",
+    "status": 200,
+    "final": "https://www.healthychildren.org/English/healthy-living/sleep/Pages/separation-anxiety-and-sleeping.aspx",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.healthychildren.org/English/news/Pages/aap-(influenza)-flu-prevention-recommendations-for-2026-27.aspx",
+    "status": 200,
+    "final": "https://www.healthychildren.org/English/news/Pages/aap-(influenza)-flu-prevention-recommendations-for-2026-27.aspx",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.healthychildren.org/English/news/Pages/aap-updates-rsv-immunization-recommendations-for-2026-2027-season.aspx",
+    "status": 200,
+    "final": "https://www.healthychildren.org/English/news/Pages/aap-updates-rsv-immunization-recommendations-for-2026-2027-season.aspx",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.healthychildren.org/English/safety-prevention/at-home/Pages/Baby-Walkers-A-Dangerous-Choice.aspx",
+    "status": 200,
+    "final": "https://www.healthychildren.org/English/safety-prevention/at-home/Pages/Baby-Walkers-A-Dangerous-Choice.aspx",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.healthychildren.org/English/safety-prevention/at-home/Pages/Childproofing-Your-Home.aspx",
+    "status": 200,
+    "final": "https://www.healthychildren.org/English/safety-prevention/at-home/Pages/Childproofing-Your-Home.aspx",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.healthychildren.org/English/safety-prevention/at-home/Pages/Home-Safety-Heres-How.aspx",
+    "status": 200,
+    "final": "https://www.healthychildren.org/English/safety-prevention/at-home/Pages/Home-Safety-Heres-How.aspx",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.healthychildren.org/English/safety-prevention/at-home/Pages/Make-Babys-Room-Safe.aspx",
+    "status": 200,
+    "final": "https://www.healthychildren.org/English/safety-prevention/at-home/Pages/Make-Babys-Room-Safe.aspx",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.healthychildren.org/English/safety-prevention/at-home/Pages/What-Parents-Need-to-Know-about-Button-and-Lithium-Coin-Batteries.aspx",
+    "status": 200,
+    "final": "https://www.healthychildren.org/English/safety-prevention/at-home/Pages/What-Parents-Need-to-Know-about-Button-and-Lithium-Coin-Batteries.aspx",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.healthychildren.org/English/safety-prevention/at-home/Pages/home-safety-heres-how.aspx",
+    "status": 200,
+    "final": "https://www.healthychildren.org/English/safety-prevention/at-home/Pages/home-safety-heres-how.aspx",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.healthychildren.org/English/safety-prevention/immunizations/Pages/Recommended-Immunization-Schedules.aspx",
+    "status": 200,
+    "final": "https://www.healthychildren.org/English/safety-prevention/immunizations/Pages/Recommended-Immunization-Schedules.aspx",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.nhs.uk/baby/first-aid-and-safety/safety/baby-and-toddler-safety/",
+    "status": 200,
+    "final": "https://www.nhs.uk/baby/first-aid-and-safety/safety/baby-and-toddler-safety/",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.nhtsa.gov/campaign/right-seat",
+    "status": 200,
+    "final": "https://www.nhtsa.gov/campaign/right-seat",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.poolsafely.gov/parents/safety-tips/",
+    "status": 200,
+    "final": "https://www.poolsafely.gov/parents/safety-tips/",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.solidstarts.com/",
+    "status": 200,
+    "final": "https://www.solidstarts.com/",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.takingcarababies.com/blogs/featured/which-taking-cara-babies-class-should-i-take",
+    "status": 200,
+    "final": "https://www.takingcarababies.com/blogs/featured/which-taking-cara-babies-class-should-i-take",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.takingcarababies.com/pages/about-taking-cara-babies",
+    "status": 200,
+    "final": "https://www.takingcarababies.com/pages/about-taking-cara-babies",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=0kjoCFXP4gs",
+    "status": 200,
+    "final": "https://www.youtube.com/watch?v=0kjoCFXP4gs",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=1Q-wilrN8GU",
+    "status": 200,
+    "final": "https://www.youtube.com/watch?v=1Q-wilrN8GU",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=2JVhfYtMAlQ",
+    "status": 200,
+    "final": "https://www.youtube.com/watch?v=2JVhfYtMAlQ",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=2zEEh4hM7dw",
+    "status": 200,
+    "final": "https://www.youtube.com/watch?v=2zEEh4hM7dw",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=5AKUzlW7pcw",
+    "status": 200,
+    "final": "https://www.youtube.com/watch?v=5AKUzlW7pcw",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=5q3azhKq0dQ",
+    "status": 200,
+    "final": "https://www.youtube.com/watch?v=5q3azhKq0dQ",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=5tgdkihi3r4",
+    "status": 200,
+    "final": "https://www.youtube.com/watch?v=5tgdkihi3r4",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=8vnX60PxlTg",
+    "status": 200,
+    "final": "https://www.youtube.com/watch?v=8vnX60PxlTg",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=8wSuua6pKHI",
+    "status": 200,
+    "final": "https://www.youtube.com/watch?v=8wSuua6pKHI",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=Bu2W89FzKiw",
+    "status": 200,
+    "final": "https://www.youtube.com/watch?v=Bu2W89FzKiw",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=DILHfYfO6Ck",
+    "status": 200,
+    "final": "https://www.youtube.com/watch?v=DILHfYfO6Ck",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=DUiytQAXkyc",
+    "status": 200,
+    "final": "https://www.youtube.com/watch?v=DUiytQAXkyc",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=FCcQeYVNVGE",
+    "status": 200,
+    "final": "https://www.youtube.com/watch?v=FCcQeYVNVGE",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=GqV34gup6TQ",
+    "status": 200,
+    "final": "https://www.youtube.com/watch?v=GqV34gup6TQ",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=HbE7HbOeIAM",
+    "status": 200,
+    "final": "https://www.youtube.com/watch?v=HbE7HbOeIAM",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=IsWTBFfj3Y0",
+    "status": 200,
+    "final": "https://www.youtube.com/watch?v=IsWTBFfj3Y0",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=LjnVH041ro0",
+    "status": 200,
+    "final": "https://www.youtube.com/watch?v=LjnVH041ro0",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=O6Bma5ZlrfQ",
+    "status": 200,
+    "final": "https://www.youtube.com/watch?v=O6Bma5ZlrfQ",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=Oga2f0mCyRI",
+    "status": 200,
+    "final": "https://www.youtube.com/watch?v=Oga2f0mCyRI",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=Oi2C5I0dRMs",
+    "status": 200,
+    "final": "https://www.youtube.com/watch?v=Oi2C5I0dRMs",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=R7kQMd8M3U4",
+    "status": 200,
+    "final": "https://www.youtube.com/watch?v=R7kQMd8M3U4",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=RG8NVPbhT3E",
+    "status": 200,
+    "final": "https://www.youtube.com/watch?v=RG8NVPbhT3E",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=Yjei6r9v3Ck",
+    "status": 200,
+    "final": "https://www.youtube.com/watch?v=Yjei6r9v3Ck",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=ZQ2tm9mvDG4",
+    "status": 200,
+    "final": "https://www.youtube.com/watch?v=ZQ2tm9mvDG4",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=_Z1bHpCq_kw",
+    "status": 200,
+    "final": "https://www.youtube.com/watch?v=_Z1bHpCq_kw",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=ah7h8pz02NY",
+    "status": 200,
+    "final": "https://www.youtube.com/watch?v=ah7h8pz02NY",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=blts1HhYk6s",
+    "status": 200,
+    "final": "https://www.youtube.com/watch?v=blts1HhYk6s",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=dPvQazyoRS0",
+    "status": 200,
+    "final": "https://www.youtube.com/watch?v=dPvQazyoRS0",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=dUFpDchxJ1Y",
+    "status": 200,
+    "final": "https://www.youtube.com/watch?v=dUFpDchxJ1Y",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=giUtPBtowDw",
+    "status": 200,
+    "final": "https://www.youtube.com/watch?v=giUtPBtowDw",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=h8f5YEuyrFk",
+    "status": 200,
+    "final": "https://www.youtube.com/watch?v=h8f5YEuyrFk",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=hnAJCmvXQv8",
+    "status": 200,
+    "final": "https://www.youtube.com/watch?v=hnAJCmvXQv8",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=jO86kP4bdRQ",
+    "status": 200,
+    "final": "https://www.youtube.com/watch?v=jO86kP4bdRQ",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=kM4Xf3-IKj4",
+    "status": 200,
+    "final": "https://www.youtube.com/watch?v=kM4Xf3-IKj4",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=mq0ywrwcmCE",
+    "status": 200,
+    "final": "https://www.youtube.com/watch?v=mq0ywrwcmCE",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=n-z_MA8u-w4",
+    "status": 200,
+    "final": "https://www.youtube.com/watch?v=n-z_MA8u-w4",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=nFVh8cPr9Dk",
+    "status": 200,
+    "final": "https://www.youtube.com/watch?v=nFVh8cPr9Dk",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=osLAmjKZm6s",
+    "status": 200,
+    "final": "https://www.youtube.com/watch?v=osLAmjKZm6s",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=vt1r42EXBPg",
+    "status": 200,
+    "final": "https://www.youtube.com/watch?v=vt1r42EXBPg",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=xiNpIYUvvk0",
+    "status": 200,
+    "final": "https://www.youtube.com/watch?v=xiNpIYUvvk0",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=zQafMJwPzKQ",
+    "status": 200,
+    "final": "https://www.youtube.com/watch?v=zQafMJwPzKQ",
+    "result": "reachable"
+  }
+]

@@ -164,7 +164,7 @@ window.AHEAD_CHANGES = {
     ],
     "signs": "Naps landing at similar times most days.",
     "total": "About 12–16 hours of sleep in 24",
-    "night": "Most babies this age still wake to feed once or more. Dropping a night feed is a separate decision; ask your pediatrician first."
+    "night": "Night feeds can continue alongside a nap routine. Dropping a night feed is a separate decision; ask your pediatrician first."
    },
    {
     "key": "two",
@@ -321,7 +321,7 @@ window.AHEAD_CHANGES = {
    ],
    [
     "Before baby can sit",
-    "Lower the crib mattress to the middle setting."
+    "Lower the crib mattress before baby can sit. Follow the crib manual for the right position."
    ],
    [
     "Before baby can pull up",
@@ -621,6 +621,10 @@ window.AHEAD_CHANGES = {
     "https://www.healthychildren.org/English/ages-stages/baby/diapers-clothing/Pages/Swaddling-Is-it-Safe.aspx"
    ],
    [
+    "AAP · Crib height and room safety",
+    "https://www.healthychildren.org/English/safety-prevention/at-home/Pages/Make-Babys-Room-Safe.aspx"
+   ],
+   [
     "AAP · Getting your baby to sleep",
     "https://www.healthychildren.org/English/ages-stages/baby/sleep/Pages/Getting-Your-Baby-to-Sleep.aspx"
    ],
@@ -689,7 +693,7 @@ window.AHEAD_CHANGES = {
       "Pain past the first few seconds, or trouble latching, is worth a lactation visit now."
      ]
     ],
-    "call": "She’s hard to wake for feeds, her skin or eyes look more yellow, or wet diapers drop below 6 a day.",
+    "call": "Baby is hard to wake for feeds, skin or eyes look more yellow, or wet diapers are fewer than expected for the day of life. After day 5, expect at least 6 wet diapers a day.",
     "signs": "",
     "looks": [],
     "lasts": "",
@@ -767,7 +771,7 @@ window.AHEAD_CHANGES = {
     "helps": [
      [
       "Watch for the readiness signs",
-      "Steady head, sits with support, opens for a spoon, and swallows instead of pushing food out. Watching you eat isn’t a sign on its own."
+      "Steady head, sits with support, opens for offered food, and swallows instead of pushing food out. Watching you eat isn’t a sign on its own."
      ],
      [
       "Bring her to the table",
@@ -817,6 +821,10 @@ window.AHEAD_CHANGES = {
     "rhythmNote": "Offer solids when she’s alert and not too hungry.",
     "night": "Milk still carries her growth. At meals, watch her interest and fullness, not how much she eats.",
     "helps": [
+     [
+      "Make one food manageable",
+      "For spoon-feeding, mash or purée an iron-rich food. For self-feeding, offer food soft enough to mash with a fork, in a shape baby can grasp. You can use both approaches."
+     ],
      [
       "Introduce peanut and egg early",
       "Offer them in a safe form, then keep them in her diet. See Introducing allergens for how."
@@ -873,7 +881,7 @@ window.AHEAD_CHANGES = {
       "A few sips of water at meals. Spills are part of learning."
      ]
     ],
-    "signs": "Eating easily from a spoon and picking food up herself.",
+    "signs": "Getting comfortable with first foods and beginning to manage more texture or pick food up.",
     "looks": [],
     "lasts": "",
     "label": ""
@@ -1060,7 +1068,7 @@ window.AHEAD_CHANGES = {
    [
     "Breast milk storage",
     "CDC",
-    "Room temperature up to 4 hours, fridge up to 4 days, freezer 6–12 months. Use thawed milk within 24 hours, don’t refreeze it, and use leftovers within 2 hours of a feed."
+    "Room temperature: up to 4 hours. Fridge: up to 4 days. Freezer: within 6 months is best; up to 12 months is acceptable. Use refrigerated thawed milk within 24 hours after it is fully thawed; don’t refreeze fully thawed milk."
    ],
    [
     "Making formula",
@@ -1070,12 +1078,12 @@ window.AHEAD_CHANGES = {
    [
     "Pumping and bottles",
     "If you nurse",
-    "Offer a bottle once nursing is going well, often around 3–6 weeks. Someone else giving it can help. When you’re apart, pump about as often as she’d feed."
+    "While you’re apart or exclusively pumping, pump about as often as baby feeds. If you also nurse, introducing bottles can take practice; another caregiver can try a calm feed."
    ],
    [
     "Choosing formula",
-    "Any standard formula",
-    "Any iron-fortified infant formula works; store brands meet the same rules. Switching is fine. Ask before using a specialty formula."
+    "For most babies",
+    "Standard iron-fortified infant formula, including store brands, suits most babies. If baby has a prescribed formula or feeding plan for early birth, growth or allergy concerns, check before changing it."
    ],
    [
     "Warming bottles",
@@ -1085,7 +1093,7 @@ window.AHEAD_CHANGES = {
    [
     "Vitamin D",
     "Ask your pediatrician",
-    "Breastfed and partly breastfed babies need vitamin D drops every day. Formula already contains it."
+    "Under 12 months, babies need 400 IU a day. Breastfed and partly breastfed babies need daily drops; formula-fed babies may too if intake is below about 32 oz a day. From age one, the daily need is 600 IU. Ask your pediatrician which supplement fits."
    ]
   ],
   "TRIAGE": [
@@ -1225,18 +1233,18 @@ window.AHEAD_CHANGES = {
     ],
     [
      "Why won’t she take a bottle?",
-     "Who’s offering it?",
+     "Does baby take it from anyone?",
      [
       [
-       "The person who nurses her",
-       "Have someone else offer it, ideally when you’re out of the room.",
-       "Try when she’s a little hungry, not starving, and try a few different nipples.",
+       "Yes, from another caregiver",
+       "Let that caregiver offer a familiar bottle while baby gets used to the change.",
+       "Try when baby is a little hungry, rather than very upset. Pause if baby turns away.",
        null
       ],
       [
-       "Someone else, and she still refuses",
-       "Try a slower-flow nipple, warm the milk slightly, and offer it in a different position or while walking.",
-       "A cup or spoon can work for short separations. Ask your pediatrician if she’s refusing for days.",
+       "No, whoever offers it",
+       "Try a calm feed before baby is very hungry. Check whether the nipple flow seems hard to manage; don’t push baby to finish.",
+       "If refusal reduces usual milk intake or wet diapers, contact your pediatrician rather than waiting for the next checkup.",
        null
       ]
      ]
@@ -1491,6 +1499,10 @@ window.AHEAD_CHANGES = {
    [
     "AAP · Starting solid foods",
     "https://www.healthychildren.org/English/ages-stages/baby/feeding-nutrition/Pages/Starting-Solid-Foods.aspx"
+   ],
+   [
+    "AAP · Introducing allergens",
+    "https://www.healthychildren.org/English/healthy-living/nutrition/Pages/when-to-introduce-egg-peanut-butter-and-other-common-food-allergens-to-your-baby-food-allergy-prevention-tips.aspx?form=HealthyChildren"
    ],
    [
     "CDC · When, what and how to introduce solids",

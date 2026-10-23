@@ -1,6 +1,16 @@
 # Ahead · Change log for Claude
 
-Review pull request #1 against `main` in `yardenwalla/ahead-prototype`. These changes are implemented on the PR branch, not merged. Please review the diff rather than reimplementing this list from an older HTML export.
+The original changes below were merged in pull request #1. The new pre-beta QA changes are documented in **`docs/beta-readiness-2026-10-22.md`**, with concrete findings, resulting behavior, verification and limits. Review the new PR diff against main rather than reimplementing either list from an older HTML export. Claude's main-branch copy updates through `6b02109a4fba5bdf8829db29f59c14057537ec85` are preserved.
+
+## Latest pre-beta pass
+
+Latest correction: **`docs/progression-fixes-2026-10-22.md`** addresses Claude's two stalled-journey findings. Safety now advances preparation beyond saved movement while preserving the actual ability for Play. Feeding gets an evolving 28-day follow-up and a distinct textures answer. The new persisted no-further-answers suite is included in the QA runner. This supersedes the earlier frozen-stage acceptance rules.
+
+Follow-up acceptance review: **`docs/recommendation-quality-2026-10-22.md`** records the reason/action/timing/personalization findings, exact behavior changes and category acceptance matrix. Its regression suite is included in `node tools/qa/check-all.cjs`. This adds targeted fixes on PR #2, not a separate redesign. The original QA report below describes the preceding snapshot; use the new report and current generated summaries for the latest test results.
+
+The new pass fixes saved-guide routes, browser navigation/reload, birthday-edit data continuity, invalid profile recovery, six-week and preview-age rules, explicit feeding/movement choices, repetitive Home movement summaries, Safety context and links, tailored Sleep support, milk-reference ambiguity and milk-specific detail content, plus month-2 Play variety. It retains the current design treatment. The full report above is the source of truth; automated coverage and actual browser checks are listed separately.
+
+The older sections below describe the previous pass and retain its historical validation boundaries.
 
 ## Home
 
