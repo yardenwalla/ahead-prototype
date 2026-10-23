@@ -550,3 +550,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 #main .connected-age-note button {font-size:11px;text-decoration:underline;min-height:32px}
 @media(max-width:350px){#main .connected-category-grid {grid-template-columns:1fr}#main .connected-category-grid button {min-height:54px}}
 /* END CONNECTED HOME */
+
+#main .safety-room-group+.safety-room-group{margin-top:14px}
+#main .safety-room-label{margin:0 0 6px;font-size:13px;font-weight:600;color:var(--year-ink)}

@@ -2,6 +2,37 @@
 
 The original changes below were merged in pull request #1. The new pre-beta QA changes are documented in **`docs/beta-readiness-2026-10-22.md`**, with concrete findings, resulting behavior, verification and limits. Review the new PR diff against main rather than reimplementing either list from an older HTML export. Claude's main-branch copy updates through `6b02109a4fba5bdf8829db29f59c14057537ec85` are preserved.
 
+## Full content sweep (2026-10-23)
+
+One deliberate pass over every string a parent can see, judged against `docs/content-spec.md`. `tools/qa/content-crawl.cjs` renders every main route across pronouns, feeding methods, solids answers, movement answers and early birth, so copy can be audited in every state.
+
+| Area | What changed |
+| --- | --- |
+| Spec | New `docs/content-spec.md`: voice, personal vs generic copy, glossary, stage names, component limits, mechanics, medical rules. |
+| Glossary | checkup (not visit or appointment), call your pediatrician (not contact), wake window, sleep space, nursing. |
+| Play | All 78 activity summaries and page intros rewritten in plain language; month intros rewritten; semicolons removed. |
+| Health | Every "What to expect" detail now says what to bring or ask; questions rewritten in the parent's voice; checkup wording throughout; when-to-call copy tightened. |
+| Home | Month intros rewritten with fewer hedges; Home rows use canonical names (The 4-month sleep regression, 3-to-2 nap transition). |
+| Sleep and Feeding | Stage leads and whys tightened; wake-window wording; 4-month regression framed as a step forward; choking, jaundice, vomiting, breathing and allergy escalation lines made explicit and consistent. |
+| Safety | Poison Control number with the lock-away check; ER step for swallowed button batteries; room-by-room intro. |
+| Mechanics | Semicolons replaced, contractions, numerals, no "based on" lines, no app-describing copy. |
+| Independent review | A separate reviewer audited all live strings against the spec; 48 findings applied, 2 declined (°C in parentheses for fever, and the "Usually around 6 months" label, which matches every other stage label). |
+
+## Launch content polish (2026-10-23)
+
+Content owner: Claude, per Yarden. Supersedes the stage-name and unknown-solids decisions in `docs/editorial-acceptance-2026-10-23.md`.
+
+| Change | Rule |
+| --- | --- |
+| Sleep stage names | **Newborn sleep → Days and nights → Three naps → Two naps**. "Naps and bedtime" was too vague; "Three naps" pairs with "Two naps" and describes structure, not an achievement. |
+| Pronouns on Sleep and Feeding | Personal lines use the profile pronoun (authored templates in `js/baby-language.js`), not a mix of "she" and "baby". Generic reference titles stay neutral. |
+| Feeding with no solids answer | Show the stage typical for her age (Starting solids 6–7 mo, Textures 8–9 mo, Family meals 10+ mo) labeled **Typical for this age**, with the check-in still shown. A parent's answer always wins. |
+| Meta copy | Removed "This section uses your baby's current age" and the "Whether you're preparing or have already begun…" lead. Back links on come-and-go pages say "Back to your guide". |
+| Leftover hedges | 4-month regression duration, two-naps lead and why, separation-anxiety why, teething, bottle refusal and textures rewritten short and specific. |
+| Health | Growth-exam detail says what to do (ask to see the chart). "How you're doing" now includes the National Maternal Mental Health Hotline. |
+| Safety babyproofing | Still one saved checklist, now grouped by part of the home: Stairs and doorways, Furniture and windows, Cupboards and outlets, Baby gear. |
+| Verified, unchanged | The fever rule from 3 months (call if over 24 hours, sooner above 104°F repeatedly) matches the AAP page it cites. |
+
 ## Latest pre-beta pass
 
 Latest correction: **`docs/progression-fixes-2026-10-22.md`** addresses Claude's two stalled-journey findings. Safety now advances preparation beyond saved movement while preserving the actual ability for Play. Feeding gets an evolving 28-day follow-up and a distinct textures answer. The new persisted no-further-answers suite is included in the QA runner. This supersedes the earlier frozen-stage acceptance rules.

@@ -2,8 +2,8 @@
 (function () {
   const POINTS = [
     ['spark', 'Everything in one place', 'Sleep, feeding, development, play, safety and checkups. One guide for the first year.'],
-    ['dev', 'Know how to support your baby', 'Clear, digestible guidance on what they need and what you can do—without hours of research.'],
-    ['explore', 'For your baby, as they grow', 'What’s relevant now and what to prepare for next, based on their age and what you’ve shared.']
+    ['dev', 'Know how to support your baby', 'Clear, digestible guidance on what they need and what you can do, without hours of research.'],
+    ['explore', 'For your baby, as they grow', 'What matters now and what’s coming next, for their age and your answers.']
   ];
 
   function welcomeHtml() {

@@ -10,7 +10,7 @@ import json, os, re
 from collections import defaultdict
 
 OUT = os.path.join(os.path.dirname(__file__), 'out')
-SLEEP = ['Newborn sleep', 'Day and night sleep', 'Naps and bedtime', 'Two naps']
+SLEEP = ['Newborn sleep', 'Nights stretch out', 'Naps settle in', 'Naps drop to two']
 FEED = ['Newborn feeding', 'Changing milk feeds', 'Getting ready for solids', 'Starting solids', 'Textures and finger foods', 'Family meals']
 WINDOWS = {  # come-and-go phases: months they may appear in
     'The 4-month sleep regression': (3, 5), 'Separation anxiety': (8, 11),

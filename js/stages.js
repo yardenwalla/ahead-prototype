@@ -50,7 +50,7 @@
     if (d.skip[key] && nowMs() - d.skip[key] < WAIT) return null;
     // An answer date is not a solids-start date. Use it only to space the next question.
     if (recentlyAnswered) return null;
-    return {key, title:`What is ${name()} managing now?`, why:'Choose the food guidance that fits today.',
+    return {key, title:`What is ${name()} managing now?`, why:'Tell us where your baby is with food today.',
       choices:[['new','First tastes'],['textures','More textures and finger foods'],['established','Regular meals']]};
   }
   window.feedingCheckinModel = feedingCheckin;
