@@ -63,7 +63,7 @@ for (const early of [false,true]) for (let age=0; age<=12; age++) {
   check(!/Coming up · Usually 7–9/.test(clean(a.html())),'No elapsed window is called coming up');
   a.run("month=1;openPage('topic:Sleep')");check(a.run("chgStageIndex('Sleep')===0"),'Sleep preview uses selected month');
   a.run("month=1;openPage('topic:Feeding')");check(a.run("chgStageIndex('Feeding')===0"),'Feeding preview uses selected month');
-  a.run("month=actualMonth();chgSetSafety('rolling')");check(a.run("safetyStageNow()==='rolling'"),'Explicit movement survives age suggestion');
+  a.run("month=actualMonth();chgSetSafety('rolling')");check(a.run("currentSafetyMovementStage()==='rolling' && safetyStageNow()==='pulling'"),'Recorded rolling stays a fact while older-age Safety prepares ahead');
   a.run("chgSetSafety('pulling')");check(a.run("safetyStageNow()==='pulling'"),'Later reported movement updates Safety');
 }
 // Saving every Sleep/Feeding view produces a visible, correctly named row and reopens that view.

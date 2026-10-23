@@ -75,6 +75,7 @@
     if (!known && live()) return m >= 6 ? 3 : 2;
     if (fs === 'preparing') return 2;
     if (fs === 'new') return 3; // First bites are an experience, not an age. Let the parent move on.
+    if (fs === 'textures') return 4;
     return m >= 10 ? 5 : 4;
   }
   function feedEvents(m) { return m < 3 ? [0] : m < 7 ? [1] : [2]; }
@@ -91,6 +92,7 @@
     return { 'Formula': 'bottle', 'Both': 'both' }[profile.feed] || 'nurse';
   }
   window.resetMilkMethod = function () { delete local.method; save(); };
+  window.resetFeedingStageOverride = function () { if (local.override?.Feeding) { delete local.override.Feeding; save(); } };
   window.chgChooseMethod = function (value) {
     if (!['nurse','bottle','both'].includes(value)) return;
     local.method = value; save(); const y = scrollY; render(); scrollTo(0, y);
@@ -189,9 +191,8 @@
     const lead = unknownFood ? 'Whether you’re preparing or have already begun, find readiness signs, safe first foods and ways to keep milk feeds alongside.' : C.lead;
     h += `<header class="experience-hero"><div class="experience-hero-copy"><div class="eyebrow">${esc(eyebrow)}</div><h2>${T(C.title)}</h2></div><span class="experience-hero-art" aria-hidden="true">${yearIllustration(cat, 1)}</span><p class="experience-hero-description">${T(lead)}</p></header>`;
 
-    // One check-in moves Feeding into solids, at most once a month; age alone never does.
-    if (cat === 'Feeding' && !isEv && view === cur && (cur === 2 || cur === 3 && !hasFoodAnswer()) && m >= 6 && (typeof checkinDue !== 'function' || checkinDue('food', ['preparing'])))
-      h += `<section class="connected-checkin chg-checkin"><div><h2>Has ${name()} started solids?</h2></div><p>Choose guidance for preparing, first bites or building meals.${profile.early ? ' Your pediatrician can help with individual timing after early birth.' : ''}</p><div class="connected-checkin-choices"><button onclick="chgAnswerCheckin('food','preparing')">Not yet</button><button onclick="chgAnswerCheckin('food','new')">First foods</button><button onclick="chgAnswerCheckin('food','established')">Eating meals</button></div></section>`;
+    if (cat === 'Feeding' && !isEv && view === cur && typeof feedingCheckinMarkup === 'function')
+      h += feedingCheckinMarkup();
 
     if (cat === 'Sleep' && !isEv && view === cur && chgSleepAuto() && autoNoticeFresh())
       h += headsUp('Updated for this age', 'Showing two-nap guidance', '', `<button class="textlink chg-headsup-link" onclick="setAnswer('twoNaps','Stay')">Still on three naps? Show Naps find a rhythm →</button>`);
@@ -385,16 +386,18 @@
     }
     if (cat === 'Feeding') {
       if (local.override) delete local.override.Feeding;
-      if (i >= 3) { save(); setFeedingStage(i === 3 ? 'new' : 'established'); if (i === 5 && feedComputed(m) !== 5) { local.override = Object.assign({}, local.override, { Feeding: { i, base: feedComputed(m) } }); save(); } }
+      if (i >= 3) { save(); setFeedingStage(i === 3 ? 'new' : i === 4 ? 'textures' : 'established'); if (i === 5 && feedComputed(m) !== 5) { local.override = Object.assign({}, local.override, { Feeding: { i, base: feedComputed(m) } }); save(); } }
       else if (i === 2 && m >= 4) { save(); setFeedingStage('preparing'); }
       else { local.override = Object.assign({}, local.override, { Feeding: { i, base: feedComputed(m) } }); save(); }
     }
     page = 'topic:' + cat; render(); window.scrollTo(0, 0);
   };
   window.chgAnswerCheckin = function (key, value) {
+    if (!['food','food-progress','naps'].includes(key)) return;
+    if (key !== 'naps' && !['preparing','new','textures','established'].includes(value)) return;
     if (typeof recordCheckin === 'function') recordCheckin(key, value);
     if (key === 'naps') setAnswer('twoNaps', value === 'Yes' ? 'Yes' : 'Not yet');
-    if (key === 'food') setFeedingStage(value);
+    if (key === 'food' || key === 'food-progress') setFeedingStage(value);
   };
   window.chgStageIndex = function (cat) { return CFG[cat].stage(ageNow()); };
   window.chgStageLabel = function (cat) { const c = DATA[cat].CH[CFG[cat].stage(ageNow())]; return c ? c.rail : ''; };

@@ -71,7 +71,7 @@
     else if (live() && answers.sit === 'Yes' && answers.mattressLowered !== 'Yes' && answers.mattressLowest !== 'Yes')
       out.push({ topic: 'Sleep', kind: 'mattressLower', tier: 'must', reported: true, reason: `You said ${name()} sits without support` });
     if (priority && priority.type === 'check')
-      out.push({ topic: 'Safety', kind: 'check', tier: 'must', reported: !!mv && relevantCheck(mv), reason: mv && relevantCheck(mv) ? said(mv) : priority.owner === 'mobile' ? 'Secure spaces within reach' : 'Prepare space for rolling', priority });
+      out.push({ topic: 'Safety', kind: 'check', tier: 'must', reported: !!mv && relevantCheck(mv), reason: mv && relevantCheck(mv) ? said(mv) : priority.owner === 'mobile' ? (safetyAgeForward()==='pulling'?'Prepare for a higher reach':'Prepare before scooting or crawling') : 'Prepare space for rolling', priority });
 
     // Development: the skill to watch now
     const dev = byTopic('Development');
@@ -87,7 +87,7 @@
     out.push({ topic: 'Feeding', title: milkRow ? milkRow.title : FEED_ROW[fi][0], body: milkRow ? milkRow.body : FEED_ROW[fi][1], action: "openPage('topic:Feeding')",
       tier: 'should', reported: milkAnswered || fi >= 3 && !!food,
       prep: fi === 2 && m >= 5,
-      reason: fi === 0 ? 'For the first weeks' : fi === 1 ? ageReason() : fi === 2 ? (food === 'preparing' ? `You said ${name()} hasn’t started solids` : 'Prepare before the first bite') : !food ? 'Solids status not shared yet' : `You said ${name()} ${food === 'new' ? 'has started solids' : 'is eating meals'}`,
+      reason: fi === 0 ? 'For the first weeks' : fi === 1 ? ageReason() : fi === 2 ? (food === 'preparing' ? `You said ${name()} hasn’t started solids` : 'Prepare before the first bite') : !food ? 'Solids status not shared yet' : `You said ${name()} ${food === 'new' ? 'has started solids' : food === 'textures' ? 'is managing more textures' : 'is eating meals'}`,
       reference: fi === 1 && !milkAnswered });
 
     // Sleep: the current stage (a reference row, so it ranks below actions)
@@ -111,7 +111,7 @@
 
     // Safety: the guide for how she moves now (when no specific check is pending)
     const saf = byTopic('Safety');
-    const rollGuide = (mv === 'trying' || mv === 'rolling') && safetyPendingIds(safetyOwnedGuides().reach.ids).length
+    const rollGuide = (mv === 'trying' || mv === 'rolling') && !safetyAgeForward() && safetyPendingIds(safetyOwnedGuides().reach.ids).length
       ? { title: 'Make room for rolling', body: 'Nearby objects, floor space and diaper changes.', action: `openSafetyChecklist('reach',false)`, art: 0 }
       // An older baby with no movement answers gets the next checklist, never an earlier one.
       : ['rolling', 'moving', 'pulling'].includes(safetyStageNow()) && !(mv === 'trying' || mv === 'rolling') && saf && /reaching and rolling/i.test(saf.title)

@@ -26,7 +26,7 @@ The app looks and works the same as the previous prototype, with two exceptions:
 - **Detail screens:**
   - Sleep: safe sleep setup, settling and sleep training, when to ask for help
   - Feeding: milk and formula basics, feeding safety and first aid, introducing allergens, when to ask for help
-- **Age suggests stages; parent reports take precedence.** Parents can correct guidance with "Already there?" or "This is where she is now." An explicit first-foods answer stays on Starting solids until eating experience is updated.
+- **Age suggests stages; parent reports determine eating experience.** Safety preparation keeps advancing ahead of recorded movement. An explicit first-foods answer stays on Starting solids, with a visible follow-up after about a month to update textures and meals.
 
 ## Home rules
 
@@ -48,9 +48,9 @@ Call `homeRulesDebug()` in the browser console to see what was shown, what was h
 
 ## When stages move
 
-- **Age provides default guidance.** Development, Play and Health follow their age references. Sleep suggests Two naps at 9 months; Safety respects explicitly selected movement stages and reported abilities. Feeding suggests textures at 8 months and family meals at 10 only after established eating is reported. A first-foods answer remains Starting solids regardless of age.
+- **Age provides default guidance.** Development, Play and Health follow their age references. Sleep suggests Two naps at 9 months. Safety prepares for age or reported movement, whichever calls for the later guide; it does not report the suggested skill as a fact. First foods, textures and regular meals remain distinct feeding answers. Established meal experience can progress to Family meals from 10 months.
 - **Newborn Sleep and Feeding transition after six weeks**, using actual days for the current baby rather than waiting for the two-month birthday. Monthly previews use the typical stage for that month.
-- **One question is left: "Has Maya started solids?"** From 6 months, at most once a month. If nobody answers, it shows for two weeks, then rests until next month. Feeding never moves into solids on age alone, because a wrong guess means advice about allergens and finger foods for a baby who hasn't started.
+- **The feeding check-in evolves.** From 6 months, ask whether solids have started; after First foods, ask what baby is managing now. Follow-ups wait 28 days after an answer or skip. Home and Feeding share the answer and quiet periods. Time prompts a question rather than automatically inventing eating progress.
 - **Safety runs ahead of the usual age,** because extra babyproofing is the safe mistake:
   - reaching and rolling from 3 months
   - crawling prep from 5 months
@@ -59,6 +59,7 @@ Call `homeRulesDebug()` in the browser console to see what was shown, what was h
   - "Stop swaddling" from 3 months
   - lower the crib mattress before sitting, following its manual; lowest before standing
 - **Saved moments count.** Saving "Rolls tummy to back" or "Pulls up to stand" in the timeline moves Safety and changes the labels to "You said…".
+  - Reported abilities are preserved separately from preparation. An old roll never blocks the later babyproofing guide; later preparation alone never inserts standing play.
 - **When Sleep moves to two naps on its own,** a notice says so for three weeks, with a one-tap undo ("Still on three naps?").
 - **Parents can always correct a stage.**
   - The Coming up card has "Already there? Move Maya to …".
@@ -77,6 +78,8 @@ Run `node tools/qa/content-journeys.cjs` for the fast template/handler checks ac
 The latest pre-beta fixes and actual browser checks are documented in `docs/beta-readiness-2026-10-22.md`. Run `node tools/qa/check-all.cjs` (Node 20+) for syntax, local assets and all regression suites, then `python3 tools/qa/link-check.py` for external URLs. These are scripted checks, not 100 human usability sessions.
 
 The follow-up recommendation acceptance review is `docs/recommendation-quality-2026-10-22.md`. The runner now also includes `recommendation-quality.cjs`: reason/action contracts, preparation timing and observable responses to parent information. Historical report counts refer to their respective snapshots.
+
+The subsequent progression corrections are documented in `docs/progression-fixes-2026-10-22.md`. The fifth suite, `progression-followups.cjs`, checks 100 families who save information once and stop updating it, so retained facts cannot silently freeze the useful journey.
 
 The handoff log is `docs/claude-change-log.md`. Setup optionally records he/him, she/her or they/them for baby-specific wording; older profiles use neutral wording. Run `node tools/qa/pronouns.cjs` to check authored copy, verb agreement, persistence and unchanged personal notes.
 

@@ -54,9 +54,9 @@ for(const experience of ['preparing','new','established']) {
 {
   const a=family(9);
   a.run("chgSetSafety('pulling');openPage('personalize');setSafetyMovement('reaching')");
-  check(a.run("safetyStageNow()==='reaching'"),'Correcting movement in Baby updates replaces an earlier stage override');
+  check(a.run("currentSafetyMovementStage()==='reaching' && safetyStageNow()==='pulling'"),'Movement correction updates the fact without cancelling preparation');
   a.run("setSafetyMovement('moving');openPage('topic:Safety')");
-  check(a.run("safetyStageNow()==='moving'"),'Updated movement selects the corresponding Safety stage');
+  check(a.run("currentSafetyMovementStage()==='moving' && safetyStageNow()==='pulling'"),'Crawling is recorded while higher-reach preparation remains available');
 }
 {
   const a=family(4,{swaddleStopped:'Yes'});
