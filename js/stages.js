@@ -34,8 +34,12 @@
   function feedingCheckin() {
     if (!isCurrent() || dm() < 6) return null;
     const d = load(), stage = foodStage();
-    const dates = [d.last.food?.at, d.last['food-progress']?.at, answers.stageDates?.food ? parse(answers.stageDates.food).getTime() : null].filter(Number.isFinite);
-    const recentlyAnswered = dates.length && nowMs() - Math.max(...dates) < WAIT;
+    const times = [d.last.food?.at, d.last['food-progress']?.at].filter(Number.isFinite);
+    const latest = times.length ? Math.max(...times) : null, day = answers.stageDates?.food;
+    // A date-only stamp is a fallback for direct stage updates. It must not
+    // turn a precise answer from that same day into a later local-noon answer.
+    const answeredAt = day && (latest === null || day > iso(new Date(latest))) ? parse(day).getTime() : latest;
+    const recentlyAnswered = Number.isFinite(answeredAt) && nowMs() - answeredAt < WAIT;
     if (!hasFoodAnswer() || stage === 'preparing') {
       if (d.skip.food && nowMs() - d.skip.food < WAIT || hasFoodAnswer() && recentlyAnswered) return null;
       return {key:'food', title:`Has ${name()} started solids?`, why:'Your answer changes the feeding guide you see.',

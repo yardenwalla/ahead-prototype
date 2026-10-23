@@ -1,117 +1,85 @@
 # Ahead · prototype
 
-A clickable prototype of **Ahead**, a baby-roadmap app for first-time parents. The example baby is Maya, 5 months old.
+Ahead helps first-time parents understand what their baby needs now and prepare for the next meaningful change. It keeps six category homes and a first-year view, with short guides and optional references.
 
-Open `index.html` in a browser. There's no build step and nothing to install. Everything runs from static files, so the repo can also be served with GitHub Pages.
+Open `index.html` or serve this directory with GitHub Pages. There is no build step. A new browser starts with onboarding; Maya is a fictional example used in QA, not a preselected baby.
 
-## What's in this version
+## Current editorial acceptance
 
-The app looks and works the same as the previous prototype, with two exceptions: **Sleep** and **Feeding** are rebuilt around the changes a baby goes through rather than a schedule.
+Start with [the consolidated first-year acceptance report](docs/editorial-acceptance-2026-10-23.md). It records substantive fixes, retained content, repetition decisions, parent tasks and the limits of the review. The earlier dated reports describe their own snapshots and may contain superseded behavior.
 
-- **Stages** sit on the rail at the top and move in order.
-  - Sleep: Newborn sleep → Days and nights → Naps find a rhythm → Two naps
-  - Feeding: Newborn feeding → Feeds find a rhythm → Getting ready for solids → Starting solids → Textures and finger foods → Family meals
-- **Come-and-go phases** appear under "Also common around now" on top of the current stage. Examples: the 4-month sleep regression, separation anxiety, cluster feeding, distracted feeding and teething.
-- **Each stage page follows the same order:**
-  1. Hero
-  2. Must-know card (only when it applies)
-  3. Why it's happening
-  4. Wake windows, or How much and how often
-  5. What helps
-  6. Call card
-  7. Also common around now
-  8. Common questions
-  9. Coming up
-  10. Link rows and sources
-- **Detail screens:**
-  - Sleep: safe sleep setup, settling and sleep training, when to ask for help
-  - Feeding: milk and formula basics, feeding safety and first aid, introducing allergens, when to ask for help
-- **Age suggests stages; parent reports determine eating experience.** Safety preparation keeps advancing ahead of recorded movement. An explicit first-foods answer stays on Starting solids, with a visible follow-up after about a month to update textures and meals.
+[The content register](docs/editorial-acceptance-register.json) stores actual rendered/source text, timing, route and hashes. It is an inventory, not an automated quality score.
 
-## Home rules
+## Category jobs
 
-Home looks the same as before. `js/home-rules.js` applies the Home recommendation engine spec to the existing components, deciding which rows show and what they say:
+| Category | What it helps a parent understand |
+| --- | --- |
+| Development | Recognizable emerging skills and how to support them; CDC reference ages, not monthly deadlines |
+| Play & everyday activities | Concrete awake-time activities, their skill connection and easier/extended versions |
+| Sleep | Changing nights and naps, awake ranges, bedtime, a matching sample day and optional settling support |
+| Feeding | Milk references, solids preparation, first tastes, textures, meals and milk/cup transitions |
+| Safety | Specific home changes before new movement; one saved checklist rather than copied tasks |
+| Health | What each actual checkup reviews, vaccines/eligibility, questions, notes and explicit attendance |
 
-- **Reason in each label.** Every row's small label now says why it's there, for example "Sleep · You said Maya is trying to roll" or "Feeding · Most babies start solids around 6 months".
-- **Ranking and caps.**
-  - Rows are ranked must-know first, then what a parent reported, then dated items, then age-based ones.
-  - The main card holds at most 3 rows, one per category.
-  - A practical Play activity can earn a main-card slot, within the same three-row cap.
-  - "Prepare for next" shows up to 2 coming-up items from categories not already above.
-- **Filters and timing.**
-  - Feeding rows distinguish the suggested guide from what the parent actually reported. Unknown solids status is labeled as unknown.
-  - A checkup moves up from "Prepare for next" only when it's within 14 days.
-  - The solids check-in waits until 6 months.
-- **Copy updates.** The rows and check-ins have new copy, written to match the content guide.
+## How guidance moves
 
-Call `homeRulesDebug()` in the browser console to see what was shown, what was held back and why.
+- Sleep: **Newborn sleep → Day and night sleep → Naps and bedtime → Two naps**. Age chooses the default; appropriate nap reports can change it. Optional sleep training is a separate choice. Browsing a future age never assigns that pattern to a newborn.
+- Feeding: **Newborn feeding → Changing milk feeds → Getting ready for solids → Starting solids → Textures and finger foods → Family meals**. Eating experience comes from a parent's answer. Time prompts a follow-up; it does not invent progress. The milk selector separates nursing, expressed milk, formula and nursing with bottles.
+- Safety separates **reported movement** from **preparation**. Preparation advances with age even if the only saved movement is an old roll. It never reports crawling or standing, or inserts standing play, without that information.
+- Newborn Sleep/Feeding use the actual six-week boundary, not the two-month birthday. Developmental guidance uses adjusted age after early birth; Health follows birthday age. An individual milk/supplement plan takes priority over general references.
+- Category rails keep **Your guide** on the recommendation while separately marking the page being read. Update actions describe what is being reported. Reading is never completion.
+- Completed visits, skills and safety checks retain their explicit records. A missing record is unknown, not evidence that a visit was missed or a skill is absent.
 
-## When stages move
+## Home
 
-- **Age provides default guidance.** Development, Play and Health follow their age references. Sleep suggests Two naps at 9 months. Safety prepares for age or reported movement, whichever calls for the later guide; it does not report the suggested skill as a fact. First foods, textures and regular meals remain distinct feeding answers. Established meal experience can progress to Family meals from 10 months.
-- **Newborn Sleep and Feeding transition after six weeks**, using actual days for the current baby rather than waiting for the two-month birthday. Monthly previews use the typical stage for that month.
-- **The feeding check-in evolves.** From 6 months, ask whether solids have started; after First foods, ask what baby is managing now. Follow-ups wait 28 days after an answer or skip. Home and Feeding share the answer and quiet periods. Time prompts a question rather than automatically inventing eating progress.
-- **Safety runs ahead of the usual age,** because extra babyproofing is the safe mistake:
-  - reaching and rolling from 3 months
-  - crawling prep from 5 months
-  - babyproofing from 8 months
-  - furniture reach from 9 months
-  - "Stop swaddling" from 3 months
-  - lower the crib mattress before sitting, following its manual; lowest before standing
-- **Saved moments count.** Saving "Rolls tummy to back" or "Pulls up to stand" in the timeline moves Safety and changes the labels to "You said…".
-  - Reported abilities are preserved separately from preparation. An old roll never blocks the later babyproofing guide; later preparation alone never inserts standing play.
-- **When Sleep moves to two naps on its own,** a notice says so for three weeks, with a one-tap undo ("Still on three naps?").
-- **Parents can always correct a stage.**
-  - The Coming up card has "Already there? Move Maya to …".
-  - Any other stage they're viewing has "This is where Maya is now" and "← Back to where Maya is now".
-- **Navigating between stages** uses the timeline at the top of each category.
-  - No Previous/Next links.
-  - Coming up cards only in Sleep, Feeding, Safety and Development (each checkpoint points to the next one).
-  - Safety's current checklist shows up to 3 unfinished checks from earlier checklists, but only ones the family actually opened. Someone who joins at 8 months is assumed to have done the earlier ones.
-- **Which age is used:** adjusted age for everything developmental (until age 2), birthday age for Health. Pages say which one they use.
+`js/home-rules.js` chooses recommendations within the existing design:
 
-## QA
+- Each row states why it is useful now. Must-know actions, relevant reports and nearby appointments rank ahead of general references.
+- At most three current rows and two preparation rows, with one category per area and no category duplicated between the two.
+- In the first weeks, milk feeding, the first checkup and initial sleep setup take priority. Completed setup stops being promoted.
+- Preparation includes the 4-month sleep change, optional training education around four months, first-food preparation and a possible catnap transition. A parent's chosen sleep approach and nap answers affect these suggestions.
+- Checkup preparation stays close to the actual/expected visit. Unfinished safety work retains Done and Doesn't apply across stages.
+- Food check-ins start around six developmental months and evolve from starting foods to textures/meals. Follow-ups are spaced 28 days after an answer or skip, with the existing quiet periods.
 
-The content and personalization regression pass is documented in `docs/content-qa-2026-10-21.md`.
-Run `node tools/qa/content-journeys.cjs` for the fast template/handler checks across 100 scripted families and 13 monthly checkpoints. This does not replace browser, editorial or pediatric review.
+`homeRulesDebug()` and `homeRecommendationAudit()` expose the reasons for the current selection for QA.
 
-The latest pre-beta fixes and actual browser checks are documented in `docs/beta-readiness-2026-10-22.md`. Run `node tools/qa/check-all.cjs` (Node 20+) for syntax, local assets and all regression suites, then `python3 tools/qa/link-check.py` for external URLs. These are scripted checks, not 100 human usability sessions.
+## Validation
 
-The follow-up recommendation acceptance review is `docs/recommendation-quality-2026-10-22.md`. The runner now also includes `recommendation-quality.cjs`: reason/action contracts, preparation timing and observable responses to parent information. Historical report counts refer to their respective snapshots.
+Run on Node 20+:
 
-The subsequent progression corrections are documented in `docs/progression-fixes-2026-10-22.md`. The fifth suite, `progression-followups.cjs`, checks 100 families who save information once and stop updating it, so retained facts cannot silently freeze the useful journey.
+```sh
+node tools/qa/check-all.cjs
+python3 tools/qa/link-check.py
+```
 
-The handoff log is `docs/claude-change-log.md`. Setup optionally records he/him, she/her or they/them for baby-specific wording; older profiles use neutral wording. Run `node tools/qa/pronouns.cjs` to check authored copy, verb agreement, persistence and unchanged personal notes.
+The six suites cover syntax/local assets, 100 scripted chronological families, pronouns, links/routes, recommendation contracts, 100 saved-once progression journeys and editorial regression contracts. Scripted scenarios are not human usability sessions or clinical approval.
 
-`tools/qa` plays nine example families week by week from onboarding to 12 months. Each family answers the solids question its own way, and some also save moments or tap “Already there?”. It checks three things: nothing is broken or empty, everything follows the right order and stays useful, and the right personalization appears and disappears. The latest report is in `docs/qa-report.html`.
+After content changes:
 
-To rerun it after any change:
-1. `python3 tools/qa/run_qa.py` plays the families (takes about 25 minutes).
-2. `python3 tools/qa/checks.py` turns the run into findings.
-3. `python3 tools/qa/report.py` builds the report.
+```sh
+node tools/qa/content-review-register.cjs --write
+```
 
-## Files
+Review the changed units in their rendered context, then update the acceptance report. A different ID or shorter paragraph does not automatically make content useful.
 
-| Path | What it is |
-|---|---|
-| `index.html` | App shell |
-| `css/layout.css`, `css/experience.css` | The existing visual identity (unchanged) |
-| `css/changes.css` | Styles for the new Sleep and Feeding pages, built only from the app's tokens |
-| `js/app.js` | The existing app. Small edits route Sleep and Feeding to the new pages. |
-| `js/changes-data.js` | All Sleep and Feeding copy and data. Edit content here. |
-| `js/changes.js` | Renders the stage pages and detail screens |
-| `js/home-rules.js` | Home rules: which rows show and their reason labels |
-| `js/stages.js` | When stages move: weekly re-ask, no-nag rules, Safety moving forward on age, adjusted age labels |
-| `js/timeline.js`, `css/timeline.css` | Timeline entries in their category colors; removes the Year Ahead tab (each category's stage rail covers the year) |
-| `js/boot.js` | Starts the app after every module has loaded |
-| `js/navigation.js` | Browser Back/Forward and reload restoration without putting baby details in URLs |
-| `tools/screenshot.py` | Playwright helper for screenshotting app states |
+Historical context: [beta-readiness fixes](docs/beta-readiness-2026-10-22.md), [recommendation review](docs/recommendation-quality-2026-10-22.md), [progression corrections](docs/progression-fixes-2026-10-22.md) and [Claude handoff log](docs/claude-change-log.md). Optional older browser-run scripts remain under `tools/qa`; their reports are not the current acceptance decision.
 
-Older Sleep and Feeding routes from the previous prototype redirect to the new pages.
+## Editing files
 
-## Editing content
+| Path | Responsibility |
+| --- | --- |
+| `index.html` | Static app shell and module order |
+| `css/` | Shared visual identity and component styles |
+| `js/app.js` | Home/Development/Play/Health/Safety templates, records, illustrations and some shared Sleep content |
+| `js/changes-data.js` | Main Sleep/Feeding guides, questions, references and source links |
+| `js/changes.js` | Sleep/Feeding rendering, contextual copy, milk reference and guide/nap choices |
+| `js/home-rules.js` | Home ranking, reasons and timely preparation |
+| `js/stages.js` | Reported information, follow-ups, quiet periods and proactive Safety progression |
+| `js/baby-language.js` | Authored pronoun-aware copy; check new wording and verb agreement |
+| `js/timeline.js` | Saved timeline presentation |
+| `js/welcome.js` | Onboarding and value proposition |
+| `js/navigation.js`, `js/boot.js` | Browser navigation/reload and startup |
 
-All Sleep and Feeding copy lives in `js/changes-data.js`. Write and review it with the ahead-content-editor skill so terms, tone and chronology stay consistent.
+Preserve the current visual identity, stable records, explicit topic ownership and digestible presentation. Use primary sources for new medical wording. Do not add content to fill a month, or treat a guide being opened as an action completed.
 
-_Prototype. Pediatric review pending._
-
+_Prototype. Pediatric review and real-parent usability testing remain pending._

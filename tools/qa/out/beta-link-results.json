@@ -265,8 +265,9 @@
   },
   {
     "url": "https://www.childproofingexperts.com/find-a-professional/",
-    "status": 503,
-    "result": "unverified"
+    "status": 200,
+    "final": "https://www.childproofingexperts.com/find-a-professional/",
+    "result": "reachable"
   },
   {
     "url": "https://www.chop.edu/centers-programs/injury-prevention-program/choking-and-suffocation",
@@ -359,6 +360,12 @@
     "result": "reachable"
   },
   {
+    "url": "https://www.healthychildren.org/English/ages-stages/baby/feeding-nutrition/Pages/baby-led-weaning-is-it-safe.aspx",
+    "status": 200,
+    "final": "https://www.healthychildren.org/English/ages-stages/baby/feeding-nutrition/Pages/baby-led-weaning-is-it-safe.aspx",
+    "result": "reachable"
+  },
+  {
     "url": "https://www.healthychildren.org/English/ages-stages/baby/feeding-nutrition/pages/Discontinuing-the-Bottle.aspx",
     "status": 200,
     "final": "https://www.healthychildren.org/English/ages-stages/baby/feeding-nutrition/pages/Discontinuing-the-Bottle.aspx",
@@ -389,6 +396,12 @@
     "result": "reachable"
   },
   {
+    "url": "https://www.healthychildren.org/English/family-life/power-of-play/Pages/simple-ways-to-entertain-and-boost-your-babys-development-at-home.aspx",
+    "status": 200,
+    "final": "https://www.healthychildren.org/English/family-life/power-of-play/Pages/simple-ways-to-entertain-and-boost-your-babys-development-at-home.aspx",
+    "result": "reachable"
+  },
+  {
     "url": "https://www.healthychildren.org/English/family-life/power-of-play/Pages/the-power-of-play-how-fun-and-games-help-children-thrive.aspx",
     "status": 200,
     "final": "https://www.healthychildren.org/English/family-life/power-of-play/Pages/the-power-of-play-how-fun-and-games-help-children-thrive.aspx",
@@ -398,6 +411,12 @@
     "url": "https://www.healthychildren.org/English/health-issues/conditions/COVID-19/Pages/when-can-kids-get-the-COVID-vaccine-or-booster.aspx",
     "status": 200,
     "final": "https://www.healthychildren.org/English/health-issues/conditions/COVID-19/Pages/when-can-kids-get-the-COVID-vaccine-or-booster.aspx",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www.healthychildren.org/English/health-issues/conditions/abdominal/Pages/GERD-Reflux.aspx",
+    "status": 200,
+    "final": "https://www.healthychildren.org/English/health-issues/conditions/abdominal/Pages/GERD-Reflux.aspx",
     "result": "reachable"
   },
   {
@@ -752,6 +771,12 @@
     "url": "https://www.youtube.com/watch?v=zQafMJwPzKQ",
     "status": 200,
     "final": "https://www.youtube.com/watch?v=zQafMJwPzKQ",
+    "result": "reachable"
+  },
+  {
+    "url": "https://www2.hse.ie/babies-children/breastfeeding/expressing-pumping/how-much-breast-milk-express/",
+    "status": 200,
+    "final": "https://www2.hse.ie/babies-children/breastfeeding/expressing-pumping/how-much-breast-milk-express/",
     "result": "reachable"
   }
 ]

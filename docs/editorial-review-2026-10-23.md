@@ -1,5 +1,7 @@
 # Editorial review: earned content and recognizable stages
 
+**Historical initial pass.** The subsequent [first-year acceptance report](editorial-acceptance-2026-10-23.md) is authoritative for the current branch. Some labels, activity choices, support entries and actions described below were further improved during that pass.
+
 This pass reviews the app as a first encounter and a return visit. It preserves the existing page structure, illustrations, colors, timelines and completion records. It is an editorial review, not a pediatrician's approval or a claim that scripted families are real users.
 
 ## Acceptance standard
