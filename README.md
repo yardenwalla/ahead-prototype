@@ -14,8 +14,8 @@ Start with [the consolidated first-year acceptance report](docs/editorial-accept
 
 | Category | What it helps a parent understand |
 | --- | --- |
-| Development | Recognizable emerging skills and how to support them; CDC reference ages, not monthly deadlines |
-| Play & everyday activities | Concrete awake-time activities, their skill connection and easier/extended versions |
+| Development & play | What the baby might be doing at each CDC checkpoint, in four areas, and things to try together; skills are marked "Seen it", never scored |
+| Everyday care | Sponge baths and cord care, bath time, skin, nails, first teeth and sun |
 | Sleep | Changing nights and naps, awake ranges, bedtime, a matching sample day and optional settling support |
 | Feeding | Milk references, solids preparation, first tastes, textures, meals and milk/cup transitions |
 | Safety | Specific home changes before new movement; one saved checklist rather than copied tasks |
@@ -41,6 +41,10 @@ Home is a briefing, built in `js/briefing.js`. It answers one question: what mat
 - The month card at the top describes what the baby may be doing this month. "Browse by category" sits at the bottom.
 
 `homeBriefingDebug()` lists what's showing and why. `js/home-rules.js` still provides the ranking audit used by the automated checks.
+
+## Summary screens
+
+Every category opens on a summary screen (`js/hub.js`, `js/hub-categories.js`, `css/hub.css`): stage pills, a hero that answers the parent's question for that stage, at most 3 rows, a must-know card (normal vs call, gagging vs choking, bath safety), coming up, and details one tap away. Rules: only one-time tasks get checkboxes (habits carry a "when" chip), at most one button and only to start a task, and visuals where a parent must recognize something or do something physical.
 
 ## Guide pages
 
