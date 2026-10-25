@@ -80,7 +80,7 @@
     if (priority && priority.type === 'check') {
       const item = safetyHomeItems()[priority.id] || {};
       const crawl = mv === 'crawling' && recent('movement');
-      out.push({ topic: 'Safety', key: 'check:' + priority.id,
+      out.push({ topic: 'Safety', key: 'check:' + priority.id, reason: crawl ? `Now that ${n()} is crawling` : null,
         title: crawl ? `Crawling opens up the whole room` : priority.id === 'gates' ? 'If you have stairs, gate them first' : item.title,
         body: crawl ? `${n()} can reach much more now. Start with this one: ${item.title.charAt(0).toLowerCase() + item.title.slice(1)}. ${item.body || ''}` : (item.body || ''),
         also: crawl ? [also('Daily rhythm', 'Crawling games, like chasing a ball, build strength and confidence.', "openPage('topic:Daily rhythm')")] : null,
@@ -123,7 +123,7 @@
   function visitItem(v) {
     const label = healthJourneyLabel(v.age);
     const when = v.saved ? (v.days < 0 ? `was on ${journeyDateLabel(v.saved)}` : `is on ${journeyDateLabel(v.saved)}`) : v.days <= 7 ? 'is around now' : v.days <= 14 ? 'is coming up in about 2 weeks' : `is about ${Math.round(v.days / 7)} weeks away`;
-    return { topic: 'Health', key: 'visit:' + v.age, title: `The ${label.charAt(0).toLowerCase() + label.slice(1)} ${when}`,
+    return { topic: 'Health', key: 'visit:' + v.age, reason: v.saved ? `Saved for ${journeyDateLabel(v.saved)}` : v.age === 0 ? 'In the first week' : `Usually around ${v.age} months`, title: `The ${label.charAt(0).toLowerCase() + label.slice(1)} ${when}`,
       body: `${conceptHealthSummary(v.age)} ${v.saved && v.days < 0 ? 'Mark it as done once you’ve been, so the next one comes up.' : 'It helps to jot down your questions beforehand.'}`,
       link: link(`openPage('health-visit:${v.age}')`, 'See what’s checked') };
   }
@@ -152,18 +152,32 @@
     return out.filter(i => !taken.some(t => t.topic === i.topic && t.key.split(':')[0] === i.key.split(':')[0])).slice(0, 2);
   }
 
-  /* ---------- markup ---------- */
-  function card(i, tone) {
-    const label = displayTopic(i.topic);
+  /* ---------- markup: Home's own components ----------
+     Important items are rows inside the month card (with Home's Mark done controls),
+     Coming up uses the "Prepare for next" list, and links use Home's text links. */
+  const REASON = {
+    'sleep-setup': 'For the first nights at home', rolling: 'Stop swaddling now', 'rolling-soon': 'Before the first attempt to roll',
+    mattress: 'Before baby can pull up', sitting: 'Now that baby can sit', 'first-foods': 'You said baby has started solids',
+    milk: 'Based on what you shared', 'solids-soon': 'Usually around 6 months', 'four-month': 'Around 4 months',
+    'crawl-soon': 'Before baby is on the move', 'two-naps-soon': 'Usually 6–9 months'
+  };
+  function reasonFor(i) {
+    if (i.reason) return i.reason;
+    if (REASON[i.key]) return REASON[i.key];
+    if (i.key === 'mattress' && answers.pullUp === 'Yes') return 'Now that baby is pulling up';
+    if (i.key.startsWith('check:')) return i.key === 'check:gates' ? 'If your home has stairs' : 'Your next babyproofing check';
+    if (i.key.startsWith('visit:')) return i.days === undefined ? 'Checkup' : 'Coming up';
+    return 'Important right now';
+  }
+  function row(i) {
+    const base = { topic: i.topic, title: babyCopy(i.title), body: babyCopy(i.body), action: i.link ? i.link.go : `openPage('topic:${i.topic}')`, art: 0,
+      reason: i.key === 'mattress' && answers.pullUp === 'Yes' ? 'Now that baby is pulling up' : reasonFor(i) };
+    let html = conceptRow(base);
     const extra = (i.also || []).filter(Boolean);
-    return `<article class="brief-card ${tone}" style="${yearTheme(i.topic)}" data-brief="${i.key}"${i.key.startsWith('check:') ? ` data-home-check="${i.key.slice(6)}"` : ''}>
-      <small class="brief-cat">${label}</small>
-      <h3>${babyCopy(i.title)}</h3>
-      <p>${babyCopy(i.body)}</p>
-      ${extra.length ? `<ul class="brief-also" aria-label="What else this changes">${extra.map(a => `<li style="${yearTheme(a.topic)}"><button onclick="${a.go}"><b>${displayTopic(a.topic)}</b><span>${a.text}</span></button></li>`).join('')}</ul>` : ''}
-      ${i.tools || ''}
-      ${i.link ? `<button class="textlink brief-link" onclick="${i.link.go}">${i.link.label} →</button>` : ''}
-    </article>`;
+    if (extra.length) html += `<div class="home-milk-links brief-also">${extra.map(a => `<button class="textlink" onclick="${a.go}">${displayTopic(a.topic)}: ${a.text.charAt(0).toLowerCase() + a.text.slice(1).replace(/\.$/, '')} →</button>`).join('')}</div>`;
+    if (i.tools) html = `<div class="home-connected-sleep" style="${yearTheme(i.topic)}" data-brief="${i.key}"${i.key.startsWith('check:') ? ` data-home-check="${i.key.slice(6)}"` : ''}>${html}<div class="home-connected-actions">${i.tools}</div></div>`;
+    else html = `<div class="brief-row" data-brief="${i.key}">${html}</div>`;
+    return html;
   }
 
   // Say so when nothing has changed since the last visit, instead of inventing news.
@@ -179,26 +193,20 @@
   function briefing() {
     const now = importantNow(), next = comingUp(now);
     const focus = homeCurrentFocus();
-    const age = month === 0 ? 'Newborn' : monthLabel(month);
     const sig = [...now, ...next].map(i => i.key).join('|');
     const since = sameAsLastVisit(sig);
-    const play = (() => { try { const model = playStageModel(), idea = model.primary[0]; return idea ? { title: idea.title, go: `openPage('play-activity:${model.phase.lo}:${idea.id}')` } : null; } catch (e) { return null; } })();
+    const play = (() => { try { const model = playStageModel(), idea = model.primary[0]; return idea ? { topic: 'Daily rhythm', key: 'play', title: idea.title, body: conceptPlaySuggestion(idea), link: link(`openPage('play-activity:${model.phase.lo}:${idea.id}')`, '') } : null; } catch (e) { return null; } })();
+    const close = !now.length && !next.length ? `You’re all caught up. Nothing needs your attention right now.` : !now.length ? `Nothing needs doing right now. The rest can wait until it’s closer.` : `Nothing else needs attention right now.`;
 
-    let h = `<section class="connected-now brief" aria-label="Your briefing">
-      <div class="home-summary brief-head">
-        <div class="home-summary-heading"><div class="home-month-eyebrow">${esc(profile.name || 'Your baby')} · ${age}${profile.early && developmentMonth(month) !== month ? ` · ${monthLabel(developmentMonth(month))} adjusted` : ''}</div><h1>${focus.title}</h1></div>
-        <span class="home-summary-art" aria-hidden="true">${homeMonthArt(month)}</span>
-        <p class="heroanswer">${focus.body}</p>
-        <div class="home-summary-spectrum" aria-hidden="true">${TOPICS.map(([t]) => `<span style="background:${YEAR_PALETTES[t].bg}"></span>`).join('')}</div>
-      </div>`;
-    if (since) h += `<p class="brief-unchanged">Nothing new since you last checked in on ${journeyDateLabel(iso(new Date(since)))}. Everything below is still current.</p>`;
-    h += liveHomeCheckin();
-    if (now.length) h += `<div class="brief-section"><h2 class="brief-heading">Important right now</h2>${now.map(i => card(i, 'is-now')).join('')}</div>`;
-    if (next.length) h += `<div class="brief-section"><h2 class="brief-heading">Coming up</h2>${next.map(i => card(i, 'is-next')).join('')}</div>`;
-    h += `<p class="brief-close">${!now.length && !next.length ? `You're all caught up. Nothing needs your attention right now.` : !now.length ? `Nothing needs doing right now. The rest can wait until it's closer.` : `Nothing else needs attention right now.`}</p>`;
-    if (play && live()) h += `<button class="brief-try" style="${yearTheme('Daily rhythm')}" onclick="${play.go}"><small>If you have a few minutes</small><b>${esc(play.title)}</b><span aria-hidden="true">→</span></button>`;
-    h += homeMomentRow() + `</section>`;
-    return h;
+    let h = `<section class="connected-now" aria-label="What matters now"><div class="connected-summary"><div class="home-summary connected-summary-intro"><div class="home-summary-heading"><div class="home-month-eyebrow">${month === 0 || focus.confirmed ? 'What matters now' : 'Likely around now'}</div><h1>${focus.title}</h1></div><span class="home-summary-art" aria-hidden="true">${homeMonthArt(month)}</span><p class="heroanswer">${focus.body}</p><div class="home-summary-spectrum" aria-hidden="true">${TOPICS.map(([t]) => `<span style="background:${YEAR_PALETTES[t].bg}"></span>`).join('')}</div></div>`;
+    if (now.length) h += `<div class="connected-summary-links">${now.map(row).join('')}</div>`;
+    h += `</div>${homeMomentRow()}</section>`;
+    if (since) h = `<p class="brief-unchanged">Nothing new since you last checked in on ${journeyDateLabel(iso(new Date(since)))}. Everything here is still current.</p>` + h;
+    const ahead = [...next];
+    if (play && live()) ahead.push({ ...play, reasonText: 'If you have a few minutes' });
+    if (ahead.length) h += `<section class="connected-ahead" aria-label="Coming up"><div class="connected-section-heading"><h2>Coming up</h2><button class="textlink" onclick="openPage('ahead')">See all →</button></div><div class="connected-ahead-list">${ahead.map(i => i.reasonText ? `<div class="brief-row" data-brief="${i.key}">${conceptRow({ topic: i.topic, title: i.title, body: i.body, action: i.link.go, art: 0, reason: i.reasonText })}</div>` : row(i)).join('')}</div></section>`;
+    h += `<p class="brief-close">${close}</p>`;
+    return liveHomeCheckin() + h;
   }
 
   window.homeBriefingDebug = () => { const now = importantNow(); return { now: now.map(i => i.key + ' · ' + i.title), next: comingUp(now).map(i => i.key + ' · ' + i.title) }; };

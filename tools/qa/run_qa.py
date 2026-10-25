@@ -139,7 +139,7 @@ async def run_persona(browser, p):
             seen_swaddle = seen_swaddle if seen_swaddle is not None else w
             if w - seen_swaddle >= p.get('swaddle_delay', 0):
                 await pg.evaluate("navigate('home')")
-                loc = pg.locator('.brief-card[data-brief^="rolling"] .home-inline-check').first
+                loc = pg.locator('[data-brief^="rolling"] .home-inline-check').first
                 if await loc.count():
                     await loc.click()
                     rec['answered'].append(dict(where='Home', q='Stop swaddling', a='Mark done'))
@@ -147,15 +147,15 @@ async def run_persona(browser, p):
         # 2b. Safety checks on Home: this family ticks one off a week after it appears
         if not p.get('silent'):
             await pg.evaluate("navigate('home')")
-            title = await pg.evaluate("(document.querySelector('.brief-card[data-home-check] h3')||{}).textContent||''")
+            title = await pg.evaluate("(document.querySelector('[data-home-check] .connected-row b')||{}).textContent||''")
             if title:
                 if seen_check.get(title) is None: seen_check[title] = w
                 elif w - seen_check[title] >= 1:
-                    loc = pg.locator('.brief-card[data-home-check] .home-inline-check').first
+                    loc = pg.locator('[data-home-check] .home-inline-check').first
                     if await loc.count():
                         await loc.click()
                         rec['answered'].append(dict(where='Home', q='Safety check: ' + title, a='Mark done'))
-            mloc = pg.locator('.brief-card .home-inline-check[aria-label*="mattress"]').first
+            mloc = pg.locator('.home-inline-check[aria-label*="mattress"]').first
             if await mloc.count():
                 await mloc.click()
                 rec['answered'].append(dict(where='Home', q='Crib mattress lowered', a='Mark done'))

@@ -34,12 +34,12 @@ window.__qa = (function () {
     const m = $m();
     const ci = m.querySelector('.connected-checkin');
     // Home is a briefing: "Important right now" cards, then "Coming up" cards.
-    const brief = sel => all(sel).map(r => ({ label: txt(r.querySelector('.brief-cat')) + ' · ' + txt(r.querySelector('h3')), title: txt(r.querySelector('h3')), body: txt(r.querySelector('p')), key: r.getAttribute('data-brief') }));
-    const rows = brief('.brief-card.is-now'), actions = [], next = brief('.brief-card.is-next');
+    const brief = sel => all(sel).map(r => ({ label: txt(r.querySelector('small')), title: txt(r.querySelector('b')), body: txt(r.querySelector('.connected-row-copy > span')) }));
+    const rows = brief('.connected-summary-links .connected-row'), actions = [], next = brief('.connected-ahead-list .connected-row');
     return {
       checkin: ci ? { q: txt(ci.querySelector('h2')), choices: all('.connected-checkin-choices button', ci).map(txt) } : null,
       hero: txt(m.querySelector('.home-summary-heading h1')), eyebrow: txt(m.querySelector('.home-month-eyebrow')), close: txt(m.querySelector('.brief-close')),
-      rows, actions, next, swaddle: all('.brief-card[data-brief^="rolling"]').length > 0, problems: problems()
+      rows, actions, next, swaddle: all('[data-brief^="rolling"]').length > 0, problems: problems()
     };
   }
 
