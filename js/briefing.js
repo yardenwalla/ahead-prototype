@@ -83,7 +83,7 @@
     // First foods: the things that matter in the first weeks.
     if (live() && hasFoodAnswer() && foodStage() === 'new' && recent('food'))
       out.push({ topic: 'Feeding', key: 'first-foods', title: 'First foods: what matters most',
-        body: `Iron-rich foods first, peanut and egg early, and milk feeds as usual.`,
+        body: `Now that ${n()} has started solids: iron-rich foods first, peanut and egg early, and milk feeds as usual.`,
         link: link("openPage('topic:Feeding')", 'See the first-foods guide') });
 
     // An answer about milk changes what Home says straight away.
@@ -116,7 +116,7 @@
   function visitItem(v) {
     const label = healthJourneyLabel(v.age);
     const when = v.saved ? (v.days < 0 ? `was on ${journeyDateLabel(v.saved)}` : `is on ${journeyDateLabel(v.saved)}`) : v.days <= 7 ? 'is around now' : v.days <= 14 ? 'is coming up in about 2 weeks' : `is about ${Math.round(v.days / 7)} weeks away`;
-    return { topic: 'Health', key: 'visit:' + v.age, reason: v.saved ? `Saved for ${journeyDateLabel(v.saved)}` : v.age === 0 ? 'In the first week' : `Usually around ${v.age} months`, title: `The ${label.charAt(0).toLowerCase() + label.slice(1)} ${when}`,
+    return { topic: 'Health', key: 'visit:' + v.age, reason: v.saved ? `Saved for ${journeyDateLabel(v.saved)}` : v.age === 0 ? 'In the first week' : `Usually around ${v.age} month${v.age === 1 ? '' : 's'}`, title: `The ${label.charAt(0).toLowerCase() + label.slice(1)} ${when}`,
       body: conceptHealthSummary(v.age) + (v.saved && v.days < 0 ? ' Mark it done once you’ve been.' : ''),
       link: link(`openPage('health-visit:${v.age}')`, 'See what’s checked') };
   }

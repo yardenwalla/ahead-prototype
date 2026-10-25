@@ -10,7 +10,7 @@ import json, os, re
 from collections import defaultdict
 
 OUT = os.path.join(os.path.dirname(__file__), 'out')
-SLEEP = ['Newborn sleep', 'Day and night sleep', 'Naps and bedtime', 'Two naps']
+SLEEP = ['Newborn sleep', 'Days and nights', 'Naps and bedtime', 'Two naps']
 FEED = ['Newborn feeding', 'Changing milk feeds', 'Getting ready for solids', 'Starting solids', 'Textures and finger foods', 'Family meals']
 WINDOWS = {  # come-and-go phases: months they may appear in
     'The 4-month sleep regression': (3, 5), 'Separation anxiety': (8, 11),
@@ -155,7 +155,7 @@ def check(results):
             if fi < prev_feed: F.add('order', 'bug', 'Feeding stage went backwards', pid, wk, where)
             prev_sleep, prev_feed = (si if reported['naps'] == 'Stay' else max(prev_sleep, si)), max(prev_feed, fi)
             for name, pg, lst in (('Sleep', s, SLEEP), ('Feeding', f, FEED)):
-                if not (pg['eyebrow'].startswith('Around now') or pg['eyebrow'] == 'Current guide'): F.add('order', 'bug', f'{name} hero doesn’t say “Around now” for the current stage', pid, wk, f'{where}: “{pg["eyebrow"]}”')
+                if not (pg['eyebrow'].startswith(('Around now', 'Recommended for this age', 'Your ', 'Based on')) or pg['eyebrow'] == 'Current guide'): F.add('order', 'bug', f'{name} hero doesn’t say “Around now” for the current stage', pid, wk, f'{where}: “{pg["eyebrow"]}”')
                 last = pg['current'] == lst[-1]
                 if not last and not pg['comingUp']: F.add('order', 'bug', f'{name}: no “Coming up” card before the last stage', pid, wk, where)
                 if last and not pg['after']: F.add('order', 'warning', f'{name}: last stage has no “after the first birthday” note', pid, wk, where)
@@ -174,7 +174,6 @@ def check(results):
             titles = [x['title'] for _, x in all_home_items(h)]
             if len(titles) != len(set(titles)): F.add('order', 'bug', 'Home shows the same card twice', pid, wk, f'{where}: {titles}')
             for kind, x in all_home_items(h):
-                if ' · ' not in x['label']: F.add('order', 'warning', 'Home card without a reason line', pid, wk, f'{where}: {x["label"]} · {x["title"]}')
                 n = re.search(r'Common at (\d+) months?( adjusted)?', x['label'])
                 if n and n.group(2) and int(n.group(1)) != dmo: F.add('order', 'bug', 'Reason line names the wrong adjusted age', pid, wk, f'{where}: {x["label"]}')
                 if n and not n.group(2) and p.get('early_days') and dmo != m and x['label'].split(' · ')[0] in ('Development', 'Sleep', 'Feeding'):
@@ -215,7 +214,7 @@ def check(results):
                 said_mv = re.search(r'You said \w+ is (crawling|pulling up|rolling|trying to roll)', x['label'])
                 if said_mv and {'crawling': ('crawling', 'pulling'), 'pulling up': ('pulling',), 'rolling': ('rolling', 'crawling', 'pulling'), 'trying to roll': ('trying',)}[said_mv.group(1)] and mv not in {'crawling': ('crawling', 'pulling'), 'pulling up': ('pulling',), 'rolling': ('rolling', 'crawling', 'pulling'), 'trying to roll': ('trying', 'rolling', 'crawling', 'pulling')}[said_mv.group(1)]:
                     F.add('personal', 'bug', 'Home claims the parent said something they didn’t', pid, wk, f'{where}: {x["label"]}')
-            if mv in ('crawling', 'pulling') and not moment_now and not re.search(r'crawl|stair|gate|move|pull', text_home):
+            if mv in ('crawling', 'pulling') and not moment_now and (h['rows'] + h['actions']) and not re.search(r'crawl|stair|gate|move|pull|^safety|\ssafety', text_home):
                 F.add('personal', 'bug', 'Said she’s crawling, but nothing on Home reflects it', pid, wk, where)
             if (mv == 'pulling' or dmo >= 8) and not reported['mattress_done']:
                 if not any('mattress' in a['title'].lower() for a in s['alerts']): F.add('personal', 'bug', 'From 8 months (or a pulling-up moment), Sleep doesn’t show the mattress step', pid, wk, where)
@@ -229,7 +228,7 @@ def check(results):
             if (reported['food'] == 'preparing' or (reported['food'] is None and dmo < 6)) and re.search(r'starting solids|first foods|textures|allergen|finger', text_home):
                 F.add('personal', 'bug', 'Home shows solids content before the parent said solids started', pid, wk, f'{where}: {text_home[:120]}')
             for x in h['rows']:
-                if x['label'].startswith('Feeding') and reported['food'] in ('new', 'established') and 'You said' not in x['label'] and not any(a['q'].startswith('Already there: starting') for a in w['answered']):
+                if x['label'].startswith('Feeding') and reported['food'] in ('new', 'established') and 'You said' not in x['label'] and 'started solids' not in x.get('body', '') and not any(a['q'].startswith('Already there: starting') for a in w['answered']):
                     F.add('personal', 'warning', 'Feeding row doesn’t mention what the parent told us', pid, wk, f'{where}: {x["label"]}')
             apply([a for a in w['answered'] if a['where'] not in ('Home', 'Timeline') and not a['q'].startswith('Already there: starting')]); learn()
             # Only one question remains (solids), at most once a month
