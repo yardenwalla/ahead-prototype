@@ -489,7 +489,7 @@
         figure('crib', cat, 'A baby asleep on their back in a sleep sack, in a bare crib with a firm mattress and fitted sheet.') + `<div class="hub-list">${rows}</div>`
         + `<div class="hub-actions">${done ? `<p class="hub-done">${F('You’ve set up Maya’s sleep space')} ✓</p>` : `<button class="hub-button" onclick="hubSleepSetUp()">${F('I’ve set this up')}</button>`}</div>`
         + `<h2 class="hub-h2">${F('As Maya starts moving')}</h2><div class="hub-list">`
-        + `<div class="hub-row is-static" id="sleep-rolling"><span class="hub-dot">${art('moon', cat)}</span><span class="hub-row-copy"><b>${F('When {s} {try|tries} to roll')}</b><small>${F('Stop swaddling, and keep putting {o} down on {p} back.')}</small></span></div>`
+        + `<div class="hub-row is-static" id="sleep-rolling"><span class="hub-dot">${art('roll', cat)}</span><span class="hub-row-copy"><b>${F('When {s} {try|tries} to roll')}</b><small>${F('Stop swaddling, and keep putting {o} down on {p} back.')}</small></span></div>`
         + `<div class="hub-row is-static" id="sleep-crib-height"><span class="hub-dot">${art('shield', cat)}</span><span class="hub-row-copy"><b>${F('Before {s} can sit or pull up')}</b><small>${F('Lower the crib mattress, then set it to its lowest.')}</small></span></div></div>`
         + video('What a safe sleep space looks like', 'NIH Safe to Sleep', 'https://www.nichd.nih.gov/sites/default/files/publications/pubs/documents/safe_sleep_environment_rev.pdf', 'Guide'), 'moon');
     }

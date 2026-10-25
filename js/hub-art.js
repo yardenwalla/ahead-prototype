@@ -40,7 +40,7 @@
     sack: (c) => `<path d="M8.5 4h7l1.5 3-1 2v9a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2V9L7 7Z" fill="${c.bg}"/><path d="M12 9.5v7"/>`,
     back: (c) => `<circle cx="6.5" cy="13" r="2.5" fill="${c.bg}"/><rect x="9.5" y="10.5" width="11" height="5" rx="2.5" fill="${c.bg}"/><path d="M3 18.5h18"/>`,
     car: (c) => `<path d="M4 15.5v-3l2.2-4.6A2 2 0 0 1 8 6.8h8a2 2 0 0 1 1.8 1.1l2.2 4.6v3Z" fill="${c.bg}"/><path d="M4 12.5h16M4 15.5v2.5h3v-2.5m10 0v2.5h3v-2.5"/>`,
-    sofa: (c) => `<path d="M5 10V8a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v2"/><path d="M3 12a2 2 0 0 1 4 0v2h10v-2a2 2 0 0 1 4 0v5H3Z" fill="${c.bg}"/><path d="M5 17v2m14-2v2"/>`,
+    sofa: (c) => `<rect x="5.5" y="5.5" width="13" height="7.5" rx="2"/><path d="M3 11.5a1.8 1.8 0 0 1 3.6 0V14h10.8v-2.5a1.8 1.8 0 0 1 3.6 0V17.5H3Z" fill="${c.bg}"/><path d="M5 17.5V20m14-2.5V20"/>`,
     heart: (c) => `<path d="M12 20s-7.5-4.5-7.5-10.2A4.1 4.1 0 0 1 12 7.3a4.1 4.1 0 0 1 7.5 2.5C19.5 15.5 12 20 12 20Z" fill="${c.bg}"/>`,
     book: (c) => `<path d="M3.5 5.5c2.8-1 5.8-1 8.5.6 2.7-1.6 5.7-1.6 8.5-.6V19c-2.8-1-5.8-1-8.5.6-2.7-1.6-5.7-1.6-8.5-.6Z" fill="${c.bg}"/><path d="M12 6.1v13.5"/>`,
     music: (c) => `<path d="M9 17V6l10-2v11"/><circle cx="6.5" cy="17" r="2.5" fill="${c.bg}"/><circle cx="16.5" cy="15" r="2.5" fill="${c.bg}"/>`,
@@ -122,7 +122,7 @@
      for one that fits the row's words, or failing that, any icon not yet on the page. */
   const HINTS = [
     [/crib|bassinet|mattress/i, 'crib'], [/your room|room-sharing|in the room/i, 'home'], [/sleep sack|wearable|blanket|swaddl/i, 'sack'],
-    [/on (his|her|their|the) back|back for|back to sleep/i, 'back'], [/car seat|the car|or swing|baby swing/i, 'car'], [/sofa|armchair|couch/i, 'sofa'],
+    [/on (his|her|their|the) back|back for|back to sleep/i, 'back'], [/car seat|the car\b|or swing\b/i, 'car'], [/swipe|bats? at/i, 'ball'], [/sofa|armchair|couch/i, 'sofa'],
     [/pacifier/i, 'pacifier'], [/night|dark/i, 'moon'], [/day from|daylight|curtain|morning/i, 'sun'], [/yawn|wind down|tired|wake window|nap/i, 'clock'],
     [/rock|holding|settle|fall asleep|cuddl|comfort/i, 'heart'], [/book|read|story|picture/i, 'book'], [/song|sing|music|rhyme/i, 'music'],
     [/mirror|faces?\b/i, 'mirror'], [/rattle|toy/i, 'toy'], [/tummy|elbows|floor|mat\b/i, 'mat'], [/roll/i, 'roll'], [/\bsit/i, 'sit'],
