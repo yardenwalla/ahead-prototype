@@ -519,6 +519,53 @@
       + (e.supportNote ? `<p class="hub-note">${T(e.supportNote)}</p>` : '') + `</div>`;
   }
 
+  /* ---------- shared sub pages ---------- */
+  function firstAid() {
+    return detail('Feeding', 'Safety', 'If Maya is choking', 'Choking is silent: {s} can’t cry, cough or breathe. Gagging is noisy, and you can let {o} work it out.',
+      `<section class="hub-card hub-versus"><div class="hub-vs" style="margin-top:0"><div><b>Gagging</b><p>${F('Coughing, sputtering, a red face. Stay calm and let {o} clear it.')}</p></div><div class="is-urgent"><b>Choking</b><p>${F('Silent, can’t cough or cry, lips turning blue. Act now.')}</p></div></div></section>`
+      + `<h2 class="hub-h2">${F('What to do if {s} {is} choking')}</h2>`
+      + steps(['Shout for help and have someone call 911.', 'Lay Maya face down along your forearm, head lower than {p} chest, supporting {p} jaw. Give up to 5 firm back blows between the shoulder blades.', 'Turn {o} face up on your other arm. With 2 fingers just below the nipple line, give up to 5 quick chest thrusts.', 'Keep switching between back blows and chest thrusts until the food comes out. If {s} stops responding, call 911 and start infant CPR.'])
+      + tip('Don’t sweep blindly', 'Only reach into {p} mouth if you can see the object and easily pick it out.')
+      + tip('Take a class', 'A short infant first aid class lets you practice these steps on a doll. It’s the best way to feel ready.')
+      + `<a class="hub-more" href="https://www.healthychildren.org/English/health-issues/injuries-emergencies/Pages/Choking-Prevention.aspx" target="_blank" rel="noopener"><span>${F('AAP guide to choking prevention and first aid')}</span><span class="hub-chev" aria-hidden="true">↗</span></a>`, 'shield');
+  }
+  function helpPage(cat) {
+    const D = C().DATA[cat], T = C().T, tone = l => /911/.test(l) ? 'is-red' : /pediatrician/i.test(l) ? 'is-red' : '';
+    const TRIAGE = cat === 'Sleep' ? [
+      ['Normal', 'Waking at night through the first year, and short naps while sleep patterns are still developing.'],
+      ['Keep an eye on it', 'Settling getting harder or more waking than usual. Jot down feeds and any signs of discomfort.'],
+      ['Call your pediatrician', 'Snoring most nights, pauses or gasping in sleep, sleep changes with fever or poor feeding, or a newborn who’s hard to wake for feeds.'],
+      ['Call 911', 'Trouble breathing, blue or gray lips, or Maya won’t wake up.']
+    ] : [
+      ['Normal', 'Spit-up in a happy baby who’s growing, a few days of cluster feeding, gagging while learning to eat, and an appetite that changes day to day.'],
+      ['Keep an eye on it', 'Shorter feeds or a smaller appetite. Keep track of wet diapers and how Maya seems overall.'],
+      ['Call your pediatrician', 'Fewer wet diapers, not back to birth weight by 2 weeks, repeated vomiting, refusing feeds or food, hives after a new food, or blood in {p} poop.'],
+      ['Call 911', 'Trouble breathing, swelling of the lips or tongue after a food, choking that doesn’t clear, or Maya is limp or won’t wake.']
+    ];
+    const cards = TRIAGE.map(x => `<div class="hub-card hub-triage"><span class="hub-chip ${tone(x[0])}">${F(x[0])}</span><p>${F(x[1])}</p></div>`).join('');
+    return detail(cat, cat === 'Sleep' ? 'Sleep' : 'Feeding', cat === 'Sleep' ? 'When to ask for sleep help' : 'When to ask for feeding help', 'Most changes are normal. Here’s how to tell when it’s worth a call.', cards
+      + (cat === 'Sleep' ? tip('Look after yourself too', 'If exhaustion or low mood is getting hard to manage, talk to your own doctor, or call or text the National Maternal Mental Health Hotline: 1-833-852-6262.') : tip('Feeding is hard work', 'If nursing hurts or feeding feels overwhelming, a lactation consultant can help, and it’s often covered by insurance. Asking for help is normal.'))
+      + note(cat === 'Sleep' ? 'Before a visit, jot down a few nights of bedtimes, wakes and feeds. It helps your pediatrician see the pattern.' : 'Before a visit, jot down a day of feeds and wet diapers. It helps your pediatrician see the pattern.'), cat === 'Sleep' ? 'moon' : 'bowl');
+  }
+  function settlePage() {
+    const age = m(), choice = C().settlingGuide();
+    if (age < 4) return detail('Sleep', 'The early months', 'Helping Maya settle', 'Feeding, rocking or holding Maya to sleep is fine while sleep patterns are still developing. You can’t spoil a young baby.',
+      steps(['Start winding down at the first sleepy cues, like a quiet stare or a yawn.', 'Keep a few familiar steps: a feed, a diaper and a quiet song.', 'Put {o} down on {p} back in {p} own sleep space.']) + tip('Sleep training comes later, if at all', 'It’s an optional choice, usually considered from around 4–6 months.'), 'moon');
+    const opts = [['learn', 'Compare sleep-training methods', 'See the main approaches side by side'], ['trying', 'Support while sleep training', 'How to handle a rough night'], ['routine', 'Keep a routine working', 'After short naps, travel or illness'], ['help', 'Settle with my help', 'Feeding or rocking to sleep can stay']];
+    let content = '';
+    if (choice === 'learn') {
+      const methods = typeof sleepTrainingMethods === 'function' ? sleepTrainingMethods() : [];
+      content = note('Sleep training is optional and usually considered from 4–6 months. Check with your pediatrician first, especially after early birth or with feeding or growth concerns.')
+        + `<div class="hub-list">${methods.map(x => `<a class="hub-row" href="${x.url}" target="_blank" rel="noopener"><span class="hub-dot">${art('moon', 'Sleep')}</span><span class="hub-row-copy"><b>${esc(x.name)}</b><small>${esc(x.title)}</small><small class="hub-row-more">${esc(x.description)}</small></span><span class="hub-chev" aria-hidden="true">↗</span></a>`).join('')}</div>`
+        + tip('Whichever you choose', 'Keep needed night feeds, pick a response every caregiver can repeat, and pause if it isn’t getting easier.');
+    }
+    if (choice === 'trying') content = steps(['Compare a few nights, not one. Less time settling or less help needed is progress.', 'After a rough night, meet hunger, discomfort or illness first, then go back to your usual response.', 'If it isn’t getting easier after a week or two, pause and talk it through with your pediatrician.']);
+    if (choice === 'routine') content = steps([age < 8 ? 'If naps are short and Maya’s tired again, keep offering the extra sleep.' : age < 12 ? 'New skills and separation anxiety can disrupt settling. Practice by day and keep bedtime familiar.' : 'One refused nap doesn’t mean {s’s} ready for one nap. Look for a pattern first.', 'After illness or travel, give the comfort {s} {need|needs}, then return to your familiar bedtime steps.', 'If sleep stays hard for a while, notice whether it’s falling asleep, waking or staying asleep, and mention it to your pediatrician.']);
+    if (choice === 'help') content = steps(['Keep a short lead-in you can repeat: a feed, a diaper, then a song or book.', 'Feeding, rocking or holding to sleep can stay part of it, if it works for you.', 'Show other caregivers the same steps, so Maya hears familiar cues from everyone.']);
+    return detail('Sleep', 'Your approach · Optional', 'Settling and sleep training', 'Sleep training is optional. Pick what would help right now, and change it any time.',
+      `<p class="hub-group">What would help right now?</p>` + options(opts.map(o => [o[0], o[1], o[2]]), choice, k => `chgChooseSettling('${k}')`) + `<div data-settling-guide="${choice}">${content}</div>`, 'moon');
+  }
+
   /* ---------- actions ---------- */
   window.hubToggleReady = i => { const r = Object.assign({}, L().ready); r[i] = !r[i]; store('ready', r); C().rerender(); };
   window.hubAllergen = k => { const a = Object.assign({}, L().allergens); a[k] = !a[k]; store('allergens', a); C().rerender(); };
@@ -537,6 +584,10 @@
     const [, cat, screen, a, b] = p.split(':');
     if (cat === 'Feeding' && screen === 's') { const cur = C().CFG.Feeding.stage(m()), v = Number(a); return feedingSummary(Number.isInteger(v) && C().DATA.Feeding.CH[v] ? v : cur, cur); }
     if (cat === 'Feeding' && screen === 'd') return feedingDetail(a, b);
+    if (cat === 'Feeding' && screen === 'safe') return firstAid();
+    if (cat === 'Feeding' && screen === 'allergy') return feedingDetail('allergens');
+    if ((cat === 'Feeding' || cat === 'Sleep') && screen === 'help') return helpPage(cat);
+    if (cat === 'Sleep' && screen === 'settle') return settlePage();
     if (cat === 'Sleep' && screen === 's') { const cur = C().CFG.Sleep.stage(m()), v = Number(a); return sleepSummary(Number.isInteger(v) && C().DATA.Sleep.CH[v] ? v : cur, cur); }
     if (cat === 'Sleep' && screen === 'd') return sleepDetail(a, b);
     if (cat === 'Sleep' && screen === 'safe') return sleepDetail('safe');

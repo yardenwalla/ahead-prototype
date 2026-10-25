@@ -117,3 +117,9 @@
 #main .hub-tiles .hub-tile b { font-size: 15px }
 #main .hub-glance.is-static { cursor: default }
 #main a.hub-more { text-decoration: none }
+/* Old stage timelines retire now that summaries use pills */
+#main .journey-stage-rail, #main .chg-rail, #main .journey-current-label { display: none !important }
+#main .hub-triage p { margin: 8px 0 0; font-size: 14px; line-height: 1.55; color: var(--ink) }
+#main .hub-triage .hub-chip { display: inline-block }
+#main .hub-row-more { margin-top: 4px !important; font-size: 12.5px !important }
+#main a.hub-row { text-decoration: none; color: inherit }

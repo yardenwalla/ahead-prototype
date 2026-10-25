@@ -99,6 +99,15 @@
     return frame('Health', `data-health-journey="${age}"`, pills, b);
   };
 
+  window.developmentDomainPage = developmentDomainPage = function (ref, domain) {
+    const meta = DEV_DOMAINS[domain], labels = DEVELOPMENT_DOMAINS[ref]?.[domain];
+    if (!meta || !labels) return developmentJourneyOverview(ref);
+    const h = H(), age = ref === 12 ? '1 year' : ref + ' months';
+    const rows = labels.map(l => { const key = journeySkillKey(l), rec = journeyData().records.find(r => r.type === 'milestone' && r.skillKey === key);
+      return `<button class="hub-row" onclick="openPage('skill-guide:${key}')"><span class="hub-dot">${h.art('swallow', 'Development')}</span><span class="hub-row-copy"><b>${clearMilestone(l)}</b><small>${esc(shortLine(DEV_EXAMPLES[l] || ''))}</small></span>${rec ? `<span class="hub-chip is-done">Noticed</span>` : ''}<span class="hub-chev" aria-hidden="true">›</span></button>`; }).join('');
+    return `<div class="quiet-category hub-page hub-detail" data-overview="Development" style="${yearTheme('Development')}">${detailPageTop('Development')}<div class="hub-detail-head"><p class="hub-context">${esc(DEV_STAGES[ref].title)}</p><h1>${esc(meta.title)}</h1><p class="hub-lead">${esc(DEV_STAGES[ref].summaries[domain])}</p></div><div class="hub-list">${rows}</div>${h.note(`Most babies show these by ${age}. Tap one to see what it looks like and how to help.`)}<a class="hub-more" href="${devSource(ref)}" target="_blank" rel="noopener"><span>${F('See CDC photos and videos')}</span><span class="hub-chev" aria-hidden="true">↗</span></a></div>`;
+  };
+
   /* ---------- small detail screens for these categories ---------- */
   function detailFrame(cat, context, title, lead, inner) {
     return `<div class="quiet-category hub-page hub-detail" data-overview="${cat}" style="${yearTheme(cat)}">${detailPageTop(cat)}<div class="hub-detail-head"><p class="hub-context">${F(context)}</p><h1>${F(title)}</h1>${lead ? `<p class="hub-lead">${F(lead)}</p>` : ''}</div>${inner}</div>`;
