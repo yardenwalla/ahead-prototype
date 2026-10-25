@@ -61,6 +61,11 @@
     steth: (c) => `<path d="M6 3.5V8a4 4 0 0 0 8 0V3.5"/><path d="M10 12v2.5a4.5 4.5 0 0 0 9 0V13"/><circle cx="19" cy="11" r="2" fill="${c.bg}"/>`,
     leaf: (c) => `<path d="M5 19C5 10 10 5 20 4c-1 10-6 15-15 15Z" fill="${c.bg}"/><path d="m5 19 8-8"/>`,
     star: (c) => `<path d="m12 3.5 2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.3-4.1 5.9-.9Z" fill="${c.bg}"/>`,
+    near: (c) => `<circle cx="5.5" cy="12" r="4" fill="#f4d6c4"/><path d="M4.3 11.2h.01M6.9 11.2h.01" stroke-width="2"/><circle cx="18.8" cy="12.5" r="3" fill="#f4d6c4"/><path d="M17.9 12h.01M19.8 12h.01" stroke-width="1.8"/><path d="M10.6 12.2h4.6" stroke-dasharray="1.4 1.8"/>`,
+    colors: (c) => `<circle cx="9" cy="9.5" r="5" fill="#f4b6a6" stroke="none" fill-opacity=".9"/><circle cx="15" cy="9.5" r="5" fill="#a9cfe8" stroke="none" fill-opacity=".9"/><circle cx="12" cy="15" r="5" fill="#f3d58a" stroke="none" fill-opacity=".9"/>`,
+    cube: (c) => `<path d="M12 3.5 19.5 7.5v9L12 20.5 4.5 16.5v-9Z" fill="${c.bg}"/><path d="M4.5 7.5 12 11.5l7.5-4M12 11.5v9"/>`,
+    hidden: (c) => `<circle cx="16.5" cy="10" r="3" fill="#f3d58a"/><path d="M3 19c1-6 4-9 8-9s7 3 8 9Z" fill="${c.bg}"/><path d="M6.5 15.5c1.2-1.5 2.6-2.2 4.2-2.2"/>`,
+    toss: (c) => `<circle cx="18" cy="17" r="3" fill="${c.bg}"/><path d="M4 18C5 9 10 5 15 6" stroke-dasharray="1.5 2.2"/><path d="M13.5 4.2 15.3 6l-2 1.4"/>`,
     towel: (c) => `<rect x="5" y="3.5" width="14" height="17" rx="2" fill="${c.bg}"/><path d="M5 8h14M5 16h14"/>`
   };
   /* Figures: flat, outline-free scenes on a soft backdrop. Words live in HTML under the picture, in the app's type. */
