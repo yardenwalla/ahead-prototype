@@ -25,6 +25,12 @@
     drop: (c) => `<path d="M50 18q20 26 20 40a20 20 0 0 1-40 0q0-14 20-40Z" fill="#fbe7a6"/><path d="M42 60q2 8 10 8" fill="none"/>${spark(78, 26)}`,
     plate: (c) => `<circle cx="52" cy="52" r="28" fill="${WHITE}"/><circle cx="52" cy="52" r="18" fill="${c.pale}"/><path d="M18 30v20m-4-20v12m8-12v12M18 50v30M86 30q-6 10 0 20v30"/><circle cx="46" cy="48" r="4" fill="#b9d58c" stroke="none"/><circle cx="57" cy="55" r="4" fill="#f0a96d" stroke="none"/>${spark(80, 20)}`,
     shield: (c) => `<path d="M50 18 76 28v22q0 20-26 32-26-12-26-32V28Z" fill="${c.pale}"/><path d="m40 50 7 7 14-14"/>${spark(80, 22)}`,
+    bath: (c) => `<path d="M18 50h64v6q0 20-20 20H38q-20 0-20-20Z" fill="${c.pale}"/><path d="M14 50h72"/><path d="M30 76l-4 8m44-8 4 8"/><path d="M26 50V28a8 8 0 0 1 16 0" fill="none"/><circle cx="58" cy="40" r="5" fill="#fff" /><circle cx="68" cy="32" r="3.5" fill="#fff"/><circle cx="50" cy="30" r="3" fill="#fff"/>${spark(80, 22)}`,
+    tooth: (c) => `<path d="M34 24q16-8 32 0 8 4 6 18-2 14-6 26-3 10-8 4l-4-12q-2-4-4 0l-4 12q-5 6-8-4-4-12-6-26-2-14 2-18Z" fill="#fff"/><path d="M42 34q8-4 16 0" fill="none"/>${spark(80, 24)}`,
+    sun: (c) => `<circle cx="50" cy="50" r="15" fill="#fbe7a6"/><path d="M50 22v8m0 40v8M22 50h8m40 0h8M30 30l6 6m28 28 6 6M30 70l6-6m28-28 6-6"/>${spark(82, 22)}`,
+    nail: (c) => `<path d="M38 84V44q0-12 12-12t12 12v40" fill="${SKIN}"/><path d="M42 46q0-8 8-8t8 8v6H42Z" fill="#fff"/>${spark(78, 24)}`,
+    cord: (c) => `<circle cx="50" cy="52" r="26" fill="${SKIN}"/><path d="M44 52q6-8 12 0-6 8-12 0Z" fill="#e7c08f"/><path d="M28 70q22 10 44 0" fill="none"/>${spark(80, 24)}`,
+    towel: (c) => `<path d="M24 30h52v42H24Z" fill="${c.pale}"/><path d="M24 40h52M24 62h52" stroke-dasharray="3 4"/>${face(50, 51, 9, '<path d="M47 54q3 2 6 0"/>')}${spark(80, 22)}`,
     moon: (c) => `<path d="M64 66A26 26 0 1 1 46 22a20 20 0 0 0 18 44Z" fill="${c.pale}"/>${spark(74, 26)}${spark(84, 42)}`
   };
   window.hubArt = function (name, cat = 'Feeding') {

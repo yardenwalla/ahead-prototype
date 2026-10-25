@@ -123,3 +123,13 @@
 #main .hub-triage .hub-chip { display: inline-block }
 #main .hub-row-more { margin-top: 4px !important; font-size: 12.5px !important }
 #main a.hub-row { text-decoration: none; color: inherit }
+#main .hub-tick.is-habit { cursor: default; background: var(--white) }
+#main .hub-tick.is-habit .hub-chip { margin-left: auto }
+#main .hub-video { display: flex; align-items: center; gap: 12px; padding: 14px; margin: 0 0 14px; border-radius: 20px; background: var(--white); border: 1px solid var(--line); text-decoration: none; color: inherit; min-height: 72px }
+#main .hub-play { width: 48px; height: 48px; border-radius: 50%; background: var(--year-ink); color: #fff; display: grid; place-items: center; flex: none }
+#main .hub-play svg { width: 22px; height: 22px; margin-left: 3px }
+#main .hub-body { margin: 0; font-size: 15px; line-height: 1.55; color: var(--ink) }
+#main .hub-tiles .hub-tile.is-link b { font-size: 15.5px; margin: 0 0 4px }
+#main .hub-tiles .hub-tile.is-link span { display: block; font-size: 12.5px; font-weight: 600; color: var(--year-ink) }
+#main .hub-tiles .hub-tile em { display: inline-block; margin-top: 6px; font-style: normal; font-size: 11.5px; font-weight: 600; color: var(--hub-done); background: var(--hub-donep); border-radius: 999px; padding: 2px 8px }
+#main .hub-seen { flex: none; margin-left: auto; border: 1px solid var(--year-accent); background: var(--white); color: var(--year-ink) !important; font-weight: 600 !important; font-size: 12.5px; border-radius: 999px; padding: 6px 12px; min-height: 34px; text-align: center !important }
