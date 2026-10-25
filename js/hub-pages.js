@@ -197,7 +197,7 @@
         h.row({ icon: 'chat', cat: 'Development', title: 'Update what’s new', sub: 'Rolling, solids, naps and more', onclick: "openPage('personalize')" }),
         h.row({ icon: 'book', cat: 'Development', title: 'How we choose guidance', sub: 'Sources and what we leave out', onclick: "openPage('trust')" })
       ]);
-      b += h.note('Your answers, notes, photos and saved moments stay in this browser on this device.');
+      b += h.note(window.AHEAD_STORAGE_PERSISTS === false ? 'This viewer can’t keep your entries after you close it. Open Ahead in your phone’s browser to keep them.' : 'Your answers, notes, photos and saved moments stay in this browser on this device.');
       return `<div class="quiet-category hub-page hub-detail" style="${yearTheme('Development')}">${backButton()}${b}</div>`;
     };
   }
