@@ -240,7 +240,7 @@ window.AHEAD_CHANGES = {
      "Harder to put down asleep"
     ],
     "why": "Sleep cycles are maturing. Baby may wake more fully between cycles and need help returning to sleep.",
-    "lasts": "How long it lasts varies. If waking continues or comes with feeding concerns, talk to your pediatrician.",
+    "lasts": "Usually a few weeks, though it varies.",
     "rhythm": [],
     "rhythmNote": "Nap lengths may wobble for a few weeks. Go by tired signs until things settle.",
     "helps": [
@@ -260,7 +260,7 @@ window.AHEAD_CHANGES = {
    },
    {
     "key": "apart",
-    "supportNote": "Harder goodbyes alone aren’t a reason to drop a nap. Keep the settling help that fits your family.",
+    "supportNote": "It’s a sign of how attached your baby is to you. Keep the settling help that fits your family, and it will pass.",
     "rail": "Separation anxiety",
     "when": "Usually 8–10 months",
     "title": "Separation anxiety",
@@ -976,8 +976,8 @@ window.AHEAD_CHANGES = {
     "night": "Wet diapers stay steady. Fussiness alone doesn’t mean low supply.",
     "helps": [
      [
-      "Feed on demand",
-      "Offer milk at hunger cues and pause at fullness cues. Bottle amounts do not have to increase at every feed."
+      "Follow her lead",
+      "Feed whenever she shows hunger cues, even if it feels constant. Bottles don’t need to get bigger every time."
      ],
      [
       "Set yourself up",
@@ -988,7 +988,7 @@ window.AHEAD_CHANGES = {
    },
    {
     "key": "distracted",
-    "supportNote": "Try feeds in a quiet, dim room. If she takes less milk overall or has fewer wet diapers, call your pediatrician.",
+    "supportNote": "If she takes less milk overall or has fewer wet diapers, call your pediatrician.",
     "rail": "Distracted feeding",
     "label": "Comes and goes",
     "when": "Usually 4–6 months",

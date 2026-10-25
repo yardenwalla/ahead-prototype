@@ -142,7 +142,7 @@
       h += glanceCard('What Maya’s eating now', milkTiles('learn'), go('chg:Feeding:d:milk'));
       h += list('In these first weeks', [
         row({ icon: 'diaper', title: 'How to tell Maya’s getting enough', sub: 'Wet diapers and weight tell you', onclick: go('chg:Feeding:d:enough') }),
-        meth() === 'bottle' || meth() === 'expressed' ? row({ icon: 'hand', title: 'Feed at the first hunger cues', sub: 'Rooting and hands to mouth come before crying', onclick: go('chg:Feeding:d:cues') }) : row({ icon: 'mouth', title: 'Get a good latch', sub: 'A wide mouth and a deep latch make feeds comfortable', onclick: go('chg:Feeding:d:latch') }),
+        meth() === 'expressed' ? row({ icon: 'bottle', title: 'Store breast milk safely', sub: '4 hours out, 4 days in the fridge', onclick: go('chg:Feeding:d:storage') }) : meth() === 'bottle' ? row({ icon: 'hand', title: 'Feed at the first hunger cues', sub: 'Rooting and hands to mouth come before crying', onclick: go('chg:Feeding:d:cues') }) : row({ icon: 'mouth', title: 'Get a good latch', sub: 'A wide mouth and a deep latch make feeds comfortable', onclick: go('chg:Feeding:d:latch') }),
         meth() === 'bottle' ? row({ icon: 'bowl', title: 'Make bottles safely', sub: 'Follow the formula’s directions exactly', onclick: go('chg:Feeding:d:bottles') }) : row({ icon: 'drop', title: 'Ask about vitamin D drops', sub: 'Breastfed babies need them from the first days', chipText: 'Must know', chipTone: 'is-red', onclick: go('chg:Feeding:d:vitd') })
       ]);
       h += versus('Normal, or time to call?', ['Normal', 'Feeding again an hour later, a little spit-up and long feeds at first.'], ['Call your pediatrician', 'Hard to wake for feeds, fewer wet diapers or looking more yellow.']);
@@ -279,7 +279,7 @@
     if (id === 'tray') {
       const grp = (title, g) => `<p class="hub-group">${F(title)}</p><div class="hub-list">${Object.entries(FOODS).filter(([, f]) => f.group === g).map(([k, f]) => row({ icon: f.art, title: f.title, sub: f.sub, onclick: go('chg:Feeding:d:food:' + k) })).join('')}</div>`;
       return detail(cat, 'Starting solids', 'There’s no perfect first food', 'Most families start with something rich in iron, then add fruits and vegetables. Whatever your family eats is a great place to start.',
-        grp('Rich in iron', 'iron') + grp('Fruits and vegetables', 'veg') + note('Skip for now: honey, whole nuts, popcorn and anything hard or round, like raw carrot or whole grapes.'));
+        grp('Rich in iron', 'iron') + grp('Fruits and vegetables', 'veg') + note('Skip for now: honey, cow’s milk as a drink, juice, added salt or sugar, whole nuts, popcorn and anything hard or round, like raw carrot or whole grapes.'));
     }
     if (id === 'food') {
       const f = FOODS[arg] || FOODS.lentils, st = style();
@@ -315,6 +315,12 @@
         + steps(['Wait for a wide-open mouth, like a yawn.', 'Bring Maya to you, chin first, with {p} nose level with your nipple.', 'Look for lips turned out and more of the areola showing above {p} top lip than below.', 'If it pinches, slip a clean finger into the corner of {p} mouth to break the suction, then try again.'])
         + `<section class="hub-card hub-versus"><h3>${F('Normal, or time for help?')}</h3><div class="hub-vs"><div><b>Normal</b><p>${F('A little tenderness in the first week, and a tug that eases after the first few sucks.')}</p></div><div><b>Ask for help</b><p>${F('Pain through the whole feed, cracked nipples, or clicking sounds. A lactation consultant can help, often in one visit.')}</p></div></div></section>`
         + tip('Feed at the first hunger cues', 'Rooting and hands to mouth come before crying, and a calm baby latches more easily.'), 'mouth');
+    }
+    if (id === 'storage') {
+      return detail(cat, 'Breast milk in bottles', 'Store breast milk safely', 'Freshly pumped milk keeps well if you follow a few simple times.',
+        table([['Room temperature', 'Up to 4 hours'], ['Fridge', 'Up to 4 days, at the back'], ['Freezer', 'Best within 6 months, up to 12'], ['Thawed milk', '24 hours in the fridge. Don’t refreeze.'], ['After a feed', 'Use leftovers within 2 hours']])
+        + steps(['Label each bag or bottle with the date, and use the oldest first.', 'Thaw in the fridge overnight or in a bowl of warm water, never the microwave.', 'Swirl to mix the fat back in. It’s normal for it to separate.'])
+        + video('Storing and preparing breast milk', 'Northwestern Medicine', 'https://www.nm.org/healthbeat/healthy-tips/how-to-store-breast-milk', 'Guide'), 'bottle');
     }
     if (id === 'vitd') {
       return detail(cat, 'Newborn feeding', 'Ask about vitamin D drops', 'Breast milk is the perfect food, but it’s low in vitamin D, so breastfed and partly breastfed babies need drops from the first days.',
@@ -356,8 +362,8 @@
           steps(['At 12 months, swap formula for whole cow’s milk, about 16–24 oz a day.', 'Offer milk in an open or straw cup instead of a bottle.', 'Talk it through at the 12-month checkup.']) + tip('No rush on the bottle', 'Phasing it out over a few weeks is fine.'), 'cup');
     }
     if (id === 'after') {
-      const A = C().DATA.Feeding.CH[5].after;
-      return detail(cat, 'After the first birthday', A[1], A[2] || '', '', 'cup');
+      return detail(cat, 'After the first birthday', 'Bottles to cups', 'Most babies move off bottles between 12 and 18 months. Going one bottle at a time keeps it easy.',
+        steps(['Swap the bottle Maya cares least about for an open or straw cup first, often the midday one.', 'Every week or so, swap another. The bedtime bottle usually goes last.', 'If you’re using cow’s milk, about 16–24 oz a day from a cup is plenty.']) + tip('Nursing is different', 'There’s no need to stop nursing at 12 months. Keep going for as long as it works for you both.'), 'cup');
     }
     if (id === 'faq') {
       const key = arg || STAGE_KEYS[C().CFG.Feeding.stage(age)], Q = C().DATA.Feeding.DEC[key] || [];
@@ -374,6 +380,7 @@
     { t: 'Put Maya on {p} back for every sleep', s: 'Naps and nights, every time', art: 'back', habit: 'Every sleep' },
     { t: 'Move {o} to {p} crib after the car or swing', s: 'Car seats and swings aren’t for sleep', art: 'car', habit: 'Every time' },
     { t: 'Never sleep with Maya on a sofa or armchair', s: 'If you might doze while feeding, use a cleared bed instead', art: 'sofa', habit: 'Always' },
+    { t: 'Keep the room smoke-free and comfortably cool', s: 'Overheating and smoke both raise the risk of SIDS', art: 'home', habit: 'Always' },
     { t: 'Offer a pacifier at sleep times', s: 'Once feeding’s going well. It’s linked to lower SIDS risk.', art: 'pacifier', habit: 'If you like' }
   ];
   const SLEEP_TASKS = SLEEP_SETUP.filter(x => x.task != null).length;
@@ -441,7 +448,7 @@
         row({ icon: 'heart', cat, title: 'Help Maya fall asleep any way that works', sub: 'Feeding, rocking or holding is fine now', onclick: "openPage('chg:Sleep:settle')" }),
         row({ icon: 'moon', cat, title: 'Keep nights dark and quiet', sub: 'It helps {p} body clock switch on', onclick: go('chg:Sleep:d:daynight') })
       ].filter(Boolean).slice(0, 3));
-      h += versus('Normal, or time to call?', ['Normal', 'Waking every 2–3 hours, grunts, squeaks and twitches in sleep.'], ['Call your pediatrician', 'Hard to wake for feeds, a temperature of 100.4°F or higher, or trouble breathing.']);
+      h += versus('Normal, or time to call?', ['Normal', 'Waking every 2–3 hours, grunts, squeaks and twitches in sleep.'], ['Call your pediatrician', 'Hard to wake for feeds, a temperature of 100.4°F or higher, or trouble breathing.'], ['When the crying won’t stop', go('chg:Sleep:d:crying')]);
     }
     if (key === 'daynight') {
       h += hero({ eyebrow: 'Days and nights', title: 'Nights are starting to stretch', lead: 'Many babies start telling day from night now. Often the first sign is one longer stretch of sleep at night.' }) + B;
@@ -504,6 +511,13 @@
         `<div class="hub-card hub-two"><div><b>${F('Getting tired')}</b><p>${F('A quiet stare, yawning, rubbing eyes or turning away.')}</p></div><div><b>${F('Overtired')}</b><p>${F('Fussing, arching or crying that’s hard to settle.')}</p></div></div>`
         + tip('Wake windows', { clock: 'Most newborns are ready to sleep after 45–60 minutes awake.', daynight: 'Around 1–1½ hours awake is typical now.', rhythm: 'About 2–2½ hours awake is typical now, a little longer before bedtime.', two: 'About 2½–4 hours awake is typical now, longest before bedtime.' }[key]), 'clock');
     }
+    if (id === 'crying') {
+      return detail(cat, 'The early months', 'When the crying won’t stop', 'Crying usually builds from about 2 weeks, peaks around 6–8 weeks and eases by 3–4 months. Some evenings nothing works, and that isn’t your fault.',
+        steps(['Check the basics: hungry, a wet diaper, too warm or too cold, or overtired.', 'Hold Maya close: skin to skin, a slow walk or gentle rocking.', 'Try a steady sound, like shushing, white noise or a soft song.', 'Offer a pacifier, or a swaddle if {s} {is}n’t trying to roll yet.'])
+        + `<section class="hub-card hub-callout"><b>${F('If you feel overwhelmed')}</b><p>${F('Put Maya down on {p} back in the crib, close the door and take a few minutes. Call someone you trust. Crying won’t hurt Maya. Shaking can, so never shake a baby.')}</p></section>`
+        + versus('Normal, or time to call?', ['Normal', 'Long crying spells, often in the evening, in a baby who feeds and grows well.'], ['Call your pediatrician', (m() < 3 ? 'Any fever of 100.4°F or higher, ' : 'Crying with a fever, ') + 'poor feeding or vomiting, a weak or high-pitched cry, or crying that sounds like pain.'])
+        + video('The Period of PURPLE Crying', 'Cook Children’s', 'https://www.cookchildrens.org/health-resources/newborn/care/period-of-purple-crying/', 'Guide'), 'heart');
+    }
     if (id === 'daynight') {
       return detail(cat, C0.rail, 'Helping Maya tell day from night', 'Babies aren’t born knowing the difference. Light, sound and your routine teach {o}.',
         steps(['During the day, open the curtains and keep normal household noise.', 'At night, keep lights low and feeds quiet and calm.', 'Save play and chatter for the daytime.']) + tip('When it clicks', 'Most babies’ body clocks switch on around 6–8 weeks, so give it time.'), 'moon');
@@ -516,7 +530,7 @@
       return detail(cat, 'Sleep safety', 'Swaddling safely', 'A snug swaddle can help a newborn settle. It just needs to be done the safe way, and only until {s} {try|tries} to roll.',
         video('Watch how to swaddle', 'St. Louis Children’s Hospital', 'https://www.stlouischildrens.org/health-resources/pulse/how-swaddle-newborn-baby-blanket')
         + steps(['Snug around the chest, with room for two fingers between the blanket and {p} chest.', 'Loose around the hips, so {p} legs can bend up and out like a frog.', 'Always on {p} back, never on {p} tummy or side.'])
-        + tip('Stop at the first attempt to roll', 'Often around 2–4 months. Switch to a sleep sack that leaves the arms free.')
+        + tip('Stop at the first attempt to roll', 'Some babies try as early as 2 months, most between 3 and 6. Switch to a sleep sack that leaves the arms free.')
         + video('Swaddling for healthy hips', 'International Hip Dysplasia Institute', 'https://hipdysplasia.org/how-to-swaddle-your-baby-to-help-keep-their-hips-healthy/', 'Guide')
 , 'moon');
     }
@@ -605,7 +619,7 @@
   function settlePage() {
     const age = m(), choice = C().settlingGuide();
     if (age < 4) return detail('Sleep', 'The early months', 'Helping Maya settle', 'Feeding, rocking or holding Maya to sleep is fine while sleep patterns are still developing. You can’t spoil a young baby.',
-      steps(['Start winding down at the first sleepy cues, like a quiet stare or a yawn.', 'Keep a few familiar steps: a feed, a diaper and a quiet song.', 'Put {o} down on {p} back in {p} own sleep space.']) + tip('Sleep training comes later, if at all', 'It’s an optional choice, usually considered from around 4–6 months.'), 'moon');
+      steps(['Start winding down at the first sleepy cues, like a quiet stare or a yawn.', 'Keep a few familiar steps: a feed, a diaper and a quiet song.', 'Put {o} down on {p} back in {p} own sleep space.']) + list('', [row({ icon: 'heart', cat: 'Sleep', title: 'When the crying won’t stop', sub: 'What helps, and what to do if you need a break', onclick: go('chg:Sleep:d:crying') })]) + tip('Sleep training comes later, if at all', 'It’s an optional choice, usually considered from around 4–6 months.'), 'moon');
     const opts = [['learn', 'Compare sleep-training methods', 'See the main approaches side by side'], ['trying', 'Support while sleep training', 'How to handle a rough night'], ['routine', 'Keep a routine working', 'After short naps, travel or illness'], ['help', 'Settle with my help', 'Feeding or rocking to sleep can stay']];
     let content = '';
     if (choice === 'learn') {

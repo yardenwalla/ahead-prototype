@@ -47,6 +47,35 @@
         link: link("openPage('chg:Sleep:safe')", 'See how to set it up') });
     }
 
+    // A checkup this week comes before longer-running reminders.
+    const visitSoon = upcomingVisit();
+    if (visitSoon && visitSoon.days <= 7) out.push(visitItem(visitSoon));
+
+    // An answer about milk changes what Home says straight away.
+    if (live() && chgStageIndex('Feeding') < 2 && homeInputs().asked.milk === month && ['Breast milk', 'Formula', 'Both'].includes(profile.feed)) {
+      const f = profile.feed;
+      out.push({ topic: 'Feeding', key: 'milk', title: f === 'Formula' ? `Formula at ${n()}’s age` : f === 'Both' ? 'Mixing breast milk and formula' : `Nursing at ${n()}’s age`,
+        body: f === 'Formula' ? `Let ${p.p} hunger and fullness lead. The guide has typical amounts and safe prep.`
+          : f === 'Both' ? `Count them as one total, and let ${n()}’s cues guide each feed.`
+          : `Feed when ${p.s} ${p.s === 'they' ? 'seem' : 'seems'} hungry. Plenty of wet diapers and steady weight mean it’s going well.`,
+        link: link("openFeedingGuide('milk')", 'See the feeding guide') });
+    }
+
+    // The first weeks: feeding, then how the parent is doing, then the crying peak.
+    const wk = live() ? Math.floor((NOW - parse(profile.dob)) / DAY / 7) : -1;
+    if (wk >= 0 && wk < 2 && chgStageIndex('Feeding') === 0)
+      out.push({ topic: 'Feeding', key: 'newborn-feeds', title: 'Feeding often is exactly right',
+        body: `Most newborns feed 8–12 times a day, day and night. Plenty of wet diapers tells you it’s going well.`,
+        link: link("openPage('topic:Feeding')", 'See newborn feeding') });
+    if (wk >= 2 && wk < 6)
+      out.push({ topic: 'Health', key: 'parent', title: 'How are you doing?',
+        body: `Feeling weepy or overwhelmed in the first couple of weeks is common. If it lasts longer or feels heavy, you don’t have to wait it out.`,
+        link: link("openPage('chg:Health:d:you')", 'Looking after you') });
+    if (wk >= 6 && wk < 11)
+      out.push({ topic: 'Sleep', key: 'crying', title: 'Fussy evenings are common right now',
+        body: `Crying often peaks around 6–8 weeks and eases by 3–4 months. If it gets too much, it’s OK to put ${n()} down safely and take a break.`,
+        link: link("openPage('chg:Sleep:d:crying')", 'What helps with crying') });
+
     // Rolling: one change, three places it shows up.
     if (priority && priority.type === 'swaddle') {
       if (mv === 'trying' || mv === 'rolling') out.push({ topic: 'Sleep', key: 'rolling', title: mv === 'trying' ? `${n()}’s trying to roll, so it’s time to stop swaddling` : `Now that ${n()}’s rolling, swaddling stops`,
@@ -86,19 +115,8 @@
         body: `Now that ${n()} has started solids, lead with iron-rich foods, try peanut and egg early, and keep milk feeds going as usual.`,
         link: link("openPage('topic:Feeding')", 'See the first-foods guide') });
 
-    // An answer about milk changes what Home says straight away.
-    if (live() && chgStageIndex('Feeding') < 2 && homeInputs().asked.milk === month && ['Breast milk', 'Formula', 'Both'].includes(profile.feed)) {
-      const f = profile.feed;
-      out.push({ topic: 'Feeding', key: 'milk', title: f === 'Formula' ? `Formula at ${n()}’s age` : f === 'Both' ? 'Mixing breast milk and formula' : `Nursing at ${n()}’s age`,
-        body: f === 'Formula' ? `Let ${p.p} hunger and fullness lead. The guide has typical amounts and safe prep.`
-          : f === 'Both' ? `Count them as one total, and let ${n()}’s cues guide each feed.`
-          : `Feed when ${p.s} ${p.s === 'they' ? 'seem' : 'seems'} hungry. Plenty of wet diapers and steady weight mean it’s going well.`,
-        link: link("openFeedingGuide('milk')", 'See the feeding guide') });
-    }
-
     // A checkup in the next two weeks.
-    const visit = upcomingVisit();
-    if (visit && visit.days <= 14) out.push(visitItem(visit));
+    if (visitSoon && visitSoon.days > 7 && visitSoon.days <= 14) out.push(visitItem(visitSoon));
     return out.slice(0, 2);
   }
 
@@ -132,8 +150,15 @@
     if (m === 3) out.push({ topic: 'Sleep', key: 'four-month', title: 'Sleep might get bumpy around 4 months',
       body: `Some babies start waking more for a while. It’s normal, and it passes.`,
       link: link("openPage('chg:Sleep:e:0')", 'See how to respond if it happens') });
+    const wk = live() ? Math.floor((NOW - parse(profile.dob)) / DAY / 7) : -1;
+    if (wk >= 2 && wk < 6) out.push({ topic: 'Sleep', key: 'crying-soon', title: 'Crying often builds over the next few weeks',
+      body: `It usually peaks around 6–8 weeks, often in the evening, then eases. Here’s what helps.`,
+      link: link("openPage('chg:Sleep:d:crying')", 'What helps with crying') });
     const visit = upcomingVisit();
     if (visit && visit.days > 14) out.push(visitItem(visit));
+    if (live() && m === 11) out.push({ topic: 'Feeding', key: 'one-year-milk', title: 'Milk and cups around the first birthday',
+      body: `From 12 months, whole cow’s milk can be a drink from a cup, and bottles start to phase out.`,
+      link: link("openPage('chg:Feeding:d:milk12')", 'See what changes') });
     if (live() && m >= 5 && m < 8 && !['crawling', 'pulling'].includes(mv) && safetyPendingIds(safetyOwnedGuides().mobile.ids).length)
       out.push({ topic: 'Safety', key: 'crawl-soon', title: `Before ${n()} starts crawling`,
         body: `Most babies get moving between 6 and 10 months. Babyproofing now saves a scramble later.`,

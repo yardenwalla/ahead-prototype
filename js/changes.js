@@ -272,7 +272,7 @@
   // a second, unrelated schedule. Early sleep remains a flexible loop.
   function sampleDay(C) {
     if (['clock', 'daynight'].includes(C.key))
-      return `<p class="chg-card-note chg-flexible-day">${C.key === 'clock' ? 'A day follows a loop: feed, a short awake time, then sleep. Repeat through the night; there is no clock-time schedule yet.' : 'Feed, a short awake time, then another sleep. Repeat as needed; naps do not need fixed start times yet.'}</p>`;
+      return `<p class="chg-card-note chg-flexible-day">${C.key === 'clock' ? 'Feed, a little awake time, sleep. Then the loop starts again, around the clock.' : 'Feed, a little awake time, sleep. Naps don’t need set times yet.'}</p>`;
     const minutes = value => {
       const normalized = value.replace(/~/g, '').replace(/½/g,'.5').replace(/¼/g,'.25').replace(/¾/g,'.75');
       const values = normalized.match(/\d+(?:\.\d+)?/g).map(Number);

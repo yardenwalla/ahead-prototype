@@ -163,3 +163,12 @@
 #main .hub-domain-tile b { font-size: 15.5px }
 #main .hub-domain-tile small { font-size: 13px; line-height: 1.35; color: var(--muted, #625d68) }
 #main .hub-domain-tile span { margin-top: auto; padding-top: 4px; font-size: 13px; font-weight: 600; color: var(--year-ink) }
+
+/* A plain callout for something a parent must not miss (crisis lines, never shake) */
+#main .hub-callout { padding: 16px; margin: 0 0 14px; border-radius: 20px; background: var(--year-pale, #fff6f0); border: 1px solid var(--line) }
+#main .hub-callout b { display: block; font-size: 15px; margin-bottom: 4px }
+#main .hub-callout p { margin: 0 0 10px; line-height: 1.45 }
+#main .hub-callout p:last-child { margin-bottom: 0 }
+#main .hub-callout .hub-button { display: block; text-align: center; text-decoration: none }
+#main .hub-callout.is-urgent { background: #fbeae7; border-color: #f1cfc9 }
+#main .hub-callout.is-urgent b { color: #9b3326 }

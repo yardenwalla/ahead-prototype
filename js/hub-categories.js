@@ -27,7 +27,7 @@
     // Four tiles, each with a line of what you might actually see, so the card is useful before anyone taps in.
     const domainTiles = Object.keys(DEV_DOMAINS).map(d => {
       const labels = DEVELOPMENT_DOMAINS[ref][d] || [], seen = labels.filter(l => journeyData().records.some(r => r.type === 'milestone' && r.skillKey === journeySkillKey(l))).length;
-      return `<button class="hub-domain-tile" onclick="openPage('development-domain:${ref}:${d}')">${h.art(DOMAIN_ICONS[d], 'Development')}<b>${DOMAIN_TITLES[d]}</b><small>${F(st.summaries[d] || '')}</small><span>${F(seen ? `${seen} of ${labels.length} seen` : `${labels.length} skills`)} ›</span></button>`;
+      return `<button class="hub-domain-tile" onclick="openPage('development-domain:${ref}:${d}')">${h.art(DOMAIN_ICONS[d], 'Development')}<b>${DOMAIN_TITLES[d]}</b><small>${F(st.summaries[d] || '')}</small><span>${F(seen ? `${seen} of ${labels.length} seen` : `${labels.length} skill${labels.length === 1 ? '' : 's'}`)} ›</span></button>`;
     }).join('');
     b += `<section class="hub-card hub-glance is-static"><span class="hub-card-head"><b>${F('What Maya might be doing')}</b></span><div class="hub-domain-tiles">${domainTiles}</div></section>` + h.note(developmentMonth() < ref ? `Most babies show these by ${age}. Some may be here already, and others are on the way.` : `Most babies show these by ${age}.`);
     if (ref === now || !live()) {
@@ -109,14 +109,14 @@
       h.steps(['Warm the room and lay Maya on a towel, with everything you need within reach.', 'Wash {p} face with a damp washcloth and plain water, then the rest of {o}, uncovering one part at a time.', 'Finish with the diaper area, then pat {o} dry, paying attention to skin folds.'])
       + h.video('Watch a newborn bath, step by step', 'WebMD', 'https://www.webmd.com/parenting/baby/video/bathing-newborns') + h.tip('How often?', 'Two or three times a week is plenty. In between, wipe {p} face, neck and diaper area.'), 'towel');
     if (id === 'cord') return d('Newborn', 'Keep the cord stump clean and dry', 'The stump usually dries up and falls off on its own in 1–3 weeks.',
-      h.steps(['Fold the top of the diaper down so the stump stays in the air.', 'If it gets dirty, clean it gently with plain water and pat it dry.', 'Let it fall off by itself, even if it’s hanging by a thread.']) + h.tip('A little crust is normal', 'A spot of blood when it comes off is normal too. Call if the skin around it gets red, swollen or smelly.'), 'cord');
+      h.steps(['Fold the top of the diaper down so the stump stays in the air.', 'If it gets dirty, clean it gently with plain water and pat it dry.', 'Let it fall off by itself, even if it’s hanging by a thread.']) + h.tip('A little crust is normal', 'A spot of blood when it comes off is normal too. Call if the skin around it gets red, swollen or smelly.') + h.tip('If your baby was circumcised', 'Put a dab of petroleum jelly on the tip at each diaper change until it heals, usually in a week to 10 days. Call if there’s bleeding, swelling or pus.'), 'cord');
     if (id === 'nails') return d(stageName, 'Trim tiny nails', 'Baby nails grow fast and are sharp enough to scratch {p} face.',
       h.steps(['Wait until Maya is asleep or very relaxed.', 'Use baby nail clippers or a soft emery board, pressing the fingertip pad away from the nail.', 'File any rough edges. A nick happens to everyone; press gently with a clean cloth.']), 'nail');
     if (id === 'tub') return d(stageName, 'Give a tub bath', 'Once the cord has healed, Maya’s ready for a baby tub.',
       h.steps(['Gather everything first: towel, washcloth, mild soap and a clean diaper.', 'Fill the tub with about 2 inches of warm water. Test it with your wrist; it should feel warm, not hot.', 'Support {p} head and neck with one arm, and wash from top to bottom with your other hand.', 'Lift {o} out onto the towel and wrap {o} up right away.'])
       + h.video('Watch a baby bath, step by step', 'WebMD', 'https://www.webmd.com/parenting/baby/video/bathing-newborns') + h.tip('Water heater', 'Set it below 120°F so tap water can’t scald.'), 'bath');
-    if (id === 'skin') return d(stageName, 'Care for dry skin and cradle cap', 'Most babies don’t need lotion. Less is usually more.',
-      h.steps(['Use a mild, fragrance-free soap, and only on the parts that need it.', 'Pat dry instead of rubbing, especially in skin folds. A little fragrance-free moisturizer helps if skin looks dry.', 'For crusty patches on the scalp, rub in a little baby oil, then brush gently with a soft brush before the bath.']) + h.tip('Red, itchy patches?', 'That could be eczema. Mention it to your pediatrician, who can suggest what helps.'), 'drop');
+    if (id === 'skin') return d(stageName, 'Care for dry skin, cradle cap and diaper rash', 'Most babies don’t need lotion. Less is usually more.',
+      h.steps(['Use a mild, fragrance-free soap, and only on the parts that need it.', 'Pat dry instead of rubbing, especially in skin folds. A little fragrance-free moisturizer helps if skin looks dry.', 'For crusty patches on the scalp, rub in a little baby oil, then brush gently with a soft brush before the bath.']) + h.tip('Diaper rash?', 'Change diapers often, let the skin air out when you can, and use a thick layer of zinc oxide cream. Call if it blisters or isn’t better in a few days.') + h.tip('Red, itchy patches?', 'That could be eczema. Mention it to your pediatrician, who can suggest what helps.'), 'drop');
     if (id === 'dress') return d(stageName, 'Dress Maya for the weather', 'Babies can’t tell you they’re too hot or cold, so a simple rule helps.',
       h.steps(['Dress Maya in one more layer than you’re comfortable in.', 'Feel the back of {p} neck. Sweaty means too warm; cool means add a layer.', 'Skip hats and heavy blankets for sleep. A sleep sack is enough.']) + h.tip('In the car seat', 'Take off puffy coats first. Buckle {o} in, then put a blanket over the straps.'), 'towel');
     if (id === 'gums') return d(stageName, 'Look after drool and gums', 'Drooling and chewing on everything are normal now. Teeth can take a while to follow.',
@@ -153,11 +153,14 @@
     const keys = SAFETY_MOVEMENT_STAGES.map(p => p.key), now = live() ? safetyStageNow() : safetyMovementStage();
     const key = keys.includes(selected) ? selected : now, owner = safetyOwnerForStage(key), guide = safetyOwnedGuides()[owner], h = H();
     const browse = live() && key !== now, items = safetyHomeItems(), pending = safetyPendingIds(guide.ids), done = guide.ids.length - pending.length;
+    // Lead with the checks this stage's headline is about (standing → windows and cords, for example).
+    const FIRST = { rolling: ['gates', 'storage', 'outlets'], moving: ['doors', 'outlets', 'storage'], pulling: ['anchor', 'windows', 'cords'] }[key] || [];
+    const rank = id => { const i = FIRST.indexOf(id); return i < 0 ? 99 : i; };
     const pills = h.pills('Safety by movement', SAFETY_MOVEMENT_STAGES.map(p => ({ label: p.rail, on: p.key === key, now: live() && p.key === now, onclick: `openPage('safety-stage:${p.key}')` })));
     let b = h.hero({ eyebrow: SAFETY_MOVEMENT_STAGES.find(p => p.key === key).rail, title: SAFETY_HEAD[key][0], lead: SAFETY_HEAD[key][1], meter: { label: owner === 'setup' ? 'Setup checks' : owner === 'reach' ? 'Reaching and rolling checks' : 'Babyproofing checks', n: done, of: guide.ids.length }, button: { label: pending.length ? (done ? 'Keep going with the checklist' : 'Open the checklist') : 'Review the checklist', onclick: `openSafetyChecklist('${owner}',${browse})` } });
     if (browse) b += back('Back to your guide', 'safetyBackToNow()');
     b += pending.length
-      ? h.list(done ? 'Next up' : 'Start with these', pending.slice(0, 3).map(id => h.row({ icon: 'shield', cat: 'Safety', title: (items[id] || {}).title || id, sub: shortLine((items[id] || {}).body), onclick: browse ? `openSafetyChecklist('${owner}',true)` : `openHomeSafetyCheck('${owner}','${id}')` })))
+      ? h.list(done ? 'Next up' : 'Start with these', [...pending].sort((x, y) => rank(x) - rank(y)).slice(0, 3).map(id => h.row({ icon: 'shield', cat: 'Safety', title: (items[id] || {}).title || id, sub: shortLine((items[id] || {}).body), onclick: browse ? `openSafetyChecklist('${owner}',true)` : `openHomeSafetyCheck('${owner}','${id}')` })))
       : h.note(`You’ve done every check for this stage. Nice work.`);
     if (key === 'rolling' || key === 'reaching') b += h.list('', [h.row({ icon: 'moon', cat: 'Safety', title: 'Rolling changes the sleep space too', sub: 'Stop swaddling at the first attempt to roll', onclick: "openSection('Sleep','sleep-rolling')" })]);
     b += h.versus('If something goes wrong', ['Poison Help', 'Call 1-800-222-1222 if Maya swallows something that could be harmful.'], ['Call 911', 'If {s} can’t breathe or won’t wake. A swallowed battery or magnet means the ER right away.']);
@@ -184,7 +187,11 @@
       `<span id="health-vaccines"></span>` + h.row({ icon: 'shield', cat: 'Health', title: 'Vaccines', sub: age === 0 ? 'Hepatitis B and RSV protection to check' : age === 1 ? 'Doses that may be due this month' : age === 9 ? 'Catch-up doses and seasonal protection' : 'Expected doses and seasonal protection', onclick: `openHealthDetail(${age},'vaccines')` }),
       h.row({ icon: 'hand', cat: 'Health', title: 'Questions to ask', sub: 'A few ideas, plus space for your own', onclick: `openHealthDetail(${age},'questions')` })
     ]);
-    b += h.versus('Between checkups', ['Call your pediatrician', actualMonth() < 3 ? 'Under 3 months, a temperature of 100.4°F or higher means calling right away.' : 'Fever with fewer wet diapers, or anything that worries you.'], ['Call 911', 'Trouble breathing, blue lips, or {s} won’t wake up.']);
+    b += h.list('Between checkups', [
+      h.row({ icon: 'steth', cat: 'Health', title: `When Maya seems sick`, sub: 'Fevers, medicine and when to call', onclick: "openPage('chg:Health:d:sick')" }),
+      h.row({ icon: 'heart', cat: 'Health', title: 'How are you doing?', sub: 'Your health matters too', onclick: "openPage('chg:Health:d:you')" })
+    ]);
+    b += h.versus('When to call', ['Call your pediatrician', actualMonth() < 3 ? 'Under 3 months, a temperature of 100.4°F or higher means calling right away.' : 'Fever with fewer wet diapers, or anything that worries you.'], ['Call 911', 'Trouble breathing, blue lips, or {s} won’t wake up.']);
     const nx = WELL_VISITS[WELL_VISITS.indexOf(age) + 1];
     if (nx != null) b += h.next(`Next checkup`, healthJourneyLabel(nx), `openPage('health-visit:${nx}')`);
     b += h.more('Your appointment notes', `openHealthDetail(${age},'notes')`);
@@ -205,17 +212,38 @@
       return `<div class="hub-tick is-habit"><span class="hub-tick-art">${h.art(DOMAIN_ICONS[domain] || 'smile', 'Development')}</span><span class="hub-row-copy"><b>${clearMilestone(l)}</b><small>${esc(DEV_EXAMPLES[l] || '')}</small></span>${rec ? `<span class="hub-chip is-done">${F('Seen')} ✓</span>` : `<button class="hub-seen" onclick="hubSeen('${key}')">${F('Seen it')}</button>`}</div>`; }).join('');
     const skill = journeySkills().find(s => labels.includes(s.label) && typeof devSkillActivity === 'function' && devSkillActivity(s)), act = skill && devSkillActivity(skill);
     const tryRow = act ? h.list('Try this together', [h.row({ icon: 'hand', cat: 'Development', title: act.title, sub: playLine(act), onclick: `openDevelopmentActivity('${skill.key}')` })]) : '';
-    return `<div class="quiet-category hub-page hub-detail" data-overview="Development" style="${yearTheme('Development')}">${detailPageTop('Development')}<div class="hub-detail-head"><p class="hub-context">${esc(`By ${age}`)}</p><h1>${esc(meta.title)}</h1><p class="hub-lead">${esc(DEV_STAGES[ref].summaries[domain])}</p></div>${h.video('Watch each of these skills in action', 'CDC', devSource(ref), 'Photos and videos')}<div class="hub-ticks">${rows}</div>${h.note(`Most babies show these by ${age}. Tap “Seen it” to save the moment to Maya’s timeline.`)}${tryRow}</div>`;
+    return `<div class="quiet-category hub-page hub-detail" data-overview="Development" style="${yearTheme('Development')}">${detailPageTop('Development')}<div class="hub-detail-head"><p class="hub-context">${esc(`By ${age}`)}</p><h1>${esc(meta.title)}</h1><p class="hub-lead">${esc(DEV_STAGES[ref].summaries[domain])}</p></div><div class="hub-ticks">${rows}</div>${h.note(`Most babies show these by ${age}. Tap “Seen it” to save the moment to Maya’s timeline.`)}${tryRow}${h.video('Watch each of these skills in action', 'CDC', devSource(ref), 'Photos and videos')}</div>`;
   };
 
   /* ---------- small detail screens for these categories ---------- */
   function detailFrame(cat, context, title, lead, inner) {
     return `<div class="quiet-category hub-page hub-detail" data-overview="${cat}" style="${yearTheme(cat)}">${detailPageTop(cat)}<div class="hub-detail-head"><p class="hub-context">${F(context)}</p><h1>${F(title)}</h1>${lead ? `<p class="hub-lead">${F(lead)}</p>` : ''}</div>${inner}</div>`;
   }
+  function healthDetail(id) {
+    const h = H(), under3 = actualMonth() < 3;
+    if (id === 'you') return detailFrame('Health', 'Looking after you', 'How are you doing?', 'Caring for a new baby is a lot. Your health matters too, and asking for help is part of looking after Maya.',
+      h.versus('Common, or time to get help?', ['Common in the first two weeks', 'Feeling weepy, anxious or overwhelmed, with good moments in between. It usually eases on its own.'], ['Get help', 'Low mood or worry that lasts more than two weeks, can’t sleep even when you could, or feeling you can’t cope.'])
+      + `<section class="hub-card hub-callout"><b>${F('Talk to someone today')}</b><p>${F('Call or text the National Maternal Mental Health Hotline at 1-833-852-6262. It’s free, confidential and open any time, for moms, partners and new parents.')}</p><a class="hub-button" href="tel:18338526262">${F('Call 1-833-852-6262')}</a></section>`
+      + h.steps(['Tell your doctor or Maya’s pediatrician how you’re feeling. They ask because it’s common and treatable.', 'Take the help people offer, and name something specific, like a meal or a nap.', 'Go to your own postpartum checkup, even if you feel fine.'])
+      + h.tip('If you’re thinking about harming yourself or Maya', 'Call or text 988, or call 911, right now.')
+      + h.note('Partners can feel this way too.'));
+    if (id === 'sick') return detailFrame('Health', 'Between checkups', 'When Maya seems sick', 'Most baby illnesses are mild, but young babies can get sick quickly. Here’s what to watch for.',
+      h.versus('Fever', ['3 months and up', 'Call if a fever lasts more than a day, or comes with fewer wet diapers, a rash or unusual sleepiness.'], ['Under 3 months', 'A temperature of 100.4°F or higher: call your pediatrician right away, day or night.'])
+      + h.list('Good to know', [
+        h.row({ icon: 'clock', cat: 'Health', title: 'Take a rectal temperature', sub: 'It’s the most accurate way for babies. Forehead and ear readings are less reliable.', onclick: '' }).replace('<button class="hub-row"', '<div class="hub-row is-static"').replace(/<\/button>$/, '</div>').replace('<span class="hub-chev" aria-hidden="true">›</span>', ''),
+        h.row({ icon: 'drop', cat: 'Health', title: 'Watch for dehydration', sub: 'Far fewer wet diapers, a dry mouth, no tears or a sunken soft spot.', onclick: '' }).replace('<button class="hub-row"', '<div class="hub-row is-static"').replace(/<\/button>$/, '</div>').replace('<span class="hub-chev" aria-hidden="true">›</span>', ''),
+        h.row({ icon: 'bottle', cat: 'Health', title: 'Ask before giving medicine', sub: 'Nothing under 3 months without your pediatrician. Ibuprofen only from 6 months. Doses go by weight.', onclick: '' }).replace('<button class="hub-row"', '<div class="hub-row is-static"').replace(/<\/button>$/, '</div>').replace('<span class="hub-chev" aria-hidden="true">›</span>', '')
+      ])
+      + `<section class="hub-card hub-callout is-urgent"><b>${F('Call 911 if Maya')}</b><p>${F('Struggles to breathe or turns blue, won’t wake or is floppy, or has a seizure.')}</p></section>`
+      + h.tip('Skip cough and cold medicines', 'They aren’t safe for babies. Saline drops and a bulb syringe help with a stuffy nose.')
+      + h.video('When to call about a fever', 'HealthyChildren · AAP', 'https://www.healthychildren.org/English/health-issues/conditions/fever/pages/When-to-Call-the-Pediatrician.aspx', 'Guide'));
+    return null;
+  }
   const baseRoute = window.changesRoute;
   window.changesRoute = function (p) {
     const [, cat, screen, a, b] = p.split(':');
     if (cat === 'Development' && screen === 'd' && a === 'faq') { const ref = DEV_STAGES[b] ? Number(b) : devRef(); return detailFrame('Development', DEV_STAGES[ref].title, 'What other parents ask', '', devCommonQuestions(ref).replace('<h2>Common questions</h2>', '').replace('class="common-questions"', 'class="common-questions hub-faq"')); }
+    if (cat === 'Health' && screen === 'd') { const pg = healthDetail(a); if (pg) return pg; }
     if (cat === 'Daily rhythm' && screen === 's') return everydayCare(Number(a));
     if (cat === 'Daily rhythm' && screen === 'd' && a !== 'more') return careDetail(a);
     if ((cat === 'Daily rhythm' || cat === 'Development') && screen === 'd' && a === 'more') {
