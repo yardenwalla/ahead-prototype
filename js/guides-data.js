@@ -1,220 +1,168 @@
-/* Ahead · Sleep and Feeding guides, written as a conversation.
-   Each stage answers the same questions in the same order:
-     short  — the short answer (shown in the page header)
+/* Ahead · Sleep and Feeding guides, written as a conversation and kept to the content guide's limits:
+   a short answer of 1–2 sentences, at most 3 items per section, one line of why or how per item.
+     short  — the short answer (page header)
      do     — what to do now
-     know   — what to know: the why, safety, and how it connects to the rest of the day
-     normal — what's normal, so a parent doesn't worry about it
-     help   — when to call your pediatrician
+     know   — what to know: safety, how it connects, what changes
+     normal — what's normal (short lines, no explanation needed)
+     help   — when to call your pediatrician (the full triage is one tap away)
    "Maya" becomes the baby's name. {s} {o} {p} {S} {is} {has} {does} become the baby's pronouns.
-   An item can carry a link: [title, body, onclick, link label]. */
+   An item can carry a link: [title, body, onclick, link label]. Depth lives in FAQs and detail pages. */
 window.AHEAD_GUIDES = {
  Sleep: {
   clock: {
-   short: 'Newborns sleep 14–17 hours a day, but only 1–3 hours at a time, day and night. There’s no pattern yet, and that’s exactly how it should be.',
+   short: 'Newborns sleep 14–17 hours a day, in 1–3 hour stretches. No pattern yet, and that’s normal.',
    do: [
-    ['Put Maya down safely for every sleep', 'On {p} back, on a firm, flat surface with nothing else in it, ideally in your room. Of everything on this page, this matters most.', "openPage('chg:Sleep:safe')", 'Go through the safe sleep checklist'],
-    ['Start settling at the first yawn', 'A yawn, a glazed stare or turning away are early signs. Most newborns are ready to sleep again after 45–60 minutes awake, and much of that time is feeding.'],
-    ['Help Maya fall asleep any way that works', 'Feeding, rocking or holding {o} to sleep is normal and fine now. You can’t spoil a newborn.'],
-    ['Share the nights if you can', 'If someone can help, take turns changing and settling. If you’re doing the feeds, they can bring Maya to you and settle {o} afterward so you can get back to sleep.']
+    ['Put Maya on {p} back for every sleep', 'Firm, flat surface, nothing else in it, in your room.', "openPage('chg:Sleep:safe')", 'Safe sleep checklist'],
+    ['Start settling at the first yawn', 'Most newborns are ready to sleep after 45–60 minutes awake.'],
+    ['Help Maya fall asleep any way that works', 'Feeding, rocking or holding to sleep is fine. You can’t spoil a newborn.']
    ],
    know: [
-    ['Feeds come first', 'If a sleep runs long, wake Maya to feed until your pediatrician says you can stop. That’s usually once birth weight is back, around 2 weeks.'],
-    ['Why there’s no pattern yet', 'A newborn’s body clock hasn’t switched on, so day and night feel the same. Hunger sets the pace for now.']
+    ['Wake Maya for feeds for now', 'Until your pediatrician says you can stop, usually once birth weight is back.'],
+    ['Day and night feel the same to Maya', 'Maya’s body clock switches on around 6–8 weeks.']
    ],
-   normal: [
-    ['Waking every 2–3 hours, day and night', 'Small tummies need frequent feeds.'],
-    ['Noisy sleep', 'Grunts, squeaks and little twitches are part of newborn sleep.'],
-    ['No two days looking the same', 'A longer stretch at night usually starts to show up around 6–8 weeks.']
-   ],
-   help: 'Call your pediatrician if Maya is hard to wake for feeds or has a temperature of 100.4°F or higher. Call 911 for trouble breathing, blue or gray lips, or if {s} won’t wake up.'
+   normal: [['Waking every 2–3 hours'], ['Grunts, squeaks and twitches in sleep'], ['No two days alike']],
+   help: 'Call if Maya is hard to wake for feeds or has a temperature of 100.4°F or higher.'
   },
   daynight: {
-   short: 'Somewhere between 6 weeks and 3 months, many babies start telling day from night. Usually the first sign is one longer stretch at night, of 3 to 5 hours, though the timing varies.',
+   short: 'Many babies start telling day from night now. Often the first sign is one longer stretch at night.',
    do: [
-    ['Keep days bright and nights dim', 'Daylight, chatter and everyday noise in the day; low light and quiet, boring feeds at night. It helps Maya’s body clock along.'],
-    ['Start a short bedtime routine', 'The same few steps each evening, like a feed, a diaper and a song. It doesn’t need to be long, just familiar.'],
-    ['Let Maya wake you for night feeds', 'Once your pediatrician says you can stop waking {o}, let {o} wake you. Most babies this age still feed 2–3 times a night.']
+    ['Keep days bright and nights dim', 'Daylight and chatter by day; low light and quiet feeds at night.'],
+    ['Start a short bedtime routine', 'A feed, a diaper and a song. Familiar matters more than long.'],
+    ['Let Maya wake you for night feeds', 'Once your pediatrician says it’s OK. Most still feed 2–3 times a night.']
    ],
    know: [
-    ['Bedtime starts late', 'At first bedtime is often between 8 and 10 pm, and it creeps earlier over these weeks. Nap times still move from day to day; they settle down next.'],
-    ['Why nights come first', 'Maya’s body clock is starting to respond to daylight, so night sleep gets longer before naps get organized.']
+    ['Bedtime starts late', 'Often 8–10 pm at first, then earlier over these weeks.'],
+    ['Nights settle before naps', 'Naps still move around. That comes next.']
    ],
-   normal: [
-    ['4–5 naps that still move around', 'A nap schedule comes later.'],
-    ['A long stretch one night, and not the next', 'Progress isn’t a straight line.'],
-    ['Fussier evenings', 'Crying often peaks around 6–8 weeks, especially in the evening, and then eases off.']
-   ],
-   help: 'Call your pediatrician if Maya snores most nights, pauses or gasps during sleep, or if sleep changes come with a fever or poor feeding. Call 911 for trouble breathing or blue or gray lips.'
+   normal: [['4–5 naps that move around'], ['A long stretch one night, not the next'], ['Fussier evenings, peaking around 6–8 weeks']],
+   help: 'Call if Maya snores most nights, pauses or gasps in sleep, or sleep changes come with fever or poor feeding.'
   },
   rhythm: {
-   short: 'Naps may start falling into a pattern now: usually three a day, two longer ones and a short late catnap. Most babies this age get sleepy after about 2 hours awake, though timing still varies and short naps are common.',
+   short: 'Naps may start to follow a pattern: usually 3 a day, with Maya sleepy after about 2 hours awake.',
    do: [
-    ['Watch for sleepy cues, then wind down', 'A quieter gaze, yawning or turning away mean it’s time. Start winding down before Maya gets upset; after a short nap, the next sleepy time may come sooner.'],
-    ['Keep the same few steps before every sleep', 'A diaper, a song and your usual help settling. Nap times can move while the routine stays familiar.']
+    ['Watch for sleepy cues', 'A quiet gaze, yawning or turning away. Wind down before Maya gets upset.'],
+    ['Keep the same steps before every sleep', 'A diaper, a song and your usual help settling.']
    ],
    know: [
-    ['Rolling changes the sleep setup', 'Babies often start trying to roll between 3 and 6 months. At the first attempt, stop swaddling and switch to a sleep sack that leaves the arms free. Keep putting Maya down on {p} back; once {s} rolls both ways, you can leave {o} there.', "openSection('Sleep','sleep-rolling')", 'See how sleep changes as Maya moves'],
-    ['Night feeds are a separate decision', 'Night feeds can carry on alongside a nap routine. If you’re thinking about dropping one, check with your pediatrician first.'],
-    ['Why naps are getting easier to read', 'As sleep matures, sleepy times become easier to spot. Short naps and night waking can still happen alongside a growing routine.']
+    ['Rolling means no more swaddling', 'At the first attempt to roll, switch to a sleep sack with arms free.', "openSection('Sleep','sleep-rolling')", 'How sleep changes as Maya moves'],
+    ['Night feeds can carry on', 'Check with your pediatrician before dropping one.']
    ],
-   normal: [
-    ['Short naps', 'Naps of 30–45 minutes are common at this age.'],
-    ['Fighting a nap now and then', 'Try again a little later, or settle for a short one.'],
-    ['Bedtime moving earlier', 'Often somewhere between 7 and 8 pm.']
-   ],
-   help: 'Call your pediatrician if Maya snores most nights, pauses or gasps during sleep, or if sleep changes come with a fever or poor feeding. Call 911 for trouble breathing or blue or gray lips.'
+   normal: [['Naps of 30–45 minutes'], ['Fighting a nap now and then'], ['Bedtime around 7–8 pm']],
+   help: 'Call if Maya snores most nights, pauses or gasps in sleep, or sleep changes come with fever or poor feeding.'
   },
   two: {
-   short: 'Somewhere between 6 and 9 months, the late catnap usually stops fitting and the day settles into two naps: one in the morning, one in the afternoon. One skipped catnap isn’t the switch; a pattern of them is.',
+   short: 'Between 6 and 9 months, most babies drop the late catnap and move to two naps. Look for a pattern, not one day.',
    do: [
-    ['Look for a pattern, not one day', 'If Maya fights the catnap most days and still gets to bedtime happily, {s} may be ready for two naps. After a short nap, a third one can still help.'],
-    ['Move bedtime earlier during the switch', 'Two-nap days make for a long afternoon. Try putting Maya down about 30 minutes earlier while {s} adjusts.'],
-    ['Lower the crib mattress before Maya sits', 'Most babies sit without support between 6 and 9 months, and pull up soon after. Lower the mattress before sitting, and set it to its lowest before pulling up.', "openSection('Sleep','sleep-crib-height')", 'See the crib setup']
+    ['Watch for a skipped catnap most days', 'If Maya still reaches bedtime happily, try two naps.'],
+    ['Move bedtime earlier during the switch', 'About 30 minutes earlier helps with the long afternoon.'],
+    ['Lower the crib mattress before Maya sits', 'Then to its lowest before pulling up.', "openSection('Sleep','sleep-crib-height')", 'Crib setup']
    ],
    know: [
-    ['Why the catnap drops', 'Longer awake periods leave less room for a late nap. Readiness shows in how Maya manages the day, not in age alone.'],
-    ['Night feeds can carry on', 'Some babies still feed at night on two naps. Talk to your pediatrician before dropping a night feed.']
+    ['Readiness shows in the day, not the age', 'A third nap can still help after a short one.'],
+    ['Night feeds can carry on', 'Check with your pediatrician before dropping one.']
    ],
-   normal: [
-    ['Catnap one day, no catnap the next', 'The switch usually takes a couple of weeks.'],
-    ['Bedtime creeping later before the switch', 'It moves earlier again once two naps settle in.'],
-    ['New skills disturbing sleep', 'Sitting, crawling and pulling up can mean a few unsettled nights.']
-   ],
-   help: 'Call your pediatrician if Maya snores most nights, pauses or gasps during sleep, or if sleep changes come with a fever or poor feeding. Call 911 for trouble breathing or blue or gray lips.'
+   normal: [['Catnap one day, none the next'], ['Bedtime creeping later before the switch'], ['New skills disturbing sleep']],
+   help: 'Call if Maya snores most nights, pauses or gasps in sleep, or sleep changes come with fever or poor feeding.'
   },
   two10: {
-   short: 'Two naps, one in the morning and one in the afternoon, usually carry on well past the first birthday. A short nap or a busy day can shift the timing without changing the number of naps.',
+   short: 'Two naps usually last well past the first birthday. A short nap can shift the timing, not the number.',
    do: [
-    ['After a short or missed nap, offer the next sleep earlier', 'One disrupted day doesn’t mean the two-nap routine has stopped working.'],
-    ['Practice new skills while Maya is awake', 'Pulling up and cruising can wake {o} at night. Plenty of practice in the day, and a familiar bedtime, help it pass.']
+    ['After a short nap, offer the next sleep earlier', 'One rough day doesn’t end the two-nap routine.'],
+    ['Practice new skills while Maya is awake', 'Plenty of standing practice by day helps nights.']
    ],
    know: [
-    ['Use the two naps as anchors', 'Timing can move after a short nap; the shape of the day stays the same.'],
-    ['Most babies don’t drop to one nap until 13–18 months', 'A few refused naps around now are usually a phase, not a transition.']
+    ['Most babies move to one nap at 13–18 months', 'A few refused naps now are usually a phase.']
    ],
-   normal: [
-    ['Unsettled nights with new skills', 'Practicing standing in the crib is very common.'],
-    ['Separation anxiety at bedtime', 'Often strongest around 8–10 months.']
-   ],
-   help: 'Call your pediatrician if Maya snores most nights, pauses or gasps during sleep, or if sleep changes come with a fever or poor feeding. Call 911 for trouble breathing or blue or gray lips.'
+   normal: [['Standing up in the crib'], ['Separation anxiety at bedtime']],
+   help: 'Call if Maya snores most nights, pauses or gasps in sleep, or sleep changes come with fever or poor feeding.'
   }
  },
  Feeding: {
   learn: {
-   short: 'Newborns feed 8–12 times a day, often every 1–3 hours, day and night. Small, frequent feeds are exactly right, and you’ll both get the hang of it.',
+   short: 'Newborns feed 8–12 times a day, often every 1–3 hours. Small, frequent feeds are exactly right.',
    do: [
-    ['Feed at the first hunger cues', 'Rooting, lip smacking and hands to the mouth usually come before crying. Offer milk when you see them, even if Maya ate an hour ago.'],
-    ['Let Maya end the feed', 'Slowing down, turning away or closing {p} mouth can mean {s} {has} had enough. {S} doesn’t need to finish a bottle. Sleepiness alone doesn’t tell you how much milk {s} took.'],
-    ['Get help early if nursing hurts', 'Pain past the first few seconds, or trouble latching, is worth a lactation visit now, not later.']
+    ['Feed at the first hunger cues', 'Rooting, lip smacking and hands to mouth come before crying.'],
+    ['Let Maya end the feed', 'Turning away or slowing down means {s} {has} had enough.'],
+    ['Get help early if nursing hurts', 'Pain past the first few seconds is worth a lactation visit.']
    ],
    know: [
-    ['How to tell it’s going well', 'At least 6 wet diapers a day after day 5, and back to birth weight by about 2 weeks.'],
-    ['Why feeds come so often', 'Newborns need frequent feeds to grow. If you’re nursing, feeding often also builds your milk supply.']
+    ['How to tell it’s going well', '6 or more wet diapers a day after day 5, and birth weight back by 2 weeks.'],
+    ['Frequent feeds build supply', 'If you’re nursing, feeding often helps your milk come in.']
    ],
-   normal: [
-    ['Wanting to feed again an hour later', 'Especially in the evening.'],
-    ['A little spit-up after feeds', 'Fine in a happy baby who’s growing.'],
-    ['Feeds that take a while at first', 'They usually get quicker in the coming weeks.']
-   ],
-   help: 'Call your pediatrician if Maya is hard to wake for feeds, {p} skin or eyes look more yellow, or {s} has fewer wet diapers than expected for {p} age in days. Call 911 for trouble breathing or if {s} is limp or won’t wake.'
+   normal: [['Feeding again an hour later'], ['A little spit-up in a happy baby'], ['Long feeds at first']],
+   help: 'Call if Maya is hard to wake for feeds, looks more yellow, or has fewer wet diapers than expected.'
   },
   rhythm: {
-   short: 'After the newborn weeks, feeds often get quicker or further apart, usually 6–8 a day. Hungrier days still happen, especially during growth spurts.',
+   short: 'Feeds often get quicker or further apart now, usually 6–8 a day. Hungrier days still happen.',
    do: [
-    ['Follow Maya’s cues, not the clock', 'Offer milk at hunger cues and pause at fullness cues, like turning away. Feeding often is normal.'],
-    ['Pace bottle feeds', 'Hold the bottle fairly level and pause every few minutes so Maya can decide when {s} {is} full. Never prop a bottle.']
+    ['Follow cues, not the clock', 'Offer milk at hunger cues; stop at fullness cues.'],
+    ['Pace bottle feeds', 'Hold the bottle level and pause often. Never prop it.']
    ],
    know: [
-    ['How to tell it’s going well', 'Steady growth along {p} own curve at checkups, and regular wet diapers. A shorter feed on its own doesn’t tell you how much milk {s} took.'],
-    ['Why feeds get quicker', 'Many babies get more efficient at feeding as they grow.']
+    ['How to tell it’s going well', 'Steady growth at checkups and regular wet diapers.'],
+    ['Shorter feeds are fine', 'Many babies just get more efficient.']
    ],
-   normal: [
-    ['Shorter, quicker feeds', 'Efficient, not underfed.'],
-    ['Longer gaps between feeds', 'As long as wet diapers and growth stay steady.'],
-    ['A little spit-up', 'Fine in a happy baby who’s growing.']
-   ],
-   help: 'Call your pediatrician if Maya has fewer wet diapers than usual, keeps refusing feeds, or is taking noticeably less milk. Call 911 for trouble breathing or if {s} is limp or won’t wake.'
+   normal: [['Quicker feeds'], ['Longer gaps between feeds'], ['A little spit-up']],
+   help: 'Call if Maya has fewer wet diapers, keeps refusing feeds or is taking much less milk.'
   },
   ready: {
-   short: 'Most babies start solids around 6 months, once they’re developmentally ready. Until then, breast milk or formula is all Maya needs. This is a good time to learn the signs and get set up.',
+   short: 'Most babies start solids around 6 months, once they’re ready. Until then, milk is all Maya needs.',
    do: [
-    ['Watch for the readiness signs', 'Maya holds {p} head steady, sits with support, opens {p} mouth when food comes near, and swallows food rather than pushing it back out. Watching you eat isn’t a sign on its own.'],
-    ['Choose how you’d like to start', 'Spoon-feeding purées, offering soft finger foods (often called baby-led weaning) and mixing both all work. You don’t have to pick just one.'],
-    ['Get the basics ready', 'A high chair with a harness, a small soft-tipped spoon, and an open cup for sips of water from 6 months. The checklist above keeps track.'],
-    ['Learn infant choking first aid', 'A short class or the AAP video. It’s much easier to learn now than in a hurry later.']
+    ['Watch for the readiness signs', 'Steady head, sits with support, opens for food and swallows it.'],
+    ['Choose how you’ll start', 'Purées, soft finger foods or both. Begin with an iron-rich food.'],
+    ['Get set up before the first bite', 'A high chair with a harness, and a choking first-aid class.']
    ],
    know: [
-    ['Gagging isn’t choking', 'Gagging is noisy and common while babies learn to eat. Choking is different: trouble breathing, or a weak or silent cough, even if there’s some sound. That’s when you call 911 and use the first aid you’ve learned.'],
-    ['Start with iron-rich foods', 'Around 6 months, iron becomes an important part of Maya’s diet. Good first foods include mashed beans, iron-fortified cereal and soft shredded meat.'],
-    ['Offer peanut and egg early', 'Once Maya is eating a few other foods, offering peanut and well-cooked egg early, and often, can help prevent those allergies. Check with your pediatrician first if {s} has severe eczema or an egg allergy.', "openPage('chg:Feeding:allergy')", 'See how to introduce allergens'],
-    ['Milk stays the main food', 'Solids start as tastes and practice. Breast milk or formula carries most of Maya’s nutrition for months to come, so keep milk feeds as they are.']
+    ['Gagging is normal; choking isn’t', 'Choking means trouble breathing or a weak cough. Call 911.'],
+    ['Offer peanut and egg early', 'Once a few foods are going well. Ask first if Maya has severe eczema.', "openPage('chg:Feeding:allergy')", 'How to introduce allergens'],
+    ['Milk stays the main food', 'Keep milk feeds as they are. Solids start as practice.']
    ],
-   normal: [
-    ['A hungrier phase around 4 months', 'Extra hunger on its own isn’t a sign Maya is ready for solids. Offer more milk.'],
-    ['Staring at your plate', 'Interest is lovely, but look for the other signs too.'],
-    ['Waking more at night', 'Often a sleep change, not hunger for solids.']
-   ],
-   help: 'Ask your pediatrician about timing if Maya was born early, has severe eczema or a known food allergy, or isn’t showing readiness signs by 7 months.'
+   normal: [['A hungrier phase around 4 months'], ['Watching you eat, with no other signs'], ['Waking more at night']],
+   help: 'Ask about timing if Maya was born early, has severe eczema or a food allergy, or shows no signs by 7 months.'
   },
   first: {
-   short: 'Maya is tasting first foods. A few bites once or twice a day is plenty, and breast milk or formula is still {p} main food.',
+   short: 'A few bites once or twice a day is plenty. Breast milk or formula is still Maya’s main food.',
    do: [
-    ['Start with an iron-rich food', 'Mashed beans, iron-fortified infant cereal mixed with breast milk or formula, or soft shredded meat. Offer small spoonfuls, or let Maya hold a spoon you’ve loaded.'],
-    ['Introduce peanut and egg early', 'One new allergen at a time, a small amount, early in the day. Use a safe form, like peanut butter thinned into a purée or well-cooked egg, then keep each in {p} diet a few times a week.', "openPage('chg:Feeding:allergy')", 'See how to introduce allergens'],
-    ['Let Maya decide how much', 'Offer, then follow {p} lead. Turning away or closing {p} mouth means {s} {is} done.'],
-    ['Pick a time when Maya is alert', 'Not overtired, and not starving. Between milk feeds often works well.']
+    ['Start with an iron-rich food', 'Mashed beans, iron-fortified cereal or soft shredded meat.'],
+    ['Introduce peanut and egg early', 'One at a time, in a safe form, then keep offering.', "openPage('chg:Feeding:allergy')", 'How to introduce allergens'],
+    ['Let Maya decide how much', 'Turning away or closing {p} mouth means done.']
    ],
    know: [
-    ['Foods to make safe', 'Whole nuts, whole grapes, popcorn, round slices of hot dog, raw carrot or apple, and spoonfuls of thick nut butter can cause choking. Quarter grapes lengthwise, cook vegetables until soft and thin nut butter.'],
-    ['Not before 12 months', 'Honey, cow’s milk as a drink and juice. Avoid added sugar, and keep salt low.'],
-    ['Milk carries on as before', 'Keep breast milk or formula feeds as they are. A few sips of water from an open cup at meals is fine.'],
-    ['Stay close at every meal', 'Keep Maya sitting upright and stay with {o} for every meal and snack.']
+    ['Make choking hazards safe', 'Quarter grapes, soften vegetables, thin nut butter. No whole nuts or popcorn.'],
+    ['Not before 12 months', 'Honey, cow’s milk as a drink, and juice.'],
+    ['Milk feeds stay the same', 'Sips of water from an open cup at meals are fine.']
    ],
-   normal: [
-    ['Gagging and funny faces', 'Part of learning to move food around the mouth.'],
-    ['Eating almost nothing some days', 'Interest matters more than amount right now.'],
-    ['Changes in poop', 'New colors and textures are expected as foods change.']
-   ],
-   help: 'Call your pediatrician if hives or vomiting follow a new food, or if Maya keeps refusing all food over a few weeks. Call 911 for trouble breathing, swelling of the lips or tongue, or choking that doesn’t clear.'
+   normal: [['Gagging and funny faces'], ['Eating almost nothing some days'], ['Changes in poop']],
+   help: 'Call if hives or vomiting follow a new food. Call 911 for trouble breathing or swelling of the lips or tongue.'
   },
   textures: {
-   short: 'Maya is ready for more texture: soft lumps, mashed food and finger foods {s} can pick up. Build from foods {s} already manages, whether you started with purées, self-feeding or both.',
+   short: 'Maya is ready for soft lumps and finger foods. Build on foods {s} already manages.',
    do: [
-    ['Move from smooth to lumpy', 'Start from a food Maya already likes and make it a little thicker or lumpier each week.'],
-    ['Offer soft finger foods', 'Finger-sized strips are easiest at first. Once Maya can pinch with thumb and finger, small soft pieces work too.'],
-    ['Practice with an open cup', 'A few sips of water at meals. Spills are part of learning.'],
-    ['Eat together when you can', 'Maya learns a lot by copying you.']
+    ['Go from smooth to lumpy', 'Make a familiar food a little thicker each week.'],
+    ['Offer soft finger foods', 'Finger-sized strips first, smaller pieces once {s} can pinch.'],
+    ['Practice with an open cup', 'A few sips of water at meals.']
    ],
    know: [
-    ['Foods to make safe', 'Whole nuts, whole grapes, popcorn, round slices of hot dog, raw carrot or apple, and spoonfuls of thick nut butter can cause choking. Quarter grapes lengthwise, cook vegetables until soft and cut food into finger-sized strips.'],
-    ['Milk still matters', 'Meals don’t need to replace milk feeds yet. Offer both.'],
-    ['Look at the week, not the meal', 'How much Maya eats at one meal matters less than how the week goes overall.']
+    ['Make choking hazards safe', 'Quarter grapes, soften vegetables, cut food into strips.'],
+    ['Milk still matters', 'Meals don’t need to replace milk feeds yet.'],
+    ['Look at the week, not the meal', 'Appetite swings from day to day.']
    ],
-   normal: [
-    ['Mess, and lots of dropped food', 'That’s exploring.'],
-    ['Appetite that swings from day to day', 'Especially during teething or illness.'],
-    ['Wanting to do it alone', 'Let Maya try, with a loaded spoon or finger food alongside.']
-   ],
-   help: 'Call your pediatrician if Maya keeps vomiting or refusing foods with texture, shows little interest in food after 9 months, or has hives or vomiting after a new food. Call 911 for trouble breathing or choking that doesn’t clear.'
+   normal: [['Mess and dropped food'], ['Appetite that swings'], ['Wanting to do it alone']],
+   help: 'Call if Maya keeps refusing textures or vomiting, or shows little interest in food after 9 months.'
   },
   meals: {
-   short: 'Maya is eating three meals a day, plus a snack or two, with milk alongside. Much of what you eat can now be adapted for {o}.',
+   short: 'Three meals and a snack or two, with milk alongside. Most family food can be adapted for Maya.',
    do: [
-    ['Adapt a family meal', 'Set Maya’s portion aside before adding salt. Aim for an iron-rich food, a soft vegetable or fruit, and a starchy food, each prepared for the way {s} eats.'],
-    ['Offer a cup at meals', 'Water from an open or straw cup, so cups feel normal before bottles go.'],
-    ['Plan the milk change at 12 months', 'From 12 months, whole cow’s milk can replace formula, about 16–24 oz a day from a cup. Breastfeeding can continue for as long as you both want.']
+    ['Adapt a family meal', 'Set Maya’s portion aside before adding salt.'],
+    ['Offer a cup at meals', 'Water from an open or straw cup.'],
+    ['Plan the milk change at 12 months', 'Whole cow’s milk can replace formula then. Nursing can continue.']
    ],
    know: [
-    ['A light day is normal', 'Appetite swings. Growth at checkups tells you more than any one day.'],
-    ['Still not before 12 months', 'Honey, cow’s milk as a drink and juice. Keep salt and added sugar low.'],
-    ['Foods to make safe', 'Whole nuts, whole grapes, popcorn and round slices of hot dog still need cutting or avoiding.']
+    ['A light day is normal', 'Growth at checkups tells you more than any meal.'],
+    ['Still not before 12 months', 'Honey, cow’s milk as a drink, and juice.']
    ],
-   normal: [
-    ['Picky phases', 'Keep offering. It can take many tries before a new food is accepted.'],
-    ['Wanting to self-feed everything', 'Messy, and good practice.'],
-    ['Eating a lot one day and very little the next', 'It evens out over the week.']
-   ],
-   help: 'Call your pediatrician if Maya is having fewer wet diapers, keeps refusing food, or has hives or vomiting after a new food. Call 911 for trouble breathing, swelling of the lips or tongue, or choking that doesn’t clear.'
+   normal: [['Picky phases'], ['Wanting to self-feed'], ['A big day, then a small one']],
+   help: 'Call if Maya has fewer wet diapers, keeps refusing food or reacts to a new food.'
   }
  }
 };

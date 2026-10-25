@@ -229,7 +229,7 @@ window.AHEAD_CHANGES = {
   "EV": [
    {
     "key": "four",
-    "supportNote": "Keep needed night feeds. If waking comes with fever, poor feeding or signs of pain, contact your pediatrician rather than assuming it is the sleep change.",
+    "supportNote": "Keep night feeds going. If waking comes with fever, poor feeding or pain, call your pediatrician.",
     "rail": "4-month sleep regression",
     "when": "Usually 3–5 months",
     "title": "The 4-month sleep regression",
@@ -963,7 +963,7 @@ window.AHEAD_CHANGES = {
     "label": "Comes and goes",
     "when": "Often around 3 weeks, 6 weeks and 3 months",
     "title": "Cluster feeding and growth spurts",
-    "lead": "Some days she wants several feeds close together, often in the evening. Watch wet diapers, growth and how feeding feels alongside the frequent feeds.",
+    "lead": "Some days she wants several feeds close together, often in the evening. Wet diapers and growth tell you it’s going well.",
     "looks": [
      "Feeding every hour or more often for a few hours",
      "Fussy between feeds, especially in the evening",
