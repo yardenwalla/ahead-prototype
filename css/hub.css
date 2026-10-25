@@ -279,3 +279,25 @@
 #main .hub-choice-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px }
 #main .hub-choice-chips button { border: 1px solid var(--line); background: var(--white); border-radius: 999px; padding: 8px 13px; font: inherit; font-size: 14px; font-weight: 600; color: var(--ink); cursor: pointer }
 #main .hub-choice-chips button.is-on { background: var(--year-pale); border-color: var(--year-ink); color: var(--year-ink) }
+
+/* Resources, Saved, How we choose guidance */
+#main .hub-search { margin: 0 0 6px }
+#main .hub-search .search { width: 100%; box-sizing: border-box; min-height: 50px; padding: 12px 16px; border-radius: 16px; border: 1px solid var(--line); background: var(--white); font-size: 16px; margin: 0 0 14px }
+#main .hub-results:empty { display: none }
+#main .hub-results-empty { margin: 0; padding: 14px 16px; font-size: 14px; color: var(--muted) }
+#main .hub-card-label { margin: 0 0 4px; font-size: 13px; font-weight: 600; color: var(--year-ink) }
+#main .hub-card-text { margin: 0 0 10px; font-size: 15px; line-height: 1.5; color: var(--ink) }
+#main .hub-empty .hub-button { margin-top: 6px }
+#main .hub-utility { margin-top: 18px }
+
+/* Page gutter: always keep a visible side margin on phones, including notched screens and in-app viewers. */
+#main { padding-left: max(20px, env(safe-area-inset-left)) !important; padding-right: max(20px, env(safe-area-inset-right)) !important; box-sizing: border-box }
+#main .hub-pills { margin-left: -20px !important; margin-right: -20px !important; padding-left: 20px !important; padding-right: 20px !important; scroll-padding-inline: 20px }
+#main .category-page-header .journey-stage-rail { margin-left: -20px !important; margin-right: -20px !important; padding-left: 16px !important; padding-right: 16px !important }
+#main .monthstrip { margin-left: -20px !important; margin-right: -20px !important; padding-left: 20px !important; padding-right: 20px !important }
+#main .journey-stage-rail { margin-left: -20px; margin-right: -20px; padding-left: 20px; padding-right: 20px; scroll-padding-inline: 20px }
+#shell > .top { padding-left: max(20px, env(safe-area-inset-left)) !important; padding-right: max(20px, env(safe-area-inset-right)) !important }
+#main .hub-utility, #main .hub-empty, #main .hub-why { text-align: left }
+#main .hub-utility .hub-row-copy, #main .hub-utility .hub-row-copy b, #main .hub-utility .hub-row-copy small { text-align: left }
+#main .hub-why > div + div { border-top: 1px solid var(--line); padding-top: 12px; margin-top: 2px }
+#main .hub-why .hub-card-text { font-size: 14px; color: var(--muted) }

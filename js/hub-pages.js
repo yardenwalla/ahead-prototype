@@ -357,4 +357,85 @@
     if (cat === 'Timeline' && screen === 'milestone') return recordMilestonePage();
     return baseRoute(p);
   };
+
+  /* ---------- Resources, a resource, Saved and How we choose guidance ---------- */
+  const CAT_ICON = { Development: 'smile', Feeding: 'bowl', Sleep: 'moon', Health: 'steth', Safety: 'shield', 'Daily rhythm': 'bath' };
+  const hubShell = (cat, inner) => `<div class="quiet-category hub-page hub-detail" style="${yearTheme(cat)}">${inner}</div>`;
+  const headBlock = (artName, cat, context, title, lead) => `<div class="hub-detail-head"><span class="hub-big">${hubArt(artName, cat)}</span><p class="hub-context">${esc2(context)}</p><h1>${esc2(title)}</h1>${lead ? `<p class="hub-lead">${esc2(lead)}</p>` : ''}</div>`;
+  const plainRow = (iconName, cat, title, sub, onclick, chipText) => `<button class="hub-row" onclick="${onclick}"><span class="hub-dot">${hubArt(iconName, cat)}</span><span class="hub-row-copy"><b>${esc2(title)}</b>${sub ? `<small>${esc2(sub)}</small>` : ''}</span>${chipText ? `<span class="hub-chip">${esc2(chipText)}</span>` : ''}<span class="hub-chev" aria-hidden="true">›</span></button>`;
+
+  if (typeof resourcesRework === 'function') {
+    window.resourcesRework = resourcesRework = function () {
+      const nm = name(), m = month, prep = m >= 4 && foodStage() === 'preparing';
+      const items = [
+        ['Development', 'What does this skill look like?', 'cdc'],
+        ['Sleep', 'What can help with sleep?', 'aap'],
+        ['Feeding', m >= 4 ? (prep ? 'How do I get ready for foods?' : 'How do I prepare this food?') : 'How do I understand feeds?', m >= 4 ? (prep ? 'readiness' : 'solids') : 'care'],
+        ['Health', 'What should I know before a checkup?', 'visits'],
+        ['Safety', 'What needs to change at home?', 'homeSafety'],
+        ['Daily rhythm', `How do I bathe and care for ${nm}?`, 'care']
+      ];
+      let b = backButton() + headBlock('book', 'Development', 'Resources', 'Trusted places to turn', 'Pick a question to see the source we use for it, or search every guide.');
+      b += `<div class="hub-search"><input class="search" placeholder="Try rolling, naps or first foods" aria-label="Search guidance" oninput="searchGuides(this.value)" value="${esc2(query || '')}"><div id="results" class="hub-list hub-results" hidden></div></div>`;
+      b += `<h2 class="hub-h2">By topic</h2><div class="hub-list">` + items.map(([cat, q, k]) => plainRow(CAT_ICON[cat], cat, q, `${RESOURCE[k].title} · ${RESOURCE[k].cost}`, `openPage('resource:${k}')`)).join('') + '</div>';
+      b += `<h2 class="hub-h2">If you want more</h2><div class="hub-list">` + plainRow('moon', 'Sleep', 'A structured sleep course', 'Taking Cara Babies · see the approach and cost first', "openPage('resource:cara')", 'Paid') + '</div>';
+      b += `<div class="hub-list">` + plainRow('book', 'Development', 'How we choose guidance', 'No paid placements or affiliate links', "openPage('trust')") + '</div>';
+      return hubShell('Development', b);
+    };
+    const baseSearch = searchGuides;
+    window.searchGuides = searchGuides = function (q) {
+      baseSearch(q);
+      const box = document.querySelector('.hub-results');
+      if (!box) return;
+      const term = String(q || '').trim();
+      box.hidden = !term;
+      box.querySelectorAll('button.row').forEach(btn => {
+        const t = btn.querySelector('h3'), sub = btn.querySelector('p');
+        const go = btn.getAttribute('onclick') || '', cat = (go.match(/topic:([A-Za-z ]+)/) || [])[1];
+        btn.outerHTML = plainRow(CAT_ICON[cat] || 'book', cat || 'Development', t ? t.textContent : '', sub ? sub.textContent : '', go);
+      });
+      const empty = box.querySelector('.hint');
+      if (empty) empty.outerHTML = `<p class="hub-results-empty">${esc2(empty.textContent)}</p>`;
+    };
+  }
+
+  if (typeof resourceRework === 'function') {
+    window.resourceRework = resourceRework = function (id) {
+      const r = RESOURCE[id];
+      const cta = id === 'solids' ? 'Open the food database' : id === 'cdc' ? 'See milestone examples' : id === 'cara' ? 'Explore sleep classes' : 'Open the guidance';
+      let b = backButton() + headBlock(r.commercial ? 'star' : 'book', 'Development', r.commercial ? 'Optional paid resource' : 'Where to turn', r.title, r.use);
+      b += `<section class="hub-card"><p class="hub-card-label">When it helps</p><p class="hub-card-text">${esc2(r.when)}</p><span class="hub-chip">${esc2(r.cost)}</span><a class="hub-button" href="${r.url}" target="_blank" rel="noopener" style="text-decoration:none">${cta} ↗</a></section>`;
+      b += `<h2 class="hub-h2">Why it’s here</h2><div class="hub-card hub-why">${[['Who’s behind it', r.who], ['Why we include it', r.evidence], ['Keep in mind', r.limits]].map(([t, d]) => `<div><p class="hub-card-label">${t}</p><p class="hub-card-text">${esc2(d)}</p></div>`).join('')}</div>`;
+      b += `<h2 class="hub-h2">Sources we checked</h2><div>` + r.refs.map(([t, u]) => `<a class="hub-video" href="${u}" target="_blank" rel="noopener"><span class="hub-play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 3h7l4 4v14H7Z"/><path d="M10 12h5M10 16h5"/></svg></span><span class="hub-row-copy"><b>${esc2(t)}</b><small>Opens the source</small></span><span class="hub-chev" aria-hidden="true">↗</span></a>`).join('') + '</div>';
+      b += `<p class="hub-note">Checked October 2026. Costs and availability can change. ${r.commercial ? 'Listed so you can decide for yourself, not as an endorsement.' : 'No paid placement or affiliate links.'}</p>`;
+      return hubShell('Development', b);
+    };
+  }
+
+  window.hubSavedPage = function () {
+    const rows = saved.map(k => {
+      if (k.startsWith('topic:')) { const t = k.slice(6); return plainRow(CAT_ICON[t] || 'book', t, displayTopic(t), `Follows ${name()}’s current stage`, `openSavedTopic('${t}')`); }
+      if (k.startsWith('view:')) { const d = savedViewData(k); if (!d) return ''; return plainRow(CAT_ICON[d.topic] || 'book', d.topic, savedViewTitle(d) || displayTopic(d.topic), `${displayTopic(d.topic)} · saved at ${monthLabel(d.month).toLowerCase()}`, `openSavedView('${k}')`); }
+      const g = GUIDES[k]; if (!g) return '';
+      return plainRow(CAT_ICON[g.topic] || 'book', g.topic, g.title, `${displayTopic(g.topic)} · 2 min read`, `openSavedGuide('${k}')`);
+    }).filter(Boolean);
+    let b = backButton() + headBlock('star', 'Development', 'Saved', 'For another quiet moment', rows.length ? `Guides you saved open at the stage you saved them. Whole topics follow ${name()}’s current stage.` : '');
+    b += rows.length ? `<div class="hub-list">${rows.join('')}</div>` : `<section class="hub-card hub-empty"><p class="hub-card-label">Nothing saved yet</p><p class="hub-card-text">Tap the bookmark at the top of any guide to keep it here.</p><button class="hub-button" onclick="navigate('categories')">Browse guides</button></section>`;
+    return hubShell('Development', b);
+  };
+
+  window.hubTrustPage = function () {
+    let b = backButton() + headBlock('book', 'Development', 'How we choose guidance', 'Where the advice comes from', 'Every guide should tell you who’s behind it, why it belongs here and what’s still uncertain.');
+    b += `<div class="hub-list">` + [['steth', 'Credentialed', 'Pediatric organizations and clinical experts, like the AAP and CDC'], ['book', 'Evidence-based', 'Checked against current evidence, with uncertainty made clear'], ['shield', 'Never sponsored', 'No paid placements, affiliate links or product deals']].map(([i, t, s]) => `<div class="hub-row is-static"><span class="hub-dot">${hubArt(i, 'Development')}</span><span class="hub-row-copy"><b>${t}</b><small>${s}</small></span></div>`).join('') + '</div>';
+    b += `<div class="hub-tip"><b>When experts disagree</b>We lay out the options so you can decide with your pediatrician.</div>`;
+    b += `<p class="hub-note">This is a prototype. Linked sources are the references we’re proposing, and Ahead doesn’t replace medical care.</p>`;
+    return hubShell('Development', b);
+  };
+
+  if (typeof journeyCategories === 'function') {
+    const baseCategories = journeyCategories;
+    window.journeyCategories = journeyCategories = function () {
+      return baseCategories().replace(/<div class="journey-utility-links">[\s\S]*<\/div>$/, `<div class="hub-list hub-utility">${plainRow('book', 'Development', 'Resources and search', 'Trusted sources for every topic', "openPage('explore')")}${plainRow('star', 'Development', 'Saved', saved.length ? saved.length + ' saved' : 'Guides you bookmark', "openPage('saved')")}</div>`);
+    };
+  }
 })();
