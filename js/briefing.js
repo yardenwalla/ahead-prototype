@@ -177,11 +177,12 @@
     let h = `<section class="connected-now" aria-label="What matters now"><div class="connected-summary"><div class="home-summary connected-summary-intro"><div class="home-summary-heading"><div class="home-month-eyebrow">${month === 0 || focus.confirmed ? 'What matters now' : 'Likely around now'}</div><h1>${focus.title}</h1></div><span class="home-summary-art" aria-hidden="true">${homeMonthArt(month)}</span><p class="heroanswer">${focus.body}</p><div class="home-summary-spectrum" aria-hidden="true">${TOPICS.map(([t]) => `<span style="background:${YEAR_PALETTES[t].bg}"></span>`).join('')}</div></div>`;
     if (now.length) h += `<div class="connected-summary-links">${now.map(row).join('')}</div>`;
     h += `</div>${homeMomentRow()}</section>`;
+    h += liveHomeCheckin();
     if (since) h = `<p class="brief-unchanged">Nothing’s changed since you checked in on ${journeyDateLabel(iso(new Date(since)))}.</p>` + h;
     const ahead = [...next];
     if (ahead.length) h += `<section class="connected-ahead" aria-label="Coming up"><div class="connected-section-heading"><h2>Coming up</h2><button class="textlink" onclick="openPage('ahead')">See all →</button></div><div class="connected-ahead-list">${ahead.map(row).join('')}</div></section>`;
     h += `<p class="brief-close">${close}</p>`;
-    return liveHomeCheckin() + h;
+    return h;
   }
 
   window.homeBriefingDebug = () => { const now = importantNow(); return { now: now.map(i => i.key + ' · ' + i.title), next: comingUp(now).map(i => i.key + ' · ' + i.title) }; };

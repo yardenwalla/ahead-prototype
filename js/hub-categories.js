@@ -17,22 +17,23 @@
 
   /* ---------- Development: "What might I see, and how can I help?" ---------- */
   const DOMAIN_TITLES = { Social: 'Social', Talking: 'Communication', Thinking: 'Thinking', Movement: 'Movement' };
+  const DOMAIN_ICONS = { Social: 'smile', Talking: 'chat', Thinking: 'idea', Movement: 'sit' };
   window.developmentJourneyOverview = developmentJourneyOverview = function (selected = null) {
     const ref = DEV_STAGES[selected] ? Number(selected) : devRef(), now = devRef(developmentMonth(actualMonth())), age = ref === 12 ? '1 year' : ref + ' months';
     const st = DEV_STAGES[ref], h = H();
     const pills = h.pills('Development by age', Object.keys(DEV_STAGES).map(Number).map(k => ({ label: monthsLabel(k), on: k === ref, now: live() && k === now, onclick: `openPage('development-stage:${k}')` })));
     let b = h.hero({ eyebrow: `What you might see by ${age}`, title: st.title, lead: st.body });
     if (live() && ref !== now) b += back(`Back to where Maya is now`, "navigate('categories');openPage('topic:Development')");
-    const tilesHtml = Object.keys(DEV_DOMAINS).map(d => {
+    // Four tiles, each with a line of what you might actually see, so the card is useful before anyone taps in.
+    const domainTiles = Object.keys(DEV_DOMAINS).map(d => {
       const labels = DEVELOPMENT_DOMAINS[ref][d] || [], seen = labels.filter(l => journeyData().records.some(r => r.type === 'milestone' && r.skillKey === journeySkillKey(l))).length;
-      return `<button class="hub-tile is-link" onclick="openPage('development-domain:${ref}:${d}')"><b>${DOMAIN_TITLES[d]}</b><span>${F(`${labels.length} skills to look for`)} ›</span>${seen ? `<em>${F(`${seen} seen`)}</em>` : ''}</button>`;
+      return `<button class="hub-domain-tile" onclick="openPage('development-domain:${ref}:${d}')">${h.art(DOMAIN_ICONS[d], 'Development')}<b>${DOMAIN_TITLES[d]}</b><small>${F(st.summaries[d] || '')}</small><span>${F(seen ? `${seen} of ${labels.length} seen` : `${labels.length} skills`)} ›</span></button>`;
     }).join('');
-    b += `<section class="hub-card hub-glance is-static"><span class="hub-card-head"><b>${F('What Maya might be doing')}</b></span><div class="hub-tiles">${tilesHtml}</div><span class="hub-card-note">${F(developmentMonth() < ref ? `Most babies show these by ${age}. Some may be here already, and others are on the way.` : `Most babies show these by ${age}.`)}</span></section>`;
+    b += `<section class="hub-card hub-glance is-static"><span class="hub-card-head"><b>${F('What Maya might be doing')}</b></span><div class="hub-domain-tiles">${domainTiles}</div></section>` + h.note(developmentMonth() < ref ? `Most babies show these by ${age}. Some may be here already, and others are on the way.` : `Most babies show these by ${age}.`);
     if (ref === now || !live()) {
       const ideas = (playStageModel().primary || []).slice(0, 3), lo = playPhase().lo;
-      b += h.list('Try together', ideas.map(a => h.row({ icon: 'hand', cat: 'Development', title: a.title, sub: playLine(a), onclick: `openPage('play-activity:${lo}:${a.id}')` })));
       const extra = (playStageModel().primary || []).length - 3 + (playStageModel().more || []).length;
-      if (extra > 0) b += h.more(`${extra} more ideas to try`, `openPage('chg:Development:d:more:${lo}')`);
+      b += h.list('Try together', [...ideas.map(a => h.row({ icon: 'hand', cat: 'Development', title: a.title, sub: playLine(a), onclick: `openPage('play-activity:${lo}:${a.id}')` })), extra > 0 ? h.listMore(`See ${extra} more ideas`, `openPage('chg:Development:d:more:${lo}')`) : '']);
     }
     b += h.versus('Not yet, or time to ask?', ['Not yet', `Every baby gets there at {p} own pace. These can show up any time before ${age}.`], ['Talk to your pediatrician', 'If Maya loses a skill, or something worries you. No need to wait for the checkup.']);
     const keys = Object.keys(DEV_STAGES).map(Number), nx = keys[keys.indexOf(ref) + 1];
@@ -201,7 +202,7 @@
     const h = H(), age = ref === 12 ? '1 year' : ref + ' months';
     // Each skill once: what it looks like, and a tap when you've seen it. No separate page per skill.
     const rows = labels.map(l => { const key = journeySkillKey(l), rec = journeyData().records.find(r => r.type === 'milestone' && r.skillKey === key);
-      return `<div class="hub-tick is-habit"><span class="hub-tick-art">${h.art('swallow', 'Development')}</span><span class="hub-row-copy"><b>${clearMilestone(l)}</b><small>${esc(DEV_EXAMPLES[l] || '')}</small></span>${rec ? `<span class="hub-chip is-done">${F('Seen')} ✓</span>` : `<button class="hub-seen" onclick="hubSeen('${key}')">${F('Seen it')}</button>`}</div>`; }).join('');
+      return `<div class="hub-tick is-habit"><span class="hub-tick-art">${h.art(DOMAIN_ICONS[domain] || 'smile', 'Development')}</span><span class="hub-row-copy"><b>${clearMilestone(l)}</b><small>${esc(DEV_EXAMPLES[l] || '')}</small></span>${rec ? `<span class="hub-chip is-done">${F('Seen')} ✓</span>` : `<button class="hub-seen" onclick="hubSeen('${key}')">${F('Seen it')}</button>`}</div>`; }).join('');
     const skill = journeySkills().find(s => labels.includes(s.label) && typeof devSkillActivity === 'function' && devSkillActivity(s)), act = skill && devSkillActivity(skill);
     const tryRow = act ? h.list('Try this together', [h.row({ icon: 'hand', cat: 'Development', title: act.title, sub: playLine(act), onclick: `openDevelopmentActivity('${skill.key}')` })]) : '';
     return `<div class="quiet-category hub-page hub-detail" data-overview="Development" style="${yearTheme('Development')}">${detailPageTop('Development')}<div class="hub-detail-head"><p class="hub-context">${esc(`By ${age}`)}</p><h1>${esc(meta.title)}</h1><p class="hub-lead">${esc(DEV_STAGES[ref].summaries[domain])}</p></div>${h.video('Watch each of these skills in action', 'CDC', devSource(ref), 'Photos and videos')}<div class="hub-ticks">${rows}</div>${h.note(`Most babies show these by ${age}. Tap “Seen it” to save the moment to Maya’s timeline.`)}${tryRow}</div>`;

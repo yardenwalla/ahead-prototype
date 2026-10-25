@@ -39,6 +39,7 @@
   // Normal versus call: two boxes side by side, with an optional link underneath.
   const versus = (title, a, b, link) => `<section class="hub-card hub-versus"><h3>${F(title)}</h3><div class="hub-vs"><div><b>${F(a[0])}</b><p>${F(a[1])}</p></div><div class="is-urgent"><b>${F(b[0])}</b><p>${F(b[1])}</p></div></div>${link ? `<button class="hub-link" onclick="${link[1]}">${F(link[0])} ›</button>` : ''}</section>`;
   const next = (when, title, onclick, extra = '') => `<button class="hub-next" onclick="${onclick}"><span><small>${F(when)}</small><b>${F(title)}</b></span>${chev}</button>${extra}`;
+  const listMore = (label, onclick) => `<button class="hub-list-more" onclick="${onclick}"><span>${F(label)}</span>${chev}</button>`;
   const more = (label, onclick) => `<button class="hub-more" onclick="${onclick}"><span>${F(label)}</span>${chev}</button>`;
   const note = t => `<p class="hub-note">${F(t)}</p>`;
   // A video for things you have to see done. Opens the source in a new tab.
@@ -367,12 +368,12 @@
 
   // Safe sleep reads in order. Setup tasks you finish once get a checkbox; habits you do every time don't.
   const SLEEP_SETUP = [
-    { t: 'Get a firm, flat crib or bassinet', s: 'With a fitted sheet and nothing else in it', art: 'moon', task: 0 },
-    { t: 'Set it up in your room', s: 'Room-sharing is recommended for at least 6 months', art: 'shield', task: 1 },
-    { t: 'Choose a sleep sack instead of blankets', s: 'Light and unweighted, with no hat', art: 'drop', task: 2 },
-    { t: 'Put Maya on {p} back for every sleep', s: 'Naps and nights, every time', art: 'moon', habit: 'Every sleep' },
-    { t: 'Move {o} to {p} crib after the car or swing', s: 'Car seats and swings aren’t for sleep', art: 'clock', habit: 'Every time' },
-    { t: 'Never sleep with Maya on a sofa or armchair', s: 'If you might doze while feeding, use a cleared bed instead', art: 'hand', habit: 'Always' },
+    { t: 'Get a firm, flat crib or bassinet', s: 'With a fitted sheet and nothing else in it', art: 'crib', task: 0 },
+    { t: 'Set it up in your room', s: 'Room-sharing is recommended for at least 6 months', art: 'home', task: 1 },
+    { t: 'Choose a sleep sack instead of blankets', s: 'Light and unweighted, with no hat', art: 'sack', task: 2 },
+    { t: 'Put Maya on {p} back for every sleep', s: 'Naps and nights, every time', art: 'back', habit: 'Every sleep' },
+    { t: 'Move {o} to {p} crib after the car or swing', s: 'Car seats and swings aren’t for sleep', art: 'car', habit: 'Every time' },
+    { t: 'Never sleep with Maya on a sofa or armchair', s: 'If you might doze while feeding, use a cleared bed instead', art: 'sofa', habit: 'Always' },
     { t: 'Offer a pacifier at sleep times', s: 'Once feeding’s going well. It’s linked to lower SIDS risk.', art: 'pacifier', habit: 'If you like' }
   ];
   const SLEEP_TASKS = SLEEP_SETUP.filter(x => x.task != null).length;
@@ -408,7 +409,7 @@
     two: 'Some babies still feed at night with two naps, and that’s fine. Ask your pediatrician before dropping one.'
   };
   const nightCard = key => `<button class="hub-card hub-glance" onclick="${go('chg:Sleep:d:day')}"><span class="hub-card-head"><b>${F('How Maya’s sleeping now')}</b>${chev}</span>${tiles(sleepGlance(key))}<span class="hub-card-note" id="sleep-night-feeds"><b>${F('At night')}</b> ${F(NIGHT[key])}</span></button>`;
-  const swaddleRow = () => swaddleDue() ? row({ icon: 'moon', cat: 'Sleep', title: rolled() ? 'Stop swaddling now' : 'Stop swaddling at the first attempt to roll', sub: rolled() ? (answers.rollDirection === 'Trying to roll' ? 'Now that Maya’s trying to roll, use a sleep sack' : 'Now that Maya’s rolling, use a sleep sack') : 'Switch to a sleep sack that leaves the arms free', chipText: rolled() ? 'Do now' : 'Must know', chipTone: 'is-red', onclick: go('chg:Sleep:d:swaddle') }) : null;
+  const swaddleRow = () => swaddleDue() ? row({ icon: 'sack', cat: 'Sleep', title: rolled() ? 'Stop swaddling now' : 'Stop swaddling at the first attempt to roll', sub: rolled() ? (answers.rollDirection === 'Trying to roll' ? 'Now that Maya’s trying to roll, use a sleep sack' : 'Now that Maya’s rolling, use a sleep sack') : 'Switch to a sleep sack that leaves the arms free', chipText: rolled() ? 'Do now' : 'Must know', chipTone: 'is-red', onclick: go('chg:Sleep:d:swaddle') }) : null;
   const mattressRow = () => mattressLowestDue() ? row({ icon: 'shield', cat: 'Sleep', title: 'Set the crib mattress to its lowest', sub: answers.pullUp === 'Yes' ? 'Now that Maya pulls up, use the lowest setting' : 'Before {s} {pull|pulls} up, use the lowest setting', chipText: 'Do now', chipTone: 'is-red', onclick: go('chg:Sleep:d:mattress') })
     : mattressDue() ? row({ icon: 'shield', cat: 'Sleep', title: 'Lower the crib mattress', sub: answers.sit === 'Yes' ? 'Now that Maya sits, move it down a setting' : 'Move it down before {s} can sit up', chipText: 'Do now', chipTone: 'is-red', onclick: go('chg:Sleep:d:mattress') }) : null;
   function settleRow() {
@@ -435,9 +436,9 @@
       h += hero({ eyebrow: 'Newborn sleep', title: 'Short sleeps, day and night', lead: 'Newborns sleep 14–17 hours a day in stretches of 1–3 hours. There’s no pattern yet, and that’s normal.', button: n === all ? null : { label: 'Set up a safe sleep space', onclick: go('chg:Sleep:safe') } }) + B + (n === all ? list('', [row({ icon: 'moon', cat, title: 'Safe sleep setup', sub: 'Your space is set up. The habits are here too.', chipText: 'Done', chipTone: 'is-done', onclick: go('chg:Sleep:safe') })]) : '');
       h += nightCard(key);
       h += list('In these first weeks', [
-        swaddleRow() || (answers.swaddleStopped === 'Yes' ? null : row({ icon: 'moon', cat, title: 'Swaddle safely, if you swaddle', sub: 'Snug at the chest, loose at the hips', onclick: go('chg:Sleep:d:swaddle') })),
+        swaddleRow() || (answers.swaddleStopped === 'Yes' ? null : row({ icon: 'sack', cat, title: 'Swaddle safely, if you swaddle', sub: 'Snug at the chest, loose at the hips', onclick: go('chg:Sleep:d:swaddle') })),
         row({ icon: 'clock', cat, title: 'Start winding down at the first yawn', sub: 'Most newborns are ready after 45–60 minutes awake', onclick: go('chg:Sleep:d:cues') }),
-        row({ icon: 'hand', cat, title: 'Help Maya fall asleep any way that works', sub: 'Feeding, rocking or holding is fine now', onclick: "openPage('chg:Sleep:settle')" }),
+        row({ icon: 'heart', cat, title: 'Help Maya fall asleep any way that works', sub: 'Feeding, rocking or holding is fine now', onclick: "openPage('chg:Sleep:settle')" }),
         row({ icon: 'moon', cat, title: 'Keep nights dark and quiet', sub: 'It helps {p} body clock switch on', onclick: go('chg:Sleep:d:daynight') })
       ].filter(Boolean).slice(0, 3));
       h += versus('Normal, or time to call?', ['Normal', 'Waking every 2–3 hours, grunts, squeaks and twitches in sleep.'], ['Call your pediatrician', 'Hard to wake for feeds, a temperature of 100.4°F or higher, or trouble breathing.']);
@@ -517,12 +518,12 @@
         + steps(['Snug around the chest, with room for two fingers between the blanket and {p} chest.', 'Loose around the hips, so {p} legs can bend up and out like a frog.', 'Always on {p} back, never on {p} tummy or side.'])
         + tip('Stop at the first attempt to roll', 'Often around 2–4 months. Switch to a sleep sack that leaves the arms free.')
         + video('Swaddling for healthy hips', 'International Hip Dysplasia Institute', 'https://hipdysplasia.org/how-to-swaddle-your-baby-to-help-keep-their-hips-healthy/', 'Guide')
-        + `<div class="hub-actions"><button class="hub-link is-quiet" onclick="setAnswer('swaddleStopped','Yes')">We don’t swaddle</button></div>`, 'moon');
+, 'moon');
     }
     if (id === 'swaddle') {
       return detail(cat, 'Sleep safety', 'Stop swaddling at the first attempt to roll', 'A swaddled baby who rolls onto {p} tummy can’t use {p} arms to move. So once rolling starts, the swaddle stops.',
         steps(['Switch to a sleep sack or wearable blanket that leaves the arms free.', 'Keep putting Maya down on {p} back.', 'If {s} {roll|rolls} over on {p} own both ways, you can leave {o} that way.'])
-        + `<div class="hub-actions"><button class="hub-button" onclick="setAnswer('swaddleStopped','Yes')">I’ve stopped swaddling</button><button class="hub-link is-quiet" onclick="setAnswer('swaddleStopped','Yes')">We don’t swaddle</button></div>` + tip('Skip weighted sleep sacks', 'Any sleep sack should be light and unweighted.'), 'moon');
+        + `<div class="hub-actions">${answers.swaddleStopped === 'Yes' ? `<p class="hub-done">${F('Maya’s in a sleep sack')} ✓</p>` : `<button class="hub-button" onclick="setAnswer('swaddleStopped','Yes')">${F('Maya’s in a sleep sack now')}</button>`}</div>` + tip('Skip weighted sleep sacks', 'Any sleep sack should be light and unweighted.'), 'moon');
     }
     if (id === 'mattress') {
       const lowest = mattressLowestDue();
@@ -649,7 +650,7 @@
     return baseRoute(p);
   };
   // Building blocks shared with the other categories (js/hub-categories.js).
-  window.__hub = { F, row, list, hero, tiles, glanceCard, versus, next, more, note, art, chev, chip, tip, steps, video, detail, mixedList, ticks,
+  window.__hub = { F, row, list, hero, tiles, glanceCard, versus, next, more, note, art, chev, chip, tip, steps, video, detail, mixedList, ticks, listMore,
     pills: (label, items) => `<nav class="hub-pills" id="hub-pills" aria-label="${esc(label)}">${items.map(it => `<button class="${it.on ? 'is-on' : ''} ${it.now ? 'is-now' : ''}" onclick="${it.onclick}" ${it.on ? 'aria-current="step"' : ''}>${esc(it.label)}${it.now && !it.on ? ' <span class="hub-now">Now</span>' : ''}</button>`).join('')}</nav>` };
   window.positionHubPills = function () {
     const r = document.getElementById('hub-pills'), s = r && r.querySelector('.is-on');

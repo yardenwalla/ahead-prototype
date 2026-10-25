@@ -151,3 +151,15 @@
 #main .hub-fig-panel small { font-size: 12.5px; line-height: 1.35; color: var(--muted, #6b6670) }
 #main .hub-fig-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px }
 #main .hub-fig-chips span { font-size: 12.5px; font-weight: 600; padding: 5px 10px; border-radius: 999px; background: var(--paper, #f6f3ee); color: inherit }
+
+/* A "see more" row that belongs to the list above it */
+#main .hub-list-more { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 14px 16px; border: 0; border-top: 1px solid var(--line); background: none; font: inherit; font-weight: 600; color: var(--year-ink, inherit); text-align: left; cursor: pointer }
+#main .hub-list-more { color: var(--year-accent-ink, var(--year-ink, inherit)) }
+
+/* Development areas: tiles with a line of what you might see */
+#main .hub-domain-tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px }
+#main .hub-domain-tile { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; padding: 14px; border: 0; border-radius: 16px; background: var(--year-pale, #f3effb); text-align: left; font: inherit; color: inherit; cursor: pointer }
+#main .hub-domain-tile svg { width: 26px; height: 26px }
+#main .hub-domain-tile b { font-size: 15.5px }
+#main .hub-domain-tile small { font-size: 13px; line-height: 1.35; color: var(--muted, #625d68) }
+#main .hub-domain-tile span { margin-top: auto; padding-top: 4px; font-size: 13px; font-weight: 600; color: var(--year-ink) }
