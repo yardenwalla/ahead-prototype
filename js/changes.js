@@ -28,7 +28,7 @@
 
   const T = s => esc(babyCopy(String(s == null ? '' : s))).replace(/Maya/g, name());
   // Everything developmental follows adjusted age for babies born early (until age 2).
-  const ageNow = () => developmentMonth();
+  const ageNow = () => (typeof hubAgeFor === 'function' ? hubAgeFor('care') : developmentMonth());
 
   /* ---------- where is this baby? ---------- */
   function rolling() { return answers.roll === 'Yes' || ['Tummy to back', 'Back to tummy', 'Both ways'].includes(answers.rollDirection); }

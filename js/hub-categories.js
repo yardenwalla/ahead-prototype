@@ -9,6 +9,18 @@
   function frame(cat, attrs, pillsHtml, body) {
     return `<div class="quiet-category hub-page" data-overview="${cat}" style="${yearTheme(cat)}" ${attrs}>${monthlyPageHeader(cat)}${pillsHtml}${body}<p class="hub-foot">Ages are typical. Every baby moves at their own pace.</p></div>`;
   }
+  // A parent can say "this is where Maya is now" for a category; it sticks until they change it.
+  const STAGE_KEY = () => 'ahead-stage:' + journeyKey();
+  const stageOverrides = () => { try { return JSON.parse(localStorage.getItem(STAGE_KEY())) || {}; } catch (e) { return {}; } };
+  window.hubStageOverride = cat => (live() ? stageOverrides()[cat] : undefined);
+  window.hubSetStage = function (cat, value) {
+    const all = stageOverrides(); if (value == null) delete all[cat]; else all[cat] = value;
+    try { localStorage.setItem(STAGE_KEY(), JSON.stringify(all)); } catch (e) {}
+    const y = scrollY; render(); scrollTo(0, y);
+    if (typeof hubToast === 'function') hubToast(value == null ? 'Back to following ' + name() + '’s age' : 'Updated', value == null ? 'This guide moves along with ' + name() + '’s age again.' : 'This is now ' + name() + '’s guide. You can change it any time.');
+  };
+  const devNow = () => { const o = hubStageOverride('Development'); return DEV_STAGES[o] ? Number(o) : devRef(developmentMonth(actualMonth())); };
+  const pickedNote = (cat, label) => `<div class="hub-browse"><span class="hub-picked">${F('You picked this stage')}</span><button class="hub-link is-quiet" onclick="hubSetStage('${cat}',null)">${F(label)} ›</button></div>`;
   const back = (label, onclick) => `<div class="hub-browse"><button class="hub-link is-quiet" onclick="${onclick}">${F(label)} ›</button></div>`;
   const firstSentence = t => ((String(t || '').match(/^.*?[.!?](\s|$)/) || [String(t || '')])[0]).trim().replace(/\.$/, '');
   const shortLine = t => { const f = firstSentence(t); return f.length > 72 && f.includes(',') ? f.slice(0, f.indexOf(',')) : f; };
@@ -20,26 +32,27 @@
   const DOMAIN_TITLES = { Social: 'Social', Talking: 'Communication', Thinking: 'Thinking', Movement: 'Movement' };
   const DOMAIN_ICONS = { Social: 'smile', Talking: 'chat', Thinking: 'idea', Movement: 'sit' };
   window.developmentJourneyOverview = developmentJourneyOverview = function (selected = null) {
-    const ref = DEV_STAGES[selected] ? Number(selected) : devRef(), now = devRef(developmentMonth(actualMonth())), age = ref === 12 ? '1 year' : ref + ' months';
+    const now = devNow(), ref = DEV_STAGES[selected] ? Number(selected) : now, age = ref === 12 ? '1 year' : ref + ' months';
     const st = DEV_STAGES[ref], h = H();
     const pills = h.pills('Development by age', Object.keys(DEV_STAGES).map(Number).map(k => ({ label: monthsLabel(k), on: k === ref, now: live() && k === now, onclick: `openPage('development-stage:${k}')` })));
     let b = h.hero({ eyebrow: `What you might see by ${age}`, title: st.title, lead: st.body });
-    if (live() && ref !== now) b += back(`Back to where Maya is now`, "navigate('categories');openPage('topic:Development')");
+    if (live() && ref !== now) b += `<div class="hub-browse"><button class="hub-link" onclick="hubSetStage('Development',${ref})">${F('This is where Maya is now')} ›</button><button class="hub-link is-quiet" onclick="navigate('categories');openPage('topic:Development')">${F('Back to Maya’s guide')} ›</button></div>`;
+    else if (live() && hubStageOverride('Development') != null) b += pickedNote('Development', 'Follow Maya’s age instead');
     // One thing about how Maya sees the world at this age: a number you can take in at a glance.
     const EYES = { 2: ['8–12 in', 'smile', 'How far Maya sees clearly. About your face during a feed.'], 4: ['Colors', 'colors', 'Maya is getting better at telling colors and shades apart, and loves faces.'], 6: ['3D', 'cube', 'Maya’s eyes now work together to judge depth, which helps {o} reach.'], 9: ['Still there', 'hidden', 'Maya knows a hidden toy hasn’t vanished. That’s why peekaboo is so exciting.'], 12: ['Distance', 'toss', 'Maya can judge distance well enough to toss a toy with aim.'] }[ref];
     if (EYES) b += `<section class="hub-card hub-eyes"><span class="hub-card-head"><b>${F('Through Maya’s eyes')}</b></span><div class="hub-eyes-row"><span class="hub-eyes-ic">${h.art(EYES[1], 'Development')}</span><span class="hub-eyes-big">${F(EYES[0])}</span><span class="hub-eyes-cap">${F(EYES[2])}</span></div></section>`;
     // Four tiles, each with a line of what you might actually see, so the card is useful before anyone taps in.
     const domainTiles = Object.keys(DEV_DOMAINS).map(d => {
       const labels = DEVELOPMENT_DOMAINS[ref][d] || [], seen = labels.filter(l => journeyData().records.some(r => r.type === 'milestone' && r.skillKey === journeySkillKey(l))).length;
-      return `<button class="hub-domain-tile" onclick="openPage('development-domain:${ref}:${d}')">${h.art(DOMAIN_ICONS[d], 'Development')}<b>${DOMAIN_TITLES[d]}</b><small>${F(st.summaries[d] || '')}</small><span>${F(seen ? `${seen} of ${labels.length} seen` : `${labels.length} skill${labels.length === 1 ? '' : 's'}`)} ›</span></button>`;
+      return `<button class="hub-domain-tile" onclick="openPage('development-domain:${ref}:${d}')">${h.art(DOMAIN_ICONS[d], 'Development')}<b>${DOMAIN_TITLES[d]}</b><small>${(window.hubBabyify || (x => x))(F(st.summaries[d] || ''))}</small><span>${F(seen ? `${seen} of ${labels.length} seen` : `${labels.length} skill${labels.length === 1 ? '' : 's'}`)} ›</span></button>`;
     }).join('');
     b += `<section class="hub-card hub-glance is-static"><span class="hub-card-head"><b>${F('What Maya might be doing')}</b></span><div class="hub-domain-tiles">${domainTiles}</div></section>` + h.note(developmentMonth() < ref ? `Most babies show these by ${age}. Some may be here already, and others are on the way.` : `Most babies show these by ${age}.`);
     if (ref === now || !live()) {
       const ideas = (playStageModel().primary || []).slice(0, 3), lo = playPhase().lo;
       const extra = (playStageModel().primary || []).length - 3 + (playStageModel().more || []).length;
-      b += h.list('Try together', [...ideas.map(a => h.row({ icon: 'hand', cat: 'Development', title: a.title, sub: playLine(a), onclick: `openPage('play-activity:${lo}:${a.id}')` })), extra > 0 ? h.listMore(`See ${extra} more ideas`, `openPage('chg:Development:d:more:${lo}')`) : '']);
+      b += h.list('Try together', [...ideas.map(a => h.row({ icon: 'hand', cat: 'Development', title: (window.hubBabyify || (x => x))(a.title), sub: playLine(a), onclick: `openPage('play-activity:${lo}:${a.id}')` })), extra > 0 ? h.listMore(`See ${extra} more ideas`, `openPage('chg:Development:d:more:${lo}')`) : '']);
     }
-    b += h.versus('Not yet, or time to ask?', ['Not yet', `Every baby gets there at {p} own pace. These can show up any time before ${age}.`], ['Talk to your pediatrician', 'If Maya loses a skill, or something worries you. No need to wait for the checkup.']);
+    b += h.versus('Not yet, or time to ask?', ['Not yet', `Every baby gets there in their own time. These can show up any time before ${age}.`], ['Talk to your pediatrician', 'If Maya loses a skill, or something worries you. No need to wait for the checkup.']);
     const keys = Object.keys(DEV_STAGES).map(Number), nx = keys[keys.indexOf(ref) + 1];
     if (nx && live() && ref === now && nx - developmentMonth(actualMonth()) <= 1) b += h.next(`Coming up by ${monthsLabel(nx)}`, DEV_STAGES[nx].title, `openPage('development-stage:${nx}')`);
     b += h.more('What other parents ask', `openPage('chg:Development:d:faq:${ref}')`);
@@ -69,7 +82,8 @@
     { key: 'late', rail: '7–12 months', when: 'Usually 7–12 months' }
   ];
   const careFor = (days, m) => days < 21 ? 0 : m < 4 ? 1 : m < 7 ? 2 : 3;
-  const careStage = () => live() ? careFor((NOW - parse(profile.dob)) / 864e5, developmentMonth(actualMonth())) : (month < 1 ? 0 : month < 4 ? 1 : month < 7 ? 2 : 3);
+  const careAge = () => (typeof hubAgeFor === 'function' ? hubAgeFor('care', actualMonth()) : developmentMonth(actualMonth()));
+  const careStage = () => { const o = hubStageOverride('Care'); if (CARE[o]) return Number(o); return live() ? careFor((NOW - parse(profile.dob)) / 864e5, careAge()) : (month < 1 ? 0 : month < 4 ? 1 : month < 7 ? 2 : 3); };
   const bathSafety = () => H().versus('Bath safety', ['Always', 'Gather everything first and keep one hand on Maya the whole time.'], ['Never', 'Step away, even for a moment. Babies can slip under quietly in seconds.']);
   const careRow = (icon, title, sub, id) => H().row({ icon, cat: 'Daily rhythm', title, sub, onclick: id.startsWith('chg:') ? `openPage('${id}')` : `openPage('chg:Daily rhythm:d:${id}')` });
   function everydayCare(selected = null) {
@@ -101,7 +115,8 @@
       b += h.list('What helps now', [careRow('tooth', 'Brush the first teeth', 'A soft brush and a tiny smear of toothpaste', 'teeth'), careRow('bath', 'Bath seats aren’t safety seats', 'Stay within arm’s reach, every bath', 'bathseat'), careRow('sun', 'Protect {p} skin in the sun', 'Shade first, then baby sunscreen', 'sun')]);
       b += bathSafety();
     }
-    if (live() && v !== now) b = b.replace('</header>', '</header>' + back('Back to your guide', `openPage('chg:Daily rhythm:s:${now}')`));
+    if (live() && v !== now) b = b.replace('</header>', '</header>' + `<div class="hub-browse"><button class="hub-link" onclick="hubSetStage('Care',${v})">${F('This is where Maya is now')} ›</button><button class="hub-link is-quiet" onclick="openPage('chg:Daily rhythm:s:${now}')">${F('Back to Maya’s guide')} ›</button></div>`);
+    else if (live() && hubStageOverride('Care') != null) b = b.replace('</header>', '</header>' + pickedNote('Care', 'Follow Maya’s age instead'));
     const nx = CARE[v + 1];
     if (nx) b += h.next(v === 0 ? 'Coming up after the first few weeks' : `Coming up at ${nx.rail.split('–')[0]} months`, ['', 'Tub baths and everyday skin care', 'Bath time becomes part of bedtime', 'First teeth and splashier baths'][v + 1], `openPage('chg:Daily rhythm:s:${v + 1}')`);
     return frame('Daily rhythm', `data-care-stage="${CARE[v].key}"`, pills, b);
@@ -163,7 +178,7 @@
     const rank = id => { const i = FIRST.indexOf(id); return i < 0 ? 99 : i; };
     const pills = h.pills('Safety by movement', SAFETY_MOVEMENT_STAGES.map(p => ({ label: p.rail, on: p.key === key, now: live() && p.key === now, onclick: `openPage('safety-stage:${p.key}')` })));
     let b = h.hero({ eyebrow: SAFETY_MOVEMENT_STAGES.find(p => p.key === key).rail, title: SAFETY_HEAD[key][0], lead: SAFETY_HEAD[key][1], meter: { label: owner === 'setup' ? 'Setup checks' : owner === 'reach' ? 'Reaching and rolling checks' : 'Babyproofing checks', n: done, of: guide.ids.length }, button: { label: pending.length ? (done ? 'Keep going with the checklist' : 'Open the checklist') : 'Review the checklist', onclick: `openSafetyChecklist('${owner}',${browse})` } });
-    if (browse) b += back('Back to your guide', 'safetyBackToNow()');
+    if (browse) b += back('Back to Maya’s guide', 'safetyBackToNow()');
     b += pending.length
       ? h.list(done ? 'Next up' : 'Start with these', [...pending].sort((x, y) => rank(x) - rank(y)).slice(0, 3).map(id => h.row({ icon: 'shield', cat: 'Safety', title: (items[id] || {}).title || id, sub: shortLine((items[id] || {}).body), onclick: browse ? `openSafetyChecklist('${owner}',true)` : `openHomeSafetyCheck('${owner}','${id}')` })))
       : h.note(`You’ve done every check for this stage. Nice work.`);
@@ -254,7 +269,7 @@
     if ((cat === 'Daily rhythm' || cat === 'Development') && screen === 'd' && a === 'more') {
       const { phase, primary, more } = playStageModel(Number(b)), h = H();
       const all = [...primary.slice(3), ...more];
-      return detailFrame('Development', phase.title, 'More ideas to try', 'Pick whatever suits the moment. There’s no need to do them all.', h.list('', all.map(x => h.row({ icon: 'hand', cat: 'Development', title: x.title, sub: playLine(x), onclick: `openPage('play-activity:${phase.lo}:${x.id}')` }))));
+      return detailFrame('Development', phase.title, 'More ideas to try', 'Pick whatever suits the moment. There’s no need to do them all.', h.list('', all.map(x => h.row({ icon: 'hand', cat: 'Development', title: (window.hubBabyify || (y => y))(x.title), sub: playLine(x), onclick: `openPage('play-activity:${phase.lo}:${x.id}')` }))));
     }
     return baseRoute(p);
   };
