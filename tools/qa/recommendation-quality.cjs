@@ -63,7 +63,7 @@ for(const experience of ['preparing','new','established']) {
   a.run("saveJourneySkill('sits-without-support',{date:iso(NOW)});navigate('home')");
   check(clean(a.html()).includes('Now that Ari can sit without support'),'Saved sitting changes Home');
   a.run("openPage('topic:Sleep')");
-  check(clean(a.html()).includes('You said baby can sit without support'),'Saved sitting changes Sleep');
+  check(clean(a.html()).includes('Now that Ari sits'),'Saved sitting changes Sleep');
   a.run("setAnswer('mattressLowered','Yes')");
   check(!clean(a.html()).includes('Sitting means the crib mattress goes down'),'Completed mattress work stops being an action');
   a.run("saveJourneySkill('pulls-up-to-stand',{date:iso(NOW)});openPage('topic:Safety')");

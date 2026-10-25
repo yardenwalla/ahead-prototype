@@ -587,7 +587,7 @@
   window.chgStageIndex = function (cat) { return CFG[cat].stage(ageNow()); };
   window.chgStageLabel = function (cat) { const c = DATA[cat].CH[CFG[cat].stage(ageNow())]; return c ? c.rail : ''; };
   // Internals the summary-and-detail screens (js/hub.js) build on.
-  window.__chg = { DATA, CFG, ageNow, method, T, fmt, question, checklist, sources, live, mainPage, sub,
+  window.__chg = { DATA, CFG, ageNow, method, T, fmt, question, checklist, sources, live, mainPage, sub, sampleDay, guideFor, settlingGuide, alertFor,
     get local() { return local; }, save, rerender() { const y = scrollY; render(); scrollTo(0, y); } };
 })();
 

@@ -16,7 +16,7 @@ for (let age=0; age<=12; age++) {
   }
   check(a.run('JSON.stringify(answers)') === before, 'Browsing every safety stage records no ability');
   a.run("openPage('topic:Sleep')");
-  check(clean(a.html()).includes('Recommended for this age'), 'Unknown nap pattern is presented as guidance selected by age');
+  check(a.html().includes('aria-current="step"') && !clean(a.html()).includes('Based on your nap pattern'), 'Unknown nap pattern is presented as guidance selected by age');
   a.run("openPage('chg:Sleep:s:2');chgAnswer('Sleep:rhythm:2',1)");
   check(!clean(a.html()).includes('This is likely the 4-month'), 'Unexplained waking is not diagnosed from one answer');
   check(!clean(a.html()).includes('At 5 months, most babies'), 'Multi-age guidance does not leak a fixed five-month instruction');
@@ -25,7 +25,7 @@ for (let age=0; age<=12; age++) {
 const a = family(8,{twoNaps:'Stay',swaddleStopped:'Yes'});
 a.run("openPage('chg:Sleep:e:1')");
 check(!clean(a.html()).includes('Keep the two-nap pattern'), 'Separation-anxiety help does not invent a two-nap routine');
-a.run("openPage('chg:Sleep:s:2');chgAnswer('Sleep:rhythm:1',1)");
+a.run("openPage('chg:Sleep:d:faq:rhythm');chgAnswer('Sleep:rhythm:1',1)");
 check(!clean(a.html()).includes('Try a stroller ride, car ride'), 'Catnap troubleshooting agrees with safe-sleep guidance');
 a.run("chgAnswer('Sleep:rhythm:2',0)");
 check(clean(a.html()).includes('rolls both ways'), 'Rolling FAQ retains the both-directions condition');
@@ -90,15 +90,15 @@ for(const age of [0,1,2,3]) {
 // The sample must contain the nap count displayed above it, with ordered times.
 for(let age=4;age<=12;age++)for(const answer of ['Stay','Yes']) {
   const b=family(age,{twoNaps:answer,swaddleStopped:'Yes',mattressLowest:'Yes'});
-  b.run("openPage('topic:Sleep')");const html=b.html();
-  const count=Number(html.match(/<span>Naps<\/span><strong>(\d+)/)[1]);
+  b.run("openPage('chg:Sleep:d:day')");const html=b.html();
+  const count=Number(html.match(/<small>Naps<\/small><b>(\d+)/)[1]);
   check((html.match(/data-sample-nap=/g)||[]).length===count,'Sample day matches the displayed nap count');
   const times=[...html.matchAll(/<time datetime="(\d\d):(\d\d)"/g)].map(m=>Number(m[1])*60+Number(m[2]));
   check(times.length>=6 && times.every((v,i)=>i===0||v>times[i-1]),'Example day has actual, increasing clock times');
   check(times.at(-1)>=19*60 && times.at(-1)<=20*60,'Example bedtime fits the displayed bedtime range');
 }
 for(const age of [0,1,2,3]) {
-  const b=family(age);b.run("openPage('topic:Sleep')");
+  const b=family(age);b.run("openPage('chg:Sleep:d:day')");
   check(!/data-sample-nap=/.test(b.html()),'Early flexible sleep does not imply fixed nap appointments');
 }
 for(const choice of ['trying','routine','help']) {

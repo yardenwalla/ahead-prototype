@@ -106,3 +106,10 @@
 #main .hub-faq { margin-top: 0 }
 #main .hub-detail .safety-check-section { margin: 0 0 14px }
 #main .hub-detail[data-overview="Feeding"] .hub-tick-art { background: var(--year-pale) }
+#main .hub-row.is-static { cursor: default }
+#main .hub-actions { display: flex; flex-direction: column; align-items: stretch; gap: 2px; margin: 0 0 14px }
+#main .hub-actions .hub-link { text-align: center !important }
+#main .hub-bullets { margin: 8px 0 0; padding-left: 18px; font-size: 14px; line-height: 1.6; color: var(--ink) }
+#main .hub-tiles.is-flat { margin-top: 0 }
+#main .hub-dayplan .chg-sample-title { margin-top: 0 }
+#main .hub-card-note b { color: var(--ink); font-weight: 600 }

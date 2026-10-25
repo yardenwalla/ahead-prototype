@@ -155,7 +155,7 @@ def check(results):
             if fi < prev_feed: F.add('order', 'bug', 'Feeding stage went backwards', pid, wk, where)
             prev_sleep, prev_feed = (si if reported['naps'] == 'Stay' else max(prev_sleep, si)), max(prev_feed, fi)
             for name, pg, lst in (('Sleep', s, SLEEP), ('Feeding', f, FEED)):
-                if not (pg['eyebrow'].startswith(('Around now', 'Recommended for this age', 'Your ', 'Based on')) or pg['eyebrow'] == 'Current guide'): F.add('order', 'bug', f'{name} hero doesn’t say “Around now” for the current stage', pid, wk, f'{where}: “{pg["eyebrow"]}”')
+                if pg['eyebrow'] != pg['current']: F.add('order', 'bug', f'{name} hero doesn’t match the current stage', pid, wk, f'{where}: “{pg["eyebrow"]}”')
                 last = pg['current'] == lst[-1]
                 if not last and not pg['comingUp']: F.add('order', 'bug', f'{name}: no “Coming up” card before the last stage', pid, wk, where)
                 if last and not pg['after']: F.add('order', 'warning', f'{name}: last stage has no “after the first birthday” note', pid, wk, where)

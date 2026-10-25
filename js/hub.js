@@ -191,7 +191,7 @@
         row({ icon: 'avocado', title: 'Offer soft finger foods', sub: 'Strips first, small pieces once {s} can pinch', onclick: go('chg:Feeding:d:finger') }),
         row({ icon: 'cup', title: 'Practice with an open cup', sub: 'A few sips of water at meals', onclick: go('chg:Feeding:d:cup') })
       ]);
-      h += versus('Safe to offer, or skip for now?', ['Safe to offer', 'Soft strips, quartered grapes and anything that squashes easily.'], ['Skip for now', 'Whole nuts, popcorn, raw carrot and round slices of hot dog.']);
+      h += versus('Safe to offer, or a choking risk?', ['Safe to offer', 'Soft strips, quartered grapes and anything that squashes easily.'], ['Skip for now', 'Whole nuts, popcorn, raw carrot and round slices of hot dog.']);
     }
     if (key === 'meals') {
       h += hero({ eyebrow: 'Family meals', title: 'Meals are part of the day now', lead: 'Three meals and a snack or two, with milk alongside. Most of what you eat can work for Maya too.' }) + B;
@@ -354,6 +354,171 @@
     return C().sub(cat, id, arg);
   }
 
+  /* ---------- sleep facts ---------- */
+  const SLEEP_KEYS = ['clock', 'daynight', 'rhythm', 'two'];
+  const rolled = () => answers.roll === 'Yes' || ['Tummy to back', 'Back to tummy', 'Both ways', 'Trying to roll'].includes(answers.rollDirection);
+  const swaddleDue = () => (rolled() || m() >= 3) && answers.swaddleStopped !== 'Yes' && (m() <= 6 || answers.swaddleStopped === 'No');
+  const mattressLowestDue = () => (answers.pullUp === 'Yes' || m() >= 8) && answers.mattressLowest !== 'Yes';
+  const mattressDue = () => !mattressLowestDue() && (m() >= 5 || answers.sit === 'Yes') && answers.mattressLowered !== 'Yes' && answers.mattressLowest !== 'Yes';
+  const safeOn = i => !!(L().safe && L().safe.Sleep && L().safe.Sleep[i]);
+  const safeDone = () => C().DATA.Sleep.SAFE.filter((_, i) => safeOn(i)).length;
+  function sleepGlance(key) {
+    return {
+      clock: [['Total sleep', '14–17 hours', 'Including naps'], ['Wake window', '45–60 min', 'Between sleeps']],
+      daynight: [['Total sleep', '14–17 hours', 'Including naps'], ['Wake window', '1–1½ hours', 'Between sleeps']],
+      rhythm: [['Naps', '3 a day', 'Plus a short catnap'], ['Wake window', '2–2½ hours', 'Between sleeps'], ['Bedtime', '7–8 pm', 'Often'], ['Total sleep', '12–16 hours', 'Including naps']],
+      two: [['Naps', '2 a day', 'Morning and afternoon'], ['Wake window', '2½–4 hours', 'Between sleeps'], ['Bedtime', '7–8 pm', 'Often'], ['Total sleep', '12–16 hours', 'Including naps']]
+    }[key];
+  }
+  const NIGHT = {
+    clock: 'Wake Maya for feeds until your pediatrician says you can stop, usually once {s’s} back to birth weight.',
+    daynight: 'Once your pediatrician says it’s OK, let Maya wake you for feeds. Most babies still feed 2–3 times a night.',
+    rhythm: 'Night feeds can carry on. Check with your pediatrician before dropping one.',
+    two: 'Some babies still feed at night with two naps, and that’s fine. Ask your pediatrician before dropping one.'
+  };
+  const nightCard = key => `<button class="hub-card hub-glance" onclick="${go('chg:Sleep:d:day')}"><span class="hub-card-head"><b>${F('How Maya’s sleeping now')}</b>${chev}</span>${tiles(sleepGlance(key))}<span class="hub-card-note" id="sleep-night-feeds"><b>${F('At night')}</b> ${F(NIGHT[key])}</span></button>`;
+  const swaddleRow = () => swaddleDue() ? row({ icon: 'moon', cat: 'Sleep', title: rolled() ? 'Stop swaddling now' : 'Stop swaddling at the first attempt to roll', sub: rolled() ? (answers.rollDirection === 'Trying to roll' ? 'Now that Maya’s trying to roll, use a sleep sack' : 'Now that Maya’s rolling, use a sleep sack') : 'Switch to a sleep sack that leaves the arms free', chipText: rolled() ? 'Do now' : 'Must know', chipTone: 'is-red', onclick: go('chg:Sleep:d:swaddle') }) : null;
+  const mattressRow = () => mattressLowestDue() ? row({ icon: 'shield', cat: 'Sleep', title: 'Set the crib mattress to its lowest', sub: answers.pullUp === 'Yes' ? 'Now that Maya pulls up, use the lowest setting' : 'Before {s} {pull|pulls} up, use the lowest setting', chipText: 'Do now', chipTone: 'is-red', onclick: go('chg:Sleep:d:mattress') })
+    : mattressDue() ? row({ icon: 'shield', cat: 'Sleep', title: 'Lower the crib mattress', sub: answers.sit === 'Yes' ? 'Now that Maya sits, move it down a setting' : 'Move it down before {s} can sit up', chipText: 'Do now', chipTone: 'is-red', onclick: go('chg:Sleep:d:mattress') }) : null;
+  function settleRow() {
+    const g = C().settlingGuide();
+    const t = { learn: ['Settling and sleep training', m() >= 4 ? 'An optional choice, whenever you’re ready' : 'Helping Maya settle'], trying: ['Support while sleep training', 'How to handle a rough night'], routine: ['When the routine changes', 'After short naps, travel or illness'], help: ['A routine with your help', 'Feeding or rocking to sleep can stay'] }[g] || ['Helping Maya settle', 'What works at this age'];
+    return row({ icon: 'moon', cat: 'Sleep', title: t[0], sub: t[1], onclick: "openPage('chg:Sleep:settle')" });
+  }
+  function eventRow(cat) {
+    const evs = C().CFG[cat].events(m());
+    if (!evs.length) return '';
+    const e = C().DATA[cat].EV[evs[0]];
+    return list('Common around now', [row({ icon: cat === 'Sleep' ? 'moon' : 'clock', cat, title: e.title, sub: e.when, onclick: `openPage('chg:${cat}:e:${evs[0]}')` })]);
+  }
+
+  /* ---------- sleep summary screens ---------- */
+  function sleepSummary(view, cur) {
+    const key = SLEEP_KEYS[view], age = m(), now = view === cur, cat = 'Sleep';
+    let h = '';
+    let B = browseLinks(cat, view, cur);
+    if (now && typeof chgSleepAuto === 'function' && chgSleepAuto()) B += `<div class="hub-browse hub-auto"><p class="hub-note">${F('We moved Maya to two-nap guidance for {p} age.')}</p><button class="hub-link" onclick="setAnswer('twoNaps','Stay')">${F('Still on three naps? Show Naps and bedtime')} ›</button></div>`;
+    if (!now && view >= 2 && age >= 5 && C().live()) B = B.replace('<div class="hub-browse">', `<div class="hub-browse"><button class="hub-link" onclick="chgSetStage('Sleep',${view})">${F(view === 3 ? 'Taking two naps? Update your guide' : 'Still taking three naps? Update your guide')} ›</button>`);
+    if (key === 'clock') {
+      const n = safeDone(), all = C().DATA.Sleep.SAFE.length;
+      h += hero({ eyebrow: 'Newborn sleep', title: 'Short sleeps, day and night', lead: 'Newborns sleep 14–17 hours a day in stretches of 1–3 hours. There’s no pattern yet, and that’s normal.', meter: { label: 'Safe sleep setup', n, of: all }, button: { label: n === all ? 'Review safe sleep' : 'Set up a safe sleep space', onclick: go('chg:Sleep:safe') } }) + B;
+      h += nightCard(key);
+      h += list('In these first weeks', [
+        swaddleRow(),
+        row({ icon: 'clock', cat, title: 'Start winding down at the first yawn', sub: 'Most newborns are ready after 45–60 minutes awake', onclick: go('chg:Sleep:d:cues') }),
+        row({ icon: 'hand', cat, title: 'Help Maya fall asleep any way that works', sub: 'Feeding, rocking or holding is fine now', onclick: "openPage('chg:Sleep:settle')" }),
+        row({ icon: 'moon', cat, title: 'Keep nights dark and quiet', sub: 'It helps {p} body clock switch on', onclick: go('chg:Sleep:d:daynight') })
+      ].filter(Boolean).slice(0, 3));
+      h += versus('Normal, or time to call?', ['Normal', 'Waking every 2–3 hours, grunts, squeaks and twitches in sleep.'], ['Call your pediatrician', 'Hard to wake for feeds, a temperature of 100.4°F or higher, or trouble breathing.']);
+    }
+    if (key === 'daynight') {
+      h += hero({ eyebrow: 'Days and nights', title: 'Nights are starting to stretch', lead: 'Many babies start telling day from night now. Often the first sign is one longer stretch of sleep at night.' }) + B;
+      h += nightCard(key);
+      h += list('What helps now', [
+        swaddleRow(),
+        row({ icon: 'moon', cat, title: 'Keep days bright and nights dim', sub: 'Daylight and chatter by day, quiet feeds at night', onclick: go('chg:Sleep:d:daynight') }),
+        row({ icon: 'clock', cat, title: 'Start a short bedtime routine', sub: 'A feed, a diaper and a song is plenty', onclick: go('chg:Sleep:d:routine') }),
+        swaddleDue() ? null : settleRow()
+      ]);
+      h += eventRow(cat);
+      h += versus('Normal, or time to call?', ['Normal', 'A long stretch one night and not the next, and fussier evenings.'], ['Call your pediatrician', 'Snoring most nights, pauses or gasps in sleep, or sleep changes with fever.']);
+    }
+    if (key === 'rhythm') {
+      h += hero({ eyebrow: 'Naps and bedtime', title: 'Naps are finding a rhythm', lead: 'Most babies take 3 naps now and get sleepy after about 2 hours awake. Bedtime often lands between 7 and 8.', button: { label: 'See an example day', onclick: go('chg:Sleep:d:day') } }) + B;
+      h += nightCard(key);
+      const rows = [swaddleRow(), mattressRow(), row({ icon: 'clock', cat, title: 'Watch for sleepy cues', sub: 'A quiet stare, yawning or turning away', onclick: go('chg:Sleep:d:cues') }), settleRow()].filter(Boolean).slice(0, 3);
+      h += list('What helps now', rows);
+      h += eventRow(cat);
+      h += versus('Normal, or time to call?', ['Normal', 'Naps of 30–45 minutes, and fighting a nap now and then.'], ['Call your pediatrician', 'Snoring most nights, pauses or gasps in sleep, or sleep changes with fever.']);
+    }
+    if (key === 'two') {
+      const settled = answers.twoNaps === 'Yes' || age >= 10;
+      h += hero({ eyebrow: 'Two naps', title: settled ? 'Two naps a day' : 'Two naps are on the way', lead: settled ? 'A morning nap and an afternoon nap make up the day. A short nap can shift the timing without changing the number.' : 'Most babies drop the late catnap between 6 and 9 months. Look for a pattern over a week, not one day.', button: { label: 'See an example day', onclick: go('chg:Sleep:d:day') } }) + B;
+      h += nightCard(key);
+      const rows = [swaddleRow(), mattressRow(), settled ? row({ icon: 'clock', cat, title: 'After a short nap, offer the next one sooner', sub: 'One rough day doesn’t end two naps', onclick: go('chg:Sleep:d:catnap') }) : row({ icon: 'clock', cat, title: 'Watch for a skipped catnap', sub: 'If {s} {skip|skips} it most days, try two naps', onclick: go('chg:Sleep:d:catnap') }), row({ icon: 'sit', cat, title: 'Practice new skills during the day', sub: 'Lots of floor time helps nights stay calm', onclick: go('chg:Sleep:d:skills') }), settleRow()].filter(Boolean).slice(0, 3);
+      h += list('What helps now', rows);
+      h += eventRow(cat);
+      h += versus('Normal, or time to call?', ['Normal', 'Standing up in the crib, and protest at bedtime when you leave.'], ['Call your pediatrician', 'Snoring most nights, pauses or gasps in sleep, or sleep changes with fever.']);
+    }
+    const D = C().DATA.Sleep, N = D.CH[view + 1], A = D.CH[view].after;
+    if (N) { let w = N.when.replace(/^Usually /, ''); if (/weeks–/.test(w)) w = w.split('–')[0]; h += next(`Coming up around ${w}`, N.rail, `chgGo('chg:Sleep:s:${view + 1}')`); }
+    else if (A) h += next(`After the first birthday, ${A[0]}`, A[1], go('chg:Sleep:d:after'));
+    h += (D.DEC[key] || []).length ? more('What other parents ask', go(`chg:Sleep:d:faq:${key}`)) : '';
+    return frame(cat, view, cur, h);
+  }
+
+  /* ---------- sleep detail screens ---------- */
+  function sleepDetail(id, arg) {
+    const cat = 'Sleep', age = m(), stage = C().CFG.Sleep.stage(age), C0 = C().DATA.Sleep.CH[stage], key = SLEEP_KEYS[stage];
+    if (id === 'safe') {
+      const S = C().DATA.Sleep.SAFE, arts = ['moon', 'shield', 'hand', 'clock', 'drop', 'swallow'];
+      const SAFE = [['Put Maya on {p} back for every sleep', 'On a firm, flat mattress with just a fitted sheet', 'moon'], ['Keep {p} sleep space in your room', 'In {p} own crib or bassinet, for at least 6 months', 'shield'], ['Never sleep with Maya on a sofa or armchair', 'If you might doze while feeding, use a cleared bed instead', 'hand'], ['Move {o} to a flat sleep space after the car', 'Car seats and swings aren’t for sleep', 'clock'], ['Keep {o} from getting too warm', 'One more light layer than you’d wear, and no hat', 'drop'], ['Offer a pacifier at sleep times', 'Once feeding’s going well. It’s linked to lower SIDS risk.', 'swallow']].slice(0, S.length);
+      const n = safeDone();
+      return detail(cat, 'Safe sleep', 'A safe place to sleep', 'Set these up once, then they become habit. Tick them off as you go.',
+        `<p class="hub-group">${n} of ${S.length} done</p>` + ticks(SAFE, safeOn, i => `chgToggleSafe('Sleep',${i})`, 'Sleep')
+        + `<h2 class="hub-h2">${F('As Maya starts moving')}</h2><div class="hub-list">`
+        + `<div class="hub-row is-static" id="sleep-rolling"><span class="hub-dot">${art('moon', cat)}</span><span class="hub-row-copy"><b>${F('When {s} {try|tries} to roll')}</b><small>${F('Stop swaddling, and keep putting {o} down on {p} back.')}</small></span></div>`
+        + `<div class="hub-row is-static" id="sleep-crib-height"><span class="hub-dot">${art('shield', cat)}</span><span class="hub-row-copy"><b>${F('Before {s} can sit or pull up')}</b><small>${F('Lower the crib mattress, then set it to its lowest.')}</small></span></div></div>`
+        + tip('Moving to {p} own room', 'Room-sharing is recommended for at least the first 6 months. After that, when to move is up to you.'), 'moon');
+    }
+    if (id === 'day') {
+      const flexible = ['clock', 'daynight'].includes(key);
+      const day = C().sampleDay(C0).replace('<h3 class="chg-sample-title">', '<h3 class="chg-sample-title hub-h2">');
+      return detail(cat, C0.rail, flexible ? 'There’s no schedule yet' : 'An example day', flexible ? 'For now, days follow a loop: a feed, a little awake time, then sleep. Clock times come later.' : 'Here’s one example built from typical wake windows. Real days will move around, and that’s fine.',
+        `<div class="hub-card">${tiles(sleepGlance(key)).replace('hub-tiles', 'hub-tiles is-flat').replace(/<small>Naps<\/small><b>(\d) a day<\/b>/, '<small>Naps</small><b>$1</b>')}</div>` + `<div class="hub-card hub-dayplan">${day}</div>` + tip('At night', NIGHT[key]), 'clock');
+    }
+    if (id === 'cues') {
+      return detail(cat, C0.rail, 'Spotting sleepy cues', 'Starting to wind down at the first signs of tiredness makes it easier for Maya to settle.',
+        `<div class="hub-card hub-two"><div><b>${F('Getting tired')}</b><p>${F('A quiet stare, yawning, rubbing eyes or turning away.')}</p></div><div><b>${F('Overtired')}</b><p>${F('Fussing, arching or crying that’s hard to settle.')}</p></div></div>`
+        + tip('Wake windows', { clock: 'Most newborns are ready to sleep after 45–60 minutes awake.', daynight: 'Around 1–1½ hours awake is typical now.', rhythm: 'About 2–2½ hours awake is typical now, a little longer before bedtime.', two: 'About 2½–4 hours awake is typical now, longest before bedtime.' }[key]), 'clock');
+    }
+    if (id === 'daynight') {
+      return detail(cat, C0.rail, 'Helping Maya tell day from night', 'Babies aren’t born knowing the difference. Light, sound and your routine teach {o}.',
+        steps(['During the day, open the curtains and keep normal household noise.', 'At night, keep lights low and feeds quiet and calm.', 'Save play and chatter for the daytime.']) + tip('When it clicks', 'Most babies’ body clocks switch on around 6–8 weeks, so give it time.'), 'moon');
+    }
+    if (id === 'routine') {
+      return detail(cat, C0.rail, 'A short bedtime routine', 'A few familiar steps in the same order tell Maya that sleep is coming.',
+        steps(['Start with a feed, then a fresh diaper and pajamas.', 'Dim the lights and sing a song or read a short book.', 'Put {o} down in {p} sleep space, on {p} back.']) + tip('Keep it short', 'Familiar matters more than long. 10–15 minutes is plenty.'), 'moon');
+    }
+    if (id === 'swaddle') {
+      return detail(cat, 'Sleep safety', 'Stop swaddling at the first attempt to roll', 'A swaddled baby who rolls onto {p} tummy can’t use {p} arms to move. So once rolling starts, the swaddle stops.',
+        steps(['Switch to a sleep sack or wearable blanket that leaves the arms free.', 'Keep putting Maya down on {p} back.', 'If {s} {roll|rolls} over on {p} own both ways, you can leave {o} that way.'])
+        + `<div class="hub-actions"><button class="hub-button" onclick="setAnswer('swaddleStopped','Yes')">I’ve stopped swaddling</button><button class="hub-link is-quiet" onclick="setAnswer('swaddleStopped','Yes')">We don’t swaddle</button></div>` + tip('Skip weighted sleep sacks', 'Any sleep sack should be light and unweighted.'), 'moon');
+    }
+    if (id === 'mattress') {
+      const lowest = mattressLowestDue();
+      return detail(cat, 'Sleep safety', lowest ? 'Set the crib mattress to its lowest' : 'Lower the crib mattress', lowest ? 'Once Maya can pull up, a higher mattress makes it easier to tip over the rail.' : 'Once Maya can sit, {s} can lean over the rail. Moving the mattress down keeps {o} safe.',
+        steps(lowest ? ['Move the mattress to the lowest setting in your crib manual.', 'Take down mobiles and anything {s} can reach from standing.', 'Check nothing nearby could be used as a step.'] : ['Find the next setting down in your crib manual.', 'Lower the mattress and check it sits firmly in place.', 'Plan to go all the way down before {s} {pull|pulls} up.'])
+        + `<div class="hub-actions"><button class="hub-button" onclick="setAnswer('${lowest ? 'mattressLowest' : 'mattressLowered'}','Yes')">Done</button></div>`, 'shield');
+    }
+    if (id === 'catnap') {
+      return detail(cat, 'Two naps', answers.twoNaps === 'Yes' || age >= 10 ? 'When a nap runs short' : 'Moving to two naps', 'The move from three naps to two takes a week or two, and some days will look messy.',
+        steps(['Watch for a skipped or hard-to-fit late catnap most days.', 'Move bedtime about 30 minutes earlier during the switch.', 'After a short nap, offer the next sleep a little sooner.']) + tip('A third nap is still OK', 'On a day with short naps, a catnap can still help.'), 'clock');
+    }
+    if (id === 'skills') {
+      return detail(cat, 'Two naps', 'Practice new skills during the day', 'Crawling and pulling up are exciting, and Maya may want to practice in the crib too.',
+        steps(['Give {o} lots of floor time to practice by day.', 'Keep the bedtime routine the same.', 'If {s} {stand|stands} up in the crib, help {o} sit back down calmly, then say goodnight.']) + tip('It passes', 'Most babies settle back into sleep once the new skill feels familiar.'), 'sit');
+    }
+    if (id === 'after') { const A = C().DATA.Sleep.CH[3].after; return detail(cat, 'After the first birthday', A[1], A[2], '', 'moon'); }
+    if (id === 'faq') {
+      const k = arg || key, Q = C().DATA.Sleep.DEC[k] || [];
+      return detail(cat, C().DATA.Sleep.CH[SLEEP_KEYS.indexOf(k)]?.rail || 'Sleep', 'What other parents ask', '', `<section class="common-questions hub-faq">${Q.map((q, i) => C().question(cat, k, i, q)).join('')}</section>`);
+    }
+    return C().sub(cat, id, arg);
+  }
+
+  /* ---------- come-and-go phases (both categories) ---------- */
+  function eventDetail(cat, i) {
+    const e = C().DATA[cat].EV[i];
+    if (!e) return C().mainPage(cat, null, null);
+    const T = C().T;
+    return `<div class="quiet-category hub-page hub-detail" data-overview="${cat}" style="${yearTheme(cat)}">${typeof detailPageTop === 'function' ? detailPageTop(cat) : ''}<div class="hub-detail-head"><span class="hub-big">${art(cat === 'Sleep' ? 'moon' : 'clock', cat)}</span><p class="hub-context">${esc(e.when)}</p><h1>${T(e.title)}</h1><p class="hub-lead">${T(e.lead)}</p></div>`
+      + `<div class="hub-card"><div class="hub-card-head"><b>What it looks like</b></div><ul class="hub-bullets">${(e.looks || []).map(x => `<li>${T(x)}</li>`).join('')}</ul></div>`
+      + `<h2 class="hub-h2">What helps</h2><div class="hub-card"><ol class="hub-steps">${(e.helps || []).slice(0, 3).map(x => `<li><span><b>${T(x[0])}.</b> ${T(x[1])}</span></li>`).join('')}</ol></div>`
+      + (e.lasts ? `<div class="hub-tip"><b>How long it lasts</b>${T(e.lasts)}</div>` : '')
+      + (e.supportNote ? `<p class="hub-note">${T(e.supportNote)}</p>` : '') + `</div>`;
+  }
+
   /* ---------- actions ---------- */
   window.hubToggleReady = i => { const r = Object.assign({}, L().ready); r[i] = !r[i]; store('ready', r); C().rerender(); };
   window.hubAllergen = k => { const a = Object.assign({}, L().allergens); a[k] = !a[k]; store('allergens', a); C().rerender(); };
@@ -365,12 +530,17 @@
   const basePage = window.changesPage, baseRoute = window.changesRoute;
   window.changesPage = function (cat) {
     if (cat === 'Feeding') { const cur = C().CFG.Feeding.stage(m()); return feedingSummary(cur, cur); }
+    if (cat === 'Sleep') { const cur = C().CFG.Sleep.stage(m()); return sleepSummary(cur, cur); }
     return basePage(cat);
   };
   window.changesRoute = function (p) {
     const [, cat, screen, a, b] = p.split(':');
     if (cat === 'Feeding' && screen === 's') { const cur = C().CFG.Feeding.stage(m()), v = Number(a); return feedingSummary(Number.isInteger(v) && C().DATA.Feeding.CH[v] ? v : cur, cur); }
     if (cat === 'Feeding' && screen === 'd') return feedingDetail(a, b);
+    if (cat === 'Sleep' && screen === 's') { const cur = C().CFG.Sleep.stage(m()), v = Number(a); return sleepSummary(Number.isInteger(v) && C().DATA.Sleep.CH[v] ? v : cur, cur); }
+    if (cat === 'Sleep' && screen === 'd') return sleepDetail(a, b);
+    if (cat === 'Sleep' && screen === 'safe') return sleepDetail('safe');
+    if ((cat === 'Sleep' || cat === 'Feeding') && screen === 'e') return eventDetail(cat, Number(a));
     return baseRoute(p);
   };
   window.positionHubPills = function () {

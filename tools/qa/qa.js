@@ -46,21 +46,26 @@ window.__qa = (function () {
   function cat(name) {
     navigate('categories'); openPage('topic:' + name);
     const m = $m();
-    const heads = all('.sleep-phase-ahead', m).map(s => ({ label: txt(s.querySelector('h3')), title: txt(s.querySelector('h4')) }));
+    // Summary screens: stage pills, a hero, rows (red chips are must-knows), normal-versus-call cards, coming up.
+    const red = all('.hub-row', m).filter(r => r.querySelector('.hub-chip.is-red')).map(r => ({ label: txt(r.querySelector('.hub-chip')), title: txt(r.querySelector('.hub-row-copy b')) }));
+    const cards = all('.hub-versus h3', m).map(h => ({ label: 'Card', title: txt(h) }));
+    const auto = all('.hub-auto .hub-note', m).map(n => ({ label: 'Updated for this age', title: txt(n) }));
+    const nexts = all('.hub-next', m).map(n => ({ label: txt(n.querySelector('small')), title: txt(n.querySelector('b')) }));
+    const pill = sel => txt(m.querySelector(sel)).replace(/\s*Now$/, '');
     return {
       header: txt(m.querySelector('.monthly-page-header p')),
-      current: txt(m.querySelector('.chg-rail [data-relevant="true"] > span:not(.journey-stage-node)')),
-      selected: txt(m.querySelector('.chg-rail [aria-current="step"] > span:not(.journey-stage-node)')),
-      eyebrow: txt(m.querySelector('.experience-hero .eyebrow')), title: txt(m.querySelector('.experience-hero h2')),
-      alerts: heads.filter(h => !/^(Coming up|Next step|After the first birthday)/.test(h.label)),
-      comingUp: heads.find(h => /^(Coming up|Next step)/.test(h.label)) || null,
-      after: heads.find(h => /^After the first birthday/.test(h.label)) || null,
+      current: pill('.hub-pills .is-now'),
+      selected: pill('.hub-pills [aria-current="step"]'),
+      eyebrow: txt(m.querySelector('.hub-eyebrow')), title: txt(m.querySelector('.hub-hero h1')),
+      alerts: [...auto, ...red, ...cards],
+      comingUp: nexts.find(h => /^Coming up/.test(h.label)) || null,
+      after: nexts.find(h => /^After the first birthday/.test(h.label)) || null,
       checkin: txt(m.querySelector('.chg-checkin h2')),
-      events: all('.chg-also .guide-resource-row b', m).map(txt),
-      questions: all('.common-questions summary > span:first-child', m).map(txt),
-      sections: all('.sleep-phase-help > h3, .chg-card-head h2, .common-questions > h2, .chg-also > h3', m).map(txt),
-      rhythm: all('.chg-day li, .chg-amounts > div', m).map(txt),
-      links: all('.sleep-reference-row', m).map(txt),
+      events: all('.hub-row', m).filter(r => /:e:\d/.test(r.getAttribute('onclick') || '')).map(r => txt(r.querySelector('.hub-row-copy b'))),
+      questions: all('.hub-more', m).map(txt),
+      sections: all('.hub-h2, .hub-versus h3', m).map(txt),
+      rhythm: all('.hub-tiles > div', m).map(txt),
+      links: all('.hub-row', m).map(r => txt(r.querySelector('.hub-row-copy b'))),
       text: txt(m), problems: problems()
     };
   }
