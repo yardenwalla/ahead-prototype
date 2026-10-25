@@ -2149,7 +2149,7 @@ const DEV_EXAMPLES={
 'Picks up small things with thumb and finger':'During eating or an everyday task, you notice a precise thumb-and-finger grasp instead of a whole-hand rake. Don’t offer small objects as a test.'
 };
 function devRef(age=developmentMonth()){return age<=2?2:age<=4?4:age<=6?6:age<=9?9:12;}
-function devSource(ref){return 'https://www.cdc.gov/act-early/milestones/'+(ref===12?'1-year':ref+'-months')+'.html';}
+function devSource(ref){return 'https://www.cdc.gov/act-early/milestones-in-action/'+(ref===12?'1-year':ref+'-months')+'.html';}
 function devClinicalSourceLinks(ref){return (ref===6?'<a href="https://www.healthychildren.org/English/ages-stages/baby/Pages/Movement-4-to-7-Months.aspx" target="_blank" rel="noopener">AAP · Rolling and sitting ↗</a>':'')+(profile.early&&profile.due?'<a href="https://www.healthychildren.org/English/ages-stages/baby/preemie/Pages/Corrected-Age-For-Preemies.aspx" target="_blank" rel="noopener">AAP · Adjusted age ↗</a>':'');}
 function devStageRail(ref){const relevant=devRef(developmentMonth(actualMonth()));return `<nav class="journey-stage-rail development-stage-rail" aria-label="Development stage guides">${Object.entries(DEV_STAGES).map(([age,stage])=>`<button class="journey-stage ${Number(age)===ref?'is-current':''} ${Number(age)===relevant?'is-relevant':''}" ${Number(age)===relevant?'data-relevant="true"':''} aria-label="By ${age} months${Number(age)===relevant?', your current guide':''}" onclick="openPage('development-stage:${age}')" ${Number(age)===ref?'aria-current="step"':''}>${timelineMarker('Development',Number(age)===ref)}<span>${age} mo</span></button>`).join('')}</nav>`;}
 function devGuideHeader(ref){return monthlyPageHeader('Development')+devStageRail(ref);}
@@ -2295,7 +2295,7 @@ function conceptFeedingReason(){return {
  new:'First bites bring new tastes and textures. Keep milk feeds while baby practices handling food.',
  established:month>=11?'The first birthday brings milk and cup decisions. Make a gradual plan around familiar meals.':'As tasting becomes eating, practice more textures, self-feeding and fitting meals around milk.'
  }[feedingGuideStage()];}
-function conceptHealthSummary(age){return {0:'Feeding, weight, jaundice and results from the newborn screening checks.',1:'Growth, feeding and how you’re doing, plus any vaccine doses due.',2:'Growth, early responses and the first main round of vaccines.',4:'New movement, feeding and sleep questions, plus the next round of vaccines.',6:'Growth, first foods, tooth care and vaccines—including whether flu vaccination is due.',9:'A development questionnaire, growth and feeding, plus any vaccine doses still due.',12:'Growth, anemia screening, lead testing when needed, new vaccines and milk and cup questions.'}[age]||'Growth, development and questions for your pediatrician.';}
+function conceptHealthSummary(age){return {0:'They’ll check feeding, weight and jaundice, and go over the newborn screening results.',1:'They’ll check growth and feeding, ask how you’re doing, and give any vaccines that are due.',2:'They’ll check growth and early responses, and give the first main round of vaccines.',4:'A good time for new movement, feeding and sleep questions. The next round of vaccines is due too.',6:'They’ll check growth and talk about first foods and teeth. Vaccines too, and maybe a flu shot.',9:'There’s a short development questionnaire, plus growth, feeding and any vaccines still due.',12:'They’ll check growth, test for anemia and lead if needed, and talk about milk and cups. New vaccines too.'}[age]||'They’ll check growth and development, and answer your questions.';}
 function conceptHealthReason(age){return conceptHealthSummary(age);}
 function conceptDevelopmentReason(){return {
  2:'Small responses to faces and voices are emerging. Notice them during ordinary time together.',
@@ -2415,7 +2415,7 @@ function liveHomeCheckin(){
  const questions={
   milk:{title:`What milk is ${name()} having?`,why:'Use the feeding reference that fits your day.',choices:[['Breast milk','Breast milk'],['Formula','Formula'],['Both','Both']]},
   movement:{title:`Is ${name()} trying to roll?`,why:'Your answer updates Sleep and Safety.',choices:[['not_yet','Not yet'],['trying','Trying'],['rolling','Rolling']]},
-  food:{title:`Has ${name()} started solids?`,why:'Your answer changes the feeding guide you see.',choices:[['preparing','Not yet'],['new','First foods'],['established','Eating meals']]},
+  food:{title:`Has ${name()} started solids?`,why:'We’ll match the feeding guide to where you are.',choices:[['preparing','Not yet'],['new','First foods'],['established','Eating meals']]},
   crawl:{title:`Has ${name()} started crawling?`,why:'Your answer updates Safety for a baby on the move.',choices:[['Not yet','Not yet'],['Yes','Yes']]},
   stand:{title:`Is ${name()} pulling up to stand?`,why:'Your answer updates Sleep and Safety for standing.',choices:[['Not yet','Not yet'],['Yes','Yes']]}
  };
@@ -2458,7 +2458,7 @@ function homePriority(){
 function homePriorityTools(priority,options={}){
  const swaddle=priority.type==='swaddle',title=swaddle?'Stop swaddling':safetyHomeItems()[priority.id].title;
  const action=options.done||(swaddle?'confirmHomeSwaddle()':`completeHomeCheck('${priority.id}','done')`),na=options.na||(swaddle?'confirmHomeSwaddle()':`completeHomeCheck('${priority.id}','na')`);
- return `<div class="home-action-tools"><button class="home-inline-check" aria-label="${swaddle?'I’ve stopped swaddling':'Mark done: '+esc(title)}" onclick="${action}"><span aria-hidden="true"></span>Mark done</button><button class="home-action-na" onclick="${na}">${swaddle?'We don’t swaddle':'Doesn’t apply'}</button></div>`;
+ return `<div class="home-action-tools"><button class="home-inline-check" aria-label="${swaddle?'I’ve stopped swaddling':'Mark done: '+esc(title)}" onclick="${action}"><span aria-hidden="true"></span>${swaddle?'We’ve stopped':'I’ve done this'}</button><button class="home-action-na" onclick="${na}">${swaddle?'We don’t swaddle':'Doesn’t apply'}</button></div>`;
 }
 function homePriorityRow(priority,options={}){
  if(!priority)return '';

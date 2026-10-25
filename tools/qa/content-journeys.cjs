@@ -71,7 +71,7 @@ for (let family = 0; family < 100; family++) {
   expect(!text(a.html()).includes('You’ve noticed rolling'), 'Not yet is not rolling');
   a.run("saveJourneyVisit(4,{date:'2026-10-20',status:'planned'});navigate('home')");
   expect(a.run('homeRulesDebug().main.some(x=>x.startsWith("Health: 4-month"))'), 'A saved appointment does not vanish when baby ages past its visit label');
-  expect(text(a.html()).includes('New movement, feeding and sleep questions'), 'Saved dates retain the visit purpose');
+  expect(text(a.html()).includes('new movement, feeding and sleep questions'), 'Saved dates retain the visit purpose');
   a.run("saveJourneyVisit(4,{date:'2026-10-20',status:'attended'});navigate('home')");
   expect(!a.run('homeRulesDebug().main.some(x=>x.startsWith("Health: 4-month"))'), 'Attended checkups leave the pending recommendations');
   a.run("answers={};persist();chgSetSafety('pulling')");

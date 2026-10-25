@@ -139,3 +139,15 @@
 #main .hub-timeline div + div { border-top: 1px solid var(--line) }
 #main .hub-timeline dt { font-size: 13px; font-weight: 700; color: var(--year-ink) }
 #main .hub-timeline dd { margin: 0; font-size: 14.5px; line-height: 1.5; color: var(--ink) }
+
+/* Figures: flat scenes, labels in the app's own type */
+#main .hub-figure { margin: 0 0 14px; padding: 12px; border-radius: 20px; background: var(--white); border: 1px solid var(--line) }
+#main .hub-figure svg { display: block; width: 100%; height: auto }
+#main .hub-fig-panels { display: grid; grid-template-columns: 1fr 1fr; gap: 10px }
+#main .hub-fig-panel { display: flex; flex-direction: column; gap: 2px }
+#main .hub-fig-panel b { margin-top: 6px; font-size: 13px; font-weight: 700 }
+#main .hub-fig-panel b.is-good { color: #3f7a4a }
+#main .hub-fig-panel b.is-bad { color: #b5483a }
+#main .hub-fig-panel small { font-size: 12.5px; line-height: 1.35; color: var(--muted, #6b6670) }
+#main .hub-fig-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px }
+#main .hub-fig-chips span { font-size: 12.5px; font-weight: 600; padding: 5px 10px; border-radius: 999px; background: var(--paper, #f6f3ee); color: inherit }

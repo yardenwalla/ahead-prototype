@@ -42,7 +42,7 @@
     const recentlyAnswered = Number.isFinite(answeredAt) && nowMs() - answeredAt < WAIT;
     if (!hasFoodAnswer() || stage === 'preparing') {
       if (d.skip.food && nowMs() - d.skip.food < WAIT || hasFoodAnswer() && recentlyAnswered) return null;
-      return {key:'food', title:`Has ${name()} started solids?`, why:'Your answer changes the feeding guide you see.',
+      return {key:'food', title:`Has ${name()} started solids?`, why:'We’ll match the feeding guide to where you are.',
         choices:[['preparing','Not yet'],['new','First foods'],['established','Eating meals']]};
     }
     if (!['new','textures'].includes(stage)) return null;

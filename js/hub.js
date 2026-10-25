@@ -42,7 +42,8 @@
   const more = (label, onclick) => `<button class="hub-more" onclick="${onclick}"><span>${F(label)}</span>${chev}</button>`;
   const note = t => `<p class="hub-note">${F(t)}</p>`;
   // A video for things you have to see done. Opens the source in a new tab.
-  const video = (title, source, url) => `<a class="hub-video" href="${url}" target="_blank" rel="noopener"><span class="hub-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5Z" fill="currentColor"/></svg></span><span class="hub-row-copy"><b>${F(title)}</b><small>${F('Video · ' + source)}</small></span><span class="hub-chev" aria-hidden="true">↗</span></a>`;
+  const figure = (name, cat, caption) => (window.hubFigure ? hubFigure(name, cat, F(caption)) : '');
+  const video = (title, source, url, kind = 'Video') => `<a class="hub-video" href="${url}" target="_blank" rel="noopener"><span class="hub-play" aria-hidden="true">${kind !== 'Guide' ? '<svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5Z" fill="currentColor"/></svg>' : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 3h7l4 4v14H7Z"/><path d="M10 12h5M10 16h5"/></svg>'}</span><span class="hub-row-copy"><b>${F(title)}</b><small>${F(kind + ' · ' + source)}</small></span><span class="hub-chev" aria-hidden="true">↗</span></a>`;
 
   // Detail screen frame: the app's header, then a short headline and lead, then one job.
   function detail(cat, context, title, lead, inner, artName) {
@@ -140,7 +141,7 @@
       h += glanceCard('What Maya’s eating now', milkTiles('learn'), go('chg:Feeding:d:milk'));
       h += list('In these first weeks', [
         row({ icon: 'diaper', title: 'How to tell Maya’s getting enough', sub: 'Wet diapers and weight tell you', onclick: go('chg:Feeding:d:enough') }),
-        row({ icon: 'hand', title: 'Feed at the first hunger cues', sub: 'Rooting and hands to mouth come before crying', onclick: go('chg:Feeding:d:cues') }),
+        meth() === 'bottle' || meth() === 'expressed' ? row({ icon: 'hand', title: 'Feed at the first hunger cues', sub: 'Rooting and hands to mouth come before crying', onclick: go('chg:Feeding:d:cues') }) : row({ icon: 'mouth', title: 'Get a good latch', sub: 'A wide mouth and a deep latch make feeds comfortable', onclick: go('chg:Feeding:d:latch') }),
         meth() === 'bottle' ? row({ icon: 'bowl', title: 'Make bottles safely', sub: 'Follow the formula’s directions exactly', onclick: go('chg:Feeding:d:bottles') }) : row({ icon: 'drop', title: 'Ask about vitamin D drops', sub: 'Breastfed babies need them from the first days', chipText: 'Must know', chipTone: 'is-red', onclick: go('chg:Feeding:d:vitd') })
       ]);
       h += versus('Normal, or time to call?', ['Normal', 'Feeding again an hour later, a little spit-up and long feeds at first.'], ['Call your pediatrician', 'Hard to wake for feeds, fewer wet diapers or looking more yellow.']);
@@ -282,7 +283,7 @@
     if (id === 'food') {
       const f = FOODS[arg] || FOODS.lentils, st = style();
       return detail(cat, 'What to put on the tray', f.title, f.why,
-        segmented([['spoon', 'Spoon-feeding'], ['finger', 'Finger foods']], st, k => `hubStyle('${k}')`) + steps([f.base, ...f[st]]) + tip('Is it soft enough?', 'It should squash easily between your thumb and finger.') + tip('Save yourself time', 'Make a batch and freeze extra in an ice cube tray. Each cube is about one meal.'), f.art);
+        segmented([['spoon', 'Spoon-feeding'], ['finger', 'Finger foods']], st, k => `hubStyle('${k}')`) + (st === 'finger' ? figure('sizes', cat, 'From 6 to 8 months, strips the size of a finger. From 9 months, pea-sized pieces, with grapes quartered.') : '') + steps([f.base, ...f[st]]) + tip('Is it soft enough?', 'It should squash easily between your thumb and finger.') + tip('Save yourself time', 'Make a batch and freeze extra in an ice cube tray. Each cube is about one meal.'), f.art);
     }
     if (id === 'allergens') {
       const t = ALLERGENS.filter(a => tried(a[0])).length;
@@ -307,6 +308,13 @@
       return detail(cat, C().DATA.Feeding.CH[C().CFG.Feeding.stage(age)].rail, 'Reading Maya’s hunger cues', 'Feeding at the first signs of hunger is easier on you both than waiting for crying.',
         `<div class="hub-card hub-two"><div><b>${F('Hungry')}</b><p>${F('Rooting, lip smacking, hands to mouth. Crying comes last.')}</p></div><div><b>${F('Full')}</b><p>${F('Slowing down, turning away, relaxed hands.')}</p></div></div>` + tip('You can’t overfeed a nursing baby', 'Offering the breast whenever {s} {seem|seems} hungry is exactly right.'), 'hand');
     }
+    if (id === 'latch') {
+      return detail(cat, 'Newborn feeding', 'Getting a good latch', 'A deep latch is more comfortable for you and helps Maya get more milk. It takes practice for both of you.',
+        video('Watch a good latch, step by step', 'Nemours KidsHealth', 'https://kidshealth.org/en/parents/breastfeed-video.html')
+        + steps(['Wait for a wide-open mouth, like a yawn.', 'Bring Maya to you, chin first, with {p} nose level with your nipple.', 'Look for lips turned out and more of the areola showing above {p} top lip than below.', 'If it pinches, slip a clean finger into the corner of {p} mouth to break the suction, then try again.'])
+        + `<section class="hub-card hub-versus"><h3>${F('Normal, or time for help?')}</h3><div class="hub-vs"><div><b>Normal</b><p>${F('A little tenderness in the first week, and a tug that eases after the first few sucks.')}</p></div><div><b>Ask for help</b><p>${F('Pain through the whole feed, cracked nipples, or clicking sounds. A lactation consultant can help, often in one visit.')}</p></div></div></section>`
+        + tip('Feed at the first hunger cues', 'Rooting and hands to mouth come before crying, and a calm baby latches more easily.'), 'mouth');
+    }
     if (id === 'vitd') {
       return detail(cat, 'Newborn feeding', 'Ask about vitamin D drops', 'Breast milk is the perfect food, but it’s low in vitamin D, so breastfed and partly breastfed babies need drops from the first days.',
         steps(['Ask your pediatrician which drops to use and how much, ideally at the first-week checkup.', 'Give them once a day, at a time that’s easy to remember, like the first morning feed.', 'Keep going until your pediatrician says you can stop.']) + tip('Formula-fed?', 'Most formula already has vitamin D added, so ask before adding drops.'), 'drop');
@@ -317,7 +325,7 @@
     }
     if (id === 'pacing') {
       return detail(cat, 'Changing milk feeds', 'Pace Maya’s bottles', 'Paced feeding lets {o} drink at {p} own speed, a bit like nursing.',
-        steps(['Hold Maya fairly upright and the bottle level, so milk fills just the tip.', 'Pause every few minutes and let {o} take a break.', 'Stop when {s} {turn|turns} away or slows down, even if there’s milk left.']) + tip('Never prop a bottle', 'Always hold Maya and the bottle during a feed.'), 'bowl');
+        figure('pace', cat, 'Paced: baby upright with the bottle level. Avoid: baby lying back with the bottle tipped up.') + steps(['Hold Maya fairly upright and the bottle level, so milk fills just the tip.', 'Pause every few minutes and let {o} take a break.', 'Stop when {s} {turn|turns} away or slows down, even if there’s milk left.']) + tip('Never prop a bottle', 'Always hold Maya and the bottle during a feed.'), 'bowl');
     }
     if (id === 'lumpy') {
       return detail(cat, 'Textures and finger foods', 'Make food a little lumpier', 'Moving to thicker food now helps Maya learn to chew and makes family food easier later.',
@@ -325,7 +333,8 @@
     }
     if (id === 'finger') {
       return detail(cat, 'Textures and finger foods', 'Offer soft finger foods', 'Picking up food is great practice for little hands, and lets Maya feed {r}.',
-        steps(['Start with strips about the size of your finger, which are easy to grab.', 'Once {s} can pinch with thumb and finger, cut food into pea-sized pieces.', 'Quarter round foods like grapes and blueberries lengthwise.']) + tip('Is it soft enough?', 'It should squash easily between your thumb and finger.'), 'avocado');
+        figure('sizes', cat, 'From 6 to 8 months, strips the size of a finger. From 9 months, pea-sized pieces, with grapes quartered.') + steps(['Start with strips about the size of your finger, which are easy to grab with a whole hand.', 'Once {s} can pinch with thumb and finger, usually around 9 months, cut food into pea-sized pieces.', 'Quarter round foods like grapes and cherry tomatoes lengthwise, at every age.']) + tip('Is it soft enough?', 'It should squash easily between your thumb and finger.')
+        + video('See how to cut dozens of foods', 'Solid Starts', 'https://www.solidstarts.com/safe-food-sizes-shapes-for-babies/', 'Guide'), 'avocado');
     }
     if (id === 'cup') {
       return detail(cat, 'Textures and finger foods', 'Practice with an open cup', 'Sipping from a cup takes practice, and starting early makes the bottle-to-cup switch easier later.',
@@ -364,7 +373,7 @@
     { t: 'Put Maya on {p} back for every sleep', s: 'Naps and nights, every time', art: 'moon', habit: 'Every sleep' },
     { t: 'Move {o} to {p} crib after the car or swing', s: 'Car seats and swings aren’t for sleep', art: 'clock', habit: 'Every time' },
     { t: 'Never sleep with Maya on a sofa or armchair', s: 'If you might doze while feeding, use a cleared bed instead', art: 'hand', habit: 'Always' },
-    { t: 'Offer a pacifier at sleep times', s: 'Once feeding’s going well. It’s linked to lower SIDS risk.', art: 'swallow', habit: 'If you like' }
+    { t: 'Offer a pacifier at sleep times', s: 'Once feeding’s going well. It’s linked to lower SIDS risk.', art: 'pacifier', habit: 'If you like' }
   ];
   const SLEEP_TASKS = SLEEP_SETUP.filter(x => x.task != null).length;
   const sleepTaskOn = i => !!(L().safe && L().safe.Sleep && L().safe.Sleep[i]);
@@ -426,7 +435,7 @@
       h += hero({ eyebrow: 'Newborn sleep', title: 'Short sleeps, day and night', lead: 'Newborns sleep 14–17 hours a day in stretches of 1–3 hours. There’s no pattern yet, and that’s normal.', button: n === all ? null : { label: 'Set up a safe sleep space', onclick: go('chg:Sleep:safe') } }) + B + (n === all ? list('', [row({ icon: 'moon', cat, title: 'Safe sleep setup', sub: 'Your space is set up. The habits are here too.', chipText: 'Done', chipTone: 'is-done', onclick: go('chg:Sleep:safe') })]) : '');
       h += nightCard(key);
       h += list('In these first weeks', [
-        swaddleRow(),
+        swaddleRow() || (answers.swaddleStopped === 'Yes' ? null : row({ icon: 'moon', cat, title: 'Swaddle safely, if you swaddle', sub: 'Snug at the chest, loose at the hips', onclick: go('chg:Sleep:d:swaddle') })),
         row({ icon: 'clock', cat, title: 'Start winding down at the first yawn', sub: 'Most newborns are ready after 45–60 minutes awake', onclick: go('chg:Sleep:d:cues') }),
         row({ icon: 'hand', cat, title: 'Help Maya fall asleep any way that works', sub: 'Feeding, rocking or holding is fine now', onclick: "openPage('chg:Sleep:settle')" }),
         row({ icon: 'moon', cat, title: 'Keep nights dark and quiet', sub: 'It helps {p} body clock switch on', onclick: go('chg:Sleep:d:daynight') })
@@ -476,11 +485,12 @@
       const done = safeDone() === SLEEP_TASKS;
       const rows = SLEEP_SETUP.map(x => `<div class="hub-row is-static"><span class="hub-dot">${art(x.art, cat)}</span><span class="hub-row-copy"><b>${F(x.t)}</b><small>${F(x.s)}</small></span></div>`).join('');
       return detail(cat, 'Safe sleep', 'A safe place to sleep', 'Set up the space once, then a few habits keep every sleep safe.',
-        `<div class="hub-list">${rows}</div>`
+        figure('crib', cat, 'A baby asleep on their back in a sleep sack, in a bare crib with a firm mattress and fitted sheet.') + `<div class="hub-list">${rows}</div>`
         + `<div class="hub-actions">${done ? `<p class="hub-done">${F('You’ve set up Maya’s sleep space')} ✓</p>` : `<button class="hub-button" onclick="hubSleepSetUp()">${F('I’ve set this up')}</button>`}</div>`
         + `<h2 class="hub-h2">${F('As Maya starts moving')}</h2><div class="hub-list">`
         + `<div class="hub-row is-static" id="sleep-rolling"><span class="hub-dot">${art('moon', cat)}</span><span class="hub-row-copy"><b>${F('When {s} {try|tries} to roll')}</b><small>${F('Stop swaddling, and keep putting {o} down on {p} back.')}</small></span></div>`
-        + `<div class="hub-row is-static" id="sleep-crib-height"><span class="hub-dot">${art('shield', cat)}</span><span class="hub-row-copy"><b>${F('Before {s} can sit or pull up')}</b><small>${F('Lower the crib mattress, then set it to its lowest.')}</small></span></div></div>`, 'moon');
+        + `<div class="hub-row is-static" id="sleep-crib-height"><span class="hub-dot">${art('shield', cat)}</span><span class="hub-row-copy"><b>${F('Before {s} can sit or pull up')}</b><small>${F('Lower the crib mattress, then set it to its lowest.')}</small></span></div></div>`
+        + video('What a safe sleep space looks like', 'NIH Safe to Sleep', 'https://www.nichd.nih.gov/sites/default/files/publications/pubs/documents/safe_sleep_environment_rev.pdf', 'Guide'), 'moon');
     }
     if (id === 'day') {
       const flexible = ['clock', 'daynight'].includes(key);
@@ -500,6 +510,14 @@
     if (id === 'routine') {
       return detail(cat, C0.rail, 'A short bedtime routine', 'A few familiar steps in the same order tell Maya that sleep is coming.',
         steps(['Start with a feed, then a fresh diaper and pajamas.', 'Dim the lights and sing a song or read a short book.', 'Put {o} down in {p} sleep space, on {p} back.']) + tip('Keep it short', 'Familiar matters more than long. 10–15 minutes is plenty.'), 'moon');
+    }
+    if (id === 'swaddle' && !rolled() && m() < 3) {
+      return detail(cat, 'Sleep safety', 'Swaddling safely', 'A snug swaddle can help a newborn settle. It just needs to be done the safe way, and only until {s} {try|tries} to roll.',
+        video('Watch how to swaddle', 'St. Louis Children’s Hospital', 'https://www.stlouischildrens.org/health-resources/pulse/how-swaddle-newborn-baby-blanket')
+        + steps(['Snug around the chest, with room for two fingers between the blanket and {p} chest.', 'Loose around the hips, so {p} legs can bend up and out like a frog.', 'Always on {p} back, never on {p} tummy or side.'])
+        + tip('Stop at the first attempt to roll', 'Often around 2–4 months. Switch to a sleep sack that leaves the arms free.')
+        + video('Swaddling for healthy hips', 'International Hip Dysplasia Institute', 'https://hipdysplasia.org/how-to-swaddle-your-baby-to-help-keep-their-hips-healthy/', 'Guide')
+        + `<div class="hub-actions"><button class="hub-link is-quiet" onclick="setAnswer('swaddleStopped','Yes')">We don’t swaddle</button></div>`, 'moon');
     }
     if (id === 'swaddle') {
       return detail(cat, 'Sleep safety', 'Stop swaddling at the first attempt to roll', 'A swaddled baby who rolls onto {p} tummy can’t use {p} arms to move. So once rolling starts, the swaddle stops.',
@@ -617,6 +635,7 @@
   };
   window.changesRoute = function (p) {
     const [, cat, screen, a, b] = p.split(':');
+    if ((cat === 'Feeding' || cat === 'Sleep') && !screen) return window.changesPage(cat);
     if (cat === 'Feeding' && screen === 's') { const cur = C().CFG.Feeding.stage(m()), v = Number(a); return feedingSummary(Number.isInteger(v) && C().DATA.Feeding.CH[v] ? v : cur, cur); }
     if (cat === 'Feeding' && screen === 'd') return feedingDetail(a, b);
     if (cat === 'Feeding' && screen === 'safe') return firstAid();

@@ -42,32 +42,32 @@
     // The first nights at home: one setup, done once.
     if (live() && chgStageIndex('Sleep') === 0 && chgSafeRemaining('Sleep') > 0) {
       const left = chgSafeRemaining('Sleep');
-      out.push({ topic: 'Sleep', key: 'sleep-setup', title: 'Set up a safe place to sleep',
-        body: `On ${p.p} back, on a firm, flat surface with nothing else in it, in your room.`,
-        link: link("openPage('chg:Sleep:safe')", left === chgSafeTotal('Sleep') ? 'Go through the checklist' : `Finish the last ${left === 1 ? 'check' : left + ' checks'}`) });
+      out.push({ topic: 'Sleep', key: 'sleep-setup', title: `Get ${n()}’s sleep space ready`,
+        body: `A bare crib or bassinet in your room, and ${p.o} on ${p.p} back for every sleep. It only takes a few minutes.`,
+        link: link("openPage('chg:Sleep:safe')", 'See how to set it up') });
     }
 
     // Rolling: one change, three places it shows up.
     if (priority && priority.type === 'swaddle') {
-      if (mv === 'trying' || mv === 'rolling') out.push({ topic: 'Sleep', key: 'rolling', title: `Rolling changes how ${n()} sleeps`,
-        body: `Stop swaddling now and switch to a sleep sack that leaves the arms free. During the day, clear the space around the play mat and give ${n()} plenty of floor time to practice.`,
+      if (mv === 'trying' || mv === 'rolling') out.push({ topic: 'Sleep', key: 'rolling', title: mv === 'trying' ? `${n()}’s trying to roll, so it’s time to stop swaddling` : `Now that ${n()}’s rolling, swaddling stops`,
+        body: `Switch to a sleep sack that leaves ${p.p} arms free. During the day, plenty of floor time helps ${p.o} practice.`,
         tools: homePriorityTools(priority), link: link("openSection('Sleep','sleep-rolling')", 'See what to change') });
-      else out.push({ topic: 'Sleep', key: 'rolling-soon', title: 'Rolling changes sleep safety',
-        body: `Most babies try to roll at 3–6 months. If you swaddle, stop at the first attempt.`,
+      else out.push({ topic: 'Sleep', key: 'rolling-soon', title: 'Rolling is on the way',
+        body: `Most babies first try between 3 and 6 months. If you swaddle, that first try is your cue to switch to a sleep sack.`,
         tools: homePriorityTools(priority), link: link("openSection('Sleep','sleep-rolling')", 'See what to change') });
     }
 
     // Sitting and pulling up both move the crib mattress down.
     if (live() && (answers.pullUp === 'Yes' || m >= 8) && answers.mattressLowest !== 'Yes') {
       const said = answers.pullUp === 'Yes';
-      out.push({ topic: 'Sleep', key: 'mattress', title: said ? `Lower the crib mattress all the way` : `Lower the crib mattress`,
-        body: said ? `Now that ${n()} pulls up, use the lowest setting and take down mobiles. Anchor dressers and shelves too, since furniture is now something to climb.` : `Most babies pull up at 8–10 months. Use the lowest setting before then.`,
-        tools: `<div class="home-action-tools"><button class="home-inline-check" aria-label="Mark done: crib mattress at its lowest" onclick="setAnswer('mattressLowest','Yes')"><span aria-hidden="true"></span>Mark done</button></div>`,
+      out.push({ topic: 'Sleep', key: 'mattress', title: said ? `Now that ${n()} pulls up, set the crib mattress to its lowest` : `Set the crib mattress to its lowest`,
+        body: said ? `Take down mobiles too, and anchor dressers and shelves. To ${n()}, they’re something to climb now.` : `Most babies pull up between 8 and 10 months, so it’s worth doing before then.`,
+        tools: `<div class="home-action-tools"><button class="home-inline-check" aria-label="Mark done: crib mattress at its lowest" onclick="setAnswer('mattressLowest','Yes')"><span aria-hidden="true"></span>I’ve done this</button></div>`,
         link: link("openSection('Sleep','sleep-crib-height')", 'See the crib setup') });
     } else if (live() && answers.sit === 'Yes' && answers.mattressLowered !== 'Yes' && answers.mattressLowest !== 'Yes') {
-      out.push({ topic: 'Sleep', key: 'sitting', title: 'Lower the crib mattress',
-        body: `Now that ${n()} can sit without support, move it down a setting so ${p.s} can’t tip over the rail.`,
-        tools: `<div class="home-action-tools"><button class="home-inline-check" aria-label="Mark done: crib mattress lowered" onclick="setAnswer('mattressLowered','Yes')"><span aria-hidden="true"></span>Mark done</button></div>`,
+      out.push({ topic: 'Sleep', key: 'sitting', title: `Now that ${n()} sits, lower the crib mattress`,
+        body: `Moving it down a setting keeps ${p.o} from tipping over the rail.`,
+        tools: `<div class="home-action-tools"><button class="home-inline-check" aria-label="Mark done: crib mattress lowered" onclick="setAnswer('mattressLowered','Yes')"><span aria-hidden="true"></span>I’ve done this</button></div>`,
         link: link("openSection('Sleep','sleep-crib-height')", 'See the crib setup') });
     }
 
@@ -76,23 +76,23 @@
       const item = safetyHomeItems()[priority.id] || {};
       const crawl = mv === 'crawling' && recent('movement');
       out.push({ topic: 'Safety', key: 'check:' + priority.id,         title: crawl ? `Crawling opens up the room` : priority.id === 'gates' ? 'If you have stairs, gate them first' : item.title,
-        body: crawl ? `First up: ${item.title.charAt(0).toLowerCase() + item.title.slice(1)}. Then go room by room, and keep a clear stretch of floor for crawling practice.` : (item.body || ''),
+        body: crawl ? `Start with this: ${item.title.charAt(0).toLowerCase() + item.title.slice(1)}. Then go room by room, and leave a clear stretch of floor for practice.` : (item.body || ''),
         tools: homePriorityTools(priority), link: link(`openHomeSafetyCheck('${priority.owner}','${priority.id}')`, 'See how to do it') });
     }
 
     // First foods: the things that matter in the first weeks.
     if (live() && hasFoodAnswer() && foodStage() === 'new' && recent('food'))
-      out.push({ topic: 'Feeding', key: 'first-foods', title: 'First foods: what matters most',
-        body: `Now that ${n()} has started solids: iron-rich foods first, peanut and egg early, and milk feeds as usual.`,
+      out.push({ topic: 'Feeding', key: 'first-foods', title: `${n()}’s started solids`,
+        body: `Now that ${n()} has started solids, lead with iron-rich foods, try peanut and egg early, and keep milk feeds going as usual.`,
         link: link("openPage('topic:Feeding')", 'See the first-foods guide') });
 
     // An answer about milk changes what Home says straight away.
     if (live() && chgStageIndex('Feeding') < 2 && homeInputs().asked.milk === month && ['Breast milk', 'Formula', 'Both'].includes(profile.feed)) {
       const f = profile.feed;
-      out.push({ topic: 'Feeding', key: 'milk', title: f === 'Formula' ? 'Formula feeding, for this age' : f === 'Both' ? 'Breast milk and formula together' : 'Breast milk, for this age',
-        body: f === 'Formula' ? `Let hunger and fullness cues lead. The guide has amounts and safe prep.`
-          : f === 'Both' ? `They add up to one total. Let hunger and fullness cues guide each feed.`
-          : `Feed on cue. Wet diapers and steady weight show it’s going well.`,
+      out.push({ topic: 'Feeding', key: 'milk', title: f === 'Formula' ? `Formula at ${n()}’s age` : f === 'Both' ? 'Mixing breast milk and formula' : `Nursing at ${n()}’s age`,
+        body: f === 'Formula' ? `Let ${p.p} hunger and fullness lead. The guide has typical amounts and safe prep.`
+          : f === 'Both' ? `Count them as one total, and let ${n()}’s cues guide each feed.`
+          : `Feed when ${p.s} ${p.s === 'they' ? 'seem' : 'seems'} hungry. Plenty of wet diapers and steady weight mean it’s going well.`,
         link: link("openFeedingGuide('milk')", 'See the feeding guide') });
     }
 
@@ -115,8 +115,8 @@
   }
   function visitItem(v) {
     const label = healthJourneyLabel(v.age);
-    const when = v.saved ? (v.days < 0 ? `was on ${journeyDateLabel(v.saved)}` : `is on ${journeyDateLabel(v.saved)}`) : v.days <= 7 ? 'is around now' : v.days <= 14 ? 'is coming up in about 2 weeks' : `is about ${Math.round(v.days / 7)} weeks away`;
-    return { topic: 'Health', key: 'visit:' + v.age, reason: v.saved ? `Saved for ${journeyDateLabel(v.saved)}` : v.age === 0 ? 'In the first week' : `Usually around ${v.age} month${v.age === 1 ? '' : 's'}`, title: `The ${label.charAt(0).toLowerCase() + label.slice(1)} ${when}`,
+    const when = v.saved ? (v.days < 0 ? `was on ${journeyDateLabel(v.saved)}` : `is on ${journeyDateLabel(v.saved)}`) : v.days <= 7 ? 'is coming up' : v.days <= 14 ? 'is in about 2 weeks' : `is in about ${Math.round(v.days / 7)} weeks`;
+    return { topic: 'Health', key: 'visit:' + v.age, reason: v.saved ? `Saved for ${journeyDateLabel(v.saved)}` : v.age === 0 ? 'In the first week' : `Usually around ${v.age} month${v.age === 1 ? '' : 's'}`, title: `${n()}’s ${label.charAt(0).toLowerCase() + label.slice(1)} ${when}`,
       body: conceptHealthSummary(v.age) + (v.saved && v.days < 0 ? ' Mark it done once you’ve been.' : ''),
       link: link(`openPage('health-visit:${v.age}')`, 'See what’s checked') };
   }
@@ -129,18 +129,18 @@
       out.push({ topic: 'Feeding', key: 'solids-soon', title: 'Solids are getting closer',
         body: `Most babies start around 6 months, once they’re ready. Here’s what to know first.`,
         link: link("openPage('topic:Feeding')", 'Get ready for solids') });
-    if (m === 3) out.push({ topic: 'Sleep', key: 'four-month', title: 'Sleep may change around 4 months',
-      body: `Some babies wake more for a while. It’s normal, and it passes.`,
+    if (m === 3) out.push({ topic: 'Sleep', key: 'four-month', title: 'Sleep might get bumpy around 4 months',
+      body: `Some babies start waking more for a while. It’s normal, and it passes.`,
       link: link("openPage('chg:Sleep:e:0')", 'See how to respond if it happens') });
     const visit = upcomingVisit();
     if (visit && visit.days > 14) out.push(visitItem(visit));
     if (live() && m >= 5 && m < 8 && !['crawling', 'pulling'].includes(mv) && safetyPendingIds(safetyOwnedGuides().mobile.ids).length)
       out.push({ topic: 'Safety', key: 'crawl-soon', title: `Before ${n()} starts crawling`,
-        body: `Most babies move at 6–10 months. Babyproofing now saves a scramble later.`,
+        body: `Most babies get moving between 6 and 10 months. Babyproofing now saves a scramble later.`,
         link: link("openSafetyChecklist('mobile',false)", 'Start the babyproofing checklist') });
     if (live() && [7, 8].includes(m) && !['Yes', 'Stay'].includes(answers.twoNaps) && chgStageIndex('Sleep') === 2)
       out.push({ topic: 'Sleep', key: 'two-naps-soon', title: 'Two naps are on the way',
-        body: `Usually at 6–9 months, once the late catnap stops fitting.`,
+        body: `Usually between 6 and 9 months, once the late-afternoon nap stops fitting.`,
         link: link("openPage('chg:Sleep:s:3')", 'See what changes') });
     return out.filter(i => !taken.some(t => t.topic === i.topic && t.key.split(':')[0] === i.key.split(':')[0])).slice(0, 2);
   }
@@ -172,12 +172,12 @@
     const focus = homeCurrentFocus();
     const sig = [...now, ...next].map(i => i.key).join('|');
     const since = sameAsLastVisit(sig);
-    const close = !now.length && !next.length ? `You’re all caught up. Nothing needs your attention right now.` : !now.length ? `Nothing needs doing right now. The rest can wait until it’s closer.` : `Nothing else needs attention right now.`;
+    const close = !now.length && !next.length ? `You’re all caught up for now.` : !now.length ? `Nothing to do right now. We’ll bring things up as they get closer.` : `That’s everything for now.`;
 
     let h = `<section class="connected-now" aria-label="What matters now"><div class="connected-summary"><div class="home-summary connected-summary-intro"><div class="home-summary-heading"><div class="home-month-eyebrow">${month === 0 || focus.confirmed ? 'What matters now' : 'Likely around now'}</div><h1>${focus.title}</h1></div><span class="home-summary-art" aria-hidden="true">${homeMonthArt(month)}</span><p class="heroanswer">${focus.body}</p><div class="home-summary-spectrum" aria-hidden="true">${TOPICS.map(([t]) => `<span style="background:${YEAR_PALETTES[t].bg}"></span>`).join('')}</div></div>`;
     if (now.length) h += `<div class="connected-summary-links">${now.map(row).join('')}</div>`;
     h += `</div>${homeMomentRow()}</section>`;
-    if (since) h = `<p class="brief-unchanged">Nothing new since you last checked in on ${journeyDateLabel(iso(new Date(since)))}. Everything here is still current.</p>` + h;
+    if (since) h = `<p class="brief-unchanged">Nothing’s changed since you checked in on ${journeyDateLabel(iso(new Date(since)))}.</p>` + h;
     const ahead = [...next];
     if (ahead.length) h += `<section class="connected-ahead" aria-label="Coming up"><div class="connected-section-heading"><h2>Coming up</h2><button class="textlink" onclick="openPage('ahead')">See all →</button></div><div class="connected-ahead-list">${ahead.map(row).join('')}</div></section>`;
     h += `<p class="brief-close">${close}</p>`;

@@ -40,7 +40,7 @@ for (const feed of ['Breast milk','Formula','Both']) for (const experience of ['
 {
   const a=family(2,{},'Prefer not to say');
   a.run("openPage('topic:Feeding');chgChooseMethod('nurse');navigate('home');answerHomeQuestion('milk','Formula')");
-  check(clean(a.html()).includes('Formula feeding, for this age'),'Milk answer changes visible Home guidance');
+  check(clean(a.html()).includes('’s age')&&clean(a.html()).includes('Formula at'),'Milk answer changes visible Home guidance');
   a.run("openPage('chg:Feeding:d:milk')");
   check(a.html().includes('value="bottle" selected'),'Milk answer replaces stale reference');
   a.run("openPage('chg:Feeding:milk')");
@@ -61,7 +61,7 @@ for(const experience of ['preparing','new','established']) {
 {
   const a=family(4,{swaddleStopped:'Yes'});
   a.run("saveJourneySkill('sits-without-support',{date:iso(NOW)});navigate('home')");
-  check(clean(a.html()).includes('Now that Ari can sit without support'),'Saved sitting changes Home');
+  check(clean(a.html()).includes('Now that Ari sits, lower the crib mattress'),'Saved sitting changes Home');
   a.run("openPage('topic:Sleep')");
   check(clean(a.html()).includes('Now that Ari sits'),'Saved sitting changes Sleep');
   a.run("setAnswer('mattressLowered','Yes')");
