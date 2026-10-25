@@ -1,5 +1,0 @@
-/* Home briefing uses Home's existing components. Only these two lines of text are new. */
-#main .brief-unchanged { margin: 0 0 12px; font-size: 12px; line-height: 1.5; color: var(--muted) }
-#main .brief-close { margin: 16px 0 0; font-size: 13px; line-height: 1.5; color: var(--muted); text-align: center }
-#main .brief-row + .brief-row, #main .brief-row + .home-connected-sleep, #main .home-connected-sleep + .brief-row { border-top: 1px solid var(--line) }
-#main .brief-also .textlink { text-align: left }

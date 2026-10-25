@@ -40,7 +40,7 @@ for (const feed of ['Breast milk','Formula','Both']) for (const experience of ['
 {
   const a=family(2,{},'Prefer not to say');
   a.run("openPage('topic:Feeding');chgChooseMethod('nurse');navigate('home');answerHomeQuestion('milk','Formula')");
-  check(clean(a.html()).includes('Formula feeding, for this age'),'Milk answer changes visible Home guidance');
+  check(clean(a.html()).includes('Formula: amounts & feeding cues'),'Milk answer changes visible Home guidance');
   a.run("openPage('topic:Feeding')");
   check(a.html().includes('value="bottle" selected'),'Milk answer replaces stale reference');
   a.run("openPage('chg:Feeding:milk')");
@@ -61,11 +61,11 @@ for(const experience of ['preparing','new','established']) {
 {
   const a=family(4,{swaddleStopped:'Yes'});
   a.run("saveJourneySkill('sits-without-support',{date:iso(NOW)});navigate('home')");
-  check(clean(a.html()).includes('Now that Ari can sit without support'),'Saved sitting changes Home');
+  check(clean(a.html()).includes('You said Ari sits without support'),'Saved sitting changes Home');
   a.run("openPage('topic:Sleep')");
   check(clean(a.html()).includes('You said baby can sit without support'),'Saved sitting changes Sleep');
   a.run("setAnswer('mattressLowered','Yes')");
-  check(!clean(a.html()).includes('Sitting means the crib mattress goes down'),'Completed mattress work stops being an action');
+  check(!clean(a.html()).includes('You said baby can sit without support'),'Completed mattress work stops being an action');
   a.run("saveJourneySkill('pulls-up-to-stand',{date:iso(NOW)});openPage('topic:Safety')");
   check(a.run("safetyStageNow()==='pulling'"),'Saved pulling-up changes Safety');
   check(a.run("monthlyPlayActivities(developmentMonth(),currentSafetyMovementStage()).some(x=>x.id==='standing-play')"),'Saved pulling-up changes the play selection');
@@ -73,7 +73,7 @@ for(const experience of ['preparing','new','established']) {
 }
 {
   const a=family(9,{swaddleStopped:'Yes',mattressLowest:'Yes',crawl:'Yes'});
-  a.run("navigate('home')");check(clean(a.html()).includes('If you have stairs'),'Home preserves task applicability');
+  a.run("navigate('home')");check(clean(a.html()).includes('If your home has stairs'),'Home preserves task applicability');
   a.run("completeHomeCheck('gates','na')");check(!a.html().includes('data-home-check="gates"'),'Does not apply removes that task from Home');
   a.run("openPage('topic:Safety')");check(a.run("safetyCheckStatus('gates')==='na'"),'Home completion is shared with Safety');
   a.run("const d=journeyData();d.checks.safetyHome={...d.checks.safetyHome,...Object.fromEntries(safetyOwnedGuides().mobile.ids.map(id=>[id,'done']))};saveJourneyData(d);navigate('home')");

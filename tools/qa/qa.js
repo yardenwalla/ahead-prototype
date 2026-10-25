@@ -33,13 +33,13 @@ window.__qa = (function () {
     navigate('home');
     const m = $m();
     const ci = m.querySelector('.connected-checkin');
-    // Home is a briefing: "Important right now" cards, then "Coming up" cards.
-    const brief = sel => all(sel).map(r => ({ label: txt(r.querySelector('small')), title: txt(r.querySelector('b')), body: txt(r.querySelector('.connected-row-copy > span')) }));
-    const rows = brief('.connected-summary-links .connected-row'), actions = [], next = brief('.connected-ahead-list .connected-row');
+    const rows = all('.connected-summary-links .connected-row').map(r => ({ label: txt(r.querySelector('small')), title: txt(r.querySelector('b')), body: txt(r.querySelector('.connected-row-copy > span')) }));
+    const actions = all('.home-action-row').map(r => ({ label: txt(r.querySelector('small')), title: txt(r.querySelector('b')) }));
+    const next = all('.connected-ahead-list .connected-row').map(r => ({ label: txt(r.querySelector('small')), title: txt(r.querySelector('b')) }));
     return {
       checkin: ci ? { q: txt(ci.querySelector('h2')), choices: all('.connected-checkin-choices button', ci).map(txt) } : null,
-      hero: txt(m.querySelector('.home-summary-heading h1')), eyebrow: txt(m.querySelector('.home-month-eyebrow')), close: txt(m.querySelector('.brief-close')),
-      rows, actions, next, swaddle: all('[data-brief^="rolling"]').length > 0, problems: problems()
+      hero: txt(m.querySelector('.home-summary-heading h1')), eyebrow: txt(m.querySelector('.home-month-eyebrow')),
+      rows, actions, next, swaddle: all('.home-connected-sleep b').some(b => /swaddl/i.test(b.textContent)), problems: problems()
     };
   }
 
@@ -52,8 +52,8 @@ window.__qa = (function () {
       current: txt(m.querySelector('.chg-rail [data-relevant="true"] > span:not(.journey-stage-node)')),
       selected: txt(m.querySelector('.chg-rail [aria-current="step"] > span:not(.journey-stage-node)')),
       eyebrow: txt(m.querySelector('.experience-hero .eyebrow')), title: txt(m.querySelector('.experience-hero h2')),
-      alerts: heads.filter(h => !/^(Coming up|Next step|After the first birthday)/.test(h.label)),
-      comingUp: heads.find(h => /^(Coming up|Next step)/.test(h.label)) || null,
+      alerts: heads.filter(h => !/^(Coming up|After the first birthday)/.test(h.label)),
+      comingUp: heads.find(h => /^Coming up/.test(h.label)) || null,
       after: heads.find(h => /^After the first birthday/.test(h.label)) || null,
       checkin: txt(m.querySelector('.chg-checkin h2')),
       events: all('.chg-also .guide-resource-row b', m).map(txt),

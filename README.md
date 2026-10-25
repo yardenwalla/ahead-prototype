@@ -32,19 +32,16 @@ Start with [the consolidated first-year acceptance report](docs/editorial-accept
 
 ## Home
 
-Home is a briefing, built in `js/briefing.js`. It answers one question: what matters for this baby right now?
+`js/home-rules.js` chooses recommendations within the existing design:
 
-- **Important right now** (at most 2): things to act on this week. The guidance is written out on Home, so a parent understands it without tapping through. Examples: stop swaddling as rolling starts, lower the crib mattress, the next babyproofing check, a checkup in the next two weeks, what matters in the first weeks of solids.
-- **Coming up** (at most 2): what to get ready for in the next few weeks, like solids at 4–5 months, the 4-month sleep change, a checkup within 35 days, babyproofing before crawling, or two naps.
-- It then says plainly that nothing else needs attention, or that the parent is all caught up. If nothing has changed since the last visit, it says that too, instead of inventing news.
-- **One change, everything it affects:** when a parent reports rolling, sitting, crawling, pulling up or first foods, Home shows one item that connects sleep, safety, play and feeding for that change.
-- The month card at the top describes what the baby may be doing this month. "Browse by category" sits at the bottom.
+- Each row states why it is useful now. Must-know actions, relevant reports and nearby appointments rank ahead of general references.
+- At most three current rows and two preparation rows, with one category per area and no category duplicated between the two.
+- In the first weeks, milk feeding, the first checkup and initial sleep setup take priority. Completed setup stops being promoted.
+- Preparation includes the 4-month sleep change, optional training education around four months, first-food preparation and a possible catnap transition. A parent's chosen sleep approach and nap answers affect these suggestions.
+- Checkup preparation stays close to the actual/expected visit. Unfinished safety work retains Done and Doesn't apply across stages.
+- Food check-ins start around six developmental months and evolve from starting foods to textures/meals. Follow-ups are spaced 28 days after an answer or skip, with the existing quiet periods.
 
-`homeBriefingDebug()` lists what's showing and why. `js/home-rules.js` still provides the ranking audit used by the automated checks.
-
-## Guide pages
-
-Sleep and Feeding stage pages (content in `js/guides-data.js`) answer the same questions in the same order: the short answer in the header, then **What to do**, **What to know** (including the numbers), **What's normal** (including the phases that come and go) and **When to call your pediatrician**. Common questions, what's coming up and sources sit below. Getting ready for solids, for example, covers readiness signs, how to start, gagging versus choking, iron-rich first foods, allergens and milk feeds on one page.
+`homeRulesDebug()` and `homeRecommendationAudit()` expose the reasons for the current selection for QA.
 
 ## Validation
 

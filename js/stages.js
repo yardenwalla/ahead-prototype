@@ -195,15 +195,9 @@
      Current checkpoint: a "Coming up" card for the next one. Another checkpoint: a way back. */
   const baseDev = developmentJourneyOverview;
   window.developmentJourneyOverview = developmentJourneyOverview = function () {
-    let html = baseDev.apply(this, arguments);
+    const html = baseDev.apply(this, arguments);
     const ref = Number((html.match(/data-development-guide="(\d+)"/) || [])[1]);
-    if (!ref) return html;
-    // Finish the page the way a conversation would: how you can help, and when to check in.
-    const help = `<section class="sleep-phase-help chg-guide-section dev-help" style="${yearTheme('Development')}"><h3>How you can help</h3><ul><li><p>Floor time, talking back to ${name()}’s sounds and simple games like peekaboo do more than any toy. You don’t need a program; everyday moments count.</p><button class="textlink chg-item-link" onclick="openPage('topic:Daily rhythm')">Ideas to try this month →</button></li></ul></section>`
-      + `<section class="sleep-phase-help chg-guide-section dev-help" style="${yearTheme('Development')}"><h3>When to check in with your pediatrician</h3><ul><li><p>If ${name()} loses a skill ${babyPronouns().s} had, or you’re worried about how ${babyPronouns().s} ${babyPronouns().s === 'they' ? 'move, see, hear or connect' : 'moves, sees, hears or connects'} with you, mention it. You don’t need to wait for the next checkup.</p></li></ul></section>`;
-    const qs = devCommonQuestions(ref);
-    if (html.includes(qs)) html = html.replace(qs, help + qs);
-    if (!isCurrent()) return html;
+    if (!ref || !isCurrent()) return html;
     const now = devRef(developmentMonth(actualMonth())), keys = Object.keys(DEV_STAGES).map(Number);
     if (ref !== now) return html.replace('</nav>', `</nav><div class="chg-browse-links" style="${yearTheme('Development')}"><button class="textlink chg-back-now" onclick="navigate('categories');openPage('topic:Development')">← Back to where ${name()} is now</button></div>`);
     const next = keys[keys.indexOf(ref) + 1];
