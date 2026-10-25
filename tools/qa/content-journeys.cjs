@@ -64,9 +64,9 @@ for (let family = 0; family < 100; family++) {
   const a = boot({ name: 'Sam', dob: '2026-05-21', early: false, due: '', feed: 'Formula', example: false });
   expect(a.run('homeRulesDebug().next.some(x=>x.startsWith("Health:"))'), 'A checkup in the coming month earns a preparation slot');
   const safe = render(a, 'chg:Sleep:safe');
-  expect(!safe.includes('aria-checked="true"'), 'Fresh checklists do not assume actions done');
-  a.run("chgToggleSafe('Sleep',0)");
-  expect(a.html().includes('aria-checked="true"'), 'Explicit checklist completion is reflected');
+  expect(!safe.includes('aria-checked="true"') && !safe.includes('hub-done'), 'Fresh checklists do not assume actions done');
+  a.run("hubSleepSetUp()");
+  expect(a.html().includes('hub-done'), 'Explicit setup completion is reflected');
   a.run("setAnswer('swaddleStopped','Yes');setAnswer('rollDirection','Not yet');navigate('home')");
   expect(!text(a.html()).includes('You’ve noticed rolling'), 'Not yet is not rolling');
   a.run("saveJourneyVisit(4,{date:'2026-10-20',status:'planned'});navigate('home')");
@@ -77,7 +77,7 @@ for (let family = 0; family < 100; family++) {
   a.run("answers={};persist();chgSetSafety('pulling')");
   expect(a.run("answers.pullUp==='Yes'&&!answers.crawl&&!answers.roll"), 'Reporting pulling up does not report crawling or rolling');
   a.run("resetBabyChanges();openPage('chg:Sleep:safe')");
-  expect(!a.html().includes('aria-checked="true"'), 'A new setup resets example checklist progress');
+  expect(!a.html().includes('aria-checked="true"') && !a.html().includes('hub-done'), 'A new setup resets example checklist progress');
   const newborn = boot({name:'Lee',dob:'2026-09-21',early:false,due:'',feed:'Both',example:false});
   const earlyHelp=render(newborn,'chg:Sleep:settle');
   expect(!/Ferber|graduated extinction|Most families who try sleep training/.test(text(earlyHelp)), 'Early settling support does not introduce training methods');

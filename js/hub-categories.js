@@ -55,76 +55,79 @@
   const baseTopic = displayTopic;
   window.displayTopic = displayTopic = t => t === 'Daily rhythm' ? 'Everyday care' : t === 'Development' ? 'Development & play' : baseTopic(t);
 
-  /* ---------- Everyday care: "How do I take care of Maya day to day?" ---------- */
+  /* ---------- Everyday care: "How do I take care of Maya day to day?" ----------
+     Stages follow age, like the monthly overview, because care changes as the baby grows. */
   const CARE = [
-    { key: 'first', rail: 'The first weeks', when: 'Until the cord stump falls off' },
-    { key: 'bath', rail: 'Bath time', when: 'Usually 2 weeks–6 months' },
-    { key: 'teeth', rail: 'Teeth and bigger baths', when: 'Usually 6–12 months' }
+    { key: 'newborn', rail: 'Newborn', when: 'Until the cord stump falls off' },
+    { key: 'early', rail: '1–3 months', when: 'Usually 1–3 months' },
+    { key: 'middle', rail: '4–6 months', when: 'Usually 4–6 months' },
+    { key: 'late', rail: '7–12 months', when: 'Usually 7–12 months' }
   ];
-  const careNow = () => { const days = (NOW - parse(profile.dob)) / 864e5; return days < 21 ? 0 : developmentMonth(actualMonth()) < 6 ? 1 : 2; };
-  const careStage = () => live() ? careNow() : (month < 1 ? 0 : month < 6 ? 1 : 2);
+  const careFor = (days, m) => days < 21 ? 0 : m < 4 ? 1 : m < 7 ? 2 : 3;
+  const careStage = () => live() ? careFor((NOW - parse(profile.dob)) / 864e5, developmentMonth(actualMonth())) : (month < 1 ? 0 : month < 4 ? 1 : month < 7 ? 2 : 3);
   const bathSafety = () => H().versus('Bath safety', ['Always', 'Gather everything first and keep one hand on Maya the whole time.'], ['Never', 'Step away, even for a moment. Babies can slip under quietly in seconds.']);
+  const careRow = (icon, title, sub, id) => H().row({ icon, cat: 'Daily rhythm', title, sub, onclick: id.startsWith('chg:') ? `openPage('${id}')` : `openPage('chg:Daily rhythm:d:${id}')` });
   function everydayCare(selected = null) {
     const now = careStage(), v = CARE[selected] ? selected : now, h = H(), C0 = CARE[v];
-    const pills = h.pills('Everyday care', CARE.map((c, i) => ({ label: c.rail, on: i === v, now: live() && i === now, onclick: `openPage('chg:Daily rhythm:s:${i}')` })));
+    const pills = h.pills('Everyday care by age', CARE.map((c, i) => ({ label: c.rail, on: i === v, now: live() && i === now, onclick: `openPage('chg:Daily rhythm:s:${i}')` })));
     let b = '';
     if (v === 0) {
-      b += h.hero({ eyebrow: C0.rail, title: 'Sponge baths until the cord falls off', lead: 'Until the cord stump falls off, usually in a week or two, a sponge bath a few times a week is all Maya needs.' });
+      b += h.hero({ eyebrow: 'Newborn', title: 'Caring for a brand-new baby', lead: 'For now it’s sponge baths, keeping the cord stump dry and lots of diapers. It feels like a lot, and it gets quicker fast.' });
       b += h.glanceCard('Maya’s care at a glance', [['Baths', '2–3 a week', 'Sponge baths for now'], ['Diapers', '8–12 a day', 'Change when wet or dirty']], `openPage('chg:Daily rhythm:d:sponge')`);
-      b += h.list('In these first weeks', [
-        h.row({ icon: 'towel', cat: 'Daily rhythm', title: 'Give a sponge bath', sub: 'A warm room, a washcloth and 5 minutes', onclick: `openPage('chg:Daily rhythm:d:sponge')` }),
-        h.row({ icon: 'cord', cat: 'Daily rhythm', title: 'Keep the cord stump clean and dry', sub: 'Fold the diaper below it and let it air', onclick: `openPage('chg:Daily rhythm:d:cord')` }),
-        h.row({ icon: 'nail', cat: 'Daily rhythm', title: 'Trim tiny nails', sub: 'Easiest while {s} {sleep|sleeps}', onclick: `openPage('chg:Daily rhythm:d:nails')` })
-      ]);
+      b += h.list('In these first weeks', [careRow('towel', 'Give a sponge bath', 'A warm room, a washcloth and 5 minutes', 'sponge'), careRow('cord', 'Keep the cord stump clean and dry', 'Fold the diaper below it and let it air', 'cord'), careRow('nail', 'Trim tiny nails', 'Easiest while {s} {sleep|sleeps}', 'nails')]);
       b += h.versus('Normal, or time to call?', ['Normal', 'A little crust or a spot of blood near the cord, peeling skin and baby acne.'], ['Call your pediatrician', 'Redness spreading around the cord, pus or a bad smell, or a temperature of 100.4°F or higher.']);
     }
     if (v === 1) {
-      b += h.hero({ eyebrow: C0.rail, title: 'Bath time can be quick and simple', lead: 'Two or three baths a week is plenty in the first year. Many families make it part of bedtime.' });
+      b += h.hero({ eyebrow: '1–3 months', title: 'Tub baths and everyday skin care', lead: 'Once the cord has healed, Maya can have real baths. Two or three a week is plenty in the first year.' });
       b += h.glanceCard('Maya’s care at a glance', [['Baths', '2–3 a week', 'More if you like'], ['Water', 'About 100°F', 'Warm, not hot']], `openPage('chg:Daily rhythm:d:tub')`);
-      b += h.list('What helps now', [
-        h.row({ icon: 'bath', cat: 'Daily rhythm', title: 'Give a tub bath', sub: 'About 2 inches of warm water is plenty', onclick: `openPage('chg:Daily rhythm:d:tub')` }),
-        h.row({ icon: 'drop', cat: 'Daily rhythm', title: 'Keep skin soft', sub: 'Mild soap, and moisturizer only if it’s dry', onclick: `openPage('chg:Daily rhythm:d:skin')` }),
-        h.row({ icon: 'moon', cat: 'Daily rhythm', title: 'Make it part of bedtime', sub: 'Bath, feed, book, bed', onclick: `openPage('chg:Sleep:d:routine')` })
-      ]);
+      b += h.list('What helps now', [careRow('bath', 'Give a tub bath', 'About 2 inches of warm water is plenty', 'tub'), careRow('drop', 'Care for dry skin and cradle cap', 'Mild soap, and a soft brush for the scalp', 'skin'), careRow('towel', 'Dress Maya for the weather', 'One more layer than you’re wearing', 'dress')]);
       b += bathSafety();
     }
     if (v === 2) {
-      b += h.hero({ eyebrow: C0.rail, title: 'First teeth, splashier baths', lead: 'Once Maya can sit, bath time gets more fun. When the first tooth shows up, it’s time to start brushing.' });
+      b += h.hero({ eyebrow: '4–6 months', title: 'Bath time becomes part of bedtime', lead: 'Many families use the bath to start winding down. Drool and chewing often start now too, long before the first tooth.' });
+      b += h.glanceCard('Maya’s care at a glance', [['Baths', '2–3 a week', 'Often before bed'], ['Sun', 'Shade first', 'Under 6 months']], `openPage('chg:Daily rhythm:d:tub')`);
+      b += h.list('What helps now', [careRow('moon', 'Make the bath part of bedtime', 'Bath, feed, book, bed', 'chg:Sleep:d:routine'), careRow('tooth', 'Look after drool and gums', 'Wipe gums and keep the chin dry', 'gums'), careRow('sun', 'Keep Maya in the shade', 'Hats and shade before sunscreen', 'sun')]);
+      b += bathSafety();
+    }
+    if (v === 3) {
+      b += h.hero({ eyebrow: '7–12 months', title: 'First teeth and splashier baths', lead: 'Once Maya can sit, bath time gets more fun. When the first tooth shows up, it’s time to start brushing.' });
       b += h.glanceCard('Maya’s care at a glance', [['Teeth', 'Brush twice a day', 'From the first tooth'], ['Toothpaste', 'A rice-grain smear', 'With fluoride']], `openPage('chg:Daily rhythm:d:teeth')`);
-      b += h.list('What helps now', [
-        h.row({ icon: 'tooth', cat: 'Daily rhythm', title: 'Brush the first teeth', sub: 'A soft brush and a tiny smear of toothpaste', onclick: `openPage('chg:Daily rhythm:d:teeth')` }),
-        h.row({ icon: 'bath', cat: 'Daily rhythm', title: 'Bath seats aren’t safety seats', sub: 'Stay within arm’s reach, every bath', onclick: `openPage('chg:Daily rhythm:d:bathseat')` }),
-        h.row({ icon: 'sun', cat: 'Daily rhythm', title: 'Protect {p} skin in the sun', sub: 'Shade first, then baby sunscreen', onclick: `openPage('chg:Daily rhythm:d:sun')` })
-      ]);
+      b += h.list('What helps now', [careRow('tooth', 'Brush the first teeth', 'A soft brush and a tiny smear of toothpaste', 'teeth'), careRow('bath', 'Bath seats aren’t safety seats', 'Stay within arm’s reach, every bath', 'bathseat'), careRow('sun', 'Protect {p} skin in the sun', 'Shade first, then baby sunscreen', 'sun')]);
       b += bathSafety();
     }
     if (live() && v !== now) b = b.replace('</header>', '</header>' + back('Back to your guide', `openPage('chg:Daily rhythm:s:${now}')`));
     const nx = CARE[v + 1];
-    if (nx) b += h.next(`Coming up ${nx.when.replace(/^Usually /, 'around ').replace(/ ?2 weeks–6 months/, ' 2 weeks').replace(/6–12 months/, '6 months')}`, nx.rail, `openPage('chg:Daily rhythm:s:${v + 1}')`);
+    if (nx) b += h.next(v === 0 ? 'Coming up after the first few weeks' : `Coming up at ${nx.rail.split('–')[0]} months`, ['', 'Tub baths and everyday skin care', 'Bath time becomes part of bedtime', 'First teeth and splashier baths'][v + 1], `openPage('chg:Daily rhythm:s:${v + 1}')`);
     return frame('Daily rhythm', `data-care-stage="${CARE[v].key}"`, pills, b);
   }
   window.everydayCare = everydayCare;
 
   function careDetail(id) {
-    const h = H(), d = (ctx, title, lead, inner, artName) => h.detail('Daily rhythm', ctx, title, lead, inner, artName);
-    if (id === 'sponge') return d('The first weeks', 'Give a sponge bath', 'Until the cord stump falls off, a sponge bath keeps Maya clean without getting the stump wet.',
+    const h = H(), stageName = CARE[careStage()].rail, d = (ctx, title, lead, inner, artName) => h.detail('Daily rhythm', ctx, title, lead, inner, artName);
+    if (id === 'sponge') return d('Newborn', 'Give a sponge bath', 'Until the cord stump falls off, a sponge bath keeps Maya clean without getting the stump wet.',
       h.steps(['Warm the room and lay Maya on a towel, with everything you need within reach.', 'Wash {p} face with a damp washcloth and plain water, then the rest of {o}, uncovering one part at a time.', 'Finish with the diaper area, then pat {o} dry, paying attention to skin folds.'])
       + h.video('Watch a newborn bath, step by step', 'WebMD', 'https://www.webmd.com/parenting/baby/video/bathing-newborns') + h.tip('How often?', 'Two or three times a week is plenty. In between, wipe {p} face, neck and diaper area.'), 'towel');
-    if (id === 'cord') return d('The first weeks', 'Keep the cord stump clean and dry', 'The stump usually dries up and falls off on its own in 1–3 weeks.',
+    if (id === 'cord') return d('Newborn', 'Keep the cord stump clean and dry', 'The stump usually dries up and falls off on its own in 1–3 weeks.',
       h.steps(['Fold the top of the diaper down so the stump stays in the air.', 'If it gets dirty, clean it gently with plain water and pat it dry.', 'Let it fall off by itself, even if it’s hanging by a thread.']) + h.tip('A little crust is normal', 'A spot of blood when it comes off is normal too. Call if the skin around it gets red, swollen or smelly.'), 'cord');
-    if (id === 'nails') return d('The first weeks', 'Trim tiny nails', 'Baby nails grow fast and are sharp enough to scratch {p} face.',
+    if (id === 'nails') return d(stageName, 'Trim tiny nails', 'Baby nails grow fast and are sharp enough to scratch {p} face.',
       h.steps(['Wait until Maya is asleep or very relaxed.', 'Use baby nail clippers or a soft emery board, pressing the fingertip pad away from the nail.', 'File any rough edges. A nick happens to everyone; press gently with a clean cloth.']), 'nail');
-    if (id === 'tub') return d('Bath time', 'Give a tub bath', 'Once the cord has healed, Maya’s ready for a baby tub.',
+    if (id === 'tub') return d(stageName, 'Give a tub bath', 'Once the cord has healed, Maya’s ready for a baby tub.',
       h.steps(['Gather everything first: towel, washcloth, mild soap and a clean diaper.', 'Fill the tub with about 2 inches of warm water. Test it with your wrist; it should feel warm, not hot.', 'Support {p} head and neck with one arm, and wash from top to bottom with your other hand.', 'Lift {o} out onto the towel and wrap {o} up right away.'])
       + h.video('Watch a baby bath, step by step', 'WebMD', 'https://www.webmd.com/parenting/baby/video/bathing-newborns') + h.tip('Water heater', 'Set it below 120°F so tap water can’t scald.'), 'bath');
-    if (id === 'skin') return d('Bath time', 'Keep skin soft', 'Most babies don’t need lotion. Less is usually more.',
-      h.steps(['Use a mild, fragrance-free soap, and only on the parts that need it.', 'Pat dry instead of rubbing, especially in skin folds.', 'If skin looks dry, a little fragrance-free moisturizer helps. If it stays dry, try fewer baths.']) + h.tip('Red, itchy patches?', 'That could be eczema. Mention it to your pediatrician, who can suggest what helps.'), 'drop');
-    if (id === 'teeth') return d('Teeth and bigger baths', 'Brush the first teeth', 'As soon as the first tooth appears, brushing helps keep it healthy.',
+    if (id === 'skin') return d(stageName, 'Care for dry skin and cradle cap', 'Most babies don’t need lotion. Less is usually more.',
+      h.steps(['Use a mild, fragrance-free soap, and only on the parts that need it.', 'Pat dry instead of rubbing, especially in skin folds. A little fragrance-free moisturizer helps if skin looks dry.', 'For crusty patches on the scalp, rub in a little baby oil, then brush gently with a soft brush before the bath.']) + h.tip('Red, itchy patches?', 'That could be eczema. Mention it to your pediatrician, who can suggest what helps.'), 'drop');
+    if (id === 'dress') return d(stageName, 'Dress Maya for the weather', 'Babies can’t tell you they’re too hot or cold, so a simple rule helps.',
+      h.steps(['Dress Maya in one more layer than you’re comfortable in.', 'Feel the back of {p} neck. Sweaty means too warm; cool means add a layer.', 'Skip hats and heavy blankets for sleep. A sleep sack is enough.']) + h.tip('In the car seat', 'Take off puffy coats first. Buckle {o} in, then put a blanket over the straps.'), 'towel');
+    if (id === 'gums') return d(stageName, 'Look after drool and gums', 'Drooling and chewing on everything are normal now. Teeth can take a while to follow.',
+      h.steps(['Wipe {p} gums with a clean, damp cloth once a day.', 'Keep a soft bib on and pat the chin dry to avoid a drool rash.', 'Offer a cool, firm teething ring if {s} {seem|seems} sore.']) + h.tip('Skip these', 'Teething necklaces, numbing gels and tablets. Ask your pediatrician about pain relief if needed.'), 'tooth');
+    if (id === 'teeth') return d(stageName, 'Brush the first teeth', 'As soon as the first tooth appears, brushing helps keep it healthy.',
       h.steps(['Use a soft baby toothbrush and a smear of fluoride toothpaste the size of a grain of rice.', 'Brush gently twice a day, including before bed.', 'No need to rinse. A little toothpaste left behind is fine.']) + h.tip('First dental visit', 'Plan one by the first birthday, or within 6 months of the first tooth.'), 'tooth');
-    if (id === 'bathseat') return d('Teeth and bigger baths', 'Bath seats aren’t safety seats', 'A bath seat can help Maya sit up, but it won’t keep {o} safe if you step away.',
+    if (id === 'bathseat') return d(stageName, 'Bath seats aren’t safety seats', 'A bath seat can help Maya sit up, but it won’t keep {o} safe if you step away.',
       h.steps(['Keep the water shallow, about as high as {p} waist when sitting.', 'Stay within arm’s reach for the whole bath.', 'If you need to leave, wrap Maya in a towel and take {o} with you.']), 'bath');
-    if (id === 'sun') return d('Teeth and bigger baths', 'Protect Maya’s skin in the sun', 'Babies’ skin burns easily, so shade comes first.',
-      h.steps(['Keep {o} in the shade and dress {o} in light clothes and a wide-brimmed hat.', 'From 6 months, use a broad-spectrum sunscreen of SPF 30 or more on skin you can’t cover.', 'Reapply every 2 hours, and after water play.']) + h.tip('Younger than 6 months?', 'Shade and clothing are best. A little sunscreen on small areas is OK if shade isn’t possible.'), 'sun');
+    if (id === 'sun') return careStage() < 3 ? d(stageName, 'Keep Maya in the shade', 'Young babies’ skin burns easily, so shade comes first.',
+      h.steps(['Keep {o} in the shade, especially in the middle of the day.', 'Dress {o} in light, long sleeves and a wide-brimmed hat.', 'If you can’t find shade, a little sunscreen on small areas like the face is OK.']) + h.tip('From 6 months', 'Broad-spectrum sunscreen of SPF 30 or more becomes part of the routine.'), 'sun')
+      : d(stageName, 'Protect Maya’s skin in the sun', 'Shade still comes first, and sunscreen joins in now.',
+      h.steps(['Keep {o} in the shade and dress {o} in light clothes and a wide-brimmed hat.', 'Use a broad-spectrum sunscreen of SPF 30 or more on skin you can’t cover.', 'Reapply every 2 hours, and after water play.']), 'sun');
     return everydayCare();
   }
 
@@ -134,14 +137,14 @@
     const r = baseSnap(topic);
     if (topic !== 'Daily rhythm') return r;
     const v = careStage();
-    return Object.assign({}, r, { title: ['Sponge baths and cord care', 'Bath time', 'First teeth and bigger baths'][v], body: ['Sponge baths until the cord falls off, plus diapers and nails.', 'Quick, simple baths a few times a week.', 'Brushing the first teeth and staying close at bath time.'][v] });
+    return Object.assign({}, r, { title: ['Baths, cord care and nails', 'Baths, skin and dressing', 'Bedtime baths, gums and shade', 'First teeth, bath safety and sun'][v], body: ['Sponge baths, the cord stump and tiny nails.', 'Tub baths, dry skin and dressing for the weather.', 'Bath as part of bedtime, drool and gums, and shade.', 'Brushing the first teeth, bath seats and sunscreen.'][v] });
   };
   const baseArt = yearIllustration;
   window.yearIllustration = yearIllustration = (t, i = 0) => t === 'Daily rhythm' && typeof hubArt === 'function' ? hubArt(['bath', 'towel', 'tooth', 'drop'][Math.abs(i) % 4], 'Daily rhythm') : baseArt(t, i);
   const baseYear = categoryYear;
   window.categoryYear = categoryYear = t => t === 'Daily rhythm' ? everydayCare() : baseYear(t);
   const baseHub = yearHub;
-  window.yearHub = yearHub = () => baseHub().replace('First responses → shared games', 'Sponge baths → first teeth');
+  window.yearHub = yearHub = () => baseHub().replace('First responses → shared games', 'Baths and cord care → first teeth');
 
   /* ---------- Safety: "What do I need to do before Maya moves?" ---------- */
   const SAFETY_HEAD = { setup: ['Set up a few things once', 'Check the car seat, hot water, smoke alarms and any pool access.'], reaching: ['Get ready for reaching and rolling', 'Rolling puts the play mat and changing spot within reach. A quick check covers it.'], rolling: ['Babyproof before Maya moves', 'Most babies start moving at 6–10 months. Getting ahead of it saves a scramble.'], moving: ['Keep going, one room at a time', 'Maya can reach much more now. Work through the rooms {s} {use|uses} most.'], pulling: ['Check what Maya can reach standing', 'Standing brings windows, cords and furniture into reach.'] };
