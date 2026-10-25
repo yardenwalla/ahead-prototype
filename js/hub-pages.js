@@ -161,22 +161,36 @@
     const sub = journeyDateLabel(r.date) + (r.provider ? ' · ' + r.provider : '') + (r.notes ? ' · ' + String(r.notes).slice(0, 60) + (r.notes.length > 60 ? '…' : '') : '');
     return h.row({ icon: milestone ? MILESTONE_ICON(r) : 'steth', cat: milestone ? 'Development' : 'Health', title: esc2(r.title), sub: esc2(sub), chipText: milestone ? 'Milestone' : r.status === 'planned' ? 'Planned' : 'Visit', onclick: `openPage('event-edit:${r.id}')` });
   }
+  /* A real timeline: one stop per month, newest first. Each stop's circle is that month's photo;
+     the visits and firsts from that month hang off it. "Next" sits at the top, "Born" at the bottom. */
   window.journeyTimeline = journeyTimeline = function () {
-    const h = H(), data = journeyData(), records = [...data.records].sort((a, b) => b.date.localeCompare(a.date));
-    const saved = records.filter(r => r.status === 'attended'), planned = records.filter(r => r.status === 'planned').reverse();
-    let b = `<div class="eyebrow">${esc2(name())}’s first year</div><h1>Little moments,<br>your own story</h1><p class="journey-lede hub-tl-lede">${F('The checkups and firsts you choose to save. Nothing fills in on its own.')}</p>`;
-    b += `<div class="hub-two-actions"><button class="hub-button" onclick="openPage('chg:Timeline:visit')">Record a visit</button><button class="hub-button is-secondary" onclick="openPage('chg:Timeline:milestone')">Save a milestone</button></div>`;
-    b += photoStrip();
-    if (!saved.length) b += `<section class="hub-card hub-empty"><span class="hub-empty-art" aria-hidden="true">${yearIllustration('Development', 1)}</span><b>${F('Your first entry starts here')}</b><p>${F('Save a checkup once you’ve been, or a first you don’t want to forget, like Maya’s first smile.')}</p></section>`;
-    else {
-      const groups = [];
-      saved.forEach(r => { const g = ageAt(r.date), last = groups[groups.length - 1]; if (last && last.g === g) last.rows.push(r); else groups.push({ g, rows: [r] }); });
-      b += `<div class="hub-tl">${groups.map(g => h.list(g.g, g.rows.map(entryRow))).join('')}</div>`;
+    const data = journeyData(), dob = parse(profile.dob), today = iso(NOW), all = photos(), nm = esc2(name());
+    let now = 0; while (now < 12 && iso(addMonths(dob, now + 1)) <= today) now++;
+    const saved = data.records.filter(r => r.status === 'attended'), planned = data.records.filter(r => r.status === 'planned').sort((a, b) => a.date.localeCompare(b.date));
+    const item = (r, extra = '') => {
+      const milestone = r.type === 'milestone', sub = journeyDateLabel(r.date) + (r.provider ? ' · ' + r.provider : '');
+      return `<button class="hub-tl-item ${milestone ? '' : 'is-visit'} ${extra}" onclick="openPage('event-edit:${r.id}')"><span class="hub-tl-ic">${hubArt(milestone ? MILESTONE_ICON(r) : 'steth', milestone ? 'Development' : 'Health')}</span><span class="hub-row-copy"><b>${esc2(r.title)}</b><small>${esc2(sub)}</small></span></button>`;
+    };
+    let stops = '';
+    // Next: the coming checkup, and anything already planned.
+    const focus = healthJourneyFocus(), fr = healthRecord(focus);
+    if (!fr || fr.status !== 'attended') {
+      const when = fr && fr.status === 'planned' ? `Saved for ${journeyDateLabel(fr.date)}` : focus === 0 ? 'In the first week' : `Usually around ${journeyDateLabel(iso(addMonths(dob, focus)))}`;
+      const extra = planned.filter(r => !(r.type === 'visit' && r.visitAge === focus)).map(r => item(r, 'is-planned')).join('');
+      stops += `<div class="hub-tl-stop"><span class="hub-tl-node is-next">Next</span><span class="hub-tl-head"><b>${esc2(healthJourneyLabel(focus))}</b><small>${esc2(when)}</small></span></div><div class="hub-tl-items">${fr && fr.status === 'planned' ? '' : `<button class="hub-tl-item is-planned" onclick="openPage('visit-form:plan-${focus}')"><span class="hub-tl-ic">${hubArt('clock', 'Health')}</span><span class="hub-row-copy"><b>Save the date</b><small>So it shows up on Home as it gets close</small></span></button>`}${extra}</div>`;
     }
-    if (planned.length) b += h.list('Planned with your care team', planned.map(entryRow));
-    const focus = healthJourneyFocus();
-    if (!healthRecord(focus) || healthRecord(focus).status !== 'attended') b += h.next('Next checkup', healthJourneyLabel(focus), `openPage('health-visit:${focus}')`);
-    b += h.note('Saved on this device for this baby.');
+    for (let m = now; m >= 0; m--) {
+      const start = iso(addMonths(dob, m)), end = iso(addMonths(dob, m + 1));
+      const rows = saved.filter(r => r.date >= start && r.date < end).sort((a, b) => b.date.localeCompare(a.date));
+      const ph = all[m], label = m === 0 ? 'Born' : m === 12 ? '1 year' : `${m} month${m === 1 ? '' : 's'}`;
+      const node = `<button class="hub-tl-node ${ph ? 'has-photo' : 'is-add'}" onclick="hubPickPhoto(${m})" aria-label="${ph ? 'Change' : 'Add'} the ${m === 0 ? 'newborn' : label} photo">${ph ? `<img src="${ph}" alt="">` : '＋'}</button>`;
+      const sub = journeyDateLabel(start) + (ph ? '' : ' · Add a photo');
+      stops += `<div class="hub-tl-stop">${node}<span class="hub-tl-head"><b>${label}</b><small>${esc2(sub)}</small></span></div><div class="hub-tl-items">${rows.map(r => item(r)).join('')}</div>`;
+    }
+    let b = `<div class="eyebrow">${nm}’s first year</div><h1>Little moments,<br>your own story</h1>`;
+    b += `<div class="hub-two-actions hub-tl-actions"><button class="hub-button" onclick="openPage('chg:Timeline:visit')">Record a visit</button><button class="hub-button is-secondary" onclick="openPage('chg:Timeline:milestone')">Save a milestone</button></div>`;
+    b += `<div class="hub-tl-line">${stops}</div>`;
+    b += H().note('Photos and entries are saved on this device for this baby.');
     return `<div class="quiet-category hub-page hub-timeline-page" style="${yearTheme('Development')}">${b}</div>`;
   };
 

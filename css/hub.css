@@ -234,3 +234,31 @@
 #main .hub-bday-photo img { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; flex: none }
 #main .hub-bday { display: block !important; grid-template-columns: none !important }
 #main .hub-bday > * { grid-column: auto !important }
+
+/* Through Maya's eyes */
+#main .hub-eyes { padding: 16px }
+#main .hub-eyes .hub-card-head { margin-bottom: 10px }
+#main .hub-eyes-row { display: flex; align-items: center; gap: 12px; background: var(--year-pale); border-radius: 14px; padding: 12px 14px }
+#main .hub-eyes-ic { flex: none; width: 30px; height: 30px }
+#main .hub-eyes-ic svg { width: 100%; height: 100% }
+#main .hub-eyes-big { flex: none; font: 800 21px/1.05 var(--display-font, inherit); color: var(--year-ink); max-width: 96px }
+#main .hub-eyes-cap { font-size: 13.5px; line-height: 1.4; color: var(--ink) }
+
+/* The timeline: a dashed line, one stop per month */
+#main .hub-tl-actions { margin-top: 16px }
+#main .hub-tl-line { position: relative; margin: 4px 0 16px }
+#main .hub-tl-line::before { content: ""; position: absolute; left: 27px; top: 28px; bottom: 28px; width: 2px; background: repeating-linear-gradient(var(--year-accent, #d9d0f2) 0 6px, transparent 6px 10px); opacity: .7 }
+#main .hub-tl-stop { position: relative; display: flex; align-items: center; gap: 14px; margin: 0 0 10px }
+#main .hub-tl-node { position: relative; z-index: 1; flex: none; width: 56px; height: 56px; border-radius: 50%; padding: 0; overflow: hidden; display: grid; place-items: center; background: var(--white); border: 3px solid var(--white); box-shadow: 0 0 0 1.5px var(--year-accent, #d9d0f2); color: var(--year-ink); font: 700 20px/1 inherit; cursor: pointer }
+#main .hub-tl-node img { width: 100%; height: 100%; object-fit: cover }
+#main .hub-tl-node.is-add { border: 2px dashed var(--year-accent, #b9a8ea); box-shadow: none; background: var(--paper, #f7f4ef) }
+#main .hub-tl-node.is-next { background: var(--year-pale); font-size: 12px; cursor: default }
+#main .hub-tl-head b { display: block; font-size: 17px; font-weight: 650; color: var(--ink) }
+#main .hub-tl-head small { color: var(--muted); font-size: 13px }
+#main .hub-tl-items { margin: 0 0 18px 70px; display: flex; flex-direction: column; gap: 8px }
+#main .hub-tl-items:empty { margin-bottom: 14px }
+#main .hub-tl-item { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; background: var(--white); border: 1px solid var(--line); border-radius: 16px; padding: 11px 13px; font: inherit; color: inherit; cursor: pointer }
+#main .hub-tl-item.is-planned { border-style: dashed; background: transparent }
+#main .hub-tl-ic { flex: none; width: 36px; height: 36px; border-radius: 11px; background: var(--year-pale); padding: 5px; box-sizing: border-box }
+#main .hub-tl-item.is-visit .hub-tl-ic { background: #e6f3ee }
+#main .hub-tl-ic svg { width: 100%; height: 100% }

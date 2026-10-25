@@ -205,7 +205,7 @@
     h += liveHomeCheckin();
     if (since) h = `<p class="brief-unchanged">Nothing’s changed since you checked in on ${journeyDateLabel(iso(new Date(since)))}.</p>` + h;
     const ahead = [...next];
-    if (ahead.length) h += `<section class="connected-ahead" aria-label="Coming up"><div class="connected-section-heading"><h2>Coming up</h2><button class="textlink" onclick="openPage('ahead')">See all →</button></div><div class="connected-ahead-list">${ahead.map(row).join('')}</div></section>`;
+    if (ahead.length) h += `<section class="connected-ahead" aria-label="Coming up"><div class="connected-section-heading"><h2>Coming up</h2></div><div class="connected-ahead-list">${ahead.map(row).join('')}</div></section>`;
     h += `<p class="brief-close">${close}</p>`;
     return h;
   }
