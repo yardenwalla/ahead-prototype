@@ -57,6 +57,8 @@ def answer_for(question, p, w):
         return {'none': 'Not yet', 'trying': 'Trying'}.get(mv, 'Rolling')
     if 'finger foods' in q:
         return 'Yes' if food == 'established' else 'Not yet'
+    if 'managing now' in q:
+        return 'Regular meals' if w >= p['meals'] else 'More textures and finger foods' if w >= p['solids'] + 8 else 'First tastes'
     if 'solids' in q:
         if 'where are you' in q:
             return {'preparing': 'Not started', 'new': 'First foods', 'established': 'Building meals'}[food]
@@ -133,11 +135,11 @@ async def run_persona(browser, p):
 
         # 2. Swaddling: mark done once the family has actually stopped
         h = rec.get('home_after', rec['home'])
-        if h['swaddle'] and any('swaddl' in x['title'].lower() for x in h['rows']) and not p.get('silent'):
+        if h['swaddle'] and not p.get('silent'):
             seen_swaddle = seen_swaddle if seen_swaddle is not None else w
             if w - seen_swaddle >= p.get('swaddle_delay', 0):
                 await pg.evaluate("navigate('home')")
-                loc = pg.locator('.home-connected-sleep', has_text='swaddl').locator('.home-inline-check').first
+                loc = pg.locator('[data-brief^="rolling"] .home-inline-check').first
                 if await loc.count():
                     await loc.click()
                     rec['answered'].append(dict(where='Home', q='Stop swaddling', a='Mark done'))
@@ -145,15 +147,15 @@ async def run_persona(browser, p):
         # 2b. Safety checks on Home: this family ticks one off a week after it appears
         if not p.get('silent'):
             await pg.evaluate("navigate('home')")
-            title = await pg.evaluate("(document.querySelector('.home-action-row b')||{}).textContent||''")
+            title = await pg.evaluate("(document.querySelector('[data-home-check] .connected-row b')||{}).textContent||''")
             if title:
                 if seen_check.get(title) is None: seen_check[title] = w
                 elif w - seen_check[title] >= 1:
-                    loc = pg.locator('.home-action-row .home-inline-check').first
+                    loc = pg.locator('[data-home-check] .home-inline-check').first
                     if await loc.count():
                         await loc.click()
                         rec['answered'].append(dict(where='Home', q='Safety check: ' + title, a='Mark done'))
-            mloc = pg.locator('.home-connected-sleep .home-inline-check[aria-label*="mattress"]').first
+            mloc = pg.locator('.home-inline-check[aria-label*="mattress"]').first
             if await mloc.count():
                 await mloc.click()
                 rec['answered'].append(dict(where='Home', q='Crib mattress lowered', a='Mark done'))
