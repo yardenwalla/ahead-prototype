@@ -53,6 +53,98 @@
     window.developmentDomainPage = developmentDomainPage = (ref, d) => babyifyHtml(baseDomain(ref, d));
   }
 
+
+  /* ---------- a photo a month ----------
+     Photos stay on this device, resized small. Thirteen slots: newborn, 1–11 months and 1 year. */
+  const PHOTO_KEY = () => 'ahead-photos:' + journeyKey();
+  const photos = () => { try { return JSON.parse(localStorage.getItem(PHOTO_KEY())) || {}; } catch (e) { return {}; } };
+  const savePhotos = o => { try { localStorage.setItem(PHOTO_KEY(), JSON.stringify(o)); return true; } catch (e) { return false; } };
+  window.hubPhotoFor = m => photos()[m] || null;
+  window.hubPickPhoto = function (m) {
+    const input = document.createElement('input');
+    input.type = 'file'; input.accept = 'image/*';
+    input.onchange = () => {
+      const file = input.files && input.files[0]; if (!file) return;
+      const img = new Image(), url = URL.createObjectURL(file);
+      img.onload = () => {
+        const size = 360, c = document.createElement('canvas'), k = Math.max(size / img.width, size / img.height);
+        c.width = c.height = size;
+        c.getContext('2d').drawImage(img, (size - img.width * k) / 2, (size - img.height * k) / 2, img.width * k, img.height * k);
+        const all = photos(); all[m] = c.toDataURL('image/jpeg', 0.8);
+        if (!savePhotos(all)) hubToast('Couldn’t save that photo', 'Your device is out of space for photos.');
+        URL.revokeObjectURL(url); const y = scrollY; render(); scrollTo(0, y);
+        hubToast('Photo saved', `${m === 0 ? 'Newborn' : m === 12 ? '1 year' : m + ' month' + (m === 1 ? '' : 's')} · on ${name()}’s timeline`);
+      };
+      img.src = url;
+    };
+    input.click();
+  };
+  function photoStrip() {
+    const now = Math.min(12, actualMonth()), all = photos();
+    const label = m => m === 0 ? 'N' : m === 12 ? '1y' : String(m);
+    const cells = Array.from({ length: 13 }, (_, m) => {
+      const ph = all[m], open = m <= now;
+      const cls = ['hub-ph', ph ? 'has-photo' : '', m === now ? 'is-now' : '', open ? '' : 'is-later'].join(' ');
+      const inner = ph ? `<img src="${ph}" alt="">` : m === now ? '<span aria-hidden="true">＋</span>' : `<span>${label(m)}</span>`;
+      const aria = `${m === 0 ? 'Newborn' : m === 12 ? '1 year' : m + ' months'} photo`;
+      return open ? `<button class="${cls}" onclick="hubPickPhoto(${m})" aria-label="${ph ? 'Change' : 'Add'} ${aria}">${inner}</button>` : `<span class="${cls}" aria-label="${aria}, later">${inner}</span>`;
+    }).join('');
+    return `<h2 class="hub-h2">A photo a month</h2><div class="hub-photo-strip">${cells}</div>`;
+  }
+
+  /* ---------- small confirmations ---------- */
+  window.hubToast = function (title, body) {
+    document.querySelectorAll('.hub-toast').forEach(t => t.remove());
+    const t = document.createElement('div');
+    t.className = 'hub-toast'; t.setAttribute('role', 'status');
+    t.innerHTML = `<span class="hub-toast-spark" aria-hidden="true">✨</span><span><b>${esc2(title)}</b><small>${esc2(body)}</small></span>`;
+    document.body.appendChild(t);
+    requestAnimationFrame(() => t.classList.add('is-in'));
+    setTimeout(() => { t.classList.remove('is-in'); setTimeout(() => t.remove(), 300); }, 3600);
+  };
+  // "Seen it": save, then celebrate the row and say where it went.
+  if (typeof window.hubSeen === 'function') {
+    const baseSeen = window.hubSeen;
+    window.hubSeen = function (key) {
+      const ticks = [...document.querySelectorAll('#main .hub-tick')];
+      const idx = ticks.findIndex(t => (t.querySelector('.hub-seen') || {}).getAttribute && t.querySelector('.hub-seen')?.getAttribute('onclick').includes(key));
+      baseSeen(key);
+      try { journeyNotice = null; } catch (e) {}
+      const y = scrollY; render(); scrollTo(0, y);
+      const row = document.querySelectorAll('#main .hub-tick')[idx];
+      if (row) { row.classList.add('is-celebrate'); row.insertAdjacentHTML('beforeend', '<span class="hub-burst" aria-hidden="true"><i>✦</i><i>✧</i><i>✦</i><i>✧</i></span>'); }
+      const rec = journeyData().records.find(r => r.type === 'milestone' && r.skillKey === key);
+      if (rec) hubToast('A first, saved', `“${rec.title}” is on ${name()}’s timeline · ${journeyDateLabel(rec.date)}`);
+    };
+  }
+
+  /* ---------- the month-birthday moment on Home ----------
+     For three days after each month-birthday, the month card celebrates and gathers that month's firsts. */
+  function monthBirthday() {
+    if (!live()) return null;
+    const dob = parse(profile.dob);
+    const today = iso(NOW);
+    let m = 0; while (m < 13 && iso(addMonths(dob, m + 1)) <= today) m++;
+    if (m < 1 || m > 12) return null;
+    const since = Math.round((parse(today) - parse(iso(addMonths(dob, m)))) / 864e5);
+    if (since < 0 || since > 3) return null;
+    const from = iso(addMonths(parse(profile.dob), m - 1));
+    const firsts = journeyData().records.filter(r => r.type === 'milestone' && r.date >= from && r.date <= iso(NOW)).slice(-3);
+    return { m, since, firsts };
+  }
+  const baseHome = window.adaptiveHome;
+  if (typeof baseHome === 'function') {
+    window.adaptiveHome = homeAtlas = function () {
+      const html = baseHome(), b = monthBirthday();
+      if (!b) return html;
+      const nm = esc2(name()), label = b.m === 12 ? '1 year' : `${b.m} month${b.m === 1 ? '' : 's'}`, plabel = b.m === 12 ? 'first-birthday' : `${b.m}-month`, photo = window.hubPhotoFor(b.m);
+      const title = b.since === 0 ? (b.m === 12 ? `${nm} is 1 year old today` : `${nm} is ${label} old today`) : (b.m === 12 ? `${nm} turned 1` : `${nm} turned ${label}`);
+      const lead = b.firsts.length ? `Here’s what you noticed this month. Add a photo to keep it with ${nm}’s timeline.` : `A whole month of new. Add a photo to keep this one with ${nm}’s timeline.`;
+      const card = `<div class="home-summary connected-summary-intro hub-bday"><span class="hub-bday-num" aria-hidden="true">${b.m === 12 ? '1' : b.m}</span><span class="hub-bday-spark" aria-hidden="true">✦</span><p class="hub-bday-eyebrow">${b.m === 12 ? 'Happy first birthday' : 'Happy ' + label}</p><h1>${title}</h1><p class="hub-bday-lead">${lead}</p>${b.firsts.length ? `<div class="hub-bday-chips">${b.firsts.map(r => `<span>✓ ${esc2(r.title)}</span>`).join('')}</div>` : ''}<button class="hub-bday-photo" onclick="hubPickPhoto(${b.m})">${photo ? `<img src="${photo}" alt="">Change the ${plabel} photo` : `<i aria-hidden="true">＋</i>Add a ${plabel} photo`}</button></div>`;
+      return html.replace(/<div class="home-summary connected-summary-intro">[\s\S]*?<div class="home-summary-spectrum"[\s\S]*?<\/div><\/div>/, card);
+    };
+  }
+
   /* ---------- Timeline ---------- */
   const ageAt = date => {
     const days = (parse(date) - parse(profile.dob)) / 864e5;
@@ -74,6 +166,7 @@
     const saved = records.filter(r => r.status === 'attended'), planned = records.filter(r => r.status === 'planned').reverse();
     let b = `<div class="eyebrow">${esc2(name())}’s first year</div><h1>Little moments,<br>your own story</h1><p class="journey-lede hub-tl-lede">${F('The checkups and firsts you choose to save. Nothing fills in on its own.')}</p>`;
     b += `<div class="hub-two-actions"><button class="hub-button" onclick="openPage('chg:Timeline:visit')">Record a visit</button><button class="hub-button is-secondary" onclick="openPage('chg:Timeline:milestone')">Save a milestone</button></div>`;
+    b += photoStrip();
     if (!saved.length) b += `<section class="hub-card hub-empty"><span class="hub-empty-art" aria-hidden="true">${yearIllustration('Development', 1)}</span><b>${F('Your first entry starts here')}</b><p>${F('Save a checkup once you’ve been, or a first you don’t want to forget, like Maya’s first smile.')}</p></section>`;
     else {
       const groups = [];

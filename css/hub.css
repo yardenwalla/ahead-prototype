@@ -200,3 +200,37 @@
 #main .hub-dot-age { display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1; color: var(--year-ink) }
 #main .hub-dot-age b { font-size: 16px; font-weight: 700 }
 #main .hub-dot-age small { font-size: 10px; font-weight: 600; margin-top: 1px }
+
+/* A photo a month */
+#main .hub-photo-strip { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin: 0 0 20px }
+#main .hub-ph { aspect-ratio: 1; border-radius: 50%; display: grid; place-items: center; font: 700 12px/1 inherit; color: var(--year-ink); border: 2px dashed var(--year-accent, #cfc5ee); background: var(--white); padding: 0; overflow: hidden; cursor: pointer }
+#main .hub-ph.is-now { border: 2px solid var(--year-ink); font-size: 18px }
+#main .hub-ph.is-later { opacity: .55; cursor: default }
+#main .hub-ph.has-photo { border: 2px solid var(--white); box-shadow: 0 0 0 1px var(--line) }
+#main .hub-ph img { width: 100%; height: 100%; object-fit: cover }
+/* Seen it */
+#main .hub-tick.is-celebrate { position: relative; animation: hubPop .5s ease }
+#main .hub-burst { position: absolute; right: 70px; top: 10px; display: flex; gap: 6px; pointer-events: none }
+#main .hub-burst i { font-style: normal; color: #e6b84a; font-size: 13px; opacity: 0; animation: hubSpark 1.2s ease forwards }
+#main .hub-burst i:nth-child(2) { animation-delay: .08s } #main .hub-burst i:nth-child(3) { animation-delay: .16s } #main .hub-burst i:nth-child(4) { animation-delay: .24s }
+@keyframes hubPop { 0% { transform: scale(1) } 40% { transform: scale(1.02) } 100% { transform: scale(1) } }
+@keyframes hubSpark { 0% { opacity: 0; transform: translateY(6px) scale(.6) } 30% { opacity: 1; transform: translateY(-4px) scale(1.1) } 100% { opacity: 0; transform: translateY(-14px) scale(.9) } }
+.hub-toast { position: fixed; left: 16px; right: 16px; bottom: 92px; max-width: 420px; margin: 0 auto; background: #2f2a38; color: #fff; border-radius: 16px; padding: 14px 16px; display: flex; gap: 12px; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,.2); z-index: 1000; opacity: 0; transform: translateY(12px); transition: opacity .25s, transform .25s }
+.hub-toast.is-in { opacity: 1; transform: none }
+.hub-toast b { display: block; font-size: 14px } .hub-toast small { display: block; opacity: .78; font-size: 12.5px; margin-top: 2px }
+.hub-toast-spark { font-size: 22px }
+@media (prefers-reduced-motion: reduce) { #main .hub-tick.is-celebrate, #main .hub-burst i { animation: none } #main .hub-burst { display: none } .hub-toast { transition: none } }
+/* Month-birthday card on Home */
+#main .hub-bday { position: relative; overflow: hidden; background: linear-gradient(160deg, #fde8d8, #fbe3ec 55%, #e9e3fb) !important; border-radius: 24px; padding: 22px 20px !important }
+#main .hub-bday-num { position: absolute; right: 12px; top: 2px; font: 800 120px/1 var(--display-font, inherit); color: #fff; opacity: .75; letter-spacing: -4px }
+#main .hub-bday-spark { position: absolute; right: 120px; top: 26px; color: #f1c75b; font-size: 16px }
+#main .hub-bday-eyebrow { margin: 0; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #9a5a3c }
+#main .hub-bday h1 { position: relative; font-size: 28px; line-height: 1.15; margin: 6px 0 8px; max-width: 72% }
+#main .hub-bday-lead { position: relative; margin: 0 0 14px; color: #5c5361; max-width: 80%; line-height: 1.45 }
+#main .hub-bday-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 16px }
+#main .hub-bday-chips span { background: #fff; border-radius: 999px; padding: 6px 11px; font-size: 13px; font-weight: 600 }
+#main .hub-bday-photo { display: flex; align-items: center; gap: 10px; width: 100%; background: #fff; border: 0; border-radius: 14px; padding: 10px 14px; font: inherit; font-weight: 600; text-align: left; cursor: pointer }
+#main .hub-bday-photo i { width: 38px; height: 38px; border-radius: 50%; border: 2px dashed #c9a7b5; display: grid; place-items: center; font-style: normal; color: #a0647c; flex: none }
+#main .hub-bday-photo img { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; flex: none }
+#main .hub-bday { display: block !important; grid-template-columns: none !important }
+#main .hub-bday > * { grid-column: auto !important }

@@ -70,6 +70,17 @@
   const shadow = (c, cx, cy, rx) => `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="4" fill="${c.ink}" fill-opacity=".07"/>`;
   const bottle = (x, y, rot, fill = 12) => `<g transform="rotate(${rot} ${x} ${y})"><rect x="${x - 8}" y="${y - 3.5}" width="10" height="7" rx="3.5" fill="${NIP}"/><rect x="${x}" y="${y - 7}" width="44" height="14" rx="7" fill="#fff"/><rect x="${x}" y="${y - 7}" width="${fill}" height="14" rx="7" fill="${MILK}"/><rect x="${x + 36}" y="${y - 7}" width="8" height="14" rx="4" fill="#fff" stroke="#000" stroke-opacity=".06"/></g>`;
   const SCENES = {
+    tub: (c) => `<svg viewBox="0 0 320 150">
+      <rect x="14" y="8" width="292" height="134" rx="22" fill="${c.pale}"/>
+      ${shadow(c, 160, 128, 104)}
+      <path d="M56 62h208l-15 54a14 14 0 0 1-13.5 10.3H84.5A14 14 0 0 1 71 116Z" fill="#fff"/>
+      <path d="M64 92h192l-7 24a14 14 0 0 1-13.5 10.3H84.5A14 14 0 0 1 71 116Z" fill="#cfe8f3"/>
+      <path d="M64 92h192" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-opacity=".8"/>
+      <path d="M40 132c14-6 34-20 56-40" stroke="#e8bda6" stroke-width="11" stroke-linecap="round" fill="none"/><ellipse cx="99" cy="90" rx="9" ry="6" fill="#e8bda6"/>
+      <rect x="112" y="78" width="74" height="22" rx="11" fill="${SK}"/>
+      <circle cx="102" cy="80" r="14" fill="${SK}"/>${sleepEyes(102, 80, c.ink)}
+      <path d="M274 92v34M270 92h8M270 126h8" stroke="${c.ink}" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>`,
     crib: (c) => `<svg viewBox="0 0 320 150">
       <rect x="14" y="8" width="292" height="134" rx="22" fill="${c.pale}"/>
       ${shadow(c, 160, 132, 124)}
@@ -100,6 +111,7 @@
       <g transform="translate(112 60)">${[[-1, -1], [1, -1], [-1, 1], [1, 1]].map(([sx, sy]) => `<path d="M${sx * 2} ${sy * 2}h${sx * 13}a${13} 17 0 0 ${sx * sy > 0 ? 1 : 0} ${-sx * 13} ${sy * 17}Z" fill="${sx < 0 ? '#9d86cf' : '#b8a4e3'}"/>`).join('')}</g></svg>`
   };
   const PANELS = {
+    tub: { scenes: ['tub'], chips: ['About 2 inches of water', 'Warm, about 100°F', 'One hand behind the head and neck'] },
     crib: { scenes: ['crib'], chips: ['On the back', 'In a sleep sack', 'Firm, flat mattress', 'Nothing else in the crib'] },
     pace: { scenes: [['paced', 'good', 'Paced', 'Upright, bottle level'], ['tipped', 'bad', 'Avoid', 'Lying back, bottle tipped up']] },
     sizes: { scenes: [['strips', 'good', '6–8 months', 'Strips the size of a finger'], ['pieces', 'good', '9 months and up', 'Pea-sized pieces, grapes quartered']] }
