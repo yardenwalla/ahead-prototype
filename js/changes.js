@@ -162,6 +162,49 @@
   const resourceRow = (go, mk, title, sub, arrow = '→') => `<button class="guide-resource-row" onclick="${go}"><span class="guide-resource-mark" aria-hidden="true">${icon(mk)}</span><span><b>${title}</b>${sub ? `<small>${sub}</small>` : ''}</span><span aria-hidden="true">${arrow}</span></button>`;
   const refRow = (go, mk, label) => `<button class="textlink sleep-reference-row" onclick="${go}"><span class="sleep-reference-mark" aria-hidden="true">${icon(mk)}</span><span>${label}</span><span aria-hidden="true">→</span></button>`;
 
+  /* Some stages answer one big question, so the page leads with that answer in the format that fits it:
+     signs to tick, a checklist, options side by side, normal-versus-call. Other stages use the standard guide. */
+  const READY_SIGNS = [
+    ['Holds {p} head steady', 'Keeps {p} head up without help.'],
+    ['Sits with support', 'Sits upright in a high chair or on your lap.'],
+    ['Opens up for food', 'Leans in and opens {p} mouth when you offer a spoon.'],
+    ['Swallows food', 'Keeps it in instead of pushing it back out with {p} tongue.']
+  ];
+  const ALLERGENS = ['Peanut', 'Egg', 'Dairy', 'Wheat', 'Soy', 'Sesame', 'Tree nuts', 'Fish', 'Shellfish'];
+  window.chgToggleReady = function (i) { local.ready = local.ready || {}; local.ready[i] = !local.ready[i]; save(); const y = scrollY; render(); scrollTo(0, y); };
+  window.chgToggleAllergen = function (k) { local.allergens = local.allergens || {}; local.allergens[k] = !local.allergens[k]; save(); const y = scrollY; render(); scrollTo(0, y); };
+  const checkRows = (rows, isOn, go) => `<div class="safety-check-list">${rows.map((x, i) => `<article class="safety-check-row ${isOn(i) ? 'is-done' : ''}"><button class="safety-check-control" role="checkbox" aria-checked="${!!isOn(i)}" aria-label="${esc(fmt(x[0]))}" onclick="${go(i)}"><span aria-hidden="true">${isOn(i) ? '✓' : ''}</span></button><div class="safety-check-copy"><h3>${T(fmt(x[0]))}</h3><p>${T(fmt(x[1]))}</p></div></article>`).join('')}</div>`;
+  const leadSection = (title, chip, inner) => `<section class="safety-check-section chg-lead"><div class="safety-check-section-head"><h3>${title}</h3>${chip ? `<span class="safety-check-progress">${chip}</span>` : ''}</div>${inner}</section>`;
+  function stageLead(cat, C) {
+    if (cat !== 'Feeding') return '';
+    if (C.key === 'ready') {
+      const on = i => !!(local.ready || {})[i], seen = READY_SIGNS.filter((_, i) => on(i)).length;
+      const note = seen === READY_SIGNS.length ? `${name()} shows all 4 signs. Pick a calm morning for the first taste.` : `Most babies show all 4 around 6 months. Wanting your food isn’t a sign on its own.`;
+      return leadSection(`Is ${name()} ready?`, `${seen} of 4 signs`, checkRows(READY_SIGNS, on, i => `chgToggleReady(${i})`) + `<p class="chg-lead-note">${T(note)}${profile.early ? ` Since ${T(name())} was born early, check timing with your pediatrician.` : ''}</p>`)
+        + checklist(cat)
+        + `<section class="sleep-phase-help chg-guide-section"><h3>Purées, baby-led weaning or both</h3><ul>${[
+            ['Purées', 'You spoon small bites, then make them lumpier over time.'],
+            ['Baby-led weaning', 'Soft finger foods {s} picks up {r}. More mess, more exploring.'],
+            ['Both', 'Spoon some foods, offer others as finger foods. Many families do this.']
+          ].map(([t, b]) => `<li><h4>${T(t)}</h4><p>${T(fmt(b))}</p></li>`).join('')}</ul><p class="chg-lead-note">There’s no wrong choice. Pick one and adjust as you go.</p></section>`;
+    }
+    if (C.key === 'first') {
+      const tried = ALLERGENS.filter(k => (local.allergens || {})[k]).length;
+      return `<section class="chg-lead chg-vs-section"><h3 class="chg-lead-title">Gagging or choking?</h3><div class="chg-vs">`
+          + `<article><h4>Gagging</h4><p>Coughing, sputtering, a red face.</p><b>Normal. Stay calm and let ${T(name())} work it out.</b></article>`
+          + `<article class="is-urgent"><h4>Choking</h4><p>Silent, can’t cry or cough, turning blue.</p><b>Call 911 and start infant first aid.</b></article>`
+          + `</div><button class="textlink chg-item-link" onclick="openPage('chg:Feeding:safe')">Infant choking first aid →</button></section>`
+        + `<section class="sleep-phase-help chg-guide-section"><h3>What to offer first</h3><ul>${[
+            ['Iron-rich foods', 'Mashed beans, soft shredded meat or iron-fortified cereal.'],
+            ['Soft enough to squash', 'It should squash between your fingers. Quarter grapes; skip whole nuts and popcorn.'],
+            ['{S} decides how much', 'Turning away or closing {p} mouth means done.']
+          ].map(([t, b]) => `<li><h4>${T(fmt(t))}</h4><p>${T(fmt(b))}</p></li>`).join('')}</ul><p class="chg-lead-note">Not before 12 months: honey, cow’s milk as a drink, and juice.</p></section>`
+        + leadSection('Allergens to try', `${tried} of ${ALLERGENS.length} tried`, `<p class="chg-lead-note is-first">One new allergen at a time, early in the day. Once it goes well, keep it in a few times a week.</p><div class="chg-choices chg-allergens">${ALLERGENS.map(k => { const v = !!(local.allergens || {})[k]; return `<button class="${v ? 'is-on' : ''}" aria-pressed="${v}" onclick="chgToggleAllergen('${k}')">${v ? '✓ ' : ''}${k}</button>`; }).join('')}</div><p class="chg-lead-note">Hives around the mouth: stop and call your pediatrician. Swelling or trouble breathing: call 911.</p><button class="textlink chg-item-link" onclick="openPage('chg:Feeding:allergy')">How to introduce allergens →</button>`);
+    }
+    return '';
+  }
+  const PROMOTED = { 'Feeding:ready': 1, 'Feeding:first': 0 };
+
   function rail(cat, view, cur, isEv) {
     const CH = DATA[cat].CH;
     return `<nav class="journey-stage-rail chg-rail" id="chg-rail" aria-label="${cat} stages">${CH.map((c, i) => {
@@ -258,7 +301,8 @@
     if (!isEv && view !== cur && live())
       h += `<div class="chg-browse-links">${canUpdate ? `<button class="textlink chg-override" onclick="chgSetStage('${cat}',${view})">${cat === 'Sleep' ? view === 3 ? 'Taking two naps? Update your guide' : 'Still taking three naps? Update your guide' : ({2:'Not started solids? Update your guide',3:'Already started solids? Update your guide',4:'Managing soft lumps or finger foods? Update your guide',5:'Eating regular meals? Update your guide'}[view])}</button>` : ''}<button class="textlink chg-back-now" onclick="chgGo('chg:${cat}:s:${cur}')">← Back to your guide</button></div>`;
 
-    if (A) h += headsUp(T(A.reason), T(A.title), T(A.body), A.done
+    const stage = isEv ? '' : stageLead(cat, C);
+    if (A && !stage) h += headsUp(T(A.reason), T(A.title), T(A.body), A.done
       ? `<div class="home-action-tools"><button class="home-inline-check" onclick="${A.go}"><span aria-hidden="true"></span>${esc(A.act)}</button></div>`
       : `<button class="textlink chg-headsup-link" onclick="${A.go}">${esc(A.act)} →</button>`);
 
@@ -296,53 +340,63 @@
 
     }
 
-    const G = guideFor(cat, C, isEv, establishedTwoNaps);
-    // 1. What to do
-    let doExtra = '';
-    {
-      const hBefore = h; h = '';
-      if (cat === 'Feeding' && !isEv && view === cur && m >= 9 && hasFoodAnswer() && ['preparing', 'new'].includes(foodStage()))
+    const fold = (title, inner) => inner ? `<details class="guide-detail chg-fold"><summary>${title} <span aria-hidden="true">＋</span></summary><div class="chg-fold-body">${inner}</div></details>` : '';
+    if (stage) {
+      if (cat === 'Feeding' && view === cur && m >= 9 && hasFoodAnswer() && ['preparing', 'new'].includes(foodStage()))
         h += resourceRow("openHealthDetail(healthJourneyFocus(),'questions')", 'health', 'Bring your feeding experience to the checkup', 'If first foods are only beginning now, discuss readiness, iron and a plan for building textures.');
-  
-      if (cat === 'Sleep' && !isEv && view === cur && m >= 4) {
-        const support = {
-          learn:['Settling and sleep training',m<=6?'From around 4–6 months, learn about optional methods before deciding whether to try.':'Compare optional methods, or choose support for the approach you already use.'],
-          trying:['Support while sleep training','Look for progress in settling, handle a rough night and know when to review the plan.'],
-          routine:['When a familiar routine changes','Adjust after short naps, travel or illness while keeping familiar bedtime cues.'],
-          help:['A routine with your help','Build repeatable bedtime cues around feeding, rocking or holding baby to sleep.']
-        }[settlingGuide()];
-        h += resourceRow("openPage('chg:Sleep:settle')", 'moon', support[0], support[1]);
+      h += stage + `<section class="common-questions chg-more">${fold(C.key === 'ready' ? 'Milk feeds don’t change yet' : 'How much, and milk alongside', rhythmHtml)}</section>`;
+    } else {
+      const G = guideFor(cat, C, isEv, establishedTwoNaps);
+      // 1. What to do
+      let doExtra = '';
+      {
+        const hBefore = h; h = '';
+        if (cat === 'Feeding' && !isEv && view === cur && m >= 9 && hasFoodAnswer() && ['preparing', 'new'].includes(foodStage()))
+          h += resourceRow("openHealthDetail(healthJourneyFocus(),'questions')", 'health', 'Bring your feeding experience to the checkup', 'If first foods are only beginning now, discuss readiness, iron and a plan for building textures.');
+    
+        if (cat === 'Sleep' && !isEv && view === cur && m >= 4) {
+          const support = {
+            learn:['Settling and sleep training',m<=6?'From around 4–6 months, learn about optional methods before deciding whether to try.':'Compare optional methods, or choose support for the approach you already use.'],
+            trying:['Support while sleep training','Look for progress in settling, handle a rough night and know when to review the plan.'],
+            routine:['When a familiar routine changes','Adjust after short naps, travel or illness while keeping familiar bedtime cues.'],
+            help:['A routine with your help','Build repeatable bedtime cues around feeding, rocking or holding baby to sleep.']
+          }[settlingGuide()];
+          h += resourceRow("openPage('chg:Sleep:settle')", 'moon', support[0], support[1]);
+        }
+    
+        doExtra = h; h = hBefore;
       }
-  
-      doExtra = h; h = hBefore;
-    }
-    h += guideSection(cat, 'What to do', G.do, doExtra + (cat === 'Feeding' && !isEv && C.key === 'first' ? sourceLink('https://www.cdc.gov/infant-toddler-nutrition/foods-and-drinks/when-what-and-how-to-introduce-solid-foods.html', 'CDC · Food preparation and texture examples') : ''));
-    // 2. What to know (the numbers live here, after the why)
-    h += guideSection(cat, 'What to know', G.know, '', rhythmHtml);
-    // 3. What's normal, including the phases that come and go
-    if (!isEv && view === cur) {
-      const evs = cfg.events(m);
-      if (evs.length) normalExtra = `<section class="chg-also"><h3 class="chg-h3">Also common around now</h3>${evs.map(k => { const e = D.EV[k]; return resourceRow(`openPage('chg:${cat}:e:${k}')`, cfg.evIcon, T(e.title), `${esc(e.when)}. ${T(e.signs)}`); }).join('')}</section>`;
-    }
+      h += guideSection(cat, 'What to do', G.do, doExtra + (cat === 'Feeding' && !isEv && C.key === 'first' ? sourceLink('https://www.cdc.gov/infant-toddler-nutrition/foods-and-drinks/when-what-and-how-to-introduce-solid-foods.html', 'CDC · Food preparation and texture examples') : ''));
+      // Everything else sits in rows a parent opens only if they want it, so the page stays one screen of reading.
+      const listOf = items => (items || []).filter(Boolean).length ? `<ul class="chg-fold-list">${items.filter(Boolean).map(([t, b, go, label]) => `<li>${t ? `<b>${T(fmt(t))}</b>` : ''}${b ? `<p>${T(fmt(b))}</p>` : ''}${go ? `<button class="textlink chg-item-link" onclick="${go}">${T(fmt(label))} →</button>` : ''}</li>`).join('')}</ul>` : '';
+      let more = '';
+      more += fold(cat === 'Sleep' ? 'Naps, nights and wake windows' : 'How much and how often', rhythmHtml);
+      more += fold(cat === 'Sleep' ? 'Sleep safety and what changes' : 'Safety, allergens and milk', listOf(G.know));
+      // 3. What's normal, including the phases that come and go
+      if (!isEv && view === cur) {
+        const evs = cfg.events(m);
+        if (evs.length) normalExtra = `<section class="chg-also"><h3 class="chg-h3">Also common around now</h3>${evs.map(k => { const e = D.EV[k]; return resourceRow(`openPage('chg:${cat}:e:${k}')`, cfg.evIcon, T(e.title), `${esc(e.when)}. ${T(e.signs)}`); }).join('')}</section>`;
+      }
 
-    h += guideSection(cat, 'What’s normal', G.normal, normalExtra);
-    // 4. When to call
-    if (G.help) h += `<section class="sleep-phase-help chg-callout"><h3>When to call your pediatrician</h3><p>${T(fmt(G.help))}</p><button class="textlink chg-headsup-link" onclick="openPage('chg:${cat}:help')">How to tell what’s normal and when to call →</button></section>`;
+      more += fold('What’s normal', listOf(G.normal) + normalExtra);
+      if (G.help) more += fold('When to call your pediatrician', `<p>${T(fmt(G.help))}</p><button class="textlink chg-item-link" onclick="openPage('chg:${cat}:help')">How to tell what’s normal →</button>`);
+      if (more) h += `<section class="common-questions chg-more">${more}</section>`;
+    }
 
     if (isEv) h += `<button class="textlink chg-back-link" onclick="back()">← Back to ${esc(D.CH[cur].rail.toLowerCase())}</button>`;
-    else {
-      const Q = D.DEC[C.key] || [];
-      if (Q.length) h += `<section class="common-questions"><h2>${rel === 'now' ? 'Common questions right now' : 'Common questions at this stage'}</h2>${Q.map((q, i) => question(cat, C.key, i, q)).join('')}</section>`;
-    }
 
     if (!isEv && !N && C.after) h += headsUp(`After the first birthday · ${esc(C.after[0])}`, T(C.after[1]), T(C.after[2]));
     // Coming up: what's next, and a one-tap way to say she's already there.
     if (!isEv && N && rel !== 'next') {
       const elapsed = rangeEnd(N.when) != null && m > rangeEnd(N.when);
       const canReportNext = cat === 'Feeding' ? m >= 4 && view + 1 >= 2 : m >= 5 && view === 2;
-      h += headsUp(elapsed ? 'Next step · When baby is ready' : `Coming up · ${esc(N.when)}`, T(N.title), `${T(N.signs)}`, `<button class="textlink chg-headsup-link" onclick="chgGo('chg:${cat}:s:${view + 1}')">See what changes →</button>${rel === 'now' && live() && canReportNext ? `<button class="textlink chg-already" onclick="chgSetStage('${cat}',${view + 1})">${cat === 'Feeding' ? ({2:'Still milk-only? Prepare for solids',3:'Already started solids? Update your guide',4:'Managing soft lumps or finger foods? Update your guide',5:'Eating regular meals? Update your guide'}[view + 1]) : 'Taking two naps? Update your guide'}</button>` : ''}`);
+      h += headsUp(elapsed ? 'Next step · When baby is ready' : `Coming up · ${esc(N.when)}`, T(N.title), `${T(fmt((window.AHEAD_GUIDES?.[cat]?.[N.key]?.short) || N.signs))}`, `<button class="textlink chg-headsup-link" onclick="chgGo('chg:${cat}:s:${view + 1}')">See what changes →</button>${rel === 'now' && live() && canReportNext ? `<button class="textlink chg-already" onclick="chgSetStage('${cat}',${view + 1})">${cat === 'Feeding' ? ({2:'Still milk-only? Prepare for solids',3:'Already started solids? Update your guide',4:'Managing soft lumps or finger foods? Update your guide',5:'Eating regular meals? Update your guide'}[view + 1]) : 'Taking two naps? Update your guide'}</button>` : ''}`);
     }
 
+    if (!isEv) {
+      const Q = D.DEC[C.key] || [];
+      if (Q.filter((_, i) => PROMOTED[cat + ':' + C.key] !== i).length) h += `<section class="common-questions"><h2>${rel === 'now' ? 'Common questions right now' : 'Common questions at this stage'}</h2>${Q.map((q, i) => PROMOTED[cat + ':' + C.key] === i ? '' : question(cat, C.key, i, q)).join('')}</section>`;
+    }
     let links = '';
     if (cat === 'Sleep') {
       links += refRow("openPage('chg:Sleep:safe')", 'safety', 'Safe sleep setup');
@@ -353,7 +407,7 @@
       if (view >= 2) { links += refRow("openPage('chg:Feeding:safe')", 'safety', 'Feeding safety and first aid'); links += refRow("openPage('chg:Feeding:allergy')", 'note', 'Introducing allergens'); }
       links += refRow("openPage('chg:Feeding:help')", 'health', 'When to ask for feeding help');
     }
-    h += `<div class="sleep-reference-area"><p class="sleep-reference-label">References</p>${links}${sources(cat)}</div>`;
+    h += `<section class="common-questions chg-more chg-more-guides"><details class="guide-detail chg-fold"><summary>More ${cat === 'Sleep' ? 'sleep' : 'feeding'} guides and sources <span aria-hidden="true">＋</span></summary><div class="chg-fold-body sleep-reference-area">${links}${sources(cat)}</div></details></section>`;
     h += `<p class="exp-footer">Ages are typical. Every baby moves at their own pace.</p></div>`;
     return h;
   }

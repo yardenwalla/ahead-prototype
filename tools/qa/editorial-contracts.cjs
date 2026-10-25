@@ -29,8 +29,8 @@ a.run("openPage('chg:Sleep:s:2');chgAnswer('Sleep:rhythm:1',1)");
 check(!clean(a.html()).includes('Try a stroller ride, car ride'), 'Catnap troubleshooting agrees with safe-sleep guidance');
 a.run("chgAnswer('Sleep:rhythm:2',0)");
 check(clean(a.html()).includes('rolls both ways'), 'Rolling FAQ retains the both-directions condition');
-a.run("openPage('chg:Feeding:s:3');chgAnswer('Feeding:first:0',1)");
-check(clean(a.html()).includes('Act now:'), 'Possible choking is an action, not a casual experiment');
+a.run("openPage('chg:Feeding:s:3')");
+check(clean(a.html()).includes('Call 911 and start infant first aid'), 'Possible choking is an action, not a casual experiment');
 
 const ids = new Set();
 for (let age=0; age<=12; age++) {

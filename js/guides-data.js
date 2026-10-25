@@ -109,8 +109,7 @@ window.AHEAD_GUIDES = {
    short: 'Most babies start solids around 6 months, once they’re ready. Until then, milk is all Maya needs.',
    do: [
     ['Watch for the readiness signs', 'Steady head, sits with support, opens for food and swallows it.'],
-    ['Choose how you’ll start', 'Purées, soft finger foods or both. Begin with an iron-rich food.'],
-    ['Get set up before the first bite', 'A high chair with a harness, and a choking first-aid class.']
+    ['Choose how you’ll start', 'Purées, soft finger foods or both. Begin with an iron-rich food.']
    ],
    know: [
     ['Gagging is normal; choking isn’t', 'Choking means trouble breathing or a weak cough. Call 911.'],

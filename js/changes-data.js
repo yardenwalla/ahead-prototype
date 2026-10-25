@@ -1058,7 +1058,7 @@ window.AHEAD_CHANGES = {
    ],
    [
     "Know gagging from choking",
-    "Gagging can happen while learning to eat. Trouble breathing or a weak or absent cough can mean choking, even if there’s some sound. Call 911 and use infant choking first aid you’ve learned."
+    "Gagging is noisy and normal. Silence, trouble breathing or a weak cough can mean choking: call 911."
    ],
    [
     "Have a soft spoon and an open cup",
