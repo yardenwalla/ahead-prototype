@@ -397,7 +397,7 @@
     const key = SLEEP_KEYS[view], age = m(), now = view === cur, cat = 'Sleep';
     let h = '';
     let B = browseLinks(cat, view, cur);
-    if (now && typeof chgSleepAuto === 'function' && chgSleepAuto()) B += `<div class="hub-browse hub-auto"><p class="hub-note">${F('We moved Maya to two-nap guidance for {p} age.')}</p><button class="hub-link" onclick="setAnswer('twoNaps','Stay')">${F('Still on three naps? Show Naps and bedtime')} ›</button></div>`;
+    if (now && typeof chgSleepAuto === 'function' && chgSleepAuto()) B += `<div class="hub-browse${C().autoNoticeFresh() ? ' hub-auto' : ''}">${C().autoNoticeFresh() ? `<p class="hub-note">${F('We moved Maya to two-nap guidance for {p} age.')}</p>` : ''}<button class="hub-link" onclick="setAnswer('twoNaps','Stay')">${F('Still on three naps? Show Naps and bedtime')} ›</button></div>`;
     if (!now && view >= 2 && age >= 5 && C().live()) B = B.replace('<div class="hub-browse">', `<div class="hub-browse"><button class="hub-link" onclick="chgSetStage('Sleep',${view})">${F(view === 3 ? 'Taking two naps? Update your guide' : 'Still taking three naps? Update your guide')} ›</button>`);
     if (key === 'clock') {
       const n = safeDone(), all = C().DATA.Sleep.SAFE.length;
