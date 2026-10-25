@@ -30,7 +30,7 @@ check(!clean(a.html()).includes('Try a stroller ride, car ride'), 'Catnap troubl
 a.run("chgAnswer('Sleep:rhythm:2',0)");
 check(clean(a.html()).includes('rolls both ways'), 'Rolling FAQ retains the both-directions condition');
 a.run("openPage('chg:Feeding:s:3')");
-check(clean(a.html()).includes('Call 911 and start infant first aid'), 'Possible choking is an action, not a casual experiment');
+check(clean(a.html()).includes('Call 911 right away'), 'Possible choking is an action, not a casual experiment');
 
 const ids = new Set();
 for (let age=0; age<=12; age++) {
@@ -51,8 +51,8 @@ for (const [age,oldID,newID] of [[1,'slow-song','face-follow'],[3,'sound-answer'
 for (const [value,title] of [['new','Starting solids'],['textures','Textures and finger foods'],['established','Family meals']]) {
   const b=family(11);
   b.run(`setFeedingStage('${value}');openPage('topic:Feeding')`);
-  check(clean(b.html()).includes('Based on what you shared'), 'Reported eating experience explains feeding selection');
-  check(b.html().includes('<h2>'+title+'</h2>'), 'Reported experience selects the matching guide');
+  check(b.html().includes('aria-current="step">'+title), 'Reported eating experience shows as the current stage');
+  check(b.html().includes('<p class="hub-eyebrow">'+title+'</p>'), 'Reported experience selects the matching guide');
 }
 // Foundational guidance is discoverable initially, then retires after setup.
 {
@@ -108,17 +108,17 @@ for(const choice of ['trying','routine','help']) {
 }
 {
   const b=family(11,{solids:'Yes',foodExperience:'established'});
-  b.run("openPage('topic:Feeding');chgChooseMethod('bottle')");
+  b.run("openPage('chg:Feeding:d:milk');chgChooseMethod('bottle')");
   check(!clean(b.html()).includes('Cow’s milk, if used'),'Before twelve months the milk row does not suggest cow’s milk');
   const c=family(12,{solids:'Yes',foodExperience:'established'});
-  c.run("openPage('topic:Feeding');chgChooseMethod('bottle')");
+  c.run("openPage('chg:Feeding:d:milk');chgChooseMethod('bottle')");
   check(clean(c.html()).includes('Cow’s milk, if used'),'After the birthday the changed milk reference names the milk it describes');
   c.run("openPage('chg:Feeding:milk');chgAnswer('Feeding:learn:2',0)");
   check(c.html().includes('chg-answer'),'The spit-up reference is reachable beyond the newborn guide');
 }
 for(const age of [1,2,3,4,5,6,7,8,9,10,11,12]) {
   const b=family(age);
-  b.run("openPage('topic:Feeding');chgChooseMethod('expressed')");
+  b.run("openPage('chg:Feeding:d:milk');chgChooseMethod('expressed')");
   const h=clean(b.html());
   check(b.html().includes('value="expressed" selected'),'Expressed milk has its own retained reference selection');
   check(!h.includes('Per formula bottle') && !h.includes('up to 32 oz'),'Breast-milk bottle reference does not inherit formula amounts');

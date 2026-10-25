@@ -41,7 +41,7 @@ for (const feed of ['Breast milk','Formula','Both']) for (const experience of ['
   const a=family(2,{},'Prefer not to say');
   a.run("openPage('topic:Feeding');chgChooseMethod('nurse');navigate('home');answerHomeQuestion('milk','Formula')");
   check(clean(a.html()).includes('Formula feeding, for this age'),'Milk answer changes visible Home guidance');
-  a.run("openPage('topic:Feeding')");
+  a.run("openPage('chg:Feeding:d:milk')");
   check(a.html().includes('value="bottle" selected'),'Milk answer replaces stale reference');
   a.run("openPage('chg:Feeding:milk')");
   check(!/Pumping|thawed breast milk/.test(clean(a.html())),'Formula answer filters milk detail');
@@ -49,7 +49,7 @@ for (const feed of ['Breast milk','Formula','Both']) for (const experience of ['
 for(const experience of ['preparing','new','established']) {
   const a=family(9);a.run(`navigate('home');answerHomeQuestion('food','${experience}');openPage('topic:Feeding')`);
   check(a.run("chgStageIndex('Feeding')")==={preparing:2,new:3,established:4}[experience],'Solids answer changes stage');
-  check(clean(a.html()).includes('Bring your feeding experience to the checkup')===(experience!=='established'),'Later starters get a concrete checkup connection without assuming delay for everyone');
+  check(clean(a.html()).includes('Bring your feeding questions to the checkup')===(experience!=='established'),'Later starters get a concrete checkup connection without assuming delay for everyone');
 }
 {
   const a=family(9);

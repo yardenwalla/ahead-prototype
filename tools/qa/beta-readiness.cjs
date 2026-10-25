@@ -87,12 +87,12 @@ for (const early of [false,true]) for (let age=0; age<=12; age++) {
     a.run(`openPage('chg:Sleep:settle');chgChooseSettling('${choice}')`);inspect(a,'settling '+choice);
     check(a.html().includes(`data-settling-guide="${choice}"`),'Distinct settling guide '+choice);
   }
-  a.run("openPage('topic:Feeding');chgChooseMethod('nurse')");
+  a.run("openPage('topic:Feeding');openPage('chg:Feeding:d:milk');chgChooseMethod('nurse')");
   check(a.html().includes('value="nurse" selected'),'Milk reference can be selected directly');
-  a.run("editingProfile=true;draft={...profile,feed:'Formula'};setupStep=2;document.querySelector('#feed').value='Formula';submitSetup({preventDefault(){}});openPage('topic:Feeding')");
+  a.run("editingProfile=true;draft={...profile,feed:'Formula'};setupStep=2;document.querySelector('#feed').value='Formula';submitSetup({preventDefault(){}});openPage('topic:Feeding');openPage('chg:Feeding:d:milk')");
   // This profile was already Formula, so a deliberate Nursing reference is retained.
   check(a.html().includes('value="nurse" selected'),'Unchanged milk type retains the chosen reference');
-  a.run("editingProfile=true;draft={...profile};setupStep=2;document.querySelector('#feed').value='Both';submitSetup({preventDefault(){}});openPage('topic:Feeding')");
+  a.run("editingProfile=true;draft={...profile};setupStep=2;document.querySelector('#feed').value='Both';submitSetup({preventDefault(){}});openPage('topic:Feeding');openPage('chg:Feeding:d:milk')");
   check(a.html().includes('value="both" selected'),'Changing milk type updates the default reference');
   check(!/<dt>Milk<\/dt>/.test(a.html()),'Combined nursing and bottles do not show two unlabeled milk amounts');
   a.run("openPage('chg:Sleep:safe')");

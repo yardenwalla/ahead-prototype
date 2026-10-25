@@ -1,0 +1,108 @@
+/* Ahead · summary screens with details one tap away.
+   Uses each category's palette (--year-bg, --year-pale, --year-ink, --year-accent) and the app's ink, line and white. */
+#main .hub-page { --hub-red: #9b2c2c; --hub-redp: #fbeceb; --hub-done: #2f6a4c; --hub-donep: #e3f1e8; padding-bottom: 8px }
+#main .hub-page button { font: inherit; color: inherit; text-align: left }
+
+/* Stage pills */
+#main .hub-pills { display: flex; gap: 8px; overflow-x: auto; padding: 6px 0 14px; margin: 0 -16px; padding-left: 16px; padding-right: 16px; scrollbar-width: none }
+#main .hub-pills::-webkit-scrollbar { display: none }
+#main .hub-pills button { flex: none; padding: 8px 13px; border-radius: 999px; font-size: 13px; color: var(--muted); background: var(--white); border: 1px solid var(--line); min-height: 36px; white-space: nowrap }
+#main .hub-pills button.is-on { background: var(--year-ink); color: #fff; border-color: var(--year-ink); font-weight: 600 }
+#main .hub-now { font-size: 10px; font-weight: 700; color: var(--year-ink); background: var(--year-pale); border-radius: 999px; padding: 1px 6px; margin-left: 4px }
+
+/* Hero */
+#main .hub-hero { background: var(--year-bg); border-radius: 24px; padding: 20px; margin: 0 0 14px }
+#main .hub-eyebrow { margin: 0 0 6px; font-size: 12px; font-weight: 600; color: var(--year-ink) }
+#main .hub-hero h1 { font: 700 25px/1.18 var(--display-font, inherit); letter-spacing: -.3px; margin: 0 0 8px; color: var(--ink) }
+#main .hub-lead { margin: 0; font-size: 14.5px; line-height: 1.55; color: var(--ink); opacity: .82 }
+#main .hub-meter { margin-top: 16px }
+#main .hub-meter-label { display: flex; justify-content: space-between; font-size: 12px; font-weight: 600; color: var(--year-ink); margin-bottom: 6px }
+#main .hub-bar { height: 8px; border-radius: 9px; background: #ffffffa8; overflow: hidden }
+#main .hub-bar i { display: block; height: 100%; background: var(--year-ink); border-radius: 9px }
+#main .hub-button { display: block; width: 100%; margin-top: 16px; padding: 14px; border-radius: 14px; border: 0; background: var(--year-ink); color: #fff !important; font-weight: 600 !important; font-size: 15px; text-align: center !important; min-height: 48px }
+#main .hub-browse { display: flex; flex-direction: column; gap: 4px; margin: -4px 0 14px }
+
+/* Cards and rows */
+#main .hub-card { display: block; width: 100%; background: var(--white); border: 1px solid var(--line); border-radius: 20px; padding: 14px 16px; margin: 0 0 14px }
+#main .hub-card-head { display: flex; justify-content: space-between; align-items: center; gap: 8px }
+#main .hub-card-head b { font-size: 15px; font-weight: 600; color: var(--ink) }
+#main .hub-card-note { display: block; margin-top: 10px; font-size: 13px; line-height: 1.5; color: var(--muted) }
+#main .hub-tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px }
+#main .hub-tiles div { background: var(--year-pale); border-radius: 14px; padding: 11px 13px }
+#main .hub-tiles small { display: block; font-size: 12px; font-weight: 600; color: var(--year-ink) }
+#main .hub-tiles b { display: block; font-size: 16.5px; line-height: 1.25; margin: 3px 0 2px; color: var(--ink) }
+#main .hub-tiles span { font-size: 12px; color: var(--muted) }
+#main .hub-h2 { font-size: 17px; font-weight: 650; margin: 22px 0 10px; color: var(--ink) }
+#main .hub-list { background: var(--white); border: 1px solid var(--line); border-radius: 20px; overflow: hidden; margin: 0 0 14px }
+#main .hub-row { display: flex; align-items: center; gap: 12px; width: 100%; padding: 13px 14px; background: none; border: 0; min-height: 64px }
+#main .hub-row + .hub-row { border-top: 1px solid var(--line) }
+#main .hub-dot { width: 42px; height: 42px; border-radius: 13px; background: var(--year-pale); padding: 4px; flex: none }
+#main .hub-dot svg, #main .hub-big svg, #main .hub-tick-art svg { width: 100%; height: 100% }
+#main .hub-row-copy { flex: 1; min-width: 0 }
+#main .hub-row-copy b { display: block; font-size: 15px; font-weight: 600; line-height: 1.3; color: var(--ink) }
+#main .hub-row-copy small { display: block; font-size: 13px; line-height: 1.4; color: var(--muted); margin-top: 2px }
+#main .hub-chip { flex: none; font-size: 12px; font-weight: 600; padding: 5px 10px; border-radius: 999px; background: var(--year-pale); color: var(--year-ink); white-space: nowrap }
+#main .hub-chip.is-done { background: var(--hub-donep); color: var(--hub-done) }
+#main .hub-chip.is-red { background: var(--hub-redp); color: var(--hub-red) }
+#main .hub-chev { flex: none; color: #b5aaa4; font-size: 20px; line-height: 1 }
+
+/* Normal versus call */
+#main .hub-versus h3 { margin: 0; font-size: 15px; font-weight: 600; color: var(--ink) }
+#main .hub-vs, #main .hub-two { display: grid; grid-template-columns: 1fr 1fr; gap: 8px }
+#main .hub-vs { margin-top: 10px }
+#main .hub-vs div, #main .hub-two div { background: var(--year-pale); border-radius: 14px; padding: 12px }
+#main .hub-vs div.is-urgent { background: var(--hub-redp) }
+#main .hub-vs b, #main .hub-two b { display: block; font-size: 14px; margin-bottom: 4px; color: var(--ink) }
+#main .hub-vs .is-urgent b { color: var(--hub-red) }
+#main .hub-vs p, #main .hub-two p { margin: 0; font-size: 12.5px; line-height: 1.45; color: var(--muted) }
+#main .hub-link { display: block; background: none; border: 0; padding: 10px 0 0; font-size: 13px; font-weight: 600; color: var(--year-ink) !important; min-height: 32px }
+#main .hub-link.is-quiet { color: var(--muted) !important; font-weight: 500 }
+
+/* Coming up and questions */
+#main .hub-next { display: flex; align-items: center; gap: 12px; width: 100%; margin: 4px 0 6px; padding: 14px 16px; border-radius: 20px; border: 1px dashed var(--year-accent); background: transparent; min-height: 60px }
+#main .hub-next span:first-child { flex: 1 }
+#main .hub-next small { display: block; font-size: 12px; font-weight: 600; color: var(--year-ink) }
+#main .hub-next b { display: block; font-size: 15px; margin-top: 2px; color: var(--ink) }
+#main .hub-more { display: flex; justify-content: space-between; align-items: center; width: 100%; background: none; border: 0; padding: 14px 4px; font-size: 14px; color: var(--muted) !important; min-height: 48px }
+#main .hub-note { margin: -2px 4px 14px; font-size: 13px; line-height: 1.55; color: var(--muted) }
+#main .hub-foot { margin: 10px 4px 0; font-size: 11.5px; color: var(--muted) }
+
+/* Detail screens */
+#main .hub-detail-head { margin: 4px 0 18px }
+#main .hub-big { display: block; width: 64px; height: 64px; border-radius: 18px; background: var(--year-pale); padding: 6px; margin-bottom: 12px }
+#main .hub-context { margin: 0 0 4px; font-size: 12px; font-weight: 600; color: var(--year-ink) }
+#main .hub-detail-head h1 { font: 700 26px/1.18 var(--display-font, inherit); margin: 0 0 8px; color: var(--ink) }
+#main .hub-detail .hub-lead { color: var(--muted); opacity: 1 }
+#main .hub-ticks { display: grid; gap: 10px; margin-bottom: 14px }
+#main .hub-tick { display: flex; align-items: center; gap: 14px; width: 100%; padding: 14px; border-radius: 20px; background: var(--white); border: 1px solid var(--line); min-height: 72px }
+#main .hub-tick.is-on { background: var(--year-pale); border-color: var(--year-accent) }
+#main .hub-tick-art { width: 52px; height: 52px; border-radius: 16px; background: #efedff; padding: 5px; flex: none }
+#main .hub-tick-box { margin-left: auto; width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--year-accent); flex: none; display: grid; place-items: center; color: #fff; font-size: 15px }
+#main .hub-tick.is-on .hub-tick-box { background: var(--year-ink); border-color: var(--year-ink) }
+#main .hub-tip { background: var(--year-pale); border-radius: 16px; padding: 14px 16px; font-size: 14px; line-height: 1.5; margin: 0 0 12px; color: var(--ink) }
+#main .hub-tip b { display: block; color: var(--year-ink); font-size: 13px; margin-bottom: 2px }
+#main .hub-tip.is-plain { background: #f1ede6; color: #5d5550; font-size: 13.5px }
+#main .hub-steps { counter-reset: s; list-style: none; margin: 0; padding: 0 }
+#main .hub-steps li { counter-increment: s; display: flex; gap: 12px; padding: 11px 0; font-size: 15px; line-height: 1.45; color: var(--ink) }
+#main .hub-steps li + li { border-top: 1px solid var(--line) }
+#main .hub-steps li::before { content: counter(s); flex: none; width: 26px; height: 26px; border-radius: 50%; background: var(--year-pale); color: var(--year-ink); font-weight: 700; font-size: 13px; display: grid; place-items: center; margin-top: 1px }
+#main .hub-table { margin: 0 }
+#main .hub-table div { display: flex; justify-content: space-between; gap: 12px; padding: 11px 0; font-size: 15px }
+#main .hub-table div + div { border-top: 1px solid var(--line) }
+#main .hub-table dt { color: var(--muted) }
+#main .hub-table dd { margin: 0; font-weight: 600; text-align: right; color: var(--ink) }
+#main .hub-options { display: grid; gap: 10px; margin-bottom: 14px }
+#main .hub-option { display: block; width: 100%; padding: 15px 16px; border-radius: 18px; background: var(--white); border: 1px solid var(--line) }
+#main .hub-option.is-on { background: var(--year-pale); border-color: var(--year-ink) }
+#main .hub-option b { display: block; font-size: 15px; margin-bottom: 3px; color: var(--ink) }
+#main .hub-option span { font-size: 13.5px; line-height: 1.45; color: var(--muted) }
+#main .hub-seg { display: flex; background: #f1ece6; border-radius: 12px; padding: 4px; margin: 0 0 14px }
+#main .hub-seg button { flex: 1; text-align: center !important; padding: 9px 6px; border-radius: 9px; border: 0; background: none; font-size: 13px; font-weight: 600; color: var(--muted) !important; min-height: 38px }
+#main .hub-seg button.is-on { background: var(--white); color: var(--year-ink) !important; box-shadow: 0 1px 3px #0001 }
+#main .hub-group { font-size: 13px; font-weight: 600; color: var(--muted); margin: 6px 4px 8px }
+#main .hub-chips { margin-top: 10px }
+#main .hub-select { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 13px; color: var(--muted); margin: 6px 4px 0 }
+#main .hub-select select { min-height: 40px; border: 1px solid var(--line); border-radius: 10px; background: var(--white); padding: 0 10px; font: inherit; color: var(--ink) }
+#main .hub-faq { margin-top: 0 }
+#main .hub-detail .safety-check-section { margin: 0 0 14px }
+#main .hub-detail[data-overview="Feeding"] .hub-tick-art { background: var(--year-pale) }

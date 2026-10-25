@@ -114,3 +114,19 @@
 #main .chg-vs article.is-urgent b { color: #9b2c2c }
 #main .chg-vs-section .chg-item-link { margin-top: 12px }
 #main .chg-allergens { margin-top: 10px }
+/* Stage hubs: next step + tiles */
+#main .chg-next { margin: 0 0 22px }
+#main .chg-tiles { margin: 0 0 26px }
+#main .chg-tiles .connected-category-grid button { min-height: 76px; align-items: center }
+#main .chg-tiles .connected-category-grid button > span:first-child { color: var(--year-ink); padding: 6px }
+#main .chg-tiles b { font-size: 13px; font-weight: 600 }
+#main .chg-tiles b small { display: block; margin-top: 3px; font-size: 12px; font-weight: 400; color: var(--muted) }
+#main .chg-options { display: grid; gap: 10px }
+#main .chg-options article { background: var(--white); border: 1px solid var(--line); border-radius: 16px; padding: 14px 16px }
+#main .chg-options h4 { margin: 0 0 4px; font-size: 15px; font-weight: 650; color: var(--ink) }
+#main .chg-options p { margin: 0 0 8px; font-size: 13px; line-height: 1.5; color: var(--muted) }
+#main .chg-options b { font-size: 13px; font-weight: 600; color: var(--year-ink) }
+#main .chg-detail .chg-vs { margin-top: 4px }
+#main .chg-detail .chg-vs + .chg-item-link { margin-top: 14px }
+#main .chg-next .connected-row-copy small { display: none }
+#main .chg-detail .chg-rhythm .chg-card-head h2 { display: none }
