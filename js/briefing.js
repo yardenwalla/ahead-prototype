@@ -33,7 +33,6 @@
     return !!d && (NOW - parse(d)) / DAY <= 28;
   }
   const link = (go, label) => ({ go, label });
-  const also = (topic, text, go) => ({ topic, text, go });
 
   /* ---------- what's important right now ---------- */
   function importantNow() {
@@ -51,9 +50,7 @@
     // Rolling: one change, three places it shows up.
     if (priority && priority.type === 'swaddle') {
       if (mv === 'trying' || mv === 'rolling') out.push({ topic: 'Sleep', key: 'rolling', title: `Rolling changes how ${n()} sleeps`,
-        body: `Time to stop swaddling. Use a sleep sack that leaves the arms free.`,
-        also: [also('Safety', 'Clear the play mat area', "openSafetyChecklist('reach',false)"),
-               also('Daily rhythm', 'More floor time', "openPage('topic:Daily rhythm')")],
+        body: `Stop swaddling now and switch to a sleep sack that leaves the arms free. During the day, clear the space around the play mat and give ${n()} plenty of floor time to practice.`,
         tools: homePriorityTools(priority), link: link("openSection('Sleep','sleep-rolling')", 'See what to change') });
       else out.push({ topic: 'Sleep', key: 'rolling-soon', title: 'Rolling changes sleep safety',
         body: `Most babies try to roll at 3–6 months. If you swaddle, stop at the first attempt.`,
@@ -64,9 +61,7 @@
     if (live() && (answers.pullUp === 'Yes' || m >= 8) && answers.mattressLowest !== 'Yes') {
       const said = answers.pullUp === 'Yes';
       out.push({ topic: 'Sleep', key: 'mattress', title: said ? `Lower the crib mattress all the way` : `Lower the crib mattress`,
-        body: said ? `Now that ${n()} pulls up, use the lowest setting and remove mobiles.` : `Most babies pull up at 8–10 months. Use the lowest setting before then.`,
-        also: said ? [also('Safety', 'Anchor furniture', "openSafetyChecklist('mobile',false)"),
-                      also('Daily rhythm', 'Cruising practice', "openPage('topic:Daily rhythm')")] : null,
+        body: said ? `Now that ${n()} pulls up, use the lowest setting and take down mobiles. Anchor dressers and shelves too, since furniture is now something to climb.` : `Most babies pull up at 8–10 months. Use the lowest setting before then.`,
         tools: `<div class="home-action-tools"><button class="home-inline-check" aria-label="Mark done: crib mattress at its lowest" onclick="setAnswer('mattressLowest','Yes')"><span aria-hidden="true"></span>Mark done</button></div>`,
         link: link("openSection('Sleep','sleep-crib-height')", 'See the crib setup') });
     } else if (live() && answers.sit === 'Yes' && answers.mattressLowered !== 'Yes' && answers.mattressLowest !== 'Yes') {
@@ -80,10 +75,8 @@
     if (priority && priority.type === 'check') {
       const item = safetyHomeItems()[priority.id] || {};
       const crawl = mv === 'crawling' && recent('movement');
-      out.push({ topic: 'Safety', key: 'check:' + priority.id, reason: crawl ? `Now that ${n()} is crawling` : null,
-        title: crawl ? `Crawling opens up the room` : priority.id === 'gates' ? 'If you have stairs, gate them first' : item.title,
-        body: crawl ? `Start here: ${item.title.charAt(0).toLowerCase() + item.title.slice(1)}.` : (item.body || ''),
-        also: crawl ? [also('Daily rhythm', 'Crawling games', "openPage('topic:Daily rhythm')")] : null,
+      out.push({ topic: 'Safety', key: 'check:' + priority.id,         title: crawl ? `Crawling opens up the room` : priority.id === 'gates' ? 'If you have stairs, gate them first' : item.title,
+        body: crawl ? `First up: ${item.title.charAt(0).toLowerCase() + item.title.slice(1)}. Then go room by room, and keep a clear stretch of floor for crawling practice.` : (item.body || ''),
         tools: homePriorityTools(priority), link: link(`openHomeSafetyCheck('${priority.owner}','${priority.id}')`, 'See how to do it') });
     }
 
@@ -155,26 +148,10 @@
   /* ---------- markup: Home's own components ----------
      Important items are rows inside the month card (with Home's Mark done controls),
      Coming up uses the "Prepare for next" list, and links use Home's text links. */
-  const REASON = {
-    'sleep-setup': 'For the first nights at home', rolling: 'Stop swaddling now', 'rolling-soon': 'Before the first attempt to roll',
-    mattress: 'Before baby can pull up', sitting: 'Now that baby can sit', 'first-foods': 'You said baby has started solids',
-    milk: 'Based on what you shared', 'solids-soon': 'Usually around 6 months', 'four-month': 'Around 4 months',
-    'crawl-soon': 'Before baby is on the move', 'two-naps-soon': 'Usually 6–9 months'
-  };
-  function reasonFor(i) {
-    if (i.reason) return i.reason;
-    if (REASON[i.key]) return REASON[i.key];
-    if (i.key === 'mattress' && answers.pullUp === 'Yes') return 'Now that baby is pulling up';
-    if (i.key.startsWith('check:')) return i.key === 'check:gates' ? 'If your home has stairs' : 'Your next babyproofing check';
-    if (i.key.startsWith('visit:')) return i.days === undefined ? 'Checkup' : 'Coming up';
-    return 'Important right now';
-  }
   function row(i) {
     const base = { topic: i.topic, title: babyCopy(i.title), body: babyCopy(i.body), action: i.link ? i.link.go : `openPage('topic:${i.topic}')`, art: 0,
-      reason: i.key === 'mattress' && answers.pullUp === 'Yes' ? 'Now that baby is pulling up' : reasonFor(i) };
+      reason: null };
     let html = conceptRow(base);
-    const extra = (i.also || []).filter(Boolean);
-    if (extra.length) html += `<div class="home-milk-links brief-also">${extra.map(a => `<button class="textlink" onclick="${a.go}">${({ 'Daily rhythm': 'Play' })[a.topic] || a.topic}: ${a.text.toLowerCase()} →</button>`).join('')}</div>`;
     if (i.tools) html = `<div class="home-connected-sleep" style="${yearTheme(i.topic)}" data-brief="${i.key}"${i.key.startsWith('check:') ? ` data-home-check="${i.key.slice(6)}"` : ''}>${html}<div class="home-connected-actions">${i.tools}</div></div>`;
     else html = `<div class="brief-row" data-brief="${i.key}">${html}</div>`;
     return html;
@@ -195,7 +172,6 @@
     const focus = homeCurrentFocus();
     const sig = [...now, ...next].map(i => i.key).join('|');
     const since = sameAsLastVisit(sig);
-    const play = (() => { try { const model = playStageModel(), idea = model.primary[0]; return idea ? { topic: 'Daily rhythm', key: 'play', title: idea.title, body: playLine(idea), link: link(`openPage('play-activity:${model.phase.lo}:${idea.id}')`, '') } : null; } catch (e) { return null; } })();
     const close = !now.length && !next.length ? `You’re all caught up. Nothing needs your attention right now.` : !now.length ? `Nothing needs doing right now. The rest can wait until it’s closer.` : `Nothing else needs attention right now.`;
 
     let h = `<section class="connected-now" aria-label="What matters now"><div class="connected-summary"><div class="home-summary connected-summary-intro"><div class="home-summary-heading"><div class="home-month-eyebrow">${month === 0 || focus.confirmed ? 'What matters now' : 'Likely around now'}</div><h1>${focus.title}</h1></div><span class="home-summary-art" aria-hidden="true">${homeMonthArt(month)}</span><p class="heroanswer">${focus.body}</p><div class="home-summary-spectrum" aria-hidden="true">${TOPICS.map(([t]) => `<span style="background:${YEAR_PALETTES[t].bg}"></span>`).join('')}</div></div>`;
@@ -203,18 +179,11 @@
     h += `</div>${homeMomentRow()}</section>`;
     if (since) h = `<p class="brief-unchanged">Nothing new since you last checked in on ${journeyDateLabel(iso(new Date(since)))}. Everything here is still current.</p>` + h;
     const ahead = [...next];
-    if (play && live()) ahead.push({ ...play, reasonText: 'If you have a few minutes' });
-    if (ahead.length) h += `<section class="connected-ahead" aria-label="Coming up"><div class="connected-section-heading"><h2>Coming up</h2><button class="textlink" onclick="openPage('ahead')">See all →</button></div><div class="connected-ahead-list">${ahead.map(i => i.reasonText ? `<div class="brief-row" data-brief="${i.key}">${conceptRow({ topic: i.topic, title: i.title, body: i.body, action: i.link.go, art: 0, reason: i.reasonText })}</div>` : row(i)).join('')}</div></section>`;
+    if (ahead.length) h += `<section class="connected-ahead" aria-label="Coming up"><div class="connected-section-heading"><h2>Coming up</h2><button class="textlink" onclick="openPage('ahead')">See all →</button></div><div class="connected-ahead-list">${ahead.map(row).join('')}</div></section>`;
     h += `<p class="brief-close">${close}</p>`;
     return liveHomeCheckin() + h;
   }
 
-  // One sentence a parent can act on: the short prompt if there is one, otherwise the first line of how to do it.
-  function playLine(idea) {
-    const first = t => ((t || '').match(/^.*?[.!?](\s|$)/) || [t || ''])[0].trim();
-    const s = conceptPlaySuggestion(idea);
-    return s.startsWith(idea.why || '\u0000') ? first(idea.how) : first(s);
-  }
   window.homeBriefingDebug = () => { const now = importantNow(); return { now: now.map(i => i.key + ' · ' + i.title), next: comingUp(now).map(i => i.key + ' · ' + i.title) }; };
   window.adaptiveHome = homeAtlas = function () {
     const raw = connectedHomeBeforeBehavior(), start = raw.indexOf('<section class="connected-now"'), end = raw.indexOf('<section class="connected-browse"');
