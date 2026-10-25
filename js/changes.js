@@ -24,6 +24,7 @@
   function save() { try { localStorage.setItem(STORE, JSON.stringify(local)); } catch (e) {} }
   window.resetBabyChanges = function () { local = freshState(); save(); };
   window.chgSafeRemaining = cat => DATA[cat].SAFE.filter((_, i) => !local.safe[cat][i]).length;
+  window.chgSafeTotal = cat => DATA[cat].SAFE.length;
 
   const T = s => esc(babyCopy(String(s == null ? '' : s))).replace(/Maya/g, name());
   // Everything developmental follows adjusted age for babies born early (until age 2).
