@@ -17,9 +17,9 @@ WINDOWS = {  # come-and-go phases: months they may appear in
     'Cluster feeding and growth spurts': (0, 2), 'Distracted feeding': (3, 6), 'Teething and feeding': (7, 12)}
 
 
-def exp_sleep(m, naps=None):
+def exp_sleep(m, naps=None, adj_weeks=99):
     """Age moves the early stages; two naps needs a parent's yes, or moves on its own at 9 months unless they chose to stay."""
-    if m < 2: return SLEEP[0]
+    if adj_weeks < 6.2: return SLEEP[0]
     if m < 4: return SLEEP[1]
     if naps == 'Yes' and m >= 5: return SLEEP[3]
     if m >= 9 and naps != 'Stay': return SLEEP[3]
@@ -34,12 +34,13 @@ def exp_safety(m, mv):
     return age if not said or order.index(age) >= order.index(said) else said
 
 
-def exp_feed(m, food):
-    if m < 2: return FEED[0]
+def exp_feed(m, food, adj_weeks=99):
+    if adj_weeks < 6.2: return FEED[0]
     if m < 4: return FEED[1]
     if food is None: return FEED[3] if m >= 6 else FEED[2]   # unknown: Starting solids, and the check-in asks
     if food == 'preparing': return FEED[2]
-    if food == 'new': return FEED[5] if m >= 10 else FEED[4] if m >= 8 else FEED[3]
+    if food == 'new': return FEED[3]          # first tastes stay until the parent reports more
+    if food == 'textures': return FEED[4]
     return FEED[5] if m >= 10 else FEED[4]
 
 
@@ -96,6 +97,7 @@ def check(results):
                       continue
                   if 'already there: two naps' in q: reported['naps'] = 'Yes'; continue
                   if 'already there: starting solids' in q: reported['food'] = 'new'; continue
+                  if 'managing now' in q: reported['food'] = {'First tastes': 'new', 'More textures and finger foods': 'textures', 'Regular meals': 'established'}[ans]; continue
                   if 'mattress' in q: reported['mattress_done'] = True; continue
                   if 'safety check' in q: continue
                   if 'catnap' in q: reported['naps'] = 'Yes' if ans == 'Yes' else 'Not yet'; continue
@@ -134,7 +136,8 @@ def check(results):
                 if not c['backOk']: F.add('works', 'bug', 'Back button leads to an empty page', pid, wk, f'{where}: {c["onclick"][:60]}')
 
             # ---------- order ----------
-            es, ef = exp_sleep(dmo, reported['naps']), exp_feed(dmo, reported['food'])
+            adj_weeks = wk - p.get('early_days', 0) / 7
+            es, ef = exp_sleep(dmo, reported['naps'], adj_weeks), exp_feed(dmo, reported['food'], adj_weeks)
             # Babies born early: developmental pages say they use adjusted age
             if p.get('early_days'):
                 for name, pg in (('Sleep', s), ('Feeding', f)):
@@ -164,7 +167,7 @@ def check(results):
                 if not pg['questions'] and pg['current'] not in ('Changing milk feeds',): F.add('order', 'warning', f'{name}: no common questions on the current stage', pid, wk, f'{where}: {pg["current"]}')
 
             cards = h['rows'] + h['actions']
-            if not cards: F.add('order', 'bug', 'Home has no cards this week', pid, wk, where)
+            if not cards and not h.get('close'): F.add('order', 'bug', 'Home is empty and doesn’t say the parent is caught up', pid, wk, where)
             if len(cards) > 3: F.add('order', 'bug', 'Home shows more than 3 cards', pid, wk, f'{where}: {len(cards)}')
             cats = [x['label'].split(' · ')[0] for x in cards]
             if len(cats) != len(set(cats)): F.add('order', 'bug', 'Home shows two cards from the same category', pid, wk, f'{where}: {cats}')
