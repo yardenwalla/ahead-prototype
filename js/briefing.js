@@ -163,6 +163,11 @@
       out.push({ topic: 'Safety', key: 'crawl-soon', title: `Before ${n()} starts crawling`,
         body: `Most babies get moving between 6 and 10 months. Babyproofing now saves a scramble later.`,
         link: link("openSafetyChecklist('mobile',false)", 'Start the babyproofing checklist') });
+    // Near the first birthday, a moving baby is about to cruise and walk: one look ahead at what comes into reach.
+    if (live() && m >= 11 && ['crawling', 'pulling'].includes(mv))
+      out.push({ topic: 'Safety', key: 'steps-soon', title: 'First steps are on the way',
+        body: `Cruising and walking bring table edges, stairs and low shelves into reach. A quick walk-through of each room helps.`,
+        link: link("openPage('topic:Safety')", 'See what to check') });
     if (live() && [7, 8].includes(m) && !['Yes', 'Stay'].includes(answers.twoNaps) && chgStageIndex('Sleep') === 2)
       out.push({ topic: 'Sleep', key: 'two-naps-soon', title: 'Two naps are on the way',
         body: `Usually between 6 and 9 months, once the late-afternoon nap stops fitting.`,
