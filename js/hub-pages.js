@@ -60,24 +60,41 @@
   const photos = () => { try { return JSON.parse(localStorage.getItem(PHOTO_KEY())) || {}; } catch (e) { return {}; } };
   const savePhotos = o => { try { localStorage.setItem(PHOTO_KEY(), JSON.stringify(o)); return true; } catch (e) { return false; } };
   window.hubPhotoFor = m => photos()[m] || null;
-  window.hubPickPhoto = function (m) {
-    const input = document.createElement('input');
-    input.type = 'file'; input.accept = 'image/*';
-    input.onchange = () => {
-      const file = input.files && input.files[0]; if (!file) return;
-      const img = new Image(), url = URL.createObjectURL(file);
-      img.onload = () => {
-        const size = 360, c = document.createElement('canvas'), k = Math.max(size / img.width, size / img.height);
-        c.width = c.height = size;
-        c.getContext('2d').drawImage(img, (size - img.width * k) / 2, (size - img.height * k) / 2, img.width * k, img.height * k);
-        const all = photos(); all[m] = c.toDataURL('image/jpeg', 0.8);
-        if (!savePhotos(all)) hubToast('Couldn’t save that photo', 'Your device is out of space for photos.');
-        URL.revokeObjectURL(url); const y = scrollY; render(); scrollTo(0, y);
-        hubToast('Photo saved', `${m === 0 ? 'Newborn' : m === 12 ? '1 year' : m + ' month' + (m === 1 ? '' : 's')} · on ${name()}’s timeline`);
-      };
-      img.src = url;
+  // A photo is chosen with a real file input inside a <label>: tapping the label opens the picker natively,
+  // which works in Safari and in-app viewers where a script-triggered picker is blocked.
+  window.hubPhotoInput = m => `<input type="file" accept="image/*" class="hub-photo-input" onchange="hubPhotoChosen(${m},this)" tabindex="-1" aria-hidden="true">`;
+  window.hubPhotoChosen = function (m, input) {
+    const file = input.files && input.files[0]; if (!file) return;
+    const done = dataUrl => {
+      const all = photos(); all[m] = dataUrl;
+      const ok = savePhotos(all);
+      const y = scrollY; render(); scrollTo(0, y);
+      if (!ok) return hubToast('Couldn’t keep that photo', 'This viewer can’t store photos. Open Ahead in your phone’s browser to keep them.');
+      hubToast('Photo saved', `${m === 0 ? 'Newborn' : m === 12 ? '1 year' : m + ' month' + (m === 1 ? '' : 's')} · on ${name()}’s timeline`);
     };
-    input.click();
+    const shrink = img => {
+      const size = 360, c = document.createElement('canvas'), w = img.naturalWidth || img.width, h = img.naturalHeight || img.height, k = Math.max(size / w, size / h);
+      c.width = c.height = size;
+      c.getContext('2d').drawImage(img, (size - w * k) / 2, (size - h * k) / 2, w * k, h * k);
+      return c.toDataURL('image/jpeg', 0.8);
+    };
+    const reader = new FileReader();
+    reader.onerror = () => hubToast('Couldn’t open that photo', 'Try another photo, or a screenshot of it.');
+    reader.onload = () => {
+      const img = new Image();
+      img.onload = () => { try { done(shrink(img)); } catch (e) { hubToast('Couldn’t open that photo', 'Try another photo, or a screenshot of it.'); } };
+      img.onerror = () => hubToast('Couldn’t open that photo', 'This photo’s format isn’t supported here. Try a screenshot of it.');
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+    input.value = '';
+  };
+  // Kept for older links: opens the same input.
+  window.hubPickPhoto = function (m) {
+    const holder = document.createElement('div'); holder.style.display = 'none'; holder.innerHTML = hubPhotoInput(m);
+    document.body.appendChild(holder); const inp = holder.firstChild;
+    inp.addEventListener('change', () => setTimeout(() => holder.remove(), 0));
+    inp.click();
   };
   function photoStrip() {
     const now = Math.min(12, actualMonth()), all = photos();
@@ -87,7 +104,7 @@
       const cls = ['hub-ph', ph ? 'has-photo' : '', m === now ? 'is-now' : '', open ? '' : 'is-later'].join(' ');
       const inner = ph ? `<img src="${ph}" alt="">` : m === now ? '<span aria-hidden="true">＋</span>' : `<span>${label(m)}</span>`;
       const aria = `${m === 0 ? 'Newborn' : m === 12 ? '1 year' : m + ' months'} photo`;
-      return open ? `<button class="${cls}" onclick="hubPickPhoto(${m})" aria-label="${ph ? 'Change' : 'Add'} ${aria}">${inner}</button>` : `<span class="${cls}" aria-label="${aria}, later">${inner}</span>`;
+      return open ? `<label class="${cls}" role="button" aria-label="${ph ? 'Change' : 'Add'} ${aria}">${inner}${hubPhotoInput(m)}</label>` : `<span class="${cls}" aria-label="${aria}, later">${inner}</span>`;
     }).join('');
     return `<h2 class="hub-h2">A photo a month</h2><div class="hub-photo-strip">${cells}</div>`;
   }
@@ -140,7 +157,7 @@
       const nm = esc2(name()), label = b.m === 12 ? '1 year' : `${b.m} month${b.m === 1 ? '' : 's'}`, plabel = b.m === 12 ? 'first-birthday' : `${b.m}-month`, photo = window.hubPhotoFor(b.m);
       const title = b.since === 0 ? (b.m === 12 ? `${nm} is 1 year old today` : `${nm} is ${label} old today`) : (b.m === 12 ? `${nm} turned 1` : `${nm} turned ${label}`);
       const lead = b.firsts.length ? `Here’s what you noticed this month. Add a photo to keep it with ${nm}’s timeline.` : `A whole month of new. Add a photo to keep this one with ${nm}’s timeline.`;
-      const card = `<div class="home-summary connected-summary-intro hub-bday"><span class="hub-bday-num" aria-hidden="true">${b.m === 12 ? '1' : b.m}</span><span class="hub-bday-spark" aria-hidden="true">✦</span><p class="hub-bday-eyebrow">${b.m === 12 ? 'Happy first birthday' : 'Happy ' + label}</p><h1>${title}</h1><p class="hub-bday-lead">${lead}</p>${b.firsts.length ? `<div class="hub-bday-chips">${b.firsts.map(r => `<span>✓ ${esc2(r.title)}</span>`).join('')}</div>` : ''}<button class="hub-bday-photo" onclick="hubPickPhoto(${b.m})">${photo ? `<img src="${photo}" alt="">Change the ${plabel} photo` : `<i aria-hidden="true">＋</i>Add a ${plabel} photo`}</button></div>`;
+      const card = `<div class="home-summary connected-summary-intro hub-bday"><span class="hub-bday-num" aria-hidden="true">${b.m === 12 ? '1' : b.m}</span><span class="hub-bday-spark" aria-hidden="true">✦</span><p class="hub-bday-eyebrow">${b.m === 12 ? 'Happy first birthday' : 'Happy ' + label}</p><h1>${title}</h1><p class="hub-bday-lead">${lead}</p>${b.firsts.length ? `<div class="hub-bday-chips">${b.firsts.map(r => `<span>✓ ${esc2(r.title)}</span>`).join('')}</div>` : ''}<label class="hub-bday-photo" role="button">${photo ? `<img src="${photo}" alt="">Change the ${plabel} photo` : `<i aria-hidden="true">＋</i>Add a ${plabel} photo`}${hubPhotoInput(b.m)}</label></div>`;
       return html.replace(/<div class="home-summary connected-summary-intro">[\s\S]*?<div class="home-summary-spectrum"[\s\S]*?<\/div><\/div>/, card);
     };
   }
@@ -180,7 +197,7 @@
       ]);
       if (profile.early && profile.due) {
         const seg = group => `<div class="hub-seg" role="group"><button class="${ageMode(group) === 'adjusted' ? 'is-on' : ''}" aria-pressed="${ageMode(group) === 'adjusted'}" onclick="hubSetAgeMode('${group}','adjusted')">Adjusted</button><button class="${ageMode(group) === 'birthday' ? 'is-on' : ''}" aria-pressed="${ageMode(group) === 'birthday'}" onclick="hubSetAgeMode('${group}','birthday')">Birthday</button></div>`;
-        b += `<h2 class="hub-h2">Which age each guide follows</h2><section class="hub-card hub-agemode"><p class="hub-agemode-lead">${F(`Babies born early often go by adjusted age, but some follow their birthday in one area. Pick what fits ${nm}.`).replace(/Maya/g, nm)}</p><div class="hub-agemode-row"><span><b>Development & play</b><small>Now ${esc2(monthLabel(developmentMonth(actualMonth())))}</small></span>${seg('dev')}</div><div class="hub-agemode-row"><span><b>Feeding, sleep and care</b><small>Now ${esc2(monthLabel(hubAgeFor('care', actualMonth())))}</small></span>${seg('care')}</div></section>` + h.note('Checkups always follow the birthday.');
+        b += `<h2 class="hub-h2">Which age each guide follows</h2><section class="hub-card hub-agemode"><p class="hub-agemode-lead">${F(`Babies born early often go by adjusted age, but some follow their birthday in one area. Pick what fits ${nm}.`).replace(/Maya/g, nm)}</p><div class="hub-agemode-row"><span><b>Development & play</b><small>Now ${esc2(monthLabel(developmentMonth(actualMonth())))}</small></span>${seg('dev')}</div><div class="hub-agemode-row"><span><b>Feeding, sleep and care</b><small>Now ${esc2(monthLabel(hubAgeFor('care', actualMonth())))}</small></span>${seg('care')}</div></section>` + h.note(`Checkups always follow the birthday. And if any guide doesn’t match where ${nm} is, open it, tap the stage that fits and tap Change.`);
       }
       const stageRow = (icon, cat, title, sub, go) => h.row({ icon, cat, title, sub: esc2(sub), onclick: go });
       const careRail = ['Newborn', '1–3 months', '4–6 months', '7–12 months'];
@@ -293,7 +310,7 @@
       const start = iso(addMonths(dob, m)), end = iso(addMonths(dob, m + 1));
       const rows = saved.filter(r => r.date >= start && r.date < end).sort((a, b) => b.date.localeCompare(a.date));
       const ph = all[m], label = m === 0 ? 'Born' : m === 12 ? '1 year' : `${m} month${m === 1 ? '' : 's'}`;
-      const node = `<button class="hub-tl-node ${ph ? 'has-photo' : 'is-add'}" onclick="hubPickPhoto(${m})" aria-label="${ph ? 'Change' : 'Add'} the ${m === 0 ? 'newborn' : label} photo">${ph ? `<img src="${ph}" alt="">` : '＋'}</button>`;
+      const node = `<label class="hub-tl-node ${ph ? 'has-photo' : 'is-add'}" role="button" aria-label="${ph ? 'Change' : 'Add'} the ${m === 0 ? 'newborn' : label} photo">${ph ? `<img src="${ph}" alt="">` : '＋'}${hubPhotoInput(m)}</label>`;
       const sub = journeyDateLabel(start) + (ph ? '' : ' · Add a photo');
       stops += `<div class="hub-tl-stop">${node}<span class="hub-tl-head"><b>${label}</b><small>${esc2(sub)}</small></span></div><div class="hub-tl-items">${rows.map(r => item(r)).join('')}</div>`;
     }

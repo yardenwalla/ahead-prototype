@@ -34,9 +34,7 @@
       { key: 'pulling', label: 'Pulling up', age: '9 months+' }
     ] },
     Development: { kind: 'calendar', stages: [
-      // Named for the milestone check; the range underneath says which months lead up to it.
-      { key: 2, label: '2 months', age: '0–2 months' }, { key: 4, label: '4 months', age: '3–4 months' }, { key: 6, label: '6 months', age: '5–6 months' },
-      { key: 9, label: '9 months', age: '7–9 months' }, { key: 12, label: '12 months', age: '10–12 months' }
+      { key: 2, label: '2 months' }, { key: 4, label: '4 months' }, { key: 6, label: '6 months' }, { key: 9, label: '9 months' }, { key: 12, label: '12 months' }
     ] },
     'Daily rhythm': { kind: 'calendar', stages: [
       { label: 'Newborn', age: '0–3 weeks' }, { label: '1–3 months' }, { label: '4–6 months' }, { label: '7–12 months' }

@@ -346,3 +346,7 @@
 #main .home-month-eyebrow, #main .connected-row-copy small, #main .connected-preview-footnote, #main .eyebrow { font-size: 11px !important }
 #main .monthly-back { min-width: 44px; min-height: 44px }
 #main .month:first-child { width: 56px !important }
+/* Photo pickers: a real file input inside a label (works where script-opened pickers are blocked). */
+.hub-photo-input { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; pointer-events: none }
+#main label.hub-ph, #main label.hub-bday-photo, #main label.hub-tl-node { cursor: pointer; position: relative }
+#main label.hub-bday-photo { box-sizing: border-box }
