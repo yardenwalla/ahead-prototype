@@ -106,9 +106,9 @@ window.AHEAD_CHANGES = {
    },
    {
     "key": "rhythm",
-    "rail": "Naps and bedtime",
+    "rail": "Three naps",
     "when": "Usually 4–6 months",
-    "title": "Naps and bedtime",
+    "title": "Three naps",
     "lead": "Naps may begin to follow a pattern. A familiar routine can help, while timing still varies from day to day.",
     "looks": [
      "Naps start at roughly the same times most days",

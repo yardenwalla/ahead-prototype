@@ -54,8 +54,8 @@ window.__qa = (function () {
     const pill = sel => txt(m.querySelector(sel)).replace(/\s*Now$/, '');
     return {
       header: txt(m.querySelector('.monthly-page-header p')),
-      current: pill('.hub-pills .is-now'),
-      selected: pill('.hub-pills [aria-current="step"]'),
+      current: pill('.hub-stage.is-now .hub-stage-name'),
+      selected: pill('.hub-stage.is-on .hub-stage-name'),
       eyebrow: txt(m.querySelector('.hub-eyebrow')), title: txt(m.querySelector('.hub-hero h1')),
       alerts: [...auto, ...red, ...cards],
       comingUp: nexts.find(h => /^Coming up/.test(h.label)) || null,

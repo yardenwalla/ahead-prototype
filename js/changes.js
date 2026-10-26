@@ -41,23 +41,25 @@
      A parent can always say "This is where she is now" (an override that lasts until age moves past it). */
   const live = () => typeof isCurrent !== 'function' || isCurrent();
   const inFirstSixWeeks = m => m < 2 && (!live() || (NOW - parse(profile.early && profile.due ? profile.due : profile.dob)) / 864e5 < 42);
+  // A parent's pick holds (Rule 2). It only drops when the stage table says it no longer fits this age (Rule 4).
   function overridden(cat, computed) {
     const o = live() && local.override && local.override[cat];
     if (!o) return computed;
-    if (o.base !== computed) { delete local.override[cat]; save(); return computed; }
+    const T = window.STAGE_TABLE && STAGE_TABLE[cat], st = T && T.stages[o.i], m = ageNow();
+    if (!st || (st.setFrom != null && m < st.setFrom) || (st.setUntil != null && m > st.setUntil)) { delete local.override[cat]; save(); return computed; }
     return o.i;
   }
+  window.chgGetOverride = cat => (local.override && local.override[cat]) ? JSON.parse(JSON.stringify(local.override[cat])) : null;
+  window.chgSetOverride = (cat, o) => { local.override = Object.assign({}, local.override); if (o) local.override[cat] = o; else delete local.override[cat]; save(); };
   function sleepComputed(m) {
     if (inFirstSixWeeks(m)) return 0;
     if (m < 4) return 1;
     const said = live() ? answers.twoNaps : null;
-    if (said === 'Yes' && m >= 5) return 3;
-    if (m >= 9 && said !== 'Stay') return 3;          // window passed: move on, with an undo
-    return 2;
+    if (said === 'Yes' && m >= 5) return 3;            // the parent told us (Rule 2)
+    if (said === 'Stay' || said === 'Not yet') return 2;
+    return m >= 9 ? 3 : 2;                              // age guess: most babies take two naps by 9 months (Rule 1)
   }
   function sleepStage(m) {
-    const selected = local.override?.Sleep;
-    if (selected && (![2,3].includes(selected.i) || m < 4 || selected.i === 3 && m < 5)) { delete local.override.Sleep; save(); }
     return overridden('Sleep', sleepComputed(m));
   }
   // The "we moved her" notice shows for three weeks after the move, then the page simply carries on.
@@ -78,11 +80,13 @@
     // Unknown solids status from 6 months: show Starting solids and let the check-in find out.
     // Only a parent's "Not yet" keeps the Getting ready guide.
     const known = typeof hasFoodAnswer !== 'function' || hasFoodAnswer();
-    if (!known && live()) return m >= 6 ? 3 : 2;
+    // No answer yet: age guess (Rule 1). Most babies start solids by 6 months, textures by 8, family meals by 10.
+    if (!known && live()) return m >= 10 ? 5 : m >= 8 ? 4 : m >= 6 ? 3 : 2;
+    // The parent told us (Rule 2). Their answer holds; Home asks again when it may be out of date (Rule 3).
     if (fs === 'preparing') return 2;
-    if (fs === 'new') return 3; // First bites are an experience, not an age. Let the parent move on.
+    if (fs === 'new') return 3;
     if (fs === 'textures') return 4;
-    return m >= 10 ? 5 : 4;
+    return m >= 8 ? 5 : 4;
   }
   function feedEvents(m) { return m < 3 ? [0] : m < 7 ? [1] : [2]; }
 
@@ -327,7 +331,7 @@
       h += feedingCheckinMarkup();
 
     if (cat === 'Sleep' && !isEv && view === cur && chgSleepAuto() && autoNoticeFresh())
-      h += headsUp('Updated for this age', 'Showing two-nap guidance', '', `<button class="textlink chg-headsup-link" onclick="setAnswer('twoNaps','Stay')">Still on three naps? Show Naps and bedtime →</button>`);
+      h += headsUp('Updated for this age', 'Showing two-nap guidance', '', `<button class="textlink chg-headsup-link" onclick="setAnswer('twoNaps','Stay')">Still on three naps? Show Three naps →</button>`);
     // Parents can explore any age. Only an appropriate, observable change
     // offers an update; reading a future age guide is not a stage selection.
     const canUpdate = cat === 'Feeding' ? m >= 4 && view >= 2 : m >= 5 && [2,3].includes(view);
@@ -559,21 +563,24 @@
     if (r && s) r.scrollLeft = s.offsetLeft - (r.clientWidth - s.offsetWidth) / 2;
   };
   // "This is where she is now": sets the parent's answer where one exists, otherwise an override.
+  // Change on the timeline. What it sets depends on the stage: an answer where one exists, otherwise a pick.
   window.chgSetStage = function (cat, i) {
     const m = ageNow();
-    // Older links remain readable without assigning a future age's patterns.
-    if (cat === 'Sleep' && (![2,3].includes(i) || m < 4 || i === 3 && m < 5)) return chgGo('chg:Sleep:s:' + i);
-    if (cat === 'Feeding' && i >= 3 && m < 4) return chgGo('chg:Feeding:s:' + i);
+    if (typeof stageCanChange === 'function' && !stageCanChange(cat, i, CFG[cat].stage(m))) return chgGo('chg:' + cat + ':s:' + i);
+    local.override = Object.assign({}, local.override); delete local.override[cat];
     if (cat === 'Sleep') {
-      if (i === 3) { if (local.override) delete local.override.Sleep; save(); return setAnswer('twoNaps', 'Yes'); }
-      if (i === 2 && m >= 4) { if (local.override) delete local.override.Sleep; save(); answers.twoNaps = 'Stay'; persist(); }
-      else { local.override = Object.assign({}, local.override, { Sleep: { i, base: sleepComputed(m) } }); save(); }
+      if (i >= 2) { answers.twoNaps = i === 3 ? 'Yes' : 'Stay'; persist(); }
+      else local.override.Sleep = { i };
     }
     if (cat === 'Feeding') {
-      if (local.override) delete local.override.Feeding;
-      if (i >= 3) { save(); setFeedingStage(i === 3 ? 'new' : i === 4 ? 'textures' : 'established'); if (i === 5 && feedComputed(m) !== 5) { local.override = Object.assign({}, local.override, { Feeding: { i, base: feedComputed(m) } }); save(); } }
-      else if (i === 2 && m >= 4) { save(); setFeedingStage('preparing'); }
-      else { local.override = Object.assign({}, local.override, { Feeding: { i, base: feedComputed(m) } }); save(); }
+      if (i >= 2) { const v = ['preparing', 'new', 'textures', 'established'][i - 2]; answers.solids = v === 'preparing' ? 'Not yet' : 'Yes'; if (v === 'preparing') delete answers.foodExperience; else answers.foodExperience = v; persist(); }
+      else local.override.Feeding = { i };
+    }
+    save();
+    // A Change counts as the parent's answer, so Home doesn't ask the same thing straight away.
+    if (typeof recordCheckin === 'function') {
+      if (cat === 'Sleep' && i >= 2) recordCheckin('naps', i === 3 ? 'Yes' : 'Stay');
+      if (cat === 'Feeding' && i >= 2) recordCheckin(i === 2 ? 'food' : 'food-progress', ['preparing', 'new', 'textures', 'established'][i - 2]);
     }
     page = 'topic:' + cat; render(); window.scrollTo(0, 0);
   };

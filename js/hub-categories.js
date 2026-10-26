@@ -12,12 +12,22 @@
   // A parent can say "this is where Maya is now" for a category; it sticks until they change it.
   const STAGE_KEY = () => 'ahead-stage:' + journeyKey();
   const stageOverrides = () => { try { return JSON.parse(localStorage.getItem(STAGE_KEY())) || {}; } catch (e) { return {}; } };
-  window.hubStageOverride = cat => (live() ? stageOverrides()[cat] : undefined);
-  window.hubSetStage = function (cat, value) {
-    const all = stageOverrides(); if (value == null) delete all[cat]; else all[cat] = value;
-    try { localStorage.setItem(STAGE_KEY(), JSON.stringify(all)); } catch (e) {}
-    const y = scrollY; render(); scrollTo(0, y);
-    if (typeof hubToast === 'function') hubToast(value == null ? 'Back to following ' + name() + '’s age' : 'Updated', value == null ? 'This guide moves along with ' + name() + '’s age again.' : 'This is now ' + name() + '’s guide. You can change it any time.');
+  // Calendar guides (Rule 5): a parent's pick holds until the baby's age reaches the next stage, then age takes over.
+  const guessFor = cat => cat === 'Development' ? devRef(developmentMonth(actualMonth())) : cat === 'Care' ? careFor((NOW - parse(profile.dob)) / 864e5, careAge()) : null;
+  const writeOverrides = all => { try { localStorage.setItem(STAGE_KEY(), JSON.stringify(all)); } catch (e) {} };
+  window.hubStageOverride = cat => {
+    if (!live()) return undefined;
+    const all = stageOverrides(), e = all[cat];
+    if (e == null) return undefined;
+    if (typeof e === 'object') { if (e.g !== guessFor(cat)) { delete all[cat]; writeOverrides(all); return undefined; } return e.v; }
+    return e;
+  };
+  window.hubStageOverrideRaw = cat => { const e = stageOverrides()[cat]; return e == null ? null : JSON.parse(JSON.stringify(e)); };
+  window.hubStageOverrideRestore = (cat, e) => { const all = stageOverrides(); if (e == null) delete all[cat]; else all[cat] = e; writeOverrides(all); };
+  window.hubSetStage = function (cat, value, silent) {
+    const all = stageOverrides(); if (value == null) delete all[cat]; else all[cat] = { v: value, g: guessFor(cat) };
+    writeOverrides(all);
+    if (!silent) { const y = scrollY; render(); scrollTo(0, y); }
   };
   const devNow = () => { const o = hubStageOverride('Development'); return DEV_STAGES[o] ? Number(o) : devRef(developmentMonth(actualMonth())); };
   const pickedNote = (cat, label) => `<div class="hub-browse"><span class="hub-picked">${F('You picked this stage')}</span><button class="hub-link is-quiet" onclick="hubSetStage('${cat}',null)">${F(label)} ›</button></div>`;
@@ -34,10 +44,9 @@
   window.developmentJourneyOverview = developmentJourneyOverview = function (selected = null) {
     const now = devNow(), ref = DEV_STAGES[selected] ? Number(selected) : now, age = ref === 12 ? '1 year' : ref + ' months';
     const st = DEV_STAGES[ref], h = H();
-    const pills = h.pills('Development by age', Object.keys(DEV_STAGES).map(Number).map(k => ({ label: monthsLabel(k), on: k === ref, now: live() && k === now, onclick: `openPage('development-stage:${k}')` })));
+    const devKeys = Object.keys(DEV_STAGES).map(Number), nowI = devKeys.indexOf(now);
+    const pills = h.pills('Development by age', devKeys.map((k, i) => ({ label: monthsLabel(k), on: k === ref, now: live() && k === now, onclick: `openPage('development-stage:${k}')`, change: stageCanChange('Development', i, nowI) ? `hubChangeStage('Development',${i})` : '' })), 'Development');
     let b = h.hero({ eyebrow: `What you might see by ${age}`, title: st.title, lead: st.body });
-    if (live() && ref !== now) b += `<div class="hub-browse"><button class="hub-link" onclick="hubSetStage('Development',${ref})">${F('This is where Maya is now')} ›</button><button class="hub-link is-quiet" onclick="navigate('categories');openPage('topic:Development')">${F('Back to Maya’s guide')} ›</button></div>`;
-    else if (live() && hubStageOverride('Development') != null) b += pickedNote('Development', 'Follow Maya’s age instead');
     // One thing about how Maya sees the world at this age: a number you can take in at a glance.
     const EYES = { 2: ['8–12 in', 'smile', 'How far Maya sees clearly. About your face during a feed.'], 4: ['Colors', 'colors', 'Maya is getting better at telling colors and shades apart, and loves faces.'], 6: ['3D', 'cube', 'Maya’s eyes now work together to judge depth, which helps {o} reach.'], 9: ['Still there', 'hidden', 'Maya knows a hidden toy hasn’t vanished. That’s why peekaboo is so exciting.'], 12: ['Distance', 'toss', 'Maya can judge distance well enough to toss a toy with aim.'] }[ref];
     if (EYES) b += `<section class="hub-card hub-eyes"><span class="hub-card-head"><b>${F('Through Maya’s eyes')}</b></span><div class="hub-eyes-row"><span class="hub-eyes-ic">${h.art(EYES[1], 'Development')}</span><span class="hub-eyes-big">${F(EYES[0])}</span><span class="hub-eyes-cap">${F(EYES[2])}</span></div></section>`;
@@ -88,7 +97,7 @@
   const careRow = (icon, title, sub, id) => H().row({ icon, cat: 'Daily rhythm', title, sub, onclick: id.startsWith('chg:') ? `openPage('${id}')` : `openPage('chg:Daily rhythm:d:${id}')` });
   function everydayCare(selected = null) {
     const now = careStage(), v = CARE[selected] ? selected : now, h = H(), C0 = CARE[v];
-    const pills = h.pills('Everyday care by age', CARE.map((c, i) => ({ label: c.rail, on: i === v, now: live() && i === now, onclick: `openPage('chg:Daily rhythm:s:${i}')` })));
+    const pills = h.pills('Everyday care by age', CARE.map((c, i) => ({ label: STAGE_TABLE['Daily rhythm'].stages[i].label, age: STAGE_TABLE['Daily rhythm'].stages[i].age, on: i === v, now: live() && i === now, onclick: `openPage('chg:Daily rhythm:s:${i}')`, change: stageCanChange('Daily rhythm', i, now) ? `hubChangeStage('Daily rhythm',${i})` : '' })), 'Daily rhythm');
     let b = '';
     if (v === 0) {
       b += h.hero({ eyebrow: 'Newborn', title: 'Caring for a brand-new baby', lead: 'For now it’s sponge baths, keeping the cord stump dry and lots of diapers. It feels like a lot, and it gets quicker fast.' });
@@ -115,8 +124,6 @@
       b += h.list('What helps now', [careRow('tooth', 'Brush the first teeth', 'A soft brush and a tiny smear of toothpaste', 'teeth'), careRow('bath', 'Bath seats aren’t safety seats', 'Stay within arm’s reach, every bath', 'bathseat'), careRow('sun', 'Protect {p} skin in the sun', 'Shade first, then baby sunscreen', 'sun')]);
       b += bathSafety();
     }
-    if (live() && v !== now) b = b.replace('</header>', '</header>' + `<div class="hub-browse"><button class="hub-link" onclick="hubSetStage('Care',${v})">${F('This is where Maya is now')} ›</button><button class="hub-link is-quiet" onclick="openPage('chg:Daily rhythm:s:${now}')">${F('Back to Maya’s guide')} ›</button></div>`);
-    else if (live() && hubStageOverride('Care') != null) b = b.replace('</header>', '</header>' + pickedNote('Care', 'Follow Maya’s age instead'));
     const nx = CARE[v + 1];
     if (nx) b += h.next(v === 0 ? 'Coming up after the first few weeks' : `Coming up at ${nx.rail.split('–')[0]} months`, ['', 'Tub baths and everyday skin care', 'Bath time becomes part of bedtime', 'First teeth and splashier baths'][v + 1], `openPage('chg:Daily rhythm:s:${v + 1}')`);
     return frame('Daily rhythm', `data-care-stage="${CARE[v].key}"`, pills, b);
@@ -176,9 +183,9 @@
     // Lead with the checks this stage's headline is about (standing → windows and cords, for example).
     const FIRST = { rolling: ['gates', 'storage', 'outlets'], moving: ['doors', 'outlets', 'storage'], pulling: ['anchor', 'windows', 'cords'] }[key] || [];
     const rank = id => { const i = FIRST.indexOf(id); return i < 0 ? 99 : i; };
-    const pills = h.pills('Safety by movement', SAFETY_MOVEMENT_STAGES.map(p => ({ label: p.rail, on: p.key === key, now: live() && p.key === now, onclick: `openPage('safety-stage:${p.key}')` })));
+    const nowI = keys.indexOf(now), ST = STAGE_TABLE.Safety.stages;
+    const pills = h.pills('Safety by movement', SAFETY_MOVEMENT_STAGES.map((p, i) => ({ label: ST[i].label, age: ST[i].age, on: p.key === key, now: live() && p.key === now, onclick: `openPage('safety-stage:${p.key}')`, change: stageCanChange('Safety', i, nowI) ? `hubChangeStage('Safety',${i})` : '' })), 'Safety');
     let b = h.hero({ eyebrow: SAFETY_MOVEMENT_STAGES.find(p => p.key === key).rail, title: SAFETY_HEAD[key][0], lead: SAFETY_HEAD[key][1], meter: { label: owner === 'setup' ? 'Setup checks' : owner === 'reach' ? 'Reaching and rolling checks' : 'Babyproofing checks', n: done, of: guide.ids.length }, button: { label: pending.length ? (done ? 'Keep going with the checklist' : 'Open the checklist') : 'Review the checklist', onclick: `openSafetyChecklist('${owner}',${browse})` } });
-    if (browse) b += back('Back to Maya’s guide', 'safetyBackToNow()');
     b += pending.length
       ? h.list(done ? 'Next up' : 'Start with these', [...pending].sort((x, y) => rank(x) - rank(y)).slice(0, 3).map(id => h.row({ icon: 'shield', cat: 'Safety', title: (items[id] || {}).title || id, sub: shortLine((items[id] || {}).body), onclick: browse ? `openSafetyChecklist('${owner}',true)` : `openHomeSafetyCheck('${owner}','${id}')` })))
       : h.note(`You’ve done every check for this stage. Nice work.`);
@@ -196,7 +203,7 @@
     const focus = healthJourneyFocus(), age = WELL_VISITS.includes(selected) ? selected : focus, h = H();
     const record = healthRecord(age), done = record?.status === 'attended', planned = record?.status === 'planned';
     const label = healthJourneyLabel(age), the = 'the ' + label.charAt(0).toLowerCase() + label.slice(1);
-    const pills = h.pills('Checkups', WELL_VISITS.map(a => ({ label: a === 0 ? 'First week' : a + (a === 1 ? ' month' : ' months'), on: a === age, now: live() && a === focus, onclick: `openPage('health-visit:${a}')` })));
+    const pills = h.pills('Checkups', WELL_VISITS.map(a => ({ label: a === 0 ? 'First week' : a + (a === 1 ? ' month' : ' months'), on: a === age, now: live() && a === focus, onclick: `openPage('health-visit:${a}')` })), 'Health');
     const eyebrow = done ? `Done · ${journeyDateLabel(record.date)}` : planned ? `Saved for ${journeyDateLabel(record.date)}` : age === 0 ? 'In the first week' : `Usually at ${age} month${age === 1 ? '' : 's'}`;
     const title = done ? `You’ve been to ${the}` : `What happens at ${the}`;
     let b = h.hero({ eyebrow, title, lead: conceptHealthSummary(age), button: done ? { label: 'Add notes from the visit', onclick: `openHealthDetail(${age},'notes')` } : { label: planned ? 'Change the date' : 'Save the date', onclick: `openPage('visit-form:${age}')` } });

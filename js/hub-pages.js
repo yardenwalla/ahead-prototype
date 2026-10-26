@@ -187,14 +187,14 @@
       const careNow = (() => { const o = hubStageOverride('Care'); if (o != null) return careRail[o]; const d = (NOW - parse(profile.dob)) / 864e5, mm = hubAgeFor('care', actualMonth()); return careRail[d < 21 ? 0 : mm < 4 ? 1 : mm < 7 ? 2 : 3]; })();
       const devOv = hubStageOverride('Development'), dref = DEV_STAGES[devOv] ? Number(devOv) : devRef(developmentMonth(actualMonth()));
       b += h.list('Where ' + nm + ' is now', [
-        stageRow('bowl', 'Feeding', 'Feeding', chgStageLabel('Feeding'), "openPage('topic:Feeding')"),
-        stageRow('moon', 'Sleep', 'Sleep', chgStageLabel('Sleep'), "openPage('topic:Sleep')"),
-        stageRow('smile', 'Development', 'Development & play', DEV_STAGES[dref].title, "openPage('topic:Development')"),
-        stageRow('shield', 'Safety', 'Safety', (SAFETY_MOVEMENT_STAGES.find(p => p.key === safetyStageNow()) || {}).rail || '', "openPage('topic:Safety')"),
+        stageRow('bowl', 'Feeding', 'Feeding', STAGE_TABLE.Feeding.stages[chgStageIndex('Feeding')].label, "openPage('topic:Feeding')"),
+        stageRow('moon', 'Sleep', 'Sleep', STAGE_TABLE.Sleep.stages[chgStageIndex('Sleep')].label, "openPage('topic:Sleep')"),
+        stageRow('smile', 'Development', 'Development & play', dref === 12 ? '1 year' : dref + ' months', "openPage('topic:Development')"),
+        stageRow('shield', 'Safety', 'Safety', (STAGE_TABLE.Safety.stages.find(p => p.key === safetyStageNow()) || {}).label || '', "openPage('topic:Safety')"),
         stageRow('bath', 'Daily rhythm', 'Everyday care', careNow, "openPage('topic:Daily rhythm')")
-      ]) + h.note(`Not quite right? Open a guide, tap the stage that fits, then “This is where ${nm} is now”. Safety follows what ${nm} is doing, so update it under “Update what’s new”.`);
+        , h.row({ icon: 'chat', cat: 'Development', title: 'Update what’s new', sub: 'Rolling, solids, naps and more', onclick: "openPage('personalize')" })
+      ]) + h.note(`Not quite right? Open the guide, tap the stage that fits ${nm}, then tap Change.`);
       b += h.list('More', [
-        h.row({ icon: 'chat', cat: 'Development', title: 'Update what’s new', sub: 'Rolling, solids, naps and more', onclick: "openPage('personalize')" }),
         h.row({ icon: 'book', cat: 'Development', title: 'How we choose guidance', sub: 'Sources and what we leave out', onclick: "openPage('trust')" })
       ]);
       b += h.note(window.AHEAD_STORAGE_PERSISTS === false ? 'This viewer can’t keep your entries after you close it. Open Ahead in your phone’s browser to keep them.' : 'Your answers, notes, photos and saved moments stay in this browser on this device.');
@@ -435,7 +435,7 @@
   if (typeof journeyCategories === 'function') {
     const baseCategories = journeyCategories;
     window.journeyCategories = journeyCategories = function () {
-      return baseCategories().replace(/<div class="journey-utility-links">[\s\S]*<\/div>$/, `<div class="hub-list hub-utility">${plainRow('book', 'Development', 'Resources and search', 'Trusted sources for every topic', "openPage('explore')")}${plainRow('star', 'Development', 'Saved', saved.length ? saved.length + ' saved' : 'Guides you bookmark', "openPage('saved')")}</div>`);
+      return baseCategories().replace(/<div class="journey-utility-links">[\s\S]*<\/div>$/, `<div class="hub-list hub-utility">${plainRow('book', 'Development', 'Resources and search', 'Trusted sources for every topic', "openPage('explore')")}</div>`);
     };
   }
 })();

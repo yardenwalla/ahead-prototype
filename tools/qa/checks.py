@@ -10,20 +10,22 @@ import json, os, re
 from collections import defaultdict
 
 OUT = os.path.join(os.path.dirname(__file__), 'out')
-SLEEP = ['Newborn sleep', 'Days and nights', 'Naps and bedtime', 'Two naps']
-FEED = ['Newborn feeding', 'Changing milk feeds', 'Getting ready for solids', 'Starting solids', 'Textures and finger foods', 'Family meals']
+SLEEP = ['Newborn', 'Days and nights', 'Three naps', 'Two naps']
+FEED = ['Newborn', 'Milk feeds', 'Getting ready', 'Starting solids', 'Textures', 'Family meals']
+# Hero eyebrows can use a stage's full name; the timeline uses the short one.
+SHORT = {'Newborn sleep': 'Newborn', 'Newborn feeding': 'Newborn', 'Changing milk feeds': 'Milk feeds', 'Getting ready for solids': 'Getting ready', 'Textures and finger foods': 'Textures', 'Naps and bedtime': 'Three naps', 'Two naps a day': 'Two naps'}
 WINDOWS = {  # come-and-go phases: months they may appear in
     'The 4-month sleep regression': (3, 5), 'Separation anxiety': (8, 11),
     'Cluster feeding and growth spurts': (0, 2), 'Distracted feeding': (3, 6), 'Teething and feeding': (7, 12)}
 
 
 def exp_sleep(m, naps=None, adj_weeks=99):
-    """Age moves the early stages; two naps needs a parent's yes, or moves on its own at 9 months unless they chose to stay."""
+    """Stage rules: age guesses (two naps by 9 months); a parent's answer wins and holds."""
     if adj_weeks < 6.2: return SLEEP[0]
     if m < 4: return SLEEP[1]
     if naps == 'Yes' and m >= 5: return SLEEP[3]
-    if m >= 9 and naps != 'Stay': return SLEEP[3]
-    return SLEEP[2]
+    if naps in ('Stay', 'Not yet'): return SLEEP[2]
+    return SLEEP[3] if m >= 9 else SLEEP[2]
 
 
 def exp_safety(m, mv):
@@ -37,11 +39,11 @@ def exp_safety(m, mv):
 def exp_feed(m, food, adj_weeks=99):
     if adj_weeks < 6.2: return FEED[0]
     if m < 4: return FEED[1]
-    if food is None: return FEED[3] if m >= 6 else FEED[2]   # unknown: Starting solids, and the check-in asks
+    if food is None: return FEED[5] if m >= 10 else FEED[4] if m >= 8 else FEED[3] if m >= 6 else FEED[2]   # age guess; the check-in asks
     if food == 'preparing': return FEED[2]
     if food == 'new': return FEED[3]          # first tastes stay until the parent reports more
     if food == 'textures': return FEED[4]
-    return FEED[5] if m >= 10 else FEED[4]
+    return FEED[5] if m >= 8 else FEED[4]
 
 
 class Findings:
@@ -142,10 +144,7 @@ def check(results):
             if p.get('early_days'):
                 for name, pg in (('Sleep', s), ('Feeding', f)):
                     if 'adjusted' not in pg.get('header', ''): F.add('order', 'bug', f'{name} doesn’t say it uses adjusted age for a baby born early', pid, wk, f'{where}: “{pg.get("header")}”')
-            # Window passed: Sleep moves on by itself and says so, with an undo
-            if s['current'] == SLEEP[3] and reported['naps'] not in ('Yes',) and dmo >= 9:
-                auto_first = auto_first if auto_first is not None else wk
-                if wk == auto_first and not any(re.search(r'We moved|two-nap guidance', a['title'] + ' ' + a['label'], re.I) for a in s['alerts']): F.add('personal', 'bug', 'Sleep moved to two naps on its own without saying so', pid, wk, where)
+            # Stage rules: with no answer, Sleep follows the age guess quietly; the timeline shows it.
             if s['current'] != es: F.add('order', 'bug', 'Sleep shows the wrong stage for the age', pid, wk, f'{where}: shows “{s["current"]}”, expected “{es}”')
             if f['current'] != ef: F.add('order', 'bug', 'Feeding shows the wrong stage for the age and answers', pid, wk, f'{where}: shows “{f["current"]}”, expected “{ef}”')
             si = SLEEP.index(s['current']) if s['current'] in SLEEP else -1
@@ -155,7 +154,7 @@ def check(results):
             if fi < prev_feed: F.add('order', 'bug', 'Feeding stage went backwards', pid, wk, where)
             prev_sleep, prev_feed = (si if reported['naps'] == 'Stay' else max(prev_sleep, si)), max(prev_feed, fi)
             for name, pg, lst in (('Sleep', s, SLEEP), ('Feeding', f, FEED)):
-                if pg['eyebrow'] != pg['current']: F.add('order', 'bug', f'{name} hero doesn’t match the current stage', pid, wk, f'{where}: “{pg["eyebrow"]}”')
+                if SHORT.get(pg['eyebrow'], pg['eyebrow']) != pg['current']: F.add('order', 'bug', f'{name} hero doesn’t match the current stage', pid, wk, f'{where}: “{pg["eyebrow"]}”')
                 last = pg['current'] == lst[-1]
                 if not last and not pg['comingUp']: F.add('order', 'bug', f'{name}: no “Coming up” card before the last stage', pid, wk, where)
                 if last and not pg['after']: F.add('order', 'warning', f'{name}: last stage has no “after the first birthday” note', pid, wk, where)
@@ -164,7 +163,7 @@ def check(results):
                     if not lo <= dmo <= hi: F.add('order', 'bug', f'{name}: “{ev}” shows outside its usual window', pid, wk, f'{where}')
                 when = re.search(r'(\d+)\s*months?$', pg['eyebrow'].replace('–', '-')) or re.search(r'-(\d+)\s*months', pg['eyebrow'].replace('–', '-'))
                 if when and int(when.group(1)) + 2 < dmo and not (name == 'Sleep' and reported['naps'] == 'Stay'): F.add('order', 'warning', f'{name}: still on a stage whose usual window ended 3+ months ago', pid, wk, f'{where}: “{pg["eyebrow"]}”')
-                if not pg['questions'] and pg['current'] not in ('Changing milk feeds',): F.add('order', 'warning', f'{name}: no common questions on the current stage', pid, wk, f'{where}: {pg["current"]}')
+                if not pg['questions'] and pg['current'] not in ('Milk feeds',): F.add('order', 'warning', f'{name}: no common questions on the current stage', pid, wk, f'{where}: {pg["current"]}')
 
             cards = h['rows'] + h['actions']
             if not cards and not h.get('close'): F.add('order', 'bug', 'Home is empty and doesn’t say the parent is caught up', pid, wk, where)

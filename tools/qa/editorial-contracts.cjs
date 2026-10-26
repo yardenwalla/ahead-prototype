@@ -48,10 +48,11 @@ for (const [age,oldID,newID] of [[1,'slow-song','face-follow'],[3,'sound-answer'
   a.run(`openPage('play-activity:${age}:${oldID}')`);
   check(a.html().includes('data-play-activity="'+newID+'"'), 'Old monthly links open the replacement activity');
 }
-for (const [value,title] of [['new','Starting solids'],['textures','Textures and finger foods'],['established','Family meals']]) {
+for (const [value,title,short] of [['new','Starting solids','Starting solids'],['textures','Textures and finger foods','Textures'],['established','Family meals','Family meals']]) {
   const b=family(11);
   b.run(`setFeedingStage('${value}');openPage('topic:Feeding')`);
-  check(b.html().includes('aria-current="step">'+title), 'Reported eating experience shows as the current stage');
+  const nowStage = (b.html().match(/hub-stage is-on is-now">[\s\S]*?hub-stage-name">([^<]+)</) || [])[1];
+  check(nowStage === short, 'Reported eating experience shows as the current stage on the timeline');
   check(b.html().includes('<p class="hub-eyebrow">'+title+'</p>'), 'Reported experience selects the matching guide');
 }
 // Foundational guidance is discoverable initially, then retires after setup.

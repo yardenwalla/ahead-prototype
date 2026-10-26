@@ -48,7 +48,7 @@ for (const feed of ['Breast milk','Formula','Both']) for (const experience of ['
 }
 for(const experience of ['preparing','new','established']) {
   const a=family(9);a.run(`navigate('home');answerHomeQuestion('food','${experience}');openPage('topic:Feeding')`);
-  check(a.run("chgStageIndex('Feeding')")==={preparing:2,new:3,established:4}[experience],'Solids answer changes stage');
+  check(a.run("chgStageIndex('Feeding')")==={preparing:2,new:3,established:5}[experience],'Solids answer changes stage');
   check(clean(a.html()).includes('Bring your feeding questions to the checkup')===(experience!=='established'),'Later starters get a concrete checkup connection without assuming delay for everyone');
 }
 {

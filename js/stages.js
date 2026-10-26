@@ -29,6 +29,10 @@
     if (month < 4 && (!profile.feed || profile.feed === 'Prefer not to say') && !d.skip.milk && !d.last.milk) out.push('milk');
     const food = feedingCheckin();
     if (food) out.push(food.key);
+    // Sleep (Rule 1 and Rule 3): from 6 months, while the guide is on Three naps, ask about the late catnap.
+    // A "not yet" (or a Change back to Three naps) is asked again a month later.
+    const sa = typeof hubAgeFor === 'function' ? hubAgeFor('care', actualMonth()) : a;
+    if (sa >= 6 && typeof chgStageIndex === 'function' && chgStageIndex('Sleep') === 2 && answers.twoNaps !== 'Yes' && due(d, 'naps', ['No', 'Not yet', 'Stay'])) out.push('naps');
     return out;
   }
   function feedingCheckin() {
@@ -54,6 +58,7 @@
       choices:[['new','First tastes'],['textures','More textures and finger foods'],['established','Regular meals']]};
   }
   window.feedingCheckinModel = feedingCheckin;
+  window.homeQuestionQueue = () => candidates();
   // No nagging: an unanswered question shows for two weeks, then rests until next month.
   // A parent who has let two questions go unanswered gets one question a month, for one week.
   const answeredSince = (d, at) => Object.values(d.last).some(l => l.at >= at);

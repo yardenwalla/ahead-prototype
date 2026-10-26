@@ -107,19 +107,15 @@
   /* ---------- feeding summary screens ---------- */
   const STAGE_KEYS = ['learn', 'rhythm', 'ready', 'first', 'textures', 'meals'];
   function pills(cat, view, cur) {
-    const CH = C().DATA[cat].CH;
-    return `<nav class="hub-pills" id="hub-pills" aria-label="${cat} stages">${CH.map((c, i) => `<button class="${i === view ? 'is-on' : ''} ${i === cur ? 'is-now' : ''}" onclick="chgGo('chg:${cat}:s:${i}')" ${i === view ? 'aria-current="step"' : ''}>${esc(c.rail)}${i === cur && i !== view ? ' <span class="hub-now">Now</span>' : ''}</button>`).join('')}</nav>`;
+    const ST = STAGE_TABLE[cat].stages, live = C().live();
+    return stageTimeline(cat, ST.map((st, i) => ({ label: st.label, age: st.age, on: i === view, now: live && i === cur, onclick: `chgGo('chg:${cat}:s:${i}')`, change: stageCanChange(cat, i, cur) ? `hubChangeStage('${cat}',${i})` : '' })), cat + ' stages');
   }
   function frame(cat, view, cur, body) {
     return `<div class="quiet-category hub-page" data-overview="${cat}" style="${yearTheme(cat)}">${monthlyPageHeader(cat)}${pills(cat, view, cur)}${body}<p class="hub-foot">Ages are typical. Every baby moves at their own pace.</p></div>`;
   }
   // When a parent browses another stage, offer the one-tap update where it makes sense.
-  function browseLinks(cat, view, cur) {
-    if (view === cur || !C().live()) return '';
-    const age = m();
-    const label = cat === 'Feeding' ? (age >= 4 && view >= 2 ? { 2: 'Not started solids yet? Show this as your guide', 3: 'Already started solids? Update your guide', 4: 'Managing lumps or finger foods? Update your guide', 5: 'Eating regular meals? Update your guide' }[view] : '') : '';
-    return `<div class="hub-browse">${label ? `<button class="hub-link" onclick="chgSetStage('${cat}',${view})">${F(label)} ›</button>` : ''}<button class="hub-link is-quiet" onclick="chgGo('chg:${cat}:s:${cur}')">Back to your guide ›</button></div>`;
-  }
+  // Stage changes live on the timeline now (Change above the stage you're reading).
+  function browseLinks() { return ''; }
   function comingUp(cat, view) {
     const D = C().DATA[cat], N = D.CH[view + 1];
     if (!N) { const A = D.CH[view].after; return A ? next(`After the first birthday, ${A[0]}`, A[1], go('chg:Feeding:d:after')) : ''; }
@@ -436,8 +432,6 @@
     const key = SLEEP_KEYS[view], age = m(), now = view === cur, cat = 'Sleep';
     let h = '';
     let B = browseLinks(cat, view, cur);
-    if (now && typeof chgSleepAuto === 'function' && chgSleepAuto()) B += `<div class="hub-browse${C().autoNoticeFresh() ? ' hub-auto' : ''}">${C().autoNoticeFresh() ? `<p class="hub-note">${F('We moved Maya to two-nap guidance for {p} age.')}</p>` : ''}<button class="hub-link" onclick="setAnswer('twoNaps','Stay')">${F('Still on three naps? Show Naps and bedtime')} ›</button></div>`;
-    if (!now && view >= 2 && age >= 5 && C().live()) B = B.replace('<div class="hub-browse">', `<div class="hub-browse"><button class="hub-link" onclick="chgSetStage('Sleep',${view})">${F(view === 3 ? 'Taking two naps? Update your guide' : 'Still taking three naps? Update your guide')} ›</button>`);
     if (key === 'clock') {
       const n = safeDone(), all = SLEEP_TASKS;
       h += hero({ eyebrow: 'Newborn sleep', title: 'Short sleeps, day and night', lead: 'Newborns sleep 14–17 hours a day in stretches of 1–3 hours. There’s no pattern yet, and that’s normal.', button: n === all ? null : { label: 'Set up a safe sleep space', onclick: go('chg:Sleep:safe') } }) + B + (n === all ? list('', [row({ icon: 'moon', cat, title: 'Safe sleep setup', sub: 'Your space is set up. The habits are here too.', chipText: 'Done', chipTone: 'is-done', onclick: go('chg:Sleep:safe') })]) : '');
@@ -463,7 +457,7 @@
       h += versus('Normal, or time to call?', ['Normal', 'A long stretch one night and not the next, and fussier evenings.'], ['Call your pediatrician', 'Snoring most nights, pauses or gasps in sleep, or sleep changes with fever.']);
     }
     if (key === 'rhythm') {
-      h += hero({ eyebrow: 'Naps and bedtime', title: 'Naps are finding a rhythm', lead: 'Most babies take 3 naps now and get sleepy after about 2 hours awake. Bedtime often lands between 7 and 8.' }) + B;
+      h += hero({ eyebrow: 'Three naps', title: 'Naps are finding a rhythm', lead: 'Most babies take 3 naps now and get sleepy after about 2 hours awake. Bedtime often lands between 7 and 8.' }) + B;
       h += nightCard(key);
       const rows = [swaddleRow(), mattressRow(), row({ icon: 'clock', cat, title: 'Watch for sleepy cues', sub: 'A quiet stare, yawning or turning away', onclick: go('chg:Sleep:d:cues') }), settleRow()].filter(Boolean).slice(0, 3);
       h += list('What helps now', rows);

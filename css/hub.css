@@ -301,3 +301,28 @@
 #main .hub-utility .hub-row-copy, #main .hub-utility .hub-row-copy b, #main .hub-utility .hub-row-copy small { text-align: left }
 #main .hub-why > div + div { border-top: 1px solid var(--line); padding-top: 12px; margin-top: 2px }
 #main .hub-why .hub-card-text { font-size: 14px; color: var(--muted) }
+
+/* Stage timeline (replaces the pill row). The illustration sits on the stage you're reading;
+   "Now" and the glow stay on the baby's stage; "Change" sits above the stage you're reading. */
+#main .hub-stagebar { display: flex; overflow-x: auto; scrollbar-width: none; margin: 2px -20px 16px; padding: 4px 12px 4px; scroll-padding-inline: 20px }
+#main .hub-stagebar::-webkit-scrollbar { display: none }
+#main .hub-stage { position: relative; flex: 0 0 92px; display: flex; flex-direction: column; align-items: center; text-align: center }
+#main .hub-stage::before { content: ''; position: absolute; top: 41px; left: 0; right: 0; height: 2px; background: color-mix(in srgb, var(--year-ink) 18%, transparent) }
+#main .hub-stage:first-child::before { left: 50% }
+#main .hub-stage:last-child::before { right: 50% }
+#main .hub-stage-top { height: 18px; font-size: 12px; line-height: 18px; font-weight: 700; color: var(--year-ink); white-space: nowrap }
+#main button.hub-stage-top { min-height: 18px; padding: 0 6px; background: none; border: 0; text-decoration: underline; text-underline-offset: 2px; cursor: pointer }
+#main .hub-stage-hit { display: flex; flex-direction: column; align-items: center; width: 100%; min-height: 0; padding: 0 2px 4px; background: none; border: 0; cursor: pointer }
+#main .hub-stage-node { position: relative; z-index: 1; display: grid; place-items: center; width: 36px; height: 36px; margin: 5px 0; border-radius: 50%; border: 1.5px solid var(--year-accent); background: var(--year-pale); transition: box-shadow .2s }
+#main .hub-stage-node svg { width: 40px; height: 40px; display: block }
+#main .hub-stage.is-on .hub-stage-node { width: 46px; height: 46px; margin: 0; background: var(--white); overflow: hidden }
+#main .hub-stage.is-now .hub-stage-node { box-shadow: 0 0 0 6px color-mix(in srgb, var(--year-accent) 35%, transparent) }
+#main .hub-stage-name { margin-top: 8px; font-size: 13px; line-height: 1.25; color: var(--ink); font-weight: 500; max-width: 88px }
+#main .hub-stage-age { margin-top: 2px; font-size: 11.5px; line-height: 1.25; color: var(--muted) }
+#main .hub-stage.is-on .hub-stage-name { font-weight: 700; color: var(--year-ink) }
+.hub-toast-undo { background: none; border: 0; color: #c9d6f2; font-weight: 700; font-size: 14px; min-height: 36px; padding: 0 4px; cursor: pointer }
+#main .hub-stage button.hub-stage-top { font-size: 12px !important; line-height: 18px !important; font-weight: 700 !important; font-family: inherit !important; letter-spacing: 0 !important; color: var(--year-ink) !important; height: 18px }
+#main .hub-stage-hit { text-align: center !important }
+#main .hub-stage-name, #main .hub-stage-age { display: block; text-align: center !important; width: 100% }
+#main .hub-stage button.hub-stage-top { position: relative; z-index: 2 }
+#main .hub-stage button.hub-stage-top::after { content: ''; position: absolute; inset: -13px -10px }
