@@ -111,6 +111,7 @@
 
   /* ---------- small confirmations ---------- */
   window.hubToast = function (title, body) {
+    if (!document.createElement || !document.body) return;
     document.querySelectorAll('.hub-toast').forEach(t => t.remove());
     const t = document.createElement('div');
     t.className = 'hub-toast'; t.setAttribute('role', 'status');
@@ -160,7 +161,7 @@
       if (!b) return html;
       const nm = esc2(name()), label = b.m === 12 ? '1 year' : `${b.m} month${b.m === 1 ? '' : 's'}`, plabel = b.m === 12 ? 'first-birthday' : `${b.m}-month`, photo = window.hubPhotoFor(b.m);
       const title = b.since === 0 ? (b.m === 12 ? `${nm} is 1 year old today` : `${nm} is ${label} old today`) : (b.m === 12 ? `${nm} turned 1` : `${nm} turned ${label}`);
-      const lead = b.firsts.length ? `Here’s what you noticed this month. Add a photo to keep it with ${nm}’s timeline.` : `A whole month of new. Add a photo to keep this one with ${nm}’s timeline.`;
+      const lead = photo ? (b.firsts.length ? `Here’s what you noticed this month. The photo is on ${nm}’s timeline.` : `Another month of firsts. The photo is on ${nm}’s timeline.`) : (b.firsts.length ? `Here’s what you noticed this month. Add a photo to keep it with ${nm}’s timeline.` : `Another month of firsts. Add a photo to keep this one with ${nm}’s timeline.`);
       const card = `<div class="home-summary connected-summary-intro hub-bday"><span class="hub-bday-num" aria-hidden="true">${b.m === 12 ? '1' : b.m}</span><span class="hub-bday-spark" aria-hidden="true">✦</span><p class="hub-bday-eyebrow">${b.m === 12 ? 'Happy first birthday' : 'Happy ' + label}</p><h1>${title}</h1><p class="hub-bday-lead">${lead}</p>${b.firsts.length ? `<div class="hub-bday-chips">${b.firsts.map(r => `<span>✓ ${esc2(r.title)}</span>`).join('')}</div>` : ''}<label class="hub-bday-photo" role="button">${photo ? `<img src="${photo}" alt="">Change the ${plabel} photo` : `<i aria-hidden="true">＋</i>Add a ${plabel} photo`}${hubPhotoInput(b.m)}</label></div>`;
       return html.replace(/<div class="home-summary connected-summary-intro">[\s\S]*?<div class="home-summary-spectrum"[\s\S]*?<\/div><\/div>/, card);
     };
@@ -209,7 +210,7 @@
     window.profileRework = profileRework = function () {
       const h = H(), nm = esc2(name());
       const born = journeyDateLabel(profile.dob);
-      let b = `<div class="hub-detail-head"><span class="hub-big">${hubArt('star', 'Development')}</span><p class="hub-context">Baby’s details</p><h1>${nm}</h1><p class="hub-lead">${esc2(monthLabel(birthdayAge()))} old · born ${esc2(born)}${profile.early ? ' · born early' : ''}</p></div>`;
+      let b = `<div class="hub-detail-head"><span class="hub-big">${hubArt('star', 'Development')}</span><p class="hub-context">Baby’s details</p><h1>${nm}</h1><p class="hub-lead">${esc2(birthdayAge() === 0 ? Math.max(1, Math.floor((NOW - parse(profile.dob)) / 864e5 / 7)) + ' week' + (Math.floor((NOW - parse(profile.dob)) / 864e5 / 7) > 1 ? 's' : '') : monthLabel(birthdayAge()))} old · born ${esc2(born)}${profile.early ? ' · born early' : ''}</p></div>`;
       b += h.list('About ' + nm, [
         h.row({ icon: 'bottle', cat: 'Development', title: 'Feeding', sub: esc2(profile.feed || 'Not set'), onclick: "editingProfile=true;draft={...profile};setupStep=2;openPage('setup')" }),
         h.row({ icon: 'smile', cat: 'Development', title: 'Pronouns', sub: esc2(babyPronounLabel()), onclick: "editingProfile=true;draft={...profile};setupStep=1;openPage('setup')" }),
@@ -223,7 +224,7 @@
       b += h.list('Where ' + nm + ' is now', [
         stageRow('bowl', 'Feeding', 'Feeding', STAGE_TABLE.Feeding.stages[chgStageIndex('Feeding')].label, "openPage('topic:Feeding')"),
         stageRow('moon', 'Sleep', 'Sleep', STAGE_TABLE.Sleep.stages[chgStageIndex('Sleep')].label, "openPage('topic:Sleep')"),
-        stageRow('smile', 'Development', 'Development & play', dref + ' months', "openPage('topic:Development')"),
+        stageRow('smile', 'Development', 'Development & play', 'By ' + dref + ' months', "openPage('topic:Development')"),
         stageRow('shield', 'Safety', 'Safety', (STAGE_TABLE.Safety.stages.find(p => p.key === safetyStageNow()) || {}).label || '', "openPage('topic:Safety')"),
         stageRow('bath', 'Daily rhythm', 'Everyday care', careNow, "openPage('topic:Daily rhythm')")
         , h.row({ icon: 'chat', cat: 'Development', title: 'Update what’s new', sub: 'Rolling, solids, naps and more', onclick: "openPage('personalize')" })
@@ -262,11 +263,17 @@
 
   /* ---------- Update what's new: one card per question, answers in the parent's words ---------- */
   window.hubMove = function (k) {
+    const rolling = answers.roll === 'Yes' || ['Tummy to back', 'Back to tummy', 'Both ways'].includes(answers.rollDirection);
     if (k === 'none') { answers.roll = 'Not yet'; answers.rollDirection = 'Not yet'; delete answers.crawl; delete answers.pullUp; }
-    if (k === 'trying') { answers.rollDirection = 'Trying to roll'; delete answers.roll; delete answers.crawl; delete answers.pullUp; }
-    if (k === 'rolling') { answers.roll = 'Yes'; answers.rollDirection = 'Both ways'; delete answers.crawl; delete answers.pullUp; }
-    if (k === 'crawling') { answers.roll = 'Yes'; answers.crawl = 'Yes'; delete answers.pullUp; }
-    if (k === 'pulling') { answers.roll = 'Yes'; answers.crawl = 'Yes'; answers.pullUp = 'Yes'; }
+    else {
+      if (answers.roll === 'Not yet') delete answers.roll;
+      if (answers.rollDirection === 'Not yet') delete answers.rollDirection;
+      if (k === 'trying') { if (answers.rollDirection === 'Trying to roll') delete answers.rollDirection; else answers.rollDirection = 'Trying to roll'; }
+      if (k === 'rolling') { if (rolling) { delete answers.roll; if (answers.rollDirection !== 'Trying to roll') delete answers.rollDirection; } else { answers.roll = 'Yes'; answers.rollDirection = 'Both ways'; } }
+      if (k === 'crawling') { if (answers.crawl === 'Yes') delete answers.crawl; else { answers.crawl = 'Yes'; answers.roll = 'Yes'; } }
+      if (k === 'pulling') { if (answers.pullUp === 'Yes') delete answers.pullUp; else answers.pullUp = 'Yes'; }
+    }
+    delete answers.safetyPick; answers.movementSetByParent = true;
     if (typeof markStage === 'function') markStage('movement');
     persist(); const y = scrollY; render(); scrollTo(0, y);
     hubToast('Updated', `Sleep, Safety and Home now match what ${name()} is doing.`);
@@ -280,9 +287,12 @@
       const chips = (opts, on, fn) => `<div class="hub-choice-chips">${opts.map(([v, l]) => `<button class="${on === v ? 'is-on' : ''}" aria-pressed="${on === v}" onclick="${fn(v)}">${on === v ? '✓ ' : ''}${l}</button>`).join('')}</div>`;
       const card = (q, sub, body) => `<section class="hub-card hub-q"><b>${q}</b>${sub ? `<small>${sub}</small>` : ''}${body}</section>`;
       let b = '';
-      b += card(`How is ${nm} moving?`, 'This updates Sleep, Safety and Home.', chips([['none', 'Not rolling yet'], ['trying', 'Trying to roll'], ['rolling', 'Rolling'], ['crawling', 'Crawling'], ['pulling', 'Pulling up']], move, v => `hubMove('${v}')`));
+      // Movement: pick everything that's true (rolling, crawling and pulling up can all be true at once).
+      const mv = { none: answers.roll === 'Not yet' && answers.rollDirection === 'Not yet', trying: answers.rollDirection === 'Trying to roll', rolling: answers.roll === 'Yes' || ['Tummy to back', 'Back to tummy', 'Both ways'].includes(answers.rollDirection), crawling: answers.crawl === 'Yes', pulling: answers.pullUp === 'Yes' };
+      const multi = (opts, fn) => `<div class="hub-choice-chips">${opts.map(([v, l]) => `<button class="${mv[v] ? 'is-on' : ''}" aria-pressed="${!!mv[v]}" onclick="${fn(v)}">${mv[v] ? '✓ ' : ''}${l}</button>`).join('')}</div>`;
+      b += card(`How is ${nm} moving?`, 'Pick everything that’s true. This updates Sleep, Safety and Home.', multi([['none', 'Not rolling yet'], ['trying', 'Trying to roll'], ['rolling', 'Rolling'], ['crawling', 'Crawling'], ['pulling', 'Pulling up']], v => `hubMove('${v}')`));
       if (age >= 4) b += card(`Has ${nm} started solids?`, 'This moves the feeding guide along.', chips([['preparing', 'Not yet'], ['new', 'First foods'], ['textures', 'Lumps and finger foods'], ['established', 'Regular meals']], food, v => `setFeedingStage('${v}')`));
-      if (age <= 6) b += card(`Is ${nm} still swaddled?`, '', chips([['No', 'Still swaddled'], ['Yes', 'In a sleep sack']], answers.swaddleStopped, v => `hubAnswer('swaddleStopped','${v}','Got it. Sleep will reflect this.')`));
+      if (age <= 6) b += card(`Is ${nm} still swaddled?`, '', chips([['No', 'Still swaddled'], ['Yes', 'In a sleep sack'], ['Never', 'We don’t swaddle']], answers.swaddleStopped === 'Yes' && answers.neverSwaddled ? 'Never' : answers.swaddleStopped,  v => v === 'Never' ? "answers.neverSwaddled=true;hubAnswer('swaddleStopped','Yes','Got it. Sleep will reflect this.')" : `delete answers.neverSwaddled;hubAnswer('swaddleStopped','${v}','Got it. Sleep will reflect this.')`));
       if (age >= 5) b += card(`How many naps most days?`, '', chips([['Stay', '3 naps'], ['Yes', '2 naps']], answers.twoNaps, v => `hubAnswer('twoNaps','${v}','The sleep guide now matches ${nm}’s naps.')`));
       if (age >= 4) b += card('Sleep training', 'Only if it’s something you’re thinking about.', chips([['not_planning', 'Not planning to'], ['not_started', 'Thinking about it'], ['in_progress', 'Working on it'], ['trained', 'Done']], answers.sleepTraining, v => `hubAnswer('sleepTraining','${v}','The settling guide now matches where you are.')`));
       return `<div class="quiet-category hub-page hub-detail" style="${yearTheme('Development')}">${backButton()}<div class="hub-detail-head"><span class="hub-big">${hubArt('chat', 'Development')}</span><p class="hub-context">Update what’s new</p><h1>What’s new with ${nm}?</h1><p class="hub-lead">Answer whatever has changed. Each answer updates the guides it affects.</p></div>${b}${H().note('You can change any answer later.')}</div>`;
@@ -334,7 +344,7 @@
     let b = `<div class="eyebrow">${nm}’s first year</div><h1>Little moments,<br>your own story</h1>`;
     b += `<div class="hub-two-actions hub-tl-actions"><button class="hub-button" onclick="openPage('chg:Timeline:visit')">Record a visit</button><button class="hub-button is-secondary" onclick="openPage('chg:Timeline:milestone')">Save a milestone</button></div>`;
     b += `<div class="hub-tl-line">${stops}</div>`;
-    b += H().note('Photos and entries are saved on this device for this baby.');
+    b += H().note('Photos and entries are saved on this device.');
     return `<div class="quiet-category hub-page hub-timeline-page" style="${yearTheme('Development')}">${b}</div>`;
   };
 
@@ -354,7 +364,8 @@
     const ICON = { Social: 'smile', Talking: 'chat', Thinking: 'idea', Movement: 'sit' }, TITLE = { Social: 'Social', Talking: 'Communication', Thinking: 'Thinking', Movement: 'Movement' };
     const tiles = Object.keys(DEV_DOMAINS).map(d => `<button class="hub-domain-tile" onclick="openPage('development-domain:${ref}:${d}')">${h.art(ICON[d], 'Development')}<b>${TITLE[d]}</b><small>${F(st.summaries[d] || '')}</small><span>${F('Pick a skill')} ›</span></button>`).join('');
     return detailPage('Development', 'Your timeline', 'Save a milestone', `Pick an area, then tap “Seen it” on anything Maya’s doing. Skills for ${age} are shown first.`,
-      `<section class="hub-card hub-glance is-static"><div class="hub-domain-tiles">${tiles}</div></section>` + h.note('Looking for an earlier skill? Each area has the other ages in the pills at the top of Development.'), 'star');
+      `<section class="hub-card hub-glance is-static"><div class="hub-domain-tiles">${tiles}</div></section>`
+      + `<h2 class="hub-h2">${F('Something else?')}</h2><section class="hub-card hub-own-first"><div class="hub-choice-chips">${['Crawling', 'First tooth', 'First word', 'First steps', 'Slept through the night'].map(t => `<button onclick="hubFirstFill('${t}')">${t}</button>`).join('')}</div><label for="firstTitle">${F('What happened')}</label><input id="firstTitle" class="search" maxlength="80" placeholder="${F('For example, crawling')}"><label for="firstDate">${F('When')}</label><input id="firstDate" class="search" type="date" min="${profile.dob}" max="${iso(NOW)}" value="${iso(NOW)}"><button class="hub-button" onclick="hubSaveFirst()">${F('Save to Maya’s timeline')}</button></section>`, 'star');
   }
   function detailPage(cat, context, title, lead, inner, artName) { return H().detail(cat, context, title, lead, inner, artName); }
 
@@ -515,7 +526,7 @@
 
   window.hubTrustPage = function () {
     let b = backButton() + headBlock('book', 'Development', 'How we choose guidance', 'Where the advice comes from', 'Every guide should tell you who’s behind it, why it belongs here and what’s still uncertain.');
-    b += `<div class="hub-list">` + [['steth', 'Credentialed', 'Pediatric organizations and clinical experts, like the AAP and CDC'], ['book', 'Evidence-based', 'Checked against current evidence, with uncertainty made clear'], ['shield', 'Never sponsored', 'No paid placements, affiliate links or product deals']].map(([i, t, s]) => `<div class="hub-row is-static"><span class="hub-dot">${hubArt(i, 'Development')}</span><span class="hub-row-copy"><b>${t}</b><small>${s}</small></span></div>`).join('') + '</div>';
+    b += `<div class="hub-list">` + [['steth', 'Credentialed', 'National pediatric and public health organizations, and clinical experts'], ['book', 'Evidence-based', 'Checked against current evidence, with uncertainty made clear'], ['shield', 'Never sponsored', 'No paid placements, affiliate links or product deals']].map(([i, t, s]) => `<div class="hub-row is-static"><span class="hub-dot">${hubArt(i, 'Development')}</span><span class="hub-row-copy"><b>${t}</b><small>${s}</small></span></div>`).join('') + '</div>';
     b += `<div class="hub-tip"><b>When experts disagree</b>We lay out the options so you can decide with your pediatrician.</div>`;
     b += `<p class="hub-note">This is a prototype. Linked sources are the references we’re proposing, and Ahead doesn’t replace medical care.</p>`;
     return hubShell('Development', b);
@@ -525,9 +536,86 @@
     const baseCategories = journeyCategories;
     window.journeyCategories = journeyCategories = function () {
       // Search sits at the top; there is no separate Resources section (outside links live inside each guide).
-      const search = `<div class="hub-search hub-cat-search"><input class="search" type="search" placeholder="Search: naps, formula, rash, fever…" aria-label="Search guidance" oninput="searchGuides(this.value)" value="${esc2(query || '')}"><div id="results" class="hub-list hub-results" ${query ? '' : 'hidden'}></div></div>`;
+      const search = `<div class="hub-search hub-cat-search"><input class="search" type="search" placeholder="Try “Is 100.6°F a fever?” or “first foods”" aria-label="Search guidance" oninput="searchGuides(this.value)" value="${esc2(query || '')}"><div id="results" class="hub-list hub-results" ${query ? '' : 'hidden'}></div></div>`;
       if (query) setTimeout(() => { if (document.querySelector('.hub-cat-search')) searchGuides(query); }, 0);
       return baseCategories().replace(/<div class="journey-utility-links">[\s\S]*<\/div>$/, '').replace(/(<h1>Categories<\/h1>)/, '$1' + search);
     };
   }
+
+  /* ---------- One "next checkup" for every screen ----------
+     The next checkup is the first one not yet marked done whose usual date is no more than 3 days past.
+     A checkup whose date passed without being recorded (within the last 2 months) gets one question on Home. */
+  const visitDue = a => { const d = parse(profile.dob); return a === 0 ? new Date(d.getTime() + 5 * 864e5) : addMonths(d, a); };
+  const daysTo = a => Math.round((visitDue(a) - NOW) / 864e5);
+  const SNOOZE = () => 'ahead-visit-ask:' + journeyKey();
+  if (typeof healthJourneyFocus === 'function') {
+    window.healthJourneyFocus = healthJourneyFocus = function () {
+      if (!isCurrent()) return visitForMonth().age;
+      const planned = journeyData().records.filter(r => r.type === 'visit' && r.status === 'planned').sort((a, b) => a.date.localeCompare(b.date));
+      const next = WELL_VISITS.find(a => healthRecord(a)?.status !== 'attended' && (daysTo(a) >= -3 || healthRecord(a)?.status === 'planned')) ?? 12;
+      return planned.length && planned[0].visitAge != null && planned[0].visitAge < next ? planned[0].visitAge : next;
+    };
+  }
+  window.hubPastVisitToConfirm = function () {
+    if (!isCurrent()) return null;
+    let snooze = {}; try { snooze = JSON.parse(localStorage.getItem(SNOOZE())) || {}; } catch (e) {}
+    const past = WELL_VISITS.filter(a => !healthRecord(a) && daysTo(a) < -3 && daysTo(a) >= -17 && !(snooze[a] && NOW - snooze[a] < 14 * 864e5));
+    return past.length ? past[past.length - 1] : null;
+  };
+  window.hubVisitNotYet = function (a) { let o = {}; try { o = JSON.parse(localStorage.getItem(SNOOZE())) || {}; } catch (e) {} o[a] = NOW.getTime(); try { localStorage.setItem(SNOOZE(), JSON.stringify(o)); } catch (e) {} render(); };
+  if (typeof stageSnapshot === 'function') {
+    const baseSnap = stageSnapshot;
+    window.stageSnapshot = stageSnapshot = function (t) { const r = baseSnap(t); if (t === 'Health' && isCurrent() && r) r.title = healthJourneyLabel(healthJourneyFocus()); return r; };
+  }
+  // Home: ask once about a checkup whose date has passed.
+  if (typeof window.adaptiveHome === 'function') {
+    const homeBase = window.adaptiveHome;
+    window.adaptiveHome = homeAtlas = function () {
+      let html = homeBase(); const a = hubPastVisitToConfirm(); if (a == null) return html;
+      const nm = esc2(name()), label = healthJourneyLabel(a), lc = label.charAt(0).toLowerCase() + label.slice(1), p = typeof P === 'function' ? null : null;
+      const card = `<section class="connected-checkin hub-visit-ask"><div><h2>Did ${nm} have the ${esc2(lc)}?</h2></div><p>It was usually due around ${esc2(journeyDateLabel(iso(visitDue(a))))}. Record it to keep it on ${nm}’s timeline.</p><div class="connected-checkin-choices"><button onclick="hubVisitNotYet(${a})">Not yet</button><button onclick="openPage('visit-form:${a}')">Yes, record it</button></div></section>`;
+      if (html.includes('<section class="connected-checkin')) return html; // one question per visit
+      const at = html.includes('<section class="connected-ahead"') ? '<section class="connected-ahead"' : '<section class="connected-browse"';
+      return html.includes(at) ? html.replace(at, card + at) : html;
+    };
+  }
+
+  /* ---------- Guides always open on the baby's real age (browsing a month on Home stays on Home) ---------- */
+  if (typeof openPage === 'function') {
+    const baseOpen = openPage;
+    window.openPage = openPage = function (p) { if (page === 'home' && p !== 'home' && typeof actualMonth === 'function') month = actualMonth(); return baseOpen(p); };
+  }
+
+  /* ---------- After recording a visit, offer notes straight away ---------- */
+  if (typeof completeHealthVisit === 'function') {
+    const baseComplete = completeHealthVisit;
+    window.completeHealthVisit = completeHealthVisit = function (age, date) {
+      const r = baseComplete(age, date); if (!r) return r;
+      page = `health-detail:${age}:notes`; render(); scrollTo(0, 0);
+      hubToast('Visit saved', `Add anything you want to remember from the ${healthJourneyLabel(age).replace('First-week', 'first-week')}.`);
+      return r;
+    };
+  }
+
+  /* ---------- Your own firsts, with a date ---------- */
+  window.hubSaveFirst = function () {
+    const t = (document.getElementById('firstTitle') || {}).value || '', d = (document.getElementById('firstDate') || {}).value || '';
+    if (!t.trim() || !d) return hubToast('Add a name and a date', 'For example: Crawling, Oct 18.');
+    if (d > iso(NOW) || d < profile.dob) return hubToast('Check the date', 'Pick a day between the birthday and today.');
+    const data = journeyData();
+    data.records.push({ id: 'milestone-own-' + Date.now(), type: 'milestone', title: t.trim().slice(0, 80), date: d, notes: '', status: 'attended', own: true });
+    if (!saveJourneyData(data)) return hubToast('Couldn’t save that', 'This viewer can’t store entries.');
+    navigate('timeline'); hubToast('A first, saved', `“${t.trim()}” is on ${name()}’s timeline · ${journeyDateLabel(d)}`);
+  };
+  window.hubFirstFill = t => { const el = document.getElementById('firstTitle'); if (el) { el.value = t; el.focus(); } };
+
+  /* ---------- Saves are plain taps: some in-app viewers block form submits ---------- */
+  document.addEventListener('click', e => {
+    const btn = e.target.closest && e.target.closest('form button');
+    if (!btn || btn.type === 'button' || btn.type === 'reset') return;
+    const form = btn.form; if (!form || !form.getAttribute('onsubmit')) return;
+    e.preventDefault();
+    if (!form.checkValidity()) { form.reportValidity(); return; }
+    form.onsubmit.call(form, { preventDefault() {}, target: form, currentTarget: form, submitter: btn });
+  }, true);
 })();

@@ -34,7 +34,8 @@
       { key: 'pulling', label: 'Pulling up', age: '9 months+' }
     ] },
     Development: { kind: 'calendar', stages: [
-      { key: 2, label: '2 months' }, { key: 4, label: '4 months' }, { key: 6, label: '6 months' }, { key: 9, label: '9 months' }, { key: 12, label: '12 months' }
+      // Named for the milestone check the stage works toward, so "By 12 months" reads right for a 10-month-old.
+      { key: 2, label: 'By 2 months' }, { key: 4, label: 'By 4 months' }, { key: 6, label: 'By 6 months' }, { key: 9, label: 'By 9 months' }, { key: 12, label: 'By 12 months' }
     ] },
     'Daily rhythm': { kind: 'calendar', stages: [
       { label: 'Newborn', age: '0–3 weeks' }, { label: '1–3 months' }, { label: '4–6 months' }, { label: '7–12 months' }
@@ -129,7 +130,7 @@
     // doesn't trigger the question straight away; the baby's age has to move first.
     const out = [], add = (cat, pickI, guessI, guessAtPick) => {
       if (pickI == null || guessI == null || guessI <= pickI || (guessAtPick != null && guessI <= guessAtPick)) return;
-      const to = STAGE_TABLE[cat].stages[guessI].label;
+      const to = cat === 'Development' ? 'the ' + STAGE_TABLE[cat].stages[guessI].label.replace('By ', '').replace(' months', '-month') + ' guide' : STAGE_TABLE[cat].stages[guessI].label;
       out.push({ cat, question: `${name()} is ${ageWords()} now. Move ${GUIDE[cat]} to ${to}?`, why: `You picked ${STAGE_TABLE[cat].stages[pickI].label}. Most babies have moved on by now, but you know ${name()} best.` });
     };
     ['Sleep', 'Feeding'].forEach(cat => { const o = typeof chgGetOverride === 'function' && chgGetOverride(cat); if (o) add(cat, o.i, chgComputedIndex(cat), o.g); });

@@ -97,8 +97,14 @@
   };
 
   const baseAnswer = answerHomeQuestion, baseLive = liveHomeCheckin;
+  const confirmAnswer = key => {
+    if (typeof hubToast !== 'function') return;
+    const label = { food: 'Feeding', 'food-progress': 'Feeding', naps: 'Sleep' }[key] || (key.startsWith('outgrown:') ? key.slice(9).replace('Daily rhythm', 'Everyday care') : null);
+    if (label) setTimeout(() => hubToast('Got it', `${label} now matches what you told us.`), 0);
+  };
   window.answerHomeQuestion = answerHomeQuestion = function (key, value) {
     if (key !== homeQuestion()) return;
+    confirmAnswer(key);
     if (key.startsWith('outgrown:')) {
       if (!['Yes', 'Not yet'].includes(value)) return;
       recordCheckin(key, value);
@@ -153,7 +159,17 @@
   }
   // A parent's pick (Change on the timeline) holds, in either direction, until they change it
   // or tell us about a new movement. Home asks when the baby may have outgrown it.
-  function stageNow() { return live2() && ORDER.includes(answers.safetyPick) ? answers.safetyPick : stageGuess(); }
+  // A pick on the timeline, or what the parent said about movement, sets Safety (Rule 2). With neither, the age guess.
+  function stageNow() {
+    if (live2() && ORDER.includes(answers.safetyPick)) return answers.safetyPick;
+    // Only an explicit "this is how they move now" (What's new) can set Safety below the age guess.
+    // A saved first (a roll, a crawl) is a minimum: it can move Safety ahead, never back.
+    if (live2() && answers.movementSetByParent) {
+      const said = answered() || (answers.roll === 'Not yet' && answers.rollDirection === 'Not yet' ? 'reaching' : null);
+      if (said) return said;
+    }
+    return stageGuess();
+  }
   const live2 = () => typeof isCurrent !== 'function' || isCurrent();
   window.safetyStageGuess = stageGuess;
   // Observed movement drives Play; preparation may run ahead without claiming that skill.

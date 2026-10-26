@@ -82,7 +82,8 @@
     // Only a parent's "Not yet" keeps the Getting ready guide.
     const known = typeof hasFoodAnswer !== 'function' || hasFoodAnswer();
     // No answer yet: age guess (Rule 1). Most babies start solids by 6 months, textures by 8, family meals by 10.
-    if (!known && live()) return m >= 10 ? 5 : m >= 8 ? 4 : m >= 6 ? 3 : 2;
+    // No answer yet: solids stages wait for the parent (Feeding asks). Until then, Preparing for solids.
+    if (!known && live()) return 2;
     // The parent told us (Rule 2). Their answer holds; Home asks again when it may be out of date (Rule 3).
     if (fs === 'preparing') return 2;
     if (fs === 'new') return 3;
@@ -100,7 +101,7 @@
 
   function method() {
     if (local.method) return local.method;
-    return { 'Formula': 'bottle', 'Both': 'both' }[profile.feed] || 'nurse';
+    return { 'Formula': 'bottle', 'Both': 'both', 'Breast milk': 'nurse' }[profile.feed] || 'both';
   }
   window.resetMilkMethod = function () { delete local.method; save(); };
   window.resetFeedingStageOverride = function () { if (local.override?.Feeding) { delete local.override.Feeding; save(); } };
@@ -439,7 +440,7 @@
     let links = '';
     if (cat === 'Sleep') {
       links += refRow("openPage('chg:Sleep:safe')", 'safety', 'Safe sleep setup');
-      if (m < 4 || isEv || view !== cur) links += refRow("openPage('chg:Sleep:settle')", 'moon', m < 4 ? 'Helping baby settle' : 'Settling and sleep training');
+      if (m < 4 || isEv || view !== cur) links += refRow("openPage('chg:Sleep:settle')", 'moon', m < 4 ? 'Sleep training, for later' : 'Settling and sleep training');
       links += refRow("openPage('chg:Sleep:help')", 'health', 'When to ask for sleep help');
     } else {
       links += refRow("openPage('chg:Feeding:milk')", 'feed', 'Breast milk and formula basics');
@@ -508,7 +509,7 @@
       ['Make it repeatable for another caregiver', 'Show them the same steps and the soothing baby responds to. They can offer comfort their own way while keeping familiar cues.'],
       ['If settling is taking longer', 'Check hunger, discomfort and whether the last nap changed. Adjust bedtime to tiredness before adding more steps to the routine.']]);
     const picker = `<div class="chg-settling-picker"><label for="settling-guide">What would help right now?</label><select id="settling-guide" onchange="chgChooseSettling(this.value)">${options.map(([v,t])=>`<option value="${v}" ${choice===v?'selected':''}>${t}</option>`).join('')}</select></div>`;
-    return detail('Sleep', 'Your approach · Optional', 'Settling and sleep training', 'Choose the guidance you need. Helping baby fall asleep can remain part of your routine.', picker + `<div data-settling-guide="${choice}">${content}</div>` +
+    return detail('Sleep', ageNow() < 4 ? 'Read ahead · For 4–6 months and up' : 'Your approach · Optional', ageNow() < 4 ? 'Sleep training, for later' : 'Settling and sleep training', ageNow() < 4 ? 'Families who sleep train usually start from 4–6 months, if at all. Here’s what the options look like, so you can decide ahead of time.' : 'Choose the guidance you need. Helping baby fall asleep can remain part of your routine.', picker + `<div data-settling-guide="${choice}">${content}</div>` +
       `<details class="sources-disclosure"><summary>Sources behind this guide <span aria-hidden="true">＋</span></summary><p><a href="https://www.healthychildren.org/English/ages-stages/baby/sleep/Pages/Getting-Your-Baby-to-Sleep.aspx" target="_blank" rel="noopener">AAP · Settling and nighttime needs ↗</a></p><p><a href="https://health.clevelandclinic.org/when-and-how-to-sleep-train-your-baby" target="_blank" rel="noopener">Cleveland Clinic · Timing and approaches ↗</a></p></details>`, '');
   }
 

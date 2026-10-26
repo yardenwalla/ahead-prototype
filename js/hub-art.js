@@ -168,3 +168,22 @@
     });
   };
 })();
+
+/* Home: a baby who grows through the year, one picture per month that matches the month's summary.
+   Same drawing family as the rest of the app (devMilestoneArt): lying, then propped, sitting, crawling,
+   pulling up, waving and, at one year, cruising with a birthday balloon. */
+(function () {
+  if (typeof devMilestoneArt !== 'function') return;
+  const SCENES = [null, 'faces', 'back', 'coo', 'reach', 'hold-toy', 'closed-mouth', 'transfer', 'crawl', 'hide', 'stand', 'wave', 'cruise'];
+  const balloon = '<g><path d="M216 66q-5 22 3 44" stroke="#b9a7c7" fill="none"/><ellipse cx="216" cy="46" rx="16" ry="20" fill="#f0bfce"/><path d="m213 66 3 4 3-4Z" fill="#f0bfce"/><text x="216" y="52" text-anchor="middle" font-size="17" font-family="Georgia,serif" fill="#77647f" stroke="none">1</text></g>';
+  window.homeMonthArt = homeMonthArt = function (age) {
+    const m = Math.max(0, Math.min(12, age | 0)), scene = SCENES[m];
+    let art = m === 0 ? homeBabyArt() : devMilestoneArt(scene, true, m, 'Daily rhythm');
+    if (m > 0) { // the baby grows: about 80% size at one month, full size at one year, standing on the same ground
+      const k = (0.8 + 0.2 * (m - 1) / 11).toFixed(3), t = `translate(${(130 * (1 - k)).toFixed(1)} ${(150 * (1 - k)).toFixed(1)}) scale(${k})`;
+      art = art.replace(/(v24H18Z"[^>]*\/>)([\s\S]*)<\/svg>$/, `$1<g transform="${t}">$2</g></svg>`);
+    }
+    if (m === 12) art = art.replace(/<\/svg>$/, balloon + '</svg>');
+    return `<span class="home-month-scene" data-home-art-month="${m}" data-home-art-scene="${scene || 'newborn'}">${art}</span>`;
+  };
+})();

@@ -129,7 +129,8 @@ for (const early of [false,true]) for (let age=0; age<=12; age++) {
   check(b.run("page==='home'&&month===6"),'Returning Home advances with the baby’s age');
   a.run("month=9;openPage('topic:Feeding')");const preview=JSON.parse(a.run('JSON.stringify(history.state)'));
   const c=boot(p,{},store,'2026-11-21T12:00:00Z',{history:true,navigationState:preview});
-  check(c.run("page==='topic:Feeding'&&month===9"),'An explicit future preview stays a preview on reload');
+  // Stage rules (Oct 26): a guide opened from Home always follows the baby's real age; month browsing stays on Home.
+  check(c.run("page==='topic:Feeding'&&month===actualMonth()"),'A guide opened from Home follows the baby’s real age');
 }
 // The six-week transition is not postponed until the two-month birthday.
 {

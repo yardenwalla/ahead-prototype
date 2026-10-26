@@ -117,7 +117,7 @@
 
     // A checkup in the next two weeks.
     if (visitSoon && visitSoon.days > 7 && visitSoon.days <= 14) out.push(visitItem(visitSoon));
-    return out.slice(0, 2);
+    return out.filter((x, i) => out.findIndex(y => y.topic === x.topic) === i).slice(0, 2); // one card per category
   }
 
   function upcomingVisit() {
@@ -143,7 +143,7 @@
   function comingUp(taken) {
     const out = [], m = dm(), mv = movement(), p = P();
     const fi = chgStageIndex('Feeding');
-    if (live() && fi === 2 && m >= 4 && (!hasFoodAnswer() || foodStage() === 'preparing'))
+    if (live() && fi === 2 && m >= 4 && m < 6 && (!hasFoodAnswer() || foodStage() === 'preparing'))
       out.push({ topic: 'Feeding', key: 'solids-soon', title: 'Solids are getting closer',
         body: `Most babies start around 6 months, once they’re ready. Here’s what to know first.`,
         link: link("openPage('topic:Feeding')", 'Get ready for solids') });

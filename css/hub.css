@@ -358,3 +358,9 @@
 #main .hub-ages .hub-agemode-row:first-of-type { border-top: 0 }
 #main .hub-cat-search { margin: 14px 0 16px }
 #main .hub-results, #main .hub-results .hub-row-copy, #main .hub-results b, #main .hub-results small { text-align: left !important }
+/* The ahead header stays on every page */
+#shell:has(#main>.parent-guide,#main>.visit-completion-page,#main>.visit-notes-page)>.top { display: flex !important }
+#main .hub-own-first label { display: block; font-size: 13px; font-weight: 600; color: var(--ink); margin: 12px 0 6px }
+#main .hub-own-first .search { width: 100%; box-sizing: border-box; min-height: 48px; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--line); background: var(--white); font-size: 16px }
+#main .hub-fever .hub-card-text { margin: 0 }
+#main .hub-visit-ask { margin: 0 0 14px }

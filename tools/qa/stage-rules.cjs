@@ -43,7 +43,7 @@ for (let age = 0; age <= 12; age++) for (const cat of Object.keys(ROUTES)) {
 
 // Change sticks, shows the same in Baby's details, and Undo puts it back.
 for (const [cat, age, i, label] of [['Sleep', 7, 3, 'Two naps'], ['Sleep', 10, 2, 'Three naps'], ['Sleep', 5, 1, 'Longer nights'], ['Feeding', 7, 4, 'More textures'], ['Feeding', 9, 2, 'Preparing for solids'],
-  ['Feeding', 7, 1, 'Milk feeds'], ['Development', 8, 2, '6 months'], ['Daily rhythm', 5, 3, '7–12 months'], ['Safety', 6, 3, 'Crawling'], ['Safety', 10, 1, 'Reaching and rolling']]) {
+  ['Feeding', 7, 1, 'Milk feeds'], ['Development', 8, 2, 'By 6 months'], ['Daily rhythm', 5, 3, '7–12 months'], ['Safety', 6, 3, 'Crawling'], ['Safety', 10, 1, 'Reaching and rolling']]) {
   const a = family(age); a.run(`openPage('topic:${cat}')`);
   const before = nowName(a.html());
   a.run(`openPage('${ROUTES[cat](i)}');hubChangeStage(${JSON.stringify(cat)}, ${i})`);
@@ -63,8 +63,8 @@ for (const [cat, age, i, label] of [['Sleep', 7, 3, 'Two naps'], ['Sleep', 10, 2
   a = family(9); a.run("openPage('topic:Sleep')"); check(nowName(a.html()) === 'Two naps', 'Sleep at 9 months guesses Two naps');
   a = family(11, { twoNaps: 'Not yet' }); a.run("openPage('topic:Sleep')"); check(nowName(a.html()) === 'Three naps', 'A parent’s “not yet” holds past 9 months');
   a = family(6, { twoNaps: 'Yes' }); a.run("openPage('topic:Sleep')"); check(nowName(a.html()) === 'Two naps', 'A parent’s “two naps” wins before 9 months');
-  a = family(8); a.run("openPage('topic:Feeding')"); check(nowName(a.html()) === 'More textures', 'Feeding at 8 months with no answer guesses More textures');
-  a = family(10); a.run("openPage('topic:Feeding')"); check(nowName(a.html()) === 'Family meals', 'Feeding at 10 months with no answer guesses Family meals');
+  a = family(8); a.run("openPage('topic:Feeding')"); check(nowName(a.html()) === 'Preparing for solids', 'Feeding with no solids answer waits on Preparing for solids');
+  a = family(10); a.run("openPage('topic:Feeding')"); check(nowName(a.html()) === 'Preparing for solids', 'Still waiting for the parent at 10 months');
   a = family(10, { solids: 'Yes', foodExperience: 'new' }); a.run("openPage('topic:Feeding')"); check(nowName(a.html()) === 'First foods', 'A parent’s “first foods” holds');
 }
 // Rule 3: an old "not yet" brings the naps question back to Home a month later.
@@ -81,7 +81,7 @@ for (const [cat, age, i, label] of [['Sleep', 7, 3, 'Two naps'], ['Sleep', 10, 2
 }
 // One rule everywhere: a pick holds until the parent changes it. When the baby outgrows it, Home asks once.
 for (const [cat, pickRoute, i, pickAge, laterAge, picked, next] of [
-  ['Development', 'development-stage:6', 2, 8, 10, '6 months', '12 months'],
+  ['Development', 'development-stage:6', 2, 8, 10, 'By 6 months', 'By 12 months'],
   ['Daily rhythm', 'chg:Daily rhythm:s:1', 1, 3, 5, '1–3 months', '4–6 months'],
   ['Safety', 'safety-stage:rolling', 2, 6, 9, 'Before crawling', 'Pulling up'],
   ['Sleep', 'chg:Sleep:s:1', 1, 4, 9, 'Longer nights', 'Two naps']]) {

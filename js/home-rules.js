@@ -31,16 +31,16 @@
   /* Copy for each stage, written to the content skill: verb-first, one line, no jargon. */
   const SLEEP_ROW = [
     ['Round-the-clock sleep', 'Recognize sleepy cues and understand short sleeps around the clock.'],
-    ['Day and night sleep', 'Use daylight and a short evening routine as nights begin to take shape.'],
+    ['Longer nights', 'Use daylight and a short evening routine as nights begin to take shape.'],
     ['Three naps', 'Find awake-time guidance and a sample day for this stage.'],
-    ['Two naps a day', 'See how the day can fit around two naps, and what helps during the transition.']
+    ['Two naps', 'See how the day can fit around two naps, and what helps during the transition.']
   ];
   const FEED_ROW = [
-    ['Newborn feeding', 'Recognize hunger and fullness cues, and the signs milk intake is on track.'],
-    ['Changing milk feeds', 'Understand changing feeds and how milk intake and growth fit together.'],
-    ['Getting ready for solids', 'Spot the readiness signs and get set up before the first bite.'],
-    ['Starting solids', 'Choose a way to offer food, prepare it safely and keep milk feeds alongside.'],
-    ['Textures and finger foods', 'Build on first foods with textures and self-feeding practice suited to your baby.'],
+    ['Newborn feeds', 'Recognize hunger and fullness cues, and the signs milk intake is on track.'],
+    ['Milk feeds', 'Understand changing feeds and how milk intake and growth fit together.'],
+    ['Preparing for solids', 'Spot the readiness signs and get set up before the first bite.'],
+    ['First foods', 'Choose a way to offer food, prepare it safely and keep milk feeds alongside.'],
+    ['More textures', 'Build on first foods with textures and self-feeding practice suited to your baby.'],
     ['Family meals', 'Bring meals, milk feeds and cup practice together as eating skills grow.']
   ];
 
@@ -91,7 +91,7 @@
     const milkRow = fi < 2 && ['Breast milk', 'Formula', 'Both'].includes(profile.feed) ? homeMilkData() : null;
     out.push({ topic: 'Feeding', title: milkRow ? milkRow.title : FEED_ROW[fi][0], body: milkRow ? milkRow.body : FEED_ROW[fi][1], action: "openPage('topic:Feeding')",
       tier: 'should', essential: fi === 0, reported: milkAnswered || fi >= 3 && !!food,
-      prep: fi === 2 && m >= 5,
+      prep: fi === 2 && m >= 5 && m < 7,
       reason: fi === 0 ? 'For the first weeks' : fi === 1 ? ageReason() : fi === 2 ? (food === 'preparing' ? `You said ${name()} hasn’t started solids` : 'Prepare before the first bite') : !food ? 'Solids status not shared yet' : `You said ${name()} ${food === 'new' ? 'has started solids' : food === 'textures' ? 'is managing more textures' : 'is eating meals'}`,
       reference: fi === 1 && !milkAnswered });
 

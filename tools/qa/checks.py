@@ -39,7 +39,7 @@ def exp_safety(m, mv):
 def exp_feed(m, food, adj_weeks=99):
     if adj_weeks < 6.2: return FEED[0]
     if m < 4: return FEED[1]
-    if food is None: return FEED[5] if m >= 10 else FEED[4] if m >= 8 else FEED[3] if m >= 6 else FEED[2]   # age guess; the check-in asks
+    if food is None: return FEED[2]   # solids stages wait for the parent's answer; the check-in asks
     if food == 'preparing': return FEED[2]
     if food == 'new': return FEED[3]          # first tastes stay until the parent reports more
     if food == 'textures': return FEED[4]
