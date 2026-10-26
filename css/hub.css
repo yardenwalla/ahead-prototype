@@ -350,3 +350,11 @@
 .hub-photo-input { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; pointer-events: none }
 #main label.hub-ph, #main label.hub-bday-photo, #main label.hub-tl-node { cursor: pointer; position: relative }
 #main label.hub-bday-photo { box-sizing: border-box }
+/* Born early: adjusted age next to the age on Home */
+.homemeta { align-items: center }
+#main .hub-agechip { background: none; border: 0; padding: 0 0 0 4px; min-height: 44px; font: 600 13px/1 inherit; font-family: inherit; color: var(--purple, #6b6081); cursor: pointer; white-space: nowrap }
+#main .hub-agechip span { font-weight: 500 }
+#main .hub-ages .hub-tiles { margin: 0 0 6px }
+#main .hub-ages .hub-agemode-row:first-of-type { border-top: 0 }
+#main .hub-cat-search { margin: 14px 0 16px }
+#main .hub-results, #main .hub-results .hub-row-copy, #main .hub-results b, #main .hub-results small { text-align: left !important }

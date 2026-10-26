@@ -152,7 +152,11 @@
   const baseHome = window.adaptiveHome;
   if (typeof baseHome === 'function') {
     window.adaptiveHome = homeAtlas = function () {
-      const html = baseHome(), b = monthBirthday();
+      let html = baseHome();
+      // Born early: the adjusted age sits next to the age at the top, and opens About age.
+      html = html.replace(/<p class="connected-age-note">[\s\S]*?<\/p>/, '');
+      if (profile.early && profile.due && isCurrent()) html = html.replace(/(<div class="homemeta"><b>[^<]*<\/b><span>)([^<]*)(<\/span>)/, (m0, a1, age, a3) => `${a1}${age}<button class="hub-agechip" onclick="openPage('age-context')" aria-label="${esc2(monthLabel(adjustedMonth(actualMonth())))} adjusted. About age">· ${esc2(String(adjustedMonth(actualMonth())))} adjusted <span aria-hidden="true">ⓘ</span></button>${a3}`);
+      const b = monthBirthday();
       if (!b) return html;
       const nm = esc2(name()), label = b.m === 12 ? '1 year' : `${b.m} month${b.m === 1 ? '' : 's'}`, plabel = b.m === 12 ? 'first-birthday' : `${b.m}-month`, photo = window.hubPhotoFor(b.m);
       const title = b.since === 0 ? (b.m === 12 ? `${nm} is 1 year old today` : `${nm} is ${label} old today`) : (b.m === 12 ? `${nm} turned 1` : `${nm} turned ${label}`);
@@ -184,6 +188,22 @@
     };
   }
 
+  /* ---------- Born early: the two ages, shown the same way on About age and in Baby's details ---------- */
+  window.hubAgeBlock = function () {
+    const nm = esc2(name()), H2 = H();
+    const seg = group => `<div class="hub-seg" role="group" aria-label="Which age"><button class="${ageMode(group) === 'adjusted' ? 'is-on' : ''}" aria-pressed="${ageMode(group) === 'adjusted'}" onclick="hubSetAgeMode('${group}','adjusted')">Adjusted</button><button class="${ageMode(group) === 'birthday' ? 'is-on' : ''}" aria-pressed="${ageMode(group) === 'birthday'}" onclick="hubSetAgeMode('${group}','birthday')">Birthday</button></div>`;
+    const tile = (k, v, s2) => `<div><small>${k}</small><b>${esc2(v)}</b><span>${s2}</span></div>`;
+    return `<section class="hub-card hub-ages"><div class="hub-tiles">${tile('Birthday age', monthLabel(birthdayAge()), 'Checkups')}${tile('Adjusted age', monthLabel(adjustedMonth(actualMonth())), 'From the due date')}</div>`
+      + `<div class="hub-agemode-row"><span><b>Development & play</b><small>${esc2(monthLabel(developmentMonth(actualMonth())))}</small></span>${seg('dev')}</div>`
+      + `<div class="hub-agemode-row"><span><b>Feeding, sleep, care</b><small>${esc2(monthLabel(hubAgeFor('care', actualMonth())))}</small></span>${seg('care')}</div></section>`
+      + H2.tip('Doesn’t match?', `Open the guide, tap the stage that fits ${nm} and tap Change.`);
+  };
+  window.hubAgePage = function () {
+    const nm = esc2(name());
+    const head = `<div class="hub-detail-head"><span class="hub-big">${hubArt('clock', 'Development')}</span><p class="hub-context">Born early</p><h1>Two ages, one ${nm}</h1><p class="hub-lead">Guides use adjusted age by default. Checkups always use the birthday.</p></div>`;
+    return `<div class="quiet-category hub-page hub-detail" style="${yearTheme('Development')}">${backButton()}${head}${hubAgeBlock()}</div>`;
+  };
+
   /* ---------- Baby's details ---------- */
   if (typeof profileRework === 'function') {
     window.profileRework = profileRework = function () {
@@ -195,10 +215,7 @@
         h.row({ icon: 'smile', cat: 'Development', title: 'Pronouns', sub: esc2(babyPronounLabel()), onclick: "editingProfile=true;draft={...profile};setupStep=1;openPage('setup')" }),
         h.row({ icon: 'clock', cat: 'Development', title: 'Birthday and due date', sub: profile.early && profile.due ? `Born ${esc2(born)} · due ${esc2(journeyDateLabel(profile.due))}` : `Born ${esc2(born)}`, onclick: "editingProfile=true;draft={...profile};setupStep=1;openPage('setup')" })
       ]);
-      if (profile.early && profile.due) {
-        const seg = group => `<div class="hub-seg" role="group"><button class="${ageMode(group) === 'adjusted' ? 'is-on' : ''}" aria-pressed="${ageMode(group) === 'adjusted'}" onclick="hubSetAgeMode('${group}','adjusted')">Adjusted</button><button class="${ageMode(group) === 'birthday' ? 'is-on' : ''}" aria-pressed="${ageMode(group) === 'birthday'}" onclick="hubSetAgeMode('${group}','birthday')">Birthday</button></div>`;
-        b += `<h2 class="hub-h2">Which age each guide follows</h2><section class="hub-card hub-agemode"><p class="hub-agemode-lead">${F(`Babies born early often go by adjusted age, but some follow their birthday in one area. Pick what fits ${nm}.`).replace(/Maya/g, nm)}</p><div class="hub-agemode-row"><span><b>Development & play</b><small>Now ${esc2(monthLabel(developmentMonth(actualMonth())))}</small></span>${seg('dev')}</div><div class="hub-agemode-row"><span><b>Feeding, sleep and care</b><small>Now ${esc2(monthLabel(hubAgeFor('care', actualMonth())))}</small></span>${seg('care')}</div></section>` + h.note(`Checkups always follow the birthday. And if any guide doesn’t match where ${nm} is, open it, tap the stage that fits and tap Change.`);
-      }
+      if (profile.early && profile.due) b += `<h2 class="hub-h2">Ages</h2>` + hubAgeBlock();
       const stageRow = (icon, cat, title, sub, go) => h.row({ icon, cat, title, sub: esc2(sub), onclick: go });
       const careRail = ['Newborn', '1–3 months', '4–6 months', '7–12 months'];
       const careNow = (() => { const o = hubStageOverride('Care'); if (o != null) return careRail[o]; const d = (NOW - parse(profile.dob)) / 864e5, mm = hubAgeFor('care', actualMonth()); return careRail[d < 21 ? 0 : mm < 4 ? 1 : mm < 7 ? 2 : 3]; })();
@@ -384,7 +401,8 @@
   const plainRow = (iconName, cat, title, sub, onclick, chipText) => `<button class="hub-row" onclick="${onclick}"><span class="hub-dot">${hubArt(iconName, cat)}</span><span class="hub-row-copy"><b>${esc2(title)}</b>${sub ? `<small>${esc2(sub)}</small>` : ''}</span>${chipText ? `<span class="hub-chip">${esc2(chipText)}</span>` : ''}<span class="hub-chev" aria-hidden="true">›</span></button>`;
 
   if (typeof resourcesRework === 'function') {
-    window.resourcesRework = resourcesRework = function () {
+    window.resourcesRework = resourcesRework = function () { return journeyCategories(); };
+    window.oldResourcesRework = function () {
       const nm = name(), m = month, prep = m >= 4 && foodStage() === 'preparing';
       const items = [
         ['Development', 'What does this skill look like?', 'cdc'],
@@ -431,7 +449,7 @@
       ['Health', 'steth', 'Fever and sick days: when to call', 'chg:Health:d:sick', 'fever temperature sick ill cold cough vomit vomiting diarrhea breathing medicine tylenol acetaminophen ibuprofen emergency call doctor'],
       ['Health', 'heart', 'How are you doing?', 'chg:Health:d:you', 'postpartum depression anxiety baby blues overwhelmed mom dad parent me'],
       ['Health', 'steth', 'Checkups and vaccines', 'topic:Health', 'checkup checkups visit well child doctor appointment vaccine vaccines shots immunizations'],
-      ['Health', 'leaf', 'Teething signs and comfort', 'resource:teething', 'teething gums drool drooling teeth tooth'],
+      ['Daily rhythm', 'tooth', 'Teething: drool, gums and comfort', 'chg:Daily rhythm:d:gums', 'teething teethe gums drool drooling sore chewing teeth tooth'],
       ['Daily rhythm', 'bath', 'Diaper rash and skin', 'chg:Daily rhythm:d:skin', 'diaper rash rashes skin cradle cap dry eczema'],
       ['Daily rhythm', 'bath', 'Giving a bath', 'chg:Daily rhythm:d:tub', 'bath tub bathing wash'],
       ['Daily rhythm', 'bath', 'Sponge baths', 'chg:Daily rhythm:d:sponge', 'sponge bath newborn wash'],
@@ -506,7 +524,10 @@
   if (typeof journeyCategories === 'function') {
     const baseCategories = journeyCategories;
     window.journeyCategories = journeyCategories = function () {
-      return baseCategories().replace(/<div class="journey-utility-links">[\s\S]*<\/div>$/, `<div class="hub-list hub-utility">${plainRow('book', 'Development', 'Resources and search', 'Trusted sources for every topic', "openPage('explore')")}</div>`);
+      // Search sits at the top; there is no separate Resources section (outside links live inside each guide).
+      const search = `<div class="hub-search hub-cat-search"><input class="search" type="search" placeholder="Search: naps, formula, rash, fever…" aria-label="Search guidance" oninput="searchGuides(this.value)" value="${esc2(query || '')}"><div id="results" class="hub-list hub-results" ${query ? '' : 'hidden'}></div></div>`;
+      if (query) setTimeout(() => { if (document.querySelector('.hub-cat-search')) searchGuides(query); }, 0);
+      return baseCategories().replace(/<div class="journey-utility-links">[\s\S]*<\/div>$/, '').replace(/(<h1>Categories<\/h1>)/, '$1' + search);
     };
   }
 })();

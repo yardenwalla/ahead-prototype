@@ -114,4 +114,18 @@ for (const [cat, route, i] of [['Development', 'development-stage:4', 1], ['Safe
   a.run("navigate('home');setMonth(8)");
   check(/Coming at 8 months/.test(a.html()) && !/Likely around now/.test(a.html()), 'A future month on Home reads as a preview');
 }
+// Resources: search lives on Categories and only opens Ahead's own guides.
+{
+  const a = family(9); a.run("navigate('categories')");
+  check(a.html().includes('hub-cat-search') && !/Resources and search|Taking Cara/.test(a.html()), 'Categories has search and no Resources section');
+  for (const q of ['teeth', 'fever', 'sleep', 'formula', 'rash', 'crawling']) { a.run(`searchGuides(${JSON.stringify(q)})`); check(!/resource:/.test(a.run("document.querySelector('.hub-results').innerHTML")), `Search “${q}” never opens a resource page`); }
+}
+// Born early: the adjusted age sits next to the age on Home and opens About age.
+{
+  const a = boot({ name: 'Ari', dob, feed: 'Both', pronouns: 'he', early: true, due: '2025-12-02' }, {}, {}, at(9));
+  a.run("navigate('home')");
+  check(/hub-agechip/.test(a.html()) && !/connected-age-note/.test(a.html()), 'Home shows the adjusted age next to the age, once');
+  a.run("openPage('age-context')");
+  check(/Two ages, one Ari/.test(a.html()) && /tap Change/.test(a.html()), 'About age explains both ages and how to change a stage');
+}
 console.log(JSON.stringify({ suite: 'stage-rules', checks, status: 'passed' }, null, 2));
