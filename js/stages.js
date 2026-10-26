@@ -33,6 +33,8 @@
     // A "not yet" (or a Change back to Three naps) is asked again a month later.
     const sa = typeof hubAgeFor === 'function' ? hubAgeFor('care', actualMonth()) : a;
     if (sa >= 6 && typeof chgStageIndex === 'function' && chgStageIndex('Sleep') === 2 && answers.twoNaps !== 'Yes' && due(d, 'naps', ['No', 'Not yet', 'Stay'])) out.push('naps');
+    // Rule 3: a stage the parent picked that the baby's age has moved past. Asked once; "Not yet" rests for a month.
+    if (typeof stageOutgrown === 'function') stageOutgrown().forEach(o => { if (due(d, 'outgrown:' + o.cat, ['Not yet'])) out.push('outgrown:' + o.cat); });
     return out;
   }
   function feedingCheckin() {
@@ -94,6 +96,12 @@
   const baseAnswer = answerHomeQuestion, baseLive = liveHomeCheckin;
   window.answerHomeQuestion = answerHomeQuestion = function (key, value) {
     if (key !== homeQuestion()) return;
+    if (key.startsWith('outgrown:')) {
+      if (!['Yes', 'Not yet'].includes(value)) return;
+      recordCheckin(key, value);
+      if (value === 'Yes') stageFollowAge(key.slice(9));
+      return render();
+    }
     if (key === 'food-progress') {
       if (!['new','textures','established'].includes(value)) return;
       recordCheckin(key, value); return setFeedingStage(value);
@@ -112,6 +120,10 @@
   window.liveHomeCheckin = liveHomeCheckin = function () {
     const key = homeQuestion(); if (!key) return '';
     if (key === 'food' || key === 'food-progress') return feedingCheckinMarkup('home');
+    if (key.startsWith('outgrown:')) {
+      const o = (stageOutgrown() || []).find(x => 'outgrown:' + x.cat === key); if (!o) return '';
+      return `<section class="connected-checkin"><div><h2>${o.question}</h2><button class="connected-skip" onclick="skipHomeQuestion()">Skip</button></div><p>${o.why}</p><div class="connected-checkin-choices"><button onclick="answerHomeQuestion('${key}','Not yet')">Not yet</button><button onclick="answerHomeQuestion('${key}','Yes')">Yes, move on</button></div></section>`;
+    }
     if (key !== 'naps') return baseLive().replace('This changes which safety setup to highlight.', 'Your answer updates Sleep and Safety.');
     return `<section class="connected-checkin"><div><h2>Is ${name()} skipping the late catnap most days?</h2><button class="connected-skip" onclick="skipHomeQuestion()">Skip</button></div><p>Your answer updates the nap guidance.</p><div class="connected-checkin-choices"><button onclick="answerHomeQuestion('naps','Not yet')">Not yet</button><button onclick="answerHomeQuestion('naps','Yes')">Yes</button></div></section>`;
   };
@@ -132,10 +144,15 @@
     return [s, chosen].filter(Boolean).sort((a,b)=>ORDER.indexOf(b)-ORDER.indexOf(a))[0] || (dm()<3?'setup':'reaching');
   }
   window.safetyAgeForward = function () { const s = reportedStage(), g = byAge(dm()); return ORDER.indexOf(g) > Math.max(1, ORDER.indexOf(s)) ? g : null; };
-  function stageNow() {
+  function stageGuess() {
     const s = reportedStage(), g = byAge(dm());
     return ORDER.indexOf(g) > ORDER.indexOf(s) ? g : s;
   }
+  // A parent's pick (Change on the timeline) holds, in either direction, until they change it
+  // or tell us about a new movement. Home asks when the baby may have outgrown it.
+  function stageNow() { return live2() && ORDER.includes(answers.safetyPick) ? answers.safetyPick : stageGuess(); }
+  const live2 = () => typeof isCurrent !== 'function' || isCurrent();
+  window.safetyStageGuess = stageGuess;
   // Observed movement drives Play; preparation may run ahead without claiming that skill.
   window.currentSafetyMovementStage = currentSafetyMovementStage = reportedStage;
   window.safetyStageNow = stageNow;

@@ -306,7 +306,7 @@
    "Now" and the glow stay on the baby's stage; "Change" sits above the stage you're reading. */
 #main .hub-stagebar { display: flex; overflow-x: auto; scrollbar-width: none; margin: 2px -20px 16px; padding: 4px 12px 4px; scroll-padding-inline: 20px }
 #main .hub-stagebar::-webkit-scrollbar { display: none }
-#main .hub-stage { position: relative; flex: 0 0 92px; display: flex; flex-direction: column; align-items: center; text-align: center }
+#main .hub-stage { position: relative; flex: 0 0 104px; display: flex; flex-direction: column; align-items: center; text-align: center }
 #main .hub-stage::before { content: ''; position: absolute; top: 41px; left: 0; right: 0; height: 2px; background: color-mix(in srgb, var(--year-ink) 18%, transparent) }
 #main .hub-stage:first-child::before { left: 50% }
 #main .hub-stage:last-child::before { right: 50% }
@@ -317,7 +317,7 @@
 #main .hub-stage-node svg { width: 40px; height: 40px; display: block }
 #main .hub-stage.is-on .hub-stage-node { width: 46px; height: 46px; margin: 0; background: var(--white); overflow: hidden }
 #main .hub-stage.is-now .hub-stage-node { box-shadow: 0 0 0 6px color-mix(in srgb, var(--year-accent) 35%, transparent) }
-#main .hub-stage-name { margin-top: 8px; font-size: 13px; line-height: 1.25; color: var(--ink); font-weight: 500; max-width: 88px }
+#main .hub-stage-name { margin-top: 8px; font-size: 13px; line-height: 1.25; color: var(--ink); font-weight: 500; max-width: 100px }
 #main .hub-stage-age { margin-top: 2px; font-size: 11.5px; line-height: 1.25; color: var(--muted) }
 #main .hub-stage.is-on .hub-stage-name { font-weight: 700; color: var(--year-ink) }
 .hub-toast-undo { background: none; border: 0; color: #c9d6f2; font-weight: 700; font-size: 14px; min-height: 36px; padding: 0 4px; cursor: pointer }

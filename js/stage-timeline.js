@@ -4,26 +4,27 @@
    - The timeline shows every stage on a line. The category's illustration sits on the stage you're reading.
    - "Now" and a glow mark the baby's stage. They don't move while you browse.
    - Reading another stage the baby can be set to? "Change" sits above it. Tapping it sets the stage, with Undo.
-   - Health has no Change: checkups follow the birthday. Safety only offers Change on stages ahead (forward only). */
+   - Health has no Change: checkups follow the birthday. Every other stage can be picked, in either direction,
+     except the two that would give advice that's wrong for the age (see setFrom / setUntil). */
 (function () {
   const live = () => typeof isCurrent !== 'function' || isCurrent();
   const ageNow = () => actualMonth();
 
-  // setFrom / setUntil: the ages (in months, by the age each guide follows) when Change is offered.
+  // setFrom / setUntil: safety limits only. Outside them, Change isn't offered (the stage can still be read).
   window.STAGE_TABLE = {
     Sleep: { kind: 'pattern', stages: [
-      { label: 'Newborn', age: '0–6 weeks', setUntil: 3 },
-      { label: 'Days and nights', age: '6 wks–4 mo', setUntil: 6 },
-      { label: 'Three naps', age: '4–9 months', setFrom: 4 },
-      { label: 'Two naps', age: '6–12 months', setFrom: 5 }
+      { label: 'Round-the-clock sleep', age: '0–6 weeks', setUntil: 3 },   // swaddling advice: not once a baby can roll
+      { label: 'Longer nights', age: '6 wks–4 mo' },
+      { label: 'Three naps', age: '4–9 months' },
+      { label: 'Two naps', age: '6–12 months' }
     ] },
     Feeding: { kind: 'pattern', stages: [
-      { label: 'Newborn', age: '0–6 weeks', setUntil: 3 },
-      { label: 'Milk feeds', age: '6 wks–4 mo', setUntil: 6 },
-      { label: 'Getting ready', age: '4–6 months', setFrom: 4 },
-      { label: 'Starting solids', age: 'Around 6 mo', setFrom: 4 },
-      { label: 'Textures', age: '7–9 months', setFrom: 6 },
-      { label: 'Family meals', age: '9–12 months', setFrom: 8 }
+      { label: 'Newborn feeds', age: '0–6 weeks' },
+      { label: 'Milk feeds', age: '6 wks–4 mo' },
+      { label: 'Preparing for solids', age: '4–6 months', setFrom: 4 },   // no solids guidance before 4 months
+      { label: 'First foods', age: 'Around 6 mo', setFrom: 4 },
+      { label: 'More textures', age: '7–9 months', setFrom: 4 },
+      { label: 'Family meals', age: '9–12 months', setFrom: 4 }
     ] },
     Safety: { kind: 'skill', stages: [
       { key: 'setup', label: 'First setup', age: '0–3 months' },
@@ -46,7 +47,6 @@
   // Can the parent make stage i (index into the table) the baby's stage right now?
   window.stageCanChange = function (cat, i, nowIndex) {
     const T = STAGE_TABLE[cat]; if (!T || T.fixed || !live() || i === nowIndex) return false;
-    if (T.kind === 'skill') return i > nowIndex;
     const s = T.stages[i] || {}, a = guideAge(cat);
     if (s.setFrom != null && a < s.setFrom) return false;
     if (s.setUntil != null && a > s.setUntil) return false;
@@ -108,11 +108,49 @@
     document.querySelectorAll('.hub-toast').forEach(t => t.remove());
     page = pg; render(); scrollTo(0, 0);
   };
+  /* ---------- Rule 3: picked stages the baby has outgrown ---------- */
+  const GUIDE = { Sleep: 'Sleep', Feeding: 'Feeding', Safety: 'Safety', Development: 'Development', 'Daily rhythm': 'Everyday care' };
+  const ageWords = () => { const m = actualMonth(); return m === 0 ? 'a few weeks old' : m === 12 ? '1 year old' : m + (m === 1 ? ' month' : ' months'); };
+  window.stageOutgrown = function () {
+    if (!live()) return [];
+    // Outgrown = the age guess has moved on since the pick, and is now past it. Picking an earlier stage
+    // doesn't trigger the question straight away; the baby's age has to move first.
+    const out = [], add = (cat, pickI, guessI, guessAtPick) => {
+      if (pickI == null || guessI == null || guessI <= pickI || (guessAtPick != null && guessI <= guessAtPick)) return;
+      const to = STAGE_TABLE[cat].stages[guessI].label;
+      out.push({ cat, question: `${name()} is ${ageWords()} now. Move ${GUIDE[cat]} to ${to}?`, why: `You picked ${STAGE_TABLE[cat].stages[pickI].label}. Most babies have moved on by now, but you know ${name()} best.` });
+    };
+    ['Sleep', 'Feeding'].forEach(cat => { const o = typeof chgGetOverride === 'function' && chgGetOverride(cat); if (o) add(cat, o.i, chgComputedIndex(cat), o.g); });
+    const devKeys = STAGE_TABLE.Development.stages.map(x => x.key);
+    const dev = typeof hubStageOverrideRaw === 'function' && hubStageOverrideRaw('Development');
+    if (dev && typeof dev === 'object') add('Development', devKeys.indexOf(Number(dev.v)), devKeys.indexOf(hubStageGuess('Development')), devKeys.indexOf(dev.g));
+    const care = typeof hubStageOverrideRaw === 'function' && hubStageOverrideRaw('Care');
+    if (care && typeof care === 'object') add('Daily rhythm', Number(care.v), hubStageGuess('Care'), care.g);
+    const sk = STAGE_TABLE.Safety.stages.map(x => x.key);
+    if (sk.includes(answers.safetyPick) && typeof safetyStageGuess === 'function') add('Safety', sk.indexOf(answers.safetyPick), sk.indexOf(safetyStageGuess()), answers.safetyPickGuess);
+    return out;
+  };
+  // "Yes, move on": drop the pick so the guide follows age again.
+  window.stageFollowAge = function (cat) {
+    if (cat === 'Sleep' || cat === 'Feeding') chgSetOverride(cat, null);
+    else if (cat === 'Development') hubSetStage('Development', null, true);
+    else if (cat === 'Daily rhythm') hubSetStage('Care', null, true);
+    else if (cat === 'Safety') { delete answers.safetyPick; delete answers.safetyPickGuess; persist(); }
+  };
+  // Telling us about a new movement replaces an older Safety pick (Rule 2: the most recent thing counts).
+  if (typeof setAnswer === 'function') {
+    const baseSetAnswer = setAnswer;
+    window.setAnswer = setAnswer = function (id, a) {
+      if (['roll', 'rollDirection', 'crawl', 'pullUp', 'movementGuide'].includes(id)) delete answers.safetyPick;
+      return baseSetAnswer(id, a);
+    };
+  }
+
   window.hubChangeStage = function (cat, i) {
     const T = STAGE_TABLE[cat]; if (!T) return;
     const snap = snapshot(cat), from = page, s = T.stages[i];
     if (cat === 'Sleep' || cat === 'Feeding') chgSetStage(cat, i, true);
-    else if (cat === 'Safety') { setAnswer('movementGuide', s.key); page = 'topic:Safety'; render(); }
+    else if (cat === 'Safety') { answers.safetyPickGuess = STAGE_TABLE.Safety.stages.findIndex(x => x.key === safetyStageGuess()); answers.safetyPick = s.key; persist(); page = 'topic:Safety'; render(); }
     else if (cat === 'Development') { hubSetStage('Development', s.key, true); page = 'topic:Development'; render(); }
     else if (cat === 'Daily rhythm') { hubSetStage('Care', i, true); page = 'topic:Daily rhythm'; render(); }
     scrollTo(0, 0);

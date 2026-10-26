@@ -189,7 +189,7 @@ async def run_persona(browser, p):
                     rec['answered'].append(dict(where='Sleep', q='Already there: two naps', a='Two naps'))
             rec['sleep_after'] = await pg.evaluate("__qa.cat('Sleep')")
         rec['feed'] = await pg.evaluate("__qa.cat('Feeding')")
-        if p.get('proactive') and w == p['solids'] and rec['feed']['current'] == 'Getting ready':
+        if p.get('proactive') and w == p['solids'] and rec['feed']['current'] == 'Preparing for solids':
             await pg.evaluate("navigate('categories');openPage('topic:Feeding')")
             loc = pg.locator('.chg-already').first
             if await loc.count():

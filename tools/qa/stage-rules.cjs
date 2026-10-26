@@ -34,15 +34,16 @@ for (let age = 0; age <= 12; age++) for (const cat of Object.keys(ROUTES)) {
     const allowed = a.run(`stageCanChange(${JSON.stringify(cat)}, ${i}, ${nowI})`);
     check(mine.change === allowed, `${cat} at ${age} months: Change on ${x.name} matches the stage table`);
     if (cat === 'Health') check(!mine.change, 'Health never offers Change');
-    if (cat === 'Safety' && i < nowI) check(!mine.change, 'Safety never moves backward');
-    if (cat === 'Sleep' && i === 3 && age < 5) check(!mine.change, 'Two naps cannot be set before 5 months');
-    if (cat === 'Feeding' && i >= 2 && age < 4) check(!mine.change, 'Solids stages cannot be set before 4 months');
+    if (cat === 'Safety' && i < nowI) check(mine.change, 'Safety can go back a stage');
+    if (cat === 'Sleep' && i === 0 && age > 3) check(!mine.change, 'Round-the-clock sleep (swaddling) cannot be picked after 3 months');
+    if (cat === 'Feeding' && i >= 2 && age < 4) check(!mine.change, 'Solids stages cannot be picked before 4 months');
+    if (!['Health'].includes(cat) && !(cat === 'Sleep' && i === 0 && age > 3) && !(cat === 'Feeding' && i >= 2 && age < 4)) check(mine.change, `${cat} at ${age} months: ${x.name} can be picked`);
   });
 }
 
 // Change sticks, shows the same in Baby's details, and Undo puts it back.
-for (const [cat, age, i, label] of [['Sleep', 7, 3, 'Two naps'], ['Sleep', 10, 2, 'Three naps'], ['Feeding', 7, 4, 'Textures'], ['Feeding', 9, 2, 'Getting ready'],
-  ['Development', 8, 2, '6 months'], ['Daily rhythm', 5, 3, '7–12 months'], ['Safety', 6, 3, 'Crawling']]) {
+for (const [cat, age, i, label] of [['Sleep', 7, 3, 'Two naps'], ['Sleep', 10, 2, 'Three naps'], ['Sleep', 5, 1, 'Longer nights'], ['Feeding', 7, 4, 'More textures'], ['Feeding', 9, 2, 'Preparing for solids'],
+  ['Feeding', 7, 1, 'Milk feeds'], ['Development', 8, 2, '6 months'], ['Daily rhythm', 5, 3, '7–12 months'], ['Safety', 6, 3, 'Crawling'], ['Safety', 10, 1, 'Reaching and rolling']]) {
   const a = family(age); a.run(`openPage('topic:${cat}')`);
   const before = nowName(a.html());
   a.run(`openPage('${ROUTES[cat](i)}');hubChangeStage(${JSON.stringify(cat)}, ${i})`);
@@ -62,9 +63,9 @@ for (const [cat, age, i, label] of [['Sleep', 7, 3, 'Two naps'], ['Sleep', 10, 2
   a = family(9); a.run("openPage('topic:Sleep')"); check(nowName(a.html()) === 'Two naps', 'Sleep at 9 months guesses Two naps');
   a = family(11, { twoNaps: 'Not yet' }); a.run("openPage('topic:Sleep')"); check(nowName(a.html()) === 'Three naps', 'A parent’s “not yet” holds past 9 months');
   a = family(6, { twoNaps: 'Yes' }); a.run("openPage('topic:Sleep')"); check(nowName(a.html()) === 'Two naps', 'A parent’s “two naps” wins before 9 months');
-  a = family(8); a.run("openPage('topic:Feeding')"); check(nowName(a.html()) === 'Textures', 'Feeding at 8 months with no answer guesses Textures');
+  a = family(8); a.run("openPage('topic:Feeding')"); check(nowName(a.html()) === 'More textures', 'Feeding at 8 months with no answer guesses More textures');
   a = family(10); a.run("openPage('topic:Feeding')"); check(nowName(a.html()) === 'Family meals', 'Feeding at 10 months with no answer guesses Family meals');
-  a = family(10, { solids: 'Yes', foodExperience: 'new' }); a.run("openPage('topic:Feeding')"); check(nowName(a.html()) === 'Starting solids', 'A parent’s “first foods” holds');
+  a = family(10, { solids: 'Yes', foodExperience: 'new' }); a.run("openPage('topic:Feeding')"); check(nowName(a.html()) === 'First foods', 'A parent’s “first foods” holds');
 }
 // Rule 3: an old "not yet" brings the naps question back to Home a month later.
 {
@@ -77,14 +78,28 @@ for (const [cat, age, i, label] of [['Sleep', 7, 3, 'Two naps'], ['Sleep', 10, 2
   a.run("navigate('home')");
   check(a.run('homeQuestionQueue()').includes('naps'), 'A month later, the naps question is due again');
 }
-// Rule 5 (calendar): a pick holds until age reaches the next stage.
-{
+// One rule everywhere: a pick holds until the parent changes it. When the baby outgrows it, Home asks once.
+for (const [cat, pickRoute, i, pickAge, laterAge, picked, next] of [
+  ['Development', 'development-stage:6', 2, 8, 10, '6 months', '1 year'],
+  ['Daily rhythm', 'chg:Daily rhythm:s:1', 1, 3, 5, '1–3 months', '4–6 months'],
+  ['Safety', 'safety-stage:rolling', 2, 6, 9, 'Before crawling', 'Pulling up'],
+  ['Sleep', 'chg:Sleep:s:1', 1, 4, 9, 'Longer nights', 'Two naps']]) {
   const storage = {};
-  let a = family(8, {}, storage); a.run("openPage('development-stage:6');hubChangeStage('Development',2);openPage('topic:Development')");
-  check(nowName(a.html()) === '6 months', 'Development pick holds');
-  a = boot({ name: 'Ari', dob, feed: 'Both', pronouns: 'he' }, {}, storage, at(9)); a.run("openPage('topic:Development')");
-  check(nowName(a.html()) === '6 months', 'Still held within the same age stage');
-  a = boot({ name: 'Ari', dob, feed: 'Both', pronouns: 'he' }, {}, storage, at(10)); a.run("openPage('topic:Development')");
-  check(nowName(a.html()) === '1 year', 'Released once age reaches the next stage');
+  let a = family(pickAge, {}, storage); a.run(`openPage('${pickRoute}');hubChangeStage(${JSON.stringify(cat)}, ${i});openPage('topic:${cat}')`);
+  check(nowName(a.html()) === picked, `${cat}: pick holds`);
+  const saved = () => JSON.parse(storage['ahead-v2-answers']);
+  a = boot({ name: 'Ari', dob, feed: 'Both', pronouns: 'he' }, saved(), storage, at(laterAge)); a.run(`openPage('topic:${cat}')`);
+  check(nowName(a.html()) === picked, `${cat}: still ${picked} after age moves on — the app doesn't move it`);
+  check(a.run('homeQuestionQueue()').includes('outgrown:' + cat), `${cat}: Home asks whether to move on`);
+  a.run(`stageFollowAge(${JSON.stringify(cat)});openPage('topic:${cat}')`);
+  check(nowName(a.html()) === next, `${cat}: “Yes, move on” follows age again (${next})`);
+}
+for (const [cat, route, i] of [['Development', 'development-stage:4', 1], ['Safety', 'safety-stage:reaching', 1], ['Sleep', 'chg:Sleep:s:1', 1], ['Feeding', 'chg:Feeding:s:1', 1], ['Daily rhythm', 'chg:Daily rhythm:s:1', 1]]) {
+  const a = family(9); a.run(`openPage('${route}');hubChangeStage(${JSON.stringify(cat)}, ${i})`);
+  check(!a.run('homeQuestionQueue()').includes('outgrown:' + cat), `${cat}: picking an earlier stage doesn't trigger the outgrown question straight away`);
+}
+{
+  const a = family(10); a.run("openPage('safety-stage:rolling');hubChangeStage('Safety',2);setAnswer('crawl','Yes');openPage('topic:Safety')");
+  check(nowName(a.html()) === 'Pulling up', 'Telling us about a new movement replaces an older Safety pick');
 }
 console.log(JSON.stringify({ suite: 'stage-rules', checks, status: 'passed' }, null, 2));

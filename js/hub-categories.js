@@ -19,9 +19,10 @@
     if (!live()) return undefined;
     const all = stageOverrides(), e = all[cat];
     if (e == null) return undefined;
-    if (typeof e === 'object') { if (e.g !== guessFor(cat)) { delete all[cat]; writeOverrides(all); return undefined; } return e.v; }
+    if (typeof e === 'object') return e.v;   // a pick holds until the parent changes it (Home asks when it's outgrown)
     return e;
   };
+  window.hubStageGuess = guessFor;
   window.hubStageOverrideRaw = cat => { const e = stageOverrides()[cat]; return e == null ? null : JSON.parse(JSON.stringify(e)); };
   window.hubStageOverrideRestore = (cat, e) => { const all = stageOverrides(); if (e == null) delete all[cat]; else all[cat] = e; writeOverrides(all); };
   window.hubSetStage = function (cat, value, silent) {

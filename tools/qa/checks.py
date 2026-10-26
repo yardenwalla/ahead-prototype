@@ -10,8 +10,8 @@ import json, os, re
 from collections import defaultdict
 
 OUT = os.path.join(os.path.dirname(__file__), 'out')
-SLEEP = ['Newborn', 'Days and nights', 'Three naps', 'Two naps']
-FEED = ['Newborn', 'Milk feeds', 'Getting ready', 'Starting solids', 'Textures', 'Family meals']
+SLEEP = ['Round-the-clock sleep', 'Longer nights', 'Three naps', 'Two naps']
+FEED = ['Newborn feeds', 'Milk feeds', 'Preparing for solids', 'First foods', 'More textures', 'Family meals']
 # Hero eyebrows can use a stage's full name; the timeline uses the short one.
 SHORT = {'Newborn sleep': 'Newborn', 'Newborn feeding': 'Newborn', 'Changing milk feeds': 'Milk feeds', 'Getting ready for solids': 'Getting ready', 'Textures and finger foods': 'Textures', 'Naps and bedtime': 'Three naps', 'Two naps a day': 'Two naps'}
 WINDOWS = {  # come-and-go phases: months they may appear in
@@ -23,7 +23,7 @@ def exp_sleep(m, naps=None, adj_weeks=99):
     """Stage rules: age guesses (two naps by 9 months); a parent's answer wins and holds."""
     if adj_weeks < 6.2: return SLEEP[0]
     if m < 4: return SLEEP[1]
-    if naps == 'Yes' and m >= 5: return SLEEP[3]
+    if naps == 'Yes': return SLEEP[3]
     if naps in ('Stay', 'Not yet'): return SLEEP[2]
     return SLEEP[3] if m >= 9 else SLEEP[2]
 
@@ -234,7 +234,8 @@ def check(results):
             hq = (w['home']['checkin'] or {}).get('q')
             asked_here = [q for q in (hq, w['sleep'].get('checkin'), w['feed'].get('checkin')) if q]
             for q in asked_here:
-                if re.search(r'roll|crawl|pull|catnap|nap', q, re.I): F.add('personal', 'bug', 'A movement or nap question still shows', pid, wk, f'{where}: “{q}”')
+                # Stage rules allow the naps question (from 6 months on Three naps) and "outgrown" questions; movement questions stay off.
+                if re.search(r'roll|crawl|pull', q, re.I) and not re.search(r'Move Safety to', q): F.add('personal', 'bug', 'A movement question still shows', pid, wk, f'{where}: “{q}”')
             solids_q = any('solids' in q for q in asked_here)
             if solids_q and last_no is not None and wk - last_no < 4 and not any('solids' in a['q'] and a['a'] == 'Not yet' and wk == last_no for a in w['answered']):
                 F.add('personal', 'bug', 'Solids question came back within a month of “Not yet”', pid, wk, f'{where}: answered week {last_no}')

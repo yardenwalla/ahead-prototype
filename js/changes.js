@@ -49,13 +49,14 @@
     if (!st || (st.setFrom != null && m < st.setFrom) || (st.setUntil != null && m > st.setUntil)) { delete local.override[cat]; save(); return computed; }
     return o.i;
   }
+  window.chgComputedIndex = cat => (cat === 'Sleep' ? sleepComputed(ageNow()) : feedComputed(ageNow()));
   window.chgGetOverride = cat => (local.override && local.override[cat]) ? JSON.parse(JSON.stringify(local.override[cat])) : null;
   window.chgSetOverride = (cat, o) => { local.override = Object.assign({}, local.override); if (o) local.override[cat] = o; else delete local.override[cat]; save(); };
   function sleepComputed(m) {
     if (inFirstSixWeeks(m)) return 0;
     if (m < 4) return 1;
     const said = live() ? answers.twoNaps : null;
-    if (said === 'Yes' && m >= 5) return 3;            // the parent told us (Rule 2)
+    if (said === 'Yes') return 3;                       // the parent told us (Rule 2)
     if (said === 'Stay' || said === 'Not yet') return 2;
     return m >= 9 ? 3 : 2;                              // age guess: most babies take two naps by 9 months (Rule 1)
   }
@@ -217,23 +218,23 @@
     if (screen === 'signs') {
       const seen = readySeen(), on = i => !!(local.ready || {})[i];
       const note = seen === 4 ? `${name()} shows all 4 signs. Pick a calm morning for the first taste.` : `Most babies show all 4 around 6 months. Wanting your food isn’t a sign on its own.`;
-      return detail('Feeding', 'Getting ready for solids', `Is ${name()} ready?`, `Tick each sign as you see it. ${seen} of 4 so far.`,
+      return detail('Feeding', 'Preparing for solids', `Is ${name()} ready?`, `Tick each sign as you see it. ${seen} of 4 so far.`,
         leadSection('Readiness signs', `${seen} of 4`, checkRows(READY_SIGNS, on, i => `chgToggleReady(${i})`)) + `<p class="chg-lead-note">${T(note)}${profile.early ? ` Since ${T(name())} was born early, check timing with your pediatrician.` : ''}</p>`);
     }
     if (screen === 'approach')
-      return detail('Feeding', 'Getting ready for solids', 'Purées, baby-led weaning or both', 'There’s no wrong choice. Pick one and adjust as you go.',
+      return detail('Feeding', 'Preparing for solids', 'Purées, baby-led weaning or both', 'There’s no wrong choice. Pick one and adjust as you go.',
         `<div class="chg-options">${[['Purées', 'You spoon small bites, then make them lumpier over time.', 'Good if you want to see how much goes in.'],
           ['Baby-led weaning', 'Soft finger foods {s} picks up {r}.', 'Good if you’re fine with mess and dropped food.'],
           ['Both', 'Spoon some foods, offer others as finger foods.', 'What many families end up doing.']].map(([t, b, g]) => `<article><h4>${T(t)}</h4><p>${T(fmt(b))}</p><b>${T(g)}</b></article>`).join('')}</div>`);
     if (screen === 'gag')
-      return detail('Feeding', 'Starting solids', 'Gagging or choking?', 'Gagging is common while babies learn to eat. Choking is rare, and you need to act fast.',
+      return detail('Feeding', 'First foods', 'Gagging or choking?', 'Gagging is common while babies learn to eat. Choking is rare, and you need to act fast.',
         `<div class="chg-vs"><article><h4>Gagging</h4><p>Coughing, sputtering, a red face.</p><b>Normal. Stay calm and let ${T(name())} work it out.</b></article><article class="is-urgent"><h4>Choking</h4><p>Silent, can’t cry or cough, turning blue.</p><b>Call 911 and start infant first aid.</b></article></div><button class="textlink chg-item-link" onclick="openPage('chg:Feeding:safe')">Learn infant choking first aid →</button>`);
     if (screen === 'offer')
-      return detail('Feeding', 'Starting solids', 'What to offer first', 'A few bites once or twice a day. Milk is still the main food.',
+      return detail('Feeding', 'First foods', 'What to offer first', 'A few bites once or twice a day. Milk is still the main food.',
         `<section class="sleep-phase-help chg-guide-section"><ul>${[['Iron-rich foods', 'Mashed beans, soft shredded meat or iron-fortified cereal.'], ['Soft enough to squash', 'Quarter grapes. Skip whole nuts and popcorn.'], ['{S} decides how much', 'Turning away or closing {p} mouth means done.']].map(([t, b]) => `<li><h4>${T(fmt(t))}</h4><p>${T(fmt(b))}</p></li>`).join('')}</ul></section><p class="chg-lead-note">Not before 12 months: honey, cow’s milk as a drink, and juice.</p>`);
     if (screen === 'allergens') {
       const tried = allergensTried();
-      return detail('Feeding', 'Starting solids', 'Allergens', 'One new allergen at a time, early in the day. Once it goes well, keep offering it a few times a week.',
+      return detail('Feeding', 'First foods', 'Allergens', 'One new allergen at a time, early in the day. Once it goes well, keep offering it a few times a week.',
         leadSection('Tap each one once tried', `${tried} of ${ALLERGENS.length}`, `<div class="chg-choices chg-allergens">${ALLERGENS.map(k => { const v = !!(local.allergens || {})[k]; return `<button class="${v ? 'is-on' : ''}" aria-pressed="${v}" onclick="chgToggleAllergen('${k}')">${v ? '✓ ' : ''}${k}</button>`; }).join('')}</div>`)
         + `<div class="chg-vs"><article><h4>Hives around the mouth</h4><b>Stop the food and call your pediatrician.</b></article><article class="is-urgent"><h4>Swelling or trouble breathing</h4><b>Call 911.</b></article></div><button class="textlink chg-item-link" onclick="openPage('chg:Feeding:allergy')">How to introduce each one →</button>`);
     }
@@ -569,12 +570,12 @@
     if (typeof stageCanChange === 'function' && !stageCanChange(cat, i, CFG[cat].stage(m))) return chgGo('chg:' + cat + ':s:' + i);
     local.override = Object.assign({}, local.override); delete local.override[cat];
     if (cat === 'Sleep') {
-      if (i >= 2) { answers.twoNaps = i === 3 ? 'Yes' : 'Stay'; persist(); }
-      else local.override.Sleep = { i };
+      if (i >= 2 && m >= 4) { answers.twoNaps = i === 3 ? 'Yes' : 'Stay'; persist(); }
+      else local.override.Sleep = { i, g: sleepComputed(m) };
     }
     if (cat === 'Feeding') {
       if (i >= 2) { const v = ['preparing', 'new', 'textures', 'established'][i - 2]; answers.solids = v === 'preparing' ? 'Not yet' : 'Yes'; if (v === 'preparing') delete answers.foodExperience; else answers.foodExperience = v; persist(); }
-      else local.override.Feeding = { i };
+      else local.override.Feeding = { i, g: feedComputed(m) };
     }
     save();
     // A Change counts as the parent's answer, so Home doesn't ask the same thing straight away.

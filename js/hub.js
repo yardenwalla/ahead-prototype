@@ -134,7 +134,7 @@
     const lateRow = lateStart ? row({ icon: 'shield', title: 'Bring your feeding questions to the checkup', sub: 'If first foods are only starting now, ask about iron and textures', onclick: "openHealthDetail(healthJourneyFocus(),'questions')" }) : '';
 
     if (key === 'learn') {
-      h += hero({ eyebrow: 'Newborn feeding', title: 'Feeding often is exactly right', lead: 'Newborns feed 8–12 times a day, often every 1–3 hours. Small, frequent feeds are how they grow.' }) + B;
+      h += hero({ eyebrow: 'Newborn feeds', title: 'Feeding often is exactly right', lead: 'Newborns feed 8–12 times a day, often every 1–3 hours. Small, frequent feeds are how they grow.' }) + B;
       h += glanceCard('What Maya’s eating now', milkTiles('learn'), go('chg:Feeding:d:milk'));
       h += list('In these first weeks', [
         row({ icon: 'diaper', title: 'How to tell Maya’s getting enough', sub: 'Wet diapers and weight tell you', onclick: go('chg:Feeding:d:enough') }),
@@ -144,7 +144,7 @@
       h += versus('Normal, or time to call?', ['Normal', 'Feeding again an hour later, a little spit-up and long feeds at first.'], ['Call your pediatrician', 'Hard to wake for feeds, fewer wet diapers or looking more yellow.']);
     }
     if (key === 'rhythm') {
-      h += hero({ eyebrow: 'Changing milk feeds', title: 'Feeds are getting quicker', lead: 'Many babies get faster at feeding now and go a little longer between feeds. Hungrier days still happen, and that’s normal.' }) + B;
+      h += hero({ eyebrow: 'Milk feeds', title: 'Feeds are getting quicker', lead: 'Many babies get faster at feeding now and go a little longer between feeds. Hungrier days still happen, and that’s normal.' }) + B;
       h += glanceCard('What Maya’s eating now', milkTiles('rhythm'), go('chg:Feeding:d:milk'));
       const ev = age < 3 ? 0 : 1;
       h += list('What helps now', [
@@ -160,7 +160,7 @@
         : n === 4 ? ['Maya looks ready for solids', '{S} {is} showing all four signs. Pick a calm morning for the first taste.']
         : age >= 7 ? ['Some babies take a little longer', 'If Maya isn’t showing all four signs yet, mention it at {p} next checkup. Until then, milk gives {o} everything {s} {need|needs}.']
         : ['Solids are coming up soon', 'Most babies start around 6 months, once they’re ready. Until then, milk gives Maya everything {s} {need|needs}.'];
-      h += hero({ eyebrow: 'Getting ready for solids', title: head[0], lead: head[1], meter: { label: 'Maya’s readiness signs', n, of: 4 }, button: { label: n === 4 && age >= 6 && now ? 'Tell us when {s’ve} started' : 'See what to look for', onclick: n === 4 && age >= 6 && now ? "chgSetStage('Feeding',3)" : go('chg:Feeding:d:signs') } }) + B;
+      h += hero({ eyebrow: 'Preparing for solids', title: head[0], lead: head[1], meter: { label: 'Maya’s readiness signs', n, of: 4 }, button: { label: n === 4 && age >= 6 && now ? 'Tell us when {s’ve} started' : 'See what to look for', onclick: n === 4 && age >= 6 && now ? "chgSetStage('Feeding',3)" : go('chg:Feeding:d:signs') } }) + B;
       h += glanceCard('What Maya’s eating now', milkTiles('ready'), go('chg:Feeding:d:milk'));
       const left = setupLeft();
       h += list('Before you start', [
@@ -171,7 +171,7 @@
       h += note('Does Maya have severe eczema or an egg allergy? Talk to your pediatrician before starting, since peanut may need to come early.');
     }
     if (key === 'first') {
-      h += hero({ eyebrow: 'Starting solids', title: 'A few bites a day is all it takes', lead: 'Milk is still doing the heavy lifting. For now, meals are mostly about practice.' }) + B;
+      h += hero({ eyebrow: 'First foods', title: 'A few bites a day is all it takes', lead: 'Milk is still doing the heavy lifting. For now, meals are mostly about practice.' }) + B;
       h += glanceCard('What Maya’s eating now', milkTiles('first'), go('chg:Feeding:d:milk'));
       const t = ALLERGENS.filter(a => tried(a[0])).length, nextA = ALLERGENS.find(a => !tried(a[0]));
       h += list('What to focus on', [
@@ -184,7 +184,7 @@
       h += versus('Gagging or choking?', ['Gagging', 'Coughing and a red face. It looks scary, but it’s normal.'], ['Choking', 'Silent and can’t cough or cry. Call 911 right away.'], ['Choking first aid, step by step', "openPage('chg:Feeding:safe')"]);
     }
     if (key === 'textures') {
-      h += hero({ eyebrow: 'Textures and finger foods', title: 'Time for lumps and finger foods', lead: 'Maya is ready for thicker food and soft pieces {s} can pick up. Build on the foods {s} already {like|likes}.' }) + B;
+      h += hero({ eyebrow: 'More textures', title: 'Time for lumps and finger foods', lead: 'Maya is ready for thicker food and soft pieces {s} can pick up. Build on the foods {s} already {like|likes}.' }) + B;
       h += glanceCard('What Maya’s eating now', milkTiles('textures'), go('chg:Feeding:d:milk'));
       h += list('What to focus on', [
         row({ icon: 'bowl', title: 'Make food a little lumpier', sub: 'Thicker each week, so {s} {learn|learns} to chew', onclick: go('chg:Feeding:d:lumpy') }),
@@ -434,7 +434,7 @@
     let B = browseLinks(cat, view, cur);
     if (key === 'clock') {
       const n = safeDone(), all = SLEEP_TASKS;
-      h += hero({ eyebrow: 'Newborn sleep', title: 'Short sleeps, day and night', lead: 'Newborns sleep 14–17 hours a day in stretches of 1–3 hours. There’s no pattern yet, and that’s normal.', button: n === all ? null : { label: 'Set up a safe sleep space', onclick: go('chg:Sleep:safe') } }) + B + (n === all ? list('', [row({ icon: 'moon', cat, title: 'Safe sleep setup', sub: 'Your space is set up. The habits are here too.', chipText: 'Done', chipTone: 'is-done', onclick: go('chg:Sleep:safe') })]) : '');
+      h += hero({ eyebrow: 'Round-the-clock sleep', title: 'Short sleeps, day and night', lead: 'Newborns sleep 14–17 hours a day in stretches of 1–3 hours. There’s no pattern yet, and that’s normal.', button: n === all ? null : { label: 'Set up a safe sleep space', onclick: go('chg:Sleep:safe') } }) + B + (n === all ? list('', [row({ icon: 'moon', cat, title: 'Safe sleep setup', sub: 'Your space is set up. The habits are here too.', chipText: 'Done', chipTone: 'is-done', onclick: go('chg:Sleep:safe') })]) : '');
       h += nightCard(key);
       h += list('In these first weeks', [
         swaddleRow() || (answers.swaddleStopped === 'Yes' ? null : row({ icon: 'sack', cat, title: 'Swaddle safely, if you swaddle', sub: 'Snug at the chest, loose at the hips', onclick: go('chg:Sleep:d:swaddle') })),
@@ -445,7 +445,7 @@
       h += versus('Normal, or time to call?', ['Normal', 'Waking every 2–3 hours, grunts, squeaks and twitches in sleep.'], ['Call your pediatrician', 'Hard to wake for feeds, a temperature of 100.4°F or higher, or trouble breathing.'], ['When the crying won’t stop', go('chg:Sleep:d:crying')]);
     }
     if (key === 'daynight') {
-      h += hero({ eyebrow: 'Days and nights', title: 'Nights are starting to stretch', lead: 'Many babies start telling day from night now. Often the first sign is one longer stretch of sleep at night.' }) + B;
+      h += hero({ eyebrow: 'Longer nights', title: 'Nights are starting to stretch', lead: 'Many babies start telling day from night now. Often the first sign is one longer stretch of sleep at night.' }) + B;
       h += nightCard(key);
       h += list('What helps now', [
         swaddleRow(),

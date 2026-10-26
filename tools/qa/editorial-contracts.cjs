@@ -48,7 +48,7 @@ for (const [age,oldID,newID] of [[1,'slow-song','face-follow'],[3,'sound-answer'
   a.run(`openPage('play-activity:${age}:${oldID}')`);
   check(a.html().includes('data-play-activity="'+newID+'"'), 'Old monthly links open the replacement activity');
 }
-for (const [value,title,short] of [['new','Starting solids','Starting solids'],['textures','Textures and finger foods','Textures'],['established','Family meals','Family meals']]) {
+for (const [value,title,short] of [['new','First foods','First foods'],['textures','More textures','More textures'],['established','Family meals','Family meals']]) {
   const b=family(11);
   b.run(`setFeedingStage('${value}');openPage('topic:Feeding')`);
   const nowStage = (b.html().match(/hub-stage is-on is-now">[\s\S]*?hub-stage-name">([^<]+)</) || [])[1];
@@ -78,13 +78,16 @@ for(const age of [3,4,7,8]) {
     check(!b.run('homeRecommendationAudit().preparation.some(r=>r.action===\"openPage(\'chg:Sleep:settle\')\")'),'Choosing help removes the sleep-training education prompt');
   }
 }
-// A guide marked with a future age is readable, not assignable to a newborn.
-for(const age of [0,1,2,3]) {
+// Stage system safety exceptions: swaddling-era sleep can't be picked after 3 months; solids can't be picked before 4.
+for(const age of [4,6,9]) {
   const b=family(age),stage=b.run("chgStageIndex('Sleep')");
-  b.run("openPage('chg:Sleep:s:2')");
-  check(!b.html().includes('onclick="chgSetStage(\'Sleep\',2)"'),'Future sleep reference has no update action');
-  b.run("chgSetStage('Sleep',2)");
-  check(b.run("chgStageIndex('Sleep')")===stage,'Legacy future-guide actions cannot select older sleep patterns');
+  b.run("chgSetStage('Sleep',0)");
+  check(b.run("chgStageIndex('Sleep')")===stage,'Round-the-clock sleep (swaddling) cannot be picked after 3 months');
+}
+for(const age of [0,1,2,3]) {
+  const b=family(age),stage=b.run("chgStageIndex('Feeding')");
+  b.run("chgSetStage('Feeding',3)");
+  check(b.run("chgStageIndex('Feeding')")===stage,'Solids stages cannot be picked before 4 months');
   b.run("openPage('chg:Feeding:s:3')");
   check(!b.html().includes('onclick="chgSetStage(\'Feeding\',3)"'),'First-food reference under four months has no update action');
 }
