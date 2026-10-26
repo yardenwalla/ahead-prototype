@@ -457,7 +457,7 @@
       ['Daily rhythm', 'bath', 'Trimming nails', 'chg:Daily rhythm:d:nails', 'nails nail trim trimming clippers scratch'],
       ['Daily rhythm', 'bath', 'Sun and shade', 'chg:Daily rhythm:d:sun', 'sun sunscreen shade hat summer'],
       ['Daily rhythm', 'shirt', 'Dressing for the weather', 'chg:Daily rhythm:d:dress', 'dress dressing clothes layers outfit hot cold weather'],
-      ['Daily rhythm', 'bath', 'Brushing first teeth', 'chg:Daily rhythm:d:teeth', 'brush brushing toothbrush toothpaste fluoride dentist'],
+      ['Daily rhythm', 'tooth', 'Brushing first teeth', 'chg:Daily rhythm:d:teeth', 'brush brushing toothbrush toothpaste fluoride dentist'],
       ['Safety', 'shield', 'Babyproofing checklist', 'topic:Safety', 'babyproof babyproofing childproof gates gate stairs outlets anchor furniture cords windows poison'],
       ['Safety', 'shield', 'Car seat and first setup', 'safety-stage:setup', 'car seat carseat smoke alarm water heater pool'],
       ['Development', 'smile', 'Milestones and what to expect', 'topic:Development', 'milestones milestone development rolling roll crawling crawl sitting sit walking walk talking babbling words standing'],
