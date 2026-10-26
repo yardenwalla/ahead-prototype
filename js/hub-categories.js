@@ -46,7 +46,7 @@
     const now = devNow(), ref = DEV_STAGES[selected] ? Number(selected) : now, age = ref === 12 ? '1 year' : ref + ' months';
     const st = DEV_STAGES[ref], h = H();
     const devKeys = Object.keys(DEV_STAGES).map(Number), nowI = devKeys.indexOf(now);
-    const pills = h.pills('Development by age', devKeys.map((k, i) => ({ label: monthsLabel(k), on: k === ref, now: live() && k === now, onclick: `openPage('development-stage:${k}')`, change: stageCanChange('Development', i, nowI) ? `hubChangeStage('Development',${i})` : '' })), 'Development');
+    const pills = h.pills('Development by age', devKeys.map((k, i) => ({ label: STAGE_TABLE.Development.stages[i].label, age: STAGE_TABLE.Development.stages[i].age, on: k === ref, now: live() && k === now, onclick: `openPage('development-stage:${k}')`, change: stageCanChange('Development', i, nowI) ? `hubChangeStage('Development',${i})` : '' })), 'Development');
     let b = h.hero({ eyebrow: `What you might see by ${age}`, title: st.title, lead: st.body });
     // One thing about how Maya sees the world at this age: a number you can take in at a glance.
     const EYES = { 2: ['8–12 in', 'smile', 'How far Maya sees clearly. About your face during a feed.'], 4: ['Colors', 'colors', 'Maya is getting better at telling colors and shades apart, and loves faces.'], 6: ['3D', 'cube', 'Maya’s eyes now work together to judge depth, which helps {o} reach.'], 9: ['Still there', 'hidden', 'Maya knows a hidden toy hasn’t vanished. That’s why peekaboo is so exciting.'], 12: ['Distance', 'toss', 'Maya can judge distance well enough to toss a toy with aim.'] }[ref];
@@ -204,7 +204,7 @@
     const focus = healthJourneyFocus(), age = WELL_VISITS.includes(selected) ? selected : focus, h = H();
     const record = healthRecord(age), done = record?.status === 'attended', planned = record?.status === 'planned';
     const label = healthJourneyLabel(age), the = 'the ' + label.charAt(0).toLowerCase() + label.slice(1);
-    const pills = h.pills('Checkups', WELL_VISITS.map(a => ({ label: a === 0 ? 'First week' : a + (a === 1 ? ' month' : ' months'), on: a === age, now: live() && a === focus, onclick: `openPage('health-visit:${a}')` })), 'Health');
+    const pills = h.pills('Checkups', WELL_VISITS.map(a => ({ label: STAGE_TABLE.Health.stages[WELL_VISITS.indexOf(a)].label, on: a === age, now: live() && a === focus, onclick: `openPage('health-visit:${a}')` })), 'Health');
     const eyebrow = done ? `Done · ${journeyDateLabel(record.date)}` : planned ? `Saved for ${journeyDateLabel(record.date)}` : age === 0 ? 'In the first week' : `Usually at ${age} month${age === 1 ? '' : 's'}`;
     const title = done ? `You’ve been to ${the}` : `What happens at ${the}`;
     let b = h.hero({ eyebrow, title, lead: conceptHealthSummary(age), button: done ? { label: 'Add notes from the visit', onclick: `openHealthDetail(${age},'notes')` } : { label: planned ? 'Change the date' : 'Save the date', onclick: `openPage('visit-form:${age}')` } });

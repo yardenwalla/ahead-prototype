@@ -189,7 +189,7 @@
       b += h.list('Where ' + nm + ' is now', [
         stageRow('bowl', 'Feeding', 'Feeding', STAGE_TABLE.Feeding.stages[chgStageIndex('Feeding')].label, "openPage('topic:Feeding')"),
         stageRow('moon', 'Sleep', 'Sleep', STAGE_TABLE.Sleep.stages[chgStageIndex('Sleep')].label, "openPage('topic:Sleep')"),
-        stageRow('smile', 'Development', 'Development & play', dref === 12 ? '1 year' : dref + ' months', "openPage('topic:Development')"),
+        stageRow('smile', 'Development', 'Development & play', dref + ' months', "openPage('topic:Development')"),
         stageRow('shield', 'Safety', 'Safety', (STAGE_TABLE.Safety.stages.find(p => p.key === safetyStageNow()) || {}).label || '', "openPage('topic:Safety')"),
         stageRow('bath', 'Daily rhythm', 'Everyday care', careNow, "openPage('topic:Daily rhythm')")
         , h.row({ icon: 'chat', cat: 'Development', title: 'Update what’s new', sub: 'Rolling, solids, naps and more', onclick: "openPage('personalize')" })
@@ -197,7 +197,7 @@
       b += h.list('More', [
         h.row({ icon: 'book', cat: 'Development', title: 'How we choose guidance', sub: 'Sources and what we leave out', onclick: "openPage('trust')" })
       ]);
-      b += h.note(window.AHEAD_STORAGE_PERSISTS === false ? 'This viewer can’t keep your entries after you close it. Open Ahead in your phone’s browser to keep them.' : 'Your answers, notes, photos and saved moments stay in this browser on this device.');
+      b += h.note(window.AHEAD_STORAGE_PERSISTS === false ? 'This viewer can’t keep your entries after you close it. Open Ahead in your phone’s browser to keep them.' : 'Your answers, notes and photos stay in this browser on this device.');
       return `<div class="quiet-category hub-page hub-detail" style="${yearTheme('Development')}">${backButton()}${b}</div>`;
     };
   }
@@ -217,6 +217,8 @@
   }
   window.hubNameEverywhere = function (root = document.getElementById('main')) {
     if (!root || typeof name !== 'function' || !live()) return;
+    // Never during setup or welcome, and only with a name the parent actually gave (no sample name).
+    if (['setup', 'welcome'].includes(page) || !(profile && String(profile.name || '').trim())) return;
     const nm = name(); if (!nm || /^baby$/i.test(nm)) return;
     const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, { acceptNode: n => n.parentElement && n.parentElement.closest('textarea,input,script,style,.eyebrow-raw') ? NodeFilter.FILTER_REJECT : /\bbaby\b/i.test(n.nodeValue) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP });
     const nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode);
@@ -382,20 +384,72 @@
       b += `<div class="hub-list">` + plainRow('book', 'Development', 'How we choose guidance', 'No paid placements or affiliate links', "openPage('trust')") + '</div>';
       return hubShell('Development', b);
     };
-    const baseSearch = searchGuides;
+    /* Search: an index of the guides parents actually look for, matched word by word (any word counts,
+       more matches rank higher). Health worries with no page of their own fall back to "when to call". */
+    const IDX = [
+      ['Sleep', 'moon', 'Set up a safe sleep space', 'chg:Sleep:safe', 'safe sleep crib bassinet bedding sids mattress room sharing'],
+      ['Sleep', 'sack', 'Swaddling, and when to stop', 'chg:Sleep:d:swaddle', 'swaddle swaddling sleep sack wrap rolling'],
+      ['Sleep', 'moon', 'Crying and how to soothe', 'chg:Sleep:d:crying', 'crying cry colic fussy fussiness soothe soothing purple inconsolable'],
+      ['Sleep', 'clock', 'Sleepy cues', 'chg:Sleep:d:cues', 'sleepy tired overtired cues yawning'],
+      ['Sleep', 'clock', 'Naps and the late catnap', 'chg:Sleep:d:catnap', 'nap naps catnap napping schedule wake window windows'],
+      ['Sleep', 'moon', 'A simple bedtime routine', 'chg:Sleep:d:routine', 'bedtime routine night bath book'],
+      ['Sleep', 'moon', 'Sleep training approaches', 'chg:Sleep:d:method', 'sleep training ferber cry it out chair settle settling self soothe'],
+      ['Sleep', 'moon', 'Days and nights mixed up', 'chg:Sleep:d:daynight', 'day night confusion awake nights'],
+      ['Sleep', 'moon', 'The 4-month sleep change', 'chg:Sleep:e:0', 'regression waking 4 four month sleep change'],
+      ['Sleep', 'moon', 'Separation anxiety', 'chg:Sleep:e:1', 'separation anxiety clingy crying leave'],
+      ['Feeding', 'bottle', 'How much milk or formula', 'chg:Feeding:d:milk', 'how much formula milk ounces oz amount amounts bottle bottles feeds feeding breast breastfeeding nursing'],
+      ['Feeding', 'bottle', 'Storing and warming milk', 'chg:Feeding:d:storage', 'storage store storing pumped pump pumping expressed thaw freeze fridge warm warming'],
+      ['Feeding', 'bottle', 'Getting a good latch', 'chg:Feeding:d:latch', 'latch latching nursing breastfeeding sore nipples'],
+      ['Feeding', 'bottle', 'Is my baby getting enough?', 'chg:Feeding:d:enough', 'enough wet diapers weight gain hungry'],
+      ['Feeding', 'bottle', 'Hunger and fullness cues', 'chg:Feeding:d:cues', 'hunger hungry full fullness cues'],
+      ['Feeding', 'bottle', 'Vitamin D drops', 'chg:Feeding:d:vitd', 'vitamin d drops supplement supplements'],
+      ['Feeding', 'bottle', 'Paced bottle feeding', 'chg:Feeding:d:pace', 'paced pacing bottle'],
+      ['Feeding', 'bowl', 'Signs of readiness for solids', 'chg:Feeding:d:signs', 'ready readiness signs solids start starting'],
+      ['Feeding', 'bowl', 'What to offer first', 'chg:Feeding:d:food', 'first foods food solids puree purees start offer'],
+      ['Feeding', 'bowl', 'Introducing allergens', 'chg:Feeding:d:allergens', 'allergen allergens allergy allergic peanut egg reaction'],
+      ['Feeding', 'bowl', 'Gagging, choking and first aid', 'chg:Feeding:safe', 'choking choke gagging gag first aid'],
+      ['Feeding', 'bowl', 'Finger foods', 'chg:Feeding:d:finger', 'finger foods blw baby led weaning lumps textures'],
+      ['Feeding', 'bowl', 'Cups and drinks', 'chg:Feeding:d:cup', 'cup cups sippy straw water juice cow milk drinks'],
+      ['Feeding', 'bottle', 'Spit-up: normal, or time to call?', 'topic:Feeding', 'spit spitting reflux burp burping'],
+      ['Health', 'steth', 'Fever and sick days: when to call', 'chg:Health:d:sick', 'fever temperature sick ill cold cough vomit vomiting diarrhea breathing medicine tylenol acetaminophen ibuprofen emergency call doctor'],
+      ['Health', 'heart', 'How are you doing?', 'chg:Health:d:you', 'postpartum depression anxiety baby blues overwhelmed mom dad parent me'],
+      ['Health', 'steth', 'Checkups and vaccines', 'topic:Health', 'checkup checkups visit well child doctor appointment vaccine vaccines shots immunizations'],
+      ['Health', 'leaf', 'Teething signs and comfort', 'resource:teething', 'teething gums drool drooling teeth tooth'],
+      ['Daily rhythm', 'bath', 'Diaper rash and skin', 'chg:Daily rhythm:d:skin', 'diaper rash rashes skin cradle cap dry eczema'],
+      ['Daily rhythm', 'bath', 'Giving a bath', 'chg:Daily rhythm:d:tub', 'bath tub bathing wash'],
+      ['Daily rhythm', 'bath', 'Sponge baths', 'chg:Daily rhythm:d:sponge', 'sponge bath newborn wash'],
+      ['Daily rhythm', 'bath', 'Cord stump care', 'chg:Daily rhythm:d:cord', 'cord stump belly button umbilical'],
+      ['Daily rhythm', 'bath', 'Trimming nails', 'chg:Daily rhythm:d:nails', 'nails nail trim trimming clippers scratch'],
+      ['Daily rhythm', 'bath', 'Sun and shade', 'chg:Daily rhythm:d:sun', 'sun sunscreen shade hat summer'],
+      ['Daily rhythm', 'shirt', 'Dressing for the weather', 'chg:Daily rhythm:d:dress', 'dress dressing clothes layers outfit hot cold weather'],
+      ['Daily rhythm', 'bath', 'Brushing first teeth', 'chg:Daily rhythm:d:teeth', 'brush brushing toothbrush toothpaste fluoride dentist'],
+      ['Safety', 'shield', 'Babyproofing checklist', 'topic:Safety', 'babyproof babyproofing childproof gates gate stairs outlets anchor furniture cords windows poison'],
+      ['Safety', 'shield', 'Car seat and first setup', 'safety-stage:setup', 'car seat carseat smoke alarm water heater pool'],
+      ['Development', 'smile', 'Milestones and what to expect', 'topic:Development', 'milestones milestone development rolling roll crawling crawl sitting sit walking walk talking babbling words standing'],
+      ['Development', 'smile', 'Play ideas for this age', 'topic:Development', 'play games toys activities tummy time bored']
+    ];
+    const HEALTHY = /\b(fever|temp|sick|ill|cough|cold|vomit|diarrh|constipat|poop|stool|blood|rash|hives|breath|wheez|ear|eye|pain|hurt|fall|fell|bump|medicine|dose|swallow|jaundice|yellow|dehydrat|lethargic|sleepy all)/i;
+    const stem = w => w.replace(/(ing|ed|es|s)$/, '');
+    const STOP = new Set(['how', 'what', 'when', 'why', 'do', 'does', 'can', 'i', 'my', 'our', 'the', 'a', 'an', 'to', 'for', 'of', 'is', 'are', 'with', 'and', 'should', 'baby', 'babies', 'it', 'in', 'on', 'much', 'many', 'normal', 'ok', 'up', 'get', 'not', 'too', 'lot']);
     window.searchGuides = searchGuides = function (q) {
-      baseSearch(q);
+      query = q;
       const box = document.querySelector('.hub-results');
       if (!box) return;
-      const term = String(q || '').trim();
+      const term = String(q || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9 ]/g, ' ').trim();
       box.hidden = !term;
-      box.querySelectorAll('button.row').forEach(btn => {
-        const t = btn.querySelector('h3'), sub = btn.querySelector('p');
-        const go = btn.getAttribute('onclick') || '', cat = (go.match(/topic:([A-Za-z ]+)/) || [])[1];
-        btn.outerHTML = plainRow(CAT_ICON[cat] || 'book', cat || 'Development', t ? t.textContent : '', sub ? sub.textContent : '', go);
-      });
-      const empty = box.querySelector('.hint');
-      if (empty) empty.outerHTML = `<p class="hub-results-empty">${esc2(empty.textContent)}</p>`;
+      if (!term) { box.innerHTML = ''; return; }
+      const words = term.split(/\s+/).filter(w => w && !STOP.has(w)).map(stem).filter(w => w.length > 1);
+      const scored = IDX.map(e => {
+        const hay = (e[2] + ' ' + e[4]).toLowerCase().split(/[^a-z0-9]+/).map(stem);
+        const score = words.reduce((n, w) => n + (hay.some(h => h === w || (w.length > 3 && h.startsWith(w))) ? 1 : 0), 0);
+        return { e, score };
+      }).filter(x => x.score > 0).sort((a, b) => b.score - a.score).slice(0, 6);
+      let rows = scored.map(({ e }) => plainRow(e[1], e[0], e[2], displayTopic(e[0]), `openPage('${e[3]}')`));
+      const health = HEALTHY.test(term);
+      if (health && !scored.some(x => x.e[3] === 'chg:Health:d:sick')) rows.push(plainRow('steth', 'Health', 'When to call your pediatrician', 'Fever, breathing, feeding and other signs to act on', "openPage('chg:Health:d:sick')"));
+      const asked = esc2(String(q).trim());
+      const lead = !scored.length && health ? `<p class="hub-results-empty">We don’t have a guide for “${asked}” yet. If you’re worried, here’s when to call:</p>` : '';
+      box.innerHTML = rows.length ? lead + rows.join('') : `<p class="hub-results-empty">No guide for “${asked}” yet. Try words like naps, formula, rash or fever. If you’re worried, call your pediatrician.</p>`;
     };
   }
 

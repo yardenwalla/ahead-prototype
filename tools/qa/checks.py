@@ -213,7 +213,7 @@ def check(results):
                 said_mv = re.search(r'You said \w+ is (crawling|pulling up|rolling|trying to roll)', x['label'])
                 if said_mv and {'crawling': ('crawling', 'pulling'), 'pulling up': ('pulling',), 'rolling': ('rolling', 'crawling', 'pulling'), 'trying to roll': ('trying',)}[said_mv.group(1)] and mv not in {'crawling': ('crawling', 'pulling'), 'pulling up': ('pulling',), 'rolling': ('rolling', 'crawling', 'pulling'), 'trying to roll': ('trying', 'rolling', 'crawling', 'pulling')}[said_mv.group(1)]:
                     F.add('personal', 'bug', 'Home claims the parent said something they didn’t', pid, wk, f'{where}: {x["label"]}')
-            if mv in ('crawling', 'pulling') and not moment_now and (h['rows'] + h['actions']) and not re.search(r'crawl|stair|gate|move|pull|^safety|\ssafety', text_home):
+            if mv in ('crawling', 'pulling') and not moment_now and (h['rows'] + h['actions']) and not re.search(r'crawl|stair|gate|move|pull|mattress|^safety|\ssafety', text_home):
                 F.add('personal', 'bug', 'Said she’s crawling, but nothing on Home reflects it', pid, wk, where)
             if (mv == 'pulling' or dmo >= 8) and not reported['mattress_done']:
                 if not any('mattress' in a['title'].lower() for a in s['alerts']): F.add('personal', 'bug', 'From 8 months (or a pulling-up moment), Sleep doesn’t show the mattress step', pid, wk, where)

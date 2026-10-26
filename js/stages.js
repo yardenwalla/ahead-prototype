@@ -77,8 +77,11 @@
     }
     return t - s.at <= (quiet ? 7 : 14) * DAY;
   }
+  // One question per visit: once a parent answers, the next one waits until tomorrow.
+  const answeredRecently = d => Object.values(d.last).some(l => l && Number.isFinite(l.at) && nowMs() - l.at < 20 * 3600 * 1000);
   window.homeQuestion = homeQuestion = function () {
     if (!isCurrent() || homeConceptDismissed) return null;
+    if (answeredRecently(load())) return null;
     return candidates().find(visible) || null;
   };
   // Category pages ask the same question in context, on the same monthly rhythm.

@@ -34,12 +34,14 @@
       { key: 'pulling', label: 'Pulling up', age: '9 months+' }
     ] },
     Development: { kind: 'calendar', stages: [
-      { key: 2, label: '2 months' }, { key: 4, label: '4 months' }, { key: 6, label: '6 months' }, { key: 9, label: '9 months' }, { key: 12, label: '1 year' }
+      // Named for the milestone check; the range underneath says which months lead up to it.
+      { key: 2, label: '2 months', age: '0–2 months' }, { key: 4, label: '4 months', age: '3–4 months' }, { key: 6, label: '6 months', age: '5–6 months' },
+      { key: 9, label: '9 months', age: '7–9 months' }, { key: 12, label: '12 months', age: '10–12 months' }
     ] },
     'Daily rhythm': { kind: 'calendar', stages: [
       { label: 'Newborn', age: '0–3 weeks' }, { label: '1–3 months' }, { label: '4–6 months' }, { label: '7–12 months' }
     ] },
-    Health: { kind: 'calendar', fixed: true, stages: [0, 1, 2, 4, 6, 9, 12].map(a => ({ key: a, label: a === 0 ? 'First week' : a === 12 ? '1 year' : a + (a === 1 ? ' month' : ' months') })) }
+    Health: { kind: 'calendar', fixed: true, stages: [0, 1, 2, 4, 6, 9, 12].map(a => ({ key: a, label: a === 0 ? 'First week' : a + (a === 1 ? ' month' : ' months') })) }
   };
 
   const guideAge = cat => (cat === 'Development' ? developmentMonth(ageNow()) : typeof hubAgeFor === 'function' ? hubAgeFor('care', ageNow()) : ageNow());
@@ -56,11 +58,23 @@
   /* ---------- the timeline ---------- */
   const SCENE = { Development: 4, Feeding: 0, Sleep: 1, Health: 1, Safety: 0, 'Daily rhythm': 1 };
   const esc3 = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  // Why a stage you're reading can't be picked (shown in grey where Change would be).
+  const lockNote = (cat, i) => {
+    const T = STAGE_TABLE[cat], s = T && T.stages[i]; if (!s || T.fixed || !live()) return '';
+    const a = guideAge(cat);
+    if (s.setFrom != null && a < s.setFrom) return 'From ' + s.setFrom + ' months';
+    if (s.setUntil != null && a > s.setUntil) return 'Until ' + s.setUntil + ' months';
+    return '';
+  };
   window.stageTimeline = function (cat, items, label) {
     const art = typeof yearIllustration === 'function' ? yearIllustration(cat, SCENE[cat] || 0) : '';
-    return `<nav class="hub-stagebar" id="hub-pills" aria-label="${esc3(label || cat + ' stages')}">${items.map(it => {
-      const top = it.now ? '<span class="hub-stage-top">Now</span>' : it.on && it.change ? `<button class="hub-stage-top is-change" onclick="${it.change}" aria-label="Change ${esc3(name())}’s stage to ${esc3(it.label)}">Change</button>` : '<span class="hub-stage-top"></span>';
-      return `<div class="hub-stage ${it.on ? 'is-on' : ''} ${it.now ? 'is-now' : ''}">${top}<button class="hub-stage-hit" onclick="${it.onclick}" ${it.on ? 'aria-current="step"' : ''}><span class="hub-stage-node" aria-hidden="true">${it.on ? art : ''}</span><span class="hub-stage-name">${esc3(it.label)}</span>${it.age ? `<span class="hub-stage-age">${esc3(it.age)}</span>` : ''}</button></div>`;
+    const baby = esc3(typeof name === 'function' ? name() : 'your baby');
+    return `<nav class="hub-stagebar" id="hub-pills" aria-label="${esc3(label || cat + ' stages')}">${items.map((it, i) => {
+      const lock = it.on && !it.now && !it.change ? lockNote(cat, i) : '';
+      const top = it.now ? '<span class="hub-stage-top" aria-hidden="true">Now</span>' : it.on && it.change ? `<button class="hub-stage-top is-change" onclick="${it.change}" aria-label="Change ${baby}’s stage to ${esc3(it.label)}">Change</button>` : `<span class="hub-stage-top${lock ? ' is-lock' : ''}">${lock}</span>`;
+      // Screen readers hear which stage is the baby's, not just which one is open.
+      const sr = it.now ? `<span class="sr-only">, ${baby}’s stage now</span>` : '';
+      return `<div class="hub-stage ${it.on ? 'is-on' : ''} ${it.now ? 'is-now' : ''}">${top}<button class="hub-stage-hit" onclick="${it.onclick}" ${it.on ? 'aria-current="step"' : ''}><span class="hub-stage-node" aria-hidden="true">${it.on ? art : ''}</span><span class="hub-stage-name">${esc3(it.label)}</span>${it.age ? `<span class="hub-stage-age">${esc3(it.age)}</span>` : ''}${sr}</button></div>`;
     }).join('')}</nav>`;
   };
   window.positionHubPills = function () {

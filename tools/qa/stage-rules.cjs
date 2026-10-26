@@ -71,16 +71,17 @@ for (const [cat, age, i, label] of [['Sleep', 7, 3, 'Two naps'], ['Sleep', 10, 2
 {
   const storage = {};
   let a = family(6, {}, storage); a.run("navigate('home');answerHomeQuestion('food','new');navigate('home')");
-  check(a.run('homeQuestion()') === 'naps', 'From 6 months on Three naps, Home asks about the late catnap');
-  a.run("answerHomeQuestion('naps','No')");
-  check(a.run('homeQuestion()') !== 'naps', 'Answered: not asked again straight away');
+  check(a.run('homeQuestionQueue()').includes('naps'), 'From 6 months on Three naps, the catnap question is queued');
+  check(a.run('homeQuestion()') === null, 'One question per visit: nothing else asked right after an answer');
+  a.run("recordCheckin('naps','No');setAnswer('twoNaps','Not yet')");
+  check(!a.run('homeQuestionQueue()').includes('naps'), 'Answered: not asked again straight away');
   a = boot({ name: 'Ari', dob, feed: 'Both', pronouns: 'he' }, JSON.parse(storage['ahead-v2-answers']), storage, at(7));
   a.run("navigate('home')");
   check(a.run('homeQuestionQueue()').includes('naps'), 'A month later, the naps question is due again');
 }
 // One rule everywhere: a pick holds until the parent changes it. When the baby outgrows it, Home asks once.
 for (const [cat, pickRoute, i, pickAge, laterAge, picked, next] of [
-  ['Development', 'development-stage:6', 2, 8, 10, '6 months', '1 year'],
+  ['Development', 'development-stage:6', 2, 8, 10, '6 months', '12 months'],
   ['Daily rhythm', 'chg:Daily rhythm:s:1', 1, 3, 5, '1–3 months', '4–6 months'],
   ['Safety', 'safety-stage:rolling', 2, 6, 9, 'Before crawling', 'Pulling up'],
   ['Sleep', 'chg:Sleep:s:1', 1, 4, 9, 'Longer nights', 'Two naps']]) {
@@ -101,5 +102,16 @@ for (const [cat, route, i] of [['Development', 'development-stage:4', 1], ['Safe
 {
   const a = family(10); a.run("openPage('safety-stage:rolling');hubChangeStage('Safety',2);setAnswer('crawl','Yes');openPage('topic:Safety')");
   check(nowName(a.html()) === 'Pulling up', 'Telling us about a new movement replaces an older Safety pick');
+}
+// Review fixes: search finds common worries; a future month on Home reads as a preview; setup never shows a sample name.
+{
+  const a = family(5); a.run("navigate('categories');openPage('explore')");
+  const find = q => { a.run(`searchGuides(${JSON.stringify(q)})`); return a.run("document.querySelector('.hub-results').innerHTML").replace(/<[^>]+>/g, ' '); };
+  for (const [q, expect] of [['fever', 'Fever and sick days'], ['how much formula', 'How much milk or formula'], ['spit up', 'Spit-up'], ['diaper rash', 'Diaper rash'],
+    ['constipation', 'When to call your pediatrician'], ['swaddle', 'Swaddling'], ['teething', 'Teething'], ['vaccines', 'Checkups and vaccines'], ['sleep regression', '4-month sleep change']])
+    check(find(q).includes(expect), `Search “${q}” finds ${expect}`);
+  check(/No guide for/.test(find('zebra')), 'Search with no match says so and suggests words');
+  a.run("navigate('home');setMonth(8)");
+  check(/Coming at 8 months/.test(a.html()) && !/Likely around now/.test(a.html()), 'A future month on Home reads as a preview');
 }
 console.log(JSON.stringify({ suite: 'stage-rules', checks, status: 'passed' }, null, 2));
