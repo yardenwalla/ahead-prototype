@@ -57,11 +57,12 @@
       const labels = DEVELOPMENT_DOMAINS[ref][d] || [], seen = labels.filter(l => journeyData().records.some(r => r.type === 'milestone' && r.skillKey === journeySkillKey(l))).length;
       return `<button class="hub-domain-tile" onclick="openPage('development-domain:${ref}:${d}')">${h.art(DOMAIN_ICONS[d], 'Development')}<b>${DOMAIN_TITLES[d]}</b><small>${(window.hubBabyify || (x => x))(F(d === 'Movement' && live() && ref === now && (answers.pullUp === 'Yes' || answers.crawl === 'Yes') ? `Maya is already ${answers.pullUp === 'Yes' ? 'pulling up' : 'crawling'}, so {s’s} ahead on movement. These are the skills that come first.` : (st.summaries[d] || '')))}</small><span>${F(seen ? `${seen} of ${labels.length} seen` : `${labels.length} skill${labels.length === 1 ? '' : 's'}`)} ›</span></button>`;
     }).join('');
-    b += `<section class="hub-card hub-glance is-static"><span class="hub-card-head"><b>${F('What Maya might be doing')}</b></span><div class="hub-domain-tiles">${domainTiles}</div></section>` + h.note(developmentMonth() < ref ? `Most babies show these by ${age}. Some may be here already, and others are on the way.` : `Most babies show these by ${age}.`);
+    b += `<section class="hub-card hub-glance is-static"><span class="hub-card-head"><b>${F('What Maya might be doing')}</b></span><div class="hub-domain-tiles">${domainTiles}</div></section>` ;
     if (ref === now || !live()) {
       const ideas = (playStageModel().primary || []).slice(0, 3), lo = playPhase().lo;
       const extra = (playStageModel().primary || []).length - 3 + (playStageModel().more || []).length;
-      b += h.list('Try together', [...ideas.map(a => h.row({ icon: 'hand', cat: 'Development', title: (window.hubBabyify || (x => x))(a.title), sub: playLine(a), onclick: `openPage('play-activity:${lo}:${a.id}')` })), extra > 0 ? h.listMore(`See ${extra} more ideas`, `openPage('chg:Development:d:more:${lo}')`) : '']);
+      const total = (playStageModel().primary || []).length + (playStageModel().more || []).length;
+      b += h.list('', [h.row({ icon: 'hand', cat: 'Development', title: 'Ideas to try together', sub: 'Simple games that fit into your day', chipText: `${total} ideas`, onclick: `openPage('chg:Development:d:more:${lo}')` })]);
     }
     const reached = live() && developmentMonth(actualMonth()) >= ref;
     b += h.versus('Not yet, or time to ask?', ['Not yet', reached ? `Most babies show these by ${age}. If Maya isn’t doing some of them yet, mention it at {p} next checkup. It’s a common question.` : `Every baby gets there in their own time. These can show up any time before ${age}.`], ['Talk to your pediatrician', 'Call if Maya loses a skill {s} had, or if something worries you. You don’t need to wait for the checkup.']);
@@ -104,22 +105,26 @@
     let b = '';
     if (v === 0) {
       b += h.hero({ eyebrow: 'Newborn', title: 'Caring for a brand-new baby', lead: 'For now it’s sponge baths, keeping the cord stump dry and lots of diapers. It feels like a lot, and it gets quicker fast.' });
+      b += h.glanceCard(v === now ? 'Maya’s care at a glance' : 'At this stage', [['Baths', '2–3 a week', 'Sponge baths for now'], ['Diapers', '8–12 a day', 'Change when wet or dirty']], `openPage('chg:Daily rhythm:d:sponge')`);
       b += h.list('In these first weeks', [careRow('towel', 'Give a sponge bath', 'A warm room, a washcloth and 5 minutes', 'sponge'), careRow('cord', 'Keep the cord stump clean and dry', 'Fold the diaper below it and let it air', 'cord'), careRow('nail', 'Trim tiny nails', 'Easiest while {s} {sleep|sleeps}', 'nails')]);
       b += h.list('Every day', [careRow('shirt', 'Dress Maya for the weather', 'One more layer than you’re wearing', 'dress'), careRow('diaper', 'Diapers and skin', 'Gentle care, and what to do about diaper rash', 'skin')]);
       b += h.versus('Normal, or time to call?', ['Normal', 'A little crust or a spot of blood near the cord, peeling skin and baby acne.'], ['Call your pediatrician', 'Redness spreading around the cord, pus or a bad smell, or a temperature of 100.4°F or higher.']);
     }
     if (v === 1) {
       b += h.hero({ eyebrow: '1–3 months', title: 'Tub baths and everyday skin care', lead: 'Once the cord has healed, Maya can have real baths. Two or three a week is plenty in the first year.' });
+      b += h.glanceCard(v === now ? 'Maya’s care at a glance' : 'At this stage', [['Baths', '2–3 a week', 'More if you like'], ['Water', 'About 100°F', 'Warm, not hot']], `openPage('chg:Daily rhythm:d:tub')`);
       b += h.list('What helps now', [careRow('bath', 'Give a tub bath', 'About 2 inches of warm water is plenty', 'tub'), careRow('drop', 'Care for dry skin and cradle cap', 'Mild soap, and a soft brush for the scalp', 'skin'), careRow('sun', 'Keep Maya out of direct sun', 'Shade and a hat when you’re outside', 'sun')]);
       b += bathSafety();
     }
     if (v === 2) {
       b += h.hero({ eyebrow: '4–6 months', title: 'Bath time becomes part of bedtime', lead: 'Many families use the bath to start winding down. Drool and chewing often start now too, long before the first tooth.' });
+      b += h.glanceCard(v === now ? 'Maya’s care at a glance' : 'At this stage', [['Baths', '2–3 a week', 'Often before bed'], actualMonth() >= 6 ? ['Sun', 'Shade, then sunscreen', 'From 6 months'] : ['Sun', 'Shade first', 'Under 6 months']], `openPage('chg:Daily rhythm:d:tub')`);
       b += h.list('What helps now', [careRow('moon', 'Make the bath part of bedtime', 'Bath, feed, book, bed', 'chg:Sleep:d:routine'), careRow('tooth', 'Teething, drool and gums', 'Wipe gums and keep the chin dry', 'gums'), careRow('sun', 'Keep Maya in the shade', 'Hats and shade before sunscreen', 'sun')]);
       b += bathSafety();
     }
     if (v === 3) {
       b += h.hero({ eyebrow: '7–12 months', title: 'First teeth and splashier baths', lead: 'Once Maya can sit, bath time gets more fun. When the first tooth shows up, it’s time to start brushing.' });
+      b += h.glanceCard(v === now ? 'Maya’s care at a glance' : 'At this stage', [['Teeth', 'Brush twice a day', 'From the first tooth'], ['Toothpaste', 'A rice-grain smear', 'With fluoride']], `openPage('chg:Daily rhythm:d:teeth')`);
       const hasTooth = live() && journeyData().records.some(r => r.type === 'milestone' && /tooth|teeth/i.test(r.title || ''));
       b += h.list('What helps now', [hasTooth || !live() ? careRow('tooth', 'Brush the first teeth', 'A soft brush and a tiny smear of toothpaste', 'teeth') : careRow('tooth', 'Teething, drool and gums', 'Brushing starts with the first tooth', 'gums'), careRow('bath', 'Bath seats aren’t safety seats', 'Stay within arm’s reach, every bath', 'bathseat'), careRow('sun', 'Protect {p} skin in the sun', 'Shade first, then baby sunscreen', 'sun')]);
       b += bathSafety();
@@ -283,8 +288,8 @@
     if (cat === 'Daily rhythm' && screen === 'd' && a !== 'more') return careDetail(a);
     if ((cat === 'Daily rhythm' || cat === 'Development') && screen === 'd' && a === 'more') {
       const { phase, primary, more } = playStageModel(Number(b)), h = H();
-      const all = [...primary.slice(3), ...more];
-      return detailFrame('Development', phase.title, 'More ideas to try', 'Pick whatever suits the moment. There’s no need to do them all.', h.list('', all.map(x => h.row({ icon: 'hand', cat: 'Development', title: (window.hubBabyify || (y => y))(x.title), sub: playLine(x), onclick: `openPage('play-activity:${phase.lo}:${x.id}')` }))));
+      const all = [...primary, ...more];
+      return detailFrame('Development', phase.title, 'Ideas to try together', 'Pick whatever suits the moment. There’s no need to do them all.', h.list('', all.map(x => h.row({ icon: 'hand', cat: 'Development', title: (window.hubBabyify || (y => y))(x.title), sub: playLine(x), onclick: `openPage('play-activity:${phase.lo}:${x.id}')` }))));
     }
     return baseRoute(p);
   };

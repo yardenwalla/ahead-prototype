@@ -160,7 +160,7 @@
     [/crib|bassinet|mattress/i, 'crib'], [/your room|room-sharing|in the room/i, 'home'], [/sleep sack|wearable|blanket|swaddl/i, 'sack'],
     [/on (his|her|their|the) back|back for|back to sleep/i, 'back'], [/car seat|the car\b|or swing\b/i, 'car'], [/swipe|bats? at/i, 'ball'], [/sofa|armchair|couch/i, 'sofa'],
     [/pacifier/i, 'pacifier'], [/night|dark/i, 'moon'], [/day from|daylight|curtain|morning/i, 'sun'], [/yawn|wind down|tired|wake window|nap/i, 'clock'],
-    [/rock|holding|settle|fall asleep|cuddl|comfort/i, 'heart'], [/book|read|story|picture/i, 'book'], [/song|sing|music|rhyme/i, 'music'],
+    [/rock|holding|settle|fall asleep|cuddl|comfort/i, 'heart'], [/book|read|story|picture/i, 'book'], [/song|sing|music|rhyme|tune/i, 'music'],
     [/mirror|faces?\b/i, 'mirror'], [/rattle|toy/i, 'toy'], [/tummy|elbows|floor|mat\b/i, 'mat'], [/roll/i, 'roll'], [/\bsit/i, 'sit'],
     [/crawl|scoot/i, 'crawl'], [/stand|pull(s|ing)? up|cruis|walk|steps/i, 'stand'], [/ball/i, 'ball'], [/block|stack|container|basket|take one out|in and out/i, 'blocks'],
     [/peek|hide|hidden/i, 'peek'], [/wave|clap|gesture|point/i, 'wave'], [/smile|laugh|chuckle/i, 'smile'], [/coo|babbl|sound|talk|voice|word|puppet|chat/i, 'chat'],
