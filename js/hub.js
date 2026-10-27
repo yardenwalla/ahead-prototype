@@ -158,7 +158,7 @@
       const n = signsSeen();
       const head = n === 4 && age < 6 ? ['Maya’s showing the signs', 'Most babies start around 6 months, so check with your pediatrician if you’d like to start sooner.']
         : n === 4 ? ['Maya looks ready for solids', '{S} {is} showing all four signs. Pick a calm morning for the first taste.']
-        : age >= 7 && !hasFoodAnswer() ? ['Solids start at different times', 'Tell us whether Maya has started, and this guide will match. If not yet, here’s what to look for.']
+        : age >= 6 && !hasFoodAnswer() ? ['Solids start at different times', 'Tell us whether Maya has started, and this guide will match. If not yet, here’s what to look for.']
         : age >= 7 ? ['Some babies take a little longer', 'If Maya isn’t showing all four signs yet, mention it at {p} next checkup. Until then, milk gives {o} everything {s} {need|needs}.']
         : ['Solids are coming up soon', 'Most babies start around 6 months, once they’re ready. Until then, milk gives Maya everything {s} {need|needs}.'];
       h += hero({ eyebrow: 'Preparing for solids', title: head[0], lead: head[1], meter: { label: 'Maya’s readiness signs', n, of: 4 }, button: { label: n === 4 && age >= 6 && now ? 'Tell us when {s’ve} started' : 'See what to look for', onclick: n === 4 && age >= 6 && now ? "chgSetStage('Feeding',3)" : go('chg:Feeding:d:signs') } }) + B;
@@ -179,7 +179,7 @@
         row({ icon: 'bowl', title: 'What to put on the tray', sub: 'Iron-rich foods, soft enough to squash', onclick: go('chg:Feeding:d:tray') }),
         row({ icon: 'peanut', title: 'Try a new allergen', sub: nextA ? `One {s} {haven’t|hasn’t} had yet, like ${nextA[1]}` : 'Keep offering the ones {s’ve} tried', chipText: `${t} of ${ALLERGENS.length}`, onclick: go('chg:Feeding:d:allergens') }),
         row({ icon: 'hand', title: 'Let {o} set the pace', sub: 'Turning away or closing {p} mouth means {s’s} done', onclick: go('chg:Feeding:d:pace') }),
-        aidDone() ? null : row({ icon: 'shield', title: 'Learn infant choking first aid', sub: 'Worth knowing before you need it', chipText: 'Must know', chipTone: 'is-red', onclick: "openPage('chg:Feeding:safe')" }),
+        (aidDone() || lateRow) ? null : row({ icon: 'shield', title: 'Learn infant choking first aid', sub: 'Worth knowing before you need it', chipText: 'Not done yet', chipTone: 'is-red', onclick: "openPage('chg:Feeding:safe')" }),
         lateRow
       ]);
       h += versus('Gagging or choking?', ['Gagging', 'Coughing and a red face. It looks scary, but it’s normal.'], ['Choking', 'Silent and can’t cough or cry. Call 911 right away.'], ['Choking first aid, step by step', "openPage('chg:Feeding:safe')"]);
@@ -190,9 +190,12 @@
       h += list('What to focus on', [
         row({ icon: 'bowl', title: 'Make food a little lumpier', sub: 'Thicker each week, so {s} {learn|learns} to chew', onclick: go('chg:Feeding:d:lumpy') }),
         row({ icon: 'avocado', title: 'Offer soft finger foods', sub: 'Strips first, small pieces once {s} can pinch', onclick: go('chg:Feeding:d:finger') }),
-        row({ icon: 'cup', title: 'Practice with an open cup', sub: 'A few sips of water at meals', onclick: go('chg:Feeding:d:cup') })
+        // Catch-up: first-food basics stay until they're done.
+        ALLERGENS.some(a => !tried(a[0])) ? row({ icon: 'peanut', title: 'Try a new allergen', sub: 'Keep going until {s’ve} tried them all', chipText: `${ALLERGENS.filter(a => tried(a[0])).length} of ${ALLERGENS.length}`, onclick: go('chg:Feeding:d:allergens') })
+          : !aidDone() ? row({ icon: 'shield', title: 'Learn infant choking first aid', sub: 'Worth knowing before you need it', chipText: 'Not done yet', chipTone: 'is-red', onclick: "openPage('chg:Feeding:safe')" })
+          : row({ icon: 'cup', title: 'Practice with an open cup', sub: 'A few sips of water at meals', onclick: go('chg:Feeding:d:cup') })
       ]);
-      h += versus('Safe to offer, or a choking risk?', ['Safe to offer', 'Soft strips, quartered grapes and anything that squashes easily.'], ['Skip for now', 'Whole nuts, popcorn, raw carrot and round slices of hot dog.']);
+      h += versus('Safe to offer, or a choking risk?', ['Safe to offer', 'Soft strips, grapes cut lengthwise into quarters and anything that squashes easily.'], ['Skip for now', 'Whole nuts, popcorn, raw carrot and round slices of hot dog.']);
     }
     if (key === 'meals') {
       h += hero({ eyebrow: 'Family meals', title: 'Meals are part of the day now', lead: 'Three meals and a snack or two, with milk alongside. Most of what you eat can work for Maya too.' }) + B;
@@ -267,7 +270,7 @@
         textures: { nurse: [['Nursing', 'About 4–6 feeds a day'], ['Meals', '2–3 a day'], ['Water', '4–8 oz a day']], bottle: [['Formula', '24–30 oz a day'], ['Meals', '2–3 a day'], ['Water', '4–8 oz a day']], expressed: [['Breast milk', 'About 24 oz a day'], ['Meals', '2–3 a day'], ['Water', '4–8 oz a day']], both: [['Milk', 'Nursing and bottles as before'], ['Meals', '2–3 a day'], ['Water', '4–8 oz a day']] },
         meals: { nurse: [['Nursing', 'About 3–5 feeds a day'], ['Meals', '3, plus 1–2 snacks'], ['Water', '4–8 oz a day']], bottle: [age >= 12 ? ['Cow’s milk, if used', '16–24 oz a day'] : ['Formula', 'About 24 oz a day'], ['Meals', '3, plus 1–2 snacks'], ['Water', '4–8 oz a day']], expressed: [['Breast milk', 'About 20–24 oz a day'], ['Meals', '3, plus 1–2 snacks'], ['Water', '4–8 oz a day']], both: [['Milk', 'Nursing and bottles as before'], ['Meals', '3, plus 1–2 snacks'], ['Water', '4–8 oz a day']] }
       }[stage];
-      const head = { learn: ['Little and often', 'Newborns have tiny tummies, so frequent feeds are exactly what they need.'], rhythm: ['Feeds are settling into a rhythm', 'Feeds often get quicker or a little further apart now. Hungrier days still happen.'], ready: ['Milk is still everything', 'Nothing changes until solids begin. Keep feeding the way you have been.'], first: ['Milk still comes first', 'Solids are practice for now, so keep milk feeds going as usual. Offer milk before meals if {s} {seem|seems} too hungry to try food.'], textures: ['Milk and meals together', 'Meals are growing, but milk still matters. Most babies drop a feed or two on their own.'], meals: ['Meals take the lead', 'Milk comes alongside meals now. The bigger change comes around the first birthday.'] }[stage];
+      const head = { learn: ['Little and often', 'Newborns have tiny tummies, so frequent feeds are exactly what they need.'], rhythm: ['Feeds are settling into a rhythm', 'Feeds often get quicker or a little further apart now. Hungrier days still happen.'], ready: age >= 7 ? ['Milk is still the main drink', 'If {s} {haven’t|hasn’t} started solids yet, it’s worth starting soon. Mention it at {p} next checkup.'] : ['Milk is still everything', 'Nothing changes until solids begin. Keep feeding the way you have been.'], first: ['Milk still comes first', 'Solids are practice for now, so keep milk feeds going as usual. Offer milk before meals if {s} {seem|seems} too hungry to try food.'], textures: ['Milk and meals together', 'Meals are growing, but milk still matters. Most babies drop a feed or two on their own.'], meals: ['Meals take the lead', 'Milk comes alongside meals now. The bigger change comes around the first birthday.'] }[stage];
       const enough = stage === 'learn' ? 'At least 6 wet diapers a day after day 5, and back to birth weight by about 2 weeks.' : stage === 'first' || stage === 'textures' || stage === 'meals' ? 'Steady growth at checkups and plenty of wet diapers. How much {s} {eat|eats} at one meal matters much less.' : 'Steady growth at checkups and plenty of wet diapers.';
       const select = `<label class="hub-select">Showing amounts for <select onchange="chgChooseMethod(this.value)">${[['nurse', 'Nursing'], ['expressed', 'Breast milk in bottles'], ['bottle', 'Formula'], ['both', 'Nursing and bottles']].map(([v, l]) => `<option value="${v}" ${meth() === v ? 'selected' : ''}>${l}</option>`).join('')}</select></label>`;
       const early = typeof profile !== 'undefined' && profile.early ? tip('Born early?', 'Follow your pediatrician’s milk and supplement plan first. These are general amounts.') : '';
@@ -298,8 +301,8 @@
     }
     if (id === 'enough') {
       return detail(cat, 'Newborn feeds', 'How to tell Maya’s getting enough', 'You can’t always see how much a newborn drinks, so these signs tell you instead.',
-        table([['Wet diapers', 'At least 6 a day after day 5'], ['Weight', 'Back to birth weight by about 2 weeks'], ['After feeds', 'Relaxed hands and a sleepy, content baby']])
-        + tip('Wake {o} for feeds for now', 'Until {s’s} back to birth weight, wake {o} if it’s been more than about 3 hours. Your pediatrician will tell you when you can stop.')
+        table([['Wet diapers', 'At least 6 a day after day 5'], ['Poops', 'Yellow and seedy by day 5, often several a day'], ['Weight', 'Back to birth weight by about 2 weeks'], ['After feeds', 'Relaxed hands and a sleepy, content baby']])
+        + ((NOW - parse(profile.dob)) / 864e5 < 21 ? tip('Wake {o} for feeds for now', 'Until {s’s} back to birth weight, wake {o} if it’s been more than about 3 hours. Your pediatrician will tell you when you can stop.') : tip('Once {s’s} back to birth weight', 'Most babies can feed when they wake. Your pediatrician will tell you if {s} still {need|needs} waking.'))
         + `<section class="hub-card hub-versus"><h3>${F('When to call')}</h3><div class="hub-vs"><div><b>Call your pediatrician</b><p>${F('Hard to wake for feeds, fewer wet diapers or looking more yellow.')}</p></div><div class="is-urgent"><b>Call right away</b><p>${F('A temperature of 100.4°F or higher under 3 months.')}</p></div></div></section>`, 'diaper');
     }
     if (id === 'cues') {
@@ -320,7 +323,7 @@
         + video('Storing and preparing breast milk', 'Northwestern Medicine', 'https://www.nm.org/healthbeat/healthy-tips/how-to-store-breast-milk', 'Guide'), 'bottle');
     }
     if (id === 'vitd') {
-      return detail(cat, 'Newborn feeds', 'Ask about vitamin D drops', 'Breast milk is the perfect food, but it’s low in vitamin D, so breastfed and partly breastfed babies need drops from the first days.',
+      return detail(cat, 'Newborn feeds', 'Ask about vitamin D drops', 'Breast milk is low in vitamin D, so breastfed and partly breastfed babies need drops from the first days.',
         steps(['Ask your pediatrician which drops to use and how much, ideally at the first-week checkup.', 'Give them once a day, at a time that’s easy to remember, like the first morning feed.', 'Keep going until your pediatrician says you can stop.']) + tip('Formula-fed?', 'Most formula already has vitamin D added, so ask before adding drops.'), 'drop');
     }
     if (id === 'bottles') {
@@ -350,7 +353,7 @@
     }
     if (id === 'family') {
       return detail(cat, 'Family meals', 'Share your family’s food', 'Most of what you eat can work for Maya with a couple of small changes.',
-        steps(['Set {p} portion aside before you add salt or spicy sauces.', 'Cut it into soft, small pieces or mash it a little.', 'Sit down together when you can. Watching you eat is how {s} {learn|learns}.']) + tip('Skip until 12 months', 'Honey, cow’s milk as a drink, juice, and hard or round foods like whole nuts.'), 'plate');
+        steps(['Set {p} portion aside before you add salt or spicy sauces.', 'Cut it into soft, small pieces or mash it a little.', 'Sit down together when you can. Watching you eat is how {s} {learn|learns}.']) + tip('Wait until 12 months', 'Honey, cow’s milk as a main drink and juice.') + tip('Keep skipping, even after 1', 'Whole nuts, popcorn, whole grapes and hard raw vegetables are choking risks for years.'), 'plate');
     }
     if (id === 'milk12') {
       return nursing()
@@ -402,7 +405,7 @@
     return {
       clock: [['Total sleep', '14–17 hours', 'Including naps'], ['Wake window', '45–60 min', 'Between sleeps']],
       daynight: [['Total sleep', '14–17 hours', 'Including naps'], ['Wake window', '1–1½ hours', 'Between sleeps']],
-      rhythm: [['Naps', '3 a day', 'Plus a short catnap'], ['Wake window', '2–2½ hours', 'Between sleeps'], ['Bedtime', '7–8 pm', 'Often'], ['Total sleep', '12–16 hours', 'Including naps']],
+      rhythm: [['Naps', '3 a day', 'The last is a short catnap'], ['Wake window', '2–2½ hours', 'Between sleeps'], ['Bedtime', '7–8 pm', 'Often'], ['Total sleep', '12–16 hours', 'Including naps']],
       two: [['Naps', '2 a day', 'Morning and afternoon'], ['Wake window', '2½–4 hours', 'Between sleeps'], ['Bedtime', '7–8 pm', 'Often'], ['Total sleep', '12–16 hours', 'Including naps']]
     }[key];
   }
@@ -418,7 +421,7 @@
     : mattressDue() ? row({ icon: 'shield', cat: 'Sleep', title: 'Lower the crib mattress', sub: answers.sit === 'Yes' ? 'Now that Maya sits, move it down a setting' : 'Move it down before {s} can sit up', chipText: 'Do now', chipTone: 'is-red', onclick: go('chg:Sleep:d:mattress') }) : null;
   function settleRow() {
     const g = C().settlingGuide();
-    const t = { learn: m() >= 4 ? ['Settling and sleep training', 'An optional choice, whenever you’re ready'] : ['Read ahead: sleep training', 'Some families start at 4–6 months or later'], trying: ['Support while sleep training', 'How to handle a rough night'], routine: ['When the routine changes', 'After short naps, travel or illness'], help: ['A routine with your help', 'Feeding or rocking to sleep can stay'] }[g] || ['Helping Maya settle', 'What works at this age'];
+    const t = { learn: m() >= 4 ? ['Sleep training, if you choose it', 'A choice, not a must'] : ['Read ahead: sleep training', 'Some families start at 4–6 months or later'], trying: ['Support while sleep training', 'How to handle a rough night'], routine: ['When the routine changes', 'After short naps, travel or illness'], help: ['A routine with your help', 'Feeding or rocking to sleep can stay'] }[g] || ['Helping Maya settle', 'What works at this age'];
     return row({ icon: 'moon', cat: 'Sleep', title: t[0], sub: t[1], onclick: "openPage('chg:Sleep:settle')" });
   }
   function eventRow(cat) {
@@ -439,7 +442,7 @@
       h += nightCard(key, now);
       h += list('In these first weeks', [
         swaddleRow() || (answers.swaddleStopped === 'Yes' ? null : row({ icon: 'sack', cat, title: 'Swaddle safely, if you swaddle', sub: 'Snug at the chest, loose at the hips', onclick: go('chg:Sleep:d:swaddle') })),
-        row({ icon: 'clock', cat, title: 'Start winding down at the first yawn', sub: 'Most newborns are ready after 45–60 minutes awake', onclick: go('chg:Sleep:d:cues') }),
+        row({ icon: 'clock', cat, title: 'Start winding down at the first yawn', sub: 'A yawn or a quiet stare is your cue', onclick: go('chg:Sleep:d:cues') }),
         row({ icon: 'heart', cat, title: 'Help Maya fall asleep any way that works', sub: 'Feeding, rocking or holding is fine now', onclick: "openPage('chg:Sleep:d:soothe')" }),
         row({ icon: 'moon', cat, title: 'Keep nights dark and quiet', sub: 'It helps {p} body clock switch on', onclick: go('chg:Sleep:d:daynight') })
       ].filter(Boolean).slice(0, 3));
@@ -466,7 +469,7 @@
       h += versus('Normal, or time to call?', ['Normal', 'Naps of 30–45 minutes, and fighting a nap now and then.'], ['Call your pediatrician', 'Snoring most nights, pauses or gasps in sleep, or sleep changes with fever.']);
     }
     if (key === 'two') {
-      const settled = answers.twoNaps === 'Yes' || age >= 10;
+      const settled = answers.twoNaps === 'Yes' || age >= 10 || (now && answers.twoNaps !== 'Not yet');
       h += hero({ eyebrow: 'Two naps', title: settled ? 'Two naps a day' : 'Two naps are on the way', lead: settled ? 'A morning nap and an afternoon nap make up the day. A short nap can shift the timing without changing the number.' : 'Most babies drop the late catnap between 6 and 9 months. Look for a pattern over a week, not one day.' }) + B;
       h += nightCard(key, now);
       const rows = [swaddleRow(), mattressRow(), settled ? row({ icon: 'clock', cat, title: 'After a short nap, offer the next one sooner', sub: 'One rough day doesn’t end two naps', onclick: go('chg:Sleep:d:catnap') }) : row({ icon: 'clock', cat, title: 'Watch for a skipped catnap', sub: 'If {s} {skip|skips} it most days, try two naps', onclick: go('chg:Sleep:d:catnap') }), row({ icon: 'sit', cat, title: 'Practice new skills during the day', sub: 'Lots of floor time helps nights stay calm', onclick: go('chg:Sleep:d:skills') }), settleRow()].filter(Boolean).slice(0, 3);
@@ -511,7 +514,7 @@
       return detail(cat, 'The early months', 'When the crying won’t stop', 'Crying usually builds from about 2 weeks, peaks around 6–8 weeks and eases by 3–4 months. Some evenings nothing works, and that isn’t your fault.',
         steps(['Check the basics: hungry, a wet diaper, too warm or too cold, or overtired.', 'Hold Maya close: skin to skin, a slow walk or gentle rocking.', 'Try a steady sound, like shushing, white noise or a soft song.', 'Offer a pacifier, or a swaddle if {s} {is}n’t trying to roll yet.'])
         + `<section class="hub-card hub-callout"><b>${F('If you feel overwhelmed')}</b><p>${F('Put Maya down on {p} back in the crib, close the door and take a few minutes. Call someone you trust. Crying won’t hurt Maya. Shaking can, so never shake a baby.')}</p></section>`
-        + versus('Normal, or time to call?', ['Normal', 'Long crying spells, often in the evening, in a baby who feeds and grows well.'], ['Call your pediatrician', (m() < 3 ? 'Any fever of 100.4°F or higher, ' : 'Crying with a fever, ') + 'poor feeding or vomiting, a weak or high-pitched cry, or crying that sounds like pain.'])
+        + versus('Normal, or time to call?', ['Normal', 'Long crying spells, often in the evening, in a baby who feeds and grows well.'], ['Call your pediatrician', (m() < 3 ? 'Right away for any fever of 100.4°F or higher. Also for ' : 'Crying with a fever, ') + 'poor feeding or vomiting, a weak or high-pitched cry, or crying that sounds like pain.'])
         + video('Why crying peaks, and what helps', 'Cook Children’s', 'https://www.cookchildrens.org/health-resources/newborn/care/period-of-purple-crying/', 'Guide'), 'heart');
     }
     if (id === 'daynight') {
@@ -593,7 +596,7 @@
       + video('Watch infant choking first aid', 'University of Washington', 'https://depts.washington.edu/learncpr/videodemo/choking-infant-video.html')
       + tip('Don’t sweep blindly', 'Only reach into {p} mouth if you can see the object and easily pick it out.')
       + tip('Take a class', 'A short infant first aid class lets you practice these steps on a doll. It’s the best way to feel ready.')
-      + `<a class="hub-more" href="https://www.healthychildren.org/English/health-issues/injuries-emergencies/Pages/Choking-Prevention.aspx" target="_blank" rel="noopener"><span>${F('AAP guide to choking prevention and first aid')}</span><span class="hub-chev" aria-hidden="true">↗</span></a>`, 'shield');
+      + `<a class="hub-more" href="https://www.healthychildren.org/English/health-issues/injuries-emergencies/Pages/Choking-Prevention.aspx" target="_blank" rel="noopener"><span>${F('Preventing choking, and what to do · HealthyChildren.org')}</span><span class="hub-chev" aria-hidden="true">↗</span></a>`, 'shield');
   }
   function helpPage(cat) {
     const D = C().DATA[cat], T = C().T, tone = l => /911/.test(l) ? 'is-red' : /pediatrician/i.test(l) ? 'is-red' : '';
@@ -637,7 +640,7 @@
     if (choice === 'trying') content = steps(['Compare a few nights, not one. Less time settling or less help needed is progress.', 'After a rough night, meet hunger, discomfort or illness first, then go back to your usual response.', 'If it isn’t getting easier after a week or two, pause and talk it through with your pediatrician.']);
     if (choice === 'routine') content = steps([age < 8 ? 'If naps are short and Maya’s tired again, keep offering the extra sleep.' : age < 12 ? 'New skills and separation anxiety can disrupt settling. Practice by day and keep bedtime familiar.' : 'One refused nap doesn’t mean {s’s} ready for one nap. Look for a pattern first.', 'After illness or travel, give the comfort {s} {need|needs}, then return to your familiar bedtime steps.', 'If sleep stays hard for a while, notice whether it’s falling asleep, waking or staying asleep, and mention it to your pediatrician.']);
     if (choice === 'help') content = steps(['Keep a short lead-in you can repeat: a feed, a diaper, then a song or book.', 'Feeding, rocking or holding to sleep can stay part of it, if it works for you.', 'Show other caregivers the same steps, so Maya hears familiar cues from everyone.']);
-    return detail('Sleep', 'Optional', 'Settling and sleep training', 'Sleep training is a choice, not a must. Helping Maya fall asleep can stay part of your routine if it works for you.',
+    return detail('Sleep', 'Optional', 'Sleep training, if you choose it', 'Sleep training is a choice, not a must. Helping Maya fall asleep can stay part of your routine if it works for you.',
       `<p class="hub-group">What would help right now?</p>` + options(opts.map(o => [o[0], o[1], o[2]]), choice, k => `chgChooseSettling('${k}')`) + `<div data-settling-guide="${choice}">${content}</div>`, 'moon');
   }
 

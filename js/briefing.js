@@ -69,7 +69,7 @@
         link: link("openPage('topic:Feeding')", 'See newborn feeding') });
     if (wk >= 2 && wk < 6)
       out.push({ topic: 'Health', key: 'parent', title: 'How are you doing?',
-        body: `Feeling weepy or overwhelmed in the first couple of weeks is common. If it lasts longer or feels heavy, you don’t have to wait it out.`,
+        body: `Feeling weepy or overwhelmed is common in the early weeks. If it lasts more than a couple of weeks or feels heavy, you don’t have to wait it out.`,
         link: link("openPage('chg:Health:d:you')", 'Looking after you') });
     if (wk >= 6 && wk < 11)
       out.push({ topic: 'Sleep', key: 'crying', title: 'Fussy evenings are common right now',
@@ -80,6 +80,9 @@
     if (priority && priority.type === 'swaddle') {
       if (mv === 'trying' || mv === 'rolling') out.push({ topic: 'Sleep', key: 'rolling', title: mv === 'trying' ? `${n()}’s trying to roll, so it’s time to stop swaddling` : `Now that ${n()}’s rolling, swaddling stops`,
         body: `Switch to a sleep sack that leaves ${p.p} arms free. During the day, plenty of floor time helps ${p.o} practice.`,
+        tools: homePriorityTools(priority), link: link("openSection('Sleep','sleep-rolling')", 'See what to change') });
+      else if (developmentMonth(actualMonth()) >= 6) out.push({ topic: 'Sleep', key: 'rolling-soon', title: 'Once rolling starts, swaddling stops',
+        body: `Most babies roll by about 6 months. If ${n()} still sleeps swaddled, switch to a sleep sack that leaves ${p.p} arms free.`,
         tools: homePriorityTools(priority), link: link("openSection('Sleep','sleep-rolling')", 'See what to change') });
       else out.push({ topic: 'Sleep', key: 'rolling-soon', title: 'Rolling is on the way',
         body: `Most babies first try between 3 and 6 months. If you swaddle, that first try is your cue to switch to a sleep sack.`,
@@ -116,20 +119,30 @@
         link: link("openPage('topic:Feeding')", 'See the first-foods guide') });
 
     // A checkup in the next two weeks.
-    if (visitSoon && visitSoon.days > 7 && visitSoon.days <= 14) out.push(visitItem(visitSoon));
+    // Once solids are going, the allergen list stays on Home until it's done.
+    if (live() && hasFoodAnswer() && ['new', 'textures'].includes(foodStage()) && !recent('food') && window.__chg) {
+      const A = ['Peanut', 'Egg', 'Dairy', 'Wheat', 'Soy', 'Sesame', 'Tree nuts', 'Fish', 'Shellfish'], got = window.__chg.local.allergens || {}, t = A.filter(a => got[a]).length;
+      if (t < A.length) out.push({ topic: 'Feeding', key: 'allergens', title: 'Try a new allergen', reason: `${t} of ${A.length} tried`,
+        body: `Offering common allergens early and often can lower the chance of food allergies. ${A.find(a => !got[a])} is a good next one.`,
+        link: link("openPage('chg:Feeding:d:allergens')", 'See how to offer each one') });
+    }
     return out.filter((x, i) => out.findIndex(y => y.topic === x.topic) === i).slice(0, 2); // one card per category
   }
 
+  // The next checkup still ahead (or a saved date). A past one that wasn't recorded is a Home question instead.
   function upcomingVisit() {
     if (!live()) return null;
-    let age = healthJourneyFocus();
-    if (age === 0 && (NOW - parse(profile.dob)) / DAY > 10) age = 1;
-    const rec = healthRecord(age);
-    if (rec && rec.status === 'attended') return null;
-    const when = rec && rec.status === 'planned' ? parse(rec.date) : addMonths(parse(profile.dob), age);
-    const days = Math.round((when - NOW) / DAY);
-    if (days > 35 && !(rec && rec.status === 'planned')) return null;
-    return { age, days, saved: rec && rec.status === 'planned' ? rec.date : null };
+    for (const age of WELL_VISITS) {
+      const rec = healthRecord(age);
+      if (rec && rec.status === 'attended') continue;
+      const planned = rec && rec.status === 'planned';
+      const due = age === 0 ? new Date(parse(profile.dob).getTime() + 5 * DAY) : addMonths(parse(profile.dob), age);
+      const when = planned ? parse(rec.date) : due, days = Math.round((when - NOW) / DAY);
+      if (!planned && days < 0) continue;
+      if (days > 35 && !planned) return null;
+      return { age, days, saved: planned ? rec.date : null };
+    }
+    return null;
   }
   function visitItem(v) {
     const label = healthJourneyLabel(v.age);
@@ -151,11 +164,11 @@
       body: `Some babies start waking more for a while. It’s normal, and it passes.`,
       link: link("openPage('chg:Sleep:e:0')", 'See how to respond if it happens') });
     const wk = live() ? Math.floor((NOW - parse(profile.dob)) / DAY / 7) : -1;
-    if (wk >= 2 && wk < 6) out.push({ topic: 'Sleep', key: 'crying-soon', title: 'Crying often builds over the next few weeks',
-      body: `It usually peaks around 6–8 weeks, often in the evening, then eases. Here’s what helps.`,
+    if (wk >= 2 && wk < 6) out.push({ topic: 'Sleep', key: 'crying-soon', title: 'Evening crying often builds from now',
+      body: `It usually peaks around 6–8 weeks, then eases. If ${n()} is already crying for long stretches, here’s what helps.`,
       link: link("openPage('chg:Sleep:d:crying')", 'What helps with crying') });
     const visit = upcomingVisit();
-    if (visit && visit.days > 14) out.push(visitItem(visit));
+    if (visit && visit.days > 7) out.push(visitItem(visit));
     if (live() && m === 11) out.push({ topic: 'Feeding', key: 'one-year-milk', title: 'Milk and cups around the first birthday',
       body: `From 12 months, whole cow’s milk can be a drink from a cup, and bottles start to phase out.`,
       link: link("openPage('chg:Feeding:d:milk12')", 'See what changes') });

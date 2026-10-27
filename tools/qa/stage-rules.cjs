@@ -108,7 +108,7 @@ for (const [cat, route, i] of [['Development', 'development-stage:4', 1], ['Safe
   const a = family(5); a.run("navigate('categories');openPage('explore')");
   const find = q => { a.run(`searchGuides(${JSON.stringify(q)})`); return a.run("document.querySelector('.hub-results').innerHTML").replace(/<[^>]+>/g, ' '); };
   for (const [q, expect] of [['fever', 'Fever and sick days'], ['how much formula', 'How much milk or formula'], ['spit up', 'Spit-up'], ['diaper rash', 'Diaper rash'],
-    ['constipation', 'When to call your pediatrician'], ['swaddle', 'Swaddling'], ['teething', 'Teething'], ['vaccines', 'Checkups and vaccines'], ['sleep regression', '4-month sleep change']])
+    ['constipation', 'When to call your pediatrician'], ['swaddle', 'Swaddling'], ['teething', 'Teething, drool and gums'], ['vaccines', 'Checkups and vaccines'], ['sleep regression', '4-month sleep change']])
     check(find(q).includes(expect), `Search “${q}” finds ${expect}`);
   check(/No guide for/.test(find('zebra')), 'Search with no match says so and suggests words');
   a.run("navigate('home');setMonth(8)");

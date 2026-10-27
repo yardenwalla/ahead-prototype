@@ -38,7 +38,7 @@
       { key: 2, label: 'By 2 months' }, { key: 4, label: 'By 4 months' }, { key: 6, label: 'By 6 months' }, { key: 9, label: 'By 9 months' }, { key: 12, label: 'By 12 months' }
     ] },
     'Daily rhythm': { kind: 'calendar', stages: [
-      { label: 'Newborn', age: '0–3 weeks' }, { label: '1–3 months' }, { label: '4–6 months' }, { label: '7–12 months' }
+      { label: 'Newborn', age: '0–4 weeks' }, { label: '1–3 months' }, { label: '4–6 months' }, { label: '7–12 months' }
     ] },
     Health: { kind: 'calendar', fixed: true, stages: [0, 1, 2, 4, 6, 9, 12].map(a => ({ key: a, label: a === 0 ? 'First week' : a + (a === 1 ? ' month' : ' months') })) }
   };

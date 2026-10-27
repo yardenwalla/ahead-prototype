@@ -7,7 +7,7 @@
   const live = () => typeof isCurrent !== 'function' || isCurrent();
   const monthsLabel = n => n === 0 ? 'Newborn' : n === 12 ? '1 year' : n === 1 ? '1 month' : n + ' months';
   function frame(cat, attrs, pillsHtml, body) {
-    return `<div class="quiet-category hub-page" data-overview="${cat}" style="${yearTheme(cat)}" ${attrs}>${monthlyPageHeader(cat)}${pillsHtml}${body}<p class="hub-foot">Ages are typical. Every baby moves at their own pace.</p></div>`;
+    return `<div class="quiet-category hub-page" data-overview="${cat}" style="${yearTheme(cat)}" ${attrs}>${monthlyPageHeader(cat)}${pillsHtml}${body}<p class="hub-foot">${cat === 'Health' ? 'Your pediatrician may schedule checkups a little differently.' : 'Ages are typical. Every baby moves at their own pace.'}</p></div>`;
   }
   // A parent can say "this is where Maya is now" for a category; it sticks until they change it.
   const STAGE_KEY = () => 'ahead-stage:' + journeyKey();
@@ -43,7 +43,7 @@
   const DOMAIN_TITLES = { Social: 'Social', Talking: 'Communication', Thinking: 'Thinking', Movement: 'Movement' };
   const DOMAIN_ICONS = { Social: 'smile', Talking: 'chat', Thinking: 'idea', Movement: 'sit' };
   window.developmentJourneyOverview = developmentJourneyOverview = function (selected = null) {
-    const now = devNow(), ref = DEV_STAGES[selected] ? Number(selected) : now, age = ref === 12 ? '1 year' : ref + ' months';
+    const now = devNow(), ref = DEV_STAGES[selected] ? Number(selected) : now, age = ref + ' months';
     const st = DEV_STAGES[ref], h = H();
     const devKeys = Object.keys(DEV_STAGES).map(Number), nowI = devKeys.indexOf(now);
     const pills = h.pills('Development by age', devKeys.map((k, i) => ({ label: STAGE_TABLE.Development.stages[i].label, age: STAGE_TABLE.Development.stages[i].age, on: k === ref, now: live() && k === now, onclick: `openPage('development-stage:${k}')`, change: stageCanChange('Development', i, nowI) ? `hubChangeStage('Development',${i})` : '' })), 'Development');
@@ -62,7 +62,8 @@
       const extra = (playStageModel().primary || []).length - 3 + (playStageModel().more || []).length;
       b += h.list('Try together', [...ideas.map(a => h.row({ icon: 'hand', cat: 'Development', title: (window.hubBabyify || (x => x))(a.title), sub: playLine(a), onclick: `openPage('play-activity:${lo}:${a.id}')` })), extra > 0 ? h.listMore(`See ${extra} more ideas`, `openPage('chg:Development:d:more:${lo}')`) : '']);
     }
-    b += h.versus('Not yet, or time to ask?', ['Not yet', `Every baby gets there in their own time. These can show up any time before ${age}.`], ['Talk to your pediatrician', 'If Maya loses a skill, or something worries you. No need to wait for the checkup.']);
+    const reached = live() && developmentMonth(actualMonth()) >= ref;
+    b += h.versus('Not yet, or time to ask?', ['Not yet', reached ? `Most babies show these by ${age}. If Maya isn’t doing some of them yet, mention it at {p} next checkup. It’s a common question.` : `Every baby gets there in their own time. These can show up any time before ${age}.`], ['Talk to your pediatrician', 'Call if Maya loses a skill {s} had, or if something worries you. You don’t need to wait for the checkup.']);
     const keys = Object.keys(DEV_STAGES).map(Number), nx = keys[keys.indexOf(ref) + 1];
     if (nx && live() && ref === now && nx - developmentMonth(actualMonth()) <= 1) b += h.next(`Coming up by ${monthsLabel(nx)}`, DEV_STAGES[nx].title, `openPage('development-stage:${nx}')`);
     b += h.more('What other parents ask', `openPage('chg:Development:d:faq:${ref}')`);
@@ -91,7 +92,7 @@
     { key: 'middle', rail: '4–6 months', when: 'Usually 4–6 months' },
     { key: 'late', rail: '7–12 months', when: 'Usually 7–12 months' }
   ];
-  const careFor = (days, m) => days < 21 ? 0 : m < 4 ? 1 : m < 7 ? 2 : 3;
+  const careFor = (days, m) => days < 28 ? 0 : m < 4 ? 1 : m < 7 ? 2 : 3;
   const careAge = () => (typeof hubAgeFor === 'function' ? hubAgeFor('care', actualMonth()) : developmentMonth(actualMonth()));
   const careStage = () => { const o = hubStageOverride('Care'); if (CARE[o]) return Number(o); return live() ? careFor((NOW - parse(profile.dob)) / 864e5, careAge()) : (month < 1 ? 0 : month < 4 ? 1 : month < 7 ? 2 : 3); };
   const bathSafety = () => H().versus('Bath safety', ['Always', 'Gather everything first and keep one hand on Maya the whole time.'], ['Never', 'Step away, even for a moment. Babies can slip under quietly in seconds.']);
@@ -115,8 +116,8 @@
     }
     if (v === 2) {
       b += h.hero({ eyebrow: '4–6 months', title: 'Bath time becomes part of bedtime', lead: 'Many families use the bath to start winding down. Drool and chewing often start now too, long before the first tooth.' });
-      b += h.glanceCard(v === now ? 'Maya’s care at a glance' : 'At this stage', [['Baths', '2–3 a week', 'Often before bed'], ['Sun', 'Shade first', 'Under 6 months']], `openPage('chg:Daily rhythm:d:tub')`);
-      b += h.list('What helps now', [careRow('moon', 'Make the bath part of bedtime', 'Bath, feed, book, bed', 'chg:Sleep:d:routine'), careRow('tooth', 'Look after drool and gums', 'Wipe gums and keep the chin dry', 'gums'), careRow('sun', 'Keep Maya in the shade', 'Hats and shade before sunscreen', 'sun')]);
+      b += h.glanceCard(v === now ? 'Maya’s care at a glance' : 'At this stage', [['Baths', '2–3 a week', 'Often before bed'], actualMonth() >= 6 ? ['Sun', 'Shade, then sunscreen', 'From 6 months'] : ['Sun', 'Shade first', 'Under 6 months']], `openPage('chg:Daily rhythm:d:tub')`);
+      b += h.list('What helps now', [careRow('moon', 'Make the bath part of bedtime', 'Bath, feed, book, bed', 'chg:Sleep:d:routine'), careRow('tooth', 'Teething, drool and gums', 'Wipe gums and keep the chin dry', 'gums'), careRow('sun', 'Keep Maya in the shade', 'Hats and shade before sunscreen', 'sun')]);
       b += bathSafety();
     }
     if (v === 3) {
@@ -137,23 +138,23 @@
       h.steps(['Warm the room and lay Maya on a towel, with everything you need within reach.', 'Wash {p} face with a damp washcloth and plain water, then the rest of {o}, uncovering one part at a time.', 'Finish with the diaper area, then pat {o} dry, paying attention to skin folds.'])
       + h.video('Watch a newborn bath, step by step', 'WebMD', 'https://www.webmd.com/parenting/baby/video/bathing-newborns') + h.tip('How often?', 'Two or three times a week is plenty. In between, wipe {p} face, neck and diaper area.'), 'towel');
     if (id === 'cord') return d('Newborn', 'Keep the cord stump clean and dry', 'The stump usually dries up and falls off on its own in 1–3 weeks.',
-      h.steps(['Fold the top of the diaper down so the stump stays in the air.', 'If it gets dirty, clean it gently with plain water and pat it dry.', 'Let it fall off by itself, even if it’s hanging by a thread.']) + h.tip('A little crust is normal', 'A spot of blood when it comes off is normal too. Call if the skin around it gets red, swollen or smelly.') + h.tip('If your baby was circumcised', 'Put a dab of petroleum jelly on the tip at each diaper change until it heals, usually in a week to 10 days. Call if there’s bleeding, swelling or pus.'), 'cord');
-    if (id === 'nails') return d(stageName, 'Trim tiny nails', 'Baby nails grow fast and are sharp enough to scratch {p} face.',
+      h.steps(['Fold the top of the diaper down so the stump stays in the air.', 'If it gets dirty, clean it gently with plain water and pat it dry.', 'Let it fall off by itself, even if it’s hanging by a thread.']) + h.tip('A little crust is normal', 'A spot of blood when it comes off is normal too. Call if the skin around it gets red, swollen or smelly.') + ((typeof babyPronouns === 'function' && babyPronouns().s === 'she') ? '' : h.tip('If your baby was circumcised', 'Put a dab of petroleum jelly on the tip at each diaper change until it heals, usually in a week to 10 days. Call if there’s bleeding, swelling or pus.')), 'cord');
+    if (id === 'nails') return d(stageName, 'Trim tiny nails', 'Those tiny nails grow fast and are sharp enough to scratch {p} face.',
       h.steps(['Wait until Maya is asleep or very relaxed.', 'Use baby nail clippers or a soft emery board, pressing the fingertip pad away from the nail.', 'File any rough edges. A nick happens to everyone; press gently with a clean cloth.']), 'nail');
-    if (id === 'tub') return d(stageName, 'Give a tub bath', 'Once the cord has healed, Maya’s ready for a baby tub.',
+    if (id === 'tub') return d(stageName, 'Give a tub bath', 'Once the cord stump has fallen off and the spot is dry, Maya’s ready for a baby tub.',
       (window.hubFigure ? hubFigure('tub', 'Daily rhythm', 'A baby lying back in a baby tub with about 2 inches of warm water, a hand supporting the head and neck.') : '') + h.steps(['Gather everything first: towel, washcloth, mild soap and a clean diaper.', 'Fill the tub with about 2 inches of warm water. Test it with your wrist; it should feel warm, not hot.', 'Support {p} head and neck with one arm, and wash from top to bottom with your other hand.', 'Lift {o} out onto the towel and wrap {o} up right away.'])
-      + h.video('Watch a baby bath, step by step', 'WebMD', 'https://www.webmd.com/parenting/baby/video/bathing-newborns') + h.tip('Water heater', 'Set it below 120°F so tap water can’t scald.'), 'bath');
+      + h.video('Watch a baby bath, step by step', 'WebMD', 'https://www.webmd.com/parenting/baby/video/bathing-newborns') + h.tip('Never step away', 'Not even for a moment. If you need to leave, wrap Maya in a towel and take {o} with you.') + h.tip('Water heater', 'Set it below 120°F so tap water can’t scald.'), 'bath');
     if (id === 'skin') return d(stageName, 'Diaper rash and skin', 'Most diaper rash clears up in a few days with a few simple steps.',
       h.steps(['Change diapers often, and let the skin air out when you can.', 'Use a thick layer of zinc oxide cream at every change.', 'Call your pediatrician if it blisters, bleeds, spreads or isn’t better in a few days.']) + h.tip('Dry skin and cradle cap', 'Dry skin is common. Use a mild, fragrance-free soap only where needed, then pat on a fragrance-free moisturizer while the skin is still damp. For crusty patches on the scalp, rub in a little baby oil and brush gently before the bath.') + h.tip('Red, itchy patches?', 'Show your pediatrician, who can suggest what helps.'), 'drop');
     if (id === 'dress') return d(stageName, 'Dress Maya for the weather', 'Babies can’t tell you they’re too hot or cold, so a simple rule helps.',
       h.steps(['Dress Maya in one more layer than you’re comfortable in.', 'Feel the back of {p} neck. Sweaty means too warm; cool means add a layer.', 'Skip hats and heavy blankets for sleep. A sleep sack is enough.']) + h.tip('In the car seat', 'Take off puffy coats first. Buckle {o} in, then put a blanket over the straps.'), 'towel');
-    if (id === 'gums') return d(stageName, 'Look after drool and gums', 'Drooling and chewing on everything are normal now. Teeth can take a while to follow.',
-      h.steps(['Wipe {p} gums with a clean, damp cloth once a day.', 'Keep a soft bib on and pat the chin dry to avoid a drool rash.', 'Offer a cool, firm teething ring if {s} {seem|seems} sore.']) + h.tip('Skip these', 'Teething necklaces, numbing gels and tablets. Ask your pediatrician about pain relief if needed.'), 'tooth');
+    if (id === 'gums') return d(stageName, 'Teething, drool and gums', 'Drooling and chewing on everything are normal now. Teeth can take a while to follow.',
+      h.steps(['Wipe {p} gums with a clean, damp cloth once a day.', 'Keep a soft bib on and pat the chin dry to avoid a drool rash.', 'Offer a cool, firm teething ring if {s} {seem|seems} sore.']) + h.tip('Skip these', 'Teething necklaces, numbing gels and tablets. Ask your pediatrician about pain relief if needed.') + h.list('', [careRow('tooth', 'Brush the first teeth', 'Start as soon as the first one appears', 'teeth')]), 'tooth');
     if (id === 'teeth') return d(stageName, 'Brush the first teeth', 'As soon as the first tooth appears, brushing helps keep it healthy.',
-      h.steps(['Use a soft baby toothbrush and a smear of fluoride toothpaste the size of a grain of rice.', 'Brush gently twice a day, including before bed.', 'No need to rinse. A little toothpaste left behind is fine.']) + h.tip('First dental visit', 'Plan one by the first birthday, or within 6 months of the first tooth.'), 'tooth');
+      h.steps(['Use a soft baby toothbrush and a smear of fluoride toothpaste the size of a grain of rice.', 'Brush gently twice a day, including before bed.', 'No need to rinse. A little toothpaste left behind is fine.']) + h.tip('First dental visit', 'Plan one by the first birthday, or within 6 months of the first tooth, whichever comes first.'), 'tooth');
     if (id === 'bathseat') return d(stageName, 'Bath seats aren’t safety seats', 'A bath seat can help Maya sit up, but it won’t keep {o} safe if you step away.',
       h.steps(['Keep the water shallow, about as high as {p} waist when sitting.', 'Stay within arm’s reach for the whole bath.', 'If you need to leave, wrap Maya in a towel and take {o} with you.']), 'bath');
-    if (id === 'sun') return careStage() < 3 ? d(stageName, 'Keep Maya in the shade', 'Young babies’ skin burns easily, so shade comes first.',
+    if (id === 'sun') return actualMonth() < 6 ? d(stageName, 'Keep Maya in the shade', 'Young babies’ skin burns easily, so shade comes first.',
       h.steps(['Keep {o} in the shade, especially in the middle of the day.', 'Dress {o} in light, long sleeves and a wide-brimmed hat.', 'If you can’t find shade, a little sunscreen on small areas like the face is OK.']) + h.tip('From 6 months', 'Broad-spectrum sunscreen of SPF 30 or more becomes part of the routine.'), 'sun')
       : d(stageName, 'Protect Maya’s skin in the sun', 'Shade still comes first, and sunscreen joins in now.',
       h.steps(['Keep {o} in the shade and dress {o} in light clothes and a wide-brimmed hat.', 'Use a broad-spectrum sunscreen of SPF 30 or more on skin you can’t cover.', 'Reapply every 2 hours, and after water play.']), 'sun');
@@ -176,7 +177,7 @@
   window.yearHub = yearHub = () => baseHub().replace('First responses → shared games', 'Baths and cord care → first teeth');
 
   /* ---------- Safety: "What do I need to do before Maya moves?" ---------- */
-  const SAFETY_HEAD = { setup: ['Set up a few things once', 'Check the car seat, hot water, smoke alarms and any pool access.'], reaching: ['Get ready for reaching and rolling', 'Rolling puts the play mat and changing spot within reach. A quick check covers it.'], rolling: ['Babyproof before Maya moves', 'Most babies start moving at 6–10 months. Getting ahead of it saves a scramble.'], moving: ['Keep going, one room at a time', 'Maya can reach much more now. Work through the rooms {s} {use|uses} most.'], pulling: ['Check what Maya can reach standing', 'Standing brings windows, cords and furniture into reach.'] };
+  const SAFETY_HEAD = { setup: ['Set up a few things once', 'Check the car seat, hot water, smoke alarms and any pool access.'], reaching: ['Get ready for reaching and rolling', 'Once rolling starts, small things on the floor are suddenly within reach. A quick check covers it.'], rolling: ['Babyproof before Maya moves', 'Most babies start moving at 6–10 months. Getting ahead of it saves a scramble.'], moving: ['Keep going, one room at a time', 'Maya can reach much more now. Work through the rooms {s} {use|uses} most.'], pulling: ['Check what Maya can reach standing', 'Standing brings windows, cords and furniture into reach.'] };
   window.safetyMovementGuide = safetyMovementGuide = function (selected = null) {
     const keys = SAFETY_MOVEMENT_STAGES.map(p => p.key), now = live() ? safetyStageNow() : safetyMovementStage();
     const key = keys.includes(selected) ? selected : now, owner = safetyOwnerForStage(key), guide = safetyOwnedGuides()[owner], h = H();
@@ -190,7 +191,7 @@
     b += pending.length
       ? h.list(done ? 'Next up' : 'Start with these', [...pending].sort((x, y) => rank(x) - rank(y)).slice(0, 3).map(id => h.row({ icon: 'shield', cat: 'Safety', title: (items[id] || {}).title || id, sub: shortLine((items[id] || {}).body), onclick: browse ? `openSafetyChecklist('${owner}',true)` : `openHomeSafetyCheck('${owner}','${id}')` })))
       : h.note(`You’ve done every check for this stage. Nice work.`);
-    if (key === 'rolling' || key === 'reaching') b += h.list('', [h.row({ icon: 'moon', cat: 'Safety', title: 'Rolling changes the sleep space too', sub: 'Stop swaddling at the first attempt to roll', onclick: "openSection('Sleep','sleep-rolling')" })]);
+    if (key === 'reaching' || (key === 'rolling' && answers.swaddleStopped !== 'Yes' && !answers.neverSwaddled)) b += h.list('', [h.row({ icon: 'moon', cat: 'Safety', title: 'Rolling changes the sleep space too', sub: key === 'rolling' ? 'Once rolling starts, swaddling stops' : 'Stop swaddling at the first attempt to roll', onclick: "openSection('Sleep','sleep-rolling')" })]);
     b += h.versus('If something goes wrong', ['Poison Help', 'Call 1-800-222-1222 if Maya swallows something that could be harmful.'], ['Call 911', 'If {s} can’t breathe or won’t wake. A swallowed battery or magnet means the ER right away.']);
     const nx = keys[keys.indexOf(key) + 1];
     if (nx && !browse) b += h.next('Coming up', SAFETY_MOVEMENT_STAGES.find(p => p.key === nx).rail, `openPage('safety-stage:${nx}')`);
@@ -207,8 +208,13 @@
     const pills = h.pills('Checkups', WELL_VISITS.map(a => ({ label: STAGE_TABLE.Health.stages[WELL_VISITS.indexOf(a)].label, on: a === age, now: live() && a === focus, onclick: `openPage('health-visit:${a}')` })), 'Health');
     const eyebrow = done ? `Done · ${journeyDateLabel(record.date)}` : planned ? `Saved for ${journeyDateLabel(record.date)}` : age === 0 ? 'In the first week' : `Usually at ${age} month${age === 1 ? '' : 's'}`;
     const title = done ? `You’ve been to ${the}` : `What happens at ${the}`;
-    let b = h.hero({ eyebrow, title, lead: conceptHealthSummary(age), button: done ? { label: 'Add notes from the visit', onclick: `openHealthDetail(${age},'notes')` } : { label: planned ? 'Change the date' : 'Save the date', onclick: `openPage('visit-form:plan-${age}')` } });
-    if (!done) b += `<div class="hub-browse"><button class="hub-link" onclick="openPage('visit-form:${age}')">${F(planned && record.date < iso(NOW) ? 'Been already? Mark it as done' : 'Already had this visit? Mark it as done')} ›</button></div>`;
+    // The buttons follow the checkup's timing: past due asks to add it, far ahead only saves a date.
+    const dueAt = age === 0 ? new Date(parse(profile.dob).getTime() + 5 * 864e5) : addMonths(parse(profile.dob), age), dueDays = Math.round((dueAt - NOW) / 864e5);
+    const pastDue = live() && !done && !planned && dueDays < -3, farAhead = !done && !planned && dueDays > 14;
+    const eyebrow2 = pastDue ? `Was due around ${journeyDateLabel(iso(dueAt))}` : eyebrow;
+    let b = h.hero({ eyebrow: eyebrow2, title, lead: conceptHealthSummary(age), button: done ? { label: 'Add notes from the checkup', onclick: `openHealthDetail(${age},'notes')` } : pastDue ? { label: 'Add it to the timeline', onclick: `openPage('visit-form:${age}')` } : { label: planned ? 'Change the date' : 'Save the date', onclick: `openPage('visit-form:plan-${age}')` } });
+    if (pastDue) b += `<div class="hub-browse"><button class="hub-link" onclick="openPage('visit-form:plan-${age}')">${F('Booked for later? Save the date')} ›</button></div>`;
+    else if (!done && !farAhead) b += `<div class="hub-browse"><button class="hub-link" onclick="openPage('visit-form:${age}')">${F(planned && record.date < iso(NOW) ? 'Been already? Mark it as done' : 'Already had this checkup? Mark it as done')} ›</button></div>`;
     if (live() && age !== focus) b += back('Back to your next checkup', `openPage('health-visit:${focus}')`);
     b += h.list('Before you go', [
       h.row({ icon: 'clock', cat: 'Health', title: 'What to expect', sub: EXPECT[age], onclick: `openHealthDetail(${age},'expect')` }),
@@ -219,10 +225,10 @@
       h.row({ icon: 'steth', cat: 'Health', title: `When Maya seems sick`, sub: 'Fevers, medicine and when to call', onclick: "openPage('chg:Health:d:sick')" }),
       h.row({ icon: 'heart', cat: 'Health', title: 'How are you doing?', sub: 'Your health matters too', onclick: "openPage('chg:Health:d:you')" })
     ]);
-    b += h.versus('When to call', ['Call your pediatrician', feverRule(actualMonth())], ['Call 911', 'Trouble breathing, blue lips, or {s} won’t wake up.']);
+    b += h.versus('When to call', ['Call your pediatrician', feverRule(actualMonth())], ['Call 911', 'Struggles to breathe or turns blue, won’t wake or is floppy, or has a seizure.']);
     const nx = WELL_VISITS[WELL_VISITS.indexOf(age) + 1];
-    if (nx != null) b += h.next(`Next checkup`, healthJourneyLabel(nx), `openPage('health-visit:${nx}')`);
-    b += h.more('Your appointment notes', `openHealthDetail(${age},'notes')`);
+    if (nx != null) b += h.next(live() && age === focus ? 'After that' : 'Next checkup', healthJourneyLabel(nx), `openPage('health-visit:${nx}')`);
+    b += h.more('Your checkup notes', `openHealthDetail(${age},'notes')`);
     return frame('Health', `data-health-journey="${age}"`, pills, b);
   };
 
@@ -250,20 +256,20 @@
   // One fever rule, used everywhere fever comes up. Source: HealthyChildren.org, "When to Call the Pediatrician".
   window.feverRule = m => m < 3
     ? 'A temperature of 100.4°F or higher: call your pediatrician right away, day or night.'
-    : 'Call your pediatrician if a fever lasts more than 24 hours, keeps going above 104°F, or comes with a rash, repeated vomiting or diarrhea, or {s} {seem|seems} very ill, unusually sleepy or very fussy.';
+    : 'Call your pediatrician if a fever lasts more than a day, or comes with fewer wet diapers, a rash or unusual sleepiness.';
   function healthDetail(id) {
     const h = H(), under3 = actualMonth() < 3;
     if (id === 'you') return detailFrame('Health', 'Looking after you', 'How are you doing?', 'Caring for a new baby is a lot, for every parent. Your health matters too, and asking for help is part of looking after Maya.',
-      h.versus('Common, or time to get help?', ['Common in the first two weeks', 'Feeling weepy, anxious or overwhelmed, with good moments in between. It usually eases on its own.'], ['Get help', 'Low mood or worry that lasts more than two weeks, can’t sleep even when you could, or feeling you can’t cope.'])
+      h.versus('Common, or time to get help?', actualMonth() < 1 ? ['Common in the first two weeks', 'Feeling weepy, anxious or overwhelmed, with good moments in between. It usually eases on its own.'] : ['Common', 'Feeling worn out, short-tempered or flat after weeks of broken sleep. Rest and a little help usually make a real difference.'], ['Get help', 'Low mood or worry that lasts more than two weeks, can’t sleep even when you could, or feeling you can’t cope.'])
       + `<section class="hub-card hub-callout"><b>${F('Talk to someone today')}</b><p>${F('Call or text the National Maternal Mental Health Hotline at 1-833-852-6262. It’s free, confidential and open any time, for moms, partners and new parents.')}</p><a class="hub-button" href="tel:18338526262">${F('Call 1-833-852-6262')}</a></section>`
-      + h.steps(['Tell your doctor or Maya’s pediatrician how you’re feeling. They ask because it’s common and treatable.', 'Take the help people offer, and name something specific, like a meal or a nap.', 'If you gave birth, go to your postpartum checkup, even if you feel fine.'])
-      + h.tip('If you’re thinking about harming yourself or Maya', 'Call or text 988, or call 911, right now.'));
+      + h.steps(['Tell your doctor or Maya’s pediatrician how you’re feeling. They ask because it’s common and treatable.', 'Take the help people offer, and name something specific, like a meal or a nap.', actualMonth() < 1 ? 'If you gave birth, go to your postpartum checkup, even if you feel fine.' : 'Trade nights or naps with another adult if you can. One longer stretch of sleep helps more than you’d think.'])
+      + `<section class="hub-card hub-callout is-urgent"><b>${F('If you’re thinking about harming yourself or Maya')}</b><p>${F('Call or text 988, or call 911, right now.')}</p><a class="hub-button" href="tel:988">${F('Call 988')}</a></section>`);
     if (id === 'sick') return detailFrame('Health', 'Between checkups', 'When Maya seems sick', 'Most baby illnesses are mild, but young babies can get sick quickly. Here’s what to watch for.',
       h.versus('Fever', ['3 months and up', 'Call if a fever lasts more than a day, or comes with fewer wet diapers, a rash or unusual sleepiness.'], ['Under 3 months', 'A temperature of 100.4°F or higher: call your pediatrician right away, day or night.'])
       + h.list('Good to know', [
-        h.row({ icon: 'clock', cat: 'Health', title: 'Take a rectal temperature', sub: 'It’s the most accurate way for babies. Forehead and ear readings are less reliable.', onclick: '' }).replace('<button class="hub-row"', '<div class="hub-row is-static"').replace(/<\/button>$/, '</div>').replace('<span class="hub-chev" aria-hidden="true">›</span>', ''),
-        h.row({ icon: 'drop', cat: 'Health', title: 'Watch for dehydration', sub: 'Far fewer wet diapers, a dry mouth, no tears or a sunken soft spot.', onclick: '' }).replace('<button class="hub-row"', '<div class="hub-row is-static"').replace(/<\/button>$/, '</div>').replace('<span class="hub-chev" aria-hidden="true">›</span>', ''),
-        h.row({ icon: 'bottle', cat: 'Health', title: 'Ask before giving medicine', sub: 'Nothing under 3 months without your pediatrician. Ibuprofen only from 6 months. Doses go by weight.', onclick: '' }).replace('<button class="hub-row"', '<div class="hub-row is-static"').replace(/<\/button>$/, '</div>').replace('<span class="hub-chev" aria-hidden="true">›</span>', '')
+        h.row({ icon: 'clock', cat: 'Health', title: 'Take a rectal temperature', sub: 'It’s the most accurate way for babies. Forehead and ear readings are less reliable.', onclick: '' }).replace('<button class="hub-row" onclick=""', '<div class="hub-row is-static"').replace('<button class="hub-row"', '<div class="hub-row is-static"').replace(/<\/button>$/, '</div>').replace('<span class="hub-chev" aria-hidden="true">›</span>', ''),
+        h.row({ icon: 'drop', cat: 'Health', title: 'Watch for dehydration', sub: 'Far fewer wet diapers, a dry mouth, no tears or a sunken soft spot.', onclick: '' }).replace('<button class="hub-row" onclick=""', '<div class="hub-row is-static"').replace('<button class="hub-row"', '<div class="hub-row is-static"').replace(/<\/button>$/, '</div>').replace('<span class="hub-chev" aria-hidden="true">›</span>', ''),
+        h.row({ icon: 'bottle', cat: 'Health', title: 'Ask before giving medicine', sub: 'Nothing under 3 months without your pediatrician. Ibuprofen only from 6 months. Doses go by weight.', onclick: '' }).replace('<button class="hub-row" onclick=""', '<div class="hub-row is-static"').replace('<button class="hub-row"', '<div class="hub-row is-static"').replace(/<\/button>$/, '</div>').replace('<span class="hub-chev" aria-hidden="true">›</span>', '')
       ])
       + `<section class="hub-card hub-callout is-urgent"><b>${F('Call 911 if Maya')}</b><p>${F('Struggles to breathe or turns blue, won’t wake or is floppy, or has a seizure.')}</p></section>`
       + h.tip('Skip cough and cold medicines', 'They aren’t safe for babies. Saline drops and a bulb syringe help with a stuffy nose.')
