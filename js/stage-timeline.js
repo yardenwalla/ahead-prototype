@@ -27,11 +27,9 @@
       { label: 'Family meals', age: '9–12 months', setFrom: 4 }
     ] },
     Safety: { kind: 'skill', stages: [
-      { key: 'setup', label: 'First setup', age: '0–3 months' },
-      { key: 'reaching', label: 'Reaching and rolling', age: '3–5 months' },
-      { key: 'rolling', label: 'Before crawling', age: '5–8 months' },
-      { key: 'moving', label: 'Crawling', age: '8–9 months' },
-      { key: 'pulling', label: 'Pulling up', age: '9 months+' }
+      { key: 'setup', label: 'First setup', age: 'From birth' },
+      { key: 'reaching', label: 'Reaching and rolling', age: '3–6 months' },
+      { key: 'rolling', label: 'On the move', age: '6 months+' }   // crawling to pulling up: one babyproofing checklist
     ] },
     Development: { kind: 'calendar', stages: [
       // Named for the milestone check the stage works toward, so "By 12 months" reads right for a 10-month-old.
@@ -46,6 +44,8 @@
   const guideAge = cat => (cat === 'Development' ? developmentMonth(ageNow()) : typeof hubAgeFor === 'function' ? hubAgeFor('care', ageNow()) : ageNow());
 
   // Can the parent make stage i (index into the table) the baby's stage right now?
+  // Safety has three stages; the movement steps inside "On the move" (crawling, pulling up) shape which checks lead.
+  window.safetyGroup = k => ['rolling', 'moving', 'pulling'].includes(k) ? 'rolling' : k;
   window.stageCanChange = function (cat, i, nowIndex) {
     const T = STAGE_TABLE[cat]; if (!T || T.fixed || !live() || i === nowIndex) return false;
     const s = T.stages[i] || {}, a = guideAge(cat);
@@ -140,7 +140,7 @@
     const care = typeof hubStageOverrideRaw === 'function' && hubStageOverrideRaw('Care');
     if (care && typeof care === 'object') add('Daily rhythm', Number(care.v), hubStageGuess('Care'), care.g);
     const sk = STAGE_TABLE.Safety.stages.map(x => x.key);
-    if (sk.includes(answers.safetyPick) && typeof safetyStageGuess === 'function') add('Safety', sk.indexOf(answers.safetyPick), sk.indexOf(safetyStageGuess()), answers.safetyPickGuess);
+    if (sk.includes(answers.safetyPick) && typeof safetyStageGuess === 'function') add('Safety', sk.indexOf(answers.safetyPick), sk.indexOf(safetyGroup(safetyStageGuess())), answers.safetyPickGuess);
     return out;
   };
   // "Yes, move on": drop the pick so the guide follows age again.
@@ -163,7 +163,7 @@
     const T = STAGE_TABLE[cat]; if (!T) return;
     const snap = snapshot(cat), from = page, s = T.stages[i];
     if (cat === 'Sleep' || cat === 'Feeding') chgSetStage(cat, i, true);
-    else if (cat === 'Safety') { answers.safetyPickGuess = STAGE_TABLE.Safety.stages.findIndex(x => x.key === safetyStageGuess()); answers.safetyPick = s.key; persist(); page = 'topic:Safety'; render(); }
+    else if (cat === 'Safety') { answers.safetyPickGuess = STAGE_TABLE.Safety.stages.findIndex(x => x.key === safetyGroup(safetyStageGuess())); answers.safetyPick = s.key; persist(); page = 'topic:Safety'; render(); }
     else if (cat === 'Development') { hubSetStage('Development', s.key, true); page = 'topic:Development'; render(); }
     else if (cat === 'Daily rhythm') { hubSetStage('Care', i, true); page = 'topic:Daily rhythm'; render(); }
     scrollTo(0, 0);

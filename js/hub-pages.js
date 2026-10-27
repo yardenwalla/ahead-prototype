@@ -228,7 +228,7 @@
         stageRow('bowl', 'Feeding', 'Feeding', STAGE_TABLE.Feeding.stages[chgStageIndex('Feeding')].label, "openPage('topic:Feeding')"),
         stageRow('moon', 'Sleep', 'Sleep', STAGE_TABLE.Sleep.stages[chgStageIndex('Sleep')].label, "openPage('topic:Sleep')"),
         stageRow('smile', 'Development', 'Development & play', 'By ' + dref + ' months', "openPage('topic:Development')"),
-        stageRow('shield', 'Safety', 'Safety', (STAGE_TABLE.Safety.stages.find(p => p.key === safetyStageNow()) || {}).label || '', "openPage('topic:Safety')"),
+        stageRow('shield', 'Safety', 'Safety', (STAGE_TABLE.Safety.stages.find(p => p.key === safetyGroup(safetyStageNow())) || {}).label || '', "openPage('topic:Safety')"),
         stageRow('bath', 'Daily rhythm', 'Everyday care', careNow, "openPage('topic:Daily rhythm')")
         , h.row({ icon: 'chat', cat: 'Development', title: 'Update what’s new', sub: 'Rolling, solids, naps and more', onclick: "openPage('personalize')" })
       ]) + h.note(`Not quite right? Open the guide, tap the stage that fits ${nm}, then tap Change.`);
@@ -581,7 +581,7 @@
   window.hubVisitNotYet = function (a) { let o = {}; try { o = JSON.parse(localStorage.getItem(SNOOZE())) || {}; } catch (e) {} o[a] = NOW.getTime(); try { localStorage.setItem(SNOOZE(), JSON.stringify(o)); } catch (e) {} render(); };
   if (typeof stageSnapshot === 'function') {
     const baseSnap = stageSnapshot;
-    window.stageSnapshot = stageSnapshot = function (t) { const r = baseSnap(t); if (t === 'Health' && isCurrent() && r) r.title = healthJourneyLabel(healthJourneyFocus()); if (t === 'Safety' && r && typeof safetyStageNow === 'function') { const st = STAGE_TABLE.Safety.stages.find(x => x.key === safetyStageNow()); if (st) r.title = st.label; } return r; };
+    window.stageSnapshot = stageSnapshot = function (t) { const r = baseSnap(t); if (t === 'Health' && isCurrent() && r) r.title = healthJourneyLabel(healthJourneyFocus()); if (t === 'Safety' && r && typeof safetyStageNow === 'function') { const st = STAGE_TABLE.Safety.stages.find(x => x.key === safetyGroup(safetyStageNow())); if (st) r.title = st.label; } return r; };
   }
   /* ---------- Questions: one design everywhere, and on Home they come first ----------
      Home order: 1 one question (if due) · 2 What matters now, with up to 2 cards, one per category ·

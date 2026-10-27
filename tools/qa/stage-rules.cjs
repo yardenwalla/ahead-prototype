@@ -12,14 +12,14 @@ const stages = html => [...html.matchAll(/<div class="hub-stage ([^"]*)">([\s\S]
   cls: m[1], change: /class="hub-stage-top is-change"/.test(m[2]), name: (m[2].match(/hub-stage-name">([^<]+)</) || [])[1] }));
 const nowName = html => (stages(html).find(s => /is-now/.test(s.cls)) || {}).name;
 const ROUTES = { Sleep: i => `chg:Sleep:s:${i}`, Feeding: i => `chg:Feeding:s:${i}`, 'Daily rhythm': i => `chg:Daily rhythm:s:${i}`,
-  Development: i => `development-stage:${[2, 4, 6, 9, 12][i]}`, Safety: i => `safety-stage:${['setup', 'reaching', 'rolling', 'moving', 'pulling'][i]}`,
+  Development: i => `development-stage:${[2, 4, 6, 9, 12][i]}`, Safety: i => `safety-stage:${['setup', 'reaching', 'rolling'][i]}`,
   Health: i => `health-visit:${[0, 1, 2, 4, 6, 9, 12][i]}` };
 
 // Every guide, every month: one timeline, one "Now", one stage being read, Change only on the stage being read.
 for (let age = 0; age <= 12; age++) for (const cat of Object.keys(ROUTES)) {
   const a = family(age); a.run(`openPage('topic:${cat}')`);
   const s = stages(a.html());
-  check(s.length >= 4, `${cat} at ${age} months shows the stage timeline`);
+  check(s.length >= (cat === 'Safety' ? 3 : 4), `${cat} at ${age} months shows the stage timeline`);
   check(s.filter(x => /is-now/.test(x.cls)).length === 1, `${cat} at ${age} months marks exactly one stage Now`);
   check(s.filter(x => /is-on/.test(x.cls)).length === 1, `${cat} at ${age} months has one stage being read`);
   check(!s.some(x => x.change), `${cat} at ${age} months: no Change on the baby's own stage`);
@@ -43,7 +43,7 @@ for (let age = 0; age <= 12; age++) for (const cat of Object.keys(ROUTES)) {
 
 // Change sticks, shows the same in Baby's details, and Undo puts it back.
 for (const [cat, age, i, label] of [['Sleep', 7, 3, 'Two naps'], ['Sleep', 10, 2, 'Three naps'], ['Sleep', 5, 1, 'Longer nights'], ['Feeding', 7, 4, 'More textures'], ['Feeding', 9, 2, 'Preparing for solids'],
-  ['Feeding', 7, 1, 'Milk feeds'], ['Development', 8, 2, 'By 6 months'], ['Daily rhythm', 5, 3, '7–12 months'], ['Safety', 6, 3, 'Crawling'], ['Safety', 10, 1, 'Reaching and rolling']]) {
+  ['Feeding', 7, 1, 'Milk feeds'], ['Development', 8, 2, 'By 6 months'], ['Daily rhythm', 5, 3, '7–12 months'], ['Safety', 2, 2, 'On the move'], ['Safety', 10, 1, 'Reaching and rolling']]) {
   const a = family(age); a.run(`openPage('topic:${cat}')`);
   const before = nowName(a.html());
   a.run(`openPage('${ROUTES[cat](i)}');hubChangeStage(${JSON.stringify(cat)}, ${i})`);
@@ -83,7 +83,7 @@ for (const [cat, age, i, label] of [['Sleep', 7, 3, 'Two naps'], ['Sleep', 10, 2
 for (const [cat, pickRoute, i, pickAge, laterAge, picked, next] of [
   ['Development', 'development-stage:6', 2, 8, 10, 'By 6 months', 'By 12 months'],
   ['Daily rhythm', 'chg:Daily rhythm:s:1', 1, 3, 5, '1–3 months', '4–6 months'],
-  ['Safety', 'safety-stage:rolling', 2, 6, 9, 'Before crawling', 'Pulling up'],
+  ['Safety', 'safety-stage:setup', 0, 4, 7, 'First setup', 'On the move'],
   ['Sleep', 'chg:Sleep:s:1', 1, 4, 9, 'Longer nights', 'Two naps']]) {
   const storage = {};
   let a = family(pickAge, {}, storage); a.run(`openPage('${pickRoute}');hubChangeStage(${JSON.stringify(cat)}, ${i});openPage('topic:${cat}')`);
@@ -100,8 +100,10 @@ for (const [cat, route, i] of [['Development', 'development-stage:4', 1], ['Safe
   check(!a.run('homeQuestionQueue()').includes('outgrown:' + cat), `${cat}: picking an earlier stage doesn't trigger the outgrown question straight away`);
 }
 {
-  const a = family(10); a.run("openPage('safety-stage:rolling');hubChangeStage('Safety',2);setAnswer('crawl','Yes');openPage('topic:Safety')");
-  check(nowName(a.html()) === 'Pulling up', 'Telling us about a new movement replaces an older Safety pick');
+  const a = family(7); a.run("openPage('safety-stage:reaching');hubChangeStage('Safety',1);setAnswer('crawl','Yes');openPage('topic:Safety')");
+  check(nowName(a.html()) === 'On the move', 'Telling us about a new movement replaces an older Safety pick');
+  const b = family(8, { pullUp: 'Yes', movementSetByParent: true }); b.run("openPage('topic:Safety')");
+  check(nowName(b.html()) === 'On the move' && /Check what Ari can reach standing/.test(b.html()), 'Pulling up stays in On the move and leads with what changes when standing');
 }
 // Review fixes: search finds common worries; a future month on Home reads as a preview; setup never shows a sample name.
 {

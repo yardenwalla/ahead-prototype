@@ -170,7 +170,7 @@
     [/diaper|wet/i, 'diaper'], [/vitamin|drop/i, 'drop'], [/peanut|allergen/i, 'peanut'], [/egg/i, 'egg'], [/\bcup/i, 'cup'],
     [/food|meal|spoon|tray|eat/i, 'bowl'], [/bath|tub|wash/i, 'bath'], [/tooth|teeth|gum/i, 'tooth'], [/sun|shade/i, 'sun'], [/nail/i, 'nail'],
     [/cord/i, 'cord'], [/skin|cream|eczema|cradle cap|lotion/i, 'drop'], [/dress|cloth|layer|outfit/i, 'shirt'],
-    [/pediatrician|doctor|checkup|call/i, 'steth'], [/gate|stairs|anchor|outlet|safe|choking|first aid/i, 'shield'], [/hand|grasp|reach|explore/i, 'hand']
+    [/pediatrician|doctor|checkup|call/i, 'steth'], [/safe|choking|first aid/i, 'shield'], [/hand|grasp|reach|explore/i, 'hand']
   ];
   const POOL = ['star', 'leaf', 'heart', 'ball', 'book', 'music', 'sun', 'eye', 'toy', 'blocks', 'clock', 'home'];
   window.hubDistinctIcons = function (root = document.getElementById('main')) {
