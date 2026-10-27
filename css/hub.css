@@ -378,3 +378,4 @@
 #main .hub-q .connected-checkin-choices button:hover { filter: brightness(.97); background: var(--year-pale) }
 #main .hub-q-skip { display: block; margin: 8px auto 0; background: none; border: 0; color: var(--muted); font-size: 13px; min-height: 36px; padding: 6px 12px; text-decoration: underline; text-underline-offset: 3px }
 #main .hub-own-ideas { font-size: 12px; font-weight: 600; color: var(--muted); margin: 10px 0 6px }
+#main .hub-fig-panels:has(> :nth-child(3)) { grid-template-columns: 1fr 1fr 1fr; gap: 8px }

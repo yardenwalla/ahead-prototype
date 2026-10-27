@@ -327,7 +327,7 @@
     const unknownFood = cat === 'Feeding' && !isEv && view === cur && m >= 6 && !hasFoodAnswer();
     const guideNow = guideFor(cat, C, isEv, establishedTwoNaps);
     const lead = unknownFood ? 'Whether you’re getting ready or have already started, this guide covers first foods, what’s safe, allergens and how milk feeds fit in.' : fmt(guideNow.short || C.lead);
-    h += `<header class="experience-hero"><div class="experience-hero-copy"><div class="eyebrow">${esc(eyebrow)}</div><h2>${T(C.title)}</h2></div><span class="experience-hero-art" aria-hidden="true">${yearIllustration(cat, 1)}</span><p class="experience-hero-description">${T(lead)}</p></header>`;
+    h += `<header class="experience-hero"><div class="experience-hero-copy"><div class="eyebrow">${esc(eyebrow)}</div><h2>${T(C.title)}</h2></div><span class="experience-hero-art" aria-hidden="true">${catIcon(cat)}</span><p class="experience-hero-description">${T(lead)}</p></header>`;
 
     if (cat === 'Feeding' && !isEv && view === cur && typeof feedingCheckinMarkup === 'function')
       h += feedingCheckinMarkup();
@@ -470,7 +470,7 @@
 
   /* ---------- detail screens ---------- */
   function detail(cat, context, title, description, inner, foot) {
-    return `<div class="quiet-category parent-guide sleep-snapshot chg-page chg-detail" data-overview="${cat}" style="${yearTheme(cat)}">${detailPageTop(cat)}${detailHeading({ context, title, description: T(description), art: yearIllustration(cat, 1) })}${inner}${foot ? `<p class="exp-footer">${foot}</p>` : ''}</div>`;
+    return `<div class="quiet-category parent-guide sleep-snapshot chg-page chg-detail" data-overview="${cat}" style="${yearTheme(cat)}">${detailPageTop(cat)}${detailHeading({ context, title, description: T(description), art: catIcon(cat) })}${inner}${foot ? `<p class="exp-footer">${foot}</p>` : ''}</div>`;
   }
   function checklist(cat) {
     const list = DATA[cat].SAFE, st = local.safe[cat], left = list.filter((_, i) => !st[i]).length;

@@ -219,7 +219,7 @@ window.AHEAD_CHANGES = {
     "signs": "Skipping the late catnap most days and staying comfortable until bedtime.",
     "after": [
      "usually 13–18 months",
-     "Two naps to one",
+     "The 2-to-1 nap transition",
      "Most babies still need two naps at their first birthday."
     ],
     "total": "About 12–16 hours of sleep in 24",
@@ -250,7 +250,7 @@ window.AHEAD_CHANGES = {
      ],
      [
       "After a short nap, offer the next one sooner",
-      "Watch for tired signs rather than waiting for the usual time."
+      "Watch for sleepy cues rather than waiting for the usual time."
      ]
     ],
     "signs": "More night waking and shorter naps, often out of nowhere.",
@@ -268,7 +268,7 @@ window.AHEAD_CHANGES = {
     "looks": [
      "Crying as soon as you walk out",
      "Waking and looking for you",
-     "Wanting the same parent every night"
+     "Wanting only you at bedtime"
     ],
     "why": "Awareness of familiar people and being apart is growing. Baby may seek more reassurance when you leave, including at bedtime.",
     "lasts": "It comes and goes. It often peaks around 9–10 months and can return in the second year.",

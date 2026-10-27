@@ -115,7 +115,16 @@
       ${[[44, 44, '#b8d78d'], [60, 36, '#f2ad74'], [52, 60, '#ecdcb8'], [70, 54, '#b8d78d'], [40, 74, '#f2ad74'], [62, 78, '#ecdcb8'], [78, 70, '#f2ad74']].map(([x, y, f], i) => `<rect x="${x}" y="${y}" width="10" height="10" rx="3" fill="${f}" transform="rotate(${(i * 23) % 40 - 20} ${x + 5} ${y + 5})"/>`).join('')}
       <g transform="translate(112 60)">${[[-1, -1], [1, -1], [-1, 1], [1, 1]].map(([sx, sy]) => `<path d="M${sx * 2} ${sy * 2}h${sx * 13}a${13} 17 0 0 ${sx * sy > 0 ? 1 : 0} ${-sx * 13} ${sy * 17}Z" fill="${sx < 0 ? '#9d86cf' : '#b8a4e3'}"/>`).join('')}</g></svg>`
   };
+  // Swaddling, in three steps: the blanket as a diamond, one side across, then snug at the chest and loose at the hips.
+  const swBase = c => `${backdrop(c, 80, 58, 50)}<path d="M80 12 128 58 80 104 32 58Z" fill="${c.bg}"/><path d="M60 32h40l-20 16Z" fill="#fff" fill-opacity=".75"/>`;
+  const swBaby = (y = 0) => `<rect x="70" y="${44 + y}" width="20" height="38" rx="10" fill="${SK}"/><circle cx="80" cy="${36 + y}" r="10" fill="${SK}"/>`;
+  Object.assign(SCENES, {
+    swad1: (c) => `<svg viewBox="0 0 160 116">${swBase(c)}${swBaby()}${sleepEyes(80, 36, c.ink)}</svg>`,
+    swad2: (c) => `<svg viewBox="0 0 160 116">${swBase(c)}${swBaby()}${sleepEyes(80, 36, c.ink)}<path d="M32 58 94 46 96 84 80 104Z" fill="${c.ink}" fill-opacity=".16"/></svg>`,
+    swad3: (c) => `<svg viewBox="0 0 160 116">${backdrop(c, 80, 58, 50)}${shadow(c, 80, 104, 26)}<path d="M66 48c0-6 6-8 14-8s14 2 14 8v26c0 14 6 22 6 26H60c0-4 6-12 6-26Z" fill="${c.bg}"/><path d="M66 56h28" stroke="#fff" stroke-opacity=".7" stroke-width="1.6" stroke-linecap="round"/><circle cx="80" cy="36" r="10" fill="${SK}"/>${sleepEyes(80, 36, c.ink)}</svg>`
+  });
   const PANELS = {
+    swaddle: { scenes: [['swad1', '1', 'Diamond, top folded', 'Shoulders below the fold'], ['swad2', '2', 'One side across', 'Arm straight, tucked under'], ['swad3', '3', 'Snug and loose', 'Snug chest, room at the hips']] },
     tub: { scenes: ['tub'], chips: ['About 2 inches of water', 'Warm, about 100°F', 'One hand behind the head and neck'] },
     crib: { scenes: ['crib'], chips: ['On the back', 'In a sleep sack', 'Firm, flat mattress', 'Nothing else in the crib'] },
     pace: { scenes: [['paced', 'good', 'Paced', 'Upright, bottle level'], ['tipped', 'bad', 'Avoid', 'Lying back, bottle tipped up']] },
@@ -127,7 +136,7 @@
     if (!P) return '';
     const label = caption.replace(/"/g, '&quot;');
     if (P.chips) return `<figure class="hub-figure is-wide" role="img" aria-label="${label}">${SCENES[P.scenes[0]](c).replace('<svg', '<svg aria-hidden="true"')}<div class="hub-fig-chips" aria-hidden="true">${P.chips.map(t => `<span>${t}</span>`).join('')}</div></figure>`;
-    return `<figure class="hub-figure" role="img" aria-label="${label}"><div class="hub-fig-panels" aria-hidden="true">${P.scenes.map(([k, tone, t, sub]) => `<div class="hub-fig-panel">${SCENES[k](c)}<b class="is-${tone}">${tone === 'bad' ? '✕' : '✓'} ${t}</b><small>${sub}</small></div>`).join('')}</div></figure>`;
+    return `<figure class="hub-figure" role="img" aria-label="${label}"><div class="hub-fig-panels" aria-hidden="true">${P.scenes.map(([k, tone, t, sub]) => `<div class="hub-fig-panel">${SCENES[k](c)}<b class="is-${tone}">${tone === 'bad' ? '✕' : tone === 'good' ? '✓' : tone + '.'} ${t}</b><small>${sub}</small></div>`).join('')}</div></figure>`;
   };
   window.hubArt = function (name, cat = 'Feeding') {
     const c = (typeof YEAR_PALETTES !== 'undefined' ? YEAR_PALETTES : {})[cat] || { ink: '#884866', bg: '#f7d9e5', pale: '#fceef3' };
@@ -187,3 +196,8 @@
     return `<span class="home-month-scene" data-home-art-month="${m}" data-home-art-scene="${scene || 'newborn'}">${art}</span>`;
   };
 })();
+
+/* One icon per category, used everywhere the category itself is shown: Categories, Home, the stage
+   timeline, Baby's details and questions. Same illustration family as the rest of the app. */
+window.CAT_ICON_SCENE = { Development: 4, Feeding: 1, Sleep: 1, Health: 0, Safety: 0, 'Daily rhythm': 0 };
+window.catIcon = function (t) { return typeof yearIllustration === 'function' ? yearIllustration(t, CAT_ICON_SCENE[t] ?? 0) : ''; };

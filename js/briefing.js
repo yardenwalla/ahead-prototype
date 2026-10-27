@@ -215,7 +215,7 @@
     const focus = homeCurrentFocus();
     const sig = [...now, ...next].map(i => i.key).join('|');
     const since = sameAsLastVisit(sig);
-    const close = !live() ? `A preview of ${month === 0 ? 'the newborn weeks' : month + (month === 1 ? ' month' : ' months')}. Your guide follows ${n()}’s age.` : !now.length && !next.length ? `You’re all caught up for now.` : !now.length ? `Nothing to do right now. We’ll bring things up as they get closer.` : `That’s everything for now.`;
+    const close = !live() ? '' : !now.length && !next.length ? `You’re all caught up for now.` : !now.length ? `Nothing to do right now. We’ll bring things up as they get closer.` : `That’s everything for now.`;
 
     let h = `<section class="connected-now" aria-label="What matters now"><div class="connected-summary"><div class="home-summary connected-summary-intro"><div class="home-summary-heading"><div class="home-month-eyebrow">${!live() ? (month > actualMonth() ? 'Coming at ' : 'Looking back at ') + (month === 0 ? 'the newborn weeks' : month + (month === 1 ? ' month' : ' months')) : 'What matters now'}</div><h1>${focus.title}</h1></div><span class="home-summary-art" aria-hidden="true">${homeMonthArt(month)}</span><p class="heroanswer">${focus.body}</p><div class="home-summary-spectrum" aria-hidden="true">${TOPICS.map(([t]) => `<span style="background:${YEAR_PALETTES[t].bg}"></span>`).join('')}</div></div>`;
     if (now.length) h += `<div class="connected-summary-links">${now.map(row).join('')}</div>`;
@@ -224,7 +224,7 @@
     if (since) h = `<p class="brief-unchanged">Nothing’s changed since you checked in on ${journeyDateLabel(iso(new Date(since)))}.</p>` + h;
     const ahead = [...next];
     if (ahead.length) h += `<section class="connected-ahead" aria-label="Coming up"><div class="connected-section-heading"><h2>Coming up</h2></div><div class="connected-ahead-list">${ahead.map(row).join('')}</div></section>`;
-    h += `<p class="brief-close">${close}</p>`;
+    if (close) h += `<p class="brief-close">${close}</p>`;
     return h;
   }
 

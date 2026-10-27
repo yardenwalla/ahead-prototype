@@ -110,15 +110,15 @@
   }
 
   /* ---------- small confirmations ---------- */
-  window.hubToast = function (title, body) {
+  window.hubToast = function (title, body, action) {
     if (!document.createElement || !document.body) return;
     document.querySelectorAll('.hub-toast').forEach(t => t.remove());
     const t = document.createElement('div');
     t.className = 'hub-toast'; t.setAttribute('role', 'status');
-    t.innerHTML = `<span class="hub-toast-spark" aria-hidden="true">✨</span><span><b>${esc2(title)}</b><small>${esc2(body)}</small></span>`;
+    t.innerHTML = `<span class="hub-toast-spark" aria-hidden="true">✨</span><span style="flex:1"><b>${esc2(title)}</b><small>${esc2(body)}</small></span>${action ? `<button class="hub-toast-undo" onclick="${action[1]}">${esc2(action[0])}</button>` : ''}`;
     document.body.appendChild(t);
     requestAnimationFrame(() => t.classList.add('is-in'));
-    setTimeout(() => { t.classList.remove('is-in'); setTimeout(() => t.remove(), 300); }, 3600);
+    setTimeout(() => { t.classList.remove('is-in'); setTimeout(() => t.remove(), 300); }, action ? 6000 : 3600);
   };
   // "Seen it": save, then celebrate the row and say where it went.
   if (typeof window.hubSeen === 'function') {
@@ -132,7 +132,7 @@
       const row = document.querySelectorAll('#main .hub-tick')[idx];
       if (row) { row.classList.add('is-celebrate'); row.insertAdjacentHTML('beforeend', '<span class="hub-burst" aria-hidden="true"><i>✦</i><i>✧</i><i>✦</i><i>✧</i></span>'); }
       const rec = journeyData().records.find(r => r.type === 'milestone' && r.skillKey === key);
-      if (rec) hubToast('A first, saved', `“${rec.title}” is on ${name()}’s timeline · ${journeyDateLabel(rec.date)}`);
+      if (rec) hubToast('A first, saved', `“${rec.title}” is on ${name()}’s timeline · ${journeyDateLabel(rec.date)}`, ['Change date', `document.querySelectorAll('.hub-toast').forEach(t=>t.remove());openPage('event-edit:${rec.id}')`]);
     };
   }
 
@@ -218,7 +218,7 @@
         h.row({ icon: 'clock', cat: 'Development', title: 'Birthday and due date', sub: profile.early && profile.due ? `Born ${esc2(born)} · due ${esc2(journeyDateLabel(profile.due))}` : `Born ${esc2(born)}`, onclick: "editingProfile=true;draft={...profile};setupStep=1;openPage('setup')" })
       ]);
       if (profile.early && profile.due) b += `<h2 class="hub-h2">Ages</h2>` + hubAgeBlock();
-      const stageRow = (icon, cat, title, sub, go) => h.row({ icon, cat, title, sub: esc2(sub), onclick: go });
+      const stageRow = (icon, cat, title, sub, go) => h.row({ icon, cat, title, sub: esc2(sub), onclick: go }).replace(/<span class="hub-dot">[\s\S]*?<\/svg><\/span>/, `<span class="hub-dot">${catIcon(cat)}</span>`);
       const careRail = ['Newborn', '1–3 months', '4–6 months', '7–12 months'];
       const careNow = (() => { const o = hubStageOverride('Care'); if (o != null) return careRail[o]; const d = (NOW - parse(profile.dob)) / 864e5, mm = hubAgeFor('care', actualMonth()); return careRail[d < 21 ? 0 : mm < 4 ? 1 : mm < 7 ? 2 : 3]; })();
       const devOv = hubStageOverride('Development'), dref = DEV_STAGES[devOv] ? Number(devOv) : devRef(developmentMonth(actualMonth()));
@@ -578,7 +578,7 @@
   window.hubVisitNotYet = function (a) { let o = {}; try { o = JSON.parse(localStorage.getItem(SNOOZE())) || {}; } catch (e) {} o[a] = NOW.getTime(); try { localStorage.setItem(SNOOZE(), JSON.stringify(o)); } catch (e) {} render(); };
   if (typeof stageSnapshot === 'function') {
     const baseSnap = stageSnapshot;
-    window.stageSnapshot = stageSnapshot = function (t) { const r = baseSnap(t); if (t === 'Health' && isCurrent() && r) r.title = healthJourneyLabel(healthJourneyFocus()); return r; };
+    window.stageSnapshot = stageSnapshot = function (t) { const r = baseSnap(t); if (t === 'Health' && isCurrent() && r) r.title = healthJourneyLabel(healthJourneyFocus()); if (t === 'Safety' && r && typeof safetyStageNow === 'function') { const st = STAGE_TABLE.Safety.stages.find(x => x.key === safetyStageNow()); if (st) r.title = st.label; } return r; };
   }
   /* ---------- Questions: one design everywhere, and on Home they come first ----------
      Home order: 1 one question (if due) · 2 What matters now, with up to 2 cards, one per category ·
@@ -593,7 +593,7 @@
     const skip = (html.match(/class="connected-skip" onclick="([^"]*)"/) || [])[1];
     const extra = (html.match(/class="connected-checkin([^"]*)"/) || [])[1] || '';
     const label = extra.includes('chg-checkin') ? '' : ({ 'Daily rhythm': 'Everyday care', Development: 'Development & play' }[cat] || cat);
-    return `<section class="connected-checkin${extra} hub-q" style="${yearTheme(cat)}" aria-label="Quick question"><div class="hub-q-head"><span class="hub-dot">${typeof hubArt === 'function' ? hubArt(Q_ICON[cat] || 'star', cat) : ''}</span><div class="hub-q-copy"><small>${label ? esc2(label) + ' · ' : ''}Quick question</small><h2>${t}</h2>${why ? `<p>${why}</p>` : ''}</div></div><div class="connected-checkin-choices">${choices}</div>${skip ? `<button class="hub-q-skip" onclick="${skip}">Skip for now</button>` : ''}</section>`;
+    return `<section class="connected-checkin${extra} hub-q" style="${yearTheme(cat)}" aria-label="Quick question"><div class="hub-q-head"><span class="hub-dot">${catIcon(cat)}</span><div class="hub-q-copy"><small>${label ? esc2(label) + ' · ' : ''}Quick question</small><h2>${t}</h2>${why ? `<p>${why}</p>` : ''}</div></div><div class="connected-checkin-choices">${choices}</div>${skip ? `<button class="hub-q-skip" onclick="${skip}">Skip for now</button>` : ''}</section>`;
   };
   if (typeof window.feedingCheckinMarkup === 'function') {
     const baseFeedQ = window.feedingCheckinMarkup;

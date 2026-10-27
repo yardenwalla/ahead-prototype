@@ -253,7 +253,7 @@
       const SETUP = [['Get a high chair with a harness', 'One that keeps {o} upright, with {p} feet supported', 'highchair'], ['Learn infant choking first aid', 'A short class or video, so you know what to do', 'shield'], ['Know gagging from choking', 'Gagging is noisy and normal. Choking is silent.', 'mouth'], ['Have a soft spoon and an open cup', 'Small soft-tipped spoons, and a cup for sips of water', 'cup']];
       const on = i => !!(L().safe && L().safe.Feeding && L().safe.Feeding[i]), done = SETUP.filter((_, i) => on(i)).length;
       return detail(cat, 'Preparing for solids', 'Get set up for the first bite', 'A few things to sort out before the first meal. Tick them off as you go.',
-        `<p class="hub-group">${done} of 4 done</p>` + ticks(SETUP, on, i => `chgToggleSafe('Feeding',${i})`, 'Feeding') + tip('Good to know', 'You don’t need special gadgets. A spoon, a bowl and a safe seat are plenty.'), 'highchair');
+        `<p class="hub-group">${done} of 4 done</p>` + ticks(SETUP, on, i => `chgToggleSafe('Feeding',${i})`, 'Feeding') + video('Watch infant choking first aid', 'University of Washington', 'https://depts.washington.edu/learncpr/videodemo/choking-infant-video.html') + tip('Good to know', 'You don’t need special gadgets. A spoon, a bowl and a safe seat are plenty.'), 'highchair');
     }
     if (id === 'approach') {
       return detail(cat, 'Preparing for solids', 'Decide how you’d like to start', 'There’s no wrong choice, and you can change your mind any time.',
@@ -523,12 +523,13 @@
     }
     if (id === 'routine') {
       return detail(cat, 'Sleep', 'A short bedtime routine', 'A few familiar steps in the same order tell Maya that sleep is coming.',
-        steps(['Start with a feed, then a fresh diaper and pajamas.', 'Dim the lights and sing a song or read a short book.', 'Put {o} down in {p} sleep space, on {p} back.']) + tip('Keep it short', 'Familiar matters more than long. 10–15 minutes is plenty.'), 'moon');
+        steps(['Start with a feed, then a fresh diaper and pajamas.', 'Dim the lights and sing a song or read a short book.', 'Put {o} down in {p} sleep space, on {p} back.']) + tip('Keep it short', 'Familiar matters more than long. About 10–15 minutes is plenty.'), 'moon');
     }
     if (id === 'swaddle' && !rolled() && m() < 3) {
       return detail(cat, 'Sleep safety', 'Swaddling safely', 'A snug swaddle can help a newborn settle. It just needs to be done the safe way, and only until {s} {try|tries} to roll.',
         video('Watch how to swaddle', 'St. Louis Children’s Hospital', 'https://www.stlouischildrens.org/health-resources/pulse/how-swaddle-newborn-baby-blanket')
-        + steps(['Snug around the chest, with room for two fingers between the blanket and {p} chest.', 'Loose around the hips, so {p} legs can bend up and out like a frog.', 'Always on {p} back, never on {p} tummy or side.'])
+        + `<h2 class="hub-h2">${F('How to wrap')}</h2>` + figure('swaddle', 'Sleep', 'Three steps: lay the blanket as a diamond with the top folded down, bring one side across and tuck it under, then fold up the bottom and wrap the last side, snug at the chest and loose at the hips.') + steps(['Lay a thin blanket out like a diamond and fold the top corner down. Place Maya on {p} back with {p} shoulders just below the fold.', 'Hold one arm straight at {p} side, bring that side of the blanket across {p} chest and tuck it under {p} back.', 'Fold the bottom corner up loosely over {p} feet, leaving room for {p} legs to bend.', 'Bring the last side across and tuck it under {o}. Snug at the chest, loose at the hips.'])
+        + `<h2 class="hub-h2">${F('Keep it safe')}</h2>` + steps(['Snug around the chest, with room for two fingers between the blanket and {p} chest.', 'Loose around the hips, so {p} legs can bend up and out like a frog.', 'Always on {p} back, never on {p} tummy or side.'])
         + tip('Stop at the first attempt to roll', 'Some babies try as early as 2 months, most between 3 and 6. Switch to a sleep sack that leaves the arms free.')
         + video('Swaddling for healthy hips', 'International Hip Dysplasia Institute', 'https://hipdysplasia.org/how-to-swaddle-your-baby-to-help-keep-their-hips-healthy/', 'Guide')
 , 'moon');
@@ -553,7 +554,7 @@
         steps(['Give {o} lots of floor time to practice by day.', 'Keep the bedtime routine the same.', 'If {s} {stand|stands} up in the crib, help {o} sit back down calmly, then say goodnight.']) + tip('It passes', 'Most babies settle back into sleep once the new skill feels familiar.'), 'sit');
     }
     if (id === 'after') { const A = C().DATA.Sleep.CH[3].after; return detail(cat, 'After the first birthday', A[1], 'Most babies still need two naps at their first birthday. The move to one nap usually comes between 13 and 18 months.',
-      tip('The sign to watch for', 'Most days, {s} {fight|fights} the morning nap or {take|takes} a long time to fall asleep for it, yet {is} fine until the afternoon.') + tip('How to switch', 'Push the morning nap a little later each few days until it lands around lunchtime. An earlier bedtime helps while {s} {adjust|adjusts}.') + tip('Not yet?', 'Two naps after the first birthday is normal. There’s no rush.'), 'moon'); }
+      tip('The sign to watch for', 'Most days, {s} {fight|fights} the morning nap or {take|takes} a long time to fall asleep for it, yet {is} fine until the afternoon.') + tip('How to switch', 'Push the morning nap a little later every few days until it lands around lunchtime. An earlier bedtime helps while {s} {adjust|adjusts}.') + tip('Not yet?', 'Two naps after the first birthday is normal. There’s no rush.'), 'moon'); }
     if (id === 'method') {
       const x = (typeof sleepTrainingMethods === 'function' ? sleepTrainingMethods() : [])[Number(arg)];
       if (!x) return settlePage();

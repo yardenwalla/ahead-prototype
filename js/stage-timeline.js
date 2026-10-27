@@ -66,7 +66,7 @@
     return '';
   };
   window.stageTimeline = function (cat, items, label) {
-    const art = typeof yearIllustration === 'function' ? yearIllustration(cat, SCENE[cat] || 0) : '';
+    const art = typeof yearIllustration === 'function' ? catIcon(cat) : '';
     const baby = esc3(typeof name === 'function' ? name() : 'your baby');
     return `<nav class="hub-stagebar" id="hub-pills" aria-label="${esc3(label || cat + ' stages')}">${items.map((it, i) => {
       const lock = it.on && !it.now && !it.change ? lockNote(cat, i) : '';
