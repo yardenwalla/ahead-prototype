@@ -9,6 +9,8 @@
     sit: (c) => `<circle cx="12" cy="5.5" r="2.5" fill="${c.bg}"/><path d="M8.6 10h6.8l1 7H7.6Z" fill="${c.bg}"/><path d="M4.5 20.5h15"/>`,
     mouth: (c) => `<path d="M4.5 10.5c2.5 6 12.5 6 15 0Z" fill="${c.bg}"/><path d="M4.5 10.5c2.6-1.6 4.8-1.2 7.5 0 2.7-1.2 4.9-1.6 7.5 0"/>`,
     alarm: (c) => `<path d="M3.5 6h17" /><path d="M6 6a6 6 0 0 0 12 0Z" fill="${c.bg}"/><circle cx="12" cy="8.5" r="1.2"/><path d="M8 16.5c1.2 1 2.5 1.5 4 1.5s2.8-.5 4-1.5M6 19.5c1.8 1.4 3.8 2 6 2s4.2-.6 6-2"/>`,
+    lock: (c) => `<rect x="5.5" y="10.5" width="13" height="10" rx="2" fill="${c.bg}"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5M12 14.5v2"/>`,
+    plug: (c) => `<rect x="4.5" y="4.5" width="15" height="15" rx="3.5" fill="${c.bg}"/><path d="M10 9.5v2.5M14 9.5v2.5M10 15.5h4"/>`,
     window: (c) => `<rect x="5" y="3.5" width="14" height="17" rx="1.5" fill="${c.bg}"/><path d="M12 3.5v17M5 12h14"/>`,
     battery: (c) => `<circle cx="12" cy="12" r="7" fill="${c.bg}"/><circle cx="12" cy="12" r="4.5"/><path d="M12 10.3v3.4M10.3 12h3.4"/>`,
     coin: (c) => `<circle cx="8.5" cy="14.5" r="4" fill="${c.bg}"/><circle cx="16.5" cy="9" r="3" fill="${c.bg}"/><path d="M14.5 19.5h5"/>`,
@@ -154,7 +156,7 @@
   /* Every point on a page gets its own icon. The first use of an icon keeps it; a repeat is swapped
      for one that fits the row's words, or failing that, any icon not yet on the page. */
   const HINTS = [
-    [/smoke|carbon monoxide|alarm/i, 'alarm'], [/window/i, 'window'], [/batter|magnet/i, 'battery'], [/coin|small parts|small objects/i, 'coin'],
+    [/smoke|carbon monoxide|alarm/i, 'alarm'], [/medicine|cleaning|lock away/i, 'lock'], [/outlet|socket/i, 'plug'], [/window/i, 'window'], [/batter|magnet/i, 'battery'], [/coin|small parts|small objects/i, 'coin'],
     [/temperature|fever|thermometer/i, 'thermo'], [/anchor|dresser|bookcase|furniture|\btv/i, 'dresser'], [/\bgate|stairs/i, 'gate'],
     [/regression|waking more/i, 'moon'], [/first aid/i, 'shield'], [/latch|gag/i, 'mouth'],
     [/crib|bassinet|mattress/i, 'crib'], [/your room|room-sharing|in the room/i, 'home'], [/sleep sack|wearable|blanket|swaddl/i, 'sack'],

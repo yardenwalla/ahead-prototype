@@ -388,7 +388,7 @@
     window.routineVisitDatePage = routineVisitDatePage = function (age, planned = false) {
       const old = healthRecord(age), key = (planned ? 'plan-' : '') + age;
       const form = `<form class="hub-card hub-form" onsubmit="submitVisitForm(event,'${key}')"><label for="visitDate">${planned ? 'Appointment date' : 'Date of the visit'}</label><input id="visitDate" type="date" min="${profile.dob}" ${!planned ? `max="${iso(NOW)}"` : ''} value="${planned && old?.date ? old.date : iso(NOW)}" required>${journeyError ? `<p class="journey-error" role="alert">${esc2(journeyError)}</p>` : ''}<button class="hub-button">${planned ? 'Save the date' : 'Save to Maya’s timeline'}</button><button type="button" class="hub-link is-quiet hub-cancel" onclick="back()">Cancel</button></form>`;
-      return detailPage('Health', healthJourneyLabel(age), planned ? 'When is the appointment?' : 'When was the visit?', planned ? 'We’ll remind you on Home as it gets close.' : 'It goes on Maya’s timeline, and you can add notes from the visit after.', form.replace(/Maya/g, esc2(name())), 'steth');
+      return detailPage('Health', healthJourneyLabel(age), planned ? 'When is the appointment?' : 'When was the visit?', planned ? 'We’ll remind you on Home as it gets close.' : 'It goes on Maya’s timeline.', form.replace(/Maya/g, esc2(name())), 'steth');
     };
   }
 
@@ -590,7 +590,7 @@
   const Q_CAT = k => k === 'visit' ? 'Health' : k === 'food' || k === 'food-progress' ? 'Feeding' : k === 'naps' ? 'Sleep' : k && k.startsWith('outgrown:') ? k.slice(9) : 'Safety';
   const Q_ICON = { Health: 'steth', Feeding: 'bowl', Sleep: 'moon', Safety: 'roll', Development: 'star', 'Daily rhythm': 'bath' };
   window.hubQuestionCard = function (html, cat) {
-    if (!html || html.includes('hub-q')) return html || '';
+    if (!html || html.includes(' hub-q"')) return html || '';
     const t = (html.match(/<h2>([\s\S]*?)<\/h2>/) || [])[1] || '', why = (html.match(/<\/div><p>([\s\S]*?)<\/p>/) || [])[1] || '';
     const choices = (html.match(/<div class="connected-checkin-choices">([\s\S]*?)<\/div>/) || [])[1] || '';
     const skip = (html.match(/class="connected-skip" onclick="([^"]*)"/) || [])[1];
@@ -612,7 +612,7 @@
       const a = hubPastVisitToConfirm();
       if (a != null) { // a missed checkup comes first; one question per visit
         const nm = esc2(name()), label = healthJourneyLabel(a), lc = label.charAt(0).toLowerCase() + label.slice(1);
-        q = hubQuestionCard(`<section class="connected-checkin"><div><h2>Did ${nm} have the ${esc2(lc)}?</h2></div><p>It was due around ${esc2(journeyDateLabel(iso(visitDue(a))))}. Saving it keeps ${nm}’s timeline complete.</p><div class="connected-checkin-choices"><button onclick="openPage('visit-form:${a}')">Yes, save it</button><button onclick="openPage('visit-form:plan-${a}')">It’s booked</button><button onclick="hubVisitNotYet(${a})">Not yet</button></div></section>`, 'Health');
+        q = hubQuestionCard(`<section class="connected-checkin"><div><h2>Did ${nm} have the ${esc2(lc)}?</h2></div><p>${window.__hubBooking === a ? 'When is it?' : `It was due around ${esc2(journeyDateLabel(iso(visitDue(a))))}.`}</p><div class="connected-checkin-choices">${window.__hubBooking === a ? `<input id="hubBookDate" class="search hub-q-date" type="date" min="${iso(NOW)}" value="${iso(NOW)}" aria-label="Appointment date"><button onclick="hubVisitBookSave(${a})">Save</button><button onclick="window.__hubBooking=null;render()">Cancel</button>` : `<button onclick="hubVisitYes(${a})">Yes</button><button onclick="window.__hubBooking=${a};render()">It’s booked</button><button onclick="hubVisitNotYet(${a})">Not yet</button>`}</div></section>`, 'Health');
       } else if (q) {
         const key = typeof homeQuestion === 'function' ? homeQuestion() : null;
         q = hubQuestionCard(q, Q_CAT(key));
@@ -634,8 +634,7 @@
     const baseComplete = completeHealthVisit;
     window.completeHealthVisit = completeHealthVisit = function (age, date) {
       const r = baseComplete(age, date); if (!r) return r;
-      page = `health-detail:${age}:notes`; render(); scrollTo(0, 0);
-      hubToast('Visit saved', `Add anything you want to remember from the ${healthJourneyLabel(age).replace('First-week', 'first-week')}.`);
+      hubAfterVisitSave(r);
       return r;
     };
   }
@@ -681,3 +680,27 @@ window.hubCenterStages = function () {
     if (on && bar.scrollWidth > bar.clientWidth) bar.scrollLeft = Math.max(0, on.offsetLeft - (bar.clientWidth - on.offsetWidth) / 2);
   });
 };
+
+/* Questions do one thing and get out of the way: no extra screens for dates or notes. */
+(function () {
+  const due = a => { const d = parse(profile.dob); return a === 0 ? new Date(d.getTime() + 5 * 864e5) : addMonths(d, a); };
+  const label = a => { const l = healthJourneyLabel(a); return l.charAt(0).toLowerCase() + l.slice(1); };
+  const changeDate = r => ['Change date', `document.querySelectorAll('.hub-toast').forEach(t=>t.remove());openPage('event-edit:${r.id}')`];
+  window.hubVisitYes = function (a) {
+    const d = due(a), r = saveJourneyVisit(a, { date: iso(d < NOW ? d : NOW), status: 'attended' });
+    render();
+    if (r) hubToast('Saved', `The ${label(a)} is on ${name()}’s timeline.`, changeDate(r));
+  };
+  window.hubVisitBookSave = function (a) {
+    const v = (document.getElementById('hubBookDate') || {}).value; if (!v) return;
+    const r = saveJourneyVisit(a, { date: v, status: 'planned' });
+    window.__hubBooking = null; render();
+    if (r) hubToast('Saved', `We’ll remind you before the ${label(a)} on ${journeyDateLabel(v)}.`);
+  };
+  // After saving a visit from a form, go back to where the parent started (not to a notes page).
+  window.hubAfterVisitSave = function (r) {
+    while (historyStack.length && /^(visit-form|chg:Timeline:visit)/.test(historyStack[historyStack.length - 1])) historyStack.pop();
+    if (historyStack.length) back(); else navigate('home');
+    hubToast('Saved', r.status === 'planned' ? `We’ll remind you on Home before ${journeyDateLabel(r.date)}.` : `It’s on ${name()}’s timeline.`);
+  };
+})();
