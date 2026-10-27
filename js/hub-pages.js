@@ -612,7 +612,7 @@
       const a = hubPastVisitToConfirm();
       if (a != null) { // a missed checkup comes first; one question per visit
         const nm = esc2(name()), label = healthJourneyLabel(a), lc = label.charAt(0).toLowerCase() + label.slice(1);
-        q = hubQuestionCard(`<section class="connected-checkin"><div><h2>Did ${nm} have the ${esc2(lc)}?</h2></div><p>It was due around ${esc2(journeyDateLabel(iso(visitDue(a))))}.</p><div class="connected-checkin-choices"><button onclick="hubVisitYes(${a})">Yes</button><button onclick="hubVisitBooked(${a})">It’s booked</button><button onclick="hubVisitNotYet(${a})">Not yet</button></div></section>`, 'Health');
+        q = hubQuestionCard(`<section class="connected-checkin"><div><h2>Did ${nm} have the ${esc2(lc)}?</h2></div><p>It was due around ${esc2(journeyDateLabel(iso(visitDue(a))))}.</p><div class="connected-checkin-choices"><button onclick="hubVisitYes(${a})">Yes</button><button onclick="hubVisitNotYet(${a})">Not yet</button></div></section>`, 'Health');
       } else if (q) {
         const key = typeof homeQuestion === 'function' ? homeQuestion() : null;
         q = hubQuestionCard(q, Q_CAT(key));
