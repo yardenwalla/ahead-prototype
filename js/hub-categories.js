@@ -144,7 +144,7 @@
       (window.hubFigure ? hubFigure('tub', 'Daily rhythm', 'A baby lying back in a baby tub with about 2 inches of warm water, a hand supporting the head and neck.') : '') + h.steps(['Gather everything first: towel, washcloth, mild soap and a clean diaper.', 'Fill the tub with about 2 inches of warm water. Test it with your wrist; it should feel warm, not hot.', 'Support {p} head and neck with one arm, and wash from top to bottom with your other hand.', 'Lift {o} out onto the towel and wrap {o} up right away.'])
       + h.video('Watch a baby bath, step by step', 'WebMD', 'https://www.webmd.com/parenting/baby/video/bathing-newborns') + h.tip('Water heater', 'Set it below 120°F so tap water can’t scald.'), 'bath');
     if (id === 'skin') return d(stageName, 'Diaper rash and skin', 'Most diaper rash clears up in a few days with a few simple steps.',
-      h.steps(['Change diapers often, and let the skin air out when you can.', 'Use a thick layer of zinc oxide cream at every change.', 'Call your pediatrician if it blisters, bleeds, spreads or isn’t better in a few days.']) + h.tip('Dry skin and cradle cap', 'Most babies don’t need lotion. Use a mild, fragrance-free soap only where needed. For crusty patches on the scalp, rub in a little baby oil and brush gently before the bath.') + h.tip('Red, itchy patches?', 'Show your pediatrician, who can suggest what helps.'), 'drop');
+      h.steps(['Change diapers often, and let the skin air out when you can.', 'Use a thick layer of zinc oxide cream at every change.', 'Call your pediatrician if it blisters, bleeds, spreads or isn’t better in a few days.']) + h.tip('Dry skin and cradle cap', 'Dry skin is common. Use a mild, fragrance-free soap only where needed, then pat on a fragrance-free moisturizer while the skin is still damp. For crusty patches on the scalp, rub in a little baby oil and brush gently before the bath.') + h.tip('Red, itchy patches?', 'Show your pediatrician, who can suggest what helps.'), 'drop');
     if (id === 'dress') return d(stageName, 'Dress Maya for the weather', 'Babies can’t tell you they’re too hot or cold, so a simple rule helps.',
       h.steps(['Dress Maya in one more layer than you’re comfortable in.', 'Feel the back of {p} neck. Sweaty means too warm; cool means add a layer.', 'Skip hats and heavy blankets for sleep. A sleep sack is enough.']) + h.tip('In the car seat', 'Take off puffy coats first. Buckle {o} in, then put a blanket over the straps.'), 'towel');
     if (id === 'gums') return d(stageName, 'Look after drool and gums', 'Drooling and chewing on everything are normal now. Teeth can take a while to follow.',
@@ -258,20 +258,16 @@
       + `<section class="hub-card hub-callout"><b>${F('Talk to someone today')}</b><p>${F('Call or text the National Maternal Mental Health Hotline at 1-833-852-6262. It’s free, confidential and open any time, for moms, partners and new parents.')}</p><a class="hub-button" href="tel:18338526262">${F('Call 1-833-852-6262')}</a></section>`
       + h.steps(['Tell your doctor or Maya’s pediatrician how you’re feeling. They ask because it’s common and treatable.', 'Take the help people offer, and name something specific, like a meal or a nap.', 'If you gave birth, go to your postpartum checkup, even if you feel fine.'])
       + h.tip('If you’re thinking about harming yourself or Maya', 'Call or text 988, or call 911, right now.'));
-    if (id === 'sick') {
-      const ill = (t, sub, icon) => h.row({ icon, cat: 'Health', title: t, sub, onclick: '' }).replace('<button class="hub-row"', '<div class="hub-row is-static"').replace(/<\/button>$/, '</div>').replace('<span class="hub-chev" aria-hidden="true">›</span>', '');
-      return detailFrame('Health', 'Between checkups', 'When Maya seems sick', 'A fever is 100.4°F or higher, taken rectally. Here’s when to call.',
-        `<section class="hub-card hub-callout is-urgent"><b>${F('Call 911 if Maya')}</b><p>${F('Struggles to breathe or turns blue, won’t wake or is floppy, or has a seizure.')}</p></section>`
-        + `<section class="hub-card hub-fever"><p class="hub-card-label">${F(under3 ? 'Under 3 months' : 'At Maya’s age')}</p><p class="hub-card-text">${F(feverRule(actualMonth()))}</p></section>`
-        + h.list('Good to know', [
-          ill('Most fevers aren’t dangerous on their own', 'How Maya is acting matters more than the number.', 'heart'),
-          ill('Take a rectal temperature', 'It’s the most accurate way for babies. Forehead and ear readings are less reliable.', 'clock'),
-          ill('Watch for dehydration', 'Far fewer wet diapers, a dry mouth, no tears or a sunken soft spot.', 'drop'),
-          ill('Ask before giving medicine', under3 ? 'Nothing under 3 months without your pediatrician. Doses go by weight.' : 'Ask your pediatrician for the right dose by weight. Ibuprofen only from 6 months.', 'bottle')
-        ])
-        + h.tip('Skip cough and cold medicines', 'They aren’t safe for babies. Saline drops and a bulb syringe help with a stuffy nose.')
-        + h.video('When to call about a fever', 'HealthyChildren.org', 'https://www.healthychildren.org/English/health-issues/conditions/fever/pages/When-to-Call-the-Pediatrician.aspx', 'Guide'));
-    }
+    if (id === 'sick') return detailFrame('Health', 'Between checkups', 'When Maya seems sick', 'Most baby illnesses are mild, but young babies can get sick quickly. Here’s what to watch for.',
+      h.versus('Fever', ['3 months and up', 'Call if a fever lasts more than a day, or comes with fewer wet diapers, a rash or unusual sleepiness.'], ['Under 3 months', 'A temperature of 100.4°F or higher: call your pediatrician right away, day or night.'])
+      + h.list('Good to know', [
+        h.row({ icon: 'clock', cat: 'Health', title: 'Take a rectal temperature', sub: 'It’s the most accurate way for babies. Forehead and ear readings are less reliable.', onclick: '' }).replace('<button class="hub-row"', '<div class="hub-row is-static"').replace(/<\/button>$/, '</div>').replace('<span class="hub-chev" aria-hidden="true">›</span>', ''),
+        h.row({ icon: 'drop', cat: 'Health', title: 'Watch for dehydration', sub: 'Far fewer wet diapers, a dry mouth, no tears or a sunken soft spot.', onclick: '' }).replace('<button class="hub-row"', '<div class="hub-row is-static"').replace(/<\/button>$/, '</div>').replace('<span class="hub-chev" aria-hidden="true">›</span>', ''),
+        h.row({ icon: 'bottle', cat: 'Health', title: 'Ask before giving medicine', sub: 'Nothing under 3 months without your pediatrician. Ibuprofen only from 6 months. Doses go by weight.', onclick: '' }).replace('<button class="hub-row"', '<div class="hub-row is-static"').replace(/<\/button>$/, '</div>').replace('<span class="hub-chev" aria-hidden="true">›</span>', '')
+      ])
+      + `<section class="hub-card hub-callout is-urgent"><b>${F('Call 911 if Maya')}</b><p>${F('Struggles to breathe or turns blue, won’t wake or is floppy, or has a seizure.')}</p></section>`
+      + h.tip('Skip cough and cold medicines', 'They aren’t safe for babies. Saline drops and a bulb syringe help with a stuffy nose.')
+      + h.video('When to call about a fever', 'HealthyChildren.org', 'https://www.healthychildren.org/English/health-issues/conditions/fever/pages/When-to-Call-the-Pediatrician.aspx', 'Guide'));
     return null;
   }
   const baseRoute = window.changesRoute;

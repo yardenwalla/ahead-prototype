@@ -99,7 +99,7 @@ def check(results):
                       continue
                   if 'already there: two naps' in q: reported['naps'] = 'Yes'; continue
                   if 'already there: starting solids' in q: reported['food'] = 'new'; continue
-                  if 'managing now' in q: reported['food'] = {'First tastes': 'new', 'More textures and finger foods': 'textures', 'Regular meals': 'established'}[ans]; continue
+                  if 'times a day' in q and 'solids' in q: reported['food'] = {'Once or less': 'new', 'Twice': 'textures', '3 times': 'established'}[ans]; continue
                   if 'mattress' in q: reported['mattress_done'] = True; continue
                   if 'safety check' in q: continue
                   if 'catnap' in q: reported['naps'] = 'Yes' if ans == 'Yes' else 'Not yet'; continue
@@ -113,7 +113,7 @@ def check(results):
                   elif 'crawl' in q and ans == 'Yes': reported['mv'] = 'crawling'
                   elif 'pulling up' in q and ans == 'Yes': reported['mv'] = 'pulling'
                   elif 'solids' in q:
-                      reported['food'] = {'Not started': 'preparing', 'Not yet': 'preparing', 'First foods': 'new', 'Building meals': 'established', 'Eating meals': 'established'}[ans]
+                      reported['food'] = {'Not started': 'preparing', 'Not yet': 'preparing', 'First foods': 'new', 'Once a day or less': 'new', 'Twice a day': 'textures', '3 times a day': 'established', 'Building meals': 'established', 'Eating meals': 'established'}[ans]
                   elif 'swaddl' in q: reported['swaddle_done'] = True
             apply([a for a in w['answered'] if a['where'] in ('Home', 'Timeline') or a['q'].startswith('Already there: starting')])
             moment_now = any(a['where'] == 'Timeline' for a in w['answered'])   # Home was read before the moment was saved
@@ -245,7 +245,7 @@ def check(results):
                 if 'solids' in a['q'] and a['a'] == 'Not yet': last_no = wk
                 if a['where'] == 'Home' and hq == a['q'] and w.get('home_after') and (w['home_after']['checkin'] or {}).get('q') == a['q']:
                     F.add('personal', 'bug', 'Question asked again right after it was answered', pid, wk, f'{where}: “{a["q"]}”')
-            qs = [a['q'] for a in w['answered'] if a['a'] in ('Not yet', 'Yes', 'Trying', 'Rolling', 'First foods', 'Not started', 'Eating meals', 'Building meals')]
+            qs = [a['q'] for a in w['answered'] if a['a'] in ('Not yet', 'Yes', 'Trying', 'Rolling', 'First foods', 'Once a day or less', 'Twice a day', '3 times a day', 'Not started', 'Eating meals', 'Building meals')]
             norm = lambda q: 'solids' if 'solids' in q else 'catnap' if 'catnap' in q else q
             if len(qs) != len(set(map(norm, qs))): F.add('personal', 'warning', 'Asked the same question twice in one week (Home and a category page)', pid, wk, f'{where}: {qs}')
             if any(re.search(r'We moved|two-nap guidance', a['title'], re.I) for a in s['alerts']):

@@ -291,7 +291,7 @@
       const mv = { none: answers.roll === 'Not yet' && answers.rollDirection === 'Not yet', trying: answers.rollDirection === 'Trying to roll', rolling: answers.roll === 'Yes' || ['Tummy to back', 'Back to tummy', 'Both ways'].includes(answers.rollDirection), crawling: answers.crawl === 'Yes', pulling: answers.pullUp === 'Yes' };
       const multi = (opts, fn) => `<div class="hub-choice-chips">${opts.map(([v, l]) => `<button class="${mv[v] ? 'is-on' : ''}" aria-pressed="${!!mv[v]}" onclick="${fn(v)}">${mv[v] ? '✓ ' : ''}${l}</button>`).join('')}</div>`;
       b += card(`How is ${nm} moving?`, 'Pick everything that’s true. This updates Sleep, Safety and Home.', multi([['none', 'Not rolling yet'], ['trying', 'Trying to roll'], ['rolling', 'Rolling'], ['crawling', 'Crawling'], ['pulling', 'Pulling up']], v => `hubMove('${v}')`));
-      if (age >= 4) b += card(`Has ${nm} started solids?`, 'This moves the feeding guide along.', chips([['preparing', 'Not yet'], ['new', 'First foods'], ['textures', 'Lumps and finger foods'], ['established', 'Regular meals']], food, v => `setFeedingStage('${v}')`));
+      if (age >= 4) b += card(`Has ${nm} started solids?`, 'This moves the feeding guide along.', chips([['preparing', 'Not yet'], ['new', 'Once a day or less'], ['textures', 'Twice a day'], ['established', '3 times a day']], food, v => `setFeedingStage('${v}')`));
       if (age <= 6) b += card(`Is ${nm} still swaddled?`, '', chips([['No', 'Still swaddled'], ['Yes', 'In a sleep sack'], ['Never', 'We don’t swaddle']], answers.swaddleStopped === 'Yes' && answers.neverSwaddled ? 'Never' : answers.swaddleStopped,  v => v === 'Never' ? "answers.neverSwaddled=true;hubAnswer('swaddleStopped','Yes','Got it. Sleep will reflect this.')" : `delete answers.neverSwaddled;hubAnswer('swaddleStopped','${v}','Got it. Sleep will reflect this.')`));
       if (age >= 5) b += card(`How many naps most days?`, '', chips([['Stay', '3 naps'], ['Yes', '2 naps']], answers.twoNaps, v => `hubAnswer('twoNaps','${v}','The sleep guide now matches ${nm}’s naps.')`));
       if (age >= 4) b += card('Sleep training', 'Only if it’s something you’re thinking about.', chips([['not_planning', 'Not planning to'], ['not_started', 'Thinking about it'], ['in_progress', 'Working on it'], ['trained', 'Done']], answers.sleepTraining, v => `hubAnswer('sleepTraining','${v}','The settling guide now matches where you are.')`));
@@ -342,7 +342,7 @@
       stops += `<div class="hub-tl-stop">${node}<span class="hub-tl-head"><b>${label}</b><small>${esc2(sub)}</small></span></div><div class="hub-tl-items">${rows.map(r => item(r)).join('')}</div>`;
     }
     let b = `<div class="eyebrow">${nm}’s first year</div><h1>Little moments,<br>your own story</h1>`;
-    b += `<div class="hub-two-actions hub-tl-actions"><button class="hub-button" onclick="openPage('chg:Timeline:visit')">Record a visit</button><button class="hub-button is-secondary" onclick="openPage('chg:Timeline:milestone')">Save a milestone</button></div>`;
+    b += `<div class="hub-two-actions hub-tl-actions"><button class="hub-button" onclick="openPage('chg:Timeline:visit')">Record a visit</button><button class="hub-button is-secondary" onclick="openPage('chg:Timeline:milestone')">Save a first</button></div>`;
     b += `<div class="hub-tl-line">${stops}</div>`;
     b += H().note('Photos and entries are saved on this device.');
     return `<div class="quiet-category hub-page hub-timeline-page" style="${yearTheme('Development')}">${b}</div>`;
@@ -365,7 +365,13 @@
     const tiles = Object.keys(DEV_DOMAINS).map(d => `<button class="hub-domain-tile" onclick="openPage('development-domain:${ref}:${d}')">${h.art(ICON[d], 'Development')}<b>${TITLE[d]}</b><small>${F(st.summaries[d] || '')}</small><span>${F('Pick a skill')} ›</span></button>`).join('');
     return detailPage('Development', 'Your timeline', 'Save a milestone', `Pick an area, then tap “Seen it” on anything Maya’s doing. Skills for ${age} are shown first.`,
       `<section class="hub-card hub-glance is-static"><div class="hub-domain-tiles">${tiles}</div></section>`
-      + `<h2 class="hub-h2">${F('Something else?')}</h2><section class="hub-card hub-own-first"><div class="hub-choice-chips">${['Crawling', 'First tooth', 'First word', 'First steps', 'Slept through the night'].map(t => `<button onclick="hubFirstFill('${t}')">${t}</button>`).join('')}</div><label for="firstTitle">${F('What happened')}</label><input id="firstTitle" class="search" maxlength="80" placeholder="${F('For example, crawling')}"><label for="firstDate">${F('When')}</label><input id="firstDate" class="search" type="date" min="${profile.dob}" max="${iso(NOW)}" value="${iso(NOW)}"><button class="hub-button" onclick="hubSaveFirst()">${F('Save to Maya’s timeline')}</button></section>`, 'star');
+      + h.list('', [h.row({ icon: 'tooth', cat: 'Development', title: 'Something that isn’t listed?', sub: 'First tooth, first word or any other first', onclick: "openPage('chg:Timeline:own')" })]), 'star');
+  }
+  // One place to save any first, whatever it's about. Ideas follow the baby's age and only fill in the field.
+  function saveFirstPage() {
+    const a = actualMonth(), ideas = a < 3 ? ['First smile', 'First laugh', 'Held head up', 'First bath'] : a < 6 ? ['Rolled over', 'First laugh', 'Grabbed a toy', 'First taste of food'] : a < 9 ? ['Sat up', 'First tooth', 'First taste of food', 'Crawled'] : ['First word', 'Pulled up', 'Waved bye-bye', 'First steps'];
+    return detailPage('Development', 'Your timeline', 'Save a first', 'What did Maya do? It goes on the timeline with the date.',
+      `<section class="hub-card hub-own-first"><label for="firstTitle">${F('What happened')}</label><input id="firstTitle" class="search" maxlength="80" placeholder="${F('For example, ' + ideas[0].charAt(0).toLowerCase() + ideas[0].slice(1))}"><p class="hub-own-ideas">${F('Ideas')}</p><div class="hub-choice-chips">${ideas.map(t => `<button onclick="hubFirstFill('${t}')">${t}</button>`).join('')}</div><label for="firstDate">${F('When')}</label><input id="firstDate" class="search" type="date" min="${profile.dob}" max="${iso(NOW)}" value="${iso(NOW)}"><button class="hub-button" onclick="hubSaveFirst()">${F('Save to Maya’s timeline')}</button></section>`, 'star');
   }
   function detailPage(cat, context, title, lead, inner, artName) { return H().detail(cat, context, title, lead, inner, artName); }
 
@@ -400,8 +406,10 @@
   const baseRoute = window.changesRoute;
   window.changesRoute = function (p) {
     const [, cat, screen] = p.split(':');
-    if (cat === 'Timeline' && screen === 'visit') return recordVisitPage();
-    if (cat === 'Timeline' && screen === 'milestone') return recordMilestonePage();
+    // Timeline pages belong to the timeline: its title in the header, its tab highlighted.
+    const asTimeline = html => html.replace(/(<div class="monthly-page-header">[\s\S]*?<h1>)[^<]*(<\/h1><p>)[^<]*/, `$1Your timeline$2${esc2(name())}’s first year`);
+    if (cat === 'Timeline' && screen === 'visit') return asTimeline(recordVisitPage());
+    if (cat === 'Timeline' && (screen === 'milestone' || screen === 'own')) return asTimeline(saveFirstPage());
     return baseRoute(p);
   };
 
@@ -536,7 +544,7 @@
     const baseCategories = journeyCategories;
     window.journeyCategories = journeyCategories = function () {
       // Search sits at the top; there is no separate Resources section (outside links live inside each guide).
-      const search = `<div class="hub-search hub-cat-search"><input class="search" type="search" placeholder="Try “Is 100.6°F a fever?” or “first foods”" aria-label="Search guidance" oninput="searchGuides(this.value)" value="${esc2(query || '')}"><div id="results" class="hub-list hub-results" ${query ? '' : 'hidden'}></div></div>`;
+      const search = `<div class="hub-search hub-cat-search"><input class="search" type="search" placeholder="Search: naps, formula, rash, fever…" aria-label="Search guidance" oninput="searchGuides(this.value)" value="${esc2(query || '')}"><div id="results" class="hub-list hub-results" ${query ? '' : 'hidden'}></div></div>`;
       if (query) setTimeout(() => { if (document.querySelector('.hub-cat-search')) searchGuides(query); }, 0);
       return baseCategories().replace(/<div class="journey-utility-links">[\s\S]*<\/div>$/, '').replace(/(<h1>Categories<\/h1>)/, '$1' + search);
     };
@@ -567,16 +575,43 @@
     const baseSnap = stageSnapshot;
     window.stageSnapshot = stageSnapshot = function (t) { const r = baseSnap(t); if (t === 'Health' && isCurrent() && r) r.title = healthJourneyLabel(healthJourneyFocus()); return r; };
   }
-  // Home: ask once about a checkup whose date has passed.
+  /* ---------- Questions: one design everywhere, and on Home they come first ----------
+     Home order: 1 one question (if due) · 2 What matters now, with up to 2 cards, one per category ·
+     3 Coming up, up to 2 · 4 "That's everything for now" · 5 Browse by category.
+     Which question: a missed checkup, then a stage the baby may have outgrown, then solids, then naps. */
+  const Q_CAT = k => k === 'visit' ? 'Health' : k === 'food' || k === 'food-progress' ? 'Feeding' : k === 'naps' ? 'Sleep' : k && k.startsWith('outgrown:') ? k.slice(9) : 'Safety';
+  const Q_ICON = { Health: 'steth', Feeding: 'bowl', Sleep: 'moon', Safety: 'roll', Development: 'star', 'Daily rhythm': 'bath' };
+  window.hubQuestionCard = function (html, cat) {
+    if (!html || html.includes('hub-q')) return html || '';
+    const t = (html.match(/<h2>([\s\S]*?)<\/h2>/) || [])[1] || '', why = (html.match(/<\/div><p>([\s\S]*?)<\/p>/) || [])[1] || '';
+    const choices = (html.match(/<div class="connected-checkin-choices">([\s\S]*?)<\/div>/) || [])[1] || '';
+    const skip = (html.match(/class="connected-skip" onclick="([^"]*)"/) || [])[1];
+    const extra = (html.match(/class="connected-checkin([^"]*)"/) || [])[1] || '';
+    const label = extra.includes('chg-checkin') ? '' : ({ 'Daily rhythm': 'Everyday care', Development: 'Development & play' }[cat] || cat);
+    return `<section class="connected-checkin${extra} hub-q" style="${yearTheme(cat)}" aria-label="Quick question"><div class="hub-q-head"><span class="hub-dot">${typeof hubArt === 'function' ? hubArt(Q_ICON[cat] || 'star', cat) : ''}</span><div class="hub-q-copy"><small>${label ? esc2(label) + ' · ' : ''}Quick question</small><h2>${t}</h2>${why ? `<p>${why}</p>` : ''}</div></div><div class="connected-checkin-choices">${choices}</div>${skip ? `<button class="hub-q-skip" onclick="${skip}">Skip for now</button>` : ''}</section>`;
+  };
+  if (typeof window.feedingCheckinMarkup === 'function') {
+    const baseFeedQ = window.feedingCheckinMarkup;
+    window.feedingCheckinMarkup = function (surface) { return hubQuestionCard(baseFeedQ(surface), 'Feeding'); };
+  }
   if (typeof window.adaptiveHome === 'function') {
     const homeBase = window.adaptiveHome;
     window.adaptiveHome = homeAtlas = function () {
-      let html = homeBase(); const a = hubPastVisitToConfirm(); if (a == null) return html;
-      const nm = esc2(name()), label = healthJourneyLabel(a), lc = label.charAt(0).toLowerCase() + label.slice(1), p = typeof P === 'function' ? null : null;
-      const card = `<section class="connected-checkin hub-visit-ask"><div><h2>Did ${nm} have the ${esc2(lc)}?</h2></div><p>It was usually due around ${esc2(journeyDateLabel(iso(visitDue(a))))}. Record it to keep it on ${nm}’s timeline.</p><div class="connected-checkin-choices"><button onclick="hubVisitNotYet(${a})">Not yet</button><button onclick="openPage('visit-form:${a}')">Yes, record it</button></div></section>`;
-      if (html.includes('<section class="connected-checkin')) return html; // one question per visit
-      const at = html.includes('<section class="connected-ahead"') ? '<section class="connected-ahead"' : '<section class="connected-browse"';
-      return html.includes(at) ? html.replace(at, card + at) : html;
+      let html = homeBase();
+      const found = html.match(/<section class="connected-checkin[\s\S]*?<\/section>/);
+      let q = found ? found[0] : '';
+      if (q) html = html.replace(q, '');
+      const a = hubPastVisitToConfirm();
+      if (a != null) { // a missed checkup comes first; one question per visit
+        const nm = esc2(name()), label = healthJourneyLabel(a), lc = label.charAt(0).toLowerCase() + label.slice(1);
+        q = hubQuestionCard(`<section class="connected-checkin"><div><h2>Did ${nm} have the ${esc2(lc)}?</h2></div><p>It was due around ${esc2(journeyDateLabel(iso(visitDue(a))))}. Saving it keeps ${nm}’s timeline complete.</p><div class="connected-checkin-choices"><button onclick="hubVisitNotYet(${a})">Not yet</button><button onclick="openPage('visit-form:${a}')">Yes, save it</button></div></section>`, 'Health');
+      } else if (q) {
+        const key = typeof homeQuestion === 'function' ? homeQuestion() : null;
+        q = hubQuestionCard(q, Q_CAT(key));
+      }
+      if (!q) return html;
+      const at = ['<p class="brief-unchanged"', '<section class="connected-now"'].find(x => html.includes(x));
+      return at ? html.replace(at, q + at) : html;
     };
   }
 

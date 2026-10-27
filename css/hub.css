@@ -364,3 +364,17 @@
 #main .hub-own-first .search { width: 100%; box-sizing: border-box; min-height: 48px; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--line); background: var(--white); font-size: 16px }
 #main .hub-fever .hub-card-text { margin: 0 }
 #main .hub-visit-ask { margin: 0 0 14px }
+
+/* Quick questions: one design on Home and in guides. Category icon and eyebrow, the question,
+   answers as soft pills in the category's color, and a quiet "Skip for now". */
+#main .connected-checkin.hub-q { background: var(--white); border: 1px solid var(--line); border-radius: 20px; padding: 16px 16px 12px; margin: 0 0 14px; box-shadow: 0 1px 0 rgba(60, 40, 30, .03) }
+#main .hub-q-head { display: flex; gap: 12px; align-items: flex-start; margin: 0 0 12px !important; justify-content: flex-start !important }
+#main .hub-q-copy { flex: 1; min-width: 0 }
+#main .hub-q-copy small { display: block; font-size: 12px; font-weight: 600; color: var(--year-ink); margin-bottom: 3px; letter-spacing: 0 }
+#main .hub-q .hub-q-copy h2 { font-size: 16.5px; font-weight: 650; line-height: 1.3; margin: 0; color: var(--ink) }
+#main .hub-q-copy p { font-size: 13px; line-height: 1.45; color: var(--muted); margin: 4px 0 0 }
+#main .hub-q .connected-checkin-choices { display: flex; flex-wrap: wrap; gap: 8px }
+#main .hub-q .connected-checkin-choices button { flex: 1 1 calc(50% - 4px); min-height: 44px; border-radius: 999px; border: 0; background: var(--year-pale); color: var(--year-ink); font-size: 14px; font-weight: 600; padding: 8px 12px }
+#main .hub-q .connected-checkin-choices button:hover { filter: brightness(.97); background: var(--year-pale) }
+#main .hub-q-skip { display: block; margin: 8px auto 0; background: none; border: 0; color: var(--muted); font-size: 13px; min-height: 36px; padding: 6px 12px; text-decoration: underline; text-underline-offset: 3px }
+#main .hub-own-ideas { font-size: 12px; font-weight: 600; color: var(--muted); margin: 10px 0 6px }

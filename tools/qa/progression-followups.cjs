@@ -31,10 +31,10 @@ for(let family=0;family<100;family++) {
       if(age>start && dm>=6) {
         followups++;
         check(a.run("homeQuestion()==='food-progress'"),'A parent who stops answering sees a clear follow-up');
-        check(clean(a.html()).includes('What is Maya managing now?'),'Home exposes the progression question');
+        check(clean(a.html()).includes('How many times a day is Maya eating solids?'),'Home exposes the progression question');
         a.run("openPage('topic:Feeding')");
-        check(clean(a.html()).includes('What is Maya managing now?'),'The current Feeding guide exposes the same progression question');
-        check(clean(a.html()).includes('More textures and finger foods')&&clean(a.html()).includes('Regular meals'),'Progression has clear visible choices');
+        check(clean(a.html()).includes('How many times a day is Maya eating solids?'),'The current Feeding guide exposes the same progression question');
+        check(clean(a.html()).includes('Twice')&&clean(a.html()).includes('3 times'),'Progression has clear visible choices');
       } else check(a.run("feedingCheckinModel()===null"),'No immediate repeat after first foods is reported');
     }
     answers=JSON.parse(storage['ahead-v2-answers']);last=a;
@@ -61,7 +61,7 @@ for(let family=0;family<100;family++) {
   const a=boot(profile,{solids:'Yes',foodExperience:'new'},storage);
   check(a.run("feedingCheckinModel()?.key==='food-progress'"),'Legacy first-food answers without a date can progress');
   a.run("skipFeedingCheckin('food-progress');openPage('topic:Feeding')");
-  check(!clean(a.html()).includes('What is Ari managing now?'),'Skip works on the category as well as Home');
+  check(!clean(a.html()).includes('How many times a day is Ari eating solids?'),'Skip works on the category as well as Home');
   const answers=JSON.parse(storage['ahead-v2-answers']);
   const b=boot(profile,answers,storage,'2026-11-18T12:00:00Z');
   check(b.run("feedingCheckinModel()?.key==='food-progress'"),'Skipped progression can return after 28 days');

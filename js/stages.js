@@ -49,15 +49,15 @@
     if (!hasFoodAnswer() || stage === 'preparing') {
       if (d.skip.food && nowMs() - d.skip.food < WAIT || hasFoodAnswer() && recentlyAnswered) return null;
       return {key:'food', title:`Has ${name()} started solids?`, why:'We’ll match the feeding guide to where you are.',
-        choices:[['preparing','Not yet'],['new','First foods'],['established','Eating meals']]};
+        choices:[['preparing','Not yet'],['new','Once a day or less'],['textures','Twice a day'],['established','3 times a day']]};
     }
     if (!['new','textures'].includes(stage)) return null;
     const key = 'food-progress';
     if (d.skip[key] && nowMs() - d.skip[key] < WAIT) return null;
     // An answer date is not a solids-start date. Use it only to space the next question.
     if (recentlyAnswered) return null;
-    return {key, title:`What is ${name()} managing now?`, why:'Choose the food guidance that fits today.',
-      choices:[['new','First tastes'],['textures','More textures and finger foods'],['established','Regular meals']]};
+    return {key, title:`How many times a day is ${name()} eating solids?`, why:'We’ll match the feeding guide to where you are.',
+      choices:[['new','Once or less'],['textures','Twice'],['established','3 times']]};
   }
   window.feedingCheckinModel = feedingCheckin;
   window.homeQuestionQueue = () => candidates();

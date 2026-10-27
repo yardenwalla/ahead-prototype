@@ -2047,7 +2047,7 @@ function stageSnapshot(topic){const result=originalStageSnapshot(topic);if(topic
 function lookAheadItems(){return originalLookAheadItems().filter(item=>item.topic!=='Health'||healthRecord(visitForMonth().age)?.status!=='attended');}
 function homeAtlas(){return originalHomeAtlas();}
 function homeMonthArt(age){const scenes=['back','faces','greeting','look-hand','swipe','reach','mouth-toy','hide','banging','babble','container','wave','cup'],scene=scenes[clamp(age)],art=age===0?homeBabyArt():devMilestoneArt(scene,true,age,'Daily rhythm');return `<span class="home-month-scene" data-home-art-month="${age}" data-home-art-scene="${scene}">${art}</span>`;}
-function activeNavigationTab(){if(page==='home')return 'home';if(page==='timeline'||page.startsWith('event-'))return 'timeline';if(['profile','personalize','age-context','trust'].includes(page))return '';if(page==='year'||page.startsWith('year:')||historyStack.some(p=>p==='year'||p.startsWith('year:')))return 'year';return ['categories','explore','saved','feeding-update'].includes(page)||/^(resource:|topic:|chg:|health-|safety-|sleep-|feeding-guide:|play-|development-|visit-|skill-)/.test(page)?'categories':'home';}
+function activeNavigationTab(){if(page==='home')return 'home';if(page==='timeline'||page.startsWith('event-')||page.startsWith('chg:Timeline:')||page.startsWith('visit-form:'))return 'timeline';if(['profile','personalize','age-context','trust'].includes(page))return '';if(page==='year'||page.startsWith('year:')||historyStack.some(p=>p==='year'||p.startsWith('year:')))return 'year';return ['categories','explore','saved','feeding-update'].includes(page)||/^(resource:|topic:|chg:|health-|safety-|sleep-|feeding-guide:|play-|development-|visit-|skill-)/.test(page)?'categories':'home';}
 function detailPageTop(topic,rail=''){return `<div class="guide-detail-top">${monthlyPageHeader(topic)}${rail}</div>`;}
 function detailHeading({context,title,description='',art=''}){return `<header class="guide-detail-heading ${art?'has-art':''}"><div><div class="eyebrow">${esc(context)}</div><h1>${esc(title)}</h1></div>${art?`<span class="guide-detail-heading-art" aria-hidden="true">${art}</span>`:''}${description?`<p>${description}</p>`:''}</header>`;}
 function feedingActualStage(){const age=actualMonth();return hasFoodAnswer()?(answers.solids==='Yes'?(answers.foodExperience==='established'?'established':'new'):age<4?'milk':'preparing'):age<4?'milk':age<6?'preparing':age===6?'new':'established';}
@@ -2415,7 +2415,7 @@ function liveHomeCheckin(){
  const questions={
   milk:{title:`What milk is ${name()} having?`,why:'We’ll show amounts that match how you feed.',choices:[['Breast milk','Breast milk'],['Formula','Formula'],['Both','Both']]},
   movement:{title:`Is ${name()} trying to roll?`,why:'Your answer updates Sleep and Safety.',choices:[['not_yet','Not yet'],['trying','Trying'],['rolling','Rolling']]},
-  food:{title:`Has ${name()} started solids?`,why:'We’ll match the feeding guide to where you are.',choices:[['preparing','Not yet'],['new','First foods'],['established','Eating meals']]},
+  food:{title:`Has ${name()} started solids?`,why:'We’ll match the feeding guide to where you are.',choices:[['preparing','Not yet'],['new','Once a day or less'],['textures','Twice a day'],['established','3 times a day']]},
   crawl:{title:`Has ${name()} started crawling?`,why:'Your answer updates Safety for a baby on the move.',choices:[['Not yet','Not yet'],['Yes','Yes']]},
   stand:{title:`Is ${name()} pulling up to stand?`,why:'Your answer updates Sleep and Safety for standing.',choices:[['Not yet','Not yet'],['Yes','Yes']]}
  };
@@ -2424,7 +2424,7 @@ function liveHomeCheckin(){
 function skipHomeQuestion(){const key=homeQuestion();if(!key)return;const ui=homeInputs();ui.skipped[key]=true;saveHomeInputs(ui);render();}
 function answerHomeQuestion(key,value){
  if(!isCurrent()||key!==homeQuestion())return;
- const allowed={milk:['Breast milk','Formula','Both'],movement:['not_yet','trying','rolling'],food:['preparing','new','established'],crawl:['Not yet','Yes'],stand:['Not yet','Yes']};
+ const allowed={milk:['Breast milk','Formula','Both'],movement:['not_yet','trying','rolling'],food:['preparing','new','textures','established'],crawl:['Not yet','Yes'],stand:['Not yet','Yes']};
  if(!allowed[key]?.includes(value))return;
  const ui=homeInputs();ui.asked[key]=month;if(['movement','crawl','stand'].includes(key))ui.reported={key,value,month};saveHomeInputs(ui);
  if(key==='milk'){profile.feed=value;if(typeof resetMilkMethod==='function')resetMilkMethod();milkReference=null;try{localStorage.removeItem('ahead-v2-milk-reference');}catch{}persist();render();}

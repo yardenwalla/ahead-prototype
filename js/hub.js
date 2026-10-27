@@ -158,6 +158,7 @@
       const n = signsSeen();
       const head = n === 4 && age < 6 ? ['Maya’s showing the signs', 'Most babies start around 6 months, so check with your pediatrician if you’d like to start sooner.']
         : n === 4 ? ['Maya looks ready for solids', '{S} {is} showing all four signs. Pick a calm morning for the first taste.']
+        : age >= 7 && !hasFoodAnswer() ? ['Solids start at different times', 'Tell us whether Maya has started, and this guide will match. If not yet, here’s what to look for.']
         : age >= 7 ? ['Some babies take a little longer', 'If Maya isn’t showing all four signs yet, mention it at {p} next checkup. Until then, milk gives {o} everything {s} {need|needs}.']
         : ['Solids are coming up soon', 'Most babies start around 6 months, once they’re ready. Until then, milk gives Maya everything {s} {need|needs}.'];
       h += hero({ eyebrow: 'Preparing for solids', title: head[0], lead: head[1], meter: { label: 'Maya’s readiness signs', n, of: 4 }, button: { label: n === 4 && age >= 6 && now ? 'Tell us when {s’ve} started' : 'See what to look for', onclick: n === 4 && age >= 6 && now ? "chgSetStage('Feeding',3)" : go('chg:Feeding:d:signs') } }) + B;
@@ -417,7 +418,7 @@
     : mattressDue() ? row({ icon: 'shield', cat: 'Sleep', title: 'Lower the crib mattress', sub: answers.sit === 'Yes' ? 'Now that Maya sits, move it down a setting' : 'Move it down before {s} can sit up', chipText: 'Do now', chipTone: 'is-red', onclick: go('chg:Sleep:d:mattress') }) : null;
   function settleRow() {
     const g = C().settlingGuide();
-    const t = { learn: m() >= 4 ? ['Settling and sleep training', 'An optional choice, whenever you’re ready'] : ['Read ahead: sleep training', 'Usually from 4–6 months, if at all'], trying: ['Support while sleep training', 'How to handle a rough night'], routine: ['When the routine changes', 'After short naps, travel or illness'], help: ['A routine with your help', 'Feeding or rocking to sleep can stay'] }[g] || ['Helping Maya settle', 'What works at this age'];
+    const t = { learn: m() >= 4 ? ['Settling and sleep training', 'An optional choice, whenever you’re ready'] : ['Read ahead: sleep training', 'Some families start at 4–6 months or later'], trying: ['Support while sleep training', 'How to handle a rough night'], routine: ['When the routine changes', 'After short naps, travel or illness'], help: ['A routine with your help', 'Feeding or rocking to sleep can stay'] }[g] || ['Helping Maya settle', 'What works at this age'];
     return row({ icon: 'moon', cat: 'Sleep', title: t[0], sub: t[1], onclick: "openPage('chg:Sleep:settle')" });
   }
   function eventRow(cat) {
@@ -617,7 +618,7 @@
     if (age < 4) {
       // Read ahead: the parent can learn about sleep training before it's time, without being told to start.
       const methods = typeof sleepTrainingMethods === 'function' ? sleepTrainingMethods() : [];
-      return detail('Sleep', 'Read ahead · Usually from 4–6 months', 'Sleep training, for later', 'Sleep training is a choice, not a must. Families who do it usually start from 4–6 months. Here’s what the options look like, so you can decide ahead of time.',
+      return detail('Sleep', 'Read ahead', 'Sleep training, for later', 'Sleep training is a choice, not a must. Families who choose it can start any time from about 4–6 months. Here’s what the options look like, so you can decide ahead of time.',
         list('The main approaches', methods.map((x, k) => row({ icon: 'moon', cat: 'Sleep', title: x.name, sub: x.title, onclick: go('chg:Sleep:d:method:' + k) }))) + tip('For now', 'Feeding, rocking or holding Maya to sleep is fine. You can’t spoil a young baby.') + list('', [row({ icon: 'heart', cat: 'Sleep', title: 'Help Maya fall asleep any way that works', sub: 'Soothing in the early months', onclick: go('chg:Sleep:d:soothe') })]), 'book');
     }
     return settleChoices(age, choice);

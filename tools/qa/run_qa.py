@@ -57,12 +57,12 @@ def answer_for(question, p, w):
         return {'none': 'Not yet', 'trying': 'Trying'}.get(mv, 'Rolling')
     if 'finger foods' in q:
         return 'Yes' if food == 'established' else 'Not yet'
-    if 'managing now' in q:
-        return 'Regular meals' if w >= p['meals'] else 'More textures and finger foods' if w >= p['solids'] + 8 else 'First tastes'
+    if 'times a day' in q and 'solids' in q:
+        return '3 times' if w >= p['meals'] else 'Twice' if w >= p['solids'] + 8 else 'Once or less'
     if 'solids' in q:
         if 'where are you' in q:
             return {'preparing': 'Not started', 'new': 'First foods', 'established': 'Building meals'}[food]
-        return {'preparing': 'Not yet', 'new': 'First foods', 'established': 'Eating meals'}[food]
+        return {'preparing': 'Not yet', 'new': 'Once a day or less', 'established': '3 times a day'}[food]
     if 'crawling' in q:
         return 'Yes' if mv in ('crawling', 'pulling') else 'Not yet'
     if 'pulling up' in q:
