@@ -11,7 +11,7 @@
   };
 })();
 
-/* The "Saved to Timeline" toast uses the saved moment's category. */
+/* The "Saved to Memories" toast uses the saved moment's category. */
 (function () {
   const base = journeyNoticeMarkup;
   window.journeyNoticeMarkup = journeyNoticeMarkup = function () {

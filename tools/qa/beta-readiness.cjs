@@ -58,7 +58,8 @@ for (const early of [false,true]) for (let age=0; age<=12; age++) {
 // Explicit experiences must not be overwritten by age, and previews must use the chosen month.
 {
   const a=boot({name:'Sam',dob:'2025-10-21',early:false,feed:'Formula'},{solids:'Yes',foodExperience:'new'});
-  check(a.run("chgStageIndex('Feeding')===3"),'Late first bites stay First foods');
+  a.run("navigate('categories');openPage('topic:Feeding')");
+  check(/First tastes<\/b>[\s\S]{0,400}Start here/.test(a.html()),'Late first bites stay First foods');
   a.run("openPage('topic:Feeding')");inspect(a,'late first bites');
   check(!/Coming up · Usually 7–9/.test(clean(a.html())),'No elapsed window is called coming up');
   a.run("month=1;openPage('topic:Sleep')");check(a.run("chgStageIndex('Sleep')===0"),'Sleep preview uses selected month');
@@ -129,8 +130,8 @@ for (const early of [false,true]) for (let age=0; age<=12; age++) {
   check(b.run("page==='home'&&month===6"),'Returning Home advances with the baby’s age');
   a.run("month=9;openPage('topic:Feeding')");const preview=JSON.parse(a.run('JSON.stringify(history.state)'));
   const c=boot(p,{},store,'2026-11-21T12:00:00Z',{history:true,navigationState:preview});
-  // Stage rules (Oct 26): a guide opened from Home always follows the baby's real age; month browsing stays on Home.
-  check(c.run("page==='topic:Feeding'&&month===actualMonth()"),'A guide opened from Home follows the baby’s real age');
+  // Oct 27: a month picked on Home carries into the categories as a labeled preview, with a way back to now.
+  check(c.run("page==='topic:Feeding'&&month===9")&&/Previewing 9 months/.test(c.html())&&/returnToCurrentMonth/.test(c.html()),'A guide opened from a previewed month says it is a preview and offers the way back');
 }
 // The six-week transition is not postponed until the two-month birthday.
 {

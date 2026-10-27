@@ -46,12 +46,20 @@
     // turn a precise answer from that same day into a later local-noon answer.
     const answeredAt = day && (latest === null || day > iso(new Date(latest))) ? parse(day).getTime() : latest;
     const recentlyAnswered = Number.isFinite(answeredAt) && nowMs() - answeredAt < WAIT;
+    // From 9 months with no answer, Feeding shows the age's step and asks there, so Home doesn't repeat it.
+    if (typeof foodAssumed === 'function' && foodAssumed()) return null;
     if (!hasFoodAnswer() || stage === 'preparing') {
       if (d.skip.food && nowMs() - d.skip.food < WAIT || hasFoodAnswer() && recentlyAnswered) return null;
-      return {key:'food', title:`Has ${name()} started solids?`, why:'We’ll match the feeding guide to where you are.',
-        choices:[['preparing','Not yet'],['new','Once a day or less'],['textures','Twice a day'],['established','3 times a day']]};
+      return {key:'food', title:`Has ${name()} started solids?`, why:'Feeding will follow along from here.',
+        choices:[['new','Yes'],['preparing','Not yet']]};
     }
-    if (!['new','textures'].includes(stage)) return null;
+    // Once solids have started, time and age suggest the next step, and the parent confirms with one tap.
+    const next = typeof foodSuggestion === 'function' ? foodSuggestion() : null;
+    if (!next || d.skip['food-progress'] && nowMs() - d.skip['food-progress'] < 14 * DAY) return null;
+    const wks = foodWeeksOnStep(), held = !!answers.foodHold;
+    return next === 'textures'
+      ? {key:'food-progress', title: held ? `Is ${name()} managing lumps now?` : `Ready for lumps and finger foods?`, why: held ? `Last time you said not yet. If lumps are going better, Feeding will move on.` : `${name()} has been on first tastes ${wks <= 12 ? `for ${wks} weeks` : 'for a while'}. Lumpier food and soft pieces usually come next.`, choices:[['textures','Yes'],['hold','Not yet']]}
+      : {key:'food-progress', title: held ? `Is ${name()} ready for family meals now?` : `Ready for family meals?`, why: held ? `Last time you said not yet. If meals are going well, Feeding will move on.` : `${name()} has been on lumps and finger foods ${wks <= 12 ? `for ${wks} weeks` : 'for a while'}. Three meals a day usually comes next.`, choices:[['established','Yes'],['hold','Not yet']]};
     const key = 'food-progress';
     if (d.skip[key] && nowMs() - d.skip[key] < WAIT) return null;
     // An answer date is not a solids-start date. Use it only to space the next question.
@@ -99,7 +107,7 @@
   const baseAnswer = answerHomeQuestion, baseLive = liveHomeCheckin;
   const confirmAnswer = key => {
     if (typeof hubToast !== 'function') return;
-    const label = { food: 'Feeding', 'food-progress': 'Feeding', naps: 'Sleep' }[key] || (key.startsWith('outgrown:') ? key.slice(9).replace('Daily rhythm', 'Everyday care') : null);
+    const label = { food: 'Feeding', naps: 'Sleep' }[key] || (key.startsWith('outgrown:') ? key.slice(9).replace('Daily rhythm', 'Everyday care') : null);
     if (label) setTimeout(() => hubToast('Got it', `${label} now matches what you told us.`), 0);
   };
   window.answerHomeQuestion = answerHomeQuestion = function (key, value) {
@@ -112,8 +120,8 @@
       return render();
     }
     if (key === 'food-progress') {
-      if (!['new','textures','established'].includes(value)) return;
-      recordCheckin(key, value); return setFeedingStage(value);
+      if (!['textures','established','hold'].includes(value)) return;
+      recordCheckin(key, value); return value === 'hold' ? holdFoodStep() : acceptFoodStep(value);
     }
     // Apply the answer first (the app checks the question is still showing), then remember when it was asked.
     if (key === 'naps') { recordCheckin(key, value); return setAnswer('twoNaps', value === 'Yes' ? 'Yes' : 'Not yet'); }
@@ -131,10 +139,10 @@
     if (key === 'food' || key === 'food-progress') return feedingCheckinMarkup('home');
     if (key.startsWith('outgrown:')) {
       const o = (stageOutgrown() || []).find(x => 'outgrown:' + x.cat === key); if (!o) return '';
-      return `<section class="connected-checkin"><div><h2>${o.question}</h2><button class="connected-skip" onclick="skipHomeQuestion()">Skip</button></div><p>${o.why}</p><div class="connected-checkin-choices"><button onclick="answerHomeQuestion('${key}','Not yet')">Not yet</button><button onclick="answerHomeQuestion('${key}','Yes')">Yes, move on</button></div></section>`;
+      return `<section class="connected-checkin"><div><h2>${o.question}</h2><button class="connected-skip" onclick="skipHomeQuestion()">Skip</button></div><p>${o.why}</p><div class="connected-checkin-choices"><button onclick="answerHomeQuestion('${key}','Yes')">Yes, move on</button><button onclick="answerHomeQuestion('${key}','Not yet')">Not yet</button></div></section>`;
     }
     if (key !== 'naps') return baseLive().replace('This changes which safety setup to highlight.', 'Your answer updates Sleep and Safety.');
-    return `<section class="connected-checkin"><div><h2>Is ${name()} skipping the late catnap most days?</h2><button class="connected-skip" onclick="skipHomeQuestion()">Skip</button></div><p>Your answer updates the nap guidance.</p><div class="connected-checkin-choices"><button onclick="answerHomeQuestion('naps','Not yet')">Not yet</button><button onclick="answerHomeQuestion('naps','Yes')">Yes</button></div></section>`;
+    return `<section class="connected-checkin"><div><h2>Is ${name()} skipping the late catnap most days?</h2><button class="connected-skip" onclick="skipHomeQuestion()">Skip</button></div><p>Your answer updates the nap guidance.</p><div class="connected-checkin-choices"><button onclick="answerHomeQuestion('naps','Yes')">Yes</button><button onclick="answerHomeQuestion('naps','Not yet')">Not yet</button></div></section>`;
   };
 
   /* ---------- Safety ---------- */

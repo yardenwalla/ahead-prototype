@@ -11,7 +11,7 @@ const family = (age, answers = {}, storage = {}) => boot({ name: 'Ari', dob, fee
 const stages = html => [...html.matchAll(/<div class="hub-stage ([^"]*)">([\s\S]*?)<\/button><\/div>/g)].map(m => ({
   cls: m[1], change: /class="hub-stage-top is-change"/.test(m[2]), name: (m[2].match(/hub-stage-name">([^<]+)</) || [])[1] }));
 const nowName = html => (stages(html).find(s => /is-now/.test(s.cls)) || {}).name;
-const ROUTES = { Sleep: i => `chg:Sleep:s:${i}`, Feeding: i => `chg:Feeding:s:${i}`, 'Daily rhythm': i => `chg:Daily rhythm:s:${i}`,
+const ROUTES = { Sleep: i => `chg:Sleep:s:${i}`, Feeding: i => `chg:Feeding:s:${[1, 2, 3][i]}`,
   Development: i => `development-stage:${[2, 4, 6, 9, 12][i]}`, Safety: i => `safety-stage:${['setup', 'reaching', 'rolling'][i]}`,
   Health: i => `health-visit:${[0, 1, 2, 4, 6, 9, 12][i]}` };
 
@@ -19,7 +19,7 @@ const ROUTES = { Sleep: i => `chg:Sleep:s:${i}`, Feeding: i => `chg:Feeding:s:${
 for (let age = 0; age <= 12; age++) for (const cat of Object.keys(ROUTES)) {
   const a = family(age); a.run(`openPage('topic:${cat}')`);
   const s = stages(a.html());
-  check(s.length >= (cat === 'Safety' ? 3 : 4), `${cat} at ${age} months shows the stage timeline`);
+  check(s.length >= (['Safety', 'Feeding'].includes(cat) ? 3 : 4), `${cat} at ${age} months shows the stage timeline`);
   check(s.filter(x => /is-now/.test(x.cls)).length === 1, `${cat} at ${age} months marks exactly one stage Now`);
   check(s.filter(x => /is-on/.test(x.cls)).length === 1, `${cat} at ${age} months has one stage being read`);
   check(!s.some(x => x.change), `${cat} at ${age} months: no Change on the baby's own stage`);
@@ -33,17 +33,17 @@ for (let age = 0; age <= 12; age++) for (const cat of Object.keys(ROUTES)) {
     check(v.filter(y => y.change).length <= 1, `${cat}: at most one Change`);
     const allowed = a.run(`stageCanChange(${JSON.stringify(cat)}, ${i}, ${nowI})`);
     check(mine.change === allowed, `${cat} at ${age} months: Change on ${x.name} matches the stage table`);
-    if (cat === 'Health') check(!mine.change, 'Health never offers Change');
+    if (cat === 'Health' || cat === 'Development') check(!mine.change, `${cat} never offers Change`);
     if (cat === 'Safety' && i < nowI) check(mine.change, 'Safety can go back a stage');
     if (cat === 'Sleep' && i === 0 && age > 3) check(!mine.change, 'Round-the-clock sleep (swaddling) cannot be picked after 3 months');
-    if (cat === 'Feeding' && i >= 2 && age < 4) check(!mine.change, 'Solids stages cannot be picked before 4 months');
-    if (!['Health'].includes(cat) && !(cat === 'Sleep' && i === 0 && age > 3) && !(cat === 'Feeding' && i >= 2 && age < 4)) check(mine.change, `${cat} at ${age} months: ${x.name} can be picked`);
+    if (cat === 'Feeding' && i >= 1 && age < 4) check(!mine.change, 'Solids stages cannot be picked before 4 months');
+    if (!['Health', 'Development'].includes(cat) && !(cat === 'Sleep' && i === 0 && age > 3) && !(cat === 'Feeding' && i >= 1 && age < 4)) check(mine.change, `${cat} at ${age} months: ${x.name} can be picked`);
   });
 }
 
 // Change sticks, shows the same in Baby's details, and Undo puts it back.
-for (const [cat, age, i, label] of [['Sleep', 7, 3, 'Two naps'], ['Sleep', 10, 2, 'Three naps'], ['Sleep', 5, 1, 'Longer nights'], ['Feeding', 7, 4, 'More textures'], ['Feeding', 9, 2, 'Preparing for solids'],
-  ['Feeding', 7, 1, 'Milk feeds'], ['Development', 8, 2, 'By 6 months'], ['Daily rhythm', 5, 3, '7–12 months'], ['Safety', 2, 2, 'On the move'], ['Safety', 10, 1, 'Reaching and rolling']]) {
+for (const [cat, age, i, label] of [['Sleep', 7, 3, 'Two naps'], ['Sleep', 10, 2, 'Three naps'], ['Sleep', 5, 1, 'Longer nights'], ['Feeding', 7, 2, 'Solids'], ['Feeding', 9, 1, 'Preparing for solids'],
+  ['Feeding', 7, 0, 'Milk feeds'], ['Safety', 2, 2, 'On the move'], ['Safety', 10, 1, 'Reaching and rolling']]) {
   const a = family(age); a.run(`openPage('topic:${cat}')`);
   const before = nowName(a.html());
   a.run(`openPage('${ROUTES[cat](i)}');hubChangeStage(${JSON.stringify(cat)}, ${i})`);
@@ -64,8 +64,13 @@ for (const [cat, age, i, label] of [['Sleep', 7, 3, 'Two naps'], ['Sleep', 10, 2
   a = family(11, { twoNaps: 'Not yet' }); a.run("openPage('topic:Sleep')"); check(nowName(a.html()) === 'Three naps', 'A parent’s “not yet” holds past 9 months');
   a = family(6, { twoNaps: 'Yes' }); a.run("openPage('topic:Sleep')"); check(nowName(a.html()) === 'Two naps', 'A parent’s “two naps” wins before 9 months');
   a = family(8); a.run("openPage('topic:Feeding')"); check(nowName(a.html()) === 'Preparing for solids', 'Feeding with no solids answer waits on Preparing for solids');
-  a = family(10); a.run("openPage('topic:Feeding')"); check(nowName(a.html()) === 'Preparing for solids', 'Still waiting for the parent at 10 months');
-  a = family(10, { solids: 'Yes', foodExperience: 'new' }); a.run("openPage('topic:Feeding')"); check(nowName(a.html()) === 'First foods', 'A parent’s “first foods” holds');
+  a = family(10); a.run("openPage('topic:Feeding')"); check(nowName(a.html()) === 'Solids' && /We’re showing solids for Ari’s age/.test(a.html()), 'From 9 months with no answer, Feeding shows solids for the age and says so');
+  a = family(10, { solids: 'Not yet' }); a.run("openPage('topic:Feeding')"); check(nowName(a.html()) === 'Preparing for solids', 'A parent’s “not yet” holds at 10 months');
+  a = family(10, { solids: 'Yes', foodExperience: 'new' }); a.run("openPage('topic:Feeding')"); check(nowName(a.html()) === 'Solids', 'A parent’s “we’ve started” holds');
+  a = family(5); a.run("openPage('topic:Feeding')"); check(nowName(a.html()) === 'Preparing for solids', 'Preparing for solids shows from 4 months');
+  a = family(3); a.run("openPage('topic:Feeding')"); check(nowName(a.html()) === 'Milk feeds', 'Milk feeds before 4 months');
+  a = family(4, { solids: 'Yes', solidsStart: '2026-02-21' }); a.run("openPage('topic:Feeding')"); check(nowName(a.html()) === 'Solids' && a.html().includes('First tastes'), 'Starting at 4 months opens Solids on first tastes');
+  for (const age of [0, 3, 7, 11]) { const c = family(age); c.run("openPage('topic:Daily rhythm')"); const st = stages(c.html()); check(st.length === 4 && st.filter(x => /is-now/.test(x.cls)).length === 1 && !st.some(x => x.change), `Everyday care at ${age} months has a read-only timeline`); for (let i = 0; i < 4; i++) { c.run(`openPage('chg:Daily rhythm:s:${i}')`); const v = stages(c.html()); check(v[i] && /is-on/.test(v[i].cls) && !v.some(x => x.change), `Everyday care: stage ${i} can be read, never changed`); } }
 }
 // Rule 3: an old "not yet" brings the naps question back to Home a month later.
 {
@@ -81,8 +86,6 @@ for (const [cat, age, i, label] of [['Sleep', 7, 3, 'Two naps'], ['Sleep', 10, 2
 }
 // One rule everywhere: a pick holds until the parent changes it. When the baby outgrows it, Home asks once.
 for (const [cat, pickRoute, i, pickAge, laterAge, picked, next] of [
-  ['Development', 'development-stage:6', 2, 8, 10, 'By 6 months', 'By 12 months'],
-  ['Daily rhythm', 'chg:Daily rhythm:s:1', 1, 3, 5, '1–3 months', '4–6 months'],
   ['Safety', 'safety-stage:setup', 0, 4, 7, 'First setup', 'On the move'],
   ['Sleep', 'chg:Sleep:s:1', 1, 4, 9, 'Longer nights', 'Two naps']]) {
   const storage = {};
@@ -95,7 +98,7 @@ for (const [cat, pickRoute, i, pickAge, laterAge, picked, next] of [
   a.run(`stageFollowAge(${JSON.stringify(cat)});openPage('topic:${cat}')`);
   check(nowName(a.html()) === next, `${cat}: “Yes, move on” follows age again (${next})`);
 }
-for (const [cat, route, i] of [['Development', 'development-stage:4', 1], ['Safety', 'safety-stage:reaching', 1], ['Sleep', 'chg:Sleep:s:1', 1], ['Feeding', 'chg:Feeding:s:1', 1], ['Daily rhythm', 'chg:Daily rhythm:s:1', 1]]) {
+for (const [cat, route, i] of [['Safety', 'safety-stage:reaching', 1], ['Sleep', 'chg:Sleep:s:1', 1], ['Feeding', 'chg:Feeding:s:1', 0]]) {
   const a = family(9); a.run(`openPage('${route}');hubChangeStage(${JSON.stringify(cat)}, ${i})`);
   check(!a.run('homeQuestionQueue()').includes('outgrown:' + cat), `${cat}: picking an earlier stage doesn't trigger the outgrown question straight away`);
 }

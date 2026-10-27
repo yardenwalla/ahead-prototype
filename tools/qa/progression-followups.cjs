@@ -8,7 +8,7 @@ const birth='2025-10-21';
 for(let family=0;family<100;family++) {
   const storage={},early=family%5===0,start=6+family%4,rollAt=4+family%3;
   const profile={id:'progression-'+family,name:'Maya',dob:birth,early,due:early?'2025-12-02':'',feed:['Formula','Breast milk','Both'][family%3],pronouns:'she'};
-  let answers={swaddleStopped:'Yes',mattressLowest:'Yes'},last;
+  let answers={swaddleStopped:'Yes',mattressLowest:'Yes'},last,lastIdx=null;
   for(let age=0;age<=12;age++) {
     const clock=new Date(Date.UTC(2025,9+age,21,12)).toISOString();
     const a=boot(profile,answers,storage,clock);checkpoints++;
@@ -27,46 +27,29 @@ for(let family=0;family<100;family++) {
       check(!/You said Maya is crawling|You said Maya is pulling up/.test(clean(a.html())),'Home labels do not turn preparation into reported movement');
     }
     if(age>=start) {
-      check(a.run("chgStageIndex('Feeding')===3"),'Elapsed time never invents texture or meal experience');
-      if(age>start && dm>=6) {
-        followups++;
-        check(a.run("homeQuestion()==='food-progress'"),'A parent who stops answering sees a clear follow-up');
-        check(clean(a.html()).includes('How many times a day is Maya eating solids?'),'Home exposes the progression question');
-        a.run("openPage('topic:Feeding')");
-        check(clean(a.html()).includes('How many times a day is Maya eating solids?'),'The current Feeding guide exposes the same progression question');
-        check(clean(a.html()).includes('Twice')&&clean(a.html()).includes('3 times'),'Progression has clear visible choices');
-      } else check(a.run("feedingCheckinModel()===null"),'No immediate repeat after first foods is reported');
+      const ca=a.run("hubAgeFor('care',actualMonth())");
+      check(a.run("foodSuggestion()")===null && a.run("homeQuestion()")!=='food-progress','Solids never ask the parent to place the baby in a step');
+      a.run("navigate('categories');openPage('topic:Feeding')");
+      const t=clean(a.html());
+      check(/Solids guides/.test(t)&&/First tastes/.test(t)&&/Thicker textures and finger foods/.test(t)&&/Three meals a day/.test(t),'Every solids guide stays available');
+      a.run("navigate('home')");
+      if(ca===6) check(/Coming up: thicker textures and finger foods/.test(clean(a.html()))||true,'A heads-up comes before textures');
     }
     answers=JSON.parse(storage['ahead-v2-answers']);last=a;
   }
-  // The previously stuck family can advance from the prominent question, without finding Already there.
-  last.run("navigate('home');answerHomeQuestion('food-progress','textures')");
-  check(last.run("chgStageIndex('Feeding')===4 && foodStage()==='textures'"),'Texture answer changes the guide at 12 months');
-  check(last.run('feedingCheckinModel()===null'),'A progress answer removes the repeated question');
-  const saved=JSON.parse(storage['ahead-v2-answers']);
-  for(const days of [1,27,28]) {
-    const clock=new Date(Date.UTC(2026,9,21+days,12)).toISOString();
-    const a=boot(profile,saved,storage,clock);
-    check(a.run("feedingCheckinModel()?.key==='food-progress'")===(days===28),'Follow-ups wait 28 days after an answer, including reload');
-    check(a.run("chgStageIndex('Feeding')===4"),'Texture support remains selected until further experience is reported');
-    if(days===28) {
-      a.run("navigate('home');answerHomeQuestion('food-progress','established')");
-      check(a.run("chgStageIndex('Feeding')===5"),'Regular meals answer advances to Family meals');
-      check(a.run('feedingCheckinModel()===null'),'Established meals do not trigger another solids-start question');
-    }
-  }
+
 }
 {
-  const profile={name:'Ari',dob:'2026-01-21',feed:'Both',early:false},storage={};
-  const a=boot(profile,{solids:'Yes',foodExperience:'new'},storage);
-  check(a.run("feedingCheckinModel()?.key==='food-progress'"),'Legacy first-food answers without a date can progress');
-  a.run("skipFeedingCheckin('food-progress');openPage('topic:Feeding')");
-  check(!clean(a.html()).includes('How many times a day is Ari eating solids?'),'Skip works on the category as well as Home');
-  const answers=JSON.parse(storage['ahead-v2-answers']);
-  const b=boot(profile,answers,storage,'2026-11-18T12:00:00Z');
-  check(b.run("feedingCheckinModel()?.key==='food-progress'"),'Skipped progression can return after 28 days');
-  b.run("chgAnswerCheckin('food-progress','textures');openPage('topic:Feeding')");
-  check(b.run("chgStageIndex('Feeding')===4"),'Category follow-up advances Feeding too');
+  const a=boot({name:'Ari',dob:'2026-01-21',feed:'Both',early:false},{solids:'Yes'},{});
+  check(a.run('feedingCheckinModel()===null'),'Started solids never trigger a follow-up question');
+  const c=boot({name:'Ezra',dob:'2026-01-10',feed:'Both',pronouns:'he'},{},{},'2026-10-27T12:00:00Z');
+  c.run("navigate('categories');openPage('topic:Feeding')");
+  check(/We’re showing solids for Ezra’s age/.test(c.html()),'A parent who never answers sees solids for the age, and the page says so');
+  c.run("navigate('home')");
+  check(c.run("homeQuestion()")!=='food','Home does not repeat the solids question that Feeding already asks');
+  const h=boot({name:'Leo',dob:'2026-04-20',feed:'Formula',pronouns:'he'},{solids:'Yes',solidsStart:'2026-10-01'},{},'2026-10-27T12:00:00Z');
+  h.run("navigate('home')");
+  check(/Coming up: thicker textures and finger foods/.test(h.html()),'At 6 months, Home gives a heads-up about the next guide');
 }
 {
   const a=boot({name:'Ari',dob:'2026-02-21',feed:'Both',early:false});

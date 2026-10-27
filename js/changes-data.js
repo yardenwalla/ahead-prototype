@@ -169,7 +169,7 @@ window.AHEAD_CHANGES = {
    {
     "key": "two",
     "rail": "Two naps",
-    "when": "Usually 6–9 months",
+    "when": "Usually 8–9 months",
     "title": "Two naps a day",
     "lead": "For days with a morning nap and an afternoon nap. If the late catnap is repeatedly hard to fit and baby manages comfortably until bedtime, it may be time to try two naps.",
     "looks": [
@@ -801,7 +801,7 @@ window.AHEAD_CHANGES = {
    },
    {
     "key": "first",
-    "rail": "First foods",
+    "rail": "First tastes",
     "when": "Usually around 6 months",
     "title": "First foods",
     "lead": "She’s tasting her first foods. Breast milk or formula is still her main food.",
@@ -857,8 +857,8 @@ window.AHEAD_CHANGES = {
    },
    {
     "key": "textures",
-    "rail": "More textures",
-    "when": "Usually 7–9 months",
+    "rail": "Thicker textures and more finger foods",
+    "when": "Usually around 7–8 months",
     "title": "More textures",
     "lead": "She’s managing first tastes and trying soft lumps or finger foods. Build on foods she can handle, whether you started with purées, self-feeding or both.",
     "why": "Practice helps baby learn to manage food beyond smooth purées. Offer texture gradually, with pieces prepared for the grasp baby can use.",
@@ -904,8 +904,8 @@ window.AHEAD_CHANGES = {
    },
    {
     "key": "meals",
-    "rail": "Family meals",
-    "when": "Usually 9–12 months",
+    "rail": "Three meals a day",
+    "when": "Usually around 9–10 months",
     "title": "Family meals",
     "lead": "She’s eating regular meals and varied textures, with milk alongside. Keep breast milk or formula through the first year; breastfeeding can continue after that.",
     "why": "As she eats more food, she needs a little less milk. Eating together helps her learn by copying you.",
@@ -1380,6 +1380,12 @@ window.AHEAD_CHANGES = {
        "Gags, then keeps going",
        "Gagging is normal while she learns. Keep offering soft lumps alongside foods she likes.",
        "Trouble breathing or an ineffective cough can mean choking, even if there’s some sound. Know infant choking first aid.",
+       null
+      ],
+      [
+       "Gags and spits it out",
+       "Go back to a slightly smoother texture for a week or two, then try again. Keep offering soft finger foods to practice.",
+       "If it isn’t getting easier after a few weeks, mention it to your pediatrician.",
        null
       ],
       [

@@ -382,3 +382,76 @@
 /* Status chips sit under the row's words, so titles keep the full width. */
 #main .hub-row-copy .hub-chip { display: inline-block; margin-top: 6px; font-size: 11.5px; padding: 3px 9px }
 #main .hub-q .hub-q-date { flex: 1 1 100%; min-height: 44px; margin: 0 0 2px; font-size: 16px }
+
+
+/* Solids: preview label, age-based note, "already doing this", and New chips. */
+#main .hub-preview { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: -4px 0 14px; padding: 10px 14px; border-radius: 14px; background: color-mix(in srgb, var(--year-accent) 18%, var(--white)); font-size: 14px; color: var(--year-ink); font-weight: 600 }
+#main .hub-preview button { flex: none; min-height: 36px; padding: 0 12px; border: 0; border-radius: 999px; background: var(--white); color: var(--year-ink); font: inherit; font-size: 13px; font-weight: 700; cursor: pointer }
+#main .hub-assumed { margin: 0 0 16px; padding: 14px 16px; border-radius: 18px; background: var(--white); border: 1px solid color-mix(in srgb, var(--year-ink) 14%, transparent) }
+#main .hub-assumed p { margin: 0 0 10px; font-size: 15px; line-height: 1.45; color: var(--ink) }
+#main .hub-assumed div { display: flex; gap: 8px }
+#main .hub-assumed button { flex: 1; min-height: 44px; border: 0; border-radius: 999px; background: var(--year-pale); color: var(--year-ink); font: inherit; font-weight: 700; cursor: pointer }
+#main .hub-already { display: block; width: 100%; margin: 8px 0 0; min-height: 44px; border: 0; background: none; color: var(--year-ink); font: inherit; font-size: 14px; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; cursor: pointer }
+#main .hub-chip.is-new { background: var(--year-ink); color: var(--white) }
+#main .hub-stepfix { margin: -6px 0 18px }
+#main .hub-stepfix summary { list-style: none; min-height: 44px; display: flex; align-items: center; font-size: 14px; font-weight: 600; color: var(--year-ink); text-decoration: underline; text-underline-offset: 3px; cursor: pointer }
+#main .hub-stepfix summary::-webkit-details-marker { display: none }
+#main .hub-stepfix div { display: flex; flex-wrap: wrap; gap: 8px; padding-top: 4px }
+#main .hub-stepfix button { min-height: 40px; padding: 0 14px; border: 1.5px solid color-mix(in srgb, var(--year-ink) 25%, transparent); border-radius: 999px; background: var(--white); color: var(--year-ink); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer }
+#main .hub-stepfix button.is-on { background: var(--year-ink); color: var(--white); border-color: var(--year-ink) }
+#main .hub-assumed div { flex-wrap: wrap }
+#main .hub-assumed button { flex: 1 1 40% }
+#main .hub-already { display: block; width: 100%; margin: 8px 0 0; min-height: 44px; border: 0; background: none; color: var(--year-ink); font: inherit; font-size: 14px; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; text-align: left }
+/* A month picked on Home, carried into the categories: said quietly in the page header */
+.monthly-page-header .monthly-preview { color: var(--year-ink, var(--muted)) }
+.monthly-page-header .monthly-preview button { background: none; border: 0; padding: 0; min-height: 0; font: inherit; color: inherit; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; cursor: pointer }
+.monthly-page-header .monthly-preview button::after { content: ''; position: absolute; inset: -12px -8px }
+.monthly-page-header .monthly-preview button { position: relative }
+/* Checkup questions and notes */
+#main .hub-q-card { padding: 16px; margin-bottom: 14px }
+#main .hub-q-card .hub-card-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px }
+#main .hub-q-hint { margin: 0 0 10px; color: var(--muted); font-size: 14px }
+#main .hub-q-idea { display: flex; gap: 12px; align-items: flex-start; padding: 12px 0; border-top: 1px solid color-mix(in srgb, var(--year-ink) 10%, transparent); font-size: 15px; line-height: 1.4; cursor: pointer }
+#main .hub-q-idea:first-of-type { border-top: 0 }
+#main .hub-q-idea input { flex: none; width: 22px; height: 22px; margin: 1px 0 0; accent-color: var(--year-ink) }
+#main .hub-q-idea.is-on span { color: var(--muted); text-decoration: line-through }
+#main .hub-q-mine { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 0; border-top: 1px solid color-mix(in srgb, var(--year-ink) 10%, transparent); font-size: 15px }
+#main .hub-q-mine button { flex: none; background: none; border: 0; min-height: 36px; color: var(--muted); font: inherit; font-size: 13px; text-decoration: underline; cursor: pointer }
+#main .hub-q-add { display: flex; gap: 8px; margin-top: 10px }
+#main .hub-q-add input { flex: 1; min-width: 0; min-height: 44px; padding: 0 14px; border-radius: 999px; border: 1.5px solid color-mix(in srgb, var(--year-ink) 20%, transparent); background: var(--white); font: inherit; font-size: 15px }
+#main .hub-q-add button, #main .hub-q-save { min-height: 44px; padding: 0 18px; border: 0; border-radius: 999px; background: var(--year-ink); color: var(--white); font: inherit; font-weight: 700; cursor: pointer }
+#main .hub-q-card textarea { width: 100%; box-sizing: border-box; padding: 12px 14px; border-radius: 14px; border: 1.5px solid color-mix(in srgb, var(--year-ink) 20%, transparent); background: var(--white); font: inherit; font-size: 15px; line-height: 1.45; resize: vertical }
+#main .hub-q-save { margin-top: 10px; width: 100% }
+/* First aid: mark it learned */
+#main .hub-learned { display: block; width: 100%; margin: 16px 0 8px; min-height: 48px; border-radius: 999px; border: 1.5px solid var(--year-ink); background: var(--white); color: var(--year-ink); font: inherit; font-weight: 700; cursor: pointer }
+#main .hub-learned.is-done { background: var(--year-pale); border-color: transparent }
+#main .hub-q-save, #main .hub-q-add button { color: var(--white) !important; text-align: center !important; justify-content: center }
+#main .hub-learned { text-align: center !important; justify-content: center; display: flex; align-items: center }
+#main .hub-agebasis { margin: -4px 0 16px; font-size: 14px; color: var(--muted); text-align: center }
+#main .hub-agebasis button { background: none; border: 0; padding: 0 2px; font: inherit; color: var(--year-ink); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; min-height: 32px }
+#main .hub-missed { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin: -4px 0 16px; padding: 12px 14px; border-radius: 16px; background: var(--white); border: 1px solid color-mix(in srgb, var(--year-ink) 14%, transparent) }
+#main .hub-missed p { margin: 0; font-size: 14px; color: var(--ink); flex: 1 1 60% }
+#main .hub-missed div { display: flex; gap: 8px }
+#main .hub-missed button { min-height: 36px; padding: 0 12px; border: 0; border-radius: 999px; background: var(--year-pale); color: var(--year-ink); font: inherit; font-size: 13px; font-weight: 700; cursor: pointer }
+/* Baby's details: where the baby is now, set in place */
+#main .hub-where-lead { margin: -4px 0 10px; color: var(--muted); font-size: 14px }
+#main .hub-where { padding: 4px 16px }
+#main .hub-where-row { display: flex; gap: 12px; align-items: flex-start; padding: 14px 0; border-top: 1px solid color-mix(in srgb, var(--ink) 8%, transparent) }
+#main .hub-where-row:first-child { border-top: 0 }
+#main .hub-where-row .hub-dot { flex: none }
+#main .hub-where-copy { flex: 1; min-width: 0 }
+#main .hub-where-copy b { display: block; font-size: 15px; margin-bottom: 6px }
+#main .hub-where-copy small { color: var(--muted); font-size: 14px }
+#main .hub-where-chips { display: flex; flex-wrap: wrap; gap: 6px }
+#main .hub-where-chips button { min-height: 34px; padding: 0 12px; border-radius: 999px; border: 1.5px solid color-mix(in srgb, var(--ink) 16%, transparent); background: var(--white); color: var(--ink); font: inherit; font-size: 13px; font-weight: 600; cursor: pointer }
+#main .hub-where-chips button.is-on { background: var(--ink); border-color: var(--ink); color: var(--white) }
+#main .hub-where-chips button:disabled { opacity: .4; cursor: default }
+#main .hub-whatsnew { display: block; width: 100%; margin: 12px 0 20px; padding: 14px 16px; border-radius: 18px; border: 1.5px dashed color-mix(in srgb, var(--ink) 22%, transparent); background: transparent; text-align: left; font: inherit; cursor: pointer }
+#main .hub-whatsnew b { display: block; font-size: 15px; color: var(--ink) }
+#main .hub-whatsnew span { font-size: 13px; color: var(--muted) }
+#main .brief-new { margin-left: 6px; padding: 2px 7px; border-radius: 999px; background: var(--year-ink, #2b2733); color: #fff; font-style: normal; font-size: 11px; font-weight: 700; letter-spacing: 0; text-transform: none; vertical-align: 1px }
+/* Home cards behave like notifications: × hides one */
+#main .brief-card { position: relative }
+#main .brief-hide { position: absolute; top: 10px; right: 6px; width: 32px; height: 32px; min-height: 0; padding: 0; border: 0; border-radius: 50%; background: transparent; color: #9a94a0; font-size: 20px; line-height: 1; cursor: pointer; z-index: 2 }
+#main .brief-hide:hover { background: rgba(43,39,51,.06) }
+#main .brief-card .connected-chevron { margin-top: 26px }

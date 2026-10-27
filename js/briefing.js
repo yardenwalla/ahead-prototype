@@ -38,6 +38,17 @@
   function importantNow() {
     const out = [], mv = movement(), m = dm(), p = P();
     const priority = homePriority();
+    // After a Feeding change, Home leads with it until the parent opens Feeding.
+    const fn = live() && typeof foodHomeNote === 'function' ? foodHomeNote() : null;
+    if (fn === 'new') { const tx = foodStage() === 'textures';
+      out.push({ topic: 'Feeding', key: 'food-step', reason: 'New in Feeding', title: tx ? 'Thicker food, and more to pick up' : 'Meals are part of the day now',
+        body: tx ? `Make food a little lumpier, and add soft pieces ${n()} can pick up.` : `Three meals and a snack or two, with milk alongside. Most of what you eat can work for ${n()} too.`,
+        link: link("openPage('topic:Feeding')", 'See what’s new') }); }
+    const fq = live() && typeof feedingCheckinModel === 'function' ? feedingCheckinModel() : null;
+    if (!fn && fq && fq.key === 'food-progress' && typeof homeQuestion === 'function' && homeQuestion() !== 'food-progress')
+      out.push({ topic: 'Feeding', key: 'food-ask', reason: 'Quick question in Feeding', title: fq.title, body: fq.why, link: link("openPage('topic:Feeding')", 'Answer in Feeding') });
+    if (fn === 'hold') out.push({ topic: 'Feeding', key: 'food-hold', reason: 'Going slowly', title: 'Not ready for lumps yet',
+        body: `That’s fine. Here’s how to build up slowly, and when to ask your pediatrician.`, link: link("openPage('chg:Feeding:d:notready')", 'See the tips') });
 
     // The first nights at home: one setup, done once.
     if (live() && chgStageIndex('Sleep') === 0 && chgSafeRemaining('Sleep') > 0) {
@@ -93,7 +104,7 @@
     if (live() && (answers.pullUp === 'Yes' || m >= 8) && answers.mattressLowest !== 'Yes') {
       const said = answers.pullUp === 'Yes';
       out.push({ topic: 'Sleep', key: 'mattress', title: said ? `Now that ${n()} pulls up, set the crib mattress to its lowest` : `Set the crib mattress to its lowest`,
-        body: said ? `Take down mobiles too, and anchor dressers and shelves. To ${n()}, they’re something to climb now.` : `Most babies pull up between 8 and 10 months, so it’s worth doing before then.`,
+        body: said ? `Take down mobiles too, and anchor dressers and shelves. To ${n()}, they’re something to climb now.` : (m >= 10 ? `Most babies pull up by now, so it’s worth doing soon.` : `Most babies pull up between 8 and 10 months, so it’s worth doing before then.`),
         tools: `<div class="home-action-tools"><button class="home-inline-check" aria-label="Mark done: crib mattress at its lowest" onclick="setAnswer('mattressLowest','Yes')"><span aria-hidden="true"></span>I’ve done this</button></div>`,
         link: link("openSection('Sleep','sleep-crib-height')", 'See the crib setup') });
     } else if (live() && answers.sit === 'Yes' && answers.mattressLowered !== 'Yes' && answers.mattressLowest !== 'Yes') {
@@ -119,14 +130,27 @@
         link: link("openPage('topic:Feeding')", 'See the first-foods guide') });
 
     // A checkup in the next two weeks.
+    // Solids: in the month the next guide starts to fit, it joins What matters now, after safety work.
+    if (live() && typeof foodStage === 'function' && foodStage() !== 'preparing') { const ca = typeof hubAgeFor === 'function' ? hubAgeFor('care', actualMonth()) : dm();
+      if (ca === 7) out.push({ topic: 'Feeding', key: 'solids-textures-now', title: approach7() ? 'From strips to small pieces' : 'Time for thicker textures',
+        body: approach7() ? `As ${n()} learns to pinch, food can get smaller and more varied.` : `Most babies are ready for lumpier food and soft pieces they can pick up now.`, link: link("openPage('chg:Feeding:s:4')", 'Read the guide') });
+      if (ca === 9) out.push({ topic: 'Feeding', key: 'solids-meals-now', title: 'Time for three meals a day',
+        body: `Most babies eat three meals and a snack or two from about now.`, link: link("openPage('chg:Feeding:s:5')", 'Read the guide') });
+    }
+    // Development: the month a new "what to look for" stage begins, Home says so.
+    if (live()) { const keys = [2, 4, 6, 9, 12], dmn = dm(), k = keys.find(x => x >= dmn), prev = keys[keys.indexOf(k) - 1];
+      if (k && prev != null && dmn === prev + 1) out.push({ topic: 'Development', key: 'dev-stage:' + k, title: `New things to look for by ${k} months`,
+        body: `What most babies do by ${k} months, and simple ways to play along.`, link: link(`openPage('development-stage:${k}')`, 'See what’s new') }); }
     // Once solids are going, the allergen list stays on Home until it's done.
     if (live() && hasFoodAnswer() && ['new', 'textures'].includes(foodStage()) && !recent('food') && window.__chg) {
       const A = ['Peanut', 'Egg', 'Dairy', 'Wheat', 'Soy', 'Sesame', 'Tree nuts', 'Fish', 'Shellfish'], got = window.__chg.local.allergens || {}, t = A.filter(a => got[a]).length;
-      if (t < A.length) out.push({ topic: 'Feeding', key: 'allergens', title: 'Try a new allergen', reason: `${t} of ${A.length} tried`,
+      if (t < A.length) out.push({ topic: 'Feeding', key: 'allergens:' + t, title: 'Try a new allergen', reason: `${t} of ${A.length} tried`,
         body: `Offering common allergens early and often can lower the chance of food allergies. ${A.find(a => !got[a])} is a good next one.`,
         link: link("openPage('chg:Feeding:d:allergens')", 'See how to offer each one') });
     }
-    return out.filter((x, i) => out.findIndex(y => y.topic === x.topic) === i).slice(0, 2); // one card per category
+    // Anything new since the last visit goes first, so it's never buried under a standing to-do.
+    const ranked = freshFirst(out);
+    return ranked.filter((x, i) => ranked.findIndex(y => y.topic === x.topic) === i).slice(0, 2); // one card per category
   }
 
   // The next checkup still ahead (or a saved date). A past one that wasn't recorded is a Home question instead.
@@ -152,6 +176,7 @@
       link: link(`openPage('health-visit:${v.age}')`, 'See what’s checked') };
   }
 
+  var approach7 = () => { try { return (window.__chg && window.__chg.local && window.__chg.local.approach) === 'finger'; } catch (e) { return false; } };
   /* ---------- what's coming up ---------- */
   function comingUp(taken) {
     const out = [], m = dm(), mv = movement(), p = P();
@@ -160,6 +185,14 @@
       out.push({ topic: 'Feeding', key: 'solids-soon', title: 'Solids are getting closer',
         body: `Most babies start around 6 months, once they’re ready. Here’s what to know first.`,
         link: link("openPage('topic:Feeding')", 'Get ready for solids') });
+    // Solids: a heads-up about a month before the next guide is usually useful.
+    if (live() && typeof foodStage === 'function' && foodStage() !== 'preparing') {
+      const ca = typeof hubAgeFor === 'function' ? hubAgeFor('care', actualMonth()) : m;
+      if (ca === 6) out.push({ topic: 'Feeding', key: 'solids-textures', title: 'Coming up: thicker textures and finger foods',
+        body: `Around 7 to 8 months, most babies move to lumpier food and soft pieces they can pick up.`, link: link("openPage('chg:Feeding:s:4')", 'Read the guide') });
+      if (ca === 8) out.push({ topic: 'Feeding', key: 'solids-meals', title: 'Coming up: three meals a day',
+        body: `From about 9 months, most babies eat three meals and a snack or two.`, link: link("openPage('chg:Feeding:s:5')", 'Read the guide') });
+    }
     if (m === 3) out.push({ topic: 'Sleep', key: 'four-month', title: 'Sleep might get bumpy around 4 months',
       body: `Some babies start waking more for a while. It’s normal, and it passes.`,
       link: link("openPage('chg:Sleep:e:0')", 'See how to respond if it happens') });
@@ -185,18 +218,47 @@
       out.push({ topic: 'Sleep', key: 'two-naps-soon', title: 'Two naps are on the way',
         body: `Usually between 6 and 9 months, once the late-afternoon nap stops fitting.`,
         link: link("openPage('chg:Sleep:s:3')", 'See what changes') });
-    return out.filter(i => !taken.some(t => t.topic === i.topic && t.key.split(':')[0] === i.key.split(':')[0])).slice(0, 2);
+    return freshFirst(out).filter(i => !taken.some(t => t.topic === i.topic && t.key.split(':')[0] === i.key.split(':')[0])).slice(0, 2);
   }
 
   /* ---------- markup: Home's own components ----------
      Important items are rows inside the month card (with Home's Mark done controls),
      Coming up uses the "Prepare for next" list, and links use Home's text links. */
+  // Home's own cards say what's new: a card that wasn't there on the last visit is tagged "New" for this visit.
+  let freshKeys = new Set();
+  const clearedKey = () => 'ahead-v2-home-cleared:' + journeyKey();
+  const cleared = () => { try { return JSON.parse(localStorage.getItem(clearedKey())) || {}; } catch (e) { return {}; } };
+  window.hubHomeClear = function (key, hide) { const c = cleared(); c[key] = NOW.getTime(); try { localStorage.setItem(clearedKey(), JSON.stringify(c)); } catch (e) {} if (hide) { const y = scrollY; render(); scrollTo(0, y); if (typeof hubToast === 'function') hubToast('Hidden', 'It’s still in its guide if you need it.'); } };
+  // Opening a card clears it only if the parent stays a few seconds, so a mis-tap doesn't lose it.
+  const openKey = () => 'ahead-v2-home-open:' + journeyKey();
+  window.hubHomeOpen = function (key) { try { localStorage.setItem(openKey(), JSON.stringify({ key, at: Date.now() })); } catch (e) {} };
+  function settleOpened() { let o = null; try { o = JSON.parse(localStorage.getItem(openKey())); localStorage.removeItem(openKey()); } catch (e) {} if (o && o.key && Date.now() - o.at >= 4000) hubHomeClear(o.key); }
+  let seenAt = {};
+  function freshFirst(items) {
+    markFresh(items);
+    if (!live()) return items;
+    const c = cleared(), t = NOW.getTime();
+    // Gone once opened or hidden. Anything else leaves Home after two weeks, except safety to-dos, which wait until they're done.
+    const keep = items.filter(i => !c[i.key] && (i.key.startsWith('check:') || i.tools || !seenAt[i.key] || t - seenAt[i.key] < 14 * 864e5));
+    return [...keep.filter(i => freshKeys.has(i.key)), ...keep.filter(i => !freshKeys.has(i.key))];
+  }
+  function markFresh(items) {
+    if (!live()) return;
+    const key = 'ahead-v2-seen:' + journeyKey(), t = NOW.getTime();
+    let seen = null; try { seen = JSON.parse(localStorage.getItem(key)); } catch (e) {}
+    seen = seen || { _since: t };
+    // "New" only once the parent has been using Ahead for a while, so day one isn't all New.
+    items.forEach(i => { if (seen[i.key] == null) seen[i.key] = t; if (seen[i.key] - seen._since > 6 * 3600 * 1000 && t - seen[i.key] < 6 * 3600 * 1000) freshKeys.add(i.key); });
+    seenAt = seen;
+    try { localStorage.setItem(key, JSON.stringify(seen)); } catch (e) {}
+  }
   function row(i) {
-    const base = { topic: i.topic, title: babyCopy(i.title), body: babyCopy(i.body), action: i.link ? i.link.go : `openPage('topic:${i.topic}')`, art: 0,
-      reason: null };
-    let html = conceptRow(base);
-    if (i.tools) html = `<div class="home-connected-sleep" style="${yearTheme(i.topic)}" data-brief="${i.key}"${i.key.startsWith('check:') ? ` data-home-check="${i.key.slice(6)}"` : ''}>${html}<div class="home-connected-actions">${i.tools}</div></div>`;
-    else html = `<div class="brief-row" data-brief="${i.key}">${html}</div>`;
+    // Like a notification: opening a card or hiding it clears it from Home. Safety to-dos clear when done, "Doesn't apply" or hidden.
+    const todo = i.key.startsWith('check:') || !!i.tools, go = i.link ? i.link.go : `openPage('topic:${i.topic}')`;
+    const base = { topic: i.topic, title: babyCopy(i.title), body: babyCopy(i.body), action: todo ? go : `hubHomeOpen('${i.key}');${go}`, art: 0, reason: null };
+    let html = conceptRow(base) + `<button class="brief-hide" onclick="hubHomeClear('${i.key}',true)" aria-label="Hide this from Home">×</button>`;
+    if (i.tools) html = `<div class="home-connected-sleep brief-card" style="${yearTheme(i.topic)}" data-brief="${i.key}"${todo ? ` data-home-check="${i.key.slice(6)}"` : ''}>${html}<div class="home-connected-actions">${i.tools}</div></div>`;
+    else html = `<div class="brief-row brief-card" data-brief="${i.key}">${html}</div>`;
     return html;
   }
 
@@ -211,17 +273,18 @@
   }
 
   function briefing() {
+    freshKeys = new Set();
+    settleOpened();
     const now = importantNow(), next = comingUp(now);
     const focus = homeCurrentFocus();
-    const sig = [...now, ...next].map(i => i.key).join('|');
-    const since = sameAsLastVisit(sig);
+    const sig = [...now, ...next].map(i => i.key).join('|') + '|' + actualMonth() + '|' + (typeof chgStageIndex === 'function' ? ['Sleep', 'Feeding'].map(chgStageIndex).join(',') : '');
+
     const close = !live() ? '' : !now.length && !next.length ? `You’re all caught up for now.` : !now.length ? `Nothing to do right now. We’ll bring things up as they get closer.` : `That’s everything for now.`;
 
     let h = `<section class="connected-now" aria-label="What matters now"><div class="connected-summary"><div class="home-summary connected-summary-intro"><div class="home-summary-heading"><div class="home-month-eyebrow">${!live() ? (month > actualMonth() ? 'Coming at ' : 'Looking back at ') + (month === 0 ? 'the newborn weeks' : month + (month === 1 ? ' month' : ' months')) : 'What matters now'}</div><h1>${focus.title}</h1></div><span class="home-summary-art" aria-hidden="true">${homeMonthArt(month)}</span><p class="heroanswer">${focus.body}</p><div class="home-summary-spectrum" aria-hidden="true">${TOPICS.map(([t]) => `<span style="background:${YEAR_PALETTES[t].bg}"></span>`).join('')}</div></div>`;
     if (now.length) h += `<div class="connected-summary-links">${now.map(row).join('')}</div>`;
     h += `</div>${homeMomentRow()}</section>`;
     h += liveHomeCheckin();
-    if (since) h = `<p class="brief-unchanged">Nothing’s changed since you checked in on ${journeyDateLabel(iso(new Date(since)))}.</p>` + h;
     const ahead = [...next];
     if (ahead.length) h += `<section class="connected-ahead" aria-label="Coming up"><div class="connected-section-heading"><h2>Coming up</h2></div><div class="connected-ahead-list">${ahead.map(row).join('')}</div></section>`;
     if (close) h += `<p class="brief-close">${close}</p>`;

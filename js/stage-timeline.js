@@ -15,28 +15,27 @@
     Sleep: { kind: 'pattern', stages: [
       { label: 'Round-the-clock sleep', age: '0–6 weeks', setUntil: 3 },   // swaddling advice: not once a baby can roll
       { label: 'Longer nights', age: '6 wks–4 mo' },
-      { label: 'Three naps', age: '4–9 months' },
-      { label: 'Two naps', age: '6–12 months' }
+      { label: 'Three naps', age: '4–8 months' },
+      { label: 'Two naps', age: '8 months+' }
     ] },
     Feeding: { kind: 'pattern', stages: [
-      { label: 'Newborn feeds', age: '0–6 weeks' },
-      { label: 'Milk feeds', age: '6 wks–4 mo' },
-      { label: 'Preparing for solids', age: '4–6 months', setFrom: 4 },   // no solids guidance before 4 months
-      { label: 'First foods', age: 'Around 6 mo', setFrom: 4 },
-      { label: 'More textures', age: '7–9 months', setFrom: 4 },
-      { label: 'Family meals', age: '9–12 months', setFrom: 4 }
+      { label: 'Milk feeds', age: 'From birth' },                         // newborn feeds, then rhythm and amounts, by age
+      { label: 'Preparing for solids', age: '4–6 months', setFrom: 4 },  // no solids guidance before 4 months
+      { label: 'Solids', age: 'Once you start', setFrom: 4 }             // first tastes, then textures, then meals: by time since starting and age
     ] },
     Safety: { kind: 'skill', stages: [
       { key: 'setup', label: 'First setup', age: 'From birth' },
       { key: 'reaching', label: 'Reaching and rolling', age: '3–6 months' },
       { key: 'rolling', label: 'On the move', age: '6 months+' }   // crawling to pulling up: one babyproofing checklist
     ] },
-    Development: { kind: 'calendar', stages: [
+    // Development follows age, so its timeline is for reading only (no Change), like Health and Everyday care.
+    Development: { kind: 'calendar', fixed: true, stages: [
       // Named for the milestone check the stage works toward, so "By 12 months" reads right for a 10-month-old.
       { key: 2, label: 'By 2 months' }, { key: 4, label: 'By 4 months' }, { key: 6, label: 'By 6 months' }, { key: 9, label: 'By 9 months' }, { key: 12, label: 'By 12 months' }
     ] },
-    'Daily rhythm': { kind: 'calendar', stages: [
-      { label: 'Newborn', age: '0–4 weeks' }, { label: '1–3 months' }, { label: '4–6 months' }, { label: '7–12 months' }
+    // Everyday care follows age, so its timeline is for reading only (no Change), like Health.
+    'Daily rhythm': { kind: 'calendar', fixed: true, stages: [
+      { label: 'Newborn' }, { label: '1–3 months' }, { label: '4–6 months' }, { label: '7–12 months' }
     ] },
     Health: { kind: 'calendar', fixed: true, stages: [0, 1, 2, 4, 6, 9, 12].map(a => ({ key: a, label: a === 0 ? 'First week' : a + (a === 1 ? ' month' : ' months') })) }
   };
@@ -45,6 +44,8 @@
 
   // Can the parent make stage i (index into the table) the baby's stage right now?
   // Safety has three stages; the movement steps inside "On the move" (crawling, pulling up) shape which checks lead.
+  // Feeding keeps six steps inside (newborn feeds, milk feeds, preparing, first tastes, textures, meals); parents see three.
+  window.feedGroup = i => i <= 1 ? 0 : i === 2 ? 1 : 2;
   window.safetyGroup = k => ['rolling', 'moving', 'pulling'].includes(k) ? 'rolling' : k;
   window.stageCanChange = function (cat, i, nowIndex) {
     const T = STAGE_TABLE[cat]; if (!T || T.fixed || !live() || i === nowIndex) return false;
@@ -133,12 +134,11 @@
       const to = cat === 'Development' ? 'the ' + STAGE_TABLE[cat].stages[guessI].label.replace('By ', '').replace(' months', '-month') + ' guide' : STAGE_TABLE[cat].stages[guessI].label;
       out.push({ cat, question: `${name()} is ${ageWords()} now. Move ${GUIDE[cat]} to ${to}?`, why: `You picked ${STAGE_TABLE[cat].stages[pickI].label}. Most babies have moved on by now, but you know ${name()} best.` });
     };
-    ['Sleep', 'Feeding'].forEach(cat => { const o = typeof chgGetOverride === 'function' && chgGetOverride(cat); if (o) add(cat, o.i, chgComputedIndex(cat), o.g); });
+    ['Sleep', 'Feeding'].forEach(cat => { const o = typeof chgGetOverride === 'function' && chgGetOverride(cat); const G = cat === 'Feeding' ? feedGroup : (x => x); if (o) add(cat, G(o.i), G(chgComputedIndex(cat)), o.g == null ? null : G(o.g)); });
     const devKeys = STAGE_TABLE.Development.stages.map(x => x.key);
     const dev = typeof hubStageOverrideRaw === 'function' && hubStageOverrideRaw('Development');
-    if (dev && typeof dev === 'object') add('Development', devKeys.indexOf(Number(dev.v)), devKeys.indexOf(hubStageGuess('Development')), devKeys.indexOf(dev.g));
+    if (false && dev && typeof dev === 'object') add('Development', devKeys.indexOf(Number(dev.v)), devKeys.indexOf(hubStageGuess('Development')), devKeys.indexOf(dev.g));
     const care = typeof hubStageOverrideRaw === 'function' && hubStageOverrideRaw('Care');
-    if (care && typeof care === 'object') add('Daily rhythm', Number(care.v), hubStageGuess('Care'), care.g);
     const sk = STAGE_TABLE.Safety.stages.map(x => x.key);
     if (sk.includes(answers.safetyPick) && typeof safetyStageGuess === 'function') add('Safety', sk.indexOf(answers.safetyPick), sk.indexOf(safetyGroup(safetyStageGuess())), answers.safetyPickGuess);
     return out;

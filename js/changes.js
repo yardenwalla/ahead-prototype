@@ -83,12 +83,13 @@
     const known = typeof hasFoodAnswer !== 'function' || hasFoodAnswer();
     // No answer yet: age guess (Rule 1). Most babies start solids by 6 months, textures by 8, family meals by 10.
     // No answer yet: solids stages wait for the parent (Feeding asks). Until then, Preparing for solids.
-    if (!known && live()) return 2;
+    // From 9 months with no answer, show the step for the age (and Feeding says so).
+    if (!known && live()) return typeof foodAssumed === 'function' && foodAssumed() ? (fs === 'established' ? 5 : 4) : 2;
     // The parent told us (Rule 2). Their answer holds; Home asks again when it may be out of date (Rule 3).
     if (fs === 'preparing') return 2;
     if (fs === 'new') return 3;
     if (fs === 'textures') return 4;
-    return m >= 8 ? 5 : 4;
+    return 5;
   }
   function feedEvents(m) { return m < 3 ? [0] : m < 7 ? [1] : [2]; }
 
@@ -568,33 +569,37 @@
   // Change on the timeline. What it sets depends on the stage: an answer where one exists, otherwise a pick.
   window.chgSetStage = function (cat, i) {
     const m = ageNow();
-    if (typeof stageCanChange === 'function' && !stageCanChange(cat, i, CFG[cat].stage(m))) return chgGo('chg:' + cat + ':s:' + i);
+    if (typeof stageCanChange === 'function' && !stageCanChange(cat, i, cat === 'Feeding' ? feedGroup(CFG[cat].stage(m)) : CFG[cat].stage(m))) return chgGo('chg:' + cat + ':s:' + i);
     local.override = Object.assign({}, local.override); delete local.override[cat];
     if (cat === 'Sleep') {
       if (i >= 2 && m >= 4) { answers.twoNaps = i === 3 ? 'Yes' : 'Stay'; persist(); }
       else local.override.Sleep = { i, g: sleepComputed(m) };
     }
     if (cat === 'Feeding') {
-      if (i >= 2) { const v = ['preparing', 'new', 'textures', 'established'][i - 2]; answers.solids = v === 'preparing' ? 'Not yet' : 'Yes'; if (v === 'preparing') delete answers.foodExperience; else answers.foodExperience = v; persist(); }
-      else local.override.Feeding = { i, g: feedComputed(m) };
+      // i is one of the three stages parents see: Milk feeds, Preparing for solids, Solids.
+      if (i === 1) { answers.solids = 'Not yet'; delete answers.foodExperience; delete answers.solidsStart; persist(); }
+      else if (i === 2) { answers.solids = 'Yes'; if (!answers.solidsStart) answers.solidsStart = iso(NOW); persist(); }
+      else local.override.Feeding = { i: inFirstSixWeeks(m) ? 0 : 1, g: feedComputed(m) };
     }
     save();
     // A Change counts as the parent's answer, so Home doesn't ask the same thing straight away.
     if (typeof recordCheckin === 'function') {
       if (cat === 'Sleep' && i >= 2) recordCheckin('naps', i === 3 ? 'Yes' : 'Stay');
-      if (cat === 'Feeding' && i >= 2) recordCheckin(i === 2 ? 'food' : 'food-progress', ['preparing', 'new', 'textures', 'established'][i - 2]);
+      if (cat === 'Feeding' && i >= 1) recordCheckin('food', i === 1 ? 'preparing' : 'new');
     }
     page = 'topic:' + cat; render(); window.scrollTo(0, 0);
   };
   window.chgAnswerCheckin = function (key, value) {
     if (!['food','food-progress','naps'].includes(key)) return;
-    if (key !== 'naps' && !['preparing','new','textures','established'].includes(value)) return;
+    if (key !== 'naps' && !['preparing','new','textures','established','hold'].includes(value)) return;
     if (typeof recordCheckin === 'function') recordCheckin(key, value);
     if (key === 'naps') setAnswer('twoNaps', value === 'Yes' ? 'Yes' : 'Not yet');
+    if (key === 'food-progress' && value === 'hold') return holdFoodStep();
+    if (key === 'food-progress') return acceptFoodStep(value);
     if (key === 'food' || key === 'food-progress') setFeedingStage(value);
   };
   window.chgStageIndex = function (cat) { return CFG[cat].stage(ageNow()); };
-  window.chgStageLabel = function (cat) { const c = DATA[cat].CH[CFG[cat].stage(ageNow())]; return c ? c.rail : ''; };
+  window.chgStageLabel = function (cat) { const i = CFG[cat].stage(ageNow()); if (cat === 'Feeding') return STAGE_TABLE.Feeding.stages[feedGroup(i)].label; const c = DATA[cat].CH[i]; return c ? c.rail : ''; };
   // Internals the summary-and-detail screens (js/hub.js) build on.
   window.__chg = { DATA, CFG, ageNow, method, T, fmt, question, checklist, sources, live, mainPage, sub, sampleDay, guideFor, settlingGuide, alertFor, autoNoticeFresh,
     get local() { return local; }, save, rerender() { const y = scrollY; render(); scrollTo(0, y); } };

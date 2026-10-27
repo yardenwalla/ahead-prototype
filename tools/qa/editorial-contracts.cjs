@@ -30,7 +30,7 @@ check(!clean(a.html()).includes('Try a stroller ride, car ride'), 'Catnap troubl
 a.run("chgAnswer('Sleep:rhythm:2',0)");
 check(clean(a.html()).includes('rolls both ways'), 'Rolling FAQ retains the both-directions condition');
 a.run("openPage('chg:Feeding:s:3')");
-check(clean(a.html()).includes('Call 911 right away'), 'Possible choking is an action, not a casual experiment');
+check(clean(a.html()).includes('Learn infant choking first aid') || clean(a.html()).includes('Choking first aid'), 'Possible choking is an action, not a casual experiment');
 
 const ids = new Set();
 for (let age=0; age<=12; age++) {
@@ -48,12 +48,13 @@ for (const [age,oldID,newID] of [[1,'slow-song','face-follow'],[3,'sound-answer'
   a.run(`openPage('play-activity:${age}:${oldID}')`);
   check(a.html().includes('data-play-activity="'+newID+'"'), 'Old monthly links open the replacement activity');
 }
-for (const [value,title,short] of [['new','First foods','First foods'],['textures','More textures','More textures'],['established','Family meals','Family meals']]) {
+for (const value of ['new','textures','established']) {
   const b=family(11);
   b.run(`setFeedingStage('${value}');openPage('topic:Feeding')`);
   const nowStage = (b.html().match(/hub-stage is-on is-now">[\s\S]*?hub-stage-name">([^<]+)</) || [])[1];
-  check(nowStage === short, 'Reported eating experience shows as the current stage on the timeline');
-  check(b.html().includes('<p class="hub-eyebrow">'+title+'</p>'), 'Reported experience selects the matching guide');
+  check(nowStage === 'Solids', 'Started solids show Solids as the current stage on the timeline');
+  check(/Solids guides/.test(b.html()) && /Start here/.test(b.html()), 'The Solids page lists every guide and marks where to start');
+  for (const i of [3,4,5]) { b.run(`openPage('chg:Feeding:s:${i}')`); check(/Solids guide ·/.test(b.html()) && /class="monthly-back"/.test(b.html()), 'Each solids guide opens as a guide with a way back'); }
 }
 // Foundational guidance is discoverable initially, then retires after setup.
 {

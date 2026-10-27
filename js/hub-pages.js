@@ -70,7 +70,7 @@
       const ok = savePhotos(all);
       const y = scrollY; render(); scrollTo(0, y);
       if (!ok) return hubToast('Couldn’t keep that photo', 'This viewer can’t store photos. Open Ahead in your phone’s browser to keep them.');
-      hubToast('Photo saved', `${m === 0 ? 'Newborn' : m === 12 ? '1 year' : m + ' month' + (m === 1 ? '' : 's')} · on ${name()}’s timeline`);
+      hubToast('Photo saved', `${m === 0 ? 'Newborn' : m === 12 ? '1 year' : m + ' month' + (m === 1 ? '' : 's')} · in Memories`);
     };
     const shrink = img => {
       const size = 360, c = document.createElement('canvas'), w = img.naturalWidth || img.width, h = img.naturalHeight || img.height, k = Math.max(size / w, size / h);
@@ -134,7 +134,7 @@
       const row = document.querySelectorAll('#main .hub-tick')[idx];
       if (row) { row.classList.add('is-celebrate'); row.insertAdjacentHTML('beforeend', '<span class="hub-burst" aria-hidden="true"><i>✦</i><i>✧</i><i>✦</i><i>✧</i></span>'); }
       const rec = journeyData().records.find(r => r.type === 'milestone' && r.skillKey === key);
-      if (rec) hubToast('A first, saved', `“${rec.title}” is on ${name()}’s timeline · ${journeyDateLabel(rec.date)}`, ['Change date', `document.querySelectorAll('.hub-toast').forEach(t=>t.remove());openPage('event-edit:${rec.id}')`]);
+      if (rec) hubToast('A first, saved', `“${rec.title}” is in Memories · ${journeyDateLabel(rec.date)}`, ['Change date', `document.querySelectorAll('.hub-toast').forEach(t=>t.remove());openPage('event-edit:${rec.id}')`]);
     };
   }
 
@@ -163,7 +163,7 @@
       if (!b) return html;
       const nm = esc2(name()), label = b.m === 12 ? '1 year' : `${b.m} month${b.m === 1 ? '' : 's'}`, plabel = b.m === 12 ? 'first-birthday' : `${b.m}-month`, photo = window.hubPhotoFor(b.m);
       const title = b.since === 0 ? (b.m === 12 ? `${nm} is 1 year old today` : `${nm} is ${label} old today`) : (b.m === 12 ? `${nm} turned 1` : `${nm} turned ${label}`);
-      const lead = photo ? (b.firsts.length ? `Here’s what you noticed this month. The photo is on ${nm}’s timeline.` : `Another month of firsts. The photo is on ${nm}’s timeline.`) : (b.firsts.length ? `Here’s what you noticed this month. Add a photo to keep it with ${nm}’s timeline.` : `Another month of firsts. Add a photo to keep this one with ${nm}’s timeline.`);
+      const lead = photo ? (b.firsts.length ? `Here’s what you noticed this month. The photo is in Memories.` : `Another month of firsts. The photo is in Memories.`) : (b.firsts.length ? `Here’s what you noticed this month. Add a photo to keep it in Memories.` : `Another month of firsts. Add a photo to keep this one in Memories.`);
       const card = `<div class="home-summary connected-summary-intro hub-bday"><span class="hub-bday-num" aria-hidden="true">${b.m === 12 ? '1' : b.m}</span><span class="hub-bday-spark" aria-hidden="true">✦</span><p class="hub-bday-eyebrow">${b.m === 12 ? 'Happy first birthday' : 'Happy ' + label}</p><h1>${title}</h1><p class="hub-bday-lead">${lead}</p>${b.firsts.length ? `<div class="hub-bday-chips">${b.firsts.map(r => `<span>✓ ${esc2(r.title)}</span>`).join('')}</div>` : ''}<label class="hub-bday-photo" role="button">${photo ? `<img src="${photo}" alt="">Change the ${plabel} photo` : `<i aria-hidden="true">＋</i>Add a ${plabel} photo`}${hubPhotoInput(b.m)}</label></div>`;
       return html.replace(/<div class="home-summary connected-summary-intro">[\s\S]*?<div class="home-summary-spectrum"[\s\S]*?<\/div><\/div>/, card);
     };
@@ -208,6 +208,8 @@
     return `<div class="quiet-category hub-page hub-detail" style="${yearTheme('Development')}">${hubPageTop(`${esc2(name())}’s age`)}${head}${hubAgeBlock()}</div>`;
   };
 
+  // Change a stage from Baby's details and stay there (Undo still works from the message).
+  window.hubProfileStage = function (cat, i) { const y = scrollY; hubChangeStage(cat, i); page = 'profile'; render(); scrollTo(0, y); };
   /* ---------- Baby's details ---------- */
   if (typeof profileRework === 'function') {
     window.profileRework = profileRework = function () {
@@ -220,18 +222,20 @@
         h.row({ icon: 'clock', cat: 'Development', title: 'Birthday and due date', sub: profile.early && profile.due ? `Born ${esc2(born)} · due ${esc2(journeyDateLabel(profile.due))}` : `Born ${esc2(born)}`, onclick: "editingProfile=true;draft={...profile};setupStep=1;openPage('setup')" })
       ]);
       if (profile.early && profile.due) b += `<h2 class="hub-h2">Ages</h2>` + hubAgeBlock();
-      const stageRow = (icon, cat, title, sub, go) => h.row({ icon, cat, title, sub: esc2(sub), onclick: go }).replace(/<span class="hub-dot">[\s\S]*?<\/svg><\/span>/, `<span class="hub-dot">${catIcon(cat)}</span>`);
+      // Where the baby is now: set it right here. Sleep, Feeding and Safety can be changed; the rest follow age.
+      const pick = (cat, title, nowI, labels) => `<div class="hub-where-row"><span class="hub-dot">${catIcon(cat)}</span><div class="hub-where-copy"><b>${title}</b><div class="hub-where-chips" role="group" aria-label="${title} stage">${labels.map((l, i) => { const on = i === nowI, ok = on || stageCanChange(cat, i, nowI); return `<button class="${on ? 'is-on' : ''}" ${on ? 'aria-pressed="true"' : ok ? `onclick="hubProfileStage('${cat}',${i})"` : 'disabled'}>${esc2(l)}</button>`; }).join('')}</div></div></div>`;
+      const fixed = (cat, title, label) => `<div class="hub-where-row"><span class="hub-dot">${catIcon(cat)}</span><div class="hub-where-copy"><b>${title}</b><small>${esc2(label)} · follows ${nm}’s age</small></div></div>`;
       const careRail = ['Newborn', '1–3 months', '4–6 months', '7–12 months'];
-      const careNow = (() => { const o = hubStageOverride('Care'); if (o != null) return careRail[o]; const d = (NOW - parse(profile.dob)) / 864e5, mm = hubAgeFor('care', actualMonth()); return careRail[d < 21 ? 0 : mm < 4 ? 1 : mm < 7 ? 2 : 3]; })();
-      const devOv = hubStageOverride('Development'), dref = DEV_STAGES[devOv] ? Number(devOv) : devRef(developmentMonth(actualMonth()));
-      b += h.list('Where ' + nm + ' is now', [
-        stageRow('bowl', 'Feeding', 'Feeding', STAGE_TABLE.Feeding.stages[chgStageIndex('Feeding')].label, "openPage('topic:Feeding')"),
-        stageRow('moon', 'Sleep', 'Sleep', STAGE_TABLE.Sleep.stages[chgStageIndex('Sleep')].label, "openPage('topic:Sleep')"),
-        stageRow('smile', 'Development', 'Development & play', 'By ' + dref + ' months', "openPage('topic:Development')"),
-        stageRow('shield', 'Safety', 'Safety', (STAGE_TABLE.Safety.stages.find(p => p.key === safetyGroup(safetyStageNow())) || {}).label || '', "openPage('topic:Safety')"),
-        stageRow('bath', 'Daily rhythm', 'Everyday care', careNow, "openPage('topic:Daily rhythm')")
-        , h.row({ icon: 'chat', cat: 'Development', title: 'Update what’s new', sub: 'Rolling, solids, naps and more', onclick: "openPage('personalize')" })
-      ]) + h.note(`Not quite right? Open the guide, tap the stage that fits ${nm}, then tap Change.`);
+      const careNow = (() => { const d = (NOW - parse(profile.dob)) / 864e5, mm = hubAgeFor('care', actualMonth()); return careRail[d < 21 ? 0 : mm < 4 ? 1 : mm < 7 ? 2 : 3]; })();
+      const safeI = STAGE_TABLE.Safety.stages.findIndex(p => p.key === safetyGroup(safetyStageNow()));
+      b += `<h2 class="hub-h2">Where ${nm} is now</h2><p class="hub-where-lead">This sets what each guide shows. Tap to change it if it’s not quite right.</p><section class="hub-card hub-where">`
+        + pick('Feeding', 'Feeding', feedGroup(chgStageIndex('Feeding')), STAGE_TABLE.Feeding.stages.map(x => x.label))
+        + pick('Sleep', 'Sleep', chgStageIndex('Sleep'), STAGE_TABLE.Sleep.stages.map(x => x.label))
+        + pick('Safety', 'Safety', safeI, STAGE_TABLE.Safety.stages.map(x => x.label))
+        + fixed('Development', 'Development & play', 'By ' + devRef(developmentMonth(actualMonth())) + ' months')
+        + fixed('Daily rhythm', 'Everyday care', careNow)
+        + fixed('Health', 'Health', healthJourneyLabel(healthJourneyFocus()))
+        + `</section>`;
       b += h.list('More', [
         h.row({ icon: 'book', cat: 'Development', title: 'How we choose guidance', sub: 'Sources and what we leave out', onclick: "openPage('trust')" })
       ]);
@@ -295,7 +299,7 @@
       const multi = (opts, fn) => `<div class="hub-choice-chips">${opts.map(([v, l]) => `<button class="${mv[v] ? 'is-on' : ''}" aria-pressed="${!!mv[v]}" onclick="${fn(v)}">${mv[v] ? '✓ ' : ''}${l}</button>`).join('')}</div>`;
       const dmv = developmentMonth(age);
       if (dmv >= 2) b += card(`How is ${nm} moving?`, 'Pick everything that’s true. This updates Sleep, Safety and Home.', multi([['none', 'Not rolling yet'], ['trying', 'Trying to roll'], ['rolling', 'Rolling'], ...(dmv >= 5 || mv.crawling ? [['crawling', 'Crawling']] : []), ...(dmv >= 6 || mv.pulling ? [['pulling', 'Pulling up']] : [])], v => `hubMove('${v}')`));
-      if (age >= 4) b += card(`Has ${nm} started solids?`, 'This moves the feeding guide along.', chips([['preparing', 'Not yet'], ['new', 'Once a day or less'], ['textures', 'Twice a day'], ['established', '3 times a day']], food, v => `setFeedingStage('${v}')`));
+      if (age >= 4) b += card(`Has ${nm} started solids?`, 'This moves the feeding guide along.', chips([['preparing', 'Not yet'], ['new', 'Yes, we’ve started']], food && food !== 'preparing' ? 'new' : food, v => `setFeedingStage('${v}')`));
       if (age <= 6) b += card(`Is ${nm} still swaddled?`, '', chips([['No', 'Still swaddled'], ['Yes', 'In a sleep sack']], answers.swaddleStopped,  v => v === 'Never' ? "answers.neverSwaddled=true;hubAnswer('swaddleStopped','Yes','Got it. Sleep will reflect this.')" : `delete answers.neverSwaddled;hubAnswer('swaddleStopped','${v}','Got it. Sleep will reflect this.')`));
       if (age >= 5) b += card(`How many naps most days?`, '', chips([['Stay', '3 naps'], ['Yes', '2 naps']], answers.twoNaps, v => `hubAnswer('twoNaps','${v}','The sleep guide now matches ${nm}’s naps.')`));
       if (age >= 4) b += card('Sleep training', 'Only if it’s something you’re thinking about.', chips([['not_planning', 'Not planning to'], ['not_started', 'Thinking about it'], ['in_progress', 'Working on it'], ['trained', 'Done']], answers.sleepTraining, v => `hubAnswer('sleepTraining','${v}','The settling guide now matches where you are.')`));
@@ -371,15 +375,15 @@
     const h = H(), ov = hubStageOverride('Development'), ref = DEV_STAGES[ov] ? Number(ov) : devRef(developmentMonth(actualMonth())), st = DEV_STAGES[ref], age = ref === 12 ? '1 year' : ref + ' months';
     const ICON = { Social: 'smile', Talking: 'chat', Thinking: 'idea', Movement: 'sit' }, TITLE = { Social: 'Social', Talking: 'Communication', Thinking: 'Thinking', Movement: 'Movement' };
     const tiles = Object.keys(DEV_DOMAINS).map(d => `<button class="hub-domain-tile" onclick="openPage('development-domain:${ref}:${d}')">${h.art(ICON[d], 'Development')}<b>${TITLE[d]}</b><small>${F(st.summaries[d] || '')}</small><span>${F('Pick a skill')} ›</span></button>`).join('');
-    return detailPage('Development', 'Your timeline', 'Save a milestone', `Pick an area, then tap “Seen it” on anything Maya’s doing. Skills for ${age} are shown first.`,
+    return detailPage('Development', 'Memories', 'Save a milestone', `Pick an area, then tap “Seen it” on anything Maya’s doing. Skills for ${age} are shown first.`,
       `<section class="hub-card hub-glance is-static"><div class="hub-domain-tiles">${tiles}</div></section>`
       + h.list('', [h.row({ icon: 'tooth', cat: 'Development', title: 'Something that isn’t listed?', sub: 'First tooth, first word or any other first', onclick: "openPage('chg:Timeline:own')" })]), 'star');
   }
   // One place to save any first, whatever it's about. Ideas follow the baby's age and only fill in the field.
   function saveFirstPage() {
     const a = developmentMonth(actualMonth()), ideas = a < 2 ? ['First smile', 'First bath', 'First outing', 'Lifted head on tummy'] : a < 5 ? ['First laugh', 'Held head up', 'Rolled over', 'Grabbed a toy'] : a < 8 ? ['Sat up', 'First taste of food', 'First tooth', 'Rolled over'] : a < 11 ? ['Crawled', 'Pulled up', 'First tooth', 'Waved bye-bye'] : ['First word', 'First steps', 'Waved bye-bye', 'Clapped'];
-    return detailPage('Development', 'Firsts', 'Save a first', 'What did Maya do? It goes on the timeline with the date.',
-      `<section class="hub-card hub-own-first"><label for="firstTitle">${F('What happened')}</label><input id="firstTitle" class="search" maxlength="80" placeholder="${F('For example, ' + ideas[0].charAt(0).toLowerCase() + ideas[0].slice(1))}"><p class="hub-own-ideas">${F('Ideas')}</p><div class="hub-choice-chips">${ideas.map(t => `<button onclick="hubFirstFill('${t}')">${t}</button>`).join('')}</div><label for="firstDate">${F('When')}</label><input id="firstDate" class="search" type="date" min="${profile.dob}" max="${iso(NOW)}" value="${iso(NOW)}"><button class="hub-button" onclick="hubSaveFirst()">${F('Save to Maya’s timeline')}</button></section>`, 'star');
+    return detailPage('Development', 'Firsts', 'Save a first', 'What did Maya do? It goes in Memories with the date.',
+      `<section class="hub-card hub-own-first"><label for="firstTitle">${F('What happened')}</label><input id="firstTitle" class="search" maxlength="80" placeholder="${F('For example, ' + ideas[0].charAt(0).toLowerCase() + ideas[0].slice(1))}"><p class="hub-own-ideas">${F('Ideas')}</p><div class="hub-choice-chips">${ideas.map(t => `<button onclick="hubFirstFill('${t}')">${t}</button>`).join('')}</div><label for="firstDate">${F('When')}</label><input id="firstDate" class="search" type="date" min="${profile.dob}" max="${iso(NOW)}" value="${iso(NOW)}"><button class="hub-button" onclick="hubSaveFirst()">${F('Save to Memories')}</button></section>`, 'star');
   }
   function detailPage(cat, context, title, lead, inner, artName) { return H().detail(cat, context, title, lead, inner, artName); }
 
@@ -387,8 +391,8 @@
   if (typeof routineVisitDatePage === 'function') {
     window.routineVisitDatePage = routineVisitDatePage = function (age, planned = false) {
       const old = healthRecord(age), key = (planned ? 'plan-' : '') + age;
-      const form = `<form class="hub-card hub-form" onsubmit="submitVisitForm(event,'${key}')"><label for="visitDate">${planned ? 'Appointment date' : 'Date of the visit'}</label><input id="visitDate" type="date" min="${profile.dob}" ${!planned ? `max="${iso(NOW)}"` : ''} value="${planned && old?.date ? old.date : iso(NOW)}" required>${journeyError ? `<p class="journey-error" role="alert">${esc2(journeyError)}</p>` : ''}<button class="hub-button">${planned ? 'Save the date' : 'Save to Maya’s timeline'}</button><button type="button" class="hub-link is-quiet hub-cancel" onclick="back()">Cancel</button></form>`;
-      return detailPage('Health', healthJourneyLabel(age), planned ? 'When is the appointment?' : 'When was the visit?', planned ? 'We’ll remind you on Home as it gets close.' : 'It goes on Maya’s timeline.', form.replace(/Maya/g, esc2(name())), 'steth');
+      const form = `<form class="hub-card hub-form" onsubmit="submitVisitForm(event,'${key}')"><label for="visitDate">${planned ? 'Appointment date' : 'Date of the visit'}</label><input id="visitDate" type="date" min="${profile.dob}" ${!planned ? `max="${iso(NOW)}"` : ''} value="${planned && old?.date ? old.date : iso(NOW)}" required>${journeyError ? `<p class="journey-error" role="alert">${esc2(journeyError)}</p>` : ''}<button class="hub-button">${planned ? 'Save the date' : 'Save to Memories'}</button><button type="button" class="hub-link is-quiet hub-cancel" onclick="back()">Cancel</button></form>`;
+      return detailPage('Health', healthJourneyLabel(age), planned ? 'When is the appointment?' : 'When was the visit?', planned ? 'We’ll remind you on Home as it gets close.' : 'It goes in Memories.', form.replace(/Maya/g, esc2(name())), 'steth');
     };
   }
 
@@ -415,7 +419,7 @@
   window.changesRoute = function (p) {
     const [, cat, screen] = p.split(':');
     // Timeline pages belong to the timeline: its title in the header, its tab highlighted.
-    const asTimeline = html => html.replace(/(<div class="monthly-page-header">[\s\S]*?<h1>)[^<]*(<\/h1><p>)[^<]*/, `$1Your timeline$2${esc2(name())}’s first year`);
+    const asTimeline = html => html.replace(/(<div class="monthly-page-header">[\s\S]*?<h1>)[^<]*(<\/h1><p>)[^<]*/, `$1Memories$2${esc2(name())}’s first year`);
     if (cat === 'Timeline' && screen === 'visit') return asTimeline(recordVisitPage());
     if (cat === 'Timeline' && (screen === 'milestone' || screen === 'own')) return asTimeline(saveFirstPage());
     return baseRoute(p);
@@ -623,11 +627,7 @@
     };
   }
 
-  /* ---------- Guides always open on the baby's real age (browsing a month on Home stays on Home) ---------- */
-  if (typeof openPage === 'function') {
-    const baseOpen = openPage;
-    window.openPage = openPage = function (p) { if (page === 'home' && p !== 'home' && typeof actualMonth === 'function') month = actualMonth(); return baseOpen(p); };
-  }
+  /* ---------- A month picked on Home carries into the categories, as a labeled preview (the bottom tabs return to now) ---------- */
 
   /* ---------- After recording a visit, offer notes straight away ---------- */
   if (typeof completeHealthVisit === 'function') {
@@ -647,7 +647,7 @@
     const data = journeyData();
     data.records.push({ id: 'milestone-own-' + Date.now(), type: 'milestone', title: t.trim().slice(0, 80), date: d, notes: '', status: 'attended', own: true });
     if (!saveJourneyData(data)) return hubToast('Couldn’t save that', 'This viewer can’t store entries.');
-    navigate('timeline'); hubToast('A first, saved', `“${t.trim()}” is on ${name()}’s timeline · ${journeyDateLabel(d)}`);
+    navigate('timeline'); hubToast('A first, saved', `“${t.trim()}” is in Memories · ${journeyDateLabel(d)}`);
   };
   window.hubFirstFill = t => { const el = document.getElementById('firstTitle'); if (el) { el.value = t; el.focus(); } };
 
@@ -668,7 +668,7 @@
   const base = submitJourneyEdit;
   window.submitJourneyEdit = submitJourneyEdit = function (e, id) {
     const r = base(e, id);
-    if (typeof hubToast === 'function' && typeof page !== 'undefined' && !String(page).startsWith('event-edit')) setTimeout(() => hubToast('Date updated', 'Your timeline is up to date.'), 0);
+    if (typeof hubToast === 'function' && typeof page !== 'undefined' && !String(page).startsWith('event-edit')) setTimeout(() => hubToast('Date updated', 'Memories are up to date.'), 0);
     return r;
   };
 })();
@@ -689,7 +689,7 @@ window.hubCenterStages = function () {
   window.hubVisitYes = function (a) {
     const d = due(a), r = saveJourneyVisit(a, { date: iso(d < NOW ? d : NOW), status: 'attended' });
     render();
-    if (r) hubToast('Saved', `The ${label(a)} is on ${name()}’s timeline.`, changeDate(r));
+    if (r) hubToast('Saved', `The ${label(a)} is in Memories.`, changeDate(r));
   };
   window.hubVisitBooked = function (a) {
     let o = {}; try { o = JSON.parse(localStorage.getItem('ahead-visit-ask:' + journeyKey())) || {}; } catch (e) {}
@@ -708,6 +708,6 @@ window.hubCenterStages = function () {
   window.hubAfterVisitSave = function (r) {
     while (historyStack.length && /^(visit-form|chg:Timeline:visit)/.test(historyStack[historyStack.length - 1])) historyStack.pop();
     if (historyStack.length) back(); else navigate('home');
-    hubToast('Saved', r.status === 'planned' ? `We’ll remind you on Home before ${journeyDateLabel(r.date)}.` : `It’s on ${name()}’s timeline.`);
+    hubToast('Saved', r.status === 'planned' ? `We’ll remind you on Home before ${journeyDateLabel(r.date)}.` : `It’s saved in Memories.`);
   };
 })();

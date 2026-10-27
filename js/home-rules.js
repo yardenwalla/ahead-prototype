@@ -36,12 +36,12 @@
     ['Two naps', 'See how the day can fit around two naps, and what helps during the transition.']
   ];
   const FEED_ROW = [
-    ['Newborn feeds', 'Recognize hunger and fullness cues, and the signs milk intake is on track.'],
+    ['Milk feeds', 'Recognize hunger and fullness cues, and the signs milk intake is on track.'],
     ['Milk feeds', 'Understand changing feeds and how milk intake and growth fit together.'],
     ['Preparing for solids', 'Spot the readiness signs and get set up before the first bite.'],
-    ['First foods', 'Choose a way to offer food, prepare it safely and keep milk feeds alongside.'],
-    ['More textures', 'Build on first foods with textures and self-feeding practice suited to your baby.'],
-    ['Family meals', 'Bring meals, milk feeds and cup practice together as eating skills grow.']
+    ['Solids', 'Choose a way to offer food, prepare it safely and keep milk feeds alongside.'],
+    ['Solids', 'Build on first foods with textures and self-feeding practice suited to your baby.'],
+    ['Solids', 'Bring meals, milk feeds and cup practice together as eating skills grow.']
   ];
 
   /* ---------- candidates ---------- */
