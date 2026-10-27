@@ -612,7 +612,7 @@
       const a = hubPastVisitToConfirm();
       if (a != null) { // a missed checkup comes first; one question per visit
         const nm = esc2(name()), label = healthJourneyLabel(a), lc = label.charAt(0).toLowerCase() + label.slice(1);
-        q = hubQuestionCard(`<section class="connected-checkin"><div><h2>Did ${nm} have the ${esc2(lc)}?</h2></div><p>${window.__hubBooking === a ? 'When is it?' : `It was due around ${esc2(journeyDateLabel(iso(visitDue(a))))}.`}</p><div class="connected-checkin-choices">${window.__hubBooking === a ? `<input id="hubBookDate" class="search hub-q-date" type="date" min="${iso(NOW)}" value="${iso(NOW)}" aria-label="Appointment date"><button onclick="hubVisitBookSave(${a})">Save</button><button onclick="window.__hubBooking=null;render()">Cancel</button>` : `<button onclick="hubVisitYes(${a})">Yes</button><button onclick="window.__hubBooking=${a};render()">It’s booked</button><button onclick="hubVisitNotYet(${a})">Not yet</button>`}</div></section>`, 'Health');
+        q = hubQuestionCard(`<section class="connected-checkin"><div><h2>Did ${nm} have the ${esc2(lc)}?</h2></div><p>It was due around ${esc2(journeyDateLabel(iso(visitDue(a))))}.</p><div class="connected-checkin-choices"><button onclick="hubVisitYes(${a})">Yes</button><button onclick="hubVisitBooked(${a})">It’s booked</button><button onclick="hubVisitNotYet(${a})">Not yet</button></div></section>`, 'Health');
       } else if (q) {
         const key = typeof homeQuestion === 'function' ? homeQuestion() : null;
         q = hubQuestionCard(q, Q_CAT(key));
@@ -690,6 +690,13 @@ window.hubCenterStages = function () {
     const d = due(a), r = saveJourneyVisit(a, { date: iso(d < NOW ? d : NOW), status: 'attended' });
     render();
     if (r) hubToast('Saved', `The ${label(a)} is on ${name()}’s timeline.`, changeDate(r));
+  };
+  window.hubVisitBooked = function (a) {
+    let o = {}; try { o = JSON.parse(localStorage.getItem('ahead-visit-ask:' + journeyKey())) || {}; } catch (e) {}
+    o[a] = NOW.getTime() + 7 * 864e5; // rests 3 weeks (the usual 2, plus 1)
+    try { localStorage.setItem('ahead-visit-ask:' + journeyKey(), JSON.stringify(o)); } catch (e) {}
+    render();
+    hubToast('Got it', `You can add the date from Health whenever it’s handy.`, ['Add date', `document.querySelectorAll('.hub-toast').forEach(t=>t.remove());openPage('visit-form:plan-${a}')`]);
   };
   window.hubVisitBookSave = function (a) {
     const v = (document.getElementById('hubBookDate') || {}).value; if (!v) return;
