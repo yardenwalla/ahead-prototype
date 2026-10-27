@@ -34,7 +34,8 @@
   const pickedNote = (cat, label) => `<div class="hub-browse"><span class="hub-picked">${F('You picked this stage')}</span><button class="hub-link is-quiet" onclick="hubSetStage('${cat}',null)">${F(label)} ›</button></div>`;
   const back = (label, onclick) => `<div class="hub-browse"><button class="hub-link is-quiet" onclick="${onclick}">${F(label)} ›</button></div>`;
   const firstSentence = t => ((String(t || '').match(/^.*?[.!?](\s|$)/) || [String(t || '')])[0]).trim().replace(/\.$/, '');
-  const shortLine = t => { const f = firstSentence(t); return f.length > 72 && f.includes(',') ? f.slice(0, f.indexOf(',')) : f; };
+  const SAFETY_SUB = { storage: 'Up high, with a child lock on the cabinet', small: 'Coins, batteries and bottle caps are the usual finds' };
+  const shortLine = t => { const f = firstSentence(t); const cut = f.length > 72 && f.includes(',') ? f.slice(0, f.indexOf(',')) : f; return cut.split(/\s+/).length < 3 ? f : cut; };
   // One thing to try, phrased as an action: the short prompt if there is one, otherwise the first line of how to do it.
   const playLine = a => (window.hubBabyify || (x => x))(playLineRaw(a));
   const playLineRaw = a => { const s = typeof conceptPlaySuggestion === 'function' ? conceptPlaySuggestion(a) : ''; return s && !s.startsWith(a.why || '\u0000') ? firstSentence(s) : firstSentence(a.how || a.why); };
@@ -103,27 +104,24 @@
     let b = '';
     if (v === 0) {
       b += h.hero({ eyebrow: 'Newborn', title: 'Caring for a brand-new baby', lead: 'For now it’s sponge baths, keeping the cord stump dry and lots of diapers. It feels like a lot, and it gets quicker fast.' });
-      b += h.glanceCard(v === now ? 'Maya’s care at a glance' : 'At this stage', [['Baths', '2–3 a week', 'Sponge baths for now'], ['Diapers', '8–12 a day', 'Change when wet or dirty']], `openPage('chg:Daily rhythm:d:sponge')`);
       b += h.list('In these first weeks', [careRow('towel', 'Give a sponge bath', 'A warm room, a washcloth and 5 minutes', 'sponge'), careRow('cord', 'Keep the cord stump clean and dry', 'Fold the diaper below it and let it air', 'cord'), careRow('nail', 'Trim tiny nails', 'Easiest while {s} {sleep|sleeps}', 'nails')]);
       b += h.list('Every day', [careRow('shirt', 'Dress Maya for the weather', 'One more layer than you’re wearing', 'dress'), careRow('diaper', 'Diapers and skin', 'Gentle care, and what to do about diaper rash', 'skin')]);
       b += h.versus('Normal, or time to call?', ['Normal', 'A little crust or a spot of blood near the cord, peeling skin and baby acne.'], ['Call your pediatrician', 'Redness spreading around the cord, pus or a bad smell, or a temperature of 100.4°F or higher.']);
     }
     if (v === 1) {
       b += h.hero({ eyebrow: '1–3 months', title: 'Tub baths and everyday skin care', lead: 'Once the cord has healed, Maya can have real baths. Two or three a week is plenty in the first year.' });
-      b += h.glanceCard(v === now ? 'Maya’s care at a glance' : 'At this stage', [['Baths', '2–3 a week', 'More if you like'], ['Water', 'About 100°F', 'Warm, not hot']], `openPage('chg:Daily rhythm:d:tub')`);
       b += h.list('What helps now', [careRow('bath', 'Give a tub bath', 'About 2 inches of warm water is plenty', 'tub'), careRow('drop', 'Care for dry skin and cradle cap', 'Mild soap, and a soft brush for the scalp', 'skin'), careRow('sun', 'Keep Maya out of direct sun', 'Shade and a hat when you’re outside', 'sun')]);
       b += bathSafety();
     }
     if (v === 2) {
       b += h.hero({ eyebrow: '4–6 months', title: 'Bath time becomes part of bedtime', lead: 'Many families use the bath to start winding down. Drool and chewing often start now too, long before the first tooth.' });
-      b += h.glanceCard(v === now ? 'Maya’s care at a glance' : 'At this stage', [['Baths', '2–3 a week', 'Often before bed'], actualMonth() >= 6 ? ['Sun', 'Shade, then sunscreen', 'From 6 months'] : ['Sun', 'Shade first', 'Under 6 months']], `openPage('chg:Daily rhythm:d:tub')`);
       b += h.list('What helps now', [careRow('moon', 'Make the bath part of bedtime', 'Bath, feed, book, bed', 'chg:Sleep:d:routine'), careRow('tooth', 'Teething, drool and gums', 'Wipe gums and keep the chin dry', 'gums'), careRow('sun', 'Keep Maya in the shade', 'Hats and shade before sunscreen', 'sun')]);
       b += bathSafety();
     }
     if (v === 3) {
       b += h.hero({ eyebrow: '7–12 months', title: 'First teeth and splashier baths', lead: 'Once Maya can sit, bath time gets more fun. When the first tooth shows up, it’s time to start brushing.' });
-      b += h.glanceCard(v === now ? 'Maya’s care at a glance' : 'At this stage', [['Teeth', 'Brush twice a day', 'From the first tooth'], ['Toothpaste', 'A rice-grain smear', 'With fluoride']], `openPage('chg:Daily rhythm:d:teeth')`);
-      b += h.list('What helps now', [careRow('tooth', 'Brush the first teeth', 'A soft brush and a tiny smear of toothpaste', 'teeth'), careRow('bath', 'Bath seats aren’t safety seats', 'Stay within arm’s reach, every bath', 'bathseat'), careRow('sun', 'Protect {p} skin in the sun', 'Shade first, then baby sunscreen', 'sun')]);
+      const hasTooth = live() && journeyData().records.some(r => r.type === 'milestone' && /tooth|teeth/i.test(r.title || ''));
+      b += h.list('What helps now', [hasTooth || !live() ? careRow('tooth', 'Brush the first teeth', 'A soft brush and a tiny smear of toothpaste', 'teeth') : careRow('tooth', 'Teething, drool and gums', 'Brushing starts with the first tooth', 'gums'), careRow('bath', 'Bath seats aren’t safety seats', 'Stay within arm’s reach, every bath', 'bathseat'), careRow('sun', 'Protect {p} skin in the sun', 'Shade first, then baby sunscreen', 'sun')]);
       b += bathSafety();
     }
     const nx = CARE[v + 1];
@@ -183,13 +181,13 @@
     const key = keys.includes(selected) ? selected : now, owner = safetyOwnerForStage(key), guide = safetyOwnedGuides()[owner], h = H();
     const browse = live() && key !== now, items = safetyHomeItems(), pending = safetyPendingIds(guide.ids), done = guide.ids.length - pending.length;
     // Lead with the checks this stage's headline is about (standing → windows and cords, for example).
-    const FIRST = { rolling: ['gates', 'storage', 'outlets'], moving: ['doors', 'outlets', 'storage'], pulling: ['anchor', 'windows', 'cords'] }[key] || [];
+    const FIRST = { rolling: ['gates', 'storage', 'outlets'], moving: ['doors', 'walkers', 'cords'], pulling: ['anchor', 'windows', 'cords'] }[key] || [];
     const rank = id => { const i = FIRST.indexOf(id); return i < 0 ? 99 : i; };
     const nowI = keys.indexOf(now), ST = STAGE_TABLE.Safety.stages;
     const pills = h.pills('Safety by movement', SAFETY_MOVEMENT_STAGES.map((p, i) => ({ label: ST[i].label, age: ST[i].age, on: p.key === key, now: live() && p.key === now, onclick: `openPage('safety-stage:${p.key}')`, change: stageCanChange('Safety', i, nowI) ? `hubChangeStage('Safety',${i})` : '' })), 'Safety');
     let b = h.hero({ eyebrow: STAGE_TABLE.Safety.stages.find(p => p.key === key).label, title: SAFETY_HEAD[key][0], lead: SAFETY_HEAD[key][1], meter: { label: owner === 'setup' ? 'Setup checks' : owner === 'reach' ? 'Reaching and rolling checks' : 'Babyproofing checks', n: done, of: guide.ids.length }, button: { label: pending.length ? (done ? 'Keep going with the checklist' : 'Open the checklist') : 'Review the checklist', onclick: `openSafetyChecklist('${owner}',${browse})` } });
     b += pending.length
-      ? h.list(done ? 'Next up' : 'Start with these', [...pending].sort((x, y) => rank(x) - rank(y)).slice(0, 3).map(id => h.row({ icon: 'shield', cat: 'Safety', title: (items[id] || {}).title || id, sub: shortLine((items[id] || {}).body), onclick: browse ? `openSafetyChecklist('${owner}',true)` : `openHomeSafetyCheck('${owner}','${id}')` })))
+      ? h.list(done ? 'Next up' : 'Start with these', [...pending].sort((x, y) => rank(x) - rank(y)).slice(0, 3).map(id => h.row({ icon: 'shield', cat: 'Safety', title: (items[id] || {}).title || id, sub: SAFETY_SUB[id] || shortLine((items[id] || {}).body), onclick: browse ? `openSafetyChecklist('${owner}',true)` : `openHomeSafetyCheck('${owner}','${id}')` })))
       : h.note(`You’ve done every check for this stage. Nice work.`);
     if (key === 'reaching' || (key === 'rolling' && answers.swaddleStopped !== 'Yes' && !answers.neverSwaddled)) b += h.list('', [h.row({ icon: 'moon', cat: 'Safety', title: 'Rolling changes the sleep space too', sub: key === 'rolling' ? 'Once rolling starts, swaddling stops' : 'Stop swaddling at the first attempt to roll', onclick: "openSection('Sleep','sleep-rolling')" })]);
     b += h.versus('If something goes wrong', ['Poison Help', 'Call 1-800-222-1222 if Maya swallows something that could be harmful.'], ['Call 911', 'If {s} can’t breathe or won’t wake. A swallowed battery or magnet means the ER right away.']);
@@ -256,7 +254,7 @@
   // One fever rule, used everywhere fever comes up. Source: HealthyChildren.org, "When to Call the Pediatrician".
   window.feverRule = m => m < 3
     ? 'A temperature of 100.4°F or higher: call your pediatrician right away, day or night.'
-    : 'Call your pediatrician if a fever lasts more than a day, or comes with fewer wet diapers, a rash or unusual sleepiness.';
+    : 'If a fever lasts more than a day, or comes with fewer wet diapers, a rash or unusual sleepiness.';
   function healthDetail(id) {
     const h = H(), under3 = actualMonth() < 3;
     if (id === 'you') return detailFrame('Health', 'Looking after you', 'How are you doing?', 'Caring for a new baby is a lot, for every parent. Your health matters too, and asking for help is part of looking after Maya.',

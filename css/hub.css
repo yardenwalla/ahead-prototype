@@ -379,3 +379,5 @@
 #main .hub-q-skip { display: block; margin: 8px auto 0; background: none; border: 0; color: var(--muted); font-size: 13px; min-height: 36px; padding: 6px 12px; text-decoration: underline; text-underline-offset: 3px }
 #main .hub-own-ideas { font-size: 12px; font-weight: 600; color: var(--muted); margin: 10px 0 6px }
 #main .hub-fig-panels:has(> :nth-child(3)) { grid-template-columns: 1fr 1fr 1fr; gap: 8px }
+/* Status chips sit under the row's words, so titles keep the full width. */
+#main .hub-row-copy .hub-chip { display: inline-block; margin-top: 6px; font-size: 11.5px; padding: 3px 9px }

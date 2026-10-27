@@ -109,6 +109,8 @@
     return `<h2 class="hub-h2">A photo a month</h2><div class="hub-photo-strip">${cells}</div>`;
   }
 
+  // Pages outside the guides use the same centered header as everything else.
+  window.hubPageTop = title => `<div class="monthly-page-header">${backButton().replace('class="back"', 'class="monthly-back"').replace(/(<\/svg>)[\s\S]*?<\/button>/, '$1</button>')}<div><h1>${title}</h1><p>${esc2(name())} · ${esc2(monthLabel(actualMonth()))}</p></div><span class="monthly-save" aria-hidden="true"></span></div>`;
   /* ---------- small confirmations ---------- */
   window.hubToast = function (title, body, action) {
     if (!document.createElement || !document.body) return;
@@ -201,9 +203,9 @@
   };
   window.hubAgePage = function () {
     const nm = esc2(name());
-    if (!(profile.early && profile.due)) return `<div class="quiet-category hub-page hub-detail" style="${yearTheme('Development')}">${backButton()}<div class="hub-detail-head"><span class="hub-big">${hubArt('clock', 'Development')}</span><p class="hub-context">${nm}’s age</p><h1>Every guide uses ${nm}’s age</h1><p class="hub-lead">If ${nm} was born early, add the due date in ${nm}’s details and guides can use adjusted age instead.</p></div></div>`;
+    if (!(profile.early && profile.due)) return `<div class="quiet-category hub-page hub-detail" style="${yearTheme('Development')}">${hubPageTop(`${esc2(name())}’s age`)}<div class="hub-detail-head"><span class="hub-big">${hubArt('clock', 'Development')}</span><p class="hub-context">${nm}’s age</p><h1>Every guide uses ${nm}’s age</h1><p class="hub-lead">If ${nm} was born early, add the due date in ${nm}’s details and guides can use adjusted age instead.</p></div></div>`;
     const head = `<div class="hub-detail-head"><span class="hub-big">${hubArt('clock', 'Development')}</span><p class="hub-context">Born early</p><h1>Two ages, one ${nm}</h1><p class="hub-lead">Guides use adjusted age by default. Checkups always use the birthday.</p></div>`;
-    return `<div class="quiet-category hub-page hub-detail" style="${yearTheme('Development')}">${backButton()}${head}${hubAgeBlock()}</div>`;
+    return `<div class="quiet-category hub-page hub-detail" style="${yearTheme('Development')}">${hubPageTop(`${esc2(name())}’s age`)}${head}${hubAgeBlock()}</div>`;
   };
 
   /* ---------- Baby's details ---------- */
@@ -211,7 +213,7 @@
     window.profileRework = profileRework = function () {
       const h = H(), nm = esc2(name());
       const born = journeyDateLabel(profile.dob);
-      let b = `<div class="hub-detail-head"><span class="hub-big">${hubArt('star', 'Development')}</span><p class="hub-context">Baby’s details</p><h1>${nm}</h1><p class="hub-lead">${esc2(birthdayAge() === 0 ? Math.max(1, Math.floor((NOW - parse(profile.dob)) / 864e5 / 7)) + ' week' + (Math.floor((NOW - parse(profile.dob)) / 864e5 / 7) > 1 ? 's' : '') : monthLabel(birthdayAge()))} old · born ${esc2(born)}${profile.early ? ' · born early' : ''}</p></div>`;
+      let b = `<div class="hub-detail-head"><span class="hub-big">${hubArt('star', 'Development')}</span><p class="hub-context">Profile</p><h1>${nm}</h1><p class="hub-lead">${esc2(birthdayAge() === 0 ? Math.max(1, Math.floor((NOW - parse(profile.dob)) / 864e5 / 7)) + ' week' + (Math.floor((NOW - parse(profile.dob)) / 864e5 / 7) > 1 ? 's' : '') : monthLabel(birthdayAge()))} old · born ${esc2(born)}${profile.early ? ' · born early' : ''}</p></div>`;
       b += h.list('About ' + nm, [
         h.row({ icon: 'bottle', cat: 'Development', title: `How ${esc2(name())} is fed`, sub: esc2(profile.feed || 'Not set'), onclick: "editingProfile=true;draft={...profile};setupStep=2;openPage('setup')" }),
         h.row({ icon: 'smile', cat: 'Development', title: 'Pronouns', sub: esc2(babyPronounLabel()), onclick: "editingProfile=true;draft={...profile};setupStep=1;openPage('setup')" }),
@@ -234,7 +236,7 @@
         h.row({ icon: 'book', cat: 'Development', title: 'How we choose guidance', sub: 'Sources and what we leave out', onclick: "openPage('trust')" })
       ]);
       b += h.note(window.AHEAD_STORAGE_PERSISTS === false ? 'This viewer can’t keep your entries after you close it. Open Ahead in your phone’s browser to keep them.' : 'Your answers, notes and photos stay in this browser on this device.');
-      return `<div class="quiet-category hub-page hub-detail" style="${yearTheme('Development')}">${backButton()}${b}</div>`;
+      return `<div class="quiet-category hub-page hub-detail" style="${yearTheme('Development')}">${hubPageTop(`${esc2(name())}’s details`)}${b}</div>`;
     };
   }
 
@@ -297,7 +299,7 @@
       if (age <= 6) b += card(`Is ${nm} still swaddled?`, '', chips([['No', 'Still swaddled'], ['Yes', 'In a sleep sack']], answers.swaddleStopped,  v => v === 'Never' ? "answers.neverSwaddled=true;hubAnswer('swaddleStopped','Yes','Got it. Sleep will reflect this.')" : `delete answers.neverSwaddled;hubAnswer('swaddleStopped','${v}','Got it. Sleep will reflect this.')`));
       if (age >= 5) b += card(`How many naps most days?`, '', chips([['Stay', '3 naps'], ['Yes', '2 naps']], answers.twoNaps, v => `hubAnswer('twoNaps','${v}','The sleep guide now matches ${nm}’s naps.')`));
       if (age >= 4) b += card('Sleep training', 'Only if it’s something you’re thinking about.', chips([['not_planning', 'Not planning to'], ['not_started', 'Thinking about it'], ['in_progress', 'Working on it'], ['trained', 'Done']], answers.sleepTraining, v => `hubAnswer('sleepTraining','${v}','The settling guide now matches where you are.')`));
-      return `<div class="quiet-category hub-page hub-detail" style="${yearTheme('Development')}">${backButton()}<div class="hub-detail-head"><span class="hub-big">${hubArt('chat', 'Development')}</span><p class="hub-context">Update what’s new</p><h1>What’s new with ${nm}?</h1><p class="hub-lead">Answer whatever has changed. Each answer updates the guides it affects.</p></div>${b}${H().note('You can change any answer later.')}<button class="hub-button" onclick="back()">Done</button></div>`;
+      return `<div class="quiet-category hub-page hub-detail" style="${yearTheme('Development')}">${hubPageTop('What’s new')}<div class="hub-detail-head"><span class="hub-big">${hubArt('chat', 'Development')}</span><p class="hub-context">Update what’s new</p><h1>What’s new with ${nm}?</h1><p class="hub-lead">Answer whatever has changed. Each answer updates the guides it affects.</p></div>${b}${H().note('You can change any answer later.')}<button class="hub-button" onclick="back()">Done</button></div>`;
     };
   }
 
@@ -324,7 +326,8 @@
     let now = 0; while (now < 12 && iso(addMonths(dob, now + 1)) <= today) now++;
     const saved = data.records.filter(r => r.status === 'attended'), planned = data.records.filter(r => r.status === 'planned').sort((a, b) => a.date.localeCompare(b.date));
     const item = (r, extra = '') => {
-      const milestone = r.type === 'milestone', sub = journeyDateLabel(r.date) + (r.provider ? ' · ' + r.provider : '');
+      const notes = r.notes || (r.type === 'visit' && journeyData().visitNotes ? journeyData().visitNotes[r.visitAge] : '') || '';
+      const milestone = r.type === 'milestone', sub = journeyDateLabel(r.date) + (r.provider ? ' · ' + r.provider : '') + (notes ? ' · ' + String(notes).slice(0, 50) + (String(notes).length > 50 ? '…' : '') : '');
       return `<button class="hub-tl-item ${milestone ? '' : 'is-visit'} ${extra}" onclick="openPage('event-edit:${r.id}')"><span class="hub-tl-ic">${hubArt(milestone ? MILESTONE_ICON(r) : 'steth', milestone ? 'Development' : 'Health')}</span><span class="hub-row-copy"><b>${esc2(r.title)}</b><small>${esc2(sub)}</small></span></button>`;
     };
     let stops = '';
@@ -538,7 +541,7 @@
   };
 
   window.hubTrustPage = function () {
-    let b = backButton() + headBlock('book', 'Development', 'How we choose guidance', 'Where the advice comes from', 'Every guide tells you who’s behind it, why it belongs here and what’s still uncertain.');
+    let b = hubPageTop('About Ahead') + headBlock('book', 'Development', 'How we choose guidance', 'Where the advice comes from', 'Every guide tells you who’s behind it, why it belongs here and what’s still uncertain.');
     b += `<div class="hub-list">` + [['steth', 'Expert sources', 'National pediatric and public health organizations, and clinical experts'], ['book', 'Evidence-based', 'Checked against current evidence, with uncertainty made clear'], ['shield', 'Never sponsored', 'No paid placements, affiliate links or product deals']].map(([i, t, s]) => `<div class="hub-row is-static"><span class="hub-dot">${hubArt(i, 'Development')}</span><span class="hub-row-copy"><b>${t}</b><small>${s}</small></span></div>`).join('') + '</div>';
     b += `<div class="hub-tip"><b>When experts disagree</b>We lay out the options so you can decide with your pediatrician.</div>`;
     b += `<p class="hub-note">Ahead is in early testing, and it doesn’t replace care from your pediatrician.</p>`;
@@ -670,3 +673,11 @@
     return r;
   };
 })();
+
+/* The stage timeline opens with the stage you're reading in the middle, so names aren't cut off at the edge. */
+window.hubCenterStages = function () {
+  document.querySelectorAll('#main .hub-stagebar').forEach(bar => {
+    const on = bar.querySelector('.hub-stage.is-on') || bar.querySelector('.hub-stage.is-now');
+    if (on && bar.scrollWidth > bar.clientWidth) bar.scrollLeft = Math.max(0, on.offsetLeft - (bar.clientWidth - on.offsetWidth) / 2);
+  });
+};

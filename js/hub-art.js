@@ -7,7 +7,14 @@
   const ART = {
     head: (c) => `<circle cx="12" cy="8.5" r="4" fill="${c.bg}"/><path d="M5 20.5c0-3.9 3.1-6.5 7-6.5s7 2.6 7 6.5"/>`,
     sit: (c) => `<circle cx="12" cy="5.5" r="2.5" fill="${c.bg}"/><path d="M8.6 10h6.8l1 7H7.6Z" fill="${c.bg}"/><path d="M4.5 20.5h15"/>`,
-    mouth: (c) => `<ellipse cx="9" cy="8" rx="3.2" ry="4.2" fill="${c.bg}" transform="rotate(-35 9 8)"/><path d="m11.2 11.4 7.3 9.1"/>`,
+    mouth: (c) => `<path d="M4.5 10.5c2.5 6 12.5 6 15 0Z" fill="${c.bg}"/><path d="M4.5 10.5c2.6-1.6 4.8-1.2 7.5 0 2.7-1.2 4.9-1.6 7.5 0"/>`,
+    alarm: (c) => `<path d="M3.5 6h17" /><path d="M6 6a6 6 0 0 0 12 0Z" fill="${c.bg}"/><circle cx="12" cy="8.5" r="1.2"/><path d="M8 16.5c1.2 1 2.5 1.5 4 1.5s2.8-.5 4-1.5M6 19.5c1.8 1.4 3.8 2 6 2s4.2-.6 6-2"/>`,
+    window: (c) => `<rect x="5" y="3.5" width="14" height="17" rx="1.5" fill="${c.bg}"/><path d="M12 3.5v17M5 12h14"/>`,
+    battery: (c) => `<circle cx="12" cy="12" r="7" fill="${c.bg}"/><circle cx="12" cy="12" r="4.5"/><path d="M12 10.3v3.4M10.3 12h3.4"/>`,
+    coin: (c) => `<circle cx="8.5" cy="14.5" r="4" fill="${c.bg}"/><circle cx="16.5" cy="9" r="3" fill="${c.bg}"/><path d="M14.5 19.5h5"/>`,
+    thermo: (c) => `<path d="M10 4.5a2 2 0 0 1 4 0v9.3a4 4 0 1 1-4 0Z" fill="${c.bg}"/><path d="M12 15v2.5"/>`,
+    dresser: (c) => `<rect x="5" y="4.5" width="14" height="13.5" rx="1.5" fill="${c.bg}"/><path d="M5 11.2h14M10.5 8h3M10.5 14.6h3M7.5 18v2M16.5 18v2M19 6.5l2-1.5"/>`,
+    gate: (c) => `<path d="M4.5 5v15M19.5 5v15"/><rect x="4.5" y="8.5" width="15" height="9" fill="${c.bg}"/><path d="M8.5 8.5v9M12 8.5v9M15.5 8.5v9"/>`,
     swallow: (c) => `<circle cx="12" cy="8" r="4.5" fill="${c.bg}"/><path d="M12 15v6m-2.5-2.5L12 21l2.5-2.5"/>`,
     highchair: (c) => `<rect x="7" y="3" width="10" height="8" rx="2" fill="${c.bg}"/><path d="M4 11h16M8 11l-2 9.5M16 11l2 9.5M8.8 16h6.4"/>`,
     bowl: (c) => `${BOWL(c.bg)}<path d="m14 8 5-5"/>`,
@@ -46,11 +53,11 @@
     music: (c) => `<path d="M9 17V6l10-2v11"/><circle cx="6.5" cy="17" r="2.5" fill="${c.bg}"/><circle cx="16.5" cy="15" r="2.5" fill="${c.bg}"/>`,
     mirror: (c) => `<ellipse cx="12" cy="10" rx="6" ry="7" fill="${c.bg}"/><path d="M12 17v4M9 21h6M9.5 8l2.5-2.5"/>`,
     toy: (c) => `<circle cx="6.8" cy="6.8" r="2.3" fill="${c.bg}"/><circle cx="17.2" cy="6.8" r="2.3" fill="${c.bg}"/><circle cx="12" cy="12.5" r="6.5" fill="${c.bg}"/><path d="M9.8 11.5h.01M14.2 11.5h.01M10.5 14.8q1.5 1 3 0"/>`,
-    mat: (c) => `<rect x="3" y="14" width="18" height="5" rx="2" fill="${c.bg}"/><path d="M6.5 14V11a5.5 5.5 0 0 1 11 0v3M12 5.5V8"/>`,
+    mat: (c) => `<path d="M3 15.5 8 11h13l-5 4.5Z" fill="${c.bg}"/><path d="M3 15.5v2.5h13v-2.5M16 18l5-4.5V11M9.5 13.2h6"/>`,
     roll: (c) => `<circle cx="12" cy="13" r="6.5" fill="${c.bg}"/><path d="M5 8.5A8 8 0 0 1 17.5 5M17.5 5l-.4 3.3M17.5 5l-3.2-.6"/>`,
     crawl: (c) => `<circle cx="6.5" cy="9" r="2.5" fill="${c.bg}"/><path d="M9 11.5h6.5a3 3 0 0 1 3 3V18M9.5 12 8 18M14 14.5l1 3.5"/><path d="M3 20h18"/>`,
     stand: (c) => `<circle cx="12" cy="5" r="2.5" fill="${c.bg}"/><path d="M12 8v7l-3 5m3-5 3 5M7.5 11.5h9"/>`,
-    ball: (c) => `<circle cx="12" cy="12" r="8" fill="${c.bg}"/><path d="M4 12h16M12 4c3 2.5 3 13.5 0 16M12 4c-3 2.5-3 13.5 0 16"/>`,
+    ball: (c) => `<circle cx="12" cy="12" r="8" fill="${c.bg}"/><path d="M5.5 8.5c4 2.2 9 2.2 13 0M5.5 15.5c4-2.2 9-2.2 13 0"/>`,
     blocks: (c) => `<rect x="3.5" y="12.5" width="7.5" height="7.5" rx="1.5" fill="${c.bg}"/><rect x="13" y="12.5" width="7.5" height="7.5" rx="1.5"/><rect x="8.25" y="4" width="7.5" height="7.5" rx="1.5" fill="${c.bg}"/>`,
     peek: (c) => `<path d="M3 12s3.5-6 9-6 9 6 9 6-3.5 6-9 6-9-6-9-6Z" fill="${c.bg}"/><path d="M4.5 4.5l15 15"/>`,
     wave: (c) => `<path d="M9 13V7.5a1.3 1.3 0 0 1 2.6 0V11m0-5a1.3 1.3 0 0 1 2.6 0v5m0-3.5a1.3 1.3 0 0 1 2.6 0v7A5 5 0 0 1 11.8 20h-.4a5 5 0 0 1-4-2L5 15a1.4 1.4 0 0 1 2-2l2 1.5" fill="${c.bg}"/><path d="M3.5 8c.4-1.6 1.4-2.8 3-3.5M19 4c1.2.9 1.8 2.1 2 3.5"/>`,
@@ -147,6 +154,9 @@
   /* Every point on a page gets its own icon. The first use of an icon keeps it; a repeat is swapped
      for one that fits the row's words, or failing that, any icon not yet on the page. */
   const HINTS = [
+    [/smoke|carbon monoxide|alarm/i, 'alarm'], [/window/i, 'window'], [/batter|magnet/i, 'battery'], [/coin|small parts|small objects/i, 'coin'],
+    [/temperature|fever|thermometer/i, 'thermo'], [/anchor|dresser|bookcase|furniture|\btv/i, 'dresser'], [/\bgate|stairs/i, 'gate'],
+    [/regression|waking more/i, 'moon'], [/first aid/i, 'shield'], [/latch|gag/i, 'mouth'],
     [/crib|bassinet|mattress/i, 'crib'], [/your room|room-sharing|in the room/i, 'home'], [/sleep sack|wearable|blanket|swaddl/i, 'sack'],
     [/on (his|her|their|the) back|back for|back to sleep/i, 'back'], [/car seat|the car\b|or swing\b/i, 'car'], [/swipe|bats? at/i, 'ball'], [/sofa|armchair|couch/i, 'sofa'],
     [/pacifier/i, 'pacifier'], [/night|dark/i, 'moon'], [/day from|daylight|curtain|morning/i, 'sun'], [/yawn|wind down|tired|wake window|nap/i, 'clock'],
@@ -166,10 +176,13 @@
     const used = new Set();
     root.querySelectorAll('.hub-dot svg[data-art], .hub-tick-art svg[data-art]').forEach(svg => {
       const name = svg.getAttribute('data-art');
-      if (!used.has(name)) { used.add(name); return; }
       const holder = svg.closest('.hub-row, .hub-tick, button, div') || svg.parentElement;
       const text = (holder.querySelector('b') || holder).textContent + ' ' + ((holder.querySelector('small') || {}).textContent || '');
-      const hint = HINTS.filter(([re]) => re.test(text)).map(([, n]) => n).find(n => ART[n] && !used.has(n));
+      const fits = HINTS.filter(([re]) => re.test((holder.querySelector('b') || holder).textContent)).map(([, n]) => n).filter(n => ART[n]);
+      // The icon follows the row's words: keep it if the title supports it, otherwise switch to the first icon that fits.
+      if (!used.has(name) && (!fits.length || fits.includes(name))) { used.add(name); return; }
+      const hint = [...fits, ...HINTS.filter(([re]) => re.test(text)).map(([, n]) => n)].find(n => ART[n] && !used.has(n));
+      if (!hint && !used.has(name)) { used.add(name); return; }
       const pick = hint || POOL.find(n => ART[n] && !used.has(n));
       if (!pick) return;
       used.add(pick);
