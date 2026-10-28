@@ -41,7 +41,11 @@ def exp_feed(m, food, adj_weeks=99, since=0):
     if adj_weeks < 6.2: return FEED[0]
     if m < 4: return FEED[1]
     if food in (None, 'preparing') and not (food is None and m >= 9): return FEED[2]   # no answer: by age from 9 months
-    return FEED[5] if m >= 9 else FEED[4] if m >= 7 else FEED[3]
+    if food is None: return FEED[5]
+    # Started: textures about 4 weeks after starting (not before 7 months), meals about 6 weeks later (not before 9 months).
+    start = m - since / 4.35 if since and m - since / 4.35 > 4 else min(m, 6)
+    tx = max(start + 0.92, 7); ml = max(tx + 1.38, 9)
+    return FEED[5] if m >= ml else FEED[4] if m >= tx else FEED[3]
 
 
 def feed_step(f):
@@ -121,10 +125,11 @@ def check(results):
                       continue
                   if 'roll' in q and 'swaddl' not in q:
                       reported['mv'] = {'Trying': 'trying', 'Rolling': 'rolling'}.get(ans, reported['mv'])
-                  elif 'crawl' in q and ans == 'Yes': reported['mv'] = 'crawling'
+                  elif ('crawl' in q or 'moving around' in q) and ans == 'Yes': reported['mv'] = 'crawling'
                   elif 'pulling up' in q and ans == 'Yes': reported['mv'] = 'pulling'
                   elif 'solids' in q:
-                      reported['food'] = {'Not started': 'preparing', 'Not yet': 'preparing', 'Yes': 'new', 'First foods': 'new', 'Once a day or less': 'new', 'Twice a day': 'textures', '3 times a day': 'established', 'Building meals': 'established', 'Eating meals': 'established'}[ans]
+                      if ans == 'For a while': reported['while'] = True
+                      reported['food'] = {'Not started': 'preparing', 'Not yet': 'preparing', 'Yes': 'new', 'Just starting': 'new', 'For a while': 'new', 'First foods': 'new', 'Once a day or less': 'new', 'Twice a day': 'textures', '3 times a day': 'established', 'Building meals': 'established', 'Eating meals': 'established'}[ans]
                   elif 'swaddl' in q: reported['swaddle_done'] = True
             apply([a for a in w['answered'] if a['where'] in ('Home', 'Timeline') or a['q'].startswith('Already there: starting')])
             moment_now = any(a['where'] == 'Timeline' for a in w['answered'])   # Home was read before the moment was saved
@@ -150,14 +155,17 @@ def check(results):
 
             # ---------- order ----------
             adj_weeks = wk - p.get('early_days', 0) / 7
-            es, ef = exp_sleep(dmo, reported['naps'], adj_weeks), exp_feed(dmo, reported['food'], adj_weeks, wk - learned.get('solids', wk))
+            es, ef = exp_sleep(dmo, reported['naps'], adj_weeks), exp_feed(dmo, reported['food'], adj_weeks, 0 if reported.get('while') else wk - learned.get('solids', wk))
             # Babies born early: developmental pages say they use adjusted age
             if p.get('early_days'):
                 for name, pg in (('Sleep', s), ('Feeding', f)):
                     if 'adjusted' not in pg.get('header', ''): F.add('order', 'bug', f'{name} doesn’t say it uses adjusted age for a baby born early', pid, wk, f'{where}: “{pg.get("header")}”')
             # Stage rules: with no answer, Sleep follows the age guess quietly; the timeline shows it.
             if s['current'] != es: F.add('order', 'bug', 'Sleep shows the wrong stage for the age', pid, wk, f'{where}: shows “{s["current"]}”, expected “{es}”')
-            if f['current'] != ef: F.add('order', 'bug', 'Feeding shows the wrong stage for the age and answers', pid, wk, f'{where}: shows “{f["current"]}”, expected “{ef}”')
+            # Solids move on by the start date, so allow a couple of weeks either side of a step.
+            ef_near = {exp_feed(dmo + d, reported['food'], adj_weeks, 0 if reported.get('while') else wk - learned.get('solids', wk) + d * 4.35) for d in (-0.5, 0.5)}
+            if dmo == 9 and ef == FEED[5]: ef_near.add(FEED[4])   # week 39 lands a day or two before the 9-month date
+            if f['current'] != ef and f['current'] not in ef_near: F.add('order', 'bug', 'Feeding shows the wrong stage for the age and answers', pid, wk, f'{where}: shows “{f["current"]}”, expected “{ef}”')
             si = SLEEP.index(s['current']) if s['current'] in SLEEP else -1
             fi = FEED.index(f['current']) if f['current'] in FEED else -1
             if si < prev_sleep and reported['naps'] == 'Stay': prev_sleep = si   # the parent chose to stay on three naps

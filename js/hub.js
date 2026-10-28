@@ -32,7 +32,7 @@
   }
   const list = (heading, rows) => rows.filter(Boolean).length ? `${heading ? `<h2 class="hub-h2">${F(heading)}</h2>` : ''}<div class="hub-list">${rows.filter(Boolean).join('')}</div>` : '';
   function hero({ eyebrow, title, lead, meter, button, extra = '' }) {
-    return `<header class="hub-hero"><p class="hub-eyebrow">${F(eyebrow)}</p><h1>${F(title)}</h1>${lead ? `<p class="hub-lead">${F(lead)}</p>` : ''}${meter ? `<div class="hub-meter"><div class="hub-meter-label"><span>${F(meter.label)}</span><span>${meter.n} of ${meter.of}</span></div><div class="hub-bar"><i style="width:${Math.round(100 * meter.n / meter.of)}%"></i></div></div>` : ''}${button ? `<button class="hub-button" onclick="${button.onclick}">${F(button.label)}</button>` : ''}${extra}</header>`;
+    return `<header class="hub-hero">${eyebrow ? `<p class="hub-eyebrow">${F(eyebrow)}</p>` : ''}<h1>${F(title)}</h1>${lead ? `<p class="hub-lead">${F(lead)}</p>` : ''}${meter ? `<div class="hub-meter"><div class="hub-meter-label"><span>${F(meter.label)}</span><span>${meter.n} of ${meter.of}</span></div><div class="hub-bar"><i style="width:${Math.round(100 * meter.n / meter.of)}%"></i></div></div>` : ''}${button ? `<button class="hub-button" onclick="${button.onclick}">${F(button.label)}</button>` : ''}${extra}</header>`;
   }
   const tiles = ts => `<div class="hub-tiles">${ts.map(t => `<div><small>${F(t[0])}</small><b>${F(t[1])}</b><span>${F(t[2])}</span></div>`).join('')}</div>`;
   const glanceCard = (title, ts, onclick, note = '') => `<button class="hub-card hub-glance" onclick="${onclick}"><span class="hub-card-head"><b>${F(title)}</b>${chev}</span>${tiles(ts)}${note ? `<span class="hub-card-note">${F(note)}</span>` : ''}</button>`;
@@ -122,15 +122,20 @@
   // When a parent browses another stage, offer the one-tap update where it makes sense.
   // Stage changes live on the timeline now (Change above the stage you're reading).
   function browseLinks() { return ''; }
+  // One question everywhere: Has X started solids? Just starting · For a while · Not yet
+  function solidsAsk(q) {
+    return `<section class="hub-assumed"><p>${F(q)}</p><div><button onclick="setFeedingStage('starting');hubToast('Got it','Feeding now shows first tastes.')">Just starting</button><button onclick="setFeedingStage('while');hubToast('Got it','${F('Feeding now matches where Maya {is}.')}')">For a while</button><button onclick="setFeedingStage('preparing')">Not yet</button></div></section>`;
+  }
   function comingUp(cat, view) {
     const D = C().DATA[cat], N = D.CH[view + 1];
-    if (!N) { const A = D.CH[view].after; return A ? next(`After the first birthday, ${A[0]}`, cat === 'Feeding' && meth() === 'nurse' ? 'Water and milk from a cup' : A[1], go('chg:Feeding:d:after')) : ''; }
+    if (!N) { const A = D.CH[view].after; return A ? next(`After the first birthday, ${A[0]}`, cat === 'Feeding' && meth() === 'nurse' ? 'Cow’s milk, from a cup' : A[1], go('chg:Feeding:d:after')) : ''; }
     let w = N.when.replace(/^Usually /, '').replace(/^around /, '');
     if (/weeks–/.test(w)) w = w.split('–')[0];
     // Inside Milk feeds, the next step keeps the same stage name, so name what changes instead.
     const rail = cat === 'Feeding' && view === 0 ? 'Feeds get quicker and further apart' : cat === 'Feeding' && view === 3 ? (approach() === 'finger' ? 'From strips to small pieces' : 'Thicker textures and finger foods') : N.rail;
     // Inside Solids, a parent whose baby is already there can say so in one tap.
     const ahead = '';
+    if (cat === 'Feeding' && view === 2 && C().live() && foodCareAge() >= 6) return next('Next, when Maya {is} ready', rail, `chgGo('chg:${cat}:s:${view + 1}')`, ahead);
     return next(`Coming up around ${w}`, rail, `chgGo('chg:${cat}:s:${view + 1}')`, ahead);
   }
   const faqRow = (cat, key) => (C().DATA[cat].DEC[key] || []).length ? more('What other parents ask', go(`chg:${cat}:d:faq:${key}`)) : '';
@@ -144,8 +149,8 @@
   function solidsHub(cur) {
     const live = C().live(), age = m(), phase = STAGE_KEYS[cur] || 'first';
     let h = '';
-    if (live && typeof foodAssumed === 'function' && foodAssumed()) h += `<section class="hub-assumed"><p>${F('We’re showing solids for Maya’s age. Not started yet? That’s okay too.')}</p><div><button onclick="setFeedingStage('new')">${F('We’ve started')}</button><button onclick="setFeedingStage('preparing')">Not yet</button></div></section>`;
-    if (live && !approach() && answers.solids === 'Yes') h += `<section class="hub-assumed"><p>${F('How are you starting solids with Maya? It changes which tips we show.')}</p><div>${[['spoon', 'Spoon-feeding'], ['finger', 'Finger foods'], ['both', 'A bit of both']].map(([k, l]) => `<button onclick="hubApproach('${k}')">${l}</button>`).join('')}</div></section>`;
+    if (live && typeof foodAssumed === 'function' && foodAssumed()) h += `${solidsAsk('We’re showing solids for Maya’s age. Has {s} started?')}`;
+    if (live && !approach() && answers.solids === 'Yes') h += `<section class="hub-assumed"><p>${F('How do you serve food to Maya? It changes which tips we show.')}</p><div>${[['spoon', 'Spoon-feeding'], ['finger', 'Finger foods'], ['both', 'A bit of both']].map(([k, l]) => `<button onclick="hubApproach('${k}')">${l}</button>`).join('')}</div></section>`;
     const blw = approach() === 'finger';
     const S = { first: ['A few bites a day is all it takes', 'First foods are about practice. A few spoonfuls or soft pieces once or twice a day is plenty, and milk is still the main food.'],
       textures: blw ? ['More to pick up, and more variety', 'Around 7 to 8 months, most babies eat 2–3 times a day. As they learn to pinch, pieces can get smaller.'] : ['Thicker food, and more to pick up', 'Around 7 to 8 months, most babies move to lumpier textures and soft finger foods, eating 2–3 times a day.'],
@@ -160,10 +165,10 @@
     h += list('Solids guides', G.map(g => row({ icon: g.icon, title: g.title, sub: g.i === 3 && startedEarly ? 'Where every baby starts' : g.when, chipText: g.i === first ? 'Start here' : '', onclick: go('chg:Feeding:s:' + g.i) })));
     const t = ALLERGENS.filter(a => tried(a[0])).length;
     // Only what a parent comes back to: the allergen tracker. Gagging help and first aid sit in the box below and in the guides.
-    if (t < ALLERGENS.length) h += list('Along the way', [row({ icon: 'peanut', title: 'Try a new allergen', sub: `Next up: ${ALLERGENS.find(a => !tried(a[0]))[0].toLowerCase()}`, chipText: `${t} of ${ALLERGENS.length}`, onclick: go('chg:Feeding:d:allergens') })]);
+    if (t < ALLERGENS.length) h += list('Along the way', [row({ icon: 'peanut', title: 'Try a new allergen', sub: !t && typeof foodWeeksIn === 'function' && foodWeeksIn() >= 4 ? 'Already tried some? Tick them' : `${ALLERGENS.find(a => !tried(a[0]))[0]} is next`, chipText: `${t} of ${ALLERGENS.length}`, onclick: go('chg:Feeding:d:allergens') })]);
     h += versus('Gagging or choking?', ['Gagging', 'Coughing and a red face. It looks scary, but it’s normal.'], ['Choking', 'Silent and can’t cough or cry. Call 911 right away.'], ['Choking first aid, step by step', "openPage('chg:Feeding:safe')"]);
     // The guides list already shows what's next, so the only look-ahead here is past the first birthday.
-    { const A = C().DATA.Feeding.CH[5].after; if (A) h += next(`After the first birthday, ${A[0]}`, meth() === 'nurse' ? 'Water and milk from a cup' : A[1], go('chg:Feeding:d:after')); }
+    { const A = C().DATA.Feeding.CH[5].after; if (A) h += next(`After the first birthday, ${A[0]}`, meth() === 'nurse' ? 'Cow’s milk, from a cup' : A[1], go('chg:Feeding:d:after')); }
     return frame('Feeding', cur, cur, h);
   }
   function feedingSummary(view, cur, guide = false) {
@@ -174,7 +179,7 @@
     if (guide) h += `<div class="hub-preview"><span>${F('Solids guide · ' + ({ first: 'usually from about 6 months', textures: 'usually around 7–8 months', meals: 'usually around 9–10 months' }[key] || ''))}</span></div>`;
     else if (!now && C().live()) h += `<div class="hub-preview"><span>${view > cur ? 'Preview' : 'Looking back'} · ${F(STAGE_RAIL_AGE[key] || '')}</span><button onclick="openPage('topic:Feeding')">${F('Back to Maya’s stage')}</button></div>`;
     // A parent who hasn't answered, from 9 months: show the step for the age, and say so.
-    if (now && typeof foodAssumed === 'function' && foodAssumed()) h += `<section class="hub-assumed"><p>${F('We’re showing solids for Maya’s age. Not started yet? That’s okay too.')}</p><div><button onclick="setFeedingStage('new')">${F('We’ve started')}</button><button onclick="setFeedingStage('preparing')">Not yet</button></div></section>`;
+    if (now && typeof foodAssumed === 'function' && foodAssumed()) h += `${solidsAsk('We’re showing solids for Maya’s age. Has {s} started?')}`;
     // Inside Solids: one quiet way to say where the baby really is, forward or back.
     const fix = '';
     // "New" stays on the rows of a new step until each is opened.
@@ -190,7 +195,7 @@
 
     if (key === 'learn') {
       h += hero({ eyebrow: 'Milk feeds', title: 'Feeding often is exactly right', lead: 'Newborns feed 8–12 times a day, often every 1–3 hours. Small, frequent feeds are how they grow.' }) + B;
-      h += glanceCard(view === cur ? 'What Maya’s eating now' : 'At this stage', milkTiles('learn'), go('chg:Feeding:d:milk:learn'));
+      h += glanceCard(view === cur && C().live() ? 'What Maya’s eating now' : 'At this stage', milkTiles('learn'), go('chg:Feeding:d:milk:learn'));
       h += list('In these first weeks', [
         row({ icon: 'diaper', title: 'How to tell Maya’s getting enough', sub: 'Wet diapers and weight tell you', onclick: go('chg:Feeding:d:enough') }),
         meth() === 'expressed' ? row({ icon: 'bottle', title: 'Store breast milk safely', sub: '4 hours out, 4 days in the fridge', onclick: go('chg:Feeding:d:storage') }) : meth() === 'bottle' ? row({ icon: 'hand', title: 'Feed at the first hunger cues', sub: 'Rooting and hands to mouth come before crying', onclick: go('chg:Feeding:d:cues') }) : row({ icon: 'mouth', title: 'Get a good latch', sub: 'A wide mouth and a deep latch make feeds comfortable', onclick: go('chg:Feeding:d:latch') }),
@@ -200,7 +205,7 @@
     }
     if (key === 'rhythm') {
       h += hero({ eyebrow: 'Milk feeds', title: 'Feeds are getting quicker', lead: 'Many babies get faster at feeding now and go a little longer between feeds. Hungrier days still happen, and that’s normal.' }) + B;
-      h += glanceCard(view === cur ? 'What Maya’s eating now' : 'At this stage', milkTiles('rhythm'), go('chg:Feeding:d:milk:rhythm'));
+      h += glanceCard(view === cur && C().live() ? 'What Maya’s eating now' : 'At this stage', milkTiles('rhythm'), go('chg:Feeding:d:milk:rhythm'));
       const ev = age < 3 ? 0 : 1;
       h += list('What helps now', [
         row({ icon: 'hand', title: 'Follow {p} cues, not the clock', sub: 'Offer milk when {s’s} hungry, stop when {s’s} full', onclick: go('chg:Feeding:d:cues') }),
@@ -213,11 +218,12 @@
       const n = signsSeen();
       const head = n === 4 && age < 6 ? ['Maya’s showing the signs', 'Most babies start around 6 months, so check with your pediatrician if you’d like to start sooner.']
         : n === 4 ? ['Maya looks ready for solids', '{S} {is} showing all four signs. Pick a calm morning for the first taste.']
-        : age >= 6 && !hasFoodAnswer() ? ['Solids start at different times', 'Tell us whether Maya has started, and this guide will match. If not yet, here’s what to look for.']
+        : age >= 6 && !n ? ['Most babies start around now', 'When Maya shows all four signs, {s’s} ready for a first taste. Until then, milk gives {o} everything {s} {need|needs}.']
         : age >= 7 ? ['Some babies take a little longer', 'If Maya isn’t showing all four signs yet, mention it at {p} next checkup. Until then, milk gives {o} everything {s} {need|needs}.']
         : ['Solids are coming up soon', 'Most babies start around 6 months, once they’re ready. Until then, milk gives Maya everything {s} {need|needs}.'];
-      h += hero({ eyebrow: 'Preparing for solids', title: head[0], lead: head[1], meter: { label: 'Maya’s readiness signs', n, of: 4 }, button: now && age >= 4 ? { label: 'We’re starting solids', onclick: "chgSetStage('Feeding',2);hubToast('Got it','Feeding now shows first tastes.')" } : { label: 'See what to look for', onclick: go('chg:Feeding:d:signs') } }) + B;
-      h += glanceCard(view === cur ? 'What Maya’s eating now' : 'At this stage', milkTiles('ready'), go('chg:Feeding:d:milk:ready'));
+      h += hero({ eyebrow: 'Preparing for solids', title: head[0], lead: head[1], meter: { label: 'Maya’s readiness signs', n, of: 4 }, button: now && age >= 4 ? null : { label: 'See what to look for', onclick: go('chg:Feeding:d:signs') } }) + B;
+      if (now && age >= 4 && !hasFoodAnswer() && !(typeof feedingCheckinModel === 'function' && feedingCheckinModel())) h += solidsAsk('Has Maya started solids?');   // the Quick question above covers it when due
+      h += glanceCard(view === cur && C().live() ? 'What Maya’s eating now' : 'At this stage', milkTiles('ready'), go('chg:Feeding:d:milk:ready'));
       const left = setupLeft();
       h += list('Before you start', [
         now && age >= 4 ? row({ icon: 'eye', title: 'Check the readiness signs', sub: 'Four things to look for before the first bite', chipText: `${n} of 4`, chipTone: n === 4 ? 'is-done' : '', onclick: go('chg:Feeding:d:signs') }) : null,
@@ -228,32 +234,32 @@
       h += note('Does Maya have severe eczema or an egg allergy? Talk to your pediatrician before starting, since peanut may need to come early.');
     }
     if (key === 'first') {
-      h += hero({ eyebrow: guide ? 'Solids guide' : 'First tastes', title: guide ? 'First tastes' : 'A few bites a day is all it takes', lead: 'Milk is still doing the heavy lifting. For now, meals are mostly about practice.' + (now && C().live() && answers.solids === 'Yes' ? '' : '') }) + B + fix;
-      if (!guide) h += glanceCard(view === cur ? 'What Maya’s eating now' : 'At this stage', milkTiles('first'), go('chg:Feeding:d:milk:first'));
+      h += hero({ eyebrow: guide ? '' : 'First tastes', title: guide ? 'First tastes' : 'A few bites a day is all it takes', lead: 'Milk is still doing the heavy lifting. For now, meals are mostly about practice.' + (now && C().live() && answers.solids === 'Yes' ? '' : '') }) + B + fix;
+      if (!guide) h += glanceCard(view === cur && C().live() ? 'What Maya’s eating now' : 'At this stage', milkTiles('first'), go('chg:Feeding:d:milk:first'));
       const t = ALLERGENS.filter(a => tried(a[0])).length, nextA = ALLERGENS.find(a => !tried(a[0]));
       h += list('What to focus on', [
         row({ icon: 'bowl', title: 'What to put on the tray', sub: 'Iron-rich foods, soft enough to squash', onclick: go('chg:Feeding:d:tray') }),
         row({ icon: 'hand', title: 'Let {o} set the pace', sub: 'Turning away or closing {p} mouth means {s’s} done', onclick: go('chg:Feeding:d:pace') }),
-        aidDone() ? null : row({ icon: 'shield', title: 'Learn infant choking first aid', sub: 'Worth knowing before you need it', chipText: 'Not done yet', chipTone: 'is-red', onclick: "openPage('chg:Feeding:safe')" }),
+        aidDone() || (C().live() && foodStage() !== 'new' && foodStage() !== 'preparing') ? null : row({ icon: 'shield', title: 'Learn infant choking first aid', sub: 'Worth knowing before you need it', chipText: 'Not done yet', chipTone: 'is-red', onclick: "openPage('chg:Feeding:safe')" }),
         lateRow
       ]);
     }
     if (key === 'textures') {
-      h += hero({ eyebrow: guide ? 'Solids guide' : 'Thicker textures and finger foods', title: guide ? (approach() === 'finger' ? 'From strips to small pieces' : 'Thicker textures and finger foods') : 'Thicker food, and more to pick up', lead: guide && approach() === 'finger' ? 'As {s} learns to pinch, food can go from long strips to small, soft pieces.' : now ? 'Maya is ready for thicker food and soft pieces {s} can pick up. Build on the foods {s} already {like|likes}.' : 'After a few weeks of first tastes, most babies are ready for thicker food and soft pieces they can pick up.' }) + B + fix;
-      if (!guide) h += glanceCard(view === cur ? 'What Maya’s eating now' : 'At this stage', milkTiles('textures'), go('chg:Feeding:d:milk:textures'));
+      h += hero({ eyebrow: guide ? '' : 'Thicker textures and finger foods', title: guide ? (approach() === 'finger' ? 'From strips to small pieces' : 'Thicker textures and finger foods') : 'Thicker food, and more to pick up', lead: guide && approach() === 'finger' ? 'As {s} learns to pinch, food can go from long strips to small, soft pieces.' : now ? 'Maya is ready for thicker food and soft pieces {s} can pick up. Build on the foods {s} already {like|likes}.' : 'After a few weeks of first tastes, most babies are ready for thicker food and soft pieces they can pick up.' }) + B + fix;
+      if (!guide) h += glanceCard(view === cur && C().live() ? 'What Maya’s eating now' : 'At this stage', milkTiles('textures'), go('chg:Feeding:d:milk:textures'));
       h += list('What to focus on', [
         approach() === 'finger' ? null : row({ icon: 'bowl', title: 'Make food a little lumpier', sub: 'Thicker each week, so {s} {learn|learns} to chew', ...newChip('lumpy'), onclick: opened('lumpy', 'chg:Feeding:d:lumpy') }),
         row({ icon: 'avocado', title: 'Offer soft finger foods', sub: 'Strips first, small pieces once {s} can pinch', ...newChip('finger'), onclick: opened('finger', 'chg:Feeding:d:finger') }),
         // Catch-up: first aid stays until it's done; then a cup to practice with.
-        !aidDone() ? row({ icon: 'shield', title: 'Learn infant choking first aid', sub: 'Worth knowing before you need it', chipText: 'Not done yet', chipTone: 'is-red', onclick: "openPage('chg:Feeding:safe')" })
+        !aidDone() && !(C().live() && foodStage() === 'new') ? row({ icon: 'shield', title: 'Learn infant choking first aid', sub: 'Worth knowing before you need it', chipText: 'Not done yet', chipTone: 'is-red', onclick: "openPage('chg:Feeding:safe')" })
           : row({ icon: 'cup', title: 'Practice with an open cup', sub: 'A few sips of water at meals', onclick: go('chg:Feeding:d:cup') }),
-        row({ icon: 'hand', title: approach() === 'finger' ? 'Gagging on new foods?' : 'Gagging on lumpier food?', sub: 'Common for a while. What helps, and when to ask', onclick: go('chg:Feeding:d:notready') })
+        row({ icon: 'hand', title: approach() === 'finger' ? 'Gagging on new foods?' : 'Gagging on lumpier food?', sub: 'It’s common for a while, and here’s what helps', onclick: go('chg:Feeding:d:notready') })
       ]);
-      h += versus('Safe to offer, or a choking risk?', ['Safe to offer', 'Soft strips, grapes cut lengthwise into quarters and anything that squashes easily.'], ['Skip for now', 'Whole nuts, popcorn, raw carrot and round slices of hot dog.']);
+      h += versus('Safe to offer, or a choking risk?', ['Safe to offer', 'Soft strips, grapes cut lengthwise into quarters and anything that squashes easily.'], ['Not safe yet', 'Whole nuts, popcorn, raw carrot and round slices of hot dog stay off the menu for years.']);
     }
     if (key === 'meals') {
-      h += hero({ eyebrow: guide ? 'Solids guide' : 'Three meals a day', title: guide ? 'Three meals a day' : now ? 'Meals are part of the day now' : 'Meals become part of the day', lead: 'Three meals and a snack or two, with milk alongside. Most of what you eat can work for Maya too.' }) + B + fix;
-      if (!guide) h += glanceCard(view === cur ? 'What Maya’s eating now' : 'At this stage', milkTiles('meals'), go('chg:Feeding:d:milk:meals'));
+      h += hero({ eyebrow: guide ? '' : 'Three meals a day', title: guide ? 'Three meals a day' : now ? 'Meals are part of the day now' : 'Meals become part of the day', lead: 'Three meals and a snack or two, with milk alongside. Most of what you eat can work for Maya too.' }) + B + fix;
+      if (!guide) h += glanceCard(view === cur && C().live() ? 'What Maya’s eating now' : 'At this stage', milkTiles('meals'), go('chg:Feeding:d:milk:meals'));
       h += list('What to focus on', [
         row({ icon: 'plate', title: 'What a day of meals looks like', sub: 'A simple example to work from', ...newChip('day'), onclick: opened('day', 'chg:Feeding:d:day') }),
         row({ icon: 'bowl', title: 'Share your family’s food', sub: 'Set {p} portion aside before adding salt', ...newChip('family'), onclick: opened('family', 'chg:Feeding:d:family') }),
@@ -351,10 +357,11 @@
     if (id === 'allergens') {
       const t = ALLERGENS.filter(a => tried(a[0])).length;
       return detail(cat, 'Solids', 'Try a new allergen', 'Offering common allergens early, once a few first foods are going well, may help prevent food allergies.',
-        `<div class="hub-card"><div class="hub-card-head"><b>${F('Tick the ones Maya has tried')}</b><span class="hub-chip">${t} of ${ALLERGENS.length}</span></div><div class="chg-choices hub-chips">${ALLERGENS.map(([k]) => `<button class="${tried(k) ? 'is-on' : ''}" aria-pressed="${tried(k)}" onclick="hubAllergen('${k}')">${tried(k) ? '✓ ' : ''}${k}</button>`).join('')}</div></div>`
-        + steps([(() => { const nx = ALLERGENS.find(x => !tried(x[0])); return nx ? `Next up: ${nx[0].toLowerCase()}. Try ${nx[1]}.` : 'Maya has tried them all. Keep offering each one a few times a week.'; })(), 'Offer a small amount early in the day, so you can watch how {s} {do|does} afterward.', 'Once it goes well, keep offering it a few times a week. That’s what helps most.'])
+        `<div class="hub-card"><div class="hub-card-head"><b>${F(t ? 'Tick the ones Maya has tried' : 'Has Maya tried any of these yet? Tick them')}</b><span class="hub-chip">${t} of ${ALLERGENS.length}</span></div><div class="chg-choices hub-chips">${ALLERGENS.map(([k]) => `<button class="${tried(k) ? 'is-on' : ''}" aria-pressed="${tried(k)}" onclick="hubAllergen('${k}')">${tried(k) ? '✓ ' : ''}${k}</button>`).join('')}</div></div>`
+        + (tried('Peanut') ? '' : note('Severe eczema or an egg allergy? Talk to your pediatrician before trying peanut.'))
+        + steps([(() => { const nx = ALLERGENS.find(x => !tried(x[0])); return nx ? `${nx[0]} is next. Try ${nx[1]}.` : 'Maya has tried them all. Keep offering each one a few times a week.'; })(), 'Offer a small amount early in the day, so you can watch how {s} {do|does} afterward.', 'Once it goes well, keep offering it a few times a week. That’s what helps most.'])
         + `<section class="hub-card hub-versus"><h3>${F('If something seems off')}</h3><div class="hub-vs"><div><b>Call your pediatrician</b><p>${F('A few hives around the mouth, or vomiting after a new food.')}</p></div><div class="is-urgent"><b>Call 911</b><p>${F('Trouble breathing, swelling of the lips or tongue, or {s} {seem|seems} floppy or pale.')}</p></div></div></section>`
-        + (tried('Peanut') ? '' : note('If Maya has severe eczema or an egg allergy, talk to your pediatrician before trying peanut.')), 'peanut');
+, 'peanut');
     }
     if (id === 'pace') {
       return detail(cat, 'Solids', 'Let Maya set the pace', 'Babies are good at knowing how much they need. Your job is what and when; {p} job is how much.',
@@ -362,10 +369,14 @@
         + tip('How much is enough?', 'A few spoonfuls or bites is plenty at first. Some days {s’ll} eat almost nothing, and that’s normal.') + tip('Make it easy', 'Sit together, keep it calm, and let {o} touch and explore. Mess is part of learning.'), 'hand');
     }
     if (id === 'enough') {
+      const days = (NOW - parse(profile.dob)) / 864e5, newborn = days < 42, ageM = typeof actualMonth === 'function' ? actualMonth() : 0;
+      if (!newborn) return detail(cat, 'Milk feeds', 'How to tell Maya’s getting enough', 'Past the newborn weeks, these signs tell you feeds are going well.',
+        table([['Wet diapers', 'About 5–6 a day'], ['Growth', 'Following {p} own curve at checkups'], ['After feeds', 'Content, and alert and curious when awake']])
+        + `<section class="hub-card hub-versus"><h3>${F('When to call')}</h3><div class="hub-vs"><div><b>Call your pediatrician</b><p>${F('Fewer wet diapers, refusing feeds or taking much less milk than usual.')}</p></div><div class="is-urgent"><b>${ageM < 3 ? 'Call right away' : 'Fever'}</b><p>${F(feverRule(ageM))}</p></div></div></section>`, 'diaper');
       return detail(cat, 'Milk feeds', 'How to tell Maya’s getting enough', 'You can’t always see how much a newborn drinks, so these signs tell you instead.',
         table([['Wet diapers', 'At least 6 a day after day 5'], ['Poops', 'Yellow and seedy by day 5, often several a day'], ['Weight', 'Back to birth weight by about 2 weeks'], ['After feeds', 'Relaxed hands and a sleepy, content baby']])
-        + ((NOW - parse(profile.dob)) / 864e5 < 21 ? tip('Wake {o} for feeds for now', 'Until {s’s} back to birth weight, wake {o} if it’s been more than about 3 hours. Your pediatrician will tell you when you can stop.') : tip('Once {s’s} back to birth weight', 'Most babies can feed when they wake. Your pediatrician will tell you if {s} still {need|needs} waking.'))
-        + `<section class="hub-card hub-versus"><h3>${F('When to call')}</h3><div class="hub-vs"><div><b>Call your pediatrician</b><p>${F('Hard to wake for feeds, fewer wet diapers or looking more yellow.')}</p></div><div class="is-urgent"><b>Call right away</b><p>${F('A temperature of 100.4°F or higher under 3 months.')}</p></div></div></section>`, 'diaper');
+        + (days < 21 ? tip('Wake {o} for feeds for now', 'Until {s’s} back to birth weight, wake {o} if it’s been more than about 3 hours. Your pediatrician will tell you when you can stop.') : tip('Once {s’s} back to birth weight', 'Most babies can feed when they wake. Your pediatrician will tell you if {s} still {need|needs} waking.'))
+        + `<section class="hub-card hub-versus"><h3>${F('When to call')}</h3><div class="hub-vs"><div><b>Call your pediatrician</b><p>${F('Hard to wake for feeds, fewer wet diapers or looking more yellow.')}</p></div><div class="is-urgent"><b>Call right away</b><p>${F('A temperature of 100.4°F or higher.')}</p></div></div></section>`, 'diaper');
     }
     if (id === 'cues') {
       return detail(cat, 'Feeding', 'Reading Maya’s hunger cues', 'Feeding at the first signs of hunger is easier on you both than waiting for crying.',
@@ -415,7 +426,7 @@
     }
     if (id === 'family') {
       return detail(cat, 'Family meals', 'Share your family’s food', 'Most of what you eat can work for Maya with a couple of small changes.',
-        steps(['Set {p} portion aside before you add salt or spicy sauces.', 'Cut it into soft, small pieces or mash it a little.', 'Sit down together when you can. Watching you eat is how {s} {learn|learns}.']) + tip('Wait until 12 months', 'Honey, cow’s milk as a main drink and juice.') + tip('Keep skipping, even after 1', 'Whole nuts, popcorn, whole grapes and hard raw vegetables are choking risks for years.'), 'plate');
+        steps(['Set {p} portion aside before you add salt or spicy sauces.', 'Cut it into soft, small pieces or mash it a little.', 'Sit down together when you can. Watching you eat is how {s} {learn|learns}.']) + tip('Keep skipping, even after 1', 'Whole nuts, popcorn, whole grapes and hard raw vegetables are choking risks for years.'), 'plate');
     }
     if (id === 'milk12') {
       return nursing()
@@ -424,7 +435,7 @@
           steps([meth() === 'both' ? 'At 12 months, swap formula bottles for whole cow’s milk, about 16–24 oz a day. Nursing can carry on alongside.' : 'At 12 months, swap formula for whole cow’s milk, about 16–24 oz a day.', 'Offer milk in an open or straw cup instead of a bottle.', 'Talk it through at the 12-month checkup.']) + tip('No rush on the bottle', 'Phasing it out over a few weeks is fine.'), 'cup');
     }
     if (id === 'after') {
-      return detail(cat, 'After the first birthday', 'Bottles to cups', 'Most babies move off bottles between 12 and 18 months. Going one bottle at a time keeps it easy.',
+      return detail(cat, 'After the first birthday', 'Bottles to cups', 'Most babies move off bottles between 12 and 18 months. Water from a cup is already fine from about 6 months, so cups won’t be new.',
         steps(['Swap the bottle Maya cares least about for an open or straw cup first, often the midday one.', 'Every week or so, swap another. The bedtime bottle usually goes last.', 'If you’re using cow’s milk, about 16–24 oz a day from a cup is plenty.']) + tip('Nursing is different', 'There’s no need to stop nursing at 12 months. Keep going for as long as it works for you both.'), 'cup');
     }
     if (id === 'faq') {
@@ -477,10 +488,10 @@
     rhythm: 'Night feeds can carry on. Check with your pediatrician before dropping one.',
     two: 'Some babies still feed at night with two naps, and that’s fine. Ask your pediatrician before dropping one.'
   };
-  const nightCard = (key, isNow = true) => `<button class="hub-card hub-glance" onclick="${go('chg:Sleep:d:day')}"><span class="hub-card-head"><b>${F(isNow ? 'How Maya’s sleeping now' : 'At this stage')}</b>${chev}</span>${tiles(sleepGlance(key))}<span class="hub-card-note" id="sleep-night-feeds"><b>${F('At night')}</b> ${F(NIGHT[key])}</span></button>`;
+  const nightCard = (key, isNow = true) => `<button class="hub-card hub-glance" onclick="${go('chg:Sleep:d:day')}"><span class="hub-card-head"><b>${F(isNow && C().live() ? 'How Maya’s sleeping now' : isNow ? 'At this age' : 'At this stage')}</b>${chev}</span>${tiles(sleepGlance(key))}<span class="hub-card-note" id="sleep-night-feeds"><b>${F('At night')}</b> ${F(NIGHT[key])}</span></button>`;
   const swaddleRow = () => swaddleDue() ? row({ icon: 'sack', cat: 'Sleep', title: rolled() ? 'Stop swaddling now' : 'Stop swaddling at the first attempt to roll', sub: rolled() ? (answers.rollDirection === 'Trying to roll' ? 'Now that Maya’s trying to roll, use a sleep sack' : 'Now that Maya’s rolling, use a sleep sack') : 'Switch to a sleep sack that leaves the arms free', chipText: rolled() ? 'Do now' : 'Must know', chipTone: 'is-red', onclick: go('chg:Sleep:d:swaddle') }) : null;
   const mattressRow = () => mattressLowestDue() ? row({ icon: 'shield', cat: 'Sleep', title: 'Set the crib mattress to its lowest', sub: answers.pullUp === 'Yes' ? 'Now that Maya pulls up, use the lowest setting' : 'Before {s} {pull|pulls} up, use the lowest setting', chipText: 'Do now', chipTone: 'is-red', onclick: go('chg:Sleep:d:mattress') })
-    : mattressDue() ? row({ icon: 'shield', cat: 'Sleep', title: 'Lower the crib mattress', sub: answers.sit === 'Yes' ? 'Now that Maya sits, move it down a setting' : 'Move it down before {s} can sit up', chipText: 'Do now', chipTone: 'is-red', onclick: go('chg:Sleep:d:mattress') }) : null;
+    : mattressDue() ? row({ icon: 'shield', cat: 'Sleep', title: 'Lower the crib mattress', sub: answers.sit === 'Yes' || answers.pullUp === 'Yes' || answers.crawl === 'Yes' ? 'Now that Maya sits, set it to the lowest setting' : 'Lowest setting before {s} can pull up', chipText: 'Do now', chipTone: 'is-red', onclick: go('chg:Sleep:d:mattress') }) : null;
   function settleRow() {
     const g = C().settlingGuide();
     const t = { learn: m() >= 4 ? ['Sleep training, if you choose it', 'A choice, not a must'] : ['Read ahead: sleep training', 'Some families start at 4–6 months or later'], trying: ['Support while sleep training', 'How to handle a rough night'], routine: ['When the routine changes', 'After short naps, travel or illness'], help: ['A routine with your help', 'Feeding or rocking to sleep can stay'] }[g] || ['Helping Maya settle', 'What works at this age'];
@@ -498,6 +509,8 @@
     const key = SLEEP_KEYS[view], age = m(), now = view === cur, cat = 'Sleep';
     let h = '';
     let B = browseLinks(cat, view, cur);
+    // Browsing another sleep stage: label it, same as Feeding.
+    if (!now && C().live()) h += `<div class="hub-preview"><span>${view > cur ? 'Preview' : 'Looking back'} · ${F(STAGE_TABLE.Sleep.stages[view]?.age || '')}</span><button onclick="openPage('topic:Sleep')">${F('Back to Maya’s stage')}</button></div>`;
     if (key === 'clock') {
       const n = safeDone(), all = SLEEP_TASKS;
       h += hero({ eyebrow: 'Round-the-clock sleep', title: 'Short sleeps, day and night', lead: 'Newborns sleep 14–17 hours a day in stretches of 1–3 hours. There’s no pattern yet, and that’s normal.', button: n === all ? null : { label: 'Set up a safe sleep space', onclick: go('chg:Sleep:safe') } }) + B + (n === all ? list('', [row({ icon: 'moon', cat, title: 'Safe sleep setup', sub: 'Your space is set up. The habits are here too.', chipText: 'Done', chipTone: 'is-done', onclick: go('chg:Sleep:safe') })]) : '');
@@ -525,7 +538,8 @@
     if (key === 'rhythm') {
       h += hero({ eyebrow: 'Three naps', title: 'Naps are finding a rhythm', lead: 'Most babies take 3 naps now and get sleepy after about 2 hours awake. Bedtime often lands between 7 and 8.' }) + B;
       h += nightCard(key, now);
-      const rows = [now ? swaddleRow() : null, now ? mattressRow() : null, row({ icon: 'clock', cat, title: 'Watch for sleepy cues', sub: 'A quiet stare, yawning or turning away', onclick: go('chg:Sleep:d:cues') }), settleRow()].filter(Boolean).slice(0, 3);
+      // Sleep training stays reachable as the last row; sleepy cues were covered at birth.
+      const rows = [now ? swaddleRow() : null, now ? mattressRow() : null, row({ icon: 'clock', cat, title: 'Watch for sleepy cues', sub: 'A quiet stare, yawning or turning away', onclick: go('chg:Sleep:d:cues') })].filter(Boolean).slice(0, 2).concat(settleRow());
       h += list('What helps now', rows);
       if (now) h += eventRow(cat);
       h += versus('Normal, or time to call?', ['Normal', 'Naps of 30–45 minutes, and fighting a nap now and then.'], ['Call your pediatrician', 'Snoring most nights, pauses or gasps in sleep, or sleep changes with fever.']);
@@ -534,7 +548,7 @@
       const settled = answers.twoNaps === 'Yes' || age >= 10 || (now && answers.twoNaps !== 'Not yet');
       h += hero({ eyebrow: 'Two naps', title: settled ? 'Two naps a day' : 'Two naps are on the way', lead: settled ? 'A morning nap and an afternoon nap make up the day. A short nap can shift the timing without changing the number.' : 'Most babies drop the late catnap between 6 and 9 months. Look for a pattern over a week, not one day.' }) + B;
       h += nightCard(key, now);
-      const rows = [now ? swaddleRow() : null, now ? mattressRow() : null, settled ? row({ icon: 'clock', cat, title: 'After a short nap, offer the next one sooner', sub: 'One rough day doesn’t end two naps', onclick: go('chg:Sleep:d:catnap') }) : row({ icon: 'clock', cat, title: 'Watch for a skipped catnap', sub: 'If {s} {skip|skips} it most days, try two naps', onclick: go('chg:Sleep:d:catnap') }), row({ icon: 'sit', cat, title: 'Practice new skills during the day', sub: 'Lots of floor time helps nights stay calm', onclick: go('chg:Sleep:d:skills') }), settleRow()].filter(Boolean).slice(0, 3);
+      const rows = [now ? swaddleRow() : null, now ? mattressRow() : null, settled ? row({ icon: 'clock', cat, title: 'After a short nap, offer the next one sooner', sub: 'One rough day doesn’t end two naps', onclick: go('chg:Sleep:d:catnap') }) : row({ icon: 'clock', cat, title: 'Watch for a skipped catnap', sub: 'If {s} {skip|skips} it most days, try two naps', onclick: go('chg:Sleep:d:catnap') }), row({ icon: 'sit', cat, title: 'Practice new skills during the day', sub: 'Lots of floor time helps nights stay calm', onclick: go('chg:Sleep:d:skills') })].filter(Boolean).slice(0, 2).concat(settleRow());
       h += list('What helps now', rows);
       if (now) h += eventRow(cat);
       h += versus('Normal, or time to call?', ['Normal', 'Standing up in the crib, and protest at bedtime when you leave.'], ['Call your pediatrician', 'Snoring most nights, pauses or gasps in sleep, or sleep changes with fever.']);
@@ -574,7 +588,7 @@
     }
     if (id === 'crying') {
       return detail(cat, 'The early months', 'When the crying won’t stop', 'Crying usually builds from about 2 weeks, peaks around 6–8 weeks and eases by 3–4 months. Some evenings nothing works, and that isn’t your fault.',
-        steps(['Check the basics: hungry, a wet diaper, too warm or too cold, or overtired.', 'Hold Maya close: skin to skin, a slow walk or gentle rocking.', 'Try a steady sound, like shushing, white noise or a soft song.', 'Offer a pacifier, or a swaddle if {s} {is}n’t trying to roll yet.'])
+        steps(['Check the basics: hungry, a wet diaper, too warm or too cold, or overtired.', 'Hold Maya close: skin to skin, a slow walk or gentle rocking.', 'Try a steady sound, like shushing, white noise or a soft song.', (rolled() || m() >= 3 || answers.swaddleStopped === 'Yes' ? 'Offer a pacifier, or try a calm, dim room.' : 'Offer a pacifier, or a swaddle if {s} {is}n’t trying to roll yet.')])
         + `<section class="hub-card hub-callout"><b>${F('If you feel overwhelmed')}</b><p>${F('Put Maya down on {p} back in the crib, close the door and take a few minutes. Call someone you trust. Crying won’t hurt Maya. Shaking can, so never shake a baby.')}</p></section>`
         + versus('Normal, or time to call?', ['Normal', 'Long crying spells, often in the evening, in a baby who feeds and grows well.'], ['Call your pediatrician', (m() < 3 ? 'Right away for any fever of 100.4°F or higher. Also for ' : 'Crying with a fever, ') + 'poor feeding or vomiting, a weak or high-pitched cry, or crying that sounds like pain.'])
         + video('Why crying peaks, and what helps', 'Cook Children’s', 'https://www.cookchildrens.org/health-resources/newborn/care/period-of-purple-crying/', 'Guide'), 'heart');
@@ -599,7 +613,7 @@
     if (id === 'swaddle') {
       return detail(cat, 'Sleep safety', 'Stop swaddling at the first attempt to roll', 'A swaddled baby who rolls onto {p} tummy can’t use {p} arms to move. So once rolling starts, the swaddle stops.',
         steps(['Switch to a sleep sack or wearable blanket that leaves the arms free.', 'Keep putting Maya down on {p} back.', 'If {s} {roll|rolls} over on {p} own both ways, you can leave {o} that way.'])
-        + `<div class="hub-actions">${answers.swaddleStopped === 'Yes' ? `<p class="hub-done">${F('Maya’s in a sleep sack')} ✓</p>` : `<button class="hub-button" onclick="setAnswer('swaddleStopped','Yes')">${F('Maya’s in a sleep sack now')}</button>`}</div>` + tip('Skip weighted sleep sacks', 'Any sleep sack should be light and unweighted.'), 'moon');
+        + `<div class="hub-actions">${answers.swaddleStopped === 'Yes' ? `<p class="hub-done">${F('Maya is in a sleep sack')} ✓</p>` : `<button class="hub-button" onclick="setAnswer('swaddleStopped','Yes')">${F('Maya’s in a sleep sack now')}</button>`}</div>` + tip('Skip weighted sleep sacks', 'Any sleep sack should be light and unweighted.'), 'moon');
     }
     if (id === 'mattress') {
       const lowest = mattressLowestDue();

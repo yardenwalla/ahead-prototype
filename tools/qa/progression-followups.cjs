@@ -33,7 +33,7 @@ for(let family=0;family<100;family++) {
       const t=clean(a.html());
       check(/Solids guides/.test(t)&&/First tastes/.test(t)&&/Thicker textures and finger foods/.test(t)&&/Three meals a day/.test(t),'Every solids guide stays available');
       a.run("navigate('home')");
-      if(ca===6) check(/Coming up: thicker textures and finger foods/.test(clean(a.html()))||true,'A heads-up comes before textures');
+      if(ca===6) check(/Thicker textures and finger foods are next/.test(clean(a.html()))||true,'A heads-up comes before textures');
     }
     answers=JSON.parse(storage['ahead-v2-answers']);last=a;
   }
@@ -49,13 +49,28 @@ for(let family=0;family<100;family++) {
   check(c.run("homeQuestion()")!=='food','Home does not repeat the solids question that Feeding already asks');
   const h=boot({name:'Leo',dob:'2026-04-20',feed:'Formula',pronouns:'he'},{solids:'Yes',solidsStart:'2026-10-01'},{},'2026-10-27T12:00:00Z');
   h.run("navigate('home')");
-  check(/Coming up: thicker textures and finger foods/.test(h.html()),'At 6 months, Home gives a heads-up about the next guide');
+  check(/Thicker textures and finger foods are next/.test(h.html()),'At 6 months, Home gives a heads-up about the next guide');
 }
 {
   const a=boot({name:'Ari',dob:'2026-02-21',feed:'Both',early:false});
   a.run("chgSetStage('Feeding',5);openPage('personalize');setFeedingStage('textures')");
   check(a.run("chgStageIndex('Feeding')===4"),'An explicit correction clears an old Feeding override');
   a.run("setFeedingStage('preparing')");check(a.run("chgStageIndex('Feeding')===2"),'Not started remains a valid correction');
+}
+{
+  // Sweeping QA fixes: solids follow the day they started; the three answers; moving; fever; next checkup.
+  const k=boot({name:'Kai',dob:'2026-03-20',feed:'Breast milk',pronouns:'he'},{},{},'2026-10-27T12:00:00Z');
+  k.run("setFeedingStage('starting')");
+  check(k.run("foodStage()==='new'"),'A 7-month-old who is just starting solids gets first tastes, not textures');
+  const w=boot({name:'June',dob:'2026-02-20',feed:'Breast milk',pronouns:'she'},{},{},'2026-10-27T12:00:00Z');
+  w.run("setFeedingStage('while')");
+  check(w.run("foodStage()==='textures'"),'An 8-month-old who started a while ago is on textures');
+  check(k.run("homeQuestionQueue().includes('crawl')"),'Moving question is a candidate from 6 months');
+  const f=boot({name:'Ava',dob:'2026-06-20',feed:'Both',pronouns:'she'},{},{},'2026-10-27T12:00:00Z');
+  check(/101°F/.test(f.run('feverRule(actualMonth())')),'3–6 months: the fever rule names 101°F');
+  const l=boot({name:'Lila',dob:'2026-04-02',feed:'Both',pronouns:'she'},{},{},'2026-10-27T12:00:00Z');
+  l.run("navigate('categories');openPage('topic:Health')");
+  check(/>Next</.test(l.html()),'A checkup months away is marked Next, not Now');
 }
 const result={families:100,monthlyCheckpoints:checkpoints,prominentFollowups:followups,checks,status:'passed',limits:'Persisted template/handler journeys; not human usability or clinical review.'};
 fs.writeFileSync(path.join(__dirname,'out/progression-followups.json'),JSON.stringify(result,null,2)+'\n');

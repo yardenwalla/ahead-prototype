@@ -131,6 +131,6 @@ for (const [cat, route, i] of [['Safety', 'safety-stage:reaching', 1], ['Sleep',
   a.run("navigate('home')");
   check(/hub-agechip/.test(a.html()) && !/connected-age-note/.test(a.html()), 'Home shows the adjusted age next to the age, once');
   a.run("openPage('age-context')");
-  check(/Two ages, one Ari/.test(a.html()) && /tap Change/.test(a.html()), 'About age explains both ages and how to change a stage');
+  check(/Two ages, one Ari/.test(a.html()) && /Development, play and safety/.test(a.html()), 'About age explains both ages and lets you switch which one each area follows');
 }
 console.log(JSON.stringify({ suite: 'stage-rules', checks, status: 'passed' }, null, 2));

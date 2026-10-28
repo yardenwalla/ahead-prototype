@@ -29,6 +29,8 @@
     if (month < 4 && (!profile.feed || profile.feed === 'Prefer not to say') && !d.skip.milk && !d.last.milk) out.push('milk');
     const food = feedingCheckin();
     if (food) out.push(food.key);
+    // From 6 months: is the baby moving around yet? A yes switches Safety and Sleep to "now that they're moving".
+    if (a >= 6 && answers.crawl !== 'Yes' && answers.pullUp !== 'Yes' && due(d, 'crawl', ['Not yet'])) out.push('crawl');
     // Sleep (Rule 1 and Rule 3): from 6 months, while the guide is on Three naps, ask about the late catnap.
     // A "not yet" (or a Change back to Three naps) is asked again a month later.
     const sa = typeof hubAgeFor === 'function' ? hubAgeFor('care', actualMonth()) : a;
@@ -51,7 +53,7 @@
     if (!hasFoodAnswer() || stage === 'preparing') {
       if (d.skip.food && nowMs() - d.skip.food < WAIT || hasFoodAnswer() && recentlyAnswered) return null;
       return {key:'food', title:`Has ${name()} started solids?`, why:'Feeding will follow along from here.',
-        choices:[['new','Yes'],['preparing','Not yet']]};
+        choices:[['starting','Just starting'],['while','For a while'],['preparing','Not yet']]};
     }
     // Once solids have started, time and age suggest the next step, and the parent confirms with one tap.
     const next = typeof foodSuggestion === 'function' ? foodSuggestion() : null;
@@ -105,14 +107,21 @@
   };
 
   const baseAnswer = answerHomeQuestion, baseLive = liveHomeCheckin;
-  const confirmAnswer = key => {
+  // Every Home answer says what changed and offers the page, so the tap never feels like it went nowhere.
+  const confirmAnswer = (key, value) => {
     if (typeof hubToast !== 'function') return;
-    const label = { food: 'Feeding', naps: 'Sleep' }[key] || (key.startsWith('outgrown:') ? key.slice(9).replace('Daily rhythm', 'Everyday care') : null);
-    if (label) setTimeout(() => hubToast('Got it', `${label} now matches what you told us.`), 0);
+    const cat = { food: 'Feeding', naps: 'Sleep', crawl: 'Safety', milk: 'Feeding' }[key] || (key.startsWith('outgrown:') ? key.slice(9) : null);
+    if (!cat) return;
+    const label = cat === 'Daily rhythm' ? 'Everyday care' : cat;
+    const body = key === 'food' ? (value === 'starting' ? 'Feeding now shows first tastes.' : value === 'while' ? `Feeding now matches where ${name()} is with solids.` : 'Feeding shows how to get ready for solids.')
+      : key === 'crawl' ? (value === 'Yes' ? `Safety now covers a baby on the move.` : `We’ll ask again in a few weeks.`)
+      : key === 'naps' ? (value === 'Yes' ? 'Sleep now shows two naps.' : 'Sleep stays on three naps for now.')
+      : `${label} now matches what you told us.`;
+    setTimeout(() => hubToast('Got it', body, [`See ${label}`, `document.querySelectorAll('.hub-toast').forEach(t=>t.remove());openPage('topic:${cat}')`]), 0);
   };
   window.answerHomeQuestion = answerHomeQuestion = function (key, value) {
     if (key !== homeQuestion()) return;
-    confirmAnswer(key);
+    confirmAnswer(key, value);
     if (key.startsWith('outgrown:')) {
       if (!['Yes', 'Not yet'].includes(value)) return;
       recordCheckin(key, value);

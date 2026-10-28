@@ -62,8 +62,10 @@ def answer_for(question, p, w):
     if 'solids' in q:
         if 'where are you' in q:
             return {'preparing': 'Not started', 'new': 'First foods', 'established': 'Building meals'}[food]
-        return {'preparing': 'Not yet', 'new': 'Yes', 'established': 'Yes'}[food]
-    if 'crawling' in q:
+        if food == 'preparing': return 'Not yet'
+        if 'has' in q and 'started solids' in q: return 'Just starting' if w - p['solids'] <= 3 else 'For a while'
+        return {'new': 'Yes', 'established': 'Yes'}[food]
+    if 'crawling' in q or 'moving around' in q:
         return 'Yes' if mv in ('crawling', 'pulling') else 'Not yet'
     if 'pulling up' in q:
         return 'Yes' if mv == 'pulling' else 'Not yet'

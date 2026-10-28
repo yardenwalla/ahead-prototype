@@ -591,7 +591,7 @@
   };
   window.chgAnswerCheckin = function (key, value) {
     if (!['food','food-progress','naps'].includes(key)) return;
-    if (key !== 'naps' && !['preparing','new','textures','established','hold'].includes(value)) return;
+    if (key !== 'naps' && !['preparing','new','starting','while','textures','established','hold'].includes(value)) return;
     if (typeof recordCheckin === 'function') recordCheckin(key, value);
     if (key === 'naps') setAnswer('twoNaps', value === 'Yes' ? 'Yes' : 'Not yet');
     if (key === 'food-progress' && value === 'hold') return holdFoodStep();

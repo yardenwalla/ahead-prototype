@@ -15,12 +15,12 @@
     Sleep: { kind: 'pattern', stages: [
       { label: 'Round-the-clock sleep', age: '0–6 weeks', setUntil: 3 },   // swaddling advice: not once a baby can roll
       { label: 'Longer nights', age: '6 wks–4 mo' },
-      { label: 'Three naps', age: '4–8 months' },
-      { label: 'Two naps', age: '8 months+' }
+      { label: 'Three naps', age: '4–9 months' },
+      { label: 'Two naps', age: 'From 6–9 months' }
     ] },
     Feeding: { kind: 'pattern', stages: [
       { label: 'Milk feeds', age: 'From birth' },                         // newborn feeds, then rhythm and amounts, by age
-      { label: 'Preparing for solids', age: '4–6 months', setFrom: 4 },  // no solids guidance before 4 months
+      { label: 'Preparing for solids', age: 'From 4 months', setFrom: 4 },  // no solids guidance before 4 months
       { label: 'Solids', age: 'Once you start', setFrom: 4 }             // first tastes, then textures, then meals: by time since starting and age
     ] },
     Safety: { kind: 'skill', stages: [
@@ -71,9 +71,9 @@
     const baby = esc3(typeof name === 'function' ? name() : 'your baby');
     return `<nav class="hub-stagebar" id="hub-pills" aria-label="${esc3(label || cat + ' stages')}">${items.map((it, i) => {
       const lock = it.on && !it.now && !it.change ? lockNote(cat, i) : '';
-      const top = it.now ? '<span class="hub-stage-top" aria-hidden="true">Now</span>' : it.on && it.change ? `<button class="hub-stage-top is-change" onclick="${it.change}" aria-label="Change ${baby}’s stage to ${esc3(it.label)}">Change</button>` : `<span class="hub-stage-top${lock ? ' is-lock' : ''}">${lock}</span>`;
+      const top = it.now ? `<span class="hub-stage-top" aria-hidden="true">${esc3(it.nowLabel || 'Now')}</span>` : it.on && it.change ? `<button class="hub-stage-top is-change" onclick="${it.change}" aria-label="Change ${baby}’s stage to ${esc3(it.label)}">Change</button>` : `<span class="hub-stage-top${lock ? ' is-lock' : ''}">${lock}</span>`;
       // Screen readers hear which stage is the baby's, not just which one is open.
-      const sr = it.now ? `<span class="sr-only">, ${baby}’s stage now</span>` : '';
+      const sr = it.now ? `<span class="sr-only">, ${it.nowLabel === 'Next' ? baby + '’s next checkup' : baby + '’s stage now'}</span>` : '';
       return `<div class="hub-stage ${it.on ? 'is-on' : ''} ${it.now ? 'is-now' : ''}">${top}<button class="hub-stage-hit" onclick="${it.onclick}" ${it.on ? 'aria-current="step"' : ''}><span class="hub-stage-node" aria-hidden="true">${it.on ? art : ''}</span><span class="hub-stage-name">${esc3(it.label)}</span>${it.age ? `<span class="hub-stage-age">${esc3(it.age)}</span>` : ''}${sr}</button></div>`;
     }).join('')}</nav>`;
   };

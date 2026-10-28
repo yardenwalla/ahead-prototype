@@ -169,7 +169,7 @@ window.AHEAD_CHANGES = {
    {
     "key": "two",
     "rail": "Two naps",
-    "when": "Usually 8–9 months",
+    "when": "Usually 6–9 months",
     "title": "Two naps a day",
     "lead": "For days with a morning nap and an afternoon nap. If the late catnap is repeatedly hard to fit and baby manages comfortably until bedtime, it may be time to try two naps.",
     "looks": [

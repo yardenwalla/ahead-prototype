@@ -58,7 +58,7 @@ window.__qa = (function () {
       selected: pill('.hub-stage.is-on .hub-stage-name'),
       eyebrow: txt(m.querySelector('.hub-eyebrow')), title: txt(m.querySelector('.hub-hero h1')),
       alerts: [...auto, ...red, ...cards],
-      comingUp: nexts.find(h => /^Coming up/.test(h.label)) || null,
+      comingUp: nexts.find(h => /^(Coming up|Next, when)/.test(h.label)) || null,
       after: nexts.find(h => /^After the first birthday/.test(h.label)) || null,
       checkin: txt(m.querySelector('.chg-checkin h2')),
       events: all('.hub-row', m).filter(r => /:e:\d/.test(r.getAttribute('onclick') || '')).map(r => txt(r.querySelector('.hub-row-copy b'))),

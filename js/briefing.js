@@ -104,7 +104,7 @@
     if (live() && (answers.pullUp === 'Yes' || m >= 8) && answers.mattressLowest !== 'Yes') {
       const said = answers.pullUp === 'Yes';
       out.push({ topic: 'Sleep', key: 'mattress', title: said ? `Now that ${n()} pulls up, set the crib mattress to its lowest` : `Set the crib mattress to its lowest`,
-        body: said ? `Take down mobiles too, and anchor dressers and shelves. To ${n()}, they’re something to climb now.` : (m >= 10 ? `Most babies pull up by now, so it’s worth doing soon.` : `Most babies pull up between 8 and 10 months, so it’s worth doing before then.`),
+        body: said ? `Take down mobiles too, and anchor dressers and shelves. To ${n()}, they’re something to climb now.` : (m >= 10 ? `Most babies pull up by now, so it’s worth doing soon.` : m >= 8 ? `Many babies pull up around now. Set it to the lowest setting before ${n()} does.` : `Most babies pull up between 8 and 10 months, so it’s worth doing before then.`),
         tools: `<div class="home-action-tools"><button class="home-inline-check" aria-label="Mark done: crib mattress at its lowest" onclick="setAnswer('mattressLowest','Yes')"><span aria-hidden="true"></span>I’ve done this</button></div>`,
         link: link("openSection('Sleep','sleep-crib-height')", 'See the crib setup') });
     } else if (live() && answers.sit === 'Yes' && answers.mattressLowered !== 'Yes' && answers.mattressLowest !== 'Yes') {
@@ -115,7 +115,9 @@
     }
 
     // One babyproofing check at a time, framed by what changed.
-    if (priority && priority.type === 'check') {
+    // One safety check per visit: after one is done, the next waits until the parent comes back (about 12 hours).
+    let safetyRest = false; try { safetyRest = Date.now() - Number(localStorage.getItem('ahead-safety-last:' + journeyKey()) || 0) < 12 * 3600e3; } catch (e) {}
+    if (priority && priority.type === 'check' && !safetyRest) {
       const item = safetyHomeItems()[priority.id] || {};
       const crawl = mv === 'crawling' && recent('movement');
       out.push({ topic: 'Safety', key: 'check:' + priority.id,         title: crawl ? `Crawling opens up the room` : priority.id === 'gates' ? 'If you have stairs, gate them first' : item.title,
@@ -131,10 +133,11 @@
 
     // A checkup in the next two weeks.
     // Solids: in the month the next guide starts to fit, it joins What matters now, after safety work.
-    if (live() && typeof foodStage === 'function' && foodStage() !== 'preparing') { const ca = typeof hubAgeFor === 'function' ? hubAgeFor('care', actualMonth()) : dm();
-      if (ca === 7) out.push({ topic: 'Feeding', key: 'solids-textures-now', title: approach7() ? 'From strips to small pieces' : 'Time for thicker textures',
-        body: approach7() ? `As ${n()} learns to pinch, food can get smaller and more varied.` : `Most babies are ready for lumpier food and soft pieces they can pick up now.`, link: link("openPage('chg:Feeding:s:4')", 'Read the guide') });
-      if (ca === 9) out.push({ topic: 'Feeding', key: 'solids-meals-now', title: 'Time for three meals a day',
+    // Solids: when the next guide starts to fit this baby (by when solids started, not just age), it joins What matters now.
+    if (live() && typeof foodStage === 'function' && foodStage() !== 'preparing' && typeof foodPhaseDates === 'function') { const st = foodStage(), d = foodPhaseDates(), fresh = k => d && (NOW - d[k]) / 864e5 < 30;
+      if (st === 'textures' && fresh('textures')) out.push({ topic: 'Feeding', key: 'solids-textures-now', title: approach7() ? 'From strips to small pieces' : 'Time for thicker textures',
+        body: approach7() ? `As ${n()} learns to pinch, food can get smaller and more varied.` : `${n()} is ready for lumpier food and soft pieces ${P().s} can pick up.`, link: link("openPage('chg:Feeding:s:4')", 'Read the guide') });
+      if (st === 'established' && fresh('established')) out.push({ topic: 'Feeding', key: 'solids-meals-now', title: 'Time for three meals a day',
         body: `Most babies eat three meals and a snack or two from about now.`, link: link("openPage('chg:Feeding:s:5')", 'Read the guide') });
     }
     // Development: the month a new "what to look for" stage begins, Home says so.
@@ -144,8 +147,9 @@
     // Once solids are going, the allergen list stays on Home until it's done.
     if (live() && hasFoodAnswer() && ['new', 'textures'].includes(foodStage()) && !recent('food') && window.__chg) {
       const A = ['Peanut', 'Egg', 'Dairy', 'Wheat', 'Soy', 'Sesame', 'Tree nuts', 'Fish', 'Shellfish'], got = window.__chg.local.allergens || {}, t = A.filter(a => got[a]).length;
-      if (t < A.length) out.push({ topic: 'Feeding', key: 'allergens:' + t, title: 'Try a new allergen', reason: `${t} of ${A.length} tried`,
-        body: `Offering common allergens early and often can lower the chance of food allergies. ${A.find(a => !got[a])} is a good next one.`,
+      const ask = !t && typeof foodWeeksIn === 'function' && foodWeeksIn() >= 4;   // started a while ago: ask what's been tried, don't assume none
+      if (t < A.length) out.push({ topic: 'Feeding', key: 'allergens:' + t, title: ask ? `Which allergens has ${n()} tried?` : 'Try a new allergen', reason: `${t} of ${A.length} tried`,
+        body: ask ? `Tick the ones ${n()} has already had, and we’ll suggest the next one.` : `Offering common allergens early and often can lower the chance of food allergies. ${A.find(a => !got[a])} is a good next one.`,
         link: link("openPage('chg:Feeding:d:allergens')", 'See how to offer each one') });
     }
     // Anything new since the last visit goes first, so it's never buried under a standing to-do.
@@ -162,7 +166,7 @@
       const planned = rec && rec.status === 'planned';
       const due = age === 0 ? new Date(parse(profile.dob).getTime() + 5 * DAY) : addMonths(parse(profile.dob), age);
       const when = planned ? parse(rec.date) : due, days = Math.round((when - NOW) / DAY);
-      if (!planned && days < 0) continue;
+      if (!planned && days < -3) continue;
       if (days > 35 && !planned) return null;
       return { age, days, saved: planned ? rec.date : null };
     }
@@ -170,8 +174,8 @@
   }
   function visitItem(v) {
     const label = healthJourneyLabel(v.age);
-    const when = v.saved ? (v.days < 0 ? `was on ${journeyDateLabel(v.saved)}` : `is on ${journeyDateLabel(v.saved)}`) : v.days <= 7 ? 'is coming up' : v.days <= 14 ? 'is in about 2 weeks' : `is in about ${Math.round(v.days / 7)} weeks`;
-    return { topic: 'Health', key: 'visit:' + v.age, reason: v.saved ? `Saved for ${journeyDateLabel(v.saved)}` : v.age === 0 ? 'In the first week' : `Usually around ${v.age} month${v.age === 1 ? '' : 's'}`, title: `${n()}’s ${label.charAt(0).toLowerCase() + label.slice(1)} ${when}`,
+    const when = v.saved ? (v.days < 0 ? `was on ${journeyDateLabel(v.saved)}` : `is on ${journeyDateLabel(v.saved)}`) : v.days < 0 ? 'is due now' : v.days <= 7 ? 'is coming up' : v.days <= 14 ? 'is in about 2 weeks' : `is in about ${Math.round(v.days / 7)} weeks`;
+    return { topic: 'Health', key: 'visit:' + v.age, reason: v.saved ? `Saved for ${journeyDateLabel(v.saved)}` : v.age === 0 ? 'In the first week' : `Due around ${journeyDateLabel(iso(addMonths(parse(profile.dob), v.age)))}`, title: `${n()}’s ${label.charAt(0).toLowerCase() + label.slice(1)} ${when}`,
       body: conceptHealthSummary(v.age) + (v.saved && v.days < 0 ? ' Mark it done once you’ve been.' : ''),
       link: link(`openPage('health-visit:${v.age}')`, 'See what’s checked') };
   }
@@ -185,12 +189,12 @@
       out.push({ topic: 'Feeding', key: 'solids-soon', title: 'Solids are getting closer',
         body: `Most babies start around 6 months, once they’re ready. Here’s what to know first.`,
         link: link("openPage('topic:Feeding')", 'Get ready for solids') });
-    // Solids: a heads-up about a month before the next guide is usually useful.
-    if (live() && typeof foodStage === 'function' && foodStage() !== 'preparing') {
-      const ca = typeof hubAgeFor === 'function' ? hubAgeFor('care', actualMonth()) : m;
-      if (ca === 6) out.push({ topic: 'Feeding', key: 'solids-textures', title: 'Coming up: thicker textures and finger foods',
-        body: `Around 7 to 8 months, most babies move to lumpier food and soft pieces they can pick up.`, link: link("openPage('chg:Feeding:s:4')", 'Read the guide') });
-      if (ca === 8) out.push({ topic: 'Feeding', key: 'solids-meals', title: 'Coming up: three meals a day',
+    // Solids: a heads-up a few weeks before the next guide fits.
+    if (live() && typeof foodStage === 'function' && foodStage() !== 'preparing' && typeof foodPhaseDates === 'function') {
+      const st = foodStage(), d = foodPhaseDates(), soon = k => d && (d[k] - NOW) / 864e5 <= 35;
+      if (st === 'new' && soon('textures')) out.push({ topic: 'Feeding', key: 'solids-textures', title: 'Thicker textures and finger foods are next',
+        body: `In a few weeks, most babies move on to lumpier food and soft pieces they can pick up.`, link: link("openPage('chg:Feeding:s:4')", 'Read the guide') });
+      if (st === 'textures' && soon('established')) out.push({ topic: 'Feeding', key: 'solids-meals', title: 'Three meals a day is next',
         body: `From about 9 months, most babies eat three meals and a snack or two.`, link: link("openPage('chg:Feeding:s:5')", 'Read the guide') });
     }
     if (m === 3) out.push({ topic: 'Sleep', key: 'four-month', title: 'Sleep might get bumpy around 4 months',
@@ -202,7 +206,10 @@
       link: link("openPage('chg:Sleep:d:crying')", 'What helps with crying') });
     const visit = upcomingVisit();
     if (visit && visit.days > 7) out.push(visitItem(visit));
-    if (live() && m === 11) out.push({ topic: 'Feeding', key: 'one-year-milk', title: 'Milk and cups around the first birthday',
+    // Older babies: the first birthday checkup is the next big thing, even a few months out.
+    if (live() && !visit && m >= 9) { const due = addMonths(parse(profile.dob), 12), wks = Math.round((due - NOW) / DAY / 7);
+      if (wks > 0 && !healthRecord(12)) out.push({ topic: 'Health', key: 'visit-ahead:12', title: `${n()}’s 12-month checkup is in about ${wks > 8 ? Math.round(wks / 4.3) + ' months' : wks + ' weeks'}`, body: conceptHealthSummary(12), link: link("openPage('health-visit:12')", 'See what’s checked') }); }
+    if (live() && m >= 10 && m < 12) out.push({ topic: 'Feeding', key: 'one-year-milk', title: 'Milk and cups around the first birthday',
       body: `From 12 months, whole cow’s milk can be a drink from a cup, and bottles start to phase out.`,
       link: link("openPage('chg:Feeding:d:milk12')", 'See what changes') });
     if (live() && m >= 5 && m < 8 && !['crawling', 'pulling'].includes(mv) && safetyPendingIds(safetyOwnedGuides().mobile.ids).length)
@@ -252,6 +259,22 @@
     seenAt = seen;
     try { localStorage.setItem(key, JSON.stringify(seen)); } catch (e) {}
   }
+  // Looking ahead on Home: what will be different by the picked month, one line per area, each opening that area at that month.
+  function previewChanges() {
+    if (live() || month <= actualMonth() || typeof hubAgeFor !== 'function') return '';
+    const nowM = actualMonth(), care = x => hubAgeFor('care', x), dev = x => developmentMonth(x);
+    const feed = c => c >= 9 ? 'Three meals a day, with milk alongside' : c >= 7 ? 'Thicker textures and finger foods' : c >= 6 ? 'First tastes of solids' : c >= 4 ? 'Getting ready for solids' : null;
+    const sleep = c => c >= 8 ? 'Likely down to two naps' : c >= 4 ? 'Usually three naps' : c >= 1.5 ? 'Longer stretches at night' : null;
+    const safe = d => d >= 9 ? 'Pulling up: anchor furniture and lower the crib mattress' : d >= 6 ? 'On the move: stair gates and babyproofing' : d >= 3 ? 'Reaching and rolling: clear the floor, stop swaddling' : null;
+    const devT = d => { const k = typeof devRef === 'function' ? devRef(d) : null; return k != null && DEV_STAGES[k] ? DEV_STAGES[k].title : null; };
+    const visit = x => WELL_VISITS.includes(x) ? healthJourneyLabel(x) : null;
+    const lines = [
+      ['Feeding', feed(care(month)), feed(care(nowM))], ['Sleep', sleep(care(month)), sleep(care(nowM))],
+      ['Development', devT(dev(month)), devT(dev(nowM))], ['Safety', safe(dev(month)), safe(dev(nowM))], ['Health', visit(month), visit(nowM)]
+    ].filter(([, a, b]) => a && a !== b);
+    if (!lines.length) return '';
+    return `<section class="connected-ahead brief-preview" aria-label="What changes"><div class="connected-section-heading"><h2>${esc(`What changes by ${month} months`)}</h2></div><div class="connected-ahead-list">${lines.map(([t, a]) => `<div class="brief-row brief-card">${conceptRow({ topic: t, title: babyCopy(a), body: '', action: `openPage('topic:${t}')`, art: 0, reason: null })}</div>`).join('')}</div></section>`;
+  }
   function row(i) {
     // Like a notification: opening a card or hiding it clears it from Home. Safety to-dos clear when done, "Doesn't apply" or hidden.
     const todo = i.key.startsWith('check:') || !!i.tools, go = i.link ? i.link.go : `openPage('topic:${i.topic}')`;
@@ -281,9 +304,10 @@
 
     const close = !live() ? '' : !now.length && !next.length ? `You’re all caught up for now.` : !now.length ? `Nothing to do right now. We’ll bring things up as they get closer.` : `That’s everything for now.`;
 
-    let h = `<section class="connected-now" aria-label="What matters now"><div class="connected-summary"><div class="home-summary connected-summary-intro"><div class="home-summary-heading"><div class="home-month-eyebrow">${!live() ? (month > actualMonth() ? 'Coming at ' : 'Looking back at ') + (month === 0 ? 'the newborn weeks' : month + (month === 1 ? ' month' : ' months')) : 'What matters now'}</div><h1>${focus.title}</h1></div><span class="home-summary-art" aria-hidden="true">${homeMonthArt(month)}</span><p class="heroanswer">${focus.body}</p><div class="home-summary-spectrum" aria-hidden="true">${TOPICS.map(([t]) => `<span style="background:${YEAR_PALETTES[t].bg}"></span>`).join('')}</div></div>`;
+    let h = `<section class="connected-now" aria-label="What matters now"><div class="connected-summary"><div class="home-summary connected-summary-intro"><div class="home-summary-heading"><div class="home-month-eyebrow">${!live() ? (month > actualMonth() ? 'Coming at ' : 'Looking back at ') + (month === 0 ? 'the newborn weeks' : month + (month === 1 ? ' month' : ' months')) + (profile.early && typeof hubAgeFor === 'function' && month > 0 && hubAgeFor('care', month) !== month ? ` · ${hubAgeFor('care', month)} adjusted` : '') : 'What matters now'}</div><h1>${focus.title}</h1></div><span class="home-summary-art" aria-hidden="true">${homeMonthArt(month)}</span><p class="heroanswer">${focus.body}</p><div class="home-summary-spectrum" aria-hidden="true">${TOPICS.map(([t]) => `<span style="background:${YEAR_PALETTES[t].bg}"></span>`).join('')}</div></div>`;
     if (now.length) h += `<div class="connected-summary-links">${now.map(row).join('')}</div>`;
     h += `</div>${homeMomentRow()}</section>`;
+    h += previewChanges();
     h += liveHomeCheckin();
     const ahead = [...next];
     if (ahead.length) h += `<section class="connected-ahead" aria-label="Coming up"><div class="connected-section-heading"><h2>Coming up</h2></div><div class="connected-ahead-list">${ahead.map(row).join('')}</div></section>`;
