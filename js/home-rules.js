@@ -118,7 +118,7 @@
         // The visit summary stays visible when an appointment is saved; the date shows in the label.
         body: conceptHealthSummary(age),
         tier: 'should', dated: true, days, upcoming: days > 14, prep: true,
-        reason: rec?.status === 'planned' ? `${rec.date < iso(NOW) ? 'Saved date passed · ' : 'Saved for '}${journeyDateLabel(rec.date)}` : age === 0 ? 'In the first week' : `Usually around ${mo(age)}` });
+        reason: rec?.status === 'planned' ? `${rec.date < iso(NOW) ? 'Saved date passed · ' : 'Saved for '}${journeyDateLabel(rec.date)}` : age === 0 ? 'In the first week' : `Due ${dueWhen(iso(addMonths(parse(profile.dob), age)))}` });
 
     // Safety: the guide for how she moves now (when no specific check is pending)
     const saf = byTopic('Safety');

@@ -175,7 +175,7 @@
   function visitItem(v) {
     const label = healthJourneyLabel(v.age);
     const when = v.saved ? (v.days < 0 ? `was on ${journeyDateLabel(v.saved)}` : `is on ${journeyDateLabel(v.saved)}`) : v.days < 0 ? 'is due now' : v.days <= 7 ? 'is coming up' : v.days <= 14 ? 'is in about 2 weeks' : `is in about ${Math.round(v.days / 7)} weeks`;
-    return { topic: 'Health', key: 'visit:' + v.age, reason: v.saved ? `Saved for ${journeyDateLabel(v.saved)}` : v.age === 0 ? 'In the first week' : `Due around ${journeyDateLabel(iso(addMonths(parse(profile.dob), v.age)))}`, title: `${n()}’s ${label.charAt(0).toLowerCase() + label.slice(1)} ${when}`,
+    return { topic: 'Health', key: 'visit:' + v.age, reason: v.saved ? `Saved for ${journeyDateLabel(v.saved)}` : v.age === 0 ? 'In the first week' : `Due ${dueWhen(iso(addMonths(parse(profile.dob), v.age)))}`, title: `${n()}’s ${label.charAt(0).toLowerCase() + label.slice(1)} ${when}`,
       body: conceptHealthSummary(v.age) + (v.saved && v.days < 0 ? ' Mark it done once you’ve been.' : ''),
       link: link(`openPage('health-visit:${v.age}')`, 'See what’s checked') };
   }
@@ -304,7 +304,7 @@
 
     const close = !live() ? '' : !now.length && !next.length ? `You’re all caught up for now.` : !now.length ? `Nothing to do right now. We’ll bring things up as they get closer.` : `That’s everything for now.`;
 
-    let h = `<section class="connected-now" aria-label="What matters now"><div class="connected-summary"><div class="home-summary connected-summary-intro"><div class="home-summary-heading"><div class="home-month-eyebrow">${!live() ? (month > actualMonth() ? 'Coming at ' : 'Looking back at ') + (month === 0 ? 'the newborn weeks' : month + (month === 1 ? ' month' : ' months')) + (profile.early && typeof hubAgeFor === 'function' && month > 0 && hubAgeFor('care', month) !== month ? ` · ${hubAgeFor('care', month)} adjusted` : '') : 'What matters now'}</div><h1>${focus.title}</h1></div><span class="home-summary-art" aria-hidden="true">${homeMonthArt(month)}</span><p class="heroanswer">${focus.body}</p><div class="home-summary-spectrum" aria-hidden="true">${TOPICS.map(([t]) => `<span style="background:${YEAR_PALETTES[t].bg}"></span>`).join('')}</div></div>`;
+    let h = `<section class="connected-now" aria-label="What matters now"><div class="connected-summary"><div class="home-summary connected-summary-intro"><div class="home-summary-heading"><div class="home-month-eyebrow">${!live() ? (month > actualMonth() ? 'Coming up · ' : 'Looking back · ') + (month === 0 ? 'Newborn' : month + (month === 1 ? ' month' : ' months')) : 'What matters now'}</div><h1>${focus.title}</h1></div><span class="home-summary-art" aria-hidden="true">${homeMonthArt(month)}</span><p class="heroanswer">${focus.body}</p><div class="home-summary-spectrum" aria-hidden="true">${TOPICS.map(([t]) => `<span style="background:${YEAR_PALETTES[t].bg}"></span>`).join('')}</div></div>`;
     if (now.length) h += `<div class="connected-summary-links">${now.map(row).join('')}</div>`;
     h += `</div>${homeMomentRow()}</section>`;
     h += previewChanges();
