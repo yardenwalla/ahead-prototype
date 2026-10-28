@@ -5,9 +5,9 @@ window.AHEAD_CHANGES = {
   "CH": [
    {
     "key": "clock",
-    "rail": "Newborn sleep",
+    "rail": "Round-the-clock sleep",
     "when": "Birth–6 weeks",
-    "title": "Newborn sleep: around the clock",
+    "title": "Round-the-clock sleep",
     "lead": "Short sleeps of 1–3 hours, day and night, with feeds in between. No pattern yet, and that’s expected.",
     "looks": [
      "14–17 hours of sleep, in short stretches",
@@ -56,9 +56,9 @@ window.AHEAD_CHANGES = {
    },
    {
     "key": "daynight",
-    "rail": "Days and nights",
+    "rail": "Longer nights",
     "when": "Usually 6 weeks–3 months",
-    "title": "Days and nights",
+    "title": "Longer nights",
     "lead": "Many babies start telling day from night now. A longer stretch often shows up at night, though timing varies.",
     "looks": [
      "One stretch of 3–5 hours at night",
@@ -106,9 +106,9 @@ window.AHEAD_CHANGES = {
    },
    {
     "key": "rhythm",
-    "rail": "Naps and bedtime",
+    "rail": "Three naps",
     "when": "Usually 4–6 months",
-    "title": "Naps and bedtime",
+    "title": "Three naps",
     "lead": "Naps may begin to follow a pattern. A familiar routine can help, while timing still varies from day to day.",
     "looks": [
      "Naps start at roughly the same times most days",
@@ -219,7 +219,7 @@ window.AHEAD_CHANGES = {
     "signs": "Skipping the late catnap most days and staying comfortable until bedtime.",
     "after": [
      "usually 13–18 months",
-     "Two naps to one",
+     "The 2-to-1 nap transition",
      "Most babies still need two naps at their first birthday."
     ],
     "total": "About 12–16 hours of sleep in 24",
@@ -229,7 +229,7 @@ window.AHEAD_CHANGES = {
   "EV": [
    {
     "key": "four",
-    "supportNote": "Keep needed night feeds. If waking comes with fever, poor feeding or signs of pain, contact your pediatrician rather than assuming it is the sleep change.",
+    "supportNote": "Keep night feeds going. If waking comes with fever, poor feeding or pain, call your pediatrician.",
     "rail": "4-month sleep regression",
     "when": "Usually 3–5 months",
     "title": "The 4-month sleep regression",
@@ -240,7 +240,7 @@ window.AHEAD_CHANGES = {
      "Harder to put down asleep"
     ],
     "why": "Sleep cycles are maturing. Baby may wake more fully between cycles and need help returning to sleep.",
-    "lasts": "How long it lasts varies. If waking continues or comes with feeding concerns, talk to your pediatrician.",
+    "lasts": "Usually a few weeks, though it varies.",
     "rhythm": [],
     "rhythmNote": "Nap lengths may wobble for a few weeks. Go by tired signs until things settle.",
     "helps": [
@@ -250,7 +250,7 @@ window.AHEAD_CHANGES = {
      ],
      [
       "After a short nap, offer the next one sooner",
-      "Watch for tired signs rather than waiting for the usual time."
+      "Watch for sleepy cues rather than waiting for the usual time."
      ]
     ],
     "signs": "More night waking and shorter naps, often out of nowhere.",
@@ -260,7 +260,7 @@ window.AHEAD_CHANGES = {
    },
    {
     "key": "apart",
-    "supportNote": "Harder goodbyes alone aren’t a reason to drop a nap. Keep the settling help that fits your family.",
+    "supportNote": "It’s a sign of how attached your baby is to you. Keep the settling help that fits your family, and it will pass.",
     "rail": "Separation anxiety",
     "when": "Usually 8–10 months",
     "title": "Separation anxiety",
@@ -268,7 +268,7 @@ window.AHEAD_CHANGES = {
     "looks": [
      "Crying as soon as you walk out",
      "Waking and looking for you",
-     "Wanting the same parent every night"
+     "Wanting only you at bedtime"
     ],
     "why": "Awareness of familiar people and being apart is growing. Baby may seek more reassurance when you leave, including at bedtime.",
     "lasts": "It comes and goes. It often peaks around 9–10 months and can return in the second year.",
@@ -674,7 +674,7 @@ window.AHEAD_CHANGES = {
   "CH": [
    {
     "key": "learn",
-    "rail": "Newborn feeding",
+    "rail": "Newborn feeds",
     "when": "Birth–6 weeks",
     "title": "Newborn feeding: little and often",
     "lead": "Feeds come often, day and night, while you and baby figure it out together. Small, frequent feeds are exactly right.",
@@ -721,9 +721,9 @@ window.AHEAD_CHANGES = {
    },
    {
     "key": "rhythm",
-    "rail": "Changing milk feeds",
+    "rail": "Milk feeds",
     "when": "Usually 6 weeks–4 months",
-    "title": "Changing milk feeds",
+    "title": "Milk feeds",
     "lead": "After the newborn weeks, many babies feed more quickly or further apart. Hungrier days still happen.",
     "why": "Some babies take milk more efficiently as they grow. Shorter feeds alone don’t tell you how much milk she’s getting; growth and wet diapers help show the overall pattern.",
     "total": "A guide, not a target.",
@@ -763,9 +763,9 @@ window.AHEAD_CHANGES = {
    },
    {
     "key": "ready",
-    "rail": "Getting ready for solids",
+    "rail": "Preparing for solids",
     "when": "Usually 4–6 months",
-    "title": "Getting ready for solids",
+    "title": "Preparing for solids",
     "lead": "Before first foods, learn the readiness signs and choose how you’d like to begin. Keep usual milk feeds while you prepare.",
     "why": "Breast milk or formula stays the main nutrition while head control, sitting and swallowing skills develop. Around 6 months is a common starting point, alongside readiness signs.",
     "total": "A guide, not a target.",
@@ -801,9 +801,9 @@ window.AHEAD_CHANGES = {
    },
    {
     "key": "first",
-    "rail": "Starting solids",
+    "rail": "First tastes",
     "when": "Usually around 6 months",
-    "title": "Starting solids",
+    "title": "First foods",
     "lead": "She’s tasting her first foods. Breast milk or formula is still her main food.",
     "why": "Around 6 months, iron-rich foods become an important part of the diet alongside milk. Early introduction of peanut and well-cooked egg may help prevent those allergies.",
     "total": "A guide, not a target.",
@@ -857,9 +857,9 @@ window.AHEAD_CHANGES = {
    },
    {
     "key": "textures",
-    "rail": "Textures and finger foods",
-    "when": "Usually 7–9 months",
-    "title": "Textures and finger foods",
+    "rail": "Thicker textures and more finger foods",
+    "when": "Usually around 7–8 months",
+    "title": "More textures",
     "lead": "She’s managing first tastes and trying soft lumps or finger foods. Build on foods she can handle, whether you started with purées, self-feeding or both.",
     "why": "Practice helps baby learn to manage food beyond smooth purées. Offer texture gradually, with pieces prepared for the grasp baby can use.",
     "total": "A guide, not a target.",
@@ -904,8 +904,8 @@ window.AHEAD_CHANGES = {
    },
    {
     "key": "meals",
-    "rail": "Family meals",
-    "when": "Usually 9–12 months",
+    "rail": "Three meals a day",
+    "when": "Usually around 9–10 months",
     "title": "Family meals",
     "lead": "She’s eating regular meals and varied textures, with milk alongside. Keep breast milk or formula through the first year; breastfeeding can continue after that.",
     "why": "As she eats more food, she needs a little less milk. Eating together helps her learn by copying you.",
@@ -963,7 +963,7 @@ window.AHEAD_CHANGES = {
     "label": "Comes and goes",
     "when": "Often around 3 weeks, 6 weeks and 3 months",
     "title": "Cluster feeding and growth spurts",
-    "lead": "Some days she wants several feeds close together, often in the evening. Watch wet diapers, growth and how feeding feels alongside the frequent feeds.",
+    "lead": "Some days she wants several feeds close together, often in the evening. Wet diapers and growth tell you it’s going well.",
     "looks": [
      "Feeding every hour or more often for a few hours",
      "Fussy between feeds, especially in the evening",
@@ -976,8 +976,8 @@ window.AHEAD_CHANGES = {
     "night": "Wet diapers stay steady. Fussiness alone doesn’t mean low supply.",
     "helps": [
      [
-      "Feed on demand",
-      "Offer milk at hunger cues and pause at fullness cues. Bottle amounts do not have to increase at every feed."
+      "Follow her lead",
+      "Feed whenever she shows hunger cues, even if it feels constant. Bottles don’t need to get bigger every time."
      ],
      [
       "Set yourself up",
@@ -988,7 +988,7 @@ window.AHEAD_CHANGES = {
    },
    {
     "key": "distracted",
-    "supportNote": "Try feeds in a quiet, dim room. If she takes less milk overall or has fewer wet diapers, call your pediatrician.",
+    "supportNote": "If she takes less milk overall or has fewer wet diapers, call your pediatrician.",
     "rail": "Distracted feeding",
     "label": "Comes and goes",
     "when": "Usually 4–6 months",
@@ -1058,7 +1058,7 @@ window.AHEAD_CHANGES = {
    ],
    [
     "Know gagging from choking",
-    "Gagging can happen while learning to eat. Trouble breathing or a weak or absent cough can mean choking, even if there’s some sound. Call 911 and use infant choking first aid you’ve learned."
+    "Gagging is noisy and normal. Silence, trouble breathing or a weak cough can mean choking: call 911."
    ],
    [
     "Have a soft spoon and an open cup",
@@ -1380,6 +1380,12 @@ window.AHEAD_CHANGES = {
        "Gags, then keeps going",
        "Gagging is normal while she learns. Keep offering soft lumps alongside foods she likes.",
        "Trouble breathing or an ineffective cough can mean choking, even if there’s some sound. Know infant choking first aid.",
+       null
+      ],
+      [
+       "Gags and spits it out",
+       "Go back to a slightly smoother texture for a week or two, then try again. Keep offering soft finger foods to practice.",
+       "If it isn’t getting easier after a few weeks, mention it to your pediatrician.",
        null
       ],
       [

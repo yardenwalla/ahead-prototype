@@ -29,6 +29,14 @@
     if (month < 4 && (!profile.feed || profile.feed === 'Prefer not to say') && !d.skip.milk && !d.last.milk) out.push('milk');
     const food = feedingCheckin();
     if (food) out.push(food.key);
+    // From 6 months: is the baby moving around yet? A yes switches Safety and Sleep to "now that they're moving".
+    if (a >= 6 && answers.crawl !== 'Yes' && answers.pullUp !== 'Yes' && due(d, 'crawl', ['Not yet'])) out.push('crawl');
+    // Sleep (Rule 1 and Rule 3): from 6 months, while the guide is on Three naps, ask about the late catnap.
+    // A "not yet" (or a Change back to Three naps) is asked again a month later.
+    const sa = typeof hubAgeFor === 'function' ? hubAgeFor('care', actualMonth()) : a;
+    if (sa >= 6 && typeof chgStageIndex === 'function' && chgStageIndex('Sleep') === 2 && answers.twoNaps !== 'Yes' && due(d, 'naps', ['No', 'Not yet', 'Stay'])) out.push('naps');
+    // Rule 3: a stage the parent picked that the baby's age has moved past. Asked once; "Not yet" rests for a month.
+    if (typeof stageOutgrown === 'function') stageOutgrown().forEach(o => { if (due(d, 'outgrown:' + o.cat, ['Not yet'])) out.push('outgrown:' + o.cat); });
     return out;
   }
   function feedingCheckin() {
@@ -40,20 +48,29 @@
     // turn a precise answer from that same day into a later local-noon answer.
     const answeredAt = day && (latest === null || day > iso(new Date(latest))) ? parse(day).getTime() : latest;
     const recentlyAnswered = Number.isFinite(answeredAt) && nowMs() - answeredAt < WAIT;
+    // From 9 months with no answer, Feeding shows the age's step and asks there, so Home doesn't repeat it.
+    if (typeof foodAssumed === 'function' && foodAssumed()) return null;
     if (!hasFoodAnswer() || stage === 'preparing') {
       if (d.skip.food && nowMs() - d.skip.food < WAIT || hasFoodAnswer() && recentlyAnswered) return null;
-      return {key:'food', title:`Has ${name()} started solids?`, why:'Your answer changes the feeding guide you see.',
-        choices:[['preparing','Not yet'],['new','First foods'],['established','Eating meals']]};
+      return {key:'food', title:`Has ${name()} started solids?`, why:'Feeding will follow along from here.',
+        choices:[['starting','Just starting'],['while','For a while'],['preparing','Not yet']]};
     }
-    if (!['new','textures'].includes(stage)) return null;
+    // Once solids have started, time and age suggest the next step, and the parent confirms with one tap.
+    const next = typeof foodSuggestion === 'function' ? foodSuggestion() : null;
+    if (!next || d.skip['food-progress'] && nowMs() - d.skip['food-progress'] < 14 * DAY) return null;
+    const wks = foodWeeksOnStep(), held = !!answers.foodHold;
+    return next === 'textures'
+      ? {key:'food-progress', title: held ? `Is ${name()} managing lumps now?` : `Ready for lumps and finger foods?`, why: held ? `Last time you said not yet. If lumps are going better, Feeding will move on.` : `${name()} has been on first tastes ${wks <= 12 ? `for ${wks} weeks` : 'for a while'}. Lumpier food and soft pieces usually come next.`, choices:[['textures','Yes'],['hold','Not yet']]}
+      : {key:'food-progress', title: held ? `Is ${name()} ready for family meals now?` : `Ready for family meals?`, why: held ? `Last time you said not yet. If meals are going well, Feeding will move on.` : `${name()} has been on lumps and finger foods ${wks <= 12 ? `for ${wks} weeks` : 'for a while'}. Three meals a day usually comes next.`, choices:[['established','Yes'],['hold','Not yet']]};
     const key = 'food-progress';
     if (d.skip[key] && nowMs() - d.skip[key] < WAIT) return null;
     // An answer date is not a solids-start date. Use it only to space the next question.
     if (recentlyAnswered) return null;
-    return {key, title:`What is ${name()} managing now?`, why:'Choose the food guidance that fits today.',
-      choices:[['new','First tastes'],['textures','More textures and finger foods'],['established','Regular meals']]};
+    return {key, title:`How many times a day is ${name()} eating solids?`, why:'We’ll match the feeding guide to where you are.',
+      choices:[['new','Once or less'],['textures','Twice'],['established','3 times']]};
   }
   window.feedingCheckinModel = feedingCheckin;
+  window.homeQuestionQueue = () => candidates();
   // No nagging: an unanswered question shows for two weeks, then rests until next month.
   // A parent who has let two questions go unanswered gets one question a month, for one week.
   const answeredSince = (d, at) => Object.values(d.last).some(l => l.at >= at);
@@ -70,8 +87,11 @@
     }
     return t - s.at <= (quiet ? 7 : 14) * DAY;
   }
+  // One question per visit: once a parent answers, the next one waits until tomorrow.
+  const answeredRecently = d => Object.values(d.last).some(l => l && Number.isFinite(l.at) && nowMs() - l.at < 20 * 3600 * 1000);
   window.homeQuestion = homeQuestion = function () {
     if (!isCurrent() || homeConceptDismissed) return null;
+    if (answeredRecently(load())) return null;
     return candidates().find(visible) || null;
   };
   // Category pages ask the same question in context, on the same monthly rhythm.
@@ -87,11 +107,30 @@
   };
 
   const baseAnswer = answerHomeQuestion, baseLive = liveHomeCheckin;
+  // Every Home answer says what changed and offers the page, so the tap never feels like it went nowhere.
+  const confirmAnswer = (key, value) => {
+    if (typeof hubToast !== 'function') return;
+    const cat = { food: 'Feeding', naps: 'Sleep', crawl: 'Safety', milk: 'Feeding' }[key] || (key.startsWith('outgrown:') ? key.slice(9) : null);
+    if (!cat) return;
+    const label = cat === 'Daily rhythm' ? 'Everyday care' : cat;
+    const body = key === 'food' ? (value === 'starting' ? 'Feeding now shows first tastes.' : value === 'while' ? `Feeding now matches where ${name()} is with solids.` : 'Feeding shows how to get ready for solids.')
+      : key === 'crawl' ? (value === 'Yes' ? `Safety now covers a baby on the move.` : `We’ll ask again in a few weeks.`)
+      : key === 'naps' ? (value === 'Yes' ? 'Sleep now shows two naps.' : 'Sleep stays on three naps for now.')
+      : `${label} now matches what you told us.`;
+    setTimeout(() => hubToast('Got it', body, [`See ${label}`, `document.querySelectorAll('.hub-toast').forEach(t=>t.remove());openPage('topic:${cat}')`]), 0);
+  };
   window.answerHomeQuestion = answerHomeQuestion = function (key, value) {
     if (key !== homeQuestion()) return;
+    confirmAnswer(key, value);
+    if (key.startsWith('outgrown:')) {
+      if (!['Yes', 'Not yet'].includes(value)) return;
+      recordCheckin(key, value);
+      if (value === 'Yes') stageFollowAge(key.slice(9));
+      return render();
+    }
     if (key === 'food-progress') {
-      if (!['new','textures','established'].includes(value)) return;
-      recordCheckin(key, value); return setFeedingStage(value);
+      if (!['textures','established','hold'].includes(value)) return;
+      recordCheckin(key, value); return value === 'hold' ? holdFoodStep() : acceptFoodStep(value);
     }
     // Apply the answer first (the app checks the question is still showing), then remember when it was asked.
     if (key === 'naps') { recordCheckin(key, value); return setAnswer('twoNaps', value === 'Yes' ? 'Yes' : 'Not yet'); }
@@ -107,8 +146,12 @@
   window.liveHomeCheckin = liveHomeCheckin = function () {
     const key = homeQuestion(); if (!key) return '';
     if (key === 'food' || key === 'food-progress') return feedingCheckinMarkup('home');
+    if (key.startsWith('outgrown:')) {
+      const o = (stageOutgrown() || []).find(x => 'outgrown:' + x.cat === key); if (!o) return '';
+      return `<section class="connected-checkin"><div><h2>${o.question}</h2><button class="connected-skip" onclick="skipHomeQuestion()">Skip</button></div><p>${o.why}</p><div class="connected-checkin-choices"><button onclick="answerHomeQuestion('${key}','Yes')">Yes, move on</button><button onclick="answerHomeQuestion('${key}','Not yet')">Not yet</button></div></section>`;
+    }
     if (key !== 'naps') return baseLive().replace('This changes which safety setup to highlight.', 'Your answer updates Sleep and Safety.');
-    return `<section class="connected-checkin"><div><h2>Is ${name()} skipping the late catnap most days?</h2><button class="connected-skip" onclick="skipHomeQuestion()">Skip</button></div><p>Your answer updates the nap guidance.</p><div class="connected-checkin-choices"><button onclick="answerHomeQuestion('naps','Not yet')">Not yet</button><button onclick="answerHomeQuestion('naps','Yes')">Yes</button></div></section>`;
+    return `<section class="connected-checkin"><div><h2>Is ${name()} skipping the late catnap most days?</h2><button class="connected-skip" onclick="skipHomeQuestion()">Skip</button></div><p>Your answer updates the nap guidance.</p><div class="connected-checkin-choices"><button onclick="answerHomeQuestion('naps','Yes')">Yes</button><button onclick="answerHomeQuestion('naps','Not yet')">Not yet</button></div></section>`;
   };
 
   /* ---------- Safety ---------- */
@@ -127,10 +170,28 @@
     return [s, chosen].filter(Boolean).sort((a,b)=>ORDER.indexOf(b)-ORDER.indexOf(a))[0] || (dm()<3?'setup':'reaching');
   }
   window.safetyAgeForward = function () { const s = reportedStage(), g = byAge(dm()); return ORDER.indexOf(g) > Math.max(1, ORDER.indexOf(s)) ? g : null; };
-  function stageNow() {
+  function stageGuess() {
     const s = reportedStage(), g = byAge(dm());
     return ORDER.indexOf(g) > ORDER.indexOf(s) ? g : s;
   }
+  // A parent's pick (Change on the timeline) holds, in either direction, until they change it
+  // or tell us about a new movement. Home asks when the baby may have outgrown it.
+  // A pick on the timeline, or what the parent said about movement, sets Safety (Rule 2). With neither, the age guess.
+  function stageNow() {
+    if (live2() && ORDER.includes(answers.safetyPick)) {
+      const g = stageGuess();
+      return answers.safetyPick === 'rolling' && ['moving', 'pulling'].includes(g) ? g : answers.safetyPick;
+    }
+    // Only an explicit "this is how they move now" (What's new) can set Safety below the age guess.
+    // A saved first (a roll, a crawl) is a minimum: it can move Safety ahead, never back.
+    if (live2() && answers.movementSetByParent) {
+      const said = answered() || (answers.roll === 'Not yet' && answers.rollDirection === 'Not yet' ? 'reaching' : null);
+      if (said) return said;
+    }
+    return stageGuess();
+  }
+  const live2 = () => typeof isCurrent !== 'function' || isCurrent();
+  window.safetyStageGuess = stageGuess;
   // Observed movement drives Play; preparation may run ahead without claiming that skill.
   window.currentSafetyMovementStage = currentSafetyMovementStage = reportedStage;
   window.safetyStageNow = stageNow;
@@ -195,9 +256,15 @@
      Current checkpoint: a "Coming up" card for the next one. Another checkpoint: a way back. */
   const baseDev = developmentJourneyOverview;
   window.developmentJourneyOverview = developmentJourneyOverview = function () {
-    const html = baseDev.apply(this, arguments);
+    let html = baseDev.apply(this, arguments);
     const ref = Number((html.match(/data-development-guide="(\d+)"/) || [])[1]);
-    if (!ref || !isCurrent()) return html;
+    if (!ref) return html;
+    // Finish the page the way a conversation would: how you can help, and when to check in.
+    const help = `<section class="sleep-phase-help chg-guide-section dev-help" style="${yearTheme('Development')}"><h3>How you can help</h3><ul><li><p>Floor time, talking back and games like peekaboo do more than any toy.</p><button class="textlink chg-item-link" onclick="openPage('topic:Daily rhythm')">Ideas for this month →</button></li></ul></section>`
+      + `<section class="sleep-phase-help chg-guide-section dev-help" style="${yearTheme('Development')}"><h3>When to check in with your pediatrician</h3><ul><li><p>If ${name()} loses a skill, or something worries you, mention it. No need to wait for the checkup.</p></li></ul></section>`;
+    const qs = devCommonQuestions(ref);
+    if (html.includes(qs)) html = html.replace(qs, help + qs);
+    if (!isCurrent()) return html;
     const now = devRef(developmentMonth(actualMonth())), keys = Object.keys(DEV_STAGES).map(Number);
     if (ref !== now) return html.replace('</nav>', `</nav><div class="chg-browse-links" style="${yearTheme('Development')}"><button class="textlink chg-back-now" onclick="navigate('categories');openPage('topic:Development')">← Back to where ${name()} is now</button></div>`);
     const next = keys[keys.indexOf(ref) + 1];

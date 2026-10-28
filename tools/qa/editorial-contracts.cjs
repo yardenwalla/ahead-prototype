@@ -16,7 +16,7 @@ for (let age=0; age<=12; age++) {
   }
   check(a.run('JSON.stringify(answers)') === before, 'Browsing every safety stage records no ability');
   a.run("openPage('topic:Sleep')");
-  check(clean(a.html()).includes('Recommended for this age'), 'Unknown nap pattern is presented as guidance selected by age');
+  check(a.html().includes('aria-current="step"') && !clean(a.html()).includes('Based on your nap pattern'), 'Unknown nap pattern is presented as guidance selected by age');
   a.run("openPage('chg:Sleep:s:2');chgAnswer('Sleep:rhythm:2',1)");
   check(!clean(a.html()).includes('This is likely the 4-month'), 'Unexplained waking is not diagnosed from one answer');
   check(!clean(a.html()).includes('At 5 months, most babies'), 'Multi-age guidance does not leak a fixed five-month instruction');
@@ -25,12 +25,12 @@ for (let age=0; age<=12; age++) {
 const a = family(8,{twoNaps:'Stay',swaddleStopped:'Yes'});
 a.run("openPage('chg:Sleep:e:1')");
 check(!clean(a.html()).includes('Keep the two-nap pattern'), 'Separation-anxiety help does not invent a two-nap routine');
-a.run("openPage('chg:Sleep:s:2');chgAnswer('Sleep:rhythm:1',1)");
+a.run("openPage('chg:Sleep:d:faq:rhythm');chgAnswer('Sleep:rhythm:1',1)");
 check(!clean(a.html()).includes('Try a stroller ride, car ride'), 'Catnap troubleshooting agrees with safe-sleep guidance');
 a.run("chgAnswer('Sleep:rhythm:2',0)");
 check(clean(a.html()).includes('rolls both ways'), 'Rolling FAQ retains the both-directions condition');
-a.run("openPage('chg:Feeding:s:3');chgAnswer('Feeding:first:0',1)");
-check(clean(a.html()).includes('Act now:'), 'Possible choking is an action, not a casual experiment');
+a.run("openPage('chg:Feeding:s:3')");
+check(clean(a.html()).includes('Learn infant choking first aid') || clean(a.html()).includes('Choking first aid'), 'Possible choking is an action, not a casual experiment');
 
 const ids = new Set();
 for (let age=0; age<=12; age++) {
@@ -48,11 +48,13 @@ for (const [age,oldID,newID] of [[1,'slow-song','face-follow'],[3,'sound-answer'
   a.run(`openPage('play-activity:${age}:${oldID}')`);
   check(a.html().includes('data-play-activity="'+newID+'"'), 'Old monthly links open the replacement activity');
 }
-for (const [value,title] of [['new','Starting solids'],['textures','Textures and finger foods'],['established','Family meals']]) {
+for (const value of ['new','textures','established']) {
   const b=family(11);
   b.run(`setFeedingStage('${value}');openPage('topic:Feeding')`);
-  check(clean(b.html()).includes('Based on what you shared'), 'Reported eating experience explains feeding selection');
-  check(b.html().includes('<h2>'+title+'</h2>'), 'Reported experience selects the matching guide');
+  const nowStage = (b.html().match(/hub-stage is-on is-now">[\s\S]*?hub-stage-name">([^<]+)</) || [])[1];
+  check(nowStage === 'Solids', 'Started solids show Solids as the current stage on the timeline');
+  check(/Solids guides/.test(b.html()) && /Start here/.test(b.html()), 'The Solids page lists every guide and marks where to start');
+  for (const i of [3,4,5]) { b.run(`openPage('chg:Feeding:s:${i}')`); check(/Solids guide ·/.test(b.html()) && /class="monthly-back"/.test(b.html()), 'Each solids guide opens as a guide with a way back'); }
 }
 // Foundational guidance is discoverable initially, then retires after setup.
 {
@@ -77,28 +79,31 @@ for(const age of [3,4,7,8]) {
     check(!b.run('homeRecommendationAudit().preparation.some(r=>r.action===\"openPage(\'chg:Sleep:settle\')\")'),'Choosing help removes the sleep-training education prompt');
   }
 }
-// A guide marked with a future age is readable, not assignable to a newborn.
-for(const age of [0,1,2,3]) {
+// Stage system safety exceptions: swaddling-era sleep can't be picked after 3 months; solids can't be picked before 4.
+for(const age of [4,6,9]) {
   const b=family(age),stage=b.run("chgStageIndex('Sleep')");
-  b.run("openPage('chg:Sleep:s:2')");
-  check(!b.html().includes('onclick="chgSetStage(\'Sleep\',2)"'),'Future sleep reference has no update action');
-  b.run("chgSetStage('Sleep',2)");
-  check(b.run("chgStageIndex('Sleep')")===stage,'Legacy future-guide actions cannot select older sleep patterns');
+  b.run("chgSetStage('Sleep',0)");
+  check(b.run("chgStageIndex('Sleep')")===stage,'Round-the-clock sleep (swaddling) cannot be picked after 3 months');
+}
+for(const age of [0,1,2,3]) {
+  const b=family(age),stage=b.run("chgStageIndex('Feeding')");
+  b.run("chgSetStage('Feeding',3)");
+  check(b.run("chgStageIndex('Feeding')")===stage,'Solids stages cannot be picked before 4 months');
   b.run("openPage('chg:Feeding:s:3')");
   check(!b.html().includes('onclick="chgSetStage(\'Feeding\',3)"'),'First-food reference under four months has no update action');
 }
 // The sample must contain the nap count displayed above it, with ordered times.
 for(let age=4;age<=12;age++)for(const answer of ['Stay','Yes']) {
   const b=family(age,{twoNaps:answer,swaddleStopped:'Yes',mattressLowest:'Yes'});
-  b.run("openPage('topic:Sleep')");const html=b.html();
-  const count=Number(html.match(/<span>Naps<\/span><strong>(\d+)/)[1]);
+  b.run("openPage('chg:Sleep:d:day')");const html=b.html();
+  const count=Number(html.match(/<small>Naps<\/small><b>(\d+)/)[1]);
   check((html.match(/data-sample-nap=/g)||[]).length===count,'Sample day matches the displayed nap count');
   const times=[...html.matchAll(/<time datetime="(\d\d):(\d\d)"/g)].map(m=>Number(m[1])*60+Number(m[2]));
   check(times.length>=6 && times.every((v,i)=>i===0||v>times[i-1]),'Example day has actual, increasing clock times');
   check(times.at(-1)>=19*60 && times.at(-1)<=20*60,'Example bedtime fits the displayed bedtime range');
 }
 for(const age of [0,1,2,3]) {
-  const b=family(age);b.run("openPage('topic:Sleep')");
+  const b=family(age);b.run("openPage('chg:Sleep:d:day')");
   check(!/data-sample-nap=/.test(b.html()),'Early flexible sleep does not imply fixed nap appointments');
 }
 for(const choice of ['trying','routine','help']) {
@@ -108,17 +113,17 @@ for(const choice of ['trying','routine','help']) {
 }
 {
   const b=family(11,{solids:'Yes',foodExperience:'established'});
-  b.run("openPage('topic:Feeding');chgChooseMethod('bottle')");
+  b.run("openPage('chg:Feeding:d:milk');chgChooseMethod('bottle')");
   check(!clean(b.html()).includes('Cow’s milk, if used'),'Before twelve months the milk row does not suggest cow’s milk');
   const c=family(12,{solids:'Yes',foodExperience:'established'});
-  c.run("openPage('topic:Feeding');chgChooseMethod('bottle')");
+  c.run("openPage('chg:Feeding:d:milk');chgChooseMethod('bottle')");
   check(clean(c.html()).includes('Cow’s milk, if used'),'After the birthday the changed milk reference names the milk it describes');
   c.run("openPage('chg:Feeding:milk');chgAnswer('Feeding:learn:2',0)");
   check(c.html().includes('chg-answer'),'The spit-up reference is reachable beyond the newborn guide');
 }
 for(const age of [1,2,3,4,5,6,7,8,9,10,11,12]) {
   const b=family(age);
-  b.run("openPage('topic:Feeding');chgChooseMethod('expressed')");
+  b.run("openPage('chg:Feeding:d:milk');chgChooseMethod('expressed')");
   const h=clean(b.html());
   check(b.html().includes('value="expressed" selected'),'Expressed milk has its own retained reference selection');
   check(!h.includes('Per formula bottle') && !h.includes('up to 32 oz'),'Breast-milk bottle reference does not inherit formula amounts');

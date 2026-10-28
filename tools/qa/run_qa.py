@@ -57,11 +57,15 @@ def answer_for(question, p, w):
         return {'none': 'Not yet', 'trying': 'Trying'}.get(mv, 'Rolling')
     if 'finger foods' in q:
         return 'Yes' if food == 'established' else 'Not yet'
+    if 'times a day' in q and 'solids' in q:
+        return '3 times' if w >= p['meals'] else 'Twice' if w >= p['solids'] + 8 else 'Once or less'
     if 'solids' in q:
         if 'where are you' in q:
             return {'preparing': 'Not started', 'new': 'First foods', 'established': 'Building meals'}[food]
-        return {'preparing': 'Not yet', 'new': 'First foods', 'established': 'Eating meals'}[food]
-    if 'crawling' in q:
+        if food == 'preparing': return 'Not yet'
+        if 'has' in q and 'started solids' in q: return 'Just starting' if w - p['solids'] <= 3 else 'For a while'
+        return {'new': 'Yes', 'established': 'Yes'}[food]
+    if 'crawling' in q or 'moving around' in q:
         return 'Yes' if mv in ('crawling', 'pulling') else 'Not yet'
     if 'pulling up' in q:
         return 'Yes' if mv == 'pulling' else 'Not yet'
@@ -133,11 +137,11 @@ async def run_persona(browser, p):
 
         # 2. Swaddling: mark done once the family has actually stopped
         h = rec.get('home_after', rec['home'])
-        if h['swaddle'] and any('swaddl' in x['title'].lower() for x in h['rows']) and not p.get('silent'):
+        if h['swaddle'] and not p.get('silent'):
             seen_swaddle = seen_swaddle if seen_swaddle is not None else w
             if w - seen_swaddle >= p.get('swaddle_delay', 0):
                 await pg.evaluate("navigate('home')")
-                loc = pg.locator('.home-connected-sleep', has_text='swaddl').locator('.home-inline-check').first
+                loc = pg.locator('[data-brief^="rolling"] .home-inline-check').first
                 if await loc.count():
                     await loc.click()
                     rec['answered'].append(dict(where='Home', q='Stop swaddling', a='Mark done'))
@@ -145,15 +149,15 @@ async def run_persona(browser, p):
         # 2b. Safety checks on Home: this family ticks one off a week after it appears
         if not p.get('silent'):
             await pg.evaluate("navigate('home')")
-            title = await pg.evaluate("(document.querySelector('.home-action-row b')||{}).textContent||''")
+            title = await pg.evaluate("(document.querySelector('[data-home-check] .connected-row b')||{}).textContent||''")
             if title:
                 if seen_check.get(title) is None: seen_check[title] = w
                 elif w - seen_check[title] >= 1:
-                    loc = pg.locator('.home-action-row .home-inline-check').first
+                    loc = pg.locator('[data-home-check] .home-inline-check').first
                     if await loc.count():
                         await loc.click()
                         rec['answered'].append(dict(where='Home', q='Safety check: ' + title, a='Mark done'))
-            mloc = pg.locator('.home-connected-sleep .home-inline-check[aria-label*="mattress"]').first
+            mloc = pg.locator('.home-inline-check[aria-label*="mattress"]').first
             if await mloc.count():
                 await mloc.click()
                 rec['answered'].append(dict(where='Home', q='Crib mattress lowered', a='Mark done'))
@@ -179,7 +183,7 @@ async def run_persona(browser, p):
                     await loc.click()
                     rec['answered'].append(dict(where='Sleep', q='We moved her to two naps', a='Keep on three naps'))
             sl2 = await pg.evaluate("__qa.cat('Sleep')")
-            if w >= p['naps'] + 1 and sl2['current'] == 'Naps and bedtime':
+            if w >= p['naps'] + 1 and sl2['current'] == 'Three naps':
                 await pg.evaluate("navigate('categories');openPage('topic:Sleep')")
                 loc = pg.locator('.chg-already').first
                 if await loc.count():
@@ -187,7 +191,7 @@ async def run_persona(browser, p):
                     rec['answered'].append(dict(where='Sleep', q='Already there: two naps', a='Two naps'))
             rec['sleep_after'] = await pg.evaluate("__qa.cat('Sleep')")
         rec['feed'] = await pg.evaluate("__qa.cat('Feeding')")
-        if p.get('proactive') and w == p['solids'] and rec['feed']['current'] == 'Getting ready for solids':
+        if p.get('proactive') and w == p['solids'] and rec['feed']['current'] == 'Preparing for solids':
             await pg.evaluate("navigate('categories');openPage('topic:Feeding')")
             loc = pg.locator('.chg-already').first
             if await loc.count():

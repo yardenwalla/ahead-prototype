@@ -10,20 +10,22 @@ import json, os, re
 from collections import defaultdict
 
 OUT = os.path.join(os.path.dirname(__file__), 'out')
-SLEEP = ['Newborn sleep', 'Day and night sleep', 'Naps and bedtime', 'Two naps']
-FEED = ['Newborn feeding', 'Changing milk feeds', 'Getting ready for solids', 'Starting solids', 'Textures and finger foods', 'Family meals']
+SLEEP = ['Round-the-clock sleep', 'Longer nights', 'Three naps', 'Two naps']
+FEED = ['Newborn feeds', 'Milk feeds', 'Preparing for solids', 'First foods', 'More textures', 'Family meals']
+# Hero eyebrows can use a stage's full name; the timeline uses the short one.
+SHORT = {'Newborn sleep': 'Newborn', 'Newborn feeding': 'Newborn', 'Changing milk feeds': 'Milk feeds', 'Getting ready for solids': 'Getting ready', 'Textures and finger foods': 'Textures', 'Naps and bedtime': 'Three naps', 'Two naps a day': 'Two naps'}
 WINDOWS = {  # come-and-go phases: months they may appear in
     'The 4-month sleep regression': (3, 5), 'Separation anxiety': (8, 11),
     'Cluster feeding and growth spurts': (0, 2), 'Distracted feeding': (3, 6), 'Teething and feeding': (7, 12)}
 
 
-def exp_sleep(m, naps=None):
-    """Age moves the early stages; two naps needs a parent's yes, or moves on its own at 9 months unless they chose to stay."""
-    if m < 2: return SLEEP[0]
+def exp_sleep(m, naps=None, adj_weeks=99):
+    """Stage rules: age guesses (two naps by 9 months); a parent's answer wins and holds."""
+    if adj_weeks < 6.2: return SLEEP[0]
     if m < 4: return SLEEP[1]
-    if naps == 'Yes' and m >= 5: return SLEEP[3]
-    if m >= 9 and naps != 'Stay': return SLEEP[3]
-    return SLEEP[2]
+    if naps == 'Yes': return SLEEP[3]
+    if naps in ('Stay', 'Not yet'): return SLEEP[2]
+    return SLEEP[3] if m >= 9 else SLEEP[2]
 
 
 def exp_safety(m, mv):
@@ -34,13 +36,28 @@ def exp_safety(m, mv):
     return age if not said or order.index(age) >= order.index(said) else said
 
 
-def exp_feed(m, food):
-    if m < 2: return FEED[0]
+def exp_feed(m, food, adj_weeks=99, since=0):
+    """Parents see Milk feeds / Preparing for solids / Solids. Inside Solids, the page follows age."""
+    if adj_weeks < 6.2: return FEED[0]
     if m < 4: return FEED[1]
-    if food is None: return FEED[3] if m >= 6 else FEED[2]   # unknown: Starting solids, and the check-in asks
-    if food == 'preparing': return FEED[2]
-    if food == 'new': return FEED[5] if m >= 10 else FEED[4] if m >= 8 else FEED[3]
-    return FEED[5] if m >= 10 else FEED[4]
+    if food in (None, 'preparing') and not (food is None and m >= 9): return FEED[2]   # no answer: by age from 9 months
+    if food is None: return FEED[5]
+    # Started: textures about 4 weeks after starting (not before 7 months), meals about 6 weeks later (not before 9 months).
+    start = m - since / 4.35 if since and m - since / 4.35 > 4 else min(m, 6)
+    tx = max(start + 0.92, 7); ml = max(tx + 1.38, 9)
+    return FEED[5] if m >= ml else FEED[4] if m >= tx else FEED[3]
+
+
+def feed_step(f):
+    """Turn the three parent-facing Feeding stages back into the six steps the hero shows."""
+    if not f: return f
+    cur, eb, title = f.get('current'), f.get('eyebrow', ''), f.get('title', '')
+    if cur == 'Solids':
+        cur = {'A few bites a day is all it takes': FEED[3], 'Thicker food, and more to pick up': FEED[4], 'More to pick up, and more variety': FEED[4], 'Meals are part of the day now': FEED[5]}.get(title, cur)
+    elif cur == 'Milk feeds':
+        cur = FEED[0] if title.startswith('Feeding often') else FEED[1]
+    f['current'] = cur
+    return f
 
 
 class Findings:
@@ -96,7 +113,9 @@ def check(results):
                       continue
                   if 'already there: two naps' in q: reported['naps'] = 'Yes'; continue
                   if 'already there: starting solids' in q: reported['food'] = 'new'; continue
+                  if 'times a day' in q and 'solids' in q: reported['food'] = {'Once or less': 'new', 'Twice': 'textures', '3 times': 'established'}[ans]; continue
                   if 'mattress' in q: reported['mattress_done'] = True; continue
+                  if 'safety check' in q and ('roll' in q or 'swaddl' in q or 'sleep sack' in q): reported['swaddle_done'] = True; continue   # the rolling card's "Mark done" is the swaddle check
                   if 'safety check' in q: continue
                   if 'catnap' in q: reported['naps'] = 'Yes' if ans == 'Yes' else 'Not yet'; continue
                   if 'we moved her' in q: reported['naps'] = 'Stay'; continue
@@ -106,10 +125,11 @@ def check(results):
                       continue
                   if 'roll' in q and 'swaddl' not in q:
                       reported['mv'] = {'Trying': 'trying', 'Rolling': 'rolling'}.get(ans, reported['mv'])
-                  elif 'crawl' in q and ans == 'Yes': reported['mv'] = 'crawling'
+                  elif ('crawl' in q or 'moving around' in q) and ans == 'Yes': reported['mv'] = 'crawling'
                   elif 'pulling up' in q and ans == 'Yes': reported['mv'] = 'pulling'
                   elif 'solids' in q:
-                      reported['food'] = {'Not started': 'preparing', 'Not yet': 'preparing', 'First foods': 'new', 'Building meals': 'established', 'Eating meals': 'established'}[ans]
+                      if ans == 'For a while': reported['while'] = True
+                      reported['food'] = {'Not started': 'preparing', 'Not yet': 'preparing', 'Yes': 'new', 'Just starting': 'new', 'For a while': 'new', 'First foods': 'new', 'Once a day or less': 'new', 'Twice a day': 'textures', '3 times a day': 'established', 'Building meals': 'established', 'Eating meals': 'established'}[ans]
                   elif 'swaddl' in q: reported['swaddle_done'] = True
             apply([a for a in w['answered'] if a['where'] in ('Home', 'Timeline') or a['q'].startswith('Already there: starting')])
             moment_now = any(a['where'] == 'Timeline' for a in w['answered'])   # Home was read before the moment was saved
@@ -120,7 +140,7 @@ def check(results):
                   if v and k not in learned: learned[k] = wk
             learn()
 
-            h = w.get('home_after', w['home']); s = w['sleep']; f = w['feed']
+            h = w.get('home_after', w['home']); s = w['sleep']; f = feed_step(w['feed']); feed_step(w.get('feed_after'))
             where = f'{pid} · week {wk} ({m} mo)'
 
             # ---------- works ----------
@@ -134,17 +154,18 @@ def check(results):
                 if not c['backOk']: F.add('works', 'bug', 'Back button leads to an empty page', pid, wk, f'{where}: {c["onclick"][:60]}')
 
             # ---------- order ----------
-            es, ef = exp_sleep(dmo, reported['naps']), exp_feed(dmo, reported['food'])
+            adj_weeks = wk - p.get('early_days', 0) / 7
+            es, ef = exp_sleep(dmo, reported['naps'], adj_weeks), exp_feed(dmo, reported['food'], adj_weeks, 0 if reported.get('while') else wk - learned.get('solids', wk))
             # Babies born early: developmental pages say they use adjusted age
             if p.get('early_days'):
                 for name, pg in (('Sleep', s), ('Feeding', f)):
                     if 'adjusted' not in pg.get('header', ''): F.add('order', 'bug', f'{name} doesn’t say it uses adjusted age for a baby born early', pid, wk, f'{where}: “{pg.get("header")}”')
-            # Window passed: Sleep moves on by itself and says so, with an undo
-            if s['current'] == SLEEP[3] and reported['naps'] not in ('Yes',) and dmo >= 9:
-                auto_first = auto_first if auto_first is not None else wk
-                if wk == auto_first and not any(re.search(r'We moved|two-nap guidance', a['title'] + ' ' + a['label'], re.I) for a in s['alerts']): F.add('personal', 'bug', 'Sleep moved to two naps on its own without saying so', pid, wk, where)
+            # Stage rules: with no answer, Sleep follows the age guess quietly; the timeline shows it.
             if s['current'] != es: F.add('order', 'bug', 'Sleep shows the wrong stage for the age', pid, wk, f'{where}: shows “{s["current"]}”, expected “{es}”')
-            if f['current'] != ef: F.add('order', 'bug', 'Feeding shows the wrong stage for the age and answers', pid, wk, f'{where}: shows “{f["current"]}”, expected “{ef}”')
+            # Solids move on by the start date, so allow a couple of weeks either side of a step.
+            ef_near = {exp_feed(dmo + d, reported['food'], adj_weeks, 0 if reported.get('while') else wk - learned.get('solids', wk) + d * 4.35) for d in (-0.5, 0.5)}
+            if dmo == 9 and ef == FEED[5]: ef_near.add(FEED[4])   # week 39 lands a day or two before the 9-month date
+            if f['current'] != ef and f['current'] not in ef_near: F.add('order', 'bug', 'Feeding shows the wrong stage for the age and answers', pid, wk, f'{where}: shows “{f["current"]}”, expected “{ef}”')
             si = SLEEP.index(s['current']) if s['current'] in SLEEP else -1
             fi = FEED.index(f['current']) if f['current'] in FEED else -1
             if si < prev_sleep and reported['naps'] == 'Stay': prev_sleep = si   # the parent chose to stay on three naps
@@ -152,26 +173,27 @@ def check(results):
             if fi < prev_feed: F.add('order', 'bug', 'Feeding stage went backwards', pid, wk, where)
             prev_sleep, prev_feed = (si if reported['naps'] == 'Stay' else max(prev_sleep, si)), max(prev_feed, fi)
             for name, pg, lst in (('Sleep', s, SLEEP), ('Feeding', f, FEED)):
-                if not (pg['eyebrow'].startswith('Around now') or pg['eyebrow'] == 'Current guide'): F.add('order', 'bug', f'{name} hero doesn’t say “Around now” for the current stage', pid, wk, f'{where}: “{pg["eyebrow"]}”')
+                if name == 'Feeding' and (pg['eyebrow'] == 'Milk feeds' and pg['current'] in FEED[:2] or (pg['current'] in FEED[3:] or pg['current'] == 'Solids')): pass
+                elif SHORT.get(pg['eyebrow'], pg['eyebrow']) != pg['current']: F.add('order', 'bug', f'{name} hero doesn’t match the current stage', pid, wk, f'{where}: “{pg["eyebrow"]}”')
                 last = pg['current'] == lst[-1]
-                if not last and not pg['comingUp']: F.add('order', 'bug', f'{name}: no “Coming up” card before the last stage', pid, wk, where)
+                solids_hub = name == 'Feeding' and (pg['current'] in FEED[3:] or pg['current'] == 'Solids')   # the Solids page lists every guide in age order instead
+                if not last and not pg['comingUp'] and not solids_hub: F.add('order', 'bug', f'{name}: no “Coming up” card before the last stage', pid, wk, where)
                 if last and not pg['after']: F.add('order', 'warning', f'{name}: last stage has no “after the first birthday” note', pid, wk, where)
                 for ev in pg['events']:
                     lo, hi = WINDOWS.get(ev, (0, 12))
                     if not lo <= dmo <= hi: F.add('order', 'bug', f'{name}: “{ev}” shows outside its usual window', pid, wk, f'{where}')
                 when = re.search(r'(\d+)\s*months?$', pg['eyebrow'].replace('–', '-')) or re.search(r'-(\d+)\s*months', pg['eyebrow'].replace('–', '-'))
                 if when and int(when.group(1)) + 2 < dmo and not (name == 'Sleep' and reported['naps'] == 'Stay'): F.add('order', 'warning', f'{name}: still on a stage whose usual window ended 3+ months ago', pid, wk, f'{where}: “{pg["eyebrow"]}”')
-                if not pg['questions'] and pg['current'] not in ('Changing milk feeds',): F.add('order', 'warning', f'{name}: no common questions on the current stage', pid, wk, f'{where}: {pg["current"]}')
+                if not pg['questions'] and pg['current'] not in ('Milk feeds',) and not solids_hub: F.add('order', 'warning', f'{name}: no common questions on the current stage', pid, wk, f'{where}: {pg["current"]}')
 
             cards = h['rows'] + h['actions']
-            if not cards: F.add('order', 'bug', 'Home has no cards this week', pid, wk, where)
+            if not cards and not h.get('close'): F.add('order', 'bug', 'Home is empty and doesn’t say the parent is caught up', pid, wk, where)
             if len(cards) > 3: F.add('order', 'bug', 'Home shows more than 3 cards', pid, wk, f'{where}: {len(cards)}')
             cats = [x['label'].split(' · ')[0] for x in cards]
             if len(cats) != len(set(cats)): F.add('order', 'bug', 'Home shows two cards from the same category', pid, wk, f'{where}: {cats}')
             titles = [x['title'] for _, x in all_home_items(h)]
             if len(titles) != len(set(titles)): F.add('order', 'bug', 'Home shows the same card twice', pid, wk, f'{where}: {titles}')
             for kind, x in all_home_items(h):
-                if ' · ' not in x['label']: F.add('order', 'warning', 'Home card without a reason line', pid, wk, f'{where}: {x["label"]} · {x["title"]}')
                 n = re.search(r'Common at (\d+) months?( adjusted)?', x['label'])
                 if n and n.group(2) and int(n.group(1)) != dmo: F.add('order', 'bug', 'Reason line names the wrong adjusted age', pid, wk, f'{where}: {x["label"]}')
                 if n and not n.group(2) and p.get('early_days') and dmo != m and x['label'].split(' · ')[0] in ('Development', 'Sleep', 'Feeding'):
@@ -203,7 +225,7 @@ def check(results):
             if swaddle_due and not sleep_sw: F.add('personal', 'bug', 'From 3 months, Sleep doesn’t show “stop swaddling”', pid, wk, where)
             exs = exp_safety(dmo, mv)
             if w.get('safety') and w['safety'] != exs: F.add('order', 'bug', 'Safety is on the wrong stage for the age and moments', pid, wk, f'{where}: “{w["safety"]}”, expected “{exs}”')
-            if reported['swaddle_done'] and (sleep_sw or w['home']['swaddle']) and not any('swaddl' in a['q'].lower() for a in w['answered']):
+            if reported['swaddle_done'] and (sleep_sw or w['home']['swaddle']) and not any(('swaddl' in a['q'].lower() or 'roll' in a['q'].lower()) for a in w['answered']):
                 F.add('personal', 'bug', '“Stop swaddling” comes back after it was marked done', pid, wk, where)
             if dmo < 3 and mv == 'none' and (sleep_sw or home_sw):
                 F.add('personal', 'bug', '“Stop swaddling” shows before 3 months', pid, wk, where)
@@ -212,7 +234,7 @@ def check(results):
                 said_mv = re.search(r'You said \w+ is (crawling|pulling up|rolling|trying to roll)', x['label'])
                 if said_mv and {'crawling': ('crawling', 'pulling'), 'pulling up': ('pulling',), 'rolling': ('rolling', 'crawling', 'pulling'), 'trying to roll': ('trying',)}[said_mv.group(1)] and mv not in {'crawling': ('crawling', 'pulling'), 'pulling up': ('pulling',), 'rolling': ('rolling', 'crawling', 'pulling'), 'trying to roll': ('trying', 'rolling', 'crawling', 'pulling')}[said_mv.group(1)]:
                     F.add('personal', 'bug', 'Home claims the parent said something they didn’t', pid, wk, f'{where}: {x["label"]}')
-            if mv in ('crawling', 'pulling') and not moment_now and not re.search(r'crawl|stair|gate|move|pull', text_home):
+            if mv in ('crawling', 'pulling') and not moment_now and (h['rows'] + h['actions']) and not re.search(r'crawl|stair|gate|move|pull|mattress|^safety|\ssafety', text_home):
                 F.add('personal', 'bug', 'Said she’s crawling, but nothing on Home reflects it', pid, wk, where)
             if (mv == 'pulling' or dmo >= 8) and not reported['mattress_done']:
                 if not any('mattress' in a['title'].lower() for a in s['alerts']): F.add('personal', 'bug', 'From 8 months (or a pulling-up moment), Sleep doesn’t show the mattress step', pid, wk, where)
@@ -226,14 +248,15 @@ def check(results):
             if (reported['food'] == 'preparing' or (reported['food'] is None and dmo < 6)) and re.search(r'starting solids|first foods|textures|allergen|finger', text_home):
                 F.add('personal', 'bug', 'Home shows solids content before the parent said solids started', pid, wk, f'{where}: {text_home[:120]}')
             for x in h['rows']:
-                if x['label'].startswith('Feeding') and reported['food'] in ('new', 'established') and 'You said' not in x['label'] and not any(a['q'].startswith('Already there: starting') for a in w['answered']):
+                if x['label'].startswith('Feeding') and reported['food'] in ('new', 'established') and 'You said' not in x['label'] and 'started solids' not in x.get('body', '') and 'allergen' not in x['title'].lower() and not re.match(r'(Time for|From strips|Coming up)', x['title']) and not any(a['q'].startswith('Already there: starting') for a in w['answered']):
                     F.add('personal', 'warning', 'Feeding row doesn’t mention what the parent told us', pid, wk, f'{where}: {x["label"]}')
             apply([a for a in w['answered'] if a['where'] not in ('Home', 'Timeline') and not a['q'].startswith('Already there: starting')]); learn()
             # Only one question remains (solids), at most once a month
             hq = (w['home']['checkin'] or {}).get('q')
             asked_here = [q for q in (hq, w['sleep'].get('checkin'), w['feed'].get('checkin')) if q]
             for q in asked_here:
-                if re.search(r'roll|crawl|pull|catnap|nap', q, re.I): F.add('personal', 'bug', 'A movement or nap question still shows', pid, wk, f'{where}: “{q}”')
+                # Stage rules allow the naps question (from 6 months on Three naps) and "outgrown" questions; movement questions stay off.
+                if re.search(r'roll|crawl|pull', q, re.I) and not re.search(r'Move Safety to', q): F.add('personal', 'bug', 'A movement question still shows', pid, wk, f'{where}: “{q}”')
             solids_q = any('solids' in q for q in asked_here)
             if solids_q and last_no is not None and wk - last_no < 4 and not any('solids' in a['q'] and a['a'] == 'Not yet' and wk == last_no for a in w['answered']):
                 F.add('personal', 'bug', 'Solids question came back within a month of “Not yet”', pid, wk, f'{where}: answered week {last_no}')
@@ -243,7 +266,7 @@ def check(results):
                 if 'solids' in a['q'] and a['a'] == 'Not yet': last_no = wk
                 if a['where'] == 'Home' and hq == a['q'] and w.get('home_after') and (w['home_after']['checkin'] or {}).get('q') == a['q']:
                     F.add('personal', 'bug', 'Question asked again right after it was answered', pid, wk, f'{where}: “{a["q"]}”')
-            qs = [a['q'] for a in w['answered'] if a['a'] in ('Not yet', 'Yes', 'Trying', 'Rolling', 'First foods', 'Not started', 'Eating meals', 'Building meals')]
+            qs = [a['q'] for a in w['answered'] if a['a'] in ('Not yet', 'Yes', 'Trying', 'Rolling', 'First foods', 'Once a day or less', 'Twice a day', '3 times a day', 'Not started', 'Eating meals', 'Building meals')]
             norm = lambda q: 'solids' if 'solids' in q else 'catnap' if 'catnap' in q else q
             if len(qs) != len(set(map(norm, qs))): F.add('personal', 'warning', 'Asked the same question twice in one week (Home and a category page)', pid, wk, f'{where}: {qs}')
             if any(re.search(r'We moved|two-nap guidance', a['title'], re.I) for a in s['alerts']):

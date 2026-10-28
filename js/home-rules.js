@@ -30,18 +30,18 @@
 
   /* Copy for each stage, written to the content skill: verb-first, one line, no jargon. */
   const SLEEP_ROW = [
-    ['Newborn sleep', 'Recognize sleepy cues and understand short sleeps around the clock.'],
-    ['Day and night sleep', 'Use daylight and a short evening routine as nights begin to take shape.'],
-    ['Naps and bedtime', 'Find awake-time guidance and a sample day for this stage.'],
-    ['Two naps a day', 'See how the day can fit around two naps, and what helps during the transition.']
+    ['Round-the-clock sleep', 'Recognize sleepy cues and understand short sleeps around the clock.'],
+    ['Longer nights', 'Use daylight and a short evening routine as nights begin to take shape.'],
+    ['Three naps', 'Find awake-time guidance and a sample day for this stage.'],
+    ['Two naps', 'See how the day can fit around two naps, and what helps during the transition.']
   ];
   const FEED_ROW = [
-    ['Newborn feeding', 'Recognize hunger and fullness cues, and the signs milk intake is on track.'],
-    ['Changing milk feeds', 'Understand changing feeds and how milk intake and growth fit together.'],
-    ['Getting ready for solids', 'Spot the readiness signs and get set up before the first bite.'],
-    ['Starting solids', 'Choose a way to offer food, prepare it safely and keep milk feeds alongside.'],
-    ['Textures and finger foods', 'Build on first foods with textures and self-feeding practice suited to your baby.'],
-    ['Family meals', 'Bring meals, milk feeds and cup practice together as eating skills grow.']
+    ['Milk feeds', 'Recognize hunger and fullness cues, and the signs milk intake is on track.'],
+    ['Milk feeds', 'Understand changing feeds and how milk intake and growth fit together.'],
+    ['Preparing for solids', 'Spot the readiness signs and get set up before the first bite.'],
+    ['Solids', 'Choose a way to offer food, prepare it safely and keep milk feeds alongside.'],
+    ['Solids', 'Build on first foods with textures and self-feeding practice suited to your baby.'],
+    ['Solids', 'Bring meals, milk feeds and cup practice together as eating skills grow.']
   ];
 
   /* ---------- candidates ---------- */
@@ -91,7 +91,7 @@
     const milkRow = fi < 2 && ['Breast milk', 'Formula', 'Both'].includes(profile.feed) ? homeMilkData() : null;
     out.push({ topic: 'Feeding', title: milkRow ? milkRow.title : FEED_ROW[fi][0], body: milkRow ? milkRow.body : FEED_ROW[fi][1], action: "openPage('topic:Feeding')",
       tier: 'should', essential: fi === 0, reported: milkAnswered || fi >= 3 && !!food,
-      prep: fi === 2 && m >= 5,
+      prep: fi === 2 && m >= 5 && m < 7,
       reason: fi === 0 ? 'For the first weeks' : fi === 1 ? ageReason() : fi === 2 ? (food === 'preparing' ? `You said ${name()} hasn’t started solids` : 'Prepare before the first bite') : !food ? 'Solids status not shared yet' : `You said ${name()} ${food === 'new' ? 'has started solids' : food === 'textures' ? 'is managing more textures' : 'is eating meals'}`,
       reference: fi === 1 && !milkAnswered });
 
@@ -211,7 +211,7 @@
     const focus = homeCurrentFocus(), summary = month === 5 && !focus.confirmed ? focus.body.split(/(?<=[.!?])\s+/)[0] : focus.body;
     const rows = main.filter(c => c.kind !== 'check').map(c => c.kind === 'swaddle' ? swaddleRow(c) : ['mattress', 'mattressLower'].includes(c.kind) ? mattressRow(c) : conceptRow(c)).join('');
     const check = main.find(c => c.kind === 'check');
-    const hero = `<section class="connected-now" aria-label="What matters now"><div class="connected-summary"><div class="home-summary connected-summary-intro"><div class="home-summary-heading"><div class="home-month-eyebrow">${month === 0 || focus.confirmed ? 'What matters now' : 'Likely around now'}</div><h1>${focus.title}</h1></div><span class="home-summary-art" aria-hidden="true">${homeMonthArt(month)}</span><p class="heroanswer">${summary}</p><div class="home-summary-spectrum" aria-hidden="true">${TOPICS.map(([topic]) => `<span style="background:${YEAR_PALETTES[topic].bg}"></span>`).join('')}</div></div>${rows ? `<div class="connected-summary-links">${rows}</div>` : ''}</div>${check ? checkRow(check) : ''}${homeMomentRow()}</section>`;
+    const hero = `<section class="connected-now" aria-label="What matters now"><div class="connected-summary"><div class="home-summary connected-summary-intro"><div class="home-summary-heading"><div class="home-month-eyebrow">What matters now</div><h1>${focus.title}</h1></div><span class="home-summary-art" aria-hidden="true">${homeMonthArt(month)}</span><p class="heroanswer">${summary}</p><div class="home-summary-spectrum" aria-hidden="true">${TOPICS.map(([topic]) => `<span style="background:${YEAR_PALETTES[topic].bg}"></span>`).join('')}</div></div>${rows ? `<div class="connected-summary-links">${rows}</div>` : ''}</div>${check ? checkRow(check) : ''}${homeMomentRow()}</section>`;
     const preparation = next.length ? `<section class="connected-ahead" aria-label="Prepare for next"><div class="connected-section-heading"><h2>Prepare for next</h2><button class="textlink" onclick="openPage('ahead')">See all →</button></div><div class="connected-ahead-list">${next.map(row => conceptRow(row)).join('')}</div></section>` : '';
     return raw.slice(0, start) + liveHomeCheckin() + hero + preparation + raw.slice(end);
   };
