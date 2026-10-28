@@ -235,6 +235,7 @@
         + pick('Feeding', 'Feeding', feedGroup(chgStageIndex('Feeding')), STAGE_TABLE.Feeding.stages.map(x => x.label))
         + pick('Sleep', 'Sleep', chgStageIndex('Sleep'), STAGE_TABLE.Sleep.stages.map(x => x.label))
         + pick('Safety', 'Safety', safeI, STAGE_TABLE.Safety.stages.map(x => x.label))
+        + (developmentMonth(actualMonth()) >= 5 ? `<div class="hub-where-row"><span class="hub-dot">${hubArt('crawl', 'Safety')}</span><div class="hub-where-copy"><b>Moving</b>${hubMovingChips()}</div></div>` : '')
         + fixed('Development', 'Development & play', 'By ' + devRef(developmentMonth(actualMonth())) + ' months', 'dev')
         + fixed('Daily rhythm', 'Everyday care', careNow, 'care')
         + fixed('Health', 'Health', 'Next: ' + healthJourneyLabel(healthJourneyFocus()), 'birthday')
@@ -585,14 +586,14 @@
     let snooze = {}; try { snooze = JSON.parse(localStorage.getItem(SNOOZE())) || {}; } catch (e) {}
     // Only the latest past checkup, only if the parent was already using Ahead when it was due, until it's answered.
     const joined = profile.joined ? parse(profile.joined) : null;
-    const past = WELL_VISITS.filter(a => daysTo(a) < -3 && !(joined && visitDue(a) < joined));
-    if (past.length && daysTo(past[past.length - 1]) < -35) return null;   // after about 5 weeks it rests; Health still has "Already had this checkup?"
+    const past = WELL_VISITS.filter(a => daysTo(a) < -14 && !(joined && visitDue(a) < joined));
+    if (past.length && daysTo(past[past.length - 1]) < -45) return null;   // after about 5 weeks it rests; Health still has "Already had this checkup?"
     const a = past.length ? past[past.length - 1] : null;
     if (a == null || healthRecord(a) || (snooze[a] && NOW - snooze[a] < 14 * 864e5)) return null;
     let skipped = {}; try { skipped = JSON.parse(localStorage.getItem('ahead-visit-skipped:' + journeyKey())) || {}; } catch (e) {}
     return skipped[a] ? null : a;
   };
-  window.hubVisitNotYet = function (a) { let o = {}; try { o = JSON.parse(localStorage.getItem(SNOOZE())) || {}; } catch (e) {} o[a] = NOW.getTime(); try { localStorage.setItem(SNOOZE(), JSON.stringify(o)); } catch (e) {} render(); if (typeof hubToast === 'function') hubToast('Got it', `We’ll check back in a couple of weeks.`, ['See the checkup', `document.querySelectorAll('.hub-toast').forEach(t=>t.remove());openPage('health-visit:${a}')`]); };
+  window.hubVisitNotYet = function (a) { if (typeof recordCheckin === 'function') recordCheckin('visit:' + a, 'Not yet'); let o = {}; try { o = JSON.parse(localStorage.getItem(SNOOZE())) || {}; } catch (e) {} o[a] = NOW.getTime(); try { localStorage.setItem(SNOOZE(), JSON.stringify(o)); } catch (e) {} render(); if (typeof hubToast === 'function') hubToast('Got it', `We’ll check back in a couple of weeks.`, ['See the checkup', `document.querySelectorAll('.hub-toast').forEach(t=>t.remove());openPage('health-visit:${a}')`]); };
   if (typeof stageSnapshot === 'function') {
     const baseSnap = stageSnapshot;
     window.stageSnapshot = stageSnapshot = function (t) { const r = baseSnap(t); if (t === 'Health' && isCurrent() && r) r.title = healthJourneyLabel(healthJourneyFocus()); if (t === 'Safety' && r && typeof safetyStageNow === 'function') { const st = STAGE_TABLE.Safety.stages.find(x => x.key === safetyGroup(safetyStageNow())); if (st) r.title = st.label; } return r; };
@@ -697,6 +698,7 @@ window.hubCenterStages = function () {
   const label = a => { const l = healthJourneyLabel(a); return l.charAt(0).toLowerCase() + l.slice(1); };
   const changeDate = r => ['Change date', `document.querySelectorAll('.hub-toast').forEach(t=>t.remove());openPage('event-edit:${r.id}')`];
   window.hubVisitYes = function (a) {
+    if (typeof recordCheckin === 'function') recordCheckin('visit:' + a, 'Yes');   // one question per visit: this was it
     const d = due(a), r = saveJourneyVisit(a, { date: iso(d < NOW ? d : NOW), status: 'attended' });
     render();
     if (r) hubToast('Saved', `The ${label(a)} is in Memories.`, changeDate(r));
@@ -721,4 +723,75 @@ window.hubCenterStages = function () {
     if (historyStack.length) back(); else navigate('home');
     hubToast('Saved', r.status === 'planned' ? `We’ll remind you on Home before ${journeyDateLabel(r.date)}.` : `It’s saved in Memories.`);
   };
+})();
+
+/* ---------- Moving: tell Ahead the baby crawls or pulls up, from Baby's details or Safety ----------
+   Sets the same answers as the Home question, so Safety, Sleep and Home switch to "now that they're moving". */
+(function () {
+  const esc2 = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+  window.hubMovingNow = () => answers.pullUp === 'Yes' ? 'pulling' : answers.crawl === 'Yes' ? 'crawling' : answers.crawl === 'Not yet' ? 'none' : null;
+  window.hubSetMoving = function (v) {
+    if (!['none', 'crawling', 'pulling'].includes(v) || !isCurrent()) return;
+    if (v === 'none') { answers.crawl = 'Not yet'; delete answers.pullUp; }
+    if (v === 'crawling') { answers.crawl = 'Yes'; delete answers.pullUp; }
+    if (v === 'pulling') { answers.crawl = 'Yes'; answers.pullUp = 'Yes'; }
+    answers.movementSetByParent = true; delete answers.safetyPick;
+    if (typeof markStage === 'function') markStage('movement');
+    if (typeof recordCheckin === 'function') recordCheckin('crawl', v === 'none' ? 'Not yet' : 'Yes');
+    persist(); const y = scrollY; render(); scrollTo(0, y);
+    const nm = name();
+    hubToast('Got it', v === 'pulling' ? `Safety now leads with what ${nm} can reach standing.` : v === 'crawling' ? `Safety now covers a baby who crawls.` : `We’ll ask again in a few weeks.`, page === 'topic:Safety' ? null : ['See Safety', `document.querySelectorAll('.hub-toast').forEach(t=>t.remove());openPage('topic:Safety')`]);
+  };
+  // One row of chips, used in Baby's details and on Safety.
+  window.hubMovingChips = function () {
+    const cur = hubMovingNow();
+    return `<div class="hub-where-chips" role="group" aria-label="How ${esc2(name())} is moving">${[['none', 'Not yet'], ['crawling', 'Crawling'], ['pulling', 'Pulling up']].map(([v, l]) => `<button class="${cur === v ? 'is-on' : ''}" aria-pressed="${cur === v}" onclick="hubSetMoving('${v}')">${l}</button>`).join('')}</div>`;
+  };
+})();
+
+/* ---------- The first birthday: a big celebration, and where Ahead ends ----------
+   From the first birthday on, Home is this screen: confetti (once, and calm with reduced motion),
+   the year in numbers, a first-birthday photo, and Memories. The month strip and the guides stay
+   available to look back. */
+(function () {
+  const esc2 = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+  const COLORS = ['#F0B3CB', '#B1ACF4', '#A3C2F2', '#98D7CC', '#F2D78A', '#F5BE9A'];
+  window.hubFirstBirthday = () => typeof isCurrent === 'function' && isCurrent() && typeof birthdayAge === 'function' && birthdayAge() >= 12;
+  function confetti() {
+    let seen = false; try { const k = 'ahead-bday-confetti:' + journeyKey(), at = Number(localStorage.getItem(k) || 0); seen = at > 0 && Date.now() - at > 15000; if (!at) localStorage.setItem(k, String(Date.now())); } catch (e) {}   // falls once; after that, a still sprinkle
+    const pieces = Array.from({ length: 46 }, (_, i) => {
+      const left = (i * 37) % 100, delay = (i % 9) * 0.12, dur = 2.4 + (i % 5) * 0.35, rot = (i * 47) % 360, c = COLORS[i % COLORS.length], shape = i % 3 === 0 ? 'is-dot' : i % 3 === 1 ? 'is-strip' : '';
+      const y = (i * 53) % 100 < 50 ? (i * 53) % 18 : 82 + (i * 53) % 16;
+      return `<span class="bday-bit ${shape}" style="left:${left}%;background:${c};animation-delay:${delay}s;animation-duration:${dur}s;--r:${rot}deg;--y:${y}%"></span>`;
+    }).join('');
+    return `<div class="bday-confetti${seen ? ' is-settled' : ''}" aria-hidden="true">${pieces}</div>`;
+  }
+  function celebration() {
+    const nm = esc2(name()), d = journeyData(), photo = window.hubPhotoFor && window.hubPhotoFor(12);
+    const firsts = d.records.filter(r => r.type === 'milestone').length;
+    const visits = d.records.filter(r => r.type !== 'milestone' && r.status === 'attended').length;
+    const photos = Array.from({ length: 13 }, (_, m) => window.hubPhotoFor && window.hubPhotoFor(m)).filter(Boolean).length;
+    const stat = (n, l) => `<div><b>${n}</b><span>${l}</span></div>`;
+    return `<section class="bday-year" aria-label="Happy first birthday">${confetti()}
+      <span class="bday-one" aria-hidden="true">1</span>
+      <p class="bday-eyebrow">Happy first birthday</p>
+      <h1>${nm} is one!</h1>
+      <p class="bday-lead">You made it through the whole first year together. Look at everything you saw along the way.</p>
+      ${(() => { const st = [[firsts, firsts === 1 ? 'first saved' : 'firsts saved'], [visits, visits === 1 ? 'checkup' : 'checkups'], [photos, photos === 1 ? 'monthly photo' : 'monthly photos']].filter(x => x[0] > 0); return st.length ? `<div class="bday-stats" style="grid-template-columns:repeat(${st.length},1fr)">${st.map(x => stat(x[0], x[1])).join('')}</div>` : ''; })()}
+      ${photo ? `<div class="bday-photo"><img src="${photo}" alt="${nm}’s first-birthday photo"></div>` : `<label class="hub-button bday-add" role="button">Add a first-birthday photo${hubPhotoInput(12)}</label>`}
+      <button class="hub-button is-secondary bday-memories" onclick="navigate('timeline')">See ${nm}’s first year</button>
+    </section>
+    <section class="bday-end"><p>${esc2('Ahead covers the first year, so this is where it ends. Your pediatrician takes it from here, starting with the 15-month checkup.')}</p><p class="bday-small">${esc2('You can still look back at any month, and every guide is in Categories.')}</p></section>`;
+  }
+  const base = window.adaptiveHome;
+  if (typeof base === 'function') {
+    window.adaptiveHome = homeAtlas = function () {
+      const html = base();
+      if (!hubFirstBirthday()) return html;
+      // Keep the header and month strip (to look back); everything else gives way to the celebration.
+      const end = html.indexOf('</nav>');
+      const top = end > -1 ? html.slice(0, end + 6) : '';
+      return top + celebration();
+    };
+  }
 })();
