@@ -175,7 +175,7 @@
   function visitItem(v) {
     const label = healthJourneyLabel(v.age);
     const when = v.saved ? (v.days < 0 ? `was on ${journeyDateLabel(v.saved)}` : `is on ${journeyDateLabel(v.saved)}`) : v.days < 0 ? 'is due now' : v.days <= 7 ? 'is coming up' : v.days <= 14 ? 'is in about 2 weeks' : `is in about ${Math.round(v.days / 7)} weeks`;
-    return { topic: 'Health', key: 'visit:' + v.age, reason: v.saved ? `Saved for ${journeyDateLabel(v.saved)}` : v.age === 0 ? 'In the first week' : `Due around ${journeyDateLabel(iso(addMonths(parse(profile.dob), v.age)))}`, title: `${n()}’s ${label.charAt(0).toLowerCase() + label.slice(1)} ${when}`,
+    return { topic: 'Health', key: 'visit:' + v.age, reason: v.saved ? `Saved for ${journeyDateLabel(v.saved)}` : v.age === 0 ? 'In the first week' : `Due ${dueWhen(iso(addMonths(parse(profile.dob), v.age)))}`, title: `${n()}’s ${label.charAt(0).toLowerCase() + label.slice(1)} ${when}`,
       body: conceptHealthSummary(v.age) + (v.saved && v.days < 0 ? ' Mark it done once you’ve been.' : ''),
       link: link(`openPage('health-visit:${v.age}')`, 'See what’s checked') };
   }

@@ -342,7 +342,7 @@
     const focus = healthJourneyFocus(), fr = healthRecord(focus);
     if (!fr || fr.status !== 'attended') {
       const dueIso = iso(focus === 0 ? new Date(dob.getTime() + 5 * 864e5) : addMonths(dob, focus));
-      const when = fr && fr.status === 'planned' ? `Saved for ${journeyDateLabel(fr.date)}` : dueIso < today ? `Was due around ${journeyDateLabel(dueIso)}` : focus === 0 ? 'In the first week' : `Due around ${journeyDateLabel(dueIso)}`;
+      const when = fr && fr.status === 'planned' ? `Saved for ${journeyDateLabel(fr.date)}` : dueIso < today ? `Was due ${dueWhen(dueIso)}` : focus === 0 ? 'In the first week' : `Due ${dueWhen(dueIso)}`;
       const extra = planned.filter(r => !(r.type === 'visit' && r.visitAge === focus)).map(r => item(r, 'is-planned')).join('');
       stops += `<div class="hub-tl-stop"><span class="hub-tl-node is-next">Next</span><span class="hub-tl-head"><b>${esc2(healthJourneyLabel(focus))}</b><small>${esc2(when)}</small></span></div><div class="hub-tl-items">${fr && fr.status === 'planned' ? '' : dueIso < today ? `<button class="hub-tl-item is-planned" onclick="openPage('visit-form:${focus}')"><span class="hub-tl-ic">${hubArt('steth', 'Health')}</span><span class="hub-row-copy"><b>Been already? Add it</b><small>Or save the date if it’s booked</small></span></button>` : `<button class="hub-tl-item is-planned" onclick="openPage('visit-form:plan-${focus}')"><span class="hub-tl-ic">${hubArt('clock', 'Health')}</span><span class="hub-row-copy"><b>Save the date</b><small>We’ll remind you on Home as it gets close</small></span></button>`}${extra}</div>`;
     }
@@ -368,7 +368,7 @@
     const h = H(), focus = healthJourneyFocus();
     const rows = WELL_VISITS.map(age => {
       const rec = healthRecord(age), done = rec && rec.status === 'attended';
-      const sub = done ? `Saved · ${journeyDateLabel(rec.date)}` : rec && rec.status === 'planned' ? `Planned · ${journeyDateLabel(rec.date)}` : age === 0 ? '3–5 days after birth' : `Due around ${journeyDateLabel(iso(addMonths(parse(profile.dob), age)))}`;
+      const sub = done ? `Saved · ${journeyDateLabel(rec.date)}` : rec && rec.status === 'planned' ? `Planned · ${journeyDateLabel(rec.date)}` : age === 0 ? '3–5 days after birth' : `Due ${dueWhen(iso(addMonths(parse(profile.dob), age)))}`;
       const badge = `<span class="hub-dot hub-dot-age"><b>${age === 0 ? '1' : age}</b><small>${age === 0 ? 'wk' : 'mo'}</small></span>`;
       return h.row({ icon: 'steth', cat: 'Health', title: healthJourneyLabel(age), sub, chipText: done ? 'Saved' : age === focus ? 'Next' : '', chipTone: done ? 'is-done' : '', onclick: done ? `openPage('event-edit:${rec.id}')` : `openPage('visit-form:${age}')` }).replace(/<span class="hub-dot">[\s\S]*?<\/svg><\/span>/, badge);
     });
@@ -411,7 +411,7 @@
       const keys = Object.keys(DEV_STAGES).map(Number), ref = devRef(developmentMonth(actualMonth())), nx = keys[keys.indexOf(ref) + 1];
       if (nx) rows.push(h.row({ icon: 'smile', cat: 'Development', title: DEV_STAGES[nx].title, sub: `Development & play · By ${nx === 12 ? '1 year' : nx + ' months'}`, onclick: `openPage('development-stage:${nx}')` }));
       const focus = healthJourneyFocus(), rec = healthRecord(focus);
-      if (!rec || rec.status !== 'attended') rows.push(h.row({ icon: 'steth', cat: 'Health', title: healthJourneyLabel(focus), sub: rec && rec.status === 'planned' ? `Health · Saved for ${journeyDateLabel(rec.date)}` : `Health · ${focus === 0 ? 'In the first week' : 'Usually around ' + focus + ' month' + (focus === 1 ? '' : 's')}`, onclick: `openPage('health-visit:${focus}')` }));
+      if (!rec || rec.status !== 'attended') rows.push(h.row({ icon: 'steth', cat: 'Health', title: healthJourneyLabel(focus), sub: rec && rec.status === 'planned' ? `Health · Saved for ${journeyDateLabel(rec.date)}` : `Health · ${focus === 0 ? 'In the first week' : 'Due ' + dueWhen(iso(addMonths(parse(profile.dob), focus)))}`, onclick: `openPage('health-visit:${focus}')` }));
       const sk = SAFETY_MOVEMENT_STAGES.map(p => p.key), sNow = safetyStageNow(), sNext = SAFETY_MOVEMENT_STAGES[sk.indexOf(sNow) + 1];
       if (sNext) rows.push(h.row({ icon: 'shield', cat: 'Safety', title: sNext.rail, sub: 'Safety · Get ahead of the next move', onclick: `openPage('safety-stage:${sNext.key}')` }));
       return detailPage('Development', 'Coming up', `What’s next for Maya`, 'The next change in each part of Maya’s first year, so nothing sneaks up on you. Ages are typical, and every baby moves at their own pace.', h.list('', rows), 'clock');
@@ -626,7 +626,7 @@
       const a = hubPastVisitToConfirm();
       if (a != null) { // a missed checkup comes first; one question per visit
         const nm = esc2(name()), label = healthJourneyLabel(a), lc = label.charAt(0).toLowerCase() + label.slice(1);
-        q = hubQuestionCard(`<section class="connected-checkin"><div><h2>Did ${nm} have the ${esc2(lc)}?</h2></div><p>It was due around ${esc2(journeyDateLabel(iso(visitDue(a))))}.</p><div class="connected-checkin-choices"><button onclick="hubVisitYes(${a})">Yes, add it</button><button onclick="hubVisitNotYet(${a})">Not yet</button><button onclick="hubVisitSkipped(${a})">We skipped it</button></div></section>`, 'Health');
+        q = hubQuestionCard(`<section class="connected-checkin"><div><h2>Did ${nm} have the ${esc2(lc)}?</h2></div><p>It was due ${esc2(dueWhen(iso(visitDue(a))))}.</p><div class="connected-checkin-choices"><button onclick="hubVisitYes(${a})">Yes, add it</button><button onclick="hubVisitNotYet(${a})">Not yet</button><button onclick="hubVisitSkipped(${a})">We skipped it</button></div></section>`, 'Health');
       } else if (q) {
         const key = typeof homeQuestion === 'function' ? homeQuestion() : null;
         q = hubQuestionCard(q, Q_CAT(key));

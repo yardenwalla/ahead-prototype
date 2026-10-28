@@ -571,26 +571,26 @@ const next=categoryAhead(t);h=h.replace('<details class="sources-disclosure">',n
 
 
 function movementSummaryIsFresh(){const key=answers.pullUp==='Yes'?'pullUp':answers.crawl==='Yes'?'crawl':'roll';const record=journeyData().records.filter(r=>r.type==='milestone'&&r.factKey===key).sort((a,b)=>b.date.localeCompare(a.date))[0];const date=record?.date||answers.stageDates?.movement;if(!date)return false;const days=(NOW-parse(date))/864e5;return days>=0&&days<28;}
-function monthlyFocus(){const m=month,started=isCurrent()&&hasFoodAnswer()&&answers.solids==='Yes',observed=isCurrent()?(answers.pullUp==='Yes'?'pulling':answers.crawl==='Yes'?'moving':answers.roll==='Yes'||['Tummy to back','Back to tummy','Both ways'].includes(answers.rollDirection)?'rolling':answers.rollDirection==='Trying to roll'?'trying':null):null,bodies=[
-'Expect 8–12 feeds a day and lots of short sleeps, day and night. It feels like a lot at first, and it gets easier.',
-'More time looking at faces and more alert moments. When you talk, pause so baby can answer.',
-'Smiles and sounds turn face time into a back-and-forth. The 2-month checkup brings the first vaccines.',
-'Coos and smiles become little conversations. Around 4 months, sleep may get bumpier.',
-'Reaching for toys and answering your voice. Sleep may get less predictable for a while.',
-started?'Reaching, rolling and mouthing everything. Meals are practice more than nutrition for now.':'Reaching, rolling and mouthing everything. Solids are getting closer.',
-started?'Sitting with support and practicing first foods. Milk feeds carry on as usual.':'Sitting with support and reaching for everything. Readiness signs tell you when to start solids.',
-'Passing toys hand to hand. Try half-hiding a favorite toy under a cloth.',
-'Banging toys together, babbling back and looking for what dropped. Play has a purpose now.',
-'Finding hidden toys and repeating sounds. The 9-month checkup asks what you’ve noticed at home.',
-'Handing you toys, filling containers and copying you. More of the room is within reach.',
-'Clapping, waving and copying you. The first-birthday checkup is coming up.',
-'Gestures, sounds and new ways to move. The checkup helps you plan meals, milk and teeth.'
-];let body=bodies[m];
-if(profile.early&&developmentMonth()!==m)body=bodies[developmentMonth()];if(isCurrent()&&/checkup/i.test(body)&&typeof healthRecord==='function'&&WELL_VISITS.some(a=>Math.abs(a-actualMonth())<=1&&healthRecord(a)?.status==='attended'))body=body.replace(/\s*The [^.]*checkup[^.]*\./i,'').trim();
-if(isCurrent()&&m===6&&!hasFoodAnswer()&&!(profile.early&&developmentMonth()!==m))body='Reaching, sitting with support and watching you eat. Readiness signs tell you when to start solids.';
+function monthlyFocus(){const m=month,started=isCurrent()&&hasFoodAnswer()&&answers.solids==='Yes',observed=isCurrent()?(answers.pullUp==='Yes'?'pulling':answers.crawl==='Yes'?'moving':answers.roll==='Yes'||['Tummy to back','Back to tummy','Both ways'].includes(answers.rollDirection)?'rolling':answers.rollDirection==='Trying to roll'?'trying':null):null,bodies=(()=>{const n=name(),P=typeof babyPronouns==='function'?babyPronouns():{s:'they',p:'their'},they=P.s==='they',S=P.s.charAt(0).toUpperCase()+P.s.slice(1),Pp=P.p.charAt(0).toUpperCase()+P.p.slice(1),Sis=they?'They’re':S+'’s',knows=they?'They know':S+' knows',nursing=profile.feed==='Breast milk';return [
+'Expect 8–12 feeds a day and lots of short sleeps. Crying often builds over the next few weeks, then eases by about 3 months.',
+`${n} is awake longer and watching you closely. Fussy evenings often peak around 6 weeks, then ease.`,
+`Smiles and coos make playtime feel like a conversation, and nights may start to stretch. The 2-month checkup brings ${P.p} first big round of vaccines.`,
+`${Pp} head is steadier and rolling may come soon, so it’s time to plan for life after the swaddle.`,
+`Everything gets grabbed and tasted. Sleep often gets bumpier around now, and solids are a couple of months off.`,
+started?`Rolling and reaching bring more of the room within reach. First foods are practice, and milk is still the main food.`:`Rolling and reaching bring more of the room within reach. Solids are coming up, with no rush.`,
+started?`${Sis} sitting with support, and meals are practice for now. Two naps may not be far behind.`:`${Sis} sitting with support and curious about food, so solids may start soon. Two naps may not be far behind.`,
+started?`${Sis} sitting steadier and may start scooting. Thicker textures come next at mealtimes.`:`${Sis} sitting steadier and may start scooting. Solids can start whenever ${they?'they’re':P.s+'’s'} ready.`,
+`Crawling and pulling up often start around now, so babyproofing matters. Many babies get clingier at bedtime too.`,
+`${knows} you still exist when you leave the room, which is why goodbyes get harder. Meals are becoming a real part of the day.`,
+`Pointing, waving and handing you things are all ways of talking. Cruising along furniture often starts around now.`,
+`First steps and first words may be close, and so is the switch to cow’s milk. The first-birthday checkup is coming up.`,
+`${nursing?'Cow’s milk from a cup can start now, and nursing can carry on.':'Cow’s milk from a cup can replace formula now.'} The 12-month checkup helps you plan what’s next.`
+]})();let body=bodies[m];
+if(profile.early&&developmentMonth()!==m)body=bodies[developmentMonth()];if(isCurrent()&&/checkup/i.test(body)&&typeof healthRecord==='function'&&WELL_VISITS.some(a=>Math.abs(a-actualMonth())<=1&&healthRecord(a)?.status==='attended'))body=body.replace(/\s*[^.]*checkup[^.]*\./i,'').trim();
+
 if(isCurrent()&&m>=3&&hasMovementAnswer()&&movementSummaryIsFresh()){const observed=answers.pullUp==='Yes'?'pulling':answers.crawl==='Yes'?'moving':answers.roll==='Yes'||['Tummy to back','Back to tummy','Both ways'].includes(answers.rollDirection)?'rolling':answers.rollDirection==='Trying to roll'?'trying':null;const connection={trying:`${name()} is trying to roll. Floor time gives room to practice.`,rolling:`${name()} is rolling, so the whole floor is open now. Clear the space around the play mat.`,moving:`${name()} is on the move. Gates and latched cabinets keep up with the new reach.`,pulling:`${name()} is pulling up. Practice sitting back down, and check furniture anchors.`}[observed];if(connection)body=connection;}
-if(m===5&&!(profile.early&&developmentMonth()!==m)){const changes={reaching:'Reaching on purpose, everything to the mouth and more back-and-forth sounds.',trying:'First rolling attempts make floor play busier.',rolling:'Rolling opens up the floor beyond the play mat.',moving:'Scooting or crawling puts more of the room in reach.',pulling:'Pulling up brings furniture and surfaces into reach.'};body=changes[observed||'reaching'];body+=' '+(started?'First foods are practice; milk is still the main food.':'Solids are coming up. No rush, just time to get ready.');}
-if(m===12&&isCurrent()&&!hasFoodAnswer())body='Waving, first words and filling containers. The checkup helps you plan meals, milk and cups.';const titles=['Getting to know<br>each other.','Familiar faces.<br>Little replies.','More smiles.<br>More connection.','Little sounds.<br>Back and forth.','Hands get busy.<br>Play opens up.','More reaching.<br>More exploring.','New movement.<br>New food skills.','Busy hands.<br>Growing curiosity.','More sharing.<br>More exploring.','Finding things.<br>Making connections.','Gestures become<br>part of the conversation.','Copying you.<br>Taking a turn.','New ways to move,<br>eat and connect.'];let title=titles[m];if(profile.early&&developmentMonth()!==m)title=developmentMonthlyLabel(developmentMonth());if(m===5&&observed)title={trying:'New ways to turn.<br>More to explore.',rolling:'Rolling opens up<br>their world.',moving:'New routes.<br>More to explore.',pulling:'New heights.<br>New reach.'}[observed];return {title,body};}
+if(m===5&&!(profile.early&&developmentMonth()!==m)){const changes={reaching:'Rolling and reaching bring more of the room within reach.',trying:'Those first rolling attempts make floor time busier, so give plenty of room to practice.',rolling:'Rolling opens up the floor beyond the play mat, so clear the space around it.',moving:'Scooting or crawling puts more of the room within reach.',pulling:'Pulling up brings furniture and surfaces within reach.'};body=changes[observed||'reaching'];body+=' '+(started?'First foods are practice, and milk is still the main food.':'Solids are coming up, with no rush.');}
+const titles=[`You’re getting to know each other`,`${name()} knows your face`,`${name()}’s first real smiles`,`${name()} is starting to coo back`,`${name()}’s hands are getting busy`,`${name()} is reaching for everything`,`${name()} is watching you eat`,`${name()} passes toys hand to hand`,`${name()} is exploring everything`,`${name()} is finding hidden toys`,`${name()} is talking with gestures`,`${name()} is copying what you do`,`${name()} is almost a toddler`];let title=titles[m];if(profile.early&&developmentMonth()!==m)title=titles[clamp(developmentMonth())];if(m===5&&observed)title={trying:`${name()} is trying to roll`,rolling:`${name()} is rolling`,moving:`${name()} is on the move`,pulling:`${name()} is pulling up to stand`}[observed];return {title,body};}
 // Shared preparation records keep the reason, eligibility and destination together.
 function guidanceContext(){return {month,current:isCurrent(),foodKnown:isCurrent()&&hasFoodAnswer(),food:foodStage(),movement:safetyMovementStage(),movementKnown:isCurrent()&&hasMovementAnswer(),training:sleepTrainingState(),visit:visitForMonth()};}
 function preparationRecords(){return [
@@ -1993,7 +1993,10 @@ let journeyNotice=null,journeyError='',journeyFormCounter=0;
 function journeyKey(){return 'ahead-v4-journey:'+(profile.id||profile.dob)+':'+(profile.example?'example':'baby');}
 function journeyData(){try{const data=JSON.parse(localStorage.getItem(journeyKey())||'{}');return {records:Array.isArray(data.records)?data.records:[],questions:data.questions||{},checks:data.checks||{},celebrated:data.celebrated||{},visitNotes:data.visitNotes||{}};}catch{return {records:[],questions:{},checks:{},celebrated:{},visitNotes:{}};}}
 function saveJourneyData(data){try{localStorage.setItem(journeyKey(),JSON.stringify(data));journeyError='';return true;}catch{journeyError='This device couldn’t save the change. Please try again.';return false;}}
-function journeyDateLabel(date){return new Date(date+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});}
+// Dates read the way people say them: "October 25", with the year only when it isn't this year.
+function journeyDateLabel(date){const d=new Date(date+'T12:00:00');return d.toLocaleDateString('en-US',d.getFullYear()===NOW.getFullYear()?{month:'long',day:'numeric'}:{month:'long',day:'numeric',year:'numeric'})}
+// When something is close, say how close: "in about 5 days", "today", "about a week ago". Otherwise "around October 25".
+function dueWhen(date){const days=Math.round((new Date(date+'T12:00:00')-NOW)/864e5);if(days===0)return 'today';if(days===1)return 'tomorrow';if(days>1&&days<=13)return `in about ${days} days`;if(days<0&&days>=-13)return days===-1?'yesterday':`about ${-days} days ago`;return `around ${journeyDateLabel(date)}`}
 function journeyValidDate(date,allowFuture=false){return /^\d{4}-\d{2}-\d{2}$/.test(date)&&!Number.isNaN(parse(date).getTime())&&iso(parse(date))===date&&date>=profile.dob&&(allowFuture||date<=iso(NOW));}
 function healthRecord(age){return journeyData().records.find(r=>r.type==='visit'&&r.visitAge===age)||null;}
 function healthJourneyFocus(){const base=visitForMonth().age;if(!isCurrent())return base;const next=WELL_VISITS.find(a=>a>=base&&healthRecord(a)?.status!=='attended')??12;const planned=journeyData().records.filter(r=>r.type==='visit'&&r.status==='planned'&&r.visitAge<=next).sort((a,b)=>a.date.localeCompare(b.date));return planned.length?planned[0].visitAge:next;}
@@ -2506,12 +2509,12 @@ function homeSafetyResolved(){
 }
 function homeCurrentFocus(){
  const focus={...monthlyFocus(),confirmed:false};if(!isCurrent())return focus;
- if(month===0){focus.title='The first weeks';focus.confirmed=true;return focus;}
+ if(month===0){focus.title='Feeding and rest come first';focus.confirmed=true;return focus;}
  const report=homeInputs().reported;if(!report||report.month!==month)return focus;
- if(report.key==='stand'&&report.value==='Yes'&&answers.pullUp==='Yes'){focus.title='A new view.<br>A higher reach.';focus.body=`${name()} is pulling up, bringing new surfaces into reach and new ways to explore during play.`;focus.confirmed=true;}
- else if(report.key==='crawl'&&report.value==='Yes'&&answers.crawl==='Yes'){focus.title='Crawling opens up<br>the room.';focus.body=`${name()} is moving between toys and exploring more of the room. Play and the space around it change with that new reach.`;focus.confirmed=true;}
- else if(report.key==='movement'&&report.value==='rolling'&&(answers.roll==='Yes'||['Tummy to back','Back to tummy','Both ways'].includes(answers.rollDirection))){focus.title='Rolling opens up<br>their world.';focus.body=`${name()} can explore beyond the play mat. Floor play makes room for reaching, turning and exploring.`;focus.confirmed=true;}
- else if(report.key==='movement'&&report.value==='trying'&&answers.rollDirection==='Trying to roll'){focus.title='New ways to turn.<br>More to explore.';focus.body=`${name()} is trying to roll. Those first attempts connect floor play with changes to the sleep setup and nearby space.`;focus.confirmed=true;}
+ if(report.key==='stand'&&report.value==='Yes'&&answers.pullUp==='Yes'){focus.title=`Standing up gives ${name()} a whole new view`;focus.body=`${name()} is pulling up, bringing new surfaces into reach and new ways to explore during play.`;focus.confirmed=true;}
+ else if(report.key==='crawl'&&report.value==='Yes'&&answers.crawl==='Yes'){focus.title='Crawling opens up the whole room';focus.body=`${name()} is moving between toys and exploring more of the room. Play and the space around it change with that new reach.`;focus.confirmed=true;}
+ else if(report.key==='movement'&&report.value==='rolling'&&(answers.roll==='Yes'||['Tummy to back','Back to tummy','Both ways'].includes(answers.rollDirection))){focus.title=`Rolling opens up ${name()}’s world`;focus.body=`${name()} can explore beyond the play mat. Floor play makes room for reaching, turning and exploring.`;focus.confirmed=true;}
+ else if(report.key==='movement'&&report.value==='trying'&&answers.rollDirection==='Trying to roll'){focus.title=`${name()} is finding new ways to turn and explore`;focus.body=`${name()} is trying to roll. Those first attempts connect floor play with changes to the sleep setup and nearby space.`;focus.confirmed=true;}
  return focus;
 }
 function homeMomentRow(){
