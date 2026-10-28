@@ -120,8 +120,8 @@
     if (priority && priority.type === 'check' && !safetyRest) {
       const item = safetyHomeItems()[priority.id] || {};
       const crawl = mv === 'crawling' && recent('movement');
-      out.push({ topic: 'Safety', key: 'check:' + priority.id,         title: crawl ? `Crawling opens up the room` : priority.id === 'gates' ? 'If you have stairs, gate them first' : item.title,
-        body: crawl ? `Start with this: ${item.title.charAt(0).toLowerCase() + item.title.slice(1)}. Then go room by room, and leave a clear stretch of floor for practice.` : (item.body || ''),
+      out.push({ topic: 'Safety', key: 'check:' + priority.id,         title: crawl ? `Now that ${n()} crawls, start here` : priority.id === 'gates' ? 'If you have stairs, gate them first' : item.title,
+        body: crawl ? `${item.title}. Then go room by room, and leave a clear stretch of floor for practice.` : (item.body || ''),
         tools: homePriorityTools(priority), link: link(`openHomeSafetyCheck('${priority.owner}','${priority.id}')`, 'See how to do it') });
     }
 
@@ -166,7 +166,7 @@
       const planned = rec && rec.status === 'planned';
       const due = age === 0 ? new Date(parse(profile.dob).getTime() + 5 * DAY) : addMonths(parse(profile.dob), age);
       const when = planned ? parse(rec.date) : due, days = Math.round((when - NOW) / DAY);
-      if (!planned && days < -3) continue;
+      if (!planned && days < -14) continue;
       if (days > 35 && !planned) return null;
       return { age, days, saved: planned ? rec.date : null };
     }
@@ -192,7 +192,7 @@
     // Solids: a heads-up a few weeks before the next guide fits.
     if (live() && typeof foodStage === 'function' && foodStage() !== 'preparing' && typeof foodPhaseDates === 'function') {
       const st = foodStage(), d = foodPhaseDates(), soon = k => d && (d[k] - NOW) / 864e5 <= 35;
-      if (st === 'new' && soon('textures')) out.push({ topic: 'Feeding', key: 'solids-textures', title: 'Thicker textures and finger foods are next',
+      if (st === 'new' && soon('textures') && foodWeeksIn() >= 2) out.push({ topic: 'Feeding', key: 'solids-textures', title: 'Thicker textures and finger foods are next',
         body: `In a few weeks, most babies move on to lumpier food and soft pieces they can pick up.`, link: link("openPage('chg:Feeding:s:4')", 'Read the guide') });
       if (st === 'textures' && soon('established')) out.push({ topic: 'Feeding', key: 'solids-meals', title: 'Three meals a day is next',
         body: `From about 9 months, most babies eat three meals and a snack or two.`, link: link("openPage('chg:Feeding:s:5')", 'Read the guide') });

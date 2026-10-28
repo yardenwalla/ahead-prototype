@@ -307,7 +307,9 @@
         : n === 4 ? 'Maya’s showing all four signs, so {s’s} ready for a first taste. Pick a calm morning when {s’s} not too hungry.'
         : 'Being curious about your food is a great sign, but on its own it doesn’t mean {s’s} ready. Most babies show all four around 6 months.';
       return detail(cat, 'Preparing for solids', 'Is Maya ready for solids?', 'Tap each sign as you notice it. Once you’ve seen all four, Maya’s ready for a first taste.',
-        ticks(READY, signsOn, i => `hubToggleReady(${i})`, 'Development') + `<div class="hub-tip is-plain">${F(close)}${typeof profile !== 'undefined' && profile.early ? ' ' + F('Since Maya was born early, check timing with your pediatrician.') : ''}</div>`);
+        ticks(READY, signsOn, i => `hubToggleReady(${i})`, 'Development') + `<div class="hub-tip is-plain">${F(close)}${typeof profile !== 'undefined' && profile.early ? ' ' + F('Since Maya was born early, check timing with your pediatrician.') : ''}</div>`
+        // All four signs, from 6 months, and solids not started yet: one tap to say today's the day.
+        + (n === 4 && age >= 6 && C().live() && answers.solids !== 'Yes' ? `<div class="hub-actions"><button class="hub-button" onclick="setFeedingStage('starting');hubToast('Got it','Feeding now shows first tastes.');openPage('topic:Feeding')">${F('We’re starting today')}</button></div>` : ''));
     }
     if (id === 'setup') {
       const SETUP = [['Get a high chair with a harness', 'One that keeps {o} upright, with {p} feet supported', 'highchair'], ['Learn infant choking first aid', 'A short class or video, so you know what to do', 'shield'], ['Know gagging from choking', 'Gagging is noisy and normal. Choking is silent.', 'mouth'], ['Have a soft spoon and an open cup', 'Small soft-tipped spoons, and a cup for sips of water', 'cup']];
@@ -435,6 +437,9 @@
           steps([meth() === 'both' ? 'At 12 months, swap formula bottles for whole cow’s milk, about 16–24 oz a day. Nursing can carry on alongside.' : 'At 12 months, swap formula for whole cow’s milk, about 16–24 oz a day.', 'Offer milk in an open or straw cup instead of a bottle.', 'Talk it through at the 12-month checkup.']) + tip('No rush on the bottle', 'Phasing it out over a few weeks is fine.'), 'cup');
     }
     if (id === 'after') {
+      // Nursing families: no bottles to swap, so the page is about cow's milk and cups.
+      if (meth() === 'nurse') return detail(cat, 'After the first birthday', 'Cow’s milk, from a cup', 'From 12 months, whole cow’s milk can be a drink alongside nursing. There’s no need to stop nursing.',
+        steps(['Offer a little whole cow’s milk in an open or straw cup with a meal or snack.', 'Build up slowly. Your pediatrician can tell you how much milk fits alongside nursing.', 'Keep nursing as much or as little as works for you both.']) + tip('Already using a cup?', 'Water from a cup has been fine since about 6 months, so this is just a new drink in a familiar cup.'), 'cup');
       return detail(cat, 'After the first birthday', 'Bottles to cups', 'Most babies move off bottles between 12 and 18 months. Water from a cup is already fine from about 6 months, so cups won’t be new.',
         steps(['Swap the bottle Maya cares least about for an open or straw cup first, often the midday one.', 'Every week or so, swap another. The bedtime bottle usually goes last.', 'If you’re using cow’s milk, about 16–24 oz a day from a cup is plenty.']) + tip('Nursing is different', 'There’s no need to stop nursing at 12 months. Keep going for as long as it works for you both.'), 'cup');
     }
@@ -469,7 +474,7 @@
   /* ---------- sleep facts ---------- */
   const SLEEP_KEYS = ['clock', 'daynight', 'rhythm', 'two'];
   const rolled = () => answers.roll === 'Yes' || ['Tummy to back', 'Back to tummy', 'Both ways', 'Trying to roll'].includes(answers.rollDirection);
-  const swaddleDue = () => (rolled() || m() >= 3) && answers.swaddleStopped !== 'Yes' && (m() <= 6 || answers.swaddleStopped === 'No');
+  const swaddleDue = () => (rolled() || m() >= 3) && answers.swaddleStopped !== 'Yes' && answers.crawl !== 'Yes' && answers.pullUp !== 'Yes' && (m() <= 6 || answers.swaddleStopped === 'No');
   const mattressLowestDue = () => (answers.pullUp === 'Yes' || m() >= 8) && answers.mattressLowest !== 'Yes';
   const mattressDue = () => !mattressLowestDue() && (m() >= 5 || answers.sit === 'Yes') && answers.mattressLowered !== 'Yes' && answers.mattressLowest !== 'Yes';
   const safeOn = i => !!(L().safe && L().safe.Sleep && L().safe.Sleep[i]);
@@ -666,7 +671,9 @@
 
   /* ---------- shared sub pages ---------- */
   function firstAid() {
-    return detail('Feeding', 'Safety', 'If Maya is choking', 'Choking is silent: {s} can’t cry, cough or breathe. Gagging is noisy, and you can let {o} work it out.',
+    // Opened from Safety, the page wears Safety's colors and header; from Feeding, Feeding's.
+    const fromSafety = (typeof historyStack !== 'undefined' && historyStack.length && String(historyStack[historyStack.length - 1]).includes('Safety'));
+    return detail(fromSafety ? 'Safety' : 'Feeding', fromSafety ? 'First aid' : 'Safety', 'If Maya is choking', 'Choking is silent: {s} can’t cry, cough or breathe. Gagging is noisy, and you can let {o} work it out.',
       `<section class="hub-card hub-versus"><div class="hub-vs" style="margin-top:0"><div><b>Gagging</b><p>${F('Coughing, sputtering, a red face. Stay calm and let {o} clear it.')}</p></div><div class="is-urgent"><b>Choking</b><p>${F('Silent, can’t cough or cry, lips turning blue. Act now.')}</p></div></div></section>`
       + `<h2 class="hub-h2">${F('What to do if {s} {is} choking')}</h2>`
       + steps(['Shout for help and have someone call 911.', 'Lay Maya face down along your forearm, head lower than {p} chest, supporting {p} jaw. Give up to 5 firm back blows between the shoulder blades.', 'Turn {o} face up on your other arm. With 2 fingers just below the nipple line, give up to 5 quick chest thrusts.', 'Keep switching between back blows and chest thrusts until the food comes out. If {s} stops responding, call 911 and start infant CPR.'])

@@ -28,9 +28,12 @@
     const d = load(), a = dm(), out = [];
     if (month < 4 && (!profile.feed || profile.feed === 'Prefer not to say') && !d.skip.milk && !d.last.milk) out.push('milk');
     const food = feedingCheckin();
-    if (food) out.push(food.key);
     // From 6 months: is the baby moving around yet? A yes switches Safety and Sleep to "now that they're moving".
-    if (a >= 6 && answers.crawl !== 'Yes' && answers.pullUp !== 'Yes' && due(d, 'crawl', ['Not yet'])) out.push('crawl');
+    // From 8 months it's asked before solids, because the safety changes matter more by then.
+    const moving = a >= 6 && answers.crawl !== 'Yes' && answers.pullUp !== 'Yes' && due(d, 'crawl', ['Not yet']);
+    if (moving && a >= 8) out.push('crawl');
+    if (food) out.push(food.key);
+    if (moving && a < 8) out.push('crawl');
     // Sleep (Rule 1 and Rule 3): from 6 months, while the guide is on Three naps, ask about the late catnap.
     // A "not yet" (or a Change back to Three naps) is asked again a month later.
     const sa = typeof hubAgeFor === 'function' ? hubAgeFor('care', actualMonth()) : a;
@@ -200,9 +203,11 @@
   window.homePriority = homePriority = function () {
     if (!isCurrent()) return null;
     const a = dm(), roll = rolling() || answers.rollDirection === 'Trying to roll';
-    if ((roll || a >= 3) && answers.swaddleStopped !== 'Yes' && (a <= 6 || answers.swaddleStopped === 'No')) return { topic: 'Sleep', type: 'swaddle' };
+    if ((roll || a >= 3) && answers.swaddleStopped !== 'Yes' && answers.crawl !== 'Yes' && answers.pullUp !== 'Yes' && (a <= 6 || answers.swaddleStopped === 'No')) return { topic: 'Sleep', type: 'swaddle' };   // a crawler is long past swaddling
     const st = stageNow(), mobile = st === 'moving' || st === 'pulling';
-    const owner = mobile ? 'mobile' : st === 'rolling' || roll ? 'reach' : null, ids = mobile ? safetyOwnedGuides().mobile.ids : owner ? ['rollspace', 'changing'] : [];
+    const owner = mobile ? 'mobile' : st === 'rolling' || roll ? 'reach' : null, lead = answers.pullUp === 'Yes' ? ['anchor', 'windows', 'cords'] : ['gates', 'storage', 'outlets'];
+    // Pulling up: furniture and windows first. Crawling: gates and cabinets first.
+    const ids = mobile ? [...lead, ...safetyOwnedGuides().mobile.ids.filter(x => !lead.includes(x))] : owner ? ['rollspace', 'changing'] : [];
     const id = safetyPendingIds(ids)[0]; return id ? { topic: 'Safety', type: 'check', owner, id } : null;
   };
   window.safetyCurrentGuideStage = safetyCurrentGuideStage = stageNow;

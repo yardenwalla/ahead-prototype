@@ -466,3 +466,29 @@
 /* The one "not medical advice" line, at the foot of Home: readable, quiet */
 #main .connected-preview-footnote { font-size: 12.5px !important; line-height: 1.5; color: var(--muted); margin: 22px 24px 12px }
 #main .setup-advice { text-align: center; margin-top: 14px }
+
+/* ---------- First birthday ---------- */
+#main .bday-year { position: relative; overflow: hidden; margin: 8px 0 14px; padding: 34px 22px 24px; border-radius: 28px; background: linear-gradient(165deg, #fde8d8, #fbe3ec 50%, #e9e3fb); text-align: center }
+#main .bday-one { position: absolute; left: 50%; top: -18px; transform: translateX(-50%); font: 800 220px/1 var(--display-font, inherit); color: #fff; opacity: .55; pointer-events: none }
+#main .bday-eyebrow { position: relative; margin: 70px 0 4px; font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #9a5a3c }
+#main .bday-year h1 { position: relative; font-size: 36px; line-height: 1.1; margin: 0 0 10px }
+#main .bday-lead { position: relative; margin: 0 auto 18px; max-width: 30ch; color: var(--muted) }
+#main .bday-stats { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 0 0 18px }
+#main .bday-stats div { background: rgba(255,255,255,.8); border-radius: 18px; padding: 12px 6px }
+#main .bday-stats b { display: block; font: 700 26px/1.1 var(--display-font, inherit); color: var(--ink) }
+#main .bday-stats span { font-size: 12.5px; color: var(--muted) }
+#main .bday-add, #main .bday-memories { position: relative; display: block; width: 100%; margin-top: 8px }
+#main .bday-photo img { width: 100%; max-height: 260px; object-fit: cover; border-radius: 20px; margin-bottom: 4px }
+#main .bday-end { text-align: center; padding: 6px 18px 28px }
+#main .bday-end p { margin: 0 0 8px; color: var(--ink) }
+#main .bday-end .bday-small { font-size: 13px; color: var(--muted) }
+#main .bday-confetti { position: absolute; inset: 0; pointer-events: none }
+#main .bday-bit { position: absolute; top: -12px; width: 8px; height: 12px; border-radius: 2px; opacity: 0; animation: bday-fall linear 1 forwards }
+#main .bday-bit.is-dot { width: 9px; height: 9px; border-radius: 50% }
+#main .bday-bit.is-strip { width: 5px; height: 16px }
+@keyframes bday-fall { 0% { opacity: 1; transform: translateY(0) rotate(0) } 85% { opacity: 1 } 100% { opacity: 0; transform: translateY(560px) rotate(var(--r)) } }
+/* Seen before, or reduced motion: a still sprinkle instead of falling confetti */
+#main .bday-confetti.is-settled .bday-bit { animation: none; opacity: .8; top: var(--y); transform: rotate(var(--r)) }
+@media (prefers-reduced-motion: reduce) { #main .bday-bit { animation: none !important; opacity: .8; top: var(--y); transform: rotate(var(--r)) } }
+#main .bday-add { background: var(--ink, #2B2840) !important; color: #fff !important; border-radius: 999px; padding: 15px 18px; font-weight: 700; cursor: pointer }
+#main .bday-memories { background: #fff !important; color: var(--ink) !important }
