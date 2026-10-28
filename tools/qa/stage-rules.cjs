@@ -117,7 +117,7 @@ for (const [cat, route, i] of [['Safety', 'safety-stage:reaching', 1], ['Sleep',
     check(find(q).includes(expect), `Search “${q}” finds ${expect}`);
   check(/No guide for/.test(find('zebra')), 'Search with no match says so and suggests words');
   a.run("navigate('home');setMonth(8)");
-  check(/Coming at 8 months/.test(a.html()) && !/Likely around now/.test(a.html()), 'A future month on Home reads as a preview');
+  check(/Coming up · 8 months/.test(a.html()) && !/Likely around now/.test(a.html()), 'A future month on Home reads as a preview');
 }
 // Resources: search lives on Categories and only opens Ahead's own guides.
 {
