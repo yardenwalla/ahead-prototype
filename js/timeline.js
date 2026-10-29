@@ -11,12 +11,12 @@
   };
 })();
 
-/* The "Saved to Memories" toast uses the Memories colors: warm neutrals, like the Memories tab. */
+/* The "Saved to Memories" toast uses the saved moment's category. */
 (function () {
   const base = journeyNoticeMarkup;
   window.journeyNoticeMarkup = journeyNoticeMarkup = function () {
     const html = base(); if (!html || !journeyNotice) return html;
-    const cat = 'Memories';
+    const cat = journeyNotice.kind === 'milestone' ? 'Development' : 'Health';
     return html.replace('<section class="journey-notice', `<section data-cat="${cat}" style="${yearTheme(cat)}" class="journey-notice`);
   };
 })();

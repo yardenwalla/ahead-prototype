@@ -875,9 +875,17 @@
 #main .home-age-line { margin: 18px 4px 10px; font-size: 16px; font-weight: 700; color: var(--ink, #2f2a33) }
 #main .home-age-line .hub-agechip { font: inherit; font-weight: 600; background: none; border: 0; padding: 0; color: var(--muted, #7a7068); text-decoration: underline; text-underline-offset: 3px; cursor: pointer }
 
-/* Memories: neutral, with the rainbow of every category along the bottom edge of its main card */
-#main .mem-welcome, #main .mem-prompt { position: relative; overflow: hidden }
-#main .mem-rainbow { position: absolute; left: 0; right: 0; bottom: 0; height: 6px; display: flex }
-#main .mem-rainbow span { flex: 1 }
-#main .mem-welcome { background: var(--card, #fffdf9) }
-#main .mem-prompt { background: var(--year-pale, #f5f1ea) }
+/* A soft wash of every category's color, fading to white: Memories and the profile, which span the whole year. */
+:root { --wash: linear-gradient(180deg, rgba(255, 253, 249, 0) 0%, #fffdf9 72%), linear-gradient(100deg, #fde3d3 0%, #f7d9e5 24%, #e5e0fc 50%, #d9e5fc 74%, #ddf1e5 100%) }
+#main .mem-welcome { background: var(--wash) }
+#main .mem-prompt { background: linear-gradient(100deg, #fdeee5 0%, #fbeaf1 30%, #efedff 62%, #edf2fe 100%) }
+#main .mem-row-ic { background: #efedff }
+/* Profile: a keepsake card */
+#main .you-hero { margin: 8px 0 22px; padding: 28px 20px 20px; border-radius: 26px; border: 1px solid var(--line, #ece6dd); background: var(--wash); text-align: center }
+#main .you-avatar { display: grid; place-items: center; width: 84px; height: 84px; margin: 0 auto 12px; border-radius: 50%; background: #fffdf9; box-shadow: 0 6px 18px rgba(70, 50, 90, .12); font-size: 36px; font-weight: 800; color: #4d443b }
+#main .you-hero h1 { margin: 0; font-size: 32px }
+#main .you-age { margin: 4px 0 16px; color: var(--muted, #7a7068); font-size: 15px }
+#main .you-pills { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px }
+#main .you-pills button { display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; border-radius: 999px; border: 1px solid var(--line, #e6dfd5); background: #fffdf9; font: inherit; font-size: 14px; font-weight: 600; color: var(--ink, #2f2a33); cursor: pointer }
+#main .you-pills svg { width: 16px; height: 16px }
+#main .you-edit { margin-top: 14px; background: none; border: 0; font: inherit; font-size: 14px; font-weight: 700; color: var(--ink, #4d443b); text-decoration: underline; text-underline-offset: 3px; cursor: pointer }

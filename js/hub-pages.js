@@ -216,12 +216,11 @@
     window.profileRework = profileRework = function () {
       const h = H(), nm = esc2(name());
       const born = journeyDateLabel(profile.dob);
-      let b = `<div class="hub-detail-head"><span class="hub-big">${hubArt('star', 'You')}</span><p class="hub-context">Profile</p><h1>${nm}</h1><p class="hub-lead">${esc2(birthdayAge() === 0 ? Math.max(1, Math.floor((NOW - parse(profile.dob)) / 864e5 / 7)) + ' week' + (Math.floor((NOW - parse(profile.dob)) / 864e5 / 7) > 1 ? 's' : '') : monthLabel(birthdayAge()))} old · born ${esc2(born)}${profile.early ? ' · born early' : ''}</p></div>`;
-      b += h.list('About ' + nm, [
-        h.row({ icon: 'bottle', cat: 'You', title: `How ${esc2(name())} is fed`, sub: esc2(profile.feed || 'Not set'), onclick: "editingProfile=true;draft={...profile};setupStep=2;openPage('setup')" }),
-        h.row({ icon: 'smile', cat: 'You', title: 'Pronouns', sub: esc2(babyPronounLabel()), onclick: "editingProfile=true;draft={...profile};setupStep=1;openPage('setup')" }),
-        h.row({ icon: 'clock', cat: 'You', title: 'Birthday and due date', sub: profile.early && profile.due ? `Born ${esc2(born)} · due ${esc2(journeyDateLabel(profile.due))}` : `Born ${esc2(born)}`, onclick: "editingProfile=true;draft={...profile};setupStep=1;openPage('setup')" })
-      ]);
+      // A keepsake-style card: the baby's initial, name and age, with the details as tappable pills.
+      const edit = step => `editingProfile=true;draft={...profile};setupStep=${step};openPage('setup')`;
+      let b = `<section class="you-hero"><span class="you-avatar" aria-hidden="true">${esc2((name() || 'B').charAt(0).toUpperCase())}</span><h1>${nm}</h1><p class="you-age">${esc2(birthdayAge() === 0 ? Math.max(1, Math.floor((NOW - parse(profile.dob)) / 864e5 / 7)) + ' week' + (Math.floor((NOW - parse(profile.dob)) / 864e5 / 7) > 1 ? 's' : '') : monthLabel(birthdayAge()))} old</p>`
+        + `<div class="you-pills"><button onclick="${edit(1)}">${hubArt('clock', 'You')}Born ${esc2(born)}${profile.early && profile.due ? ` · due ${esc2(journeyDateLabel(profile.due))}` : ''}</button><button onclick="${edit(2)}">${hubArt('bottle', 'You')}${esc2(profile.feed || 'Feeding not set')}</button><button onclick="${edit(1)}">${hubArt('smile', 'You')}${esc2(babyPronounLabel())}</button></div>`
+        + `<button class="you-edit" onclick="${edit(1)}">Edit details</button></section>`;
       if (profile.early && profile.due) b += `<h2 class="hub-h2">Ages</h2>` + hubAgeBlock();
       // Where the baby is now: set it right here. Sleep, Feeding and Safety can be changed; the rest follow age.
       const pick = (cat, title, nowI, labels) => `<div class="hub-where-row"><span class="hub-dot" style="${yearTheme(cat)}">${catIcon(cat)}</span><div class="hub-where-copy"><b>${title}</b><div class="hub-where-chips" role="group" aria-label="${title} stage">${labels.map((l, i) => { const on = i === nowI, ok = on || stageCanChange(cat, i, nowI); return `<button class="${on ? 'is-on' : ''}" ${on ? 'aria-pressed="true"' : ok ? `onclick="hubProfileStage('${cat}',${i})"` : 'disabled'}>${esc2(l)}</button>`; }).join('')}</div></div></div>`;
