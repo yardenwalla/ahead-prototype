@@ -121,22 +121,19 @@
       bagList(m) + h.tip('Keep it packed', 'Restock as soon as you’re home, so the next outing is grab and go.'), 'bag');
     // Flying, in the order a trip happens: before you go, at the airport, on the plane, when you arrive.
     if (id === 'fly') {
-      // A trip in three legs. Each leg says when, then 2–3 specific things to do, so it reads like a plan, not a list of facts.
-      const it = (icon, t, sub, link) => `<li><span class="oa-leg-ic">${hubArt(icon, CAT)}</span><span><b>${F(t)}</b><small>${F(sub)}</small>${link || ''}</span></li>`;
-      const leg = (n, title, when, items) => `<section class="hub-card oa-leg"><header><span class="oa-leg-n">${n}</span><span><b>${F(title)}</b><small>${F(when)}</small></span></header><ul>${items.join('')}</ul></section>`;
-      const passport = `<a class="oa-leg-link" href="https://travel.state.gov/content/travel/en/passports/apply-renew-passport/under-16.html" target="_blank" rel="noopener">Passport form and steps ↗</a>`;
-      return d('Fly with Maya', 'What to plan, in the order you’ll need it.',
-        leg(1, 'Before you go', 'A few weeks ahead', [
-          it('shield', 'Book Maya a seat if you can', 'Bring a car seat labeled for aircraft.'),
-          it('book', 'Going abroad? Get a passport', 'In person, with both parents and one photo.', passport)].concat(m < 3 ? [it('steth', 'Under 3 months?', 'Wait if you can. Colds spread easily in airports.')] : []))
-        + leg(2, 'Travel day', 'Airport and plane', [
-          it('bottle', 'Milk goes through security', 'Pack extra for delays, and tell the officer.'),
-          it('car', 'Board early', 'Time to install the car seat by the window.'),
-          it('swallow', 'Feed at takeoff and landing', 'Swallowing eases ear pressure.')])
-        + leg(3, 'When you arrive', 'The first few days', [
-          it('crib', 'Set up a safe place to sleep', 'Firm, flat and empty, even in a hotel.', `<button class="oa-leg-link" onclick="openPage('chg:${CAT}:d:away')">Sleeping away from home ›</button>`),
-          it('sun', 'New time zone?', 'Shift naps toward local time over a few days.')])
-        + h.video('Flying with babies: parent questions and tips', 'HealthyChildren.org', 'https://www.healthychildren.org/English/safety-prevention/on-the-go/Pages/Flying-with-Baby.aspx', 'Guide'), 'plane');
+      // Three moments in the order a parent meets them. The one real decision (seat or lap) gets the comparison;
+      // everything else is a few full sentences, so it reads like a friend explaining it, not a list of fragments.
+      const sec = t => `<h2 class="hub-h2">${F(t)}</h2>`;
+      return d('Fly with Maya', 'Most of it comes down to one choice when you book, and a little planning for the day itself.',
+        sec('When you book')
+        + h.versus('Where will Maya sit?', ['Own seat', 'Safest. Buckle {o} into a car seat labeled for aircraft.'], ['On your lap', 'Often free under 2, but turbulence can throw a baby from your arms.'])
+        + (m < 3 ? h.tip('Under 3 months?', 'It’s worth waiting a few weeks if you can. Colds spread easily in busy airports.') : '')
+        + h.video('Going abroad? Maya needs a passport', 'Apply in person with form DS-11. Both parents come, with one photo of Maya.', 'https://travel.state.gov/content/travel/en/passports/apply-renew-passport/under-16.html', 'Guide')
+        + sec('On travel day')
+        + h.steps(['Formula, breast milk and water for mixing can all go through security. Pack extra in case of delays.', 'Board early, so there’s time to install the car seat in a window seat.', 'Feed Maya or offer a pacifier during takeoff and landing. Swallowing helps {p} ears.'])
+        + sec('When you arrive')
+        + h.tip('Sleep the same way as home', 'Firm, flat and empty, even in a hotel crib. For a new time zone, shift naps and bedtime a little each day.')
+        + H().list('', [row('crib', 'Sleeping away from home', 'Portable cribs and hotel cribs', 'away')]), 'plane');
     }
     if (id === 'away') return d('Sleep away from home', 'New places are fine for sleep, as long as the sleep space is the same as at home: firm, flat and empty.',
       hubFigure('crib', CAT, 'On the back, in a sleep sack, on a firm flat mattress, with nothing else in the crib.') +

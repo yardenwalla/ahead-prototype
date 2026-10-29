@@ -8,7 +8,7 @@ try {
   hasProfile = !!savedProfile && validDate(savedProfile.dob) && savedProfile.dob <= iso(NOW) &&
     (!savedProfile.early || validDate(savedProfile.due) && savedProfile.due >= savedProfile.dob);
   if (hasProfile) {
-    profile = {...savedProfile, name: typeof savedProfile.name === 'string' ? savedProfile.name : '',
+    profile = {...savedProfile, name: typeof savedProfile.name === 'string' ? capName(savedProfile.name) : '',
       pronouns: ['he','she','they'].includes(savedProfile.pronouns) ? savedProfile.pronouns : 'they',
       feed: ['Breast milk','Formula','Both','Prefer not to say'].includes(savedProfile.feed) ? savedProfile.feed : 'Prefer not to say'};
   }

@@ -857,3 +857,17 @@
 #main .mem-welcome-btn.is-quiet { background: none; text-align: center; border: 1px solid var(--line, #ddd5ca); color: inherit }
 #main .mem-also { margin: 10px 2px 0; font-size: 14px; color: var(--muted, #7a7068); line-height: 1.5 }
 #main .mem-also b { color: var(--ink, #2f2a33); margin-right: 4px }
+
+/* Memories: firsts as a short list, with the rest on their own page */
+#main .mem-list { background: var(--card, #fffdf9); border: 1px solid var(--line, #ece6dd); border-radius: 18px; overflow: hidden }
+#main .mem-row { display: flex; align-items: center; gap: 12px; width: 100%; padding: 14px 16px; background: none; border: 0; text-align: left; font-family: inherit; color: inherit; cursor: pointer }
+#main .mem-row + .mem-row { border-top: 1px solid var(--line, #ece6dd) }
+#main .mem-row-ic { flex: none; width: 42px; height: 42px; border-radius: 50%; background: var(--year-soft, #efeafc); display: grid; place-items: center }
+#main .mem-row-ic svg { width: 24px; height: 24px }
+#main .mem-row-copy { flex: 1; min-width: 0 }
+#main .mem-row-copy b { display: block; font-size: 16px }
+#main .mem-row-copy small { display: block; font-size: 13px; color: var(--muted, #7a7068); margin-top: 2px }
+#main .mem-row-copy q { display: block; font-size: 14px; margin-top: 6px; font-style: italic; color: var(--ink, #3b3440) }
+#main .mem-row-note { flex: none; font-size: 13px; font-weight: 700; color: var(--year-ink, #5b4a8a) }
+#main .mem-all { display: block; width: 100%; padding: 14px 16px; border: 0; border-top: 1px solid var(--line, #ece6dd); background: none; text-align: left; font-family: inherit; font-size: 15px; font-weight: 700; color: var(--year-ink, #5b4a8a); cursor: pointer }
+#main .mem-row-go { flex: none; font-size: 20px; color: var(--muted, #a59c94) }

@@ -16,6 +16,23 @@
   const longLabel = m => m === 0 ? 'Newborn' : m === 12 ? '1 year' : `${m} month${m === 1 ? '' : 's'}`;
   const monthOf = (dob, date) => { let m = 0; while (m < 12 && iso(addMonths(dob, m + 1)) <= date) m++; return m; };
 
+  // One first: icon, what happened, when, and the note (or an invitation to add one).
+  const firstRow = (r, withMonth = true) => {
+    const dob = parse(profile.dob);
+    return `<button class="mem-row" onclick="openPage('event-edit:${r.id}')"><span class="mem-row-ic">${hubArt(ICON(r), 'Development')}</span><span class="mem-row-copy"><b>${esc2(r.title)}</b><small>${esc2(journeyDateLabel(r.date))}${withMonth ? ` · ${esc2(longLabel(monthOf(dob, r.date)))}` : ''}</small>${r.notes ? `<q>${esc2(String(r.notes).slice(0, 90))}</q>` : ''}</span><span class="mem-row-go" aria-hidden="true">›</span></button>`;
+  };
+  // All firsts, by month, newest first. Its own page, so Memories itself never grows long.
+  const allFirsts = () => {
+    const dob = parse(profile.dob), firsts = journeyData().records.filter(r => r.type === 'milestone' && r.status === 'attended').sort((a, c) => c.date.localeCompare(a.date));
+    const by = {}; firsts.forEach(r => { const m = monthOf(dob, r.date); (by[m] = by[m] || []).push(r); });
+    const inner = Object.keys(by).map(Number).sort((x, y) => y - x).map(m => `<h2 class="hub-h2">${esc2(longLabel(m))}</h2><div class="mem-list">${by[m].map(r => firstRow(r, false)).join('')}</div>`).join('');
+    return String(window.__hub.detail('Development', 'Memories', `${name()}’s firsts`, `${firsts.length} saved so far.`, inner || `<p class="mem-empty">${esc2('Nothing saved yet.')}</p>`, 'star')).replace(/(<div class="monthly-page-header">[\s\S]*?<h1>)[^<]*(<\/h1><p>)[^<]*/, `$1Memories$2${esc2(name())}’s first year`);
+  };
+  if (typeof window.changesRoute === 'function') {
+    const baseRoute = window.changesRoute;
+    window.changesRoute = function (p) { return p === 'chg:Timeline:firsts' ? allFirsts() : baseRoute(p); };
+  }
+
   window.journeyTimeline = journeyTimeline = function () {
     const data = journeyData(), dob = parse(profile.dob), today = iso(NOW), nm = esc2(name());
     const now = monthOf(dob, today);
@@ -43,10 +60,10 @@
     }
     if (missing.length) b += `<details class="mem-missing"><summary>${esc2(`Add photos for earlier months (${missing.length})`)}</summary><div class="mem-missing-row">${missing.map(m => `<label class="mem-slot" role="button" aria-label="Add the ${longLabel(m).toLowerCase()} photo"><i aria-hidden="true">＋</i><span>${label(m)}</span>${hubPhotoInput(m)}</label>`).join('')}</div></details>`;
 
-    // Firsts: every saved first gets a card, newest first, in a row you swipe, so it never grows into a long stack.
+    // Firsts: the three most recent, then "See all" for the rest, so the page stays the same length however many you save.
     b += `<div class="mem-head"><h2>Firsts</h2><button class="textlink" onclick="openPage('chg:Timeline:milestone')">＋ Save a first</button></div>`;
     b += firsts.length
-      ? `<div class="mem-firsts">${[...firsts].reverse().map(r => `<button class="mem-first" onclick="openPage('event-edit:${r.id}')"><span class="mem-first-ic">${hubArt(ICON(r), 'Development')}</span><b>${esc2(r.title)}</b><small>${esc2(journeyDateLabel(r.date))} · ${esc2(longLabel(monthOf(dob, r.date)))}</small>${r.notes ? `<q>${esc2(String(r.notes).slice(0, 70))}</q>` : `<span class="mem-addnote">${esc2('Add a note')}</span>`}</button>`).join('')}</div>`
+      ? `<div class="mem-list">${[...firsts].reverse().slice(0, 3).map(r => firstRow(r)).join('')}${firsts.length > 3 ? `<button class="mem-all" onclick="openPage('chg:Timeline:firsts')">${esc2(`See all ${firsts.length} firsts`)} ›</button>` : ''}</div>`
       : `<p class="mem-empty">${esc2(`First smile, first laugh, first roll. Save them as they happen and they’ll collect here.`)}</p>`;
 
     // Checkups: a quiet record.
