@@ -170,19 +170,18 @@
   };
 })();
 
-/* Category main cards carry the drawing for the stage you're reading, in the corner, like Home's card. */
+/* The main card points up at the stage you're reading on the timeline, so the two read as one. */
 (function () {
   if (typeof render !== 'function') return;
   const base = render;
   window.render = render = function (...a) {
     const out = base.apply(this, a);
     try {
-      const page = document.querySelector('#main [data-overview]'), hero = page && page.querySelector('.hub-hero');
-      if (hero && !hero.querySelector('.hub-hero-art') && typeof yearIllustration === 'function') {
-        const cat = page.getAttribute('data-overview'), stages = [...page.querySelectorAll('.hub-stagebar > .hub-stage')];
-        const i = Math.max(0, stages.findIndex(x => x.classList.contains('is-on')));
-        hero.classList.add('has-art');
-        hero.insertAdjacentHTML('afterbegin', `<span class="hub-hero-art" aria-hidden="true">${yearIllustration(cat, i)}</span>`);
+      const page = document.querySelector('#main [data-overview]'), bar = page && page.querySelector('.hub-stagebar');
+      const on = bar && bar.querySelector('.hub-stage.is-on .hub-stage-node'), next = bar && bar.nextElementSibling, card = next && next.classList.contains('hub-hero') ? next : null;
+      if (on && card && card.getBoundingClientRect) {
+        const x = on.getBoundingClientRect().left + on.getBoundingClientRect().width / 2 - card.getBoundingClientRect().left;
+        if (x > 24 && x < card.getBoundingClientRect().width - 24) { card.classList.add('hub-pointed'); card.style.setProperty('--point-x', x + 'px'); }
       }
     } catch (e) {}
     return out;

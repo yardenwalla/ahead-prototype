@@ -931,8 +931,7 @@
 #main .hub-mgroup-item b { font-size: 15px } #main .hub-mgroup-item small { grid-column: 1; font-size: 13.5px; line-height: 1.4; color: var(--muted) }
 #main .hub-mgroup-item span { grid-column: 2; grid-row: 1 / span 2; align-self: center; font-size: 20px; color: var(--muted) }
 
-/* Main card illustration */
-#main .hub-hero.has-art { position: relative }
-#main .hub-hero-art { position: absolute; top: 14px; right: 14px; width: 84px; height: 84px; border-radius: 50%; background: color-mix(in srgb, #fff 55%, transparent); display: grid; place-items: center }
-#main .hub-hero-art svg { width: 70px; height: 70px }
-#main .hub-hero.has-art > .hub-eyebrow, #main .hub-hero.has-art > h1 { padding-right: 92px }
+#main .hub-para { font-size: 16px; line-height: 1.55; margin: 4px 0 18px }
+/* Pointer from the main card up to the selected stage */
+#main .hub-pointed { position: relative; overflow: visible }
+#main .hub-pointed::before { content: ''; position: absolute; top: -9px; left: calc(var(--point-x) - 10px); width: 20px; height: 20px; background: inherit; border-radius: 4px 0 0 0; transform: rotate(45deg); z-index: 0 }
