@@ -881,11 +881,18 @@
 #main .mem-prompt { background: linear-gradient(100deg, #fdeee5 0%, #fbeaf1 30%, #efedff 62%, #edf2fe 100%) }
 #main .mem-row-ic { background: #efedff }
 /* Profile: a keepsake card */
-#main .you-hero { margin: 8px 0 22px; padding: 28px 20px 20px; border-radius: 26px; border: 1px solid var(--line, #ece6dd); background: var(--wash); text-align: center }
-#main .you-avatar { display: grid; place-items: center; width: 84px; height: 84px; margin: 0 auto 12px; border-radius: 50%; background: #fffdf9; box-shadow: 0 6px 18px rgba(70, 50, 90, .12); font-size: 36px; font-weight: 800; color: #4d443b }
-#main .you-hero h1 { margin: 0; font-size: 32px }
-#main .you-age { margin: 4px 0 16px; color: var(--muted, #7a7068); font-size: 15px }
-#main .you-pills { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px }
-#main .you-pills button { display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; border-radius: 999px; border: 1px solid var(--line, #e6dfd5); background: #fffdf9; font: inherit; font-size: 14px; font-weight: 600; color: var(--ink, #2f2a33); cursor: pointer }
-#main .you-pills svg { width: 16px; height: 16px }
-#main .you-edit { margin-top: 14px; background: none; border: 0; font: inherit; font-size: 14px; font-weight: 700; color: var(--ink, #4d443b); text-decoration: underline; text-underline-offset: 3px; cursor: pointer }
+#main .you-hero { margin: 8px 0 22px; padding: 20px 18px 18px; border-radius: 24px; border: 1px solid var(--line, #ece6dd); background: var(--wash) }
+#main .you-top { display: flex; align-items: center; gap: 14px; margin-bottom: 16px }
+#main .you-avatar { flex: none; display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; background: #fffdf9; box-shadow: 0 4px 14px rgba(70, 50, 90, .12); font-size: 28px; font-weight: 800; color: #4d443b }
+#main .you-hero h1 { margin: 0; font-size: 28px; line-height: 1.1 }
+#main .you-age { margin: 4px 0 0; color: var(--muted, #7a7068); font-size: 15px }
+#main .you-pills { display: flex; flex-wrap: wrap; gap: 8px }
+#main .you-pills button { display: flex; align-items: center; justify-content: center; gap: 6px; min-height: 40px; white-space: nowrap; padding: 6px 14px; border-radius: 999px; border: 1px solid var(--line, #e6dfd5); background: #fffdf9; font: inherit; font-size: 13px; font-weight: 600; color: var(--ink, #2f2a33); cursor: pointer }
+#main .you-pills svg { flex: none; width: 15px; height: 15px }
+/* Empty Memories: the "older photos" link sits centered under the welcome card, with room to breathe */
+#main .mem-missing.is-welcome { margin-top: 16px; text-align: center }
+#main .mem-missing.is-welcome summary { display: inline-block; font-size: 14px; font-weight: 600; color: var(--muted, #7a7068); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; list-style: none }
+#main .mem-missing.is-welcome summary::-webkit-details-marker { display: none }
+#main .mem-missing.is-welcome[open] { text-align: left }
+#main .mem-missing.is-welcome + .hub-foot { text-align: center }
+#main .you-pills span { min-width: 0; overflow: hidden; text-overflow: ellipsis }
