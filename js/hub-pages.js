@@ -13,7 +13,7 @@
   const AFTER_NOUN = /^(mirror|book|books|block|blocks|spoon|ball|rattle|crinkle|fabric|flap|toy|toys|nail|clippers|picture|board|photo|gate|monitor|carrier|tub|wipes|food|foods|oatmeal|sunscreen|toothbrush|bath|bottle|lotion|oil|shampoo|gym|bouncer|walker|sling|wrap|seat|carrier)\b/i;
   const MODAL = new Set(['can', 'may', 'might', 'will', 'could', 'should', 'would', 'must', 'did', 'cannot', 'can’t', 'won’t']);
   const ADVERB = new Set(['also', 'often', 'still', 'usually', 'just', 'only', 'may', 'sometimes', 'already', 'first', 'then', 'now', 'really']);
-  const IRREG = { are: 'is', were: 'was', have: 'has', do: 'does', 'don’t': 'doesn’t', go: 'goes', 'aren’t': 'isn’t', 'weren’t': 'wasn’t', 'haven’t': 'hasn’t' };
+  const IRREG = { are: 'is', were: 'was', have: 'has', do: 'does', 'don’t': 'doesn’t', go: 'goes', 'aren’t': 'isn’t', 'weren’t': 'wasn’t', 'haven’t': 'hasn’t', "don't": 'doesn’t', "aren't": 'isn’t', "weren't": 'wasn’t', "haven't": 'hasn’t' };
   const verbS = w => IRREG[w] || (/[^aeiou]y$/.test(w) ? w.slice(0, -1) + 'ies' : /(s|sh|ch|x|z|o)$/.test(w) ? w + 'es' : w + 's');
   const capFirst = (s, like) => like[0] === like[0].toUpperCase() ? s[0].toUpperCase() + s.slice(1) : s;
   function babyify(text) {
@@ -158,7 +158,7 @@
       let html = baseHome();
       // Born early: the adjusted age sits next to the age at the top, and opens About age.
       html = html.replace(/<p class="connected-age-note">[\s\S]*?<\/p>/, '');
-      if (profile.early && profile.due && isCurrent()) html = html.replace(/(<div class="homemeta"><b>[^<]*<\/b><span>)([^<]*)(<\/span>)/, (m0, a1, age, a3) => `${a1}${age.trim()} <button class="hub-agechip" onclick="openPage('age-context')" aria-label="${esc2(monthLabel(adjustedMonth(actualMonth())))} adjusted. About age">· ${esc2(String(adjustedMonth(actualMonth())))} adjusted <span aria-hidden="true">ⓘ</span></button>${a3}`);
+      if (profile.early && profile.due && isCurrent()) html = html.replace(/(<span class="home-age">)([^<]*)(<\/span>)/, (m0, a1, age, a3) => `${a1}${age.trim()} <button class="hub-agechip" onclick="openPage('age-context')" aria-label="${esc2(monthLabel(adjustedMonth(actualMonth())))} adjusted. About age">· ${esc2(String(adjustedMonth(actualMonth())))} adjusted <span aria-hidden="true">ⓘ</span></button>${a3}`);
       // Born early: the month strip also marks the adjusted month, so both ages are visible at a glance.
       if (profile.early && profile.due && isCurrent()) { const adj = adjustedMonth(actualMonth()); if (adj !== actualMonth()) html = html.replace(new RegExp(`(<button class="month[^"]*)("[^>]*onclick="setMonth\\(${adj}\\)"[^>]*><b>[^<]*</b><span>)mo(</span>)`), '$1 is-adjusted$2adj$3'); }
       const b = monthBirthday();
@@ -166,7 +166,7 @@
       const nm = esc2(name()), label = b.m === 12 ? '1 year' : `${b.m} month${b.m === 1 ? '' : 's'}`, plabel = b.m === 12 ? 'first-birthday' : `${b.m}-month`, photo = window.hubPhotoFor(b.m);
       const title = b.since === 0 ? (b.m === 12 ? `${nm} is 1 year old today` : `${nm} is ${label} old today`) : (b.m === 12 ? `${nm} turned 1` : `${nm} turned ${label}`);
       const lead = photo ? (b.firsts.length ? `Here’s what you noticed this month. The photo is in Memories.` : `Another month of firsts. The photo is in Memories.`) : (b.firsts.length ? `Here’s what you noticed this month. Add a photo to keep it in Memories.` : `Another month of firsts. Add a photo to keep this one in Memories.`);
-      const card = `<div class="home-summary connected-summary-intro hub-bday"><span class="hub-bday-num" aria-hidden="true">${b.m === 12 ? '1' : b.m}</span><span class="hub-bday-spark" aria-hidden="true">✦</span><p class="hub-bday-eyebrow">${b.m === 12 ? 'Happy first birthday' : 'Happy ' + label}</p><h1>${title}</h1><p class="hub-bday-lead">${lead}</p>${b.firsts.length ? `<div class="hub-bday-chips">${b.firsts.map(r => `<span>✓ ${esc2(r.title)}</span>`).join('')}</div>` : ''}<label class="hub-bday-photo" role="button">${photo ? `<img src="${photo}" alt="">Change the ${plabel} photo` : `<i aria-hidden="true">＋</i>Add a ${plabel} photo`}${hubPhotoInput(b.m)}</label></div>`;
+      const card = `<div class="home-summary connected-summary-intro hub-bday"><span class="hub-bday-num" aria-hidden="true">${b.m === 12 ? '1' : b.m}</span><span class="hub-bday-spark" aria-hidden="true">✦</span><p class="hub-bday-eyebrow">${b.m === 12 ? 'Happy first birthday' : 'Happy ' + label}${profile.early && profile.due && adjustedMonth(actualMonth()) !== actualMonth() ? ` <button class="hub-agechip" onclick="openPage('age-context')" aria-label="${esc2(monthLabel(adjustedMonth(actualMonth())))} adjusted. About age">· ${esc2(String(adjustedMonth(actualMonth())))} adjusted <span aria-hidden="true">ⓘ</span></button>` : ''}</p><h1>${title}</h1><p class="hub-bday-lead">${lead}</p>${b.firsts.length ? `<div class="hub-bday-chips">${b.firsts.map(r => `<span>✓ ${esc2(r.title)}</span>`).join('')}</div>` : ''}<label class="hub-bday-photo" role="button">${photo ? `<img src="${photo}" alt="">Change the ${plabel} photo` : `<i aria-hidden="true">＋</i>Add a ${plabel} photo`}${hubPhotoInput(b.m)}</label></div>`;
       return html.replace(/<div class="home-summary connected-summary-intro">[\s\S]*?<div class="home-summary-spectrum"[\s\S]*?<\/div><\/div>/, card);
     };
   }
@@ -431,7 +431,7 @@
   };
 
   /* ---------- Resources, a resource, Saved and How we choose guidance ---------- */
-  const CAT_ICON = { Development: 'smile', Feeding: 'bowl', Sleep: 'moon', Health: 'steth', Safety: 'shield', 'Daily rhythm': 'bath' };
+  const CAT_ICON = { Development: 'smile', Feeding: 'bowl', Sleep: 'moon', Health: 'steth', Safety: 'shield', 'Daily rhythm': 'bath', 'Out and about': 'stroller' };
   const hubShell = (cat, inner) => `<div class="quiet-category hub-page hub-detail" style="${yearTheme(cat)}">${inner}</div>`;
   const headBlock = (artName, cat, context, title, lead) => `<div class="hub-detail-head"><span class="hub-big">${hubArt(artName, cat)}</span><p class="hub-context">${esc2(context)}</p><h1>${esc2(title)}</h1>${lead ? `<p class="hub-lead">${esc2(lead)}</p>` : ''}</div>`;
   const plainRow = (iconName, cat, title, sub, onclick, chipText) => `<button class="hub-row" onclick="${onclick}"><span class="hub-dot">${hubArt(iconName, cat)}</span><span class="hub-row-copy"><b>${esc2(title)}</b>${sub ? `<small>${esc2(sub)}</small>` : ''}</span>${chipText ? `<span class="hub-chip">${esc2(chipText)}</span>` : ''}<span class="hub-chev" aria-hidden="true">›</span></button>`;
@@ -473,7 +473,7 @@
       ['Feeding', 'bottle', 'Getting a good latch', 'chg:Feeding:d:latch', 'latch latching nursing breastfeeding sore nipples'],
       ['Feeding', 'bottle', 'Is my baby getting enough?', 'chg:Feeding:d:enough', 'enough wet diapers weight gain hungry'],
       ['Feeding', 'bottle', 'Hunger and fullness cues', 'chg:Feeding:d:cues', 'hunger hungry full fullness cues'],
-      ['Feeding', 'bottle', 'Vitamin D drops', 'chg:Feeding:d:vitd', 'vitamin d drops supplement supplements'],
+      ['Feeding', 'bottle', 'Vitamin D and iron', 'chg:Feeding:d:vitd', 'vitamin vitamins d iron drops supplement supplements anemia'],
       ['Feeding', 'bottle', 'Paced bottle feeding', 'chg:Feeding:d:pace', 'paced pacing bottle'],
       ['Feeding', 'bowl', 'Signs of readiness for solids', 'chg:Feeding:d:signs', 'ready readiness signs solids start starting'],
       ['Feeding', 'bowl', 'What to put on the tray', 'chg:Feeding:d:tray', 'first foods food solids puree purees start offer tray finger'],
@@ -485,6 +485,15 @@
       ['Health', 'steth', 'Fever and sick days: when to call', 'chg:Health:d:sick', 'fever temperature sick ill cold cough vomit vomiting diarrhea breathing medicine tylenol acetaminophen ibuprofen emergency call doctor'],
       ['Health', 'heart', 'How are you doing?', 'chg:Health:d:you', 'postpartum depression anxiety baby blues overwhelmed mom dad parent me tired exhausted exhaustion sad lonely stressed help crying myself'],
       ['Health', 'steth', 'Checkups and vaccines', 'topic:Health', 'checkup checkups visit well child doctor appointment vaccine vaccines shots immunizations'],
+      ['Development', 'signs', 'Baby signs: more, eat, milk, all done', 'chg:Development:d:signs', 'sign signs signing sign language baby signs asl more milk eat all done gestures'],
+      ['Out and about', 'car', 'Car seats', 'chg:Out and about:d:car', 'car seat carseat rear facing forward facing harness chest clip coat pinch test straps uber taxi rideshare'],
+      ['Out and about', 'car', 'A bigger car seat', 'chg:Out and about:d:bigger', 'convertible car seat outgrow infant seat forward facing weight limit'],
+      ['Out and about', 'carrier', 'Wearing a carrier', 'chg:Out and about:d:carry', 'carrier carriers sling wrap babywearing backpack front pack'],
+      ['Out and about', 'stroller', 'Stroller safety', 'chg:Out and about:d:stroller', 'stroller strollers pram buggy walk walks brakes'],
+      ['Out and about', 'plane', 'Flying with a baby', 'chg:Out and about:d:fly', 'flying fly plane flight flights airport travel traveling trip vacation holiday ears passport abroad tsa security'],
+      ['Out and about', 'road', 'Road trips', 'chg:Out and about:d:road', 'road trip drive driving long car ride travel vacation holiday'],
+      ['Out and about', 'crib', 'Sleep away from home', 'chg:Out and about:d:away', 'hotel airbnb grandparents travel crib portable crib pack and play play yard vacation holiday'],
+      ['Out and about', 'bag', 'What to pack', 'chg:Out and about:d:bag', 'diaper bag pack packing packing list outing out leave the house checklist'],
       ['Daily rhythm', 'tooth', 'Teething, drool and gums', 'chg:Daily rhythm:d:gums', 'teething teethe gums drool drooling sore chewing teeth tooth'],
       ['Daily rhythm', 'bath', 'Diaper rash and skin', 'chg:Daily rhythm:d:skin', 'diaper rash rashes skin cradle cap dry eczema'],
       ['Daily rhythm', 'bath', 'Giving a bath', 'chg:Daily rhythm:d:tub', 'bath tub bathing wash'],
@@ -577,7 +586,7 @@
     window.healthJourneyFocus = healthJourneyFocus = function () {
       if (!isCurrent()) return visitForMonth().age;
       const planned = journeyData().records.filter(r => r.type === 'visit' && r.status === 'planned').sort((a, b) => a.date.localeCompare(b.date));
-      const next = WELL_VISITS.find(a => healthRecord(a)?.status !== 'attended' && (daysTo(a) >= -17 || healthRecord(a)?.status === 'planned')) ?? 12;
+      const next = WELL_VISITS.find(a => healthRecord(a)?.status !== 'attended' && (daysTo(a) >= (a === 0 ? -7 : -17) || healthRecord(a)?.status === 'planned')) ?? 12;
       return planned.length && planned[0].visitAge != null && planned[0].visitAge < next ? planned[0].visitAge : next;
     };
   }
@@ -603,7 +612,7 @@
      3 Coming up, up to 2 · 4 "That's everything for now" · 5 Browse by category.
      Which question: a missed checkup, then a stage the baby may have outgrown, then solids, then naps. */
   const Q_CAT = k => k === 'visit' ? 'Health' : k === 'food' || k === 'food-progress' ? 'Feeding' : k === 'naps' ? 'Sleep' : k && k.startsWith('outgrown:') ? k.slice(9) : 'Safety';
-  const Q_ICON = { Health: 'steth', Feeding: 'bowl', Sleep: 'moon', Safety: 'roll', Development: 'star', 'Daily rhythm': 'bath' };
+  const Q_ICON = { Health: 'steth', Feeding: 'bowl', Sleep: 'moon', Safety: 'roll', Development: 'star', 'Daily rhythm': 'bath', 'Out and about': 'stroller' };
   window.hubQuestionCard = function (html, cat) {
     if (!html || html.includes(' hub-q"')) return html || '';
     const t = (html.match(/<h2>([\s\S]*?)<\/h2>/) || [])[1] || '', why = (html.match(/<\/div><p>([\s\S]*?)<\/p>/) || [])[1] || '';
@@ -611,7 +620,7 @@
     const skip = (html.match(/class="connected-skip" onclick="([^"]*)"/) || [])[1];
     const extra = (html.match(/class="connected-checkin([^"]*)"/) || [])[1] || '';
     const label = extra.includes('chg-checkin') ? '' : ({ 'Daily rhythm': 'Everyday care', Development: 'Development & play' }[cat] || cat);
-    return `<section class="connected-checkin${extra} hub-q" style="${yearTheme(cat)}" aria-label="Quick question"><div class="hub-q-head"><span class="hub-dot">${catIcon(cat)}</span><div class="hub-q-copy"><small>${label ? esc2(label) + ' · ' : ''}Quick question</small><h2>${t}</h2>${why ? `<p>${why}</p>` : ''}</div></div><div class="connected-checkin-choices">${choices}</div>${skip ? `<button class="hub-q-skip" onclick="${skip}">Skip for now</button>` : ''}</section>`;
+    return `<section class="connected-checkin${extra} hub-q" style="${yearTheme(cat)}" aria-label="Quick question"><div class="hub-q-head"><span class="hub-dot">${catIcon(cat)}</span><div class="hub-q-copy"><small>${label ? esc2(label) + ' · ' : ''}Quick question</small><h2>${t}</h2>${why ? `<p>${why}</p>` : ''}</div></div><div class="connected-checkin-choices">${choices}${skip ? `<button class="hub-q-skip" onclick="${skip}" aria-label="Skip for now">Skip</button>` : ''}</div></section>`;
   };
   if (typeof window.feedingCheckinMarkup === 'function') {
     const baseFeedQ = window.feedingCheckinMarkup;
@@ -781,7 +790,7 @@ window.hubCenterStages = function () {
       ${photo ? `<div class="bday-photo"><img src="${photo}" alt="${nm}’s first-birthday photo"></div>` : `<label class="hub-button bday-add" role="button">Add a first-birthday photo${hubPhotoInput(12)}</label>`}
       <button class="hub-button is-secondary bday-memories" onclick="navigate('timeline')">See ${nm}’s first year</button>
     </section>
-    <section class="bday-end"><p>${esc2('Ahead covers the first year, so this is where it ends. Your pediatrician takes it from here, starting with the 15-month checkup.')}</p><p class="bday-small">${esc2('You can still look back at any month, and every guide is in Categories.')}</p></section>`;
+    <section class="bday-end"><p>${esc2('Ahead covers the first year, so this is where it ends. Your pediatrician takes it from here, starting with the 12-month checkup.')}</p><p class="bday-small">${esc2('You can still look back at any month, and every guide is in Categories.')}</p></section>`;
   }
   const base = window.adaptiveHome;
   if (typeof base === 'function') {

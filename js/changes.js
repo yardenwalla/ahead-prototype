@@ -141,10 +141,11 @@
      sleep-snapshot-patterns + sleep-phase-metrics (data card) · guide-resource-row
      common-questions + faq-toggle · sleep-reference-row · safety-check-list · sources-disclosure */
   const helpList = (title, items) => `<section class="sleep-phase-help">${title ? "<h3>"+title+"</h3>" : ""}<ul>${items.map(([t, b]) => `<li>${t ? `<h4>${T(t)}</h4>` : ''}${b ? `<p>${T(b)}</p>` : ''}</li>`).join('')}</ul></section>`;
-  // Pronoun tokens in guide copy: {s} {o} {p} {r} {S} {is} {has} {does}.
+  // Pronoun tokens in guide copy: {s} {o} {p} {r} {S} {is} {has} {does}, and verb pairs like {pick|picks} (they pick, she picks).
   const fmt = str => {
     const pr = typeof babyPronouns === 'function' ? babyPronouns() : { s: 'she', o: 'her', p: 'her', r: 'herself', is: 'is', has: 'has', does: 'does' };
-    return String(str || '').replace(/\{(s|o|p|r|S|is|has|does)\}/g, (_, k) => k === 'S' ? pr.s.charAt(0).toUpperCase() + pr.s.slice(1) : pr[k]);
+    return String(str || '').replace(/\{([a-z]+)\|([a-z]+)\}/g, (_, plural, single) => pr.s === 'they' ? plural : single)
+      .replace(/\{(s|o|p|r|S|is|has|does)\}/g, (_, k) => k === 'S' ? pr.s.charAt(0).toUpperCase() + pr.s.slice(1) : pr[k]);
   };
   // The guide for a stage, or the same shape built from a come-and-go phase.
   function guideFor(cat, C, isEv, late) {
@@ -226,14 +227,14 @@
     if (screen === 'approach')
       return detail('Feeding', 'Preparing for solids', 'Purées, baby-led weaning or both', 'There’s no wrong choice. Pick one and adjust as you go.',
         `<div class="chg-options">${[['Purées', 'You spoon small bites, then make them lumpier over time.', 'Good if you want to see how much goes in.'],
-          ['Baby-led weaning', 'Soft finger foods {s} picks up {r}.', 'Good if you’re fine with mess and dropped food.'],
+          ['Baby-led weaning', 'Soft finger foods {s} {pick|picks} up {r}.', 'Good if you’re fine with mess and dropped food.'],
           ['Both', 'Spoon some foods, offer others as finger foods.', 'What many families end up doing.']].map(([t, b, g]) => `<article><h4>${T(t)}</h4><p>${T(fmt(b))}</p><b>${T(g)}</b></article>`).join('')}</div>`);
     if (screen === 'gag')
       return detail('Feeding', 'First foods', 'Gagging or choking?', 'Gagging is common while babies learn to eat. Choking is rare, and you need to act fast.',
         `<div class="chg-vs"><article><h4>Gagging</h4><p>Coughing, sputtering, a red face.</p><b>Normal. Stay calm and let ${T(name())} work it out.</b></article><article class="is-urgent"><h4>Choking</h4><p>Silent, can’t cry or cough, turning blue.</p><b>Call 911 and start infant first aid.</b></article></div><button class="textlink chg-item-link" onclick="openPage('chg:Feeding:safe')">Learn infant choking first aid →</button>`);
     if (screen === 'offer')
       return detail('Feeding', 'First foods', 'What to offer first', 'A few bites once or twice a day. Milk is still the main food.',
-        `<section class="sleep-phase-help chg-guide-section"><ul>${[['Iron-rich foods', 'Mashed beans, soft shredded meat or iron-fortified cereal.'], ['Soft enough to squash', 'Quarter grapes. Skip whole nuts and popcorn.'], ['{S} decides how much', 'Turning away or closing {p} mouth means done.']].map(([t, b]) => `<li><h4>${T(fmt(t))}</h4><p>${T(fmt(b))}</p></li>`).join('')}</ul></section><p class="chg-lead-note">Not before 12 months: honey, cow’s milk as a drink, and juice.</p>`);
+        `<section class="sleep-phase-help chg-guide-section"><ul>${[['Iron-rich foods', 'Mashed beans, soft shredded meat or iron-fortified cereal.'], ['Soft enough to squash', 'Quarter grapes. Skip whole nuts and popcorn.'], ['{S} {decide|decides} how much', 'Turning away or closing {p} mouth means done.']].map(([t, b]) => `<li><h4>${T(fmt(t))}</h4><p>${T(fmt(b))}</p></li>`).join('')}</ul></section><p class="chg-lead-note">Not before 12 months: honey, cow’s milk as a drink, and juice.</p>`);
     if (screen === 'allergens') {
       const tried = allergensTried();
       return detail('Feeding', 'First foods', 'Allergens', 'One new allergen at a time, early in the day. Once it goes well, keep offering it a few times a week.',
@@ -296,7 +297,16 @@
         rows.push(`<li class="is-sleep" data-sample-nap="${nap}"><span>${label==='Catnap'?'Catnap':'Nap '+nap}</span><span class="chg-sample-times">${time(at)}–${time(end)}</span></li>`); at=end;
       } else if (label === 'Bedtime') rows.push(`<li class="is-bed"><span>Bedtime</span>${time(at)}</li>`);
     }
-    return `<h3 class="chg-sample-title">Example day · ${nap} naps</h3><ol class="chg-day" aria-label="Example day with ${nap} naps">${rows.join('')}</ol>`;
+    // A ribbon of the day, 6 am to 9 pm: awake time light, naps colored, night dark from bedtime. The list below gives exact times.
+    const segs=[]; let t=7*60;
+    for (const [label,duration] of C.rhythm) {
+      if (label === 'Awake') { segs.push(['awake',t,t+minutes(duration)]); t+=minutes(duration); }
+      else if (/nap/i.test(label)) { segs.push(['nap',t,t+minutes(duration)]); t+=minutes(duration); }
+      else if (label === 'Bedtime') segs.push(['night',t,21*60]);
+    }
+    const S0=6*60, W=15*60, pct=v=>((Math.max(S0,Math.min(S0+W,v))-S0)/W*100).toFixed(2);
+    const ribbon=`<div class="chg-ribbon" aria-hidden="true"><div class="chg-ribbon-bar"><i class="is-night" style="left:0;width:${pct(7*60)}%"></i>${segs.map(([k,a,b])=>`<i class="is-${k}" style="left:${pct(a)}%;width:${(pct(b)-pct(a)).toFixed(2)}%"></i>`).join('')}</div><div class="chg-ribbon-scale"><span style="left:${pct(7*60)}%">7 am</span><span style="left:${pct(12*60)}%">noon</span><span style="left:${pct(17*60)}%">5 pm</span></div><div class="chg-ribbon-key"><span><i class="is-awake"></i>Awake</span><span><i class="is-nap"></i>Nap</span><span><i class="is-night"></i>Night</span></div></div>`;
+    return `<h3 class="chg-sample-title">Example day · ${nap} naps</h3>${ribbon}<ol class="chg-day" aria-label="Example day with ${nap} naps">${rows.join('')}</ol>`;
   }
 
   // The last age in a label like "Usually 4–6 months", "Usually around 6 months" or "Birth–6 weeks", in months.
