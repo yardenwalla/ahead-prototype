@@ -151,3 +151,21 @@
     return base(m ? `chg:Development:d:more:${m[1]}` : p, ...rest);
   };
 })();
+
+/* Long stage timelines open with the baby's stage in view: the row starts one stage before it (whole stages only). */
+(function () {
+  if (typeof render !== 'function') return;
+  const base = render;
+  window.render = render = function (...a) {
+    const out = base.apply(this, a);
+    try {
+      document.querySelectorAll('#main .hub-stagebar').forEach(bar => {
+        const items = [...bar.children], n = items.length; if (n <= 4) return;
+        const i = Math.max(0, items.findIndex(x => x.classList.contains('is-on')));
+        const first = Math.max(0, Math.min(i - 1, n - 4));
+        bar.scrollLeft = first * (items[0].getBoundingClientRect().width || 0);
+      });
+    } catch (e) {}
+    return out;
+  };
+})();

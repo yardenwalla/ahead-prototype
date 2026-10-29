@@ -77,6 +77,12 @@
     const baseEdit = journeyVisitDateEdit;
     window.journeyVisitDateEdit = journeyVisitDateEdit = function (record) {
       let html = baseEdit(record);
+      // Same header as every other inner page: the category icon, a short context line, then the title.
+      const cat = record.type === 'milestone' ? 'Development' : 'Health';
+      html = html.replace('<div class="journey-form-page">', `<div class="journey-form-page" style="${yearTheme(cat)}">`)
+        .replace(/<div class="eyebrow">[^<]*<\/div><h1>/, `<div class="hub-detail-head"><span class="hub-big">${hubArt(record.type === 'milestone' ? ICON(record) : 'steth', cat)}</span><p class="hub-context">${record.type === 'milestone' ? 'A first' : 'Checkup'}</p><h1>`)
+        .replace('</h1><form', '</h1></div><form')
+        .replace('>Save date</button>', '>Save</button>');
       if (record.type !== 'milestone') return html;
       html = html.replace(/<details class="guide-detail"><summary>Your saved note[\s\S]*?<\/details>/, '');
       return html.replace('<button class="primary">', `<label for="editNote">A note (optional)</label><textarea id="editNote" maxlength="200" rows="3" placeholder="${esc2('What happened, who was there…')}">${esc2(record.notes || '')}</textarea><button class="primary">`);

@@ -381,3 +381,14 @@
    timeline, Baby's details and questions. Same illustration family as the rest of the app. */
 window.CAT_ICON_SCENE = { Development: 4, Feeding: 1, Sleep: 1, Health: 0, Safety: 0, 'Daily rhythm': 0 };
 window.catIcon = function (t) { return typeof yearIllustration === 'function' ? yearIllustration(t, CAT_ICON_SCENE[t] ?? 0) : ''; };
+
+/* Every inner page opens with a large icon. A page that doesn't name one gets one that fits its title,
+   or its category's own icon, so no page looks like a different template. */
+window.hubPageIcon = function (cat, title) {
+  const t = String(title || '').toLowerCase();
+  const pick = [[/fever|sick|temperature/, 'thermo'], [/cold|stuffy|nose/, 'drop'], [/tooth|teeth|gum/, 'tooth'], [/sun/, 'sun'], [/bath|tub/, 'bath'], [/sign/, 'signs'],
+    [/sleep|nap|night|bed/, 'moon'], [/swing|bouncer|seat|gate|proof|safe/, 'shield'], [/feed|food|meal|milk|bottle|solid/, 'bowl'], [/play|idea|game|toy/, 'hand'],
+    [/checkup|visit|vaccine|doctor/, 'steth'], [/you|parent|feel/, 'heart'], [/ask|question/, 'chat'], [/car|stroller|carrier|outing|trip|fly/, 'stroller']].find(([r]) => r.test(t));
+  const fallback = { Development: 'smile', Feeding: 'bowl', Sleep: 'moon', Health: 'steth', Safety: 'shield', 'Daily rhythm': 'bath', 'Out and about': 'stroller' }[cat] || 'star';
+  return pick ? pick[1] : fallback;
+};

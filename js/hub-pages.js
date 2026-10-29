@@ -786,9 +786,8 @@ window.hubCenterStages = function () {
       <p class="bday-lead">You made it through the whole first year together. Look at everything you saw along the way.</p>
       ${(() => { const st = [[firsts, firsts === 1 ? 'first saved' : 'firsts saved'], [visits, visits === 1 ? 'checkup' : 'checkups'], [photos, photos === 1 ? 'monthly photo' : 'monthly photos']].filter(x => x[0] > 0); return st.length ? `<div class="bday-stats" style="grid-template-columns:repeat(${st.length},1fr)">${st.map(x => stat(x[0], x[1])).join('')}</div>` : ''; })()}
       ${photo ? `<div class="bday-photo"><img src="${photo}" alt="${nm}’s first-birthday photo"></div>` : `<label class="hub-button bday-add" role="button">Add a first-birthday photo${hubPhotoInput(12)}</label>`}
-      <button class="hub-button is-secondary bday-memories" onclick="navigate('timeline')">See ${nm}’s first year</button>
+      ${typeof memPlay === 'function' && photos >= 2 ? `<button class="hub-button is-secondary bday-memories" onclick="memPlay()"><span aria-hidden="true">▶</span> ${esc2(`Play ${name()}’s year`)}</button>` : `<button class="hub-button is-secondary bday-memories" onclick="navigate('timeline')">See ${nm}’s first year</button>`}
     </section>
-    ${typeof memPlay === 'function' && Array.from({ length: 13 }, (_, m) => hubPhotoFor(m)).filter(Boolean).length >= 2 ? `<button class="mem-play bday-play" onclick="memPlay()"><span aria-hidden="true">▶</span> ${esc2('Play the year')}</button>` : ''}
     <section class="bday-end"><p>${esc2('Ahead covers the first year, so this is where it ends. Your pediatrician takes it from here, starting with the 12-month checkup.')}</p><p class="bday-small">${esc2('You can still look back at any month, and every guide is in Categories.')}</p></section>`;
   }
   const base = window.adaptiveHome;
