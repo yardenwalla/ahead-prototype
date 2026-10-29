@@ -218,7 +218,7 @@
       const born = journeyDateLabel(profile.dob);
       // A keepsake-style card: the baby's initial, name and age, with the details as tappable pills.
       const edit = step => `editingProfile=true;draft={...profile};setupStep=${step};openPage('setup')`;
-      let b = `<section class="you-hero"><div class="you-top"><span class="you-avatar" aria-hidden="true">${esc2((name() || 'B').charAt(0).toUpperCase())}</span><div><h1>${nm}</h1><p class="you-age">${esc2(birthdayAge() === 0 ? Math.max(1, Math.floor((NOW - parse(profile.dob)) / 864e5 / 7)) + ' week' + (Math.floor((NOW - parse(profile.dob)) / 864e5 / 7) > 1 ? 's' : '') : monthLabel(birthdayAge()))} old · born ${esc2(parse(profile.dob).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }))}</p></div></div>`
+      let b = `<section class="you-hero"><button class="you-edit" onclick="${edit(1)}" aria-label="Edit ${nm}’s details">Edit</button><div class="you-top"><span class="you-avatar" aria-hidden="true">${esc2((name() || 'B').charAt(0).toUpperCase())}</span><div><h1>${nm}</h1><p class="you-age">${esc2(birthdayAge() === 0 ? Math.max(1, Math.floor((NOW - parse(profile.dob)) / 864e5 / 7)) + ' week' + (Math.floor((NOW - parse(profile.dob)) / 864e5 / 7) > 1 ? 's' : '') : monthLabel(birthdayAge()))} old · born ${esc2(parse(profile.dob).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }))}</p></div></div>`
         + `<div class="you-pills"><button onclick="${edit(2)}">${hubArt('bottle', 'You')}<span>${esc2(profile.feed || 'Feeding not set')}</span></button><button onclick="${edit(1)}">${hubArt('smile', 'You')}<span>${esc2(babyPronounLabel())}</span></button></div></section>`;
       if (profile.early && profile.due) b += `<h2 class="hub-h2">Ages</h2>` + hubAgeBlock();
       // Where the baby is now: set it right here. Sleep, Feeding and Safety can be changed; the rest follow age.
@@ -232,15 +232,12 @@
       b += `<h2 class="hub-h2">Where ${nm} is now</h2><p class="hub-where-lead">This sets what each guide shows. Tap to change it if it’s not quite right.</p><section class="hub-card hub-where">`
         + pick('Feeding', 'Feeding', feedGroup(chgStageIndex('Feeding')), STAGE_TABLE.Feeding.stages.map(x => x.label))
         + pick('Sleep', 'Sleep', chgStageIndex('Sleep'), STAGE_TABLE.Sleep.stages.map(x => x.label))
-        + pick('Safety', 'Safety', safeI, STAGE_TABLE.Safety.stages.map(x => x.label))
-        + (developmentMonth(actualMonth()) >= 5 ? `<div class="hub-where-row"><span class="hub-dot" style="${yearTheme('Safety')}">${hubArt('crawl', 'Safety')}</span><div class="hub-where-copy"><b>Moving</b>${hubMovingChips()}</div></div>` : '')
+        + pick('Safety', 'Safety', safeI, STAGE_TABLE.Safety.stages.map(x => x.label)).replace(/<\/div><\/div>$/, (developmentMonth(actualMonth()) >= 5 ? `<p class="hub-where-sub">How ${nm} moves</p>${hubMovingChips()}` : '') + '</div></div>')
         + fixed('Development', 'Development & play', 'By ' + devRef(developmentMonth(actualMonth())) + ' months', 'dev')
         + fixed('Daily rhythm', 'Everyday care', careNow, 'care')
         + fixed('Health', 'Health', 'Next: ' + healthJourneyLabel(healthJourneyFocus()), 'birthday')
         + `</section>`;
-      b += h.list('More', [
-        h.row({ icon: 'book', cat: 'You', title: 'How we choose guidance', sub: 'Sources and what we leave out', onclick: "openPage('trust')" })
-      ]);
+      b += `<button class="you-link" onclick="openPage('trust')">How we choose guidance ›</button>`;
       b += h.note(window.AHEAD_STORAGE_PERSISTS === false ? 'This viewer can’t keep your entries after you close it. Open Ahead in your phone’s browser to keep them.' : 'Your answers, notes and photos stay in this browser on this device.');
       return `<div class="quiet-category hub-page hub-detail" style="${yearTheme('You')}">${hubPageTop(`${esc2(name())}’s details`)}${b}</div>`;
     };

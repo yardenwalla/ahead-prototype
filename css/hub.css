@@ -896,3 +896,9 @@
 #main .mem-missing.is-welcome[open] { text-align: left }
 #main .mem-missing.is-welcome + .hub-foot { text-align: center }
 #main .you-pills span { min-width: 0; overflow: hidden; text-overflow: ellipsis }
+#main .you-hero { position: relative }
+#main .you-edit { position: absolute; top: 14px; right: 14px; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line, #e6dfd5); background: #fffdf9; font: inherit; font-size: 13px; font-weight: 700; color: var(--ink, #2f2a33); text-decoration: none; cursor: pointer; margin: 0 }
+#main .hub-where-sub { margin: 12px 0 6px; font-size: 13px; font-weight: 700; color: var(--muted, #7a7068) }
+#main .you-link { display: block; margin: 8px auto 6px; background: none; border: 0; font: inherit; font-size: 15px; font-weight: 600; color: var(--ink, #2f2a33); text-decoration: underline; text-underline-offset: 3px; cursor: pointer }
+#main .next-dot svg { width: 100%; height: 100% }
+#main .you-top { padding-right: 56px }

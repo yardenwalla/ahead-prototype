@@ -71,7 +71,7 @@
   }
 
   function card(i) {
-    return `<button class="next-item" style="${yearTheme(i.cat)}" onclick="${i.go}"><span class="next-dot">${hubArt(i.icon || ICON[i.cat] || 'star', i.cat)}</span><span class="next-copy"><small>${esc(displayTopic(i.cat))}</small><b>${F(i.title)}</b><span>${F(i.line)}</span></span><span class="hub-chev" aria-hidden="true">›</span></button>`;
+    return `<button class="next-item" style="${yearTheme(i.cat)}" onclick="${i.go}"><span class="next-dot">${typeof catIcon === 'function' ? catIcon(i.cat) : hubArt(ICON[i.cat] || 'star', i.cat)}</span><span class="next-copy"><small>${esc(displayTopic(i.cat))}</small><b>${F(i.title)}</b><span>${F(i.line)}</span></span><span class="hub-chev" aria-hidden="true">›</span></button>`;
   }
 
   window.nextPage = function () {
