@@ -170,20 +170,3 @@
   };
 })();
 
-/* The main card points up at the stage you're reading on the timeline, so the two read as one. */
-(function () {
-  if (typeof render !== 'function') return;
-  const base = render;
-  window.render = render = function (...a) {
-    const out = base.apply(this, a);
-    try {
-      const page = document.querySelector('#main [data-overview]'), bar = page && page.querySelector('.hub-stagebar');
-      const on = bar && bar.querySelector('.hub-stage.is-on .hub-stage-node'), next = bar && bar.nextElementSibling, card = next && next.classList.contains('hub-hero') ? next : null;
-      if (on && card && card.getBoundingClientRect) {
-        const x = on.getBoundingClientRect().left + on.getBoundingClientRect().width / 2 - card.getBoundingClientRect().left;
-        if (x > 24 && x < card.getBoundingClientRect().width - 24) { card.classList.add('hub-pointed'); card.style.setProperty('--point-x', x + 'px'); }
-      }
-    } catch (e) {}
-    return out;
-  };
-})();

@@ -294,7 +294,7 @@
   // A scale from one end to the other, with options placed along it (each one tappable).
   window.hubScale = function ({ title, left, right, items, cat = 'Sleep', caption = '' }) {
     const c = palOf(cat);
-    return `<figure class="hub-figure hub-scale" role="img" aria-label="${escA(caption || title)}" style="--ink:${c.ink};--bg:${c.bg};--pale:${c.pale}"><b class="hub-fig-title">${F2(title)}</b><div class="hub-scale-ends"><span>${F2(left)}</span><span>${F2(right)}</span></div><div class="hub-scale-bar"></div><div class="hub-scale-items">${items.map(([name, sub, go], i) => `<button class="hub-scale-item" onclick="${go}"><i>${i + 1}</i><span><b>${F2(name)}</b><small>${F2(sub)}</small></span></button>`).join('')}</div></figure>`;
+    return `<figure class="hub-figure hub-scale" role="img" aria-label="${escA(caption || title)}" style="--ink:${c.ink};--bg:${c.bg};--pale:${c.pale}"><b class="hub-fig-title">${F2(title)}</b><div class="hub-scale-ends"><span>${F2(left)}</span><span>${F2(right)}</span></div><div class="hub-scale-bar"></div><div class="hub-scale-items">${items.map(([name, sub, go], i) => `<button class="hub-scale-item" style="--k:${items.length > 1 ? (i / (items.length - 1)).toFixed(2) : 1}" onclick="${go}"><span><b>${F2(name)}</b><small>${F2(sub)}</small></span><em aria-hidden="true">›</em></button>`).join('')}</div><small class="hub-scale-hint">${F2('Swipe to see all ' + items.length)}</small></figure>`;
   };
   // A day as a line from morning to evening, with an icon at each moment.
   window.hubDayMarkers = function ({ title, events, from = 6 * 60, to = 20 * 60, cat = 'Feeding', caption = '', note = '' }) {

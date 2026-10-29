@@ -910,28 +910,14 @@
 #main .hub-stage-name { max-width: 92% }
 #main .mem-play-link { background: var(--ink, #2f2a33) }
 
-/* Sleep-training approaches: a vertical scale, most to least hands-on, with the line running down the left */
-#main .hub-vscale { padding: 16px 16px 14px }
-#main .hub-vscale-end { margin: 10px 0 8px 22px; font-size: 13px; font-weight: 700; color: var(--year-ink) }
-#main .hub-vscale-list { position: relative; padding-left: 22px }
-#main .hub-vscale-list::before { content: ''; position: absolute; left: 6px; top: -4px; bottom: -4px; width: 4px; border-radius: 4px; background: linear-gradient(180deg, var(--year-ink), var(--year-bg)) }
-#main .hub-vscale-item { position: relative; display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; width: 100%; text-align: left; padding: 11px 12px; margin-bottom: 8px; border-radius: 14px; border: 0; background: var(--year-pale); font: inherit; color: inherit; cursor: pointer }
-#main .hub-vscale-item::before { content: ''; position: absolute; left: -20px; top: 18px; width: 8px; height: 8px; border-radius: 50%; background: var(--white, #fff); border: 2px solid var(--year-ink) }
-#main .hub-vscale-item b { font-size: 15px; grid-column: 1 }
-#main .hub-vscale-item small { grid-column: 1; font-size: 13.5px; line-height: 1.4; color: var(--muted) }
-#main .hub-vscale-item span { grid-column: 2; grid-row: 1 / span 2; align-self: center; font-size: 20px; color: var(--muted) }
 
-/* Sleep training: two groups of methods */
-#main .hub-mgroup { border-radius: 18px; padding: 14px 14px 6px; margin-bottom: 12px; background: var(--year-pale); border: 1px solid color-mix(in srgb, var(--year-ink) 12%, transparent) }
-#main .hub-mgroup.is-out { background: var(--card, #fffdf9) }
-#main .hub-mgroup header { margin-bottom: 8px }
-#main .hub-mgroup header b { display: block; font-size: 17px; color: var(--year-ink) }
-#main .hub-mgroup header small { display: block; font-size: 13.5px; color: var(--muted); margin-top: 2px; line-height: 1.4 }
-#main .hub-mgroup-item { display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; width: 100%; text-align: left; padding: 12px 0; border: 0; border-top: 1px solid color-mix(in srgb, var(--year-ink) 12%, transparent); background: none; font: inherit; color: inherit; cursor: pointer }
-#main .hub-mgroup-item b { font-size: 15px } #main .hub-mgroup-item small { grid-column: 1; font-size: 13.5px; line-height: 1.4; color: var(--muted) }
-#main .hub-mgroup-item span { grid-column: 2; grid-row: 1 / span 2; align-self: center; font-size: 20px; color: var(--muted) }
-
-#main .hub-para { font-size: 16px; line-height: 1.55; margin: 4px 0 18px }
-/* Pointer from the main card up to the selected stage */
-#main .hub-pointed { position: relative; overflow: visible }
-#main .hub-pointed::before { content: ''; position: absolute; top: -9px; left: calc(var(--point-x) - 10px); width: 20px; height: 20px; background: inherit; border-radius: 4px 0 0 0; transform: rotate(45deg); z-index: 0 }
+/* Sleep-training approaches as a carousel: one card per method, in order from more of you to less of you.
+   The bar and each card's outline darken in the same direction, so the order reads at a glance. */
+#main .hub-scale-bar { background: linear-gradient(90deg, var(--pale), var(--ink)) }
+#main .hub-scale-items { display: flex; gap: 10px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; margin: 0 -16px; padding: 2px 16px 6px; scroll-padding-inline: 16px }
+#main .hub-scale-items::-webkit-scrollbar { display: none }
+#main .hub-scale-item { flex: 0 0 64%; scroll-snap-align: start; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; gap: 10px; min-height: 112px; padding: 14px; border-radius: 16px; background: #fffdf9; border: 2px solid color-mix(in srgb, var(--ink) calc(18% + var(--k) * 82%), transparent) }
+#main .hub-scale-item b { font-size: 16px; margin-bottom: 4px }
+#main .hub-scale-item small { font-size: 13.5px; line-height: 1.4 }
+#main .hub-scale-item em { align-self: flex-end; font-style: normal; font-size: 20px; color: var(--ink) }
+#main .hub-scale-hint { display: block; margin-top: 6px; font-size: 12px; color: var(--muted, #6b6670) }

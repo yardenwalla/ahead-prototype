@@ -673,7 +673,6 @@
         + `<div class="hub-actions"><button class="hub-button" onclick="setAnswer('${lowest ? 'mattressLowest' : 'mattressLowered'}','Yes')">Done</button></div>`, 'shield');
     }
     // Where baby sleeps: bassinet to crib, and when to move rooms. AAP: room-share, on a separate sleep surface, ideally for the first 6 months.
-    if (id === 'methods') return detail(cat, 'Sleep training', 'Choosing an approach', '', methodScale(), 'book');
     if (id === 'where') {
       return detail(cat, 'Sleep', 'Where Maya sleeps', 'In your room for the first 6 months, in {p} own sleep space. After that, where {s} {sleep|sleeps} is your family’s call.',
         hubWindowBar({ title: 'In your room, in {p} own sleep space', from: 0, to: 12, zones: [[0, 6, 'Share a room', 'band'], [6, 12, 'Your call', 'calm']], ticks: [[0, 'Birth'], [6, '6 mo'], [12, '1 year']], now: (NOW - parse(profile.dob)) / 2629746e3, cat, caption: 'Keep baby in your room, in their own crib or bassinet, for the first 6 months. After that, moving to their own room is a family choice.' })
@@ -768,22 +767,15 @@
     const methods = typeof sleepTrainingMethods === 'function' ? sleepTrainingMethods() : [];
     const order = ['fading', 'pickup', 'chair', 'ferber', 'extinction'];
     const sorted = order.map(k => [methods.findIndex(x => x.kind === k), methods.find(x => x.kind === k)]).filter(x => x[1]);
-    // The real difference between methods is whether you stay in the room. Say that once, then list the methods
-    // as plain rows (what you'd do, in one line), and answer the one worry every parent has.
-    const what = { fading: 'Start bedtime later, when {s’s} sleepier, then move it earlier', pickup: 'Pick {o} up to calm {o}, then lay {o} back down', chair: 'Sit by the crib, moving your chair away over a few nights', ferber: 'Check in at longer and longer gaps', extinction: 'Don’t go back in until morning, unless something’s wrong' };
-    const r = k => { const x = methods.find(y => y.kind === k); return x ? row({ icon: k === 'fading' ? 'clock' : k === 'pickup' ? 'heart' : k === 'chair' ? 'sofa' : k === 'ferber' ? 'eye' : 'moon', cat: 'Sleep', title: x.name, sub: what[k], onclick: go('chg:Sleep:d:method:' + methods.indexOf(x)) }) : ''; };
-    return `<p class="hub-para">${F('There’s no best method. The main difference is whether you stay in the room while Maya learns to fall asleep. Staying usually means less crying but takes longer. Leaving is usually quicker, with more crying at first.')}</p>`
-      + list('You stay in the room', ['fading', 'pickup', 'chair'].map(r))
-      + list('You leave the room', ['ferber', 'extinction'].map(r))
-      + tip('Is it safe?', 'Studies haven’t found lasting harm to babies or to your bond. The best method is one you can stick with.');
+    return hubScale({ title: 'The main approaches', left: 'More of you, more gradual', right: 'Less of you, often quicker', items: sorted.map(([k, x]) => [x.name, x.title, go('chg:Sleep:d:method:' + k)]), cat: 'Sleep', caption: 'Five sleep-training approaches, from the most hands-on (bedtime fading) to the least (cry it out).' });
   }
   function settlePage() {
     const age = m(), choice = C().settlingGuide();
     if (age < 4) {
       // Read ahead: the parent can learn about sleep training before it's time, without being told to start.
       const methods = typeof sleepTrainingMethods === 'function' ? sleepTrainingMethods() : [];
-      return detail('Sleep', 'Read ahead', 'Sleep training can wait', 'It’s optional, and families who try it usually start around 4–6 months. For now, feeding, rocking or holding Maya to sleep is fine. You can’t spoil a young baby.',
-        list('', [row({ icon: 'book', cat: 'Sleep', title: 'Curious about the options?', sub: 'The main approaches, in plain words', onclick: go('chg:Sleep:d:methods') })]) + list('', [row({ icon: 'heart', cat: 'Sleep', title: 'Help Maya fall asleep any way that works', sub: 'Soothing in the early months', onclick: go('chg:Sleep:d:soothe') })]), 'book');
+      return detail('Sleep', 'Read ahead', 'Sleep training, for later', 'Sleep training is a choice, not a must. Families who choose it can start any time from about 4–6 months. Here’s what the options look like, so you can decide ahead of time.',
+        methodScale() + tip('For now', 'Feeding, rocking or holding Maya to sleep is fine. You can’t spoil a young baby.') + list('', [row({ icon: 'heart', cat: 'Sleep', title: 'Help Maya fall asleep any way that works', sub: 'Soothing in the early months', onclick: go('chg:Sleep:d:soothe') })]), 'book');
     }
     return settleChoices(age, choice);
   }
