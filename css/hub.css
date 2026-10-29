@@ -829,7 +829,7 @@
 #main .oa-leg ul { list-style: none; margin: 0; padding: 0 }
 #main .oa-leg li { display: flex; gap: 12px; padding: 12px 0; align-items: flex-start }
 #main .oa-leg li + li { border-top: 1px solid var(--line, #ece6dd) }
-#main .oa-leg-ic { flex: none; width: 40px; height: 40px; border-radius: 12px; background: var(--year-soft, #fbeee6); display: grid; place-items: center }
+#main .oa-leg-ic { flex: none; width: 40px; height: 40px; border-radius: 12px; background: var(--year-pale, #fbeee6); display: grid; place-items: center }
 #main .oa-leg-ic svg { width: 24px; height: 24px }
 #main .oa-leg li b { display: block; font-size: 15px }
 #main .oa-leg li small { display: block; font-size: 14px; color: var(--muted, #7a7068); line-height: 1.4; margin-top: 2px }
@@ -837,12 +837,12 @@
 #main .oa-leg-pack { margin-top: 14px }
 
 /* Memories: empty state and the short "also seen" line */
-#main .mem-welcome { background: linear-gradient(180deg, var(--year-soft, #efeafc) 0%, var(--card, #fffdf9) 62%); border: 1px solid var(--line, #ece6dd); border-radius: 24px; padding: 30px 20px 22px; text-align: center; margin-top: 14px; overflow: hidden }
+#main .mem-welcome { background: linear-gradient(180deg, var(--year-pale, #f5f1ea) 0%, var(--card, #fffdf9) 62%); border: 1px solid var(--line, #ece6dd); border-radius: 24px; padding: 30px 20px 22px; text-align: center; margin-top: 14px; overflow: hidden }
 #main .mem-welcome-art { position: relative; height: 150px; margin: 0 auto 20px; max-width: 280px }
 #main .mem-polaroid { position: absolute; top: 10px; width: 104px; padding: 8px 8px 0; background: #fff; border-radius: 6px; box-shadow: 0 6px 18px rgba(60, 40, 90, .14), 0 1px 3px rgba(60, 40, 90, .08) }
 #main .mem-polaroid i { display: grid; place-items: center; height: 92px; border-radius: 3px }
 #main .mem-polaroid i svg { width: 38px; height: 38px }
-#main .mem-polaroid em { display: block; font-style: normal; font-size: 12px; font-weight: 700; color: #6b5f7a; padding: 7px 0 9px }
+#main .mem-polaroid em { display: block; font-style: normal; font-size: 12px; font-weight: 700; color: #6b6158; padding: 7px 0 9px }
 #main .mem-polaroid.is-0 { left: 0; transform: rotate(-9deg); z-index: 1 }
 #main .mem-polaroid.is-0 i { background: #fde4dc }
 #main .mem-polaroid.is-1 { left: 50%; margin-left: -52px; top: 0; transform: rotate(2deg); z-index: 3 }
@@ -862,7 +862,7 @@
 #main .mem-list { background: var(--card, #fffdf9); border: 1px solid var(--line, #ece6dd); border-radius: 18px; overflow: hidden }
 #main .mem-row { display: flex; align-items: center; gap: 12px; width: 100%; padding: 14px 16px; background: none; border: 0; text-align: left; font-family: inherit; color: inherit; cursor: pointer }
 #main .mem-row + .mem-row { border-top: 1px solid var(--line, #ece6dd) }
-#main .mem-row-ic { flex: none; width: 42px; height: 42px; border-radius: 50%; background: var(--year-soft, #efeafc); display: grid; place-items: center }
+#main .mem-row-ic { flex: none; width: 42px; height: 42px; border-radius: 50%; background: var(--year-pale, #f5f1ea); display: grid; place-items: center }
 #main .mem-row-ic svg { width: 24px; height: 24px }
 #main .mem-row-copy { flex: 1; min-width: 0 }
 #main .mem-row-copy b { display: block; font-size: 16px }
@@ -874,3 +874,10 @@
 #main .hub-row.is-static { cursor: default }
 #main .home-age-line { margin: 18px 4px 10px; font-size: 16px; font-weight: 700; color: var(--ink, #2f2a33) }
 #main .home-age-line .hub-agechip { font: inherit; font-weight: 600; background: none; border: 0; padding: 0; color: var(--muted, #7a7068); text-decoration: underline; text-underline-offset: 3px; cursor: pointer }
+
+/* Memories: neutral, with the rainbow of every category along the bottom edge of its main card */
+#main .mem-welcome, #main .mem-prompt { position: relative; overflow: hidden }
+#main .mem-rainbow { position: absolute; left: 0; right: 0; bottom: 0; height: 6px; display: flex }
+#main .mem-rainbow span { flex: 1 }
+#main .mem-welcome { background: var(--card, #fffdf9) }
+#main .mem-prompt { background: var(--year-pale, #f5f1ea) }
