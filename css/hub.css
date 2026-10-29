@@ -748,3 +748,65 @@
 #main .hub-hero-checks li::before { content: ''; width: 8px; height: 8px; top: 7px; left: 6px; border-radius: 50%; background: currentColor; opacity: .55 }
 #main .hub-hero-checks li { padding-left: 24px }
 #main .hub-q .connected-checkin-choices button { flex: 1 1 auto }
+/* ---------- Memories, led by the photos ---------- */
+#main .mem-page h1 { margin: 6px 0 4px }
+#main .mem-lead { margin: 0 0 16px; color: var(--muted, #6b6670); font-size: 15px }
+#main .mem-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px }
+#main .mem-tile { position: relative; aspect-ratio: 1; border-radius: 16px; overflow: hidden; display: grid; place-items: center; cursor: pointer; background: var(--year-pale, #f3effa) }
+#main .mem-tile img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover }
+#main .mem-tile > span { position: absolute; left: 8px; bottom: 7px; font-size: 12px; font-weight: 800; color: var(--year-ink, #5b4a8b); background: rgba(255, 255, 255, .88); padding: 2px 8px; border-radius: 999px }
+#main .mem-tile.is-empty { box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--year-ink, #5b4a8b) 25%, transparent) }
+#main .mem-tile.is-empty i { font-style: normal; font-size: 24px; color: var(--year-ink, #5b4a8b); opacity: .6; margin-bottom: 14px }
+#main .mem-tile.is-now { background: #fff; box-shadow: inset 0 0 0 2px var(--year-ink, #5b4a8b) }
+#main .mem-tile.is-now em { position: absolute; top: 8px; left: 0; right: 0; text-align: center; font-style: normal; font-size: 11px; font-weight: 800; color: var(--year-ink, #5b4a8b) }
+#main .mem-tile.is-future { cursor: default; background: transparent; box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--year-ink, #5b4a8b) 10%, transparent) }
+#main .mem-tile.is-future > span { background: none; opacity: .45 }
+#main .mem-play { width: 100%; min-height: 48px; border: 0; border-radius: 999px; background: var(--year-ink, #5b4a8b); color: #fff; font: inherit; font-weight: 700; font-size: 15.5px; cursor: pointer; margin-bottom: 22px }
+#main .mem-head { display: flex; align-items: baseline; justify-content: space-between; margin: 6px 0 10px }
+#main .mem-head h2 { margin: 0; font-size: 19px }
+#main .mem-firsts { display: grid; grid-auto-flow: column; grid-auto-columns: 46%; gap: 10px; overflow-x: auto; padding-bottom: 6px; margin: 0 -16px 18px; padding-left: 16px; padding-right: 16px; scroll-snap-type: x mandatory }
+#main .mem-first { scroll-snap-align: start; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; text-align: left; padding: 14px; border-radius: 18px; border: 1px solid var(--line); background: var(--white); font: inherit; color: inherit; cursor: pointer }
+#main .mem-first-ic { width: 44px; height: 44px; border-radius: 50%; background: var(--year-pale, #f3effa); display: grid; place-items: center; margin-bottom: 6px }
+#main .mem-first-ic svg { width: 26px; height: 26px }
+#main .mem-first b { font-size: 15px; line-height: 1.3 }
+#main .mem-first small { font-size: 12.5px; color: var(--muted, #6b6670) }
+#main .mem-empty { color: var(--muted, #6b6670); font-size: 14px; margin: 0 0 18px }
+#main .mem-visits { border-top: 1px solid var(--line); padding: 12px 0; margin-bottom: 8px }
+#main .mem-visits summary { display: flex; justify-content: space-between; align-items: baseline; cursor: pointer; list-style: none; font-weight: 700 }
+#main .mem-visits summary small { font-weight: 500; color: var(--muted, #6b6670) }
+#main .mem-visit { display: flex; justify-content: space-between; width: 100%; padding: 10px 0; border: 0; border-bottom: 1px solid var(--line); background: none; font: inherit; color: inherit; text-align: left; cursor: pointer }
+#main .mem-visit small { color: var(--muted, #6b6670) }
+#main .mem-visits .textlink { margin-top: 10px }
+/* The flipbook */
+.mem-flip { position: fixed; inset: 0; z-index: 60; background: #1f1b22; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: env(safe-area-inset-top, 0) 16px env(safe-area-inset-bottom, 0) }
+.mem-flip-close { position: absolute; top: calc(env(safe-area-inset-top, 0px) + 12px); right: 14px; width: 44px; height: 44px; border-radius: 50%; border: 0; background: rgba(255, 255, 255, .14); color: #fff; font-size: 26px; cursor: pointer }
+.mem-flip-stage { position: relative; width: min(100%, 420px); aspect-ratio: 1; border-radius: 24px; overflow: hidden; cursor: pointer }
+.mem-flip-stage img { width: 100%; height: 100%; object-fit: cover; display: block }
+.mem-flip-stage img.is-in { animation: memIn .5s ease-out }
+@keyframes memIn { from { opacity: .2; transform: scale(1.04) } to { opacity: 1; transform: none } }
+.mem-flip-cap { position: absolute; left: 0; right: 0; bottom: 0; padding: 40px 18px 16px; background: linear-gradient(transparent, rgba(0, 0, 0, .55)); color: #fff }
+.mem-flip-cap b { display: block; font-size: 24px }
+.mem-flip-cap span { font-size: 14px; opacity: .9 }
+.mem-flip-dots { display: flex; gap: 6px; margin-top: 16px }
+.mem-flip-dots i { width: 7px; height: 7px; border-radius: 50%; background: rgba(255, 255, 255, .3) }
+.mem-flip-dots i.is-on { background: #fff }
+@media (prefers-reduced-motion: reduce) { .mem-flip-stage img.is-in { animation: none } }
+#main .mem-tile:nth-child(13) { grid-column: 1 / -1; aspect-ratio: 3 / 1 }
+/* Memories v2: a prompt for this month, a swipeable row of the photos you have, earlier months tucked away */
+#main .mem-page h1 { margin-bottom: 14px }
+#main .mem-prompt { display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: 18px; background: var(--year-pale, #f3effa); cursor: pointer; margin-bottom: 18px }
+#main .mem-prompt-plus { flex: none; width: 52px; height: 52px; border-radius: 14px; background: #fff; display: grid; place-items: center; font-size: 22px; color: var(--year-ink, #5b4a8b) }
+#main .mem-prompt b { display: block; font-size: 15.5px }
+#main .mem-prompt small { font-size: 13px; color: var(--muted, #6b6670) }
+#main .mem-play-link { border: 0; background: var(--year-ink, #5b4a8b); color: #fff; font: inherit; font-size: 13.5px; font-weight: 700; padding: 7px 14px; border-radius: 999px; cursor: pointer }
+#main .mem-strip { display: grid; grid-auto-flow: column; grid-auto-columns: 40%; gap: 10px; overflow-x: auto; margin: 0 -16px 10px; padding: 0 16px 6px; scroll-snap-type: x mandatory }
+#main .mem-shot { position: relative; aspect-ratio: 1; border-radius: 18px; overflow: hidden; scroll-snap-align: start; cursor: pointer }
+#main .mem-shot img { width: 100%; height: 100%; object-fit: cover; display: block }
+#main .mem-shot > span { position: absolute; left: 8px; bottom: 8px; font-size: 12px; font-weight: 800; color: var(--year-ink, #5b4a8b); background: rgba(255, 255, 255, .9); padding: 2px 8px; border-radius: 999px }
+#main .mem-missing { margin: 0 0 20px }
+#main .mem-missing summary { cursor: pointer; list-style: none; font-size: 14px; font-weight: 600; color: var(--year-ink, #5b4a8b); text-decoration: underline; text-underline-offset: 3px }
+#main .mem-missing-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px }
+#main .mem-slot { width: 64px; height: 64px; border-radius: 14px; display: grid; place-items: center; position: relative; cursor: pointer; box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--year-ink, #5b4a8b) 25%, transparent) }
+#main .mem-slot i { font-style: normal; color: var(--year-ink, #5b4a8b); opacity: .6; margin-bottom: 12px }
+#main .mem-slot span { position: absolute; bottom: 5px; font-size: 11px; font-weight: 700; color: var(--year-ink, #5b4a8b) }
+#main .mem-head .mem-play-link, #main .mem-head .mem-play-link span { color: #fff; opacity: 1 }

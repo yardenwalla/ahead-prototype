@@ -1,0 +1,77 @@
+/* Ahead · Memories, led by the photos.
+   A grid of the year (newborn to 1 year): photos big, this month's slot inviting, the months still to come
+   faint, so the year fills in as it goes. "Play the year" flips through the photos with the firsts from each
+   month. Firsts sit below as keepsake cards; checkups are a quiet record at the bottom.
+   Planning (the next checkup) lives in Next and Health, not here. */
+(function () {
+  const esc2 = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const ICON = r => {
+    const k = String(r.skillKey || r.title || '').toLowerCase();
+    return /smile|laugh|face|people/.test(k) ? 'smile' : /coo|babbl|sound|word|talk/.test(k) ? 'chat' : /roll/.test(k) ? 'roll' : /sit/.test(k) ? 'sit' : /crawl/.test(k) ? 'crawl' : /stand|pull|step|walk/.test(k) ? 'stand' : /wave|clap|point/.test(k) ? 'wave' : /tooth/.test(k) ? 'tooth' : 'star';
+  };
+  const label = m => m === 0 ? 'Born' : m === 12 ? '1 year' : `${m} mo`;
+  const longLabel = m => m === 0 ? 'Newborn' : m === 12 ? '1 year' : `${m} month${m === 1 ? '' : 's'}`;
+  const monthOf = (dob, date) => { let m = 0; while (m < 12 && iso(addMonths(dob, m + 1)) <= date) m++; return m; };
+
+  window.journeyTimeline = journeyTimeline = function () {
+    const data = journeyData(), dob = parse(profile.dob), today = iso(NOW), nm = esc2(name());
+    const now = monthOf(dob, today);
+    const photo = m => (typeof hubPhotoFor === 'function' ? hubPhotoFor(m) : null);
+    const firsts = data.records.filter(r => r.type === 'milestone' && r.status === 'attended').sort((a, b) => a.date.localeCompare(b.date));
+    const visits = data.records.filter(r => r.type === 'visit' && r.status === 'attended').sort((a, b) => b.date.localeCompare(a.date));
+
+    // Photos: only the ones that exist, in a row you swipe. No empty boxes to scroll past.
+    const have = Array.from({ length: now + 1 }, (_, m) => m).filter(m => photo(m));
+    const missing = Array.from({ length: now }, (_, m) => m).filter(m => !photo(m));
+    let b = `<div class="mem-page"><div class="eyebrow">Memories</div><h1>${nm}’s first year</h1>`;
+    // This month's photo: one gentle prompt, only while it's missing.
+    if (!photo(now)) b += `<label class="mem-prompt" role="button"><span class="mem-prompt-plus" aria-hidden="true">＋</span><span><b>${esc2(`Add ${name()}’s ${now === 0 ? 'newborn' : now === 12 ? 'first-birthday' : now + '-month'} photo`)}</b><small>${esc2('One a month, and the year plays back like a flipbook.')}</small></span>${hubPhotoInput(now)}</label>`;
+    if (have.length) {
+      b += `<div class="mem-head"><h2>Month by month</h2>${have.length >= 2 ? `<button class="mem-play-link" onclick="memPlay()"><span aria-hidden="true">▶</span> Play the year</button>` : ''}</div>`;
+      b += `<div class="mem-strip">${[...have].reverse().map(m => `<label class="mem-shot" role="button" aria-label="Change the ${longLabel(m).toLowerCase()} photo"><img src="${photo(m)}" alt=""><span>${label(m)}</span>${hubPhotoInput(m)}</label>`).join('')}</div>`;
+    }
+    if (missing.length) b += `<details class="mem-missing"><summary>${esc2(`Add photos for earlier months (${missing.length})`)}</summary><div class="mem-missing-row">${missing.map(m => `<label class="mem-slot" role="button" aria-label="Add the ${longLabel(m).toLowerCase()} photo"><i aria-hidden="true">＋</i><span>${label(m)}</span>${hubPhotoInput(m)}</label>`).join('')}</div></details>`;
+
+    // Firsts, as keepsakes.
+    b += `<div class="mem-head"><h2>Firsts</h2><button class="textlink" onclick="openPage('chg:Timeline:milestone')">＋ Save a first</button></div>`;
+    b += firsts.length
+      ? `<div class="mem-firsts">${[...firsts].reverse().map(r => `<button class="mem-first" onclick="openPage('event-edit:${r.id}')"><span class="mem-first-ic">${hubArt(ICON(r), 'Development')}</span><b>${esc2(r.title)}</b><small>${esc2(journeyDateLabel(r.date))} · ${esc2(longLabel(monthOf(dob, r.date)))}</small></button>`).join('')}</div>`
+      : `<p class="mem-empty">${esc2(`First smile, first laugh, first roll. Save them as they happen and they’ll collect here.`)}</p>`;
+
+    // Checkups: a quiet record.
+    b += `<details class="mem-visits"><summary><span>${esc2('Checkups')}</span><small>${visits.length ? `${visits.length} saved` : 'None saved yet'}</small></summary>${visits.map(r => `<button class="mem-visit" onclick="openPage('event-edit:${r.id}')"><b>${esc2(r.title)}</b><small>${esc2(journeyDateLabel(r.date))}</small></button>`).join('')}<button class="textlink" onclick="openPage('chg:Timeline:visit')">＋ Record a visit</button></details>`;
+    b += `<p class="hub-foot">Photos and entries stay on this device.</p></div>`;
+    return `<div class="quiet-category hub-page hub-timeline-page" style="${yearTheme('Development')}">${b}</div>`;
+  };
+
+  /* ---------- Play the year: a flipbook of the monthly photos ---------- */
+  let timer = null;
+  window.memPlay = function () {
+    const dob = parse(profile.dob), data = journeyData();
+    const frames = Array.from({ length: 13 }, (_, m) => m).filter(m => hubPhotoFor(m)).map(m => {
+      const start = iso(addMonths(dob, m)), end = iso(addMonths(dob, m + 1));
+      const f = data.records.filter(r => r.type === 'milestone' && r.status === 'attended' && r.date >= start && r.date < end).map(r => r.title);
+      return { m, src: hubPhotoFor(m), firsts: f };
+    });
+    if (!frames.length) return;
+    const el = document.createElement('div');
+    el.className = 'mem-flip'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', 'The year in photos');
+    el.innerHTML = `<button class="mem-flip-close" aria-label="Close">×</button><div class="mem-flip-stage"><img alt=""><div class="mem-flip-cap"><b></b><span></span></div></div><div class="mem-flip-dots">${frames.map(() => '<i></i>').join('')}</div>`;
+    document.body.appendChild(el);
+    let i = 0;
+    const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const show = () => {
+      const f = frames[i], img = el.querySelector('img');
+      img.classList.remove('is-in'); void img.offsetWidth; img.src = f.src; img.classList.add('is-in');
+      el.querySelector('.mem-flip-cap b').textContent = longLabel(f.m);
+      el.querySelector('.mem-flip-cap span').textContent = f.firsts.join(' · ');
+      el.querySelectorAll('.mem-flip-dots i').forEach((d, k) => d.classList.toggle('is-on', k === i));
+    };
+    const close = () => { clearInterval(timer); timer = null; el.remove(); };
+    const step = () => { i = (i + 1) % frames.length; show(); };
+    el.querySelector('.mem-flip-close').onclick = close;
+    el.querySelector('.mem-flip-stage').onclick = () => { if (timer) { clearInterval(timer); timer = null; } else step(); };
+    show();
+    if (!reduce) timer = setInterval(() => { if (i === frames.length - 1) { clearInterval(timer); timer = null; return; } step(); }, 1400);
+  };
+})();
