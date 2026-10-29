@@ -928,3 +928,21 @@
 #main .hub-select select { width: 100%; appearance: none; -webkit-appearance: none; padding: 14px 44px 14px 16px; border-radius: 14px; border: 1.5px solid color-mix(in srgb, var(--year-ink) 35%, transparent); background: var(--year-pale) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23555' stroke-width='2.5' stroke-linecap='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 16px center; font: inherit; font-size: 16px; font-weight: 700; color: var(--ink) }
 /* Main cards: the category color, softening toward the bottom. */
 #main .hub-hero { background: linear-gradient(165deg, var(--year-bg) 0%, var(--year-bg) 35%, var(--year-pale) 100%) }
+
+/* Childcare */
+#main .cc-sub { margin: 12px 0 6px; font-size: 13px; font-weight: 700; color: var(--year-ink) }
+#main .cc-notes { width: 100%; padding: 12px 14px; border-radius: 14px; border: 1px solid var(--line); background: var(--white, #fffdf9); font: inherit; font-size: 15px; resize: vertical }
+#main .cc-saved { display: block; margin: 6px 2px 16px; font-size: 12px; color: var(--muted) }
+#main .cc-card { padding: 14px 16px; display: grid; gap: 12px }
+#main .cc-field span { display: block; font-size: 13px; font-weight: 700; color: var(--year-ink); margin-bottom: 4px }
+#main .cc-field textarea { width: 100%; min-height: 44px; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--white, #fffdf9); font: inherit; font-size: 15px; line-height: 1.4; resize: none; overflow: hidden }
+#main .cc-always { margin: 0; padding: 10px 12px; border-radius: 12px; background: var(--year-pale); font-size: 14px; line-height: 1.45 }
+#main .cc-always b { display: block; font-size: 13px; color: var(--year-ink); margin-bottom: 2px }
+#main .cc-actions { margin: 14px 0 6px } #main .cc-actions .hub-button { width: 100% }
+#main .cc-done { margin: 6px 2px 10px; font-size: 14px; font-weight: 600; color: var(--year-ink) }
+#main .cc-fit { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 12px }
+#main .cc-fit > div { padding: 12px; border-radius: 14px; background: var(--year-pale) }
+#main .cc-fit > div + div { background: #f4f1ec }
+#main .cc-fit b { display: block; font-size: 14px; color: var(--year-ink); margin-bottom: 4px } #main .cc-fit > div + div b { color: var(--ink) }
+#main .cc-fit p { margin: 0; font-size: 13.5px; line-height: 1.45; color: var(--muted) }
+#main .cc-lead { margin: 0 2px 8px; font-size: 14px; color: var(--muted) }
