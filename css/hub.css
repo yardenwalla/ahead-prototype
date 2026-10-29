@@ -819,3 +819,34 @@
 #main .mem-skills-month { padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 13.5px; line-height: 1.45 }
 #main .mem-skills-month b { display: block; font-size: 13px; color: var(--year-ink, #5b4a8b) }
 #main .bday-play { margin: 8px 0 18px }
+
+/* Flying: a trip in four legs */
+#main .oa-leg { padding: 16px 16px 6px; margin-top: 14px }
+#main .oa-leg header { display: flex; align-items: center; gap: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--line, #ece6dd) }
+#main .oa-leg header b { display: block; font-size: 17px }
+#main .oa-leg header small { display: block; color: var(--muted, #7a7068); font-size: 13px; margin-top: 1px }
+#main .oa-leg-n { flex: none; width: 30px; height: 30px; border-radius: 50%; background: var(--year-ink, #8a4a2c); color: #fff; font-weight: 800; font-size: 14px; display: grid; place-items: center }
+#main .oa-leg ul { list-style: none; margin: 0; padding: 0 }
+#main .oa-leg li { display: flex; gap: 12px; padding: 12px 0; align-items: flex-start }
+#main .oa-leg li + li { border-top: 1px solid var(--line, #ece6dd) }
+#main .oa-leg-ic { flex: none; width: 40px; height: 40px; border-radius: 12px; background: var(--year-soft, #fbeee6); display: grid; place-items: center }
+#main .oa-leg-ic svg { width: 24px; height: 24px }
+#main .oa-leg li b { display: block; font-size: 15px }
+#main .oa-leg li small { display: block; font-size: 14px; color: var(--muted, #7a7068); line-height: 1.4; margin-top: 2px }
+#main .oa-leg-link { display: inline-block; margin-top: 6px; font-size: 14px; font-weight: 700; color: var(--year-ink, #8a4a2c); background: none; border: 0; padding: 0; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; font-family: inherit }
+#main .oa-leg-pack { margin-top: 14px }
+
+/* Memories: empty state and the short "also seen" line */
+#main .mem-welcome { background: var(--card, #fffdf9); border: 1px solid var(--line, #ece6dd); border-radius: 22px; padding: 26px 20px 22px; text-align: center; margin-top: 14px }
+#main .mem-welcome-art { display: flex; justify-content: center; gap: 10px; margin-bottom: 14px }
+#main .mem-welcome-art span { width: 58px; height: 58px; border-radius: 50%; background: var(--year-soft, #efeafc); display: grid; place-items: center }
+#main .mem-welcome-art span:nth-child(2) { transform: translateY(-8px) }
+#main .mem-welcome-art svg { width: 30px; height: 30px }
+#main .mem-welcome h2 { font-size: 22px; margin: 0 0 6px; text-wrap: balance }
+#main .mem-welcome p { color: var(--muted, #7a7068); margin: 0 auto 18px; max-width: 30ch; line-height: 1.45 }
+#main .mem-welcome-actions { display: grid; gap: 8px }
+#main .mem-welcome-btn { position: relative; display: block; text-align: center; width: 100%; border-radius: 14px; padding: 13px; font-weight: 700; font-size: 15px; cursor: pointer; font-family: inherit }
+#main .mem-welcome-btn input { position: absolute; inset: 0; opacity: 0; cursor: pointer }
+#main .mem-welcome-btn.is-quiet { background: none; text-align: center; border: 1px solid var(--line, #ddd5ca); color: inherit }
+#main .mem-also { margin: 10px 2px 0; font-size: 14px; color: var(--muted, #7a7068); line-height: 1.5 }
+#main .mem-also b { color: var(--ink, #2f2a33); margin-right: 4px }

@@ -27,6 +27,14 @@
     const have = Array.from({ length: now + 1 }, (_, m) => m).filter(m => photo(m));
     const missing = Array.from({ length: now }, (_, m) => m).filter(m => !photo(m));
     let b = `<div class="mem-page"><div class="eyebrow">Memories</div><h1>${nm}’s first year</h1>`;
+    // Nothing saved yet: one welcoming card with the two ways in, instead of empty sections.
+    if (!have.length && !firsts.length) {
+      const P = typeof babyPronouns === 'function' ? babyPronouns() : { p: 'their' };
+      b += `<section class="mem-welcome"><div class="mem-welcome-art" aria-hidden="true"><span>${hubArt('smile', 'Development')}</span><span>${hubArt('star', 'Development')}</span><span>${hubArt('heart', 'Development')}</span></div><h2>${esc2(`${name()}’s year starts here`)}</h2><p>${esc2(`Add a photo each month and save firsts as they happen. By ${P.p} first birthday, it all plays back like a flipbook.`)}</p><div class="mem-welcome-actions"><label class="primary mem-welcome-btn" role="button">${esc2(`Add ${now === 0 ? 'a newborn' : now === 12 ? 'a first-birthday' : `the ${now}-month`} photo`)}${hubPhotoInput(now)}</label><button class="mem-welcome-btn is-quiet" onclick="openPage('chg:Timeline:milestone')">Save a first</button></div></section>`;
+      if (missing.length) b += `<details class="mem-missing"><summary>${esc2(`Have older photos? Add earlier months (${missing.length})`)}</summary><div class="mem-missing-row">${missing.map(m => `<label class="mem-slot" role="button" aria-label="Add the ${longLabel(m).toLowerCase()} photo"><i aria-hidden="true">＋</i><span>${label(m)}</span>${hubPhotoInput(m)}</label>`).join('')}</div></details>`;
+      b += `<p class="hub-foot">Photos and entries stay on this device.</p></div>`;
+      return `<div class="quiet-category hub-page hub-timeline-page" style="${yearTheme('Development')}">${b}</div>`;
+    }
     // This month's photo: one gentle prompt, only while it's missing.
     if (!photo(now)) b += `<label class="mem-prompt" role="button"><span class="mem-prompt-plus" aria-hidden="true">＋</span><span><b>${esc2(`Add ${name()}’s ${now === 0 ? 'newborn' : now === 12 ? 'first-birthday' : now + '-month'} photo`)}</b><small>${esc2('One a month, and the year plays back like a flipbook.')}</small></span>${hubPhotoInput(now)}</label>`;
     if (have.length) {
@@ -36,12 +44,16 @@
     if (missing.length) b += `<details class="mem-missing"><summary>${esc2(`Add photos for earlier months (${missing.length})`)}</summary><div class="mem-missing-row">${missing.map(m => `<label class="mem-slot" role="button" aria-label="Add the ${longLabel(m).toLowerCase()} photo"><i aria-hidden="true">＋</i><span>${label(m)}</span>${hubPhotoInput(m)}</label>`).join('')}</div></details>`;
 
     // Firsts: the big moments parents remember get a card each. Every other skill ticked "Seen it" is a quiet count.
-    const big = firsts.filter(isBig), more = firsts.filter(r => !isBig(r));
+    const big = firsts.filter(isBig), rest = firsts.filter(r => !isBig(r));
+    while (big.length < 3 && rest.length) big.push(rest.pop());
+    big.sort((a, c) => a.date.localeCompare(c.date));
+    const more = rest;
     b += `<div class="mem-head"><h2>Firsts</h2><button class="textlink" onclick="openPage('chg:Timeline:milestone')">＋ Save a first</button></div>`;
     b += big.length
       ? `<div class="mem-firsts">${[...big].reverse().map(r => `<button class="mem-first" onclick="openPage('event-edit:${r.id}')"><span class="mem-first-ic">${hubArt(ICON(r), 'Development')}</span><b>${esc2(r.title)}</b><small>${esc2(journeyDateLabel(r.date))} · ${esc2(longLabel(monthOf(dob, r.date)))}</small>${r.notes ? `<q>${esc2(String(r.notes).slice(0, 70))}</q>` : `<span class="mem-addnote">${esc2('Add a note')}</span>`}</button>`).join('')}</div>`
       : `<p class="mem-empty">${esc2(`First smile, first laugh, first roll. Save them as they happen and they’ll collect here.`)}</p>`;
-    if (more.length) {
+    if (more.length && more.length <= 6) b += `<p class="mem-also"><b>Also seen</b> ${more.map(r => esc2(r.title)).join(' · ')}</p>`;
+    else if (more.length) {
       const byMonth = {};
       more.forEach(r => { const m = monthOf(dob, r.date); (byMonth[m] = byMonth[m] || []).push(r); });
       b += `<details class="mem-skills"><summary>${esc2(`${more.length} more skill${more.length === 1 ? '' : 's'} seen`)}</summary>${Object.keys(byMonth).map(Number).sort((x, y) => y - x).map(m => `<div class="mem-skills-month"><b>${esc2(longLabel(m))}</b><span>${byMonth[m].map(r => esc2(r.title)).join(' · ')}</span></div>`).join('')}</details>`;
