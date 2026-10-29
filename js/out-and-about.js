@@ -129,6 +129,7 @@
         + h.versus('Where will Maya sit?', ['Own seat', 'Safest. Buckle {o} into a car seat labeled for aircraft.'], ['On your lap', 'Often free under 2, but turbulence can throw a baby from your arms.'])
         + (m < 3 ? h.tip('Under 3 months?', 'It’s worth waiting a few weeks if you can. Colds spread easily in busy airports.') : '')
         + h.video('Going abroad? Maya needs a passport', 'Apply in person with form DS-11. Both parents come, with one photo of Maya.', 'https://travel.state.gov/content/travel/en/passports/apply-renew-passport/under-16.html', 'Guide')
+        + h.tip('Vaccines for trips abroad', m >= 6 ? 'Ask your pediatrician a few weeks before you go. Babies 6 months and older usually get an early measles shot before international travel.' : 'Ask your pediatrician a few weeks before you go. Some trips need extra protection, and from 6 months that usually includes an early measles shot.')
         + sec('On travel day')
         + h.steps(['Formula, breast milk and water for mixing can all go through security. Pack extra in case of delays.', 'Board early, so there’s time to install the car seat in a window seat.', 'Feed Maya or offer a pacifier during takeoff and landing. Swallowing helps {p} ears.'])
         + sec('When you arrive')

@@ -137,3 +137,13 @@
     } catch (e) { /* no DOM to touch */ }
   };
 })();
+
+/* Old activity pages are retired: any link that still points at one opens the ideas list for that stage. */
+(function () {
+  if (typeof openPage !== 'function') return;
+  const base = openPage;
+  window.openPage = openPage = function (p, ...rest) {
+    const m = /^play-activity:(\d+):/.exec(String(p || ''));
+    return base(m ? `chg:Development:d:more:${m[1]}` : p, ...rest);
+  };
+})();

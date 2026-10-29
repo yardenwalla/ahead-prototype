@@ -132,7 +132,7 @@
 
     // A practical activity earns a place alongside guidance; keep the same three-row cap.
     const model = playStageModel(), idea = model.primary[0];
-    const play = byTopic('Daily rhythm') || (idea ? { topic: 'Daily rhythm', title: idea.title, body: conceptPlaySuggestion(idea), action: `openPage('play-activity:${model.phase.lo}:${idea.id}')` } : null);
+    const play = byTopic('Daily rhythm') || (idea ? { topic: 'Daily rhythm', title: idea.title, body: conceptPlaySuggestion(idea), action: `openPage('chg:Development:d:more:${model.phase.lo}')` } : null);
     if (play) out.push({ ...play, tier: 'should', activity: true, reason: 'An activity for this stage' });
     return out;
   }

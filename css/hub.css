@@ -871,3 +871,4 @@
 #main .mem-row-note { flex: none; font-size: 13px; font-weight: 700; color: var(--year-ink, #5b4a8a) }
 #main .mem-all { display: block; width: 100%; padding: 14px 16px; border: 0; border-top: 1px solid var(--line, #ece6dd); background: none; text-align: left; font-family: inherit; font-size: 15px; font-weight: 700; color: var(--year-ink, #5b4a8a); cursor: pointer }
 #main .mem-row-go { flex: none; font-size: 20px; color: var(--muted, #a59c94) }
+#main .hub-row.is-static { cursor: default }
