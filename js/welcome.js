@@ -11,7 +11,7 @@
       <div class="aw-intro"><div class="eyebrow">Your baby’s first year</div><div class="aw-baby" aria-hidden="true">${homeBabyArt()}</div></div>
       <h1><span>Less searching.</span><span>More confidence</span><span>in what’s next.</span></h1>
       <p class="aw-lead">Know what matters now and feel ready for what’s next, with guidance tailored to your baby.</p>
-      <div class="aw-spectrum" aria-hidden="true">${Array(6).fill('<span></span>').join('')}</div>
+      <div class="aw-spectrum" aria-hidden="true">${Array(7).fill('<span></span>').join('')}</div>
       <div class="aw-points">${POINTS.map(([i, h, d]) => `<div class="promise aw-point"><span class="aw-point-icon" aria-hidden="true">${icon(i)}</span><div><h3>${h}</h3><p>${d}</p></div></div>`).join('')}</div>
       <button class="primary aw-start" onclick="startSetup()">Set up your baby’s guide →</button>
     </section>`;

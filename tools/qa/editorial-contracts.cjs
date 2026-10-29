@@ -41,12 +41,13 @@ for (let age=0; age<=12; age++) {
     check(!ids.has(idea.id), 'Default monthly sets do not reintroduce the same activity as new');
     ids.add(idea.id);
     b.run(`openPage('play-activity:${age}:${idea.id}')`);
-    check(b.html().includes('data-play-activity="'+idea.id+'"'), 'Every curated activity opens its own guide');
+    // Activity guides were retired: an old link lands on the ideas list, where each idea reads in full.
+    check(b.html().includes('Ideas to try together'), 'An old activity link opens the ideas list for its stage');
   }
 }
 for (const [age,oldID,newID] of [[1,'slow-song','face-follow'],[3,'sound-answer','sock-puppet'],[3,'coo-copy','sock-puppet'],[12,'toy-homes','water-pour']]) {
   a.run(`openPage('play-activity:${age}:${oldID}')`);
-  check(a.html().includes('data-play-activity="'+newID+'"'), 'Old monthly links open the replacement activity');
+  check(a.html().includes('Ideas to try together'), 'Old monthly links open the ideas list');
 }
 for (const value of ['new','textures','established']) {
   const b=family(11);

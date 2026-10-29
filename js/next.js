@@ -51,8 +51,12 @@
       const rec = typeof healthRecord === 'function' ? healthRecord(v) : null;
       list.push(I(v, v + 0.4, 'birth', 'Health', healthJourneyLabel(v), v === 9 ? 'Growth, development and any catch-up shots.' : 'Growth, development and the vaccines due.', 'Add your questions now, so they’re ready at the visit.', `openHealthDetail(${v},'questions')`, { skip: rec && rec.status === 'attended' }));
     });
+    // The Timeline holds the big moments only: the changes parents anticipate and plan around.
+    // Smaller stage details (three naps, textures, sunscreen, car seats) stay in their category.
+    const BIG = ['Nights start to stretch', 'The 4-month sleep regression', 'The late nap drops, leaving two', 'Two naps become one', 'First tastes of solids', 'The milk change at 12 months', 'Crawling opens up the whole room', 'The first tooth arrives', 'Cruising and first steps'];
+    const keep = x => x.cat === 'Development' || x.cat === 'Health' || BIG.includes(x.title);
     const cur = cat => (typeof chgStageIndex === 'function' ? chgStageIndex(cat) : null);
-    return list.filter(x => !x.skip && !(x.soonOnly && ageAt(careFrom()) >= 7)).map(x => {
+    return list.filter(x => keep(x) && !x.skip && !(x.soonOnly && ageAt(careFrom()) >= 7)).map(x => {
       const from = x.basis === 'birth' ? born() : careFrom(), now = ageAt(from);
       let at = dateAt(from, x.start), state = x.start > now ? 'ahead' : now < x.end ? 'now' : 'past';
       // Sleep and Feeding follow the category page: the current stage is "now", earlier ones are done,
@@ -67,7 +71,7 @@
   }
 
   function card(i) {
-    return `<button class="next-item" style="${yearTheme(i.cat)}" onclick="${i.go}"><span class="next-dot">${hubArt(i.icon || ICON[i.cat] || 'star', i.cat)}</span><span class="next-copy"><small>${esc(displayTopic(i.cat))}</small><b>${F(i.title)}</b><span>${F(i.line)}</span></span><span class="hub-chev" aria-hidden="true">›</span></button>`;
+    return `<button class="next-item" style="${yearTheme(i.cat)}" onclick="${i.go}"><span class="next-dot">${typeof catIcon === 'function' ? catIcon(i.cat) : hubArt(ICON[i.cat] || 'star', i.cat)}</span><span class="next-copy"><small>${esc(displayTopic(i.cat))}</small><b>${F(i.title)}</b><span>${F(i.line)}</span></span><span class="hub-chev" aria-hidden="true">›</span></button>`;
   }
 
   window.nextPage = function () {
@@ -84,7 +88,7 @@
     const label = m => m === 0 ? 'Newborn' : m === 12 ? '1 year' : `${m} month${m === 1 ? '' : 's'}`;
     // Born early: both ages, so the month headings line up with the adjusted-age guides.
     const ageNote = d => { const b = Math.floor(ageAt(born(), d)), c = Math.floor(ageAt(careFrom(), d)); return `Maya will be ${label(b)}${c !== b ? ` · ${Math.max(0, c)} adjusted` : ''}`; };
-    let h = `<div class="next-page"><div class="eyebrow">${F('Coming up for Maya')}</div><h1>${F('What’s next')}</h1><p class="next-lead">${F('The next few months at a glance, across everything. Tap anything to read ahead.')}</p>`;
+    let h = `<div class="next-page"><div class="eyebrow">${F('Coming up for Maya')}</div><h1>${F('Timeline')}</h1><p class="next-lead">${F('The big moments of the next few months. Tap any to read ahead.')}</p>`;
     if (here.length) h += `<section class="next-group is-now"><div class="next-when"><b>${F('Around now')}</b><span>${F(label(Math.floor(ageAt(born()))))}</span></div><div class="next-list">${here.map(card).join('')}</div></section>`;
     h += groups.map(g => `<section class="next-group"><div class="next-when"><b>${F(g.k === thisMonth ? 'Later this month' : g.at.toLocaleDateString('en-US', { month: 'long' }))}</b><span>${F(g.k === thisMonth ? '' : ageNote(new Date(g.at.getFullYear(), g.at.getMonth(), 15)))}</span></div><div class="next-list">${g.list.map(card).join('')}</div></section>`).join('');
     if (!soon.length && !here.length) h += `<p class="next-lead">${F('That’s the first year covered. Keep these guides close as Maya grows.')}</p>`;
@@ -108,7 +112,7 @@
   });
 
   /* ---------- the tab ---------- */
-  const NEXT_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h12M12 6l6 6-6 6"/><path d="M20 4v16"/></svg>';
+  const NEXT_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="5.5" r="2"/><circle cx="6" cy="12" r="2"/><circle cx="6" cy="18.5" r="2"/><path d="M6 7.5v2.5M6 14v2.5M11 5.5h9M11 12h7M11 18.5h8"/></svg>';
   const baseRender = render;
   let lastPage = null;
   window.render = render = function () {
@@ -122,7 +126,7 @@
       const nav = document.getElementById('nav');
       if (nav && !nav.hidden && typeof nav.querySelector === 'function') {
         let btn = nav.querySelector('[data-tab="next"]');
-        if (!btn) { btn = document.createElement('button'); btn.dataset.tab = 'next'; btn.setAttribute('onclick', "navigate('next')"); btn.innerHTML = NEXT_ICON + 'Next'; const home = nav.querySelector('button'); home ? home.after(btn) : nav.prepend(btn); }
+        if (!btn) { btn = document.createElement('button'); btn.dataset.tab = 'next'; btn.setAttribute('onclick', "navigate('next')"); btn.innerHTML = NEXT_ICON + 'Timeline'; const home = nav.querySelector('button'); home ? home.after(btn) : nav.prepend(btn); }
         // The highlighted tab is the one you came from: a page opened from Next or Home keeps that tab lit.
         const roots = { home: 0, next: 1, categories: 2, timeline: 3 }, from = isNext ? 'next' : (typeof historyStack !== 'undefined' ? [...historyStack].reverse().find(p => p in roots) : null);
         if (from === 'next' || (from === 'home' && page !== 'home' && !/^(categories|timeline)$/.test(page))) {
@@ -133,7 +137,36 @@
       if (isNext) document.getElementById('main').innerHTML = nextPage();
       // Home's "Coming up" gets a way into the full timeline.
       const ahead = document.querySelector('#main .connected-ahead:not(.brief-preview) .connected-section-heading');
-      if (ahead && typeof ahead.insertAdjacentHTML === 'function' && !ahead.querySelector('.next-link')) ahead.insertAdjacentHTML('beforeend', `<button class="textlink next-link" onclick="navigate('next')">${F('See everything coming up')} →</button>`);
+      if (ahead && typeof ahead.insertAdjacentHTML === 'function' && !ahead.querySelector('.next-link')) ahead.insertAdjacentHTML('beforeend', `<button class="textlink next-link" onclick="navigate('next')">${F('See the full timeline')} →</button>`);
     } catch (e) { /* no DOM to touch */ }
   };
 })();
+
+/* Old activity pages are retired: any link that still points at one opens the ideas list for that stage. */
+(function () {
+  if (typeof openPage !== 'function') return;
+  const base = openPage;
+  window.openPage = openPage = function (p, ...rest) {
+    const m = /^play-activity:(\d+):/.exec(String(p || ''));
+    return base(m ? `chg:Development:d:more:${m[1]}` : p, ...rest);
+  };
+})();
+
+/* Long stage timelines open with the baby's stage in view: the row starts one stage before it (whole stages only). */
+(function () {
+  if (typeof render !== 'function') return;
+  const base = render;
+  window.render = render = function (...a) {
+    const out = base.apply(this, a);
+    try {
+      document.querySelectorAll('#main .hub-stagebar').forEach(bar => {
+        const items = [...bar.children], n = items.length; if (n <= 4) return;
+        const i = Math.max(0, items.findIndex(x => x.classList.contains('is-on')));
+        const first = Math.max(0, Math.min(i - 1, n - 4));
+        bar.scrollLeft = first * (items[0].getBoundingClientRect().width || 0);
+      });
+    } catch (e) {}
+    return out;
+  };
+})();
+

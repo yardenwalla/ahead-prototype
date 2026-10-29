@@ -23,9 +23,7 @@
 
   const ART = ['stroller', 'car', 'plane', 'bag'];
   const baseArt = yearIllustration;
-  window.yearIllustration = yearIllustration = (t, i = 0) => t === CAT && typeof hubArt === 'function'
-    ? hubArt(ART[Math.abs(i) % ART.length], CAT).replace('viewBox="0 0 24 24"', 'viewBox="-7 -7 38 38"').replace('stroke-width="1.5"', 'stroke-width="1.3"').replace('aria-hidden="true">', `aria-hidden="true"><circle cx="12" cy="12" r="18" fill="${YEAR_PALETTES[CAT].pale}" stroke="none"/>`)
-    : baseArt(t, i);
+  // Outings uses the same illustrated icon style as the other categories (a stroller), from app.js.
   const baseTopic = displayTopic;
   window.displayTopic = displayTopic = t => t === CAT ? 'Outings and travel' : baseTopic(t);
 
@@ -119,13 +117,23 @@
       + h.tip('Car seat on a stroller frame', 'Fine for a walk. Once you’re home, move Maya to a flat surface to sleep.'), 'stroller');
     if (id === 'bag') return d('Pack the diaper bag', 'Tap each thing as it goes in.',
       bagList(m) + h.tip('Keep it packed', 'Restock as soon as you’re home, so the next outing is grab and go.'), 'bag');
-    if (id === 'fly') return d('Fly with Maya', 'The safest place for Maya on a plane is in {p} own seat, in a car seat approved for aircraft.',
-      h.versus('Where Maya sits', ['Safest', 'In {p} own seat, buckled into a car seat labeled for aircraft.'], ['Less safe', 'On your lap. In turbulence, a baby can be thrown from your arms.'])
-      + h.steps(['Buy Maya a seat if you can, and bring a car seat labeled for use in aircraft.', 'Board early to install the car seat in a window seat, away from the aisle.', 'Feed Maya or offer a pacifier during takeoff and landing to help with ear pressure.', 'Formula, breast milk and water for mixing can go through security. Tell the officers you have them.'])
-      + (m < 3 ? h.tip('Under 2–3 months?', 'If you can, wait a little. Crowded airports make it easier to catch colds.') : '')
-      + (m >= 6 ? h.tip('Keeping Maya busy', 'Plan around naps, pack a few small new toys, and walk the aisle when the seatbelt sign is off.') : '')
-      + h.tip('Going abroad?', 'Maya needs a passport. Ask your pediatrician about vaccines a few weeks before the trip.')
-      + `<section class="hub-card hub-skip is-pack"><b class="hub-fig-title">${F('Pack for the plane')}</b><div class="hub-skip-chips">${['Extra milk or formula, for delays', 'A change of clothes for you both', 'Car seat with its aircraft label', 'Pacifier or bottle for takeoff', 'Passport, if you’re going abroad', 'A couple of small new toys'].map(t => `<span>${F(t)}</span>`).join('')}</div></section>` + h.video('Flying with babies: parent questions and tips', 'HealthyChildren.org', 'https://www.healthychildren.org/English/safety-prevention/on-the-go/Pages/Flying-with-Baby.aspx', 'Guide'), 'plane');
+    // Flying, in the order a trip happens: before you go, at the airport, on the plane, when you arrive.
+    if (id === 'fly') {
+      // Three moments in the order a parent meets them. The one real decision (seat or lap) gets the comparison;
+      // everything else is a few full sentences, so it reads like a friend explaining it, not a list of fragments.
+      const sec = t => `<h2 class="hub-h2">${F(t)}</h2>`;
+      return d('Fly with Maya', 'Most of it comes down to one choice when you book, and a little planning for the day itself.',
+        sec('When you book')
+        + h.versus('Where will Maya sit?', ['Own seat', 'Safest. Buckle {o} into a car seat labeled for aircraft.'], ['On your lap', 'Often free under 2, but turbulence can throw a baby from your arms.'])
+        + (m < 3 ? h.tip('Under 3 months?', 'It’s worth waiting a few weeks if you can. Colds spread easily in busy airports.') : '')
+        + h.video('Going abroad? Maya needs a passport', 'Apply in person with form DS-11. Both parents come, with one photo of Maya.', 'https://travel.state.gov/content/travel/en/passports/apply-renew-passport/under-16.html', 'Guide')
+        + h.tip('Vaccines for trips abroad', m >= 6 ? 'Ask your pediatrician a few weeks before you go. Babies 6 months and older usually get an early measles shot before international travel.' : 'Ask your pediatrician a few weeks before you go. Some trips need extra protection, and from 6 months that usually includes an early measles shot.')
+        + sec('On travel day')
+        + h.steps(['Formula, breast milk and water for mixing can all go through security. Pack extra in case of delays.', 'Board early, so there’s time to install the car seat in a window seat.', 'Feed Maya or offer a pacifier during takeoff and landing. Swallowing helps {p} ears.'])
+        + sec('When you arrive')
+        + h.tip('Sleep the same way as home', 'Firm, flat and empty, even in a hotel crib. For a new time zone, shift naps and bedtime a little each day.')
+        + H().list('', [row('crib', 'Sleeping away from home', 'Portable cribs and hotel cribs', 'away')]), 'plane');
+    }
     if (id === 'away') return d('Sleep away from home', 'New places are fine for sleep, as long as the sleep space is the same as at home: firm, flat and empty.',
       hubFigure('crib', CAT, 'On the back, in a sleep sack, on a firm flat mattress, with nothing else in the crib.') +
       h.steps(['Bring or borrow a portable crib or play yard, and use only the mattress it came with.', 'Keep it bare: no pillows, blankets or bumpers, even if a hotel adds them.', 'Check a hotel crib for broken or missing parts before you use it.'])

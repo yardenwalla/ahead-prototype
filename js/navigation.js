@@ -22,7 +22,7 @@
     if (setupStep === 2) { const feed = document.querySelector('#feed'); if (feed) draft.feed = feed.value; }
     else {
       const field = id => document.querySelector('#' + id);
-      if (field('babyName')) draft = {...draft, name: field('babyName').value,
+      if (field('babyName')) draft = {...draft, name: (typeof capName === 'function' ? capName : x => x)(field('babyName').value),
         pronouns: field('babyPronouns').value, dob: field('dob').value,
         early: field('early').checked, due: field('due').value};
     }

@@ -204,9 +204,9 @@
   };
   window.hubAgePage = function () {
     const nm = esc2(name());
-    if (!(profile.early && profile.due)) return `<div class="quiet-category hub-page hub-detail" style="${yearTheme('Development')}">${hubPageTop(`${esc2(name())}’s age`)}<div class="hub-detail-head"><span class="hub-big">${hubArt('clock', 'Development')}</span><p class="hub-context">${nm}’s age</p><h1>Every guide uses ${nm}’s age</h1><p class="hub-lead">If ${nm} was born early, add the due date in ${nm}’s details and guides can use adjusted age instead.</p></div></div>`;
-    const head = `<div class="hub-detail-head"><span class="hub-big">${hubArt('clock', 'Development')}</span><p class="hub-context">Born early</p><h1>Two ages, one ${nm}</h1><p class="hub-lead">Guides use adjusted age by default. Checkups always use the birthday.</p></div>`;
-    return `<div class="quiet-category hub-page hub-detail" style="${yearTheme('Development')}">${hubPageTop(`${esc2(name())}’s age`)}${head}${hubAgeBlock()}</div>`;
+    if (!(profile.early && profile.due)) return `<div class="quiet-category hub-page hub-detail" style="${yearTheme('You')}">${hubPageTop(`${esc2(name())}’s age`)}<div class="hub-detail-head"><span class="hub-big">${hubArt('clock', 'You')}</span><p class="hub-context">${nm}’s age</p><h1>Every guide uses ${nm}’s age</h1><p class="hub-lead">If ${nm} was born early, add the due date in ${nm}’s details and guides can use adjusted age instead.</p></div></div>`;
+    const head = `<div class="hub-detail-head"><span class="hub-big">${hubArt('clock', 'You')}</span><p class="hub-context">Born early</p><h1>Two ages, one ${nm}</h1><p class="hub-lead">Guides use adjusted age by default. Checkups always use the birthday.</p></div>`;
+    return `<div class="quiet-category hub-page hub-detail" style="${yearTheme('You')}">${hubPageTop(`${esc2(name())}’s age`)}${head}${hubAgeBlock()}</div>`;
   };
 
   // Change a stage from Baby's details and stay there (Undo still works from the message).
@@ -216,35 +216,30 @@
     window.profileRework = profileRework = function () {
       const h = H(), nm = esc2(name());
       const born = journeyDateLabel(profile.dob);
-      let b = `<div class="hub-detail-head"><span class="hub-big">${hubArt('star', 'Development')}</span><p class="hub-context">Profile</p><h1>${nm}</h1><p class="hub-lead">${esc2(birthdayAge() === 0 ? Math.max(1, Math.floor((NOW - parse(profile.dob)) / 864e5 / 7)) + ' week' + (Math.floor((NOW - parse(profile.dob)) / 864e5 / 7) > 1 ? 's' : '') : monthLabel(birthdayAge()))} old · born ${esc2(born)}${profile.early ? ' · born early' : ''}</p></div>`;
-      b += h.list('About ' + nm, [
-        h.row({ icon: 'bottle', cat: 'Development', title: `How ${esc2(name())} is fed`, sub: esc2(profile.feed || 'Not set'), onclick: "editingProfile=true;draft={...profile};setupStep=2;openPage('setup')" }),
-        h.row({ icon: 'smile', cat: 'Development', title: 'Pronouns', sub: esc2(babyPronounLabel()), onclick: "editingProfile=true;draft={...profile};setupStep=1;openPage('setup')" }),
-        h.row({ icon: 'clock', cat: 'Development', title: 'Birthday and due date', sub: profile.early && profile.due ? `Born ${esc2(born)} · due ${esc2(journeyDateLabel(profile.due))}` : `Born ${esc2(born)}`, onclick: "editingProfile=true;draft={...profile};setupStep=1;openPage('setup')" })
-      ]);
+      // A keepsake-style card: the baby's initial, name and age, with the details as tappable pills.
+      const edit = step => `editingProfile=true;draft={...profile};setupStep=${step};openPage('setup')`;
+      let b = `<section class="you-hero"><button class="you-edit" onclick="${edit(1)}" aria-label="Edit ${nm}’s details">Edit</button><div class="you-top"><span class="you-avatar" aria-hidden="true">${esc2((name() || 'B').charAt(0).toUpperCase())}</span><div><h1>${nm}</h1><p class="you-age">${esc2(birthdayAge() === 0 ? Math.max(1, Math.floor((NOW - parse(profile.dob)) / 864e5 / 7)) + ' week' + (Math.floor((NOW - parse(profile.dob)) / 864e5 / 7) > 1 ? 's' : '') : monthLabel(birthdayAge()))} old · born ${esc2(parse(profile.dob).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }))}</p></div></div>`
+        + `<div class="you-pills"><button onclick="${edit(2)}">${hubArt('bottle', 'You')}<span>${esc2(profile.feed || 'Feeding not set')}</span></button><button onclick="${edit(1)}">${hubArt('smile', 'You')}<span>${esc2(babyPronounLabel())}</span></button></div></section>`;
       if (profile.early && profile.due) b += `<h2 class="hub-h2">Ages</h2>` + hubAgeBlock();
       // Where the baby is now: set it right here. Sleep, Feeding and Safety can be changed; the rest follow age.
-      const pick = (cat, title, nowI, labels) => `<div class="hub-where-row"><span class="hub-dot">${catIcon(cat)}</span><div class="hub-where-copy"><b>${title}</b><div class="hub-where-chips" role="group" aria-label="${title} stage">${labels.map((l, i) => { const on = i === nowI, ok = on || stageCanChange(cat, i, nowI); return `<button class="${on ? 'is-on' : ''}" ${on ? 'aria-pressed="true"' : ok ? `onclick="hubProfileStage('${cat}',${i})"` : 'disabled'}>${esc2(l)}</button>`; }).join('')}</div></div></div>`;
+      const pick = (cat, title, nowI, labels) => `<div class="hub-where-row"><span class="hub-dot" style="${yearTheme(cat)}">${catIcon(cat)}</span><div class="hub-where-copy"><b>${title}</b><div class="hub-where-chips" role="group" aria-label="${title} stage">${labels.map((l, i) => { const on = i === nowI, ok = on || stageCanChange(cat, i, nowI); return `<button class="${on ? 'is-on' : ''}" ${on ? 'aria-pressed="true"' : ok ? `onclick="hubProfileStage('${cat}',${i})"` : 'disabled'}>${esc2(l)}</button>`; }).join('')}</div></div></div>`;
       const twoAges = profile.early && profile.due && adjustedMonth(actualMonth()) !== actualMonth();
       // Born early: say which age each one follows, since there are two.
-      const fixed = (cat, title, label, basis) => `<div class="hub-where-row"><span class="hub-dot">${catIcon(cat)}</span><div class="hub-where-copy"><b>${title}</b><small>${esc2(label)} · ${twoAges ? (basis === 'birthday' ? `follows ${nm}’s birthday` : `follows ${basis === 'dev' ? (ageMode('dev') === 'birthday' ? 'birthday' : 'adjusted') : (ageMode('care') === 'birthday' ? 'birthday' : 'adjusted')} age`) : `follows ${nm}’s age`}</small></div></div>`;
+      const fixed = (cat, title, label, basis) => `<div class="hub-where-row"><span class="hub-dot" style="${yearTheme(cat)}">${catIcon(cat)}</span><div class="hub-where-copy"><b>${title}</b><small>${esc2(label)} · ${twoAges ? (basis === 'birthday' ? `follows ${nm}’s birthday` : `follows ${basis === 'dev' ? (ageMode('dev') === 'birthday' ? 'birthday' : 'adjusted') : (ageMode('care') === 'birthday' ? 'birthday' : 'adjusted')} age`) : `follows ${nm}’s age`}</small></div></div>`;
       const careRail = ['Newborn', '1–3 months', '4–6 months', '7–12 months'];
       const careNow = (() => { const d = (NOW - parse(profile.dob)) / 864e5, mm = hubAgeFor('care', actualMonth()); return careRail[d < 21 ? 0 : mm < 4 ? 1 : mm < 7 ? 2 : 3]; })();
       const safeI = STAGE_TABLE.Safety.stages.findIndex(p => p.key === safetyGroup(safetyStageNow()));
       b += `<h2 class="hub-h2">Where ${nm} is now</h2><p class="hub-where-lead">This sets what each guide shows. Tap to change it if it’s not quite right.</p><section class="hub-card hub-where">`
         + pick('Feeding', 'Feeding', feedGroup(chgStageIndex('Feeding')), STAGE_TABLE.Feeding.stages.map(x => x.label))
         + pick('Sleep', 'Sleep', chgStageIndex('Sleep'), STAGE_TABLE.Sleep.stages.map(x => x.label))
-        + pick('Safety', 'Safety', safeI, STAGE_TABLE.Safety.stages.map(x => x.label))
-        + (developmentMonth(actualMonth()) >= 5 ? `<div class="hub-where-row"><span class="hub-dot">${hubArt('crawl', 'Safety')}</span><div class="hub-where-copy"><b>Moving</b>${hubMovingChips()}</div></div>` : '')
+        + pick('Safety', 'Safety', safeI, STAGE_TABLE.Safety.stages.map(x => x.label)).replace(/<\/div><\/div>$/, (developmentMonth(actualMonth()) >= 5 ? `<p class="hub-where-sub">How ${nm} moves</p>${hubMovingChips()}` : '') + '</div></div>')
         + fixed('Development', 'Development & play', 'By ' + devRef(developmentMonth(actualMonth())) + ' months', 'dev')
         + fixed('Daily rhythm', 'Everyday care', careNow, 'care')
         + fixed('Health', 'Health', 'Next: ' + healthJourneyLabel(healthJourneyFocus()), 'birthday')
         + `</section>`;
-      b += h.list('More', [
-        h.row({ icon: 'book', cat: 'Development', title: 'How we choose guidance', sub: 'Sources and what we leave out', onclick: "openPage('trust')" })
-      ]);
+      b += `<button class="you-link" onclick="openPage('trust')">How we choose guidance ›</button>`;
       b += h.note(window.AHEAD_STORAGE_PERSISTS === false ? 'This viewer can’t keep your entries after you close it. Open Ahead in your phone’s browser to keep them.' : 'Your answers, notes and photos stay in this browser on this device.');
-      return `<div class="quiet-category hub-page hub-detail" style="${yearTheme('Development')}">${hubPageTop(`${esc2(name())}’s details`)}${b}</div>`;
+      return `<div class="quiet-category hub-page hub-detail" style="${yearTheme('You')}">${hubPageTop(`${esc2(name())}’s details`)}${b}</div>`;
     };
   }
 
@@ -307,7 +302,7 @@
       if (age <= 6) b += card(`Is ${nm} still swaddled?`, '', chips([['No', 'Still swaddled'], ['Yes', 'In a sleep sack']], answers.swaddleStopped,  v => v === 'Never' ? "answers.neverSwaddled=true;hubAnswer('swaddleStopped','Yes','Got it. Sleep will reflect this.')" : `delete answers.neverSwaddled;hubAnswer('swaddleStopped','${v}','Got it. Sleep will reflect this.')`));
       if (age >= 5) b += card(`How many naps most days?`, '', chips([['Stay', '3 naps'], ['Yes', '2 naps']], answers.twoNaps, v => `hubAnswer('twoNaps','${v}','The sleep guide now matches ${nm}’s naps.')`));
       if (age >= 4) b += card('Sleep training', 'Only if it’s something you’re thinking about.', chips([['not_planning', 'Not planning to'], ['not_started', 'Thinking about it'], ['in_progress', 'Working on it'], ['trained', 'Done']], answers.sleepTraining, v => `hubAnswer('sleepTraining','${v}','The settling guide now matches where you are.')`));
-      return `<div class="quiet-category hub-page hub-detail" style="${yearTheme('Development')}">${hubPageTop('What’s new')}<div class="hub-detail-head"><span class="hub-big">${hubArt('chat', 'Development')}</span><p class="hub-context">Update what’s new</p><h1>What’s new with ${nm}?</h1><p class="hub-lead">Answer whatever has changed. Each answer updates the guides it affects.</p></div>${b}${H().note('You can change any answer later.')}<button class="hub-button" onclick="back()">Done</button></div>`;
+      return `<div class="quiet-category hub-page hub-detail" style="${yearTheme('You')}">${hubPageTop('What’s new')}<div class="hub-detail-head"><span class="hub-big">${hubArt('chat', 'You')}</span><p class="hub-context">Update what’s new</p><h1>What’s new with ${nm}?</h1><p class="hub-lead">Answer whatever has changed. Each answer updates the guides it affects.</p></div>${b}${H().note('You can change any answer later.')}<button class="hub-button" onclick="back()">Done</button></div>`;
     };
   }
 
@@ -485,6 +480,9 @@
       ['Health', 'steth', 'Fever and sick days: when to call', 'chg:Health:d:sick', 'fever temperature sick ill cold cough vomit vomiting diarrhea breathing medicine tylenol acetaminophen ibuprofen emergency call doctor'],
       ['Health', 'heart', 'How are you doing?', 'chg:Health:d:you', 'postpartum depression anxiety baby blues overwhelmed mom dad parent me tired exhausted exhaustion sad lonely stressed help crying myself'],
       ['Health', 'steth', 'Checkups and vaccines', 'topic:Health', 'checkup checkups visit well child doctor appointment vaccine vaccines shots immunizations'],
+      ['Safety', 'shield', 'Swings, bouncers and floor seats', 'chg:Safety:d:gear', 'swing bouncer bouncy seat rocker floor seat bumbo activity center jumper weight limit'],
+      ['Health', 'drop', 'Colds and stuffy noses', 'chg:Health:d:cold', 'cold colds stuffy nose congestion congested runny nose snot saline suction aspirator nosefrida humidifier cough sneeze winter'],
+      ['Sleep', 'crib', 'Bassinet to crib, and moving rooms', 'chg:Sleep:d:where', 'bassinet crib switch move transition own room nursery room sharing room-sharing'],
       ['Development', 'signs', 'Baby signs: more, eat, milk, all done', 'chg:Development:d:signs', 'sign signs signing sign language baby signs asl more milk eat all done gestures'],
       ['Out and about', 'car', 'Car seats', 'chg:Out and about:d:car', 'car seat carseat rear facing forward facing harness chest clip coat pinch test straps uber taxi rideshare'],
       ['Out and about', 'car', 'A bigger car seat', 'chg:Out and about:d:bigger', 'convertible car seat outgrow infant seat forward facing weight limit'],
@@ -788,7 +786,7 @@ window.hubCenterStages = function () {
       <p class="bday-lead">You made it through the whole first year together. Look at everything you saw along the way.</p>
       ${(() => { const st = [[firsts, firsts === 1 ? 'first saved' : 'firsts saved'], [visits, visits === 1 ? 'checkup' : 'checkups'], [photos, photos === 1 ? 'monthly photo' : 'monthly photos']].filter(x => x[0] > 0); return st.length ? `<div class="bday-stats" style="grid-template-columns:repeat(${st.length},1fr)">${st.map(x => stat(x[0], x[1])).join('')}</div>` : ''; })()}
       ${photo ? `<div class="bday-photo"><img src="${photo}" alt="${nm}’s first-birthday photo"></div>` : `<label class="hub-button bday-add" role="button">Add a first-birthday photo${hubPhotoInput(12)}</label>`}
-      <button class="hub-button is-secondary bday-memories" onclick="navigate('timeline')">See ${nm}’s first year</button>
+      ${typeof memPlay === 'function' && photos >= 2 ? `<button class="hub-button is-secondary bday-memories" onclick="memPlay()"><span aria-hidden="true">▶</span> ${esc2(`Play ${name()}’s year`)}</button>` : `<button class="hub-button is-secondary bday-memories" onclick="navigate('timeline')">See ${nm}’s first year</button>`}
     </section>
     <section class="bday-end"><p>${esc2('Ahead covers the first year, so this is where it ends. Your pediatrician takes it from here, starting with the 12-month checkup.')}</p><p class="bday-small">${esc2('You can still look back at any month, and every guide is in Categories.')}</p></section>`;
   }
