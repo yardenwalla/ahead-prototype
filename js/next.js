@@ -51,8 +51,12 @@
       const rec = typeof healthRecord === 'function' ? healthRecord(v) : null;
       list.push(I(v, v + 0.4, 'birth', 'Health', healthJourneyLabel(v), v === 9 ? 'Growth, development and any catch-up shots.' : 'Growth, development and the vaccines due.', 'Add your questions now, so they’re ready at the visit.', `openHealthDetail(${v},'questions')`, { skip: rec && rec.status === 'attended' }));
     });
+    // The Timeline holds the big moments only: the changes parents anticipate and plan around.
+    // Smaller stage details (three naps, textures, sunscreen, car seats) stay in their category.
+    const BIG = ['Nights start to stretch', 'The 4-month sleep regression', 'The late nap drops, leaving two', 'Two naps become one', 'First tastes of solids', 'The milk change at 12 months', 'Crawling opens up the whole room', 'The first tooth arrives', 'Cruising and first steps'];
+    const keep = x => x.cat === 'Development' || x.cat === 'Health' || BIG.includes(x.title);
     const cur = cat => (typeof chgStageIndex === 'function' ? chgStageIndex(cat) : null);
-    return list.filter(x => !x.skip && !(x.soonOnly && ageAt(careFrom()) >= 7)).map(x => {
+    return list.filter(x => keep(x) && !x.skip && !(x.soonOnly && ageAt(careFrom()) >= 7)).map(x => {
       const from = x.basis === 'birth' ? born() : careFrom(), now = ageAt(from);
       let at = dateAt(from, x.start), state = x.start > now ? 'ahead' : now < x.end ? 'now' : 'past';
       // Sleep and Feeding follow the category page: the current stage is "now", earlier ones are done,
@@ -84,7 +88,7 @@
     const label = m => m === 0 ? 'Newborn' : m === 12 ? '1 year' : `${m} month${m === 1 ? '' : 's'}`;
     // Born early: both ages, so the month headings line up with the adjusted-age guides.
     const ageNote = d => { const b = Math.floor(ageAt(born(), d)), c = Math.floor(ageAt(careFrom(), d)); return `Maya will be ${label(b)}${c !== b ? ` · ${Math.max(0, c)} adjusted` : ''}`; };
-    let h = `<div class="next-page"><div class="eyebrow">${F('Coming up for Maya')}</div><h1>${F('Timeline')}</h1><p class="next-lead">${F('The next few months at a glance, across everything. Tap anything to read ahead.')}</p>`;
+    let h = `<div class="next-page"><div class="eyebrow">${F('Coming up for Maya')}</div><h1>${F('Timeline')}</h1><p class="next-lead">${F('The big moments of the next few months. Tap any to read ahead.')}</p>`;
     if (here.length) h += `<section class="next-group is-now"><div class="next-when"><b>${F('Around now')}</b><span>${F(label(Math.floor(ageAt(born()))))}</span></div><div class="next-list">${here.map(card).join('')}</div></section>`;
     h += groups.map(g => `<section class="next-group"><div class="next-when"><b>${F(g.k === thisMonth ? 'Later this month' : g.at.toLocaleDateString('en-US', { month: 'long' }))}</b><span>${F(g.k === thisMonth ? '' : ageNote(new Date(g.at.getFullYear(), g.at.getMonth(), 15)))}</span></div><div class="next-list">${g.list.map(card).join('')}</div></section>`).join('');
     if (!soon.length && !here.length) h += `<p class="next-lead">${F('That’s the first year covered. Keep these guides close as Maya grows.')}</p>`;
@@ -108,7 +112,7 @@
   });
 
   /* ---------- the tab ---------- */
-  const NEXT_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h12M12 6l6 6-6 6"/><path d="M20 4v16"/></svg>';
+  const NEXT_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="5.5" r="2"/><circle cx="6" cy="12" r="2"/><circle cx="6" cy="18.5" r="2"/><path d="M6 7.5v2.5M6 14v2.5M11 5.5h9M11 12h7M11 18.5h8"/></svg>';
   const baseRender = render;
   let lastPage = null;
   window.render = render = function () {

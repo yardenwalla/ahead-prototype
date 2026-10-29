@@ -872,3 +872,5 @@
 #main .mem-all { display: block; width: 100%; padding: 14px 16px; border: 0; border-top: 1px solid var(--line, #ece6dd); background: none; text-align: left; font-family: inherit; font-size: 15px; font-weight: 700; color: var(--year-ink, #5b4a8a); cursor: pointer }
 #main .mem-row-go { flex: none; font-size: 20px; color: var(--muted, #a59c94) }
 #main .hub-row.is-static { cursor: default }
+#main .home-age-line { margin: 18px 4px 10px; font-size: 16px; font-weight: 700; color: var(--ink, #2f2a33) }
+#main .home-age-line .hub-agechip { font: inherit; font-weight: 600; background: none; border: 0; padding: 0; color: var(--muted, #7a7068); text-decoration: underline; text-underline-offset: 3px; cursor: pointer }
