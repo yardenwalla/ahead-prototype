@@ -837,11 +837,18 @@
 #main .oa-leg-pack { margin-top: 14px }
 
 /* Memories: empty state and the short "also seen" line */
-#main .mem-welcome { background: var(--card, #fffdf9); border: 1px solid var(--line, #ece6dd); border-radius: 22px; padding: 26px 20px 22px; text-align: center; margin-top: 14px }
-#main .mem-welcome-art { display: flex; justify-content: center; gap: 10px; margin-bottom: 14px }
-#main .mem-welcome-art span { width: 58px; height: 58px; border-radius: 50%; background: var(--year-soft, #efeafc); display: grid; place-items: center }
-#main .mem-welcome-art span:nth-child(2) { transform: translateY(-8px) }
-#main .mem-welcome-art svg { width: 30px; height: 30px }
+#main .mem-welcome { background: linear-gradient(180deg, var(--year-soft, #efeafc) 0%, var(--card, #fffdf9) 62%); border: 1px solid var(--line, #ece6dd); border-radius: 24px; padding: 30px 20px 22px; text-align: center; margin-top: 14px; overflow: hidden }
+#main .mem-welcome-art { position: relative; height: 150px; margin: 0 auto 20px; max-width: 280px }
+#main .mem-polaroid { position: absolute; top: 10px; width: 104px; padding: 8px 8px 0; background: #fff; border-radius: 6px; box-shadow: 0 6px 18px rgba(60, 40, 90, .14), 0 1px 3px rgba(60, 40, 90, .08) }
+#main .mem-polaroid i { display: grid; place-items: center; height: 92px; border-radius: 3px }
+#main .mem-polaroid i svg { width: 38px; height: 38px }
+#main .mem-polaroid em { display: block; font-style: normal; font-size: 12px; font-weight: 700; color: #6b5f7a; padding: 7px 0 9px }
+#main .mem-polaroid.is-0 { left: 0; transform: rotate(-9deg); z-index: 1 }
+#main .mem-polaroid.is-0 i { background: #fde4dc }
+#main .mem-polaroid.is-1 { left: 50%; margin-left: -52px; top: 0; transform: rotate(2deg); z-index: 3 }
+#main .mem-polaroid.is-1 i { background: #e6e0fb }
+#main .mem-polaroid.is-2 { right: 0; transform: rotate(9deg); z-index: 2 }
+#main .mem-polaroid.is-2 i { background: #dcefe6 }
 #main .mem-welcome h2 { font-size: 22px; margin: 0 0 6px; text-wrap: balance }
 #main .mem-welcome p { color: var(--muted, #7a7068); margin: 0 auto 18px; max-width: 30ch; line-height: 1.45 }
 #main .mem-welcome-actions { display: grid; gap: 8px }

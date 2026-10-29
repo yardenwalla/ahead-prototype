@@ -121,26 +121,21 @@
       bagList(m) + h.tip('Keep it packed', 'Restock as soon as you’re home, so the next outing is grab and go.'), 'bag');
     // Flying, in the order a trip happens: before you go, at the airport, on the plane, when you arrive.
     if (id === 'fly') {
-      // A trip in four legs. Each leg says when, then 2–3 specific things to do, so it reads like a plan, not a list of facts.
+      // A trip in three legs. Each leg says when, then 2–3 specific things to do, so it reads like a plan, not a list of facts.
       const it = (icon, t, sub, link) => `<li><span class="oa-leg-ic">${hubArt(icon, CAT)}</span><span><b>${F(t)}</b><small>${F(sub)}</small>${link || ''}</span></li>`;
       const leg = (n, title, when, items) => `<section class="hub-card oa-leg"><header><span class="oa-leg-n">${n}</span><span><b>${F(title)}</b><small>${F(when)}</small></span></header><ul>${items.join('')}</ul></section>`;
       const passport = `<a class="oa-leg-link" href="https://travel.state.gov/content/travel/en/passports/apply-renew-passport/under-16.html" target="_blank" rel="noopener">Passport form and steps ↗</a>`;
-      const pack = ['Extra milk or formula, for delays', 'A change of clothes for you both', 'Pacifier or bottle for takeoff', 'A couple of small new toys', 'Passport, if you’re going abroad'];
-      return d('Fly with Maya', 'The safest place for Maya on a plane is in {p} own seat, in a car seat approved for aircraft.',
-        leg(1, 'Book and get ready', 'A few weeks before', [
-          it('shield', 'Book Maya a seat if you can', 'Safer than your lap in turbulence. Check the car seat’s label says it’s approved for aircraft.'),
-          it('book', 'Going abroad? Get Maya a passport', 'Apply in person with form DS-11. Both parents come, with one photo of Maya.', passport),
-          it('steth', m < 3 ? 'Check in with your pediatrician' : 'Traveling abroad? Ask about vaccines', m < 3 ? 'Under 3 months, it’s worth waiting if you can. Colds spread easily in airports.' : 'Ask a few weeks before you go.')])
-        + `<section class="hub-card hub-skip is-pack oa-leg-pack"><b class="hub-fig-title">${F('Pack in your carry-on')}</b><div class="hub-skip-chips">${pack.map(t => `<span>${F(t)}</span>`).join('')}</div></section>`
-        + leg(2, 'At the airport', 'Security and boarding', [
-          it('bottle', 'Milk goes through security', 'Formula, breast milk and water for mixing are all allowed. Tell the officer you have them.'),
-          it('car', 'Board early', 'Gives you time to install the car seat, in a window seat.')])
-        + leg(3, 'On the plane', 'Takeoff to landing', [
-          it('swallow', 'Feed at takeoff and landing', 'Swallowing eases ear pressure. A pacifier works too.'),
-          m >= 6 ? it('toy', 'Keep {o} busy', 'Bring out one new toy at a time, and walk the aisle when the seatbelt sign is off.') : it('heart', 'Hold, feed and let {o} sleep', 'Walk the aisle when the seatbelt sign is off.')])
-        + leg(4, 'When you arrive', 'The first few days', [
+      return d('Fly with Maya', 'What to plan, in the order you’ll need it.',
+        leg(1, 'Before you go', 'A few weeks ahead', [
+          it('shield', 'Book Maya a seat if you can', 'Bring a car seat labeled for aircraft.'),
+          it('book', 'Going abroad? Get a passport', 'In person, with both parents and one photo.', passport)].concat(m < 3 ? [it('steth', 'Under 3 months?', 'Wait if you can. Colds spread easily in airports.')] : []))
+        + leg(2, 'Travel day', 'Airport and plane', [
+          it('bottle', 'Milk goes through security', 'Pack extra for delays, and tell the officer.'),
+          it('car', 'Board early', 'Time to install the car seat by the window.'),
+          it('swallow', 'Feed at takeoff and landing', 'Swallowing eases ear pressure.')])
+        + leg(3, 'When you arrive', 'The first few days', [
           it('crib', 'Set up a safe place to sleep', 'Firm, flat and empty, even in a hotel.', `<button class="oa-leg-link" onclick="openPage('chg:${CAT}:d:away')">Sleeping away from home ›</button>`),
-          it('sun', 'Ease into a new time zone', 'Shift naps and bedtime toward local time over a few days. Morning daylight helps.')])
+          it('sun', 'New time zone?', 'Shift naps toward local time over a few days.')])
         + h.video('Flying with babies: parent questions and tips', 'HealthyChildren.org', 'https://www.healthychildren.org/English/safety-prevention/on-the-go/Pages/Flying-with-Baby.aspx', 'Guide'), 'plane');
     }
     if (id === 'away') return d('Sleep away from home', 'New places are fine for sleep, as long as the sleep space is the same as at home: firm, flat and empty.',
