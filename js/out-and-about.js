@@ -119,13 +119,26 @@
       + h.tip('Car seat on a stroller frame', 'Fine for a walk. Once you’re home, move Maya to a flat surface to sleep.'), 'stroller');
     if (id === 'bag') return d('Pack the diaper bag', 'Tap each thing as it goes in.',
       bagList(m) + h.tip('Keep it packed', 'Restock as soon as you’re home, so the next outing is grab and go.'), 'bag');
-    if (id === 'fly') return d('Fly with Maya', 'The safest place for Maya on a plane is in {p} own seat, in a car seat approved for aircraft.',
-      h.versus('Where Maya sits', ['Safest', 'In {p} own seat, buckled into a car seat labeled for aircraft.'], ['Less safe', 'On your lap. In turbulence, a baby can be thrown from your arms.'])
-      + h.steps(['Buy Maya a seat if you can, and bring a car seat labeled for use in aircraft.', 'Board early to install the car seat in a window seat, away from the aisle.', 'Feed Maya or offer a pacifier during takeoff and landing to help with ear pressure.', 'Formula, breast milk and water for mixing can go through security. Tell the officers you have them.'])
-      + (m < 3 ? h.tip('Under 2–3 months?', 'If you can, wait a little. Crowded airports make it easier to catch colds.') : '')
-      + (m >= 6 ? h.tip('Keeping Maya busy', 'Plan around naps, pack a few small new toys, and walk the aisle when the seatbelt sign is off.') : '')
-      + h.tip('Going abroad?', 'Maya needs a passport. Ask your pediatrician about vaccines a few weeks before the trip.')
-      + `<section class="hub-card hub-skip is-pack"><b class="hub-fig-title">${F('Pack for the plane')}</b><div class="hub-skip-chips">${['Extra milk or formula, for delays', 'A change of clothes for you both', 'Car seat with its aircraft label', 'Pacifier or bottle for takeoff', 'Passport, if you’re going abroad', 'A couple of small new toys'].map(t => `<span>${F(t)}</span>`).join('')}</div></section>` + h.video('Flying with babies: parent questions and tips', 'HealthyChildren.org', 'https://www.healthychildren.org/English/safety-prevention/on-the-go/Pages/Flying-with-Baby.aspx', 'Guide'), 'plane');
+    // Flying, in the order a trip happens: before you go, at the airport, on the plane, when you arrive.
+    if (id === 'fly') {
+      const phase = (n, title) => `<h2 class="hub-h2 oa-phase"><span>${n}</span>${F(title)}</h2>`;
+      return d('Fly with Maya', 'The safest place for Maya on a plane is in {p} own seat, in a car seat approved for aircraft.',
+        hubStageStrip({ title: 'Your trip, step by step', numbered: true, items: [['', 'Before you go', 'Seat, passport, packing'], ['', 'At the airport', 'Security and boarding'], ['', 'On the plane', 'Ears and keeping busy'], ['', 'When you arrive', 'Sleep and settling in']], cat: CAT, caption: 'Four steps: before you go, at the airport, on the plane, and when you arrive.' }).replace('is-3', 'is-4')
+        + phase(1, 'Before you go')
+        + h.versus('Where Maya sits', ['Safest', 'In {p} own seat, buckled into a car seat labeled for aircraft.'], ['Less safe', 'On your lap. In turbulence, a baby can be thrown from your arms.'])
+        + h.steps(['Buy Maya a seat if you can, and check the car seat’s label says it’s approved for aircraft.', 'Going abroad? Maya needs {p} own passport. Apply well ahead, and ask your pediatrician about vaccines a few weeks before.'])
+        + (m < 3 ? h.tip('Under 2–3 months?', 'If you can, wait a little. Crowded airports make it easier to catch colds.') : '')
+        + h.video('Apply for a child’s passport (under 16)', 'U.S. State Department · In person, form DS-11, both parents and one photo', 'https://travel.state.gov/content/travel/en/passports/apply-renew-passport/under-16.html', 'Guide')
+        + `<section class="hub-card hub-skip is-pack"><b class="hub-fig-title">${F('Pack for the plane')}</b><div class="hub-skip-chips">${['Extra milk or formula, for delays', 'A change of clothes for you both', 'Car seat with its aircraft label', 'Pacifier or bottle for takeoff', 'Passport, if you’re going abroad', 'A couple of small new toys'].map(t => `<span>${F(t)}</span>`).join('')}</div></section>`
+        + phase(2, 'At the airport')
+        + h.steps(['Formula, breast milk and water for mixing can go through security. Tell the officers you have them.', 'Board early, so you have time to install the car seat in a window seat, away from the aisle.'])
+        + phase(3, 'On the plane')
+        + h.steps(['Feed Maya or offer a pacifier during takeoff and landing. Swallowing helps with ear pressure.', m >= 6 ? 'Plan around naps, bring out one new toy at a time, and walk the aisle when the seatbelt sign is off.' : 'Hold, feed and let {o} sleep when {s} {need|needs} to. Walk the aisle when the seatbelt sign is off.'])
+        + phase(4, 'When you arrive')
+        + H().list('', [row('crib', 'Set up a safe place to sleep', 'Firm, flat and empty, even in a hotel', 'away')])
+        + h.tip('New time zone?', 'Shift naps and bedtime toward local time over a few days. Daylight in the morning helps.')
+        + h.video('Flying with babies: parent questions and tips', 'HealthyChildren.org', 'https://www.healthychildren.org/English/safety-prevention/on-the-go/Pages/Flying-with-Baby.aspx', 'Guide'), 'plane');
+    }
     if (id === 'away') return d('Sleep away from home', 'New places are fine for sleep, as long as the sleep space is the same as at home: firm, flat and empty.',
       hubFigure('crib', CAT, 'On the back, in a sleep sack, on a firm flat mattress, with nothing else in the crib.') +
       h.steps(['Bring or borrow a portable crib or play yard, and use only the mattress it came with.', 'Keep it bare: no pillows, blankets or bumpers, even if a hotel adds them.', 'Check a hotel crib for broken or missing parts before you use it.'])

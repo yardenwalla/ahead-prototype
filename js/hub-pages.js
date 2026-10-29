@@ -485,6 +485,9 @@
       ['Health', 'steth', 'Fever and sick days: when to call', 'chg:Health:d:sick', 'fever temperature sick ill cold cough vomit vomiting diarrhea breathing medicine tylenol acetaminophen ibuprofen emergency call doctor'],
       ['Health', 'heart', 'How are you doing?', 'chg:Health:d:you', 'postpartum depression anxiety baby blues overwhelmed mom dad parent me tired exhausted exhaustion sad lonely stressed help crying myself'],
       ['Health', 'steth', 'Checkups and vaccines', 'topic:Health', 'checkup checkups visit well child doctor appointment vaccine vaccines shots immunizations'],
+      ['Safety', 'shield', 'Swings, bouncers and floor seats', 'chg:Safety:d:gear', 'swing bouncer bouncy seat rocker floor seat bumbo activity center jumper weight limit'],
+      ['Health', 'drop', 'Colds and stuffy noses', 'chg:Health:d:cold', 'cold colds stuffy nose congestion congested runny nose snot saline suction aspirator nosefrida humidifier cough sneeze winter'],
+      ['Sleep', 'crib', 'Bassinet to crib, and moving rooms', 'chg:Sleep:d:where', 'bassinet crib switch move transition own room nursery room sharing room-sharing'],
       ['Development', 'signs', 'Baby signs: more, eat, milk, all done', 'chg:Development:d:signs', 'sign signs signing sign language baby signs asl more milk eat all done gestures'],
       ['Out and about', 'car', 'Car seats', 'chg:Out and about:d:car', 'car seat carseat rear facing forward facing harness chest clip coat pinch test straps uber taxi rideshare'],
       ['Out and about', 'car', 'A bigger car seat', 'chg:Out and about:d:bigger', 'convertible car seat outgrow infant seat forward facing weight limit'],
@@ -790,6 +793,7 @@ window.hubCenterStages = function () {
       ${photo ? `<div class="bday-photo"><img src="${photo}" alt="${nm}’s first-birthday photo"></div>` : `<label class="hub-button bday-add" role="button">Add a first-birthday photo${hubPhotoInput(12)}</label>`}
       <button class="hub-button is-secondary bday-memories" onclick="navigate('timeline')">See ${nm}’s first year</button>
     </section>
+    ${typeof memPlay === 'function' && Array.from({ length: 13 }, (_, m) => hubPhotoFor(m)).filter(Boolean).length >= 2 ? `<button class="mem-play bday-play" onclick="memPlay()"><span aria-hidden="true">▶</span> ${esc2('Play the year')}</button>` : ''}
     <section class="bday-end"><p>${esc2('Ahead covers the first year, so this is where it ends. Your pediatrician takes it from here, starting with the 12-month checkup.')}</p><p class="bday-small">${esc2('You can still look back at any month, and every guide is in Categories.')}</p></section>`;
   }
   const base = window.adaptiveHome;

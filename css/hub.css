@@ -810,3 +810,12 @@
 #main .mem-slot i { font-style: normal; color: var(--year-ink, #5b4a8b); opacity: .6; margin-bottom: 12px }
 #main .mem-slot span { position: absolute; bottom: 5px; font-size: 11px; font-weight: 700; color: var(--year-ink, #5b4a8b) }
 #main .mem-head .mem-play-link, #main .mem-head .mem-play-link span { color: #fff; opacity: 1 }
+#main .oa-phase { display: flex; align-items: center; gap: 10px; margin-top: 22px }
+#main .oa-phase span { width: 26px; height: 26px; border-radius: 50%; background: var(--year-ink, #8a4a2c); color: #fff; font-size: 13px; font-weight: 800; display: grid; place-items: center }
+#main .mem-first q { font-size: 13px; line-height: 1.35; font-style: italic; color: var(--ink); margin-top: 4px; quotes: '“' '”' }
+#main .mem-addnote { font-size: 12.5px; font-weight: 600; color: var(--year-ink, #5b4a8b); margin-top: 4px }
+#main .mem-skills { margin: -6px 0 18px }
+#main .mem-skills summary { cursor: pointer; list-style: none; font-size: 14px; font-weight: 600; color: var(--year-ink, #5b4a8b); text-decoration: underline; text-underline-offset: 3px }
+#main .mem-skills-month { padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 13.5px; line-height: 1.45 }
+#main .mem-skills-month b { display: block; font-size: 13px; color: var(--year-ink, #5b4a8b) }
+#main .bday-play { margin: 8px 0 18px }

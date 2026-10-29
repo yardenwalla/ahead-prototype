@@ -9,6 +9,9 @@
     const k = String(r.skillKey || r.title || '').toLowerCase();
     return /smile|laugh|face|people/.test(k) ? 'smile' : /coo|babbl|sound|word|talk/.test(k) ? 'chat' : /roll/.test(k) ? 'roll' : /sit/.test(k) ? 'sit' : /crawl/.test(k) ? 'crawl' : /stand|pull|step|walk/.test(k) ? 'stand' : /wave|clap|point/.test(k) ? 'wave' : /tooth/.test(k) ? 'tooth' : 'star';
   };
+  // The firsts parents remember. A first the parent typed in themselves always counts.
+  const BIG = /smile|laugh|roll|sits? (up|without)|sitting|tooth|crawl|first word|mama|dada|name for a parent|says a word|pulls? (up|to stand)|stand|first steps|takes? (a few )?steps|walk|waves?/i;
+  const isBig = r => r.own || !r.skillKey || BIG.test(String(r.title));
   const label = m => m === 0 ? 'Born' : m === 12 ? '1 year' : `${m} mo`;
   const longLabel = m => m === 0 ? 'Newborn' : m === 12 ? '1 year' : `${m} month${m === 1 ? '' : 's'}`;
   const monthOf = (dob, date) => { let m = 0; while (m < 12 && iso(addMonths(dob, m + 1)) <= date) m++; return m; };
@@ -32,11 +35,17 @@
     }
     if (missing.length) b += `<details class="mem-missing"><summary>${esc2(`Add photos for earlier months (${missing.length})`)}</summary><div class="mem-missing-row">${missing.map(m => `<label class="mem-slot" role="button" aria-label="Add the ${longLabel(m).toLowerCase()} photo"><i aria-hidden="true">＋</i><span>${label(m)}</span>${hubPhotoInput(m)}</label>`).join('')}</div></details>`;
 
-    // Firsts, as keepsakes.
+    // Firsts: the big moments parents remember get a card each. Every other skill ticked "Seen it" is a quiet count.
+    const big = firsts.filter(isBig), more = firsts.filter(r => !isBig(r));
     b += `<div class="mem-head"><h2>Firsts</h2><button class="textlink" onclick="openPage('chg:Timeline:milestone')">＋ Save a first</button></div>`;
-    b += firsts.length
-      ? `<div class="mem-firsts">${[...firsts].reverse().map(r => `<button class="mem-first" onclick="openPage('event-edit:${r.id}')"><span class="mem-first-ic">${hubArt(ICON(r), 'Development')}</span><b>${esc2(r.title)}</b><small>${esc2(journeyDateLabel(r.date))} · ${esc2(longLabel(monthOf(dob, r.date)))}</small></button>`).join('')}</div>`
+    b += big.length
+      ? `<div class="mem-firsts">${[...big].reverse().map(r => `<button class="mem-first" onclick="openPage('event-edit:${r.id}')"><span class="mem-first-ic">${hubArt(ICON(r), 'Development')}</span><b>${esc2(r.title)}</b><small>${esc2(journeyDateLabel(r.date))} · ${esc2(longLabel(monthOf(dob, r.date)))}</small>${r.notes ? `<q>${esc2(String(r.notes).slice(0, 70))}</q>` : `<span class="mem-addnote">${esc2('Add a note')}</span>`}</button>`).join('')}</div>`
       : `<p class="mem-empty">${esc2(`First smile, first laugh, first roll. Save them as they happen and they’ll collect here.`)}</p>`;
+    if (more.length) {
+      const byMonth = {};
+      more.forEach(r => { const m = monthOf(dob, r.date); (byMonth[m] = byMonth[m] || []).push(r); });
+      b += `<details class="mem-skills"><summary>${esc2(`${more.length} more skill${more.length === 1 ? '' : 's'} seen`)}</summary>${Object.keys(byMonth).map(Number).sort((x, y) => y - x).map(m => `<div class="mem-skills-month"><b>${esc2(longLabel(m))}</b><span>${byMonth[m].map(r => esc2(r.title)).join(' · ')}</span></div>`).join('')}</details>`;
+    }
 
     // Checkups: a quiet record.
     b += `<details class="mem-visits"><summary><span>${esc2('Checkups')}</span><small>${visits.length ? `${visits.length} saved` : 'None saved yet'}</small></summary>${visits.map(r => `<button class="mem-visit" onclick="openPage('event-edit:${r.id}')"><b>${esc2(r.title)}</b><small>${esc2(journeyDateLabel(r.date))}</small></button>`).join('')}<button class="textlink" onclick="openPage('chg:Timeline:visit')">＋ Record a visit</button></details>`;
@@ -44,13 +53,32 @@
     return `<div class="quiet-category hub-page hub-timeline-page" style="${yearTheme('Development')}">${b}</div>`;
   };
 
+  /* ---------- A note on a first: what happened, who was there ---------- */
+  if (typeof journeyVisitDateEdit === 'function') {
+    const baseEdit = journeyVisitDateEdit;
+    window.journeyVisitDateEdit = journeyVisitDateEdit = function (record) {
+      let html = baseEdit(record);
+      if (record.type !== 'milestone') return html;
+      html = html.replace(/<details class="guide-detail"><summary>Your saved note[\s\S]*?<\/details>/, '');
+      return html.replace('<button class="primary">', `<label for="editNote">A note (optional)</label><textarea id="editNote" maxlength="200" rows="3" placeholder="${esc2('What happened, who was there…')}">${esc2(record.notes || '')}</textarea><button class="primary">`);
+    };
+  }
+  if (typeof submitJourneyEdit === 'function') {
+    const baseSubmit = submitJourneyEdit;
+    window.submitJourneyEdit = submitJourneyEdit = function (e, id) {
+      const el = document.getElementById('editNote');
+      if (el) { const d = journeyData(), r = d.records.find(x => x.id === id); if (r) { r.notes = el.value.trim(); saveJourneyData(d); } }
+      return baseSubmit(e, id);
+    };
+  }
+
   /* ---------- Play the year: a flipbook of the monthly photos ---------- */
   let timer = null;
   window.memPlay = function () {
     const dob = parse(profile.dob), data = journeyData();
     const frames = Array.from({ length: 13 }, (_, m) => m).filter(m => hubPhotoFor(m)).map(m => {
       const start = iso(addMonths(dob, m)), end = iso(addMonths(dob, m + 1));
-      const f = data.records.filter(r => r.type === 'milestone' && r.status === 'attended' && r.date >= start && r.date < end).map(r => r.title);
+      const f = data.records.filter(r => r.type === 'milestone' && r.status === 'attended' && r.date >= start && r.date < end && isBig(r)).map(r => r.title);
       return { m, src: hubPhotoFor(m), firsts: f };
     });
     if (!frames.length) return;

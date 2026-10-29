@@ -225,7 +225,7 @@
     if (key === 'reaching' || (key === 'rolling' && answers.swaddleStopped !== 'Yes' && !answers.neverSwaddled && answers.crawl !== 'Yes' && answers.pullUp !== 'Yes')) b += h.list('In the sleep space', [h.row({ icon: 'sack', cat: 'Safety', title: key === 'rolling' ? 'Switch to a sleep sack' : 'Stop swaddling at the first attempt to roll', sub: key === 'rolling' ? 'Swaddling stops at the first attempt to roll' : 'Have a sleep sack that leaves the arms free ready', onclick: "openPage('chg:Sleep:safe')" })]);
     // Choking first aid lives with Feeding, but parents look for it here too: one row, same page.
     const aid = !!(window.__chg && window.__chg.local.safe && window.__chg.local.safe.Feeding && window.__chg.local.safe.Feeding[1]);
-    b += h.list('Good to know', [h.row({ icon: 'shield', cat: 'Safety', title: 'Learn infant choking first aid', sub: aid ? 'You’ve learned this. A refresher any time.' : 'A short video now, and a class if you can', chipText: aid ? 'Done' : '', chipTone: aid ? 'is-done' : '', onclick: "openPage('chg:Feeding:safe')" })]);
+    b += h.list('Good to know', [h.row({ icon: 'shield', cat: 'Safety', title: 'Learn infant choking first aid', sub: aid ? 'You’ve learned this. A refresher any time.' : 'A short video now, and a class if you can', chipText: aid ? 'Done' : '', chipTone: aid ? 'is-done' : '', onclick: "openPage('chg:Feeding:safe')" }), ['setup', 'reaching', 'rolling', 'moving'].includes(key) ? h.row({ icon: 'toy', cat: 'Safety', title: 'Swings, bouncers and floor seats', sub: 'Check the limits, strap in, keep them on the floor', onclick: "openPage('chg:Safety:d:gear')" }) : null]);
     b += h.versus('If something goes wrong', ['Poison Help', 'Call 1-800-222-1222 if Maya swallows something that could be harmful.'], ['Call 911', 'If {s} can’t breathe or won’t wake. A swallowed battery or magnet means the ER right away.']);
     const STG = STAGE_TABLE.Safety.stages, nxS = STG[STG.findIndex(p => p.key === safetyGroup(key)) + 1];
     if (nxS && !browse) b += h.next('Coming up', nxS.label, `openPage('safety-stage:${nxS.key}')`);
@@ -266,6 +266,7 @@
     ]);
     b += h.list('Between checkups', [
       h.row({ icon: 'thermo', cat: 'Health', title: `When Maya seems sick`, sub: 'Fevers, medicine and when to call', onclick: "openPage('chg:Health:d:sick')" }),
+      h.row({ icon: 'drop', cat: 'Health', title: 'Colds and stuffy noses', sub: 'Saline, suction and a humidifier', onclick: "openPage('chg:Health:d:cold')" }),
       h.row({ icon: 'heart', cat: 'Health', title: 'How are you doing?', sub: 'Your health matters too', onclick: "openPage('chg:Health:d:you')" })
     ]);
     b += h.versus('When to call', ['Call your pediatrician', feverRule(actualMonth())], ['Call 911', 'Struggles to breathe or turns blue, won’t wake or is floppy, or has a seizure.']);
@@ -332,6 +333,17 @@
       + H().steps(['Start with 2 or 3 you’ll use every day.', 'Say the word as you sign it: “More?”', 'Cheer {p} version, even if it looks different.'])
       + H().tip('When to expect it', 'Many babies sign back around 8–12 months. Signing won’t slow down {p} talking.'));
     if (cat === 'Development' && screen === 'd' && a === 'faq') { const ref = DEV_STAGES[b] ? Number(b) : devRef(); return detailFrame('Development', DEV_STAGES[ref].title, 'What other parents ask', '', devCommonQuestions(ref).replace('<h2>Common questions</h2>', '').replace('class="common-questions"', 'class="common-questions hub-faq"')); }
+    // Swings, bouncers and floor seats: the label's limits, straps, the floor, and never for sleep (AAP, CPSC).
+    if (cat === 'Safety' && screen === 'd' && a === 'gear') return detailFrame('Safety', 'Safety', 'Swings, bouncers and floor seats', 'Handy for a few minutes of hands-free time. A few habits keep them safe.',
+      hubIconSteps([['shield', 'Check the label', 'Weight and age limits. Stop once Maya reaches them.'], ['hand', 'Strap in every time', 'Even for a minute'], ['home', 'On the floor', 'Never on a table, counter, bed or sofa'], ['moon', 'Not for sleep', 'Fell asleep? Move {o} to {p} crib, on {p} back']], 'Safety', 'Check the weight and age limits, strap in every time, keep it on the floor, and never use it for sleep.', false)
+      + H().tip('When to stop using a bouncer', 'Once Maya can sit up on {p} own or tries to climb out, even if {s’s} under the weight limit.')
+      + H().tip('Stay close', 'Keep Maya within sight, and keep older kids and pets from rocking or pushing it.'));
+    // Colds and stuffy noses: saline and suction, a cool-mist humidifier, no cold medicines, and when to call (AAP).
+    if (cat === 'Health' && screen === 'd' && a === 'cold') return detailFrame('Health', 'Health', 'Colds and stuffy noses', 'Most babies catch several colds in the first year. They usually clear up on their own in about 7–10 days.',
+      hubIconSteps([['drop', 'Saline drops', 'A few drops in each nostril loosen the mucus'], ['swallow', 'Then gentle suction', 'A bulb syringe or nasal aspirator, before feeds and sleep'], ['snow', 'Cool-mist humidifier', 'In {p} room at night. Clean it every day.'], ['bottle', 'Keep feeds going', 'Smaller, more frequent feeds are fine while {s’s} stuffy']], 'Health', 'Saline drops, then gentle suction before feeds and sleep, a cool-mist humidifier at night, and plenty of feeds.', true)
+      + H().tip('Skip cough and cold medicines', 'They aren’t safe for babies. No honey before 1 year either.')
+      + H().versus('When to call', ['Call your pediatrician', 'Any fever under 3 months, fewer wet diapers, ear pulling, a cough or cold that lasts more than 10 days, or a fever more than 2–3 days.'], ['Call 911', 'Struggles to breathe, ribs pulling in with each breath, or lips turning blue.'])
+      + H().note('Wash hands often and keep sick visitors away, especially in the first months.'));
     if (cat === 'Health' && screen === 'd') { const pg = healthDetail(a); if (pg) return pg; }
     if (cat === 'Daily rhythm' && screen === 's') return everydayCare(Number(a));
     if (cat === 'Daily rhythm' && screen === 'd' && a !== 'more') return careDetail(a);
