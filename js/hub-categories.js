@@ -196,7 +196,7 @@
     return Object.assign({}, r, { title: ['Baths, cord care and nails', 'Baths, skin and dressing', 'Bedtime baths, gums and shade', 'First teeth, bath safety and sun'][v], body: ['Sponge baths, the cord stump and tiny nails.', 'Tub baths, dry skin and dressing for the weather.', 'Bath as part of bedtime, drool and gums, and shade.', 'Brushing the first teeth, bath seats and sunscreen.'][v] });
   };
   const baseArt = yearIllustration;
-  window.yearIllustration = yearIllustration = (t, i = 0) => t === 'Daily rhythm' && typeof hubArt === 'function' ? hubArt(['bath', 'towel', 'tooth', 'drop'][Math.abs(i) % 4], 'Daily rhythm').replace('viewBox="0 0 24 24"', 'viewBox="-7 -7 38 38"').replace('stroke-width="1.5"', 'stroke-width="1.3"').replace('aria-hidden="true">', `aria-hidden="true"><circle cx="12" cy="12" r="18" fill="${(YEAR_PALETTES['Daily rhythm'] || {}).pale || '#eef8f5'}" stroke="none"/>`) : baseArt(t, i);
+  // Everyday care uses the same illustrated icon as the other categories (a tub), from app.js.
   const baseYear = categoryYear;
   window.categoryYear = categoryYear = t => t === 'Daily rhythm' ? everydayCare() : baseYear(t);
   const baseHub = yearHub;

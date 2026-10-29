@@ -23,9 +23,7 @@
 
   const ART = ['stroller', 'car', 'plane', 'bag'];
   const baseArt = yearIllustration;
-  window.yearIllustration = yearIllustration = (t, i = 0) => t === CAT && typeof hubArt === 'function'
-    ? hubArt(ART[Math.abs(i) % ART.length], CAT).replace('viewBox="0 0 24 24"', 'viewBox="-7 -7 38 38"').replace('stroke-width="1.5"', 'stroke-width="1.3"').replace('aria-hidden="true">', `aria-hidden="true"><circle cx="12" cy="12" r="18" fill="${YEAR_PALETTES[CAT].pale}" stroke="none"/>`)
-    : baseArt(t, i);
+  // Outings uses the same illustrated icon style as the other categories (a stroller), from app.js.
   const baseTopic = displayTopic;
   window.displayTopic = displayTopic = t => t === CAT ? 'Outings and travel' : baseTopic(t);
 

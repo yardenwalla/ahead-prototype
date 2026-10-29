@@ -15,12 +15,12 @@
 #main .aw-spectrum span:nth-child(3) { background: #9fb8df }
 #main .aw-spectrum span:nth-child(4) { background: #9bc7ac }
 #main .aw-spectrum span:nth-child(5) { background: #d9bd87 }
-#main .aw-spectrum span:nth-child(6) { background: #94c9bc }
+#main .aw-spectrum span:nth-child(6) { background: #8cc1d6 }
 #main .aw-point { display: flex; gap: 12px; padding: 16px 0; border-bottom: 1px solid var(--line) }
 #main .aw-point:last-child { border-bottom: 0; padding-bottom: 0 }
 #main .aw-point-icon { flex: none; width: 38px; height: 38px; display: grid; place-items: center; border-radius: 13px; background: #edf2fe; color: #46638c }
 #main .aw-point:nth-child(2) .aw-point-icon { background: #efedff; color: #625084 }
-#main .aw-point:nth-child(3) .aw-point-icon { background: #edf9f5; color: #316a5e }
+#main .aw-point:nth-child(3) .aw-point-icon { background: #ecf6fa; color: #2a6078 }
 #main .aw-point svg { width: 19px; height: 19px; margin: 0; color: inherit }
 #main .aw-point h3 { font: 700 15px/1.4 var(--ui-font); color: var(--ink) }
 #main .aw-point p { font-size: 13px; line-height: 1.5; margin-top: 4px; color: var(--muted) }
