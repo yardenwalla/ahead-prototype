@@ -84,7 +84,7 @@
     const label = m => m === 0 ? 'Newborn' : m === 12 ? '1 year' : `${m} month${m === 1 ? '' : 's'}`;
     // Born early: both ages, so the month headings line up with the adjusted-age guides.
     const ageNote = d => { const b = Math.floor(ageAt(born(), d)), c = Math.floor(ageAt(careFrom(), d)); return `Maya will be ${label(b)}${c !== b ? ` · ${Math.max(0, c)} adjusted` : ''}`; };
-    let h = `<div class="next-page"><div class="eyebrow">${F('Coming up for Maya')}</div><h1>${F('What’s next')}</h1><p class="next-lead">${F('The next few months at a glance, across everything. Tap anything to read ahead.')}</p>`;
+    let h = `<div class="next-page"><div class="eyebrow">${F('Coming up for Maya')}</div><h1>${F('Timeline')}</h1><p class="next-lead">${F('The next few months at a glance, across everything. Tap anything to read ahead.')}</p>`;
     if (here.length) h += `<section class="next-group is-now"><div class="next-when"><b>${F('Around now')}</b><span>${F(label(Math.floor(ageAt(born()))))}</span></div><div class="next-list">${here.map(card).join('')}</div></section>`;
     h += groups.map(g => `<section class="next-group"><div class="next-when"><b>${F(g.k === thisMonth ? 'Later this month' : g.at.toLocaleDateString('en-US', { month: 'long' }))}</b><span>${F(g.k === thisMonth ? '' : ageNote(new Date(g.at.getFullYear(), g.at.getMonth(), 15)))}</span></div><div class="next-list">${g.list.map(card).join('')}</div></section>`).join('');
     if (!soon.length && !here.length) h += `<p class="next-lead">${F('That’s the first year covered. Keep these guides close as Maya grows.')}</p>`;
@@ -122,7 +122,7 @@
       const nav = document.getElementById('nav');
       if (nav && !nav.hidden && typeof nav.querySelector === 'function') {
         let btn = nav.querySelector('[data-tab="next"]');
-        if (!btn) { btn = document.createElement('button'); btn.dataset.tab = 'next'; btn.setAttribute('onclick', "navigate('next')"); btn.innerHTML = NEXT_ICON + 'Next'; const home = nav.querySelector('button'); home ? home.after(btn) : nav.prepend(btn); }
+        if (!btn) { btn = document.createElement('button'); btn.dataset.tab = 'next'; btn.setAttribute('onclick', "navigate('next')"); btn.innerHTML = NEXT_ICON + 'Timeline'; const home = nav.querySelector('button'); home ? home.after(btn) : nav.prepend(btn); }
         // The highlighted tab is the one you came from: a page opened from Next or Home keeps that tab lit.
         const roots = { home: 0, next: 1, categories: 2, timeline: 3 }, from = isNext ? 'next' : (typeof historyStack !== 'undefined' ? [...historyStack].reverse().find(p => p in roots) : null);
         if (from === 'next' || (from === 'home' && page !== 'home' && !/^(categories|timeline)$/.test(page))) {
@@ -133,7 +133,7 @@
       if (isNext) document.getElementById('main').innerHTML = nextPage();
       // Home's "Coming up" gets a way into the full timeline.
       const ahead = document.querySelector('#main .connected-ahead:not(.brief-preview) .connected-section-heading');
-      if (ahead && typeof ahead.insertAdjacentHTML === 'function' && !ahead.querySelector('.next-link')) ahead.insertAdjacentHTML('beforeend', `<button class="textlink next-link" onclick="navigate('next')">${F('See everything coming up')} →</button>`);
+      if (ahead && typeof ahead.insertAdjacentHTML === 'function' && !ahead.querySelector('.next-link')) ahead.insertAdjacentHTML('beforeend', `<button class="textlink next-link" onclick="navigate('next')">${F('See the full timeline')} →</button>`);
     } catch (e) { /* no DOM to touch */ }
   };
 })();

@@ -131,7 +131,8 @@
     if (safetyRow && !(priority && priority.type === 'check') && unfinishedSafety(safetyRow)) out.push(safetyRow);
 
     // A practical activity earns a place alongside guidance; keep the same three-row cap.
-    const model = playStageModel(), idea = model.primary[0];
+    // A different idea each day, so Home doesn't keep showing the one you've already seen in Development.
+    const model = playStageModel(), ideas = model.primary.concat(model.more || []), idea = ideas.length ? ideas[Math.floor(NOW / 864e5) % ideas.length] : null;
     const play = byTopic('Daily rhythm') || (idea ? { topic: 'Daily rhythm', title: idea.title, body: conceptPlaySuggestion(idea), action: `openPage('chg:Development:d:more:${model.phase.lo}')` } : null);
     if (play) out.push({ ...play, tier: 'should', activity: true, reason: 'An activity for this stage' });
     return out;

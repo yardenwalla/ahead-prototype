@@ -2366,7 +2366,7 @@ function conceptConnections(){
  const groups=[['Feeding','Sleep','Health'],['Development','Daily rhythm','Feeding'],['Development','Daily rhythm','Health'],['Development','Daily rhythm','Sleep'],['Development','Daily rhythm','Sleep'],['Development','Daily rhythm','Safety'],['Feeding','Health','Daily rhythm'],['Development','Daily rhythm','Sleep'],['Development','Daily rhythm','Safety'],['Development','Daily rhythm','Health'],['Development','Daily rhythm','Safety'],['Development','Daily rhythm','Feeding'],['Health','Feeding','Daily rhythm']];
  const rows=groups[month].map(conceptTopic),play=playStageModel(),ideas=play.primary;
  const playIndex=rows.findIndex(r=>r.topic==='Daily rhythm');
- if(playIndex>=0&&ideas.length){const idea=month===5?ideas.find(a=>a.id==='texture-pair')||ideas[0]:ideas[0];rows[playIndex]={topic:'Daily rhythm',title:idea.title,body:conceptPlaySuggestion(idea),action:`openPage('chg:Development:d:more:${play.phase.lo}')`};}
+ if(playIndex>=0&&ideas.length){const pool=ideas.concat(play.more||[]),idea=pool[Math.floor(NOW/864e5)%pool.length];rows[playIndex]={topic:'Daily rhythm',title:idea.title,body:conceptPlaySuggestion(idea),action:`openPage('chg:Development:d:more:${play.phase.lo}')`};}
  if(month===5&&!(profile.early&&developmentMonth()!==month)){
   const reported=homeReportedMovement(),movement=reported==='trying'?'reaching':reported||'reaching';
   const skillKey={reaching:'reaches-to-grab-a-toy',rolling:'rolls-tummy-to-back',moving:'gets-into-sitting',pulling:'pulls-up-to-stand'}[movement];
