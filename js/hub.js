@@ -767,10 +767,17 @@
     const methods = typeof sleepTrainingMethods === 'function' ? sleepTrainingMethods() : [];
     const order = ['fading', 'pickup', 'chair', 'ferber', 'extinction'];
     const sorted = order.map(k => [methods.findIndex(x => x.kind === k), methods.find(x => x.kind === k)]).filter(x => x[1]);
-    // A vertical scale: alternatives, not steps, so no numbers. The line runs from most to least hands-on,
-    // and each method says in one sentence what you'd actually do.
-    const what = { fading: 'Start bedtime later, when {s’s} sleepier, then move it earlier bit by bit.', pickup: 'Pick {o} up when {s} {cry|cries}, and put {o} back down once calm.', chair: 'Sit by the crib, and move your chair farther away every few nights.', ferber: 'Leave the room, and check in at longer and longer gaps.', extinction: 'Say goodnight, and don’t go back in until morning unless something’s wrong.' };
-    return `<section class="hub-card hub-vscale" style="${yearTheme('Sleep')}"><b class="hub-fig-title">${F('The main approaches')}</b><p class="hub-vscale-end">${F('Most hands-on, most gradual')}</p><div class="hub-vscale-list">${sorted.map(([k, x]) => `<button class="hub-vscale-item" onclick="${go('chg:Sleep:d:method:' + k)}"><b>${F(x.name)}</b><small>${F(what[x.kind] || x.title)}</small><span aria-hidden="true">›</span></button>`).join('')}</div><p class="hub-vscale-end">${F('Least hands-on, often quickest')}</p><p class="hub-fig-caption" hidden>${F('Five sleep-training approaches, from the most hands-on (bedtime fading) to the least (cry it out).')}</p></section>`;
+    // Two groups parents actually choose between: stay with the baby (gentler, slower) or step out (quicker, more crying).
+    // Each method gets one sentence on what you'd do. Then: is it safe, and what makes any method work.
+    const what = { fading: 'Start bedtime later, when {s’s} sleepier, then move it earlier bit by bit.', pickup: 'Pick {o} up when {s} {cry|cries}, and put {o} back down once calm.', chair: 'Sit by the crib, and move your chair farther away every few nights.', ferber: 'Leave, then check in at longer and longer gaps.', extinction: 'Say goodnight, and don’t go back in until morning unless something’s wrong.' };
+    const row2 = k => { const x = methods.find(y => y.kind === k); return x ? `<button class="hub-mgroup-item" onclick="${go('chg:Sleep:d:method:' + methods.indexOf(x))}"><b>${F(x.name)}</b><small>${F(what[k])}</small><span aria-hidden="true">›</span></button>` : ''; };
+    const group = (title, sub, keys, tone) => `<section class="hub-mgroup ${tone}"><header><b>${F(title)}</b><small>${F(sub)}</small></header>${keys.map(row2).join('')}</section>`;
+    return `<h2 class="hub-h2">${F('Two ways to go about it')}</h2>`
+      + group('You stay close', 'Gentler, with less crying. Usually takes a few weeks.', ['fading', 'pickup', 'chair'], 'is-close')
+      + group('You step out', 'Quicker, often within a week. Expect more crying at first.', ['ferber', 'extinction'], 'is-out')
+      + tip('Is it safe?', 'Studies haven’t found lasting harm to babies’ emotions or to your bond. Pick the approach you can stick with.')
+      + `<h2 class="hub-h2">${F('Whichever you choose')}</h2>`
+      + steps(['Keep the same bedtime routine every night.', 'Stick with it for a week or two before you judge it.', 'Pause if {s’s} sick, teething or you’re traveling, then start again.']);
   }
   function settlePage() {
     const age = m(), choice = C().settlingGuide();
@@ -778,7 +785,7 @@
       // Read ahead: the parent can learn about sleep training before it's time, without being told to start.
       const methods = typeof sleepTrainingMethods === 'function' ? sleepTrainingMethods() : [];
       return detail('Sleep', 'Read ahead', 'Sleep training, for later', 'Sleep training is a choice, not a must. Families who choose it can start any time from about 4–6 months. Here’s what the options look like, so you can decide ahead of time.',
-        methodScale() + tip('For now', 'Feeding, rocking or holding Maya to sleep is fine. You can’t spoil a young baby.') + list('', [row({ icon: 'heart', cat: 'Sleep', title: 'Help Maya fall asleep any way that works', sub: 'Soothing in the early months', onclick: go('chg:Sleep:d:soothe') })]), 'book');
+        tip('For now', 'Feeding, rocking or holding Maya to sleep is fine. You can’t spoil a young baby.') + methodScale() + list('', [row({ icon: 'heart', cat: 'Sleep', title: 'Help Maya fall asleep any way that works', sub: 'Soothing in the early months', onclick: go('chg:Sleep:d:soothe') })]), 'book');
     }
     return settleChoices(age, choice);
   }

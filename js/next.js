@@ -169,3 +169,22 @@
     return out;
   };
 })();
+
+/* Category main cards carry the drawing for the stage you're reading, in the corner, like Home's card. */
+(function () {
+  if (typeof render !== 'function') return;
+  const base = render;
+  window.render = render = function (...a) {
+    const out = base.apply(this, a);
+    try {
+      const page = document.querySelector('#main [data-overview]'), hero = page && page.querySelector('.hub-hero');
+      if (hero && !hero.querySelector('.hub-hero-art') && typeof yearIllustration === 'function') {
+        const cat = page.getAttribute('data-overview'), stages = [...page.querySelectorAll('.hub-stagebar > .hub-stage')];
+        const i = Math.max(0, stages.findIndex(x => x.classList.contains('is-on')));
+        hero.classList.add('has-art');
+        hero.insertAdjacentHTML('afterbegin', `<span class="hub-hero-art" aria-hidden="true">${yearIllustration(cat, i)}</span>`);
+      }
+    } catch (e) {}
+    return out;
+  };
+})();
