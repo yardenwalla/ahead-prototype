@@ -102,7 +102,7 @@
     if (T[stage]) return T[stage][k] || T[stage].nurse;
     const milk = { first: { nurse: ['Milk', 'About 5–7 feeds', 'Still the main food'], bottle: ['Formula', '24–32 oz a day', 'Still the main food'], expressed: ['Milk', m() <= 6 ? 'About 25 oz a day' : 'About 24 oz a day', 'Still the main food'], both: ['Milk', 'About 5–7 feeds', 'Nursing and bottles'] },
       textures: { nurse: ['Milk', 'About 4–6 feeds', 'Alongside meals'], bottle: ['Formula', '24–30 oz a day', 'Alongside meals'], expressed: ['Milk', 'About 24 oz a day', 'Alongside meals'], both: ['Milk', 'About 4–6 feeds', 'Bottles 6–8 oz each'] },
-      meals: { nurse: ['Milk', 'About 3–5 feeds', 'Alongside meals'], bottle: ['Formula', 'About 24 oz a day', 'Until 12 months'], expressed: ['Milk', 'About 20–24 oz', 'A day'], both: ['Milk', 'About 3–5 feeds', 'Bottles 6–8 oz each'] } }[stage];
+      meals: { nurse: ['Milk', 'About 3–5 feeds', 'Alongside meals'], bottle: ['Formula', 'About 24 oz a day', 'No more than 32 oz'], expressed: ['Milk', 'About 20–24 oz', 'A day'], both: ['Milk', 'About 3–5 feeds', 'Bottles 6–8 oz each'] } }[stage];
     // From the first birthday, formula gives way to whole cow's milk from a cup (AAP: about 16–24 oz a day).
     if (stage === 'meals' && m() >= 12) Object.assign(milk, { nurse: ['Nursing', 'As often as suits you', 'Meals lead now'], bottle: ['Whole milk', '16–24 oz a day', 'From a cup'], expressed: ['Milk', '16–24 oz a day', 'From a cup'], both: ['Milk', '16–24 oz a day', 'From a cup, plus nursing'] });
     const food = { first: ['Solids', '1–2 small meals', 'A few bites is plenty'], textures: ['Meals', '2–3 a day', 'Bigger portions now'], meals: ['Meals', '3, plus 1–2 snacks', 'Family food, adapted'] }[stage];
@@ -163,11 +163,12 @@
     h += hero({ eyebrow: 'Solids', title: S[0], checks: S[1] });
     h += glanceCard(live ? 'What Maya’s eating now' : 'At this age', milkTiles(phase), go('chg:Feeding:d:milk:' + phase));
     // The guide for this age comes first; a baby who started in the last few weeks starts with First tastes.
-    const recent = live && typeof foodWeeksIn === 'function' && foodWeeksIn() < 4;
+    // Just started (they said so, or the start date is recent): First tastes is where to start.
+    const recent = live && (answers.foodExperience === 'new' || (answers.solidsStart && typeof foodWeeksIn === 'function' && foodWeeksIn() < 4));
     const first = recent ? 3 : cur;
     const G = SOLIDS_GUIDES.map(g => blw && g.i === 4 ? { ...g, title: 'From strips to small pieces' } : g);
     const startedEarly = live && answers.solidsStart && age < 6;
-    h += list('Solids guides', G.map(g => row({ icon: g.icon, title: g.title, sub: g.i === 3 && startedEarly ? 'Where every baby starts' : g.when, chipText: g.i === first ? 'Start here' : '', onclick: go('chg:Feeding:s:' + g.i) })));
+    h += list('Solids guides', G.map(g => row({ icon: g.icon, title: g.title, sub: g.i === 3 && startedEarly ? 'Where every baby starts' : g.when, chipText: g.i === first ? (recent || !live ? 'Start here' : 'Now') : '', onclick: go('chg:Feeding:s:' + g.i) })));
     const t = ALLERGENS.filter(a => tried(a[0])).length;
     // Only what a parent comes back to: the allergen tracker. Gagging help and first aid sit in the box below and in the guides.
     if (t < ALLERGENS.length) h += list('Along the way', [row({ icon: 'peanut', title: 'Try a new allergen', sub: !t && typeof foodWeeksIn === 'function' && foodWeeksIn() >= 4 ? 'Already tried some? Tick them' : `${ALLERGENS.find(a => !tried(a[0]))[0]} is next`, chipText: `${t} of ${ALLERGENS.length}`, onclick: go('chg:Feeding:d:allergens') })]);
@@ -248,7 +249,7 @@
         row({ icon: 'bowl', title: 'What to put on the tray', sub: 'Iron-rich foods, soft enough to squash', onclick: go('chg:Feeding:d:tray') }),
         row({ icon: 'hand', title: 'Let {o} set the pace', sub: 'Turning away or closing {p} mouth means {s’s} done', onclick: go('chg:Feeding:d:pace') }),
         meth() === 'bottle' ? null : row({ icon: 'drop', title: 'Keep up the vitamin D drops', sub: 'Through the first year, plus iron if your pediatrician says so', onclick: go('chg:Feeding:d:vitd') }),
-        aidDone() || (C().live() && foodStage() !== 'new' && foodStage() !== 'preparing') ? null : row({ icon: 'shield', title: 'Learn infant choking first aid', sub: 'Worth knowing before you need it', chipText: 'Not done yet', chipTone: 'is-red', onclick: "openPage('chg:Feeding:safe')" }),
+        aidDone() || (C().live() && foodStage() !== 'new' && foodStage() !== 'preparing') ? null : row({ icon: 'shield', title: (typeof actualMonth === 'function' && actualMonth() >= 12 ? 'Learn choking first aid for a child' : 'Learn infant choking first aid'), sub: 'Worth knowing before you need it', chipText: 'Not done yet', chipTone: 'is-red', onclick: "openPage('chg:Feeding:safe')" }),
         lateRow
       ]);
     }
@@ -259,7 +260,7 @@
         approach() === 'finger' ? null : row({ icon: 'bowl', title: 'Make food a little lumpier', sub: 'Thicker each week, so {s} {learn|learns} to chew', ...newChip('lumpy'), onclick: opened('lumpy', 'chg:Feeding:d:lumpy') }),
         row({ icon: 'avocado', title: 'Offer soft finger foods', sub: 'Strips first, small pieces once {s} can pinch', ...newChip('finger'), onclick: opened('finger', 'chg:Feeding:d:finger') }),
         // Catch-up: first aid stays until it's done; then a cup to practice with.
-        !aidDone() && !(C().live() && foodStage() === 'new') ? row({ icon: 'shield', title: 'Learn infant choking first aid', sub: 'Worth knowing before you need it', chipText: 'Not done yet', chipTone: 'is-red', onclick: "openPage('chg:Feeding:safe')" })
+        !aidDone() && !(C().live() && foodStage() === 'new') ? row({ icon: 'shield', title: (typeof actualMonth === 'function' && actualMonth() >= 12 ? 'Learn choking first aid for a child' : 'Learn infant choking first aid'), sub: 'Worth knowing before you need it', chipText: 'Not done yet', chipTone: 'is-red', onclick: "openPage('chg:Feeding:safe')" })
           : row({ icon: 'cup', title: 'Practice with an open cup', sub: 'A few sips of water at meals', onclick: go('chg:Feeding:d:cup') }),
         row({ icon: 'hand', title: approach() === 'finger' ? 'Gagging on new foods?' : 'Gagging on lumpier food?', sub: 'It’s common for a while, and here’s what helps', onclick: go('chg:Feeding:d:notready') })
       ]);
@@ -339,7 +340,7 @@
         ready: { nurse: [['Nursing', 'About 5–7 feeds a day'], ['Between feeds', 'Every 3–4 hours']], bottle: [['Per bottle', '4–6 oz'], ['A day', 'Up to 32 oz']], expressed: [['Per bottle', '3–5 oz'], ['A day', age <= 6 ? 'About 25 oz' : 'Follow Maya’s cues']], both: [['Feeds', 'About 5–7 a day in total'], ['Per bottle', '4–6 oz']] },
         first: { nurse: [['Nursing', 'About 5–7 feeds a day'], ['Solids', '1–2 small meals a day'], ['Water', 'A few sips with meals']], bottle: [['Formula', '24–32 oz a day'], ['Solids', '1–2 small meals a day'], ['Water', 'A few sips with meals']], expressed: [['Breast milk', age <= 6 ? 'About 25 oz a day' : 'About 24 oz a day'], ['Solids', '1–2 small meals a day'], ['Water', 'A few sips with meals']], both: [['Milk', 'About 5–7 feeds a day, nursing and bottles'], ['Solids', '1–2 small meals a day'], ['Water', 'A few sips with meals']] },
         textures: { nurse: [['Nursing', 'About 4–6 feeds a day'], ['Meals', '2–3 a day'], ['Water', '4–8 oz a day']], bottle: [['Formula', '24–30 oz a day'], ['Meals', '2–3 a day'], ['Water', '4–8 oz a day']], expressed: [['Breast milk', 'About 24 oz a day'], ['Meals', '2–3 a day'], ['Water', '4–8 oz a day']], both: [['Milk', 'About 4–6 feeds a day, nursing and bottles'], ['Meals', '2–3 a day'], ['Water', '4–8 oz a day']] },
-        meals: { nurse: [['Nursing', 'About 3–5 feeds a day'], ['Meals', '3, plus 1–2 snacks'], ['Water', '4–8 oz a day']], bottle: [age >= 12 ? ['Cow’s milk, if used', '16–24 oz a day'] : ['Formula', 'About 24 oz a day'], ['Meals', '3, plus 1–2 snacks'], ['Water', '4–8 oz a day']], expressed: [['Breast milk', 'About 20–24 oz a day'], ['Meals', '3, plus 1–2 snacks'], ['Water', '4–8 oz a day']], both: [['Milk', 'About 3–5 feeds a day, nursing and bottles'], ['Meals', '3, plus 1–2 snacks'], ['Water', '4–8 oz a day']] }
+        meals: { nurse: [['Nursing', 'About 3–5 feeds a day'], ['Meals', '3, plus 1–2 snacks'], ['Water', age >= 12 ? 'Offer with meals and snacks' : '4–8 oz a day']], bottle: [age >= 12 ? ['Cow’s milk, if used', '16–24 oz a day'] : ['Formula', 'About 24 oz a day'], ['Meals', '3, plus 1–2 snacks'], ['Water', age >= 12 ? 'Offer with meals and snacks' : '4–8 oz a day']], expressed: [['Breast milk', 'About 20–24 oz a day'], ['Meals', '3, plus 1–2 snacks'], ['Water', age >= 12 ? 'Offer with meals and snacks' : '4–8 oz a day']], both: [['Milk', 'About 3–5 feeds a day, nursing and bottles'], ['Meals', '3, plus 1–2 snacks'], ['Water', age >= 12 ? 'Offer with meals and snacks' : '4–8 oz a day']] }
       }[stage];
       const head = { learn: ['Little and often', 'Newborns have tiny tummies, so frequent feeds are exactly what they need.'], rhythm: ['Feeds are settling into a rhythm', 'Feeds often get quicker or a little further apart now. Hungrier days still happen.'], ready: age >= 7 ? ['Milk is still the main drink', 'If {s} {haven’t|hasn’t} started solids yet, it’s worth starting soon. Mention it at {p} next checkup.'] : ['Milk is still everything', 'Nothing changes until solids begin. Keep feeding the way you have been.'], first: ['Milk still comes first', 'Solids are practice for now, so keep milk feeds going as usual. Offer milk before meals if {s} {seem|seems} too hungry to try food.'], textures: ['Milk and meals together', 'Meals are growing, but milk still matters. Most babies drop a feed or two on their own.'], meals: ['Meals take the lead', 'Milk comes alongside meals now. The bigger change comes around the first birthday.'] }[stage];
       const enough = stage === 'learn' ? 'At least 6 wet diapers a day after day 5, and back to birth weight by about 2 weeks.' : stage === 'first' || stage === 'textures' || stage === 'meals' ? 'Steady growth at checkups and plenty of wet diapers. How much {s} {eat|eats} at one meal matters much less.' : 'Steady growth at checkups and plenty of wet diapers.';
@@ -349,7 +350,7 @@
       const si = ['learn', 'rhythm', 'ready', 'first', 'textures', 'meals'].indexOf(stage), labels = ['Newborn', '1–4 months', '4–6 months', '6–7 months', '7–9 months', '9–12 months'];
       const chart = meth() === 'nurse' || meth() === 'both'
         ? hubColumnChart({ title: 'Milk feeds a day, across the year', items: [['Newborn', 8, 12, '8–12'], ['1–4|months', 6, 8, '6–8'], ['4–7|months', 5, 7, '5–7'], ['7–9|months', 4, 6, '4–6'], ['9–12|months', 3, 5, '3–5']], max: 12, nowIndex: [0, 1, 2, 2, 3, 4][si], cat, caption: 'Milk feeds go down across the year: 8 to 12 a day as a newborn, 6 to 8 at 1 to 4 months, 5 to 7 at 4 to 7 months, 4 to 6 at 7 to 9 months and 3 to 5 at 9 to 12 months.', note: 'Fewer, bigger feeds as Maya grows and solids join in. Every baby’s a little different.' })
-        : meth() === 'bottle' ? hubColumnChart({ title: 'Formula per bottle, across the year', items: [['Newborn', 1, 3, '1–3 oz'], ['1–4|months', 4, 5, '4–5 oz'], ['4–6|months', 4, 6, '4–6 oz'], ['6–12|months', 6, 8, '6–8 oz']], max: 8, nowIndex: [0, 1, 2, 3, 3, 3][si], cat, caption: 'Bottles grow from 1 to 3 oz as a newborn to 6 to 8 oz from about 6 months.', note: 'Bigger bottles, fewer of them: about 4–5 a day by 6 months. The daily total stays around 24–32 oz until 12 months.' })
+        : meth() === 'bottle' ? hubColumnChart({ title: 'Formula per bottle, across the year', items: [['Newborn', 1, 3, '1–3 oz'], ['1–4|months', 4, 5, '4–5 oz'], ['4–6|months', 4, 6, '4–6 oz'], ['6–12|months', 6, 8, '6–8 oz']], max: 8, nowIndex: [0, 1, 2, 3, 3, 3][si], cat, caption: 'Bottles grow from 1 to 3 oz as a newborn to 6 to 8 oz from about 6 months.', note: 'Bigger bottles, fewer of them: about 4–5 a day by 6 months. The daily total is usually about 24 oz, and no more than 32, until 12 months.' })
         : hubColumnChart({ title: 'Breast milk per bottle, across the year', items: [['Newborn', 1, 3, '1–3 oz'], ['1–4|months', 3, 4, '3–4 oz'], ['4–12|months', 3, 5, '3–5 oz']], max: 6, nowIndex: [0, 1, 2, 2, 2, 2][si], cat, caption: 'Bottles of breast milk grow from 1 to 3 oz to about 3 to 5 oz, then stay there.', note: age <= 6 ? 'Breast milk changes with your baby, so bottles stay about 3–5 oz. About 25 oz a day is typical.' : 'Breast milk changes with your baby, so bottles stay about 3–5 oz.' });
       return detail(cat, C().DATA.Feeding.CH[C().CFG.Feeding.stage(age)].rail, head[0], head[1], chart + table(rowsByMeth[meth()] || rowsByMeth.nurse) + early + tip('How to tell {s’s} getting enough', enough) + note('These are typical amounts, not targets. Every baby’s a little different.') + select, 'bowl');
     }
@@ -418,14 +419,16 @@
     }
     if (id === 'vitd') {
       // Vitamin D and iron, in one place. AAP: breast milk is low in both; formula has both added.
-      // Iron (AAP, 2026): babies who only have breast milk need iron drops by 6 months; babies born early often start sooner.
+      // Iron (AAP): breastfed babies get iron drops from 4 months until iron-rich foods are going well; breastfed babies born early, from about 1 month through 12 months.
+      // Vitamin D (AAP): 400 IU a day for breastfed and partly breastfed babies; after 1, many children still need 600 IU.
       const f = meth() === 'bottle', early = typeof profile !== 'undefined' && profile.early;
       const ts = f ? [['Vitamin D', 'Usually covered', 'Formula has it added'], ['Iron', 'Usually covered', 'Formula has it added']]
-        : [['Vitamin D', '400 IU a day', 'Drops, from the first days'], ['Iron', early ? 'Ask when to start' : 'Ask at 4 months', early ? 'Often from the first weeks' : 'Drops by 6 months, until iron-rich foods are going well']];
+        : [['Vitamin D', '400 IU a day', 'Drops, from the first days'], ['Iron', early ? 'From about 1 month' : 'From 4 months', early ? 'Usually until 12 months, at the dose your pediatrician gives' : 'Drops until iron-rich foods are going well']];
       return detail(cat, 'Milk feeds', 'Vitamin D and iron', f ? 'Formula has both added, so most formula-fed babies don’t need drops.' : 'Breast milk is low in vitamin D and iron, so breastfed and partly breastfed babies need a little extra.',
         `<section class="hub-card hub-glance is-static"><span class="hub-card-head"><b>${F(f ? 'For formula-fed babies' : 'For breastfed babies')}</b></span>${tiles(ts)}</section>`
         + (f ? tip('When to ask', 'If Maya drinks less than about 32 oz of formula a day, ask your pediatrician about vitamin D drops.')
-          : steps(age < 4 ? ['Ask which drops and how much at Maya’s next checkup.', 'Ask about iron at the 4-month checkup, and whether to give it with milk or on its own.'] : ['Keep giving vitamin D every day through the first year.', 'Ask at Maya’s next checkup whether {s} still {need|needs} iron drops, or if iron-rich foods are enough.']))
+          : steps(age >= 12 ? ['Ask at the 12-month checkup whether to keep giving vitamin D. After 1, many children still need it (600 IU a day).', 'Iron now comes from food: meat, beans, eggs and iron-fortified cereal.'] : age < 4 ? ['Give 400 IU of vitamin D every day, starting now. The label says how many drops that is.', early ? 'Ask your pediatrician for Maya’s iron dose. Babies born early usually start at about 1 month.' : 'At the 4-month checkup, ask your pediatrician for Maya’s iron dose.'] : ['Keep giving 400 IU of vitamin D every day through the first year.', early ? 'Keep giving iron drops, usually until 12 months.' : 'Give iron drops until iron-rich foods are going well. Ask at the next checkup when to stop.'])
+          + (meth() === 'both' ? tip('Breast milk and formula?', 'Keep giving vitamin D until Maya drinks about 32 oz of formula a day.') : ''))
         + (!f || early ? `<h2 class="hub-h2">${F('How to give drops')}</h2>` + (window.hubFigure ? hubFigure('drops', cat, 'Mix the drops into about an ounce of milk, give that small bottle first, then the usual feed.') : '')
           + tip(meth() === 'nurse' ? 'No bottles? Easy' : 'Or straight from the dropper', (meth() === 'nurse' ? 'Put the drop on your nipple just before a feed, or squirt it slowly inside {p} cheek. ' : 'Squirt it slowly inside {p} cheek, not toward the back of the throat. ') + 'If {s} {spit|spits} up afterward, don’t give another dose.') : '')
         + note('Once solids start, iron-rich foods like meat, beans and iron-fortified oatmeal help too.'), 'drop');
@@ -515,7 +518,7 @@
       clock: [['Total sleep', '14–17 hours', 'Including naps'], ['Wake window', '45–60 min', 'Between sleeps']],
       daynight: [['Total sleep', '14–17 hours', 'Including naps'], ['Wake window', '1–1½ hours', 'Between sleeps']],
       rhythm: [['Naps', '3 a day', 'The last is a short catnap'], ['Wake window', '2–2½ hours', 'Between sleeps'], ['Bedtime', '7–8 pm', 'Often'], ['Total sleep', '12–16 hours', 'Including naps']],
-      two: [['Naps', '2 a day', 'Morning and afternoon'], ['Wake window', '2½–4 hours', 'Between sleeps'], ['Bedtime', '7–8 pm', 'Often'], ['Total sleep', '12–16 hours', 'Including naps']]
+      two: [['Naps', '2 a day', 'Morning and afternoon'], ['Wake window', '2½–4 hours', 'Between sleeps'], ['Bedtime', '7–8 pm', 'Often'], ['Total sleep', m() >= 12 ? '11–14 hours' : '12–16 hours', 'Including naps']]
     }[key];
   }
   const NIGHT = {
@@ -527,7 +530,7 @@
   const nightCard = (key, isNow = true) => `<button class="hub-card hub-glance" onclick="${go('chg:Sleep:d:day')}"><span class="hub-card-head"><b>${F(isNow && C().live() ? 'How Maya’s sleeping now' : isNow ? 'At this age' : 'At this stage')}</b>${chev}</span>${tiles(sleepGlance(key))}<span class="hub-card-note" id="sleep-night-feeds"><b>${F('At night')}</b> ${F(NIGHT[key])}</span></button>`;
   const swaddleRow = () => swaddleDue() ? row({ icon: 'sack', cat: 'Sleep', title: rolled() ? 'Stop swaddling now' : 'Stop swaddling at the first attempt to roll', sub: rolled() ? (answers.rollDirection === 'Trying to roll' ? 'Now that Maya’s trying to roll, use a sleep sack' : 'Now that Maya’s rolling, use a sleep sack') : 'Switch to a sleep sack that leaves the arms free', chipText: rolled() ? 'Do now' : 'Must know', chipTone: 'is-red', onclick: go('chg:Sleep:d:swaddle') }) : null;
   const mattressRow = () => mattressLowestDue() ? row({ icon: 'shield', cat: 'Sleep', title: 'Set the crib mattress to its lowest', sub: answers.pullUp === 'Yes' ? 'Now that Maya pulls up, use the lowest setting' : 'Before {s} {pull|pulls} up, use the lowest setting', chipText: 'Do now', chipTone: 'is-red', onclick: go('chg:Sleep:d:mattress') })
-    : mattressDue() ? row({ icon: 'shield', cat: 'Sleep', title: 'Lower the crib mattress', sub: answers.sit === 'Yes' || answers.pullUp === 'Yes' || answers.crawl === 'Yes' ? 'Now that Maya sits, set it to the lowest setting' : 'Lowest setting before {s} can pull up', chipText: 'Do now', chipTone: 'is-red', onclick: go('chg:Sleep:d:mattress') }) : null;
+    : mattressDue() ? row({ icon: 'shield', cat: 'Sleep', title: 'Lower the crib mattress', sub: answers.sit === 'Yes' || answers.pullUp === 'Yes' || answers.crawl === 'Yes' ? (answers.pullUp === 'Yes' ? 'Now that Maya pulls up' : answers.crawl === 'Yes' ? 'Now that Maya crawls' : 'Now that Maya sits') + ', set it to the lowest setting' : 'Lowest setting before {s} can pull up', chipText: 'Do now', chipTone: 'is-red', onclick: go('chg:Sleep:d:mattress') }) : null;
   // One fixed name for the sleep-training page, whatever was picked inside it, so the row always says what's behind it.
   function settleRow() {
     const t = m() >= 4 ? ['Sleep training, if you choose it', 'Compare methods, or get support along the way'] : ['Sleep training, for later', 'A choice, not a must. Some families start at 4–6 months'];
@@ -557,7 +560,7 @@
         row({ icon: 'heart', cat, title: 'Help Maya fall asleep any way that works', sub: 'Feeding, rocking or holding is fine now', onclick: "openPage('chg:Sleep:d:soothe')" }),
         row({ icon: 'moon', cat, title: 'Keep nights dark and quiet', sub: 'It helps {p} body clock switch on', onclick: go('chg:Sleep:d:daynight') })
       ].filter(Boolean).slice(0, 3).concat([row({ icon: 'crib', cat, title: 'Where Maya sleeps', sub: 'In your room, in {p} own sleep space', onclick: go('chg:Sleep:d:where') })]));
-      h += versus('Normal, or time to call?', ['Normal', 'Waking every 2–3 hours, grunts, squeaks and twitches in sleep.'], ['Call your pediatrician', 'Hard to wake for feeds, a temperature of 100.4°F or higher, or trouble breathing.'], ['When the crying won’t stop', go('chg:Sleep:d:crying')]);
+      h += versus('Normal, or time to call?', ['Normal', 'Waking every 2–3 hours, grunts, squeaks and twitches in sleep.'], ['Call your pediatrician', 'Hard to wake for feeds, or a temperature of 100.4°F or higher. Trouble breathing: call 911.'], ['When the crying won’t stop', go('chg:Sleep:d:crying')]);
     }
     if (key === 'daynight') {
       h += hero({ eyebrow: 'Longer nights', title: 'Nights are starting to stretch', checks: ['One stretch of night sleep starts to get longer', 'Maya starts to tell day from night, often by 6–8 weeks', 'Awake time grows to about 1–1½ hours, up from under an hour'] }) + B;
@@ -733,14 +736,17 @@
   /* ---------- shared sub pages ---------- */
   function firstAid() {
     // Opened from Safety, the page wears Safety's colors and header; from Feeding, Feeding's.
+    const over1 = (typeof actualMonth === 'function' ? actualMonth() : m()) >= 12;
     const fromSafety = (typeof historyStack !== 'undefined' && historyStack.length && String(historyStack[historyStack.length - 1]).includes('Safety'));
     return detail(fromSafety ? 'Safety' : 'Feeding', fromSafety ? 'First aid' : 'Safety', 'If Maya is choking', 'Choking is silent: {s} can’t cry, cough or breathe. Gagging is noisy, and you can let {o} work it out.',
       `<section class="hub-card hub-versus"><div class="hub-vs" style="margin-top:0"><div><b>Gagging</b><p>${F('Coughing, sputtering, a red face. Stay calm and let {o} clear it.')}</p></div><div class="is-urgent"><b>Choking</b><p>${F('Silent, can’t cough or cry, lips turning blue. Act now.')}</p></div></div></section>`
       + `<h2 class="hub-h2">${F('What to do if {s} {is} choking')}</h2>`
-      + steps(['Shout for help and have someone call 911.', 'Lay Maya face down along your forearm, head lower than {p} chest, supporting {p} jaw. Give up to 5 firm back blows between the shoulder blades.', 'Turn {o} face up on your other arm. With 2 fingers just below the nipple line, give up to 5 quick chest thrusts.', 'Keep switching between back blows and chest thrusts until the food comes out. If {s} {stop|stops} responding, call 911 and start infant CPR.'])
-      + hubEmbed('ShaNuST_58A', 'What to do when a baby is choking', 'American Red Cross')
+      // From the first birthday, first aid for a child (abdominal thrusts) replaces the infant method (AAP, American Red Cross).
+      + (over1 ? steps(['Shout for help and have someone call 911.', 'Kneel or stand behind Maya and wrap your arms around {p} waist.', 'Make a fist just above {p} belly button, thumb side in. Grab it with your other hand.', 'Give quick, firm thrusts inward and upward until the food comes out. If {s} {stop|stops} responding, call 911 and start CPR.'])
+        : steps(['Shout for help and have someone call 911.', 'Lay Maya face down along your forearm, head lower than {p} chest, supporting {p} jaw. Give up to 5 firm back blows between the shoulder blades.', 'Turn {o} face up on your other arm. With 2 fingers just below the nipple line, give up to 5 quick chest thrusts.', 'Keep switching between back blows and chest thrusts until the food comes out. If {s} {stop|stops} responding, call 911 and start infant CPR.'])
+          + hubEmbed('ShaNuST_58A', 'What to do when a baby is choking', 'American Red Cross'))
       + tip('Don’t sweep blindly', 'Only reach into {p} mouth if you can see the object and easily pick it out.')
-      + tip('Take a class', 'A short infant first aid class lets you practice these steps on a doll. It’s the best way to feel ready.')
+      + tip('Take a class', over1 ? 'A short child first aid and CPR class lets you practice on a doll. It’s the best way to feel ready.' : 'A short infant first aid class lets you practice these steps on a doll. It’s the best way to feel ready.')
       + `<button class="hub-learned${aidDone() ? ' is-done' : ''}" onclick="chgToggleSafe('Feeding',1)" aria-pressed="${aidDone()}">${aidDone() ? '✓ You’ve learned this' : 'I’ve learned this'}</button>`
       + `<a class="hub-more" href="https://www.healthychildren.org/English/health-issues/injuries-emergencies/Pages/Choking-Prevention.aspx" target="_blank" rel="noopener"><span>${F('Preventing choking, and what to do · HealthyChildren.org')}</span><span class="hub-chev" aria-hidden="true">↗</span></a>`, 'shield');
   }

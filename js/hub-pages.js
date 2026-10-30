@@ -218,7 +218,7 @@
       const born = journeyDateLabel(profile.dob);
       // A keepsake-style card: the baby's initial, name and age, with the details as tappable pills.
       const edit = step => `editingProfile=true;draft={...profile};setupStep=${step};openPage('setup')`;
-      let b = `<section class="you-hero"><button class="you-edit" onclick="${edit(1)}" aria-label="Edit ${nm}’s details">Edit</button><div class="you-top"><span class="you-avatar" aria-hidden="true">${esc2((name() || 'B').charAt(0).toUpperCase())}</span><div><h1>${nm}</h1><p class="you-age">${esc2(birthdayAge() === 0 ? Math.max(1, Math.floor((NOW - parse(profile.dob)) / 864e5 / 7)) + ' week' + (Math.floor((NOW - parse(profile.dob)) / 864e5 / 7) > 1 ? 's' : '') : monthLabel(birthdayAge()))} old · born ${esc2(parse(profile.dob).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }))}</p></div></div>`
+      let b = `<section class="you-hero"><button class="you-edit" onclick="${edit(1)}" aria-label="Edit ${nm}’s details">Edit</button><div class="you-top"><span class="you-avatar" aria-hidden="true">${esc2((name() || 'B').charAt(0).toUpperCase())}</span><div><h1>${nm}</h1><p class="you-age">${esc2(birthdayAge() === 0 ? Math.max(1, Math.floor(Math.round((NOW - parse(profile.dob)) / 864e5) / 7)) + ' week' + (Math.floor(Math.round((NOW - parse(profile.dob)) / 864e5) / 7) > 1 ? 's' : '') : monthLabel(birthdayAge()))} old · born ${esc2(parse(profile.dob).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }))}</p></div></div>`
         + `<div class="you-pills"><button onclick="${edit(2)}">${hubArt('bottle', 'You')}<span>${esc2(profile.feed || 'Feeding not set')}</span></button><button onclick="${edit(1)}">${hubArt('smile', 'You')}<span>${esc2(babyPronounLabel())}</span></button></div></section>`;
       if (profile.early && profile.due) b += `<h2 class="hub-h2">Ages</h2>` + hubAgeBlock();
       // Where the baby is now: set it right here. Sleep, Feeding and Safety can be changed; the rest follow age.
@@ -481,6 +481,8 @@
       ['Health', 'heart', 'How are you doing?', 'chg:Health:d:you', 'postpartum depression anxiety baby blues overwhelmed mom dad parent me tired exhausted exhaustion sad lonely stressed help crying myself'],
       ['Health', 'steth', 'Checkups and vaccines', 'topic:Health', 'checkup checkups visit well child doctor appointment vaccine vaccines shots immunizations'],
       ['Safety', 'shield', 'Swings, bouncers and floor seats', 'chg:Safety:d:gear', 'swing bouncer bouncy seat rocker floor seat bumbo activity center jumper weight limit'],
+      ['Childcare', 'home', 'Childcare: daycare, nannies, sitters and family', 'topic:Childcare', 'childcare child care daycare day care nanny nanny share babysitter sitter grandparents family caregiver back to work return to work'],
+      ['Childcare', 'notepad', 'Care card for caregivers', 'chg:Childcare:d:card', 'care card caregiver babysitter instructions emergency contacts allergies routine handover'],
       ['Health', 'drop', 'Colds and stuffy noses', 'chg:Health:d:cold', 'cold colds stuffy nose congestion congested runny nose snot saline suction aspirator nosefrida humidifier cough sneeze winter'],
       ['Sleep', 'crib', 'Bassinet to crib, and moving rooms', 'chg:Sleep:d:where', 'bassinet crib switch move transition own room nursery room sharing room-sharing'],
       ['Development', 'signs', 'Baby signs: more, eat, milk, all done', 'chg:Development:d:signs', 'sign signs signing sign language baby signs asl more milk eat all done gestures'],

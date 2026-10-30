@@ -561,7 +561,7 @@
 #main .hub-skip-chips span { font-size: 13px; font-weight: 600; padding: 6px 11px 6px 26px; border-radius: 999px; background: #fbe9e6; color: #8f3b2f; position: relative }
 #main .hub-skip-chips span::before { content: '✕'; position: absolute; left: 10px; font-size: 10px; top: 8px; font-weight: 800 }
 #main .hub-skip small { font-size: 13px; color: var(--muted, #6b6670) }
-#main .hub-fever-bands { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px }
+#main .hub-fever-bands { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px }
 #main .hub-fever-bands > div { position: relative; padding: 12px 10px; border-radius: 14px; background: var(--paper, #f6f3ee) }
 #main .hub-fever-bands > div.is-now { background: #fde6e3; box-shadow: inset 0 0 0 2px #e9a59b }
 #main .hub-fever-bands em { position: absolute; top: -9px; left: 10px; font-style: normal; font-size: 11px; font-weight: 800; background: #b5483a; color: #fff; padding: 2px 8px; border-radius: 999px }
@@ -928,3 +928,120 @@
 #main .hub-select select { width: 100%; appearance: none; -webkit-appearance: none; padding: 14px 44px 14px 16px; border-radius: 14px; border: 1.5px solid color-mix(in srgb, var(--year-ink) 35%, transparent); background: var(--year-pale) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23555' stroke-width='2.5' stroke-linecap='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 16px center; font: inherit; font-size: 16px; font-weight: 700; color: var(--ink) }
 /* Main cards: the category color, softening toward the bottom. */
 #main .hub-hero { background: linear-gradient(165deg, var(--year-bg) 0%, var(--year-bg) 35%, var(--year-pale) 100%) }
+
+/* Childcare */
+#main .cc-tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 0 0 18px }
+#main .cc-tile { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; padding: 14px; border-radius: 18px; background: var(--white, #fffdf9); border: 1px solid var(--line); text-align: left; font: inherit; color: inherit; cursor: pointer; min-height: 120px }
+#main .cc-tile:last-child:nth-child(odd) { grid-column: 1 / -1; flex-direction: row; align-items: center; min-height: 0; gap: 12px }
+#main .cc-tile:last-child:nth-child(odd) b { margin-top: 0 }
+#main .cc-tile-art { width: 44px; height: 44px; border-radius: 50%; background: var(--year-pale); display: grid; place-items: center; flex: none }
+#main .cc-tile-art svg { width: 26px; height: 26px }
+#main .cc-tile b { font-size: 15px; margin-top: 6px } #main .cc-tile small { font-size: 13px; color: var(--muted); line-height: 1.35 }
+#main .cc-fit { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 12px }
+#main .cc-fit > div { padding: 12px; border-radius: 14px; background: var(--year-pale) }
+#main .cc-fit > div + div { background: #f4f1ec }
+#main .cc-fit b { display: block; font-size: 14px; color: var(--year-ink); margin-bottom: 4px } #main .cc-fit > div + div b { color: var(--ink) }
+#main .cc-fit p { margin: 0; font-size: 13.5px; line-height: 1.45; color: var(--muted) }
+#main .cc-lead { margin: 0 2px 10px; font-size: 14px; color: var(--muted); line-height: 1.45 }
+#main .cc-qs, #main .cc-checks { background: var(--white, #fffdf9); border: 1px solid var(--line); border-radius: 18px; padding: 4px 14px; margin-bottom: 16px }
+#main .cc-q { padding: 12px 0 } #main .cc-q + .cc-q { border-top: 1px solid var(--line) }
+#main .cc-q b, #main .cc-check b { display: block; font-size: 15px; line-height: 1.35 }
+#main .cc-q small, #main .cc-check small { display: block; margin-top: 3px; font-size: 13.5px; line-height: 1.4; color: var(--muted) }
+#main .cc-check { display: flex; gap: 12px; align-items: flex-start; padding: 12px 0; cursor: pointer } #main .cc-check + .cc-check { border-top: 1px solid var(--line) }
+#main .cc-check input { flex: none; width: 22px; height: 22px; margin-top: 1px; accent-color: var(--year-ink) }
+#main .cc-add { width: 100%; margin: 4px 0 8px }
+#main .cc-form, #main .cc-sec { padding: 14px 16px; display: grid; gap: 10px; margin-bottom: 12px }
+#main .cc-field span, #main .cc-q-label { display: block; font-size: 13px; font-weight: 700; color: var(--year-ink); margin: 0 0 4px }
+#main .cc-field input, #main .cc-other { width: 100%; min-height: 44px; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--white, #fffdf9); font: inherit; font-size: 16px }
+#main .cc-sec-title { font-size: 16px }
+#main .cc-chips { display: flex; flex-wrap: wrap; gap: 8px }
+#main .cc-chip { min-height: 40px; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--white, #fffdf9); font: inherit; font-size: 14px; font-weight: 600; color: var(--ink); cursor: pointer }
+#main .cc-chip.is-on { background: var(--year-ink); border-color: var(--year-ink); color: #fff }
+#main .cc-notes { width: 100%; padding: 12px 14px; border-radius: 14px; border: 1px solid var(--line); background: var(--white, #fffdf9); font: inherit; font-size: 16px; resize: vertical }
+#main .cc-always { margin: 4px 0 12px; padding: 10px 12px; border-radius: 12px; background: var(--year-pale); font-size: 14px; line-height: 1.45 }
+#main .cc-always b { display: block; font-size: 13px; color: var(--year-ink); margin-bottom: 2px }
+#main .cc-actions { display: grid; gap: 8px; margin: 14px 0 6px } #main .cc-actions .hub-button { width: 100% }
+#main .cc-remove { background: none; border: 0; font: inherit; font-size: 14px; font-weight: 600; color: #a33a3a; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; padding: 8px }
+#main .cc-done { margin: 6px 2px 10px; font-size: 14px; font-weight: 600; color: var(--year-ink) }
+#main .cc-view { padding: 18px 18px 8px; background: linear-gradient(165deg, var(--year-bg) 0%, var(--year-pale) 60%, #fffdf9 100%) }
+#main .cc-view-name { margin: 0 0 10px; font-size: 22px; font-weight: 800 }
+#main .cc-view-row { display: grid; grid-template-columns: 112px 1fr; gap: 10px; padding: 10px 0; border-top: 1px solid color-mix(in srgb, var(--year-ink) 15%, transparent) }
+#main .cc-view-row b { font-size: 13px; color: var(--year-ink) } #main .cc-view-row span { font-size: 15px; line-height: 1.4 }
+#main .cc-view-row.is-always span { font-weight: 600 }
+#main .cc-qhead { display: flex; justify-content: space-between; align-items: baseline }
+#main .cc-qedit { background: none; border: 0; font: inherit; font-size: 14px; font-weight: 700; color: var(--year-ink); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; padding: 8px 2px }
+#main .cc-q { display: flex; gap: 10px; align-items: flex-start } #main .cc-q > div { flex: 1; min-width: 0 }
+#main .cc-q-x { flex: none; width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--line); background: var(--white, #fffdf9); font-size: 18px; line-height: 1; color: #a33a3a; cursor: pointer }
+#main .cc-q-add { display: flex; gap: 8px; padding: 12px 0; border-top: 1px solid var(--line) }
+#main .cc-q-add input { flex: 1; min-width: 0; min-height: 44px; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--white, #fffdf9); font: inherit; font-size: 16px }
+#main .cc-q-add button { flex: none; padding: 0 16px; border-radius: 12px; border: 0; background: var(--year-ink); color: #fff; font: inherit; font-weight: 700; cursor: pointer }
+#main .cc-q-reset { display: block; margin: 0 0 12px; background: none; border: 0; font: inherit; font-size: 13px; font-weight: 600; color: var(--muted); text-decoration: underline; cursor: pointer; padding: 0 }
+#main .cc-times { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 6px }
+#main .cc-times label { display: grid; gap: 4px; flex: 1 1 120px } #main .cc-times span { font-size: 12px; font-weight: 600; color: var(--muted) }
+#main .cc-times input { min-height: 44px; padding: 8px 10px; border-radius: 12px; border: 1px solid var(--line); background: var(--white, #fffdf9); font: inherit; font-size: 16px }
+#main .cc-group { margin: 14px 0 0; padding-top: 2px; font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--year-ink) }
+#main .cc-group:first-child { margin-top: 10px }
+#main .cc-group + .cc-q, #main .cc-group + .cc-check { border-top: 0 }
+#main .cc-group { display: grid; grid-template-columns: 26px 1fr; column-gap: 10px; align-items: center; margin: 16px 0 2px; text-transform: none; letter-spacing: 0; font-size: 15px; font-weight: 800; color: var(--ink) }
+#main .cc-group > span { grid-row: span 2; width: 26px; height: 26px; border-radius: 50%; background: var(--year-ink); color: #fff; font-size: 13px; display: grid; place-items: center }
+#main .cc-group small { grid-column: 2; font-size: 13px; font-weight: 500; color: var(--muted) }
+#main .cc-qs .cc-group:not(:first-child), #main .cc-checks .cc-group:not(:first-child) { margin-top: 18px; padding-top: 16px; border-top: 6px solid var(--year-pale) }
+#main .cc-group + .cc-q, #main .cc-group + .cc-check { border-top: 0 }
+/* Childcare steps: one at a time */
+#main .cc-steps { margin: 4px 0 18px }
+#main .cc-tabs { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 6px; padding: 5px; border-radius: 18px; background: var(--year-pale); margin-bottom: 14px }
+#main .cc-tabs button { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 8px 2px; border: 0; border-radius: 14px; background: none; font: inherit; font-size: 13px; font-weight: 700; color: var(--muted); cursor: pointer; min-width: 0 }
+#main .cc-tabs i { font-style: normal; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; background: #fffdf9; color: var(--year-ink) }
+#main .cc-tabs button.is-on { background: #fffdf9; color: var(--ink); box-shadow: 0 2px 8px rgba(80, 60, 20, .1) }
+#main .cc-tabs button.is-on i { background: var(--year-ink); color: #fff }
+#main .cc-stephead { margin: 0 2px 12px } #main .cc-stephead b { display: block; font-size: 18px } #main .cc-stephead small { font-size: 14px; color: var(--muted) }
+#main .cc-look { display: grid; grid-template-columns: 1fr 1fr; gap: 10px }
+#main .cc-look-tile { padding: 14px; border-radius: 18px; background: #fffdf9; border: 1px solid var(--line) }
+#main .cc-look-tile span { width: 44px; height: 44px; border-radius: 50%; background: var(--year-pale); display: grid; place-items: center; margin-bottom: 10px }
+#main .cc-look-tile span svg { width: 26px; height: 26px }
+#main .cc-look-tile b { display: block; font-size: 15px; line-height: 1.3 } #main .cc-look-tile small { display: block; margin-top: 4px; font-size: 13px; line-height: 1.4; color: var(--muted) }
+#main .cc-asks { display: grid; gap: 10px }
+#main .cc-ask { position: relative; display: block; width: 100%; text-align: left; padding: 16px 16px 14px 56px; border-radius: 20px; border: 0; background: linear-gradient(160deg, var(--year-bg), var(--year-pale)); font: inherit; color: var(--ink); cursor: pointer }
+#main .cc-ask em { position: absolute; left: 16px; top: 16px; width: 28px; height: 28px; border-radius: 50%; background: #fffdf9; color: var(--year-ink); font-style: normal; font-weight: 800; display: grid; place-items: center }
+#main .cc-ask b { display: block; font-size: 16px; line-height: 1.35 }
+#main .cc-ask .cc-tap { display: block; margin-top: 8px; font-size: 13px; font-weight: 700; color: var(--year-ink) }
+#main .cc-ask .cc-listen { display: none; margin-top: 10px; padding: 10px 12px; border-radius: 12px; background: rgba(255, 253, 249, .85); font-size: 14px; line-height: 1.45 }
+#main .cc-ask .cc-listen small { display: block; font-size: 12px; font-weight: 800; color: var(--year-ink); letter-spacing: .03em; text-transform: uppercase }
+#main .cc-ask.is-open .cc-listen { display: block } #main .cc-ask.is-open .cc-tap { display: none }
+#main .cc-ask .cc-own { display: block; margin-top: 6px; font-size: 13px; color: var(--muted) }
+#main .cc-quick { border-radius: 18px; background: #fffdf9; border: 1px solid var(--line); padding: 4px 14px }
+#main .cc-quick-row { display: flex; gap: 12px; align-items: center; padding: 12px 0 } #main .cc-quick-row + .cc-quick-row { border-top: 1px solid var(--line) }
+#main .cc-quick-row > span { flex: none; width: 40px; height: 40px; border-radius: 50%; background: var(--year-pale); display: grid; place-items: center } #main .cc-quick-row > span svg { width: 22px; height: 22px }
+#main .cc-quick-row b { display: block; font-size: 15px; line-height: 1.3 } #main .cc-quick-row small { display: block; font-size: 13px; color: var(--muted); line-height: 1.4; margin-top: 2px }
+#main .cc-next { display: block; margin: 12px 0 0 auto; background: none; border: 0; font: inherit; font-size: 14px; font-weight: 700; color: var(--year-ink); cursor: pointer; padding: 8px 2px }
+/* Safety checklist, easier on the eyes */
+#main .safety-check-section-head { display: grid; grid-template-columns: 1fr auto; align-items: baseline; row-gap: 8px; margin-bottom: 12px }
+#main .safety-check-section-head .safety-check-progress { font-size: 14px; font-weight: 700; color: var(--year-ink) }
+#main .sc-bar { grid-column: 1 / -1; height: 8px; border-radius: 4px; background: var(--year-pale); overflow: hidden }
+#main .sc-bar i { display: block; height: 100%; border-radius: 4px; background: var(--year-ink); transition: width .3s }
+#main .safety-check-list { display: grid; gap: 10px; background: none !important; border: 0 !important; padding: 0 !important; box-shadow: none !important }
+#main .safety-check-row { display: grid !important; grid-template-columns: 48px 1fr 36px; gap: 12px; align-items: start; padding: 14px !important; border-radius: 20px; background: #fffdf9; border: 1px solid var(--line) !important; margin: 0 !important }
+#main .safety-check-row + .safety-check-row { border-top: 1px solid var(--line) !important }
+#main .sc-art { grid-column: 1; grid-row: 1; width: 48px; height: 48px; border-radius: 14px; background: var(--year-pale); display: grid; place-items: center }
+#main .sc-art svg { width: 28px; height: 28px }
+#main .safety-check-copy { grid-column: 2; grid-row: 1; min-width: 0 }
+#main .safety-check-row .safety-check-control { grid-column: 3; grid-row: 1; justify-self: end; margin: 6px 0 0 !important }
+#main .safety-check-copy h3 { margin: 2px 0 4px !important; font-size: 16px !important; line-height: 1.3 }
+#main .safety-check-copy > p { margin: 0 !important; font-size: 14px !important; line-height: 1.45 !important; color: var(--muted) }
+#main .safety-check-tools { display: flex !important; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 10px !important }
+#main .safety-check-detail summary { white-space: nowrap; display: inline-flex; align-items: center; gap: 4px; padding: 5px 12px; border-radius: 999px; background: var(--year-pale); font-size: 13px !important; font-weight: 700; color: var(--year-ink); list-style: none; cursor: pointer }
+#main .safety-check-detail summary::-webkit-details-marker { display: none }
+#main .safety-check-detail[open] { flex-basis: 100% }
+#main .safety-check-detail > div { margin-top: 8px; padding: 10px 12px; border-radius: 12px; background: var(--year-pale); font-size: 14px }
+#main .safety-check-na { margin-left: auto; font-size: 13px !important; color: var(--muted) !important }
+#main .safety-check-row[data-check-status="done"], #main .safety-check-row[data-check-status="na"] { background: var(--year-pale); border-color: transparent !important }
+#main .safety-check-row[data-check-status="done"] h3, #main .safety-check-row[data-check-status="na"] h3 { color: var(--muted) }
+#main .safety-check-tools { gap: 14px !important } #main .safety-check-detail summary { min-height: 32px !important; padding: 4px 12px !important; line-height: 1.2 }
+#main .hub-season { padding: 14px 16px; margin-bottom: 16px; background: var(--year-pale) }
+#main .hub-season > div { display: flex; gap: 12px; align-items: flex-start; margin-top: 10px }
+#main .hub-season > div span { flex: none; width: 36px; height: 36px; border-radius: 50%; background: #fffdf9; display: grid; place-items: center } #main .hub-season > div span svg { width: 20px; height: 20px }
+#main .hub-season p { margin: 0; font-size: 14px; line-height: 1.45; color: var(--muted) } #main .hub-season p b { display: block; color: var(--ink); font-size: 15px }
+#main .hub-season small { display: block; margin-top: 10px; font-size: 13px; color: var(--year-ink); font-weight: 600 }
+#main .hub-season-chip { display: inline-block; margin-left: 8px; padding: 2px 8px; border-radius: 999px; background: #fde6e3; color: #9a3b2f; font-style: normal; font-size: 11px; font-weight: 800; vertical-align: middle }
+#main .health-vaccines + .hub-versus, #main .health-vaccines ~ .hub-versus { margin-top: 22px }
+#main .hub-vax-combo { margin: 0 0 12px; padding: 10px 14px; border-radius: 14px; background: var(--year-pale); font-size: 14px; line-height: 1.45 }
