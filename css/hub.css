@@ -1073,3 +1073,12 @@
 #main .hub-flow .hub-link { margin-top: 6px; padding: 0 }
 #main .hub-flow .hub-chip { margin-top: 6px }
 #main .hub-flow .hub-dot { margin-top: 2px }
+#main .hub-schart { padding: 14px 12px }
+#main .hub-sc-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px 3px }
+#main .hub-sc-head { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 3px; margin-bottom: 2px }
+#main .hub-sc-head span { font-size: 11.5px; font-weight: 600; line-height: 1.2; color: var(--muted); text-align: center; padding: 4px 2px; border-radius: 8px }
+#main .hub-sc-head span.is-on { background: var(--year-ink); color: #fff }
+#main .hub-sc-label { grid-column: 1 / -1; font-size: 13.5px; margin-top: 10px }
+#main .hub-sc-cell { display: flex; flex-direction: column; justify-content: center; min-height: 34px; padding: 6px 8px; border-radius: 10px; background: var(--year-pale); color: var(--muted); font-size: 12.5px; font-weight: 600; line-height: 1.25 }
+#main .hub-sc-cell small { font-size: 11px; font-weight: 500; margin-top: 1px }
+#main .hub-sc-cell.is-on { background: var(--year-bg); color: var(--ink, #2b2840); box-shadow: inset 0 0 0 1.5px var(--year-ink) }
