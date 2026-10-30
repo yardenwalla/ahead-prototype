@@ -1053,3 +1053,12 @@
 #main .hub-qa small { display: block; font-size: 14px; font-weight: 600; color: var(--year-ink) }
 #main .hub-qa b { display: block; margin: 2px 0 2px; font-size: 22px; line-height: 1.2 }
 #main .hub-qa p { margin: 0; font-size: 14px; line-height: 1.45; color: var(--muted) }
+#main .hub-sqs { padding: 4px 0 }
+#main .hub-sq { display: grid; grid-template-columns: 74px 1fr auto; gap: 12px; align-items: start; width: 100%; padding: 14px 16px; border: 0; border-top: 1px solid var(--line, #efeaf2); background: none; text-align: left; font: inherit; color: inherit }
+#main .hub-sq:first-child { border-top: 0 }
+#main .hub-sq.is-now { background: linear-gradient(90deg, var(--year-pale), transparent) }
+#main .hub-sq-when { font-size: 12.5px; font-weight: 700; line-height: 1.3; color: var(--year-ink); padding-top: 2px }
+#main .hub-sq-when em { display: block; width: max-content; margin-bottom: 4px; padding: 2px 8px; border-radius: 99px; background: var(--year-ink); color: #fff; font-style: normal; font-size: 11px }
+#main .hub-sq-copy b { display: block; font-size: 15.5px; line-height: 1.3 }
+#main .hub-sq-copy small { display: block; margin-top: 3px; font-size: 14px; line-height: 1.45; color: var(--muted) }
+#main .hub-sq > svg, #main .hub-sq > .hub-chev { align-self: center }
