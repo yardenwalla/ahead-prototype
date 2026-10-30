@@ -38,45 +38,40 @@
       lead: 'A licensed center with trained teachers, where babies are cared for in a room with others their age.',
       good: 'You want set hours, backup staff when someone’s out, and other babies around.', mind: 'Babies catch more colds the first year. Centers close on holidays and have set pickup times.',
       when: ['Start looking early', 'Infant rooms often have waitlists of several months, so many families start during pregnancy.'],
-      ask: [SLEEP, ['How many babies does each teacher look after?', 'No more than 3, in a room of 6 babies or fewer.'], CPR,
-        ['How long have the baby-room teachers been here?', 'The same faces for a year or more. Babies do best with familiar caregivers.'],
-        ['How do you comfort a crying baby?', 'They pick babies up, and feed on cue rather than by the clock.'],
-        ['Are you licensed? Can I see your latest inspection?', 'Yes, gladly. You can also look it up on your state’s licensing site.'],
-        ['When does a sick child stay home?', 'A clear written policy, and they’ll call you quickly.'],
-        ['Can I visit any time?', 'Yes, without calling ahead.']] },
+      ask: [['Safety', [SLEEP, CPR, ['Are you licensed? Can I see your latest inspection?', 'Yes, gladly. You can also look it up on your state’s licensing site.'], ['Who can pick up, and how do you check?', 'Only people you name, with ID checked every time.']]],
+        ['Their day', [['What does a typical day look like for babies?', 'Babies eat and nap on their own schedule, not the room’s.'], ['What if a baby isn’t tired at nap time, or wakes up early?', 'Never forced to sleep or left crying in the crib. Quiet play, then back down when sleepy.'], ['What do babies eat?', 'They follow your plan for bottles and solids, store breast milk safely, and ask before new foods.'], ['How much time do babies spend on the floor and outside?', 'Tummy time and floor play every day, outside when they can, and no screens.']]],
+        ['The people and the room', [['How many babies does each teacher look after?', 'No more than 3, in a room of 6 babies or fewer.'], ['What ages share the room, and when do babies move up?', 'Babies with other babies, moving up when they’re ready, with a gentle handoff.'], ['How long have the baby-room teachers been here?', 'The same faces for a year or more. Babies do best with familiar caregivers.'], ['How do you comfort a crying baby?', 'They pick babies up and soothe them, and feed on cue.']]],
+        ['Practical', [['What are your hours and closed days?', 'A clear calendar you get ahead of time.'], ['When does a sick child stay home?', 'A clear written policy, and they’ll call you quickly.'], ['How will I hear about my baby’s day?', 'A daily report of feeds, naps and diapers, often with photos.'], ['Can I visit any time?', 'Yes, without calling ahead.'], ['What’s included in the cost, and are there extra fees?', 'Clear, written fees, including late pickup and supplies.']]]] },
     home: { icon: 'home', name: 'Home daycare', short: 'A small group in a home', who: 'place',
       lead: 'A provider cares for a small group of children in their own home, often a mix of ages.',
       good: 'You’d like a smaller group and a homey feel, often with more flexible hours.', mind: 'With one provider, you’ll need backup care when they’re sick or away.',
       when: ['A few months ahead', 'Good spots fill up, so start about 3–6 months before you need care.'],
-      ask: [SLEEP, ['How many children do you look after, and how many are babies?', 'No more than 2 babies per adult.'], CPR,
-        ['Who else is in the home during the day?', 'Everyone over 18 has had a background check.'],
-        ['Who covers when you’re sick or on vacation?', 'A backup plan they can tell you about now.'],
-        ['Are you licensed? Can I see your latest inspection?', 'Yes, gladly. You can also look it up on your state’s licensing site.'],
-        ['Can I visit any time?', 'Yes, without calling ahead.']] },
+      ask: [['Safety', [SLEEP, CPR, ['Are you licensed? Can I see your latest inspection?', 'Yes, gladly. You can also look it up on your state’s licensing site.'], ['Who else is in the home during the day?', 'Everyone over 18 has had a background check.'], ['Are there pets, a pool or guns in the home?', 'Pets kept apart from babies, any pool fenced, and any guns locked, unloaded and stored separately.']]],
+        ['Their day', [['What does a typical day look like?', 'Babies eat and nap on their own schedule, with time on the floor and outside.'], ['What if a baby isn’t tired at nap time, or wakes up early?', 'Never forced to sleep or left crying. Quiet play, then back down when sleepy.'], ['What do babies eat?', 'They follow your plan for bottles and solids, and ask before new foods.'], ['Is the TV on during the day?', 'No screens for babies.']]],
+        ['The people', [['How many children do you look after, and how many are babies?', 'No more than 2 babies per adult.'], ['What ages are in the group?', 'A small mix is fine, as long as babies have their own safe space to play and sleep.']]],
+        ['Practical', [['What are your hours, and who covers when you’re sick or on vacation?', 'Set hours, and a backup plan they can tell you about now.'], ['When does a sick child stay home?', 'A clear written policy, and they’ll call you quickly.'], ['How will I hear about my baby’s day?', 'Texts or a daily note about feeds, naps and diapers.'], ['Can I visit any time?', 'Yes, without calling ahead.'], ['What’s included in the cost, and are there extra fees?', 'Clear, written fees, including late pickup.']]]] },
     nanny: { icon: 'hand', name: 'Nanny or nanny share', short: 'One caregiver at home', who: 'person',
       lead: 'A caregiver who looks after your baby at home. In a nanny share, two families split one nanny.',
       good: 'You want one-on-one care at home, on a schedule that fits yours.', mind: 'You become an employer, with payroll and taxes. Plan backup for when your nanny is sick.',
       when: ['About 2–3 months ahead', 'That leaves time for interviews, references and a paid trial day.'],
-      ask: [['How long have you cared for babies under 1?', 'At least a year, with babies this young.'],
-        ['How do you put a baby down to sleep?', 'On the back, in a crib with nothing else in it.'], ['Are you trained in infant CPR?', 'Yes, or happy to take a class before starting.'],
-        ['What would you do if Maya wouldn’t stop crying?', 'Calm, practical steps, and a call to you if worried. Never shaking.'],
-        ['Can I call two families you’ve worked for?', 'Yes, gladly.'], ['Are you okay with a background check?', 'Yes.'],
-        ['Would you do a paid trial day?', 'Yes.'], ['Will you follow our routine for feeding, naps and screens?', 'Yes, and no screens at this age.']] },
+      ask: [['Safety', [['How do you put a baby down to sleep?', 'On the back, in a crib with nothing else in it.'], ['Are you trained in infant CPR?', 'Yes, or happy to take a class before starting.'], ['What would you do if Maya wouldn’t stop crying?', 'Calm, practical steps, and a call to you if worried. Never shaking.'], ['Are you okay with a background check?', 'Yes.']]],
+        ['Their day', [['What would a typical day with Maya look like?', 'Naps and feeds by {p} cues, time outside, reading and floor play.'], ['What would you do if Maya won’t nap?', 'Try again a little later, with quiet play in between, never leaving {o} to cry for long.'], ['Are you comfortable with bottles and starting solids our way?', 'Yes, and they’ll ask before trying new foods.'], ['How do you feel about screens?', 'None at this age.']]],
+        ['Experience', [['How long have you cared for babies under 1?', 'At least a year, with babies this young.'], ['Can I call two families you’ve worked for?', 'Yes, gladly.'], ['Would you do a paid trial day?', 'Yes.']]],
+        ['Practical', [['What hours and days can you work, and how flexible are you?', 'A clear answer that matches what you need.'], ['Do you drive, and are you comfortable with car seats?', 'A clean driving record, and they buckle in right every time.'], ['How would you keep us updated during the day?', 'A few texts or photos, and a quick recap at pickup.'], ['Are you comfortable with a written agreement on pay, hours and time off?', 'Yes. It protects you both.']]]] },
     family: { icon: 'heart', name: 'Family or friends', short: 'Someone you trust', who: 'person', talk: true,
       lead: 'A grandparent, relative or friend looks after your baby, at your home or theirs.',
       good: 'You’d like someone who already loves Maya, with flexible timing.', mind: 'Advice has changed since they had babies. Talk it through early, kindly and clearly.',
       when: ['A few weeks ahead', 'Enough time to talk through the routine and do a practice day together.'],
-      ask: [['Back to sleep, in a bare crib, even for naps', 'No blankets, bumpers or tummy sleeping. This is the biggest change since they had babies.'],
-        ['The car seat, every ride', 'Rear-facing and buckled snugly, even for short trips.'], ['Feeding: what, when and how much', 'And no honey, juice or new foods until you’ve tried them.'],
-        ['No smoking or vaping around Maya', 'Including in the car and on clothes.'], ['If they feel frustrated', 'Put Maya down somewhere safe and step away for a minute. Never shake a baby.'],
-        ['No screens at this age', 'Talking, songs and books instead.']] },
+      ask: [['The safety basics', [['Back to sleep, in a bare crib, even for naps', 'No blankets, bumpers or tummy sleeping. This is the biggest change since they had babies.'], ['The car seat, every ride', 'Rear-facing and buckled snugly, even for short trips.'], ['No smoking or vaping around Maya', 'Including in the car and on clothes.'], ['If they feel frustrated', 'Put Maya down somewhere safe and step away for a minute. Never shake a baby.']]],
+        ['Their day', [['The schedule', 'Nap times, bedtime and roughly when Maya eats.'], ['Feeding: what, when and how much', 'And no honey, juice or new foods until you’ve tried them.'], ['If Maya won’t nap', 'Quiet play, then try again. Car seats and swings aren’t for sleep.'], ['No screens at this age', 'Talking, songs and books instead.']]],
+        ['Keeping in touch', [['How you’ll stay in touch', 'A text after naps, or whatever suits you both.'], ['What to do if Maya seems sick', 'Call you first, and 911 if it’s an emergency.']]]] },
     sitter: { icon: 'moon', name: 'Babysitter', short: 'For a few hours', who: 'person',
       lead: 'Someone who watches your baby now and then, for a date night, an appointment or an afternoon.',
       good: 'You need a few hours of help, not regular care.', mind: 'Meet them with Maya first, and walk them through sleep and the car seat.',
       when: ['A week or two ahead', 'Try a short first visit while you’re at home, so everyone gets comfortable.'],
-      ask: [['Have you looked after babies this young?', 'Yes, more than once.'], ['How do you put a baby down to sleep?', 'On the back, in a crib with nothing else in it.'],
-        ['Are you trained in infant CPR?', 'Yes, ideally within the last 2 years.'], ['What would you do in an emergency?', 'Call 911 first, then you.'],
-        ['Can I call a family you’ve sat for?', 'Yes, gladly.']] }
+      ask: [['Safety', [['How do you put a baby down to sleep?', 'On the back, in a crib with nothing else in it.'], ['Are you trained in infant CPR?', 'Yes, ideally within the last 2 years.'], ['What would you do in an emergency?', 'Call 911 first, then you.']]],
+        ['Experience', [['Have you looked after babies this young?', 'Yes, more than once.'], ['Can I call a family you’ve sat for?', 'Yes, gladly.'], ['Could you come for a short visit while we’re home first?', 'Yes, so Maya can get to know them.']]],
+        ['Their time together', [['What would you do if Maya won’t settle?', 'Hold, rock and soothe, and text you if it lasts.'], ['How do you feel about screens?', 'None at this age.']]]] },
   };
 
   /* ---------- the summary screen: tiles for the types of care ---------- */
@@ -100,7 +95,11 @@
   // Each question has a stable key ('d3' for ours, 'c…' for yours), so ticks on a shortlist survive edits.
   const qPrefs = () => load('ahead-childcare-qs', {});
   const questions = k => { const t = TYPES[k], p = qPrefs()[k] || {}, hid = p.hidden || [];
-    return t.ask.map(([q, a], i) => ({ key: 'd' + i, q, a })).filter(x => !hid.includes(x.key)).concat((p.added || []).map(x => ({ key: x.key, q: x.q, a: '', own: true }))); };
+    let i = 0; const ours = [];
+    t.ask.forEach(([g, qs]) => qs.forEach(([q, a]) => ours.push({ key: 'd' + i++, q, a, g })));
+    return ours.filter(x => !hid.includes(x.key)).concat((p.added || []).map(x => ({ key: x.key, q: x.q, a: '', own: true, g: 'Your questions' }))); };
+  // Group headings between questions, in the order they come.
+  const grouped = (Q, row) => { let last = null; return Q.map(x => { const head = x.g !== last ? `<p class="cc-group">${F(x.g)}</p>` : ''; last = x.g; return head + row(x); }).join(''); };
   const qEditing = {};
   window.ccQEdit = k => { qEditing[k] = !qEditing[k]; rerender(); };
   window.ccQHide = (k, key) => { const all = qPrefs(), p = all[k] = all[k] || {};
@@ -114,7 +113,7 @@
   function typePage(k) {
     const t = TYPES[k], h = H(), mine = shortlist()[k] || [], noun = t.who === 'place' ? 'place' : 'person', Q = questions(k);
     const ed = qEditing[k], changed = !!qPrefs()[k];
-    const qs = `<div class="cc-qs${ed ? ' is-editing' : ''}">${Q.map(x => `<div class="cc-q"><div><b>${x.own ? esc3(x.q) : F(x.q)}</b>${x.own ? `<small>${F('Your question')}</small>` : `<small>${F(t.talk ? x.a : 'Listen for: ' + x.a)}</small>`}</div>${ed ? `<button class="cc-q-x" aria-label="Remove this question" onclick="ccQHide('${k}','${x.key}')">×</button>` : ''}</div>`).join('')}`
+    const qs = `<div class="cc-qs${ed ? ' is-editing' : ''}">${grouped(Q, x => `<div class="cc-q"><div><b>${x.own ? esc3(x.q) : F(x.q)}</b>${x.own ? `<small>${F('Your question')}</small>` : `<small>${F(t.talk ? x.a : 'Listen for: ' + x.a)}</small>`}</div>${ed ? `<button class="cc-q-x" aria-label="Remove this question" onclick="ccQHide('${k}','${x.key}')">×</button>` : ''}</div>`)}`
       + (ed ? `<div class="cc-q-add"><input id="ccNewQ" placeholder="${esc3('Add your own question')}" autocomplete="off" onkeydown="if(event.key==='Enter')ccQAdd('${k}')"><button onclick="ccQAdd('${k}')">${F('Add')}</button></div>${changed ? `<button class="cc-q-reset" onclick="ccQReset('${k}')">${F('Bring back our questions')}</button>` : ''}` : '') + `</div>`;
     const shortRows = mine.map(c => h.row({ icon: t.icon, cat: CAT, title: esc3(c.name || 'Unnamed'), sub: `${(c.checks || []).filter(x => Q.some(y => y.key === x)).length} of ${Q.length} ${t.talk ? 'talked through' : 'good answers'}${c.notes ? ' · has notes' : ''}`, onclick: `openPage('chg:${CAT}:d:cand-${k}-${c.id}')` }));
     return h.detail(CAT, 'Childcare', t.name, t.lead,
@@ -130,7 +129,7 @@
   function candidatePage(k, id) {
     const t = TYPES[k], h = H(), list = shortlist(), mine = list[k] || [], c = mine.find(x => x.id === id) || { id: 'new', name: '', contact: '', checks: [], notes: '' };
     const noun = t.who === 'place' ? 'place' : 'person', isNew = c.id === 'new';
-    const checks = questions(k).map(x => `<label class="cc-check"><input type="checkbox" data-k="${x.key}" ${(c.checks || []).includes(x.key) ? 'checked' : ''}><span><b>${x.own ? esc3(x.q) : F(x.q)}</b>${x.a ? `<small>${F(t.talk ? x.a : 'Listen for: ' + x.a)}</small>` : ''}</span></label>`).join('');
+    const checks = grouped(questions(k), x => `<label class="cc-check"><input type="checkbox" data-k="${x.key}" ${(c.checks || []).includes(x.key) ? 'checked' : ''}><span><b>${x.own ? esc3(x.q) : F(x.q)}</b>${x.a ? `<small>${F(t.talk ? x.a : 'Listen for: ' + x.a)}</small>` : ''}</span></label>`);
     return h.detail(CAT, t.name, isNew ? `Add a ${noun}` : esc3(c.name), isNew ? '' : '',
       `<section class="hub-card cc-form"><label class="cc-field"><span>${F(t.who === 'place' ? 'Name of the place' : 'Their name')}</span><input id="ccName" value="${esc3(c.name)}" placeholder="${esc3(t.who === 'place' ? 'For example, Little Oaks' : 'For example, Sam')}" autocomplete="off"></label>
         <label class="cc-field"><span>${F('Phone or email (optional)')}</span><input id="ccContact" value="${esc3(c.contact)}" autocomplete="off"></label></section>`

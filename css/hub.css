@@ -979,3 +979,6 @@
 #main .cc-times { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 6px }
 #main .cc-times label { display: grid; gap: 4px; flex: 1 1 120px } #main .cc-times span { font-size: 12px; font-weight: 600; color: var(--muted) }
 #main .cc-times input { min-height: 44px; padding: 8px 10px; border-radius: 12px; border: 1px solid var(--line); background: var(--white, #fffdf9); font: inherit; font-size: 16px }
+#main .cc-group { margin: 14px 0 0; padding-top: 2px; font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--year-ink) }
+#main .cc-group:first-child { margin-top: 10px }
+#main .cc-group + .cc-q, #main .cc-group + .cc-check { border-top: 0 }
