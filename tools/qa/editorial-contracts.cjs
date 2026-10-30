@@ -54,7 +54,7 @@ for (const value of ['new','textures','established']) {
   b.run(`setFeedingStage('${value}');openPage('topic:Feeding')`);
   const nowStage = (b.html().match(/hub-stage is-on is-now">[\s\S]*?hub-stage-name">([^<]+)</) || [])[1];
   check(nowStage === 'Solids', 'Started solids show Solids as the current stage on the timeline');
-  check(/Solids guides/.test(b.html()) && /Start here/.test(b.html()), 'The Solids page lists every guide and marks where to start');
+  check(/Solids guides/.test(b.html()) && /Start here|>Now</.test(b.html()), 'The Solids page lists every guide and marks where the baby is');
   for (const i of [3,4,5]) { b.run(`openPage('chg:Feeding:s:${i}')`); check(/Solids guide ·/.test(b.html()) && /class="monthly-back"/.test(b.html()), 'Each solids guide opens as a guide with a way back'); }
 }
 // Foundational guidance is discoverable initially, then retires after setup.

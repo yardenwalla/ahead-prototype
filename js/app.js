@@ -1478,9 +1478,9 @@ function sleepMethodGraphic(kind){const crib='<path d="M104 67v27m58-27v27M104 7
 function sleepTrainingMethods(){return [
 {kind:'ferber',name:'Timed check-ins',title:'Return for short check-ins',description:'You leave, then pop back in for short check-ins, waiting a little longer each time. Expect some crying. Check-ins reassure some babies and wind others up.',url:'https://health.clevelandclinic.org/ferber-method',link:'More about Ferber'},
 {kind:'chair',name:'Chair method',title:'Stay nearby, then step back',description:'You sit by the crib while your baby falls asleep, and move your chair a little farther away every few nights. Gentle, but it takes patience.',url:'https://health.clevelandclinic.org/chair-method-sleep-training',link:'More about the chair method'},
-{kind:'pickup',name:'Pick up, put down',title:'Comfort, then return to the crib',description:'When your baby cries, you pick them up until they’re calm, then put them back down awake. Lots of comfort, and lots of lifting.',url:'https://health.clevelandclinic.org/pick-up-put-down-method',link:'More about pick up, put down'},
+{kind:'pickup',name:'Pick up, put down',title:'Comfort, then return to the crib',description:'When your baby cries, you lift and cuddle until calm, then lay your baby back down awake. Lots of comfort, and lots of lifting.',url:'https://health.clevelandclinic.org/pick-up-put-down-method',link:'More about pick up, put down'},
 {kind:'extinction',name:'Cry it out',title:'Settle without routine check-ins',description:'After the bedtime routine, you leave and don’t go back in unless it’s time for a feed or something seems wrong. Often the fastest, and the hardest to listen to.',url:'https://health.clevelandclinic.org/cry-it-out-method',link:'More about cry it out'},
-{kind:'fading',name:'Bedtime fading',title:'Move bedtime gradually',description:'You start bedtime when your baby naturally gets sleepy, then move it earlier bit by bit. Less crying, because they’re truly tired at lights out.',url:'https://pubmed.ncbi.nlm.nih.gov/27221288/',link:'Research on bedtime fading',source:'Pediatrics · Study abstract'}
+{kind:'fading',name:'Bedtime fading',title:'Move bedtime gradually',description:'You start bedtime when your baby naturally gets sleepy, then move it earlier bit by bit. Less crying, since bedtime comes when your baby is truly tired.',url:'https://pubmed.ncbi.nlm.nih.gov/27221288/',link:'Research on bedtime fading',source:'Pediatrics · Study abstract'}
 ];}
 const SLEEP_TRAINING_STAGES={not_started:'Not started',in_progress:'Working on sleep training',trained:'Sleep trained',not_planning:'Not planning on training'};
 const sleepTrainingPreviews={},sleepFollowUpPreviews={};
@@ -1585,7 +1585,7 @@ function sleepAgeReference(key=sleepStageFocus()){const m=month,wake=m===0?'½�
 ['Bedtime',m<3?'Varies':m<=4?'Shifting':'7–8 pm',m<3?'No fixed time yet':m<=4?'Moving earlier':'Example timing'],
 ['Daytime naps',m<3?'Several':sleepSampleOptions().join('–'),m<3?'Across the day':'Morning + afternoon'],
 ['Wake windows',wake,m>=10?'Follow their pattern & sleepy cues':'Broad range · '+(m===0?'Newborn':m<=2?'1–2 months':m<=4?'3–4 months':m<=7?'5–7 months':'8–9 months')],
-['Sleep in 24 hours',m<4?'14–17 hrs':'12–16 hrs','Includes naps and night sleep']
+['Sleep in 24 hours',m<4?'14–17 hrs':m>=12?'11–14 hrs':'12–16 hrs','Includes naps and night sleep']
 ].map(([label,value,sub])=>`<div class="sleep-number"><span class="number-label">${label==='Wake windows'?`<button class="sleep-window-label" aria-label="What is a wake window?" onclick="openPage('sleep-age:windows${sleepPreviewSuffix()}')">Wake windows${icon('question')}</button>`:label}</span><strong>${value.replace(/ (hrs?|pm)$/,'<span class="metric-unit"> $1</span>')}</strong><small>${sub}</small></div>`).join('')}</div><p class="sleep-reference-note">Follow sleepy cues and feeding needs.</p></section>`;}
 // The stage owns the useful answer. Legacy question routes render this same guide.
 function sleepCoachingAnswers(){return {
@@ -1653,7 +1653,7 @@ return `<div class="parent-guide feeding-focus sleep-overview sleep-light sleep-
 ['Bedtime',m<3?'Varies':m<=4?'Shifting':'7–8 pm',m<3?'No fixed time yet':m<=4?'Moving earlier':'Example timing'],
 ['Daytime naps',m<3?'Several':m<=4?'3–4':m===5?'3':m<=8?'2–3':'2',m<3?'Across the day':'Morning + afternoon'],
 ['Wake windows',m>=10?'Varies':wake,m>=10?'Follow their pattern & sleepy cues':'A broad guide, not a target'],
-['Sleep in 24 hours',m<4?'14–17 hrs':'12–16 hrs','Includes naps and night sleep']
+['Sleep in 24 hours',m<4?'14–17 hrs':m>=12?'11–14 hrs':'12–16 hrs','Includes naps and night sleep']
 ].map(([label,value,sub])=>`<div class="sleep-number"><span class="number-label">${label}</span><strong>${value.replace(/ (hrs?|pm)$/,'<span class="metric-unit"> $1</span>')}</strong><small>${sub}</small></div>`).join('')}</div><div class="sleep-reassurance">${icon('dev')}<span>Follow sleepy cues and feeding needs. Shorter night stretches are common.</span></div></section>${sleepSampleDay()}${sleepSetupGuide()}${month>=4?sleepLearningSection():''}${commonQuestions('Sleep')}<div id="sleep-next">${sleepAhead()}</div><details class="sources-disclosure"><summary>Sources behind this guide <span aria-hidden="true">＋</span></summary><div class="source-line">${d.refs.map(([label,url])=>`<p><a href="${url}" target="_blank" rel="noopener">${label} ↗</a></p>`).join('')}</div></details><p class="feeding-help">${d.call}</p>${overviewCheckins('Sleep')}<p class="exp-footer">Prototype Not medical advice.</p></div>`;
 }
 
@@ -1880,7 +1880,7 @@ function playActivityLibrary(){return [
 ['roll-interest','movement','A reason to turn','On a firm floor mat, show baby a favorite toy, then hold it slightly to one side. Let them decide whether to look, reach or turn.','Gives self-directed turning a playful purpose.','Keep the toy close. Looking or reaching is enough; don’t pull baby into a roll.'],
 ['sound-side','listening','Where’s that gentle sound?','While baby is comfortably supported, softly shake a baby rattle just to one side, where they can also see it. Wait for their response.','Invites attention toward a sound and its source.','Bring it in front if baby doesn’t turn. This is a game, not a hearing test.'],
 ['texture-pair','sensory','Smooth or bumpy?','Offer two intact baby-safe toys with different surfaces, one at a time. Let baby hold and explore each.','Offers a simple contrast to discover by touch.','Use one toy and let baby explore without switching.'],
-['peek-face','connection','A little peekaboo','Cover your own face with your hands, then open them and say “peekaboo.” Keep your voice gentle and watch baby’s reaction.','Introduces a small, predictable surprise.','Hide just your eyes if the full reveal seems startling.'],
+['peek-face','connection','A little peekaboo','Cover your own face with your hands, then open your hands and say “peekaboo.” Keep your voice gentle and watch baby’s reaction.','Introduces a small, predictable surprise.','Hide just your eyes if the full reveal seems startling.'],
 ['rhyming-page','language','Give the picture a rhyme','Share a board book and make up a short rhyme about one picture. Repeat the rhythm and leave a pause.','Makes a picture part of a playful sound pattern.','Use two simple words rather than a whole rhyme.'],
 ['two-hands','hands','One toy, two hands','Offer one light, easy-to-grasp baby toy at the center of baby’s body. Let them hold it, turn it or move it between hands.','Makes room for both hands to explore together.','Keep supporting the toy if holding it is still hard work.'],
 ['basket-out','hands','Take one out','Place one large baby-safe toy in a shallow, lightweight open basket. Hold the basket steady and let baby explore taking the toy out.','Adds a destination to reaching and grasping.','Tip the basket slightly so the toy is easy to reach.'],
@@ -2145,15 +2145,15 @@ const DEV_EXAMPLES={
 'Keeps head steady while held':'When you hold baby upright, their head stays steady without you holding it in place.',
 'Holds a toy placed in their hand':'When you put a suitable toy in baby’s hand, they hold on for a moment.',
 'Swipes at toys':'Baby swings an arm toward a nearby toy. A deliberate swipe can come before an accurate grasp.',
-'Brings hands to mouth':'Baby brings their hands to their mouth to explore them.',
+'Brings hands to mouth':'Baby brings their hands to their mouth to explore their fingers.',
 'Pushes onto elbows during tummy time':'During supervised awake tummy time, baby props themselves up on their forearms.',
-'Knows familiar people':'Baby reacts differently to people they see often, perhaps brightening or settling with them.',
+'Knows familiar people':'Baby reacts differently to people they see often, perhaps brightening or calming down around familiar faces.',
 'Likes looking at self in a mirror':'Baby is interested in their reflection. That doesn’t mean they recognize themselves yet.',
 'Laughs':'A game, a voice or a funny face makes baby laugh out loud.',
 'Takes turns making sounds with you':'Baby makes a sound, you answer, and they answer back.',
 'Blows raspberries':'Baby sticks out their tongue and blows, making a bubbly sound.',
 'Squeals':'High squealing sounds during awake moments, separate from crying.',
-'Puts things in mouth to explore':'Baby brings toys to their mouth to find out about them.',
+'Puts things in mouth to explore':'Baby brings toys to their mouth to find out what each one is like.',
 'Reaches to grab a toy':'Baby reaches for a toy they want, instead of only holding one you give them.',
 'Closes lips to show they don’t want more food':'During feeding, baby closes their mouth instead of opening for more. Notice this response rather than trying to get another bite in.',
 'Rolls tummy to back':'Baby turns from lying on their tummy onto their back. Rolling from back to tummy is a different movement.',
@@ -2176,7 +2176,7 @@ const DEV_EXAMPLES={
 'Waves goodbye':'Baby waves during a goodbye, often after seeing you do it.',
 'Uses a name for a parent':'Baby uses “mama,” “dada” or your family’s word specifically for that person.',
 'Pauses or stops at “no”':'When you say “no,” baby briefly pauses or stops what they are doing. This doesn’t mean they can reliably follow rules.',
-'Puts an object in a container':'Baby puts things into a container, not just takes them out.',
+'Puts an object in a container':'Baby puts things into a container, not just takes things out.',
 'Looks for something you hide':'After watching you hide a toy, baby looks where you put it.',
 'Pulls up to stand':'Baby uses stable support to pull themselves up into standing.',
 'Steps while holding furniture':'While holding suitable stable support, baby takes sideways or forward steps. Independent walking is a separate skill.',

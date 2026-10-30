@@ -561,7 +561,7 @@
 #main .hub-skip-chips span { font-size: 13px; font-weight: 600; padding: 6px 11px 6px 26px; border-radius: 999px; background: #fbe9e6; color: #8f3b2f; position: relative }
 #main .hub-skip-chips span::before { content: '✕'; position: absolute; left: 10px; font-size: 10px; top: 8px; font-weight: 800 }
 #main .hub-skip small { font-size: 13px; color: var(--muted, #6b6670) }
-#main .hub-fever-bands { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px }
+#main .hub-fever-bands { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px }
 #main .hub-fever-bands > div { position: relative; padding: 12px 10px; border-radius: 14px; background: var(--paper, #f6f3ee) }
 #main .hub-fever-bands > div.is-now { background: #fde6e3; box-shadow: inset 0 0 0 2px #e9a59b }
 #main .hub-fever-bands em { position: absolute; top: -9px; left: 10px; font-style: normal; font-size: 11px; font-weight: 800; background: #b5483a; color: #fff; padding: 2px 8px; border-radius: 999px }
@@ -1037,3 +1037,8 @@
 #main .safety-check-row[data-check-status="done"], #main .safety-check-row[data-check-status="na"] { background: var(--year-pale); border-color: transparent !important }
 #main .safety-check-row[data-check-status="done"] h3, #main .safety-check-row[data-check-status="na"] h3 { color: var(--muted) }
 #main .safety-check-tools { gap: 14px !important } #main .safety-check-detail summary { min-height: 32px !important; padding: 4px 12px !important; line-height: 1.2 }
+#main .hub-season { padding: 14px 16px; margin-bottom: 16px; background: var(--year-pale) }
+#main .hub-season > div { display: flex; gap: 12px; align-items: flex-start; margin-top: 10px }
+#main .hub-season > div span { flex: none; width: 36px; height: 36px; border-radius: 50%; background: #fffdf9; display: grid; place-items: center } #main .hub-season > div span svg { width: 20px; height: 20px }
+#main .hub-season p { margin: 0; font-size: 14px; line-height: 1.45; color: var(--muted) } #main .hub-season p b { display: block; color: var(--ink); font-size: 15px }
+#main .hub-season small { display: block; margin-top: 10px; font-size: 13px; color: var(--year-ink); font-weight: 600 }

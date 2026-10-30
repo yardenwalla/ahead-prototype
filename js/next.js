@@ -87,12 +87,14 @@
     soon.forEach(i => { const k = i.at.getFullYear() * 12 + i.at.getMonth(); let g = groups.find(x => x.k === k); if (!g) groups.push(g = { k, at: i.at, list: [] }); g.list.push(i); });
     const label = m => m === 0 ? 'Newborn' : m === 12 ? '1 year' : `${m} month${m === 1 ? '' : 's'}`;
     // Born early: both ages, so the month headings line up with the adjusted-age guides.
-    const ageNote = d => { const b = Math.floor(ageAt(born(), d)), c = Math.floor(ageAt(careFrom(), d)); return `Maya will be ${label(b)}${c !== b ? ` · ${Math.max(0, c)} adjusted` : ''}`; };
+    // The month of the first birthday says so; other months give the age that month.
+    const ageNote = d => { const bd = dateAt(born(), 12); if (bd.getFullYear() === d.getFullYear() && bd.getMonth() === d.getMonth()) return `Maya turns 1 on ${bd.toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}`;
+      const b = Math.floor(ageAt(born(), d)), c = Math.floor(ageAt(careFrom(), d)); return `Maya will be ${label(b)}${c !== b ? ` · ${Math.max(0, c)} adjusted` : ''}`; };
     let h = `<div class="next-page"><div class="eyebrow">${F('Coming up for Maya')}</div><h1>${F('Timeline')}</h1><p class="next-lead">${F('The big moments of the next few months. Tap any to read ahead.')}</p>`;
     if (here.length) h += `<section class="next-group is-now"><div class="next-when"><b>${F('Around now')}</b><span>${F(label(Math.floor(ageAt(born()))))}</span></div><div class="next-list">${here.map(card).join('')}</div></section>`;
     h += groups.map(g => `<section class="next-group"><div class="next-when"><b>${F(g.k === thisMonth ? 'Later this month' : g.at.toLocaleDateString('en-US', { month: 'long' }))}</b><span>${F(g.k === thisMonth ? '' : ageNote(new Date(g.at.getFullYear(), g.at.getMonth(), 15)))}</span></div><div class="next-list">${g.list.map(card).join('')}</div></section>`).join('');
     if (!soon.length && !here.length) h += `<p class="next-lead">${F('That’s the first year covered. Keep these guides close as Maya grows.')}</p>`;
-    if (later.length) h += `<details class="next-later"><summary>${F('Later in the year')} <span>${later.length}</span></summary><div class="next-list">${later.map(i => card(i).replace('</small>', ` · ${esc(when(i.at).replace(/^around /, ''))}</small>`)).join('')}</div></details>`;
+    if (later.length) h += `<details class="next-later"><summary>${F('Later in the year')} <span>${later.length} more</span></summary><div class="next-list">${later.map(i => card(i).replace('</small>', ` · ${esc(when(i.at).replace(/^around /, ''))}</small>`)).join('')}</div></details>`;
     h += `<p class="hub-foot">${F('Ages are typical. Every baby moves at their own pace.')}</p></div>`;
     return h;
   };
@@ -195,4 +197,11 @@
     } catch (e) {}
     return out;
   };
+})();
+
+/* One "On the move" page: the moving and pulling-up routes open the same page as the On the move stage. */
+(function () {
+  if (typeof chgLegacy !== 'function') return;
+  const base = chgLegacy;
+  window.chgLegacy = chgLegacy = p => base(/^safety-stage:(moving|pulling)$/.test(p) ? 'safety-stage:rolling' : p);
 })();
