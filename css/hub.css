@@ -1086,3 +1086,25 @@
 #main .hub-moment p { margin: 0; font-size: 16px; line-height: 1.55 }
 #main .hub-moment b { color: var(--year-ink) }
 #main .hub-row-eyebrow { display: block; font-size: 12px; font-weight: 700; letter-spacing: .02em; color: var(--year-ink); margin-bottom: 2px }
+#main .hub-sb { display: flex; flex-direction: column; gap: 8px }
+#main .hub-sb-row { display: grid; grid-template-columns: 92px 1fr; gap: 10px; align-items: center }
+#main .hub-sb-label { font-size: 12.5px; font-weight: 600; line-height: 1.25; color: var(--muted, #6b6670) }
+#main .hub-sb-row.is-now .hub-sb-label { color: var(--ink, #2b2840) }
+#main .hub-sb-label em { display: block; width: max-content; margin-top: 3px; font-style: normal; font-size: 10.5px; font-weight: 800; background: var(--year-ink); color: #fff; padding: 1px 7px; border-radius: 999px }
+#main .hub-sb-bar { position: relative; height: 26px; border-radius: 8px; overflow: hidden; background: #f6e7c8 }
+#main .hub-sb-row.is-now .hub-sb-bar { box-shadow: 0 0 0 2px var(--year-ink) }
+#main .hub-sb-bar i { position: absolute; top: 0; bottom: 0 }
+#main .hub-sb-bar i.is-night { background: #3e4f7a } #main .hub-sb-bar i.is-nap { background: #9fb6e6 } #main .hub-sb-bar i.is-awake { background: #f6e7c8 }
+#main .hub-sb-bar b { position: absolute; top: 50%; width: 8px; height: 8px; margin: -4px 0 0 -4px; border-radius: 50%; background: #f2a7c0; box-shadow: 0 0 0 1.5px #fff }
+#main .hub-sb-scale { display: grid; grid-template-columns: 92px 1fr; gap: 10px; height: 16px }
+#main .hub-sb-scale div { position: relative; font-size: 11.5px; color: var(--muted, #6b6670) }
+#main .hub-sb-scale div span { position: absolute; transform: translateX(-50%); white-space: nowrap }
+#main .hub-sb-scale div span:first-child { transform: none } #main .hub-sb-scale div span:last-child { transform: translateX(-100%) }
+#main .hub-sb-key { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12px; color: var(--muted, #6b6670) }
+#main .hub-sb-key span { display: flex; align-items: center; gap: 5px }
+#main .hub-sb-key i { width: 12px; height: 12px; border-radius: 4px; display: inline-block }
+#main .hub-sb-key i.is-night { background: #3e4f7a } #main .hub-sb-key i.is-nap { background: #9fb6e6 } #main .hub-sb-key i.is-awake { background: #f6e7c8 } #main .hub-sb-key i.is-feed { background: #f2a7c0; border-radius: 50% }
+#main .hub-crib { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px }
+#main .hub-crib > div { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 4px; border-radius: 14px; text-align: center }
+#main .hub-crib > div.is-now { background: var(--year-pale) }
+#main .hub-crib b { font-size: 13.5px } #main .hub-crib small { font-size: 12px; color: var(--muted, #6b6670); line-height: 1.3 }
