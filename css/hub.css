@@ -1063,3 +1063,11 @@
 #main .hub-sq-copy small { display: block; margin-top: 3px; font-size: 14px; line-height: 1.45; color: var(--muted) }
 #main .hub-sq > svg, #main .hub-sq > .hub-chev { align-self: center }
 #main .hub-next-sign em { display: block; margin-top: 3px; font-style: normal; font-size: 14px; line-height: 1.45; color: var(--muted) }
+#main .hub-flow { list-style: none; margin: 0 0 16px; padding: 6px 0 }
+#main .hub-flow li { display: grid; grid-template-columns: 28px 1fr; gap: 12px; padding: 14px 16px; border-top: 1px solid var(--line, #efeaf2) }
+#main .hub-flow li:first-child { border-top: 0 }
+#main .hub-flow-n { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--year-pale); color: var(--year-ink); font-weight: 700; font-size: 14px }
+#main .hub-flow b { display: block; font-size: 15.5px; line-height: 1.3; padding-top: 3px }
+#main .hub-flow p { margin: 4px 0 0; font-size: 14.5px; line-height: 1.5; color: var(--muted) }
+#main .hub-flow .hub-link { margin-top: 6px; padding: 0 }
+#main .hub-flow .hub-chip { margin-top: 6px }
