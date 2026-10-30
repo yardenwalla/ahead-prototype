@@ -57,6 +57,9 @@
     return `<div class="hub-ticks">${rows.map((r, i) => `<button class="hub-tick ${isOn(i) ? 'is-on' : ''}" role="checkbox" aria-checked="${isOn(i)}" onclick="${onclick(i)}"><span class="hub-tick-art">${art(r[2], cat)}</span><span class="hub-row-copy"><b>${F(r[0])}</b><small>${F(r[1])}</small></span><span class="hub-tick-box" aria-hidden="true">${isOn(i) ? '✓' : ''}</span></button>`).join('')}</div>`;
   }
   const steps = items => `<div class="hub-card"><ol class="hub-steps">${items.map(x => `<li>${F(x)}</li>`).join('')}</ol></div>`;
+  // Answers first: for pages parents open with a question ("when", "how do I know", "how much").
+  // Each card is [question, short answer, one line of detail]. One shared block, so pages stay consistent.
+  const qa = items => `<section class="hub-qa">${items.filter(Boolean).map(([q, a, d]) => `<div><small>${F(q)}</small><b>${F(a)}</b>${d ? `<p>${F(d)}</p>` : ''}</div>`).join('')}</section>`;
   const tip = (label, text) => `<div class="hub-tip"><b>${F(label)}</b>${F(text)}</div>`;
   const table = rows => `<div class="hub-card"><dl class="hub-table">${rows.map(r => `<div><dt>${F(r[0])}</dt><dd>${F(r[1])}</dd></div>`).join('')}</dl></div>`;
   const options = (items, chosen, onclick, cat = 'Feeding') => `<div class="hub-options">${items.map(([k, t, b, icon]) => `<button class="hub-option ${chosen === k ? 'is-on' : ''}${icon ? ' has-art' : ''}" aria-pressed="${chosen === k}" onclick="${onclick(k)}">${icon ? `<span class="hub-option-art">${art(icon, cat)}</span>` : ''}<span><b>${F(t)}</b><span>${F(b)}</span></span></button>`).join('')}</div>`;
@@ -491,14 +494,17 @@
     }
     if (id === 'milk12') {
       return nursing()
-        ? detail(cat, 'Family meals', 'Keep nursing, or wean', 'There’s no need to stop at 12 months. Many families keep nursing well past the first birthday. If you’re ready to stop, go slowly.',
-            tiles([['Cow’s milk', 'Optional', 'Up to 16 oz a day alongside nursing, from a cup'], ['Drinks', 'Water from a cup', 'Between meals and feeds']])
+        ? detail(cat, 'Family meals', 'Keep nursing, or wean', '',
+            qa([['Do we have to stop nursing at 1?', 'No', 'Many families keep nursing well past the first birthday.'],
+              ['Can {s} have cow’s milk too?', 'Yes, up to 16 oz a day', 'Whole milk from a cup, alongside nursing. Water between meals.']])
             + `<h2 class="hub-h2">${F('If you’d like to wean')}</h2>` + steps(['Drop one feed every week or so, starting with the one {s} {care|cares} least about.', 'Offer a snack, a cup of milk or a cuddle at that time instead.', 'Keep the bedtime and morning feeds until last. They’re usually the hardest to give up.'])
             + tip('Go easy on yourself', 'Weaning can stir up big feelings, and sometimes low mood. Slow and gradual is gentler on your body too.')
             + tip('Ask at the checkup', 'Your pediatrician can talk through vitamin D and iron at the 12-month checkup.'), 'cup')
-        : detail(cat, 'Family meals', m() >= 12 ? 'Switching to whole milk' : 'Plan the milk change at 12 months', m() >= 12 ? 'Now that Maya’s 1, whole cow’s milk can replace formula, and bottles can make way for cups.' : 'Around the first birthday, whole cow’s milk can replace formula, and bottles can make way for cups.',
-          tiles([['How much', '16–24 oz a day', 'No more than 24, or it fills {o} up and lowers iron'], ['What kind', 'Whole milk', 'Until 2, unless your pediatrician says otherwise']])
-          + steps([meth() === 'both' ? 'Swap formula bottles for whole cow’s milk. Nursing can carry on alongside.' : 'Swap formula for whole cow’s milk. You can switch straight over.', 'Picky about the taste? Mix it half and half with formula for a week, then all milk.', 'Offer milk in an open or straw cup with meals and snacks, and water in between.']) + tip('No rush on the bottle', 'Phasing it out by about 18 months is fine. The bedtime bottle usually goes last.'), 'cup');
+        : detail(cat, 'Family meals', m() >= 12 ? 'Switching to whole milk' : 'Plan the milk change at 12 months', '',
+          qa([['When do we switch from formula?', 'At 12 months', 'Whole cow’s milk replaces formula, and cups replace bottles.'],
+            ['How much milk?', '16–24 oz a day', 'No more than 24, or it fills {o} up and lowers iron.'],
+            ['Which milk?', 'Whole milk', 'Until 2, unless your pediatrician says otherwise.']])
+          + `<h2 class="hub-h2">${F('Making the switch')}</h2>` + steps([meth() === 'both' ? 'Swap formula bottles for whole cow’s milk. Nursing can carry on alongside.' : 'Swap formula for whole cow’s milk. You can switch straight over.', 'Picky about the taste? Mix it half and half with formula for a week, then all milk.', 'Offer milk in an open or straw cup with meals and snacks, and water in between.']) + tip('No rush on the bottle', 'Phasing it out by about 18 months is fine. The bedtime bottle usually goes last.'), 'cup');
     }
     if (id === 'after') {
       // Nursing families: no bottles to swap, so the page is about cow's milk and cups.
@@ -601,6 +607,7 @@
         now ? swaddleRow() : null,
         row({ icon: 'moon', cat, title: 'Keep days bright and nights dim', sub: 'Daylight and chatter by day, quiet feeds at night', onclick: go('chg:Sleep:d:daynight') }),
         row({ icon: 'clock', cat, title: 'Bedtime routine', sub: 'When to start, and when bedtime moves to 7–8 pm', onclick: go('chg:Sleep:d:routine') }),
+        row({ icon: 'sun', cat, title: 'Nap schedule', sub: 'When naps get predictable, and the signs', onclick: go('chg:Sleep:d:naps') }),
         now && swaddleDue() ? null : settleRow(),
         row({ icon: 'crib', cat, title: 'Where Maya sleeps', sub: 'In your room, in {p} own sleep space', onclick: go('chg:Sleep:d:where') })
       ]);
@@ -611,7 +618,7 @@
       h += hero({ eyebrow: 'Three naps', title: 'Naps are finding a rhythm', checks: ['Naps settle into 3 a day, down from 4 or 5', 'Maya can stay awake about 2–2½ hours at a time, up from 1–1½', 'Bedtime moves earlier, to around 7–8 pm'].concat(m() < 6 ? ['Waking more at night? Sleep cycles mature around 4 months, and it usually settles in a few weeks'] : []) }) + B;
       h += nightCard(key, now);
       // Sleep training stays reachable as the last row; sleepy cues were covered at birth.
-      const rows = [now ? swaddleRow() : null, now ? mattressRow() : null, row({ icon: 'clock', cat, title: 'Watch for sleepy cues', sub: 'A quiet stare, yawning or turning away', onclick: go('chg:Sleep:d:cues') })].filter(Boolean).slice(0, 2).concat([row({ icon: 'moon', cat, title: 'Bedtime routine', sub: 'When to start, and when bedtime moves to 7–8 pm', onclick: go('chg:Sleep:d:routine') }), settleRow()]);
+      const rows = [now ? swaddleRow() : null, now ? mattressRow() : null, row({ icon: 'sun', cat, title: 'Nap schedule', sub: 'When naps get predictable, and the signs', onclick: go('chg:Sleep:d:naps') })].filter(Boolean).slice(0, 2).concat([row({ icon: 'moon', cat, title: 'Bedtime routine', sub: 'When to start, and when bedtime moves to 7–8 pm', onclick: go('chg:Sleep:d:routine') }), settleRow()]);
       h += list('What helps now', rows.concat([row({ icon: 'crib', cat, title: 'Where Maya sleeps', sub: 'Bassinet to crib, and when to move rooms', onclick: go('chg:Sleep:d:where') })]));
       if (now) h += eventRow(cat);
       h += versus('Normal, or time to call?', ['Normal', 'Naps of 30–45 minutes, and fighting a nap now and then.'], ['Call your pediatrician', 'Snoring most nights, pauses or gasps in sleep, or sleep changes with fever.']);
@@ -650,7 +657,7 @@
     if (id === 'day') {
       const flexible = ['clock', 'daynight'].includes(key);
       const day = C().sampleDay(C0).replace('<h3 class="chg-sample-title">', '<h3 class="chg-sample-title hub-h2">');
-      return detail(cat, C0.rail, flexible ? 'There’s no schedule yet' : 'An example day', flexible ? 'For now, days follow a loop: a feed, a little awake time, then sleep. Clock times come later.' : 'Here’s one example built from typical wake windows. Real days will move around, and that’s fine.',
+      return detail(cat, C0.rail, flexible ? 'There’s no schedule yet' : 'An example day', flexible ? 'For now, days follow a loop: a feed, a little awake time, then sleep. Naps usually become predictable around 3–4 months.' : 'Here’s one example built from typical wake windows. Real days will move around, and that’s fine.',
         `<div class="hub-card">${tiles(sleepGlance(key)).replace('hub-tiles', 'hub-tiles is-flat').replace(/<small>Naps<\/small><b>(\d) a day<\/b>/, '<small>Naps</small><b>$1</b>')}</div>` + `<div class="hub-card hub-dayplan">${day}</div>` + tip('At night', NIGHT[key]), 'clock');
     }
     if (id === 'cues') {
@@ -683,15 +690,27 @@
       return detail(cat, 'Longer nights', 'Helping Maya tell day from night', 'Babies aren’t born knowing the difference. Light, sound and your routine teach {o}.',
         hubIconSteps([['sun', 'By day', 'Curtains open, normal noise, play and chatter'], ['moon', 'At night', 'Low lights, quiet and calm feeds']], cat, 'By day, open curtains, normal noise and play. At night, low lights and quiet, calm feeds.', false) + tip('When it clicks', 'Most babies’ body clocks switch on around 6–8 weeks, so give it time.'), 'moon');
     }
+    if (id === 'naps') {
+      // When naps become predictable (AAP: regular sleep cycles from about 4 months; Mayo Clinic: naps get more regular with age).
+      const win = { clock: '45–60 minutes', daynight: '1–1½ hours', rhythm: '2–2½ hours', two: '2½–4 hours' }[key] || '2–2½ hours';
+      return detail(cat, 'Sleep', 'Nap schedule', '',
+        qa([['When do naps become predictable?', 'Around 3–4 months', 'Before that, sleep follows feeds, not the clock.'],
+          ['How do I know {s’s} ready?', 'Sleepy at the same times', 'Most days, {s} {get|gets} tired around the same times and naps last longer.'],
+          ['How many naps now?', m() >= 12 ? '2, then 1' : { clock: '4 or 5 a day', daynight: '4 or 5 a day', rhythm: '3 a day', two: '2 a day' }[key], m() >= 12 ? 'Two naps become one between 13 and 18 months.' : key === 'two' ? 'One in the morning, one in the afternoon, until 13–18 months.' : key === 'rhythm' ? 'Then two between 6 and 9 months.' : 'Three by about 4 months, then two between 6 and 9 months.']])
+        + `<h2 class="hub-h2">${F('Setting a nap rhythm')}</h2>`
+        + steps(['For a few days, note when {s} {start|starts} to look sleepy.', 'Put {o} down at those times, before {s’s} overtired.', 'Use a short version of the bedtime routine: a song, then down drowsy but awake.', 'After a short nap, offer the next one a little sooner.'])
+        + tip('Wake windows set the times', `Right now, about ${win} awake between sleeps is typical.`)
+        + list('', [row({ icon: 'clock', title: 'An example day', sub: 'Naps, feeds and bedtime together', onclick: go('chg:Sleep:d:day') })]), 'clock');
+    }
     if (id === 'routine') {
       // Answers first: the three questions parents ask, each answered in a few words, then the how-to (AAP).
       const teeth = answers.hasTooth === 'Yes' || m() >= 7;
-      const qa = [['When should we start a bedtime routine?', 'Around 6–8 weeks', 'Before that, help {o} sleep any way that works.'],
+      const Q = [['When should we start a bedtime routine?', 'Around 6–8 weeks', 'Before that, help {o} sleep any way that works.'],
         ['How do I know {s’s} ready?', 'Nights start to stretch', 'And {s} {get|gets} sleepy around the same time each evening.'],
         ['When does bedtime move to 7–8 pm?', 'Around 3–4 months', 'Move it 15 minutes earlier every few nights until you get there.']];
       const steps4 = [['bath', 'Bath', 'Optional, a few nights a week'], ['bottle', 'Feed', teeth ? 'Then brush {p} teeth' : 'Then a fresh diaper and pajamas'], ['book', 'A song or book', 'The same one most nights'], ['crib', 'Down drowsy but awake', 'On {p} back, in {p} own sleep space']];
       return detail(cat, 'Sleep', 'Bedtime routine', '',
-        `<section class="hub-qa">${qa.map(([q, a, d]) => `<div><small>${F(q)}</small><b>${F(a)}</b><p>${F(d)}</p></div>`).join('')}</section>`
+        qa(Q)
         + `<h2 class="hub-h2">${F('A simple routine')}</h2>` + hubIconSteps(steps4, cat, 'Bath if you like, a feed, a song or book, then down drowsy but awake.', true)
         + tip('Keep it short', 'About 15–20 minutes, in the same order every night.'), 'moon');
     }
@@ -718,10 +737,12 @@
     // Where baby sleeps: bassinet to crib, and when to move rooms. AAP: room-share, on a separate sleep surface, ideally for the first 6 months.
     if (id === 'nightwake') {
       // Night waking after 6 months: common reasons, what helps, and when to call (AAP).
-      return detail(cat, 'Sleep', 'Waking at night', 'Many babies still wake once or twice a night. Most of the time, there’s a simple reason.',
-        hubIconSteps([['stand', 'New skills', 'Practicing standing or crawling, even half asleep'], ['heart', 'Missing you', 'Separation anxiety peaks around 8–10 months'], ['tooth', 'Teeth or a cold', 'Discomfort wakes {o} up'], ['bottle', 'Habit or hunger', 'Ask your pediatrician if night feeds are still needed']], cat, 'New skills, missing you, teeth or a cold, or habit and hunger.', false)
+      return detail(cat, 'Sleep', 'Waking at night', '',
+        qa([['Is it normal to still wake at night?', 'Yes, very common', 'Many babies wake once or twice a night, even after sleeping through for a while.'],
+          ['What helps most?', 'Wait a minute or two', 'Many babies settle on their own. If not, keep it brief, dark and boring.']])
+        + `<h2 class="hub-h2">${F('Common reasons')}</h2>` + hubIconSteps([['stand', 'New skills', 'Practicing standing or crawling, even half asleep'], ['heart', 'Missing you', 'Separation anxiety peaks around 8–10 months'], ['tooth', 'Teeth or a cold', 'Discomfort wakes {o} up'], ['bottle', 'Habit or hunger', 'Ask your pediatrician if night feeds are still needed']], cat, 'New skills, missing you, teeth or a cold, or habit and hunger.', false)
         + `<h2 class="hub-h2">${F('What helps')}</h2>`
-        + steps(['Wait a minute or two before going in. Many babies settle on their own.', 'Keep it brief, dark and boring: a pat, a few quiet words, then out.', 'Stuck standing? Practice sitting back down during the day.', 'Respond the same way each time, so {s} {know|knows} what to expect.'])
+        + steps(['Keep it brief: a pat, a few quiet words, then out.', 'Stuck standing? Practice sitting back down during the day.', 'Respond the same way each time, so {s} {know|knows} what to expect.'])
         + versus('Normal, or time to call?', ['Normal', 'One or two wakings a night that settle with a little help.'], ['Call your pediatrician', 'Snoring, pauses in breathing, fever or ear pulling, or a big change that lasts more than two weeks.']), 'moon');
     }
     if (id === 'where') {
@@ -736,17 +757,19 @@
       + `<h2 class="hub-h2">${F('Setting up the room')}</h2>` + tiles([['Temperature', 'About 68–72°F', 'Comfortable for you in a T-shirt'], ['Clothes', 'One more layer', 'Than you’d wear, or a sleep sack'], ['White noise', 'Low and steady', 'Across the room, not by the crib'], ['Light', 'Dark for night', 'A dim night light for feeds']]), 'crib');
     }
     if (id === 'catnap') {
-      return detail(cat, 'Two naps', answers.twoNaps === 'Yes' || age >= 10 ? 'When a nap runs short' : 'Moving to two naps', 'The move from three naps to two takes a week or two, and some days will look messy.',
-        hubWindowBar({ title: 'When three naps become two', from: 3, to: 12, band: [6, 9, '6–9 months'], ticks: [[3, '3 mo'], [6, '6 mo'], [9, '9 mo'], [12, '12 mo']], now: (NOW - parse(profile.dob)) / 2629746e3, cat, caption: 'Most babies move from three naps to two between 6 and 9 months.' })
-        + steps(['Watch for a skipped or hard-to-fit late catnap most days.', 'Move bedtime about 30 minutes earlier during the switch.', 'After a short nap, offer the next sleep a little sooner.']) + tip('A third nap is still OK', 'On a day with short naps, a catnap can still help.'), 'clock');
+      return detail(cat, 'Two naps', answers.twoNaps === 'Yes' || age >= 10 ? 'When a nap runs short' : 'Moving to two naps', '',
+        qa([['When do three naps become two?', 'Between 6 and 9 months', 'The switch takes a week or two, and some days will look messy.'],
+          ['What’s the sign?', 'Skipping the catnap', 'Most days, the late-afternoon nap is skipped or pushes bedtime late.']])
+        + `<h2 class="hub-h2">${F('Making the switch')}</h2>` + steps(['Move bedtime about 30 minutes earlier during the switch.', 'After a short nap, offer the next sleep a little sooner.']) + tip('A third nap is still OK', 'On a day with short naps, a catnap can still help.'), 'clock');
     }
     if (id === 'skills') {
       return detail(cat, 'Two naps', 'Practice new skills during the day', 'Crawling and pulling up are exciting, and Maya may want to practice in the crib too.',
         steps(['Give {o} lots of floor time to practice by day.', 'Keep the bedtime routine the same.', 'If {s} {stand|stands} up in the crib, help {o} sit back down calmly, then say goodnight.']) + tip('It passes', 'Most babies settle back into sleep once the new skill feels familiar.'), 'sit');
     }
-    if (id === 'after') { const A = C().DATA.Sleep.CH[3].after; return detail(cat, 'After the first birthday', A[1], 'Most babies still need two naps at their first birthday. The move to one nap usually comes between 13 and 18 months.',
-      hubWindowBar({ title: 'When two naps become one', from: 9, to: 24, band: [13, 18, '13–18 months'], ticks: [[9, '9 mo'], [12, '1 year'], [18, '18 mo'], [24, '2 years']], now: (NOW - parse(profile.dob)) / 2629746e3, cat, caption: 'Most toddlers move from two naps to one between 13 and 18 months.' })
-      + tip('The sign to watch for', 'Most days, {s} {fight|fights} the morning nap or {take|takes} a long time to fall asleep for it, yet {is} fine until the afternoon.') + tip('How to switch', 'Push the morning nap a little later every few days until it lands around lunchtime. An earlier bedtime helps while {s} {adjust|adjusts}.') + tip('Not yet?', 'Two naps after the first birthday is normal. There’s no rush.'), 'moon'); }
+    if (id === 'after') { const A = C().DATA.Sleep.CH[3].after; return detail(cat, 'After the first birthday', A[1], '',
+      qa([['When do two naps become one?', 'Between 13 and 18 months', 'Most babies still need two naps at their first birthday.'],
+        ['What’s the sign?', 'Fighting the morning nap', 'Most days, yet {s’s} fine until the afternoon.']])
+      + `<h2 class="hub-h2">${F('Making the switch')}</h2>` + steps(['Push the morning nap a little later every few days.', 'Stop once it lands around lunchtime.', 'Move bedtime a little earlier while {s} {adjust|adjusts}.']) + tip('Not yet?', 'Two naps after the first birthday is normal. There’s no rush.'), 'moon'); }
     if (id === 'method') {
       const x = (typeof sleepTrainingMethods === 'function' ? sleepTrainingMethods() : [])[Number(arg)];
       if (!x) return settlePage();
@@ -883,7 +906,7 @@
     return baseRoute(p);
   };
   // Building blocks shared with the other categories (js/hub-categories.js).
-  window.__hub = { F, row, list, hero, tiles, glanceCard, versus, next, more, note, art, chev, chip, tip, steps, video, detail, mixedList, ticks, listMore,
+  window.__hub = { F, qa, row, list, hero, tiles, glanceCard, versus, next, more, note, art, chev, chip, tip, steps, video, detail, mixedList, ticks, listMore,
     pills: (label, items) => `<nav class="hub-pills" id="hub-pills" aria-label="${esc(label)}">${items.map(it => `<button class="${it.on ? 'is-on' : ''} ${it.now ? 'is-now' : ''}" onclick="${it.onclick}" ${it.on ? 'aria-current="step"' : ''}>${esc(it.label)}${it.now && !it.on ? ' <span class="hub-now">Now</span>' : ''}</button>`).join('')}</nav>` };
   window.positionHubPills = function () {
     const r = document.getElementById('hub-pills'), s = r && r.querySelector('.is-on');
