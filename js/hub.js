@@ -600,7 +600,7 @@
       h += list('What helps now', [
         now ? swaddleRow() : null,
         row({ icon: 'moon', cat, title: 'Keep days bright and nights dim', sub: 'Daylight and chatter by day, quiet feeds at night', onclick: go('chg:Sleep:d:daynight') }),
-        row({ icon: 'clock', cat, title: 'Start a short bedtime routine', sub: 'A feed, a diaper and a song is plenty', onclick: go('chg:Sleep:d:routine') }),
+        row({ icon: 'clock', cat, title: 'Bedtime routine', sub: 'When to start, and when bedtime moves to 7–8 pm', onclick: go('chg:Sleep:d:routine') }),
         now && swaddleDue() ? null : settleRow(),
         row({ icon: 'crib', cat, title: 'Where Maya sleeps', sub: 'In your room, in {p} own sleep space', onclick: go('chg:Sleep:d:where') })
       ]);
@@ -611,7 +611,7 @@
       h += hero({ eyebrow: 'Three naps', title: 'Naps are finding a rhythm', checks: ['Naps settle into 3 a day, down from 4 or 5', 'Maya can stay awake about 2–2½ hours at a time, up from 1–1½', 'Bedtime moves earlier, to around 7–8 pm'].concat(m() < 6 ? ['Waking more at night? Sleep cycles mature around 4 months, and it usually settles in a few weeks'] : []) }) + B;
       h += nightCard(key, now);
       // Sleep training stays reachable as the last row; sleepy cues were covered at birth.
-      const rows = [now ? swaddleRow() : null, now ? mattressRow() : null, row({ icon: 'clock', cat, title: 'Watch for sleepy cues', sub: 'A quiet stare, yawning or turning away', onclick: go('chg:Sleep:d:cues') })].filter(Boolean).slice(0, 2).concat([row({ icon: 'moon', cat, title: 'Your bedtime routine', sub: 'And moving bedtime earlier, to about 7–8 pm', onclick: go('chg:Sleep:d:routine') }), settleRow()]);
+      const rows = [now ? swaddleRow() : null, now ? mattressRow() : null, row({ icon: 'clock', cat, title: 'Watch for sleepy cues', sub: 'A quiet stare, yawning or turning away', onclick: go('chg:Sleep:d:cues') })].filter(Boolean).slice(0, 2).concat([row({ icon: 'moon', cat, title: 'Bedtime routine', sub: 'When to start, and when bedtime moves to 7–8 pm', onclick: go('chg:Sleep:d:routine') }), settleRow()]);
       h += list('What helps now', rows.concat([row({ icon: 'crib', cat, title: 'Where Maya sleeps', sub: 'Bassinet to crib, and when to move rooms', onclick: go('chg:Sleep:d:where') })]));
       if (now) h += eventRow(cat);
       h += versus('Normal, or time to call?', ['Normal', 'Naps of 30–45 minutes, and fighting a nap now and then.'], ['Call your pediatrician', 'Snoring most nights, pauses or gasps in sleep, or sleep changes with fever.']);
@@ -620,7 +620,7 @@
       const settled = answers.twoNaps === 'Yes' || age >= 10 || (now && answers.twoNaps !== 'Not yet');
       h += hero({ eyebrow: 'Two naps', title: settled ? 'Two naps a day' : 'Two naps are on the way', checks: settled ? ['Naps settle into 2 a day: one in the morning, one in the afternoon', 'Maya can stay awake about 2½–4 hours at a time, longest before bed', 'A short nap shifts the timing, not the number of naps'] : ['The late-afternoon catnap starts to drop, often between 6 and 9 months', 'Awake stretches grow to about 2½–4 hours', 'Bedtime may move a little earlier while {s} {adjust|adjusts}'] }) + B;
       h += nightCard(key, now);
-      const rows = [now ? swaddleRow() : null, now ? mattressRow() : null, settled ? row({ icon: 'moon', cat, title: 'Waking at night?', sub: 'Why it happens, and what helps', onclick: go('chg:Sleep:d:nightwake') }) : row({ icon: 'clock', cat, title: 'Watch for a skipped catnap', sub: 'If {s} {skip|skips} it most days, try two naps', onclick: go('chg:Sleep:d:catnap') }), row({ icon: 'sit', cat, title: 'Practice new skills during the day', sub: 'Lots of floor time helps nights stay calm', onclick: go('chg:Sleep:d:skills') })].filter(Boolean).slice(0, 2).concat([row({ icon: 'clock', cat, title: 'Your bedtime routine', sub: teethCopy(), onclick: go('chg:Sleep:d:routine') }), settleRow()]);
+      const rows = [now ? swaddleRow() : null, now ? mattressRow() : null, settled ? row({ icon: 'moon', cat, title: 'Waking at night?', sub: 'Why it happens, and what helps', onclick: go('chg:Sleep:d:nightwake') }) : row({ icon: 'clock', cat, title: 'Watch for a skipped catnap', sub: 'If {s} {skip|skips} it most days, try two naps', onclick: go('chg:Sleep:d:catnap') }), row({ icon: 'sit', cat, title: 'Practice new skills during the day', sub: 'Lots of floor time helps nights stay calm', onclick: go('chg:Sleep:d:skills') })].filter(Boolean).slice(0, 2).concat([row({ icon: 'clock', cat, title: 'Bedtime routine', sub: teethCopy(), onclick: go('chg:Sleep:d:routine') }), settleRow()]);
       h += list('What helps now', rows.concat([row({ icon: 'crib', cat, title: 'Where Maya sleeps', sub: 'Bassinet to crib, and when to move rooms', onclick: go('chg:Sleep:d:where') })]));
       if (now) h += eventRow(cat);
       h += versus('Normal, or time to call?', ['Normal', 'Standing up in the crib, and protest at bedtime when you leave.'], ['Call your pediatrician', 'Snoring most nights, pauses or gasps in sleep, or sleep changes with fever.']);
@@ -684,17 +684,16 @@
         hubIconSteps([['sun', 'By day', 'Curtains open, normal noise, play and chatter'], ['moon', 'At night', 'Low lights, quiet and calm feeds']], cat, 'By day, open curtains, normal noise and play. At night, low lights and quiet, calm feeds.', false) + tip('When it clicks', 'Most babies’ body clocks switch on around 6–8 weeks, so give it time.'), 'moon');
     }
     if (id === 'routine') {
-      // A bedtime routine: from about 6–8 weeks; bedtime often moves to about 7–8 pm around 3–4 months as nights stretch (AAP).
-      const teeth = answers.hasTooth === 'Yes' || m() >= 7, ready = m() >= 3;
+      // Answers first: the three questions parents ask, each answered in a few words, then the how-to (AAP).
+      const teeth = answers.hasTooth === 'Yes' || m() >= 7;
+      const qa = [['When should we start a bedtime routine?', 'Around 6–8 weeks', 'Before that, help {o} sleep any way that works.'],
+        ['How do I know {s’s} ready?', 'Nights start to stretch', 'And {s} {get|gets} sleepy around the same time each evening.'],
+        ['When does bedtime move to 7–8 pm?', 'Around 3–4 months', 'Move it 15 minutes earlier every few nights until you get there.']];
       const steps4 = [['bath', 'Bath', 'Optional, a few nights a week'], ['bottle', 'Feed', teeth ? 'Then brush {p} teeth' : 'Then a fresh diaper and pajamas'], ['book', 'A song or book', 'The same one most nights'], ['crib', 'Down drowsy but awake', 'On {p} back, in {p} own sleep space']];
-      return detail(cat, 'Sleep', 'A bedtime routine', 'A few familiar steps, in the same order every night, tell Maya that sleep is coming.',
-        `<section class="hub-card cc-fit"><div><b>${F('When to start')}</b><p>${F('From about 6–8 weeks. Before that, help {o} sleep any way that works.')}</p></div><div><b>${F('Signs {s’s} ready')}</b><p>${F('A longer stretch at night, sleepy around the same time each evening, and fussier when bedtime runs late.')}</p></div></section>`
-        + `<h2 class="hub-h2">${F('The routine')}</h2>` + hubIconSteps(steps4, cat, 'Bath if you like, a feed, a song or book, then down drowsy but awake.', true)
-        + tip('Keep it short', 'About 15–20 minutes is plenty. The same steps matter more than how long.')
-        + `<h2 class="hub-h2">${F('Moving bedtime earlier')}</h2>`
-        + (ready ? '' : `<p class="hub-para-sm">${F('For now, a late bedtime is normal. Around 3–4 months, as nights stretch, many babies are ready for about 7–8 pm.')}</p>`)
-        + steps(['Notice when Maya gets sleepy in the evening. That’s where to start.', 'Every few nights, start the routine 15 minutes earlier.', 'Stop once you reach about 7–8 pm, or a time that suits your family.'])
-        + tip('Drowsy but awake', 'Putting {o} down calm but still awake gives {o} practice falling asleep, which helps at night wakings too. It’s fine if it doesn’t work every time.'), 'moon');
+      return detail(cat, 'Sleep', 'Bedtime routine', '',
+        `<section class="hub-qa">${qa.map(([q, a, d]) => `<div><small>${F(q)}</small><b>${F(a)}</b><p>${F(d)}</p></div>`).join('')}</section>`
+        + `<h2 class="hub-h2">${F('A simple routine')}</h2>` + hubIconSteps(steps4, cat, 'Bath if you like, a feed, a song or book, then down drowsy but awake.', true)
+        + tip('Keep it short', 'About 15–20 minutes, in the same order every night.'), 'moon');
     }
     if (id === 'swaddle' && !rolled() && m() < 3) {
       return detail(cat, 'Sleep safety', 'Swaddling safely', 'A snug swaddle can help a newborn settle. It just needs to be done the safe way, and only until {s} {try|tries} to roll.',
