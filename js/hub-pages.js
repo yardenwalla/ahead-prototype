@@ -459,7 +459,7 @@
       ['Sleep', 'clock', 'Sleepy cues', 'chg:Sleep:d:cues', 'sleepy tired overtired cues yawning'],
       ['Sleep', 'clock', 'Naps and the late catnap', 'chg:Sleep:d:catnap', 'nap naps catnap napping schedule wake window windows'],
       ['Sleep', 'moon', 'Bedtime routine', 'chg:Sleep:d:routine', 'bedtime routine night bath book when to start 7 8 pm early bedtime signs ready'],
-      ['Sleep', 'clock', 'Nap schedule', 'chg:Sleep:d:naps', 'nap schedule naps predictable regular when signs how many naps wake windows'],
+      ['Sleep', 'clock', 'Nap schedule', 'chg:Sleep:d:day', 'nap schedule naps predictable regular when signs how many naps wake windows'],
       ['Sleep', 'moon', 'Sleep training approaches', 'chg:Sleep:d:method', 'sleep training ferber cry it out chair settle settling self soothe'],
       ['Sleep', 'moon', 'Days and nights mixed up', 'chg:Sleep:d:daynight', 'day night confusion awake nights'],
       ['Sleep', 'moon', 'The 4-month sleep change', 'chg:Sleep:e:0', 'regression waking 4 four month sleep change'],
