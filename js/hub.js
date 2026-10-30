@@ -639,7 +639,12 @@
       h += hero({ eyebrow: 'Three naps', title: 'Naps are finding a rhythm', checks: ['Naps start to happen at similar times most days', 'Awake time between naps gets longer', 'Bedtime moves earlier'].concat(m() < 6 && !now ? ['Waking more at night? Sleep cycles mature around 4 months, and it usually settles in a few weeks'] : []) }) + B;
       h += nightCard(key, now);
       // Sleep training stays reachable as the last row; sleepy cues were covered at birth.
-      const rows = [now ? swaddleRow() : null, now ? mattressRow() : null].filter(Boolean).slice(0, 2).concat([row({ icon: 'moon', cat, title: 'Bedtime routine', sub: 'When to start, and moving bedtime earlier', onclick: go('chg:Sleep:d:routine') }), settleRow()]);
+      const swaddleNow = now && swaddleDue();
+      const rows = [now ? mattressRow() : null,
+        row({ icon: 'clock', cat, title: 'Set nap times and an earlier bedtime', sub: 'Naps and bedtime become predictable now', onclick: go('chg:Sleep:d:predictable') }),
+        swaddleNow ? row({ icon: 'sack', cat, title: rolled() ? 'Stop swaddling now' : 'Stop swaddling at the first try to roll', sub: 'Switch to a sleep sack, arms free', chipText: rolled() ? 'Do now' : 'Must know', chipTone: 'is-red', onclick: go('chg:Sleep:d:swaddleoff') })
+          : row({ icon: 'roll', cat, title: 'Rolling onto {p} tummy? Let {o} be', sub: 'Once {s} can roll both ways', onclick: go('chg:Sleep:d:swaddleoff') }),
+        settleRow()].filter(Boolean);
       h += list('What helps now', rows.concat([row({ icon: 'crib', cat, title: 'Where Maya sleeps', sub: 'Bassinet to crib, and when to move rooms', onclick: go('chg:Sleep:d:where') })]));
       if (now) h += eventRow(cat);
       h += versus('Normal, or time to call?', ['Normal', 'Naps of 30–45 minutes, and a short cry between sleep cycles that settles in a few minutes.'], ['Call your pediatrician', 'Snoring most nights, pauses or gasps in sleep, or sleep changes with fever.']);
@@ -714,6 +719,23 @@
     if (id === 'daynight') {
       return detail(cat, 'Longer nights', 'Helping Maya tell day from night', 'Babies aren’t born knowing the difference. Light, sound and your routine teach {o}.',
         hubIconSteps([['sun', 'By day', 'Curtains open, normal noise, play and chatter'], ['moon', 'At night', 'Low lights, quiet and calm feeds']], cat, 'By day, open curtains, normal noise and play. At night, low lights and quiet, calm feeds.', false) + tip('When it clicks', 'Most babies’ body clocks switch on around 6–8 weeks, so give it time.'), 'moon');
+    }
+    // Moment pages: one change, one strip showing it, then what's happening, what to do and why.
+    const moment = (title, strip, paras, extra = '', icon = 'moon') => detail(cat, C0.rail, title, '', strip + `<section class="hub-moment">${paras.map(([k, v]) => `<p><b>${F(k)}</b> ${F(v)}</p>`).join('')}</section>` + extra, icon);
+    if (id === 'predictable') {
+      return moment('Naps and bedtime become predictable',
+        hubStageStrip({ title: 'How it changes', items: [['clock', 'Notice sleepy times', 'For a few days'], ['moon', 'Bedtime earlier', '15 min every few nights'], ['sun', 'Predictable days', 'Naps at set times, bed 7–8 pm']], cat, caption: 'Notice when baby gets sleepy, move bedtime earlier, and days become predictable.' }),
+        [['What’s happening.', 'Maya starts getting sleepy at about the same times each day. You’ll notice yawning or fussing at similar times.'],
+          ['What to do.', 'Put {o} down for naps at those times. Move bedtime 15 minutes earlier every few nights, until it’s around 7–8 pm.'],
+          ['Why it matters.', 'Overtired babies have a harder time falling asleep and wake more at night. An earlier bedtime often means a better night.']],
+        list('', [row({ icon: 'book', title: 'A simple bedtime routine', sub: 'A few steps, the same every night', onclick: go('chg:Sleep:d:routine') }), row({ icon: 'clock', title: 'An example day', sub: 'Naps, feeds and bedtime together', onclick: go('chg:Sleep:d:day:' + stage) })]));
+    }
+    if (id === 'swaddleoff') {
+      return moment(swaddleDue() ? 'The swaddle comes off' : 'Rolling over in sleep',
+        hubStageStrip({ title: 'How it changes', items: [['sack', 'Swaddle', 'Newborn weeks'], ['roll', 'First try to roll', 'Switch right away'], ['sack', 'Sleep sack', 'Arms free, on {p} back']], cat, caption: 'Swaddle in the newborn weeks, switch at the first try to roll, then a sleep sack with arms free, on the back.' }),
+        [['What’s happening.', 'Most babies start trying to roll in these months. Once they do, a swaddle isn’t safe, because they need their arms free to push up.'],
+          ['What to do.', 'At {p} first try to roll, switch to a sleep sack with {p} arms free. Keep putting {o} down on {p} back for every sleep.'],
+          ['If Maya rolls over.', 'Once {s} can roll both ways on {p} own, it’s fine to let {o} stay on {p} tummy.']], '', 'sack');
     }
     if (id === 'routine') {
       // Answers first: the three questions parents ask, each answered in a few words, then the how-to (AAP).
