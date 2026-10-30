@@ -262,10 +262,6 @@
     if (pastDue) b += `<div class="hub-browse"><button class="hub-link" onclick="openPage('visit-form:plan-${age}')">${F('Booked for later? Save the date')} ›</button></div>`;
     else if (!done && !farAhead) b += `<div class="hub-browse"><button class="hub-link" onclick="openPage('visit-form:${age}')">${F(planned && record.date < iso(NOW) ? 'Been already? Mark it as done' : 'Already had this checkup? Mark it as done')} ›</button></div>`;
     if (live() && age !== focus) b += back('Back to your next checkup', `openPage('health-visit:${focus}')`);
-    // Flu and RSV season (October to March): what to ask for, by age (AAP).
-    { const mo = NOW.getMonth(), am = actualMonth(), inSeason = mo >= 9 || mo <= 2;
-      const items = [am < 8 ? ['RSV antibody', 'Recommended for babies under 8 months in their first RSV season, unless you had the RSV vaccine in pregnancy.'] : null, am >= 6 ? ['Flu shot', 'From 6 months, every year. The first season takes 2 doses, 4 weeks apart.'] : null].filter(Boolean);
-      if (live() && inSeason && items.length) b += `<section class="hub-card hub-season"><b class="hub-fig-title">${F('Flu and RSV season')}</b>${items.map(([t, d]) => `<div><span>${h.art('shield', 'Health')}</span><p><b>${F(t)}</b>${F(d)}</p></div>`).join('')}<small>${F('Ask at your next visit, or call to book one now.')}</small></section>`; }
     b += h.list('For the checkup', [
       h.row({ icon: 'clock', cat: 'Health', title: 'What to expect', sub: EXPECT[age], onclick: `openHealthDetail(${age},'expect')` }),
       `<span id="health-vaccines"></span>` + h.row({ icon: 'shield', cat: 'Health', title: 'Vaccines', sub: age === 0 ? 'Hepatitis B, and protection against RSV, a common winter virus' : ({ 1: 'Hepatitis B, dose 2 (if not at 2 months)', 2: 'DTaP, Hib, pneumococcal, polio, rotavirus and hepatitis B', 4: 'DTaP, Hib, pneumococcal, polio and rotavirus', 6: 'DTaP, pneumococcal and more, plus flu and COVID in season', 9: 'Usually catch-up only, plus flu in season', 12: 'MMR, chickenpox, hepatitis A, and Hib and pneumococcal boosters' })[age] || 'What’s due at this checkup', onclick: `openHealthDetail(${age},'vaccines')` }),
@@ -377,7 +373,10 @@
       // After the shots: what's normal, and when to call (AAP).
       const after = age === 0 ? '' : H().versus('After the shots', ['Normal for a day or two', 'Fussy or sleepy, a low fever, and a sore, red spot where the shot went in.'], ['Call your pediatrician', 'A fever of 104°F or higher, crying for 3 hours or more, or swelling that keeps growing.']);
       const out = routine ? html.replace(/(<section class="health-vaccines"><h2>[^<]*<\/h2>)/, `$1${tiles}`) : html;
-      return out.replace('<section class="health-seasonal-protection"', after + '<section class="health-seasonal-protection"');
+      // October to March, the seasonal ones are marked "In season now", since this is when to ask for them.
+      const mo = NOW.getMonth(), inSeason = mo >= 9 || mo <= 2;
+      const marked = inSeason ? out.replace(/(<details class="guide-detail vaccine-detail vaccine-conditional"><summary><span><b>(?:Flu \(influenza\)|RSV, a common winter virus)<\/b>)/g, '$1<em class="hub-season-chip">In season now</em>') : out;
+      return marked.replace(/<details class="guide-detail"><summary>What about side effects\?[\s\S]*?<\/details>/, '').replace('<section class="health-seasonal-protection"', after + '<section class="health-seasonal-protection"');
     }
     if (part !== 'questions' && part !== 'notes') return baseHealthDetail(age, part);
     const h = H(), e = v => esc(String(v)), own = journeyData().questions[age] || [], notes = visitNotesFor(age);
