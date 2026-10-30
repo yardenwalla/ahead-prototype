@@ -376,7 +376,7 @@
       // October to March, the seasonal ones are marked "In season now", since this is when to ask for them.
       const mo = NOW.getMonth(), inSeason = mo >= 9 || mo <= 2;
       const marked = inSeason ? out.replace(/(<details class="guide-detail vaccine-detail vaccine-conditional"><summary><span><b>(?:Flu \(influenza\)|RSV, a common winter virus)<\/b>)/g, '$1<em class="hub-season-chip">In season now</em>') : out;
-      return marked.replace(/<details class="guide-detail"><summary>What about side effects\?[\s\S]*?<\/details>/, '').replace('<section class="health-seasonal-protection"', after + '<section class="health-seasonal-protection"');
+      return marked.replace(/<details class="guide-detail"><summary>What about side effects\?[\s\S]*?<\/details>/, '').replace(/(<section class="health-seasonal-protection"[\s\S]*?<\/section><\/section>)/, '$1' + after);
     }
     if (part !== 'questions' && part !== 'notes') return baseHealthDetail(age, part);
     const h = H(), e = v => esc(String(v)), own = journeyData().questions[age] || [], notes = visitNotesFor(age);
