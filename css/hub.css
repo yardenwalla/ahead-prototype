@@ -1085,3 +1085,4 @@
 #main .hub-moment { display: flex; flex-direction: column; gap: 14px; margin: 18px 0 }
 #main .hub-moment p { margin: 0; font-size: 16px; line-height: 1.55 }
 #main .hub-moment b { color: var(--year-ink) }
+#main .hub-row-eyebrow { display: block; font-size: 12px; font-weight: 700; letter-spacing: .02em; color: var(--year-ink); margin-bottom: 2px }
