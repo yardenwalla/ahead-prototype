@@ -1091,7 +1091,7 @@
 #main .hub-sb-label { font-size: 12.5px; font-weight: 600; line-height: 1.25; color: var(--muted, #6b6670) }
 #main .hub-sb-row.is-now .hub-sb-label { color: var(--ink, #2b2840) }
 #main .hub-sb-label em { display: block; width: max-content; margin-top: 3px; font-style: normal; font-size: 10.5px; font-weight: 800; background: var(--year-ink); color: #fff; padding: 1px 7px; border-radius: 999px }
-#main .hub-sb-bar { position: relative; height: 26px; border-radius: 8px; overflow: hidden; background: #f6e7c8 }
+#main .hub-sb-bar { position: relative; height: 26px; border-radius: 8px; overflow: hidden; background: var(--year-pale) }
 #main .hub-sb-row.is-now .hub-sb-bar { box-shadow: 0 0 0 2px var(--year-ink) }
 #main .hub-sb-bar i { position: absolute; top: 0; bottom: 0 }
 #main .hub-sb-bar i.is-night { background: #3e4f7a } #main .hub-sb-bar i.is-nap { background: #9fb6e6 } #main .hub-sb-bar i.is-awake { background: #f6e7c8 }
@@ -1108,3 +1108,15 @@
 #main .hub-crib > div { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 4px; border-radius: 14px; text-align: center }
 #main .hub-crib > div.is-now { background: var(--year-pale) }
 #main .hub-crib b { font-size: 13.5px } #main .hub-crib small { font-size: 12px; color: var(--muted, #6b6670); line-height: 1.3 }
+#main .hub-counts, #main .hub-lengths { display: flex; flex-direction: column; gap: 12px }
+#main .hub-count-row, #main .hub-len-row { display: grid; grid-template-columns: 104px 1fr; gap: 4px 12px; align-items: center; padding: 8px; border-radius: 14px }
+#main .hub-count-row.is-now, #main .hub-len-row.is-now { background: var(--year-pale) }
+#main .hub-count-label { font-size: 13px; font-weight: 600; line-height: 1.25 }
+#main .hub-count-label em { display: block; width: max-content; margin-top: 3px; font-style: normal; font-size: 10.5px; font-weight: 800; background: var(--year-ink); color: #fff; padding: 1px 7px; border-radius: 999px }
+#main .hub-count-icons { display: flex; gap: 4px } #main .hub-count-icons svg { width: 28px; height: 28px }
+#main .hub-count-row small { grid-column: 2; font-size: 12.5px; color: var(--muted, #6b6670); line-height: 1.3 }
+#main .hub-len-track { display: block; background: var(--year-pale); border-radius: 8px; height: 30px }
+#main .hub-len-row.is-now .hub-len-track { background: #fff }
+#main .hub-len-track i { display: flex; align-items: center; height: 100%; min-width: max-content; border-radius: 8px; background: #3e4f7a; padding: 0 10px; box-sizing: border-box }
+#main .hub-len-track b { font-size: 12.5px; color: #fff; white-space: nowrap }
+#main .hub-sched > div { border-radius: 14px } #main .hub-sched > div.is-now { background: var(--year-pale) } #main .hub-sched p { margin: 4px 0 0; font-size: 14.5px; line-height: 1.4 }

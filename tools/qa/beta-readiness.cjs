@@ -84,10 +84,8 @@ for (const early of [false,true]) for (let age=0; age<=12; age++) {
   }
   a.run("openSection('Sleep','sleep-night-feeds')");check(a.html().includes('id="sleep-night-feeds"'),'Night-feeds link lands at current age reference');
   a.run("openSection('Feeding','bottle-handling')");check(a.run("page==='chg:Feeding:milk'"),'Milk handling opens its reference');
-  for(const choice of ['learn','trying','routine','help']) {
-    a.run(`openPage('chg:Sleep:settle');chgChooseSettling('${choice}')`);inspect(a,'settling '+choice);
-    check(a.html().includes(`data-settling-guide="${choice}"`),'Distinct settling guide '+choice);
-  }
+  a.run("openPage('chg:Sleep:settle')");inspect(a,'settling page');
+  check(a.html().includes('More of you, more gradual')&&!a.html().includes('settling-guide'),'Sleep training shows every method, with no picker');
   a.run("openPage('topic:Feeding');openPage('chg:Feeding:d:milk');chgChooseMethod('nurse')");
   check(a.html().includes('value="nurse" selected'),'Milk reference can be selected directly');
   a.run("editingProfile=true;draft={...profile,feed:'Formula'};setupStep=2;document.querySelector('#feed').value='Formula';submitSetup({preventDefault(){}});openPage('topic:Feeding');openPage('chg:Feeding:d:milk')");
