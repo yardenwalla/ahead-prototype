@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>A care card from Ahead</title>
+<meta name="description" content="Everything you need to look after the baby: feeding, naps, what helps, and who to call.">
+<!-- The link preview in Messages, WhatsApp and email. The card itself travels in the link after the #, so it never reaches a server. -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ahead">
+<meta property="og:title" content="A care card from Ahead">
+<meta property="og:description" content="Feeding, naps, what helps, and who to call. Tap to open.">
+<meta property="og:url" content="https://yardenwalla.github.io/ahead-prototype/card.html">
+<meta property="og:image" content="https://yardenwalla.github.io/ahead-prototype/docs/card-preview.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#f8edb3">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Nunito:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root { --bg: #f7f4ee; --ink: #2f2a33; --muted: #6f6860; --gold: #6b5a0e; --sun: #f8edb3; --pale: #fcf7dd; --line: #ece4cf; --card: #fffdf9 }
+* { box-sizing: border-box }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 Figtree, system-ui, -apple-system, sans-serif }
+main { max-width: 480px; margin: 0 auto; padding: max(28px, env(safe-area-inset-top)) max(18px, env(safe-area-inset-right)) 40px max(18px, env(safe-area-inset-left)) }
+.brand { font: 800 26px/1 Nunito, Figtree, sans-serif; letter-spacing: -.02em; color: var(--ink) } .brand span { color: #b7a48d }
+.card { margin-top: 22px; border-radius: 28px; overflow: hidden; background: var(--card); border: 1px solid var(--line); box-shadow: 0 10px 30px rgba(80, 64, 20, .08) }
+.top { padding: 26px 22px 22px; background: linear-gradient(165deg, var(--sun) 0%, var(--pale) 70%, var(--card) 100%) }
+.eyebrow { font-size: 13px; font-weight: 700; color: var(--gold); letter-spacing: .02em }
+h1 { margin: 4px 0 4px; font: 800 34px/1.1 Nunito, Figtree, sans-serif; letter-spacing: -.01em }
+.from { margin: 0; color: var(--muted); font-size: 14px }
+.rows { padding: 4px 22px 8px }
+.row { display: grid; grid-template-columns: 34px 1fr; gap: 12px; padding: 14px 0; border-top: 1px solid var(--line) }
+.row:first-child { border-top: 0 }
+.ic { width: 34px; height: 34px; border-radius: 50%; background: var(--pale); display: grid; place-items: center; font-size: 17px }
+.row b { display: block; font-size: 13px; color: var(--gold); font-weight: 700 }
+.row span { display: block; font-size: 16px; line-height: 1.45 }
+.row a { white-space: nowrap; color: var(--ink); font-weight: 700; text-decoration: underline; text-underline-offset: 3px }
+.always { margin: 4px 22px 22px; padding: 14px 16px; border-radius: 16px; background: var(--pale); font-weight: 600; line-height: 1.45 }
+.always b { display: block; font-size: 13px; color: var(--gold) }
+.foot { margin: 18px 4px 0; text-align: center; font-size: 13px; color: var(--muted) }
+.empty { margin-top: 30px; padding: 24px; border-radius: 22px; background: var(--card); border: 1px solid var(--line); text-align: center; color: var(--muted) }
+</style></head>
+<body><main><div class="brand">ahead<span>.</span></div><div id="out"></div></main>
+<script>
+(function () {
+  const out = document.getElementById('out');
+  const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  let d = null;
+  try { const raw = location.hash.slice(1).replace(/-/g, '+').replace(/_/g, '/'); d = JSON.parse(decodeURIComponent(escape(atob(raw)))); } catch (e) {}
+  if (!d || !d.n) { out.innerHTML = '<div class="empty">This care card link looks incomplete. Ask whoever sent it to share it again.</div>'; return; }
+  const icon = { Feeding: '🍼', Sleep: '🌙', 'Nap times': '🕘', Bedtime: '🛏️', 'What helps': '🎵', 'Allergies and medicines': '💊', Pediatrician: '🩺', 'Call us': '📞', Or: '📞', Also: '✏️' };
+  // Phone numbers become tap-to-call links.
+  const phones = v => esc(v).replace(/(\+?\(?\d[\d\s().-]{6,}\d)/g, m => `<a href="tel:${m.replace(/[^\d+]/g, '')}">${m}</a>`);
+  document.title = `${d.n}’s care card`;
+  out.innerHTML = `<article class="card"><div class="top"><div class="eyebrow">Care card</div><h1>${esc(d.n)}</h1>${d.f ? `<p class="from">From ${esc(d.f)}${d.d ? ' · ' + esc(d.d) : ''}</p>` : d.d ? `<p class="from">Updated ${esc(d.d)}</p>` : ''}</div>
+    <div class="rows">${(d.r || []).map(([l, v]) => `<div class="row"><span class="ic" aria-hidden="true">${icon[l] || '•'}</span><div><b>${esc(l)}</b><span>${phones(v)}</span></div></div>`).join('')}</div>
+    ${d.a ? `<p class="always"><b>Always</b>${esc(d.a)}</p>` : ''}</article><p class="foot">Made with Ahead, a guide for the first year.</p>`;
+})();
+</script></body></html>

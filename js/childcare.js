@@ -199,8 +199,8 @@
       const L = cardLines(c);
       return h.detail(CAT, 'Before the first day', `${nm}’s care card`, '',
         `<section class="hub-card cc-view"><p class="cc-view-name">${esc3(nm)}</p>${L.map(([l, v]) => `<div class="cc-view-row"><b>${F(l)}</b><span>${esc3(v)}</span></div>`).join('')}<div class="cc-view-row is-always"><b>${F('Always')}</b><span>${F(ALWAYS())}</span></div></section>`
-        + `<div class="cc-actions"><button class="hub-button" onclick="ccShare()">${F('Send as a PDF')}</button><button class="hub-button is-secondary" onclick="ccCardMode('edit')">${F('Edit')}</button></div><p class="cc-done" id="ccDone" hidden></p>`
-        + h.note('Opens your phone’s share sheet, so you can text or email the PDF. Saved on this device until you send it.'), 'notepad');
+        + `<div class="cc-actions"><button class="hub-button" onclick="ccShare()">${F('Share the card')}</button><button class="hub-button is-secondary" onclick="ccCardMode('edit')">${F('Edit')}</button></div><p class="cc-done" id="ccDone" hidden></p>`
+        + h.note('Sends a link that opens as a card on their phone. Only people you send it to can see it.'), 'notepad');
     }
     const sec = (title, inner) => `<section class="hub-card cc-sec"><b class="cc-sec-title">${F(title)}</b>${inner}</section>`;
     return h.detail(CAT, 'Before the first day', `${nm}’s care card`, 'Tap what fits. It takes about a minute, and you can share it with any caregiver.',
@@ -216,44 +216,19 @@
       + `<p class="cc-always"><b>${F('Always included')}</b>${F(ALWAYS())}</p>`
       + `<div class="cc-actions"><button class="hub-button" onclick="ccCardMode('view')">${F('Save the card')}</button></div>`, 'notepad');
   }
-  // Sharing sends a one-page PDF (a document the caregiver can open, save or print), not text to paste.
-  // A small PDF writer: Helvetica text and colored bars, WinAnsi encoding for curly quotes and dashes.
-  function cardPdf(rows, title, always) {
-    const W = 612, Hh = 792, M = 54, enc = s => String(s).replace(/[’‘]/g, "\x92").replace(/[“”]/g, '"').replace(/–/g, "\x96").replace(/—/g, "\x97").replace(/·/g, "\xb7").replace(/[\\()]/g, m => '\\' + m).replace(/[^\x00-\xff]/g, '');
-    const wrap = (t, size, width) => { const out = []; let line = ''; String(t).split(' ').forEach(w => { const test = line ? line + ' ' + w : w; if (test.length * size * 0.5 > width && line) { out.push(line); line = w; } else line = test; }); if (line) out.push(line); return out; };
-    let y = Hh - M, ops = [];
-    const text = (x, yy, size, font, t, rgb = '0.18 0.16 0.2') => ops.push(`${rgb} rg BT /${font} ${size} Tf ${x} ${yy} Td (${enc(t)}) Tj ET`);
-    ops.push(`0.973 0.929 0.702 rg 0 ${Hh - 18} ${W} 18 re f`);
-    text(M, y - 20, 26, 'F2', title); y -= 34;
-    text(M, y - 14, 11, 'F1', 'Made with Ahead · ' + new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }), '0.45 0.42 0.4'); y -= 40;
-    rows.concat([['Always', always]]).forEach(([l, v], idx, arr) => {
-      const lines = wrap(v, 13, W - M * 2 - 150), hgt = Math.max(1, lines.length) * 18 + 14;
-      if (idx === arr.length - 1) ops.push(`0.988 0.969 0.867 rg ${M - 8} ${y - hgt + 6} ${W - M * 2 + 16} ${hgt} re f`);
-      text(M, y - 12, 11, 'F2', l, '0.42 0.35 0.05');
-      lines.forEach((ln, k) => text(M + 150, y - 12 - k * 18, 13, idx === arr.length - 1 ? 'F2' : 'F1', ln));
-      y -= hgt; ops.push(`0.9 0.88 0.84 RG 0.75 w ${M} ${y + 4} m ${W - M} ${y + 4} l S`);
-    });
-    const stream = ops.join('\n'), objs = ['<< /Type /Catalog /Pages 2 0 R >>', '<< /Type /Pages /Kids [3 0 R] /Count 1 >>',
-      `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${W} ${Hh}] /Resources << /Font << /F1 4 0 R /F2 5 0 R >> >> /Contents 6 0 R >>`,
-      '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>', '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>',
-      `<< /Length ${stream.length} >>\nstream\n${stream}\nendstream`];
-    let pdf = '%PDF-1.4\n', offs = [];
-    objs.forEach((o, i) => { offs.push(pdf.length); pdf += `${i + 1} 0 obj\n${o}\nendobj\n`; });
-    const xref = pdf.length; pdf += `xref\n0 ${objs.length + 1}\n0000000000 65535 f \n` + offs.map(o => String(o).padStart(10, '0') + ' 00000 n \n').join('') + `trailer\n<< /Size ${objs.length + 1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`;
-    const bytes = new Uint8Array(pdf.length); for (let i = 0; i < pdf.length; i++) bytes[i] = pdf.charCodeAt(i) & 255;
-    return new Blob([bytes], { type: 'application/pdf' });
-  }
-  window.ccCardPdf = () => cardPdf(cardLines(card()), `${name()}’s care card`, ALWAYS());
+  // Sharing sends a link that unfurls into a preview card in Messages, WhatsApp or email, like sharing a song.
+  // The card's details ride in the link after the #, so they open on the caregiver's phone and never reach a server.
+  const CARD_URL = 'https://yardenwalla.github.io/ahead-prototype/card.html';
+  window.ccCardLink = function () {
+    const data = { n: name(), d: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric' }), r: cardLines(card()), a: ALWAYS() };
+    const b64 = btoa(unescape(encodeURIComponent(JSON.stringify(data)))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    return `${CARD_URL}#${b64}`;
+  };
   window.ccShare = async function () {
-    const blob = ccCardPdf(), fname = `${name().replace(/[^\w ]/g, '')} care card.pdf`, done = document.getElementById('ccDone');
+    const url = ccCardLink(), done = document.getElementById('ccDone');
     const say = m => { if (done) { done.textContent = m; done.hidden = false; } };
-    try {
-      const file = new File([blob], fname, { type: 'application/pdf' });
-      if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], title: `${name()}’s care card` }); return; }
-    } catch (e) { if (e && e.name === 'AbortError') return; }
-    // No share sheet (most computers): save the PDF so it can be attached to an email or message.
-    try { const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = fname; document.body.appendChild(a); a.click(); a.remove(); say('Saved as a PDF. Attach it to a text or email.'); }
-    catch (e) { say('Couldn’t create the PDF here. Try again on your phone.'); }
+    try { if (navigator.share) { await navigator.share({ title: `${name()}’s care card`, text: `Here’s ${name()}’s care card`, url }); return; } } catch (e) { if (e && e.name === 'AbortError') return; }
+    try { await navigator.clipboard.writeText(url); say('Link copied. Paste it into a text or email.'); } catch (e) { say('Couldn’t share from here. Try again on your phone.'); }
   };
 
   /* ---------- routes ---------- */
