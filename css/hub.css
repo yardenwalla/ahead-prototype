@@ -930,19 +930,41 @@
 #main .hub-hero { background: linear-gradient(165deg, var(--year-bg) 0%, var(--year-bg) 35%, var(--year-pale) 100%) }
 
 /* Childcare */
-#main .cc-sub { margin: 12px 0 6px; font-size: 13px; font-weight: 700; color: var(--year-ink) }
-#main .cc-notes { width: 100%; padding: 12px 14px; border-radius: 14px; border: 1px solid var(--line); background: var(--white, #fffdf9); font: inherit; font-size: 15px; resize: vertical }
-#main .cc-saved { display: block; margin: 6px 2px 16px; font-size: 12px; color: var(--muted) }
-#main .cc-card { padding: 14px 16px; display: grid; gap: 12px }
-#main .cc-field span { display: block; font-size: 13px; font-weight: 700; color: var(--year-ink); margin-bottom: 4px }
-#main .cc-field textarea { width: 100%; min-height: 44px; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--white, #fffdf9); font: inherit; font-size: 15px; line-height: 1.4; resize: none; overflow: hidden }
-#main .cc-always { margin: 0; padding: 10px 12px; border-radius: 12px; background: var(--year-pale); font-size: 14px; line-height: 1.45 }
-#main .cc-always b { display: block; font-size: 13px; color: var(--year-ink); margin-bottom: 2px }
-#main .cc-actions { margin: 14px 0 6px } #main .cc-actions .hub-button { width: 100% }
-#main .cc-done { margin: 6px 2px 10px; font-size: 14px; font-weight: 600; color: var(--year-ink) }
+#main .cc-tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 0 0 18px }
+#main .cc-tile { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; padding: 14px; border-radius: 18px; background: var(--white, #fffdf9); border: 1px solid var(--line); text-align: left; font: inherit; color: inherit; cursor: pointer; min-height: 120px }
+#main .cc-tile:last-child:nth-child(odd) { grid-column: 1 / -1; flex-direction: row; align-items: center; min-height: 0; gap: 12px }
+#main .cc-tile:last-child:nth-child(odd) b { margin-top: 0 }
+#main .cc-tile-art { width: 44px; height: 44px; border-radius: 50%; background: var(--year-pale); display: grid; place-items: center; flex: none }
+#main .cc-tile-art svg { width: 26px; height: 26px }
+#main .cc-tile b { font-size: 15px; margin-top: 6px } #main .cc-tile small { font-size: 13px; color: var(--muted); line-height: 1.35 }
 #main .cc-fit { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 12px }
 #main .cc-fit > div { padding: 12px; border-radius: 14px; background: var(--year-pale) }
 #main .cc-fit > div + div { background: #f4f1ec }
 #main .cc-fit b { display: block; font-size: 14px; color: var(--year-ink); margin-bottom: 4px } #main .cc-fit > div + div b { color: var(--ink) }
 #main .cc-fit p { margin: 0; font-size: 13.5px; line-height: 1.45; color: var(--muted) }
-#main .cc-lead { margin: 0 2px 8px; font-size: 14px; color: var(--muted) }
+#main .cc-lead { margin: 0 2px 10px; font-size: 14px; color: var(--muted); line-height: 1.45 }
+#main .cc-qs, #main .cc-checks { background: var(--white, #fffdf9); border: 1px solid var(--line); border-radius: 18px; padding: 4px 14px; margin-bottom: 16px }
+#main .cc-q { padding: 12px 0 } #main .cc-q + .cc-q { border-top: 1px solid var(--line) }
+#main .cc-q b, #main .cc-check b { display: block; font-size: 15px; line-height: 1.35 }
+#main .cc-q small, #main .cc-check small { display: block; margin-top: 3px; font-size: 13.5px; line-height: 1.4; color: var(--muted) }
+#main .cc-check { display: flex; gap: 12px; align-items: flex-start; padding: 12px 0; cursor: pointer } #main .cc-check + .cc-check { border-top: 1px solid var(--line) }
+#main .cc-check input { flex: none; width: 22px; height: 22px; margin-top: 1px; accent-color: var(--year-ink) }
+#main .cc-add { width: 100%; margin: 4px 0 8px }
+#main .cc-form, #main .cc-sec { padding: 14px 16px; display: grid; gap: 10px; margin-bottom: 12px }
+#main .cc-field span, #main .cc-q-label { display: block; font-size: 13px; font-weight: 700; color: var(--year-ink); margin: 0 0 4px }
+#main .cc-field input, #main .cc-other { width: 100%; min-height: 44px; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--white, #fffdf9); font: inherit; font-size: 16px }
+#main .cc-sec-title { font-size: 16px }
+#main .cc-chips { display: flex; flex-wrap: wrap; gap: 8px }
+#main .cc-chip { min-height: 40px; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--white, #fffdf9); font: inherit; font-size: 14px; font-weight: 600; color: var(--ink); cursor: pointer }
+#main .cc-chip.is-on { background: var(--year-ink); border-color: var(--year-ink); color: #fff }
+#main .cc-notes { width: 100%; padding: 12px 14px; border-radius: 14px; border: 1px solid var(--line); background: var(--white, #fffdf9); font: inherit; font-size: 16px; resize: vertical }
+#main .cc-always { margin: 4px 0 12px; padding: 10px 12px; border-radius: 12px; background: var(--year-pale); font-size: 14px; line-height: 1.45 }
+#main .cc-always b { display: block; font-size: 13px; color: var(--year-ink); margin-bottom: 2px }
+#main .cc-actions { display: grid; gap: 8px; margin: 14px 0 6px } #main .cc-actions .hub-button { width: 100% }
+#main .cc-remove { background: none; border: 0; font: inherit; font-size: 14px; font-weight: 600; color: #a33a3a; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; padding: 8px }
+#main .cc-done { margin: 6px 2px 10px; font-size: 14px; font-weight: 600; color: var(--year-ink) }
+#main .cc-view { padding: 18px 18px 8px; background: linear-gradient(165deg, var(--year-bg) 0%, var(--year-pale) 60%, #fffdf9 100%) }
+#main .cc-view-name { margin: 0 0 10px; font-size: 22px; font-weight: 800 }
+#main .cc-view-row { display: grid; grid-template-columns: 112px 1fr; gap: 10px; padding: 10px 0; border-top: 1px solid color-mix(in srgb, var(--year-ink) 15%, transparent) }
+#main .cc-view-row b { font-size: 13px; color: var(--year-ink) } #main .cc-view-row span { font-size: 15px; line-height: 1.4 }
+#main .cc-view-row.is-always span { font-weight: 600 }
