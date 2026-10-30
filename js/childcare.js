@@ -220,7 +220,14 @@
   // The card's details ride in the link after the #, so they open on the caregiver's phone and never reach a server.
   const CARD_URL = 'https://yardenwalla.github.io/ahead-prototype/card.html';
   window.ccCardLink = function () {
-    const data = { n: name(), d: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric' }), r: cardLines(card()), a: ALWAYS() };
+    const c = card(), P = babyPronouns(), n = c.naps === '4 or more' ? 4 : Number(c.naps) || 0;
+    const low = (a, own) => (a || []).map((x, i) => x === 'On their own' ? own : i ? x.toLowerCase() : x);
+    const data = { n: name(), s: P.s, o: P.o, p: P.p, d: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric' }),
+      milk: c.milk, often: c.often, oz: c.milk && c.milk !== 'Breast milk' ? c.oz : null, solids: c.solids, naps: c.naps,
+      times: (c.napTimes || []).slice(0, n).filter(Boolean).map(clock), bed: clock(c.bedtime), asleep: low(c.asleep, `On ${P.p} own`), calm: low(c.calm),
+      allergy: c.allergy ? (c.allergy === 'Yes' ? (c.allergyText || 'Yes, please ask us') : 'None known') : null, other: c.other,
+      c: [[c.c1Name, c.c1Phone], [c.c2Name, c.c2Phone]], doc: [c.docName, c.docPhone], a: ALWAYS() };
+    Object.keys(data).forEach(k => { if (data[k] == null || data[k] === '' || (Array.isArray(data[k]) && !data[k].length)) delete data[k]; });
     const b64 = btoa(unescape(encodeURIComponent(JSON.stringify(data)))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
     return `${CARD_URL}#${b64}`;
   };

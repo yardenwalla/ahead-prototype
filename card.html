@@ -1,56 +1,94 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>A care card from Ahead</title>
-<meta name="description" content="Everything you need to look after the baby: feeding, naps, what helps, and who to call.">
-<!-- The link preview in Messages, WhatsApp and email. The card itself travels in the link after the #, so it never reaches a server. -->
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="Ahead">
-<meta property="og:title" content="A care card from Ahead">
-<meta property="og:description" content="Feeding, naps, what helps, and who to call. Tap to open.">
+<meta name="description" content="Everything you need to look after the little one: feeding, naps, what helps, and who to call.">
+<!-- The preview in Messages, WhatsApp and email. The card's details travel in the link after the #, so they never reach a server. -->
+<meta property="og:type" content="website"><meta property="og:site_name" content="Ahead">
+<meta property="og:title" content="You’ve been trusted with someone special">
+<meta property="og:description" content="Their care card: feeding, naps, what helps and who to call.">
 <meta property="og:url" content="https://yardenwalla.github.io/ahead-prototype/card.html">
 <meta property="og:image" content="https://yardenwalla.github.io/ahead-prototype/docs/card-preview.png">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#f8edb3">
+<meta name="twitter:card" content="summary_large_image"><meta name="theme-color" content="#fbe9e2">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Nunito:wght@700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
 <style>
-:root { --bg: #f7f4ee; --ink: #2f2a33; --muted: #6f6860; --gold: #6b5a0e; --sun: #f8edb3; --pale: #fcf7dd; --line: #ece4cf; --card: #fffdf9 }
+:root { --bg: #fbf8f2; --ink: #2f2a33; --muted: #6f6870; --line: #eee7dc; --card: #fffdf9;
+  --feed: #f7d9e5; --feed-ink: #884866; --sleep: #d9e5fc; --sleep-ink: #46638c; --dev: #e5e0fc; --dev-ink: #625084; --health: #ddf1e5; --health-ink: #356651; --sun: #f8edb3; --sun-ink: #6b5a0e }
 * { box-sizing: border-box }
-body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 Figtree, system-ui, -apple-system, sans-serif }
-main { max-width: 480px; margin: 0 auto; padding: max(28px, env(safe-area-inset-top)) max(18px, env(safe-area-inset-right)) 40px max(18px, env(safe-area-inset-left)) }
-.brand { font: 800 26px/1 Nunito, Figtree, sans-serif; letter-spacing: -.02em; color: var(--ink) } .brand span { color: #b7a48d }
-.card { margin-top: 22px; border-radius: 28px; overflow: hidden; background: var(--card); border: 1px solid var(--line); box-shadow: 0 10px 30px rgba(80, 64, 20, .08) }
-.top { padding: 26px 22px 22px; background: linear-gradient(165deg, var(--sun) 0%, var(--pale) 70%, var(--card) 100%) }
-.eyebrow { font-size: 13px; font-weight: 700; color: var(--gold); letter-spacing: .02em }
-h1 { margin: 4px 0 4px; font: 800 34px/1.1 Nunito, Figtree, sans-serif; letter-spacing: -.01em }
-.from { margin: 0; color: var(--muted); font-size: 14px }
-.rows { padding: 4px 22px 8px }
-.row { display: grid; grid-template-columns: 34px 1fr; gap: 12px; padding: 14px 0; border-top: 1px solid var(--line) }
-.row:first-child { border-top: 0 }
-.ic { width: 34px; height: 34px; border-radius: 50%; background: var(--pale); display: grid; place-items: center; font-size: 17px }
-.row b { display: block; font-size: 13px; color: var(--gold); font-weight: 700 }
-.row span { display: block; font-size: 16px; line-height: 1.45 }
-.row a { white-space: nowrap; color: var(--ink); font-weight: 700; text-decoration: underline; text-underline-offset: 3px }
-.always { margin: 4px 22px 22px; padding: 14px 16px; border-radius: 16px; background: var(--pale); font-weight: 600; line-height: 1.45 }
-.always b { display: block; font-size: 13px; color: var(--gold) }
-.foot { margin: 18px 4px 0; text-align: center; font-size: 13px; color: var(--muted) }
+html { background: var(--bg) }
+body { margin: 0; color: var(--ink); font: 16px/1.5 Figtree, system-ui, -apple-system, sans-serif; background:
+  radial-gradient(120% 60% at 0% 0%, #fde3d3 0%, transparent 55%), radial-gradient(90% 55% at 100% 0%, #e5e0fc 0%, transparent 60%),
+  radial-gradient(80% 40% at 60% 18%, #d9e5fc 0%, transparent 60%), var(--bg); background-repeat: no-repeat }
+main { max-width: 480px; margin: 0 auto; padding: max(22px, env(safe-area-inset-top)) max(18px, env(safe-area-inset-right)) max(30px, env(safe-area-inset-bottom)) max(18px, env(safe-area-inset-left)) }
+.brand { font: 800 24px/1 Nunito, Figtree, sans-serif; letter-spacing: -.02em } .brand span { color: #b7a48d }
+.hero { text-align: center; padding: 18px 8px 8px }
+.baby { position: relative; width: 132px; height: 132px; margin: 6px auto 12px; border-radius: 50%; background: #fffdf9; box-shadow: 0 14px 34px rgba(98, 80, 132, .16); display: grid; place-items: center }
+.baby svg { width: 96px; height: 108px }
+.baby i { position: absolute; border-radius: 50%; } .baby i:nth-of-type(1) { width: 12px; height: 12px; background: #f0bfce; left: -6px; top: 30px }
+.baby i:nth-of-type(2) { width: 9px; height: 9px; background: #c3d7fb; right: -2px; top: 14px } .baby i:nth-of-type(3) { width: 10px; height: 10px; background: #f1d697; right: 4px; bottom: 18px }
+.hello { margin: 0; font-size: 14px; font-weight: 700; color: var(--dev-ink); letter-spacing: .02em }
+h1 { margin: 2px 0 8px; font: 900 40px/1.05 Nunito, Figtree, sans-serif; letter-spacing: -.02em; text-wrap: balance }
+.intro { margin: 0 auto; max-width: 30ch; color: var(--muted); font-size: 16px }
+.updated { display: inline-block; margin-top: 12px; padding: 4px 12px; border-radius: 999px; background: rgba(255, 253, 249, .8); border: 1px solid var(--line); font-size: 13px; color: var(--muted) }
+section { margin-top: 18px; padding: 18px; border-radius: 24px; background: var(--card); border: 1px solid var(--line); box-shadow: 0 6px 22px rgba(80, 60, 40, .05) }
+h2 { margin: 0 0 12px; font: 800 19px/1.2 Nunito, Figtree, sans-serif; display: flex; align-items: center; gap: 8px }
+h2 .dot { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-size: 15px }
+.tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px }
+.tile { padding: 12px 14px; border-radius: 16px; min-width: 0 } .tile.wide { grid-column: 1 / -1 }
+.tile b { display: block; font-size: 12px; font-weight: 700; letter-spacing: .02em; text-transform: uppercase; opacity: .85 }
+.tile span { display: block; font-size: 17px; font-weight: 700; line-height: 1.3; margin-top: 2px; color: var(--ink) }
+.tile small { display: block; font-size: 14px; color: var(--muted); margin-top: 2px }
+.feed { background: var(--feed); color: var(--feed-ink) } .sleep { background: var(--sleep); color: var(--sleep-ink) }
+.times { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px } .times em { font-style: normal; font-size: 14px; font-weight: 700; padding: 4px 10px; border-radius: 999px; background: rgba(255, 255, 255, .7); color: var(--ink) }
+.chips { display: flex; flex-wrap: wrap; gap: 8px } .chips span { padding: 8px 14px; border-radius: 999px; background: var(--dev); color: var(--dev-ink); font-weight: 700; font-size: 15px }
+.note { margin: 12px 0 0; color: var(--muted); font-size: 15px }
+.facts p { margin: 0; padding: 10px 0; border-top: 1px solid var(--line); display: grid; grid-template-columns: 120px 1fr; gap: 10px } .facts p:first-of-type { border-top: 0; padding-top: 0 }
+.facts p b { font-size: 14px; color: var(--muted); font-weight: 600 }
+.calls { display: grid; gap: 10px }
+.call { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 18px; background: var(--health); color: var(--ink); text-decoration: none }
+.call i { flex: none; width: 42px; height: 42px; border-radius: 50%; background: #fffdf9; display: grid; place-items: center; font-style: normal; font-size: 19px }
+.call b { display: block; font-size: 16px } .call small { white-space: nowrap } .call small { display: block; color: var(--health-ink); font-weight: 600; font-size: 14px } .call.is-doc { background: #f4f1ec } .call.is-doc small { color: var(--muted) }
+.call em { margin-left: auto; font-style: normal; font-weight: 800; font-size: 14px; color: var(--health-ink); padding: 6px 12px; border-radius: 999px; background: #fffdf9 }
+.always { background: linear-gradient(160deg, #233456, #3d4f7a); color: #fff; border: 0 }
+.always h2 { color: #fff } .always h2 .dot { background: rgba(255, 255, 255, .14) } .always p { margin: 0; font-size: 17px; font-weight: 600; line-height: 1.45 }
+.always small { display: block; margin-top: 8px; opacity: .78; font-size: 14px }
+.thanks { text-align: center; margin: 22px 8px 0; color: var(--muted); font-size: 15px }
+.ahead { margin-top: 26px; padding: 22px 20px; border-radius: 26px; text-align: left; border: 0; color: var(--ink);
+  background: linear-gradient(100deg, #fde3d3 0%, #f7d9e5 28%, #e5e0fc 56%, #d9e5fc 80%, #ddf1e5 100%) }
+.ahead .brand { font-size: 22px } .ahead p { margin: 8px 0 14px; font-size: 16px; line-height: 1.45 }
+.ahead a { display: inline-flex; align-items: center; gap: 6px; padding: 12px 18px; border-radius: 14px; background: var(--ink); color: #fff; text-decoration: none; font-weight: 700 }
 .empty { margin-top: 30px; padding: 24px; border-radius: 22px; background: var(--card); border: 1px solid var(--line); text-align: center; color: var(--muted) }
 </style></head>
 <body><main><div class="brand">ahead<span>.</span></div><div id="out"></div></main>
 <script>
 (function () {
-  const out = document.getElementById('out');
+  const out = document.getElementById('out'), BABY = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 112 126" fill="none" data-illustration-family="ahead-soft"><path d="M6 62a50 50 0 0 1 100 0v42H6Z" fill="#eee7db"/><ellipse cx="56" cy="111" rx="47" ry="8" fill="#e3d9c9"/><g stroke="#77647f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M33 78q23-15 46 0l8 28q-31 11-62 0Z" fill="#b7e3d7"/><path d="m36 82-14 12m55-12 14 12" stroke="#f1c7ae" stroke-width="11"/></g><g stroke="#77647f" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="30" cy="53" r="4" fill="#f1c7ae"/><circle cx="82" cy="53" r="4" fill="#f1c7ae"/><circle cx="56" cy="51" r="26" fill="#f1c7ae"/><path d="M48 26q5-8 12-1-7-2-8 3" fill="#a18178"/><circle cx="49" cy="50" r="1.6" fill="#77647f" stroke="none"/><circle cx="63" cy="50" r="1.6" fill="#77647f" stroke="none"/><ellipse cx="43" cy="57" rx="4.5" ry="3" fill="#eaa7ac" stroke="none"/><ellipse cx="69" cy="57" rx="4.5" ry="3" fill="#eaa7ac" stroke="none"/><path d="M51 58q5 7 10 0" fill="#fff9f1"/></g><circle cx="93" cy="19" r="6" fill="#f0bfce"/><path d="M8 43h9m-4.5-4.5v9" stroke="#c3d7fb" stroke-width="3" stroke-linecap="round"/></svg>`;
   const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   let d = null;
-  try { const raw = location.hash.slice(1).replace(/-/g, '+').replace(/_/g, '/'); d = JSON.parse(decodeURIComponent(escape(atob(raw)))); } catch (e) {}
+  try { d = JSON.parse(decodeURIComponent(escape(atob(location.hash.slice(1).replace(/-/g, '+').replace(/_/g, '/'))))); } catch (e) {}
   if (!d || !d.n) { out.innerHTML = '<div class="empty">This care card link looks incomplete. Ask whoever sent it to share it again.</div>'; return; }
-  const icon = { Feeding: '🍼', Sleep: '🌙', 'Nap times': '🕘', Bedtime: '🛏️', 'What helps': '🎵', 'Allergies and medicines': '💊', Pediatrician: '🩺', 'Call us': '📞', Or: '📞', Also: '✏️' };
-  // Phone numbers become tap-to-call links.
-  const phones = v => esc(v).replace(/(\+?\(?\d[\d\s().-]{6,}\d)/g, m => `<a href="tel:${m.replace(/[^\d+]/g, '')}">${m}</a>`);
+  const n = esc(d.n), they = d.s || 'they', them = d.o || 'them', cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+  const tel = p => String(p || '').replace(/[^\d+]/g, '');
   document.title = `${d.n}’s care card`;
-  out.innerHTML = `<article class="card"><div class="top"><div class="eyebrow">Care card</div><h1>${esc(d.n)}</h1>${d.f ? `<p class="from">From ${esc(d.f)}${d.d ? ' · ' + esc(d.d) : ''}</p>` : d.d ? `<p class="from">Updated ${esc(d.d)}</p>` : ''}</div>
-    <div class="rows">${(d.r || []).map(([l, v]) => `<div class="row"><span class="ic" aria-hidden="true">${icon[l] || '•'}</span><div><b>${esc(l)}</b><span>${phones(v)}</span></div></div>`).join('')}</div>
-    ${d.a ? `<p class="always"><b>Always</b>${esc(d.a)}</p>` : ''}</article><p class="foot">Made with Ahead, a guide for the first year.</p>`;
+  let h = `<div class="hero"><div class="baby">${BABY}<i></i><i></i><i></i></div><p class="hello">Thank you for looking after</p><h1>${n}</h1><p class="intro">Everything you need, in one place. Keep it handy while you’re together.</p>${d.d ? `<span class="updated">Updated ${esc(d.d)}</span>` : ''}</div>`;
+  // The day: feeding and sleep as colored tiles.
+  const tiles = [];
+  if (d.milk || d.often) tiles.push(`<div class="tile feed${d.oz ? '' : ' wide'}"><b>Feeding</b><span>${esc(d.milk || 'Milk')}</span>${d.often ? `<small>${esc(d.often)}</small>` : ''}</div>`);
+  if (d.oz) tiles.push(`<div class="tile feed"><b>Per bottle</b><span>About ${esc(d.oz)}</span>${d.solids && d.solids !== 'Not yet' ? `<small>Solids: ${esc(d.solids.toLowerCase())}</small>` : ''}</div>`);
+  if (d.naps || (d.times || []).length) tiles.push(`<div class="tile sleep wide"><b>Naps</b><span>${d.naps ? esc(d.naps) + (d.naps === '1' ? ' nap' : ' naps') + ' a day' : 'Naps'}</span>${(d.times || []).length ? `<div class="times">${d.times.map(t => `<em>${esc(t)}</em>`).join('')}</div>` : ''}</div>`);
+  if (d.bed) tiles.push(`<div class="tile sleep${(d.asleep || []).length ? '' : ' wide'}"><b>Bedtime</b><span>${esc(d.bed)}</span></div>`);
+  if ((d.asleep || []).length) tiles.push(`<div class="tile sleep${d.bed ? '' : ' wide'}"><b>Falls asleep with</b><span>${esc(d.asleep.join(', '))}</span></div>`);
+  if (tiles.length) h += `<section><h2><span class="dot" style="background:var(--feed)">🍼</span>The day</h2><div class="tiles">${tiles.join('')}</div></section>`;
+  if ((d.calm || []).length) h += `<section><h2><span class="dot" style="background:var(--dev)">🎵</span>If ${esc(they)}${they === 'they' ? '’re' : '’s'} upset, try</h2><div class="chips">${d.calm.map(c => `<span>${esc(cap(c))}</span>`).join('')}</div></section>`;
+  const facts = [d.allergy && ['Allergies', d.allergy], d.other && ['Also', d.other]].filter(Boolean);
+  if (facts.length) h += `<section class="facts"><h2><span class="dot" style="background:var(--sun)">✏️</span>Good to know</h2>${facts.map(([l, v]) => `<p><b>${l}</b><span>${esc(v)}</span></p>`).join('')}</section>`;
+  const calls = (d.c || []).filter(c => c[0] || c[1]).map(([nm, ph]) => `<a class="call" href="${ph ? 'tel:' + tel(ph) : '#'}"><i>📞</i><span><b>${esc(nm || 'Call')}</b><small>${esc(ph)}</small></span>${ph ? '<em>Call</em>' : ''}</a>`);
+  if (d.doc && (d.doc[0] || d.doc[1])) calls.push(`<a class="call is-doc" href="${d.doc[1] ? 'tel:' + tel(d.doc[1]) : '#'}"><i>🩺</i><span><b>${esc(d.doc[0] || 'Pediatrician')}</b><small>Pediatrician${d.doc[1] ? ' · ' + esc(d.doc[1]) : ''}</small></span>${d.doc[1] ? '<em>Call</em>' : ''}</a>`);
+  if (calls.length) h += `<section><h2><span class="dot" style="background:var(--health)">📞</span>Who to call</h2><div class="calls">${calls.join('')}</div><p class="note">In an emergency, call 911 first.</p></section>`;
+  h += `<section class="always"><h2><span class="dot">🌙</span>Every sleep, every time</h2><p>${esc(d.a || '')}</p><small>No blankets, pillows or bumpers. Car seats, swings and couches aren’t for sleep.</small></section>`;
+  h += `<p class="thanks">Thank you for helping. ${n} is lucky to have you. 💛</p>`;
+  h += `<section class="ahead"><div class="brand">ahead<span>.</span></div><p>${n}’s family made this card with Ahead, a calm guide to a baby’s first year. Expecting, or know someone who is?</p><a href="https://yardenwalla.github.io/ahead-prototype/">Try Ahead, it’s free →</a></section>`;
+  out.innerHTML = h;
 })();
 </script></body></html>
