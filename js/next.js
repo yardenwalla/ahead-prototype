@@ -170,3 +170,29 @@
   };
 })();
 
+
+/* Safety checklist: each check as a card with its own picture, and progress as a bar, not "8 left". */
+(function () {
+  if (typeof render !== 'function') return;
+  const ICON = { seat: 'car', water: 'thermo', alarms: 'alarm', pool: 'drop', batteries: 'battery', bags: 'bag', small: 'coin', rollspace: 'mat', changing: 'diaper', gates: 'gate', anchor: 'dresser', storage: 'lock', outlets: 'plug', windows: 'window', cords: 'shield', doors: 'home', walkers: 'stroller' };
+  const base = render;
+  window.render = render = function (...a) {
+    const out = base.apply(this, a);
+    try {
+      document.querySelectorAll('#main .safety-check-row').forEach(row => {
+        if (row.querySelector('.sc-art') || typeof hubArt !== 'function') return;
+        row.insertAdjacentHTML('afterbegin', `<span class="sc-art" aria-hidden="true">${hubArt(ICON[row.dataset.safetyJob] || 'shield', 'Safety')}</span>`);
+      });
+      document.querySelectorAll('#main .safety-check-section').forEach(sec => {
+        const rows = [...sec.querySelectorAll('.safety-check-row')], head = sec.querySelector('.safety-check-section-head');
+        if (!rows.length || !head || head.querySelector('.sc-bar')) return;
+        // Count every check in this guide, including ones folded away as done or not applying.
+        const owner = (sec.closest('[data-safety-owner]') || {}).dataset?.safetyOwner, guide = owner && typeof safetyOwnedGuides === 'function' && safetyOwnedGuides()[owner];
+        const total = guide ? guide.ids.length : rows.length, done = guide && typeof safetyPendingIds === 'function' ? total - safetyPendingIds(guide.ids).length : rows.filter(r => r.dataset.checkStatus !== 'pending').length;
+        const prog = head.querySelector('.safety-check-progress'); if (prog) prog.textContent = `${done} of ${total} done`;
+        head.insertAdjacentHTML('beforeend', `<div class="sc-bar" aria-hidden="true"><i style="width:${Math.round(done / Math.max(1, total) * 100)}%"></i></div>`);
+      });
+    } catch (e) {}
+    return out;
+  };
+})();

@@ -1014,3 +1014,26 @@
 #main .cc-quick-row > span { flex: none; width: 40px; height: 40px; border-radius: 50%; background: var(--year-pale); display: grid; place-items: center } #main .cc-quick-row > span svg { width: 22px; height: 22px }
 #main .cc-quick-row b { display: block; font-size: 15px; line-height: 1.3 } #main .cc-quick-row small { display: block; font-size: 13px; color: var(--muted); line-height: 1.4; margin-top: 2px }
 #main .cc-next { display: block; margin: 12px 0 0 auto; background: none; border: 0; font: inherit; font-size: 14px; font-weight: 700; color: var(--year-ink); cursor: pointer; padding: 8px 2px }
+/* Safety checklist, easier on the eyes */
+#main .safety-check-section-head { display: grid; grid-template-columns: 1fr auto; align-items: baseline; row-gap: 8px; margin-bottom: 12px }
+#main .safety-check-section-head .safety-check-progress { font-size: 14px; font-weight: 700; color: var(--year-ink) }
+#main .sc-bar { grid-column: 1 / -1; height: 8px; border-radius: 4px; background: var(--year-pale); overflow: hidden }
+#main .sc-bar i { display: block; height: 100%; border-radius: 4px; background: var(--year-ink); transition: width .3s }
+#main .safety-check-list { display: grid; gap: 10px; background: none !important; border: 0 !important; padding: 0 !important; box-shadow: none !important }
+#main .safety-check-row { display: grid !important; grid-template-columns: 48px 1fr 36px; gap: 12px; align-items: start; padding: 14px !important; border-radius: 20px; background: #fffdf9; border: 1px solid var(--line) !important; margin: 0 !important }
+#main .safety-check-row + .safety-check-row { border-top: 1px solid var(--line) !important }
+#main .sc-art { grid-column: 1; grid-row: 1; width: 48px; height: 48px; border-radius: 14px; background: var(--year-pale); display: grid; place-items: center }
+#main .sc-art svg { width: 28px; height: 28px }
+#main .safety-check-copy { grid-column: 2; grid-row: 1; min-width: 0 }
+#main .safety-check-row .safety-check-control { grid-column: 3; grid-row: 1; justify-self: end; margin: 6px 0 0 !important }
+#main .safety-check-copy h3 { margin: 2px 0 4px !important; font-size: 16px !important; line-height: 1.3 }
+#main .safety-check-copy > p { margin: 0 !important; font-size: 14px !important; line-height: 1.45 !important; color: var(--muted) }
+#main .safety-check-tools { display: flex !important; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 10px !important }
+#main .safety-check-detail summary { white-space: nowrap; display: inline-flex; align-items: center; gap: 4px; padding: 5px 12px; border-radius: 999px; background: var(--year-pale); font-size: 13px !important; font-weight: 700; color: var(--year-ink); list-style: none; cursor: pointer }
+#main .safety-check-detail summary::-webkit-details-marker { display: none }
+#main .safety-check-detail[open] { flex-basis: 100% }
+#main .safety-check-detail > div { margin-top: 8px; padding: 10px 12px; border-radius: 12px; background: var(--year-pale); font-size: 14px }
+#main .safety-check-na { margin-left: auto; font-size: 13px !important; color: var(--muted) !important }
+#main .safety-check-row[data-check-status="done"], #main .safety-check-row[data-check-status="na"] { background: var(--year-pale); border-color: transparent !important }
+#main .safety-check-row[data-check-status="done"] h3, #main .safety-check-row[data-check-status="na"] h3 { color: var(--muted) }
+#main .safety-check-tools { gap: 14px !important } #main .safety-check-detail summary { min-height: 32px !important; padding: 4px 12px !important; line-height: 1.2 }
