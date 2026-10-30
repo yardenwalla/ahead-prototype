@@ -1045,3 +1045,6 @@
 #main .hub-season-chip { display: inline-block; margin-left: 8px; padding: 2px 8px; border-radius: 999px; background: #fde6e3; color: #9a3b2f; font-style: normal; font-size: 11px; font-weight: 800; vertical-align: middle }
 #main .health-vaccines + .hub-versus, #main .health-vaccines ~ .hub-versus { margin-top: 22px }
 #main .hub-vax-combo { margin: 0 0 12px; padding: 10px 14px; border-radius: 14px; background: var(--year-pale); font-size: 14px; line-height: 1.45 }
+#main .hub-para-sm { margin: 0 2px 10px; font-size: 14px; color: var(--muted); line-height: 1.45 }
+#main .hub-skip-chips.is-good { margin: 0 0 16px } #main .hub-skip-chips.is-good span { background: #e8f3ea; color: #2f5e3e; padding-left: 26px } #main .hub-skip-chips.is-good span::before { content: '✓'; font-size: 11px; top: 7px }
+#main .hub-skip-fix { margin: 4px 0 0; font-size: 13.5px; line-height: 1.45; color: var(--muted) }
