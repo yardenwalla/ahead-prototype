@@ -1121,3 +1121,4 @@
 #main .hub-len-track b { font-size: 12.5px; color: #fff; white-space: nowrap }
 #main .hub-sched > div { border-radius: 14px } #main .hub-sched > div.is-now { background: var(--year-pale) } #main .hub-sched p { margin: 4px 0 0; font-size: 14.5px; line-height: 1.4 }
 #main .hub-card-cta { font-size: 13px; font-weight: 600; color: var(--year-ink) }
+#main .hub-looks ul { margin: 8px 0 0; padding-left: 20px; display: grid; gap: 6px; font-size: 15px; line-height: 1.45 }
