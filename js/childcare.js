@@ -108,11 +108,36 @@
     const all = qPrefs(), p = all[k] = all[k] || {}; p.added = (p.added || []).concat({ key: 'c' + Date.now(), q }); save('ahead-childcare-qs', all); rerender(); };
   window.ccQReset = k => { const all = qPrefs(); delete all[k]; save('ahead-childcare-qs', all); rerender(); };
 
+  /* ---------- the steps, one at a time ---------- */
+  // Tabs name each step in one word; each kind of step has its own shape: quick checks as icon rows,
+  // things to look for as picture tiles, questions as cards with the answer to listen for tucked inside.
+  const TAB = { 'Before you visit': 'Call', 'On the tour: look for': 'Look', 'On the tour: ask': 'Ask', 'Before you sign': 'Sign', 'Before you meet': 'Call', 'At the interview: watch for': 'Watch', 'At the interview: ask': 'Ask', 'Before you hire': 'Check', 'Before they come': 'Message', 'A first visit, while you’re home': 'Visit', 'Ask': 'Ask', 'Your questions': 'Yours' };
+  const ICONS = [[/spot|waitlist/i, 'notepad'], [/hours|days/i, 'clock'], [/cost|pay/i, 'coin'], [/licens|inspection/i, 'shield'], [/sleep|crib/i, 'crib'], [/grown-up|babies per adult|2 babies/i, 'smile'], [/warm|caregiver|hold|how they are/i, 'heart'], [/clean|calm room/i, 'home'], [/baby-safe home|safe home/i, 'shield'], [/phone|attention/i, 'eye'], [/cpr/i, 'steth'], [/background/i, 'shield'], [/sick/i, 'thermo'], [/hear about|day\?/i, 'chat'], [/pets|pool|guns/i, 'home'], [/references|families|family you/i, 'chat'], [/trial/i, 'clock'], [/car seat/i, 'car'], [/babies this young|under 1/i, 'smile'], [/frustrat/i, 'heart'], [/feeds|naps, bedtime/i, 'bottle'], [/touch/i, 'chat']];
+  const iconFor = q => (ICONS.find(([r]) => r.test(q)) || [0, 'star'])[1];
+  const stepView = {};
+  window.ccStep = (k, i) => { stepView[k] = i; rerender(); };
+  window.ccFlip = el => el.classList.toggle('is-open');
+  function stepsBlock(k, Q, t) {
+    const groups = []; Q.forEach(x => { let g = groups.find(y => y.name === x.g); if (!g) groups.push(g = { name: x.g, kind: x.kind, sub: x.gs, items: [] }); g.items.push(x); });
+    // Your own questions join the "ask" step.
+    const yours = groups.find(g => g.name === 'Your questions'), askG = groups.find(g => g.kind === 'ask' && g !== yours);
+    if (yours && askG) { askG.items.push(...yours.items); groups.splice(groups.indexOf(yours), 1); }
+    const cur = Math.min(stepView[k] || 0, groups.length - 1), g = groups[cur];
+    const tabs = groups.length > 1 ? `<div class="cc-tabs" role="tablist">${groups.map((x, i) => `<button role="tab" aria-selected="${i === cur}" class="${i === cur ? 'is-on' : ''}" onclick="ccStep('${k}',${i})"><i>${i + 1}</i>${F(TAB[x.name] || x.name)}</button>`).join('')}</div>` : '';
+    const head = `<div class="cc-stephead"><b>${F(g.name)}</b>${g.sub ? `<small>${F(g.sub)}</small>` : ''}</div>`;
+    let body = '';
+    if (g.kind === 'look') body = `<div class="cc-look">${g.items.map(x => `<div class="cc-look-tile"><span>${hubArt(iconFor(x.q), CAT)}</span><b>${F(x.q)}</b><small>${F(x.a)}</small></div>`).join('')}</div>`;
+    else if (g.kind === 'ask') body = `<div class="cc-asks">${g.items.map((x, i) => `<button class="cc-ask" onclick="ccFlip(this)"><em>${i + 1}</em><b>${x.own ? esc3(x.q) : F(x.q)}</b>${x.own ? `<small class="cc-own">${F('Your question')}</small>` : `<span class="cc-listen"><small>${F('Listen for')}</small>${F(x.a)}</span><small class="cc-tap">${F('What to listen for')} ›</small>`}</button>`).join('')}</div>`;
+    else body = `<div class="cc-quick">${g.items.map(x => `<div class="cc-quick-row"><span>${hubArt(iconFor(x.q), CAT)}</span><div><b>${x.own ? esc3(x.q) : F(x.q)}</b>${x.a ? `<small>${F(x.a)}</small>` : ''}</div></div>`).join('')}</div>`;
+    const nav = groups.length > 1 && cur < groups.length - 1 ? `<button class="cc-next" onclick="ccStep('${k}',${cur + 1})">${F('Next: ' + (TAB[groups[cur + 1].name] || groups[cur + 1].name))} ›</button>` : '';
+    return `<section class="cc-steps">${tabs}${head}${body}${nav}</section>`;
+  }
+
   /* ---------- one page per type, always in the same order ---------- */
   function typePage(k) {
     const t = TYPES[k], h = H(), mine = shortlist()[k] || [], noun = t.who === 'place' ? 'place' : 'person', Q = questions(k);
     const ed = qEditing[k], changed = !!qPrefs()[k];
-    const qs = `<div class="cc-qs${ed ? ' is-editing' : ''}">${grouped(Q, x => `<div class="cc-q"><div><b>${x.own ? esc3(x.q) : F(x.q)}</b><small>${F(hint(x))}</small></div>${ed ? `<button class="cc-q-x" aria-label="Remove this question" onclick="ccQHide('${k}','${x.key}')">×</button>` : ''}</div>`)}`
+    const qs = !ed ? stepsBlock(k, Q, t) : `<div class="cc-qs is-editing">${grouped(Q, x => `<div class="cc-q"><div><b>${x.own ? esc3(x.q) : F(x.q)}</b><small>${F(hint(x))}</small></div>${ed ? `<button class="cc-q-x" aria-label="Remove this question" onclick="ccQHide('${k}','${x.key}')">×</button>` : ''}</div>`)}`
       + (ed ? `<div class="cc-q-add"><input id="ccNewQ" placeholder="${esc3('Add your own question')}" autocomplete="off" onkeydown="if(event.key==='Enter')ccQAdd('${k}')"><button onclick="ccQAdd('${k}')">${F('Add')}</button></div>${changed ? `<button class="cc-q-reset" onclick="ccQReset('${k}')">${F('Bring back our questions')}</button>` : ''}` : '') + `</div>`;
     const shortRows = mine.map(c => h.row({ icon: t.icon, cat: CAT, title: esc3(c.name || 'Unnamed'), sub: `${(c.checks || []).filter(x => Q.some(y => y.key === x)).length} of ${Q.length} ${t.talk ? 'talked through' : 'checked'}${c.notes ? ' · has notes' : ''}`, onclick: `openPage('chg:${CAT}:d:cand-${k}-${c.id}')` }));
     return h.detail(CAT, 'Childcare', t.name, t.lead,
@@ -128,14 +153,18 @@
   function candidatePage(k, id) {
     const t = TYPES[k], h = H(), list = shortlist(), mine = list[k] || [], c = mine.find(x => x.id === id) || { id: 'new', name: '', contact: '', checks: [], notes: '' };
     const noun = t.who === 'place' ? 'place' : 'person', isNew = c.id === 'new';
-    const checks = grouped(questions(k), x => `<label class="cc-check"><input type="checkbox" data-k="${x.key}" ${(c.checks || []).includes(x.key) ? 'checked' : ''}><span><b>${x.own ? esc3(x.q) : F(x.q)}</b>${x.a || x.own ? `<small>${F(hint(x))}</small>` : ''}</span></label>`);
+    // Same steps as the page, one at a time. Every box stays in the page, so Save keeps ticks from all steps.
+    const Qs = questions(k), gnames = [...new Set(Qs.map(x => x.g))];
+    const ctabs = gnames.length > 1 ? `<div class="cc-tabs" role="tablist">${gnames.map((g, i) => `<button type="button" role="tab" aria-selected="${!i}" class="${i ? '' : 'is-on'}" onclick="ccCandStep(${i})"><i>${i + 1}</i>${F(TAB[g] || g)}</button>`).join('')}</div>` : '';
+    const checks = ctabs + gnames.map((g, i) => `<div class="cc-cstep" data-step="${i}"${i ? ' hidden' : ''}>${Qs.filter(x => x.g === g).map(x => `<label class="cc-check"><input type="checkbox" data-k="${x.key}" ${(c.checks || []).includes(x.key) ? 'checked' : ''}><span><b>${x.own ? esc3(x.q) : F(x.q)}</b>${x.a || x.own ? `<small>${F(hint(x))}</small>` : ''}</span></label>`).join('')}</div>`).join('');
     return h.detail(CAT, t.name, isNew ? `Add a ${noun}` : esc3(c.name), isNew ? '' : '',
       `<section class="hub-card cc-form"><label class="cc-field"><span>${F(t.who === 'place' ? 'Name of the place' : 'Their name')}</span><input id="ccName" value="${esc3(c.name)}" placeholder="${esc3(t.who === 'place' ? 'For example, Little Oaks' : 'For example, Sam')}" autocomplete="off"></label>
         <label class="cc-field"><span>${F('Phone or email (optional)')}</span><input id="ccContact" value="${esc3(c.contact)}" autocomplete="off"></label></section>`
-      + `<h2 class="hub-h2">${F(t.talk ? 'What you’ve talked through' : 'Your checklist')}</h2><p class="cc-lead">${F(t.talk ? 'Tick each one once you’ve talked it over.' : 'Tick each one as you go, where you liked what you saw or heard.')}</p><section class="hub-card cc-checks">${checks}</section>`
+      + `<h2 class="hub-h2">${F(t.talk ? 'What you’ve talked through' : 'Your checklist')}</h2><p class="cc-lead">${F(t.talk ? 'Tick each one once you’ve talked it over.' : 'Tick each one as you go, where you liked what you saw or heard.')}</p><div class="cc-checkwrap">${checks.replace(/(<div class="cc-cstep")/, '<section class="hub-card cc-checks">$1').replace(/$/, '</section>')}</div>`
       + `<h2 class="hub-h2">${F('Notes')}</h2><textarea id="ccNotes" class="cc-notes" rows="4" placeholder="${esc3('What stood out, how it felt, anything to follow up…')}">${esc3(c.notes)}</textarea>`
       + `<div class="cc-actions"><button class="hub-button" onclick="ccSaveCand('${k}','${c.id}')">${F('Save')}</button>${isNew ? '' : `<button class="cc-remove" onclick="ccRemoveCand('${k}','${c.id}')">${F('Remove from shortlist')}</button>`}</div>`, t.icon);
   }
+  window.ccCandStep = i => { document.querySelectorAll('.cc-checkwrap .cc-tabs button').forEach((b, j) => { b.classList.toggle('is-on', j === i); b.setAttribute('aria-selected', j === i); }); document.querySelectorAll('.cc-cstep').forEach((d, j) => { d.hidden = j !== i; }); };
   window.ccSaveCand = function (k, id) {
     const list = shortlist(), mine = list[k] = list[k] || [];
     const v = s => (document.getElementById(s) || {}).value || '';

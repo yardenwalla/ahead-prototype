@@ -987,3 +987,30 @@
 #main .cc-group small { grid-column: 2; font-size: 13px; font-weight: 500; color: var(--muted) }
 #main .cc-qs .cc-group:not(:first-child), #main .cc-checks .cc-group:not(:first-child) { margin-top: 18px; padding-top: 16px; border-top: 6px solid var(--year-pale) }
 #main .cc-group + .cc-q, #main .cc-group + .cc-check { border-top: 0 }
+/* Childcare steps: one at a time */
+#main .cc-steps { margin: 4px 0 18px }
+#main .cc-tabs { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 6px; padding: 5px; border-radius: 18px; background: var(--year-pale); margin-bottom: 14px }
+#main .cc-tabs button { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 8px 2px; border: 0; border-radius: 14px; background: none; font: inherit; font-size: 13px; font-weight: 700; color: var(--muted); cursor: pointer; min-width: 0 }
+#main .cc-tabs i { font-style: normal; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; background: #fffdf9; color: var(--year-ink) }
+#main .cc-tabs button.is-on { background: #fffdf9; color: var(--ink); box-shadow: 0 2px 8px rgba(80, 60, 20, .1) }
+#main .cc-tabs button.is-on i { background: var(--year-ink); color: #fff }
+#main .cc-stephead { margin: 0 2px 12px } #main .cc-stephead b { display: block; font-size: 18px } #main .cc-stephead small { font-size: 14px; color: var(--muted) }
+#main .cc-look { display: grid; grid-template-columns: 1fr 1fr; gap: 10px }
+#main .cc-look-tile { padding: 14px; border-radius: 18px; background: #fffdf9; border: 1px solid var(--line) }
+#main .cc-look-tile span { width: 44px; height: 44px; border-radius: 50%; background: var(--year-pale); display: grid; place-items: center; margin-bottom: 10px }
+#main .cc-look-tile span svg { width: 26px; height: 26px }
+#main .cc-look-tile b { display: block; font-size: 15px; line-height: 1.3 } #main .cc-look-tile small { display: block; margin-top: 4px; font-size: 13px; line-height: 1.4; color: var(--muted) }
+#main .cc-asks { display: grid; gap: 10px }
+#main .cc-ask { position: relative; display: block; width: 100%; text-align: left; padding: 16px 16px 14px 56px; border-radius: 20px; border: 0; background: linear-gradient(160deg, var(--year-bg), var(--year-pale)); font: inherit; color: var(--ink); cursor: pointer }
+#main .cc-ask em { position: absolute; left: 16px; top: 16px; width: 28px; height: 28px; border-radius: 50%; background: #fffdf9; color: var(--year-ink); font-style: normal; font-weight: 800; display: grid; place-items: center }
+#main .cc-ask b { display: block; font-size: 16px; line-height: 1.35 }
+#main .cc-ask .cc-tap { display: block; margin-top: 8px; font-size: 13px; font-weight: 700; color: var(--year-ink) }
+#main .cc-ask .cc-listen { display: none; margin-top: 10px; padding: 10px 12px; border-radius: 12px; background: rgba(255, 253, 249, .85); font-size: 14px; line-height: 1.45 }
+#main .cc-ask .cc-listen small { display: block; font-size: 12px; font-weight: 800; color: var(--year-ink); letter-spacing: .03em; text-transform: uppercase }
+#main .cc-ask.is-open .cc-listen { display: block } #main .cc-ask.is-open .cc-tap { display: none }
+#main .cc-ask .cc-own { display: block; margin-top: 6px; font-size: 13px; color: var(--muted) }
+#main .cc-quick { border-radius: 18px; background: #fffdf9; border: 1px solid var(--line); padding: 4px 14px }
+#main .cc-quick-row { display: flex; gap: 12px; align-items: center; padding: 12px 0 } #main .cc-quick-row + .cc-quick-row { border-top: 1px solid var(--line) }
+#main .cc-quick-row > span { flex: none; width: 40px; height: 40px; border-radius: 50%; background: var(--year-pale); display: grid; place-items: center } #main .cc-quick-row > span svg { width: 22px; height: 22px }
+#main .cc-quick-row b { display: block; font-size: 15px; line-height: 1.3 } #main .cc-quick-row small { display: block; font-size: 13px; color: var(--muted); line-height: 1.4; margin-top: 2px }
+#main .cc-next { display: block; margin: 12px 0 0 auto; background: none; border: 0; font: inherit; font-size: 14px; font-weight: 700; color: var(--year-ink); cursor: pointer; padding: 8px 2px }
