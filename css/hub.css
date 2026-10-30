@@ -968,3 +968,14 @@
 #main .cc-view-row { display: grid; grid-template-columns: 112px 1fr; gap: 10px; padding: 10px 0; border-top: 1px solid color-mix(in srgb, var(--year-ink) 15%, transparent) }
 #main .cc-view-row b { font-size: 13px; color: var(--year-ink) } #main .cc-view-row span { font-size: 15px; line-height: 1.4 }
 #main .cc-view-row.is-always span { font-weight: 600 }
+#main .cc-qhead { display: flex; justify-content: space-between; align-items: baseline }
+#main .cc-qedit { background: none; border: 0; font: inherit; font-size: 14px; font-weight: 700; color: var(--year-ink); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; padding: 8px 2px }
+#main .cc-q { display: flex; gap: 10px; align-items: flex-start } #main .cc-q > div { flex: 1; min-width: 0 }
+#main .cc-q-x { flex: none; width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--line); background: var(--white, #fffdf9); font-size: 18px; line-height: 1; color: #a33a3a; cursor: pointer }
+#main .cc-q-add { display: flex; gap: 8px; padding: 12px 0; border-top: 1px solid var(--line) }
+#main .cc-q-add input { flex: 1; min-width: 0; min-height: 44px; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--white, #fffdf9); font: inherit; font-size: 16px }
+#main .cc-q-add button { flex: none; padding: 0 16px; border-radius: 12px; border: 0; background: var(--year-ink); color: #fff; font: inherit; font-weight: 700; cursor: pointer }
+#main .cc-q-reset { display: block; margin: 0 0 12px; background: none; border: 0; font: inherit; font-size: 13px; font-weight: 600; color: var(--muted); text-decoration: underline; cursor: pointer; padding: 0 }
+#main .cc-times { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 6px }
+#main .cc-times label { display: grid; gap: 4px; flex: 1 1 120px } #main .cc-times span { font-size: 12px; font-weight: 600; color: var(--muted) }
+#main .cc-times input { min-height: 44px; padding: 8px 10px; border-radius: 12px; border: 1px solid var(--line); background: var(--white, #fffdf9); font: inherit; font-size: 16px }

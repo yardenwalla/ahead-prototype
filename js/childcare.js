@@ -96,15 +96,31 @@
     return frame(b);
   }
 
+  /* ---------- questions you can change: hide ours, add your own ---------- */
+  // Each question has a stable key ('d3' for ours, 'c…' for yours), so ticks on a shortlist survive edits.
+  const qPrefs = () => load('ahead-childcare-qs', {});
+  const questions = k => { const t = TYPES[k], p = qPrefs()[k] || {}, hid = p.hidden || [];
+    return t.ask.map(([q, a], i) => ({ key: 'd' + i, q, a })).filter(x => !hid.includes(x.key)).concat((p.added || []).map(x => ({ key: x.key, q: x.q, a: '', own: true }))); };
+  const qEditing = {};
+  window.ccQEdit = k => { qEditing[k] = !qEditing[k]; rerender(); };
+  window.ccQHide = (k, key) => { const all = qPrefs(), p = all[k] = all[k] || {};
+    if (key.startsWith('c')) p.added = (p.added || []).filter(x => x.key !== key); else p.hidden = (p.hidden || []).concat(key);
+    save('ahead-childcare-qs', all); rerender(); };
+  window.ccQAdd = k => { const el = document.getElementById('ccNewQ'), q = el && el.value.trim(); if (!q) return;
+    const all = qPrefs(), p = all[k] = all[k] || {}; p.added = (p.added || []).concat({ key: 'c' + Date.now(), q }); save('ahead-childcare-qs', all); rerender(); };
+  window.ccQReset = k => { const all = qPrefs(); delete all[k]; save('ahead-childcare-qs', all); rerender(); };
+
   /* ---------- one page per type, always in the same order ---------- */
   function typePage(k) {
-    const t = TYPES[k], h = H(), mine = shortlist()[k] || [], noun = t.who === 'place' ? 'place' : 'person';
-    const qs = `<div class="cc-qs">${t.ask.map(([q, a]) => `<div class="cc-q"><b>${F(q)}</b><small>${F(t.talk ? a : 'Listen for: ' + a)}</small></div>`).join('')}</div>`;
-    const shortRows = mine.map(c => h.row({ icon: t.icon, cat: CAT, title: esc3(c.name || 'Unnamed'), sub: `${(c.checks || []).length} of ${t.ask.length} ${t.talk ? 'talked through' : 'good answers'}${c.notes ? ' · has notes' : ''}`, onclick: `openPage('chg:${CAT}:d:cand-${k}-${c.id}')` }));
+    const t = TYPES[k], h = H(), mine = shortlist()[k] || [], noun = t.who === 'place' ? 'place' : 'person', Q = questions(k);
+    const ed = qEditing[k], changed = !!qPrefs()[k];
+    const qs = `<div class="cc-qs${ed ? ' is-editing' : ''}">${Q.map(x => `<div class="cc-q"><div><b>${x.own ? esc3(x.q) : F(x.q)}</b>${x.own ? `<small>${F('Your question')}</small>` : `<small>${F(t.talk ? x.a : 'Listen for: ' + x.a)}</small>`}</div>${ed ? `<button class="cc-q-x" aria-label="Remove this question" onclick="ccQHide('${k}','${x.key}')">×</button>` : ''}</div>`).join('')}`
+      + (ed ? `<div class="cc-q-add"><input id="ccNewQ" placeholder="${esc3('Add your own question')}" autocomplete="off" onkeydown="if(event.key==='Enter')ccQAdd('${k}')"><button onclick="ccQAdd('${k}')">${F('Add')}</button></div>${changed ? `<button class="cc-q-reset" onclick="ccQReset('${k}')">${F('Bring back our questions')}</button>` : ''}` : '') + `</div>`;
+    const shortRows = mine.map(c => h.row({ icon: t.icon, cat: CAT, title: esc3(c.name || 'Unnamed'), sub: `${(c.checks || []).filter(x => Q.some(y => y.key === x)).length} of ${Q.length} ${t.talk ? 'talked through' : 'good answers'}${c.notes ? ' · has notes' : ''}`, onclick: `openPage('chg:${CAT}:d:cand-${k}-${c.id}')` }));
     return h.detail(CAT, 'Childcare', t.name, t.lead,
       `<section class="hub-card cc-fit"><div><b>${F('A good fit if')}</b><p>${F(t.good)}</p></div><div><b>${F('Keep in mind')}</b><p>${F(t.mind)}</p></div></section>`
       + h.tip(t.when[0], t.when[1])
-      + `<h2 class="hub-h2">${F(t.talk ? 'Things to talk through' : 'Questions to ask')}</h2>` + qs
+      + `<div class="cc-qhead"><h2 class="hub-h2">${F(t.talk ? 'Things to talk through' : 'Questions to ask')}</h2><button class="cc-qedit" onclick="ccQEdit('${k}')">${F(ed ? 'Done' : 'Edit')}</button></div>` + qs
       + `<h2 class="hub-h2">${F('Your shortlist')}</h2>`
       + (mine.length ? h.list('', shortRows) : `<p class="cc-lead">${F(t.talk ? `Add each person who’ll help, and tick off what you’ve talked through.` : `Add each ${noun} you’re considering. The questions become a checklist for each one, with space for notes.`)}</p>`)
       + `<button class="hub-button is-secondary cc-add" onclick="openPage('chg:${CAT}:d:cand-${k}-new')">＋ ${F(`Add a ${noun}`)}</button>`, t.icon);
@@ -114,7 +130,7 @@
   function candidatePage(k, id) {
     const t = TYPES[k], h = H(), list = shortlist(), mine = list[k] || [], c = mine.find(x => x.id === id) || { id: 'new', name: '', contact: '', checks: [], notes: '' };
     const noun = t.who === 'place' ? 'place' : 'person', isNew = c.id === 'new';
-    const checks = t.ask.map(([q, a], i) => `<label class="cc-check"><input type="checkbox" data-i="${i}" ${(c.checks || []).includes(i) ? 'checked' : ''}><span><b>${F(q)}</b><small>${F(t.talk ? a : 'Listen for: ' + a)}</small></span></label>`).join('');
+    const checks = questions(k).map(x => `<label class="cc-check"><input type="checkbox" data-k="${x.key}" ${(c.checks || []).includes(x.key) ? 'checked' : ''}><span><b>${x.own ? esc3(x.q) : F(x.q)}</b>${x.a ? `<small>${F(t.talk ? x.a : 'Listen for: ' + x.a)}</small>` : ''}</span></label>`).join('');
     return h.detail(CAT, t.name, isNew ? `Add a ${noun}` : esc3(c.name), isNew ? '' : '',
       `<section class="hub-card cc-form"><label class="cc-field"><span>${F(t.who === 'place' ? 'Name of the place' : 'Their name')}</span><input id="ccName" value="${esc3(c.name)}" placeholder="${esc3(t.who === 'place' ? 'For example, Little Oaks' : 'For example, Sam')}" autocomplete="off"></label>
         <label class="cc-field"><span>${F('Phone or email (optional)')}</span><input id="ccContact" value="${esc3(c.contact)}" autocomplete="off"></label></section>`
@@ -125,7 +141,7 @@
   window.ccSaveCand = function (k, id) {
     const list = shortlist(), mine = list[k] = list[k] || [];
     const v = s => (document.getElementById(s) || {}).value || '';
-    const checks = [...document.querySelectorAll('.cc-checks input:checked')].map(x => Number(x.dataset.i));
+    const checks = [...document.querySelectorAll('.cc-checks input:checked')].map(x => x.dataset.k);
     const rec = { id: id === 'new' ? String(Date.now()) : id, name: v('ccName').trim() || 'Unnamed', contact: v('ccContact').trim(), checks, notes: v('ccNotes').trim() };
     const i = mine.findIndex(x => x.id === rec.id); if (i >= 0) mine[i] = rec; else mine.push(rec);
     save('ahead-childcare-shortlist', list);
@@ -153,6 +169,8 @@
     if (multi) { const a = c[k] || []; c[k] = a.includes(v) ? a.filter(x => x !== v) : a.concat(v); } else c[k] = c[k] === v ? null : v;
     save('ahead-carecard', c); rerender();
   };
+  window.ccNapTime = (i, v) => { const c = card(); c.napTimes = c.napTimes || []; c.napTimes[i] = v; save('ahead-carecard', c); };
+  const clock = v => { if (!v) return ''; const [h, m] = v.split(':').map(Number); return `${h % 12 || 12}${m ? ':' + String(m).padStart(2, '0') : ''} ${h < 12 ? 'am' : 'pm'}`; };
   window.ccText = (k, v) => { const c = card(); c[k] = v; save('ahead-carecard', c); };
   window.ccCardMode = function (mode) { const c = card(); c.saved = mode === 'view'; save('ahead-carecard', c); scrollTo(0, 0); render(); };
   const chips = (k, multi, c) => `<div class="cc-chips">${OPT[k].map(v => { const on = multi ? (c[k] || []).includes(v) : c[k] === v; return `<button class="cc-chip${on ? ' is-on' : ''}" aria-pressed="${on}" onclick="ccPick('${k}','${v.replace(/'/g, '\\\'')}',${multi})">${F(v === 'On their own' ? 'On {p} own' : v)}</button>`; }).join('')}</div>`;
@@ -164,7 +182,10 @@
     if (feed) L.push(['Feeding', feed + (c.solids && c.solids !== 'Not yet' ? `. Solids: ${c.solids.toLowerCase()}` : '')]);
     const sleep = [c.naps && `${c.naps} nap${c.naps === '1' ? '' : 's'} a day`, (c.asleep || []).length && `falls asleep with ${(c.asleep || []).map(x => x === 'On their own' ? `nothing, on ${P.p} own` : x.toLowerCase()).join(', ')}`].filter(Boolean).join(', ');
     if (sleep) L.push(['Sleep', sleep.charAt(0).toUpperCase() + sleep.slice(1)]);
-    if ((c.calm || []).length) L.push(['What helps', c.calm.join(', ')]);
+    const times = (c.napTimes || []).slice(0, c.naps === '4 or more' ? 4 : Number(c.naps) || 0).filter(Boolean).map(clock);
+    if (times.length) L.push(['Nap times', times.join(', ')]);
+    if (c.bedtime) L.push(['Bedtime', clock(c.bedtime)]);
+    if ((c.calm || []).length) L.push(['What helps', c.calm.map((x, i) => i ? x.toLowerCase() : x).join(', ')]);
     if (c.allergy) L.push(['Allergies and medicines', c.allergy === 'Yes' ? (c.allergyText || 'Yes, ask us') : 'None known']);
     if (c.docName || c.docPhone) L.push(['Pediatrician', [c.docName, c.docPhone].filter(Boolean).join(' · ')]);
     [[c.c1Name, c.c1Phone], [c.c2Name, c.c2Phone]].filter(([n, p]) => n || p).forEach(([n, p], i) => L.push([i ? 'Or' : 'Call us', [n, p].filter(Boolean).join(' · ')]));
@@ -178,13 +199,16 @@
       const L = cardLines(c);
       return h.detail(CAT, 'Before the first day', `${nm}’s care card`, '',
         `<section class="hub-card cc-view"><p class="cc-view-name">${esc3(nm)}</p>${L.map(([l, v]) => `<div class="cc-view-row"><b>${F(l)}</b><span>${esc3(v)}</span></div>`).join('')}<div class="cc-view-row is-always"><b>${F('Always')}</b><span>${F(ALWAYS())}</span></div></section>`
-        + `<div class="cc-actions"><button class="hub-button" onclick="ccShare()">${F('Share the card')}</button><button class="hub-button is-secondary" onclick="ccCardMode('edit')">${F('Edit')}</button></div><p class="cc-done" id="ccDone" hidden></p>`
-        + h.note('Saved on this device. Nothing is shared until you tap Share.'), 'notepad');
+        + `<div class="cc-actions"><button class="hub-button" onclick="ccShare()">${F('Send as a PDF')}</button><button class="hub-button is-secondary" onclick="ccCardMode('edit')">${F('Edit')}</button></div><p class="cc-done" id="ccDone" hidden></p>`
+        + h.note('Opens your phone’s share sheet, so you can text or email the PDF. Saved on this device until you send it.'), 'notepad');
     }
     const sec = (title, inner) => `<section class="hub-card cc-sec"><b class="cc-sec-title">${F(title)}</b>${inner}</section>`;
     return h.detail(CAT, 'Before the first day', `${nm}’s care card`, 'Tap what fits. It takes about a minute, and you can share it with any caregiver.',
       sec('Feeding', chips('milk', false, c) + `<p class="cc-q-label">${F('How often')}</p>` + chips('often', false, c) + (bottles ? `<p class="cc-q-label">${F('Per bottle')}</p>` + chips('oz', false, c) : '') + (typeof actualMonth === 'function' && actualMonth() >= 5 ? `<p class="cc-q-label">${F('Solids')}</p>` + chips('solids', false, c) : ''))
-      + sec('Sleep', `<p class="cc-q-label">${F('Naps a day')}</p>` + chips('naps', false, c) + `<p class="cc-q-label">${F('Falls asleep with')}</p>` + chips('asleep', true, c))
+      + sec('Sleep', `<p class="cc-q-label">${F('Naps a day')}</p>` + chips('naps', false, c)
+        + (c.naps ? `<p class="cc-q-label">${F('Usual nap times')}</p><div class="cc-times">${Array.from({ length: c.naps === '4 or more' ? 4 : Number(c.naps) }, (_, i) => `<label><span>${F(['First', 'Second', 'Third', 'Fourth'][i])}</span><input type="time" value="${esc3((c.napTimes || [])[i])}" onchange="ccNapTime(${i}, this.value)"></label>`).join('')}</div>` : '')
+        + `<div class="cc-times"><label><span>${F('Bedtime')}</span><input type="time" value="${esc3(c.bedtime)}" onchange="ccText('bedtime', this.value)"></label></div>`
+        + `<p class="cc-q-label">${F('Falls asleep with')}</p>` + chips('asleep', true, c))
       + sec('What helps when {s’s} upset', chips('calm', true, c))
       + sec('Allergies or medicines', chips('allergy', false, c) + (c.allergy === 'Yes' ? input('allergyText', 'Which ones', c) : ''))
       + sec('Who to call', input('c1Name', 'Name', c) + input('c1Phone', 'Phone', c, 'tel') + input('c2Name', 'Second person (optional)', c) + input('c2Phone', 'Phone', c, 'tel') + input('docName', 'Pediatrician', c) + input('docPhone', 'Pediatrician’s phone', c, 'tel'))
@@ -192,11 +216,44 @@
       + `<p class="cc-always"><b>${F('Always included')}</b>${F(ALWAYS())}</p>`
       + `<div class="cc-actions"><button class="hub-button" onclick="ccCardMode('view')">${F('Save the card')}</button></div>`, 'notepad');
   }
+  // Sharing sends a one-page PDF (a document the caregiver can open, save or print), not text to paste.
+  // A small PDF writer: Helvetica text and colored bars, WinAnsi encoding for curly quotes and dashes.
+  function cardPdf(rows, title, always) {
+    const W = 612, Hh = 792, M = 54, enc = s => String(s).replace(/[’‘]/g, "\x92").replace(/[“”]/g, '"').replace(/–/g, "\x96").replace(/—/g, "\x97").replace(/·/g, "\xb7").replace(/[\\()]/g, m => '\\' + m).replace(/[^\x00-\xff]/g, '');
+    const wrap = (t, size, width) => { const out = []; let line = ''; String(t).split(' ').forEach(w => { const test = line ? line + ' ' + w : w; if (test.length * size * 0.5 > width && line) { out.push(line); line = w; } else line = test; }); if (line) out.push(line); return out; };
+    let y = Hh - M, ops = [];
+    const text = (x, yy, size, font, t, rgb = '0.18 0.16 0.2') => ops.push(`${rgb} rg BT /${font} ${size} Tf ${x} ${yy} Td (${enc(t)}) Tj ET`);
+    ops.push(`0.973 0.929 0.702 rg 0 ${Hh - 18} ${W} 18 re f`);
+    text(M, y - 20, 26, 'F2', title); y -= 34;
+    text(M, y - 14, 11, 'F1', 'Made with Ahead · ' + new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }), '0.45 0.42 0.4'); y -= 40;
+    rows.concat([['Always', always]]).forEach(([l, v], idx, arr) => {
+      const lines = wrap(v, 13, W - M * 2 - 150), hgt = Math.max(1, lines.length) * 18 + 14;
+      if (idx === arr.length - 1) ops.push(`0.988 0.969 0.867 rg ${M - 8} ${y - hgt + 6} ${W - M * 2 + 16} ${hgt} re f`);
+      text(M, y - 12, 11, 'F2', l, '0.42 0.35 0.05');
+      lines.forEach((ln, k) => text(M + 150, y - 12 - k * 18, 13, idx === arr.length - 1 ? 'F2' : 'F1', ln));
+      y -= hgt; ops.push(`0.9 0.88 0.84 RG 0.75 w ${M} ${y + 4} m ${W - M} ${y + 4} l S`);
+    });
+    const stream = ops.join('\n'), objs = ['<< /Type /Catalog /Pages 2 0 R >>', '<< /Type /Pages /Kids [3 0 R] /Count 1 >>',
+      `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${W} ${Hh}] /Resources << /Font << /F1 4 0 R /F2 5 0 R >> >> /Contents 6 0 R >>`,
+      '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>', '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>',
+      `<< /Length ${stream.length} >>\nstream\n${stream}\nendstream`];
+    let pdf = '%PDF-1.4\n', offs = [];
+    objs.forEach((o, i) => { offs.push(pdf.length); pdf += `${i + 1} 0 obj\n${o}\nendobj\n`; });
+    const xref = pdf.length; pdf += `xref\n0 ${objs.length + 1}\n0000000000 65535 f \n` + offs.map(o => String(o).padStart(10, '0') + ' 00000 n \n').join('') + `trailer\n<< /Size ${objs.length + 1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`;
+    const bytes = new Uint8Array(pdf.length); for (let i = 0; i < pdf.length; i++) bytes[i] = pdf.charCodeAt(i) & 255;
+    return new Blob([bytes], { type: 'application/pdf' });
+  }
+  window.ccCardPdf = () => cardPdf(cardLines(card()), `${name()}’s care card`, ALWAYS());
   window.ccShare = async function () {
-    const c = card(), text = `${name()}’s care card\n\n${cardLines(c).map(([l, v]) => `${l}: ${v}`).join('\n')}\n\nAlways: ${ALWAYS()}`, done = document.getElementById('ccDone');
+    const blob = ccCardPdf(), fname = `${name().replace(/[^\w ]/g, '')} care card.pdf`, done = document.getElementById('ccDone');
     const say = m => { if (done) { done.textContent = m; done.hidden = false; } };
-    try { if (navigator.share) { await navigator.share({ title: `${name()}’s care card`, text }); return; } } catch (e) { if (e && e.name === 'AbortError') return; }
-    try { await navigator.clipboard.writeText(text); say('Copied. Paste it into a text or email.'); } catch (e) { say('Couldn’t copy here. Select the card above and copy it.'); }
+    try {
+      const file = new File([blob], fname, { type: 'application/pdf' });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], title: `${name()}’s care card` }); return; }
+    } catch (e) { if (e && e.name === 'AbortError') return; }
+    // No share sheet (most computers): save the PDF so it can be attached to an email or message.
+    try { const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = fname; document.body.appendChild(a); a.click(); a.remove(); say('Saved as a PDF. Attach it to a text or email.'); }
+    catch (e) { say('Couldn’t create the PDF here. Try again on your phone.'); }
   };
 
   /* ---------- routes ---------- */
