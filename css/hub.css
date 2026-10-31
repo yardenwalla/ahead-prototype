@@ -1159,3 +1159,16 @@
 #main .hub-rough-copy b { display: block; font-size: 17px; color: #fff }
 #main .hub-rough-copy small { display: block; margin-top: 2px; font-size: 13.5px; color: rgba(255,255,255,.82) }
 #main .hub-rough-card .hub-chev { position: relative; color: #fff; opacity: .8 }
+#main .hub-accs { display: flex; flex-direction: column; gap: 10px; margin-top: 4px }
+#main .hub-acc { background: var(--white); border: 1px solid var(--line); border-radius: 20px; overflow: hidden }
+#main .hub-acc summary { display: flex; align-items: center; gap: 12px; padding: 16px 18px; min-height: 64px; list-style: none; cursor: pointer }
+#main .hub-acc summary::-webkit-details-marker { display: none }
+#main .hub-acc summary > span:first-child { flex: 1; min-width: 0 }
+#main .hub-acc summary b { display: block; font-size: 17px }
+#main .hub-acc summary small { display: block; margin-top: 2px; font-size: 13.5px; color: var(--muted) }
+#main .hub-acc summary .hub-chev { transition: transform .15s }
+#main .hub-acc[open] summary .hub-chev { transform: rotate(90deg) }
+#main .hub-acc-body { padding: 0 6px 10px }
+#main .hub-acc-body .hub-list { border: 0; box-shadow: none; margin: 0; background: transparent }
+#main .hub-acc-body .hub-actions { padding: 4px 12px 6px }
+#main .hub-acc-body .hub-tip { margin: 6px 12px 6px }
