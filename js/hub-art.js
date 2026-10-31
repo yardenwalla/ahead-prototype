@@ -200,7 +200,7 @@
       </svg>`
   });
   const PANELS = {
-    drops: { scenes: [['dropa', '1', 'A little milk', 'Drops in about 1 oz'], ['dropb', '2', 'Give that first', 'So you know it all went in'], ['dropc', '3', 'Then the usual feed', 'Breast or bottle']] },
+    drops: { scenes: [['dropa', '1', 'Add the drops', 'To about 1 oz of milk'], ['dropb', '2', 'Give that first', 'So the whole dose goes in'], ['dropc', '3', 'Then feed as usual', 'Breast or bottle']] },
     carseat: { scenes: ['carseat'], chips: ['Rear-facing, in the back seat', 'Chest clip level with the armpits', 'Straps snug: no slack to pinch', 'No puffy coat underneath'] },
     carrier: { scenes: ['carrierfit'], chips: ['Face visible, close enough to kiss', 'Chin off the chest', 'Knees up in an M shape', 'Back supported'] },
     stroller: { scenes: ['stroller'], chips: ['Lying flat while little', 'Harness on every time', 'Brakes on when you stop', 'No bags on the handles', 'No blanket over the top'] },
