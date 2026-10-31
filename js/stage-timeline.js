@@ -23,7 +23,7 @@
       { label: 'Milk feeds', age: '6 wks–4 mo' },
       { label: 'Ready for solids', age: '4–6 months', setFrom: 4 },
       { label: 'First foods', age: 'Once you start', setFrom: 4 },
-      { label: 'Meals', age: 'Around 9 months', setFrom: 8 }
+      { label: 'Meals', age: 'Around 9–10 months', setFrom: 8 }
     ] },
     Safety: { kind: 'skill', stages: [
       { key: 'setup', label: 'First setup', age: 'From birth' },
