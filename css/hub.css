@@ -1191,3 +1191,11 @@
 #main .hub-tl-copy span { display: block; font-size: 13px; color: var(--muted) }
 #main .hub-rough-card.is-feed { background: linear-gradient(135deg, #7c3c5c 0%, #a45a7c 100%) }
 #main .hub-rough-card.is-feed .hub-rough-moon { color: #ffe1ec }
+#main .hub-amts { display: flex; flex-direction: column; gap: 6px }
+#main .hub-amt { display: grid; grid-template-columns: 1.2fr 1fr 1.2fr; align-items: center; gap: 8px; padding: 9px 10px; border-radius: 12px; background: var(--year-pale) }
+#main .hub-amt.is-now { box-shadow: inset 0 0 0 1.5px var(--year-ink) }
+#main .hub-amt span { font-size: 13px; color: var(--muted) }
+#main .hub-amt span em { display: block; font-style: normal; font-size: 11px; font-weight: 700; color: var(--year-ink) }
+#main .hub-amt b { font-size: 15px }
+#main .hub-amt small { font-size: 12.5px; color: var(--muted) }
+#main .hub-pill-meta { display: block; font-size: 12.5px; color: var(--muted); font-weight: 500 }
