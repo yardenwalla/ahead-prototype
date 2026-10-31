@@ -778,17 +778,20 @@
       // One picture for the rule, then two short lists: every sleep, and what changes as she grows.
       const sec = (open, title, meta, inner) => `<h2 class="hub-h2">${F(title)}</h2>${inner}`;
       const habits = [{ t: 'Nothing else in the crib', s: 'A fitted sheet only. No bumpers, pillows, loungers, inclined or weighted products', art: 'crib' }, ...SLEEP_SETUP.filter(x => x.task == null && x.art !== 'back')];
-      return detail(cat, 'Safe sleep', 'A safe place to sleep', 'On {p} back, in {p} own bare crib or bassinet in your room, for every sleep. No bumpers, loungers, inclined or weighted products.',
-        figure('crib', cat, 'A baby asleep on their back in a sleep sack, in a bare crib with a firm mattress and fitted sheet. Never on a sofa or in your bed. Keep the room cool and smoke-free. A pacifier is optional.')
+      return detail(cat, 'Safe sleep', 'A safe place to sleep', 'The same for every sleep, naps too. Also skip bumpers, loungers, and inclined or weighted products.',
+        figure('crib', cat, 'A baby asleep on their back in a sleep sack, in a bare crib with a firm mattress and fitted sheet. Not on a sofa or in your bed. Keep the room cool and smoke-free. A pacifier is optional.')
         + (m() < 3 || done ? `<div class="hub-actions">${done ? `<p class="hub-done">${F('You’ve set up Maya’s sleep space')} ✓</p>` : `<button class="hub-button" onclick="hubSleepSetUp()">${F('I’ve set this up')}</button>`}</div>` : '')
         + `<div class="hub-accs">`
-        + tip('Might fall asleep while feeding at night?', 'Feed in your bed rather than on a sofa or armchair, with pillows and blankets moved away from {o}. If you wake up, move {o} back to {p} own space.')
-        + sec(false, 'As Maya grows', 'Swaddle, crib, mattress, lovey', `<div class="hub-list">`
-          + row({ cat, icon: 'sack', title: 'Swaddle, then a sleep sack', sub: 'How to swaddle safely, and stop at the first try to roll', onclick: go('chg:Sleep:d:swaddle') }).replace('<button', '<button id="sleep-rolling"')
-          + row({ cat, icon: 'crib', title: 'Bassinet to crib, then {p} own room', sub: 'At the weight limit or first roll. Share a room for 6 months', onclick: go('chg:Sleep:d:where') })
-          + `<div class="hub-row is-static" id="sleep-crib-height"><span class="hub-dot">${art('shield', cat)}</span><span class="hub-row-copy"><b>${F('Before {s} can sit, then pull up')}</b><small>${F('Lower the crib mattress, then set it to its lowest.')}</small></span></div>`
-          + `<div class="hub-row is-static"><span class="hub-dot">${art('heart', cat)}</span><span class="hub-row-copy"><b>${F('After 12 months')}</b><small>${F('A small lovey is fine. Keep pillows and heavy blankets out until later.')}</small></span></div></div>`)
-        + `</div>`, 'moon');
+        // In the order it happens: an age or sign first, then the one thing to do.
+        + (() => { const when = (eyebrow, html) => html.replace('<span class="hub-row-copy">', `<span class="hub-row-copy"><small class="hub-row-eyebrow">${F(eyebrow)}</small>`);
+          const stat = (ic, t, sub, id) => `<div class="hub-row is-static"${id ? ` id="${id}"` : ''}><span class="hub-dot">${art(ic, cat)}</span><span class="hub-row-copy"><b>${F(t)}</b><small>${F(sub)}</small></span></div>`;
+          return `<h2 class="hub-h2">${F('As Maya grows')}</h2><div class="hub-list">`
+          + when('First try to roll, often 2–4 months', row({ cat, icon: 'sack', title: 'Stop swaddling', sub: 'Switch to a sleep sack with arms free. How to swaddle until then', onclick: go('chg:Sleep:d:swaddle') }).replace('<button', '<button id="sleep-rolling"'))
+          + when('Rolling, or the bassinet’s weight limit', row({ cat, icon: 'crib', title: 'Move from the bassinet to the crib', sub: 'Whichever comes first', onclick: go('chg:Sleep:d:where') }))
+          + when('Before {s} can sit, around 5–6 months', stat('shield', 'Lower the crib mattress', 'Then to the lowest setting before {s} pulls up', 'sleep-crib-height'))
+          + when('After 6 months', row({ cat, icon: 'home', title: 'Own room, if you like', sub: 'Room-sharing until then', onclick: go('chg:Sleep:d:where') }))
+          + when('After 12 months', stat('heart', 'A small lovey is fine', 'Still no pillows or heavy blankets'))
+          + `</div>`; })(), 'moon');
     }
     if (id === 'day' || id === 'naps') {
       // Naps and a typical day, for the stage being viewed. Answers first (AAP: regular sleep cycles from about 4 months; Mayo Clinic: naps get more regular with age).
