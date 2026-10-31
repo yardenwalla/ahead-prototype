@@ -809,9 +809,10 @@ window.hubCenterStages = function () {
       <h1>${nm} is one!</h1>
       <p class="bday-lead">You made it through the whole first year together. Look at everything you saw along the way.</p>
       ${(() => { const st = [[firsts, firsts === 1 ? 'first saved' : 'firsts saved'], [visits, visits === 1 ? 'checkup' : 'checkups'], [photos, photos === 1 ? 'monthly photo' : 'monthly photos']].filter(x => x[0] > 0); return st.length ? `<div class="bday-stats" style="grid-template-columns:repeat(${st.length},1fr)">${st.map(x => stat(x[0], x[1])).join('')}</div>` : ''; })()}
-      ${photo ? `<div class="bday-photo"><img src="${photo}" alt="${nm}’s first-birthday photo"></div>` : `<label class="hub-button bday-add" role="button">Add a first-birthday photo${hubPhotoInput(12)}</label>`}
-      ${typeof storyShare === 'function' && Array.from({ length: 12 }, (_, i) => window.hubPhotoFor(i + 1)).some(Boolean) ? `<button class="hub-button bday-story" onclick="storyShare(12)">${esc2(`Make ${name()}’s first-year collage`)}</button>` : ''}
-      ${typeof memPlay === 'function' && photos >= 2 ? `<button class="hub-button is-secondary bday-memories" onclick="memPlay()"><span aria-hidden="true">▶</span> ${esc2(`Play ${name()}’s year`)}</button>` : `<button class="hub-button is-secondary bday-memories" onclick="navigate('timeline')">See ${nm}’s first year</button>`}
+      ${photo ? `<div class="bday-photo"><img src="${photo}" alt="${nm}’s first-birthday photo"></div>` : ''}
+      ${(() => { // One button: the collage once there are monthly photos (it holds the video too); before that, the birthday photo.
+        const any = Array.from({ length: 12 }, (_, i) => window.hubPhotoFor(i + 1)).some(Boolean);
+        return typeof storyShare === 'function' && any ? `<button class="hub-button bday-story" onclick="storyShare(12)">${esc2(`Make ${name()}’s first-year collage`)}</button>` : `<label class="hub-button bday-add" role="button">Add a first-birthday photo${hubPhotoInput(12)}</label>`; })()}
     </section>
     <section class="bday-end"><p>${esc2('Ahead covers the first year, so this is where it ends. Your pediatrician takes it from here, starting with the 12-month checkup.')}</p><p class="bday-small">${esc2('You can still look back at any month, and every guide is in Categories.')}</p></section>`;
   }

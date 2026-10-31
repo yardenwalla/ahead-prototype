@@ -108,3 +108,4 @@ Existing age-based guide advancement remains a product decision: suggested guida
 - **Move the photo in the polaroid:** in the Story sheet, drag the photo to position it and zoom with the slider. The choice is saved per month and used in the year collage too. Photos are now kept whole (short side ~840px) instead of pre-cropped to a square, so there's room to move them; tall photos start a little above centre.
 - **Remove a photo in Memories:** a small × on each monthly photo, with Undo in the toast.
 - Share shows only where the phone can share files (iPhone Safari, Android Chrome); elsewhere there's one Save button.
+- **One button on the first-birthday screen:** "Make [Name]'s first-year collage" once there are monthly photos (the collage includes the video, so the separate Play button is gone), otherwise "Add a first-birthday photo".
