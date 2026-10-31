@@ -655,7 +655,7 @@
     }[key];
     const extra = key === 'clock' ? (swaddleDue() || answers.swaddleStopped === 'Yes' ? '' : listMore('How to swaddle safely', go('chg:Sleep:d:swaddle')))
       : '';
-    const rough = `<div class="hub-list hub-rough-row">${row({ cat, icon: 'moon', title: 'Rough night?', sub: age < 3 ? 'Crying, won’t settle, up a lot' : 'Waking a lot, short naps, up too early', onclick: go('chg:Sleep:d:rough') })}</div>`;
+    const rough = `<button class="hub-rough-card" onclick="${go('chg:Sleep:d:rough')}"><svg class="hub-rough-stars" viewBox="0 0 120 60" aria-hidden="true"><circle cx="18" cy="14" r="1.6"/><circle cx="52" cy="8" r="1.1"/><circle cx="88" cy="18" r="1.4"/><circle cx="108" cy="6" r="1"/><circle cx="70" cy="44" r="1.1"/><circle cx="30" cy="48" r="1"/></svg><span class="hub-rough-moon" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></span><span class="hub-rough-copy"><b>${F('Rough night?')}</b><small>${F(age < 3 ? 'Crying, won’t settle, up a lot' : 'Waking a lot, short naps, up too early')}</small></span>${chev}</button>`;
     return `<h2 class="hub-h2">${F('What’s different now')}</h2><div class="hub-list" id="sleep-night-feeds">${R.map(([l, o]) => cr(l, o)).join('')}</div>` + rough + extra;
   }
   function settleRow() {
@@ -785,7 +785,7 @@
         + `<h2 class="hub-h2">${F('As Maya grows')}</h2><div class="hub-list">`
         + `<div class="hub-row is-static" id="sleep-rolling"><span class="hub-dot">${art('roll', cat)}</span><span class="hub-row-copy"><b>${F('At the first try to roll')}</b><small>${F('Stop swaddling. If {s’s} in a bassinet, move {o} to the crib.')}</small></span></div>`
         + `<div class="hub-row is-static" id="sleep-crib-height"><span class="hub-dot">${art('shield', cat)}</span><span class="hub-row-copy"><b>${F('Before {s} can sit, then pull up')}</b><small>${F('Lower the crib mattress, then set it to its lowest.')}</small></span></div>`
-        + `<div class="hub-row is-static"><span class="hub-dot">${art('home', cat)}</span><span class="hub-row-copy"><b>${F('After 6 months')}</b><small>${F('Room-sharing is recommended for at least 6 months. After that, it’s up to you.')}</small></span></div>`
+        + row({ cat, icon: 'crib', title: 'Bassinet to crib, then {p} own room', sub: 'When to move {o}, and room-sharing for at least 6 months', onclick: go('chg:Sleep:d:where') })
         + `<div class="hub-row is-static"><span class="hub-dot">${art('heart', cat)}</span><span class="hub-row-copy"><b>${F('After 12 months')}</b><small>${F('A small lovey is fine. Keep pillows and heavy blankets out until later.')}</small></span></div></div>`
         + tip('Might fall asleep while feeding at night?', 'Feed in your bed rather than on a sofa or armchair, with pillows and blankets moved away from {o}. If you wake up, move {o} back to {p} own space.'), 'moon');
     }

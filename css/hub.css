@@ -1152,3 +1152,10 @@
 #main .hub-napask-done { margin: 0 0 12px; font-size: 13.5px; color: var(--muted) }
 #main .hub-napask-done button { background: none; border: 0; padding: 4px 2px; font: inherit; font-weight: 600; color: var(--year-ink); cursor: pointer }
 #main .hub-napask-chips button { text-align: center; font-size: 16px }
+#main .hub-rough-card { position: relative; overflow: hidden; display: flex; align-items: center; gap: 14px; width: 100%; margin: 14px 0 16px; padding: 18px 18px; min-height: 76px; border: 0; border-radius: 22px; background: linear-gradient(135deg, #34406a 0%, #46638c 100%); color: #fff; font: inherit; text-align: left; cursor: pointer }
+#main .hub-rough-card .hub-rough-stars { position: absolute; right: 0; top: 0; width: 60%; height: 100%; fill: #fff; opacity: .55; pointer-events: none }
+#main .hub-rough-moon { flex: none; display: grid; place-items: center; width: 46px; height: 46px; border-radius: 50%; background: rgba(255,255,255,.14); color: #ffe7a8 }
+#main .hub-rough-copy { position: relative; flex: 1; min-width: 0 }
+#main .hub-rough-copy b { display: block; font-size: 17px; color: #fff }
+#main .hub-rough-copy small { display: block; margin-top: 2px; font-size: 13.5px; color: rgba(255,255,255,.82) }
+#main .hub-rough-card .hub-chev { position: relative; color: #fff; opacity: .8 }
