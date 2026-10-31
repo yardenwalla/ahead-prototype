@@ -48,6 +48,7 @@
   // Normal versus call: two boxes side by side, with an optional link underneath.
   const versus = (title, a, b, link) => `<section class="hub-card hub-versus"><h3>${F(title)}</h3><div class="hub-vs"><div><b>${F(a[0])}</b><p>${F(a[1])}</p></div><div class="is-urgent"><b>${F(b[0])}</b><p>${F(b[1])}</p></div></div>${link ? `<button class="hub-link" onclick="${link[1]}">${F(link[0])} ›</button>` : ''}</section>`;
   const next = (when, title, onclick, extra = '') => `<button class="hub-next" onclick="${onclick}"><span><small>${F(when)}</small><b>${F(title)}</b></span>${chev}</button>${extra}`;
+  const trainRow = `<button class="hub-card hub-pillrow" onclick="openPage('chg:Sleep:settle')"><span>${'Sleep training, if you choose it'}</span>${chev}</button>`;
   const listMore = (label, onclick) => `<button class="hub-list-more" onclick="${onclick}"><span>${F(label)}</span>${chev}</button>`;
   const more = (label, onclick) => `<button class="hub-more" onclick="${onclick}"><span>${F(label)}</span>${chev}</button>`;
   const note = t => `<p class="hub-note">${F(t)}</p>`;
@@ -666,7 +667,7 @@
     if (!now && C().live()) h += `<div class="hub-preview"><span>${view > cur ? 'Preview' : 'Looking back'} · ${F(STAGE_TABLE.Sleep.stages[view]?.age || '')}</span><button onclick="openPage('topic:Sleep')">${F('Back to Maya’s stage')}</button></div>`;
     if (key === 'clock') {
       const n = safeDone(), all = SLEEP_TASKS;
-      h += hero({ eyebrow: 'Round-the-clock sleep', title: 'Short sleeps, day and night', lead: 'For now, feeds set the rhythm. Expect sleep in stretches of 2–4 hours, day and night, with no pattern yet.' }) + B;
+      h += hero({ eyebrow: 'Round-the-clock sleep', title: 'Short sleeps, day and night', lead: 'For now, feeds set the rhythm. Expect sleep in stretches of 2–4 hours, day and night, with no pattern yet. Sleep when Maya sleeps, even during the day.' }) + B;
       h += nightCard(key, now);
       h += sleepFour(key, now, view);
       h += versus('Normal, or time to call?', ['Normal', 'Waking every 2–3 hours, grunts, squeaks and twitches in sleep.'], ['Call your pediatrician', 'Hard to wake for feeds, or a temperature of 100.4°F or higher. Trouble breathing: call 911.'], ['When the crying won’t stop', go('chg:Sleep:d:crying')]);
@@ -678,14 +679,14 @@
       h += versus('Normal, or time to call?', ['Normal', 'A long stretch one night and not the next, and fussier evenings.'], ['Call your pediatrician', m() < 3 ? 'A temperature of 100.4°F or higher: call right away. Also snoring most nights, or pauses or gasps in sleep.' : 'Snoring most nights, pauses or gasps in sleep, or sleep changes with fever.']);
     }
     if (key === 'rhythm') {
-      h += hero({ eyebrow: 'Three naps', title: 'Naps start happening at set times', lead: (age < 6 ? 'Many babies now sleep 5 hours or more in a row at night, growing to 6–8 hours around 6 months. ' : 'Many babies now sleep 6–8 hours in a row at night, some longer. ') + 'Naps settle into a pattern you can plan your days around.', button: { label: 'Want longer nights? Sleep training', onclick: "openPage('chg:Sleep:settle')" } }) + B;
+      h += hero({ eyebrow: 'Three naps', title: 'Naps start happening at set times', lead: (age < 6 ? 'Many babies now sleep 5 hours or more in a row at night, growing to 6–8 hours around 6 months. ' : 'Many babies now sleep 6–8 hours in a row at night, some longer. ') + 'Naps settle into a pattern you can plan your days around.' }) + trainRow + B;
       h += nightCard(key, now);
       h += sleepFour(key, now, view);
       h += versus('Normal, or time to call?', ['Normal', 'Naps of 30–45 minutes, and a short cry between sleep cycles that settles in a few minutes.'], ['Call your pediatrician', 'Snoring most nights, pauses or gasps in sleep, fever or ear pulling, or a big change that lasts more than two weeks.']);
     }
     if (key === 'two') {
       const settled = answers.twoNaps === 'Yes' || age >= 10 || (now && answers.twoNaps !== 'Not yet');
-      h += hero({ eyebrow: 'Two naps', title: settled ? 'Two naps a day' : 'Two naps are on the way', lead: (age >= 9 ? 'Many babies now sleep 10–12 hours at night, some with one feed. ' : 'Nights keep stretching toward 10–12 hours by 9–12 months. ') + (settled ? 'Days settle into a morning and an afternoon nap.' : 'The late catnap is on its way out.'), button: { label: 'Want longer nights? Sleep training', onclick: "openPage('chg:Sleep:settle')" } }) + B;
+      h += hero({ eyebrow: 'Two naps', title: settled ? 'Two naps a day' : 'Two naps are on the way', lead: (age >= 9 ? 'Many babies now sleep 10–12 hours at night, some with one feed. ' : 'Nights keep stretching toward 10–12 hours by 9–12 months. ') + (settled ? 'Days settle into a morning and an afternoon nap.' : 'The late catnap is on its way out.') }) + trainRow + B;
       h += nightCard(key, now);
       h += sleepFour(key, now, view);
       h += versus('Normal, or time to call?', ['Normal', 'Standing up in the crib, protest at bedtime, and a short cry in the night that settles in a few minutes.'], ['Call your pediatrician', 'Snoring most nights, pauses or gasps in sleep, fever or ear pulling, or a big change that lasts more than two weeks.']);
