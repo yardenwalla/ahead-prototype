@@ -1172,3 +1172,38 @@
 #main .hub-acc-body .hub-list { border: 0; box-shadow: none; margin: 0; background: transparent }
 #main .hub-acc-body .hub-actions { padding: 4px 12px 6px }
 #main .hub-acc-body .hub-tip { margin: 6px 12px 6px }
+#main .hub-safe-fig { position: relative; padding-bottom: 6px }
+#main .hub-callout { position: absolute; background: var(--white); border: 1px solid var(--line); border-radius: 12px; padding: 4px 10px; font-size: 12.5px; font-weight: 600; color: var(--ink); box-shadow: 0 1px 3px rgba(43,40,64,.08) }
+#main .hub-callout.is-a { left: 10px; top: 10px }
+#main .hub-callout.is-b { right: 10px; top: 10px }
+#main .hub-callout.is-c { right: 10px; bottom: 14px }
+#main .hub-ess { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px }
+#main .hub-ess > div { display: flex; flex-direction: column; gap: 4px; padding: 14px; border-radius: 18px; background: var(--year-pale); min-width: 0 }
+#main .hub-ess .hub-dot { margin-bottom: 4px; background: var(--white) }
+#main .hub-ess b { font-size: 15px; line-height: 1.25 }
+#main .hub-ess small { font-size: 12.5px; line-height: 1.35; color: var(--muted) }
+#main .hub-avoid { margin: 0 0 18px; padding: 16px 18px; border-radius: 20px; background: #fbeaea; color: #2b2840 }
+#main .hub-avoid > b { display: block; font-size: 16px; color: #a3392b }
+#main .hub-avoid ul { margin: 8px 0 0; padding-left: 20px; font-size: 14.5px; line-height: 1.5 }
+#main .hub-avoid li { margin: 2px 0 }
+#main .hub-avoid p { margin: 10px 0 0; padding-top: 10px; border-top: 1px solid rgba(163,57,43,.15); font-size: 13.5px; line-height: 1.45; color: #5e5a75 }
+#main .hub-grow { list-style: none; margin: 0 0 16px; padding: 0; position: relative }
+#main .hub-grow::before { content: ""; position: absolute; left: 7px; top: 20px; bottom: 20px; width: 2px; background: var(--line) }
+#main .hub-grow-item > button, #main .hub-grow-item > div { position: relative; display: flex; align-items: center; gap: 12px; width: 100%; padding: 10px 6px 10px 26px; border: 0; background: none; font: inherit; text-align: left; color: inherit; cursor: pointer }
+#main .hub-grow-item > div { cursor: default }
+#main .hub-grow-dot { position: absolute; left: 2px; top: 50%; width: 12px; height: 12px; margin-top: -6px; border-radius: 50%; background: var(--white); border: 2px solid var(--year-accent, #9fb8df) }
+#main .hub-grow-item.is-past { opacity: .5 }
+#main .hub-grow-item.is-past .hub-grow-dot { background: var(--year-accent, #9fb8df) }
+#main .hub-grow-item.is-now > button, #main .hub-grow-item.is-now > div { background: var(--year-pale); border-radius: 16px }
+#main .hub-grow-item.is-now .hub-grow-dot { background: var(--year-ink); border-color: var(--year-ink) }
+#main .hub-grow-item .hub-row-copy { flex: 1; min-width: 0 }
+#main .hub-grow-item em { display: block; font-style: normal; font-size: 11.5px; font-weight: 700; color: var(--year-ink); text-transform: uppercase; letter-spacing: .04em }
+#main .hub-grow-item b { display: block; font-size: 15px }
+#main .hub-grow-item small { display: block; font-size: 13px; color: var(--muted) }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) #main .hub-avoid { background: #3a2626; color: #f2eef7 } }
+#main .hub-setup { list-style: none; margin: 0; padding: 0 12px }
+#main .hub-setup li { position: relative; padding: 10px 0 10px 28px; border-top: 1px solid var(--line) }
+#main .hub-setup li:first-child { border-top: 0 }
+#main .hub-setup li::before { content: ""; position: absolute; left: 0; top: 13px; width: 16px; height: 16px; border-radius: 5px; border: 2px solid var(--year-accent, #9fb8df) }
+#main .hub-setup b { display: block; font-size: 15px }
+#main .hub-setup small { display: block; font-size: 13px; line-height: 1.4; color: var(--muted) }
