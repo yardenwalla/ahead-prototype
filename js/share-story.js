@@ -151,6 +151,11 @@
     if (mode === 'share' && navigator.canShare && navigator.canShare({ files: [file] })) {
       try { await navigator.share({ files: [file] }); return 'shared'; } catch (e) { if (e && e.name === 'AbortError') return 'cancelled'; }
     }
+    // Inside Claude (the tappable preview), files go through Claude's own save prompt; on iPhone that opens the share sheet.
+    const downloads = window.claude && typeof window.claude.use === 'function' ? await window.claude.use('downloads').catch(() => null) : null;
+    if (downloads) {
+      try { await downloads.save({ filename: file.name, data: blob }); return 'handed'; } catch (e) { return e && e.code === 'declined' ? 'cancelled' : 'failed'; }
+    }
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = file.name; document.body.appendChild(a); a.click();
     setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 4000);
     return 'saved';
@@ -247,6 +252,7 @@
       if (!blob) return;
       const r = await shareOrSave(blob, fileName(m), mode);
       if (r === 'saved') toast('Saved', kind === 'video' ? 'The video is in your downloads.' : 'The photo is in your downloads.');
+      if (r === 'failed') toast('Couldn’t save it', 'Try again, or take a screenshot of the photo.');
     });
     setTimeout(() => { const btn = sheet && sheet.querySelector('.story-btn'); if (btn) btn.focus(); }, 50);
   };
