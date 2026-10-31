@@ -241,7 +241,7 @@
         ['What if Maya skips crawling?', 'Some babies scoot, roll or go straight to pulling up. What matters is that {s’s} finding ways to move. If {s} isn’t moving around at all, mention it at the 9-month checkup.'],
         ['What’s the questionnaire at the 9-month checkup?', 'Pediatricians recommend a development check at 9 months. You’ll answer a short set of questions about the skills on these pages, so it helps to notice them.']],
     12: [['Should Maya be walking by 1?', 'Not necessarily. Most babies pull up and step along furniture by 1, and many take first steps between 12 and 15 months. Walking on their own usually comes by 18 months.'],
-         ['How can I help Maya walk?', 'Give {o} sturdy furniture to step along and plenty of time barefoot on the floor. A push toy works well. Skip baby walkers. They lead to falls and don’t help babies walk sooner.'],
+         ['How can I help Maya walk?', 'Give {o} sturdy furniture to step along and plenty of time barefoot on the floor. A push toy works well. Skip walkers. They lead to falls and don’t help babies walk sooner.'],
          ['How many words should Maya say?', 'By 1, most babies have a name for a parent, like “mama” or “dada,” and wave bye-bye. More words usually come after the first birthday.']]
   };
   function faqPage(ref) {
