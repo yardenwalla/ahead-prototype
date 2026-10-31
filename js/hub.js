@@ -48,7 +48,7 @@
   // Normal versus call: two boxes side by side, with an optional link underneath.
   const versus = (title, a, b, link) => `<section class="hub-card hub-versus"><h3>${F(title)}</h3><div class="hub-vs"><div><b>${F(a[0])}</b><p>${F(a[1])}</p></div><div class="is-urgent"><b>${F(b[0])}</b><p>${F(b[1])}</p></div></div>${link ? `<button class="hub-link" onclick="${link[1]}">${F(link[0])} ›</button>` : ''}</section>`;
   const next = (when, title, onclick, extra = '') => `<button class="hub-next" onclick="${onclick}"><span><small>${F(when)}</small><b>${F(title)}</b></span>${chev}</button>${extra}`;
-  const trainRow = `<button class="hub-card hub-pillrow" onclick="openPage('chg:Sleep:settle')"><span>${'Sleep training, if you choose it'}</span>${chev}</button>`;
+  const trainRow = `<button class="hub-pillrow" onclick="openPage('chg:Sleep:settle')"><span>${'Sleep training, if you choose it'}</span>${chev}</button>`;
   const listMore = (label, onclick) => `<button class="hub-list-more" onclick="${onclick}"><span>${F(label)}</span>${chev}</button>`;
   const more = (label, onclick) => `<button class="hub-more" onclick="${onclick}"><span>${F(label)}</span>${chev}</button>`;
   const note = t => `<p class="hub-note">${F(t)}</p>`;
@@ -673,20 +673,20 @@
       h += versus('Normal, or time to call?', ['Normal', 'Waking every 2–3 hours, grunts, squeaks and twitches in sleep.'], ['Call your pediatrician', 'Hard to wake for feeds, or a temperature of 100.4°F or higher. Trouble breathing: call 911.'], ['When the crying won’t stop', go('chg:Sleep:d:crying')]);
     }
     if (key === 'daynight') {
-      h += hero({ eyebrow: 'Longer nights', title: 'Nights are starting to stretch', lead: 'Maya starts to tell day from night, and the longest sleep moves to the night.' }) + B;
+      h += hero({ eyebrow: 'Longer nights', title: 'Nights are starting to stretch', lead: 'Maya starts to tell day from night, and the longest sleep moves to the night. Fussy evenings often peak around 6–8 weeks, then ease.' }) + B;
       h += nightCard(key, now);
       h += sleepFour(key, now, view);
       h += versus('Normal, or time to call?', ['Normal', 'A long stretch one night and not the next, and fussier evenings.'], ['Call your pediatrician', m() < 3 ? 'A temperature of 100.4°F or higher: call right away. Also snoring most nights, or pauses or gasps in sleep.' : 'Snoring most nights, pauses or gasps in sleep, or sleep changes with fever.']);
     }
     if (key === 'rhythm') {
-      h += hero({ eyebrow: 'Three naps', title: 'Naps start happening at set times', lead: 'Sleep settles into a pattern you can plan your days around.' }) + trainRow + B;
+      h += hero({ eyebrow: 'Three naps', title: 'Naps start happening at set times', lead: 'Sleep settles into a pattern you can plan your days around. It’s also when many families start sleep training.' , extra: trainRow }) + B;
       h += nightCard(key, now);
       h += sleepFour(key, now, view);
       h += versus('Normal, or time to call?', ['Normal', 'Naps of 30–45 minutes, and a short cry between sleep cycles that settles in a few minutes.'], ['Call your pediatrician', 'Snoring most nights, pauses or gasps in sleep, fever or ear pulling, or a big change that lasts more than two weeks.']);
     }
     if (key === 'two') {
       const settled = answers.twoNaps === 'Yes' || age >= 10 || (now && answers.twoNaps !== 'Not yet');
-      h += hero({ eyebrow: 'Two naps', title: settled ? 'Two naps a day' : 'Two naps are on the way', lead: settled ? 'Days settle into a morning and an afternoon nap, and nights get longer.' : 'The late catnap is on its way out, and days move toward two naps.' }) + trainRow + B;
+      h += hero({ eyebrow: 'Two naps', title: settled ? 'Two naps a day' : 'Two naps are on the way', lead: settled ? 'Days settle into a morning and an afternoon nap, and nights get longer. New skills like standing can stir up nights for a while.' : 'The late catnap is on its way out, and days move toward two naps. Nights keep getting longer.' , extra: trainRow }) + B;
       h += nightCard(key, now);
       h += sleepFour(key, now, view);
       h += versus('Normal, or time to call?', ['Normal', 'Standing up in the crib, protest at bedtime, and a short cry in the night that settles in a few minutes.'], ['Call your pediatrician', 'Snoring most nights, pauses or gasps in sleep, fever or ear pulling, or a big change that lasts more than two weeks.']);
