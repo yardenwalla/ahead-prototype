@@ -19,9 +19,11 @@
       { label: 'Two naps', age: 'From 6–9 months' }
     ] },
     Feeding: { kind: 'pattern', stages: [
-      { label: 'Milk feeds', age: 'From birth' },                         // newborn feeds, then rhythm and amounts, by age
-      { label: 'Preparing for solids', age: 'From 4 months', setFrom: 4 },  // no solids guidance before 4 months
-      { label: 'Solids', age: 'Once you start', setFrom: 4 }             // first tastes, then textures, then meals: by time since starting and age
+      { label: 'Newborn feeds', age: '0–6 weeks' },
+      { label: 'Milk feeds', age: '6 wks–4 mo' },
+      { label: 'Ready for solids', age: '4–6 months', setFrom: 4 },
+      { label: 'First foods', age: 'Once you start', setFrom: 4 },
+      { label: 'Meals', age: 'Around 9 months', setFrom: 8 }
     ] },
     Safety: { kind: 'skill', stages: [
       { key: 'setup', label: 'First setup', age: 'From birth' },
@@ -45,7 +47,7 @@
   // Can the parent make stage i (index into the table) the baby's stage right now?
   // Safety has three stages; the movement steps inside "On the move" (crawling, pulling up) shape which checks lead.
   // Feeding keeps six steps inside (newborn feeds, milk feeds, preparing, first tastes, textures, meals); parents see three.
-  window.feedGroup = i => i <= 1 ? 0 : i === 2 ? 1 : 2;
+  window.feedGroup = i => [0, 1, 2, 3, 3, 4][i] ?? 4;   // six steps inside, five stages parents see
   window.safetyGroup = k => ['rolling', 'moving', 'pulling'].includes(k) ? 'rolling' : k;
   window.stageCanChange = function (cat, i, nowIndex) {
     const T = STAGE_TABLE[cat]; if (!T || T.fixed || !live() || i === nowIndex) return false;

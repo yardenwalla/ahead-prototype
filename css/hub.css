@@ -1189,3 +1189,5 @@
 #main .hub-tl-copy small { display: inline-block; margin-bottom: 4px; padding: 2px 8px; border-radius: 999px; background: var(--year-pale); font-size: 11.5px; font-weight: 600; color: var(--year-ink) }
 #main .hub-tl-copy b { display: block; font-size: 15px }
 #main .hub-tl-copy span { display: block; font-size: 13px; color: var(--muted) }
+#main .hub-rough-card.is-feed { background: linear-gradient(135deg, #7c3c5c 0%, #a45a7c 100%) }
+#main .hub-rough-card.is-feed .hub-rough-moon { color: #ffe1ec }

@@ -128,8 +128,8 @@
     const ST = STAGE_TABLE[cat].stages, live = C().live();
     if (cat === 'Feeding') {
       // Three stages for parents; the step inside each follows age (milk) or time since starting (solids).
-      const inside = g => g === feedGroup(cur) ? cur : g === 0 ? (m() < 1.5 ? 0 : 1) : g === 1 ? 2 : 3;
-            return stageTimeline(cat, ST.map((st, g) => ({ label: st.label, age: st.age, on: g === feedGroup(view), now: live && g === feedGroup(cur), onclick: g === 2 && live && feedGroup(cur) === 2 ? `openPage('topic:Feeding')` : `chgGo('chg:Feeding:s:${inside(g)}')`, change: stageCanChange(cat, g, feedGroup(cur)) ? `hubChangeStage('Feeding',${g})` : '' })), 'Feeding stages');
+      const inside = g => g === feedGroup(cur) ? cur : [0, 1, 2, 3, 5][g];
+            return stageTimeline(cat, ST.map((st, g) => ({ label: st.label, age: st.age, on: g === feedGroup(view), now: live && g === feedGroup(cur), onclick: g === feedGroup(cur) && live ? `openPage('topic:Feeding')` : `chgGo('chg:Feeding:s:${inside(g)}')`, change: stageCanChange(cat, g, feedGroup(cur)) ? `hubChangeStage('Feeding',${g})` : '' })), 'Feeding stages');
     }
     return stageTimeline(cat, ST.map((st, i) => ({ label: st.label, age: st.age, on: i === view, now: live && i === cur, onclick: `chgGo('chg:${cat}:s:${i}')`, change: stageCanChange(cat, i, cur) ? `hubChangeStage('${cat}',${i})` : '' })), cat + ' stages');
   }
@@ -189,7 +189,69 @@
     { const A = C().DATA.Feeding.CH[5].after; if (A) h += next(`After the first birthday, ${A[0]}`, meth() === 'nurse' ? 'Cow’s milk, from a cup' : A[1], go('chg:Feeding:d:after')); }
     return frame('Feeding', cur, cur, h);
   }
+
+  // Feeding stage screens, Sleep's shape: a summary, the numbers, the same four rows on every stage (Milk · Solids · Drinks · Safety), a problem-first card, normal-or-call, and what's next.
+  function feedingStageScreen(view, cur) {
+    const key = STAGE_KEYS[view], age = m(), now = view === cur, cat = 'Feeding', k = meth(), bottle = k === 'bottle', nurse = !bottle;
+    let h = '';
+    if (now && typeof feedingCheckinMarkup === 'function' && !(typeof foodAssumed === 'function' && foodAssumed())) h += feedingCheckinMarkup();
+    else if (now && key === 'ready' && age >= 4 && !hasFoodAnswer()) h += solidsAsk('Has Maya started solids?');
+    if (!now && C().live()) h += `<div class="hub-preview"><span>${view > cur ? 'Preview' : 'Looking back'} · ${F(STAGE_RAIL_AGE[key] || '')}</span><button onclick="openPage('topic:Feeding')">${F('Back to Maya’s stage')}</button></div>`;
+    const n = signsSeen(), t = ALLERGENS.filter(a => tried(a[0])).length;
+    const H = {
+      learn: ['Newborn feeds', 'Feeding often is exactly right', 'Most newborns feed 8–12 times a day, day and night. Small, frequent feeds are how they grow.'],
+      rhythm: ['Milk feeds', 'Feeds get quicker and further apart', 'Most babies feed about 6–8 times a day now, and the longest gap moves to the night.'],
+      ready: ['Ready for solids', age >= 8 && !n ? 'Worth starting soon' : n === 4 ? 'Maya looks ready for solids' : age >= 6 ? 'Most babies start around now' : 'Solids are coming up soon', age >= 8 && !n ? 'Mention it at Maya’s next checkup, and ask about iron. Milk is still the main food.' : 'Watch for four signs, often around 6 months. Until then, milk gives Maya everything {s} {need|needs}.'],
+      first: ['First foods', 'A few bites a day is all it takes', 'Milk is still the main food. Food is about practice, not amounts.'],
+      textures: ['First foods', 'Thicker food, and more to pick up', 'Food gets lumpier and soft finger foods join in, at 2–3 small meals a day.'],
+      meals: ['Meals', age >= 12 ? 'Meals lead now' : 'Meals are part of the day now', age >= 12 ? 'Three meals and a snack or two, with whole milk from a cup.' : 'Three meals and a snack or two, with milk after. Whole milk comes at 12 months.']
+    }[key];
+    h += hero({ eyebrow: H[0], title: H[1], lead: H[2] });
+    h += glanceCard(now && C().live() ? 'Feeding now' : 'At this stage', milkTiles(key), go('chg:Feeding:d:milk:' + key));
+    const R = {
+      learn: [
+        ['Milk', { icon: 'diaper', title: 'Is {s} getting enough?', sub: 'Wet diapers and weight tell you', onclick: go('chg:Feeding:d:enough') }],
+        ['Solids', { icon: 'bowl', title: 'Milk is all {s} {need|needs}', sub: 'No solids or water until about 6 months', onclick: go('chg:Feeding:d:signs') }],
+        ['Drinks', bottle ? { icon: 'drop', title: 'Formula has vitamin D', sub: 'Drops usually aren’t needed', onclick: go('chg:Feeding:d:vitd') } : { icon: 'drop', title: 'Start vitamin D drops', sub: 'Breastfed babies need them from the first days', chipText: 'Must know', chipTone: 'is-red', onclick: go('chg:Feeding:d:vitd') }],
+        ['Safety', bottle ? { icon: 'bottle', title: 'Make bottles safely', sub: 'Follow the formula’s directions exactly', onclick: go('chg:Feeding:d:bottles') } : { icon: 'bottle', title: 'Pumping and storing milk', sub: '4 hours out, 4 days in the fridge', onclick: go('chg:Feeding:d:pump') }]],
+      rhythm: [
+        ['Milk', { icon: 'clock', title: 'Follow {p} cues, not the clock', sub: 'Hungry, full, and the longer gap at night', onclick: go('chg:Feeding:d:cues') }],
+        ['Solids', { icon: 'eye', title: 'Solids come around 6 months', sub: 'Signs to watch for from 4 months', onclick: go('chg:Feeding:d:signs') }],
+        ['Drinks', bottle ? { icon: 'bottle', title: 'Pace {p} bottles', sub: 'Hold it level and pause every so often', onclick: go('chg:Feeding:d:pacing') } : { icon: 'drop', title: 'Keep up the vitamin D', sub: 'Every day, through the first year', onclick: go('chg:Feeding:d:vitd') }],
+        ['Safety', bottle ? { icon: 'bottle', title: 'Bottles for daycare or time apart', sub: 'Make, store and label them safely', onclick: go('chg:Feeding:d:bottles') } : { icon: 'bottle', title: 'Pumping for time apart', sub: 'Going back to work, and storing milk', onclick: go('chg:Feeding:d:pump') }]],
+      ready: [
+        ['Milk', { icon: 'bottle', title: 'Milk is still the main food', sub: bottle ? 'About 24–32 oz a day' : 'About 5–7 feeds a day', onclick: go('chg:Feeding:d:milk:ready') }],
+        ['Solids', { icon: 'eye', title: 'Check the readiness signs', sub: 'Four things to look for before the first bite', chipText: `${n} of 4`, chipTone: n === 4 ? 'is-done' : '', onclick: go('chg:Feeding:d:signs') }],
+        ['Drinks', nurse ? { icon: 'drop', title: 'Ask about iron', sub: 'Breastfed babies may need drops from 4 months', onclick: go('chg:Feeding:d:vitd') } : { icon: 'cup', title: 'Water comes with solids', sub: 'A few sips from an open cup, from 6 months', onclick: go('chg:Feeding:d:cup') }],
+        ['Safety', { icon: 'highchair', title: 'Get set up for the first bite', sub: 'A high chair, and choking first aid', onclick: go('chg:Feeding:d:setup') }]],
+      first: [
+        ['Milk', { icon: 'bottle', title: 'Milk first, then food', sub: 'Still most of what {s} {need|needs}', onclick: go('chg:Feeding:d:milk:first') }],
+        ['Solids', { icon: 'bowl', title: 'What to put on the tray', sub: 'Iron-rich foods, soft enough to squash', onclick: go('chg:Feeding:d:tray') }],
+        ['Drinks', { icon: 'cup', title: 'Sips of water from an open cup', sub: 'About 4–8 oz a day, with meals', onclick: go('chg:Feeding:d:cup') }],
+        ['Safety', { icon: 'shield', title: 'Peanut and egg early', sub: 'One new allergen at a time', chipText: `${t} of ${ALLERGENS.length}`, onclick: go('chg:Feeding:d:allergens') }]],
+      meals: [
+        ['Milk', age >= 12 ? { icon: 'cup', title: 'Whole milk from a cup', sub: 'About 16–24 oz a day', onclick: go('chg:Feeding:d:milk12') } : { icon: 'bottle', title: 'Milk comes after meals', sub: bottle ? 'About 24 oz a day' : 'About 3–5 feeds a day', onclick: go('chg:Feeding:d:milk:meals') }],
+        ['Solids', { icon: 'plate', title: 'Three meals and a snack', sub: 'An example day to work from', onclick: go('chg:Feeding:d:day') }],
+        ['Drinks', { icon: 'cup', title: age >= 12 ? 'Bottles phase out' : 'Plan the milk change at 12 months', sub: age >= 12 ? 'Cups for every drink by 12–18 months' : 'Whole milk from a cup, and goodbye bottles', onclick: go('chg:Feeding:d:milk12') }],
+        ['Safety', { icon: 'shield', title: 'Choking hazards to skip', sub: 'Cut sizes, and what waits for years', onclick: go('chg:Feeding:d:finger') }]]
+    }[key === 'textures' ? 'first' : key];
+    if (key === 'textures') R[1][1] = { icon: 'avocado', title: 'Lumpier food and finger foods', sub: 'Strips first, small pieces once {s} can pinch', onclick: go('chg:Feeding:d:finger') };
+    const cr = (label, o) => row({ cat, ...o }).replace('<span class="hub-row-copy">', `<span class="hub-row-copy"><small class="hub-row-eyebrow">${F(label)}</small>`);
+    h += `<h2 class="hub-h2">${F('What’s different now')}</h2><div class="hub-list">${R.map(([l, o]) => cr(l, o)).join('')}</div>`;
+    h += `<button class="hub-rough-card is-feed" onclick="${go('chg:Feeding:d:tough')}"><span class="hub-rough-moon" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M10 3v3l-2 3v10a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V9l-2-3V3"/><path d="M8 13h8"/></svg></span><span class="hub-rough-copy"><b>${F('Tough feed?')}</b><small>${F(view <= 2 ? 'Spitting up, fussy feeds, won’t take a bottle' : 'Gagging, refusing food, spitting up')}</small></span>${chev}</button>`;
+    const V = {
+      learn: ['Feeding again an hour later, a little spit-up, and long feeds at first.', 'Hard to wake for feeds, fewer wet diapers or looking more yellow. A fever of 100.4°F or higher: call right away.'],
+      rhythm: ['Quicker feeds, longer gaps, and a little spit-up.', 'Fewer wet diapers, refusing feeds, or forceful or green vomit.'],
+      ready: ['Watching you eat, chewing on hands, and the same milk as before.', 'Fewer wet diapers, refusing feeds, or not gaining weight.'],
+      first: ['Gagging, funny faces at new tastes, and eating more one day than the next.', 'Hives or vomiting after a new food. Trouble breathing or a swollen face: call 911.'],
+      meals: ['Eating a lot one day and little the next, and some mess.', 'Hives or vomiting after a new food. Trouble breathing or a swollen face: call 911.']
+    }[key === 'textures' ? 'first' : key];
+    h += versus('Normal, or time to call?', ['Normal', V[0]], ['Call your pediatrician', V[1]]);
+    h += comingUp('Feeding', view);
+    return frame('Feeding', view, cur, h);
+  }
   function feedingSummary(view, cur, guide = false) {
+    if (!guide) return feedingStageScreen(view, cur);
     const key = STAGE_KEYS[view], age = m(), now = view === cur && !guide;
     let h = '';
     if (now && typeof feedingCheckinMarkup === 'function' && !(typeof foodAssumed === 'function' && foodAssumed())) h += feedingCheckinMarkup();
@@ -325,6 +387,22 @@
   };
 
   function feedingDetail(id, arg) {
+    if (id === 'tough') {
+      // Problem-first, like Rough night: pick what's happening, see why and what to try.
+      const mo = m(), bottle = meth() === 'bottle';
+      const items = [
+        ['drop', 'Spitting up a lot', 'Most spit-up is normal and eases by about 12 months, as long as {s’s} gaining weight and has plenty of wet diapers.', ['Keep {o} upright for 20–30 minutes after feeds', 'Try smaller feeds, a little more often', 'Burp partway through the feed', 'Call your pediatrician for forceful, green or bloody vomit, or poor weight gain']],
+        mo < 7 && ['clock', 'Feeding all evening', 'Cluster feeding is common, often in the evening and during growth spurts around 2–3 weeks, 6 weeks and 3 months.', ['Follow {p} cues. It usually passes in a few days', 'Have water and a snack nearby for you', 'Fewer wet diapers? Call your pediatrician']],
+        mo >= 3 && mo < 9 && ['eye', 'Distracted feeds', 'Around 4–6 months, the world gets interesting, and many babies pull off to look around.', ['Feed in a quiet, dim room', 'Try a feed when {s’s} drowsy', 'It passes, and {s} still gets what {s} {need|needs}']],
+        ['bottle', bottle ? 'Won’t take the bottle' : 'Won’t take a bottle', 'Many babies refuse at first, especially breastfed babies, or when they’re very hungry.', ['Try before {s’s} very hungry', 'Let someone else offer it, while you’re out of the room', 'Try a slower nipple, and pace the feed', 'Keep trying for a few days before switching bottles']],
+        ['diaper', 'Is {s} getting enough?', 'Weight at checkups and wet diapers are the best signs.', ['About 6 or more wet diapers a day after the first week', 'Content after most feeds', 'Call your pediatrician for no wet diaper in 6–8 hours, a dry mouth or a sunken soft spot']],
+        mo >= 5 && ['hand', 'Gagging at meals', 'Gagging is noisy and normal while {s} {learn|learns}. It moves food away from the airway. Choking is silent.', ['Stay calm and let {o} work it out', 'Offer soft foods that squash between your fingers', 'Silent, can’t cough or cry? Start back blows and have someone call 911']],
+        mo >= 5 && ['bowl', 'Refusing food', 'Turning away, closing {p} mouth or pushing food off the tray means {s’s} done for now.', ['Offer a new food 10–15 times before deciding {s} doesn’t like it', 'Eat together, and let {o} touch and play with it', 'Milk is still the main food until about 9 months']],
+        mo >= 6 && ['plate', 'Constipation after starting solids', 'Harder, less frequent poop is common as solids start.', ['Offer water with meals', 'Add pears, prunes, peas or oatmeal', 'Call your pediatrician for blood in the poop, or pain']]
+      ].filter(Boolean);
+      const body = `<div class="hub-list hub-rough">${items.map(([ic, t, why, tries]) => `<details class="hub-rough-item"><summary><span class="hub-dot">${art(ic, 'Feeding')}</span><b>${F(t)}</b><span class="hub-chev" aria-hidden="true">›</span></summary><div class="hub-rough-body"><p><b>${F('Likely why.')}</b> ${F(why)}</p><p class="hub-rough-try"><b>${F('What helps')}</b></p><ul>${tries.map(x => `<li>${F(x)}</li>`).join('')}</ul></div></details>`).join('')}</div>`;
+      return detail('Feeding', 'Feeding', 'Tough feed?', 'Pick what’s happening. You’ll see the likely reason and what helps.', body, 'bottle');
+    }
     const cat = 'Feeding', age = m();
     if (id === 'signs') {
       const n = signsSeen();
@@ -1029,7 +1107,7 @@
   /* ---------- routing ---------- */
   const basePage = window.changesPage, baseRoute = window.changesRoute;
   window.changesPage = function (cat) {
-    if (cat === 'Feeding') { const cur = C().CFG.Feeding.stage(m()); return cur >= 3 ? solidsHub(cur) : feedingSummary(cur, cur); }
+    if (cat === 'Feeding') { const cur = C().CFG.Feeding.stage(m()); return feedingStageScreen(cur, cur); }
     if (cat === 'Sleep') { const cur = C().CFG.Sleep.stage(m()); return sleepSummary(cur, cur); }
     return basePage(cat);
   };

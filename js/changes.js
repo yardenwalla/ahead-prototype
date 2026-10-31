@@ -587,15 +587,17 @@
     }
     if (cat === 'Feeding') {
       // i is one of the three stages parents see: Milk feeds, Preparing for solids, Solids.
-      if (i === 1) { answers.solids = 'Not yet'; delete answers.foodExperience; delete answers.solidsStart; persist(); }
-      else if (i === 2) { answers.solids = 'Yes'; if (!answers.solidsStart) answers.solidsStart = iso(NOW); persist(); }
-      else local.override.Feeding = { i: inFirstSixWeeks(m) ? 0 : 1, g: feedComputed(m) };
+      // i is one of the five stages parents see: Newborn feeds, Milk feeds, Ready for solids, First foods, Meals.
+      if (i === 2) { answers.solids = 'Not yet'; delete answers.foodExperience; delete answers.solidsStart; persist(); }
+      else if (i === 3) { answers.solids = 'Yes'; answers.solidsStart = iso(NOW); persist(); }
+      else if (i === 4) { answers.solids = 'Yes'; answers.solidsStart = iso(new Date(NOW.getTime() - 80 * 864e5)); persist(); }
+      else local.override.Feeding = { i, g: feedComputed(m) };
     }
     save();
     // A Change counts as the parent's answer, so Home doesn't ask the same thing straight away.
     if (typeof recordCheckin === 'function') {
       if (cat === 'Sleep' && i >= 2) recordCheckin('naps', i === 3 ? 'Yes' : 'Stay');
-      if (cat === 'Feeding' && i >= 1) recordCheckin('food', i === 1 ? 'preparing' : 'new');
+      if (cat === 'Feeding' && i >= 2) recordCheckin('food', i === 2 ? 'preparing' : 'new');
     }
     page = 'topic:' + cat; render(); window.scrollTo(0, 0);
   };
