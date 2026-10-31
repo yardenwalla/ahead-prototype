@@ -534,8 +534,7 @@
     { t: 'Set it up in your room', s: 'Room-sharing is recommended for at least 6 months', art: 'home', task: 1 },
     { t: 'A swaddle or sleep sack, not blankets', s: 'Swaddle until the first try to roll, then a sleep sack. Light, unweighted, no hat', art: 'sack', task: 2 },
     { t: 'Put Maya on {p} back for every sleep', s: 'Naps and nights, every time', art: 'back', habit: 'Every sleep' },
-    { t: 'Only in {p} own sleep space', s: 'Not a sofa, armchair or your bed. Sharing a bed raises the risk of SIDS', art: 'sofa', habit: 'Always' },
-    { t: 'Move {o} after the car seat or swing', s: 'They aren’t for sleep', art: 'car', habit: 'Every time' },
+    { t: 'Only in {p} own sleep space', s: 'Not a sofa, your bed, a car seat or a swing. Sharing a bed raises the risk of SIDS', art: 'sofa', habit: 'Always' },
     { t: 'Cool and smoke-free', s: 'Sweaty neck or chest means too warm', art: 'home', habit: 'Always' },
     { t: 'Offer a pacifier, if you like', s: 'Once feeding is going well, often 3–4 weeks. No clips or strings. It lowers SIDS risk', art: 'pacifier', habit: 'If you like' }
   ];
@@ -653,8 +652,7 @@
         ['Routine', answers.hasTooth === 'Yes' || age >= 7 ? { icon: 'tooth', title: 'Add brushing teeth to bedtime', sub: 'A rice-grain smear of fluoride toothpaste', onclick: go('chg:Sleep:d:routine') } : { icon: 'book', title: 'Keep the same bedtime routine', sub: 'Same steps, same order, every night', onclick: go('chg:Sleep:d:routine') }],
         ['Safe sleep', safe || (age >= 12 ? { icon: 'heart', title: 'A lovey is fine after 12 months', sub: 'Small and soft. No bottle in the crib', onclick: go('chg:Sleep:d:lovey') } : answers.mattressLowest === 'Yes' ? { icon: 'crib', title: 'Keep the crib bare', sub: 'No pillows, blankets or bumpers in the first year', onclick: go('chg:Sleep:safe') } : { icon: 'shield', title: 'Lower the crib mattress', sub: 'When {s} {sit|sits}, then lowest before {s} {pull|pulls} up', onclick: go('chg:Sleep:d:mattress') })]]
     }[key];
-    const extra = key === 'clock' ? (swaddleDue() || answers.swaddleStopped === 'Yes' ? '' : listMore('How to swaddle safely', go('chg:Sleep:d:swaddle')))
-      : '';
+    const extra = '';
     const rough = `<button class="hub-rough-card" onclick="${go('chg:Sleep:d:rough')}"><svg class="hub-rough-stars" viewBox="0 0 120 60" aria-hidden="true"><circle cx="18" cy="14" r="1.6"/><circle cx="52" cy="8" r="1.1"/><circle cx="88" cy="18" r="1.4"/><circle cx="108" cy="6" r="1"/><circle cx="70" cy="44" r="1.1"/><circle cx="30" cy="48" r="1"/></svg><span class="hub-rough-moon" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></span><span class="hub-rough-copy"><b>${F('Rough night?')}</b><small>${F(age < 3 ? 'Crying, won’t settle, up a lot' : 'Waking a lot, short naps, up too early')}</small></span>${chev}</button>`;
     return `<h2 class="hub-h2">${F('What’s different now')}</h2><div class="hub-list" id="sleep-night-feeds">${R.map(([l, o]) => cr(l, o)).join('')}</div>` + rough + extra;
   }
@@ -777,15 +775,15 @@
       // Three groups a parent can scan: what to set up once (checkboxes counted on the stage row), what to do every sleep, and what changes as she grows.
       const done = safeDone() === SLEEP_TASKS;
       const rowOf = x => `<div class="hub-row is-static"><span class="hub-dot">${art(x.art, cat)}</span><span class="hub-row-copy"><b>${F(x.t)}</b><small>${F(x.s)}</small></span></div>`;
-      return detail(cat, 'Safe sleep', 'A safe place to sleep', 'Set up the space once, then a few habits keep every sleep safe.',
+      return detail(cat, 'Safe sleep', 'A safe place to sleep', 'Set it up once, then four habits keep every sleep safe.',
         figure('crib', cat, 'A baby asleep on their back in a sleep sack, in a bare crib with a firm mattress and fitted sheet.')
         + `<h2 class="hub-h2">${F('Set up once')}</h2><div class="hub-list">${SLEEP_SETUP.filter(x => x.task != null).map(rowOf).join('')}</div>`
         + `<div class="hub-actions">${done ? `<p class="hub-done">${F('You’ve set up Maya’s sleep space')} ✓</p>` : `<button class="hub-button" onclick="hubSleepSetUp()">${F('I’ve set this up')}</button>`}</div>`
         + `<h2 class="hub-h2">${F('Every sleep')}</h2><div class="hub-list">${SLEEP_SETUP.filter(x => x.task == null).map(rowOf).join('')}</div>`
         + `<h2 class="hub-h2">${F('As Maya grows')}</h2><div class="hub-list">`
-        + `<div class="hub-row is-static" id="sleep-rolling"><span class="hub-dot">${art('roll', cat)}</span><span class="hub-row-copy"><b>${F('At the first try to roll')}</b><small>${F('Stop swaddling. If {s’s} in a bassinet, move {o} to the crib.')}</small></span></div>`
+        + row({ cat, icon: 'sack', title: 'Swaddle, then a sleep sack', sub: 'How to swaddle safely, and stop at the first try to roll', onclick: go('chg:Sleep:d:swaddle') }).replace('<button', '<button id="sleep-rolling"')
+        + row({ cat, icon: 'crib', title: 'Bassinet to crib, then {p} own room', sub: 'At the weight limit or first roll. Share a room for 6 months', onclick: go('chg:Sleep:d:where') })
         + `<div class="hub-row is-static" id="sleep-crib-height"><span class="hub-dot">${art('shield', cat)}</span><span class="hub-row-copy"><b>${F('Before {s} can sit, then pull up')}</b><small>${F('Lower the crib mattress, then set it to its lowest.')}</small></span></div>`
-        + row({ cat, icon: 'crib', title: 'Bassinet to crib, then {p} own room', sub: 'When to move {o}, and room-sharing for at least 6 months', onclick: go('chg:Sleep:d:where') })
         + `<div class="hub-row is-static"><span class="hub-dot">${art('heart', cat)}</span><span class="hub-row-copy"><b>${F('After 12 months')}</b><small>${F('A small lovey is fine. Keep pillows and heavy blankets out until later.')}</small></span></div></div>`
         + tip('Might fall asleep while feeding at night?', 'Feed in your bed rather than on a sofa or armchair, with pillows and blankets moved away from {o}. If you wake up, move {o} back to {p} own space.'), 'moon');
     }
