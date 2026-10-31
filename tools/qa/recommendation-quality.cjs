@@ -104,10 +104,7 @@ for(const experience of ['preparing','new','established']) {
   const a=family(12,{twoNaps:'Yes',swaddleStopped:'Yes',mattressLowest:'Yes'});
   a.run("openPage('topic:Sleep')");check(!clean(a.html()).includes('Wait for a week of skipped catnaps'),'Established two-nap guide moves past transition tips');
   a.run("setAnswer('twoNaps','Yes')");check(!clean(a.html()).includes('Wait for a week of skipped catnaps'),'Reporting the current nap count is not proof of a new transition');
-  for(const choice of ['trying','routine','help','learn']) {
-    a.run(`openPage('chg:Sleep:settle');chgChooseSettling('${choice}')`);
-    check(a.html().includes(`data-settling-guide="${choice}"`),'Settling selection changes displayed support');
-  }
+  a.run("openPage('chg:Sleep:settle')");check(clean(a.html()).includes('It can work at any age from here'),'Sleep training speaks to an older baby');
 }
 const result={states,destinations,checks,status:'passed',limits:'Editorial review is documented separately; these checks verify observable recommendation contracts.'};
 require('node:fs').writeFileSync(require('node:path').join(__dirname,'out/recommendation-quality.json'),JSON.stringify(result,null,2)+'\n');

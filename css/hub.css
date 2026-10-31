@@ -1045,3 +1045,147 @@
 #main .hub-season-chip { display: inline-block; margin-left: 8px; padding: 2px 8px; border-radius: 999px; background: #fde6e3; color: #9a3b2f; font-style: normal; font-size: 11px; font-weight: 800; vertical-align: middle }
 #main .health-vaccines + .hub-versus, #main .health-vaccines ~ .hub-versus { margin-top: 22px }
 #main .hub-vax-combo { margin: 0 0 12px; padding: 10px 14px; border-radius: 14px; background: var(--year-pale); font-size: 14px; line-height: 1.45 }
+#main .hub-para-sm { margin: 0 2px 10px; font-size: 14px; color: var(--muted); line-height: 1.45 }
+#main .hub-skip-chips.is-good { margin: 0 0 16px } #main .hub-skip-chips.is-good span { background: #e8f3ea; color: #2f5e3e; padding-left: 26px } #main .hub-skip-chips.is-good span::before { content: '✓'; font-size: 11px; top: 7px }
+#main .hub-skip-fix { margin: 4px 0 0; font-size: 13.5px; line-height: 1.45; color: var(--muted) }
+#main .hub-qa { display: grid; gap: 10px; margin: 4px 0 20px }
+#main .hub-qa > div { padding: 14px 16px; border-radius: 18px; background: linear-gradient(160deg, var(--year-bg), var(--year-pale)) }
+#main .hub-qa small { display: block; font-size: 14px; font-weight: 600; color: var(--year-ink) }
+#main .hub-qa b { display: block; margin: 2px 0 2px; font-size: 22px; line-height: 1.2 }
+#main .hub-qa p { margin: 0; font-size: 14px; line-height: 1.45; color: var(--muted) }
+#main .hub-sqs { padding: 4px 0 }
+#main .hub-sq { display: grid; grid-template-columns: 74px 1fr auto; gap: 12px; align-items: start; width: 100%; padding: 14px 16px; border: 0; border-top: 1px solid var(--line, #efeaf2); background: none; text-align: left; font: inherit; color: inherit }
+#main .hub-sq:first-child { border-top: 0 }
+#main .hub-sq.is-now { background: linear-gradient(90deg, var(--year-pale), transparent) }
+#main .hub-sq-when { font-size: 12.5px; font-weight: 700; line-height: 1.3; color: var(--year-ink); padding-top: 2px }
+#main .hub-sq-when em { display: block; width: max-content; margin-bottom: 4px; padding: 2px 8px; border-radius: 99px; background: var(--year-ink); color: #fff; font-style: normal; font-size: 11px }
+#main .hub-sq-copy b { display: block; font-size: 15.5px; line-height: 1.3 }
+#main .hub-sq-copy small { display: block; margin-top: 3px; font-size: 14px; line-height: 1.45; color: var(--muted) }
+#main .hub-sq > svg, #main .hub-sq > .hub-chev { align-self: center }
+#main .hub-next-sign em { display: block; margin-top: 3px; font-style: normal; font-size: 14px; line-height: 1.45; color: var(--muted) }
+#main .hub-flow { list-style: none; margin: 0 0 16px; padding: 6px 0 }
+#main .hub-flow-item { display: grid; grid-template-columns: auto 1fr; gap: 12px }
+#main .hub-flow li { padding: 14px 16px; border-top: 1px solid var(--line, #efeaf2) }
+#main .hub-flow li:first-child { border-top: 0 }
+#main .hub-flow-n { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--year-pale); color: var(--year-ink); font-weight: 700; font-size: 14px }
+#main .hub-flow b { display: block; font-size: 15.5px; line-height: 1.3; padding-top: 3px }
+#main .hub-flow p { margin: 4px 0 0; font-size: 14.5px; line-height: 1.5; color: var(--muted) }
+#main .hub-flow .hub-link { margin-top: 6px; padding: 0 }
+#main .hub-flow .hub-chip { margin-top: 6px }
+#main .hub-flow .hub-dot { margin-top: 2px }
+#main .hub-schart { padding: 14px 12px }
+#main .hub-sc-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px 3px }
+#main .hub-sc-head { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 3px; margin-bottom: 2px }
+#main .hub-sc-head span { font-size: 11.5px; font-weight: 600; line-height: 1.2; color: var(--muted); text-align: center; padding: 4px 2px; border-radius: 8px }
+#main .hub-sc-head span.is-on { background: var(--year-ink); color: #fff }
+#main .hub-sc-label { grid-column: 1 / -1; font-size: 13.5px; margin-top: 10px }
+#main .hub-sc-cell { display: flex; flex-direction: column; justify-content: center; min-height: 34px; padding: 6px 8px; border-radius: 10px; background: var(--year-pale); color: var(--muted); font-size: 12.5px; font-weight: 600; line-height: 1.25 }
+#main .hub-sc-cell small { font-size: 11px; font-weight: 500; margin-top: 1px }
+#main .hub-sc-cell.is-on { background: var(--year-bg); color: var(--ink, #2b2840); box-shadow: inset 0 0 0 1.5px var(--year-ink) }
+#main .hub-moment { display: flex; flex-direction: column; gap: 14px; margin: 18px 0 }
+#main .hub-moment p { margin: 0; font-size: 16px; line-height: 1.55 }
+#main .hub-moment b { color: var(--year-ink) }
+#main .hub-row-eyebrow { display: block; font-size: 12px; font-weight: 700; letter-spacing: .02em; color: var(--year-ink); margin-bottom: 2px }
+#main .hub-sb { display: flex; flex-direction: column; gap: 8px }
+#main .hub-sb-row { display: grid; grid-template-columns: 92px 1fr; gap: 10px; align-items: center }
+#main .hub-sb-label { font-size: 12.5px; font-weight: 600; line-height: 1.25; color: var(--muted, #6b6670) }
+#main .hub-sb-row.is-now .hub-sb-label { color: var(--ink, #2b2840) }
+#main .hub-sb-label em { display: block; width: max-content; margin-top: 3px; font-style: normal; font-size: 10.5px; font-weight: 800; background: var(--year-ink); color: #fff; padding: 1px 7px; border-radius: 999px }
+#main .hub-sb-bar { position: relative; height: 26px; border-radius: 8px; overflow: hidden; background: var(--year-pale) }
+#main .hub-sb-row.is-now .hub-sb-bar { box-shadow: 0 0 0 2px var(--year-ink) }
+#main .hub-sb-bar i { position: absolute; top: 0; bottom: 0 }
+#main .hub-sb-bar i.is-night { background: #3e4f7a } #main .hub-sb-bar i.is-nap { background: #9fb6e6 } #main .hub-sb-bar i.is-awake { background: #f6e7c8 }
+#main .hub-sb-bar b { position: absolute; top: 50%; width: 8px; height: 8px; margin: -4px 0 0 -4px; border-radius: 50%; background: #f2a7c0; box-shadow: 0 0 0 1.5px #fff }
+#main .hub-sb-scale { display: grid; grid-template-columns: 92px 1fr; gap: 10px; height: 16px }
+#main .hub-sb-scale div { position: relative; font-size: 11.5px; color: var(--muted, #6b6670) }
+#main .hub-sb-scale div span { position: absolute; transform: translateX(-50%); white-space: nowrap }
+#main .hub-sb-scale div span:first-child { transform: none } #main .hub-sb-scale div span:last-child { transform: translateX(-100%) }
+#main .hub-sb-key { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12px; color: var(--muted, #6b6670) }
+#main .hub-sb-key span { display: flex; align-items: center; gap: 5px }
+#main .hub-sb-key i { width: 12px; height: 12px; border-radius: 4px; display: inline-block }
+#main .hub-sb-key i.is-night { background: #3e4f7a } #main .hub-sb-key i.is-nap { background: #9fb6e6 } #main .hub-sb-key i.is-awake { background: #f6e7c8 } #main .hub-sb-key i.is-feed { background: #f2a7c0; border-radius: 50% }
+#main .hub-crib { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px }
+#main .hub-crib > div { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 4px; border-radius: 14px; text-align: center }
+#main .hub-crib > div.is-now { background: var(--year-pale) }
+#main .hub-crib b { font-size: 13.5px } #main .hub-crib small { font-size: 12px; color: var(--muted, #6b6670); line-height: 1.3 }
+#main .hub-counts, #main .hub-lengths { display: flex; flex-direction: column; gap: 12px }
+#main .hub-count-row, #main .hub-len-row { display: grid; grid-template-columns: 104px 1fr; gap: 4px 12px; align-items: center; padding: 8px; border-radius: 14px }
+#main .hub-count-row.is-now, #main .hub-len-row.is-now { background: var(--year-pale) }
+#main .hub-count-label { font-size: 13px; font-weight: 600; line-height: 1.25 }
+#main .hub-count-label em { display: block; width: max-content; margin-top: 3px; font-style: normal; font-size: 10.5px; font-weight: 800; background: var(--year-ink); color: #fff; padding: 1px 7px; border-radius: 999px }
+#main .hub-count-icons { display: flex; gap: 4px } #main .hub-count-icons svg { width: 28px; height: 28px }
+#main .hub-count-row small { grid-column: 2; font-size: 12.5px; color: var(--muted, #6b6670); line-height: 1.3 }
+#main .hub-len-track { display: block; background: var(--year-pale); border-radius: 8px; height: 30px }
+#main .hub-len-row.is-now .hub-len-track { background: #fff }
+#main .hub-len-track i { display: flex; align-items: center; height: 100%; min-width: max-content; border-radius: 8px; background: #3e4f7a; padding: 0 10px; box-sizing: border-box }
+#main .hub-len-track b { font-size: 12.5px; color: #fff; white-space: nowrap }
+#main .hub-sched > div { border-radius: 14px } #main .hub-sched > div.is-now { background: var(--year-pale) } #main .hub-sched p { margin: 4px 0 0; font-size: 14.5px; line-height: 1.4 }
+#main .hub-card-cta { font-size: 13px; font-weight: 600; color: var(--year-ink) }
+#main .hub-looks ul { margin: 8px 0 0; padding-left: 20px; display: grid; gap: 6px; font-size: 15px; line-height: 1.45 }
+#main .hub-sb-bar i span { position: absolute; left: 7px; top: 50%; transform: translateY(-50%); font-size: 11.5px; font-weight: 700; font-style: normal; color: #fff; white-space: nowrap }
+#main .hub-pillrow { display: flex; align-items: center; justify-content: space-between; width: 100%; margin: 18px 0 0; padding: 15px 18px; min-height: 52px; border: 0; border-radius: 16px; background: var(--white); box-shadow: 0 1px 2px rgba(43,40,64,.06); font: inherit; font-size: 15px; font-weight: 500; color: var(--ink); text-align: left; cursor: pointer }
+#main button.hub-card-cta { background: none; border: 0; padding: 6px 0 6px 12px; font: inherit; font-size: 13px; font-weight: 600; color: var(--year-ink); cursor: pointer }
+#main .hub-card-foot { display: flex; align-items: center; justify-content: space-between; width: 100%; margin-top: 12px; padding: 12px 0 0; border: 0; border-top: 1px solid var(--line); background: none; font: inherit; font-size: 14.5px; font-weight: 600; color: var(--year-ink); text-align: left; cursor: pointer }
+#main .hub-tiles .hub-tile-go { min-height: 0; text-align: left; font: inherit; cursor: pointer; position: relative }
+#main .hub-tiles .hub-tile-go b { font-size: 16.5px }
+#main .hub-tiles .hub-tile-go b i { font-style: normal; font-weight: 500; color: var(--year-ink); opacity: .7 }
+#main .hub-rough-row { margin-top: 10px }
+#main .hub-rough-item { border-top: 1px solid var(--line) }
+#main .hub-rough-item:first-child { border-top: 0 }
+#main .hub-rough-item summary { display: flex; align-items: center; gap: 12px; padding: 12px 14px; min-height: 56px; list-style: none; cursor: pointer }
+#main .hub-rough-item summary::-webkit-details-marker { display: none }
+#main .hub-rough-item summary b { flex: 1; font-size: 15.5px; line-height: 1.3 }
+#main .hub-rough-item summary .hub-chev { transition: transform .15s }
+#main .hub-rough-item[open] summary .hub-chev { transform: rotate(90deg) }
+#main .hub-rough-body { padding: 0 16px 14px 16px }
+#main .hub-rough-body p { margin: 0 0 8px; font-size: 15px; line-height: 1.5 }
+#main .hub-rough-body .hub-rough-try { margin: 10px 0 4px; color: var(--year-ink) }
+#main .hub-rough-body .hub-rough-try b { color: var(--year-ink) }
+#main .hub-rough-body ul { margin: 0; padding-left: 20px; font-size: 15px; line-height: 1.5 }
+#main .hub-rough-body li { margin: 3px 0 }
+#main .hub-napask { display: flex; flex-direction: column; gap: 4px; margin: 0 0 14px; padding: 16px; border-radius: 20px; background: var(--white); border: 1px solid var(--line) }
+#main .hub-napask b { font-size: 16px }
+#main .hub-napask span { font-size: 13.5px; color: var(--muted) }
+#main .hub-napask-chips { display: flex; gap: 8px; margin-top: 8px }
+#main .hub-napask-chips button { flex: 1; min-height: 44px; border-radius: 14px; border: 1.5px solid var(--year-accent, #9fb8df); background: var(--year-pale); font: inherit; font-size: 17px; font-weight: 700; color: var(--ink); cursor: pointer }
+#main .hub-napask-chips button.is-on { background: var(--year-ink); color: var(--white); border-color: var(--year-ink) }
+#main .hub-napask-done { margin: 0 0 12px; font-size: 13.5px; color: var(--muted) }
+#main .hub-napask-done button { background: none; border: 0; padding: 4px 2px; font: inherit; font-weight: 600; color: var(--year-ink); cursor: pointer }
+#main .hub-napask-chips button { text-align: center; font-size: 16px }
+#main .hub-rough-card { position: relative; overflow: hidden; display: flex; align-items: center; gap: 14px; width: 100%; margin: 14px 0 16px; padding: 18px 18px; min-height: 76px; border: 0; border-radius: 22px; background: linear-gradient(135deg, #34406a 0%, #46638c 100%); color: #fff; font: inherit; text-align: left; cursor: pointer }
+#main .hub-rough-card .hub-rough-stars { position: absolute; right: 0; top: 0; width: 60%; height: 100%; fill: #fff; opacity: .55; pointer-events: none }
+#main .hub-rough-moon { flex: none; display: grid; place-items: center; width: 46px; height: 46px; border-radius: 50%; background: rgba(255,255,255,.14); color: #ffe7a8 }
+#main .hub-rough-copy { position: relative; flex: 1; min-width: 0 }
+#main .hub-rough-copy b { display: block; font-size: 17px; color: #fff }
+#main .hub-rough-copy small { display: block; margin-top: 2px; font-size: 13.5px; color: rgba(255,255,255,.82) }
+#main .hub-rough-card .hub-chev { position: relative; color: #fff; opacity: .8 }
+#main .hub-accs { display: flex; flex-direction: column; gap: 10px; margin-top: 4px }
+#main .hub-acc { background: var(--white); border: 1px solid var(--line); border-radius: 20px; overflow: hidden }
+#main .hub-acc summary { display: flex; align-items: center; gap: 12px; padding: 16px 18px; min-height: 64px; list-style: none; cursor: pointer }
+#main .hub-acc summary::-webkit-details-marker { display: none }
+#main .hub-acc summary > span:first-child { flex: 1; min-width: 0 }
+#main .hub-acc summary b { display: block; font-size: 17px }
+#main .hub-acc summary small { display: block; margin-top: 2px; font-size: 13.5px; color: var(--muted) }
+#main .hub-acc summary .hub-chev { transition: transform .15s }
+#main .hub-acc[open] summary .hub-chev { transform: rotate(90deg) }
+#main .hub-acc-body { padding: 0 6px 10px }
+#main .hub-acc-body .hub-list { border: 0; box-shadow: none; margin: 0; background: transparent }
+#main .hub-acc-body .hub-actions { padding: 4px 12px 6px }
+#main .hub-acc-body .hub-tip { margin: 6px 12px 6px }
+#main .hub-ess3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 0 0 18px }
+#main .hub-ess3 > div { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 3px; padding: 12px 8px; border-radius: 16px; background: var(--white); border: 1px solid var(--line); min-width: 0 }
+#main .hub-ess3-ic { display: grid; place-items: center; width: 34px; height: 34px; margin-bottom: 4px }
+#main .hub-ess3-ic svg { width: 30px; height: 30px }
+#main .hub-ess3 b { font-size: 13.5px; line-height: 1.25 }
+#main .hub-ess3 small { font-size: 11.5px; line-height: 1.35; color: var(--muted) }
+#main .hub-tl { list-style: none; margin: 0 0 16px; padding: 0 0 0 22px; position: relative }
+#main .hub-tl::before { content: ""; position: absolute; left: 6px; top: 18px; bottom: 18px; width: 2px; background: var(--line) }
+#main .hub-tl li { position: relative; margin: 0 0 8px }
+#main .hub-tl li::before { content: ""; position: absolute; left: -21px; top: 18px; width: 10px; height: 10px; border-radius: 50%; background: var(--white); border: 2px solid var(--year-accent, #9fb8df) }
+#main .hub-tl li.is-now::before { background: var(--year-ink); border-color: var(--year-ink) }
+#main .hub-tl li > button, #main .hub-tl li > div { display: flex; align-items: center; gap: 10px; width: 100%; padding: 12px 14px; border-radius: 16px; background: var(--white); border: 1px solid var(--line); font: inherit; color: inherit; text-align: left; cursor: pointer }
+#main .hub-tl li > div { cursor: default }
+#main .hub-tl-copy { flex: 1; min-width: 0 }
+#main .hub-tl-copy small { display: inline-block; margin-bottom: 4px; padding: 2px 8px; border-radius: 999px; background: var(--year-pale); font-size: 11.5px; font-weight: 600; color: var(--year-ink) }
+#main .hub-tl-copy b { display: block; font-size: 15px }
+#main .hub-tl-copy span { display: block; font-size: 13px; color: var(--muted) }

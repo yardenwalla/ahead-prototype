@@ -97,7 +97,7 @@ for(const age of [0,1,2,3]) {
 for(let age=4;age<=12;age++)for(const answer of ['Stay','Yes']) {
   const b=family(age,{twoNaps:answer,swaddleStopped:'Yes',mattressLowest:'Yes'});
   b.run("openPage('chg:Sleep:d:day')");const html=b.html();
-  const count=Number(html.match(/<small>Naps<\/small><b>(\d+)/)[1]);
+  const count=Number(html.match(/Example day · (\d+) naps/)[1]);
   check((html.match(/data-sample-nap=/g)||[]).length===count,'Sample day matches the displayed nap count');
   const times=[...html.matchAll(/<time datetime="(\d\d):(\d\d)"/g)].map(m=>Number(m[1])*60+Number(m[2]));
   check(times.length>=6 && times.every((v,i)=>i===0||v>times[i-1]),'Example day has actual, increasing clock times');

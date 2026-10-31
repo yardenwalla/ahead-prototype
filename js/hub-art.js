@@ -208,7 +208,7 @@
     outgrown: { scenes: ['outgrown'], chips: ['Head within an inch of the top', 'Or past the height or weight on the label'] },
     swaddle: { scenes: [['swad1', '1', 'Diamond, top folded', 'Shoulders below the fold'], ['swad2', '2', 'One side across', 'Arm straight, tucked under'], ['swad3', '3', 'Snug and loose', 'Snug chest, room at the hips']] },
     tub: { scenes: ['tub'], chips: ['About 2 inches of water', 'Warm, about 100°F', 'One hand behind the head and neck'] },
-    crib: { scenes: ['crib'], chips: ['On the back', 'In a sleep sack', 'Firm, flat mattress', 'Nothing else in the crib'] },
+    crib: { scenes: ['crib'], chips: ['On the back', 'Swaddle or sleep sack', 'Firm, flat mattress', 'Nothing else in the crib', 'Not a sofa or your bed', 'Cool and smoke-free', 'Pacifier, if you like'] },
     pace: { scenes: [['paced', 'good', 'Paced', 'Upright, bottle level'], ['tipped', 'bad', 'Avoid', 'Lying back, bottle tipped up']] },
     sizes: { scenes: [['strips', '1', '6–8 months', 'Strips the size of a finger'], ['pieces', '2', '9 months and up', 'Pea-sized pieces, grapes quartered']] }
   };
