@@ -1216,3 +1216,7 @@
 #main .dev-photo { margin: 0; border-radius: 16px; overflow: hidden; background: var(--year-pale) }
 #main .dev-photo img { width: 100%; display: block }
 #main .dev-photo figcaption { font-size: 12px; color: var(--ink-2, #5E5A75); padding: 6px 10px }
+#main .dev-awake-note { font-size: 13px; line-height: 1.45; color: var(--ink-2, #5E5A75); margin: 12px 0 0 }
+#main .dev-faq-q { font-weight: 600; font-size: 15px; margin: 4px 0 4px; color: var(--ink) }
+#main .dev-faq-a { font-size: 14px; line-height: 1.5; color: var(--ink-2, #5E5A75); margin: 0 0 10px }
+#main .dev-idea-art text, #main .dev-idea-hero text { font-family: Figtree, system-ui, sans-serif }
