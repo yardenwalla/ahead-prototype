@@ -42,13 +42,29 @@
   const ease = x => (x < 0 ? 0 : x > 1 ? 1 : x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
   const clamp = x => (x < 0 ? 0 : x > 1 ? 1 : x);
 
+  // Where each month's photo sits in its frame: the point of the photo at the frame's centre (x, y from 0 to 1) and a zoom.
+  // Saved per baby on this device, so the Story and the year collage both use the parent's choice.
+  const POS_KEY = () => 'ahead-photo-pos:' + (typeof journeyKey === 'function' ? journeyKey() : 'baby');
+  const positions = () => { try { return JSON.parse(localStorage.getItem(POS_KEY())) || {}; } catch (e) { return {}; } };
+  const posFor = m => positions()[m] || null;
+  const savePos = (m, p) => { try { const all = positions(); all[m] = p; localStorage.setItem(POS_KEY(), JSON.stringify(all)); } catch (e) {} };
+  window.storyResetPosition = m => { try { const all = positions(); delete all[m]; localStorage.setItem(POS_KEY(), JSON.stringify(all)); } catch (e) {} };
+  // Tall photos start a little above centre, where faces usually are.
+  const startPos = im => ({ x: 0.5, y: im && im.height > im.width * 1.05 ? 0.42 : 0.5, z: 1 });
+  // Size of the photo in the frame, and how far its centre point may move before an edge shows.
+  function fit(im, w, h, z) {
+    const k = Math.max(w / im.width, h / im.height) * z, dw = im.width * k, dh = im.height * k;
+    return { dw, dh, mx: (dw - w) / (2 * dw), my: (dh - h) / (2 * dh) };
+  }
+  const keepIn = (p, f) => ({ x: Math.min(0.5 + f.mx, Math.max(0.5 - f.mx, p.x)), y: Math.min(0.5 + f.my, Math.max(0.5 - f.my, p.y)), z: p.z });
+
   // A photo cropped to fill a tilted window, the way it would sit in a polaroid.
-  function drawPhoto(ctx, im, cx, cy, w, h, deg, alpha = 1, zoom = 1) {
+  function drawPhoto(ctx, im, cx, cy, w, h, deg, alpha = 1, zoom = 1, pos = null) {
     if (!im || alpha <= 0) return;
+    const p0 = pos || startPos(im), f = fit(im, w, h, p0.z || 1), p = keepIn(p0, f);
     ctx.save(); ctx.globalAlpha = alpha; ctx.translate(cx, cy); ctx.rotate(deg * Math.PI / 180); ctx.scale(zoom, zoom);
     ctx.beginPath(); ctx.rect(-w / 2, -h / 2, w, h); ctx.clip();
-    const k = Math.max(w / im.width, h / im.height);
-    ctx.drawImage(im, -im.width * k / 2, -im.height * k / 2, im.width * k, im.height * k);
+    ctx.drawImage(im, -f.dw / 2 + f.dw * (0.5 - p.x), -f.dh / 2 + f.dh * (0.5 - p.y), f.dw, f.dh);
     ctx.restore();
   }
   function footer(ctx, x, y, align, dot, alpha = 1) {
@@ -65,7 +81,7 @@
     const ctx = c.getContext('2d');
     ctx.fillStyle = '#F5E8E2'; ctx.fillRect(0, 0, W, H);
     ctx.drawImage(bg, L.b[0], L.b[1], L.b[2], L.b[3]);
-    drawPhoto(ctx, photo, L.p[0], L.p[1], L.p[2] + 3, L.p[3] + 3, L.t);
+    drawPhoto(ctx, photo, L.p[0], L.p[1], L.p[2] + 3, L.p[3] + 3, L.t, 1, 1, posFor(m));
     ctx.drawImage(tape, L.tp[0], L.tp[1], L.tp[2], L.tp[3]);
     // The handwriting: "[Name] is five months", a small heart and an underline in the month's color.
     ctx.save(); ctx.translate(L.s[0], L.s[1]); ctx.rotate(L.t * Math.PI / 180);
@@ -101,7 +117,7 @@
     YEAR.p.forEach((q, i) => {
       if (!parts.photos[i]) return;
       const [a, z, la] = shown(i);
-      drawPhoto(ctx, parts.photos[i], q[0], q[1], q[2], q[3], q[4], a, z);
+      drawPhoto(ctx, parts.photos[i], q[0], q[1], q[2], q[3], q[4], a, z, posFor(i + 1));
       if (la > 0) drawLabel(ctx, i, la);
     });
     ctx.drawImage(parts.tape, YEAR.tp[0], YEAR.tp[1], YEAR.tp[2], YEAR.tp[3]);
@@ -185,12 +201,15 @@
     const title = isYear ? `${nm}’s first year` : `${nm} is ${WORDS[m - 1]}`;
     const note = isYear
       ? (have < 12 ? `${12 - have} month${12 - have === 1 ? ' doesn’t' : 's don’t'} have a photo yet. Add ${12 - have === 1 ? 'it' : 'them'} in Memories and they’ll appear here.` : 'All twelve months, on one page.')
-      : 'Share it to your Story or send it to family. It’s made on this phone from your photo.';
+      : 'Drag the photo to move it, and zoom if you like. Then share it to your Story or send it to family.';
+    // Phones that can share files get Share and Save; anywhere else, one Save button.
+    let canShareFiles = false; try { canShareFiles = !!(navigator.canShare && navigator.canShare({ files: [new File(['x'], 'x.png', { type: 'image/png' })] })); } catch (e) {}
     sheet.innerHTML = `<div class="story-card"><button class="story-close" aria-label="Close">×</button>
       <p class="story-eyebrow">${eyebrow}</p><h2>${title}</h2>
       ${isYear && have ? `<div class="story-seg" role="group" aria-label="Photo or video"><button class="is-on" data-kind="photo" aria-pressed="true">Photo</button><button data-kind="video" aria-pressed="false">Video</button></div>` : ''}
       <div class="story-frame"><canvas width="${W}" height="${H}" aria-label="${isYear ? 'Your first-year collage' : 'Your monthly photo'}"></canvas><div class="story-busy" hidden><span></span></div></div>
-      <div class="story-actions"><button class="story-btn" data-act="share">Share</button><button class="story-btn is-quiet" data-act="save">Save</button></div>
+      ${isYear ? '' : `<div class="story-adjust"><label for="storyZoom">Zoom</label><input id="storyZoom" type="range" min="1" max="2.5" step="0.01" value="1"></div>`}
+      <div class="story-actions${canShareFiles ? '' : ' is-single'}">${canShareFiles ? '<button class="story-btn" data-act="share">Share</button><button class="story-btn is-quiet" data-act="save">Save</button>' : '<button class="story-btn" data-act="save">Save</button>'}</div>
       <p class="story-note">${esc(note)}</p></div>`;
     document.body.appendChild(sheet);
     document.addEventListener('keydown', onKey);
@@ -208,6 +227,25 @@
       vctx.drawImage(still, 0, 0); setBusy('');
     } catch (e) { setBusy(''); toast('Couldn’t make it', 'Try again, or pick another photo.'); return close(); }
     if (isYear && !have) sheet.querySelectorAll('.story-btn').forEach(b => { b.disabled = true; });
+
+    // Move the photo inside the polaroid: drag on the picture, zoom with the slider. Saved for this month.
+    if (!isYear) {
+      const L = MONTHS[m], photo = await img(photoFor(m)), w = L.p[2] + 3, h = L.p[3] + 3, t = L.t * Math.PI / 180;
+      let pos = posFor(m) || startPos(photo), pending = false, drag = null;
+      const zoomEl = sheet.querySelector('#storyZoom'); zoomEl.value = String(pos.z || 1);
+      const redraw = () => { if (pending) return; pending = true; requestAnimationFrame(async () => { pending = false; savePos(m, pos); still = await renderMonth(m); if (sheet === mine) vctx.drawImage(still, 0, 0); }); };
+      zoomEl.oninput = () => { pos = keepIn({ x: pos.x, y: pos.y, z: Number(zoomEl.value) }, fit(photo, w, h, Number(zoomEl.value))); redraw(); };
+      view.classList.add('is-movable');
+      view.addEventListener('pointerdown', e => { drag = { x: e.clientX, y: e.clientY, p: { ...pos } }; view.setPointerCapture(e.pointerId); });
+      view.addEventListener('pointermove', e => {
+        if (!drag) return;
+        const scale = W / view.clientWidth, dx = (e.clientX - drag.x) * scale, dy = (e.clientY - drag.y) * scale;
+        const rx = dx * Math.cos(t) + dy * Math.sin(t), ry = -dx * Math.sin(t) + dy * Math.cos(t), f = fit(photo, w, h, pos.z || 1);
+        pos = keepIn({ x: drag.p.x - rx / f.dw, y: drag.p.y - ry / f.dh, z: pos.z || 1 }, f); redraw();
+      });
+      const end = () => { drag = null; };
+      view.addEventListener('pointerup', end); view.addEventListener('pointercancel', end);
+    }
 
     // Video preview: plays on a loop until the sheet closes or switches back to the photo.
     const play = () => {

@@ -70,16 +70,18 @@
       const all = photos(); all[m] = shrink(image, 840, 0.82);
       let ok = savePhotos(all);
       if (!ok) { all[m] = shrink(image, 360, 0.8); ok = savePhotos(all); }
+      if (ok && typeof storyResetPosition === 'function') storyResetPosition(m);
       const y = scrollY; render(); scrollTo(0, y);
       if (!ok) return hubToast('Couldn’t keep that photo', 'This viewer can’t store photos. Open Ahead in your phone’s browser to keep them.');
       // Months 1–11 have a Story design: show it straight away, ready to share.
       if (m >= 1 && m <= 11 && typeof storyShare === 'function') return storyShare(m, { saved: true });
       hubToast('Photo saved', `${m === 0 ? 'Newborn' : m === 12 ? '1 year' : m + ' month' + (m === 1 ? '' : 's')} · in Memories`);
     };
+    // The whole photo is kept (short side `size`, long side up to 1.5×), so a parent can move it inside the polaroid later.
     const shrink = (img, size, q) => {
-      const c = document.createElement('canvas'), w = img.naturalWidth || img.width, h = img.naturalHeight || img.height, k = Math.max(size / w, size / h);
-      c.width = c.height = size;
-      c.getContext('2d').drawImage(img, (size - w * k) / 2, (size - h * k) / 2, w * k, h * k);
+      const c = document.createElement('canvas'), w = img.naturalWidth || img.width, h = img.naturalHeight || img.height, k = size / Math.min(w, h);
+      c.width = Math.round(Math.min(w * k, size * 1.5)); c.height = Math.round(Math.min(h * k, size * 1.5));
+      c.getContext('2d').drawImage(img, (c.width - w * k) / 2, (c.height - h * k) / 2, w * k, h * k);
       return c.toDataURL('image/jpeg', q);
     };
     const reader = new FileReader();
@@ -141,6 +143,21 @@
       if (rec) hubToast('A first, saved', `“${rec.title}” is in Memories · ${journeyDateLabel(rec.date)}`, ['Change date', `document.querySelectorAll('.hub-toast').forEach(t=>t.remove());openPage('event-edit:${rec.id}')`]);
     };
   }
+
+  // Remove a month's photo from Memories. The toast offers Undo for a few seconds.
+  let removed = null;
+  window.hubPhotoRemove = function (m) {
+    const all = photos(); if (!all[m]) return;
+    removed = { m, data: all[m] }; delete all[m]; savePhotos(all);
+    const y = scrollY; render(); scrollTo(0, y);
+    hubToast('Photo removed', `${m === 0 ? 'Newborn' : m === 12 ? 'First-birthday' : m + '-month'} photo`, ['Undo', 'hubPhotoUndo()']);
+  };
+  window.hubPhotoUndo = function () {
+    if (!removed) return;
+    const all = photos(); all[removed.m] = removed.data; savePhotos(all); removed = null;
+    document.querySelectorAll('.hub-toast').forEach(t => t.remove());
+    const y = scrollY; render(); scrollTo(0, y);
+  };
 
   /* ---------- the month-birthday moment on Home ----------
      For three days after each month-birthday, the month card celebrates and gathers that month's firsts. */

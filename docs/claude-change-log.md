@@ -105,3 +105,6 @@ Existing age-based guide advancement remains a product decision: suggested guida
 - Monthly photos are now kept at about 840px (was 360px) so they're sharp in the Story, falling back to the small size if the phone runs out of room. Photos added before this change stay small.
 - The handwriting font (Caveat, OFL) ships with the app in `assets/fonts` so the Story always draws it.
 - Checked in Chromium: adding a 5-month photo opens the Story; Home, Memories and the birthday entry points open it; the collage and video render; the video saves (19.7s MP4). `check-all.cjs` matches main (the existing "Solids answer changes stage" assertion fails on main too).
+- **Move the photo in the polaroid:** in the Story sheet, drag the photo to position it and zoom with the slider. The choice is saved per month and used in the year collage too. Photos are now kept whole (short side ~840px) instead of pre-cropped to a square, so there's room to move them; tall photos start a little above centre.
+- **Remove a photo in Memories:** a small × on each monthly photo, with Undo in the toast.
+- Share shows only where the phone can share files (iPhone Safari, Android Chrome); elsewhere there's one Save button.
