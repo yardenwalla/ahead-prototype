@@ -95,3 +95,13 @@ The first pass covered 100 scripted families across 1,300 monthly checkpoints, a
 The redesigned welcome and both setup steps were visually inspected in a managed browser preview. Setup progression, back navigation, retained answers and completion into personalized Home were checked. The pronoun regression suite passes 1,584 checks across 419 renders. This is not pediatric approval or a full visual QA pass of every app screen.
 
 Existing age-based guide advancement remains a product decision: suggested guidance is distinct from confirmed skill mastery. This update includes onboarding-only visual changes, with no merge or production deployment.
+
+## Monthly Stories and the first-year collage (2026-10-31)
+
+- **Each month, 1–11:** a foil-number balloon in that month's color, the parent's photo taped on a polaroid, and "[Name] is five months" handwritten underneath. Designs are Yarden's (`assets/share/month-*.jpg`); the photo window, tilt and tape layer were measured from each design (`js/share-story.js`).
+- **Where it appears:** right after a parent adds a month's photo (anywhere in the app), as a "Share [Name]'s 5-month photo" button on the month-birthday card on Home, and as a small share button on each month in Memories.
+- **First birthday:** all twelve photos on one page under a gold "12", as a photo or a ~20-second video that zooms through each month and pulls back to the whole year. It opens from "Make [Name]'s first-year collage" on the birthday screen and in Memories at 12 months. Months without a photo stay as empty frames, and the sheet says how many are missing.
+- **Share / Save:** the Story is drawn on the phone from the parent's own photo. Share opens the phone's share sheet (Instagram, Messages); Save downloads it. The video is recorded in the browser (MP4 in Safari and Chrome, WebM elsewhere).
+- Monthly photos are now kept at about 840px (was 360px) so they're sharp in the Story, falling back to the small size if the phone runs out of room. Photos added before this change stay small.
+- The handwriting font (Caveat, OFL) ships with the app in `assets/fonts` so the Story always draws it.
+- Checked in Chromium: adding a 5-month photo opens the Story; Home, Memories and the birthday entry points open it; the collage and video render; the video saves (19.7s MP4). `check-all.cjs` matches main (the existing "Solids answer changes stage" assertion fails on main too).

@@ -1189,3 +1189,32 @@
 #main .hub-tl-copy small { display: inline-block; margin-bottom: 4px; padding: 2px 8px; border-radius: 999px; background: var(--year-pale); font-size: 11.5px; font-weight: 600; color: var(--year-ink) }
 #main .hub-tl-copy b { display: block; font-size: 15px }
 #main .hub-tl-copy span { display: block; font-size: 13px; color: var(--muted) }
+
+/* ---------- Monthly Stories and the first-year collage (js/share-story.js) ---------- */
+/* The handwriting on each Story ships with the app, so it draws the same with or without a connection. */
+@font-face { font-family: AheadHand; src: url('../assets/fonts/caveat-latin-600-normal.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: swap }
+.story-sheet { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; padding: 16px; background: rgba(43, 40, 64, .55); font-family: Figtree, system-ui, sans-serif; color: #2B2840 }
+.story-card { position: relative; box-sizing: border-box; width: min(380px, 100%); max-height: calc(100dvh - 32px); overflow: auto; background: #FAF8F5; border-radius: 28px; padding: 20px 16px 16px; text-align: center }
+.story-close { position: absolute; top: 10px; right: 10px; width: 44px; height: 44px; border: 0; border-radius: 50%; background: transparent; font-size: 26px; line-height: 1; color: #5E5A75; cursor: pointer }
+.story-eyebrow { margin: 0 44px 2px; font-size: 13px; font-weight: 600; color: #5E5A75 }
+.story-card h2 { margin: 0 36px 12px; font-family: Nunito, sans-serif; font-weight: 800; font-size: 21px; line-height: 1.2 }
+.story-seg { display: inline-flex; gap: 4px; padding: 4px; margin-bottom: 12px; border-radius: 999px; background: #EFEAF2 }
+.story-seg button { min-width: 84px; min-height: 36px; border: 0; border-radius: 999px; background: transparent; font: inherit; font-size: 14px; font-weight: 600; color: #5E5A75; cursor: pointer }
+.story-seg button.is-on { background: #fff; color: #2B2840; box-shadow: 0 1px 2px rgba(43, 40, 64, .12) }
+.story-frame { position: relative; width: min(100%, calc((100dvh - 290px) * 9 / 16)); min-width: 160px; margin: 0 auto; aspect-ratio: 9 / 16; border-radius: 18px; overflow: hidden; box-shadow: 0 10px 28px rgba(43, 40, 64, .18); background: #F5E8E2 }
+.story-frame canvas { display: block; width: 100%; height: 100% }
+.story-busy { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(250, 248, 245, .55) }
+.story-busy[hidden] { display: none }
+.story-busy span { padding: 8px 14px; border-radius: 999px; background: #fff; font-size: 13px; font-weight: 600; box-shadow: 0 2px 8px rgba(43, 40, 64, .12) }
+.story-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px }
+.story-btn { min-height: 48px; border: 0; border-radius: 999px; background: #2B2840; color: #fff; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer }
+.story-btn.is-quiet { background: #fff; color: #2B2840; box-shadow: inset 0 0 0 1.5px #2B2840 }
+.story-btn:disabled, .story-seg button:disabled { opacity: .5; cursor: default }
+.story-note { margin: 10px 4px 0; font-size: 12.5px; line-height: 18px; color: #5E5A75 }
+#main .mem-shot-wrap { position: relative; scroll-snap-align: start }
+#main .mem-shot-share { position: absolute; right: 6px; top: 6px; width: 32px; height: 32px; border: 0; border-radius: 50%; background: rgba(255, 255, 255, .92); color: var(--year-ink, #5b4a8b); display: grid; place-items: center; cursor: pointer; box-shadow: 0 1px 3px rgba(43, 40, 64, .15) }
+#main .mem-shot-share svg { width: 16px; height: 16px }
+#main .hub-bday-share { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 44px; margin-top: 8px; border: 0; border-radius: 14px; background: #2B2840; color: #fff; font: inherit; font-weight: 600; cursor: pointer }
+#main .mem-shot-wrap > .mem-shot { display: block }
+#main .bday-story { position: relative; display: block; width: 100%; margin-top: 8px; background: var(--ink, #2B2840) !important; color: #fff !important; border-radius: 999px; padding: 15px 18px; font-weight: 700 }
+#main .mem-year { margin-top: 4px; margin-bottom: 10px }
