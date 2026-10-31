@@ -775,8 +775,8 @@
       // Three groups a parent can scan: what to set up once (checkboxes counted on the stage row), what to do every sleep, and what changes as she grows.
       const done = safeDone() === SLEEP_TASKS;
       const rowOf = x => `<div class="hub-row is-static"><span class="hub-dot">${art(x.art, cat)}</span><span class="hub-row-copy"><b>${F(x.t)}</b><small>${F(x.s)}</small></span></div>`;
-      // One picture for the rule, then three sections a parent opens when they need them.
-      const sec = (open, title, meta, inner) => `<details class="hub-acc"${open ? ' open' : ''}><summary><span><b>${F(title)}</b><small>${F(meta)}</small></span><span class="hub-chev" aria-hidden="true">›</span></summary><div class="hub-acc-body">${inner}</div></details>`;
+      // One picture for the rule, then two short lists: every sleep, and what changes as she grows.
+      const sec = (open, title, meta, inner) => `<h2 class="hub-h2">${F(title)}</h2>${inner}`;
       const habits = [{ t: 'Nothing else in the crib', s: 'A fitted sheet only. No bumpers, pillows, loungers, inclined or weighted products', art: 'crib' }, ...SLEEP_SETUP.filter(x => x.task == null && x.art !== 'back')];
       return detail(cat, 'Safe sleep', 'A safe place to sleep', 'On {p} back, in {p} own bare crib or bassinet in your room, for every sleep.',
         figure('crib', cat, 'A baby asleep on their back in a sleep sack, in a bare crib with a firm mattress and fitted sheet.')
