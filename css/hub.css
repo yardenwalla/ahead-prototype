@@ -1221,3 +1221,17 @@
 #main .hub-supply { display: flex; flex-direction: column; gap: 10px; margin-top: 4px }
 #main .hub-supply p { margin: 6px 0; font-size: 15px; line-height: 1.5 }
 #main .hub-supply ul { margin: 0; padding-left: 20px; font-size: 15px; line-height: 1.5 }
+#main .hub-feedpick { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 0 0 14px; padding: 10px 14px; border-radius: 16px; background: var(--white); border: 1px solid var(--line); font-size: 14px; color: var(--muted) }
+#main .hub-feedpick select { flex: 1; max-width: 70%; border: 0; background: var(--year-pale); border-radius: 10px; padding: 8px 10px; font: inherit; font-size: 15px; font-weight: 600; color: var(--ink) }
+#main .hub-tough { display: flex; flex-direction: column; gap: 10px }
+#main .hub-tough-item { background: var(--white); border: 1px solid var(--line); border-radius: 18px; overflow: hidden }
+#main .hub-tough-item summary { display: flex; align-items: center; gap: 12px; padding: 12px 14px; min-height: 64px; list-style: none; cursor: pointer }
+#main .hub-tough-item summary::-webkit-details-marker { display: none }
+#main .hub-tough-copy { flex: 1; min-width: 0 }
+#main .hub-tough-copy b { display: block; font-size: 16px }
+#main .hub-tough-copy small { display: block; margin-top: 2px; font-size: 13.5px; line-height: 1.35; color: var(--muted) }
+#main .hub-tough-item[open] { border-color: var(--year-ink) }
+#main .hub-tough-item[open] .hub-chev { transform: rotate(90deg) }
+#main .hub-tough-body { padding: 0 16px 14px 16px }
+#main .hub-tough-body p { margin: 0 0 6px; font-size: 15px; line-height: 1.5 }
+#main .hub-tough-body ul { margin: 0; padding-left: 20px; font-size: 15px; line-height: 1.5 }
