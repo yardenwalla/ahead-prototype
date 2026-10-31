@@ -1189,3 +1189,30 @@
 #main .hub-tl-copy small { display: inline-block; margin-bottom: 4px; padding: 2px 8px; border-radius: 999px; background: var(--year-pale); font-size: 11.5px; font-weight: 600; color: var(--year-ink) }
 #main .hub-tl-copy b { display: block; font-size: 15px }
 #main .hub-tl-copy span { display: block; font-size: 13px; color: var(--muted) }
+
+/* Development & play: awake time, illustrated ideas, and skills you can see on the page */
+#main .dev-awake .hub-figure { margin: 4px 0 0 }
+#main .dev-awake-ideas { border-top: 1px solid var(--line); margin-top: 14px; padding-top: 14px }
+#main .dev-sub { display: block; font-size: 13px; font-weight: 600; color: var(--year-ink); margin-bottom: 10px }
+#main .dev-ideas { display: grid; grid-template-columns: 1fr 1fr; gap: 12px }
+#main .dev-ideas.is-grid { margin: 4px 0 16px }
+#main .dev-idea { display: flex; flex-direction: column; gap: 8px; text-align: left; background: var(--white); border: 1px solid var(--line); border-radius: 20px; padding: 8px 8px 12px; cursor: pointer; font: inherit; color: var(--ink) }
+#main .dev-ideas.is-pair .dev-idea { border: 0; padding: 0; background: none }
+#main .dev-idea b { font-size: 14px; line-height: 1.3; font-weight: 600; padding: 0 4px }
+#main .dev-idea-art { display: block; border-radius: 16px; overflow: hidden; background: var(--year-pale); aspect-ratio: 4 / 3 }
+#main .dev-idea-art svg { width: 100%; height: 100%; display: block }
+#main .awake-link, #main .dev-awake-ideas .hub-link { margin-top: 12px }
+#main .dev-try-row { display: flex; align-items: center; gap: 14px; width: 100%; background: none; border: 0; padding: 0; text-align: left; font: inherit; color: var(--ink); cursor: pointer }
+#main .dev-try-row .dev-idea-art { width: 96px; flex: none }
+#main .dev-idea-hero { margin: 0 0 16px; border-radius: 24px; overflow: hidden; background: var(--year-pale) }
+#main .dev-idea-hero svg { width: 100%; height: auto; display: block }
+#main .dev-skill { align-items: flex-start; flex-wrap: wrap }
+#main .dev-skill .hub-seen, #main .dev-skill .hub-chip { margin-top: 2px }
+#main button.dev-see { display: inline-block; margin-top: 8px; background: none; border: 0; padding: 0; font: inherit; font-size: 13px; font-weight: 600; color: var(--year-ink) !important; cursor: pointer; min-height: 0 }
+#main .dev-see::before { content: "▸ " }
+#main .dev-see[aria-expanded="true"]::before { content: "▾ " }
+#main .dev-media { flex-basis: 100%; margin-top: 2px }
+#main .dev-media .hub-embed { margin: 0 }
+#main .dev-photo { margin: 0; border-radius: 16px; overflow: hidden; background: var(--year-pale) }
+#main .dev-photo img { width: 100%; display: block }
+#main .dev-photo figcaption { font-size: 12px; color: var(--ink-2, #5E5A75); padding: 6px 10px }
