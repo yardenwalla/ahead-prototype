@@ -202,7 +202,7 @@
   /* ---------- Ideas: a picture grid, and a short page for each ---------- */
   function ideasPage(ref) {
     ref = DEV_STAGES[ref] ? ref : devRef(ref);
-    return devDetail('Awake time', `By ${ageWord(ref)}`, 'A few minutes of any of these is plenty. Pick one that suits the moment.',
+    return devDetail('Ideas to try together', `Awake time · by ${ageWord(ref)}`, 'A few minutes of any of these is plenty. Pick one that suits the moment.',
       `<div class="dev-ideas is-grid">${stageIdeas(ref).map(a => ideaTile(a, ref)).join('')}</div><p class="dev-awake-note">${F(AWAKE_LINE[ref](live() && ref === devNow()))}</p>`);
   }
   function ideaPage(ref, id) {
