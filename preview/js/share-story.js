@@ -42,6 +42,13 @@
   const img = src => cache[src] || (cache[src] = new Promise((ok, no) => { const i = new Image(); i.onload = () => ok(i); i.onerror = () => { delete cache[src]; no(new Error('image')); }; i.src = src; }));
   const fonts = () => (document.fonts && document.fonts.load ? Promise.all([document.fonts.load("600 72px AheadHand"), document.fonts.load('600 22px Figtree')]).catch(() => {}) : Promise.resolve());
   const ease = x => (x < 0 ? 0 : x > 1 ? 1 : x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+  // "May 31, 2026", read straight from the saved birthday so it never shifts a day with time zones.
+  const birthdayText = () => {
+    const d = typeof profile === 'object' && profile && profile.dob;
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(d || ''); if (!m) return '';
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    return `${months[Number(m[2]) - 1]} ${Number(m[3])}, ${m[1]}`;
+  };
   const clamp = x => (x < 0 ? 0 : x > 1 ? 1 : x);
 
   // Where each month's photo sits in its frame: the point of the photo at the frame's centre (x, y from 0 to 1) and a zoom.
@@ -87,14 +94,25 @@
     ctx.drawImage(tape, L.tp[0], L.tp[1], L.tp[2], L.tp[3]);
     // The handwriting: "[Name] is five months", a small heart and an underline in the month's color.
     ctx.save(); ctx.translate(L.s[0], L.s[1]); ctx.rotate(L.t * Math.PI / 180);
-    const text = m === 0 ? babyName() : m === 12 ? `${babyName()} is one!` : `${babyName()} is ${WORDS[m - 1]}`;
+    if (m === 0) {
+      // Newborn: the name, and the birthday underneath, kept left of the heart printed on this polaroid.
+      const born = birthdayText(), cx = -40;
+      ctx.fillStyle = INK; ctx.textBaseline = 'middle'; ctx.textAlign = 'center';
+      let size = 64; ctx.font = `600 ${size}px AheadHand, Caveat, cursive`;
+      while (ctx.measureText(babyName()).width > L.s[2] - 160 && size > 36) { size -= 2; ctx.font = `600 ${size}px AheadHand, Caveat, cursive`; }
+      ctx.fillText(babyName(), cx, born ? -22 : -6);
+      if (born) { ctx.globalAlpha = 0.75; ctx.font = '600 38px AheadHand, Caveat, cursive'; ctx.fillText(born, cx, 30); ctx.globalAlpha = 1; }
+      ctx.textAlign = 'start';
+    } else {
+    const text = m === 12 ? `${babyName()} is one!` : `${babyName()} is ${WORDS[m - 1]}`;
     let size = 72; ctx.font = `600 ${size}px AheadHand, Caveat, cursive`;
     while (ctx.measureText(text).width > L.s[2] - 90 && size > 40) { size -= 2; ctx.font = `600 ${size}px AheadHand, Caveat, cursive`; }
-    const tw = ctx.measureText(text).width, total = m === 0 ? tw : tw + 44, x0 = -total / 2 - (m === 0 ? 40 : 0);
+    const tw = ctx.measureText(text).width, total = tw + 44, x0 = -total / 2;
     ctx.fillStyle = INK; ctx.textBaseline = 'middle'; ctx.fillText(text, x0, -10);
-    if (m !== 0) { ctx.save(); ctx.translate(x0 + tw + 10, -10 - size * 0.42); ctx.rotate(8 * Math.PI / 180); ctx.scale(34 / 24, 34 / 24);
-    ctx.strokeStyle = L.accent; ctx.lineWidth = 1.8 * 24 / 34; ctx.lineJoin = 'round'; ctx.stroke(new Path2D(HEART)); ctx.restore(); }
-    ctx.save(); ctx.translate(m === 0 ? Math.max(-115, x0 + tw / 2 - 115) : -115, 22); ctx.strokeStyle = L.accent; ctx.globalAlpha = 0.8; ctx.lineWidth = 5; ctx.lineCap = 'round'; ctx.stroke(new Path2D(SWOOSH)); ctx.restore();
+    ctx.save(); ctx.translate(x0 + tw + 10, -10 - size * 0.42); ctx.rotate(8 * Math.PI / 180); ctx.scale(34 / 24, 34 / 24);
+    ctx.strokeStyle = L.accent; ctx.lineWidth = 1.8 * 24 / 34; ctx.lineJoin = 'round'; ctx.stroke(new Path2D(HEART)); ctx.restore();
+    ctx.save(); ctx.translate(-115, 22); ctx.strokeStyle = L.accent; ctx.globalAlpha = 0.8; ctx.lineWidth = 5; ctx.lineCap = 'round'; ctx.stroke(new Path2D(SWOOSH)); ctx.restore();
+    }
     ctx.restore();
     footer(ctx, 60, H - 62, 'left', L.accent);
     return c;
@@ -301,7 +319,7 @@
   const thumbs = {};
   const thumbKey = m => {
     const ph = m === 'year' ? Array.from({ length: 12 }, (_, i) => (photoFor(i + 1) || '').length).join('.') : String((photoFor(m) || '').length) + (photoFor(m) || '').slice(-24);
-    return [m, babyName(), ph, JSON.stringify(m === 'year' ? positions() : posFor(m))].join('|');
+    return [m, babyName(), birthdayText(), ph, JSON.stringify(m === 'year' ? positions() : posFor(m))].join('|');
   };
   async function thumb(m) {
     const key = thumbKey(m);
