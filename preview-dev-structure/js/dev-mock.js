@@ -72,8 +72,13 @@
     const done = prev ? (DEVELOPMENT_DOMAINS[prev][domain] || []) : [];
     const head = page.querySelector('.dev-area-head');
     page.querySelector('.hub-seen-meter, .hub-meter')?.remove();
-    if (done.length) head.insertAdjacentHTML('afterend', `<section class="hub-card dm-done"><span class="hub-card-head"><b>${F('Probably doing already')}</b></span><div class="dm-chips is-done">${done.map(chip).join('')}</div></section><p class="dm-sub">${F(`Working on now, by ${r === 12 ? '1 year' : r + ' months'}`)}</p>`);
-    else head.insertAdjacentHTML('afterend', `<p class="dm-sub">${F(`Working on now, by ${r === 12 ? '1 year' : r + ' months'}`)}</p>`);
+    // One quiet line instead of a card of chips.
+    const prevLine = prev && DEV_STAGES[prev] ? DEV_STAGES[prev].summaries[domain] : '';
+    if (prevLine) head.insertAdjacentHTML('beforeend', `<p class="dm-already">✓ ${F('Probably doing already: ' + prevLine.charAt(0).toLowerCase() + prevLine.slice(1))}</p>`);
+    head.insertAdjacentHTML('afterend', `<p class="dm-sub">${F(`Working on now, by ${r === 12 ? '1 year' : r + ' months'}`)}</p>`);
+    // Calmer skill cards: the title and Seen it; what it looks like opens on tap.
+    page.querySelectorAll('.dev-skill').forEach(c => { const d = c.querySelector('.hub-row-copy small'), see = c.querySelector('.dev-see'), box = c.querySelector('.dev-media'); if (d && box) { box.dataset.desc = d.textContent; d.remove(); } else if (d && !see) d.remove(); });
+
     const note = page.querySelector('.hub-note');
     const big = BIG_AREA[r] === domain && BIG[r] ? `<section class="hub-card dm-bigq"><span class="hub-card-head"><b>${F(BIG[r][0])}</b></span><p class="dm-a">${F(BIG[r][1])}</p></section>` : '';
     const call = `<p class="dm-call">${F('Not all of these yet? Mention it at {p} next checkup. Call sooner if Maya loses a skill {s} had.')}</p>`;
@@ -100,6 +105,8 @@
     const signs = ref >= 6 ? `<div class="hub-list"><button class="hub-row" onclick="openPage('chg:Development:d:signs')"><span class="hub-dot">${hubArt('signs', 'Development')}</span><span class="hub-row-copy"><b>${F('Try a few baby signs')}</b><small>${F('More, eat, milk and all done')}</small></span><span class="hub-chev" aria-hidden="true">›</span></button></div>` : '';
     return inner.replace('</div></div>', `</div></div>`).replace(/(<div class="dev-ideas is-grid">)/, `<p class="dm-wake">${F(`Maya is usually awake for ${WAKE(m)} at a time. A few minutes of any of these is plenty.`)}</p>$1`).replace(/<\/div>$/, `${signs}</div>`);
   }
+  const baseSee = window.devSeeIt;
+  window.devSeeIt = function (btn, key) { baseSee(btn, key); const box = btn.closest('.dev-skill').querySelector('.dev-media'); if (box && box.dataset.desc && !box.querySelector('.dm-desc')) box.insertAdjacentHTML('afterbegin', `<p class="dm-desc">${box.dataset.desc}</p>`); };
   const baseRoute = window.changesRoute;
   window.changesRoute = function (p) {
     const [, cat, screen, a, b] = p.split(':');
@@ -118,6 +125,10 @@
 #main .dm-chips.is-done .dm-chip::before { content: "✓ "; color: #356651; font-weight: 700 }
 #main .dm-a { margin: 0; font-size: 14.5px; line-height: 1.55; color: #4c4757 }
 #main .dm-more { margin-top: 14px }
+#main .dm-already { margin: 12px 0 0; font-size: 13.5px; line-height: 1.45; color: #356651; font-weight: 600 }
+#main .dm-desc { margin: 4px 0 10px; font-size: 14px; line-height: 1.5; color: #5c5361 }
+#main .dev-area-page .dev-skill { min-height: 0; padding: 12px 14px }
+#main .dev-area-page .dev-skill .dev-see { margin-top: 4px }
 #main .dm-hint { display: block; font-style: normal; font-size: 12.5px; font-weight: 600; color: var(--year-ink); background: rgba(255,255,255,.7); border-radius: 10px; padding: 5px 8px; margin: 6px 14px 2px; line-height: 1.3 }
 #main .dev-area-art.dm-mini { height: 30px !important; margin: 14px 14px 8px !important; width: auto !important }
 #main .dev-area-art.dm-mini svg { height: 100% !important; width: auto !important }
