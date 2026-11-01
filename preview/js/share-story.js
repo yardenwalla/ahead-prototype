@@ -76,7 +76,7 @@
   /* ---------- one month ---------- */
   async function renderMonth(m) {
     const L = MONTHS[m]; await fonts();
-    const [bg, tape, photo] = await Promise.all([img(`assets/share/month-${m}.jpg`), img(`assets/share/tape-${m}.png`), img(photoFor(m))]);
+    const [bg, tape, photo] = await Promise.all([img(`assets/share/month-${m}.jpg`), img(`assets/share/tape-${m}.png`), photoFor(m) ? img(photoFor(m)) : null]);
     const c = document.createElement('canvas'); c.width = W; c.height = H;
     const ctx = c.getContext('2d');
     ctx.fillStyle = '#F5E8E2'; ctx.fillRect(0, 0, W, H);
@@ -208,7 +208,7 @@
       <p class="story-eyebrow">${eyebrow}</p><h2>${title}</h2>
       ${isYear && have ? `<div class="story-seg" role="group" aria-label="Photo or video"><button class="is-on" data-kind="photo" aria-pressed="true">Photo</button><button data-kind="video" aria-pressed="false">Video</button></div>` : ''}
       <div class="story-frame"><canvas width="${W}" height="${H}" aria-label="${isYear ? 'Your first-year collage' : 'Your monthly photo'}"></canvas><div class="story-busy" hidden><span></span></div></div>
-      ${isYear ? '' : `<div class="story-adjust"><label for="storyZoom">Zoom</label><input id="storyZoom" type="range" min="1" max="2.5" step="0.01" value="1"></div>`}
+      ${isYear ? '' : `<div class="story-adjust"><label for="storyZoom">Zoom</label><input id="storyZoom" type="range" min="1" max="2.5" step="0.01" value="1"><label class="story-change" role="button">Change photo${typeof hubPhotoInput === 'function' ? hubPhotoInput(m) : ''}</label></div>`}
       <div class="story-actions${canShareFiles ? '' : ' is-single'}">${canShareFiles ? '<button class="story-btn" data-act="share">Share</button><button class="story-btn is-quiet" data-act="save">Save</button>' : '<button class="story-btn" data-act="save">Save</button>'}</div>
       <p class="story-note">${esc(note)}</p></div>`;
     document.body.appendChild(sheet);
@@ -293,6 +293,30 @@
       if (r === 'failed') toast('Couldn’t save it', 'Try again, or take a screenshot of the photo.');
     });
     setTimeout(() => { const btn = sheet && sheet.querySelector('.story-btn'); if (btn) btn.focus(); }, 50);
+  };
+
+  // Small copies of each month's Story for Memories, made once and kept until the photo, its position or the name changes.
+  const thumbs = {};
+  const thumbKey = m => {
+    const ph = m === 12 ? Array.from({ length: 12 }, (_, i) => (photoFor(i + 1) || '').length).join('.') : String((photoFor(m) || '').length) + (photoFor(m) || '').slice(-24);
+    return [m, babyName(), ph, JSON.stringify(m === 12 ? positions() : posFor(m))].join('|');
+  };
+  async function thumb(m) {
+    const key = thumbKey(m);
+    if (thumbs[m] && thumbs[m].key === key) return thumbs[m].url;
+    const full = m === 12 ? await renderYear() : await renderMonth(m);
+    const c = document.createElement('canvas'); c.width = 360; c.height = 640;
+    c.getContext('2d').drawImage(full, 0, 0, 360, 640);
+    const url = c.toDataURL('image/jpeg', 0.86);
+    thumbs[m] = { key, url };
+    return url;
+  }
+  window.storyHydrate = function (root = document) {
+    root.querySelectorAll('img[data-story-thumb]').forEach(el => {
+      const m = Number(el.dataset.storyThumb);
+      if (!(m >= 1 && m <= 12)) return;
+      thumb(m).then(url => { if (el.isConnected) { el.src = url; el.classList.add('is-ready'); } }).catch(() => {});
+    });
   };
 
   // For checks and for anything that needs the picture without the sheet.

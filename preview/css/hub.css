@@ -1224,3 +1224,20 @@
 .story-adjust input { flex: 1; min-width: 0; accent-color: #2B2840 }
 #main .mem-shot-remove { position: absolute; left: 6px; top: 6px; width: 28px; height: 28px; border: 0; border-radius: 50%; background: rgba(43, 40, 64, .55); color: #fff; display: grid; place-items: center; font-size: 18px; line-height: 1; cursor: pointer }
 #main .mem-shot-remove::after { content: ""; position: absolute; inset: -8px }
+/* Memories: each month as its finished Story; empty months show the design waiting for a photo */
+#main .mem-stories { display: grid; grid-auto-flow: column; grid-auto-columns: 42%; gap: 12px; overflow-x: auto; margin: 0 -16px 14px; padding: 4px 16px 12px; scroll-snap-type: x mandatory }
+#main .mem-story-wrap { position: relative; scroll-snap-align: start }
+#main .mem-story { position: relative; display: block; width: 100%; aspect-ratio: 9 / 16; padding: 0; border: 0; border-radius: 16px; overflow: hidden; background: #F5E8E2; box-shadow: 0 6px 16px rgba(43, 40, 64, .12); cursor: pointer; scroll-snap-align: start; font: inherit }
+#main .mem-story img { display: block; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .25s }
+#main .mem-story img.is-ready, #main .mem-story.is-plain img { opacity: 1 }
+#main .mem-story-add { position: absolute; left: 50%; bottom: 12px; transform: translateX(-50%); padding: 7px 12px; border-radius: 999px; background: #2B2840; color: #fff; font-size: 12.5px; font-weight: 600; white-space: nowrap }
+#main .mem-story.is-next { cursor: default; opacity: .5; box-shadow: none }
+#main .mem-story.is-next .mem-story-add { background: rgba(255, 255, 255, .92); color: #5E5A75 }
+#main .mem-story.is-plain em { position: absolute; left: 8px; top: 8px; padding: 2px 8px; border-radius: 999px; background: rgba(255, 255, 255, .92); font-style: normal; font-size: 12px; font-weight: 700; color: var(--year-ink, #5b4a8b) }
+#main .mem-story.is-plain.is-empty { display: grid; place-items: center; border: 2px dashed #d9cfe3; box-shadow: none; background: #fbf7f4 }
+#main .mem-story.is-plain.is-empty em { left: 50%; top: 40%; transform: translateX(-50%) }
+.story-change { position: relative; flex: none; padding: 6px 2px; color: #2B2840; text-decoration: underline; text-underline-offset: 3px; cursor: pointer }
+.story-change .hub-photo-input, .mem-story .hub-photo-input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none }
+/* The × on a Memories photo matches the × on Home's cards: a soft grey ×, on a small white circle so it reads on any photo */
+#main .mem-shot-remove { left: auto; right: 6px; top: 6px; width: 28px; height: 28px; min-height: 0; padding: 0; border: 0; border-radius: 50%; background: rgba(255, 255, 255, .92); color: #7d7785; font-size: 19px; line-height: 1; box-shadow: 0 1px 3px rgba(43, 39, 51, .12); z-index: 2 }
+#main .mem-shot-remove:hover { background: #fff; color: #2B2840 }

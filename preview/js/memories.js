@@ -40,28 +40,36 @@
     const firsts = data.records.filter(r => r.type === 'milestone' && r.status === 'attended').sort((a, b) => a.date.localeCompare(b.date));
     const visits = data.records.filter(r => r.type === 'visit' && r.status === 'attended').sort((a, b) => b.date.localeCompare(a.date));
 
-    // Photos: only the ones that exist, in a row you swipe. No empty boxes to scroll past.
+    // Month by month: each month as its finished Story (the balloon design with the photo in the polaroid).
+    // Months without a photo show the same design with an empty polaroid, so parents can see what it becomes.
     const have = Array.from({ length: now + 1 }, (_, m) => m).filter(m => photo(m));
-    const missing = Array.from({ length: now }, (_, m) => m).filter(m => !photo(m));
+    const designs = typeof storyShare === 'function';
+    const L = m => longLabel(m).toLowerCase();
+    const remove = m => `<button class="mem-shot-remove" onclick="hubPhotoRemove(${m})" aria-label="Remove the ${L(m)} photo"><span aria-hidden="true">×</span></button>`;
+    const card = m => {
+      if (m === 0) return photo(0)
+        ? `<div class="mem-story-wrap"><label class="mem-story is-plain" role="button" aria-label="Change the newborn photo"><img src="${photo(0)}" alt=""><em>Newborn</em>${hubPhotoInput(0)}</label>${remove(0)}</div>`
+        : `<label class="mem-story is-plain is-empty" role="button" aria-label="Add the newborn photo"><em>Newborn</em><span class="mem-story-add">＋ Add photo</span>${hubPhotoInput(0)}</label>`;
+      if (!designs) return photo(m) ? `<div class="mem-story-wrap"><label class="mem-story is-plain" role="button"><img src="${photo(m)}" alt=""><em>${label(m)}</em>${hubPhotoInput(m)}</label>${remove(m)}</div>` : '';
+      if (m === 12 && !photo(12)) return `<label class="mem-story is-empty" role="button" aria-label="Add the first-birthday photo"><img data-story-thumb="12" alt=""><span class="mem-story-add">＋ Add 1-year photo</span>${hubPhotoInput(12)}</label>`;
+      if (photo(m)) return `<div class="mem-story-wrap"><button class="mem-story" onclick="storyShare(${m})" aria-label="${m === 12 ? 'Open the first-year collage' : `Open the ${L(m)} Story`}"><img data-story-thumb="${m}" alt=""></button>${remove(m)}</div>`;
+      return `<label class="mem-story is-empty" role="button" aria-label="Add the ${L(m)} photo"><img data-story-thumb="${m}" alt=""><span class="mem-story-add">＋ Add photo</span>${hubPhotoInput(m)}</label>`;
+    };
+    // Newest first, then one faint look at next month's design.
+    const months = Array.from({ length: now + 1 }, (_, i) => now - i);
+    const next = designs && now < 11 ? `<div class="mem-story is-next" aria-hidden="true"><img data-story-thumb="${now + 1}" alt=""><span class="mem-story-add">Next month</span></div>` : '';
+    const strip = `<div class="mem-stories">${months.map(card).join('')}${next}</div>`;
+    if (designs) setTimeout(() => window.storyHydrate && storyHydrate(), 0);
     let b = `<div class="mem-page"><div class="eyebrow">Memories</div><h1>${nm}’s first year</h1>`;
-    // Nothing saved yet: one welcoming card with the two ways in, instead of empty sections.
+    // Nothing saved yet: a welcoming card, with the year's designs waiting underneath.
     if (!have.length && !firsts.length) {
       const P = typeof babyPronouns === 'function' ? babyPronouns() : { p: 'their' };
-      b += `<section class="mem-welcome"><div class="mem-welcome-art" aria-hidden="true">${[['smile', 'Born', 'Out and about'], ['star', '6 months', 'Development'], ['heart', '1 year', 'Health']].map(([ic, t, c], k) => `<span class="mem-polaroid is-${k}"><i>${hubArt(ic, c)}</i><em>${t}</em></span>`).join('')}</div><h2>${esc2(`${name()}’s year starts here`)}</h2><p>${esc2(`Add a photo each month and save firsts as they happen. By ${P.p} first birthday, it all plays back like a flipbook.`)}</p><div class="mem-welcome-actions"><label class="primary mem-welcome-btn" role="button">${esc2(`Add ${now === 0 ? 'a newborn' : now === 12 ? 'a first-birthday' : `the ${now}-month`} photo`)}${hubPhotoInput(now)}</label><button class="mem-welcome-btn is-quiet" onclick="openPage('chg:Timeline:milestone')">Save a first</button></div></section>`;
-      if (missing.length) b += `<details class="mem-missing is-welcome"><summary>${esc2(`Have older photos? Add earlier months (${missing.length})`)}</summary><div class="mem-missing-row">${missing.map(m => `<label class="mem-slot" role="button" aria-label="Add the ${longLabel(m).toLowerCase()} photo"><i aria-hidden="true">＋</i><span>${label(m)}</span>${hubPhotoInput(m)}</label>`).join('')}</div></details>`;
+      b += `<section class="mem-welcome"><h2>${esc2(`${name()}’s year starts here`)}</h2><p>${esc2(`Add a photo each month and it becomes a little Story to keep and share. By ${P.p} first birthday, all twelve hang together on one page.`)}</p><div class="mem-welcome-actions"><label class="primary mem-welcome-btn" role="button">${esc2(`Add ${now === 0 ? 'a newborn' : now === 12 ? 'a first-birthday' : `the ${now}-month`} photo`)}${hubPhotoInput(now)}</label><button class="mem-welcome-btn is-quiet" onclick="openPage('chg:Timeline:milestone')">Save a first</button></div></section>`;
+      b += `<div class="mem-head"><h2>Month by month</h2></div>${strip}`;
       b += `<p class="hub-foot">Photos and entries stay on this device.</p></div>`;
       return `<div class="quiet-category hub-page hub-timeline-page" style="${yearTheme('Memories')}">${b}</div>`;
     }
-    // This month's photo: one gentle prompt, only while it's missing.
-    if (!photo(now)) b += `<label class="mem-prompt" role="button"><span class="mem-prompt-plus" aria-hidden="true">＋</span><span><b>${esc2(`Add ${name()}’s ${now === 0 ? 'newborn' : now === 12 ? 'first-birthday' : now + '-month'} photo`)}</b><small>${esc2('One a month, and the year plays back like a flipbook.')}</small></span>${hubPhotoInput(now)}</label>`;
-    if (have.length) {
-      b += `<div class="mem-head"><h2>Month by month</h2>${have.length >= 2 ? `<button class="mem-play-link" onclick="memPlay()"><span aria-hidden="true">▶</span> Play the year</button>` : ''}</div>`;
-      // Months 1–11 each have a Story to share; the share button sits beside the photo, not inside its picker.
-      const share = m => (m >= 1 && m <= 11 && typeof storyShare === 'function' ? `<button class="mem-shot-share" onclick="storyShare(${m})" aria-label="Share the ${longLabel(m).toLowerCase()} photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3m0 0-4 4m4-4 4 4"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg></button>` : '');
-      b += `<div class="mem-strip">${[...have].reverse().map(m => `<div class="mem-shot-wrap"><label class="mem-shot" role="button" aria-label="Change the ${longLabel(m).toLowerCase()} photo"><img src="${photo(m)}" alt=""><span>${label(m)}</span>${hubPhotoInput(m)}</label><button class="mem-shot-remove" onclick="hubPhotoRemove(${m})" aria-label="Remove the ${longLabel(m).toLowerCase()} photo"><span aria-hidden="true">×</span></button>${share(m)}</div>`).join('')}</div>`;
-      if (now === 12 && typeof storyShare === 'function' && have.some(m => m >= 1)) b += `<button class="hub-button is-secondary mem-year" onclick="storyShare(12)">${esc2(`Make ${name()}’s first-year collage`)}</button>`;
-    }
-    if (missing.length) b += `<details class="mem-missing"><summary>${esc2(`Add photos for earlier months (${missing.length})`)}</summary><div class="mem-missing-row">${missing.map(m => `<label class="mem-slot" role="button" aria-label="Add the ${longLabel(m).toLowerCase()} photo"><i aria-hidden="true">＋</i><span>${label(m)}</span>${hubPhotoInput(m)}</label>`).join('')}</div></details>`;
+    b += `<div class="mem-head"><h2>Month by month</h2>${have.length >= 2 ? `<button class="mem-play-link" onclick="memPlay()"><span aria-hidden="true">▶</span> Play the year</button>` : ''}</div>${strip}`;
 
     // Firsts: the three most recent, then "See all" for the rest, so the page stays the same length however many you save.
     b += `<div class="mem-head"><h2>Firsts</h2><button class="textlink" onclick="openPage('chg:Timeline:milestone')">＋ Save a first</button></div>`;
