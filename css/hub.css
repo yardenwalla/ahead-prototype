@@ -1317,3 +1317,17 @@
 #main .dev-try .dev-try-row { display: flex; align-items: center; gap: 14px; width: 100%; background: none; border: 0; padding: 0; text-align: left; font: inherit; color: var(--ink); cursor: pointer; min-height: 0 }
 #main .dev-try .dev-idea-art { width: 104px; flex: none }
 #main .dev-try .hub-row-copy small { display: block; margin-top: 2px }
+
+/* Development, blended into the rest of the app: the same top card as every category (flat category color,
+   same type), with only a quiet age number; tiles and area pages in the category's own lilac. */
+#main .dev-hero { background: var(--year-bg); padding: 20px; border-radius: 24px }
+#main .dev-hero-spark { display: none }
+#main .dev-hero-num { font-size: 104px; top: -4px; right: 14px; opacity: .6 }
+#main .dev-hero-eyebrow { margin: 0 0 6px; font-size: 12px; font-weight: 600; letter-spacing: 0; text-transform: none; color: var(--year-ink) }
+#main .dev-hero h1 { font: 700 25px/1.18 var(--display-font, inherit); letter-spacing: -.3px; margin: 0 0 8px; max-width: 80% }
+#main .dev-hero-lead { font-size: 14.5px; line-height: 1.55; color: var(--ink); opacity: .82; max-width: 100% }
+#main .dev-area.is-Social, #main .dev-area.is-Talking, #main .dev-area.is-Thinking, #main .dev-area.is-Movement { background: var(--year-pale) }
+#main .dev-area .dev-area-art svg > circle:first-of-type { fill: #fff; fill-opacity: .7 }
+#main .dev-area-page.is-Social, #main .dev-area-page.is-Talking, #main .dev-area-page.is-Thinking, #main .dev-area-page.is-Movement { --area: var(--year-pale); --area-deep: var(--year-accent) }
+#main .dev-area-head .hub-context { letter-spacing: 0; text-transform: none; font-weight: 600 }
+#main .dev-area-head h1 { font-size: 25px }
