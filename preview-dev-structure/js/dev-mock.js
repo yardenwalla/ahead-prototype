@@ -35,11 +35,27 @@
     }
     const tiles = page.querySelector('.hub-glance');
     if (tiles) tiles.querySelector('.hub-card-head b').textContent = F('What Maya is working on');
-    // One row for the worry, in the parent's words.
-    const row = `<div class="hub-list"><button class="hub-row" onclick="openPage('chg:Development:d:ontrack:${ref}')"><span class="hub-dot">${hubArt('smile', 'Development')}</span><span class="hub-row-copy"><b>${F('Is Maya on track?')}</b><small>${F('What she’s likely doing, and when to call')}</small></span><span class="hub-chev" aria-hidden="true">›</span></button></div>`;
-    (ideas || tiles).insertAdjacentHTML('afterend', row);
   }
 
+  const BIG_AREA = { 2: 'Social', 4: 'Movement', 6: 'Movement', 9: 'Movement', 12: 'Movement' };
+  // Area pages answer "is she on track?" themselves: what she's likely doing already, the big question if it's about this area, and when to call.
+  function dressArea() {
+    const page = document.querySelector('#main .dev-area-page');
+    if (!page || page.dataset.mock) return;
+    page.dataset.mock = '1';
+    const domain = (page.className.match(/is-(\w+)/) || [])[1];
+    const ref = Number((page.querySelector('.hub-context') || {}).textContent.match(/\d+/)?.[0]) || 6;
+    const r = ref === 1 ? 12 : ref, prev = KEYS[KEYS.indexOf(r) - 1];
+    const done = prev ? (DEVELOPMENT_DOMAINS[prev][domain] || []) : [];
+    const head = page.querySelector('.dev-area-head');
+    page.querySelector('.hub-seen-meter, .hub-meter')?.remove();
+    if (done.length) head.insertAdjacentHTML('afterend', `<section class="hub-card dm-done"><span class="hub-card-head"><b>${F('Probably doing already')}</b></span><div class="dm-chips is-done">${done.map(chip).join('')}</div></section><p class="dm-sub">${F(`Working on now, by ${r === 12 ? '1 year' : r + ' months'}`)}</p>`);
+    else head.insertAdjacentHTML('afterend', `<p class="dm-sub">${F(`Working on now, by ${r === 12 ? '1 year' : r + ' months'}`)}</p>`);
+    const note = page.querySelector('.hub-note');
+    const big = BIG_AREA[r] === domain && BIG[r] ? `<section class="hub-card dm-bigq"><span class="hub-card-head"><b>${F(BIG[r][0])}</b></span><p class="dm-a">${F(BIG[r][1])}</p></section>` : '';
+    const call = `<p class="dm-call"><b>${F('When to call:')}</b> ${F('if Maya loses a skill she had, or isn’t doing most of the “already” list. You don’t need to wait for the checkup.')}</p>`;
+    if (note) { note.insertAdjacentHTML('afterend', big + call); note.remove(); }
+  }
   // "Is Maya on track?" on its own page.
   function onTrack(ref) {
     const prev = KEYS[KEYS.indexOf(ref) - 1], h = __hub, age = ref === 12 ? '1 year' : ref + ' months';
@@ -64,7 +80,7 @@
     return baseRoute(p);
   };
   const base = window.render;
-  window.render = render = function (...a) { const r = base.apply(this, a); try { dress(); } catch (e) { console.error(e); } return r; };
+  window.render = render = function (...a) { const r = base.apply(this, a); try { dress(); dressArea(); } catch (e) { console.error(e); } return r; };
   const css = document.createElement('style');
   css.textContent = `
 #main .dm-chips { display: flex; flex-wrap: wrap; gap: 6px }
@@ -73,6 +89,11 @@
 #main .dm-chips.is-done .dm-chip::before { content: "✓ "; color: #356651; font-weight: 700 }
 #main .dm-a { margin: 0; font-size: 14.5px; line-height: 1.55; color: #4c4757 }
 #main .dm-more { margin-top: 14px }
+#main .dm-sub { margin: 18px 4px 10px; font-size: 13px; font-weight: 700; color: var(--year-ink) }
+#main .dm-done { margin-top: 0 }
+#main .dm-bigq { margin-top: 16px }
+#main .dm-call { margin: 16px 4px 0; font-size: 14px; line-height: 1.5; color: #4c4757 }
+#main .dm-call b { color: #a03a3a }
 #main .dm-wake { margin: 0 0 14px; font-size: 14.5px; line-height: 1.5; color: #4c4757 }
 #main .hub-page[data-overview="Development"] .hub-lead { color: #5c5361 }
 `;
