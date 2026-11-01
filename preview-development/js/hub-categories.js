@@ -68,19 +68,17 @@
     }).join('');
     b += `<section class="hub-card hub-glance is-static"><span class="hub-card-head"><b>${F('What Maya might be doing')}</b></span><div class="hub-domain-tiles">${domainTiles}</div></section>` ;
     if (ref === now || !live()) {
-      const ideas = (playStageModel().primary || []).slice(0, 3), lo = playPhase().lo;
-      const extra = (playStageModel().primary || []).length - 3 + (playStageModel().more || []).length;
-      const total = (playStageModel().primary || []).length + (playStageModel().more || []).length;
-      b += h.list('', [h.row({ icon: 'hand', cat: 'Development', title: 'Ideas to try together', sub: 'Simple games that fit into your day', chipText: `${total} ideas`, onclick: `openPage('chg:Development:d:more:${lo}')` }),
+      // Ideas to try together: four pictures, each opening a short how-to.
+      b += window.devIdeasCard ? devIdeasCard(ref) : '';
+      if (ref >= 6) b += h.list('', [
         // From 6 months: a few baby signs, so Maya can say what she wants before she has the words.
-        ref >= 6 ? h.row({ icon: 'signs', cat: 'Development', title: 'Try a few baby signs', sub: 'More, eat, milk and all done', onclick: `openPage('chg:Development:d:signs')` }) : null].filter(Boolean));
+        h.row({ icon: 'signs', cat: 'Development', title: 'Try a few baby signs', sub: 'More, eat, milk and all done', onclick: `openPage('chg:Development:d:signs')` })]);
     }
     const reached = live() && developmentMonth(actualMonth()) >= ref;
     b += h.versus('Not yet, or time to ask?', ['Not yet', reached && ref < now ? `Most babies show these by ${age}. If Maya isn’t doing some of them yet, it’s worth calling your pediatrician rather than waiting for the checkup.` : reached ? `Most babies show these by ${age}. If Maya isn’t doing some of them yet, mention it at {p} next checkup. It’s a common question.` : `Every baby gets there in their own time. These can show up any time before ${age}.`], ['Talk to your pediatrician', 'Call if Maya loses a skill {s} had, or if something worries you. You don’t need to wait for the checkup.']);
     const keys = Object.keys(DEV_STAGES).map(Number), nx = keys[keys.indexOf(ref) + 1];
     if (nx && live() && ref === now && nx - developmentMonth(actualMonth()) <= 1) b += h.next(`Coming up by ${monthsLabel(nx)}`, DEV_STAGES[nx].title, `openPage('development-stage:${nx}')`);
     b += h.more(other ? 'Common questions at this stage' : 'What other parents ask', `openPage('chg:Development:d:faq:${ref}')`);
-    b += `<a class="hub-more" href="${devSource(ref)}" target="_blank" rel="noopener"><span>${F('See photos and videos of each skill')}</span><span class="hub-chev" aria-hidden="true">↗</span></a>`;
     return frame('Development', `data-development-guide="${ref}"`, pills + ageNote, b);
   };
 
@@ -289,10 +287,11 @@
     const h = H(), age = ref === 12 ? '1 year' : ref + ' months';
     // Each skill once: what it looks like, and a tap when you've seen it. No separate page per skill.
     const rows = labels.map(l => { const key = journeySkillKey(l), rec = journeyData().records.find(r => r.type === 'milestone' && r.skillKey === key) || (skillSeen(l) ? { reported: true } : null);
-      return `<div class="hub-tick is-habit"><span class="hub-tick-art">${h.art(DOMAIN_ICONS[domain] || 'smile', 'Development')}</span><span class="hub-row-copy"><b>${clearMilestone(l)}</b><small>${esc(DEV_EXAMPLES[l] || '')}</small></span>${rec ? `<span class="hub-chip is-done">${F('Seen')} ✓</span>` : `<button class="hub-seen" onclick="hubSeen('${key}')">${F('Seen it')}</button>`}</div>`; }).join('');
+      const see = window.devSeeButton ? devSeeButton(key, clearMilestone(l)) : '';
+      return `<div class="hub-tick is-habit dev-skill"><span class="hub-tick-art">${h.art(DOMAIN_ICONS[domain] || 'smile', 'Development')}</span><span class="hub-row-copy"><b>${clearMilestone(l)}</b><small>${esc(DEV_EXAMPLES[l] || '')}</small>${see}</span>${rec ? `<span class="hub-chip is-done">${F('Seen')} ✓</span>` : `<button class="hub-seen" onclick="hubSeen('${key}')">${F('Seen it')}</button>`}${see ? '<div class="dev-media" hidden></div>' : ''}</div>`; }).join('');
     const skill = journeySkills().find(s => labels.includes(s.label) && typeof devSkillActivity === 'function' && devSkillActivity(s)), act = skill && devSkillActivity(skill);
     const tryRow = act ? h.list('Try this together', [h.row({ icon: 'hand', cat: 'Development', title: act.title, sub: playLine(act) })]) : '';
-    return `<div class="quiet-category hub-page hub-detail" data-overview="Development" style="${yearTheme('Development')}">${detailPageTop('Development')}<div class="hub-detail-head"><span class="hub-big">${h.art(DOMAIN_ICONS[domain] || 'smile', 'Development')}</span><p class="hub-context">${esc(`By ${age}`)}</p><h1>${esc(meta.title)}</h1><p class="hub-lead">${esc(DEV_STAGES[ref].summaries[domain])}</p></div>${(() => { const seen = labels.filter(l => skillSeen(l)).length; return `<div class="hub-meter hub-seen-meter"><div class="hub-meter-label"><span>${F('Skills you’ve seen')}</span><span>${seen} of ${labels.length}</span></div><div class="hub-bar"><i style="width:${Math.round(100 * seen / labels.length)}%"></i></div></div>`; })()}<div class="hub-ticks">${rows}</div>${h.note(`Most babies show these by ${age}. Tap “Seen it” to save the moment to Memories.`)}${tryRow}${h.video('Watch each of these skills in action', 'CDC', devSource(ref), 'Photos and videos')}</div>`;
+    return `<div class="quiet-category hub-page hub-detail" data-overview="Development" style="${yearTheme('Development')}">${detailPageTop('Development')}<div class="hub-detail-head"><span class="hub-big">${h.art(DOMAIN_ICONS[domain] || 'smile', 'Development')}</span><p class="hub-context">${esc(`By ${age}`)}</p><h1>${esc(meta.title)}</h1><p class="hub-lead">${esc(DEV_STAGES[ref].summaries[domain])}</p></div>${(() => { const seen = labels.filter(l => skillSeen(l)).length; return `<div class="hub-meter hub-seen-meter"><div class="hub-meter-label"><span>${F('Skills you’ve seen')}</span><span>${seen} of ${labels.length}</span></div><div class="hub-bar"><i style="width:${Math.round(100 * seen / labels.length)}%"></i></div></div>`; })()}<div class="hub-ticks">${rows}</div>${h.note(`Most babies show these by ${age}. Tap “Seen it” to save the moment to Memories.`)}${tryRow}</div>`;
   };
 
   /* ---------- small detail screens for these categories ---------- */
