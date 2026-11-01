@@ -115,3 +115,5 @@ Existing age-based guide advancement remains a product decision: suggested guida
 - No faint next-month card; the row shows only months the baby has reached.
 - **Newborn matches the set:** Yarden's gold "Hello, World!" design with the name handwritten on the polaroid (the design already has a heart). It's the first card in the Memories row and opens like the other months.
 - **Newborn caption:** the name with the birthday underneath ("May 31, 2026"), taken from the saved birthday.
+- **One Share button, like sharing a song:** the Story sheet has a single Share button that opens the phone's share sheet (Messages, Instagram, Save Image). The picture is made the moment it's tapped, so the phone still treats it as the parent's tap; before, the file was prepared first, iPhone refused the share and it fell back to downloading. The video is two taps: Make the video, then Share the video.
+- Where the share sheet isn't available (some in-app browsers), the finished picture appears with "Press and hold the picture to save or share it" instead of a download. A computer still downloads it.

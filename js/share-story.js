@@ -181,22 +181,19 @@
 
   /* ---------- sharing ---------- */
   const fileName = m => `${babyName().replace(/[^\w-]+/g, '-')}-${m === 'year' ? 'first-year' : m === 0 ? 'newborn' : m + '-months'}`;
-  async function shareOrSave(blob, base, mode) {
-    const ext = /mp4/.test(blob.type) ? 'mp4' : /webm/.test(blob.type) ? 'webm' : 'png';
-    const file = new File([blob], `${base}.${ext}`, { type: blob.type });
-    if (mode === 'share' && navigator.canShare && navigator.canShare({ files: [file] })) {
-      try { await navigator.share({ files: [file] }); return 'shared'; } catch (e) { if (e && e.name === 'AbortError') return 'cancelled'; }
-    }
-    // Inside Claude (the tappable preview), files go through Claude's own save prompt; on iPhone that opens the share sheet.
-    const downloads = window.claude && typeof window.claude.use === 'function' ? await window.claude.use('downloads').catch(() => null) : null;
-    if (downloads) {
-      try { await downloads.save({ filename: file.name, data: blob }); return 'handed'; } catch (e) { return e && e.code === 'declined' ? 'cancelled' : 'failed'; }
-    }
-    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = file.name; document.body.appendChild(a); a.click();
-    setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 4000);
-    return 'saved';
+  // A finished picture as a file, made synchronously so the tap that asked for it still counts when the share sheet opens.
+  function jpegFile(canvas, base) {
+    const url = canvas.toDataURL('image/jpeg', 0.92), bin = atob(url.slice(url.indexOf(',') + 1)), bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return new File([bytes], `${base}.jpg`, { type: 'image/jpeg' });
   }
-  const pngOf = c => new Promise(ok => c.toBlob(ok, 'image/png'));
+  const touch = () => !!(window.matchMedia && matchMedia('(pointer: coarse)').matches);
+  // Open the phone's share sheet (Messages, Instagram, Save Image…). Must be called straight from the tap, with no waiting first.
+  function openShare(file, fallback) {
+    let ok = false; try { ok = !!(navigator.canShare && navigator.share && navigator.canShare({ files: [file] })); } catch (e) {}
+    if (!ok) return fallback(file);
+    navigator.share({ files: [file] }).catch(e => { if (!e || e.name !== 'AbortError') fallback(file); });
+  }
   function videoType() {
     if (typeof MediaRecorder === 'undefined') return null;
     return ['video/mp4;codecs=avc1', 'video/mp4', 'video/webm;codecs=vp9', 'video/webm'].find(t => MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(t)) || null;
@@ -221,15 +218,14 @@
     const title = isYear ? `${nm}’s first year` : m === 0 ? `Hello, ${nm}` : m === 12 ? `${nm} is one!` : `${nm} is ${WORDS[m - 1]}`;
     const note = isYear
       ? (have < 12 ? `${12 - have} month${12 - have === 1 ? ' doesn’t' : 's don’t'} have a photo yet. Add ${12 - have === 1 ? 'it' : 'them'} in Memories and they’ll appear here.` : 'All twelve months, on one page.')
-      : 'Drag the photo to move it, and zoom if you like. Then share it to your Story or send it to family.';
-    // Phones that can share files get Share and Save; anywhere else, one Save button.
-    let canShareFiles = false; try { canShareFiles = !!(navigator.canShare && navigator.canShare({ files: [new File(['x'], 'x.png', { type: 'image/png' })] })); } catch (e) {}
+      : 'Drag the photo to move it, and zoom if you like.';
     sheet.innerHTML = `<div class="story-card"><button class="story-close" aria-label="Close">×</button>
       <p class="story-eyebrow">${eyebrow}</p><h2>${title}</h2>
       ${isYear && have ? `<div class="story-seg" role="group" aria-label="Photo or video"><button class="is-on" data-kind="photo" aria-pressed="true">Photo</button><button data-kind="video" aria-pressed="false">Video</button></div>` : ''}
       <div class="story-frame"><canvas width="${W}" height="${H}" aria-label="${isYear ? 'Your first-year collage' : 'Your monthly photo'}"></canvas><div class="story-busy" hidden><span></span></div></div>
       ${isYear ? '' : `<div class="story-adjust"><label for="storyZoom">Zoom</label><input id="storyZoom" type="range" min="1" max="2.5" step="0.01" value="1"><label class="story-change" role="button">Change photo${typeof hubPhotoInput === 'function' ? hubPhotoInput(m) : ''}</label></div>`}
-      <div class="story-actions${canShareFiles ? '' : ' is-single'}">${canShareFiles ? '<button class="story-btn" data-act="share">Share</button><button class="story-btn is-quiet" data-act="save">Save</button>' : '<button class="story-btn" data-act="save">Save</button>'}</div>
+      <div class="story-actions is-single"><button class="story-btn" data-act="share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3m0 0-4 4m4-4 4 4"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg><span>Share</span></button></div>
+      <p class="story-share-hint">Send it in Messages, post it to Instagram, or tap Save Image to keep it in Photos.</p>
       <p class="story-note">${esc(note)}</p></div>`;
     document.body.appendChild(sheet);
     document.addEventListener('keydown', onKey);
@@ -304,14 +300,41 @@
       play();
       return new Blob(chunks, { type: type.split(';')[0] });
     }
-    sheet.querySelectorAll('.story-btn').forEach(b => b.onclick = async () => {
-      const mode = b.dataset.act;
-      const blob = kind === 'video' ? await recordVideo() : await pngOf(still);
-      if (!blob) return;
-      const r = await shareOrSave(blob, fileName(m), mode);
-      if (r === 'saved') toast('Saved', kind === 'video' ? 'The video is in your downloads.' : 'The photo is in your downloads.');
-      if (r === 'failed') toast('Couldn’t save it', 'Try again, or take a screenshot of the photo.');
-    });
+    // When the share sheet isn't available (some in-app browsers, a computer), never surprise with a download on a phone:
+    // show the finished picture and let the parent press and hold it, the way any photo on a web page is saved.
+    const frame = sheet.querySelector('.story-frame'), btn = sheet.querySelector('.story-btn'), btnText = btn.querySelector('span');
+    async function fallback(file) {
+      const claude = window.claude && typeof window.claude.use === 'function' ? await window.claude.use('downloads').catch(() => null) : null;
+      if (claude) { try { await claude.save({ filename: file.name, data: file }); } catch (e) {} return; }   // inside Claude: Claude's own save, which opens the share sheet on iPhone
+      if (touch() && /image/.test(file.type)) {
+        let hold = frame.querySelector('.story-hold');
+        if (!hold) { hold = document.createElement('div'); hold.className = 'story-hold'; hold.innerHTML = '<img alt=""><span>Press and hold the picture to save or share it</span>'; frame.appendChild(hold); }
+        const im = hold.querySelector('img'); if (im.src) URL.revokeObjectURL(im.src); im.src = URL.createObjectURL(file);
+        hold.onclick = e => { if (e.target === hold) hold.remove(); };
+        return;
+      }
+      const a = document.createElement('a'); a.href = URL.createObjectURL(file); a.download = file.name; document.body.appendChild(a); a.click();
+      setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 4000);
+      toast('Saved', `${/video/.test(file.type) ? 'The video' : 'The picture'} is in your downloads.`);
+    }
+    // The video has to be recorded first, so it's two taps: make it, then share it.
+    let videoFile = null;
+    const label = () => { btnText.textContent = kind === 'video' ? (videoFile ? 'Share the video' : 'Make the video') : 'Share'; };
+    sheet.querySelectorAll('.story-seg button').forEach(x => x.addEventListener('click', () => setTimeout(label, 0)));
+    btn.onclick = () => {
+      const old = frame.querySelector('.story-hold'); if (old) old.remove();
+      if (kind === 'video') {
+        if (videoFile) return openShare(videoFile, fallback);
+        recordVideo().then(blob => {
+          if (!blob) return;
+          const ext = /mp4/.test(blob.type) ? 'mp4' : 'webm';
+          videoFile = new File([blob], `${fileName(m)}.${ext}`, { type: blob.type });
+          label(); toast('Your video is ready', 'Tap Share the video to send it or save it.');
+        });
+        return;
+      }
+      openShare(jpegFile(still, fileName(m)), fallback);
+    };
     setTimeout(() => { const btn = sheet && sheet.querySelector('.story-btn'); if (btn) btn.focus(); }, 50);
   };
 
