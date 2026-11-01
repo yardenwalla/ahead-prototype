@@ -56,21 +56,21 @@
     // A question always comes right after the top card.
     const q = page.querySelector('.hub-napask, .connected-checkin, .hub-q');
     if (q) hero.after(q);
-    const draw = ART[t];
-    const art = hero.dataset.art || (draw ? draw(pal(t)) : '');
-    if (art) hero.insertAdjacentHTML('afterbegin', `<span class="mock-hero-art">${art}</span>`);
+    // The same category icon the timeline and Home use, large, in a soft white circle.
+    const icon = typeof catIcon === 'function' ? catIcon(t) : '';
+    if (icon) hero.insertAdjacentHTML('afterbegin', `<span class="mock-hero-icon">${icon}</span>`);
   }
   const base_ = window.render;
   window.render = render = function (...a) { const r = base_.apply(this, a); try { dress(); } catch (e) {} return r; };
   const css = document.createElement('style');
   css.textContent = `
 #main .hub-hero.mock-hero { position: relative; overflow: hidden; background: linear-gradient(160deg, var(--year-bg), var(--year-pale) 62%, #fdeee6) !important; padding-top: 22px }
-#main .mock-hero-art { position: absolute; right: -14px; top: -8px; width: 150px; height: 110px; opacity: .95; pointer-events: none }
-#main .mock-hero-art svg { width: 100%; height: 100% }
+#main .mock-hero-icon { position: absolute; right: 18px; top: 18px; width: 76px; height: 76px; border-radius: 50%; background: rgba(255,255,255,.7); box-shadow: 0 0 0 8px rgba(255,255,255,.28); display: grid; place-items: center; padding: 12px; pointer-events: none }
+#main .mock-hero-icon svg { width: 100% !important; height: 100% !important }
 
-#main .hub-hero.mock-hero > *:not(.mock-hero-art):not(.mock-hero-spark) { position: relative }
+#main .hub-hero.mock-hero > *:not(.mock-hero-icon) { position: relative }
 #main .hub-hero.mock-hero { min-height: 172px; padding: 20px 20px 22px !important; margin-bottom: 14px }
-#main .hub-hero.mock-hero .hub-eyebrow, #main .hub-hero.mock-hero h1 { max-width: 62% }
+#main .hub-hero.mock-hero .hub-eyebrow, #main .hub-hero.mock-hero h1 { max-width: 68% }
 #main .hub-hero.mock-hero h1 { font-size: 25px !important; line-height: 1.17 !important; margin: 6px 0 10px !important }
 #main .hub-hero.mock-hero .hub-lead { max-width: 100%; margin: 0 }
 #main .mock-after { margin-bottom: 14px }
