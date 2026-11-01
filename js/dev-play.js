@@ -154,13 +154,13 @@
     b += `<section class="hub-card hub-glance is-static"><span class="hub-card-head"><b>${F(own ? 'What Maya might be doing' : 'What babies might be doing')}</b></span><div class="hub-domain-tiles">${tiles}</div></section>`;
     // Q3: awake time, then two illustrated ideas and the rest one tap away.
     const lo = own && live() ? playPhase(developmentMonth(actualMonth())).lo : ref, ideas = ideasFor(lo).primary;
-    b += `<section class="hub-card dev-awake"><span class="hub-card-head"><b>${F(own ? 'Awake time with Maya' : `Awake time at ${age}`)}</b></span>${hubIconSteps(awakeFor(ref, own), 'Development', 'What awake time looks like at this age', false)}<p class="dev-awake-note">${F((own && live() && actualMonth() < 2 ? 'Right now Maya is awake for about 45–60 minutes at a time, feeds included. ' : '') + 'Screens aren’t recommended yet. Video chats with family are fine.')}</p><div class="dev-awake-ideas"><span class="dev-sub">${F('Ideas to try together')}</span><div class="dev-ideas is-pair">${todaysIdeas(ideas).map(a => ideaTile(a, lo)).join('')}</div><button class="hub-link" onclick="openPage('chg:Development:d:more:${lo}')">${F(`See all ${ideas.length} ideas`)} ›</button></div></section>`;
+    b += `<section class="hub-card dev-awake"><span class="hub-card-head"><b>${F(own ? 'Things to try with Maya' : `Things to try at ${age}`)}</b></span><div class="dev-ideas is-pair">${todaysIdeas(ideas).map(a => ideaTile(a, lo)).join('')}</div>${ref <= 4 ? `<p class="dev-awake-note">${F('Tummy time: ' + awakeFor(ref, own)[0][2].replace(/^./, c => c.toLowerCase()) + '.')}</p>` : ''}<button class="hub-link" onclick="openPage('chg:Development:d:more:${lo}')">${F(`See all ${ideas.length} ideas`)} ›</button></section>`;
     if (ref >= 6) b += h.list('', [h.row({ icon: 'signs', cat: 'Development', title: 'Try a few baby signs', sub: 'More, eat, milk and all done', onclick: `openPage('chg:Development:d:signs')` })]);
     b += h.versus('Not yet, or time to ask?', ['Not yet', notYetLine(ref, now)], ['Talk to your pediatrician', 'Call if Maya loses a skill {s} had, or if something worries you. You don’t need to wait for the checkup.']);
     const nx = devKeys[devKeys.indexOf(ref) + 1];
     if (nx && live() && ref === now && nx - developmentMonth(actualMonth()) <= 1) b += h.next(`Coming up by ${ageWord(nx)}`, COPY[nx].any[0], `openPage('development-stage:${nx}')`);
     const top = (Q[ref] || [])[0];
-    b += top ? `<section class="hub-card dev-faq"><span class="hub-card-head"><b>${F(other ? 'Common questions at this stage' : 'What other parents ask')}</b></span><p class="dev-faq-q">${F(top[0])}</p><p class="dev-faq-a">${F(top[1])}</p><button class="hub-link" onclick="openPage('chg:Development:d:faq:${ref}')">${F('More questions')} ›</button></section>` : h.more('What other parents ask', `openPage('chg:Development:d:faq:${ref}')`);
+    b += h.list('', [h.row({ icon: 'chat', cat: 'Development', title: other ? 'Common questions at this stage' : 'What other parents ask', sub: top ? top[0] : '', onclick: `openPage('chg:Development:d:faq:${ref}')` })]);
     return `<div class="quiet-category hub-page" data-overview="Development" style="${yearTheme('Development')}" data-development-guide="${ref}">${monthlyPageHeader('Development')}${pills}${ageNote}${b}<p class="hub-foot">${F('Ages are typical. Every baby moves at their own pace.')}</p></div>`;
   };
   // One answer to "is Maya behind?", used on the summary and in common questions.
@@ -206,8 +206,10 @@
   /* ---------- Ideas: a picture grid, and a short page for each ---------- */
   function ideasPage(lo) {
     const { phase, primary } = ideasFor(lo);
+    const ref = devRef(lo), own = live() && ref === devNow();
     return devDetail('Ideas to try together', phase.title, 'A few minutes of any of these is plenty. Pick one that suits the moment.',
-      `<div class="dev-ideas is-grid">${primary.map(a => ideaTile(a, lo)).join('')}</div>`);
+      `<div class="dev-ideas is-grid">${primary.map(a => ideaTile(a, lo)).join('')}</div>`
+      + `<section class="hub-card dev-awake"><span class="hub-card-head"><b>${F(own ? 'Awake time with Maya' : 'Awake time at this age')}</b></span>${hubIconSteps(awakeFor(ref, own), 'Development', 'What awake time looks like at this age', false)}<p class="dev-awake-note">${F((own && actualMonth() < 2 ? 'Right now Maya is awake for about 45–60 minutes at a time, feeds included. ' : '') + 'Screens aren’t recommended yet. Video chats with family are fine.')}</p></section>`);
   }
   function ideaPage(lo, id) {
     const a = findIdea(lo, id), h = H();
@@ -216,11 +218,8 @@
     const steps = (typeof playInstructionSteps === 'function' ? playInstructionSteps(a.how) : [a.how]).map(s => B(s));
     return devDetail(B(a.title), 'Ideas to try together', B(ctx.explain || a.why || ''),
       `<figure class="dev-idea-hero">${ideaArt(a, lo)}</figure>`
-      + (ctx.needs && !sameAsStep(ctx.needs, steps[0]) ? h.tip('You’ll need', B(ctx.needs)) : '')
       + h.steps(steps)
       + (ctx.notice ? h.tip('What to notice', B(ctx.notice)) : '')
-      + (a.adapt ? h.tip('Make it easier', B(a.adapt)) : '')
-      + (ctx.extend ? h.tip('Ready for more', B(ctx.extend)) : '')
       + h.note('Stay close, and stop when Maya looks away or fusses. That’s {p} way of saying “enough for now.”'), true);
   }
   const words = t => String(t || '').toLowerCase().replace(/[^a-z\s-]/g, ' ').split(/\s+/).filter(w => w.length > 3);
