@@ -110,14 +110,7 @@
     return inner.replace('</div></div>', `</div></div>`).replace(/(<div class="dev-ideas is-grid">)/, `<p class="dm-wake">${F(`Maya is usually awake for ${WAKE(m)} at a time. A few minutes of any of these is plenty.`)}</p>$1`).replace(/<\/div>$/, `${signs}</div>`);
   }
   const baseSee = window.devSeeIt;
-  window.devSeeIt = function (btn, key) { baseSee(btn, key); const box = btn.closest('.dev-skill').querySelector('.dev-media'); if (box) box.querySelectorAll('figcaption small').forEach(x => { x.textContent = 'Video · CDC'; });
-    // One designed cover for every video instead of YouTube's random frame: the area's color and picture, the play button on top.
-    const poster = box && box.querySelector('.hub-embed-poster');
-    if (poster && !poster.dataset.cover) {
-      const page = btn.closest('.dev-area-page'), dom = (page.className.match(/is-(\w+)/) || [])[1], ref = Number((page.querySelector('.hub-context') || {}).textContent.match(/\d+/)?.[0]) || 6;
-      poster.dataset.cover = '1'; poster.style.backgroundImage = 'none';
-      poster.insertAdjacentHTML('afterbegin', `<span class="dm-cover">${window.devAreaArt ? devAreaArt(dom, ref === 1 ? 12 : ref).replace('viewBox="14 6 132 104"', 'viewBox="0 4 160 112"') : ''}</span>`);
-    } if (box && box.dataset.desc && !box.querySelector('.dm-desc')) box.insertAdjacentHTML('afterbegin', `<p class="dm-desc">${box.dataset.desc}</p>`); };
+  window.devSeeIt = function (btn, key) { baseSee(btn, key); const box = btn.closest('.dev-skill').querySelector('.dev-media'); if (box) box.querySelectorAll('figcaption small').forEach(x => { x.textContent = 'Video · CDC'; }); if (box && box.dataset.desc && !box.querySelector('.dm-desc')) box.insertAdjacentHTML('afterbegin', `<p class="dm-desc">${box.dataset.desc}</p>`); };
   const baseRoute = window.changesRoute;
   window.changesRoute = function (p) {
     const [, cat, screen, a, b] = p.split(':');
@@ -151,11 +144,6 @@
 #main .dev-area-page .dev-media figcaption a { display: none }
 #main .dev-area-page .dev-media figcaption small, #main .dev-area-page .dev-photo figcaption { font-size: 12px; font-weight: 600; color: var(--year-ink) }
 #main .dev-area-page .dev-photo { background: none; border-radius: 12px }
-#main .dev-area-page .hub-embed-poster[data-cover] { background: #fff !important; filter: none }
-#main .dm-cover { position: absolute; inset: 0; display: block }
-#main .dm-cover svg { width: 100%; height: 100%; display: block }
-#main .dm-cover svg > circle:first-of-type { fill: var(--area, var(--year-pale)) }
-#main .dev-area-page .hub-embed-poster[data-cover] .hub-embed-play { top: auto; bottom: 14px; left: auto; right: 14px; margin: 0; width: 44px; height: 44px }
 #main .dev-area-page .dev-photo img { border-radius: 12px; aspect-ratio: 4 / 3; object-fit: cover; filter: saturate(.85) brightness(1.04) }
 #main .dev-area-page .dev-photo figcaption { padding: 8px 4px 0 }
 #main .dm-already { margin: 12px 0 0; font-size: 13.5px; line-height: 1.45; color: #356651; font-weight: 600 }
