@@ -8,6 +8,7 @@
 
   // Play text fixes: "them" that meant the toys, and plainer lines.
   const FIX = {
+    'choose-two': { title: 'Which one does Maya want?' },
     'mirror-company': { extend: 'Make one expression in the mirror, then copy whatever face comes back.' },
     'two-hands': { explain: 'Turning one toy over gets both hands working together.' },
     'peek-face': { explain: 'Your face going away and coming back is the whole game, and it never gets old.' },
@@ -72,7 +73,7 @@
     // Every other idea for this stage, tucked into one collapsed list so the page stays calm.
     const keys = Object.keys(DEV_STAGES).map(Number), from = (keys[keys.indexOf(ref) - 1] ?? -1) + 1, extra = [];
     for (let k = ref; k >= from; k--) { const x = playStageModel(k); [...(x.primary || []), ...(x.more || [])].forEach(a => { if (!shown.has(a.id)) { shown.add(a.id); extra.push(find(a.id)); } }); }
-    const more = extra.filter(Boolean).length ? `<details class="dev-more-ideas"><summary><span>${F(`${extra.length} more ideas`)}</span><span class="faq-plus" aria-hidden="true">＋</span></summary><div class="hub-list">${extra.filter(Boolean).map(a => h.row({ icon: 'hand', cat: 'Development', title: B(a.title), sub: B((ctxFor(a).explain || a.why || '').replace(/\.$/, '')), onclick: `openPage('chg:Development:d:idea:${ref}:${a.id}')` })).join('')}</div></details>` : '';
+    const more = extra.filter(Boolean).length ? `<details class="dev-more-ideas"><summary><span>${F(`${extra.length} more ideas`)}</span><span class="faq-plus" aria-hidden="true">＋</span></summary><ul class="dev-more-list">${extra.filter(Boolean).map(a => `<li><button onclick="openPage('chg:Development:d:idea:${ref}:${a.id}')"><span>${F(B(a.title))}</span><span class="hub-chev" aria-hidden="true">›</span></button></li>`).join('')}</ul></details>` : '';
     const signs = ref >= 6 ? h.list('', [h.row({ icon: 'signs', cat: 'Development', title: 'Try a few baby signs', sub: 'More, eat, milk and all done', onclick: `openPage('chg:Development:d:signs')` })]) : '';
     return frame('Ideas to try together', `Awake time · by ${ref === 12 ? '1 year' : ref + ' months'}`, lead, `<div class="dev-ideas is-grid">${pics.map(a => tile(a, ref)).join('')}</div>${more}${signs}`);
   }

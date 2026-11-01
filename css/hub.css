@@ -1360,3 +1360,9 @@
 #main .dev-more-ideas > summary::-webkit-details-marker { display: none }
 #main .dev-more-ideas[open] .faq-plus { transform: rotate(45deg) }
 #main .dev-more-ideas .hub-list { margin: 0; border: 0; border-top: 1px solid var(--line); border-radius: 0 }
+/* More ideas: a plain list of names, quiet like a menu */
+#main .dev-more-list { list-style: none; margin: 0; padding: 4px 16px 8px; border-top: 1px solid var(--line) }
+#main .dev-more-list li + li { border-top: 1px solid var(--line) }
+#main .dev-more-list button { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; padding: 13px 0; min-height: 0; background: none; border: 0; font: inherit; font-size: 15px; color: var(--ink); text-align: left; cursor: pointer }
+#main .dev-more-list button::before { content: ""; flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--year-accent); margin-right: 2px }
+#main .dev-more-list button span:first-of-type { flex: 1 }
