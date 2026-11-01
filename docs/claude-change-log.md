@@ -109,3 +109,5 @@ Existing age-based guide advancement remains a product decision: suggested guida
 - **Remove a photo in Memories:** a small × on each monthly photo, with Undo in the toast.
 - Share shows only where the phone can share files (iPhone Safari, Android Chrome); elsewhere there's one Save button.
 - **One button on the first-birthday screen:** "Make [Name]'s first-year collage" once there are monthly photos (the collage includes the video, so the separate Play button is gone), otherwise "Add a first-birthday photo".
+- **Memories shows the Stories:** "Month by month" is a row of each month's finished Story (balloon design with the photo). Months without a photo show the design with an empty polaroid and "＋ Add photo", and next month's design sits faintly at the end, so the empty state shows what the year becomes. Tapping a month opens its Story (move, zoom, Change photo, share). The newborn photo stays a plain photo; at 12 months the first card is the year collage.
+- The × on a Memories photo matches the × on Home's cards.
