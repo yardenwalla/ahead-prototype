@@ -1295,3 +1295,25 @@
 #main .dev-area.is-Movement { background: #e7effc }
 #main .dev-area .dev-area-art circle:first-child { fill: #ffffff; fill-opacity: .55 }
 #main .hub-eyes-big { font-size: 30px !important }
+
+/* Development area pages: the area's own color carries through from its tile */
+#main .dev-area-page { --area: #efedff; --area-deep: #e2dcfb }
+#main .dev-area-page.is-Social { --area: #fdeef2; --area-deep: #f9dbe4 }
+#main .dev-area-page.is-Talking { --area: #fff3dc; --area-deep: #fbe6bd }
+#main .dev-area-page.is-Thinking { --area: #e6f5ec; --area-deep: #cfead9 }
+#main .dev-area-page.is-Movement { --area: #e7effc; --area-deep: #d3e1f8 }
+#main .dev-area-head { background: var(--area); border-radius: 24px; padding: 4px 20px 20px; margin: 0 0 16px; overflow: hidden }
+#main .dev-area-head-art { display: block; height: 150px; margin: 0 -8px 2px }
+#main .dev-area-head-art svg { width: 100%; height: 100%; display: block }
+#main .dev-area-head-art svg > circle:first-of-type { fill: #fff; fill-opacity: .6 }
+#main .dev-area-head .hub-context { margin: 0; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--year-ink) }
+#main .dev-area-head h1 { font: 700 27px/1.15 var(--display-font, inherit); margin: 6px 0 6px; color: var(--ink) }
+#main .dev-area-head .hub-lead { margin: 0; color: #5c5361 }
+#main .dev-area-page .hub-tick-art { background: var(--area) }
+#main .dev-area-page .hub-seen { border-color: var(--area-deep) }
+#main .dev-area-page .hub-meter { background: var(--white) }
+#main .dev-area-page .hub-bar { background: var(--area) }
+#main .dev-area-page .hub-bar i { background: var(--year-ink) }
+#main .dev-try .dev-try-row { display: flex; align-items: center; gap: 14px; width: 100%; background: none; border: 0; padding: 0; text-align: left; font: inherit; color: var(--ink); cursor: pointer; min-height: 0 }
+#main .dev-try .dev-idea-art { width: 104px; flex: none }
+#main .dev-try .hub-row-copy small { display: block; margin-top: 2px }
