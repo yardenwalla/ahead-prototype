@@ -7,8 +7,12 @@
   const esc2 = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const ICON = r => {
     const k = String(r.skillKey || r.title || '').toLowerCase();
-    return /smile|laugh|face|people/.test(k) ? 'smile' : /coo|babbl|sound|word|talk/.test(k) ? 'chat' : /roll/.test(k) ? 'roll' : /sit/.test(k) ? 'sit' : /crawl/.test(k) ? 'crawl' : /stand|pull|step|walk/.test(k) ? 'stand' : /wave|clap|point/.test(k) ? 'wave' : /tooth/.test(k) ? 'tooth' : 'star';
+    return /smile|laugh|face|people/.test(k) ? 'smile' : /coo|babbl|sound|word|talk|mama|dada|parent/.test(k) ? 'chat' : /roll/.test(k) ? 'roll' : /sit/.test(k) ? 'sit' : /crawl/.test(k) ? 'crawl' : /stand|pull|step|walk/.test(k) ? 'stand' : /wave|clap|point/.test(k) ? 'wave' : /tooth/.test(k) ? 'tooth' : 'star';
   };
+  // Each first takes the soft color of its area, the same colors as Development's tiles:
+  // people and waving pink, talking yellow, moving blue, the rest (thinking, own firsts) green, a tooth peach.
+  const TONE = r => { const i = ICON(r), d = /smile|wave/.test(i) ? 'Social' : i === 'chat' ? 'Talking' : /roll|sit|crawl|stand/.test(i) ? 'Movement' : i === 'tooth' ? null : 'Thinking';
+    const c = d && window.devTileColors ? devTileColors(d) : ['#fdeee6', '#9a5a3c']; return `--mem-bg:${c[0]};--mem-ink:${c[1]}`; };
   // The firsts parents remember. A first the parent typed in themselves always counts.
   const BIG = /smile|laugh|roll|sits? (up|without)|sitting|tooth|crawl|first word|mama|dada|name for a parent|says a word|pulls? (up|to stand)|stand|first steps|takes? (a few )?steps|walk|waves?/i;
   const isBig = r => r.own || !r.skillKey || BIG.test(String(r.title));
@@ -19,7 +23,7 @@
   // One first: icon, what happened, when, and the note (or an invitation to add one).
   const firstRow = (r, withMonth = true) => {
     const dob = parse(profile.dob);
-    return `<button class="mem-row" onclick="openPage('event-edit:${r.id}')"><span class="mem-row-ic">${hubArt(ICON(r), 'Development')}</span><span class="mem-row-copy"><b>${esc2(r.title)}</b><small>${esc2(journeyDateLabel(r.date))}${withMonth ? ` · ${esc2(longLabel(monthOf(dob, r.date)))}` : ''}</small>${r.notes ? `<q>${esc2(String(r.notes).slice(0, 90))}</q>` : ''}</span><span class="mem-row-go" aria-hidden="true">›</span></button>`;
+    return `<button class="mem-row" onclick="openPage('event-edit:${r.id}')"><span class="mem-row-ic is-toned" style="${TONE(r)}">${hubArt(ICON(r), 'Development')}</span><span class="mem-row-copy"><b>${esc2(r.title)}</b><small>${esc2(journeyDateLabel(r.date))}${withMonth ? ` · ${esc2(longLabel(monthOf(dob, r.date)))}` : ''}</small>${r.notes ? `<q>${esc2(String(r.notes).slice(0, 90))}</q>` : ''}</span><span class="mem-row-go" aria-hidden="true">›</span></button>`;
   };
   // All firsts, by month, newest first. Its own page, so Memories itself never grows long.
   const allFirsts = () => {
@@ -92,7 +96,7 @@
       // Same header as every other inner page: the category icon, a short context line, then the title.
       const cat = record.type === 'milestone' ? 'Development' : 'Health';
       html = html.replace('<div class="journey-form-page">', `<div class="journey-form-page" style="${yearTheme(cat)}">`)
-        .replace(/<div class="eyebrow">[^<]*<\/div><h1>/, `<div class="hub-detail-head"><span class="hub-big">${hubArt(record.type === 'milestone' ? ICON(record) : 'steth', cat)}</span><p class="hub-context">${record.type === 'milestone' ? 'A first' : 'Checkup'}</p><h1>`)
+        .replace(/<div class="eyebrow">[^<]*<\/div><h1>/, `<div class="hub-detail-head"><span class="hub-big${record.type === 'milestone' ? ' mem-big is-toned" style="' + TONE(record) : ''}">${hubArt(record.type === 'milestone' ? ICON(record) : 'steth', cat)}</span><p class="hub-context">${record.type === 'milestone' ? 'A first' : 'Checkup'}</p><h1>`)
         .replace('</h1><form', '</h1></div><form')
         .replace('>Save date</button>', '>Save</button>');
       if (record.type !== 'milestone') return html;
