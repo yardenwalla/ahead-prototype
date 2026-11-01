@@ -51,14 +51,15 @@
         ? `<div class="mem-story-wrap"><label class="mem-story is-plain" role="button" aria-label="Change the newborn photo"><img src="${photo(0)}" alt=""><em>Newborn</em>${hubPhotoInput(0)}</label>${remove(0)}</div>`
         : `<label class="mem-story is-plain is-empty" role="button" aria-label="Add the newborn photo"><em>Newborn</em><span class="mem-story-add">＋ Add photo</span>${hubPhotoInput(0)}</label>`;
       if (!designs) return photo(m) ? `<div class="mem-story-wrap"><label class="mem-story is-plain" role="button"><img src="${photo(m)}" alt=""><em>${label(m)}</em>${hubPhotoInput(m)}</label>${remove(m)}</div>` : '';
-      if (m === 12 && !photo(12)) return `<label class="mem-story is-empty" role="button" aria-label="Add the first-birthday photo"><img data-story-thumb="12" alt=""><span class="mem-story-add">＋ Add 1-year photo</span>${hubPhotoInput(12)}</label>`;
-      if (photo(m)) return `<div class="mem-story-wrap"><button class="mem-story" onclick="storyShare(${m})" aria-label="${m === 12 ? 'Open the first-year collage' : `Open the ${L(m)} Story`}"><img data-story-thumb="${m}" alt=""></button>${remove(m)}</div>`;
+      if (photo(m)) return `<div class="mem-story-wrap"><button class="mem-story" onclick="storyShare(${m})" aria-label="Open the ${L(m)} Story"><img data-story-thumb="${m}" alt=""></button>${remove(m)}</div>`;
       return `<label class="mem-story is-empty" role="button" aria-label="Add the ${L(m)} photo"><img data-story-thumb="${m}" alt=""><span class="mem-story-add">＋ Add photo</span>${hubPhotoInput(m)}</label>`;
     };
-    // Newest first, then one faint look at next month's design.
+    // Newest first, only the months the baby has reached.
     const months = Array.from({ length: now + 1 }, (_, i) => now - i);
-    const next = designs && now < 11 ? `<div class="mem-story is-next" aria-hidden="true"><img data-story-thumb="${now + 1}" alt=""><span class="mem-story-add">Next month</span></div>` : '';
-    const strip = `<div class="mem-stories">${months.map(card).join('')}${next}</div>`;
+    const strip = `<div class="mem-stories">${months.map(card).join('')}</div>`;
+    // At the first birthday, the whole year on one page sits above the row, as its own thing.
+    const year = designs && now === 12 && Array.from({ length: 12 }, (_, i) => photo(i + 1)).some(Boolean)
+      ? `<button class="mem-yearcard" onclick="storyShare('year')"><span class="mem-yearcard-pic"><img data-story-thumb="year" alt=""></span><span><b>${esc2(`${name()}’s first year`)}</b><small>All twelve months on one page, as a photo or a video.</small></span><span class="mem-row-go" aria-hidden="true">›</span></button>` : '';
     if (designs) setTimeout(() => window.storyHydrate && storyHydrate(), 0);
     let b = `<div class="mem-page"><div class="eyebrow">Memories</div><h1>${nm}’s first year</h1>`;
     // Nothing saved yet: a welcoming card, with the year's designs waiting underneath.
@@ -69,7 +70,7 @@
       b += `<p class="hub-foot">Photos and entries stay on this device.</p></div>`;
       return `<div class="quiet-category hub-page hub-timeline-page" style="${yearTheme('Memories')}">${b}</div>`;
     }
-    b += `<div class="mem-head"><h2>Month by month</h2>${have.length >= 2 ? `<button class="mem-play-link" onclick="memPlay()"><span aria-hidden="true">▶</span> Play the year</button>` : ''}</div>${strip}`;
+    b += `${year}<div class="mem-head"><h2>Month by month</h2>${have.length >= 2 ? `<button class="mem-play-link" onclick="memPlay()"><span aria-hidden="true">▶</span> Play the year</button>` : ''}</div>${strip}`;
 
     // Firsts: the three most recent, then "See all" for the rest, so the page stays the same length however many you save.
     b += `<div class="mem-head"><h2>Firsts</h2><button class="textlink" onclick="openPage('chg:Timeline:milestone')">＋ Save a first</button></div>`;

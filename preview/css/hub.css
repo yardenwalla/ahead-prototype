@@ -1241,3 +1241,10 @@
 /* The × on a Memories photo matches the × on Home's cards: a soft grey ×, on a small white circle so it reads on any photo */
 #main .mem-shot-remove { left: auto; right: 6px; top: 6px; width: 28px; height: 28px; min-height: 0; padding: 0; border: 0; border-radius: 50%; background: rgba(255, 255, 255, .92); color: #7d7785; font-size: 19px; line-height: 1; box-shadow: 0 1px 3px rgba(43, 39, 51, .12); z-index: 2 }
 #main .mem-shot-remove:hover { background: #fff; color: #2B2840 }
+#main .mem-yearcard { display: flex; align-items: center; gap: 14px; width: 100%; margin: 4px 0 18px; padding: 12px 14px 12px 12px; border: 0; border-radius: 20px; background: #fff; box-shadow: 0 6px 16px rgba(43, 40, 64, .10); text-align: left; font: inherit; color: var(--ink, #2B2840); cursor: pointer }
+#main .mem-yearcard-pic { flex: none; width: 64px; aspect-ratio: 9 / 16; border-radius: 10px; overflow: hidden; background: #F8EBE5 }
+#main .mem-yearcard-pic img { display: block; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .25s }
+#main .mem-yearcard-pic img.is-ready { opacity: 1 }
+#main .mem-yearcard b { display: block; font-size: 16px }
+#main .mem-yearcard small { display: block; margin-top: 2px; color: var(--muted, #5E5A75); font-size: 13px; line-height: 18px }
+#main .mem-yearcard .mem-row-go { margin-left: auto; font-size: 22px; color: #9a94a0 }
