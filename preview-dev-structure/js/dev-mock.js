@@ -103,7 +103,7 @@
     return inner.replace('</div></div>', `</div></div>`).replace(/(<div class="dev-ideas is-grid">)/, `<p class="dm-wake">${F(`Maya is usually awake for ${WAKE(m)} at a time. A few minutes of any of these is plenty.`)}</p>$1`).replace(/<\/div>$/, `${signs}</div>`);
   }
   const baseSee = window.devSeeIt;
-  window.devSeeIt = function (btn, key) { baseSee(btn, key); const box = btn.closest('.dev-skill').querySelector('.dev-media'); if (box && box.dataset.desc && !box.querySelector('.dm-desc')) box.insertAdjacentHTML('afterbegin', `<p class="dm-desc">${box.dataset.desc}</p>`); };
+  window.devSeeIt = function (btn, key) { baseSee(btn, key); const box = btn.closest('.dev-skill').querySelector('.dev-media'); if (box) box.querySelectorAll('figcaption small').forEach(x => { x.textContent = 'Video · CDC'; }); if (box && box.dataset.desc && !box.querySelector('.dm-desc')) box.insertAdjacentHTML('afterbegin', `<p class="dm-desc">${box.dataset.desc}</p>`); };
   const baseRoute = window.changesRoute;
   window.changesRoute = function (p) {
     const [, cat, screen, a, b] = p.split(':');
@@ -122,6 +122,23 @@
 #main .dm-chips.is-done .dm-chip::before { content: "✓ "; color: #356651; font-weight: 700 }
 #main .dm-a { margin: 0; font-size: 14.5px; line-height: 1.55; color: #4c4757 }
 #main .dm-more { margin-top: 14px }
+/* Top card like Sleep's: the soft gradient and one quiet white circle, no number. */
+#main .dev-hero-num, #main .dev-hero-spark { display: none }
+#main .dev-hero::after { content: ""; position: absolute; right: -40px; top: -50px; width: 170px; height: 170px; border-radius: 50%; background: #fff; opacity: .35; pointer-events: none }
+#main .dev-hero > * { position: relative; z-index: 1 }
+#main .dev-hero-eyebrow { letter-spacing: 0; text-transform: none; font-size: 12.5px; font-weight: 600 }
+/* Skill photos and videos framed like the app: the area's color as a mat, rounded corners, an app-style play button, a small source tag. */
+#main .dev-area-page .dev-media { background: var(--area, var(--year-pale)); border-radius: 18px; padding: 8px 8px 10px; margin-top: 8px }
+#main .dev-area-page .dev-media .hub-embed { border: 0; border-radius: 12px; background: none; margin: 0 }
+#main .dev-area-page .dev-media .hub-embed-poster { border-radius: 12px; aspect-ratio: 4 / 3; filter: saturate(.85) brightness(1.04) }
+#main .dev-area-page .dev-media .hub-embed-play { background: var(--year-ink); color: #fff; width: 52px; height: 52px; margin: -26px 0 0 -26px; box-shadow: 0 0 0 8px rgba(255,255,255,.55) }
+#main .dev-area-page .dev-media figcaption { padding: 8px 4px 0 }
+#main .dev-area-page .dev-media figcaption b { display: none }
+#main .dev-area-page .dev-media figcaption a { display: none }
+#main .dev-area-page .dev-media figcaption small, #main .dev-area-page .dev-photo figcaption { font-size: 12px; font-weight: 600; color: var(--year-ink) }
+#main .dev-area-page .dev-photo { background: none; border-radius: 12px }
+#main .dev-area-page .dev-photo img { border-radius: 12px; aspect-ratio: 4 / 3; object-fit: cover; filter: saturate(.85) brightness(1.04) }
+#main .dev-area-page .dev-photo figcaption { padding: 8px 4px 0 }
 #main .dm-already { margin: 12px 0 0; font-size: 13.5px; line-height: 1.45; color: #356651; font-weight: 600 }
 #main .dm-desc { margin: 4px 0 10px; font-size: 14px; line-height: 1.5; color: #5c5361 }
 #main .dev-area-page .dev-skill { min-height: 0; padding: 12px 14px }
