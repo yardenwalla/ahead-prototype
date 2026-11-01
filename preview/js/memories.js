@@ -47,7 +47,7 @@
     const L = m => longLabel(m).toLowerCase();
     const remove = m => `<button class="mem-shot-remove" onclick="hubPhotoRemove(${m})" aria-label="Remove the ${L(m)} photo"><span aria-hidden="true">×</span></button>`;
     const card = m => {
-      if (m === 0) return photo(0)
+      if (m === 0 && !designs) return photo(0)
         ? `<div class="mem-story-wrap"><label class="mem-story is-plain" role="button" aria-label="Change the newborn photo"><img src="${photo(0)}" alt=""><em>Newborn</em>${hubPhotoInput(0)}</label>${remove(0)}</div>`
         : `<label class="mem-story is-plain is-empty" role="button" aria-label="Add the newborn photo"><em>Newborn</em><span class="mem-story-add">＋ Add photo</span>${hubPhotoInput(0)}</label>`;
       if (!designs) return photo(m) ? `<div class="mem-story-wrap"><label class="mem-story is-plain" role="button"><img src="${photo(m)}" alt=""><em>${label(m)}</em>${hubPhotoInput(m)}</label>${remove(m)}</div>` : '';
