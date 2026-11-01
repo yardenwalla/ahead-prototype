@@ -31,20 +31,17 @@
     if (t === 'Childcare') return ['4', 'Kinds of care to compare'];
     return ['', ''];
   }
-  // Direction B: soft overlapping shapes, a different motif for each category, no figures at all.
+  // Direction C: one quiet family of white shapes for every category, tone on tone like the big number.
+  // Same shapes everywhere, nudged a little per category so pages feel related, never identical, and never a picture.
   function shapes(t, c) {
-    const W = 'rgba(255,255,255,', I = c.ink, A = c.accent, B = c.bg;
-    const M = {
-      Development: `<circle cx="150" cy="120" r="70" fill="${A}" fill-opacity=".55"/><circle cx="102" cy="82" r="38" fill="${W}.7)"/><circle cx="168" cy="40" r="22" fill="#f3d58a" fill-opacity=".85"/><circle cx="70" cy="40" r="10" fill="${A}"/>`,
-      Sleep: `<circle cx="140" cy="70" r="56" fill="${W}.75)"/><circle cx="162" cy="54" r="50" fill="${B}"/><circle cx="62" cy="34" r="4" fill="#f3d58a"/><circle cx="84" cy="96" r="3" fill="#f3d58a"/><circle cx="48" cy="72" r="2.5" fill="${W}.9)"/><path d="M0 150c50-30 120-30 200 0v20H0Z" fill="${A}" fill-opacity=".45"/>`,
-      Feeding: `<circle cx="120" cy="96" r="58" fill="${A}" fill-opacity=".5"/><path d="M150 18c22 30 34 50 34 66a34 34 0 0 1-68 0c0-16 12-36 34-66Z" fill="${W}.75)"/><circle cx="70" cy="40" r="16" fill="#fbecc6"/>`,
-      Health: `<path d="M120 150c-50-34-80-60-80-92a40 40 0 0 1 80-8 40 40 0 0 1 80 8c0 32-30 58-80 92Z" fill="${A}" fill-opacity=".5"/><circle cx="160" cy="40" r="26" fill="${W}.75)"/><path d="M60 110h30l8-16 10 30 8-14h26" stroke="${I}" stroke-opacity=".35" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`,
-      Safety: `<path d="M40 170V100a80 80 0 0 1 160 0v70Z" fill="${A}" fill-opacity=".5"/><path d="M80 170v-60a40 40 0 0 1 80 0v60Z" fill="${W}.75)"/><circle cx="56" cy="40" r="12" fill="#f3d58a" fill-opacity=".9"/>`,
-      'Daily rhythm': `<circle cx="140" cy="100" r="54" fill="${A}" fill-opacity=".5"/><circle cx="92" cy="54" r="24" fill="${W}.75)"/><circle cx="168" cy="36" r="14" fill="${W}.85)"/><circle cx="60" cy="100" r="8" fill="${W}.8)"/>`,
-      'Out and about': `<path d="M-10 130c60-50 120 10 220-50" stroke="${W}.8)" stroke-width="16" fill="none" stroke-linecap="round"/><circle cx="160" cy="120" r="44" fill="${A}" fill-opacity=".5"/><circle cx="150" cy="44" r="18" fill="#f3d58a" fill-opacity=".9"/>`,
-      Childcare: `<path d="M50 170v-50a30 30 0 0 1 60 0v50Z" fill="${W}.75)"/><path d="M120 170v-80a40 40 0 0 1 80 0v80Z" fill="${A}" fill-opacity=".5"/><circle cx="80" cy="40" r="14" fill="#f3d58a" fill-opacity=".9"/>`
-    };
-    return `<svg viewBox="0 0 200 160" preserveAspectRatio="xMaxYMin slice">${M[t] || M.Development}</svg>`;
+    const seed = { Development: 0, Sleep: 1, Feeding: 2, Health: 3, Safety: 4, 'Daily rhythm': 5, 'Out and about': 6, Childcare: 7 }[t] || 0;
+    const r = [[0, 0], [14, -10], [-10, 12], [8, 16], [-14, -6], [18, 8], [-6, -14], [10, 4]][seed];
+    const [dx, dy] = r;
+    return `<svg viewBox="0 0 200 160" preserveAspectRatio="xMaxYMin slice">
+      <circle cx="${168 + dx}" cy="${28 + dy}" r="74" fill="#fff" fill-opacity=".38"/>
+      <circle cx="${112 + dx}" cy="${70 + dy}" r="30" fill="#fff" fill-opacity=".32"/>
+      <path d="M${70 + dx} ${150} a${70} ${70} 0 0 1 ${140} 0" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="10" stroke-linecap="round"/>
+    </svg>`;
   }
   const pal = t => (typeof YEAR_PALETTES !== 'undefined' && (YEAR_PALETTES[t] || YEAR_PALETTES.Memories)) || { bg: '#eee', pale: '#f6f6f6', ink: '#444', accent: '#ccc' };
   // One page skeleton for every category: timeline, a top card with the same three parts and a picture,
@@ -87,7 +84,7 @@
     // A question always comes right after the top card.
     const q = page.querySelector('.hub-napask, .connected-checkin, .hub-q');
     if (q) hero.after(q);
-    const mode = window.MOCK_MODE || new URLSearchParams(location.search).get('look') || 'number';
+    const mode = window.MOCK_MODE || new URLSearchParams(location.search).get('look') || 'shapes';
     hero.classList.add('mode-' + mode);
     if (mode === 'number') {
       const [big, small] = numberFor(t, page);
@@ -108,9 +105,9 @@
 #main .hub-hero.mock-hero > *:not(.mock-num):not(.mock-shapes) { position: relative }
 #main .mock-num { position: absolute; right: 14px; top: -10px; font: 800 112px/1 var(--display-font, inherit); letter-spacing: -5px; color: #fff; opacity: .85; pointer-events: none }
 #main .mock-num-cap { display: inline-block; margin-top: 12px; background: rgba(255,255,255,.75); color: var(--year-ink); font-size: 12.5px; font-weight: 700; border-radius: 999px; padding: 5px 11px }
-#main .mock-shapes { position: absolute; top: 0; right: 0; width: 44%; height: 62%; opacity: .85; pointer-events: none }
+#main .mock-shapes { position: absolute; top: 0; right: 0; width: 56%; height: 100%; pointer-events: none }
 #main .mock-shapes svg { width: 100%; height: 100%; display: block }
-#main .mode-shapes h1, #main .mode-shapes .hub-eyebrow { max-width: 58% }
+#main .mode-shapes h1, #main .mode-shapes .hub-eyebrow { max-width: 78% }
 #main .mode-shapes .hub-lead { background: none }
 #main .hub-hero.mock-hero { min-height: 172px; padding: 20px 20px 22px !important; margin-bottom: 14px }
 #main .hub-hero.mock-hero .hub-eyebrow, #main .hub-hero.mock-hero h1 { max-width: 68% }
