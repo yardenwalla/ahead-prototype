@@ -14,3 +14,8 @@
 #main .hub-page[data-look] .hub-rough-copy b { color: #2f3a63 }
 #main .hub-page[data-look] .hub-rough-copy small { color: #4d5785 }
 #main .hub-page[data-look] .hub-rough-card .hub-chev { color: #3d4a7a }
+/* Sleep's subpages: the same soft night blue as the main page instead of heavy navy, and a lighter button. */
+#main .hub-page[data-overview="Sleep"] .hub-len-track i { background: #8e9ad0 }
+#main .hub-page[data-overview="Sleep"] .hub-len-track b { color: #fff; text-shadow: 0 1px 1px rgba(47, 58, 99, .25) }
+#main .hub-page[data-overview="Sleep"] .hub-sb-bar i.is-night, #main .hub-page[data-overview="Sleep"] .hub-sb-key i.is-night, #main .hub-page[data-overview="Sleep"] .chg-ribbon i.is-night { background: #8e9ad0 }
+#main .hub-page[data-overview="Sleep"] .hub-button { background: #6f86b8 }
