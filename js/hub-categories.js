@@ -53,34 +53,20 @@
     const ageNote = live() && profile.early && profile.due ? (() => { const adj = developmentMonth(actualMonth()) !== actualMonth(); return `<p class="hub-agebasis">${F(adj ? `Following Maya’s adjusted age (${monthsLabel(developmentMonth(actualMonth()))}).` : `Following Maya’s birthday age (${monthsLabel(actualMonth())}).`)} <button onclick="hubSetAgeMode('dev','${adj ? 'birthday' : 'adjusted'}')">${adj ? 'Use birthday age' : 'Use adjusted age'}</button></p>`; })() : '';
     const devKeys = Object.keys(DEV_STAGES).map(Number), nowI = devKeys.indexOf(now);
     const pills = h.pills('Development by age', devKeys.map((k, i) => ({ label: STAGE_TABLE.Development.stages[i].label, age: STAGE_TABLE.Development.stages[i].age, on: k === ref, now: live() && k === now, onclick: `openPage('development-stage:${k}')`, change: stageCanChange('Development', i, nowI) ? `hubChangeStage('Development',${i})` : '' })), 'Development');
-    let b = h.hero({ eyebrow: `What to look for by ${age}`, title: st.title, lead: st.body });
-    // One thing about how Maya sees the world at this age: a number you can take in at a glance.
-    const EYES = { 2: ['8–12 in', 'smile', 'How far Maya sees clearly. About your face during a feed.'], 4: ['Colors', 'colors', 'Maya is getting better at telling colors and shades apart, and loves faces.'], 6: ['3D', 'cube', 'Maya’s eyes now work together to judge depth, which helps {o} reach.'], 9: ['Still there', 'hidden', 'Maya knows a hidden toy hasn’t vanished. That’s why peekaboo is so exciting.'], 12: ['Distance', 'toss', 'Maya can judge distance well enough to toss a toy with aim.'] }[ref];
-    // Browsing another stage: say what babies do at that age, not what this baby does.
-    const other = live() && ref !== now;
-    const EYES_ANY = { 2: 'How far babies see clearly by 2 months. About a parent’s face during a feed.', 4: 'By 4 months, babies get better at telling colors apart, and love faces.', 6: 'By 6 months, babies’ eyes work together to judge depth, which helps them reach.', 9: 'By 9 months, babies know a hidden toy hasn’t vanished. That’s why peekaboo is so exciting.', 12: 'By 12 months, babies can judge distance well enough to toss a toy with aim.' };
-    if (EYES && other) EYES[2] = EYES_ANY[ref];
-    if (EYES) b += `<section class="hub-card hub-eyes"><span class="hub-card-head"><b>${F(other ? `Through a baby’s eyes, by ${age}` : 'Through Maya’s eyes')}</b></span><div class="hub-eyes-row"><span class="hub-eyes-ic">${h.art(EYES[1], 'Development')}</span><span class="hub-eyes-big">${F(EYES[0])}</span><span class="hub-eyes-cap">${F(EYES[2])}</span></div></section>`;
-    // Four tiles, each with a line of what you might actually see, so the card is useful before anyone taps in.
+    // The top card: what this age looks like, with the answer to the big worry of the age in its own words.
+    const LEAD = { 4: 'Play starts to feel like a conversation: smiles, little sounds and swiping at toys. Rolling usually follows, between 4 and 6 months.', 9: 'Sitting frees both hands for babbling, banging and finding things. Not crawling yet? Many babies skip it.', 12: 'Waving, copying and pulling up to stand. First steps usually come between 12 and 15 months.' };
+    let b = `<section class="dev-hero"><p class="dev-hero-eyebrow">${F(`What to look for by ${ref === 12 ? '12 months' : age}`)}</p><h1>${F(st.title)}</h1><p class="dev-hero-lead">${F(LEAD[ref] || st.body)}</p></section>`;
+    // What Maya is working on: four areas, each with a line of what you might see.
     const domainTiles = Object.keys(DEV_DOMAINS).map(d => {
-      const labels = DEVELOPMENT_DOMAINS[ref][d] || [], seen = labels.filter(l => skillSeen(l)).length;
-      return `<button class="hub-domain-tile" onclick="openPage('development-domain:${ref}:${d}')">${h.art(DOMAIN_ICONS[d], 'Development')}<b>${DOMAIN_TITLES[d]}</b><small>${(window.hubBabyify || (x => x))(F(d === 'Movement' && live() && ref === now && (answers.pullUp === 'Yes' || answers.crawl === 'Yes') ? (answers.pullUp === 'Yes' ? 'Maya is already pulling up. Cruising and first steps come next.' : 'Maya is already crawling. Pulling up comes next.') : (st.summaries[d] || '')))}</small><span>${F(seen ? `${seen} of ${labels.length} seen` : `${labels.length} skill${labels.length === 1 ? '' : 's'}`)} ›</span></button>`;
+      const labels = DEVELOPMENT_DOMAINS[ref][d] || [], c = window.devTileColors ? devTileColors(d) : null, hl = (window.DEV_HEADLINE || {})[ref]?.[d];
+      const moving = d === 'Movement' && live() && ref === now && (answers.pullUp === 'Yes' || answers.crawl === 'Yes');
+      const line = moving ? (answers.pullUp === 'Yes' ? 'Already pulling up' : 'Already crawling') : hl ? hl[0] : (st.summaries[d] || '');
+      return `<button class="hub-domain-tile dev-tile" style="${c ? `--dt-bg:${c[0]};--dt-ink:${c[1]}` : ''}" onclick="openPage('development-domain:${ref}:${d}')"><span class="dev-tile-art">${window.devTileArt ? devTileArt(d, ref) : h.art(DOMAIN_ICONS[d], 'Development')}</span><small class="dev-tile-label">${DOMAIN_TITLES[d]}</small><b class="dev-tile-line">${(window.hubBabyify || (x => x))(F(line))}</b><span class="dev-tile-count">${F(`${labels.length} skill${labels.length === 1 ? '' : 's'}`)} ›</span></button>`;
     }).join('');
-    b += `<section class="hub-card hub-glance is-static"><span class="hub-card-head"><b>${F('What Maya might be doing')}</b></span><div class="hub-domain-tiles">${domainTiles}</div></section>` ;
-    if (ref === now || !live()) {
-      const ideas = (playStageModel().primary || []).slice(0, 3), lo = playPhase().lo;
-      const extra = (playStageModel().primary || []).length - 3 + (playStageModel().more || []).length;
-      const total = (playStageModel().primary || []).length + (playStageModel().more || []).length;
-      b += h.list('', [h.row({ icon: 'hand', cat: 'Development', title: 'Ideas to try together', sub: 'Simple games that fit into your day', chipText: `${total} ideas`, onclick: `openPage('chg:Development:d:more:${lo}')` }),
-        // From 6 months: a few baby signs, so Maya can say what she wants before she has the words.
-        ref >= 6 ? h.row({ icon: 'signs', cat: 'Development', title: 'Try a few baby signs', sub: 'More, eat, milk and all done', onclick: `openPage('chg:Development:d:signs')` }) : null].filter(Boolean));
-    }
-    const reached = live() && developmentMonth(actualMonth()) >= ref;
-    b += h.versus('Not yet, or time to ask?', ['Not yet', reached && ref < now ? `Most babies show these by ${age}. If Maya isn’t doing some of them yet, it’s worth calling your pediatrician rather than waiting for the checkup.` : reached ? `Most babies show these by ${age}. If Maya isn’t doing some of them yet, mention it at {p} next checkup. It’s a common question.` : `Every baby gets there in their own time. These can show up any time before ${age}.`], ['Talk to your pediatrician', 'Call if Maya loses a skill {s} had, or if something worries you. You don’t need to wait for the checkup.']);
-    const keys = Object.keys(DEV_STAGES).map(Number), nx = keys[keys.indexOf(ref) + 1];
-    if (nx && live() && ref === now && nx - developmentMonth(actualMonth()) <= 1) b += h.next(`Coming up by ${monthsLabel(nx)}`, DEV_STAGES[nx].title, `openPage('development-stage:${nx}')`);
-    b += h.more(other ? 'Common questions at this stage' : 'What other parents ask', `openPage('chg:Development:d:faq:${ref}')`);
-    b += `<a class="hub-more" href="${devSource(ref)}" target="_blank" rel="noopener"><span>${F('See photos and videos of each skill')}</span><span class="hub-chev" aria-hidden="true">↗</span></a>`;
+    const other = live() && ref !== now;
+    b += `<section class="hub-card hub-glance is-static"><span class="hub-card-head"><b>${F(other ? `What babies work on by ${age}` : 'What Maya is working on')}</b></span><div class="hub-domain-tiles">${domainTiles}</div></section>`;
+    // Try today: two picture ideas that change each day, and the rest one tap away.
+    b += window.devTodayCard ? devTodayCard(ref) : '';
     return frame('Development', `data-development-guide="${ref}"`, pills + ageNote, b);
   };
 
@@ -283,16 +269,44 @@
     if (!rec && typeof saveJourneySkill === 'function') saveJourneySkill(key, { date: iso(NOW) });
     const y = scrollY; render(); scrollTo(0, y);
   };
+  // The big question at each checkpoint, on the area it's about.
+  const DEV_BIG = {
+    2: ['Social', 'When will {s} smile at me?', 'Most babies smile back by about 6–8 weeks.'],
+    4: ['Movement', 'Should {s} be rolling yet?', 'Not yet for most babies. Rolling usually shows up between 4 and 6 months.'],
+    6: ['Movement', 'When will {s} sit on {p} own?', 'Most babies sit without support by about 9 months. Sitting propped on {p} hands is right on track.'],
+    9: ['Movement', 'What about crawling?', 'Many babies skip crawling. Some scoot or roll instead. What matters is that Maya finds a way to move.'],
+    12: ['Movement', 'Should {s} be walking?', 'Not yet for most babies. First steps often come between 12 and 15 months.']
+  };
+  // An icon that matches each skill's words.
+  const SKILL_ICON = l => { const t = l.toLowerCase();
+    return /peekaboo|hid|dropped/.test(t) ? 'peek' : /wave|goodbye/.test(t) ? 'wave' : /roll/.test(t) ? 'roll' : /crawl/.test(t) ? 'crawl' : /stand|pull|steps|furniture/.test(t) ? 'stand' : /sit/.test(t) ? 'sit' : /tummy|push/.test(t) ? 'mat' : /head/.test(t) ? 'head'
+      : /cup|drink/.test(t) ? 'cup' : /mouth|lips|food|breast|bottle|feed/.test(t) ? 'mouth' : /mirror/.test(t) ? 'mirror' : /name|voice|loud|sound|hear/.test(t) && !/makes|babble/.test(t) ? 'ear'
+      : /smil|laugh|chuckle|glad|familiar|shy|clingy|game|pat-a-cake/.test(t) ? 'smile' : /coo|babble|raspberr|squeal|word|mama|dada|sounds|no/.test(t) ? 'chat' : /look|watch|face|expression|eyes/.test(t) ? 'eye'
+      : /hand|grasp|rake|thumb|finger|hold|swipe|reach|grab|arms|leg/.test(t) ? 'hand' : /toy|object|bang|container|put|stack/.test(t) ? 'blocks' : DOMAIN_ICONS_FALLBACK; };
+  let DOMAIN_ICONS_FALLBACK = 'smile';
   window.developmentDomainPage = developmentDomainPage = function (ref, domain) {
     const meta = DEV_DOMAINS[domain], labels = DEVELOPMENT_DOMAINS[ref]?.[domain];
     if (!meta || !labels) return developmentJourneyOverview(ref);
     const h = H(), age = ref === 12 ? '1 year' : ref + ' months';
-    // Each skill once: what it looks like, and a tap when you've seen it. No separate page per skill.
-    const rows = labels.map(l => { const key = journeySkillKey(l), rec = journeyData().records.find(r => r.type === 'milestone' && r.skillKey === key) || (skillSeen(l) ? { reported: true } : null);
-      return `<div class="hub-tick is-habit"><span class="hub-tick-art">${h.art(DOMAIN_ICONS[domain] || 'smile', 'Development')}</span><span class="hub-row-copy"><b>${clearMilestone(l)}</b><small>${esc(DEV_EXAMPLES[l] || '')}</small></span>${rec ? `<span class="hub-chip is-done">${F('Seen')} ✓</span>` : `<button class="hub-seen" onclick="hubSeen('${key}')">${F('Seen it')}</button>`}</div>`; }).join('');
-    const skill = journeySkills().find(s => labels.includes(s.label) && typeof devSkillActivity === 'function' && devSkillActivity(s)), act = skill && devSkillActivity(skill);
-    const tryRow = act ? h.list('Try this together', [h.row({ icon: 'hand', cat: 'Development', title: act.title, sub: playLine(act) })]) : '';
-    return `<div class="quiet-category hub-page hub-detail" data-overview="Development" style="${yearTheme('Development')}">${detailPageTop('Development')}<div class="hub-detail-head"><span class="hub-big">${h.art(DOMAIN_ICONS[domain] || 'smile', 'Development')}</span><p class="hub-context">${esc(`By ${age}`)}</p><h1>${esc(meta.title)}</h1><p class="hub-lead">${esc(DEV_STAGES[ref].summaries[domain])}</p></div>${(() => { const seen = labels.filter(l => skillSeen(l)).length; return `<div class="hub-meter hub-seen-meter"><div class="hub-meter-label"><span>${F('Skills you’ve seen')}</span><span>${seen} of ${labels.length}</span></div><div class="hub-bar"><i style="width:${Math.round(100 * seen / labels.length)}%"></i></div></div>`; })()}<div class="hub-ticks">${rows}</div>${h.note(`Most babies show these by ${age}. Tap “Seen it” to save the moment to Memories.`)}${tryRow}${h.video('Watch each of these skills in action', 'CDC', devSource(ref), 'Photos and videos')}</div>`;
+    DOMAIN_ICONS_FALLBACK = DOMAIN_ICONS[domain] || 'smile';
+    // Each skill once: its name, "Seen it", and what it looks like (words, photo or video) on tap.
+    const hl = (window.DEV_HEADLINE || {})[ref]?.[domain];
+    const ordered = hl ? [...labels].sort((x, y) => (hl[1].test(clearMilestone(y)) ? 1 : 0) - (hl[1].test(clearMilestone(x)) ? 1 : 0)) : labels;
+    const tc = window.devTileColors ? devTileColors(domain) : null;
+    const rows = ordered.map(l => { const key = journeySkillKey(l), rec = journeyData().records.find(r => r.type === 'milestone' && r.skillKey === key) || (skillSeen(l) ? { reported: true } : null);
+      const see = window.devSeeButton ? devSeeButton(key, clearMilestone(l)) : '';
+      const desc = (window.hubBabyify || (x => x))(F(DEV_EXAMPLES[l] || ''));
+      return `<div class="hub-tick is-habit dev-skill"><span class="hub-tick-art">${h.art(SKILL_ICON(l), 'Development')}</span><span class="hub-row-copy"><b>${(window.hubBabyify || (x => x))(F(clearMilestone(l)))}</b>${see || (desc ? `<small>${desc}</small>` : '')}</span>${rec ? `<span class="hub-chip is-done">${F('Seen')} ✓</span>` : `<button class="hub-seen" onclick="hubSeen('${key}')">${F('Seen it')}</button>`}${see ? `<div class="dev-media" hidden data-desc="${desc.replace(/"/g, '&quot;')}"></div>` : ''}</div>`; }).join('');
+    // The big question, only on the area it's about.
+    const big = DEV_BIG[ref] && DEV_BIG[ref][0] === domain ? `<section class="hub-card dev-bigq"><span class="hub-card-head"><b>${F(DEV_BIG[ref][1])}</b></span><p class="dev-bigq-a">${F(DEV_BIG[ref][2])}</p></section>` : '';
+    // Try this together: on Movement, the idea that helps with the big question; elsewhere, an idea for one of these skills.
+    const move = domain === 'Movement' && window.devMoveIdea ? devMoveIdea(ref) : null;
+    const skill = journeySkills().find(s => labels.includes(s.label) && typeof devSkillActivity === 'function' && devSkillActivity(s)), act = !move && skill && devSkillActivity(skill);
+    const pic = move ? move.art : act && window.devPlayArt ? devPlayArt(act.id) : '';
+    const tryCard = move || act ? `<section class="hub-card dev-try"><span class="hub-card-head"><b>${F('Try this together')}</b></span><button class="dev-try-row" onclick="openPage('${move ? `chg:Development:d:move:${ref}` : `chg:Development:d:idea:${ref}:${act.id}`}')">${pic ? `<span class="dev-idea-art">${pic}</span>` : ''}<span class="hub-row-copy"><b>${F(move ? move.title : act.title)}</b><small>${move ? F(move.why) : playLine(act)}</small></span><span class="hub-chev" aria-hidden="true">›</span></button></section>` : '';
+    const call = `<p class="dev-call">${F('Not all of these yet? Mention it at {p} next checkup. Call sooner if Maya loses a skill {s} had.')}</p>`;
+    const credit = rows.includes('dev-see') ? `<p class="dev-credit">${F('Photos and videos: Source CDC, free at cdc.gov. The CDC doesn’t endorse Ahead.')}</p>` : '';
+    return `<div class="quiet-category hub-page hub-detail dev-area-page is-${domain}" data-overview="Development" style="${yearTheme('Development')}${tc ? `;--area:${tc[0]};--area-ink:${tc[1]}` : ''}">${detailPageTop('Development')}<div class="dev-area-head">${window.devTileArt ? `<span class="dev-area-head-art">${devTileArt(domain, ref)}</span>` : ''}<p class="hub-context">${esc(`By ${age}`)}</p><h1>${esc(meta.title)}</h1><p class="hub-lead">${esc(DEV_STAGES[ref].summaries[domain])}</p></div><p class="dev-sub">${F(`Working on now, by ${age}`)}</p><div class="hub-ticks">${rows}</div>${big}${tryCard}${call}${credit}</div>`;
   };
 
   /* ---------- small detail screens for these categories ---------- */

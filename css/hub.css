@@ -1257,3 +1257,108 @@
 .story-hold { position: absolute; inset: 0; z-index: 3; background: #F5E8E2 }
 .story-hold img { display: block; width: 100%; height: 100%; object-fit: cover; -webkit-touch-callout: default; -webkit-user-select: auto; user-select: auto }
 .story-hold span { position: absolute; left: 50%; top: 12px; transform: translateX(-50%); width: max-content; max-width: 88%; padding: 8px 14px; border-radius: 999px; background: #2B2840; color: #fff; font-size: 12.5px; font-weight: 600; text-align: center; pointer-events: none }
+
+/* Development & play: ideas as pictures, and skill photos and videos inside the app */
+#main .dev-ideas { display: grid; grid-template-columns: 1fr 1fr; gap: 12px }
+#main .dev-ideas.is-grid { margin: 4px 0 16px }
+#main .dev-idea { display: flex; flex-direction: column; gap: 8px; text-align: left; background: var(--white); border: 1px solid var(--line); border-radius: 20px; padding: 8px 8px 12px; cursor: pointer; font: inherit; color: var(--ink); min-height: 0 }
+#main .dev-awake .dev-idea { border: 0; padding: 0; background: none }
+#main .dev-idea b { font-size: 14px; line-height: 1.3; font-weight: 600; padding: 0 4px }
+#main .dev-idea-art { display: block; border-radius: 16px; overflow: hidden; background: #f8f7fd; aspect-ratio: 160 / 116 }
+#main .dev-idea-art svg { width: 100%; height: 100%; display: block }
+#main .dev-idea-hero { margin: 0 0 16px; border-radius: 24px; overflow: hidden; background: #f8f7fd }
+#main .dev-idea-hero svg { width: 100%; height: auto; display: block }
+#main .dev-skill { flex-wrap: wrap; align-items: flex-start }
+#main button.dev-see { display: inline-block; margin-top: 8px; background: none; border: 0; padding: 0; font: inherit; font-size: 13px; font-weight: 600; color: var(--year-ink) !important; cursor: pointer; min-height: 0 }
+#main .dev-see::before { content: "▸ " }
+#main .dev-see[aria-expanded="true"]::before { content: "▾ " }
+#main .dev-media { flex-basis: 100%; margin-top: 2px }
+#main .dev-media .hub-embed { margin: 0 }
+#main .dev-photo { margin: 0; border-radius: 16px; overflow: hidden; background: var(--year-pale) }
+#main .dev-photo img { width: 100%; display: block }
+#main .dev-photo figcaption { font-size: 12px; color: var(--ink-2, #5E5A75); padding: 6px 10px }
+
+/* Development & play: a warmer top of the page */
+#main .dev-hero { position: relative; overflow: hidden; background: linear-gradient(160deg, #e9e3fd, #f3e6f6 60%, #fde9e2); border-radius: 24px; padding: 22px 20px; margin: 0 0 14px }
+#main .dev-hero-num { position: absolute; right: 10px; top: -6px; font: 800 118px/1 var(--display-font, inherit); color: #fff; opacity: .8; letter-spacing: -4px; pointer-events: none }
+#main .dev-hero-spark { position: absolute; right: 22px; top: 104px; color: #f1c75b; font-size: 15px }
+#main .dev-hero-eyebrow { position: relative; margin: 0; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--year-ink) }
+#main .dev-hero h1 { position: relative; font: 700 27px/1.15 var(--display-font, inherit); letter-spacing: -.3px; margin: 8px 0 8px; max-width: 78%; color: var(--ink); text-wrap: balance }
+#main .dev-hero-lead { position: relative; margin: 0; color: #5c5361; line-height: 1.5; max-width: 92% }
+#main .dev-area { padding: 0 0 14px; overflow: hidden; gap: 4px }
+#main .dev-area > b, #main .dev-area > small, #main .dev-area > span:not(.dev-area-art) { padding-left: 14px; padding-right: 14px }
+#main .dev-area-art { display: block; width: 100%; height: 104px; overflow: hidden; margin: 6px 0 4px }
+#main .dev-area-art svg { width: 100% !important; height: 100% !important; display: block }
+#main .dev-area.is-Social { background: #fdeef2 }
+#main .dev-area.is-Talking { background: #fff3dc }
+#main .dev-area.is-Thinking { background: #e6f5ec }
+#main .dev-area.is-Movement { background: #e7effc }
+#main .dev-area .dev-area-art circle:first-child { fill: #ffffff; fill-opacity: .55 }
+#main .hub-eyes-big { font-size: 30px !important }
+
+/* Development area pages: the area's own color carries through from its tile */
+#main .dev-area-page { --area: #efedff; --area-deep: #e2dcfb }
+#main .dev-area-page.is-Social { --area: #fdeef2; --area-deep: #f9dbe4 }
+#main .dev-area-page.is-Talking { --area: #fff3dc; --area-deep: #fbe6bd }
+#main .dev-area-page.is-Thinking { --area: #e6f5ec; --area-deep: #cfead9 }
+#main .dev-area-page.is-Movement { --area: #e7effc; --area-deep: #d3e1f8 }
+#main .dev-area-head { background: var(--area); border-radius: 24px; padding: 4px 20px 20px; margin: 0 0 16px; overflow: hidden }
+#main .dev-area-head-art { display: block; height: 150px; margin: 0 -8px 2px }
+#main .dev-area-head-art svg { width: 100%; height: 100%; display: block }
+#main .dev-area-head-art svg > circle:first-of-type { fill: #fff; fill-opacity: .6 }
+#main .dev-area-head .hub-context { margin: 0; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--year-ink) }
+#main .dev-area-head h1 { font: 700 27px/1.15 var(--display-font, inherit); margin: 6px 0 6px; color: var(--ink) }
+#main .dev-area-head .hub-lead { margin: 0; color: #5c5361 }
+#main .dev-area-page .hub-tick-art { background: var(--area) }
+#main .dev-area-page .hub-seen { border-color: var(--area-deep) }
+#main .dev-area-page .hub-meter { background: var(--white) }
+#main .dev-area-page .hub-bar { background: var(--area) }
+#main .dev-area-page .hub-bar i { background: var(--year-ink) }
+#main .dev-try .dev-try-row { display: flex; align-items: center; gap: 14px; width: 100%; background: none; border: 0; padding: 0; text-align: left; font: inherit; color: var(--ink); cursor: pointer; min-height: 0 }
+#main .dev-try .dev-idea-art { width: 104px; flex: none }
+#main .dev-try .hub-row-copy small { display: block; margin-top: 2px }
+
+/* Development, final: a top card like Sleep's, calm area pages, and skill media framed like the app */
+#main .dev-hero::after { content: ""; position: absolute; right: -40px; top: -50px; width: 170px; height: 170px; border-radius: 50%; background: #fff; opacity: .35; pointer-events: none }
+#main .dev-hero > * { position: relative; z-index: 1 }
+#main .dev-hero-eyebrow { letter-spacing: 0; text-transform: none; font-size: 12.5px; font-weight: 600 }
+#main .dev-hero h1 { max-width: 100% }
+#main .dev-more-link { margin-top: 14px }
+#main .dev-sub { margin: 18px 4px 10px; font-size: 13px; font-weight: 700; color: var(--year-ink) }
+#main .dev-area-page .dev-skill { min-height: 0; padding: 12px 14px }
+#main .dev-area-page .dev-skill .dev-see { margin-top: 4px }
+#main .dev-bigq { margin-top: 16px }
+#main .dev-bigq-a { margin: 0; font-size: 14.5px; line-height: 1.55; color: #4c4757 }
+#main .dev-call { margin: 16px 4px 0; font-size: 14px; line-height: 1.5; color: #5c5361 }
+#main .dev-desc { margin: 4px 0 10px; font-size: 14px; line-height: 1.5; color: #5c5361 }
+#main .dev-area-page .dev-media { background: var(--area, var(--year-pale)); border-radius: 18px; padding: 8px 8px 10px; margin-top: 8px }
+#main .dev-area-page .dev-media .hub-embed { border: 0; border-radius: 12px; background: none; margin: 0 }
+#main .dev-area-page .dev-media .hub-embed-poster { border-radius: 12px; aspect-ratio: 4 / 3 }
+#main .dev-area-page .dev-media .hub-embed-frame { border-radius: 12px; aspect-ratio: 4 / 3 }
+#main .dev-area-page .dev-media .hub-embed-play { background: var(--year-ink); color: #fff; width: 52px; height: 52px; margin: -26px 0 0 -26px; box-shadow: 0 0 0 8px rgba(255,255,255,.55) }
+#main .dev-area-page .dev-media figcaption { padding: 8px 4px 0 }
+#main .dev-area-page .dev-media figcaption b, #main .dev-area-page .dev-media figcaption a { display: none }
+#main .dev-area-page .dev-media figcaption small, #main .dev-area-page .dev-photo figcaption { font-size: 12px; font-weight: 600; color: var(--year-ink) }
+#main .dev-area-page .dev-photo { background: none; border-radius: 12px }
+#main .dev-area-page .dev-photo img { border-radius: 12px; aspect-ratio: 4 / 3; object-fit: cover }
+#main .dev-area-page .dev-photo figcaption { padding: 8px 4px 0 }
+
+/* Development tiles in Sleep's style */
+#main .hub-domain-tiles:has(.dev-tile) { align-items: stretch }
+#main .dev-tile { display: flex !important; flex-direction: column !important; justify-content: flex-start !important; align-items: flex-start; gap: 2px !important; padding: 12px 14px 14px !important; border-radius: 18px !important; background: var(--dt-bg) !important; min-height: 0 }
+#main .dev-tile .dev-tile-art { display: block; height: 30px; margin: 0 0 10px !important; padding: 0 !important }
+#main .dev-tile .dev-tile-art svg { height: 100% !important; width: auto !important; display: block }
+#main .dev-tile .dev-tile-label { font-size: 13px !important; font-weight: 600; color: var(--dt-ink) !important; line-height: 1.3 }
+#main .dev-tile .dev-tile-line { font-size: 16px !important; line-height: 1.25; font-weight: 700; color: var(--ink); margin: 2px 0 4px }
+#main .dev-tile .dev-tile-count { font-size: 13px; font-weight: 600; color: var(--dt-ink) !important; margin-top: auto !important; padding-top: 4px !important }
+#main .dev-area-page .dev-area-head { background: var(--area) }
+#main .dev-area-page .dev-area-head-art { display: block; height: 56px; margin: 16px 0 14px }
+#main .dev-area-page .dev-area-head-art svg { height: 100%; width: auto; display: block }
+#main .dev-area-page .hub-tick-art { background: var(--area) }
+#main .dev-area-page .dev-area-head .hub-context { color: var(--area-ink) }
+#main .dev-credit { margin: 14px 4px 0; font-size: 12px; line-height: 1.45; color: #8a8490 }
+#main .dev-more-ideas { margin: 4px 0 16px; background: var(--white); border: 1px solid var(--line); border-radius: 20px; overflow: hidden }
+#main .dev-more-ideas > summary { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; font-weight: 600; cursor: pointer; list-style: none }
+#main .dev-more-ideas > summary::-webkit-details-marker { display: none }
+#main .dev-more-ideas[open] .faq-plus { transform: rotate(45deg) }
+#main .dev-more-ideas .hub-list { margin: 0; border: 0; border-top: 1px solid var(--line); border-radius: 0 }
