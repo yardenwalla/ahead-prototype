@@ -186,8 +186,20 @@
       if (!b) return html;
       const nm = esc2(name()), label = b.m === 12 ? '1 year' : `${b.m} month${b.m === 1 ? '' : 's'}`, plabel = b.m === 12 ? 'first-birthday' : `${b.m}-month`, photo = window.hubPhotoFor(b.m);
       const title = b.since === 0 ? (b.m === 12 ? `${nm} is 1 year old today` : `${nm} is ${label} old today`) : (b.m === 12 ? `${nm} turned 1` : `${nm} turned ${label}`);
-      const lead = photo ? (b.firsts.length ? `Here’s what you noticed this month. The photo is in Memories.` : `Another month of firsts. The photo is in Memories.`) : (b.firsts.length ? `Here’s what you noticed this month. Add a photo to keep it in Memories.` : `Another month of firsts. Add a photo to keep this one in Memories.`);
-      const card = `<div class="home-summary connected-summary-intro hub-bday"><span class="hub-bday-num" aria-hidden="true">${b.m === 12 ? '1' : b.m}</span><span class="hub-bday-spark" aria-hidden="true">✦</span><p class="hub-bday-eyebrow">${b.m === 12 ? 'Happy first birthday' : 'Happy ' + label}${profile.early && profile.due && adjustedMonth(actualMonth()) !== actualMonth() ? ` <button class="hub-agechip" onclick="openPage('age-context')" aria-label="${esc2(monthLabel(adjustedMonth(actualMonth())))} adjusted. About age">· ${esc2(String(adjustedMonth(actualMonth())))} adjusted <span aria-hidden="true">ⓘ</span></button>` : ''}</p><h1>${title}</h1><p class="hub-bday-lead">${lead}</p>${b.firsts.length ? `<div class="hub-bday-chips">${b.firsts.map(r => `<span>✓ ${esc2(r.title)}</span>`).join('')}</div>` : ''}<label class="hub-bday-photo" role="button">${photo ? `<img src="${photo}" alt="">Change the ${plabel} photo` : `<i aria-hidden="true">＋</i>Add a ${plabel} photo`}${hubPhotoInput(b.m)}</label>${photo && b.m <= 11 && typeof storyShare === 'function' ? `<button class="hub-bday-share" onclick="storyShare(${b.m})">Share ${nm}’s ${plabel} photo</button>` : ''}</div>`;
+      // Keepsake style: the month's own balloon sits in the card, and there's one thing to do —
+      // add this month's photo, or, once it's in, open the finished Story to share it.
+      const lead = photo ? (b.firsts.length ? `Here’s what you noticed this month, and ${nm}’s Story is ready.` : `Another month of firsts, and ${nm}’s Story is ready to share.`) : (b.firsts.length ? `Here’s what you noticed this month. Add a photo and it becomes ${nm}’s ${plabel} Story.` : `Another month of firsts. Add a photo and it becomes ${nm}’s ${plabel} Story.`);
+      const early = profile.early && profile.due && adjustedMonth(actualMonth()) !== actualMonth() ? ` <button class="hub-agechip" onclick="openPage('age-context')" aria-label="${esc2(monthLabel(adjustedMonth(actualMonth())))} adjusted. About age">· ${esc2(String(adjustedMonth(actualMonth())))} adjusted <span aria-hidden="true">ⓘ</span></button>` : '';
+      const keepsake = typeof storyShare === 'function';
+      const action = !keepsake
+        ? `<label class="hub-bday-photo" role="button">${photo ? `<img src="${photo}" alt="">Change the ${plabel} photo` : `<i aria-hidden="true">＋</i>Add a ${plabel} photo`}${hubPhotoInput(b.m)}</label>`
+        : photo
+          ? `<button class="hub-bday-story" onclick="storyShare(${b.m})"><span class="hub-bday-thumb"><img data-story-thumb="${b.m}" alt=""></span><span class="hub-bday-story-copy"><b>${nm}’s ${plabel} Story</b><small>Ready to share</small></span><span class="hub-bday-story-go" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3m0 0-4 4m4-4 4 4"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg></span></button>`
+          : `<label class="hub-bday-add" role="button">＋ Add ${nm}’s ${plabel} photo${hubPhotoInput(b.m)}</label>`;
+      if (keepsake && photo) setTimeout(() => window.storyHydrate && storyHydrate(), 0);
+      const card = keepsake
+        ? `<div class="home-summary connected-summary-intro hub-bday is-keepsake"><img class="hub-bday-balloon" src="assets/share/balloon-${b.m}.jpg" alt=""><div class="hub-bday-copy"><p class="hub-bday-eyebrow">${b.m === 12 ? 'Happy first birthday' : 'Happy ' + label}${early}</p><h1>${title}</h1><p class="hub-bday-lead">${lead}</p></div>${b.firsts.length ? `<div class="hub-bday-chips">${b.firsts.map(r => `<span>✓ ${esc2(r.title)}</span>`).join('')}</div>` : ''}${action}</div>`
+        : `<div class="home-summary connected-summary-intro hub-bday"><span class="hub-bday-num" aria-hidden="true">${b.m === 12 ? '1' : b.m}</span><span class="hub-bday-spark" aria-hidden="true">✦</span><p class="hub-bday-eyebrow">${b.m === 12 ? 'Happy first birthday' : 'Happy ' + label}${early}</p><h1>${title}</h1><p class="hub-bday-lead">${lead}</p>${b.firsts.length ? `<div class="hub-bday-chips">${b.firsts.map(r => `<span>✓ ${esc2(r.title)}</span>`).join('')}</div>` : ''}${action}</div>`;
       return html.replace(/<div class="home-summary connected-summary-intro">[\s\S]*?<div class="home-summary-spectrum"[\s\S]*?<\/div><\/div>/, card);
     };
   }
@@ -786,7 +798,8 @@ window.hubCenterStages = function () {
    available to look back. */
 (function () {
   const esc2 = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
-  const COLORS = ['#F0B3CB', '#B1ACF4', '#A3C2F2', '#98D7CC', '#F2D78A', '#F5BE9A'];
+  // Gold, cream, pink, lilac and blue: the same confetti as the Story designs.
+  const COLORS = ['#E2B24F', '#F4E3BF', '#EFA3C3', '#C8B6F0', '#93BDEB', '#D39A33'];
   window.hubFirstBirthday = () => typeof isCurrent === 'function' && isCurrent() && typeof birthdayAge === 'function' && birthdayAge() >= 12;
   function confetti() {
     let seen = false; try { const k = 'ahead-bday-confetti:' + journeyKey(), at = Number(localStorage.getItem(k) || 0); seen = at > 0 && Date.now() - at > 15000; if (!at) localStorage.setItem(k, String(Date.now())); } catch (e) {}   // falls once; after that, a still sprinkle
@@ -803,6 +816,23 @@ window.hubCenterStages = function () {
     const visits = d.records.filter(r => r.type !== 'milestone' && r.status === 'attended').length;
     const photos = Array.from({ length: 13 }, (_, m) => window.hubPhotoFor && window.hubPhotoFor(m)).filter(Boolean).length;
     const stat = (n, l) => `<div><b>${n}</b><span>${l}</span></div>`;
+    const keepsake = typeof storyShare === 'function';
+    const any = Array.from({ length: 12 }, (_, i) => window.hubPhotoFor(i + 1)).some(Boolean);
+    if (keepsake) {
+      // Keepsake style: the gold "12" on top, the name in the Stories' handwriting, the collage itself, one button.
+      if (any) setTimeout(() => window.storyHydrate && storyHydrate(), 0);
+      return `<section class="bday-year is-keepsake" aria-label="Happy first birthday">${confetti()}
+      <img class="bday-balloon" src="assets/share/balloon-12.jpg" alt="">
+      <p class="bday-eyebrow">Happy first birthday</p>
+      <h1 class="bday-hand">${nm} is one!</h1>
+      <p class="bday-lead">You made it through the whole first year together. Look at everything you saw along the way.</p>
+      ${(() => { const st = [[firsts, firsts === 1 ? 'first saved' : 'firsts saved'], [visits, visits === 1 ? 'checkup' : 'checkups'], [photos, photos === 1 ? 'monthly photo' : 'monthly photos']].filter(x => x[0] > 0); return st.length ? `<div class="bday-stats" style="grid-template-columns:repeat(${st.length},1fr)">${st.map(x => stat(x[0], x[1])).join('')}</div>` : ''; })()}
+      ${any
+        ? `<button class="bday-collage" onclick="storyShare('year')" aria-label="${esc2(`Open ${name()}’s first-year collage`)}"><img data-story-thumb="year" alt=""></button><button class="hub-button bday-story" onclick="storyShare('year')">${esc2(`Share ${name()}’s first year`)}</button>`
+        : `<label class="hub-button bday-add" role="button">Add a first-birthday photo${hubPhotoInput(12)}</label>`}
+    </section>
+    <section class="bday-end"><p>${esc2('Ahead covers the first year, so this is where it ends. Your pediatrician takes it from here, starting with the 12-month checkup.')}</p><p class="bday-small">${esc2('You can still look back at any month, and every guide is in Categories.')}</p></section>`;
+    }
     return `<section class="bday-year" aria-label="Happy first birthday">${confetti()}
       <span class="bday-one" aria-hidden="true">1</span>
       <p class="bday-eyebrow">Happy first birthday</p>
