@@ -1293,7 +1293,6 @@
 #main .dev-area.is-Talking { background: #fff3dc }
 #main .dev-area.is-Thinking { background: #e6f5ec }
 #main .dev-area.is-Movement { background: #e7effc }
-#main .dev-area .dev-area-art circle:first-child { fill: #ffffff; fill-opacity: .55 }
 #main .hub-eyes-big { font-size: 30px !important }
 
 /* Development area pages: the area's own color carries through from its tile */
@@ -1305,7 +1304,6 @@
 #main .dev-area-head { background: var(--area); border-radius: 24px; padding: 4px 20px 20px; margin: 0 0 16px; overflow: hidden }
 #main .dev-area-head-art { display: block; height: 150px; margin: 0 -8px 2px }
 #main .dev-area-head-art svg { width: 100%; height: 100%; display: block }
-#main .dev-area-head-art svg > circle:first-of-type { fill: #fff; fill-opacity: .6 }
 #main .dev-area-head .hub-context { margin: 0; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--year-ink) }
 #main .dev-area-head h1 { font: 700 27px/1.15 var(--display-font, inherit); margin: 6px 0 6px; color: var(--ink) }
 #main .dev-area-head .hub-lead { margin: 0; color: #5c5361 }
