@@ -1190,6 +1190,74 @@
 #main .hub-tl-copy b { display: block; font-size: 15px }
 #main .hub-tl-copy span { display: block; font-size: 13px; color: var(--muted) }
 
+/* ---------- Monthly Stories and the first-year collage (js/share-story.js) ---------- */
+/* The handwriting on each Story ships with the app, so it draws the same with or without a connection. */
+@font-face { font-family: AheadHand; src: url('../assets/fonts/caveat-latin-600-normal.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: swap }
+.story-sheet { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; padding: 16px; background: rgba(43, 40, 64, .55); font-family: Figtree, system-ui, sans-serif; color: #2B2840 }
+.story-card { position: relative; box-sizing: border-box; width: min(380px, 100%); max-height: calc(100dvh - 32px); overflow: auto; background: #FAF8F5; border-radius: 28px; padding: 20px 16px 16px; text-align: center }
+.story-close { position: absolute; top: 10px; right: 10px; width: 44px; height: 44px; border: 0; border-radius: 50%; background: transparent; font-size: 26px; line-height: 1; color: #5E5A75; cursor: pointer }
+.story-eyebrow { margin: 0 44px 2px; font-size: 13px; font-weight: 600; color: #5E5A75 }
+.story-card h2 { margin: 0 36px 12px; font-family: Nunito, sans-serif; font-weight: 800; font-size: 21px; line-height: 1.2 }
+.story-seg { display: inline-flex; gap: 4px; padding: 4px; margin-bottom: 12px; border-radius: 999px; background: #EFEAF2 }
+.story-seg button { min-width: 84px; min-height: 36px; border: 0; border-radius: 999px; background: transparent; font: inherit; font-size: 14px; font-weight: 600; color: #5E5A75; cursor: pointer }
+.story-seg button.is-on { background: #fff; color: #2B2840; box-shadow: 0 1px 2px rgba(43, 40, 64, .12) }
+.story-frame { position: relative; width: min(100%, calc((100dvh - 290px) * 9 / 16)); min-width: 160px; margin: 0 auto; aspect-ratio: 9 / 16; border-radius: 18px; overflow: hidden; box-shadow: 0 10px 28px rgba(43, 40, 64, .18); background: #F5E8E2 }
+.story-frame canvas { display: block; width: 100%; height: 100% }
+.story-busy { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(250, 248, 245, .55) }
+.story-busy[hidden] { display: none }
+.story-busy span { padding: 8px 14px; border-radius: 999px; background: #fff; font-size: 13px; font-weight: 600; box-shadow: 0 2px 8px rgba(43, 40, 64, .12) }
+.story-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px }
+.story-btn { min-height: 48px; border: 0; border-radius: 999px; background: #2B2840; color: #fff; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer }
+.story-btn.is-quiet { background: #fff; color: #2B2840; box-shadow: inset 0 0 0 1.5px #2B2840 }
+.story-btn:disabled, .story-seg button:disabled { opacity: .5; cursor: default }
+.story-note { margin: 10px 4px 0; font-size: 12.5px; line-height: 18px; color: #5E5A75 }
+#main .mem-shot-wrap { position: relative; scroll-snap-align: start }
+#main .mem-shot-share { position: absolute; right: 6px; top: 6px; width: 32px; height: 32px; border: 0; border-radius: 50%; background: rgba(255, 255, 255, .92); color: var(--year-ink, #5b4a8b); display: grid; place-items: center; cursor: pointer; box-shadow: 0 1px 3px rgba(43, 40, 64, .15) }
+#main .mem-shot-share svg { width: 16px; height: 16px }
+#main .hub-bday-share { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 44px; margin-top: 8px; border: 0; border-radius: 14px; background: #2B2840; color: #fff; font: inherit; font-weight: 600; cursor: pointer }
+#main .mem-shot-wrap > .mem-shot { display: block }
+#main .bday-story { position: relative; display: block; width: 100%; margin-top: 8px; background: var(--ink, #2B2840) !important; color: #fff !important; border-radius: 999px; padding: 15px 18px; font-weight: 700 }
+#main .mem-year { margin-top: 4px; margin-bottom: 10px }
+.story-actions.is-single { grid-template-columns: 1fr }
+.story-frame canvas.is-movable { cursor: grab; touch-action: none }
+.story-adjust { display: flex; align-items: center; gap: 12px; max-width: 280px; margin: 12px auto 0; font-size: 13px; font-weight: 600; color: #5E5A75 }
+.story-adjust input { flex: 1; min-width: 0; accent-color: #2B2840 }
+#main .mem-shot-remove { position: absolute; left: 6px; top: 6px; width: 28px; height: 28px; border: 0; border-radius: 50%; background: rgba(43, 40, 64, .55); color: #fff; display: grid; place-items: center; font-size: 18px; line-height: 1; cursor: pointer }
+#main .mem-shot-remove::after { content: ""; position: absolute; inset: -8px }
+/* Memories: each month as its finished Story; empty months show the design waiting for a photo */
+#main .mem-stories { display: grid; grid-auto-flow: column; grid-auto-columns: 42%; gap: 12px; overflow-x: auto; margin: 0 -16px 14px; padding: 4px 16px 12px; scroll-snap-type: x mandatory }
+#main .mem-story-wrap { position: relative; scroll-snap-align: start }
+#main .mem-story { position: relative; display: block; width: 100%; aspect-ratio: 9 / 16; padding: 0; border: 0; border-radius: 16px; overflow: hidden; background: #F5E8E2; box-shadow: 0 6px 16px rgba(43, 40, 64, .12); cursor: pointer; scroll-snap-align: start; font: inherit }
+#main .mem-story img { display: block; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .25s }
+#main .mem-story img.is-ready, #main .mem-story.is-plain img { opacity: 1 }
+#main .mem-story-add { position: absolute; left: 50%; bottom: 12px; transform: translateX(-50%); padding: 7px 12px; border-radius: 999px; background: #2B2840; color: #fff; font-size: 12.5px; font-weight: 600; white-space: nowrap }
+#main .mem-story.is-next { cursor: default; opacity: .5; box-shadow: none }
+#main .mem-story.is-next .mem-story-add { background: rgba(255, 255, 255, .92); color: #5E5A75 }
+#main .mem-story.is-plain em { position: absolute; left: 8px; top: 8px; padding: 2px 8px; border-radius: 999px; background: rgba(255, 255, 255, .92); font-style: normal; font-size: 12px; font-weight: 700; color: var(--year-ink, #5b4a8b) }
+#main .mem-story.is-plain.is-empty { display: grid; place-items: center; border: 2px dashed #d9cfe3; box-shadow: none; background: #fbf7f4 }
+#main .mem-story.is-plain.is-empty em { left: 50%; top: 40%; transform: translateX(-50%) }
+.story-change { position: relative; flex: none; padding: 6px 2px; color: #2B2840; text-decoration: underline; text-underline-offset: 3px; cursor: pointer }
+.story-change .hub-photo-input, .mem-story .hub-photo-input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none }
+/* The × on a Memories photo matches the × on Home's cards: a soft grey ×, on a small white circle so it reads on any photo */
+#main .mem-shot-remove { left: auto; right: 6px; top: 6px; width: 28px; height: 28px; min-height: 0; padding: 0; border: 0; border-radius: 50%; background: rgba(255, 255, 255, .92); color: #7d7785; font-size: 19px; line-height: 1; box-shadow: 0 1px 3px rgba(43, 39, 51, .12); z-index: 2 }
+#main .mem-shot-remove:hover { background: #fff; color: #2B2840 }
+#main .mem-yearcard { display: flex; align-items: center; gap: 14px; width: 100%; margin: 4px 0 18px; padding: 12px 14px 12px 12px; border: 0; border-radius: 20px; background: #fff; box-shadow: 0 6px 16px rgba(43, 40, 64, .10); text-align: left; font: inherit; color: var(--ink, #2B2840); cursor: pointer }
+#main .mem-yearcard-pic { flex: none; width: 64px; aspect-ratio: 9 / 16; border-radius: 10px; overflow: hidden; background: #F8EBE5 }
+#main .mem-yearcard-pic img { display: block; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .25s }
+#main .mem-yearcard-pic img.is-ready { opacity: 1 }
+#main .mem-yearcard b { display: block; font-size: 16px }
+#main .mem-yearcard small { display: block; margin-top: 2px; color: var(--muted, #5E5A75); font-size: 13px; line-height: 18px }
+#main .mem-yearcard .mem-row-go { margin-left: auto; font-size: 22px; color: #9a94a0 }
+/* One Share button: it opens the phone's share sheet (Messages, Instagram, Save Image) */
+.story-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px }
+.story-btn svg { width: 18px; height: 18px; flex: none }
+.story-share-hint { margin: 8px 6px 0; font-size: 12.5px; line-height: 18px; color: #5E5A75 }
+.story-share-hint + .story-note { margin-top: 4px }
+/* Where the share sheet can't open: the picture itself, to press and hold */
+.story-hold { position: absolute; inset: 0; z-index: 3; background: #F5E8E2 }
+.story-hold img { display: block; width: 100%; height: 100%; object-fit: cover; -webkit-touch-callout: default; -webkit-user-select: auto; user-select: auto }
+.story-hold span { position: absolute; left: 50%; top: 12px; transform: translateX(-50%); width: max-content; max-width: 88%; padding: 8px 14px; border-radius: 999px; background: #2B2840; color: #fff; font-size: 12.5px; font-weight: 600; text-align: center; pointer-events: none }
+
 /* Development & play: awake time, illustrated ideas, and skills you can see on the page */
 #main .dev-awake .hub-figure { margin: 4px 0 0 }
 #main .dev-awake-ideas { border-top: 1px solid var(--line); margin-top: 14px; padding-top: 14px }
@@ -1220,3 +1288,9 @@
 #main .dev-faq-q { font-weight: 600; font-size: 15px; margin: 4px 0 4px; color: var(--ink) }
 #main .dev-faq-a { font-size: 14px; line-height: 1.5; color: var(--ink-2, #5E5A75); margin: 0 0 10px }
 #main .dev-idea-art text, #main .dev-idea-hero text { font-family: Figtree, system-ui, sans-serif }
+#main .dev-awake .dev-ideas { margin-top: 2px }
+#main .dev-awake .dev-idea { border: 0; padding: 0; background: none }
+#main .dev-idea-art { background: #f8f7fd }
+#main .dev-idea-hero { background: #f8f7fd }
+#main .dev-help { display: block; margin-top: 8px; font-size: 13px; line-height: 1.45; color: var(--ink) }
+#main .dev-help b { display: inline !important; font-size: inherit !important; color: var(--year-ink); font-weight: 600; margin-right: 2px }

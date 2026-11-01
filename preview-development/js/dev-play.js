@@ -115,22 +115,20 @@
   const fixed = a => a && FIX[a.id] ? Object.assign({}, a, FIX[a.id]) : a;
   const ctxFor = a => Object.assign({}, (typeof PLAY_CONTEXT !== 'undefined' && PLAY_CONTEXT[a.id]) || {}, FIX[a.id] || {});
 
-  /* ---------- One idea per area, from the same stage's ideas ---------- */
-  const AREA_IDEA = {
-    2: { Social: 'smile-pause', Talking: 'sound-answer', Thinking: 'face-follow', Movement: 'tummy-reflection' },
-    4: { Social: 'mirror-company', Talking: 'sock-puppet', Thinking: 'fabric-feel', Movement: 'easy-grip' },
-    6: { Social: 'mirror-faces', Talking: 'sound-side', Thinking: 'basket-out', Movement: 'supported-reach' },
-    9: { Social: 'peek-corner', Talking: 'hello-wave', Thinking: 'hidden-toy', Movement: 'empty-basket' },
-    12: { Social: 'gesture-song', Talking: 'action-book', Thinking: 'hide-helper', Movement: 'two-baskets' }
+  /* ---------- Ideas: four per stage, each with a flat picture ---------- */
+  const ALL_IDEAS = () => { const o = {}; for (let m = 0; m <= 12; m++) { const x = playStageModel(m); [...(x.primary || []), ...(x.more || [])].forEach(a => { if (!o[a.id]) o[a.id] = a; }); } return o; };
+  const findIdea = id => fixed(ALL_IDEAS()[id]);
+  const stageIdeas = ref => (window.DEV_STAGE_IDEAS[ref] || []).map(findIdea).filter(Boolean);
+  const ideaArt = a => (window.devPlayArt ? devPlayArt(a.id) : '');
+  const ideaTile = (a, ref) => `<button class="dev-idea" onclick="openPage('chg:Development:d:idea:${ref}:${a.id}')"><span class="dev-idea-art">${ideaArt(a)}</span><b>${F(B(a.title))}</b></button>`;
+  // One line under the ideas: the awake-time rule that matters most at this age (AAP, WHO).
+  const AWAKE_LINE = {
+    2: own => own && live() && (NOW - parse(profile.dob)) / 864e5 >= 49 ? 'Aim for 15–30 minutes of tummy time a day in all, in short turns.' : 'Start tummy time with a few minutes, 2–3 times a day, and build to 15–30 minutes a day by 7 weeks.',
+    4: () => 'Aim for about 30 minutes of tummy time a day in all, in short turns. Screens aren’t recommended yet.',
+    6: () => 'Floor time beats seats. Keep time in a bouncer, swing or stroller to an hour at a time.',
+    9: () => 'Give Maya floor space to sit, roll and crawl, and talk about what you’re doing as you go.',
+    12: () => 'A sturdy push toy and furniture to step along help more than a walker. Walkers lead to falls.'
   };
-  const ideasFor = lo => { const m = playStageModel(lo); return { phase: m.phase, primary: (m.primary || []).map(fixed), all: [...(m.primary || []), ...(m.more || [])].map(fixed) }; };
-  const findIdea = (lo, id) => fixed(ideasFor(lo).all.find(a => a.id === id));
-  // Illustration for an idea, recolored into Development's lilac.
-  const ideaArt = (a, lo) => (typeof playActivityArt === 'function' ? playActivityArt(a, ideasFor(lo).phase) : '')
-    .replace('<svg', '<svg preserveAspectRatio="xMidYMid meet"').replace(/#ecf6fa/gi, '#f3f1ff').replace(/#cfe9f4/gi, '#dfdcfb');
-  const ideaTile = (a, lo) => `<button class="dev-idea" onclick="openPage('chg:Development:d:idea:${lo}:${a.id}')"><span class="dev-idea-art">${ideaArt(a, lo)}</span><b>${F(B(a.title))}</b></button>`;
-  // A different pair of ideas each day, so the summary feels fresh without growing.
-  const todaysIdeas = list => { if (list.length <= 2) return list; const d = Math.floor((typeof NOW !== 'undefined' ? NOW : new Date()) / 864e5), i = d % list.length; return [list[i], list[(i + 1) % list.length]]; };
 
   /* ---------- Summary ---------- */
   window.developmentJourneyOverview = developmentJourneyOverview = function (selected = null) {
@@ -149,12 +147,11 @@
       const n = (DEVELOPMENT_DOMAINS[ref][d] || []).length;
       const moving = own && live() && d === 'Movement' && (answers.pullUp === 'Yes' || answers.crawl === 'Yes');
       const line = moving ? (answers.pullUp === 'Yes' ? 'Maya is already pulling up. Stepping along the furniture comes next.' : 'Maya is already crawling. Pulling up comes next.') : c.areas[d][own ? 0 : 1];
-      return `<button class="hub-domain-tile" onclick="openPage('development-domain:${ref}:${d}')">${h.art(DOMAIN_ICONS[d], 'Development')}<b>${DOMAIN_TITLES[d]}</b><small>${F(line)}</small><span>${F(`${n} skill${n === 1 ? '' : 's'} to look for`)} ›</span></button>`;
+      return `<button class="hub-domain-tile" onclick="openPage('development-domain:${ref}:${d}')">${h.art(DOMAIN_ICONS[d], 'Development')}<b>${DOMAIN_TITLES[d]}</b><small>${F(line)}</small><span>${F(`${n} skill${n === 1 ? '' : 's'}`)} ›</span></button>`;
     }).join('');
-    b += `<section class="hub-card hub-glance is-static"><span class="hub-card-head"><b>${F(own ? 'What Maya might be doing' : 'What babies might be doing')}</b></span><div class="hub-domain-tiles">${tiles}</div></section>`;
-    // Q3: awake time, then two illustrated ideas and the rest one tap away.
-    const lo = own && live() ? playPhase(developmentMonth(actualMonth())).lo : ref, ideas = ideasFor(lo).primary;
-    b += `<section class="hub-card dev-awake"><span class="hub-card-head"><b>${F(own ? 'Things to try with Maya' : `Things to try at ${age}`)}</b></span><div class="dev-ideas is-pair">${todaysIdeas(ideas).map(a => ideaTile(a, lo)).join('')}</div>${ref <= 4 ? `<p class="dev-awake-note">${F('Tummy time: ' + awakeFor(ref, own)[0][2].replace(/^./, c => c.toLowerCase()) + '.')}</p>` : ''}<button class="hub-link" onclick="openPage('chg:Development:d:more:${lo}')">${F(`See all ${ideas.length} ideas`)} ›</button></section>`;
+    b += `<section class="hub-card hub-glance is-static"><span class="hub-card-head"><b>${F(own ? 'What Maya can do now' : `What babies do by ${age}`)}</b></span><div class="hub-domain-tiles">${tiles}</div></section>`;
+    // Q3: what to do in awake time: four pictures, and the one rule that matters most now.
+    b += `<section class="hub-card dev-awake"><span class="hub-card-head"><b>${F(own ? 'Awake time with Maya' : `Awake time at ${age}`)}</b></span><div class="dev-ideas">${stageIdeas(ref).map(a => ideaTile(a, ref)).join('')}</div><p class="dev-awake-note">${F(AWAKE_LINE[ref](own))}</p></section>`;
     if (ref >= 6) b += h.list('', [h.row({ icon: 'signs', cat: 'Development', title: 'Try a few baby signs', sub: 'More, eat, milk and all done', onclick: `openPage('chg:Development:d:signs')` })]);
     b += h.versus('Not yet, or time to ask?', ['Not yet', notYetLine(ref, now)], ['Talk to your pediatrician', 'Call if Maya loses a skill {s} had, or if something worries you. You don’t need to wait for the checkup.']);
     const nx = devKeys[devKeys.indexOf(ref) + 1];
@@ -193,31 +190,28 @@
     const rows = labels.map(l => {
       const key = journeySkillKey(l), rec = journeyData().records.find(r => r.type === 'milestone' && r.skillKey === key) || (skillSeen(l) ? { reported: true } : null);
       const t = F(B(clearMilestone(l))), see = media[key] ? `<button class="dev-see" aria-expanded="false" data-title="${t}" onclick="devSeeIt(this,'${key}')">See what it looks like</button>` : '';
-      return `<div class="hub-tick is-habit dev-skill"><span class="hub-tick-art">${h.art(DOMAIN_ICONS[domain] || 'smile', 'Development')}</span><span class="hub-row-copy"><b>${t}</b><small>${F(B(EXAMPLE_FIX[l] || DEV_EXAMPLES[l] || ''))}</small>${see}</span>${rec ? `<span class="hub-chip is-done">${F('Seen')} ✓</span>` : `<button class="hub-seen" onclick="hubSeen('${key}')">${F('Seen it')}</button>`}${see ? '<div class="dev-media" hidden></div>' : ''}</div>`;
+      return `<div class="hub-tick is-habit dev-skill"><span class="hub-tick-art">${h.art(DOMAIN_ICONS[domain] || 'smile', 'Development')}</span><span class="hub-row-copy"><b>${t}</b><small>${F(B(EXAMPLE_FIX[l] || DEV_EXAMPLES[l] || ''))}</small>${help(key)}${see}</span>${rec ? `<span class="hub-chip is-done">${F('Seen')} ✓</span>` : `<button class="hub-seen" onclick="hubSeen('${key}')">${F('Seen it')}</button>`}${see ? '<div class="dev-media" hidden></div>' : ''}</div>`;
     }).join('');
-    const a = findIdea(ref, AREA_IDEA[ref][domain]);
-    const tryCard = a ? `<section class="hub-card dev-try"><span class="hub-card-head"><b>${F('Try this together')}</b></span><button class="dev-try-row" onclick="openPage('chg:Development:d:idea:${ref}:${a.id}')"><span class="dev-idea-art">${ideaArt(a, ref)}</span><span class="hub-row-copy"><b>${F(B(a.title))}</b><small>${F(B(ctxFor(a).explain || a.why || playLineFull(a)))}</small></span><span class="hub-chev" aria-hidden="true">›</span></button></section>` : '';
     const lead = COPY[ref].areas[domain][own ? 0 : 1];
-    return `<div class="quiet-category hub-page hub-detail" data-overview="Development" style="${yearTheme('Development')}">${detailPageTop('Development')}<div class="hub-detail-head"><span class="hub-big">${h.art(DOMAIN_ICONS[domain] || 'smile', 'Development')}</span><p class="hub-context">${esc(`${meta.title} · by ${age}`)}</p><h1>${F(own ? 'What Maya might be doing' : `What babies do by ${age}`)}</h1><p class="hub-lead">${F(lead)}</p></div><div class="hub-ticks">${rows}</div>${h.note(`Most babies do ${labels.length === 1 ? 'this' : 'these'} by ${age}. Tap “Seen it” to save the moment to Memories.`)}${tryCard}</div>`;
+    return `<div class="quiet-category hub-page hub-detail" data-overview="Development" style="${yearTheme('Development')}">${detailPageTop('Development')}<div class="hub-detail-head"><span class="hub-big">${h.art(DOMAIN_ICONS[domain] || 'smile', 'Development')}</span><p class="hub-context">${esc(`By ${age}`)}</p><h1>${esc(meta.title)}</h1><p class="hub-lead">${F(lead)}</p></div><div class="hub-ticks">${rows}</div>${h.note(`Most babies do ${labels.length === 1 ? 'this' : 'these'} by ${age}. Tap “Seen it” to save the moment to Memories.`)}</div>`;
   };
+  const help = key => { const g = (typeof DEV_SUPPORT !== 'undefined' ? DEV_SUPPORT : {})[key]; return g && g[0] ? `<span class="dev-help"><b>${F('How to help:')}</b> ${F(B(g[0]))}</span>` : ''; };
   const EXAMPLE_FIX = { 'Steps while holding furniture': 'Holding on to the sofa or a low table, Maya takes a few steps sideways. Walking on {p} own usually comes between 12 and 18 months.' };
   const playLineFull = a => { const s = String(a.how || ''); const first = (s.match(/^.*?[.!?](\s|$)/) || [s])[0].trim(); return first; };
 
   /* ---------- Ideas: a picture grid, and a short page for each ---------- */
-  function ideasPage(lo) {
-    const { phase, primary } = ideasFor(lo);
-    const ref = devRef(lo), own = live() && ref === devNow();
-    return devDetail('Ideas to try together', phase.title, 'A few minutes of any of these is plenty. Pick one that suits the moment.',
-      `<div class="dev-ideas is-grid">${primary.map(a => ideaTile(a, lo)).join('')}</div>`
-      + `<section class="hub-card dev-awake"><span class="hub-card-head"><b>${F(own ? 'Awake time with Maya' : 'Awake time at this age')}</b></span>${hubIconSteps(awakeFor(ref, own), 'Development', 'What awake time looks like at this age', false)}<p class="dev-awake-note">${F((own && actualMonth() < 2 ? 'Right now Maya is awake for about 45–60 minutes at a time, feeds included. ' : '') + 'Screens aren’t recommended yet. Video chats with family are fine.')}</p></section>`);
+  function ideasPage(ref) {
+    ref = DEV_STAGES[ref] ? ref : devRef(ref);
+    return devDetail('Awake time', `By ${ageWord(ref)}`, 'A few minutes of any of these is plenty. Pick one that suits the moment.',
+      `<div class="dev-ideas is-grid">${stageIdeas(ref).map(a => ideaTile(a, ref)).join('')}</div><p class="dev-awake-note">${F(AWAKE_LINE[ref](live() && ref === devNow()))}</p>`);
   }
-  function ideaPage(lo, id) {
-    const a = findIdea(lo, id), h = H();
-    if (!a) return ideasPage(lo);
+  function ideaPage(ref, id) {
+    const a = findIdea(id), h = H();
+    if (!a) return ideasPage(ref);
     const ctx = ctxFor(a);
     const steps = (typeof playInstructionSteps === 'function' ? playInstructionSteps(a.how) : [a.how]).map(s => B(s));
-    return devDetail(B(a.title), 'Ideas to try together', B(ctx.explain || a.why || ''),
-      `<figure class="dev-idea-hero">${ideaArt(a, lo)}</figure>`
+    return devDetail(B(a.title), 'Awake time', B(ctx.explain || a.why || ''),
+      `<figure class="dev-idea-hero">${ideaArt(a)}</figure>`
       + h.steps(steps)
       + (ctx.notice ? h.tip('What to notice', B(ctx.notice)) : '')
       + h.note('Stay close, and stop when Maya looks away or fusses. That’s {p} way of saying “enough for now.”'), true);
@@ -255,8 +249,8 @@
   window.changesRoute = function (p) {
     const [, cat, screen, a, b, c] = p.split(':');
     if (cat === 'Development' && screen === 'd') {
-      if (a === 'more') return ideasPage(Number(b));
-      if (a === 'idea') return ideaPage(Number(b), c);
+      if (a === 'more') return ideasPage(devRef(Number(b)));
+      if (a === 'idea') return ideaPage(DEV_STAGES[b] ? Number(b) : devRef(Number(b)), c);
       if (a === 'faq') return faqPage(DEV_STAGES[b] ? Number(b) : devRef());
     }
     return baseRoute(p);
