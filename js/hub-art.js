@@ -343,6 +343,7 @@
     const used = new Set();
     root.querySelectorAll('.hub-dot svg[data-art], .hub-tick-art svg[data-art]').forEach(svg => {
       const name = svg.getAttribute('data-art');
+      if (svg.closest('[data-icon-fixed]')) { used.add(name); return; }
       const holder = svg.closest('.hub-row, .hub-tick, button, div') || svg.parentElement;
       const text = (holder.querySelector('b') || holder).textContent + ' ' + ((holder.querySelector('small') || {}).textContent || '');
       const fits = HINTS.filter(([re]) => re.test((holder.querySelector('b') || holder).textContent)).map(([, n]) => n).filter(n => ART[n]);

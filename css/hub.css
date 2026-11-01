@@ -1236,3 +1236,10 @@
 #main .hub-tough-body p { margin: 0 0 6px; font-size: 15px; line-height: 1.5 }
 #main .hub-tough-body ul { margin: 0; padding-left: 20px; font-size: 15px; line-height: 1.5 }
 #main .hub-card-pick select { border: 0; background: var(--year-pale); border-radius: 10px; padding: 6px 8px; font: inherit; font-size: 13px; font-weight: 600; color: var(--year-ink); max-width: 190px }
+#main .hub-poop { display: flex; flex-direction: column; gap: 12px }
+#main .hub-poop-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px }
+#main .hub-poop-row > div { display: flex; flex-direction: column; gap: 4px; min-width: 0 }
+#main .hub-poop-row span { display: block; height: 28px; border-radius: 14px; box-shadow: inset 0 0 0 1px rgba(0,0,0,.08) }
+#main .hub-poop-row b { font-size: 13px }
+#main .hub-poop-row small { font-size: 12.5px; color: var(--ink-2, #5d6470); line-height: 1.35 }
+#main .hub-poop-note { margin: 0; font-size: 13.5px; line-height: 1.45; padding-top: 10px; border-top: 1px solid var(--line) }
