@@ -1257,3 +1257,23 @@
 .story-hold { position: absolute; inset: 0; z-index: 3; background: #F5E8E2 }
 .story-hold img { display: block; width: 100%; height: 100%; object-fit: cover; -webkit-touch-callout: default; -webkit-user-select: auto; user-select: auto }
 .story-hold span { position: absolute; left: 50%; top: 12px; transform: translateX(-50%); width: max-content; max-width: 88%; padding: 8px 14px; border-radius: 999px; background: #2B2840; color: #fff; font-size: 12.5px; font-weight: 600; text-align: center; pointer-events: none }
+
+/* Development & play: ideas as pictures, and skill photos and videos inside the app */
+#main .dev-ideas { display: grid; grid-template-columns: 1fr 1fr; gap: 12px }
+#main .dev-ideas.is-grid { margin: 4px 0 16px }
+#main .dev-idea { display: flex; flex-direction: column; gap: 8px; text-align: left; background: var(--white); border: 1px solid var(--line); border-radius: 20px; padding: 8px 8px 12px; cursor: pointer; font: inherit; color: var(--ink); min-height: 0 }
+#main .dev-awake .dev-idea { border: 0; padding: 0; background: none }
+#main .dev-idea b { font-size: 14px; line-height: 1.3; font-weight: 600; padding: 0 4px }
+#main .dev-idea-art { display: block; border-radius: 16px; overflow: hidden; background: #f8f7fd; aspect-ratio: 160 / 116 }
+#main .dev-idea-art svg { width: 100%; height: 100%; display: block }
+#main .dev-idea-hero { margin: 0 0 16px; border-radius: 24px; overflow: hidden; background: #f8f7fd }
+#main .dev-idea-hero svg { width: 100%; height: auto; display: block }
+#main .dev-skill { flex-wrap: wrap; align-items: flex-start }
+#main button.dev-see { display: inline-block; margin-top: 8px; background: none; border: 0; padding: 0; font: inherit; font-size: 13px; font-weight: 600; color: var(--year-ink) !important; cursor: pointer; min-height: 0 }
+#main .dev-see::before { content: "▸ " }
+#main .dev-see[aria-expanded="true"]::before { content: "▾ " }
+#main .dev-media { flex-basis: 100%; margin-top: 2px }
+#main .dev-media .hub-embed { margin: 0 }
+#main .dev-photo { margin: 0; border-radius: 16px; overflow: hidden; background: var(--year-pale) }
+#main .dev-photo img { width: 100%; display: block }
+#main .dev-photo figcaption { font-size: 12px; color: var(--ink-2, #5E5A75); padding: 6px 10px }
