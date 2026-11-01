@@ -20,7 +20,8 @@
     8: { accent: '#E889AD', b: [-0.6, 0, 1081.2, 1920], p: [522.4, 1213.5, 578.7, 558.8], t: -7.59, s: [568.4, 1558.4, 575.7, 140.2], tp: [198.2, 787.1, 625.1, 185.0] },
     9: { accent: '#EC8478', b: [-0.6, 0, 1081.2, 1920], p: [522.5, 1212.6, 577.5, 558.9], t: -7.67, s: [569.0, 1557.5, 574.5, 140.2], tp: [233.8, 785.9, 611.3, 185.0] },
     10: { accent: '#B59AE4', b: [-0.6, 0, 1081.2, 1920], p: [522.0, 1211.5, 575.4, 561.3], t: -7.93, s: [570.1, 1556.9, 572.4, 139.0], tp: [199.3, 783.6, 643.4, 180.4] },
-    11: { accent: '#E889AD', b: [-0.9, 0, 1081.9, 1920], p: [521.9, 1211.4, 577.7, 560.3], t: -7.73, s: [568.9, 1557.0, 574.7, 140.3], tp: [222.1, 784.1, 622.0, 184.0] }
+    11: { accent: '#E889AD', b: [-0.9, 0, 1081.9, 1920], p: [521.9, 1211.4, 577.7, 560.3], t: -7.73, s: [568.9, 1557.0, 574.7, 140.3], tp: [222.1, 784.1, 622.0, 184.0] },
+    12: { accent: '#E0B54A', b: [-0.6, 0, 1081.2, 1920], p: [522.4, 1211.4, 576.8, 561.2], t: -7.93, s: [570.5, 1556.7, 573.8, 139.0], tp: [199.3, 783.6, 644.6, 188.4] }
   };
   // The year: twelve windows [cx, cy, w, h, tilt], months 1–12 in reading order.
   const YEAR = {
@@ -85,7 +86,7 @@
     ctx.drawImage(tape, L.tp[0], L.tp[1], L.tp[2], L.tp[3]);
     // The handwriting: "[Name] is five months", a small heart and an underline in the month's color.
     ctx.save(); ctx.translate(L.s[0], L.s[1]); ctx.rotate(L.t * Math.PI / 180);
-    const text = `${babyName()} is ${WORDS[m - 1]}`;
+    const text = m === 12 ? `${babyName()} is one!` : `${babyName()} is ${WORDS[m - 1]}`;
     let size = 72; ctx.font = `600 ${size}px AheadHand, Caveat, cursive`;
     while (ctx.measureText(text).width > L.s[2] - 90 && size > 40) { size -= 2; ctx.font = `600 ${size}px AheadHand, Caveat, cursive`; }
     const tw = ctx.measureText(text).width, total = tw + 44, x0 = -total / 2;
@@ -160,7 +161,7 @@
   }
 
   /* ---------- sharing ---------- */
-  const fileName = m => `${babyName().replace(/[^\w-]+/g, '-')}-${m === 12 ? 'first-year' : m + '-months'}`;
+  const fileName = m => `${babyName().replace(/[^\w-]+/g, '-')}-${m === 'year' ? 'first-year' : m + '-months'}`;
   async function shareOrSave(blob, base, mode) {
     const ext = /mp4/.test(blob.type) ? 'mp4' : /webm/.test(blob.type) ? 'webm' : 'png';
     const file = new File([blob], `${base}.${ext}`, { type: blob.type });
@@ -189,16 +190,16 @@
   function toast(title, body) { if (typeof hubToast === 'function') hubToast(title, body); }
 
   window.storyShare = async function (m, opts = {}) {
-    if (!(m >= 1 && m <= 12)) return;
-    if (m < 12 && !photoFor(m)) return;
+    if (m !== 'year' && !(m >= 1 && m <= 12)) return;
+    if (m !== 'year' && !photoFor(m)) return;
     close();
-    const nm = esc(babyName()), isYear = m === 12;
+    const nm = esc(babyName()), isYear = m === 'year';
     const have = isYear ? Array.from({ length: 12 }, (_, i) => photoFor(i + 1)).filter(Boolean).length : 1;
     sheet = document.createElement('div');
     sheet.className = 'story-sheet'; sheet.setAttribute('role', 'dialog'); sheet.setAttribute('aria-modal', 'true');
     sheet.setAttribute('aria-label', isYear ? `${babyName()}’s first year` : `${babyName()}’s ${m}-month photo`);
-    const eyebrow = opts.saved ? 'Photo saved · Ready for your Story' : isYear ? 'Happy first birthday' : `${m} month${m === 1 ? '' : 's'}`;
-    const title = isYear ? `${nm}’s first year` : `${nm} is ${WORDS[m - 1]}`;
+    const eyebrow = opts.saved ? 'Photo saved · Ready for your Story' : isYear ? 'Happy first birthday' : m === 12 ? '1 year' : `${m} month${m === 1 ? '' : 's'}`;
+    const title = isYear ? `${nm}’s first year` : m === 12 ? `${nm} is one!` : `${nm} is ${WORDS[m - 1]}`;
     const note = isYear
       ? (have < 12 ? `${12 - have} month${12 - have === 1 ? ' doesn’t' : 's don’t'} have a photo yet. Add ${12 - have === 1 ? 'it' : 'them'} in Memories and they’ll appear here.` : 'All twelve months, on one page.')
       : 'Drag the photo to move it, and zoom if you like. Then share it to your Story or send it to family.';
@@ -298,13 +299,13 @@
   // Small copies of each month's Story for Memories, made once and kept until the photo, its position or the name changes.
   const thumbs = {};
   const thumbKey = m => {
-    const ph = m === 12 ? Array.from({ length: 12 }, (_, i) => (photoFor(i + 1) || '').length).join('.') : String((photoFor(m) || '').length) + (photoFor(m) || '').slice(-24);
-    return [m, babyName(), ph, JSON.stringify(m === 12 ? positions() : posFor(m))].join('|');
+    const ph = m === 'year' ? Array.from({ length: 12 }, (_, i) => (photoFor(i + 1) || '').length).join('.') : String((photoFor(m) || '').length) + (photoFor(m) || '').slice(-24);
+    return [m, babyName(), ph, JSON.stringify(m === 'year' ? positions() : posFor(m))].join('|');
   };
   async function thumb(m) {
     const key = thumbKey(m);
     if (thumbs[m] && thumbs[m].key === key) return thumbs[m].url;
-    const full = m === 12 ? await renderYear() : await renderMonth(m);
+    const full = m === 'year' ? await renderYear() : await renderMonth(m);
     const c = document.createElement('canvas'); c.width = 360; c.height = 640;
     c.getContext('2d').drawImage(full, 0, 0, 360, 640);
     const url = c.toDataURL('image/jpeg', 0.86);
@@ -313,13 +314,13 @@
   }
   window.storyHydrate = function (root = document) {
     root.querySelectorAll('img[data-story-thumb]').forEach(el => {
-      const m = Number(el.dataset.storyThumb);
-      if (!(m >= 1 && m <= 12)) return;
+      const m = el.dataset.storyThumb === 'year' ? 'year' : Number(el.dataset.storyThumb);
+      if (m !== 'year' && !(m >= 1 && m <= 12)) return;
       thumb(m).then(url => { if (el.isConnected) { el.src = url; el.classList.add('is-ready'); } }).catch(() => {});
     });
   };
 
   // For checks and for anything that needs the picture without the sheet.
-  window.storyRender = m => (m === 12 ? renderYear() : renderMonth(m));
+  window.storyRender = m => (m === 'year' ? renderYear() : renderMonth(m));
   window.storyYearFrame = async t => { const p = await yearParts(), tl = yearTimeline(p), c = document.createElement('canvas'); c.width = W; c.height = H; tl.frame(c.getContext('2d'), t); return c; };
 })();

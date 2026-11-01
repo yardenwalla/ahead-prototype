@@ -111,3 +111,5 @@ Existing age-based guide advancement remains a product decision: suggested guida
 - **One button on the first-birthday screen:** "Make [Name]'s first-year collage" once there are monthly photos (the collage includes the video, so the separate Play button is gone), otherwise "Add a first-birthday photo".
 - **Memories shows the Stories:** "Month by month" is a row of each month's finished Story (balloon design with the photo). Months without a photo show the design with an empty polaroid and "＋ Add photo", and next month's design sits faintly at the end, so the empty state shows what the year becomes. Tapping a month opens its Story (move, zoom, Change photo, share). The newborn photo stays a plain photo; at 12 months the first card is the year collage.
 - The × on a Memories photo matches the × on Home's cards.
+- **12 months matches the other months:** Yarden's single-photo gold "12" is the 12-month Story ("[Name] is one!"). The twelve-photo collage is its own "[Name]'s first year" card above the row in Memories at 12 months, and the first-birthday button on Home opens it.
+- No faint next-month card; the row shows only months the baby has reached.

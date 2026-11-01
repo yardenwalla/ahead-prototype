@@ -74,7 +74,7 @@
       const y = scrollY; render(); scrollTo(0, y);
       if (!ok) return hubToast('Couldn’t keep that photo', 'This viewer can’t store photos. Open Ahead in your phone’s browser to keep them.');
       // Months 1–11 have a Story design: show it straight away, ready to share.
-      if (m >= 1 && m <= 11 && typeof storyShare === 'function') return storyShare(m, { saved: true });
+      if (m >= 1 && m <= 12 && typeof storyShare === 'function') return storyShare(m, { saved: true });
       hubToast('Photo saved', `${m === 0 ? 'Newborn' : m === 12 ? '1 year' : m + ' month' + (m === 1 ? '' : 's')} · in Memories`);
     };
     // The whole photo is kept (short side `size`, long side up to 1.5×), so a parent can move it inside the polaroid later.
@@ -812,7 +812,7 @@ window.hubCenterStages = function () {
       ${photo ? `<div class="bday-photo"><img src="${photo}" alt="${nm}’s first-birthday photo"></div>` : ''}
       ${(() => { // One button: the collage once there are monthly photos (it holds the video too); before that, the birthday photo.
         const any = Array.from({ length: 12 }, (_, i) => window.hubPhotoFor(i + 1)).some(Boolean);
-        return typeof storyShare === 'function' && any ? `<button class="hub-button bday-story" onclick="storyShare(12)">${esc2(`Make ${name()}’s first-year collage`)}</button>` : `<label class="hub-button bday-add" role="button">Add a first-birthday photo${hubPhotoInput(12)}</label>`; })()}
+        return typeof storyShare === 'function' && any ? `<button class="hub-button bday-story" onclick="storyShare('year')">${esc2(`Make ${name()}’s first-year collage`)}</button>` : `<label class="hub-button bday-add" role="button">Add a first-birthday photo${hubPhotoInput(12)}</label>`; })()}
     </section>
     <section class="bday-end"><p>${esc2('Ahead covers the first year, so this is where it ends. Your pediatrician takes it from here, starting with the 12-month checkup.')}</p><p class="bday-small">${esc2('You can still look back at any month, and every guide is in Categories.')}</p></section>`;
   }
