@@ -10,6 +10,7 @@
   const WORDS = ['one month', 'two months', 'three months', 'four months', 'five months', 'six months', 'seven months', 'eight months', 'nine months', 'ten months', 'eleven months'];
   // b: where the design sits · p: photo window [cx, cy, w, h] · t: tilt · s: caption strip [cx, cy, w, h] · tp: tape layer [x, y, w, h]
   const MONTHS = {
+    0: { accent: '#E0B54A', b: [0, 0, 1080, 1919], p: [533.2, 1052.7, 611.3, 576.7], t: -3.56, s: [556.0, 1418.0, 608.3, 158.4], tp: [212.3, 615.2, 620.9, 277.7] },
     1: { accent: '#7FA9DE', b: [-100, 0, 1280, 1920], p: [522.4, 1296.1, 627.2, 560.5], t: -6.85, s: [564.4, 1646.0, 624.2, 147.2], tp: [322.5, 841.2, 510.0, 208.8] },
     2: { accent: '#8FA6DA', b: [0, 0, 1080, 1919], p: [523.8, 1218.1, 577.5, 558.3], t: -7.75, s: [570.5, 1560.8, 574.5, 136.6], tp: [285.8, 791.9, 560.1, 175.6] },
     3: { accent: '#7CC2A0', b: [0, 0, 1080, 1919], p: [522.1, 1215.1, 575.7, 559.8], t: -7.7, s: [568.6, 1559.2, 572.7, 137.7], tp: [250.2, 788.5, 593.4, 176.7] },
@@ -86,14 +87,14 @@
     ctx.drawImage(tape, L.tp[0], L.tp[1], L.tp[2], L.tp[3]);
     // The handwriting: "[Name] is five months", a small heart and an underline in the month's color.
     ctx.save(); ctx.translate(L.s[0], L.s[1]); ctx.rotate(L.t * Math.PI / 180);
-    const text = m === 12 ? `${babyName()} is one!` : `${babyName()} is ${WORDS[m - 1]}`;
+    const text = m === 0 ? babyName() : m === 12 ? `${babyName()} is one!` : `${babyName()} is ${WORDS[m - 1]}`;
     let size = 72; ctx.font = `600 ${size}px AheadHand, Caveat, cursive`;
     while (ctx.measureText(text).width > L.s[2] - 90 && size > 40) { size -= 2; ctx.font = `600 ${size}px AheadHand, Caveat, cursive`; }
-    const tw = ctx.measureText(text).width, total = tw + 44, x0 = -total / 2;
+    const tw = ctx.measureText(text).width, total = m === 0 ? tw : tw + 44, x0 = -total / 2 - (m === 0 ? 40 : 0);
     ctx.fillStyle = INK; ctx.textBaseline = 'middle'; ctx.fillText(text, x0, -10);
-    ctx.save(); ctx.translate(x0 + tw + 10, -10 - size * 0.42); ctx.rotate(8 * Math.PI / 180); ctx.scale(34 / 24, 34 / 24);
-    ctx.strokeStyle = L.accent; ctx.lineWidth = 1.8 * 24 / 34; ctx.lineJoin = 'round'; ctx.stroke(new Path2D(HEART)); ctx.restore();
-    ctx.save(); ctx.translate(-115, 22); ctx.strokeStyle = L.accent; ctx.globalAlpha = 0.8; ctx.lineWidth = 5; ctx.lineCap = 'round'; ctx.stroke(new Path2D(SWOOSH)); ctx.restore();
+    if (m !== 0) { ctx.save(); ctx.translate(x0 + tw + 10, -10 - size * 0.42); ctx.rotate(8 * Math.PI / 180); ctx.scale(34 / 24, 34 / 24);
+    ctx.strokeStyle = L.accent; ctx.lineWidth = 1.8 * 24 / 34; ctx.lineJoin = 'round'; ctx.stroke(new Path2D(HEART)); ctx.restore(); }
+    ctx.save(); ctx.translate(m === 0 ? Math.max(-115, x0 + tw / 2 - 115) : -115, 22); ctx.strokeStyle = L.accent; ctx.globalAlpha = 0.8; ctx.lineWidth = 5; ctx.lineCap = 'round'; ctx.stroke(new Path2D(SWOOSH)); ctx.restore();
     ctx.restore();
     footer(ctx, 60, H - 62, 'left', L.accent);
     return c;
@@ -161,7 +162,7 @@
   }
 
   /* ---------- sharing ---------- */
-  const fileName = m => `${babyName().replace(/[^\w-]+/g, '-')}-${m === 'year' ? 'first-year' : m + '-months'}`;
+  const fileName = m => `${babyName().replace(/[^\w-]+/g, '-')}-${m === 'year' ? 'first-year' : m === 0 ? 'newborn' : m + '-months'}`;
   async function shareOrSave(blob, base, mode) {
     const ext = /mp4/.test(blob.type) ? 'mp4' : /webm/.test(blob.type) ? 'webm' : 'png';
     const file = new File([blob], `${base}.${ext}`, { type: blob.type });
@@ -190,16 +191,16 @@
   function toast(title, body) { if (typeof hubToast === 'function') hubToast(title, body); }
 
   window.storyShare = async function (m, opts = {}) {
-    if (m !== 'year' && !(m >= 1 && m <= 12)) return;
+    if (m !== 'year' && !(m >= 0 && m <= 12)) return;
     if (m !== 'year' && !photoFor(m)) return;
     close();
     const nm = esc(babyName()), isYear = m === 'year';
     const have = isYear ? Array.from({ length: 12 }, (_, i) => photoFor(i + 1)).filter(Boolean).length : 1;
     sheet = document.createElement('div');
     sheet.className = 'story-sheet'; sheet.setAttribute('role', 'dialog'); sheet.setAttribute('aria-modal', 'true');
-    sheet.setAttribute('aria-label', isYear ? `${babyName()}’s first year` : `${babyName()}’s ${m}-month photo`);
-    const eyebrow = opts.saved ? 'Photo saved · Ready for your Story' : isYear ? 'Happy first birthday' : m === 12 ? '1 year' : `${m} month${m === 1 ? '' : 's'}`;
-    const title = isYear ? `${nm}’s first year` : m === 12 ? `${nm} is one!` : `${nm} is ${WORDS[m - 1]}`;
+    sheet.setAttribute('aria-label', isYear ? `${babyName()}’s first year` : m === 0 ? `${babyName()}’s newborn photo` : `${babyName()}’s ${m}-month photo`);
+    const eyebrow = opts.saved ? 'Photo saved · Ready for your Story' : isYear ? 'Happy first birthday' : m === 0 ? 'Newborn' : m === 12 ? '1 year' : `${m} month${m === 1 ? '' : 's'}`;
+    const title = isYear ? `${nm}’s first year` : m === 0 ? `Hello, ${nm}` : m === 12 ? `${nm} is one!` : `${nm} is ${WORDS[m - 1]}`;
     const note = isYear
       ? (have < 12 ? `${12 - have} month${12 - have === 1 ? ' doesn’t' : 's don’t'} have a photo yet. Add ${12 - have === 1 ? 'it' : 'them'} in Memories and they’ll appear here.` : 'All twelve months, on one page.')
       : 'Drag the photo to move it, and zoom if you like. Then share it to your Story or send it to family.';
@@ -315,7 +316,7 @@
   window.storyHydrate = function (root = document) {
     root.querySelectorAll('img[data-story-thumb]').forEach(el => {
       const m = el.dataset.storyThumb === 'year' ? 'year' : Number(el.dataset.storyThumb);
-      if (m !== 'year' && !(m >= 1 && m <= 12)) return;
+      if (m !== 'year' && !(m >= 0 && m <= 12)) return;
       thumb(m).then(url => { if (el.isConnected) { el.src = url; el.classList.add('is-ready'); } }).catch(() => {});
     });
   };

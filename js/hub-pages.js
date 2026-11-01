@@ -74,7 +74,7 @@
       const y = scrollY; render(); scrollTo(0, y);
       if (!ok) return hubToast('Couldn’t keep that photo', 'This viewer can’t store photos. Open Ahead in your phone’s browser to keep them.');
       // Months 1–11 have a Story design: show it straight away, ready to share.
-      if (m >= 1 && m <= 12 && typeof storyShare === 'function') return storyShare(m, { saved: true });
+      if (m >= 0 && m <= 12 && typeof storyShare === 'function') return storyShare(m, { saved: true });
       hubToast('Photo saved', `${m === 0 ? 'Newborn' : m === 12 ? '1 year' : m + ' month' + (m === 1 ? '' : 's')} · in Memories`);
     };
     // The whole photo is kept (short side `size`, long side up to 1.5×), so a parent can move it inside the polaroid later.

@@ -113,3 +113,4 @@ Existing age-based guide advancement remains a product decision: suggested guida
 - The × on a Memories photo matches the × on Home's cards.
 - **12 months matches the other months:** Yarden's single-photo gold "12" is the 12-month Story ("[Name] is one!"). The twelve-photo collage is its own "[Name]'s first year" card above the row in Memories at 12 months, and the first-birthday button on Home opens it.
 - No faint next-month card; the row shows only months the baby has reached.
+- **Newborn matches the set:** Yarden's gold "Hello, World!" design with the name handwritten on the polaroid (the design already has a heart). It's the first card in the Memories row and opens like the other months.
