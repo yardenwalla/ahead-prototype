@@ -64,6 +64,31 @@
     'action-book': c => svg(sit(c, 62, 98, { left: [[48, 70], [52, 58]], right: [[76, 70], [72, 58]] }) + `<g transform="rotate(-6 112 74)">${book(c, 112, 70, 40)}</g>`, c),
     'two-baskets': c => svg(sit(c, 54, 98, { right: [[70, 78], [84, 72]] }) + `<g transform="translate(94 100) scale(.7)">${basket(c, 0, 0)}</g><g transform="translate(122 100) scale(.7)">${basket(c, 0, 0)}</g>` + ball(84, 68, 6) + `<path d="M98 80q12-14 24 0" stroke="${c.ink}" stroke-opacity=".3" stroke-width="2" stroke-dasharray="2 4" fill="none" stroke-linecap="round"/>`, c)
   };
+
+  // Crawling on hands and knees, head on the right.
+  const crawl = (c, x, y) => `${shadow(c, x, y + 2, 34)}<rect x="${x - 22}" y="${y - 26}" width="40" height="18" rx="9" fill="${c.bg}"/>`
+    + limb([[x - 16, y - 12], [x - 22, y - 2], [x - 34, y]], 6) + limb([[x + 10, y - 14], [x + 12, y]], 6) + limb([[x + 2, y - 14], [x + 2, y]], 6) + face(c, x + 22, y - 30, 12, 2);
+  // Standing, holding a low table, head up.
+  const standAt = (c, x, y) => `${shadow(c, x + 10, y + 2, 34)}<rect x="${x + 14}" y="${y - 44}" width="40" height="6" rx="3" fill="${c.ink}" fill-opacity=".35"/><rect x="${x + 46}" y="${y - 40}" width="5" height="40" rx="2.5" fill="${c.ink}" fill-opacity=".3"/>`
+    + limb([[x - 6, y - 22], [x - 7, y]], 7) + limb([[x + 6, y - 22], [x + 7, y]], 7) + `<rect x="${x - 12}" y="${y - 50}" width="24" height="30" rx="11" fill="${c.bg}"/>`
+    + limb([[x + 8, y - 44], [x + 20, y - 42]], 5) + limb([[x - 8, y - 44], [x - 14, y - 34]], 5) + face(c, x, y - 60, 12, 2);
+  // The baby at each Development stage, for the top of the page.
+  const HERO = {
+    2: c => svg(back(c, 86, 80) + `<circle cx="46" cy="40" r="4" fill="${SUN}"/>`, c),
+    4: c => svg(tummy(c, 82, 84) + rattle(118, 74, 30), c),
+    6: c => svg(sit(c, 72, 98, { right: [[88, 72], [100, 62]] }) + ball(110, 58, 8), c),
+    9: c => svg(crawl(c, 74, 96) + block(110, 82, 12, MINT), c),
+    12: c => svg(standAt(c, 62, 100) + ball(118, 98, 7), c)
+  };
+  // Small pictures for the four areas.
+  const AREA = {
+    Social: c => svg(`<circle cx="62" cy="58" r="20" fill="${HK}"/><path d="M42 54c3-17 37-19 40 0" fill="${c.ink}" fill-opacity=".45"/><path d="M55 60h.01M68 60h.01" stroke="${c.ink}" stroke-opacity=".6" stroke-width="3" stroke-linecap="round"/><path d="M58 68q4 3 8 0" stroke="${c.ink}" stroke-opacity=".5" stroke-width="2" fill="none" stroke-linecap="round"/>` + face(c, 104, 66, 15, -2) + `<path d="M84 34c-3-4-9-2-7 3 1 3 7 6 7 6s6-3 7-6c2-5-4-7-7-3Z" fill="${ROSE}"/>`, c),
+    Talking: c => svg(face(c, 64, 70, 17, 2) + `<rect x="88" y="30" width="44" height="28" rx="14" fill="#fff"/><path d="M94 56l-6 10 14-8Z" fill="#fff"/><path d="M100 44h.01M110 44h.01M120 44h.01" stroke="${c.ink}" stroke-opacity=".5" stroke-width="4" stroke-linecap="round"/>`, c),
+    Thinking: c => svg(face(c, 58, 64, 16, 4) + cloth(c, 104, 92) + `<circle cx="118" cy="86" r="7" fill="${ROSE}"/><path d="M90 44q6-8 12 0" stroke="${c.ink}" stroke-opacity=".35" stroke-width="2" fill="none" stroke-linecap="round" stroke-dasharray="2 4"/>`, c),
+    Movement: c => svg(crawl(c, 78, 94), c)
+  };
+  window.devHeroArt = ref => HERO[ref] ? HERO[ref](pal()) : '';
+  window.devAreaArt = (d, ref) => (d === 'Movement' && HERO[ref] ? HERO[ref](pal()) : AREA[d] ? AREA[d](pal()) : '').replace('viewBox="0 0 160 116"', 'viewBox="14 6 132 104" preserveAspectRatio="xMidYMid meet"');
   // Four ideas per stage, in the order a parent might try them.
   window.DEV_STAGE_IDEAS = { 2: ['close-face', 'chest-chat', 'bold-picture', 'song-listen'], 4: ['mirror-company', 'easy-grip', 'tummy-picture', 'crinkle-book'], 6: ['two-hands', 'peek-face', 'supported-reach', 'floor-drum'], 9: ['hidden-toy', 'empty-basket', 'ball-turns', 'hello-wave'], 12: ['pretend-cup', 'stack-pair', 'action-book', 'two-baskets'] };
   window.devPlayArt = id => (S[id] ? S[id](pal()) : '');
