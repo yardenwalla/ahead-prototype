@@ -1277,3 +1277,21 @@
 #main .dev-photo { margin: 0; border-radius: 16px; overflow: hidden; background: var(--year-pale) }
 #main .dev-photo img { width: 100%; display: block }
 #main .dev-photo figcaption { font-size: 12px; color: var(--ink-2, #5E5A75); padding: 6px 10px }
+
+/* Development & play: a warmer top of the page */
+#main .dev-hero { position: relative; overflow: hidden; background: linear-gradient(160deg, #e9e3fd, #f3e6f6 60%, #fde9e2); border-radius: 24px; padding: 22px 20px; margin: 0 0 14px }
+#main .dev-hero-num { position: absolute; right: 10px; top: -6px; font: 800 118px/1 var(--display-font, inherit); color: #fff; opacity: .8; letter-spacing: -4px; pointer-events: none }
+#main .dev-hero-spark { position: absolute; right: 22px; top: 104px; color: #f1c75b; font-size: 15px }
+#main .dev-hero-eyebrow { position: relative; margin: 0; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--year-ink) }
+#main .dev-hero h1 { position: relative; font: 700 27px/1.15 var(--display-font, inherit); letter-spacing: -.3px; margin: 8px 0 8px; max-width: 78%; color: var(--ink); text-wrap: balance }
+#main .dev-hero-lead { position: relative; margin: 0; color: #5c5361; line-height: 1.5; max-width: 92% }
+#main .dev-area { padding: 0 0 14px; overflow: hidden; gap: 4px }
+#main .dev-area > b, #main .dev-area > small, #main .dev-area > span:not(.dev-area-art) { padding-left: 14px; padding-right: 14px }
+#main .dev-area-art { display: block; width: 100%; height: 104px; overflow: hidden; margin: 6px 0 4px }
+#main .dev-area-art svg { width: 100% !important; height: 100% !important; display: block }
+#main .dev-area.is-Social { background: #fdeef2 }
+#main .dev-area.is-Talking { background: #fff3dc }
+#main .dev-area.is-Thinking { background: #e6f5ec }
+#main .dev-area.is-Movement { background: #e7effc }
+#main .dev-area .dev-area-art circle:first-child { fill: #ffffff; fill-opacity: .55 }
+#main .hub-eyes-big { font-size: 30px !important }
