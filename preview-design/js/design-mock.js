@@ -15,6 +15,37 @@
     'Out and about': c => base(c, `<path d="M58 92 72 76M98 92 86 76M96 76l18-28" stroke="${c.ink}" stroke-opacity=".5" stroke-width="3.5" stroke-linecap="round"/><path d="M110 48h10" stroke="${c.ink}" stroke-width="5" stroke-linecap="round" stroke-opacity=".7"/><circle cx="58" cy="94" r="8" fill="${c.ink}" fill-opacity=".5"/><circle cx="98" cy="94" r="8" fill="${c.ink}" fill-opacity=".5"/><rect x="48" y="58" width="56" height="20" rx="10" fill="${c.accent}"/><path d="M48 70a24 24 0 0 1 26-24v14H58c-6 0-10 4-10 10Z" fill="${c.ink}" fill-opacity=".3"/><circle cx="84" cy="56" r="8" fill="${SK}"/>${sleepy(84, 56, c.ink)}<circle cx="124" cy="30" r="8" fill="#f3d58a"/>`),
     Childcare: c => base(c, `<path d="M42 58 80 30l38 28v40H42Z" fill="#fff"/><path d="M36 60 80 26l44 34" stroke="${c.ink}" stroke-opacity=".45" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><rect x="72" y="74" width="16" height="24" rx="4" fill="${c.accent}"/><circle cx="58" cy="70" r="7" fill="${SK}"/>${eyes(58, 69, c.ink)}<rect x="52" y="77" width="12" height="14" rx="6" fill="${c.accent}"/><circle cx="102" cy="64" r="9" fill="${HK}"/><rect x="94" y="73" width="16" height="22" rx="7" fill="${c.ink}" fill-opacity=".25"/>`)
   };
+
+  // Direction A: the one number that matters right now, set huge, with what it means underneath.
+  function numberFor(t, page) {
+    const now = (page.querySelector('.hub-pills .is-now, [aria-current="step"], .is-now') || {}).textContent || '';
+    const stage = (page.querySelector('.hub-hero .hub-eyebrow') || {}).textContent || '';
+    const m = typeof actualMonth === 'function' ? actualMonth() : 6;
+    if (t === 'Development') return [String(page.dataset.developmentGuide || m), `What most babies do by ${page.dataset.developmentGuide || m} months`];
+    if (t === 'Sleep') return /two/i.test(stage) ? ['2', 'Naps a day'] : /three/i.test(stage) ? ['3', 'Naps a day'] : /longer/i.test(stage) ? ['6h', 'longest stretch at night'] : ['16h', 'of sleep a day, in short stretches'];
+    if (t === 'Feeding') return /preparing/i.test(stage) ? ['4', 'Signs she’s ready for solids'] : /solid/i.test(stage) ? ['9', 'allergens to try'] : ['8–12', 'feeds a day'];
+    if (t === 'Health') return [String(m), `Your ${m}-month checkup`];
+    if (t === 'Safety') return ['8', 'Babyproofing checks'];
+    if (t === 'Daily rhythm') return ['2–3', 'Baths a week'];
+    if (t === 'Out and about') return ['1h', 'At most in a seat or stroller at a time'];
+    if (t === 'Childcare') return ['4', 'Kinds of care to compare'];
+    return ['', ''];
+  }
+  // Direction B: soft overlapping shapes, a different motif for each category, no figures at all.
+  function shapes(t, c) {
+    const W = 'rgba(255,255,255,', I = c.ink, A = c.accent, B = c.bg;
+    const M = {
+      Development: `<circle cx="150" cy="120" r="70" fill="${A}" fill-opacity=".55"/><circle cx="102" cy="82" r="38" fill="${W}.7)"/><circle cx="168" cy="40" r="22" fill="#f3d58a" fill-opacity=".85"/><circle cx="70" cy="40" r="10" fill="${A}"/>`,
+      Sleep: `<circle cx="140" cy="70" r="56" fill="${W}.75)"/><circle cx="162" cy="54" r="50" fill="${B}"/><circle cx="62" cy="34" r="4" fill="#f3d58a"/><circle cx="84" cy="96" r="3" fill="#f3d58a"/><circle cx="48" cy="72" r="2.5" fill="${W}.9)"/><path d="M0 150c50-30 120-30 200 0v20H0Z" fill="${A}" fill-opacity=".45"/>`,
+      Feeding: `<circle cx="120" cy="96" r="58" fill="${A}" fill-opacity=".5"/><path d="M150 18c22 30 34 50 34 66a34 34 0 0 1-68 0c0-16 12-36 34-66Z" fill="${W}.75)"/><circle cx="70" cy="40" r="16" fill="#fbecc6"/>`,
+      Health: `<path d="M120 150c-50-34-80-60-80-92a40 40 0 0 1 80-8 40 40 0 0 1 80 8c0 32-30 58-80 92Z" fill="${A}" fill-opacity=".5"/><circle cx="160" cy="40" r="26" fill="${W}.75)"/><path d="M60 110h30l8-16 10 30 8-14h26" stroke="${I}" stroke-opacity=".35" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`,
+      Safety: `<path d="M40 170V100a80 80 0 0 1 160 0v70Z" fill="${A}" fill-opacity=".5"/><path d="M80 170v-60a40 40 0 0 1 80 0v60Z" fill="${W}.75)"/><circle cx="56" cy="40" r="12" fill="#f3d58a" fill-opacity=".9"/>`,
+      'Daily rhythm': `<circle cx="140" cy="100" r="54" fill="${A}" fill-opacity=".5"/><circle cx="92" cy="54" r="24" fill="${W}.75)"/><circle cx="168" cy="36" r="14" fill="${W}.85)"/><circle cx="60" cy="100" r="8" fill="${W}.8)"/>`,
+      'Out and about': `<path d="M-10 130c60-50 120 10 220-50" stroke="${W}.8)" stroke-width="16" fill="none" stroke-linecap="round"/><circle cx="160" cy="120" r="44" fill="${A}" fill-opacity=".5"/><circle cx="150" cy="44" r="18" fill="#f3d58a" fill-opacity=".9"/>`,
+      Childcare: `<path d="M50 170v-50a30 30 0 0 1 60 0v50Z" fill="${W}.75)"/><path d="M120 170v-80a40 40 0 0 1 80 0v80Z" fill="${A}" fill-opacity=".5"/><circle cx="80" cy="40" r="14" fill="#f3d58a" fill-opacity=".9"/>`
+    };
+    return `<svg viewBox="0 0 200 160" preserveAspectRatio="xMaxYMin slice">${M[t] || M.Development}</svg>`;
+  }
   const pal = t => (typeof YEAR_PALETTES !== 'undefined' && (YEAR_PALETTES[t] || YEAR_PALETTES.Memories)) || { bg: '#eee', pale: '#f6f6f6', ink: '#444', accent: '#ccc' };
   // One page skeleton for every category: timeline, a top card with the same three parts and a picture,
   // then one question (if any), then everything else. Anything that used to sit inside the top card moves into its own card.
@@ -56,9 +87,15 @@
     // A question always comes right after the top card.
     const q = page.querySelector('.hub-napask, .connected-checkin, .hub-q');
     if (q) hero.after(q);
-    // The same category icon the timeline and Home use, large, in a soft white circle.
-    const icon = typeof catIcon === 'function' ? catIcon(t) : '';
-    if (icon) hero.insertAdjacentHTML('afterbegin', `<span class="mock-hero-icon">${icon}</span>`);
+    const mode = window.MOCK_MODE || new URLSearchParams(location.search).get('look') || 'number';
+    hero.classList.add('mode-' + mode);
+    if (mode === 'number') {
+      const [big, small] = numberFor(t, page);
+      hero.insertAdjacentHTML('afterbegin', `<span class="mock-num" aria-hidden="true">${big}</span>`);
+      if (small) hero.insertAdjacentHTML('beforeend', `<span class="mock-num-cap">${small}</span>`);
+    } else {
+      hero.insertAdjacentHTML('afterbegin', `<span class="mock-shapes" aria-hidden="true">${shapes(t, pal(t))}</span>`);
+    }
   }
   const base_ = window.render;
   window.render = render = function (...a) { const r = base_.apply(this, a); try { dress(); } catch (e) {} return r; };
@@ -68,7 +105,13 @@
 #main .mock-hero-icon { position: absolute; right: 18px; top: 18px; width: 76px; height: 76px; border-radius: 50%; background: rgba(255,255,255,.7); box-shadow: 0 0 0 8px rgba(255,255,255,.28); display: grid; place-items: center; padding: 12px; pointer-events: none }
 #main .mock-hero-icon svg { width: 100% !important; height: 100% !important }
 
-#main .hub-hero.mock-hero > *:not(.mock-hero-icon) { position: relative }
+#main .hub-hero.mock-hero > *:not(.mock-num):not(.mock-shapes) { position: relative }
+#main .mock-num { position: absolute; right: 14px; top: -10px; font: 800 112px/1 var(--display-font, inherit); letter-spacing: -5px; color: #fff; opacity: .85; pointer-events: none }
+#main .mock-num-cap { display: inline-block; margin-top: 12px; background: rgba(255,255,255,.75); color: var(--year-ink); font-size: 12.5px; font-weight: 700; border-radius: 999px; padding: 5px 11px }
+#main .mock-shapes { position: absolute; top: 0; right: 0; width: 44%; height: 62%; opacity: .85; pointer-events: none }
+#main .mock-shapes svg { width: 100%; height: 100%; display: block }
+#main .mode-shapes h1, #main .mode-shapes .hub-eyebrow { max-width: 58% }
+#main .mode-shapes .hub-lead { background: none }
 #main .hub-hero.mock-hero { min-height: 172px; padding: 20px 20px 22px !important; margin-bottom: 14px }
 #main .hub-hero.mock-hero .hub-eyebrow, #main .hub-hero.mock-hero h1 { max-width: 68% }
 #main .hub-hero.mock-hero h1 { font-size: 25px !important; line-height: 1.17 !important; margin: 6px 0 10px !important }
