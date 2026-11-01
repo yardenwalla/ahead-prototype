@@ -58,7 +58,9 @@
     btn.setAttribute('aria-expanded', String(!open));
     btn.textContent = open ? 'See what it looks like' : 'Hide';
   };
-  window.devSeeButton = (key, title) => (typeof DEV_EXAMPLE_LINKS !== 'undefined' && DEV_EXAMPLE_LINKS[key]) ? `<button class="dev-see" aria-expanded="false" data-title="${title}" onclick="devSeeIt(this,'${key}')">See what it looks like</button>` : '';
+  // Skills that are obvious from words alone don't get a photo or video; the one-line description is enough.
+  const NO_MEDIA = new Set(['laughs', 'squeals', 'chuckles-during-play', 'smiles-back-at-you', 'makes-sounds-beyond-crying', 'responds-to-loud-sounds', 'moves-both-arms-and-legs', 'looks-at-your-face', 'seems-glad-to-see-you', 'likes-looking-at-self-in-a-mirror', 'waves-goodbye', 'raises-arms-to-be-picked-up', 'enjoys-peekaboo', 'coos', 'brings-hands-to-mouth', 'puts-things-in-mouth-to-explore']);
+  window.devSeeButton = (key, title) => (typeof DEV_EXAMPLE_LINKS !== 'undefined' && DEV_EXAMPLE_LINKS[key] && !NO_MEDIA.has(key)) ? `<button class="dev-see" aria-expanded="false" data-title="${title}" onclick="devSeeIt(this,'${key}')">See what it looks like</button>` : '';
 
   function frame(title, context, lead, inner) {
     return `<div class="quiet-category hub-page hub-detail" data-overview="Development" style="${yearTheme('Development')}">${detailPageTop('Development')}<div class="hub-detail-head"><p class="hub-context">${F(context)}</p><h1>${F(title)}</h1>${lead ? `<p class="hub-lead">${F(lead)}</p>` : ''}</div>${inner}</div>`;
@@ -66,8 +68,13 @@
   function ideasPage(ref) {
     const live = typeof isCurrent !== 'function' || isCurrent(), m = live ? developmentMonth(actualMonth()) : ref, h = H();
     const lead = live && devRef(m) === ref ? `Maya is usually awake for ${WAKE(m)} at a time. A few minutes of any of these is plenty.` : 'A few minutes of any of these is plenty. Pick one that suits the moment.';
+    const pics = stageIdeas(ref), shown = new Set(pics.map(a => a.id));
+    // Every other idea for this stage, tucked into one collapsed list so the page stays calm.
+    const keys = Object.keys(DEV_STAGES).map(Number), from = (keys[keys.indexOf(ref) - 1] ?? -1) + 1, extra = [];
+    for (let k = ref; k >= from; k--) { const x = playStageModel(k); [...(x.primary || []), ...(x.more || [])].forEach(a => { if (!shown.has(a.id)) { shown.add(a.id); extra.push(find(a.id)); } }); }
+    const more = extra.filter(Boolean).length ? `<details class="dev-more-ideas"><summary><span>${F(`${extra.length} more ideas`)}</span><span class="faq-plus" aria-hidden="true">＋</span></summary><div class="hub-list">${extra.filter(Boolean).map(a => h.row({ icon: 'hand', cat: 'Development', title: B(a.title), sub: B((ctxFor(a).explain || a.why || '').replace(/\.$/, '')), onclick: `openPage('chg:Development:d:idea:${ref}:${a.id}')` })).join('')}</div></details>` : '';
     const signs = ref >= 6 ? h.list('', [h.row({ icon: 'signs', cat: 'Development', title: 'Try a few baby signs', sub: 'More, eat, milk and all done', onclick: `openPage('chg:Development:d:signs')` })]) : '';
-    return frame('Ideas to try together', `Awake time · by ${ref === 12 ? '1 year' : ref + ' months'}`, lead, `<div class="dev-ideas is-grid">${stageIdeas(ref).map(a => tile(a, ref)).join('')}</div>${signs}`);
+    return frame('Ideas to try together', `Awake time · by ${ref === 12 ? '1 year' : ref + ' months'}`, lead, `<div class="dev-ideas is-grid">${pics.map(a => tile(a, ref)).join('')}</div>${more}${signs}`);
   }
   function movePage(ref) {
     const mv = window.devMoveIdea(ref), h = H();
@@ -79,7 +86,7 @@
     if (!a) return ideasPage(ref);
     const ctx = ctxFor(a), steps = (typeof playInstructionSteps === 'function' ? playInstructionSteps(a.how) : [a.how]).map(s => B(s));
     return frame(B(a.title), 'Ideas to try together', B(ctx.explain || a.why || ''),
-      `<figure class="dev-idea-hero">${devPlayArt(a.id)}</figure>` + h.steps(steps) + (ctx.notice ? h.tip('What to notice', B(ctx.notice)) : '')
+      (devPlayArt(a.id) ? `<figure class="dev-idea-hero">${devPlayArt(a.id)}</figure>` : '') + h.steps(steps) + (ctx.notice ? h.tip('What to notice', B(ctx.notice)) : '')
       + h.note('Stay close, and stop when Maya looks away or fusses. That’s {p} way of saying “enough for now.”'));
   }
   const baseRoute = window.changesRoute;

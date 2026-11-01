@@ -58,8 +58,10 @@
     let b = `<section class="dev-hero"><p class="dev-hero-eyebrow">${F(`What to look for by ${ref === 12 ? '12 months' : age}`)}</p><h1>${F(st.title)}</h1><p class="dev-hero-lead">${F(LEAD[ref] || st.body)}</p></section>`;
     // What Maya is working on: four areas, each with a line of what you might see.
     const domainTiles = Object.keys(DEV_DOMAINS).map(d => {
-      const labels = DEVELOPMENT_DOMAINS[ref][d] || [];
-      return `<button class="hub-domain-tile dev-area is-${d}" onclick="openPage('development-domain:${ref}:${d}')"><span class="dev-area-art">${window.devAreaArt ? devAreaArt(d, ref) : h.art(DOMAIN_ICONS[d], 'Development')}</span><b>${DOMAIN_TITLES[d]}</b><small>${(window.hubBabyify || (x => x))(F(d === 'Movement' && live() && ref === now && (answers.pullUp === 'Yes' || answers.crawl === 'Yes') ? (answers.pullUp === 'Yes' ? 'Maya is already pulling up. Cruising and first steps come next.' : 'Maya is already crawling. Pulling up comes next.') : (st.summaries[d] || '')))}</small><span>${F(`${labels.length} skill${labels.length === 1 ? '' : 's'}`)} ›</span></button>`;
+      const labels = DEVELOPMENT_DOMAINS[ref][d] || [], c = window.devTileColors ? devTileColors(d) : null, hl = (window.DEV_HEADLINE || {})[ref]?.[d];
+      const moving = d === 'Movement' && live() && ref === now && (answers.pullUp === 'Yes' || answers.crawl === 'Yes');
+      const line = moving ? (answers.pullUp === 'Yes' ? 'Already pulling up' : 'Already crawling') : hl ? hl[0] : (st.summaries[d] || '');
+      return `<button class="hub-domain-tile dev-tile" style="${c ? `--dt-bg:${c[0]};--dt-ink:${c[1]}` : ''}" onclick="openPage('development-domain:${ref}:${d}')"><span class="dev-tile-art">${window.devTileArt ? devTileArt(d, ref) : h.art(DOMAIN_ICONS[d], 'Development')}</span><small class="dev-tile-label">${DOMAIN_TITLES[d]}</small><b class="dev-tile-line">${(window.hubBabyify || (x => x))(F(line))}</b><span class="dev-tile-count">${F(`${labels.length} skill${labels.length === 1 ? '' : 's'}`)} ›</span></button>`;
     }).join('');
     const other = live() && ref !== now;
     b += `<section class="hub-card hub-glance is-static"><span class="hub-card-head"><b>${F(other ? `What babies work on by ${age}` : 'What Maya is working on')}</b></span><div class="hub-domain-tiles">${domainTiles}</div></section>`;
@@ -288,7 +290,10 @@
     const h = H(), age = ref === 12 ? '1 year' : ref + ' months';
     DOMAIN_ICONS_FALLBACK = DOMAIN_ICONS[domain] || 'smile';
     // Each skill once: its name, "Seen it", and what it looks like (words, photo or video) on tap.
-    const rows = labels.map(l => { const key = journeySkillKey(l), rec = journeyData().records.find(r => r.type === 'milestone' && r.skillKey === key) || (skillSeen(l) ? { reported: true } : null);
+    const hl = (window.DEV_HEADLINE || {})[ref]?.[domain];
+    const ordered = hl ? [...labels].sort((x, y) => (hl[1].test(clearMilestone(y)) ? 1 : 0) - (hl[1].test(clearMilestone(x)) ? 1 : 0)) : labels;
+    const tc = window.devTileColors ? devTileColors(domain) : null;
+    const rows = ordered.map(l => { const key = journeySkillKey(l), rec = journeyData().records.find(r => r.type === 'milestone' && r.skillKey === key) || (skillSeen(l) ? { reported: true } : null);
       const see = window.devSeeButton ? devSeeButton(key, clearMilestone(l)) : '';
       const desc = (window.hubBabyify || (x => x))(F(DEV_EXAMPLES[l] || ''));
       return `<div class="hub-tick is-habit dev-skill"><span class="hub-tick-art">${h.art(SKILL_ICON(l), 'Development')}</span><span class="hub-row-copy"><b>${(window.hubBabyify || (x => x))(F(clearMilestone(l)))}</b>${see || (desc ? `<small>${desc}</small>` : '')}</span>${rec ? `<span class="hub-chip is-done">${F('Seen')} ✓</span>` : `<button class="hub-seen" onclick="hubSeen('${key}')">${F('Seen it')}</button>`}${see ? `<div class="dev-media" hidden data-desc="${desc.replace(/"/g, '&quot;')}"></div>` : ''}</div>`; }).join('');
@@ -300,7 +305,8 @@
     const pic = move ? move.art : act && window.devPlayArt ? devPlayArt(act.id) : '';
     const tryCard = move || act ? `<section class="hub-card dev-try"><span class="hub-card-head"><b>${F('Try this together')}</b></span><button class="dev-try-row" onclick="openPage('${move ? `chg:Development:d:move:${ref}` : `chg:Development:d:idea:${ref}:${act.id}`}')">${pic ? `<span class="dev-idea-art">${pic}</span>` : ''}<span class="hub-row-copy"><b>${F(move ? move.title : act.title)}</b><small>${move ? F(move.why) : playLine(act)}</small></span><span class="hub-chev" aria-hidden="true">›</span></button></section>` : '';
     const call = `<p class="dev-call">${F('Not all of these yet? Mention it at {p} next checkup. Call sooner if Maya loses a skill {s} had.')}</p>`;
-    return `<div class="quiet-category hub-page hub-detail dev-area-page is-${domain}" data-overview="Development" style="${yearTheme('Development')}">${detailPageTop('Development')}<div class="dev-area-head">${window.devAreaArt ? `<span class="dev-area-head-art">${devAreaArt(domain, ref).replace('viewBox="14 6 132 104"', 'viewBox="0 4 160 112"')}</span>` : ''}<p class="hub-context">${esc(`By ${age}`)}</p><h1>${esc(meta.title)}</h1><p class="hub-lead">${esc(DEV_STAGES[ref].summaries[domain])}</p></div><p class="dev-sub">${F(`Working on now, by ${age}`)}</p><div class="hub-ticks">${rows}</div>${big}${tryCard}${call}</div>`;
+    const credit = rows.includes('dev-see') ? `<p class="dev-credit">${F('Photos and videos: Source CDC, free at cdc.gov. The CDC doesn’t endorse Ahead.')}</p>` : '';
+    return `<div class="quiet-category hub-page hub-detail dev-area-page is-${domain}" data-overview="Development" style="${yearTheme('Development')}${tc ? `;--area:${tc[0]};--area-ink:${tc[1]}` : ''}">${detailPageTop('Development')}<div class="dev-area-head">${window.devTileArt ? `<span class="dev-area-head-art">${devTileArt(domain, ref)}</span>` : ''}<p class="hub-context">${esc(`By ${age}`)}</p><h1>${esc(meta.title)}</h1><p class="hub-lead">${esc(DEV_STAGES[ref].summaries[domain])}</p></div><p class="dev-sub">${F(`Working on now, by ${age}`)}</p><div class="hub-ticks">${rows}</div>${big}${tryCard}${call}${credit}</div>`;
   };
 
   /* ---------- small detail screens for these categories ---------- */

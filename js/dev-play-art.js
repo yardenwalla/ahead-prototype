@@ -89,6 +89,31 @@
   };
   window.devHeroArt = ref => HERO[ref] ? HERO[ref](pal()) : '';
   window.devAreaArt = (d, ref) => (d === 'Movement' && HERO[ref] ? HERO[ref](pal()) : AREA[d] ? AREA[d](pal()) : '').replace('viewBox="0 0 160 116"', 'viewBox="14 6 132 104" preserveAspectRatio="xMidYMid meet"');
+
+  /* Area tiles, in Sleep's style: a small shape picture (no drawn babies), the area's own soft color,
+     and the one skill most worth watching for at this checkpoint as the headline. */
+  const TILE = { Social: ['#fdeef2', '#a24d6a', '#f2b8c6', '#f4d6c4'], Talking: ['#fff3dc', '#8a6a2a', '#f3d58a', '#fbe6bd'], Thinking: ['#e6f5ec', '#356651', '#bfe3cf', '#f2b8c6'], Movement: ['#e7effc', '#46638c', '#9fb8df', '#f4d6c4'] };
+  const SHAPE = {
+    Social: c => `<circle cx="14" cy="14" r="13" fill="${c[2]}"/><circle cx="32" cy="14" r="13" fill="${c[3]}" fill-opacity=".9"/>`,
+    Talking: c => `<rect x="1" y="1" width="40" height="20" rx="10" fill="${c[2]}"/><path d="M10 20l-5 8 11-6Z" fill="${c[2]}"/><rect x="46" y="8" width="22" height="12" rx="6" fill="${c[3]}"/>`,
+    Thinking: c => `<path d="M1 27c2-15 9-22 20-22s18 7 20 22Z" fill="${c[2]}"/><circle cx="41" cy="22" r="6" fill="${c[3]}"/>`,
+    Movement: (c, ref) => ref <= 2 ? `<rect x="1" y="14" width="40" height="10" rx="5" fill="${c[2]}"/><circle cx="49" cy="12" r="8" fill="${c[3]}"/>`
+      : ref <= 4 ? `<rect x="1" y="16" width="40" height="10" rx="5" fill="${c[2]}"/><circle cx="48" cy="8" r="8" fill="${c[3]}"/>`
+      : ref <= 6 ? `<path d="M1 28a17 17 0 0 1 34 0Z" fill="${c[2]}"/><circle cx="18" cy="8" r="7" fill="${c[3]}"/>`
+      : ref <= 9 ? `<path d="M1 28a17 17 0 0 1 34 0Z" fill="${c[2]}"/><circle cx="18" cy="8" r="7" fill="${c[3]}"/><circle cx="44" cy="24" r="4" fill="${c[3]}"/>`
+      : `<rect x="16" y="5" width="36" height="5" rx="2.5" fill="${c[2]}"/><rect x="47" y="7" width="5" height="22" rx="2.5" fill="${c[2]}"/><rect x="1" y="10" width="12" height="19" rx="6" fill="${c[2]}"/><circle cx="7" cy="5" r="5" fill="${c[3]}"/>`
+  };
+  const BOX = { Social: '0 0 46 28', Talking: '0 0 69 29', Thinking: '0 0 48 28', Movement: '0 0 58 30' };
+  window.devTileColors = d => TILE[d];
+  window.devTileArt = (d, ref) => TILE[d] ? `<svg viewBox="${BOX[d]}" aria-hidden="true">${SHAPE[d](TILE[d], ref)}</svg>` : '';
+  // The headline skill per area and checkpoint: [words on the tile, a phrase that finds the same skill in the list].
+  window.DEV_HEADLINE = {
+    2: { Social: ['Smiles back at you', /smiles back/i], Talking: ['Makes sounds besides crying', /beyond crying/i], Thinking: ['Follows you with {p} eyes', /watches you move/i], Movement: ['Lifts {p} head on {p} tummy', /lifts head/i] },
+    4: { Social: ['Smiles to get your attention', /smiles to get/i], Talking: ['Coos back at you', /coos/i], Thinking: ['Studies {p} hands', /studies/i], Movement: ['Holds {p} head steady', /head steady/i] },
+    6: { Social: ['Knows familiar faces', /familiar people/i], Talking: ['Takes turns making sounds', /takes turns/i], Thinking: ['Reaches to grab a toy', /reaches to grab/i], Movement: ['Rolls tummy to back', /rolls tummy/i] },
+    9: { Social: ['Turns when you call {p} name', /call/i], Talking: ['Babbles “mamama”', /babbles/i], Thinking: ['Looks for a dropped toy', /dropped/i], Movement: ['Sits on {p} own', /sits without/i] },
+    12: { Social: ['Plays pat-a-cake', /pat-a-cake/i], Talking: ['Calls you mama or dada', /name for a parent/i], Thinking: ['Finds a toy you hide', /hide/i], Movement: ['Pulls up to stand', /pulls up/i] }
+  };
   // Four ideas per stage, in the order a parent might try them.
   window.DEV_STAGE_IDEAS = { 2: ['close-face', 'chest-chat', 'bold-picture', 'song-listen'], 4: ['mirror-company', 'easy-grip', 'tummy-picture', 'crinkle-book'], 6: ['two-hands', 'peek-face', 'supported-reach', 'floor-drum'], 9: ['hidden-toy', 'empty-basket', 'ball-turns', 'hello-wave'], 12: ['pretend-cup', 'stack-pair', 'action-book', 'two-baskets'] };
   window.devPlayArt = id => (S[id] ? S[id](pal()) : '');
