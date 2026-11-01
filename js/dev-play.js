@@ -24,8 +24,23 @@
   const stageIdeas = ref => (window.DEV_STAGE_IDEAS[ref] || []).map(find).filter(Boolean);
   const tile = (a, ref) => `<button class="dev-idea" onclick="openPage('chg:Development:d:idea:${ref}:${a.id}')"><span class="dev-idea-art">${devPlayArt(a.id)}</span><b>${F(B(a.title))}</b></button>`;
 
-  // The card on the summary: four pictures.
-  window.devIdeasCard = ref => `<section class="hub-card dev-awake"><span class="hub-card-head"><b>${F('Ideas to try together')}</b></span><div class="dev-ideas">${stageIdeas(ref).map(a => tile(a, ref)).join('')}</div></section>`;
+  // Try today, on the summary: two of the stage's ideas, a different pair each day, and the rest one tap away.
+  window.devTodayCard = ref => {
+    const list = stageIdeas(ref), d = Math.floor((typeof NOW !== 'undefined' ? NOW : new Date()) / 864e5), i = list.length ? d % list.length : 0;
+    const two = list.length > 2 ? [list[i], list[(i + 1) % list.length]] : list;
+    return `<section class="hub-card dev-awake"><span class="hub-card-head"><b>${F('Try today')}</b></span><div class="dev-ideas">${two.map(a => tile(a, ref)).join('')}</div><button class="hub-link dev-more-link" onclick="openPage('chg:Development:d:more:${ref}')">${F('More ideas for awake time')} ›</button></section>`;
+  };
+  // How long Maya is usually awake at a time, by the age the guides follow (adjusted age for babies born early). Same ranges as Sleep.
+  const WAKE = m => m < 2 ? '45–60 minutes' : m < 3 ? '1–1½ hours' : m < 5 ? '1½–2 hours' : m < 7 ? '2–2½ hours' : m < 10 ? '2½–3 hours' : '3–4 hours';
+  // On Movement, the idea that answers the big question of the age.
+  const MOVE = {
+    4: { id: 'tummy-picture', title: 'A picture at floor level', why: 'Turning to look is how rolling starts.', steps: ['During tummy time, prop a bold picture where Maya can see it.', 'Lie down facing {o} and talk about it.', 'Move it a little to one side so {s} turns to look.'] },
+    6: { id: 'supported-reach', title: 'A toy beside your knee', why: 'Reaching while sitting builds the balance {s} needs to sit on {p} own.', steps: ['Sit Maya on the floor, supported around {p} chest as needed.', 'Hold a toy close beside your knee.', 'Let {o} lean and reach for it.'] },
+    9: { id: 'toy-reach', hero: 9, title: 'A toy just out of reach', why: 'A reason to move is all most babies need.', steps: ['Put a favorite toy on the floor, a little out of Maya’s reach.', 'Cheer {o} on as {s} scoots, rolls or crawls toward it.', 'If {s} gets frustrated, move it a bit closer.'] },
+    12: { id: 'cruise-toy', hero: 12, title: 'Cruise to a toy', why: 'Stepping along furniture comes before first steps.', steps: ['Put a toy at the far end of a sturdy sofa or low table.', 'Let Maya hold on and step sideways to reach it.', 'Stay close and keep the floor clear.'] }
+  };
+  const moveArt = mv => mv.hero ? (window.devHeroArt ? devHeroArt(mv.hero) : '') : devPlayArt(mv.id);
+  window.devMoveIdea = ref => MOVE[ref] ? Object.assign({}, MOVE[ref], { art: moveArt(MOVE[ref]) }) : null;
 
   // A skill's photo or video, opened on the page.
   window.devSeeIt = function (btn, key) {
@@ -37,6 +52,8 @@
       if (m && m.type === 'video') { const id = (m.href.match(/[?&]v=([\w-]{11})/) || [])[1]; box.innerHTML = id ? hubEmbed(id, btn.dataset.title || 'What it looks like', 'CDC') : ''; }
       else if (m) box.innerHTML = `<figure class="dev-photo"><img src="${m.href}" alt="${btn.dataset.title || ''}" loading="lazy"><figcaption>Photo · CDC</figcaption></figure>`;
     }
+    if (!open && box.dataset.desc && !box.querySelector('.dev-desc')) box.insertAdjacentHTML('afterbegin', `<p class="dev-desc">${box.dataset.desc}</p>`);
+    box.querySelectorAll('.hub-embed figcaption small').forEach(x => { x.textContent = 'Video · CDC'; });
     box.hidden = open;
     btn.setAttribute('aria-expanded', String(!open));
     btn.textContent = open ? 'See what it looks like' : 'Hide';
@@ -47,7 +64,15 @@
     return `<div class="quiet-category hub-page hub-detail" data-overview="Development" style="${yearTheme('Development')}">${detailPageTop('Development')}<div class="hub-detail-head"><p class="hub-context">${F(context)}</p><h1>${F(title)}</h1>${lead ? `<p class="hub-lead">${F(lead)}</p>` : ''}</div>${inner}</div>`;
   }
   function ideasPage(ref) {
-    return frame('Ideas to try together', `By ${ref === 12 ? '1 year' : ref + ' months'}`, 'A few minutes of any of these is plenty. Pick one that suits the moment.', `<div class="dev-ideas is-grid">${stageIdeas(ref).map(a => tile(a, ref)).join('')}</div>`);
+    const live = typeof isCurrent !== 'function' || isCurrent(), m = live ? developmentMonth(actualMonth()) : ref, h = H();
+    const lead = live && devRef(m) === ref ? `Maya is usually awake for ${WAKE(m)} at a time. A few minutes of any of these is plenty.` : 'A few minutes of any of these is plenty. Pick one that suits the moment.';
+    const signs = ref >= 6 ? h.list('', [h.row({ icon: 'signs', cat: 'Development', title: 'Try a few baby signs', sub: 'More, eat, milk and all done', onclick: `openPage('chg:Development:d:signs')` })]) : '';
+    return frame('Ideas to try together', `Awake time · by ${ref === 12 ? '1 year' : ref + ' months'}`, lead, `<div class="dev-ideas is-grid">${stageIdeas(ref).map(a => tile(a, ref)).join('')}</div>${signs}`);
+  }
+  function movePage(ref) {
+    const mv = window.devMoveIdea(ref), h = H();
+    if (!mv) return ideasPage(ref);
+    return frame(mv.title, 'Try this together', mv.why, `<figure class="dev-idea-hero">${mv.art}</figure>` + h.steps(mv.steps) + h.note('Stay close, and stop when Maya looks away or fusses. That’s {p} way of saying “enough for now.”'));
   }
   function ideaPage(ref, id) {
     const a = find(id), h = H();
@@ -61,6 +86,7 @@
   window.changesRoute = function (p) {
     const [, cat, screen, a, b, c] = p.split(':');
     if ((cat === 'Development' || cat === 'Daily rhythm') && screen === 'd' && a === 'more') return ideasPage(devRef(Number(b)));
+    if (cat === 'Development' && screen === 'd' && a === 'move') return movePage(DEV_STAGES[b] ? Number(b) : devRef(Number(b)));
     if (cat === 'Development' && screen === 'd' && a === 'idea') return ideaPage(DEV_STAGES[b] ? Number(b) : devRef(Number(b)), c);
     return baseRoute(p);
   };

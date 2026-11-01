@@ -1317,3 +1317,28 @@
 #main .dev-try .dev-try-row { display: flex; align-items: center; gap: 14px; width: 100%; background: none; border: 0; padding: 0; text-align: left; font: inherit; color: var(--ink); cursor: pointer; min-height: 0 }
 #main .dev-try .dev-idea-art { width: 104px; flex: none }
 #main .dev-try .hub-row-copy small { display: block; margin-top: 2px }
+
+/* Development, final: a top card like Sleep's, calm area pages, and skill media framed like the app */
+#main .dev-hero::after { content: ""; position: absolute; right: -40px; top: -50px; width: 170px; height: 170px; border-radius: 50%; background: #fff; opacity: .35; pointer-events: none }
+#main .dev-hero > * { position: relative; z-index: 1 }
+#main .dev-hero-eyebrow { letter-spacing: 0; text-transform: none; font-size: 12.5px; font-weight: 600 }
+#main .dev-hero h1 { max-width: 100% }
+#main .dev-more-link { margin-top: 14px }
+#main .dev-sub { margin: 18px 4px 10px; font-size: 13px; font-weight: 700; color: var(--year-ink) }
+#main .dev-area-page .dev-skill { min-height: 0; padding: 12px 14px }
+#main .dev-area-page .dev-skill .dev-see { margin-top: 4px }
+#main .dev-bigq { margin-top: 16px }
+#main .dev-bigq-a { margin: 0; font-size: 14.5px; line-height: 1.55; color: #4c4757 }
+#main .dev-call { margin: 16px 4px 0; font-size: 14px; line-height: 1.5; color: #5c5361 }
+#main .dev-desc { margin: 4px 0 10px; font-size: 14px; line-height: 1.5; color: #5c5361 }
+#main .dev-area-page .dev-media { background: var(--area, var(--year-pale)); border-radius: 18px; padding: 8px 8px 10px; margin-top: 8px }
+#main .dev-area-page .dev-media .hub-embed { border: 0; border-radius: 12px; background: none; margin: 0 }
+#main .dev-area-page .dev-media .hub-embed-poster { border-radius: 12px; aspect-ratio: 4 / 3; filter: saturate(.85) brightness(1.04) }
+#main .dev-area-page .dev-media .hub-embed-frame { border-radius: 12px; aspect-ratio: 4 / 3 }
+#main .dev-area-page .dev-media .hub-embed-play { background: var(--year-ink); color: #fff; width: 52px; height: 52px; margin: -26px 0 0 -26px; box-shadow: 0 0 0 8px rgba(255,255,255,.55) }
+#main .dev-area-page .dev-media figcaption { padding: 8px 4px 0 }
+#main .dev-area-page .dev-media figcaption b, #main .dev-area-page .dev-media figcaption a { display: none }
+#main .dev-area-page .dev-media figcaption small, #main .dev-area-page .dev-photo figcaption { font-size: 12px; font-weight: 600; color: var(--year-ink) }
+#main .dev-area-page .dev-photo { background: none; border-radius: 12px }
+#main .dev-area-page .dev-photo img { border-radius: 12px; aspect-ratio: 4 / 3; object-fit: cover; filter: saturate(.85) brightness(1.04) }
+#main .dev-area-page .dev-photo figcaption { padding: 8px 4px 0 }
