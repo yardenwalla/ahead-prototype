@@ -26,6 +26,13 @@
     page.querySelectorAll('.hub-eyes, .hub-versus, .hub-more, .hub-next').forEach(e => e.remove());
     page.querySelectorAll('.hub-list').forEach(l => { if (/baby signs|other parents/i.test(l.textContent)) l.remove(); });
     // Ideas: two for today, then one line and a link.
+    const LEAD = {
+      4: 'Play starts to feel like a conversation: smiles, little sounds and swiping at toys. Rolling usually follows, between 4 and 6 months.',
+      9: 'Sitting frees both hands for babbling, banging and finding things. Not crawling yet? Many babies skip it.',
+      12: 'Waving, copying and pulling up to stand. First steps usually come between 12 and 15 months.'
+    };
+    const lead = page.querySelector('.dev-hero-lead');
+    if (lead && LEAD[ref]) lead.textContent = F(LEAD[ref]);
     const ideas = page.querySelector('.dev-awake');
     if (ideas) {
       ideas.querySelector('.hub-card-head b').textContent = F('Try today');
@@ -36,7 +43,7 @@
     const tiles = page.querySelector('.hub-glance');
     if (tiles) {
       tiles.querySelector('.hub-card-head b').textContent = F('What Maya is working on');
-      tiles.querySelectorAll('.dev-area').forEach(t => { const d = (t.className.match(/is-(\w+)/) || [])[1]; if (HINT[ref] && HINT[ref][0] === d) t.querySelector('small')?.insertAdjacentHTML('afterend', `<em class="dm-hint">${F(HINT[ref][1])}</em>`); });
+      
       if (window.MOCK_MINI || /tiles=mini/.test(location.search)) tiles.querySelectorAll('.dev-area').forEach(t => { const d = (t.className.match(/is-(\w+)/) || [])[1], a = t.querySelector('.dev-area-art'); if (a && MINI[d]) { a.innerHTML = MINI[d](null, ref); a.classList.add('dm-mini'); } });
     }
   }
