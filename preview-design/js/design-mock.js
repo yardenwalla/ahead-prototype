@@ -16,16 +16,49 @@
     Childcare: c => base(c, `<path d="M42 58 80 30l38 28v40H42Z" fill="#fff"/><path d="M36 60 80 26l44 34" stroke="${c.ink}" stroke-opacity=".45" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><rect x="72" y="74" width="16" height="24" rx="4" fill="${c.accent}"/><circle cx="58" cy="70" r="7" fill="${SK}"/>${eyes(58, 69, c.ink)}<rect x="52" y="77" width="12" height="14" rx="6" fill="${c.accent}"/><circle cx="102" cy="64" r="9" fill="${HK}"/><rect x="94" y="73" width="16" height="22" rx="7" fill="${c.ink}" fill-opacity=".25"/>`)
   };
   const pal = t => (typeof YEAR_PALETTES !== 'undefined' && (YEAR_PALETTES[t] || YEAR_PALETTES.Memories)) || { bg: '#eee', pale: '#f6f6f6', ink: '#444', accent: '#ccc' };
+  // One page skeleton for every category: timeline, a top card with the same three parts and a picture,
+  // then one question (if any), then everything else. Anything that used to sit inside the top card moves into its own card.
   function dress() {
     const page = document.querySelector('#main .hub-page[data-overview]:not(.hub-detail)');
-    if (!page) return;
+    if (!page || page.dataset.mock) return;
+    page.dataset.mock = '1';
     const t = page.dataset.overview;
-    if (t === 'Development') return;
-    const hero = page.querySelector('.hub-hero');
-    if (!hero || hero.classList.contains('mock-hero')) return;
+    let hero = page.querySelector('.hub-hero, .dev-hero');
+    if (!hero) return;
+    // Development: same top card as everyone else, with the baby at this stage instead of the big number.
+    if (hero.classList.contains('dev-hero')) {
+      const ref = Number(page.dataset.developmentGuide) || 6;
+      const h = document.createElement('header');
+      h.className = 'hub-hero';
+      h.innerHTML = `<p class="hub-eyebrow">${hero.querySelector('.dev-hero-eyebrow').textContent}</p><h1>${hero.querySelector('h1').textContent}</h1><p class="hub-lead">${hero.querySelector('.dev-hero-lead').textContent}</p>`;
+      hero.replaceWith(h); hero = h;
+      hero.dataset.art = (window.devHeroArt ? devHeroArt(ref) : '').replace('<circle cx="80" cy="60" r="52" fill="#efedff"/>', '<circle cx="80" cy="60" r="52" fill="#fff" fill-opacity=".55"/>');
+    }
     hero.classList.add('mock-hero');
-    const draw = ART[t] || ART[page.dataset.cat];
-    if (draw) hero.insertAdjacentHTML('afterbegin', `<span class="mock-hero-art">${draw(pal(t))}</span><span class="mock-hero-spark" aria-hidden="true">✦</span>`);
+    // Move extras out of the top card.
+    const keep = el => el.matches('.hub-eyebrow, h1, .hub-lead');
+    const extras = [...hero.children].filter(el => !keep(el));
+    const bare = extras.length && !hero.querySelector('.hub-checks-label') && extras.every(el => el.matches('button, .hub-pillrow, .hub-button'));
+    if (bare) { extras.reverse().forEach(el => { el.classList.add('mock-bare'); hero.after(el); }); }
+    else if (extras.length) {
+      const card = document.createElement('section');
+      card.className = 'hub-card mock-after';
+      const label = hero.querySelector('.hub-checks-label');
+      if (label) { const head = document.createElement('span'); head.className = 'hub-card-head'; head.innerHTML = `<b>${label.textContent}</b>`; card.appendChild(head); label.remove(); }
+      extras.filter(el => el.isConnected && el.parentNode === hero).forEach(el => card.appendChild(el));
+      hero.after(card);
+    }
+    if (!hero.querySelector('.hub-lead') && !hero.querySelector('p:not(.hub-eyebrow)')) {
+      // No lead (checks list instead): use the first point as the lead so every card has the same three parts.
+      const li = page.querySelector('.mock-after .hub-hero-checks li');
+      if (li) { const p = document.createElement('p'); p.className = 'hub-lead'; p.textContent = li.textContent; hero.appendChild(p); li.remove(); }
+    }
+    // A question always comes right after the top card.
+    const q = page.querySelector('.hub-napask, .connected-checkin, .hub-q');
+    if (q) hero.after(q);
+    const draw = ART[t];
+    const art = hero.dataset.art || (draw ? draw(pal(t)) : '');
+    if (art) hero.insertAdjacentHTML('afterbegin', `<span class="mock-hero-art">${art}</span>`);
   }
   const base_ = window.render;
   window.render = render = function (...a) { const r = base_.apply(this, a); try { dress(); } catch (e) {} return r; };
@@ -34,10 +67,20 @@
 #main .hub-hero.mock-hero { position: relative; overflow: hidden; background: linear-gradient(160deg, var(--year-bg), var(--year-pale) 62%, #fdeee6) !important; padding-top: 22px }
 #main .mock-hero-art { position: absolute; right: -14px; top: -8px; width: 150px; height: 110px; opacity: .95; pointer-events: none }
 #main .mock-hero-art svg { width: 100%; height: 100% }
-#main .mock-hero-spark { position: absolute; right: 18px; top: 108px; color: #f1c75b; font-size: 14px }
+
 #main .hub-hero.mock-hero > *:not(.mock-hero-art):not(.mock-hero-spark) { position: relative }
-#main .hub-hero.mock-hero h1, #main .hub-hero.mock-hero > p:first-of-type, #main .hub-hero.mock-hero .hub-eyebrow, #main .hub-hero.mock-hero > span:not([class^=mock]) { max-width: 66% }
-#main .hub-hero.mock-hero h1 { font-size: 27px; line-height: 1.15 }
+#main .hub-hero.mock-hero { min-height: 172px; padding: 20px 20px 22px !important; margin-bottom: 14px }
+#main .hub-hero.mock-hero .hub-eyebrow, #main .hub-hero.mock-hero h1 { max-width: 62% }
+#main .hub-hero.mock-hero h1 { font-size: 25px !important; line-height: 1.17 !important; margin: 6px 0 10px !important }
+#main .hub-hero.mock-hero .hub-lead { max-width: 100%; margin: 0 }
+#main .mock-after { margin-bottom: 14px }
+#main .mock-bare { display: flex; margin: 0 0 14px !important; width: 100% }
+#main .hub-button.mock-bare { justify-content: center }
+#main .mock-after .hub-hero-checks { margin: 6px 0 0; padding-left: 18px }
+#main .mock-after .hub-button { width: 100%; margin-top: 12px }
+#main .mock-after > .hub-meter:first-child { margin-top: 0 }
+#main .hub-page[data-overview="Development"] .dev-area { background: var(--year-pale) !important }
+#main .hub-page[data-overview="Development"] .dev-area .dev-area-art circle:first-child { fill: #fff; fill-opacity: .7 }
 #main .hub-page:not([data-overview="Development"]) .hub-row .hub-dot { background: var(--year-pale) }
 #main .hub-page:not([data-overview="Development"]) .hub-glance .hub-tiles div, #main .hub-page:not([data-overview="Development"]) .hub-glance [class*=tile] { background: linear-gradient(160deg, var(--year-pale), #fff) }
 `;
