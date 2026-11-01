@@ -40,6 +40,8 @@
         const t = p.innerHTML.trim();
         if (/^What to do/i.test(l)) return `<section class="ss-do"><b>What to do</b><p>${t}</p></section>`;
         if (/^What’s happening/i.test(l)) return `<p class="ss-what">${t}</p>`;
+        // "How you'll know" and "How long" often hold the "when" answer, so they stay easy to read.
+        if (/^How (you’ll know|long)/i.test(l)) return `<p class="ss-know"><b>${l.replace(/\.$/, '')}</b>${t}</p>`;
         return `<p class="ss-small">${l ? `<b>${l.replace(/\.$/, ':')}</b> ` : ''}${t}</p>`;
       });
       m.className = 'ss-moment'; m.innerHTML = out.join('');
