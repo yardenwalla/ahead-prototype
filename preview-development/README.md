@@ -1,1 +1,1 @@
-Preview of branch claude/development-small. Not the live app.
+Mockup: Development reordered the way parents think. Not the live app.
