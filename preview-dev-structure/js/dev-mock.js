@@ -72,9 +72,6 @@
     const done = prev ? (DEVELOPMENT_DOMAINS[prev][domain] || []) : [];
     const head = page.querySelector('.dev-area-head');
     page.querySelector('.hub-seen-meter, .hub-meter')?.remove();
-    // One quiet line instead of a card of chips.
-    const prevLine = prev && DEV_STAGES[prev] ? DEV_STAGES[prev].summaries[domain] : '';
-    if (prevLine) head.insertAdjacentHTML('beforeend', `<p class="dm-already">✓ ${F('Probably doing already: ' + prevLine.charAt(0).toLowerCase() + prevLine.slice(1))}</p>`);
     head.insertAdjacentHTML('afterend', `<p class="dm-sub">${F(`Working on now, by ${r === 12 ? '1 year' : r + ' months'}`)}</p>`);
     // Calmer skill cards: the title and Seen it; what it looks like opens on tap.
     page.querySelectorAll('.dev-skill').forEach(c => { const d = c.querySelector('.hub-row-copy small'), see = c.querySelector('.dev-see'), box = c.querySelector('.dev-media'); if (d && box) { box.dataset.desc = d.textContent; d.remove(); } else if (d && !see) d.remove(); });
