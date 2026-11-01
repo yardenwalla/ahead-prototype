@@ -1243,3 +1243,19 @@
 #main .hub-poop-row b { font-size: 13px }
 #main .hub-poop-row small { font-size: 12.5px; color: var(--ink-2, #5d6470); line-height: 1.35 }
 #main .hub-poop-note { margin: 0; font-size: 13.5px; line-height: 1.45; padding-top: 10px; border-top: 1px solid var(--line) }
+#main .hub-guide-pick { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 0 0 12px; font-size: 13.5px; color: var(--ink-2, #5d6470) }
+#main .hub-guide h3 { margin: 2px 0 6px; font-size: 18px; line-height: 1.3; text-wrap: pretty }
+#main .hub-guide p { margin: 0 0 8px; font-size: 15px; line-height: 1.5 }
+#main .hub-guide-label { display: flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 700; color: var(--year-ink) }
+#main .hub-guide .hub-poop-row { margin-top: 6px }
+#main .hub-gclock { display: flex; align-items: center; gap: 10px; margin-top: 8px; padding: 12px; background: var(--year-pale); border-radius: 14px }
+#main .hub-gclock > div { display: flex; flex-direction: column; min-width: 0 }
+#main .hub-gclock b { font-size: 17px; color: var(--year-ink) }
+#main .hub-gclock small { font-size: 12.5px }
+#main .hub-gclock i { flex: 1; height: 2px; background: repeating-linear-gradient(90deg, var(--year-ink) 0 6px, transparent 6px 11px); opacity: .5 }
+#main .hub-gstomach { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; align-items: end; margin-top: 8px; padding: 12px; background: var(--year-pale); border-radius: 14px; text-align: center }
+#main .hub-gstomach > div { display: flex; flex-direction: column; align-items: center; gap: 3px }
+#main .hub-gstomach span { border-radius: 50%; background: var(--year-ink); opacity: .75 }
+#main .hub-gstomach b { font-size: 13px }
+#main .hub-gstomach small { font-size: 12.5px }
+#main .hub-gstomach p { grid-column: 1 / -1; margin: 6px 0 0; font-size: 13px; text-align: left }
