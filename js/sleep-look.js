@@ -16,7 +16,7 @@
   ];
   function dress() {
     const page = document.querySelector('#main .hub-page[data-overview="Sleep"]:not(.hub-detail)');
-    if (!page || page.dataset.look) return;
+    if (!page || !page.dataset || page.dataset.look) return;
     page.dataset.look = '1';
     const hero = page.querySelector('.hub-hero');
     if (hero) hero.classList.add('sm-hero');
