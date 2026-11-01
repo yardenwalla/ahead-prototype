@@ -65,24 +65,30 @@
   window.hubPhotoInput = m => `<input type="file" accept="image/*" class="hub-photo-input" onchange="hubPhotoChosen(${m},this)" tabindex="-1" aria-hidden="true">`;
   window.hubPhotoChosen = function (m, input) {
     const file = input.files && input.files[0]; if (!file) return;
-    const done = dataUrl => {
-      const all = photos(); all[m] = dataUrl;
-      const ok = savePhotos(all);
+    // Photos are kept sharp enough for the monthly Story (about 840px). If the phone runs out of room, a smaller copy is kept instead.
+    const done = image => {
+      const all = photos(); all[m] = shrink(image, 840, 0.82);
+      let ok = savePhotos(all);
+      if (!ok) { all[m] = shrink(image, 360, 0.8); ok = savePhotos(all); }
+      if (ok && typeof storyResetPosition === 'function') storyResetPosition(m);
       const y = scrollY; render(); scrollTo(0, y);
       if (!ok) return hubToast('Couldn’t keep that photo', 'This viewer can’t store photos. Open Ahead in your phone’s browser to keep them.');
+      // Months 1–11 have a Story design: show it straight away, ready to share.
+      if (m >= 0 && m <= 12 && typeof storyShare === 'function') return storyShare(m, { saved: true });
       hubToast('Photo saved', `${m === 0 ? 'Newborn' : m === 12 ? '1 year' : m + ' month' + (m === 1 ? '' : 's')} · in Memories`);
     };
-    const shrink = img => {
-      const size = 360, c = document.createElement('canvas'), w = img.naturalWidth || img.width, h = img.naturalHeight || img.height, k = Math.max(size / w, size / h);
-      c.width = c.height = size;
-      c.getContext('2d').drawImage(img, (size - w * k) / 2, (size - h * k) / 2, w * k, h * k);
-      return c.toDataURL('image/jpeg', 0.8);
+    // The whole photo is kept (short side `size`, long side up to 1.5×), so a parent can move it inside the polaroid later.
+    const shrink = (img, size, q) => {
+      const c = document.createElement('canvas'), w = img.naturalWidth || img.width, h = img.naturalHeight || img.height, k = size / Math.min(w, h);
+      c.width = Math.round(Math.min(w * k, size * 1.5)); c.height = Math.round(Math.min(h * k, size * 1.5));
+      c.getContext('2d').drawImage(img, (c.width - w * k) / 2, (c.height - h * k) / 2, w * k, h * k);
+      return c.toDataURL('image/jpeg', q);
     };
     const reader = new FileReader();
     reader.onerror = () => hubToast('Couldn’t open that photo', 'Try another photo, or a screenshot of it.');
     reader.onload = () => {
       const img = new Image();
-      img.onload = () => { try { done(shrink(img)); } catch (e) { hubToast('Couldn’t open that photo', 'Try another photo, or a screenshot of it.'); } };
+      img.onload = () => { try { done(img); } catch (e) { hubToast('Couldn’t open that photo', 'Try another photo, or a screenshot of it.'); } };
       img.onerror = () => hubToast('Couldn’t open that photo', 'This photo’s format isn’t supported here. Try a screenshot of it.');
       img.src = reader.result;
     };
@@ -138,6 +144,21 @@
     };
   }
 
+  // Remove a month's photo from Memories. The toast offers Undo for a few seconds.
+  let removed = null;
+  window.hubPhotoRemove = function (m) {
+    const all = photos(); if (!all[m]) return;
+    removed = { m, data: all[m] }; delete all[m]; savePhotos(all);
+    const y = scrollY; render(); scrollTo(0, y);
+    hubToast('Photo removed', `${m === 0 ? 'Newborn' : m === 12 ? 'First-birthday' : m + '-month'} photo`, ['Undo', 'hubPhotoUndo()']);
+  };
+  window.hubPhotoUndo = function () {
+    if (!removed) return;
+    const all = photos(); all[removed.m] = removed.data; savePhotos(all); removed = null;
+    document.querySelectorAll('.hub-toast').forEach(t => t.remove());
+    const y = scrollY; render(); scrollTo(0, y);
+  };
+
   /* ---------- the month-birthday moment on Home ----------
      For three days after each month-birthday, the month card celebrates and gathers that month's firsts. */
   function monthBirthday() {
@@ -166,7 +187,7 @@
       const nm = esc2(name()), label = b.m === 12 ? '1 year' : `${b.m} month${b.m === 1 ? '' : 's'}`, plabel = b.m === 12 ? 'first-birthday' : `${b.m}-month`, photo = window.hubPhotoFor(b.m);
       const title = b.since === 0 ? (b.m === 12 ? `${nm} is 1 year old today` : `${nm} is ${label} old today`) : (b.m === 12 ? `${nm} turned 1` : `${nm} turned ${label}`);
       const lead = photo ? (b.firsts.length ? `Here’s what you noticed this month. The photo is in Memories.` : `Another month of firsts. The photo is in Memories.`) : (b.firsts.length ? `Here’s what you noticed this month. Add a photo to keep it in Memories.` : `Another month of firsts. Add a photo to keep this one in Memories.`);
-      const card = `<div class="home-summary connected-summary-intro hub-bday"><span class="hub-bday-num" aria-hidden="true">${b.m === 12 ? '1' : b.m}</span><span class="hub-bday-spark" aria-hidden="true">✦</span><p class="hub-bday-eyebrow">${b.m === 12 ? 'Happy first birthday' : 'Happy ' + label}${profile.early && profile.due && adjustedMonth(actualMonth()) !== actualMonth() ? ` <button class="hub-agechip" onclick="openPage('age-context')" aria-label="${esc2(monthLabel(adjustedMonth(actualMonth())))} adjusted. About age">· ${esc2(String(adjustedMonth(actualMonth())))} adjusted <span aria-hidden="true">ⓘ</span></button>` : ''}</p><h1>${title}</h1><p class="hub-bday-lead">${lead}</p>${b.firsts.length ? `<div class="hub-bday-chips">${b.firsts.map(r => `<span>✓ ${esc2(r.title)}</span>`).join('')}</div>` : ''}<label class="hub-bday-photo" role="button">${photo ? `<img src="${photo}" alt="">Change the ${plabel} photo` : `<i aria-hidden="true">＋</i>Add a ${plabel} photo`}${hubPhotoInput(b.m)}</label></div>`;
+      const card = `<div class="home-summary connected-summary-intro hub-bday"><span class="hub-bday-num" aria-hidden="true">${b.m === 12 ? '1' : b.m}</span><span class="hub-bday-spark" aria-hidden="true">✦</span><p class="hub-bday-eyebrow">${b.m === 12 ? 'Happy first birthday' : 'Happy ' + label}${profile.early && profile.due && adjustedMonth(actualMonth()) !== actualMonth() ? ` <button class="hub-agechip" onclick="openPage('age-context')" aria-label="${esc2(monthLabel(adjustedMonth(actualMonth())))} adjusted. About age">· ${esc2(String(adjustedMonth(actualMonth())))} adjusted <span aria-hidden="true">ⓘ</span></button>` : ''}</p><h1>${title}</h1><p class="hub-bday-lead">${lead}</p>${b.firsts.length ? `<div class="hub-bday-chips">${b.firsts.map(r => `<span>✓ ${esc2(r.title)}</span>`).join('')}</div>` : ''}<label class="hub-bday-photo" role="button">${photo ? `<img src="${photo}" alt="">Change the ${plabel} photo` : `<i aria-hidden="true">＋</i>Add a ${plabel} photo`}${hubPhotoInput(b.m)}</label>${photo && b.m <= 11 && typeof storyShare === 'function' ? `<button class="hub-bday-share" onclick="storyShare(${b.m})">Share ${nm}’s ${plabel} photo</button>` : ''}</div>`;
       return html.replace(/<div class="home-summary connected-summary-intro">[\s\S]*?<div class="home-summary-spectrum"[\s\S]*?<\/div><\/div>/, card);
     };
   }
@@ -788,8 +809,10 @@ window.hubCenterStages = function () {
       <h1>${nm} is one!</h1>
       <p class="bday-lead">You made it through the whole first year together. Look at everything you saw along the way.</p>
       ${(() => { const st = [[firsts, firsts === 1 ? 'first saved' : 'firsts saved'], [visits, visits === 1 ? 'checkup' : 'checkups'], [photos, photos === 1 ? 'monthly photo' : 'monthly photos']].filter(x => x[0] > 0); return st.length ? `<div class="bday-stats" style="grid-template-columns:repeat(${st.length},1fr)">${st.map(x => stat(x[0], x[1])).join('')}</div>` : ''; })()}
-      ${photo ? `<div class="bday-photo"><img src="${photo}" alt="${nm}’s first-birthday photo"></div>` : `<label class="hub-button bday-add" role="button">Add a first-birthday photo${hubPhotoInput(12)}</label>`}
-      ${typeof memPlay === 'function' && photos >= 2 ? `<button class="hub-button is-secondary bday-memories" onclick="memPlay()"><span aria-hidden="true">▶</span> ${esc2(`Play ${name()}’s year`)}</button>` : `<button class="hub-button is-secondary bday-memories" onclick="navigate('timeline')">See ${nm}’s first year</button>`}
+      ${photo ? `<div class="bday-photo"><img src="${photo}" alt="${nm}’s first-birthday photo"></div>` : ''}
+      ${(() => { // One button: the collage once there are monthly photos (it holds the video too); before that, the birthday photo.
+        const any = Array.from({ length: 12 }, (_, i) => window.hubPhotoFor(i + 1)).some(Boolean);
+        return typeof storyShare === 'function' && any ? `<button class="hub-button bday-story" onclick="storyShare('year')">${esc2(`Make ${name()}’s first-year collage`)}</button>` : `<label class="hub-button bday-add" role="button">Add a first-birthday photo${hubPhotoInput(12)}</label>`; })()}
     </section>
     <section class="bday-end"><p>${esc2('Ahead covers the first year, so this is where it ends. Your pediatrician takes it from here, starting with the 12-month checkup.')}</p><p class="bday-small">${esc2('You can still look back at any month, and every guide is in Categories.')}</p></section>`;
   }

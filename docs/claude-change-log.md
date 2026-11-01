@@ -95,3 +95,25 @@ The first pass covered 100 scripted families across 1,300 monthly checkpoints, a
 The redesigned welcome and both setup steps were visually inspected in a managed browser preview. Setup progression, back navigation, retained answers and completion into personalized Home were checked. The pronoun regression suite passes 1,584 checks across 419 renders. This is not pediatric approval or a full visual QA pass of every app screen.
 
 Existing age-based guide advancement remains a product decision: suggested guidance is distinct from confirmed skill mastery. This update includes onboarding-only visual changes, with no merge or production deployment.
+
+## Monthly Stories and the first-year collage (2026-10-31)
+
+- **Each month, 1–11:** a foil-number balloon in that month's color, the parent's photo taped on a polaroid, and "[Name] is five months" handwritten underneath. Designs are Yarden's (`assets/share/month-*.jpg`); the photo window, tilt and tape layer were measured from each design (`js/share-story.js`).
+- **Where it appears:** right after a parent adds a month's photo (anywhere in the app), as a "Share [Name]'s 5-month photo" button on the month-birthday card on Home, and as a small share button on each month in Memories.
+- **First birthday:** all twelve photos on one page under a gold "12", as a photo or a ~20-second video that zooms through each month and pulls back to the whole year. It opens from "Make [Name]'s first-year collage" on the birthday screen and in Memories at 12 months. Months without a photo stay as empty frames, and the sheet says how many are missing.
+- **Share / Save:** the Story is drawn on the phone from the parent's own photo. Share opens the phone's share sheet (Instagram, Messages); Save downloads it. The video is recorded in the browser (MP4 in Safari and Chrome, WebM elsewhere).
+- Monthly photos are now kept at about 840px (was 360px) so they're sharp in the Story, falling back to the small size if the phone runs out of room. Photos added before this change stay small.
+- The handwriting font (Caveat, OFL) ships with the app in `assets/fonts` so the Story always draws it.
+- Checked in Chromium: adding a 5-month photo opens the Story; Home, Memories and the birthday entry points open it; the collage and video render; the video saves (19.7s MP4). `check-all.cjs` matches main (the existing "Solids answer changes stage" assertion fails on main too).
+- **Move the photo in the polaroid:** in the Story sheet, drag the photo to position it and zoom with the slider. The choice is saved per month and used in the year collage too. Photos are now kept whole (short side ~840px) instead of pre-cropped to a square, so there's room to move them; tall photos start a little above centre.
+- **Remove a photo in Memories:** a small × on each monthly photo, with Undo in the toast.
+- Share shows only where the phone can share files (iPhone Safari, Android Chrome); elsewhere there's one Save button.
+- **One button on the first-birthday screen:** "Make [Name]'s first-year collage" once there are monthly photos (the collage includes the video, so the separate Play button is gone), otherwise "Add a first-birthday photo".
+- **Memories shows the Stories:** "Month by month" is a row of each month's finished Story (balloon design with the photo). Months without a photo show the design with an empty polaroid and "＋ Add photo", and next month's design sits faintly at the end, so the empty state shows what the year becomes. Tapping a month opens its Story (move, zoom, Change photo, share). The newborn photo stays a plain photo; at 12 months the first card is the year collage.
+- The × on a Memories photo matches the × on Home's cards.
+- **12 months matches the other months:** Yarden's single-photo gold "12" is the 12-month Story ("[Name] is one!"). The twelve-photo collage is its own "[Name]'s first year" card above the row in Memories at 12 months, and the first-birthday button on Home opens it.
+- No faint next-month card; the row shows only months the baby has reached.
+- **Newborn matches the set:** Yarden's gold "Hello, World!" design with the name handwritten on the polaroid (the design already has a heart). It's the first card in the Memories row and opens like the other months.
+- **Newborn caption:** the name with the birthday underneath ("May 31, 2026"), taken from the saved birthday.
+- **One Share button, like sharing a song:** the Story sheet has a single Share button that opens the phone's share sheet (Messages, Instagram, Save Image). The picture is made the moment it's tapped, so the phone still treats it as the parent's tap; before, the file was prepared first, iPhone refused the share and it fell back to downloading. The video is two taps: Make the video, then Share the video.
+- Where the share sheet isn't available (some in-app browsers), the finished picture appears with "Press and hold the picture to save or share it" instead of a download. A computer still downloads it.
