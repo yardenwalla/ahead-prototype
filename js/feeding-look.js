@@ -18,12 +18,19 @@
     [/a day/i, '#fdeee6', '#9a5a3c', t => { const oz = Math.min(top(t) || 24, 32); return `<svg viewBox="0 0 120 40"><rect x="6" y="16" width="108" height="10" rx="5" fill="#fff" fill-opacity=".8"/><rect x="6" y="16" width="${Math.round(108 * oz / 32)}" height="10" rx="5" fill="#f4c7ab"/></svg>`; }],
     // A bottle filled to the ounces (out of 8).
     [/per bottle/i, '#fdeee6', '#9a5a3c', t => { const oz = Math.min(top(t) || 4, 8); const fill = Math.round(24 * oz / 8); return `<svg viewBox="0 0 120 40"><rect x="8" y="9" width="20" height="28" rx="6" fill="#fff" stroke="#e9b99c" stroke-width="2"/><rect x="10" y="${35 - fill}" width="16" height="${fill}" rx="4" fill="#f4c7ab"/><rect x="13" y="3" width="10" height="6" rx="2" fill="#e9b99c"/></svg>`; }],
+    // Each feed: two sides, one after the other.
+    [/^Each feed/i, '#f6e8f3', '#7a4f74', () => `<svg viewBox="0 0 120 40"><rect x="6" y="14" width="46" height="12" rx="6" fill="#e2c3dc"/><rect x="58" y="14" width="30" height="12" rx="6" fill="#e2c3dc" fill-opacity=".6"/></svg>`],
     // Weight: a gentle climb.
     [/^Weight/i, '#e6f5ec', '#356651', () => `<svg viewBox="0 0 120 40"><path d="M6 32C30 31 40 24 58 20S92 10 112 6" fill="none" stroke="#9fd0b4" stroke-width="3" stroke-linecap="round"/><circle cx="112" cy="6" r="4" fill="#356651"/></svg>`],
     // Water from a cup.
     [/^Water/i, '#e7effc', '#46638c', () => `<svg viewBox="0 0 120 40"><path d="M8 8h20l-3 26H11Z" fill="#fff" stroke="#9db5dc" stroke-width="2"/><path d="M10 20h16l-2 14H12Z" fill="#c9d8f2"/></svg>`]
   ];
   const ROW = [
+    [/^How to/i, '#fdeee6', '#9a5a3c'],
+    [/^When & how often|^How much/i, '#e7effc', '#46638c'],
+    [/^Your body/i, '#fdeef2', '#a24d6a'],
+    [/^Make|^Store|^Pumping/i, '#f6e8f3', '#7a4f74'],
+    [/^Vitamin D/i, '#e6f5ec', '#356651'],
     [/^A feed, step by step/i, '#fdeee6', '#9a5a3c'],
     [/^When & how much/i, '#e7effc', '#46638c'],
     [/getting enough/i, '#fff3dc', '#8a6a2a'],

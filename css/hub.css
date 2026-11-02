@@ -1462,3 +1462,6 @@
 #main .hub-hold b { font-size: 15.5px }
 #main .hub-hold span { font-size: 14px; line-height: 1.4 }
 #main .hub-hold small { font-size: 13px; color: var(--year-ink); font-weight: 600; margin-top: 4px }
+#main .hub-side { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; margin: 0 0 12px; background: var(--white); border: 1px solid var(--line); border-radius: 999px }
+#main .hub-side button { border: 0; border-radius: 999px; padding: 10px 8px; background: none; font: inherit; font-size: 14.5px; font-weight: 600; color: var(--muted); cursor: pointer }
+#main .hub-side button.is-on { background: var(--year-pale); color: var(--year-ink) }
