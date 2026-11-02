@@ -434,7 +434,7 @@
       return detail(FC, 'How much', 'How much, and how often', 'These are typical, not targets. {S} {lead|leads} the way.',
         (fmo < 7 ? `<h2 class="hub-h2">${F('Hungry or full?')}</h2>` + hubIconSteps([['eye', 'Early hunger', 'Stirring, mouth opening, turning toward the breast or bottle'], ['hand', 'Getting hungrier', 'Hands to mouth, fussing'], ['heart', 'Full', 'Slows down, hands relax, turns away']], FC, 'Early hunger: stirring, mouth opening, turning toward the breast or bottle. Getting hungrier: hands to mouth, fussing. Full: slows down, hands relax, turns away.', false)
           + `<section class="hub-moment"><p><b>${F('Count from the start.')}</b> ${F('Time between feeds runs from the start of one feed to the start of the next. A feed at 1:00 means the next is often around 3:00–4:00.')}</p><p><b>${F('Crying is a late sign.')}</b> ${F('Calm {o} first with a cuddle, then feed.')}</p></section>` : '')
-        + `<h2 class="hub-h2">${F(tab === 'nurse' ? 'Feeds across the year' : 'How much at each feed')}</h2>` + chart
+        + `<h2 class="hub-h2">${F(tab === 'nurse' ? 'How often' : 'How much at each feed')}</h2>` + chart
         + (tab0 === 'combo' ? tip('Nursing and formula?', 'Nurse when {s} {show|shows} hunger cues. These amounts are for the bottles of formula that replace a feed.') : '')
         + (fmo < 4 ? tip('Feeding all evening?', 'That’s called cluster feeding: lots of feeds close together for a few hours, often in the evening. It’s normal now and then, and it passes in a few days.') : ''), 'clock');
     }
@@ -555,7 +555,7 @@
         fmo >= 6 && ['plate', 'Constipation', 'Harder, less frequent poop is common as solids start.', ['Offer water with meals', 'Add pears, prunes, peas or oatmeal', 'Gently bicycle {p} legs'], 'Blood in the poop, pain, vomiting, or no poop for 2 days after trying these. A hard, swollen belly: go to the ER.']
       ].filter(Boolean);
       const body = `<div class="hub-tough">${T.map(([ic, t, why, helps, call, extra]) => `<details class="hub-tough-item"><summary><span class="hub-dot">${art(ic, 'Feeding')}</span><span class="hub-tough-copy"><b>${F(t)}</b><small>${F(why.split('. ')[0].replace(/\.$/, ''))}</small></span><span class="hub-chev" aria-hidden="true">›</span></summary><div class="hub-tough-body">${why.split('. ').length > 1 ? `<p>${F(why.split('. ').slice(1).join('. '))}</p>` : ''}<p class="hub-rough-try"><b>${F('What helps')}</b></p><ul>${helps.map(x => `<li>${F(x)}</li>`).join('')}</ul>${extra || ''}${call ? `<p class="hub-pick-call"><b>${F('Call your pediatrician')}</b> ${F(call)}</p>` : ''}</div></details>`).join('')}</div>`;
-      return detail(FC, fmo < 9 ? 'Gas, spit-up & fussing' : 'Gagging & picky days', 'What’s happening?', 'Tap what you’re seeing to find out if it’s normal, and what helps.', body, 'bottle');
+      return detail(FC, fmo < 7 ? 'Gas, spit-up & fussing' : 'Gagging & picky days', 'What’s happening?', 'Tap what you’re seeing to find out if it’s normal, and what helps.', body, 'bottle');
     }
     const cat = 'Feeding', age = m();
     if (id === 'signs') {
