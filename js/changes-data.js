@@ -219,7 +219,7 @@ window.AHEAD_CHANGES = {
     "signs": "Skipping the late catnap most days and staying comfortable until bedtime.",
     "after": [
      "usually 13–18 months",
-     "The 2-to-1 nap transition",
+     "From two naps to one",
      "Most babies still need two naps at their first birthday."
     ],
     "total": "About 12–16 hours of sleep in 24",
