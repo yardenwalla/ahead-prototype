@@ -17,7 +17,7 @@
   window.safetyOwnedGuides = safetyOwnedGuides = function () {
     const g = base(), lead = LEAD[viewing()];
     if (lead && g.mobile) g.mobile = Object.assign({}, g.mobile, { ids: [...lead.filter(x => g.mobile.ids.includes(x)), ...g.mobile.ids.filter(x => !lead.includes(x))] },
-      viewing() === 'pulling' ? { intro: 'Pulling up brings furniture, windows and cords into reach. Start with those, then the rest of the rooms.' } : {});
+      viewing() === 'pulling' ? { intro: 'The same checklist as Crawling, with the standing-height checks first: furniture, windows and cords.' } : {});
     return g;
   };
   function dress() {
