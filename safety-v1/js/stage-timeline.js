@@ -25,8 +25,9 @@
     ] },
     Safety: { kind: 'skill', stages: [
       { key: 'setup', label: 'First setup', age: 'From birth' },
-      { key: 'reaching', label: 'Reaching and rolling', age: '3–6 months' },
-      { key: 'rolling', label: 'On the move', age: '6 months+' }   // crawling to pulling up: one babyproofing checklist
+      { key: 'reaching', label: 'Rolling', age: '3–6 months' },
+      { key: 'rolling', label: 'Crawling', age: '6–9 months' },   // before and after the first crawl
+      { key: 'pulling', label: 'Pulling up', age: '9 months+' }   // standing, cruising and first steps
     ] },
     // Development follows age, so its timeline is for reading only (no Change), like Health and Everyday care.
     Development: { kind: 'calendar', fixed: true, stages: [
@@ -43,10 +44,10 @@
   const guideAge = cat => (cat === 'Development' ? developmentMonth(ageNow()) : typeof hubAgeFor === 'function' ? hubAgeFor('care', ageNow()) : ageNow());
 
   // Can the parent make stage i (index into the table) the baby's stage right now?
-  // Safety has three stages; the movement steps inside "On the move" (crawling, pulling up) shape which checks lead.
+  // Safety follows the child: first setup, rolling, crawling, pulling up. Crawling covers "about to move" and "moving".
   // Feeding keeps six steps inside (newborn feeds, milk feeds, preparing, first tastes, textures, meals); parents see three.
   window.feedGroup = i => i <= 1 ? 0 : i === 2 ? 1 : 2;
-  window.safetyGroup = k => ['rolling', 'moving', 'pulling'].includes(k) ? 'rolling' : k;
+  window.safetyGroup = k => k === 'moving' ? 'rolling' : k;
   window.stageCanChange = function (cat, i, nowIndex) {
     const T = STAGE_TABLE[cat]; if (!T || T.fixed || !live() || i === nowIndex) return false;
     const s = T.stages[i] || {}, a = guideAge(cat);
