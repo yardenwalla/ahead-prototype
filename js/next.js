@@ -199,9 +199,9 @@
   };
 })();
 
-/* One "On the move" page: the moving and pulling-up routes open the same page as the On the move stage. */
+/* The old "moving" route opens Crawling. Pulling up is its own stage (safety-v2). */
 (function () {
   if (typeof chgLegacy !== 'function') return;
   const base = chgLegacy;
-  window.chgLegacy = chgLegacy = p => base(/^safety-stage:(moving|pulling)$/.test(p) ? 'safety-stage:rolling' : p);
+  window.chgLegacy = chgLegacy = p => base(/^safety-stage:moving$/.test(p) ? 'safety-stage:rolling' : p);
 })();

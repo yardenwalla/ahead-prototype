@@ -135,7 +135,7 @@ window.AHEAD_GUIDES = {
    help: 'Call if hives or vomiting follow a new food. Call 911 for trouble breathing or swelling of the lips or tongue.'
   },
   textures: {
-   short: 'Maya is ready for soft lumps and finger foods. Build on foods {s} already manages.',
+   short: 'Maya is ready for soft lumps and finger foods. Build on foods {s} already {manage|manages}.',
    do: [
     ['Go from smooth to lumpy', 'Make a familiar food a little thicker each week.'],
     ['Offer soft finger foods', 'Finger-sized strips first, smaller pieces once {s} can pinch.'],
