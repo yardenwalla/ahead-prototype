@@ -1372,5 +1372,5 @@
 #main .hub-big.mem-big { background: var(--mem-bg) }
 /* Care card: the link to copy when the share sheet isn't available */
 #main .cc-link { display: flex; gap: 8px; margin-top: 10px }
-#main .cc-link input { flex: 1; min-width: 0; border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; font: inherit; font-size: 13px; background: #fff; color: var(--ink) }
+#main .cc-link input, #main .cc-link textarea { flex: 1; min-width: 0; border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; font: inherit; font-size: 13px; background: #fff; color: var(--ink) }
 #main .cc-link button { border: 0; border-radius: 12px; padding: 0 16px; font: inherit; font-weight: 600; background: var(--year-pale, #eef2ec); color: var(--ink) }
