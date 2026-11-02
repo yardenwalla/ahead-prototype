@@ -39,11 +39,11 @@
     { title: 'Diapers, the cord and first baths', lead: 'It feels like a lot at first, and it gets quicker fast.',
       news: () => [['diapers', 'How to change a diaper', '8–12 a day for now', go('diapers')], ['cord', 'Cord stump care', 'Clean and dry until it falls off', `openPage('chg:${CAT}:d:cord')`], ['bath', 'Sponge baths', 'Until the cord falls off', go('bath')]] },
     { title: 'Tub baths and skin care', lead: 'The cord has healed, and care settles into a rhythm.',
-      news: () => [['bath', 'Tub baths can start', 'Once the cord has healed', go('bath')], ['skin', 'Baby acne and cradle cap', 'Common now, and easy to care for', go('skin')]] },
+      news: () => [['bath', 'Giving a tub bath', 'Once the cord has healed', go('bath')], ['skin', 'Baby acne and cradle cap', 'Common now, and easy to care for', go('skin')]] },
     { title: 'Drool, sun and busy hands', lead: 'Busy hands, lots of drool, and more time outside.',
-      news: () => [['teeth', 'Drool and chewing', 'Often long before the first tooth', go('teeth')], ['sun', careAge() >= 6 ? 'Sunscreen can start now' : 'Sunscreen from 6 months', 'Shade still comes first', go('sun')]] },
+      news: () => [['teeth', 'Sore gums and drool', 'What helps before the first tooth', go('teeth')], ['sun', 'Sun protection', careAge() >= 6 ? 'Shade first, and sunscreen now' : 'Shade first, sunscreen from 6 months', go('sun')]] },
     { title: 'First teeth and first steps', lead: 'Maya sits up, pulls up, and the first teeth arrive.',
-      news: () => [['teeth', hasTooth() ? 'Brushing the first teeth' : 'Brushing starts with the first tooth', 'Twice a day, a rice-grain smear', go('teeth')], ['bath', 'The big tub', 'Once {s} {sit|sits} steadily', go('bath')], ['clothes', 'Bare feet for first steps', 'Soft shoes only for outside', go('clothes')]] }
+      news: () => [['teeth', hasTooth() ? 'Brushing the first teeth' : 'Brushing starts with the first tooth', 'Twice a day, a rice-grain smear', go('teeth')], ['bath', 'The big tub', 'Once {s} {sit|sits} steadily', go('bath')], ['clothes', 'Shoes, or bare feet?', 'Bare feet indoors, soft shoes outside', go('clothes')]] }
   ];
 
   /* ---------- the home ---------- */
@@ -53,7 +53,7 @@
     const pills = h.pills('Everyday care by age', T.map((s, i) => ({ label: s.label, age: s.age, on: i === v, now: live() && i === now, onclick: `openPage('chg:${CAT}:s:${i}')`, change: typeof stageCanChange === 'function' && stageCanChange(CAT, i, now) ? `hubChangeStage('${CAT}',${i})` : '' })), CAT);
     const careNote = live() && profile.early && profile.due && ageMonths(parse(profile.due), NOW) !== actualMonth() ? (() => { const adj = careAge() !== actualMonth(); return `<p class="hub-agebasis">${F(adj ? `Following Maya’s adjusted age (${monthsLabel(careAge())}), like Feeding and Sleep.` : `Following Maya’s birthday age (${monthsLabel(actualMonth())}), like Feeding and Sleep.`)} <button onclick="hubSetAgeMode('care','${adj ? 'birthday' : 'adjusted'}')">${adj ? 'Use birthday age' : 'Use adjusted age'}</button></p>`; })() : '';
     let b = `<header class="hub-hero care-hero"><p class="hub-eyebrow">${STAGE[v]}</p><h1>${F(st.title)}</h1><p class="hub-lead">${F(st.lead)}</p></header>`;
-    b += `<h2 class="hub-h2">${F(v === now && live() ? 'New for Maya now' : 'New at this stage')}</h2><div class="hub-list">${st.news().map(([k, t, s, on]) => rowK(k, t, s, on)).join('')}</div>`;
+    b += `<h2 class="hub-h2">${F(v === now && live() ? 'Right now' : 'At this stage')}</h2><div class="hub-list">${st.news().map(([k, t, s, on]) => rowK(k, t, s, on)).join('')}</div>`;
     b += `<h2 class="hub-h2">All the basics</h2><div class="care-grid">${BASICS.map(([k, t]) => tile(k, t)).join('')}</div>`;
     b += h.versus('Every change and every bath', ['Always', 'Gather everything first, and keep a hand on Maya.'], ['Never', 'Step away, even for a moment. Take {o} with you.']);
     const nx = HOME[v + 1];
