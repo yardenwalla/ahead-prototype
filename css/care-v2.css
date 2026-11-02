@@ -72,3 +72,11 @@
 #main .care-v2 .care-rash-card .hub-rough-copy b { color: #2b2840 }
 #main .care-v2 .care-rash-card .hub-rough-copy small { color: #7a5a4c }
 #main .care-v2 .care-fold-body .hub-steps, #main .care-v2 .care-fold-body ol { margin: 6px 0 8px }
+/* "Something look off?" */
+#main .care-v2 .care-urgent { margin: 0 0 10px; padding: 10px 12px; border-radius: 14px; background: #fbe9e9; font-size: 14.5px; line-height: 21px; color: #2b2840 }
+#main .care-v2 .care-urgent b { color: #a33a3a }
+#main .care-v2 .care-p b { color: var(--ink, #2b2840); font-weight: 600 }
+#main .care-v2 .care-list { margin: 0 0 10px; padding-left: 18px; display: grid; gap: 8px; font-size: 14.5px; line-height: 21px; color: var(--ink-2, #5e5a75) }
+#main .care-v2 .care-list b { color: var(--ink, #2b2840); font-weight: 600 }
+#main .care-v2 .care-more { margin: 0 0 10px }
+#main .care-v2 .care-more > summary { cursor: pointer; font-size: 14px; font-weight: 600; color: var(--ss-ink, #9a5a3c); margin-bottom: 8px }
