@@ -1,0 +1,12 @@
+/* Ahead · Timeline in category colors. */
+/* Timeline: each saved moment wears its category's colors */
+#main .journey-timeline-entry[data-cat] .journey-timeline-dot { background: var(--year-pale); border-color: var(--year-accent); color: var(--year-ink) }
+#main .journey-timeline-entry[data-cat] small { color: var(--year-ink); font-weight: 600 }
+#main .journey-connected-list:before { border-left-color: var(--line) }
+
+/* Saved-to-timeline toast: the app's type, in the category's colors */
+#main .journey-notice, #main .journey-notice.is-visit b, #main .journey-notice p { font-family: var(--ui-font) }
+#main .journey-notice.is-visit b { font-size: 15px; font-weight: 600; color: var(--ink) }
+#main .journey-notice[data-cat] { background: var(--year-pale); border-color: color-mix(in srgb, var(--year-accent) 60%, transparent) }
+#main .journey-notice[data-cat] b { color: var(--year-ink) }
+#main .journey-notice[data-cat] p { color: var(--muted) }

@@ -1,0 +1,29 @@
+/* PREVIEW · Year Ahead map: shared month axis, one lane per category, a Today line */
+#main .ym-page .monthly-page-header > span[aria-hidden] { width: 40px }
+#main .ym-lede { font-size: 14px; line-height: 1.6; color: var(--muted); margin: 4px 0 16px }
+#main .ym-map { background: var(--white); border: 1px solid var(--line); border-radius: 20px; overflow: hidden; margin: 0 -2px }
+#main .ym-scroll { position: relative; overflow-x: auto; overflow-y: hidden; padding: 0 0 14px; scrollbar-width: thin }
+#main .ym-axis { position: relative; height: 34px; margin-left: 106px; border-bottom: 1px solid var(--line) }
+#main .ym-tick { position: absolute; bottom: 0; height: 6px; border-left: 1px solid var(--line) }
+#main .ym-tick.is-major { height: 10px; border-left-color: var(--muted) }
+#main .ym-tick.is-major { font-size: 11px; font-weight: 600; color: var(--muted); padding-left: 4px; line-height: 1; height: 26px; display: flex; align-items: flex-start; padding-top: 4px; white-space: nowrap }
+#main .ym-row { display: flex; align-items: center; min-height: 58px; border-bottom: 1px solid color-mix(in srgb, var(--line) 60%, transparent) }
+#main .ym-row:last-of-type { border-bottom: 0 }
+#main .ym-name { position: sticky; left: 0; z-index: 3; flex: none; width: 106px; min-height: 58px; display: flex; align-items: center; gap: 7px; padding: 0 8px 0 12px; background: var(--white); text-align: left; font: 600 12.5px/1.25 var(--ui-font); color: var(--ink); box-shadow: 6px 0 8px -6px color-mix(in srgb, var(--ink) 18%, transparent) }
+#main .ym-name i { flex: none; width: 9px; height: 9px; border-radius: 50%; background: var(--year-accent) }
+#main .ym-lane { position: relative; height: 58px; flex: none }
+#main .ym-band { position: absolute; top: 9px; height: 40px; min-height: 0; padding: 0 8px; border-radius: 12px; background: var(--year-pale); border: 1px solid color-mix(in srgb, var(--year-accent) 55%, transparent); color: var(--year-ink); text-align: left; overflow: hidden }
+#main .ym-band span { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font: 600 11.5px/1.25 var(--ui-font) }
+#main .ym-band.is-past { opacity: .55 }
+#main .ym-band.is-now { background: var(--year-bg); border-color: var(--year-ink); box-shadow: 0 0 0 2px color-mix(in srgb, var(--year-accent) 35%, transparent) }
+#main .ym-band.is-now span { color: var(--ink) }
+#main .ym-dot { position: absolute; top: 12px; min-height: 0; width: 34px; margin-left: -17px; padding: 0; display: flex; flex-direction: column; align-items: center; gap: 3px; background: none; color: var(--year-ink) }
+#main .ym-dot i { width: 14px; height: 14px; border-radius: 50%; background: var(--white); border: 2px solid var(--year-ink) }
+#main .ym-dot span { font-size: 10.5px; font-weight: 600; white-space: nowrap }
+#main .ym-dot.is-past i { background: var(--year-ink) }
+#main .ym-dot.is-small { top: 22px }
+#main .ym-dot.is-small i { width: 9px; height: 9px; border-width: 1.5px; border-color: var(--year-accent) }
+#main .ym-dot.is-small.is-past i { background: var(--year-accent) }
+#main .ym-today { position: absolute; top: 0; bottom: 10px; margin-left: 106px; width: 0; border-left: 2px solid var(--ink); z-index: 2; pointer-events: none }
+#main .ym-today span { position: absolute; top: 6px; left: -1px; transform: translateX(-50%); font-size: 10.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; background: var(--ink); color: var(--white); padding: 3px 7px; border-radius: 999px; white-space: nowrap }
+#main .ym-hint { font-size: 12.5px; line-height: 1.55; color: var(--muted); margin: 12px 2px 0 }

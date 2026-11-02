@@ -1269,3 +1269,188 @@
 #main .hub-feed-tiles > .hub-feed-tile:last-child:nth-child(odd) { grid-column: 1 / -1 }
 #main .hub-card-note { margin: 12px 0 0; padding-top: 12px; border-top: 1px solid var(--line); font-size: 14px; line-height: 1.45 }
 #main .hub-pillrow.is-guide { margin: 0 0 6px }
+
+/* ---------- Monthly Stories and the first-year collage (js/share-story.js) ---------- */
+/* The handwriting on each Story ships with the app, so it draws the same with or without a connection. */
+@font-face { font-family: AheadHand; src: url('../assets/fonts/caveat-latin-600-normal.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: swap }
+.story-sheet { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; padding: 16px; background: rgba(43, 40, 64, .55); font-family: Figtree, system-ui, sans-serif; color: #2B2840 }
+.story-card { position: relative; box-sizing: border-box; width: min(380px, 100%); max-height: calc(100dvh - 32px); overflow: auto; background: #FAF8F5; border-radius: 28px; padding: 20px 16px 16px; text-align: center }
+.story-close { position: absolute; top: 10px; right: 10px; width: 44px; height: 44px; border: 0; border-radius: 50%; background: transparent; font-size: 26px; line-height: 1; color: #5E5A75; cursor: pointer }
+.story-eyebrow { margin: 0 44px 2px; font-size: 13px; font-weight: 600; color: #5E5A75 }
+.story-card h2 { margin: 0 36px 12px; font-family: Nunito, sans-serif; font-weight: 800; font-size: 21px; line-height: 1.2 }
+.story-seg { display: inline-flex; gap: 4px; padding: 4px; margin-bottom: 12px; border-radius: 999px; background: #EFEAF2 }
+.story-seg button { min-width: 84px; min-height: 36px; border: 0; border-radius: 999px; background: transparent; font: inherit; font-size: 14px; font-weight: 600; color: #5E5A75; cursor: pointer }
+.story-seg button.is-on { background: #fff; color: #2B2840; box-shadow: 0 1px 2px rgba(43, 40, 64, .12) }
+.story-frame { position: relative; width: min(100%, calc((100dvh - 290px) * 9 / 16)); min-width: 160px; margin: 0 auto; aspect-ratio: 9 / 16; border-radius: 18px; overflow: hidden; box-shadow: 0 10px 28px rgba(43, 40, 64, .18); background: #F5E8E2 }
+.story-frame canvas { display: block; width: 100%; height: 100% }
+.story-busy { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(250, 248, 245, .55) }
+.story-busy[hidden] { display: none }
+.story-busy span { padding: 8px 14px; border-radius: 999px; background: #fff; font-size: 13px; font-weight: 600; box-shadow: 0 2px 8px rgba(43, 40, 64, .12) }
+.story-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px }
+.story-btn { min-height: 48px; border: 0; border-radius: 999px; background: #2B2840; color: #fff; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer }
+.story-btn.is-quiet { background: #fff; color: #2B2840; box-shadow: inset 0 0 0 1.5px #2B2840 }
+.story-btn:disabled, .story-seg button:disabled { opacity: .5; cursor: default }
+.story-note { margin: 10px 4px 0; font-size: 12.5px; line-height: 18px; color: #5E5A75 }
+#main .mem-shot-wrap { position: relative; scroll-snap-align: start }
+#main .mem-shot-share { position: absolute; right: 6px; top: 6px; width: 32px; height: 32px; border: 0; border-radius: 50%; background: rgba(255, 255, 255, .92); color: var(--year-ink, #5b4a8b); display: grid; place-items: center; cursor: pointer; box-shadow: 0 1px 3px rgba(43, 40, 64, .15) }
+#main .mem-shot-share svg { width: 16px; height: 16px }
+#main .hub-bday-share { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 44px; margin-top: 8px; border: 0; border-radius: 14px; background: #2B2840; color: #fff; font: inherit; font-weight: 600; cursor: pointer }
+#main .mem-shot-wrap > .mem-shot { display: block }
+#main .bday-story { position: relative; display: block; width: 100%; margin-top: 8px; background: var(--ink, #2B2840) !important; color: #fff !important; border-radius: 999px; padding: 15px 18px; font-weight: 700 }
+#main .mem-year { margin-top: 4px; margin-bottom: 10px }
+.story-actions.is-single { grid-template-columns: 1fr }
+.story-frame canvas.is-movable { cursor: grab; touch-action: none }
+.story-adjust { display: flex; align-items: center; gap: 12px; max-width: 280px; margin: 12px auto 0; font-size: 13px; font-weight: 600; color: #5E5A75 }
+.story-adjust input { flex: 1; min-width: 0; accent-color: #2B2840 }
+#main .mem-shot-remove { position: absolute; left: 6px; top: 6px; width: 28px; height: 28px; border: 0; border-radius: 50%; background: rgba(43, 40, 64, .55); color: #fff; display: grid; place-items: center; font-size: 18px; line-height: 1; cursor: pointer }
+#main .mem-shot-remove::after { content: ""; position: absolute; inset: -8px }
+/* Memories: each month as its finished Story; empty months show the design waiting for a photo */
+#main .mem-stories { display: grid; grid-auto-flow: column; grid-auto-columns: 42%; gap: 12px; overflow-x: auto; margin: 0 -16px 14px; padding: 4px 16px 12px; scroll-snap-type: x mandatory }
+#main .mem-story-wrap { position: relative; scroll-snap-align: start }
+#main .mem-story { position: relative; display: block; width: 100%; aspect-ratio: 9 / 16; padding: 0; border: 0; border-radius: 16px; overflow: hidden; background: #F5E8E2; box-shadow: 0 6px 16px rgba(43, 40, 64, .12); cursor: pointer; scroll-snap-align: start; font: inherit }
+#main .mem-story img { display: block; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .25s }
+#main .mem-story img.is-ready, #main .mem-story.is-plain img { opacity: 1 }
+#main .mem-story-add { position: absolute; left: 50%; bottom: 12px; transform: translateX(-50%); padding: 7px 12px; border-radius: 999px; background: #2B2840; color: #fff; font-size: 12.5px; font-weight: 600; white-space: nowrap }
+#main .mem-story.is-next { cursor: default; opacity: .5; box-shadow: none }
+#main .mem-story.is-next .mem-story-add { background: rgba(255, 255, 255, .92); color: #5E5A75 }
+#main .mem-story.is-plain em { position: absolute; left: 8px; top: 8px; padding: 2px 8px; border-radius: 999px; background: rgba(255, 255, 255, .92); font-style: normal; font-size: 12px; font-weight: 700; color: var(--year-ink, #5b4a8b) }
+#main .mem-story.is-plain.is-empty { display: grid; place-items: center; border: 2px dashed #d9cfe3; box-shadow: none; background: #fbf7f4 }
+#main .mem-story.is-plain.is-empty em { left: 50%; top: 40%; transform: translateX(-50%) }
+.story-change { position: relative; flex: none; padding: 6px 2px; color: #2B2840; text-decoration: underline; text-underline-offset: 3px; cursor: pointer }
+.story-change .hub-photo-input, .mem-story .hub-photo-input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none }
+/* The × on a Memories photo matches the × on Home's cards: a soft grey ×, on a small white circle so it reads on any photo */
+#main .mem-shot-remove { left: auto; right: 6px; top: 6px; width: 28px; height: 28px; min-height: 0; padding: 0; border: 0; border-radius: 50%; background: rgba(255, 255, 255, .92); color: #7d7785; font-size: 19px; line-height: 1; box-shadow: 0 1px 3px rgba(43, 39, 51, .12); z-index: 2 }
+#main .mem-shot-remove:hover { background: #fff; color: #2B2840 }
+#main .mem-yearcard { display: flex; align-items: center; gap: 14px; width: 100%; margin: 4px 0 18px; padding: 12px 14px 12px 12px; border: 0; border-radius: 20px; background: #fff; box-shadow: 0 6px 16px rgba(43, 40, 64, .10); text-align: left; font: inherit; color: var(--ink, #2B2840); cursor: pointer }
+#main .mem-yearcard-pic { flex: none; width: 64px; aspect-ratio: 9 / 16; border-radius: 10px; overflow: hidden; background: #F8EBE5 }
+#main .mem-yearcard-pic img { display: block; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .25s }
+#main .mem-yearcard-pic img.is-ready { opacity: 1 }
+#main .mem-yearcard b { display: block; font-size: 16px }
+#main .mem-yearcard small { display: block; margin-top: 2px; color: var(--muted, #5E5A75); font-size: 13px; line-height: 18px }
+#main .mem-yearcard .mem-row-go { margin-left: auto; font-size: 22px; color: #9a94a0 }
+/* One Share button: it opens the phone's share sheet (Messages, Instagram, Save Image) */
+.story-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px }
+.story-btn svg { width: 18px; height: 18px; flex: none }
+.story-share-hint { margin: 8px 6px 0; font-size: 12.5px; line-height: 18px; color: #5E5A75 }
+.story-share-hint + .story-note { margin-top: 4px }
+/* Where the share sheet can't open: the picture itself, to press and hold */
+.story-hold { position: absolute; inset: 0; z-index: 3; background: #F5E8E2 }
+.story-hold img { display: block; width: 100%; height: 100%; object-fit: cover; -webkit-touch-callout: default; -webkit-user-select: auto; user-select: auto }
+.story-hold span { position: absolute; left: 50%; top: 12px; transform: translateX(-50%); width: max-content; max-width: 88%; padding: 8px 14px; border-radius: 999px; background: #2B2840; color: #fff; font-size: 12.5px; font-weight: 600; text-align: center; pointer-events: none }
+
+/* Development & play: ideas as pictures, and skill photos and videos inside the app */
+#main .dev-ideas { display: grid; grid-template-columns: 1fr 1fr; gap: 12px }
+#main .dev-ideas.is-grid { margin: 4px 0 16px }
+#main .dev-idea { display: flex; flex-direction: column; gap: 8px; text-align: left; background: var(--white); border: 1px solid var(--line); border-radius: 20px; padding: 8px 8px 12px; cursor: pointer; font: inherit; color: var(--ink); min-height: 0 }
+#main .dev-awake .dev-idea { border: 0; padding: 0; background: none }
+#main .dev-idea b { font-size: 14px; line-height: 1.3; font-weight: 600; padding: 0 4px }
+#main .dev-idea-art { display: block; border-radius: 16px; overflow: hidden; background: #f8f7fd; aspect-ratio: 160 / 116 }
+#main .dev-idea-art svg { width: 100%; height: 100%; display: block }
+#main .dev-idea-hero { margin: 0 0 16px; border-radius: 24px; overflow: hidden; background: #f8f7fd }
+#main .dev-idea-hero svg { width: 100%; height: auto; display: block }
+#main .dev-skill { flex-wrap: wrap; align-items: flex-start }
+#main button.dev-see { display: inline-block; margin-top: 8px; background: none; border: 0; padding: 0; font: inherit; font-size: 13px; font-weight: 600; color: var(--year-ink) !important; cursor: pointer; min-height: 0 }
+#main .dev-see::before { content: "▸ " }
+#main .dev-see[aria-expanded="true"]::before { content: "▾ " }
+#main .dev-media { flex-basis: 100%; margin-top: 2px }
+#main .dev-media .hub-embed { margin: 0 }
+#main .dev-photo { margin: 0; border-radius: 16px; overflow: hidden; background: var(--year-pale) }
+#main .dev-photo img { width: 100%; display: block }
+#main .dev-photo figcaption { font-size: 12px; color: var(--ink-2, #5E5A75); padding: 6px 10px }
+
+/* Development & play: a warmer top of the page */
+#main .dev-hero { position: relative; overflow: hidden; background: linear-gradient(160deg, #e9e3fd, #f3e6f6 60%, #fde9e2); border-radius: 24px; padding: 22px 20px; margin: 0 0 14px }
+#main .dev-hero-num { position: absolute; right: 10px; top: -6px; font: 800 118px/1 var(--display-font, inherit); color: #fff; opacity: .8; letter-spacing: -4px; pointer-events: none }
+#main .dev-hero-spark { position: absolute; right: 22px; top: 104px; color: #f1c75b; font-size: 15px }
+#main .dev-hero-eyebrow { position: relative; margin: 0; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--year-ink) }
+#main .dev-hero h1 { position: relative; font: 700 27px/1.15 var(--display-font, inherit); letter-spacing: -.3px; margin: 8px 0 8px; max-width: 78%; color: var(--ink); text-wrap: balance }
+#main .dev-hero-lead { position: relative; margin: 0; color: #5c5361; line-height: 1.5; max-width: 92% }
+#main .dev-area { padding: 0 0 14px; overflow: hidden; gap: 4px }
+#main .dev-area > b, #main .dev-area > small, #main .dev-area > span:not(.dev-area-art) { padding-left: 14px; padding-right: 14px }
+#main .dev-area-art { display: block; width: 100%; height: 104px; overflow: hidden; margin: 6px 0 4px }
+#main .dev-area-art svg { width: 100% !important; height: 100% !important; display: block }
+#main .dev-area.is-Social { background: #fdeef2 }
+#main .dev-area.is-Talking { background: #fff3dc }
+#main .dev-area.is-Thinking { background: #e6f5ec }
+#main .dev-area.is-Movement { background: #e7effc }
+#main .hub-eyes-big { font-size: 30px !important }
+
+/* Development area pages: the area's own color carries through from its tile */
+#main .dev-area-page { --area: #efedff; --area-deep: #e2dcfb }
+#main .dev-area-page.is-Social { --area: #fdeef2; --area-deep: #f9dbe4 }
+#main .dev-area-page.is-Talking { --area: #fff3dc; --area-deep: #fbe6bd }
+#main .dev-area-page.is-Thinking { --area: #e6f5ec; --area-deep: #cfead9 }
+#main .dev-area-page.is-Movement { --area: #e7effc; --area-deep: #d3e1f8 }
+#main .dev-area-head { background: var(--area); border-radius: 24px; padding: 4px 20px 20px; margin: 0 0 16px; overflow: hidden }
+#main .dev-area-head-art { display: block; height: 150px; margin: 0 -8px 2px }
+#main .dev-area-head-art svg { width: 100%; height: 100%; display: block }
+#main .dev-area-head .hub-context { margin: 0; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--year-ink) }
+#main .dev-area-head h1 { font: 700 27px/1.15 var(--display-font, inherit); margin: 6px 0 6px; color: var(--ink) }
+#main .dev-area-head .hub-lead { margin: 0; color: #5c5361 }
+#main .dev-area-page .hub-tick-art { background: var(--area) }
+#main .dev-area-page .hub-seen { border-color: var(--area-deep) }
+#main .dev-area-page .hub-meter { background: var(--white) }
+#main .dev-area-page .hub-bar { background: var(--area) }
+#main .dev-area-page .hub-bar i { background: var(--year-ink) }
+#main .dev-try .dev-try-row { display: flex; align-items: center; gap: 14px; width: 100%; background: none; border: 0; padding: 0; text-align: left; font: inherit; color: var(--ink); cursor: pointer; min-height: 0 }
+#main .dev-try .dev-idea-art { width: 104px; flex: none }
+#main .dev-try .hub-row-copy small { display: block; margin-top: 2px }
+
+/* Development, final: a top card like Sleep's, calm area pages, and skill media framed like the app */
+#main .dev-hero::after { content: ""; position: absolute; right: -40px; top: -50px; width: 170px; height: 170px; border-radius: 50%; background: #fff; opacity: .35; pointer-events: none }
+#main .dev-hero > * { position: relative; z-index: 1 }
+#main .dev-hero-eyebrow { letter-spacing: 0; text-transform: none; font-size: 12.5px; font-weight: 600 }
+#main .dev-hero h1 { max-width: 100% }
+#main .dev-more-link { margin-top: 14px }
+#main .dev-sub { margin: 18px 4px 10px; font-size: 13px; font-weight: 700; color: var(--year-ink) }
+#main .dev-area-page .dev-skill { min-height: 0; padding: 12px 14px }
+#main .dev-area-page .dev-skill .dev-see { margin-top: 4px }
+#main .dev-bigq { margin-top: 16px }
+#main .dev-bigq-a { margin: 0; font-size: 14.5px; line-height: 1.55; color: #4c4757 }
+#main .dev-call { margin: 16px 4px 0; font-size: 14px; line-height: 1.5; color: #5c5361 }
+#main .dev-desc { margin: 4px 0 10px; font-size: 14px; line-height: 1.5; color: #5c5361 }
+#main .dev-area-page .dev-media { background: var(--area, var(--year-pale)); border-radius: 18px; padding: 8px 8px 10px; margin-top: 8px }
+#main .dev-area-page .dev-media .hub-embed { border: 0; border-radius: 12px; background: none; margin: 0 }
+#main .dev-area-page .dev-media .hub-embed-poster { border-radius: 12px; aspect-ratio: 4 / 3 }
+#main .dev-area-page .dev-media .hub-embed-frame { border-radius: 12px; aspect-ratio: 4 / 3 }
+#main .dev-area-page .dev-media .hub-embed-play { background: var(--year-ink); color: #fff; width: 52px; height: 52px; margin: -26px 0 0 -26px; box-shadow: 0 0 0 8px rgba(255,255,255,.55) }
+#main .dev-area-page .dev-media figcaption { padding: 8px 4px 0 }
+#main .dev-area-page .dev-media figcaption b, #main .dev-area-page .dev-media figcaption a { display: none }
+#main .dev-area-page .dev-media figcaption small, #main .dev-area-page .dev-photo figcaption { font-size: 12px; font-weight: 600; color: var(--year-ink) }
+#main .dev-area-page .dev-photo { background: none; border-radius: 12px }
+#main .dev-area-page .dev-photo img { border-radius: 12px; aspect-ratio: 4 / 3; object-fit: cover }
+#main .dev-area-page .dev-photo figcaption { padding: 8px 4px 0 }
+
+/* Development tiles in Sleep's style */
+#main .hub-domain-tiles:has(.dev-tile) { align-items: stretch }
+#main .dev-tile { display: flex !important; flex-direction: column !important; justify-content: flex-start !important; align-items: flex-start; gap: 2px !important; padding: 12px 14px 14px !important; border-radius: 18px !important; background: var(--dt-bg) !important; min-height: 0 }
+#main .dev-tile .dev-tile-art { display: block; height: 30px; margin: 0 0 10px !important; padding: 0 !important }
+#main .dev-tile .dev-tile-art svg { height: 100% !important; width: auto !important; display: block }
+#main .dev-tile .dev-tile-label { font-size: 13px !important; font-weight: 600; color: var(--dt-ink) !important; line-height: 1.3 }
+#main .dev-tile .dev-tile-line { font-size: 16px !important; line-height: 1.25; font-weight: 700; color: var(--ink); margin: 2px 0 4px }
+#main .dev-tile .dev-tile-count { font-size: 13px; font-weight: 600; color: var(--dt-ink) !important; margin-top: auto !important; padding-top: 4px !important }
+#main .dev-area-page .dev-area-head { background: var(--area) }
+#main .dev-area-page .dev-area-head-art { display: block; height: 56px; margin: 16px 0 14px }
+#main .dev-area-page .dev-area-head-art svg { height: 100%; width: auto; display: block }
+#main .dev-area-page .hub-tick-art { background: var(--area) }
+#main .dev-area-page .dev-area-head .hub-context { color: var(--area-ink) }
+#main .dev-credit { margin: 14px 4px 0; font-size: 12px; line-height: 1.45; color: #8a8490 }
+#main .dev-more-ideas { margin: 4px 0 16px; background: var(--white); border: 1px solid var(--line); border-radius: 20px; overflow: hidden }
+#main .dev-more-ideas > summary { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; font-weight: 600; cursor: pointer; list-style: none }
+#main .dev-more-ideas > summary::-webkit-details-marker { display: none }
+#main .dev-more-ideas[open] .faq-plus { transform: rotate(45deg) }
+#main .dev-more-ideas .hub-list { margin: 0; border: 0; border-top: 1px solid var(--line); border-radius: 0 }
+/* More ideas: a plain list of names, quiet like a menu */
+#main .dev-more-list { list-style: none; margin: 0; padding: 4px 16px 8px; border-top: 1px solid var(--line) }
+#main .dev-more-list li + li { border-top: 1px solid var(--line) }
+#main .dev-more-list button { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; padding: 13px 0; min-height: 0; background: none; border: 0; font: inherit; font-size: 15px; color: var(--ink); text-align: left; cursor: pointer }
+#main .dev-more-list button::before { content: ""; flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--year-accent); margin-right: 2px }
+#main .dev-more-list button span:first-of-type { flex: 1 }
+/* Memories: each first in its area's soft color, in the same rounded square as the category rows */
+#main .mem-row-ic.is-toned { border-radius: 13px; background: var(--mem-bg) }
+#main .is-toned svg, #main .is-toned svg [stroke]:not([stroke="none"]) { stroke: var(--mem-ink) }
+#main .hub-big.mem-big { background: var(--mem-bg) }
+/* Care card: the link to copy when the share sheet isn't available */
+#main .cc-link { display: flex; gap: 8px; margin-top: 10px }
+#main .cc-link input, #main .cc-link textarea { flex: 1; min-width: 0; border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; font: inherit; font-size: 13px; background: #fff; color: var(--ink) }
+#main .cc-link button { border: 0; border-radius: 12px; padding: 0 16px; font: inherit; font-weight: 600; background: var(--year-pale, #eef2ec); color: var(--ink) }

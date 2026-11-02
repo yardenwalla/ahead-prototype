@@ -243,10 +243,11 @@
       + `<p class="cc-always"><b>${F('Always included')}</b>${F(ALWAYS())}</p>`
       + `<div class="cc-actions"><button class="hub-button" onclick="ccCardMode('view')">${F('Save the card')}</button></div>`, 'notepad');
   }
-  // Sharing sends a link that unfurls into a preview card in Messages, WhatsApp or email, like sharing a song.
-  // The card's details ride in the link after the #, so they open on the caregiver's phone and never reach a server.
-  const CARD_URL = 'https://yardenwalla.github.io/ahead-prototype/card.html';
-  window.ccCardLink = function () {
+  // Sharing sends one link that opens the whole card. The link carries the details itself (?c=…, which messaging apps keep);
+  // the card page is a static file, so nothing is saved anywhere.
+  // The card page next to this app (so a preview shares its own card page). Opened from a file, fall back to the live one.
+  const CARD_URL = typeof location !== 'undefined' && location.protocol.startsWith('http') ? new URL('card.html', location.href).href.split('?')[0] : 'https://yardenwalla.github.io/ahead-prototype/card.html';
+  const cardData = function () {
     const c = card(), P = babyPronouns(), n = c.naps === '4 or more' ? 4 : Number(c.naps) || 0;
     const low = (a, own) => (a || []).map((x, i) => x === 'On their own' ? own : i ? x.toLowerCase() : x);
     const data = { n: name(), s: P.s, o: P.o, p: P.p, d: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric' }),
@@ -255,14 +256,44 @@
       allergy: c.allergy ? (c.allergy === 'Yes' ? (c.allergyText || 'Yes, please ask us') : 'None known') : null, other: c.other,
       c: [[c.c1Name, c.c1Phone], [c.c2Name, c.c2Phone]], doc: [c.docName, c.docPhone], a: ALWAYS() };
     Object.keys(data).forEach(k => { if (data[k] == null || data[k] === '' || (Array.isArray(data[k]) && !data[k].length)) delete data[k]; });
-    const b64 = btoa(unescape(encodeURIComponent(JSON.stringify(data)))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-    return `${CARD_URL}#${b64}`;
+    return data;
+  };
+  window.ccCardLink = function () {
+    const b64 = btoa(unescape(encodeURIComponent(JSON.stringify(cardData())))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    return `${CARD_URL}?c=${b64}`;
+  };
+  // The same card as plain text: what a caregiver needs at a glance.
+  window.ccCardText = function () {
+    const d = cardData(), L = [];
+    const nap = d.naps ? `${d.naps === '4 or more' ? '4 or more' : d.naps} nap${d.naps === '1' ? '' : 's'} a day${d.times ? ` (${d.times.join(', ')})` : ''}` : '';
+    L.push(`${d.n}’s care card`);
+    if (d.milk) L.push(`Feeding: ${[d.milk, d.often && d.often.toLowerCase(), d.oz].filter(Boolean).join(', ')}${d.solids ? `. Solids: ${d.solids.toLowerCase()}` : ''}`);
+    if (nap || d.bed) L.push(`Sleep: ${[nap, d.bed && `bedtime ${d.bed}`].filter(Boolean).join(', ')}`);
+    if (d.asleep) L.push(`Falls asleep with: ${d.asleep.join(', ').toLowerCase()}`);
+    if (d.calm) L.push(`If upset, try: ${d.calm.join(', ').toLowerCase()}`);
+    if (d.allergy) L.push(`Allergies: ${d.allergy}`);
+    if (d.other) L.push(d.other);
+    const calls = (d.c || []).filter(x => x && (x[0] || x[1])).map(x => x.filter(Boolean).join(' '));
+    if (calls.length) L.push(`Call: ${calls.join(' · ')}`);
+    if (d.doc && (d.doc[0] || d.doc[1])) L.push(`Pediatrician: ${d.doc.filter(Boolean).join(' ')}`);
+    if (d.a) L.push(d.a);
+    L.push('', `Full card: ${ccCardLink()}`);
+    return L.join('\n');
   };
   window.ccShare = async function () {
     const url = ccCardLink(), done = document.getElementById('ccDone');
-    const say = m => { if (done) { done.textContent = m; done.hidden = false; } };
-    try { if (navigator.share) { await navigator.share({ title: `${name()}’s care card`, text: `Here’s ${name()}’s care card`, url }); return; } } catch (e) { if (e && e.name === 'AbortError') return; }
-    try { await navigator.clipboard.writeText(url); say('Link copied. Paste it into a text or email.'); } catch (e) { say('Couldn’t share from here. Try again on your phone.'); }
+    // If the phone's share sheet or the clipboard says no, show the link with its own Copy button, so there's always a way to send it.
+    const fallback = () => { if (!done) return; done.hidden = false; done.innerHTML = `${F('Copy this link and paste it into a text or email.')}<span class="cc-link"><input readonly value="${esc3(url)}" onclick="this.select()" aria-label="Care card link"><button onclick="ccCopy(this)">${F('Copy')}</button></span>`; };
+    const data = { title: `${name()}’s care card`, url };
+    if (navigator.share && (!navigator.canShare || navigator.canShare(data))) {
+      try { await navigator.share(data); return; } catch (e) { if (e && e.name === 'AbortError') return; }
+    }
+    try { await navigator.clipboard.writeText(url); if (done) { done.textContent = F('Link copied. Paste it into a text or email.'); done.hidden = false; } } catch (e) { fallback(); }
+  };
+  window.ccCopy = async function (btn) {
+    const input = btn.previousElementSibling; input.select(); input.setSelectionRange(0, 99999);
+    let ok = false; try { await navigator.clipboard.writeText(input.value); ok = true; } catch (e) { try { ok = document.execCommand('copy'); } catch (e2) {} }
+    btn.textContent = ok ? 'Copied' : 'Select and copy';
   };
 
   /* ---------- routes ---------- */
