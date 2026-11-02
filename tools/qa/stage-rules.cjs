@@ -43,7 +43,7 @@ for (let age = 0; age <= 12; age++) for (const cat of Object.keys(ROUTES)) {
 
 // Change sticks, shows the same in Baby's details, and Undo puts it back.
 for (const [cat, age, i, label] of [['Sleep', 7, 3, 'Two naps'], ['Sleep', 10, 2, 'Three naps'], ['Sleep', 5, 1, 'Longer nights'], ['Feeding', 7, 2, 'Solids'], ['Feeding', 9, 1, 'Preparing for solids'],
-  ['Feeding', 7, 0, 'Milk feeds'], ['Safety', 2, 2, 'On the move'], ['Safety', 10, 1, 'Reaching and rolling']]) {
+  ['Feeding', 7, 0, 'Milk feeds'], ['Safety', 2, 2, 'Crawling'], ['Safety', 10, 1, 'Rolling']]) {
   const a = family(age); a.run(`openPage('topic:${cat}')`);
   const before = nowName(a.html());
   a.run(`openPage('${ROUTES[cat](i)}');hubChangeStage(${JSON.stringify(cat)}, ${i})`);
@@ -86,7 +86,7 @@ for (const [cat, age, i, label] of [['Sleep', 7, 3, 'Two naps'], ['Sleep', 10, 2
 }
 // One rule everywhere: a pick holds until the parent changes it. When the baby outgrows it, Home asks once.
 for (const [cat, pickRoute, i, pickAge, laterAge, picked, next] of [
-  ['Safety', 'safety-stage:setup', 0, 4, 7, 'First setup', 'On the move'],
+  ['Safety', 'safety-stage:setup', 0, 4, 7, 'First setup', 'Crawling'],
   ['Sleep', 'chg:Sleep:s:1', 1, 4, 9, 'Longer nights', 'Two naps']]) {
   const storage = {};
   let a = family(pickAge, {}, storage); a.run(`openPage('${pickRoute}');hubChangeStage(${JSON.stringify(cat)}, ${i});openPage('topic:${cat}')`);
@@ -104,9 +104,9 @@ for (const [cat, route, i] of [['Safety', 'safety-stage:reaching', 1], ['Sleep',
 }
 {
   const a = family(7); a.run("openPage('safety-stage:reaching');hubChangeStage('Safety',1);setAnswer('crawl','Yes');openPage('topic:Safety')");
-  check(nowName(a.html()) === 'On the move', 'Telling us about a new movement replaces an older Safety pick');
+  check(nowName(a.html()) === 'Crawling', 'Telling us about a new movement replaces an older Safety pick');
   const b = family(8, { pullUp: 'Yes', movementSetByParent: true }); b.run("openPage('topic:Safety')");
-  check(nowName(b.html()) === 'On the move' && /Check what Ari can reach standing/.test(b.html()), 'Pulling up stays in On the move and leads with what changes when standing');
+  check(nowName(b.html()) === 'Pulling up' && /Check what Ari can reach standing/.test(b.html()), 'Pulling up is its own stage and leads with what changes when standing');
 }
 // Review fixes: search finds common worries; a future month on Home reads as a preview; setup never shows a sample name.
 {

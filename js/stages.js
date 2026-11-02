@@ -183,7 +183,7 @@
   function stageNow() {
     if (live2() && ORDER.includes(answers.safetyPick)) {
       const g = stageGuess();
-      return answers.safetyPick === 'rolling' && ['moving', 'pulling'].includes(g) ? g : answers.safetyPick;
+      return answers.safetyPick === 'rolling' && g === 'moving' ? g : answers.safetyPick;
     }
     // Only an explicit "this is how they move now" (What's new) can set Safety below the age guess.
     // A saved first (a roll, a crawl) is a minimum: it can move Safety ahead, never back.
