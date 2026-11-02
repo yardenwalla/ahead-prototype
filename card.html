@@ -2,7 +2,7 @@
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>A care card from Ahead</title>
 <meta name="description" content="Everything you need to look after the little one: feeding, naps, what helps, and who to call.">
-<!-- The preview in Messages, WhatsApp and email. The card's details travel in the link after the #, so they never reach a server. -->
+<!-- The preview in Messages, WhatsApp and email. The card's details travel in the link itself (?c=…); this page saves nothing. -->
 <meta property="og:type" content="website"><meta property="og:site_name" content="Ahead">
 <meta property="og:title" content="You’ve been trusted with someone special">
 <meta property="og:description" content="Their care card: feeding, naps, what helps and who to call.">
@@ -13,52 +13,48 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
 <style>
-:root { --bg: #fbf8f2; --ink: #2f2a33; --muted: #6f6870; --line: #eee7dc; --card: #fffdf9;
-  --feed: #f7d9e5; --feed-ink: #884866; --sleep: #d9e5fc; --sleep-ink: #46638c; --dev: #e5e0fc; --dev-ink: #625084; --health: #ddf1e5; --health-ink: #356651; --sun: #f8edb3; --sun-ink: #6b5a0e }
+/* The care card, in the app's current look: a soft gradient top card, Sleep-style tiles whose pictures carry the numbers,
+   rows with soft colored icon squares, and a calm night card for safe sleep. No emoji. */
+:root { --bg: #f7f3ec; --ink: #2f2a33; --muted: #6b6670; --line: #ece5da; --card: #fffdf9;
+  --feed: #fdeef2; --feed-ink: #a24d6a; --nap: #fff3dc; --nap-ink: #8a6a2a; --dusk: #f6e8f3; --dusk-ink: #7a4f74; --night: #e3e6f6; --night-ink: #3d4a7a;
+  --green: #e6f5ec; --green-ink: #356651; --peach: #fdeee6; --peach-ink: #9a5a3c; --blue: #e7effc; --blue-ink: #46638c }
 * { box-sizing: border-box }
-html { background: var(--bg) }
-body { margin: 0; color: var(--ink); font: 16px/1.5 Figtree, system-ui, -apple-system, sans-serif; background:
-  radial-gradient(120% 60% at 0% 0%, #fde3d3 0%, transparent 55%), radial-gradient(90% 55% at 100% 0%, #e5e0fc 0%, transparent 60%),
-  radial-gradient(80% 40% at 60% 18%, #d9e5fc 0%, transparent 60%), var(--bg); background-repeat: no-repeat }
-main { max-width: 480px; margin: 0 auto; padding: max(22px, env(safe-area-inset-top)) max(18px, env(safe-area-inset-right)) max(30px, env(safe-area-inset-bottom)) max(18px, env(safe-area-inset-left)) }
-.brand { font: 800 24px/1 Nunito, Figtree, sans-serif; letter-spacing: -.02em } .brand span { color: #b7a48d }
-.hero { text-align: center; padding: 18px 8px 8px }
-.baby { position: relative; width: 132px; height: 132px; margin: 6px auto 12px; border-radius: 50%; background: #fffdf9; box-shadow: 0 14px 34px rgba(98, 80, 132, .16); display: grid; place-items: center }
-.baby svg { width: 96px; height: 108px }
-.baby i { position: absolute; border-radius: 50%; } .baby i:nth-of-type(1) { width: 12px; height: 12px; background: #f0bfce; left: -6px; top: 30px }
-.baby i:nth-of-type(2) { width: 9px; height: 9px; background: #c3d7fb; right: -2px; top: 14px } .baby i:nth-of-type(3) { width: 10px; height: 10px; background: #f1d697; right: 4px; bottom: 18px }
-.hello { margin: 0; font-size: 14px; font-weight: 700; color: var(--dev-ink); letter-spacing: .02em }
-h1 { margin: 2px 0 8px; font: 900 40px/1.05 Nunito, Figtree, sans-serif; letter-spacing: -.02em; text-wrap: balance }
-.intro { margin: 0 auto; max-width: 30ch; color: var(--muted); font-size: 16px }
-.updated { display: inline-block; margin-top: 12px; padding: 4px 12px; border-radius: 999px; background: rgba(255, 253, 249, .8); border: 1px solid var(--line); font-size: 13px; color: var(--muted) }
-section { margin-top: 18px; padding: 18px; border-radius: 24px; background: var(--card); border: 1px solid var(--line); box-shadow: 0 6px 22px rgba(80, 60, 40, .05) }
-h2 { margin: 0 0 12px; font: 800 19px/1.2 Nunito, Figtree, sans-serif; display: flex; align-items: center; gap: 8px }
-h2 .dot { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-size: 15px }
+html, body { background: var(--bg) }
+body { margin: 0; color: var(--ink); font: 16px/1.5 Figtree, system-ui, -apple-system, sans-serif }
+main { max-width: 520px; margin: 0 auto; padding: max(20px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(30px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left)) }
+.brand { font: 800 24px/1 Nunito, Figtree, sans-serif; letter-spacing: -.02em; margin: 4px 4px 16px } .brand span { color: #b7a48d }
+.hero { position: relative; overflow: hidden; border-radius: 28px; padding: 22px 22px 24px; background: linear-gradient(160deg, #fbe2e9, #f6eef6 55%, #e7ecfb) }
+.hero::after { content: ""; position: absolute; right: -46px; top: -56px; width: 180px; height: 180px; border-radius: 50%; background: #fff; opacity: .4 }
+.hero > * { position: relative; z-index: 1 }
+.hero-art { display: block; height: 44px; margin: 4px 0 14px } .hero-art svg { height: 100%; width: auto }
+.hello { margin: 0; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--feed-ink) }
+h1 { margin: 4px 0 6px; font: 800 36px/1.05 Nunito, Figtree, sans-serif; letter-spacing: -.02em }
+.intro { margin: 0; color: #5c5361; font-size: 15.5px }
+.updated { display: inline-block; margin-top: 12px; padding: 3px 11px; border-radius: 999px; background: rgba(255, 255, 255, .75); font-size: 12.5px; font-weight: 600; color: var(--muted) }
+h2 { margin: 24px 4px 10px; font: 700 17px/1.2 Figtree, sans-serif }
 .tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px }
-.tile { padding: 12px 14px; border-radius: 16px; min-width: 0 } .tile.wide { grid-column: 1 / -1 }
-.tile b { display: block; font-size: 12px; font-weight: 700; letter-spacing: .02em; text-transform: uppercase; opacity: .85 }
-.tile span { display: block; font-size: 17px; font-weight: 700; line-height: 1.3; margin-top: 2px; color: var(--ink) }
-.tile small { display: block; font-size: 14px; color: var(--muted); margin-top: 2px }
-.feed { background: var(--feed); color: var(--feed-ink) } .sleep { background: var(--sleep); color: var(--sleep-ink) }
-.times { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px } .times em { font-style: normal; font-size: 14px; font-weight: 700; padding: 4px 10px; border-radius: 999px; background: rgba(255, 255, 255, .7); color: var(--ink) }
-.chips { display: flex; flex-wrap: wrap; gap: 8px } .chips span { padding: 8px 14px; border-radius: 999px; background: var(--dev); color: var(--dev-ink); font-weight: 700; font-size: 15px }
-.note { margin: 12px 0 0; color: var(--muted); font-size: 15px }
-.facts p { margin: 0; padding: 10px 0; border-top: 1px solid var(--line); display: grid; grid-template-columns: 120px 1fr; gap: 10px } .facts p:first-of-type { border-top: 0; padding-top: 0 }
-.facts p b { font-size: 14px; color: var(--muted); font-weight: 600 }
-.calls { display: grid; gap: 10px }
-.call { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 18px; background: var(--health); color: var(--ink); text-decoration: none }
-.call i { flex: none; width: 42px; height: 42px; border-radius: 50%; background: #fffdf9; display: grid; place-items: center; font-style: normal; font-size: 19px }
-.call b { display: block; font-size: 16px } .call small { white-space: nowrap } .call small { display: block; color: var(--health-ink); font-weight: 600; font-size: 14px } .call.is-doc { background: #f4f1ec } .call.is-doc small { color: var(--muted) }
-.call em { margin-left: auto; font-style: normal; font-weight: 800; font-size: 14px; color: var(--health-ink); padding: 6px 12px; border-radius: 999px; background: #fffdf9 }
-.always { background: linear-gradient(160deg, #233456, #3d4f7a); color: #fff; border: 0 }
-.always h2 { color: #fff } .always h2 .dot { background: rgba(255, 255, 255, .14) } .always p { margin: 0; font-size: 17px; font-weight: 600; line-height: 1.45 }
-.always small { display: block; margin-top: 8px; opacity: .78; font-size: 14px }
+.tile { padding: 14px 14px 16px; border-radius: 20px; min-width: 0; background: var(--t); color: var(--ti) } .tile.wide { grid-column: 1 / -1 }
+.tile-art { display: block; height: 26px; margin-bottom: 10px } .tile-art svg { height: 100%; width: auto; display: block }
+.tile small { display: block; font-size: 13px; font-weight: 600 }
+.tile b { display: block; font-size: 18px; font-weight: 700; line-height: 1.25; margin-top: 2px; color: var(--ink) }
+.tile span { display: block; font-size: 13.5px; color: #5c5361; margin-top: 2px }
+.times { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px } .times em { font-style: normal; font-size: 13.5px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: rgba(255, 255, 255, .75); color: var(--ink) }
+.list { background: var(--card); border: 1px solid var(--line); border-radius: 22px; overflow: hidden }
+.row { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-top: 1px solid var(--line); color: var(--ink); text-decoration: none } .row:first-child { border-top: 0 }
+.ic { flex: none; width: 42px; height: 42px; border-radius: 13px; display: grid; place-items: center; background: var(--t); color: var(--ti) } .ic svg { width: 22px; height: 22px }
+.row-copy { flex: 1; min-width: 0 } .row-copy small { display: block; font-size: 13px; color: var(--muted) } .row-copy b { display: block; font-size: 15.5px; font-weight: 600; line-height: 1.35 }
+.call-btn { flex: none; font-weight: 700; font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--green); color: var(--green-ink) }
+.note { margin: 10px 6px 0; color: var(--muted); font-size: 13.5px }
+.night { margin-top: 24px; padding: 20px; border-radius: 24px; background: var(--night) }
+.night-art { display: block; height: 30px; margin-bottom: 10px } .night-art svg { height: 100%; width: auto }
+.night small { display: block; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--night-ink) }
+.night p { margin: 4px 0 0; font-size: 16px; font-weight: 600; line-height: 1.45 } .night span { display: block; margin-top: 8px; font-size: 14px; color: #4c4757 }
 .thanks { text-align: center; margin: 22px 8px 0; color: var(--muted); font-size: 15px }
-.ahead { margin-top: 26px; padding: 22px 20px; border-radius: 26px; text-align: left; border: 0; color: var(--ink);
-  background: linear-gradient(100deg, #fde3d3 0%, #f7d9e5 28%, #e5e0fc 56%, #d9e5fc 80%, #ddf1e5 100%) }
-.ahead .brand { font-size: 22px } .ahead p { margin: 8px 0 14px; font-size: 16px; line-height: 1.45 }
-.ahead a { display: inline-flex; align-items: center; gap: 6px; padding: 12px 18px; border-radius: 14px; background: var(--ink); color: #fff; text-decoration: none; font-weight: 700 }
-.empty { margin-top: 30px; padding: 24px; border-radius: 22px; background: var(--card); border: 1px solid var(--line); text-align: center; color: var(--muted) }
+.ahead { margin-top: 20px; padding: 20px; border-radius: 24px; background: var(--card); border: 1px solid var(--line) }
+.ahead .brand { font-size: 20px; margin: 0 } .ahead p { margin: 8px 0 14px; font-size: 15px; line-height: 1.45; color: #4c4757 }
+.ahead a { display: inline-block; padding: 11px 18px; border-radius: 14px; background: var(--green); color: var(--green-ink); text-decoration: none; font-weight: 700 }
+@media (min-width: 700px) { main { padding-top: 48px } h1 { font-size: 42px } }
+.empty { margin-top: 10px; padding: 24px; border-radius: 22px; background: var(--card); border: 1px solid var(--line); text-align: center; color: var(--muted) }
 </style></head>
 <body><main><div class="brand">ahead<span>.</span></div><div id="out"></div></main>
 <script>
@@ -69,28 +65,46 @@ h2 .dot { width: 30px; height: 30px; border-radius: 50%; display: grid; place-it
   // The card's details come in the link: ?c=… (survives every messaging app), or #… from older links.
   const raw = new URLSearchParams(location.search).get('c') || location.hash.slice(1);
   try { const b = raw.replace(/-/g, '+').replace(/_/g, '/'); d = JSON.parse(decodeURIComponent(escape(atob(b + '==='.slice((b.length + 3) % 4))))); } catch (e) {}
-  if (!d || !d.n) { out.innerHTML = '<div class="empty">This care card link looks incomplete. The details are in the message it came with, or ask whoever sent it to share it again.</div>'; return; }
-  const n = esc(d.n), they = d.s || 'they', them = d.o || 'them', cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+  if (!d || !d.n) { out.innerHTML = '<div class="empty">This care card link looks incomplete. Ask whoever sent it to share it again.</div>'; return; }
+  const n = esc(d.n), they = d.s || 'they', cap = s => s.charAt(0).toUpperCase() + s.slice(1);
   const tel = p => String(p || '').replace(/[^\d+]/g, '');
   document.title = `${d.n}’s care card`;
-  let h = `<div class="hero"><div class="baby">${BABY}<i></i><i></i><i></i></div><p class="hello">Thank you for looking after</p><h1>${n}</h1><p class="intro">Everything you need, in one place. Keep it handy while you’re together.</p>${d.d ? `<span class="updated">Updated ${esc(d.d)}</span>` : ''}</div>`;
-  // The day: feeding and sleep as colored tiles.
-  const tiles = [];
-  if (d.milk || d.often) tiles.push(`<div class="tile feed${d.oz ? '' : ' wide'}"><b>Feeding</b><span>${esc(d.milk || 'Milk')}</span>${d.often ? `<small>${esc(d.often)}</small>` : ''}</div>`);
-  if (d.oz) tiles.push(`<div class="tile feed"><b>Per bottle</b><span>About ${esc(d.oz)}</span>${d.solids && d.solids !== 'Not yet' ? `<small>Solids: ${esc(d.solids.toLowerCase())}</small>` : ''}</div>`);
-  if (d.naps || (d.times || []).length) tiles.push(`<div class="tile sleep wide"><b>Naps</b><span>${d.naps ? esc(d.naps) + (d.naps === '1' ? ' nap' : ' naps') + ' a day' : 'Naps'}</span>${(d.times || []).length ? `<div class="times">${d.times.map(t => `<em>${esc(t)}</em>`).join('')}</div>` : ''}</div>`);
-  if (d.bed) tiles.push(`<div class="tile sleep${(d.asleep || []).length ? '' : ' wide'}"><b>Bedtime</b><span>${esc(d.bed)}</span></div>`);
-  if ((d.asleep || []).length) tiles.push(`<div class="tile sleep${d.bed ? '' : ' wide'}"><b>Falls asleep with</b><span>${esc(d.asleep.join(', '))}</span></div>`);
-  if (tiles.length) h += `<section><h2><span class="dot" style="background:var(--feed)">🍼</span>The day</h2><div class="tiles">${tiles.join('')}</div></section>`;
-  if ((d.calm || []).length) h += `<section><h2><span class="dot" style="background:var(--dev)">🎵</span>If ${esc(they)}${they === 'they' ? '’re' : '’s'} upset, try</h2><div class="chips">${d.calm.map(c => `<span>${esc(cap(c))}</span>`).join('')}</div></section>`;
-  const facts = [d.allergy && ['Allergies', d.allergy], d.other && ['Also', d.other]].filter(Boolean);
-  if (facts.length) h += `<section class="facts"><h2><span class="dot" style="background:var(--sun)">✏️</span>Good to know</h2>${facts.map(([l, v]) => `<p><b>${l}</b><span>${esc(v)}</span></p>`).join('')}</section>`;
-  const calls = (d.c || []).filter(c => c[0] || c[1]).map(([nm, ph]) => `<a class="call" href="${ph ? 'tel:' + tel(ph) : '#'}"><i>📞</i><span><b>${esc(nm || 'Call')}</b><small>${esc(ph)}</small></span>${ph ? '<em>Call</em>' : ''}</a>`);
-  if (d.doc && (d.doc[0] || d.doc[1])) calls.push(`<a class="call is-doc" href="${d.doc[1] ? 'tel:' + tel(d.doc[1]) : '#'}"><i>🩺</i><span><b>${esc(d.doc[0] || 'Pediatrician')}</b><small>Pediatrician${d.doc[1] ? ' · ' + esc(d.doc[1]) : ''}</small></span>${d.doc[1] ? '<em>Call</em>' : ''}</a>`);
-  if (calls.length) h += `<section><h2><span class="dot" style="background:var(--health)">📞</span>Who to call</h2><div class="calls">${calls.join('')}</div><p class="note">In an emergency, call 911 first.</p></section>`;
-  h += `<section class="always"><h2><span class="dot">🌙</span>Every sleep, every time</h2><p>${esc(d.a || '')}</p><small>No blankets, pillows or bumpers. Car seats, swings and couches aren’t for sleep.</small></section>`;
-  h += `<p class="thanks">Thank you for helping. ${n} is lucky to have you. 💛</p>`;
-  h += `<section class="ahead"><div class="brand">ahead<span>.</span></div><p>${n}’s family made this card with Ahead, a calm guide to a baby’s first year. Expecting, or know someone who is?</p><a href="https://yardenwalla.github.io/ahead-prototype/">Try Ahead, it’s free →</a></section>`;
+  // Small line icons, the same family as the app's.
+  const I = {
+    bottle: '<path d="M10 3h4M10.5 3v3.2L8.6 8.4A2.5 2.5 0 0 0 8 10v8.5A2.5 2.5 0 0 0 10.5 21h3a2.5 2.5 0 0 0 2.5-2.5V10a2.5 2.5 0 0 0-.6-1.6L13.5 6.2V3M8 12h8"/>',
+    heart: '<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10Z"/>',
+    note: '<rect x="5.5" y="4" width="13" height="16.5" rx="2"/><path d="M9 9h6M9 12.5h6M9 16h4"/>',
+    phone: '<path d="M6.6 3.8 9 3.4l1.6 4-2 1.3a10.5 10.5 0 0 0 6.7 6.7l1.3-2 4 1.6-.4 2.4a2 2 0 0 1-2 1.7A16.6 16.6 0 0 1 4.9 5.8a2 2 0 0 1 1.7-2Z"/>',
+    steth: '<path d="M7 4v5a4 4 0 0 0 8 0V4M11 13v2.5a4 4 0 0 0 8 0V13"/><circle cx="19" cy="11" r="2"/>',
+    shield: '<path d="M12 3.5 5.5 6v5.5c0 4 2.8 7.4 6.5 8.5 3.7-1.1 6.5-4.5 6.5-8.5V6Z"/><path d="m9.5 12 1.8 1.8 3.3-3.6"/>'
+  };
+  const icon = (k, t, ti) => `<span class="ic" style="--t:var(--${t});--ti:var(--${ti})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${I[k]}</svg></span>`;
+  const row = (k, t, label, value, extra = '', href = '') => `<${href ? `a href="${href}"` : 'div'} class="row">${icon(k, t, t + '-ink')}<span class="row-copy"><small>${label}</small><b>${value}</b></span>${extra}</${href ? 'a' : 'div'}>`;
+  // Top card: a small flat picture (a big circle and a small one: someone looking after someone).
+  let h = `<header class="hero"><span class="hero-art"><svg viewBox="0 0 80 40" aria-hidden="true"><circle cx="18" cy="20" r="16" fill="#f2b8c6"/><circle cx="44" cy="27" r="10" fill="#f4d6c4"/></svg></span><p class="hello">Thank you for looking after</p><h1>${n}</h1><p class="intro">Everything you need, in one place. Keep it handy while you’re together.</p>${d.d ? `<span class="updated">Updated ${esc(d.d)}</span>` : ''}</header>`;
+  // The day, as tiles like Sleep's: the nap pills count the naps; the sun sets at bedtime.
+  const tiles = [], napN = d.naps === '4 or more' ? 4 : Number(d.naps) || 0;
+  const tile = (bg, ink, art, label, value, sub, wide) => `<div class="tile${wide ? ' wide' : ''}" style="--t:var(--${bg});--ti:var(--${ink})">${art ? `<span class="tile-art">${art}</span>` : ''}<small>${label}</small><b>${value}</b>${sub || ''}</div>`;
+  if (d.milk || d.often) tiles.push(tile('feed', 'feed-ink', '<svg viewBox="0 0 60 26" aria-hidden="true"><rect x="2" y="4" width="14" height="20" rx="6" fill="#f2b8c6"/><rect x="5" y="1" width="8" height="5" rx="2" fill="#f4d6c4"/></svg>', 'Feeding', esc(d.milk || 'Milk'), `${d.often ? `<span>${esc(d.often)}</span>` : ''}${d.oz ? `<span>About ${esc(d.oz)} a bottle</span>` : ''}${d.solids && d.solids !== 'Not yet' ? `<span>Solids: ${esc(d.solids.toLowerCase())}</span>` : ''}`, false));
+  if (napN || (d.times || []).length) tiles.push(tile('nap', 'nap-ink', `<svg viewBox="0 0 ${Math.max(1, napN) * 22} 26" aria-hidden="true">${Array.from({ length: Math.max(1, napN) }, (_, i) => `<rect x="${i * 22}" y="9" width="16" height="9" rx="4.5" fill="#f3d58a"/>`).join('')}</svg>`, 'Naps', napN ? `${esc(d.naps)} ${d.naps === '1' ? 'nap' : 'naps'} a day` : 'Naps', (d.times || []).length ? `<div class="times">${d.times.map(t => `<em>${esc(t)}</em>`).join('')}</div>` : '', !(d.milk || d.often)));
+  if (d.bed) tiles.push(tile('dusk', 'dusk-ink', '<svg viewBox="0 0 60 26" aria-hidden="true"><path d="M2 22h56" stroke="#e3b8cf" stroke-width="2.5" stroke-linecap="round"/><path d="M18 22a10 10 0 0 1 20 0Z" fill="#f4c3a8"/></svg>', 'Bedtime', esc(d.bed), '', false));
+  if ((d.asleep || []).length) tiles.push(tile('night', 'night-ink', '<svg viewBox="0 0 60 26" aria-hidden="true"><path d="M12 3a10 10 0 1 0 9 15A8.5 8.5 0 0 1 12 3Z" fill="#8e9ad0"/></svg>', 'Falls asleep with', esc(d.asleep.join(', ')), '', false));
+  if (tiles.length % 2 && tiles.length > 1) tiles[tiles.length - 1] = tiles[tiles.length - 1].replace('class="tile"', 'class="tile wide"');
+  if (tiles.length) h += `<h2>The day</h2><div class="tiles">${tiles.join('')}</div>`;
+  // Good to know: what helps, allergies, anything else.
+  const know = [];
+  if ((d.calm || []).length) know.push(row('heart', 'feed', `If ${esc(they)}${they === 'they' ? '’re' : '’s'} upset, try`, esc(d.calm.map(cap).join(', '))));
+  if (d.allergy) know.push(row('shield', 'peach', 'Allergies and medicines', esc(d.allergy)));
+  if (d.other) know.push(row('note', 'nap', 'Also', esc(d.other)));
+  if (know.length) h += `<h2>Good to know</h2><div class="list">${know.join('')}</div>`;
+  // Who to call: each one taps to call.
+  const calls = (d.c || []).filter(c => c[0] || c[1]).map(([nm, ph]) => row('phone', 'green', esc(ph || ''), esc(nm || 'Call'), ph ? '<span class="call-btn">Call</span>' : '', ph ? 'tel:' + tel(ph) : ''));
+  if (d.doc && (d.doc[0] || d.doc[1])) calls.push(row('steth', 'blue', `Pediatrician${d.doc[1] ? ' · ' + esc(d.doc[1]) : ''}`, esc(d.doc[0] || 'Pediatrician'), d.doc[1] ? '<span class="call-btn">Call</span>' : '', d.doc[1] ? 'tel:' + tel(d.doc[1]) : ''));
+  if (calls.length) h += `<h2>Who to call</h2><div class="list">${calls.join('')}</div><p class="note">In an emergency, call 911 first.</p>`;
+  // Safe sleep, always included, in the calm night color.
+  h += `<section class="night"><span class="night-art"><svg viewBox="0 0 80 30" aria-hidden="true"><path d="M14 3a12 12 0 1 0 10 18A10 10 0 0 1 14 3Z" fill="#8e9ad0"/><rect x="32" y="12" width="40" height="8" rx="4" fill="#c9cff0"/></svg></span><small>Every sleep, every time</small><p>${esc(d.a || '')}</p><span>No blankets, pillows or bumpers. Car seats, swings and couches aren’t for sleep.</span></section>`;
+  h += `<p class="thanks">Thank you for helping. ${n} is lucky to have you.</p>`;
+  h += `<section class="ahead"><div class="brand">ahead<span>.</span></div><p>${n}’s family made this card with Ahead, a calm guide to a baby’s first year. Expecting, or know someone who is?</p><a href="https://yardenwalla.github.io/ahead-prototype/">Try Ahead, it’s free</a></section>`;
   out.innerHTML = h;
 })();
 </script></body></html>

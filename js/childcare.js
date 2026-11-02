@@ -243,8 +243,7 @@
       + `<p class="cc-always"><b>${F('Always included')}</b>${F(ALWAYS())}</p>`
       + `<div class="cc-actions"><button class="hub-button" onclick="ccCardMode('view')">${F('Save the card')}</button></div>`, 'notepad');
   }
-  // Sharing sends the card as a short text message with a link to the full card underneath, so whoever receives it
-  // always gets the details, even if a messaging app trims the link. The link carries the details itself (?c=…);
+  // Sharing sends one link that opens the whole card. The link carries the details itself (?c=…, which messaging apps keep);
   // the card page is a static file, so nothing is saved anywhere.
   // The card page next to this app (so a preview shares its own card page). Opened from a file, fall back to the live one.
   const CARD_URL = location.protocol.startsWith('http') ? new URL('card.html', location.href).href.split('?')[0] : 'https://yardenwalla.github.io/ahead-prototype/card.html';
@@ -282,14 +281,14 @@
     return L.join('\n');
   };
   window.ccShare = async function () {
-    const text = ccCardText(), done = document.getElementById('ccDone');
-    // If the phone's share sheet or the clipboard says no, show the message with its own Copy button, so there's always a way to send it.
-    const fallback = () => { if (!done) return; done.hidden = false; done.innerHTML = `${F('Copy this and paste it into a text or email.')}<span class="cc-link"><textarea readonly rows="4" onclick="this.select()" aria-label="Care card">${esc3(text)}</textarea><button onclick="ccCopy(this)">${F('Copy')}</button></span>`; };
-    const data = { title: `${name()}’s care card`, text };
+    const url = ccCardLink(), done = document.getElementById('ccDone');
+    // If the phone's share sheet or the clipboard says no, show the link with its own Copy button, so there's always a way to send it.
+    const fallback = () => { if (!done) return; done.hidden = false; done.innerHTML = `${F('Copy this link and paste it into a text or email.')}<span class="cc-link"><input readonly value="${esc3(url)}" onclick="this.select()" aria-label="Care card link"><button onclick="ccCopy(this)">${F('Copy')}</button></span>`; };
+    const data = { title: `${name()}’s care card`, url };
     if (navigator.share && (!navigator.canShare || navigator.canShare(data))) {
       try { await navigator.share(data); return; } catch (e) { if (e && e.name === 'AbortError') return; }
     }
-    try { await navigator.clipboard.writeText(text); if (done) { done.textContent = F('Copied. Paste it into a text or email.'); done.hidden = false; } } catch (e) { fallback(); }
+    try { await navigator.clipboard.writeText(url); if (done) { done.textContent = F('Link copied. Paste it into a text or email.'); done.hidden = false; } } catch (e) { fallback(); }
   };
   window.ccCopy = async function (btn) {
     const input = btn.previousElementSibling; input.select(); input.setSelectionRange(0, 99999);
