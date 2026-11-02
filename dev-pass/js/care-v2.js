@@ -373,7 +373,9 @@
   const STAGES = [
     { title: 'Diapers, the cord and first baths', lead: 'It feels like a lot at first, and it gets quicker fast. Most of what looks odd in the first weeks is normal.',
       tiles: () => [['Diapers', '8–12 a day', 'Change when wet or dirty'], ['Baths', '2–3 a week', 'Sponge baths until the cord falls off'], ['Clothes', '+1 layer', 'One more than you'], ['Sun', 'Shade only', 'No sunscreen yet']],
-      rows: () => ['firstweek', 'change', 'cord', 'sponge', 'newskin', 'dress', 'nailsnose', 'need'],
+      // The first weeks bring the most to learn, so they're grouped, like Health's checkup page, to stay easy to scan.
+      groups: () => [['Diapers', ['firstweek', 'change']], ['Until the cord falls off', ['cord', 'sponge']], ['Skin, clothes and nails', ['newskin', 'dress', 'nailsnose']]],
+      rows: () => [],
       call: ['Peeling skin, tiny white bumps, sneezing, and black poop for the first few days.', 'Fewer wet diapers than expected, white or gray poop, a red or smelly cord, or yellow skin that’s spreading.'] },
     { title: 'Tub baths and skin care', lead: 'The cord has healed, and care settles into a rhythm. Poops can space out, and baby acne is common.',
       tiles: () => [['Diapers', '6+ wet a day', 'Poops can space out'], ['Baths', 'About 3 a week', 'In a baby tub'], ['Clothes', '+1 layer', 'One more than you'], ['Sun', 'Shade only', 'No sunscreen yet']],
@@ -381,25 +383,27 @@
       call: ['Fewer poops if breastfed, grunting and going red to poop, and baby acne.', 'Hard, pebble-like poop, blood in the diaper, or fewer than 6 wet diapers a day.'] },
     { title: 'Drool, sun and busy hands', lead: 'Lots of drool, and teething often starts. At 6 months, sunscreen and sips of water can join in.',
       tiles: () => [['Diapers', '6+ wet a day', live() && answers.solids === 'Yes' ? 'Poop changes with solids' : 'Size up for leaks'], ['Baths', 'About 3 a week', 'Often at bedtime'], ['Clothes', '+1 layer', 'One more than you'], sixNow() ? ['Sun', 'Shade + SPF 30', 'Sunscreen from 6 months'] : ['Sun', 'Shade only', 'No sunscreen yet']],
-      rows: () => ['teething', 'drool', sixNow() ? 'six' : 'shade', 'need', live() && answers.solids === 'Yes' ? 'solids' : null].filter(Boolean),
+      rows: () => ['teething', 'drool', sixNow() ? 'six' : 'shade', live() && answers.solids === 'Yes' ? 'solids' : null].filter(Boolean),
       call: ['Lots of drool, chewing on everything, and more fussing than usual.', 'A fever of 100.4°F or higher (teething doesn’t cause one), or any sunburn.'] },
     { title: 'First teeth and first steps', lead: 'Brushing starts with the first tooth, the big tub comes next, and bare feet help first steps.',
       tiles: () => [['Diapers', '6+ wet a day', 'Wriggly changes'], ['Baths', 'About 3 a week', 'The big tub once sitting'], walkingSoon() ? ['Clothes', 'Bare feet indoors', 'Soft shoes outside'] : ['Clothes', '+1 layer', 'One more than you'], ['Sun', 'Shade + SPF 30', 'Every 2 hours']],
-      rows: () => ['brush', 'bigtub', walkingSoon() ? 'feet' : null, 'wriggly', 'need', live() && answers.solids === 'Yes' ? 'solids' : null].filter(Boolean),
+      rows: () => ['brush', 'bigtub', walkingSoon() ? 'feet' : null, 'wriggly', live() && answers.solids === 'Yes' ? 'solids' : null].filter(Boolean),
       call: ['Wriggly changes, firmer poop with solids, and no tooth yet.', 'A fever with teething, hard poop for days, or any sunburn.'] }
   ];
   // "Now" means now: sunscreen and water only from 6 months, shoes only once pulling up and cruising are close.
   const sixNow = () => !live() || careAge() >= 6;
   const walkingSoon = () => !live() || careAge() >= 9 || answers.pullUp === 'Yes';
-  const qRow = id => { const q = Q[id], c = COL[q.k];
-    return `<button class="hub-row hl-row" style="--hl-bg:${c[0]};--hl-ink:${c[1]}" onclick="openPage('chg:${CAT}:d:q:${id}')"><span class="hub-dot">${hubArt(q.i || ICON[q.k], CAT)}</span><span class="hub-row-copy"><small class="hub-row-eyebrow">${F(LABEL[q.k])}</small><b>${F(val(q.title))}</b>${q.sub ? `<small>${F(q.sub)}</small>` : ''}</span><span class="hub-chev" aria-hidden="true">›</span></button>`; };
+  const qRow = (id, eyebrow = true) => { const q = Q[id], c = COL[q.k];
+    return `<button class="hub-row hl-row" style="--hl-bg:${c[0]};--hl-ink:${c[1]}" onclick="openPage('chg:${CAT}:d:q:${id}')"><span class="hub-dot">${hubArt(q.i || ICON[q.k], CAT)}</span><span class="hub-row-copy">${eyebrow ? `<small class="hub-row-eyebrow">${F(LABEL[q.k])}</small>` : ''}<b>${F(val(q.title))}</b>${q.sub ? `<small>${F(q.sub)}</small>` : ''}</span><span class="hub-chev" aria-hidden="true">›</span></button>`; };
   window.careHome = function (selected = null) {
     const h = H(), now = stageNow(), v = Number.isInteger(selected) && STAGES[selected] ? selected : now, st = STAGES[v], nx = STAGES[v + 1];
     const T = STAGE_TABLE[CAT].stages;
     const pills = h.pills('Everyday care by age', T.map((s, i) => ({ label: s.label, age: s.age, on: i === v, now: live() && i === now, onclick: `openPage('chg:${CAT}:s:${i}')`, change: typeof stageCanChange === 'function' && stageCanChange(CAT, i, now) ? `hubChangeStage('${CAT}',${i})` : '' })), CAT);
     let b = `<header class="hub-hero care-hero"><p class="hub-eyebrow">${STAGE[v]}</p><h1>${F(st.title)}</h1><p class="hub-lead">${F(st.lead)}</p></header>`;
     // No tiles: Everyday care's answers are mostly actions, not numbers, so they read better as rows (like Health).
-    b += `<h2 class="hub-h2">${F('What’s different now')}</h2><div class="hub-list">${st.rows().map(id => id === 'need' ? `<button class="hub-row hl-row" style="--hl-bg:${COL.need[0]};--hl-ink:${COL.need[1]}" onclick="${go('need', v)}"><span class="hub-dot">${hubArt('bag', CAT)}</span><span class="hub-row-copy"><small class="hub-row-eyebrow">${F('Shopping')}</small><b>${F(v === 0 ? 'What you’ll need' : 'What you’ll need now')}</b></span><span class="hub-chev" aria-hidden="true">›</span></button>` : qRow(id)).join('')}</div>`;
+    const shop = v === 1 ? '' : `<div class="hub-browse care-shop"><button class="hub-link" onclick="${go('need', v)}">${F(v === 0 ? 'Getting ready? What you’ll need' : 'What you’ll need now')} ›</button></div>`;
+    if (st.groups) b += st.groups().map(([t, ids], i) => `<h2 class="hub-h2">${F(t)}</h2><div class="hub-list">${ids.map(id => qRow(id, false)).join('')}</div>`).join('') + shop;
+    else b += `<h2 class="hub-h2">${F('What’s different now')}</h2><div class="hub-list">${st.rows().map(id => qRow(id)).join('')}</div>` + shop;
     b += `<button class="hub-rough-card care-rash-card" onclick="openPage('chg:${CAT}:d:q:rashes')"><span class="hub-rough-moon" aria-hidden="true">${hubArt('drop', CAT)}</span><span class="hub-rough-copy"><b>${F('What’s this rash?')}</b><small>${F('Bumps, spots and red patches')}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`;
     b += h.versus('Normal, or time to call?', ['Normal', st.call[0]], ['Call your pediatrician', st.call[1]]);
     b += nx ? h.next(v === 0 ? 'Next, after the first few weeks' : `Next, usually from ${STAGE[v + 1].split('–')[0]} months`, nx.title, `openPage('chg:${CAT}:s:${v + 1}')`)
