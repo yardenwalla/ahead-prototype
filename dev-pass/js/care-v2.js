@@ -248,9 +248,10 @@
         ['4–6 months', [['Drool and teething', 'Soft bibs and a firm teething ring.'], ['Sun', 'A baby sunscreen, SPF 30 or more, for 6 months on, and a stroller sunshade.']]],
         ['7–12 months', [['Teeth', 'A soft baby toothbrush and fluoride toothpaste.'], ['Baths', 'A non-slip mat for the big tub.'], ['Feet', 'Soft, flexible shoes for outside, once {s’s} walking.']]]
       ];
-      let b = head('need', live() ? `Everyday care · Maya’s ${STAGE[now]}` : 'Everyday care', 'What you’ll need', 'A short list. Most of it lasts the whole first year.');
-      L.forEach(([when, items]) => { b += h2(when) + `<div class="hub-card care-need">${items.map(([t, d]) => `<div><b>${F(t)}</b><span>${F(d)}</span></div>`).join('')}</div>`; });
-      b += h.note('There’s no need for wipe warmers or a separate laundry routine.');
+      const list = L[{ 0: 0, 2: 1, 3: 2 }[v] ?? 0];
+      let b = head('need', LABEL.need, v === 0 ? 'What you’ll need' : 'What you’ll need now', v === 0 ? 'A short list. Most of it lasts the whole first year.' : '');
+      b += `<div class="hub-card care-need">${list[1].map(([t, d]) => `<div><b>${F(t)}</b><span>${F(d)}</span></div>`).join('')}</div>`;
+      if (v === 0) b += h.note('There’s no need for wipe warmers or a separate laundry routine.');
       return page('need', b);
     }
   };
@@ -371,20 +372,20 @@
 
   const STAGES = [
     { title: 'Diapers, the cord and first baths', lead: 'It feels like a lot at first, and it gets quicker fast. Most of what looks odd in the first weeks is normal.',
-      tiles: () => [['Diapers', '8–12 a day', 'Change when wet or dirty'], ['Baths', '2–3 a week', 'Sponge baths for now'], ['The cord', 'Falls off', 'In 1–3 weeks'], ['Nails', 'Once a week', 'They grow fast']],
-      rows: () => ['firstweek', 'change', 'cord', 'sponge', 'newskin', 'nailsnose'],
+      tiles: () => [['Diapers', '8–12 a day', 'Change when wet or dirty'], ['Baths', '2–3 a week', 'Sponge baths until the cord falls off'], ['Clothes', '+1 layer', 'One more than you'], ['Sun', 'Shade only', 'No sunscreen yet']],
+      rows: () => ['firstweek', 'change', 'cord', 'sponge', 'newskin', 'dress', 'nailsnose', 'need'],
       call: ['Peeling skin, tiny white bumps, sneezing, and black poop for the first few days.', 'Fewer wet diapers than expected, white or gray poop, a red or smelly cord, or yellow skin that’s spreading.'] },
     { title: 'Tub baths and skin care', lead: 'The cord has healed, and care settles into a rhythm. Poops can space out, and baby acne is common.',
-      tiles: () => [['Wet diapers', '6 or more', 'A day'], ['Baths', 'About 3 a week', 'In a baby tub'], ['Hair', '2–3 a week', 'A mild shampoo'], ['Sun', 'Shade only', 'No sunscreen yet']],
+      tiles: () => [['Diapers', '6+ wet a day', 'Poops can space out'], ['Baths', 'About 3 a week', 'In a baby tub'], ['Clothes', '+1 layer', 'One more than you'], ['Sun', 'Shade only', 'No sunscreen yet']],
       rows: () => ['fewer', 'tub', 'acne', 'gums', 'shade'],
       call: ['Fewer poops if breastfed, grunting and going red to poop, and baby acne.', 'Hard, pebble-like poop, blood in the diaper, or fewer than 6 wet diapers a day.'] },
     { title: 'Drool, sun and busy hands', lead: 'Lots of drool, and teething often starts. At 6 months, sunscreen and sips of water can join in.',
-      tiles: () => [['Teething', 'Often starts now', 'First tooth around 6 months'], ['Drool', 'Lots of it', 'A soft bib helps'], ...(sixNow() ? [['Sunscreen', 'SPF 30 or more', 'Shade first'], ['Water', 'Sips in a cup', 'With meals']] : [['Sun', 'Shade first', 'No sunscreen yet'], ['Baths', 'About 3 a week', 'Often at bedtime']])],
-      rows: () => ['teething', 'drool', sixNow() ? 'six' : 'shade', live() && answers.solids === 'Yes' ? 'solids' : null].filter(Boolean),
+      tiles: () => [['Diapers', '6+ wet a day', live() && answers.solids === 'Yes' ? 'Poop changes with solids' : 'Size up for leaks'], ['Baths', 'About 3 a week', 'Often at bedtime'], ['Clothes', '+1 layer', 'One more than you'], sixNow() ? ['Sun', 'Shade + SPF 30', 'Sunscreen from 6 months'] : ['Sun', 'Shade only', 'No sunscreen yet']],
+      rows: () => ['teething', 'drool', sixNow() ? 'six' : 'shade', 'need', live() && answers.solids === 'Yes' ? 'solids' : null].filter(Boolean),
       call: ['Lots of drool, chewing on everything, and more fussing than usual.', 'A fever of 100.4°F or higher (teething doesn’t cause one), or any sunburn.'] },
     { title: 'First teeth and first steps', lead: 'Brushing starts with the first tooth, the big tub comes next, and bare feet help first steps.',
-      tiles: () => [hasTooth() ? ['Brushing', 'Twice a day', 'A rice-grain smear'] : ['First tooth', 'Any time now', 'Up to 12 months is normal'], ['Water', '4–8 oz a day', 'In a cup'], ['Baths', 'About 3 a week', 'The big tub once sitting'], walkingSoon() ? ['Feet', 'Bare indoors', 'Soft shoes outside'] : ['Sun', 'Shade and SPF 30', 'Every 2 hours']],
-      rows: () => ['brush', 'bigtub', walkingSoon() ? 'feet' : null, 'wriggly', live() && answers.solids === 'Yes' ? 'solids' : null].filter(Boolean),
+      tiles: () => [['Diapers', '6+ wet a day', 'Wriggly changes'], ['Baths', 'About 3 a week', 'The big tub once sitting'], walkingSoon() ? ['Clothes', 'Bare feet indoors', 'Soft shoes outside'] : ['Clothes', '+1 layer', 'One more than you'], ['Sun', 'Shade + SPF 30', 'Every 2 hours']],
+      rows: () => ['brush', 'bigtub', walkingSoon() ? 'feet' : null, 'wriggly', 'need', live() && answers.solids === 'Yes' ? 'solids' : null].filter(Boolean),
       call: ['Wriggly changes, firmer poop with solids, and no tooth yet.', 'A fever with teething, hard poop for days, or any sunburn.'] }
   ];
   // "Now" means now: sunscreen and water only from 6 months, shoes only once pulling up and cruising are close.
@@ -398,12 +399,11 @@
     const pills = h.pills('Everyday care by age', T.map((s, i) => ({ label: s.label, age: s.age, on: i === v, now: live() && i === now, onclick: `openPage('chg:${CAT}:s:${i}')`, change: typeof stageCanChange === 'function' && stageCanChange(CAT, i, now) ? `hubChangeStage('${CAT}',${i})` : '' })), CAT);
     let b = `<header class="hub-hero care-hero"><p class="hub-eyebrow">${STAGE[v]}</p><h1>${F(st.title)}</h1><p class="hub-lead">${F(st.lead)}</p></header>`;
     b += `<section class="hub-card hub-glance care-glance"><span class="hub-card-head"><b>${F(v === now && live() ? 'Maya’s care now' : 'At this stage')}</b></span>${h.tiles(st.tiles())}</section>`;
-    b += `<h2 class="hub-h2">${F('What’s different now')}</h2><div class="hub-list">${st.rows().map(qRow).join('')}</div>`;
+    b += `<h2 class="hub-h2">${F('What’s different now')}</h2><div class="hub-list">${st.rows().map(id => id === 'need' ? `<button class="hub-row hl-row" style="--hl-bg:${COL.need[0]};--hl-ink:${COL.need[1]}" onclick="${go('need', v)}"><span class="hub-dot">${hubArt('bag', CAT)}</span><span class="hub-row-copy"><small class="hub-row-eyebrow">${F('Shopping')}</small><b>${F(v === 0 ? 'What you’ll need' : 'What you’ll need now')}</b></span><span class="hub-chev" aria-hidden="true">›</span></button>` : qRow(id)).join('')}</div>`;
     b += `<button class="hub-rough-card care-rash-card" onclick="openPage('chg:${CAT}:d:q:rashes')"><span class="hub-rough-moon" aria-hidden="true">${hubArt('drop', CAT)}</span><span class="hub-rough-copy"><b>${F('What’s this rash?')}</b><small>${F('Bumps, spots and red patches')}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`;
     b += h.versus('Normal, or time to call?', ['Normal', st.call[0]], ['Call your pediatrician', st.call[1]]);
     b += nx ? h.next(v === 0 ? 'Next, after the first few weeks' : `Next, usually from ${STAGE[v + 1].split('–')[0]} months`, nx.title, `openPage('chg:${CAT}:s:${v + 1}')`)
       : h.next('After the first birthday', 'Toddler baths and first shoes', `openPage('chg:${CAT}:d:after1')`);
-    b += `<h2 class="hub-h2">${F('Any time')}</h2><div class="hub-list">${[v > 0 && 'change', 'dress'].filter(Boolean).map(qRow).join('')}${rowK('need', 'What you’ll need', 'A short shopping list', go('need'))}</div>`;
     b += h.note('Sleep sacks are in Sleep, and fevers and colds in Health. Ages are typical, and every baby moves at their own pace.');
     return `<div class="quiet-category hub-page care-v2" data-overview="${CAT}" data-care-stage="${v}" style="${yearTheme(CAT)}">${typeof monthlyPageHeader === 'function' ? monthlyPageHeader(CAT) : ''}${pills}${b}</div>`;
   };
@@ -419,7 +419,7 @@
     const [, cat, screen, a, b, c] = p.split(':');
     if (cat === CAT && screen === 'd') {
       if (a === 'q') { const r = qPage(b); if (r) return r; }
-      if (a === 't') { if (b === 'need') return careTopic('need'); const v = c == null ? stageNow() : Number(c), ids = T2Q[b]; if (ids) { const id = ids[v] === 'solids' && !(live() && answers.solids === 'Yes') ? 'fewer' : ids[v]; return qPage(id); } }
+      if (a === 't') { if (b === 'need') return careTopic('need', c == null ? null : Number(c)); const v = c == null ? stageNow() : Number(c), ids = T2Q[b]; if (ids) { const id = ids[v] === 'solids' && !(live() && answers.solids === 'Yes') ? 'fewer' : ids[v]; return qPage(id); } }
       if (a === 'cord') return qPage('cord');
       if (a === 'rash') { const r = rashPage(b); if (r) return r; }
       const OLDQ = { sponge: 'sponge', tub: 'tub', bathseat: 'bigtub', skin: 'rashes', dress: 'dress', steps: 'feet', sun: stageNow() >= 2 ? 'six' : 'shade', gums: 'teething', teeth: 'brush', nails: 'nailsnose' };
