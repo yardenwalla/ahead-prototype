@@ -1,0 +1,53 @@
+/* Outings and travel, in the same look as Sleep, Safety and Health: see js/out-and-about.js */
+#main .oa-hero { background: linear-gradient(160deg, #fde3d3, #fef2ea 58%, #e7effc) !important; position: relative; overflow: hidden }
+#main .oa-hero::after { content: ""; position: absolute; right: -40px; top: -50px; width: 170px; height: 170px; border-radius: 50%; background: #fff; opacity: .35; pointer-events: none }
+#main .oa-hero > * { position: relative; z-index: 1 }
+#main .hub-page[data-overview="Out and about"] .hub-next { border: 0; background: #fef2ea }
+
+/* "Where are you headed?": one tile per situation, each in its own soft color with a small flat picture. */
+#main .oa-places { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 0 0 22px }
+#main .oa-place { display: flex; flex-direction: column; align-items: flex-start; text-align: left; gap: 2px; min-height: 118px; padding: 12px 14px 14px; border: 0; border-radius: 20px; background: var(--oa-bg); color: var(--ink); font: inherit; cursor: pointer }
+#main .oa-place-art { display: block; height: 30px; margin: 0 0 10px }
+#main .oa-place-art svg { height: 100%; width: auto; display: block }
+#main .oa-place b { font-size: 15.5px; line-height: 1.25; font-weight: 600; color: var(--ink) }
+#main .oa-place small { font-size: 13px; line-height: 1.35; color: var(--oa-ink) }
+#main .oa-place:focus-visible { outline: 2px solid var(--oa-ink); outline-offset: 2px }
+
+/* Gear rows: soft icon squares, one color per piece of gear. */
+#main .oa-dot { width: 42px; height: 42px; border-radius: 13px; background: var(--hl-bg); padding: 4px; flex: none }
+#main .oa-dot svg { width: 100%; height: 100% }
+#main .oa-dot svg, #main .oa-dot svg [stroke]:not([stroke="none"]) { stroke: var(--hl-ink) }
+
+/* Subpages: sections in the order a trip happens, with the "What to do" card standing out. */
+#main .oa-sec { margin: 22px 4px 10px; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--ss-ink) }
+#main .oa-sec:first-of-type { margin-top: 6px }
+#main .oa-lines { list-style: none; margin: 0 0 12px; padding: 4px 18px; background: #fff; border: 1px solid var(--line); border-radius: 20px }
+#main .oa-lines li { padding: 11px 0; border-top: 1px solid var(--line); font-size: 15px; line-height: 1.5; color: var(--ink) }
+#main .oa-lines li:first-child { border-top: 0 }
+#main .oa-lines li b { display: block; font-weight: 600; margin-bottom: 1px }
+#main .oa-lines li span { display: block; color: #5c5361 }
+#main .oa-do ul { margin: 0; padding-left: 18px; font-size: 15px; line-height: 1.5; color: var(--ink) }
+#main .oa-do li + li { margin-top: 6px }
+#main .oa-seg { margin: 0 0 14px }
+#main .oa-link-row { margin: 0 0 12px }
+#main .hub-detail[data-overview="Out and about"] .hub-qa > div { background: #fff; border: 1px solid var(--line) }
+#main .hub-detail[data-overview="Out and about"] .hub-qa small { color: var(--ss-ink) }
+#main .hub-detail[data-overview="Out and about"] .hub-vs > div:first-child { background: var(--ss-bg) }
+#main .hub-detail[data-overview="Out and about"] .hub-seg button.is-on { background: var(--ss-bg); color: var(--ss-ink) }
+
+/* "At Maya's age" tiles on subpages: one soft color per tile, an icon, a small label, the answer in large type. */
+#main .oa-now { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 0 0 14px }
+#main .oa-now.is-3 > div:first-child { grid-column: 1 / -1 }
+#main .oa-now > div { background: var(--oa-bg); border-radius: 18px; padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 2px }
+#main .oa-now-art { width: 30px; height: 30px; border-radius: 10px; background: #fff9; padding: 3px; margin-bottom: 6px }
+#main .oa-now-art svg { width: 100%; height: 100%; display: block }
+#main .oa-now-art svg, #main .oa-now-art svg [stroke]:not([stroke="none"]) { stroke: var(--oa-ink) }
+#main .oa-now small { font-size: 12.5px; font-weight: 600; color: var(--oa-ink) }
+#main .oa-now b { font-size: 17px; line-height: 1.25; font-weight: 600; color: var(--ink) }
+#main .oa-now span:last-child:not(.oa-now-art) { font-size: 13px; line-height: 1.4; color: #5c5361 }
+#main .hub-detail[data-overview="Out and about"] .hub-figure { margin-bottom: 14px }
+
+/* One color per subpage: charts, strips and picture steps take the color of the tile the parent tapped. */
+#main .hub-detail[data-overview="Out and about"] .hub-strip, #main .hub-detail[data-overview="Out and about"] .hub-daymarks { --ink: var(--ss-ink) !important; --bg: var(--ss-bg) !important; --pale: var(--ss-bg) !important }
+#main .hub-detail[data-overview="Out and about"] .hub-tiles { margin-bottom: 14px }
+#main .hub-detail[data-overview="Out and about"] .hub-seg button.is-on { background: var(--ss-bg) !important; color: var(--ss-ink) !important }
