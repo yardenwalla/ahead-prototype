@@ -75,107 +75,132 @@
   const changeSteps = () => H().steps(['Lay out a clean diaper, wipes and cream before you start.', 'Unfasten, and use the front of the old diaper to wipe the worst away.', 'Wipe front to back, then lift {p} bottom gently with a hand underneath, or roll {o} to one side, to slide the clean one under.', 'Let the skin dry, add cream if it looks red, and fasten so two fingers fit at the waist.']);
   const rashSteps = () => hubIconSteps([['diaper', 'Change often', 'Let the skin air out when you can'], ['shield', 'Thick zinc cream', 'At every change'], ['steth', 'Not better in 2–3 days?', 'Or blistering, oozing, spreading: call']], CAT, 'Change diapers often and air the skin, use a thick layer of zinc oxide cream at every change, and call your pediatrician if it blisters, oozes, spreads or isn’t better in 2–3 days.');
 
-  /* ---------- the topic pages ---------- */
+  /* ---------- the topic pages ----------
+     Calm by default: the answer for this age, the one how-to that matters now, and when to call.
+     Everything else sits in one "More" card, a row per topic that opens in place. Nothing is cut. */
+  const fold = (title, items) => { const it = items.filter(Boolean); if (!it.length) return '';
+    return h2(title) + `<div class="hub-card care-folds">${it.map(([t, sub, body]) => `<details class="care-fold"><summary><span><b>${F(t)}</b>${sub ? `<small>${F(sub)}</small>` : ''}</span><i aria-hidden="true">›</i></summary><div class="care-fold-body">${body}</div></details>`).join('')}</div>`; };
+  const p_ = t => `<p class="care-p">${F(t)}</p>`;
+  const changes = (k, lines, v) => ['How it changes as {s} {grow|grows}', 'What’s different at each age', `<div class="care-strip">${lines.map((t, i) => `<button class="care-step${i === v ? ' is-on' : ''}" onclick="${go(k, i)}"${i === v ? ' aria-current="true"' : ''}><b>${STAGE[i]}${live() && i === stageNow() ? ' · Now' : ''}</b><span>${F(t)}</span></button>`).join('')}</div>`];
   const TOPIC = {
     diapers(v) {
       const h = H();
       const qa = [
-        [['How many a day?', '8–12', 'Change when wet or dirty, and after feeds when you can.'], ['Which size?', 'Newborn size', 'Most move up to size 1 at around 8–10 pounds. Sizes overlap, so go by fit: leaks or red marks at the legs mean size up.']],
-        [['How many wet ones?', '6 or more a day', 'That’s the sign {s’s} getting enough milk.'], ['Which size?', 'Size 1 or 2', 'Size up when you see leaks or red marks at the legs.']],
-        [['How many wet ones?', '6 or more a day', 'Poops can space out, and that’s normal.'], ['Which size?', 'Size 2 or 3', 'Size up when you see leaks or red marks at the legs.']],
-        [['How many wet ones?', '6 or more a day', 'Poop looks more like food once solids are going.'], ['Which size?', 'Size 3 or 4', 'Size up when you see leaks or red marks at the legs.']]
+        [['How many a day?', '8–12', 'Change when wet or dirty.'], ['Which size?', 'Newborn', 'Size 1 from about 8–10 pounds.']],
+        [['Wet diapers', '6 or more a day', 'The sign {s’s} getting enough milk.'], ['Which size?', 'Size 1 or 2', 'Leaks or red marks at the legs mean size up.']],
+        [['Wet diapers', '6 or more a day', 'Poops can space out, and that’s normal.'], ['Which size?', 'Size 2 or 3', 'Leaks or red marks at the legs mean size up.']],
+        [['Wet diapers', '6 or more a day', 'Poop looks more like food now.'], ['Which size?', 'Size 3 or 4', 'Leaks or red marks at the legs mean size up.']]
       ][v];
-      let b = head('diapers', ctx(v), 'Diapers', v === 0 ? 'How to change one, keeping the cord dry, and what’s normal in there.' : 'How many, how to change one, and what to do about diaper rash.') + h.qa(qa);
-      b += h2(v === 3 ? 'Wriggly changes' : 'How to change a diaper') + (v === 3 ? h.steps(['Hand {o} a toy to hold, or sing the same song each time.', 'Keep one hand on {o} on the changing table, always.', 'Pull-up style diapers or a change standing up can help once {s} {pull|pulls} up.']) : changeSteps());
-      if (v === 0) b += h.tip('In the first weeks', 'Fold the top of the diaper down so the cord stump stays in the air. Fragrance-free wipes or a soft washcloth and warm water both work.')
-        + h.tip('Cleaning down there', 'Always wipe front to back. In newborn girls, a little white discharge or a spot of blood is normal in the first weeks. If uncircumcised, wash the outside only; don’t pull back the foreskin. If circumcised, a dab of petroleum jelly on the tip at each change until it heals, in about 7–10 days. Call if there’s bleeding, swelling or pus.');
-      if (v === 2) b += h.tip('Once solids start', 'Usually around 6 months. Poop gets thicker, browner and smellier, and can take on the color of what {s} ate.');
-      b += h2('Diaper rash') + rashSteps();
-      b += strip('diapers', ['8–12 a day. Fold the top below the cord.', '6 or more wet ones a day. Size up when leaks start.', 'Once solids start, poop changes.', 'Wriggly changes. A toy in hand helps.'], v);
-      b += h.versus('Normal, or time to call?', ['Normal', (v === 0 ? 'Black, sticky poop in the first 3–4 days, then mustard-yellow' : 'Mustard-yellow') + ', seedy poop if breastfed, or yellow-tan if formula. Anywhere from several a day to one every few days.'], ['Call your pediatrician', 'Fewer wet diapers than usual, or 4 or fewer in a day. White, gray or red poop, or black poop after the first few days. A rash that blisters, oozes or spreads.']);
+      let b = head('diapers', ctx(v), 'Diapers', v === 0 ? 'How to change one, and what’s normal in there.' : 'How many, how to change one, and diaper rash.') + h.qa(qa);
+      b += h2(v === 3 ? 'Wriggly changes' : 'How to change a diaper') + (v === 3 ? h.steps(['Hand {o} a toy to hold, or sing the same song each time.', 'Keep one hand on {o} on the changing table, always.', 'Once {s} {pull|pulls} up, a change standing up can be easier.']) : changeSteps());
+      b += h.versus('Normal, or time to call?', ['Normal', (v === 0 ? 'Black, sticky poop for the first 3–4 days, then mustard-yellow' : 'Mustard-yellow') + ' if breastfed, yellow-tan if formula. Several a day to one every few days.'], ['Call your pediatrician', '4 or fewer wet diapers in a day. White, gray or red poop, or black after the first few days.']);
+      b += fold('More about diapers', [
+        ['Diaper rash', 'What helps, and when to call', rashSteps()],
+        v === 0 && ['In the first weeks', 'The cord, and wipes or a washcloth', p_('Fold the top of the diaper down so the cord stump stays in the air.') + p_('Fragrance-free wipes or a soft washcloth and warm water both work.')],
+        v === 0 && ['Cleaning down there', 'For girls and boys', p_('Always wipe front to back. In newborn girls, a little white discharge or a spot of blood is normal in the first weeks.') + p_('If uncircumcised, wash the outside only; don’t pull back the foreskin. If circumcised, put a dab of petroleum jelly on the tip at each change until it heals, in about 7–10 days. Call if there’s bleeding, swelling or pus.')],
+        v === 2 && ['Once solids start', 'Usually around 6 months', p_('Poop gets thicker, browner and smellier, and can take on the color of what {s} ate.')],
+        ['Sizes', 'When to move up', p_('Most babies start in newborn size and move to size 1 at around 8–10 pounds. Sizes overlap, so go by fit: leaks or red marks at the legs mean it’s time to size up.')],
+        changes('diapers', ['8–12 a day. Fold the top below the cord.', '6 or more wet ones a day. Size up when leaks start.', 'Once solids start, poop changes.', 'Wriggly changes. A toy in hand helps.'], v)
+      ]);
       return page('diapers', b);
     },
     bath(v) {
       const h = H();
-      let b = head('bath', ctx(v), 'Baths and hair', ['Until the cord stump falls off, a sponge bath keeps Maya clean without getting the stump wet.', 'Once the cord has healed, Maya’s ready for a baby tub.', 'The same tub bath, and for many families it’s now part of bedtime.', 'Sitting up changes bath time, and the big tub comes next.'][v]);
+      let b = head('bath', ctx(v), 'Baths and hair', ['Sponge baths until the cord stump falls off.', 'Once the cord has healed, a baby tub.', 'The same tub bath, often part of bedtime now.', 'Sitting up, then the big tub.'][v]);
       b += h.qa([
-        [['How often?', '2–3 a week', 'In between, wipe {p} face, neck and diaper area.'], ['How long?', 'About 5 minutes', 'In a warm room.']],
-        [['How often?', '2–3 a week', 'More if you like.'], ['Water', 'About 100°F', 'Warm, not hot. About 2 inches deep.']],
-        [['How often?', '2–3 a week', 'Often before bed.'], ['Water', 'About 100°F', 'Warm, not hot. About 2 inches deep.']],
-        [['Where?', 'The big tub', 'Once {s} {sit|sits} steadily on {p} own.'], ['Water', 'Waist-high', 'When {s’s} sitting. No deeper.']]
+        [['How often?', '2–3 a week', 'In between, wipe {p} face, neck and diaper area.']],
+        [['How often?', '2–3 a week', 'In about 2 inches of warm water, around 100°F.']],
+        [['How often?', '2–3 a week', 'In about 2 inches of warm water, around 100°F.']],
+        [['Where?', 'The big tub', 'Once {s} {sit|sits} steadily. Water no higher than {p} waist.']]
       ][v]);
-      if (v === 0) b += h2('Give a sponge bath') + hubIconSteps([['home', 'Warm room, towel down', 'Everything within reach'], ['drop', 'Face, then body', 'Plain water, one part at a time'], ['towel', 'Diaper area last', 'Pat dry, into the skin folds']], CAT, 'Warm the room and lay baby on a towel. Wash the face, then the body one part at a time, then the diaper area last, and pat dry.')
-        + hubEmbed('uYQ_KNlcQwE', 'How to give your newborn a sponge bath', 'Nemours KidsHealth')
-        + h.tip('Keep {o} warm', 'Keep {o} wrapped in a towel and uncover one part at a time. Wipe each eye from the inside corner out, and into the creases of the neck, arms and legs.');
-      if (v === 1 || v === 2) b += h2('Give a tub bath') + (window.hubFigure ? hubFigure('tub', CAT, 'A baby lying back in a baby tub with about 2 inches of warm water, a hand supporting the head and neck.') : '')
-        + h.steps(['Gather everything first: towel, washcloth, mild soap and a clean diaper.', 'Fill the tub with about 2 inches of warm water. Test it with your wrist; it should feel warm, not hot.', 'Support {p} head and neck with one arm, and wash from top to bottom with your other hand.', 'Lift {o} out onto the towel and wrap {o} up right away.'])
-        + hubEmbed('VsUla1M7eHQ', 'How to give your baby a tub bath', 'Nemours KidsHealth');
-      if (v === 2) b += `<div class="hub-list care-link">${rowK('bath', 'Make the bath part of bedtime', 'Bath, feed, book, bed · In Sleep', "openPage('chg:Sleep:d:routine')")}</div>`;
-      if (v === 3) b += h2('In the big tub') + h.steps(['Use a non-slip mat, and keep the water about waist-high when {s’s} sitting.', 'Keep a hand on Maya the whole bath. Expect {o} to try to pull up.', 'A bath seat can help {o} sit, but it isn’t a safety seat. Stay within arm’s reach.']);
-      if (v > 0) b += h.tip('Washing hair', 'Once or twice a week, a little mild baby shampoo is plenty. Rinse with a wet washcloth, front to back, so it stays out of {p} eyes.');
-      if (v === 1) b += h.tip('Water heater', 'Set it to 120°F or lower so tap water can’t scald.');
-      b += strip('bath', ['Sponge baths until the cord falls off.', 'Baby tub, 2–3 times a week.', 'Often part of bedtime now.', 'Sitting up, then the big tub.'], v);
-      b += h.versus('Every bath', ['Always', 'Gather everything first, then keep a hand on Maya the whole bath.'], ['Never', 'Step away, even for a moment. Babies can slip under quietly in seconds. Take {o} with you.']);
+      if (v === 0) b += h2('Give a sponge bath') + hubIconSteps([['home', 'Warm room, towel down', 'Everything within reach'], ['drop', 'Face, then body', 'Plain water, one part at a time'], ['towel', 'Diaper area last', 'Pat dry, into the skin folds']], CAT, 'Warm the room and lay baby on a towel. Wash the face, then the body one part at a time, then the diaper area last, and pat dry.');
+      if (v === 1 || v === 2) b += h2('Give a tub bath') + h.steps(['Gather everything first: towel, washcloth, mild soap and a clean diaper.', 'Test the water with your wrist. It should feel warm, not hot.', 'Support {p} head and neck with one arm, and wash top to bottom with the other.', 'Lift {o} out onto the towel and wrap {o} up right away.']);
+      if (v === 3) b += h2('In the big tub') + h.steps(['Use a non-slip mat, and keep the water about waist-high when {s’s} sitting.', 'Keep a hand on Maya the whole bath. Expect {o} to try to pull up.', 'A bath seat helps {o} sit, but it isn’t a safety seat. Stay within arm’s reach.']);
+      b += h.versus('Every bath', ['Always', 'Gather everything first, then keep a hand on Maya the whole bath.'], ['Never', 'Step away, even for a moment. Babies can slip under in seconds. Take {o} with you.']);
+      b += fold('More about baths', [
+        v === 0 && ['Watch how it’s done', 'A short video', hubEmbed('uYQ_KNlcQwE', 'How to give your newborn a sponge bath', 'Nemours KidsHealth')],
+        v === 0 && ['Keeping {o} warm', 'Eyes, creases and folds', p_('Keep {o} wrapped in a towel and uncover one part at a time. Wipe each eye from the inside corner out, and get into the creases of the neck, arms and legs.') + p_('About 5 minutes in a warm room is plenty.')],
+        (v === 1 || v === 2) && ['Watch how it’s done', 'A short video', (window.hubFigure ? hubFigure('tub', CAT, 'A baby lying back in a baby tub with about 2 inches of warm water, a hand supporting the head and neck.') : '') + hubEmbed('VsUla1M7eHQ', 'How to give your baby a tub bath', 'Nemours KidsHealth')],
+        v === 2 && ['Bath as part of bedtime', 'Bath, feed, book, bed', `<div class="hub-list care-link">${rowK('bath', 'Start a bedtime routine', 'In Sleep', "openPage('chg:Sleep:d:routine')")}</div>`],
+        v > 0 && ['Washing hair', 'Once or twice a week', p_('A little mild baby shampoo is plenty. Rinse with a wet washcloth, front to back, so it stays out of {p} eyes.')],
+        ['Water heater', 'Set it to 120°F or lower', p_('At 120°F or lower, tap water can’t scald.')],
+        changes('bath', ['Sponge baths until the cord falls off.', 'Baby tub, 2–3 times a week.', 'Often part of bedtime now.', 'Sitting up, then the big tub.'], v)
+      ]);
       return page('bath', b);
     },
     skin(v) {
       const h = H(), common = [['peeling', 'acne'], ['acne', 'cradle'], ['drool', 'eczema'], ['eczema', 'diaper']][v];
-      let b = head('skin', ctx(v), 'Skin and rashes', 'Most baby rashes are harmless and clear up with simple care. Find the one you’re seeing.');
-      b += h2('What’s this rash?') + `<div class="hub-list">${RASH_ORDER.map(id => { const r = RASH[id];
+      let b = head('skin', ctx(v), 'Skin and rashes', 'Most baby rashes are harmless. Find the one you’re seeing.');
+      b += `<div class="hub-list">${RASH_ORDER.map(id => { const r = RASH[id];
         return `<button class="hub-row care-rash" onclick="openPage('chg:${CAT}:d:rash:${id}')"><span class="hub-row-copy"><b>${F(r.t)}${common.includes(id) ? ' <em class="care-tag">Common now</em>' : ''}</b><small>${F(r.look)}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`; }).join('')}</div>`;
-      b += h2('Everyday skin care') + h.steps(['Plain water is enough for most baths. Use a mild, fragrance-free soap only where needed.', 'Pat on a fragrance-free moisturizer while the skin is still damp.', 'Wash {p} clothes in a fragrance-free detergent.']);
       b += rashCall();
+      b += fold('More about skin', [['Everyday skin care', 'Soap, moisturizer and laundry', h.steps(['Plain water is enough for most baths. Use a mild, fragrance-free soap only where needed.', 'Pat on a fragrance-free moisturizer while the skin is still damp.', 'Wash {p} clothes in a fragrance-free detergent.'])]]);
       return page('skin', b);
     },
     clothes(v) {
       const h = H();
-      let b = head('clothes', ctx(v), 'Clothes', v === 3 ? 'Dressing for the weather, and what {s} {need|needs} on {p} feet as {s} {start|starts} to stand.' : 'Babies can’t tell you they’re too hot or cold, so a simple rule helps.');
+      let b = head('clothes', ctx(v), 'Clothes', v === 3 ? 'Dressing for the weather, and bare feet for first steps.' : 'Babies can’t tell you they’re too hot or cold, so one rule helps.');
       b += h.qa(v === 3 ? [['Indoors', 'Bare feet', 'They help with balance while {s} {learn|learns} to walk.'], ['Outside', 'Soft shoes', 'Flexible soles, once {s’s} walking.']]
-        : [['How many layers?', 'One more than you', 'Feel the back of {p} neck: sweaty means too warm, cool means add a layer.'], ['For sleep', 'Snug pajamas and a sleep sack', 'No hats or loose blankets.']]);
-      b += `<figure class="hub-figure hub-layers" role="img" aria-label="Dress baby in one more layer than you’re wearing."><div><span>${hubArt('shirt', CAT)}${hubArt('shirt', CAT)}</span><b>${F('You')}</b><small>${F('Comfortable in 2 layers')}</small></div><i aria-hidden="true">+1</i><div class="is-baby"><span>${hubArt('shirt', CAT)}${hubArt('shirt', CAT)}${hubArt('shirt', CAT)}</span><b>${F('Maya')}</b><small>${F('Needs 3')}</small></div></figure>`;
-      if (v === 3) b += h.steps(['Feel the back of {p} neck. Sweaty means too warm; cool means add a layer.', 'For sleep, snug-fitting pajamas and a sleep sack are enough. Skip hats and loose blankets.']);
-      if (v === 0) b += h.tip('Getting clothes on', 'Stretch the neck opening wide and ease it over the back of {p} head first, then the face. Snaps or a zip down the front are easiest at first.');
-      if (v === 3) b += h2('First steps') + hubIconSteps([['home', 'Indoors: bare feet', 'They help with balance and feeling the floor'], ['sun', 'Outside: soft shoes', 'Flexible soles, room for toes, once walking']], CAT, 'Bare feet indoors. Soft, flexible shoes outside once walking.', false)
-        + h.tip('Walkers', 'Skip walkers on wheels. They don’t help with walking, and they can lead to falls down stairs.');
-      b += h.tip('In the car seat', 'Take off puffy coats first. Buckle {o} in, then put a blanket over the straps.');
-      b += `<div class="hub-list care-link">${rowK('clothes', 'Sleep sacks and swaddles', 'What to use, and when to stop swaddling · In Sleep', "openPage('chg:Sleep:safe')")}</div>`;
-      b += strip('clothes', ['One more layer than you, and easy snaps.', 'One more layer than you.', 'Layers for the season, and bibs for drool.', 'Bare feet indoors, soft shoes outside.'], v);
+        : [['How many layers?', 'One more than you', 'Sweaty neck means too warm. Cool means add a layer.'], ['For sleep', 'Pajamas and a sleep sack', 'Snug-fitting. No hats or loose blankets.']]);
+      if (v < 3) b += `<figure class="hub-figure hub-layers" role="img" aria-label="Dress baby in one more layer than you’re wearing."><div><span>${hubArt('shirt', CAT)}${hubArt('shirt', CAT)}</span><b>${F('You')}</b><small>${F('Comfortable in 2 layers')}</small></div><i aria-hidden="true">+1</i><div class="is-baby"><span>${hubArt('shirt', CAT)}${hubArt('shirt', CAT)}${hubArt('shirt', CAT)}</span><b>${F('Maya')}</b><small>${F('Needs 3')}</small></div></figure>`;
+      if (v === 3) b += hubIconSteps([['home', 'Indoors: bare feet', 'They help with balance and feeling the floor'], ['sun', 'Outside: soft shoes', 'Flexible soles, room for toes, once walking']], CAT, 'Bare feet indoors. Soft, flexible shoes outside once walking.', false);
+      b += fold('More about clothes', [
+        v === 0 && ['Getting clothes on', 'Over a floppy head', p_('Stretch the neck opening wide and ease it over the back of {p} head first, then the face. Snaps or a zip down the front are easiest at first.')],
+        v === 3 && ['Dressing for the weather', 'One more layer than you', p_('Feel the back of {p} neck. Sweaty means too warm; cool means add a layer. For sleep, snug-fitting pajamas and a sleep sack, no hats or loose blankets.')],
+        v === 3 && ['Walkers', 'Skip the ones on wheels', p_('They don’t help with walking, and they can lead to falls down stairs.')],
+        ['In the car seat', 'No puffy coats', p_('Take off puffy coats first. Buckle {o} in, then put a blanket over the straps.')],
+        ['Sleep sacks and swaddles', 'In Sleep', `<div class="hub-list care-link">${rowK('clothes', 'What to use, and when to stop swaddling', 'In Sleep', "openPage('chg:Sleep:safe')")}</div>`],
+        changes('clothes', ['One more layer than you, and easy snaps.', 'One more layer than you.', 'Layers for the season, and bibs for drool.', 'Bare feet indoors, soft shoes outside.'], v)
+      ]);
       return page('clothes', b);
     },
     sun(v) {
       const h = H(), six = v === 3 || (v === 2 && careAge() >= 6) || (!live() && v >= 2);
-      let b = head('sun', ctx(v), 'Sun and heat', six ? 'Shade still comes first, and sunscreen joins in now.' : 'Young babies’ skin burns easily, so shade comes first.');
-      b += h.qa([six ? ['Sunscreen?', 'Yes, SPF 30 or more', 'Broad-spectrum (it blocks both kinds of UV rays), every 2 hours and after water.'] : ['Sunscreen?', 'From 6 months', 'Until then, shade, clothes and a hat. A little on the face only if there’s no shade.']]);
-      b += h.steps(six ? ['Keep {o} in the shade and in a wide-brimmed hat, even with sunscreen on.', 'Put sunscreen on skin you can’t cover, 15 minutes before going out.', 'Reapply every 2 hours, and after water play.'] : ['Keep {o} in the shade, especially in the middle of the day.', 'Dress {o} in light, long sleeves and a wide-brimmed hat.']);
-      b += h.tip('At the pool or beach', 'Swim diapers, a sun shirt and a hat' + (six ? ', and a mineral sunscreen (zinc oxide).' : '.') + ' Keep a hand on {o} in any water, even shallow.');
-      b += h2('Hot days') + h.steps(['Dress {o} in one light layer, and keep {o} in the shade or indoors at midday.', v < 2 || !six ? 'Offer milk feeds more often. Under 6 months, milk is all {s} {need|needs}, no water.' : 'Offer milk feeds more often, and small sips of water once {s’s} eating solids.', 'Don’t drape a blanket over the stroller. It traps heat. Use the canopy or a clip-on shade.']);
-      b += strip('sun', ['Shade and a hat, no sunscreen yet.', 'Shade and a hat, no sunscreen yet.', 'Sunscreen can start at 6 months.', 'Shade, a hat and SPF 30.'], v);
-      b += h.versus('Normal, or time to call?', ['Normal', 'A little sweaty and pink, and cooling down quickly in the shade.'], ['Call your pediatrician', 'Fewer wet diapers than usual, or any sunburn before 1 year.']) + h.tip('Get help right away', 'Hot and flushed and hard to wake, floppy, or not feeding: get {o} somewhere cool and call 911.');
+      let b = head('sun', ctx(v), 'Sun and heat', six ? 'Shade still comes first, and sunscreen joins in now.' : 'Young skin burns easily, so shade comes first.');
+      b += h.qa([six ? ['Sunscreen?', 'Yes, SPF 30 or more', 'Broad-spectrum, every 2 hours and after water.'] : ['Sunscreen?', 'From 6 months', 'Until then, shade and a hat. A little on the face only if there’s no shade.']]);
+      b += h.steps(six ? ['Shade and a wide-brimmed hat, even with sunscreen on.', 'Sunscreen on skin you can’t cover, 15 minutes before going out.', 'Reapply every 2 hours, and after water play.'] : ['Keep {o} in the shade, especially in the middle of the day.', 'Light, long sleeves and a wide-brimmed hat.']);
+      b += h.versus('Normal, or time to call?', ['Normal', 'A little sweaty and pink, cooling down quickly in the shade.'], ['Call your pediatrician', 'Fewer wet diapers than usual, or any sunburn before 1 year.']) + h.tip('Get help right away', 'Hot and flushed and hard to wake, floppy, or not feeding: get {o} somewhere cool and call 911.');
+      b += fold('More about sun and heat', [
+        ['Hot days', 'Layers, feeds and the stroller', h.steps(['One light layer, and the shade or indoors at midday.', !six ? 'Offer milk feeds more often. Under 6 months, milk is all {s} {need|needs}, no water.' : 'Offer milk feeds more often, and small sips of water once {s’s} eating solids.', 'Don’t drape a blanket over the stroller. It traps heat. Use the canopy or a clip-on shade.'])],
+        ['At the pool or beach', 'What to bring', p_('Swim diapers, a sun shirt and a hat' + (six ? ', and a mineral sunscreen (zinc oxide).' : '.') + ' Keep a hand on {o} in any water, even shallow.')],
+        six && ['What “broad-spectrum” means', 'On the label', p_('It blocks both kinds of the sun’s UV rays. Look for it on the label, with SPF 30 or more.')],
+        changes('sun', ['Shade and a hat, no sunscreen yet.', 'Shade and a hat, no sunscreen yet.', 'Sunscreen can start at 6 months.', 'Shade, a hat and SPF 30.'], v)
+      ]);
       return page('sun', b);
     },
     teeth(v) {
       const h = H(), tooth = hasTooth();
       const paste = `<figure class="hub-figure hub-paste" role="img" aria-label="Use a smear of toothpaste the size of a grain of rice, not a pea-sized amount."><div class="is-yes"><svg viewBox="0 0 160 60" aria-hidden="true"><rect x="58" y="34" width="96" height="14" rx="7" fill="#cfe3db"/><rect x="8" y="30" width="56" height="20" rx="8" fill="#a9cbbd"/>${Array.from({ length: 9 }, (_, i) => `<rect x="${12 + i * 5.6}" y="16" width="3.4" height="15" rx="1.7" fill="#cfe3db"/>`).join('')}<ellipse cx="34" cy="14" rx="4.5" ry="2.6" fill="#fff" stroke="#7fb0cc" stroke-width="1.3"/></svg><b>✓ ${F('A grain of rice')}</b><small>${F('Under 3 years')}</small></div><div class="is-no"><svg viewBox="0 0 160 60" aria-hidden="true"><rect x="58" y="34" width="96" height="14" rx="7" fill="#cfe3db"/><rect x="8" y="30" width="56" height="20" rx="8" fill="#a9cbbd"/>${Array.from({ length: 9 }, (_, i) => `<rect x="${12 + i * 5.6}" y="16" width="3.4" height="15" rx="1.7" fill="#cfe3db"/>`).join('')}<circle cx="34" cy="8" r="9" fill="#fff" stroke="#7fb0cc" stroke-width="1.3"/></svg><b>${F('Not a pea')}</b><small>${F('That’s from age 3')}</small></div></figure>`;
-      const lead = v < 2 ? 'Nothing to do yet. Here’s what’s coming.' : v === 2 ? 'Drooling and chewing on everything are normal now. Teeth can take a while to follow.' : tooth ? 'As soon as the first tooth appears, brushing helps keep it healthy.' : 'Brushing starts with the first tooth. Until then, gums and drool.';
-      let b = head('teeth', ctx(v), v === 3 && tooth ? 'Brush the first teeth' : 'Gums and teeth', lead);
-      b += h.qa([v === 3 ? (tooth ? ['How often?', 'Twice a day', 'With a rice-grain smear of fluoride toothpaste, including before bed.'] : ['No tooth yet?', 'That’s normal', 'Some babies don’t get their first one until around their first birthday.']) : ['When’s the first tooth?', 'Around 6 months', 'Anywhere from about 4 to 12 months is normal.']]);
-      const gums = h2('Drool and sore gums') + h.steps(['Wipe {p} gums with a clean, damp cloth once a day.', 'Keep a soft bib on and pat the chin dry to avoid a drool rash.', 'Offer a cool, firm teething ring if {s} {seem|seems} sore.']) + h.tip('Skip these', 'Teething necklaces, numbing gels and tablets. Ask your pediatrician about pain relief if needed.');
-      const brush = h2(tooth ? 'How to brush' : 'When the first tooth comes') + paste + h.steps(['Brush gently twice a day with a soft baby toothbrush and fluoride toothpaste, including before bed.', 'No need to rinse. A little toothpaste left behind is fine.']) + h.tip('First dental visit', 'Book one after the first tooth comes in, and by the first birthday.');
-      if (v < 2) b += h.tip('If you like', 'Wiping {p} gums with a clean, damp cloth once a day gets {o} used to it.');
-      if (v === 2) b += (live() && !tooth ? `<button class="hub-already" onclick="setAnswer('hasTooth','Yes');render()">${F('Maya already has a tooth? See how to brush')}</button>` : '') + (tooth ? brush : '') + gums;
-      if (v === 3) b += (live() && !tooth ? `<button class="hub-already" onclick="setAnswer('hasTooth','Yes');render()">${F('Maya has a tooth now? Tell us')}</button>` : '') + brush + gums;
-      b += strip('teeth', ['Nothing to do yet.', 'Nothing to do yet.', 'Drool, chewing and sore gums.', 'Brush twice a day from the first tooth.'], v);
-      if (v >= 2) b += h.versus('Normal, or time to call?', ['Normal', 'Drooling, chewing on everything, being a bit fussier, and feeling a little warm.'], ['Call your pediatrician', 'A fever of 100.4°F or higher. Teething doesn’t cause one, so something else is going on.']);
+      const brushing = v === 3 && tooth;
+      const lead = v < 2 ? 'Nothing to do yet. Here’s what’s coming.' : v === 2 ? 'Drooling and chewing on everything are normal now.' : tooth ? 'Brushing keeps the first teeth healthy.' : 'Brushing starts with the first tooth.';
+      let b = head('teeth', ctx(v), brushing ? 'Brush the first teeth' : 'Gums and teeth', lead);
+      b += h.qa([v === 3 ? (tooth ? ['How often?', 'Twice a day', 'A rice-grain smear of fluoride toothpaste, including before bed.'] : ['No tooth yet?', 'That’s normal', 'Some babies don’t get one until around the first birthday.']) : ['When’s the first tooth?', 'Around 6 months', 'Anywhere from about 4 to 12 months is normal.']]);
+      const gumSteps = h.steps(['Wipe {p} gums with a clean, damp cloth once a day.', 'Keep a soft bib on and pat the chin dry, to avoid a drool rash.', 'Offer a cool, firm teething ring if {s} {seem|seems} sore.']);
+      const skip = h.tip('Skip these', 'Teething necklaces, numbing gels and tablets. Ask your pediatrician about pain relief if needed.');
+      const brushHow = paste + h.steps(['Brush gently twice a day with a soft baby toothbrush and fluoride toothpaste, including before bed.', 'No need to rinse. A little toothpaste left behind is fine.']);
+      if (live() && v >= 2 && !tooth) b += `<button class="hub-already" onclick="setAnswer('hasTooth','Yes');render()">${F(v === 2 ? 'Maya already has a tooth? See how to brush' : 'Maya has a tooth now? Tell us')}</button>`;
+      if (brushing || (v === 2 && tooth)) b += h2('How to brush') + brushHow;
+      else if (v >= 2) b += h2('Drool and sore gums') + gumSteps + skip;
+      if (v >= 2) b += h.versus('Normal, or time to call?', ['Normal', 'Drooling, chewing on everything, a bit fussier, and feeling a little warm.'], ['Call your pediatrician', 'A fever of 100.4°F or higher. Teething doesn’t cause one.']);
+      b += fold('More about teeth', [
+        v < 2 && ['Wiping gums', 'If you like', p_('Wiping {p} gums with a clean, damp cloth once a day gets {o} used to it.')],
+        (brushing || (v === 2 && tooth)) && ['Drool and sore gums', 'More teeth are on the way', gumSteps + skip],
+        v === 3 && !tooth && ['When the first tooth comes', 'How to brush', brushHow],
+        v >= 2 && ['First dental visit', 'By the first birthday', p_('Book one after the first tooth comes in, and by the first birthday.')],
+        changes('teeth', ['Nothing to do yet.', 'Nothing to do yet.', 'Drool, chewing and sore gums.', 'Brush twice a day from the first tooth.'], v)
+      ]);
       return page('teeth', b);
     },
     nails(v) {
       const h = H();
       let b = head('nails', ctx(v), 'Nails, ears and nose', 'Small jobs, quick once you know how.');
-      b += h.qa([['Nails', 'Once or twice a week', v < 2 ? 'They grow fast, and they’re sharp enough to scratch {p} face.' : 'Easiest while {s’s} asleep or very relaxed.']]);
-      b += h2('Trim tiny nails') + h.steps(['Wait until Maya is asleep or very relaxed.', 'Use baby nail clippers or a soft emery board, pressing the fingertip pad away from the nail.', 'File any rough edges. A nick happens to everyone; press gently with a clean cloth.']);
-      b += h.tip('Ears', 'Wipe the outside and behind the ears with a washcloth. Skip cotton swabs inside the ear; earwax clears on its own.');
-      b += h.tip('Eyes', 'Wipe from the inside corner out with a clean, damp cotton ball, a fresh one for each eye.');
-      b += `<div class="hub-list care-link">${rowK('nails', 'A stuffy nose', 'Saline drops and gentle suction · In Health', "openPage('chg:Health:d:cold')")}</div>`;
+      b += h.qa([['Nails', 'Once or twice a week', v < 2 ? 'They grow fast and can scratch {p} face.' : 'Easiest while {s’s} asleep.']]);
+      b += h2('Trim tiny nails') + h.steps(['Wait until Maya is asleep or very relaxed.', 'Use baby clippers or a soft emery board, pressing the fingertip pad away from the nail.', 'File rough edges. A nick happens to everyone; press gently with a clean cloth.']);
+      b += fold('More', [
+        ['Ears', 'No cotton swabs inside', p_('Wipe the outside and behind the ears with a washcloth. Earwax clears on its own.')],
+        ['Eyes', 'Inside corner out', p_('Wipe with a clean, damp cotton ball, a fresh one for each eye.')],
+        ['A stuffy nose', 'Saline and gentle suction · In Health', `<div class="hub-list care-link">${rowK('nails', 'Colds and stuffy noses', 'In Health', "openPage('chg:Health:d:cold')")}</div>`]
+      ]);
       return page('nails', b);
     },
     need(v) {

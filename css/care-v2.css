@@ -17,3 +17,20 @@
 #main .care-v2 .care-need > div:first-child { border-top: 0 }
 #main .care-v2 .care-need b { font-size: 14.5px; font-weight: 600 }
 #main .care-v2 .care-need span { font-size: 14px; line-height: 20px; color: var(--ink-2, #5e5a75) }
+/* "More" card: one row per extra topic, opening in place */
+#main .care-v2 .care-folds { padding: 0 16px }
+#main .care-v2 .care-fold { border-top: 1px solid var(--line) }
+#main .care-v2 .care-fold:first-child { border-top: 0 }
+#main .care-v2 .care-fold > summary { list-style: none; display: flex; align-items: center; gap: 10px; padding: 14px 0; cursor: pointer }
+#main .care-v2 .care-fold > summary::-webkit-details-marker { display: none }
+#main .care-v2 .care-fold > summary span { flex: 1; display: grid; gap: 2px }
+#main .care-v2 .care-fold > summary b { font-size: 15px; font-weight: 600 }
+#main .care-v2 .care-fold > summary small { font-size: 13px; color: var(--ink-2, #5e5a75) }
+#main .care-v2 .care-fold > summary i { font-style: normal; color: #aaa; transition: transform .2s }
+#main .care-v2 .care-fold[open] > summary i { transform: rotate(90deg) }
+#main .care-v2 .care-fold-body { padding: 0 0 14px }
+#main .care-v2 .care-fold-body > :first-child { margin-top: 0 }
+#main .care-v2 .care-fold-body > :last-child { margin-bottom: 0 }
+#main .care-v2 .care-p { margin: 0 0 8px; font-size: 14.5px; line-height: 22px; color: var(--ink-2, #5e5a75) }
+#main .care-v2 .care-fold-body .care-strip { padding: 0 }
+#main .care-v2 .care-fold-body .care-step:first-child { border-top: 0 }
