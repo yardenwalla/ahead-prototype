@@ -456,29 +456,30 @@
     return b + (call ? `<p class="ss-small"><b>${F('Call your pediatrician:')}</b> ${F(call)}</p>` : '');
   };
   const downLabel = () => { const a = anatomy(); return a === 'girl' ? 'For girls' : a === 'boy' ? (answers.circumcised === 'Yes' ? 'Circumcised' : answers.circumcised === 'No' ? 'Not circumcised' : 'For boys') : 'For girls and boys'; };
-  const downPick = (x, inline) => {
-    const a = anatomy(), c = answers.circumcised;
-    const parts = a === 'girl' ? [['', x.girl]] : a === 'boy' ? (c === 'Yes' ? [['', x.cut]] : c === 'No' ? [['', x.uncut]] : [['If circumcised', x.cut], ['If not circumcised', x.uncut]])
-      : [['Girls', x.girl], ['Boys, circumcised', x.cut], ['Boys, not circumcised', x.uncut]];
-    if (parts.length === 1) return F(parts[0][1]);
-    return inline ? parts.map(([t, v]) => `${F(t)}: ${F(v.charAt(0).toLowerCase() + v.slice(1))}`).join(' ') : parts.map(([t, v]) => `<span class="care-down-row"><strong>${F(t)}</strong>${F(v)}</span>`).join('');
-  };
+  // Girl or boy from onboarding pronouns; only a "they" baby gets a Girl/Boy toggle. Boys get a
+  // Circumcised / Not circumcised toggle, starting on circumcised; the choice is remembered.
+  const downAnat = () => anatomy() || 'girl';
+  const downCirc = () => answers.circumcised || 'Yes';
+  const downPick = x => F(downAnat() === 'girl' ? x.girl : downCirc() === 'Yes' ? x.cut : x.uncut);
+  const downToggles = () => (profile.pronouns === 'he' || profile.pronouns === 'she' ? '' : seg('careAnatomy', downAnat(), [['girl', 'Girl'], ['boy', 'Boy']]))
+    + (downAnat() === 'boy' ? seg('circumcised', downCirc(), [['Yes', 'Circumcised'], ['No', 'Not circumcised']]) : '');
   const T3 = {
     // Care down there: girl or boy comes from onboarding pronouns. No switches: a "they" baby sees both,
     // and boys see circumcised and not, unless the parent has already told us.
     down: {
-      0: { html: true,
-        get line() { const a = anatomy(); return a === 'girl' ? 'Wiping, and what’s normal' : a === 'boy' ? 'Circumcision and foreskin care' : 'For girls and boys'; },
-        get answer() { return anatomy() === 'boy' ? 'Only gentle cleaning is needed, plus a little extra care while a circumcision heals.' : 'Only gentle cleaning is needed. A few things in the first weeks look surprising, and they’re normal.'; },
+      0: { html: true, pre: () => `<div class="care-toggles">${downToggles()}</div>`,
+        vis: () => downAnat() === 'boy' && downCirc() === 'Yes' ? hubIconSteps([['drop', 'Petroleum jelly', 'On the tip or a gauze square'], ['diaper', 'Diaper on loosely', 'So it doesn’t rub'], ['bath', 'Warm water', 'No wipes until healed']], CAT, 'Petroleum jelly on the tip or on a gauze square, the diaper fastened loosely, and warm water instead of wipes until it heals.', false) : '',
+        get line() { const a = anatomy(); return a === 'girl' ? 'Wiping, and what’s normal' : a === 'boy' ? 'Circumcised or not' : 'For girls and boys'; },
+        get answer() { return downAnat() === 'boy' ? 'Only gentle cleaning is needed, plus a little extra care while a circumcision heals.' : 'Only gentle cleaning is needed. A few things in the first weeks look surprising, and they’re normal.'; },
         get doText() { return downPick({ girl: 'Wipe front to back at every change, gently, between the folds.',
-          cut: 'A dab of petroleum jelly on the tip at every change, and warm water instead of wipes until it heals, in 7–10 days.',
+          cut: 'Keep the tip from sticking to the diaper, and keep it clean until it heals, in 7–10 days.',
           uncut: 'Wash the outside only. Never pull back the foreskin.' }); },
         get normal() { return downPick({ girl: 'A little white discharge or light spotting, and swollen-looking genitals, in the first weeks. It comes from hormones passed on before birth.',
           cut: 'While it heals: a red tip and a soft yellow film. A plastic ring, if there is one, falls off on its own in 5–10 days.',
           uncut: 'The foreskin stays attached for years, and loosens on its own.' }); },
         get call() { return downPick({ girl: 'Bleeding that lasts more than 3–4 days, or starts after the first week.',
           cut: 'Bleeding bigger than a quarter, pus or swelling, no pee within 8 hours, or a ring still on after 10 days.',
-          uncut: 'Redness, swelling or pain when {s} {pee|pees}.' }, true); } }
+          uncut: 'Redness, swelling or pain when {s} {pee|pees}.' }); } }
     },
     diapers: {
       0: { line: 'How to change one', answer: 'About 8–12 changes a day at first. It gets quick.',
@@ -569,10 +570,11 @@
     if (!s) return null;
     const ck = TCOL[k];
     let b = head(ck, `Everyday care · ${STAGE[vv]}`, TNAME[k], '') + `<p class="ss-what care-answer">${F(val(s.answer))}</p>`;
+    if (s.pre) b += s.pre();
     const T = x => s.html ? x : F(x); // html: the copy is already built (rows with labels), text inside already templated
     if (s.doText) b += `<section class="ss-do"><b>What to do</b><p>${T(s.doText)}</p></section>`;
     if (s.normal) b += `<p class="ss-know"><b>How you’ll know</b>${T(s.normal)}</p>`;
-    if (s.vis) b += s.vis();
+    if (s.vis) b += s.vis() || '';
     if (s.urgent) b += `<p class="care-urgent">${F(s.urgent)}</p>`;
     if (s.call) b += `<p class="ss-small"><b>${F('Call your pediatrician:')}</b> ${T(s.call)}</p>`;
     if (s.extra) b += s.extra();
