@@ -8,3 +8,10 @@
 #main .hub-page[data-overview="Feeding"][data-look] .hub-rough-copy b { color: #6e3f27 }
 #main .hub-page[data-overview="Feeding"][data-look] .hub-rough-copy small { color: #8a5a42 }
 #main .hub-page[data-overview="Feeding"][data-look] .hub-rough-card .hub-chev { color: #9a5a3c }
+#main .hub-cmp-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 0; margin-top: 8px }
+#main .hub-cmp.is-both .hub-cmp-grid { grid-template-columns: 1fr 1fr 1fr }
+#main .hub-cmp-grid > * { padding: 9px 4px; border-top: 1px solid var(--line); font-size: 14px; line-height: 1.35 }
+#main .hub-cmp-grid > small { border-top: 0; font-size: 12px; font-weight: 700; color: var(--year-ink); padding-top: 0 }
+#main .hub-cmp-grid > b { font-weight: 600 }
+#main .hub-cmp-grid > .is-now { background: var(--year-pale); }
+#main .hub-cmp-note { display: block; margin-top: 10px; font-size: 13px; color: var(--muted); line-height: 1.45 }
