@@ -21,9 +21,6 @@
     const hero = page.querySelector('.hub-hero');
     if (hero) hero.classList.add('sm-hero');
     dressRows(page);
-    // Parents can look ahead: say so under the stage timeline.
-    const bar = page.querySelector('.hub-stagebar');
-    if (bar && !page.querySelector('.ss-hint')) bar.insertAdjacentHTML('afterend', '<p class="ss-hint">Tap a stage to see what’s coming.</p>');
     const tiles = [...page.querySelectorAll('.hub-glance .hub-tiles > *')];
     tiles.slice(0, 4).forEach((d, i) => {
       const t = TIME[i]; if (!t) return;

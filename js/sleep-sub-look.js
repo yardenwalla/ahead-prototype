@@ -10,7 +10,7 @@
     safe: ['#e7effc', '#46638c', '#9fb8df', '#d9e5fc'],
     train: ['#ece8f8', '#5b4f8a', '#c3b8ea', '#e3b8cf']
   };
-  const LANE = l => /nap/i.test(l) ? 'naps' : /routine|bedtime/i.test(l) ? 'dusk' : /safe|safety/i.test(l) ? 'safe' : /training|choice|read ahead/i.test(l) ? 'train' : 'night';
+  const LANE = l => /tonight/i.test(l) ? 'night' : /nap/i.test(l) ? 'naps' : /routine|bedtime/i.test(l) ? 'dusk' : /safe|safety/i.test(l) ? 'safe' : /training|choice|read ahead/i.test(l) ? 'train' : 'night';
   // Small pictures in Development's flat-shape style: a sun and two naps; a moon and a long night; a setting sun;
   // a crib; a closed door with a nightlight.
   const ART = {
@@ -45,6 +45,14 @@
         return `<p class="ss-small">${l ? `<b>${l.replace(/\.$/, ':')}</b> ` : ''}${t}</p>`;
       });
       m.className = 'ss-moment'; m.innerHTML = out.join('');
+    });
+    // Rough night: each problem's "Try tonight" gets the same What to do card.
+    page.querySelectorAll('.hub-rough-body').forEach(body => {
+      const t = body.querySelector('.hub-rough-try'), ul = t && t.nextElementSibling;
+      if (!t || !ul || ul.tagName !== 'UL') return;
+      const card = document.createElement('section'); card.className = 'ss-do ss-try';
+      card.innerHTML = `<b>Try tonight</b>`; t.replaceWith(card); card.appendChild(ul);
+      const why = body.querySelector('p > b'); if (why && /Likely why/.test(why.textContent)) { why.remove(); body.querySelector('p').classList.add('ss-what'); }
     });
   }
   const base = window.render;
