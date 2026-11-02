@@ -17,3 +17,14 @@
 #main .ss-try ul { margin: 0; padding-left: 18px; font-size: 15px; line-height: 1.5; color: var(--ink) }
 #main .ss-try li + li { margin-top: 6px }
 #main .hub-rough-body .ss-what { margin: 4px 0 12px }
+/* Body pieces on restyled subpages (Sleep, Health, Development) follow the page's color, so nothing stays in the old blue:
+   tips are quiet white cards with a colored title, buttons are soft, and icons sit on the page's color. */
+#main .hub-detail[data-ss] .hub-tip { background: #fff; border: 1px solid var(--line) }
+#main .hub-detail[data-ss] .hub-tip b { color: var(--ss-ink) }
+#main .hub-detail[data-ss] .hub-button { background: var(--ss-bg); color: var(--ss-ink) !important }
+#main .hub-detail[data-ss] .hub-iconstep-art { background: var(--ss-bg) !important }
+#main .hub-detail[data-ss] .hub-iconstep-art svg, #main .hub-detail[data-ss] .hub-iconstep-art svg [stroke]:not([stroke="none"]) { stroke: var(--ss-ink) }
+#main .hub-detail[data-ss] .hub-row:not(.hl-row) .hub-dot { background: var(--ss-bg) !important }
+#main .hub-detail[data-ss] .hub-row:not(.hl-row) .hub-dot svg, #main .hub-detail[data-ss] .hub-row:not(.hl-row) .hub-dot svg [stroke]:not([stroke="none"]) { stroke: var(--ss-ink) }
+#main .hub-detail[data-ss] .hub-steps li > span:first-child:not(:only-child), #main .hub-detail[data-ss] .hub-steps li::before { color: var(--ss-ink) }
+#main .hub-detail[data-ss] .hub-tiles > div:not(.sm-tile) { background: var(--ss-bg) }
