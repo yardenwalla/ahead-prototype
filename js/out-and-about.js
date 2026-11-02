@@ -235,10 +235,10 @@
       return sub('fly', 'Flying', 'Flying with Maya', m < 3 ? 'Flying is generally fine after the first week, but waiting until 2–3 months is best if you can.' : 'Here’s the whole trip, from booking to landing.',
         H().versus('Where will Maya sit?', ['Own seat', 'Safest, buckled into a car seat labeled for aircraft.'], ['On your lap', 'Often free under 2, but less safe if there’s turbulence.'])
         + strip('Your trip, start to finish', [
-          ['notepad', 'Book', 'Add {o} to the booking. Ask about a bassinet seat'],
-          ['bag', 'Pack', 'An extra feed and {p} birth certificate'],
-          ['stroller', 'Airport', 'Milk is fine through security. Check the stroller at the gate'],
-          ['plane', 'Takeoff and landing', 'A feed or a pacifier eases {p} ears']],
+          ['notepad', 'Book', 'Add {o}, and ask for a bassinet seat'],
+          ['bag', 'Pack', 'An extra feed, {p} birth certificate'],
+          ['stroller', 'Airport', 'Milk through security, stroller at the gate'],
+          ['plane', 'Fly', 'A feed or pacifier at takeoff and landing']],
           'Book: add her to the booking and ask about a bassinet seat. Pack an extra feed and her birth certificate. At the airport, milk and formula are fine through security, even over 3.4 ounces, and you check the stroller at the gate. At takeoff and landing, a feed or a pacifier eases her ears.')
         + good([['carrier', 'A carrier in the airport', 'Handy for getting through. Take {o} out of it before takeoff and landing.'], bf ? ['fridge', 'Pumping', 'Your pump and ice packs can come through security, and airports have private rooms.'] : ['bottle', 'Formula at security', 'Ready-to-feed and powder are both allowed. Tell the officer.'], ['clock', 'Time zones', 'On a short trip, keep naps near home time. On a longer one, shift them a little each day.']]));
     }
