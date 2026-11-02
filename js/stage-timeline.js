@@ -16,7 +16,7 @@
       { label: 'Round-the-clock sleep', age: '0–6 weeks', setUntil: 3 },   // swaddling advice: not once a baby can roll
       { label: 'Longer nights', age: '6 wks–4 mo' },
       { label: 'Three naps', age: '4–9 months' },
-      { label: 'Two naps', age: 'From 6–9 months' }
+      { label: 'Two naps', age: 'Starts 6–9 months' }
     ] },
     Feeding: { kind: 'pattern', stages: [
       { label: 'Milk feeds', age: 'From birth' },                         // newborn feeds, then rhythm and amounts, by age
