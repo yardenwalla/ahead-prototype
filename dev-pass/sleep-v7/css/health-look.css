@@ -1,0 +1,7 @@
+/* Health's look: see js/health-look.js */
+#main .hl-hero { background: linear-gradient(160deg, #d5eedf, #eaf6ef 58%, #fdeee6) !important; position: relative; overflow: hidden }
+#main .hl-hero::after { content: ""; position: absolute; right: -40px; top: -50px; width: 170px; height: 170px; border-radius: 50%; background: #fff; opacity: .35; pointer-events: none }
+#main .hl-hero > * { position: relative; z-index: 1 }
+#main .hl-row .hub-dot { background: var(--hl-bg) !important }
+#main .hl-row .hub-dot svg { stroke: var(--hl-ink) }
+#main .hub-page[data-overview="Health"][data-look] .hub-next { border: 0; background: #e6f5ec }

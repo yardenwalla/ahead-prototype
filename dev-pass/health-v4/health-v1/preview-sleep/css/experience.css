@@ -1,0 +1,552 @@
+/* Ahead · one experience
+   Canvas → stage rail → editorial introduction → useful content → quiet reference.
+   Pastels identify subjects. Dark ink carries meaning. */
+:root {
+  --bg:#f7f4ee; --white:#fffefa; --ink:#302d3c; --muted:#625f6d;
+  --line:#e3dfe5; --green:#e4f7ec; --leaf:#35665b;
+  --lav:#eeedff; --purple:#62558a; --cream:#fbf0e4;
+  --ui-font:'Figtree',-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;
+  --display-font:'Nunito',ui-rounded,'Figtree',-apple-system,sans-serif;
+  --radius:20px; --radius-small:12px;
+}
+body {background:#ece8e1;color:var(--ink);font-family:var(--ui-font);font-size:15px;line-height:1.6}
+#shell {background:var(--bg);padding-bottom:100px}
+.top {padding:16px 16px 10px;align-items:center}
+.brand {font-family:var(--display-font);font-size:29px;font-weight:800;letter-spacing:-1.4px;color:var(--ink)}
+.brand .dot {color:#b7a48d}
+.profile {width:38px;min-height:38px;background:#eee8df;color:var(--ink);border:1px solid #dfd6ca;font-size:13px;font-weight:600}
+#main {padding:8px 16px 28px}
+#main .parent-guide {--muted:#625f6d;--line:#e3dfe5;font-family:var(--ui-font);color:var(--ink)}
+#main p {color:var(--muted)}
+#main h1,#main h2,#main h3,#main h4 {color:var(--ink)}
+#main h1 {font-family:var(--display-font);font-weight:800;font-size:30px;line-height:1.15;letter-spacing:-.5px}
+#main h2 {font-family:var(--ui-font);font-weight:600;font-size:21px;line-height:1.3;letter-spacing:-.4px}
+#main h3 {font-family:var(--ui-font);font-weight:600;font-size:15px;line-height:1.4;letter-spacing:-.15px}
+#main .eyebrow {color:var(--muted);font-size:10px;font-weight:600;line-height:1.5;letter-spacing:.09em}
+#main .textlink {color:var(--year-ink,#62558a);font-size:13px;min-height:44px;text-underline-offset:4px}
+#main .back {color:var(--muted);font-size:13px;min-height:44px;margin:0 0 12px}
+#main .back svg {width:17px;height:17px}
+#main button,#main a {touch-action:manipulation}
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,summary:focus-visible,
+#main :is(button,a,input,textarea,select,summary):focus-visible {
+  outline:3px solid #7461a8;outline-offset:3px;
+}
+.primary,#main .primary {background:#3c3945;color:#fffefa;border:1px solid transparent;border-radius:14px;font-size:14px;font-weight:600;min-height:48px;padding:12px 16px;box-shadow:none}
+.secondary,#main .secondary {background:var(--white);border:1px solid var(--line);border-radius:14px;color:var(--ink);font-size:13px;min-height:46px}
+#main .form label {font-size:13px;color:var(--ink);font-weight:500}
+#main .form input,#main .form select,#main textarea,#main .search,#main .year-select {
+  background:var(--white);color:var(--ink);border:1px solid #cfc9d8;border-radius:12px;min-height:48px;font:14px/1.6 var(--ui-font);padding:12px;
+}
+#main textarea {width:100%;resize:vertical}
+#main input[type=checkbox] {accent-color:#61517e}
+.hint,#main .hint,#main .health-small {color:var(--muted);font-size:12px;line-height:1.6}
+#main .exp-footer,#main .foot,#main .sourcenote {font-size:10px;line-height:1.6;color:#6c6877}
+
+/* Global navigation: a stable, quiet anchor, not another content card. */
+.nav {width:min(460px,100%);background:#fffefaee;border-top:1px solid var(--line);padding:10px 8px max(12px,env(safe-area-inset-bottom));box-shadow:0 -4px 22px #302d3c04;backdrop-filter:blur(20px)}
+.nav button {width:25%;gap:5px;min-height:49px;font-size:10px;color:#6a6476;font-weight:500;position:relative;isolation:isolate}
+.nav button svg {width:21px;height:21px;stroke-width:1.6}
+.nav button.active {color:var(--ink);font-weight:600}
+.nav button.active:before {content:'';position:absolute;width:46px;height:29px;top:-3px;border-radius:12px;background:#eee8df;z-index:-1}
+
+/* The same category chrome, regardless of whether its rail is age- or skill-led. */
+.monthly-page-header {display:grid;grid-template-columns:35px minmax(0,1fr) 35px;gap:10px;align-items:center;margin:0 0 12px;padding:0;min-height:56px}
+.monthly-page-header .monthly-back,.monthly-page-header .monthly-save {display:grid;place-items:center;min-height:40px;width:35px;padding:0;border:0;border-radius:12px;color:var(--ink);background:transparent}
+.monthly-page-header .monthly-back svg {width:18px;height:18px}
+.monthly-page-header .monthly-save svg {width:19px;height:19px}
+.monthly-page-header .monthly-save[aria-pressed=true] {background:var(--year-bg);color:var(--year-ink)}
+.monthly-page-header h1 {font:600 21px/1.25 var(--ui-font);letter-spacing:-.55px;margin:0;color:var(--ink)}
+.monthly-page-header p {font-size:11px;line-height:1.5;margin:3px 0 0;color:var(--muted)}
+#main .monthly-page-header h1 {font:700 18px/1.25 var(--display-font);letter-spacing:-.2px}
+#main .monthly-page-header p {font-size:12px;margin:2px 0 0}
+#main .journey-stage-rail {
+  display:flex;gap:0;margin:0 -16px 16px;padding:9px 16px 8px;overflow:auto;scrollbar-width:none;scroll-padding-inline:16px;position:relative;
+}
+#main .journey-stage-rail .journey-stage {
+  position:relative;flex:1 0 58px;min-width:58px;min-height:66px;padding:2px 7px 5px;gap:9px;border:0;border-radius:0;background:transparent;
+  color:var(--muted);font-size:11.5px;line-height:1.35;white-space:nowrap;justify-content:flex-start;align-items:center;font-weight:500;
+}
+#main .journey-stage-rail .journey-stage:before {display:block;content:'';position:absolute;top:18px;left:0;right:0;height:2px;background:color-mix(in srgb,var(--year-ink,#62558a) 19%,transparent)}
+#main .journey-stage-rail .journey-stage:first-child:before {left:50%}
+#main .journey-stage-rail .journey-stage:last-child:before {right:50%}
+#main .journey-stage-rail .journey-stage-node {display:grid;place-items:center;position:relative;flex:none;width:32px;height:32px;border-radius:50%;border:1.5px solid var(--year-accent,#b4a9dd);background:var(--year-pale,#efedff);color:var(--year-ink,#62558a);font-size:11px;box-shadow:none;z-index:1}
+#main .journey-stage-node>svg {width:29px;height:29px;display:block}
+#main .journey-node-complete {position:absolute;right:-4px;bottom:-3px;width:13px;height:13px;border-radius:50%;display:grid;place-items:center;background:var(--year-ink);color:var(--white);font-size:9px;border:1px solid var(--white)}
+#main .journey-stage-rail .journey-stage.is-current {background:transparent;color:var(--year-ink,#554776);font-weight:700;box-shadow:none;border:0}
+#main .journey-stage-rail .journey-stage.is-current .journey-stage-node {background:var(--white);border:1.5px solid var(--year-accent,#b4a9dd);box-shadow:0 0 0 2px var(--year-pale,#efedff);color:var(--year-ink)}
+#main .journey-stage-rail .journey-stage.is-relevant {box-shadow:none}
+#main .journey-stage-rail .journey-stage.is-relevant .journey-stage-node {outline:4px solid color-mix(in srgb,var(--year-accent,#b4a9dd) 30%,transparent);outline-offset:2px;box-shadow:0 0 12px color-mix(in srgb,var(--year-accent,#b4a9dd) 45%,transparent)}
+#main .journey-stage-rail .journey-stage.is-current.is-relevant .journey-stage-node {box-shadow:0 0 0 1px var(--year-accent),0 0 10px var(--year-accent)}
+#main .journey-stage-rail .journey-stage.is-relevant:after {display:none}
+#main .journey-stage-rail .journey-stage.is-recorded .journey-stage-node {background:var(--year-ink);color:var(--white);border:2px solid var(--year-pale)}
+#main .journey-stage-rail .journey-stage.is-recorded.is-current .journey-stage-node {background:var(--white);border:1.5px solid var(--year-accent);color:var(--year-ink)}
+#main .sleep-development-rail .journey-stage {flex:1 0 108px;min-width:108px;white-space:normal}
+#main .safety-movement-rail .journey-stage {flex:1 0 88px;min-width:88px;white-space:normal}
+#main .journey-stage-rail .journey-stage>span:last-child {max-width:104px;min-height:16px}
+#main :is(.sleep-development-rail,.safety-movement-rail) .journey-stage>span:last-child {min-height:30px}
+#main .category-modes {margin:0 0 16px;padding:0 0 8px;border-bottom:1px solid var(--line);gap:18px;background:none;border-radius:0}
+#main .category-modes button {font-size:12px;min-height:36px;border-radius:0;color:var(--muted);padding:5px 0;background:none;box-shadow:none}
+#main .category-modes button[aria-current] {color:var(--year-ink);border-bottom:2px solid var(--year-accent)}
+
+/* Shared guide introduction. Each category now renders this actual component. */
+#main .experience-hero {
+  display:grid;grid-template-columns:minmax(0,1fr) 72px;gap:10px 14px;align-items:center;position:relative;
+  padding:19px 18px;background:var(--year-pale,#efedff);border:1px solid color-mix(in srgb,var(--year-accent,#b4a9dd) 24%,transparent);border-radius:22px;margin:0 0 24px;isolation:auto;overflow:hidden;
+}
+#main .experience-hero .experience-hero-copy {min-width:0;width:auto;padding:0;max-width:none}
+#main .experience-hero .experience-hero-copy>.eyebrow {font-size:12px;color:var(--year-ink);line-height:1.4;margin:0 0 7px;letter-spacing:0;text-transform:none}
+#main .experience-hero .experience-hero-copy h2,#main .experience-hero .experience-hero-copy h1 {
+  font:700 26px/1.18 var(--display-font);letter-spacing:-.3px;margin:0;color:var(--ink);max-width:none;
+}
+#main .experience-hero>.experience-hero-art {display:grid;place-items:center;width:76px;height:76px;flex:none;margin:0;align-self:center;opacity:1;background:var(--white);border-radius:50%;padding:7px;position:static;transform:none}
+#main .experience-hero>.experience-hero-art svg {display:block;width:100%;height:100%}
+#main .experience-hero>.experience-hero-description {grid-column:1/-1;font-size:14px;line-height:1.6;color:var(--muted);margin:0;max-width:none;padding:0;background:none}
+#main .experience-hero .journey-date {font-size:11px;margin-top:10px}
+#main .experience-hero .health-small {font-size:12px;margin-top:7px}
+#main .experience-hero.no-art {grid-template-columns:1fr}
+
+/* The journey stays at the top, on the neutral canvas, above the stage card. */
+#shell:has(#main>.parent-guide,#main>.visit-completion-page,#main>.visit-notes-page)>.top {display:none}
+#main:has(>.parent-guide,>.visit-completion-page,>.visit-notes-page) {padding-top:24px}
+#main .category-page-header {margin:0 0 13px;padding:0;border:0;background:transparent}
+#main .category-page-header .monthly-page-header {margin:0 0 8px;grid-template-columns:40px minmax(0,1fr) 40px;gap:10px;min-height:48px}
+#main .category-page-header .monthly-page-header>div {text-align:center}
+#main .category-page-header .monthly-back,#main .category-page-header .monthly-save {border-radius:50%;width:40px;min-height:40px;background:transparent}
+#main .category-page-header .monthly-save[aria-pressed=true] {background:var(--year-bg)}
+#main .category-page-header .journey-stage-rail {margin:0 -16px;padding:8px 12px 6px}
+
+#main .category-page-header .journey-stage-rail {padding-top:21px}
+#main .journey-stage-rail .journey-current-label {position:absolute;top:-13px;left:0;right:0;text-align:center;color:var(--year-ink);font-size:9px;line-height:13px;font-weight:700;letter-spacing:.01em}
+#main .journey-stage-rail .journey-stage>span:not(.journey-stage-node) {max-width:104px;min-height:16px}
+#main .feeding-guide-rail .journey-stage {flex:1 0 106px;min-width:106px;white-space:normal}
+#main .feeding-guide-rail .journey-stage>span:not(.journey-stage-node) {min-height:30px}
+#main .milk-age-reference {display:flex;align-items:center;justify-content:space-between;gap:12px;margin:16px 0 8px;padding-top:14px;border-top:1px solid var(--line)}
+#main .milk-age-reference label {font-size:13px;font-weight:600;color:var(--ink)}
+#main .milk-age-reference select {font:13px var(--ui-font);color:var(--ink);background:var(--white);border:1px solid var(--line);border-radius:12px;padding:10px 12px;min-height:44px;max-width:155px}
+#main .feeding-update-link {margin-top:-18px;margin-bottom:0}
+#main .guide-detail-top {margin-bottom:18px}
+#main .guide-detail-heading {display:grid;grid-template-columns:minmax(0,1fr);align-items:center;gap:12px;margin:0 0 20px;padding:0;background:none;border:0}
+#main .guide-detail-heading.has-art {grid-template-columns:minmax(0,1fr) 64px}
+#main .guide-detail-heading .eyebrow {font-size:11px;letter-spacing:0;text-transform:none;color:var(--year-ink);margin:0 0 8px}
+#main .guide-detail-heading h1 {font:800 28px/1.18 var(--display-font);letter-spacing:-.35px;margin:0}
+#main .guide-detail-heading>p {grid-column:1/-1;margin:0;font-size:14px;line-height:1.65}
+#main .guide-detail-heading-art {display:grid;place-items:center;width:64px;height:64px;background:var(--year-pale);border-radius:18px;padding:5px}
+#main .guide-detail-heading-art svg {width:100%;height:100%}
+#main .guide-save-notice {position:fixed;bottom:92px;left:50%;transform:translateX(-50%);z-index:15;width:min(420px,calc(100% - 32px));padding:12px 15px;border:1px solid var(--line);border-radius:16px;background:var(--white);box-shadow:0 4px 20px #302d3c12;display:flex;align-items:center;gap:12px;font-size:12px;color:var(--ink)}
+#main .guide-save-notice>span {flex:1}
+#main .guide-save-notice button {color:var(--ink);font-size:12px;min-height:44px;white-space:nowrap}
+
+/* Home: the summary leads; quiet category cards carry their own accents. */
+.homemeta {font-size:12px;color:var(--muted);margin:3px 0 0}
+.homemeta b {font-weight:600;color:var(--ink)}
+.monthstrip {gap:5px;margin:14px -16px 16px;padding:4px 16px 9px}
+.monthstrip .month {width:44px;min-height:55px;border:1px solid transparent;border-radius:14px;background:transparent;color:var(--muted);box-shadow:none}
+.monthstrip .month b {font:500 18px/1.2 var(--ui-font)}
+.monthstrip .month span {font-size:9px;color:inherit;margin-top:3px}
+.monthstrip .month.active {background:var(--ink);color:var(--white);border-color:var(--ink);box-shadow:none}
+.monthstrip .month.current:not(.active) {box-shadow:0 0 0 2px #dfd6ca}
+.monthstrip .month.current:after {background:#a79883;bottom:4px}
+.monthstrip .month.active.current:after {background:var(--white)}
+#main .home-summary {display:grid;grid-template-columns:minmax(0,1fr) 112px;gap:13px;background:#fff0e0;border:1px solid #eed8c1;border-radius:24px;padding:21px 18px 24px;margin:0;position:relative;overflow:hidden}
+#main .home-summary-spectrum {position:absolute;bottom:0;left:0;right:0;height:6px;display:flex;gap:0;overflow:hidden}
+#main .home-summary-spectrum>span {flex:1}
+.home-summary .home-summary-heading {min-width:0;align-self:center}
+.home-summary .home-month-eyebrow {font-size:10px;line-height:1.5;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin:0 0 9px}
+#main .home-summary h1 {font:700 27px/1.15 var(--display-font);letter-spacing:-.35px;margin:0;max-width:none;color:var(--ink)}
+.home-summary .home-summary-art {width:112px;height:90px;display:grid;place-items:center;align-self:center}
+.home-month-scene {display:block;width:100%}
+.home-month-scene svg {display:block;max-height:90px}
+.home-month-scene svg>rect:first-child {fill:transparent}
+.home-summary .home-summary-art svg {width:100%;height:100%}
+#main .home-summary .heroanswer {grid-column:1/-1;position:static;font-size:14px;line-height:1.6;color:var(--muted);max-width:none;background:none;margin:0}
+#main .atlashead {margin:26px 0 12px;gap:10px;align-items:center}
+#main .atlashead h2 {font:600 19px/1.3 var(--ui-font);letter-spacing:-.4px}
+#main .atlashead .tailor {font-size:11px;color:var(--muted);white-space:normal;text-align:right;max-width:125px;line-height:1.45}
+#main .atlas {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+#main .atlascard {background:var(--white);border:1px solid color-mix(in srgb,var(--year-accent) 40%,var(--white));border-radius:20px;padding:14px;min-height:176px;gap:0;box-shadow:none;transition:transform .18s}
+#main .home-tile-art {display:grid;place-items:center;flex:none;background:var(--year-pale);width:34px;height:34px;border-radius:50%;padding:3px;margin:0}
+#main .home-tile-art svg {width:100%;height:100%}
+#main .atlascard .cardtop {margin:0 0 10px;gap:8px;align-items:center}
+#main .atlascard .badgeicon {width:29px;height:29px;border-radius:10px;background:var(--year-bg);color:var(--year-ink);flex-shrink:0}
+#main .atlascard .badgeicon svg {width:17px;height:17px}
+#main .atlascard .categoryname {font-size:11.5px;line-height:1.4;color:var(--muted);font-weight:500;min-width:0;margin:0}
+#main .atlascard h3 {font:600 16px/1.3 var(--ui-font);letter-spacing:-.25px;margin:0;color:var(--ink)}
+#main .atlascard p {font-size:12px;line-height:1.5;margin:7px 0 0;color:var(--muted)}
+#main .atlascard .smallarrow {margin-top:auto;padding-top:10px;color:var(--year-ink);align-self:flex-end;min-height:0}
+#main .atlascard .smallarrow svg {height:15px;width:15px}
+#main .atlascard:hover {border-color:var(--year-accent);transform:translateY(-1px);box-shadow:none}
+#main .home-prep {background:var(--white);border:1px solid #e5ddd1;border-radius:20px;padding:17px;margin-top:20px;gap:12px}
+#main .home-prep .ribbonicon {width:32px;height:38px;color:#8c7a61}
+#main .home-prep h2 {font:600 17px/1.3 var(--ui-font);color:var(--ink);margin:4px 0 5px}
+#main .home-prep p {font-size:12px;color:var(--muted);line-height:1.5}
+#main .home-prep .ahead-card-cta {font-size:11px;color:var(--ink);margin-top:8px;display:block}
+#main .home-prep .timing-label {background:none;padding:0;font-size:10px;color:var(--muted)}
+#main .year-home-link {border-bottom:1px solid var(--line);font-size:12px;color:var(--muted);margin-top:12px;min-height:48px}
+#main .journey-category-grid {margin-top:24px}
+#main .category-directory {background:var(--white);border-radius:20px;box-shadow:0 0 0 1px #302d3c0b;margin:21px 0 0;overflow:hidden;padding:0 15px}
+#main .category-directory-row {display:grid;grid-template-columns:45px minmax(0,1fr) 16px;gap:13px;align-items:center;text-align:left;width:100%;padding:14px 0;border-bottom:1px solid var(--line);color:var(--ink)}
+#main .category-directory-row:last-child {border-bottom:0}
+#main .directory-art {width:45px;height:45px;background:var(--year-pale);border-radius:50%;display:grid;place-items:center;padding:4px}
+#main .directory-art svg {width:100%;height:100%}
+#main .directory-copy b {display:block;font-size:15px;line-height:1.35;font-weight:600}
+#main .directory-copy small {display:block;font-size:13px;line-height:1.4;color:var(--muted);margin-top:3px}
+#main .directory-chevron {color:var(--muted)}
+#main .directory-chevron svg {width:16px;height:16px}
+#main .journey-utility-links {border-color:var(--line);margin-top:23px}
+#main .journey-utility-links button {color:var(--muted);font-size:12px}
+
+/* Development: one-column domains, compact skills, explanatory art. */
+#main .development-domain-cards {gap:12px}
+#main .development-domain-card {background:var(--white);border:1px solid color-mix(in srgb,var(--year-accent) 30%,var(--white));border-radius:20px;padding:0 15px 7px}
+#main .development-domain-card>header {grid-template-columns:31px minmax(0,1fr) 55px;gap:10px;background:color-mix(in srgb,var(--year-pale) 40%,var(--white));margin:0 -15px 5px;padding:12px 15px;border-bottom:1px solid color-mix(in srgb,var(--year-accent) 20%,var(--white))}
+#main .development-domain-card .development-domain-icon {background:var(--year-pale);color:var(--year-ink);width:31px;height:31px;border-radius:10px}
+#main .development-domain-card h3 {font:600 16px/1.3 var(--ui-font);color:var(--ink);margin:0 0 3px}
+#main .development-domain-card header p {font-size:11px;color:var(--muted);max-width:none}
+#main .development-domain-art {width:55px;height:49px;border-radius:10px;background:none;padding:0}
+#main .development-domain-art svg>rect:first-child {fill:transparent}
+#main .development-card-skill {font-size:14px;line-height:1.4;min-height:46px;padding:10px 0;gap:10px;color:var(--ink);border-bottom:1px solid #efecf1}
+#main .development-card-skill:last-child {border-bottom:0}
+#main .development-skill-circle {width:17px;height:17px;background:transparent;border-color:#aaa1ba;color:var(--white)}
+#main .development-card-skill.is-recorded .development-skill-circle {background:#776192;border-color:#776192}
+#main .development-skill-chevron {color:#81738e}
+#main .development-skill-badge {color:var(--year-ink);font-size:11px;margin:0 0 10px;background:none;padding:0;letter-spacing:0}
+#main .development-uniform .development-skill-hero h1 {font:800 29px/1.15 var(--display-font);color:var(--ink);margin:0 0 18px}
+#main .development-uniform .development-milestone-picture {background:#eeebfc;border:1px solid #e1daee;border-radius:20px;height:190px;margin:0 0 12px}
+#main .development-uniform .development-milestone-picture>svg {width:100%;height:190px}
+#main .development-uniform .development-visual-sequence {height:190px;padding:10px;gap:8px}
+#main .development-uniform .development-visual-sequence svg {height:128px;border-radius:12px}
+#main .development-uniform .development-visual-sequence figcaption {font-size:11px;color:var(--muted)}
+#main .development-uniform .development-skill-example h2,#main .development-uniform .development-support h2 {font:600 19px/1.3 var(--ui-font);color:var(--ink);margin:0 0 9px}
+#main .development-uniform .development-skill-example p,#main .development-uniform .development-support p {font-size:14px;line-height:1.65;color:var(--muted)}
+#main .development-uniform .development-support {background:none;border:0;border-radius:0;padding:0;margin:22px 0}
+#main .development-example-link {background:var(--year-pale);border:1px solid var(--line);border-radius:16px;padding:14px;margin:20px 0;text-decoration:none}
+#main .development-example-link b {font-size:13px;color:var(--ink)}
+#main .development-example-link small {font-size:11px;color:var(--muted)}
+#main .development-reference-note,#main .milestone-footnote,#main .development-source-note {font-size:11px;color:var(--muted);line-height:1.6}
+
+/* Completion is a record action, never a second guidance card. */
+#main .journey-completion-row,#main .development-specific .journey-completion-row {display:flex;align-items:center;justify-content:space-between;gap:9px;background:var(--white);border:1px solid var(--line);border-radius:14px;padding:9px 11px 9px 13px;margin:0 0 22px}
+#main .journey-completion-copy {gap:8px;min-width:0}
+#main .journey-completion-copy b {font:500 12px/1.5 var(--ui-font);color:var(--ink)}
+#main .journey-completion-circle {width:18px;height:18px;border-color:#aaa1ba;background:transparent;color:var(--white)}
+#main .journey-completion-row .textlink {border-radius:10px;background:var(--year-pale);color:var(--year-ink);font-size:11px;min-height:40px;padding:8px 10px;text-decoration:none;white-space:nowrap}
+#main .journey-completion-row.is-complete .journey-completion-circle {background:var(--year-ink);border-color:var(--year-ink)}
+#main .journey-completion-row.is-complete .textlink {background:transparent}
+#main .visit-completion-intro {background:var(--year-pale,#eeebfc);border:1px solid var(--line);border-radius:22px;padding:20px 18px}
+#main .visit-completion-intro h1 {font-size:30px;color:var(--ink)}
+#main .visit-completion-art {height:82px;margin:12px auto}
+#main .visit-date-panel,#main .visit-notes-panel {background:var(--white);border:1px solid var(--line);border-radius:18px;padding:18px}
+#main .journey-notice {background:#edf8f1;border-color:#c8dfd0;border-radius:18px;box-shadow:0 8px 28px #302d3c12}
+#main .journey-notice b {color:#305d46;font-size:14px}
+#main .journey-notice p {color:#52675a;font-size:12px}
+
+/* Play: illustrated rows, open page, clear steps. */
+#main .play-stage-guide .play-ideas {background:none;border:0;padding:0;margin:0;border-radius:0}
+#main .play-stage-guide .play-collection-heading {margin-bottom:12px}
+#main .play-stage-guide .play-collection-heading h2 {font:600 19px/1.3 var(--ui-font)}
+#main .play-activity-card {background:var(--white);border:1px solid var(--line);border-radius:17px;padding:7px 12px 7px 7px;gap:13px;min-height:101px}
+#main .play-activity-card:hover {background:#f8fcf9;border-color:#aacdbf}
+#main .play-card-art {background:#edf8f1;border-radius:11px;width:91px;flex-basis:91px;min-height:85px}
+#main .play-card-art svg {height:85px;min-height:85px;width:100%}
+#main .play-card-title {font:600 16px/1.3 var(--ui-font);letter-spacing:-.2px;color:var(--ink);margin-bottom:5px}
+#main .play-card-copy .play-why {font-size:12px;line-height:1.5;color:var(--muted)}
+#main .play-card-chevron {color:var(--year-ink)}
+#main .play-more {margin-top:15px;border-color:var(--line);padding-top:0}
+#main .play-more>summary {font-size:13px;font-weight:500;padding:15px 0;min-height:48px;color:var(--year-ink)}
+#main .play-activity-picture {background:var(--year-pale);border:1px solid var(--line);border-radius:20px;margin:0 0 20px}
+#main .play-activity-picture svg {width:100%;height:auto;max-height:230px}
+#main .play-activity-intro h2 {font:800 28px/1.15 var(--display-font);margin:0 0 10px;letter-spacing:-.4px}
+#main .play-activity-intro p {font-size:14px;line-height:1.65}
+#main .play-setup {background:var(--year-pale);padding:14px 15px;border-radius:14px;margin:20px 0;gap:11px}
+#main .play-setup>span {background:var(--year-bg);color:var(--year-ink);width:30px;height:30px}
+#main .play-setup h2 {font:600 13px/1.4 var(--ui-font);margin:0 0 4px}
+#main .play-setup p {font-size:13px;line-height:1.55}
+#main .play-how {background:none;border:0;padding:0;margin:23px 0;border-radius:0}
+#main .play-how h2,#main .play-notice h2,#main .play-easier h2,#main .play-extend h2 {font:600 19px/1.3 var(--ui-font);margin:0 0 11px}
+#main .play-how h2 svg {color:var(--year-ink);width:19px;height:19px}
+#main .play-how li {color:var(--muted);font-size:14px;line-height:1.65;padding-left:31px;margin-bottom:12px}
+#main .play-how li:before {background:var(--year-bg);color:var(--year-ink);font-weight:600}
+#main .play-notice p,#main .play-easier p,#main .play-extend p {font-size:14px;line-height:1.65}
+#main .play-activity-pagination {border-color:var(--line);margin:24px 0 14px;padding-top:14px;gap:20px}
+#main .play-activity-pagination button {font-size:12px;line-height:1.55;max-width:60%}
+
+/* Feeding: a stable milk reference; a visibly separate food progression. */
+#main .feeding-month-five {--tan:var(--year-ink);--cream:var(--year-pale)}
+#main .feeding-month-five .milk,#main .feeding-focus .milk-overview {background:var(--white);border:1px solid var(--line);border-radius:20px;padding:17px 15px;margin:0 0 24px}
+#main .feeding-month-five .milk h2,#main .milk-overview-heading h2 {font:600 19px/1.3 var(--ui-font);color:var(--ink)}
+#main .milk-overview-heading>span {height:33px;width:33px}
+#main .feeding-month-five .seg,#main .feeding-month-five .choice,#main .milk-tabs,#main .solids-stage-options {background:#f0edf1;border:1px solid #e9e3eb;border-radius:12px;padding:3px;gap:3px;margin:14px 0 12px}
+#main .feeding-month-five .seg button,#main .feeding-month-five .choice button,#main .milk-tabs button,#main .solids-stage-options button {font-size:11px;line-height:1.4;color:var(--muted);min-height:43px;border-radius:9px;font-weight:500}
+#main .feeding-month-five .seg button.active,#main .feeding-month-five .choice button.active,#main .milk-tabs button[aria-pressed=true],#main .solids-stage-options button[aria-pressed=true] {background:var(--white);color:var(--year-ink);box-shadow:0 1px 4px #302d3c0b}
+#main .feeding-month-five .metric small,#main .milk-metrics .milk-metric-label {color:var(--muted);font-size:11px;line-height:1.5}
+#main .feeding-month-five .metric strong,#main .milk-metrics .milk-metric-value>strong {font:500 25px/1.25 var(--ui-font);letter-spacing:-.8px;color:var(--ink)}
+#main .feeding-month-five .metric em,#main .milk-metric-unit {font-size:11px;color:var(--muted)}
+#main .milk-metrics .milk-metric-value.is-words>strong {font-size:20px;letter-spacing:-.4px}
+#main .feeding-month-five .section {margin-top:25px}
+#main .feeding-month-five .section h2 {font:600 21px/1.3 var(--ui-font);color:var(--ink)}
+#main .feeding-month-five .section h2.stage-title {font:500 12px/1.5 var(--ui-font);letter-spacing:0;text-transform:none;color:var(--muted)}
+#main .feeding-month-five .lede {margin:18px 0 12px}
+#main .feeding-month-five .lede p {font-size:14px;line-height:1.6}
+#main .feeding-month-five .prep-card {background:var(--white);border:1px solid var(--line);border-radius:20px;padding:18px;min-height:0;flex:0 0 88%;scroll-snap-align:start}
+#main .feeding-month-five .prep-index {color:var(--year-ink);font-size:10px;letter-spacing:.04em;margin-bottom:9px}
+#main .feeding-month-five .prep-card h3 {font:600 21px/1.2 var(--ui-font);letter-spacing:-.4px;color:var(--ink)}
+#main .feeding-month-five .prep-art {background:var(--year-pale);height:110px;border-radius:13px;margin:14px 0}
+#main .feeding-month-five .prep-art svg {height:98px;width:166px}
+#main .feeding-month-five .prep-card p {font-size:14px;line-height:1.6;color:var(--muted)}
+#main .feeding-month-five .guide-link {font-size:12px;font-weight:600;color:var(--year-ink);border-color:#d7b4c4;min-height:42px;margin-top:12px}
+#main .prep-nav,#main .sleep-method-nav,#main .help-carousel-nav {font-size:11px;color:var(--muted)}
+#main .prep-nav button,#main .sleep-method-nav button,#main .help-carousel-nav button {background:var(--white);border:1px solid var(--line);border-radius:11px;min-width:44px;min-height:44px;color:var(--year-ink)}
+#main .feeding-month-five .detail,#main .feeding-month-five .enough {background:transparent;border:0;border-bottom:1px solid var(--line);border-radius:0;margin:0}
+#main .feeding-month-five .detail>summary {font-size:14px;font-weight:500;line-height:1.5;color:var(--ink);padding:16px 0}
+#main .feeding-month-five .detail .inside {padding:0 0 16px}
+#main .feeding-month-five .detail .inside p {font-size:14px;line-height:1.65}
+#main .feeding-month-five .guide-area>.detail {background:var(--white);border:1px solid var(--line);border-radius:17px;padding:0 16px}
+
+/* Sleep: the age snapshot is one compact data surface; guidance remains open. */
+#main .sleep-snapshot-patterns {background:var(--white);border:1px solid var(--line);border-radius:20px;margin:0 0 25px;overflow:hidden}
+#main .sleep-snapshot .sleep-phase-metrics {border:0;border-bottom:1px solid var(--line);padding:17px 14px 12px;margin:0;gap:0}
+#main .sleep-phase-metrics>div {border-color:var(--line);padding:0 8px}
+#main .sleep-phase-metrics strong {font:600 18px/1.3 var(--ui-font);letter-spacing:-.5px;color:var(--ink)}
+#main .sleep-phase-metrics small {font-size:10px;color:var(--muted)}
+#main .sleep-phase-metrics span {color:var(--year-ink);font-size:10px}
+#main .sleep-snapshot.sleep-polished .sleep-example[data-timeline-style=sleek] {padding:14px 15px 6px;background:none;margin:0;border:0;box-shadow:none;border-radius:0}
+#main .sleep-example .schedule-heading h2 {font:600 15px/1.3 var(--ui-font)!important;letter-spacing:-.2px;margin:0!important;color:var(--ink)}
+#main .sleep-example .schedule-heading>span {font-size:10px;color:var(--muted)}
+#main .sleep-example .day-sleep-bar {background:#f8eccf;height:20px;border:0;border-radius:7px;overflow:hidden;margin:11px 0}
+#main .sleep-example .nap-segment {background:#c3d7fb;border:0;border-radius:5px;box-shadow:none}
+#main .sleep-example .nap-segment svg {width:11px;height:11px;color:#4b6086}
+#main .sleep-example .bed-segment {background:#7e91b9}
+#main .sleep-clock-labels {font-size:11px;color:var(--muted)}
+#main .sleep-clock-labels svg {width:15px;height:15px}
+#main .nap-legend {font-size:10px;color:var(--muted);margin-bottom:11px}
+#main .nap-legend span:first-child i {background:#c3d7fb}
+#main .nap-legend span:last-child i {background:#f8eccf}
+#main .nap-times {gap:0}
+#main .nap-times li {border-color:var(--line);padding:8px 0;font-size:12px}
+#main .nap-times li b {font-weight:500;color:var(--ink)}
+#main .nap-times time {color:var(--muted);font-size:11px}
+#main .nap-times .nap-label-moon {color:var(--year-ink)}
+#main .sleep-phase-night>p {font-size:12px;line-height:1.55;color:var(--muted)}
+#main .sleep-phase-help h3,#main .sleep-phase-ahead>h3 {font:600 19px/1.3 var(--ui-font);color:var(--ink);margin:0 0 13px}
+#main .sleep-phase-help li {border-color:var(--line);padding:13px 0}
+#main .sleep-phase-help li h4 {font:600 14px/1.4 var(--ui-font);color:var(--ink);margin:0 0 5px}
+#main .sleep-phase-help li p {font-size:14px;line-height:1.6;color:var(--muted)}
+#main .sleep-snapshot-lower {border:0;background:none;padding:0}
+#main .sleep-phase-ahead {background:var(--year-pale);border:0;border-radius:16px;padding:15px;margin:0 0 22px}
+#main .sleep-phase-ahead>h3 {font:600 11px/1.4 var(--ui-font);color:var(--year-ink);margin:0 0 8px;letter-spacing:.03em}
+#main .sleep-phase-ahead article {background:none;border:0;border-radius:0;padding:0}
+#main .sleep-phase-ahead article h4 {font:600 14px/1.4 var(--ui-font);color:var(--ink);margin:0 0 5px}
+#main .sleep-phase-ahead article p {font-size:13px;line-height:1.6;color:var(--muted)}
+#main .sleep-support-group {background:none;border:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);border-radius:0;padding:0;margin:0 0 22px}
+#main .sleep-support-group summary {font-size:14px;color:var(--ink)}
+#main .sleep-support-group p {font-size:14px;color:var(--muted);line-height:1.65}
+#main .sleep-method-card {background:var(--white);border:1px solid var(--line);border-radius:18px;padding:17px}
+#main .sleep-method-card h3 {font:600 22px/1.25 var(--ui-font);color:var(--ink)}
+#main .sleep-method-card .sleep-method-name {font-size:13px;color:var(--year-ink)}
+#main .sleep-method-art {background:var(--year-pale);border-radius:13px}
+#main .sleep-method-card .sleep-method-description {font-size:14px;line-height:1.6;color:var(--muted)}
+#main .sleep-method-card a {color:var(--year-ink);font-size:12px}
+#main .sleep-reference-area {margin-top:24px;border-top:1px solid var(--line);padding-top:14px}
+#main .sleep-reference-label {font-size:11px;color:var(--muted)}
+#main .sleep-reference-row {border-color:var(--line);color:var(--year-ink);font-size:13px;min-height:48px}
+#main .sleep-reference-mark {color:var(--year-ink);background:var(--year-pale);border-radius:9px}
+
+/* Safety: an actionable checklist, with quieter secondary controls. */
+#main .safety-check-section {margin:0 0 22px}
+#main .safety-check-section-head h2,#main .safety-check-section-head h3 {font:600 19px/1.3 var(--ui-font);color:var(--ink)}
+#main .safety-check-progress {font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+#main .safety-check-list {background:var(--white);border:1px solid var(--line);border-radius:18px;padding:0 13px}
+#main .safety-check-row {grid-template-columns:32px minmax(0,1fr);gap:9px;padding:16px 0;border-color:var(--line)}
+#main .safety-check-control {min-width:32px;width:32px;min-height:44px;justify-content:flex-start}
+#main .safety-check-control>span {height:22px;width:22px;border-radius:7px;border-color:#9d9a83;margin-top:1px;color:#fffefa}
+#main .safety-check-control[aria-checked=true]>span {background:var(--year-ink);border-color:var(--year-ink)}
+#main .safety-check-copy h3 {font:600 14px/1.45 var(--ui-font);color:var(--ink);margin:0 0 6px}
+#main .safety-check-copy>p,#main .safety-check-detail p {font-size:14px;line-height:1.6;color:var(--muted)}
+#main .safety-check-detail>summary {font-size:12px;color:var(--year-ink)}
+#main .safety-check-tools>.safety-check-na {font-size:11px;color:var(--muted)}
+#main .safety-more-checks,#main .safety-saved-group,#main .safety-check-update {border-color:var(--line)}
+#main .safety-more-checks>summary,#main .safety-saved-group>summary,#main .safety-check-update>summary {font-size:12px;color:var(--year-ink)}
+#main .safety-owner-link,#main .safety-check-full {background:var(--white);border-color:var(--line);border-radius:15px;padding:14px;margin-bottom:10px}
+#main .safety-owner-link.is-featured {background:var(--year-pale);border-color:var(--line);border-radius:16px}
+#main .safety-owner-link b,#main .safety-check-full b {font-size:14px;color:var(--ink);font-weight:600}
+#main .safety-owner-link small,#main .safety-check-full small {font-size:12px;line-height:1.5;color:var(--muted)}
+#main .safety-tool-mark {background:var(--year-bg);color:var(--year-ink);border-radius:10px}
+#main .safety-earlier-checks>h3,#main .safety-check-hands-on>h3 {font:600 18px/1.3 var(--ui-font);color:var(--ink)}
+#main .babyproof-options {display:grid;grid-template-columns:1fr;gap:0;padding:0;border:1px solid var(--line);background:var(--white);border-radius:16px;overflow:hidden}
+#main .babyproof-options a.babyproof-option {display:flex;align-items:center;gap:12px;margin:0;padding:14px;border:0;border-bottom:1px solid var(--line);background:transparent;border-radius:0;text-decoration:none;color:var(--year-ink);align-self:stretch}
+#main .babyproof-options a.babyproof-option:last-child {border-bottom:0}
+#main .babyproof-options .babyproof-option-icon {background:var(--year-pale);color:var(--year-ink);width:33px;height:33px;flex:none;border-radius:11px}
+#main .babyproof-options .babyproof-option-copy {gap:3px}
+#main .babyproof-options .babyproof-option-copy>span {font-size:12px;line-height:1.45}
+#main .babyproof-options b {font-size:13px;color:var(--ink)}
+#main .babyproof-options small {font-size:12px;color:var(--muted)}
+#main .safety-check-footnote {color:var(--muted);font-size:11px}
+
+/* Health: four clear destinations, with the same linked-row anatomy elsewhere. */
+#main .journey-section-links {border:1px solid var(--line);border-radius:18px;background:var(--white);padding:0 15px;margin:0 0 19px;overflow:hidden}
+#main .journey-section-links>button {padding:17px 0;grid-template-columns:34px minmax(0,1fr) 12px;gap:11px;border-color:var(--line);color:var(--year-ink)}
+#main .journey-section-links>button:last-child {border-bottom:0}
+#main .journey-link-icon {width:34px;height:34px;border-radius:11px;background:var(--year-pale);color:var(--year-ink)}
+#main .journey-section-links b {font-size:14px;font-weight:600;color:var(--ink);line-height:1.4}
+#main .journey-section-links small {font-size:12px;line-height:1.5;color:var(--muted);margin-top:3px}
+#main .health-help-footnote {margin:8px 0 13px}
+#main .health-help-footnote .textlink {color:var(--muted);font-size:11px;min-height:36px}
+#main .health-exam-check,#main .health-detail-page .vaccine-detail {background:var(--white);border:1px solid var(--line);border-radius:16px;margin:10px 0;padding:0 14px;overflow:hidden}
+#main .health-exam-check>summary {padding:15px 0;grid-template-columns:28px minmax(0,1fr) 15px;gap:10px}
+#main .health-check-mark {background:var(--year-pale);color:var(--year-ink);width:28px;height:28px;border-radius:9px}
+#main .health-exam-check b {font:600 14px/1.4 var(--ui-font);color:var(--ink)}
+#main .health-exam-check small {font-size:13px;line-height:1.5;color:var(--muted);margin-top:5px}
+#main .health-exam-check>div {padding:0 0 15px 38px}
+#main .health-exam-check p {font-size:14px;line-height:1.65}
+#main .health-exam-check[open] {background:var(--white);border-color:#bdcfc5}
+#main .health-detail-page .vaccine-detail summary {font-size:14px;font-weight:500;color:var(--ink);min-height:57px}
+#main .health-detail-page .vaccine-detail p {font-size:14px;line-height:1.65;color:var(--muted)}
+#main .health-detail-page .vaccine-detail[open] {background:var(--white);border-color:#bdcfc5}
+#main .health-vaccine-group h3 {font:600 17px/1.3 var(--ui-font)}
+#main .health-detail-page .journey-question-list {background:var(--white);border:1px solid var(--line);border-radius:18px;padding:0 15px}
+#main .health-detail-page .journey-question-list>p {font-size:14px;line-height:1.65;border-color:var(--line);padding:15px 0}
+#main .health-detail-page .journey-question-list svg {color:var(--year-ink)}
+#main .health-detail-page .journey-form:has(#visitQuestion) {border:1px solid var(--line);background:var(--white);border-radius:18px}
+#main .health-notebook .visit-notes-panel #appointmentNotes {background:none;font-size:14px;line-height:1.8;min-height:240px;color:var(--ink)}
+
+/* Shared closing rhythm: references never compete with the guide itself. */
+#main .sources-disclosure {border:0;border-top:1px solid var(--line);border-radius:0;background:none;padding:0;margin:24px 0 0}
+#main .sources-disclosure>summary {font:400 11px/1.6 var(--ui-font);color:var(--muted);min-height:45px;display:flex;align-items:center;justify-content:space-between;padding:10px 0;cursor:pointer}
+#main .sources-disclosure p,#main .sources-disclosure a {font-size:12px;line-height:1.6;color:var(--muted)}
+#main .sources-disclosure p {margin:8px 0}
+#main .common-questions>h2,#main .faq>h2 {font:600 21px/1.3 var(--ui-font);color:var(--ink);margin:0 0 7px}
+#main .guide-detail,#main .common-questions>details {border-color:var(--line);background:none;border-radius:0}
+#main .guide-detail>summary,#main .common-questions>details>summary {font:500 14px/1.5 var(--ui-font);color:var(--ink);min-height:49px;padding:14px 0}
+#main .guide-detail p,#main .common-questions>details p {font-size:14px;line-height:1.65;color:var(--muted)}
+#main .exp-footer {margin-top:13px;text-align:left}
+
+/* Year and personal timeline use the very same surfaces and type hierarchy. */
+#main .year-hub-title {font-size:34px}
+#main .year-intro,#main .journey-lede {font-size:14px;line-height:1.65;margin-top:12px}
+#main .visual-year-categories {gap:10px}
+#main .visual-year-categories>button {background:var(--white);border:1px solid var(--line);border-radius:18px;padding:17px;color:var(--ink)}
+#main .visual-year-categories strong {font:600 17px/1.3 var(--ui-font);color:var(--ink)}
+#main .visual-year-categories>button>span:not(.year-hub-art) {font-size:12px;line-height:1.5;color:var(--muted)}
+#main .year-hub-art {background:var(--year-pale);border-radius:15px}
+#main .year-title {padding:4px 0 20px}
+#main .year-title h1 {font-size:32px;color:var(--ink)}
+#main .year-title p {font-size:14px;line-height:1.65;color:var(--muted)}
+#main .year-stop-content,#main .development-year-stop {background:var(--white);border:1px solid var(--line);border-radius:18px;box-shadow:none}
+#main .year-stop.is-relevant .year-stop-content,#main .development-year-stop.is-current {border-color:var(--year-accent);background:var(--year-pale)}
+#main .year-stop strong,#main .development-year-stop b {font:600 19px/1.3 var(--ui-font);color:var(--ink)}
+#main .year-stop-age,#main .development-year-stop small {font-size:11px;color:var(--year-ink)}
+#main .year-stop-copy,#main .development-year-stop p {font-size:13px;line-height:1.6;color:var(--muted)}
+#main .year-now {background:var(--year-bg);color:var(--year-ink);font-size:10px;border-radius:7px}
+#main .year-dot,#main .development-year-node {background:var(--year-bg);border-color:var(--year-accent)}
+#main .journey-timeline-entry {color:var(--ink);padding:16px 0;gap:12px}
+#main .journey-timeline-entry b {font:600 18px/1.3 var(--ui-font);color:var(--ink)}
+#main .journey-timeline-entry p {font-size:13px;line-height:1.6;color:var(--muted)}
+#main .journey-timeline-entry small,#main .journey-timeline-entry time {font-size:11px;color:var(--muted)}
+#main .journey-timeline-dot {background:#eee8df;border-color:#dfd6ca;color:var(--muted)}
+#main .is-recorded .journey-timeline-dot {background:#e4f7ec;color:#35665b;border-color:#c7e0d1}
+#main .journey-empty,#main .empty {background:var(--white);border-radius:20px;border:1px solid #e5ddd1;padding:20px}
+#main .journey-empty p {color:var(--muted);font-size:14px}
+#main .personalquestion {border-color:var(--line)}
+#main .chip {border-color:#d3cbdc;background:var(--white);color:var(--muted);border-radius:12px;font-size:12px}
+#main .chip.on {background:#e5dff8;color:#554776;border-color:#c7b9e1}
+#main .welcome .sprout {color:#8e7db5}
+#main .progress .on {background:#a99ad1}
+@media(min-width:650px) {
+  #shell {margin:28px auto;min-height:calc(100dvh - 56px);border-radius:28px;box-shadow:0 18px 80px #302d3c12;border:1px solid #ffffffa0}
+  .top {padding-top:23px}
+}
+@media(max-width:370px) {
+  #main {padding-left:16px;padding-right:16px}
+  .top {padding-left:16px;padding-right:16px}
+  .monthstrip {margin-left:-16px;margin-right:-16px;padding-left:16px;padding-right:16px}
+  #main .home-summary {padding:19px 17px;grid-template-columns:minmax(0,1fr) 96px;gap:12px}
+  #main .home-summary h1 {font-size:26px}
+  .home-summary .home-summary-art {width:96px;height:88px}
+  #main .atlascard {padding:13px 12px;min-height:176px}
+  #main .atlascard .categoryname {font-size:11.5px}
+  #main .atlascard h3 {font-size:16px}
+  #main .atlascard p {font-size:12px}
+  #main .experience-hero {padding:17px 15px;grid-template-columns:minmax(0,1fr) 64px;gap:10px}
+  #main .experience-hero>.experience-hero-art {width:64px;height:64px}
+  #main .experience-hero .experience-hero-copy h2 {font-size:25px}
+  #main .play-card-art {width:78px;flex-basis:78px}
+  #main .play-card-title {font-size:15px}
+  #main .journey-completion-row {padding:8px 9px;gap:5px}
+  #main .journey-completion-copy b {font-size:11px}
+  #main .journey-completion-row .textlink {font-size:10px;padding:8px}
+  #main .milk-metrics .milk-metric-value>strong,#main .feeding-month-five .metric strong {font-size:23px}
+}
+@media(prefers-reduced-motion:reduce) {
+  #main .atlascard {transition:none}
+  #main .atlascard:hover {transform:none}
+  .journey-notice {animation:none}
+  * {scroll-behavior:auto!important}
+}
+
+/* BEGIN CONNECTED HOME */
+/* A connected Home, using Ahead's existing typography, palette and illustrations. */
+#main .home-concept-label {display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 18px;font-size:11px;line-height:1.4;color:var(--muted)}
+#main .home-concept-label>span {background:#eee8df;border-radius:6px;padding:4px 7px}
+#main .home-concept-label a {color:var(--muted);text-decoration:none;min-height:32px;display:flex;align-items:center}
+#main .connected-summary {border:1px solid #eed8c1;border-radius:24px;overflow:hidden;background:var(--white)}
+#main .connected-summary .home-summary {border:0;border-radius:0;margin:0;padding-bottom:24px}
+#main .connected-summary-links {padding:0 15px}
+#main .connected-row {width:100%;display:grid;grid-template-columns:38px minmax(0,1fr) 12px;gap:11px;align-items:center;text-align:left;padding:14px 0;border:0;background:transparent;color:var(--ink)}
+#main .connected-row+.connected-row {border-top:1px solid var(--line)}
+#main .connected-row-icon {display:grid;place-items:center;width:38px;height:38px;background:var(--year-pale);border-radius:12px;padding:3px}
+#main .connected-row-icon svg {width:100%;height:100%}
+#main .connected-row-copy {min-width:0}
+#main .connected-row-copy small {display:block;font-size:10px;line-height:1.4;font-weight:600;color:var(--year-ink);margin-bottom:3px}
+#main .connected-row-copy b {display:block;font-size:14px;line-height:1.35;font-weight:600}
+#main .connected-row-copy>span {display:block;font-size:12px;line-height:1.45;color:var(--muted);margin-top:4px}
+#main .connected-chevron {font-size:20px;line-height:1;color:var(--muted)}
+#main .connected-checkin {padding:14px 15px;margin:0 0 14px;border-radius:18px;background:var(--white);border:1px solid var(--line)}
+#main .connected-checkin>div:first-child {display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:9px}
+#main .connected-checkin h2 {font-size:14px;line-height:1.4;margin:0;letter-spacing:0}
+#main .connected-checkin>p {font-size:12px;line-height:1.5;margin:0 0 11px}
+#main .connected-skip {min-height:32px;font-size:11px;color:var(--muted)}
+#main .connected-checkin-choices {display:flex;gap:6px}
+#main .connected-checkin-choices button {flex:1;min-height:42px;padding:7px 5px;font-size:12px;border:1px solid var(--line);border-radius:11px;background:var(--white);color:var(--ink)}
+#main .connected-checkin-choices button:hover {background:#f3f0f7;border-color:#c4b8d5}
+#main :is(.connected-support,.connected-ahead,.connected-browse) {margin-top:25px}
+#main :is(.connected-support,.connected-ahead,.connected-browse) h2 {font:600 18px/1.3 var(--ui-font);letter-spacing:-.3px;margin:0 0 12px}
+#main .connected-support>div {display:flex;flex-direction:column;gap:9px}
+#main .connected-current-extra {display:flex;flex-direction:column;gap:9px;margin-top:12px}
+#main .home-action-row {margin:12px 0;padding:0 13px;border:1px solid var(--line);border-radius:16px;background:var(--white)}
+#main .home-action-tools {display:flex;align-items:center;justify-content:space-between;gap:12px;border-top:1px solid var(--line)}
+#main .home-inline-check {min-height:44px;display:flex;align-items:center;gap:7px;padding:0 4px 0 0;color:var(--ink);font-size:12px;font-weight:600}
+#main .home-inline-check>span {width:16px;height:16px;border:1.5px solid var(--year-accent);border-radius:50%}
+#main .home-action-na {min-height:44px;padding:0 0 0 4px;font-size:12px;color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+#main .home-connected-sleep {border-top:1px solid var(--line)}
+#main .home-connected-actions {padding-left:49px;margin-top:-5px;padding-bottom:6px}
+#main .home-connected-actions .home-action-tools {border-top:0}
+#main .home-action-link {display:flex;width:100%;align-items:center;gap:12px;min-width:0;text-align:left;padding:11px 0;min-height:56px;color:var(--ink)}
+#main .home-action-link>span:first-child {flex:1}
+#main .home-action-link small {display:block;color:var(--year-ink);font-size:10px;line-height:1.4;margin-bottom:3px}
+#main .home-action-link b {display:block;font-size:14px;font-weight:600;line-height:1.4}
+#main .home-action-link>span>span {display:block;color:var(--muted);font-size:12px;line-height:1.4;margin-top:4px}
+#main .home-milk-links {display:flex;gap:14px;flex-wrap:wrap;padding:0 0 10px 49px}
+#main .home-milk-links .textlink {font-size:11px;min-height:38px}
+#main .home-moment-row {display:flex;align-items:center;gap:10px;margin-top:12px;padding:12px 13px;border:1px solid #efded9;border-radius:18px;background:#fff5f3}
+#main .home-moment-row>span {flex:none;display:grid;place-items:center;width:32px;height:32px;border-radius:11px;background:var(--white);color:#8b526b}
+#main .home-moment-row svg {width:17px;height:17px}
+#main .home-moment-row>div {flex:1;min-width:0}
+#main .home-moment-row b {display:block;font-size:13px;line-height:1.4;font-weight:600}
+#main .home-moment-row small {display:block;font-size:11px;color:var(--muted)}
+#main .home-moment-row .textlink {font-size:12px;min-height:40px}
+#main .connected-support-row {border:1px solid var(--line);border-radius:18px;background:var(--white);padding:13px 14px}
+#main .connected-support-row+.connected-support-row {border-top:1px solid var(--line)}
+#main .connected-section-heading {display:flex;justify-content:space-between;align-items:center;gap:12px}
+#main .connected-section-heading h2 {margin:0}
+#main .connected-section-heading .textlink {font-size:11px;color:var(--muted)}
+#main .connected-ahead-list {padding:0 14px;border:1px solid var(--line);background:var(--white);border-radius:18px}
+#main .connected-category-grid {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:8px}
+#main .connected-category-grid button {display:grid;grid-template-columns:30px minmax(0,1fr) 8px;gap:8px;align-items:center;text-align:left;background:var(--white);border:1px solid color-mix(in srgb,var(--year-accent) 40%,var(--white));border-radius:15px;padding:12px 10px;min-height:65px}
+#main .connected-category-grid button>span:first-child {display:grid;place-items:center;width:30px;height:30px;background:var(--year-pale);border-radius:50%;padding:3px}
+#main .connected-category-grid svg {width:100%;height:100%}
+#main .connected-category-grid b {font-size:12px;line-height:1.35;font-weight:500;color:var(--ink)}
+#main .connected-preview-footnote {font-size:10px;line-height:1.5;text-align:center;margin:18px 0 8px}
+#main .connected-age-note {font-size:11px;line-height:1.5;margin:0 0 14px}
+#main .connected-age-note button {font-size:11px;text-decoration:underline;min-height:32px}
+@media(max-width:350px){#main .connected-category-grid {grid-template-columns:1fr}#main .connected-category-grid button {min-height:54px}}
+/* END CONNECTED HOME */
