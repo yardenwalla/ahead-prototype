@@ -468,11 +468,11 @@
     // and boys see circumcised and not, unless the parent has already told us.
     down: {
       0: { html: true, pre: () => `<div class="care-toggles">${downToggles()}</div>`,
-        vis: () => downAnat() === 'boy' && downCirc() === 'Yes' ? hubIconSteps([['drop', 'Petroleum jelly', 'On the tip or a gauze square'], ['diaper', 'Diaper on loosely', 'So it doesn’t rub'], ['bath', 'Warm water', 'No wipes until healed']], CAT, 'Petroleum jelly on the tip or on a gauze square, the diaper fastened loosely, and warm water instead of wipes until it heals.', false) : '',
+        vis: () => downAnat() === 'boy' && downCirc() === 'Yes' ? hubIconSteps([['drop', 'Jelly on gauze', 'A dab on a gauze square'], ['hand', 'Over the tip', 'Loosely, not wrapped tight'], ['diaper', 'Fresh each change', 'Until it heals']], CAT, 'Put a dab of petroleum jelly on a gauze square, lay it loosely over the tip, and use a fresh one at each diaper change until it heals.') : '',
         get line() { const a = anatomy(); return a === 'girl' ? 'Wiping, and what’s normal' : a === 'boy' ? 'Circumcised or not' : 'For girls and boys'; },
         get answer() { return downAnat() === 'boy' ? 'Only gentle cleaning is needed, plus a little extra care while a circumcision heals.' : 'Only gentle cleaning is needed. A few things in the first weeks look surprising, and they’re normal.'; },
         get doText() { return downPick({ girl: 'Wipe front to back at every change, gently, between the folds.',
-          cut: 'Keep the tip from sticking to the diaper, and keep it clean until it heals, in 7–10 days.',
+          cut: 'Keep the tip from sticking to the diaper until it heals, in 7–10 days. Clean it with warm water, not wipes.',
           uncut: 'Wash the outside only. Never pull back the foreskin.' }); },
         get normal() { return downPick({ girl: 'A little white discharge or light spotting, and swollen-looking genitals, in the first weeks. It comes from hormones passed on before birth.',
           cut: 'While it heals: a red tip and a soft yellow film. A plastic ring, if there is one, falls off on its own in 5–10 days.',
