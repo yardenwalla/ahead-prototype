@@ -110,6 +110,40 @@
     [DIAPER_ART[3], 'Slide the clean one under', 'Lift gently with a hand under {p} bottom.'],
     [DIAPER_ART[4], 'Fasten', 'Cream if it looks red. Two fingers of room at the waist.']
   ]);
+  const BATH_ART = (() => {
+    const SK = '#f7dcca', LEG = '#f1cdb6', INK = '#2a6078', BG = '#e3f1f7', PH = '#c98f72', SL = '#8cc1d6', WATER = '#cfe8f3', TOWEL = '#bfe0ee';
+    const base = inner => `<svg viewBox="0 0 300 180" aria-hidden="true"><rect width="300" height="180" rx="22" fill="${BG}"/>${inner}</svg>`;
+    const eyes = (x, y) => `<path d="M${x - 8} ${y}q3 3 6 0M${x + 4} ${y}q3 3 6 0" stroke="${INK}" stroke-width="1.8" fill="none" stroke-linecap="round"/>`;
+    const hand = (x, y, r) => `<g transform="translate(${x} ${y}) rotate(${r})"><rect x="-9" y="0" width="22" height="48" rx="6" fill="${SL}"/><rect x="-7" y="-26" width="18" height="30" rx="9" fill="${PH}"/><rect x="7" y="-20" width="7" height="16" rx="3.5" fill="${PH}"/></g>`;
+    const cloth = (x, y) => `<rect x="${x}" y="${y}" width="26" height="20" rx="5" fill="#fff" stroke="${SL}" stroke-width="2"/>`;
+    // A baby lying on a towel, wrapped, with one part uncovered.
+    const onTowel = body => `<rect x="22" y="60" width="256" height="84" rx="24" fill="${TOWEL}"/><path d="M40 132h220" stroke="#fff" stroke-width="2" stroke-dasharray="4 5" stroke-linecap="round"/><circle cx="76" cy="100" r="24" fill="${SK}"/>${eyes(76, 98)}${body}`;
+    const wrapped = `<rect x="98" y="78" width="130" height="44" rx="22" fill="#fff"/>`;
+    const tub = `<path d="M40 70h220l-14 62a16 16 0 0 1-15.6 12.4H69.6A16 16 0 0 1 54 132Z" fill="#fff"/><path d="M48 102h204l-6 30a16 16 0 0 1-15.6 12.4H69.6A16 16 0 0 1 54 132Z" fill="${WATER}"/>`;
+    return {
+      sponge: [
+        base(`<rect x="22" y="96" width="150" height="50" rx="16" fill="${TOWEL}"/><path d="M36 134h122" stroke="#fff" stroke-width="2" stroke-dasharray="4 5" stroke-linecap="round"/><path d="M190 96h80l-8 40a10 10 0 0 1-10 8h-44a10 10 0 0 1-10-8Z" fill="#fff"/><path d="M194 110h72l-5 26a10 10 0 0 1-10 8h-42a10 10 0 0 1-10-8Z" fill="${WATER}"/>${cloth(214, 66)}<text x="30" y="52" font-size="13" font-weight="700" fill="${INK}">warm room</text>`),
+        base(onTowel(wrapped) + hand(124, 70, 40) + `<rect x="90" y="100" width="20" height="15" rx="4" fill="#fff" stroke="${SL}" stroke-width="2"/>`),
+        base(onTowel(`<rect x="98" y="78" width="80" height="44" rx="22" fill="#fff"/><rect x="170" y="80" width="56" height="40" rx="18" fill="${SK}"/><path d="M226 88q24-8 30-26M226 112q24 8 30 26" stroke="${LEG}" stroke-width="12" stroke-linecap="round" fill="none"/>`) + hand(220, 40, 20) + cloth(206, 58))
+      ],
+      tub: [
+        base(`<rect x="22" y="134" width="256" height="12" rx="6" fill="#fff"/><rect x="34" y="92" width="70" height="42" rx="10" fill="${TOWEL}"/><path d="M42 124h54" stroke="#fff" stroke-width="2" stroke-dasharray="4 5" stroke-linecap="round"/>${cloth(116, 112)}<rect x="156" y="88" width="24" height="46" rx="9" fill="${SL}"/><rect x="162" y="80" width="12" height="11" rx="3" fill="#fff"/><path d="M196 104h66v10c0 12-10 20-24 20h-18c-14 0-24-8-24-20Z" fill="#fff" stroke="#9fb8df" stroke-width="2"/>`),
+        base(tub + `<path d="M262 46 182 102" stroke="${PH}" stroke-width="18" stroke-linecap="round"/><rect x="250" y="30" width="40" height="30" rx="10" fill="${SL}" transform="rotate(-35 270 45)"/><path d="M150 100q8-8 16 0t16 0" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round"/><text x="54" y="48" font-size="15" font-weight="700" fill="${INK}">about 100°F</text>`),
+        base(tub + `<path d="M24 160c16-6 32-20 52-42" stroke="${PH}" stroke-width="14" stroke-linecap="round" fill="none"/><rect x="100" y="84" width="96" height="28" rx="14" fill="${SK}"/><circle cx="88" cy="88" r="20" fill="${SK}"/>${eyes(88, 86)}` + hand(214, 56, 50) + cloth(196, 70)),
+        base(`<path d="M150 22c44 0 72 36 72 84v22c0 9-7 16-16 16H94c-9 0-16-7-16-16v-22c0-48 28-84 72-84Z" fill="${TOWEL}"/><path d="M150 22c-22 0-40 12-48 32h96c-8-20-26-32-48-32Z" fill="#fff" fill-opacity=".55"/><circle cx="150" cy="80" r="24" fill="${SK}"/>${eyes(150, 78)}`)
+      ]
+    };
+  })();
+  const bathCarousel = kind => kind === 'sponge' ? carousel('bath', [
+    [BATH_ART.sponge[0], 'Warm room, everything ready', 'A towel down, warm water and a washcloth. About 5 minutes is plenty.'],
+    [BATH_ART.sponge[1], 'Face first', 'Plain water. Wipe each eye from the inside corner out.'],
+    [BATH_ART.sponge[2], 'Then body, diaper area last', 'Keep {o} wrapped and uncover one part at a time. Pat dry into the creases.']
+  ], ['uYQ_KNlcQwE', 'How to give your newborn a sponge bath', 'Nemours KidsHealth']) : carousel('bath', [
+    [BATH_ART.tub[0], 'Gather everything first', 'Towel, washcloth, mild soap and a clean diaper.'],
+    [BATH_ART.tub[1], 'Test the water', 'About 2 inches, warm not hot. Check with your wrist.'],
+    [BATH_ART.tub[2], 'Support head and neck', 'One arm behind {o}. Wash top to bottom with the other.'],
+    [BATH_ART.tub[3], 'Straight into the towel', 'Lift {o} out and wrap {o} up right away.']
+  ], ['VsUla1M7eHQ', 'How to give your baby a tub bath', 'Nemours KidsHealth']);
   const TOPIC = {
     diapers(v) {
       const h = H();
@@ -126,8 +160,7 @@
         ['Diaper rash', 'What helps, and when to call', rashSteps()],
         v === 0 && ['In the first weeks', 'The cord, and wipes or a washcloth', p_('Fold the top of the diaper down so the cord stump stays in the air.') + p_('Fragrance-free wipes or a soft washcloth and warm water both work.')],
         v === 0 && ['Cleaning down there', 'For girls and boys', p_('Always wipe front to back. In newborn girls, a little white discharge or a spot of blood is normal in the first weeks.') + p_('If uncircumcised, wash the outside only; don’t pull back the foreskin. If circumcised, put a dab of petroleum jelly on the tip at each change until it heals, in about 7–10 days. Call if there’s bleeding, swelling or pus.')],
-        v === 2 && ['Once solids start', 'Usually around 6 months', p_('Poop gets thicker, browner and smellier, and can take on the color of what {s} ate.')],
-        changes('diapers', ['8–12 a day. Fold the top below the cord.', '6 or more wet ones a day. Size up when leaks start.', 'Once solids start, poop changes.', 'Wriggly changes. A toy in hand helps.'], v)
+        v === 2 && ['Once solids start', 'Usually around 6 months', p_('Poop gets thicker, browner and smellier, and can take on the color of what {s} ate.')]
       ]);
       return page('diapers', b);
     },
@@ -140,14 +173,11 @@
         [['How often?', '2–3 a week', 'In about 2 inches of warm water, around 100°F.']],
         [['Where?', 'The big tub', 'Once {s} {sit|sits} steadily. Water no higher than {p} waist.']]
       ][v]);
-      if (v === 0) b += h2('Give a sponge bath') + hubIconSteps([['home', 'Warm room, towel down', 'Everything within reach'], ['drop', 'Face, then body', 'Plain water, one part at a time'], ['towel', 'Diaper area last', 'Pat dry, into the skin folds']], CAT, 'Warm the room and lay baby on a towel. Wash the face, then the body one part at a time, then the diaper area last, and pat dry.');
-      if (v === 1 || v === 2) b += h2('Give a tub bath') + h.steps(['Gather everything first: towel, washcloth, mild soap and a clean diaper.', 'Test the water with your wrist. It should feel warm, not hot.', 'Support {p} head and neck with one arm, and wash top to bottom with the other.', 'Lift {o} out onto the towel and wrap {o} up right away.']);
+      if (v === 0) b += h2('Give a sponge bath') + bathCarousel('sponge');
+      if (v === 1 || v === 2) b += h2('Give a tub bath') + bathCarousel('tub');
       if (v === 3) b += h2('In the big tub') + h.steps(['Use a non-slip mat, and keep the water about waist-high when {s’s} sitting.', 'Keep a hand on Maya the whole bath. Expect {o} to try to pull up.', 'A bath seat helps {o} sit, but it isn’t a safety seat. Stay within arm’s reach.']);
       b += h.versus('Every bath', ['Always', 'Gather everything first, then keep a hand on Maya the whole bath.'], ['Never', 'Step away, even for a moment. Babies can slip under in seconds. Take {o} with you.']);
       b += fold('More about baths', [
-        v === 0 && ['Watch how it’s done', 'A short video', hubEmbed('uYQ_KNlcQwE', 'How to give your newborn a sponge bath', 'Nemours KidsHealth')],
-        v === 0 && ['Keeping {o} warm', 'Eyes, creases and folds', p_('Keep {o} wrapped in a towel and uncover one part at a time. Wipe each eye from the inside corner out, and get into the creases of the neck, arms and legs.') + p_('About 5 minutes in a warm room is plenty.')],
-        (v === 1 || v === 2) && ['Watch how it’s done', 'A short video', (window.hubFigure ? hubFigure('tub', CAT, 'A baby lying back in a baby tub with about 2 inches of warm water, a hand supporting the head and neck.') : '') + hubEmbed('VsUla1M7eHQ', 'How to give your baby a tub bath', 'Nemours KidsHealth')],
         v === 2 && ['Bath as part of bedtime', 'Bath, feed, book, bed', `<div class="hub-list care-link">${rowK('bath', 'Start a bedtime routine', 'In Sleep', "openPage('chg:Sleep:d:routine')")}</div>`],
         v > 0 && ['Washing hair', 'Once or twice a week', p_('A little mild baby shampoo is plenty. Rinse with a wet washcloth, front to back, so it stays out of {p} eyes.')],
         changes('bath', ['Sponge baths until the cord falls off.', 'Baby tub, 2–3 times a week.', 'Often part of bedtime now.', 'Sitting up, then the big tub.'], v)
@@ -174,8 +204,7 @@
         v === 0 && ['Getting clothes on', 'Over a floppy head', p_('Stretch the neck opening wide and ease it over the back of {p} head first, then the face. Snaps or a zip down the front are easiest at first.')],
         v === 3 && ['Dressing for the weather', 'One more layer than you', p_('Feel the back of {p} neck. Sweaty means too warm; cool means add a layer. For sleep, snug-fitting pajamas and a sleep sack, no hats or loose blankets.')],
         ['In the car seat', 'No puffy coats', p_('Take off puffy coats first. Buckle {o} in, then put a blanket over the straps.')],
-        ['Sleep sacks and swaddles', 'In Sleep', `<div class="hub-list care-link">${rowK('clothes', 'What to use, and when to stop swaddling', 'In Sleep', "openPage('chg:Sleep:safe')")}</div>`],
-        changes('clothes', ['One more layer than you, and easy snaps.', 'One more layer than you.', 'Layers for the season, and bibs for drool.', 'Bare feet indoors, soft shoes outside.'], v)
+        ['Sleep sacks and swaddles', 'In Sleep', `<div class="hub-list care-link">${rowK('clothes', 'What to use, and when to stop swaddling', 'In Sleep', "openPage('chg:Sleep:safe')")}</div>`]
       ]);
       return page('clothes', b);
     },
@@ -221,7 +250,6 @@
       b += h2('Trim tiny nails') + h.steps(['Wait until Maya is asleep or very relaxed.', 'Use baby clippers or a soft emery board, pressing the fingertip pad away from the nail.', 'File rough edges. A nick happens to everyone; press gently with a clean cloth.']);
       b += fold('More', [
         ['Ears', 'No cotton swabs inside', p_('Wipe the outside and behind the ears with a washcloth. Earwax clears on its own.')],
-        ['Eyes', 'Inside corner out', p_('Wipe with a clean, damp cotton ball, a fresh one for each eye.')],
         ['A stuffy nose', 'Saline and gentle suction · In Health', `<div class="hub-list care-link">${rowK('nails', 'Colds and stuffy noses', 'In Health', "openPage('chg:Health:d:cold')")}</div>`]
       ]);
       return page('nails', b);
