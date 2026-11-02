@@ -5,3 +5,27 @@
 #main .hl-row .hub-dot { background: var(--hl-bg) !important }
 #main .hl-row .hub-dot svg { stroke: var(--hl-ink) }
 #main .hub-page[data-overview="Health"][data-look] .hub-next { border: 0; background: #e6f5ec }
+/* Checkup pages: the header follows Development's area pages */
+#main .hv-head { background: var(--area) }
+#main .hv-head .dev-area-head-art { display: block; height: 56px; margin: 16px 0 14px }
+#main .hv-head .dev-area-head-art svg { height: 100%; width: auto; display: block }
+#main .hv-head .hub-context { color: var(--area-ink) }
+#main .hv-doses { list-style: none; margin: -10px 0 0; padding: 0 18px 8px 74px }
+#main .hv-doses li { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 8px 0; border-top: 1px solid var(--line); font-size: 15px }
+#main .hv-doses li:first-child { border-top: 0 }
+#main .hv-doses b { font-weight: 500; color: var(--ink) }
+#main .hv-doses span { font-size: 13px; color: #6b6670; text-align: right }
+#main .hv-more { border-top: 1px solid var(--line) }
+#main .hv-more:first-child { border-top: 0 }
+#main .hv-more > summary { list-style: none; display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; font-size: 14.5px; font-weight: 600; color: #46638c; cursor: pointer }
+#main .hv-more > summary::-webkit-details-marker { display: none }
+#main .hv-more.is-row > summary { padding: 0 18px 0 0; color: inherit; font-weight: inherit }
+#main .hv-more.is-row > summary .hub-row { flex: 1; border: 0 }
+#main .hv-plus { color: #46638c; font-size: 16px }
+#main .hv-more[open] .hv-plus { transform: rotate(45deg) }
+#main .hv-lines { list-style: none; margin: 0; padding: 0 18px 10px }
+#main .hv-more.is-row .hv-lines { padding-left: 74px }
+#main .hv-lines li { padding: 8px 0; border-top: 1px solid var(--line) }
+#main .hv-lines b { display: block; font-size: 15px; font-weight: 500; color: var(--ink) }
+#main .hv-lines span { display: block; font-size: 13.5px; line-height: 1.45; color: #6b6670; margin-top: 1px }
+#main .hv-doses b { white-space: nowrap }
