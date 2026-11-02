@@ -242,7 +242,7 @@
   // Videos that play right on the page. Nothing loads from YouTube until the parent taps play.
   window.hubEmbed = function (id, title, source, opts = {}) {
     const watch = `https://www.youtube.com/watch?v=${id}`;
-    return `<figure class="hub-embed${opts.small ? ' is-small' : ''}"><button class="hub-embed-poster" data-yt="${id}" onclick="hubPlay(this,'${id}',${opts.loop ? 1 : 0})" aria-label="Play video: ${escA(title)}" style="background-image:url(https://i.ytimg.com/vi/${id}/hqdefault.jpg)"><span class="hub-embed-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5Z" fill="currentColor"/></svg></span></button>${opts.small ? '' : `<figcaption><b>${F2(title)}</b><small>Video · ${escA(source)}</small></figcaption>`}</figure>`;
+    return `<figure class="hub-embed${opts.small ? ' is-small' : ''}"><button class="hub-embed-poster" data-yt="${id}" onclick="hubPlay(this,'${id}',${opts.loop ? 1 : 0})" aria-label="Play video: ${escA(title)}" style="background-image:url(https://i.ytimg.com/vi/${id}/hqdefault.jpg)"><span class="hub-embed-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5Z" fill="currentColor"/></svg></span></button>${opts.small ? '' : `<figcaption><b>${F2(title)}</b><small>Video</small></figcaption>`}</figure>`;
   };
   window.hubPlay = function (btn, id, loop) {
     // Find the poster even when called without it (a link that only knows the video id).
