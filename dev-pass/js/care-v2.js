@@ -82,6 +82,34 @@
     return h2(title) + `<div class="hub-card care-folds">${it.map(([t, sub, body]) => `<details class="care-fold"><summary><span><b>${F(t)}</b>${sub ? `<small>${F(sub)}</small>` : ''}</span><i aria-hidden="true">›</i></summary><div class="care-fold-body">${body}</div></details>`).join('')}</div>`; };
   const p_ = t => `<p class="care-p">${F(t)}</p>`;
   const changes = (k, lines, v) => ['How it changes as {s} {grow|grows}', 'What’s different at each age', `<div class="care-strip">${lines.map((t, i) => `<button class="care-step${i === v ? ' is-on' : ''}" onclick="${go(k, i)}"${i === v ? ' aria-current="true"' : ''}><b>${STAGE[i]}${live() && i === stageNow() ? ' · Now' : ''}</b><span>${F(t)}</span></button>`).join('')}</div>`];
+
+  /* Step-by-step pictures for things parents learn by seeing: one card per step, swiped sideways.
+     Each card is a picture and one short line. The video, where there is one, sits right under it. */
+  const carousel = (k, frames, video) => { const c = COL[k];
+    return `<section class="care-carousel" style="--cc-bg:${c[0]};--cc-ink:${c[1]}" aria-roledescription="carousel"><div class="care-track" tabindex="0" onscroll="careDots(this)">${frames.map(([svg, t, line], i) => `<figure class="care-card" aria-label="Step ${i + 1} of ${frames.length}: ${t.replace(/"/g, '')}">${svg}<figcaption><small>${i + 1} of ${frames.length}</small><b>${F(t)}</b><span>${F(line)}</span></figcaption></figure>`).join('')}</div><div class="care-dots" aria-hidden="true">${frames.map((_, i) => `<i${i ? '' : ' class="on"'}></i>`).join('')}</div>${video ? `<a class="care-video" href="https://www.youtube.com/watch?v=${video[0]}" target="_blank" rel="noopener"><span class="care-play" aria-hidden="true">▶</span><span><b>${F('Watch it done')}</b><small>${F(video[1])} · ${F(video[2])}</small></span><span aria-hidden="true">↗</span></a>` : ''}</section>`; };
+  window.careDots = el => { const i = Math.round(el.scrollLeft / (el.firstElementChild ? el.firstElementChild.offsetWidth + 12 : 1)); el.parentNode.querySelectorAll('.care-dots i').forEach((d, j) => d.classList.toggle('on', j === i)); };
+  const DIAPER_ART = (() => {
+    const SK = '#f7dcca', LEG = '#f1cdb6', INK = '#46638c', BG = '#e7effc', PH = '#c98f72', SL = '#8eaee0';
+    const base = inner => `<svg viewBox="0 0 300 180" aria-hidden="true"><rect width="300" height="180" rx="22" fill="${BG}"/><rect x="22" y="40" width="256" height="104" rx="26" fill="#fff"/>${inner}</svg>`;
+    const baby = `<circle cx="70" cy="92" r="24" fill="${SK}"/><path d="M62 90q3 3 6 0M74 90q3 3 6 0" stroke="${INK}" stroke-width="1.8" fill="none" stroke-linecap="round"/><rect x="92" y="70" width="80" height="44" rx="20" fill="#c9d9f5"/><path d="M110 72 q-6 -14 -16 -18M110 112 q-6 14 -16 18" stroke="${SK}" stroke-width="9" stroke-linecap="round" fill="none"/><path d="M190 80 q22 -6 30 -26M190 104 q22 6 30 26" stroke="${LEG}" stroke-width="12" stroke-linecap="round" fill="none"/><circle cx="222" cy="52" r="7" fill="${LEG}"/><circle cx="222" cy="132" r="7" fill="${LEG}"/>`;
+    const diaper = (f, l) => `<path d="M166 72 h22 q10 0 10 10 v20 q0 10 -10 10 h-22 Z" fill="${f}" stroke="${l}" stroke-width="2"/>`;
+    const hand = (x, y, r) => `<g transform="translate(${x} ${y}) rotate(${r})"><rect x="-9" y="0" width="22" height="48" rx="6" fill="${SL}"/><rect x="-7" y="-26" width="18" height="30" rx="9" fill="${PH}"/><rect x="7" y="-20" width="7" height="16" rx="3.5" fill="${PH}"/></g>`;
+    const arrow = (x1, y1, x2, y2) => { const a = Math.atan2(y2 - y1, x2 - x1), h = 7; return `<path d="M${x1} ${y1} L${x2} ${y2}" stroke="${INK}" stroke-width="2.4" stroke-linecap="round"/><path d="M${x2 - h * Math.cos(a - .5)} ${y2 - h * Math.sin(a - .5)} L${x2} ${y2} L${x2 - h * Math.cos(a + .5)} ${y2 - h * Math.sin(a + .5)}" stroke="${INK}" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`; };
+    return [
+      base(baby + diaper('#fff6dc', '#f3d58a') + `<g transform="translate(236 20)"><rect width="44" height="30" rx="7" fill="#fff" stroke="#9fb8df" stroke-width="2"/><path d="M8 15h28" stroke="#9fb8df" stroke-width="2"/></g><g transform="translate(184 14)"><rect width="40" height="26" rx="7" fill="#fff" stroke="#9bc7ac" stroke-width="2"/><rect x="13" y="-4" width="14" height="7" rx="3" fill="#9bc7ac"/></g><g transform="translate(134 18)"><rect width="36" height="13" rx="6.5" fill="#f2b8c6"/><rect x="34" y="3" width="8" height="7" rx="2" fill="#a24d6a"/></g>`),
+      base(baby + diaper('#fff6dc', '#f3d58a') + `<path d="M166 72 h-14 q-6 0 -6 6 v28 q0 6 6 6 h14 Z" fill="#fffbee" stroke="#f3d58a" stroke-width="2" stroke-dasharray="4 3"/>` + arrow(178, 152, 150, 152) + hand(178, 132, -10)),
+      base(baby + `<path d="M166 72 h22 q10 0 10 10 v20 q0 10 -10 10 h-22 Z" fill="#fffbee" stroke="#f3d58a" stroke-width="2" stroke-dasharray="4 3"/><rect x="168" y="84" width="22" height="16" rx="5" fill="#fff" stroke="#9bc7ac" stroke-width="2"/>` + hand(180, 112, 0) + arrow(150, 30, 196, 30) + `<text x="150" y="22" font-size="11.5" font-weight="700" fill="${INK}">front to back</text>`),
+      base(baby + `<path d="M150 66 h52 q10 0 10 10 v32 q0 10 -10 10 h-52 Z" fill="#fff" stroke="#9fb8df" stroke-width="2"/><path d="M150 74 h-10 M150 110 h-10" stroke="#9fb8df" stroke-width="4" stroke-linecap="round"/>` + arrow(262, 92, 230, 92) + hand(196, 140, -20)),
+      base(baby + diaper('#fff', '#9fb8df') + `<path d="M160 74 h12 M160 110 h12" stroke="#9fb8df" stroke-width="5" stroke-linecap="round"/><g transform="translate(150 50) rotate(-90)"><rect x="-20" y="-6" width="26" height="7" rx="3.5" fill="${PH}"/><rect x="-20" y="3" width="26" height="7" rx="3.5" fill="${PH}"/></g><circle cx="250" cy="34" r="15" fill="#fff"/><path d="M243 34 l5 5 9 -11" stroke="#356651" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`)
+    ];
+  })();
+  const diaperCarousel = () => carousel('diapers', [
+    [DIAPER_ART[0], 'Get everything ready', 'A clean diaper, wipes and cream within reach.'],
+    [DIAPER_ART[1], 'Open and fold down', 'Unfasten, and use the front to wipe the worst away.'],
+    [DIAPER_ART[2], 'Wipe front to back', 'Into the creases, then let the skin dry.'],
+    [DIAPER_ART[3], 'Slide the clean one under', 'Lift gently with a hand under {p} bottom.'],
+    [DIAPER_ART[4], 'Fasten', 'Cream if it looks red. Two fingers of room at the waist.']
+  ]);
   const TOPIC = {
     diapers(v) {
       const h = H();
@@ -92,14 +120,13 @@
         [['Wet diapers', '6 or more a day', 'Poop looks more like food now.'], ['Which size?', 'Size 3 or 4', 'Leaks or red marks at the legs mean size up.']]
       ][v];
       let b = head('diapers', ctx(v), 'Diapers', v === 0 ? 'How to change one, and what’s normal in there.' : 'How many, how to change one, and diaper rash.') + h.qa(qa);
-      b += h2(v === 3 ? 'Wriggly changes' : 'How to change a diaper') + (v === 3 ? h.steps(['Hand {o} a toy to hold, or sing the same song each time.', 'Keep one hand on {o} on the changing table, always.', 'Once {s} {pull|pulls} up, a change standing up can be easier.']) : changeSteps());
+      b += h2(v === 3 ? 'Wriggly changes' : 'How to change a diaper') + (v === 3 ? h.steps(['Hand {o} a toy to hold, or sing the same song each time.', 'Keep one hand on {o} on the changing table, always.', 'Once {s} {pull|pulls} up, a change standing up can be easier.']) : diaperCarousel());
       b += h.versus('Normal, or time to call?', ['Normal', (v === 0 ? 'Black, sticky poop for the first 3–4 days, then mustard-yellow' : 'Mustard-yellow') + ' if breastfed, yellow-tan if formula. Several a day to one every few days.'], ['Call your pediatrician', '4 or fewer wet diapers in a day. White, gray or red poop, or black after the first few days.']);
       b += fold('More about diapers', [
         ['Diaper rash', 'What helps, and when to call', rashSteps()],
         v === 0 && ['In the first weeks', 'The cord, and wipes or a washcloth', p_('Fold the top of the diaper down so the cord stump stays in the air.') + p_('Fragrance-free wipes or a soft washcloth and warm water both work.')],
         v === 0 && ['Cleaning down there', 'For girls and boys', p_('Always wipe front to back. In newborn girls, a little white discharge or a spot of blood is normal in the first weeks.') + p_('If uncircumcised, wash the outside only; don’t pull back the foreskin. If circumcised, put a dab of petroleum jelly on the tip at each change until it heals, in about 7–10 days. Call if there’s bleeding, swelling or pus.')],
         v === 2 && ['Once solids start', 'Usually around 6 months', p_('Poop gets thicker, browner and smellier, and can take on the color of what {s} ate.')],
-        ['Sizes', 'When to move up', p_('Most babies start in newborn size and move to size 1 at around 8–10 pounds. Sizes overlap, so go by fit: leaks or red marks at the legs mean it’s time to size up.')],
         changes('diapers', ['8–12 a day. Fold the top below the cord.', '6 or more wet ones a day. Size up when leaks start.', 'Once solids start, poop changes.', 'Wriggly changes. A toy in hand helps.'], v)
       ]);
       return page('diapers', b);
@@ -123,7 +150,6 @@
         (v === 1 || v === 2) && ['Watch how it’s done', 'A short video', (window.hubFigure ? hubFigure('tub', CAT, 'A baby lying back in a baby tub with about 2 inches of warm water, a hand supporting the head and neck.') : '') + hubEmbed('VsUla1M7eHQ', 'How to give your baby a tub bath', 'Nemours KidsHealth')],
         v === 2 && ['Bath as part of bedtime', 'Bath, feed, book, bed', `<div class="hub-list care-link">${rowK('bath', 'Start a bedtime routine', 'In Sleep', "openPage('chg:Sleep:d:routine')")}</div>`],
         v > 0 && ['Washing hair', 'Once or twice a week', p_('A little mild baby shampoo is plenty. Rinse with a wet washcloth, front to back, so it stays out of {p} eyes.')],
-        ['Water heater', 'Set it to 120°F or lower', p_('At 120°F or lower, tap water can’t scald.')],
         changes('bath', ['Sponge baths until the cord falls off.', 'Baby tub, 2–3 times a week.', 'Often part of bedtime now.', 'Sitting up, then the big tub.'], v)
       ]);
       return page('bath', b);
@@ -147,7 +173,6 @@
       b += fold('More about clothes', [
         v === 0 && ['Getting clothes on', 'Over a floppy head', p_('Stretch the neck opening wide and ease it over the back of {p} head first, then the face. Snaps or a zip down the front are easiest at first.')],
         v === 3 && ['Dressing for the weather', 'One more layer than you', p_('Feel the back of {p} neck. Sweaty means too warm; cool means add a layer. For sleep, snug-fitting pajamas and a sleep sack, no hats or loose blankets.')],
-        v === 3 && ['Walkers', 'Skip the ones on wheels', p_('They don’t help with walking, and they can lead to falls down stairs.')],
         ['In the car seat', 'No puffy coats', p_('Take off puffy coats first. Buckle {o} in, then put a blanket over the straps.')],
         ['Sleep sacks and swaddles', 'In Sleep', `<div class="hub-list care-link">${rowK('clothes', 'What to use, and when to stop swaddling', 'In Sleep', "openPage('chg:Sleep:safe')")}</div>`],
         changes('clothes', ['One more layer than you, and easy snaps.', 'One more layer than you.', 'Layers for the season, and bibs for drool.', 'Bare feet indoors, soft shoes outside.'], v)
@@ -157,13 +182,12 @@
     sun(v) {
       const h = H(), six = v === 3 || (v === 2 && careAge() >= 6) || (!live() && v >= 2);
       let b = head('sun', ctx(v), 'Sun and heat', six ? 'Shade still comes first, and sunscreen joins in now.' : 'Young skin burns easily, so shade comes first.');
-      b += h.qa([six ? ['Sunscreen?', 'Yes, SPF 30 or more', 'Broad-spectrum, every 2 hours and after water.'] : ['Sunscreen?', 'From 6 months', 'Until then, shade and a hat. A little on the face only if there’s no shade.']]);
+      b += h.qa([six ? ['Sunscreen?', 'Yes, SPF 30 or more', 'Look for “broad-spectrum” on the label. Every 2 hours and after water.'] : ['Sunscreen?', 'From 6 months', 'Until then, shade and a hat. A little on the face only if there’s no shade.']]);
       b += h.steps(six ? ['Shade and a wide-brimmed hat, even with sunscreen on.', 'Sunscreen on skin you can’t cover, 15 minutes before going out.', 'Reapply every 2 hours, and after water play.'] : ['Keep {o} in the shade, especially in the middle of the day.', 'Light, long sleeves and a wide-brimmed hat.']);
       b += h.versus('Normal, or time to call?', ['Normal', 'A little sweaty and pink, cooling down quickly in the shade.'], ['Call your pediatrician', 'Fewer wet diapers than usual, or any sunburn before 1 year.']) + h.tip('Get help right away', 'Hot and flushed and hard to wake, floppy, or not feeding: get {o} somewhere cool and call 911.');
       b += fold('More about sun and heat', [
         ['Hot days', 'Layers, feeds and the stroller', h.steps(['One light layer, and the shade or indoors at midday.', !six ? 'Offer milk feeds more often. Under 6 months, milk is all {s} {need|needs}, no water.' : 'Offer milk feeds more often, and small sips of water once {s’s} eating solids.', 'Don’t drape a blanket over the stroller. It traps heat. Use the canopy or a clip-on shade.'])],
         ['At the pool or beach', 'What to bring', p_('Swim diapers, a sun shirt and a hat' + (six ? ', and a mineral sunscreen (zinc oxide).' : '.') + ' Keep a hand on {o} in any water, even shallow.')],
-        six && ['What “broad-spectrum” means', 'On the label', p_('It blocks both kinds of the sun’s UV rays. Look for it on the label, with SPF 30 or more.')],
         changes('sun', ['Shade and a hat, no sunscreen yet.', 'Shade and a hat, no sunscreen yet.', 'Sunscreen can start at 6 months.', 'Shade, a hat and SPF 30.'], v)
       ]);
       return page('sun', b);
@@ -183,7 +207,6 @@
       else if (v >= 2) b += h2('Drool and sore gums') + gumSteps + skip;
       if (v >= 2) b += h.versus('Normal, or time to call?', ['Normal', 'Drooling, chewing on everything, a bit fussier, and feeling a little warm.'], ['Call your pediatrician', 'A fever of 100.4°F or higher. Teething doesn’t cause one.']);
       b += fold('More about teeth', [
-        v < 2 && ['Wiping gums', 'If you like', p_('Wiping {p} gums with a clean, damp cloth once a day gets {o} used to it.')],
         (brushing || (v === 2 && tooth)) && ['Drool and sore gums', 'More teeth are on the way', gumSteps + skip],
         v === 3 && !tooth && ['When the first tooth comes', 'How to brush', brushHow],
         v >= 2 && ['First dental visit', 'By the first birthday', p_('Book one after the first tooth comes in, and by the first birthday.')],
