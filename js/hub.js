@@ -233,7 +233,7 @@
     const cue = { learn: 'Hungry? {S} {stir|stirs}, {open|opens} {p} mouth or {turn|turns} toward the breast or bottle. Crying is a late sign.', rhythm: 'Hungry? Hands to mouth, rooting, fussing. Crying is a late sign.', ready: 'Feeds are quicker now, and {s} may stop to look around.' }[key];
     h += `<section class="hub-card hub-glance is-static"><span class="hub-card-head"><b>${F(now && C().live() ? 'Feeds now' : 'At this stage')}</b>${pick}</span>${tiles(milkStage ? T4[key][tab] : [...milkTiles(key), ...enough])}${cue ? `<p class="hub-card-note">${F(cue)}</p>` : ''}</section>`;
     // Six doors, named the way parents ask, in the same place all year. The line under each says what's true at this stage.
-    const D = (label, icon, line, to, chipT) => `<button class="hub-domain-tile hub-feed-tile" onclick="${go(to)}"><span class="hub-feed-tile-art">${art(icon, cat)}</span><small>${F(label)}</small><b>${F(line)}</b>${chipT ? `<span class="hub-chip${chipT === 'Must know' ? ' is-red' : chipT === '4 of 4' ? ' is-done' : ''}">${F(chipT)}</span>` : ''}</button>`;
+    const D = (label, icon, line, to, chipT) => row({ cat, icon, title: label, sub: line, onclick: go(to), chipText: chipT || '', chipTone: chipT === 'Must know' ? 'is-red' : chipT === '4 of 4' ? 'is-done' : '' });
     const pk = key === 'textures' ? 'first' : key;
     const DOORS = [
       D('When & how much', 'clock', { learn: 'Feed at the first hunger signs', rhythm: 'Follow {p} cues, not the clock', ready: 'Fewer, quicker feeds', first: key === 'textures' ? 'Milk first, then food' : 'Milk first, then a few bites', meals: 'Three meals, milk after' }[pk], key === 'meals' ? 'chg:Feeding:d:day' : 'chg:Feeding:d:amount'),
@@ -244,7 +244,7 @@
       D(view <= 1 ? 'Vitamins' : 'Vitamins & solids', view <= 1 ? 'sun' : 'bowl', { learn: isFormula ? 'Ask about vitamin D' : 'Vitamin D drops every day', rhythm: isFormula ? 'Vitamin D until about 32 oz' : 'Keep up the vitamin D', ready: 'Signs {s’s} ready for food', first: 'Iron-rich foods first', meals: 'Safe pieces of family food' }[pk], { learn: 'chg:Feeding:d:vitd', rhythm: 'chg:Feeding:d:vitd', ready: 'chg:Feeding:d:signs', first: key === 'textures' ? 'chg:Feeding:d:finger' : 'chg:Feeding:d:tray', meals: 'chg:Feeding:d:finger' }[pk], key === 'learn' && !isFormula ? 'Must know' : key === 'ready' ? `${n} of 4` : '')
     ].filter(Boolean);
     if (key === 'learn') h += `<button class="hub-pillrow is-guide" onclick="${go('chg:Feeding:d:guide')}"><span>${F('New to this? The first weeks, start to finish')}</span>${chev}</button>`;
-    h += `<h2 class="hub-h2">${F('Your feeding questions')}</h2><div class="hub-domain-tiles hub-feed-tiles" data-icon-fixed>${DOORS.join('')}</div>`;
+    h += `<h2 class="hub-h2">${F('Your feeding questions')}</h2><div class="hub-list" data-icon-fixed>${DOORS.join('')}</div>`;
     const V = {
       learn: ['Feeding again an hour later, a little spit-up, and long feeds at first.', 'Hard to wake for feeds, fewer wet diapers, looking more yellow, or forceful, green or bloody vomit. A fever of 100.4°F or higher: call right away. Struggling to breathe, blue or floppy: call 911.'],
       rhythm: ['A little spit-up, and hungrier days during growth spurts.', 'Fewer wet diapers, refusing feeds, or forceful or green vomit.'],

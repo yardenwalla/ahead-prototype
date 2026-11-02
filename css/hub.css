@@ -1268,4 +1268,4 @@
 #main .hub-feed-tile .hub-chip { margin-top: 6px; padding-top: 2px }
 #main .hub-feed-tiles > .hub-feed-tile:last-child:nth-child(odd) { grid-column: 1 / -1 }
 #main .hub-card-note { margin: 12px 0 0; padding-top: 12px; border-top: 1px solid var(--line); font-size: 14px; line-height: 1.45 }
-#main .hub-pillrow.is-guide { width: 100%; margin: 0 0 14px; background: var(--year-pale); border: 0 }
+#main .hub-pillrow.is-guide { margin: 0 0 6px }
