@@ -71,3 +71,4 @@
 #main .care-v2 .care-glance .hub-tiles > div { background: var(--year-pale) }
 #main .care-v2 .care-rash-card .hub-rough-copy b { color: #2b2840 }
 #main .care-v2 .care-rash-card .hub-rough-copy small { color: #7a5a4c }
+#main .care-v2 .care-fold-body .hub-steps, #main .care-v2 .care-fold-body ol { margin: 6px 0 8px }
