@@ -46,3 +46,7 @@
 #main .oa-now b { font-size: 17px; line-height: 1.25; font-weight: 600; color: var(--ink) }
 #main .oa-now span:last-child:not(.oa-now-art) { font-size: 13px; line-height: 1.4; color: #5c5361 }
 #main .hub-detail[data-overview="Out and about"] .hub-figure { margin-bottom: 14px }
+
+/* One color per subpage: charts, strips and picture steps take the color of the tile the parent tapped. */
+#main .hub-detail[data-overview="Out and about"] .hub-strip, #main .hub-detail[data-overview="Out and about"] .hub-daymarks { --ink: var(--ss-ink) !important; --bg: var(--ss-bg) !important; --pale: var(--ss-bg) !important }
+#main .hub-detail[data-overview="Out and about"] .hub-tiles { margin-bottom: 14px }
