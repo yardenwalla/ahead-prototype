@@ -1259,3 +1259,13 @@
 #main .hub-gstomach b { font-size: 13px }
 #main .hub-gstomach small { font-size: 12.5px }
 #main .hub-gstomach p { grid-column: 1 / -1; margin: 6px 0 0; font-size: 13px; text-align: left }
+#main .hub-feed-tiles { margin-bottom: 14px }
+#main .hub-feed-tile { gap: 4px; min-width: 0 }
+#main .hub-feed-tile .hub-feed-tile-art { margin: 0 0 4px; padding: 0 }
+#main .hub-feed-tile .hub-feed-tile-art svg { width: 30px; height: 30px }
+#main .hub-feed-tile small { font-size: 12.5px; font-weight: 700; color: var(--year-ink); line-height: 1.3 }
+#main .hub-feed-tile b { font-size: 15px; line-height: 1.3; font-weight: 600 }
+#main .hub-feed-tile .hub-chip { margin-top: 6px; padding-top: 2px }
+#main .hub-feed-tiles > .hub-feed-tile:last-child:nth-child(odd) { grid-column: 1 / -1 }
+#main .hub-card-note { margin: 12px 0 0; padding-top: 12px; border-top: 1px solid var(--line); font-size: 14px; line-height: 1.45 }
+#main .hub-pillrow.is-guide { width: 100%; margin: 0 0 14px; background: var(--year-pale); border: 0 }
