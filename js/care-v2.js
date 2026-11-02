@@ -17,7 +17,8 @@
 
   // Each topic's soft color pair, its icon, and a small flat picture for the page header.
   const COL = { diapers: ['#e7effc', '#46638c', '#9fb8df', '#d9e5fc'], bath: ['#e3f1f7', '#2a6078', '#8cc1d6', '#cfe9f4'], skin: ['#fdeee6', '#9a5a3c', '#f4c3a8', '#fbe0d0'], clothes: ['#efedff', '#625084', '#b4a5dc', '#e5e0fc'], sun: ['#fff3dc', '#8a6a2a', '#f3d58a', '#fbe6bd'], teeth: ['#e6f5ec', '#356651', '#9bc7ac', '#ddf1e5'], nails: ['#fdeef2', '#a24d6a', '#f2b8c6', '#f4d6c4'], cord: ['#fdeef2', '#a24d6a', '#f2b8c6', '#f4d6c4'], need: ['#f5f1ea', '#4d443b', '#d8cbb8', '#ece6dc'], look: ['#fdeee6', '#9a5a3c', '#f4c3a8', '#fbe0d0'] };
-  const ICON = { diapers: 'diaper', bath: 'bath', skin: 'drop', clothes: 'shirt', sun: 'sun', teeth: 'tooth', nails: 'nail', cord: 'cord', need: 'bag', look: 'eye' };
+  COL.down = COL.diapers;
+  const ICON = { diapers: 'diaper', bath: 'bath', skin: 'drop', clothes: 'shirt', sun: 'sun', teeth: 'tooth', nails: 'nail', cord: 'cord', need: 'bag', look: 'eye', down: 'heart' };
   const ART = {
     diapers: c => `<path d="M6 8h44v6a22 18 0 0 1-44 0Z" fill="${c[2]}"/><circle cx="66" cy="24" r="8" fill="${c[3]}"/>`,
     bath: c => `<rect x="4" y="18" width="52" height="16" rx="8" fill="${c[2]}"/><circle cx="22" cy="12" r="5" fill="${c[3]}"/><circle cx="34" cy="9" r="4" fill="${c[3]}"/>`,
@@ -68,6 +69,7 @@
   };
 
   /* ---------- shared pieces for topic pages ---------- */
+  ART.down = ART.diapers;
   const head = (k, ctx, title, lead) => { const c = COL[k];
     return `<div class="dev-area-head ss-head" style="--area:${c[0]};--area-ink:${c[1]}"><span class="dev-area-head-art"><svg viewBox="0 0 90 40" aria-hidden="true">${ART[k](c)}</svg></span><p class="hub-context">${F(ctx)}</p><h1>${F(title)}</h1>${lead ? `<p class="hub-lead">${F(lead)}</p>` : ''}</div>`; };
   const page = (k, inner) => { const c = COL[k]; return `<div class="quiet-category hub-page hub-detail care-v2" data-overview="${CAT}" data-ss="1" style="${yearTheme(CAT)};--ss-bg:${c[0]};--ss-ink:${c[1]}">${detailPageTop(CAT)}${inner}</div>`; };
@@ -429,9 +431,9 @@
      One fixed set of topics, in the same order at every stage. A stage shows only the topics with something new,
      each row = the topic + what's new now. Each topic page: a one-line answer, What to do (3 steps at most), at most
      one picture or video, what's normal, one "call" line; anything extra opens in place below. */
-  const TOPIC_ORDER = ['diapers', 'cord', 'bath', 'skin', 'dress', 'teeth', 'nails'];
-  const TNAME = { diapers: 'Diapers', cord: 'The cord', bath: 'Bath time', skin: 'Skin', dress: 'Clothes and sun', teeth: 'Teeth', nails: 'Nails, eyes and ears' };
-  const TCOL = { diapers: 'diapers', cord: 'cord', bath: 'bath', skin: 'skin', dress: 'clothes', teeth: 'teeth', nails: 'nails' };
+  const TOPIC_ORDER = ['diapers', 'down', 'cord', 'bath', 'skin', 'dress', 'teeth', 'nails'];
+  const TNAME = { diapers: 'Diapers', cord: 'The cord', bath: 'Bath time', skin: 'Skin', dress: 'Clothes and sun', teeth: 'Teeth', nails: 'Nails, eyes and ears', down: 'Care down there' };
+  const TCOL = { diapers: 'diapers', down: 'down', cord: 'cord', bath: 'bath', skin: 'skin', dress: 'clothes', teeth: 'teeth', nails: 'nails' };
   const solidsYes = () => live() && answers.solids === 'Yes';
   const sizes = () => p_('Most babies start in newborn size and move to size 1 at around 8–10 pounds. Leaks, red marks at the legs or waist, or tabs that don’t reach the middle mean it’s time for the next size.');
   // Care down there, shown right on the Diapers page: no fold to open. We know girl or boy from onboarding;
@@ -454,13 +456,35 @@
     return b + (call ? `<p class="ss-small"><b>${F('Call your pediatrician:')}</b> ${F(call)}</p>` : '');
   };
   const downLabel = () => { const a = anatomy(); return a === 'girl' ? 'For girls' : a === 'boy' ? (answers.circumcised === 'Yes' ? 'Circumcised' : answers.circumcised === 'No' ? 'Not circumcised' : 'For boys') : 'For girls and boys'; };
+  const downPick = (x, inline) => {
+    const a = anatomy(), c = answers.circumcised;
+    const parts = a === 'girl' ? [['', x.girl]] : a === 'boy' ? (c === 'Yes' ? [['', x.cut]] : c === 'No' ? [['', x.uncut]] : [['If circumcised', x.cut], ['If not circumcised', x.uncut]])
+      : [['Girls', x.girl], ['Boys, circumcised', x.cut], ['Boys, not circumcised', x.uncut]];
+    if (parts.length === 1) return F(parts[0][1]);
+    return inline ? parts.map(([t, v]) => `${F(t)}: ${F(v.charAt(0).toLowerCase() + v.slice(1))}`).join(' ') : parts.map(([t, v]) => `<span class="care-down-row"><strong>${F(t)}</strong>${F(v)}</span>`).join('');
+  };
   const T3 = {
+    // Care down there: girl or boy comes from onboarding pronouns. No switches: a "they" baby sees both,
+    // and boys see circumcised and not, unless the parent has already told us.
+    down: {
+      0: { html: true,
+        get line() { const a = anatomy(); return a === 'girl' ? 'Wiping, and what’s normal' : a === 'boy' ? 'Circumcision and foreskin care' : 'For girls and boys'; },
+        get answer() { return anatomy() === 'boy' ? 'Only gentle cleaning is needed, plus a little extra care while a circumcision heals.' : 'Only gentle cleaning is needed. A few things in the first weeks look surprising, and they’re normal.'; },
+        get doText() { return downPick({ girl: 'Wipe front to back at every change, gently, between the folds.',
+          cut: 'A dab of petroleum jelly on the tip at every change, and warm water instead of wipes until it heals, in 7–10 days.',
+          uncut: 'Wash the outside only. Never pull back the foreskin.' }); },
+        get normal() { return downPick({ girl: 'A little white discharge or light spotting, and swollen-looking genitals, in the first weeks. It comes from hormones passed on before birth.',
+          cut: 'While it heals: a red tip and a soft yellow film. A plastic ring, if there is one, falls off on its own in 5–10 days.',
+          uncut: 'The foreskin stays attached for years, and loosens on its own.' }); },
+        get call() { return downPick({ girl: 'Bleeding that lasts more than 3–4 days, or starts after the first week.',
+          cut: 'Bleeding bigger than a quarter, pus or swelling, no pee within 8 hours, or a ring still on after 10 days.',
+          uncut: 'Redness, swelling or pain when {s} {pee|pees}.' }, true); } }
+    },
     diapers: {
-      0: { line: 'How to change one, and care down there', answer: 'About 8–12 changes a day at first. It gets quick.',
+      0: { line: 'How to change one', answer: 'About 8–12 changes a day at first. It gets quick.',
         doText: 'Change when wet or dirty, and keep one hand on {o} on the changing table. Fold the top down below the cord stump.',
         normal: 'A good fit: two fingers slide in at the waist, and no red marks at the legs.', vis: () => diaperCarousel(),
         urgent: 'White, gray or chalky poop: call your pediatrician right away.',
-        extra: () => downInline(),
         more: () => [['Sizes', 'When to move up', sizes()]] },
       2: { line: 'Rolling on the changing table', answer: 'Once {s} {roll|rolls}, {s} can roll off in a second.',
         doText: 'Keep one hand on {o} at every change, and never step away. Need both hands? Change {o} on the floor.',
@@ -497,10 +521,10 @@
         urgent: 'Never step away, even for a second.' }
     },
     skin: {
-      1: { line: 'Baby acne and cradle cap', answer: 'Baby acne and cradle cap are common now, and both clear up on their own.',
-        vis: () => hubIconSteps([['drop', 'Baby acne', 'Plain water, no lotions'], ['bath', 'Cradle cap', 'A little oil, then shampoo']], CAT, 'Baby acne: plain water and no lotions. Cradle cap: a little oil, then a mild shampoo.', false),
-        doText: 'Baby acne: plain water, no lotions. Cradle cap: loosen the flakes with a little oil, then wash with a mild shampoo.',
-        normal: 'Baby acne fades by 4–6 months, cradle cap usually by the first birthday.', call: 'A rash with a fever, pus or oozing, or one that keeps spreading.' },
+      1: { line: 'Baby acne and cradle cap', answer: 'Both are common now and clear up on their own: acne by 4–6 months, cradle cap usually by the first birthday.',
+        doText: 'Keep it gentle. Skip acne creams, and don’t pick at the flakes.',
+        normal: 'Baby acne: small red bumps on the cheeks and nose. Cradle cap: yellow, greasy flakes on the scalp.',
+        vis: () => hubIconSteps([['drop', 'Baby acne', 'Plain water only, no lotions'], ['bath', 'Cradle cap', 'Rub in a little oil, then a mild shampoo']], CAT, 'Baby acne: plain water only, no lotions. Cradle cap: rub in a little oil, then wash with a mild shampoo.', false), call: 'A rash with a fever, pus or oozing, or one that keeps spreading.' },
       2: { line: 'Drool rash and dry skin', answer: 'Drool can leave a red, rough rash on the chin and neck. Dry, rough patches are common too.',
         doText: 'Pat drool dry often and keep a soft bib on. For dry patches, keep baths short and lukewarm, then put on a thick fragrance-free cream.',
         normal: 'Drool rash stays where the drool lands. Dry patches feel rough and can come and go.',
@@ -545,11 +569,12 @@
     if (!s) return null;
     const ck = TCOL[k];
     let b = head(ck, `Everyday care · ${STAGE[vv]}`, TNAME[k], '') + `<p class="ss-what care-answer">${F(val(s.answer))}</p>`;
-    if (s.doText) b += `<section class="ss-do"><b>What to do</b><p>${F(s.doText)}</p></section>`;
-    if (s.normal) b += `<p class="ss-know"><b>How you’ll know</b>${F(s.normal)}</p>`;
+    const T = x => s.html ? x : F(x); // html: the copy is already built (rows with labels), text inside already templated
+    if (s.doText) b += `<section class="ss-do"><b>What to do</b><p>${T(s.doText)}</p></section>`;
+    if (s.normal) b += `<p class="ss-know"><b>How you’ll know</b>${T(s.normal)}</p>`;
     if (s.vis) b += s.vis();
     if (s.urgent) b += `<p class="care-urgent">${F(s.urgent)}</p>`;
-    if (s.call) b += `<p class="ss-small"><b>${F('Call your pediatrician:')}</b> ${F(s.call)}</p>`;
+    if (s.call) b += `<p class="ss-small"><b>${F('Call your pediatrician:')}</b> ${T(s.call)}</p>`;
     if (s.extra) b += s.extra();
     if (s.more) { const m = s.more(); b += `<div class="hub-card care-folds">${m.map(([t, sub, body]) => `<details class="care-fold"><summary><span><b>${F(t)}</b>${sub ? `<small>${F(sub)}</small>` : ''}</span><i aria-hidden="true">›</i></summary><div class="care-fold-body">${body}</div></details>`).join('')}</div>`; }
     return page(ck, b);
@@ -557,7 +582,7 @@
   const topicRow = (k, v) => { const s = tFor(k, v); if (!s) return ''; const c = COL[TCOL[k]];
     return `<button class="hub-row hl-row" style="--hl-bg:${c[0]};--hl-ink:${c[1]}" onclick="openPage('chg:${CAT}:d:c:${k}:${v}')"><span class="hub-dot">${hubArt(ICON[TCOL[k]], CAT)}</span><span class="hub-row-copy"><b>${F(TNAME[k])}</b><small>${F(val(s.line))}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`; };
   // Older links land on the topic and stage they were about.
-  const Q2T = { firstweek: ['diapers', 0], change: ['diapers', 0], downthere: ['diapers', 0], fewer: ['look', 1], solids: ['look', 2], wriggly: ['diapers', 3], cordbath: ['cord', 0], cord: ['cord', 0], sponge: ['bath', 0], tub: ['bath', 1], bigtub: ['bath', 3], newskin: ['look', 0], acne: ['skin', 1], drool: ['skin', 2], rashes: ['look', 0], dress: ['dress', 0], shade: ['dress', 1], six: ['dress', 2], feet: ['dress', 3], gums: ['teeth', 2], teething: ['teeth', 2], brush: ['teeth', 3], nails: ['nails', 0], nailsnose: ['nails', 0] };
+  const Q2T = { firstweek: ['diapers', 0], change: ['diapers', 0], downthere: ['down', 0], fewer: ['look', 1], solids: ['look', 2], wriggly: ['diapers', 3], cordbath: ['cord', 0], cord: ['cord', 0], sponge: ['bath', 0], tub: ['bath', 1], bigtub: ['bath', 3], newskin: ['look', 0], acne: ['skin', 1], drool: ['skin', 2], rashes: ['look', 0], dress: ['dress', 0], shade: ['dress', 1], six: ['dress', 2], feet: ['dress', 3], gums: ['teeth', 2], teething: ['teeth', 2], brush: ['teeth', 3], nails: ['nails', 0], nailsnose: ['nails', 0] };
 
   const STAGES = [
     { title: 'Diapers, the cord and first baths', lead: 'It feels like a lot at first, and it gets quicker fast. Most of what looks odd in the first weeks is normal.',
