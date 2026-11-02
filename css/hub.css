@@ -1454,3 +1454,11 @@
 #main .cc-link { display: flex; gap: 8px; margin-top: 10px }
 #main .cc-link input, #main .cc-link textarea { flex: 1; min-width: 0; border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; font: inherit; font-size: 13px; background: #fff; color: var(--ink) }
 #main .cc-link button { border: 0; border-radius: 12px; padding: 0 16px; font: inherit; font-weight: 600; background: var(--year-pale, #eef2ec); color: var(--ink) }
+#main .hub-holds { display: flex; gap: 10px; overflow-x: auto; scroll-snap-type: x mandatory; margin: 0 -16px 14px; padding: 2px 16px 6px; scrollbar-width: none }
+#main .hub-holds::-webkit-scrollbar { display: none }
+#main .hub-hold { flex: 0 0 72%; scroll-snap-align: start; margin: 0; background: var(--white); border: 1px solid var(--line); border-radius: 20px; padding: 10px 14px 14px }
+#main .hub-hold-art svg { display: block; width: 100%; height: auto; max-height: 130px }
+#main .hub-hold figcaption { display: flex; flex-direction: column; gap: 2px; margin-top: 6px }
+#main .hub-hold b { font-size: 15.5px }
+#main .hub-hold span { font-size: 14px; line-height: 1.4 }
+#main .hub-hold small { font-size: 13px; color: var(--year-ink); font-weight: 600; margin-top: 4px }

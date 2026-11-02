@@ -393,3 +393,44 @@ window.hubPageIcon = function (cat, title) {
   const fallback = { Development: 'smile', Feeding: 'bowl', Sleep: 'moon', Health: 'steth', Safety: 'shield', 'Daily rhythm': 'bath', 'Out and about': 'stroller' }[cat] || 'star';
   return pick ? pick[1] : fallback;
 };
+
+/* Ahead · nursing holds, in the flat play-picture language (no outlines, soft backdrop, dot eyes).
+   One picture per hold; the words live in HTML under it. */
+(function () {
+  const SK = '#f4d6c4', HK = '#e8bda6', HAIR = '#8a6a5a';
+  const pal = cat => (typeof YEAR_PALETTES !== 'undefined' && YEAR_PALETTES[cat]) || { bg: '#f7d9e5', pale: '#fceef3', ink: '#884866', accent: '#e9a9c0' };
+  const eyes = (c, x, y, r) => `<path d="M${x - r * .36} ${y - 1}h.01M${x + r * .36} ${y - 1}h.01" stroke="${c.ink}" stroke-opacity=".65" stroke-width="2.6" stroke-linecap="round"/>`;
+  const adultHead = (c, x, y, r = 13) => `<circle cx="${x}" cy="${y}" r="${r}" fill="${HK}"/><path d="M${x - r} ${y - 1}c1-${r * .9} ${r * 2 - 2}-${r * .9} ${r * 2} 0c-${r * .5}-${r * .5}-${r * 1.4}-${r * .55}-${r * 2} 0Z" fill="${HAIR}"/>` + eyes(c, x, y + 2, r);
+  const babyHead = (c, x, y, r = 10, sleepy = true) => `<circle cx="${x}" cy="${y}" r="${r}" fill="${SK}"/>` + (sleepy ? `<path d="M${x - r * .5} ${y}q2 1.6 4 0" stroke="${c.ink}" stroke-opacity=".55" stroke-width="1.6" fill="none" stroke-linecap="round"/>` : eyes(c, x, y, r));
+  const arm = (pts, w = 8, col = HK) => `<path d="M${pts.map(p => p.join(' ')).join(' L')}" stroke="${col}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" fill="none"/>`;
+  const wrap = (c, inner) => `<svg viewBox="0 0 160 116" aria-hidden="true"><circle cx="80" cy="60" r="52" fill="${c.pale}"/>${inner}</svg>`;
+  const top = c => c.ink;
+  const ART = {
+    // Sitting up, baby across the lap with the head in the crook of the arm.
+    cradle: c => wrap(c, `<rect x="44" y="96" width="72" height="8" rx="4" fill="${c.ink}" fill-opacity=".08"/>`
+      + `<path d="M54 100c0-34 10-50 26-50s26 16 26 50Z" fill="${top(c)}" fill-opacity=".22"/>` + adultHead(c, 80, 34)
+      + `<rect x="62" y="62" width="40" height="15" rx="7.5" fill="${c.accent}"/>` 
+      + arm([[60, 56], [54, 78], [98, 80]], 7) + arm([[100, 56], [106, 72], [98, 74]], 7) + babyHead(c, 62, 67, 10)),
+    football: c => wrap(c, `<rect x="30" y="96" width="96" height="8" rx="4" fill="${c.ink}" fill-opacity=".08"/>`
+      + `<path d="M66 100c0-34 10-50 26-50s26 16 26 50Z" fill="${top(c)}" fill-opacity=".22"/>` + adultHead(c, 92, 34)
+      + `<rect x="36" y="62" width="38" height="15" rx="7.5" fill="${c.accent}"/>` 
+      + arm([[72, 56], [60, 80], [44, 78]], 7) + arm([[112, 56], [116, 78], [104, 82]], 7) + babyHead(c, 76, 66, 10)),
+    side: c => wrap(c, `<rect x="22" y="84" width="118" height="12" rx="6" fill="${c.ink}" fill-opacity=".1"/><rect x="112" y="66" width="28" height="16" rx="8" fill="#fff" fill-opacity=".9"/>`
+      + `<rect x="40" y="60" width="78" height="24" rx="12" fill="${top(c)}" fill-opacity=".22"/>` + adultHead(c, 124, 58, 12)
+      + `<rect x="64" y="70" width="30" height="14" rx="7" fill="${c.accent}"/>` + babyHead(c, 100, 74, 9)
+      + arm([[108, 64], [92, 60], [72, 66]], 7)),
+    laidback: c => wrap(c, `<rect x="28" y="96" width="104" height="8" rx="4" fill="${c.ink}" fill-opacity=".08"/>`
+      + `<g transform="rotate(30 58 70)"><rect x="42" y="34" width="30" height="72" rx="14" fill="#fff" fill-opacity=".95"/></g>`
+      + `<g transform="rotate(30 86 70)"><rect x="46" y="57" width="80" height="26" rx="13" fill="${top(c)}" fill-opacity=".22"/></g>` + adultHead(c, 48, 42, 12)
+      + `<g transform="rotate(30 98 62)"><rect x="79" y="54.5" width="38" height="15" rx="7.5" fill="${c.accent}"/></g>` + babyHead(c, 78, 52, 10)
+      + arm([[60, 60], [84, 70], [104, 62]], 7))
+  };
+  window.hubHolds = function (cat = 'Feeding', F2 = (x => x)) {
+    const c = pal(cat);
+    const H = [['cradle', 'Cradle', 'Across your lap, head in the crook of your arm', 'An easy everyday hold'],
+      ['football', 'Football', 'Tucked at your side, under your arm', 'Keeps weight off a C-section scar'],
+      ['side', 'Side-lying', 'You both lie on your sides, tummy to tummy', 'For rest. Move {o} back to {p} own bed after'],
+      ['laidback', 'Laid-back', 'You lean back, {s} lies tummy-down on you', 'Helps with a fast letdown']];
+    return `<div class="hub-holds" role="list" aria-label="${F2('Nursing holds')}">${H.map(([k, t, how, when]) => `<figure class="hub-hold" role="listitem"><span class="hub-hold-art">${ART[k](c)}</span><figcaption><b>${F2(t)}</b><span>${F2(how)}</span><small>${F2(when)}</small></figcaption></figure>`).join('')}</div>`;
+  };
+})();
