@@ -63,3 +63,11 @@
 #main .care-v2 .care-ramp b { grid-row: span 2; font-size: 13.5px; font-weight: 600; color: var(--ss-ink, var(--year-ink)) }
 #main .care-v2 .care-ramp span { font-size: 15px; font-weight: 600 }
 #main .care-v2 .care-ramp small { font-size: 13px; color: var(--ink-2, #5e5a75) }
+/* "What's this rash?" in the place of Sleep's "Rough night?", in Everyday care's skin color */
+#main .care-v2 .care-rash-card { background: #fdeee6; color: #9a5a3c }
+#main .care-v2 .care-rash-card .hub-rough-moon { background: #fff; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; padding: 8px }
+#main .care-v2 .care-rash-card .hub-rough-moon svg { width: 100%; height: 100%; stroke: #9a5a3c }
+#main .care-v2 .care-rash-card .hub-chev { color: #9a5a3c }
+#main .care-v2 .care-glance .hub-tiles > div { background: var(--year-pale) }
+#main .care-v2 .care-rash-card .hub-rough-copy b { color: #2b2840 }
+#main .care-v2 .care-rash-card .hub-rough-copy small { color: #7a5a4c }
