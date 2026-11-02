@@ -50,3 +50,4 @@
 /* One color per subpage: charts, strips and picture steps take the color of the tile the parent tapped. */
 #main .hub-detail[data-overview="Out and about"] .hub-strip, #main .hub-detail[data-overview="Out and about"] .hub-daymarks { --ink: var(--ss-ink) !important; --bg: var(--ss-bg) !important; --pale: var(--ss-bg) !important }
 #main .hub-detail[data-overview="Out and about"] .hub-tiles { margin-bottom: 14px }
+#main .hub-detail[data-overview="Out and about"] .hub-seg button.is-on { background: var(--ss-bg) !important; color: var(--ss-ink) !important }
