@@ -269,6 +269,7 @@
     ]);
     b += h.list('Between checkups', [
       h.row({ icon: 'thermo', cat: 'Health', title: `When Maya seems sick`, sub: 'Fevers, medicine and when to call', onclick: "openPage('chg:Health:d:sick')" }),
+      age === 0 ? h.row({ icon: 'sun', cat: 'Health', title: 'Yellow skin (jaundice)', sub: 'Common in the first week, and when to call', onclick: "openPage('chg:Health:d:jaundice')" }) : '',
       h.row({ icon: 'drop', cat: 'Health', title: 'Colds and stuffy noses', sub: 'Saline, suction and a humidifier', onclick: "openPage('chg:Health:d:cold')" }),
       h.row({ icon: 'heart', cat: 'Health', title: 'How are you doing?', sub: 'Your health matters too', onclick: "openPage('chg:Health:d:you')" })
     ]);
@@ -370,6 +371,11 @@
       hubIconSteps([['shield', 'Check the label', 'Weight and age limits. Stop once Maya reaches them.'], ['hand', 'Strap in every time', 'Even for a minute'], ['home', 'On the floor', 'Never on a table, counter, bed or sofa'], ['moon', 'Not for sleep', 'Fell asleep? Move {o} to {p} crib, on {p} back']], 'Safety', 'Check the weight and age limits, strap in every time, keep it on the floor, and never use it for sleep.', false)
       + H().tip('When to stop using a bouncer', 'Once Maya can sit up on {p} own or tries to climb out, even if {s’s} under the weight limit.')
       + H().tip('Stay close', 'Keep Maya within sight, and keep older kids and pets from rocking or pushing it.'));
+    // Jaundice: common in the first days; when to get it checked (AAP).
+    if (cat === 'Health' && screen === 'd' && a === 'jaundice') return detailFrame('Health', 'Health', 'Yellow skin (jaundice)', 'Common in the first days after birth. It usually fades on its own, but it needs watching.',
+      H().steps(['It starts on the face, then can move down to the chest, belly, arms and legs.', 'Check in daylight. On darker skin, look at the whites of the eyes and the gums.', 'Feeding often helps {o} clear it.'])
+      + H().versus('When to call', ['Call your pediatrician', 'Yellow that’s getting deeper or spreading to the belly, arms or legs, yellow whites of the eyes, or fewer wet diapers.'], ['Call right away', 'Any yellow in the first 24 hours, or {s’s} hard to wake, very fussy or not feeding well.'])
+      + H().tip('Sunlight isn’t a treatment', 'Putting {o} in the sun isn’t a safe way to treat jaundice. Your pediatrician has a simple test and treatment if it’s needed.'));
     // Colds and stuffy noses: saline and suction, a cool-mist humidifier, no cold medicines, and when to call (AAP).
     if (cat === 'Health' && screen === 'd' && a === 'cold') return detailFrame('Health', 'Health', 'Colds and stuffy noses', 'Most babies catch several colds in the first year. They usually clear up on their own in about 7–10 days.',
       hubIconSteps([['drop', 'Saline drops', 'A few drops in each nostril loosen the mucus'], ['swallow', 'Then gentle suction', 'A bulb syringe or nasal aspirator, before feeds and sleep'], ['snow', 'Cool-mist humidifier', 'In {p} room at night. Clean it every day.'], ['bottle', 'Keep feeds going', 'Smaller, more frequent feeds are fine while {s’s} stuffy']], 'Health', 'Saline drops, then gentle suction before feeds and sleep, a cool-mist humidifier at night, and plenty of feeds.', true)

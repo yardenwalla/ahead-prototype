@@ -52,3 +52,14 @@
 #main .care-v2 .care-video b { font-size: 15px; font-weight: 600 }
 #main .care-v2 .care-video small { font-size: 13px; color: var(--ink-2, #5e5a75) }
 #main .care-v2 .care-play { width: 34px; height: 34px; border-radius: 50%; background: var(--cc-bg); color: var(--cc-ink); display: grid; place-items: center; font-size: 12px }
+/* What's new at this stage, the girl/boy and circumcised switches, and the first-week diaper ramp */
+#main .care-v2 .care-newlabel { margin: 4px 2px -4px; font-size: 12.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--ss-ink, var(--year-ink)) }
+#main .care-v2 .care-seg { display: inline-flex; gap: 4px; padding: 4px; margin: 0 0 12px; background: #fff; border: 1px solid var(--line); border-radius: 99px }
+#main .care-v2 .care-seg button { border: 0; background: none; padding: 8px 14px; border-radius: 99px; font: inherit; font-size: 14px; font-weight: 600; color: var(--ink-2, #5e5a75); cursor: pointer }
+#main .care-v2 .care-seg button.is-on { background: var(--ss-bg, var(--year-pale)); color: var(--ss-ink, var(--year-ink)) }
+#main .care-v2 .care-ramp { padding: 4px 16px; margin-bottom: 10px }
+#main .care-v2 .care-ramp > div { display: grid; grid-template-columns: 112px 1fr; gap: 0 10px; padding: 11px 0; border-top: 1px solid var(--line) }
+#main .care-v2 .care-ramp > div:first-child { border-top: 0 }
+#main .care-v2 .care-ramp b { grid-row: span 2; font-size: 13.5px; font-weight: 600; color: var(--ss-ink, var(--year-ink)) }
+#main .care-v2 .care-ramp span { font-size: 15px; font-weight: 600 }
+#main .care-v2 .care-ramp small { font-size: 13px; color: var(--ink-2, #5e5a75) }
