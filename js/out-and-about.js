@@ -206,17 +206,20 @@
     const m = ageNow();
 
     if (id === 'errands') {
-      // Wherever you go (a store, a café, the park, the doctor): the cart, changing, naps out, and feeding out.
+      // One outing, start to finish, in the order it happens: leaving, the store, a change, a nap. Short labels so the strip reads at a glance; the rest is in rows.
       const nurse = ['mouth', 'Nursing or pumping', 'Nurse wherever you’re comfortable. To pump, ask for a nursing room, or use your parked car.'];
-      const noTable = ['diaper', 'No changing table?', 'Lay your changing pad on the floor, or on the back seat of the car.'];
-      const changing = ['diaper', 'On a changing table', 'Use the strap and keep a hand on {o}'];
+      const cart = ['car', 'The car seat and the cart', 'Never set the car seat on top of a shopping cart. It can tip.'];
+      const outing = strip('An outing, start to finish', [
+        ['clock', 'Head out', 'Right after a feed'],
+        [m >= 6 ? 'sit' : 'carrier', 'Shop', m >= 6 ? 'In the cart’s seat, strap on' : 'With a carrier or stroller'],
+        ['diaper', 'Change', 'A hand on {o}, or a pad on the floor'],
+        ['moon', 'Nap', 'Asleep? Move {o} to a flat bed']],
+        'Head out right after a feed. Shop with her in a carrier, a stroller or the cart’s seat. When you change her, keep a hand on her, or use a pad on the floor. If she falls asleep, move her to a flat bed when you can.');
       if (m < 2) return sub('errands', 'Errands and walks', 'Your first outings', 'A walk or a quick trip to a quiet store is a good start. Heading home early still counts.',
-        `<h2 class="hub-h2">${F('Wherever you go')}</h2>` + steps([['clock', 'Go right after a feed', 'When {s’s} likely to be calm'], ['hand', 'Ask for clean hands', 'Before anyone holds {o}'], ['carrier', 'Wear {o} in a carrier', 'Easier than a car seat on a cart, and safer'], changing], 'Go right after a feed, ask for clean hands before anyone holds her, wear her in a carrier instead of putting the car seat on a cart, and on a changing table use the strap and keep a hand on her.')
-        + good([['home', 'Crowds and germs, for now', 'Skip crowded indoor places and anyone who’s sick for the first couple of months.'], noTable, nursing() ? nurse : ['steth', 'At the doctor’s office', 'Ask if you can wait in the car until they call you.']]));
+        outing + good([['hand', 'Crowds and germs, for now', 'Skip crowded indoor places and anyone who’s sick. Ask for clean hands before anyone holds {o}.'], cart, nursing() ? nurse : ['steth', 'At the doctor’s office', 'Ask if you can wait in the car until they call you.']]));
       return sub('errands', 'Errands and walks', 'Errands and walks', 'Stores, cafés, the park: most everyday places are fine now.',
-        `<h2 class="hub-h2">${F('Wherever you go')}</h2>` + steps([['car', 'Car seat off the cart', 'Never set it on top of a shopping cart'], m >= 6 ? ['sit', 'Use the cart’s seat', 'With the strap on, once {s} {sit|sits} well'] : ['carrier', 'Carrier or stroller instead', 'For the store or a café'], changing, ['stroller', 'Asleep while you’re out?', 'Keep {o} in view, and move {o} to a flat bed when you can']], 'The car seat never goes on top of a shopping cart. Use a carrier, a stroller or the cart’s seat. On a changing table, use the strap and keep a hand on her. If she falls asleep, keep her in view and move her to a flat bed when you can.')
-        + good(m >= 6 ? [noTable, ['bowl', 'Snacks out', 'Soft foods that squash between your fingers, while {s} {sit|sits} up and you watch. Not in the stroller or car.'], nursing() ? nurse : ['sit', 'High chairs', 'Use the straps every time.']]
-          : [noTable, nursing() ? nurse : ['hand', 'Germs', 'Washing hands is still the best way to avoid colds.']]));
+        outing + good(m >= 6 ? [cart, ['bowl', 'Snacks out', 'Soft foods that squash between your fingers, while {s} {sit|sits} up and you watch. Not in the stroller or car.'], nursing() ? nurse : ['sit', 'High chairs', 'Use the straps every time.']]
+          : [cart, nursing() ? nurse : ['hand', 'Germs', 'Washing hands is still the best way to avoid colds.']]));
     }
 
     if (id === 'road') return sub('road', 'Road trips', 'Road trips', 'Plan a stop every couple of hours.',
