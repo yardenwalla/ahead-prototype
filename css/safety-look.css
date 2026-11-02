@@ -6,3 +6,13 @@
 #main .hub-page[data-overview="Safety"][data-look] .hub-next { border: 0; background: #fcf3e4 }
 /* Checklists are subpages: like every other subpage, no timeline (it used older stage names). */
 #main .safety-owner-page .safety-movement-rail { display: none }
+/* Safety stage page: steps to tick */
+#main .sf-head { display: flex; justify-content: space-between; align-items: baseline }
+#main .sf-count { font-size: 13px; font-weight: 600; color: #795b2c }
+#main .sf-row { align-items: center }
+#main .sf-tick { flex: none; width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid #d9bd87; margin-left: 8px; display: grid; place-items: center; font-weight: 700; color: #fff; font-size: 14px }
+#main .sf-row.is-done .sf-tick { background: #795b2c; border-color: #795b2c }
+#main .sf-row.is-done b { color: #6b6670 }
+#main .sf-row.is-na { opacity: .6 } #main .sf-row.is-na .sf-tick { color: #795b2c }
+#main .sf-actions { display: flex; flex-direction: column; align-items: stretch; gap: 6px }
+#main .sf-actions .hub-link { text-align: center }
