@@ -16,3 +16,7 @@
 #main .sf-row.is-na { opacity: .6 } #main .sf-row.is-na .sf-tick { color: #795b2c }
 #main .sf-actions { display: flex; flex-direction: column; align-items: stretch; gap: 6px }
 #main .sf-actions .hub-link { text-align: center }
+#main .sf-earlier { display: block; width: 100%; text-align: left; background: none; border: 0; padding: 4px 4px 14px; font: inherit; font-size: 14px; color: #795b2c; cursor: pointer }
+#main .sf-tick { cursor: pointer }
+#main .sf-earlier { display: block; width: 100%; text-align: left; background: none; border: 0; padding: 4px 4px 14px; font: inherit; font-size: 14px; color: #795b2c; cursor: pointer }
+#main .sf-tick { cursor: pointer }

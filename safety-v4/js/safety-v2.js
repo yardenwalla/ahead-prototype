@@ -22,14 +22,17 @@
     sleep: { t: 'Set up a bare crib', s: 'Firm, flat and empty, in your room', i: 'moon', c: 'sleep', go: "openPage('chg:Sleep:safe')", sleep: true },
     changing: { t: 'Set up your changing spot', s: 'Supplies within arm’s reach, or a mat on the floor', i: 'diaper', c: 'body',
       why: 'Babies wriggle and roll sooner than you expect, and a fall from a changing table is one of the most common early injuries.',
-      steps: ['Keep diapers, wipes and a change of clothes within arm’s reach of the changing spot.', 'On a raised table, use the strap and keep one hand on {o}, every time.', 'Or change {o} on a mat on the floor, where there’s nothing to fall from.'],
+      steps: ['Keep diapers, wipes and a change of clothes within arm’s reach of the changing spot.', 'On a raised table, use the strap and keep one hand on {o}, every time.', 'Or change {o} on a mat on the floor. Never leave {o} on a bed or sofa, even for a second.'],
       tip: ['Never step away', 'Even for a second. A strap doesn’t replace a hand on {o}.'] },
-    gear: { t: 'Check swings and bouncers', s: 'Weight limits and straps, and never for sleep', i: 'mat', c: 'floor', go: "openPage('chg:Safety:d:gear')", own: true },
-    swaddle: { t: 'Stop swaddling at the first roll', s: 'Then a sleep sack, arms free', i: 'sack', c: 'sleep', go: "openPage('chg:Sleep:d:swaddleoff')", sleep: true },
-    bassinet: { t: 'Move from the bassinet to the crib', s: 'Once {s} {roll|rolls}, or at the bassinet’s weight limit', i: 'crib', c: 'sleep', go: "openPage('chg:Sleep:d:where')", sleep: true },
+    gear: { t: 'Check swings and bouncers', s: 'Weight limits and straps, and never for sleep', i: 'mat', c: 'floor',
+      why: 'Swings, bouncers and floor seats are handy for a few hands-free minutes. A quick check keeps them safe.',
+      steps: ['Check the label for weight and age limits, and stop once {s} {reach|reaches} them.', 'Use the straps every time, even for a minute.', 'Keep them on the floor, never on a table, counter, bed or sofa.', 'They’re not for sleep. If {s} {fall|falls} asleep, move {o} to {p} crib, on {p} back.'],
+      tip: ['When to stop using a bouncer', 'Once {s} can sit up on {p} own or tries to climb out, even under the weight limit.'] },
+    swaddle: { t: 'Stop swaddling at the first try to roll', s: 'Some babies try at 2 months. Then a sleep sack, arms free', i: 'sack', c: 'sleep', go: "openPage('chg:Sleep:d:swaddleoff')", sleep: true },
+    bassinet: { t: 'Move from the bassinet to the crib', s: 'Once {s} {try|tries} to roll or push up, or at its weight limit', i: 'crib', c: 'sleep', go: "openPage('chg:Sleep:d:where')", sleep: true },
     small: { t: 'Clear the floor where {s} {play|plays}', s: 'Coins, button batteries and small parts out of reach', i: 'coin', c: 'floor',
       why: 'Rolling brings the floor within reach, and everything {s} {find|finds} goes in {p} mouth.',
-      steps: ['Look around {p} play space at floor level for coins, magnets and pieces of older children’s toys.', 'Anything that fits inside an empty toilet-paper tube is small enough to choke on. Keep it out of reach.', 'Check that remotes, key fobs, musical books and toys have battery covers that screw shut. Keep spare batteries up high.'],
+      steps: ['Give {o} a firm play mat on the floor, away from furniture edges and cords. Beds and sofas aren’t safe for rolling practice.', 'Look around {p} play space at floor level for coins, magnets and pieces of older children’s toys.', 'Anything that fits inside an empty toilet-paper tube is small enough to choke on. Keep it out of reach.', 'Check that remotes, key fobs, musical books and toys have battery covers that screw shut. Keep spare batteries up high.'],
       tip: ['Button batteries are an emergency', 'If you think {s} swallowed a button battery or a magnet, go to the ER right away.'],
       links: [['Small-object checks · CHOP', 'https://www.chop.edu/centers-programs/injury-prevention-program/choking-and-suffocation']] },
     bags: { t: 'Give visitors’ bags a place up high', s: 'They often hold medicines', i: 'bag', c: 'body',
@@ -40,7 +43,7 @@
       why: 'Once {s} {crawl|crawls}, stairs are the biggest fall risk at home.',
       steps: ['At the top of the stairs, use a gate that screws into the wall. A gate that only presses against the walls can give way.', 'At the bottom, either kind is fine.', 'Use gates made for children, and follow their instructions.'],
       tip: ['Skip seated walkers with wheels', 'They let babies move fast toward stairs and other hazards, and they don’t help with walking. Floor play or a stationary activity center is safer.'],
-      links: [['Baby walkers · AAP', 'https://www.healthychildren.org/English/safety-prevention/at-home/Pages/Baby-Walkers-A-Dangerous-Choice.aspx']] },
+      links: [['Room-by-room babyproofing · AAP', aap], ['Find a professional childproofer · Paid', 'https://www.childproofingexperts.com/find-a-professional/'], ['Baby walkers · AAP', 'https://www.healthychildren.org/English/safety-prevention/at-home/Pages/Baby-Walkers-A-Dangerous-Choice.aspx']] },
     storage: { t: 'Lock up cabinets and drawers', s: 'Medicines, cleaners, knives and plastic bags locked up; bathroom and laundry closed off', i: 'lock', c: 'high',
       why: 'Crawling babies open every low door and drawer they can reach.',
       steps: ['Fit child latches or locks on cabinets and drawers that hold medicines, cleaners, detergent pods, knives or plastic bags.', 'Better still, move medicines and cleaners up high as well as latched.', 'Keep the bathroom, laundry room and garage closed off with door knob covers or a gate.'],
@@ -57,7 +60,7 @@
       links: [['Anchor it · CPSC', cpsc]] },
     windows: { t: 'Make windows and blinds safe', s: 'Open no more than 4 inches, and no hanging cords', i: 'window', c: 'car',
       why: 'Standing puts windows and blind cords within reach.',
-      steps: ['Fit window stops, small locks that keep windows from opening more than 4 inches. Screens don’t stop falls.', 'Keep at least one window in each room that an adult can open fully in a fire.', 'Swap corded blinds and shades for cordless ones. Hanging cords and loops can wrap around a baby’s neck.', 'Move cribs and furniture {s} could climb away from windows.'],
+      steps: ['Fit window stops, small locks that keep windows from opening more than 4 inches. Screens don’t stop falls.', 'Keep at least one window in each room that an adult can open fully in a fire.', 'Swap corded blinds and shades for cordless ones. Tying up the pull cord isn’t enough: inner cords and loops can still be reached, from the floor or from furniture.', 'Move cribs and furniture {s} could climb away from windows.'],
       links: [['Window safety · CPSC', cpsc]] },
     kitchen: { t: 'Fit stove knob covers and an oven lock', s: 'Once {s} can reach the front of the stove', i: 'fridge', c: 'high',
       why: 'Standing brings stove knobs and the oven door within reach.',
@@ -65,7 +68,7 @@
       links: [['Childproofing your home · CPSC', cpsc]] },
     pool: { t: 'Block the way to water', s: 'A toilet lock, a shut bathroom, and a fenced pool', i: 'bath', c: 'home',
       why: 'Babies can drown in a few inches of water, quickly and quietly.',
-      steps: ['Fit a toilet-lid lock, and keep the bathroom door closed.', 'Empty buckets, tubs and wading pools right after use.', 'If you have a pool or spa, fence it on all sides with a self-closing, self-latching gate.'],
+      steps: ['Fit a toilet-lid lock, and keep the bathroom door closed.', 'Empty buckets, tubs and wading pools right after use.', 'If you have a pool or spa, fence it on all sides with a self-closing, self-latching gate. Keep doors to it locked, and close the gate every time.'],
       tip: ['Barriers don’t replace watching', 'Stay within arm’s reach whenever {s’s} near water.'],
       links: [['Pool Safely · CPSC', 'https://www.poolsafely.gov/parents/safety-tips/']] },
     mattress2: { t: 'Set the crib mattress to its lowest', s: 'Before or as soon as {s} {stand|stands}', i: 'crib', c: 'sleep', go: "openPage('chg:Sleep:d:mattress')", sleep: true }
@@ -112,11 +115,18 @@
     const pills = h.pills('Safety by movement', STAGES.map((s, j) => ({ label: s.label, age: s.age, on: j === i, now: live && j === nowI, onclick: `openPage('safety-stage:${s.key}')`, change: typeof stageCanChange === 'function' && stageCanChange('Safety', j, nowI) ? `hubChangeStage('Safety',${j})` : '' })), 'Safety');
     const sts = st.ids.map(status), done = sts.filter(x => x === 'done').length, na = sts.filter(x => x === 'na').length, of = st.ids.length - na;
     const rows = st.ids.map((id, k) => { const x = STEP[id], c = C[x.c], s = sts[k];
-      return `<button class="hub-row hl-row sf-row${s ? ' is-' + s : ''}" style="--hl-bg:${c[0]};--hl-ink:${c[1]}" onclick="${open(id)}"><span class="hub-dot">${hubArt(x.i, 'Safety')}</span><span class="hub-row-copy"><b>${F(x.t)}</b><small>${s === 'na' ? 'Doesn’t apply to your home' : F(x.s) + (x.sleep ? ' · In Sleep' : '')}</small></span><span class="sf-tick" aria-hidden="true">${s === 'done' ? '✓' : s === 'na' ? '–' : ''}</span></button>`; }).join('');
+      return `<button class="hub-row hl-row sf-row${s ? ' is-' + s : ''}" style="--hl-bg:${c[0]};--hl-ink:${c[1]}" onclick="${open(id)}"><span class="hub-dot">${hubArt(x.i, 'Safety')}</span><span class="hub-row-copy"><b>${F(x.t)}</b><small>${s === 'na' ? 'Doesn’t apply to your home' : F(x.s) + (x.sleep ? ' · In Sleep' : '')}</small></span><span class="sf-tick" role="checkbox" aria-checked="${s === 'done'}" aria-label="Mark done: ${x.t.replace(/"/g, '')}" onclick="event.stopPropagation();sfSet('${id}','${s === 'done' ? '' : 'done'}')">${s === 'done' ? '✓' : s === 'na' ? '–' : ''}</span></button>`; }).join('');
     let b = `<header class="hub-hero sf-hero"><p class="hub-eyebrow">${st.label} · ${st.age}</p><h1>${F(st.title)}</h1><p class="hub-lead">${F(st.lead)}</p></header>`;
     b += `<div class="sf-head"><h2 class="hub-h2">${F(i < nowI && live ? 'Done these yet?' : 'Do these now')}</h2><span class="sf-count">${of ? `${done} of ${of} done` : 'None apply'}</span></div><div class="hub-list sf-list">${rows}</div>`;
+    // Joined later, or skipped a stage? One quiet line back to the earliest stage with steps still open.
+    if (live && i === nowI) {
+      const left = STAGES.slice(0, i).map(s2 => [s2, s2.ids.filter(x => !status(x)).length]).filter(x => x[1]);
+      if (left.length) b += `<button class="sf-earlier" onclick="openPage('safety-stage:${left[0][0].key}')">${F('Earlier steps: ' + left.map(([s2, n]) => `${n} from ${s2.label}`).join(', ') + ', if you haven’t done them')} ›</button>`;
+    }
     b += h.versus('If something goes wrong', ['Poison Help', 'Call 1-800-222-1222 if Maya swallows something that could be harmful.'], ['Call 911', 'If {s} can’t breathe or won’t wake. A swallowed battery or magnet means the ER right away.']);
-    if (nx) b += h.next(`Next: ${nx.label}, around ${nx.age.replace(/\D.*$/, '')} months`, nx.title, `openPage('safety-stage:${nx.key}')`);
+    // Choking first aid lives in Feeding; the safety net links to it.
+    b += `<div class="hub-browse"><button class="hub-link" onclick="openPage('chg:Feeding:safe')">${F(typeof actualMonth === 'function' && actualMonth() >= 12 ? 'Learn choking first aid for a child' : 'Learn infant choking first aid')} ›</button></div>`;
+    if (nx) b += h.next(`Next: ${nx.label}, from about ${nx.age.replace(/\D.*$/, '')} months`, nx.title, `openPage('safety-stage:${nx.key}')`);
     b += h.note('Ages are typical. Every baby moves at their own pace.');
     return `<div class="quiet-category hub-page" data-overview="Safety" data-safety-stage="${key}" style="${yearTheme('Safety')}">${typeof monthlyPageHeader === 'function' ? monthlyPageHeader('Safety') : ''}${pills}${b}</div>`;
   };
@@ -128,7 +138,7 @@
     const head = `<div class="dev-area-head ss-head" style="--area:${SAND[0]};--area-ink:${SAND[1]}"><span class="dev-area-head-art"><svg viewBox="0 0 90 40" aria-hidden="true"><rect x="4" y="30" width="78" height="6" rx="3" fill="${SAND[2]}"/><circle cx="24" cy="22" r="8" fill="${SAND[3]}"/><rect x="48" y="12" width="20" height="18" rx="4" fill="${SAND[2]}"/></svg></span><p class="hub-context">${st ? st.label : 'Safety'}</p><h1>${F(x.t)}</h1><p class="hub-lead">${F(x.why)}</p></div>`;
     const actions = s === 'done' ? `<p class="hub-done">${F('Done')} ✓</p><button class="hub-link" onclick="sfSet('${id}','')">${F('Undo')}</button>`
       : `<button class="hub-button" onclick="sfSet('${id}','done');back()">${F('Mark as done')}</button><button class="hub-link sf-na" onclick="sfSet('${id}','${s === 'na' ? '' : 'na'}');back()">${F(s === 'na' ? 'It applies after all' : 'Doesn’t apply to our home')}</button>`;
-    const links = (x.links || []).map(([t, u]) => `<a class="hub-more" href="${u}" target="_blank" rel="noopener"><span>${F(t)}</span><span class="hub-chev" aria-hidden="true">↗</span></a>`).join('');
+    const links = (x.links || []).map(([t, u]) => `<a class="hub-more" href="${u}" target="_blank" rel="noopener"><span>${t}</span><span class="hub-chev" aria-hidden="true">↗</span></a>`).join('');
     return `<div class="quiet-category hub-page hub-detail" data-overview="Safety" data-ss="1" style="${yearTheme('Safety')};--ss-bg:${c[0]};--ss-ink:${c[1]}">${detailPageTop('Safety')}${head}`
       + h.steps(x.steps.map(F)) + (x.tip ? h.tip(x.tip[0], x.tip[1]) : '') + `<div class="hub-actions sf-actions">${actions}</div>` + links + `</div>`;
   }
