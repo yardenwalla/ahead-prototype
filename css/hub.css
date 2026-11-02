@@ -1366,3 +1366,11 @@
 #main .dev-more-list button { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; padding: 13px 0; min-height: 0; background: none; border: 0; font: inherit; font-size: 15px; color: var(--ink); text-align: left; cursor: pointer }
 #main .dev-more-list button::before { content: ""; flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--year-accent); margin-right: 2px }
 #main .dev-more-list button span:first-of-type { flex: 1 }
+/* Memories: each first in its area's soft color, in the same rounded square as the category rows */
+#main .mem-row-ic.is-toned { border-radius: 13px; background: var(--mem-bg) }
+#main .is-toned svg, #main .is-toned svg [stroke]:not([stroke="none"]) { stroke: var(--mem-ink) }
+#main .hub-big.mem-big { background: var(--mem-bg) }
+/* Care card: the link to copy when the share sheet isn't available */
+#main .cc-link { display: flex; gap: 8px; margin-top: 10px }
+#main .cc-link input, #main .cc-link textarea { flex: 1; min-width: 0; border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; font: inherit; font-size: 13px; background: #fff; color: var(--ink) }
+#main .cc-link button { border: 0; border-radius: 12px; padding: 0 16px; font: inherit; font-weight: 600; background: var(--year-pale, #eef2ec); color: var(--ink) }
