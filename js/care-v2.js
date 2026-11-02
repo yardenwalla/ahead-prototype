@@ -468,7 +468,7 @@
     // and boys see circumcised and not, unless the parent has already told us.
     down: {
       0: { html: true, pre: () => `<div class="care-toggles">${downToggles()}</div>`,
-        vis: () => downAnat() === 'boy' && downCirc() === 'Yes' ? hubIconSteps([['drop', 'Jelly on gauze', 'A dab on a gauze square'], ['hand', 'Over the tip', 'Loosely, not wrapped tight'], ['diaper', 'Fresh each change', 'Until it heals']], CAT, 'Put a dab of petroleum jelly on a gauze square, lay it loosely over the tip, and use a fresh one at each diaper change until it heals.') : '',
+        vis: () => downAnat() === 'boy' && downCirc() === 'Yes' ? hubIconSteps([['drop', 'Add petroleum jelly', 'A dab on a square of gauze'], ['hand', 'Lay it over the tip', 'Loosely, jelly side down'], ['diaper', 'Use a new one', 'At every diaper change']], CAT, 'Put a dab of petroleum jelly on a gauze square, lay it loosely over the tip, and use a fresh one at each diaper change until it heals.') : '',
         get line() { const a = anatomy(); return a === 'girl' ? 'Wiping, and what’s normal' : a === 'boy' ? 'Circumcised or not' : 'For girls and boys'; },
         get answer() { return downAnat() === 'boy' ? 'Only gentle cleaning is needed, plus a little extra care while a circumcision heals.' : 'Only gentle cleaning is needed. A few things in the first weeks look surprising, and they’re normal.'; },
         get doText() { return downPick({ girl: 'Wipe front to back at every change, gently, between the folds.',
