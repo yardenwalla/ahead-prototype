@@ -9,6 +9,7 @@
     [/^Questions and notes/i, '#fff3dc', '#8a6a2a'],
     [/seems sick/i, '#fdeee6', '#9a5a3c'],
     [/^Colds/i, '#e7effc', '#46638c'],
+    [/jaundice/i, '#fff3dc', '#8a6a2a'],
     [/^How are you doing/i, '#fdeef2', '#a24d6a']
   ];
   function dress() {
