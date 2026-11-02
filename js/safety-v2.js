@@ -66,7 +66,7 @@
       why: 'Standing brings stove knobs and the oven door within reach.',
       steps: ['Fit knob covers so {s} can’t turn the burners on.', 'Add an oven lock so the door stays shut.', 'Cook on the back burners when you can, with pot handles turned in.'],
       links: [['Childproofing your home · CPSC', cpsc]] },
-    pool: { t: 'Block the way to water', s: 'A toilet lock, a shut bathroom, and a fenced pool', i: 'bath', c: 'home',
+    pool: { t: 'Keep water out of reach', s: 'A toilet lock, a shut bathroom, and a fenced pool', i: 'bath', c: 'home',
       why: 'Babies can drown in a few inches of water, quickly and quietly.',
       steps: ['Fit a toilet-lid lock, and keep the bathroom door closed.', 'Empty buckets, tubs and wading pools right after use.', 'If you have a pool or spa, fence it on all sides with a self-closing, self-latching gate. Keep doors to it locked, and close the gate every time.'],
       tip: ['Barriers don’t replace watching', 'Stay within arm’s reach whenever {s’s} near water.'],
