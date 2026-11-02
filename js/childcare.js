@@ -246,7 +246,7 @@
   // Sharing sends one link that opens the whole card. The link carries the details itself (?c=…, which messaging apps keep);
   // the card page is a static file, so nothing is saved anywhere.
   // The card page next to this app (so a preview shares its own card page). Opened from a file, fall back to the live one.
-  const CARD_URL = location.protocol.startsWith('http') ? new URL('card.html', location.href).href.split('?')[0] : 'https://yardenwalla.github.io/ahead-prototype/card.html';
+  const CARD_URL = typeof location !== 'undefined' && location.protocol.startsWith('http') ? new URL('card.html', location.href).href.split('?')[0] : 'https://yardenwalla.github.io/ahead-prototype/card.html';
   const cardData = function () {
     const c = card(), P = babyPronouns(), n = c.naps === '4 or more' ? 4 : Number(c.naps) || 0;
     const low = (a, own) => (a || []).map((x, i) => x === 'On their own' ? own : i ? x.toLowerCase() : x);
