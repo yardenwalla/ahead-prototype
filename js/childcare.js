@@ -260,9 +260,18 @@
   };
   window.ccShare = async function () {
     const url = ccCardLink(), done = document.getElementById('ccDone');
-    const say = m => { if (done) { done.textContent = m; done.hidden = false; } };
-    try { if (navigator.share) { await navigator.share({ title: `${name()}’s care card`, text: `Here’s ${name()}’s care card`, url }); return; } } catch (e) { if (e && e.name === 'AbortError') return; }
-    try { await navigator.clipboard.writeText(url); say('Link copied. Paste it into a text or email.'); } catch (e) { say('Couldn’t share from here. Try again on your phone.'); }
+    // If the phone's share sheet or the clipboard says no, show the link with its own Copy button, so there's always a way to send it.
+    const fallback = () => { if (!done) return; done.hidden = false; done.innerHTML = `${F('Copy this link and paste it into a text or email.')}<span class="cc-link"><input readonly value="${esc3(url)}" onclick="this.select()" aria-label="Care card link"><button onclick="ccCopy(this)">${F('Copy')}</button></span>`; };
+    const data = { title: `${name()}’s care card`, url };
+    if (navigator.share && (!navigator.canShare || navigator.canShare(data))) {
+      try { await navigator.share(data); return; } catch (e) { if (e && e.name === 'AbortError') return; }
+    }
+    try { await navigator.clipboard.writeText(url); if (done) { done.textContent = F('Link copied. Paste it into a text or email.'); done.hidden = false; } } catch (e) { fallback(); }
+  };
+  window.ccCopy = async function (btn) {
+    const input = btn.previousElementSibling; input.select(); input.setSelectionRange(0, 99999);
+    let ok = false; try { await navigator.clipboard.writeText(input.value); ok = true; } catch (e) { try { ok = document.execCommand('copy'); } catch (e2) {} }
+    btn.textContent = ok ? 'Copied' : 'Select and copy';
   };
 
   /* ---------- routes ---------- */
