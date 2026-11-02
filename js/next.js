@@ -41,7 +41,7 @@
       I(6, 12, 'care', 'Daily rhythm', 'The first tooth arrives', 'Usually between 6 and 12 months.', '', "openPage('chg:Daily rhythm:d:teeth')", { skip: a.hasTooth === 'Yes', icon: 'tooth' }),
       I(6, 7, 'care', 'Daily rhythm', 'Sunscreen can join in', 'From 6 months, alongside shade.', '', "openPage('chg:Daily rhythm:d:sun')", { icon: 'sun' }),
       I(9, 12, 'care', 'Daily rhythm', 'Cruising and first steps', 'Pulling up and cruising come before walking.', '', "openPage('chg:Daily rhythm:d:steps')", { icon: 'stand' }),
-      I(3, 6, 'birth', 'Out and about', 'Longer trips get easier', 'Steadier heads and feeds make road trips and flights more doable.', 'On long drives, plan a stop every 2 hours.', "openPage('chg:Out and about:s:1')"),
+      I(2, 6, 'birth', 'Out and about', 'Longer trips fit between feeds', 'Feeds spread out, so a long drive or a first flight gets easier.', 'On long drives, plan a stop about every 2 hours.', "openPage('chg:Out and about:s:1')"),
       I(6, 12, 'birth', 'Out and about', 'Outgrowing the infant car seat', 'Many babies do in the first year. The next seat still faces back.', '', "openPage('chg:Out and about:d:bigger')", { icon: 'car' })
     ];
     // Development: what most babies do by each stage.
