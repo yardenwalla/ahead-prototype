@@ -16,8 +16,8 @@
   const hasTooth = () => !live() || answers.hasTooth === 'Yes' || (typeof journeyData === 'function' && journeyData().records.some(r => r.type === 'milestone' && /tooth|teeth/i.test(r.title || '')));
 
   // Each topic's soft color pair, its icon, and a small flat picture for the page header.
-  const COL = { diapers: ['#e7effc', '#46638c', '#9fb8df', '#d9e5fc'], bath: ['#e3f1f7', '#2a6078', '#8cc1d6', '#cfe9f4'], skin: ['#fdeee6', '#9a5a3c', '#f4c3a8', '#fbe0d0'], clothes: ['#efedff', '#625084', '#b4a5dc', '#e5e0fc'], sun: ['#fff3dc', '#8a6a2a', '#f3d58a', '#fbe6bd'], teeth: ['#e6f5ec', '#356651', '#9bc7ac', '#ddf1e5'], nails: ['#fdeef2', '#a24d6a', '#f2b8c6', '#f4d6c4'], cord: ['#fdeef2', '#a24d6a', '#f2b8c6', '#f4d6c4'], need: ['#f5f1ea', '#4d443b', '#d8cbb8', '#ece6dc'] };
-  const ICON = { diapers: 'diaper', bath: 'bath', skin: 'drop', clothes: 'shirt', sun: 'sun', teeth: 'tooth', nails: 'nail', cord: 'cord', need: 'bag' };
+  const COL = { diapers: ['#e7effc', '#46638c', '#9fb8df', '#d9e5fc'], bath: ['#e3f1f7', '#2a6078', '#8cc1d6', '#cfe9f4'], skin: ['#fdeee6', '#9a5a3c', '#f4c3a8', '#fbe0d0'], clothes: ['#efedff', '#625084', '#b4a5dc', '#e5e0fc'], sun: ['#fff3dc', '#8a6a2a', '#f3d58a', '#fbe6bd'], teeth: ['#e6f5ec', '#356651', '#9bc7ac', '#ddf1e5'], nails: ['#fdeef2', '#a24d6a', '#f2b8c6', '#f4d6c4'], cord: ['#fdeef2', '#a24d6a', '#f2b8c6', '#f4d6c4'], need: ['#f5f1ea', '#4d443b', '#d8cbb8', '#ece6dc'], look: ['#fdeee6', '#9a5a3c', '#f4c3a8', '#fbe0d0'] };
+  const ICON = { diapers: 'diaper', bath: 'bath', skin: 'drop', clothes: 'shirt', sun: 'sun', teeth: 'tooth', nails: 'nail', cord: 'cord', need: 'bag', look: 'eye' };
   const ART = {
     diapers: c => `<path d="M6 8h44v6a22 18 0 0 1-44 0Z" fill="${c[2]}"/><circle cx="66" cy="24" r="8" fill="${c[3]}"/>`,
     bath: c => `<rect x="4" y="18" width="52" height="16" rx="8" fill="${c[2]}"/><circle cx="22" cy="12" r="5" fill="${c[3]}"/><circle cx="34" cy="9" r="4" fill="${c[3]}"/>`,
@@ -27,6 +27,7 @@
     teeth: c => `<rect x="6" y="10" width="14" height="20" rx="7" fill="${c[2]}"/><rect x="24" y="10" width="14" height="20" rx="7" fill="${c[2]}"/><rect x="46" y="22" width="28" height="8" rx="4" fill="${c[3]}"/>`,
     nails: c => `<rect x="10" y="6" width="14" height="28" rx="7" fill="${c[2]}"/><rect x="12" y="6" width="10" height="9" rx="4" fill="${c[3]}"/><circle cx="50" cy="24" r="8" fill="${c[3]}"/>`,
     cord: c => `<circle cx="20" cy="20" r="13" fill="${c[2]}"/><circle cx="20" cy="20" r="4" fill="${c[3]}"/>`,
+    look: c => `<circle cx="20" cy="20" r="14" fill="${c[2]}"/><circle cx="20" cy="20" r="5" fill="${c[3]}"/><rect x="42" y="18" width="34" height="8" rx="4" fill="${c[3]}"/>`,
     need: c => `<rect x="6" y="12" width="36" height="24" rx="6" fill="${c[2]}"/><path d="M16 12a8 7 0 0 1 16 0" stroke="${c[2]}" stroke-width="3" fill="none"/><rect x="50" y="24" width="24" height="8" rx="4" fill="${c[3]}"/>`
   };
   const go = (k, v) => `openPage('chg:${CAT}:d:t:${k}${v == null ? '' : ':' + v}')`;
@@ -404,7 +405,7 @@
     const shop = v === 1 ? '' : `<div class="hub-browse care-shop"><button class="hub-link" onclick="${go('need', v)}">${F(v === 0 ? 'Getting ready? What you’ll need' : 'What you’ll need now')} ›</button></div>`;
     if (st.groups) b += st.groups().map(([t, ids], i) => `<h2 class="hub-h2">${F(t)}</h2><div class="hub-list">${ids.map(id => qRow(id, false)).join('')}</div>`).join('') + shop;
     else b += `<h2 class="hub-h2">${F('What’s different now')}</h2><div class="hub-list">${st.rows().map(id => qRow(id)).join('')}</div>` + shop;
-    b += `<button class="hub-rough-card care-rash-card" onclick="openPage('chg:${CAT}:d:q:rashes')"><span class="hub-rough-moon" aria-hidden="true">${hubArt('drop', CAT)}</span><span class="hub-rough-copy"><b>${F('What’s this rash?')}</b><small>${F('Bumps, spots and red patches')}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`;
+    b += `<button class="hub-rough-card care-rash-card" onclick="openPage('chg:${CAT}:d:look:${v}')"><span class="hub-rough-moon" aria-hidden="true">${hubArt('eye', CAT)}</span><span class="hub-rough-copy"><b>${F('Something look off?')}</b><small>${F(['Poop, rashes, the cord, eyes and more', 'Poop, rashes, eyes and more', 'Drool, rashes, poop and more', 'Drool, rashes, poop and more'][v])}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`;
     b += h.versus('Normal, or time to call?', ['Normal', st.call[0]], ['Call your pediatrician', st.call[1]]);
     b += nx ? h.next(v === 0 ? 'Next, after the first few weeks' : `Next, usually from ${STAGE[v + 1].split('–')[0]} months`, nx.title, `openPage('chg:${CAT}:s:${v + 1}')`)
       : h.next('After the first birthday', 'Toddler baths and first shoes', `openPage('chg:${CAT}:d:after1')`);
@@ -413,6 +414,39 @@
   };
   // Older links: a topic at a stage opens that stage's main question for it.
   const T2Q = { diapers: ['firstweek', 'fewer', 'solids', 'wriggly'], bath: ['sponge', 'tub', 'tub', 'bigtub'], skin: ['newskin', 'acne', 'drool', 'rashes'], clothes: ['dress', 'dress', 'dress', 'feet'], sun: ['shade', 'shade', 'six', 'six'], teeth: ['gums', 'gums', 'teething', 'brush'], nails: ['nailsnose', 'nailsnose', 'nailsnose', 'nailsnose'] };
+
+  /* ---------- "Something look off?" ----------
+     The in-the-moment door, like Sleep's "Rough night?": pick what you're seeing, and the answer opens right there
+     (what's normal, what to do, when to call), with anything urgent first. Ordered for the baby's stage. */
+  function lookOff(v) {
+    const h = H(), now = v == null ? stageNow() : v, solidsOn = live() && answers.solids === 'Yes';
+    const block = (normal, todo, call, urgentT) => (urgentT ? `<p class="care-urgent"><b>${F('Get help right away:')}</b> ${F(urgentT)}</p>` : '')
+      + (normal ? `<p class="care-p"><b>${F('Normal:')}</b> ${F(normal)}</p>` : '') + (todo ? `<p class="care-p"><b>${F('What to do:')}</b> ${F(todo)}</p>` : '') + (call ? `<p class="care-p"><b>${F('Call your pediatrician:')}</b> ${F(call)}</p>` : '');
+    const rashLine = id => { const r = RASH[id]; return `<li><b>${F(r.t)}</b> ${F(r.look + '. ' + r.steps[0])}</li>`; };
+    const rashOrder = [['acne', 'cradle', 'peeling'], ['acne', 'cradle', 'strawberry'], ['drool', 'eczema'], ['eczema', 'heat']][now];
+    const rest = RASH_ORDER.concat('strawberry').filter((id, i, a) => a.indexOf(id) === i && !rashOrder.includes(id));
+    const items = {
+      poop: ['Poop or pee', 'Colors, how often, and when to call', block(
+        (now === 0 ? 'Black and sticky for the first 3–4 days, then ' : '') + 'mustard-yellow and seedy if breastfed, tan if formula. Green, yellow, orange and brown are all normal.' + (now >= 1 ? ' After the first weeks, breastfed babies can go days between poops.' : '') + (solidsOn ? ' With solids: thicker, browner, sometimes the color of the food.' : ''),
+        'Count wet diapers: 6 or more a day after the first week. Grunting, straining and going red to poop is normal.',
+        'Fewer than 4 wet diapers a day, black poop after day 3, red or blood, hard pebble-like poop, or watery poop many times a day (right away under 3 months).' + (now === 0 ? ' A pink stain that lasts past the first few days.' : ''),
+        'White, gray or chalky poop. Call your pediatrician right away.')],
+      rash: ['A rash or spots', 'Bumps, red patches, dry skin', `<ul class="care-list">${rashOrder.map(rashLine).join('')}</ul><details class="care-more"><summary>${F('More rashes')}</summary><ul class="care-list">${rest.map(rashLine).join('')}</ul></details>`
+        + block('', '', 'A rash with a fever, blisters, pus or oozing, or one that keeps spreading.' + (now === 0 ? ' Clusters of tiny blisters in the first 2 weeks: call now.' : ''), 'Purple or red dots that don’t fade when you press a glass on them. Call 911 or go to the ER.')],
+      cord: ['The cord or belly button', 'Smell, crust or a little blood', block('Darkening and drying, a little crust, and a spot of blood when it falls off, usually at 1–3 weeks.', 'Keep it dry and let it fall off on its own.', 'A yellow, smelly discharge, redness or warmth around it, bleeding that doesn’t stop, still on after 3 weeks, or a moist lump after it falls off.')],
+      eyes: ['Eyes or nose', 'Sticky eyes, sneezing, snuffles', block('Sneezing and snuffly breathing (dried milk or mucus, not a cold), and a watery eye that isn’t red, often a blocked tear duct that opens by the first birthday.', 'Wipe sticky eyes from the inside corner out, a fresh damp cotton ball for each. For a stuffy nose, a few saline drops and gentle suction.', 'A red or swollen eyelid, yellow-green discharge with redness, or a red lump at the inner corner.', 'Struggling to breathe, or blue lips. Call 911.')
+        + `<div class="hub-list care-link">${rowK('nails', 'Colds and stuffy noses', 'In Health', "openPage('chg:Health:d:cold')")}</div>`],
+      yellow: ['Yellow skin', 'Jaundice in the first weeks', block('Some yellow on the face in the first days is common, and usually fades on its own.', '', 'Yellow spreading to the belly or legs, yellow whites of the eyes, or fewer wet diapers.', 'Any yellow in the first 24 hours, or yellow and hard to wake or not feeding well.')
+        + `<div class="hub-list care-link">${rowK('skin', 'Jaundice', 'What to watch for · In Health', "openPage('chg:Health:d:jaundice')")}</div>`],
+      gums: ['Drool, sore gums or extra fussing', 'Could it be teething?', block('Drool, chewing on everything, sore gums and more fussing than usual, often from about 4 months.', 'A clean finger on the gums, or a firm teething ring chilled in the fridge. Skip numbing gels and teething necklaces.', 'A fever of 100.4°F or higher, diarrhea or a rash. Teething doesn’t cause those.')],
+      hot: ['Too hot or too cold?', 'Sweaty, flushed or chilly', block('A warm, slightly sweaty neck after a feed or a nap.', 'Feel the back of {p} neck: sweaty means take off a layer, cool means add one. One more layer than you is a good guide.', 'Any sunburn before age 1.', 'Hot and flushed and hard to wake, floppy, or not feeding. Cool {o} down and call 911.')]
+    };
+    const order = [['poop', 'rash', 'cord', 'yellow', 'eyes', 'hot'], ['poop', 'rash', 'eyes', 'hot', 'cord'], ['gums', 'rash', 'poop', 'hot', 'eyes'], ['gums', 'rash', 'poop', 'hot', 'eyes']][now];
+    let b = head('look', 'Is this normal?', 'Something look off?', 'Pick what you’re seeing.');
+    b += `<div class="hub-card care-folds care-lookoff">${order.map(k => { const [t, sub, body] = items[k]; return `<details class="care-fold"><summary><span><b>${F(t)}</b><small>${F(sub)}</small></span><i aria-hidden="true">›</i></summary><div class="care-fold-body">${body}</div></details>`; }).join('')}</div>`;
+    b += `<div class="hub-list care-link"><button class="hub-row hl-row" style="--hl-bg:#fdeee6;--hl-ink:#9a5a3c" onclick="openPage('chg:Health:d:sick')"><span class="hub-dot">${hubArt('thermo', 'Health')}</span><span class="hub-row-copy"><b>${F('Seems sick, or has a fever?')}</b><small>In Health</small></span><span class="hub-chev" aria-hidden="true">›</span></button></div>`;
+    return page('look', b);
+  }
 
   /* ---------- routes ---------- */
   // Older pages open the topic that now holds them, at the age they were about.
@@ -423,6 +457,7 @@
     const [, cat, screen, a, b, c] = p.split(':');
     if (cat === CAT && screen === 'd') {
       if (a === 'q') { const r = qPage(b); if (r) return r; }
+      if (a === 'look') return lookOff(b == null ? null : Number(b));
       if (a === 't') { if (b === 'need') return careTopic('need', c == null ? null : Number(c)); const v = c == null ? stageNow() : Number(c), ids = T2Q[b]; if (ids) { const id = ids[v] === 'solids' && !(live() && answers.solids === 'Yes') ? 'fewer' : ids[v]; return qPage(id); } }
       if (a === 'cord') return qPage('cord');
       if (a === 'rash') { const r = rashPage(b); if (r) return r; }
