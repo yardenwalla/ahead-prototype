@@ -155,7 +155,7 @@
     teeth(v) {
       const h = H(), brush = v === 3 && hasTooth();
       let b = head('teeth', ctx(v), brush ? 'Brush the first teeth' : 'Gums and teeth', brush ? 'As soon as the first tooth appears, brushing helps keep it healthy.' : v < 2 ? 'Nothing to do yet. Here’s what’s coming.' : 'Drooling and chewing on everything are normal now. Teeth can take a while to follow.');
-      if (!brush) b += h.qa([['When’s the first tooth?', 'Around 6 months', 'Anywhere from about 4 to 12 months is normal.']]);
+      if (!brush) b += h.qa([v === 3 ? ['No tooth yet?', 'That’s normal', 'Some babies don’t get their first one until around their first birthday.'] : ['When’s the first tooth?', 'Around 6 months', 'Anywhere from about 4 to 12 months is normal.']]);
       if (v >= 2 && !brush) b += (live() && answers.hasTooth !== 'Yes' ? `<button class="hub-already" onclick="setAnswer('hasTooth','Yes');openPage('chg:${CAT}:d:t:teeth:3')">${F('Maya already has a tooth? See how to brush')}</button>` : '')
         + h2('Drool and sore gums') + h.steps(['Wipe {p} gums with a clean, damp cloth once a day.', 'Keep a soft bib on and pat the chin dry to avoid a drool rash.', 'Offer a cool, firm teething ring if {s} {seem|seems} sore.'])
         + h.tip('Skip these', 'Teething necklaces, numbing gels and tablets. Ask your pediatrician about pain relief if needed.');
