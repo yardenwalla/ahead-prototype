@@ -62,7 +62,7 @@
       links: [['Childproofing your home · CPSC', cpsc]] },
     mattress: { t: 'Lower the crib mattress', s: 'Before {s} can sit', i: 'crib', c: 'sleep', go: "openPage('chg:Sleep:d:mattress')", sleep: true },
     anchor: { t: 'Strap furniture and TVs to the wall', s: 'So they can’t tip if {s} {pull|pulls} on them', i: 'dresser', c: 'body',
-      tiles: [['dresser', 'Anti-tip straps', 'On dressers, bookcases and tall furniture'], ['blocks', 'TVs too', 'On the wall, or strapped to their stand'], ['clock', 'When', 'Any time before {s} {pull|pulls} up']],
+      tiles: [['dresser', 'Anti-tip straps', 'On dressers, bookcases and tall furniture'], ['blocks', 'TVs too', 'On the wall, or strapped to their stand'], ['clock', 'When', 'Now, before {s} {pull|pulls} on them']],
       why: 'Babies use furniture as a handhold to pull up, and dressers, bookcases and TVs can tip over onto them.',
       steps: ['Fit anti-tip straps to dressers, bookcases and other tall furniture {s} could pull on.', 'Mount TVs on the wall, or strap them to the furniture they stand on.', 'Do it any time before {s} {pull|pulls} up. Many families do it while babyproofing for crawling.'],
       links: [['Anchor it · CPSC', cpsc]] },
@@ -158,7 +158,7 @@
       + (x.fig === 'tube' ? tubeFigure() : '')
       + (x.tiles ? hubIconSteps(x.tiles, 'Safety', F(x.tiles.map(t => t[1] + ': ' + t[2]).join('. ')), false) : x.tiles === null ? '' : h.steps(x.steps.map(F)))
       + (x.note ? `<p class="sf-note">${F(x.note)}</p>` : '')
-      + (x.tip ? h.tip(x.tip[0], x.tip[1]) : '') + `<div class="hub-actions sf-actions">${actions}</div>`</div>`;
+      + (x.tip ? h.tip(x.tip[0], x.tip[1]) : '') + `<div class="hub-actions sf-actions">${actions}</div></div>`;
   }
 
   /* ---------- routes, and older links into the new pages ---------- */

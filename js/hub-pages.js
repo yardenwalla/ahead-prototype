@@ -818,7 +818,7 @@ window.hubCenterStages = function () {
         const any = Array.from({ length: 12 }, (_, i) => window.hubPhotoFor(i + 1)).some(Boolean);
         return typeof storyShare === 'function' && any ? `<button class="hub-button bday-story" onclick="storyShare('year')">${esc2(`Make ${name()}’s first-year collage`)}</button>` : `<label class="hub-button bday-add" role="button">Add a first-birthday photo${hubPhotoInput(12)}</label>`; })()}
     </section>
-    <section class="bday-end"><p>${esc2('Ahead covers the first year, so this is where it ends. Your pediatrician takes it from here, starting with the 12-month checkup.')}</p><p class="bday-small">${esc2('You can still look back at any month, and every guide is in Categories.')}</p></section>`;
+    <section class="bday-end"><p>${esc2('Ahead covers the first year, so this is where it ends. Your pediatrician takes it from here, starting with the 12-month checkup.')}</p><div class="bday-links"><button class="hub-link" onclick="navigate('timeline')">${esc2('Look back in Memories')} ›</button><button class="hub-link" onclick="navigate('categories')">${esc2('Open every guide')} ›</button></div></section>`;
   }
   const base = window.adaptiveHome;
   if (typeof base === 'function') {
