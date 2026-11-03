@@ -185,7 +185,7 @@
         ['The night before', 'bag', 'Pack and label everything, so the morning is calm.'],
         ['Day one', 'heart', 'A quick, warm goodbye. Pick up a little early if you can.']],
         'Two weeks before, fill in and share the care card. A week before, a short visit and a short day. The night before, pack and label everything. On day one, a quick, warm goodbye.')
-      + rows('', [['notepad', `${name()}’s care card`, 'Feeds, naps, what helps and who to call, ready to share', go('card')]])
+      + careCardButton(load('ahead-carecard', {}))
       + packCard('Pack for care', 'Label everything with {p} name', [
         bm ? ['bottle', 'Pumped milk for each feed, plus one extra', 'Ask how many feeds they expect while {s’s} there'] : null,
         bm ? ['notepad', 'A label on every bottle', '{P} name and the date it was pumped'] : null,
@@ -233,16 +233,21 @@
     return `<div class="quiet-category hub-page" data-overview="${CAT}" style="${yearTheme(CAT)}">${monthlyPageHeader(CAT)}${body}<p class="hub-foot">${F('Every family’s situation is different. Pick the care that fits yours.')}</p></div>`;
   }
   const shortlist = () => load('ahead-childcare-shortlist', {});
+  // The care card gets its own button, like Sleep's "Rough night?": it's the one thing a parent sends to someone else,
+  // so it stands apart from the reading rows. Saved, it goes straight to sharing.
+  function careCardButton(card) {
+    return `<button class="hub-rough-card cc-card-button" onclick="openPage('chg:${CAT}:d:card')"><span class="hub-rough-moon" aria-hidden="true">${hubArt('notepad', CAT)}</span><span class="hub-rough-copy"><b>${F(`${name()}’s care card`)}</b><small>${F(card.saved ? 'Ready to send to any caregiver' : 'Feeds, naps and who to call, ready to share')}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`;
+  }
   function childcare() {
     const h = H(), card = load('ahead-carecard', {}), list = shortlist();
     let b = `<header class="hub-hero cc-hero"><p class="hub-eyebrow">${F('Childcare')}</p><h1>${F('Finding care that fits')}</h1><p class="hub-lead">${F('Start early, visit or meet before you decide, and have a backup for sick days.')}</p></header>`;
     b += `<h2 class="hub-h2">${F('Types of care')}</h2><div class="oa-places">${['center', 'home', 'nanny', 'family'].map(k => { const t = TYPES[k], c = PAL[k], n = (list[k] || []).length;
       return `<button class="oa-place" style="--oa-bg:${c[0]};--oa-ink:${c[1]}" onclick="openPage('chg:${CAT}:d:${k}')"><span class="oa-place-art">${SHAPE[k](c)}</span><b>${F(t.name)}</b><small>${F(n ? `${n} on your shortlist` : t.short)}</small></button>`; }).join('')}</div>`;
+    b += careCardButton(card);
     b += `<h2 class="hub-h2">${F('Your plan')}</h2><div class="hub-list">`
       + homeRow('plan', 'clock', 'Plan your care', 'When to start looking, and what to do first', 'plan')
       + homeRow('pay', 'coin', 'Paying for care', 'Help from your state, work and taxes', 'pay')
       + homeRow('ready', 'bag', 'Getting ready for day one', 'Easing in, and what to send', 'ready')
-      + homeRow('card', 'notepad', `${name()}’s care card`, card.saved ? 'Ready to share with any caregiver' : 'A few taps, then share it with any caregiver', 'card')
       + homeRow('backup', 'shield', 'When care falls through', 'Sick days, closed days, and a caregiver who quits', 'backup') + `</div>`;
     b += `<h2 class="hub-h2">${F('Help now and then')}</h2><div class="hub-list">`
       + homeRow('sitter', 'moon', 'A babysitter', (list.sitter || []).length ? `${list.sitter.length} on your shortlist` : 'For a date night, an appointment or a break', 'sitter')
@@ -306,6 +311,7 @@
       `<section class="hub-card cc-fit"><div><b>${F('A good fit if')}</b><p>${F(t.good)}</p></div><div><b>${F('Keep in mind')}</b><p>${F(t.mind)}</p></div></section>`
       + h.tip(t.when[0], t.when[1])
       + (WHERE[k] ? rows('Where to look', WHERE[k]) : '')
+      + (k === 'sitter' ? careCardButton(load('ahead-carecard', {})) : '')
       + (k === 'nanny' ? rows('Sharing a nanny', SHARE) : '')
       + `<div class="cc-qhead"><h2 class="hub-h2">${F(t.talk ? 'Things to talk through' : t.who === 'place' ? 'Checking a place' : 'Finding the right person')}</h2><button class="cc-qedit" onclick="ccQEdit('${k}')">${F(ed ? 'Done' : 'Edit')}</button></div>` + qs
       + `<h2 class="hub-h2">${F('Your shortlist')}</h2>`
