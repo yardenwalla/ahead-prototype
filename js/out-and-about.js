@@ -216,15 +216,15 @@
     if (id === 'errands') {
       // Around town, done the Road trips way: one ordinary outing, step by step, with the "how" in each step.
       const bf = nursing(), ff = formula();
-      const run = timeline('A store run, step by step', [
+      const run = timeline('Any outing, step by step', [
         ['Before you go', 'clock', m < 2 ? 'Feed {o} first, and pick a quiet time, like a weekday morning. Keep it short: one or two stops.' : 'Feed {o} first, or go right after a nap, when {s’s} at {p} happiest.'],
-        ['Parking', 'car', m >= 6 ? 'Leave the car seat in the car. In the store, {s} {ride|rides} in the cart’s seat with the strap on, or in a carrier.' : 'Leave the car seat in the car. In the store, wear {o} in a carrier or use the stroller.'],
-        ['If {s’s} hungry', 'bottle', bf && ff ? 'Nurse wherever you’re comfortable, or give a bottle. Many stores have a nursing room, or a fitting room works.' : bf ? 'Nurse wherever you’re comfortable. Many stores have a nursing room, or a fitting room or your parked car works.' : 'Mix a bottle with the powder and water you packed. Room temperature is fine.'],
-        ['For a change', 'diaper', 'Look for a family restroom. Strap {o} in and keep a hand on {o}. No table? Use your pad on the back seat of the car.'],
-        ['If {s} {fuss|fusses}', 'heart', 'Try a feed, then a diaper check, then holding {o} close and walking. Still upset? It’s fine to leave your cart and go.'],
+        ['When you get there', 'car', m >= 6 ? 'Leave the car seat in the car. Use a carrier or stroller, or the cart’s seat with the strap on at a store.' : 'Leave the car seat in the car, and wear {o} in a carrier or use the stroller. At a store, never set the car seat on the cart.'],
+        ['If {s’s} hungry', 'bottle', bf && ff ? 'Nurse wherever you’re comfortable, or give a bottle. A quiet corner, a nursing room or your parked car all work.' : bf ? 'Nurse wherever you’re comfortable. A quiet corner, a nursing room or your parked car all work.' : 'Mix a bottle with the powder and water you packed. Room temperature is fine.'],
+        ['For a change', 'diaper', 'Look for a family restroom. On a table, strap {o} in and keep a hand on {o}. No table? Your pad on a clean floor or the car’s back seat.'],
+        ['If {s} {fuss|fusses}', 'heart', 'Try a feed, then a diaper check, then holding {o} close and walking. Still upset? It’s fine to head home early.'],
         ['Heading home', 'moon', 'Asleep in the car seat? Fine while you drive. At home, move {o} to {p} crib to finish the nap.']],
-        'A store run, step by step: feed first, leave the car seat in the car, feed or change wherever there’s space, try a feed, a change and walking if she fusses, and move her to her crib at home.');
-      return sub('errands', 'Around town', m < 2 ? 'Your first outings' : 'Around town', m < 2 ? 'For the first couple of months, pick quiet places and skip anyone who’s sick.' : 'Most everyday places are fine now: the store, a café, a friend’s house.',
+        'Any outing, step by step: feed first, leave the car seat in the car, feed or change wherever there’s space, try a feed, a change and walking if she fusses, and move her to her crib at home.');
+      return sub('errands', 'Around town', m < 2 ? 'Your first outings' : 'Around town', m < 2 ? 'For the first couple of months, pick quiet places and skip anyone who’s sick.' : 'Most everyday places are fine now: the store, a café, the park, a friend’s house.',
         run + good([m < 2 ? ['hand', 'Holding {o}', 'It’s fine to ask people to wash their hands first, or to say no.'] : null, m >= 6 ? ['bowl', 'Snacks', 'Soft foods that squash between your fingers, offered while {s} {sit|sits} up and you watch.'] : null, ['steth', 'At the doctor’s office', 'Ask if you can wait in the car until they call you, away from sick children.']]));
     }
 
@@ -265,9 +265,9 @@
     if (id === 'away') {
       // Staying away, done the Road trips way: before you go, then the first ten minutes in the room, then bedtime.
       const plan = timeline('Setting up, step by step', [
-        ['Before you go', 'notepad', 'Ask the hotel or your hosts for a crib, or plan to bring a play yard. In a hotel, ask for a room away from the pool.'],
-        ['When you arrive', 'crib', 'Set up the crib first, away from windows and blind cords. Take out any pillows, bumpers or extra blankets.'],
-        ['The room', m >= 6 ? 'lock' : 'bag', m >= 6 ? 'Get down to {p} level. Move medicines, cleaners, cords and small things up high, and block the stairs.' : 'Put bags with medicines up high, yours and your hosts’, and move cords out of reach.'],
+        ['Before you go', 'notepad', 'Ask for a crib or bring a play yard. At a hotel, also ask for a mini-fridge for milk, and a room without a balcony, away from the pool.'],
+        ['When you arrive', 'crib', 'Check the crib for loose or missing parts: hotel cribs don’t always meet today’s standards. Set it away from windows and cords, and take out pillows and bumpers.'],
+        ['The room', m >= 6 ? 'lock' : 'bag', m >= 6 ? 'Get down to {p} level. Move medicines, cleaners, cords and small things up high, push the TV back from the edge, and block any stairs.' : 'Put bags with medicines up high, yours and your hosts’, and move cords out of reach.'],
         m >= 6 ? ['The rest of the house', 'bath', 'Close bathroom doors. Near a pool or bath, an adult stays right beside {o}, every second.'] : null,
         ['Bedtime', 'moon', 'Keep the same bedtime steps as at home, with {p} own sleep sack. A few off nights are normal.']],
         'Before you go, ask for a crib or bring a play yard. When you arrive, set up the crib away from windows and empty it, then make the room safe at her level. Keep the same bedtime steps.');
