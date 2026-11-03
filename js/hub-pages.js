@@ -519,7 +519,7 @@
       ['Out and about', 'home', 'Errands, walks and first outings', 'chg:Out and about:d:errands', 'outing outings errand errands store grocery shopping cart walk walks park cafe restaurant crowds germs first outing leave the house doctor waiting room nursing in public'],
       ['Out and about', 'sun', 'Hot and cold days out', 'chg:Out and about:d:weather', 'hot heat summer cold winter snow weather temperature bug spray insect repellent mosquito deet overheating stroller cover car seat coat'],
       ['Out and about', 'plane', 'Going abroad with a baby', 'chg:Out and about:d:abroad', 'abroad international passport vaccine vaccines shots measles travel clinic water mosquito jet lag mexico europe overseas'],
-      ['Out and about', 'thermo', 'Sick on a trip', 'chg:Out and about:d:sick', 'sick trip travel vacation fever diarrhea vomiting first aid kit medicine travel insurance urgent care'],
+      ['Out and about', 'thermo', 'Going abroad: if Maya gets sick', 'chg:Out and about:d:abroad', 'sick trip travel vacation fever diarrhea vomiting first aid kit medicine travel insurance urgent care'],
       ['Daily rhythm', 'tooth', 'Teething, drool and gums', 'chg:Daily rhythm:d:gums', 'teething teethe gums drool drooling sore chewing teeth tooth'],
       ['Daily rhythm', 'bath', 'Diaper rash and skin', 'chg:Daily rhythm:d:skin', 'diaper rash rashes skin cradle cap dry eczema'],
       ['Daily rhythm', 'bath', 'Giving a bath', 'chg:Daily rhythm:d:tub', 'bath tub bathing wash'],
