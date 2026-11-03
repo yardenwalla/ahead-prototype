@@ -1408,3 +1408,4 @@
 /* A versus card for two equal choices (which gate where, table or floor): no warning color on the second side. */
 #main .hub-vs > div.is-choice { background: var(--ss-bg, #f4f1ec) }
 #main .hub-vs > div.is-choice b { color: var(--ink) }
+#main .hub-steps.is-tips li::before { content: ""; width: 7px; height: 7px; margin: 8px 9px 0 10px; border-radius: 50%; background: var(--ss-ink, var(--year-ink)); opacity: .55 }
