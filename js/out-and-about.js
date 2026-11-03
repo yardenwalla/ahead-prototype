@@ -123,7 +123,7 @@
   function gear(v) {
     const n = bagItems(ageNow()).length, on = bagItems(ageNow()).filter(i => bagGet().includes(i[1])).length;
     return `<h2 class="hub-h2">${F('Your gear')}</h2><div class="hub-list">`
-      + gearRow('car', 'car', 'Car seat', ageNow() < 6 ? 'Installing it and buckling in' : 'Fit, and when to size up', 'car')
+      + gearRow('car', 'car', 'Car seat', 'Setting it up, and which seat when', 'car')
       + gearRow('stroller', 'stroller', 'Stroller', 'Harness, brakes and shade', 'stroller')
       + gearRow('carrier', 'carrier', 'Carrier', ageNow() < 2 ? 'Wearing {o} safely' : ageNow() < 6 ? 'When {s} can face out' : 'Front and back carriers', 'carry')
       + gearRow('bag', 'bag', 'Diaper bag', 'Packed for how Maya is fed', 'bag', on ? `${on} of ${n} packed` : '')
@@ -325,15 +325,13 @@
     // Car seat: one page from birth past the first birthday. Next car seat and rear-facing after 1 live here now.
     if (id === 'car' || id === 'bigger' || id === 'after1') {
       const install = `<h2 class="hub-h2">${F('Setting it up')}</h2>` + steps([['car', 'Pick one way to install it', 'Lower anchors or the seat belt, not both'], ['hand', 'Check it’s tight', 'Tug where it’s belted in: less than 1 inch of movement'], ['back', 'Set the recline', 'To the angle line on the seat'], ['shield', 'Buckle {o} in snugly', 'Harness straps at or below {p} shoulders']], 'Install it with the lower anchors or the seat belt, not both, so it moves less than 1 inch where it’s belted. Set the recline to the angle line. Buckle the straps at or below the shoulders.', true);
-      const taxi = ['car', 'Taxis and other people’s cars', 'Bring {p} car seat. Most can be installed with just the seat belt.'];
-      const tech = ['steth', 'A free check', 'A certified car seat technician can check it, usually for free.'];
-      if (m < 6) return sub('gear', 'Your gear', 'Car seat basics', 'Rear-facing in the back seat, never in front of an airbag.',
-        hubFigure('carseat', CAT, 'Rear-facing in the back seat, chest clip level with the armpits, straps snug with no slack to pinch, and no puffy coat underneath.')
-        + install + good([taxi, ['notepad', 'Only what came with it', 'Skip add-on inserts and head supports.'], tech]));
+      // One page for the whole first year and beyond: no stages, so the seat-by-seat path shows from day one,
+      // and Good to know holds what's true at any age. The home's "Coming up" card points back here when the limits matter.
       return sub('gear', 'Your gear', 'Car seat basics', 'Rear-facing in the back seat, for as long as the seat allows.',
         hubFigure('carseat', CAT, 'Rear-facing in the back seat, chest clip level with the armpits, straps snug with no slack to pinch, and no puffy coat underneath.')
-        + hubStageStrip({ title: 'As {o} grows', numbered: true, items: [['car', 'Infant seat', 'Until its height or weight limit'], ['car', 'Convertible seat', 'Still rear-facing, past the first birthday'], ['car', 'Forward-facing', 'Only after its rear-facing limits, often age 2 or older']], cat: CAT, caption: 'Infant seat until its limit, then a convertible seat still rear-facing past the first birthday, and forward-facing only after its rear-facing limits, often age 2 or older.' })
-        + good([taxi, ['back', 'Legs touching the seat back', 'That’s fine rear-facing. It isn’t a reason to turn {o} around.'], ['notepad', 'A used seat?', 'Only if you know its history: never in a crash, not expired or recalled.']]));
+        + install
+        + hubStageStrip({ title: 'Which seat, and when', numbered: true, items: [['car', 'Infant seat', 'Rear-facing, from birth until its height or weight limit'], ['car', 'Convertible seat', 'Still rear-facing. Legs touching the seat back is fine'], ['car', 'Forward-facing', 'Only after its rear-facing limits, often age 2 or older']], cat: CAT, caption: 'An infant seat rear-facing from birth until its height or weight limit, then a convertible seat still rear-facing, and forward-facing only after its rear-facing limits, often age 2 or older.' })
+        + good([['car', 'Taxis and other people’s cars', 'Bring {p} car seat. Most can be installed with just the seat belt.'], ['notepad', 'Only what came with it', 'Skip add-on inserts and head supports, and use a secondhand seat only if you know its history.'], ['steth', 'A free check', 'A certified car seat technician can check your install, usually for free.']]));
     }
 
     if (id === 'carry') return sub('gear', 'Your gear', 'Carrier basics', 'A quick check every time keeps {o} breathing easy.',
