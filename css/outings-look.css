@@ -69,3 +69,7 @@
 #main .oa-extra li b { display: block; font-size: 15px; font-weight: 600; color: var(--ink); line-height: 1.3 }
 #main .oa-extra li small { display: block; font-size: 13.5px; color: #5c5361; line-height: 1.35 }
 #main .hub-detail[data-overview="Out and about"] .oa-timeline { margin-bottom: 22px }
+/* Childcare's journey pages reuse the Outings plan timeline and packing card, in Childcare's yellow. */
+#main .hub-detail[data-overview="Childcare"] .cc-extra { background: #fcf7dd }
+#main .hub-detail[data-overview="Childcare"] .cc-extra > small { color: #6b5a0e }
+#main .hub-detail[data-overview="Childcare"] .oa-timeline { margin-bottom: 22px }
