@@ -210,6 +210,9 @@
     // Outings and travel: each age-related change to a place or a piece of gear, from the month before it
     // (trips get planned ahead) through the month it happens, so a parent never has to spot it in the tab.
     const oa = live() && typeof oaUpdate === 'function' ? oaUpdate(actualMonth()) : null;
+    // Childcare: once a care card is saved, a nudge to update it when naps or food tend to change.
+    const cc = live() && typeof ccUpdate === 'function' ? ccUpdate(actualMonth()) : null;
+    if (cc) out.push({ topic: 'Childcare', key: cc.key, title: cc.title, body: cc.body, link: link(cc.action, cc.label) });
     if (oa) out.push({ topic: 'Out and about', key: 'outings:' + oa.at, title: oa.title, body: oa.body, link: link(oa.action, oa.label) });
     // Older babies: the first birthday checkup is the next big thing, even a few months out.
     if (live() && !visit && m >= 9) { const due = addMonths(parse(profile.dob), 12), wks = Math.round((due - NOW) / DAY / 7);
