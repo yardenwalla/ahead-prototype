@@ -151,14 +151,15 @@
 
   function journey(id) {
     const h = H(), m = typeof actualMonth === 'function' ? actualMonth() : 0, fd = feedNow(), bm = fd !== 'Formula', fm = fd !== 'Breast milk';
-    if (id === 'plan') return sub('plan', 'Finding care', 'Your search, month by month', 'Work back from the day you need care. Most families start sooner than they expect.',
+    if (id === 'plan') return sub('plan', 'Finding care', 'When to start looking', 'It depends on the kind of care. Work back from the day you need it.',
       packCard('Before you look', 'Two things to settle first', [['clock', 'Your days and hours', 'Early and late ones too'], ['coin', 'A monthly budget', 'And what your work offers']])
-      + tl('Your countdown', [
-        ['6 months before', 'notepad', 'Join a few daycare waitlists.'],
-        ['3 months before', 'home', 'Visit home daycares, or meet nannies.'],
-        ['6–8 weeks before', 'shield', 'Decide, call references, sign up.'],
-        ['2 weeks before', 'heart', 'Get ready for day one.']],
-        'Six months before, join daycare waitlists. Three months before, visit home daycares or meet nannies. Six to eight weeks before, decide and sign up. Two weeks before, get ready for day one.')
+      + tl('How early to start', [
+        ['Daycare center', 'blocks', '6 months or more. Join a few waitlists.'],
+        ['Home daycare', 'home', '3 to 4 months. Visit and ask about openings.'],
+        ['Nanny or share', 'hand', '2 to 3 months. Meet a few, and call references.'],
+        ['Family or friends', 'heart', 'A month or two. Agree on days, hours and pay.'],
+        ['Babysitter', 'moon', 'A few weeks. Try a short first night.']],
+        'Daycare centers: six months or more, so join waitlists. Home daycares: three to four months. Nannies: two to three months. Family or friends: a month or two. Babysitters: a few weeks.')
       + picSteps('When things don’t go to plan', [
         ['clock', 'Starting in a few weeks?', 'You can still find good care. Your local referral agency knows who has openings now.'],
         ['moon', 'Hours outside 9 to 5', 'Ask home daycares and nannies about early, late or weekend hours.'],
@@ -320,7 +321,7 @@
     const card = load('ahead-carecard', {}), list = shortlist(), n = NOW_CARD.plan;
     // The same shape as Outings: one card to start, the kinds of care as tiles, the care card, then one list
     // for setting care up, in the order you meet it. No step rail: the app can't know where a family is.
-    let b = `<header class="hub-hero cc-hero"><p class="hub-eyebrow">${F('Finding care')}</p><h1>${F('Start looking about 6 months ahead')}</h1><p class="hub-lead">${F('Spots for babies fill up early. Know your hours and budget first, then compare the kinds of care below.')}</p><button class="cc-hero-go" onclick="openPage('chg:${CAT}:d:plan')">${F('See the countdown')} ›</button></header>`;
+    let b = `<header class="hub-hero cc-hero"><p class="hub-eyebrow">${F('Finding care')}</p><h1>${F('How early to start looking')}</h1><p class="hub-lead">${F('Daycare waitlists can take 6 months or more. A nanny takes a few months, and a babysitter a few weeks.')}</p><button class="cc-hero-go" onclick="openPage('chg:${CAT}:d:plan')">${F('See when to start')} ›</button></header>`;
     const kinds = [['center'], ['home'], ['nanny'], ['family'], ['sitter', 'For a night out, or a break'], ['help', 'A doula or overnight help', 'Extra help at home']];
     b += `<h2 class="hub-h2">${F('What kind of care?')}</h2><div class="oa-places">${kinds.map(([k, short, title]) => { const t = TYPES[k] || {}, c = PAL[k], m = (list[k] || []).length;
       return `<button class="oa-place" style="--oa-bg:${c[0]};--oa-ink:${c[1]}" onclick="openPage('chg:${CAT}:d:${k}')"><span class="oa-place-art">${SHAPE[k](c)}</span><b>${F(title || t.name)}</b><small>${F(m ? `${m} on your shortlist` : short || t.short)}</small></button>`; }).join('')}</div>`
