@@ -34,7 +34,9 @@
     : age === 12 ? [['pacifier', 'peach', 'A snack and a cup', 'A longer visit, with a blood test']] : (EXPECT[age].bring || []);
   function expectPage(age) {
     const e = EXPECT[age];
-    return frame(head(age, 'green', 'What to expect', e.lead) + H().list('What they’ll check', e.checks.map(c => row(...c))) + H().list('Before you go', BRING(age).map(c => row(...c))));
+    // First week: jaundice at home, since it peaks in these days (AAP, HealthyChildren.org).
+    const jaundice = age === 0 ? H().versus('Yellow skin at home: normal, or time to call?', ['Normal', 'A little yellow on the face and chest in the first week, in a baby who feeds well and has plenty of diapers.'], ['Call your pediatrician', 'Yellow spreading to the belly or legs, yellow eyes, poor feeding, fewer diapers, or very sleepy and hard to wake.']) : '';
+    return frame(head(age, 'green', 'What to expect', e.lead) + H().list('What they’ll check', e.checks.map(c => row(...c))) + jaundice + H().list('Before you go', BRING(age).map(c => row(...c))));
   }
 
   /* ---------- Vaccines ---------- */
@@ -63,7 +65,7 @@
     const list = `<h2 class="hub-h2">At this checkup</h2><div class="hub-list">${row('shield', 'blue', 'Shots', shotsSub)}${doses(v.shots)}${v.oral ? row('drop', 'green', 'By mouth', 'Drops, not a shot') + doses(v.oral) : ''}${details('What each one protects against', lines(all.map(([n]) => [n, WHAT[n]])))}</div>`;
     const season = `<h2 class="hub-h2">Depends on the season</h2><div class="hub-list">${details(row('snow', 'peach', title, age < 6 ? 'RSV in season. Flu and COVID-19 from 6 months' : 'Your pediatrician will say which are due'), lines(s), 'is-row')}</div>`;
     // REVIEW: for babies under 3 months, any fever of 100.4°F or more needs a call.
-    const call = age <= 2 ? 'A fever of 100.4°F or higher while {s} {are|is} under 3 months, crying that won’t stop for 3 hours, or swelling that keeps growing.' : 'A fever of 104°F or higher, crying for 3 hours or more, or swelling that keeps growing.';
+    const call = age <= 2 ? 'A fever of 100.4°F or higher while {s} {are|is} under 3 months, crying that won’t stop for 3 hours, or swelling that keeps growing.' : 'A fever that keeps going above 104°F, crying for 3 hours or more, or swelling that keeps growing.';
     const after = H().versus('After the shots', ['Normal for a day or two', 'Fussy or sleepy, a low fever, and a sore red spot where the shot went in.' + (age === 12 ? ' A fever or rash 1–2 weeks later can also be normal after MMR and chickenpox.' : '')], ['Call your pediatrician', call]);
     return frame(head(age, 'blue', 'Vaccines', v.lead) + list + season + after + H().note('Based on the schedule pediatricians recommend. Your pediatrician confirms what’s due from Maya’s record.'));
   }

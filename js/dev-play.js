@@ -29,9 +29,9 @@
   window.devTodayCard = ref => {
     const list = stageIdeas(ref), d = Math.floor((typeof NOW !== 'undefined' ? NOW : new Date()) / 864e5), i = list.length ? d % list.length : 0;
     const two = list.length > 2 ? [list[i], list[(i + 1) % list.length]] : list;
-    return `<section class="hub-card dev-awake"><span class="hub-card-head"><b>${F('Try today')}</b></span><div class="dev-ideas">${two.map(a => tile(a, ref)).join('')}</div><button class="hub-link dev-more-link" onclick="openPage('chg:Development:d:more:${ref}')">${F('More ideas for awake time')} ›</button></section>`
-      // From 6 months: a few baby signs, so Maya can say what she wants before she has the words.
-      + (ref >= 6 ? H().list('', [H().row({ icon: 'signs', cat: 'Development', title: 'Try a few baby signs', sub: 'More, eat, milk and all done', onclick: `openPage('chg:Development:d:signs')` })]) : '');
+    return `<section class="hub-card dev-awake"><span class="hub-card-head"><b>${F('Try today')}</b></span><div class="dev-ideas">${two.map(a => tile(a, ref)).join('')}</div>`
+      // From 6 months: a few baby signs, so Maya can say what she wants before she has the words. One of the things to try, inside the same card.
+      + `<button class="hub-link dev-more-link" onclick="openPage('chg:Development:d:more:${ref}')">${F('More ideas for awake time')} ›</button></section>`;
   };
   // How long Maya is usually awake at a time, by the age the guides follow (adjusted age for babies born early). Same ranges as Sleep.
   const WAKE = m => m < 2 ? '45–60 minutes' : m < 3 ? '1–1½ hours' : m < 5 ? '1½–2 hours' : m < 7 ? '2–2½ hours' : m < 10 ? '2½–3 hours' : '3–4 hours';

@@ -117,3 +117,14 @@ Existing age-based guide advancement remains a product decision: suggested guida
 - **Newborn caption:** the name with the birthday underneath ("May 31, 2026"), taken from the saved birthday.
 - **One Share button, like sharing a song:** the Story sheet has a single Share button that opens the phone's share sheet (Messages, Instagram, Save Image). The picture is made the moment it's tapped, so the phone still treats it as the parent's tap; before, the file was prepared first, iPhone refused the share and it fell back to downloading. The video is two taps: Make the video, then Share the video.
 - Where the share sheet isn't available (some in-app browsers), the finished picture appears with "Press and hold the picture to save or share it" instead of a download. A computer still downloads it.
+
+## Development, Sleep, Health and Safety against their core jobs (2026-11-03)
+
+Each category was checked against its job (project doc "Ahead jobs to be done") and walked month by month, and by tapping every stage. Previewed in `core-jobs/`.
+
+- **Sleep:** the same four rows at every stage (Night sleep, Naps, Routine, Safe sleep), each titled with what's new. The bedtime routine is one thread on one page: introduced at Longer nights (with moving bedtime earlier at 3–4 months), a set 7–8 pm bedtime at Three naps, brushing and the same goodbye at Two naps. Sleep training sits in the top card from Three naps on, as its own page. Rough night is the one place for troubleshooting; under 3 months crying leads and opens the crying page. A stage tapped on the timeline (and its pages) reads as a typical baby at that stage, not at the baby's real age. The mattress page follows age. "What to do" is one short line per step.
+- **Development:** a "Next, by N months" row, one small tick per skill on the area tiles (filled once seen, no counts), a pictured play idea on every area, baby signs as Communication's idea from 6 months, and the big question of each age as a small chart.
+- **Health:** the sick page goes temperature → when a fever means calling (the baby's own rule) → feeling better → vomiting or diarrhea → Call 911 last, in calm cards. Ear infection signs are on the colds page; jaundice at home is on the first-week checkup. One fever wording everywhere.
+- **Safety:** Pulling up opens before 9 months (an old route redirect sent it to Crawling), future stages say "Get ready for this stage", the car seat step opens Outings' car seat page, step pages end without outside links, choking is no longer described as always silent.
+- **Category icons** (`js/cat-icons.js`) are now in the live app.
+- `tools/qa/stage-rules.cjs` knew only three Safety stages; it now covers Pulling up. "Solids answer changes stage" in recommendation-quality fails as it did before this change.

@@ -74,7 +74,7 @@
       const lock = it.on && !it.now && !it.change ? lockNote(cat, i) : '';
       const top = it.now ? `<span class="hub-stage-top" aria-hidden="true">${esc3(it.nowLabel || 'Now')}</span>` : it.on && it.change ? `<button class="hub-stage-top is-change" onclick="${it.change}" aria-label="Change ${baby}’s stage to ${esc3(it.label)}">Change</button>` : `<span class="hub-stage-top${lock ? ' is-lock' : ''}">${lock}</span>`;
       // Screen readers hear which stage is the baby's, not just which one is open.
-      const sr = it.now ? `<span class="sr-only">, ${it.nowLabel === 'Next' ? baby + '’s next checkup' : baby + '’s stage now'}</span>` : '';
+      const sr = it.now ? `<span class="sr-only">, ${it.nowLabel === 'Next' || cat === 'Health' ? baby + '’s next checkup' : baby + '’s stage now'}</span>` : '';
       return `<div class="hub-stage ${it.on ? 'is-on' : ''} ${it.now ? 'is-now' : ''}">${top}<button class="hub-stage-hit" onclick="${it.onclick}" ${it.on ? 'aria-current="step"' : ''}><span class="hub-stage-node" aria-hidden="true">${it.on ? art : ''}</span><span class="hub-stage-name">${esc3(it.label)}</span>${it.age ? `<span class="hub-stage-age">${esc3(it.age)}</span>` : ''}${sr}</button></div>`;
     }).join('')}</nav>`;
   };

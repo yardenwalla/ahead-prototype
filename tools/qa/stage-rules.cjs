@@ -12,7 +12,7 @@ const stages = html => [...html.matchAll(/<div class="hub-stage ([^"]*)">([\s\S]
   cls: m[1], change: /class="hub-stage-top is-change"/.test(m[2]), name: (m[2].match(/hub-stage-name">([^<]+)</) || [])[1] }));
 const nowName = html => (stages(html).find(s => /is-now/.test(s.cls)) || {}).name;
 const ROUTES = { Sleep: i => `chg:Sleep:s:${i}`, Feeding: i => `chg:Feeding:s:${[1, 2, 3][i]}`,
-  Development: i => `development-stage:${[2, 4, 6, 9, 12][i]}`, Safety: i => `safety-stage:${['setup', 'reaching', 'rolling'][i]}`,
+  Development: i => `development-stage:${[2, 4, 6, 9, 12][i]}`, Safety: i => `safety-stage:${['setup', 'reaching', 'rolling', 'pulling'][i]}`,
   Health: i => `health-visit:${[0, 1, 2, 4, 6, 9, 12][i]}` };
 
 // Every guide, every month: one timeline, one "Now", one stage being read, Change only on the stage being read.
@@ -106,7 +106,7 @@ for (const [cat, route, i] of [['Safety', 'safety-stage:reaching', 1], ['Sleep',
   const a = family(7); a.run("openPage('safety-stage:reaching');hubChangeStage('Safety',1);setAnswer('crawl','Yes');openPage('topic:Safety')");
   check(nowName(a.html()) === 'Crawling', 'Telling us about a new movement replaces an older Safety pick');
   const b = family(8, { pullUp: 'Yes', movementSetByParent: true }); b.run("openPage('topic:Safety')");
-  check(nowName(b.html()) === 'Pulling up' && /Check what Ari can reach standing/.test(b.html()), 'Pulling up is its own stage and leads with what changes when standing');
+  check(nowName(b.html()) === 'Pulling up' && /Standing brings everything higher into reach/.test(b.html()), 'Pulling up is its own stage and leads with what changes when standing');
 }
 // Review fixes: search finds common worries; a future month on Home reads as a preview; setup never shows a sample name.
 {

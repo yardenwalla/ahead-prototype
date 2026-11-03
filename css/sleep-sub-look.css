@@ -28,3 +28,6 @@
 #main .hub-detail[data-ss] .hub-row:not(.hl-row) .hub-dot svg, #main .hub-detail[data-ss] .hub-row:not(.hl-row) .hub-dot svg [stroke]:not([stroke="none"]) { stroke: var(--ss-ink) }
 #main .hub-detail[data-ss] .hub-steps li > span:first-child:not(:only-child), #main .hub-detail[data-ss] .hub-steps li::before { color: var(--ss-ink) }
 #main .hub-detail[data-ss] .hub-tiles > div:not(.sm-tile) { background: var(--ss-bg) }
+/* What to do, one idea per line */
+#main .ss-do-list { margin: 0; padding-left: 18px; font-size: 15.5px; line-height: 1.5; color: var(--ink) }
+#main .ss-do-list li + li { margin-top: 6px }

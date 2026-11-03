@@ -275,9 +275,9 @@ if(t==='Sleep')return {when:'Before you choose more support',title:'Know your op
 if(t==='Daily rhythm'&&month>=3&&month<=6&&!started)return {when:'When foods join the day',title:'Make a little room for meals.',intro:'Before starting, picture where a supervised meal could fit alongside milk, play and rest.',items:[observation('Start with a place, not a strict schedule','Think about a supported meal setup and a moment when you can stay close.'),observation('Keep the transition flexible','Readiness and individual needs matter more than fitting an exact timetable.')],resource:'readiness',resourceText:'Understand the transition to foods',foot:'Preparation is useful even while milk feeds remain the current focus.'};
 return {when:'As the next stage unfolds',title:'Keep familiar moments flexible.',intro:'New skills and changing needs can shift what the day looks like.',items:[observation('Follow their interest','A familiar book, song or supervised play moment can adapt with your baby.')],resource:'play',resourceText:'AAP ideas for the next stage',foot:'You don’t need to fill the day with activities.'};}
 function clearMilestone(label){return esc(({
-'Coos':'Coos: soft “oo” and “ah” sounds',
+'Coos':'Coos, making soft “oo” and “ah” sounds',
 'Rakes food with fingers':'Uses fingers to rake food toward them',
-'Blows raspberries':'Blows raspberries — tongue out, blowing air',
+'Blows raspberries':'Blows raspberries',
 'Leans on hands when sitting':'Leans on hands while sitting',
 'Pushes up with straight arms on tummy':'Pushes up on straight arms during tummy time',
 'Takes turns making sounds with you':'Takes turns making sounds with you',
