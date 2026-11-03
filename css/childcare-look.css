@@ -48,19 +48,7 @@
 /* "Not sure which?" sits quietly under the tiles, like Development's "More ideas" link. */
 #main .cc-quiz-link { display: block; margin: -10px 4px 20px; padding: 6px 0; border: 0; background: none; font: inherit; font-size: 14.5px; font-weight: 600; color: #6b5a0e; text-align: left; cursor: pointer }
 
-/* Care card preview on the home: a small copy of the card a caregiver receives */
-#main .hub-page[data-overview="Childcare"] .cc-mini { display: block; width: 100%; margin: 0 0 22px; padding: 14px; border: 0; border-radius: 24px; text-align: left; font: inherit; color: #2f2a33; cursor: pointer;
-  background: linear-gradient(160deg, #fbe2e9, #f6eef6 55%, #e7ecfb); box-shadow: 0 1px 0 rgba(47, 42, 51, .04) }
-#main .cc-mini > span { display: block }
-#main .cc-mini small { display: block; font-size: 11.5px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase }
-#main .cc-mini-top { padding: 2px 4px 10px } #main .cc-mini-top small { color: #a24d6a }
-#main .cc-mini-top b { display: block; font-size: 20px; font-weight: 800; letter-spacing: -.01em; margin-top: 2px }
-#main .cc-mini-tiles { display: grid !important; grid-template-columns: 1fr 1fr; gap: 8px }
-#main .cc-mini-tiles > span { border-radius: 16px; padding: 10px 12px; min-width: 0 }
-#main .cc-mini-tiles .is-feed { background: #fdeef2 } #main .cc-mini-tiles .is-feed small { color: #a24d6a }
-#main .cc-mini-tiles .is-nap { background: #fff3dc } #main .cc-mini-tiles .is-nap small { color: #8a6a2a }
-#main .cc-mini b { font-weight: 600; font-size: 14.5px; line-height: 1.3 } #main .cc-mini-tiles b, #main .cc-mini-row b { display: block; margin-top: 2px }
-#main .cc-mini-row { margin-top: 8px; padding: 10px 12px; border-radius: 16px; background: rgba(255, 255, 255, .8) } #main .cc-mini-row small { color: #356651 }
-#main .cc-mini.is-example .cc-mini-tiles b, #main .cc-mini.is-example .cc-mini-row b { color: #6b6670 }
-#main .cc-mini-go { display: flex !important; justify-content: space-between; align-items: center; margin-top: 12px; padding: 0 4px; font-size: 14.5px; font-weight: 700; color: #a24d6a }
-#main .hub-page[data-overview="Childcare"] .cc-mini .cc-mini-top b { font-size: 21px; font-weight: 800; line-height: 1.2 }
+#main .cc-preview { margin: 4px 0 18px }
+#main .cc-actions-two { display: grid; grid-template-columns: 2fr 1fr; gap: 10px; margin: 0 0 18px }
+#main .cc-actions-two .hub-button { margin: 0 }
+#main .cc-preview { margin: 0 0 18px }

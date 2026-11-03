@@ -313,38 +313,24 @@
   }
   const WHY = { center: 'Set hours, other babies, and built-in backup.', home: 'A smaller group, often the most affordable.', nanny: 'One-on-one, on your schedule.', share: 'Close to one-on-one, with the cost split.', family: 'Someone you trust, with flexible days.' };
 
-  // The care card on the home is a small preview of what a caregiver receives, so parents can see why it's worth a minute.
-  // Before it's filled in, it shows example details, marked as an example.
   function careCardButton(card) {
-    const P = babyPronouns(), filled = !!(card.milk || card.naps || card.c1Name);
-    const nap = card.naps ? `${card.naps} nap${card.naps === '1' ? '' : 's'} a day` : '';
-    const feed = filled ? [card.milk, card.often && card.often.toLowerCase()].filter(Boolean).join(', ') || 'Add feeds' : 'Formula, every 3 hours';
-    const sleep = filled ? [nap, card.bedtime && `bed ${clock(card.bedtime)}`].filter(Boolean).join(', ') || 'Add naps' : '2 naps, bed 7 pm';
-    const who = filled ? (card.c1Name || 'Add who to call') : 'Jordan · 555 0134';
-    const go = card.saved ? 'Ready to send to any caregiver' : filled ? 'Finish and share it' : 'Fill it in once, share it with anyone';
-    return `<button class="cc-mini${filled ? '' : ' is-example'}" onclick="openPage('chg:${CAT}:d:card')" aria-label="${esc3(`${name()}’s care card. ${go}`)}">`
-      + `<span class="cc-mini-top"><small>${filled ? F('What a caregiver sees') : F('Example')}</small><b>${F(`${name()}’s care card`)}</b></span>`
-      + `<span class="cc-mini-tiles"><span class="is-feed"><small>${F('Feeding')}</small><b>${esc3(feed)}</b></span><span class="is-nap"><small>${F('Sleep')}</small><b>${esc3(sleep)}</b></span></span>`
-      + `<span class="cc-mini-row"><small>${F('Call us')}</small><b>${esc3(who)}</b></span>`
-      + `<span class="cc-mini-go">${F(go)}<span aria-hidden="true">›</span></span></button>`;
+    return `<button class="hub-rough-card cc-card-button" onclick="openPage('chg:${CAT}:d:card')"><span class="hub-rough-moon" aria-hidden="true">${hubArt('notepad', CAT)}</span><span class="hub-rough-copy"><b>${F(`${name()}’s care card`)}</b><small>${F(card.saved ? 'Ready to send to any caregiver' : 'Feeds, naps and who to call, ready to share')}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`;
   }
   function childcare() {
-    const h = H(), card = load('ahead-carecard', {}), list = shortlist(), n = NOW_CARD.plan;
-    // No step rail: the app can't know where a family is in finding care. One card to start, the kinds of care,
-    // then what comes once care is lined up, as ordinary rows you open when you get there.
+    const card = load('ahead-carecard', {}), list = shortlist(), n = NOW_CARD.plan;
+    // The same shape as Outings: one card to start, the kinds of care as tiles, the care card, then one list
+    // for setting care up, in the order you meet it. No step rail: the app can't know where a family is.
     let b = `<header class="hub-hero cc-hero"><p class="hub-eyebrow">${F('Finding care')}</p><h1>${F(n[0])}</h1><p class="hub-lead">${F(n[1])}</p><button class="cc-hero-go" onclick="openPage('chg:${CAT}:d:plan')">${F(n[2])} ›</button></header>`;
-    b += `<h2 class="hub-h2">${F('Types of care')}</h2><div class="oa-places">${['center', 'home', 'nanny', 'family'].map(k => { const t = TYPES[k], c = PAL[k], m = (list[k] || []).length;
-      return `<button class="oa-place" style="--oa-bg:${c[0]};--oa-ink:${c[1]}" onclick="openPage('chg:${CAT}:d:${k}')"><span class="oa-place-art">${SHAPE[k](c)}</span><b>${F(t.name)}</b><small>${F(m ? `${m} on your shortlist` : t.short)}</small></button>`; }).join('')}</div>`
+    const kinds = [['center'], ['home'], ['nanny'], ['family'], ['sitter', 'For a night out, or a break'], ['help', 'A doula or overnight help', 'Extra help at home']];
+    b += `<h2 class="hub-h2">${F('What kind of care?')}</h2><div class="oa-places">${kinds.map(([k, short, title]) => { const t = TYPES[k] || {}, c = PAL[k], m = (list[k] || []).length;
+      return `<button class="oa-place" style="--oa-bg:${c[0]};--oa-ink:${c[1]}" onclick="openPage('chg:${CAT}:d:${k}')"><span class="oa-place-art">${SHAPE[k](c)}</span><b>${F(title || t.name)}</b><small>${F(m ? `${m} on your shortlist` : short || t.short)}</small></button>`; }).join('')}</div>`
       + `<button class="hub-link cc-quiz-link" onclick="openPage('chg:${CAT}:d:fit')">${F('Not sure which? Take the quick quiz')} ›</button>`;
-    b += `<h2 class="hub-h2">${F('Once care is lined up')}</h2><div class="hub-list">`
-      + homeRow('ready', 'bag', 'Getting ready for day one', 'A few short days first, and what to send', 'ready')
-      + homeRow(PAL.start ? 'start' : 'help', 'heart', 'The first months', 'Settling in, and when to speak up', 'start') + `</div>`;
     b += careCardButton(card);
-    b += `<h2 class="hub-h2">${F('Anytime')}</h2><div class="hub-list">`
+    b += `<h2 class="hub-h2">${F('Setting it up')}</h2><div class="hub-list">`
       + homeRow('pay', 'coin', 'Paying for care', 'Help from your state, work and taxes', 'pay')
-      + homeRow('backup', 'shield', 'When care falls through', 'Sick days, closed days, a caregiver who quits', 'backup')
-      + homeRow('sitter', 'moon', 'A babysitter', (list.sitter || []).length ? `${list.sitter.length} on your shortlist` : 'For a night out, or a break', 'sitter')
-      + homeRow('help', 'heart', 'Extra help at home', 'A doula, overnight help, or family', 'help') + `</div>`;
+      + homeRow('ready', 'bag', 'Getting ready for day one', 'A few short days first, and what to send', 'ready')
+      + homeRow('start', 'heart', 'The first months', 'Settling in, and when to speak up', 'start')
+      + homeRow('backup', 'shield', 'When care falls through', 'Sick days, closed days, a caregiver who quits', 'backup') + `</div>`;
     return frame(b);
   }
 
@@ -490,10 +476,11 @@
     const h = H(), c = card(), nm = name(), bottles = !!c.milk;
     if (c.saved) {
       const L = cardLines(c);
-      return sub('card', 'Your plan', `${nm}’s care card`, '',
-        `<section class="hub-card cc-view"><p class="cc-view-name">${esc3(nm)}</p>${L.map(([l, v]) => `<div class="cc-view-row"><b>${F(l)}</b><span>${esc3(v)}</span></div>`).join('')}<div class="cc-view-row is-always"><b>${F('Always')}</b><span>${F(ALWAYS())}</span></div></section>`
-        + `<div class="cc-actions"><button class="hub-button" onclick="ccShare()">${F('Share the card')}</button><button class="hub-button is-secondary" onclick="ccCardMode('edit')">${F('Edit')}</button></div><p class="cc-done" id="ccDone" hidden></p>`
-        + h.note('Sends a link that opens as a card on their phone. Only people you send it to can see it.'), 'notepad');
+      // Saved, the card shows exactly as a caregiver will see it when you send it.
+      return sub('card', 'Your plan', `${nm}’s care card`, 'This is what a caregiver sees when you send it.',
+        `<div class="cc-actions cc-actions-two"><button class="hub-button" onclick="ccShare()">${F('Share the card')}</button><button class="hub-button is-secondary" onclick="ccCardMode('edit')">${F('Edit')}</button></div><p class="cc-done" id="ccDone" hidden></p>`
+        + `<div class="acc cc-preview">${window.aheadCareCard ? aheadCareCard(cardData(), true) : ''}</div>`
+        + h.note('Sending it shares a link that opens as this card on their phone. Only people you send it to can see it.'), 'notepad');
     }
     const sec = (title, inner) => `<section class="hub-card cc-sec"><b class="cc-sec-title">${F(title)}</b>${inner}</section>`;
     return sub('card', 'Your plan', `${nm}’s care card`, 'Tap what fits. It takes about a minute, and you can share it with any caregiver.',
@@ -507,7 +494,7 @@
       + sec('Who to call', input('c1Name', 'Name', c) + input('c1Phone', 'Phone', c, 'tel') + input('c2Name', 'Second person (optional)', c) + input('c2Phone', 'Phone', c, 'tel') + input('docName', 'Pediatrician', c) + input('docPhone', 'Pediatrician’s phone', c, 'tel'))
       + sec('Anything else (optional)', `<input class="cc-other" value="${esc3(c.other)}" oninput="ccText('other', this.value)" placeholder="${esc3('For example, likes the blue blanket in the stroller')}" autocomplete="off">`)
       + `<p class="cc-always"><b>${F('Always included')}</b>${F(ALWAYS())}</p>`
-      + `<div class="cc-actions"><button class="hub-button" onclick="ccCardMode('view')">${F('Save the card')}</button><button class="hub-button is-secondary" onclick="window.open(ccCardLink(), '_blank')">${F('Preview what they’ll see')}</button></div>`, 'notepad');
+      + `<div class="cc-actions"><button class="hub-button" onclick="ccCardMode('view')">${F('Save the card')}</button></div>`, 'notepad');
   }
   // Sharing sends one link that opens the whole card. The link carries the details itself (?c=…, which messaging apps keep);
   // the card page is a static file, so nothing is saved anywhere.
