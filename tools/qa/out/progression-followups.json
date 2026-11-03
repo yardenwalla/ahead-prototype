@@ -1,8 +1,8 @@
 {
   "families": 100,
   "monthlyCheckpoints": 1300,
-  "prominentFollowups": 445,
-  "checks": 7224,
+  "prominentFollowups": 0,
+  "checks": 4929,
   "status": "passed",
   "limits": "Persisted template/handler journeys; not human usability or clinical review."
 }

@@ -1,7 +1,7 @@
 {
-  "checks": 135216,
-  "renders": 9470,
-  "destinations": 8194,
-  "externalLinks": 67,
+  "checks": 122816,
+  "renders": 8944,
+  "destinations": 7671,
+  "externalLinks": 27,
   "failures": []
 }
