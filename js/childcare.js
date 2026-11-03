@@ -95,15 +95,15 @@
       steps: [['Before you visit', 'check', 'A quick call, or a look online', [['Do you have a spot for a baby, and when?', 'Ask about the waitlist, and how often it moves.'], ['What are your hours and cost?', 'Including closed days and any extra fees.'], ['Are you licensed?', 'You can read their inspection reports on your state’s child care site.']]],
         ['On the tour: look for', 'look', 'You can see these for yourself', [['Babies sleeping on their backs, in bare cribs', 'No blankets, bumpers or toys.'], ['Enough grown-ups for the babies', 'Best is 3 babies per adult, and 6 in a room. Your state may allow a few more.'], ['Warm, unhurried caregivers', 'Talking to babies, and picking them up when they cry.'], ['A clean, calm room', 'A clean changing area, covered outlets and floor space to play.']]],
         ['On the tour: ask', 'ask', 'The three that tell you the most', [['How long have the baby-room teachers been here?', 'A year or more. Familiar faces matter most for babies.'], ['What happens if a baby isn’t tired at nap time, or wakes up early?', 'Never forced to sleep or left crying. Quiet play, then back down when sleepy.'], ['Walk me through a baby’s day.', 'Feeds and naps on each baby’s own schedule, floor time and outside every day, and no screens.']]],
-        ['Before you sign', 'check', 'Easy to ask by email', [['Is everyone trained in infant CPR?', 'Yes, and it’s kept current.'], ['Has every staff member had a background check?', 'Yes, everyone.'], ['When does a sick child stay home?', 'A clear, written policy.'], ['How will I hear about my baby’s day?', 'A daily note on feeds, naps and diapers.'], ['Can I have it in writing?', 'Hours, fees, closed days, and how much notice either side gives.']]]] },
+        ['Before you sign', 'check', 'Easy to ask by email', [['Is everyone trained in infant CPR?', 'Yes, and it’s kept current.'], ['Has every staff member had a background check?', 'Yes, everyone.'], ['When does a sick child stay home?', 'A clear, written policy.'], ['How will I hear about my baby’s day?', 'A daily note on feeds, naps and diapers.'], ['Can I have it in writing?', 'Hours, fees, closed days, and how much notice either side gives.'], ['Are children and staff up to date on vaccines?', 'Yes, with a clear policy, and hand-washing before feeds and after changes.']]]] },
     home: { icon: 'home', name: 'Home daycare', short: 'A small group in a home', who: 'place',
       lead: 'A provider cares for a small group of children in their own home, often a mix of ages.',
       good: 'You’d like a smaller group and a homey feel, often with more flexible hours.', mind: 'With one provider, you’ll need backup care when they’re sick or away.',
       when: ['About 3 months ahead', 'Good spots fill up, often through word of mouth.'],
-      steps: [['Before you visit', 'check', 'A quick call, or a look online', [['Do you have a spot for a baby, and when?', 'And how many babies they take.'], ['What are your hours and cost?', 'Including closed days and any extra fees.'], ['Are you licensed?', 'You can read their inspection reports on your state’s child care site.']]],
+      steps: [['Before you visit', 'check', 'A quick call, or a look online', [['Do you have a spot for a baby, and when?', 'Also ask how many babies they take.'], ['What are your hours and cost?', 'Including closed days and any extra fees.'], ['Are you licensed?', 'You can read their inspection reports on your state’s child care site.']]],
         ['On the tour: look for', 'look', 'You can see these for yourself', [['A safe place for babies to sleep', 'Their own crib, bare, away from older kids.'], ['Enough grown-ups for the babies', 'Best is no more than 2 babies per adult in a home daycare.'], ['A warm, unhurried caregiver', 'Talking to the children, and calm when one cries.'], ['A baby-safe home', 'Gates, covered outlets, and no smoke smell.']]],
         ['On the tour: ask', 'ask', 'The three that tell you the most', [['Who covers when you’re sick or on vacation?', 'A backup plan they can tell you about now.'], ['What happens if a baby isn’t tired at nap time, or wakes up early?', 'Never forced to sleep or left crying. Quiet play, then back down when sleepy.'], ['Walk me through a baby’s day.', 'Feeds and naps on the baby’s own schedule, floor time, outside, and no TV.']]],
-        ['Before you sign', 'check', 'Easy to ask by email', [['Are you trained in infant CPR?', 'Yes, and it’s kept current.'], ['Has every adult in the home had a background check?', 'Yes, everyone over 18.'], ['Are there pets, a pool or guns in the home?', 'Pets kept apart, any pool fenced, any guns locked and unloaded.'], ['When does a sick child stay home?', 'A clear, written policy.']]]] },
+        ['Before you sign', 'check', 'Easy to ask by email', [['Are you trained in infant CPR?', 'Yes, and it’s kept current.'], ['Has every adult in the home had a background check?', 'Yes, everyone over 18.'], ['Are there pets, a pool or guns in the home?', 'Pets kept apart, any pool fenced, any guns locked and unloaded.'], ['When does a sick child stay home?', 'A clear, written policy.'], ['Can I have it in writing?', 'Hours, fees, closed days, and how much notice either side gives.'], ['Are children and staff up to date on vaccines?', 'Yes, with a clear policy, and hand-washing before feeds and after changes.']]]] },
     nanny: { icon: 'hand', name: 'Nanny or nanny share', short: 'One caregiver at home', who: 'person',
       lead: 'A caregiver who looks after your baby at home. In a nanny share, two families split one nanny.',
       good: 'You want one-on-one care at home, on a schedule that fits yours.', mind: 'With one caregiver, you’ll need backup for when your nanny is sick or away.',
@@ -186,7 +186,7 @@
       + careCardButton(load('ahead-carecard', {}))
       + packCard('Pack for care', 'Label everything with {p} name', [
         ['bottle', bm && fm ? 'Milk or formula for each feed, plus one extra' : bm ? 'Pumped milk for each feed, plus one extra' : 'Formula for each feed, plus one extra',
-          (bm ? 'Bottles labeled with {p} name and the date, in a cooler bag' : 'With clean bottles, labeled with {p} name') + (m >= 6 ? '. Food too, if they don’t provide it' : '')],
+          (bm ? 'Bottles labeled with {p} name and the date, in a cooler bag' : 'With clean bottles, labeled with {p} name') + (m >= 6 ? '. Food too, if your caregiver doesn’t provide it' : '')],
         ['shirt', 'A spare outfit or two', 'For spills and blowouts']])
       + picSteps('When things don’t go to plan', [
         m < 9 ? ['bottle', 'Won’t take a bottle', 'Common at first. Let the caregiver try while you’re out of the room.'] : null,
@@ -207,18 +207,18 @@
         ['thermo', '{S’s} sick', 'Take turns with a partner if you can, or call your backup. Your pediatrician can say when {s} can go back.'],
         ['home', 'The caregiver is sick', 'Call your backup, or a sitter you’ve used before.'],
         ['hand', 'Your nanny quits', 'Family or a sitter for now. Then a nanny agency, or your referral agency for daycare openings.'],
-        ['notepad', 'Closed days', 'Daycares close on holidays. Plan those days with family early.']],
+        ['notepad', 'Closed days', 'Daycares close on holidays. Plan those days early, with family, a sitter or time off.']],
         'When the baby is sick, take turns or call your backup. When the caregiver is sick, call a sitter. If a nanny quits, cover with family or a temporary nanny. Plan daycare holidays early.')
       + good([['blocks', 'Changing care', 'Overlap the old and new care for a few days if you can.'], ['notepad', 'Sick days at work', 'Many jobs, and some states, let you use sick days to care for your child. Ask HR.']]), 'shield');
 
-    if (id === 'share') return sub('nanny', 'Nanny or nanny share', 'Sharing a nanny', 'Two families split one nanny. Your baby gets close to one-on-one care, for less.',
+    if (id === 'share') return sub('nanny', 'Nanny or nanny share', 'Sharing a nanny', 'Two families split one nanny, for close to one-on-one care at a lower cost.',
       tl('Plan your share', [
         ['First', 'heart', 'Find a family through local parent groups, ideally with a baby close in age.'],
         ['Then', 'home', 'Agree whose home, the hours, and how you split pay and costs.'],
         ['Before you hire', 'notepad', 'Meet the nanny together, and put it all in a written agreement.']],
         'Find a family through parent groups. Agree whose home, the hours and the split. Meet the nanny together and write it down.')
       + picSteps('When things don’t go to plan', [
-        ['thermo', 'One baby is sick', 'Agree up front whether the share goes ahead, and at whose home.'],
+        ['thermo', 'One child is sick', 'Agree up front whether the share goes ahead, and at whose home.'],
         ['hand', 'A family leaves', 'Agree how much notice each family gives, so the nanny isn’t left short.']],
         'Agree up front what happens when one baby is sick, and how much notice a family gives before leaving.')
       + good([['notepad', 'Two employers', 'Each family pays its share, and its own taxes.'], ['clock', 'Schedules change', 'Check in every few months as naps and needs shift.']]), 'hand');
@@ -245,8 +245,8 @@
         'The baby seems settled at pickup, you hear about the day, the caregiver tells you about problems, and you are welcome anytime.')
       + picSteps('When things don’t go to plan', [
         ['chat', 'Something small bothers you', 'Bring it up early and kindly. Most things are easy to fix.'],
-        ['heart', 'Harder drop-offs', 'Common from around 8 months, as {s} learns to miss you. A short, warm goodbye helps.'],
-        ['shield', 'A real worry', 'Unexplained injuries, safe sleep not followed, or not being let in. Act right away.']],
+        ['heart', 'Harder drop-offs', 'Common from around 8 months, as {s} {learn|learns} to miss you. A short, warm goodbye helps.'],
+        ['shield', 'A real worry', 'Unexplained injuries, safe sleep not followed, or not being let in. Keep {o} home and talk to the caregiver. For licensed care, report it on your state’s child care website.']],
         'Bring small things up early. Harder drop-offs from around 8 months are common. Act right away on real safety worries.')
       + good([['shield', 'Licensed care', 'Your state’s child care website takes reports about licensed daycares.'], ['hand', 'If you have a nanny', 'Agree on paid time off up front, and check in on pay once a year.']]), 'heart');
 
@@ -430,7 +430,7 @@
   /* ---------- the care card: mostly taps, then Save, then Share ---------- */
   const OPT = {
     milk: ['Breast milk', 'Formula', 'Both'],
-    often: ['Every 2–3 hours', 'Every 3–4 hours', 'When hungry'],
+    often: ['Every 2–3 hours', 'Every 3–4 hours', 'A few times a day', 'When hungry'],
     oz: ['2–3 oz', '4–5 oz', '6–8 oz'],
     solids: ['Not yet', 'A few foods', 'Most foods'],
     naps: ['1', '2', '3', '4 or more'],
