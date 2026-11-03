@@ -131,20 +131,19 @@
       + `</div>`;
   }
   // What's new for outings, month by month: [from month, headline, one line, the page it opens].
-  // Every age-related change in the tab, places and gear alike: [month, headline, one line, the page it opens, home row].
-  // The same list drives the top card here and the home screen's update row (see home-rules.js), so a parent
-  // hears about each change without having to come back and spot it. Month 0 is the welcome, not an update.
+  // What changes with age in this tab: [month, headline, one line, the page it opens, home row].
+  // Only the three gear changes get a home row (see briefing.js): facing out, moving up from the infant seat, and
+  // rear-facing past 1. Each depends on the gear's label, so the row says to check it, never that it's time.
   const NOWS = [
     [0, 'Short outings are good for you both', 'Fresh air and a change of scene help, even in the first weeks.', 'errands'],
-    [2, 'Bug spray can start', 'From 2 months, for walks and trips on buggy days.', 'weather', ['Bug spray can start', 'See which kinds are okay from 2 months, and how to put it on.']],
-    [4, 'Facing out may be next', 'Once {p} head is steady, {s} can face out in the carrier for short stretches.', 'carry', ['Facing out in the carrier', 'See when it’s okay, and for how long.']],
-    [6, 'What changes for outings at 6 months', 'Sunscreen, the shopping cart’s own seat, snacks out, and babyproofing when you stay over.', 'errands', ['What changes for outings at 6 months', 'Sunscreen, the cart’s own seat, snacks out, and babyproofing when you stay over.']],
-    [9, 'Watch the car seat’s limits', 'Many babies outgrow the infant seat this year. The label tells you when.', 'car', ['Check the infant car seat’s limits', 'Many babies outgrow it this year. See which seat comes next.']],
-    [12, 'Rear-facing after the first birthday, too', 'Keep {o} rear-facing for as long as the seat allows.', 'car', ['Rear-facing past the first birthday', 'See why, and when a convertible seat comes in.']]
+    [2, 'Longer trips may feel easier soon', 'As feeds start to spread out, a long drive or a first flight gets more doable.', 'road'],
+    [4, 'Facing out may be next', 'It depends on your carrier’s height and weight limits, and on {p} head control. Check the label.', 'carry', ['You can start checking about facing out', 'It depends on your carrier’s height and weight limits, and on {p} head control.']],
+    [6, 'What changes for outings at 6 months', 'The shopping cart’s own seat, snacks out, and babyproofing when you stay over.', 'errands'],
+    [9, 'Watch the car seat’s limits', 'Moving to a convertible seat depends on the infant seat’s height and weight limits. The label tells you when.', 'car', ['Check the infant car seat’s limits', 'Moving to a convertible seat depends on its height and weight limits, not age.']],
+    [12, 'Rear-facing after the first birthday, too', 'Keep {o} rear-facing for as long as the seat allows.', 'car', ['Rear-facing past the first birthday', 'Keep {o} rear-facing until the seat’s rear-facing limits, often age 2 or older.']]
   ];
   // For the home screen: the update for this month, or the one coming next month (so trips can be planned ahead).
-  // Bug spray only comes up in the warm months, when it's useful.
-  window.oaUpdate = m => { const n = NOWS.find(x => x[4] && (x[0] === m || x[0] === m + 1) && !(x[3] === 'weather' && season() !== 'hot')); return n ? { soon: n[0] > m, at: n[0], title: F(n[4][0]), body: F(n[4][1]), action: open(n[3]) } : null; };
+  window.oaUpdate = m => { const n = NOWS.find(x => x[4] && (x[0] === m || x[0] === m + 1)); return n ? { soon: n[0] > m, at: n[0], title: F(n[4][0]), body: F(n[4][1]), action: open(n[3]) } : null; };
   const nowFor = m => NOWS.filter(n => n[0] <= m).pop();
   const nextFor = m => NOWS.find(n => n[0] > m);
   function outAndAbout() {
@@ -343,7 +342,7 @@
     // Carrier and stroller follow Car seat: the same page at every age, with how it changes shown as a path from day one.
     if (id === 'carry') return sub('gear', 'Your gear', 'Carrier basics', 'A quick check every time keeps {o} breathing easy.',
       hubFigure('carrier', CAT, 'In a carrier: face visible and close enough to kiss, chin off the chest, knees up in an M shape, back supported.')
-      + hubStageStrip({ title: 'Ways to carry, as {s} {grow|grows}', numbered: true, items: [['carrier', 'Facing in', 'From birth, face above the fabric'], ['carrier', 'Facing out', 'Once {p} head is steady, for short awake times'], ['carrier', 'On your back', 'Once {s} {sit|sits} steadily and the label allows']], cat: CAT, caption: 'Facing in from birth, facing out once the head is steady for short awake times, and on your back once sitting steadily and the label allows.' })
+      + hubStageStrip({ title: 'Ways to carry, as {s} {grow|grows}', numbered: true, items: [['carrier', 'Facing in', 'From birth, face above the fabric'], ['carrier', 'Facing out', 'Once {p} head is steady and the label allows, for short awake times'], ['carrier', 'On your back', 'Once {s} {sit|sits} steadily and the label allows']], cat: CAT, caption: 'Facing in from birth, facing out once the head is steady for short awake times, and on your back once sitting steadily and the label allows.' })
       + good([['hand', 'Snug enough', 'When you lean forward, {s} {stay|stays} against you without slumping.'], ['moon', 'Asleep in the carrier', 'Keep {p} face visible, and move {o} to a flat bed when you can.'], ['cup', 'Away from the stove', 'And from hot drinks, while {s’s} in the carrier.']]));
 
     if (id === 'stroller') return sub('gear', 'Your gear', 'Stroller basics', 'Harness on every time, and brakes on whenever you stop.',
