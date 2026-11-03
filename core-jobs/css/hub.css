@@ -1394,3 +1394,5 @@
 /* Rough night: the crying row opens its own page, styled like the other items */
 #main .hub-rough-link { display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px 14px; min-height: 56px; background: none; border: 0; text-align: left; font: inherit; color: inherit; cursor: pointer }
 #main .hub-rough-link b { flex: 1; font-size: 15.5px; line-height: 1.3 }
+#main .dev-try .dev-signs-art { display: flex; align-items: center; justify-content: center; height: 76px; border-radius: 18px; background: var(--area, #efedff) }
+#main .dev-try .dev-signs-art svg { width: 40px; height: 40px }

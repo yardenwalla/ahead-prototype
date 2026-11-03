@@ -31,7 +31,6 @@
     const two = list.length > 2 ? [list[i], list[(i + 1) % list.length]] : list;
     return `<section class="hub-card dev-awake"><span class="hub-card-head"><b>${F('Try today')}</b></span><div class="dev-ideas">${two.map(a => tile(a, ref)).join('')}</div>`
       // From 6 months: a few baby signs, so Maya can say what she wants before she has the words. One of the things to try, inside the same card.
-      + (ref >= 6 ? `<button class="dev-try-row dev-signs-row" onclick="openPage('chg:Development:d:signs')"><span class="hub-dot">${H().art('signs', 'Development')}</span><span class="hub-row-copy"><b>${F('Try a few baby signs')}</b><small>${F('More, eat, milk and all done')}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>` : '')
       + `<button class="hub-link dev-more-link" onclick="openPage('chg:Development:d:more:${ref}')">${F('More ideas for awake time')} ›</button></section>`;
   };
   // How long Maya is usually awake at a time, by the age the guides follow (adjusted age for babies born early). Same ranges as Sleep.

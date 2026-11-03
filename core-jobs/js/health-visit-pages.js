@@ -34,7 +34,9 @@
     : age === 12 ? [['pacifier', 'peach', 'A snack and a cup', 'A longer visit, with a blood test']] : (EXPECT[age].bring || []);
   function expectPage(age) {
     const e = EXPECT[age];
-    return frame(head(age, 'green', 'What to expect', e.lead) + H().list('What they’ll check', e.checks.map(c => row(...c))) + H().list('Before you go', BRING(age).map(c => row(...c))));
+    // First week: jaundice at home, since it peaks in these days (AAP, HealthyChildren.org).
+    const jaundice = age === 0 ? H().versus('Yellow skin at home: normal, or time to call?', ['Normal', 'A little yellow on the face and chest in the first week, in a baby who feeds well and has plenty of diapers.'], ['Call your pediatrician', 'Yellow spreading to the belly or legs, yellow eyes, poor feeding, fewer diapers, or very sleepy and hard to wake.']) : '';
+    return frame(head(age, 'green', 'What to expect', e.lead) + H().list('What they’ll check', e.checks.map(c => row(...c))) + jaundice + H().list('Before you go', BRING(age).map(c => row(...c))));
   }
 
   /* ---------- Vaccines ---------- */
