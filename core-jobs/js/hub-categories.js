@@ -271,16 +271,6 @@
       `<span id="health-vaccines"></span>` + h.row({ icon: 'shield', cat: 'Health', title: 'Vaccines', sub: age === 0 ? 'Hepatitis B, and protection against RSV, a common winter virus' : ({ 1: 'Hepatitis B, dose 2 (if not at 2 months)', 2: 'DTaP, Hib, pneumococcal, polio, rotavirus and hepatitis B', 4: 'DTaP, Hib, pneumococcal, polio and rotavirus', 6: 'DTaP, pneumococcal and more, plus flu and COVID in season', 9: 'Usually catch-up only, plus flu in season', 12: 'MMR, chickenpox, hepatitis A, and Hib and pneumococcal boosters' })[age] || 'What’s due at this checkup', onclick: `openHealthDetail(${age},'vaccines')` }),
       h.row({ icon: 'notepad', cat: 'Health', title: 'Questions and notes', sub: visitNotesFor(age) ? 'Your questions, and notes from this checkup' : 'Bring your questions, and jot down the answers', onclick: `openHealthDetail(${age},'questions')` })
     ]);
-    // Common at this age: the everyday worries of this age, each with what's normal and when to call (AAP, HealthyChildren.org).
-    // Spit-up lives in Feeding, diaper rash and teething in Everyday care, so they aren't repeated here.
-    const ca = actualMonth(), days = (NOW - parse(profile.dob)) / 864e5;
-    const common = [
-      days <= 21 && ['sun', 'Yellow skin in the first weeks', 'Newborn jaundice: normal, or time to call', 'jaundice'],
-      ['diaper', ca < 6 ? 'Poop: what’s normal' : 'Poop once solids start', ca < 6 ? 'Colors, how often, and when to call' : 'New colors and textures, and hard poop', 'poop'],
-      ca >= 6 && ['bottle', 'Vomiting and diarrhea', 'Keeping {o} drinking, and when to call', 'tummy'],
-      ca >= 9 && ['ear', 'Ear infections', 'The signs, and when to call', 'ear']
-    ].filter(Boolean).slice(-2);
-    b += h.list('Common at this age', common.map(([icon, title, sub, id]) => h.row({ icon, cat: 'Health', title, sub, onclick: `openPage('chg:Health:d:${id}')` })));
     b += h.list('Between checkups', [
       h.row({ icon: 'thermo', cat: 'Health', title: `When Maya seems sick`, sub: 'Fevers, medicine and when to call', onclick: "openPage('chg:Health:d:sick')" }),
       h.row({ icon: 'drop', cat: 'Health', title: 'Colds and stuffy noses', sub: 'Saline, suction and a humidifier', onclick: "openPage('chg:Health:d:cold')" }),
@@ -305,6 +295,14 @@
     9: ['Movement', 'What about crawling?', 'Many babies skip crawling. Some scoot or roll instead. What matters is that Maya finds a way to move.'],
     12: ['Movement', 'Should {s} be walking?', 'Not yet for most babies. First steps often come between 12 and 15 months.']
   };
+  // [from, to, band start, band end, band label, ticks] in months, for the big question's picture.
+  const DEV_BIG_BAR = {
+    2: [0, 4, 1.2, 2.2, 'Smiling', [[0, 'Birth'], [2, '2 mo'], [4, '4 mo']]],
+    4: [0, 9, 4, 6, 'Rolling', [[0, 'Birth'], [4, '4 mo'], [6, '6 mo'], [9, '9 mo']]],
+    6: [3, 12, 6, 9, 'Sitting alone', [[3, '3 mo'], [6, '6 mo'], [9, '9 mo'], [12, '1 year']]],
+    9: [4, 14, 6, 10, 'Crawling', [[4, '4 mo'], [6, '6 mo'], [10, '10 mo'], [14, '14 mo']]],
+    12: [8, 18, 12, 15, 'First steps', [[8, '8 mo'], [12, '1 year'], [15, '15 mo'], [18, '18 mo']]]
+  };
   // An icon that matches each skill's words.
   const SKILL_ICON = l => { const t = l.toLowerCase();
     return /peekaboo|hid|dropped/.test(t) ? 'peek' : /wave|goodbye/.test(t) ? 'wave' : /roll/.test(t) ? 'roll' : /crawl/.test(t) ? 'crawl' : /stand|pull|steps|furniture/.test(t) ? 'stand' : /sit/.test(t) ? 'sit' : /tummy|push/.test(t) ? 'mat' : /head/.test(t) ? 'head'
@@ -312,8 +310,8 @@
       : /smil|laugh|chuckle|glad|familiar|shy|clingy|game|pat-a-cake/.test(t) ? 'smile' : /coo|babble|raspberr|squeal|word|mama|dada|sounds|no/.test(t) ? 'chat' : /look|watch|face|expression|eyes/.test(t) ? 'eye'
       : /hand|grasp|rake|thumb|finger|hold|swipe|reach|grab|arms|leg/.test(t) ? 'hand' : /toy|object|bang|container|put|stack/.test(t) ? 'blocks' : DOMAIN_ICONS_FALLBACK; };
   let DOMAIN_ICONS_FALLBACK = 'smile';
-  // One idea per area at each checkpoint, from that checkpoint's ideas but not the four Try today rotates through.
-  const AREA_IDEA = { 2: { Social: 'smile-pause', Talking: 'change-chat', Thinking: 'outside-pause' }, 4: { Social: 'sock-puppet', Talking: 'touch-rhyme', Thinking: 'follow-toy' }, 6: { Social: 'mirror-faces', Talking: 'rhyming-page', Thinking: 'texture-pair' }, 9: { Social: 'peek-corner', Talking: 'song-pause', Thinking: 'lift-flap' }, 12: { Social: 'body-song', Talking: 'follow-point', Thinking: 'put-in' } };
+  // One idea per area at each checkpoint, each one of that checkpoint's pictured ideas (Movement has its own).
+  const AREA_IDEA = { 2: { Social: 'close-face', Talking: 'song-listen', Thinking: 'bold-picture' }, 4: { Social: 'mirror-company', Talking: 'crinkle-book', Thinking: 'easy-grip' }, 6: { Social: 'peek-face', Talking: 'floor-drum', Thinking: 'two-hands' }, 9: { Social: 'ball-turns', Talking: 'hello-wave', Thinking: 'hidden-toy' }, 12: { Social: 'pretend-cup', Talking: 'action-book', Thinking: 'stack-pair' } };
   const devAreaIdea = (ref, domain) => { const id = AREA_IDEA[ref]?.[domain]; if (!id || typeof playStageModel !== 'function') return null; for (let m = 0; m <= 12; m++) { const x = playStageModel(m), a = [...(x.primary || []), ...(x.more || [])].find(y => y.id === id); if (a) return a; } return null; };
   window.developmentDomainPage = developmentDomainPage = function (ref, domain) {
     const meta = DEV_DOMAINS[domain], labels = DEVELOPMENT_DOMAINS[ref]?.[domain];
@@ -329,7 +327,8 @@
       const desc = (window.hubBabyify || (x => x))(F(DEV_EXAMPLES[l] || ''));
       return `<div class="hub-tick is-habit dev-skill"><span class="hub-tick-art">${h.art(SKILL_ICON(l), 'Development')}</span><span class="hub-row-copy"><b>${(window.hubBabyify || (x => x))(F(clearMilestone(l)))}</b>${desc ? `<small>${desc}</small>` : ''}${see}</span>${rec ? `<span class="hub-chip is-done">${F('Seen')} ✓</span>` : `<button class="hub-seen" onclick="hubSeen('${key}')">${F('Seen it')}</button>`}${see ? `<div class="dev-media" hidden></div>` : ''}</div>`; }).join('');
     // The big question, only on the area it's about.
-    const big = DEV_BIG[ref] && DEV_BIG[ref][0] === domain ? `<section class="hub-card dev-bigq"><span class="hub-card-head"><b>${F(DEV_BIG[ref][1])}</b></span><p class="dev-bigq-a">${F(DEV_BIG[ref][2])}</p></section>` : '';
+    const W = DEV_BIG_BAR[ref], nowMo = live() ? (NOW - parse(profile.early && profile.due && developmentMonth(actualMonth()) !== actualMonth() ? profile.due : profile.dob)) / 2629746e3 : null;
+    const big = DEV_BIG[ref] && DEV_BIG[ref][0] === domain ? `<section class="hub-card dev-bigq"><span class="hub-card-head"><b>${F(DEV_BIG[ref][1])}</b></span>${W && window.hubWindowBar ? hubWindowBar({ title: '', from: W[0], to: W[1], zones: [[W[2], W[3], W[4], 'band']], ticks: W[5], now: nowMo, cat: 'Development', caption: F(DEV_BIG[ref][2]) }) : ''}<p class="dev-bigq-a">${F(DEV_BIG[ref][2])}</p></section>` : '';
     // Try this together: on Movement, the idea that helps with the big question; elsewhere, an idea for one of these skills.
     const move = domain === 'Movement' && window.devMoveIdea ? devMoveIdea(ref) : null;
     const act = !move && devAreaIdea(ref, domain);
@@ -369,28 +368,6 @@
         h.row({ icon: 'heart', cat: 'Health', title: 'Help {o} feel comfortable', sub: 'Offer extra feeds, dress {o} lightly and let {o} rest. A fever on its own is the body fighting an infection.', onclick: '' }).replace('<button class="hub-row" onclick=""', '<div class="hub-row is-static"').replace('<button class="hub-row"', '<div class="hub-row is-static"').replace(/<\/button>$/, '</div>').replace('<span class="hub-chev" aria-hidden="true">›</span>', '')
       ])
       + h.video('When to call about a fever', 'HealthyChildren.org', 'https://www.healthychildren.org/English/health-issues/conditions/fever/pages/When-to-Call-the-Pediatrician.aspx', 'Guide'));
-    const looks = (title, items) => `<div class="hub-card hub-looks"><b class="hub-fig-title">${F(title)}</b><ul>${items.map(t => `<li>${F(t)}</li>`).join('')}</ul></div>`;
-    const urgent = (t, p) => `<section class="hub-card hub-callout is-urgent"><b>${F(t)}</b><p>${F(p)}</p></section>`;
-    if (id === 'jaundice') return detailFrame('Health', 'Common at this age', 'Yellow skin in the first weeks', 'Many newborns look a little yellow in the first week. It’s called jaundice, and it usually fades by about 2 weeks.',
-      h.versus('Normal, or time to call?', ['Normal', 'A little yellow on the face and chest in the first week, in a baby who feeds well and has plenty of wet and dirty diapers.'], ['Call your pediatrician today', 'Yellow spreading to the belly, arms or legs, yellow in the whites of the eyes, poor feeding, fewer diapers, or still yellow after 2 weeks.'])
-      + urgent('Call right away if Maya', 'Is very sleepy and hard to wake, won’t feed, or has a high-pitched cry.')
-      + h.steps(['Check in daylight: gently press the skin on {p} forehead or chest, then let go. Yellow as it springs back is jaundice.', 'Feed often, 8–12 times a day. Feeding helps {o} clear it.', 'Count diapers. Plenty of wet and dirty ones are a good sign.'])
-      + h.tip('Pale poop is different', 'White, gray or clay-colored poop is never normal. Call your pediatrician that day.'));
-    if (id === 'poop') { const m = actualMonth(); return detailFrame('Health', 'Common at this age', m < 6 ? 'Poop: what’s normal' : 'Poop once solids start', m < 6 ? 'Color, texture and how often all vary a lot, and most of it is normal.' : 'Once solids start, poop gets firmer and smellier, and changes color with what Maya eats. That’s normal.',
-      `<section class="hub-card hub-poop"><b class="hub-fig-title">${F('Poop colors')}</b><div class="hub-poop-row">${[['#d9a62e', 'Yellow'], ['#7f8f3a', 'Green'], ['#8a5a2f', 'Brown']].map(([c, t]) => `<span><i style="background:${c}"></i>${t}</span>`).join('')}</div><small>${F('All normal')}</small><div class="hub-poop-row is-call">${[['#e8e4dc', 'White or gray'], ['#b8322a', 'Red'], ['#1f1c1a', 'Black']].map(([c, t]) => `<span><i style="background:${c}"></i>${t}</span>`).join('')}</div><small class="is-call">${F('Call your pediatrician. Black is normal only in the first few days.')}</small></section>`
-      + h.versus('Normal, or time to call?', ['Normal', m < 1 ? 'Dark, sticky poop in the first days, then yellow and seedy. Grunting and a red face while pushing out soft poop.' : m < 6 ? 'Several a day, or one every few days if it’s soft when it comes. Straining and a red face while pushing out soft poop.' : 'Firmer, smellier poop, and bits of food you can recognize.'], ['Call your pediatrician', 'White, gray or very pale poop, blood in it, or hard, dry pellets that seem to hurt.'])
-      + (m < 6 ? h.tip('Constipation is about hardness, not how often', 'After the first month, breastfed babies can go several days without a poop. If it’s soft when it comes, that’s normal.')
-        : h.tip('If poop gets hard', 'Offer a little water in a cup with meals, and foods like pears, prunes and peas. Still hard after a few days? Ask your pediatrician.'))); }
-    if (id === 'tummy') return detailFrame('Health', 'Common at this age', 'Vomiting and diarrhea', 'Most tummy bugs pass in a few days. The main job is keeping Maya drinking.',
-      h.steps(['Keep offering breast milk or formula, in smaller amounts more often.', 'Once {s} {want|wants} to eat, offer {p} usual foods.', 'Watch the diapers. Far fewer wet ones than usual is a sign of dehydration.', 'Ask your pediatrician before giving an oral rehydration drink or any medicine.'])
-      + h.versus('Normal, or time to call?', ['Normal', 'A few loose poops or a vomit or two for a day or two, in a baby who still feeds and has wet diapers.'], ['Call your pediatrician', 'Can’t keep feeds down, signs of dehydration, green or bloody vomit, blood in the poop, a swollen belly, or diarrhea with a fever.'])
-      + urgent('Call 911 if Maya', 'Is very sleepy, hard to wake or floppy.')
-      + h.tip('Dehydration looks like', 'Far fewer wet diapers, a dry mouth, no tears when crying, or a sunken soft spot.'));
-    if (id === 'ear') return detailFrame('Health', 'Common at this age', 'Ear infections', 'Ear infections often follow a cold. They’re one of the most common reasons babies see the pediatrician.',
-      looks('What it can look like', ['Fussing and crying, especially lying down', 'Trouble sleeping', 'A fever', 'Pulling at an ear, along with other signs', 'Fluid draining from the ear'])
-      + h.versus('Normal, or time to call?', ['Normal', 'Pulling at an ear now and then, in a baby who’s otherwise happy and feeding well.'], ['Call your pediatrician', 'Ear pain with a cold, a fever, fluid draining from the ear, or fussing that won’t settle.'])
-      + h.tip('Ear pulling on its own', 'Babies often pull at their ears when tired or just discovering them. Without a cold or fever, it’s usually nothing.')
-      + h.tip('For the pain', 'Ask your pediatrician which pain medicine is right, and the dose for {p} weight.'));
     return null;
   }
   const baseRoute = window.changesRoute;
