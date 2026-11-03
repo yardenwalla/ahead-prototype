@@ -482,7 +482,7 @@
           uncut: 'Redness, swelling or pain when {s} {pee|pees}.' }); } }
     },
     diapers: {
-      0: { line: 'How to change one', answer: 'About 8–12 changes a day at first. It gets quick.',
+      0: { line: 'How to change one', get answer() { return CURV === 0 ? 'About 8–12 changes a day at first. It gets quick.' : 'Fewer changes now than in the first weeks. Change when wet or dirty.'; },
         get doText() { return 'Change when wet or dirty, and keep one hand on {o} on the changing table.' + (CURV === 0 ? ' Fold the top down below the cord stump.' : ''); },
         normal: 'A good fit: two fingers slide in at the waist, and no red marks at the legs.', vis: () => diaperCarousel(),
         urgent: 'White, gray or chalky poop: call your pediatrician right away.',
@@ -552,8 +552,8 @@
         normal: 'Drool, chewing on everything and extra fussing.',
         vis: () => hubIconSteps([['hand', 'A clean finger', 'Rub the gums'], ['toy', 'A teething ring', 'Chilled, not frozen'], ['shield', 'Skip these', 'Numbing gels, necklaces']], CAT, 'Rub the gums with a clean finger, offer a chilled teething ring, and skip numbing gels and teething necklaces.', false), call: 'A fever of 100.4°F or higher, diarrhea or a rash. Teething doesn’t cause those.', extra: () => toothBtn() },
       3: { line: () => hasTooth() ? 'Brushing, twice a day' : 'Brushing starts with the first tooth', answer: () => hasTooth() ? 'Twice a day keeps new teeth healthy.' : 'No tooth yet is normal. Some come close to the first birthday.',
-        doText: 'A soft baby toothbrush and a rice-grain smear of fluoride toothpaste, twice a day. No bottle in bed. Book a first dental visit by the first birthday.',
-        normal: 'Brushed well: no white film left along the gumline.', vis: () => paste(), extra: () => toothBtn() }
+        get doText() { return hasTooth() ? 'A soft baby toothbrush and a rice-grain smear of fluoride toothpaste, twice a day. No bottle in bed. Book a first dental visit by the first birthday.' : 'Until the first tooth, comfort sore gums with a clean finger or a chilled teething ring. Once it’s in, brush twice a day with a rice-grain smear of fluoride toothpaste. Book a first dental visit by the first birthday.'; },
+        get normal() { return hasTooth() ? 'Brushed well: no white film left along the gumline.' : 'Drool, chewing on everything and extra fussing can mean a tooth is on its way.'; }, vis: () => paste(), extra: () => toothBtn() }
     },
     nails: {
       0: { line: 'Trimming nails, wiping eyes and ears', answer: 'Tiny nails grow fast and can scratch. Eyes and ears just need a gentle wipe.',
@@ -582,7 +582,7 @@
     if (s.call) b += `<p class="ss-small"><b>${F('Call your pediatrician:')}</b> ${T(s.call)}</p>`;
     if (s.extra) b += s.extra();
     if (s.more) { const m = s.more(); b += `<div class="hub-card care-folds">${m.map(([t, sub, body]) => `<details class="care-fold"><summary><span><b>${F(t)}</b>${sub ? `<small>${F(sub)}</small>` : ''}</span><i aria-hidden="true">›</i></summary><div class="care-fold-body">${body}</div></details>`).join('')}</div>`; }
-    const hw = HOW[k]; if (hw) b += hubStageStrip({ title: 'How it changes', items: hw.items, nowIndex: hw.now(v), cat: CAT, caption: hw.caption });
+    const hw = HOW[k]; if (hw) b += hubStageStrip({ title: 'How it changes', items: hw.items, nowIndex: live() ? hw.now(stageNow()) : hw.now(v), cat: CAT, caption: hw.caption });
     return page(ck, b);
   }
   // The "when": each topic across the year, with the baby's place marked.
@@ -591,7 +591,7 @@
     bath: { items: [['bath', 'Sponge baths', 'Until the cord falls off'], ['tub', 'Baby tub', 'Once the cord heals'], ['mat', 'Big tub', 'Once sitting steadily']], now: v => [0, 1, 1, 2][v], caption: 'Baths: sponge baths until the cord falls off, a baby tub once it heals, and the big tub once sitting steadily.' },
     skin: { items: [['drop', 'Peeling and spots', 'First weeks'], ['smile', 'Acne and cradle cap', '1–3 months'], ['leaf', 'Drool rash', 'From about 4 months']], now: v => [0, 1, 2, 2][v], caption: 'Skin: peeling and spots in the first weeks, baby acne and cradle cap at 1 to 3 months, and drool rash from about 4 months.' },
     dress: { items: [['sun', 'Shade only', 'Under 6 months'], ['drop', 'Shade and sunscreen', 'From 6 months'], ['stand', 'Soft shoes', 'Once walking outside']], now: v => v <= 1 ? 0 : v === 2 ? (sixNow() ? 1 : 0) : (walkingSoon() ? 2 : 1), caption: 'Sun and shoes: shade only under 6 months, sunscreen from 6 months, and soft shoes once walking outside.' },
-    teeth: { items: [['tooth', 'Teething', 'Often from 4–6 months'], ['smile', 'First tooth', 'Around 6 months'], ['drop', 'Brushing', 'From the first tooth'], ['steth', 'Dentist', 'By the first birthday']], now: v => v < 2 ? -1 : v === 2 ? (hasTooth() ? 2 : 0) : (hasTooth() ? 2 : 1), caption: 'Teeth: teething often from 4 to 6 months, the first tooth around 6 months, brushing from the first tooth, and a dentist visit by the first birthday.' }
+    teeth: { items: [['tooth', 'Teething', 'Often from 4–6 months'], ['smile', 'First tooth', 'Around 6 months'], ['drop', 'Brushing', 'From the first tooth'], ['steth', 'Dentist', 'By the first birthday']], now: v => v < 2 ? -1 : hasTooth() ? 2 : 0, caption: 'Teeth: teething often from 4 to 6 months, the first tooth around 6 months, brushing from the first tooth, and a dentist visit by the first birthday.' }
   };
   // Your daily care: every care job that applies at this age, with the answer for now; "New" marks what changed.
   const DAILY = [
@@ -607,15 +607,15 @@
   const NEWNOW = [['diapers', 'down', 'cord', 'bath'], ['bath', 'skin', 'dress'], ['diapers', 'skin', 'dress', 'teeth'], ['diapers', 'bath', 'dress', 'teeth']];
   const BASIC6 = ['diapers', 'bath', 'skin', 'dress', 'teeth', 'nails'];
   const hasAny = (k, v) => { for (let i = v; i >= 0; i--) if (T3[k] && T3[k][i]) return true; return false; };
-  const basicTile = (k, v) => { const c = COL[TCOL[k]], ok = hasAny(k, v);
+  const basicTile = (k, v) => { const c = COL[TCOL[k]], ok = hasAny(k, v) || k !== 'teeth';
     return `<button class="care-tile${ok ? '' : ' is-later'}" style="--hl-bg:${c[0]};--hl-ink:${c[1]}" onclick="openPage('chg:${CAT}:d:c:${k}:${v}')"><span class="care-tile-ic">${hubArt(ICON[TCOL[k]], CAT)}</span><span class="care-tile-copy"><b>${F(TNAME[k])}</b><small>${F(TILE[v]()[k])}</small></span></button>`; };
   // A basic with nothing to do yet says so, and when it starts, instead of showing a later stage's advice.
   // One glanceable line per tile: the answer for this age, mostly a number.
   const TILE = [
     () => ({ diapers: '8–12 a day', bath: '2–3 sponge baths a week', skin: 'Peeling is normal', dress: '+1 layer, shade only', teeth: 'From about 4 months', nails: 'Trim weekly' }),
     () => ({ diapers: 'When wet or dirty', bath: 'Baby tub, about 3 a week', skin: 'Acne and cradle cap', dress: '+1 layer, shade only', teeth: 'From about 4 months', nails: 'Trim weekly' }),
-    () => ({ diapers: 'One hand on {o}, always', bath: 'About 3 a week', skin: 'Drool rash', dress: sixNow() ? 'Shade + SPF 30' : 'Shade only until 6 months', teeth: 'Teething often starts', nails: 'Trim weekly' }),
-    () => ({ diapers: 'A toy to hold', bath: 'Big tub once sitting', skin: 'Drool rash', dress: 'Bare feet indoors', teeth: hasTooth() ? 'Brush twice a day' : 'Brush from the first tooth', nails: 'Trim weekly' })
+    () => ({ diapers: 'One hand on {o}, always', bath: 'About 3 a week', skin: 'Pat drool dry often', dress: sixNow() ? 'Shade + SPF 30' : 'Shade only until 6 months', teeth: 'Teething often starts', nails: 'Trim weekly' }),
+    () => ({ diapers: 'A hand on {o}, a toy to hold', bath: 'Big tub once sitting', skin: 'Pat drool dry often', dress: 'Bare feet indoors', teeth: hasTooth() ? 'Brush twice a day' : 'Soothe gums until a tooth', nails: 'Trim weekly' })
   ];
   const LATER = { teeth: 'From about 4 months', skin: 'Peeling is normal' };
   const NOTYET = { teeth: 'Teething usually starts around 4–6 months. There’s nothing to do yet.', skin: 'In the first weeks, peeling skin and tiny white bumps are normal and clear up on their own. Nothing else to do yet.' };
@@ -638,7 +638,7 @@
       tiles: () => [['Diapers', '6+ wet a day', live() && answers.solids === 'Yes' ? 'Poop changes with solids' : 'Size up for leaks'], ['Baths', 'About 3 a week', 'Often at bedtime'], ['Clothes', '+1 layer', 'One more than you'], sixNow() ? ['Sun', 'Shade + SPF 30', 'Sunscreen from 6 months'] : ['Sun', 'Shade only', 'No sunscreen yet']],
       rows: () => ['teething', sixNow() ? 'six' : 'shade'],
       call: ['Lots of drool, chewing on everything, and more fussing than usual.', 'A fever of 100.4°F or higher (teething doesn’t cause one), or any sunburn.'] },
-    { title: 'First teeth and first steps', lead: 'Brushing starts with the first tooth, the big tub comes next, and bare feet help first steps.',
+    { title: 'First teeth and the big tub', lead: 'Brushing starts with the first tooth, the big tub comes once sitting, and bare feet help when first steps come.',
       tiles: () => [['Diapers', '6+ wet a day', 'Wriggly changes'], ['Baths', 'About 3 a week', 'The big tub once sitting'], walkingSoon() ? ['Clothes', 'Bare feet indoors', 'Soft shoes outside'] : ['Clothes', '+1 layer', 'One more than you'], ['Sun', 'Shade + SPF 30', 'Every 2 hours']],
       rows: () => ['brush', 'bigtub', walkingSoon() ? 'feet' : null, 'wriggly'].filter(Boolean),
       call: ['Wriggly changes, firmer poop with solids, and no tooth yet.', 'A fever of 100.4°F or higher (teething doesn’t cause one), hard poop for days, or any sunburn.'] }
@@ -655,7 +655,7 @@
     let b = `<header class="hub-hero care-hero"><p class="hub-eyebrow">${STAGE[v]}</p><h1>${F(st.title)}</h1><p class="hub-lead">${F(st.lead)}</p></header>`;
     // No tiles: Everyday care's answers are mostly actions, not numbers, so they read better as rows (like Health).
     const shop = v === 1 ? '' : `<div class="hub-browse care-shop"><button class="hub-link" onclick="${go('need', v)}">${F(v === 0 ? 'Getting ready? What you’ll need' : 'What you’ll need now')} ›</button></div>`;
-    b += `<h2 class="hub-h2">${F('New for Maya now')}</h2><div class="hub-list">${NEWNOW[v].map(k => topicRow(k, v)).join('')}</div>`;
+    b += `<h2 class="hub-h2">${F(live() && v !== now ? `New at ${STAGE[v].toLowerCase() === 'newborn' ? 'the newborn stage' : STAGE[v]}` : 'New for Maya now')}</h2><div class="hub-list">${NEWNOW[v].map(k => topicRow(k, v)).join('')}</div>`;
     b += `<h2 class="hub-h2">${F('All the basics')}</h2><div class="care-grid">${BASIC6.map(k => basicTile(k, v)).join('')}</div>` + shop;
     b += `<button class="hub-rough-card care-rash-card" onclick="openPage('chg:${CAT}:d:look:${v}')"><span class="hub-rough-moon" aria-hidden="true">${hubArt('eye', CAT)}</span><span class="hub-rough-copy"><b>${F('Something look off?')}</b><small>${F(['Poop, rashes, the cord, eyes and more', 'Poop, rashes, eyes and more', 'Drool, rashes, poop and more', 'Drool, rashes, poop and more'][v])}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`;
     b += h.versus('Normal, or time to call?', ['Normal', st.call[0]], ['Call your pediatrician', st.call[1]]);
