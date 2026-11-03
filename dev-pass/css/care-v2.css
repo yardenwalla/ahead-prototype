@@ -85,3 +85,47 @@
 #main .care-v2 .care-call { margin: 4px 4px 16px; font-size: 14.5px; line-height: 1.5; color: var(--ink-2, #5e5a75) }
 #main .care-v2 .care-call b { color: var(--ink, #2b2840); font-weight: 600 }
 #main .care-v2 .ss-do + .care-carousel, #main .care-v2 .ss-do + .hub-embed, #main .care-v2 .ss-do + .hub-figure, #main .care-v2 .ss-do + .hub-card { margin-top: 4px }
+
+/* Care down there, inline on the Diapers page */
+#main .care-down .care-down-row { display: block; margin-top: 8px }
+#main .care-down .care-down-row:first-of-type { margin-top: 0 }
+#main .care-down .care-down-row strong { display: block; font-weight: 600; font-size: 15px; color: var(--ink) }
+#main .care-down .care-seg { margin: 4px 0 10px }
+
+/* Icons on What you'll need and Something look off? */
+#main .care-v2 .care-need > div.care-need-row { display: flex; align-items: flex-start; gap: 12px }
+#main .care-v2 .care-need-copy { display: grid; gap: 2px; flex: 1 }
+/* Own class, not .hub-dot, so the shared icon de-duplicator leaves these chosen icons alone. */
+#main .care-v2 .care-ico { width: 40px; height: 40px; border-radius: 13px; background: var(--year-pale); padding: 4px; flex: none; display: block }
+#main .care-v2 .care-ico svg { width: 100%; height: 100% }
+#main .care-v2 .care-fold > summary span.care-ico { flex: 0 0 40px; display: block }
+
+#main .ss-do .care-down-row { display: block; margin-top: 8px }
+#main .ss-do .care-down-row:first-child { margin-top: 0 }
+#main .ss-do .care-down-row strong { display: block; font-weight: 700 }
+#main .ss-know .care-down-row { display: block; margin-top: 8px }
+#main .ss-know .care-down-row:first-of-type { margin-top: 0 }
+#main .ss-know .care-down-row strong { display: block; font-weight: 600 }
+#main .care-toggles { display: grid; gap: 8px; margin: 0 0 12px }
+#main .care-toggles:empty { display: none }
+#main .care-toggles .care-seg { margin: 0 }
+/* "New" marks a care job that changed at this stage */
+#main .care-v2 .care-new { display: inline-block; margin-left: 8px; padding: 2px 8px; border-radius: 99px; background: var(--hl-bg); color: var(--hl-ink); font-size: 11px; font-weight: 700; font-style: normal; letter-spacing: .02em; vertical-align: 2px }
+#main .care-v2 .care-tile-copy { display: grid; gap: 1px }
+#main .care-v2 .care-tile-copy small { font-size: 12px; line-height: 16px; color: var(--ink-2, #5e5a75) }
+#main .care-v2 .care-tile.is-later { background: transparent; border-style: dashed }
+#main .care-v2 .care-tile.is-later .care-tile-ic { opacity: .6 }
+#main .care-v2 .care-tile { align-items: flex-start }
+/* How it changes: a simple timeline (not more icon circles), each step opens that age's page */
+#main .care-v2 .care-when { padding: 16px 14px 14px; margin: 0 0 12px }
+#main .care-v2 .care-when .hub-fig-title { display: block; margin: 0 4px 14px }
+#main .care-v2 .care-when-line { list-style: none; margin: 0; padding: 0; display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; position: relative }
+#main .care-v2 .care-when-line::before { content: ''; position: absolute; left: 12%; right: 12%; top: 25px; height: 2px; background: var(--line) }
+#main .care-v2 .care-when-line li { position: relative; text-align: center }
+#main .care-v2 .care-when-line button { all: unset; cursor: pointer; display: grid; justify-items: center; gap: 2px; width: 100%; padding: 0 2px; box-sizing: border-box }
+#main .care-v2 .care-when-line i { width: 12px; height: 12px; border-radius: 50%; background: #fff; border: 2px solid var(--ss-ink, #7a7590); margin: 18px 0 8px; position: relative; z-index: 1 }
+#main .care-v2 .care-when-line em { position: absolute; top: -2px; left: 50%; transform: translateX(-50%); font-style: normal; font-size: 10.5px; font-weight: 700; color: #fff; background: var(--ss-ink, #2b2840); border-radius: 99px; padding: 1px 7px }
+#main .care-v2 .care-when-line .is-now i { width: 16px; height: 16px; margin: 16px 0 6px; background: var(--ss-ink, #2b2840) }
+#main .care-v2 .care-when-line .is-here i { background: var(--ss-bg, #eee) }
+#main .care-v2 .care-when-line b { font-size: 13px; line-height: 17px; font-weight: 600; color: var(--ink, #2b2840) }
+#main .care-v2 .care-when-line small { font-size: 11.5px; line-height: 15px; color: var(--ink-2, #5e5a75) }
