@@ -116,3 +116,16 @@
 #main .care-v2 .care-tile.is-later { background: transparent; border-style: dashed }
 #main .care-v2 .care-tile.is-later .care-tile-ic { opacity: .6 }
 #main .care-v2 .care-tile { align-items: flex-start }
+/* How it changes: a simple timeline (not more icon circles), each step opens that age's page */
+#main .care-v2 .care-when { padding: 16px 14px 14px; margin: 0 0 12px }
+#main .care-v2 .care-when .hub-fig-title { display: block; margin: 0 4px 14px }
+#main .care-v2 .care-when-line { list-style: none; margin: 0; padding: 0; display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; position: relative }
+#main .care-v2 .care-when-line::before { content: ''; position: absolute; left: 12%; right: 12%; top: 25px; height: 2px; background: var(--line) }
+#main .care-v2 .care-when-line li { position: relative; text-align: center }
+#main .care-v2 .care-when-line button { all: unset; cursor: pointer; display: grid; justify-items: center; gap: 2px; width: 100%; padding: 0 2px; box-sizing: border-box }
+#main .care-v2 .care-when-line i { width: 12px; height: 12px; border-radius: 50%; background: #fff; border: 2px solid var(--ss-ink, #7a7590); margin: 18px 0 8px; position: relative; z-index: 1 }
+#main .care-v2 .care-when-line em { position: absolute; top: -2px; left: 50%; transform: translateX(-50%); font-style: normal; font-size: 10.5px; font-weight: 700; color: #fff; background: var(--ss-ink, #2b2840); border-radius: 99px; padding: 1px 7px }
+#main .care-v2 .care-when-line .is-now i { width: 16px; height: 16px; margin: 16px 0 6px; background: var(--ss-ink, #2b2840) }
+#main .care-v2 .care-when-line .is-here i { background: var(--ss-bg, #eee) }
+#main .care-v2 .care-when-line b { font-size: 13px; line-height: 17px; font-weight: 600; color: var(--ink, #2b2840) }
+#main .care-v2 .care-when-line small { font-size: 11.5px; line-height: 15px; color: var(--ink-2, #5e5a75) }
