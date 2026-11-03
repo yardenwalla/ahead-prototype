@@ -214,18 +214,18 @@
     const m = ageNow();
 
     if (id === 'errands') {
-      // Around town, done the Road trips way: one ordinary outing, step by step, with the "how" in each step.
-      const bf = nursing(), ff = formula();
+      // Any local outing, step by step. One short sentence per step, so it reads calmly at a glance.
+      const bf = nursing();
       const run = timeline('Any outing, step by step', [
-        ['Before you go', 'clock', m < 2 ? 'Feed {o} first, and pick a quiet time, like a weekday morning. Keep it short: one or two stops.' : 'Feed {o} first, or go right after a nap, when {s’s} at {p} happiest.'],
-        ['When you get there', 'car', m >= 6 ? 'Leave the car seat in the car. Use a carrier or stroller, or the cart’s seat with the strap on at a store.' : 'Leave the car seat in the car, and wear {o} in a carrier or use the stroller. At a store, never set the car seat on the cart.'],
-        ['If {s’s} hungry', 'bottle', bf && ff ? 'Nurse wherever you’re comfortable, or give a bottle. A quiet corner, a nursing room or your parked car all work.' : bf ? 'Nurse wherever you’re comfortable. A quiet corner, a nursing room or your parked car all work.' : 'Mix a bottle with the powder and water you packed. Room temperature is fine.'],
-        ['For a change', 'diaper', 'Look for a family restroom. On a table, strap {o} in and keep a hand on {o}. No table? Your pad on a clean floor or the car’s back seat.'],
-        ['If {s} {fuss|fusses}', 'heart', 'Try a feed, then a diaper check, then holding {o} close and walking. Still upset? It’s fine to head home early.'],
-        ['Heading home', 'moon', 'Asleep in the car seat? Fine while you drive. At home, move {o} to {p} crib to finish the nap.']],
-        'Any outing, step by step: feed first, leave the car seat in the car, feed or change wherever there’s space, try a feed, a change and walking if she fusses, and move her to her crib at home.');
-      return sub('errands', 'Around town', m < 2 ? 'Your first outings' : 'Around town', m < 2 ? 'For the first couple of months, pick quiet places and skip anyone who’s sick.' : 'Most everyday places are fine now: the store, a café, the park, a friend’s house.',
-        run + good([m < 2 ? ['hand', 'Holding {o}', 'It’s fine to ask people to wash their hands first, or to say no.'] : null, m >= 6 ? ['bowl', 'Snacks', 'Soft foods that squash between your fingers, offered while {s} {sit|sits} up and you watch.'] : null, ['steth', 'At the doctor’s office', 'Ask if you can wait in the car until they call you, away from sick children.']]));
+        ['Before you go', 'clock', m < 2 ? 'Feed {o} first, and pick somewhere quiet.' : 'Feed {o} first, or go right after a nap.'],
+        ['When you arrive', 'car', m >= 6 ? 'The car seat stays in the car. Use a carrier, stroller or cart seat.' : 'The car seat stays in the car. Use a carrier or stroller.'],
+        ['Feeding', 'bottle', bf ? 'Nurse wherever you’re comfortable, or in your parked car.' : 'Mix a bottle when {s’s} hungry. No warming needed.'],
+        ['Changing', 'diaper', 'Strap on, one hand on {o}. No table? Your pad on the floor.'],
+        ['Fussing', 'heart', 'A feed, a change, then a walk. Or head home early.'],
+        ['Home', 'moon', 'Asleep in the car seat? Move {o} to {p} crib.']],
+        'Any outing, step by step: feed first, leave the car seat in the car, feed and change wherever you are, try a feed, a change and a walk if she fusses, and move her to her crib at home.');
+      return sub('errands', 'Around town', m < 2 ? 'Your first outings' : 'Around town', m < 2 ? 'For the first couple of months, pick quiet places and skip anyone who’s sick.' : 'The store, a café, the park, a friend’s house: most places are fine now.',
+        run + good([m < 2 ? ['hand', 'Holding {o}', 'It’s fine to ask people to wash their hands first, or to say no.'] : null, m >= 6 ? ['bowl', 'Snacks', 'Soft foods that squash between your fingers, while {s} {sit|sits} up and you watch.'] : null]));
     }
 
     if (id === 'water') return sub('water', 'Pool or beach', 'Pool or beach', m < 6 ? 'Under 6 months, shade matters most. In the water, hold {o} the whole time.' : 'Shade and sunscreen first. In the water, hold {o} the whole time.',
