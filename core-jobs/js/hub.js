@@ -658,9 +658,7 @@
     }[key];
     const extra = '';
     const rough = `<button class="hub-rough-card" onclick="${go('chg:Sleep:d:rough')}"><svg class="hub-rough-stars" viewBox="0 0 120 60" aria-hidden="true"><circle cx="18" cy="14" r="1.6"/><circle cx="52" cy="8" r="1.1"/><circle cx="88" cy="18" r="1.4"/><circle cx="108" cy="6" r="1"/><circle cx="70" cy="44" r="1.1"/><circle cx="30" cy="48" r="1"/></svg><span class="hub-rough-moon" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></span><span class="hub-rough-copy"><b>${F('Rough night?')}</b><small>${F(age < 3 ? 'Crying a lot, up a lot, days and nights mixed up' : 'Waking a lot, short naps, up too early')}</small></span>${chev}</button>`;
-    // Sleep training is optional, so it's a quiet line under the four rows, not a card of its own.
-    const train = key === 'rhythm' || key === 'two' ? `<div class="hub-browse"><button class="hub-link" onclick="openPage('chg:Sleep:settle')">${F('Thinking about sleep training? Compare the methods')} ›</button></div>` : '';
-    return `<h2 class="hub-h2">${F(now && C().live() ? 'How to help Maya sleep now' : 'How to help at this stage')}</h2><div class="hub-list" id="sleep-night-feeds">${R.map(([l, o]) => cr(l, o)).join('')}</div>` + train + rough + extra;
+    return `<h2 class="hub-h2">${F(now && C().live() ? 'How to help Maya sleep now' : 'How to help at this stage')}</h2><div class="hub-list" id="sleep-night-feeds">${R.map(([l, o]) => cr(l, o)).join('')}</div>` + rough + extra;
   }
   function settleRow() {
     const t = m() >= 4 ? ['Sleep training, if you choose it', 'Optional. Compare the methods'] : ['Sleep training, for later', 'A choice, not a must. Some families start at 4–6 months'];
@@ -694,14 +692,14 @@
       h += versus('Normal, or time to call?', ['Normal', 'A long stretch one night and not the next, fussier evenings, and fussing in light sleep. Pause a minute before going in. Picking {o} up too soon can wake {o} fully.'], ['Call your pediatrician', (m() < 3 ? 'A temperature of 100.4°F or higher: call right away. Also snoring most nights, or gasping in sleep.' : 'A fever with poor sleep or feeding, snoring most nights, or gasping in sleep.') + ' Long pauses in breathing or blue lips: call 911.']);
     }
     if (key === 'rhythm') {
-      h += hero({ eyebrow: 'Three naps', title: 'Naps start happening at set times', lead: 'Sleep settles into a pattern you can plan your days around, and nights keep getting longer.' }) + napAsk(now, age) + B;
+      h += hero({ eyebrow: 'Three naps', title: 'Naps start happening at set times', lead: 'Sleep settles into a pattern you can plan your days around. It’s also when many families start thinking about sleep training.', extra: trainRow }) + napAsk(now, age) + B;
       h += nightCard(key, now);
       h += sleepFour(key, now, view);
       h += versus('Normal, or time to call?', ['Normal', 'Naps of 30–45 minutes, and a short cry when {s} half-wakes that settles in a few minutes.'], ['Call your pediatrician', 'Snoring most nights, gasping in sleep, fever or ear pulling, or a big change that lasts more than two weeks. Long pauses in breathing or blue lips: call 911.']);
     }
     if (key === 'two') {
       const settled = answers.twoNaps === 'Yes' || age >= 10 || (now && answers.twoNaps !== 'Not yet');
-      h += hero({ eyebrow: 'Two naps', title: settled ? 'Two naps a day' : 'Two naps are on the way', lead: settled ? 'Days settle into a morning and an afternoon nap, and nights get longer. New skills like standing can stir up nights for a while.' : 'The late catnap is on its way out, and days move toward two naps. Nights keep getting longer.' }) + napAsk(now, age) + B;
+      h += hero({ eyebrow: 'Two naps', title: settled ? 'Two naps a day' : 'Two naps are on the way', lead: settled ? 'Days settle into a morning and an afternoon nap, and nights get longer. New skills like standing can stir up nights for a while.' : 'The late catnap is on its way out, and days move toward two naps. Nights keep getting longer.' , extra: trainRow }) + napAsk(now, age) + B;
       h += nightCard(key, now);
       h += sleepFour(key, now, view);
       h += versus('Normal, or time to call?', ['Normal', 'Standing up in the crib, protest at bedtime, and a short cry in the night that settles in a few minutes.'], ['Call your pediatrician', 'Snoring most nights, gasping in sleep, fever or ear pulling, or a big change that lasts more than two weeks. Long pauses in breathing or blue lips: call 911.']);
