@@ -121,9 +121,9 @@
       lead: 'Someone who watches your baby now and then. A few hours to yourself is good for your baby too.',
       good: 'You need a few hours of help, not regular care.', mind: 'Good sitters get busy on weekends, so ask a little ahead.',
       when: ['A week or two ahead', 'Try a short first visit while you’re at home, so everyone gets comfortable.'],
-      steps: [['Before they come', 'check', 'A quick message or call', [['Have you looked after babies this young?', 'Yes, more than once.'], ['Are you trained in infant CPR?', 'Yes, ideally in the last 2 years.'], ['Can I call a family you’ve sat for?', 'Yes, gladly.']]],
+      steps: [['Before the sitter comes', 'check', 'A quick message or call', [['Have you looked after babies this young?', 'Yes, more than once.'], ['Are you trained in infant CPR?', 'Yes, ideally in the last 2 years.'], ['Can I call a family you’ve sat for?', 'Yes, gladly.']]],
         ['A first visit, while you’re home', 'look', 'An hour is enough', [['How they hold and talk to Maya', 'Calm, gentle and engaged.'], ['Show them sleep and the car seat', 'On the back in a bare crib, and buckled snugly.']]],
-        ['On the visit: ask', 'ask', 'Before their first time alone', [['What would you do in an emergency?', 'Call 911 first, then you.'], ['What would you do if Maya wouldn’t settle?', 'Hold, rock and soothe, and text you if it lasts.']]]] },
+        ['On the visit: ask', 'ask', 'Before the sitter’s first time alone', [['What would you do in an emergency?', 'Call 911 first, then you.'], ['What would you do if Maya wouldn’t settle?', 'Hold, rock and soothe, and text you if it lasts.']]]] },
   };
 
   // Where to actually look, by type. Kinds of places only, never a named site or company.
@@ -191,10 +191,10 @@
       + picSteps('When things don’t go to plan', [
         m < 9 ? ['bottle', 'Won’t take a bottle', 'Common at first. Let the caregiver try while you’re out of the room.'] : null,
         ['heart', 'Tears at drop-off', 'Keep goodbyes short and the same each day. Ask for a text once {s’s} settled.'],
-        ['clock', 'Running low', 'Ask the caregiver to text you when milk, diapers or clothes run low.'],
+        ['clock', 'Running low', (bm && fm ? 'Ask the caregiver to text you when milk, formula, diapers or clothes run low.' : bm ? 'Ask the caregiver to text you when milk, diapers or clothes run low.' : 'Ask the caregiver to text you when formula, diapers or clothes run low.')],
         ['chat', 'Something feels off', 'Talk to the caregiver early. If it still doesn’t feel right, it’s OK to change.']],
         'If the baby won’t take a bottle, let the caregiver try while you’re away. Keep goodbyes short. Ask to hear when every bottle is finished. If something feels off, talk early.')
-      + good([['bottle', 'Ask how they feed', 'How many feeds to expect, and how they warm bottles.'], ['heart', 'Your feelings count', 'The first weeks can be hard on you too. It usually gets easier.']])
+      + good([['bottle', 'Ask about feeds', 'How many feeds to expect, and how the caregiver warms bottles.'], ['heart', 'Your feelings count', 'The first weeks can be hard on you too. It usually gets easier.']])
       + `<button class="hub-button is-secondary cc-add" onclick="ccStarted()">${F('Care has started')} ›</button>`, 'bag');
 
     if (id === 'backup') return sub('backup', 'Anytime', 'When care falls through', 'Every family has days when care doesn’t happen. A plan made now makes them easier.',
@@ -307,7 +307,9 @@
     if (f.family === 'Yes, some days') sc.family += 3; else if (f.family === 'Not really') sc.family -= 5;
     if (f.group === 'Other babies around') { sc.center += 2; sc.home += 1; }
     if (f.group === 'One-on-one') { sc.nanny += 2; sc.share += 1; sc.family += 1; }
-    return Object.entries(sc).sort((a, b) => b[1] - a[1]).slice(0, f.family === 'Yes, some days' ? 3 : 2).map(([k]) => k);
+    // Only types that actually fit: a poor match (a center for weekend hours) never shows just to fill a slot.
+    const ranked = Object.entries(sc).sort((a, b) => b[1] - a[1]), fits = ranked.filter(([, v]) => v > 0);
+    return (fits.length ? fits : ranked.slice(0, 1)).slice(0, f.family === 'Yes, some days' ? 3 : 2).map(([k]) => k);
   }
   const WHY = { center: 'Set hours, other babies, and built-in backup.', home: 'A smaller group, often the most affordable.', nanny: 'One-on-one, on your schedule.', share: 'Close to one-on-one, with the cost split.', family: 'Someone you trust, with flexible days.' };
 
@@ -354,7 +356,7 @@
   /* ---------- the steps, one at a time ---------- */
   // Tabs name each step in one word; each kind of step has its own shape: quick checks as icon rows,
   // things to look for as picture tiles, questions as cards with the answer to listen for tucked inside.
-  const TAB = { 'Before you visit': 'Call', 'On the tour: look for': 'Look', 'On the tour: ask': 'Ask', 'Before you sign': 'Sign', 'Before you meet': 'Call', 'At the interview: watch for': 'Watch', 'At the interview: ask': 'Ask', 'Before you hire': 'Check', 'Before they come': 'Message', 'A first visit, while you’re home': 'Visit', 'Ask': 'Ask', 'On the visit: ask': 'Ask', 'Your questions': 'Yours' };
+  const TAB = { 'Before you visit': 'Call', 'On the tour: look for': 'Look', 'On the tour: ask': 'Ask', 'Before you sign': 'Sign', 'Before you meet': 'Call', 'At the interview: watch for': 'Watch', 'At the interview: ask': 'Ask', 'Before you hire': 'Check', 'Before the sitter comes': 'Message', 'A first visit, while you’re home': 'Visit', 'Ask': 'Ask', 'On the visit: ask': 'Ask', 'Your questions': 'Yours' };
   const ICONS = [[/spot|waitlist/i, 'notepad'], [/hours|days/i, 'clock'], [/cost|pay/i, 'coin'], [/licens|inspection/i, 'shield'], [/sleep|crib/i, 'crib'], [/grown-up|babies per adult|2 babies/i, 'smile'], [/warm|caregiver|hold|how they are/i, 'heart'], [/clean|calm room/i, 'home'], [/baby-safe home|safe home/i, 'shield'], [/phone|attention/i, 'eye'], [/cpr/i, 'steth'], [/background/i, 'shield'], [/sick/i, 'thermo'], [/hear about|day\?/i, 'chat'], [/pets|pool|guns/i, 'home'], [/references|families|family you/i, 'chat'], [/trial/i, 'clock'], [/car seat/i, 'car'], [/babies this young|under 1/i, 'smile'], [/frustrat/i, 'heart'], [/feeds|naps, bedtime/i, 'bottle'], [/touch/i, 'chat']];
   const iconFor = q => (ICONS.find(([r]) => r.test(q)) || [0, 'star'])[1];
   const stepView = {};
