@@ -212,20 +212,20 @@
   const calls = (a, b) => H().versus('When to call', a, b);
 
   /* Every place page follows one layout, modeled on Road trips, so the tab reads as one piece:
-       header → "How it might go" (an example plan, in order) → "Pack for this" (only the extras on top of the everyday bag)
-       → "If it happens" (two to four what-ifs) → "Good to know" (at most 3). Going abroad adds "When to call".
+       header → "Plan your …" (an example plan, in order) → "Pack for this" (only the extras on top of the everyday bag)
+       → "Quick fixes" (two to four what-ifs) → "Good to know" (at most 3). Going abroad adds "When to call".
      Gear pages: header → the one picture or steps → "Good to know". Written for every family: with or without a car,
      however the baby is fed. A fact lives on one page only. */
   const pack = items => { const it = items.filter(Boolean); return it.length ? `<section class="oa-extra"><b>${F('Pack for this')}</b><small>${F('On top of your everyday diaper bag')}</small><ul>${it.map(([icon, t, s]) => `<li><span class="oa-extra-art">${hubArt(icon, CAT)}</span><span><b>${F(t)}</b>${s ? `<small>${F(s)}</small>` : ''}</span></li>`).join('')}</ul></section>` : ''; };
-  const ifs = (items, caption, heading = 'If it happens') => `<h2 class="hub-h2">${F(heading)}</h2>` + steps(items, caption);
-  const plan = (items, caption) => timeline('How it might go', items, caption);
+  const ifs = (items, caption, heading = 'Quick fixes') => `<h2 class="hub-h2">${F(heading)}</h2>` + steps(items, caption);
+  const plan = (title, items, caption) => timeline(title, items, caption);
 
   function detail(id) {
     const m = ageNow(), bf = nursing(), fm = formula();
     const feedLine = bf && fm ? 'Nurse or give a bottle, wherever you’re comfortable.' : bf ? 'Nurse wherever you’re comfortable, or give a bottle of pumped milk.' : 'Give a bottle where you are. Formula doesn’t need warming.';
 
     if (id === 'errands') return sub('errands', 'Around town', m < 2 ? 'Your first trips out' : 'Short trips, home whenever you like', 'A walk, the store, a café or a friend’s. One or two stops is plenty.',
-      plan([
+      plan('Plan your outing', [
         ['Before you leave', 'clock', 'Feed {o}. Right after a feed is the longest calm stretch.'],
         ['Getting there', 'stroller', 'On foot, a carrier or the stroller. In any car, even a taxi or a friend’s, {s} {ride|rides} in {p} own car seat.'],
         ['While you’re out', 'carrier', 'A carrier keeps your hands free, even if you bring the stroller too.'],
@@ -244,7 +244,7 @@
         m >= 6 ? ['cup', 'At a café', 'Keep hot drinks and plates past {p} reach. {S} will grab.'] : ['hand', 'Holding {o}', 'It’s fine to ask people to wash their hands first, or to say no.']]));
 
     if (id === 'road') return sub('road', 'Road trips', 'Road trips', 'Plan a stop every couple of hours.',
-      hubDayMarkers({ title: 'How it might go', events: [[9 * 60, 'car', 'Leave as a nap starts'], [11 * 60, 'bottle', 'Stop to feed and change'], [13 * 60, 'mat', 'Stop to feed and stretch'], [15 * 60, 'home', 'Arrive']], from: 8 * 60, to: 16 * 60, cat: CAT, caption: 'Leave at 9 as a nap starts, stop at 11 to feed and change, stop at 1 to feed and stretch, arrive at 3.' })
+      hubDayMarkers({ title: 'Plan your drive', events: [[9 * 60, 'car', 'Leave as a nap starts'], [11 * 60, 'bottle', 'Stop to feed and change'], [13 * 60, 'mat', 'Stop to feed and stretch'], [15 * 60, 'home', 'Arrive']], from: 8 * 60, to: 16 * 60, cat: CAT, caption: 'Leave at 9 as a nap starts, stop at 11 to feed and change, stop at 1 to feed and stretch, arrive at 3.' })
       + pack([['toy', 'Soft toys only', 'Hard ones can fly in a sudden stop'], ['bottle', 'One extra feed', 'In case of traffic'], bf ? ['fridge', 'A cooler bag with ice packs', 'If you’re bringing pumped milk'] : null])
       + ifs([
         ['car', 'Crying while you drive', 'Pull over somewhere safe, then take {o} out to soothe or feed.'],
@@ -255,7 +255,7 @@
 
     if (id === 'fly') return sub('fly', 'Flying', 'Flying with Maya', m < 1 ? 'Ask your pediatrician before flying in the first weeks.' : 'Most of the planning happens when you book.',
       H().versus('Where will Maya sit?', ['Own seat', 'Safest, buckled into a car seat labeled for aircraft.'], ['On your lap', 'Often free under 2, but less safe if there’s turbulence.'])
-      + plan([
+      + plan('Plan your flight', [
         ['When you book', 'notepad', 'Add {o} to your booking, and ask about a bassinet seat.'],
         ['The car seat', 'car', 'For a seat on the plane, look for the red text on its label that says it’s certified for aircraft.'],
         ['At security', 'bag', 'Milk, formula and your pump can all go through. Tell the officer you have them.'],
@@ -270,7 +270,7 @@
       + good([['carrier', 'A carrier in the airport', 'Handy for getting through. Take {o} out of it before takeoff and landing.'], ['clock', 'Time zones', 'On a short trip, keep naps near home time. On a longer one, shift them a little each day.']]));
 
     if (id === 'abroad') return sub('abroad', 'Going abroad', 'Going abroad with Maya', 'Everything on Flying applies. These are the extra steps, and the passport comes first.',
-      plan([
+      plan('Plan your trip', [
         ['As soon as you book', 'notepad', 'Apply for {p} passport in person. It can take several weeks.'],
         ['4–6 weeks before', 'steth', m >= 6 ? 'Ask your pediatrician about shots and malaria medicine, including an early measles shot.' : 'Ask your pediatrician about shots and malaria medicine, for {o} and for you.'],
         ['Before you leave', 'home', 'Save how you’d find a doctor there. Your hotel or travel insurance can help.']],
@@ -281,7 +281,7 @@
       + calls(['Call a doctor', m < 3 ? 'Fewer wet diapers, a dry mouth, or diarrhea that keeps going.' : 'A fever, fewer wet diapers, a dry mouth, or diarrhea that keeps going.'], ['Get care right away', m < 3 ? 'A temperature of 100.4°F or higher, trouble breathing, or hard to wake.' : 'Any fever in a malaria area, trouble breathing, or hard to wake.']));
 
     if (id === 'away') return sub('away', 'Staying away', 'Staying with family or in a hotel', 'Most homes and hotel rooms aren’t set up for babies. Ten minutes when you arrive covers most of it.',
-      plan([
+      plan('Plan your stay', [
         ['Before you go', 'notepad', 'Ask for a crib, or bring a play yard. At a hotel, ask for a room away from the pool.'],
         ['When you arrive', 'crib', 'Check the crib for loose or missing parts. Set it away from windows and cords, and empty it.'],
         ['At {p} level', m >= 6 ? 'lock' : 'bag', m >= 6 ? 'Move medicines, cleaners, cords and small things up high, and block any stairs.' : 'Put bags with medicines up high, yours and everyone else’s.'],
@@ -296,7 +296,7 @@
       + good([['shield', 'Which crib is safe?', 'A play yard, or a crib made after June 2011. Never an adult bed or a couch.'], ['heart', 'Pets', 'Never leave {o} alone with a pet, even a gentle one.'], m >= 6 ? ['bowl', 'Grandparents and treats', 'Share the food rules once, kindly: no honey, juice or cow’s milk to drink before 1.'] : null]));
 
     if (id === 'water') return sub('water', 'Pool or beach', 'Pool or beach', 'In the water, hold {o} the whole time.',
-      plan([
+      plan('Plan your day by the water', [
         ['Early', 'clock', 'Go in the morning, before the strongest sun.'],
         ['Set up', 'sun', m < 6 ? 'Shade first: an umbrella or canopy, and a hat.' : 'Shade, a hat, and sunscreen, SPF 30 or more.'],
         ['In the water', 'hand', 'Hold {o} the whole time, even with a float. Keep dips short.'],
