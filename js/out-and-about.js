@@ -213,11 +213,11 @@
 
   /* Every place page follows one layout, modeled on Road trips, so the tab reads as one piece:
        header → "Plan your …" (an example plan, in order) → "Pack for this" (only the extras on top of the everyday bag)
-       → "Quick fixes" (two to four what-ifs) → "Good to know" (at most 3). Going abroad adds "When to call".
+       → "When things don’t go to plan" (two to four what-ifs) → "Good to know" (at most 3). Going abroad adds "When to call".
      Gear pages: header → the one picture or steps → "Good to know". Written for every family: with or without a car,
      however the baby is fed. A fact lives on one page only. */
   const pack = items => { const it = items.filter(Boolean); return it.length ? `<section class="oa-extra"><b>${F('Pack for this')}</b><small>${F('On top of your everyday diaper bag')}</small><ul>${it.map(([icon, t, s]) => `<li><span class="oa-extra-art">${hubArt(icon, CAT)}</span><span><b>${F(t)}</b>${s ? `<small>${F(s)}</small>` : ''}</span></li>`).join('')}</ul></section>` : ''; };
-  const ifs = (items, caption, heading = 'Quick fixes') => `<h2 class="hub-h2">${F(heading)}</h2>` + steps(items, caption);
+  const ifs = (items, caption, heading = 'When things don’t go to plan') => `<h2 class="hub-h2">${F(heading)}</h2>` + steps(items, caption);
   const plan = (title, items, caption) => timeline(title, items, caption);
 
   function detail(id) {
