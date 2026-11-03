@@ -144,38 +144,37 @@
   const go = id => `openPage('chg:${CAT}:d:${id}')`;
   const feedNow = () => (typeof profile !== 'undefined' && profile.feed) || 'Breast milk';
 
+  // Setting up a backup is a to-do list, so it's a checklist you can tick, kept on this phone.
+  const BACKUP = [['Name two backup people', 'People you could call at short notice. A sitter counts.', 'heart'], ['Ask work about backup care', 'Some jobs offer backup care days.', 'notepad'], ['Save a sitter’s number', 'For days the caregiver can’t come.', 'moon']];
+  window.ccBackupTick = i => { const on = load('ahead-childcare-backup', []); save('ahead-childcare-backup', on.includes(i) ? on.filter(x => x !== i) : on.concat(i)); rerender(); };
+  const backupList = () => { const on = load('ahead-childcare-backup', []); return `<h2 class="hub-h2">${F('Set up your backup')}</h2>` + H().ticks(BACKUP, i => on.includes(i), i => `ccBackupTick(${i})`, CAT); };
+
   function journey(id) {
     const h = H(), m = typeof actualMonth === 'function' ? actualMonth() : 0, fd = feedNow(), bm = fd !== 'Formula', fm = fd !== 'Breast milk';
     if (id === 'plan') return sub('plan', 'Find care', 'Plan your care', 'Work back from the day you need care. Most families start sooner than they expect.',
-      h.tip('Starting in a few weeks?', 'You can still find good care. Your local referral agency knows who has openings now.')
-      + tl('Plan your search', [
-        ['First', 'clock', 'The days and hours you need, early and late ones too.'],
-        ['Next', 'coin', 'A monthly budget, and what your work offers.'],
+      packCard('Before you look', 'Two things to settle first', [['clock', 'Your days and hours', 'Early and late ones too'], ['coin', 'A monthly budget', 'And what your work offers']])
+      + tl('Your countdown', [
         ['6 months before', 'notepad', 'Join a few daycare waitlists.'],
         ['3 months before', 'home', 'Visit home daycares, or meet nannies.'],
         ['6–8 weeks before', 'shield', 'Decide, call references, sign up.'],
         ['2 weeks before', 'heart', 'Get ready for day one.']],
-        'Work out the days and hours you need, then a budget. Six months before, join daycare waitlists. Three months before, visit home daycares or meet nannies. Six to eight weeks before, decide and sign up. Two weeks before, start easing in.')
+        'Six months before, join daycare waitlists. Three months before, visit home daycares or meet nannies. Six to eight weeks before, decide and sign up. Two weeks before, get ready for day one.')
       + picSteps('When things don’t go to plan', [
+        ['clock', 'Starting in a few weeks?', 'You can still find good care. Your local referral agency knows who has openings now.'],
         ['moon', 'Hours outside 9 to 5', 'Ask home daycares and nannies about early, late or weekend hours.'],
         ['heart', 'Nothing feels right yet', 'Keep looking. Family or a sitter can bridge the gap.']],
-        'Odd hours: ask home daycares and nannies. Nothing right yet: keep looking, with family or a sitter in between.')
+        'Starting soon: ask your referral agency who has openings. Odd hours: ask home daycares and nannies. Nothing right yet: keep looking, with family or a sitter in between.')
       + good([['steth', 'Born early?', 'Ask your pediatrician when, and what kind of care, makes sense for {o}.'], ['notepad', 'Waitlists move', 'Check in every month or so. Spots open up.'], ['blocks', 'A mix is common', 'Family two days and daycare three is a plan too.']]), 'notepad');
 
     if (id === 'pay') return sub('pay', 'Anytime', 'Paying for care', 'Care is one of a family’s biggest monthly costs. There are more ways to pay less than most parents know.',
-      tl('Plan your costs', [
-        ['Before you choose', 'coin', 'Ask for the full cost, fees included.'],
-        ['After the birth', 'notepad', 'Ask HR about a pre-tax care account.'],
-        ['At tax time', 'shield', 'Claim the child care tax credit.']],
-        'Before you choose, ask for the full cost. After the birth, ask HR about a pre-tax care account. At tax time, claim the child care tax credit.')
-      + picSteps('Ways to pay less', [
+      picSteps('Ways to pay less', [
         ['coin', 'Help from your state', 'For families who qualify. A referral agency can help you apply.'],
-        ['notepad', 'A pre-tax care account', 'Through many jobs. Ask HR.'],
-        ['shield', 'A tax credit', 'Lowers your taxes by part of what you pay.'],
+        ['notepad', 'A pre-tax care account', 'Through many jobs. Ask HR soon after the birth.'],
+        ['shield', 'A tax credit', 'Lowers your taxes by part of what you pay. Claim it at tax time.'],
         ['home', 'Early Head Start', 'Free for families who qualify.']],
         'Help from your state, a pre-tax care account through work, a federal tax credit, and Early Head Start.')
       + rows('', [['hand', 'If you hire a nanny', 'You’re usually their employer, with taxes to pay. A nanny payroll service can handle them.']])
-      + good([['eye', 'Prices vary a lot', 'By state, type of care and hours. A nanny usually costs the most, and a share brings it down.'], ['lock', 'Deposits', 'Many daycares ask for a deposit or a fee to hold a spot.'], ['heart', 'Paying family', 'Paying a relative may still count toward the tax credit. Ask a tax professional.']]), 'coin');
+      + good([['eye', 'Prices vary a lot', 'By state, type of care and hours. Ask each place for the full cost, fees included.'], ['lock', 'Deposits', 'Many daycares ask for a deposit or a fee to hold a spot.'], ['heart', 'Paying family', 'Paying a relative may still count toward the tax credit. Ask a tax professional.']]), 'coin');
 
     if (id === 'ready') return sub('ready', 'Get ready', 'Getting ready for day one', 'A few short days first makes the real start easier for you both.',
       tl('Plan the first week', [
@@ -199,11 +198,7 @@
       + `<button class="hub-button is-secondary cc-add" onclick="ccStarted()">${F('Care has started')} ›</button>`, 'bag');
 
     if (id === 'backup') return sub('backup', 'Anytime', 'When care falls through', 'Every family has days when care doesn’t happen. A plan made now makes them easier.',
-      tl('Plan your backup', [
-        ['Now', 'heart', 'Name two people you could call. A sitter counts.'],
-        ['Ask your work', 'notepad', 'Ask about backup care days.'],
-        ['Save a sitter', 'moon', 'For days the caregiver can’t come.']],
-        'Now, name two people you could call. Ask your work about backup care. Save the number of a sitter you have used.')
+      backupList()
       + picSteps('When things don’t go to plan', [
         ['thermo', '{S’s} sick', 'Take turns with a partner if you can, or call your backup. Your pediatrician can say when {s} can go back.'],
         ['home', 'The caregiver is sick', 'Call your backup, or a sitter you’ve used before.'],
@@ -213,11 +208,10 @@
       + good([['blocks', 'Changing care', 'Overlap the old and new care for a few days if you can.'], ['notepad', 'Sick days at work', 'Many jobs, and some states, let you use sick days to care for your child. Ask HR.']]), 'shield');
 
     if (id === 'share') return sub('nanny', 'Nanny or nanny share', 'Sharing a nanny', 'Two families split one nanny, for close to one-on-one care at a lower cost.',
-      tl('Plan your share', [
-        ['First', 'heart', 'Find a family through local parent groups.'],
-        ['Then', 'home', 'Agree whose home, the hours and the split.'],
-        ['Before you hire', 'notepad', 'Meet the nanny together, and write it down.']],
-        'Find a family through parent groups. Agree whose home, the hours and the split. Meet the nanny together and write it down.')
+      `<h2 class="hub-h2">${F('How to set it up')}</h2>` + hubIconSteps([
+        ['heart', 'Find a family', 'Through local parent groups'],
+        ['home', 'Agree the basics', 'Whose home, the hours and the split'],
+        ['notepad', 'Hire together', 'Meet the nanny, and write it down']], CAT, F('Find a family through parent groups, agree whose home, the hours and the split, then meet the nanny together and write it down.'), true)
       + picSteps('When things don’t go to plan', [
         ['thermo', 'One child is sick', 'Agree up front whether the share goes ahead, and at whose home.'],
         ['hand', 'A family leaves', 'Agree how much notice each family gives, so the nanny isn’t left short.']],
