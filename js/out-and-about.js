@@ -143,7 +143,8 @@
     [12, 'Rear-facing after the first birthday, too', 'Keep {o} rear-facing for as long as the seat allows.', 'car', ['Rear-facing past the first birthday', 'See why, and when a convertible seat comes in.']]
   ];
   // For the home screen: the update for this month, or the one coming next month (so trips can be planned ahead).
-  window.oaUpdate = m => { const n = NOWS.find(x => x[4] && (x[0] === m || x[0] === m + 1)); return n ? { soon: n[0] > m, at: n[0], title: F(n[4][0]), body: F(n[4][1]), action: open(n[3]) } : null; };
+  // Bug spray only comes up in the warm months, when it's useful.
+  window.oaUpdate = m => { const n = NOWS.find(x => x[4] && (x[0] === m || x[0] === m + 1) && !(x[3] === 'weather' && season() !== 'hot')); return n ? { soon: n[0] > m, at: n[0], title: F(n[4][0]), body: F(n[4][1]), action: open(n[3]) } : null; };
   const nowFor = m => NOWS.filter(n => n[0] <= m).pop();
   const nextFor = m => NOWS.find(n => n[0] > m);
   function outAndAbout() {
