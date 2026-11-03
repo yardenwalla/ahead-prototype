@@ -237,7 +237,7 @@
     if (id === 'fly') {
       // The whole trip in the order you meet it: booking, packing, the airport, the plane. Rows hold the rest.
       const bf = nursing();
-      return sub('fly', 'Flying', 'Flying with Maya', m < 3 ? 'Flying is generally fine after the first week, but waiting until 2–3 months is best if you can.' : 'Here’s the whole trip, from booking to landing.',
+      return sub('fly', 'Flying', 'Flying with Maya', m < 3 ? 'Flying is generally fine after the first week, but waiting until 2–3 months is best if you can.' : 'Most of the planning happens when you book: where {s} {sit|sits}, and whether there’s a bassinet seat.',
         H().versus('Where will Maya sit?', ['Own seat', 'Safest, buckled into a car seat labeled for aircraft.'], ['On your lap', 'Often free under 2, but less safe if there’s turbulence.'])
         + timeline('Your trip, start to finish', [
           ['When you book', 'notepad', 'Add {o} to your booking, and ask if there’s a bassinet seat.'],
@@ -303,7 +303,7 @@
       hubFigure(m < 6 ? 'stroller' : 'strollerUp', CAT, 'Harness on every time, brakes on when you stop, no bags on the handles and no blanket over the top.')
       + good([['sun', 'Why no blanket over the top', 'It traps heat. Use the canopy instead.'], ['snow', 'On cold days', 'A footmuff or a blanket tucked around {o} is fine.'], m < 6 && ['car', 'A car seat on the frame', 'Listen for the click, then tug to check it’s locked on.']]));
 
-    if (id === 'bag') return sub('gear', 'Your gear', 'Packing the diaper bag', 'Tap each thing as it goes in. The list follows how Maya is fed.',
+    if (id === 'bag') return sub('gear', 'Your gear', 'Packing the diaper bag', 'Packed for how Maya is fed. Ticks clear by the next day, so it’s ready for every outing.',
       bagList(m) + good([formula() && ['bottle', 'Mixing formula', 'Room temperature is fine. Use it within 2 hours of mixing.'], formula() && ['clock', 'Leftover formula', 'Once a feed starts, use it within an hour, then toss the rest.'], nursing() && ['fridge', 'Pumped milk', 'Keeps 4 hours at room temperature, or a day in a cooler with frozen ice packs.'], ['sun', 'On hot days', 'Keep milk in a cooler with ice packs, never in a hot car.']]));
 
     if (id === 'snacks') return detail('errands');
