@@ -478,7 +478,7 @@
       const L = cardLines(c);
       // Saved, the card shows exactly as a caregiver will see it when you send it.
       return sub('card', 'Your plan', `${nm}’s care card`, 'This is what a caregiver sees when you send it.',
-        `<div class="cc-actions cc-actions-two"><button class="hub-button" onclick="ccShare()">${F('Share the card')}</button><button class="hub-button is-secondary" onclick="ccCardMode('edit')">${F('Edit')}</button></div><p class="cc-done" id="ccDone" hidden></p>`
+        `<div class="cc-actions cc-actions-two"><button class="hub-button" onclick="ccShare()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3M8 7l4-4 4 4M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>${F('Share the card')}</button><button class="hub-button is-secondary" onclick="ccCardMode('edit')">${F('Edit')}</button></div><p class="cc-done" id="ccDone" hidden></p>`
         + `<div class="acc cc-preview">${window.aheadCareCard ? aheadCareCard(cardData(), true) : ''}</div>`
         + h.note('Sending it shares a link that opens as this card on their phone. Only people you send it to can see it.'), 'notepad');
     }

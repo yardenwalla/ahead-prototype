@@ -52,3 +52,11 @@
 #main .cc-actions-two { display: grid; grid-template-columns: 2fr 1fr; gap: 10px; margin: 0 0 18px }
 #main .cc-actions-two .hub-button { margin: 0 }
 #main .cc-preview { margin: 0 0 18px }
+/* The saved card sits in one frame, like the page a caregiver opens */
+#main .cc-preview { margin: 0 0 18px; padding: 12px 12px 18px; border-radius: 30px; background: #f7f3ec; border: 1px solid #ece5da; box-shadow: 0 10px 30px rgba(47, 42, 51, .08) }
+#main .cc-preview .acc-h2:first-of-type { margin-top: 20px }
+/* Share is the main action: solid, with the share icon */
+#main .cc-actions-two .hub-button:first-child { background: #2f2a33; color: #fff; display: inline-flex; align-items: center; justify-content: center; gap: 8px }
+#main .cc-actions-two .hub-button:first-child svg { width: 18px; height: 18px }
+#main .hub-page[data-overview="Childcare"] .cc-actions-two .hub-button:first-child { background: #2f2a33; color: #fff }
+#main .hub-detail[data-ss] .cc-actions-two .hub-button:first-child { background: #2f2a33; color: #fff !important }
