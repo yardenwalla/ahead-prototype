@@ -125,7 +125,7 @@
     return `<h2 class="hub-h2">${F('Your gear')}</h2><div class="hub-list">`
       + gearRow('car', 'car', 'Car seat', 'Setting it up, and which seat when', 'car')
       + gearRow('stroller', 'stroller', 'Stroller', 'Harness, brakes and shade', 'stroller')
-      + gearRow('carrier', 'carrier', 'Carrier', ageNow() < 2 ? 'Wearing {o} safely' : ageNow() < 6 ? 'When {s} can face out' : 'Front and back carriers', 'carry')
+      + gearRow('carrier', 'carrier', 'Carrier', 'Facing in, facing out, and on your back', 'carry')
       + gearRow('bag', 'bag', 'Diaper bag', 'Packed for how Maya is fed', 'bag', on ? `${on} of ${n} packed` : '')
 
       + `</div>`;
@@ -334,15 +334,16 @@
         + good([['car', 'Taxis and other people’s cars', 'Bring {p} car seat. Most can be installed with just the seat belt.'], ['notepad', 'Only what came with it', 'Skip add-on inserts and head supports, and use a secondhand seat only if you know its history.'], ['steth', 'A free check', 'A certified car seat technician can check your install, usually for free.']]));
     }
 
+    // Carrier and stroller follow Car seat: the same page at every age, with how it changes shown as a path from day one.
     if (id === 'carry') return sub('gear', 'Your gear', 'Carrier basics', 'A quick check every time keeps {o} breathing easy.',
       hubFigure('carrier', CAT, 'In a carrier: face visible and close enough to kiss, chin off the chest, knees up in an M shape, back supported.')
-      + good(m < 3 ? [['carrier', 'From day one', 'Wraps, ring slings and soft carriers all work, as long as {p} face stays above the fabric.'], ['hand', 'Snug enough', 'When you lean forward, {s} {stay|stays} against you without slumping.'], ['moon', 'Asleep in the carrier', 'Keep {p} face visible, and move {o} to a flat bed when you can.']]
-        : m < 6 ? [['eye', 'Facing out', 'Once {p} head is steady, for short awake times. Turn {o} back in if {s} {get|gets} sleepy.'], ['hand', 'Snug enough', 'When you lean forward, {s} {stay|stays} against you without slumping.'], ['moon', 'Asleep in the carrier', 'Keep {p} face visible, and move {o} to a flat bed when you can.']]
-        : [['carrier', 'A backpack carrier', 'Once {s} {sit|sits} steadily on {p} own and the label allows. Keep every strap fastened.'], ['hand', 'Picking things up', 'Bend at the knees, not the waist.'], ['fridge', 'Not while cooking', 'Keep away from the stove and hot drinks.']]));
+      + hubStageStrip({ title: 'Ways to carry, as {o} grows', numbered: true, items: [['carrier', 'Facing in', 'From birth, face above the fabric'], ['carrier', 'Facing out', 'Once {p} head is steady, for short awake times'], ['carrier', 'On your back', 'Once {s} {sit|sits} steadily and the label allows']], cat: CAT, caption: 'Facing in from birth, facing out once the head is steady for short awake times, and on your back once sitting steadily and the label allows.' })
+      + good([['hand', 'Snug enough', 'When you lean forward, {s} {stay|stays} against you without slumping.'], ['moon', 'Asleep in the carrier', 'Keep {p} face visible, and move {o} to a flat bed when you can.'], ['fridge', 'Not while cooking', 'Keep away from the stove and hot drinks.']]));
 
-    if (id === 'stroller') return sub('gear', 'Your gear', 'Stroller basics', 'Lying back until {s} can sit steadily on {p} own, then upright, as the stroller’s label allows.',
-      hubFigure(m < 6 ? 'stroller' : 'strollerUp', CAT, 'Harness on every time, brakes on when you stop, no bags on the handles and no blanket over the top.')
-      + good([['sun', 'Why no blanket over the top', 'It traps heat. Use the canopy instead.'], ['stroller', 'On a bus or train', 'Brakes on and a hand on the stroller while it moves.'], m < 6 && ['car', 'A car seat on the frame', 'Listen for the click, then tug to check it’s locked on.']]));
+    if (id === 'stroller') return sub('gear', 'Your gear', 'Stroller basics', 'Harness on every time, and brakes on whenever you stop.',
+      hubFigure('stroller', CAT, 'Harness on every time, brakes on when you stop, no bags on the handles and no blanket over the top.')
+      + hubStageStrip({ title: 'Lying back, then sitting up', numbered: true, items: [['stroller', 'Lying back', 'From birth, or with the infant car seat clicked on'], ['stroller', 'Sitting up', 'Once {s} can sit steadily on {p} own, as the label allows']], cat: CAT, caption: 'Lying back from birth, or with the infant car seat clicked on, then sitting up once the baby can sit steadily, as the label allows.' })
+      + good([['sun', 'Why no blanket over the top', 'It traps heat. Use the canopy instead.'], ['car', 'A car seat on the frame', 'Listen for the click, then tug to check it’s locked on.'], ['stroller', 'On a bus or train', 'Brakes on and a hand on the stroller while it moves.']]));
 
     if (id === 'bag') return sub('gear', 'Your gear', 'Packing the diaper bag', 'Packed for how Maya is fed. Ticks clear by the next day, so it’s ready for every outing.',
       bagList(m) + good([fm && ['bottle', 'Mixed formula', 'Use it within 2 hours of mixing, or within 1 hour once the feed starts.'], bf && ['fridge', 'Pumped milk', 'Keeps 4 hours at room temperature, or a day in a cooler with frozen ice packs.']]));
