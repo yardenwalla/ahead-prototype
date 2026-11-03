@@ -115,3 +115,4 @@
 #main .care-v2 .care-tile-copy small { font-size: 12px; line-height: 16px; color: var(--ink-2, #5e5a75) }
 #main .care-v2 .care-tile.is-later { background: transparent; border-style: dashed }
 #main .care-v2 .care-tile.is-later .care-tile-ic { opacity: .6 }
+#main .care-v2 .care-tile { align-items: flex-start }

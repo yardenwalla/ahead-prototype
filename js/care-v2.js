@@ -608,8 +608,15 @@
   const BASIC6 = ['diapers', 'bath', 'skin', 'dress', 'teeth', 'nails'];
   const hasAny = (k, v) => { for (let i = v; i >= 0; i--) if (T3[k] && T3[k][i]) return true; return false; };
   const basicTile = (k, v) => { const c = COL[TCOL[k]], ok = hasAny(k, v);
-    return `<button class="care-tile${ok ? '' : ' is-later'}" style="--hl-bg:${c[0]};--hl-ink:${c[1]}" onclick="openPage('chg:${CAT}:d:c:${k}:${v}')"><span class="care-tile-ic">${hubArt(ICON[TCOL[k]], CAT)}</span><span class="care-tile-copy"><b>${F(TNAME[k])}</b>${ok ? '' : `<small>${F(LATER[k])}</small>`}</span></button>`; };
+    return `<button class="care-tile${ok ? '' : ' is-later'}" style="--hl-bg:${c[0]};--hl-ink:${c[1]}" onclick="openPage('chg:${CAT}:d:c:${k}:${v}')"><span class="care-tile-ic">${hubArt(ICON[TCOL[k]], CAT)}</span><span class="care-tile-copy"><b>${F(TNAME[k])}</b><small>${F(TILE[v]()[k])}</small></span></button>`; };
   // A basic with nothing to do yet says so, and when it starts, instead of showing a later stage's advice.
+  // One glanceable line per tile: the answer for this age, mostly a number.
+  const TILE = [
+    () => ({ diapers: '8–12 a day', bath: '2–3 sponge baths a week', skin: 'Peeling is normal', dress: '+1 layer, shade only', teeth: 'From about 4 months', nails: 'Trim weekly' }),
+    () => ({ diapers: 'When wet or dirty', bath: 'Baby tub, about 3 a week', skin: 'Acne and cradle cap', dress: '+1 layer, shade only', teeth: 'From about 4 months', nails: 'Trim weekly' }),
+    () => ({ diapers: 'One hand on {o}, always', bath: 'About 3 a week', skin: 'Drool rash', dress: sixNow() ? 'Shade + SPF 30' : 'Shade only until 6 months', teeth: 'Teething often starts', nails: 'Trim weekly' }),
+    () => ({ diapers: 'A toy to hold', bath: 'Big tub once sitting', skin: 'Drool rash', dress: 'Bare feet indoors', teeth: hasTooth() ? 'Brush twice a day' : 'Brush from the first tooth', nails: 'Trim weekly' })
+  ];
   const LATER = { teeth: 'From about 4 months', skin: 'Peeling is normal' };
   const NOTYET = { teeth: 'Teething usually starts around 4–6 months. There’s nothing to do yet.', skin: 'In the first weeks, peeling skin and tiny white bumps are normal and clear up on their own. Nothing else to do yet.' };
   const topicRow = (k, v) => { const s = tFor(k, v); if (!s) return ''; const c = COL[TCOL[k]];
