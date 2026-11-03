@@ -210,7 +210,7 @@
     // Outings and travel: each age-related change to a place or a piece of gear, from the month before it
     // (trips get planned ahead) through the month it happens, so a parent never has to spot it in the tab.
     const oa = live() && typeof oaUpdate === 'function' ? oaUpdate(actualMonth()) : null;
-    if (oa) out.push({ topic: 'Out and about', key: 'outings:' + oa.at, title: oa.title, body: oa.body, link: link(oa.action, 'See what’s new') });
+    if (oa) out.push({ topic: 'Out and about', key: 'outings:' + oa.at, title: oa.title, body: oa.body, link: link(oa.action, oa.label) });
     // Older babies: the first birthday checkup is the next big thing, even a few months out.
     if (live() && !visit && m >= 9) { const due = addMonths(parse(profile.dob), 12), wks = Math.round((due - NOW) / DAY / 7);
       if (wks > 0 && !healthRecord(12)) out.push({ topic: 'Health', key: 'visit-ahead:12', title: `${n()}’s 12-month checkup is in about ${wks > 8 ? Math.round(wks / 4.3) + ' months' : wks + ' weeks'}`, body: conceptHealthSummary(12), link: link("openPage('health-visit:12')", 'See what’s checked') }); }

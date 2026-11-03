@@ -137,13 +137,13 @@
   const NOWS = [
     [0, 'Short outings are good for you both', 'Fresh air and a change of scene help, even in the first weeks.', 'errands'],
     [2, 'Longer trips may feel easier soon', 'As feeds start to spread out, a long drive or a first flight gets more doable.', 'road'],
-    [4, 'Facing out may be next', 'It depends on your carrier’s height and weight limits, and on {p} head control. You’ll find the limits in the carrier’s instructions.', 'carry', ['You can start checking about facing out', 'It depends on your carrier’s height and weight limits, and on {p} head control.']],
+    [4, 'Facing out may be next', 'It depends on your carrier’s height and weight limits, and on {p} head control. You’ll find the limits in the carrier’s instructions.', 'carry', ['Maya may be ready to face out soon', 'Once {p} head is steady, {s} can face out in the carrier for short stretches. Your carrier’s instructions say when.', 'See the carrier guide']],
     [6, 'What changes for outings at 6 months', 'The shopping cart’s own seat, snacks out, and babyproofing when you stay over.', 'errands'],
-    [9, 'Watch the car seat’s limits', 'Moving to a convertible seat depends on the infant seat’s height and weight limits, printed on a sticker on the seat.', 'car', ['Check the infant car seat’s limits', 'Moving to a convertible seat depends on its height and weight limits, not age.']],
-    [12, 'Rear-facing after the first birthday, too', 'Keep {o} rear-facing for as long as the seat allows.', 'car', ['Rear-facing past the first birthday', 'Keep {o} rear-facing until the seat’s rear-facing limits, often age 2 or older.']]
+    [9, 'Watch the car seat’s limits', 'Moving to a convertible seat depends on the infant seat’s height and weight limits, printed on a sticker on the seat.', 'car', ['Maya may outgrow the infant car seat soon', 'Many babies do in the first year. The height and weight limits are on a sticker on the seat.', 'See which seat comes next']],
+    [12, 'Rear-facing after the first birthday, too', 'Keep {o} rear-facing for as long as the seat allows.', 'car', ['Keep Maya rear-facing after the first birthday', 'Until the seat’s rear-facing limits, often age 2 or older. It protects {p} head and neck best.', 'See why it matters']]
   ];
   // For the home screen: the update for this month, or the one coming next month (so trips can be planned ahead).
-  window.oaUpdate = m => { const n = NOWS.find(x => x[4] && (x[0] === m || x[0] === m + 1)); return n ? { soon: n[0] > m, at: n[0], title: F(n[4][0]), body: F(n[4][1]), action: open(n[3]) } : null; };
+  window.oaUpdate = m => { const n = NOWS.find(x => x[4] && (x[0] === m || x[0] === m + 1)); return n ? { soon: n[0] > m, at: n[0], title: F(n[4][0]), body: F(n[4][1]), label: n[4][2], action: open(n[3]) } : null; };
   const nowFor = m => NOWS.filter(n => n[0] <= m).pop();
   const nextFor = m => NOWS.find(n => n[0] > m);
   function outAndAbout() {
