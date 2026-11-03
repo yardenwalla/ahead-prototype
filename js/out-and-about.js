@@ -121,14 +121,16 @@
   ];
   const TRIPS = [['road', 'Road trips'], ['fly', 'Flying'], ['away', 'Staying away'], ['abroad', 'Going abroad']];
   const tile = (id, label, sub, small) => { const c = PAL[id]; return `<button class="oa-place${small ? ' is-small' : ''}" style="--oa-bg:${c[0]};--oa-ink:${c[1]}" onclick="${open(id)}"><span class="oa-place-art">${SHAPE[id](c)}</span><b>${F(label)}</b>${sub ? `<small>${F(sub)}</small>` : ''}</button>`; };
+  // Calm, like Health and Sleep: plain white lists with one soft-colored icon per row, no big colored tiles.
+  const ROW_ICON = { feed: 'bottle', change: 'diaper', cry: 'heart', nap: 'moon', drive: 'car', road: 'road', fly: 'plane', away: 'home', abroad: 'notepad', hot: 'sun', cold: 'snow' };
+  const listRow = (id, title, sub) => { const c = PAL[id]; return `<button class="hub-row oa-row" style="--hl-bg:${c[0]};--hl-ink:${c[1]}" onclick="${open(id === 'hot' || id === 'cold' ? 'weather' : id)}"><span class="oa-dot">${hubArt(ROW_ICON[id], CAT)}</span><span class="hub-row-copy"><b>${F(title)}</b>${sub ? `<small>${F(sub)}</small>` : ''}</span><span class="hub-chev" aria-hidden="true">›</span></button>`; };
   function leaving() {
-    const m = ageNow(), n = bagItems(m).length, on = bagItems(m).filter(i => bagGet().includes(i[1])).length;
-    return `<h2 class="hub-h2">${F('Leaving the house')}</h2><p class="oa-intro">${F(m < 2 ? 'Short outings count, and heading home early is always fine.' : 'Wherever you’re going, these are the moments to be ready for.')}</p>`
-      + `<div class="hub-list oa-bagrow">${gearRow('bag', 'bag', 'Pack the bag', 'Packed for how Maya is fed', 'bag', on ? `${on} of ${n} packed` : '')}</div>`
-      + `<div class="oa-places oa-moments">${MOMENTS.map(([id, label, sub]) => tile(id, label, sub())).join('')}</div>`;
+    const m = ageNow(), k = season();
+    const rows = MOMENTS.map(([id, label, sub]) => listRow(id, label, id === 'drive' ? 'Never leave {o} alone in it' : sub()))
+      .concat(listRow(k, k === 'hot' ? 'Hot days out' : 'Cold days out', k === 'hot' ? 'Shade, drinks and a cool car' : 'Layers and the car seat'));
+    return `<h2 class="hub-h2">${F('Leaving the house')}</h2><p class="oa-intro">${F(m < 2 ? 'Short outings count, and heading home early is always fine.' : 'Wherever you’re going, these are the moments to be ready for.')}</p><div class="hub-list">${rows.join('')}</div>`;
   }
-  const farther = () => `<h2 class="hub-h2">${F('Going farther')}</h2><div class="oa-places oa-trips">${TRIPS.map(([id, label]) => tile(id, label, '', true)).join('')}</div>`;
-  const seasonCard = () => { const k = season(), c = PAL[k]; return `<button class="hub-next oa-season" style="background:${c[0]}" onclick="${open('weather')}"><span><small style="color:${c[1]}">${F('This season')}</small><b>${F(k === 'hot' ? 'Hot days out: shade, drinks and the car' : 'Cold days out: layers and the car seat')}</b></span><span class="hub-chev" aria-hidden="true">›</span></button>`; };
+  const farther = () => `<h2 class="hub-h2">${F('Going farther')}</h2><div class="hub-list">${TRIPS.map(([id, label]) => listRow(id, label, { road: 'Long drives and stops', fly: 'From booking to landing', away: 'Family, friends or a hotel', abroad: 'Passport, shots and water' }[id])).join('')}</div>`;
   const GEAR_C = { car: ['#e7effc', '#46638c'], stroller: ['#e6f5ec', '#356651'], carrier: ['#fdeef2', '#a24d6a'], bag: ['#fff3dc', '#8a6a2a'], snack: ['#fdeee6', '#9a5a3c'] };
   const gearRow = (icon, key, title, sub, id, chip) => `<button class="hub-row oa-row" style="--hl-bg:${GEAR_C[key][0]};--hl-ink:${GEAR_C[key][1]}" onclick="${open(id)}"><span class="oa-dot">${hubArt(icon, CAT)}</span><span class="hub-row-copy"><b>${F(title)}</b><small>${F(sub)}</small>${chip ? `<span class="hub-chip">${F(chip)}</span>` : ''}</span><span class="hub-chev" aria-hidden="true">›</span></button>`;
   function gear(v) {
@@ -153,8 +155,7 @@
   function outAndAbout() {
     const m = ageNow(), v = stageFor(m), h = H(), n = nowFor(m), nx = nextFor(m);
     let b = `<header class="hub-hero oa-hero"><p class="hub-eyebrow">${F(m < 1 ? 'In the first weeks' : `At ${m} ${m === 1 ? 'month' : 'months'}`)}</p><h1>${F(n[1])}</h1><p class="hub-lead">${F(n[2])}</p></header>`;
-    b += leaving() + farther() + seasonCard() + gear(v);
-    b += h.versus('In the car', ['Every time', 'Look in the back seat before you walk away.'], ['Never', 'Leave Maya alone in the car, even for a minute.']);
+    b += leaving() + farther() + gear(v);
     if (nx) b += h.next(`Coming up around ${nx[0]} months`, nx[1], open(nx[3]));
     b += h.note('Car seats, carriers and strollers each have their own limits. Check the label and the manual.');
     return `<div class="quiet-category hub-page" data-overview="${CAT}" style="${yearTheme(CAT)}">${monthlyPageHeader(CAT)}${b}</div>`;
