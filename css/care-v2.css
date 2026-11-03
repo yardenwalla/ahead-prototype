@@ -129,3 +129,7 @@
 #main .care-v2 .care-when-line .is-here i { background: var(--ss-bg, #eee) }
 #main .care-v2 .care-when-line b { font-size: 13px; line-height: 17px; font-weight: 600; color: var(--ink, #2b2840) }
 #main .care-v2 .care-when-line small { font-size: 11.5px; line-height: 15px; color: var(--ink-2, #5e5a75) }
+/* Option B: new tiles get the topic's soft color and a tag */
+#main .care-v2 .care-tile.is-new { background: var(--hl-bg); border-color: transparent }
+#main .care-v2 .care-tile.is-new .care-tile-ic { background: #fff }
+#main .care-v2 .care-tile .care-new { margin: 0 0 3px; justify-self: start; background: #fff }

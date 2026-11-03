@@ -607,8 +607,8 @@
   const NEWNOW = [['diapers', 'down', 'cord', 'bath'], ['bath', 'skin', 'dress'], ['diapers', 'skin', 'dress', 'teeth'], ['diapers', 'bath', 'dress', 'teeth']];
   const BASIC6 = ['diapers', 'bath', 'skin', 'dress', 'teeth', 'nails'];
   const hasAny = (k, v) => { for (let i = v; i >= 0; i--) if (T3[k] && T3[k][i]) return true; return false; };
-  const basicTile = (k, v) => { const c = COL[TCOL[k]], ok = hasAny(k, v) || k !== 'teeth';
-    return `<button class="care-tile${ok ? '' : ' is-later'}" style="--hl-bg:${c[0]};--hl-ink:${c[1]}" onclick="openPage('chg:${CAT}:d:c:${k}:${v}')"><span class="care-tile-ic">${hubArt(ICON[TCOL[k]], CAT)}</span><span class="care-tile-copy"><b>${F(TNAME[k])}</b><small>${F(TILE[v]()[k])}</small></span></button>`; };
+  const basicTile = (k, v, isNew) => { const c = COL[TCOL[k]], ok = hasAny(k, v) || k !== 'teeth';
+    return `<button class="care-tile${ok ? '' : ' is-later'}${isNew ? ' is-new' : ''}" style="--hl-bg:${c[0]};--hl-ink:${c[1]}" onclick="openPage('chg:${CAT}:d:c:${k}:${v}')"><span class="care-tile-ic">${hubArt(ICON[TCOL[k]], CAT)}</span><span class="care-tile-copy">${isNew ? `<em class="care-new">${F('New')}</em>` : ''}<b>${F(TNAME[k])}</b><small>${F(TILE[v]()[k])}</small></span></button>`; };
   // A basic with nothing to do yet says so, and when it starts, instead of showing a later stage's advice.
   // One glanceable line per tile: the answer for this age, mostly a number.
   const TILE = [
@@ -655,8 +655,15 @@
     let b = `<header class="hub-hero care-hero"><p class="hub-eyebrow">${STAGE[v]}</p><h1>${F(st.title)}</h1><p class="hub-lead">${F(st.lead)}</p></header>`;
     // No tiles: Everyday care's answers are mostly actions, not numbers, so they read better as rows (like Health).
     const shop = v === 1 ? '' : `<div class="hub-browse care-shop"><button class="hub-link" onclick="${go('need', v)}">${F(v === 0 ? 'Getting ready? What you’ll need' : 'What you’ll need now')} ›</button></div>`;
+    if (window.CARE_GRID_ONLY) {
+      // Option B: one grid, what's new marked in it; newborn-only topics stay as rows above it.
+      const extra = NEWNOW[v].filter(k => !BASIC6.includes(k));
+      if (extra.length) b += `<h2 class="hub-h2">${F('Just for the first weeks')}</h2><div class="hub-list">${extra.map(k => topicRow(k, v)).join('')}</div>`;
+      b += `<h2 class="hub-h2">${F('Maya’s care')}</h2><div class="care-grid">${BASIC6.map(k => basicTile(k, v, v > 0 && NEWNOW[v].includes(k))).join('')}</div>` + shop;
+    } else {
     b += `<h2 class="hub-h2">${F(live() && v !== now ? `New at ${STAGE[v].toLowerCase() === 'newborn' ? 'the newborn stage' : STAGE[v]}` : 'New for Maya now')}</h2><div class="hub-list">${NEWNOW[v].map(k => topicRow(k, v)).join('')}</div>`;
     b += `<h2 class="hub-h2">${F('All the basics')}</h2><div class="care-grid">${BASIC6.map(k => basicTile(k, v)).join('')}</div>` + shop;
+    }
     b += `<button class="hub-rough-card care-rash-card" onclick="openPage('chg:${CAT}:d:look:${v}')"><span class="hub-rough-moon" aria-hidden="true">${hubArt('eye', CAT)}</span><span class="hub-rough-copy"><b>${F('Something look off?')}</b><small>${F(['Poop, rashes, the cord, eyes and more', 'Poop, rashes, eyes and more', 'Drool, rashes, poop and more', 'Drool, rashes, poop and more'][v])}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`;
     b += h.versus('Normal, or time to call?', ['Normal', st.call[0]], ['Call your pediatrician', st.call[1]]);
     b += nx ? h.next(v === 0 ? 'Next, after the first few weeks' : `Next, usually from ${STAGE[v + 1].split('–')[0]} months`, nx.title, `openPage('chg:${CAT}:s:${v + 1}')`)
