@@ -487,9 +487,8 @@
         normal: 'A good fit: two fingers slide in at the waist, and no red marks at the legs.', vis: () => diaperCarousel(),
         urgent: 'White, gray or chalky poop: call your pediatrician right away.',
         more: () => [['Sizes', 'When to move up', sizes()]] },
-      2: { line: 'Rolling on the changing table', answer: 'Once {s} {roll|rolls}, {s} can roll off in a second.',
+      2: { line: 'Rolling on the changing table', answer: 'Most babies roll from 4–6 months, often with no warning, and can roll off in a second.',
         doText: 'Set up every change so you never need to step away.',
-        normal: 'Most babies roll from about 4–6 months, sometimes with no warning first.',
         vis: () => hubIconSteps([['hand', 'One hand on {o}', 'Every change'], ['mat', 'The floor', 'When you need both hands'], ['toy', 'A toy to hold', 'Keeps hands busy']], CAT, 'Keep one hand on the baby, change on the floor when you need both hands, and give the baby a toy to hold.', false),
         urgent: 'Never step away from the changing table, even for a second.' },
       3: { line: 'Wriggly changes', answer: 'Rolling and crawling can turn changes into a wrestle.',
@@ -504,9 +503,8 @@
         call: 'A yellow, smelly discharge, redness around it, or still on after 3 weeks.' }
     },
     bath: {
-      0: { line: 'Sponge baths until the cord falls off', answer: '2–3 sponge baths a week, until the cord stump falls off.',
+      0: { line: 'Sponge baths until the cord falls off', answer: '2–3 sponge baths a week, until the cord stump falls off. In between, wipe {p} face, neck and diaper area.',
         doText: 'In a warm room: face first with plain water, then the body, diaper area last. Keep {o} wrapped and warm.',
-        normal: 'Babies don’t need a bath every day. In between, wipe {p} face, neck and diaper area.',
         vis: () => hubEmbed('uYQ_KNlcQwE', 'How to give your newborn a sponge bath', 'Nemours KidsHealth'),
         urgent: 'Never leave {o} alone in a bath, even for a second.' },
       1: { line: 'Tub baths can start', answer: 'About 3 baths a week in a baby tub, once the cord has healed.',
@@ -574,7 +572,7 @@
     if (s.pre) b += s.pre();
     const T = x => s.html ? x : F(x); // html: the copy is already built (rows with labels), text inside already templated
     if (s.doText) b += `<section class="ss-do"><b>What to do</b><p>${T(s.doText)}</p></section>`;
-    if (s.normal) b += `<p class="ss-know"><b>How you’ll know</b>${T(s.normal)}</p>`;
+    if (s.normal) b += `<p class="ss-know"><b>What to look for</b>${T(s.normal)}</p>`;
     if (s.vis) b += s.vis() || '';
     if (s.urgent) b += `<p class="care-urgent">${F(s.urgent)}</p>`;
     if (s.call) b += `<p class="ss-small"><b>${F('Call your pediatrician:')}</b> ${T(s.call)}</p>`;
