@@ -1398,3 +1398,10 @@
 #main .dev-try .dev-signs-art svg { width: 40px; height: 40px }
 /* The sick page's fever card: calm, in the page's own colors */
 #main .hub-fever.is-calm .hub-fever-bands > div { background: var(--paper, #f6f3ee); box-shadow: none }
+/* Sick page: rectal vs forehead/ear, two tiles */
+#main .hub-thermo { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 12px }
+#main .hub-thermo > div { background: var(--paper, #f6f3ee); border-radius: 16px; padding: 14px 12px }
+#main .hub-thermo > div.is-good { background: #e3f3e9 }
+#main .hub-thermo .hub-dot { display: inline-flex; margin-bottom: 8px }
+#main .hub-thermo b { display: block; font-size: 15.5px }
+#main .hub-thermo p { margin: 4px 0 0; font-size: 13px; line-height: 1.35; color: var(--muted, #6b6670) }
