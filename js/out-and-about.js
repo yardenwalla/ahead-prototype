@@ -201,6 +201,8 @@
   const tiles = (heading, ts) => `<h2 class="hub-h2">${F(heading)}</h2>${H().tiles(ts.filter(Boolean))}`;
   const steps = (items, caption, numbered = false) => hubIconSteps(items.filter(Boolean), CAT, F(caption), numbered);
   const strip = (title, items, caption) => hubStageStrip({ title, items: items.filter(Boolean), numbered: true, cat: CAT, caption });
+  // The same timeline as Road trips' example drive, with words ("When you book") where the drive has clock times.
+  const timeline = (title, items, caption) => { const c = YEAR_PALETTES[CAT]; return `<figure class="hub-figure hub-daymarks oa-timeline" role="img" aria-label="${F(caption)}" style="--ink:${c.ink};--bg:${c.bg};--pale:${c.pale}"><b class="hub-fig-title">${F(title)}</b><ol class="hub-daymarks-list">${items.filter(Boolean).map(([when, icon, text]) => `<li><i>${hubArt(icon, CAT)}</i><time>${F(when)}</time><span>${F(text)}</span></li>`).join('')}</ol></figure>`; };
   const good = (rows, heading = 'Good to know') => { const r = rows.filter(Boolean).slice(0, 3); return r.length ? H().list(heading, r.map(([icon, title, s]) => H().row({ icon, cat: CAT, title, sub: s }))) : ''; };
   const calls = (a, b) => H().versus('When to call', a, b);
 
@@ -237,12 +239,12 @@
       const bf = nursing();
       return sub('fly', 'Flying', 'Flying with Maya', m < 3 ? 'Flying is generally fine after the first week, but waiting until 2–3 months is best if you can.' : 'Here’s the whole trip, from booking to landing.',
         H().versus('Where will Maya sit?', ['Own seat', 'Safest, buckled into a car seat labeled for aircraft.'], ['On your lap', 'Often free under 2, but less safe if there’s turbulence.'])
-        + strip('Your trip, start to finish', [
-          ['notepad', 'Book', 'Add {o}, and ask for a bassinet seat'],
-          ['bag', 'Pack', 'An extra feed, {p} birth certificate'],
-          ['stroller', 'Airport', 'Milk through security, stroller at the gate'],
-          ['plane', 'Fly', 'A feed or pacifier at takeoff and landing']],
-          'Book: add her to the booking and ask about a bassinet seat. Pack an extra feed and her birth certificate. At the airport, milk and formula are fine through security, even over 3.4 ounces, and you check the stroller at the gate. At takeoff and landing, a feed or a pacifier eases her ears.')
+        + timeline('Your trip, start to finish', [
+          ['When you book', 'notepad', 'Add {o} to your booking, and ask if there’s a bassinet seat.'],
+          ['When you pack', 'bag', 'Bring one extra feed and {p} birth certificate.'],
+          ['At the airport', 'stroller', 'Milk and formula can go through security. Leave the stroller at the gate.'],
+          ['Takeoff and landing', 'plane', 'Feed {o} or offer a pacifier to help {p} ears.']],
+          'When you book, add her to your booking and ask about a bassinet seat. Pack one extra feed and her birth certificate. At the airport, milk and formula can go through security, and you leave the stroller at the gate. At takeoff and landing, feed her or offer a pacifier to help her ears.')
         + good([['carrier', 'A carrier in the airport', 'Handy for getting through. Take {o} out of it before takeoff and landing.'], bf ? ['fridge', 'Pumping', 'Your pump and ice packs can come through security, and airports have private rooms.'] : ['bottle', 'Formula at security', 'Ready-to-feed and powder are both allowed. Tell the officer.'], ['clock', 'Time zones', 'On a short trip, keep naps near home time. On a longer one, shift them a little each day.']]));
     }
 
