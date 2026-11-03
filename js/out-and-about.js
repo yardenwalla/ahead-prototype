@@ -214,19 +214,18 @@
     const m = ageNow();
 
     if (id === 'errands') {
-      // Around town: the store, the doctor, a friend's house. The same few moments come up wherever you go.
-      const bf = nursing();
-      const moments = `<h2 class="hub-h2">${F('Wherever you go')}</h2>` + steps([
-        ['bottle', 'Feeding', bf ? 'Nurse wherever you’re comfortable' : 'Powder and water packed apart, mixed when {s’s} hungry'],
-        ['diaper', 'Changing', 'Strap on and a hand on {o}. No table? Your pad on the floor'],
-        ['heart', 'Crying', 'A feed, a change, or holding {o} close and moving'],
-        ['moon', 'Naps', 'Keep {o} in view, and move {o} to a flat bed when you stop']],
-        'Feeding: nurse or give a bottle wherever you are. Changing: use the strap and keep a hand on her, or your pad on the floor. Crying: try a feed, a change, or holding her close and moving. Naps: keep her in view and move her to a flat bed when you stop.');
-      const cart = ['car', 'Shopping carts', m >= 6 ? 'Use the cart’s seat with the strap on, never the car seat on top.' : 'Use a carrier or stroller. Never set the car seat on top of a cart.'];
-      if (m < 2) return sub('errands', 'Around town', 'Your first outings', 'Short trips to quiet places are a good start, and heading home early still counts.',
-        moments + good([['hand', 'Crowds and germs, for now', 'Skip crowded indoor places and anyone who’s sick. Ask for clean hands before anyone holds {o}.'], cart, bf ? ['fridge', 'Pumping', 'Ask for a nursing room, or use your parked car.'] : ['steth', 'At the doctor’s office', 'Ask if you can wait in the car until they call you.']]));
-      return sub('errands', 'Around town', 'Around town', 'The store, a café, a friend’s house: most everyday places are fine now.',
-        moments + good([cart, m >= 6 ? ['bowl', 'Snacks', 'Soft foods that squash between your fingers, while {s} {sit|sits} up and you watch.'] : ['home', 'It’s OK to leave', 'Heading home early still counts as a good outing.'], bf ? ['fridge', 'Pumping', 'Ask for a nursing room, or use your parked car.'] : ['hand', 'Germs', 'Washing hands is still the best way to avoid colds.']]));
+      // Around town, done the Road trips way: one ordinary outing, step by step, with the "how" in each step.
+      const bf = nursing(), ff = formula();
+      const run = timeline('A store run, step by step', [
+        ['Before you go', 'clock', m < 2 ? 'Feed {o} first, and pick a quiet time, like a weekday morning. Keep it short: one or two stops.' : 'Feed {o} first, or go right after a nap, when {s’s} at {p} happiest.'],
+        ['Parking', 'car', m >= 6 ? 'Leave the car seat in the car. In the store, {s} {ride|rides} in the cart’s seat with the strap on, or in a carrier.' : 'Leave the car seat in the car. In the store, wear {o} in a carrier or use the stroller.'],
+        ['If {s’s} hungry', 'bottle', bf && ff ? 'Nurse wherever you’re comfortable, or give a bottle. Many stores have a nursing room, or a fitting room works.' : bf ? 'Nurse wherever you’re comfortable. Many stores have a nursing room, or a fitting room or your parked car works.' : 'Mix a bottle with the powder and water you packed. Room temperature is fine.'],
+        ['For a change', 'diaper', 'Look for a family restroom. Strap {o} in and keep a hand on {o}. No table? Use your pad on the back seat of the car.'],
+        ['If {s} {fuss|fusses}', 'heart', 'Try a feed, then a diaper check, then holding {o} close and walking. Still upset? It’s fine to leave your cart and go.'],
+        ['Heading home', 'moon', 'Asleep in the car seat? Fine while you drive. At home, move {o} to {p} crib to finish the nap.']],
+        'A store run, step by step: feed first, leave the car seat in the car, feed or change wherever there’s space, try a feed, a change and walking if she fusses, and move her to her crib at home.');
+      return sub('errands', 'Around town', m < 2 ? 'Your first outings' : 'Around town', m < 2 ? 'For the first couple of months, pick quiet places and skip anyone who’s sick.' : 'Most everyday places are fine now: the store, a café, a friend’s house.',
+        run + good([m < 2 ? ['hand', 'Holding {o}', 'It’s fine to ask people to wash their hands first, or to say no.'] : null, m >= 6 ? ['bowl', 'Snacks', 'Soft foods that squash between your fingers, offered while {s} {sit|sits} up and you watch.'] : null, ['steth', 'At the doctor’s office', 'Ask if you can wait in the car until they call you, away from sick children.']]));
     }
 
     if (id === 'water') return sub('water', 'Pool or beach', 'Pool or beach', m < 6 ? 'Under 6 months, shade matters most. In the water, hold {o} the whole time.' : 'Shade and sunscreen first. In the water, hold {o} the whole time.',
@@ -264,13 +263,16 @@
       + calls(['Call a doctor', m < 3 ? 'Fewer wet diapers, a dry mouth, or diarrhea that keeps going.' : 'A fever, fewer wet diapers, a dry mouth, or diarrhea that keeps going.'], ['Get care right away', m < 3 ? 'A temperature of 100.4°F or higher, trouble breathing, or hard to wake.' : 'Any fever in a malaria area, trouble breathing, or hard to wake.']));
 
     if (id === 'away') {
-      const arrive = m >= 6
-        ? [['lock', 'Medicines up high', 'Check bags, nightstands and under sinks'], ['gate', 'Block the stairs', 'With a gate you bring or borrow'], ['bath', 'Watch {o} near water', 'Bath or pool: an adult right beside {o}, every second'], ['crib', 'Check the crib', 'Made after June 2011, away from blind cords']]
-        : [['bag', 'Bags with medicines up high', 'Yours and your hosts’'], ['cord', 'Move the crib from blinds', 'So the cords can’t reach it'], ['crib', 'Check the crib', 'For broken or missing parts']];
-      return sub('away', 'Staying away', 'Staying with family or in a hotel', m >= 6 ? 'Sleep the same way as at home, in {p} own crib or play yard, never your bed or a couch.' : 'Most homes and hotel rooms aren’t set up for babies. A quick look around when you arrive covers most of it.',
-        `<h2 class="hub-h2">${F('When you arrive')}</h2>` + steps(arrive, m >= 6 ? 'Put medicines up high, block the stairs, watch her near water, and check the crib.' : 'Put bags with medicines up high, move the crib away from blinds, and check the crib.')
-        + good(m >= 6 ? [['heart', 'Pets', 'Never leave {o} alone with a pet, even a gentle one.'], ['shield', 'Ask about guns', 'Any gun in the home should be locked and unloaded, with ammunition stored apart.'], ['bowl', 'Grandparents and treats', 'Share the food rules once, kindly: no honey, juice or cow’s milk to drink before 1.']]
-          : [['crib', 'Where {s} {sleep|sleeps}', 'In {p} own crib or play yard, never your bed or a couch.'], ['home', 'Older cribs', 'Use a family crib only if it was made after June 2011.'], ['moon', 'A play yard', 'Use only its own mattress, with no extra padding.']]));
+      // Staying away, done the Road trips way: before you go, then the first ten minutes in the room, then bedtime.
+      const plan = timeline('Setting up, step by step', [
+        ['Before you go', 'notepad', 'Ask the hotel or your hosts for a crib, or plan to bring a play yard. In a hotel, ask for a room away from the pool.'],
+        ['When you arrive', 'crib', 'Set up the crib first, away from windows and blind cords. Take out any pillows, bumpers or extra blankets.'],
+        ['The room', m >= 6 ? 'lock' : 'bag', m >= 6 ? 'Get down to {p} level. Move medicines, cleaners, cords and small things up high, and block the stairs.' : 'Put bags with medicines up high, yours and your hosts’, and move cords out of reach.'],
+        m >= 6 ? ['The rest of the house', 'bath', 'Close bathroom doors. Near a pool or bath, an adult stays right beside {o}, every second.'] : null,
+        ['Bedtime', 'moon', 'Keep the same bedtime steps as at home, with {p} own sleep sack. A few off nights are normal.']],
+        'Before you go, ask for a crib or bring a play yard. When you arrive, set up the crib away from windows and empty it, then make the room safe at her level. Keep the same bedtime steps.');
+      return sub('away', 'Staying away', 'Staying with family or in a hotel', 'Most homes and hotel rooms aren’t set up for babies. Ten minutes when you arrive covers most of it.',
+        plan + good([['shield', 'Which crib is safe?', 'A play yard with its own mattress, or a crib made after June 2011. Never an adult bed or a couch.'], ['bag', 'Packing for a few nights', 'A day’s worth of diapers, feeds and clothes for each night, plus one extra day.'], m >= 6 ? ['bowl', 'Grandparents and treats', 'Share the food rules once, kindly: no honey, juice or cow’s milk to drink before 1.'] : ['heart', 'Pets', 'Never leave {o} alone with a pet, even a gentle one.']]));
     }
 
     if (id === 'weather') {
