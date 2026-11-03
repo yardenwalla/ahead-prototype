@@ -40,7 +40,7 @@
   }
 
   /* ---------- Vaccines ---------- */
-  const WHAT = { DTaP: 'Whooping cough, diphtheria and tetanus', Hib: 'A cause of meningitis', Pneumococcal: 'Pneumonia and ear infections', Polio: 'Polio', 'Hepatitis B': 'A liver infection', Rotavirus: 'Severe diarrhea', MMR: 'Measles, mumps and rubella', Chickenpox: 'Chickenpox', 'Hepatitis A': 'A liver infection' };
+  const WHAT = { DTaP: 'Protects against whooping cough, diphtheria and tetanus', Hib: 'Protects against a cause of meningitis', Pneumococcal: 'Protects against pneumonia and ear infections', Polio: 'Protects against polio', 'Hepatitis B': 'Protects against a liver infection', Rotavirus: 'Protects against severe diarrhea', MMR: 'Protects against measles, mumps and rubella', Chickenpox: 'Protects against chickenpox', 'Hepatitis A': 'Protects against a liver infection' };
   // REVIEW: doses follow the app's existing schedule. Hepatitis B numbering assumes a birth dose.
   const VAX = {
     0: { lead: 'Most babies get their first hepatitis B shot in the hospital. This checkup makes sure it was given.', shots: [['Hepatitis B', '1st dose, if not given at birth']] },
@@ -57,13 +57,14 @@
     ['Flu', age < 6 ? 'From 6 months, every fall' : 'Every fall. The first time takes 2 doses, 4 weeks apart'],
     ['COVID-19', age < 6 ? 'From 6 months, if your pediatrician recommends it' : 'If your pediatrician recommends it']
   ];
-  const doses = xs => `<ul class="hv-doses">${xs.map(([n, d]) => `<li><b>${n}</b><span>${d}</span></li>`).join('')}</ul>`;
+  // Each vaccine on one line: its name and dose, with what it protects against right underneath.
+  const doses = xs => `<ul class="hv-doses">${xs.map(([n, d]) => `<li><b>${n}</b><span>${d}</span>${WHAT[n] && WHAT[n] !== n ? `<em>${WHAT[n]}</em>` : ''}</li>`).join('')}</ul>`;
   function vaccinePage(age) {
-    const v = VAX[age], all = [...v.shots, ...(v.oral || [])], s = SEASON(age);
+    const v = VAX[age], s = SEASON(age);
     const names = s.map(x => x[0]), title = names.length === 3 ? `${names[0]}, ${names[1].toLowerCase()} and ${names[2]}` : names.join(' and ');
     const shotsSub = age === 12 ? 'Usually given as separate shots' : '';
-    const list = `<h2 class="hub-h2">At this checkup</h2><div class="hub-list">${row('shield', 'blue', 'Shots', shotsSub)}${doses(v.shots)}${v.oral ? row('drop', 'green', 'By mouth', 'Drops, not a shot') + doses(v.oral) : ''}${details('What each one protects against', lines(all.map(([n]) => [n, WHAT[n]])))}</div>`;
-    const season = `<h2 class="hub-h2">Depends on the season</h2><div class="hub-list">${details(row('snow', 'peach', title, age < 6 ? 'RSV in season. Flu and COVID-19 from 6 months' : 'Your pediatrician will say which are due'), lines(s), 'is-row')}</div>`;
+    const list = `<h2 class="hub-h2">At this checkup</h2><div class="hub-list">${row('shield', 'blue', 'Shots', shotsSub)}${doses(v.shots)}${v.oral ? row('drop', 'green', 'By mouth', 'Drops, not a shot') + doses(v.oral) : ''}</div>`;
+    const season = `<h2 class="hub-h2">Depends on the season</h2><div class="hub-list">${row('snow', 'peach', title, 'Your pediatrician will say which are due')}<ul class="hv-doses">${s.map(([n, d]) => `<li><b>${n}</b><em>${d}</em></li>`).join('')}</ul></div>`;
     // REVIEW: for babies under 3 months, any fever of 100.4°F or more needs a call.
     const call = age <= 2 ? 'A fever of 100.4°F or higher while {s} {are|is} under 3 months, crying that won’t stop for 3 hours, or swelling that keeps growing.' : 'A fever that keeps going above 104°F, crying for 3 hours or more, or swelling that keeps growing.';
     const after = H().versus('After the shots', ['Normal for a day or two', 'Fussy or sleepy, a low fever, and a sore red spot where the shot went in.' + (age === 12 ? ' A fever or rash 1–2 weeks later can also be normal after MMR and chickenpox.' : '')], ['Call your pediatrician', call]);

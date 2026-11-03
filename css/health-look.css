@@ -29,3 +29,7 @@
 #main .hv-lines b { display: block; font-size: 15px; font-weight: 500; color: var(--ink) }
 #main .hv-lines span { display: block; font-size: 13.5px; line-height: 1.45; color: #6b6670; margin-top: 1px }
 #main .hv-doses b { white-space: nowrap }
+
+/* Vaccines: name and dose on top, what it protects against underneath, in the same row */
+#main .hv-doses li { flex-wrap: wrap; row-gap: 2px }
+#main .hv-doses em { flex-basis: 100%; font-style: normal; font-size: 13.5px; line-height: 1.4; color: #6b6670 }
