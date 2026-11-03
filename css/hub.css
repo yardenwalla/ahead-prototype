@@ -1410,3 +1410,6 @@
 #main .hub-vs > div.is-choice b { color: var(--ink) }
 #main .hub-steps.is-tips li::before { content: ""; width: 7px; height: 7px; margin: 8px 9px 0 10px; border-radius: 50%; background: var(--ss-ink, var(--year-ink)); opacity: .55 }
 #main .bday-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 18px; margin-top: 6px }
+#main .hub-thermo.is-three > div.is-good { grid-column: 1 / -1 }
+#main .hub-thermo.is-three > div.is-good { display: grid; grid-template-columns: auto 1fr; column-gap: 12px; align-items: center }
+#main .hub-thermo.is-three > div.is-good .hub-dot { grid-row: 1 / 3; margin: 0 }

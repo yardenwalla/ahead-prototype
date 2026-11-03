@@ -376,7 +376,13 @@
       const med = u3 ? 'Call your pediatrician before giving any medicine.' : m < 6 ? 'Acetaminophen can help, after checking with your pediatrician. Ask for the dose for {p} weight.' : 'Acetaminophen or ibuprofen can help. Ask your pediatrician for the dose for {p} weight, and check the label every time.';
       return detailFrame('Health', 'Between checkups', 'When Maya seems sick', 'Most baby illnesses are mild and pass in a few days. Here’s how to look after {o}, and when to call.',
         `<h2 class="hub-h2">${F('Take {p} temperature')}</h2>`
-        + `<div class="hub-card hub-two hub-thermo"><div class="is-good"><span class="hub-dot">${h.art('thermo', 'Health')}</span><b>${F('Rectal')}</b><p>${F('The most accurate reading for babies')}</p></div><div><span class="hub-dot">${h.art('eye', 'Health')}</span><b>${F('Forehead or ear')}</b><p>${F('Less reliable at this age')}</p></div></div>`
+        + (() => {
+          // Which thermometer, by age: rectal is most accurate all year; armpit works for a quick check (fever from 99°F);
+          // forehead works at any age; ear readings only from 6 months.
+          const fe = u3 ? ['Forehead', 'Fine for a quick check. If it reads 100.4°F or higher, check rectally'] : m < 6 ? ['Forehead', 'Reliable now. Ear thermometers work from 6 months'] : ['Forehead or ear', 'Both reliable now'];
+          const tile = (icon, t, d, good) => `<div${good ? ' class="is-good"' : ''}><span class="hub-dot">${h.art(icon, 'Health')}</span><b>${F(t)}</b><p>${F(d)}</p></div>`;
+          return `<div class="hub-card hub-thermo is-three">${tile('thermo', 'Rectal', 'The most accurate reading for babies', true)}${tile('hand', 'Armpit', u3 ? 'Easy, but less accurate. If it reads 99°F or higher, check rectally' : 'Easy, but less accurate. A fever starts at 99°F this way')}${tile('eye', fe[0], fe[1])}</div>`;
+        })()
         + `<h2 class="hub-h2">${F('When a fever means calling')}</h2>`
         + `<section class="hub-card hub-fever is-calm"><div class="hub-fever-bands is-one"><div><small>${F(feverBand(m))}</small><b>${u3 ? '100.4°F<span> or higher</span>' : 'Above 104°F<span> and keeps going up</span>'}</b><p>${F(u3 ? 'Call your pediatrician right away, day or night.' : 'Or a fever that lasts more than a day. Call your pediatrician.')}</p></div></div><p class="hub-fever-note">${F('Also call if Maya seems very unwell, has a rash, is unusually sleepy, or is still unwell after the fever comes down.')}</p></section>`
         + `<h2 class="hub-h2">${F('Help {o} feel better')}</h2>`
