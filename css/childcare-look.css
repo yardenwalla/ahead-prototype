@@ -21,3 +21,17 @@
 #main .hub-page[data-overview="Childcare"] .cc-card-button .hub-rough-copy b { color: #5c4513 }
 #main .hub-page[data-overview="Childcare"] .cc-card-button .hub-rough-copy small { color: #8a6a2a }
 #main .hub-page[data-overview="Childcare"] .cc-card-button .hub-chev { color: #8a6a2a }
+/* "Start with your plan": the one clear first step, on the top card. */
+#main .cc-hero-go { margin-top: 12px; padding: 9px 16px; border: 0; border-radius: 999px; background: #fff; color: #6b5a0e; font: inherit; font-size: 14.5px; font-weight: 600; cursor: pointer }
+/* "How they compare": closed by default, one line per kind of care. */
+#main .cc-compare { margin: -8px 0 18px; border-radius: 18px; background: #fff; border: 1px solid var(--line) }
+#main .cc-compare summary { display: flex; align-items: center; justify-content: space-between; padding: 13px 16px; font-weight: 600; font-size: 15px; list-style: none; cursor: pointer }
+#main .cc-compare summary::-webkit-details-marker { display: none }
+#main .cc-compare[open] summary .hub-chev { transform: rotate(90deg) }
+#main .cc-compare ul { list-style: none; margin: 0; padding: 0 16px 8px }
+#main .cc-compare li { padding: 10px 0; border-top: 1px solid var(--line); font-size: 14.5px; line-height: 1.45; color: #5c5361 }
+#main .cc-compare li b { display: block; color: var(--ink); font-weight: 600 }
+/* Timing sits inside the fit card now, across both halves. */
+#main .cc-fit .cc-when { grid-column: 1 / -1; margin: 0; padding: 2px 4px 2px; font-size: 14.5px; line-height: 1.45; color: #5c5361 }
+#main .cc-fit .cc-when b { display: block; color: var(--ss-ink, var(--ink)); font-size: 14px; margin-bottom: 2px }
+#main .cc-chosen { margin-top: 6px }
