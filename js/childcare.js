@@ -175,7 +175,7 @@
         ['home', 'A free program', 'Early Head Start is free for families who qualify. Your referral agency knows where it’s offered.']])
       + good([['coin', 'Prices vary a lot', 'By state, type of care and hours. A nanny usually costs the most, and a share brings it down.'], ['notepad', 'Deposits', 'Many daycares ask for a deposit or a fee to hold a spot.'], ['heart', 'Paying family', 'Paying a relative may still count toward the tax credit. Ask a tax professional.']]), 'coin');
 
-    if (id === 'ready') return sub('ready', 'Step 3', 'Getting ready for day one', 'A few short days first makes the real start easier for you both.',
+    if (id === 'ready') return sub('ready', 'Step 2', 'Getting ready for day one', 'A few short days first makes the real start easier for you both.',
       tl('Plan the first week', [
         ['2 weeks before', 'notepad', 'Fill in Maya’s care card and share it with the caregiver.'],
         ['The week before', 'clock', 'A short visit together, then a short day or two on {p} own.'],
@@ -184,12 +184,8 @@
         'Two weeks before, fill in and share the care card. A week before, a short visit and a short day. The night before, pack and label everything. On day one, a quick, warm goodbye.')
       + careCardButton(load('ahead-carecard', {}))
       + packCard('Pack for care', 'Label everything with {p} name', [
-        bm ? ['bottle', 'Pumped milk for each feed, plus one extra', 'Ask how many feeds they expect while {s’s} there'] : null,
-        bm ? ['notepad', 'A label on every bottle', '{P} name and the date it was pumped'] : null,
-        bm ? ['fridge', 'A cooler bag with an ice pack', 'To keep milk cold on the way'] : null,
-        fm ? ['bottle', 'Formula for each feed, plus one extra', 'Ask how many feeds they expect while {s’s} there'] : null,
-        fm ? ['cup', 'Clean bottles', 'One for each feed'] : null,
-        m >= 6 ? ['bowl', 'Food, if they don’t provide it', 'Ask what they serve, and send a spoon and bib'] : null,
+        ['bottle', bm && fm ? 'Milk or formula for each feed, plus one extra' : bm ? 'Pumped milk for each feed, plus one extra' : 'Formula for each feed, plus one extra',
+          (bm ? 'Bottles labeled with {p} name and the date, in a cooler bag' : 'With clean bottles, labeled with {p} name') + (m >= 6 ? '. Food too, if they don’t provide it' : '')],
         ['shirt', 'A spare outfit or two', 'For spills and blowouts']])
       + picSteps('When things don’t go to plan', [
         m < 9 ? ['bottle', 'Won’t take a bottle', 'Common at first. Let the caregiver try while you’re out of the room.'] : null,
@@ -197,7 +193,7 @@
         ['clock', 'Running low', 'Ask the caregiver to text you when milk, diapers or clothes run low.'],
         ['chat', 'Something feels off', 'Talk to the caregiver early. If it still doesn’t feel right, it’s OK to change.']],
         'If the baby won’t take a bottle, let the caregiver try while you’re away. Keep goodbyes short. Ask to hear when every bottle is finished. If something feels off, talk early.')
-      + good([['bottle', 'Ask how they feed', 'How they warm bottles, and whether they feed slowly, with breaks.'], ['heart', 'Your feelings count', 'The first weeks can be hard on you too. It usually gets easier.']])
+      + good([['bottle', 'Ask how they feed', 'How many feeds to expect, and how they warm bottles.'], ['heart', 'Your feelings count', 'The first weeks can be hard on you too. It usually gets easier.']])
       + `<button class="hub-button is-secondary cc-add" onclick="ccStarted()">${F('Care has started')} ›</button>`, 'bag');
 
     if (id === 'backup') return sub('backup', 'Anytime', 'When care falls through', 'Every family has days when care doesn’t happen. A plan made now makes them easier.',
@@ -230,11 +226,11 @@
       const f = load('ahead-childcare-fit', {}), done = FIT_Q.every(([q]) => f[q]), top = done ? fitResults(f) : [];
       const qs = FIT_Q.map(([q, label, opts]) => `<section class="hub-card cc-sec"><b class="cc-sec-title">${F(label)}</b><div class="cc-chips">${opts.map(o => `<button class="cc-chip${f[q] === o ? ' is-on' : ''}" aria-pressed="${f[q] === o}" onclick="ccFit('${q}','${o.replace(/'/g, '\\\'')}')">${F(o)}</button>`).join('')}</div></section>`).join('');
       const res = done ? `<h2 class="hub-h2">${F('Worth looking at first')}</h2><div class="oa-places">${top.map(k => { const c = PAL[k === 'share' ? 'nanny' : k], nm = k === 'share' ? 'Nanny share' : TYPES[k].name; return `<button class="oa-place" style="--oa-bg:${c[0]};--oa-ink:${c[1]}" onclick="openPage('chg:${CAT}:d:${k}')"><span class="oa-place-art">${SHAPE[k === 'share' ? 'nanny' : k](c)}</span><b>${F(nm)}</b><small>${F(WHY[k])}</small></button>`; }).join('')}</div>` : '';
-      return sub('fit', 'Step 2', 'Which care fits us?', 'Four quick taps. There’s no wrong answer, and many families end up with a mix.',
+      return sub('fit', 'Types of care', 'Which care fits us?', 'Four quick taps. There’s no wrong answer, and many families end up with a mix.',
         qs + res + rows('How they compare', [['blocks', 'Daycare center', 'Set hours and built-in backup. Usually costs less than a nanny.'], ['home', 'Home daycare', 'A smaller group, often the most affordable.'], ['hand', 'Nanny', 'One-on-one and the most flexible. Usually costs the most.'], ['heart', 'Nanny share', 'Close to one-on-one, with the cost split between two families.', go('share')], ['smile', 'Family or friends', 'Flexible and familiar. Needs the clearest talk up front.']]));
     }
 
-    if (id === 'start') return sub('start', 'Step 4', 'Once care starts', 'The first months are about building trust, on both sides.',
+    if (id === 'start') return sub('start', 'Step 3', 'Once care starts', 'The first months are about building trust, on both sides.',
       tl('Plan the first months', [
         ['The first week', 'clock', 'Short days if you can, and a quick chat at pickup.'],
         ['After a month', 'chat', 'A proper check-in: what’s working, and anything to change.'],
@@ -281,11 +277,11 @@
   const shortlist = () => load('ahead-childcare-shortlist', {});
   // The care card gets its own button, like Sleep's "Rough night?": it's the one thing a parent sends to someone else,
   // so it stands apart from the reading rows. Saved, it goes straight to sharing.
-  const STEPS = [['plan', 'Plan', 'When and how much'], ['fit', 'Choose', 'Which care fits'], ['ready', 'Get ready', 'Day one'], ['start', 'Once it starts', 'The first months']];
+  const STEPS = [['plan', 'Plan', 'When to start looking'], ['ready', 'Get ready', 'Day one'], ['start', 'Once it starts', 'The first months']];
   function stepNow() {
     if (load('ahead-childcare-started', false)) return 'start';
     const list = shortlist(); if (Object.values(list).some(a => (a || []).some(c => c.chosen))) return 'ready';
-    return Object.keys(load('ahead-childcare-fit', {})).length ? 'fit' : 'plan';
+    return 'plan';
   }
   window.ccStarted = () => { save('ahead-childcare-started', true); openPage(`chg:${CAT}:d:start`); };
   // The journey as one path: four steps, the current one picked out, so the home never has to list everything.
@@ -322,7 +318,8 @@
     let b = `<header class="hub-hero cc-hero"><p class="hub-eyebrow">${F('Childcare')}</p><h1>${F('Finding care that fits')}</h1><p class="hub-lead">${F('Most families try a few options before one feels right. Here’s the path, one step at a time.')}</p></header>`;
     b += journeyStrip();
     b += `<h2 class="hub-h2">${F('Types of care')}</h2><div class="oa-places">${['center', 'home', 'nanny', 'family'].map(k => { const t = TYPES[k], c = PAL[k], n = (list[k] || []).length;
-      return `<button class="oa-place" style="--oa-bg:${c[0]};--oa-ink:${c[1]}" onclick="openPage('chg:${CAT}:d:${k}')"><span class="oa-place-art">${SHAPE[k](c)}</span><b>${F(t.name)}</b><small>${F(n ? `${n} on your shortlist` : t.short)}</small></button>`; }).join('')}</div>`;
+      return `<button class="oa-place" style="--oa-bg:${c[0]};--oa-ink:${c[1]}" onclick="openPage('chg:${CAT}:d:${k}')"><span class="oa-place-art">${SHAPE[k](c)}</span><b>${F(t.name)}</b><small>${F(n ? `${n} on your shortlist` : t.short)}</small></button>`; }).join('')}</div>`
+      + rows('', [['star', 'Not sure which?', 'Four quick taps to see what might fit', go('fit')]]);
     b += careCardButton(card);
     b += `<h2 class="hub-h2">${F('Anytime')}</h2><div class="hub-list">`
       + homeRow('pay', 'coin', 'Paying for care', 'Help from your state, work and taxes', 'pay')
