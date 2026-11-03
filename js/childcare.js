@@ -151,7 +151,7 @@
 
   function journey(id) {
     const h = H(), m = typeof actualMonth === 'function' ? actualMonth() : 0, fd = feedNow(), bm = fd !== 'Formula', fm = fd !== 'Breast milk';
-    if (id === 'plan') return sub('plan', 'Find care', 'Plan your care', 'Work back from the day you need care. Most families start sooner than they expect.',
+    if (id === 'plan') return sub('plan', 'Getting started', 'How to find care', 'Work back from the day you need care. Most families start sooner than they expect.',
       packCard('Before you look', 'Two things to settle first', [['clock', 'Your days and hours', 'Early and late ones too'], ['coin', 'A monthly budget', 'And what your work offers']])
       + tl('Your countdown', [
         ['6 months before', 'notepad', 'Join a few daycare waitlists.'],
@@ -320,7 +320,7 @@
     const card = load('ahead-carecard', {}), list = shortlist(), n = NOW_CARD.plan;
     // The same shape as Outings: one card to start, the kinds of care as tiles, the care card, then one list
     // for setting care up, in the order you meet it. No step rail: the app can't know where a family is.
-    let b = `<header class="hub-hero cc-hero"><p class="hub-eyebrow">${F('Finding care')}</p><h1>${F(n[0])}</h1><p class="hub-lead">${F(n[1])}</p><button class="cc-hero-go" onclick="openPage('chg:${CAT}:d:plan')">${F(n[2])} ›</button></header>`;
+    let b = `<header class="hub-hero cc-hero"><p class="hub-eyebrow">${F('New to childcare?')}</p><h1>${F('How to find care')}</h1><p class="hub-lead">${F(n[1])}</p><button class="cc-hero-go" onclick="openPage('chg:${CAT}:d:plan')">${F('Get started')} ›</button></header>`;
     const kinds = [['center'], ['home'], ['nanny'], ['family'], ['sitter', 'For a night out, or a break'], ['help', 'A doula or overnight help', 'Extra help at home']];
     b += `<h2 class="hub-h2">${F('What kind of care?')}</h2><div class="oa-places">${kinds.map(([k, short, title]) => { const t = TYPES[k] || {}, c = PAL[k], m = (list[k] || []).length;
       return `<button class="oa-place" style="--oa-bg:${c[0]};--oa-ink:${c[1]}" onclick="openPage('chg:${CAT}:d:${k}')"><span class="oa-place-art">${SHAPE[k](c)}</span><b>${F(title || t.name)}</b><small>${F(m ? `${m} on your shortlist` : short || t.short)}</small></button>`; }).join('')}</div>`
@@ -478,7 +478,7 @@
       const L = cardLines(c);
       // Saved, the card shows exactly as a caregiver will see it when you send it.
       return sub('card', 'Your plan', `${nm}’s care card`, 'This is what a caregiver sees when you send it.',
-        `<div class="cc-actions cc-actions-two"><button class="hub-button" onclick="ccShare()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3M8 7l4-4 4 4M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>${F('Share the card')}</button><button class="hub-button is-secondary" onclick="ccCardMode('edit')">${F('Edit')}</button></div><p class="cc-done" id="ccDone" hidden></p>`
+        `<button class="hub-button cc-share" onclick="ccShare()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3M8 7l4-4 4 4M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>${F('Share the card')}</button><button class="hub-link cc-edit" onclick="ccCardMode('edit')">${F('Edit the card')} ›</button><p class="cc-done" id="ccDone" hidden></p>`
         + `<div class="acc cc-preview">${window.aheadCareCard ? aheadCareCard(cardData(), true) : ''}</div>`
         + h.note('Sending it shares a link that opens as this card on their phone. Only people you send it to can see it.'), 'notepad');
     }
