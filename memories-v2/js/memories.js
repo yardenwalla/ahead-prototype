@@ -67,19 +67,22 @@
       const when = m === 0 ? `Born ${dayLabel(iso(dob))}` : `${dayLabel(iso(from))} – ${dayLabel(iso(to))}`;
       const title = m === 0 ? `Hello, ${nm}` : WORDS[m];
       const caption = m === 0 ? `${nm}, ${dayLabel(iso(dob))}` : `${nm} at ${WORDS[m].toLowerCase()}`;
-      const shot = pic
-        ? `<button class="bb-polaroid" style="--tape:${tape}" onclick="storyShare(${m})" aria-label="Open the ${esc2(WORDS[m].toLowerCase())} photo"><span class="bb-tape"></span><img src="${pic}" alt=""><span class="bb-cap">${caption}</span></button>`
-        : `<label class="bb-polaroid is-empty${m === now ? ' is-now' : ''}" style="--tape:${tape}" role="button" aria-label="Add the ${esc2(WORDS[m].toLowerCase())} photo"><span class="bb-tape"></span><span class="bb-hole"><span class="bb-add">＋ ${m === now ? 'Add this month’s photo' : 'Add a photo'}</span></span><span class="bb-cap">${caption}</span>${hubPhotoInput(m)}</label>`;
+      const designs = typeof storyShare === 'function';
+      const shot = designs
+        ? (pic ? `<div class="bb-story-wrap"><button class="mem-story bb-story" onclick="storyShare(${m})" aria-label="Open the ${esc2(WORDS[m].toLowerCase())} Story"><img data-story-thumb="${m}" alt=""></button></div>`
+          : `<div class="bb-story-wrap"><label class="mem-story bb-story is-empty${m === now ? '' : ' is-past'}" role="button" aria-label="Add the ${esc2(WORDS[m].toLowerCase())} photo"><img data-story-thumb="${m}" alt="">${m === now ? `<span class="mem-story-add">＋ Add this month’s photo</span>` : `<span class="mem-story-plus" aria-hidden="true">＋</span>`}${hubPhotoInput(m)}</label></div>`)
+        : '';
       const lines = fs.length
         ? `<ul class="bb-firsts">${fs.map(r => `<li><button onclick="openPage('event-edit:${r.id}')"><span class="bb-ic" style="${TONE(r)}">${hubArt(ICON(r), 'Development')}</span><span class="bb-line"><b>${esc2(keepTitle(r))}</b><small>${esc2(dayLabel(r.date))}</small>${r.notes ? `<q>${esc2(String(r.notes).slice(0, 120))}</q>` : ''}</span></button></li>`).join('')}</ul>`
         : `<div class="bb-ruled" aria-hidden="true"><i></i><i></i></div>${m === now ? `<p class="bb-blank">${esc2(`Firsts you save this month are written here.`)}</p>` : ''}`;
       const stamps = vs.map(r => `<span class="bb-stamp">✓ ${esc2(r.title)}</span>`).join('');
       const foot = m === now ? `<button class="bb-link" onclick="openPage('chg:Timeline:milestone')">＋ Save a first</button>` : pic ? `<button class="bb-link" onclick="storyShare(${m})">Share this month</button>` : '';
-      return `<section class="bb-page${m === now ? ' is-now' : ''}" id="bb-${m}" aria-label="${esc2(WORDS[m])}"><div class="bb-paper"><p class="bb-when">${esc2(when)}</p><h2 class="bb-title">${title}</h2>${shot}${lines}${stamps ? `<div class="bb-stamps">${stamps}</div>` : ''}${foot ? `<div class="bb-foot">${foot}</div>` : ''}</div></section>`;
+      return `<section class="bb-page${m === now ? ' is-now' : ''}" id="bb-${m}" aria-label="${esc2(WORDS[m])}"><div class="bb-paper"><p class="bb-when">${esc2(when)}</p>${shot}${lines}${stamps ? `<div class="bb-stamps">${stamps}</div>` : ''}${foot ? `<div class="bb-foot">${foot}</div>` : ''}</div></section>`;
     };
     const months = Array.from({ length: now + 1 }, (_, m) => m);
     const index = `<div class="bb-index" role="tablist" aria-label="Months">${months.map(m => `<button class="${photo(m) || inMonth(bigs, m).length ? 'is-full' : ''}${m === now ? ' is-now' : ''}" onclick="bbGo(${m})" aria-label="${esc2(WORDS[m])}">${m === 0 ? 'N' : m}</button>`).join('')}</div>`;
     const book = `<div class="bb-book" id="bb-book">${months.map(page).join('')}</div>`;
+    setTimeout(() => window.storyHydrate && storyHydrate(), 0);
     setTimeout(() => { const el = document.getElementById('bb-' + now), bk = document.getElementById('bb-book'); if (el && bk && !bk.dataset.placed) { bk.scrollLeft = el.offsetLeft - bk.offsetLeft - 16; bk.dataset.placed = '1'; } }, 0);
     const have = months.filter(m => photo(m));
     const year = typeof storyShare === 'function' && now === 12 && have.length

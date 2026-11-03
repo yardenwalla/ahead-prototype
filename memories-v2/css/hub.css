@@ -1451,3 +1451,7 @@
 #main .bb-foot { margin-top: auto; padding-top: 16px; text-align: center }
 #main .bb-link { border: 0; background: none; padding: 6px 4px; font: inherit; font-size: 14px; font-weight: 600; color: #5b4a8b; cursor: pointer }
 #main .bb-links { display: flex; justify-content: center; gap: 22px; margin: 4px 0 8px }
+/* Baby book pages lead with the month's Story design */
+#main .bb-story-wrap { position: relative; align-self: center; width: 70%; margin-top: 10px }
+#main .bb-story { width: 100% }
+#main .bb-paper .bb-when { text-align: center }
