@@ -111,3 +111,7 @@
 #main .care-toggles .care-seg { margin: 0 }
 /* "New" marks a care job that changed at this stage */
 #main .care-v2 .care-new { display: inline-block; margin-left: 8px; padding: 2px 8px; border-radius: 99px; background: var(--hl-bg); color: var(--hl-ink); font-size: 11px; font-weight: 700; font-style: normal; letter-spacing: .02em; vertical-align: 2px }
+#main .care-v2 .care-tile-copy { display: grid; gap: 1px }
+#main .care-v2 .care-tile-copy small { font-size: 12px; line-height: 16px; color: var(--ink-2, #5e5a75) }
+#main .care-v2 .care-tile.is-later { background: transparent; border-style: dashed }
+#main .care-v2 .care-tile.is-later .care-tile-ic { opacity: .6 }

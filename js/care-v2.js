@@ -568,7 +568,8 @@
   function topic3(k, v) {
     CURV = v;
     let s = tFor(k, v), vv = v;
-    if (!s) { for (let i = v; i >= 0 && !s; i--) { if (T3[k] && T3[k][i]) { s = T3[k][i]; vv = i; } } if (!s) for (let i = v; i < 4 && !s; i++) if (T3[k] && T3[k][i]) { s = T3[k][i]; vv = i; } }
+    if (!s) { for (let i = v; i >= 0 && !s; i--) { if (T3[k] && T3[k][i]) { s = T3[k][i]; vv = i; } } }
+    if (!s && NOTYET[k]) { const hw = HOW[k]; return page(TCOL[k], head(TCOL[k], `Everyday care · ${STAGE[v]}`, TNAME[k], '') + `<p class="ss-what care-answer">${F(NOTYET[k])}</p>` + (hw ? hubStageStrip({ title: 'How it changes', items: hw.items, nowIndex: -1, cat: CAT, caption: hw.caption }) : '') + (k === 'skin' ? `<div class="hub-list care-link">${rowK('look', 'Something look off?', 'Poop, rashes, the cord, eyes and more', `openPage('chg:${CAT}:d:look:${v}')`)}</div>` : '')); }
     if (!s) return null;
     const ck = TCOL[k];
     let b = head(ck, `Everyday care · ${STAGE[v]}`, TNAME[k], '') + `<p class="ss-what care-answer">${F(val(s.answer))}</p>`;
@@ -602,6 +603,15 @@
   const dailyRow = (k, v, line) => { const c = COL[TCOL[k]], isNew = v > 0 && T3[k] && T3[k][v] && tFor(k, v);
     const sub = line == null ? val((T3[k][v] || T3[k][0]).line) : line;
     return `<button class="hub-row hl-row" style="--hl-bg:${c[0]};--hl-ink:${c[1]}" onclick="openPage('chg:${CAT}:d:c:${k}:${v}')"><span class="hub-dot">${hubArt(ICON[TCOL[k]], CAT)}</span><span class="hub-row-copy"><b>${F(TNAME[k])}${isNew ? `<em class="care-new">${F('New')}</em>` : ''}</b><small>${F(sub)}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`; };
+  // New for Maya now: the topics that change at this stage. All the basics: the same six tiles at every age.
+  const NEWNOW = [['diapers', 'down', 'cord', 'bath'], ['bath', 'skin', 'dress'], ['diapers', 'skin', 'dress', 'teeth'], ['diapers', 'bath', 'dress', 'teeth']];
+  const BASIC6 = ['diapers', 'bath', 'skin', 'dress', 'teeth', 'nails'];
+  const hasAny = (k, v) => { for (let i = v; i >= 0; i--) if (T3[k] && T3[k][i]) return true; return false; };
+  const basicTile = (k, v) => { const c = COL[TCOL[k]], ok = hasAny(k, v);
+    return `<button class="care-tile${ok ? '' : ' is-later'}" style="--hl-bg:${c[0]};--hl-ink:${c[1]}" onclick="openPage('chg:${CAT}:d:c:${k}:${v}')"><span class="care-tile-ic">${hubArt(ICON[TCOL[k]], CAT)}</span><span class="care-tile-copy"><b>${F(TNAME[k])}</b>${ok ? '' : `<small>${F(LATER[k])}</small>`}</span></button>`; };
+  // A basic with nothing to do yet says so, and when it starts, instead of showing a later stage's advice.
+  const LATER = { teeth: 'From about 4 months', skin: 'Peeling is normal' };
+  const NOTYET = { teeth: 'Teething usually starts around 4–6 months. There’s nothing to do yet.', skin: 'In the first weeks, peeling skin and tiny white bumps are normal and clear up on their own. Nothing else to do yet.' };
   const topicRow = (k, v) => { const s = tFor(k, v); if (!s) return ''; const c = COL[TCOL[k]];
     return `<button class="hub-row hl-row" style="--hl-bg:${c[0]};--hl-ink:${c[1]}" onclick="openPage('chg:${CAT}:d:c:${k}:${v}')"><span class="hub-dot">${hubArt(ICON[TCOL[k]], CAT)}</span><span class="hub-row-copy"><b>${F(TNAME[k])}</b><small>${F(val(s.line))}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`; };
   // Older links land on the topic and stage they were about.
@@ -638,7 +648,8 @@
     let b = `<header class="hub-hero care-hero"><p class="hub-eyebrow">${STAGE[v]}</p><h1>${F(st.title)}</h1><p class="hub-lead">${F(st.lead)}</p></header>`;
     // No tiles: Everyday care's answers are mostly actions, not numbers, so they read better as rows (like Health).
     const shop = v === 1 ? '' : `<div class="hub-browse care-shop"><button class="hub-link" onclick="${go('need', v)}">${F(v === 0 ? 'Getting ready? What you’ll need' : 'What you’ll need now')} ›</button></div>`;
-    b += `<h2 class="hub-h2">${F('Your daily care')}</h2><div class="hub-list">${DAILY[v]().map(([k, line]) => dailyRow(k, v, line)).join('')}</div>` + shop;
+    b += `<h2 class="hub-h2">${F('New for Maya now')}</h2><div class="hub-list">${NEWNOW[v].map(k => topicRow(k, v)).join('')}</div>`;
+    b += `<h2 class="hub-h2">${F('All the basics')}</h2><div class="care-grid">${BASIC6.map(k => basicTile(k, v)).join('')}</div>` + shop;
     b += `<button class="hub-rough-card care-rash-card" onclick="openPage('chg:${CAT}:d:look:${v}')"><span class="hub-rough-moon" aria-hidden="true">${hubArt('eye', CAT)}</span><span class="hub-rough-copy"><b>${F('Something look off?')}</b><small>${F(['Poop, rashes, the cord, eyes and more', 'Poop, rashes, eyes and more', 'Drool, rashes, poop and more', 'Drool, rashes, poop and more'][v])}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`;
     b += h.versus('Normal, or time to call?', ['Normal', st.call[0]], ['Call your pediatrician', st.call[1]]);
     b += nx ? h.next(v === 0 ? 'Next, after the first few weeks' : `Next, usually from ${STAGE[v + 1].split('–')[0]} months`, nx.title, `openPage('chg:${CAT}:s:${v + 1}')`)
