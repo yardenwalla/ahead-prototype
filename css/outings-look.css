@@ -73,3 +73,5 @@
 #main .hub-detail[data-overview="Childcare"] .cc-extra { background: #fcf7dd }
 #main .hub-detail[data-overview="Childcare"] .cc-extra > small { color: #6b5a0e }
 #main .hub-detail[data-overview="Childcare"] .oa-timeline { margin-bottom: 22px }
+#main .oa-away-head { display: flex; align-items: baseline; justify-content: space-between }
+#main .oa-away-head .hub-link { font-size: 14px }
