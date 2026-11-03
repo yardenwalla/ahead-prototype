@@ -426,7 +426,7 @@ window.AHEAD_CHANGES = {
       [
        "Yes",
        "Evening fussiness is very common. Dim the lights, cut the noise and feed as often as she wants.",
-       "It often peaks around 6 weeks and eases by 3–4 months.",
+       "It often peaks around 6–8 weeks and eases by 3–4 months.",
        null
       ],
       [
@@ -464,7 +464,7 @@ window.AHEAD_CHANGES = {
       [
        "Yes",
        "Evening fussiness is very common. Dim the lights, cut the noise and feed as often as she wants.",
-       "It often peaks around 6 weeks and eases by 3–4 months.",
+       "It often peaks around 6–8 weeks and eases by 3–4 months.",
        null
       ],
       [

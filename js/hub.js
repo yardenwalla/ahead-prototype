@@ -697,7 +697,7 @@
       h += hero({ eyebrow: 'Three naps', title: 'Naps start happening at set times', lead: 'Sleep settles into a pattern you can plan your days around. It’s also when many families start thinking about sleep training.', extra: trainRow }) + napAsk(now, age) + B;
       h += nightCard(key, now);
       h += sleepFour(key, now, view);
-      h += versus('Normal, or time to call?', ['Normal', 'Naps of 30–45 minutes, and a short cry when {s} half-wakes that settles in a few minutes.'], ['Call your pediatrician', 'Snoring most nights, gasping in sleep, fever or ear pulling, or a big change that lasts more than two weeks. Long pauses in breathing or blue lips: call 911.']);
+      h += versus('Normal, or time to call?', ['Normal', 'Naps of 30–45 minutes, and a short cry when {s} {half-wake|half-wakes} that settles in a few minutes.'], ['Call your pediatrician', 'Snoring most nights, gasping in sleep, fever or ear pulling, or a big change that lasts more than two weeks. Long pauses in breathing or blue lips: call 911.']);
     }
     if (key === 'two') {
       const settled = answers.twoNaps === 'Yes' || age >= 10 || (now && answers.twoNaps !== 'Not yet');
@@ -806,7 +806,7 @@
             [0, 'Newborn', 'Swaddle until the first try to roll', 'Arms in, hips loose', 'chg:Sleep:d:swaddle'],
             [2, '2–4 months', 'Stop swaddling', 'At the first try to roll, switch to a sleep sack', 'chg:Sleep:d:swaddle', 'sleep-rolling'],
             [4, '4–6 months', 'Bassinet to crib', 'At its weight limit, or once {s} {roll|rolls}', 'chg:Sleep:d:where'],
-            [5, 'Before {s} sits', 'Lower the crib mattress', 'Then lowest before {s} pulls up', '', 'sleep-crib-height'],
+            [5, 'Before {s} {sit|sits}', 'Lower the crib mattress', 'Then lowest before {s} {pull|pulls} up', '', 'sleep-crib-height'],
             [6, '6 months', 'Own room, if you like', 'Room-share until then', 'chg:Sleep:d:where'],
             [12, '12 months', 'A small comfort toy is fine', 'Still no pillows or heavy blankets', '']];
           const cur = steps.reduce((k, st, i) => (mo >= st[0] ? i : k), 0);
@@ -1028,7 +1028,7 @@
   }
   function settleChoices(age) {
     // One page about one choice: is it time, the approaches side by side, what to expect, and that skipping it is fine. (AAP: optional, from about 4–6 months.)
-    return detail('Sleep', 'Your choice', 'Sleep training, if you choose it', 'It teaches Maya to fall back asleep on {p} own when {s} half-wakes, so nights get longer. It’s optional. Rocking or feeding to sleep is fine too.',
+    return detail('Sleep', 'Your choice', 'Sleep training, if you choose it', 'It teaches Maya to fall back asleep on {p} own when {s} {half-wake|half-wakes}, so nights get longer. It’s optional. Rocking or feeding to sleep is fine too.',
       tip('Is Maya old enough?', (profile.early ? 'Go by adjusted age. ' : '') + (age >= 7 ? 'It can work at any age from here, once your pediatrician says weight and feeding are on track.' : 'Most families who try it start between 4 and 6 months, once your pediatrician says weight and feeding are on track.') + ' Wait if {s’s} sick, or during travel or the first weeks of daycare.')
       + methodScale()
       + tip('What to expect', 'Most methods take 1–2 weeks. Pick one that fits your family and stick with it, since switching makes it harder.')

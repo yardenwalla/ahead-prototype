@@ -30,7 +30,7 @@
       tiles: [['notepad', 'Check the limits', 'Weight and age, on the label'], ['shield', 'Straps on', 'Every time, even for a minute'], ['home', 'On the floor', 'Never a table, counter, bed or sofa'], ['moon', 'Not for sleep', 'Asleep? Move {o} to {p} crib']],
       why: 'Swings, bouncers and floor seats are handy for a few hands-free minutes. A quick check keeps them safe.',
       steps: ['Check the label for weight and age limits, and stop once {s} {reach|reaches} them.', 'Use the straps every time, even for a minute.', 'Keep them on the floor, never on a table, counter, bed or sofa.', 'They’re not for sleep. If {s} {fall|falls} asleep, move {o} to {p} crib, on {p} back.'],
-      tip: ['When to stop using a bouncer', 'Once {s} can sit up on {p} own or tries to climb out, even under the weight limit.'] },
+      tip: ['When to stop using a bouncer', 'Once {s} can sit up on {p} own or {try|tries} to climb out, even under the weight limit.'] },
     swaddle: { t: 'Stop swaddling at the first try to roll', s: 'Some babies try at 2 months. Then a sleep sack, arms free', i: 'sack', c: 'sleep', go: "openPage('chg:Sleep:d:swaddleoff')", sleep: true },
     bassinet: { t: 'Move from the bassinet to the crib', s: 'Once {s} {try|tries} to roll or push up, or at its weight limit', i: 'crib', c: 'sleep', go: "openPage('chg:Sleep:d:where')", sleep: true },
     small: { t: 'Clear the floor where {s} {play|plays}', s: 'Coins, button batteries and small parts out of reach', i: 'coin', c: 'floor',
