@@ -21,16 +21,20 @@
       links: [['Find a car-seat check near you · NHTSA', 'https://www.nhtsa.gov/campaign/right-seat']] },
     sleep: { t: 'Set up a bare crib', s: 'Firm, flat and empty, in your room', i: 'moon', c: 'sleep', go: "openPage('chg:Sleep:safe')", sleep: true },
     changing: { t: 'Set up your changing spot', s: 'Supplies within arm’s reach, or a mat on the floor', i: 'diaper', c: 'body',
+      vs: ['Where to change {o}', ['On a changing table', 'Use the strap, and keep one hand on {o} every time.'], ['On the floor', 'A mat on the floor. Never a bed or sofa, even for a second.']], tiles: null,
+      tip: ['Everything within reach', 'Diapers, wipes and a change of clothes, so you never need to step away.'],
       why: 'Babies wriggle and roll sooner than you expect, and a fall from a changing table is one of the most common early injuries.',
       steps: ['Keep diapers, wipes and a change of clothes within arm’s reach of the changing spot.', 'On a raised table, use the strap and keep one hand on {o}, every time.', 'Or change {o} on a mat on the floor. Never leave {o} on a bed or sofa, even for a second.'],
-      tip: ['Never step away', 'Even for a second. A strap doesn’t replace a hand on {o}.'] },
+    },
     gear: { t: 'Check swings and bouncers', s: 'Weight limits and straps, and never for sleep', i: 'mat', c: 'floor',
+      tiles: [['notepad', 'Check the limits', 'Weight and age, on the label'], ['shield', 'Straps on', 'Every time, even for a minute'], ['home', 'On the floor', 'Never a table, counter, bed or sofa'], ['moon', 'Not for sleep', 'Asleep? Move {o} to {p} crib']],
       why: 'Swings, bouncers and floor seats are handy for a few hands-free minutes. A quick check keeps them safe.',
       steps: ['Check the label for weight and age limits, and stop once {s} {reach|reaches} them.', 'Use the straps every time, even for a minute.', 'Keep them on the floor, never on a table, counter, bed or sofa.', 'They’re not for sleep. If {s} {fall|falls} asleep, move {o} to {p} crib, on {p} back.'],
       tip: ['When to stop using a bouncer', 'Once {s} can sit up on {p} own or tries to climb out, even under the weight limit.'] },
     swaddle: { t: 'Stop swaddling at the first try to roll', s: 'Some babies try at 2 months. Then a sleep sack, arms free', i: 'sack', c: 'sleep', go: "openPage('chg:Sleep:d:swaddleoff')", sleep: true },
     bassinet: { t: 'Move from the bassinet to the crib', s: 'Once {s} {try|tries} to roll or push up, or at its weight limit', i: 'crib', c: 'sleep', go: "openPage('chg:Sleep:d:where')", sleep: true },
     small: { t: 'Clear the floor where {s} {play|plays}', s: 'Coins, button batteries and small parts out of reach', i: 'coin', c: 'floor',
+      fig: 'tube', tiles: [['mat', 'A firm play mat', 'On the floor, away from edges and cords'], ['eye', 'Look at floor level', 'For coins, magnets and older kids’ toy pieces'], ['battery', 'Battery covers screwed shut', 'On remotes, key fobs and musical toys']],
       why: 'Rolling brings the floor within reach, and everything {s} {find|finds} goes in {p} mouth.',
       steps: ['Give {o} a firm play mat on the floor, away from furniture edges and cords. Beds and sofas aren’t safe for rolling practice.', 'Look around {p} play space at floor level for coins, magnets and pieces of older children’s toys.', 'Anything that fits inside an empty toilet-paper tube is small enough to choke on. Keep it out of reach.', 'Check that remotes, key fobs, musical books and toys have battery covers that screw shut. Keep spare batteries up high.'],
       tip: ['Button batteries are an emergency', 'If you think {s} swallowed a button battery or a magnet, go to the ER right away.'],
@@ -40,33 +44,40 @@
       steps: ['Pick a spot up high, like a hook or a closet shelf, for bags and coats.', 'Ask visitors to put their bags there when they arrive.'],
       tip: ['Child-resistant isn’t childproof', 'Caps slow children down but don’t stop them. Medicines still need to be up high and locked.'] },
     gates: { t: 'Fit stair gates', s: 'Screwed in at the top, so it can’t give way', i: 'gate', c: 'car',
+      vs: ['Which gate where', ['Top of the stairs', 'A gate that screws into the wall. One that presses against the walls can give way.'], ['Bottom of the stairs', 'Either kind is fine.']], tiles: null, note: 'Use gates made for children, and follow their instructions.',
       why: 'Once {s} {crawl|crawls}, stairs are the biggest fall risk at home.',
       steps: ['At the top of the stairs, use a gate that screws into the wall. A gate that only presses against the walls can give way.', 'At the bottom, either kind is fine.', 'Use gates made for children, and follow their instructions.'],
       tip: ['Skip seated walkers with wheels', 'They let babies move fast toward stairs and other hazards, and they don’t help with walking. Floor play or a stationary activity center is safer.'],
-      links: [['Room-by-room babyproofing · AAP', aap], ['Find a professional childproofer · Paid', 'https://www.childproofingexperts.com/find-a-professional/'], ['Baby walkers · AAP', 'https://www.healthychildren.org/English/safety-prevention/at-home/Pages/Baby-Walkers-A-Dangerous-Choice.aspx']] },
+      links: [['Room-by-room babyproofing · AAP', aap], ['Find a professional childproofer · Paid', 'https://www.childproofingexperts.com/find-a-professional/'], ['Seated walkers · AAP', 'https://www.healthychildren.org/English/safety-prevention/at-home/Pages/Baby-Walkers-A-Dangerous-Choice.aspx']] },
     storage: { t: 'Lock up cabinets and drawers', s: 'Medicines, cleaners, knives and plastic bags locked up; bathroom and laundry closed off', i: 'lock', c: 'high',
+      tiles: [['lock', 'Latch it', 'Cabinets and drawers with medicines, cleaners, pods, knives or plastic bags'], ['up', 'Up high too', 'Medicines and cleaners, as well as latched'], ['home', 'Close off rooms', 'Bathroom, laundry and garage, with knob covers or a gate']],
       why: 'Crawling babies open every low door and drawer they can reach.',
       steps: ['Fit child latches or locks on cabinets and drawers that hold medicines, cleaners, detergent pods, knives or plastic bags.', 'Better still, move medicines and cleaners up high as well as latched.', 'Keep the bathroom, laundry room and garage closed off with door knob covers or a gate.'],
       tip: ['Relatch every time', 'Pull the door after you close it to check the latch holds.'],
       links: [['What to lock away · AAP', aap]] },
     outlets: { t: 'Cover outlets and move cords', s: 'Covers too big to swallow', i: 'plug', c: 'floor',
+      tiles: [['plug', 'Outlet covers', 'Too big to swallow, and hard to pull out'], ['cord', 'Cords out of reach', 'Lamps and chargers behind furniture'], ['shield', 'Replacing outlets?', 'Tamper-resistant ones have built-in shutters']],
       why: 'Outlets and cords sit right at crawling height.',
       steps: ['Use plug-in outlet covers {s} can’t pull out and that are too big to swallow.', 'Move lamp and charger cords out of reach, or tuck them behind furniture.', 'If you’re replacing outlets, tamper-resistant ones have built-in shutters.'],
       links: [['Childproofing your home · CPSC', cpsc]] },
     mattress: { t: 'Lower the crib mattress', s: 'Before {s} can sit', i: 'crib', c: 'sleep', go: "openPage('chg:Sleep:d:mattress')", sleep: true },
     anchor: { t: 'Strap furniture and TVs to the wall', s: 'So they can’t tip if {s} {pull|pulls} on them', i: 'dresser', c: 'body',
+      tiles: [['dresser', 'Anti-tip straps', 'On dressers, bookcases and tall furniture'], ['blocks', 'TVs too', 'On the wall, or strapped to their stand'], ['clock', 'When', 'Any time before {s} {pull|pulls} up']],
       why: 'Babies use furniture as a handhold to pull up, and dressers, bookcases and TVs can tip over onto them.',
       steps: ['Fit anti-tip straps to dressers, bookcases and other tall furniture {s} could pull on.', 'Mount TVs on the wall, or strap them to the furniture they stand on.', 'Do it any time before {s} {pull|pulls} up. Many families do it while babyproofing for crawling.'],
       links: [['Anchor it · CPSC', cpsc]] },
     windows: { t: 'Make windows and blinds safe', s: 'Open no more than 4 inches, and no hanging cords', i: 'window', c: 'car',
+      tiles: [['window', 'Window stops', 'Open 4 inches at most. Screens don’t stop falls'], ['home', 'One way out', 'One window per room an adult can open fully, for a fire'], ['cord', 'Cordless blinds', 'Tied-up cords can still be reached'], ['crib', 'Furniture away', 'Cribs and climbable things away from windows']],
       why: 'Standing puts windows and blind cords within reach.',
       steps: ['Fit window stops, small locks that keep windows from opening more than 4 inches. Screens don’t stop falls.', 'Keep at least one window in each room that an adult can open fully in a fire.', 'Swap corded blinds and shades for cordless ones. Tying up the pull cord isn’t enough: inner cords and loops can still be reached, from the floor or from furniture.', 'Move cribs and furniture {s} could climb away from windows.'],
       links: [['Window safety · CPSC', cpsc]] },
     kitchen: { t: 'Fit stove knob covers and an oven lock', s: 'Once {s} can reach the front of the stove', i: 'fridge', c: 'high',
+      tiles: [['fridge', 'Knob covers', 'So the burners can’t be turned on'], ['lock', 'An oven lock', 'So the door stays shut'], ['cup', 'Back burners', 'With pot handles turned in']],
       why: 'Standing brings stove knobs and the oven door within reach.',
       steps: ['Fit knob covers so {s} can’t turn the burners on.', 'Add an oven lock so the door stays shut.', 'Cook on the back burners when you can, with pot handles turned in.'],
       links: [['Childproofing your home · CPSC', cpsc]] },
     pool: { t: 'Keep water out of reach', s: 'A toilet lock, a shut bathroom, and a fenced pool', i: 'bath', c: 'home',
+      tiles: [['bath', 'Bathroom shut', 'A toilet-lid lock, and the door closed'], ['drop', 'Empty it', 'Buckets, tubs and wading pools, right after use'], ['shield', 'Fence the pool', 'All sides, with a self-closing, self-latching gate']],
       why: 'Babies can drown in a few inches of water, quickly and quietly.',
       steps: ['Fit a toilet-lid lock, and keep the bathroom door closed.', 'Empty buckets, tubs and wading pools right after use.', 'If you have a pool or spa, fence it on all sides with a self-closing, self-latching gate. Keep doors to it locked, and close the gate every time.'],
       tip: ['Barriers don’t replace watching', 'Stay within arm’s reach whenever {s’s} near water.'],
@@ -131,16 +142,23 @@
     return `<div class="quiet-category hub-page" data-overview="Safety" data-safety-stage="${key}" style="${yearTheme('Safety')}">${typeof monthlyPageHeader === 'function' ? monthlyPageHeader('Safety') : ''}${pills}${b}</div>`;
   };
 
+  // The toilet-paper tube test, as a picture: anything that fits through it is small enough to choke on.
+  const tubeFigure = () => `<figure class="hub-figure sf-tube" role="img" aria-label="${F('Anything that fits through an empty toilet-paper tube is small enough to choke on.')}"><svg viewBox="0 0 220 96" aria-hidden="true"><ellipse cx="70" cy="48" rx="34" ry="34" fill="#fff" stroke="#c9a46a" stroke-width="3"/><ellipse cx="70" cy="48" rx="22" ry="22" fill="#f7e6c4" stroke="#c9a46a" stroke-width="2"/><circle cx="64" cy="44" r="5" fill="#b9b1a4"/><circle cx="76" cy="52" r="4" fill="#8f8a83"/><rect x="66" y="36" width="10" height="6" rx="2" fill="#e38b6d"/><path d="M118 48h30" stroke="#795b2c" stroke-width="3" stroke-linecap="round"/><path d="m142 40 8 8-8 8" fill="none" stroke="#795b2c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="182" cy="48" r="16" fill="#fde3d3"/><path d="M174 48h16" stroke="#9a5a3c" stroke-width="3" stroke-linecap="round"/></svg><figcaption><b>${F('The tube test')}</b>${F('If it fits through an empty toilet-paper tube, it’s small enough to choke on. Keep it out of reach.')}</figcaption></figure>`;
+
   /* ---------- a step's how-to ---------- */
   function stepPage(id) {
     const x = STEP[id], h = H(); if (!x || x.go) return safetyMovementGuide();
     const st = stageOf(id), s = status(id), c = C[x.c];
-    const head = `<div class="dev-area-head ss-head" style="--area:${SAND[0]};--area-ink:${SAND[1]}"><span class="dev-area-head-art"><svg viewBox="0 0 90 40" aria-hidden="true"><rect x="4" y="30" width="78" height="6" rx="3" fill="${SAND[2]}"/><circle cx="24" cy="22" r="8" fill="${SAND[3]}"/><rect x="48" y="12" width="20" height="18" rx="4" fill="${SAND[2]}"/></svg></span><p class="hub-context">${st ? st.label : 'Safety'}</p><h1>${F(x.t)}</h1><p class="hub-lead">${F(x.why)}</p></div>`;
+    const head = `<div class="dev-area-head ss-head" style="--area:${SAND[0]};--area-ink:${SAND[1]}"><span class="dev-area-head-art sf-head-art">${hubArt(x.i, 'Safety')}</span><p class="hub-context">${F(st ? st.label : 'Safety')}</p><h1>${F(x.t)}</h1>${x.why ? `<p class="hub-lead">${F(x.why)}</p>` : ''}</div>`;
     const actions = s === 'done' ? `<p class="hub-done">${F('Done')} ✓</p><button class="hub-link" onclick="sfSet('${id}','')">${F('Undo')}</button>`
       : `<button class="hub-button" onclick="sfSet('${id}','done');back()">${F('Mark as done')}</button><button class="hub-link sf-na" onclick="sfSet('${id}','${s === 'na' ? '' : 'na'}');back()">${F(s === 'na' ? 'It applies after all' : 'Doesn’t apply to our home')}</button>`;
     const links = (x.links || []).map(([t, u]) => `<a class="hub-more" href="${u}" target="_blank" rel="noopener"><span>${t}</span><span class="hub-chev" aria-hidden="true">↗</span></a>`).join('');
     return `<div class="quiet-category hub-page hub-detail" data-overview="Safety" data-ss="1" style="${yearTheme('Safety')};--ss-bg:${c[0]};--ss-ink:${c[1]}">${detailPageTop('Safety')}${head}`
-      + h.steps(x.steps.map(F)) + (x.tip ? h.tip(x.tip[0], x.tip[1]) : '') + `<div class="hub-actions sf-actions">${actions}</div></div>`;
+      + (x.vs ? h.versus(x.vs[0], x.vs[1], x.vs[2]).replace('is-urgent', 'is-choice') : '')
+      + (x.fig === 'tube' ? tubeFigure() : '')
+      + (x.tiles ? hubIconSteps(x.tiles, 'Safety', F(x.tiles.map(t => t[1] + ': ' + t[2]).join('. ')), false) : x.tiles === null ? '' : h.steps(x.steps.map(F)))
+      + (x.note ? `<p class="sf-note">${F(x.note)}</p>` : '')
+      + (x.tip ? h.tip(x.tip[0], x.tip[1]) : '') + `<div class="hub-actions sf-actions">${actions}</div>`</div>`;
   }
 
   /* ---------- routes, and older links into the new pages ---------- */

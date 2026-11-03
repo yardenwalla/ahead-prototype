@@ -34,7 +34,10 @@
       + `<button class="hub-link dev-more-link" onclick="openPage('chg:Development:d:more:${ref}')">${F('More ideas for awake time')} ›</button></section>`;
   };
   // How long Maya is usually awake at a time, by the age the guides follow (adjusted age for babies born early). Same ranges as Sleep.
-  const WAKE = m => m < 2 ? '45–60 minutes' : m < 3 ? '1–1½ hours' : m < 5 ? '1½–2 hours' : m < 7 ? '2–2½ hours' : m < 10 ? '2½–3 hours' : '3–4 hours';
+  // Awake time comes from Sleep, so the two tabs always give the same number: Sleep's stage for this baby
+  // (three naps or two) when there is one, and the age otherwise.
+  const SLEEP_WAKE = ['45–60 minutes', '1–1½ hours', '2–2½ hours', '2½–4 hours'];
+  const WAKE = m => { try { if ((typeof isCurrent !== 'function' || isCurrent()) && typeof chgStageIndex === 'function') { const i = chgStageIndex('Sleep'); if (SLEEP_WAKE[i]) return SLEEP_WAKE[i]; } } catch (e) {} return m < 2 ? '45–60 minutes' : m < 4 ? '1–1½ hours' : m < 7 ? '2–2½ hours' : '2½–4 hours'; };
   // On Movement, the idea that answers the big question of the age.
   const MOVE = {
     4: { id: 'tummy-picture', title: 'A picture at floor level', why: 'Turning to look is how rolling starts.', steps: ['During tummy time, prop a bold picture where Maya can see it.', 'Lie down facing {o} and talk about it.', 'Move it a little to one side so {s} turns to look.'] },

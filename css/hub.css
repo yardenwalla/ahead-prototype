@@ -1405,3 +1405,6 @@
 #main .hub-thermo .hub-dot { display: inline-flex; margin-bottom: 8px }
 #main .hub-thermo b { display: block; font-size: 15.5px }
 #main .hub-thermo p { margin: 4px 0 0; font-size: 13px; line-height: 1.35; color: var(--muted, #6b6670) }
+/* A versus card for two equal choices (which gate where, table or floor): no warning color on the second side. */
+#main .hub-vs > div.is-choice { background: var(--ss-bg, #f4f1ec) }
+#main .hub-vs > div.is-choice b { color: var(--ink) }
