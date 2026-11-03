@@ -137,9 +137,9 @@
   const NOWS = [
     [0, 'Short outings are good for you both', 'Fresh air and a change of scene help, even in the first weeks.', 'errands'],
     [2, 'Longer trips may feel easier soon', 'As feeds start to spread out, a long drive or a first flight gets more doable.', 'road'],
-    [4, 'Facing out may be next', 'It depends on your carrier’s height and weight limits, and on {p} head control. Check the label.', 'carry', ['You can start checking about facing out', 'It depends on your carrier’s height and weight limits, and on {p} head control.']],
+    [4, 'Facing out may be next', 'It depends on your carrier’s height and weight limits, and on {p} head control. You’ll find the limits in the carrier’s instructions.', 'carry', ['You can start checking about facing out', 'It depends on your carrier’s height and weight limits, and on {p} head control.']],
     [6, 'What changes for outings at 6 months', 'The shopping cart’s own seat, snacks out, and babyproofing when you stay over.', 'errands'],
-    [9, 'Watch the car seat’s limits', 'Moving to a convertible seat depends on the infant seat’s height and weight limits. The label tells you when.', 'car', ['Check the infant car seat’s limits', 'Moving to a convertible seat depends on its height and weight limits, not age.']],
+    [9, 'Watch the car seat’s limits', 'Moving to a convertible seat depends on the infant seat’s height and weight limits, printed on a sticker on the seat.', 'car', ['Check the infant car seat’s limits', 'Moving to a convertible seat depends on its height and weight limits, not age.']],
     [12, 'Rear-facing after the first birthday, too', 'Keep {o} rear-facing for as long as the seat allows.', 'car', ['Rear-facing past the first birthday', 'Keep {o} rear-facing until the seat’s rear-facing limits, often age 2 or older.']]
   ];
   // For the home screen: the update for this month, or the one coming next month (so trips can be planned ahead).
@@ -152,7 +152,7 @@
     b += places(v) + seasonCard() + gear(v);
     b += h.versus('In the car', ['Every time', 'Look in the back seat before you walk away.'], ['Never', 'Leave Maya alone in the car, even for a minute.']);
     if (nx) b += h.next(`Coming up around ${nx[0]} months`, nx[1], open(nx[3]));
-    b += h.note('Car seats, carriers and strollers each have their own limits. Check the label and the manual.');
+    b += h.note('Car seats, carriers and strollers each have their own height and weight limits. You’ll find them in the manual and on the gear itself.');
     return `<div class="quiet-category hub-page" data-overview="${CAT}" style="${yearTheme(CAT)}">${monthlyPageHeader(CAT)}${b}</div>`;
   }
 
@@ -342,12 +342,12 @@
     // Carrier and stroller follow Car seat: the same page at every age, with how it changes shown as a path from day one.
     if (id === 'carry') return sub('gear', 'Your gear', 'Carrier basics', 'A quick check every time keeps {o} breathing easy.',
       hubFigure('carrier', CAT, 'In a carrier: face visible and close enough to kiss, chin off the chest, knees up in an M shape, back supported.')
-      + hubStageStrip({ title: 'Ways to carry, as {s} {grow|grows}', numbered: true, items: [['carrier', 'Facing in', 'From birth, face above the fabric'], ['carrier', 'Facing out', 'Once {p} head is steady and the label allows, for short awake times'], ['carrier', 'On your back', 'Once {s} {sit|sits} steadily and the label allows']], cat: CAT, caption: 'Facing in from birth, facing out once the head is steady for short awake times, and on your back once sitting steadily and the label allows.' })
+      + hubStageStrip({ title: 'Ways to carry, as {s} {grow|grows}', numbered: true, items: [['carrier', 'Facing in', 'From birth, face above the fabric'], ['carrier', 'Facing out', 'Once {p} head is steady and {s} {fit|fits} the carrier’s limits for facing out. Short awake times only'], ['carrier', 'On your back', 'Once {s} {sit|sits} steadily and {fit|fits} the carrier’s limits for back carries']], cat: CAT, caption: 'Facing in from birth. Facing out once the head is steady and the baby fits the carrier’s limits for it, for short awake times. On your back once sitting steadily and within the carrier’s limits.' })
       + good([['hand', 'Snug enough', 'When you lean forward, {s} {stay|stays} against you without slumping.'], ['moon', 'Asleep in the carrier', 'Keep {p} face visible, and move {o} to a flat bed when you can.'], ['cup', 'Away from the stove', 'And from hot drinks, while {s’s} in the carrier.']]));
 
     if (id === 'stroller') return sub('gear', 'Your gear', 'Stroller basics', 'Harness on every time, and brakes on whenever you stop.',
       hubFigure('stroller', CAT, 'Harness on every time, brakes on when you stop, no bags on the handles and no blanket over the top.')
-      + hubStageStrip({ title: 'Lying back, then sitting up', numbered: true, items: [['stroller', 'Lying back', 'From birth, or with the infant car seat clicked on'], ['stroller', 'Sitting up', 'Once {s} can sit steadily on {p} own, as the label allows']], cat: CAT, caption: 'Lying back from birth, or with the infant car seat clicked on, then sitting up once the baby can sit steadily, as the label allows.' })
+      + hubStageStrip({ title: 'Lying back, then sitting up', numbered: true, items: [['stroller', 'Lying back', 'From birth, or with the infant car seat clicked on'], ['stroller', 'Sitting up', 'Once {s} can sit steadily on {p} own, if the stroller’s instructions allow it']], cat: CAT, caption: 'Lying back from birth, or with the infant car seat clicked on, then sitting up once the baby can sit steadily, if the stroller’s instructions allow it.' })
       + good([['sun', 'Why no blanket over the top', 'It traps heat. Use the canopy instead.'], ['car', 'A car seat on the frame', 'Listen for the click, then tug to check it’s locked on.'], ['stroller', 'On a bus or train', 'Brakes on and a hand on the stroller while it moves.']]));
 
     if (id === 'bag') return sub('gear', 'Your gear', 'Packing the diaper bag', 'Packed for how Maya is fed. Ticks clear by the next day, so it’s ready for every outing.',
