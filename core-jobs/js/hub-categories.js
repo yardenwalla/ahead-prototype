@@ -365,19 +365,23 @@
       + `<section class="hub-card hub-callout"><b>${F('Talk to someone today')}</b><p>${F('Call or text the National Maternal Mental Health Hotline at 1-833-852-6262. It’s free, confidential and open any time, for moms, partners and new parents.')}</p><a class="hub-button" href="tel:18338526262">${F('Call 1-833-852-6262')}</a></section>`
       + h.steps(['Tell your doctor or Maya’s pediatrician how you’re feeling. They ask because it’s common and treatable.', 'Take the help people offer, and name something specific, like a meal or a nap.', actualMonth() < 1 ? 'If you gave birth, go to your postpartum checkup, even if you feel fine.' : 'Trade nights or naps with another adult if you can. One longer stretch of sleep helps more than you’d think.'])
       + `<section class="hub-card hub-callout is-urgent"><b>${F('If you’re thinking about harming yourself or Maya')}</b><p>${F('Call or text 988, or call 911, right now.')}</p><a class="hub-button" href="tel:988">${F('Call 988')}</a></section>`);
-    if (id === 'sick') return detailFrame('Health', 'Between checkups', 'When Maya seems sick', 'Most baby illnesses are mild, but young babies can get sick quickly. Here’s what to watch for.',
-      // Fever by age as three tiles, Maya's band marked. Same numbers as feverRule (AAP, HealthyChildren.org).
-      (() => { const m = actualMonth(), u3 = m < 3; return `<section class="hub-card hub-fever"><b class="hub-fig-title">${F('When to call about a fever')}</b><div class="hub-fever-bands is-one"><div class="is-now"><em>${F('Maya · ' + feverBand(m))}</em><b>${u3 ? '100.4°F<span> or higher</span>' : 'Above 104°F<span> and keeps going up</span>'}</b><p>${F(u3 ? 'Any fever: call your pediatrician right away, day or night.' : 'Or a fever that lasts more than a day. Call your pediatrician.')}</p></div></div><p class="hub-fever-note">${F('At any age, also call if Maya seems very sick, has a rash, is unusually sleepy, has far fewer wet diapers, or is still unwell after the fever comes down.')}</p></section>`; })()
-      + `<section class="hub-card hub-callout is-urgent"><b>${F('Call 911 if Maya')}</b><p>${F('Struggles to breathe or turns blue, won’t wake or is floppy, or has a seizure.')}</p></section>`
-      + (() => { const m = actualMonth(), med = m < 3 ? ['Ask first', 'Call your pediatrician before giving any medicine.'] : m < 6 ? ['Acetaminophen', 'Only after checking with your pediatrician, at the dose they give for {p} weight.'] : ['Acetaminophen or ibuprofen', 'At the dose your pediatrician gives for {p} weight. Check the label every time.']; return `<section class="hub-card"><b class="hub-fig-title">${F('Medicine for fever or pain')}</b><p class="hub-body"><b>${F(med[0])}.</b> ${F(med[1])}</p></section>`; })()
-      + `<h2 class="hub-h2">${F('Vomiting or diarrhea')}</h2>`
-      + h.steps(['Keep offering breast milk or formula, a little at a time and more often.', 'Watch for dehydration: far fewer wet diapers, a dry mouth, no tears or a sunken soft spot. If you see these, call your pediatrician today.', 'Ask your pediatrician before giving any medicine or rehydration drink.'])
-      + h.versus('Normal, or time to call?', ['Normal', 'A few loose poops or a vomit or two for a day or so, in a baby who still feeds and has wet diapers.'], ['Call your pediatrician', 'Can’t keep feeds down, green or bloody vomit, blood in the poop, a swollen belly, or signs of dehydration.'])
-      + h.list('Good to know', [
-        h.row({ icon: 'clock', cat: 'Health', title: 'Take a rectal temperature', sub: 'It’s the most accurate way for babies. Forehead and ear readings are less reliable.', onclick: '' }).replace('<button class="hub-row" onclick=""', '<div class="hub-row is-static"').replace('<button class="hub-row"', '<div class="hub-row is-static"').replace(/<\/button>$/, '</div>').replace('<span class="hub-chev" aria-hidden="true">›</span>', ''),
-        h.row({ icon: 'heart', cat: 'Health', title: 'Help {o} feel comfortable', sub: 'Offer extra feeds, dress {o} lightly and let {o} rest. A fever on its own is the body fighting an infection.', onclick: '' }).replace('<button class="hub-row" onclick=""', '<div class="hub-row is-static"').replace('<button class="hub-row"', '<div class="hub-row is-static"').replace(/<\/button>$/, '</div>').replace('<span class="hub-chev" aria-hidden="true">›</span>', '')
-      ])
-      + h.video('When to call about a fever', 'HealthyChildren.org', 'https://www.healthychildren.org/English/health-issues/conditions/fever/pages/When-to-Call-the-Pediatrician.aspx', 'Guide'));
+    if (id === 'sick') {
+      // In the order a parent meets it: take a temperature, know when a fever means calling, help them feel better,
+      // tummy bugs, and the emergency signs last. Calm cards; one fever rule for this baby's age (AAP, HealthyChildren.org).
+      const m = actualMonth(), u3 = m < 3;
+      const med = u3 ? 'Call your pediatrician before giving any medicine.' : m < 6 ? 'Acetaminophen can help, after checking with your pediatrician. Ask for the dose for {p} weight.' : 'Acetaminophen or ibuprofen can help. Ask your pediatrician for the dose for {p} weight, and check the label every time.';
+      return detailFrame('Health', 'Between checkups', 'When Maya seems sick', 'Most baby illnesses are mild and pass in a few days. Here’s how to look after {o}, and when to call.',
+        `<h2 class="hub-h2">${F('Take {p} temperature')}</h2>`
+        + h.steps(['A rectal thermometer gives the most accurate reading for babies.', 'Forehead and ear readings are less reliable at this age.'])
+        + `<h2 class="hub-h2">${F('When a fever means calling')}</h2>`
+        + `<section class="hub-card hub-fever is-calm"><div class="hub-fever-bands is-one"><div><small>${F(feverBand(m))}</small><b>${u3 ? '100.4°F<span> or higher</span>' : 'Above 104°F<span> and keeps going up</span>'}</b><p>${F(u3 ? 'Call your pediatrician right away, day or night.' : 'Or a fever that lasts more than a day. Call your pediatrician.')}</p></div></div><p class="hub-fever-note">${F('Also call if Maya seems very unwell, has a rash, is unusually sleepy, or is still unwell after the fever comes down.')}</p></section>`
+        + `<h2 class="hub-h2">${F('Help {o} feel better')}</h2>`
+        + h.steps(['Offer extra feeds, dress {o} lightly and let {o} rest.', 'A fever on its own is the body fighting an infection.', med])
+        + `<h2 class="hub-h2">${F('Vomiting or diarrhea')}</h2>`
+        + h.steps(['Keep offering breast milk or formula, a little at a time and more often.', 'Watch for dehydration: far fewer wet diapers, a dry mouth, no tears or a sunken soft spot. If you see these, call your pediatrician today.', 'Ask your pediatrician before giving any medicine or rehydration drink.'])
+        + h.tip('Call your pediatrician', 'If {s} can’t keep feeds down, or there’s green or bloody vomit, blood in the poop or a swollen belly.')
+        + `<section class="hub-card hub-callout"><b>${F('Call 911 if Maya')}</b><p>${F('Struggles to breathe or turns blue, won’t wake or is floppy, or has a seizure.')}</p></section>`);
+    }
     return null;
   }
   const baseRoute = window.changesRoute;
