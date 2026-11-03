@@ -210,13 +210,16 @@
     if (id === 'errands') {
       // One outing, start to finish, in the order it happens: leaving, the store, a change, a nap. Short labels so the strip reads at a glance; the rest is in rows.
       const nurse = ['mouth', 'Nursing or pumping', 'Nurse wherever you’re comfortable. To pump, ask for a nursing room, or use your parked car.'];
-      const cart = ['car', 'The car seat and the cart', 'Never set the car seat on top of a shopping cart. It can tip.'];
-      const outing = strip('An outing, start to finish', [
-        ['clock', 'Head out', 'Right after a feed'],
-        [m >= 6 ? 'sit' : 'carrier', 'Shop', m >= 6 ? 'In the cart’s seat, strap on' : 'With a carrier or stroller'],
-        ['diaper', 'Change', 'A hand on {o}, or a pad on the floor'],
-        ['moon', 'Nap', 'Asleep? Move {o} to a flat bed']],
-        'Head out right after a feed. Shop with her in a carrier, a stroller or the cart’s seat. When you change her, keep a hand on her, or use a pad on the floor. If she falls asleep, move her to a flat bed when you can.');
+      const cart = ['diaper', 'No changing table?', 'Lay your changing pad on the floor, or on the back seat of the car.'];
+      // An example morning out, told in the order it happens (same timeline as Road trips' example drive).
+      const outing = hubDayMarkers({ title: 'An example morning out', from: 8 * 60 + 30, to: 11 * 60 + 30, cat: CAT,
+        events: [
+          [9 * 60, 'bottle', 'Feed {o}, then head out while {s’s} calm'],
+          [9 * 60 + 20, m >= 6 ? 'sit' : 'carrier', m >= 6 ? 'At the store, the car seat stays in the car. {S} {ride|rides} in the cart’s seat' : 'At the store, the car seat stays in the car. {S} {ride|rides} in a carrier or stroller'],
+          [10 * 60, 'diaper', 'Time for a change: strap on, and one hand on {o}'],
+          [10 * 60 + 30, 'moon', 'Asleep on the way home? Keep {o} in view'],
+          [11 * 60, 'home', 'Home: move {o} to {p} crib to finish the nap']],
+        caption: 'An example morning out: feed her at 9 and head out while she’s calm. At the store, the car seat stays in the car and she rides in a carrier, stroller or the cart seat. At 10, change her with the strap on and one hand on her. If she falls asleep on the way home, keep her in view, then move her to her crib at home.' });
       if (m < 2) return sub('errands', 'Errands and walks', 'Your first outings', 'A walk or a quick trip to a quiet store is a good start. Heading home early still counts.',
         outing + good([['hand', 'Crowds and germs, for now', 'Skip crowded indoor places and anyone who’s sick. Ask for clean hands before anyone holds {o}.'], cart, nursing() ? nurse : ['steth', 'At the doctor’s office', 'Ask if you can wait in the car until they call you.']]));
       return sub('errands', 'Errands and walks', 'Errands and walks', 'Stores, cafés, the park: most everyday places are fine now.',
