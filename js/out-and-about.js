@@ -245,24 +245,24 @@
 
     if (id === 'road') return sub('road', 'Road trips', 'Road trips', 'Plan a stop every couple of hours.',
       hubDayMarkers({ title: 'Plan your drive', events: [[9 * 60, 'car', 'Leave as a nap starts'], [11 * 60, 'bottle', 'Stop to feed and change'], [13 * 60, 'mat', 'Stop to feed and stretch'], [15 * 60, 'home', 'Arrive']], from: 8 * 60, to: 16 * 60, cat: CAT, caption: 'Leave at 9 as a nap starts, stop at 11 to feed and change, stop at 1 to feed and stretch, arrive at 3.' })
-      + pack([['toy', 'Soft toys only', 'Hard ones can fly in a sudden stop'], ['bottle', 'One extra feed', 'In case of traffic'], bf ? ['fridge', 'A cooler bag with ice packs', 'If you’re bringing pumped milk'] : null])
+      + pack([['toy', 'Soft toys only', 'Hard ones can fly in a sudden stop'], fm ? ['bottle', 'One extra bottle', 'In case of traffic'] : null, bf ? ['fridge', 'A cooler bag with ice packs', 'If you’re bringing pumped milk'] : null])
       + ifs([
         ['car', 'Crying while you drive', 'Pull over somewhere safe, then take {o} out to soothe or feed.'],
         ['clock', 'Driving on your own', 'Plan a few more stops. Check on {o} only when you’re parked.'],
         m >= 6 ? ['bowl', 'Snack time', 'Only at a stop, out of the car seat.'] : null],
         'If the baby cries while you drive, pull over first. On your own, plan more stops and check on the baby only when parked.')
-      + good([['clock', 'How long between breaks?', 'There’s no official limit. Every couple of hours suits most babies. Born early? Ask your pediatrician.'], ['moon', 'Naps on the road', 'Naps in the car seat are fine while you drive. When you stop, move {o} to a crib or play yard.'], bf ? ['fridge', 'Pumping on the road', 'Pump at a stop, parked, not while you’re driving.'] : null]));
+      + good([['clock', 'How long between breaks?', 'There’s no official limit. Every couple of hours suits most babies. Born early? Ask your pediatrician.'], ['moon', 'Naps on the road', 'Naps in the car seat are fine while you drive. When you stop, move {o} to a crib or play yard.'], bf ? ['mouth', 'Nursing or pumping on the road', 'Park first. {S} stays buckled in whenever the car is moving.'] : null]));
 
     if (id === 'fly') return sub('fly', 'Flying', 'Flying with Maya', m < 1 ? 'Ask your pediatrician before flying in the first weeks.' : 'Most of the planning happens when you book.',
       H().versus('Where will Maya sit?', ['Own seat', 'Safest, buckled into a car seat labeled for aircraft.'], ['On your lap', 'Often free under 2, but less safe if there’s turbulence.'])
       + plan('Plan your flight', [
         ['When you book', 'notepad', 'Add {o} to your booking, and ask about a bassinet seat.'],
         ['The car seat', 'car', 'For a seat on the plane, look for the red text on its label that says it’s certified for aircraft.'],
-        ['At security', 'bag', 'Milk, formula and your pump can all go through. Tell the officer you have them.'],
+        ['At security', 'bag', bf && !fm ? 'Pumped milk and your pump can go through, if you bring them. Tell the officer.' : !bf ? 'Formula and water for {o} can go through. Tell the officer.' : 'Milk, formula and your pump can all go through. Tell the officer.'],
         ['At the gate', 'stroller', 'Ask for a gate-check tag. The stroller waits for you at the plane door.'],
-        ['Takeoff and landing', 'plane', 'Feed {o} or offer a pacifier to help {p} ears.']],
+        ['Takeoff and landing', 'plane', bf && !fm ? 'Nurse {o}, or offer a pacifier, to help {p} ears.' : 'Feed {o} or offer a pacifier to help {p} ears.']],
         'When you book, add the baby and ask about a bassinet seat. For a seat on the plane, check the car seat label says it’s certified for aircraft. Milk, formula and your pump can go through security. Gate-check the stroller. Feed or offer a pacifier at takeoff and landing.')
-      + pack([['bottle', 'One extra feed', 'In case of delays'], ['shirt', 'A spare top for you', 'For spit-up on board'], ['notepad', 'Proof of {p} age', 'Like {p} birth certificate, for a lap seat']])
+      + pack([fm ? ['bottle', 'One extra bottle', 'In case of delays'] : null, ['shirt', 'A spare top for you', 'For spit-up on board'], ['notepad', 'Proof of {p} age', 'Like {p} birth certificate, for a lap seat']])
       + ifs([
         ['heart', 'Crying on board', 'Walk the aisle when the seatbelt sign is off, or offer a feed. Most people understand.'],
         ['diaper', 'A diaper change', 'Ask the crew which restroom has the fold-down table.']],
