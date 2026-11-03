@@ -214,18 +214,21 @@
     const m = ageNow();
 
     if (id === 'errands') {
-      // Any local outing, step by step. One short sentence per step, so it reads calmly at a glance.
-      const bf = nursing();
-      const run = timeline('Any outing, step by step', [
-        ['Before you go', 'clock', m < 2 ? 'Feed {o} first, and pick somewhere quiet.' : 'Feed {o} first, or go right after a nap.'],
-        ['When you arrive', 'car', m >= 6 ? 'The car seat stays in the car. Use a carrier, stroller or cart seat.' : 'The car seat stays in the car. Use a carrier or stroller.'],
-        ['Feeding', 'bottle', bf ? 'Nurse wherever you’re comfortable, or in your parked car.' : 'Mix a bottle when {s’s} hungry. No warming needed.'],
-        ['Changing', 'diaper', 'Strap on, one hand on {o}. No table? Your pad on the floor.'],
-        ['Fussing', 'heart', 'A feed, a change, then a walk. Or head home early.'],
-        ['Home', 'moon', 'Asleep in the car seat? Move {o} to {p} crib.']],
-        'Any outing, step by step: feed first, leave the car seat in the car, feed and change wherever you are, try a feed, a change and a walk if she fusses, and move her to her crib at home.');
+      // Any local outing, broken into small picture steps (two per row), each with a short title and the full how.
+      const bf = nursing(), ff = formula();
+      const run = `<h2 class="hub-h2">${F('Any outing, step by step')}</h2>` + steps([
+        ['clock', 'Before you go', m < 2 ? 'Feed {o} first, and pick a quiet time and place. One or two stops is plenty.' : 'Feed {o} first, or go right after a nap, when {s’s} at {p} happiest.'],
+        ['car', 'When you arrive', m >= 6 ? 'The car seat stays in the car. Use a carrier, the stroller, or a cart seat with the strap on.' : 'The car seat stays in the car, never on a shopping cart. Use a carrier or the stroller.'],
+        ['bottle', 'Feeding', bf && ff ? 'Nurse wherever you’re comfortable, or give a bottle. Room-temperature formula is fine.' : bf ? 'Nurse wherever you’re comfortable: a quiet corner, a nursing room or your parked car.' : 'Mix a bottle when {s’s} hungry. Room-temperature formula is fine.'],
+        ['diaper', 'Changing', 'On a table, strap {o} in and keep a hand on {o}. No table? Your pad on a clean floor or the car’s back seat.'],
+        ['heart', 'If {s} {fuss|fusses}', 'Try a feed, then a diaper check, then holding {o} close and walking. It’s fine to head home early.'],
+        ['moon', 'Heading home', 'Asleep in the car seat is fine while you drive. At home, move {o} to {p} crib.']],
+        'Any outing, step by step: feed first, leave the car seat in the car, feed and change wherever you are, try a feed, a change and a walk if she fusses, and move her to her crib at home.', true);
       return sub('errands', 'Around town', m < 2 ? 'Your first outings' : 'Around town', m < 2 ? 'For the first couple of months, pick quiet places and skip anyone who’s sick.' : 'The store, a café, the park, a friend’s house: most places are fine now.',
-        run + good([m < 2 ? ['hand', 'Holding {o}', 'It’s fine to ask people to wash their hands first, or to say no.'] : null, m >= 6 ? ['bowl', 'Snacks', 'Soft foods that squash between your fingers, while {s} {sit|sits} up and you watch.'] : null]));
+        run + good([
+          ['home', 'Finding a family restroom', 'Big stores, malls and many restaurants have one with a changing table. Ask at the front desk or look near the restrooms.'],
+          bf ? ['fridge', 'Pumping in public', 'Ask for a nursing room or a fitting room, or use your parked car. Keep the milk in a cooler with ice packs.'] : null,
+          m < 2 ? ['hand', 'Holding {o}', 'It’s fine to ask people to wash their hands first, or to say no.'] : m >= 6 ? ['bowl', 'Snacks', 'Soft foods that squash between your fingers, while {s} {sit|sits} up and you watch.'] : null]));
     }
 
     if (id === 'water') return sub('water', 'Pool or beach', 'Pool or beach', m < 6 ? 'Under 6 months, shade matters most. In the water, hold {o} the whole time.' : 'Shade and sunscreen first. In the water, hold {o} the whole time.',
