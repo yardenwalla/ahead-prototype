@@ -483,7 +483,7 @@
     },
     diapers: {
       0: { line: 'How to change one', answer: 'About 8–12 changes a day at first. It gets quick.',
-        doText: 'Change when wet or dirty, and keep one hand on {o} on the changing table. Fold the top down below the cord stump.',
+        get doText() { return 'Change when wet or dirty, and keep one hand on {o} on the changing table.' + (CURV === 0 ? ' Fold the top down below the cord stump.' : ''); },
         normal: 'A good fit: two fingers slide in at the waist, and no red marks at the legs.', vis: () => diaperCarousel(),
         urgent: 'White, gray or chalky poop: call your pediatrician right away.',
         more: () => [['Sizes', 'When to move up', sizes()]] },
@@ -536,14 +536,14 @@
       0: { line: 'One more layer than you', answer: 'Babies can’t tell you they’re too hot or cold, so one rule helps.',
         doText: 'Dress {o} in one more layer than you. No hats indoors. Choose snaps or zips, with no ties or strings near the neck. No puffy coats under car seat straps.',
         normal: 'Feel the back of {p} neck: sweaty means too warm, cool means add a layer.', vis: () => layers() },
-      1: { line: 'Shade, not sunscreen', answer: 'Under 6 months, keep {o} out of direct sun.', vis: () => hubAgeTiles({ title: 'Sun by age', items: [['Under 6 months', 'Shade only', 'Long sleeves and a hat'], ['6 months and up', 'Shade + SPF 30', 'Every 2 hours']], nowIndex: sixNow() ? 1 : 0, cat: CAT, caption: 'Under 6 months, shade only. From 6 months, shade plus SPF 30 sunscreen.' }), 
+      1: { line: 'Shade, not sunscreen', answer: 'Under 6 months, keep {o} out of direct sun.', 
         doText: 'Shade, light long sleeves and a wide-brimmed hat. On hot days, extra milk feeds, and no water yet. No shade at all? Ask your pediatrician about a little sunscreen on the face.',
         normal: 'Too much sun shows as pink skin, often hours later.', call: 'Any sunburn.' },
-      2: { line: 'Sunscreen from 6 months', get answer() { return sixNow() ? 'At 6 months, sunscreen can join shade and a hat.' : 'Shade only until 6 months. Then sunscreen can join in.'; }, vis: () => hubAgeTiles({ title: 'Sun by age', items: [['Under 6 months', 'Shade only', 'Long sleeves and a hat'], ['6 months and up', 'Shade + SPF 30', 'Every 2 hours']], nowIndex: sixNow() ? 1 : 0, cat: CAT, caption: 'Under 6 months, shade only. From 6 months, shade plus SPF 30 sunscreen.' }), 
+      2: { line: 'Sunscreen from 6 months', get answer() { return sixNow() ? 'At 6 months, sunscreen can join shade and a hat.' : 'Shade only until 6 months. Then sunscreen can join in.'; }, 
         get doText() { return sixNow() ? 'Shade and a hat first. Then broad-spectrum sunscreen, SPF 30 or more, every 2 hours. Mineral is gentlest.' : 'Keep {o} in the shade, with light long sleeves and a wide-brimmed hat. From 6 months, add SPF 30 sunscreen every 2 hours.'; },
         normal: 'Too much sun shows as pink skin, often hours later.', call: 'Any sunburn.' },
       3: { line: 'Bare feet, then soft shoes', answer: 'Bare feet help {o} balance while {s} {learn|learns} to walk.',
-        doText: 'Barefoot or socks indoors. Soft, flexible shoes only once {s’s} walking outside.',
+        doText: 'Barefoot or socks indoors. Soft, flexible shoes only once {s’s} walking outside. In the sun: shade, a hat, and SPF 30 sunscreen every 2 hours.',
         vis: () => hubIconSteps([['home', 'Indoors', 'Bare feet or socks'], ['sun', 'Outside', 'Soft shoes, once walking']], CAT, 'Bare feet indoors, soft shoes outside once walking.', false) }
     },
     teeth: {
@@ -564,12 +564,14 @@
     }
   };
   const tFor = (k, v) => { const T = T3[k]; if (!T) return null; const s = T[v]; return s && (!s.when || s.when()) ? s : null; };
+  let CURV = 0;
   function topic3(k, v) {
+    CURV = v;
     let s = tFor(k, v), vv = v;
     if (!s) { for (let i = v; i >= 0 && !s; i--) { if (T3[k] && T3[k][i]) { s = T3[k][i]; vv = i; } } if (!s) for (let i = v; i < 4 && !s; i++) if (T3[k] && T3[k][i]) { s = T3[k][i]; vv = i; } }
     if (!s) return null;
     const ck = TCOL[k];
-    let b = head(ck, `Everyday care · ${STAGE[vv]}`, TNAME[k], '') + `<p class="ss-what care-answer">${F(val(s.answer))}</p>`;
+    let b = head(ck, `Everyday care · ${STAGE[v]}`, TNAME[k], '') + `<p class="ss-what care-answer">${F(val(s.answer))}</p>`;
     if (s.pre) b += s.pre();
     const T = x => s.html ? x : F(x); // html: the copy is already built (rows with labels), text inside already templated
     if (s.doText) b += `<section class="ss-do"><b>What to do</b><p>${T(s.doText)}</p></section>`;
@@ -579,8 +581,27 @@
     if (s.call) b += `<p class="ss-small"><b>${F('Call your pediatrician:')}</b> ${T(s.call)}</p>`;
     if (s.extra) b += s.extra();
     if (s.more) { const m = s.more(); b += `<div class="hub-card care-folds">${m.map(([t, sub, body]) => `<details class="care-fold"><summary><span><b>${F(t)}</b>${sub ? `<small>${F(sub)}</small>` : ''}</span><i aria-hidden="true">›</i></summary><div class="care-fold-body">${body}</div></details>`).join('')}</div>`; }
+    const hw = HOW[k]; if (hw) b += hubStageStrip({ title: 'How it changes', items: hw.items, nowIndex: hw.now(v), cat: CAT, caption: hw.caption });
     return page(ck, b);
   }
+  // The "when": each topic across the year, with the baby's place marked.
+  const HOW = {
+    diapers: { items: [['diaper', '8–12 a day', 'Newborn'], ['hand', 'A hand on {o}', 'Once rolling'], ['toy', 'A toy to hold', 'When wriggly'], ['stand', 'Standing changes', 'Once pulling up']], now: v => [0, 0, 1, answers.pullUp === 'Yes' ? 3 : 2][v], caption: 'Diapers: 8 to 12 a day as a newborn, a hand on the baby once rolling, a toy to hold when wriggly, and standing changes once pulling up.' },
+    bath: { items: [['bath', 'Sponge baths', 'Until the cord falls off'], ['tub', 'Baby tub', 'Once the cord heals'], ['mat', 'Big tub', 'Once sitting steadily']], now: v => [0, 1, 1, 2][v], caption: 'Baths: sponge baths until the cord falls off, a baby tub once it heals, and the big tub once sitting steadily.' },
+    skin: { items: [['drop', 'Peeling and spots', 'First weeks'], ['smile', 'Acne and cradle cap', '1–3 months'], ['leaf', 'Drool rash', 'From about 4 months']], now: v => [0, 1, 2, 2][v], caption: 'Skin: peeling and spots in the first weeks, baby acne and cradle cap at 1 to 3 months, and drool rash from about 4 months.' },
+    dress: { items: [['sun', 'Shade only', 'Under 6 months'], ['drop', 'Shade and sunscreen', 'From 6 months'], ['stand', 'Soft shoes', 'Once walking outside']], now: v => v <= 1 ? 0 : v === 2 ? (sixNow() ? 1 : 0) : (walkingSoon() ? 2 : 1), caption: 'Sun and shoes: shade only under 6 months, sunscreen from 6 months, and soft shoes once walking outside.' },
+    teeth: { items: [['tooth', 'Teething', 'Often from 4–6 months'], ['smile', 'First tooth', 'Around 6 months'], ['drop', 'Brushing', 'From the first tooth'], ['steth', 'Dentist', 'By the first birthday']], now: v => v < 2 ? -1 : v === 2 ? (hasTooth() ? 2 : 0) : (hasTooth() ? 2 : 1), caption: 'Teeth: teething often from 4 to 6 months, the first tooth around 6 months, brushing from the first tooth, and a dentist visit by the first birthday.' }
+  };
+  // Your daily care: every care job that applies at this age, with the answer for now; "New" marks what changed.
+  const DAILY = [
+    () => [['diapers', '8–12 a day, one hand on {o}'], ['down', null], ['cord', 'Keep it dry. It falls off in 1–3 weeks'], ['bath', 'Sponge baths, 2–3 a week'], ['dress', 'One more layer than you'], ['nails', 'Trim weekly, while {s’s} asleep']],
+    () => [['diapers', 'Change when wet or dirty'], ['bath', 'Baby tub, about 3 a week'], ['skin', 'Baby acne and cradle cap'], ['dress', 'One more layer, and shade only'], ['nails', 'Trim weekly, while {s’s} asleep']],
+    () => [['diapers', 'Rolling: one hand on {o}, always'], ['bath', 'Baby tub, about 3 a week'], ['skin', 'Drool rash and dry skin'], ['dress', sixNow() ? 'Shade, a hat and sunscreen' : 'Shade only until 6 months'], ['teeth', 'Teething often starts'], ['nails', 'Trim weekly, while {s’s} asleep']],
+    () => [['diapers', 'Wriggly: give {o} a toy to hold'], ['bath', 'The big tub, once {s} {sit|sits} steadily'], ['skin', 'Drool rash and dry skin'], ['dress', 'Bare feet indoors, sunscreen outside'], ['teeth', hasTooth() ? 'Brushing, twice a day' : 'Brushing starts with the first tooth'], ['nails', 'Trim weekly, while {s’s} asleep']]
+  ];
+  const dailyRow = (k, v, line) => { const c = COL[TCOL[k]], isNew = v > 0 && T3[k] && T3[k][v] && tFor(k, v);
+    const sub = line == null ? val((T3[k][v] || T3[k][0]).line) : line;
+    return `<button class="hub-row hl-row" style="--hl-bg:${c[0]};--hl-ink:${c[1]}" onclick="openPage('chg:${CAT}:d:c:${k}:${v}')"><span class="hub-dot">${hubArt(ICON[TCOL[k]], CAT)}</span><span class="hub-row-copy"><b>${F(TNAME[k])}${isNew ? `<em class="care-new">${F('New')}</em>` : ''}</b><small>${F(sub)}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`; };
   const topicRow = (k, v) => { const s = tFor(k, v); if (!s) return ''; const c = COL[TCOL[k]];
     return `<button class="hub-row hl-row" style="--hl-bg:${c[0]};--hl-ink:${c[1]}" onclick="openPage('chg:${CAT}:d:c:${k}:${v}')"><span class="hub-dot">${hubArt(ICON[TCOL[k]], CAT)}</span><span class="hub-row-copy"><b>${F(TNAME[k])}</b><small>${F(val(s.line))}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`; };
   // Older links land on the topic and stage they were about.
@@ -617,7 +638,7 @@
     let b = `<header class="hub-hero care-hero"><p class="hub-eyebrow">${STAGE[v]}</p><h1>${F(st.title)}</h1><p class="hub-lead">${F(st.lead)}</p></header>`;
     // No tiles: Everyday care's answers are mostly actions, not numbers, so they read better as rows (like Health).
     const shop = v === 1 ? '' : `<div class="hub-browse care-shop"><button class="hub-link" onclick="${go('need', v)}">${F(v === 0 ? 'Getting ready? What you’ll need' : 'What you’ll need now')} ›</button></div>`;
-    b += `<h2 class="hub-h2">${F('What’s different now')}</h2><div class="hub-list">${TOPIC_ORDER.map(k => topicRow(k, v)).join('')}</div>` + shop;
+    b += `<h2 class="hub-h2">${F('Your daily care')}</h2><div class="hub-list">${DAILY[v]().map(([k, line]) => dailyRow(k, v, line)).join('')}</div>` + shop;
     b += `<button class="hub-rough-card care-rash-card" onclick="openPage('chg:${CAT}:d:look:${v}')"><span class="hub-rough-moon" aria-hidden="true">${hubArt('eye', CAT)}</span><span class="hub-rough-copy"><b>${F('Something look off?')}</b><small>${F(['Poop, rashes, the cord, eyes and more', 'Poop, rashes, eyes and more', 'Drool, rashes, poop and more', 'Drool, rashes, poop and more'][v])}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`;
     b += h.versus('Normal, or time to call?', ['Normal', st.call[0]], ['Call your pediatrician', st.call[1]]);
     b += nx ? h.next(v === 0 ? 'Next, after the first few weeks' : `Next, usually from ${STAGE[v + 1].split('–')[0]} months`, nx.title, `openPage('chg:${CAT}:s:${v + 1}')`)

@@ -109,3 +109,5 @@
 #main .care-toggles { display: grid; gap: 8px; margin: 0 0 12px }
 #main .care-toggles:empty { display: none }
 #main .care-toggles .care-seg { margin: 0 }
+/* "New" marks a care job that changed at this stage */
+#main .care-v2 .care-new { display: inline-block; margin-left: 8px; padding: 2px 8px; border-radius: 99px; background: var(--hl-bg); color: var(--hl-ink); font-size: 11px; font-weight: 700; font-style: normal; letter-spacing: .02em; vertical-align: 2px }
