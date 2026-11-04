@@ -1,0 +1,34 @@
+/* Timeline reimagined: coming up next as cards, the year as a path */
+#main .ya-page { padding-bottom: 8px }
+#main .ya-page h1 { margin: 2px 0 6px }
+#main .ya-h2 { margin: 22px 0 10px; font-size: 19px }
+#main .ya-next { display: flex; flex-direction: column; gap: 10px }
+#main .ya-card { display: flex; gap: 14px; align-items: center; width: 100%; padding: 16px; border: 0; border-radius: 22px; background: linear-gradient(135deg, var(--year-pale, #f3effb), #fffdf9); box-shadow: 0 1px 2px rgba(43,40,64,.06); text-align: left; font: inherit; color: inherit; cursor: pointer }
+#main .ya-card-art { flex: none; display: grid; place-items: center; width: 64px; height: 64px; border-radius: 20px; background: #fff }
+#main .ya-card-art svg { width: 36px; height: 36px }
+#main .ya-card-copy small { display: block; font-size: 12.5px; font-weight: 700; color: var(--year-ink, #5b4a8b) }
+#main .ya-card-copy b { display: block; margin: 2px 0; font-size: 19px; line-height: 1.2 }
+#main .ya-card-copy > span { display: block; font-size: 14.5px; color: #5c5466 }
+#main .ya-card-copy em { display: block; margin-top: 8px; font-style: normal; font-size: 13.5px; font-weight: 600; color: var(--year-ink, #5b4a8b) }
+#main .ya-path { list-style: none; margin: 0; padding: 0 0 0 18px; position: relative }
+#main .ya-path::before { content: ""; position: absolute; left: 6px; top: 8px; bottom: 8px; width: 2px; background: #e6dfd4; border-radius: 2px }
+#main .ya-path li { position: relative }
+#main .ya-node { position: absolute; left: -17px; top: 24px; width: 12px; height: 12px; border-radius: 50%; background: #fff; border: 2px solid #d9d0c4 }
+#main .ya-row button { display: flex; gap: 12px; align-items: center; width: 100%; margin: 4px 0; padding: 12px 12px 12px 14px; border: 0; border-radius: 18px; background: #fffdf9; box-shadow: 0 1px 2px rgba(43,40,64,.05); text-align: left; font: inherit; color: inherit; cursor: pointer }
+#main .ya-row-art { flex: none; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 14px; background: var(--year-pale, #f3effb) }
+#main .ya-row-art svg { width: 24px; height: 24px }
+#main .ya-row-copy { flex: 1; min-width: 0 }
+#main .ya-row-copy b { display: block; font-size: 15.5px; line-height: 1.25 }
+#main .ya-row-copy small { display: block; margin-top: 1px; font-size: 12.5px; color: #8a8494 }
+#main .ya-bar { position: relative; display: block; height: 6px; margin-top: 8px; border-radius: 3px; background: #f1ece5 }
+#main .ya-bar i { position: absolute; top: 0; bottom: 0; border-radius: 3px; background: var(--year-ink, #5b4a8b); opacity: .45 }
+#main .ya-bar u { position: absolute; top: -3px; width: 2px; height: 12px; background: #2B2840; border-radius: 1px }
+#main .ya-row.is-past { opacity: .45 }
+#main .ya-row.is-now .ya-node { border-color: var(--year-ink, #5b4a8b); background: var(--year-ink, #5b4a8b) }
+#main .ya-pin { padding: 8px 0 8px 2px; font-size: 13px; color: #8a8494 }
+#main .ya-pin .ya-node { top: 11px; width: 8px; height: 8px; left: -15px; border-width: 2px }
+#main .ya-pin.is-past { opacity: .5 }
+#main .ya-here { display: flex; align-items: baseline; gap: 8px; padding: 12px 0 12px 2px }
+#main .ya-here .ya-node { top: 14px; left: -20px; width: 18px; height: 18px; background: #2B2840; border: 4px solid #fff; box-shadow: 0 0 0 2px #2B2840 }
+#main .ya-here b { font-size: 16px }
+#main .ya-here small { font-size: 13px; color: #8a8494 }
