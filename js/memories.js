@@ -34,11 +34,29 @@
   const allFirsts = () => {
     const dob = parse(profile.dob), all = journeyData().records.filter(r => r.type === 'milestone' && r.status === 'attended').sort((a, c) => a.date.localeCompare(c.date));
     const big = bigFirsts(all), rest = all.filter(r => !big.includes(r)).reverse();
-    const by = {}; [...big].reverse().forEach(r => { const m = monthOf(dob, r.date); (by[m] = by[m] || []).push(r); });
-    const inner = Object.keys(by).map(Number).sort((x, y) => y - x).map(m => `<h2 class="hub-h2">${esc2(longLabel(m))}</h2><div class="mem-list">${by[m].map(r => firstRow(r, false)).join('')}</div>`).join('')
-      // Every other skill marked "Seen it": its own section in the same card style, with each skill's area color and icon.
-      + (rest.length ? `<div class="mem-head mem-skills-head"><h2>${esc2('Other skills you noticed')}</h2><span class="mem-count">${rest.length}</span></div><p class="mem-skills-sub">${esc2('Everything you marked “Seen it” in Development & play.')}</p><div class="mem-list mem-skills">${rest.map(r => `<button class="mem-row is-small" onclick="openPage('event-edit:${r.id}')"><span class="mem-row-ic is-toned" style="${TONE(r)}">${hubArt(ICON(r), 'Development')}</span><span class="mem-row-copy"><b>${esc2(r.title)}</b><small>${esc2(journeyDateLabel(r.date))} · ${esc2(longLabel(monthOf(dob, r.date)))}</small></span><span class="mem-row-go" aria-hidden="true">›</span></button>`).join('')}</div>` : '');
-    return String(window.__hub.detail('Memories', 'Memories', `${name()}’s firsts`, big.length ? `${big.length} big firsts so far.` : 'The big ones will collect here.', inner || `<p class="mem-empty">${esc2('Nothing saved yet.')}</p>`, 'star')).replace(/(<div class="monthly-page-header">[\s\S]*?<h1>)[^<]*(<\/h1><p>)[^<]*/, `$1Memories$2${esc2(name())}`);
+    // Each month reads like a baby-book page: its big firsts, then the smaller things you noticed that month, as soft chips.
+    const by = {}, also = {};
+    [...big].reverse().forEach(r => { const m = monthOf(dob, r.date); (by[m] = by[m] || []).push(r); });
+    rest.forEach(r => { const m = monthOf(dob, r.date); (also[m] = also[m] || []).push(r); });
+    const months = [...new Set([...Object.keys(by), ...Object.keys(also)].map(Number))].sort((x, y) => y - x);
+    // Each month as a page of a baby book: the month written by hand, its photo taped in the corner,
+    // the big firsts written out with their dates and notes, and the smaller things noticed as little tags.
+    const WORDS = ['Newborn', 'One month', 'Two months', 'Three months', 'Four months', 'Five months', 'Six months', 'Seven months', 'Eight months', 'Nine months', 'Ten months', 'Eleven months', 'One year'];
+    const TAPE = ['#f3d58a', '#f2b8c6', '#bfe3cf', '#cfe3f7', '#e5d4f5', '#f6cdb5', '#d8e9b8', '#f9d9a8', '#c9d7f5', '#f4c2c2', '#b9e2dc', '#f0d1e8', '#f1cf86'];
+    const day = d => parse(d).toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+    const pageOf = (m, k) => {
+      const pic = typeof hubPhotoFor === 'function' ? hubPhotoFor(m) : null, tape = TAPE[m], tilt = k % 2 ? -4 : 4;
+      const firstsHtml = (by[m] || []).map(r => `<button class="bk-first" onclick="openPage('event-edit:${r.id}')"><span class="bk-ic" style="${TONE(r)}">${hubArt(ICON(r), 'Development')}</span><span class="bk-copy"><b>${esc2(keepTitle(r))}</b><small>${esc2(day(r.date))}</small>${r.notes ? `<q>${esc2(String(r.notes).slice(0, 140))}</q>` : ''}</span></button>`).join('');
+      const tags = also[m] ? `<div class="bk-also"><span class="bk-also-label">${esc2(by[m] ? 'Also this month' : 'Noticed this month')}</span><div class="bk-tags">${also[m].map(r => `<button class="bk-tag" style="${TONE(r)}" onclick="openPage('event-edit:${r.id}')">${esc2(r.title)}</button>`).join('')}</div></div>` : '';
+      // The month's photo, taped in on the right. No photo yet: an empty polaroid that adds one.
+      const photo = pic ? `<span class="bk-photo" style="--tape:${tape};--tilt:${tilt}deg"><i></i><img src="${pic}" alt=""></span>`
+        : `<label class="bk-photo is-empty" style="--tape:${tape};--tilt:${tilt}deg" role="button" aria-label="Add the ${esc2(WORDS[m].toLowerCase())} photo"><i></i><span class="bk-photo-add">＋</span>${typeof hubPhotoInput === 'function' ? hubPhotoInput(m) : ''}</label>`;
+      return `<section class="bk-page"><div class="bk-body"><h2 class="bk-month">${esc2(WORDS[m])}</h2>${firstsHtml ? `<div class="bk-firsts">${firstsHtml}</div>` : ''}${tags}</div>${photo}</section>`;
+    };
+    const inner = `<div class="bk-book">${months.map(pageOf).join('')}</div>`;
+    // A header in the same keepsake style: the title, and a little stack of taped polaroids.
+    const head = `<header class="bk-head"><div class="bk-head-copy"><p class="bk-eyebrow">${hubArt('star', 'Development')}<span>Memories</span></p><h1>${esc2(`${name()}’s firsts`)}</h1><p class="bk-count">${esc2(big.length ? `${big.length} big first${big.length === 1 ? '' : 's'} so far.` : 'The big ones will collect here.')}</p></div><span class="bk-stack" aria-hidden="true"><span class="bk-stack-back"></span><span class="bk-stack-mid"></span><span class="bk-stack-front"><i></i><svg viewBox="0 0 40 40"><path d="M20 31s-9-5.6-9-12.2A5 5 0 0 1 20 16a5 5 0 0 1 9 2.8C29 25.4 20 31 20 31Z" fill="none" stroke="#f08b72" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span></header>`;
+    return `<div class="quiet-category hub-page hub-detail bk-screen" data-overview="Memories" style="${yearTheme('Memories')}">${typeof detailPageTop === 'function' ? detailPageTop('Memories') : ''}${head}${months.length ? inner : `<p class="mem-empty">${esc2('Nothing saved yet.')}</p>`}</div>`;
   };
   if (typeof window.changesRoute === 'function') {
     const baseRoute = window.changesRoute;

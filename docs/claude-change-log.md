@@ -134,3 +134,7 @@ Each category was checked against its job (project doc "Ahead jobs to be done") 
 - Firsts shows the big moments (smile, laugh, roll, sitting, crawling, first tooth, first word, waving, pulling up, first steps, and anything the parent types) with baby-book titles ("First laugh"). Every other skill marked "Seen it" stays under "See all", in a quiet "Other skills you noticed" list.
 - Checkups appear only once one is saved (they arrive from Health), with no "None saved yet" prompt.
 - Every month still asks for its photo, as before.
+
+## Memories: the firsts book (2026-11-03)
+
+"See all firsts" is a baby book, styled to Yarden's design: a header with a stack of taped polaroids, and one rounded cream page per month with the month handwritten, that month's photo as a tilted polaroid with gingham tape (an empty one adds the photo), the big firsts with ringed icons and handwritten notes, and the smaller skills noticed that month as soft tags under "Also this month". The Firsts card on the Memories tab uses the same cream card and ringed icons. The page keeps the app's cream background.
