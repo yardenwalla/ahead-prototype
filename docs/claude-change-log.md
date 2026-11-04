@@ -142,3 +142,10 @@ Each category was checked against its job (project doc "Ahead jobs to be done") 
 ## Memories: the memory book card (2026-11-03)
 
 The Firsts list on the Memories tab is replaced by one "[Name]'s memory book" card (handwritten title, "N firsts so far", "Open the book", a stack of taped polaroids, and "＋ Save a first"). The book's title is now "[Name]'s memory book". With nothing saved, the card opens Save a first.
+
+## Timeline reimagined (2026-11-03)
+Job: "Help me understand what's coming as my baby grows, when to expect important changes, and how to prepare for each new stage." Files: `js/year-ahead.js`, `js/year-ahead-art.js`, `css/year-ahead.css` (overrides `window.nextPage`, adds `chg:Timeline:c:<id>`).
+- 17 big changes from the crying peak to first steps, each with a typical range. A change stays until its range ends or the parent reports it (rolled, solids, crawling, pulling up, tooth, two naps).
+- "Coming up next": the next three changes as compact cards. "Later on": swipeable month cards up to 1 year, each with Timeline's own object illustration (Home keeps the growing baby), the changes starting that month with their ranges, and checkups pinned.
+- Each change opens a read-ahead page: when, the signs it's close, then "What it changes", up to four rows labeled by area that open the existing page for each, and a when-to-call tip. Nothing is written twice.
+- Stops at 1 year, because the app ends there.

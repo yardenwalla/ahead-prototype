@@ -22,8 +22,7 @@
     ['pull', 9, 12, 'Development', 'stand', 'Pulling up to stand', 'Maya stands holding furniture, so anchor it', "__GO__"],
     ['words', 10, 14, 'Development', 'chat', 'First words', 'Often “mama” or “dada” for a parent', "__GO__"],
     ['milk', 12, 12.5, 'Feeding', 'cup', 'Milk at 12 months', 'Whole milk from a cup can replace formula', "__GO__", 'At 12 months'],
-    ['steps', 12, 15, 'Development', 'stand', 'First steps', 'Walking holding on, then on {p} own', "__GO__"],
-    ['onenap', 13, 18, 'Sleep', 'sun', 'Two naps become one', 'One long nap around midday', "__GO__"]
+    ['steps', 12, 15, 'Development', 'stand', 'First steps', 'Walking holding on, then on {p} own', "__GO__"]
   ].map(([id, start, end, cat, icon, title, why, go, range]) => ({ id, start, end, cat, icon, title, why, go: `openPage('chg:Timeline:c:${id}')`, range: range || `${start}–${end} months` }));
   const CHECKUPS = [2, 4, 6, 9, 12];
   const TOUCH = {
@@ -62,10 +61,10 @@
     // (the same baby who grows on Home), its date, the changes that usually start then, and a checkup if one is due.
     const later = ahead.filter(c => !next.includes(c));
     const born = parse(profile.dob), monthDate = m => { const d = new Date(born); d.setMonth(d.getMonth() + m); return d.toLocaleDateString('en-US', { month: 'long' }); };
-    const months = {}; later.forEach(c => { const m = Math.min(13, Math.max(Math.ceil(a), Math.floor(c.start))); (months[m] = months[m] || []).push(c); });
+    const months = {}; later.forEach(c => { const m = Math.min(12, Math.max(Math.ceil(a), Math.floor(c.start))); (months[m] = months[m] || []).push(c); });
     CHECKUPS.filter(v => v > a).forEach(v => { months[v] = months[v] || []; });
     const keys = Object.keys(months).map(Number).sort((x, y) => x - y);
-    const label = m => m >= 13 ? 'After 1 year' : m === 12 ? '1 year' : `${m} months`;
+    const label = m => m >= 12 ? '1 year' : `${m} months`;
     const card = m => `<section class="ya-month"><div class="ya-month-top"><span class="ya-month-art">${typeof yaArt === 'function' ? (m === 12 ? yaArt('birthday', 'Feeding') : months[m].length ? yaArt(months[m][0].id, months[m][0].cat) : yaArt('checkup', 'Health')) : ''}</span><div class="ya-month-head"><b>${F(label(m))}</b><small>${F(m >= 13 ? 'In the second year' : 'Around ' + monthDate(m))}</small></div></div><div class="ya-month-list">${months[m].map(c => `<button class="ya-chip" style="${yearTheme(c.cat)}" onclick="${c.go}"><span>${hubArt(c.icon, c.cat)}</span><em>${F(c.title)}<small>${F(range(c))}${c.start <= a ? ' · ' + F('any time now') : ''}</small></em></button>`).join('')}${CHECKUPS.includes(m) && m > a ? `<span class="ya-month-pin">${F(`${m}-month checkup`)}</span>` : ''}</div></section>`;
     if (keys.length) h += `<h2 class="ya-h2">${F('Later on')}</h2><p class="ya-sub">${F(`Swipe to see what’s coming, month by month.`)}</p><div class="ya-months">${keys.map(card).join('')}</div>`;
     h += `<p class="hub-foot">${F('Ages are typical. Every baby moves at their own pace.')}</p></div>`;
