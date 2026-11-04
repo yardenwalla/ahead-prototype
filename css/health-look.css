@@ -33,3 +33,12 @@
 /* Vaccines: name and dose on top, what it protects against underneath, in the same row */
 #main .hv-doses li { flex-wrap: wrap; row-gap: 2px }
 #main .hv-doses em { flex-basis: 100%; font-style: normal; font-size: 13.5px; line-height: 1.4; color: #6b6670 }
+
+/* Vaccines: tap a vaccine to see what it protects against, right under its name */
+#main .hv-doses li.hv-dose-more { display: block; padding: 0 }
+#main .hv-doses li.hv-dose-more summary { list-style: none; display: flex; align-items: baseline; gap: 12px; padding: 8px 0; cursor: pointer }
+#main .hv-doses li.hv-dose-more summary::-webkit-details-marker { display: none }
+#main .hv-doses li.hv-dose-more summary span { margin-left: auto }
+#main .hv-doses li.hv-dose-more .hv-plus { font-style: normal; font-size: 13px; color: #46638c; transition: transform .15s }
+#main .hv-doses li.hv-dose-more details[open] .hv-plus { transform: rotate(45deg) }
+#main .hv-doses li.hv-dose-more em { display: block; padding: 0 0 9px; font-style: normal; font-size: 13.5px; line-height: 1.4; color: #6b6670 }

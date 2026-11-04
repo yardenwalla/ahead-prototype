@@ -58,7 +58,7 @@
     ['COVID-19', age < 6 ? 'From 6 months, if your pediatrician recommends it' : 'If your pediatrician recommends it']
   ];
   // Each vaccine on one line: its name and dose, with what it protects against right underneath.
-  const doses = xs => `<ul class="hv-doses">${xs.map(([n, d]) => `<li><b>${n}</b><span>${d}</span>${WHAT[n] && WHAT[n] !== n ? `<em>${WHAT[n]}</em>` : ''}</li>`).join('')}</ul>`;
+  const doses = xs => `<ul class="hv-doses">${xs.map(([n, d]) => WHAT[n] ? `<li class="hv-dose-more"><details><summary><b>${n}</b><span>${d}</span><i class="hv-plus" aria-hidden="true">＋</i></summary><em>${WHAT[n]}</em></details></li>` : `<li><b>${n}</b><span>${d}</span></li>`).join('')}</ul>`;
   function vaccinePage(age) {
     const v = VAX[age], s = SEASON(age);
     const names = s.map(x => x[0]), title = names.length === 3 ? `${names[0]}, ${names[1].toLowerCase()} and ${names[2]}` : names.join(' and ');
