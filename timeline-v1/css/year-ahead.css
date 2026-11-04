@@ -2,13 +2,14 @@
 #main .ya-page { padding-bottom: 8px }
 #main .ya-page h1 { margin: 2px 0 6px }
 #main .ya-h2 { margin: 22px 0 10px; font-size: 19px }
-#main .ya-next { display: flex; flex-direction: column; gap: 10px }
-#main .ya-card { display: flex; gap: 14px; align-items: center; width: 100%; padding: 16px; border: 0; border-radius: 22px; background: linear-gradient(135deg, var(--year-pale, #f3effb), #fffdf9); box-shadow: 0 1px 2px rgba(43,40,64,.06); text-align: left; font: inherit; color: inherit; cursor: pointer }
-#main .ya-card-art { flex: none; display: grid; place-items: center; width: 64px; height: 64px; border-radius: 20px; background: #fff }
-#main .ya-card-art svg { width: 36px; height: 36px }
+#main .ya-next { display: flex; flex-direction: column; gap: 8px }
+#main .ya-card { display: flex; gap: 14px; align-items: center; width: 100%; padding: 12px 14px; border: 0; border-radius: 18px; background: linear-gradient(135deg, var(--year-pale, #f3effb), #fffdf9); box-shadow: 0 1px 2px rgba(43,40,64,.06); text-align: left; font: inherit; color: inherit; cursor: pointer }
+#main .ya-card-art { flex: none; display: grid; place-items: center; width: 46px; height: 46px; border-radius: 15px; background: #fff }
+#main .ya-card-art svg { width: 26px; height: 26px }
+#main .ya-card-copy { flex: 1; min-width: 0 }
 #main .ya-card-copy small { display: block; font-size: 12.5px; font-weight: 700; color: var(--year-ink, #5b4a8b) }
-#main .ya-card-copy b { display: block; margin: 2px 0; font-size: 19px; line-height: 1.2 }
-#main .ya-card-copy > span { display: block; font-size: 14.5px; color: #5c5466 }
+#main .ya-card-copy b { display: block; margin: 1px 0; font-size: 16.5px; line-height: 1.2 }
+#main .ya-card-copy > span { display: block; font-size: 13.5px; color: #5c5466 }
 #main .ya-card-copy em { display: block; margin-top: 8px; font-style: normal; font-size: 13.5px; font-weight: 600; color: var(--year-ink, #5b4a8b) }
 #main .ya-path { list-style: none; margin: 0; padding: 0 0 0 18px; position: relative }
 #main .ya-path::before { content: ""; position: absolute; left: 6px; top: 8px; bottom: 8px; width: 2px; background: #e6dfd4; border-radius: 2px }
