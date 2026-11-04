@@ -49,3 +49,12 @@
 #main .ya-chip span { display: grid; place-items: center; width: 24px; height: 24px; flex: none }
 #main .ya-chip svg { width: 20px; height: 20px }
 #main .ya-month-pin { padding: 2px 4px; font-size: 12.5px; color: #8a8494 }
+
+/* How changes connect: the areas each change touches */
+#main .ya-touch { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px }
+#main .ya-touch-pill { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px 3px 4px; border-radius: 999px; background: #fff; font-size: 12px; font-weight: 600; color: var(--year-ink, #5b4a8b) }
+#main .ya-touch-pill .cat-icon { width: 16px; height: 16px }
+#main .ya-chip em { flex: 1; font-style: normal }
+#main .ya-chip-areas { display: inline-flex; gap: 2px; font-style: normal }
+#main .ya-chip-areas .cat-icon { width: 16px; height: 16px }
+#main .ya-connect { margin: 4px 2px 0; font-size: 14.5px; line-height: 1.45; color: #5c5466 }
