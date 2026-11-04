@@ -1,62 +1,92 @@
-/* Ahead · Mock (Sleep only): stages behind a "See all stages" row instead of a strip at the top.
-   The page leads with the baby's stage; one row under the top card opens a stages page (a vertical list with
-   what changes at each stage and "Ari's stage now"). Reading another stage keeps the Preview banner, which
-   also offers "Make this Ari's stage" where a parent can change it. */
+/* Ahead · Stages behind a small chip instead of a strip at the top of every category.
+   Each category page leads with the baby's stage. A small "All stages ›" chip on the top card's first line
+   ("All checkups ›" in Health) opens a stages page: a vertical list with each stage's ages, one line on what
+   changes, and the baby's stage marked. Reading another stage shows a Preview banner with "Back to [name]'s
+   stage" and, where a parent can change it (Sleep, Feeding, Safety), "Make this [name]'s stage". */
 (function () {
-  const CAT = 'Sleep';
+  if (typeof window.stageTimeline !== 'function') return;
   const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
-  const ONE = [
-    'Short sleeps around the clock, waking to feed',
-    'Days and nights sort out, and one sleep stretches longer',
-    'Naps settle into set times, with a regular bedtime',
-    'A morning and an afternoon nap, and longer nights'
-  ];
-  const live = () => typeof isCurrent !== 'function' || isCurrent();
-  const cur = () => (typeof chgStageIndex === 'function' ? chgStageIndex(CAT) : 0);
   const nm = () => esc(typeof name === 'function' ? name() : 'your baby');
+  const live = () => typeof isCurrent !== 'function' || isCurrent();
+  const TITLE = { Sleep: 'Sleep stages', Feeding: 'Feeding stages', Safety: 'Safety stages', Development: 'Development by age', 'Daily rhythm': 'Everyday care by age', Health: 'Checkups' };
+  const LEAD = {
+    Sleep: 'Sleep changes in steps. Tap a stage to see what to expect.',
+    Feeding: 'From milk to first foods to family meals. Tap a stage to see what to expect.',
+    Safety: 'Each stage brings a few things to change at home, before your baby can reach them.',
+    Development: 'What most babies do by each age. Tap one to see what to look for.',
+    'Daily rhythm': 'How everyday care changes through the first year.',
+    Health: 'Seven checkups in the first year. Tap one to see what happens.'
+  };
+  // One line per stage: what changes there. Kept to what each stage page already says.
+  const ONE = {
+    Sleep: ['Short sleeps around the clock, waking to feed', 'Days and nights sort out, and one sleep stretches longer', 'Naps settle into set times, with a regular bedtime', 'A morning and an afternoon nap, and longer nights'],
+    Feeding: ['Breast milk or formula is everything Maya needs', 'Watching for readiness signs and getting set up', 'First tastes, then textures, then three meals a day'],
+    Safety: ['Car seat, crib and changing spot, set up once', 'Swaddle off, and small things off the floor', 'Gates, locks and covers before Maya moves', 'Furniture anchored, and water and the stove out of reach'],
+    Development: ['First looks and smiles', 'Smiles, little sounds and swiping at toys', 'Reaching, laughing and rolling', 'Sitting up, babbling and finding things', 'Waving, copying and pulling up'],
+    'Daily rhythm': ['The cord, diapers and first sponge baths', 'Tub baths start, and care settles into a rhythm', 'Drool, teething and more fun at bath time', 'Brushing starts with the first tooth'],
+    Health: ['Feeding, weight and a jaundice check', 'Growth, feeding and how you’re doing', 'The first main round of vaccines', 'Movement, feeding and sleep questions, and vaccines', 'First foods and teeth, and vaccines', 'A short development questionnaire', 'Anemia and lead checks, milk and cups, and vaccines']
+  };
+  const CHANGEABLE = ['Sleep', 'Feeding', 'Safety'];
+  const fill = s => String(s).replace(/Maya/g, typeof name === 'function' ? name() : 'your baby');
+  const ageOf = it => it.age && !/^By |months?$|^Newborn$|^First week$/.test(it.label) ? it.age : '';
 
-  function allRow() {
-    const T = STAGE_TABLE[CAT].stages, c = cur();
-    const dots = T.map((s, i) => `<i class="${i < c ? 'is-past' : i === c ? 'is-now' : ''}"></i>`).join('');
-    return `<button class="st-all" onclick="openPage('stages:${CAT}')" aria-label="See all sleep stages"><span class="st-dots" aria-hidden="true">${dots}</span><span class="st-all-copy">Stage ${c + 1} of ${T.length} · <u>See all stages</u></span></button>`;
-  }
+  let last = null; const store = {};
+  window.stageTimeline = function (cat, items) { last = { cat, items }; store[cat] = items; return ''; };
+  if (window.__hub) window.__hub.pills = (label, items, cat) => window.stageTimeline(cat || 'Development', items, label);
 
-  function stagesPage() {
-    const T = STAGE_TABLE[CAT].stages, c = cur();
-    const items = T.map((s, i) => {
-      const go = i === c ? `openPage('topic:${CAT}')` : `chgGo('chg:${CAT}:s:${i}')`;
-      return `<li class="st-item ${i === c ? 'is-now' : i < c ? 'is-past' : ''}"><span class="st-node" aria-hidden="true">${i === c && typeof catIcon === 'function' ? catIcon(CAT) : ''}</span><button class="st-card" onclick="${go}">${i === c ? `<span class="st-tag">${nm()}’s stage now</span>` : ''}<b>${esc(s.label)}</b><small class="st-age">${esc(s.age || '')}</small><span class="st-one">${esc(ONE[i] || '')}</span><span class="st-chev" aria-hidden="true">›</span></button></li>`;
+  const nowTag = cat => cat === 'Health' ? 'Next checkup' : `${nm()}’s stage now`;
+  const topicGo = cat => `openPage('topic:${cat}')`;
+
+  function stagesPage(cat) {
+    const items = store[cat] || [];
+    const ci = items.findIndex(x => x.now);
+    const list = items.map((it, i) => {
+      const cls = it.now ? 'is-now' : ci >= 0 && i < ci ? 'is-past' : '';
+      const age = ageOf(it);
+      return `<li class="st-item ${cls}"><span class="st-node" aria-hidden="true">${it.now && typeof catIcon === 'function' ? catIcon(cat) : ''}</span><button class="st-card" onclick="${it.now ? topicGo(cat) : it.onclick}">${it.now ? `<span class="st-tag">${nowTag(cat)}</span>` : ''}<b>${esc(it.label)}</b>${age ? `<small class="st-age">${esc(age)}</small>` : ''}<span class="st-one">${esc(fill((ONE[cat] || [])[i] || ''))}</span><span class="st-chev" aria-hidden="true">›</span></button></li>`;
     }).join('');
-    return `<div class="quiet-category hub-page hub-detail" style="${yearTheme(CAT)}">${hubPageTop('Sleep stages')}<p class="st-lead">Sleep changes in steps. Tap a stage to see what to expect.</p><ol class="st-list">${items}</ol><p class="st-foot">Ages are typical. If ${nm()}’s sleep looks more like another stage, open it and tap “Make this ${nm()}’s stage”.</p></div>`;
+    const foot = cat === 'Health' ? `Checkups follow ${nm()}’s birthday.` : CHANGEABLE.includes(cat) ? `Ages are typical. If ${nm()} seems more like another stage, open it and tap “Make this ${nm()}’s stage”.` : 'Ages are typical. Every baby moves at their own pace.';
+    return `<div class="quiet-category hub-page hub-detail" style="${yearTheme(cat)}">${hubPageTop(TITLE[cat] || 'Stages')}<p class="st-lead">${esc(LEAD[cat] || '')}</p><ol class="st-list">${list}</ol><p class="st-foot">${foot}</p></div>`;
   }
 
-  const baseOpen = window.openPage;
   const baseRender = window.render;
   window.render = render = function () {
-    if (typeof page === 'string' && page === 'stages:' + CAT) {
-      const m = document.getElementById('main');
-      try { baseRender.apply(this, arguments); } catch (e) {}
-      if (m) { m.innerHTML = stagesPage(); }
+    const m = document.getElementById('main');
+    if (typeof page === 'string' && page.startsWith('stages:')) {
+      const cat = page.slice(7), keep = page;
+      page = 'topic:' + cat; try { baseRender.apply(this, arguments); } catch (e) {} page = keep;   // refreshes the stage list
+      if (m) m.innerHTML = stagesPage(cat);
       return;
     }
+    last = null;
     baseRender.apply(this, arguments);
-    if (typeof page !== 'string' || !live()) return;
-    const onTopic = page === 'topic:' + CAT, sm = page.match(/^chg:Sleep:s:(\d+)$/);
-    if (!onTopic && !sm) return;
-    const m = document.getElementById('main'); if (!m) return;
-    m.querySelectorAll('nav.hub-stagebar').forEach(n => n.remove());
-    const hero = m.querySelector('header.hub-hero');
-    // Inside the top card, beside the stage name: a small chip, like a filter, not a call to action.
-    const eb = hero && hero.querySelector('.hub-eyebrow');
-    if (eb && !m.querySelector('.st-chip')) { eb.classList.add('st-eyebrow'); eb.insertAdjacentHTML('beforeend', `<button class="st-chip" onclick="openPage('stages:${CAT}')" aria-label="See all sleep stages">All stages <span aria-hidden="true">›</span></button>`); }
-    if (sm) {
-      const i = Number(sm[1]), c = cur(), banner = m.querySelector('.hub-preview');
-      if (banner && i !== c && typeof stageCanChange === 'function' && stageCanChange(CAT, i, c)) {
-        banner.insertAdjacentHTML('beforeend', `<button class="st-make" onclick="hubChangeStage('${CAT}',${i})">Make this ${nm()}’s stage</button>`);
-      }
+    if (!last || !m) return;
+    const { cat, items } = last;
+    const pg = m.querySelector('.hub-page') || m;
+    const hero = [...pg.children].find(e => !e.matches('.monthly-page-header, .hub-preview, nav'));
+    // The chip: on the top card's first line when it has one, otherwise in its top corner.
+    if (hero && !m.querySelector('.st-chip')) {
+      const chip = `<button class="st-chip" onclick="openPage('stages:${cat}')">${cat === 'Health' ? 'All checkups' : 'All stages'} <span aria-hidden="true">›</span></button>`;
+      const eb = hero.querySelector('.hub-eyebrow');
+      if (eb && hero.firstElementChild === eb) { eb.classList.add('st-eyebrow'); eb.insertAdjacentHTML('beforeend', chip); }
+      else { hero.classList.add('st-has-chip'); hero.insertAdjacentHTML('afterbegin', chip.replace('class="st-chip"', 'class="st-chip st-chip-abs"')); }
+    }
+    // Reading another stage: say so, with a way back (and a way to make it the baby's stage where that's allowed).
+    const ci = items.findIndex(x => x.now), oi = items.findIndex(x => x.on);
+    if (!live() || ci < 0 || oi < 0 || oi === ci) return;
+    const on = items[oi];
+    const back = `<button onclick="${topicGo(cat)}">${cat === 'Health' ? 'Back to the next checkup' : `Back to ${nm()}’s stage`}</button>`;
+    const make = on.change && CHANGEABLE.includes(cat) ? `<button class="st-make" onclick="${on.change}">Make this ${nm()}’s stage</button>` : '';
+    const banner = m.querySelector('.hub-preview');
+    if (banner) {
+      if (!/Back to/.test(banner.innerHTML)) banner.insertAdjacentHTML('beforeend', back);
+      if (make && !banner.querySelector('.st-make')) banner.insertAdjacentHTML('beforeend', make);
+    } else if (hero) {
+      const what = oi < ci ? 'Looking back' : cat === 'Health' ? 'Coming up' : 'Preview';
+      const age = ['Development', 'Daily rhythm', 'Health'].includes(cat) ? on.label : ageOf(on);
+      hero.insertAdjacentHTML('beforebegin', `<div class="hub-preview"><span>${what}${age ? ' · ' + esc(age) : ''}</span>${back}${make}</div>`);
     }
   };
-  // Keep the Categories tab lit on the stages page.
   if (typeof activeNavigationTab === 'function') {
     const baseTab = activeNavigationTab;
     window.activeNavigationTab = activeNavigationTab = function () { return typeof page === 'string' && page.startsWith('stages:') ? 'categories' : baseTab(); };
