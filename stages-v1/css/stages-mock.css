@@ -1,0 +1,29 @@
+/* Mock: "See all stages" row and the stages page (Sleep only) */
+#main .st-all { display: flex; align-items: center; gap: 14px; width: 100%; margin: -2px 0 16px; padding: 14px 16px; border: 0; border-radius: 20px; background: var(--white, #fff); box-shadow: 0 1px 3px rgba(43,40,64,.07); text-align: left; font: inherit; color: inherit; cursor: pointer }
+#main .st-dots { display: flex; gap: 5px; flex: none }
+#main .st-dots i { width: 9px; height: 9px; border-radius: 50%; background: color-mix(in srgb, var(--year-accent) 35%, #fff); box-shadow: inset 0 0 0 1.5px var(--year-accent) }
+#main .st-dots i.is-past { background: var(--year-accent) }
+#main .st-dots i.is-now { width: 22px; border-radius: 6px; background: var(--year-ink); box-shadow: none }
+#main .st-all-copy { flex: 1; display: flex; flex-direction: column; gap: 2px }
+#main .st-all-copy b { font-size: 16px }
+#main .st-all-copy small { font-size: 13px; color: #8a8494 }
+#main .st-chev { color: #b3adbd; font-size: 22px; line-height: 1 }
+#main .st-lead { margin: 2px 0 18px; color: #6f6979; font-size: 15px; line-height: 1.45 }
+#main .st-list { list-style: none; margin: 0; padding: 0; position: relative }
+#main .st-item { position: relative; display: flex; gap: 14px; padding-bottom: 12px }
+#main .st-item::before { content: ''; position: absolute; left: 21px; top: 44px; bottom: -4px; width: 2px; background: color-mix(in srgb, var(--year-accent) 45%, #fff) }
+#main .st-item:last-child::before { display: none }
+#main .st-node { flex: none; width: 44px; height: 44px; margin-top: 8px; border-radius: 50%; background: #fff; box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--year-accent) 55%, #fff); display: grid; place-items: center; position: relative; z-index: 1 }
+#main .st-item.is-past .st-node { background: color-mix(in srgb, var(--year-accent) 40%, #fff); box-shadow: none }
+#main .st-item.is-now .st-node { background: var(--year-pale); box-shadow: 0 0 0 4px #fff, 0 0 0 6px var(--year-accent) }
+#main .st-node svg { width: 28px; height: 28px }
+#main .st-card { position: relative; flex: 1; display: flex; flex-direction: column; gap: 3px; padding: 14px 40px 14px 16px; border: 0; border-radius: 20px; background: #fff; box-shadow: 0 1px 3px rgba(43,40,64,.07); text-align: left; font: inherit; color: inherit; cursor: pointer }
+#main .st-item.is-now .st-card { background: var(--year-pale); box-shadow: inset 0 0 0 1.5px var(--year-accent) }
+#main .st-card b { font-size: 17px }
+#main .st-age { font-size: 13px; font-weight: 600; color: var(--year-ink) }
+#main .st-one { font-size: 14px; line-height: 1.4; color: #6f6979 }
+#main .st-tag { align-self: flex-start; margin-bottom: 4px; padding: 3px 9px; border-radius: 999px; background: var(--year-ink); color: #fff; font-size: 11.5px; font-weight: 700 }
+#main .st-card .st-chev { position: absolute; right: 14px; top: 50%; transform: translateY(-50%) }
+#main .st-foot { margin: 10px 0 0; font-size: 13px; color: #8a8494; line-height: 1.45 }
+#main .hub-preview { flex-wrap: wrap }
+#main .hub-preview .st-make { background: var(--year-ink); color: #fff }
