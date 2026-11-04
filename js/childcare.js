@@ -168,7 +168,7 @@
         'Starting soon: ask your referral agency who has openings. Odd hours: ask home daycares and nannies. Nothing right yet: keep looking, with family or a sitter in between.')
       + good([['steth', 'Born early?', 'Ask your pediatrician when, and what kind of care, makes sense for {o}.'], ['notepad', 'Waitlists move', 'Check in every month or so. Spots open up.'], ['blocks', 'A mix is common', 'Family two days and daycare three is a plan too.']]), 'notepad');
 
-    if (id === 'pay') return sub('pay', 'Setting it up', 'Pay less for care', 'Care is one of a family’s biggest monthly costs. There are more ways to pay less than most parents know.',
+    if (id === 'pay') return sub('pay', 'Setting it up', 'Paying for care', 'Care is one of a family’s biggest monthly costs. There are more ways to pay less than most parents know.',
       picSteps('Ways to pay less', [
         ['coin', 'Help from your state', 'For families who qualify. A referral agency can help you apply.'],
         ['notepad', 'A pre-tax care account', 'Through many jobs. Ask HR soon after the birth.'],
@@ -199,7 +199,7 @@
       + good([['bottle', 'Ask about feeds', 'How many feeds to expect, and how the caregiver warms bottles.'], ['heart', 'Your feelings count', 'The first weeks can be hard on you too. It usually gets easier.']])
       + `<button class="hub-button is-secondary cc-add" onclick="ccStarted()">${F('Care has started')} ›</button>`, 'bag');
 
-    if (id === 'backup') return sub('backup', 'Setting it up', 'Have a backup plan', 'Every family has days when care doesn’t happen. A plan made now makes them easier.',
+    if (id === 'backup') return sub('backup', 'Setting it up', 'When care falls through', 'Every family has days when care doesn’t happen. A plan made now makes them easier.',
       backupList()
       + picSteps('When things don’t go to plan', [
         ['thermo', '{S’s} sick', 'Take turns with a partner if you can, or call your backup. Your pediatrician can say when {s} can go back.'],
@@ -329,10 +329,10 @@
       + `<button class="hub-link cc-quiz-link" onclick="openPage('chg:${CAT}:d:fit')">${F('Not sure which? Take the quick quiz')} ›</button>`;
     b += careCardButton(card);
     b += `<h2 class="hub-h2">${F('Setting it up')}</h2><div class="hub-list">`
-      + homeRow('pay', 'coin', 'Pay less for care', 'Help from your state, work and taxes', 'pay')
+      + homeRow('pay', 'coin', 'Paying for care', 'Help from your state, work and taxes', 'pay')
       + homeRow('ready', 'bag', 'Get ready for day one', 'A few short days first, and what to send', 'ready')
       + homeRow('start', 'heart', 'Settle in', 'The first months, and when to speak up', 'start')
-      + homeRow('backup', 'shield', 'Have a backup plan', 'For sick days, closed days, or a caregiver who quits', 'backup') + `</div>`;
+      + homeRow('backup', 'shield', 'When care falls through', 'Sick days, closed days, a caregiver who quits', 'backup') + `</div>`;
     return frame(b);
   }
 
