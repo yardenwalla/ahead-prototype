@@ -16,6 +16,11 @@
   // The firsts parents remember. A first the parent typed in themselves always counts.
   const BIG = /smile|laugh|roll|sits? (up|without)|sitting|tooth|crawl|first word|mama|dada|name for a parent|says a word|pulls? (up|to stand)|stand|first steps|takes? (a few )?steps|walk|waves?/i;
   const isBig = r => r.own || !r.skillKey || BIG.test(String(r.title));
+  // The big firsts get baby-book titles; everything else keeps its own words.
+  const KEEP = [[/smiles? back|smiles at you|social smile/i, 'First smile'], [/laugh|chuckle/i, 'First laugh'], [/roll/i, 'First roll'], [/sits? (up|without)|sitting/i, 'Sitting up'], [/crawl/i, 'Crawling'], [/tooth/i, 'First tooth'], [/mama|dada|first word|says a word|name for a parent/i, 'First word'], [/wave/i, 'Waving bye-bye'], [/pulls? (up|to stand)|stand/i, 'Pulling up to stand'], [/steps|walk/i, 'First steps']];
+  const keepTitle = r => { if (r.own || !r.skillKey) return r.title; const k = KEEP.find(([re]) => re.test(String(r.title))); return k ? k[1] : r.title; };
+  // The moments for the keepsake list: the big ones (first of each kind) and anything the parent typed in.
+  const bigFirsts = recs => { const seen = new Set(); return recs.filter(isBig).filter(r => { const t = keepTitle(r); if (r.own || !r.skillKey) return true; if (seen.has(t)) return false; seen.add(t); return true; }); };
   const label = m => m === 0 ? 'Born' : m === 12 ? '1 year' : `${m} mo`;
   const longLabel = m => m === 0 ? 'Newborn' : m === 12 ? '1 year' : `${m} month${m === 1 ? '' : 's'}`;
   const monthOf = (dob, date) => { let m = 0; while (m < 12 && iso(addMonths(dob, m + 1)) <= date) m++; return m; };
@@ -23,14 +28,16 @@
   // One first: icon, what happened, when, and the note (or an invitation to add one).
   const firstRow = (r, withMonth = true) => {
     const dob = parse(profile.dob);
-    return `<button class="mem-row" onclick="openPage('event-edit:${r.id}')"><span class="mem-row-ic is-toned" style="${TONE(r)}">${hubArt(ICON(r), 'Development')}</span><span class="mem-row-copy"><b>${esc2(r.title)}</b><small>${esc2(journeyDateLabel(r.date))}${withMonth ? ` · ${esc2(longLabel(monthOf(dob, r.date)))}` : ''}</small>${r.notes ? `<q>${esc2(String(r.notes).slice(0, 90))}</q>` : ''}</span><span class="mem-row-go" aria-hidden="true">›</span></button>`;
+    return `<button class="mem-row" onclick="openPage('event-edit:${r.id}')"><span class="mem-row-ic is-toned" style="${TONE(r)}">${hubArt(ICON(r), 'Development')}</span><span class="mem-row-copy"><b>${esc2(keepTitle(r))}</b><small>${esc2(journeyDateLabel(r.date))}${withMonth ? ` · ${esc2(longLabel(monthOf(dob, r.date)))}` : ''}</small>${r.notes ? `<q>${esc2(String(r.notes).slice(0, 90))}</q>` : ''}</span><span class="mem-row-go" aria-hidden="true">›</span></button>`;
   };
   // All firsts, by month, newest first. Its own page, so Memories itself never grows long.
   const allFirsts = () => {
-    const dob = parse(profile.dob), firsts = journeyData().records.filter(r => r.type === 'milestone' && r.status === 'attended').sort((a, c) => c.date.localeCompare(a.date));
-    const by = {}; firsts.forEach(r => { const m = monthOf(dob, r.date); (by[m] = by[m] || []).push(r); });
-    const inner = Object.keys(by).map(Number).sort((x, y) => y - x).map(m => `<h2 class="hub-h2">${esc2(longLabel(m))}</h2><div class="mem-list">${by[m].map(r => firstRow(r, false)).join('')}</div>`).join('');
-    return String(window.__hub.detail('Memories', 'Memories', `${name()}’s firsts`, `${firsts.length} saved so far.`, inner || `<p class="mem-empty">${esc2('Nothing saved yet.')}</p>`, 'star')).replace(/(<div class="monthly-page-header">[\s\S]*?<h1>)[^<]*(<\/h1><p>)[^<]*/, `$1Memories$2${esc2(name())}’s first year`);
+    const dob = parse(profile.dob), all = journeyData().records.filter(r => r.type === 'milestone' && r.status === 'attended').sort((a, c) => a.date.localeCompare(c.date));
+    const big = bigFirsts(all), rest = all.filter(r => !big.includes(r)).reverse();
+    const by = {}; [...big].reverse().forEach(r => { const m = monthOf(dob, r.date); (by[m] = by[m] || []).push(r); });
+    const inner = Object.keys(by).map(Number).sort((x, y) => y - x).map(m => `<h2 class="hub-h2">${esc2(longLabel(m))}</h2><div class="mem-list">${by[m].map(r => firstRow(r, false)).join('')}</div>`).join('')
+      + (rest.length ? `<details class="mem-visits mem-skills"><summary><span>${esc2('Other skills you noticed')}</span><small>${rest.length}</small></summary>${rest.map(r => `<button class="mem-visit" onclick="openPage('event-edit:${r.id}')"><b>${esc2(r.title)}</b><small>${esc2(journeyDateLabel(r.date))}</small></button>`).join('')}</details>` : '');
+    return String(window.__hub.detail('Memories', 'Memories', `${name()}’s firsts`, big.length ? `${big.length} big firsts so far.` : 'The big ones will collect here.', inner || `<p class="mem-empty">${esc2('Nothing saved yet.')}</p>`, 'star')).replace(/(<div class="monthly-page-header">[\s\S]*?<h1>)[^<]*(<\/h1><p>)[^<]*/, `$1Memories$2${esc2(name())}`);
   };
   if (typeof window.changesRoute === 'function') {
     const baseRoute = window.changesRoute;
@@ -58,6 +65,7 @@
       if (photo(m)) return `<div class="mem-story-wrap"><button class="mem-story" onclick="storyShare(${m})" aria-label="Open the ${L(m)} Story"><img data-story-thumb="${m}" alt=""></button>${remove(m)}</div>`;
       return `<label class="mem-story is-empty" role="button" aria-label="Add the ${L(m)} photo"><img data-story-thumb="${m}" alt=""><span class="mem-story-add">＋ Add photo</span>${hubPhotoInput(m)}</label>`;
     };
+    const bigs = bigFirsts(firsts);
     // Newest first, only the months the baby has reached.
     const months = Array.from({ length: now + 1 }, (_, i) => now - i);
     const strip = `<div class="mem-stories">${months.map(card).join('')}</div>`;
@@ -78,12 +86,13 @@
 
     // Firsts: the three most recent, then "See all" for the rest, so the page stays the same length however many you save.
     b += `<div class="mem-head"><h2>Firsts</h2><button class="textlink" onclick="openPage('chg:Timeline:milestone')">＋ Save a first</button></div>`;
-    b += firsts.length
-      ? `<div class="mem-list">${[...firsts].reverse().slice(0, 3).map(r => firstRow(r)).join('')}${firsts.length > 3 ? `<button class="mem-all" onclick="openPage('chg:Timeline:firsts')">${esc2(`See all ${firsts.length} firsts`)} ›</button>` : ''}</div>`
-      : `<p class="mem-empty">${esc2(`First smile, first laugh, first roll. Save them as they happen and they’ll collect here.`)}</p>`;
+    const more = firsts.length - Math.min(3, bigs.length);
+    b += bigs.length
+      ? `<div class="mem-list">${[...bigs].reverse().slice(0, 3).map(r => firstRow(r)).join('')}${more > 0 ? `<button class="mem-all" onclick="openPage('chg:Timeline:firsts')">${esc2(bigs.length > 3 ? `See all ${bigs.length} firsts` : 'See everything you’ve noticed')} ›</button>` : ''}</div>`
+      : `<p class="mem-empty">${esc2(`First smile, first laugh, first roll. Save them as they happen and they’ll collect here.`)}</p>${firsts.length ? `<button class="mem-all" onclick="openPage('chg:Timeline:firsts')">${esc2(`${firsts.length} skill${firsts.length === 1 ? '' : 's'} you’ve noticed`)} ›</button>` : ''}`;
 
     // Checkups: a quiet record.
-    b += `<details class="mem-visits"><summary><span>${esc2('Checkups')}</span><small>${visits.length ? `${visits.length} saved` : 'None saved yet'}</small></summary>${visits.map(r => `<button class="mem-visit" onclick="openPage('event-edit:${r.id}')"><b>${esc2(r.title)}</b><small>${esc2(journeyDateLabel(r.date))}</small></button>`).join('')}<button class="textlink" onclick="openPage('chg:Timeline:visit')">＋ Record a visit</button></details>`;
+    if (visits.length) b += `<details class="mem-visits"><summary><span>${esc2('Checkups')}</span><small>${visits.length ? `${visits.length} saved` : 'None saved yet'}</small></summary>${visits.map(r => `<button class="mem-visit" onclick="openPage('event-edit:${r.id}')"><b>${esc2(r.title)}</b><small>${esc2(journeyDateLabel(r.date))}</small></button>`).join('')}<button class="textlink" onclick="openPage('chg:Timeline:visit')">＋ Record a visit</button></details>`;
     b += `<p class="hub-foot">Photos and entries stay on this device.</p></div>`;
     return `<div class="quiet-category hub-page hub-timeline-page" style="${yearTheme('Memories')}">${b}</div>`;
   };

@@ -1405,3 +1405,6 @@
 #main .hub-thermo .hub-dot { display: inline-flex; margin-bottom: 8px }
 #main .hub-thermo b { display: block; font-size: 15.5px }
 #main .hub-thermo p { margin: 4px 0 0; font-size: 13px; line-height: 1.35; color: var(--muted, #6b6670) }
+
+/* Memories: other skills noticed, quietly under the big firsts */
+#main .mem-skills { margin-top: 18px }
