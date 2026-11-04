@@ -54,7 +54,7 @@
     const a = ageNow(), nm = name();
     const ahead = C.filter(c => c.end > a), next = ahead.filter(c => c.start >= a && c.start <= a + 3).slice(0, 3);
     let h = `<div class="ya-page"><div class="eyebrow">${F('The year ahead')}</div><h1>${F('Timeline')}</h1><p class="next-lead">${F(`The big changes coming for ${nm}, and what each one changes. Tap any to read ahead.`)}</p>`;
-    if (next.length) h += `<h2 class="ya-h2">${F('Coming up next')}</h2><div class="ya-next">${next.map(c => `<button class="ya-card" style="${yearTheme(c.cat)}" onclick="${c.go}"><span class="ya-card-art">${hubArt(c.icon, c.cat)}</span><span class="ya-card-copy"><small>${F(range(c))} · ${F(soon(c, a).replace(/^Could start /, '').replace(/^In about/, 'in about'))}</small><b>${F(c.title)}</b><span>${F(TOUCH[c.id] || c.why)}</span></span><span class="hub-chev" aria-hidden="true">›</span></button>`).join('')}</div>`;
+    if (next.length) h += `<h2 class="ya-h2">${F('Coming up next')}</h2><div class="ya-next">${next.map(c => `<button class="ya-card" style="${yearTheme(c.cat)}" onclick="${c.go}"><span class="ya-card-art">${hubArt(c.icon, c.cat)}</span><span class="ya-card-copy"><small>${F(range(c))} · ${F(soon(c, a).replace(/^Could start /, '').replace(/^In about/, 'in about'))}</small><b>${F(c.title)}</b><span>${F(c.why)}</span></span><span class="hub-chev" aria-hidden="true">›</span></button>`).join('')}</div>`;
     // Later on: swipe through the months ahead and watch the baby grow. Each month card has that month's picture
     // (the same baby who grows on Home), its date, the changes that usually start then, and a checkup if one is due.
     const later = ahead.filter(c => c.start >= a && !next.includes(c));
@@ -130,8 +130,8 @@
     const when = past ? 'Already behind ' + name() : now ? 'Happening around now' : c.start - a <= 1 ? 'Could start any week now' : `In about ${Math.round(c.start - a)} month${Math.round(c.start - a) === 1 ? '' : 's'}`;
     const look = `${p.signsTitle ? 'Signs {s’s} ready' : 'Signs it’s close'}: ${p.signs.map(x => x.charAt(0).toLowerCase() + x.slice(1)).join(', ')}.`;
     return h.detail(cat, `${range(c)} · ${when}`, c.title, p.lead + ' ' + look,
-      h.list('What it changes', p.rows.slice(0, 4).map(([icon, rc, title, sub, go]) => h.row({ icon, cat: rc, title, sub, onclick: go }).replace('<span class="hub-row-copy">', `<span class="hub-row-copy"><small class="hub-row-eyebrow">${F(AREA[rc] || rc)}</small>`)))
-      + h.tip(p.tip[0], p.tip[1]), c.icon).replace('<h2', `<p class="ya-connect">${F(`${c.title} doesn’t happen on its own. Here’s everything it touches, and how to get ready.`)}</p><h2`);
+      `<h2 class="hub-h2">${F('What it changes')}</h2><div class="ya-web" style="${yearTheme(cat)}"><div class="ya-web-root"><span>${hubArt(c.icon, cat)}</span><b>${F(c.title)}</b></div><ul class="ya-web-list">${p.rows.slice(0, 4).map(([icon, rc, title, sub, go]) => `<li style="${yearTheme(rc)}"><button onclick="${go}"><span class="ya-web-ic">${typeof catIcon === 'function' ? catIcon(rc) : hubArt(icon, rc)}</span><span class="ya-web-copy"><small>${F(AREA[rc] || rc)}</small><b>${F(title)}</b><span>${F(sub)}</span></span><span class="hub-chev" aria-hidden="true">›</span></button></li>`).join('')}</ul></div>`
+      + h.tip(p.tip[0], p.tip[1]), c.icon);
   }
   const base = window.changesRoute;
   window.changesRoute = function (p) { const m = /^chg:Timeline:c:(\w+)$/.exec(p); if (m) { const pg = changePage(m[1]); if (pg) return pg; } return base(p); };

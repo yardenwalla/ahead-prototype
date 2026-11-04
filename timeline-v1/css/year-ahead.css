@@ -58,3 +58,22 @@
 #main .ya-chip-areas { display: inline-flex; gap: 2px; font-style: normal }
 #main .ya-chip-areas .cat-icon { width: 16px; height: 16px }
 #main .ya-connect { margin: 4px 2px 0; font-size: 14.5px; line-height: 1.45; color: #5c5466 }
+
+/* What it changes: the change, with a line branching to each area it touches */
+#main .ya-web { margin: 0 0 16px }
+#main .ya-web-root { display: inline-flex; align-items: center; gap: 10px; padding: 10px 16px 10px 10px; border-radius: 999px; background: var(--year-pale, #f3effb); position: relative; z-index: 1 }
+#main .ya-web-root span { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: #fff }
+#main .ya-web-root svg { width: 22px; height: 22px }
+#main .ya-web-root b { font-size: 16px }
+#main .ya-web-list { list-style: none; margin: 0; padding: 6px 0 0 26px; position: relative }
+#main .ya-web-list::before { content: ""; position: absolute; left: 26px; top: -4px; bottom: 30px; width: 2px; background: var(--year-ink, #5b4a8b); opacity: .25; border-radius: 2px }
+#main .ya-web-list li { position: relative; padding: 8px 0 0 22px }
+#main .ya-web-list li::before { content: ""; position: absolute; left: 0; top: 36px; width: 22px; height: 2px; background: #5b4a8b; opacity: .25 }
+#main .ya-web-list li::after { content: ""; position: absolute; left: -4px; top: 33px; width: 8px; height: 8px; border-radius: 50%; background: var(--year-ink, #5b4a8b) }
+#main .ya-web-list button { display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px 12px 12px 12px; border: 0; border-radius: 18px; background: #fffdf9; box-shadow: 0 1px 2px rgba(43,40,64,.06), 0 4px 12px rgba(43,40,64,.05); text-align: left; font: inherit; color: inherit; cursor: pointer }
+#main .ya-web-ic { flex: none; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 14px; background: var(--year-pale, #f3effb) }
+#main .ya-web-ic .cat-icon { width: 26px; height: 26px }
+#main .ya-web-copy { flex: 1; min-width: 0 }
+#main .ya-web-copy small { display: block; font-size: 12px; font-weight: 700; color: var(--year-ink, #5b4a8b) }
+#main .ya-web-copy b { display: block; font-size: 15.5px; line-height: 1.25 }
+#main .ya-web-copy span { display: block; margin-top: 1px; font-size: 13px; color: #7a7484 }
