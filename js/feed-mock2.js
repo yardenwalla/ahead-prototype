@@ -52,25 +52,26 @@
       let b = `<header class="hub-hero"><p class="hub-eyebrow">${F('Milk feeds')}</p><h1>${F('Feeds get quicker and further apart')}</h1><p class="hub-lead">${F('Ari is better at eating now, so feeds take less time, and many babies take their longest stretch at night.')}</p></header>`;
       b += `<section class="hub-card hub-glance is-static"><span class="hub-card-head"><b>${F('Feeds now')}</b><button class="hub-card-cta" onclick="${go('day')}">${F('Example day')} ›</button></span><div class="hub-tiles">${tiles.map(([c, art, l, v, sub]) => `<div class="sm-tile" style="--sm-bg:${TILE[c][0]};--sm-ink:${TILE[c][1]}"><span class="sm-art">${art}</span><small>${F(l)}</small><b>${F(v)}</b><span>${F(sub)}</span></div>`).join('')}</div><span class="hub-card-note"><b>${F('Every day')}</b> ${F('Vitamin D drops, while Ari gets breast milk.')} <button class="hub-inline-link" onclick="${go('vitd')}" style="all:unset;cursor:pointer;color:#9b4766;font-weight:600">${F('How')} ›</button></span></section>`;
       b += h2('How to help Ari feed now') + `<div class="hub-list">${[
-        row('blue', 'clock', 'Feeds', 'Follow his cues, not the clock', 'Lots of evening feeds are normal', 'day'),
         row('yellow', 'diaper', 'Getting enough', 'Wet diapers and steady weight', 'The two signs that matter now', 'enough'),
-        row('pink', 'drop', 'Your milk', 'Softer breasts are normal now', 'It doesn’t mean less milk', 'supply'),
-        row('lilac', 'bottle', 'Bottles', 'Pace each bottle', 'Level, with pauses, so he leads', 'bottle')].join('')}</div>`;
+        row('blue', 'clock', 'Growth spurts', 'Hungrier days are normal', 'Often around 6 weeks and 3 months', 'spurt'),
+        row('pink', 'drop', 'Your milk', 'Softer breasts are normal now', 'It doesn’t mean less milk', 'supply')].join('')}</div>`;
       b += `<button class="hub-rough-card care-rash-card" style="background:#fbe4ec;color:#9b4766" onclick="${go('worry')}"><span class="hub-rough-moon" aria-hidden="true">${hubArt('eye', CAT)}</span><span class="hub-rough-copy"><b>${F('Is this normal?')}</b><small>${F('Spit-up, gas, fussing or arching at feeds')}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`;
       b += h2('Coming up') + `<div class="hub-list">${row('lilac', 'clock', 'Often around 3 months', 'Going back to work?', 'Start a few weeks ahead', 'work')}</div>`;
       b += h.next('Next, around 4 months', 'Ready for solids', '');
-      b += `<div class="hub-browse care-shop"><button class="hub-link" onclick="${go('basics')}">${F('Milk and bottle basics')} ›</button><button class="hub-link" onclick="${go('year')}">${F('Feeding this year')} ›</button></div>` + h.note('Ages are typical. Every baby moves at their own pace.');
+      b += h2('Show me how') + `<div class="hub-list">${[row('pink', 'heart', '', 'Latch and holds', 'Four holds, and how a good latch feels', 'latch'), row('lilac', 'bottle', '', 'Giving a bottle', 'Pacing, burping and nipple flow', 'bottle'), row('peach', 'hand', '', 'Making a formula bottle', 'Water first, level scoops', 'formula'), row('blue', 'snow', '', 'Storing and warming milk', 'How long it keeps, and travel', 'basics')].join('')}</div>`;
+      b += `<div class="hub-browse care-shop"><button class="hub-link" onclick="${go('year')}">${F('Feeding this year')} ›</button></div>` + h.note('Ages are typical. Every baby moves at their own pace.');
       return `${css}<div class="quiet-category hub-page care-v2" data-overview="${CAT}" style="${yearTheme(CAT)}">${typeof monthlyPageHeader === 'function' ? monthlyPageHeader(CAT) : ''}${pills}${b}</div>`; },
 
     // 1 · HOW MUCH, HOW OFTEN: a day of feeds at this age
     day: () => page(head('Feeds now', 'A day of feeds at 2 months', 'An example, not a schedule. Ari leads, and no two days look the same.')
-      + `<div class="hub-card"><ol class="fm-day">${[['7:00', 'drop', 'Nurse', 'Often 10–15 minutes'], ['10:00', 'bottle', 'Bottle', '4 oz'], ['1:00', 'drop', 'Nurse', ''], ['4:00', 'drop', 'Nurse', ''], ['6–8 pm', 'drop', 'A few feeds close together', 'Cluster feeding is normal'], ['10:00', 'bottle', 'Bottle', '4–5 oz, then bed'], ['3:00 am', 'drop', 'Nurse', 'After his longest stretch']].map(([t, i, w, s]) => `<li><time>${F(t)}</time><span class="fm-ic" style="background:${i === 'bottle' ? '#fdeee6' : '#fbe4ec'}">${hubArt(i, CAT)}</span><span><b>${F(w)}</b>${s ? `<small>${F(s)}</small>` : ''}</span></li>`).join('')}</ol></div>`
+      + `<div class="hub-card"><ol class="fm-day">${[['7:00', 'drop', 'Nurse', 'Often 10–15 minutes'], ['10:00', 'bottle', 'Bottle', '4 oz'], ['1:00', 'drop', 'Nurse', ''], ['4:00', 'drop', 'Nurse', ''], ['6–8 pm', 'drop', 'A few feeds close together', 'Normal in the evening'], ['10:00', 'bottle', 'Bottle', '4–5 oz, then bed'], ['3:00 am', 'drop', 'Nurse', 'After his longest stretch']].map(([t, i, w, s]) => `<li><time>${F(t)}</time><span class="fm-ic" style="background:${i === 'bottle' ? '#fdeee6' : '#fbe4ec'}">${hubArt(i, CAT)}</span><span><b>${F(w)}</b>${s ? `<small>${F(s)}</small>` : ''}</span></li>`).join('')}</ol></div>`
       + h2('How much at each feed') + `<div class="fm-two"><div style="background:#fbe4ec"><small style="color:#9b4766">${F('Nursing')}</small><b>${F('Until he lets go')}</b><span>${F('Often 10–15 minutes now. Offer the second side.')}</span></div><div style="background:#fdeee6"><small style="color:#9a5a3c">${F('A bottle')}</small><b>${F('4–5 oz')}</b><span>${F('Of formula. Breast milk bottles stay about 3–4 oz.')}</span></div></div>`
       + h2('Hungry, or full?') + `<div class="fm-two"><div style="background:#e7effc"><small style="color:#46638c">${F('Hungry')}</small><span>${F('Rooting, hands to mouth, lip smacking. Crying comes last.')}</span></div><div style="background:#e4f3ec"><small style="color:#356651">${F('Full')}</small><span>${F('Slows down, turns away, relaxed open hands.')}</span></div></div>`
       + `<p class="ss-small"><b>${F('Counting the time:')}</b> ${F('from the start of one feed to the start of the next.')}</p>`),
 
-    vitd: () => page(head('Every day', 'Vitamin D drops', 'Babies who get any breast milk need 400 IU every day.', C.green)
-      + steps([['drop', 'Once a day', 'Same time helps you remember'], ['hand', 'On the nipple or a pacifier', 'Or inside the cheek']], true)
+    vitd: () => page(head('Every day', 'Vitamin D drops', 'Babies who get any breast milk need 400 IU every day. Once a day, at the same time, is easiest to remember.', C.green)
+      + h2('Ways to give it') + steps([['bottle', 'In a little milk', 'About an ounce in a bottle, before the rest of the feed'], ['heart', 'On the nipple', 'Just before he latches'], ['hand', 'Inside the cheek', 'Slowly, with the dropper']], false)
+      + `<p class="ss-small"><b>${F('Not in a full bottle:')}</b> ${F('if he doesn’t finish it, he misses some. Check the label for the dose, since drops differ.')}</p>`
       + `<p class="ss-know"><b>${F('When to stop')}</b>${F('Once Ari drinks about 32 oz of formula a day. Formula has vitamin D added.')}</p>` + `<p class="ss-small"><b>${F('Coming up:')}</b> ${F('at the 4-month checkup, ask about iron.')}</p>`),
 
     // 2 · GETTING ENOUGH
@@ -85,13 +86,26 @@
       + h2('Worried it’s too little?') + p('Feed more often and offer both sides. If you’re supplementing, nurse or pump for those feeds too. A lactation consultant can help.')
       + call('Fewer wet diapers, or slow weight gain at a checkup.')),
 
+    spurt: () => page(head('Growth spurts', 'Hungrier days are normal', 'Every few weeks, Ari may want to feed much more for 2–3 days. Often around 6 weeks and 3 months.', C.blue)
+      + steps([['clock', 'More feeds', 'Closer together, often in the evening'], ['heart', 'Fussier', 'And sometimes sleepier after'], ['smile', 'Then it settles', 'Usually in 2–3 days']], false)
+      + h2('What helps') + p('Follow his lead and feed more often. If you nurse, the extra feeds tell your body to make more milk. It isn’t a sign your supply is low.')
+      + call('Fewer wet diapers, or it lasts more than a few days.')),
+    latch: () => page(head('Show me how', 'Latch and holds', 'A good latch feels like a strong tug, not a pinch.', C.pink)
+      + h2('A good latch') + steps([['heart', 'Nose to nipple', 'Tummy to tummy with you'], ['smile', 'Wait for a wide mouth', 'Like a yawn'], ['hand', 'Bring him to you', 'Chin first, not you to him']], true)
+      + `<p class="ss-small"><b>${F('Pinching?')}</b> ${F('Slide a clean finger into the corner of his mouth to break the seal, and try again.')}</p>`
+      + h2('Four holds') + steps([['heart', 'Cradle', 'Head in the crook of your arm'], ['hand', 'Football', 'Tucked at your side. Easy after a C-section'], ['moon', 'Side-lying', 'You both lie on your sides'], ['smile', 'Laid-back', 'Helps with a fast letdown']], false)
+      + call('Pain past the first minute of a feed, cracked or bleeding nipples, or a hot, red, painful area with a fever.')),
+    formula: () => page(head('Show me how', 'Making a formula bottle', 'Follow the label exactly. The amounts matter.', C.peach)
+      + steps([['hand', 'Wash your hands', 'And use a clean bottle'], ['drop', 'Water first', 'The amount on the label'], ['bowl', 'Level scoops', 'Then shake well'], ['heart', 'Test on your wrist', 'Warm or room temperature']], true)
+      + `<p class="ss-small"><b>${F('Never add extra water or powder.')}</b> ${F('Too much or too little can make Ari sick.')}</p>`
+      + `<div class="hub-list care-link">${row('blue', 'snow', '', 'How long it keeps once made', 'Fridge, counter and after a feed starts', 'basics')}</div>`),
     // HOW-TO
-    bottle: () => page(head('How-to', 'Pace each bottle', 'Pacing lets Ari lead, like at the breast, so he takes what he needs and less air.', C.lilac)
+    bottle: () => page(head('Show me how', 'Giving a bottle', 'Pace each bottle. It lets Ari lead, like at the breast, so he takes what he needs and less air.', C.lilac)
       + steps([['hand', 'Hold him upright', 'Head higher than his tummy'], ['bottle', 'Bottle fairly level', 'Just enough milk in the tip'], ['clock', 'Pause every few sucks', 'Tip it down, then let him draw it back'], ['heart', 'Stop when he slows', 'Even if there’s milk left']], true)
       + h2('Time for a faster nipple?') + `<div class="fm-two"><div style="background:#efedff"><small style="color:#625084">${F('Too slow')}</small><span>${F('Sucks hard, gets frustrated, the nipple collapses, feeds take over 20 minutes.')}</span></div><div style="background:#fdeee6"><small style="color:#9a5a3c">${F('Too fast')}</small><span>${F('Gulping, coughing, or milk spilling from his mouth.')}</span></div></div>`
       + `<p class="ss-small"><b>${F('Burping:')}</b> ${F('every 2–3 oz and at the end. No burp after a few minutes is fine.')}</p>`),
 
-    basics: () => page(head('Milk and bottle basics', 'How long milk keeps', 'Breast milk and formula, side by side.', C.blue)
+    basics: () => page(head('Show me how', 'Storing and warming milk', 'Breast milk and formula, side by side.', C.blue)
       + `<div class="hub-card fm-store"><table><tr><th></th><th>${F('Breast milk')}</th><th>${F('Formula, once made')}</th></tr>${[['On the counter', 'Up to 4 hours', 'Up to 2 hours'], ['Once a feed starts', 'Within 2 hours', 'Within 1 hour'], ['In the fridge', 'Up to 4 days', 'Up to 24 hours'], ['In the freezer', 'Best within 6 months', 'Don’t freeze']].map(r => `<tr>${r.map(c => `<td>${F(c)}</td>`).join('')}</tr>`).join('')}</table></div>`
       + h2('Warming a bottle') + steps([['drop', 'Warm water', 'Or a bottle warmer'], ['hand', 'Swirl', 'To mix the fat back in'], ['heart', 'Test on your wrist', 'Warm, not hot']], true)
       + `<p class="ss-small"><b>${F('Never the microwave.')}</b> ${F('It heats unevenly. Cold or room temperature is fine too.')}</p>`
