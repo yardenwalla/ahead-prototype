@@ -736,19 +736,19 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     const h = H(), now = v == null ? stageNow() : v, solidsOn = live() && answers.solids === 'Yes';
     const block = (normal, todo, call, urgentT, urgentL) => (normal ? `<p class="care-p"><b>${F('Normal:')}</b> ${F(normal)}</p>` : '') + (todo ? `<p class="care-p"><b>${F('What to do:')}</b> ${F(todo)}</p>` : '') + (call ? `<p class="care-p"><b>${F('Call your pediatrician:')}</b> ${F(call)}</p>` : '')
       + (urgentT ? `<p class="care-urgent"><b>${F(urgentL || 'Get help right away:')}</b> ${F(urgentT)}</p>` : '');
-    const ans = (title, tiles, call, urgentT) => `<p class="care-p"><b>${F(title)}</b></p>` + hubIconSteps(tiles, CAT, F(tiles.map(t => t[1] + ': ' + t[2]).join('. ')), false) + block('', '', call, urgentT);
+    const ans = (title, tiles, call, urgentT) => `<h2 class="hub-h2">${F(title)}</h2>` + hubIconSteps(tiles, CAT, F(tiles.map(t => t[1] + ': ' + t[2]).join('. ')), false) + block('', '', call, urgentT);
     const rashLine = id => { const r = RASH[id]; return `<li><b>${F(r.t)}</b> ${F(r.look)}</li>`; };
     const rashOrder = [['newborn', 'peeling', 'acne'], ['acne', 'cradle', 'strawberry'], ['drool', 'eczema', 'heat'], ['drool', 'eczema', 'heat']][now];
     const rest = RASH_ORDER.concat('strawberry', 'newborn').filter((id, i, a) => a.indexOf(id) === i && !rashOrder.includes(id) && !(now >= 2 && ['newborn', 'peeling', 'strawberry', 'acne', 'cradle'].includes(id)) && !(now === 1 && ['newborn', 'peeling'].includes(id)));
     const items = {
       poop: ['Poop or pee looks different', 'Colors, fewer poops, and when to call', poopChart()
-        + `<p class="care-p"><b>${F('Also normal')}</b></p>` + hubIconSteps([
+        + `<h2 class="hub-h2">${F('Also normal')}</h2>` + hubIconSteps([
           now === 0 ? ['clock', 'Black at first', 'For the first 2–3 days'] : live() && profile.feed === 'Formula' ? ['clock', 'Most days', 'Usual on formula'] : ['clock', 'Fewer poops', live() && profile.feed === 'Both' ? 'A few days apart can be normal' : 'Breastfed babies can go days between'],
           ['diaper', 'Straining, going red', 'Even when it comes out soft'],
           solidsOn || now >= 2 ? ['bowl', 'Thicker with solids', 'Hard? Pears, prunes, peaches'] : ['drop', '6+ wet diapers', 'Every day']], CAT, 'Also normal.', false)
         + block('', '', 'Fewer than 4 wet diapers a day after the first week, hard pebble-like poop, or watery poop many times a day' + (now <= 1 ? ' (right away under 3 months)' : '') + '.', 'White, gray or chalky poop. Call your pediatrician right away.')],
-      rash: ['Spots, bumps or dry skin', now >= 2 ? 'Drool rash, eczema, heat rash' : 'Rashes, acne, cradle cap', `<p class="care-p">${F('Tap the one that looks most like it.')}</p>` + rashLink(rashOrder) + `<p class="care-p"><b>${F('More rashes')}</b></p>` + rashLink(rest)
-        + `<p class="care-p"><b>${F('Every day:')}</b> ${F('plain water for most baths, fragrance-free soap only on dirty spots, and most babies don’t need lotion.')}</p>` + glassTest() + block('', '', 'A rash with blisters, pus or oozing, or one that keeps spreading.' + (now === 0 ? ' Call right away for clusters of tiny blisters in the first 2 weeks.' : '') + (now >= 2 ? ' A rash with a fever.' : ''), (now <= 1 ? 'A rash with a fever of 100.4°F or higher: under 3 months, call your pediatrician right away, day or night. ' : '') + 'Purple or red dots that don’t fade when you press a glass on them: call 911.')],
+      rash: ['Spots, bumps or dry skin', now >= 2 ? 'Drool rash, eczema, heat rash' : 'Rashes, acne, cradle cap', `<h2 class="hub-h2">${F('Common now')}</h2>` + rashLink(rashOrder) + `<h2 class="hub-h2">${F('Other rashes')}</h2>` + rashLink(rest)
+        + `<h2 class="hub-h2">${F('Worried? Try the glass test')}</h2>` + glassTest() + block('', '', 'A rash with blisters, pus or oozing, or one that keeps spreading.' + (now === 0 ? ' Call right away for clusters of tiny blisters in the first 2 weeks.' : '') + (now >= 2 ? ' A rash with a fever.' : ''), (now <= 1 ? 'A rash with a fever of 100.4°F or higher: under 3 months, call your pediatrician right away, day or night. ' : '') + 'Purple or red dots that don’t fade when you press a glass on them: call 911.')],
       cord: ['The cord', 'Smell, crust or a little blood', ans('What’s normal', [['cord', 'Darkens and dries', 'A little crust is fine'], ['drop', 'A spot of blood', 'When it falls off'], ['clock', 'Falls off', 'Usually at 1–3 weeks']],
         'A yellow, smelly discharge, redness around it, crying when you touch it, or still on after 3 weeks. A moist lump after it falls off is easy to treat.')],
       eyes: ['Sticky eyes or a stuffy nose', 'Snuffles, sneezing, tear ducts', ans('Usually normal, and what helps', [['drop', 'Snuffly breathing', 'Dried milk or mucus, not a cold'], ['eye', 'A watery eye', 'Not red: a blocked tear duct'], ['hand', 'Sticky eyes', 'Wipe from the inside corner out'], ['steth', 'A stuffy nose', 'Saline drops, gentle suction']],
@@ -758,16 +758,18 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
         'Yellow spreading to the belly or legs, yellow whites of the eyes, or fewer wet diapers.', 'Any yellow in the first 24 hours, or yellow and hard to wake or not feeding well.')
         + `<div class="hub-list care-link">${rowK('yellow', 'Jaundice', 'What to watch for · In Health', "openPage('chg:Health:d:jaundice')")}</div>`],
       gums: ['Drool, sore gums or extra fussing', 'Could it be teething?', ans('Usually teething', [['drop', 'Lots of drool', 'And chewing on everything'], ['tooth', 'Sore, swollen gums', 'Often the bottom front'], ['clock', 'A few fussy days', 'Then it settles']],
-        'Fever, diarrhea or a runny nose: teething doesn’t cause those. See “Seems sick, or has a fever?” below.') + `<div class="hub-list care-link">${rowK('teeth', 'Soothe sore gums', 'What helps, and what to skip', `openPage('chg:${CAT}:d:p:teething')`)}</div>`],
+        'Fever, diarrhea or a runny nose: teething doesn’t cause those. Check “Seems sick” in Health.') + `<div class="hub-list care-link">${rowK('teeth', 'Soothe sore gums', 'What helps, and what to skip', `openPage('chg:${CAT}:d:p:teething')`)}</div>`],
       hot: ['Too hot or too cold?', 'Sweaty, flushed, chilly, what to wear', ans('Check and adjust', [['shirt', 'One more layer', 'Than you’re wearing'], ['hand', 'Feel the neck', 'Sweaty: too warm. Cool: add one'], ['home', 'No hat indoors', 'And no puffy coat in the car seat']],
         'Any sunburn before age 1, right away.', 'Hot and flushed and hard to wake, floppy, or not feeding. Cool {o} down and call 911.')]
     };
     const order = [['poop', 'rash', 'cord', 'yellow', 'eyes'], ['poop', 'rash', 'eyes'], ['gums', 'rash', 'poop', 'eyes'], ['gums', 'rash', 'poop', 'eyes']][now];
     const LI = { poop: 'diaper', rash: 'drop', cord: 'cord', yellow: 'sun', eyes: 'eye', gums: 'tooth', hot: 'thermo' };
+    const sick = `<div class="hub-list care-link"><button class="hub-row hl-row" style="--hl-bg:#fdeee6;--hl-ink:#9a5a3c" onclick="openPage('chg:Health:d:sick')"><span class="hub-dot">${hubArt('thermo', 'Health')}</span><span class="hub-row-copy"><b>${F('Seems sick, or has a fever?')}</b><small>In Health</small></span><span class="hub-chev" aria-hidden="true">›</span></button></div>`;
+    if (openK && items[openK]) { const [t, sub, body] = items[openK];
+      return page('look', head('look', 'Is this normal?', t, sub) + body + (openK === 'gums' ? sick : '')); }
     let b = head('look', 'Is this normal?', 'Something look off?', 'Pick what you’re seeing.');
-    b += `<div class="hub-card care-folds care-lookoff">${order.map(k => { const [t, sub, body] = items[k]; return `<details class="care-fold"${k === openK ? ' open' : ''}${k === openK ? ` id="care-open"` : ''}><summary><span class="care-ico">${hubArt(LI[k], CAT)}</span><span><b>${F(t)}</b><small>${F(sub)}</small></span><i aria-hidden="true">›</i></summary><div class="care-fold-body">${body}</div></details>`; }).join('')}</div>`;
-    b += `<div class="hub-list care-link"><button class="hub-row hl-row" style="--hl-bg:#fdeee6;--hl-ink:#9a5a3c" onclick="openPage('chg:Health:d:sick')"><span class="hub-dot">${hubArt('thermo', 'Health')}</span><span class="hub-row-copy"><b>${F('Seems sick, or has a fever?')}</b><small>In Health</small></span><span class="hub-chev" aria-hidden="true">›</span></button></div>`;
-    if (openK) setTimeout(() => { const el = document.getElementById('care-open'); if (el) el.scrollIntoView({ block: 'start' }); }, 60);
+    b += `<div class="hub-card care-folds care-lookoff">${order.map(k => { const [t, sub] = items[k]; return `<button class="care-pick" onclick="openPage('chg:${CAT}:d:look:${now}:${k}')"><span class="care-ico">${hubArt(LI[k], CAT)}</span><span><b>${F(t)}</b><small>${F(sub)}</small></span><i aria-hidden="true">›</i></button>`; }).join('')}</div>`;
+    b += sick;
     return page('look', b);
   }
 

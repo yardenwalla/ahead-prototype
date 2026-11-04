@@ -182,3 +182,11 @@
 #main .hub-poop-label { font-size: 12.5px; font-weight: 700; color: #356651 }
 #main .hub-poop-label.is-call { color: #a3324f }
 #main .care-v2 .care-swatch { display: block; height: 14px; border-radius: 7px; margin-bottom: 6px; box-shadow: inset 0 0 0 1px rgba(0,0,0,.08) }
+/* Something look off?: a short list, each choice opens its own answer */
+#main .care-v2 .care-pick { all: unset; box-sizing: border-box; cursor: pointer; display: flex; align-items: center; gap: 12px; width: 100%; padding: 14px 0; border-top: 1px solid var(--line) }
+#main .care-v2 .care-pick:first-child { border-top: 0 }
+#main .care-v2 .care-pick > span:nth-child(2) { flex: 1; display: grid; gap: 2px; min-width: 0 }
+#main .care-v2 .care-pick b { font-size: 15px; font-weight: 600 }
+#main .care-v2 .care-pick small { font-size: 13px; color: var(--ink-2, #5e5a75) }
+#main .care-v2 .care-pick > i { font-style: normal; color: #aaa }
+#main .care-v2 .care-pick:focus-visible { outline: 2px solid var(--year-ink, #2a6078); outline-offset: 2px; border-radius: 8px }
