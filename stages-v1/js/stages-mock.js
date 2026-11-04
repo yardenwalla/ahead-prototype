@@ -63,7 +63,8 @@
     if (!last || !m) return;
     const { cat, items } = last;
     const pg = m.querySelector('.hub-page') || m;
-    const hero = [...pg.children].find(e => !e.matches('.monthly-page-header, .hub-preview, nav'));
+    const kids = [...pg.children].filter(e => !e.matches('.monthly-page-header, .hub-preview, nav, .hub-agebasis'));
+    const hero = kids.find(e => e.matches('.hub-hero, .dev-hero, header')) || kids[0];   // the top card (skip the born-early age switch)
     // The chip: on the top card's first line when it has one, otherwise in its top corner.
     if (hero && !m.querySelector('.st-chip')) {
       const chip = `<button class="st-chip" onclick="openPage('stages:${cat}')">${cat === 'Health' ? 'All checkups' : 'All stages'} <span aria-hidden="true">›</span></button>`;
