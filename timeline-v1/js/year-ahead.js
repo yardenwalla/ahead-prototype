@@ -48,22 +48,24 @@
   const touches = c => { const p = PAGES[c.id]; return p ? [...new Set(p.rows.map(r => r[1]))] : []; };
   const touchPills = c => { const t = touches(c); return t.length > 1 ? `<span class="ya-touch">${t.map(cat => `<span class="ya-touch-pill" style="${yearTheme(cat)}">${typeof catIcon === 'function' ? catIcon(cat) : ''}${F(AREA[cat] || cat)}</span>`).join('')}</span>` : ''; };
   const range = c => c.range.replace(/^(\d+(\.5)?)–/, (m, a) => `${Math.floor(+a)}–`);
-  const soon = (c, a) => c.start <= a + 1 ? 'Could start any week now' : `In about ${Math.round(c.start - a)} month${Math.round(c.start - a) === 1 ? '' : 's'}`;
+  const soon = (c, a) => c.start <= a ? 'Could happen any time now' : c.start <= a + 1 ? 'Could start any week now' : `In about ${Math.round(c.start - a)} month${Math.round(c.start - a) === 1 ? '' : 's'}`;
 
   window.nextPage = function () {
     const a = ageNow(), nm = name();
-    const ahead = C.filter(c => c.end > a), next = ahead.filter(c => c.start >= a && c.start <= a + 3).slice(0, 3);
+    const an = typeof answers !== 'undefined' ? answers : {};
+    const done = { roll: typeof rolled === 'function' && rolled(), solids: an.solids === 'Yes', crawl: an.crawl === 'Yes', pull: an.pullUp === 'Yes', tooth: an.hasTooth === 'Yes', twonaps: an.twoNaps === 'Yes' };
+    const ahead = C.filter(c => c.end > a && !done[c.id]).sort((x, y) => x.start - y.start), next = ahead.slice(0, 3);
     let h = `<div class="ya-page"><div class="eyebrow">${F('The year ahead')}</div><h1>${F('Timeline')}</h1><p class="next-lead">${F(`The big changes coming for ${nm}, and what each one changes. Tap any to read ahead.`)}</p>`;
-    if (next.length) h += `<h2 class="ya-h2">${F('Coming up next')}</h2><div class="ya-next">${next.map(c => `<button class="ya-card" style="${yearTheme(c.cat)}" onclick="${c.go}"><span class="ya-card-art">${hubArt(c.icon, c.cat)}</span><span class="ya-card-copy"><small>${F(range(c))} · ${F(soon(c, a).replace(/^Could start /, '').replace(/^In about/, 'in about'))}</small><b>${F(c.title)}</b><span>${F(c.why)}</span></span><span class="hub-chev" aria-hidden="true">›</span></button>`).join('')}</div>`;
+    if (next.length) h += `<h2 class="ya-h2">${F('Coming up next')}</h2><div class="ya-next">${next.map(c => `<button class="ya-card" style="${yearTheme(c.cat)}" onclick="${c.go}"><span class="ya-card-art">${hubArt(c.icon, c.cat)}</span><span class="ya-card-copy"><small>${F(range(c))} · ${F(soon(c, a).replace(/^Could happen any time now$/, 'any time now').replace(/^Could start /, '').replace(/^In about/, 'in about'))}</small><b>${F(c.title)}</b><span>${F(c.why)}</span></span><span class="hub-chev" aria-hidden="true">›</span></button>`).join('')}</div>`;
     // Later on: swipe through the months ahead and watch the baby grow. Each month card has that month's picture
     // (the same baby who grows on Home), its date, the changes that usually start then, and a checkup if one is due.
-    const later = ahead.filter(c => c.start >= a && !next.includes(c));
+    const later = ahead.filter(c => !next.includes(c));
     const born = parse(profile.dob), monthDate = m => { const d = new Date(born); d.setMonth(d.getMonth() + m); return d.toLocaleDateString('en-US', { month: 'long' }); };
     const months = {}; later.forEach(c => { const m = Math.min(13, Math.max(Math.ceil(a), Math.floor(c.start))); (months[m] = months[m] || []).push(c); });
     CHECKUPS.filter(v => v > a).forEach(v => { months[v] = months[v] || []; });
     const keys = Object.keys(months).map(Number).sort((x, y) => x - y);
     const label = m => m >= 13 ? 'After 1 year' : m === 12 ? '1 year' : `${m} months`;
-    const card = m => `<section class="ya-month"><span class="ya-month-art">${typeof homeMonthArt === 'function' ? homeMonthArt(Math.min(12, m)) : ''}</span><div class="ya-month-head"><b>${F(label(m))}</b><small>${F(m >= 13 ? 'In the second year' : 'Around ' + monthDate(m))}</small></div><div class="ya-month-list">${months[m].map(c => `<button class="ya-chip" style="${yearTheme(c.cat)}" onclick="${c.go}"><span>${hubArt(c.icon, c.cat)}</span><em>${F(c.title)}</em></button>`).join('')}${CHECKUPS.includes(m) && m > a ? `<span class="ya-month-pin">${F(`${m}-month checkup`)}</span>` : ''}</div></section>`;
+    const card = m => `<section class="ya-month"><span class="ya-month-art">${typeof homeMonthArt === 'function' ? homeMonthArt(Math.min(12, m)) : ''}</span><div class="ya-month-head"><b>${F(label(m))}</b><small>${F(m >= 13 ? 'In the second year' : 'What may start around ' + monthDate(m))}</small></div><div class="ya-month-list">${months[m].map(c => `<button class="ya-chip" style="${yearTheme(c.cat)}" onclick="${c.go}"><span>${hubArt(c.icon, c.cat)}</span><em>${F(c.title)}<small>${F(range(c))}${c.start <= a ? ' · ' + F('any time now') : ''}</small></em></button>`).join('')}${CHECKUPS.includes(m) && m > a ? `<span class="ya-month-pin">${F(`${m}-month checkup`)}</span>` : ''}</div></section>`;
     if (keys.length) h += `<h2 class="ya-h2">${F('Later on')}</h2><p class="ya-sub">${F(`Swipe ahead to see ${nm} grow.`)}</p><div class="ya-months">${keys.map(card).join('')}</div>`;
     h += `<p class="hub-foot">${F('Ages are typical. Every baby moves at their own pace.')}</p></div>`;
     return h;
