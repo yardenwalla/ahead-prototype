@@ -18,7 +18,7 @@
   function allRow() {
     const T = STAGE_TABLE[CAT].stages, c = cur();
     const dots = T.map((s, i) => `<i class="${i < c ? 'is-past' : i === c ? 'is-now' : ''}"></i>`).join('');
-    return `<button class="st-all" onclick="openPage('stages:${CAT}')"><span class="st-dots" aria-hidden="true">${dots}</span><span class="st-all-copy"><b>See all sleep stages</b><small>${nm()} is in ${esc(T[c].label)} · ${c + 1} of ${T.length}</small></span><span class="st-chev" aria-hidden="true">›</span></button>`;
+    return `<button class="st-all" onclick="openPage('stages:${CAT}')" aria-label="See all sleep stages"><span class="st-dots" aria-hidden="true">${dots}</span><span class="st-all-copy">Stage ${c + 1} of ${T.length} · <u>See all stages</u></span></button>`;
   }
 
   function stagesPage() {

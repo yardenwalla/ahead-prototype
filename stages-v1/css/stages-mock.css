@@ -27,3 +27,11 @@
 #main .st-foot { margin: 10px 0 0; font-size: 13px; color: #8a8494; line-height: 1.45 }
 #main .hub-preview { flex-wrap: wrap }
 #main .hub-preview .st-make { background: var(--year-ink); color: #fff }
+
+/* Quieter: a small text link under the card, not a card of its own */
+#main .st-all { width: auto; margin: -4px 0 16px; padding: 4px 6px; gap: 10px; background: transparent; box-shadow: none; border-radius: 10px }
+#main .st-dots { gap: 4px }
+#main .st-dots i { width: 7px; height: 7px }
+#main .st-dots i.is-now { width: 16px; border-radius: 4px }
+#main .st-all-copy { display: inline; font-size: 13.5px; color: #8a8494; font-weight: 500 }
+#main .st-all-copy u { color: var(--year-ink); text-decoration: none; font-weight: 600 }
