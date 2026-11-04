@@ -67,3 +67,8 @@
 #main .hub-detail .cc-fit .cc-when-art { width: 42px; height: 42px; border-radius: 13px }
 #main .hub-detail .cc-fit .cc-when-art svg { width: 24px; height: 24px; stroke: var(--ss-ink) }
 #main .hub-detail .cc-fit .cc-when-art svg circle { fill: var(--ss-bg) }
+
+/* Right after "We chose this one": a short note at the top of Get ready */
+#main .cc-chosen-note { display: grid; gap: 2px; padding: 14px 16px; margin: 0 0 14px; background: var(--ss-bg, #fff3dc) }
+#main .cc-chosen-note b { font-size: 15.5px; color: var(--ink) }
+#main .cc-chosen-note span { font-size: 14px; color: var(--muted) }
