@@ -155,3 +155,29 @@
 #main .care-v2 .care-hero::after { content: ""; position: absolute; right: -40px; top: -50px; width: 170px; height: 170px; border-radius: 50%; background: #fff; opacity: .35; pointer-events: none }
 #main .care-v2 .care-hero > * { position: relative; z-index: 1 }
 #main .care-v2 .care-hero .hub-eyebrow { color: #2a6078 }
+/* Where a rash shows up: a small outline beside the words */
+#main .care-v2 .care-map { display: grid; grid-template-columns: 108px 1fr; gap: 14px; align-items: center; margin: 4px 0 10px; padding: 12px; background: #fff; border: 1px solid var(--line); border-radius: 18px }
+#main .care-v2 .care-map svg { width: 108px; height: auto; display: block }
+#main .care-v2 .care-map figcaption { display: grid; gap: 3px; min-width: 0 }
+#main .care-v2 .care-map b { font-size: 13px; font-weight: 700; color: #9a5a3c; text-transform: uppercase; letter-spacing: .04em }
+#main .care-v2 .care-map span { font-size: 15px; line-height: 1.4; color: var(--ink) }
+#main .care-v2 .care-map small { font-size: 12.5px; line-height: 1.35; color: var(--muted) }
+/* The glass test */
+#main .care-v2 .care-glass { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 12px; margin: 10px 0 }
+#main .care-v2 .care-glass > div { display: grid; gap: 2px; background: #f4f1ec; border-radius: 14px; padding: 10px; text-align: center }
+#main .care-v2 .care-glass > div.is-urgent { background: #fbe9ec }
+#main .care-v2 .care-glass svg { width: 100%; height: auto; margin-bottom: 4px }
+#main .care-v2 .care-glass b { font-size: 14px }
+#main .care-v2 .care-glass small { font-size: 12.5px; color: var(--muted) }
+#main .care-v2 .care-glass .is-urgent b { color: #a3324f }
+/* Poop colors and the first-week swatches (the swatch style from the Feeding pages) */
+#main .hub-poop { display: flex; flex-direction: column; gap: 8px; padding: 14px }
+#main .hub-poop-row { display: grid; gap: 8px }
+#main .hub-poop-row.is-5 { grid-template-columns: repeat(5, minmax(0, 1fr)) }
+#main .hub-poop-row.is-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 6px }
+#main .hub-poop-row > div { display: flex; flex-direction: column; gap: 4px; min-width: 0 }
+#main .hub-poop-row span { display: block; height: 24px; border-radius: 12px; box-shadow: inset 0 0 0 1px rgba(0,0,0,.08) }
+#main .hub-poop-row b { font-size: 12px; font-weight: 600; line-height: 1.25 }
+#main .hub-poop-label { font-size: 12.5px; font-weight: 700; color: #356651 }
+#main .hub-poop-label.is-call { color: #a3324f }
+#main .care-v2 .care-swatch { display: block; height: 14px; border-radius: 7px; margin-bottom: 6px; box-shadow: inset 0 0 0 1px rgba(0,0,0,.08) }
