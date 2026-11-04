@@ -31,19 +31,13 @@
     const ahead = C.filter(c => c.end > a), next = ahead.filter(c => c.start >= a && c.start <= a + 3).slice(0, 3);
     let h = `<div class="ya-page"><div class="eyebrow">${F('The year ahead')}</div><h1>${F('Timeline')}</h1><p class="next-lead">${F(`The big changes coming for ${nm}, and what each one changes. Tap any to read ahead.`)}</p>`;
     if (next.length) h += `<h2 class="ya-h2">${F('Coming up next')}</h2><div class="ya-next">${next.map(c => `<button class="ya-card" style="${yearTheme(c.cat)}" onclick="${c.go}"><span class="ya-card-art">${hubArt(c.icon, c.cat)}</span><span class="ya-card-copy"><small>${F(range(c))}</small><b>${F(c.title)}</b><span>${F(c.why)}</span><em>${F(soon(c, a))} ›</em></span></button>`).join('')}</div>`;
-    // The whole year as a path: changes where they usually start, a bar for their usual range, the baby's place marked.
-    const rows = []; let placed = false;
-    const marker = `<li class="ya-here"><span class="ya-node"></span><b>${F(`${nm} is here`)}</b><small>${F(a < 1 ? 'Newborn' : `${Math.floor(a)} month${Math.floor(a) === 1 ? '' : 's'}`)}</small></li>`;
-    const items = [...C.map(c => ({ t: c.start, c })), ...CHECKUPS.map(v => ({ t: v + 0.01, v }))].sort((x, y) => x.t - y.t);
-    items.forEach(it => {
-      if (!placed && it.t > a) { rows.push(marker); placed = true; }
-      if (it.v) { rows.push(`<li class="ya-pin${it.t < a ? ' is-past' : ''}"><span class="ya-node"></span><span>${F(`${it.v}-month checkup`)}</span></li>`); return; }
-      const c = it.c, past = c.end <= a, now = c.start <= a && c.end > a;
-      const w = Math.max(4, (Math.min(c.end, 18) - c.start) / 18 * 100), l = c.start / 18 * 100;
-      rows.push(`<li class="ya-row${past ? ' is-past' : ''}${now ? ' is-now' : ''}" style="${yearTheme(c.cat)}"><span class="ya-node"></span><button onclick="${c.go}"><span class="ya-row-art">${hubArt(c.icon, c.cat)}</span><span class="ya-row-copy"><b>${F(c.title)}</b><small>${F(range(c))}${now ? ' · ' + F('happening now') : ''}</small><span class="ya-bar"><i style="left:${l}%;width:${w}%"></i><u style="left:${Math.min(a, 18) / 18 * 100}%"></u></span></span><span class="hub-chev" aria-hidden="true">›</span></button></li>`);
-    });
-    if (!placed) rows.push(marker);
-    h += `<h2 class="ya-h2">${F('The first year')}</h2><ol class="ya-path">${rows.join('')}</ol>`;
+    // The rest of the year, in order: only what's still ahead and not already in Coming up next. Checkups as small pins.
+    const later = ahead.filter(c => c.start >= a && !next.includes(c));
+    const pins = CHECKUPS.filter(v => v > a);
+    const items = [...later.map(c => ({ t: c.start, c })), ...pins.map(v => ({ t: v + 0.01, v }))].sort((x, y) => x.t - y.t);
+    const rows = items.map(it => it.v ? `<li class="ya-pin"><span class="ya-node"></span><span>${F(`${it.v}-month checkup`)}</span></li>`
+      : `<li class="ya-row" style="${yearTheme(it.c.cat)}"><span class="ya-node"></span><button onclick="${it.c.go}"><span class="ya-row-art">${hubArt(it.c.icon, it.c.cat)}</span><span class="ya-row-copy"><b>${F(it.c.title)}</b><small>${F(range(it.c))}</small></span><span class="hub-chev" aria-hidden="true">›</span></button></li>`);
+    if (rows.length) h += `<h2 class="ya-h2">${F('Later on')}</h2><ol class="ya-path">${rows.join('')}</ol>`;
     h += `<p class="hub-foot">${F('Ages are typical. Every baby moves at their own pace.')}</p></div>`;
     return h;
   };
@@ -99,14 +93,11 @@
   };
   function changePage(id) {
     const h = H(), c = C.find(x => x.id === id), p = PAGES[id]; if (!c || !p) return null;
-    const [from, to, za, zb, zl] = p.bar, a = ageNow(), cat = c.cat;
-    const tick = v => [v, v === 0 ? 'Birth' : v === 12 ? '1 year' : `${v} mo`];
-    const ticks = [...new Set([from, Math.floor(za), Math.ceil(zb), to])].sort((x, y) => x - y).map(tick);
-    const past = c.end <= a, now = c.start <= a && c.end > a;
-    return h.detail(cat, past ? 'Already happened' : now ? 'Happening around now' : 'Coming up', c.title, p.lead,
-      hubWindowBar({ title: 'When it usually happens', from, to, zones: [[za, zb, zl, 'band']], ticks, now: a, cat, caption: p.lead })
-      + `<div class="hub-card hub-looks"><b class="hub-fig-title">${F(p.signsTitle || 'Signs it’s close')}</b><ul>${p.signs.map(t => `<li>${F(t)}</li>`).join('')}</ul></div>`
-      + h.list('What it changes', p.rows.map(([icon, rc, title, sub, go]) => h.row({ icon, cat: rc, title, sub, onclick: go })))
+    const a = ageNow(), cat = c.cat, past = c.end <= a, now = c.start <= a && c.end > a;
+    const when = past ? 'Already behind ' + name() : now ? 'Happening around now' : c.start - a <= 1 ? 'Could start any week now' : `In about ${Math.round(c.start - a)} month${Math.round(c.start - a) === 1 ? '' : 's'}`;
+    const look = `${p.signsTitle ? 'Signs {s’s} ready' : 'Signs it’s close'}: ${p.signs.map(x => x.charAt(0).toLowerCase() + x.slice(1)).join(', ')}.`;
+    return h.detail(cat, `${range(c)} · ${when}`, c.title, p.lead + ' ' + look,
+      h.list('How to get ready', p.rows.slice(0, 3).map(([icon, rc, title, sub, go]) => h.row({ icon, cat: rc, title, sub, onclick: go })))
       + h.tip(p.tip[0], p.tip[1]), c.icon);
   }
   const base = window.changesRoute;
