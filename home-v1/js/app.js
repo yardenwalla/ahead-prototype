@@ -2492,7 +2492,7 @@ function homePriorityTools(priority,options={}){
  const swaddle=priority.type==='swaddle',title=swaddle?'Stop swaddling':safetyHomeItems()[priority.id].title;
  const action=options.done||(swaddle?'confirmHomeSwaddle()':`completeHomeCheck('${priority.id}','done')`),na=options.na||(swaddle?'confirmHomeSwaddle()':`completeHomeCheck('${priority.id}','na')`);
  // One control for swaddling (a sleep sack covers both "we stopped" and "we never swaddled"); safety checks keep "Doesn't apply".
- return `<div class="home-action-tools"><button class="home-inline-check" aria-label="${swaddle?'Using a sleep sack now':'Mark done: '+esc(title)}" onclick="${action}"><span aria-hidden="true"></span>${swaddle?`${esc(name())} is in a sleep sack`:'I’ve done this'}</button>${swaddle?'':`<button class="home-action-na" onclick="${na}">Doesn’t apply</button>`}</div>`;
+ return `<div class="home-action-tools"><button class="home-inline-check" aria-label="${swaddle?'Using a sleep sack now':'Mark done: '+esc(title)}" onclick="${action}"><span aria-hidden="true"></span>${swaddle?'Already in a sleep sack':'I’ve done this'}</button>${swaddle?'':`<button class="home-action-na" onclick="${na}">Doesn’t apply</button>`}</div>`;
 }
 function homePriorityRow(priority,options={}){
  if(!priority)return '';

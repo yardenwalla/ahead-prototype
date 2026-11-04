@@ -226,6 +226,30 @@
   // The details (one row per area) live on the change's Timeline page, one tap away.
   // The one urgent effect (stop swaddling; once moving, the first safety step) rides inside the change card with its Done button.
   const urgentFor = (ch, items) => items.find(i => ch.id === 'roll' ? ['rolling', 'rolling-soon'].includes(i.key) : ch.state === 'now' && ['crawl', 'pull'].includes(ch.id) && i.key.startsWith('check:'));
+  // The change's effects as Home cards: the urgent one first (with its Done button), then the next most important.
+  function changeEffects(ch, urgent) {
+    const F = t => (window.__hub ? window.__hub.F(t) : t).replace(/&#39;|&amp;#39;/g, '’');
+    const NOW_ROWS = {
+      crawl: [['Safety', 'Babyproof room by room', 'Stair gates, cabinet locks and outlet covers. Start with the rooms ' + n() + ' spends most time in.', "openPage('safety-stage:rolling')"], ['Sleep', 'Lower the crib mattress', `${cap(P().s)} can push up and lean over the rail now.`, "openPage('chg:Sleep:d:mattress')"]],
+      pull: [['Safety', 'Strap furniture and TVs to the wall', `So nothing tips when ${P().s} pulls on it.`, "openPage('chg:Safety:d:step:anchor')"], ['Sleep', 'Set the crib mattress to its lowest', `Now that ${P().s} can stand, before ${P().s} can climb out.`, "openPage('chg:Sleep:d:mattress')"]],
+      solids: [['Feeding', 'What to put on the tray', 'Iron-rich foods first, soft and easy to hold or mash.', "openPage('chg:Feeding:s:3')"], ['Feeding', 'Try a new allergen', 'Offer peanut and egg early, then keep them in the mix.', "openPage('chg:Feeding:d:allergens')"]]
+    };
+    const SOON_ROWS = {
+      crawl: [['Safety', 'Babyproof before ' + n() + ' moves', 'Stair gates, cabinet locks and outlet covers, low rooms first.', "openPage('safety-stage:rolling')"], ['Sleep', 'Lower the crib mattress', `Before ${P().s} can push up and lean over the rail.`, "openPage('chg:Sleep:d:mattress')"]],
+      pull: [['Safety', 'Strap furniture and TVs to the wall', `Before ${P().s} starts using them as handholds.`, "openPage('chg:Safety:d:step:anchor')"], ['Sleep', 'Set the crib mattress to its lowest', `Before ${P().s} can pull up to stand.`, "openPage('chg:Sleep:d:mattress')"]],
+      solids: [['Feeding', 'Watch for the readiness signs', 'Sitting with a little support, a steady head, and leaning in for food.', "openPage('topic:Feeding')"], ['Safety', 'Learn infant choking first aid', 'Before the first bite, and how gagging is different.', "openPage('chg:Feeding:safe')"]],
+      roll: [['Sleep', 'Stop swaddling at the first try to roll', 'Then a sleep sack with arms free.', "openPage('chg:Sleep:d:swaddleoff')"], ['Safety', 'Clear the floor where ' + n() + ' plays', 'Small things go straight in the mouth.', "openPage('chg:Safety:d:step:small')"]]
+    };
+    const src = (ch.state === 'now' ? NOW_ROWS : SOON_ROWS)[ch.id] || SOON_ROWS[ch.id] || [];
+    const items = src.map(([cat, title, body, go], i) => ({ topic: cat, key: `change:${ch.id}:${ch.state}:${i}`, title: F(title), body: F(body), link: link(go, 'See how') }));
+    if (urgent) { // the urgent item keeps its Done button, worded as the step itself (the heading already says why)
+      const it = urgent.key.startsWith('check:') && typeof safetyHomeItems === 'function' ? safetyHomeItems()[urgent.key.slice(6)] || {} : {};
+      const u = { ...urgent, title: ch.id === 'roll' ? 'Stop swaddling at the first try to roll' : it.title || urgent.title, body: ch.id === 'roll' ? 'Then a sleep sack with arms free. Lots of floor time helps ' + n() + ' practice.' : it.body || urgent.body };
+      const at = items.findIndex(x => x.topic === urgent.topic);
+      items.splice(at < 0 ? 0 : at, 1); items.unshift(u);
+    }
+    return items.slice(0, 2);
+  }
   function changeItem(ch, urgent) {
     const c = ch.info, nm = n();
     const AREA = { 'Daily rhythm': 'everyday care', Development: 'play', 'Out and about': 'outings', Safety: 'safety', Sleep: 'sleep', Feeding: 'feeding', Health: 'your checkup' };
@@ -367,14 +391,22 @@
     settleOpened();
     const ch = activeChange();
     const all = importantNow(), urgent = ch ? urgentFor(ch, all) : null;
-    const now = [...(ch ? [changeItem(ch, urgent)] : []), ...all.filter(i => !covered(ch, i.key))].slice(0, 2), next = comingUp(now).filter(i => !covered(ch, i.key));
+    // A change in the baby: its two most important effects, as ordinary cards that say what to do, under one line that says why.
+    // Anything else that can't wait (a checkup due this week) still shows after them.
+    const effects = ch ? changeEffects(ch, urgent) : [];
+    const rest = all.filter(i => !covered(ch, i.key));
+    const before = ch ? rest.filter(i => i.key.startsWith('visit:')).slice(0, 1) : [];
+    const now = ch ? [...before, ...effects] : rest.slice(0, 2), next = comingUp(now).filter(i => !covered(ch, i.key));
     const focus = homeCurrentFocus();
     const sig = [...now, ...next].map(i => i.key).join('|') + '|' + actualMonth() + '|' + (typeof chgStageIndex === 'function' ? ['Sleep', 'Feeding'].map(chgStageIndex).join(',') : '');
 
     const close = !live() ? '' : !now.length && !next.length ? `You’re all caught up for now.` : !now.length ? `Nothing to do right now. We’ll bring things up as they get closer.` : `That’s everything for now.`;
 
     let h = `${live() ? `<p class="home-age-line">${esc(name())} · ${esc(monthLabel(actualMonth()))}${profile.early && profile.due && typeof developmentMonth === 'function' && developmentMonth(actualMonth()) !== actualMonth() ? ` <button class="hub-agechip" onclick="openPage('age-context')" aria-label="${esc(monthLabel(developmentMonth(actualMonth())))} adjusted. About age">· ${developmentMonth(actualMonth())} adjusted <span aria-hidden="true">ⓘ</span></button>` : ''}</p>` : ''}<section class="connected-now" aria-label="What matters now"><div class="connected-summary"><div class="home-summary connected-summary-intro"><div class="home-summary-heading"><div class="home-month-eyebrow">${!live() ? (month > actualMonth() ? 'Coming up · ' : 'Looking back · ') + (month === 0 ? 'Newborn' : month + (month === 1 ? ' month' : ' months')) : 'What matters now'}</div><h1>${focus.title}</h1></div><span class="home-summary-art" aria-hidden="true">${homeMonthArt(month)}</span><p class="heroanswer">${focus.body}</p><div class="home-summary-spectrum" aria-hidden="true">${TOPICS.map(([t]) => `<span style="background:${YEAR_PALETTES[t].bg}"></span>`).join('')}</div></div>`;
-    if (now.length) h += `<div class="connected-summary-links">${now.map(row).join('')}</div>`;
+    if (before.length) h += `<div class="connected-summary-links">${before.map(row).join('')}</div>`;
+    if (ch) h += `<div class="home-change-why"><b>${ch.state === 'now' ? `Now that ${esc(n())} ${({ pull: 'pulls up', crawl: 'crawls', roll: 'rolls', solids: 'has started solids', sit: 'sits up' })[ch.id]}` : ({ pull: 'Pulling up could start any week now', crawl: 'Crawling could start any week now', roll: 'Rolling could start any week now', solids: 'Solids start around 6 months', sit: 'Sitting up could start any week now' })[ch.id]}</b><span>${ch.state === 'now' ? 'Here’s what changes' : 'Here’s what to get ready'}</span><button onclick="openPage('chg:Timeline:c:${ch.id}')">Everything it changes ›</button></div>`;
+    const after = now.filter(i => !before.includes(i));
+    if (after.length) h += `<div class="connected-summary-links">${after.map(row).join('')}</div>`;
     h += `</div>${homeMomentRow()}</section>`;
     h += previewChanges();
     h += liveHomeCheckin();
