@@ -6,23 +6,23 @@
   const MONTH = 30.4375 * 864e5;
   const ageNow = () => { const from = profile.early && profile.due ? parse(profile.due) : parse(profile.dob); return (NOW - from) / MONTH; };
   const C = [
-    ['smile', 1.5, 2, 'Development', 'smile', 'First smiles', 'The first real back-and-forth', "__GO__"],
-    ['nights', 1.5, 4, 'Sleep', 'moon', 'Longer nights', 'One longer stretch at night', "__GO__"],
-    ['regress', 3, 5, 'Sleep', 'moon', 'The 4-month sleep regression', 'More waking, for a few weeks', "__GO__"],
-    ['roll', 4, 6, 'Development', 'roll', 'Rolling', 'The swaddle comes off', "__GO__"],
-    ['solids', 6, 6.5, 'Feeding', 'bowl', 'Starting solids', 'Food joins milk', "__GO__", 'Around 6 months'],
-    ['twonaps', 6, 9, 'Sleep', 'sun', 'Three naps become two', 'The late catnap drops', "__GO__"],
-    ['crawl', 6, 10, 'Development', 'crawl', 'Crawling', 'Every room opens up', "__GO__"],
-    ['sit', 6, 9, 'Development', 'sit', 'Sitting up', 'Both hands free to play', "__GO__"],
+    ['smile', 1.5, 2, 'Development', 'smile', 'First smiles', 'Maya starts smiling back when you smile', "__GO__"],
+    ['nights', 1.5, 4, 'Sleep', 'moon', 'Longer nights', 'One longer sleep at night, often 4–5 hours', "__GO__"],
+    ['regress', 3, 5, 'Sleep', 'moon', 'The 4-month sleep regression', 'More night waking, for a few weeks', "__GO__"],
+    ['roll', 4, 6, 'Development', 'roll', 'Rolling', 'Time to stop swaddling', "__GO__"],
+    ['solids', 6, 6.5, 'Feeding', 'bowl', 'Starting solids', 'Food alongside milk, a few bites at first', "__GO__", 'Around 6 months'],
+    ['twonaps', 6, 9, 'Sleep', 'sun', 'Three naps become two', 'Two naps a day, and an earlier bedtime', "__GO__"],
+    ['crawl', 6, 10, 'Development', 'crawl', 'Crawling', 'Maya can get around, so babyproof first', "__GO__"],
+    ['sit', 6, 9, 'Development', 'sit', 'Sitting up', 'Maya sits up without your help', "__GO__"],
     ['tooth', 6, 12, 'Daily rhythm', 'tooth', 'The first tooth', 'Time to start brushing', "__GO__"],
-    ['finger', 7, 9, 'Feeding', 'bowl', 'Textures and finger foods', 'Meals get lumpier, and messier', "__GO__"],
-    ['carseat', 9, 12, 'Out and about', 'car', 'A bigger car seat', 'Many outgrow the infant seat', "__GO__", 'Often in the first year'],
-    ['sep', 8, 10, 'Development', 'heart', 'Separation anxiety', 'Goodbyes get harder for a while', "__GO__"],
-    ['pull', 9, 12, 'Development', 'stand', 'Pulling up to stand', 'Everything higher is in reach', "__GO__"],
-    ['words', 10, 14, 'Development', 'chat', 'First words', 'Mama, dada and more', "__GO__"],
-    ['milk', 12, 12.5, 'Feeding', 'cup', 'Milk at 12 months', 'Cow’s milk from a cup', "__GO__", 'At 12 months'],
-    ['steps', 12, 15, 'Development', 'stand', 'First steps', 'Walking, holding on at first', "__GO__"],
-    ['onenap', 13, 18, 'Sleep', 'sun', 'Two naps become one', 'One long midday nap', "__GO__"]
+    ['finger', 7, 9, 'Feeding', 'bowl', 'Textures and finger foods', 'Lumpier food, and pieces to pick up', "__GO__"],
+    ['carseat', 9, 12, 'Out and about', 'car', 'A bigger car seat', 'Most outgrow the infant seat by height', "__GO__", 'Often in the first year'],
+    ['sep', 8, 10, 'Development', 'heart', 'Separation anxiety', 'Goodbyes and bedtime can get harder', "__GO__"],
+    ['pull', 9, 12, 'Development', 'stand', 'Pulling up to stand', 'Maya stands holding furniture, so anchor it', "__GO__"],
+    ['words', 10, 14, 'Development', 'chat', 'First words', 'Often “mama” or “dada” for a parent', "__GO__"],
+    ['milk', 12, 12.5, 'Feeding', 'cup', 'Milk at 12 months', 'Whole milk from a cup can replace formula', "__GO__", 'At 12 months'],
+    ['steps', 12, 15, 'Development', 'stand', 'First steps', 'Walking holding on, then on {p} own', "__GO__"],
+    ['onenap', 13, 18, 'Sleep', 'sun', 'Two naps become one', 'One long nap around midday', "__GO__"]
   ].map(([id, start, end, cat, icon, title, why, go, range]) => ({ id, start, end, cat, icon, title, why, go: `openPage('chg:Timeline:c:${id}')`, range: range || `${start}–${end} months` }));
   const CHECKUPS = [2, 4, 6, 9, 12];
   const TOUCH = {
@@ -130,7 +130,8 @@
     const when = past ? 'Already behind ' + name() : now ? 'Happening around now' : c.start - a <= 1 ? 'Could start any week now' : `In about ${Math.round(c.start - a)} month${Math.round(c.start - a) === 1 ? '' : 's'}`;
     const look = `${p.signsTitle ? 'Signs {s’s} ready' : 'Signs it’s close'}: ${p.signs.map(x => x.charAt(0).toLowerCase() + x.slice(1)).join(', ')}.`;
     return h.detail(cat, `${range(c)} · ${when}`, c.title, p.lead + ' ' + look,
-      `<h2 class="hub-h2">${F('What it changes')}</h2><div class="ya-web" style="${yearTheme(cat)}"><div class="ya-web-root"><span>${hubArt(c.icon, cat)}</span><b>${F(c.title)}</b></div><ul class="ya-web-list">${p.rows.slice(0, 4).map(([icon, rc, title, sub, go]) => `<li style="${yearTheme(rc)}"><button onclick="${go}"><span class="ya-web-ic">${typeof catIcon === 'function' ? catIcon(rc) : hubArt(icon, rc)}</span><span class="ya-web-copy"><small>${F(AREA[rc] || rc)}</small><b>${F(title)}</b><span>${F(sub)}</span></span><span class="hub-chev" aria-hidden="true">›</span></button></li>`).join('')}</ul></div>`
+      `<p class="ya-connect">${F(`${c.title} doesn’t happen on its own. Here’s everything it touches, and how to get ready.`)}</p>`
+      + h.list('What it changes', p.rows.slice(0, 4).map(([icon, rc, title, sub, go]) => h.row({ icon, cat: rc, title, sub, onclick: go }).replace('<span class="hub-row-copy">', `<span class="hub-row-copy"><small class="hub-row-eyebrow">${F(AREA[rc] || rc)}</small>`)))
       + h.tip(p.tip[0], p.tip[1]), c.icon);
   }
   const base = window.changesRoute;
