@@ -392,7 +392,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
       extra: () => callTip('Any sunburn before age 1, right away.') + urgent('Hot and flushed and hard to wake, floppy, or not feeding. Cool {o} down and call 911.') },
     teething: { k: 'teeth', title: 'Soothe sore gums',
       W: 'Drool, chewing on everything and a few fussy days are the usual signs. The first tooth usually comes around 6 months, often a bottom front one. Anywhere from 4 to 12 months is normal.', tiles: () => [['hand', 'A clean finger', 'Rub the sore gums'], ['toy', 'A teething ring', 'Firm, chilled, not frozen'], ['shirt', 'A soft bib', 'Pat the drool dry']], tips: false, D: '',
-      Y: 'Teething doesn’t cause fever, diarrhea, diaper rash or a runny nose. If you see those, check “Seems sick” in Health.', Yl: 'Good to know',
+      Y: 'Teething doesn’t cause fever, diarrhea, diaper rash or a runny nose. If you see those, something else is going on.', Yl: 'Good to know',
       extra: () => H().tip('Skip these', 'Numbing gels, homeopathic teething tablets, and amber or other teething necklaces. Ask your pediatrician before any pain medicine.') + toothBtn(false) },
     drool: { i: 'drop', k: 'skin', late: true, title: 'Drool rash and eczema', vis: () => rashLink(['drool', 'eczema']),
       W: 'All that drool, and dry air, can leave {p} skin red and rough.', D: '',
@@ -751,23 +751,23 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
         + `<h2 class="hub-h2">${F('Worried? Try the glass test')}</h2>` + glassTest() + block('', '', 'A rash with blisters, pus or oozing, or one that keeps spreading.' + (now === 0 ? ' Call right away for clusters of tiny blisters in the first 2 weeks.' : '') + (now >= 2 ? ' A rash with a fever.' : ''), (now <= 1 ? 'A rash with a fever of 100.4°F or higher: under 3 months, call your pediatrician right away, day or night. ' : '') + 'Purple or red dots that don’t fade when you press a glass on them: call 911.')],
       cord: ['The cord', 'Smell, crust or a little blood', ans('What’s normal', [['cord', 'Darkens and dries', 'A little crust is fine'], ['drop', 'A spot of blood', 'When it falls off'], ['clock', 'Falls off', 'Usually at 1–3 weeks']],
         'A yellow, smelly discharge, redness around it, crying when you touch it, or still on after 3 weeks. A moist lump after it falls off is easy to treat.')],
-      eyes: ['Sticky eyes or a stuffy nose', 'Snuffles, sneezing, tear ducts', ans('Usually normal, and what helps', [['drop', 'Snuffly breathing', 'Dried milk or mucus, not a cold'], ['eye', 'A watery eye', 'Not red: a blocked tear duct'], ['hand', 'Sticky eyes', 'Wipe from the inside corner out'], ['steth', 'A stuffy nose', 'Saline drops, gentle suction']],
+      eyes: ['Sticky eyes or snuffles', 'Noisy breathing, sneezing, tear ducts', ans('Usually normal, and what helps', [['drop', 'Snuffly breathing', 'Dried milk or mucus, not a cold'], ['eye', 'A watery eye', 'Not red: a blocked tear duct'], ['hand', 'Sticky eyes', 'Wipe from the inside corner out'], ['steth', 'A stuffy nose', 'Saline drops, gentle suction']],
         'A red or swollen eyelid, yellow-green discharge with redness, or a red lump at the inner corner.', 'Struggling to breathe, or blue lips. Call 911.')
-        + `<div class="hub-list care-link">${rowK('nose', 'Colds and stuffy noses', 'In Health', "openPage('chg:Health:d:cold')")}</div>`],
+        ],
       yellow: ['Yellow skin', 'Jaundice in the first weeks', ans('Usually normal', [['sun', 'Yellow on the face', 'In the first days, then fades'], ['eye', 'On darker skin', 'Check the eyes and gums'], ['bottle', 'Feed often', 'Not sunlight. Let your pediatrician check']],
         'Yellow spreading to the belly or legs, yellow whites of the eyes, or fewer wet diapers.', 'Any yellow in the first 24 hours, or yellow and hard to wake or not feeding well.')],
       gums: ['Drool, sore gums or extra fussing', 'Could it be teething?', ans('Usually teething', [['drop', 'Lots of drool', 'And chewing on everything'], ['tooth', 'Sore, swollen gums', 'Often the bottom front'], ['clock', 'A few fussy days', 'Then it settles']],
-        'Fever, diarrhea or a runny nose: teething doesn’t cause those. Check “Seems sick” in Health.') + `<div class="hub-list care-link">${rowK('teeth', 'Soothe sore gums', 'What helps, and what to skip', `openPage('chg:${CAT}:d:p:teething')`)}</div>`],
+        'Fever, diarrhea or a runny nose. Teething doesn’t cause those, so something else is going on.') + `<div class="hub-list care-link">${rowK('teeth', 'Soothe sore gums', 'What helps, and what to skip', `openPage('chg:${CAT}:d:p:teething')`)}</div>`],
       hot: ['Too hot or too cold?', 'Sweaty, flushed, chilly, what to wear', ans('Check and adjust', [['shirt', 'One more layer', 'Than you’re wearing'], ['hand', 'Feel the neck', 'Sweaty: too warm. Cool: add one'], ['home', 'No hat indoors', 'And no puffy coat in the car seat']],
         'Any sunburn before age 1, right away.', 'Hot and flushed and hard to wake, floppy, or not feeding. Cool {o} down and call 911.')]
     };
     const order = [['poop', 'rash', 'cord', 'yellow', 'eyes'], ['poop', 'rash', 'eyes'], ['gums', 'rash', 'poop', 'eyes'], ['gums', 'rash', 'poop', 'eyes']][now];
     const LI = { poop: 'diaper', rash: 'drop', cord: 'cord', yellow: 'sun', eyes: 'eye', gums: 'tooth', hot: 'thermo' };
-    const sick = `<div class="hub-list care-link"><button class="hub-row hl-row" style="--hl-bg:#fdeee6;--hl-ink:#9a5a3c" onclick="openPage('chg:Health:d:sick')"><span class="hub-dot">${hubArt('thermo', 'Health')}</span><span class="hub-row-copy"><b>${F('Seems sick, or has a fever?')}</b><small>In Health</small></span><span class="hub-chev" aria-hidden="true">›</span></button></div>`;
+    const sick = `<div class="hub-list care-link">${rowK('nose', 'A cold or stuffy nose?', 'In Health', "openPage('chg:Health:d:cold')")}<button class="hub-row hl-row" style="--hl-bg:#fdeee6;--hl-ink:#9a5a3c" onclick="openPage('chg:Health:d:sick')"><span class="hub-dot">${hubArt('thermo', 'Health')}</span><span class="hub-row-copy"><b>${F('Seems sick, or has a fever?')}</b><small>In Health</small></span><span class="hub-chev" aria-hidden="true">›</span></button></div>`;
     if (openK && items[openK]) { const [t, sub, body] = items[openK];
-      return page('look', head('look', 'Is this normal?', t, sub) + body + (openK === 'gums' ? sick : '')); }
+      return page('look', head('look', 'Is this normal?', t, sub) + body ); }
     let b = head('look', 'Is this normal?', 'Something look off?', 'Pick what you’re seeing.');
-    b += `<div class="hub-card care-folds care-lookoff">${order.map(k => { const [t, sub] = items[k]; return `<button class="care-pick" onclick="openPage('chg:${CAT}:d:look:${now}:${k}')"><span class="care-ico">${hubArt(LI[k], CAT)}</span><span><b>${F(t)}</b><small>${F(sub)}</small></span><i aria-hidden="true">›</i></button>`; }).join('')}</div>`;
+    b += `<div class="hub-card care-folds care-lookoff">${order.map(k => { const [t, sub] = items[k]; return `<button class="care-pick" onclick="openPage('chg:${CAT}:d:${k === 'gums' ? 'p:teething' : `look:${now}:${k}`}')"><span class="care-ico">${hubArt(LI[k], CAT)}</span><span><b>${F(t)}</b><small>${F(sub)}</small></span><i aria-hidden="true">›</i></button>`; }).join('')}</div>`;
     b += sick;
     return page('look', b);
   }
