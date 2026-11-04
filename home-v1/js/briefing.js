@@ -58,6 +58,12 @@
         link: link("openPage('chg:Sleep:safe')", 'See how to set it up') });
     }
 
+    // Vitamin D: one of the few first-days must-knows, for babies who get any breast milk (AAP: 400 IU a day).
+    const wk0 = live() ? Math.floor((NOW - parse(profile.dob)) / DAY / 7) : -1;
+    if (wk0 >= 0 && wk0 < 3 && ['Breast milk', 'Both'].includes(profile.feed))
+      out.push({ topic: 'Feeding', key: 'vitamin-d', title: 'Start vitamin D drops',
+        body: `Breast milk is low in vitamin D, so the AAP recommends 400 IU a day from the first days. Ask your pediatrician which drops to use.`,
+        link: link("openPage('chg:Feeding:d:vitd')", 'See vitamin D and iron') });
     // A checkup this week comes before longer-running reminders.
     const visitSoon = upcomingVisit();
     if (visitSoon && visitSoon.days <= 7) out.push(visitItem(visitSoon));
@@ -182,6 +188,40 @@
   }
 
   var approach7 = () => { try { return (window.__chg && window.__chg.local && window.__chg.local.approach) === 'finger'; } catch (e) { return false; } };
+  /* ---------- the change card: one change in the baby, and everything it touches ----------
+     Before: from the start of its usual window ("Crawling could start any week now").
+     After: for four weeks once the parent tells us ("Now that Ari crawls").
+     Its rows come from the Timeline read-ahead pages (yaChangeInfo), and it replaces the separate
+     cards it covers, so Home shows the cause and its effects together. */
+  const CH_ORDER = ['pull', 'solids', 'crawl', 'roll', 'sit'];
+  const CH_COVERS = { roll: ['rolling', 'rolling-soon', 'check:'], crawl: ['mattress', 'sitting', 'check:', 'crawl-soon'], pull: ['mattress', 'check:', 'steps-soon'], solids: ['first-foods', 'solids-soon', 'food-ask'], sit: ['sitting'] };
+  function activeChange() {
+    if (!live() || typeof yaChangeInfo !== 'function') return null;
+    const a = dm(), mv = movement();
+    const said = { pull: answers.pullUp === 'Yes', crawl: answers.crawl === 'Yes', roll: mv === 'rolling' || ['crawling', 'pulling'].includes(mv), solids: hasFoodAnswer() && foodStage() !== 'preparing', sit: answers.sit === 'Yes' };
+    const now = said.pull && recent('movement') ? 'pull' : said.crawl && recent('movement') ? 'crawl' : mv === 'rolling' && recent('movement') ? 'roll' : said.solids && recent('food') ? 'solids' : null;
+    if (now) return { id: now, state: 'now', info: yaChangeInfo(now) };
+    for (const id of CH_ORDER) { const c = yaChangeInfo(id); if (!c || said[id]) continue; if (a >= c.start - 0.5 && a < c.end) return { id, state: 'soon', info: c }; }
+    return null;
+  }
+  const covered = (ch, key) => !!ch && (CH_COVERS[ch.id] || []).some(k => key === k || (k.endsWith(':') && key.startsWith(k)));
+  function changeCard(ch) {
+    const F = s => (window.__hub ? window.__hub.F(s) : s), nm = esc(n()), c = ch.info;
+    const DONE = { pull: `Now that ${nm} pulls up`, crawl: `Now that ${nm} crawls`, roll: `Now that ${nm} rolls`, solids: `Now that ${nm} has started solids`, sit: `Now that ${nm} sits up` };
+    const SOON = { pull: 'Pulling up could start any week now', crawl: 'Crawling could start any week now', roll: 'Rolling could start any week now', solids: 'Solids start around 6 months', sit: 'Sitting up could start any week now' };
+    const AREA = { 'Daily rhythm': 'Everyday care', Development: 'Play', 'Out and about': 'Outings' };
+    const art = typeof hubArt === 'function' ? hubArt(c.icon, 'Development') : '';
+    // Once it's happened, the rows talk about now, not "before".
+    const NOW_ROWS = {
+      crawl: [['shield', 'Safety', 'Babyproof room by room', 'Stair gates, cabinet locks and outlet covers', "openPage('safety-stage:rolling')"], ['crib', 'Sleep', 'Lower the crib mattress', '{S} can push up and lean over now', "openPage('chg:Sleep:d:mattress')"]],
+      pull: [['dresser', 'Safety', 'Strap furniture and TVs to the wall', 'So nothing tips when {s} pulls', "openPage('chg:Safety:d:step:anchor')"], ['crib', 'Sleep', 'Crib mattress to its lowest', 'Now that {s} can stand', "openPage('chg:Sleep:d:mattress')"]],
+      solids: [['bowl', 'Feeding', 'What to put on the tray', 'Iron-rich foods first', "openPage('chg:Feeding:s:3')"], ['peanut', 'Feeding', 'Try a new allergen', 'Peanut and egg early, then often', "openPage('chg:Feeding:d:allergens')"], ['shield', 'Safety', 'Gagging or choking?', 'How to tell, and what to do', "openPage('chg:Feeding:safe')"]]
+    };
+    const src = ch.state === 'now' && NOW_ROWS[ch.id] ? [...NOW_ROWS[ch.id], ...c.rows.filter(r => !NOW_ROWS[ch.id].some(x => x[1] === r[1] && (r[2].includes('mattress') || r[2].startsWith('Babyproof') || r[2].startsWith('Strap'))) && ch.id !== 'solids')] : c.rows;
+    const rows = src.slice(0, 4).map(([icon, cat, title, sub, go]) => `<button class="home-change-row" onclick="${go}"><span class="home-change-tag" style="${yearTheme(YEAR_PALETTES[cat] ? cat : 'Safety')}">${esc(AREA[cat] || cat)}</span><span class="home-change-copy"><b>${F(title)}</b><small>${F(sub)}</small></span><span class="home-change-chev" aria-hidden="true">›</span></button>`).join('');
+    return `<div class="home-change" data-brief="change:${ch.id}"><div class="home-change-head"><span class="home-change-art" aria-hidden="true">${art}</span><div><p class="home-change-eyebrow">${ch.state === 'now' ? 'Just happened' : 'Coming up · ' + esc(c.range)}</p><h3>${ch.state === 'now' ? DONE[ch.id] : SOON[ch.id]}</h3><p class="home-change-lead">${ch.state === 'now' ? 'Here’s what changes, in one place.' : 'Here’s what it changes, so you’re ready.'}</p></div></div><div class="home-change-rows">${rows}</div><button class="home-change-all" onclick="openPage('chg:Timeline:c:${ch.id}')">Everything ${({ pull: 'pulling up', solids: 'starting solids', crawl: 'crawling', roll: 'rolling', sit: 'sitting up' })[ch.id]} changes ›</button></div>`;
+  }
+
   /* ---------- what's coming up ---------- */
   function comingUp(taken) {
     const out = [], m = dm(), mv = movement(), p = P();
@@ -307,13 +347,15 @@
   function briefing() {
     freshKeys = new Set();
     settleOpened();
-    const now = importantNow(), next = comingUp(now);
+    const ch = activeChange();
+    const now = importantNow().filter(i => !covered(ch, i.key)).slice(0, ch ? 1 : 2), next = comingUp(now).filter(i => !covered(ch, i.key));
     const focus = homeCurrentFocus();
     const sig = [...now, ...next].map(i => i.key).join('|') + '|' + actualMonth() + '|' + (typeof chgStageIndex === 'function' ? ['Sleep', 'Feeding'].map(chgStageIndex).join(',') : '');
 
-    const close = !live() ? '' : !now.length && !next.length ? `You’re all caught up for now.` : !now.length ? `Nothing to do right now. We’ll bring things up as they get closer.` : `That’s everything for now.`;
+    const close = !live() ? '' : ch ? `That’s everything for now.` : !now.length && !next.length ? `You’re all caught up for now.` : !now.length ? `Nothing to do right now. We’ll bring things up as they get closer.` : `That’s everything for now.`;
 
     let h = `${live() ? `<p class="home-age-line">${esc(name())} · ${esc(monthLabel(actualMonth()))}${profile.early && profile.due && typeof developmentMonth === 'function' && developmentMonth(actualMonth()) !== actualMonth() ? ` <button class="hub-agechip" onclick="openPage('age-context')" aria-label="${esc(monthLabel(developmentMonth(actualMonth())))} adjusted. About age">· ${developmentMonth(actualMonth())} adjusted <span aria-hidden="true">ⓘ</span></button>` : ''}</p>` : ''}<section class="connected-now" aria-label="What matters now"><div class="connected-summary"><div class="home-summary connected-summary-intro"><div class="home-summary-heading"><div class="home-month-eyebrow">${!live() ? (month > actualMonth() ? 'Coming up · ' : 'Looking back · ') + (month === 0 ? 'Newborn' : month + (month === 1 ? ' month' : ' months')) : 'What matters now'}</div><h1>${focus.title}</h1></div><span class="home-summary-art" aria-hidden="true">${homeMonthArt(month)}</span><p class="heroanswer">${focus.body}</p><div class="home-summary-spectrum" aria-hidden="true">${TOPICS.map(([t]) => `<span style="background:${YEAR_PALETTES[t].bg}"></span>`).join('')}</div></div>`;
+    if (ch) h += changeCard(ch);
     if (now.length) h += `<div class="connected-summary-links">${now.map(row).join('')}</div>`;
     h += `</div>${homeMomentRow()}</section>`;
     h += previewChanges();

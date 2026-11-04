@@ -139,6 +139,8 @@
       + h.list('What it changes', p.rows.slice(0, 4).map(([icon, rc, title, sub, go]) => h.row({ icon, cat: rc, title, sub, onclick: go }).replace('<span class="hub-row-copy">', `<span class="hub-row-copy"><small class="hub-row-eyebrow">${F(AREA[rc] || rc)}</small>`)))
       + h.tip(p.tip[0], p.tip[1]), c.icon);
   }
+  // Home's change card uses the same rows, so the advice is written once.
+  window.yaChangeInfo = id => { const c = C.find(x => x.id === id), p = PAGES[id]; return c && p ? { id, title: c.title, icon: c.icon, range: range(c), start: c.start, end: c.end, rows: p.rows } : null; };
   const base = window.changesRoute;
   window.changesRoute = function (p) { const m = /^chg:Timeline:c:(\w+)$/.exec(p); if (m) { const pg = changePage(m[1]); if (pg) return pg; } return base(p); };
 })();
