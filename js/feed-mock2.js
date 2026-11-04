@@ -93,7 +93,7 @@
     formula: () => page(head('Show me how', 'Making a formula bottle', 'Follow the label exactly. The amounts matter.', C.peach)
       + steps([['hand', 'Wash your hands', 'And use a clean bottle'], ['drop', 'Water first', 'The amount on the label'], ['bowl', 'Level scoops', 'Then shake well'], ['heart', 'Test on your wrist', 'Warm or room temperature']], true)
       + `<p class="ss-small"><b>${F('Never add extra water or powder.')}</b> ${F('Too much or too little can make Ari sick.')}</p>`
-      + `<div class="hub-list care-link">${row('blue', 'snow', '', 'How long it keeps once made', 'Fridge, counter and after a feed starts', 'basics')}</div>`),
+      + `<p class="ss-know"><b>${F('How long it lasts')}</b>${F('Use within 2 hours of making it, and within 1 hour once he starts. Made bottles keep 24 hours in the fridge.')}</p>`),
     how: () => page(head('Feeding', 'Show me how', 'Step-by-step pictures for the everyday parts of feeding.', C.lilac)
       + `<div class="hub-list">${[row('pink', 'heart', '', 'Latch and holds', 'How a good latch feels, and four holds', 'latch'), row('lilac', 'bottle', '', 'Giving a bottle', 'Pacing, burping and nipple flow', 'bottle'), row('peach', 'bowl', '', 'Making a formula bottle', 'Water first, level scoops', 'formula'), row('blue', 'snow', '', 'Storing and warming milk', 'How long it keeps, and travel', 'basics')].join('')}</div>`),
     // HOW-TO
@@ -113,8 +113,7 @@
       + hubStageStrip({ title: 'When to start', items: [['clock', '3–4 weeks before', 'Pump once a day'], ['bottle', '2 weeks before', 'Someone else gives a bottle'], ['heart', 'First week back', 'Pump about every 3 hours']], cat: CAT, caption: 'Start pumping once a day 3 to 4 weeks before, have someone else give a bottle 2 weeks before, and pump about every 3 hours once you are back.' })
       + h2('How') + `<ol class="care-do">${['Pump after a morning feed, when most parents have the most milk.', 'Freeze it flat in small bags of 2–4 oz, so nothing goes to waste.', 'Ask your caregiver to pace bottles and follow his cues.', 'At work, pump for each feed you miss.'].map(t => `<li>${F(t)}</li>`).join('')}</ol>`
       + h2('What’s normal') + p('What you pump is often less than he gets at the breast. Many babies refuse a bottle from a parent but take it from someone else.')
-      + `<p class="ss-small"><b>${F('Your rights:')}</b> ${F('most workplaces must give you break time and a private space that isn’t a bathroom.')}</p>`
-      + `<div class="hub-list care-link">${row('blue', 'snow', '', 'How long milk keeps', 'On the counter, fridge and freezer', 'basics')}</div>`),
+      + `<p class="ss-small"><b>${F('Your rights:')}</b> ${F('most workplaces must give you break time and a private space that isn’t a bathroom.')}</p>`),
 
     year: () => page(head('Feeding this year', 'What changes, and when', 'Ages are typical. Each one opens a short guide when it’s close.', C.lilac)
       + `<div class="hub-card"><ol class="fm-year">${[['done', 'Milk comes in', 'Days 2–5'], ['done', 'A first bottle', 'From 3–4 weeks'], ['next', 'Going back to work', 'Often around 3 months', 'work'], ['', 'A faster nipple flow', 'When bottles get slow'], ['', 'Ready for solids', '4–6 months'], ['', 'First tastes and allergens', 'Around 6 months'], ['', 'Textures and finger foods', '7–8 months'], ['', 'Three meals', 'Around 9 months'], ['', 'Whole milk and cups', '12 months'], ['', 'Nursing past 1, or stopping', 'When you choose']].map(([s, t, w, to]) => `<li class="${s ? 'is-' + s : ''}" ${to ? `onclick="${go(to)}" style="cursor:pointer"` : ''}><i></i><span><b>${F(t)}</b><small>${F(w)}</small></span>${s === 'next' ? `<em>${F('Coming up')}</em>` : ''}</li>`).join('')}</ol></div>`),
