@@ -178,19 +178,43 @@
       + rows('', [['hand', 'If you hire a nanny', 'You’re usually their employer, with taxes to pay. A nanny payroll service can handle them.']])
       + good([['eye', 'Prices vary a lot', 'A nanny usually costs most, then a daycare center, then a home daycare. Ask each place for the full cost, fees included.'], ['lock', 'Deposits', 'Many daycares ask for a deposit or a fee to hold a spot.'], ['heart', 'Paying family', 'Paying a relative may still count toward the tax credit. Ask a tax professional.']]), 'coin');
 
-    if (id === 'ready') return sub('ready', 'Setting it up', 'Get ready for day one', 'A visit and a short practice day first make the real start easier for you both.',
-      tl('Your countdown to day one', [
-        ['2 weeks before', 'notepad', 'Fill in Maya’s care card, and name two backup people.'],
-        ['The week before', 'clock', 'A short visit together, then a short day.'],
-        ['The night before', 'bag', 'Pack and label everything.'],
-        ['Day one', 'heart', 'A quick, warm goodbye.']],
-        'Two weeks before, fill in the care card and name two backup people. A week before, a short visit and a short day. The night before, pack and label everything. On day one, a quick, warm goodbye.')
+    if (id === 'ready') {
+      // Personal to the care they chose: a place (daycare, home daycare), someone at your home (a nanny), or family.
+      const ch = chosenNow(), kind = ch ? ch.k : '', who = ch ? esc3(ch.c.name) : '', place = kind === 'center' || kind === 'home', atHome = kind === 'nanny';
+      const just = ch && load('ahead-childcare-justchose', '') === ch.c.id; if (just) save('ahead-childcare-justchose', '');
+      const steps = place ? [
+          ['3 weeks before', 'notepad', 'Send the enrollment forms and shot record.'],
+          ['2 weeks before', 'heart', 'Fill in Maya’s care card, and name two backup people.'],
+          ['The week before', 'clock', 'A short visit together, then a short day.'],
+          ['The night before', 'bag', 'Pack and label everything.'],
+          ['Day one', 'heart', 'A quick, warm goodbye.']]
+        : atHome ? [
+          ['3 weeks before', 'notepad', 'Agree on hours, pay and duties in writing.'],
+          ['2 weeks before', 'heart', 'Fill in Maya’s care card, and name two backup people.'],
+          ['The week before', 'clock', 'A paid trial day, with you at home.'],
+          ['The night before', 'home', 'Leave the care card out, and stock bottles, diapers and clothes.'],
+          ['Day one', 'heart', 'A quick, warm goodbye.']]
+        : kind === 'family' ? [
+          ['2 weeks before', 'chat', 'Talk through safe sleep, the car seat and the day’s rhythm.'],
+          ['The week before', 'clock', 'A practice day together.'],
+          ['The night before', 'bag', 'Pack and label everything, if it’s at their place.'],
+          ['Day one', 'heart', 'A quick, warm goodbye.']]
+        : [
+          ['2 weeks before', 'notepad', 'Fill in Maya’s care card, and name two backup people.'],
+          ['The week before', 'clock', 'A short visit together, then a short day.'],
+          ['The night before', 'bag', 'Pack and label everything.'],
+          ['Day one', 'heart', 'A quick, warm goodbye.']];
+      const lead = atHome ? 'A paid trial day, with you at home, makes the real start easier for you all.' : kind === 'family' ? 'A practice day together makes the real start easier for everyone.' : 'A visit and a short practice day first make the real start easier for you both.';
+      return sub('ready', 'Setting it up', who ? `Get ready for ${who}` : 'Get ready for day one', lead,
+      (just ? `<div class="hub-card cc-chosen-note"><b>${F(`You chose ${who}.`)}</b><span>${F('Here’s how to get ready for day one.')}</span></div>` : '')
+      + tl('Your countdown to day one', steps,
+        steps.map(x => `${x[0]}: ${x[2]}`).join(' '))
       + careCardButton(load('ahead-carecard', {}))
-      + packCard('Pack for care', 'Label everything with {p} name. Your caregiver may have a list too', [
+      + packCard(atHome ? 'Set up at home' : 'Pack for care', atHome ? 'So the day runs without you' : 'Label everything with {p} name. Your caregiver may have a list too', [
         ['bottle', bm && fm ? 'Milk or formula for each feed, plus one extra' : bm ? 'Pumped milk for each feed, plus one extra' : 'Formula for each feed, plus one extra',
           (bm ? 'Bottles labeled with {p} name and the date, in a cooler bag' : 'With clean bottles, labeled with {p} name') + (m >= 6 ? '. Food too, if your caregiver doesn’t provide it' : '')],
         ['shirt', 'A spare outfit or two', 'For spills and blowouts'],
-        ['heart', 'Diapers, wipes and cream', 'If your caregiver asks for them']])
+        ['heart', 'Diapers, wipes and cream', atHome ? 'Where your nanny can find them' : 'If your caregiver asks for them']])
       + picSteps('When things don’t go to plan', [
         m < 9 ? ['bottle', 'Won’t take a bottle', 'Common at first. Let the caregiver try while you’re out of the room.'] : null,
         ['heart', 'Tears at drop-off', 'Keep goodbyes short and the same each day. Ask for a text once {s’s} settled.'],
@@ -199,6 +223,7 @@
         'If the baby won’t take a bottle, let the caregiver try while you’re away. Keep goodbyes short. Ask to hear when every bottle is finished. If something feels off, talk early.')
       + good([['bottle', 'Ask about feeds', 'How many feeds to expect, and how the caregiver warms bottles.'], ['heart', 'Your feelings count', 'The first weeks can be hard on you too. It usually gets easier.']])
       + `<button class="hub-button is-secondary cc-add" onclick="ccStarted()">${F('Care has started? Next: Settle in')} ›</button>`, 'bag');
+    }
 
     if (id === 'backup') return sub('backup', 'Setting it up', 'When care falls through', 'Every family has days when care doesn’t happen. A plan made now makes them easier.',
       backupList()
@@ -420,13 +445,20 @@
       + `<div class="cc-actions"><button class="hub-button" onclick="ccSaveCand('${k}','${c.id}')">${F('Save')}</button>${isNew ? '' : `<button class="cc-remove" onclick="ccRemoveCand('${k}','${c.id}')">${F('Remove from shortlist')}</button>`}</div>`, t.icon);
   }
   window.ccCandStep = i => { document.querySelectorAll('.cc-checkwrap .cc-tabs button').forEach((b, j) => { b.classList.toggle('is-on', j === i); b.setAttribute('aria-selected', j === i); }); document.querySelectorAll('.cc-cstep').forEach((d, j) => { d.hidden = j !== i; }); };
+  // The care a family picked most recently ("We chose this one"), so Get ready can speak to it.
+  const chosenNow = () => { const list = shortlist(); let best = null;
+    Object.keys(list).forEach(k => (list[k] || []).forEach(c => { if (c.chosen && (!best || Number(c.id) > Number(best.c.id))) best = { k, c }; }));
+    return best; };
+  window.ccChosenNow = chosenNow;
   window.ccSaveCand = function (k, id) {
     const list = shortlist(), mine = list[k] = list[k] || [];
     const v = s => (document.getElementById(s) || {}).value || '';
     const checks = [...document.querySelectorAll('.cc-checks input:checked')].map(x => x.dataset.k);
     const rec = { id: id === 'new' ? String(Date.now()) : id, name: v('ccName').trim() || 'Unnamed', contact: v('ccContact').trim(), checks, notes: v('ccNotes').trim(), chosen: !!(document.getElementById('ccChosen') || {}).checked };
-    const i = mine.findIndex(x => x.id === rec.id); if (i >= 0) mine[i] = rec; else mine.push(rec);
+    const i = mine.findIndex(x => x.id === rec.id), was = i >= 0 && mine[i].chosen; if (i >= 0) mine[i] = rec; else mine.push(rec);
     save('ahead-childcare-shortlist', list);
+    // Just picked? Go straight to getting ready, so it isn't buried at the bottom of the shortlist.
+    if (rec.chosen && !was) { save('ahead-childcare-justchose', rec.id); openPage(`chg:${CAT}:d:ready`); return; }
     openPage(`chg:${CAT}:d:${k}`);
   };
   window.ccRemoveCand = function (k, id) {
