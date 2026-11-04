@@ -32,8 +32,6 @@
 #main .cc-compare li { padding: 10px 0; border-top: 1px solid var(--line); font-size: 14.5px; line-height: 1.45; color: #5c5361 }
 #main .cc-compare li b { display: block; color: var(--ink); font-weight: 600 }
 /* Timing sits inside the fit card now, across both halves. */
-#main .cc-fit .cc-when { grid-column: 1 / -1; margin: 0; padding: 2px 4px 2px; font-size: 14.5px; line-height: 1.45; color: #5c5361 }
-#main .cc-fit .cc-when b { display: block; color: var(--ss-ink, var(--ink)); font-size: 14px; margin-bottom: 2px }
 #main .cc-chosen { margin-top: 6px }
 /* The path: four steps in one row, the current one picked out. */
 #main .cc-path { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 0 0 22px; padding: 6px; border-radius: 20px; background: #fcf7dd }
@@ -57,3 +55,10 @@
 #main .hub-detail .cc-share { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 0 }
 #main .hub-detail .cc-share svg { width: 18px; height: 18px }
 #main .hub-detail .cc-edit { display: block; margin: 6px auto 14px }
+/* When to start looking: its own labeled row in the fit card, with a clock */
+#main .hub-detail .cc-fit .cc-when { grid-column: 1 / -1; display: flex; gap: 12px; align-items: flex-start; padding: 12px; border-radius: 14px; background: var(--ss-bg, #fcf3cf) }
+#main .hub-detail .cc-fit .cc-when-art { flex: none; width: 36px; height: 36px; border-radius: 11px; background: #fff; display: grid; place-items: center; color: var(--ss-ink) }
+#main .hub-detail .cc-fit .cc-when-art svg { width: 20px; height: 20px }
+#main .hub-detail .cc-fit .cc-when small { display: block; font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--ss-ink) }
+#main .hub-detail .cc-fit .cc-when b { display: block; font-size: 15.5px; color: var(--ink); margin: 2px 0 2px }
+#main .hub-detail .cc-fit .cc-when p { margin: 0; font-size: 13.5px; line-height: 1.45; color: #5c5361 }
