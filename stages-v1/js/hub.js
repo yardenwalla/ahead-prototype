@@ -14,7 +14,7 @@
     let out = String(str == null ? '' : str)
       .replace(/\{s’(s|ve|ll)\}/g, (_, k) => they ? 'they’' + ({ s: 're', ve: 've', ll: 'll' })[k] : pr.s + '’' + ({ s: 's', ve: 's', ll: 'll' })[k])
       .replace(/\{S’(s|ve|ll)\}/g, (_, k) => cap(they ? 'they’' + ({ s: 're', ve: 've', ll: 'll' })[k] : pr.s + '’' + ({ s: 's', ve: 's', ll: 'll' })[k]))
-      .replace(/\{([A-Za-z’']+)\|([A-Za-z’']+)\}/g, (_, a, b) => they ? a : b)
+      .replace(/\{([A-Za-z’'-]+)\|([A-Za-z’'-]+)\}/g, (_, a, b) => they ? a : b)
       .replace(/\{(s|o|p|r|S|P|is|has|does)\}/g, (_, k) => k === 'S' ? cap(pr.s) : k === 'P' ? cap(pr.p) : pr[k]);
     return esc(out).replace(/Maya/g, esc(name_()));
   };
