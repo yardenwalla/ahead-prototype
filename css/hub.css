@@ -1485,3 +1485,4 @@
 #main .mem-bookcard-art .bk-stack { position: absolute; right: -8px; top: -6px; transform: scale(.78); transform-origin: top right }
 #main .mem-bookcard-save { display: block; margin: 0 0 0 20px; padding: 4px 0 16px; border: 0; background: none; font: inherit; font-size: 14px; font-weight: 600; color: #8a8494; cursor: pointer }
 #main .bk-head h1 { font-size: 34px }
+#main .hub-row + span:empty + .hub-row { border-top: 1px solid var(--line) } /* a scroll anchor between rows keeps the divider */
