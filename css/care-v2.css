@@ -150,3 +150,8 @@
 #main .care-v2 .care-do.care-tips { list-style: none; padding-left: 0 }
 #main .care-v2 .care-do.care-tips li { position: relative; padding-left: 18px }
 #main .care-v2 .care-do.care-tips li::before { content: ""; position: absolute; left: 3px; top: .62em; width: 7px; height: 7px; border-radius: 50%; background: currentColor; opacity: .5 }
+/* Everyday care's top card in the same look as Health and Sleep: a soft gradient in its own water blue, with a quiet white circle */
+#main .care-v2 .care-hero { background: linear-gradient(160deg, #d3ecf6, #ecf6fa 58%, #fdeee6) !important; position: relative; overflow: hidden }
+#main .care-v2 .care-hero::after { content: ""; position: absolute; right: -40px; top: -50px; width: 170px; height: 170px; border-radius: 50%; background: #fff; opacity: .35; pointer-events: none }
+#main .care-v2 .care-hero > * { position: relative; z-index: 1 }
+#main .care-v2 .care-hero .hub-eyebrow { color: #2a6078 }
