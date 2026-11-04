@@ -149,3 +149,10 @@ Job: "Help me understand what's coming as my baby grows, when to expect importan
 - "Coming up next": the next three changes as compact cards. "Later on": swipeable month cards up to 1 year, each with Timeline's own object illustration (Home keeps the growing baby), the changes starting that month with their ranges, and checkups pinned.
 - Each change opens a read-ahead page: when, the signs it's close, then "What it changes", up to four rows labeled by area that open the existing page for each, and a when-to-call tip. Nothing is written twice.
 - Stops at 1 year, because the app ends there.
+
+## Baby's details (2026-11-04)
+Job: "Help me keep my baby's information and my family's preferences up to date so Ahead can provide relevant, personalized guidance without repeatedly asking me for information." File: `js/profile-v2.js` (overrides `profileRework`), plus the Safety age rule in `js/stages.js`.
+- Safety's age rule now matches its four stages: First setup, Rolling (3–6 months), Crawling (6–9), Pulling up (9+). It used to switch to Crawling at 5 months. Saved movement still moves it ahead.
+- In Baby's details, Safety shows the same four stage chips as Feeding and Sleep. The separate "How [name] moves" row is gone.
+- The feeding pill says "Breast milk and formula" instead of "Both". The avatar uses the newest saved monthly photo, or the initial when there is none.
+- Edit reads as editing ("[name]'s details", "How [name] has milk", Next, Save), with no setup step dots or "See what matters now".
