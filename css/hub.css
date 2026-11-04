@@ -1416,3 +1416,4 @@
 
 /* Memories: other skills noticed, quietly under the big firsts */
 #main .mem-skills { margin-top: 18px }
+#main .hub-row + span:empty + .hub-row { border-top: 1px solid var(--line) } /* a scroll anchor between rows keeps the divider */
