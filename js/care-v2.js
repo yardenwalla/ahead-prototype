@@ -763,12 +763,10 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     };
     const order = [['poop', 'rash', 'cord', 'yellow', 'eyes'], ['poop', 'rash', 'eyes'], ['gums', 'rash', 'poop', 'eyes'], ['gums', 'rash', 'poop', 'eyes']][now];
     const LI = { poop: 'diaper', rash: 'drop', cord: 'cord', yellow: 'sun', eyes: 'eye', gums: 'tooth', hot: 'thermo' };
-    const sick = `<div class="hub-list care-link">${rowK('nose', 'A cold or stuffy nose?', 'In Health', "openPage('chg:Health:d:cold')")}<button class="hub-row hl-row" style="--hl-bg:#fdeee6;--hl-ink:#9a5a3c" onclick="openPage('chg:Health:d:sick')"><span class="hub-dot">${hubArt('thermo', 'Health')}</span><span class="hub-row-copy"><b>${F('Seems sick, or has a fever?')}</b><small>In Health</small></span><span class="hub-chev" aria-hidden="true">›</span></button></div>`;
     if (openK && items[openK]) { const [t, sub, body] = items[openK];
       return page('look', head('look', 'Is this normal?', t, sub) + body ); }
     let b = head('look', 'Is this normal?', 'Something look off?', 'Pick what you’re seeing.');
     b += `<div class="hub-card care-folds care-lookoff">${order.map(k => { const [t, sub] = items[k]; return `<button class="care-pick" onclick="openPage('chg:${CAT}:d:${k === 'gums' ? 'p:teething' : `look:${now}:${k}`}')"><span class="care-ico">${hubArt(LI[k], CAT)}</span><span><b>${F(t)}</b><small>${F(sub)}</small></span><i aria-hidden="true">›</i></button>`; }).join('')}</div>`;
-    b += sick;
     return page('look', b);
   }
 
