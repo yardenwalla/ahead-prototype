@@ -144,7 +144,7 @@
       <div class="quiet-category hub-page care-v2" data-overview="${CAT}" style="${yearTheme(CAT)};padding-bottom:70px">${typeof monthlyPageHeader === 'function' ? monthlyPageHeader(CAT) : ''}${pills}${inner}${h.next('Next, around 4 months', 'Ready for solids', '')}${h.note('Ages are typical. Every baby moves at their own pace.')}</div>${sw}`; };
   const hero = (t, l) => `<header class="hub-hero"><p class="hub-eyebrow">${F('Milk feeds')}</p><h1>${F(t)}</h1><p class="hub-lead">${F(l)}</p></header>`;
   const fa = (c, icon, t, body, to, more = 'More') => `<div class="fa-card"><span class="hub-dot" style="background:${C[c][0]};color:${C[c][1]}">${hubArt(icon, CAT)}</span><div><b>${F(t)}</b><p>${F(body)}</p>${to ? `<button onclick="${go(to)}">${F(more)} ›</button>` : ''}</div></div>`;
-  window.fcTick = k => { window.__fc = window.__fc || {}; window.__fc[k] = !window.__fc[k]; openPage('chg:Feeding:mock:dirC'); };
+  window.fcTick = k => { window.__fc = window.__fc || {}; window.__fc[k] = !window.__fc[k]; openPage(window.__fdLast || 'chg:Feeding:mock:dirC'); };
   const on = k => !!(window.__fc || {})[k];
   Object.assign(P, {
     // A · Answers up front: the app brings this stage's answers to you. Read the home and you're covered.
@@ -263,11 +263,12 @@
     return [
       b && [r('pink', 'heart', 'Your milk', 'Your milk comes in, days 2–5', 'Full, tender breasts are normal at first', 'milkin'), r('pink', 'heart', 'Your milk', 'Your supply settles', 'Feeling less full doesn’t mean less milk', 'supply'), r('pink', 'heart', 'Your milk', 'Breast milk alone for about 6 months', 'Then alongside food, for as long as it works for you both', 'howlong'), r('pink', 'heart', 'Your milk', 'Still a main food with meals', 'Nursing often drops as meals grow', 'milkmeals'), r('pink', 'heart', 'Your milk', 'Nursing past 1 is up to you', 'No need to stop at the first birthday', 'at12')][v],
       f && [r('peach', 'bottle', 'Bottles', !fm ? (how() === 'Pumping' ? 'Pump about as often as he’d feed' : 'A first bottle from 3–4 weeks') : feed === 'Formula' ? 'Water first, then level scoops' : 'A first bottle from 3–4 weeks', !fm ? (how() === 'Pumping' ? 'About 8–12 times a day at first' : 'Once nursing is going well') : feed === 'Formula' ? 'Use within 2 hours of making it' : 'Once nursing is going well', !fm && how() === 'Pumping' ? 'pump' : feed === 'Formula' ? 'formula' : 'firstbottle'), r('peach', 'bottle', 'Bottles', 'Slow, with little pauses', 'And how long milk lasts', 'basics'), r('peach', 'bottle', 'Bottles', 'Move up a nipple size when it’s slow', 'He sucks hard and gets frustrated', 'bottle'), r('peach', 'bottle', 'Bottles', 'Start practicing with a cup', 'Water from an open or straw cup', 'cups'), r('peach', 'bottle', 'Bottles', 'Whole milk and cups at 12 months', 'Plan the switch a month ahead', 'at12')][v],
+      !f && v <= 1 && r('peach', 'bottle', 'Bottles', v === 0 ? 'A first bottle, when you’re ready' : 'A bottle, if you’d like one', v === 0 ? 'Often from 3–4 weeks' : 'So someone else can take a feed', 'firstbottle'),
       r('green', 'drop', 'Every day', [b ? 'Vitamin D drops' : 'Vitamin D drops until about 32 oz', b ? 'Vitamin D drops' : 'Vitamin D drops until about 32 oz', mostlyB ? 'Vitamin D and iron drops' : b ? 'Vitamin D drops, and iron if mostly breast milk' : 'Vitamin D drops until about 32 oz', 'An iron-rich food', 'An iron-rich food at a meal'][v], ['From the first days', b ? 'While he gets breast milk' : 'Formula has some added', mostlyB ? 'Iron from 4 months. Ask for the dose' : 'Formula has the iron', 'Meat, beans, eggs, iron-fortified cereal', b ? 'Plus vitamin D drops' : 'Meat, beans, eggs, iron-fortified cereal'][v], 'vitd'),
       v >= 2 && [null, null, r('green', 'bowl', 'Food', 'Is he ready for solids?', 'Sits with support, opens for a spoon', 'signs'), r('green', 'bowl', 'Food', 'First foods, a few bites at a time', 'Iron first. Allergens early and often', 'firstfoods'), r('green', 'bowl', 'Food', 'Three meals of family food', 'Soft pieces, no added salt', 'family')][v],
       [r('blue', 'clock', 'Common now', 'Cluster feeding', 'Lots of feeds close together, often in the evening', 'cluster'), r('blue', 'clock', 'Common now', 'Hungrier days', 'Growth spurts last a few days', 'spurt'), r('blue', 'clock', 'Common now', 'Quick, distracted feeds', 'A quiet spot helps', 'distract'), r('blue', 'clock', 'Common now', 'Gagging', 'Loud and normal. It’s how he learns', 'gag'), r('blue', 'clock', 'Common now', 'Picky days', 'New foods can take 10–15 tries', 'picky')][v]
     ].filter(Boolean); };
-  P.dirD = (v) => { v = v == null ? 1 : Number(v); const feed = fd(), h = H(), st = SHEET(v, feed), b = isBreast(), f = isBottle();
+  P.dirD = (v) => { v = v == null ? 1 : Number(v); window.__fdStage = v; const feed = fd(), h = H(), st = SHEET(v, feed), b = isBreast(), f = isBottle();
     const pills = h.pills('Feeding by age', STAGES.map(([l, a], i) => ({ label: l, age: a, on: i === v, now: i === 1, onclick: go('dirD:' + i) })), CAT);
     const tile = ([c, art, l, val, sub, to]) => to ? `<button class="sm-tile hub-tile hub-tile-go" style="--sm-bg:${TILE[c] ? TILE[c][0] : C[c][0]};--sm-ink:${TILE[c] ? TILE[c][1] : C[c][1]};text-align:left;border:0;font:inherit;cursor:pointer" onclick="${go(to)}"><span class="sm-art">${art}</span><small>${F(l)}</small><b>${F(val)}</b><span>${F(sub)} ›</span></button>` : `<div class="sm-tile" style="--sm-bg:${TILE[c] ? TILE[c][0] : C[c][0]};--sm-ink:${TILE[c] ? TILE[c][1] : C[c][1]}"><span class="sm-art">${art}</span><small>${F(l)}</small><b>${F(val)}</b><span>${F(sub)}</span></div>`;
     let b2 = `<header class="hub-hero"><p class="hub-eyebrow">${F(STAGES[v][0])}</p><h1>${F(st.hero[0])}</h1><p class="hub-lead">${F(st.hero[1])}</p></header>`;
@@ -282,8 +283,200 @@
     + h2('What’s normal') + steps([['heart', 'Full, tender breasts', 'For a few days as milk comes in'], ['hand', 'A strong tug', 'At the start of a feed, not a pinch'], ['drop', 'Some leaking', 'Between feeds']], false)
     + h2('What helps') + steps([['clock', 'Feed often', '8–12 times a day'], ['hand', 'Very full?', 'Feed or hand-express a little, then a cold pack'], ['heart', 'Sore nipples?', 'Check the latch. A little milk or lanolin after feeds']], false)
     + call('Pain through the whole feed, cracked or bleeding nipples, or a red, painful area with a fever or chills (it can be mastitis).'));
+  /* ================= Every page, built from the page map =================
+     Each page is complete on its own (what's normal, what to do, when to call) and links to nothing.
+     Pages follow the stage the parent is looking at and only show what fits how the family feeds. */
+  const stg = () => (window.__fdStage == null ? 1 : window.__fdStage);
+  const formulaFam = () => fd() !== 'Breast milk' && fd() !== 'Prefer not to say';
+  const ctx = (c) => c;
+  const know = (label, t) => `<p class="ss-know"><b>${F(label)}</b>${F(t)}</p>`;
+  const small = (label, t) => `<p class="ss-small"><b>${F(label)}</b> ${F(t)}</p>`;
+  const two = (a, b) => `<div class="fm-two"><div style="background:${a[2] || '#e7effc'}"><small style="color:${a[3] || '#46638c'}">${F(a[0])}</small><span>${F(a[1])}</span></div><div style="background:${b[2] || '#e4f3ec'}"><small style="color:${b[3] || '#356651'}">${F(b[0])}</small><span>${F(b[1])}</span></div></div>`;
+  const dayList = items => `<div class="hub-card"><ol class="fm-day">${items.map(([t, i, w, s]) => `<li><time>${F(t)}</time><span class="fm-ic" style="background:${i === 'bowl' ? '#e4f3ec' : i === 'bottle' ? '#fdeee6' : '#fbe4ec'}">${hubArt(i, CAT)}</span><span><b>${F(w)}</b>${s ? `<small>${F(s)}</small>` : ''}</span></li>`).join('')}</ol></div>`;
+  const firstAid = () => h2('If he’s choking') + steps([['hand', '5 back blows', 'Face down along your forearm, head lower than his chest'], ['heart', '5 chest thrusts', 'Face up, two fingers in the middle of his chest'], ['clock', 'Repeat', 'Until it comes out, or help arrives']], true)
+    + `<p class="care-urgent"><b>${F('Call 911:')}</b> ${F('if he can’t cough, cry or breathe, have someone call 911 right away while you start back blows. If he stops responding, start CPR.')}</p>`;
+
+  Object.assign(P, {
+    // ---------- Tiles ----------
+    day: () => { const v = stg(), nurse = nurses(), fm = formulaFam(), pump = pumps();
+      const milk = (sub) => nurse && !fm && !pump ? ['drop', 'Nurse', sub || ''] : nurse && fm ? ['drop', 'Nurse, or a bottle', sub || ''] : ['bottle', 'Bottle', sub || (fm ? ['1–3 oz', '4–5 oz', '4–6 oz', '6–8 oz', '6–8 oz'][v] : ['1–3 oz', '3–4 oz', '3–5 oz', '3–5 oz', '3–5 oz'][v])];
+      const D = [
+        [['7:00', ...milk()], ['9:30', ...milk()], ['12:00', ...milk()], ['2:30', ...milk()], ['5:00', ...milk()], ['6–9 pm', 'clock', 'Cluster feeding', 'Several feeds close together. Normal'], ['11:00', ...milk()], ['2:00 am', ...milk()], ['4:30 am', ...milk()]],
+        [['7:00', ...milk()], ['10:00', ...milk()], ['1:00', ...milk()], ['4:00', ...milk()], ['6–8 pm', 'clock', 'A few feeds close together', 'Normal in the evening'], ['10:00', ...milk('Then bed')], ['3:00 am', ...milk('After his longest stretch')]],
+        [['7:00', ...milk()], ['10:30', ...milk()], ['2:00', ...milk()], ['5:30', ...milk()], ['8:00', ...milk('Then bed')], ['Night', ...milk('Some babies still wake for one')]],
+        [['7:00', ...milk()], ['8:00', 'bowl', 'Breakfast', 'A few spoonfuls, something iron-rich'], ['11:00', ...milk()], ['3:00', ...milk()], ['5:30', 'bowl', 'Dinner', 'A small taste of what you’re eating'], ['7:00', ...milk('Then bed')]],
+        [['7:00', ...milk()], ['8:00', 'bowl', 'Breakfast', ''], ['10:00', 'bowl', 'Snack', ''], ['12:00', 'bowl', 'Lunch', 'Water from a cup'], ['1:00', ...milk('Before a nap')], ['3:30', 'bowl', 'Snack', ''], ['5:30', 'bowl', 'Dinner', 'Soft pieces of family food'], ['7:00', ...milk('Then bed')]]
+      ][v];
+      const cues = v <= 2 ? h2('Is he hungry?') + hubStageStrip({ title: 'Hunger cues, early to late', items: [['eye', 'Early', 'Stirring, mouth opening, turning to look'], ['hand', 'Active', 'Rooting, hands to mouth, wriggling'], ['heart', 'Late', 'Crying. Calm him first, then feed']], nowIndex: -1, cat: CAT, caption: 'Early: stirring, mouth opening. Active: rooting, hands to mouth. Late: crying.' })
+        + h2('Is he full?') + steps([['smile', 'Slows down', 'Fewer, lazier sucks'], ['hand', 'Relaxed, open hands', 'Fists unclench'], ['eye', 'Turns away', 'Or lets go'], ['moon', 'Drifts off', 'Content and sleepy']], false)
+        : h2('Ready for more, or all done?') + two(['Ready for more', 'Leans in, opens his mouth, reaches for food.'], ['All done', 'Turns away, closes his mouth, pushes food away, plays with it.']) + know('Your job, his job', 'You choose what and when. He chooses how much.');
+      return page(head('Feeds now', ['A newborn day', 'A day at 2 months', 'A day at 4–6 months', 'A day at 6–9 months', 'A day at 9–12 months'][v], 'An example, not a schedule. Ari leads, and no two days look the same.') + dayList(D) + cues); },
+
+    enough: () => { const v = stg();
+      const body = v === 0
+        ? h2('Wet diapers, day by day') + hubStageStrip({ title: 'Wet diapers a day', items: [['diaper', 'Days 1–2', '1–2'], ['diaper', 'Days 3–4', '3 or more'], ['diaper', 'From day 5–6', '6 or more, pale yellow']], nowIndex: -1, cat: CAT, caption: 'Days 1 to 2: one or two. Days 3 to 4: three or more. From day 5 to 6: six or more, pale yellow.' })
+          + know('Weight', 'Losing up to about 10% in the first days is common. Most babies are back to birth weight by about 2 weeks.')
+          + small('Poop:', 'black and sticky at first, then greenish, then ' + (isBreast() ? 'mustard yellow and seedy.' : 'tan to yellow and a little firmer.'))
+          + call('Fewer wet diapers than this, not back to birth weight by 2 weeks, or very sleepy and hard to wake for feeds.')
+        : steps([['diaper', '6 or more wet diapers', 'A day, pale yellow'], ['heart', 'Steady growth', 'Along his own curve at checkups'], ['smile', v >= 3 ? 'Busy and content' : 'Content after most feeds', v >= 3 ? 'Even on days he eats little' : 'With some fussy evenings']], false)
+          + (v >= 3 ? p('Appetite goes up and down from day to day. Growth at checkups tells you more than any one meal.') : p('You don’t need to measure what he drinks' + (nurses() ? ' at the breast.' : '.') + ' Some feeds are short, some long.'))
+          + call('Fewer than 6 wet diapers a day, he seems hungry after most feeds, or he isn’t gaining at a checkup.');
+      return page(head('Getting enough', 'Is Ari getting enough?', v === 0 ? 'In the first weeks, diapers and weight tell you.' : 'Two signs tell you: wet diapers and steady growth.', C.yellow) + body
+        + urgent('No wet diaper in 8 hours, a sunken soft spot, or very hard to wake. Call your pediatrician right away.')); },
+
+    // ---------- Every day ----------
+    vitd: () => { const v = stg(), br = isBreast(), mostly = fd() === 'Breast milk', fm = formulaFam(), early = typeof profile !== 'undefined' && profile.early;
+      let b = h2('Vitamin D') + p(br ? '400 IU every day, from the first days, while he gets breast milk.' : 'Formula has vitamin D added. Until he drinks about 32 oz a day, he needs drops too, and most young babies drink less than that.');
+      b += steps([['bottle', 'In a little milk', 'About an ounce, before the rest of the feed'], ['heart', 'On the nipple', 'Just before he latches'], ['hand', 'Inside the cheek', 'Slowly, with the dropper']].filter((x, i) => i !== 1 || nurses()), false);
+      b += small('Not in a full bottle:', 'if he doesn’t finish it, he misses some. Don’t repeat the dose if he spits up.');
+      b += h2('Iron') + (early && br ? p('Babies born early who get breast milk usually start iron drops by 1 month and keep going to 12 months. Follow your care team’s dose.')
+        : mostly || (fd() === 'Both') ? p((fd() === 'Both' ? 'If most of his feeds are breast milk: ' : '') + 'from 4 months, he needs iron drops every day until iron-rich foods are a regular part of meals. The dose depends on his weight, so ask your pediatrician.')
+        : p('Formula has iron added, so he doesn’t need iron drops.'));
+      if (v >= 3) b += know('Iron from food', 'An iron-rich food every day: meat, beans, lentils, eggs, or iron-fortified cereal.');
+      b += small('Other supplements:', 'ask your pediatrician before giving anything else.');
+      return page(head('Every day', 'Vitamins and iron', v >= 3 ? 'An iron-rich food every day, and drops if he still needs them.' : 'A few drops a day, and what changes as he grows.', C.green) + b); },
+
+    // ---------- Your milk (breast milk), in order ----------
+    supply: () => page(head('Your milk', 'Your supply settles', 'In the weeks after your milk comes in, your body learns how much Ari needs and makes about that much.')
+      + h2('What you may notice') + steps([['heart', 'Softer breasts', 'Less full between feeds'], ['drop', 'Less leaking', 'Between feeds and at night'], ['clock', 'Quicker feeds', 'He’s more efficient now']], false)
+      + know('This is normal', 'Softer doesn’t mean less milk. Wet diapers and steady growth are the signs that matter, not how full you feel or how much you pump.')
+      + h2('Too little?') + p('Feed or pump more often, offer both sides, and try skin to skin. A lactation consultant can check how feeds are going.')
+      + h2('Too much?') + p('Gulping, coughing or pulling off at the start of feeds can mean a fast flow. Lean back so he feeds against gravity, and burp mid-feed. If it keeps happening, ask a lactation consultant.')
+      + call('Fewer than 6 wet diapers a day, slow weight gain, or a red, painful area on your breast with a fever.')),
+    howlong: () => page(head('Your milk', 'How long to breastfeed', 'Pediatricians suggest breast milk alone for about 6 months, then alongside food for as long as it works for you both.')
+      + steps([['heart', 'Any amount helps', 'A few feeds a day still count'], ['clock', 'There’s no wrong time', 'To keep going, or to stop'], ['bottle', 'Switching is fine', 'Formula is a good choice too']], false)
+      + h2('If you decide to stop') + p('Go slowly: drop one feed every week or so, with bedtime last. If your breasts feel full, express just enough to be comfortable. Low mood can come with stopping. Tell your doctor if it lingers.')),
+    milkmeals: () => page(head('Your milk', 'Milk is still a main food', 'Until 12 months, milk gives Ari much of what he needs. Meals are for learning.')
+      + steps([['heart', 'Keep milk feeds going', 'Before or after meals both work'], ['clock', 'Fewer feeds over time', 'As meals grow'], ['drop', 'Vitamin D drops', 'Every day while he gets breast milk']], false)
+      + know('How you’ll know it’s enough', 'Wet diapers, steady growth, and a busy, content baby.')),
+    at12: () => { const nurse = nurses(), bottle = isBottle();
+      return page(head('Coming up', 'At 12 months', 'Milk changes a little at the first birthday. Plan about a month ahead.', C.lilac)
+        + (bottle ? h2('Whole milk and cups') + steps([['drop', 'Whole cow’s milk', 'From a cup, 16–24 oz a day'], ['bottle', 'Bottles to cups', 'One at a time, about a week apart'], ['moon', 'Bedtime bottle last', 'Aim to finish by 18 months']], true) + small('Picky about the taste?', 'mix it half and half with ' + (formulaFam() ? 'formula' : 'breast milk') + ' for a week. Toddler formula isn’t needed.') : '')
+        + (nurse ? h2('Nursing past 1') + p('There’s no need to stop at the first birthday. Whole cow’s milk from a cup can join alongside, and vitamin D drops continue while he nurses.') : '')
+        + small('Not more than 24 oz of milk a day:', 'more fills him up and can lower his iron.')); },
+
+    // ---------- Bottles, in order ----------
+    firstbottle: () => page(head('Bottles', 'A first bottle', 'Around 3–4 weeks, once nursing is going well, is a good time to try a bottle.', C.peach)
+      + steps([['heart', 'Someone else offers it', 'He may refuse it from you at first'], ['clock', 'Before he’s very hungry', 'Calm is easier'], ['bottle', 'A slow-flow nipple', 'And pace it, like the breast']], true)
+      + know('Keeping your supply up', 'When a bottle replaces a nursing feed, pump around the same time.')
+      + small('Won’t take it?', 'that’s common. Try again in a day or two, and keep trying.')),
+    pump: () => page(head('Bottles', 'Pumping', 'Pump about as often as he’d feed. At first that’s 8–12 times a day, including once at night.', C.peach)
+      + steps([['clock', 'Every 2–3 hours', 'At first, day and night'], ['hand', 'It shouldn’t hurt', 'A flange that fits matters'], ['drop', 'Output varies', 'From session to session']], false)
+      + know('How much he needs', 'About 24–30 oz a day once feeding is settled, or about 1 oz for each hour you’re apart.')
+      + h2('How long breast milk lasts') + `<div class="hub-card fm-store"><table>${[['On the counter', 'Up to 4 hours'], ['In the fridge', 'Up to 4 days, at the back'], ['In the freezer', 'Best within 6 months, up to 12'], ['Once a feed starts', 'Within 2 hours'], ['Thawed', '24 hours in the fridge. Don’t refreeze']].map(r => `<tr><td>${F(r[0])}</td><td>${F(r[1])}</td></tr>`).join('')}</table></div>`
+      + small('Clean pump parts:', 'wash them after every use and let them air-dry.')
+      + call('Pain while pumping, a red, painful area with a fever, or a sudden big drop in what you pump.')),
+    basics: () => { const br = isBreast() && (pumps() || nurses()), fm = formulaFam();
+      const rows = [['On the counter', 'Up to 4 hours', 'Use within 2 hours of making it'], ['Once a feed starts', 'Within 2 hours', 'Within 1 hour'], ['In the fridge', 'Up to 4 days', 'Up to 24 hours'], ['In the freezer', 'Best within 6 months', 'Don’t freeze']];
+      const cols = [br && 1, fm && 2].filter(Boolean);
+      return page(head('Bottles', 'How long milk lasts', 'And warming a bottle, and taking milk out with you.', C.blue)
+        + `<div class="hub-card fm-store"><table><tr><th></th>${cols.map(c => `<th>${F(c === 1 ? 'Breast milk' : 'Formula')}</th>`).join('')}</tr>${rows.map(r => `<tr><td>${F(r[0])}</td>${cols.map(c => `<td>${F(r[c])}</td>`).join('')}</tr>`).join('')}</table></div>`
+        + h2('Warming a bottle') + steps([['drop', 'Warm water', 'Or a bottle warmer'], ['hand', 'Swirl', 'To mix it'], ['heart', 'Test on your wrist', 'Warm, not hot']], true)
+        + small('Never the microwave.', 'It heats unevenly. Cold or room temperature is fine too.')
+        + h2('Out and about') + p((br ? 'A cooler bag with frozen ice packs keeps breast milk up to 24 hours. ' : 'Carry powder and water separately, and mix when he’s ready. ') + 'Flying, breast milk and formula are allowed in carry-on bags in more than 3.4 oz: tell security at the start.')); },
+    bottle: () => page(head('Bottles', 'Giving a bottle', 'A slow, paced bottle lets Ari lead, so he takes what he needs and swallows less air.', C.lilac)
+      + h2('Positions') + steps([['heart', 'Cradled, sitting up', 'Head higher than his tummy'], ['smile', 'Upright on your lap', 'Facing sideways, head supported'], ['moon', 'Side-lying', 'Along your arm. Slows the flow']], false)
+      + small('Never flat on his back,', 'and never prop the bottle.')
+      + h2('Pacing, step by step') + steps([['bottle', 'Bottle fairly level', 'With milk filling the nipple'], ['hand', 'Let him draw it in', 'Touch the nipple to his lip'], ['clock', 'Pause every few sucks', 'Tip it down, then let him start again'], ['heart', 'Switch sides halfway', 'And burp every 2–3 oz']], true)
+      + h2('Time for a faster nipple?') + two(['Too slow', 'He sucks hard, gets frustrated, or the nipple collapses.', '#efedff', '#625084'], ['Too fast', 'Gulping, coughing, or milk spilling from his mouth.', '#fdeee6', '#9a5a3c'])
+      + small('Start with the slowest flow,', 'and go up only when it’s too slow.')
+      + h2('Choosing and cleaning bottles') + p('There’s no best bottle. Use whichever one he takes well. Wash bottles and nipples in hot, soapy water after every feed, and sanitize them often in the first months.')),
+    formula: () => page(head('Bottles', 'Making formula', 'Follow the label exactly. The amounts matter.', C.peach)
+      + steps([['hand', 'Wash your hands', 'And use a clean bottle'], ['drop', 'Water first', 'The amount on the label'], ['bowl', 'Level scoops', 'Then shake well'], ['heart', 'Test on your wrist', 'Warm or room temperature']], true)
+      + small('Never add extra water or powder.', 'Too much or too little can make him sick.')
+      + know('Safe water', 'Under 2 months, born early, or a weak immune system: boil the water, let it cool for about 5 minutes, mix, then cool the bottle before feeding.')
+      + know('How long it lasts', 'Use within 2 hours of making it, and within 1 hour once he starts. Made bottles keep 24 hours in the fridge.')
+      + small('Which formula?', 'any standard iron-fortified infant formula. Ask your pediatrician before switching to a special one.')),
+    cups: () => page(head('Bottles', 'Practicing with a cup', 'From about 6 months, an open or straw cup with meals makes the move off bottles easier later.', C.blue)
+      + steps([['drop', 'Water with meals', '4–8 oz a day, from a cup'], ['hand', 'Open or straw cup', 'Expect spills'], ['clock', 'Milk stays as is', 'Until 12 months']], false)
+      + small('No juice before 1.', 'Water and milk are all he needs.')),
+
+    // ---------- Food, in order ----------
+    signs: () => page(head('Food', 'Is Ari ready for solids?', 'Most babies show all four signs around 6 months. Some sooner, some later.', C.green)
+      + ticksPlan([['Sitting', 'Sits with support and holds his head steady', 's1'], ['Mouth', 'Opens his mouth when food comes near', 's2'], ['Swallowing', 'Swallows instead of pushing food back out', 's3'], ['Interest', 'Reaches for food and brings things to his mouth', 's4']])
+      + h2('Getting set up') + steps([['star', 'A high chair', 'Supportive, with a harness'], ['bowl', 'A soft spoon and a bib', 'Skip the fancy gadgets'], ['hand', 'Spoon, finger foods or both', 'There’s no wrong choice']], false)
+      + know('Eczema or an egg allergy?', 'Talk to your pediatrician before trying peanut. It may help to start it early.')),
+    firstfoods: () => page(head('Food', 'First foods', 'A few bites at a time. Milk is still his main food.', C.green)
+      + steps([['bowl', 'Iron-rich first', 'Meat, beans, lentils, eggs, iron-fortified cereal'], ['hand', 'Soft and safe', 'Mashed, or strips the size of a finger'], ['smile', 'He decides how much', 'A few spoonfuls is plenty']], false)
+      + h2('Allergens, early and often') + p('Once a few first foods go well, offer the common allergens one at a time, then keep them in a few times a week: peanut (thinned, never whole), egg, dairy (yogurt or cheese), wheat, soy, sesame, fish, shellfish and tree nuts (ground).')
+      + small('A few hives:', 'call your pediatrician. Trouble breathing, a swollen face, hives all over, or hives with vomiting: call 911.')
+      + h2('Not yet') + two(['Until 1', 'Honey, cow’s milk to drink, and juice.', '#fdeee6', '#9a5a3c'], ['For years', 'Whole nuts, popcorn, whole grapes, hard raw vegetables.', '#efedff', '#625084'])),
+    family: () => page(head('Food', 'Three meals of family food', 'Around 9–12 months, Ari can eat soft pieces of what you eat.', C.green)
+      + steps([['bowl', '3 meals', 'Plus 1–2 snacks'], ['hand', 'Pea-size pieces', 'Once he picks things up with finger and thumb'], ['heart', 'Your family’s food', 'Set his portion aside before adding salt']], false)
+      + h2('Safe shapes') + p('Quarter grapes lengthwise, cut round foods into thin strips, cook hard vegetables until soft, and spread nut butter thinly. Whole nuts and popcorn stay off the menu for years.')
+      + small('Still not yet:', 'honey, and cow’s milk to drink, until 1.')),
+
+    // ---------- Common now, in order ----------
+    cluster: () => page(head('Common now', 'Cluster feeding', 'Lots of feeds close together for a few hours, often in the evening. It’s normal, and it passes.', C.blue)
+      + steps([['clock', 'Feed when he asks', 'Even if it feels constant'], ['heart', 'Settle in', 'Water and a snack within reach'], ['hand', 'Take turns', 'Someone else can burp, change and soothe']], false)
+      + call('Fewer wet diapers than usual, or he seems hungry and unsettled after most feeds all day.')),
+    spurt: () => page(head('Common now', 'Hungrier days', 'Some days he’ll want to feed far more often. It usually lasts up to about 3 days.', C.blue)
+      + steps([['clock', 'More feeds', 'Closer together'], ['heart', 'Fussier', 'Sometimes sleepier after'], ['smile', 'Then it settles', 'Usually in a few days']], false)
+      + p(nurses() ? 'Follow his lead and feed more often. The extra feeds tell your body to make more milk. It isn’t a sign your supply is low.' : 'Follow his lead. Offer a little more, or an extra bottle, if he still seems hungry.')
+      + call('Fewer wet diapers, or it goes on for more than a few days.')),
+    distract: () => page(head('Common now', 'Quick, distracted feeds', 'Around 4–6 months, the world gets interesting, and feeds get short and busy.', C.blue)
+      + steps([['moon', 'A quiet, dim spot', 'Fewer things to look at'], ['clock', 'Feed when he’s drowsy', 'Before naps and bed'], ['heart', 'It passes', 'And quick feeds can be full ones']], false)
+      + call('Fewer wet diapers, or he isn’t gaining at a checkup.')),
+    gag: () => page(head('Common now', 'Gagging or choking?', 'Gagging is loud and normal while he learns to eat. Choking is often silent.', C.blue)
+      + two(['Gagging: normal', 'Coughing, sputtering, red face, tongue out. Stay calm and let him work it out.', '#e4f3ec', '#356651'], ['Choking: act now', 'Silent or a high squeak, can’t cough or cry, turning blue.', '#fbe9e9', '#a33a3a'])
+      + h2('Making it less likely') + steps([['star', 'Sitting upright', 'Always, and always watched'], ['hand', 'Safe shapes', 'Soft, squashable, finger-size'], ['clock', 'No rushing', 'Never while he’s moving around']], false)
+      + firstAid()),
+    picky: () => page(head('Common now', 'Picky days', 'Appetite goes up and down from day to day. That’s normal.', C.blue)
+      + steps([['heart', 'Keep offering', 'A new food can take 10–15 tries'], ['hand', 'No pressure', 'You choose what, he chooses how much'], ['smile', 'Eat together', 'He learns by watching you']], false)
+      + call('He isn’t gaining at a checkup, or eats very little for more than a few days and seems unwell.')),
+
+    // ---------- Tough feed? ----------
+    gas: () => page(head('Tough feed?', 'Gas and lots of crying', 'Babies swallow air when they feed and cry. Fussy spells often peak around 6 weeks and ease by 3–4 months.')
+      + steps([['hand', 'Burp', 'During and after feeds'], ['smile', 'Bicycle his legs', 'Or fold his knees to his tummy'], ['heart', 'Tummy-down', 'Across your knees, a gentle back rub']], false)
+      + small('Gas drops or gripe water?', 'ask your pediatrician first.')
+      + call('Gas with a fever or vomiting, or crying that won’t settle.')),
+    fussy: () => page(head('Tough feed?', 'Fussy or arching at feeds', 'Usually he’s too hungry, the flow is too fast or slow, he has gas, or he’s full.')
+      + steps([['clock', 'Feed at early cues', 'Before crying starts'], ['heart', 'Calm him first', 'Then offer again'], ['hand', nurses() ? 'Fast letdown?' : 'Check the nipple flow', nurses() ? 'Lean back so he feeds against gravity' : 'Too fast or too slow both cause fussing']], false)
+      + call('Arching and crying at every feed, refusing several feeds in a row, or slow weight gain.')),
+    sleepy: () => page(head('Tough feed?', 'Too sleepy to feed', 'Newborns often doze off mid-feed. Until he’s back to birth weight, wake him if it’s been about 3 hours.')
+      + steps([['hand', 'Undress him', 'Down to his diaper'], ['drop', 'Change his diaper', 'Halfway through'], ['heart', 'Gently stroke', 'His feet or cheek']], false)
+      + urgent('Very hard to wake, floppy, or yellow skin spreading to his belly or legs.')),
+    refusebottle: () => page(head('Tough feed?', 'Won’t take a bottle', 'Common for babies who nurse. Most come around with a little patience.')
+      + steps([['heart', 'Someone else offers it', 'Ideally while you’re out of the room'], ['clock', 'Before he’s very hungry', 'Calm is easier'], ['bottle', 'A slow-flow nipple', 'Warm, and give it a few days']], false)),
+    hiccups: () => page(head('Tough feed?', 'Hiccups', 'Very common, and they rarely bother babies. They usually stop on their own.')
+      + steps([['hand', 'A burp or a pause', 'Can help them pass'], ['clock', 'Calmer feeds', 'Before he’s very hungry'], ['smile', 'Nothing else needed', 'No remedies']], false)),
+    refusefood: () => page(head('Tough feed?', 'Refusing food', 'Some days he’ll barely eat. Milk is still a main food until 12 months, so a light day is fine.')
+      + steps([['heart', 'Try again later', 'No pressure'], ['bowl', 'Offer what he likes', 'Alongside something new'], ['clock', 'Keep meals short', 'About 15–20 minutes']], false)
+      + call('Refusing milk too, fewer wet diapers, or he seems unwell.')),
+    constipation: () => page(head('Tough feed?', 'Constipation', 'Harder poop is common as solids start.')
+      + steps([['drop', 'Water with meals', 'From a cup'], ['bowl', 'Pears, prunes, peas', 'And oatmeal'], ['smile', 'Bicycle his legs', 'Gently']], false)
+      + call('Blood in the poop, pain, vomiting, or no poop for 2 days after trying these.')
+      + urgent('A hard, swollen belly. Go to the ER.')),
+    rash: () => page(head('Tough feed?', 'A rash after a new food', 'Most rashes around the mouth come from food rubbing the skin. A few hives can be an allergy.')
+      + two(['Around the mouth only', 'Red where food touched, fades within an hour. Usually skin irritation.', '#e4f3ec', '#356651'], ['Hives', 'Raised, itchy welts. Stop that food and call your pediatrician.', '#fdeee6', '#9a5a3c'])
+      + `<p class="care-urgent"><b>${F('Call 911:')}</b> ${F('trouble breathing, a swollen face, lips or tongue, hives all over, or hives with vomiting.')}</p>`),
+    biting: () => page(head('Tough feed?', 'Biting while nursing', 'Common once teeth come. Babies can’t bite while actively feeding, so it usually happens at the end.')
+      + steps([['hand', 'Calmly take him off', 'Slide a finger in to break the seal'], ['clock', 'End the feed', 'If it happens again'], ['heart', 'Offer a teether', 'Before feeds if his gums are sore']], false)),
+
+    // ---------- Show me how ----------
+    latch: () => page(head('Show me how', 'Latch and holds', 'A good latch feels like a strong tug, not a pinch.')
+      + h2('A good latch') + steps([['heart', 'Nose to nipple', 'Tummy to tummy with you'], ['smile', 'Wait for a wide mouth', 'Like a yawn'], ['hand', 'Bring him to you', 'Chin first']], true)
+      + small('Pinching?', 'slide a clean finger into the corner of his mouth to break the seal, and try again.')
+      + h2('Four holds') + steps([['heart', 'Cradle', 'Head in the crook of your arm'], ['hand', 'Football', 'Tucked at your side. Easy after a C-section'], ['moon', 'Side-lying', 'You both lie on your sides'], ['smile', 'Laid-back', 'Helps with a fast letdown']], false)
+      + small('Burping:', 'between sides. No burp after a few minutes is fine.')
+      + call('Pain through the whole feed, cracked or bleeding nipples, or a red, painful area with a fever (it can be mastitis). If latching keeps hurting despite help, ask about his mouth, including tongue-tie.')),
+    prep: () => page(head('Show me how', 'Preparing first foods', 'Soft enough to squash between your finger and thumb. Shapes change as he grows.', C.green)
+      + hubStageStrip({ title: 'Textures, as he grows', items: [['bowl', 'Around 6 months', 'Smooth and mashed'], ['hand', '6–8 months', 'Soft strips the size of a finger'], ['smile', '9 months on', 'Soft pea-size pieces']], nowIndex: -1, cat: CAT, caption: 'Smooth and mashed around 6 months, soft finger-size strips at 6 to 8 months, pea-size pieces from about 9 months.' })
+      + h2('Safe shapes') + p('Cook hard vegetables until soft, or grate them. Quarter grapes lengthwise. Spread nut butter thinly or stir it into food. No whole nuts or popcorn.')),
+    choking: () => page(head('Show me how', 'Choking first aid', 'For babies under 1. Learn it now, and hope you never need it.', C.lilac) + firstAid()),
+    how: () => { const v = stg(), solids = v >= 3;
+      const all = [['latch', 'pink', 'heart', 'Latch and holds', 'How a good latch feels, and four holds', nurses()], ['bottle', 'lilac', 'bottle', 'Giving a bottle', 'Positions, pacing and nipple flow', isBottle()], ['formula', 'peach', 'bowl', 'Making formula', 'Water first, level scoops', formulaFam()], ['pump', 'peach', 'drop', 'Pumping', 'How often, and how long it lasts', pumps()], ['basics', 'blue', 'snow', 'How long milk lasts', 'And warming, and travel', isBottle()], ['prep', 'green', 'bowl', 'Preparing first foods', 'Safe shapes by age', v >= 2], ['choking', 'lilac', 'shield', 'Choking first aid', 'Under 1, step by step', v >= 2]];
+      const mine = all.filter(x => x[5] && (solids ? ['prep', 'choking'].includes(x[0]) || x[0] === 'bottle' && false : true)), rest = all.filter(x => !mine.includes(x));
+      const list = xs => `<div class="hub-list">${xs.map(([to, c, i, t, s]) => row(c, i, '', t, s, to)).join('')}</div>`;
+      return page(head('Feeding', 'Show me how', 'Step by step, for the everyday parts of feeding.', C.lilac) + list(mine) + (rest.length ? h2('Other how-tos') + list(rest) : '')); }
+  });
+  // Tough feed list now opens real pages
+  P.worry = (v) => { v = v == null ? stg() : Number(v); const bt = isBottle();
+    const items = v <= 2 ? [['bottle', 'Spit-up or vomit?', 'How much is normal, and when to call', 'spit'], ['drop', 'Gas or lots of crying', 'What helps, and gripe water', 'gas'], ['heart', 'Fussy or arching at feeds', 'Too hungry, too fast, or full', 'fussy'], v === 0 && ['moon', 'Too sleepy to feed', 'How to wake him, and when to call', 'sleepy'], nurses() && bt && ['star', 'Won’t take a bottle', 'Common for babies who nurse', 'refusebottle'], ['smile', 'Hiccups', 'Normal, and when they pass', 'hiccups']].filter(Boolean)
+      : [['shield', 'Gagging or choking?', 'How to tell, and what to do', 'gag'], ['bowl', 'Refusing food', 'Light days, and what helps', 'refusefood'], ['diaper', 'Constipation', 'Hard poop with solids', 'constipation'], ['eye', 'A rash after a new food', 'When it’s an allergy', 'rash'], nurses() && ['hand', 'Biting while nursing', 'Once teeth come', 'biting']].filter(Boolean);
+    return page(head('Feeding', 'Tough feed?', 'Pick what you’re seeing.') + `<div class="hub-card care-folds care-lookoff">${items.map(([i, t, s, to]) => `<button class="care-pick" onclick="${go(to)}"><span class="care-ico">${hubArt(i, CAT)}</span><span><b>${F(t)}</b><small>${F(s)}</small></span><i aria-hidden="true">›</i></button>`).join('')}</div>`); };
   const base = window.changesRoute;
-  window.changesRoute = function (r) { const [, cat, s, a, x] = r.split(':'); if (cat === CAT && s === 'mock' && P[a]) return P[a](x); return base(r); };
+  window.changesRoute = function (r) { const [, cat, s, a, x] = r.split(':'); if (cat === CAT && s === 'mock' && P[a]) { window.__fdLast = r; return P[a](x); } return base(r); };
   const op = window.openPage;
   window.openPage = openPage = function (r, ...rest) { if (r === 'topic:Feeding') r = 'chg:Feeding:mock:dirD'; return op.call(this, r, ...rest); };
 })();
