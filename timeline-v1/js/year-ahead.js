@@ -6,6 +6,7 @@
   const MONTH = 30.4375 * 864e5;
   const ageNow = () => { const from = profile.early && profile.due ? parse(profile.due) : parse(profile.dob); return (NOW - from) / MONTH; };
   const C = [
+    ['crying', 0.5, 3, 'Sleep', 'heart', 'The crying peak', 'Fussy evenings, at their worst around 6–8 weeks', "__GO__", '2 weeks–3 months'],
     ['smile', 1.5, 2, 'Development', 'smile', 'First smiles', 'Maya starts smiling back when you smile', "__GO__"],
     ['nights', 1.5, 4, 'Sleep', 'moon', 'Longer nights', 'One longer sleep at night, often 4–5 hours', "__GO__"],
     ['regress', 3, 5, 'Sleep', 'moon', 'The 4-month sleep regression', 'More night waking, for a few weeks', "__GO__"],
@@ -74,6 +75,9 @@
   /* ---------- read-ahead pages: when, the signs it's close, what it changes, one reassuring note ---------- */
   // [from, to, zoneStart, zoneEnd, zoneLabel] in months; rows open the page that already covers each effect.
   const PAGES = {
+    crying: { lead: 'From about 2 weeks, many babies cry more, often in the late afternoon and evening. It peaks around 6–8 weeks and eases by 3–4 months.', bar: [0, 4, 0.5, 3, 'Peaks at 6–8 weeks'], signsTitle: 'What it can look like', signs: ['Fussier evenings', 'Crying that’s hard to settle, even after a feed', 'Pulling up legs or going red in the face'],
+      rows: [['heart', 'Sleep', 'When the crying won’t stop', 'What helps, and when it eases', "openPage('chg:Sleep:d:crying')"], ['heart', 'Health', 'Looking after you', 'It’s OK to put {o} down safely and step away', "openPage('chg:Health:d:you')"]],
+      tip: ['Crying with a fever, poor feeding, or a cry that sounds different?', 'Call your pediatrician. Under 3 months, a temperature of 100.4°F or higher means calling right away.'] },
     smile: { lead: 'Around 6–8 weeks, most babies start smiling back at you. It’s the first real back-and-forth between you.', bar: [0, 4, 1.4, 2.1, 'Smiling back'], signs: ['Watching your face closely', 'Calming at your voice', 'Little coos when you talk'],
       rows: [['smile', 'Development', 'Lots of face-to-face time', 'Close up, where {s} can see you best', "openPage('development-domain:2:Social')"], ['chat', 'Development', 'Talk back to {p} sounds', 'Pause, and give {o} a turn', "openPage('development-domain:2:Talking')"]],
       tip: ['Not smiling back by 2 months?', 'Some babies take a little longer. Mention it at the 2-month checkup.'] },
@@ -130,9 +134,9 @@
     const h = H(), c = C.find(x => x.id === id), p = PAGES[id]; if (!c || !p) return null;
     const a = ageNow(), cat = c.cat, past = c.end <= a, now = c.start <= a && c.end > a;
     const when = past ? 'Already behind ' + name() : now ? 'Happening around now' : c.start - a <= 1 ? 'Could start any week now' : `In about ${Math.round(c.start - a)} month${Math.round(c.start - a) === 1 ? '' : 's'}`;
-    const look = `${p.signsTitle ? 'Signs {s’s} ready' : 'Signs it’s close'}: ${p.signs.map(x => x.charAt(0).toLowerCase() + x.slice(1)).join(', ')}.`;
+    const look = `${p.signsTitle || 'Signs it’s close'}: ${p.signs.map(x => x.charAt(0).toLowerCase() + x.slice(1)).join(', ')}.`;
     return h.detail(cat, `${range(c)} · ${when}`, c.title, p.lead + ' ' + look,
-      `<p class="ya-connect">${F(`${c.title} doesn’t happen on its own. Here’s everything it touches, and how to get ready.`)}</p>`
+      `<p class="ya-connect">${F(`Here’s what it changes, and how to get ready.`)}</p>`
       + h.list('What it changes', p.rows.slice(0, 4).map(([icon, rc, title, sub, go]) => h.row({ icon, cat: rc, title, sub, onclick: go }).replace('<span class="hub-row-copy">', `<span class="hub-row-copy"><small class="hub-row-eyebrow">${F(AREA[rc] || rc)}</small>`)))
       + h.tip(p.tip[0], p.tip[1]), c.icon);
   }
