@@ -1474,3 +1474,14 @@
 #main .hub-timeline-page .mem-row-ic.is-toned { width: 44px; height: 44px; border-radius: 50%; border: 3px solid #fff; box-shadow: 0 3px 8px rgba(120,80,70,.14) }
 #main .hub-timeline-page .mem-row-copy b { font-size: 17px; font-weight: 700 }
 #main .hub-timeline-page .mem-row-copy q { font-family: AheadHand, Caveat, cursive; font-size: 18px; font-style: normal; color: #4c4757 }
+/* Memories: the memory book card, like the book's cover */
+#main .mem-bookcard { position: relative; margin: 6px 0 18px; border-radius: 22px; background: #fffaf7; box-shadow: 0 1px 0 rgba(120,80,70,.05), 0 8px 22px rgba(120,80,70,.08) }
+#main .mem-bookcard-open { display: flex; align-items: center; gap: 4px; width: 100%; padding: 18px 18px 10px 20px; border: 0; background: none; text-align: left; font: inherit; color: inherit; cursor: pointer }
+#main .mem-bookcard-copy { flex: 1; min-width: 0 }
+#main .mem-bookcard-copy b { display: block; font-family: AheadHand, Caveat, cursive; font-weight: 600; font-size: 32px; line-height: 1.05; color: #2b2840 }
+#main .mem-bookcard-copy small { display: block; margin-top: 4px; font-size: 15px; color: #8a8494 }
+#main .mem-bookcard-copy em { display: inline-block; margin-top: 12px; font-style: normal; font-size: 14.5px; font-weight: 600; color: #5b4a8b }
+#main .mem-bookcard-art { order: 2; flex: none; width: 104px; height: 112px; position: relative }
+#main .mem-bookcard-art .bk-stack { position: absolute; right: -8px; top: -6px; transform: scale(.78); transform-origin: top right }
+#main .mem-bookcard-save { display: block; margin: 0 0 0 20px; padding: 4px 0 16px; border: 0; background: none; font: inherit; font-size: 14px; font-weight: 600; color: #8a8494; cursor: pointer }
+#main .bk-head h1 { font-size: 34px }

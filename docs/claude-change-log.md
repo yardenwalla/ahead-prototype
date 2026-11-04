@@ -138,3 +138,7 @@ Each category was checked against its job (project doc "Ahead jobs to be done") 
 ## Memories: the firsts book (2026-11-03)
 
 "See all firsts" is a baby book, styled to Yarden's design: a header with a stack of taped polaroids, and one rounded cream page per month with the month handwritten, that month's photo as a tilted polaroid with gingham tape (an empty one adds the photo), the big firsts with ringed icons and handwritten notes, and the smaller skills noticed that month as soft tags under "Also this month". The Firsts card on the Memories tab uses the same cream card and ringed icons. The page keeps the app's cream background.
+
+## Memories: the memory book card (2026-11-03)
+
+The Firsts list on the Memories tab is replaced by one "[Name]'s memory book" card (handwritten title, "N firsts so far", "Open the book", a stack of taped polaroids, and "＋ Save a first"). The book's title is now "[Name]'s memory book". With nothing saved, the card opens Save a first.

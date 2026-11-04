@@ -55,7 +55,7 @@
     };
     const inner = `<div class="bk-book">${months.map(pageOf).join('')}</div>`;
     // A header in the same keepsake style: the title, and a little stack of taped polaroids.
-    const head = `<header class="bk-head"><div class="bk-head-copy"><p class="bk-eyebrow">${hubArt('star', 'Development')}<span>Memories</span></p><h1>${esc2(`${name()}’s firsts`)}</h1><p class="bk-count">${esc2(big.length ? `${big.length} big first${big.length === 1 ? '' : 's'} so far.` : 'The big ones will collect here.')}</p></div><span class="bk-stack" aria-hidden="true"><span class="bk-stack-back"></span><span class="bk-stack-mid"></span><span class="bk-stack-front"><i></i><svg viewBox="0 0 40 40"><path d="M20 31s-9-5.6-9-12.2A5 5 0 0 1 20 16a5 5 0 0 1 9 2.8C29 25.4 20 31 20 31Z" fill="none" stroke="#f08b72" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span></header>`;
+    const head = `<header class="bk-head"><div class="bk-head-copy"><p class="bk-eyebrow">${hubArt('star', 'Development')}<span>Memories</span></p><h1>${esc2(`${name()}’s memory book`)}</h1><p class="bk-count">${esc2(big.length ? `${big.length} first${big.length === 1 ? '' : 's'} so far.` : 'The big ones will collect here.')}</p></div><span class="bk-stack" aria-hidden="true"><span class="bk-stack-back"></span><span class="bk-stack-mid"></span><span class="bk-stack-front"><i></i><svg viewBox="0 0 40 40"><path d="M20 31s-9-5.6-9-12.2A5 5 0 0 1 20 16a5 5 0 0 1 9 2.8C29 25.4 20 31 20 31Z" fill="none" stroke="#f08b72" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span></header>`;
     return `<div class="quiet-category hub-page hub-detail bk-screen" data-overview="Memories" style="${yearTheme('Memories')}">${typeof detailPageTop === 'function' ? detailPageTop('Memories') : ''}${head}${months.length ? inner : `<p class="mem-empty">${esc2('Nothing saved yet.')}</p>`}</div>`;
   };
   if (typeof window.changesRoute === 'function') {
@@ -104,12 +104,10 @@
     }
     b += `${year}<div class="mem-head"><h2>Month by month</h2>${have.length >= 2 ? `<button class="mem-play-link" onclick="memPlay()"><span aria-hidden="true">▶</span> Play the year</button>` : ''}</div>${strip}`;
 
-    // Firsts: the three most recent, then "See all" for the rest, so the page stays the same length however many you save.
-    b += `<div class="mem-head"><h2>Firsts</h2><button class="textlink" onclick="openPage('chg:Timeline:milestone')">＋ Save a first</button></div>`;
-    const more = firsts.length - Math.min(3, bigs.length);
-    b += bigs.length
-      ? `<div class="mem-list">${[...bigs].reverse().slice(0, 3).map(r => firstRow(r)).join('')}${more > 0 ? `<button class="mem-all" onclick="openPage('chg:Timeline:firsts')">${esc2(bigs.length > 3 ? `See all ${bigs.length} firsts` : 'See everything you’ve noticed')} ›</button>` : ''}</div>`
-      : `<p class="mem-empty">${esc2(`First smile, first laugh, first roll. Save them as they happen and they’ll collect here.`)}</p>${firsts.length ? `<button class="mem-all" onclick="openPage('chg:Timeline:firsts')">${esc2(`${firsts.length} skill${firsts.length === 1 ? '' : 's'} you’ve noticed`)} ›</button>` : ''}`;
+    // The memory book: one card that opens it, styled like the book's own cover. Saving a first stays one tap.
+    const stack = `<span class="bk-stack" aria-hidden="true"><span class="bk-stack-back"></span><span class="bk-stack-mid"></span><span class="bk-stack-front"><i></i><svg viewBox="0 0 40 40"><path d="M20 31s-9-5.6-9-12.2A5 5 0 0 1 20 16a5 5 0 0 1 9 2.8C29 25.4 20 31 20 31Z" fill="none" stroke="#f08b72" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>`;
+    const count = bigs.length ? `${bigs.length} first${bigs.length === 1 ? '' : 's'} so far` : firsts.length ? `${firsts.length} thing${firsts.length === 1 ? '' : 's'} you’ve noticed` : 'Firsts you save are written here';
+    b += `<div class="mem-bookcard"><button class="mem-bookcard-open" onclick="openPage('${firsts.length ? 'chg:Timeline:firsts' : 'chg:Timeline:milestone'}')"><span class="mem-bookcard-art">${stack}</span><span class="mem-bookcard-copy"><b>${esc2(`${name()}’s memory book`)}</b><small>${esc2(count)}</small>${firsts.length ? `<em>${esc2('Open the book')} ›</em>` : ''}</span></button><button class="mem-bookcard-save" onclick="openPage('chg:Timeline:milestone')">＋ Save a first</button></div>`;
 
     // Checkups: a quiet record.
     if (visits.length) b += `<details class="mem-visits"><summary><span>${esc2('Checkups')}</span><small>${visits.length ? `${visits.length} saved` : 'None saved yet'}</small></summary>${visits.map(r => `<button class="mem-visit" onclick="openPage('event-edit:${r.id}')"><b>${esc2(r.title)}</b><small>${esc2(journeyDateLabel(r.date))}</small></button>`).join('')}<button class="textlink" onclick="openPage('chg:Timeline:visit')">＋ Record a visit</button></details>`;
