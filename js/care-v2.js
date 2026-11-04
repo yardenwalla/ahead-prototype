@@ -231,7 +231,7 @@
       title: 'Skin and rashes',
       lead: ['Newborn skin does a lot of surprising, normal things.', 'Baby acne and cradle cap are common now.', 'Drool, and sometimes eczema.', 'Heat rash in warm weather, and eczema that comes and goes.'],
       news: [
-        [['Normal newborn skin', H().steps(['Peeling or flaky skin in the first 1–2 weeks.', 'Tiny white bumps on the nose and chin (milia). They fade in a few weeks.', 'Red blotches with a white or yellow center, from about day 2. Gone in 1–2 weeks.', 'Pink marks on the eyelids or back of the neck (stork bites), and blue-gray patches on the back or bottom. Birthmarks, not bruises.']) + p_('None of these need treatment.')], ['Yellow skin?', `<div class="hub-list care-link">${rowK('yellow', 'Jaundice', 'What to watch for · In Health', "openPage('chg:Health:d:jaundice')")}</div>`]],
+        [['Normal newborn skin', H().steps(['Peeling or flaky skin in the first 1–2 weeks.', 'Tiny white bumps on the nose and chin (milia). They fade in a few weeks.', 'Red blotches with a white or yellow center, from about day 2. Gone in 1–2 weeks.', 'Pink marks on the eyelids or back of the neck (stork bites), and blue-gray patches on the back or bottom. Birthmarks, not bruises.']) + p_('None of these need treatment.')]],
         [['Common now', rashLink(['acne', 'cradle', 'strawberry'])]],
         [['Common now', rashLink(['drool', 'eczema'])]],
         [['Common now', rashLink(['heat', 'eczema'])]]
@@ -372,7 +372,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
       Y: 'More baths can dry {p} skin. In between, wipe {p} face, neck and diaper area.', Yl: 'Why not more' },
     newskin: { k: 'skin', title: 'Newborn skin', vis: () => looks('What it can look like', ['Peeling or flaky skin in the first 1–2 weeks', 'Tiny white bumps on the nose and chin', 'Red blotches with a white or yellow center, gone in 1–2 weeks', 'Pink marks on the eyelids or neck, and blue-gray patches on the back or bottom: birthmarks, not bruises', 'From about 2 weeks: baby acne on the cheeks, and flaky cradle cap on the scalp']),
       W: 'Newborn skin does a lot of surprising things in the first weeks. Almost all of it is normal.', D: 'Nothing to treat. Plain water, and no lotions or creams on bumps.',
-      extra: () => urgent('Clusters of tiny blisters in the first 2 weeks. Call your pediatrician right away.') + `<div class="hub-list care-link">${rowK('yellow', 'Yellow skin?', 'Jaundice · In Health', "openPage('chg:Health:d:jaundice')")}</div>` },
+      extra: () => urgent('Clusters of tiny blisters in the first 2 weeks. Call your pediatrician right away.') },
     nailsnose: { k: 'nails', title: 'Trim nails once a week',
       W: 'They grow fast and are sharp enough to scratch {p} face.', D: ['Wait until {s’s} asleep.', 'Baby clippers or a soft file, pressing the fingertip pad away from the nail.', 'File to a rounded edge.'],
       K: 'A small nick happens to everyone. Press gently with a clean cloth.', Kl: 'If you nick the skin', Y: 'Wipe the outside of the ears with a washcloth. No cotton swabs inside.', Yl: 'Ears',
@@ -755,8 +755,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
         'A red or swollen eyelid, yellow-green discharge with redness, or a red lump at the inner corner.', 'Struggling to breathe, or blue lips. Call 911.')
         + `<div class="hub-list care-link">${rowK('nose', 'Colds and stuffy noses', 'In Health', "openPage('chg:Health:d:cold')")}</div>`],
       yellow: ['Yellow skin', 'Jaundice in the first weeks', ans('Usually normal', [['sun', 'Yellow on the face', 'In the first days, then fades'], ['eye', 'On darker skin', 'Check the eyes and gums'], ['bottle', 'Feed often', 'Not sunlight. Let your pediatrician check']],
-        'Yellow spreading to the belly or legs, yellow whites of the eyes, or fewer wet diapers.', 'Any yellow in the first 24 hours, or yellow and hard to wake or not feeding well.')
-        + `<div class="hub-list care-link">${rowK('yellow', 'Jaundice', 'What to watch for · In Health', "openPage('chg:Health:d:jaundice')")}</div>`],
+        'Yellow spreading to the belly or legs, yellow whites of the eyes, or fewer wet diapers.', 'Any yellow in the first 24 hours, or yellow and hard to wake or not feeding well.')],
       gums: ['Drool, sore gums or extra fussing', 'Could it be teething?', ans('Usually teething', [['drop', 'Lots of drool', 'And chewing on everything'], ['tooth', 'Sore, swollen gums', 'Often the bottom front'], ['clock', 'A few fussy days', 'Then it settles']],
         'Fever, diarrhea or a runny nose: teething doesn’t cause those. Check “Seems sick” in Health.') + `<div class="hub-list care-link">${rowK('teeth', 'Soothe sore gums', 'What helps, and what to skip', `openPage('chg:${CAT}:d:p:teething')`)}</div>`],
       hot: ['Too hot or too cold?', 'Sweaty, flushed, chilly, what to wear', ans('Check and adjust', [['shirt', 'One more layer', 'Than you’re wearing'], ['hand', 'Feel the neck', 'Sweaty: too warm. Cool: add one'], ['home', 'No hat indoors', 'And no puffy coat in the car seat']],
