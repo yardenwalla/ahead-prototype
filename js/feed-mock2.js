@@ -226,7 +226,7 @@
   const STAGES = [['Newborn', '0–6 weeks'], ['Milk feeds', '6 weeks–4 months'], ['Ready for solids', '4–6 months'], ['First foods', '6–9 months'], ['Meals', '9–12 months']];
   const SHEET = (v, feed) => { const b = feed !== 'Formula', f = feed !== 'Breast milk', both = feed === 'Both', fm = f, nurse = b && how() !== 'Pumping', pump = b && how() !== 'Nursing', bottle = fm || pump;
     const T = (c, art, l, val, sub, to) => [c, art, l, val, sub, to];
-    const enough = T('yellow', ART.diapers(6), 'Getting enough', '6+ wet diapers', v === 0 ? 'By day 6. Back to birth weight by 2 weeks' : 'A day, and steady growth', 'enough');
+    const enough = T('yellow', ART.diapers(6), 'Getting enough', '6+ wet diapers', v === 0 ? (typeof profile !== 'undefined' && profile.early ? 'A day once home, and steady gains' : 'By day 6. Back to birth weight by 2 weeks') : 'A day, and steady growth', 'enough');
     const S = [
       { hero: ['Lots of feeds, and that’s the point', b ? 'Feeding often helps Ari grow and gets your milk going. It gets quicker over the next few weeks.' : 'Small, frequent bottles are how newborns eat. Feeds get bigger and further apart over the next few weeks.'],
         tiles: [T('blue', ART.often(6), 'How often', b ? 'Every 2–3 hours' : 'Every 2–4 hours', 'From the start of one feed'), T('pink', ART.drops(10), 'Feeds a day', b ? '8–12' : '6–10', both ? (nurse ? 'Nursing and bottles' : 'Breast milk and formula') : 'Day and night'), !bottle ? T('peach', ART.bottle(.3), 'Each feed', 'Until he lets go', 'Often 10–20 minutes a side') : T('peach', ART.bottle(.3), 'Per bottle', fm ? '1–3 oz' : '1–3 oz', fm && pump ? 'Formula or breast milk' : fm && nurse ? 'Formula, plus nursing' : fm ? 'Of formula' : 'Of breast milk'), enough],
@@ -536,7 +536,7 @@
       b += small('Other supplements:', 'ask your pediatrician before giving anything else.');
       return page(head('Every day', 'Vitamins and iron', v >= 3 ? 'An iron-rich food every day, and drops if he still needs them.' : 'A few drops a day, and what changes as he grows.', C.green) + b); },
 
-    combo: () => page(head('Your milk', 'Nursing and formula together', (stg() === 0 ? 'Your milk comes in around days 2–5. ' : '') + 'Lots of families do both. A few habits keep your milk going for as long as you want it.')
+    combo: () => page(head('Your milk', 'Nursing and formula together', (stg() === 0 && !isEarly() ? 'Your milk comes in around days 2–5. ' : '') + 'Lots of families do both. A few habits keep your milk going for as long as you want it.')
       + steps([['heart', 'Nurse first', 'Then offer formula if he’s still hungry'], ['clock', 'Pump when a bottle replaces a feed', 'Around the same time, so your body keeps making that milk'], ['drop', 'Every feed at the breast counts', 'Any amount of breast milk helps']], false)
       + (stg() === 0 ? h2('The first days') + steps([['hand', 'Very full?', 'Feed or hand-express a little, then a cold pack'], ['heart', 'Sore nipples?', 'Check the latch. A little milk or lanolin after feeds']], false) : '')
       + small('How much formula?', 'top-ups after nursing are often smaller than a full bottle. Let his cues decide.')
@@ -644,13 +644,18 @@
   const drinkLine = () => small('Coffee, a drink, medicines:', 'coffee in moderation is fine. If you have a drink, wait at least 2 hours before ' + (nurses() ? 'nursing' : 'pumping') + '. Ask your doctor before starting any medicine.');
   ['supply', 'howlong', 'milkmeals', 'at12', 'combo'].forEach(k => { const old = P[k]; P[k] = (...a) => { const h = old(...a); if (!isBreast() || (k === 'combo' && stg() === 0 && false)) return h; const i = h.indexOf('<p class="care-p"><b>'); return i > 0 && k !== 'at12' && k !== 'howlong' && k !== 'milkmeals' ? h.slice(0, i) + drinkLine() + h.slice(i) : h.replace(/<\/div>$/, drinkLine() + '</div>'); }; });
   // Born early: the care team's plan comes first, and ages are adjusted
+  const v_small = h => { const j = h.indexOf('ss-head'), i = j > 0 ? h.indexOf('</div>', j) + 6 : -1; return i > 5 ? h.slice(0, i) + small('Born early?', 'if your care team gave you targets, go by those.') + h.slice(i) : h; };
   const planLine = () => know('Your care team’s plan comes first', 'If your NICU or pediatrician gave you amounts, a recipe or wake times, follow those over the general numbers here.');
-  ['enough', 'formula', 'basics', 'sleepy', 'day', 'signs'].forEach(k => { const old = P[k]; P[k] = (...a) => { let h = old(...a); if (!isEarly()) return h;
+  ['enough', 'formula', 'basics', 'sleepy', 'signs'].forEach(k => { const old = P[k]; P[k] = (...a) => { let h = old(...a); if (!isEarly()) return h;
     if (k === 'formula') h = h.replace(F('Extra water or extra powder isn’t safe. Always use the amounts on the label.'), F('Unless your care team gave you a special recipe, use the amounts on the label. Never add extra water.')).replace(F('any standard iron-fortified infant formula. Ask your pediatrician before switching to a special one.'), F('use the one your care team recommends, and ask before switching.'));
     if (k === 'basics') return h.replace('</table></div>', '</table></div>' + small('Fortified milk', 'can keep for less time. Follow your care team’s instructions.'));
     if (k === 'signs') return h.replace(/<\/div>$/, small('Born early?', 'go by these signs and his adjusted age, and check with his pediatrician before starting.') + '</div>');
     if (k === 'sleepy') h = h.replace(F('Newborns often doze off mid-feed. Until he’s back to birth weight, wake him if it’s been about 3 hours.'), F('Babies born early often stay sleepy at feeds for longer. Follow your care team’s advice on how often to wake him.'));
-    if (k === 'enough') h = h.replace(F('Fewer than 6 wet diapers a day,'), F('He tires, breathes fast or changes color during feeds. Fewer than 6 wet diapers a day,'));
+    if (k === 'enough') { h = h.replace(F('Fewer than 6 wet diapers a day,'), F('He tires, breathes fast or changes color during feeds. Fewer than 6 wet diapers a day,'));
+      if (stg() === 0) { const a = h.indexOf('<h2 class="hub-h2">' + F('Wet diapers, day by day')), b = h.indexOf('<p class="ss-small">', a); if (a > 0 && b > a) h = h.slice(0, a) + p('Your care team tracks his weight and diapers closely at first. Once he’s home, 6 or more wet diapers a day and steady gains at checkups are the signs to watch.') + h.slice(b);
+        h = h.replace(F('In the first weeks, diapers and weight tell you.'), F('Diapers and weight gain tell you.')).replace(small('His first checkup', 'is usually 3–5 days after birth, with a weight check.'), '').replace(small('Born early?', 'ask your pediatrician whether he needs extra weight checks.'), '').replace(/ By about day 4,[^<]*/, '').replace(F('Fewer wet diapers than this, not back to birth weight by 2 weeks, or very sleepy and hard to wake for feeds.'), F('He tires, breathes fast or changes color during feeds, has fewer than 6 wet diapers a day once home, or is very sleepy and hard to wake for feeds.')); }
+      return v_small(h); }
+    if (k === 'sleepy') h = h.replace('<p class="care-urgent">', small('Call your pediatrician:', 'he tires, breathes fast or changes color during feeds.') + '<p class="care-urgent">');
     const j = h.indexOf('ss-head'); const i = j > 0 ? h.indexOf('</div>', j) + 6 : -1; return i > 5 ? h.slice(0, i) + planLine() + h.slice(i) : h; }; });
   // Tough feed list now opens real pages
   P.worry = (v) => { v = v == null ? stg() : Number(v); const bt = isBottle();
