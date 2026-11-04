@@ -25,6 +25,25 @@
     ['onenap', 13, 18, 'Sleep', 'sun', 'Two naps become one', 'One long midday nap', "__GO__"]
   ].map(([id, start, end, cat, icon, title, why, go, range]) => ({ id, start, end, cat, icon, title, why, go: `openPage('chg:Timeline:c:${id}')`, range: range || `${start}–${end} months` }));
   const CHECKUPS = [2, 4, 6, 9, 12];
+  const TOUCH = {
+    smile: 'More face-to-face time, and play starts to feel like a conversation.',
+    nights: 'A longer stretch at night, and a good time to start a bedtime routine.',
+    regress: 'More night waking for a few weeks, so protect your own rest too.',
+    roll: 'The swaddle comes off, beds and sofas are off-limits, and the floor needs clearing.',
+    sit: 'The crib mattress goes lower, and the bouncer’s days are numbered.',
+    twonaps: 'Bedtime moves earlier, and there’s more time for outings between naps.',
+    tooth: 'Brushing starts, and sore gums can mean fussier days.',
+    crawl: 'Every room opens up: time to babyproof, lower the crib mattress and make floor time.',
+    solids: 'A high chair, choking first aid, and a new rhythm to your days.',
+    finger: 'Messier meals, new food shapes, and knowing gagging from choking.',
+    sep: 'Harder goodbyes, night waking, and a gentler start with caregivers.',
+    pull: 'Furniture gets strapped to the wall, and the crib mattress goes to its lowest.',
+    words: 'More talking, reading and naming things together.',
+    milk: 'Cow’s milk from a cup, and the bottle starts to go.',
+    carseat: 'A new car seat, still facing the back.',
+    steps: 'Everything higher is in reach, and more time on {p} feet.',
+    onenap: 'One long midday nap, and a new shape to your days.'
+  };
   const AREA = { Development: 'Play', Feeding: 'Feeding', Sleep: 'Sleep', Health: 'Health', Safety: 'Safety', 'Daily rhythm': 'Everyday care', 'Out and about': 'Outings', Childcare: 'Childcare' };
   const touches = c => { const p = PAGES[c.id]; return p ? [...new Set(p.rows.map(r => r[1]))] : []; };
   const touchPills = c => { const t = touches(c); return t.length > 1 ? `<span class="ya-touch">${t.map(cat => `<span class="ya-touch-pill" style="${yearTheme(cat)}">${typeof catIcon === 'function' ? catIcon(cat) : ''}${F(AREA[cat] || cat)}</span>`).join('')}</span>` : ''; };
@@ -35,7 +54,7 @@
     const a = ageNow(), nm = name();
     const ahead = C.filter(c => c.end > a), next = ahead.filter(c => c.start >= a && c.start <= a + 3).slice(0, 3);
     let h = `<div class="ya-page"><div class="eyebrow">${F('The year ahead')}</div><h1>${F('Timeline')}</h1><p class="next-lead">${F(`The big changes coming for ${nm}, and what each one changes. Tap any to read ahead.`)}</p>`;
-    if (next.length) h += `<h2 class="ya-h2">${F('Coming up next')}</h2><div class="ya-next">${next.map(c => `<button class="ya-card" style="${yearTheme(c.cat)}" onclick="${c.go}"><span class="ya-card-art">${hubArt(c.icon, c.cat)}</span><span class="ya-card-copy"><small>${F(range(c))} · ${F(soon(c, a).replace(/^Could start /, '').replace(/^In about/, 'in about'))}</small><b>${F(c.title)}</b><span>${F(c.why)}</span>${touchPills(c)}</span><span class="hub-chev" aria-hidden="true">›</span></button>`).join('')}</div>`;
+    if (next.length) h += `<h2 class="ya-h2">${F('Coming up next')}</h2><div class="ya-next">${next.map(c => `<button class="ya-card" style="${yearTheme(c.cat)}" onclick="${c.go}"><span class="ya-card-art">${hubArt(c.icon, c.cat)}</span><span class="ya-card-copy"><small>${F(range(c))} · ${F(soon(c, a).replace(/^Could start /, '').replace(/^In about/, 'in about'))}</small><b>${F(c.title)}</b><span>${F(TOUCH[c.id] || c.why)}</span></span><span class="hub-chev" aria-hidden="true">›</span></button>`).join('')}</div>`;
     // Later on: swipe through the months ahead and watch the baby grow. Each month card has that month's picture
     // (the same baby who grows on Home), its date, the changes that usually start then, and a checkup if one is due.
     const later = ahead.filter(c => c.start >= a && !next.includes(c));
@@ -44,7 +63,7 @@
     CHECKUPS.filter(v => v > a).forEach(v => { months[v] = months[v] || []; });
     const keys = Object.keys(months).map(Number).sort((x, y) => x - y);
     const label = m => m >= 13 ? 'After 1 year' : m === 12 ? '1 year' : `${m} months`;
-    const card = m => `<section class="ya-month"><span class="ya-month-art">${typeof homeMonthArt === 'function' ? homeMonthArt(Math.min(12, m)) : ''}</span><div class="ya-month-head"><b>${F(label(m))}</b><small>${F(m >= 13 ? 'In the second year' : 'Around ' + monthDate(m))}</small></div><div class="ya-month-list">${months[m].map(c => `<button class="ya-chip" style="${yearTheme(c.cat)}" onclick="${c.go}"><span>${hubArt(c.icon, c.cat)}</span><em>${F(c.title)}</em>${touches(c).length > 1 ? `<i class="ya-chip-areas">${touches(c).map(cat => typeof catIcon === 'function' ? catIcon(cat) : '').join('')}</i>` : ''}</button>`).join('')}${CHECKUPS.includes(m) && m > a ? `<span class="ya-month-pin">${F(`${m}-month checkup`)}</span>` : ''}</div></section>`;
+    const card = m => `<section class="ya-month"><span class="ya-month-art">${typeof homeMonthArt === 'function' ? homeMonthArt(Math.min(12, m)) : ''}</span><div class="ya-month-head"><b>${F(label(m))}</b><small>${F(m >= 13 ? 'In the second year' : 'Around ' + monthDate(m))}</small></div><div class="ya-month-list">${months[m].map(c => `<button class="ya-chip" style="${yearTheme(c.cat)}" onclick="${c.go}"><span>${hubArt(c.icon, c.cat)}</span><em>${F(c.title)}</em></button>`).join('')}${CHECKUPS.includes(m) && m > a ? `<span class="ya-month-pin">${F(`${m}-month checkup`)}</span>` : ''}</div></section>`;
     if (keys.length) h += `<h2 class="ya-h2">${F('Later on')}</h2><p class="ya-sub">${F(`Swipe ahead to see ${nm} grow.`)}</p><div class="ya-months">${keys.map(card).join('')}</div>`;
     h += `<p class="hub-foot">${F('Ages are typical. Every baby moves at their own pace.')}</p></div>`;
     return h;
