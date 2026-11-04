@@ -1,6 +1,6 @@
 /* Ahead · Baby's details, simpler and more complete (preview).
    The same page, with three changes: Safety asks how the baby moves (Rolling included) and says which stage it
-   shows, Sleep holds the family's sleep-training choice, and editing reads like editing, not setup. */
+   shows, and editing reads like editing, not setup. */
 (function () {
   const H = () => window.__hub;
   const esc2 = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
@@ -43,7 +43,7 @@
       const safeI = STAGE_TABLE.Safety.stages.findIndex(p => p.key === safetyGroup(safetyStageNow()));
       b += `<h2 class="hub-h2">Where ${nm} is now</h2><p class="hub-where-lead">This sets what each guide shows. Tap to change it if it’s not quite right.</p><section class="hub-card hub-where">`
         + pick('Feeding', 'Feeding', feedGroup(chgStageIndex('Feeding')), STAGE_TABLE.Feeding.stages.map(x => x.label))
-        + pick('Sleep', 'Sleep', chgStageIndex('Sleep'), STAGE_TABLE.Sleep.stages.map(x => x.label)).replace(/<\/div><\/div>$/, (hubAgeFor('care', actualMonth()) >= 4 ? `<p class="hub-where-sub">Sleep training</p>${chips([['not_planning', 'Not planning to'], ['not_started', 'Thinking about it'], ['in_progress', 'Working on it'], ['trained', 'Done']], answers.sleepTraining, v => `hubAnswer('sleepTraining','${v}','The settling guide now matches where you are.')`)}` : '') + '</div></div>')
+        + pick('Sleep', 'Sleep', chgStageIndex('Sleep'), STAGE_TABLE.Sleep.stages.map(x => x.label))
         + safetyRow()
         + fixed('Development', 'Development & play', 'By ' + devRef(developmentMonth(actualMonth())) + ' months', 'dev')
         + fixed('Daily rhythm', 'Everyday care', careNow, 'care')
