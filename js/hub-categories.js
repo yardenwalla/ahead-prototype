@@ -369,29 +369,42 @@
       + `<section class="hub-card hub-callout"><b>${F('Talk to someone today')}</b><p>${F('Call or text the National Maternal Mental Health Hotline at 1-833-852-6262. It’s free, confidential and open any time, for moms, partners and new parents.')}</p><a class="hub-button" href="tel:18338526262">${F('Call 1-833-852-6262')}</a></section>`
       + `<h2 class="hub-h2">${F('What helps')}</h2>` + hubIconSteps([['steth', 'Say how you’re feeling', 'To your doctor or Maya’s pediatrician. It’s common and treatable'], ['heart', 'Take the help', 'And name something specific, like a meal or a nap'], actualMonth() < 1 ? ['notepad', 'Your postpartum checkup', 'If you gave birth, go even if you feel fine'] : ['moon', 'Trade nights', 'One longer stretch of sleep helps more than you’d think']], 'Health', F('Say how you are feeling to a doctor, take the help people offer, and trade nights for one longer stretch of sleep.'), false)
       + `<section class="hub-card hub-callout is-urgent"><b>${F('If you’re thinking about harming yourself or Maya')}</b><p>${F('Call or text 988, or call 911, right now.')}</p><a class="hub-button" href="tel:988">${F('Call 988')}</a></section>`);
+    // "When Maya seems sick" is a short hub: the one fever rule for this baby's age, then one page per job
+    // (take a temperature, help them feel better, tummy bugs, colds), and the emergency signs last (AAP, HealthyChildren.org).
+    const m = actualMonth(), u3 = m < 3;
+    const call911 = `<section class="hub-card hub-callout"><b>${F('Call 911 if Maya')}</b><p>${F('Struggles to breathe or turns blue, won’t wake or is floppy, or has a seizure.')}</p></section>`;
+    const feverCard = `<section class="hub-card hub-fever is-calm"><div class="hub-fever-bands is-one"><div><small>${F(feverBand(m))}</small><b>${u3 ? '100.4°F<span> or higher</span>' : 'Above 104°F<span> and keeps going up</span>'}</b><p>${F(u3 ? 'Call your pediatrician right away, day or night.' : 'Or a fever that lasts more than a day. Call your pediatrician.')}</p></div></div><p class="hub-fever-note">${F('Also call if Maya seems very unwell, has a rash, is unusually sleepy, or is still unwell after the fever comes down.')}</p></section>`;
     if (id === 'sick') {
-      // In the order a parent meets it: take a temperature, know when a fever means calling, help them feel better,
-      // tummy bugs, and the emergency signs last. Calm cards; one fever rule for this baby's age (AAP, HealthyChildren.org).
-      const m = actualMonth(), u3 = m < 3;
-      const med = u3 ? 'Call your pediatrician before giving any medicine.' : m < 6 ? 'Acetaminophen can help, after checking with your pediatrician. Ask for the dose for {p} weight.' : 'Acetaminophen or ibuprofen can help. Ask your pediatrician for the dose for {p} weight, and check the label every time.';
-      return detailFrame('Health', 'Between checkups', 'When Maya seems sick', 'Most baby illnesses are mild and pass in a few days. Here’s how to look after {o}, and when to call.',
-        `<h2 class="hub-h2">${F('Take {p} temperature')}</h2>`
-        + (() => {
-          // Which thermometer, by age: rectal is most accurate all year; armpit works for a quick check (fever from 99°F);
-          // forehead works at any age; ear readings only from 6 months.
-          const fe = u3 ? ['Forehead', 'Fine for a quick check. If it reads 100.4°F or higher, check rectally'] : m < 6 ? ['Forehead', 'Reliable now. Ear thermometers work from 6 months'] : ['Forehead or ear', 'Both reliable now'];
-          const tile = (icon, t, d, good) => `<div${good ? ' class="is-good"' : ''}><span class="hub-dot">${h.art(icon, 'Health')}</span><b>${F(t)}</b><p>${F(d)}</p></div>`;
-          return `<div class="hub-card hub-thermo is-three">${tile('thermo', 'Rectal', 'The most accurate reading for babies', true)}${tile('hand', 'Armpit', u3 ? 'Easy, but less accurate. If it reads 99°F or higher, check rectally' : 'Easy, but less accurate. A fever starts at 99°F this way')}${tile('eye', fe[0], fe[1])}</div>`;
-        })()
-        + `<h2 class="hub-h2">${F('When a fever means calling')}</h2>`
-        + `<section class="hub-card hub-fever is-calm"><div class="hub-fever-bands is-one"><div><small>${F(feverBand(m))}</small><b>${u3 ? '100.4°F<span> or higher</span>' : 'Above 104°F<span> and keeps going up</span>'}</b><p>${F(u3 ? 'Call your pediatrician right away, day or night.' : 'Or a fever that lasts more than a day. Call your pediatrician.')}</p></div></div><p class="hub-fever-note">${F('Also call if Maya seems very unwell, has a rash, is unusually sleepy, or is still unwell after the fever comes down.')}</p></section>`
-        + `<h2 class="hub-h2">${F('Help {o} feel better')}</h2>`
-        + hubIconSteps([['bottle', 'Extra feeds', 'Little and often'], ['shirt', 'Dress {o} lightly', 'No extra layers or blankets'], ['moon', 'Lots of rest', 'Naps and quiet time'], ['drop', 'Medicine', u3 ? 'Call your pediatrician first' : m < 6 ? 'Acetaminophen, after checking with your pediatrician' : 'Acetaminophen or ibuprofen, at the dose for {p} weight']], 'Health', 'Offer extra feeds, dress lightly, let them rest, and ask your pediatrician about medicine.', false)
-        + h.note(u3 ? 'Under 3 months, don’t give any medicine without asking your pediatrician.' : 'Ask your pediatrician for the dose by weight, and check the label every time. A fever on its own is the body fighting an infection.')
-        + `<h2 class="hub-h2">${F('Vomiting or diarrhea')}</h2>`
-        + hubIconSteps([['bottle', 'Keep feeds going', 'Breast milk or formula, a little at a time'], ['diaper', 'Watch the diapers', 'Far fewer wet ones can mean dehydration'], ['steth', 'Ask before medicine', 'Or any rehydration drink']], 'Health', 'Keep feeds going a little at a time, watch the wet diapers, and ask before giving medicine.', false)
+      return detailFrame('Health', 'Between checkups', 'When Maya seems sick', 'Most baby illnesses are mild and pass in a few days.',
+        `<h2 class="hub-h2">${F('When a fever means calling')}</h2>` + feverCard
+        + h.list('What do you need?', [
+          h.row({ icon: 'thermo', cat: 'Health', title: 'Take {p} temperature', sub: u3 ? 'Rectal is most accurate' : 'Which thermometer works now', onclick: "openPage('chg:Health:d:sick-temp')" }),
+          h.row({ icon: 'heart', cat: 'Health', title: 'Help {o} feel better', sub: 'Feeds, rest and medicine', onclick: "openPage('chg:Health:d:sick-care')" }),
+          h.row({ icon: 'bottle', cat: 'Health', title: 'Vomiting or diarrhea', sub: 'Keep feeds going, and when to call', onclick: "openPage('chg:Health:d:sick-tummy')" }),
+          h.row({ icon: 'drop', cat: 'Health', title: 'A cold or stuffy nose', sub: 'Saline, suction, and ear infections', onclick: "openPage('chg:Health:d:cold')" })
+        ])
+        + call911);
+    }
+    if (id === 'sick-temp') {
+      // Which thermometer, by age: rectal is most accurate all year; armpit works for a quick check (fever from 99°F);
+      // forehead works at any age; ear readings only from 6 months.
+      const fe = u3 ? ['Forehead', 'Fine for a quick check. If it reads 100.4°F or higher, check rectally'] : m < 6 ? ['Forehead', 'Reliable now. Ear thermometers work from 6 months'] : ['Forehead or ear', 'Both reliable now'];
+      const tile = (icon, t, d, good) => `<div${good ? ' class="is-good"' : ''}><span class="hub-dot">${h.art(icon, 'Health')}</span><b>${F(t)}</b><p>${F(d)}</p></div>`;
+      return detailFrame('Health', 'When Maya seems sick', 'Take {p} temperature', u3 ? 'Under 3 months, a rectal reading is the one to trust.' : 'A quick check first, then rectal if you’re not sure.',
+        `<div class="hub-card hub-thermo is-three">${tile('thermo', 'Rectal', 'The most accurate reading for babies', true)}${tile('hand', 'Armpit', u3 ? 'Easy, but less accurate. If it reads 99°F or higher, check rectally' : 'Easy, but less accurate. A fever starts at 99°F this way')}${tile('eye', fe[0], fe[1])}</div>`
+        + h.tip('A fever is', '100.4°F or higher, taken rectally.'));
+    }
+    if (id === 'sick-care') {
+      return detailFrame('Health', 'When Maya seems sick', 'Help {o} feel better', 'Most fevers and bugs pass in a few days. Comfort is most of the care.',
+        hubIconSteps([['bottle', 'Extra feeds', 'Little and often'], ['shirt', 'Dress {o} lightly', 'No extra layers or blankets'], ['moon', 'Lots of rest', 'Naps and quiet time']], 'Health', 'Offer extra feeds, dress lightly, and let them rest.', false)
+        + h.tip('Medicine', u3 ? 'Under 3 months, don’t give any medicine without asking your pediatrician first.' : m < 6 ? 'Acetaminophen can help, after checking with your pediatrician. Ask for the dose for {p} weight.' : 'Acetaminophen or ibuprofen can help. Ask your pediatrician for the dose for {p} weight, and check the label every time.')
+        + h.note('A fever on its own is the body fighting an infection.'));
+    }
+    if (id === 'sick-tummy') {
+      return detailFrame('Health', 'When Maya seems sick', 'Vomiting or diarrhea', 'Usually a tummy bug that passes in a day or two. Keeping {o} drinking is what matters.',
+        hubIconSteps([['bottle', 'Keep feeds going', 'Breast milk or formula, a little at a time'], ['diaper', 'Watch the diapers', 'Far fewer wet ones can mean dehydration'], ['steth', 'Ask before medicine', 'Or any rehydration drink']], 'Health', 'Keep feeds going a little at a time, watch the wet diapers, and ask before giving medicine.', false)
         + h.versus('Normal, or time to call?', ['Normal', 'A few loose poops or a vomit or two for a day or so, while {s} still {feed|feeds} and has wet diapers.'], ['Call your pediatrician', 'Can’t keep feeds down, green or bloody vomit, blood in the poop, a swollen belly, a dry mouth or no tears.'])
-        + `<section class="hub-card hub-callout"><b>${F('Call 911 if Maya')}</b><p>${F('Struggles to breathe or turns blue, won’t wake or is floppy, or has a seizure.')}</p></section>`);
+        + call911);
     }
     return null;
   }
