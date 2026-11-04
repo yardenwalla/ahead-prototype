@@ -341,12 +341,12 @@
 
     // ---------- Your milk (breast milk), in order ----------
     supply: () => (pumps() && !nurses()) ? page(head('Your milk', 'Your supply settles', 'In the first weeks, pumping often tells your body how much to make. After that, output usually levels off.')
-      + steps([['drop', 'Steadier output', 'Session to session'], ['heart', 'Softer breasts', 'Less full between sessions'], ['clock', 'Some sessions less', 'Mornings are often highest']], false)
+      + steps([['drop', 'Steadier output', 'Session to session'], ['heart', 'Fewer engorged days', 'Not as full between sessions'], ['clock', 'Some sessions less', 'Mornings are often highest']], false)
       + know('This is normal', 'What you pump in a session varies. Wet diapers and steady growth are the signs that matter.')
       + h2('Too little?') + p('Pump more often, including once at night, and check your flange fit. A lactation consultant can help.')
       + call('Fewer than 6 wet diapers a day, slow weight gain, or a red, painful area on your breast with a fever.')) : page(head('Your milk', 'Your supply settles', 'In the weeks after your milk comes in, your body learns how much Ari needs and makes about that much.')
-      + h2('What you may notice') + steps([['heart', 'Softer breasts', 'Less full between feeds'], ['drop', 'Less leaking', 'Between feeds and at night'], ['clock', 'Quicker feeds', 'He’s more efficient now']], false)
-      + know('This is normal', 'Softer doesn’t mean less milk. Wet diapers and steady growth are the signs that matter, not how full you feel or how much you pump.')
+      + h2('What you may notice') + steps([['heart', 'Fewer engorged days', 'Not as full or hard between feeds'], ['drop', 'Less leaking', 'Between feeds and at night'], ['clock', 'Quicker feeds', 'He’s more efficient now']], false)
+      + know('This is normal', 'Feeling less full doesn’t mean less milk. Wet diapers and steady growth are the signs that matter, not how full you feel or how much you pump.')
       + h2('Too little?') + p('Feed or pump more often, offer both sides, and try skin to skin. A lactation consultant can check how feeds are going.')
       + h2('Too much?') + p('Gulping, coughing or pulling off at the start of feeds can mean a fast flow. Lean back so he feeds against gravity, and burp mid-feed. If it keeps happening, ask a lactation consultant.')
       + call('Fewer than 6 wet diapers a day, slow weight gain, or a red, painful area on your breast with a fever.')),
