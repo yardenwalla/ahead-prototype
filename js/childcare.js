@@ -151,16 +151,14 @@
 
   function journey(id) {
     const h = H(), m = typeof actualMonth === 'function' ? actualMonth() : 0, fd = feedNow(), bm = fd !== 'Formula', fm = fd !== 'Breast milk';
-    if (id === 'plan') return sub('plan', 'Finding care', 'Plan your search', 'Each kind of care needs a different head start. Work back from the day you need it.',
-      tl('When to start, by kind of care', [
-        ['Daycare center', 'blocks', 'About 6 months, some in pregnancy. Join a few waitlists.'],
-        ['Home daycare', 'home', 'About 3 months. Visit and ask about openings.'],
-        ['Nanny or share', 'hand', 'About 3 months. Meet a few, and call references.'],
-        ['Family or friends', 'heart', 'A few weeks. Agree on days, hours and pay.'],
-        ['Babysitter', 'moon', 'A week or two. Try a short first visit.'],
-        ['Then, for any kind', 'bag', 'Decide and sign up 6 to 8 weeks before. Get ready for day one in the last 2 weeks.']],
-        'Daycare centers: about six months, so join waitlists. Home daycares and nannies: about three months. Family or friends: a few weeks. Babysitters: a week or two. Then, for any kind, decide and sign up six to eight weeks before, and get ready for day one in the last two weeks.')
-      + packCard('Before you look', 'Two things to settle first', [['clock', 'Your days and hours', 'Early and late ones too'], ['coin', 'A monthly budget', 'And what your work offers']])
+    if (id === 'plan') return sub('plan', 'Find care', 'Plan your care', 'Work back from the day you need care. Most families start sooner than they expect.',
+      packCard('Before you look', 'Two things to settle first', [['clock', 'Your days and hours', 'Early and late ones too'], ['coin', 'A monthly budget', 'And what your work offers']])
+      + tl('Your countdown', [
+        ['6 months before', 'notepad', 'Join a few daycare waitlists.'],
+        ['3 months before', 'home', 'Visit home daycares, or meet nannies.'],
+        ['6–8 weeks before', 'shield', 'Decide, call references, sign up.'],
+        ['2 weeks before', 'heart', 'Get ready for day one.']],
+        'Six months before, join daycare waitlists. Three months before, visit home daycares or meet nannies. Six to eight weeks before, decide and sign up. Two weeks before, get ready for day one.')
       + picSteps('When things don’t go to plan', [
         ['clock', 'Starting in a few weeks?', 'You can still find good care. Your local referral agency knows who has openings now.'],
         ['moon', 'Hours outside 9 to 5', 'Ask home daycares and nannies about early, late or weekend hours.'],
@@ -322,7 +320,7 @@
     const card = load('ahead-carecard', {}), list = shortlist(), n = NOW_CARD.plan;
     // The same shape as Outings: one card to start, the kinds of care as tiles, the care card, then one list
     // for setting care up, in the order you meet it. No step rail: the app can't know where a family is.
-    let b = `<header class="hub-hero cc-hero"><p class="hub-eyebrow">${F('Finding care')}</p><h1>${F('Start looking early')}</h1><p class="hub-lead">${F('Daycare waitlists can take about 6 months. A nanny takes about 3, and a babysitter a week or two.')}</p><button class="cc-hero-go" onclick="openPage('chg:${CAT}:d:plan')">${F('See when to start')} ›</button></header>`;
+    let b = `<header class="hub-hero cc-hero"><p class="hub-eyebrow">${F('Find care')}</p><h1>${F(n[0])}</h1><p class="hub-lead">${F(n[1])}</p><button class="cc-hero-go" onclick="openPage('chg:${CAT}:d:plan')">${F(n[2])} ›</button></header>`;
     const kinds = [['center'], ['home'], ['nanny'], ['family'], ['sitter', 'For a night out, or a break'], ['help', 'A doula or overnight help', 'Extra help at home']];
     b += `<h2 class="hub-h2">${F('What kind of care?')}</h2><div class="oa-places">${kinds.map(([k, short, title]) => { const t = TYPES[k] || {}, c = PAL[k], m = (list[k] || []).length;
       return `<button class="oa-place" style="--oa-bg:${c[0]};--oa-ink:${c[1]}" onclick="openPage('chg:${CAT}:d:${k}')"><span class="oa-place-art">${SHAPE[k](c)}</span><b>${F(title || t.name)}</b><small>${F(m ? `${m} on your shortlist` : short || t.short)}</small></button>`; }).join('')}</div>`
