@@ -35,3 +35,7 @@
 #main .st-dots i.is-now { width: 16px; border-radius: 4px }
 #main .st-all-copy { display: inline; font-size: 13.5px; color: #8a8494; font-weight: 500 }
 #main .st-all-copy u { color: var(--year-ink); text-decoration: none; font-weight: 600 }
+
+/* Integrated: a small chip in the top card's eyebrow row */
+#main .hub-eyebrow.st-eyebrow { display: flex; align-items: center; justify-content: space-between; gap: 10px }
+#main .st-chip { flex: none; padding: 4px 10px; border: 0; border-radius: 999px; background: rgba(255,255,255,.7); color: var(--year-ink); font: inherit; font-size: 12.5px; font-weight: 600; letter-spacing: 0; text-transform: none; cursor: pointer }

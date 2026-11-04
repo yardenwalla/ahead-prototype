@@ -46,7 +46,9 @@
     const m = document.getElementById('main'); if (!m) return;
     m.querySelectorAll('nav.hub-stagebar').forEach(n => n.remove());
     const hero = m.querySelector('header.hub-hero');
-    if (hero && !m.querySelector('.st-all')) hero.insertAdjacentHTML('afterend', allRow());
+    // Inside the top card, beside the stage name: a small chip, like a filter, not a call to action.
+    const eb = hero && hero.querySelector('.hub-eyebrow');
+    if (eb && !m.querySelector('.st-chip')) { eb.classList.add('st-eyebrow'); eb.insertAdjacentHTML('beforeend', `<button class="st-chip" onclick="openPage('stages:${CAT}')" aria-label="See all sleep stages">All stages <span aria-hidden="true">›</span></button>`); }
     if (sm) {
       const i = Number(sm[1]), c = cur(), banner = m.querySelector('.hub-preview');
       if (banner && i !== c && typeof stageCanChange === 'function' && stageCanChange(CAT, i, c)) {
