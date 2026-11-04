@@ -33,3 +33,19 @@
 #main .ya-here .ya-node { top: 14px; left: -20px; width: 18px; height: 18px; background: #2B2840; border: 4px solid #fff; box-shadow: 0 0 0 2px #2B2840 }
 #main .ya-here b { font-size: 16px }
 #main .ya-here small { font-size: 13px; color: #8a8494 }
+
+/* Later on: month cards to swipe, with the baby growing */
+#main .ya-sub { margin: -4px 0 10px; font-size: 14px; color: #8a8494 }
+#main .ya-months { display: grid; grid-auto-flow: column; grid-auto-columns: 74%; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; margin: 0 -16px; padding: 4px 16px 14px; scrollbar-width: none }
+#main .ya-months::-webkit-scrollbar { display: none }
+#main .ya-month { scroll-snap-align: start; display: flex; flex-direction: column; border-radius: 22px; background: #fffdf9; box-shadow: 0 1px 2px rgba(43,40,64,.06), 0 6px 16px rgba(43,40,64,.06); overflow: hidden }
+#main .ya-month-art { display: block; background: #f6f1fb; height: 150px }
+#main .ya-month-art svg { display: block; width: 100%; height: 100% }
+#main .ya-month-head { padding: 12px 14px 4px }
+#main .ya-month-head b { display: block; font-size: 18px }
+#main .ya-month-head small { font-size: 13px; color: #8a8494 }
+#main .ya-month-list { display: flex; flex-direction: column; gap: 6px; padding: 8px 12px 14px }
+#main .ya-chip { display: flex; align-items: center; gap: 8px; width: 100%; padding: 8px 10px; border: 0; border-radius: 12px; background: var(--year-pale, #f3effb); font: inherit; font-size: 14px; font-weight: 600; color: #3e3650; text-align: left; cursor: pointer }
+#main .ya-chip span { display: grid; place-items: center; width: 24px; height: 24px; flex: none }
+#main .ya-chip svg { width: 20px; height: 20px }
+#main .ya-month-pin { padding: 2px 4px; font-size: 12.5px; color: #8a8494 }

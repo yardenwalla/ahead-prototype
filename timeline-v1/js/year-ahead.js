@@ -33,13 +33,16 @@
     const ahead = C.filter(c => c.end > a), next = ahead.filter(c => c.start >= a && c.start <= a + 3).slice(0, 3);
     let h = `<div class="ya-page"><div class="eyebrow">${F('The year ahead')}</div><h1>${F('Timeline')}</h1><p class="next-lead">${F(`The big changes coming for ${nm}, and what each one changes. Tap any to read ahead.`)}</p>`;
     if (next.length) h += `<h2 class="ya-h2">${F('Coming up next')}</h2><div class="ya-next">${next.map(c => `<button class="ya-card" style="${yearTheme(c.cat)}" onclick="${c.go}"><span class="ya-card-art">${hubArt(c.icon, c.cat)}</span><span class="ya-card-copy"><small>${F(range(c))} · ${F(soon(c, a).replace(/^Could start /, '').replace(/^In about/, 'in about'))}</small><b>${F(c.title)}</b><span>${F(c.why)}</span></span><span class="hub-chev" aria-hidden="true">›</span></button>`).join('')}</div>`;
-    // The rest of the year, in order: only what's still ahead and not already in Coming up next. Checkups as small pins.
+    // Later on: swipe through the months ahead and watch the baby grow. Each month card has that month's picture
+    // (the same baby who grows on Home), its date, the changes that usually start then, and a checkup if one is due.
     const later = ahead.filter(c => c.start >= a && !next.includes(c));
-    const pins = CHECKUPS.filter(v => v > a);
-    const items = [...later.map(c => ({ t: c.start, c })), ...pins.map(v => ({ t: v + 0.01, v }))].sort((x, y) => x.t - y.t);
-    const rows = items.map(it => it.v ? `<li class="ya-pin"><span class="ya-node"></span><span>${F(`${it.v}-month checkup`)}</span></li>`
-      : `<li class="ya-row" style="${yearTheme(it.c.cat)}"><span class="ya-node"></span><button onclick="${it.c.go}"><span class="ya-row-art">${hubArt(it.c.icon, it.c.cat)}</span><span class="ya-row-copy"><b>${F(it.c.title)}</b><small>${F(range(it.c))}</small></span><span class="hub-chev" aria-hidden="true">›</span></button></li>`);
-    if (rows.length) h += `<h2 class="ya-h2">${F('Later on')}</h2><ol class="ya-path">${rows.join('')}</ol>`;
+    const born = parse(profile.dob), monthDate = m => { const d = new Date(born); d.setMonth(d.getMonth() + m); return d.toLocaleDateString('en-US', { month: 'long' }); };
+    const months = {}; later.forEach(c => { const m = Math.min(13, Math.max(Math.ceil(a), Math.floor(c.start))); (months[m] = months[m] || []).push(c); });
+    CHECKUPS.filter(v => v > a).forEach(v => { months[v] = months[v] || []; });
+    const keys = Object.keys(months).map(Number).sort((x, y) => x - y);
+    const label = m => m >= 13 ? 'After 1 year' : m === 12 ? '1 year' : `${m} months`;
+    const card = m => `<section class="ya-month"><span class="ya-month-art">${typeof homeMonthArt === 'function' ? homeMonthArt(Math.min(12, m)) : ''}</span><div class="ya-month-head"><b>${F(label(m))}</b><small>${F(m >= 13 ? 'In the second year' : 'Around ' + monthDate(m))}</small></div><div class="ya-month-list">${months[m].map(c => `<button class="ya-chip" style="${yearTheme(c.cat)}" onclick="${c.go}"><span>${hubArt(c.icon, c.cat)}</span>${F(c.title)}</button>`).join('')}${CHECKUPS.includes(m) && m > a ? `<span class="ya-month-pin">${F(`${m}-month checkup`)}</span>` : ''}</div></section>`;
+    if (keys.length) h += `<h2 class="ya-h2">${F('Later on')}</h2><p class="ya-sub">${F(`Swipe ahead to see ${nm} grow.`)}</p><div class="ya-months">${keys.map(card).join('')}</div>`;
     h += `<p class="hub-foot">${F('Ages are typical. Every baby moves at their own pace.')}</p></div>`;
     return h;
   };
