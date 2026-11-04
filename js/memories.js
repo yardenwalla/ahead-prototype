@@ -57,13 +57,13 @@
     const designs = typeof storyShare === 'function';
     const L = m => longLabel(m).toLowerCase();
     const remove = m => `<button class="mem-shot-remove" onclick="hubPhotoRemove(${m})" aria-label="Remove the ${L(m)} photo"><span aria-hidden="true">×</span></button>`;
-    const card = m => {
+    const card = (m, quiet) => {
       if (m === 0 && !designs) return photo(0)
         ? `<div class="mem-story-wrap"><label class="mem-story is-plain" role="button" aria-label="Change the newborn photo"><img src="${photo(0)}" alt=""><em>Newborn</em>${hubPhotoInput(0)}</label>${remove(0)}</div>`
         : `<label class="mem-story is-plain is-empty" role="button" aria-label="Add the newborn photo"><em>Newborn</em><span class="mem-story-add">＋ Add photo</span>${hubPhotoInput(0)}</label>`;
       if (!designs) return photo(m) ? `<div class="mem-story-wrap"><label class="mem-story is-plain" role="button"><img src="${photo(m)}" alt=""><em>${label(m)}</em>${hubPhotoInput(m)}</label>${remove(m)}</div>` : '';
       if (photo(m)) return `<div class="mem-story-wrap"><button class="mem-story" onclick="storyShare(${m})" aria-label="Open the ${L(m)} Story"><img data-story-thumb="${m}" alt=""></button>${remove(m)}</div>`;
-      return `<label class="mem-story is-empty" role="button" aria-label="Add the ${L(m)} photo"><img data-story-thumb="${m}" alt=""><span class="mem-story-add">＋ Add photo</span>${hubPhotoInput(m)}</label>`;
+      return `<label class="mem-story is-empty" role="button" aria-label="Add the ${L(m)} photo"><img data-story-thumb="${m}" alt="">${quiet ? '' : '<span class="mem-story-add">＋ Add photo</span>'}${hubPhotoInput(m)}</label>`;
     };
     const bigs = bigFirsts(firsts);
     // Newest first, only the months the baby has reached.
@@ -77,8 +77,9 @@
     // Nothing saved yet: a welcoming card, with the year's designs waiting underneath.
     if (!have.length && !firsts.length) {
       const P = typeof babyPronouns === 'function' ? babyPronouns() : { p: 'their' };
-      b += `<section class="mem-welcome"><h2>${esc2(`${name()}’s year starts here`)}</h2><p>${esc2(`Add a photo each month and it becomes a little Story to keep and share. By ${P.p} first birthday, all twelve hang together on one page.`)}</p><div class="mem-welcome-actions"><label class="primary mem-welcome-btn" role="button">${esc2(`Add ${now === 0 ? 'a newborn' : now === 12 ? 'a first-birthday' : `the ${now}-month`} photo`)}${hubPhotoInput(now)}</label><button class="mem-welcome-btn is-quiet" onclick="openPage('chg:Timeline:milestone')">Save a first</button></div></section>`;
-      b += `<div class="mem-head"><h2>Month by month</h2></div>${strip}`;
+      b += `<section class="mem-welcome"><h2>${esc2(now === 0 ? `${name()}’s year starts here` : `${name()}’s year, one photo a month`)}</h2><p>${esc2(`Add a photo each month and it becomes a little Story to keep and share. By ${P.p} first birthday, all twelve hang together on one page.`)}</p><div class="mem-welcome-actions"><label class="primary mem-welcome-btn" role="button">${esc2(`Add ${now === 0 ? 'a newborn' : now === 12 ? 'a first-birthday' : `the ${now}-month`} photo`)}${hubPhotoInput(now)}</label><button class="mem-welcome-btn is-quiet" onclick="openPage('chg:Timeline:milestone')">Save a first</button></div></section>`;
+      // The welcome button already adds this month's photo, so its tile doesn't repeat the button.
+      b += `<div class="mem-head"><h2>Month by month</h2></div><div class="mem-stories">${months.map(m => card(m, m === now)).join('')}</div>`;
       b += `<p class="hub-foot">Photos and entries stay on this device.</p></div>`;
       return `<div class="quiet-category hub-page hub-timeline-page" style="${yearTheme('Memories')}">${b}</div>`;
     }
