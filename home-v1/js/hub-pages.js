@@ -188,7 +188,7 @@
       const nm = esc2(name()), label = b.m === 12 ? '1 year' : `${b.m} month${b.m === 1 ? '' : 's'}`, plabel = b.m === 12 ? 'first-birthday' : `${b.m}-month`, photo = window.hubPhotoFor(b.m);
       const title = b.since === 0 ? (b.m === 12 ? `${nm} is 1 year old today` : `${nm} is ${label} old today`) : (b.m === 12 ? `${nm} turned 1` : `${nm} turned ${label}`);
       const lead = photo ? (b.firsts.length ? `Here’s what you noticed this month. The photo is in Memories.` : `Another month of firsts. The photo is in Memories.`) : (b.firsts.length ? `Here’s what you noticed this month. Add a photo to keep it in Memories.` : `Another month of firsts. Add a photo to keep this one in Memories.`);
-      const card = `<div class="home-summary connected-summary-intro hub-bday"><span class="hub-bday-num" aria-hidden="true">${b.m === 12 ? '1' : b.m}</span><span class="hub-bday-spark" aria-hidden="true">✦</span><p class="hub-bday-eyebrow">${b.m === 12 ? 'Happy first birthday' : 'Happy ' + label}${profile.early && profile.due && adjustedMonth(actualMonth()) !== actualMonth() ? ` <button class="hub-agechip" onclick="openPage('age-context')" aria-label="${esc2(monthLabel(adjustedMonth(actualMonth())))} adjusted. About age">· ${esc2(String(adjustedMonth(actualMonth())))} adjusted <span aria-hidden="true">ⓘ</span></button>` : ''}</p><h1>${title}</h1><p class="hub-bday-lead">${lead}</p>${b.firsts.length ? `<div class="hub-bday-chips">${b.firsts.map(r => `<span>✓ ${esc2(r.title)}</span>`).join('')}</div>` : ''}<label class="hub-bday-photo" role="button">${photo ? `<img src="${photo}" alt="">Change the ${plabel} photo` : `<i aria-hidden="true">＋</i>Add a ${plabel} photo`}${hubPhotoInput(b.m)}</label>${photo && b.m <= 11 && typeof storyShare === 'function' ? `<button class="hub-bday-share" onclick="storyShare(${b.m})">Share ${nm}’s ${plabel} photo</button>` : ''}</div>`;
+      const card = `<div class="home-summary connected-summary-intro hub-bday"><span class="hub-bday-num" aria-hidden="true">${b.m === 12 ? '1' : b.m}</span><span class="hub-bday-spark" aria-hidden="true">✦</span><p class="hub-bday-eyebrow">${b.m === 12 ? 'Happy first birthday' : 'Happy ' + label}${profile.early && profile.due && adjustedMonth(actualMonth()) !== actualMonth() ? ` <button class="hub-agechip" onclick="openPage('age-context')" aria-label="${esc2(monthLabel(adjustedMonth(actualMonth())))} adjusted. About age">· ${esc2(String(adjustedMonth(actualMonth())))} adjusted <span aria-hidden="true">ⓘ</span></button>` : ''}</p><h1>${title}</h1><p class="hub-bday-lead">${lead}</p>${b.firsts.length ? `<div class="hub-bday-chips">${b.firsts.map(r => `<span>✓ ${esc2(r.title)}</span>`).join('')}</div>` : ''}<label class="hub-bday-photo" role="button">${photo ? `<img src="${photo}" alt="">Change the ${plabel} photo` : `<i aria-hidden="true">＋</i>Add ${/^(8|11)-/.test(plabel) ? 'an' : 'a'} ${plabel} photo`}${hubPhotoInput(b.m)}</label>${photo && b.m <= 11 && typeof storyShare === 'function' ? `<button class="hub-bday-share" onclick="storyShare(${b.m})">Share ${nm}’s ${plabel} photo</button>` : ''}</div>`;
       return html.replace(/<div class="home-summary connected-summary-intro">[\s\S]*?<div class="home-summary-spectrum"[\s\S]*?<\/div><\/div>/, card);
     };
   }
@@ -669,8 +669,9 @@
         q = hubQuestionCard(q, Q_CAT(key));
       }
       if (!q) return html;
-      const at = ['<p class="brief-unchanged"', '<section class="connected-now"'].find(x => html.includes(x));
-      return at ? html.replace(at, q + at) : html;
+      // After the month card, never above it: the parent sees what's happening first, then one question.
+      const at = ['<section class="connected-ahead"', '<p class="brief-close"', '<section class="connected-browse"'].find(x => html.includes(x));
+      return at ? html.replace(at, q + at) : html + q;
     };
   }
 
