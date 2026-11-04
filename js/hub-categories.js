@@ -383,14 +383,22 @@
       const tile = (icon, t, d, good) => `<div${good ? ' class="is-good"' : ''}><span class="hub-dot">${h.art(icon, 'Health')}</span><b>${F(t)}</b><p>${F(d)}</p></div>`;
       return `<div class="hub-card hub-thermo is-three">${tile('thermo', 'Rectal', 'The most accurate reading for babies', true)}${tile('hand', 'Armpit', u3 ? 'Easy, but less accurate. If it reads 99°F or higher, check rectally' : 'Easy, but less accurate. A fever starts at 99°F this way')}${tile('eye', fe[0], fe[1])}</div>`;
     };
-    if (id === 'sick' || id === 'sick-temp' || id === 'sick-care') {
-      return detailFrame('Health', 'Between checkups', 'When Maya seems sick', 'Most baby illnesses are mild and pass in a few days.',
-        h.list('A tummy bug or a cold?', [
+    // The page answers "what's going on?": one row per thing a parent is seeing, each opening a page that covers it
+    // whole (how to check, when to call, how to help). The emergency signs apply to all of them, so they sit here.
+    if (id === 'sick') {
+      return detailFrame('Health', 'Between checkups', 'When Maya seems sick', 'Most baby illnesses are mild and pass in a few days. Start with what you’re seeing.',
+        h.list('What’s going on?', [
+          h.row({ icon: 'thermo', cat: 'Health', title: 'A fever', sub: u3 ? 'Under 3 months, any fever means calling' : 'How to check, and when to call', onclick: "openPage('chg:Health:d:sick-fever')" }),
           h.row({ icon: 'bottle', cat: 'Health', title: 'Vomiting or diarrhea', sub: 'Keep feeds going, and when to call', onclick: "openPage('chg:Health:d:sick-tummy')" }),
           h.row({ icon: 'drop', cat: 'Health', title: 'A cold or stuffy nose', sub: 'Saline, suction, and ear infections', onclick: "openPage('chg:Health:d:cold')" })
         ])
-        + `<h2 class="hub-h2">${F('Check for a fever')}</h2>` + thermo()
-        + `<h2 class="hub-h2">${F('When a fever means calling')}</h2>` + feverCard
+        + h.note('Not sure? Your pediatrician’s office has someone to talk to day or night. Calling is never a bother.')
+        + call911);
+    }
+    if (id === 'sick-fever' || id === 'sick-temp' || id === 'sick-care') {
+      return detailFrame('Health', 'When Maya seems sick', 'A fever', 'A fever is the body fighting an infection. What matters most is {p} age and how {s} {seem|seems}.',
+        `<h2 class="hub-h2">${F('Take {p} temperature')}</h2>` + thermo()
+        + `<h2 class="hub-h2">${F('When it means calling')}</h2>` + feverCard
         + `<h2 class="hub-h2">${F('Help {o} feel better')}</h2>`
         + hubIconSteps([['bottle', 'Extra feeds', 'Little and often'], ['shirt', 'Dress {o} lightly', 'No extra layers or blankets'], ['moon', 'Lots of rest', 'Naps and quiet time']], 'Health', 'Offer extra feeds, dress lightly, and let them rest.', false)
         + h.tip('Medicine', u3 ? 'Under 3 months, don’t give any medicine without asking your pediatrician first.' : m < 6 ? 'Acetaminophen can help, after checking with your pediatrician. Ask for the dose for {p} weight.' : 'Acetaminophen or ibuprofen can help. Ask your pediatrician for the dose for {p} weight, and check the label every time.')
