@@ -45,10 +45,17 @@
 #main .st-has-chip > :nth-child(2) { padding-right: 104px }
 #main .st-has-chip > .st-chip-abs, #main .hub-eyebrow > .st-chip { font-size: 12.5px; font-weight: 600; line-height: 1.3; min-height: 0; padding: 4px 10px; letter-spacing: 0; text-transform: none }
 
-/* Clean banner: one line with a text link back; changing the stage is a quiet line underneath */
-#main .hub-preview.st-banner { display: block; padding: 11px 14px; border-radius: 14px }
-#main .st-banner-row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px }
-#main .st-banner-row > span { font-size: 14px; font-weight: 600 }
-#main .hub-preview.st-banner button { min-height: 0; padding: 0; border-radius: 0; background: none; color: var(--year-ink); font: inherit; font-size: 13.5px; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; cursor: pointer }
-#main .st-banner-back { flex: none; white-space: nowrap }
-#main .st-banner-make { margin: 6px 0 0; padding-top: 8px; border-top: 1px solid color-mix(in srgb, var(--year-accent) 35%, transparent); font-size: 13.5px; font-weight: 500; color: #6f6979 }
+/* Preview card: what you're reading, and the way back */
+#main .hub-preview.st-banner { display: block; margin: -2px 0 14px; padding: 12px; border-radius: 20px; background: #fff; box-shadow: 0 1px 3px rgba(43,40,64,.07), inset 0 0 0 1px color-mix(in srgb, var(--year-accent) 30%, transparent); color: inherit }
+#main .st-banner-top { display: flex; align-items: center; gap: 12px }
+#main .st-banner-icon { flex: none; width: 40px; height: 40px; border-radius: 14px; display: grid; place-items: center; background: var(--year-pale) }
+#main .st-banner-icon svg { width: 26px; height: 26px }
+#main .st-banner-copy { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px }
+#main .st-banner-copy small { font-size: 12px; font-weight: 600; color: var(--year-ink); opacity: .8 }
+#main .st-banner-copy b { font-size: 15.5px; font-weight: 700; color: #2b2840; line-height: 1.3 }
+#main .st-banner-copy b i { font-style: normal; font-weight: 500; color: #8a8494 }
+#main .st-banner .st-btn { min-height: 38px; padding: 0 14px; border: 0; border-radius: 12px; font: inherit; font-size: 13.5px; font-weight: 700; cursor: pointer; white-space: nowrap }
+#main .st-banner .st-btn-back { background: var(--year-pale); color: var(--year-ink) }
+#main .st-banner .st-btn-make { background: var(--year-ink); color: #fff }
+#main .st-banner-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px }
+#main .st-banner-actions .st-btn { padding: 0 8px }

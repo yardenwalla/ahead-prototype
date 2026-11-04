@@ -76,14 +76,15 @@
     const ci = items.findIndex(x => x.now), oi = items.findIndex(x => x.on);
     if (!live() || ci < 0 || oi < 0 || oi === ci) return;
     const on = items[oi];
-    // One quiet line: where you are, and a way back. Changing the stage is a small text link under it.
-    const backTxt = cat === 'Health' ? 'Back to next checkup' : `Back to ${nm()}’s stage`;
+    // A small card: what you're reading, and the way back. Where a parent can change the stage, two equal buttons.
     const old = m.querySelector('.hub-preview');
-    const what = oi < ci ? 'Looking back' : cat === 'Health' ? 'Coming up' : 'Preview';
-    const age = ['Development', 'Daily rhythm', 'Health'].includes(cat) ? on.label : ageOf(on);
-    const label = old && old.querySelector('span') ? old.querySelector('span').innerHTML : `${what}${age ? ' · ' + esc(age) : ''}`;
-    const make = on.change && CHANGEABLE.includes(cat) ? `<p class="st-banner-make">Is this where ${nm()} is? <button onclick="${on.change}">Make this ${nm()}’s stage</button></p>` : '';
-    const html = `<div class="hub-preview st-banner"><div class="st-banner-row"><span>${label}</span><button class="st-banner-back" onclick="${topicGo(cat)}">${backTxt}</button></div>${make}</div>`;
+    const what = oi < ci ? 'Looking back' : cat === 'Health' ? 'Coming up' : 'Previewing';
+    const stage = cat === 'Health' ? on.label.replace(/ months?$/, '-month').replace('First week', 'First-week') + ' checkup' : on.label;
+    const when = ['Development', 'Daily rhythm', 'Health'].includes(cat) ? '' : ageOf(on) || (old && old.querySelector('span') ? old.querySelector('span').textContent.replace(/^[^·]*·\s*/, '') : '');
+    const backTxt = cat === 'Health' ? 'next checkup' : `${nm()}’s stage`;
+    const changeable = on.change && CHANGEABLE.includes(cat);
+    const icon = typeof catIcon === 'function' ? catIcon(cat) : '';
+    const html = `<section class="hub-preview st-banner${changeable ? ' has-make' : ''}" aria-label="${what}"><div class="st-banner-top"><span class="st-banner-icon" aria-hidden="true">${icon}</span><div class="st-banner-copy"><small>${what}</small><b>${esc(stage)}${when ? ` <i>· ${esc(when)}</i>` : ''}</b></div>${changeable ? '' : `<button class="st-btn st-btn-back" onclick="${topicGo(cat)}">Back to ${backTxt}</button>`}</div>${changeable ? `<div class="st-banner-actions"><button class="st-btn st-btn-back" onclick="${topicGo(cat)}">Back to ${backTxt}</button><button class="st-btn st-btn-make" onclick="${on.change}">Make this ${nm()}’s stage</button></div>` : ''}</section>`;
     if (old) old.outerHTML = html; else if (hero) hero.insertAdjacentHTML('beforebegin', html);
   };
   if (typeof activeNavigationTab === 'function') {
