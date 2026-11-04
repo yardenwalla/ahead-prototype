@@ -156,3 +156,10 @@ Job: "Help me keep my baby's information and my family's preferences up to date 
 - In Baby's details, Safety shows the same four stage chips as Feeding and Sleep. The separate "How [name] moves" row is gone.
 - The feeding pill says "Breast milk and formula" instead of "Both". The avatar uses the newest saved monthly photo, or the initial when there is none.
 - Edit reads as editing ("[name]'s details", "How [name] has milk", Next, Save), with no setup step dots or "See what matters now".
+
+## Stages behind a chip (2026-11-04)
+The stage strip at the top of every category is gone. Files: `js/stages-nav.js` (wraps `stageTimeline` and `render`), `css/stages-nav.css`.
+- Each category opens on the baby's stage. A small "All stages ›" chip ("All checkups ›" in Health) sits on the top card's first line.
+- The chip opens a stages page (`stages:<category>`): a vertical list with each stage's ages, one line on what changes, and "[name]'s stage now" ("Next checkup" in Health) marked.
+- Reading another stage shows a tinted Preview card: "Looking back" or "Previewing", the stage and its ages, and "Back to [name]'s stage". Sleep, Feeding and Safety add "Make this [name]'s stage" where the stage table allows it (the old strip's Change).
+- QA: `stageItemsLast()` exposes the stage list behind the page last shown. stage-rules, editorial-contracts and progression-followups read it instead of the strip's HTML, so the same rules stay covered.

@@ -16,7 +16,7 @@ for (let age=0; age<=12; age++) {
   }
   check(a.run('JSON.stringify(answers)') === before, 'Browsing every safety stage records no ability');
   a.run("openPage('topic:Sleep')");
-  check(a.html().includes('aria-current="step"') && !clean(a.html()).includes('Based on your nap pattern'), 'Unknown nap pattern is presented as guidance selected by age');
+  check(a.run("((stageItemsLast()||{}).items||[]).some(x => x.on)") && !clean(a.html()).includes('Based on your nap pattern'), 'Unknown nap pattern is presented as guidance selected by age');
   a.run("openPage('chg:Sleep:s:2');chgAnswer('Sleep:rhythm:2',1)");
   check(!clean(a.html()).includes('This is likely the 4-month'), 'Unexplained waking is not diagnosed from one answer');
   check(!clean(a.html()).includes('At 5 months, most babies'), 'Multi-age guidance does not leak a fixed five-month instruction');
@@ -52,7 +52,7 @@ for (const [age,oldID,newID] of [[1,'slow-song','face-follow'],[3,'sound-answer'
 for (const value of ['new','textures','established']) {
   const b=family(11);
   b.run(`setFeedingStage('${value}');openPage('topic:Feeding')`);
-  const nowStage = (b.html().match(/hub-stage is-on is-now">[\s\S]*?hub-stage-name">([^<]+)</) || [])[1];
+  const nowStage = b.run("(((stageItemsLast()||{}).items||[]).find(x => x.now && x.on) || {}).label");
   check(nowStage === 'Solids', 'Started solids show Solids as the current stage on the timeline');
   check(/Solids guides/.test(b.html()) && /Start here|>Now</.test(b.html()), 'The Solids page lists every guide and marks where the baby is');
   for (const i of [3,4,5]) { b.run(`openPage('chg:Feeding:s:${i}')`); check(/Solids guide ·/.test(b.html()) && /class="monthly-back"/.test(b.html()), 'Each solids guide opens as a guide with a way back'); }

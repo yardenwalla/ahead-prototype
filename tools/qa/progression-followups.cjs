@@ -70,7 +70,7 @@ for(let family=0;family<100;family++) {
   check(/104°F/.test(f.run('feverRule(actualMonth())')) && /more than a day/.test(f.run('feverRule(actualMonth())')),'From 3 months: the fever rule follows the AAP (104°F, or more than a day)');
   const l=boot({name:'Lila',dob:'2026-04-02',feed:'Both',pronouns:'she'},{},{},'2026-10-27T12:00:00Z');
   l.run("navigate('categories');openPage('topic:Health')");
-  check(/>Next</.test(l.html()),'A checkup months away is marked Next, not Now');
+  check(l.run("((stageItemsLast()||{}).items||[]).some(x => x.now && x.nowLabel === 'Next')"),'A checkup months away is marked Next, not Now');
 }
 const result={families:100,monthlyCheckpoints:checkpoints,prominentFollowups:followups,checks,status:'passed',limits:'Persisted template/handler journeys; not human usability or clinical review.'};
 fs.writeFileSync(path.join(__dirname,'out/progression-followups.json'),JSON.stringify(result,null,2)+'\n');

@@ -1,5 +1,5 @@
 // Stage system checks: the rules in the project doc "ahead-stage-system.md".
-// One timeline per guide, "Now" on the baby's stage, Change only where the stage table allows it,
+// One stage list per guide, "Now" on the baby's stage, "Make this [name]'s stage" only where the stage table allows it,
 // changes that stick (and show the same everywhere), Undo, and the age/answer rules.
 const assert = require('node:assert/strict');
 const boot = require('./content-runtime.cjs');
@@ -8,9 +8,9 @@ const check = (v, m) => { checks++; assert.ok(v, m); };
 const dob = '2025-10-21';
 const at = age => new Date(Date.UTC(2025, 9 + age, 21, 12)).toISOString();
 const family = (age, answers = {}, storage = {}) => boot({ name: 'Ari', dob, feed: 'Both', pronouns: 'he' }, answers, storage, at(age));
-const stages = html => [...html.matchAll(/<div class="hub-stage ([^"]*)">([\s\S]*?)<\/button><\/div>/g)].map(m => ({
-  cls: m[1], change: /class="hub-stage-top is-change"/.test(m[2]), name: (m[2].match(/hub-stage-name">([^<]+)</) || [])[1] }));
-const nowName = html => (stages(html).find(s => /is-now/.test(s.cls)) || {}).name;
+// The stages behind the page last shown (the "All stages" page and the Preview card use the same list).
+const stages = a => JSON.parse(a.run(`JSON.stringify(((stageItemsLast()||{}).items||[]).map(x => ({ cls: (x.on ? 'is-on ' : '') + (x.now ? 'is-now' : ''), change: !!(x.on && x.change), name: x.label })))`));
+const nowName = a => (stages(a).find(s => /is-now/.test(s.cls)) || {}).name;
 const ROUTES = { Sleep: i => `chg:Sleep:s:${i}`, Feeding: i => `chg:Feeding:s:${[1, 2, 3][i]}`,
   Development: i => `development-stage:${[2, 4, 6, 9, 12][i]}`, Safety: i => `safety-stage:${['setup', 'reaching', 'rolling', 'pulling'][i]}`,
   Health: i => `health-visit:${[0, 1, 2, 4, 6, 9, 12][i]}` };
@@ -18,8 +18,8 @@ const ROUTES = { Sleep: i => `chg:Sleep:s:${i}`, Feeding: i => `chg:Feeding:s:${
 // Every guide, every month: one timeline, one "Now", one stage being read, Change only on the stage being read.
 for (let age = 0; age <= 12; age++) for (const cat of Object.keys(ROUTES)) {
   const a = family(age); a.run(`openPage('topic:${cat}')`);
-  const s = stages(a.html());
-  check(s.length >= (['Safety', 'Feeding'].includes(cat) ? 3 : 4), `${cat} at ${age} months shows the stage timeline`);
+  const s = stages(a);
+  check(s.length >= (['Safety', 'Feeding'].includes(cat) ? 3 : 4), `${cat} at ${age} months has its stages`);
   check(s.filter(x => /is-now/.test(x.cls)).length === 1, `${cat} at ${age} months marks exactly one stage Now`);
   check(s.filter(x => /is-on/.test(x.cls)).length === 1, `${cat} at ${age} months has one stage being read`);
   check(!s.some(x => x.change), `${cat} at ${age} months: no Change on the baby's own stage`);
@@ -28,7 +28,7 @@ for (let age = 0; age <= 12; age++) for (const cat of Object.keys(ROUTES)) {
   s.forEach((x, i) => {
     if (i === nowI) return;
     a.run(`openPage('${ROUTES[cat](i)}')`);
-    const v = stages(a.html()), mine = v[i];
+    const v = stages(a), mine = v[i];
     check(mine && /is-on/.test(mine.cls), `${cat}: tapping ${x.name} opens it`);
     check(v.filter(y => y.change).length <= 1, `${cat}: at most one Change`);
     const allowed = a.run(`stageCanChange(${JSON.stringify(cat)}, ${i}, ${nowI})`);
@@ -45,32 +45,32 @@ for (let age = 0; age <= 12; age++) for (const cat of Object.keys(ROUTES)) {
 for (const [cat, age, i, label] of [['Sleep', 7, 3, 'Two naps'], ['Sleep', 10, 2, 'Three naps'], ['Sleep', 5, 1, 'Longer nights'], ['Feeding', 7, 2, 'Solids'], ['Feeding', 9, 1, 'Preparing for solids'],
   ['Feeding', 7, 0, 'Milk feeds'], ['Safety', 2, 2, 'Crawling'], ['Safety', 10, 1, 'Rolling']]) {
   const a = family(age); a.run(`openPage('topic:${cat}')`);
-  const before = nowName(a.html());
+  const before = nowName(a);
   a.run(`openPage('${ROUTES[cat](i)}');hubChangeStage(${JSON.stringify(cat)}, ${i})`);
-  check(nowName(a.html()) === label, `${cat} at ${age} months: Change makes ${label} the baby's stage`);
+  check(nowName(a) === label, `${cat} at ${age} months: Change makes ${label} the baby's stage`);
   a.run("navigate('profile')");
   check(a.html().includes(label), `${cat}: Baby's details shows ${label}`);
   a.run(`navigate('categories');openPage('topic:${cat}')`);
-  check(nowName(a.html()) === label, `${cat}: the change sticks`);
+  check(nowName(a) === label, `${cat}: the change sticks`);
   const u = family(age);
   u.run(`openPage('${ROUTES[cat](i)}');hubChangeStage(${JSON.stringify(cat)}, ${i});stageUndo();navigate('categories');openPage('topic:${cat}')`);
-  check(nowName(u.html()) === before, `${cat}: Undo goes back to ${before}`);
+  check(nowName(u) === before, `${cat}: Undo goes back to ${before}`);
 }
 
 // Rule 1 and Rule 2: age guesses; the parent's answer wins and holds.
 {
-  let a = family(8); a.run("openPage('topic:Sleep')"); check(nowName(a.html()) === 'Three naps', 'Sleep at 8 months guesses Three naps');
-  a = family(9); a.run("openPage('topic:Sleep')"); check(nowName(a.html()) === 'Two naps', 'Sleep at 9 months guesses Two naps');
-  a = family(11, { twoNaps: 'Not yet' }); a.run("openPage('topic:Sleep')"); check(nowName(a.html()) === 'Three naps', 'A parent’s “not yet” holds past 9 months');
-  a = family(6, { twoNaps: 'Yes' }); a.run("openPage('topic:Sleep')"); check(nowName(a.html()) === 'Two naps', 'A parent’s “two naps” wins before 9 months');
-  a = family(8); a.run("openPage('topic:Feeding')"); check(nowName(a.html()) === 'Preparing for solids', 'Feeding with no solids answer waits on Preparing for solids');
-  a = family(10); a.run("openPage('topic:Feeding')"); check(nowName(a.html()) === 'Solids' && /We’re showing solids for Ari’s age/.test(a.html()), 'From 9 months with no answer, Feeding shows solids for the age and says so');
-  a = family(10, { solids: 'Not yet' }); a.run("openPage('topic:Feeding')"); check(nowName(a.html()) === 'Preparing for solids', 'A parent’s “not yet” holds at 10 months');
-  a = family(10, { solids: 'Yes', foodExperience: 'new' }); a.run("openPage('topic:Feeding')"); check(nowName(a.html()) === 'Solids', 'A parent’s “we’ve started” holds');
-  a = family(5); a.run("openPage('topic:Feeding')"); check(nowName(a.html()) === 'Preparing for solids', 'Preparing for solids shows from 4 months');
-  a = family(3); a.run("openPage('topic:Feeding')"); check(nowName(a.html()) === 'Milk feeds', 'Milk feeds before 4 months');
-  a = family(4, { solids: 'Yes', solidsStart: '2026-02-21' }); a.run("openPage('topic:Feeding')"); check(nowName(a.html()) === 'Solids' && a.html().includes('First tastes'), 'Starting at 4 months opens Solids on first tastes');
-  for (const age of [0, 3, 7, 11]) { const c = family(age); c.run("openPage('topic:Daily rhythm')"); const st = stages(c.html()); check(st.length === 4 && st.filter(x => /is-now/.test(x.cls)).length === 1 && !st.some(x => x.change), `Everyday care at ${age} months has a read-only timeline`); for (let i = 0; i < 4; i++) { c.run(`openPage('chg:Daily rhythm:s:${i}')`); const v = stages(c.html()); check(v[i] && /is-on/.test(v[i].cls) && !v.some(x => x.change), `Everyday care: stage ${i} can be read, never changed`); } }
+  let a = family(8); a.run("openPage('topic:Sleep')"); check(nowName(a) === 'Three naps', 'Sleep at 8 months guesses Three naps');
+  a = family(9); a.run("openPage('topic:Sleep')"); check(nowName(a) === 'Two naps', 'Sleep at 9 months guesses Two naps');
+  a = family(11, { twoNaps: 'Not yet' }); a.run("openPage('topic:Sleep')"); check(nowName(a) === 'Three naps', 'A parent’s “not yet” holds past 9 months');
+  a = family(6, { twoNaps: 'Yes' }); a.run("openPage('topic:Sleep')"); check(nowName(a) === 'Two naps', 'A parent’s “two naps” wins before 9 months');
+  a = family(8); a.run("openPage('topic:Feeding')"); check(nowName(a) === 'Preparing for solids', 'Feeding with no solids answer waits on Preparing for solids');
+  a = family(10); a.run("openPage('topic:Feeding')"); check(nowName(a) === 'Solids' && /We’re showing solids for Ari’s age/.test(a.html()), 'From 9 months with no answer, Feeding shows solids for the age and says so');
+  a = family(10, { solids: 'Not yet' }); a.run("openPage('topic:Feeding')"); check(nowName(a) === 'Preparing for solids', 'A parent’s “not yet” holds at 10 months');
+  a = family(10, { solids: 'Yes', foodExperience: 'new' }); a.run("openPage('topic:Feeding')"); check(nowName(a) === 'Solids', 'A parent’s “we’ve started” holds');
+  a = family(5); a.run("openPage('topic:Feeding')"); check(nowName(a) === 'Preparing for solids', 'Preparing for solids shows from 4 months');
+  a = family(3); a.run("openPage('topic:Feeding')"); check(nowName(a) === 'Milk feeds', 'Milk feeds before 4 months');
+  a = family(4, { solids: 'Yes', solidsStart: '2026-02-21' }); a.run("openPage('topic:Feeding')"); check(nowName(a) === 'Solids' && a.html().includes('First tastes'), 'Starting at 4 months opens Solids on first tastes');
+  for (const age of [0, 3, 7, 11]) { const c = family(age); c.run("openPage('topic:Daily rhythm')"); const st = stages(c); check(st.length === 4 && st.filter(x => /is-now/.test(x.cls)).length === 1 && !st.some(x => x.change), `Everyday care at ${age} months has a read-only timeline`); for (let i = 0; i < 4; i++) { c.run(`openPage('chg:Daily rhythm:s:${i}')`); const v = stages(c); check(v[i] && /is-on/.test(v[i].cls) && !v.some(x => x.change), `Everyday care: stage ${i} can be read, never changed`); } }
 }
 // Rule 3: an old "not yet" brings the naps question back to Home a month later.
 {
@@ -90,13 +90,13 @@ for (const [cat, pickRoute, i, pickAge, laterAge, picked, next] of [
   ['Sleep', 'chg:Sleep:s:1', 1, 4, 9, 'Longer nights', 'Two naps']]) {
   const storage = {};
   let a = family(pickAge, {}, storage); a.run(`openPage('${pickRoute}');hubChangeStage(${JSON.stringify(cat)}, ${i});openPage('topic:${cat}')`);
-  check(nowName(a.html()) === picked, `${cat}: pick holds`);
+  check(nowName(a) === picked, `${cat}: pick holds`);
   const saved = () => JSON.parse(storage['ahead-v2-answers']);
   a = boot({ name: 'Ari', dob, feed: 'Both', pronouns: 'he' }, saved(), storage, at(laterAge)); a.run(`openPage('topic:${cat}')`);
-  check(nowName(a.html()) === picked, `${cat}: still ${picked} after age moves on — the app doesn't move it`);
+  check(nowName(a) === picked, `${cat}: still ${picked} after age moves on — the app doesn't move it`);
   check(a.run('homeQuestionQueue()').includes('outgrown:' + cat), `${cat}: Home asks whether to move on`);
   a.run(`stageFollowAge(${JSON.stringify(cat)});openPage('topic:${cat}')`);
-  check(nowName(a.html()) === next, `${cat}: “Yes, move on” follows age again (${next})`);
+  check(nowName(a) === next, `${cat}: “Yes, move on” follows age again (${next})`);
 }
 for (const [cat, route, i] of [['Safety', 'safety-stage:reaching', 1], ['Sleep', 'chg:Sleep:s:1', 1], ['Feeding', 'chg:Feeding:s:1', 0]]) {
   const a = family(9); a.run(`openPage('${route}');hubChangeStage(${JSON.stringify(cat)}, ${i})`);
@@ -104,9 +104,9 @@ for (const [cat, route, i] of [['Safety', 'safety-stage:reaching', 1], ['Sleep',
 }
 {
   const a = family(7); a.run("openPage('safety-stage:reaching');hubChangeStage('Safety',1);setAnswer('crawl','Yes');openPage('topic:Safety')");
-  check(nowName(a.html()) === 'Crawling', 'Telling us about a new movement replaces an older Safety pick');
+  check(nowName(a) === 'Crawling', 'Telling us about a new movement replaces an older Safety pick');
   const b = family(8, { pullUp: 'Yes', movementSetByParent: true }); b.run("openPage('topic:Safety')");
-  check(nowName(b.html()) === 'Pulling up' && /Standing brings everything higher into reach/.test(b.html()), 'Pulling up is its own stage and leads with what changes when standing');
+  check(nowName(b) === 'Pulling up' && /Standing brings everything higher into reach/.test(b.html()), 'Pulling up is its own stage and leads with what changes when standing');
 }
 // Review fixes: search finds common worries; a future month on Home reads as a preview; setup never shows a sample name.
 {
