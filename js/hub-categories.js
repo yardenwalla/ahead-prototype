@@ -372,7 +372,7 @@
     // "When Maya seems sick" is a short hub: the one fever rule for this baby's age, then one page per job
     // (take a temperature, help them feel better, tummy bugs, colds), and the emergency signs last (AAP, HealthyChildren.org).
     const m = actualMonth(), u3 = m < 3;
-    const call911 = `<section class="hub-card hub-callout"><b>${F('Call 911 if Maya')}</b><p>${F('Struggles to breathe or turns blue, won’t wake or is floppy, or has a seizure.')}</p></section>`;
+    const call911 = `<section class="hub-card hub-callout"><b>${F('Call 911 right away')}</b><p>${F('If Maya struggles to breathe or turns blue, won’t wake or is floppy, or has a seizure.')}</p></section>`;
     const feverCard = `<section class="hub-card hub-fever is-calm"><div class="hub-fever-bands is-one"><div><small>${F(feverBand(m))}</small><b>${u3 ? '100.4°F<span> or higher</span>' : 'Above 104°F<span> and keeps going up</span>'}</b><p>${F(u3 ? 'Call your pediatrician right away, day or night.' : 'Or a fever that lasts more than a day. Call your pediatrician.')}</p></div></div><p class="hub-fever-note">${F('Also call if Maya seems very unwell, has a rash, is unusually sleepy, or is still unwell after the fever comes down.')}</p></section>`;
     // One flow, in the order a parent lives it: check for a fever and know when that means calling,
     // make them comfortable, then the two common bugs, and the emergency signs last.
@@ -385,15 +385,15 @@
     };
     if (id === 'sick' || id === 'sick-temp' || id === 'sick-care') {
       return detailFrame('Health', 'Between checkups', 'When Maya seems sick', 'Most baby illnesses are mild and pass in a few days.',
-        `<h2 class="hub-h2">${F('Check for a fever')}</h2>` + thermo()
+        h.list('A tummy bug or a cold?', [
+          h.row({ icon: 'bottle', cat: 'Health', title: 'Vomiting or diarrhea', sub: 'Keep feeds going, and when to call', onclick: "openPage('chg:Health:d:sick-tummy')" }),
+          h.row({ icon: 'drop', cat: 'Health', title: 'A cold or stuffy nose', sub: 'Saline, suction, and ear infections', onclick: "openPage('chg:Health:d:cold')" })
+        ])
+        + `<h2 class="hub-h2">${F('Check for a fever')}</h2>` + thermo()
         + `<h2 class="hub-h2">${F('When a fever means calling')}</h2>` + feverCard
         + `<h2 class="hub-h2">${F('Help {o} feel better')}</h2>`
         + hubIconSteps([['bottle', 'Extra feeds', 'Little and often'], ['shirt', 'Dress {o} lightly', 'No extra layers or blankets'], ['moon', 'Lots of rest', 'Naps and quiet time']], 'Health', 'Offer extra feeds, dress lightly, and let them rest.', false)
         + h.tip('Medicine', u3 ? 'Under 3 months, don’t give any medicine without asking your pediatrician first.' : m < 6 ? 'Acetaminophen can help, after checking with your pediatrician. Ask for the dose for {p} weight.' : 'Acetaminophen or ibuprofen can help. Ask your pediatrician for the dose for {p} weight, and check the label every time.')
-        + h.list('A tummy bug or a cold?', [
-          h.row({ icon: 'bottle', cat: 'Health', title: 'Vomiting or diarrhea', sub: 'Keep feeds going, and when to call', onclick: "openPage('chg:Health:d:sick-tummy')" }),
-          h.row({ icon: 'drop', cat: 'Health', title: 'A cold or stuffy nose', sub: 'Saline, suction, and ear infections', onclick: "openPage('chg:Health:d:cold')" })
-        ])
         + call911);
     }
     if (id === 'sick-tummy') {
