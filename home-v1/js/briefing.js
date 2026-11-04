@@ -222,6 +222,19 @@
     return `<div class="home-change" data-brief="change:${ch.id}"><div class="home-change-head"><span class="home-change-art" aria-hidden="true">${art}</span><div><p class="home-change-eyebrow">${ch.state === 'now' ? 'Just happened' : 'Coming up · ' + esc(c.range)}</p><h3>${ch.state === 'now' ? DONE[ch.id] : SOON[ch.id]}</h3><p class="home-change-lead">${ch.state === 'now' ? 'Here’s what changes, in one place.' : 'Here’s what it changes, so you’re ready.'}</p></div></div><div class="home-change-rows">${rows}</div><button class="home-change-all" onclick="openPage('chg:Timeline:c:${ch.id}')">Everything ${({ pull: 'pulling up', solids: 'starting solids', crawl: 'crawling', roll: 'rolling', sit: 'sitting up' })[ch.id]} changes ›</button></div>`;
   }
 
+  // Home shows the change as one ordinary card: what's happening, and which areas it touches.
+  // The details (one row per area) live on the change's Timeline page, one tap away.
+  function changeItem(ch) {
+    const c = ch.info, nm = n();
+    const AREA = { 'Daily rhythm': 'everyday care', Development: 'play', 'Out and about': 'outings', Safety: 'safety', Sleep: 'sleep', Feeding: 'feeding', Health: 'your checkup' };
+    const areas = [...new Set(c.rows.map(r => AREA[r[1]] || r[1].toLowerCase()))];
+    const list = areas.length > 1 ? areas.slice(0, -1).join(', ') + ' and ' + areas[areas.length - 1] : areas[0];
+    const DONE = { pull: `Now that ${nm} pulls up`, crawl: `Now that ${nm} crawls`, roll: `Now that ${nm} rolls`, solids: `Now that ${nm} has started solids`, sit: `Now that ${nm} sits up` };
+    const SOON = { pull: 'Pulling up could start any week now', crawl: 'Crawling could start any week now', roll: 'Rolling could start any week now', solids: 'Solids start around 6 months', sit: 'Sitting up could start any week now' };
+    return { topic: c.rows[0][1] === 'Feeding' ? 'Feeding' : 'Development', key: 'change:' + ch.id + ':' + ch.state, title: ch.state === 'now' ? DONE[ch.id] : SOON[ch.id],
+      body: `It changes ${list}. Here’s what to do for each.`, link: link(`openPage('chg:Timeline:c:${ch.id}')`, 'See what it changes') };
+  }
+
   /* ---------- what's coming up ---------- */
   function comingUp(taken) {
     const out = [], m = dm(), mv = movement(), p = P();
@@ -348,14 +361,13 @@
     freshKeys = new Set();
     settleOpened();
     const ch = activeChange();
-    const now = importantNow().filter(i => !covered(ch, i.key)).slice(0, ch ? 1 : 2), next = comingUp(now).filter(i => !covered(ch, i.key));
+    const now = [...(ch ? [changeItem(ch)] : []), ...importantNow().filter(i => !covered(ch, i.key))].slice(0, 2), next = comingUp(now).filter(i => !covered(ch, i.key));
     const focus = homeCurrentFocus();
     const sig = [...now, ...next].map(i => i.key).join('|') + '|' + actualMonth() + '|' + (typeof chgStageIndex === 'function' ? ['Sleep', 'Feeding'].map(chgStageIndex).join(',') : '');
 
-    const close = !live() ? '' : ch ? `That’s everything for now.` : !now.length && !next.length ? `You’re all caught up for now.` : !now.length ? `Nothing to do right now. We’ll bring things up as they get closer.` : `That’s everything for now.`;
+    const close = !live() ? '' : !now.length && !next.length ? `You’re all caught up for now.` : !now.length ? `Nothing to do right now. We’ll bring things up as they get closer.` : `That’s everything for now.`;
 
     let h = `${live() ? `<p class="home-age-line">${esc(name())} · ${esc(monthLabel(actualMonth()))}${profile.early && profile.due && typeof developmentMonth === 'function' && developmentMonth(actualMonth()) !== actualMonth() ? ` <button class="hub-agechip" onclick="openPage('age-context')" aria-label="${esc(monthLabel(developmentMonth(actualMonth())))} adjusted. About age">· ${developmentMonth(actualMonth())} adjusted <span aria-hidden="true">ⓘ</span></button>` : ''}</p>` : ''}<section class="connected-now" aria-label="What matters now"><div class="connected-summary"><div class="home-summary connected-summary-intro"><div class="home-summary-heading"><div class="home-month-eyebrow">${!live() ? (month > actualMonth() ? 'Coming up · ' : 'Looking back · ') + (month === 0 ? 'Newborn' : month + (month === 1 ? ' month' : ' months')) : 'What matters now'}</div><h1>${focus.title}</h1></div><span class="home-summary-art" aria-hidden="true">${homeMonthArt(month)}</span><p class="heroanswer">${focus.body}</p><div class="home-summary-spectrum" aria-hidden="true">${TOPICS.map(([t]) => `<span style="background:${YEAR_PALETTES[t].bg}"></span>`).join('')}</div></div>`;
-    if (ch) h += changeCard(ch);
     if (now.length) h += `<div class="connected-summary-links">${now.map(row).join('')}</div>`;
     h += `</div>${homeMomentRow()}</section>`;
     h += previewChanges();
