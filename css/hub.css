@@ -1413,3 +1413,6 @@
 #main .hub-thermo.is-three > div.is-good { grid-column: 1 / -1 }
 #main .hub-thermo.is-three > div.is-good { display: grid; grid-template-columns: auto 1fr; column-gap: 12px; align-items: center }
 #main .hub-thermo.is-three > div.is-good .hub-dot { grid-row: 1 / 3; margin: 0 }
+
+/* Memories: other skills noticed, quietly under the big firsts */
+#main .mem-skills { margin-top: 18px }

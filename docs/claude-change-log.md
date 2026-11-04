@@ -128,3 +128,9 @@ Each category was checked against its job (project doc "Ahead jobs to be done") 
 - **Safety:** Pulling up opens before 9 months (an old route redirect sent it to Crawling), future stages say "Get ready for this stage", the car seat step opens Outings' car seat page, step pages end without outside links, choking is no longer described as always silent.
 - **Category icons** (`js/cat-icons.js`) are now in the live app.
 - `tools/qa/stage-rules.cjs` knew only three Safety stages; it now covers Pulling up. "Solids answer changes stage" in recommendation-quality fails as it did before this change.
+
+## Memories: the moments that matter (2026-11-03)
+
+- Firsts shows the big moments (smile, laugh, roll, sitting, crawling, first tooth, first word, waving, pulling up, first steps, and anything the parent types) with baby-book titles ("First laugh"). Every other skill marked "Seen it" stays under "See all", in a quiet "Other skills you noticed" list.
+- Checkups appear only once one is saved (they arrive from Health), with no "None saved yet" prompt.
+- Every month still asks for its photo, as before.
