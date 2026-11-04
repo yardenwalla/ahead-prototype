@@ -59,3 +59,7 @@
 #main .st-banner .st-btn-make { background: var(--year-ink); color: #fff }
 #main .st-banner-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px }
 #main .st-banner-actions .st-btn { padding: 0 8px }
+/* Status, not content: tinted and flat, with a thin border in the category color */
+#main .hub-preview.st-banner { background: var(--year-pale); box-shadow: none; border: 1px solid color-mix(in srgb, var(--year-accent) 55%, transparent) }
+#main .st-banner-icon { background: #fff }
+#main .st-banner .st-btn-back { background: #fff }
