@@ -59,6 +59,11 @@
 #main .hub-detail .cc-fit .cc-when { grid-column: 1 / -1; display: flex; gap: 12px; align-items: flex-start; padding: 12px; border-radius: 14px; background: var(--ss-bg, #fcf3cf) }
 #main .hub-detail .cc-fit .cc-when-art { flex: none; width: 36px; height: 36px; border-radius: 11px; background: #fff; display: grid; place-items: center; color: var(--ss-ink) }
 #main .hub-detail .cc-fit .cc-when-art svg { width: 20px; height: 20px }
-#main .hub-detail .cc-fit .cc-when small { display: block; font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--ss-ink) }
-#main .hub-detail .cc-fit .cc-when b { display: block; font-size: 15.5px; color: var(--ink); margin: 2px 0 2px }
+#main .hub-detail .cc-fit .cc-when small { display: block; font-size: 14px; font-weight: 700; color: var(--ss-ink); margin-bottom: 2px }
+#main .hub-detail .cc-fit .cc-when b { display: block; font-size: 15px; font-weight: 600; color: var(--ink) !important; margin: 0 0 2px }
 #main .hub-detail .cc-fit .cc-when p { margin: 0; font-size: 13.5px; line-height: 1.45; color: #5c5361 }
+#main .hub-detail .cc-fit .cc-when-art svg [stroke]:not([stroke="none"]) { stroke: currentColor }
+#main .hub-detail .cc-fit .cc-when-art svg [fill]:not([fill="none"]) { fill: var(--ss-bg) }
+#main .hub-detail .cc-fit .cc-when-art { width: 42px; height: 42px; border-radius: 13px }
+#main .hub-detail .cc-fit .cc-when-art svg { width: 24px; height: 24px; stroke: var(--ss-ink) }
+#main .hub-detail .cc-fit .cc-when-art svg circle { fill: var(--ss-bg) }
