@@ -39,8 +39,18 @@
     [...big].reverse().forEach(r => { const m = monthOf(dob, r.date); (by[m] = by[m] || []).push(r); });
     rest.forEach(r => { const m = monthOf(dob, r.date); (also[m] = also[m] || []).push(r); });
     const months = [...new Set([...Object.keys(by), ...Object.keys(also)].map(Number))].sort((x, y) => y - x);
-    const chips = m => also[m] ? `<div class="mem-also"><small>${esc2(by[m] ? 'Also this month' : 'Noticed this month')}</small><div class="mem-chips">${also[m].map(r => `<button class="mem-chip" style="${TONE(r)}" onclick="openPage('event-edit:${r.id}')">${esc2(r.title)}</button>`).join('')}</div></div>` : '';
-    const inner = months.map(m => `<h2 class="hub-h2">${esc2(longLabel(m))}</h2>${by[m] ? `<div class="mem-list">${by[m].map(r => firstRow(r, false)).join('')}</div>` : ''}${chips(m)}`).join('');
+    // Each month as a page of a baby book: the month written by hand, its photo taped in the corner,
+    // the big firsts written out with their dates and notes, and the smaller things noticed as little tags.
+    const WORDS = ['Newborn', 'One month', 'Two months', 'Three months', 'Four months', 'Five months', 'Six months', 'Seven months', 'Eight months', 'Nine months', 'Ten months', 'Eleven months', 'One year'];
+    const TAPE = ['#f3d58a', '#f2b8c6', '#bfe3cf', '#cfe3f7', '#e5d4f5', '#f6cdb5', '#d8e9b8', '#f9d9a8', '#c9d7f5', '#f4c2c2', '#b9e2dc', '#f0d1e8', '#f1cf86'];
+    const day = d => parse(d).toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+    const pageOf = (m, k) => {
+      const pic = typeof hubPhotoFor === 'function' ? hubPhotoFor(m) : null;
+      const firstsHtml = (by[m] || []).map(r => `<button class="bk-first" onclick="openPage('event-edit:${r.id}')"><span class="bk-ic" style="${TONE(r)}">${hubArt(ICON(r), 'Development')}</span><span class="bk-copy"><b>${esc2(keepTitle(r))}</b><small>${esc2(day(r.date))}</small>${r.notes ? `<q>${esc2(String(r.notes).slice(0, 140))}</q>` : ''}</span></button>`).join('');
+      const tags = also[m] ? `<div class="bk-also"><span class="bk-also-label">${esc2(by[m] ? 'Also this month' : 'Noticed this month')}</span><div class="bk-tags">${also[m].map((r, i) => `<button class="bk-tag" style="${TONE(r)};--tilt:${i % 2 ? 1.5 : -1.5}deg" onclick="openPage('event-edit:${r.id}')">${esc2(r.title)}</button>`).join('')}</div></div>` : '';
+      return `<section class="bk-page${k % 2 ? ' is-alt' : ''}"><div class="bk-top"><h2 class="bk-month">${esc2(WORDS[m])}</h2>${pic ? `<span class="bk-photo" style="--tape:${TAPE[m]}"><i></i><img src="${pic}" alt=""></span>` : ''}</div>${firstsHtml ? `<div class="bk-firsts">${firstsHtml}</div>` : ''}${tags}</section>`;
+    };
+    const inner = `<div class="bk-book">${months.map(pageOf).join('')}</div>`;
     return String(window.__hub.detail('Memories', 'Memories', `${name()}’s firsts`, big.length ? `${big.length} big firsts so far.` : 'The big ones will collect here.', inner || `<p class="mem-empty">${esc2('Nothing saved yet.')}</p>`, 'star')).replace(/(<div class="monthly-page-header">[\s\S]*?<h1>)[^<]*(<\/h1><p>)[^<]*/, `$1Memories$2${esc2(name())}`);
   };
   if (typeof window.changesRoute === 'function') {
