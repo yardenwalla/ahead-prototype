@@ -167,7 +167,8 @@
   }
   // The checklist moves ahead of the usual age, without claiming the skill:
   // reaching and rolling from 3 months, crawling prep from 5, babyproofing from 8, furniture reach from 9.
-  function byAge(a) { return a >= 9 ? 'pulling' : a >= 8 ? 'moving' : a >= 5 ? 'rolling' : a >= 3 ? 'reaching' : 'setup'; }
+  // Matches the four stages parents see: First setup (from birth), Rolling (3–6 months), Crawling (6–9 months), Pulling up (9+).
+  function byAge(a) { return a >= 9 ? 'pulling' : a >= 8 ? 'moving' : a >= 6 ? 'rolling' : a >= 3 ? 'reaching' : 'setup'; }
   function reportedStage() {
     const s = answered(), chosen = ORDER.includes(answers.movementGuide) ? answers.movementGuide : null;
     return [s, chosen].filter(Boolean).sort((a,b)=>ORDER.indexOf(b)-ORDER.indexOf(a))[0] || (dm()<3?'setup':'reaching');
