@@ -76,17 +76,15 @@
     const ci = items.findIndex(x => x.now), oi = items.findIndex(x => x.on);
     if (!live() || ci < 0 || oi < 0 || oi === ci) return;
     const on = items[oi];
-    const back = `<button onclick="${topicGo(cat)}">${cat === 'Health' ? 'Back to the next checkup' : `Back to ${nm()}’s stage`}</button>`;
-    const make = on.change && CHANGEABLE.includes(cat) ? `<button class="st-make" onclick="${on.change}">Make this ${nm()}’s stage</button>` : '';
-    const banner = m.querySelector('.hub-preview');
-    if (banner) {
-      if (!/Back to/.test(banner.innerHTML)) banner.insertAdjacentHTML('beforeend', back);
-      if (make && !banner.querySelector('.st-make')) banner.insertAdjacentHTML('beforeend', make);
-    } else if (hero) {
-      const what = oi < ci ? 'Looking back' : cat === 'Health' ? 'Coming up' : 'Preview';
-      const age = ['Development', 'Daily rhythm', 'Health'].includes(cat) ? on.label : ageOf(on);
-      hero.insertAdjacentHTML('beforebegin', `<div class="hub-preview"><span>${what}${age ? ' · ' + esc(age) : ''}</span>${back}${make}</div>`);
-    }
+    // One quiet line: where you are, and a way back. Changing the stage is a small text link under it.
+    const backTxt = cat === 'Health' ? 'Back to next checkup' : `Back to ${nm()}’s stage`;
+    const old = m.querySelector('.hub-preview');
+    const what = oi < ci ? 'Looking back' : cat === 'Health' ? 'Coming up' : 'Preview';
+    const age = ['Development', 'Daily rhythm', 'Health'].includes(cat) ? on.label : ageOf(on);
+    const label = old && old.querySelector('span') ? old.querySelector('span').innerHTML : `${what}${age ? ' · ' + esc(age) : ''}`;
+    const make = on.change && CHANGEABLE.includes(cat) ? `<p class="st-banner-make">Is this where ${nm()} is? <button onclick="${on.change}">Make this ${nm()}’s stage</button></p>` : '';
+    const html = `<div class="hub-preview st-banner"><div class="st-banner-row"><span>${label}</span><button class="st-banner-back" onclick="${topicGo(cat)}">${backTxt}</button></div>${make}</div>`;
+    if (old) old.outerHTML = html; else if (hero) hero.insertAdjacentHTML('beforebegin', html);
   };
   if (typeof activeNavigationTab === 'function') {
     const baseTab = activeNavigationTab;
