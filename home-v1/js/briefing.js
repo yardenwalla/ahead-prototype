@@ -204,7 +204,7 @@
     for (const id of CH_ORDER) { const c = yaChangeInfo(id); if (!c || said[id]) continue; if (a >= c.start - 0.5 && a < c.end) return { id, state: 'soon', info: c }; }
     return null;
   }
-  const covered = (ch, key) => !!ch && (CH_COVERS[ch.id] || []).some(k => key === k || (k.endsWith(':') && key.startsWith(k)));
+    const covered = (ch, key) => !!ch && (CH_COVERS[ch.id] || []).some(k => key === k || (k.endsWith(':') && key.startsWith(k)));
   function changeCard(ch) {
     const F = s => (window.__hub ? window.__hub.F(s) : s), nm = esc(n()), c = ch.info;
     const DONE = { pull: `Now that ${nm} pulls up`, crawl: `Now that ${nm} crawls`, roll: `Now that ${nm} rolls`, solids: `Now that ${nm} has started solids`, sit: `Now that ${nm} sits up` };
@@ -224,7 +224,9 @@
 
   // Home shows the change as one ordinary card: what's happening, and which areas it touches.
   // The details (one row per area) live on the change's Timeline page, one tap away.
-  function changeItem(ch) {
+  // The one urgent effect (stop swaddling; once moving, the first safety step) rides inside the change card with its Done button.
+  const urgentFor = (ch, items) => items.find(i => ch.id === 'roll' ? ['rolling', 'rolling-soon'].includes(i.key) : ch.state === 'now' && ['crawl', 'pull'].includes(ch.id) && i.key.startsWith('check:'));
+  function changeItem(ch, urgent) {
     const c = ch.info, nm = n();
     const AREA = { 'Daily rhythm': 'everyday care', Development: 'play', 'Out and about': 'outings', Safety: 'safety', Sleep: 'sleep', Feeding: 'feeding', Health: 'your checkup' };
     const areas = [...new Set(c.rows.map(r => AREA[r[1]] || r[1].toLowerCase()))];
@@ -232,7 +234,8 @@
     const DONE = { pull: `Now that ${nm} pulls up`, crawl: `Now that ${nm} crawls`, roll: `Now that ${nm} rolls`, solids: `Now that ${nm} has started solids`, sit: `Now that ${nm} sits up` };
     const SOON = { pull: 'Pulling up could start any week now', crawl: 'Crawling could start any week now', roll: 'Rolling could start any week now', solids: 'Solids start around 6 months', sit: 'Sitting up could start any week now' };
     return { topic: c.rows[0][1] === 'Feeding' ? 'Feeding' : 'Development', key: 'change:' + ch.id + ':' + ch.state, title: ch.state === 'now' ? DONE[ch.id] : SOON[ch.id],
-      body: `It changes ${list}. Here’s what to do for each.`, link: link(`openPage('chg:Timeline:c:${ch.id}')`, 'See what it changes') };
+      body: urgent ? `First: ${ch.id === 'roll' ? 'stop swaddling at the first try to roll' : (() => { const t = ((typeof safetyHomeItems === 'function' && safetyHomeItems()[urgent.key.slice(6)]) || {}).title || 'start with the stairs'; return t.charAt(0).toLowerCase() + t.slice(1); })()}. Then:` : ch.state === 'now' ? 'Here’s what it changes:' : 'Here’s what it changes, so you’re ready:', tools: urgent && urgent.tools, link: link(`openPage('chg:Timeline:c:${ch.id}')`, 'See what it changes'),
+      tags: [...new Map(c.rows.map(r => [r[1], r])).values()].map(([, cat, , , go]) => ({ cat, go, label: ({ 'Daily rhythm': 'Everyday care', Development: 'Play', 'Out and about': 'Outings', Health: 'Checkup' })[cat] || cat })) };
   }
 
   /* ---------- what's coming up ---------- */
@@ -341,8 +344,10 @@
     // Like a notification: opening a card or hiding it clears it from Home. Safety to-dos clear when done, "Doesn't apply" or hidden.
     const todo = i.key.startsWith('check:') || !!i.tools, go = i.link ? i.link.go : `openPage('topic:${i.topic}')`;
     const base = { topic: i.topic, title: babyCopy(i.title), body: babyCopy(i.body), action: todo ? go : `hubHomeOpen('${i.key}');${go}`, art: 0, reason: null };
+    const tags = i.tags ? `<div class="home-change-tags">${i.tags.map(t => `<button style="${yearTheme(YEAR_PALETTES[t.cat] ? t.cat : 'Safety')}" onclick="${t.go}">${esc(t.label)}</button>`).join('')}</div>` : '';
     let html = conceptRow(base) + `<button class="brief-hide" onclick="hubHomeClear('${i.key}',true)" aria-label="Hide this from Home">×</button>`;
-    if (i.tools) html = `<div class="home-connected-sleep brief-card" style="${yearTheme(i.topic)}" data-brief="${i.key}"${todo ? ` data-home-check="${i.key.slice(6)}"` : ''}>${html}<div class="home-connected-actions">${i.tools}</div></div>`;
+    if (i.tools) html = `<div class="home-connected-sleep brief-card${i.tags ? ' home-change-card' : ''}" style="${yearTheme(i.topic)}" data-brief="${i.key}"${todo && !i.tags ? ` data-home-check="${i.key.slice(6)}"` : ''}>${html}${tags}<div class="home-connected-actions">${i.tools}</div></div>`;
+    else if (i.tags) html = `<div class="brief-row brief-card home-change-card" data-brief="${i.key}">${html}${tags}</div>`;
     else html = `<div class="brief-row brief-card" data-brief="${i.key}">${html}</div>`;
     return html;
   }
@@ -361,7 +366,8 @@
     freshKeys = new Set();
     settleOpened();
     const ch = activeChange();
-    const now = [...(ch ? [changeItem(ch)] : []), ...importantNow().filter(i => !covered(ch, i.key))].slice(0, 2), next = comingUp(now).filter(i => !covered(ch, i.key));
+    const all = importantNow(), urgent = ch ? urgentFor(ch, all) : null;
+    const now = [...(ch ? [changeItem(ch, urgent)] : []), ...all.filter(i => !covered(ch, i.key))].slice(0, 2), next = comingUp(now).filter(i => !covered(ch, i.key));
     const focus = homeCurrentFocus();
     const sig = [...now, ...next].map(i => i.key).join('|') + '|' + actualMonth() + '|' + (typeof chgStageIndex === 'function' ? ['Sleep', 'Feeding'].map(chgStageIndex).join(',') : '');
 
