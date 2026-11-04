@@ -324,8 +324,6 @@
     return h;
   }
 
-  // The redesigned Home builds from this (js/home-v2.js).
-  window.homeBriefingData = () => { freshKeys = new Set(); settleOpened(); const now = importantNow(), next = comingUp(now); return { now, next, focus: homeCurrentFocus(), fresh: freshKeys }; };
   window.homeBriefingDebug = () => { const now = importantNow(); return { now: now.map(i => i.key + ' · ' + i.title), next: comingUp(now).map(i => i.key + ' · ' + i.title) }; };
   window.adaptiveHome = homeAtlas = function () {
     const raw = connectedHomeBeforeBehavior(), start = raw.indexOf('<section class="connected-now"'), end = raw.indexOf('<section class="connected-browse"');

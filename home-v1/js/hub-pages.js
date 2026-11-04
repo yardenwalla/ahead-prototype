@@ -173,7 +173,6 @@
     const firsts = journeyData().records.filter(r => r.type === 'milestone' && r.date >= from && r.date <= iso(NOW)).slice(-3);
     return { m, since, firsts };
   }
-  window.hubMonthBirthday = () => monthBirthday();
   const baseHome = window.adaptiveHome;
   if (typeof baseHome === 'function') {
     window.adaptiveHome = homeAtlas = function () {
@@ -669,9 +668,8 @@
         q = hubQuestionCard(q, Q_CAT(key));
       }
       if (!q) return html;
-      // After the month card, never above it: the parent sees what's happening first, then one question.
-      const at = ['<section class="connected-ahead"', '<p class="brief-close"', '<section class="connected-browse"'].find(x => html.includes(x));
-      return at ? html.replace(at, q + at) : html + q;
+      const at = ['<p class="brief-unchanged"', '<section class="connected-now"'].find(x => html.includes(x));
+      return at ? html.replace(at, q + at) : html;
     };
   }
 
