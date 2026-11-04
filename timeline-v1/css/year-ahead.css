@@ -78,3 +78,13 @@
 #main .ya-web-copy b { display: block; font-size: 15.5px; line-height: 1.25 }
 #main .ya-web-copy span { display: block; margin-top: 1px; font-size: 13px; color: #7a7484 }
 #main .ya-chip em small { display: block; font-size: 12px; font-weight: 500; color: #8a8494 }
+
+/* Month cards, compact: a small picture of the baby beside the month, the changes underneath */
+#main .ya-months { align-items: start; grid-auto-columns: 78% }
+#main .ya-month { background: linear-gradient(180deg, #f6f1fb 0, #fffdf9 92px) }
+#main .ya-month-top { display: flex; align-items: center; gap: 12px; padding: 12px 14px 4px }
+#main .ya-month-art { position: relative; flex: none; width: 76px; height: 76px; border-radius: 20px; background: #fff; overflow: hidden; box-shadow: 0 1px 3px rgba(43,40,64,.08) }
+#main .ya-month-art .home-month-scene, #main .ya-month-art svg { position: absolute; left: 50%; top: 52%; width: 150px; height: auto; transform: translate(-50%, -50%) }
+#main .ya-month-head { padding: 0 }
+#main .ya-month-head b { font-size: 19px }
+#main .ya-month-list { padding: 8px 12px 12px }
