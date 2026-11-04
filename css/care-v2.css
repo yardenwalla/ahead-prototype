@@ -170,6 +170,7 @@
 #main .care-v2 .care-glass b { font-size: 14px }
 #main .care-v2 .care-glass small { font-size: 12.5px; color: var(--muted) }
 #main .care-v2 .care-glass .is-urgent b { color: #a3324f }
+#main .care-v2 .care-glass figcaption { grid-column: 1 / -1; font-size: 13px; color: var(--muted); text-align: center; padding: 0 4px }
 /* Poop colors and the first-week swatches (the swatch style from the Feeding pages) */
 #main .hub-poop { display: flex; flex-direction: column; gap: 8px; padding: 14px }
 #main .hub-poop-row { display: grid; gap: 8px }
