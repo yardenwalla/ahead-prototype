@@ -1,0 +1,12 @@
+/* Home cards v4 preview: one-tap answers on cards, and live category tiles */
+#main .home2-card .home2-ask{display:flex;gap:8px;flex-wrap:wrap;padding:0 14px 14px 58px;margin-top:-4px}
+#main .home2-card .home2-ask button{min-height:36px;padding:0 14px;border-radius:999px;border:1px solid color-mix(in srgb,var(--year-accent,#c4b8d5) 55%,var(--white));background:var(--white);color:var(--ink);font:600 12.5px/1 Figtree,system-ui,sans-serif}
+#main .home2-card .home2-ask button:hover{background:color-mix(in srgb,var(--year-pale,#f3f0f7) 70%,var(--white))}
+#main .home2-card .home2-done{display:inline-flex;align-items:center;gap:7px}
+#main .home2-card .home2-done>span{width:14px;height:14px;border:1.5px solid var(--year-accent,#c4b8d5);border-radius:50%}
+#main .home2-card{position:relative}
+#main .connected-category-grid button.home2-live{grid-template-columns:30px minmax(0,1fr) 8px;align-items:start;min-height:76px}
+#main .connected-category-grid button.home2-live b{grid-column:2;display:block}
+#main .connected-category-grid button.home2-live>span:first-child{grid-row:span 2}
+#main .connected-category-grid .home2-tile{grid-column:2;display:block;font-size:11.5px;line-height:1.35;color:var(--ink-2,#5E5A75);margin-top:2px}
+#main .connected-category-grid button.home2-live .connected-chevron{grid-column:3;grid-row:1 / span 2;align-self:center}
