@@ -103,7 +103,6 @@
     s => s.feed === 'breast' ? 'Hourly feeds are common around 3 and 6 weeks, and settle in 2–3 days. Feeding more is how your body makes more.' : 'Days of extra hunger are common around 3 and 6 weeks. Follow {his} cues: it settles in 2–3 days.', { go: "openPage('chg:Feeding:d:cues')" });
   card('tub-baths', 'Daily rhythm', 4, s => s.d >= 14 && s.d <= 28, 'First tub bath: once the cord falls off', 'Usually at 1–3 weeks. A few inches of warm water, and a hand on {him} the whole time.', { go: "openPage('chg:Daily rhythm:d:tub')" });
   card('first-bottle', 'Feeding', 4, s => s.feed === 'breast' && s.d >= 21 && s.d <= 42, 'A first bottle, if you’ll ever need one', '3 to 6 weeks is the easiest time, once nursing is going well. Babies who don’t try one early can resist it later.', { go: "openPage('chg:Feeding:d:bottles')" });
-  card('postpartum', 'Health', 4, s => s.d >= 14 && s.d <= 49, 'Your own checkup is due too', 'If you gave birth: a check-in in the first 3 weeks, and a full visit by 12 weeks.', { go: "openPage('chg:Health:d:you')" });
   card('crying-peak', 'Sleep', 4, s => s.d >= 35 && s.d <= 63, 'The fussiest weeks: they ease by 3–4 months', 'Crying usually peaks around 6–8 weeks, and some evenings nothing works. That isn’t you. At your limit, put {him} down safely and step away.', { go: "openPage('chg:Sleep:d:crying')" });
   // 6 weeks to 4 months
   card('drool', 'Daily rhythm', 4, s => s.d >= 60 && s.d <= 115, 'All that drool usually isn’t teeth yet', 'Drooling and chewing on fists often start around 2–4 months, long before a first tooth. It’s how babies explore.', { go: "openPage('chg:Daily rhythm:d:gums')" });
@@ -151,6 +150,7 @@
   card('solids-1', 'Feeding', 3, s => s.solidsDays != null && s.solidsDays <= 45 && s.solidsTold != null && s.solidsTold <= 21 && !opened(s, 'solids-maybe'), 'First foods: lead with iron', 'Iron runs low around 6 months, so meat, beans, lentils or iron-fortified oatmeal make the best first foods.', { fromAnswer: 1, must: 1, go: "openPage('chg:Feeding:d:food')" });
   card('solids-2', 'Feeding', 2, s => s.solidsDays != null && ((s.solidsDays >= 7 && s.solidsDays <= 120 && (opened(s, 'solids-1') || opened(s, 'solids-maybe'))) || (s.solidsDays > 21 && s.solidsDays <= 120)), 'Offer peanut and egg early', 'Giving common allergens early, then keeping them in {his} week, lowers the chance of a food allergy. Severe eczema? Ask your pediatrician first.', { must: 1, go: "openPage('chg:Feeding:d:allergens')" });
   card('off-menu', 'Feeding', 2, s => s.solidsDays != null && s.solidsTold != null && s.solidsTold <= 70 && (opened(s, 'solids-1') || opened(s, 'solids-maybe') || s.solidsDays > 45), 'Still off the menu until 1', 'No honey, and no whole grapes, nuts or popcorn: they’re common choking risks before {his} first birthday.', { must: 1, go: "openPage('chg:Feeding:d:food')" });
+  card('choking-foods', 'Feeding', 2, s => s.solidsDays != null && s.solidsTold != null && s.solidsTold <= 90 && opened(s, 'off-menu'), '', '', { must: 1, go: "openPage('chg:Feeding:d:setup')" });
   card('solids-poop', 'Daily rhythm', 4, s => s.solidsDays != null && s.solidsDays >= 5 && s.solidsDays <= 25, 'Poop changes with solids', 'Thicker, browner and smellier, sometimes the color of what {he} ate. All normal.', { go: "openPage('topic:Daily rhythm')" });
   card('solids-3', 'Feeding', 4, s => s.solidsDays != null && s.solidsDays >= 14 && s.solidsDays <= 80 && opened(s, 'solids-2'), 'A few sips of water at meals', 'Up to 4–8 oz a day, from an open or straw cup. Starting now makes leaving bottles at 12 months easier.', { go: "openPage('chg:Feeding:d:cup')" });
   card('solids-unknown', 'Feeding', 3, s => s.solids == null && s.d >= 246 && s.d <= 300, 'Started solids? Offer peanut and egg early', 'Giving common allergens early, then keeping them in {his} week, lowers the chance of a food allergy. Severe eczema? Ask your pediatrician first.',
@@ -244,7 +244,7 @@
     rsv: "openPage('home2:rsv')", flu: "openPage('home2:flu')", clocks: "openPage('home2:clocks')",
     reaching: "openPage('safety-stage:reaching')", 'rolling-soon': "openPage('safety-stage:reaching')", 'rolling-now': "openPage('safety-stage:reaching')",
     'first-bottle': "openPage('chg:Feeding:d:pump')", 'bottle-cup': "openPage('chg:Feeding:d:after')", 'solids-1': "openPage('chg:Feeding:d:tray')", 'solids-maybe': "openPage('chg:Feeding:d:tray')",
-    'off-menu': "openPage('chg:Feeding:d:setup')", 'solids-late': "openPage('chg:Feeding:d:signs')", cluster: "openPage('chg:Feeding:d:nursing')"
+    'off-menu': "openPage('chg:Feeding:d:tray')", 'solids-late': "openPage('chg:Feeding:d:signs')", cluster: "openPage('chg:Feeding:d:nursing')"
   };
   C.forEach(c => { if (ROUTE[c.id]) c.go = ROUTE[c.id]; });
 

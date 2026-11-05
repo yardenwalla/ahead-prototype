@@ -1,4 +1,4 @@
-/* Ahead · Home card copy (v7, warm and short, reviewed). Shared with the card simulator: one source for every word on a Home card. */
+/* Ahead · Home card copy (v7.1). Shared with the card simulator: one source for every word on a Home card. */
 window.HOME_COPY = {
 "vitamin-d:t": "Time to start vitamin D drops",
 "vitamin-d:t-late": "Daily vitamin D drops for {N}",
@@ -19,8 +19,6 @@ window.HOME_COPY = {
 "tub-baths": "Once the cord falls off, use a few inches of warm water and keep a hand on {him}.",
 "first-bottle:t": "Thinking about a bottle someday?",
 "first-bottle": "Weeks 3 to 6 are the easiest time to try one, once nursing feels settled.",
-"postpartum:t": "Your own checkup matters too",
-"postpartum": "If you gave birth, book your own visit if you haven’t, and mention how your mood feels.",
 "crying-peak:t": "Peak fussiness, easing by 3–4 months",
 "crying-peak": "Crying peaks around 6–8 weeks, and it’s OK to lay {him} in the crib and step away.",
 "drool:t": "All that drool isn’t teething yet",
@@ -71,8 +69,8 @@ window.HOME_COPY = {
 "solids-2": "Early, regular egg and thinned peanut butter lower allergy risk. Severe eczema or food allergy? Ask your pediatrician.",
 "solids-unknown:t": "Started solids? Try peanut and egg early",
 "solids-unknown": "Early, regular egg and thinned peanut butter lower allergy risk. Severe eczema or food allergy? Ask your pediatrician.",
-"off-menu:t": "Honey waits until 1, nuts much longer",
-"off-menu": "Honey can start at 1, but whole nuts, whole grapes and popcorn wait until about age 4.",
+"off-menu:t": "Honey waits until 1",
+"off-menu": "Even a small taste can make babies under 1 very sick, so it waits until {his} first birthday.",
 "solids-poop:t": "Poop changes with solids",
 "solids-poop": "Thicker, browner and smellier is all normal, sometimes even the color of what {he} ate.",
 "solids-3:t": "A few sips of water at meals",
@@ -157,5 +155,7 @@ window.HOME_COPY = {
 "care-start:t": "Daycare starts soon",
 "care-start": "Plan a short practice day, and send a note with {his} feeds and naps.",
 "stand-soon:cond": "Set the crib mattress to its lowest setting now, if it isn’t there already.",
-"crawl-now:first": "Start with a gate screwed in at the top of the stairs, then cabinet locks and furniture straps."
+"crawl-now:first": "Start with a gate screwed in at the top of the stairs, then cabinet locks and furniture straps.",
+"choking-foods:t": "A few foods wait until about 4",
+"choking-foods": "Whole nuts, whole grapes and popcorn are choking risks, so quarter grapes and skip nuts and popcorn."
 };
