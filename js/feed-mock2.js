@@ -804,6 +804,7 @@
     const list = (NO_CALL.includes(a) || a === 'supply') ? rows.filter(r => r[2] && !/pediatrician right away/.test(r[1])) : rows;
     if (keepMom && a === 'supply') list.unshift(['Call your doctor or a lactation consultant if', F('A red, painful area on your breast with a fever.')]);
     else if (keepMom) list.unshift(['Call your doctor or a lactation consultant if', mom]);
+    if (a === 'enough') list.forEach(r => { r[1] = r[1].split(F('during feeds. Fewer than 6 wet diapers a day, he seems hungry after most feeds, he isn’t gaining at a checkup, or he refuses')).join(F('during feeds, has fewer than 6 wet diapers a day, seems hungry after most feeds, isn’t gaining at a checkup, or refuses')); });
     if (a === 'enough' || a === 'small') list.forEach(r => { if (!r[2] && !/refus/.test(r[1])) r[1] = r[1].replace(/\.$/, F(', or he refuses several feeds in a row.')).replace(F(' or he isn’t gaining at a checkup, or he refuses'), F(' he isn’t gaining at a checkup, or he refuses')).replace(F(', or very sleepy and hard to wake for feeds, or he refuses'), F(', very sleepy and hard to wake for feeds, or he refuses')).replace(F(', or is very sleepy and hard to wake for feeds, or he refuses'), F(', is very sleepy and hard to wake for feeds, or refuses')); });
     // Drop duplicate breast-pain lines folded into pediatrician rows
     list.forEach(r => { if (!r[2]) r[1] = r[1].replace(F(', or a red, painful area on your breast with a fever.'), '.'); });
@@ -820,10 +821,13 @@
     if (a === 'enough') { ['Poop:', 'Night feeds', 'first checkup', isEarly() ? '\\u0000' : 'Born a few weeks early'].forEach(dropP);
       if (stg() === 0) h = h.replace(/<\/div>$/, `<div class="hub-tip"><b>${F('Tracking feeds')}</b>${F(isBottle() && !nurses() ? 'For the first weeks, jot down when each feed starts, how many ounces, and each diaper. Once he’s back to birth weight, you can stop.' : 'For the first weeks, jot down when each feed starts, which side' + (isBottle() ? ' or how many ounces' : '') + ', and each diaper. Once he’s back to birth weight, you can stop.')}</div></div>`); }
     if (a === 'latch') ['Burping:'].forEach(dropP);
+    if (a === 'enough' && isEarly()) h = h.split(F('Once he’s back to birth weight, you can stop.')).join(F('Keep going until his care team says you can stop.'))
+      .split(F('He tires, breathes fast or changes color during feeds. Fewer than 6 wet diapers a day, he seems hungry after most feeds, he isn’t gaining at a checkup, or he refuses several feeds in a row.')).join(F('He tires, breathes fast or changes color during feeds, has fewer than 6 wet diapers a day, seems hungry after most feeds, isn’t gaining at a checkup, or refuses several feeds in a row.'));
     if (a === 'milkin' && nurses()) ['One side or both'].forEach(dropP);
     // Remove any boxes the regexes emptied, then add the one card at the end
     h = h.replace(/<div class="hub-tip fd-tip fd-notes">\s*<\/div>/g, '');
     h = h.replace(/<\/div>$/, whenCard(list) + calmCss + '</div>');
+    if (a === 'enough') h = h.split(F('during feeds. Fewer than 6 wet diapers a day, he seems hungry after most feeds, he isn’t gaining at a checkup, or he refuses')).join(F('during feeds, has fewer than 6 wet diapers a day, seems hungry after most feeds, isn’t gaining at a checkup, or refuses'));
     return pron(addVideo(a, h)); };
   const stTl = window.stageTimeline;
   if (typeof stTl === 'function') window.stageTimeline = function (cat, items, ...r) { if (cat === CAT && !window.__fdPills) return ''; return stTl.call(this, cat, items, ...r); };
