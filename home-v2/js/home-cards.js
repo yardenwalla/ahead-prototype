@@ -17,7 +17,49 @@
   const save = st => { try { localStorage.setItem('ahead-home2:' + journeyKey(), JSON.stringify(st)); } catch (e) {} };
   const daysSince = iso => iso ? Math.floor((NOW - parse(iso)) / DAY) : null;
 
+  /* ---------- use what the app already knows (no new questions) ---------- */
+  // A first saved in Memories ("Rolls over", "Crawling", "First tooth") counts as the parent telling us.
+  const MEM = [['pulling', /pull(s|ing|ed)? (up|to stand)|stands? (up|holding|with)|cruis/i], ['crawling', /crawl|scoot/i], ['sitting', /sits?( up)? without|sitting (up|alone|on)|sits alone/i], ['rolling', /roll/i], ['tooth', /tooth|teeth/i]];
+  function memoryFirsts() {
+    const out = {};
+    try {
+      const recs = journeyData().records.filter(r => r.type === 'milestone' && r.status === 'attended');
+      const skills = typeof journeySkills === 'function' ? journeySkills() : [];
+      for (const r of recs) {
+        const text = (r.title || '') + ' ' + ((skills.find(x => x.key === r.skillKey) || {}).label || '');
+        for (const [k, re] of MEM) if (re.test(text)) { if (!out[k] || r.date < out[k]) out[k] = r.date; break; }
+      }
+    } catch (e) {}
+    return out;
+  }
+  const RANK = ['none', 'rolling', 'sitting', 'crawling', 'pulling'];
+  function syncFromApp() {
+    const mf = memoryFirsts(), a = answers; let changed = false;
+    a.stageDates = a.stageDates || {};
+    const cur = a.pullUp === 'Yes' ? 'pulling' : a.crawl === 'Yes' ? 'crawling' : a.sit === 'Yes' ? 'sitting' : a.roll === 'Yes' ? 'rolling' : 'none';
+    let best = null; for (const k of ['pulling', 'crawling', 'sitting', 'rolling']) if (mf[k]) { best = k; break; }
+    if (best && RANK.indexOf(best) > RANK.indexOf(cur)) {
+      if (best === 'pulling') { a.pullUp = 'Yes'; a.crawl = a.crawl === 'Yes' ? 'Yes' : a.crawl; }
+      if (best === 'crawling') a.crawl = 'Yes';
+      if (best === 'sitting') a.sit = 'Yes';
+      if (['rolling', 'sitting', 'crawling', 'pulling'].includes(best) && a.roll !== 'Yes' && mf.rolling) a.roll = 'Yes';
+      if (best === 'rolling') a.roll = 'Yes';
+      a.stageDates.movement = mf[best]; changed = true;
+      const st = store(); if (best === 'sitting') { st.sitAt = mf[best]; save(st); }
+    }
+    if (mf.tooth && a.tooth !== 'Yes') { a.tooth = 'Yes'; const st = store(); st.toothAt = mf.tooth; delete st.toothNo; save(st); changed = true; }
+    if (changed && typeof persist === 'function') persist();
+  }
+  // Steps ticked in Safety's checklist count as done on Home, and the other way round.
+  const safetyDone = id => { try { return ['done', 'na'].includes((journeyData().checks.safetyHome || {})[id]); } catch (e) { return false; } };
+  function tickSafety(ids) { try { const data = journeyData(); data.checks.safetyHome = Object.assign({}, data.checks.safetyHome || {}); ids.forEach(id => { if (!data.checks.safetyHome[id]) data.checks.safetyHome[id] = 'done'; }); saveJourneyData(data); } catch (e) {} }
+  // Born early: cards follow adjusted age, except Health (checkups and shots follow the birthday).
+  const adjustedDays = () => (profile.early && profile.due && (typeof ageMode !== 'function' || ageMode('dev') !== 'birthday')) ? Math.floor((NOW - parse(profile.due)) / DAY) : null;
+  // Places that don't change their clocks
+  const noDst = (() => { try { return ['America/Phoenix', 'Pacific/Honolulu', 'America/Puerto_Rico'].includes(Intl.DateTimeFormat().resolvedOptions().timeZone); } catch (e) { return false; } })();
+
   function state() {
+    syncFromApp();
     const st = store(), a = answers || {}, dob = parse(profile.dob);
     const d = Math.floor((NOW - dob) / DAY);
     const feed = profile.feed === 'Formula' ? 'formula' : profile.feed === 'Both' ? 'both' : profile.feed === 'Breast milk' ? 'breast' : 'unknown';
@@ -37,7 +79,7 @@
     const solids = start ? 'started' : (a.solids === 'Not yet' || st.solidsNo) ? 'notyet' : null;
     const solidsAt = st.solidsToldAt || (sd.food) || (a.solidsStart) || null;
     return {
-      d, feed, date: new Date(NOW), birth: dob, n: name(), p: babyPronouns(),
+      d, dBirth: d, dAdj: adjustedDays(), feed, date: new Date(NOW), birth: dob, n: name(), p: babyPronouns(),
       move, notYet, moveAt: moveAt ? daysSince(moveAt) : null,
       swaddle: a.swaddleStopped === 'Yes' ? 'sack' : a.neverSwaddled === 'Yes' ? 'never' : null,
       solids, solidsDays: start ? Math.floor((NOW - start) / DAY) : null, solidsTold: solidsAt ? daysSince(solidsAt) : null,
@@ -248,6 +290,13 @@
   };
   C.forEach(c => { if (ROUTE[c.id]) c.go = ROUTE[c.id]; });
 
+  /* ---------- age basis and Safety's checklist ---------- */
+  const BIRTH_AGE = c => c.cat === 'Health';
+  const DONE_IN_SAFETY = { 'rolling-soon': ['small', 'changing'], reaching: ['small'], 'crawl-soon': ['gates', 'storage', 'outlets', 'anchor'], 'crawl-now': ['gates'] };
+  const DONE_ANSWER = { 'stand-soon': () => answers.mattressLowest === 'Yes', 'stand-now': () => answers.mattressLowest === 'Yes' && !0, 'sitting-gear': () => answers.mattressLowered === 'Yes' || answers.mattressLowest === 'Yes' };
+  const doneElsewhere = (c, s) => (DONE_IN_SAFETY[c.id] && DONE_IN_SAFETY[c.id].every(safetyDone)) || (c.id === 'stand-soon' && DONE_ANSWER['stand-soon']()) || (c.id === 'stand-now' && !opened(s, 'stand-soon') && answers.mattressLowest === 'Yes') || (c.id === 'sitting-gear' && DONE_ANSWER['sitting-gear']()) || (c.id === 'clocks' && noDst);
+  const forCard = (c, s) => (s.dAdj != null && !BIRTH_AGE(c)) ? at(s, s.dAdj) : s;
+
   /* ---------- picking ---------- */
   const KEY = (c, s) => c.key ? c.key(s) : c.id;
   function wasTrue(c, s, within, step) {
@@ -261,12 +310,14 @@
       if (c.once !== false && s.opened[KEY(c, s)] != null) return false;
       if (c.id === 'checkup' && !checkupNow(s)) return false;
       if (c.topic && c.topic === qTopic) return false;
-      let ok = false; try { ok = c.show(s); } catch (e) {}
+      if (doneElsewhere(c, s)) return false;
+      const sc = forCard(c, s);
+      let ok = false; try { ok = c.show(sc); } catch (e) {}
       if (ok) return true;
-      if (c.must && s.seen[c.id] == null && wasTrue(c, s, 28, 2)) return true;      // waits for the parent
-      return !!(first && c.catchup && s.d <= c.catchup && wasTrue(c, s, 400, 7));
+      if (c.must && s.seen[c.id] == null && wasTrue(c, sc, 28, 2)) return true;      // waits for the parent
+      return !!(first && c.catchup && sc.d <= c.catchup && wasTrue(c, sc, 400, 7));
     });
-    const later = at(s, s.d + 4), leaving = c => { try { return !c.show(later); } catch (e) { return true; } };
+    const leaving = c => { const sc = forCard(c, s); try { return !c.show(at(sc, sc.d + 4)); } catch (e) { return true; } };
     // A card the parent just unlocked with an answer leads, so the answer visibly does something.
     const justAnswered = Date.now() - s.answeredAt < 12 * 3600e3, pri = c => c.fromAnswer && justAnswered ? 0 : c.pri;
     live.sort((a, b) => (pri(a) - pri(b)) || (leaving(b) - leaving(a)) || ((s.seen[a.id] != null) - (s.seen[b.id] != null)) || (C.indexOf(a) - C.indexOf(b)));
@@ -286,7 +337,7 @@
   window.home2Open = (id, go) => { const st = store(); st.pending = { id, at: Date.now() }; save(st); try { (new Function(go))(); } catch (e) { render(); } };
   function settlePending() { const st = store(); if (st.pending) { if (Date.now() - st.pending.at >= 4000) { st.opened = st.opened || {}; st.opened[st.pending.id] = Date.now(); } delete st.pending; save(st); } }
   window.home2Hide = id => { mark('opened', id); const y = scrollY; render(); scrollTo(0, y); if (typeof hubToast === 'function') hubToast('Hidden', 'It’s still in its guide if you need it.'); };
-  window.home2Done = id => { mark('opened', id); const y = scrollY; render(); scrollTo(0, y); if (typeof hubToast === 'function') hubToast('Done', 'Nice. It’s ticked off in Safety too.'); };
+  window.home2Done = id => { mark('opened', id); if (DONE_IN_SAFETY[id]) tickSafety(DONE_IN_SAFETY[id]); if (id === 'stand-now') { answers.mattressLowest = 'Yes'; persist(); } const y = scrollY; render(); scrollTo(0, y); if (typeof hubToast === 'function') hubToast('Done', 'Nice. It’s ticked off in Safety too.'); };
   const toast = (t, b) => { if (typeof hubToast === 'function') hubToast(t, b); };
   window.home2Answer = (id, js, label) => {
     mark('opened', id); const st0 = store(); st0.answeredAt = Date.now(); save(st0);
@@ -305,7 +356,8 @@
     'Has a tooth': 'Home now shows tooth care.', 'On two naps': 'Home now shows the bedtime change.', 'Still three': 'We’ll check back in a few weeks.' };
 
   /* ---------- markup ---------- */
-  function row(c, s) {
+  function row(c, s0) {
+    const s = forCard(c, s0);
     const id = KEY(c, s), title = esc(w(s, T(c.title)(s))), body = esc(w(s, T(c.body)(s))), go = typeof c.go === 'function' ? c.go(s) : c.go;
     let tools = '';
     if (c.ask) tools = `<div class="home2-ask">${c.ask.map(([label, js]) => `<button onclick="home2Answer('${id}',&quot;${js.replace(/"/g, '&quot;')}&quot;,'${esc(ANSWERED[label] || '')}')">${esc(label)}</button>`).join('')}</div>`;
@@ -383,8 +435,35 @@
     }
     const r = baseRender.apply(this, arguments);
     try { if (page === 'home' && (typeof isCurrent !== 'function' || isCurrent())) paint(); } catch (e) { console.error(e); }
+    try { const where = document.querySelector('#main .hub-where'); if (where && !document.querySelector('#main .home2-know')) where.insertAdjacentHTML('afterend', knowsHtml()); } catch (e) { console.error(e); }
     return r;
   };
+  /* ---------- Profile: what Ahead knows, so parents can see it and fix it (never a form to fill in) ---------- */
+  const dayLabel = iso => parse(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  window.home2Forget = key => {
+    const st = store();
+    if (key === 'solids') { delete st.solidsToldAt; save(st); setFeedingStage('preparing'); return; }
+    if (key === 'tooth') { delete st.toothAt; st.toothNo = iso(NOW); save(st); setAnswer('tooth', null); return; }
+    if (key === 'naps') { delete st.napsAt; save(st); setAnswer('twoNaps', null); return; }
+    if (key === 'sack') { setAnswer('swaddleStopped', null); return; }
+    if (key === 'never') { setAnswer('neverSwaddled', null); return; }
+  };
+  function knowsHtml() {
+    const s = state(), a = answers, mf = memoryFirsts(), n = esc(s.n), rows = [];
+    const row = (label, sub, btn) => rows.push(`<div class="home2-know-row"><div><b>${esc(label)}</b><small>${esc(sub)}</small></div>${btn || ''}</div>`);
+    const fix = key => `<button class="home2-know-fix" onclick="home2Forget('${key}')">Not right</button>`;
+    const mem = `<button class="home2-know-fix" onclick="openPage('chg:Timeline:firsts')">In Memories</button>`;
+    const mv = { pulling: 'Pulling up', crawling: 'Crawling', sitting: 'Sitting on ' + s.p.p + ' own', rolling: 'Rolling' }[s.move];
+    if (mv) { const d = (a.stageDates || {}).movement; row(mv, (d ? 'Since ' + dayLabel(d) + ' · ' : '') + (mf[s.move] ? 'From Memories' : 'Change it under “How ' + s.n + ' moves”'), mf[s.move] ? mem : ''); }
+    if (s.solidsDays != null && a.solidsStart) row('Started solids', 'Since ' + dayLabel(a.solidsStart), fix('solids'));
+    if (s.tooth === true) row('Has teeth', mf.tooth ? 'First tooth ' + dayLabel(mf.tooth) + ' · From Memories' : 'You told us on Home', mf.tooth ? mem : fix('tooth'));
+    if (s.naps === 2) row('On two naps', 'You told us on Home', fix('naps'));
+    if (s.swaddle === 'sack') row('In a sleep sack', 'No more swaddle cards', fix('sack'));
+    if (s.swaddle === 'never') row('Doesn’t swaddle', 'No swaddle cards', fix('never'));
+    if (!rows.length) return '';
+    return `<h2 class="hub-h2">What Ahead knows</h2><p class="hub-where-lead">From your answers and Memories. Fix anything that’s not right.</p><section class="hub-card home2-know">${rows.join('')}</section>`;
+  }
+
   function paint() {
     const main = document.getElementById('main'); if (!main) return;
     settlePending();
