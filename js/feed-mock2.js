@@ -672,9 +672,38 @@
     const j = h.indexOf('ss-head'); const i = j > 0 ? h.indexOf('</div>', j) + 6 : -1; if (k === 'sleepy' || (k === 'formula' && stg() > 2)) return h; return i > 5 ? h.slice(0, i) + planLine() + h.slice(i) : h; }; });
   // Tough feed list now opens real pages
   P.worry = (v) => { v = v == null ? stg() : Number(v); const bt = isBottle();
-    const items = v <= 2 ? [['bottle', 'Spit-up or vomit?', 'How much is normal, and when to call', 'spit'], ['drop', 'Gas and lots of crying', 'What helps, and gripe water', 'gas'], ['heart', 'Fussy or arching at feeds', 'Too hungry, too fast, or full', 'fussy'], (v === 0 || (isEarly() && v === 1)) && ['moon', 'Too sleepy to feed', 'How to wake him, and when to call', 'sleepy'], nurses() && ['star', 'Won’t take a bottle', 'Common for babies who nurse', 'refusebottle'], nurses() && fd() === 'Both' && ['heart', 'Fussy at the breast after bottles', 'When bottles flow faster', 'prefbottle'], ['smile', 'Hiccups', 'Normal, and what helps', 'hiccups']].filter(Boolean)
+    const items = v <= 2 ? [['bottle', 'Spit-up or vomit?', 'How much is normal, and when to call', 'spit'], ['drop', 'Gas and lots of crying', 'What helps, and gripe water', 'gas'], ['heart', 'Fussy or arching at feeds', 'Too hungry, too fast, or full', 'fussy'], ['diaper', 'Not eating much', 'What to try, and how to tell it’s okay', 'enough'], v >= 1 && ['clock', 'Snacking', 'Small feeds, every hour or so', 'snack'], ['moon', 'Eating more at night', v === 0 ? 'Days and nights mixed up' : 'Less in the day, more at night', 'nights'], nurses() && v >= 1 && ['heart', 'Suddenly refusing the breast', 'A nursing strike, and what helps', 'nstrike'], fd() !== 'Breast milk' && ['bottle', 'Is it the formula?', 'Before you switch', 'isformula'], (v === 0 || (isEarly() && v === 1)) && ['moon', 'Too sleepy to feed', 'How to wake him, and when to call', 'sleepy'], nurses() && ['star', 'Won’t take a bottle', 'Common for babies who nurse', 'refusebottle'], nurses() && fd() === 'Both' && ['heart', 'Fussy at the breast after bottles', 'When bottles flow faster', 'prefbottle'], ['smile', 'Hiccups', 'Normal, and what helps', 'hiccups']].filter(Boolean)
       : [['shield', 'Gagging or choking?', 'How to tell, and what to do', 'gag'], ['bowl', 'Refusing food', 'Light days, and what helps', 'refusefood'], ['diaper', 'Constipation', 'Hard poop with solids', 'constipation'], ['eye', 'A rash after a new food', 'When it’s an allergy', 'rash'], ['tooth', 'Teething and feeds', 'Sore gums, shorter feeds', 'teethfeed'], nurses() && ['hand', 'Biting while nursing', 'Once teeth come', 'biting']].filter(Boolean);
-    return page(head('Feeding', 'Tough feed?', 'Pick what you’re seeing.') + `<div class="hub-card care-folds care-lookoff">${items.map(([i, t, s, to]) => `<button class="care-pick" onclick="${go(to)}"><span class="care-ico">${hubArt(i, CAT)}</span><span><b>${F(t)}</b><small>${F(s)}</small></span><i aria-hidden="true">›</i></button>`).join('')}</div>`); };
+    const pick = ([i, t, s, to]) => `<button class="care-pick" onclick="${go(to)}"><span class="care-ico">${hubArt(i, CAT)}</span><span><b>${F(t)}</b><small>${F(s)}</small></span><i aria-hidden="true">›</i></button>`;
+    const DAY = ['enough', 'snack', 'nights', 'isformula', 'refusefood', 'constipation'], during = items.filter(x => !DAY.includes(x[3])), day = items.filter(x => DAY.includes(x[3]));
+    const list = (t, xs) => xs.length ? h2(t) + `<div class="hub-card care-folds care-lookoff">${xs.map(pick).join('')}</div>` : '';
+    return page(head('Feeding', 'Tough feed?', 'Pick what you’re seeing.') + (v <= 2 ? list('During a feed', during) + list('Across the day', day) : `<div class="hub-card care-folds care-lookoff">${items.map(pick).join('')}</div>`)); };
+  // Snacking: small, frequent feeds. Normal for many babies; worth changing only if it's wearing the family out.
+  P.snack = () => page(head('Tough feed?', 'Snacking: small feeds, often', 'Some babies take a little, stop, and want more an hour later. It’s common, and it isn’t harmful.', C.blue)
+    + h2('Does it need changing?') + two(['Fine as it is', 'He’s growing well, has 6+ wet diapers, and it works for you.'], ['Worth a try', 'Feeds come nearly every hour all day, he rarely settles, or you’re worn out.', '#fdeee6', '#9a5a3c'])
+    + h2('For fuller feeds') + steps([['eye', 'Feed when he’s really hungry', 'Rooting and hands to mouth, not every fuss'], ['smile', 'Soothe first if he just ate', 'Rock, walk or offer a pacifier, then feed when cues come back'], ['hand', 'Keep him feeding', isBreast() && nurses() ? 'Burp, switch sides, then offer again' : 'Burp, then offer the rest of the bottle'], ['clock', 'A calm, quiet spot', 'Distraction makes feeds short']], false)
+    + p('Go slowly. Stretching by about 15–30 minutes every few days is plenty.')
+    + know('Not in the first weeks', 'Newborns need lots of feeds, so feed whenever he asks. The same goes for growth spurts and cluster feeding.'));
+  // Eating more at night: day-night mix-up for newborns, then "less in the day, more at night"
+  P.nights = () => { const v = stg(); return v === 0
+    ? page(head('Tough feed?', 'Awake and hungry at night?', 'Many newborns mix up days and nights at first. It usually sorts itself out by about 6–8 weeks.', C.blue)
+      + h2('What helps') + steps([['star', 'Bright, busy days', 'Daylight and everyday noise during day feeds'], ['moon', 'Quiet, dim nights', 'Low light, no play, a quick diaper change'], ['clock', 'Feeds every 2–3 hours by day', 'Wake him in the day if it’s been longer']], false)
+      + p('Night feeds are normal and needed now. This is only about helping him tell day from night.'))
+    : page(head('Tough feed?', 'Eating more at night', 'Some babies eat less in the day, when everything’s interesting, and make up for it at night. It’s common, and often a phase.', C.blue)
+      + h2('Shifting feeds to the day') + steps([['eye', 'Offer more often by day', 'About every 2–3 hours while he’s awake'], ['clock', 'Quiet daytime feeds', 'A calm, dim spot, away from distractions'], ['heart', 'A full feed before bed', 'And one before you go to sleep, if that suits you'], ['moon', 'Keep nights dull', 'Dim light, no play, straight back to sleep']], false)
+      + know('Growing well?', 'Then the total over the day matters more than when he eats it. Night feeds are still normal at this age.')
+      + (nurses() ? p('After time apart in the day, some nursing babies wait for you and feed more at night. That’s common, and offering more when you’re together helps.') : '')); };
+  // Nursing strike: sudden refusal after nursing well
+  P.nstrike = () => page(head('Tough feed?', 'Suddenly refusing the breast', 'A baby who nursed well and suddenly won’t is often on a nursing strike. It usually passes in a few days.', C.pink)
+    + h2('Common reasons') + p('A stuffy nose or sore ear, sore gums, a fright like your reaction to a bite, a busy room, or a change in your soap or routine.')
+    + h2('What helps') + steps([['moon', 'Offer when he’s drowsy', 'Waking up, or about to fall asleep'], ['heart', 'Lots of skin to skin', 'Without pressure to feed'], ['clock', 'A quiet, dim room', 'Fewer things to look at'], ['bottle', 'Pump to keep your milk', 'And give it by bottle, cup or spoon meanwhile']], false)
+    + p('It isn’t a sign he’s ready to stop. Most babies go back to nursing.')
+    + call('Fewer than 6 wet diapers a day, or he seems unwell, has a fever or pulls at his ear.'));
+  // Formula worries: most fussiness isn't the formula
+  P.isformula = () => page(head('Tough feed?', 'Is it the formula?', 'Most gas, fussing and spit-up isn’t the formula, and switching often doesn’t help. It can also make it harder to tell what’s going on.', C.peach)
+    + h2('Before you switch') + steps([['bottle', 'Check the bottle first', 'A slower nipple and paced feeds often help'], ['hand', 'Burp more often', 'Every 2–3 oz'], ['heart', 'Ask your pediatrician first', 'Before switching to a special formula']], false)
+    + h2('Worth asking about') + p('Blood or mucus in his poop, a rash or hives, vomiting after most feeds, slow weight gain, or crying after every feed. These can point to a milk protein allergy.')
+    + `<p class="care-urgent"><b>${F('Call 911:')}</b> ${F('trouble breathing, or swelling of his face, lips or tongue.')}</p>`);
   /* ---------- Calm pass: runs last on every Feeding page ----------
      1. One quiet "When to call" card at the very bottom, instead of a pink box and a red line on every page.
         "This is normal" pages don't get one: Getting enough is the one home for diaper and weight worries.
@@ -682,7 +711,7 @@
      3. "Never..." lines say what to do instead.
      4. Answers to common first-time-parent questions that were missing or thin.
      5. The baby's own name and pronoun everywhere (the copy was written for a boy named Ari). */
-  const NO_CALL = ['cluster', 'spurt', 'distract', 'picky', 'tiny', 'howlong', 'milkmeals', 'combo', 'pump', 'teethfeed', 'refusebottle', 'prefbottle', 'hiccups', 'biting'];
+  const NO_CALL = ['snack', 'cluster', 'spurt', 'distract', 'picky', 'tiny', 'howlong', 'milkmeals', 'combo', 'pump', 'teethfeed', 'refusebottle', 'prefbottle', 'hiccups', 'biting'];
   const SWAP = [
     ['Never flat on his back,', 'Keep his head higher than his tummy,'], ['and never prop the bottle.', 'and hold the bottle for every feed.'],
     ['Never the microwave.', 'Skip the microwave.'],
@@ -729,6 +758,7 @@
     const list = (NO_CALL.includes(a) || a === 'supply') ? rows.filter(r => r[2] && !/pediatrician right away/.test(r[1])) : rows;
     if (keepMom && a !== 'latch' && a !== 'milkin') list.unshift(['Call your doctor or a lactation consultant if', F('A red, painful area on your breast with a fever.')]);
     else if (keepMom) list.unshift(['Call your doctor or a lactation consultant if', mom]);
+    if (a === 'enough') list.forEach(r => { if (!r[2] && !/refus/.test(r[1])) r[1] = r[1].replace(/\.$/, F(', or he refuses several feeds in a row.')).replace(F(' or he isn’t gaining at a checkup, or he refuses'), F(' he isn’t gaining at a checkup, or he refuses')).replace(F(', or very sleepy and hard to wake for feeds, or he refuses'), F(', very sleepy and hard to wake for feeds, or he refuses')).replace(F(', or is very sleepy and hard to wake for feeds, or he refuses'), F(', is very sleepy and hard to wake for feeds, or refuses')); });
     // Drop duplicate breast-pain lines folded into pediatrician rows
     list.forEach(r => { if (!r[2]) r[1] = r[1].replace(F(', or a red, painful area on your breast with a fever.'), '.'); });
     // "Coffee, a drink" once, on the Your milk pages
@@ -740,6 +770,10 @@
     if (a === 'supply' && pumps() && !nurses()) h = h.replace(/<\/div>$/, `<div class="hub-tip fd-tip"><b>${F('Too much?')}</b><p>${F('Pumping more makes more. Pump about what he drinks, freeze any extra, and drop extra sessions slowly so you stay comfortable.')}</p></div></div>`);
     if (a === 'howlong' && isBreast()) { const j = h.indexOf('ss-head'), i = j > 0 ? h.indexOf('</div>', j) + 6 : -1;
       if (i > 5) h = h.slice(0, i) + `<div class="hub-tip"><b>${F('What pediatricians recommend')}</b>${F('Breast milk alone for about the first 6 months, then alongside food for as long as you both want, up to 2 years or beyond.')}</div>` + h.slice(i); }
+    if (a === 'enough' && stg() <= 2) { const nb = stg() === 0, nurse = nurses(), bot = isBottle();
+      const tries = [['eye', 'Feed at early cues', 'Rooting or hands to mouth, before crying'], nb ? ['moon', 'Wake him for feeds', 'About every 3 hours until he’s back to birth weight'] : ['clock', 'A calm, quiet spot', 'Fewer things to look at'], nurse ? ['heart', 'Switch sides when sucking slows', 'Gently squeezing your breast helps milk flow'] : ['bottle', 'Check the nipple flow', 'Too fast and he pulls off, too slow and he gives up'], ['hand', 'Burp, then offer again', 'Gas can make him feel full']];
+      const add = h2('If feeds seem small') + p('Some feeds are small, and that’s often fine. Look at the whole day, not one feed.') + steps(tries, false) + (nurse && bot ? '' : '');
+      h = h.replace(/<\/div>$/, add + '</div>'); }
     // Remove any boxes the regexes emptied, then add the one card at the end
     h = h.replace(/<div class="hub-tip fd-tip fd-notes">\s*<\/div>/g, '');
     h = h.replace(/<\/div>$/, whenCard(list) + calmCss + '</div>');
