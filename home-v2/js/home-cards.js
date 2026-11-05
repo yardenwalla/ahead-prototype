@@ -210,6 +210,29 @@
     return [sun(3, 2), sun(11, 1)].some(c => { const k = (c - s.date) / DAY; return k >= 0 && k <= 6; });
   }
 
+
+  /* ---------- copy v6: every word comes from HOME_COPY ---------- */
+  const K = window.HOME_COPY || {};
+  const cp = (key, visit) => s => (K[key] || '').replace(/\{visit\}/g, visit ? visit(s) : '');
+  C.forEach(c => { if (K[c.id + ':t']) c.title = cp(c.id + ':t'); if (K[c.id]) c.body = cp(c.id); });
+  const set = (id, title, body) => { const c = C.find(x => x.id === id); if (title) c.title = title; if (body) c.body = body; };
+  const pickK = f => s => K[f(s)] || '';
+  set('vitamin-d', pickK(s => s.d > 28 ? 'vitamin-d:t-late' : 'vitamin-d:t'));
+  set('poop-colors', null, pickK(s => s.feed === 'breast' ? 'poop-colors:breast' : 'poop-colors'));
+  set('cluster', null, pickK(s => s.feed === 'breast' ? 'cluster:breast' : 'cluster'));
+  set('swaddle-now', pickK(s => moved(s, 'rolling') ? 'swaddle-now:t' : 'swaddle-now:t-other'));
+  set('iron', null, pickK(s => s.feed === 'breast' ? 'iron:breast' : 'iron'));
+  set('rolling-soon', pickK(s => fresh7(s, 'rolling') ? 'rolling-soon:t' : 'rolling-soon:t-cond'));
+  set('crawl-soon', pickK(s => fresh7(s, 'crawling') ? 'crawl-soon:t' : 'crawl-soon:t-cond'));
+  set('stand-soon', pickK(s => fresh7(s, 'pulling') ? 'stand-soon:t' : 'stand-soon:t-cond'));
+  set('rolling-now', pickK(s => moved(s, 'rolling') ? 'rolling-now:t' : 'rolling-now:t-other'));
+  set('sitting-gear', pickK(s => moved(s, 'sitting') ? 'sitting-gear:t' : 'sitting-gear:t-cond'));
+  set('first-bite', pickK(s => s.solidsDays == null ? 'first-bite:t' : 'first-bite:t-after'));
+  set('stand-now', pickK(s => opened(s, 'stand-soon') ? 'stand-now:t-after' : 'stand-now:t'), pickK(s => opened(s, 'stand-soon') ? 'stand-now:after' : 'stand-now'));
+  set('hot-days', pickK(s => s.d < 183 ? 'hot-days:t' : 'hot-days:t-older'), pickK(s => s.d < 183 ? 'hot-days' : 'hot-days:older'));
+  set('milk12', null, pickK(s => K['milk12:' + s.feed] ? 'milk12:' + s.feed : 'milk12'));
+  set('checkup', s => (K[checkupNow(s).ahead >= 2 ? 'checkup:t-soon' : 'checkup:t'] || '').replace('{visit}', checkupNow(s).label), s => K['checkup:' + checkupNow(s).label] || '');
+
   /* ---------- picking ---------- */
   const KEY = (c, s) => c.key ? c.key(s) : c.id;
   function wasTrue(c, s, within, step) {
