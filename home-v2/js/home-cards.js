@@ -224,7 +224,8 @@
   set('iron', null, pickK(s => s.feed === 'breast' ? 'iron:breast' : 'iron'));
   set('rolling-soon', pickK(s => fresh7(s, 'rolling') ? 'rolling-soon:t' : 'rolling-soon:t-cond'));
   set('crawl-soon', pickK(s => fresh7(s, 'crawling') ? 'crawl-soon:t' : 'crawl-soon:t-cond'));
-  set('stand-soon', pickK(s => fresh7(s, 'pulling') ? 'stand-soon:t' : 'stand-soon:t-cond'));
+  set('stand-soon', pickK(s => fresh7(s, 'pulling') ? 'stand-soon:t' : 'stand-soon:t-cond'), pickK(s => fresh7(s, 'pulling') ? 'stand-soon' : 'stand-soon:cond'));
+  set('crawl-now', null, pickK(s => opened(s, 'crawl-soon') ? 'crawl-now' : 'crawl-now:first'));
   set('rolling-now', pickK(s => moved(s, 'rolling') ? 'rolling-now:t' : 'rolling-now:t-other'));
   set('sitting-gear', pickK(s => moved(s, 'sitting') ? 'sitting-gear:t' : 'sitting-gear:t-cond'));
   set('first-bite', pickK(s => s.solidsDays == null ? 'first-bite:t' : 'first-bite:t-after'));
