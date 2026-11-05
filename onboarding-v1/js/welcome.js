@@ -1,7 +1,7 @@
 /* Ahead · Onboarding, using the guide's shared palette and illustrations. */
 (function () {
   const POINTS = [
-    ['spark', 'Everything in one place', 'From sleep and feeding to development and everyday care, get trusted, practical guidance whenever you need it.'],
+    ['spark', 'Everything in one place', 'From sleep and feeding to development and everyday care, get practical guidance based on what pediatricians recommend, whenever you need it.'],
     ['rhythm', 'Helpful things, right when you need them', 'Get timely tips and heads-ups about what’s changing, what matters now, and what to prepare for next.'],
     ['dev', 'Made for your baby', 'Guidance tailored to your baby’s age and stage, so you can focus on what’s relevant to you.']
   ];
