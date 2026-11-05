@@ -480,15 +480,6 @@
     const close = main.querySelector('.brief-close');
     const aheadHtml = soon.length ? `<section class="connected-ahead" aria-label="Coming up"><div class="connected-section-heading"><h2>Coming up</h2></div><div class="connected-ahead-list">${soon.map(c => row(c, s)).join('')}</div></section>` : '';
     if (close) { close.insertAdjacentHTML('beforebegin', aheadHtml); close.textContent = !now.length && !soon.length ? `Nothing new this week. ${s.n}’s right on track.` : 'That’s everything for now.'; }
-    // live tiles: each says what its own page leads with, so a tap lands on the same words
-    const tiles = pageHeadlines();
-    main.querySelectorAll('.connected-category-grid button').forEach(b => {
-      const m = (b.getAttribute('onclick') || '').match(/topic:([^']+)'/); if (!m) return;
-      const line = (tiles[m[1]] || tileLine(m[1], s)); if (!line || b.querySelector('.home2-tile')) return;
-      const label = b.querySelector('b'); if (label) label.insertAdjacentHTML('afterend', `<small class="home2-tile">${esc(line)}</small>`);
-      b.classList.add('home2-live');
-    });
-    const h = main.querySelector('.connected-browse h2'); if (h) h.textContent = `Where ${s.n} is now`;
   }
 
   // For checks
