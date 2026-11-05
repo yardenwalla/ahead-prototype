@@ -11,9 +11,8 @@
     diapers: n => `<svg viewBox="0 0 120 40">${Array.from({ length: n }, (_, i) => `<path d="M${6 + i * 19} 12 h16 v8 q-8 10 -16 0Z" fill="#c9a24a" fill-opacity=".8"/>`).join('')}</svg>`
   };
   const css = `<style>
-    #main .fd-notes p{margin:0;font-size:14.5px;line-height:1.5;color:var(--ink)}#main .fd-notes p+p{margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}#main .fd-notes p b{display:inline;font-size:14.5px;letter-spacing:0;text-transform:none;color:var(--ink);font-weight:600;margin:0}
+    #main .fd-tip p{margin:0;font-size:14px;line-height:1.5;color:var(--ink)}#main .fd-tip p+p{margin-top:8px}#main .fd-notes p+p{margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}#main .hub-detail[data-ss] .fd-tip p b{display:inline;font-size:14px;color:var(--ink);font-weight:600;margin:0}
     #main .hub-detail .fd-call{margin:14px 0 12px}
-    #main .ss-do p+p{margin-top:8px}#main .ss-do p b{display:inline;font-size:inherit;letter-spacing:0;text-transform:none;color:inherit;font-weight:600;margin:0}
     #main .fm-day{list-style:none;margin:0;padding:6px 16px}
     #main .fm-day li{display:grid;grid-template-columns:64px 30px 1fr;align-items:center;gap:8px;padding:9px 0;border-top:1px solid var(--line)}
     #main .fm-day li:first-child{border-top:0}
@@ -45,11 +44,12 @@
   // Runs of short notes are gathered into one quiet card so pages don't end in a wall of small text.
   const TXT = '<p class="(?:ss-small|ss-what|care-p)">(?:(?!<\\/p>)[\\s\\S])*<\\/p>\\s*';
   const tidy = h => h
+    .replace(/<p class="ss-know"><b>((?:(?!<\/b>)[\s\S])*)<\/b>((?:(?!<\/p>)[\s\S])*)<\/p>/g, '<div class="hub-tip"><b>$1</b>$2</div>')
     // A heading followed only by text becomes one soft box with the heading as its label
-    .replace(new RegExp('<h2 class="hub-h2">([^<]*)<\\/h2>\\s*((?:' + TXT + ')+)', 'g'), (m, t, body) => `<div class="ss-do"><b>${t}</b>${body.replace(/<p class="(?:ss-small|ss-what|care-p)">/g, '<p>')}</div>`)
+    .replace(new RegExp('<h2 class="hub-h2">([^<]*)<\\/h2>\\s*((?:' + TXT + ')+)', 'g'), (m, t, body) => `<div class="hub-tip fd-tip"><b>${t}</b>${body.replace(/<p class="(?:ss-small|ss-what|care-p)">/g, '<p>')}</div>`)
     // Any other short notes, alone or in a run, sit together in one quiet card
-    .replace(/(?:<p class="ss-small">(?:(?!<\/p>)[\s\S])*<\/p>\s*)+/g, m => `<div class="ss-know fd-notes">${m.replace(/<p class="ss-small">/g, '<p>')}</div>`)
-    .replace(/(?:<p class="(?:care-p|ss-what)">(?:(?!<\/p>)[\s\S])*<\/p>\s*)+/g, m => `<div class="ss-know fd-notes">${m.replace(/<p class="(?:care-p|ss-what)">/g, '<p>')}</div>`);
+    .replace(/(?:<p class="ss-small">(?:(?!<\/p>)[\s\S])*<\/p>\s*)+/g, m => `<div class="hub-tip fd-tip fd-notes">${m.replace(/<p class="ss-small">/g, '<p>')}</div>`)
+    .replace(/(?:<p class="(?:care-p|ss-what)">(?:(?!<\/p>)[\s\S])*<\/p>\s*)+/g, m => `<div class="hub-tip fd-tip fd-notes">${m.replace(/<p class="(?:care-p|ss-what)">/g, '<p>')}</div>`);
   const page = inner => { const m = inner.match(/--area:(#[0-9a-f]+);--area-ink:(#[0-9a-f]+)/i), bg = m ? m[1] : C.pink[0], ink = m ? m[2] : C.pink[1];
     return `${css}<div class="quiet-category hub-page hub-detail care-v2" data-overview="${CAT}" data-ss="1" style="${yearTheme(CAT)};--ss-bg:${bg};--ss-ink:${ink}">${detailPageTop(CAT)}${tidy(inner)}</div>`; };
   const h2 = t => `<h2 class="hub-h2">${F(t)}</h2>`;
