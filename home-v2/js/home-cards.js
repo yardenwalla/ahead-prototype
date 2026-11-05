@@ -233,6 +233,20 @@
   set('milk12', null, pickK(s => K['milk12:' + s.feed] ? 'milk12:' + s.feed : 'milk12'));
   set('checkup', s => (K[checkupNow(s).ahead >= 2 ? 'checkup:t-soon' : 'checkup:t'] || '').replace('{visit}', checkupNow(s).label), s => K['checkup:' + checkupNow(s).label] || '');
 
+  /* ---------- every card opens a page that continues it ---------- */
+  const ROUTE = {
+    'poop-colors': "openPage('chg:Daily rhythm:d:t:diapers:0')", 'fewer-poops': "openPage('chg:Daily rhythm:d:t:diapers:1')", 'solids-poop': "openPage('chg:Daily rhythm:d:t:diapers:2')",
+    'newborn-normal': "openPage('chg:Daily rhythm:d:t:skin:0')", 'tub-baths': "openPage('chg:Daily rhythm:d:t:bath:1')", drool: "openPage('chg:Daily rhythm:d:t:teeth:2')",
+    teething: "openPage('chg:Daily rhythm:d:t:teeth:2')", 'first-tooth': "openPage('chg:Daily rhythm:d:t:teeth:3')", dentist: "openPage('chg:Daily rhythm:d:t:teeth:3')",
+    sunscreen: "openPage('chg:Daily rhythm:d:t:sun:2')", 'first-steps': "openPage('chg:Daily rhythm:d:t:clothes:3')",
+    separation: "openPage('development-domain:9:Social')", 'first-words': "openPage('development-domain:12:Talking')",
+    rsv: "openPage('home2:rsv')", flu: "openPage('home2:flu')", clocks: "openPage('home2:clocks')",
+    reaching: "openPage('safety-stage:reaching')", 'rolling-soon': "openPage('safety-stage:reaching')", 'rolling-now': "openPage('safety-stage:reaching')",
+    'first-bottle': "openPage('chg:Feeding:d:pump')", 'bottle-cup': "openPage('chg:Feeding:d:after')", 'solids-1': "openPage('chg:Feeding:d:tray')", 'solids-maybe': "openPage('chg:Feeding:d:tray')",
+    'off-menu': "openPage('chg:Feeding:d:setup')", 'solids-late': "openPage('chg:Feeding:d:signs')", cluster: "openPage('chg:Feeding:d:nursing')"
+  };
+  C.forEach(c => { if (ROUTE[c.id]) c.go = ROUTE[c.id]; });
+
   /* ---------- picking ---------- */
   const KEY = (c, s) => c.key ? c.key(s) : c.id;
   function wasTrue(c, s, within, step) {
@@ -267,7 +281,9 @@
 
   /* ---------- actions ---------- */
   const mark = (field, id) => { const st = store(); st[field] = st[field] || {}; st[field][id] = Date.now(); save(st); };
-  window.home2Open = (id, go) => { mark('opened', id); try { (new Function(go))(); } catch (e) { render(); } };
+  // Like the old Home: opening a card clears it only once the parent has stayed on its page a few seconds, so a mis-tap doesn't lose it.
+  window.home2Open = (id, go) => { const st = store(); st.pending = { id, at: Date.now() }; save(st); try { (new Function(go))(); } catch (e) { render(); } };
+  function settlePending() { const st = store(); if (st.pending) { if (Date.now() - st.pending.at >= 4000) { st.opened = st.opened || {}; st.opened[st.pending.id] = Date.now(); } delete st.pending; save(st); } }
   window.home2Hide = id => { mark('opened', id); const y = scrollY; render(); scrollTo(0, y); if (typeof hubToast === 'function') hubToast('Hidden', 'It’s still in its guide if you need it.'); };
   window.home2Done = id => { mark('opened', id); const y = scrollY; render(); scrollTo(0, y); if (typeof hubToast === 'function') hubToast('Done', 'Nice. It’s ticked off in Safety too.'); };
   const toast = (t, b) => { if (typeof hubToast === 'function') hubToast(t, b); };
@@ -315,15 +331,64 @@
     return '';
   }
 
+  /* ---------- the headline each category page leads with ---------- */
+  let tileCache = { sig: null, lines: {} };
+  function pageHeadlines() {
+    const sig = journeyKey() + iso(NOW) + JSON.stringify(answers) + profile.feed + localStorage.getItem('ahead-v4-journey:' + (profile.id || profile.dob) + ':baby');
+    if (tileCache.sig === sig) return tileCache.lines;
+    const keepPage = page, keepHist = historyStack.slice(), keepAns = JSON.stringify(answers), keepY = scrollY, snap = {};
+    for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); snap[k] = localStorage.getItem(k); }
+    const lines = {}, main = document.getElementById('main'), keepHtml = main.innerHTML;
+    for (const cat of ['Development', 'Feeding', 'Sleep', 'Health', 'Safety', 'Daily rhythm', 'Out and about', 'Childcare']) {
+      try {
+        page = 'topic:' + cat; baseRender();
+        const h = [...main.querySelectorAll('h1,h2')].find(x => !x.closest('.monthly-page-header,.guide-detail-top') && !x.classList.contains('hub-h2') && x.innerText.trim());
+        if (h) lines[cat] = h.innerText.trim().replace(/\s+/g, ' ');
+      } catch (e) {}
+    }
+    // put everything back exactly as it was
+    page = keepPage; historyStack = keepHist; Object.keys(answers).forEach(k => delete answers[k]); Object.assign(answers, JSON.parse(keepAns));
+    Object.keys(localStorage).forEach(k => { if (!(k in snap)) localStorage.removeItem(k); }); Object.entries(snap).forEach(([k, v]) => { if (localStorage.getItem(k) !== v) localStorage.setItem(k, v); });
+    main.innerHTML = keepHtml; scrollTo(0, keepY);
+    tileCache = { sig, lines };
+    return lines;
+  }
+
   /* ---------- put it on Home ---------- */
   const baseRender = window.render;
+  const PAGES = {
+    rsv: { cat: 'Health', ctx: 'Vaccines', title: 'The RSV shot', what: 'RSV is a common cold virus that can make young babies very sick, and it’s the top reason babies end up in hospital.',
+      doIt: 'If {N} was born before RSV season and hasn’t had the shot, ask at the next checkup or call to book it.',
+      know: ['Who it’s for', 'Babies under 8 months in their first RSV season, usually October to March. Babies born during the season often get it before leaving hospital.'],
+      know2: ['If you had the RSV vaccine in pregnancy', 'At least 2 weeks before birth, most babies don’t need the shot as well. Your pediatrician can confirm.'] },
+    flu: { cat: 'Health', ctx: 'Vaccines', title: 'A first flu shot', what: 'From 6 months, babies can have the flu shot each fall and winter.',
+      doIt: 'Ask at the next checkup, or book it on its own. The first season takes two doses, 4 weeks apart.',
+      know: ['Why two doses', 'The first dose primes {his} body and the second gives full protection, so starting early in the season helps.'],
+      know2: ['After the shot', 'A sore leg or a low fever for a day is common.'] },
+    clocks: { cat: 'Sleep', ctx: 'Daily rhythm', title: 'When the clocks change', what: 'A one-hour jump can throw naps and bedtime off for a few days.',
+      doIt: 'Starting a few days before, move naps and bedtime by about 15 minutes a day, so the change is done by the weekend.',
+      know: ['Or just let it settle', 'Some families keep their usual times and give it a few days. Most babies adjust within a week either way.'],
+      know2: ['Light helps', 'Bright mornings and a dim bedtime help {his} body clock catch up.'] }
+  };
+  function pageHtml(id) {
+    const P0 = PAGES[id], s = state();
+    const k = ([t, b]) => `<p class="ss-know"><b>${esc(t)}</b>${esc(w(s, b))}</p>`;
+    return `<div class="quiet-category hub-page hub-detail" style="${yearTheme(P0.cat)}"><div class="guide-detail-top"><div class="monthly-page-header"><button class="monthly-back" onclick="back()" aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5-7 7 7 7"></path></svg></button><div><h1>${esc(typeof displayTopic === 'function' ? displayTopic(P0.cat) : P0.cat)}</h1><p>${esc(name())} · ${esc(monthLabel(actualMonth()))}</p></div><span class="monthly-save" aria-hidden="true"></span></div></div>`
+      + `<div class="dev-area-head ss-head"><p class="hub-context">${esc(P0.ctx)}</p><h1>${esc(P0.title)}</h1></div><section class="ss-moment"><p class="ss-what">${esc(w(s, P0.what))}</p><section class="ss-do"><b>What to do</b><p>${esc(w(s, P0.doIt))}</p></section>${k(P0.know)}${k(P0.know2)}</section></div>`;
+  }
   window.render = render = function () {
+    if (typeof page === 'string' && page.startsWith('home2:') && PAGES[page.slice(6)]) {
+      const m = document.getElementById('main'); if (m) m.innerHTML = pageHtml(page.slice(6)); return;
+    }
     const r = baseRender.apply(this, arguments);
     try { if (page === 'home' && (typeof isCurrent !== 'function' || isCurrent())) paint(); } catch (e) { console.error(e); }
     return r;
   };
   function paint() {
     const main = document.getElementById('main'); if (!main) return;
+    settlePending();
+    // 1. Cards carry their own answers, so the top slot keeps only questions no card can ask: a missed checkup, and the milk question.
+    main.querySelectorAll('section.hub-q, section.connected-checkin').forEach(q => { const h = q.innerHTML; if (!/hubVisit|answerHomeQuestion\('milk'/.test(h)) q.remove(); });
     const s = state(), { now, soon } = pick(s);
     // remember what was shown, for "waits until seen"
     const st = store(); st.seen = st.seen || {}; st.firstDay = st.firstDay || iso(NOW); [...now, ...soon].forEach(c => { if (st.seen[c.id] == null) st.seen[c.id] = Date.now(); }); save(st);
@@ -336,10 +401,11 @@
     const close = main.querySelector('.brief-close');
     const aheadHtml = soon.length ? `<section class="connected-ahead" aria-label="Coming up"><div class="connected-section-heading"><h2>Coming up</h2></div><div class="connected-ahead-list">${soon.map(c => row(c, s)).join('')}</div></section>` : '';
     if (close) { close.insertAdjacentHTML('beforebegin', aheadHtml); close.textContent = !now.length && !soon.length ? `Nothing new this week. ${s.n}’s right on track.` : 'That’s everything for now.'; }
-    // live tiles
+    // live tiles: each says what its own page leads with, so a tap lands on the same words
+    const tiles = pageHeadlines();
     main.querySelectorAll('.connected-category-grid button').forEach(b => {
       const m = (b.getAttribute('onclick') || '').match(/topic:([^']+)'/); if (!m) return;
-      const line = tileLine(m[1], s); if (!line || b.querySelector('.home2-tile')) return;
+      const line = (tiles[m[1]] || tileLine(m[1], s)); if (!line || b.querySelector('.home2-tile')) return;
       const label = b.querySelector('b'); if (label) label.insertAdjacentHTML('afterend', `<small class="home2-tile">${esc(line)}</small>`);
       b.classList.add('home2-live');
     });
