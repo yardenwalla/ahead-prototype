@@ -1,0 +1,33 @@
+/* Sleep subpages: see js/sleep-sub-look.js */
+#main .ss-head { background: var(--area) !important; border-radius: 24px; padding: 4px 20px 20px; margin: 0 0 16px }
+#main .ss-head .dev-area-head-art { display: block; height: 56px; margin: 16px 0 14px }
+#main .ss-head .dev-area-head-art svg { height: 100%; width: auto; display: block }
+#main .ss-head .hub-context { margin: 0; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--area-ink) }
+#main .ss-head h1 { margin: 6px 0 6px }
+#main .ss-head .hub-lead { margin: 0; color: #5c5361 }
+#main .ss-moment { margin: 16px 0 }
+#main .ss-what { margin: 0 4px 12px; font-size: 15.5px; line-height: 1.55; color: #4c4757 }
+#main .ss-do { background: var(--ss-bg); border-radius: 20px; padding: 16px 18px; margin: 0 0 12px }
+#main .ss-do > b { display: block; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--ss-ink); margin-bottom: 6px }
+#main .ss-do > p { margin: 0; font-size: 15.5px; line-height: 1.55; color: var(--ink) }
+#main .ss-small { margin: 0 4px 10px; font-size: 14px; line-height: 1.5; color: #6b6670 }
+#main .ss-small b { color: #4c4757; font-weight: 600 }
+#main .ss-know { margin: 0 0 12px; padding: 14px 18px; border-radius: 20px; background: #fff; border: 1px solid var(--line); font-size: 15px; line-height: 1.55; color: var(--ink) }
+#main .ss-know b { display: block; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--ss-ink); margin-bottom: 4px }
+#main .ss-try ul { margin: 0; padding-left: 18px; font-size: 15px; line-height: 1.5; color: var(--ink) }
+#main .ss-try li + li { margin-top: 6px }
+#main .hub-rough-body .ss-what { margin: 4px 0 12px }
+/* Body pieces on restyled subpages (Sleep, Health, Development) follow the page's color, so nothing stays in the old blue:
+   tips are quiet white cards with a colored title, buttons are soft, and icons sit on the page's color. */
+#main .hub-detail[data-ss] .hub-tip { background: #fff; border: 1px solid var(--line) }
+#main .hub-detail[data-ss] .hub-tip b { color: var(--ss-ink) }
+#main .hub-detail[data-ss] .hub-button { background: var(--ss-bg); color: var(--ss-ink) !important }
+#main .hub-detail[data-ss] .hub-iconstep-art { background: var(--ss-bg) !important }
+#main .hub-detail[data-ss] .hub-iconstep-art svg, #main .hub-detail[data-ss] .hub-iconstep-art svg [stroke]:not([stroke="none"]) { stroke: var(--ss-ink) }
+#main .hub-detail[data-ss] .hub-row:not(.hl-row) .hub-dot { background: var(--ss-bg) !important }
+#main .hub-detail[data-ss] .hub-row:not(.hl-row) .hub-dot svg, #main .hub-detail[data-ss] .hub-row:not(.hl-row) .hub-dot svg [stroke]:not([stroke="none"]) { stroke: var(--ss-ink) }
+#main .hub-detail[data-ss] .hub-steps li > span:first-child:not(:only-child), #main .hub-detail[data-ss] .hub-steps li::before { color: var(--ss-ink) }
+#main .hub-detail[data-ss] .hub-tiles > div:not(.sm-tile) { background: var(--ss-bg) }
+/* What to do, one idea per line */
+#main .ss-do-list { margin: 0; padding-left: 18px; font-size: 15.5px; line-height: 1.5; color: var(--ink) }
+#main .ss-do-list li + li { margin-top: 6px }
