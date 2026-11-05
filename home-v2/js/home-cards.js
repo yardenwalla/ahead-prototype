@@ -435,7 +435,6 @@
     }
     const r = baseRender.apply(this, arguments);
     try { if (page === 'home' && (typeof isCurrent !== 'function' || isCurrent())) paint(); } catch (e) { console.error(e); }
-    try { const where = document.querySelector('#main .hub-where'); if (where && !document.querySelector('#main .home2-know')) where.insertAdjacentHTML('afterend', knowsHtml()); } catch (e) { console.error(e); }
     return r;
   };
   /* ---------- Profile: what Ahead knows, so parents can see it and fix it (never a form to fill in) ---------- */
