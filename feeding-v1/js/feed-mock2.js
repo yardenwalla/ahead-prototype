@@ -298,10 +298,12 @@
     const tile = ([c, art, l, val, sub, to]) => to ? `<button class="sm-tile hub-tile hub-tile-go" style="--sm-bg:${TILE[c] ? TILE[c][0] : C[c][0]};--sm-ink:${TILE[c] ? TILE[c][1] : C[c][1]};text-align:left;border:0;font:inherit;cursor:pointer" onclick="${go(to)}"><span class="sm-art">${art}</span><small>${F(l)}</small><b>${F(val)}</b><span>${F(sub)} ›</span></button>` : `<div class="sm-tile" style="--sm-bg:${TILE[c] ? TILE[c][0] : C[c][0]};--sm-ink:${TILE[c] ? TILE[c][1] : C[c][1]}"><span class="sm-art">${art}</span><small>${F(l)}</small><b>${F(val)}</b><span>${F(sub)}</span></div>`;
     let b2 = `<header class="hub-hero"><p class="hub-eyebrow">${F(STAGES[v][0])}</p><h1>${F(st.hero[0])}</h1><p class="hub-lead">${F(st.hero[1])}</p></header>` + (isEarly() ? `<p class="ss-small" style="margin:0 0 12px"><b>${F('Born early:')}</b> ${F('stages follow Ari’s adjusted age. If your NICU or pediatrician gave you a feeding plan, follow it first.')}</p>` : '');
     b2 += `<section class="hub-card hub-glance is-static"><span class="hub-card-head"><b>${F(v >= 3 ? 'Eating now' : 'Feeds now')}</b><button class="hub-card-cta" onclick="${go('day')}">${F('Example day')} ›</button></span><div class="hub-tiles">${st.tiles.map(tile).join('')}</div></section>`;
-    b2 += `<div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px">${h2(v === realStage() ? (v >= 3 ? 'How to help Ari eat now' : 'How to help Ari feed now') : 'At ' + ['the newborn stage', '6 weeks–4 months', '4–6 months', '6–9 months', '9–12 months'][v])}<button class="hub-card-cta" style="flex:none;background:none;border:0;font:inherit;font-size:14px;color:#9b4766;cursor:pointer;padding:0" onclick="${go('how')}">${F('All how-tos')} ›</button></div>` + `<div class="hub-list">${AREAS(v).map(x => `<button class="hub-row hl-row" style="--hl-bg:${C[x.c][0]};--hl-ink:${C[x.c][1]}" onclick="${P[x.to] ? go(x.to) : ''}"><span class="fd-dot" style="width:42px;height:42px;border-radius:13px;background:var(--hl-bg);color:var(--hl-ink);padding:9px;box-sizing:border-box;flex:none;display:grid;place-items:center">${hubArt(x.icon, CAT)}</span><span class="hub-row-copy"><small>${F(x.label)}</small><b>${F(x.act)}</b><small>${F(x.sub)}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`).join('')}</div>`;
+    void NORMALCALL;
+    if (v === 0) b2 += `<p class="care-urgent fd-callnow"><b>${F('Call your pediatrician right away')}</b> ${F('for a fever of 100.4°F (38°C) or higher, fewer than 6 wet diapers a day after day 6, or if he’s too sleepy to wake for most feeds.')}</p>`;
+    if (v === 3) b2 += `<p class="care-urgent fd-callnow"><b>${F('Call 911')}</b> ${F('if he’s choking and can’t cough, cry or breathe. Start back blows right away.')} <button class="hub-link" style="padding:0;border:0;background:none;font:inherit;color:inherit;text-decoration:underline;cursor:pointer" onclick="${go('choking')}">${F('Choking first aid')} ›</button></p>`;
+    b2 += `<div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px">${h2(v === realStage() ? (v >= 3 ? 'How to help Ari eat now' : 'How to help Ari feed now') : 'At ' + ['the newborn stage', '6 weeks–4 months', '4–6 months', '6–9 months', '9–12 months'][v])}</div>` + `<div class="hub-list">${AREAS(v).map(x => `<button class="hub-row hl-row" style="--hl-bg:${C[x.c][0]};--hl-ink:${C[x.c][1]}" onclick="${P[x.to] ? go(x.to) : ''}"><span class="fd-dot" style="width:42px;height:42px;border-radius:13px;background:var(--hl-bg);color:var(--hl-ink);padding:9px;box-sizing:border-box;flex:none;display:grid;place-items:center">${hubArt(x.icon, CAT)}</span><span class="hub-row-copy"><small>${F(x.label)}</small><b>${F(x.act)}</b><small>${F(x.sub)}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`).join('')}</div>`;
     const crow = ([icon, label, act, sub, to], c) => `<button class="hub-row hl-row" style="--hl-bg:${C[c][0]};--hl-ink:${C[c][1]}" onclick="${go(to)}"><span class="fd-dot" style="width:42px;height:42px;border-radius:13px;background:var(--hl-bg);color:var(--hl-ink);padding:9px;box-sizing:border-box;flex:none;display:grid;place-items:center">${hubArt(icon, CAT)}</span><span class="hub-row-copy"><small>${F(label)}</small><b>${F(act)}</b><small>${F(sub)}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`;
-    b2 += `<button class="hub-rough-card care-rash-card" style="background:#fbe4ec;color:#9b4766;margin-top:12px" onclick="${go('hard')}"><span class="hub-rough-moon" aria-hidden="true">${hubArt('eye', CAT)}</span><span class="hub-rough-copy"><b>${F('Tough feed?')}</b><small>${F([nurses() ? 'Too sleepy, crying at feeds, not eating much' : 'Too sleepy, crying at feeds, not eating much', nurses() ? 'Crying at feeds, not eating much, bottle refusal' : 'Crying at feeds, not eating much', nurses() ? 'A nursing strike, not eating much' : 'Not eating much, or feeding when sick', 'Refusing food, a rash, teething', 'Picky days, refusing food, a rash'][v])}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`;
-    { const [nm, cl] = NORMALCALL(v); b2 += h.versus('Normal, or time to call?', nm, cl); }
+    b2 += `<button class="hub-rough-card care-rash-card" style="background:#fbe4ec;color:#9b4766;margin-top:12px" onclick="${go('hard')}"><span class="hub-rough-moon" aria-hidden="true">${hubArt('eye', CAT)}</span><span class="hub-rough-copy"><b>${F('Tough feed?')}</b><small>${F(['Not eating much, lots of spit-up, crying he can’t settle from', nurses() ? 'Crying at feeds, not eating much, bottle refusal' : 'Crying at feeds, not eating much', nurses() ? 'A nursing strike, not eating much' : 'Not eating much, or feeding when sick', 'Refusing food, a rash, teething', 'Picky days, refusing food, a rash'][v])}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`;
     b2 += h.next(st.next[0], st.next[1], v < 4 ? go('dirD:' + (v + 1)) : '') + h.note('Ages are typical. Every baby moves at their own pace.');
     return `${css}<div class="quiet-category hub-page care-v2" data-overview="${CAT}" style="${yearTheme(CAT)}">${typeof monthlyPageHeader === 'function' ? monthlyPageHeader(CAT) : ''}${pills}${b2}</div>`; };
   P.milkin = () => (pumps() && !nurses()) ? page(head('Your milk', 'Your milk comes in', 'Small amounts of colostrum come first. Your milk comes in around days 2–5.')
@@ -878,7 +880,28 @@
       r('green', 'bowl', 'Food', 'Watch for signs he’s ready', 'Most babies start around 6 months', 'signs'),
       r('green', 'bowl', 'Food', 'Start with a few bites a day', 'Iron-rich first. Allergens early and often', 'firstfoods'),
       r('green', 'bowl', 'Food', 'Serve three meals of family food', 'Soft pieces, no added salt', 'family')][v];
-    return [feeds, milk, tummy, fourth].filter(x => x && P[x.to]); };
+    // Locked structure (Nov 5): Feeding rhythms, Breastfeeding & pumping, Bottle feeding, and a fourth slot that changes name by stage.
+    const rhythm = { ...feeds, label: 'Feeding rhythms' };
+    const bf = b ? [
+      r('pink', 'heart', 'Breastfeeding & pumping', nurse ? 'Get help early if nursing hurts' : 'Pump 8–12 times a day', nurse && fm ? 'Your milk comes in, and topping up with formula' : 'Your milk comes in around days 2–5', 'milkarea'),
+      r('pink', 'heart', 'Breastfeeding & pumping', 'Trust your supply as it settles', 'Softer breasts don’t mean less milk', 'bf1'),
+      r('pink', 'heart', 'Breastfeeding & pumping', mostlyB ? 'Keep to breast milk until about 6 months' : 'Keep any breast milk going', 'And how to stop gently, if you choose to', 'howlong'),
+      r('pink', 'heart', 'Breastfeeding & pumping', 'Keep milk going around meals', 'Milk is still the main food', 'howlong'),
+      r('pink', 'heart', 'Breastfeeding & pumping', 'Plan for the first birthday', 'Nursing can go on as long as you both want', 'at12')][v] : null;
+    const bo = bot ? [
+      fm ? r('lilac', 'bottle', 'Bottle feeding', 'Make each bottle safely', 'Water first, then level scoops', 'formula') : r('lilac', 'bottle', 'Bottle feeding', 'Pace each bottle', 'And store milk safely', 'bottle'),
+      r('lilac', 'bottle', 'Bottle feeding', 'Pace each bottle', 'And check the nipple flow', 'bottle'),
+      fm ? r('lilac', 'bottle', 'Bottle feeding', 'Keep bottles the main food', 'Even once solids start', 'bottlegrow') : r('lilac', 'bottle', 'Bottle feeding', 'Store and warm milk safely', 'At home, at daycare, on the go', 'basics'),
+      r('lilac', 'drop', 'Bottle feeding', 'Start practicing with a cup', 'Water from an open or straw cup', 'cups'),
+      r('lilac', 'bottle', 'Bottle feeding', 'Phase out bottles after 1', 'Milk from a cup, with meals', 'at12')][v] : null;
+    const four = [
+      r('blue', 'drop', 'Everyday essentials', 'Vitamin D, burping and spit-up', 'And what normal poop looks like', 'tummy'),
+      r('blue', 'drop', 'Everyday essentials', early && b ? 'Add iron drops' : 'Gas and spit-up peak now', early && b ? 'And keep up vitamin D' : 'Vitamin D, and how poop changes', early && b ? 'vitd' : 'tummy'),
+      r('green', 'bowl', 'Preparing for solids', 'Watch for signs he’s ready', 'And learn choking first aid', 'signs'),
+      r('green', 'bowl', 'Starting solids', 'Start with a few bites a day', 'Iron-rich first. Allergens early and often', 'firstfoods'),
+      r('green', 'bowl', 'Meals & self-feeding', 'Serve three meals of family food', 'Finger foods, cups and milk at 12 months', 'family')][v];
+    void milk; void tummy; void fourth;
+    return [rhythm, bf, bo, four].filter(x => x && (P[x.to] || x.to === 'bf1')); };
 
   // Area pages in Sleep's look: a colored header, one picture, a "What to do" card that stands out (2–3 short lines), one "How you'll know" line.
   const doCard = (c, lines) => `<section class="ss-moment"><section class="ss-do" style="--ss-bg:${c[0]};--ss-ink:${c[1]}"><b>${F('What to do')}</b><ul class="ss-do-list">${lines.filter(Boolean).map(l => `<li>${F(l)}</li>`).join('')}</ul></section></section>`;
@@ -1095,6 +1118,54 @@
     return pron(addVideo(a, h)); };
   const stTl = window.stageTimeline;
   if (typeof stTl === 'function') window.stageTimeline = function (cat, items, ...r) { if (cat === CAT && !window.__fdPills) return ''; return stTl.call(this, cat, items, ...r); };
+  // ---- Mocks for the locked structure (Nov 5) ----
+  HEADART['Breastfeeding & pumping'] = () => ART.drops(4); HEADART['Tough feed?'] = HEADART['Tough feed?'] || (() => ART.often(3));
+  const arow = (c, icon, label, t, sub, to) => `<button class="hub-row hl-row" style="--hl-bg:${C[c][0]};--hl-ink:${C[c][1]}" onclick="${go(to)}"><span class="fd-dot" style="width:42px;height:42px;border-radius:13px;background:var(--hl-bg);color:var(--hl-ink);padding:9px;box-sizing:border-box;flex:none;display:grid;place-items:center">${hubArt(icon, CAT)}</span><span class="hub-row-copy">${label ? `<small>${F(label)}</small>` : ''}<b>${F(t)}</b><small>${F(sub)}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`;
+  const alist = rows => `<div class="hub-list">${rows.filter(Boolean).join('')}</div>`;
+  // Breastfeeding & pumping, 6 weeks–4 months: what's normal, what to do, then depth one tap away.
+  P.bf1 = () => { const nurse = nurses(), pump = pumps(), fm = formulaFam(), c = C.pink;
+    return page(head('Breastfeeding & pumping', 'Your supply settles', 'Somewhere between 6 and 12 weeks, your body learns how much milk he needs. Softer breasts and quicker feeds are normal now. They don’t mean less milk.', c)
+      + sstrip('How your milk changes', [['drop', 'Days 2–5', 'Milk comes in'], ['heart', 'Weeks 1–6', 'Full, often leaky'], ['clock', '6–12 weeks', 'Settles to what he takes']])
+      + doCard(c, [nurse ? 'Keep feeding on cue. Each feed tells your body how much to make.' : 'Keep about the same total each day, even as you pump less often.', fm ? 'Topping up with formula? ' + (nurse ? 'Nurse' : 'Pump') + ' first and keep top-ups small, so your body keeps making milk.' : '', 'Dropping a feed or a pump? Drop one every few days, not all at once, to avoid clogged ducts.'])
+      + knowLine('6 or more wet diapers a day and steady growth at checkups. That’s the real sign your supply is right, not how full you feel.')
+      + h2('More on your milk')
+      + alist([arow('pink', 'drop', '', 'Too much or too little milk?', 'Most worries aren’t low supply. How to tell', 'supplyhelp'), nurse && fm && arow('pink', 'bottle', '', 'Nursing and formula', 'Keep your milk going while you top up', 'combo'), arow('lilac', 'clock', '', 'Going back to work', 'A pumping plan, and your rights', 'work')])
+      + h2('Show me how')
+      + alist([nurse && arow('peach', 'heart', '', 'Latch and holds', 'How a good latch feels, and five holds', 'latch'), pump && arow('peach', 'drop', '', 'Pumping', 'How often, flange fit, and as he grows', 'pump'), arow('blue', 'snow', '', 'Storing and warming milk', 'How long it lasts, and travel', 'basics')])
+      + small('Pain, a lump or cracked nipples?', 'that’s in Tough feed, under For you.')); };
+  P.supplyhelp = () => { const nurse = nurses(), c = C.pink;
+    return page(head('Breastfeeding & pumping', 'Too much or too little milk?', 'Most parents worry about low supply at some point. Usually it’s fine. Here’s how to tell.', c)
+      + two(['Usually fine', 'Softer breasts, quicker feeds, pumping a bit less than before, fussy evenings.'], ['Worth checking', 'Fewer than 6 wet diapers a day, slow weight gain, or hungry after most feeds.', '#fdeee6', '#9a5a3c'])
+      + know('If it might be too little', (nurse ? 'Nurse' : 'Pump') + ' more often for a few days, including once at night. ' + (nurse ? 'Get the latch checked' : 'Get your flange fit checked') + ' by a lactation consultant. Don’t space out feeds to “save up” milk. That tells your body to make less.')
+      + know('If it might be too much', 'He gulps, coughs or pulls off as your milk lets down, and you feel full most of the time. Try a laid-back position, and offer one side per feed for a few feeds.')
+      + call('Slow weight gain, or fewer than 6 wet diapers a day.')); };
+  // Tough feed, newborn: problem first. It doesn't re-explain what's normal; that lives in Everyday essentials.
+  P.reflux0 = () => page(head('Tough feed?', 'Spit-up that seems like too much', 'Lots of spit-up is common. It’s worth help when it comes with crying, arching, or not gaining weight.', C.blue)
+    + doCard(C.blue, ['Offer smaller feeds, more often.', isBottle() ? 'Pace the bottle, and burp every 2–3 oz.' : 'Burp between sides, and when he slows down.', 'Hold him upright for 20–30 minutes after feeds.'])
+    + small('Before you change anything,', 'ask your pediatrician first about thickening feeds or switching formula. Keep him on his back on a flat surface for sleep, even with spit-up.')
+    + call('Slow weight gain, refusing feeds, fewer wet diapers, or forceful vomiting after most feeds.')
+    + `<p class="care-urgent"><b>${F('Call right away:')}</b> ${F('green or bloody vomit, or vomiting with a fever.')}</p>`
+    + small('Wondering what’s normal?', 'Everyday essentials covers spit-up, burping and gas.'));
+  P.crying0 = () => page(head('Tough feed?', 'Crying he can’t settle from', 'Crying often peaks around 6 weeks and eases by 3–4 months. When nothing works, try these in order.', C.blue)
+    + steps([['bottle', 'Check the basics', 'Hungry, needs a burp, or a diaper'], ['clock', 'Slow the feed', isBottle() ? 'Pace the bottle, try a slower nipple' : 'Try laid-back nursing if milk gushes'], ['hand', 'Ease the gas', 'Bicycle his legs, or tummy-down on your lap'], ['moon', 'Calm him', 'Swaddle, rock, shush, white noise']], true)
+    + know('If you’re at your limit', 'Put him down somewhere safe, on his back, and step away for a few minutes. Crying won’t hurt him. Never shake him. Then call someone to help.')
+    + small('Gas drops or gripe water?', 'gas drops are safe but often don’t help much. Ask your pediatrician before trying gripe water.')
+    + call('Crying for 3 or more hours a day, crying that sounds different or high-pitched, or crying with vomiting or poor feeding.')
+    + `<p class="care-urgent"><b>${F('Call right away:')}</b> ${F('a fever of 100.4°F (38°C) or higher.')}</p>`);
+  P.poop0 = () => { const br = isBreast() && fd() === 'Breast milk';
+    return page(head('Tough feed?', 'Poop that worries you', 'Most colors and textures are normal. These are the ones to call about.', C.blue)
+      + two(['Call your pediatrician', (br ? 'Fewer than 3 poops a day after day 4, in the first weeks. ' : '') + 'Hard, pebble-like poop. Watery poop much more often, with fewer wet diapers.', '#fdeee6', '#9a5a3c'], ['Call right away', 'White, gray or very pale poop. Red or black poop after the first few days.', '#fbe9e9', '#a33a3a'])
+      + small('Green, mustard, seedy or a bit of mucus?', 'all normal. So is grunting and going red, as long as the poop is soft.')
+      + small('Bring a photo.', 'A picture of the diaper helps your pediatrician tell what’s going on.')); };
+  { const hard0 = P.hard; P.hard = () => { if (stg() !== 0) return hard0(); const nurse = nurses(), fm = formulaFam(), br = isBreast();
+    const pick = ([i, t, s, to]) => `<button class="care-pick" onclick="${go(to)}"><span class="care-ico">${hubArt(i, CAT)}</span><span><b>${F(t)}</b><small>${F(s)}</small></span><i aria-hidden="true">›</i></button>`;
+    const card = xs => `<div class="hub-card care-folds care-lookoff">${xs.filter(Boolean).map(pick).join('')}</div>`;
+    return page(head('Feeding', 'Tough feed?', 'Pick what’s happening. You’ll see what to try, and when to call.')
+      + h2('Feeds') + card([['moon', 'Too sleepy to feed', 'How to wake him, and when to call', 'sleepy'], ['heart', 'Crying or arching at feeds', 'Too hungry, too fast, or full', 'fussy'], ['diaper', 'Not eating much', 'What to try, and how to tell it’s okay', 'small'], fm && ['bottle', 'Is it the formula?', 'Before you switch', 'isformula']])
+      + h2('Tummy') + card([['bottle', 'Spit-up that seems like too much', 'With crying, arching, or slow weight gain', 'reflux0'], ['drop', 'Crying he can’t settle from', 'What to try, in order', 'crying0'], ['diaper', 'Poop that worries you', 'The colors and changes to call about', 'poop0']])
+      + h2('When he’s unwell') + card([['eye', 'Sick, or a stuffy nose', 'Feeding when he’s unwell', 'sick']])
+      + (br ? h2('For you') + card([nurse && ['heart', 'Nursing still hurts', 'Cracked nipples, or pain through the feed', 'sore'], ['heart', 'A tender lump in your breast', 'A clogged duct, and what helps', 'lump']]) : '')
+      + `<div class="hub-list" style="margin-top:12px">${arow('lilac', 'hand', 'Support', 'You don’t have to figure this out alone', 'Who can help, and how you’re doing', 'help')}</div>`); }; }
   const dirD0 = P.dirD; P.dirD = function (...a) { window.__fdPills = true; try { return dirD0.apply(this, a); } finally { window.__fdPills = false; } };
   const rnd = window.render;
   const curPage = () => { try { return (0, eval)('page'); } catch (e) { return ''; } };
