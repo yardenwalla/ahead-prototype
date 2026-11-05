@@ -675,8 +675,73 @@
     const items = v <= 2 ? [['bottle', 'Spit-up or vomit?', 'How much is normal, and when to call', 'spit'], ['drop', 'Gas and lots of crying', 'What helps, and gripe water', 'gas'], ['heart', 'Fussy or arching at feeds', 'Too hungry, too fast, or full', 'fussy'], (v === 0 || (isEarly() && v === 1)) && ['moon', 'Too sleepy to feed', 'How to wake him, and when to call', 'sleepy'], nurses() && ['star', 'Won’t take a bottle', 'Common for babies who nurse', 'refusebottle'], nurses() && fd() === 'Both' && ['heart', 'Fussy at the breast after bottles', 'When bottles flow faster', 'prefbottle'], ['smile', 'Hiccups', 'Normal, and what helps', 'hiccups']].filter(Boolean)
       : [['shield', 'Gagging or choking?', 'How to tell, and what to do', 'gag'], ['bowl', 'Refusing food', 'Light days, and what helps', 'refusefood'], ['diaper', 'Constipation', 'Hard poop with solids', 'constipation'], ['eye', 'A rash after a new food', 'When it’s an allergy', 'rash'], ['tooth', 'Teething and feeds', 'Sore gums, shorter feeds', 'teethfeed'], nurses() && ['hand', 'Biting while nursing', 'Once teeth come', 'biting']].filter(Boolean);
     return page(head('Feeding', 'Tough feed?', 'Pick what you’re seeing.') + `<div class="hub-card care-folds care-lookoff">${items.map(([i, t, s, to]) => `<button class="care-pick" onclick="${go(to)}"><span class="care-ico">${hubArt(i, CAT)}</span><span><b>${F(t)}</b><small>${F(s)}</small></span><i aria-hidden="true">›</i></button>`).join('')}</div>`); };
+  /* ---------- Calm pass: runs last on every Feeding page ----------
+     1. One quiet "When to call" card at the very bottom, instead of a pink box and a red line on every page.
+        "This is normal" pages don't get one: Getting enough is the one home for diaper and weight worries.
+     2. Mastitis and "coffee, a drink" live on the Your milk pages only, not repeated across the category.
+     3. "Never..." lines say what to do instead.
+     4. Answers to common first-time-parent questions that were missing or thin.
+     5. The baby's own name and pronoun everywhere (the copy was written for a boy named Ari). */
+  const NO_CALL = ['cluster', 'spurt', 'distract', 'picky', 'tiny', 'howlong', 'milkmeals', 'combo', 'pump', 'teethfeed', 'refusebottle', 'prefbottle', 'hiccups', 'biting'];
+  const SWAP = [
+    ['Never flat on his back,', 'Keep his head higher than his tummy,'], ['and never prop the bottle.', 'and hold the bottle for every feed.'],
+    ['Never the microwave.', 'Skip the microwave.'],
+    ['Never add extra water', 'Stick to the label'], ['Extra water or extra powder isn’t safe. Always use the amounts on the label.', 'The label’s water and scoops, every time. Extra water or powder changes what he gets.'],
+    ['Unless your care team gave you a special recipe, use the amounts on the label. Never add extra water.', 'Unless your care team gave you a special recipe, the label’s water and scoops, every time.'],
+    ['Never instead of water', 'Always mixed with water'],
+    ['For babies under 1. Learn it now, and hope you never need it.', 'For babies under 1. Two moves worth knowing by heart before solids.'],
+    ['Never while he’s moving around', 'Seated for every bite, never on the move'],
+    ['There’s no best bottle.', 'Wide or narrow?'], ['Use whichever one he takes well.', 'Neither is better. The nipple’s flow matters more than the shape, so stick with one he takes calmly.'],
+    ['Ask your pediatrician first.', 'Gas drops are safe for most babies, but often don’t help much. Gripe water isn’t regulated like medicine, so ask your pediatrician before trying it.'],
+    ['ask your pediatrician first.', 'gas drops are safe for most babies, but often don’t help much. Gripe water isn’t regulated like medicine, so ask your pediatrician before trying it.'],
+    ['Most babies spit up. It peaks around 4 months and is usually gone by the first birthday.', 'Most babies spit up. It’s called reflux, it peaks around 4 months, and it’s usually gone by the first birthday.'],
+    ['Usually he’s too hungry, the flow is too fast or slow, he has gas, or he’s full.', 'Arching and squirming usually mean he’s too hungry, the flow is too fast or slow, he has gas or reflux, or he’s full.'],
+    ['Not drinking is safest. Or wait 2 hours to nurse', 'An occasional one is fine. Wait about 2 hours to nurse'],
+    ['Not drinking is safest. Or wait 2 hours to pump', 'An occasional one is fine. Wait about 2 hours to pump'],
+    ['After a drink, wait 2 hours to nurse.', 'An occasional drink is fine if you wait about 2 hours to nurse.'],
+    ['After a drink, wait 2 hours to pump.', 'An occasional drink is fine if you wait about 2 hours to pump.'],
+    ['No wet diaper in 8 hours, a sunken soft spot, or very hard to wake. Call your pediatrician right away.', 'No wet diaper in 8 hours, a sunken soft spot, or he’s very hard to wake.'],
+    ['A hard, swollen belly, or he seems in a lot of pain. Call your pediatrician right away.', 'A hard, swollen belly, or he seems to be in a lot of pain.']
+  ];
+  const whenCard = rows => rows.length ? `<section class="fd-when"><h2>${F('When to call')}</h2>${rows.map(([t, b, u]) => `<p${u ? ' class="is-now"' : ''}><b>${F(t)}</b>${b}</p>`).join('')}</section>` : '';
+  const calmCss = `<style>#main .fd-when{margin:22px 0 8px;padding:14px 16px;border-radius:18px;background:var(--card,#fff);border:1px solid var(--line)}
+    #main .fd-when h2{margin:0 0 6px;font-size:13px;font-weight:600;letter-spacing:0;text-transform:none;color:var(--muted)}
+    #main .fd-when p{margin:0;padding:9px 0 0;font-size:14px;line-height:1.45;color:var(--ink)}#main .fd-when p+p{margin-top:9px;border-top:1px solid var(--line)}
+    #main .fd-when b{display:block;font-size:13px;font-weight:600;margin:0 0 2px;color:var(--ink)}#main .fd-when p.is-now b{color:#9b4766}</style>`;
+  const pron = h => { if (typeof profile === 'undefined') return h; const nm = esc(profile.name || 'your baby'), pr = profile.pronouns || 'they';
+    if (nm === 'Ari' && pr === 'he') return h;
+    const she = pr === 'she', they = pr !== 'he' && !she;
+    const map = { 'he’s': she ? 'she’s' : they ? nm + '’s' : 'he’s', 'He’s': she ? 'She’s' : they ? nm + '’s' : 'He’s', he: she ? 'she' : they ? nm : 'he', He: she ? 'She' : they ? nm : 'He', his: she ? 'her' : they ? 'their' : 'his', His: she ? 'Her' : they ? 'Their' : 'His', him: she ? 'her' : they ? 'them' : 'him', himself: she ? 'herself' : they ? 'themself' : 'himself' };
+    return h.replace(/(<style[\s\S]*?<\/style>)|(<[^>]*>)|([^<]+)/g, (m, st, tag, txt) => txt ? txt.replace(/\bAri\b/g, nm).replace(/\b(he’s|He’s|himself|he|He|his|His|him)\b/g, w => map[w]) : m); };
+  const calm = (a, h) => {
+    if (a === 'dirD') return pron(h.replace(`${F('Example day')} ›`, `${F(stg() <= 2 ? 'A day, and hunger cues' : 'Example day')} ›`));
+    SWAP.forEach(([x, y]) => { h = h.split(F(x)).join(F(y)); });
+    // Gather every call box and urgent line, then rebuild them as one card at the end
+    const rows = []; let mom = '';
+    h = h.replace(/<div class="hub-tip fd-call"><b>([\s\S]*?)<\/b>([\s\S]*?)<\/div>/g, (m, t, b) => { if (/lactation/.test(t)) mom = b; else rows.push(['Call your pediatrician if', b]); return ''; })
+      .replace(/<p class="care-urgent"><b>([\s\S]*?)<\/b>\s*([\s\S]*?)<\/p>/g, (m, t, b) => { const ifs = /^if /.test(b); rows.push([/911/.test(t) ? (ifs ? 'Call 911' : 'Call 911 if') : 'Call right away if', (ifs && /911/.test(t) ? b : b.replace(/^if /, '')).replace(/^./, c => c.toUpperCase()), 1]); return ''; });
+    const keepMom = ['milkin', 'supply', 'latch'].includes(a) && mom;
+    if (a === 'latch' && mom) mom = F('Pain through the whole feed, cracked or bleeding nipples, or a red, painful area with a fever. If latching keeps hurting despite help, ask about his mouth, including tongue-tie.');
+    const list = (NO_CALL.includes(a) || a === 'supply') ? rows.filter(r => r[2] && !/pediatrician right away/.test(r[1])) : rows;
+    if (keepMom && a !== 'latch' && a !== 'milkin') list.unshift(['Call your doctor or a lactation consultant if', F('A red, painful area on your breast with a fever.')]);
+    else if (keepMom) list.unshift(['Call your doctor or a lactation consultant if', mom]);
+    // Drop duplicate breast-pain lines folded into pediatrician rows
+    list.forEach(r => { if (!r[2]) r[1] = r[1].replace(F(', or a red, painful area on your breast with a fever.'), '.'); });
+    // "Coffee, a drink" once, on the Your milk pages
+    if (['howlong', 'milkmeals', 'at12'].includes(a)) h = h.replace(/<div class="hub-tip(?: fd-tip)?"><b>[^<]*Coffee, a drink[\s\S]*?<\/div>/g, '');
+    // Normal pages end with the reassurance, not a warning
+    if (a === 'cluster' || a === 'spurt') h = h.replace(/<\/div>$/, `<div class="hub-tip fd-tip"><b>${F('How you’ll know it’s fine')}</b><p>${F('6 or more wet diapers a day, and steady growth at checkups.')}</p></div></div>`);
+    if (a === 'teethfeed') h = h.replace(/<\/div>$/, `<div class="hub-tip fd-tip"><b>${F('Good to know')}</b><p>${F('Teething doesn’t cause a fever, diarrhea or a runny nose. If he has those, it’s something else, so check in with your pediatrician.')}</p></div></div>`);
+    if (a === 'spit') h = h.replace(/<\/div>$/, `<div class="hub-tip fd-tip"><b>${F('Happy and growing well?')}</b><p>${F('Then spit-up doesn’t need treatment, even when it looks like a lot.')}</p></div></div>`);
+    if (a === 'supply' && pumps() && !nurses()) h = h.replace(/<\/div>$/, `<div class="hub-tip fd-tip"><b>${F('Too much?')}</b><p>${F('Pumping more makes more. Pump about what he drinks, freeze any extra, and drop extra sessions slowly so you stay comfortable.')}</p></div></div>`);
+    if (a === 'howlong' && isBreast()) { const j = h.indexOf('ss-head'), i = j > 0 ? h.indexOf('</div>', j) + 6 : -1;
+      if (i > 5) h = h.slice(0, i) + `<div class="hub-tip"><b>${F('What pediatricians recommend')}</b>${F('Breast milk alone for about the first 6 months, then alongside food for as long as you both want, up to 2 years or beyond.')}</div>` + h.slice(i); }
+    // Remove any boxes the regexes emptied, then add the one card at the end
+    h = h.replace(/<div class="hub-tip fd-tip fd-notes">\s*<\/div>/g, '');
+    h = h.replace(/<\/div>$/, whenCard(list) + calmCss + '</div>');
+    return pron(h); };
   const base = window.changesRoute;
-  window.changesRoute = function (r) { const [, cat, s, a, x] = r.split(':'); if (cat === CAT && s === 'mock' && P[a]) { window.__fdLast = r; const out = P[a](x); return a === 'dirD' ? out : tidy(out); } return base(r); };
+  window.changesRoute = function (r) { const [, cat, s, a, x] = r.split(':'); if (cat === CAT && s === 'mock' && P[a]) { window.__fdLast = r; const out = P[a](x); return calm(a, a === 'dirD' ? out : tidy(out)); } return base(r); };
   const op = window.openPage;
   window.openPage = openPage = function (r, ...rest) { if (r === 'topic:Feeding') r = 'chg:Feeding:mock:dirD'; return op.call(this, r, ...rest); };
 })();
