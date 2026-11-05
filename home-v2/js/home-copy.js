@@ -1,4 +1,4 @@
-/* Ahead · Home card copy (v7.1). Shared with the card simulator: one source for every word on a Home card. */
+/* Ahead · Home card copy (v7.2). Shared with the card simulator: one source for every word on a Home card. */
 window.HOME_COPY = {
 "vitamin-d:t": "Time to start vitamin D drops",
 "vitamin-d:t-late": "Daily vitamin D drops for {N}",
@@ -151,7 +151,7 @@ window.HOME_COPY = {
 "bottle-cup:t": "Moving from bottles to cups",
 "bottle-cup": "Swap one bottle a day for a cup, saving the bedtime one for last.",
 "care-bottle:t": "Bottle practice before daycare",
-"care-bottle": "A few bottles a week from someone else make day one much easier.",
+"care-bottle": "Practicing a few bottles a week with someone else makes day one much easier.",
 "care-start:t": "Daycare starts soon",
 "care-start": "Plan a short practice day, and send a note with {his} feeds and naps.",
 "stand-soon:cond": "Set the crib mattress to its lowest setting now, if it isn’t there already.",

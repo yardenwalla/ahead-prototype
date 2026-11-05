@@ -323,9 +323,10 @@
     live.sort((a, b) => (pri(a) - pri(b)) || (leaving(b) - leaving(a)) || ((s.seen[a.id] != null) - (s.seen[b.id] != null)) || (C.indexOf(a) - C.indexOf(b)));
     const now = [], soon = [], cats = new Set(); let safety = false;
     for (const c of live) {
-      if (cats.has(c.cat) || (c.safety && safety)) continue;
+      if (cats.has(c.cat)) continue;
       const slot = typeof c.slot === 'function' ? c.slot(s) : c.slot, box = slot === 'soon' ? soon : now;
-      if (box.length >= 2) continue;
+      // No fixed cap: every must-know shows. Good-to-know cards fill in only while Home has fewer than 3.
+      if (!(c.pri <= 2 || c.must) && now.length + soon.length >= 3) continue;
       box.push(c); cats.add(c.cat); safety = safety || !!c.safety;
     }
     return { now, soon };
