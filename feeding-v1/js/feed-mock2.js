@@ -880,59 +880,71 @@
       r('green', 'bowl', 'Food', 'Serve three meals of family food', 'Soft pieces, no added salt', 'family')][v];
     return [feeds, milk, tummy, fourth].filter(x => x && P[x.to]); };
 
+  // Area pages in Sleep's look: a colored header, one picture, a "What to do" card that stands out (2–3 short lines), one "How you'll know" line.
+  const doCard = (c, lines) => `<section class="ss-moment"><section class="ss-do" style="--ss-bg:${c[0]};--ss-ink:${c[1]}"><b>${F('What to do')}</b><ul class="ss-do-list">${lines.filter(Boolean).map(l => `<li>${F(l)}</li>`).join('')}</ul></section></section>`;
+  const knowLine = t => `<p class="ss-know"><b>${F('How you’ll know')}</b>${F(t)}</p>`;
+  const sstrip = (title, items) => hubStageStrip({ title, items });
   // Feeds: how feeds go at each stage
-  P.feeds = () => { const v = stg(), nurse = nurses(), bot = isBottle(), fm = formulaFam();
-    if (v === 0) return page(head('Feeds', 'Feed often, day and night', nurse ? '8–12 feeds a day is normal now. Feeding often is how he grows, and how your milk gets going.' : '6–10 bottles a day is normal now. Small, frequent feeds are how newborns eat.', C.peach)
-      + h2('Positions') + (nurse ? steps([['hand', 'Cross-cradle', 'Your hand supports his head. Good for learning to latch'], ['heart', 'Football', 'Tucked at your side. Easy after a C-section'], ['moon', 'Laid-back', 'Leaning back, him tummy-down on you']], false) + small('A good latch', 'feels like a strong tug, not a pinch. Wait for a wide mouth, then bring him to you, chin first.') : steps([['heart', 'Cradled, sitting up', 'Head higher than his tummy'], ['smile', 'Upright on your lap', 'Facing sideways, head supported'], ['bottle', 'Paced', 'Bottle fairly level, little pauses']], false))
-      + (nurse && bot ? small('With a bottle,', 'hold him fairly upright, keep the bottle level, and pause every few sucks.') : '')
-      + h2('Burping') + steps([['heart', 'Over your shoulder', 'A cloth underneath'], ['smile', 'Sitting on your lap', 'Lean him forward, support his chin'], ['moon', 'Across your knees', 'Tummy down, a gentle back rub']], false)
-      + todo(['Feed at early hunger cues: stirring, rooting, hands to mouth. Crying is a late cue, so calm him first.', bot && nurse ? 'Burp every 2–3 oz from a bottle, between sides at the breast, and at the end.' : bot ? 'Burp every 2–3 oz, and at the end of the feed.' : 'Burp between sides, and at the end of the feed.', 'Expect some evenings of nonstop feeds. That’s cluster feeding. It’s normal, and it passes.', 'Until he’s back to birth weight, wake him for a feed if it’s been about 3 hours.'])
-      + know2('6 or more wet diapers a day by day 6, and back to birth weight by about 2 weeks.'));
-    if (v === 1) return page(head('Feeds', 'Feeds get quicker and further apart', 'He’s better at eating now, so feeds take less time. Most babies feed about ' + (nurse ? '7–9' : '6–8') + ' times a day.', C.peach)
-      + todo(['Go by his cues, not the clock. Some feeds are short, some long.', 'Hungrier for a few days? That’s a growth spurt. Feed more often. It usually passes in 2–3 days.', 'Small feeds every hour? That’s snacking. It’s fine if it works for you. If it’s wearing you out, soothe him first and feed when hunger cues come back.', bot ? 'Bottles are often 4–5 oz now. Follow his cues rather than finishing every bottle.' : ''])
-      + know2('6 or more wet diapers a day, and steady growth at checkups.'));
-    if (v === 2) return page(head('Feeds', 'Expect short, distracted feeds', 'The world is more interesting now, so feeds get short and busy. A quick feed can still be a full one.', C.peach)
-      + todo(['Feed in a quiet, dim spot, away from screens and siblings.', 'Feed when he’s drowsy: before naps, and at bedtime.', 'Eating less by day and more at night? Offer feeds more often while he’s awake.', bot ? 'Bottles are often 4–6 oz, and about the same total each day until solids.' : ''])
-      + know2('6 or more wet diapers a day, and steady growth at checkups.'));
-    if (v === 3) return page(head('Feeds', 'Fit milk feeds around meals', 'Until 12 months, milk is still his main food. Solids are for learning.', C.peach)
-      + todo(['Offer milk before or after meals. Both work.', nurse ? 'Nurse when he asks. Feeds often drop a little as meals grow.' : 'Bottles are often 6–8 oz, 4–5 a day, up to about 32 oz.', 'Offer water from an open or straw cup with meals.'])
-      + know2('6 or more wet diapers a day, steady growth, and a busy, content baby.'));
-    return page(head('Feeds', 'Milk drops as meals grow', 'Most babies take 3–4 milk feeds a day now, often around meals and at bedtime.', C.peach)
-      + todo(['Offer milk after meals, so he comes to the table hungry.', 'Keep a milk feed at bedtime if it works for you.', 'Start practicing with a cup, so 12 months is an easier switch.'])
-      + know2('He eats three small meals, still drinks milk, and has 6 or more wet diapers a day.')); };
+  P.feeds = () => { const v = stg(), nurse = nurses(), bot = isBottle(), c = C.peach;
+    if (v === 0) return page(head('Feeds', 'Feed often, day and night', nurse ? '8–12 feeds a day is normal now. Feeding often is how he grows, and how your milk gets going.' : '6–10 bottles a day is normal now. Small, frequent feeds are how newborns eat.', c)
+      + steps([['eye', 'Watch for early cues', 'Rooting, hands to mouth'], nurse ? ['heart', 'Feed in a comfy hold', 'Cross-cradle or football to start'] : ['bottle', 'Hold him upright', 'And pace the bottle'], ['hand', 'Burp', bot && nurse ? 'Every 2–3 oz, or between sides' : bot ? 'Every 2–3 oz' : 'Between sides, and at the end']], true)
+      + doCard(c, ['Feed when he shows early cues. Crying is a late one, so calm him first.', 'Expect some evenings of nonstop feeds. That’s cluster feeding, and it passes.', 'Until he’s back to birth weight, wake him if it’s been about 3 hours.'])
+      + knowLine('6 or more wet diapers a day by day 6, and back to birth weight by about 2 weeks.'));
+    if (v === 1) return page(head('Feeds', 'Feeds get quicker and further apart', 'He’s better at eating now, so feeds take less time.', c)
+      + sstrip('Feeds a day, as he grows', nurse ? [['drop', 'Newborn', '8–12'], ['drop', 'Now', '7–9'], ['drop', 'By 4 months', 'Often 6–8']] : [['bottle', 'Newborn', '6–10 bottles'], ['bottle', 'Now', '6–8, 4–5 oz'], ['bottle', 'By 4 months', '4–6, 4–6 oz']])
+      + doCard(c, ['Go by his cues, not the clock.', 'Hungrier for a few days? That’s a growth spurt. Feed more often, and it passes in 2–3 days.', 'Small feeds every hour? That’s snacking. If it’s wearing you out, soothe him first and feed when cues come back.'])
+      + knowLine('6 or more wet diapers a day, and steady growth at checkups.'));
+    if (v === 2) return page(head('Feeds', 'Expect short, distracted feeds', 'The world is more interesting now, so feeds get short and busy. A quick feed can still be a full one.', c)
+      + steps([['moon', 'A quiet, dim spot', 'Fewer things to look at'], ['clock', 'When he’s drowsy', 'Before naps and bed'], ['eye', 'More often by day', 'If he eats more at night']], false)
+      + doCard(c, ['Feed somewhere calm, away from screens and siblings.', 'Offer a feed before naps and at bedtime, when he’s sleepy.'])
+      + knowLine('6 or more wet diapers a day, and steady growth at checkups.'));
+    if (v === 3) return page(head('Feeds', 'Fit milk feeds around meals', 'Until 12 months, milk is still his main food. Solids are for learning.', c)
+      + sstrip('A day of milk and meals', [['drop', 'Morning', 'Milk'], ['bowl', 'Breakfast', 'A few bites'], ['drop', 'Afternoon', 'Milk'], ['bowl', 'Dinner', 'A few bites'], ['moon', 'Bedtime', 'Milk']])
+      + doCard(c, ['Offer milk before or after meals. Both work.', nurse ? 'Nurse when he asks. Feeds often drop a little as meals grow.' : 'Bottles are often 6–8 oz, 4–5 a day, up to about 32 oz.', 'Offer water from an open or straw cup with meals.'])
+      + knowLine('6 or more wet diapers a day, steady growth, and a busy, content baby.'));
+    return page(head('Feeds', 'Milk drops as meals grow', 'Most babies take 3–4 milk feeds a day now, often around meals and at bedtime.', c)
+      + sstrip('Milk feeds a day', [['drop', '6–9 months', '4–5'], ['drop', 'Now', '3–4'], ['bowl', 'After 1', 'Milk with meals']])
+      + doCard(c, ['Offer milk after meals, so he comes to the table hungry.', 'Keep a bedtime milk feed if it works for you.', 'Practice with a cup now, so the switch at 1 is easier.'])
+      + knowLine('He eats three small meals, still drinks milk, and has 6 or more wet diapers a day.')); };
 
-  // Your milk, the newborn weeks: milk coming in, pain, and for families who give both, how to combine
-  P.milkarea = () => { const nurse = nurses(), fm = formulaFam(), pumpOnly = onlyPump();
-    return page(head(milkLabel(), nurse ? 'Get help early if nursing hurts' : 'Pump 8–12 times a day', 'Your milk comes in around days 2–5. Some tenderness at first is common. Pain through the whole feed isn’t something to push through.')
-      + h2('What’s normal') + steps([['heart', 'Full, tender breasts', 'For a few days as milk comes in'], nurse ? ['hand', 'A strong tug', 'At the start of a feed, not a pinch'] : ['drop', 'Tiny amounts at first', 'Then more each day'], ['drop', 'Some leaking', 'Between feeds']], false)
-      + (nurse && fm ? h2('Nursing and formula') + steps([['heart', 'Nurse first', 'Both sides, until he slows down'], ['bottle', 'Then formula, if he’s still hungry', 'Often a small top-up. His cues decide']], true) : '')
-      + todo([nurse ? 'Pinching? Break the seal with a clean finger and try again. Cross-cradle or laid-back often help.' : 'Check the flange fit: your nipple should move freely without rubbing.', 'Very full? ' + (nurse ? 'Feed or hand-express' : 'Pump') + ' a little, then a cold pack.', 'Sore nipples? A little breast milk or lanolin after feeds.', nurse && fm ? 'Skipping a nursing for a bottle? Pump around then, so that milk keeps coming.' : '', 'Get help early. A lactation consultant can watch a feed and fix most problems in a visit or two. Most US insurance plans cover it.'])
-      + know2(nurse ? 'Feeds stop hurting, your breasts feel softer after feeds, and he has 6 or more wet diapers a day by day 6.' : 'What you pump grows day by day, and he has 6 or more wet diapers a day by day 6.')
+  // Your milk, the newborn weeks
+  P.milkarea = () => { const nurse = nurses(), fm = formulaFam(), c = C.pink;
+    return page(head(milkLabel(), nurse ? 'Get help early if nursing hurts' : 'Pump 8–12 times a day', nurse ? 'Some tenderness at first is common. Pain through the whole feed isn’t something to push through.' : 'Pumping often, including once at night, tells your body how much to make.', c)
+      + sstrip('Your milk, the first weeks', [['drop', 'Days 1–2', 'Small amounts of colostrum'], ['heart', 'Days 2–5', 'Milk comes in. Full, tender'], ['clock', '6–12 weeks', 'Supply settles']])
+      + doCard(c, [nurse ? 'Pinching? Break the seal with a clean finger and try again. Cross-cradle often helps.' : 'Check the flange: your nipple should move freely without rubbing.', 'Very full or sore? ' + (nurse ? 'Hand-express' : 'Pump') + ' a little, then a cold pack. A little breast milk soothes sore nipples.', nurse && fm ? 'Nurse first, then offer formula if he’s still hungry.' : '', 'Get help early. A lactation consultant can fix most problems in a visit or two, and most insurance covers it.'])
+      + knowLine(nurse ? 'Feeds stop hurting, your breasts feel softer after feeds, and he has 6 or more wet diapers a day by day 6.' : 'What you pump grows day by day, and he has 6 or more wet diapers a day by day 6.')
       + `<div class="hub-tip fd-call"><b>${F('Call your doctor or a lactation consultant')}</b>${F('Cracked or bleeding nipples, pain that isn’t easing, or a red, painful area with a fever.')}</div>`); };
 
   // Tummy: spit-up, gas and poop, by stage
-  P.tummy = () => { const v = stg(), br = fd() === 'Breast milk', both = isBreast() && formulaFam();
+  P.tummy = () => { const v = stg(), br = fd() === 'Breast milk', both = isBreast() && formulaFam(), c = C.blue;
     const poopNow = br ? 'yellow and seedy' : both ? 'soft and yellow to tan' : 'tan to yellow, like peanut butter';
-    if (v === 0) return page(head('Tummy', 'Expect spit-up, gas and grunts', 'Newborn tummies are noisy. Most of it is normal and eases by 3–4 months.', C.blue)
-      + two(['Spit-up', 'Flows out gently, and is usually less than it looks. Spill a tablespoon of milk to compare.'], ['Vomit', 'Comes out with force, sometimes across the room.', '#fdeee6', '#9a5a3c'])
-      + todo(['Hold him upright for 20–30 minutes after feeds.', 'Burp mid-feed and at the end.', 'For gas, bicycle his legs or lay him tummy-down across your knees.', 'Grunting, going red and straining while he poops are normal. He’s learning which muscles to relax.', 'By about day 5, poop changes from black and sticky to ' + poopNow + '.'])
-      + know2('He’s growing well and has plenty of wet diapers. Then spit-up is normal, even when it looks like a lot.')
-      + call('Forceful vomiting, or hard, pebble-like poop.') + `<p class="care-urgent"><b>${F('Call right away:')}</b> ${F('green or bloody vomit, or white or very pale poop.')}</p>`);
-    if (v === 1) return page(head('Tummy', 'Gas and spit-up peak now', 'Fussy evenings often peak around 6 weeks, and spit-up around 4 months. Both usually ease by 3–4 months.', C.blue)
-      + todo(['Burp more often, and keep him upright after feeds.', 'For gas, bicycle his legs, or try tummy-down across your knees.', 'Gas drops are safe for most babies but often don’t help much. Ask your pediatrician before trying gripe water.', br ? 'After about 6 weeks, some breastfed babies go several days without a poop. Soft when it comes is what matters.' : 'Poop often comes once or twice a day. Soft is what matters.'])
-      + know2('He’s growing well and is mostly content between fussy spells.')
+    const urgent = t => `<p class="care-urgent"><b>${F('Call right away:')}</b> ${F(t)}</p>`;
+    if (v === 0) return page(head('Tummy', 'Expect spit-up, gas and grunts', 'Newborn tummies are noisy. Most of it is normal and eases by 3–4 months.', c)
+      + two(['Spit-up', 'Flows out gently, and is usually less than it looks.'], ['Vomit', 'Comes out with force, sometimes across the room.', '#fdeee6', '#9a5a3c'])
+      + doCard(c, ['Hold him upright for 20–30 minutes after feeds.', 'Burp mid-feed and at the end.', 'For gas, bicycle his legs or lay him tummy-down across your knees.'])
+      + knowLine('He’s growing well and has plenty of wet diapers. Then spit-up is normal, even when it looks like a lot.')
+      + small('Poop:', 'grunting and going red is normal. By about day 5, it turns ' + poopNow + '.')
+      + call('Forceful vomiting, or hard, pebble-like poop.') + urgent('green or bloody vomit, or white or very pale poop.'));
+    if (v === 1) return page(head('Tummy', 'Gas and spit-up peak now', 'Both are common at this age, and both ease.', c)
+      + sstrip('When it eases', [['moon', 'Fussy evenings', 'Peak around 6 weeks'], ['bottle', 'Spit-up', 'Peaks around 4 months'], ['smile', 'Both', 'Usually ease by 3–4 months']])
+      + doCard(c, ['Burp more often, and keep him upright after feeds.', 'For gas, bicycle his legs or try tummy-down across your knees.', br ? 'Some breastfed babies go a few days without a poop now. Soft is what matters.' : 'Poop often comes once or twice a day. Soft is what matters.'])
+      + knowLine('He’s growing well and is mostly content between fussy spells.')
+      + small('Gas drops or gripe water?', 'gas drops are safe but often don’t help much. Ask your pediatrician before trying gripe water.')
       + call('Forceful vomiting, crying that won’t settle, blood in his poop, or slow weight gain.'));
-    if (v === 2) return page(head('Tummy', 'Spit-up starts to ease', 'For most babies, spit-up peaks around 4 months and then slowly eases. Drool is common too, and isn’t always teething.', C.blue)
-      + todo(['Keep him upright after feeds, and burp mid-feed.', 'Lots of drool? Keep a bib on and wipe his chin to protect his skin.', 'Poop can change color and smell once solids start. That’s normal.'])
-      + know2('He’s growing well and isn’t bothered by the spit-up.')
+    if (v === 2) return page(head('Tummy', 'Spit-up starts to ease', 'For most babies, spit-up peaks around 4 months, then slowly eases.', c)
+      + steps([['bottle', 'Less spit-up', 'Week by week'], ['drop', 'Lots of drool', 'Not always teething'], ['diaper', 'Poop changes', 'Once solids start']], false)
+      + doCard(c, ['Keep him upright after feeds, and burp mid-feed.', 'Keep a bib on, and wipe his chin to protect his skin from drool.'])
+      + knowLine('He’s growing well and isn’t bothered by the spit-up.')
       + call('Forceful vomiting, spit-up that starts after 6 months, or slow weight gain.'));
-    if (v === 3) return page(head('Tummy', 'Poop changes with solids', 'Color and smell follow what he eats, and harder poop is common at first.', C.blue)
-      + todo(['Offer water from a cup with meals.', 'Pears, prunes, peas and oatmeal help keep poop soft.', 'Bicycle his legs gently if he’s straining.'])
-      + know2('Poop is soft and comes regularly, even if less often than before.')
+    if (v === 3) return page(head('Tummy', 'Poop changes with solids', 'Color and smell follow what he eats, and harder poop is common at first.', c)
+      + steps([['bowl', 'Pears and prunes', 'Mashed or puréed'], ['bowl', 'Peas and oatmeal', 'Soft and easy'], ['drop', 'Water', 'Sips from a cup with meals']], false)
+      + doCard(c, ['Offer these foods and water when poop gets harder.', 'Bicycle his legs gently if he’s straining.'])
+      + knowLine('Poop is soft and comes regularly, even if less often than before.')
       + call('Blood in his poop, pain, vomiting, or no poop for 2 days after trying these.'));
-    return page(head('Tummy', 'Keep poop soft', 'As he eats more family food, water and fiber keep things moving.', C.blue)
-      + todo(['Offer water from a cup with every meal, up to about 8 oz a day.', 'Include fruit, vegetables and whole grains at most meals.', 'Plan the move to whole milk at 12 months slowly, as too much milk can make poop harder.'])
-      + know2('Soft poop that comes regularly.')
+    return page(head('Tummy', 'Keep poop soft', 'As he eats more family food, water and fiber keep things moving.', c)
+      + steps([['drop', 'Water with meals', 'Up to 8 oz a day'], ['bowl', 'Fruit and vegetables', 'At most meals'], ['bowl', 'Whole grains', 'Oatmeal, bread, pasta']], false)
+      + doCard(c, ['Offer water from a cup with every meal.', 'At 12 months, go easy on milk. Too much can make poop harder.'])
+      + knowLine('Soft poop that comes regularly.')
       + call('Blood in his poop, pain, vomiting, or no poop for 2 days after trying these.')); };
 
   // Tough feed?: only acute, right-now situations, like Sleep's Rough night
