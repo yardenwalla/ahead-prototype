@@ -39,10 +39,11 @@
   </style>`;
   // Each subpage header gets a small picture, like Sleep and Everyday care
   const HEADART = { 'Your milk': () => ART.drops(4), 'Bottles': () => ART.bottle(.55), 'Cups': () => ART.bottle(.3), 'Every day': () => ART.drops(2), 'Food': () => `<svg viewBox="0 0 120 40">${[0, 1].map(i => `<path d="M${8 + i * 36} 16 h28 q0 14 -14 14 q-14 0 -14 -14Z" fill="#356651" fill-opacity=".7"/>`).join('')}</svg>`, 'Getting enough': () => ART.diapers(4), 'Feeds now': () => ART.often(5), 'Common now': () => ART.often(4), 'Coming up': () => ART.often(3), 'Tough feed?': () => ART.often(3), 'Show me how': () => ART.often(4), 'Feeding': () => ART.often(4) };
-  const head = (ctx, title, lead, c = C.pink) => `<div class="dev-area-head ss-head" style="--area:${c[0]};--area-ink:${c[1]}">${HEADART[ctx] ? `<span class="dev-area-head-art" aria-hidden="true">${HEADART[ctx]()}</span>` : ''}<p class="hub-context">${F(ctx)}</p><h1>${F(title)}</h1>${lead ? `<p class="hub-lead">${F(lead)}</p>` : ''}</div>`;
+  const head = (ctx, title, lead, c = C.pink) => `<div class="dev-area-head ss-head" style="--area:${c[0]};--area-ink:${c[1]}">${HEADART[ctx] ? `<span class="dev-area-head-art" aria-hidden="true">${HEADART[ctx]().replace(/#(46638c|9b4766|d98a6a|c9a24a|356651)/gi, c[1])}</span>` : ''}<p class="hub-context">${F(ctx)}</p><h1>${F(title)}</h1>${lead ? `<p class="hub-lead">${F(lead)}</p>` : ''}</div>`;
   // Subpages use the shared subpage look (data-ss): icons, tips and cards take the page's own color.
   // Runs of short notes are gathered into one quiet card so pages don't end in a wall of small text.
-  const tidy = h => h.replace(/(?:<p class="ss-small">(?:(?!<\/p>)[\s\S])*<\/p>\s*){2,}/g, m => `<div class="ss-know fd-notes">${m.replace(/<p class="ss-small">/g, '<p>')}</div>`);
+  const tidy = h => h.replace(/<h2 class="hub-h2">([^<]*)<\/h2><p class="care-p">((?:(?!<\/p>)[\s\S])*)<\/p>/g, '<div class="ss-do"><b>$1</b><p>$2</p></div>')
+    .replace(/<p class="care-p">(?!<b>)/g, '<p class="ss-what">').replace(/(?:<p class="ss-small">(?:(?!<\/p>)[\s\S])*<\/p>\s*){2,}/g, m => `<div class="ss-know fd-notes">${m.replace(/<p class="ss-small">/g, '<p>')}</div>`);
   const page = inner => { const m = inner.match(/--area:(#[0-9a-f]+);--area-ink:(#[0-9a-f]+)/i), bg = m ? m[1] : C.pink[0], ink = m ? m[2] : C.pink[1];
     return `${css}<div class="quiet-category hub-page hub-detail care-v2" data-overview="${CAT}" data-ss="1" style="${yearTheme(CAT)};--ss-bg:${bg};--ss-ink:${ink}">${detailPageTop(CAT)}${tidy(inner)}</div>`; };
   const h2 = t => `<h2 class="hub-h2">${F(t)}</h2>`;
