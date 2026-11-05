@@ -899,7 +899,10 @@
       r('green', 'bowl', 'Starting solids', 'Start with a few bites a day', 'Iron-rich first. Allergens early and often', 'firstfoods'),
       r('green', 'bowl', 'Meals & self-feeding', 'Serve three meals of family food', 'Finger foods, cups and milk at 12 months', 'family')][v];
     void milk; void tummy; void fourth;
-    return [rhythm, bf, bo, four].filter(x => x && (P[x.to] || x.to === 'bf1')); };
+    if (bf) bf.to = 'bfhome';
+    if (v <= 1) four.to = 'esshome';
+    if (v === 0 && four) four.sub = 'Burping, spit-up, poop and vitamin D';
+    return [rhythm, bf, bo, four].filter(x => x && (P[x.to] || ['bf1', 'bfhome', 'esshome'].includes(x.to))); };
 
   // Area pages in Sleep's look: a colored header, one picture, a "What to do" card that stands out (2–3 short lines), one "How you'll know" line.
   const doCard = (c, lines) => `<section class="ss-moment"><section class="ss-do" style="--ss-bg:${c[0]};--ss-ink:${c[1]}"><b>${F('What to do')}</b><ul class="ss-do-list">${lines.filter(Boolean).map(l => `<li>${F(l)}</li>`).join('')}</ul></section></section>`;
@@ -1170,6 +1173,49 @@
       + h2('When he’s unwell') + card([['eye', 'Sick, or a stuffy nose', 'Feeding when he’s unwell', 'sick']])
       + (br ? h2('For you') + card([nurse && ['heart', 'Nursing still hurts', 'Cracked nipples, or pain through the feed', 'sore'], ['heart', 'A tender lump in your breast', 'A clogged duct, and what helps', 'lump']]) : '')
       + `<div class="hub-list" style="margin-top:12px">${arow('lilac', 'hand', 'Support', 'You don’t have to figure this out alone', 'Who can help, and how you’re doing', 'help')}</div>`); }; }
+  // ---- Mock v2 (Nov 5): one permanent home per subject, guides inside it, stage page points into them ----
+  HEADART['Everyday essentials'] = () => ART.bottle(.45);
+  const guideRow = (c, icon, t, sub, to, when) => `<button class="hub-row hl-row" style="--hl-bg:${C[c][0]};--hl-ink:${C[c][1]}" onclick="${go(to)}"><span class="fd-dot" style="width:42px;height:42px;border-radius:13px;background:var(--hl-bg);color:var(--hl-ink);padding:9px;box-sizing:border-box;flex:none;display:grid;place-items:center">${hubArt(icon, CAT)}</span><span class="hub-row-copy"><b>${F(t)}</b><small>${F(sub)}</small>${when ? `<small style="opacity:.7">${F(when)}</small>` : ''}</span><span class="hub-chev" aria-hidden="true">›</span></button>`;
+  const nowCard = (c, icon, t, sub, to) => `<button class="hub-rough-card care-rash-card" style="background:${c[0]};color:${c[1]};margin:0 0 6px" onclick="${go(to)}"><span class="hub-rough-moon" aria-hidden="true">${hubArt(icon, CAT)}</span><span class="hub-rough-copy"><small style="text-transform:uppercase;letter-spacing:.06em;font-size:11.5px;font-weight:700">${F('Right now')}</small><b>${F(t)}</b><small>${F(sub)}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`;
+  // Breastfeeding & pumping: the permanent home. Every guide lives here; the stage only decides which comes first.
+  P.bfhome = () => { const v = stg(), nurse = nurses(), pump = pumps(), fm = formulaFam(), c = C.pink;
+    const G = [
+      ['heart', 'Getting started', 'Milk coming in, latch and holds, tongue-tie', 'milkarea', 'Most useful in the first 6 weeks', nurse || pump],
+      ['drop', 'Understanding your supply', 'Settling, too little, too much', 'bf1', 'From about 6 weeks', true],
+      ['heart', 'Comfort and care', 'Engorgement, sore nipples, clogged ducts', 'sore', 'Any time', true],
+      ['drop', 'Pumping basics', 'How often, flange fit, how much', 'pump', pump ? 'Any time' : 'If you start pumping', true],
+      ['bottle', 'Nursing and bottles', fm ? 'Topping up with formula, protecting supply' : 'A first bottle, and keeping nursing going', fm ? 'combo' : 'firstbottle', 'From about 3 weeks', nurse],
+      ['clock', 'Everyday life', 'Pumping at work, food, coffee and drinks', 'work', 'From about 6 weeks', true],
+      ['heart', 'Nursing challenges', 'Strikes and biting', 'nstrike', 'From about 4 months', nurse],
+      ['heart', 'Continuing or stopping', 'How long, stopping gently, nursing past 1', 'howlong', 'From about 4 months', true]
+    ].filter(g => g[5] && P[g[3]]);
+    const nowI = [0, 1, 7, 5, 7][v], now = G.find((g, i) => i === Math.min(nowI, G.length - 1)) || G[0];
+    return page(head('Breastfeeding & pumping', 'Your milk, start to finish', 'Every guide about nursing, pumping and your milk lives here. The one that matters most for Ari right now is first.', c)
+      + nowCard(c, now[0], now[1], now[2], now[3])
+      + h2('All guides') + alist(G.filter(g => g !== now).map(g => guideRow('pink', g[0], g[1], g[2], g[3], g[4])))); };
+  // Everyday essentials: the normal stuff, with the problem version inside each guide.
+  P.esshome = () => { const v = stg(), c = C.blue;
+    const G = [['hand', 'Burping and spit-up', 'How to burp, what’s normal, and reflux', 'spitguide', 'Most useful 0–4 months'], ['drop', 'Gas and fussy evenings', 'What helps, and crying that won’t settle', 'crying0', 'Peaks around 6 weeks'], ['diaper', 'Understanding poop', 'What’s normal on milk, and colors to call about', 'poop0', 'Any time'], ['drop', 'Vitamin D and iron', 'How to give drops, and when to stop', 'vitd', 'Every day']];
+    const now = G[v === 1 ? 1 : 0];
+    return page(head('Everyday essentials', 'The everyday stuff', 'Burping, spit-up, gas, poop and vitamins. What’s normal, what helps, and when it’s more than that.', c)
+      + nowCard(c, now[0], now[1], now[2], now[3])
+      + h2('All guides') + alist(G.filter(g => g !== now).map(g => guideRow('blue', g[0], g[1], g[2], g[3], g[4])))); };
+  // A guide: normal first, then what helps, then when it's more than that. Tough feed links here instead of repeating it.
+  P.spitguide = () => { const c = C.blue, bot = isBottle();
+    return page(head('Everyday essentials', 'Burping and spit-up', 'Almost every newborn spits up, and most of it is normal. Burping and a few small habits help.', c)
+      + h2('What’s normal')
+      + two(['Spit-up', 'Flows out gently, often with a burp. It’s usually less than it looks.'], ['Vomit', 'Comes out with force, sometimes across the room.', '#fdeee6', '#9a5a3c'])
+      + sstrip('Spit-up, as he grows', [['bottle', '0–2 months', 'Common after feeds'], ['bottle', 'Around 4 months', 'Usually the peak'], ['smile', '9–12 months', 'Mostly gone']])
+      + h2('How to burp')
+      + steps([['heart', 'Over your shoulder', 'Pat or rub his back'], ['hand', 'Sitting on your lap', 'Support his chin and chest'], ['moon', 'Tummy-down on your lap', 'Gentle pats on his back']], true)
+      + small('When:', bot ? 'every 2–3 oz, and at the end. No burp after a minute or two is fine.' : 'between sides, and at the end. No burp after a minute or two is fine.')
+      + doCard(c, ['Hold him upright for 20–30 minutes after feeds.', 'Offer smaller feeds, more often, if he spits up a lot.', bot ? 'Pace the bottle so he doesn’t gulp air.' : ''])
+      + knowLine('He’s growing well and has 6 or more wet diapers a day. Then spit-up is normal, even when it looks like a lot.')
+      + h2('When it’s more than spit-up')
+      + know('Signs of reflux that bothers him', 'He cries or arches during or after most feeds, refuses feeds, or isn’t gaining weight. Ask your pediatrician before thickening feeds or switching formula.')
+      + call('Slow weight gain, refusing feeds, fewer wet diapers, or forceful vomiting after most feeds.')
+      + `<p class="care-urgent"><b>${F('Call right away:')}</b> ${F('green or bloody vomit, or vomiting with a fever.')}</p>`); };
+  { const hardV = P.hard; P.hard = () => hardV().replace(`mock:reflux0'`, `mock:spitguide'`).replace(F('Spit-up that seems like too much'), F('Lots of spit-up, or crying with feeds')); }
   const dirD0 = P.dirD; P.dirD = function (...a) { window.__fdPills = true; try { return dirD0.apply(this, a); } finally { window.__fdPills = false; } };
   const rnd = window.render;
   const curPage = () => { try { return (0, eval)('page'); } catch (e) { return ''; } };
