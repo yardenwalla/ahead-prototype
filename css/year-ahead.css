@@ -94,3 +94,18 @@
 #main .ya-month-art .ya-art { position: absolute; inset: 0; display: block; padding: 9px; border-radius: 20px }
 #main .ya-month-art .ya-art svg { position: static; transform: none; width: 100%; height: 100% }
 #main .ya-month { background: #fffdf9 }
+/* Nov 5: Timeline in the app's own style. The label matches Home's; "Coming up next" cards are white with a hairline,
+   like Home's cards and category rows, and each item icon sits in its category's soft square (circles mean category,
+   squares mean item). The colored blocks in the month cards stay: they're Timeline's own touch. */
+#main .ya-page>.ya-eyebrow{text-transform:none;letter-spacing:0;font-size:13px;line-height:1.4;font-weight:600;color:#7a4f6d}
+#main .ya-card{background:var(--white,#fff);border:1px solid var(--line,#efeaf2);box-shadow:none}
+#main .ya-card-art{background:var(--year-pale,#f3effb);border-radius:14px;width:44px;height:44px}
+#main .ya-chip span{width:30px;height:30px;border-radius:10px;background:var(--white,#fff)}
+#main .ya-chip svg{width:19px;height:19px}
+/* The same sentence-case plum label on every tab's title: Timeline, Categories and Memories (Home's is the age on its month card). */
+#main>.eyebrow,#main .mem-page>.eyebrow,#main .ya-page>.ya-eyebrow{text-transform:none!important;letter-spacing:0!important;font-size:13px!important;line-height:1.4!important;font-weight:600!important;color:#7a4f6d!important}
+/* Month cards sit flat like every other card (white, hairline, no shadow). The blocks keep their color, one shade
+   richer to match Sleep's tiles and the category line, and the age range takes the category's own ink. */
+#main .ya-month{background:var(--white,#fff);border:1px solid var(--line,#efeaf2);box-shadow:none}
+#main .ya-chip{background:color-mix(in srgb,var(--year-bg,#e5e0fc) 70%,#fff)}
+#main .ya-chip em small{color:var(--year-ink,#5b4a8b);font-weight:600}
