@@ -149,3 +149,17 @@ Job: "Help me understand what's coming as my baby grows, when to expect importan
 - "Coming up next": the next three changes as compact cards. "Later on": swipeable month cards up to 1 year, each with Timeline's own object illustration (Home keeps the growing baby), the changes starting that month with their ranges, and checkups pinned.
 - Each change opens a read-ahead page: when, the signs it's close, then "What it changes", up to four rows labeled by area that open the existing page for each, and a when-to-call tip. Nothing is written twice.
 - Stops at 1 year, because the app ends there.
+
+## Baby's details (2026-11-04)
+Job: "Help me keep my baby's information and my family's preferences up to date so Ahead can provide relevant, personalized guidance without repeatedly asking me for information." File: `js/profile-v2.js` (overrides `profileRework`), plus the Safety age rule in `js/stages.js`.
+- Safety's age rule now matches its four stages: First setup, Rolling (3–6 months), Crawling (6–9), Pulling up (9+). It used to switch to Crawling at 5 months. Saved movement still moves it ahead.
+- In Baby's details, Safety shows the same four stage chips as Feeding and Sleep. The separate "How [name] moves" row is gone.
+- The feeding pill says "Breast milk and formula" instead of "Both". The avatar uses the newest saved monthly photo, or the initial when there is none.
+- Edit reads as editing ("[name]'s details", "How [name] has milk", Next, Save), with no setup step dots or "See what matters now".
+
+## Stages behind a chip (2026-11-04)
+The stage strip at the top of every category is gone. Files: `js/stages-nav.js` (wraps `stageTimeline` and `render`), `css/stages-nav.css`.
+- Each category opens on the baby's stage. A small "All stages ›" chip ("All checkups ›" in Health) sits on the top card's first line.
+- The chip opens a stages page (`stages:<category>`): a vertical list with each stage's ages, one line on what changes, and "[name]'s stage now" ("Next checkup" in Health) marked.
+- Reading another stage shows a tinted Preview card: "Looking back" or "Previewing", the stage and its ages, and "Back to [name]'s stage". Sleep, Feeding and Safety add "Make this [name]'s stage" where the stage table allows it (the old strip's Change).
+- QA: `stageItemsLast()` exposes the stage list behind the page last shown. stage-rules, editorial-contracts and progression-followups read it instead of the strip's HTML, so the same rules stay covered.
