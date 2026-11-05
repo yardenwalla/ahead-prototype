@@ -284,12 +284,12 @@
       v >= 2 && [null, null, r('green', 'bowl', 'Food', 'Is he ready for solids?', 'Sits with support, opens for a spoon', 'signs'), r('green', 'bowl', 'Food', 'First foods, a few bites at a time', 'Iron first. Allergens early and often', 'firstfoods'), r('green', 'bowl', 'Food', 'Three meals of family food', 'Soft pieces, no added salt', 'family')][v],
       [r('blue', 'clock', 'Common now', 'Cluster feeding', 'Lots of feeds close together, often in the evening', 'cluster'), r('blue', 'clock', 'Common now', 'Hungrier days', 'Growth spurts last a few days', 'spurt'), r('blue', 'clock', 'Common now', 'Quick, distracted feeds', 'A quiet spot helps', 'distract'), r('blue', 'clock', 'Common now', 'Tiny, messy meals', 'A few bites is plenty', 'tiny'), r('blue', 'clock', 'Common now', 'Picky days', 'New foods can take 10–15 tries', 'picky')][v]
     ].filter(Boolean); };
-  P.dirD = (v) => { v = v == null ? 1 : Number(v); window.__fdStage = v; const feed = fd(), h = H(), st = SHEET(v, feed), b = isBreast(), f = isBottle();
-    const pills = h.pills('Feeding by age', STAGES.map(([l, a], i) => ({ label: l, age: a, on: i === v, now: i === 1, onclick: go('dirD:' + i) })), CAT);
+  P.dirD = (v) => { v = v == null ? realStage() : Number(v); window.__fdStage = v; const feed = fd(), h = H(), st = SHEET(v, feed), b = isBreast(), f = isBottle();
+    const pills = h.pills('Feeding by age', STAGES.map(([l, a], i) => ({ label: l, age: a, on: i === v, now: i === realStage(), onclick: go('dirD:' + i), change: i >= 3 && ageMo() < 4 ? '' : `__fdPick(${i})` })), CAT);
     const tile = ([c, art, l, val, sub, to]) => to ? `<button class="sm-tile hub-tile hub-tile-go" style="--sm-bg:${TILE[c] ? TILE[c][0] : C[c][0]};--sm-ink:${TILE[c] ? TILE[c][1] : C[c][1]};text-align:left;border:0;font:inherit;cursor:pointer" onclick="${go(to)}"><span class="sm-art">${art}</span><small>${F(l)}</small><b>${F(val)}</b><span>${F(sub)} ›</span></button>` : `<div class="sm-tile" style="--sm-bg:${TILE[c] ? TILE[c][0] : C[c][0]};--sm-ink:${TILE[c] ? TILE[c][1] : C[c][1]}"><span class="sm-art">${art}</span><small>${F(l)}</small><b>${F(val)}</b><span>${F(sub)}</span></div>`;
     let b2 = `<header class="hub-hero"><p class="hub-eyebrow">${F(STAGES[v][0])}</p><h1>${F(st.hero[0])}</h1><p class="hub-lead">${F(st.hero[1])}</p></header>` + (isEarly() ? `<p class="ss-small" style="margin:0 0 12px"><b>${F('Born early:')}</b> ${F('stages follow Ari’s adjusted age. If your NICU or pediatrician gave you a feeding plan, follow it first.')}</p>` : '');
     b2 += `<section class="hub-card hub-glance is-static"><span class="hub-card-head"><b>${F(v >= 3 ? 'Eating now' : 'Feeds now')}</b><button class="hub-card-cta" onclick="${go('day')}">${F('Example day')} ›</button></span><div class="hub-tiles">${st.tiles.map(tile).join('')}</div></section>`;
-    b2 += h2('Feeding at ' + ['the newborn stage', '2 months', '4–6 months', '6–9 months', '9–12 months'][v]) + `<div class="hub-list">${ROWS(v, feed).map(x => `<button class="hub-row hl-row" style="--hl-bg:${C[x.c][0]};--hl-ink:${C[x.c][1]}" onclick="${P[x.to] ? go(x.to) : ''}"><span class="fd-dot" style="width:42px;height:42px;border-radius:13px;background:var(--hl-bg);color:var(--hl-ink);padding:9px;box-sizing:border-box;flex:none;display:grid;place-items:center">${hubArt(x.icon, CAT)}</span><span class="hub-row-copy"><small>${F(x.label)}</small><b>${F(x.act)}</b><small>${F(x.sub)}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`).join('')}</div>`;
+    b2 += h2(v === realStage() ? 'Feeding now' : 'Feeding at ' + ['the newborn stage', '6 weeks–4 months', '4–6 months', '6–9 months', '9–12 months'][v]) + `<div class="hub-list">${ROWS(v, feed).map(x => `<button class="hub-row hl-row" style="--hl-bg:${C[x.c][0]};--hl-ink:${C[x.c][1]}" onclick="${P[x.to] ? go(x.to) : ''}"><span class="fd-dot" style="width:42px;height:42px;border-radius:13px;background:var(--hl-bg);color:var(--hl-ink);padding:9px;box-sizing:border-box;flex:none;display:grid;place-items:center">${hubArt(x.icon, CAT)}</span><span class="hub-row-copy"><small>${F(x.label)}</small><b>${F(x.act)}</b><small>${F(x.sub)}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`).join('')}</div>`;
     b2 += `<button class="hub-rough-card care-rash-card" style="background:#fbe4ec;color:#9b4766;margin-top:12px" onclick="${go('worry:' + v)}"><span class="hub-rough-moon" aria-hidden="true">${hubArt('eye', CAT)}</span><span class="hub-rough-copy"><b>${F('Tough feed?')}</b><small>${F(v <= 2 ? 'Spit-up, gas, fussing or arching' : 'Gagging, refusing food, constipation')}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`;
     const hows = v <= 1 ? [nurses() && 'latch', isBottle() && (v === 0 || pumps()) && 'bottles', feed !== 'Breast milk' && v === 1 && 'formula', pumps() && v === 1 && 'pumping'] : v === 2 ? [nurses() && 'latch', isBottle() && 'bottles', 'preparing first foods'] : ['preparing first foods', 'choking first aid'];
     b2 += `<div class="hub-browse care-shop"><button class="hub-link" onclick="${go('how')}">${F('Show me how: ' + hows.filter(Boolean).join(', '))} ›</button></div>`;
@@ -305,7 +305,22 @@
   /* ================= Every page, built from the page map =================
      Each page is complete on its own (what's normal, what to do, when to call) and links to nothing.
      Pages follow the stage the parent is looking at and only show what fits how the family feeds. */
-  const stg = () => (window.__fdStage == null ? 1 : window.__fdStage);
+  const pickKey = () => 'ahead-fd-stage:' + ((typeof profile !== 'undefined' && (profile.id || profile.dob)) || 'x');
+  const picked = () => { try { const n = localStorage.getItem(pickKey()); return n == null ? null : Number(n); } catch (e) { return null; } };
+  const STAGE_NAMES = ['Newborn', 'Milk feeds', 'Ready for solids', 'First foods', 'Meals'];
+  window.__fdPick = (i) => { const before = picked(); try { localStorage.setItem(pickKey(), String(i)); } catch (e) {}
+    window.__fdStage = null; openPage('topic:Feeding');
+    if (document.body) { document.querySelectorAll('.hub-toast').forEach(t => t.remove()); const el = document.createElement('div'); el.className = 'hub-toast'; el.setAttribute('role', 'status');
+      el.innerHTML = `<div style="flex:1"><b>${esc('Feeding now follows ' + STAGE_NAMES[i])}</b></div><button class="hub-toast-undo" onclick="__fdUndo(${before == null ? 'null' : before})">Undo</button>`;
+      document.body.appendChild(el); requestAnimationFrame(() => el.classList.add('is-in')); setTimeout(() => { el.classList.remove('is-in'); setTimeout(() => el.remove(), 300); }, 5000); } };
+  window.__fdUndo = (b) => { try { b == null ? localStorage.removeItem(pickKey()) : localStorage.setItem(pickKey(), String(b)); } catch (e) {} document.querySelectorAll('.hub-toast').forEach(t => t.remove()); window.__fdStage = null; render(); };
+  const realStage = () => { const pk = picked(); if (pk != null && pk >= 0 && pk <= 4) return pk; try { const pr = typeof profile !== 'undefined' ? profile : {}; if (!pr.dob) return 1;
+      const from = pr.early && pr.due ? new Date(pr.due + 'T12:00:00') : new Date(pr.dob + 'T12:00:00'), days = Math.max(0, (NOW - from) / 864e5), mo = days / 30.44;
+      let v = days < 42 ? 0 : mo < 4 ? 1 : mo < 6 ? 2 : mo < 9 ? 3 : 4; const sol = typeof answers !== 'undefined' ? answers.solids : undefined;
+      if (v >= 3 && sol === 'Not yet') v = 2; else if (v === 3 && sol !== 'Yes') v = 2; else if (v === 2 && sol === 'Yes') v = 3; return v; } catch (e) { return 1; } };
+  window.__fdReal = realStage;
+  const ageMo = () => { try { const pr = profile; const from = pr.early && pr.due ? new Date(pr.due + 'T12:00:00') : new Date(pr.dob + 'T12:00:00'); return (NOW - from) / 864e5 / 30.44; } catch (e) { return 12; } };
+  const stg = () => (window.__fdStage == null ? realStage() : window.__fdStage);
   const isEarly = () => typeof profile !== 'undefined' && !!profile.early;
   const formulaFam = () => fd() !== 'Breast milk' && fd() !== 'Prefer not to say';
   const ctx = (c) => c;
@@ -330,7 +345,7 @@
       const cues = v <= 2 ? h2('Is he hungry?') + hubStageStrip({ title: 'Hunger cues, early to late', items: [['eye', 'Early', 'Stirring, mouth opening, turning to look'], ['hand', 'Active', 'Rooting, hands to mouth, wriggling'], ['heart', 'Late', 'Crying. Calm him first, then feed']], nowIndex: -1, cat: CAT, caption: 'Early: stirring, mouth opening. Active: rooting, hands to mouth. Late: crying.' })
         + h2('Is he full?') + steps([['smile', 'Slows down', 'Fewer, lazier sucks'], ['hand', 'Relaxed, open hands', 'Fists unclench'], ['eye', 'Turns away', nurses() ? 'Or lets go' : 'From the bottle'], ['moon', 'Drifts off', 'Content and sleepy']], false)
         : h2('Ready for more, or all done?') + two(['Ready for more', 'Leans in, opens his mouth, reaches for food.'], ['All done', 'Turns away, closes his mouth, pushes food away, plays with it.']) + know('Your job, his job', 'You choose what and when. He chooses how much.');
-      return page(head('Feeds now', ['A newborn day', 'A day at 2 months', 'A day at 4–6 months', 'A day at 6–9 months', 'A day at 9–12 months'][v], 'An example, not a schedule. Ari leads, and no two days look the same.') + dayList(D) + cues); },
+      return page(head('Feeds now', ['A newborn day', 'A day at 2–3 months', 'A day at 4–6 months', 'A day at 6–9 months', 'A day at 9–12 months'][v], 'An example, not a schedule. Ari leads, and no two days look the same.') + dayList(D) + cues); },
 
     enough: () => { const v = stg();
       const body = v === 0
@@ -801,6 +816,12 @@
     h = h.replace(/<div class="hub-tip fd-tip fd-notes">\s*<\/div>/g, '');
     h = h.replace(/<\/div>$/, whenCard(list) + calmCss + '</div>');
     return pron(h); };
+  const stTl = window.stageTimeline;
+  if (typeof stTl === 'function') window.stageTimeline = function (cat, items, ...r) { if (cat === CAT && !window.__fdPills) return ''; return stTl.call(this, cat, items, ...r); };
+  const dirD0 = P.dirD; P.dirD = function (...a) { window.__fdPills = true; try { return dirD0.apply(this, a); } finally { window.__fdPills = false; } };
+  const rnd = window.render;
+  const curPage = () => { try { return (0, eval)('page'); } catch (e) { return ''; } };
+  window.render = render = function (...a) { if (curPage() === 'stages:Feeding') { const keep = window.__fdStage; try { P.dirD(); } catch (e) { console.warn('fd stages', e); } window.__fdStage = keep; } return rnd.apply(this, a); };
   const base = window.changesRoute;
   window.changesRoute = function (r) { const [, cat, s, a, x] = r.split(':'); if (cat === CAT && s === 'mock' && P[a]) { window.__fdLast = r; const out = P[a](x); return calm(a, a === 'dirD' ? out : tidy(out)); } return base(r); };
   const op = window.openPage;
