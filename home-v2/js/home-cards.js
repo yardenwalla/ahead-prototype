@@ -467,6 +467,19 @@
   function paint() {
     const main = document.getElementById('main'); if (!main) return;
     settlePending();
+    // The month card: the baby's exact age on top, and the category line on the birthday card too.
+    try {
+      const dob = parse(profile.dob), now = new Date(NOW), days = Math.floor((now - dob) / DAY);
+      let m = (now.getFullYear() - dob.getFullYear()) * 12 + now.getMonth() - dob.getMonth(); if (now.getDate() < dob.getDate()) m--;
+      const since = new Date(dob); since.setMonth(dob.getMonth() + m); const wks = Math.floor((now - since) / DAY / 7);
+      const ageText = days < 91 ? (days < 7 ? `${days} day${days === 1 ? '' : 's'} old` : `${Math.floor(days / 7)} weeks old`) : `${m} months${wks ? `, ${wks} week${wks > 1 ? 's' : ''}` : ''}`;
+      const eb = main.querySelector('.connected-summary-intro:not(.hub-bday) .home-month-eyebrow'); if (eb) eb.textContent = ageText;
+      const bd = main.querySelector('.connected-summary-intro.hub-bday');
+      if (bd && !bd.querySelector('.home-summary-spectrum')) {
+        const spec = document.querySelector('.home-summary-spectrum') ? '' : `<div class="home-summary-spectrum" aria-hidden="true">${['#e5e0fc', '#f7d9e5', '#d9e5fc', '#ddf1e5', '#f7e6c4', '#cfe9f4', '#fde3d3', '#f8edb3'].map(c => `<span style="background:${c}"></span>`).join('')}</div>`;
+        bd.insertAdjacentHTML('beforeend', spec);
+      }
+    } catch (e) {}
     // 1. Cards carry their own answers, so the top slot keeps only questions no card can ask: a missed checkup, and the milk question.
     main.querySelectorAll('section.hub-q, section.connected-checkin').forEach(q => { const h = q.innerHTML; if (!/hubVisit|answerHomeQuestion\('milk'/.test(h)) q.remove(); });
     const s = state(), { now, soon } = pick(s);

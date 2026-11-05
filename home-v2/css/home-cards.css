@@ -16,3 +16,10 @@
 #main .home2-know-row b{display:block;font-size:14px;color:var(--ink);font-weight:600}
 #main .home2-know-row small{display:block;font-size:12px;color:var(--ink-2,#5E5A75);margin-top:2px}
 #main .home2-know-fix{flex:0 0 auto;min-height:36px;padding:0 12px;border:1px solid var(--line);border-radius:11px;background:var(--white);color:var(--ink);font:500 12px/1 Figtree,system-ui,sans-serif}
+/* The month card: one sunrise blend for every day (peach into blush into lavender), so it reads as "all of it", never as one category. The birthday card is the richer version. */
+#main .connected-summary{border-color:#f0dde3}
+#main .connected-summary-intro:not(.hub-bday){background:radial-gradient(circle at 96% 4%,rgba(255,255,255,.6) 0 30%,transparent 30.5%),linear-gradient(160deg,#fef2e8 0%,#fdeef3 52%,#f3effc 100%)!important;border-color:#f0dde3}
+#main .connected-summary-intro .home-month-eyebrow,#main .hub-bday-eyebrow{text-transform:none!important;letter-spacing:0!important;font-size:13px!important;line-height:1.4!important;font-weight:600!important;color:#7a4f6d!important}
+#main .hub-bday{padding-bottom:28px!important}
+#main .hub-bday .home-summary-spectrum{position:absolute;bottom:0;left:0;right:0;height:6px;display:flex}
+#main .hub-bday .home-summary-spectrum>span{flex:1}
