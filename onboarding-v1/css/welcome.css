@@ -1,0 +1,67 @@
+/* Onboarding shares the guide's cream canvas, soft accents and rounded type. */
+#shell:has(#main.is-onboarding) { padding-bottom: 0 }
+#main.is-onboarding { padding-bottom: 30px }
+#main .aw { padding-top: 0 }
+#main .aw h1 span { display: block }
+#main.is-onboarding .eyebrow { font-size: 10px; letter-spacing: .1em; font-weight: 700; color: var(--muted) }
+#main.is-onboarding h1 { font: 800 30px/1.16 var(--display-font); letter-spacing: -.5px; color: var(--ink); margin-top: 8px; text-wrap: balance }
+#main .aw-intro { display: flex; justify-content: space-between; align-items: center; height: 78px }
+#main .aw-baby { width: 76px; align-self: end }
+#main .aw-baby svg { width: 76px; height: 85px }
+#main .aw-lead { margin-top: 12px; font-size: 15px; line-height: 1.55; color: var(--muted) }
+#main .aw-spectrum { display: flex; gap: 4px; margin: 20px 0 4px }
+#main .aw-spectrum span { height: 4px; flex: 1; border-radius: 10px; background: #b4a5dc }
+#main .aw-spectrum span:nth-child(2) { background: #d5a4b8 }
+#main .aw-spectrum span:nth-child(3) { background: #9fb8df }
+#main .aw-spectrum span:nth-child(4) { background: #9bc7ac }
+#main .aw-spectrum span:nth-child(5) { background: #d9bd87 }
+#main .aw-spectrum span:nth-child(6) { background: #8cc1d6 }
+#main .aw-spectrum span:nth-child(7) { background: #e8b096 }
+#main .aw-point { display: flex; gap: 12px; padding: 16px 0; border-bottom: 1px solid var(--line) }
+#main .aw-point:last-child { border-bottom: 0; padding-bottom: 0 }
+#main .aw-point-icon { flex: none; width: 38px; height: 38px; display: grid; place-items: center; border-radius: 13px; background: #edf2fe; color: #46638c }
+#main .aw-point:nth-child(2) .aw-point-icon { background: #efedff; color: #625084 }
+#main .aw-point:nth-child(3) .aw-point-icon { background: #ecf6fa; color: #2a6078 }
+#main .aw-point svg { width: 19px; height: 19px; margin: 0; color: inherit }
+#main .aw-point h3 { font: 700 15px/1.4 var(--ui-font); color: var(--ink) }
+#main .aw-point p { font-size: 13px; line-height: 1.5; margin-top: 4px; color: var(--muted) }
+#main .aw-start { width: 100%; margin-top: 24px }
+#main.is-onboarding .primary { min-height: 50px; font-weight: 650 }
+#main.is-onboarding .back { margin-bottom: 16px }
+#main .aw-steps { display: flex; align-items: center; gap: 10px; margin-bottom: 22px }
+#main .aw-steps span { display: flex; align-items: center; gap: 7px; color: var(--muted); font-size: 12px }
+#main .aw-steps b { font-weight: 500 }
+#main .aw-steps i { flex: 1; height: 1px; background: var(--line) }
+#main .aw-steps .current { color: #625084; font-weight: 800 }
+#main .aw-steps .current b { font-weight: 700 }
+#main .aw-steps .complete { color: #356651 }
+#main .aw-setup-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 19px 20px; border-radius: 22px; background: #f1eee8 }
+#main .aw-setup-heading h1 { font-size: 27px }
+#main .aw-setup-art { flex: none; width: 65px }
+#main .aw-setup-art svg { width: 65px; height: 76px }
+#main.is-onboarding:has(#feed) .aw-setup-heading { background: #fceef3 }
+#main.is-onboarding:has(#feed) .aw-setup-art { display: grid; place-items: center; width: 55px; height: 55px; border-radius: 50%; background: #fffafc; color: #884866 }
+#main.is-onboarding:has(#feed) .aw-setup-art svg { width: 48px; height: 48px }
+#main.is-onboarding .form label { margin-top: 18px; font-size: 13px; font-weight: 650; color: var(--ink) }
+#main.is-onboarding .form input:not([type=checkbox]), #main.is-onboarding .form select { border: 1px solid var(--line); border-radius: 14px; background: var(--white, #fffefb); padding: 12px 14px; min-height: 48px; font-size: 15px }
+#main.is-onboarding .form .checkbox { font-weight: 500; margin-top: 20px; padding: 13px 14px; border-radius: 14px; background: #eef8f1 }
+#main.is-onboarding .form input[type=checkbox] { flex: none; min-height: 18px; accent-color: #625084 }
+#main.is-onboarding .form .primary { margin-top: 24px }
+@media(max-width: 360px) {
+  #main.is-onboarding h1 { font-size: 28px }
+  #main .aw-setup-heading { padding: 16px }
+  #main .aw-setup-heading h1 { font-size: 24px }
+  #main .aw-setup-art { width: 52px }
+  #main .aw-setup-art svg { width: 52px; height: 64px }
+}
+
+/* Nov 5 restyle: onboarding in the app's current look. Labels are sentence case and plum like every tab; both setup
+   steps use Home's month-card blend (no step takes a category color); the welcome line is Home's category line;
+   the born-early box is a plain field. */
+#main.is-onboarding .eyebrow { font-size: 13px !important; line-height: 1.4 !important; letter-spacing: 0 !important; text-transform: none !important; font-weight: 600 !important; color: #7a4f6d !important }
+#main .aw-setup-heading, #main.is-onboarding:has(#feed) .aw-setup-heading { position: relative; overflow: hidden; border: 1px solid #f0dde3;
+  background: radial-gradient(circle at 96% 4%, rgba(255,255,255,.6) 0 30%, transparent 30.5%), linear-gradient(160deg, #fef2e8 0%, #fdeef3 52%, #f3effc 100%) }
+#main.is-onboarding:has(#feed) .aw-setup-art { background: rgba(255,255,255,.75) }
+#main .aw-spectrum { gap: 0; height: 6px; border-radius: 3px; overflow: hidden }
+#main .aw-spectrum span { height: 6px; border-radius: 0 }
+#main.is-onboarding .form .checkbox { background: var(--white, #fff); border: 1px solid var(--line) }
