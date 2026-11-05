@@ -13,6 +13,7 @@
   const css = `<style>
     #main .fd-notes p{margin:0;font-size:14.5px;line-height:1.5;color:var(--ink)}#main .fd-notes p+p{margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}#main .fd-notes p b{display:inline;font-size:14.5px;letter-spacing:0;text-transform:none;color:var(--ink);font-weight:600;margin:0}
     #main .hub-detail .fd-call{margin:14px 0 12px}
+    #main .ss-do p+p{margin-top:8px}#main .ss-do p b{display:inline;font-size:inherit;letter-spacing:0;text-transform:none;color:inherit;font-weight:600;margin:0}
     #main .fm-day{list-style:none;margin:0;padding:6px 16px}
     #main .fm-day li{display:grid;grid-template-columns:64px 30px 1fr;align-items:center;gap:8px;padding:9px 0;border-top:1px solid var(--line)}
     #main .fm-day li:first-child{border-top:0}
@@ -42,8 +43,13 @@
   const head = (ctx, title, lead, c = C.pink) => `<div class="dev-area-head ss-head" style="--area:${c[0]};--area-ink:${c[1]}">${HEADART[ctx] ? `<span class="dev-area-head-art" aria-hidden="true">${HEADART[ctx]().replace(/#(46638c|9b4766|d98a6a|c9a24a|356651)/gi, c[1])}</span>` : ''}<p class="hub-context">${F(ctx)}</p><h1>${F(title)}</h1>${lead ? `<p class="hub-lead">${F(lead)}</p>` : ''}</div>`;
   // Subpages use the shared subpage look (data-ss): icons, tips and cards take the page's own color.
   // Runs of short notes are gathered into one quiet card so pages don't end in a wall of small text.
-  const tidy = h => h.replace(/<h2 class="hub-h2">([^<]*)<\/h2><p class="care-p">((?:(?!<\/p>)[\s\S])*)<\/p>/g, '<div class="ss-do"><b>$1</b><p>$2</p></div>')
-    .replace(/<p class="care-p">(?!<b>)/g, '<p class="ss-what">').replace(/(?:<p class="ss-small">(?:(?!<\/p>)[\s\S])*<\/p>\s*){2,}/g, m => `<div class="ss-know fd-notes">${m.replace(/<p class="ss-small">/g, '<p>')}</div>`);
+  const TXT = '<p class="(?:ss-small|ss-what|care-p)">(?:(?!<\\/p>)[\\s\\S])*<\\/p>\\s*';
+  const tidy = h => h
+    // A heading followed only by text becomes one soft box with the heading as its label
+    .replace(new RegExp('<h2 class="hub-h2">([^<]*)<\\/h2>\\s*((?:' + TXT + ')+)', 'g'), (m, t, body) => `<div class="ss-do"><b>${t}</b>${body.replace(/<p class="(?:ss-small|ss-what|care-p)">/g, '<p>')}</div>`)
+    // Any other short notes, alone or in a run, sit together in one quiet card
+    .replace(/(?:<p class="ss-small">(?:(?!<\/p>)[\s\S])*<\/p>\s*)+/g, m => `<div class="ss-know fd-notes">${m.replace(/<p class="ss-small">/g, '<p>')}</div>`)
+    .replace(/(?:<p class="(?:care-p|ss-what)">(?:(?!<\/p>)[\s\S])*<\/p>\s*)+/g, m => `<div class="ss-know fd-notes">${m.replace(/<p class="(?:care-p|ss-what)">/g, '<p>')}</div>`);
   const page = inner => { const m = inner.match(/--area:(#[0-9a-f]+);--area-ink:(#[0-9a-f]+)/i), bg = m ? m[1] : C.pink[0], ink = m ? m[2] : C.pink[1];
     return `${css}<div class="quiet-category hub-page hub-detail care-v2" data-overview="${CAT}" data-ss="1" style="${yearTheme(CAT)};--ss-bg:${bg};--ss-ink:${ink}">${detailPageTop(CAT)}${tidy(inner)}</div>`; };
   const h2 = t => `<h2 class="hub-h2">${F(t)}</h2>`;
@@ -648,7 +654,7 @@
       + small('Won’t take it?', 'that’s common. Try again in a day or two.'))
   });
   // Same short line on every "Your milk" page after the newborn weeks
-  const drinkLine = () => small('Coffee, a drink, medicines:', 'coffee in moderation is fine. After a drink, wait 2 hours to ' + (nurses() ? 'nurse' : 'pump') + '. Ask your doctor about any medicine.');
+  const drinkLine = () => know('Coffee, a drink, medicines', 'Coffee in moderation is fine. After a drink, wait 2 hours to ' + (nurses() ? 'nurse' : 'pump') + '. Ask your doctor about any medicine.');
   ['supply', 'howlong', 'milkmeals', 'at12', 'combo'].forEach(k => { const old = P[k]; P[k] = (...a) => { const h = old(...a); if (!isBreast() || (k === 'combo' && stg() === 0 && false)) return h; const i = h.indexOf('<p class="care-p"><b>'); return i > 0 && k !== 'at12' && k !== 'howlong' && k !== 'milkmeals' ? h.slice(0, i) + drinkLine() + h.slice(i) : h.replace(/<\/div>$/, drinkLine() + '</div>'); }; });
   // Born early: the care team's plan comes first, and ages are adjusted
   const v_small = h => { const j = h.indexOf('ss-head'), i = j > 0 ? h.indexOf('</div>', j) + 6 : -1; return i > 5 ? h.slice(0, i) + small('Born early?', 'if your care team gave you targets, go by those.') + h.slice(i) : h; };
