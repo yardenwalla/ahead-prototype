@@ -1886,20 +1886,19 @@
 
   // The new Newborn home
   P.dirD = (old => (v) => { const vv = v == null ? realStage() : Number(v); if (vv !== 0) return old(v);
-    const html = old(0).replace(/<p class="ss-small" style="margin:4px 4px 0">[\s\S]*?<\/p>/, ''), cut = html.indexOf('<div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px">');
+    const html = old(0), cut = html.indexOf('<div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px">');
     const b = isBreast(), nurse = nurses(), pump = pumps(), bot = isBottle(), fm = formulaFam(), st = SHEET(0, fd());
-    const rows = [
-      sRow('peach', 'clock', 'Feeds', b ? 'Feed 8–12 times a day, at early hunger cues' : 'Feed every 2–4 hours, at early hunger cues', 'Rooting and hands to mouth come before crying', 'n0feeds'),
-      b && sRow('pink', 'heart', 'Your milk', 'Your milk comes in around days 2–5', 'Full and tender for a few days is normal', 'n0milk'),
-      nurse && sRow('pink', 'heart', 'Latch', 'A deep latch makes feeds comfortable', 'A strong tug, not a pinch', 'n0latch'),
-      fm && sRow('lilac', 'bottle', 'Bottles', 'Make every bottle the same safe way', 'Water first, level scoops, use within 2 hours', 'n0bottle'),
-      bot && sRow('lilac', 'bottle', 'Bottles', 'Let him set the pace', 'Bottle fairly level, little pauses, stop when full', 'n0pace'),
-      sRow('yellow', 'diaper', 'Getting enough', 'Wet diapers tell you he’s getting enough', '6 or more a day by day 6', 'n0enough'),
-      sRow('blue', 'moon', 'Evenings', 'Busy evenings are normal', 'It’s called cluster feeding, and it eases by 6–8 weeks', 'n0evenings'),
-      sRow('green', 'drop', 'Every day', b ? 'Vitamin D drops, from the first days' : 'Vitamin D drops, until about 32 oz a day', '400 IU, with a dropper', 'vitd')].filter(Boolean);
-    const how = [nurse && ['heart', 'Latch and holds', 'latch'], ['hand', 'Burping', 'burp'], fm && ['bowl', 'Making a bottle', 'formula'], bot && ['bottle', 'Giving a bottle', 'bottle'], bot && ['fridge', 'Storing milk', 'basics'], pump && ['drop', 'Pumping', 'pump']].filter(Boolean);
+    // Four rows, like Sleep. Which four depends on how the family feeds.
+    const R = {
+      feeds: sRow('peach', 'clock', 'Feeds', b ? 'Feed 8–12 times a day, at early hunger cues' : 'Feed every 2–4 hours, at early hunger cues', 'Rooting and hands to mouth come before crying', 'n0feeds'),
+      milk: sRow('pink', 'heart', 'Your milk', 'Your milk comes in around days 2–5', 'Full and tender for a few days is normal', 'n0milk'),
+      latch: sRow('pink', 'heart', 'Latch', 'A deep latch makes feeds comfortable', 'A strong tug, not a pinch', 'n0latch'),
+      make: sRow('lilac', 'bottle', 'Bottles', 'Make every bottle the same safe way', 'Water first, level scoops, use within 2 hours', 'n0bottle'),
+      pace: sRow('lilac', 'bottle', 'Bottles', 'Let him set the pace', 'Bottle fairly level, little pauses, stop when full', 'n0pace'),
+      enough: sRow('yellow', 'diaper', 'Getting enough', 'Wet diapers tell you he’s getting enough', '6 or more a day by day 6', 'n0enough') };
+    const mid = nurse && !bot ? ['latch', 'milk'] : nurse ? ['latch', 'pace'] : b ? ['milk', 'pace'] : ['make', 'pace'];
+    const rows = ['feeds', ...mid, 'enough'].map(k => R[k]);
     let body = h2('How to feed Ari now') + `<div class="hub-list">${rows.join('')}</div>`
-      + `<section class="hub-card" style="padding:14px 16px"><b style="display:block;margin-bottom:8px">${F('Show me how')}</b><div style="display:flex;flex-wrap:wrap;gap:8px">${how.map(([i, t, to]) => `<button style="border:1px solid var(--line,#eee);background:#fff;border-radius:999px;padding:8px 13px;font:inherit;font-size:14px;cursor:pointer;display:inline-flex;gap:6px;align-items:center" onclick="${go(to)}"><span style="width:18px;height:18px;display:inline-grid">${hubArt(i, CAT)}</span>${F(t)}</button>`).join('')}</div></section>`
       + `<button class="hub-rough-card care-rash-card" style="background:#fbe4ec;color:#9b4766;margin-top:12px" onclick="${go('hard')}"><span class="hub-rough-moon" aria-hidden="true">${hubArt('eye', CAT)}</span><span class="hub-rough-copy"><b>${F('Tough feed?')}</b><small>${F(nurse ? 'Sore nipples, too sleepy, fussy feeds, spit-up' : 'Too sleepy, fussy feeds, lots of spit-up')}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`
       + `<section class="hub-card" style="padding:14px 16px;margin-top:12px"><b style="display:block;margin-bottom:8px">${F('Normal, or time to call?')}</b>` + two(['Normal', (b ? 'Feeding every 2–3 hours' : 'Bottles every 2–4 hours') + ', short and long feeds, busy evenings, grunting, spit-up of a tablespoon or two, and green or seedy poop.'], ['Call your pediatrician', 'Fewer than 6 wet diapers a day after day 6, very hard to wake for feeds, yellow skin that’s spreading, or a fever of 100.4°F (38°C) or higher.', '#fdeee6', '#9a5a3c']) + `</section>`
       + H().next(st.next[0], st.next[1], go('dirD:1')) + H().note('Ages are typical. Every baby moves at their own pace.');
