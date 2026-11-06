@@ -1328,6 +1328,10 @@
         onlyP && ['Then pump', 'drop', 'About as often as he feeds, 8–12 times a day.']];
     return page(head('Making feeding work', title, lead, c)
       + tl('A feed, start to finish', feed)
+      + (nurse ? h2('Holds to try') + steps([['heart', 'Cross-cradle', 'Easiest for learning to latch'], ['hand', 'Football', 'Good after a C-section'], ['moon', 'Laid-back', 'Lean back, him tummy-down on you'], ['smile', 'Cradle', 'Once latching feels easy']], false) : '')
+      + (bot ? h2('Giving a bottle') + steps([['bottle', 'Sit him up', 'Head higher than his tummy, never flat'], ['hand', 'Pace it', 'Bottle level, pause every few sucks'], ['heart', 'Switch sides', 'Halfway through, like at the breast']], false)
+        + small('Nipple flow:', 'start with the slowest. Too slow: he sucks hard and gets frustrated. Too fast: he gulps, coughs or milk spills out.')
+        + small('Which bottle?', 'there’s no best one, wide or narrow. Use one he takes well, and wash it in hot, soapy water after every feed.') : '')
       + (b ? tl('Your milk, the first week', [['Days 1–2', 'drop', 'Small amounts of colostrum. It’s all he needs.'], ['Days 2–5', 'heart', 'Your milk comes in. Full, tender breasts are normal.'], ['After that', 'clock', 'Breasts feel softer after feeds. That’s a good sign.']]) : '')
       + ifs([
         nurse && ['heart', 'Nursing hurts', 'Break the seal with a clean finger and try again. Pain through the whole feed: see a lactation consultant.'],
@@ -1340,7 +1344,13 @@
         nurse && fm ? ['heart', 'Protect your milk', 'Pumping after a top-up keeps your supply going.'] : null,
         bot ? ['snow', 'How long it lasts', fm ? 'Use a formula bottle within 2 hours, or 1 hour once he starts.' : 'Breast milk keeps 4 hours out and 4 days in the fridge.'] : null,
         b ? ['hand', 'Help is covered', 'Most insurance covers a lactation consultant.'] : null])
-      + (nurse ? oneLink(['Latch and holds, with a video', 'Step by step, with pictures'], 'latch') : '')); }; }
+      + h2('Show me how') + alist([
+        nurse && guideRow('lilac', 'heart', 'Latch and holds', 'Step by step, with a video', 'latch'),
+        pump && guideRow('lilac', 'drop', 'Pumping', 'How often, flange fit, how much', 'pump'),
+        nurse && !bot && guideRow('lilac', 'bottle', 'A first bottle', 'When and how, for nursing families', 'firstbottle'),
+        fm && guideRow('lilac', 'bowl', 'Making formula', 'Step by step, and safe water', 'formula'),
+        bot && guideRow('lilac', 'bottle', 'Giving a bottle', 'Positions, pacing and nipple flow, in pictures', 'bottle'),
+        bot && guideRow('lilac', 'snow', 'Storing and warming milk', 'How long it lasts, warming, and travel', 'basics')].filter(Boolean))); }; }
   { const afterOld = P.after; P.after = () => { if (stg() !== 0) return afterOld(); const bot = isBottle(), br = isBreast() && fd() === 'Breast milk', fmOnly = fd() === 'Formula', c = C.blue;
     const poop = br ? 'Yellow and seedy' : fmOnly ? 'Tan, like peanut butter' : 'Yellow to tan';
     return page(head('After a feed', 'Burping, spit-up and poop', 'Newborn tummies are noisy. Most of what you see after a feed is normal.', c)
