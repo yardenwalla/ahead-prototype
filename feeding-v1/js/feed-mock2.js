@@ -1548,8 +1548,7 @@
           + two(['Normal fullness', 'Heavy and warm on days 2–5. Softens after a feed.'], ['Engorged', 'Hard, tight and sore. Hard for him to latch.', '#fdeee6', '#9a5a3c'])
           + h2('When you’re very full') + steps([['heart', 'Feed often', nurse ? 'Or hand-express a little first' : 'Pump on your usual schedule'], ['drop', 'Soften first', 'Express just enough to latch or pump comfortably'], ['snow', 'Cold after', 'A cold pack eases swelling']], true)
           + accs([['drop', 'How to tell if your supply is enough', 'Diapers and weight, not fullness', ['Wet diapers and weight gain tell you, not how full you feel.'], 'Fewer than 6 wet diapers a day, or slow weight gain.', '']])
-          + h2('Food and drink while making milk') + H().tiles([['Caffeine', 'Up to 300 mg a day', 'About 2–3 cups of coffee'], ['Alcohol', 'Wait 2+ hours', 'After each drink. None is safest'], ['Fish', '8–12 oz a week', 'Low-mercury, like salmon or shrimp'], ['Water', 'A glass each feed', 'Then drink to thirst']])
-          + small('Medicines:', 'most are fine. Check each one with your doctor or pharmacist.')],
+          + h2('Food and drink while making milk') + H().tiles([['Caffeine', 'Up to 300 mg a day', 'About 2–3 cups of coffee'], ['Alcohol', 'Wait 2+ hours', 'After each drink. None is safest'], ['Fish', '8–12 oz a week', 'Low-mercury, like salmon or shrimp'], ['Water', 'A glass each feed', 'Then drink to thirst']])],
         nurse && ['Latch & holds', h2('Latch, step by step') + hubEmbed('y--syZR0u1E', 'A good latch, step by step', 'Global Health Media')
           + steps([['eye', 'Nose to nipple', 'Tummy to you, head tipped back a little'], ['smile', 'Wait for a wide mouth', 'Like a big yawn'], ['heart', 'Bring him to you', 'Chin first, not you to him']], true)
           + small('A good latch', 'feels like a strong tug, not a pinch. Pinching? Break the seal with a clean finger and try again.')
