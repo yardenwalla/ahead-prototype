@@ -1698,7 +1698,7 @@
     const dayHtml = (P.day() || ''), k = dayHtml.indexOf('<div class="hub-card" style="padding:14px 14px 8px">'), e = k >= 0 ? dayHtml.indexOf('<figure', k) : -1, ribbon = k >= 0 && e > k ? dayHtml.slice(k, e) : '';
     return qaCss + page(head('Hunger & feeding times', 'Follow his cues, not the clock', 'Newborn feeding is frequent and uneven. Here’s how to read him, and what’s normal across a day and night.', C.peach)
       + tabbed('#c27a52', [
-        ['A day', h2('A newborn day is not a schedule') + ribbon
+        ['A day', h2('What a day of feeds looks like') + ribbon
           + small(b ? 'About every 2–3 hours, day and night.' : 'About every 2–4 hours, day and night.', (b ? 'That’s 8–12 feeds a day' : 'That’s 6–10 bottles a day') + ', counted from the start of one feed. He leads.')
           + qa([
             ['sun', 'Should I wake him to feed?', ['~Yes, until he’s back to birth weight, if it’s been about 3 hours. Your pediatrician will tell you when you can stop, usually around 2 weeks.', 'To wake him, unwrap him and change his diaper.', 'Hold him upright and talk to him. Dim lights help him open his eyes.']],
