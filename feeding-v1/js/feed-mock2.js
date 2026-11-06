@@ -1700,7 +1700,7 @@
       + tabbed('#c27a52', [
         ['A day', h2('What a day of feeds looks like') + ribbon
           + small('This is an example, not a schedule.', 'He leads, and no two days look the same.')
-          + h2('The basics') + H().tiles([['How often', b ? 'Every 2–3 hours' : 'Every 2–4 hours', 'Day and night, from the start of a feed'], ['Feeds a day', b ? '8–12' : '6–10', 'Some bunch together, some spread out'], ['How long', b && nurse ? '10–20 min a side' : '10–20 minutes', b && nurse ? 'At first. Quicker as he gets stronger' : 'Much faster can mean the flow is too fast'], ['Waking him', 'After about 3 hours', 'Until he’s back to birth weight']])
+          + h2('How long, and when to wake him') + H().tiles([['How long', b && nurse ? '10–20 min a side' : '10–20 minutes', b && nurse ? 'At first. Quicker as he gets stronger' : 'Much faster can mean the flow is too fast'], ['Waking him', 'After about 3 hours', 'Until he’s back to birth weight']])
           + qa([
             ['moon', 'How do I keep him awake during a feed?', ['~Newborns often doze off mid-feed.', { html: steps([['shirt', 'Undress him', 'Down to his diaper'], ['hand', 'Stroke his feet', 'Or his back'], ['diaper', 'Change his diaper', 'Halfway through'], b && nurse ? ['drop', 'Squeeze gently', 'Behind the nipple, to keep milk flowing'] : ['smile', 'Pause and burp', 'Then offer again']], false) }]],
             ['sun', 'When can I stop waking him?', ['~Once he’s back to birth weight, usually around 2 weeks. Your pediatrician will tell you.']],
