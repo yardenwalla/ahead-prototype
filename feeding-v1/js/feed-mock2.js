@@ -1564,7 +1564,7 @@
         ['If it hurts', accs([
             nurse && ['heart', 'Sore or cracked nipples', 'Tenderness vs pain', ['Some tenderness in the first week is common. Pain through the whole feed usually means a shallow latch.', 'Break the seal and try again, try cross-cradle, and rub a little milk on after feeds.'], 'Bleeding nipples, or pain that isn’t easing.', ''],
             nurse && ['eye', 'It keeps hurting, even with help', 'Tongue-tie', ['Ask to have his mouth checked for tongue-tie.'], '', ''],
-            onlyP && ['drop', 'Pumping hurts', 'Usually the flange', ['Check the flange fit on the Pumping tab, and turn the suction down.'], '', ''],
+            ['drop', 'Pumping hurts', 'Usually the flange or suction', ['Check the flange fit on the Pumping tab. Then turn the suction down to the highest level that still feels comfortable.'], 'Pain that doesn’t ease after changing the flange and suction.', ''],
             ['heart', 'A tender lump in your breast', 'Often a clogged duct', ['Keep feeding or pumping as usual. Use a cold pack, and skip deep massage.', 'Keeps coming back? Sunflower lecithin may help. Ask your doctor or a lactation consultant first.'], '', 'A red, painful area with a fever or chills. Call your own doctor.']])
           + know('Who can help', 'A lactation consultant can fix most problems in a visit or two, and most insurance covers it.')]
       ])); };
