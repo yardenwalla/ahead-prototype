@@ -1838,6 +1838,72 @@
         ['eye', 'A white spot', 'Often a milk blister', ['~It’s usually a tiny blocked pore. Keep feeding or pumping, and don’t pop it yourself.'], '', ''],
         ['drop', 'Shiny, pink, burning or itchy', 'Could be thrush', ['~This can be a yeast infection.' + (nurse ? ' He may also have white patches in his mouth that don’t wipe off.' : ''), { html: small('Call your doctor.', nurse ? 'You’ll both need treatment.' : 'It’s easy to treat.') }], '', '']])
       + knowBox('Who can help', 'A lactation consultant can fix most problems in a visit or two, and most insurance covers it.')); };
+  // ---- Mock (Nov 6): the Newborn Feeding home built like Sleep. The home itself teaches; each row is the advice, opening one short page. ----
+  const sRow = (c, icon, label, act, sub, to) => `<button class="hub-row hl-row" style="--hl-bg:${C[c][0]};--hl-ink:${C[c][1]}" onclick="${go(to)}"><span class="fd-dot" style="width:42px;height:42px;border-radius:13px;background:var(--hl-bg);color:var(--hl-ink);padding:9px;box-sizing:border-box;flex:none;display:grid;place-items:center">${hubArt(icon, CAT)}</span><span class="hub-row-copy">${label ? `<small>${F(label)}</small>` : ''}<b>${F(act)}</b><small>${F(sub)}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`;
+  const mDo = items => `<section class="ss-do"><b>${F('What to do')}</b><ul class="ss-do-list">${items.filter(Boolean).map(x => `<li>${F(x)}</li>`).join('')}</ul></section>`;
+  const mKnow = (label, t) => `<div class="ss-know"><b>${F(label)}</b>${F(t)}</div>`;
+  const mGood = (label, t) => `<p class="fd-gk" style="margin:4px 4px 14px;font-size:14px;line-height:1.5;color:var(--muted,#6b6670)"><b style="color:var(--ink,#2b2840);font-weight:600">${F(label)}</b> ${F(t)}</p>`;
+  const mCall = t => `<div class="hub-tip fd-call"><b>${F('Call your pediatrician')}</b>${F(t)}</div>`;
+
+  // The six short pages behind the rows. One idea each, in Sleep's order.
+  Object.assign(P, {
+    n0feeds: () => { const b = isBreast();
+      return page(head('Feeds', 'Feed when he’s hungry, ' + (b ? '8–12 times a day' : 'about every 2–4 hours'), 'Newborns eat little and often, day and night. His cues tell you when.', C.peach)
+        + mDo(['Offer a feed at early hunger cues, before he cries.', 'Count from the start of one feed to the start of the next.', 'Stop when he shows he’s full, even if the feed was short' + (isBottle() ? ' or milk is left.' : '.')])
+        + cueStrip().replace(F('Hunger cues, early to late'), F('Hunger cues, early to late'))
+        + mKnow('How you’ll know he’s full', 'He slows down, his hands relax, he turns away or drifts off, content.')
+        + mGood('Extra-hungry for a few days?', 'That’s a growth spurt, often around 2–3 weeks. Feed more often, and it passes.')); },
+    n0milk: () => page(head('Your milk', 'Your milk comes in around days 2–5', 'Small amounts of colostrum come first. That’s all he needs at first.', C.pink)
+      + milkLine('How your milk changes', [['Days 1–2', 'Small amounts of colostrum'], ['Days 2–5', 'Milk comes in. Often feels full'], ['Weeks 1–2', 'Turns whiter'], ['6–12 weeks', 'Supply settles. You feel less full']], (d => d < 2 ? 0 : d < 5 ? 1 : d < 42 ? 2 : 3)(babyDays()))
+      + mDo([(nurses() ? 'Feed' : 'Pump') + ' often. That’s what builds your supply.', 'Very full? Soften the nipple with your fingertips first, then a cold pack after.', 'Eat and drink to hunger and thirst. No special diet needed.'])
+      + two(['Normal fullness', 'Heavy and warm. Softens after a feed.'], ['Engorged', 'Hard, tight and sore. Feed or express a little, then a cold pack.', '#fdeee6', '#9a5a3c'])
+      + mKnow('How you’ll know your supply is enough', 'His wet diapers and weight are on track. Softer breasts later on don’t mean less milk.')
+      + `<div class="hub-tip"><b>${F('Call your doctor')}</b> ${F('A red, painful area on your breast with a fever or chills.')}</div>`),
+    n0bottle: () => page(head('Bottles', 'Make every bottle the same safe way', 'A simple routine you can do half-asleep.', C.lilac)
+      + steps([['hand', 'Wash', 'Your hands, and a clean bottle'], ['drop', 'Water first', 'The amount on the label'], ['bowl', 'Then formula', 'Level scoops, not packed'], ['bottle', 'Mix and feed', 'Room temperature is fine']], true)
+      + mDo(['Follow the label exactly. Watered-down or extra-strong formula isn’t safe.', 'Use a made bottle within 2 hours, or 1 hour once he starts. Then toss it.', 'Ask your pediatrician whether to boil water in the first months.'])
+      + mKnow('How you’ll know it’s right', 'He feeds steadily without gulping, and his wet diapers are on track.')),
+    n0latch: () => page(head('Latch', 'A deep latch makes feeds comfortable', 'It feels like a strong tug, not a pinch.', C.pink)
+      + illGrid([[ILL.crossCradle(PAL), 'Cross-cradle', 'Easiest for learning'], [ILL.laidBack(PAL), 'Laid-back', 'Lean back, him tummy-down on you']])
+      + mDo(['Nose to nipple. Wait for a wide mouth.', 'Bring him in chin first, with a big mouthful of breast.', 'Pinching? Break the seal with a clean finger and try again.'])
+      + two(['Good latch', 'Lips flared out. Long sucks with swallows. Comfortable after the first few sucks.'], ['Shallow latch', 'Clicking, dimpled cheeks, or pinching through the whole feed.', '#fdeee6', '#9a5a3c'])
+      + mGood('Still sore with a good latch?', 'Ask your pediatrician or a lactation consultant to check for tongue-tie.')),
+    n0pace: () => page(head('Bottles', 'Let him set the pace', 'A slower bottle helps him notice when he’s full.', C.lilac)
+      + illGrid([[ILL.cradled(PALB), 'Cradled, sitting up', 'Head higher than his tummy'], [ILL.upright(PALB), 'Upright on your lap', 'Good for slowing a fast eater']])
+      + mDo(['Hold the bottle fairly level, with just enough milk in the tip.', 'Tip it down every few sucks to give him a break.', 'Burp every 2–3 oz. Stop when he slows or turns away.'])
+      + mKnow('How you’ll know the nipple is right', 'He sucks steadily, without gulping, coughing or getting frustrated.')
+      + mGood('Never prop a bottle.', 'Always hold him and the bottle.')),
+    n0enough: () => page(head('Getting enough', 'Wet diapers tell you he’s getting enough', 'You can’t always see how much he drinks. His diapers show you.', C.yellow)
+      + hubStageStrip({ title: 'Wet diapers, day by day', items: [['diaper', 'Days 1–2', '1–2 a day'], ['diaper', 'Days 3–4', '3 or more'], ['diaper', 'From day 5–6', '6 or more, pale yellow']], cat: CAT })
+      + mDo(['Keep a rough count of wet and dirty diapers for the first week or two.', 'Go to his early checkups. Weighing him is how your pediatrician knows.'])
+      + mKnow('How you’ll know', '6 or more wet diapers a day from about day 6, and back to birth weight by about 2 weeks.')
+      + mCall('Fewer wet diapers than this, not back to birth weight by 2 weeks, or very sleepy and hard to wake for feeds.')),
+    n0evenings: () => page(head('Evenings', 'Busy evenings are normal', 'Feed after feed for a few hours is called cluster feeding. It’s very common.', C.blue)
+      + hubStageStrip({ title: 'A newborn evening', items: [['clock', 'Late afternoon', 'Feeds start bunching up'], ['moon', 'Evening', 'Feed after feed'], ['smile', 'Later', 'Often a longer sleep']], cat: CAT })
+      + mDo(['Feed when he asks. ' + (isBreast() ? 'It’s how he tells your body to make more.' : 'It’s normal on formula too. Smaller bottles, more often.'), 'Set up a spot with water and a snack before evening starts.', 'If someone can help, let them burp, change and settle him.'])
+      + mKnow('How you’ll know it’s easing', 'Around 6–8 weeks, evenings calm down and one night stretch gets longer.'))
+  });
+
+  // The new Newborn home
+  P.dirD = (old => (v) => { const vv = v == null ? realStage() : Number(v); if (vv !== 0) return old(v);
+    const html = old(0).replace(/<p class="ss-small" style="margin:4px 4px 0">[\s\S]*?<\/p>/, ''), cut = html.indexOf('<div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px">');
+    const b = isBreast(), nurse = nurses(), pump = pumps(), bot = isBottle(), fm = formulaFam(), st = SHEET(0, fd());
+    const rows = [
+      sRow('peach', 'clock', 'Feeds', b ? 'Feed 8–12 times a day, at early hunger cues' : 'Feed every 2–4 hours, at early hunger cues', 'Rooting and hands to mouth come before crying', 'n0feeds'),
+      b && sRow('pink', 'heart', 'Your milk', 'Your milk comes in around days 2–5', 'Full and tender for a few days is normal', 'n0milk'),
+      nurse && sRow('pink', 'heart', 'Latch', 'A deep latch makes feeds comfortable', 'A strong tug, not a pinch', 'n0latch'),
+      fm && sRow('lilac', 'bottle', 'Bottles', 'Make every bottle the same safe way', 'Water first, level scoops, use within 2 hours', 'n0bottle'),
+      bot && sRow('lilac', 'bottle', 'Bottles', 'Let him set the pace', 'Bottle fairly level, little pauses, stop when full', 'n0pace'),
+      sRow('yellow', 'diaper', 'Getting enough', 'Wet diapers tell you he’s getting enough', '6 or more a day by day 6', 'n0enough'),
+      sRow('blue', 'moon', 'Evenings', 'Busy evenings are normal', 'It’s called cluster feeding, and it eases by 6–8 weeks', 'n0evenings'),
+      sRow('green', 'drop', 'Every day', b ? 'Vitamin D drops, from the first days' : 'Vitamin D drops, until about 32 oz a day', '400 IU, with a dropper', 'vitd')].filter(Boolean);
+    const how = [nurse && ['heart', 'Latch and holds', 'latch'], ['hand', 'Burping', 'burp'], fm && ['bowl', 'Making a bottle', 'formula'], bot && ['bottle', 'Giving a bottle', 'bottle'], bot && ['fridge', 'Storing milk', 'basics'], pump && ['drop', 'Pumping', 'pump']].filter(Boolean);
+    let body = h2('How to feed Ari now') + `<div class="hub-list">${rows.join('')}</div>`
+      + `<section class="hub-card" style="padding:14px 16px"><b style="display:block;margin-bottom:8px">${F('Show me how')}</b><div style="display:flex;flex-wrap:wrap;gap:8px">${how.map(([i, t, to]) => `<button style="border:1px solid var(--line,#eee);background:#fff;border-radius:999px;padding:8px 13px;font:inherit;font-size:14px;cursor:pointer;display:inline-flex;gap:6px;align-items:center" onclick="${go(to)}"><span style="width:18px;height:18px;display:inline-grid">${hubArt(i, CAT)}</span>${F(t)}</button>`).join('')}</div></section>`
+      + `<button class="hub-rough-card care-rash-card" style="background:#fbe4ec;color:#9b4766;margin-top:12px" onclick="${go('hard')}"><span class="hub-rough-moon" aria-hidden="true">${hubArt('eye', CAT)}</span><span class="hub-rough-copy"><b>${F('Tough feed?')}</b><small>${F(nurse ? 'Sore nipples, too sleepy, fussy feeds, spit-up' : 'Too sleepy, fussy feeds, lots of spit-up')}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`
+      + `<section class="hub-card" style="padding:14px 16px;margin-top:12px"><b style="display:block;margin-bottom:8px">${F('Normal, or time to call?')}</b>` + two(['Normal', (b ? 'Feeding every 2–3 hours' : 'Bottles every 2–4 hours') + ', short and long feeds, busy evenings, grunting, spit-up of a tablespoon or two, and green or seedy poop.'], ['Call your pediatrician', 'Fewer than 6 wet diapers a day after day 6, very hard to wake for feeds, yellow skin that’s spreading, or a fever of 100.4°F (38°C) or higher.', '#fdeee6', '#9a5a3c']) + `</section>`
+      + H().next(st.next[0], st.next[1], go('dirD:1')) + H().note('Ages are typical. Every baby moves at their own pace.');
+    return html.slice(0, cut) + body + '</div>'; })(P.dirD);
   ['basics0', 'bf0', 'bot0', 'dig0', 'rhythm1', 'bfmilk1', 'bot1', 'dig1'].forEach(k => { const old = P[k]; P[k] = (...a) => { CALLS.soon = []; CALLS.now = []; const h = old(...a); CALLS.soon = []; CALLS.now = []; return h; }; });
   window.__fdApplyJump = () => { const j = window.__fdJump; if (!j) return; window.__fdJump = null; const m = document.querySelector('#main'); if (!m) return;
     m.querySelectorAll('details.fd-acc[open]').forEach(x => { x.open = false; });
