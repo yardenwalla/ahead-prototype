@@ -1551,8 +1551,8 @@
           + h2('Food and drink while making milk') + H().tiles([['Caffeine', 'Up to 300 mg a day', 'About 2–3 cups of coffee'], ['Alcohol', 'Best skipped for now', 'Later, wait 2+ hours after a drink'], ['Fish', '8–12 oz a week', 'Low-mercury, like salmon or shrimp'], ['Water', 'A glass each feed', 'Then drink to thirst']])],
         nurse && ['Nursing', tl('A nursing feed, start to finish', [['Start', 'eye', 'At early cues, before he cries.'], ['Latch', 'heart', 'Nose to nipple. Wait for a wide mouth, then bring him to you, chin first.'], ['When he slows', 'hand', 'Often after 10–20 minutes. Burp, then offer the other side.'], fm && ['Still hungry?', 'bottle', 'Offer a small formula top-up.'], ['Done', 'smile', 'He lets go, relaxes his hands or drifts off.']])
           + h2('Holds to try') + illGrid([[ILL.crossCradle(PAL), 'Cross-cradle', 'Easiest for learning to latch'], [ILL.football(PAL), 'Football', 'Good after a C-section'], [ILL.laidBack(PAL), 'Laid-back', 'Lean back, him tummy-down on you'], [ILL.cradle(PAL), 'Cradle', 'Once latching feels easy']])
+          + small('Gulping or coughing at feeds?', 'Milk may be coming fast. Try laid-back, so he feeds against gravity.')
           + h2('A good latch, step by step') + hubEmbed('y--syZR0u1E', 'A good latch, step by step', 'Global Health Media')
-          + accs([['drop', 'Gulping or coughing at feeds', 'Milk may be coming fast', ['Try leaning back while he feeds.'], '', '']])
           + h2('Adding bottles') + accs([
             fm && ['bottle', 'Nursing with formula top-ups', 'Nurse first', ['Nurse first, then offer a small, paced bottle if he’s still hungry.', 'Pumping after a top-up, when you can, keeps your milk going.'], '', ''],
             !fm && ['bottle', 'A first bottle', 'Around 3–4 weeks', ['Once nursing is going well, someone else can offer a bottle of pumped milk, before he’s very hungry.'], '', '']])],
