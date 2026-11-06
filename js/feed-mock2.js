@@ -302,6 +302,9 @@
     b2 += `<div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px">${h2(v === 0 ? 'Your newborn feeding guide' : v === realStage() ? (v >= 3 ? 'How to help Ari eat now' : 'How to help Ari feed now') : 'At ' + ['the newborn stage', '6 weeks–4 months', '4–6 months', '6–9 months', '9–12 months'][v])}</div>` + `<div class="hub-list">${AREAS(v).map(x => `<button class="hub-row hl-row" style="--hl-bg:${C[x.c][0]};--hl-ink:${C[x.c][1]}" onclick="${P[x.to] ? go(x.to) : ''}"><span class="fd-dot" style="width:42px;height:42px;border-radius:13px;background:var(--hl-bg);color:var(--hl-ink);padding:9px;box-sizing:border-box;flex:none;display:grid;place-items:center">${hubArt(x.icon, CAT)}</span><span class="hub-row-copy">${x.label ? `<small>${F(x.label)}</small>` : ''}<b>${F(x.act)}</b><small>${F(x.sub)}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`).join('')}</div>`;
     const crow = ([icon, label, act, sub, to], c) => `<button class="hub-row hl-row" style="--hl-bg:${C[c][0]};--hl-ink:${C[c][1]}" onclick="${go(to)}"><span class="fd-dot" style="width:42px;height:42px;border-radius:13px;background:var(--hl-bg);color:var(--hl-ink);padding:9px;box-sizing:border-box;flex:none;display:grid;place-items:center">${hubArt(icon, CAT)}</span><span class="hub-row-copy"><small>${F(label)}</small><b>${F(act)}</b><small>${F(sub)}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`;
     if (v !== 0) b2 += `<button class="hub-rough-card care-rash-card" style="background:#fbe4ec;color:#9b4766;margin-top:12px" onclick="${go('hard')}"><span class="hub-rough-moon" aria-hidden="true">${hubArt('eye', CAT)}</span><span class="hub-rough-copy"><b>${F('Tough feed?')}</b><small>${F(['Not eating much, too sleepy, crying that won’t settle', nurses() ? 'Crying at feeds, not eating much, bottle refusal' : 'Crying at feeds, not eating much', nurses() ? 'A nursing strike, not eating much' : 'Not eating much, or feeding when sick', 'Refusing food, a rash, teething', 'Picky days, refusing food, a rash'][v])}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`;
+    if (v === 0) { const nurse = nurses(), br = isBreast();
+      const W = [['heart', 'He won’t stop crying', 'dig0', 'Gas', 'settle'], nurse && ['heart', 'Nursing hurts', 'bf0', 'Challenges', 'Sore'], ['diaper', 'He’s barely eating', 'basics0', 'Not going', 'Not eating'], ['moon', 'He’s too sleepy to feed', 'basics0', 'Day and night', 'Waking'], ['bottle', 'Lots of spit-up', 'dig0', 'Reflux', ''], ['diaper', 'Is this poop normal?', 'dig0', 'Poop', 'looks off'], ['eye', 'He fusses or pulls off at feeds', 'basics0', 'Not going', 'Fussy'], br ? ['drop', 'A lump, or very full breasts', 'bf0', 'Challenges', 'lump'] : ['eye', 'He’s sick', 'basics0', 'Not going', 'sick']].filter(Boolean);
+      b2 += h2('Something not right?') + `<div class="hub-list">${W.map(([i, t, pg, tab, acc]) => `<button class="hub-row hl-row" style="--hl-bg:#fbe4ec;--hl-ink:#9b4766;padding-top:12px;padding-bottom:12px" onclick="window.__fdJump=['${tab}','${acc}'];${go(pg)}"><span class="fd-dot" style="width:36px;height:36px;border-radius:11px;background:var(--hl-bg);color:var(--hl-ink);padding:8px;box-sizing:border-box;flex:none;display:grid;place-items:center">${hubArt(i, CAT)}</span><span class="hub-row-copy"><b>${F(t)}</b></span><span class="hub-chev" aria-hidden="true">›</span></button>`).join('')}</div>`; }
     b2 += h.next(st.next[0], st.next[1], v < 4 ? go('dirD:' + (v + 1)) : '') + h.note('Ages are typical. Every baby moves at their own pace.');
     return `${css}<div class="quiet-category hub-page care-v2" data-overview="${CAT}" style="${yearTheme(CAT)}">${typeof monthlyPageHeader === 'function' ? monthlyPageHeader(CAT) : ''}${pills}${b2}</div>`; };
   P.milkin = () => (pumps() && !nurses()) ? page(head('Your milk', 'Your milk comes in', 'Small amounts of colostrum come first. Your milk comes in around days 2–5.')
@@ -900,7 +903,7 @@
       r('green', 'bowl', 'Meals & self-feeding', 'Serve three meals of family food', 'Finger foods, cups and milk at 12 months', 'family')][v];
     void milk; void tummy; void fourth;
     if (v === 0) return [
-        r('peach', 'clock', '', 'Rhythms & cues', 'Hunger cues, cluster feeding, days and nights, and when it’s hard', 'basics0'),
+        r('peach', 'clock', '', 'Hunger & feeding times', 'Is he hungry, nonstop evenings, day and night', 'basics0'),
         b && r('pink', 'heart', '', 'Breastfeeding & pumping', nurse ? 'Milk coming in, latch, comfort and pumping' : 'Milk coming in, pumping and comfort', 'bf0'),
         r('lilac', 'bottle', '', 'Bottle feeding', fm ? 'Formula, bottle skills, preparation and storage' : 'Bottle skills, storing and warming milk', 'bot0'),
         r('blue', 'drop', '', 'Digestion & comfort', 'Burping, spit-up, gas, poop and reflux', 'dig0')].filter(Boolean);
@@ -1595,10 +1598,10 @@
       ])
       + medHelp(['Call your pediatrician for forceful vomiting after most feeds, refusing feeds, fewer wet diapers or slow weight gain.', 'Call right away for green or bloody vomit, vomiting with a fever, white or very pale poop, or any fever of 100.4°F (38°C) or higher in the first 3 months.'])); };
   // ---- Newborn v9 (Yarden, Nov 5): rethought as a whole. Nothing repeats the stage tiles; each tab has one job. ----
-  HEADART['Rhythms & cues'] = () => ART.often(5);
+  HEADART['Rhythms & cues'] = () => ART.often(5); HEADART['Hunger & feeding times'] = () => ART.often(5);
   P.basics0 = () => { const nurse = nurses(), b = isBreast(), bot = isBottle();
     const dayHtml = (P.day() || ''), k = dayHtml.indexOf('<div class="hub-card" style="padding:14px 14px 8px">'), e = k >= 0 ? dayHtml.indexOf('<figure', k) : -1, ribbon = k >= 0 && e > k ? dayHtml.slice(k, e) : '';
-    return page(head('Rhythms & cues', 'Follow his cues, not the clock', 'Newborn feeding is frequent and uneven. Here’s how to read him, and what’s normal across a day and night.', C.peach)
+    return page(head('Hunger & feeding times', 'Follow his cues, not the clock', 'Newborn feeding is frequent and uneven. Here’s how to read him, and what’s normal across a day and night.', C.peach)
       + tabbed('#c27a52', [
         ['Hunger cues', cueStrip()
           + h2('Is he full?') + fullTiles()
@@ -1609,18 +1612,24 @@
           + accs([['heart', 'When it wears you out', 'Sharing the load', ['Someone else can burp, change and settle him between feeds, and bring you water and snacks.', 'Set up a comfy spot for the evening before it starts.'], '', ''],
             ['clock', 'Extra-hungry days', 'A growth spurt', ['Some days he’ll feed much more often, for about 2–3 days. Feeding more ' + (b ? 'makes more milk.' : 'is how he grows.')], '', '']])
           + hubAgeTiles({ title: 'When it eases', items: [['Weeks 2–3', 'A growth spurt', 'A few extra-hungry days'], ['Around 6 weeks', 'Fussy evenings peak', 'Then they ease'], ['6–8 weeks', 'Feeds spread out', 'Fewer, more predictable']], cat: CAT })],
-        ['Days & nights', h2('A day and night of feeds') + ribbon + small('An example, not a schedule.', 'He leads, and no two days look the same.')
+        ['Day and night', h2('A day and night of feeds') + ribbon + small('An example, not a schedule.', 'He leads, and no two days look the same.')
           + accs([['moon', 'Waking him to feed', 'Until he’s back to birth weight', ['Wake him if it’s been about 3 hours. Undress him to his diaper, stroke his feet, or change his diaper.', 'Ask your pediatrician when you can stop. Usually once he’s back to birth weight, around 2 weeks.'], 'He’s too sleepy to feed most times.', 'He’s very hard to wake, or yellow skin is spreading.'],
             ['clock', 'Days and nights mixed up', 'Awake at night, sleepy all day', ['Bright light and play by day. Dim, quiet, boring night feeds. It sorts itself out over a few weeks.'], '', ''],
             ['notepad', 'Tracking feeds', 'Whether it’s worth it', ['A quick note of feeds and wet diapers helps in the first weeks, and at checkups. Stop when feeding feels settled.'], '', ''],
             ['drop', 'Vitamin D, every day', b ? 'From the first days' : 'Until he drinks about 32 oz a day', [b ? 'Breastfed and partly breastfed babies need vitamin D drops every day, from the first days.' : 'Until he drinks about 32 oz of formula a day, he needs vitamin D drops too.', 'Put the drop on the nipple, or inside his cheek. Don’t repeat it after spit-up.'].concat(isEarly() && b ? ['Born early? Iron drops usually start by 1 month. Follow your care team’s dose.'] : []), '', '']])],
-        ['When it’s hard', accs([
+        ['Not going well?', accs([
             ['diaper', 'Not eating much', 'How to tell if it’s okay', ['Short feeds can still be full ones. Diapers and weight tell you more than minutes or ounces.', 'Offer feeds often, and get the ' + (b ? 'latch' : 'bottle') + ' checked.'], 'Fewer than 6 wet diapers a day after day 6, or not back to birth weight by 2 weeks.', ''],
             ['heart', 'Fussy or pulling off at feeds', 'Too hungry, too fast, or full', ['Feed at early cues, before he’s upset. Burp, then try again.', bot ? 'With a bottle, try a slower nipple and pace it more.' : 'If milk gushes, try leaning back.'], 'He refuses several feeds in a row, or fusses at every feed and isn’t gaining.', ''],
             ['eye', 'Feeding when he’s sick', 'A stuffy nose, or not interested', ['Offer smaller feeds more often. Saline drops and gentle suction before feeds help a stuffy nose.'], 'Fewer wet diapers, or he isn’t feeding well.', 'Any fever of 100.4°F (38°C) or higher in the first 3 months.']])
           + h2('You don’t have to do this alone') + know('Who can help', (b ? 'A lactation consultant for latch, pain and supply. ' : '') + 'Your pediatrician for weight and feeds. A feeding specialist if feeds stay hard.')
           + know('How are you doing?', 'Hard feeds wear on your mood. If you feel low, anxious or overwhelmed most days, tell your doctor. You can call or text the National Maternal Mental Health Hotline any time at 1-833-852-6262.')]
       ])); };
+  window.__fdApplyJump = () => { const j = window.__fdJump; if (!j) return; window.__fdJump = null; const m = document.querySelector('#main'); if (!m) return;
+    m.querySelectorAll('details.fd-acc[open]').forEach(x => { x.open = false; });
+    const tb = [...m.querySelectorAll('.fd-tabs button')].find(b => b.textContent.toLowerCase().includes(j[0].toLowerCase())); if (tb) tb.click();
+    const d = j[1] && [...m.querySelectorAll('.fd-panel:not([hidden]) details.fd-acc, details.fd-acc')].find(x => getComputedStyle(x.closest('.fd-panel') || x).display !== 'none' && x.querySelector('summary').textContent.toLowerCase().includes(j[1].toLowerCase()));
+    if (d) { d.open = true; setTimeout(() => d.scrollIntoView({ block: 'center' }), 30); } else if (tb) tb.scrollIntoView({ block: 'start' }); };
+  { const obs = new MutationObserver(() => { if (window.__fdJump && document.querySelector('#main .fd-tabs')) setTimeout(window.__fdApplyJump, 20); }); const start = () => { const m = document.querySelector('#main'); if (m) obs.observe(m, { childList: true }); }; if (document.readyState !== 'loading') start(); else document.addEventListener('DOMContentLoaded', start); }
   const dirD0 = P.dirD; P.dirD = function (...a) { window.__fdPills = true; try { return dirD0.apply(this, a); } finally { window.__fdPills = false; } };
   const rnd = window.render;
   const curPage = () => { try { return (0, eval)('page'); } catch (e) { return ''; } };
