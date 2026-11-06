@@ -1705,8 +1705,8 @@
             ['moon', 'How do I keep him awake during a feed?', ['~Newborns often doze off mid-feed.', { html: steps([['shirt', 'Undress him', 'Down to his diaper'], ['hand', 'Stroke his feet', 'Or his back'], ['diaper', 'Change his diaper', 'Halfway through'], b && nurse ? ['drop', 'Squeeze gently', 'Behind the nipple, to keep milk flowing'] : ['smile', 'Pause and burp', 'Then offer again']], false) }]],
             ['clock', 'How long should a feed take?', [b && nurse ? 'Nursing: often 10–20 minutes a side at first. Feeds get quicker as he gets stronger.' : '', bot ? 'A bottle: often 10–20 minutes. Much faster can mean the flow is too fast.' : '', 'Let him finish when he slows or turns away, not when the clock says.']],
             ['heart', 'Hungry, or sucking for comfort?', [{ html: two(['Hungry', 'Rooting and fists to his mouth, and it’s been a while since a feed. Not sure? Offer one.'], ['Sucking for comfort', 'He just fed. Try a cuddle or a pacifier' + (nurse ? ', once nursing is going well.' : '.'), '#f5efe3', '#8a6a2c']) }]]])],
-        ['Cues & amounts', cueStrip().replace(F('Hunger cues, early to late'), F('When he’s hungry'))
-          + h2('When he’s done') + fullTiles()
+        ['Cues & amounts', h2('How to tell he’s hungry') + cueStrip().replace(F('Hunger cues, early to late'), F('Early to late'))
+          + h2('How to tell he’s done') + fullTiles()
           + h2('Is he getting enough?') + H().tiles([['Wet diapers', '6 or more a day', 'By day 6, pale yellow'], ['Weight', 'Back to birth weight', 'By about 2 weeks'], ['After feeds', 'Mostly content', 'Some fussy evenings are normal'], ['Amounts', 'Vary feed to feed', 'Look at the whole day']])
           + qa([
             bot && ['bottle', 'How much should he drink?', [nurse && fm ? 'Top-ups are small, often 1–2 oz.' : 'About 1–3 oz a bottle at first, slowly more over the first weeks.', 'Follow his cues. Stop when he slows or turns away, even if milk is left.']],
