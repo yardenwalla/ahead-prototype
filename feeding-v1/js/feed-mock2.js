@@ -1548,7 +1548,6 @@
           + two(['Normal fullness', 'Heavy and warm on days 2–5. Softens after a feed.'], ['Engorged', 'Hard, tight and sore. Hard for him to latch.', '#fdeee6', '#9a5a3c'])
           + h2('When you’re very full') + steps([['heart', 'Feed often', nurse ? 'Or hand-express a little first' : 'Pump on your usual schedule'], ['drop', 'Soften first', 'Express just enough to latch or pump comfortably'], ['snow', 'Cold after', 'A cold pack eases swelling']], true)
           + accs([['drop', 'Worried it’s not enough', 'How to tell', ['Wet diapers and weight gain tell you, not how full you feel.'], 'Fewer than 6 wet diapers a day, or slow weight gain.', ''],
-            ['drop', 'Gulping or coughing at feeds', 'Milk may be coming fast', ['Try leaning back while he feeds.'], '', ''],
             ['bowl', 'Food and drink', 'While breastfeeding', ['No special diet needed. Coffee in moderation is usually fine. Ask about alcohol timing and any medicine.'], '', '']])],
         nurse && ['Latch & holds', tl('A nursing feed, start to finish', [['Start', 'eye', 'At early cues, before he cries.'], ['Latch', 'heart', 'Nose to nipple. Wait for a wide mouth, then bring him to you, chin first.'], ['When he slows', 'hand', 'Often after 10–20 minutes. Burp, then offer the other side.'], fm && ['Still hungry?', 'bottle', 'Offer a small formula top-up.'], ['Done', 'smile', 'He lets go, relaxes his hands or drifts off.']])
           + h2('Holds to try') + illGrid([[ILL.crossCradle(PAL), 'Cross-cradle', 'Easiest for learning to latch'], [ILL.football(PAL), 'Football', 'Good after a C-section'], [ILL.laidBack(PAL), 'Laid-back', 'Lean back, him tummy-down on you'], [ILL.cradle(PAL), 'Cradle', 'Once latching feels easy']])
@@ -1559,6 +1558,7 @@
         ['Challenges', accs([
             nurse && ['heart', 'Sore or cracked nipples', 'Tenderness vs pain', ['Some tenderness in the first week is common. Pain through the whole feed usually means a shallow latch.', 'Break the seal and try again, try cross-cradle, and rub a little milk on after feeds.'], 'Bleeding nipples, or pain that isn’t easing.', ''],
             ['heart', 'A tender lump in your breast', 'Often a clogged duct', ['Keep feeding or pumping as usual. Use a cold pack, and skip deep massage.'], '', 'A red, painful area with a fever or chills. Call your own doctor.'],
+            nurse && ['drop', 'Gulping or coughing at feeds', 'Milk may be coming fast', ['Try leaning back while he feeds.'], '', ''],
             nurse && ['eye', 'It keeps hurting, even with help', 'Tongue-tie', ['Ask to have his mouth checked for tongue-tie.'], '', ''],
             nurse && fm && ['bottle', 'Combining with formula', 'Nursing, pumping and bottles', ['Nurse first, then offer a small, paced bottle if he’s still hungry.', 'Pumping after a top-up, when you can, keeps your milk going.'], '', ''],
             nurse && !isBottle() && ['bottle', 'A first bottle', 'When and how', ['Around 3–4 weeks, once nursing is going well. Someone else can offer it, before he’s very hungry.'], '', '']])
