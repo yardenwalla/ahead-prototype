@@ -1113,7 +1113,7 @@
     if (a === 'milkin' && nurses()) ['One side or both'].forEach(dropP);
     { const v = stg(), nurse = nurses(), pump = pumps(), bot = isBottle(), fm = formulaFam();
       const T = { latch: ['heart', 'Latch and holds', 'How a good latch feels, and five holds'], burp: ['hand', 'Burping', 'Three positions, and how often'], bottle: ['bottle', 'Giving a bottle', 'Positions, pacing and nipple flow'], formula: ['bowl', 'Making formula', 'Water first, level scoops'], pump: ['drop', 'Pumping', 'How often, flange fit, as he grows'], basics: ['snow', 'Storing and warming milk', 'How long it lasts, and travel'], work: ['clock', 'Going back to work', 'A pumping plan, and your rights'], vitd: ['drop', 'Vitamin D and iron', 'How to give drops, and when to stop'], choking: ['shield', 'Choking first aid', 'Under 1, step by step'], prep: ['bowl', 'Preparing first foods', 'Safe shapes by age'], cups: ['drop', 'Cups', 'Open or straw, and how to start'], tummy: ['drop', 'Tummy and poop', 'What’s normal now'], firstbottle: ['bottle', 'A first bottle', 'When and how, for nursing families'], day: ['clock', 'A day, and hunger cues', 'What a day of feeds can look like'] };
-      const HOWIN = { feeds: [nurse && 'latch', bot && 'bottle', v <= 2 && 'burp', 'day'], milkarea: [nurse && 'latch', pump && 'pump', bot && 'basics', nurse && !bot && 'firstbottle'], bf1: [], howlong: [nurse && 'latch', pump && 'pump', 'work', bot && 'basics'], supply: [nurse && 'latch', pump && 'pump', 'work'],
+      const HOWIN = { feeds: v <= 1 ? [] : [nurse && 'latch', bot && 'bottle', v <= 2 && 'burp', 'day'], milkarea: [nurse && 'latch', pump && 'pump', bot && 'basics', nurse && !bot && 'firstbottle'], bf1: [], howlong: [nurse && 'latch', pump && 'pump', 'work', bot && 'basics'], supply: [nurse && 'latch', pump && 'pump', 'work'],
         formula: ['bottle', 'basics', v <= 2 && 'burp'], bottle: [fm && 'formula', 'basics', v <= 2 && 'burp', pump && 'pump'], bottlegrow: ['bottle', fm && 'formula', 'basics'], basics: ['bottle', fm && 'formula'], cups: [bot && 'bottle'],
         tummy: [v <= 2 && 'burp', 'vitd'], vitd: [v <= 1 && 'tummy'], signs: ['choking', 'prep', 'vitd', 'tummy'], firstfoods: ['prep', 'choking', 'cups', 'tummy', 'vitd'], family: ['prep', 'choking', 'cups', 'tummy', 'vitd'], at12: ['cups', bot && 'bottle'] }[a];
       if (HOWIN) { const ks = HOWIN.filter(k => k && k !== a && P[k] && !h.includes(`mock:${k}'`)); if (ks.length) h = h.replace(/<\/div>$/, h2('Show me how') + `<div class="hub-list">${ks.map(k => `<button class="hub-row hl-row" style="--hl-bg:${C.lilac[0]};--hl-ink:${C.lilac[1]}" onclick="${go(k)}"><span class="fd-dot" style="width:42px;height:42px;border-radius:13px;background:var(--hl-bg);color:var(--hl-ink);padding:9px;box-sizing:border-box;flex:none;display:grid;place-items:center">${hubArt(T[k][0], CAT)}</span><span class="hub-row-copy"><b>${F(T[k][1])}</b><small>${F(T[k][2])}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`).join('')}</div></div>`); } }
@@ -1251,6 +1251,60 @@
       + doCard(c, v === 0 ? ['For gas, bicycle his legs or lay him tummy-down across your knees.', 'Grunting and going red while he poops is normal, as long as it’s soft.', 'Give vitamin D drops every day' + (bot && !isBreast() ? ', until he drinks about 32 oz a day.' : '.')] : ['Burp more often, and keep him upright after feeds.', 'For gas, bicycle his legs or try tummy-down across your knees.', br ? 'Some breastfed babies go a few days without a poop now. Soft is what matters.' : 'Poop often comes once or twice a day now. Soft is what matters.'])
       + knowLine(v === 0 ? 'He’s growing well and has 6 or more wet diapers a day. By about day 5, poop turns ' + poop + '.' : 'He’s growing well and is mostly content between fussy spells.')
       + h2('Guides') + alist([guideRow('blue', 'hand', 'Burping and spit-up', 'How to burp, what’s normal, and reflux', 'spitguide'), guideRow('blue', 'drop', 'Gas and fussy evenings', 'What helps, and crying that won’t settle', 'crying0'), guideRow('blue', 'diaper', 'Understanding poop', 'What’s normal, and colors to call about', 'poop0'), guideRow('blue', 'drop', 'Vitamin D and iron', 'How to give drops, and when to stop', 'vitd')])); };
+  // ---- Mock v4: the section page is the answer. At most one link out. ----
+  const oneLink = (t, to) => `<div class="hub-list" style="margin-top:14px">${guideRow('lilac', 'eye', t[0], t[1], to)}</div>`;
+  P.mfw = () => { const v = stg(), nurse = nurses(), pump = pumps(), fm = formulaFam(), b = isBreast(), bot = isBottle(), c = C.pink, onlyP = pump && !nurse;
+    let breast = '', bottle = '', link = '';
+    if (v === 0) {
+      if (nurse) breast = steps([['eye', 'Nose to nipple', 'Line him up, tummy to you'], ['smile', 'Wait for a wide mouth', 'Like a big yawn'], ['heart', 'Bring him to you', 'Chin first, not you to him']], true)
+        + small('Holds:', 'cross-cradle and football are easiest at first. Laid-back works well too.')
+        + sstrip('Your milk, the first weeks', [['drop', 'Days 1–2', 'Small amounts of colostrum'], ['heart', 'Days 2–5', 'Milk comes in'], ['clock', 'Weeks 1–6', 'Full, often leaky']])
+        + doCard(c, ['Pinching? Break the seal with a clean finger and try again.', 'Very full or sore? Express a little, then use a cold pack.', 'Get help early. A lactation consultant can fix most problems in a visit or two.']);
+      else if (onlyP) breast = sstrip('Your milk, the first weeks', [['drop', 'Days 1–2', 'Small amounts of colostrum'], ['heart', 'Days 2–5', 'Milk comes in'], ['clock', 'Weeks 1–6', 'Amounts grow']])
+        + doCard(c, ['Pump 8–12 times a day, including once at night.', 'Your nipple should move freely in the flange without rubbing. Pumping shouldn’t hurt.', 'Fresh milk keeps 4 hours out and 4 days in the fridge.']);
+      if (bot) bottle = steps(fm ? [['drop', 'Water first', 'Then level scoops'], ['bowl', 'Exactly as the label says', 'Never extra water or powder'], ['hand', 'Test on your wrist', 'Warm or room temperature']] : [['snow', 'Thaw in the fridge', 'Or in warm water'], ['drop', 'Swirl, don’t shake', 'Never the microwave'], ['hand', 'Test on your wrist', 'Cold is fine too']], true)
+        + doCard(C.lilac, ['Hold him fairly upright, and pace the bottle with pauses every few sucks.', 'Burp every 2–3 oz. Stop when he slows or turns away.', 'Never prop a bottle.'])
+        + small('How long it lasts:', fm ? 'use a formula bottle within 2 hours, or 1 hour once he starts.' : 'breast milk keeps 4 hours out and 4 days in the fridge. Use it within 2 hours once he starts.');
+      link = nurse ? oneLink(['Latch and holds, with a video', 'Step by step, with pictures'], 'latch') : onlyP ? oneLink(['Pumping, step by step', 'How often, flange fit, how much'], 'pump') : oneLink(['Making formula, step by step', 'Including safe water'], 'formula');
+    } else {
+      if (b) breast = sstrip('Your supply settles', [['drop', 'Weeks 1–6', 'Full, often leaky'], ['heart', '6–12 weeks', 'Softer, still plenty'], ['clock', 'After', 'Makes about what he takes']])
+        + doCard(c, ['Softer breasts and quicker feeds are normal. They don’t mean less milk.', nurse ? 'Keep feeding on cue. Each feed tells your body how much to make.' : 'Keep about the same total each day, even as you pump less often.', 'Drop a feed or a pump one at a time, every few days, to avoid clogged ducts.'])
+        + know('Too little, or too much?', 'Diapers and growth tell you, not how full you feel. Fewer than 6 wet diapers or slow gain: feed more often and see a lactation consultant. Gulping and coughing at letdown: try a laid-back position.');
+      if (bot) bottle = steps([['bottle', 'Too slow', 'Sucks hard, gets frustrated'], ['drop', 'Too fast', 'Gulps, coughs, milk spills'], ['hand', 'Just right', 'Steady sucks and swallows']], false)
+        + doCard(C.lilac, ['Stay with the slowest nipple until he’s clearly frustrated.', fm ? 'Bottles are often 4–5 oz now, and stay about the same until solids.' : 'Breast milk bottles stay about 3–4 oz, even as he grows.', 'Keep pacing, and stop when he slows or turns away.']);
+      link = b ? oneLink(['Going back to work', 'A pumping plan, and your rights'], 'work') : '';
+    }
+    const title = v === 0 ? (nurse && fm ? 'Nursing, plus formula top-ups' : nurse ? 'Get nursing off to a good start' : b ? 'Get pumping going' : 'Make and give bottles safely') : (nurse && fm ? 'Keep your milk going as you top up' : b ? 'Trust your supply as it settles' : 'Check the flow, and keep pacing');
+    const lead = v === 0 ? 'The first weeks are when feeding gets set up. It takes practice, and help is easy to get.' : 'Small adjustments as he gets better at eating.';
+    const combo = nurse && fm ? small('Topping up?', v === 0 ? 'nurse first, then offer a small bottle if he’s still hungry. Pumping after a top-up helps keep your milk going.' : 'keep top-ups small and nurse first, so your body keeps making milk.') : '';
+    return page(head('Making feeding work', title, lead, c)
+      + (b && bot && breast ? h2(nurse ? 'Nursing' : 'Pumping') : '') + breast + combo
+      + (bottle ? (b ? h2(fm ? 'Formula top-ups' : 'Bottles') : '') + bottle : '')
+      + knowLine(v === 0 ? '6 or more wet diapers a day by day 6, and back to birth weight by about 2 weeks.' : '6 or more wet diapers a day, and steady growth at checkups.')
+      + link); };
+  P.after = () => { const v = stg(), bot = isBottle(), br = isBreast() && fd() === 'Breast milk', fmOnly = fd() === 'Formula', c = C.blue;
+    const poop = br ? 'Yellow and seedy' : fmOnly ? 'Tan, like peanut butter' : 'Yellow to tan';
+    const vit = isBreast() ? (v === 1 && isEarly() ? 'Vitamin D every day, plus iron drops for babies born early.' : 'Vitamin D drops every day.') : 'Vitamin D drops every day, until he drinks about 32 oz a day.';
+    const tough = `<div class="hub-list" style="margin-top:14px">${guideRow('pink', 'eye', 'More than this?', 'Tough feed covers reflux, worrying poop, and crying that won’t settle', 'hard')}</div>`;
+    if (v === 0) return page(head('After a feed', 'Burping, spit-up and poop', 'Newborn tummies are noisy. Most of what you see after a feed is normal.', c)
+      + h2('Burping')
+      + steps([['heart', 'Over your shoulder', 'Pat or rub his back'], ['hand', 'Sitting on your lap', 'Support his chin and chest'], ['moon', 'Tummy-down on your lap', 'Gentle pats']], true)
+      + small('When:', (bot ? 'every 2–3 oz' : 'between sides') + ', and at the end. No burp after a minute or two is fine.')
+      + h2('Spit-up')
+      + two(['Spit-up', 'Flows out gently. Usually less than it looks.'], ['Vomit', 'Comes out with force, sometimes across the room.', '#fdeee6', '#9a5a3c'])
+      + doCard(c, ['Hold him upright for 20–30 minutes after feeds.', 'For gas, bicycle his legs or lay him tummy-down across your knees.', vit])
+      + h2('Poop')
+      + sstrip('The first week', [['diaper', 'Days 1–2', 'Black and sticky'], ['diaper', 'Days 3–4', 'Greenish'], ['diaper', 'By day 5', poop]])
+      + small('Grunting and going red', 'while he poops is normal, as long as it’s soft.')
+      + knowLine('He’s growing well and has 6 or more wet diapers a day. Then spit-up is normal, even when it looks like a lot.')
+      + tough);
+    return page(head('After a feed', 'Gas and spit-up may peak now', 'Both are common at this age, and both ease. Here’s what helps.', c)
+      + sstrip('When it eases', [['moon', 'Fussy evenings', 'Peak around 6 weeks'], ['bottle', 'Spit-up', 'Peaks around 4 months'], ['smile', 'Gas', 'Usually eases by 3–4 months']])
+      + doCard(c, ['Burp more often, and keep him upright after feeds.', 'For gas, bicycle his legs or try tummy-down across your knees.', vit])
+      + small('Gas drops or gripe water?', 'gas drops are safe but often don’t help much. Ask your pediatrician before trying gripe water.')
+      + small('Poop:', br ? 'some breastfed babies go a few days without one now. Soft is what matters.' : 'often once or twice a day now. Soft is what matters.')
+      + knowLine('He’s growing well and is mostly content between fussy spells.')
+      + tough); };
   const dirD0 = P.dirD; P.dirD = function (...a) { window.__fdPills = true; try { return dirD0.apply(this, a); } finally { window.__fdPills = false; } };
   const rnd = window.render;
   const curPage = () => { try { return (0, eval)('page'); } catch (e) { return ''; } };
