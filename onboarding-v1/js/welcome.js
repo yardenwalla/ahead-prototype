@@ -1,16 +1,16 @@
 /* Ahead · Onboarding, using the guide's shared palette and illustrations. */
 (function () {
   const POINTS = [
-    ['spark', 'Everything in one place', 'From sleep and feeding to development and everyday care, get practical guidance based on what pediatricians recommend, whenever you need it.'],
-    ['rhythm', 'Helpful things, right when you need them', 'Get timely tips and heads-ups about what’s changing, what matters now, and what to prepare for next.'],
-    ['dev', 'Made for your baby', 'Guidance tailored to your baby’s age and stage, so you can focus on what’s relevant to you.']
+    ['spark', 'Everything in one place', 'Sleep, feeding, development and everyday care, based on what pediatricians recommend.'],
+    ['rhythm', 'Heads-ups, right when you need them', 'What’s changing, what matters now, and what’s coming next.'],
+    ['dev', 'Made for your baby', 'Tailored to your baby’s age and stage, so you only see what’s relevant.']
   ];
   const POINT_ART = { spark: ['book', 'Development', '#efedff'], rhythm: ['clock', 'Sleep', '#edf2fe'], dev: ['heart', 'Feeding', '#fceef3'] };
   function welcomeHtml() {
     return `<section class="welcome aw">
       <div class="aw-intro"><div class="eyebrow">Your baby’s first year</div><div class="aw-baby" aria-hidden="true">${homeBabyArt()}</div></div>
       <h1><span>Less searching.</span><span>More confidence</span><span>in what’s next.</span></h1>
-      <p class="aw-lead">Everything you need to understand your baby, care for them with confidence, and enjoy every new stage.</p>
+      <p class="aw-lead">Understand your baby, care for them with confidence, and enjoy every stage.</p>
       <div class="aw-spectrum" aria-hidden="true">${['#e5e0fc','#f7d9e5','#d9e5fc','#ddf1e5','#f7e6c4','#cfe9f4','#fde3d3','#f8edb3'].map(c => `<span style="background:${c}"></span>`).join('')}</div>
       <div class="aw-points">${POINTS.map(([i, h, d]) => `<div class="promise aw-point"><span class="aw-point-icon" aria-hidden="true" style="background:${(POINT_ART[i] || [])[2] || ''}">${typeof hubArt === 'function' && POINT_ART[i] ? hubArt(POINT_ART[i][0], POINT_ART[i][1]) : icon(i)}</span><div><h3>${h}</h3><p>${d}</p></div></div>`).join('')}</div>
       <button class="primary aw-start" onclick="startSetup()">Set up your baby’s guide →</button>
