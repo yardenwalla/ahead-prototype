@@ -1565,12 +1565,8 @@
           + h2('Is he getting enough?') + H().tiles([['Wet diapers', '6 or more a day', 'By day 6'], mostlyB ? ['Poop', '3 or more a day', 'Yellow, in the first weeks'] : ['Poop', 'Yellow to tan', 'By day 5, and soft'], ['Weight', 'Back to birth weight', 'By about 2 weeks'], nurse ? ['Swallowing', 'You hear it', 'During feeds'] : ['Feeds', '8–12 a day', 'Content after most']])
           + small('Not a sign of supply:', 'how much you pump, or breasts that feel softer after the first weeks. He gets more milk than a pump does.')
           + h2('Feeling full') + two(['Normal fullness', 'Heavy and warm on days 2–5. Softens after a feed.'], ['Engorged', nurse ? 'Hard, tight and sore. Hard for him to latch.' : 'Hard, tight and sore. Pumping feels harder.', '#fdeee6', '#9a5a3c'])
-          + h2('When you’re very full') + steps([['heart', nurse ? 'Feed often' : 'Keep pumping', nurse ? 'Every 2–3 hours' : 'On your usual schedule'], ['drop', 'Soften first', nurse ? 'Hand-express a little so he can latch' : 'Start slow, on a low setting'], ['snow', 'Cold after', 'A cold pack eases swelling']], true)
-          + accs([['drop', 'More ways to ease fullness', 'What lactation consultants suggest', [
-              'Reverse pressure softening: press your fingertips around the nipple for a minute before a ' + (nurse ? 'feed.' : 'session.'),
-              'Light strokes toward your armpit ease swelling. Skip deep massage.',
-              'Express just to comfort. Emptying fully makes more milk.',
-              'A supportive bra that isn’t tight.'], '', ''],
+          + h2('When you’re very full') + steps([['heart', nurse ? 'Feed often' : 'Keep pumping', nurse ? 'Every 2–3 hours' : 'On your usual schedule'], ['hand', 'Soften first', 'Press fingertips around the nipple for a minute'], ['snow', 'Cold after', 'A cold pack eases swelling'], ['wave', 'Light strokes', 'Toward your armpit. Skip deep massage'], ['drop', 'Express a little', 'Just to comfort, not to empty'], ['shirt', 'A supportive bra', 'That isn’t tight']], false)
+          + accs([
             ['drop', 'Leaking', 'Common in the first weeks', [
               '~It usually eases as your supply settles.',
               'Nursing pads keep your shirts dry.',
