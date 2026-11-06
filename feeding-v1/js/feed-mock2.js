@@ -1305,6 +1305,78 @@
       + small('Poop:', br ? 'some breastfed babies go a few days without one now. Soft is what matters.' : 'often once or twice a day now. Soft is what matters.')
       + knowLine('He’s growing well and is mostly content between fussy spells.')
       + tough); };
+  // ---- Mock v5: Newborn told as a story, Outings' layout: a plan in order, what-ifs, good to know ----
+  const tl = (title, items) => { const c = YEAR_PALETTES[CAT]; return `<figure class="hub-figure hub-daymarks oa-timeline" style="--ink:${c.ink};--bg:${c.bg};--pale:${c.pale}"><b class="hub-fig-title">${F(title)}</b><ol class="hub-daymarks-list">${items.filter(Boolean).map(([when, icon, text]) => `<li><i>${hubArt(icon, CAT)}</i><time>${F(when)}</time><span>${F(text)}</span></li>`).join('')}</ol></figure>`; };
+  const ifs = items => h2('When things don’t go to plan') + steps(items.filter(Boolean).slice(0, 4), false);
+  const goodK = rows => { const r = rows.filter(Boolean).slice(0, 3); return r.length ? H().list('Good to know', r.map(([icon, title, sub]) => H().row({ icon, cat: CAT, title, sub }))) : ''; };
+  { const mfwOld = P.mfw; P.mfw = () => { if (stg() !== 0) return mfwOld(); const nurse = nurses(), pump = pumps(), fm = formulaFam(), b = isBreast(), bot = isBottle(), onlyP = pump && !nurse, c = C.pink;
+    const title = nurse && fm ? 'Nursing, plus formula top-ups' : nurse ? 'Get nursing off to a good start' : b ? 'Get pumping going' : 'Make and give bottles safely';
+    const feed = nurse ? [
+        ['Early cues', 'eye', 'Rooting, hands to mouth. Crying is a late cue, so calm him first.'],
+        ['Latch', 'heart', 'Nose to nipple. Wait for a wide mouth, then bring him to you.'],
+        ['When he slows', 'hand', 'Burp, then offer the other side.'],
+        fm && ['Still hungry?', 'bottle', 'Offer a small formula top-up, and pace it.'],
+        ['After', 'clock', 'Hold him upright for 20–30 minutes.'],
+        ['Next feed', 'clock', 'In about 2–3 hours, counted from the start of this one.']]
+      : [
+        ['Early cues', 'eye', 'Rooting, hands to mouth. Crying is a late cue, so calm him first.'],
+        fm ? ['Make the bottle', 'bowl', 'Water first, then level scoops, exactly as the label says.'] : ['Get the milk ready', 'snow', 'Fresh or thawed. Warm it in water, never the microwave.'],
+        ['Feed', 'bottle', 'Hold him fairly upright and pace the bottle, with pauses.'],
+        ['Every 2–3 oz', 'hand', 'Burp. Stop when he slows or turns away, even if milk is left.'],
+        onlyP ? ['Then pump', 'drop', 'About as often as he feeds, 8–12 times a day.'] : ['After', 'clock', 'Hold him upright for 20–30 minutes.'],
+        ['Next feed', 'clock', 'In about 2–3 hours, counted from the start of this one.']];
+    const weeks = b ? [
+        ['Days 1–2', 'drop', 'Small amounts of colostrum. It’s all he needs.'],
+        ['Days 2–5', 'heart', 'Your milk comes in. Full, tender breasts are normal.'],
+        ['About 2 weeks', 'smile', 'Back to birth weight.'],
+        ['Weeks 2–3', 'clock', 'A few extra-hungry days. Feeding more makes more milk.'],
+        ['Around 6 weeks', 'moon', 'Feeds get quicker and easier.']]
+      : [
+        ['First days', 'bottle', 'Small feeds, about 1–3 oz.'],
+        ['About 2 weeks', 'smile', 'Back to birth weight.'],
+        ['Weeks 2–3', 'clock', 'A few extra-hungry days. Follow his cues.'],
+        ['Around 6 weeks', 'moon', 'Fewer, bigger bottles.']];
+    return page(head('Making feeding work', title, 'The first weeks are when feeding gets set up. It takes practice, and help is easy to get.', c)
+      + tl('A feed, start to finish', feed)
+      + tl('Your first weeks', weeks)
+      + ifs([
+        nurse && ['heart', 'Nursing hurts', 'Break the seal with a clean finger and try again. Pain through the whole feed means it’s time for a lactation consultant.'],
+        ['moon', 'He’s too sleepy to feed', 'Undress him to his diaper or stroke his feet. Until he’s back to birth weight, wake him after about 3 hours.'],
+        b && ['drop', 'You’re very full', (nurse ? 'Nurse or hand-express' : 'Pump') + ' a little, then use a cold pack.'],
+        bot && ['bottle', 'He gulps or sputters', 'Tip the bottle lower, pause more, or try a slower nipple.']])
+      + goodK([
+        ['drop', 'Vitamin D', b ? 'Drops every day, from the first days.' : 'Drops every day, until he drinks about 32 oz a day.'],
+        nurse && fm ? ['heart', 'Protect your milk', 'Pumping after a top-up keeps your supply going.'] : bot ? ['snow', 'How long it lasts', fm ? 'Use a formula bottle within 2 hours, or 1 hour once he starts.' : 'Breast milk keeps 4 hours out and 4 days in the fridge.'] : null,
+        b ? ['hand', 'Help is covered', 'Most insurance covers a lactation consultant.'] : null])
+      + (nurse ? oneLink(['Latch and holds, with a video', 'Step by step, with pictures'], 'latch') : '')); }; }
+  { const afterOld = P.after; P.after = () => { if (stg() !== 0) return afterOld(); const bot = isBottle(), br = isBreast() && fd() === 'Breast milk', fmOnly = fd() === 'Formula', c = C.blue;
+    const poop = br ? 'Yellow and seedy' : fmOnly ? 'Tan, like peanut butter' : 'Yellow to tan';
+    return page(head('After a feed', 'Burping, spit-up and poop', 'Newborn tummies are noisy. Most of what you see after a feed is normal.', c)
+      + tl('After every feed', [
+        ['During', 'hand', bot && !isBreast() ? 'Burp every 2–3 oz: over your shoulder, sitting up, or tummy-down on your lap.' : 'Burp between sides: over your shoulder, sitting up, or tummy-down on your lap.'],
+        ['Right after', 'clock', 'Hold him upright for 20–30 minutes.'],
+        ['Spit-up', 'bottle', 'A little is normal, and it’s usually less than it looks.'],
+        ['Diaper', 'diaper', 'Wet diapers, and poop that changes through the first week.']])
+      + sstrip('Poop, the first week', [['diaper', 'Days 1–2', 'Black and sticky'], ['diaper', 'Days 3–4', 'Greenish'], ['diaper', 'By day 5', poop]])
+      + ifs([
+        ['bottle', 'Lots of spit-up', 'If he’s growing and has plenty of wet diapers, it’s normal. Crying or arching with it is worth a look in Tough feed.'],
+        ['drop', 'Gas', 'Bicycle his legs, or lay him tummy-down across your knees.'],
+        ['diaper', 'Grunting and going red', 'Normal while he poops, as long as it’s soft.'],
+        ['heart', 'Hiccups', 'Common and harmless. They stop on their own.']])
+      + goodK([['drop', 'Vitamin D', isBreast() ? 'Drops every day, from the first days.' : 'Drops every day, until he drinks about 32 oz a day.'], ['bottle', 'Spit-up or vomit?', 'Spit-up flows out gently. Vomit comes out with force.']])
+      + `<div class="hub-list" style="margin-top:14px">${guideRow('pink', 'eye', 'More than this?', 'Tough feed covers reflux, worrying poop, and crying that won’t settle', 'hard')}</div>`); }; }
+  { const feedsOld = P.feeds; P.feeds = () => { if (stg() !== 0) return feedsOld(); const nurse = nurses(), c = C.peach;
+    return page(head('Finding your rhythm', 'Feed often, and follow his cues', nurse ? '8–12 feeds a day is normal now. Feeding often is how he grows, and how your milk gets going.' : '6–10 bottles a day is normal now. Small, frequent feeds are how newborns eat.', c)
+      + tl('A newborn day', [
+        ['Morning', 'eye', 'Feed at early cues, about every 2–3 hours.'],
+        ['Afternoon', 'clock', 'Still often. Until he’s back to birth weight, wake him if it’s been about 3 hours.'],
+        ['Evening', 'moon', 'Often nonstop feeds for a few hours. That’s cluster feeding, and it’s normal.'],
+        ['Night', 'moon', 'Feeds keep going. Mixed-up days and nights are normal at first.']])
+      + ifs([
+        ['clock', 'Evenings of nonstop feeds', 'Normal, and it passes. Someone else can burp, change and settle him between feeds.'],
+        ['moon', 'Awake at night, sleepy all day', 'Bright light and play by day. Dim and quiet at night.'],
+        ['eye', 'Not sure if he’s hungry', 'If in doubt, offer a feed. Stop when he slows or turns away.']])
+      + goodK([['heart', 'Hunger cues', 'Early: rooting, hands to mouth. Late: crying, so calm him first.'], ['notepad', 'Tracking', 'A quick note of feeds and wet diapers helps in the first weeks. Stop when feeding feels settled.'], ['diaper', 'Getting enough', '6 or more wet diapers a day by day 6, and back to birth weight by about 2 weeks.']])); }; }
   const dirD0 = P.dirD; P.dirD = function (...a) { window.__fdPills = true; try { return dirD0.apply(this, a); } finally { window.__fdPills = false; } };
   const rnd = window.render;
   const curPage = () => { try { return (0, eval)('page'); } catch (e) { return ''; } };
