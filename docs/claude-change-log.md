@@ -2,6 +2,14 @@
 
 The original changes below were merged in pull request #1. The new pre-beta QA changes are documented in **`docs/beta-readiness-2026-10-22.md`**, with concrete findings, resulting behavior, verification and limits. Review the new PR diff against main rather than reimplementing either list from an older HTML export. Claude's main-branch copy updates through `6b02109a4fba5bdf8829db29f59c14057537ec85` are preserved.
 
+## Onboarding restyle and welcome copy (Nov 5, 2026)
+
+Merged from the onboarding-v1 preview (`js/welcome.js`, `css/welcome.css`).
+- Labels are sentence case and plum like every tab; both setup steps use Home's month-card blend (the milk step no longer takes Feeding's pink); the welcome line is Home's category line; the born-early box is a plain field.
+- Welcome: the baby sits beside the headline; the three points use the app's own pictures (book, clock, heart).
+- New welcome copy in active, conversational language: "Understand your baby, care for them with confidence, and enjoy every stage." Points: "Everything in one place" (answers based on what pediatricians recommend, rather than calling it "trusted"), "Know what's coming", "Made for your baby".
+- Tried and rejected: a growing-baby hero, live name and age, milk tiles, taped polaroids and a scrapbook-style page.
+
 ## Home cards and Timeline style (Nov 5, 2026)
 
 Merged from the home-v2 preview. Full rules, the card library and simulation results are in the project doc "ahead-home-cards"; styling is in the style guide.
