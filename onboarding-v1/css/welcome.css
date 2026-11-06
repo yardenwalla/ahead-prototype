@@ -65,3 +65,39 @@
 #main .aw-spectrum { gap: 0; height: 6px; border-radius: 3px; overflow: hidden }
 #main .aw-spectrum span { height: 6px; border-radius: 0 }
 #main.is-onboarding .form .checkbox { background: var(--white, #fff); border: 1px solid var(--line) }
+
+/* Nov 5: the memory book's charm. The welcome's eyebrow is handwritten like the book; the baby sits in a little stack of
+   taped polaroids beside the headline; the points use the app's own pictures; the setup steps get a small polaroid too. */
+#main .welcome.aw { position: relative }
+#main .aw-intro { height: auto; display: block; margin-top: 4px }
+#main .aw-intro .eyebrow { font-family: AheadHand, Caveat, cursive !important; font-size: 25px !important; font-weight: 600 !important; line-height: 1.1 !important; color: #7a4f6d !important }
+#main.is-onboarding .welcome h1 { margin-top: 10px; max-width: 66% }
+#main .aw-lead { margin-top: 14px }
+#main .aw-spectrum { margin: 20px 0 6px }
+#main .aw-point { padding: 14px 0 }
+#main .aw-point-icon { width: 40px; height: 40px; border-radius: 14px }
+#main .aw-point-icon svg { width: 22px !important; height: 22px !important }
+#main .aw-polar { position: absolute; right: -6px; top: 34px; width: 128px; height: 140px }
+#main .aw-polar > span { position: absolute; width: 104px; height: 114px; background: #fff; border-radius: 4px; box-shadow: 0 6px 16px rgba(120,80,70,.14) }
+#main .aw-p-back { right: 0; top: 18px; transform: rotate(10deg) }
+#main .aw-p-mid { right: 14px; top: 12px; transform: rotate(-9deg) }
+#main .aw-p-front { right: 8px; top: 6px; transform: rotate(3deg); padding: 9px 9px 24px; box-sizing: border-box }
+#main .aw-p-photo { display: grid; place-items: center; width: 100%; height: 100%; border-radius: 2px; overflow: hidden; background: linear-gradient(160deg, #fef2e8, #fdeef3 55%, #f3effc) }
+#main .aw-p-photo svg { width: 74%; height: auto }
+#main .aw-p-front i { position: absolute; top: -9px; left: 50%; width: 46px; height: 16px; transform: translateX(-50%) rotate(-3deg); border-radius: 2px; opacity: .92;
+  background-color: var(--tape, #f2b8c6); background-image: linear-gradient(90deg, rgba(255,255,255,.45) 50%, transparent 50%), linear-gradient(rgba(255,255,255,.45) 50%, transparent 50%); background-size: 6px 6px }
+#main .aw-setup-art { width: 92px !important; height: 92px !important; background: none !important; border-radius: 0 !important; display: block !important; position: relative }
+#main .aw-polar.is-small { position: absolute; right: -4px; top: -4px; width: 96px; height: 100px }
+#main .aw-polar.is-small > span { width: 76px; height: 84px }
+#main .aw-polar.is-small .aw-p-front { padding: 7px 7px 18px }
+#main .aw-polar.is-small .aw-p-front i { width: 36px; height: 13px; top: -7px }
+#main .aw-polar.is-small .aw-p-photo svg { width: 70%; height: auto }
+#main.is-onboarding .welcome h1 { font-size: 28px; max-width: 70%; margin-top: 8px }
+#main .aw-polar { right: -10px; top: 40px; transform: scale(.86); transform-origin: top right }
+#main .aw-setup-art { width: 80px !important; height: 84px !important }
+#main .aw-polar.is-small { right: -10px; top: -6px; transform: scale(.88); transform-origin: top right }
+#main .aw-setup-heading h1 { font-size: 25px }
+#main .aw-polar { top: 22px }
+#main .aw-lead { margin-top: 20px }
+#main .aw-setup-heading h1 { font-size: 24px }
+#main .aw-setup-heading { gap: 6px }
