@@ -1545,9 +1545,9 @@
     return page(head('Breastfeeding & pumping', 'Your milk is coming in', 'Milk supply builds over the first few days. Here’s what to expect, and how to make it more comfortable.', C.pink)
       + tabbed('#c46b8e', [
         ['Your milk', milkLine('Your milk, the first weeks', [['Days 1–2', 'Small amounts of colostrum'], ['Days 2–5', 'Milk comes in. Often feels full'], ['Weeks 1–2', 'Turns whiter'], ['6–12 weeks', 'Supply settles. You feel less full']])
+          + accs([['drop', 'How to tell if your supply is enough', 'Diapers and weight, not fullness', ['Wet diapers and weight gain tell you, not how full you feel.'], 'Fewer than 6 wet diapers a day, or slow weight gain.', '']])
           + two(['Normal fullness', 'Heavy and warm on days 2–5. Softens after a feed.'], ['Engorged', 'Hard, tight and sore. Hard for him to latch.', '#fdeee6', '#9a5a3c'])
           + h2('When you’re very full') + steps([['heart', 'Feed often', nurse ? 'Or hand-express a little first' : 'Pump on your usual schedule'], ['drop', 'Soften first', 'Express just enough to latch or pump comfortably'], ['snow', 'Cold after', 'A cold pack eases swelling']], true)
-          + accs([['drop', 'How to tell if your supply is enough', 'Diapers and weight, not fullness', ['Wet diapers and weight gain tell you, not how full you feel.'], 'Fewer than 6 wet diapers a day, or slow weight gain.', '']])
           + h2('Food and drink while making milk') + H().tiles([['Caffeine', 'Up to 300 mg a day', 'About 2–3 cups of coffee'], ['Alcohol', 'Best skipped for now', 'Later, wait 2+ hours after a drink'], ['Fish', '8–12 oz a week', 'Low-mercury, like salmon or shrimp'], ['Water', 'A glass each feed', 'Then drink to thirst']])],
         nurse && ['Latch & holds', h2('Latch, step by step') + hubEmbed('y--syZR0u1E', 'A good latch, step by step', 'Global Health Media')
           + steps([['eye', 'Nose to nipple', 'Tummy to you, head tipped back a little'], ['smile', 'Wait for a wide mouth', 'Like a big yawn'], ['heart', 'Bring him to you', 'Chin first, not you to him']], true)
