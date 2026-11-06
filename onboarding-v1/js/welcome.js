@@ -1,9 +1,9 @@
 /* Ahead · Onboarding, using the guide's shared palette and illustrations. */
 (function () {
   const POINTS = [
-    ['spark', 'Everything in one place', 'Sleep, feeding, development and everyday care, based on what pediatricians recommend.'],
-    ['rhythm', 'Heads-ups, right when you need them', 'What’s changing, what matters now, and what’s coming next.'],
-    ['dev', 'Made for your baby', 'Tailored to your baby’s age and stage, so you only see what’s relevant.']
+    ['spark', 'Everything in one place', 'Find answers on sleep, feeding and everyday care, all based on what pediatricians recommend.'],
+    ['rhythm', 'Know what’s coming', 'See what’s changing before it happens, so nothing catches you off guard.'],
+    ['dev', 'Made for your baby', 'See only what matters for your baby’s age and stage right now.']
   ];
   const POINT_ART = { spark: ['book', 'Development', '#efedff'], rhythm: ['clock', 'Sleep', '#edf2fe'], dev: ['heart', 'Feeding', '#fceef3'] };
   function welcomeHtml() {
