@@ -1700,10 +1700,11 @@
       + tabbed('#c27a52', [
         ['A day', h2('What a day of feeds looks like') + ribbon
           + small('This is an example, not a schedule.', 'He leads, and no two days look the same.')
-          + h2('How long, and when to wake him') + H().tiles([['How long', b && nurse ? '10–20 min a side' : '10–20 minutes', b && nurse ? 'At first. Quicker as he gets stronger' : 'Much faster can mean the flow is too fast'], ['Waking him', 'After about 3 hours', 'Until he’s back to birth weight']])
+          + h2('How long a feed takes') + H().tiles([[b && nurse ? 'Nursing' : 'A bottle', b && nurse ? '10–20 min a side' : '10–20 minutes', b && nurse ? 'At first. Quicker as he gets stronger' : 'Much faster can mean the flow is too fast'], ['When to stop', 'When he’s done', 'He slows, lets go or turns away']])
           + qa([
+            ['sun', 'Should I wake him to feed?', ['~Yes, if it’s been about 3 hours, until he’s back to birth weight. That’s usually around 2 weeks, and your pediatrician will tell you when you can stop.']],
             ['moon', 'How do I keep him awake during a feed?', ['~Newborns often doze off mid-feed.', { html: steps([['shirt', 'Undress him', 'Down to his diaper'], ['hand', 'Stroke his feet', 'Or his back'], ['diaper', 'Change his diaper', 'Halfway through'], b && nurse ? ['drop', 'Squeeze gently', 'Behind the nipple, to keep milk flowing'] : ['smile', 'Pause and burp', 'Then offer again']], false) }]],
-            ['sun', 'When can I stop waking him?', ['~Once he’s back to birth weight, usually around 2 weeks. Your pediatrician will tell you.']],
+            
             ['heart', 'Hungry, or sucking for comfort?', [{ html: two(['Hungry', 'Rooting and fists to his mouth, and it’s been a while since a feed. Not sure? Offer one.'], ['Sucking for comfort', 'He just fed. Try a cuddle or a pacifier' + (nurse ? ', once nursing is going well.' : '.'), '#f5efe3', '#8a6a2c']) }]]])],
         ['Cues & amounts', h2('How to tell he’s hungry') + cueStrip().replace(F('Hunger cues, early to late'), F('Early to late'))
           + h2('How to tell he’s done') + fullTiles()
