@@ -2403,6 +2403,68 @@
       + xKnow('Before giving anything', 'Ask your pediatrician before water, juice or anything else. Under 1 month old, call if he seems constipated.')
       + xNote('Straining and going red?', 'Normal too, as long as the poop is soft.'));
 
+  // ---- Calmer versions (Nov 7): Sleep-length pages (about 100 words). Fixes for when it's not going smoothly sit in one
+  // quiet two-column card (what you see → what to do) instead of a stack of notes. ----
+  const xFix = (label, rows) => { rows = rows.filter(Boolean); return rows.length ? `<style>#main .xfix{margin:0 0 12px;padding:12px 18px 6px;border-radius:20px;background:#fff;border:1px solid var(--line)}#main .xfix>b{display:block;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ss-ink);margin:2px 0 4px}#main .xfix>div{display:grid;grid-template-columns:42% 1fr;gap:12px;padding:9px 0;border-top:1px solid var(--line);font-size:14.5px;line-height:1.4}#main .xfix>b+div{border-top:0}#main .xfix>div>span:first-child{font-weight:600;color:var(--ink)}#main .xfix>div>span+span{color:#4c4757}</style><section class="xfix"><b>${F(label)}</b>${rows.map(([q, a]) => `<div><span>${F(q)}</span><span>${F(a)}</span></div>`).join('')}</section>` : ''; };
+  const latchVideo = () => `<p class="ss-small"><a href="https://www.youtube.com/watch?v=y--syZR0u1E" target="_blank" rel="noopener" style="color:var(--ss-ink);font-weight:600">${F('Watch a good latch')} ↗</a> ${F('A short video.')}</p>`;
+  P.x_day = (() => { const prev = P.x_day; return () => prev().replace(F('Count from the start of one feed to the start of the next.'), F('Count from the start of one feed to the next.')).replace(F('Some feeds come close together, some further apart. Both are normal.'), F('Some come close together, some further apart.')).replace(F('A quick note of feeds and diapers helps in the first weeks.'), F('A quick note of feeds and diapers helps at first.')).replace(F('Fewer, more predictable feeds by about 6 weeks, and a longer night stretch around 2–3 months.'), F('More predictable by about 6 weeks, and a longer night stretch around 2–3 months.')); })();
+  P.x_cues = () => xPage('feed', 'x_cues', 'Start at his early hunger cues', 'Feeding before he cries is easier for you both.',
+      cueStrip().replace(`<b class="hub-fig-title">${F('Hunger cues, early to late')}</b>`, '')
+      + xDo('What to do', ['Offer a feed at the first stirring or rooting.', 'Already crying? Calm him with a cuddle first.'])
+      + xKnow('Hungry, or wants comfort?', 'A while since his last feed? Likely hunger. Just fed? Try a cuddle' + (nurses() ? ', or a pacifier once nursing is going well.' : ' or a pacifier.')));
+  P.x_night = () => { const b = isBreast(), nurse = nurses();
+    return xPage('routine', 'x_night', 'At night, keep feeds quick and calm', 'Dim, quiet nights and bright days help him learn day from night.',
+      steps([['sun', 'By day', 'Bright, normal noise, play'], ['moon', 'At night', 'Dim, quiet, back down']], false)
+      + xDo('What to do', ['Keep lights low and voices quiet. No play.', 'Change his diaper only if it’s needed.', 'Until he’s back to birth weight, wake him if 3 hours pass.'])
+      + xKnow('Hard to wake?', 'Undress him to his diaper, stroke his feet, or change his diaper.')
+      + xNote('Worth a call:', 'too sleepy to feed most times.')); };
+  P.x_latch = () => xPage('feed', 'x_latch', 'A deep latch feels like a tug, not a pinch', 'Get comfortable first, with a pillow under him. Bring him to you, not you to him.',
+      kHolds() + xDo('Step by step', ['Nose to nipple, head and body in a line.', 'Wait for a wide mouth, like a yawn.', 'Bring him in chin first.'], true)
+      + xKnow('How you’ll know it’s right', 'Flared lips, long sucks with swallows, and a tug, not a pinch.')
+      + xFix('If it’s not going smoothly', [['Clicking or pinching', 'Break the seal with a finger, and try again.'], ['Gulping or coughing', 'Lean back, so he feeds against gravity.'], ['Too sleepy to latch', 'Hand express a few drops of colostrum onto a spoon.']])
+      + latchVideo() + xNote('Worth a call:', 'most feeds hurt. A lactation consultant can help, and check for tongue-tie.'));
+  P.x_burp = () => { const b = isBreast(), bot = isBottle(), nurse = nurses();
+    const holds = illGrid([[ILL.shoulder(PALT), 'Over your shoulder', 'Chin on a burp cloth'], [ILL.sitting(PALT), 'Sitting on your lap', 'Support chin and chest'], [ILL.tummy(PALT), 'Tummy-down', 'Across your lap']]);
+    return nurse ? xPage('feed', 'x_burp', 'When he slows, burp him and offer the other side', 'Often 10–20 minutes a side at first. Some feeds take one side, some both.',
+      holds + xDo('What to do', ['When sucking slows, burp him.', 'Then offer the other side.', 'Start the next feed on the last side.'])
+      + xFix('If it’s not going smoothly', [['Dozing off', 'Switch sides, or squeeze gently behind the nipple.'], ['Spit-up or hiccups', 'Common, and harmless.']])
+      + (!bot ? xNote('A first bottle?', 'Around 3–4 weeks, once nursing is going well.') : ''))
+    : xPage('feed', 'x_burp', 'Burp him every 2–3 oz, and at the end', 'Less air in means less fussing after.',
+      holds + xDo('What to do', ['Pause every 2–3 oz, and at the end.', 'Firm pats or slow circles on his back.', 'No burp after a minute or two? Carry on.'])
+      + xKnow('Good to know', 'A little spit-up and hiccups are common, and harmless.')); };
+  P.x_bottle = () => { const nurse = nurses(), fm = formulaFam(), top = nurse && fm;
+    return xPage('feed', 'x_bottle', top ? 'Top up with a small, paced bottle' : 'Pace each bottle, and stop when he’s done', top ? 'Only if he still seems hungry after both sides.' : 'Let him set the pace. A bottle often takes 10–20 minutes.',
+      (top ? H().tiles([['A top-up', '½–2 oz', 'After nursing'], ['Burp', 'Every 2–3 oz', 'And at the end']])
+        : H().tiles([['Day 1', '1–2 tsp', 'A feed'], ['Day 3', 'About 1 oz', 'A feed'], ['Week 1', '1½–2 oz', 'A feed'], ['Weeks 2–4', '2–4 oz', 'A feed']]))
+      + xDo('Step by step', ['Hold him semi-upright.', 'Touch his lip, and let him draw the nipple in.', 'Keep the bottle level, and pause every few sucks.', 'Stop when he’s done, even if milk is left.'], true)
+      + xFix('If it’s not going smoothly', [['Gulping or spilling', 'Try a slower nipple.'], ['Working hard, frustrated', 'Try a faster nipple.'], ['Falls asleep', 'Burp, then offer again.'], nurse && ['Won’t take a bottle', 'Have someone else offer it.']])
+      + xNote('Never prop a bottle.', 'Any bottle he takes well works, wide or narrow, with a slow-flow nipple.')); };
+  P.x_store = () => { const b = isBreast(), fm = formulaFam();
+    return xPage('prep', 'x_store', 'How long milk keeps', 'Once he starts a bottle, use it soon, then toss what’s left.',
+      (b ? (fm ? h2('Breast milk') : '') + storeTable([['Fresh', '4 hours', '4 days', '6 months'], ['Thawed', '1–2 hours', '24 hours', 'Never refreeze']]) : '')
+      + (fm ? (b ? h2('Formula') : '') + storeTable([['Made', '2 hours', '24 hours', 'Don’t freeze']]) : '')
+      + xDo('What to do', ['Once he starts, finish within ' + (fm && !b ? '1 hour' : !fm ? '2 hours' : '1 hour for formula, 2 for breast milk') + '.', b ? 'Freeze flat in 2–4 oz bags. Thaw in the fridge.' : '', 'Warm in a bowl of warm water. Never microwave.'])
+      + xNote('Out and about:', b ? 'a cooler with ice packs keeps breast milk 24 hours.' : 'carry powder and water separately.')); };
+  P.x_enough = (() => { const prev = P.x_enough; return () => { const b = isBreast(), h = prev(), i = h.indexOf('<section class="ss-do">'); if (i < 0) return h; const j = h.indexOf('</section>', h.lastIndexOf('<p class="ss-small">')) ;
+    const top = h.slice(0, i), tail = h.slice(h.indexOf('</section>', h.lastIndexOf('<p class="ss-small">')));
+    return top + xDo('What to do', ['First week: about one wet diaper per day of life.', 'From day 6: 6 or more a day' + (b ? ', and 3 or more poops.' : '.')])
+      + xKnow('How you’ll know it’s going well', 'Heavy diapers, and poop that turns from black to green to ' + (fd() === 'Formula' ? 'tan' : 'yellow') + ' by day 5.')
+      + xNote('Worth a call:', 'fewer wet diapers, dark urine, or black poop after day 5.') + tail; }; })();
+  P.x_weight = () => xPage('growth', 'x_weight', 'Back to birth weight by about 2 weeks', 'Some loss at first is normal. Your pediatrician checks at each visit.',
+      H().tiles([['First few days', 'Some loss', 'Up to about 10%'], ['By about 2 weeks', 'Back to birth weight', 'Then 5–7 oz a week']])
+      + xDo('What to do', ['Go to the early weight checks.', 'Feed on cue. No need to weigh at home.', 'Extra hungry for a few days? Often a growth spurt.'])
+      + xNote('Born early or slow to gain?', 'Follow your pediatrician’s feeding plan first.') + xNote('Worth a call:', 'not back to birth weight by 2 weeks.'));
+  P.x_poop = () => xTough('x_poop', 'Most poop colors are normal', 'Yellow, green or tan, seedy or with a little mucus. Straining and going red is fine if it’s soft.',
+      h2('Colors to call about') + illGrid([[ILL.poop('#e9e4d6'), 'White or pale', 'Call the same day'], [ILL.poop('#b3362c'), 'Red', 'Could be blood'], [ILL.poop('#2b2622'), 'Black', 'After the first few days']])
+      + xKnow('How often', isBreast() ? 'In the first weeks, usually 3 or more a day. After about 6 weeks, some go days between.' : 'Once a day or every few days can both be normal.')
+      + xFix('If he seems constipated', [['The sign', 'Hard, pebble-like poop, not how often.'], ['What helps', 'Bicycle his legs, or a warm bath and tummy rub.'], formulaFam() && ['Formula', 'Check it’s mixed exactly as the label says.']])
+      + xNote('Ask first', 'before water or juice. Under 1 month old, call if he seems constipated.'));
+  P.x_gas = () => xTough('x_gas', 'When he’s gassy or crying a lot', 'Some fussing every day is normal, often in the evening.',
+      steps([['hand', 'Burp mid-feed', 'Not just at the end'], ['roll', 'Bicycle his legs', 'Gently, on his back'], ['mat', 'Tummy time', 'Awake and watched']], false)
+      + xDo('Crying that won’t stop', ['Check: hungry, burp, diaper, too warm?', 'Swaddle, hold, shush and sway.', 'Need a break? Lay him on his back somewhere safe.'], true)
+      + xKnow('Never shake him', 'Even when you’re exhausted. Call someone to take over.')
+      + xNote('Gas drops?', 'Safe, but often don’t help. Ask before gripe water.') + xNote('Worth a call:', 'crying 3 or more hours a day, or grunting with every breath.'));
+
   // ---- Milk feeds (6 weeks–4 months), rebuilt on the Newborn model (Nov 5): four subject pages with tabs, grouped by moment. ----
   HEADART['Feeds & rhythm'] = () => ART.often(5);
   P.rhythm1 = () => { const nurse = nurses(), b = isBreast(), bot = isBottle(), fm = formulaFam();
