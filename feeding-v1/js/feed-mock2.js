@@ -2025,18 +2025,43 @@
   const kPage = (title, leadT, inner) => nbPage(title, title, leadT, C.pink, tabCss + illCss + irowsCss + inner);
   const kHolds = () => `<style>#main .fd-holds .fd-ill{display:flex!important;overflow-x:auto;scroll-snap-type:x mandatory;gap:10px;margin:0 -16px;padding:0 16px 4px!important;scroll-padding:0 16px;scrollbar-width:none}#main .fd-holds .fd-ill::-webkit-scrollbar{display:none}#main .fd-holds .fd-ill>figure{flex:0 0 46%;scroll-snap-align:start;margin:0}</style><div class="fd-holds">` + illGrid([[ILL.crossCradle(PAL), 'Cross-cradle', 'Easiest to learn on'], [ILL.football(PAL), 'Football', 'Good after a C-section'], [ILL.laidBack(PAL), 'Laid-back', 'Slows a fast flow'], [ILL.cradle(PAL), 'Cradle', 'Once latching is easy']]) + lead('Swipe for all four.') + `</div>`;
   // 1. Feeding routine
+  // Compact building blocks, same look as the app: small tinted icons, list rows in one card, thin folded questions.
+  const CCSS = `<style>
+#main .nbc .hub-hero,#main .nbc .dev-area-head{padding-top:16px!important;padding-bottom:16px!important;min-height:0!important}
+#main .nbc .dev-area-head-art{display:none!important}
+#main .nbc .hub-h2{margin:22px 0 4px}
+#main .nbc .c-lead{margin:0 0 10px;font-size:15px;line-height:1.45;color:var(--muted,#6b6578)}
+#main .nbc .c-list{list-style:none;margin:0 0 12px;padding:4px 14px;background:var(--card,#fff);border:1px solid var(--line,#efe8ea);border-radius:18px}
+#main .nbc .c-list li{display:grid;grid-template-columns:28px 1fr;gap:12px;align-items:start;padding:10px 0;border-top:1px solid var(--line,#f2ecee)}
+#main .nbc .c-list li:first-child{border-top:0}
+#main .nbc .c-list li>i{width:28px;height:28px;border-radius:9px;background:${C.pink[0]};color:${C.pink[1]};display:grid;place-items:center;font-style:normal;font-size:13px;font-weight:700;padding:5px;box-sizing:border-box}
+#main .nbc .c-list li>i svg{width:18px;height:18px}
+#main .nbc .c-list b{display:block;font-size:15px;font-weight:600;line-height:1.35}
+#main .nbc .c-list small{display:block;font-size:13.5px;line-height:1.4;color:var(--muted,#6b6578);margin-top:1px}
+#main .nbc .fd-acc{margin:0;border-radius:0;border:0;border-bottom:1px solid var(--line,#efe8ea);background:none;box-shadow:none}
+#main .nbc .fd-acc summary{padding:13px 2px!important}
+#main .nbc .fd-acc .fd-acc-ico{display:none!important}
+#main .nbc .fd-acc summary b{font-size:15.5px}
+#main .nbc .fd-acc-body{padding:0 2px 12px!important}
+#main .nbc .hub-tiles{gap:8px}
+</style>`;
+  const cLead = t => `<p class="c-lead">${F(t)}</p>`;
+  const cList = (xs, numbered) => `<ul class="c-list">${xs.filter(Boolean).map((x, i) => `<li><i>${numbered ? i + 1 : hubArt(x[0], CAT)}</i><span><b>${F(numbered ? x[0] : x[1])}</b>${(numbered ? x[1] : x[2]) ? `<small>${F(numbered ? x[1] : x[2])}</small>` : ''}</span></li>`).join('')}</ul>`;
+  const cPage = (ctx, title, leadT, inner) => `<div class="nbc">` + nbPage(ctx, title, leadT, C.pink, tabCss + illCss + irowsCss + CCSS + inner) + `</div>`;
+
   P.nb_routine = () => { const nurse = nurses(), b = isBreast(), bot = isBottle(), fm = formulaFam();
     const dayHtml = (P.day() || ''), k0 = dayHtml.indexOf('<div class="hub-card" style="padding:14px 14px 8px">'), e0 = k0 >= 0 ? dayHtml.indexOf('<figure', k0) : -1, ribbon = k0 >= 0 && e0 > k0 ? dayHtml.slice(k0, e0) : '';
-    return kPage('Feeding routine', 'What feeding looks like now, what might surprise you, and how to make it easier.',
-      h2('Your feeding rhythm') + H().tiles([['Feeds a day', b ? '8–12' : '6–10', 'Day and night'], ['How often', b ? 'Every 2–3 hours' : 'Every 2–4 hours', 'From the start of one feed'], bot && [nurse && fm ? 'Top-ups' : 'Per bottle', nurse && fm ? '1–2 oz' : '1–3 oz', nurse && fm ? 'Only if he’s still hungry' : 'At first, slowly more'], ['Led by', 'His hunger cues', 'Not an exact schedule']].filter(Boolean))
-      + h2('A typical day') + ribbon + small('An example, not a schedule.', 'Every baby’s day looks a little different.')
-      + kCard('heart', 'Know when he’s hungry', cueStrip().replace(F('Hunger cues, early to late'), F('Early to late')) + two(['Hungry', 'Rooting and fists to his mouth, and it’s been a while. Not sure? Offer a feed.'], ['Comfort', 'He just fed. A cuddle or a pacifier' + (nurse ? ', once nursing is going well,' : '') + ' may settle him.', '#f5efe3', '#8a6a2c']))
-      + kCard('moon', 'Some newborns need waking', kP('Until he’s back to birth weight, your pediatrician may recommend waking him for a feed about every 3 hours.') + kOl([['Undress him to his diaper'], ['Gently stroke his feet or back'], ['Change his diaper midway'], b && nurse ? ['Use breast compressions'] : ['Pause, burp, then offer again']], 'Try this') + kMute('Follow his own feeding plan, especially if he was born early or is gaining slowly.'))
-      + kCard('sun', 'Evenings can get intense', kP('He might want to feed again and again for a few hours. That’s cluster feeding, and it’s common.' + (b ? ' It doesn’t mean you’re low on milk.' : ''))
-        + hubStageStrip({ title: 'A typical evening', items: [['clock', 'Late afternoon', 'Feeds bunch up'], ['moon', 'Evening', 'Frequent feeds'], ['smile', 'Later', 'Often a longer rest']], cat: CAT })
-        + kQ('Four ways to make nights easier', kOl([[b ? 'Switch sides often' : 'Offer smaller bottles', b ? 'Keeps milk flowing when he slows' : 'More often, not one big one'], ['Change first', 'Before the feed, so he stays sleepy after'], ['Keep it dim and quiet', 'Save talking and play for the day'], ['Take turns', 'So each of you gets a longer stretch']])))
-      + h2('It won’t always be this frequent') + hubAgeTiles({ title: '', items: [['Around 6 weeks', 'Fussy evenings peak', 'Then ease'], ['6–8 weeks', 'Cluster feeding eases', 'Feeds spread out'], ['2–3 months', 'A longer stretch', 'For many babies']], cat: CAT })
-      + kQs('Common questions', [['Days and nights mixed up?', 'Keep days bright and nights quiet and boring. It improves over a few weeks.'], ['Should I track feeds?', 'A short-term note of feeds and diapers helps at first. Stop once things feel settled, unless your pediatrician asks you to keep going.']])); };
+    return cPage('Feeding routine', 'Feeding routine', 'What feeding looks like now, what might surprise you, and how to make it easier.',
+      h2('Your feeding rhythm') + H().tiles([['Feeds a day', b ? '8–12' : '6–10', 'Day and night'], ['How often', b ? 'Every 2–3 hrs' : 'Every 2–4 hrs', 'From the start of one feed']])
+      + ribbon + cLead('An example, not a schedule. Follow his hunger cues.' + (bot ? (nurse && fm ? ' Top-ups are small, often 1–2 oz.' : ' Bottles start around 1–3 oz.') : ''))
+      + h2('Know when he’s hungry') + cLead('Feed at the early signs. Crying is a late sign, so calm him first.')
+      + cList([['eye', 'Early', 'Stirring, mouth opening, turning to look'], ['hand', 'Active', 'Rooting, fists to his mouth, wriggling'], ['heart', 'Late', 'Crying']])
+      + h2('Some newborns need waking') + cLead('Until he’s back to birth weight, your pediatrician may suggest waking him about every 3 hours. Try:')
+      + cList([['Undress him to his diaper'], ['Gently stroke his feet or back'], ['Change his diaper midway'], [b && nurse ? 'Use breast compressions' : 'Pause, burp, then offer again']], true)
+      + h2('Evenings can get intense') + cLead('Feeding again and again for a few hours is cluster feeding. It’s common' + (b ? ', and it doesn’t mean you’re low on milk.' : '.'))
+      + cList([[b ? 'roll' : 'bottle', b ? 'Switch sides often' : 'Smaller bottles, more often', b ? 'Keeps milk flowing when he slows' : 'Instead of one big one'], ['diaper', 'Change first', 'Before the feed, so he stays sleepy after'], ['moon', 'Keep nights dim and quiet', 'Save talking and play for the day'], ['heart', 'Take turns', 'So each of you gets a longer stretch']])
+      + h2('It won’t always be this frequent') + cList([['clock', 'Around 6 weeks', 'Fussy evenings peak, then ease'], ['moon', '6–8 weeks', 'Cluster feeding eases'], ['smile', '2–3 months', 'Many babies sleep a longer stretch']])
+      + h2('Common questions') + accs([['eye', 'Hungry, or wants comfort?', '', ['~If it’s been a while, offer a feed. If he just ate, a cuddle or a pacifier' + (nurse ? ' (once nursing is going well)' : '') + ' may settle him.'], '', ''], ['eye', 'Days and nights mixed up?', '', ['~Keep days bright and nights quiet and boring. It improves over a few weeks.'], '', ''], ['eye', 'Should I track feeds?', '', ['~A short note of feeds and diapers helps at first. Stop once things feel settled, unless your pediatrician asks you to keep going.'], '', '']])); };
 
   // 2. Feeding skills
   P.nb_skills = () => { const nurse = nurses(), bot = isBottle(), fm = formulaFam(), b = isBreast();
