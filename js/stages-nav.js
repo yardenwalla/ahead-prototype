@@ -20,7 +20,7 @@
   // One line per stage: what changes there. Kept to what each stage page already says.
   const ONE = {
     Sleep: ['Short sleeps around the clock, waking to feed', 'Days and nights sort out, and one sleep stretches longer', 'Naps settle into set times, with a regular bedtime', 'A morning and an afternoon nap, and longer nights'],
-    Feeding: ['Breast milk or formula is everything Maya needs', 'Watching for readiness signs and getting set up', 'First tastes, then textures, then three meals a day'],
+    Feeding: ['Lots of feeds, day and night, while Maya learns to eat', 'Feeds get quicker and further apart', 'Milk is still everything, and the signs for solids show up', 'First tastes, textures and lots of mess', 'Three meals a day, and milk still matters'],
     Safety: ['Car seat, crib and changing spot, set up once', 'Swaddle off, and small things off the floor', 'Gates, locks and covers before Maya moves', 'Furniture anchored, and water and the stove out of reach'],
     Development: ['First looks and smiles', 'Smiles, little sounds and swiping at toys', 'Reaching, laughing and rolling', 'Sitting up, babbling and finding things', 'Waving, copying and pulling up'],
     'Daily rhythm': ['The cord, diapers and first sponge baths', 'Tub baths start, and care settles into a rhythm', 'Drool, teething and more fun at bath time', 'Brushing starts with the first tooth'],
