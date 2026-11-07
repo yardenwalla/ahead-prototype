@@ -87,7 +87,7 @@
       solidsNoAt: st.solidsNo ? daysSince(st.solidsNo) : null,
       tooth: a.tooth === 'Yes' ? true : st.toothNo ? false : null, toothAt: st.toothAt ? daysSince(st.toothAt) : null, toothNoAt: st.toothNo ? daysSince(st.toothNo) : null,
       naps: a.twoNaps === 'Yes' ? 2 : a.twoNaps === 'Stay' ? 3 : null, napsAt: st.napsAt ? daysSince(st.napsAt) : null,
-      opened: st.opened || {}, seen: st.seen || {}, snooze: st.snooze || {}, views: st.views || {}, lastNewAt: st.lastNewAt || 0, firstDay: st.firstDay || iso(NOW), answeredAt: st.answeredAt || 0, q: typeof homeQuestion === 'function' ? homeQuestion() : null
+      opened: st.opened || {}, seen: st.seen || {}, snooze: st.snooze || {}, views: st.views || {}, lastNewAt: st.lastNewAt || 0, firstDay: st.firstDay || iso(NOW), answeredAt: st.answeredAt || 0, q: !peeking && typeof homeQuestion === 'function' ? homeQuestion() : null
     };
   }
   // Pages a parent has opened (only the few that unlock a Home card), and whether Childcare has a plan.
@@ -314,6 +314,7 @@
   const forCard = (c, s) => (s.dAdj != null && !BIRTH_AGE(c)) ? at(s, s.dAdj) : s;
 
   /* ---------- picking ---------- */
+  let peeking = false;   // working out Home's cards before its question is chosen
   const KEY = (c, s) => c.key ? c.key(s) : c.id;
   function wasTrue(c, s, within, step) {
     for (let back = step; back <= within; back += step) { const d = s.d - back; if (d < 0) break; try { if (c.show(at(s, d))) return true; } catch (e) {} }
@@ -468,12 +469,28 @@
       + `<div class="dev-area-head ss-head"><p class="hub-context">${esc(P0.ctx)}</p><h1>${esc(P0.title)}</h1></div><section class="ss-moment"><p class="ss-what">${esc(w(s, P0.what))}</p><section class="ss-do"><b>What to do</b><p>${esc(w(s, P0.doIt))}</p></section>${k(P0.know)}${k(P0.know2)}</section></div>`;
   }
   // Home asks at most one question a week, so it never feels like a form. The missed-checkup question is separate.
+  // Only when it's needed. Questions whose answer brings time-sensitive guidance can ask any week: crawling and
+  // pulling up (babyproofing, the crib mattress), solids starting (peanut, egg, honey, choking foods), and the milk a
+  // parent skipped at setup. Nap and next-food-step questions wait for a visit where Home has nothing new to show.
+  const SAFETY_Q = ['crawl', 'stand', 'food', 'milk'];
+  function newOnHome() {
+    peeking = true;
+    try { const s = state(), p = pick(s), today = iso(NOW); return [...p.now, ...p.soon].some(c => s.seen[c.id] == null || iso(new Date(s.seen[c.id])) === today); }
+    catch (e) { return false; } finally { peeking = false; }
+  }
   if (typeof window.homeQuestion === 'function') {
     const baseQ = window.homeQuestion;
     window.homeQuestion = homeQuestion = function () {
-      const k = baseQ(); if (!k) return k;
       const key = 'ahead-home2-lastq:' + journeyKey();
       let last = null; try { last = JSON.parse(localStorage.getItem(key)); } catch (e) {}
+      const up = last && NOW.getTime() - last.at < 7 * DAY;   // a question already showing this week stays put
+      const next = (typeof homeQuestionQueue === 'function' ? homeQuestionQueue() : [])[0];
+      if (!up && next && !SAFETY_Q.includes(next) && newOnHome()) return null;
+      // "Mattress down" comes before the question about pulling up, never hidden behind it.
+      const standWaits = () => { const st = store(); return !(st.seen || {})['stand-soon'] && !(st.opened || {})['stand-soon']; };
+      if (!up && next === 'stand' && standWaits()) return null;
+      const k = baseQ(); if (!k) return k;
+      if (k === 'stand' && !(up && last.k === 'stand') && standWaits()) return null;
       if (last && last.k !== k && NOW.getTime() - last.at < 7 * DAY) return null;
       if (!last || last.k !== k) { try { localStorage.setItem(key, JSON.stringify({ k, at: NOW.getTime() })); } catch (e) {} }
       return k;
