@@ -37,6 +37,10 @@
     // cards once it knows. Solids come first: a late start matters more.
     if (a >= 8 && answers.pullUp !== 'Yes' && (answers.crawl === 'Yes' || a >= 9) && due(d, 'stand', ['Not yet'])) out.push('stand');
     if (moving && a < 8) out.push('crawl');
+    // First teeth come anywhere from 4 to 12 months. From 6, when they're most common, Home can ask; a "not yet" rests
+    // 6 weeks, and it stops at the first birthday. It's never urgent, so Home only asks on a week with nothing new.
+    const lt = d.last.tooth;
+    if (a >= 6 && a < 12 && answers.tooth !== 'Yes' && !(d.skip.tooth && nowMs() - d.skip.tooth < 42 * DAY) && (!lt || (lt.value === 'Not yet' && nowMs() - lt.at >= 42 * DAY))) out.push('tooth');
     // Sleep (Rule 1 and Rule 3): from 6 months, while the guide is on Three naps, ask about the late catnap.
     // A "not yet" (or a Change back to Three naps) is asked again a month later.
     const sa = typeof hubAgeFor === 'function' ? hubAgeFor('care', actualMonth()) : a;
@@ -116,11 +120,12 @@
   // Every Home answer says what changed and offers the page, so the tap never feels like it went nowhere.
   const confirmAnswer = (key, value) => {
     if (typeof hubToast !== 'function') return;
-    const cat = { food: 'Feeding', naps: 'Sleep', crawl: 'Safety', stand: 'Safety', milk: 'Feeding' }[key] || (key.startsWith('outgrown:') ? key.slice(9) : null);
+    const cat = { food: 'Feeding', naps: 'Sleep', crawl: 'Safety', stand: 'Safety', tooth: 'Daily rhythm', milk: 'Feeding' }[key] || (key.startsWith('outgrown:') ? key.slice(9) : null);
     if (!cat) return;
     const label = cat === 'Daily rhythm' ? 'Everyday care' : cat;
     const body = key === 'food' ? (value === 'starting' ? 'Feeding now shows first tastes.' : value === 'while' ? `Feeding now matches where ${name()} is with solids.` : 'Feeding shows how to get ready for solids.')
       : key === 'crawl' ? (value === 'Yes' ? `Safety now covers a baby on the move.` : `We’ll ask again in a few weeks.`)
+      : key === 'tooth' ? (value === 'Yes' ? `Everyday care now shows brushing first teeth.` : `We’ll check back in a few weeks.`)
       : key === 'stand' ? (value === 'Yes' ? `Safety now covers a baby who stands.` : `We’ll ask again in a few weeks.`)
       : key === 'naps' ? (value === 'Yes' ? 'Sleep now shows two naps.' : 'Sleep stays on three naps for now.')
       : `${label} now matches what you told us.`;
@@ -141,6 +146,7 @@
     }
     // Apply the answer first (the app checks the question is still showing), then remember when it was asked.
     if (key === 'naps') { recordCheckin(key, value); return setAnswer('twoNaps', value === 'Yes' ? 'Yes' : 'Not yet'); }
+    if (key === 'tooth') { if (!['Yes', 'Not yet'].includes(value)) return; recordCheckin(key, value); return typeof home2Tooth === 'function' ? home2Tooth(value === 'Yes') : setAnswer('tooth', value); }
     const y = window.scrollY;
     baseAnswer(key, value);
     recordCheckin(key, value);
@@ -157,6 +163,7 @@
       const o = (stageOutgrown() || []).find(x => 'outgrown:' + x.cat === key); if (!o) return '';
       return `<section class="connected-checkin"><div><h2>${o.question}</h2><button class="connected-skip" onclick="skipHomeQuestion()">Skip</button></div><p>${o.why}</p><div class="connected-checkin-choices"><button onclick="answerHomeQuestion('${key}','Yes')">Yes, move on</button><button onclick="answerHomeQuestion('${key}','Not yet')">Not yet</button></div></section>`;
     }
+    if (key === 'tooth') return `<section class="connected-checkin"><div><h2>Any teeth yet for ${name()}?</h2><button class="connected-skip" onclick="skipHomeQuestion()">Skip</button></div><p>Your answer updates tooth care in Everyday care.</p><div class="connected-checkin-choices"><button onclick="answerHomeQuestion('tooth','Yes')">Yes</button><button onclick="answerHomeQuestion('tooth','Not yet')">Not yet</button></div></section>`;
     if (key !== 'naps') return baseLive().replace('This changes which safety setup to highlight.', 'Your answer updates Sleep and Safety.');
     return `<section class="connected-checkin"><div><h2>Is ${name()} skipping the late catnap most days?</h2><button class="connected-skip" onclick="skipHomeQuestion()">Skip</button></div><p>Your answer updates the nap guidance.</p><div class="connected-checkin-choices"><button onclick="answerHomeQuestion('naps','Yes')">Yes</button><button onclick="answerHomeQuestion('naps','Not yet')">Not yet</button></div></section>`;
   };

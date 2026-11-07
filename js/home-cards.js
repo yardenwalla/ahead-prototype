@@ -221,7 +221,10 @@
   card('teething', 'Daily rhythm', 4, s => s.d >= 150 && s.d <= 240 && s.tooth !== true, 'Teething can start weeks before a tooth', 'Drool and chewing often start weeks before the first tooth, usually between 6 and 10 months. A chilled (not frozen) teething ring helps.',
     Object.assign({ topic: 'tooth', catchup: 240, go: "openPage('chg:Daily rhythm:d:gums')" }, ask([['Has a tooth', "home2Tooth(true)"], ['Not yet', "home2Tooth(false)"]])));
   card('first-tooth', 'Daily rhythm', 3, s => s.tooth === true && s.toothAt != null && s.toothAt <= 28, 'Teeth are here: time to brush', 'Brush twice a day with a rice-grain smear of fluoride toothpaste, the last time after the bedtime feed.', { fromAnswer: 1, go: "openPage('chg:Daily rhythm:d:teeth')" });
-  card('dentist', 'Health', 4, s => s.tooth === true && ((opened(s, 'first-tooth') && s.toothAt >= 10 && s.toothAt <= 60) || s.d >= 320), 'The first dentist visit comes early', 'Book it once the first tooth is in, and by {his} first birthday. They’ll check {his} teeth and show you how to brush.', { go: "openPage('chg:Daily rhythm:d:teeth')" });
+  // From when first teeth are most common: brushing starts with the first tooth, so the card is true either way.
+  card('tooth-soon', 'Daily rhythm', 4, s => s.d >= 183 && s.d <= 300 && s.tooth !== true, 'First tooth in, or on the way?', 'Brushing starts with the first tooth: a rice-grain smear of fluoride toothpaste, twice a day.', { topic: 'tooth', go: "openPage('chg:Daily rhythm:d:t:teeth:3')" });
+  // Every baby's first dentist visit is due by 1, tooth or not.
+  card('dentist', 'Health', 4, s => (s.tooth === true && opened(s, 'first-tooth') && s.toothAt >= 10 && s.toothAt <= 60) || (s.d >= 320 && s.d <= 365), 'The first dentist visit comes early', 'Book it once the first tooth is in, and by {his} first birthday. They’ll check {his} teeth and show you how to brush.', { go: "openPage('chg:Daily rhythm:d:teeth')" });
   // Round 2 (Nov 7): timely discoveries, new options and cards from what the parent does in Ahead.
   card('solids-approach', 'Feeding', 4, s => s.d >= 160 && s.d <= 190 && s.solids !== 'started', 'How to start solids is your call', 'Spoon-feeding, soft finger foods or a bit of both all work, so pick what suits your family.', { go: "openPage('chg:Feeding:d:approach')" });
   card('sleep-training', 'Sleep', 4, s => s.d >= 125 && s.d <= 180, 'Sleep training is an option, not a must', 'Some families try it from about 4–6 months, and many never do. Either way is fine.', { go: "openPage('sleep-stage:prepare')" });
@@ -328,8 +331,13 @@
   function pick(s) {
     const first = s.firstDay === iso(NOW);
     // While Home's one question is about a topic, cards on that topic wait for the answer.
-    const qTopic = s.q === 'movement' || s.q === 'crawl' || s.q === 'stand' ? 'move' : s.q === 'food' || s.q === 'food-progress' ? 'food' : s.q === 'naps' ? 'naps' : null;
-    const live = C.filter(c => {
+    const qTopic = qTopicOf(s);
+    const live = C.filter(c => isLive(c, s, first, qTopic));
+    return arrange(s, live, first);
+  }
+  const qTopicOf = s => s.q === 'movement' || s.q === 'crawl' || s.q === 'stand' ? 'move' : s.q === 'food' || s.q === 'food-progress' ? 'food' : s.q === 'naps' ? 'naps' : s.q === 'tooth' ? 'tooth' : null;
+  function isLive(c, s, first, qTopic) {
+    {
       if (c.once !== false && s.opened[KEY(c, s)] != null) return false;
       const sk = s.snooze[KEY(c, s)]; if (sk != null && Date.now() - sk < 21 * DAY) return false;
       const vw = s.views[KEY(c, s)]; if (vw && vw.n >= (c.must ? 1e9 : 2)) return false;
@@ -341,7 +349,9 @@
       if (ok) return true;
       if (c.must && s.seen[c.id] == null && wasTrue(c, sc, c.grace != null ? c.grace : 7, 1)) return true;      // waits briefly for the parent, never past its moment
       return !!(first && c.catchup && sc.d <= c.catchup && wasTrue(c, sc, 400, 7));
-    });
+    }
+  }
+  function arrange(s, live, first) {
     const leaving = c => { const sc = forCard(c, s); try { return !c.show(at(sc, sc.d + 4)); } catch (e) { return true; } };
     // A card the parent just unlocked with an answer leads, so the answer visibly does something.
     const justAnswered = Date.now() - s.answeredAt < 12 * 3600e3, pri = c => c.fromAnswer && justAnswered ? 0 : c.pri;
@@ -536,7 +546,31 @@
     const st = store(); st.seen = st.seen || {}; st.firstDay = st.firstDay || iso(NOW); st.views = st.views || {}; const today = iso(NOW);
     [...now, ...soon].forEach(c => { if (st.seen[c.id] == null) { st.seen[c.id] = Date.now(); st.lastNewAt = Date.now(); } const k = KEY(c, forCard(c, s)), v = st.views[k] || { n: 0, last: '' }; if (v.last !== today) st.views[k] = { n: v.n + 1, last: today }; }); save(st);
   }
-  window.home2RecordShown = () => { const s = state(), r = pick(s); recordShown(s, r.now, r.soon); };
+  // Home's set is fixed for the day: dismissing or opening a card doesn't pull in the next one until tomorrow.
+  // The exception is a card the parent just unlocked by answering Home's question.
+  function forToday(s, r) {
+    const st = store(), today = iso(NOW);
+    const first = s.firstDay === today, qt = qTopicOf(s), byId = id => C.find(c => c.id === id);
+    if (!st.today || st.today.date !== today) {
+      // A card brought forward on a quiet week isn't live yet: remember it, so it stays for the day.
+      st.today = { date: today, now: r.now.map(c => c.id), soon: r.soon.map(c => c.id), ahead: r.soon.filter(c => !isLive(c, s, first, qt)).map(c => c.id) }; save(st); return r;
+    }
+    // Same day: the cards chosen this morning, minus any opened or dismissed, plus a card an answer just unlocked.
+    const ahead = new Set(st.today.ahead || []);
+    const keep = ids => (ids || []).map(byId).filter(c => c && (isLive(c, s, first, qt) || (ahead.has(c.id) && s.opened[KEY(c, s)] == null)));
+    const out = { now: keep(st.today.now), soon: keep(st.today.soon) };
+    const justAnswered = Date.now() - s.answeredAt < 12 * 3600e3, had = new Set([...(st.today.now || []), ...(st.today.soon || [])]);
+    const fresh = justAnswered ? [...r.now, ...r.soon].filter(c => (c.fromAnswer || c.must) && !had.has(c.id)) : [];
+    if (fresh.length) { out.now = fresh.concat(out.now); st.today.now = fresh.map(c => c.id).concat(st.today.now || []); save(st); }
+    out.cleared = had.size > 0 && !out.now.length && !out.soon.length;
+    return out;
+  }
+  // Answering Home's question counts as "just answered", so the card it unlocks shows on this visit.
+  if (typeof window.answerHomeQuestion === 'function') {
+    const baseAnswerQ = window.answerHomeQuestion;
+    window.answerHomeQuestion = answerHomeQuestion = function () { const st = store(); st.answeredAt = Date.now(); save(st); return baseAnswerQ.apply(this, arguments); };
+  }
+  window.home2RecordShown = () => { const s = state(), r = forToday(s, pick(s)); recordShown(s, r.now, r.soon); };
   function paint() {
     const main = document.getElementById('main'); if (!main) return;
     settlePending();
@@ -554,7 +588,7 @@
       }
     } catch (e) {}
     // Home asks at most one question, in its own slot at the top; the cards below are notifications only.
-    const s = state(), { now, soon } = pick(s);
+    const s = state(), r = forToday(s, pick(s)), { now, soon } = r;
     // remember what was shown, for "waits until seen"
     recordShown(s, now, soon);
     const summary = main.querySelector('.connected-summary');
@@ -565,12 +599,12 @@
     main.querySelectorAll('section.connected-ahead:not(.brief-preview)').forEach(e => e.remove());
     const close = main.querySelector('.brief-close');
     const aheadHtml = soon.length ? `<section class="connected-ahead" aria-label="Coming up"><div class="connected-section-heading"><h2>Coming up</h2></div><div class="connected-ahead-list">${soon.map(c => row(c, s)).join('')}</div></section>` : '';
-    if (close) { close.insertAdjacentHTML('beforebegin', aheadHtml); close.textContent = !now.length && !soon.length ? `Nothing new this week. ${s.n}’s right on track.` : 'That’s everything for now.'; }
+    if (close) { close.insertAdjacentHTML('beforebegin', aheadHtml); close.textContent = r.cleared ? 'You’re all caught up for today.' : !now.length && !soon.length ? `Nothing new this week. ${s.n}’s right on track.` : 'That’s everything for today.'; }
   }
 
   // For checks
   window.home2Audit = () => {
-    const s = state(), r = pick(s);
+    const s = state(), r = forToday(s, pick(s));
     const out = (c, slot) => { const sc = forCard(c, s), go = typeof c.go === 'function' ? c.go(sc) : c.go;
       return { id: c.id, key: KEY(c, sc), slot, cat: c.cat, pri: c.pri, must: !!c.must, safety: !!c.safety, fromAnswer: !!c.fromAnswer, done: !!c.done,
         title: w(sc, T(c.title)(sc)), body: w(sc, T(c.body)(sc)), go, ask: (c.ask || []).map(([label, js]) => ({ label, js })) }; };

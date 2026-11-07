@@ -1,4 +1,4 @@
-/* Ahead · Home card copy (v9). Shared with the card simulator: one source for every word on a Home card.
+/* Ahead · Home card copy (v10). Shared with the card simulator: one source for every word on a Home card.
    One card, one thought: a card says one thing and opens the one page about it. */
 window.HOME_COPY = {
 "flying": "Sucking helps {his} ears adjust to the pressure change.",
@@ -131,7 +131,9 @@ window.HOME_COPY = {
 "first-tooth:t": "Brushing starts with the first tooth",
 "first-tooth": "A rice-grain smear of fluoride toothpaste, twice a day, is all {he} {needs|need}.",
 "dentist:t": "The first dentist visit comes early",
-"dentist": "Book it once the first tooth is in, and by {his} first birthday.",
+"dentist": "Book it for when the first tooth comes in, or by {his} first birthday at the latest.",
+"tooth-soon:t": "First tooth in, or on the way?",
+"tooth-soon": "Brushing starts with the first tooth: a rice-grain smear of fluoride toothpaste, twice a day.",
 "checkup:t": "The {visit} checkup is this week",
 "checkup:t-soon": "The {visit} checkup is coming up",
 "checkup:first-week": "They’ll check {his} weight and look for jaundice, so bring any feeding questions.",

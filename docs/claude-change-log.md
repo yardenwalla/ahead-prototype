@@ -212,3 +212,12 @@ From the round 2 audit (doc: "Ahead Home audit, round 2"). Files: `js/home-cards
 - Home's question only when it's needed: crawling, pulling up, solids starting and a skipped milk answer can ask any week, since their guidance can't wait. The nap question waits for a visit with nothing new on Home. New "Is [name] pulling up to stand?" from 8 months for crawlers (9 for everyone), asked only after "Mattress down" has shown, so it never hides that card. Weekly visits with a question: 18% (was 16%); nap questions fell from 322 to 124.
 - Results: weekly visits with something new 84% (was 71%); month 11 is 68% (55% before the standing question), every-2-weeks visits 99% (was 92%), no screen with two caution cards (was 8%), longest quiet stretch 4 weeks (was 6). Cards shown after their window fell from 2,906 to 1,068, and what's left is preemies on adjusted age and useful first-visit catch-ups.
 - Not yet built: the optional setup question for late joiners (waiting on Yarden), daycare prep (needs a start date in Childcare), monthly-visitor freshness.
+
+## Home: first teeth (2026-11-07, preview)
+Files: `js/home-cards.js`, `js/home-copy.js` (v10), `js/stages.js`.
+- New card "First tooth in, or on the way?" (brushing starts with the first tooth), from 6 months, when first teeth are most common, through 10 months. It's a good-to-know card, so it lands on a week with room. True either way, so Home doesn't need to know.
+- "The first dentist visit comes early" now shows for every baby around 10½–12 months (due by the first birthday, tooth or not), and still a few weeks after a first tooth when Home knows.
+- Home's question can ask "Any teeth yet?" from 6 months to the first birthday, only on a week with nothing new. A "Not yet" rests 6 weeks.
+- "Poop changes with solids" stays on Home (Yarden, Nov 7).
+- Results (840 simulated families): weekly visits with something new 86% (was 84%); month 10 82% (73%), month 11 71% (68%); first teeth known for 54% of families (was 0%); weekly visits with a question 19% (18%).
+- Home's cards are set once a day. Opening or dismissing a card removes it without pulling in the next one, so "That's everything for today" stays true (and reads "You're all caught up for today" once they're all cleared). Before, Home re-picked on every redraw, so a × swapped in a new card. A card unlocked by answering Home's question still shows on the same visit.
