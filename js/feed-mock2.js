@@ -51,7 +51,10 @@
     .replace(/(?:<p class="ss-small">(?:(?!<\/p>)[\s\S])*<\/p>\s*)+/g, m => `<div class="hub-tip fd-tip fd-notes">${m.replace(/<p class="ss-small">/g, '<p>')}</div>`)
     .replace(/(?:<p class="(?:care-p|ss-what)">(?:(?!<\/p>)[\s\S])*<\/p>\s*)+/g, m => `<div class="hub-tip fd-tip fd-notes">${m.replace(/<p class="(?:care-p|ss-what)">/g, '<p>')}</div>`);
   const page = inner => { const m = inner.match(/--area:(#[0-9a-f]+);--area-ink:(#[0-9a-f]+)/i), bg = m ? m[1] : C.pink[0], ink = m ? m[2] : C.pink[1];
-    return `${css}<div class="quiet-category hub-page hub-detail care-v2" data-overview="${CAT}" data-ss="1" style="${yearTheme(CAT)};--ss-bg:${bg};--ss-ink:${ink}">${detailPageTop(CAT)}${tidy(inner)}</div>`; };
+    return `${css}<div class="quiet-category hub-page hub-detail care-v2" data-overview="${CAT}" data-ss="1" style="${yearTheme(CAT)};--ss-bg:${bg};--ss-ink:${ink}">${detailPageTop(CAT)}${noLact(tidy(inner))}</div>`; };
+  // Families giving only stored milk don't see links to nursing, pumping or supply pages.
+  const LACT = 'pump|pump0|supply|milkin|milkarea|latch|bf1|bf0|work|lump|sore|nb_pump|nb_express|biting|nstrike|prefbottle|combo|bfmilk1';
+  const noLact = h => typeof stored === 'function' && stored() ? h.replace(new RegExp(`<button[^>]*onclick="openPage\\('chg:Feeding:mock:(?:${LACT})'\\)"[^>]*>[\\s\\S]*?</button>`, 'g'), '').replace(/<h2 class="hub-h2">[^<]*<\/h2>\s*<div class="[^"]*">\s*<\/div>/g, '') : h;
   const h2 = t => `<h2 class="hub-h2">${F(t)}</h2>`;
   const p = t => `<p class="care-p">${F(t)}</p>`;
   const call = t => `<div class="hub-tip fd-call"><b>${F('Call your pediatrician')}</b>${F(t.charAt(0).toUpperCase() + t.slice(1))}</div>`;
@@ -213,7 +216,9 @@
   /* ---------- Feedback round: subpages ---------- */
   const fd = () => { const f = typeof profile !== 'undefined' && profile.feed; return ['Breast milk', 'Formula', 'Both'].includes(f) ? f : 'Both'; };
   const how = () => (typeof profile !== 'undefined' && profile.feedHow) || 'Nursing';
-  const isBreast = () => fd() !== 'Formula', nurses = () => isBreast() && how() !== 'Pumping', pumps = () => isBreast() && how() !== 'Nursing', isBottle = () => fd() !== 'Breast milk' || pumps();
+  const isBreast = () => fd() !== 'Formula', nurses = () => isBreast() && how() !== 'Pumping' && how() !== 'Stored', pumps = () => isBreast() && how() !== 'Nursing', isBottle = () => fd() !== 'Breast milk' || pumps();
+  // Stored: weaned, giving saved (frozen) breast milk in bottles. Bottles of breast milk, like pumping, but nothing about nursing, pumping or supply.
+  const stored = () => isBreast() && how() === 'Stored';
   const cueStrip = () => hubStageStrip({ title: 'Hunger cues, early to late', items: [['eye', 'Early', 'Stirring, mouth opening, turning to look'], ['hand', 'Active', 'Rooting, hands to mouth, wriggling'], ['heart', 'Late', 'Crying. Calm him first, then feed']], nowIndex: -1, cat: CAT, caption: 'Early cues: stirring, mouth opening, turning to look. Active: rooting, hands to mouth. Late: crying, so calm him first.' });
   const fullTiles = () => steps([['smile', 'Slows down', 'Fewer, lazier sucks'], ['hand', 'Relaxed, open hands', 'Fists unclench'], ['eye', 'Turns away', isBreast() ? 'Or lets go of the nipple' : 'From the bottle'], ['moon', 'Drifts off', 'Content and sleepy']], false);
   P.day = () => page(head('Feeds now', 'A day of feeds at 2 months', 'An example, not a schedule. Ari leads, and no two days look the same.')
@@ -240,7 +245,7 @@
 
   /* ---------- The cheat sheet, every stage ---------- */
   const STAGES = [['Newborn', '0–6 weeks'], ['Milk feeds', '6 weeks–4 months'], ['Ready for solids', '4–6 months'], ['First foods', '6–9 months'], ['Meals', '9–12 months']];
-  const SHEET = (v, feed) => { const b = feed !== 'Formula', f = feed !== 'Breast milk', both = feed === 'Both', fm = f, nurse = b && how() !== 'Pumping', pump = b && how() !== 'Nursing', bottle = fm || pump;
+  const SHEET = (v, feed) => { const b = feed !== 'Formula', f = feed !== 'Breast milk', both = feed === 'Both', fm = f, nurse = b && how() !== 'Pumping' && how() !== 'Stored', pump = b && how() !== 'Nursing', bottle = fm || pump;
     const T = (c, art, l, val, sub, to) => [c, art, l, val, sub, to];
     const enough = T('yellow', ART.diapers(6), 'Getting enough', '6+ wet diapers', v === 0 ? (typeof profile !== 'undefined' && profile.early ? 'A day once home, and steady gains' : 'By day 6. Back to birth weight by 2 weeks') : 'A day, and steady growth', v <= 1 ? '' : 'enough');
     const S = [
@@ -274,7 +279,7 @@
   };
   // How to help, thought through as a parent: each row is something to do or know at this stage, shown only when it's new.
   // Same order at every stage, so it's easy to follow as stages change: The basics, Food, Milk, Cups, Every day.
-  const ROWS = (v, feed) => { const b = feed !== 'Formula', fm = feed !== 'Breast milk', pump = b && how() !== 'Nursing', nurse = b && how() !== 'Pumping', pumpOnly = pump && !nurse, mostlyB = feed === 'Breast milk', early = isEarly();
+  const ROWS = (v, feed) => { const b = feed !== 'Formula', fm = feed !== 'Breast milk', pump = b && how() !== 'Nursing', nurse = b && how() !== 'Pumping' && how() !== 'Stored', pumpOnly = pump && !nurse, mostlyB = feed === 'Breast milk', early = isEarly();
     const r = (c, icon, label, act, sub, to) => ({ c, icon, label, act, sub, to });
     const basics = [r('peach', 'hand', 'The basics', 'Learn positions, burping and what’s normal', 'Spit-up, hiccups and more', 'feedbasics'), r('peach', 'eye', 'The basics', 'Know what’s normal at 2–3 months', 'Spit-up, fussy evenings and more', 'normal'), r('peach', 'eye', 'The basics', 'Know what’s normal at 4–6 months', 'Short feeds, drool and more', 'normal'), r('peach', 'eye', 'The basics', 'Know what’s normal with first foods', 'Mess, gagging, funny faces', 'normal'), r('peach', 'eye', 'The basics', 'Know what’s normal at 9–12 months', 'Picky days, mess and more', 'normal')][v];
     const food = [null, null, r('green', 'bowl', 'Food', 'Watch for signs he’s ready', 'Most babies start around 6 months', 'signs'), r('green', 'bowl', 'Food', 'Start with a few bites a day', 'Iron-rich first. Allergens early and often', 'firstfoods'), r('green', 'bowl', 'Food', 'Serve three meals of family food', 'Soft pieces, no added salt', 'family')][v];
@@ -347,7 +352,7 @@
   Object.assign(P, {
     // ---------- Tiles ----------
     day: () => { const v = stg(), nurse = nurses(), fm = formulaFam(), pump = pumps();
-      const milk = (sub) => !nurse && pump && v <= 2 ? ['bottle', 'Bottle, then pump', sub || ['1–3 oz', '3–4 oz', '3–5 oz'][v]] : nurse && !fm && !pump ? ['drop', 'Nurse', sub || ''] : nurse && fm ? ['drop', 'Nurse, or a bottle', sub || ''] : ['bottle', 'Bottle', sub || (fm ? ['1–3 oz', '4–5 oz', '4–6 oz', '6–8 oz', '6–8 oz'][v] : ['1–3 oz', '3–4 oz', '3–5 oz', '3–5 oz', '3–5 oz'][v])];
+      const milk = (sub) => !nurse && pump && v <= 2 ? ['bottle', stored() ? 'Bottle' : 'Bottle, then pump', sub || ['1–3 oz', '3–4 oz', '3–5 oz'][v]] : nurse && !fm && !pump ? ['drop', 'Nurse', sub || ''] : nurse && fm ? ['drop', 'Nurse, or a bottle', sub || ''] : ['bottle', 'Bottle', sub || (fm ? ['1–3 oz', '4–5 oz', '4–6 oz', '6–8 oz', '6–8 oz'][v] : ['1–3 oz', '3–4 oz', '3–5 oz', '3–5 oz', '3–5 oz'][v])];
       const D = [
         [['7:00', ...milk()], ['9:30', ...milk()], ['12:00', ...milk()], ['2:30', ...milk()], ['5:00', ...milk()], ['6–9 pm', 'clock', 'Cluster feeding', 'Several feeds close together. Normal'], ['11:00', ...milk()], ['2:00 am', ...milk()], ['4:30 am', ...milk()]],
         [['7:00', ...milk()], ['10:00', ...milk()], ['1:00', ...milk()], ['4:00', ...milk()], ['6–8 pm', 'clock', 'A few feeds close together', 'Normal in the evening'], ['10:00', ...milk('Then bed')], ['3:00 am', ...milk('After his longest stretch')]],
@@ -466,7 +471,7 @@
       + call('Fewer wet diapers than usual, or he seems hungry and unsettled after most feeds all day.')),
     spurt: () => page(head('Common now', 'Hungrier days', 'Some days he’ll want to feed far more often. It usually lasts up to about 3 days.', C.blue)
       + steps([['clock', 'More feeds', 'Closer together'], ['heart', 'Fussier', 'Sometimes sleepier after'], ['moon', 'More night waking', 'For a night or two']], false)
-      + p((pumps() && !nurses()) ? 'Follow his lead and offer a little more. An extra pump session for a few days helps your supply keep up.' : nurses() ? 'Follow his lead and feed more often. The extra feeds tell your body to make more milk. It isn’t a sign your supply is low.' : 'Follow his lead. Offer a little more, or an extra bottle, if he still seems hungry.')
+      + p(stored() ? 'Follow his lead and offer a little more. Plan for your stored milk going a bit faster for a few days.' : (pumps() && !nurses()) ? 'Follow his lead and offer a little more. An extra pump session for a few days helps your supply keep up.' : nurses() ? 'Follow his lead and feed more often. The extra feeds tell your body to make more milk. It isn’t a sign your supply is low.' : 'Follow his lead. Offer a little more, or an extra bottle, if he still seems hungry.')
       + call('Fewer wet diapers, or it goes on for more than a few days.')),
     distract: () => page(head('Common now', 'Quick, distracted feeds', 'Around 4–6 months, the world gets interesting, and feeds get short and busy.', C.blue)
       + steps([['moon', 'A quiet, dim spot', 'Fewer things to look at'], ['clock', 'Feed when he’s drowsy', 'Before naps and bed'], ['heart', 'It passes', 'And quick feeds can be full ones']], false)
@@ -740,7 +745,7 @@
     const nurse = nurses(), fm = formulaFam(), pumpOnly = onlyPump(), both = nurse && pumps() && !fm;
     const T = { N: [[7, 9.5, 12, 14.5, 17, 19, 20.5, 23, 2, 4.5], [7, 9.5, 12, 14.5, 17, 19.5, 22, 3], [7, 10, 13, 16, 19, 22, 4]], B: [[7, 10, 13, 16, 19, 22, 2, 5], [7, 10.5, 14, 17.5, 21, 3.5], [7, 11, 15, 19, 22.5]], P: [[6, 9, 12, 15, 18, 21, 0, 3], [6.5, 10.5, 14, 18, 22, 3], [6.5, 11, 15, 19, 23]] };
     let feeds = (nurse ? T.N[v] : pumpOnly ? [T.N[0], T.N[1], [7, 10.5, 14, 17.5, 21, 3]][v] : T.B[v]).map(t => [t, nurse ? 'N' : 'B']);
-    const pumpsAt = pumpOnly ? T.P[v] : both ? [8.5] : [];
+    const pumpsAt = stored() ? [] : pumpOnly ? T.P[v] : both ? [8.5] : [];
     if (nurse && fm) { const top = [[17, 20.5], [17, 22], [16, 22]][v]; feeds = feeds.map(([t, k]) => [t, top.includes(t) ? 'T' : k]); }
     if (both) { const bt = [19, 19.5, 19][v]; feeds = feeds.map(([t, k]) => [t, t === bt ? 'B' : k]); }
     const W = 320, X = t => 14 + ((t - 6 + 24) % 24) / 24 * (W - 28), col = { N: '#c46b8e', B: '#e08a5c', T: '#c46b8e' };
@@ -2415,7 +2420,7 @@
   // quiet two-column card (what you see → what to do) instead of a stack of notes. ----
   const xFix = (label, rows) => { rows = rows.filter(Boolean); return rows.length ? `<style>#main .xfix{margin:0 0 12px;padding:12px 18px 6px;border-radius:20px;background:#fff;border:1px solid var(--line)}#main .xfix>b{display:block;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ss-ink);margin:2px 0 4px}#main .xfix>div{display:grid;grid-template-columns:42% 1fr;gap:12px;padding:9px 0;border-top:1px solid var(--line);font-size:14.5px;line-height:1.4}#main .xfix>b+div{border-top:0}#main .xfix>div>span:first-child{font-weight:600;color:var(--ink)}#main .xfix>div>span+span{color:#4c4757}</style><section class="xfix"><b>${F(label)}</b>${rows.map(([q, a]) => `<div><span>${F(q)}</span><span>${F(a)}</span></div>`).join('')}</section>` : ''; };
   const latchVideo = () => `<p class="ss-small"><a href="https://www.youtube.com/watch?v=y--syZR0u1E" target="_blank" rel="noopener" style="color:var(--ss-ink);font-weight:600">${F('Watch a good latch')} ↗</a> ${F('A short video.')}</p>`;
-  P.x_day = (() => { const prev = P.x_day; return () => prev().replace(F('Count from the start of one feed to the start of the next.'), F('Count from the start of one feed to the next.')).replace(F('Some feeds come close together, some further apart. Both are normal.'), F('Some come close together, some further apart.')).replace(F('A quick note of feeds and diapers helps in the first weeks.'), F(isBreast() ? 'Days 3–5: expect hungrier, more frequent feeds as your milk comes in.' : 'Week 1: he’ll want a little more each day.')).replace(F('Fewer, more predictable feeds by about 6 weeks, and a longer night stretch around 2–3 months.'), F('More predictable by about 6 weeks, and a longer night stretch around 2–3 months.')); })();
+  P.x_day = (() => { const prev = P.x_day; return () => prev().replace(F('Count from the start of one feed to the start of the next.'), F('Count from the start of one feed to the next.')).replace(F('Some feeds come close together, some further apart. Both are normal.'), F('Some come close together, some further apart.')).replace(F('A quick note of feeds and diapers helps in the first weeks.'), F(isBreast() && !stored() ? 'Days 3–5: expect hungrier, more frequent feeds as your milk comes in.' : 'Week 1: he’ll want a little more each day.')).replace(F('Fewer, more predictable feeds by about 6 weeks, and a longer night stretch around 2–3 months.'), F('More predictable by about 6 weeks, and a longer night stretch around 2–3 months.')); })();
   P.x_cues = () => xPage('feed', 'x_cues', 'Start at his early hunger cues', 'Feeding before he cries is easier for you both.',
       cueStrip().replace(`<b class="hub-fig-title">${F('Hunger cues, early to late')}</b>`, '')
       + xDo('What to do', ['Offer a feed at the first stirring or rooting.', 'Already crying? Calm him with a cuddle first.'])
@@ -2960,7 +2965,7 @@
     const row = H().row({ cat: CAT, icon: 'bag', title: 'Going back to work, or a sitter?', sub: 'A first bottle, and a small milk stash', onclick: go('y_away') }).replace(/<span class="hub-dot">[\s\S]*?<\/span><span class="hub-row-copy">/, `<span class="hub-dot">${hubArt('bag', CAT).replace('data-art=', 'data-keep=')}</span><span class="hub-row-copy">`).replace('class="hub-row', `style="--sm-bg:${XC.p1[0]};--sm-ink:${XC.p1[1]}" class="sm-row hub-row`);
     const i = h.indexOf('</div><button class="hub-rough-card'); return i < 0 ? h : h.slice(0, i) + row + h.slice(i); }; })();
   // 2. Pumping-only families: one line on the newborn day about how often to pump, beside the pump marks on the ribbon.
-  P.x_day = (() => { const prev = P.x_day; return () => { const h = prev(); if (!onlyPump() || formulaFam()) return h;
+  P.x_day = (() => { const prev = P.x_day; return () => { const h = prev(); if (!onlyPump() || formulaFam() || stored()) return h;
     const t = `<li>${F('Days 3–5: expect hungrier, more frequent feeds as your milk comes in.')}</li>`;
     return h.replace(t, t + `<li>${F('Pump about as often as he feeds, 8 or more times a day, including once at night.')}</li>`); }; })();
   // 3. Nursing + formula: cutting back top-ups, as three tiles instead of one line.

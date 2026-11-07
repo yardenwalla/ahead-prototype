@@ -1488,3 +1488,6 @@
 #main .hub-row + span:empty + .hub-row { border-top: 1px solid var(--line) } /* a scroll anchor between rows keeps the divider */
 /* Photo pickers are real file inputs inside labels: show focus on the label for keyboard users. */
 label:has(> .hub-photo-input:focus-visible) { outline: 2px solid #884866; outline-offset: 3px }
+
+/* Search: the section a result opened, highlighted for a moment. */
+#main .hub-found{outline:2px solid var(--ss-ink,var(--leaf,#526c47));outline-offset:3px;border-radius:12px;transition:outline-color .6s}

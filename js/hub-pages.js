@@ -504,6 +504,7 @@
       ['Health', 'steth', 'Checkups and vaccines', 'topic:Health', 'checkup checkups visit well child doctor appointment vaccine vaccines shots immunizations'],
       ['Safety', 'shield', 'Swings, bouncers and floor seats', 'chg:Safety:d:gear', 'swing bouncer bouncy seat rocker floor seat bumbo activity center jumper weight limit'],
       ['Childcare', 'home', 'Childcare: daycare, nannies, sitters and family', 'topic:Childcare', 'childcare child care daycare day care nanny nanny share babysitter sitter grandparents family caregiver back to work return to work'],
+      ['Childcare', 'heart', 'Settle in: each day, sick days, moving up', 'chg:Childcare:d:start', 'settle settling first week drop off dropoff pickup pick up daily report notes handoff sick day sick days fever policy home toddler room moving up goodbyes separation'],
       ['Childcare', 'notepad', 'Care card for caregivers', 'chg:Childcare:d:card', 'care card caregiver babysitter instructions emergency contacts allergies routine handover'],
       ['Health', 'drop', 'Colds and stuffy noses', 'chg:Health:d:cold', 'cold colds stuffy nose congestion congested runny nose snot saline suction aspirator nosefrida humidifier cough sneeze winter ear ears ear infection earache pulling ear'],
       ['Sleep', 'crib', 'Bassinet to crib, and moving rooms', 'chg:Sleep:d:where', 'bassinet crib switch move transition own room nursery room sharing room-sharing'],
@@ -511,16 +512,16 @@
       ['Out and about', 'car', 'Car seats', 'chg:Out and about:d:car', 'car seat carseat rear facing forward facing harness chest clip coat pinch test straps uber taxi rideshare'],
       ['Out and about', 'car', 'A bigger car seat', 'chg:Out and about:d:bigger', 'convertible car seat outgrow infant seat forward facing weight limit'],
       ['Out and about', 'carrier', 'Wearing a carrier', 'chg:Out and about:d:carry', 'carrier carriers sling wrap babywearing backpack front pack'],
-      ['Out and about', 'stroller', 'Stroller safety', 'chg:Out and about:d:stroller', 'stroller strollers pram buggy walk walks brakes'],
-      ['Out and about', 'plane', 'Flying with a baby', 'chg:Out and about:d:fly', 'flying fly plane flight flights airport travel traveling trip vacation holiday ears passport abroad tsa security'],
+      ['Out and about', 'stroller', 'Stroller safety', 'chg:Out and about:d:stroller', 'stroller strollers pram buggy stroll brakes'],
+      ['Out and about', 'plane', 'Flying with a baby', 'chg:Out and about:d:fly', 'flying fly plane flight flights airport travel traveling trip vacation holiday ears passport abroad tsa security jetlag timezone'],
       ['Out and about', 'road', 'Road trips', 'chg:Out and about:d:road', 'road trip drive driving long car ride travel vacation holiday'],
       ['Out and about', 'crib', 'Staying with family or in a hotel', 'chg:Out and about:d:away', 'babyproof relatives in-laws old crib drop side hotel airbnb grandparents travel crib portable crib pack and play play yard vacation holiday'],
       ['Out and about', 'bag', 'What to pack', 'chg:Out and about:d:bag', 'diaper bag pack packing packing list outing out leave the house checklist'],
-      ['Out and about', 'home', 'Errands, walks and first outings', 'chg:Out and about:d:errands', 'outing outings errand errands store grocery shopping cart walk walks park cafe restaurant crowds germs first outing leave the house doctor waiting room nursing in public'],
+      ['Out and about', 'home', 'Errands and first outings', 'chg:Out and about:d:errands', 'outing outings errand errands store grocery shopping cart stroll park cafe restaurant eating out highchair crowds germs first outing leave the house doctor waiting room nursing in public'],
       ['Out and about', 'sun', 'Hot and cold days out', 'chg:Out and about:d:weather', 'hot heat summer cold winter snow weather temperature bug spray insect repellent mosquito deet overheating stroller cover car seat coat'],
       ['Out and about', 'plane', 'Going abroad with a baby', 'chg:Out and about:d:abroad', 'abroad international passport vaccine vaccines shots measles travel clinic water mosquito jet lag mexico europe overseas'],
       ['Out and about', 'thermo', 'Going abroad: if your baby gets sick', 'chg:Out and about:d:abroad', 'sick trip travel vacation fever diarrhea vomiting first aid kit medicine travel insurance urgent care'],
-      ['Daily rhythm', 'tooth', 'Teething, drool and gums', 'chg:Daily rhythm:d:gums', 'teething teethe gums drool drooling sore chewing teeth tooth'],
+      ['Daily rhythm', 'tooth', 'Teething', 'chg:Daily rhythm:d:gums', 'teething teethe gums drool drooling sore chewing teeth tooth'],
       ['Daily rhythm', 'bath', 'Diaper rash and skin', 'chg:Daily rhythm:d:skin', 'diaper rash rashes skin cradle cap dry eczema'],
       ['Daily rhythm', 'bath', 'Giving a bath', 'chg:Daily rhythm:d:tub', 'bath tub bathing wash'],
       ['Daily rhythm', 'bath', 'Sponge baths', 'chg:Daily rhythm:d:sponge', 'sponge bath newborn wash'],
@@ -534,28 +535,98 @@
       ['Development', 'smile', 'Milestones and what to expect', 'topic:Development', 'milestones milestone development rolling roll crawling crawl sitting sit walking walk talking babbling words standing'],
       ['Development', 'smile', 'Play ideas for this age', 'topic:Development', 'play games toys activities tummy time bored']
     ];
-    const HEALTHY = /\b(fever|temp|sick|ill|cough|cold|vomit|diarrh|constipat|poop|stool|blood|rash|hives|breath|wheez|ear|eye|pain|hurt|fall|fell|bump|medicine|dose|swallow|jaundice|yellow|dehydrat|lethargic|sleepy all)/i;
-    const stem = w => w.replace(/(ing|ed|es|s)$/, '');
-    const STOP = new Set(['how', 'what', 'when', 'why', 'do', 'does', 'can', 'i', 'my', 'our', 'the', 'a', 'an', 'to', 'for', 'of', 'is', 'are', 'with', 'and', 'should', 'baby', 'babies', 'it', 'in', 'on', 'much', 'many', 'normal', 'ok', 'up', 'get', 'not', 'too', 'lot']);
+    const HEALTHY = /\b(fever|temp|sick|ill|cough|cold|vomit|throw|puk|diarrh|constipat|poop|stool|blood|rash|hives|breath|wheez|ear|eye|pain|hurt|fall|fell|bump|medicine|dose|swallow|jaundice|yellow|dehydrat|letharg|floppy|seizure|choke|choking|burn)/i;
+    const stem = w => w.length > 4 ? w.replace(/(ing|ed|es|s)$/, '') : w.replace(/s$/, '');
+    const STOP = new Set(['how', 'what', 'when', 'why', 'do', 'does', 'can', 'i', 'my', 'our', 'the', 'a', 'an', 'to', 'for', 'of', 'is', 'are', 'with', 'and', 'should', 'baby', 'babies', 'it', 'in', 'on', 'much', 'many', 'normal', 'ok', 'up', 'get', 'not', 'too', 'lot', 'won', 'don', 'doesn', 'isn', 'cant', 'wont', 'dont', 'will', 'just', 'keep', 'he', 'she', 'they', 'his', 'her', 'him', 'them', 'their', 'be', 'at', 'or', 'we', 'me', 'help', 'about', 'any', 'still', 'yet']);
+    // Parent words, mapped to the words the guides use. Each query word also matches its partners.
+    const SYN = [
+      ['poop', 'poo', 'stool', 'constipation', 'constipated'], ['teething', 'teeth', 'tooth', 'drool', 'drooling', 'gums'],
+      ['walking', 'walk', 'cruising'], ['crawling', 'crawl'], ['rolling', 'roll', 'rollover'], ['sitting', 'sit'], ['standing', 'stand', 'pulling'],
+      ['vomit', 'vomiting', 'throw', 'puke', 'spit'], ['fever', 'temperature', 'temp', 'hot'], ['medicine', 'tylenol', 'acetaminophen', 'motrin', 'advil', 'ibuprofen'],
+      ['nursing', 'breastfeeding', 'breast', 'boob', 'latch'], ['pumping', 'pump', 'pumped', 'stash', 'frozen', 'freezer', 'thaw'], ['formula', 'bottle'],
+      ['nap', 'naps', 'napping'], ['night', 'waking', 'wakes', 'overnight'], ['crying', 'colic', 'fussy', 'cries'], ['daycare', 'childcare', 'nanny', 'sitter', 'babysitter', 'center'],
+      ['restaurant', 'cafe', 'highchair'], ['jetlag', 'timezone'], ['sunscreen', 'sun', 'shade'], ['bug', 'bugs', 'insect', 'mosquito', 'repellent'],
+      ['pool', 'swim', 'swimming', 'beach', 'water'], ['plane', 'flying', 'flight', 'airport'], ['shots', 'vaccine', 'vaccines', 'immunizations'], ['talking', 'babbling', 'words', 'talk'],
+      ['solids', 'food', 'foods', 'puree', 'purees'], ['choking', 'gagging', 'gag', 'choke'], ['carseat', 'car'], ['bath', 'bathing', 'tub'], ['sick', 'ill', 'cold', 'germs']
+    ].map(g => g.map(stem));
+    // Two-word names read as one word, in the question and in the guides alike.
+    const PHRASE = [[/\bhigh chairs?\b/g, 'highchair'], [/\bcar seats?\b/g, 'carseat'], [/\beat(?:ing)? out\b/g, 'restaurant'], [/\bbug spray\b/g, 'repellent'], [/\bjet ?lag\b/g, 'jetlag'], [/\btime zones?\b/g, 'timezone'], [/\bsick days?\b/g, 'sickday sick']];
+    const phr = t => PHRASE.reduce((x, [re, to]) => x.replace(re, to), t);
+    const expand = w => { const g = SYN.find(x => x.includes(w)); return g ? [w, ...g.filter(x => x !== w)] : [w]; };
+    const words_ = t => phr(String(t).toLowerCase()).split(/[^a-z0-9]+/).filter(Boolean).map(stem);
+    // A word matches a whole word, or (once three letters are typed) the start of one, so "teeth" finds teething but "walk" never finds stroller.
+    const hit = (hay, w, exact) => hay.some(h => h === w || (!exact && w.length >= 3 && h.startsWith(w)));
+    const plain = s => String(F(s)).replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#0?39;|&#x27;/g, "'").replace(/&amp;/g, '&');
+    const clean = s => String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9 ]/g, ' ').trim();
+    const ageBit = () => 1 << Math.max(0, Math.min(12, Math.floor(typeof actualMonth === 'function' ? actualMonth() : 0)));
+    const docs = () => {
+      const curated = IDX.filter(e => !(e[3] === 'chg:Sleep:d:method' && actualMonth() < 4)).map(e => ({ cat: e[0], icon: e[1], title: e[2], route: e[3], t: words_(e[2]), k: words_(e[4]), bonus: 0.5 }));
+      const deep = (window.SEARCH_DEEP || []).filter(r => r[4] & ageBit()).map(r => {
+        const cat = r[0].startsWith('safety') ? 'Safety' : (r[0].match(/^(?:chg|topic|stages):([^:]+)/) || [])[1] || 'Safety';
+        return { cat, icon: CAT_ICON[cat] || (cat === 'Childcare' ? 'home' : 'book'), title: r[2], page: r[1], sub: r[3], route: r[0], section: r[5] ? '' : r[2], deep: 1, t: words_(r[2]), k: words_(r[3] + ' ' + r[1]), bonus: 0 };
+      });
+      return curated.concat(deep);
+    };
+    const run = term => {
+      const words = phr(clean(term)).split(/\s+/).filter(w => w && !STOP.has(w)).map(stem).filter(w => w.length > 1);
+      if (!words.length) return { words, list: [] };
+      const out = docs().map(d => {
+        let matched = 0, score = d.bonus, inTitle = false;
+        words.forEach((w, i) => {
+          const last = i === words.length - 1, opts = expand(w);
+          // The word itself counts more than a partner word, and a title more than a description.
+          const tI = opts.findIndex((o, j) => hit(d.t, o, j > 0 || !last)), kI = tI >= 0 ? -1 : opts.findIndex((o, j) => hit(d.k, o, j > 0 || !last));
+          if (tI >= 0) { matched++; inTitle = true; score += tI === 0 ? 3 : 2; } else if (kI >= 0) { matched++; score += kI === 0 ? 1 : 0.5; }
+        });
+        return { d, matched, score: score + 2 * matched, inTitle };
+      }).filter(x => x.matched && x.matched >= Math.ceil(words.length / 2))
+        .sort((a, b) => b.score - a.score || b.matched - a.matched);
+      // Plenty of title matches? Then a passing mention in a description isn't worth a row.
+      const strong = out.filter(x => x.inTitle || !x.d.deep);
+      if (strong.length >= 3) out.splice(0, out.length, ...strong);
+      const seen = new Set(), list = [];
+      for (const x of out) { const key = x.d.route + '|' + (x.d.section || ''); const pageKey = x.d.route; if (seen.has(key) || (!x.d.section && seen.has(pageKey))) continue; seen.add(key); seen.add(pageKey); list.push(x.d); if (list.length >= 6) break; }
+      return { words, list };
+    };
+    // The closest word the guides use, for a typo ("teathing").
+    const near = (w, vocab) => { if (w.length < 5) return null; let best = null, bd = w.length > 6 ? 3 : 2; vocab.forEach(v => { if (Math.abs(v.length - w.length) >= bd) return; const d = lev(w, v); if (d < bd) { bd = d; best = v; } }); return best; };
+    const lev = (a, b) => { const m = Array.from({ length: a.length + 1 }, (_, i) => [i]); for (let j = 1; j <= b.length; j++) m[0][j] = j; for (let i = 1; i <= a.length; i++) for (let j = 1; j <= b.length; j++) m[i][j] = Math.min(m[i - 1][j] + 1, m[i][j - 1] + 1, m[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)); return m[a.length][b.length]; };
+    // Opening a section result scrolls to it, opening it first if it's folded away.
+    window.searchOpen = function (route, section) {
+      openPage(route);
+      if (!section) return;
+      setTimeout(() => {
+        const want = clean(plain(section)), main = document.getElementById('main'); if (!main) return;
+        const el = [...main.querySelectorAll('h2, h3, summary, b')].find(e => clean(e.textContent) === want); if (!el) return;
+        const fold = el.closest('details'); if (fold) fold.open = true;
+        const box = el.closest('.hub-row, li, .care-pick, details, section') || el;
+        box.scrollIntoView({ block: 'center' }); box.classList.add('hub-found'); setTimeout(() => box.classList.remove('hub-found'), 1800);
+      }, 60);
+    };
     window.searchGuides = searchGuides = function (q) {
       query = q;
       const box = document.querySelector('.hub-results');
       if (!box) return;
-      const term = String(q || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9 ]/g, ' ').trim();
+      const term = clean(q);
       box.hidden = !term;
       if (!term) { box.innerHTML = ''; return; }
-      const words = term.split(/\s+/).filter(w => w && !STOP.has(w)).map(stem).filter(w => w.length > 1);
-      const scored = IDX.map(e => {
-        const hay = (e[2] + ' ' + e[4]).toLowerCase().split(/[^a-z0-9]+/).map(stem);
-        const score = words.reduce((n, w) => n + (hay.some(h => h === w || (w.length > 3 && h.startsWith(w))) ? 1 : 0), 0);
-        return { e, score };
-      }).filter(x => x.score > 0 && !(x.e[3] === 'chg:Sleep:d:method' && actualMonth() < 4)).sort((a, b) => b.score - a.score).slice(0, 6);
-      let rows = scored.map(({ e }) => plainRow(e[1], e[0], e[2], displayTopic(e[0]), `openPage('${e[3]}')`));
+      let { words, list } = run(term), fixed = '';
+      if (!list.length && words.length) {
+        const vocab = [...new Set(docs().flatMap(d => d.t.concat(d.k)).filter(w => w.length > 2))];
+        const alt = words.map(w => near(w, vocab) || w);
+        if (alt.join(' ') !== words.join(' ')) { const r = run(alt.join(' ')); if (r.list.length) { list = r.list; fixed = alt.join(' '); } }
+      }
+      const sickRoute = 'chg:Health:d:sick';
+      const js = v => String(v).replace(/\\/g, '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+      const where = d => { const pg = d.page ? plain(d.page) : ''; return pg && clean(pg) !== clean(d.title) && clean(pg) !== clean(displayTopic(d.cat)) ? `${displayTopic(d.cat)} · ${pg}` : displayTopic(d.cat); };
+      const rowFor = d => plainRow(d.icon, d.cat, d.deep ? plain(d.title) : d.title, d.section ? where(d) : displayTopic(d.cat), d.section ? `searchOpen('${js(d.route)}','${js(d.section)}')` : `openPage('${d.route}')`);
       const health = HEALTHY.test(term);
-      if (health && !scored.some(x => x.e[3] === 'chg:Health:d:sick')) rows.push(plainRow('steth', 'Health', 'When to call your pediatrician', 'Fever, breathing, feeding and other signs to act on', "openPage('chg:Health:d:sick')"));
+      // A health worry: the age-right "when to call" sits first, whatever else matches.
+      const feverQ = /fever|temp/.test(term), callRow = health ? plainRow('steth', 'Health', feverQ ? 'Fever and sick days: when to call' : 'When to call your pediatrician', feverQ && typeof feverRule === 'function' ? feverRule(actualMonth()) : 'Fever, breathing, feeding and other signs to act on', `openPage('${sickRoute}')`) : '';
+      const rows = (health ? [callRow] : []).concat(list.filter(d => !(health && d.route === sickRoute && !d.section)).map(rowFor)).slice(0, 7);
       const asked = esc2(String(q).trim());
-      const lead = !scored.length && health ? `<p class="hub-results-empty">We don’t have a guide for “${asked}” yet. If you’re worried, here’s when to call:</p>` : '';
-      box.innerHTML = rows.length ? lead + rows.join('') : `<p class="hub-results-empty">No guide for “${asked}” yet. Try words like naps, formula, rash or fever. If you’re worried, call your pediatrician.</p>`;
+      const lead = fixed ? `<p class="hub-results-empty">Showing results for “${esc2(fixed)}”</p>` : '';
+      box.innerHTML = rows.length ? lead + rows.join('') : `<p class="hub-results-empty">Nothing on “${asked}” yet. Try a shorter word, like naps, formula, rash or fever. If you’re worried, call your pediatrician.</p>`;
     };
   }
 

@@ -31,7 +31,9 @@
   const stageNow = () => stageFor(ageNow());
   const feed = () => (typeof profile !== 'undefined' && profile.feed) || 'Breast milk';
   const nursing = () => feed() !== 'Formula';
-  const pumps = () => { const h = (typeof profile !== 'undefined' && profile.feedHow) || ''; return h !== 'Nursing'; };
+  const how = () => (typeof profile !== 'undefined' && profile.feedHow) || '';
+  const pumps = () => how() !== 'Nursing'; // breast milk in bottles: pumped, or stored after weaning
+  const pumping = () => pumps() && how() !== 'Stored'; // a pump comes along
   const formula = () => feed() !== 'Breast milk';
   // Moving, as the parent reported it in Safety (crawling or pulling up), never claimed from age alone.
   const moving = () => live() && typeof currentSafetyMovementStage === 'function' && ['moving', 'pulling'].includes(currentSafetyMovementStage());
@@ -104,7 +106,7 @@
 
   /* ---------- the home screen ---------- */
   const PLACES = [
-    ['errands', 'Around town', ['Your first trips out', 'A walk, the store, a café']],
+    ['errands', 'Around town', ['Your first trips out', 'A walk, the store, eating out']],
     ['road', 'Road trips', ['Long drives and stops']],
     ['fly', 'Flying', ['Booking, security, the flight']],
     ['away', 'Staying away', ['Family, friends or a hotel']],
@@ -176,7 +178,7 @@
       ['towel', 'wipes', 'Wipes and a changing pad', 'And a bag for dirty diapers'],
       ['shirt', 'clothes', 'A spare outfit', 'For {o}, and a top for you, for blowouts'],
       ['heart', 'burp', 'Burp cloths', ''],
-      f !== 'Formula' && pumps() ? ['bottle', 'pump', 'Your pump and bottles with lids', 'If you’ll pump while you’re out'] : null,
+      f !== 'Formula' && pumping() ? ['bottle', 'pump', 'Your pump and bottles with lids', 'If you’ll pump while you’re out'] : null,
       f !== 'Formula' && pumps() ? ['fridge', 'pumped', 'Pumped milk in a cooler with ice packs', 'If you’re bringing bottles'] : null,
       f !== 'Formula' && !pumps() ? ['heart', 'cover', 'A nursing cover or scarf', 'Only if you like one'] : null,
       f !== 'Breast milk' ? ['bottle', 'formula', 'Formula for each feed, plus one', 'Ready-to-feed, or powder and water packed apart'] : null,
@@ -238,7 +240,7 @@
     const m = ageNow(), bf = nursing(), fm = formula();
     const feedLine = bf && fm ? 'Nurse or give a bottle, wherever you’re comfortable.' : bf ? 'Nurse wherever you’re comfortable, or give a bottle of pumped milk.' : 'Give a bottle where you are. Formula doesn’t need warming.';
 
-    if (id === 'errands') return sub('errands', 'Around town', m < 2 ? 'Your first trips out' : 'Short trips, home whenever you like', 'A walk, the store, a café or a friend’s. One or two stops is plenty, and leaving early still counts.',
+    if (id === 'errands') return sub('errands', 'Around town', m < 2 ? 'Your first trips out' : 'Short trips, home whenever you like', 'A walk, the store, a restaurant or a friend’s. One or two stops is plenty, and leaving early still counts.',
       ifs([
         ['clock', 'Feed first', 'Right after a feed is the calmest stretch'],
         ['car', 'Any car, {p} own seat', 'Even a taxi or a friend’s car'],
@@ -250,10 +252,19 @@
         ['heart', 'Crying in public', 'It happens to every parent. Step outside, or walk with {o} close.'],
         ['diaper', 'A blowout', 'A family restroom, or your changing pad on a clean flat spot.']],
         'If the baby is hungry, feed them where you are. Crying in public happens to everyone. For a blowout, find a family restroom or use your changing pad.')
+      + ifs(m >= 6 ? [
+        ['highchair', 'Check the high chair', 'Steady, with a strap that works. Skip one that wobbles.'],
+        ['hand', 'Strap {o} in', 'Around the waist and between the legs, every time'],
+        ['plate', 'Pull it back from the table', 'So {s} can’t push off with {p} feet'],
+        ['cup', 'Hot food out of reach', 'Plates and hot drinks to the middle. {S} will grab.']] : [
+        ['carseat', 'Car seat stays low', 'On the floor or in the stroller, never on top of a high chair'],
+        ['clock', 'Go after a feed', 'A fed baby often sleeps right through'],
+        ['cup', 'Hot drinks away', 'Keep them and hot plates away from where you hold {o}']],
+        m >= 6 ? 'Check the high chair is steady with a working strap. Strap the baby in. Pull the chair back from the table. Keep hot food and drinks in the middle.' : 'Keep the car seat on the floor or in the stroller. Go after a feed. Keep hot drinks away from the baby.', 'Eating out')
       + good([
         ['car', 'Car seats and shopping carts', m >= 6 ? 'Use the cart’s own seat with the strap on, not the infant seat on top.' : 'An infant seat can tip off the top of a cart. Use a carrier or the stroller.'],
         bf ? ['fridge', 'Pumped milk', 'Fine cool or at room temperature. No need to warm it.'] : null,
-        m >= 6 ? ['cup', 'At a café', 'Keep hot drinks and plates out of {p} reach. {S} will grab.'] : ['hand', 'Holding {o}', 'It’s fine to ask people to wash their hands first, or to say no.']]));
+        m >= 6 ? ['bowl', 'Bring {p} own food', 'Something soft from home, a bib and a spoon. A placemat keeps the tray clean.'] : ['hand', 'Holding {o}', 'It’s fine to ask people to wash their hands first, or to say no.']]));
 
     if (id === 'road') return sub('road', 'Road trips', 'Road trips', 'Plan a stop every couple of hours.',
       hubDayMarkers({ title: 'Plan your drive', events: [[9 * 60, 'car', 'Leave as a nap starts'], [11 * 60, 'bottle', 'Stop to feed and change'], [13 * 60, 'mat', m >= 6 ? 'Stop for a snack and a stretch' : 'Stop to feed and stretch'], [15 * 60, 'home', 'Arrive']], from: 8 * 60, to: 16 * 60, cat: CAT, caption: 'Leave at 9 as a nap starts, stop at 11 to feed and change, stop at 1 to feed and stretch, arrive at 3.' })
@@ -269,9 +280,9 @@
       H().versus('Where will Maya sit?', ['Own seat', 'Safest, buckled into a car seat labeled for aircraft.'], ['On your lap', 'Often free on US flights under 2, but less safe if there’s turbulence.'])
       + plan('Plan your flight', [
         ['When you book', 'notepad', 'Add {o}, ask about a bassinet seat, and check the car seat says “aircraft” in red.'],
-        ['At security', 'bag', bf && !fm && !pumps() ? 'Nothing extra for nursing. If you bring pumped milk, tell the officer.' : bf && !fm ? 'Pumped milk and your pump can go through. Tell the officer.' : !bf ? 'Formula and water can go through. Tell the officer.' : 'Milk, formula and your pump can go through. Tell the officer.'],
+        ['At security', 'bag', bf && !fm && !pumps() ? 'Nothing extra for nursing. If you bring pumped milk, tell the officer.' : bf && !fm && !pumping() ? 'Breast milk can go through, even more than 3.4 oz. Tell the officer.' : bf && !fm ? 'Pumped milk and your pump can go through. Tell the officer.' : !bf ? 'Formula and water can go through. Tell the officer.' : pumping() ? 'Milk, formula and your pump can go through. Tell the officer.' : 'Breast milk and formula can go through. Tell the officer.'],
         ['At the gate', 'stroller', 'Gate-check the stroller. It waits at the plane door.'],
-        ['Takeoff and landing', 'plane', bf && !fm ? 'Nurse {o}, or offer a pacifier.' : 'A feed or a pacifier helps {p} ears.']],
+        ['Takeoff and landing', 'plane', bf && !fm && how() === 'Nursing' ? 'Nurse {o}, or offer a pacifier.' : 'A feed or a pacifier helps {p} ears.']],
         'When you book, add the baby, ask about a bassinet seat and check the car seat is certified for aircraft. Milk, formula and your pump can go through security. Gate-check the stroller. Feed or offer a pacifier at takeoff and landing.')
       + pack([fm ? ['bottle', 'One extra bottle', 'In case of delays'] : null, ['diaper', 'Diapers for the trip, plus extra', 'At least one more than you think, for delays'], ['shirt', 'A change of clothes', 'For {o}, and a top for you, in your carry-on'], ageNow() >= 6 ? ['bowl', 'Snacks {s} already eats', 'Soft and easy, for delays'] : null, ['drop', 'Medicine you might need', 'A fever reducer your pediatrician has OK’d, with its syringe'], ['notepad', 'Proof of {p} age', 'Like {p} birth certificate, for a lap seat']])
       + ifs([

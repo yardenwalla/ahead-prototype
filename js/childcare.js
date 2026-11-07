@@ -259,14 +259,25 @@
         ['The first week', 'clock', 'Short days, and a quick chat at pickup.'],
         ['After a month', 'chat', 'A proper check-in about what’s working.'],
         ...(m >= 6 && m < 12 ? [['Around 8–10 months', 'heart', 'Goodbyes often get harder for a while. A short goodbye, the same each day, helps.']] : []),
-        ['Every few months', 'notepad', 'Update Maya’s care card.']],
-        'In the first week, short days and a chat at pickup. After a month, a proper check-in. Every few months, update the care card.')
+        ['Every few months', 'notepad', 'Update Maya’s care card.'],
+        ...(m >= 9 ? [['Around 12–18 months', 'home', 'Many centers move babies up to the toddler room, often once they’re walking. Ask for a few short visits first. The day there usually has one nap, after lunch.']] : [])],
+        'In the first week, short days and a chat at pickup. After a month, a proper check-in. Every few months, update the care card.' + (m >= 9 ? ' Around 12 to 18 months, many centers move babies up to the toddler room.' : ''))
+      + picSteps('Each day', [
+        ['clock', 'At drop-off', 'Say how the night went and when {s} last ate.'],
+        ['notepad', 'At pickup', 'Look over the day’s notes: feeds, naps and diapers.'],
+        ['moon', 'At home', 'Short naps at care? An earlier bedtime that night helps.']],
+        'At drop-off, say how the night went and when the baby last ate. At pickup, look over the notes on feeds, naps and diapers. After short naps at care, try an earlier bedtime.')
+      + picSteps('Sick days', [
+        ['thermo', 'A fever', m < 3 ? 'Under 3 months, call your pediatrician first. Most places then ask for a day without fever before coming back.' : 'Most places ask for 24 hours without a fever, and without fever medicine, before coming back.'],
+        ['drop', 'Vomiting or diarrhea', 'Usually a day at home too. Ask what your care’s policy says.'],
+        ['chat', 'A runny nose', 'Often fine to go, if {s} {are|is} eating and playing as usual.'],
+        ['shield', 'Lots of colds at first', 'Common in the first year of care. Have backup care lined up for sick days.']],
+        'Most places ask for 24 hours without a fever before coming back, and a day home after vomiting or diarrhea. A runny nose is often fine. Lots of colds in the first year are common, so line up backup care.')
       + picSteps('Signs it’s going well', [
         ['smile', '{S} {seem|seems} settled', 'Content at pickup, even if drop-off has tears.'],
-        ['notepad', 'You hear about the day', 'Feeds, naps and diapers, without having to ask.'],
         ['chat', 'Problems come to you', 'The caregiver tells you about small things, not just good news.'],
         ['home', 'You’re welcome anytime', 'You can call or drop in without it being a big deal.']],
-        'The baby seems settled at pickup, you hear about the day, the caregiver tells you about problems, and you are welcome anytime.')
+        'The baby seems settled at pickup, the caregiver tells you about problems, and you are welcome anytime.')
       + picSteps('When things don’t go to plan', [
         ['chat', 'Something small bothers you', 'Bring it up early and kindly. Most things are easy to fix.'],
         ['heart', 'Harder drop-offs', 'Common from around 8 months, as {s} {learn|learns} to miss you. A short, warm goodbye helps.'],
@@ -359,7 +370,7 @@
       + homeRow('pay', 'coin', 'Paying for care', 'Help from your state, work and taxes', 'pay')
       + homeRow('ready', 'bag', 'Get ready for day one', `A practice day first, and packing ${bm0 && fm0 ? 'milk and formula' : bm0 ? 'pumped milk' : 'formula'}`, 'ready')
       + homeRow('backup', 'shield', 'When care falls through', 'Sick days, closed days, a caregiver who quits', 'backup')
-      + homeRow('start', 'heart', 'Settle in', am >= 7 ? 'Harder goodbyes for a while, and when to speak up' : 'The first months, and when to speak up', 'start') + `</div>`;
+      + homeRow('start', 'heart', 'Settle in', am >= 9 ? 'Each day, sick days and moving up a room' : am >= 7 ? 'Each day, sick days and harder goodbyes' : 'Each day, sick days and when to speak up', 'start') + `</div>`;
     return frame(b);
   }
 
