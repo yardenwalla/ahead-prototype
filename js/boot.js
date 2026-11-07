@@ -10,7 +10,7 @@ try {
   if (hasProfile) {
     profile = {...savedProfile, name: typeof savedProfile.name === 'string' ? capName(savedProfile.name) : '',
       pronouns: ['he','she','they'].includes(savedProfile.pronouns) ? savedProfile.pronouns : 'they',
-      feed: ['Breast milk','Formula','Both'].includes(savedProfile.feed) ? savedProfile.feed : ''};
+      feed: ['Breast milk','Formula','Both','Prefer not to say'].includes(savedProfile.feed) ? savedProfile.feed : 'Prefer not to say'};
   }
 } catch (e) {}
 // Preserve stored data for recovery; malformed details must not produce a blank screen.
