@@ -2617,6 +2617,49 @@
     return `<h2 class="hub-h2">${F('How to help Ari feed now')}</h2><div class="hub-list">${R.filter(Boolean).map(r => cr(...r)).join('')}</div>` + rough
       + h.versus('Normal, or time to call?', ['Normal', 'Shorter feeds, fussy evenings, spit-up' + (b ? ', fewer poops' : '') + '.'], ['Call your pediatrician', 'Fewer than 6 wet diapers, refusing several feeds, forceful vomiting, or a fever of 100.4°F under 3 months.']); };
 
+  // ---- Milk feeds, only what's new (Nov 7): parents already know how to feed, so this stage shows just what changes.
+  // A few rows on the stage page, each one short page. No repeats of Newborn. ----
+  Object.assign(HEADART, { 'Feeds now': () => ART.drops(4), 'Evenings': () => ART.often(5), 'Nights': () => ART.often(3), 'Away from home': () => ART.bottle(.55), 'Growing': () => ART.diapers(6) });
+  const yPage = (c, eyebrow, title, lead, body) => qaCss + page(head(eyebrow, title, lead, c) + `<section class="ss-moment">${body}</section>`);
+  P.y_nurse = () => { const fm = formulaFam(), bot = isBottle();
+    return yPage(XC.f1, 'Feeds now', 'Quicker feeds are normal', 'He’s better at it now. Many feeds take 5–10 minutes a side, and that’s enough.',
+      xNums('', [['5–10 min', 'A side, often'], ['7–9', 'Feeds a day']])
+      + xDo('What’s new', ['Shorter feeds don’t mean less milk. Diapers and growth tell you.', 'Growth spurts around 6 weeks and 3 months: more feeds for a few days.', fm ? 'Many babies need fewer top-ups now. Ask your pediatrician about cutting back.' : ''])
+      + xFix('If it’s not going smoothly', [['Pulls off and fusses', 'Burp, then try again. Milk coming fast? Lean back.'], ['Distracted by everything', 'Often from 3–4 months. Feed somewhere quiet and dim.']])); };
+  P.y_bottle = () => { const fm = formulaFam(), b = isBreast(), nurse = nurses();
+    return yPage(XC.f1, 'Feeds now', 'Bigger bottles, same slow pace', 'He’ll take a little more as he grows. Keep letting him set the pace.',
+      xNums('About how much, per bottle', fm && b ? [['3–4 oz', 'Breast milk'], ['4–6 oz', 'Formula']] : fm ? [['4–5 oz', 'Around 2 months'], ['4–6 oz', 'Around 4 months']] : [['3–4 oz', 'Through these months'], ['24–30 oz', 'A day, in all']])
+      + xDo('What’s new', ['Growth spurts around 6 weeks and 3 months: more for a few days.', fm ? 'Up to about 32 oz of formula a day.' : 'Breast milk bottles stay about the same size.'])
+      + xFix('If it’s not going smoothly', [['Sucks hard, frustrated', 'Try the next nipple size.'], ['Gulping or spilling', 'Stay with the slower one.'], ['Distracted by everything', 'Often from 3–4 months. Feed somewhere quiet and dim.']])); };
+  P.y_evening = () => yPage(XC.d1, 'Evenings', 'Fussy evenings peak, then ease', 'Crying and cluster feeds often peak around 6 weeks, and ease by 3–4 months.',
+      hubStageStrip({ title: '', items: [['clock', 'Around 6 weeks', 'The fussiest weeks'], ['heart', '8–10 weeks', 'Starting to ease'], ['smile', '3–4 months', 'Calmer evenings']], cat: CAT })
+      + xKnow('What helps', 'Feed when he asks, keep the lights low, and take turns so you each get a break.')
+      + xNote('Worth a call:', 'crying 3 or more hours a day, or crying that sounds different.'));
+  P.y_night = () => yPage(XC.d1, 'Nights', 'A longer stretch at night', 'Many babies sleep one longer stretch, often 4–6 hours, by 2–3 months.',
+      xNums('', [['4–6 hrs', 'A longer stretch, often'], ['1–2', 'Night feeds, still normal']])
+      + xDo('What’s new', ['Once your pediatrician says he’s gaining well, you can stop waking him and let him wake you.'])
+      + xKnow('More on nights', 'Sleep has the rest: routines, naps and the 4-month changes.'));
+  P.y_away = () => { const b = isBreast();
+    return yPage(XC.p1, 'Away from home', 'Bottles for daycare, a sitter or a day out', 'The same safe bottles, packed to travel.',
+      xCompare([['star', 'Label', 'His name and the date on every bottle.'], ['snow', 'Keep cold', 'A cooler with ice packs, up to 24 hours.'], ['clock', 'How much', b ? 'About 1–1½ oz for each hour you’re apart.' : 'Pre-measured powder, water separately.']])
+      + xDo('What to tell caregivers', ['Feed on cue, not the clock.', 'Hold the bottle level, and let him pause.', b ? 'Small bottles, so less is wasted.' : 'Mix right before the feed.'])); };
+  P.y_growth = () => { const b = isBreast();
+    return yPage(XC.g1, 'Growing', b ? 'Fewer poops can be normal now' : 'Steady growth at checkups', b ? 'After about 6 weeks, some breastfed babies poop only every few days. Soft is what matters.' : 'Your pediatrician weighs him at 2 and 4 months.',
+      xNums('', [['6+', 'Wet diapers a day, still'], ['About 2×', 'Birth weight by 4–5 months']])
+      + xKnow('How you’ll know it’s going well', 'Wet diapers, and he stays on his own growth curve at checkups.')
+      + xNote('Worth a call:', 'fewer than 6 wet diapers a day, or feeding much less.')); };
+  window.M1HOME = () => { const b = isBreast(), nurse = nurses(), fm = formulaFam(), bot = isBottle(), h = H();
+    const T = { f1: XC.f1, d1: XC.d1, p1: XC.p1, g1: XC.g1 };
+    const cr = (t, icon, title, sub, id) => h.row({ cat: CAT, icon, title, sub, onclick: go(id) }).replace(/<span class="hub-dot">[\s\S]*?<\/span><span class="hub-row-copy">/, `<span class="hub-dot">${hubArt(icon, CAT).replace('data-art=', 'data-keep=')}</span><span class="hub-row-copy">`).replace('class="hub-row', `style="--sm-bg:${T[t][0]};--sm-ink:${T[t][1]}" class="sm-row hub-row`);
+    const R = [nurse ? ['f1', 'heart', 'Quicker feeds are normal', '5–10 minutes a side is often enough', 'y_nurse'] : ['f1', 'bottle', 'Bigger bottles, same slow pace', 'How much now, and nipple size', 'y_bottle'],
+      ['d1', 'clock', 'Fussy evenings peak, then ease', 'Around 6 weeks, calmer by 3–4 months', 'y_evening'],
+      ['d1', 'moon', 'A longer stretch at night', 'When you can stop waking him', 'y_night'],
+      bot && ['p1', 'bag', 'Bottles away from home', 'Daycare, a sitter or a day out', 'y_away'],
+      ['g1', 'leaf', b ? 'Fewer poops can be normal' : 'Steady growth at checkups', b ? 'Wet diapers still tell you' : 'At 2 and 4 months', 'y_growth']];
+    const rough = `<button class="hub-rough-card care-rash-card" style="background:#fbe4ec;color:#9b4766;margin-top:12px" onclick="${go('x_tough')}"><span class="hub-rough-moon" aria-hidden="true">${hubArt('heart', CAT)}</span><span class="hub-rough-copy"><b>${F('Feeding challenges')}</b><small>${F('Spit-up, gas and crying, distracted or refusing, poop')}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`;
+    return `<h2 class="hub-h2">${F('What’s new now')}</h2><div class="hub-list">${R.filter(Boolean).map(r => cr(...r)).join('')}</div>` + rough
+      + h.versus('Normal, or time to call?', ['Normal', 'Shorter feeds, fussy evenings, spit-up' + (b ? ', fewer poops' : '') + '.'], ['Call your pediatrician', 'Fewer than 6 wet diapers, refusing several feeds, forceful vomiting, or a fever of 100.4°F under 3 months.']); };
+
   // ---- Milk feeds (6 weeks–4 months), rebuilt on the Newborn model (Nov 5): four subject pages with tabs, grouped by moment. ----
   HEADART['Feeds & rhythm'] = () => ART.often(5);
   P.rhythm1 = () => { const nurse = nurses(), b = isBreast(), bot = isBottle(), fm = formulaFam();
