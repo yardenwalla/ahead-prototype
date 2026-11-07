@@ -1866,10 +1866,10 @@
     const TONE = { routine: ['#e7effc', '#46638c'], feed: ['#fbe4ec', '#9b4766'], prep: ['#fdeee6', '#9a5a3c'], growth: ['#fff3dc', '#8a6a2a'] };
     const cr = (label, icon, title, sub, area) => h.row({ cat: CAT, icon, title, sub, onclick: go('xa:' + area) }).replace(/<span class="hub-dot">[\s\S]*?<\/span><span class="hub-row-copy">/, `<span class="hub-dot">${hubArt(icon, CAT).replace('data-art=', 'data-keep=')}</span><span class="hub-row-copy">`).replace('<span class="hub-row-copy">', `<span class="hub-row-copy"><small class="hub-row-eyebrow">${F(label)}</small>`).replace('class="hub-row', `style="--sm-bg:${TONE[area][0]};--sm-ink:${TONE[area][1]}" class="sm-row hub-row`);
     const R = [
-      ['His day and night', 'clock', b ? 'About every 2–3 hours, around the clock' : 'About every 2–4 hours, around the clock', 'Day, evening and night', 'routine'],
       ['A feed, step by step', nurse ? 'hand' : 'bottle', 'From his first cue to the last burp', nurse && fm ? 'Hungry, latch on, burp and switch, top up, full' : nurse ? 'Hungry, latch on, burp and switch, full' : 'Hungry, bottle, burp, full', 'feed'],
+      ['His day and night', 'clock', b ? 'About every 2–3 hours, around the clock' : 'About every 2–4 hours, around the clock', 'Day, evening and night', 'routine'],
       bot && ['Bottles, start to finish', 'bottle', 'Make every bottle the same safe way', 'Choose, make, store and clean', 'prep'],
-      ['Is he getting enough?', 'leaf', 'Diapers and weight tell you, not ounces', 'How much, diapers, weight, vitamin D', 'growth']];
+      ['Is he getting enough?', 'leaf', 'Diapers and weight tell you, not ounces', nurse ? 'Diapers, weight, how much, vitamin D' : 'How much, diapers, weight, vitamins', 'growth']];
     const rough = `<button class="hub-rough-card care-rash-card" style="background:#fbe4ec;color:#9b4766;margin-top:12px" onclick="${go('x_tough')}"><span class="hub-rough-moon" aria-hidden="true">${hubArt('heart', CAT)}</span><span class="hub-rough-copy"><b>${F('Feeding challenges')}</b><small>${F('Spit-up, gas, refusing feeds, poop')}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`;
     return `<h2 class="hub-h2">${F('How to help Ari feed now')}</h2><div class="hub-list">${R.filter(Boolean).map(r => cr(...r)).join('')}</div>` + rough
       + h.versus('Normal, or time to call?', ['Normal', 'Frequent feeds, fussy evenings, spit-up, grunting.'], ['Call your pediatrician', 'Fewer wet diapers, too sleepy to feed, green vomit, pale poop, or a fever of 100.4°F.']); };
@@ -2249,7 +2249,7 @@
       routine: ['His day and night', [['x_day', 'sun', 'Day', ''], ['x_evening', 'clock', 'Evening', ''], ['x_night', 'moon', 'Night', '']], 'That’s his day and night'],
       feed: ['A feed, step by step', [['x_cues', 'eye', 'Hungry', ''], nurse ? ['x_latch', 'heart', 'Latch on', ''] : ['x_bottle', 'bottle', 'Bottle', ''], ['x_burp', 'hand', nurse ? 'Burp & switch' : 'Burp', ''], nurse && fm && ['x_bottle', 'bottle', 'Top up', ''], ['x_full', 'smile', 'Full', '']], 'That’s a whole feed'],
       prep: bot ? ['Bottles, start to finish', [['x_kind', 'drop', b && fm ? 'Milk' : b ? 'Milk' : 'Choose', ''], fm && ['x_formula', 'bowl', pump ? 'Formula' : 'Make', ''], pump && ['x_bm', 'snow', fm ? 'Breast milk' : 'Warm', ''], ['x_store', 'fridge', 'Store', ''], ['x_clean', 'star', 'Clean', '']], 'That’s a bottle, start to finish'] : null,
-      growth: ['Is he getting enough?', [['x_amount', 'leaf', 'How much', ''], ['x_enough', 'diaper', 'Diapers', ''], ['x_weight', 'star', 'Weight', ''], ['x_vitd', 'drop', b ? 'Vitamin D' : 'Vitamins', '']], 'That’s how to tell he’s getting enough']
+      growth: ['Is he getting enough?', (nurse ? [['x_enough', 'diaper', 'Diapers', ''], ['x_weight', 'star', 'Weight', ''], ['x_amount', 'leaf', 'How much', '']] : [['x_amount', 'leaf', 'How much', ''], ['x_enough', 'diaper', 'Diapers', ''], ['x_weight', 'star', 'Weight', '']]).concat([['x_vitd', 'drop', b ? 'Vitamin D' : 'Vitamins', '']]), 'That’s how to tell he’s getting enough']
     }; };
   const xMore = (area, self) => { const [t, rows] = XAREA()[area], rs = rows.filter(r => r && r[0] !== self); return rs.length ? `<h2 class="hub-h2">${F('More on ' + t.toLowerCase())}</h2><div class="hub-list">${rs.map(([id, icon, title, sub]) => H().row({ cat: CAT, icon, title, sub, onclick: go(id) }).replace(/<span class="hub-dot">[\s\S]*?<\/span><span class="hub-row-copy">/, `<span class="hub-dot">${hubArt(icon, CAT).replace('data-art=', 'data-keep=')}</span><span class="hub-row-copy">`)).join('')}</div>` : ''; };
   const xPage = (area, id, title, lead, body) => window.__xCollect ? head((XAREA()[area] || ['Feeding'])[0], title, lead, XC[area]) + `<section class="ss-moment">${body}</section>` : qaCss + page(head(XAREA()[area] ? XAREA()[area][0] : 'Feeding challenges', title, lead, XC[area]) + `<section class="ss-moment">${body}</section>` + (XAREA()[area] ? xMore(area, id) : ''));
@@ -2464,6 +2464,39 @@
       + xDo('Crying that won’t stop', ['Check: hungry, burp, diaper, too warm?', 'Swaddle, hold, shush and sway.', 'Need a break? Lay him on his back somewhere safe.'], true)
       + xKnow('Never shake him', 'Even when you’re exhausted. Call someone to take over.')
       + xNote('Gas drops?', 'Safe, but often don’t help. Ask before gripe water.') + xNote('Worth a call:', 'crying 3 or more hours a day, or grunting with every breath.'));
+
+  // ---- Consistency pass (Nov 7): every page has the same anatomy (header → one picture in a white card → What to do →
+  // How you'll know / fixes → one quiet note). Two-up cards take the page's own color. Stomach size is a picture. ----
+  const xTwo = (a, b2, call) => `<div class="fm-two"><div style="background:var(--ss-bg)"><small style="color:var(--ss-ink)">${F(a[0])}</small><span>${F(a[1])}</span></div><div style="background:${call ? '#fdeee6' : 'var(--ss-bg)'}"><small style="color:${call ? '#9a5a3c' : 'var(--ss-ink)'}">${F(b2[0])}</small><span>${F(b2[1])}</span></div></div>`;
+  const STOMACH = [
+    ['Day 1', 'A marble', '1–2 tsp', `<svg viewBox="0 0 60 56" aria-hidden="true"><circle cx="30" cy="47" r="7" fill="#a9c8ea"/><circle cx="27.5" cy="44.5" r="2.2" fill="#fff" opacity=".8"/></svg>`],
+    ['Day 3', 'A walnut', 'About 1 oz', `<svg viewBox="0 0 60 56" aria-hidden="true"><ellipse cx="30" cy="42" rx="12.5" ry="12" fill="#c49a6c"/><path d="M30 31c-3 4 3 7 0 11s3 7 0 11" stroke="#9c7247" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M22 38c2 1 3 3 2 5M38 38c-2 1-3 3-2 5" stroke="#9c7247" stroke-width="1.3" fill="none" stroke-linecap="round"/></svg>`],
+    ['Week 1', 'An apricot', '1½–2 oz', `<svg viewBox="0 0 60 56" aria-hidden="true"><circle cx="30" cy="38" r="16" fill="#f4a95c"/><path d="M30 23c-2 6-2 20 0 30" stroke="#e08a3c" stroke-width="1.6" fill="none"/><path d="M30 23c3-6 9-7 12-5-3 4-8 6-12 5Z" fill="#8fb36a"/><circle cx="24" cy="33" r="3" fill="#fff" opacity=".35"/></svg>`],
+    ['Weeks 2–4', 'An egg', '2–4 oz', `<svg viewBox="0 0 60 56" aria-hidden="true"><path d="M30 8c11 0 18 18 18 30s-8 16-18 16-18-4-18-16S19 8 30 8Z" fill="#fbf4e6" stroke="#e6d8bd" stroke-width="1.5"/><ellipse cx="24" cy="24" rx="3.5" ry="6" fill="#fff" opacity=".9"/></svg>`]];
+  const stomachViz = (title) => `<style>#main .xst{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;text-align:center}#main .xst svg{width:100%;max-width:64px;height:auto;display:block;margin:0 auto 4px}#main .xst small{display:block;font-size:12px;font-weight:600;color:var(--ss-ink)}#main .xst b{display:block;font-size:15px;margin:1px 0}#main .xst span{display:block;font-size:12px;color:var(--muted,#6b6578);line-height:1.3}</style><section class="hub-card" style="padding:14px 12px 14px;margin:0 0 12px"><b style="display:block;font-size:15px;margin:0 4px 10px">${F(title)}</b><div class="xst">${STOMACH.map(([d, thing, amt, svg]) => `<div>${svg}<small>${F(d)}</small><b>${F(amt)}</b><span>${F(thing)}</span></div>`).join('')}</div></section>`;
+  P.x_amount = () => xPage('growth', 'x_amount', 'Small feeds are all he needs at first', 'His stomach is tiny, and grows fast. That’s why he feeds so often.',
+      stomachViz('His stomach, and about how much a feed holds')
+      + xDo('What to do', ['Follow his cues, not the ounces.', nurses() ? 'Nursing? You won’t see ounces, and that’s fine.' : 'Offer a little more only if he still seems hungry.'])
+      + xKnow('How you’ll know it’s enough', nurses() ? 'Wet diapers and steady weight, not ounces.' : 'You can’t see it in a feed, but you can in his diapers and weight. That’s next.'));
+  P.x_bottle = (() => { const prev = P.x_bottle; return () => { const nurse = nurses(), fm = formulaFam(); if (nurse && fm) return prev();
+    const h = prev(), i = h.indexOf('<div class="hub-tiles'); if (i < 0) return h; const j = h.indexOf('<section class="ss-do">', i);
+    return h.slice(0, i) + stomachViz('About how much, per bottle') + h.slice(j); }; })();
+  P.x_kind = (() => { const prev = P.x_kind; return () => { const b = isBreast(), fm = formulaFam(); let h = prev();
+    if (b && fm) h = h.replace(two(['Breast milk', 'Changes as he grows, and helps protect him from some illnesses.'], ['Formula', 'Gives him everything he needs to grow, with vitamin D and iron.']), xTwo(['Breast milk', 'Changes as he grows, and helps protect him from some illnesses.'], ['Formula', 'Gives him everything he needs to grow, with vitamin D and iron.']));
+    else if (b) h = h.replace(two(['Breast milk', 'Changes as he grows, and helps protect him from some illnesses.'], ['Vitamin D', 'Drops every day, from the first days.']), xTwo(['Breast milk', 'Changes as he grows, and helps protect him from some illnesses.'], ['Vitamin D', 'Drops every day, from the first days.']));
+    return h; }; })();
+  P.x_spit = (() => { const prev = P.x_spit; return () => prev().replace(two(['Usually fine', 'Comfortable, growing, and plenty of wet diapers.'], ['Worth a call', 'Forceful or green vomit, blood, or crying and arching at most feeds.', '#fdeee6', '#9a5a3c']), xTwo(['Usually fine', 'Comfortable, growing, and plenty of wet diapers.'], ['Worth a call', 'Forceful or green vomit, blood, or crying and arching at most feeds.'], true)); })();
+  // Pages that had no picture get their steps as one: the same numbered icon row the rest of the app uses.
+  P.x_formula = () => xPage('prep', 'x_formula', 'Make every bottle the same safe way', 'Powder isn’t sterile, and young babies are most at risk, so these steps matter.',
+      steps([['hand', 'Wash', 'Hands, counter and bottle'], ['drop', 'Boil the water', 'Then let it sit 5 minutes'], ['bowl', 'Water, then powder', 'Level scoops, as the label says'], ['heart', 'Cool and test', 'Warm, not hot, on your wrist']], true)
+      + xKnow('How long it keeps', 'Use within 2 hours, or fridge for up to 24. Once he starts, finish within 1 hour.')
+      + xNote('Easier at 3 am:', 'ready-to-feed is sterile and needs no mixing. Ask your pediatrician if your tap water is safe.'));
+  P.x_bm = () => xPage('prep', 'x_bm', 'Getting breast milk ready', 'Oldest first, gently mixed, and fed within 2 hours.',
+      steps([['fridge', 'Oldest first', 'From the fridge, or thawed there overnight'], ['drop', 'Swirl', 'Don’t shake. Layers are normal'], ['heart', 'Warm or cool', 'Test a few drops on your wrist']], true)
+      + xKnow('Never microwave', 'It heats unevenly and can burn. A bowl of warm water works best.'));
+  P.x_clean = () => xPage('prep', 'x_clean', 'Wash bottles after every feed', 'And sanitize once a day for the first few months.',
+      steps([['hand', 'Take it apart', pumps() ? 'Pump parts too' : 'Bottle, nipple, ring'], ['drop', 'Wash', 'Hot, soapy water or the dishwasher'], ['star', 'Air-dry', 'On a clean rack, not a towel']], true)
+      + xKnow('Sanitizing', 'Once a day: boil 5 minutes, steam, or a sanitize cycle. Most important under 2 months, or for babies born early.'));
 
   // ---- Milk feeds (6 weeks–4 months), rebuilt on the Newborn model (Nov 5): four subject pages with tabs, grouped by moment. ----
   HEADART['Feeds & rhythm'] = () => ART.often(5);
