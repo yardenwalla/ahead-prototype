@@ -221,7 +221,10 @@
   card('teething', 'Daily rhythm', 4, s => s.d >= 150 && s.d <= 240 && s.tooth !== true, 'Teething can start weeks before a tooth', 'Drool and chewing often start weeks before the first tooth, usually between 6 and 10 months. A chilled (not frozen) teething ring helps.',
     Object.assign({ topic: 'tooth', catchup: 240, go: "openPage('chg:Daily rhythm:d:gums')" }, ask([['Has a tooth', "home2Tooth(true)"], ['Not yet', "home2Tooth(false)"]])));
   card('first-tooth', 'Daily rhythm', 3, s => s.tooth === true && s.toothAt != null && s.toothAt <= 28, 'Teeth are here: time to brush', 'Brush twice a day with a rice-grain smear of fluoride toothpaste, the last time after the bedtime feed.', { fromAnswer: 1, go: "openPage('chg:Daily rhythm:d:teeth')" });
-  card('dentist', 'Health', 4, s => s.tooth === true && ((opened(s, 'first-tooth') && s.toothAt >= 10 && s.toothAt <= 60) || s.d >= 320), 'The first dentist visit comes early', 'Book it once the first tooth is in, and by {his} first birthday. They’ll check {his} teeth and show you how to brush.', { go: "openPage('chg:Daily rhythm:d:teeth')" });
+  // From when first teeth are most common: brushing starts with the first tooth, so the card is true either way.
+  card('tooth-soon', 'Daily rhythm', 4, s => s.d >= 183 && s.d <= 300 && s.tooth !== true, 'First tooth in, or on the way?', 'Brushing starts with the first tooth: a rice-grain smear of fluoride toothpaste, twice a day.', { topic: 'tooth', go: "openPage('chg:Daily rhythm:d:t:teeth:3')" });
+  // Every baby's first dentist visit is due by 1, tooth or not.
+  card('dentist', 'Health', 4, s => (s.tooth === true && opened(s, 'first-tooth') && s.toothAt >= 10 && s.toothAt <= 60) || (s.d >= 320 && s.d <= 365), 'The first dentist visit comes early', 'Book it once the first tooth is in, and by {his} first birthday. They’ll check {his} teeth and show you how to brush.', { go: "openPage('chg:Daily rhythm:d:teeth')" });
   // Round 2 (Nov 7): timely discoveries, new options and cards from what the parent does in Ahead.
   card('solids-approach', 'Feeding', 4, s => s.d >= 160 && s.d <= 190 && s.solids !== 'started', 'How to start solids is your call', 'Spoon-feeding, soft finger foods or a bit of both all work, so pick what suits your family.', { go: "openPage('chg:Feeding:d:approach')" });
   card('sleep-training', 'Sleep', 4, s => s.d >= 125 && s.d <= 180, 'Sleep training is an option, not a must', 'Some families try it from about 4–6 months, and many never do. Either way is fine.', { go: "openPage('sleep-stage:prepare')" });
@@ -328,7 +331,7 @@
   function pick(s) {
     const first = s.firstDay === iso(NOW);
     // While Home's one question is about a topic, cards on that topic wait for the answer.
-    const qTopic = s.q === 'movement' || s.q === 'crawl' || s.q === 'stand' ? 'move' : s.q === 'food' || s.q === 'food-progress' ? 'food' : s.q === 'naps' ? 'naps' : null;
+    const qTopic = s.q === 'movement' || s.q === 'crawl' || s.q === 'stand' ? 'move' : s.q === 'food' || s.q === 'food-progress' ? 'food' : s.q === 'naps' ? 'naps' : s.q === 'tooth' ? 'tooth' : null;
     const live = C.filter(c => {
       if (c.once !== false && s.opened[KEY(c, s)] != null) return false;
       const sk = s.snooze[KEY(c, s)]; if (sk != null && Date.now() - sk < 21 * DAY) return false;
