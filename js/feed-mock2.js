@@ -2256,7 +2256,7 @@
       g1: ['Is he getting enough?', [['y_diapers', 'diaper', 'Diapers', ''], ['y_weight', 'star', 'Weight', ''], ['x_vitd', 'drop', b ? 'Vitamin D' : 'Vitamins', '']], 'That’s how to tell he’s getting enough']
       ,r2: ['Getting ready for solids', [['z_signs', 'eye', 'Signs', ''], ['z_how', 'plate', 'Choose', ''], ['z_allergy', 'shield', 'Allergies', ''], ['z_setup', 'highchair', 'Set up', ''], ['z_gag', 'eye', 'Gagging', '']], 'You’re ready for the first bite']
       ,m1e: ['Evenings and nights', [['y_evening', 'clock', 'Evenings', ''], ['y_night', 'moon', 'Nights', '']], 'That’s evenings and nights'],
-      f3: ['First foods, step by step', [['z_tray', 'bowl', 'Start', ''], ['z_allergens', 'star', 'Allergens', ''], ['z_notyet', 'shield', 'Not yet', ''], ['z_water', 'cup', 'Drinks', '']], 'That’s what goes on the tray']
+      f3: ['First foods, step by step', [['z_tray', 'bowl', 'Start', ''], ['z_allergens', 'star', 'Allergens', ''], ['z_notyet', 'shield', 'Foods to skip', ''], ['z_water', 'cup', 'Drinks', '']], 'That’s what goes on the tray']
     }; };
   const xMore = (area, self) => { const [t, rows] = XAREA()[area], rs = rows.filter(r => r && r[0] !== self); return rs.length ? `<h2 class="hub-h2">${F('More on ' + t.toLowerCase())}</h2><div class="hub-list">${rs.map(([id, icon, title, sub]) => H().row({ cat: CAT, icon, title, sub, onclick: go(id) }).replace(/<span class="hub-dot">[\s\S]*?<\/span><span class="hub-row-copy">/, `<span class="hub-dot">${hubArt(icon, CAT).replace('data-art=', 'data-keep=')}</span><span class="hub-row-copy">`)).join('')}</div>` : ''; };
   const xPage = (area, id, title, lead, body) => window.__xCollect ? head((XAREA()[area] || ['Feeding'])[0], title, lead, XC[area]) + `<section class="ss-moment">${body}</section>` : qaCss + page(head(XAREA()[area] ? XAREA()[area][0] : 'Feeding challenges', title, lead, XC[area]) + `<section class="ss-moment">${body}</section>` + (XAREA()[area] ? xMore(area, id) : ''));
@@ -2733,6 +2733,7 @@
       + xNote('Worth a call:', 'refusing most foods for weeks, or fewer wet diapers.'));
   P.z_reaction = () => yPage(XL, 'Feeding challenges', 'A rash or reaction after a new food', 'A little redness around the mouth is often from acidic food. A true reaction looks different.',
       xTwo(['Usually fine', 'Redness only where food touched, that fades.'], ['Call your pediatrician', 'Hives, vomiting, or a rash that spreads.'], true)
+      + xDo('What to do', ['Note the food and what happened. A photo helps.', 'Hold off on that food, and ask your pediatrician before trying it again.'])
       + xKnow('Call 911', 'Trouble breathing, swelling of the lips or face, or he’s very sleepy or floppy.'));
   P.z_tough = () => { const rows = [['z_gag', 'eye', 'Gagging', 'Normal, and how to tell it from choking'], ['z_refuse', 'heart', 'Refusing food', 'Common, and what helps'], ['z_reaction', 'star', 'A rash after a new food', 'What’s fine, and when to call'], ['x_poop', 'diaper', 'Constipation', 'Common with new foods']];
     return qaCss + page(head('Feeding challenges', 'Something not quite right?', 'Pick what’s happening.', XL) + `<div class="hub-list">${rows.map(([id, icon, title, sub]) => H().row({ cat: CAT, icon, title, sub, onclick: go(id) }).replace(/<span class="hub-dot">[\s\S]*?<\/span><span class="hub-row-copy">/, `<span class="hub-dot">${hubArt(icon, CAT).replace('data-art=', 'data-keep=')}</span><span class="hub-row-copy">`)).join('')}</div>`
@@ -2740,7 +2741,7 @@
   window.SHOME = (v) => { const b = isBreast(), fm = formulaFam(), h = H(), early = isEarly();
     const cr = (c, icon, title, sub, id) => h.row({ cat: CAT, icon, title, sub, onclick: go(id) }).replace(/<span class="hub-dot">[\s\S]*?<\/span><span class="hub-row-copy">/, `<span class="hub-dot">${hubArt(icon, CAT).replace('data-art=', 'data-keep=')}</span><span class="hub-row-copy">`).replace('class="hub-row', `style="--sm-bg:${c[0]};--sm-ink:${c[1]}" class="sm-row hub-row`);
     const R = v === 2 ? [b && [XC.g1, 'drop', 'Iron drops from 4 months', fm ? 'If most of his milk is breast milk' : 'Breast milk is low in iron', 'z_iron'], [XG, 'bowl', 'Start when he shows all the signs', 'Signs, choosing, allergies, set up, gagging', 'xa:r2']]
-      : v === 3 ? [[XG, 'bowl', 'Start with iron-rich foods, then build variety', 'Start, allergens, not yet, drinks', 'xa:f3']]
+      : v === 3 ? [[XG, 'bowl', 'Start with iron-rich foods, then build variety', 'Start, allergens, foods to skip, drinks', 'xa:f3']]
       : [[XG, 'clock', 'Three meals, plus milk', 'An example day', 'z_day'], [XG, 'hand', 'Soft pieces of family food', 'What he can eat now', 'z_family'], [XC.g1, 'leaf', 'Appetite goes up and down', 'And that’s normal', 'z_appetite'], [XC.d1, 'cup', 'Cups now, whole milk at 12 months', 'What changes at his first birthday', 'z_milk12']];
     const tough = v === 2 ? 'x_tough' : 'z_tough', toughSub = v === 2 ? 'Distracted feeds, spit-up, gas, poop' : 'Gagging, refusing food, a rash, constipation';
     const rough = `<button class="hub-rough-card care-rash-card" style="background:#fbe4ec;color:#9b4766;margin-top:12px" onclick="${go(tough)}"><span class="hub-rough-moon" aria-hidden="true">${hubArt('heart', CAT)}</span><span class="hub-rough-copy"><b>${F('Feeding challenges')}</b><small>${F(toughSub)}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`;
@@ -2819,6 +2820,33 @@
   const xEyebrow = (h, key, label) => { const i = h.indexOf(key); if (i < 0) return h; const j = h.indexOf('<span class="hub-row-copy">', i); return j < 0 ? h : h.slice(0, j) + `<span class="hub-row-copy"><small class="hub-row-eyebrow">${F(label)}</small>` + h.slice(j + '<span class="hub-row-copy">'.length); };
   window.SHOME = (() => { const prev = window.SHOME; return v => v === 3 ? xEyebrow(prev(v), 'xa:f3', 'First foods, step by step') : prev(v); })();
   window.M1HOME = (() => { const prev = window.M1HOME; return () => xEyebrow(prev(), 'xa:m1e', 'Evenings and nights'); })();
+  // ---- Quality bar pass (Nov 7): spit-up in the standard shape, a week-of-appetite picture, real food icons,
+  // "Foods to skip" instead of "Not yet", and the allergen check-off is back. ----
+  P.x_spit = () => xTough('x_spit', 'Spit-up is common, and usually fine', 'It looks like more than it is once it spreads out.',
+      xNums('', [['1–2 tbsp', 'At a time, often normal'], ['Around 4 months', 'When it peaks. Gone by 9–12 months']])
+      + xDo('What helps', ['Hold him upright for 20–30 minutes after feeds.', 'Smaller feeds, more often.', 'Stop when he slows. No need to finish.'])
+      + xTwo(['Usually fine', 'Comfortable, growing, and plenty of wet diapers.'], ['Worth a call', 'Forceful or green vomit, blood, or crying and arching at most feeds.'], true)
+      + xNote('For sleep:', 'flat on his back, even with spit-up. No wedges or inclined sleepers.') + (formulaFam() ? xNote('Wondering if it’s the formula?', 'Spit-up happens on any formula. A rash or blood in his poop is worth a call. Ask before switching.') : ''));
+  const weekViz = () => { const v = [70, 35, 50, 90, 40, 60, 80], d = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+    return `<section class="hub-card" style="padding:14px 16px 12px;margin:0 0 12px"><b style="display:block;font-size:15px;margin:0 0 10px">${F('A typical week of meals')}</b><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:8px;align-items:end;height:84px">${v.map(h => `<div style="height:${h}%;background:var(--ss-bg);border-radius:8px 8px 4px 4px;border:1.5px solid var(--ss-ink);border-bottom-width:1.5px"></div>`).join('')}</div><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-top:6px;text-align:center;font-size:11.5px;color:var(--muted,#6b6578)">${d.map(x => `<span>${x}</span>`).join('')}</div><p style="margin:10px 0 0;font-size:13.5px;color:#4c4757">${F('Big days and small days even out over the week.')}</p></section>`; };
+  P.z_appetite = () => yPage(XC.g1, 'Appetite', 'Appetite goes up and down', 'Growth slows after the first months, so he may eat less than you expect.',
+      weekViz()
+      + xDo('What to do', ['Keep offering, without pressure.', 'A new food can take 10–15 tries.', 'Look at the week, not one meal.'])
+      + xKnow('How you’ll know he’s getting enough', 'Wet diapers, energy, and steady growth at his 9- and 12-month checkups.'));
+  P.z_family = (() => { const prev = P.z_family; return () => prev().replace(hubArt('pieces', CAT).replace('data-art=', 'data-keep='), hubArt('lentils', CAT).replace('data-art=', 'data-keep=')); })();
+  P.z_tray = (() => { const prev = P.z_tray; return () => prev().replace(hubStageStrip({ title: 'Textures, as he grows', items: [['bowl', 'Around 6 months', 'Smooth and mashed'], ['strips', '6–8 months', 'Soft, finger-size strips'], ['pieces', '9 months on', 'Soft, pea-size pieces']], cat: CAT }), hubStageStrip({ title: 'Textures, as he grows', items: [['bowl', 'Around 6 months', 'Smooth and mashed'], ['avocado', '6–8 months', 'Soft, finger-size strips'], ['lentils', '9 months on', 'Soft, pea-size pieces']], cat: CAT })); })();
+  P.z_notyet = () => yPage(XL, 'Safety', 'Foods to skip until his first birthday', 'Some foods wait for safety, not taste.',
+      chips(['Honey', 'Whole nuts', 'Whole grapes', 'Popcorn', 'Hot dog rounds', 'Hard raw veg', 'Cow’s milk to drink', 'Juice'])
+      + xDo('What to do', ['Quarter grapes and cherry tomatoes lengthwise.', 'Spread nut butters thin, never in a lump.', 'Cook hard veg until soft.'])
+      + xKnow('Why honey', 'It can carry botulism, which babies can’t fight off until 12 months.'));
+  // Allergen check-off: tap each one once he’s had it. Kept on this device.
+  const AL = ['Peanut', 'Egg', 'Dairy', 'Wheat', 'Soy', 'Fish', 'Shellfish', 'Sesame', 'Tree nuts'];
+  const alGet = () => { try { return JSON.parse(localStorage.getItem('ahead-fd-allergens') || '[]'); } catch (e) { return window.__alMem || []; } };
+  window.__alCard = () => { const done = alGet();
+    return `<section class="hub-card" id="fd-al" style="padding:14px 14px 12px;margin:0 0 12px"><div style="display:flex;justify-content:space-between;align-items:baseline;margin:0 2px 10px"><b style="font-size:15px">${F('Tap each one once he’s had it')}</b><small style="font-weight:700;color:var(--ss-ink)">${done.length} ${F('of')} ${AL.length}</small></div><div style="display:flex;flex-wrap:wrap;gap:8px">${AL.map(a => { const on = done.includes(a); return `<button type="button" aria-pressed="${on}" onclick="__alTick('${a}')" style="font:inherit;font-size:14px;font-weight:600;border-radius:999px;padding:6px 12px;cursor:pointer;border:1.5px solid var(--ss-ink);background:${on ? 'var(--ss-ink)' : 'var(--ss-bg)'};color:${on ? '#fff' : 'var(--ss-ink)'}">${on ? '✓ ' : ''}${F(a)}</button>`; }).join('')}</div></section>`; };
+  window.__alTick = a => { let d = alGet(); d = d.includes(a) ? d.filter(x => x !== a) : d.concat(a); window.__alMem = d; try { localStorage.setItem('ahead-fd-allergens', JSON.stringify(d)); } catch (e) { } const el = document.getElementById('fd-al'); if (el) el.outerHTML = pron(window.__alCard()); };
+  P.z_allergens = (() => { const prev = P.z_allergens; return () => prev().replace(chips(['Peanut', 'Egg', 'Dairy', 'Wheat', 'Soy', 'Fish', 'Shellfish', 'Sesame', 'Tree nuts']), window.__alCard()); })();
+
   // ---- Milk feeds (6 weeks–4 months), rebuilt on the Newborn model (Nov 5): four subject pages with tabs, grouped by moment. ----
   HEADART['Feeds & rhythm'] = () => ART.often(5);
   P.rhythm1 = () => { const nurse = nurses(), b = isBreast(), bot = isBottle(), fm = formulaFam();
