@@ -33,6 +33,9 @@
     const moving = a >= 6 && answers.crawl !== 'Yes' && answers.pullUp !== 'Yes' && due(d, 'crawl', ['Not yet']);
     if (moving && a >= 8) out.push('crawl');
     if (food) out.push(food.key);
+    // From 8 months for a crawler (9 for everyone): is the baby pulling up? Home shows its cruising and standing-height
+    // cards once it knows. Solids come first: a late start matters more.
+    if (a >= 8 && answers.pullUp !== 'Yes' && (answers.crawl === 'Yes' || a >= 9) && due(d, 'stand', ['Not yet'])) out.push('stand');
     if (moving && a < 8) out.push('crawl');
     // Sleep (Rule 1 and Rule 3): from 6 months, while the guide is on Three naps, ask about the late catnap.
     // A "not yet" (or a Change back to Three naps) is asked again a month later.
@@ -113,11 +116,12 @@
   // Every Home answer says what changed and offers the page, so the tap never feels like it went nowhere.
   const confirmAnswer = (key, value) => {
     if (typeof hubToast !== 'function') return;
-    const cat = { food: 'Feeding', naps: 'Sleep', crawl: 'Safety', milk: 'Feeding' }[key] || (key.startsWith('outgrown:') ? key.slice(9) : null);
+    const cat = { food: 'Feeding', naps: 'Sleep', crawl: 'Safety', stand: 'Safety', milk: 'Feeding' }[key] || (key.startsWith('outgrown:') ? key.slice(9) : null);
     if (!cat) return;
     const label = cat === 'Daily rhythm' ? 'Everyday care' : cat;
     const body = key === 'food' ? (value === 'starting' ? 'Feeding now shows first tastes.' : value === 'while' ? `Feeding now matches where ${name()} is with solids.` : 'Feeding shows how to get ready for solids.')
       : key === 'crawl' ? (value === 'Yes' ? `Safety now covers a baby on the move.` : `We’ll ask again in a few weeks.`)
+      : key === 'stand' ? (value === 'Yes' ? `Safety now covers a baby who stands.` : `We’ll ask again in a few weeks.`)
       : key === 'naps' ? (value === 'Yes' ? 'Sleep now shows two naps.' : 'Sleep stays on three naps for now.')
       : `${label} now matches what you told us.`;
     setTimeout(() => hubToast('Got it', body, [`See ${label}`, `document.querySelectorAll('.hub-toast').forEach(t=>t.remove());openPage('topic:${cat}')`]), 0);
