@@ -2043,7 +2043,7 @@
 #main .nbc .fd-acc .fd-acc-ico{display:none!important}
 #main .nbc .fd-acc summary b{font-size:15.5px}
 #main .nbc .fd-acc-body{padding:0 2px 12px!important}
-#main .nbc .hub-tiles{gap:8px}
+#main .nbc .hub-tiles{gap:8px}#main .nbc .hub-figure,#main .nbc .hub-steps,#main .nbc figure.hub-card,#main .nbc .hub-icon-steps{background:none!important;border:0!important;box-shadow:none!important;padding-left:0!important;padding-right:0!important}#main .nbc .hub-fig-title:empty{display:none}#main .nbc .hub-iconstep-art{width:40px!important;height:40px!important;padding:9px!important;border-radius:12px!important}#main .nbc .hub-iconstep{gap:4px}#main .nbc .hub-iconsteps-row{row-gap:16px}
 </style>`;
   const cLead = t => `<p class="c-lead">${F(t)}</p>`;
   const cList = (xs, numbered) => `<ul class="c-list">${xs.filter(Boolean).map((x, i) => `<li><i>${numbered ? i + 1 : hubArt(x[0], CAT)}</i><span><b>${F(numbered ? x[0] : x[1])}</b>${(numbered ? x[1] : x[2]) ? `<small>${F(numbered ? x[1] : x[2])}</small>` : ''}</span></li>`).join('')}</ul>`;
@@ -2052,15 +2052,15 @@
   P.nb_routine = () => { const nurse = nurses(), b = isBreast(), bot = isBottle(), fm = formulaFam();
     const dayHtml = (P.day() || ''), k0 = dayHtml.indexOf('<div class="hub-card" style="padding:14px 14px 8px">'), e0 = k0 >= 0 ? dayHtml.indexOf('<figure', k0) : -1, ribbon = k0 >= 0 && e0 > k0 ? dayHtml.slice(k0, e0) : '';
     return cPage('Feeding routine', 'Feeding routine', 'What feeding looks like now, what might surprise you, and how to make it easier.',
-      `<section class="hub-card" style="padding:16px 16px 10px;margin:0 0 12px"><b style="display:block;font-size:17px;margin:0 0 10px">${F('Your feeding rhythm')}</b><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div><strong style="display:block;font-size:28px;line-height:1.1">${b ? '8–12' : '6–10'}</strong><small style="display:block;color:var(--muted,#6b6578);font-size:13.5px;margin-top:3px">${F('Feeds a day')}</small></div><div><strong style="display:block;font-size:28px;line-height:1.1">${b ? '2–3 hrs' : '2–4 hrs'}</strong><small style="display:block;color:var(--muted,#6b6578);font-size:13.5px;margin-top:3px">${F('Between the starts of feeds')}</small></div></div><p style="margin:12px 0 0;font-size:14.5px;line-height:1.45">${F('Follow his hunger cues rather than an exact schedule. The day below is just an example.' + (bot ? (nurse && fm ? ' Top-ups are small, often 1–2 oz.' : ' Bottles start around 1–3 oz.') : ''))}</p>${ribbon.replace('<div class="hub-card" style="padding:14px 14px 8px">', '<div style="padding:10px 0 0;margin-top:10px;border-top:1px solid var(--line,#f0e8eb)">')}</div></section>`
-      + h2('Know when he’s hungry') + cLead('Feed at the early signs. Crying is a late sign.')
-      + cueStrip().replace(F('Hunger cues, early to late'), F('Early to late'))
+      `<section class="hub-card" style="padding:16px 16px 10px;margin:0 0 12px"><b style="display:block;font-size:17px;margin:0 0 10px">${F('Your feeding rhythm')}</b><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div><strong style="display:block;font-size:28px;line-height:1.1">${b ? '8–12' : '6–10'}</strong><small style="display:block;color:var(--muted,#6b6578);font-size:13.5px;margin-top:3px">${F('Feeds a day')}</small></div><div><strong style="display:block;font-size:28px;line-height:1.1">${b ? '2–3 hrs' : '2–4 hrs'}</strong><small style="display:block;color:var(--muted,#6b6578);font-size:13.5px;margin-top:3px">${F('Apart')}</small></div></div>${ribbon.replace('<div class="hub-card" style="padding:14px 14px 8px">', '<div style="padding:10px 0 0;margin-top:10px;border-top:1px solid var(--line,#f0e8eb)">')}</div></section>`
+      + h2('Know when he’s hungry') + ''
+      + cueStrip().replace(`<b class="hub-fig-title">${F('Hunger cues, early to late')}</b>`, '')
       + accs([['eye', 'Hungry, or wants comfort?', '', ['~If it’s been a while, offer a feed. If he just ate, a cuddle or a pacifier' + (nurse ? ' (once nursing is going well)' : '') + ' may settle him.'], '', '']])
-      + h2('Some newborns need waking') + cLead('Until he’s back to birth weight, your pediatrician may suggest waking him about every 3 hours. Any of these can help.')
+      + h2('Some newborns need waking') + cLead('Until he’s back to birth weight, about every 3 hours.')
       + steps([['shirt', 'Undress him', 'Down to his diaper'], ['hand', 'Stroke his feet', 'Or his back, gently'], ['diaper', 'Change his diaper', 'Midway through'], b && nurse ? ['drop', 'Breast compressions', 'Keep milk flowing'] : ['smile', 'Pause and burp', 'Then offer again']], false)
-      + h2('Evenings can get intense') + cLead('Feeding again and again for a few hours is cluster feeding. It’s common' + (b ? ', and it doesn’t mean you’re low on milk.' : '.'))
+      + h2('Evenings can get intense') + cLead('Feed after feed for a few hours is normal.')
       + steps([[b ? 'roll' : 'bottle', b ? 'Switch sides often' : 'Smaller bottles', b ? 'Keeps milk flowing' : 'More often'], ['diaper', 'Change first', 'So he stays sleepy after'], ['moon', 'Dim and quiet', 'Save play for the day'], ['heart', 'Take turns', 'A longer stretch each']], false)
-      + h2('It won’t always be this frequent') + hubStageStrip({ title: 'What’s ahead', items: [['clock', 'Around 6 weeks', 'Fussy evenings peak, then ease'], ['moon', '6–8 weeks', 'Cluster feeding eases'], ['smile', '2–3 months', 'A longer night stretch']], cat: CAT })
+      + h2('It won’t always be this frequent') + hubStageStrip({ title: '', items: [['clock', 'Around 6 weeks', 'Fussy evenings peak, then ease'], ['moon', '6–8 weeks', 'Cluster feeding eases'], ['smile', '2–3 months', 'A longer night stretch']], cat: CAT })
       + h2('Common questions') + accs([['eye', 'Days and nights mixed up?', '', ['~Keep days bright and nights quiet and boring. It improves over a few weeks.'], '', ''], ['eye', 'Should I track feeds?', '', ['~A short note of feeds and diapers helps at first. Stop once things feel settled, unless your pediatrician asks you to keep going.'], '', '']])); };
 
   // 2. Feeding skills
