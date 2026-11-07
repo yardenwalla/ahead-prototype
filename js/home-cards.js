@@ -86,7 +86,7 @@
       solidsNoAt: st.solidsNo ? daysSince(st.solidsNo) : null,
       tooth: a.tooth === 'Yes' ? true : st.toothNo ? false : null, toothAt: st.toothAt ? daysSince(st.toothAt) : null, toothNoAt: st.toothNo ? daysSince(st.toothNo) : null,
       naps: a.twoNaps === 'Yes' ? 2 : a.twoNaps === 'Stay' ? 3 : null, napsAt: st.napsAt ? daysSince(st.napsAt) : null,
-      opened: st.opened || {}, seen: st.seen || {}, firstDay: st.firstDay || iso(NOW), answeredAt: st.answeredAt || 0, q: typeof homeQuestion === 'function' ? homeQuestion() : null
+      opened: st.opened || {}, seen: st.seen || {}, snooze: st.snooze || {}, views: st.views || {}, firstDay: st.firstDay || iso(NOW), answeredAt: st.answeredAt || 0, q: typeof homeQuestion === 'function' ? homeQuestion() : null
     };
   }
   const at = (s, d) => Object.assign({}, s, { d, date: new Date(s.birth.getTime() + d * DAY) });
@@ -144,10 +144,11 @@
   card('cluster', 'Feeding', 4, s => (s.d >= 10 && s.d <= 24) || (s.d >= 38 && s.d <= 48), 'Feeding nonstop? Often a growth spurt',
     s => s.feed === 'breast' ? 'Hourly feeds are common around 3 and 6 weeks, and settle in 2–3 days. Feeding more is how your body makes more.' : 'Days of extra hunger are common around 3 and 6 weeks. Follow {his} cues: it settles in 2–3 days.', { go: "openPage('chg:Feeding:d:cues')" });
   card('tub-baths', 'Daily rhythm', 4, s => s.d >= 14 && s.d <= 28, 'First tub bath: once the cord falls off', 'Usually at 1–3 weeks. A few inches of warm water, and a hand on {him} the whole time.', { go: "openPage('chg:Daily rhythm:d:tub')" });
+  card('tummy-time', 'Development', 3, s => s.d >= 5 && s.d <= 42, 'Tummy time starts now', 'A few minutes on {his} tummy, a few times a day while {hes} awake, builds neck strength.', { go: "openPage('development-domain:2:Movement')" });
+  card('formula-hour', 'Feeding', 3, s => (s.feed === 'formula' || s.feed === 'both') && s.d >= 3 && s.d <= 35, 'Leftover formula goes after an hour', 'Once {he} {starts|start} a bottle, toss what’s left within an hour, since germs grow fast.', { go: "openPage('topic:Feeding')" });
   card('first-bottle', 'Feeding', 4, s => s.feed === 'breast' && s.d >= 21 && s.d <= 42, 'A first bottle, if you’ll ever need one', '3 to 6 weeks is the easiest time, once nursing is going well. Babies who don’t try one early can resist it later.', { go: "openPage('chg:Feeding:d:bottles')" });
   card('crying-peak', 'Sleep', 4, s => s.d >= 35 && s.d <= 63, 'The fussiest weeks: they ease by 3–4 months', 'Crying usually peaks around 6–8 weeks, and some evenings nothing works. That isn’t you. At your limit, put {him} down safely and step away.', { go: "openPage('chg:Sleep:d:crying')" });
   // 6 weeks to 4 months
-  card('drool', 'Daily rhythm', 4, s => s.d >= 60 && s.d <= 115, 'All that drool usually isn’t teeth yet', 'Drooling and chewing on fists often start around 2–4 months, long before a first tooth. It’s how babies explore.', { go: "openPage('chg:Daily rhythm:d:gums')" });
   card('routine', 'Sleep', 3, s => s.d >= 42 && s.d <= 77, 'Nights start to stretch: add a bedtime routine', 'Bath, feed, song: a short routine in the same order helps that longer stretch land at night instead of the afternoon.', { catchup: 150, go: "openPage('chg:Sleep:d:routine')" });
   card('shorter-feeds', 'Feeding', 4, s => breast(s) && s.d >= 42 && s.d <= 60, 'Shorter feeds are normal now', 'Around 6 weeks, many breastfed babies get faster and go 2–4 hours between feeds. It doesn’t mean less milk.', { go: "openPage('chg:Feeding:d:nursing')" });
   card('fewer-poops', 'Daily rhythm', 4, s => s.feed === 'breast' && s.d >= 42 && s.d <= 90, 'Days without a poop can be normal', 'After about 6 weeks, some breastfed babies go days between poops. Wet diapers, 6 or more a day, tell you {hes} getting enough.', { go: "openPage('topic:Daily rhythm')" });
@@ -167,7 +168,7 @@
   const MOVE_ASK = (yes, key) => ask([[yes, `setAnswer('${key}','Yes')`], ['Not yet', key === 'roll' ? "setAnswer('rollDirection','Not yet')" : `setAnswer('${key}','Not yet')`]]);
   const fresh7 = (s, k) => s.notYet[k] && s.moveAt != null && s.moveAt <= 7;
   const freshNo = (s, k) => s.notYet[k] && s.moveAt != null && s.moveAt <= 28;
-  card('rolling-soon', 'Safety', 1, s => s.d >= 105 && s.d <= 200 && (freshNo(s, 'rolling') || s.move == null),
+  card('rolling-soon', 'Safety', 1, s => s.d >= 105 && s.d <= 200 && (s.move == null || s.move === 'none'),
     s => fresh7(s, 'rolling') ? 'Rolling is coming: two quick changes' : 'Rolling, or about to? Two quick changes',
     'Usually between 4 and 6 months. Change {him} on the floor or with a hand on {him}, and sweep the floor for small things.',
     Object.assign({ safety: 1, must: 1, topic: 'move', go: "openPage('safety-stage:rolling')" }, MOVE_ASK('Already rolling', 'roll')));
@@ -181,32 +182,29 @@
     'Sitting on {his} own usually means the stroller’s upright seat instead of the bassinet attachment. Infant tubs often stop at sitting too.',
     { fromAnswer: 1, go: "openPage('chg:Out and about:d:stroller')" });
   // Solids
-  card('solids-ready', 'Feeding', 3, s => (s.d >= 140 && s.d <= 175 && s.solids == null) || (s.d >= 140 && s.d <= 245 && s.solids === 'notyet' && s.solidsNoAt != null && s.solidsNoAt <= 28), 'Solids are getting close',
-    'Around 6 months, once {he} {sits|sit} with a little support, {holds|hold} {his} head steady and {leans|lean} in for food.',
-    Object.assign({ slot: 'soon', topic: 'food', go: "openPage('chg:Feeding:d:signs')" }, ask([['Started already', "home2Solids(true)"], ['Not yet', "home2Solids(false)"]])));
-  card('first-bite', 'Feeding', 3, s => (opened(s, 'solids-ready') && ((s.d >= 150 && s.d <= 175 && s.solids == null) || (s.solids === 'notyet' && s.solidsNoAt != null && s.solidsNoAt <= 28 && s.d <= 245))) || (s.solidsDays != null && s.solidsDays <= 45 && s.solidsTold != null && s.solidsTold <= 28 && opened(s, 'solids-1')),
+  card('first-bite', 'Feeding', 3, s => (s.d >= 150 && s.d <= 200 && s.solids !== 'started') || (s.solidsDays != null && s.solidsDays <= 45 && s.solidsTold != null && s.solidsTold <= 28 && opened(s, 'solids-1')),
     s => s.solidsDays == null ? 'Before the first bite: gagging vs choking' : 'Gagging vs choking: how to tell',
     'Gagging is loud, red-faced and normal: it’s how {he} {learns|learn}. Choking is silent. A short infant first aid video before you start helps.', { must: 1, topic: 'food', go: "openPage('chg:Feeding:d:setup')" });
-  card('solids-maybe', 'Feeding', 3, s => s.d >= 176 && s.d <= 245 && s.solids == null, 'Starting solids? Lead with iron', 'Iron runs low around 6 months, so meat, beans, lentils or iron-fortified oatmeal make the best first foods.',
+  card('solids-maybe', 'Feeding', 3, s => s.d >= 176 && s.d <= 245 && s.solids !== 'started', 'Starting solids? Lead with iron', 'Iron runs low around 6 months, so meat, beans, lentils or iron-fortified oatmeal make the best first foods.',
     Object.assign({ must: 1, topic: 'food', go: "openPage('chg:Feeding:d:food')" }, ask([['Started already', "home2Solids(true)"], ['Not yet', "home2Solids(false)"]])));
   card('solids-1', 'Feeding', 3, s => s.solidsDays != null && s.solidsDays <= 45 && s.solidsTold != null && s.solidsTold <= 21 && !opened(s, 'solids-maybe'), 'First foods: lead with iron', 'Iron runs low around 6 months, so meat, beans, lentils or iron-fortified oatmeal make the best first foods.', { fromAnswer: 1, must: 1, go: "openPage('chg:Feeding:d:food')" });
-  card('solids-2', 'Feeding', 2, s => s.solidsDays != null && ((s.solidsDays >= 7 && s.solidsDays <= 120 && (opened(s, 'solids-1') || opened(s, 'solids-maybe'))) || (s.solidsDays > 21 && s.solidsDays <= 120)), 'Offer peanut and egg early', 'Giving common allergens early, then keeping them in {his} week, lowers the chance of a food allergy. Severe eczema? Ask your pediatrician first.', { must: 1, go: "openPage('chg:Feeding:d:allergens')" });
+  card('solids-2', 'Feeding', 2, s => s.solidsDays != null && ((s.solidsDays >= 3 && s.solidsDays <= 120 && (opened(s, 'solids-1') || opened(s, 'solids-maybe'))) || (s.solidsDays > 14 && s.solidsDays <= 120)), 'Offer peanut and egg early', 'Giving common allergens early, then keeping them in {his} week, lowers the chance of a food allergy. Severe eczema? Ask your pediatrician first.', { must: 1, go: "openPage('chg:Feeding:d:allergens')" });
   card('off-menu', 'Feeding', 2, s => s.solidsDays != null && s.solidsTold != null && s.solidsTold <= 70 && (opened(s, 'solids-1') || opened(s, 'solids-maybe') || s.solidsDays > 45), 'Still off the menu until 1', 'No honey, and no whole grapes, nuts or popcorn: they’re common choking risks before {his} first birthday.', { must: 1, go: "openPage('chg:Feeding:d:food')" });
   card('choking-foods', 'Feeding', 2, s => s.solidsDays != null && s.solidsTold != null && s.solidsTold <= 90 && opened(s, 'off-menu'), '', '', { must: 1, go: "openPage('chg:Feeding:d:setup')" });
   card('solids-poop', 'Daily rhythm', 4, s => s.solidsDays != null && s.solidsDays >= 5 && s.solidsDays <= 25, 'Poop changes with solids', 'Thicker, browner and smellier, sometimes the color of what {he} ate. All normal.', { go: "openPage('topic:Daily rhythm')" });
   card('solids-3', 'Feeding', 4, s => s.solidsDays != null && s.solidsDays >= 14 && s.solidsDays <= 80 && opened(s, 'solids-2'), 'A few sips of water at meals', 'Up to 4–8 oz a day, from an open or straw cup. Starting now makes leaving bottles at 12 months easier.', { go: "openPage('chg:Feeding:d:cup')" });
-  card('solids-unknown', 'Feeding', 3, s => s.solids == null && s.d >= 246 && s.d <= 300, 'Started solids? Offer peanut and egg early', 'Giving common allergens early, then keeping them in {his} week, lowers the chance of a food allergy. Severe eczema? Ask your pediatrician first.',
+  card('solids-unknown', 'Feeding', 3, s => s.d >= 246 && s.d <= 300 && (s.solids == null || (s.solids === 'notyet' && s.solidsNoAt != null && s.solidsNoAt > 21)), 'Started solids? Offer peanut and egg early', 'Giving common allergens early, then keeping them in {his} week, lowers the chance of a food allergy. Severe eczema? Ask your pediatrician first.',
     Object.assign({ must: 1, topic: 'food', go: "openPage('chg:Feeding:d:allergens')" }, ask([['Started already', "home2Solids(true)"], ['Not yet', "home2Solids(false)"]])));
   card('textures', 'Feeding', 3, s => s.solidsDays != null && s.solidsDays >= 28 && mo(s) >= 7 && mo(s) <= 9.5, 'Time for lumpier food', 'Thicker textures and soft pieces {he} can pick up. Babies who move past smooth purées by about 9 months take to lumps more easily.', { go: "openPage('chg:Feeding:d:lumpy')" });
   card('meals', 'Feeding', 3, s => s.solidsDays != null && s.solidsDays >= 70 && mo(s) >= 9 && mo(s) <= 11, 'Three meals a day, from about now', 'Most babies eat three meals and a snack or two from about now, with milk alongside.', { go: "openPage('chg:Feeding:d:day')" });
-  card('solids-late', 'Feeding', 2, s => s.solids === 'notyet' && mo(s) >= 8, 'Not started solids yet? An easy way in', 'Iron matters most now, so it’s worth a quick call to your pediatrician about an easy way in.', { go: "openPage('chg:Feeding:d:notready')" });
+  card('solids-late', 'Feeding', 2, s => s.solids === 'notyet' && s.solidsNoAt != null && s.solidsNoAt <= 21 && mo(s) >= 8, 'Not started solids yet? An easy way in', 'Iron matters most now, so it’s worth a quick call to your pediatrician about an easy way in.', { go: "openPage('chg:Feeding:d:notready')" });
   // Moving
-  card('crawl-soon', 'Safety', 1, s => s.d >= 150 && s.d <= 300 && (moved(s, 'rolling', 'sitting') || s.d >= 210) && (freshNo(s, 'crawling') || (s.move == null || (moved(s, 'none', 'rolling', 'sitting') && !freshNo(s, 'crawling') && s.d >= 210))),
+  card('crawl-soon', 'Safety', 1, s => s.d >= 150 && s.d <= 300 && !moved(s, 'crawling', 'pulling') && (moved(s, 'rolling', 'sitting') || s.d >= 183),
     s => fresh7(s, 'crawling') ? 'Crawling is coming: babyproof first' : 'Crawling, or close to it? Babyproof now',
     'It usually starts between 6 and 10 months. Start with stair gates, cabinet locks, outlet covers, and tall furniture strapped to the wall.',
     Object.assign({ safety: 1, must: 1, topic: 'move', go: "openPage('safety-stage:moving')" }, MOVE_ASK('Already crawling', 'crawl')));
   card('crawl-now', 'Safety', 1, s => moved(s, 'crawling') && s.moveAt != null && s.moveAt <= 42, 'Now that {N} crawls, start with the stairs', 'A gate screwed into the wall at the top, and either kind at the bottom. No stairs? This one’s done.', { fromAnswer: 1, safety: 1, must: 1, done: 1, go: "openPage('chg:Safety:d:step:gates')" });
-  card('stand-soon', 'Safety', 1, s => s.d >= 230 && s.d <= 365 && (freshNo(s, 'pulling') || s.move !== 'pulling'),
+  card('stand-soon', 'Safety', 1, s => (s.d >= 230 || (moved(s, 'crawling') && s.d >= 200)) && s.d <= 365 && s.move !== 'pulling',
     s => fresh7(s, 'pulling') ? 'Pulling up is next: mattress down first' : 'Pulling up, or close? Mattress down first',
     'Usually between 9 and 12 months. Set the crib mattress to its lowest before {he} can stand in it.',
     Object.assign({ safety: 1, must: 1, topic: 'move', go: "openPage('chg:Sleep:d:mattress')" }, MOVE_ASK('Already pulling up', 'pullUp')));
@@ -218,19 +216,19 @@
   card('new-skills-sleep', 'Sleep', 4, s => moved(s, 'crawling') && s.moveAt != null && s.moveAt >= 3 && s.moveAt <= 24, 'New skills, more waking: it passes', 'Extra waking for a week or two is common while {he} {practices|practice}. Keeping bedtime the same helps.', { go: "openPage('chg:Sleep:d:regress')" });
   // Sleep shifts
   card('six-month-sleep', 'Sleep', 3, s => s.d >= 183 && s.d <= 215, '{His} own room is now an option', 'Where {he} {sleeps|sleep} from here is your call: the room-sharing advice covers the first 6 months.', { catchup: 240, go: "openPage('chg:Sleep:d:where')" });
-  card('two-naps-soon', 'Sleep', 3, s => s.d >= 200 && s.d <= 270 && (s.naps == null || (s.naps === 3 && s.napsAt != null && s.napsAt <= 21)), 'Ready for two naps?', 'Between 6 and 9 months, the late nap often stops fitting, or bedtime drifts later. A week of that is the sign.',
+  card('two-naps-soon', 'Sleep', 3, s => s.d >= 200 && s.d <= 270 && s.naps !== 2, 'Ready for two naps?', 'Between 6 and 9 months, the late nap often stops fitting, or bedtime drifts later. A week of that is the sign.',
     Object.assign({ topic: 'naps', go: "openPage('chg:Sleep:d:catnap')" }, ask([['On two naps', "home2Naps(2)"], ['Still three', "home2Naps(3)"]])));
   card('two-naps', 'Sleep', 3, s => s.naps === 2 && s.d <= 300 && s.napsAt != null && s.napsAt <= 28, 'Two naps: bedtime moves earlier', 'While {he} {adjusts|adjust}, move bedtime about 30 minutes earlier. The switch takes a week or two.', { fromAnswer: 1, go: "openPage('chg:Sleep:d:catnap')" });
   card('separation', 'Daily rhythm', 4, s => s.d >= 240 && s.d <= 290, 'Clingier lately? It’s a good sign', 'Common from about 8 months, and it means {he} {knows|know} you. A short, same-every-time goodbye helps.', { catchup: 330, go: "openPage('topic:Development')" });
   // Teeth
-  card('teething', 'Daily rhythm', 4, s => s.d >= 165 && s.d <= (s.tooth === false ? 230 : 200) && s.tooth !== true, 'Teething can start weeks before a tooth', 'Drool and chewing often start weeks before the first tooth, usually between 6 and 10 months. A chilled (not frozen) teething ring helps.',
+  card('teething', 'Daily rhythm', 4, s => s.d >= 165 && s.d <= 300 && s.tooth !== true, 'Teething can start weeks before a tooth', 'Drool and chewing often start weeks before the first tooth, usually between 6 and 10 months. A chilled (not frozen) teething ring helps.',
     Object.assign({ topic: 'tooth', catchup: 200, go: "openPage('chg:Daily rhythm:d:gums')" }, ask([['Has a tooth', "home2Tooth(true)"], ['Not yet', "home2Tooth(false)"]])));
   card('first-tooth', 'Daily rhythm', 3, s => s.tooth === true && s.toothAt != null && s.toothAt <= 28, 'Teeth are here: time to brush', 'Brush twice a day with a rice-grain smear of fluoride toothpaste, the last time after the bedtime feed.', { fromAnswer: 1, go: "openPage('chg:Daily rhythm:d:teeth')" });
   card('dentist', 'Health', 4, s => s.tooth === true && ((opened(s, 'first-tooth') && s.toothAt >= 10 && s.toothAt <= 60) || s.d >= 320), 'The first dentist visit comes early', 'Book it once the first tooth is in, and by {his} first birthday. They’ll check {his} teeth and show you how to brush.', { go: "openPage('chg:Daily rhythm:d:teeth')" });
   card('biting', 'Feeding', 4, s => breast(s) && s.tooth === true && s.toothAt >= 7 && s.toothAt <= 42, 'If {he} {bites|bite} while nursing', 'It usually doesn’t last long. A calm pause and a short break stop most babies.', { go: "openPage('chg:Feeding:d:nursing')" });
   // Health
   card('checkup', 'Health', 2, s => !!checkupNow(s), s => { const c = checkupNow(s); return c.label[0].toUpperCase() + c.label.slice(1) + ' checkup: what to know'; }, s => TIP[checkupNow(s).label],
-    { once: false, slot: s => checkupNow(s) && checkupNow(s).ahead >= 2 ? 'soon' : 'now', go: s => `openPage('health-visit:${checkupNow(s).age}')`, key: s => 'checkup:' + checkupNow(s).label });
+    { slot: s => checkupNow(s) && checkupNow(s).ahead >= 2 ? 'soon' : 'now', go: s => `openPage('health-visit:${checkupNow(s).age}')`, key: s => { const v = checkupNow(s); return v ? 'checkup:' + v.label + (v.ahead <= 3 ? ':week' : '') : 'checkup'; } });
   card('rsv', 'Health', 2, s => [10, 11, 12, 1, 2, 3].includes(month_(s)) && s.d <= 243 && [4, 5, 6, 7, 8, 9].includes(s.birth.getMonth() + 1), 'Born before RSV season? Ask about the shot', 'It’s the top reason babies end up in the hospital. An antibody shot protects babies under 8 months through their first season.', { go: "openPage('topic:Health')" });
   card('flu', 'Health', 3, s => [9, 10, 11, 12, 1, 2].includes(month_(s)) && s.d >= 183, 'Flu season: {his} first shot can start', '{His} first season takes two doses, 4 weeks apart, so starting early means {hes} covered sooner.', { go: "openPage('topic:Health')" });
   // Gear, outings, seasons
@@ -239,8 +237,6 @@
     s => s.d < 183 ? 'Under 6 months, extra milk feeds are all {he} {needs|need}, even on the hottest days. Water can wait.' : 'More milk feeds than usual, plus a few sips of water from a cup at meals.', { go: "openPage('chg:Out and about:d:weather')" });
   card('cold-car-seat', 'Out and about', 4, s => [11, 12, 1].includes(month_(s)) && s.date.getDate() <= 14, 'Cold days: coats off in the car seat', 'Puffy coats leave the straps too loose in a crash. Buckle {him} in thin layers, then put the coat or a blanket over the straps.', { go: "openPage('chg:Out and about:d:car')" });
   card('car-seat', 'Out and about', 1, s => s.d >= 270 && s.d <= 305, 'Next car seat: still facing back', 'In an infant seat? Many babies outgrow it by height before weight. The next seat still faces backward, often until age 2 or beyond.', { safety: 1, must: 1, catchup: 345, go: "openPage('chg:Out and about:d:car')" });
-  card('first-steps', 'Development', 4, s => s.d >= 300 && s.d <= 340, 'No rush on first steps', 'Anywhere from 9 to 18 months is normal for walking, and many babies cruise along furniture for weeks first.', { go: "openPage('topic:Development')" });
-  card('first-words', 'Development', 4, s => s.d >= 335 && s.d <= 365, 'First words: what counts', '“Mama” or “dada” said to the right person counts, and so does a sound {he} always {uses|use} for one thing, like “ba” for ball.', { go: "openPage('topic:Development')" });
   card('milk12', 'Feeding', 3, s => s.d >= 320 && s.d <= 370, 'At 12 months: whole milk from a cup',
     s => s.feed === 'formula' ? 'Whole cow’s milk can replace formula straight away, with no need for toddler formula. About 2 cups a day is plenty.'
       : s.feed === 'both' ? 'Formula can switch to whole cow’s milk, about 2 cups a day, and nursing can carry on as long as you both want.'
@@ -274,15 +270,15 @@
   set('stand-now', pickK(s => opened(s, 'stand-soon') ? 'stand-now:t-after' : 'stand-now:t'), pickK(s => opened(s, 'stand-soon') ? 'stand-now:after' : 'stand-now'));
   set('hot-days', pickK(s => s.d < 183 ? 'hot-days:t' : 'hot-days:t-older'), pickK(s => s.d < 183 ? 'hot-days' : 'hot-days:older'));
   set('milk12', null, pickK(s => K['milk12:' + s.feed] ? 'milk12:' + s.feed : 'milk12'));
-  set('checkup', s => (K[checkupNow(s).ahead >= 2 ? 'checkup:t-soon' : 'checkup:t'] || '').replace('{visit}', checkupNow(s).label), s => K['checkup:' + checkupNow(s).label] || '');
+  set('checkup', s => (K[checkupNow(s).ahead >= 2 ? 'checkup:t-soon' : 'checkup:t'] || '').replace('{visit}', checkupNow(s).label), s => K['checkup:' + checkupNow(s).label + ':' + s.feed] || K['checkup:' + checkupNow(s).label] || '');
 
   /* ---------- every card opens a page that continues it ---------- */
   const ROUTE = {
     'poop-colors': "openPage('chg:Daily rhythm:d:t:diapers:0')", 'fewer-poops': "openPage('chg:Daily rhythm:d:t:diapers:1')", 'solids-poop': "openPage('chg:Daily rhythm:d:t:diapers:2')",
-    'newborn-normal': "openPage('chg:Daily rhythm:d:t:skin:0')", 'tub-baths': "openPage('chg:Daily rhythm:d:t:bath:1')", drool: "openPage('chg:Daily rhythm:d:t:teeth:2')",
+    'newborn-normal': "openPage('chg:Daily rhythm:d:t:skin:0')", 'tub-baths': "openPage('chg:Daily rhythm:d:t:bath:1')",
     teething: "openPage('chg:Daily rhythm:d:t:teeth:2')", 'first-tooth': "openPage('chg:Daily rhythm:d:t:teeth:3')", dentist: "openPage('chg:Daily rhythm:d:t:teeth:3')",
-    sunscreen: "openPage('chg:Daily rhythm:d:t:sun:2')", 'first-steps': "openPage('chg:Daily rhythm:d:t:clothes:3')",
-    separation: "openPage('development-domain:9:Social')", 'first-words': "openPage('development-domain:12:Talking')",
+    sunscreen: "openPage('chg:Daily rhythm:d:t:sun:2')",
+    separation: "openPage('development-domain:9:Social')",
     rsv: "openPage('home2:rsv')", flu: "openPage('home2:flu')", clocks: "openPage('home2:clocks')",
     reaching: "openPage('safety-stage:reaching')", 'rolling-soon': "openPage('safety-stage:reaching')", 'rolling-now': "openPage('safety-stage:reaching')",
     'first-bottle': "openPage('chg:Feeding:d:pump')", 'bottle-cup': "openPage('chg:Feeding:d:after')", 'solids-1': "openPage('chg:Feeding:d:tray')", 'solids-maybe': "openPage('chg:Feeding:d:tray')",
@@ -308,9 +304,13 @@
   }
   function pick(s) {
     const first = s.firstDay === iso(NOW);
-    const qTopic = s.q === 'movement' || s.q === 'crawl' || s.q === 'stand' ? 'move' : s.q === 'food' ? 'food' : null;
+    // Movement and food questions now live on the cards themselves (Home's top slot only asks about a missed checkup
+    // or milk), so nothing is held back waiting for a question the parent never sees.
+    const qTopic = null;
     const live = C.filter(c => {
       if (c.once !== false && s.opened[KEY(c, s)] != null) return false;
+      const sk = s.snooze[KEY(c, s)]; if (sk != null && Date.now() - sk < 21 * DAY) return false;
+      const vw = s.views[KEY(c, s)]; if (vw && vw.n >= 3) return false;
       if (c.id === 'checkup' && !checkupNow(s)) return false;
       if (c.topic && c.topic === qTopic) return false;
       if (doneElsewhere(c, s)) return false;
@@ -330,6 +330,7 @@
       const slot = typeof c.slot === 'function' ? c.slot(s) : c.slot, box = slot === 'soon' ? soon : now;
       // No fixed cap: every must-know shows. Good-to-know cards fill in only while Home has fewer than 3.
       if (!(c.pri <= 2 || c.must) && now.length + soon.length >= 3) continue;
+      if (c.safety && safety) continue;   // one safety card per screen; the next one waits
       box.push(c); cats.add(c.cat); safety = safety || !!c.safety;
     }
     return { now, soon };
@@ -343,8 +344,11 @@
   window.home2Hide = id => { mark('opened', id); const y = scrollY; render(); scrollTo(0, y); if (typeof hubToast === 'function') hubToast('Hidden', 'It’s still in its guide if you need it.'); };
   window.home2Done = id => { mark('opened', id); if (DONE_IN_SAFETY[id]) tickSafety(DONE_IN_SAFETY[id]); if (id === 'stand-now') { answers.mattressLowest = 'Yes'; persist(); } const y = scrollY; render(); scrollTo(0, y); if (typeof hubToast === 'function') hubToast('Done', 'Nice. It’s ticked off in Safety too.'); };
   const toast = (t, b) => { if (typeof hubToast === 'function') hubToast(t, b); };
+  // A "not yet" snoozes the card for 3 weeks (the toast promises we'll check back); any other answer closes it.
+  const NOT_YET = /'Not yet'|home2Solids\(false\)|home2Tooth\(false\)|home2Naps\(3\)/;
   window.home2Answer = (id, js, label) => {
-    mark('opened', id); const st0 = store(); st0.answeredAt = Date.now(); save(st0);
+    if (NOT_YET.test(js)) { const st1 = store(); st1.snooze = st1.snooze || {}; st1.snooze[id] = Date.now(); if (st1.views) delete st1.views[id]; save(st1); } else mark('opened', id);
+    const st0 = store(); st0.answeredAt = Date.now(); save(st0);
     try { (new Function(js))(); } catch (e) {}
     const y = scrollY; render(); scrollTo(0, y); toast('Got it', label);
   };
@@ -467,6 +471,12 @@
     return `<h2 class="hub-h2">What Ahead knows</h2><p class="hub-where-lead">From your answers and Memories. Fix anything that’s not right.</p><section class="hub-card home2-know">${rows.join('')}</section>`;
   }
 
+  // Remember what was shown: "waits until seen", and a card shown on 3 visits without a tap retires.
+  function recordShown(s, now, soon) {
+    const st = store(); st.seen = st.seen || {}; st.firstDay = st.firstDay || iso(NOW); st.views = st.views || {}; const today = iso(NOW);
+    [...now, ...soon].forEach(c => { if (st.seen[c.id] == null) st.seen[c.id] = Date.now(); const k = KEY(c, forCard(c, s)), v = st.views[k] || { n: 0, last: '' }; if (v.last !== today) st.views[k] = { n: v.n + 1, last: today }; }); save(st);
+  }
+  window.home2RecordShown = () => { const s = state(), r = pick(s); recordShown(s, r.now, r.soon); };
   function paint() {
     const main = document.getElementById('main'); if (!main) return;
     settlePending();
@@ -487,7 +497,7 @@
     main.querySelectorAll('section.hub-q, section.connected-checkin').forEach(q => { const h = q.innerHTML; if (!/hubVisit|answerHomeQuestion\('milk'/.test(h)) q.remove(); });
     const s = state(), { now, soon } = pick(s);
     // remember what was shown, for "waits until seen"
-    const st = store(); st.seen = st.seen || {}; st.firstDay = st.firstDay || iso(NOW); [...now, ...soon].forEach(c => { if (st.seen[c.id] == null) st.seen[c.id] = Date.now(); }); save(st);
+    recordShown(s, now, soon);
     const summary = main.querySelector('.connected-summary');
     if (summary) {
       summary.querySelectorAll('.connected-summary-links').forEach(e => e.remove());
@@ -500,5 +510,14 @@
   }
 
   // For checks
+  window.home2Audit = () => {
+    const s = state(), r = pick(s);
+    const out = (c, slot) => { const sc = forCard(c, s), go = typeof c.go === 'function' ? c.go(sc) : c.go;
+      return { id: c.id, key: KEY(c, sc), slot, cat: c.cat, pri: c.pri, must: !!c.must, safety: !!c.safety, fromAnswer: !!c.fromAnswer, done: !!c.done,
+        title: w(sc, T(c.title)(sc)), body: w(sc, T(c.body)(sc)), go, ask: (c.ask || []).map(([label, js]) => ({ label, js })) }; };
+    return { d: s.d, dAdj: s.dAdj, move: s.move, solids: s.solids, solidsDays: s.solidsDays, tooth: s.tooth, naps: s.naps, swaddle: s.swaddle, q: s.q,
+      cards: [...r.now.map(c => out(c, 'now')), ...r.soon.map(c => out(c, 'soon'))] };
+  };
+  window.home2Settle = () => settlePending();
   window.home2Debug = () => { const s = state(), r = pick(s); return { d: s.d, move: s.move, now: r.now.map(c => c.id + ' · ' + w(s, T(c.title)(s))), soon: r.soon.map(c => c.id + ' · ' + w(s, T(c.title)(s))) }; };
 })();
