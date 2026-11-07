@@ -1,4 +1,4 @@
-/* Ahead · Timeline reimagined: the year as a path with the baby on it, the next few big changes as cards,
+/* Ahead · Timeline reimagined: the year as a path with the baby on it, the next few big changes as the bigger steps,
    and a read-ahead page per change that says when, the signs it's close, and everything it changes (each row
    opens the page that already covers it). Preview: two change pages (crawling, solids). */
 (function () {
@@ -50,26 +50,46 @@
   const range = c => c.range.replace(/^(\d+(\.5)?)–/, (m, a) => `${Math.floor(+a)}–`);
   const soon = (c, a) => c.start <= a ? 'Could happen any time now' : c.start <= a + 1 ? 'Could start any week now' : `In about ${Math.round(c.start - a)} month${Math.round(c.start - a) === 1 ? '' : 's'}`;
 
+  // The baby's reported changes, so a change they've already told us about drops behind them.
+  const doneNow = () => { const an = typeof answers !== 'undefined' ? answers : {}; return { roll: typeof rolled === 'function' && rolled(), solids: an.solids === 'Yes', crawl: an.crawl === 'Yes', pull: an.pullUp === 'Yes', tooth: an.hasTooth === 'Yes', twonaps: an.twoNaps === 'Yes' }; };
+  const ageLabel = a => { const m = Math.floor(a), w = Math.floor((a - m) * 4.35); return m === 0 ? `${Math.max(1, w)} week${w === 1 ? '' : 's'}` : `${m} month${m === 1 ? '' : 's'}${w ? `, ${w} week${w === 1 ? '' : 's'}` : ''}`; };
+  const whenShort = (c, a) => c.start <= a ? 'any time now' : c.start <= a + 1 ? 'any week now' : `in about ${Math.round(c.start - a)} month${Math.round(c.start - a) === 1 ? '' : 's'}`;
+  // A small bar under each next change: its usual window, and where the baby is today.
+  const windowBar = (c, a) => { const p = PAGES[c.id]; if (!p) return ''; const [from, to, zs, ze] = p.bar, pct = v => Math.max(0, Math.min(100, (v - from) / (to - from) * 100)); return `<span class="ya-bar" aria-hidden="true"><i style="left:${pct(zs)}%;width:${pct(ze) - pct(zs)}%"></i>${a >= from && a <= to ? `<u style="left:${pct(a)}%"></u>` : ''}</span>`; };
+  // Home uses this to open a change's page only while the change is still ahead.
+  window.timelineChangeLive = id => { const c = C.find(x => x.id === id); return !!(c && PAGES[id] && c.end > ageNow() && !doneNow()[id]); };
+
+  /* Timeline as a path (Nov 7): no cards on top. The path starts at the baby's spot, the next three changes are
+     the bigger steps right after it, then each month to the first birthday with its smaller changes and checkups.
+     Changes behind the baby fold into one quiet line above. Every change opens its read-ahead page. */
   window.nextPage = function () {
-    const a = ageNow(), nm = name();
-    const an = typeof answers !== 'undefined' ? answers : {};
-    const done = { roll: typeof rolled === 'function' && rolled(), solids: an.solids === 'Yes', crawl: an.crawl === 'Yes', pull: an.pullUp === 'Yes', tooth: an.hasTooth === 'Yes', twonaps: an.twoNaps === 'Yes' };
-    const ahead = C.filter(c => c.end > a && !done[c.id]).sort((x, y) => x.start - y.start), next = ahead.slice(0, 3);
-    let h = `<div class="ya-page"><div class="eyebrow ya-eyebrow">${F(`${nm}’s year ahead`)}</div><h1>${F('Timeline')}</h1><p class="next-lead">${F(`The big changes coming for ${nm}, and what each one changes. Tap any to read ahead.`)}</p>`;
-    if (next.length) h += `<h2 class="ya-h2">${F('Coming up next')}</h2><div class="ya-next">${next.map(c => `<button class="ya-card" style="${yearTheme(c.cat)}" onclick="${c.go}"><span class="ya-card-art">${hubArt(c.icon, c.cat)}</span><span class="ya-card-copy"><small>${F(range(c))} · ${F(soon(c, a).replace(/^Could happen any time now$/, 'any time now').replace(/^Could start /, '').replace(/^In about/, 'in about'))}</small><b>${F(c.title)}</b><span>${F(c.why)}</span></span><span class="hub-chev" aria-hidden="true">›</span></button>`).join('')}</div>`;
-    // Later on: swipe through the months ahead and watch the baby grow. Each month card has that month's picture
-    // (the same baby who grows on Home), its date, the changes that usually start then, and a checkup if one is due.
-    const later = ahead.filter(c => !next.includes(c));
+    const a = ageNow(), nm = name(), done = doneNow();
+    const ahead = C.filter(c => c.end > a && !done[c.id]).sort((x, y) => x.start - y.start), next = ahead.slice(0, 3), later = ahead.slice(3);
+    const behind = C.filter(c => c.end <= a || done[c.id]).sort((x, y) => x.start - y.start);
     const born = parse(profile.dob), monthDate = m => { const d = new Date(born); d.setMonth(d.getMonth() + m); return d.toLocaleDateString('en-US', { month: 'long' }); };
+    const label = m => m >= 12 ? '1 year' : `${m} months`;
+    const node = '<span class="ya-node" aria-hidden="true"></span>', chev = '<span class="hub-chev" aria-hidden="true">›</span>';
+    let h = `<div class="ya-page ya-pathpage"><div class="eyebrow ya-eyebrow">${F(`${nm}’s year ahead`)}</div><h1>${F('Timeline')}</h1><p class="next-lead">${F(`Where ${nm} is now, and the big changes ahead. Tap any to read ahead.`)}</p><ol class="ya-path">`;
+    if (behind.length) h += `<li class="ya-behind">${node}<button onclick="this.parentNode.classList.toggle('is-open')" aria-expanded="false">${F(`Behind ${nm}: ${behind.length} ${behind.length === 1 ? 'change' : 'changes'}`)} <span aria-hidden="true">›</span></button><div class="ya-behind-list">${behind.map(c => `<button style="${yearTheme(c.cat)}" onclick="${c.go}"><span>${hubArt(c.icon, c.cat)}</span>${F(c.title)}</button>`).join('')}</div></li>`;
+    h += `<li class="ya-here">${node}<b>${F(`${nm} now`)}</b><small>${F(ageLabel(a))}</small></li>`;
+    h += next.map(c => `<li class="ya-row is-next" style="${yearTheme(c.cat)}">${node}<button onclick="${c.go}"><span class="ya-row-art">${hubArt(c.icon, c.cat)}</span><span class="ya-row-copy"><small class="ya-when">${F(range(c))} · ${F(whenShort(c, a))}</small><b>${F(c.title)}</b><span class="ya-why">${F(c.why)}</span>${windowBar(c, a)}</span>${chev}</button></li>`).join('');
     const months = {}; later.forEach(c => { const m = Math.min(12, Math.max(Math.ceil(a), Math.floor(c.start))); (months[m] = months[m] || []).push(c); });
     CHECKUPS.filter(v => v > a).forEach(v => { months[v] = months[v] || []; });
-    const keys = Object.keys(months).map(Number).sort((x, y) => x - y);
-    const label = m => m >= 12 ? '1 year' : `${m} months`;
-    const card = m => `<section class="ya-month"><div class="ya-month-top"><span class="ya-month-art">${typeof yaArt === 'function' ? (m === 12 ? yaArt('birthday', 'Feeding') : months[m].length ? yaArt(months[m][0].id, months[m][0].cat) : yaArt('checkup', 'Health')) : ''}</span><div class="ya-month-head"><b>${F(label(m))}</b><small>${F(m >= 13 ? 'In the second year' : 'Around ' + monthDate(m))}</small></div></div><div class="ya-month-list">${months[m].map(c => `<button class="ya-chip" style="${yearTheme(c.cat)}" onclick="${c.go}"><span>${hubArt(c.icon, c.cat)}</span><em>${F(c.title)}<small>${F(range(c))}${c.start <= a ? ' · ' + F('any time now') : ''}</small></em></button>`).join('')}${CHECKUPS.includes(m) && m > a ? `<span class="ya-month-pin">${F(`${m}-month checkup`)}</span>` : ''}</div></section>`;
-    if (keys.length) h += `<h2 class="ya-h2">${F('Later on')}</h2><p class="ya-sub">${F(`Swipe to see what’s coming, month by month.`)}</p><div class="ya-months">${keys.map(card).join('')}</div>`;
-    h += `<p class="hub-foot">${F('Ages are typical. Every baby moves at their own pace.')}</p></div>`;
+    Object.keys(months).map(Number).sort((x, y) => x - y).forEach(m => {
+      h += `<li class="ya-pin">${node}<b>${F(label(m))}</b> · ${F('around ' + monthDate(m))}</li>`;
+      h += months[m].map(c => `<li class="ya-row" style="${yearTheme(c.cat)}">${node}<button onclick="${c.go}"><span class="ya-row-art">${hubArt(c.icon, c.cat)}</span><span class="ya-row-copy"><b>${F(c.title)}</b><small>${F(range(c))}</small></span>${chev}</button></li>`).join('');
+      if (CHECKUPS.includes(m) && m > a) h += `<li class="ya-row" style="${yearTheme('Health')}">${node}<button onclick="openPage('health-visit:${m}')"><span class="ya-row-art">${hubArt('steth', 'Health')}</span><span class="ya-row-copy"><b>${F(`${m}-month checkup`)}</b><small>${F('Growth, development and vaccines')}</small></span>${chev}</button></li>`;
+    });
+    h += `<li class="ya-pin ya-end">${node}<b>${F('First birthday')}</b></li></ol><p class="hub-foot">${F('Ages are typical. Every baby moves at their own pace.')}</p></div>`;
     return h;
   };
+
+  // On a change's page: where it sits in the year, and where the baby is. Tapping it opens the whole Timeline.
+  function yearStrip(c) {
+    const a = ageNow(), max = 13, pct = v => Math.max(0, Math.min(100, v / max * 100));
+    const ticks = [0, 3, 6, 9, 12].map(m => `<span style="left:${pct(m)}%">${m === 0 ? 'Birth' : m === 12 ? '1 yr' : m + 'm'}</span>`).join('');
+    return `<button class="ya-yearstrip" onclick="navigate('next')"><span class="ya-ys-top"><b>${F(`On ${name()}’s year ahead`)}</b><em>${F('See the whole year')} ›</em></span><span class="ya-ys-bar" aria-hidden="true"><i style="left:${pct(c.start)}%;width:${pct(Math.min(c.end, max)) - pct(c.start)}%"></i>${a <= max ? `<u style="left:${pct(a)}%"><small>${F(`${name()} now`)}</small></u>` : ''}</span><span class="ya-ys-ticks" aria-hidden="true">${ticks}</span></button>`;
+  }
 
   /* ---------- read-ahead pages: when, the signs it's close, what it changes, one reassuring note ---------- */
   // [from, to, zoneStart, zoneEnd, zoneLabel] in months; rows open the page that already covers each effect.
@@ -137,7 +157,7 @@
     return h.detail(cat, `${range(c)} · ${when}`, c.title, p.lead + ' ' + look,
       `<p class="ya-connect">${F(`Here’s what it changes, and how to get ready.`)}</p>`
       + h.list('What it changes', p.rows.slice(0, 4).map(([icon, rc, title, sub, go]) => h.row({ icon, cat: rc, title, sub, onclick: go }).replace('<span class="hub-row-copy">', `<span class="hub-row-copy"><small class="hub-row-eyebrow">${F(AREA[rc] || rc)}</small>`)))
-      + h.tip(p.tip[0], p.tip[1]), c.icon);
+      + h.tip(p.tip[0], p.tip[1]), c.icon).replace('<div class="hub-detail-head">', yearStrip(c) + '<div class="hub-detail-head">');
   }
   const base = window.changesRoute;
   window.changesRoute = function (p) { const m = /^chg:Timeline:c:(\w+)$/.exec(p); if (m) { const pg = changePage(m[1]); if (pg) return pg; } return base(p); };
