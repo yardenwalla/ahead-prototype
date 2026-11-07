@@ -2061,23 +2061,41 @@
       + h2('Common questions') + accs([['eye', 'Days and nights mixed up?', '', ['~Keep days bright and nights quiet and boring. It improves over a few weeks.'], '', ''], ['eye', 'Should I track feeds?', '', ['~A short note of feeds and diapers helps at first. Stop once things feel settled, unless your pediatrician asks you to keep going.'], '', '']])); };
 
   // 2. Feeding skills
-  P.nb_skills = () => { const nurse = nurses(), bot = isBottle(), fm = formulaFam(), b = isBreast();
+  P.nb_skills = () => { const nurse = nurses(), bot = isBottle(), fm = formulaFam(), b = isBreast(), pump = pumps();
     return kPage('Feeding skills', 'Feeding takes practice for both of you. Here’s how to get comfortable with the basics.', kPick([
-      nurse && ['Nursing', kH('Getting a comfortable latch', 'Start with a position that supports you both. Bring him to your breast, rather than leaning forward.') + kHolds()
+      nurse && ['Nursing', kH('Getting a comfortable latch', 'Set up before he’s frantic. A pillow under him and your feet up, so you bring him to you, not lean over him.') + kHolds()
         + h2('Latch, step by step') + kOl([['Nose to nipple.', 'Keep his head and body in a line.'], ['Wait for a wide mouth,', 'like a yawn.'], ['Bring him in, chin first,', 'close to you.']], 'Step by step')
         + kTwo(['Good latch', 'Flared lips, long sucks and swallows, a strong tug rather than pinching.'], ['Adjust the latch', 'Clicking, dimpled cheeks or pinching that lasts. Break the seal and try again.'])
-        + kH('Through a feed') + kP('Start at early hunger cues. When sucking slows, burp and offer the other side.' + (fm ? ' Still hungry? A small, paced formula top-up.' : '') + ' At the next feed, start with the last side.')
-        + kQ('Watch a good latch', hubEmbed('y--syZR0u1E', 'A good latch, step by step', 'Global Health Media'))
-        + kQ('Common issues and adjustments', `<p><b>${F('Dozing off?')}</b> ${F('Squeeze gently behind the nipple, or switch sides.')}</p><p><b>${F('Gulping or coughing?')}</b> ${F('Lean back, so he feeds against gravity.')}</p><p><b>${F('Sore nipples?')}</b> ${F('Re-latch. Balm or your own milk after feeds. If most feeds hurt, see a lactation consultant soon.')}</p>`)],
-      bot && ['Bottles', kH('Paced bottle feeding', 'Help him control the pace instead of milk flowing too quickly.')
-        + kOl([['Hold him semi-upright,', 'head higher than his tummy.'], ['Touch the nipple to his lip', 'and let him draw it in.'], ['Keep the bottle fairly level,', 'just enough milk to fill the tip.'], ['Pause every few sucks', 'by tipping the bottle down.'], ['Stop at fullness cues.', 'There’s no need to finish.']], 'Step by step')
-        + small('Never prop a bottle.', 'Always hold him and the bottle.')
+        + accs([['eye', 'Watch a good latch', '', [{ html: hubEmbed('y--syZR0u1E', 'A good latch, step by step', 'Global Health Media') }], '', '']])
+        + small('Still hurts after a few tries?', 'Slip a finger in the corner of his mouth to break the seal, and start again. If most feeds hurt, see a lactation consultant soon.')
+        + h2('Through a feed') + tl('', [['Start', 'eye', 'At early hunger cues, before crying.'], ['When he slows', 'hand', 'Burp, then offer the other side. Some feeds take one side, some both.'], fm && ['Still hungry?', 'bottle', 'A small, paced formula top-up.'], ['Next feed', 'clock', 'Start on the last side. A hair tie on your wrist helps you remember.']])
+        + h2('Common issues') + accs([
+          ['eye', 'Falling asleep at the breast', '', ['Squeeze gently behind the nipple to keep milk flowing.', 'Switch sides. The move wakes him a little.', 'Undress him to his diaper, or tickle his feet.'], '', ''],
+          ['eye', 'Gulping or coughing', '', ['~Milk may be coming fast. Try laid-back, so he feeds against gravity, and let him come off to breathe.'], '', ''],
+          ['eye', 'Sore or cracked nipples', '', ['~Some tenderness in the first week is common. Pain all feed usually means a shallow latch.', 'Re-latch until it feels like a tug.', 'Balm or your own milk after feeds.', 'Breast shells between feeds.', 'Still sore with a good latch? Ask a lactation consultant about tongue-tie.'], '', ''],
+          ['eye', 'Very full breasts', '', ['~Hard to latch? Hand express a little first to soften the nipple. A cold pack after feeds eases swelling.'], '', ''],
+          !fm && ['eye', 'A first bottle', '', ['~Around 3–4 weeks, once nursing is going well. Someone else offers pumped milk, before he’s very hungry.'], '', '']])],
+      bot && ['Bottles', h2('What you’ll need') + cDo('The basics', [nurse && fm ? '2–3 small bottles for top-ups. No best shape, just one he takes.' : 'Enough bottles for a day. No best shape, just one he takes.', 'Slow-flow nipples, the slowest size to start.', 'A bottle brush and a drying rack.'])
+        + kH('Paced bottle feeding', 'Help him control the pace instead of milk flowing too quickly.')
+        + kOl([['Hold him semi-upright,', 'head higher than his tummy.'], ['Touch the nipple to his lip', 'and let him draw it in.'], ['Keep the bottle fairly level,', 'just enough milk to fill the tip.'], ['Pause every few sucks', 'by tipping the bottle down.'], ['Switch sides halfway,', 'so he looks both ways.'], ['Stop at fullness cues.', 'There’s no need to finish.']], 'Step by step')
+        + small('Never prop a bottle.', 'Always hold him and the bottle. Burp every 2–3 oz, and at the end.')
+        + H().tiles([[nurse && fm ? 'Top-ups' : 'Per bottle', nurse && fm ? '1–2 oz' : '1–3 oz', nurse && fm ? 'Only if he’s still hungry' : 'At first, slowly more'], ['A feed takes', '10–20 minutes', 'Much faster? The flow may be too fast']])
         + h2('Is the nipple flow right?') + two(['Too slow', 'He works hard, gets frustrated, or the nipple flattens.'], ['Too fast', 'Gulping, coughing, or milk spilling out.', '#fdeee6', '#9a5a3c'])
-        + kQ('Common issues and adjustments', `${nurse ? `<p><b>${F('Won’t take a bottle?')}</b> ${F('Someone else offers, before he’s very hungry, with a slow-flow nipple.')}</p>` : ''}<p><b>${F('Drinks it too fast?')}</b> ${F('Pause more often, and hold him more upright.')}</p><p><b>${F('Falls asleep?')}</b> ${F('Burp, switch sides, then offer again.')}</p>`)],
+        + small('Start with the slowest flow.', 'Go up a size only when he’s clearly frustrated.')
+        + h2('Common issues') + accs([
+          nurse && ['eye', 'Won’t take a bottle', '', ['Someone else offers, ideally with you out of the room.', 'Try before he’s very hungry, when he’s calm.', 'A slow-flow nipple, warm milk, and a few days’ patience.'], '', ''],
+          ['eye', 'Drinks it too fast', '', ['~Pause more often, hold him more upright, and check the nipple size.'], '', ''],
+          ['eye', 'Falls asleep mid-bottle', '', ['~Burp, switch sides, then offer again. If he’s done, that’s fine.'], '', ''],
+          ['eye', 'Warming a bottle', '', ['~Warm water or a bottle warmer, then a few drops on your wrist. Room temperature or cold is fine too. Skip the microwave.'], '', ''],
+          b && fm && ['eye', 'Mixing breast milk and formula', '', ['~Fine in one bottle, once the formula is made with water as usual. Don’t add powder straight to breast milk.'], '', ''],
+          fm && ['eye', 'Is it the formula?', '', ['~Gas, fussing and spit-up happen on any formula. Blood in his poop, a rash, vomiting after most feeds, or slow weight gain are worth a call.'], '', '']])],
       ['Burping', kH('Three ways to burp', 'Try a comfortable position with gentle support for his head and neck.')
         + illGrid([[ILL.shoulder(PALT), 'Over your shoulder', 'Chin on a burp cloth'], [ILL.sitting(PALT), 'Sitting on your lap', 'Support chin and chest'], [ILL.tummy(PALT), 'Tummy-down', 'Across your lap']])
-        + kP((b && bot ? 'Try between sides or every 2–3 oz' : b ? 'Try between sides' : 'Try every 2–3 oz') + ', and at the end. If no burp comes after a minute or two, you can carry on.')
-        + kQ('Common issues and adjustments', `<p><b>${F('Spit-up after a burp?')}</b> ${F('Common. Hold him upright for a bit after feeds.')}</p><p><b>${F('Hiccups?')}</b> ${F('Harmless. They stop on their own.')}</p>`)]])); };
+        + cDo('When and how', [(b && bot ? 'Between sides, or every 2–3 oz' : b ? 'Between sides' : 'Every 2–3 oz') + ', and at the end.', 'Firm pats or slow circles on his back.', 'No burp after a minute or two? Carry on.', 'Feed early and burp mid-feed, so less air gets in.'])
+        + h2('Common issues') + accs([
+          ['eye', 'Spit-up after a burp', '', ['~Common. Hold him upright for 20–30 minutes after feeds. If he’s comfortable and growing, it isn’t a problem.'], '', ''],
+          ['eye', 'Lots of gas', '', ['Bicycle his legs gently, on his back.', 'Tummy time, when he’s awake and watched.', 'A deeper latch or a slower nipple means less air.'], '', ''],
+          ['eye', 'Hiccups', '', ['~Harmless, and they stop on their own. A burp or a pause can help.'], '', '']])]])); };
 
   // 3. Milk and preparation
   P.nb_prep = () => { const nurse = nurses(), pump = pumps(), fm = formulaFam(), b = isBreast(), bot = isBottle();
