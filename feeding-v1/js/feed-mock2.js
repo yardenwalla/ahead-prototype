@@ -2525,6 +2525,27 @@
       + xKnow('How you’ll know it’s going well', 'Heavy diapers, and poop that turns from black to green to ' + (fmOnly ? 'tan' : 'yellow') + ' by day 5.')
       + xNote('Worth a call:', 'fewer wet diapers, dark urine, or black poop after day 5.')); };
 
+  P.x_bottle = (() => { const prev = P.x_bottle; return () => prev().replace(xNums('A top-up', [['½–2 oz', 'After nursing, if still hungry'], ['2–3 oz', 'Burp every']]), xNums('A top-up', [['½–2 oz', 'After nursing, only if he still seems hungry']])); })();
+  const weightViz = () => { const W = 300, H = 120, x = d => 18 + d / 28 * (W - 36), y = v => 70 - v * 4.2;
+    const pts = [[0, 0], [2, -5], [4, -7], [7, -4], [11, -1], [14, 0], [21, 3.5], [28, 7]].map(([d, v]) => `${x(d).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
+    return `<section class="hub-card" style="padding:14px 14px 10px;margin:0 0 12px"><b style="display:block;font-size:15px;margin:0 2px 6px">${F('His first month')}</b><svg viewBox="0 0 ${W} ${H}" style="display:block;width:100%;height:auto" aria-label="${F('Weight dips in the first days, is back to birth weight by about 2 weeks, then climbs')}">`
+      + `<line x1="12" x2="${W - 12}" y1="${y(0)}" y2="${y(0)}" stroke="#d9cfc0" stroke-dasharray="4 4"/><text x="${W - 12}" y="${y(0) + 15}" text-anchor="end" font-size="11" fill="#8a8295">${F('Birth weight')}</text>`
+      + `<polyline points="${pts}" fill="none" stroke="var(--ss-ink)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`
+      + `<circle cx="${x(4)}" cy="${y(-7)}" r="4.5" fill="#fff" stroke="var(--ss-ink)" stroke-width="2"/><circle cx="${x(14)}" cy="${y(0)}" r="4.5" fill="var(--ss-ink)"/>`
+      + `<text x="${x(4)}" y="${y(-7) + 20}" text-anchor="middle" font-size="11.5" font-weight="600" fill="#4c4757">${F('Some loss')}</text><text x="${x(4)}" y="${y(-7) + 33}" text-anchor="middle" font-size="10.5" fill="#8a8295">${F('up to 10%')}</text>`
+      + `<text x="${x(14)}" y="${y(0) + 20}" text-anchor="middle" font-size="11.5" font-weight="600" fill="#4c4757">${F('Back')}</text><text x="${x(14)}" y="${y(0) + 33}" text-anchor="middle" font-size="10.5" fill="#8a8295">${F('by 2 weeks')}</text>`
+      + `<text x="${x(28)}" y="${y(7) - 12}" text-anchor="end" font-size="11.5" font-weight="600" fill="#4c4757">${F('Then 5–7 oz a week')}</text></svg>`
+      + `<div style="display:flex;justify-content:space-between;font-size:11px;color:#8a8295;margin:2px 4px 0"><span>${F('Birth')}</span><span>${F('1 week')}</span><span>${F('2 weeks')}</span><span>${F('3 weeks')}</span><span>${F('4 weeks')}</span></div></section>`; };
+  P.x_weight = () => xPage('growth', 'x_weight', 'Back to birth weight by about 2 weeks', 'A dip in the first days is normal. Your pediatrician checks at each visit.',
+      weightViz()
+      + xDo('What to do', ['Go to the early weight checks.', 'Feed on cue. No need to weigh at home.', 'Extra hungry for a few days? Often a growth spurt.'])
+      + xNote('Born early or slow to gain?', 'Follow your pediatrician’s feeding plan first.') + xNote('Worth a call:', 'not back to birth weight by 2 weeks.'));
+  P.x_vitd = () => { const b = isBreast(), fm = formulaFam(), early = isEarly();
+    return xPage('growth', 'x_vitd', b ? 'Vitamin D drops, every day' : 'Vitamin D and iron are in the formula', b ? 'Breast milk is low in vitamin D, so he needs drops from the first days.' : 'Ask about vitamin D drops until he drinks about 32 oz a day.',
+      xCompare([['sun', 'Vitamin D', b ? '400 IU a day, as drops, from the first days.' : 'In the formula. Ask about drops until 32 oz a day.'], ['star', 'Iron', fm ? 'In the formula. Choose one with iron.' : early ? 'Drops from about 1 month, for babies born early.' : 'Ask at 4 months. Breastfed babies may need drops.']])
+      + xDo(b ? 'How to give drops' : 'If your pediatrician suggests drops', ['Drip it on the nipple just before a feed, or inside his cheek.', 'Or mix it into about 1 oz of milk, and make sure he finishes it.'])
+      + xNote('No water yet.', 'Milk is all he needs until about 6 months, even on hot days.')); };
+
   // ---- Milk feeds (6 weeks–4 months), rebuilt on the Newborn model (Nov 5): four subject pages with tabs, grouped by moment. ----
   HEADART['Feeds & rhythm'] = () => ART.often(5);
   P.rhythm1 = () => { const nurse = nurses(), b = isBreast(), bot = isBottle(), fm = formulaFam();
