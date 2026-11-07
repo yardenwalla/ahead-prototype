@@ -2140,7 +2140,7 @@
       + h2('Weight') + H().tiles([['First few days', 'Some loss', 'Up to about 10% is common'], ['By about 2 weeks', 'Back to birth weight', 'The surest sign it’s going well']])
       + kP('Extra hungry for a few days? Often a growth spurt, around 2–3 weeks. Feed more often, and it passes.')
       + h2('Vitamin D and iron') + H().tiles([['Vitamin D', b ? '400 IU a day' : 'In the formula', b ? 'Drops, from the first days' : 'Ask about drops until he drinks 27 oz a day'], ['Iron', fm ? 'In the formula' : 'Ask at 4 months', fm ? 'Choose one with iron' : 'Breastfed babies may need drops']])
-      + cDo('Giving drops', ['Drip it on the nipple just before a feed, or slowly inside his cheek.', 'Or mix it into about 1 oz of milk in a bottle, and make sure he finishes it.', 'Use the dropper that comes with them, and the dose on the label.'])
+      + cDo('Giving drops', [(nurses() ? 'Drip it on the nipple just before a feed, or slowly inside his cheek.' : 'Drip it slowly inside his cheek.'), 'Or mix it into about 1 oz of milk in a bottle, and make sure he finishes it.', 'Use the dropper that comes with them, and the dose on the label.'])
       + kP('No water yet. Milk is all he needs until about 6 months, even on hot days.')
       + small('Worth a call:', 'too few wet diapers, poop that stays dark after day 5, or not back to birth weight by 2 weeks. Born early or slow to gain? Follow your pediatrician’s plan first.')); };
 
@@ -2233,7 +2233,7 @@
       + kP('Extra hungry for a few days? Often a growth spurt, around 2–3 weeks. Feed more often, and it passes.')
       + h2('Poop through the first week') + illGrid([[ILL.poop('#2b2622'), 'Days 1–2', 'Black and sticky'], [ILL.poop('#5f6b33'), 'Days 3–4', 'Turning green'], [ILL.poop(br ? '#d4a23a' : fmOnly ? '#b98a4e' : '#c99642'), 'Day 5 on', br ? 'Yellow and seedy' : fmOnly ? 'Tan, like peanut butter' : 'Yellow to tan']])
       + h2('Vitamin D and iron') + H().tiles([['Vitamin D', b ? '400 IU a day' : 'In the formula', b ? 'Drops, from the first days' : 'Ask about drops until he drinks 27 oz a day'], ['Iron', fm ? 'In the formula' : 'Ask at 4 months', fm ? 'Choose one with iron' : 'Breastfed babies may need drops']])
-      + cDo('Giving drops', ['Drip it on the nipple just before a feed, or slowly inside his cheek.', 'Or mix it into about 1 oz of milk in a bottle, and make sure he finishes it.', 'Use the dropper that comes with them, and the dose on the label.'])
+      + cDo('Giving drops', [(nurses() ? 'Drip it on the nipple just before a feed, or slowly inside his cheek.' : 'Drip it slowly inside his cheek.'), 'Or mix it into about 1 oz of milk in a bottle, and make sure he finishes it.', 'Use the dropper that comes with them, and the dose on the label.'])
       + kP('No water yet. Milk is all he needs until about 6 months, even on hot days.')
       + small('Worth a call:', 'not back to birth weight by 2 weeks. Born early or slow to gain? Follow your pediatrician’s plan first.')); };
 
@@ -2282,7 +2282,7 @@
       + xKnow('Hungry, or wants comfort?', 'If it’s been a while since his last feed, it’s likely hunger. Just fed and still fussing? Try a cuddle' + (nurses() ? ', or a pacifier once nursing is going well.' : ' or a pacifier.'))); };
   P.x_full = () => xPage('feed', 'x_full', 'Stop when he shows he’s full', 'Let him decide how much. It’s how he learns his own hunger and fullness.',
       fullTiles()
-      + xDo('What to do', ['Still rooting after a burp? Offer ' + (nurses() ? 'the other side' + (formulaFam() ? ', then a small top-up' : '') : 'a little more') + '.', 'Turns away or drifts off? That’s the end of the feed, even if milk is left.', 'No need to finish a bottle or empty a side.'])
+      + xDo('What to do', ['Still rooting after a burp? Offer ' + (nurses() ? 'the other side' + (formulaFam() ? ', then a small top-up' : '') : 'a little more') + '.', 'Turns away or drifts off? That’s the end of the feed, even if milk is left.', (nurses() && !isBottle() ? 'No need to empty a side.' : !nurses() ? 'No need to finish the bottle.' : 'No need to finish a bottle or empty a side.')])
       + xKnow('How you’ll know he got enough', 'Wet diapers through the day, and he’s content for a while between most feeds.'));
   P.x_day = () => { const b = isBreast();
     const dayHtml = (P.day() || ''), k0 = dayHtml.indexOf('<div class="hub-card" style="padding:14px 14px 8px">'), e0 = k0 >= 0 ? dayHtml.indexOf('<figure', k0) : -1, ribbon = k0 >= 0 && e0 > k0 ? dayHtml.slice(k0, e0) : '';
@@ -2380,7 +2380,7 @@
   P.x_vitd = () => { const b = isBreast(), fm = formulaFam();
     return xPage('growth', 'x_vitd', b ? 'Vitamin D drops, every day' : 'Vitamin D and iron are in the formula', b ? 'Breast milk is low in vitamin D, so he needs drops from the first days.' : 'Ask about vitamin D drops until he drinks about 27 oz a day.',
       H().tiles([['Vitamin D', b ? '400 IU a day' : 'In the formula', b ? 'Drops, from the first days' : 'Drops until 27 oz a day'], ['Iron', fm ? 'In the formula' : isEarly() ? 'From about 1 month' : 'Ask at 4 months', fm ? 'Choose one with iron' : isEarly() ? 'Drops, for babies born early' : 'Breastfed babies may need drops']])
-      + xDo(b ? 'How to give drops' : 'If your pediatrician suggests drops', ['Drip it on the nipple just before a feed, or slowly inside his cheek.', 'Or mix it into about 1 oz of milk in a bottle, and make sure he finishes it.', 'Use the dropper that comes with them, and the dose on the label.'])
+      + xDo(b ? 'How to give drops' : 'If your pediatrician suggests drops', [(nurses() ? 'Drip it on the nipple just before a feed, or slowly inside his cheek.' : 'Drip it slowly inside his cheek.'), 'Or mix it into about 1 oz of milk in a bottle, and make sure he finishes it.', 'Use the dropper that comes with them, and the dose on the label.'])
       + xKnow('No water yet', 'Milk is all he needs until about 6 months, even on hot days.')); };
 
   // Feeding challenges: pick what you're seeing, like Sleep's Rough night
@@ -2552,7 +2552,7 @@
   P.x_vitd = () => { const b = isBreast(), fm = formulaFam(), early = isEarly();
     return xPage('growth', 'x_vitd', b ? 'Vitamin D drops, every day' : 'Vitamin D and iron are in the formula', b ? 'Breast milk is low in vitamin D, so he needs drops from the first days.' : 'Ask about vitamin D drops until he drinks about 27 oz a day.',
       xCompare([['sun', 'Vitamin D', b ? '400 IU a day, as drops, from the first days.' : 'In the formula. Ask about drops until 27 oz a day.'], ['star', 'Iron', fm ? 'In the formula. Choose one with iron.' : early ? 'Drops from about 1 month, for babies born early.' : 'Ask at 4 months. Breastfed babies may need drops.']])
-      + xDo(b ? 'How to give drops' : 'If your pediatrician suggests drops', ['Use the dropper that comes with them, and the dose on the label.', 'Drip it on the nipple just before a feed, or inside his cheek.', 'Or mix it into about 1 oz of milk, and make sure he finishes it.'])
+      + xDo(b ? 'How to give drops' : 'If your pediatrician suggests drops', ['Use the dropper that comes with them, and the dose on the label.', (nurses() ? 'Drip it on the nipple just before a feed, or inside his cheek.' : 'Drip it slowly inside his cheek.'), 'Or mix it into about 1 oz of milk, and make sure he finishes it.'])
       + xNote('No water yet.', 'Milk is all he needs until about 6 months, even on hot days.')); };
 
   // ---- Milk feeds (6 weeks–4 months), built on the Newborn model (Nov 7). ----
@@ -2765,7 +2765,7 @@
     return yPage(XG, 'On the tray', 'Start with iron-rich foods, then build variety', 'There’s no required order, and a few bites is plenty. Textures change as he grows.',
       hubStageStrip({ title: 'Textures, as he grows', items: [['bowl', 'Around 6 months', 'Smooth and mashed'], ['strips', '6–8 months', 'Soft, finger-size strips'], ['pieces', '9 months on', 'Soft, pea-size pieces']], cat: CAT })
       + xDo('What to do', ['First: iron-rich foods like meat, beans, eggs or iron-fortified cereal.', 'Then vegetables, fruit and soft family food, in any order.', 'Once a day at first, then 2–3 times a day by 8–9 months.', 'Let him lead: wait for an open mouth, stop when he turns away.'])
-      + xKnow('Milk still comes first', b && !fm ? 'Keep nursing on demand. Solids add to milk, they don’t replace it yet.' : 'About 24–32 oz of ' + (b ? 'milk' : 'formula') + ' a day. Solids add to it, they don’t replace it yet.')
+      + xKnow('Milk still comes first', nurses() ? (fm ? 'Keep nursing, plus his usual formula bottles. Solids add to milk, they don’t replace it yet.' : 'Keep nursing on demand. Solids add to milk, they don’t replace it yet.') : 'About 24–32 oz of ' + (b && fm ? 'milk' : b ? 'breast milk' : 'formula') + ' a day. Solids add to it, they don’t replace it yet.')
       + xNote('Safe shapes:', 'soft enough to squash between finger and thumb.')); };
   P.z_gag = () => yPage(XL, 'Safety', 'Gagging is normal. Choking is silent.', 'Learn this before the first bite. Gagging is how he learns to handle food, and it can look scary.',
       xTwo(['Gagging: normal', 'Loud: coughing, sputtering, red face, tongue out. Let him work it out.'], ['Choking: act now', 'Silent or a high squeak, can’t cough or cry, turning blue.'], true)
@@ -2931,6 +2931,21 @@
   const rnd = window.render;
   const curPage = () => { try { return (0, eval)('page'); } catch (e) { return ''; } };
   window.render = render = function (...a) { if (curPage() === 'stages:Feeding') { const keep = window.__fdStage; try { P.dirD(); } catch (e) { console.warn('fd stages', e); } window.__fdStage = keep; } return rnd.apply(this, a); };
+
+  // ---- One sequence alone under "What's new now" (First foods, and Getting ready for formula families): show it as a
+  // step card with its steps listed, so the stage's one big topic reads as the main thing without a new card style. ----
+  const SEQ = { f3: ['What to put on the tray', 'Try the common allergens', 'Foods to skip for now', 'Water, and other drinks'],
+    r2: ['The four readiness signs', 'Purées, finger foods, or both', 'Allergies, and who should ask first', 'Get set up for the first bite', 'Gagging vs choking'] };
+  const seqCard = (area, icon, title) => { const [t, rows] = XAREA()[area], c = XC[area], st = rows.filter(Boolean);
+    return `<section class="hub-card fd-seq" style="--sq-bg:${c[0]};--sq-ink:${c[1]}"><button type="button" class="fd-seq-top" onclick="${go('xa:' + area)}"><span class="fd-seq-art">${hubArt(icon, CAT).replace('data-art=', 'data-keep=')}</span><span class="fd-seq-copy"><small>${F(t)}</small><b>${F(title)}</b></span><span class="hub-chev" aria-hidden="true">›</span></button>`
+      + `<ol class="fd-seq-steps">${st.map((r, i) => `<li><button type="button" onclick="${go('xa:' + area + '.' + i)}"><span class="fd-seq-n">${i + 1}</span><span class="fd-seq-l">${F(SEQ[area][i] || r[2])}</span><span class="hub-chev" aria-hidden="true">›</span></button></li>`).join('')}</ol></section>`; };
+  const seqCss = `<style>#main .fd-seq{padding:0;overflow:hidden}#main .fd-seq-top{display:flex;align-items:center;gap:14px;width:100%;border:0;background:var(--sq-bg);color:var(--sq-ink);padding:18px 18px;font:inherit;text-align:left;cursor:pointer}#main .fd-seq-art{flex:none;width:52px;height:52px;border-radius:16px;background:#fff;display:grid;place-items:center}#main .fd-seq-art svg{width:34px;height:34px}#main .fd-seq-copy{flex:1;min-width:0;display:grid;gap:3px}#main .fd-seq-copy small{font-size:13px;font-weight:600;opacity:.85}#main .fd-seq-copy b{font-size:19px;line-height:1.25;color:var(--ink,#2b2840);text-wrap:balance}#main .fd-seq-steps{list-style:none;margin:0;padding:6px 0}#main .fd-seq-steps button{display:flex;align-items:center;gap:12px;width:100%;border:0;background:none;padding:11px 18px;font:inherit;font-size:15px;color:var(--ink,#2b2840);text-align:left;cursor:pointer}#main .fd-seq-steps li+li button{border-top:1px solid var(--line,#efe8ea)}#main .fd-seq-n{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:700;background:var(--sq-bg);color:var(--sq-ink)}#main .fd-seq-l{flex:1;min-width:0}</style>`;
+  window.SHOME = (() => { const prev = window.SHOME; return v => { const h = prev(v);
+    const area = v === 3 ? 'f3' : v === 2 && !isBreast() ? 'r2' : null; if (!area) return h;
+    const i = h.indexOf('<div class="hub-list">'), j = h.indexOf('</div>' + '<button class="hub-rough-card', i); if (i < 0 || j < 0) return h;
+    const list = h.slice(i, j + 6); if ((list.match(/sm-row hub-row/g) || []).length !== 1) return h;
+    return h.slice(0, i) + seqCss + seqCard(area, 'bowl', v === 3 ? 'Iron first, then lots of variety' : 'Start when he shows all the signs') + h.slice(j + 6); }; })();
+
   const base = window.changesRoute;
   window.changesRoute = function (r) { const [, cat, s, a, x] = r.split(':'); if (cat === CAT && s === 'mock' && P[a]) { window.__fdLast = r; const out = P[a](x); return calm(a, a === 'dirD' ? out : tidy(out)); } return base(r); };
   const op = window.openPage;
