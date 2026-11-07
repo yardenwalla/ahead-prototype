@@ -294,7 +294,7 @@
     ][v];
     return [basics, food, ...milk, daily].filter(Boolean).filter(x => P[x.to]); };
   P.dirD = (v) => { v = v == null ? realStage() : Number(v); window.__fdStage = v; const feed = fd(), h = H(), st = SHEET(v, feed), b = isBreast(), f = isBottle();
-    const pills = h.pills('Feeding by age', STAGES.map(([l, a], i) => ({ label: l, age: a, on: i === v, now: i === realStage(), onclick: go('dirD:' + i), change: i >= 3 && ageMo() < 4 ? '' : `__fdPick(${i})` })), CAT);
+    const pills = h.pills('Feeding by age', STAGES.map(([l, a], i) => ({ label: l, age: a, on: i === v, now: i === realStage(), onclick: go('dirD:' + i), change: typeof stageCanChange === 'function' && !stageCanChange(CAT, i, realStage()) ? '' : `__fdPick(${i})` })), CAT);
     const tile = ([c, art, l, val, sub, to]) => to ? `<button class="sm-tile hub-tile hub-tile-go" style="--sm-bg:${TILE[c] ? TILE[c][0] : C[c][0]};--sm-ink:${TILE[c] ? TILE[c][1] : C[c][1]};text-align:left;border:0;font:inherit;cursor:pointer" onclick="${go(to)}"><span class="sm-art">${art}</span><small>${F(l)}</small><b>${F(val)}</b><span>${F(sub)} ›</span></button>` : `<div class="sm-tile" style="--sm-bg:${TILE[c] ? TILE[c][0] : C[c][0]};--sm-ink:${TILE[c] ? TILE[c][1] : C[c][1]}"><span class="sm-art">${art}</span><small>${F(l)}</small><b>${F(val)}</b><span>${F(sub)}</span></div>`;
     let b2 = `<style>#main .fd-hero{background:linear-gradient(160deg,#f9d9e5,#fce9ef 58%,#fdeee6)!important;position:relative;overflow:hidden}#main .fd-hero::after{content:"";position:absolute;right:-40px;top:-50px;width:170px;height:170px;border-radius:50%;background:#fff;opacity:.35;pointer-events:none}#main .fd-hero>*{position:relative;z-index:1}</style><header class="hub-hero fd-hero"><p class="hub-eyebrow">${F(STAGES[v][0])}</p><h1>${F(st.hero[0])}</h1><p class="hub-lead">${F(st.hero[1])}</p></header>` + (isEarly() ? `<p class="ss-small" style="margin:0 0 12px"><b>${F('Born early:')}</b> ${F('stages follow Ari’s adjusted age. If your NICU or pediatrician gave you a feeding plan, follow it first.')}</p>` : '');
     b2 += `<section class="hub-card hub-glance is-static"><span class="hub-card-head"><b>${F('Feeding at a glance')}</b></span><div class="hub-tiles">${st.tiles.map(tile).join('')}</div>${st.note ? `<span class="hub-card-note"><b>${F(st.note[0])}</b> ${F(st.note[1])}</span>` : ''}</section>`;
@@ -327,7 +327,7 @@
       el.innerHTML = `<div style="flex:1"><b>${esc('Feeding now follows ' + STAGE_NAMES[i])}</b></div><button class="hub-toast-undo" onclick="__fdUndo(${before == null ? 'null' : before})">Undo</button>`;
       document.body.appendChild(el); requestAnimationFrame(() => el.classList.add('is-in')); setTimeout(() => { el.classList.remove('is-in'); setTimeout(() => el.remove(), 300); }, 5000); } };
   window.__fdUndo = (b) => { try { b == null ? localStorage.removeItem(pickKey()) : localStorage.setItem(pickKey(), String(b)); } catch (e) {} document.querySelectorAll('.hub-toast').forEach(t => t.remove()); window.__fdStage = null; render(); };
-  const realStage = () => { const pk = picked(); if (pk != null && pk >= 0 && pk <= 4) return pk; try { const pr = typeof profile !== 'undefined' ? profile : {}; if (!pr.dob) return 1;
+  const realStage = () => { if (typeof chgStageIndex === 'function' && typeof feedGroup === 'function') { try { return feedGroup(chgStageIndex('Feeding')); } catch (e) {} } const pk = picked(); if (pk != null && pk >= 0 && pk <= 4) return pk; try { const pr = typeof profile !== 'undefined' ? profile : {}; if (!pr.dob) return 1;
       const from = pr.early && pr.due ? new Date(pr.due + 'T12:00:00') : new Date(pr.dob + 'T12:00:00'), days = Math.max(0, (NOW - from) / 864e5), mo = days / 30.44;
       let v = days < 42 ? 0 : mo < 4 ? 1 : mo < 6 ? 2 : mo < 9 ? 3 : 4; const sol = typeof answers !== 'undefined' ? answers.solids : undefined;
       if (v >= 3 && sol === 'Not yet') v = 2; else if (v === 3 && sol !== 'Yes') v = 2; else if (v === 2 && sol === 'Yes') v = 3; else if (v === 4 && sol === 'Yes' && ['new', 'starting'].includes(answers.foodExperience)) v = 3; return v; } catch (e) { return 1; } };
@@ -2972,10 +2972,40 @@
   P.dirD = (() => { const prev = P.dirD; return (v) => { const h = prev(v); if (window.__fdStage !== 2 || ageMo() < 7) return h;
     return h.replace(F('Milk is still all Ari needs. Most babies start solids around 6 months, once they show the signs.'), F('Iron matters more after 6 months, so it’s worth starting soon. Bring your feeding questions to the checkup.')); }; })();
 
+
+  // One Feeding stage everywhere: the page, the stage timeline, Baby's details and Home all read the app's stage,
+  // and "Make this her stage" sets it the same way the timeline's Change does (with Undo).
+  try { localStorage.removeItem(pickKey()); } catch (e) {}
+  window.__fdReal = () => { try { return feedGroup(chgStageIndex('Feeding')); } catch (e) { return realStage(); } };
+  window.__fdPick = (i) => { window.__fdStage = null; if (typeof hubChangeStage === 'function') hubChangeStage('Feeding', i); else openPage('topic:Feeding'); };
+
+
+  // No answer about solids yet, and old enough that most babies have started: show solids for the age, say so,
+  // and give a one-tap way back to Ready for solids.
+  P.dirD = (() => { const prev = P.dirD; return (v) => { const h = prev(v);
+    try { if (v != null && v !== window.__fdReal()) return h; if (typeof hasFoodAnswer !== 'function' || hasFoodAnswer() || !(typeof foodAssumed === 'function' && foodAssumed())) return h; } catch (e) { return h; }
+    const note = `<p class="hub-lead" style="margin-top:10px;font-size:14px">${F('We’re showing solids for Ari’s age.')} <button type="button" onclick="hubChangeStage('Feeding',2)" style="border:0;background:none;padding:0;font:inherit;font-weight:700;color:inherit;text-decoration:underline;cursor:pointer">${F('Not started yet?')}</button></p>`;
+    return h.replace('</header><section class="hub-card hub-glance', note + '</header><section class="hub-card hub-glance'); }; })();
+
+
+  // Once solids start, choking first aid is one tap from the stage page, under "Normal, or time to call?".
+  window.SHOME = (() => { const prev = window.SHOME; return v => prev(v) + (v >= 3 ? `<div class="hub-browse"><button class="hub-link" onclick="${go('xa:r2.4')}">${F('Choking first aid, step by step')} ›</button></div>` : ''); })();
+
+
+  // Anything that renders the Feeding category directly (a stage Change, Undo, Back) shows the new stage page.
+  { const rnd2 = window.render; window.render = render = function (...a) { try { if ((0, eval)('page') === 'topic:Feeding') (0, eval)("page='chg:Feeding:mock:dirD'"); } catch (e) {} return rnd2.apply(this, a); }; }
+
   const base = window.changesRoute;
   // Home cards link to the old Feeding detail pages; send each to the page that now covers it.
-  const OLDD = { vitd: 'xa:growth.3', signs: 'xa:r2.0', notready: 'xa:r2.0', setup: 'xa:r2.3', food: 'xa:f3.0', tray: 'xa:f3.0', lumpy: 'xa:f3.0', allergens: 'xa:f3.1', cup: 'xa:f3.3', day: 'xa:m4.0', milk12: 'z_milk12', after: 'z_milk12', cues: 'xa:feed.0', nursing: 'y_nurse', bottles: 'y_away', pump: 'y_away' };
-  window.changesRoute = function (r) { { const q = String(r).split(':'); if (q[1] === CAT && q[2] === 'd' && OLDD[q[3]]) r = 'chg:' + CAT + ':mock:' + OLDD[q[3]]; } const [, cat, s, a, x] = r.split(':'); if (cat === CAT && s === 'mock' && P[a]) { window.__fdLast = r; const out = P[a](x); return calm(a, a === 'dirD' ? out : tidy(out)); } return base(r); };
+  // Every older Feeding link (Home cards, the year view, Safety, briefings) opens the page that now covers it.
+  const OLDD = { vitd: 'xa:growth.3', signs: 'xa:r2.0', notready: 'xa:r2.0', approach: 'xa:r2.1', setup: 'xa:r2.3', food: 'xa:f3.0', tray: 'xa:f3.0', lumpy: 'xa:f3.0', finger: 'xa:f3.0',
+    allergens: 'xa:f3.1', cup: 'xa:f3.3', day: 'xa:m4.0', family: 'xa:m4.1', milk12: 'z_milk12', after: 'z_milk12', cues: 'xa:feed.0', latch: 'xa:feed.1', pace: 'xa:feed.1', pacing: 'xa:feed.1',
+    enough: 'xa:growth.1', milk: 'xa:growth.0', storage: 'xa:prep', nursing: 'y_nurse', bottles: 'y_away', pump: 'y_away' };
+  const OLDTOP = { safe: 'xa:r2.4', gag: 'xa:r2.4', signs: 'xa:r2.0', approach: 'xa:r2.1', allergens: 'xa:f3.1', allergy: 'xa:f3.1', offer: 'xa:f3.0', amounts: 'xa:growth.0', milk: 'xa:growth.0' };
+  const oldFeeding = r => { const q = String(r).split(':'); if (q[0] === 'chg' && q[1] === CAT && q[2] === 'mock' && q[3] === 'enough') return 'chg:' + CAT + ':mock:y_growth'; if (q[0] !== 'chg' || q[1] !== CAT || q[2] === 'mock') return r;
+    const to = q[2] === 'd' ? OLDD[q[3]] : q[2] === 's' && q[3] !== '' && q[3] != null ? 'dirD:' + feedGroup(Number(q[3])) : q[2] === 'help' ? (window.__fdReal() <= 2 ? 'x_tough' : 'z_tough') : OLDTOP[q[2]];
+    return 'chg:' + CAT + ':mock:' + (to || 'dirD'); };
+  window.changesRoute = function (r) { r = oldFeeding(r); const [, cat, s, a, x] = r.split(':'); if (cat === CAT && s === 'mock' && P[a]) { window.__fdLast = r; const out = P[a](x); return calm(a, a === 'dirD' ? out : tidy(out)); } return base(r); };
   const op = window.openPage;
   window.openPage = openPage = function (r, ...rest) { if (r === 'topic:Feeding') r = 'chg:Feeding:mock:dirD'; return op.call(this, r, ...rest); };
 })();

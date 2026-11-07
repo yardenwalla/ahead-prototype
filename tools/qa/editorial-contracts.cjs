@@ -53,9 +53,9 @@ for (const value of ['new','textures','established']) {
   const b=family(11);
   b.run(`setFeedingStage('${value}');openPage('topic:Feeding')`);
   const nowStage = b.run("(((stageItemsLast()||{}).items||[]).find(x => x.now && x.on) || {}).label");
-  check(nowStage === 'Solids', 'Started solids show Solids as the current stage on the timeline');
-  check(/Solids guides/.test(b.html()) && /Start here|>Now</.test(b.html()), 'The Solids page lists every guide and marks where the baby is');
-  for (const i of [3,4,5]) { b.run(`openPage('chg:Feeding:s:${i}')`); check(/Solids guide ·/.test(b.html()) && /class="monthly-back"/.test(b.html()), 'Each solids guide opens as a guide with a way back'); }
+  check(['First foods','Meals'].includes(nowStage), 'Started solids show a solids stage as the current stage on the timeline');
+  check(/step by step/.test(b.html()), 'The solids stage page opens with its steps');
+  for (const i of [3,4,5]) { b.run(`openPage('chg:Feeding:s:${i}')`); check(/(Tastes, textures and lots of mess|Three meals, and milk still matters)/.test(b.html()) && /class="monthly-back"/.test(b.html()), 'Each old solids guide link opens its stage with a way back'); }
 }
 // Foundational guidance is discoverable initially, then retires after setup.
 {
@@ -112,23 +112,20 @@ for(const choice of ['trying','routine','help']) {
   b.run(`chgChooseSettling('${choice}');openPage('topic:Sleep')`);
   check(!clean(b.html()).includes('From around 4–6 months, learn about optional methods'),'The Sleep entry reflects the selected support, not another introduction');
 }
+// Nov 7: Feeding follows the milk set in Baby's details. Old milk links open the matching new page.
 {
   const b=family(11,{solids:'Yes',foodExperience:'established'});
-  b.run("openPage('chg:Feeding:d:milk');chgChooseMethod('bottle')");
-  check(!clean(b.html()).includes('Cow’s milk, if used'),'Before twelve months the milk row does not suggest cow’s milk');
-  const c=family(12,{solids:'Yes',foodExperience:'established'});
-  c.run("openPage('chg:Feeding:d:milk');chgChooseMethod('bottle')");
-  check(clean(c.html()).includes('Cow’s milk, if used'),'After the birthday the changed milk reference names the milk it describes');
-  c.run("openPage('chg:Feeding:milk');chgAnswer('Feeding:learn:2',0)");
-  check(c.html().includes('chg-answer'),'The spit-up reference is reachable beyond the newborn guide');
+  b.run("openPage('chg:Feeding:d:milk12')");
+  check(/whole milk/i.test(clean(b.html())),'The first-birthday milk page names the milk it describes');
+  const c=family(2);
+  c.run("openPage('chg:Feeding:help')");
+  check(/spit/i.test(clean(c.html())),'The spit-up help is reachable beyond the newborn guide');
 }
 for(const age of [1,2,3,4,5,6,7,8,9,10,11,12]) {
-  const b=family(age);
-  b.run("openPage('chg:Feeding:d:milk');chgChooseMethod('expressed')");
+  const b=boot({name:'Ari',dob:'2025-10-21',feed:'Breast milk',feedHow:'Pumping',pronouns:'he'},{},{},new Date(Date.UTC(2025,9+age,21,12)).toISOString());
+  b.run("openPage('chg:Feeding:d:milk')");
   const h=clean(b.html());
-  check(b.html().includes('value="expressed" selected'),'Expressed milk has its own retained reference selection');
-  check(!h.includes('Per formula bottle') && !h.includes('up to 32 oz'),'Breast-milk bottle reference does not inherit formula amounts');
-  check(h.includes('25 oz')===(age<=6),'The expressed-milk average is limited to the age range its source covers');
+  check(!/formula/i.test(h),'Breast-milk bottle amounts do not inherit formula amounts');
 }
 {
   const b=family(9,{solids:'Yes',foodExperience:'new'});

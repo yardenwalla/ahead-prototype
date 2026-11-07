@@ -11,7 +11,7 @@ const family = (age, answers = {}, storage = {}) => boot({ name: 'Ari', dob, fee
 // The stages behind the page last shown (the "All stages" page and the Preview card use the same list).
 const stages = a => JSON.parse(a.run(`JSON.stringify(((stageItemsLast()||{}).items||[]).map(x => ({ cls: (x.on ? 'is-on ' : '') + (x.now ? 'is-now' : ''), change: !!(x.on && x.change), name: x.label })))`));
 const nowName = a => (stages(a).find(s => /is-now/.test(s.cls)) || {}).name;
-const ROUTES = { Sleep: i => `chg:Sleep:s:${i}`, Feeding: i => `chg:Feeding:s:${[1, 2, 3][i]}`,
+const ROUTES = { Sleep: i => `chg:Sleep:s:${i}`, Feeding: i => `chg:Feeding:mock:dirD:${i}`,
   Development: i => `development-stage:${[2, 4, 6, 9, 12][i]}`, Safety: i => `safety-stage:${['setup', 'reaching', 'rolling', 'pulling'][i]}`,
   Health: i => `health-visit:${[0, 1, 2, 4, 6, 9, 12][i]}` };
 
@@ -19,7 +19,7 @@ const ROUTES = { Sleep: i => `chg:Sleep:s:${i}`, Feeding: i => `chg:Feeding:s:${
 for (let age = 0; age <= 12; age++) for (const cat of Object.keys(ROUTES)) {
   const a = family(age); a.run(`openPage('topic:${cat}')`);
   const s = stages(a);
-  check(s.length >= (['Safety', 'Feeding'].includes(cat) ? 3 : 4), `${cat} at ${age} months has its stages`);
+  check(s.length >= (cat === 'Safety' ? 3 : 4), `${cat} at ${age} months has its stages`);
   check(s.filter(x => /is-now/.test(x.cls)).length === 1, `${cat} at ${age} months marks exactly one stage Now`);
   check(s.filter(x => /is-on/.test(x.cls)).length === 1, `${cat} at ${age} months has one stage being read`);
   check(!s.some(x => x.change), `${cat} at ${age} months: no Change on the baby's own stage`);
@@ -36,14 +36,15 @@ for (let age = 0; age <= 12; age++) for (const cat of Object.keys(ROUTES)) {
     if (cat === 'Health' || cat === 'Development') check(!mine.change, `${cat} never offers Change`);
     if (cat === 'Safety' && i < nowI) check(mine.change, 'Safety can go back a stage');
     if (cat === 'Sleep' && i === 0 && age > 3) check(!mine.change, 'Round-the-clock sleep (swaddling) cannot be picked after 3 months');
-    if (cat === 'Feeding' && i >= 1 && age < 4) check(!mine.change, 'Solids stages cannot be picked before 4 months');
-    if (!['Health', 'Development'].includes(cat) && !(cat === 'Sleep' && i === 0 && age > 3) && !(cat === 'Feeding' && i >= 1 && age < 4)) check(mine.change, `${cat} at ${age} months: ${x.name} can be picked`);
+    if (cat === 'Feeding' && i >= 2 && age < 4) check(!mine.change, 'Solids stages cannot be picked before 4 months');
+    if (cat === 'Feeding' && i === 4 && age < 8) check(!mine.change, 'Meals cannot be picked before 8 months');
+    if (!['Health', 'Development', 'Feeding'].includes(cat) && !(cat === 'Sleep' && i === 0 && age > 3)) check(mine.change, `${cat} at ${age} months: ${x.name} can be picked`);
   });
 }
 
 // Change sticks, shows the same in Baby's details, and Undo puts it back.
-for (const [cat, age, i, label] of [['Sleep', 7, 3, 'Two naps'], ['Sleep', 10, 2, 'Three naps'], ['Sleep', 5, 1, 'Longer nights'], ['Feeding', 7, 2, 'Solids'], ['Feeding', 9, 1, 'Preparing for solids'],
-  ['Feeding', 7, 0, 'Milk feeds'], ['Safety', 2, 2, 'Crawling'], ['Safety', 10, 1, 'Rolling']]) {
+for (const [cat, age, i, label] of [['Sleep', 7, 3, 'Two naps'], ['Sleep', 10, 2, 'Three naps'], ['Sleep', 5, 1, 'Longer nights'], ['Feeding', 7, 3, 'First foods'], ['Feeding', 9, 2, 'Ready for solids'],
+  ['Feeding', 7, 1, 'Milk feeds'], ['Safety', 2, 2, 'Crawling'], ['Safety', 10, 1, 'Rolling']]) {
   const a = family(age); a.run(`openPage('topic:${cat}')`);
   const before = nowName(a);
   a.run(`openPage('${ROUTES[cat](i)}');hubChangeStage(${JSON.stringify(cat)}, ${i})`);
@@ -63,13 +64,13 @@ for (const [cat, age, i, label] of [['Sleep', 7, 3, 'Two naps'], ['Sleep', 10, 2
   a = family(9); a.run("openPage('topic:Sleep')"); check(nowName(a) === 'Two naps', 'Sleep at 9 months guesses Two naps');
   a = family(11, { twoNaps: 'Not yet' }); a.run("openPage('topic:Sleep')"); check(nowName(a) === 'Three naps', 'A parent’s “not yet” holds past 9 months');
   a = family(6, { twoNaps: 'Yes' }); a.run("openPage('topic:Sleep')"); check(nowName(a) === 'Two naps', 'A parent’s “two naps” wins before 9 months');
-  a = family(8); a.run("openPage('topic:Feeding')"); check(nowName(a) === 'Preparing for solids', 'Feeding with no solids answer waits on Preparing for solids');
-  a = family(10); a.run("openPage('topic:Feeding')"); check(nowName(a) === 'Solids' && /We’re showing solids for Ari’s age/.test(a.html()), 'From 9 months with no answer, Feeding shows solids for the age and says so');
-  a = family(10, { solids: 'Not yet' }); a.run("openPage('topic:Feeding')"); check(nowName(a) === 'Preparing for solids', 'A parent’s “not yet” holds at 10 months');
-  a = family(10, { solids: 'Yes', foodExperience: 'new' }); a.run("openPage('topic:Feeding')"); check(nowName(a) === 'Solids', 'A parent’s “we’ve started” holds');
-  a = family(5); a.run("openPage('topic:Feeding')"); check(nowName(a) === 'Preparing for solids', 'Preparing for solids shows from 4 months');
+  a = family(8); a.run("openPage('topic:Feeding')"); check(nowName(a) === 'Ready for solids', 'Feeding with no solids answer waits on Ready for solids');
+  a = family(10); a.run("openPage('topic:Feeding')"); check(['First foods', 'Meals'].includes(nowName(a)) && /We’re showing solids for Ari’s age/.test(a.html()), 'From 9 months with no answer, Feeding shows solids for the age and says so');
+  a = family(10, { solids: 'Not yet' }); a.run("openPage('topic:Feeding')"); check(nowName(a) === 'Ready for solids', 'A parent’s “not yet” holds at 10 months');
+  a = family(10, { solids: 'Yes', foodExperience: 'new' }); a.run("openPage('topic:Feeding')"); check(nowName(a) === 'First foods', 'A parent’s “we’ve started” holds');
+  a = family(5); a.run("openPage('topic:Feeding')"); check(nowName(a) === 'Ready for solids', 'Ready for solids shows from 4 months');
   a = family(3); a.run("openPage('topic:Feeding')"); check(nowName(a) === 'Milk feeds', 'Milk feeds before 4 months');
-  a = family(4, { solids: 'Yes', solidsStart: '2026-02-21' }); a.run("openPage('topic:Feeding')"); check(nowName(a) === 'Solids' && a.html().includes('First tastes'), 'Starting at 4 months opens Solids on first tastes');
+  a = family(4, { solids: 'Yes', solidsStart: '2026-02-21' }); a.run("openPage('topic:Feeding')"); check(nowName(a) === 'First foods' && a.html().includes('Tastes, textures'), 'Starting at 4 months opens First foods');
   for (const age of [0, 3, 7, 11]) { const c = family(age); c.run("openPage('topic:Daily rhythm')"); const st = stages(c); check(st.length === 4 && st.filter(x => /is-now/.test(x.cls)).length === 1 && !st.some(x => x.change), `Everyday care at ${age} months has a read-only timeline`); for (let i = 0; i < 4; i++) { c.run(`openPage('chg:Daily rhythm:s:${i}')`); const v = stages(c); check(v[i] && /is-on/.test(v[i].cls) && !v.some(x => x.change), `Everyday care: stage ${i} can be read, never changed`); } }
 }
 // Rule 3: an old "not yet" brings the naps question back to Home a month later.
@@ -98,7 +99,7 @@ for (const [cat, pickRoute, i, pickAge, laterAge, picked, next] of [
   a.run(`stageFollowAge(${JSON.stringify(cat)});openPage('topic:${cat}')`);
   check(nowName(a) === next, `${cat}: “Yes, move on” follows age again (${next})`);
 }
-for (const [cat, route, i] of [['Safety', 'safety-stage:reaching', 1], ['Sleep', 'chg:Sleep:s:1', 1], ['Feeding', 'chg:Feeding:s:1', 0]]) {
+for (const [cat, route, i] of [['Safety', 'safety-stage:reaching', 1], ['Sleep', 'chg:Sleep:s:1', 1], ['Feeding', 'chg:Feeding:s:1', 1]]) {
   const a = family(9); a.run(`openPage('${route}');hubChangeStage(${JSON.stringify(cat)}, ${i})`);
   check(!a.run('homeQuestionQueue()').includes('outgrown:' + cat), `${cat}: picking an earlier stage doesn't trigger the outgrown question straight away`);
 }

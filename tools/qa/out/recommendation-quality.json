@@ -1,7 +1,7 @@
 {
   "states": 312,
-  "destinations": 843,
-  "checks": 8277,
+  "destinations": 804,
+  "checks": 8157,
   "status": "passed",
   "limits": "Editorial review is documented separately; these checks verify observable recommendation contracts."
 }

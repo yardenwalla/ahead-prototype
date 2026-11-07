@@ -86,13 +86,13 @@ for (const early of [false,true]) for (let age=0; age<=12; age++) {
   a.run("openSection('Feeding','bottle-handling')");check(a.run("page==='chg:Feeding:milk'"),'Milk handling opens its reference');
   a.run("openPage('chg:Sleep:settle')");inspect(a,'settling page');
   check(a.html().includes('You stay close, slower')&&!a.html().includes('settling-guide'),'Sleep training shows every method, with no picker');
-  a.run("openPage('topic:Feeding');openPage('chg:Feeding:d:milk');chgChooseMethod('nurse')");
-  check(a.html().includes('value="nurse" selected'),'Milk reference can be selected directly');
+  // Nov 7: Feeding follows the milk set in Baby's details (no separate picker). Old milk links open "How much".
+  a.run("openPage('topic:Feeding');openPage('chg:Feeding:d:milk')");
+  check(/oz/.test(clean(a.html()))&&a.run("page==='chg:Feeding:d:milk'||/Feeding/.test(page)"),'Old milk link opens the amounts page');
   a.run("editingProfile=true;draft={...profile,feed:'Formula'};setupStep=2;document.querySelector('#feed').value='Formula';submitSetup({preventDefault(){}});openPage('topic:Feeding');openPage('chg:Feeding:d:milk')");
-  // This profile was already Formula, so a deliberate Nursing reference is retained.
-  check(a.html().includes('value="nurse" selected'),'Unchanged milk type retains the chosen reference');
+  check(!/breast milk|nursing/i.test(clean(a.html())),'Formula families see only formula amounts');
   a.run("editingProfile=true;draft={...profile};setupStep=2;document.querySelector('#feed').value='Both';submitSetup({preventDefault(){}});openPage('topic:Feeding');openPage('chg:Feeding:d:milk')");
-  check(a.html().includes('value="both" selected'),'Changing milk type updates the default reference');
+  check(/breast milk/i.test(clean(a.html()))&&/formula/i.test(clean(a.html())),'Changing milk type updates the amounts');
   check(!/<dt>Milk<\/dt>/.test(a.html()),'Combined nursing and bottles do not show two unlabeled milk amounts');
   a.run("openPage('chg:Sleep:safe')");
   check(a.html().includes('id="sleep-rolling"')&&a.html().includes('id="sleep-crib-height"'),'Safety links have direct sleep-space targets');
