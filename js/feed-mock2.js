@@ -2075,14 +2075,13 @@
           ['eye', 'Sore or cracked nipples', '', ['~Some tenderness in the first week is common. Pain all feed usually means a shallow latch.', 'Re-latch until it feels like a tug.', 'Balm or your own milk after feeds.', 'Breast shells between feeds.', 'Still sore with a good latch? Ask a lactation consultant about tongue-tie.'], '', ''],
           ['eye', 'Very full breasts', '', ['~Hard to latch? Hand express a little first to soften the nipple. A cold pack after feeds eases swelling.'], '', ''],
           !fm && ['eye', 'A first bottle', '', ['~Around 3–4 weeks, once nursing is going well. Someone else offers pumped milk, before he’s very hungry.'], '', '']])],
-      bot && ['Bottles', h2('What you’ll need') + cDo('The basics', [nurse && fm ? '2–3 small bottles for top-ups. No best shape, just one he takes.' : 'Enough bottles for a day. No best shape, just one he takes.', 'Slow-flow nipples, the slowest size to start.', 'A bottle brush and a drying rack.'])
-        + kH('Paced bottle feeding', 'Help him control the pace instead of milk flowing too quickly.')
-        + kOl([['Hold him semi-upright,', 'head higher than his tummy.'], ['Touch the nipple to his lip', 'and let him draw it in.'], ['Keep the bottle fairly level,', 'just enough milk to fill the tip.'], ['Pause every few sucks', 'by tipping the bottle down.'], ['Switch sides halfway,', 'so he looks both ways.'], ['Stop at fullness cues.', 'There’s no need to finish.']], 'Step by step')
-        + small('Never prop a bottle.', 'Always hold him and the bottle. Burp every 2–3 oz, and at the end.')
-        + H().tiles([[nurse && fm ? 'Top-ups' : 'Per bottle', nurse && fm ? '1–2 oz' : '1–3 oz', nurse && fm ? 'Only if he’s still hungry' : 'At first, slowly more'], ['A feed takes', '10–20 minutes', 'Much faster? The flow may be too fast']])
-        + h2('Is the nipple flow right?') + two(['Too slow', 'He works hard, gets frustrated, or the nipple flattens.'], ['Too fast', 'Gulping, coughing, or milk spilling out.', '#fdeee6', '#9a5a3c'])
-        + small('Start with the slowest flow.', 'Go up a size only when he’s clearly frustrated.')
-        + h2('Common issues') + accs([
+      bot && ['Bottles', kH('Paced bottle feeding', 'Let him set the pace, like nursing.')
+        + kOl([['Hold him semi-upright.'], ['Touch his lip,', 'let him draw it in.'], ['Bottle fairly level,', 'milk just in the tip.'], ['Pause every few sucks.'], ['Stop when he’s done,', 'even if milk is left.']], 'Step by step')
+        + H().tiles([[nurse && fm ? 'Top-ups' : 'Per bottle', nurse && fm ? '1–2 oz' : '1–3 oz', 'At first'], ['Burp', 'Every 2–3 oz', 'And at the end']])
+        + small('Never prop a bottle.', 'Always hold him.')
+        + h2('Is the nipple flow right?') + two(['Too slow', 'Works hard, frustrated, nipple flattens.'], ['Too fast', 'Gulping, coughing, milk spilling.', '#fdeee6', '#9a5a3c'])
+        + h2('Good to know') + accs([
+          ['eye', 'What you’ll need', '', ['Bottles in any shape he takes well' + (nurse && fm ? ', 2–3 small ones for top-ups.' : '.'), 'Slow-flow nipples. Go up a size only when he’s clearly frustrated.', 'A bottle brush and a drying rack.'], '', ''],
           nurse && ['eye', 'Won’t take a bottle', '', ['Someone else offers, ideally with you out of the room.', 'Try before he’s very hungry, when he’s calm.', 'A slow-flow nipple, warm milk, and a few days’ patience.'], '', ''],
           ['eye', 'Drinks it too fast', '', ['~Pause more often, hold him more upright, and check the nipple size.'], '', ''],
           ['eye', 'Falls asleep mid-bottle', '', ['~Burp, switch sides, then offer again. If he’s done, that’s fine.'], '', ''],
