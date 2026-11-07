@@ -2043,9 +2043,9 @@
 #main .nbc .fd-acc .fd-acc-ico{display:none!important}
 #main .nbc .fd-acc summary b{font-size:15.5px}
 #main .nbc .fd-acc-body{padding:0 2px 12px!important}
-#main .nbc .hub-tiles{gap:8px}#main .nbc .hub-fig-title:empty{display:none}#main .nbc .c-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 16px;background:var(--card,#fff);border:1px solid var(--line,#efe8ea);border-radius:20px;padding:16px;margin:0 0 12px}#main .nbc .c-grid b{display:block;font-size:15px;font-weight:600;line-height:1.3}#main .nbc .c-grid small{display:block;font-size:13.5px;line-height:1.4;color:var(--muted,#6b6578);margin-top:2px}
+#main .nbc .hub-tiles{gap:8px}#main .nbc .hub-fig-title:empty{display:none}#main .nbc .c-grid{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:14px 16px;background:var(--card,#fff);border:1px solid var(--line,#efe8ea);border-radius:20px;padding:16px;margin:0 0 12px}#main .nbc .c-grid-art{position:absolute;top:-14px;right:16px;width:44px;height:44px;border-radius:50%;background:#fff;display:grid;place-items:center;padding:10px;box-sizing:border-box;box-shadow:0 2px 8px rgba(80,40,60,.08)}#main .nbc .c-grid{padding-top:20px}#main .nbc .c-grid b{display:block;font-size:15px;font-weight:600;line-height:1.3}#main .nbc .c-grid small{display:block;font-size:13.5px;line-height:1.4;color:var(--muted,#6b6578);margin-top:2px}
 </style>`;
-  const cGrid = xs => `<div class="c-grid">${xs.filter(Boolean).map(([, t, sub]) => `<div><b>${F(t)}</b><small>${F(sub)}</small></div>`).join('')}</div>`;
+  const cGrid = (xs, icon, tint) => `<div class="c-grid"${tint ? ` style="background:${tint[0]};border-color:transparent"` : ''}>${icon ? `<span class="c-grid-art" style="color:${tint ? tint[1] : C.pink[1]}">${hubArt(icon, CAT)}</span>` : ''}${xs.filter(Boolean).map(([, t, sub]) => `<div><b>${F(t)}</b><small>${F(sub)}</small></div>`).join('')}</div>`;
   const cLead = t => `<p class="c-lead">${F(t)}</p>`;
   const cList = (xs, numbered) => `<ul class="c-list">${xs.filter(Boolean).map((x, i) => `<li><i>${numbered ? i + 1 : hubArt(x[0], CAT)}</i><span><b>${F(numbered ? x[0] : x[1])}</b>${(numbered ? x[1] : x[2]) ? `<small>${F(numbered ? x[1] : x[2])}</small>` : ''}</span></li>`).join('')}</ul>`;
   const cPage = (ctx, title, leadT, inner) => `<div class="nbc">` + nbPage(ctx, title, leadT, C.pink, tabCss + illCss + irowsCss + CCSS + inner) + `</div>`;
@@ -2058,9 +2058,9 @@
       + cueStrip().replace(`<b class="hub-fig-title">${F('Hunger cues, early to late')}</b>`, '')
       + accs([['eye', 'Hungry, or wants comfort?', '', ['~If it’s been a while, offer a feed. If he just ate, a cuddle or a pacifier' + (nurse ? ' (once nursing is going well)' : '') + ' may settle him.'], '', '']])
       + h2('Some newborns need waking') + cLead('Until he’s back to birth weight, about every 3 hours.')
-      + cGrid([['shirt', 'Undress him', 'Down to his diaper'], ['hand', 'Stroke his feet', 'Or his back, gently'], ['diaper', 'Change his diaper', 'Midway through'], b && nurse ? ['drop', 'Breast compressions', 'Keep milk flowing'] : ['smile', 'Pause and burp', 'Then offer again']])
+      + cGrid([['shirt', 'Undress him', 'Down to his diaper'], ['hand', 'Stroke his feet', 'Or his back, gently'], ['diaper', 'Change his diaper', 'Midway through'], b && nurse ? ['drop', 'Breast compressions', 'Keep milk flowing'] : ['smile', 'Pause and burp', 'Then offer again']], 'sun', ['#fff3dc', '#8a6a2a'])
       + h2('Evenings can get intense') + cLead('Feed after feed for a few hours is normal.')
-      + cGrid([[b ? 'roll' : 'bottle', b ? 'Switch sides often' : 'Smaller bottles', b ? 'Keeps milk flowing' : 'More often'], ['diaper', 'Change first', 'So he stays sleepy after'], ['moon', 'Dim and quiet', 'Save play for the day'], ['heart', 'Take turns', 'A longer stretch each']])
+      + cGrid([[b ? 'roll' : 'bottle', b ? 'Switch sides often' : 'Smaller bottles', b ? 'Keeps milk flowing' : 'More often'], ['diaper', 'Change first', 'So he stays sleepy after'], ['moon', 'Dim and quiet', 'Save play for the day'], ['heart', 'Take turns', 'A longer stretch each']], 'moon', ['#efedff', '#625084'])
       + h2('It won’t always be this frequent') + hubStageStrip({ title: '', items: [['clock', 'Around 6 weeks', 'Fussy evenings peak, then ease'], ['moon', '6–8 weeks', 'Cluster feeding eases'], ['smile', '2–3 months', 'A longer night stretch']], cat: CAT })
       + h2('Common questions') + accs([['eye', 'Days and nights mixed up?', '', ['~Keep days bright and nights quiet and boring. It improves over a few weeks.'], '', ''], ['eye', 'Should I track feeds?', '', ['~A short note of feeds and diapers helps at first. Stop once things feel settled, unless your pediatrician asks you to keep going.'], '', '']])); };
 
