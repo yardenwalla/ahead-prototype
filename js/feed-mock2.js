@@ -2054,8 +2054,8 @@
     return cPage('Feeding routine', 'Feeding routine', 'What feeding looks like now, what might surprise you, and how to make it easier.',
       h2('Your feeding rhythm') + H().tiles([['Feeds a day', b ? '8–12' : '6–10', 'Day and night'], ['How often', b ? 'Every 2–3 hrs' : 'Every 2–4 hrs', 'From the start of one feed']])
       + ribbon + cLead('An example, not a schedule. Follow his hunger cues.' + (bot ? (nurse && fm ? ' Top-ups are small, often 1–2 oz.' : ' Bottles start around 1–3 oz.') : ''))
-      + h2('Know when he’s hungry') + cLead('Feed at the early signs. Crying is a late sign, so calm him first.')
-      + cList([['eye', 'Early', 'Stirring, mouth opening, turning to look'], ['hand', 'Active', 'Rooting, fists to his mouth, wriggling'], ['heart', 'Late', 'Crying']])
+      + h2('Know when he’s hungry') + cLead('Feed at the early signs. Crying is a late sign.')
+      + cueStrip().replace(F('Hunger cues, early to late'), F('Early to late'))
       + h2('Some newborns need waking') + cLead('Until he’s back to birth weight, your pediatrician may suggest waking him about every 3 hours. Try:')
       + cList([['Undress him to his diaper'], ['Gently stroke his feet or back'], ['Change his diaper midway'], [b && nurse ? 'Use breast compressions' : 'Pause, burp, then offer again']], true)
       + h2('Evenings can get intense') + cLead('Feeding again and again for a few hours is cluster feeding. It’s common' + (b ? ', and it doesn’t mean you’re low on milk.' : '.'))
