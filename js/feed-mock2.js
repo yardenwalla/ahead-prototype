@@ -2271,7 +2271,7 @@
     return xPage('feed', 'x_cues', 'Start at his early hunger cues', 'Feeding before he cries is easier for you both. Crying is a late sign.',
       cueStrip().replace(`<b class="hub-fig-title">${F('Hunger cues, early to late')}</b>`, '')
       + xDo('What to do', ['Offer a feed at the first stirring, rooting or hands to mouth.', 'Already crying? Calm him first with skin to skin or a cuddle, then feed.'])
-      + xKnow('Hungry, or wants comfort?', 'If it’s been a while since his last feed, it’s likely hunger. Just fed and still fussing? Try a cuddle first.')); };
+      + xKnow('Hungry, or wants comfort?', 'If it’s been a while since his last feed, it’s likely hunger. Just fed and still fussing? Try a cuddle' + (nurses() ? ', or a pacifier once nursing is going well.' : ' or a pacifier.'))); };
   P.x_full = () => xPage('feed', 'x_full', 'Stop when he shows he’s full', 'Let him decide how much. It’s how he learns his own hunger and fullness.',
       fullTiles()
       + xDo('What to do', ['Still rooting after a burp? Offer ' + (nurses() ? 'the other side' + (formulaFam() ? ', then a small top-up' : '') : 'a little more') + '.', 'Turns away or drifts off? That’s the end of the feed, even if milk is left.', 'No need to finish a bottle or empty a side.'])
@@ -2298,7 +2298,7 @@
   // How to feed
   P.x_latch = () => xPage('feed', 'x_latch', 'A deep latch feels like a tug, not a pinch', 'Get comfortable first: a pillow under him and your feet up, so you bring him to you.',
       kHolds() + xDo('Step by step', ['Nose to nipple, his head and body in a line.', 'Wait for a wide mouth, like a yawn.', 'Bring him in chin first, close to you.'], true)
-      + xKnow('How you’ll know it’s right', 'Lips flared out, long sucks with swallows, and a tug that doesn’t pinch. Clicking or pinching that lasts? Break the seal with a finger and try again.')
+      + `<p class="ss-small"><a href="https://www.youtube.com/watch?v=y--syZR0u1E" target="_blank" rel="noopener" style="color:var(--ss-ink);font-weight:600">${F('Watch a good latch')} ↗</a> ${F('A short video from Global Health Media.')}</p>` + xKnow('How you’ll know it’s right', 'Lips flared out, long sucks with swallows, and a tug that doesn’t pinch. Clicking or pinching that lasts? Break the seal with a finger and try again.')
       + xNote('Gulping or coughing?', 'Milk may be coming fast. Lean back, so he feeds against gravity.') + xNote('Too sleepy to latch in the first days?', 'Hand express a few drops of colostrum and give them on a spoon.')
       + xNote('Worth a call:', 'most feeds hurt, or he can’t stay on. A lactation consultant can help, and check for tongue-tie.'));
   P.x_sides = () => { const fm = formulaFam(), bot = isBottle();
@@ -2312,7 +2312,7 @@
       H().tiles([[nurse && fm ? 'Top-ups' : 'Per bottle', nurse && fm ? '1–2 oz' : '1–3 oz', 'At first. More as he grows'], ['Burp', 'Every 2–3 oz', 'And at the end']])
       + xDo('Step by step', ['Hold him semi-upright, and touch his lip so he draws the nipple in.', 'Keep the bottle fairly level, milk just in the tip.', 'Pause every few sucks.', 'Stop when he’s done, even if milk is left.'], true)
       + xKnow('How you’ll know the flow is right', 'He sucks steadily without gulping or working hard. Gulping, coughing or milk spilling? Try a slower nipple.')
-      + xNote('Never prop a bottle.', 'Any bottle he takes well works, wide or narrow, with a slow-flow nipple.' + (nurse ? ' Won’t take one? Have someone else offer it, before he’s very hungry.' : ''))); };
+      + xNote('Falls asleep mid-bottle?', 'Burp, then offer again. If he’s done, that’s fine.') + xNote('Never prop a bottle.', 'Any bottle he takes well works, wide or narrow, with a slow-flow nipple.' + (nurse ? ' Won’t take one? Have someone else offer it, before he’s very hungry.' : ''))); };
   P.x_burp = () => { const b = isBreast(), bot = isBottle(), nurse = nurses();
     return nurse ? xPage('feed', 'x_burp', 'When he slows, burp him and offer the other side', 'Some feeds take one side, some both. Often 10–20 minutes a side at first.',
       illGrid([[ILL.shoulder(PALT), 'Over your shoulder', 'Chin on a burp cloth'], [ILL.sitting(PALT), 'Sitting on your lap', 'Support chin and chest'], [ILL.tummy(PALT), 'Tummy-down', 'Across your lap']])
@@ -2342,7 +2342,7 @@
     return xPage('prep', 'x_store', 'How long milk keeps', 'Once he starts a bottle, use it soon, then toss what’s left.',
       (b ? (fm ? h2('Breast milk') : '') + storeTable([['Fresh', '4 hours', '4 days', '6 months'], ['Thawed', '1–2 hours', '24 hours', 'Never refreeze']]) : '')
       + (fm ? (b ? h2('Formula') : '') + storeTable([['Made', '2 hours', '24 hours', 'Don’t freeze']]) : '')
-      + xDo('What to do', ['Once he starts a bottle, finish within ' + (fm && !b ? '1 hour' : !fm ? '2 hours' : '1 hour for formula, 2 for breast milk') + '.', 'Store milk at the back of the fridge, not the door.', 'Warm it in a bowl of warm water, or serve it at room temperature. Never microwave.', b ? 'Out and about: a cooler with ice packs keeps breast milk 24 hours.' : 'Out and about: carry powder and water separately, and mix when he’s ready.'])); };
+      + xDo('What to do', ['Once he starts a bottle, finish within ' + (fm && !b ? '1 hour' : !fm ? '2 hours' : '1 hour for formula, 2 for breast milk') + '.', 'Store milk at the back of the fridge, not the door.', b ? 'Freeze breast milk flat in 2–4 oz bags, and thaw it in the fridge overnight.' : '', 'Warm it in a bowl of warm water, or serve it at room temperature. Never microwave.', b ? 'Out and about: a cooler with ice packs keeps breast milk 24 hours.' : 'Out and about: carry powder and water separately, and mix when he’s ready.'])); };
   P.x_clean = () => xPage('prep', 'x_clean', 'Wash bottles after every feed', 'And sanitize once a day for the first few months.',
       xDo('Step by step', ['Take it all apart' + (pumps() ? ', pump parts too.' : '.'), 'Wash in hot, soapy water or the dishwasher.', 'Air-dry on a clean rack, not a used towel.'], true)
       + xKnow('Sanitizing', 'Once a day: boil 5 minutes, steam, or a sanitize cycle. Most important under 2 months, or for babies born early.'));
@@ -2370,7 +2370,7 @@
       + xKnow('How you’ll know it’s enough', 'You can’t see it in a feed, but you can in his diapers and his weight. That’s next.'));
   P.x_vitd = () => { const b = isBreast(), fm = formulaFam();
     return xPage('growth', 'x_vitd', b ? 'Vitamin D drops, every day' : 'Vitamin D and iron are in the formula', b ? 'Breast milk is low in vitamin D, so he needs drops from the first days.' : 'Ask about vitamin D drops until he drinks about 32 oz a day.',
-      H().tiles([['Vitamin D', b ? '400 IU a day' : 'In the formula', b ? 'Drops, from the first days' : 'Drops until 32 oz a day'], ['Iron', fm ? 'In the formula' : 'Ask at 4 months', fm ? 'Choose one with iron' : 'Breastfed babies may need drops']])
+      H().tiles([['Vitamin D', b ? '400 IU a day' : 'In the formula', b ? 'Drops, from the first days' : 'Drops until 32 oz a day'], ['Iron', fm ? 'In the formula' : isEarly() ? 'From about 1 month' : 'Ask at 4 months', fm ? 'Choose one with iron' : isEarly() ? 'Drops, for babies born early' : 'Breastfed babies may need drops']])
       + xDo('How to give drops', ['Drip it on the nipple just before a feed, or slowly inside his cheek.', 'Or mix it into about 1 oz of milk in a bottle, and make sure he finishes it.', 'Use the dropper that comes with them, and the dose on the label.'])
       + xKnow('No water yet', 'Milk is all he needs until about 6 months, even on hot days.')); };
 
