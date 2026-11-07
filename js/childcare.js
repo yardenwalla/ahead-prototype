@@ -161,19 +161,19 @@
         'Six months before, join daycare waitlists. Three months before, visit home daycares or meet nannies. Six to eight weeks before, decide and sign up. Two weeks before, get ready for day one.')
       + H().note('Less time than this? That’s common. See below.')
       + picSteps('When things don’t go to plan', [
-        ['clock', 'Short on time?', 'You can still find good care. Your local child care referral agency is free, and knows who has openings now. Your state’s child care website can point you to yours.'],
-        ['moon', 'Hours outside 9 to 5', 'Ask home daycares and nannies about early, late or weekend hours.'],
-        ['heart', 'Nothing feels right yet', 'Keep looking. Family or a sitter can bridge the gap.']],
+        ['clock', 'Short on time?', 'Your local child care referral agency is free and knows who has openings.'],
+        ['moon', 'Hours outside 9 to 5', 'Ask home daycares and nannies about early or late hours.'],
+        ['heart', 'Nothing feels right', 'Keep looking. Family or a sitter can fill the gap.']],
         'Starting soon: ask your referral agency who has openings. Odd hours: ask home daycares and nannies. Nothing right yet: keep looking, with family or a sitter in between.')
       + good([['steth', 'Born early?', 'Ask your pediatrician when, and what kind of care, makes sense for {o}.'], ['notepad', 'Waitlists move', 'Check in every month or so. Spots open up.'], ['blocks', 'A mix is common', 'Family two days and daycare three is a plan too.']])
       + `<button class="hub-button is-secondary cc-add" onclick="openPage('chg:${CAT}:d:fit')">${F('Next: Which care fits us?')} ›</button>`, 'notepad');
 
     if (id === 'pay') return sub('pay', 'Setting it up', 'Paying for care', 'Care is one of a family’s biggest monthly costs. There are more ways to pay less than most parents know.',
       picSteps('Ways to pay less', [
-        ['coin', 'Help from your state', 'For families who qualify. Your local child care referral agency can help you apply, for free.'],
-        ['notepad', 'A pre-tax care account', 'Through many jobs. A birth or starting care usually lets you sign up mid-year. Ask HR.'],
-        ['shield', 'A tax credit', 'Lowers your taxes by part of what you pay. Claim it at tax time.'],
-        ['home', 'Early Head Start', 'Free for families who qualify. Your referral agency knows if there’s one near you.']],
+        ['coin', 'Help from your state', 'If you qualify. Your referral agency helps you apply.'],
+        ['notepad', 'A pre-tax care account', 'Through many jobs. A new baby lets you join mid-year.'],
+        ['shield', 'A tax credit', 'Takes part of what you pay off your taxes.'],
+        ['home', 'Early Head Start', 'Free care, for families who qualify.']],
         'Help from your state, a pre-tax care account through work, a federal tax credit, and Early Head Start.')
       + rows('', [['hand', 'If you hire a nanny', 'You’re usually their employer, with taxes to pay. A nanny payroll service can handle them.']])
       + good([['eye', 'Prices vary a lot', 'A nanny usually costs most, then a daycare center, then a home daycare. Ask each place for the full cost, fees included.'], ['lock', 'Deposits', 'Many daycares ask for a deposit or a fee to hold a spot.'], ['heart', 'Paying family', 'Paying a relative may still count toward the tax credit. Ask a tax professional.']]), 'coin');
@@ -216,10 +216,10 @@
         ['shirt', 'A spare outfit or two', 'For spills and blowouts'],
         ['heart', 'Diapers, wipes and cream', atHome ? 'Where your nanny can find them' : 'If your caregiver asks for them']])
       + picSteps('When things don’t go to plan', [
-        m < 9 ? ['bottle', 'Won’t take a bottle', 'Common at first. Let the caregiver try while you’re out of the room.'] : null,
-        ['heart', 'Tears at drop-off', 'Keep goodbyes short and the same each day. Ask for a text once {s’s} settled.'],
-        ['clock', 'Running low', (bm && fm ? 'Ask the caregiver to text you when milk, formula, diapers or clothes run low.' : bm ? 'Ask the caregiver to text you when milk, diapers or clothes run low.' : 'Ask the caregiver to text you when formula, diapers or clothes run low.')],
-        ['chat', 'Something feels off', 'Talk to the caregiver early. If it still doesn’t feel right, it’s OK to change.']],
+        m < 9 ? ['bottle', 'Won’t take a bottle', 'Let the caregiver try, with you out of the room.'] : null,
+        ['heart', 'Tears at drop-off', 'Keep goodbyes short. Ask for a text once {s’s} settled.'],
+        ['clock', 'Running low', 'Ask for a text when ' + (bm && fm ? 'milk, formula or diapers' : bm ? 'milk or diapers' : 'formula or diapers') + ' run low.'],
+        ['chat', 'Something feels off', 'Talk early. It’s OK to change care.']],
         'If the baby won’t take a bottle, let the caregiver try while you’re away. Keep goodbyes short. Ask to hear when every bottle is finished. If something feels off, talk early.')
       + good([['bottle', 'Ask about feeds', 'How many feeds to expect, and how the caregiver warms bottles.'], ['heart', 'Your feelings count', 'The first weeks can be hard on you too. It usually gets easier.']])
       + `<button class="hub-button is-secondary cc-add" onclick="ccStarted()">${F('Care has started? Next: Settle in')} ›</button>`, 'bag');
@@ -228,10 +228,10 @@
     if (id === 'backup') return sub('backup', 'Setting it up', 'When care falls through', 'Every family has days when care doesn’t happen. A plan made now makes them easier.',
       backupList()
       + picSteps('When things don’t go to plan', [
-        ['thermo', '{S’s} sick', 'Take turns with a partner if you can, or call your backup. Your daycare’s sick policy says when {s} can go back, so ask for it.'],
-        ['home', 'The caregiver is sick', 'Call your backup, or a sitter you’ve used before.'],
-        ['hand', 'Your nanny quits', 'Family or a sitter for now. Then a nanny agency, or your referral agency for daycare openings.'],
-        ['notepad', 'Closed days', 'Daycares close on holidays. Plan those days early, with family, a sitter or time off.']],
+        ['thermo', '{S’s} sick', 'Take turns with a partner, or call your backup.'],
+        ['home', 'The caregiver is sick', 'Call your backup, or a sitter you know.'],
+        ['hand', 'Your nanny quits', 'Family or a sitter for now, then an agency.'],
+        ['notepad', 'Closed days', 'Plan holidays early: family, a sitter or time off.']],
         'When the baby is sick, take turns or call your backup. When the caregiver is sick, call a sitter. If a nanny quits, cover with family or a temporary nanny. Plan daycare holidays early.')
       + good([['blocks', 'Changing care', 'Overlap the old and new care for a few days if you can.'], ['notepad', 'Sick days at work', 'Many jobs, and some states, let you use sick days to care for your child. Ask HR.']]), 'shield');
 
@@ -258,39 +258,29 @@
       tl('Plan the first months', [
         ['The first week', 'clock', 'Short days, and a quick chat at pickup.'],
         ['After a month', 'chat', 'A proper check-in about what’s working.'],
-        ...(m >= 6 && m < 12 ? [['Around 8–10 months', 'heart', 'Goodbyes often get harder for a while. A short goodbye, the same each day, helps.']] : []),
         ['Every few months', 'notepad', 'Update Maya’s care card.'],
-        ...(m >= 9 ? [['Around 12–18 months', 'home', 'Many centers move babies up to the toddler room, often once they’re walking. Ask for a few short visits first. The day there usually has one nap, after lunch.']] : [])],
+        ...(m >= 9 ? [['Around 12–18 months', 'home', 'Many centers move babies up to the toddler room. Ask for a few short visits first.']] : [])],
         'In the first week, short days and a chat at pickup. After a month, a proper check-in. Every few months, update the care card.' + (m >= 9 ? ' Around 12 to 18 months, many centers move babies up to the toddler room.' : ''))
-      + picSteps('Each day', [
-        ['clock', 'At drop-off', 'Say how the night went and when {s} last ate.'],
-        ['notepad', 'At pickup', 'Look over the day’s notes: feeds, naps and diapers.'],
-        ['moon', 'At home', 'Short naps at care? An earlier bedtime that night helps.']],
-        'At drop-off, say how the night went and when the baby last ate. At pickup, look over the notes on feeds, naps and diapers. After short naps at care, try an earlier bedtime.')
-      + picSteps('Sick days', [
-        ['thermo', 'A fever', m < 3 ? 'Under 3 months, call your pediatrician first. Most places then ask for a day without fever before coming back.' : 'Most places ask for 24 hours without a fever, and without fever medicine, before coming back.'],
-        ['drop', 'Vomiting or diarrhea', 'Usually a day at home too. Ask what your care’s policy says.'],
-        ['chat', 'A runny nose', 'Often fine to go, if {s} {are|is} eating and playing as usual.'],
-        ['shield', 'Lots of colds at first', 'Common in the first year of care. Have backup care lined up for sick days.']],
-        'Most places ask for 24 hours without a fever before coming back, and a day home after vomiting or diarrhea. A runny nose is often fine. Lots of colds in the first year are common, so line up backup care.')
-      + picSteps('Signs it’s going well', [
-        ['smile', '{S} {seem|seems} settled', 'Content at pickup, even if drop-off has tears.'],
-        ['chat', 'Problems come to you', 'The caregiver tells you about small things, not just good news.'],
-        ['home', 'You’re welcome anytime', 'You can call or drop in without it being a big deal.']],
-        'The baby seems settled at pickup, the caregiver tells you about problems, and you are welcome anytime.')
+      + rows('Each day', [
+        ['clock', 'At drop-off', 'Say how the night went and when {s} last ate'],
+        ['notepad', 'At pickup', 'Look over the day’s notes: feeds, naps and diapers'],
+        ['moon', 'Short naps at care?', 'An earlier bedtime that night helps']])
+      + H().versus('Sick days: care or home?', ['Usually fine to go', 'A runny nose, if {s} {are|is} eating and playing as usual.'],
+        ['Usually a day at home', m < 3 ? 'Any fever: call your pediatrician first. And after vomiting or diarrhea.' : 'Until 24 hours without a fever, and without fever medicine. And after vomiting or diarrhea.'])
+      + H().note('Every place has its own sick policy. Ask for it in writing.')
+      + `<h2 class="hub-h2">${F('Signs it’s going well')}</h2>` + H().tips(['{S} {seem|seems} settled at pickup, even if drop-off has tears.', 'The caregiver tells you about small problems, not just good news.', 'You can call or drop in anytime.'])
       + picSteps('When things don’t go to plan', [
-        ['chat', 'Something small bothers you', 'Bring it up early and kindly. Most things are easy to fix.'],
-        ['heart', 'Harder drop-offs', 'Common from around 8 months, as {s} {learn|learns} to miss you. A short, warm goodbye helps.'],
-        ['shield', 'A real worry', 'Unexplained injuries or unsafe sleep. Keep {o} home and speak up right away. For licensed care, you can also report it on your state’s child care website.']],
-        'Bring small things up early. Harder drop-offs from around 8 months are common. Act right away on real safety worries.')
-      + good([['hand', 'If you have a nanny', 'Agree on paid time off up front, and check in on pay once a year.']]), 'heart');
-
+        ['chat', 'Something small', 'Bring it up early and kindly.'],
+        ['heart', 'Harder drop-offs', 'Common from 8 months. Keep goodbyes short and warm.'],
+        ['shield', 'A real worry', 'Injuries or unsafe sleep: keep {o} home and speak up.']],
+        'Bring small things up early. Harder drop-offs from around 8 months are common, so keep goodbyes short. For injuries or unsafe sleep, keep the baby home and speak up right away.')
+      + good([['thermo', 'Lots of colds at first', 'Common in the first year of care. Line up backup care', go('backup')], ['eye', 'A real worry at licensed care?', 'You can also report it on your state’s child care website'], ['hand', 'If you have a nanny', 'Agree on paid time off up front, and check in on pay once a year']]), 'heart');
     if (id === 'help') return sub('help', 'Kinds of care', 'Extra help at home', 'Help in the early months isn’t only for when you go back to work.',
       picSteps('Kinds of help', [
-        ['heart', 'A postpartum doula', 'Help with feeding, rest and recovery in the first weeks.'],
-        ['moon', 'Overnight help', 'A newborn care specialist looks after nights so you can sleep.'],
-        ['home', 'Family and friends', 'Ask for something specific: a meal, laundry, an hour with {o}.'],
-        ['clock', 'A sitter for a break', 'A few hours to rest, see a friend or get out.', go('sitter')]],
+        ['heart', 'A postpartum doula', 'Feeding, rest and recovery in the first weeks.'],
+        ['moon', 'Overnight help', 'A newborn care specialist covers nights.'],
+        ['home', 'Family and friends', 'Ask for one thing: a meal, laundry, an hour.'],
+        ['clock', 'A sitter for a break', 'A few hours to rest or get out.', go('sitter')]],
         'A postpartum doula helps with feeding and recovery. Overnight help covers nights. Family and friends can help with specific tasks. A sitter gives you a break.')
       + rows('Where to look', [['heart', 'Other parents', 'Ask who helped them, and what it was like'], ['steth', 'Your hospital or pediatrician’s office', 'Many keep lists of local doulas and newborn care specialists'], ['eye', 'Doula directories and agencies', 'Search for postpartum doulas near you']])
       + good([['coin', 'Insurance may help', 'Some health plans and state Medicaid programs cover doula care. Ask yours.'], ['clock', 'Book early', 'Doulas and overnight help often fill up, so ask a few weeks ahead.'], ['chat', 'Asking is OK', 'Most people want to help. They just need to know how.']]), 'heart');

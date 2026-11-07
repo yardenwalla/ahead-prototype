@@ -252,17 +252,9 @@
         ['heart', 'Crying in public', 'It happens to every parent. Step outside, or walk with {o} close.'],
         ['diaper', 'A blowout', 'A family restroom, or your changing pad on a clean flat spot.']],
         'If the baby is hungry, feed them where you are. Crying in public happens to everyone. For a blowout, find a family restroom or use your changing pad.')
-      + ifs(m >= 6 ? [
-        ['highchair', 'Check the high chair', 'Steady, with a strap that works. Skip one that wobbles.'],
-        ['hand', 'Strap {o} in', 'Around the waist and between the legs, every time'],
-        ['plate', 'Pull it back from the table', 'So {s} can’t push off with {p} feet'],
-        ['cup', 'Hot food out of reach', 'Plates and hot drinks to the middle. {S} will grab.']] : [
-        ['carseat', 'Car seat stays low', 'On the floor or in the stroller, never on top of a high chair'],
-        ['clock', 'Go after a feed', 'A fed baby often sleeps right through'],
-        ['cup', 'Hot drinks away', 'Keep them and hot plates away from where you hold {o}']],
-        m >= 6 ? 'Check the high chair is steady with a working strap. Strap the baby in. Pull the chair back from the table. Keep hot food and drinks in the middle.' : 'Keep the car seat on the floor or in the stroller. Go after a feed. Keep hot drinks away from the baby.', 'Eating out')
       + good([
         ['car', 'Car seats and shopping carts', m >= 6 ? 'Use the cart’s own seat with the strap on, not the infant seat on top.' : 'An infant seat can tip off the top of a cart. Use a carrier or the stroller.'],
+        m >= 6 ? ['highchair', 'Eating out', 'A steady high chair, strapped in and pulled back from the table. Hot food to the middle.'] : ['carseat', 'Eating out', 'The car seat stays on the floor or in the stroller, never on top of a high chair.'],
         bf ? ['fridge', 'Pumped milk', 'Fine cool or at room temperature. No need to warm it.'] : null,
         m >= 6 ? ['bowl', 'Bring {p} own food', 'Something soft from home, a bib and a spoon. A placemat keeps the tray clean.'] : ['hand', 'Holding {o}', 'It’s fine to ask people to wash their hands first, or to say no.']]));
 
