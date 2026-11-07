@@ -2239,8 +2239,8 @@
 
   // ---- Newborn, built like Sleep and Everyday care (Nov 7): every page is one idea in the app's subpage shape
   // (header → one picture → What to do → How you'll know → a short note), and ends with the other pages in its area. ----
-  const XC = { f1: ['#fbe4ec', '#9b4766'], d1: ['#e7effc', '#46638c'], p1: ['#fdeee6', '#9a5a3c'], g1: ['#fff3dc', '#8a6a2a'], routine: ['#e7effc', '#46638c'], feed: ['#fbe4ec', '#9b4766'], prep: ['#fdeee6', '#9a5a3c'], growth: ['#fff3dc', '#8a6a2a'], tough: ['#f6e8f3', '#7a4f74'] };
-  Object.assign(HEADART, { 'Feeding routine': () => ART.often(5), 'How to feed': () => ART.drops(4), 'Milk and preparation': () => ART.bottle(.55), 'Nutrition and growth': () => ART.diapers(6), 'Feeding challenges': () => ART.often(3), 'His day and night': () => ART.often(5), 'A feed, step by step': () => ART.drops(4), 'Bottles, start to finish': () => ART.bottle(.55), 'Is he getting enough?': () => ART.diapers(6) });
+  const XC = { r2: ['#e6f1e8', '#356651'], f1: ['#fbe4ec', '#9b4766'], d1: ['#e7effc', '#46638c'], p1: ['#fdeee6', '#9a5a3c'], g1: ['#fff3dc', '#8a6a2a'], routine: ['#e7effc', '#46638c'], feed: ['#fbe4ec', '#9b4766'], prep: ['#fdeee6', '#9a5a3c'], growth: ['#fff3dc', '#8a6a2a'], tough: ['#f6e8f3', '#7a4f74'] };
+  Object.assign(HEADART, { 'Getting ready for solids': () => ART.often(4), 'Feeding routine': () => ART.often(5), 'How to feed': () => ART.drops(4), 'Milk and preparation': () => ART.bottle(.55), 'Nutrition and growth': () => ART.diapers(6), 'Feeding challenges': () => ART.often(3), 'His day and night': () => ART.often(5), 'A feed, step by step': () => ART.drops(4), 'Bottles, start to finish': () => ART.bottle(.55), 'Is he getting enough?': () => ART.diapers(6) });
   const xDo = (label, xs, ol) => { xs = xs.filter(Boolean); return xs.length ? `<section class="ss-do"><b>${F(label)}</b><${ol ? 'ol' : 'ul'} class="ss-do-list"${ol ? ' style="padding-left:20px"' : ''}>${xs.map(t => `<li>${F(t)}</li>`).join('')}</${ol ? 'ol' : 'ul'}></section>` : ''; };
   const xKnow = (label, t) => `<p class="ss-know"><b>${F(label)}</b>${F(t)}</p>`;
   const xNote = (label, t) => `<p class="ss-small"><b>${F(label)}</b> ${F(t)}</p>`;
@@ -2254,6 +2254,7 @@
       d1: ['His day and night', [['y_day', 'sun', 'Day', ''], ['y_evening', 'clock', 'Evening', ''], ['y_night', 'moon', 'Night', '']], 'That’s his day and night'],
       p1: bot ? ['Bottles, start to finish', [['y_make', 'bowl', 'Make', ''], ['x_store', 'fridge', 'Store', ''], ['y_away', 'bag', 'Away', ''], ['x_clean', 'star', 'Clean', '']], 'That’s a bottle, start to finish'] : null,
       g1: ['Is he getting enough?', [['y_diapers', 'diaper', 'Diapers', ''], ['y_weight', 'star', 'Weight', ''], ['x_vitd', 'drop', b ? 'Vitamin D' : 'Vitamins', '']], 'That’s how to tell he’s getting enough']
+      ,r2: ['Getting ready for solids', [['z_signs', 'eye', 'Signs', ''], ['z_how', 'plate', 'Choose', ''], ['z_allergy', 'shield', 'Allergies', ''], ['z_setup', 'highchair', 'Set up', ''], ['z_gag', 'eye', 'Gagging', '']], 'You’re ready for the first bite']
     }; };
   const xMore = (area, self) => { const [t, rows] = XAREA()[area], rs = rows.filter(r => r && r[0] !== self); return rs.length ? `<h2 class="hub-h2">${F('More on ' + t.toLowerCase())}</h2><div class="hub-list">${rs.map(([id, icon, title, sub]) => H().row({ cat: CAT, icon, title, sub, onclick: go(id) }).replace(/<span class="hub-dot">[\s\S]*?<\/span><span class="hub-row-copy">/, `<span class="hub-dot">${hubArt(icon, CAT).replace('data-art=', 'data-keep=')}</span><span class="hub-row-copy">`)).join('')}</div>` : ''; };
   const xPage = (area, id, title, lead, body) => window.__xCollect ? head((XAREA()[area] || ['Feeding'])[0], title, lead, XC[area]) + `<section class="ss-moment">${body}</section>` : qaCss + page(head(XAREA()[area] ? XAREA()[area][0] : 'Feeding challenges', title, lead, XC[area]) + `<section class="ss-moment">${body}</section>` + (XAREA()[area] ? xMore(area, id) : ''));
@@ -2263,7 +2264,7 @@
   window.__xaGo = (el, n) => { const r = el.closest('.xa'); if (!r) return; r.querySelectorAll('.xa-p').forEach((p, i) => { p.hidden = i !== n; }); r.querySelectorAll('.xs-step').forEach((b, i) => { b.classList.toggle('is-on', i === n); b.classList.toggle('is-done', i < n); b.setAttribute('aria-current', i === n ? 'step' : 'false'); }); window.scrollTo(0, 0); };
   P.xa = (spec) => { const [area, start] = String(spec || 'routine').split('.'), A = XAREA()[area]; if (!A) return P.dirD(0);
     const steps2 = A[1].filter(Boolean), n0 = Math.min(Number(start) || 0, steps2.length - 1);
-    window.__xCollect = true; const bodies = steps2.map(r => P[r[0]]()); window.__xCollect = false;
+    window.__xCollect = area === 'r2' ? A[0] : true; const bodies = steps2.map(r => P[r[0]]()); window.__xCollect = false;
     const titles = bodies.map(h => ((h.match(/<h1>([\s\S]*?)<\/h1>/) || [])[1] || ''));
     const bar = `<nav class="xs" aria-label="${F(A[0])}">${steps2.map((r, i) => `<button type="button" class="xs-step${i === n0 ? ' is-on' : i < n0 ? ' is-done' : ''}" aria-current="${i === n0 ? 'step' : 'false'}" onclick="__xaGo(this,${i})"><span class="xs-dot">${i + 1}</span><span class="xs-l">${F(r[2])}</span></button>`).join('')}</nav>`;
     const foot = i => i < steps2.length - 1 ? H().next(F('Next · step ' + (i + 2) + ' of ' + steps2.length), titles[i + 1], `__xaGo(this,${i + 1})`) : H().next(F(A[2]), F('Back to Feeding'), go('dirD:0'));
@@ -2471,7 +2472,7 @@
 
   // ---- Consistency pass (Nov 7): every page has the same anatomy (header → one picture in a white card → What to do →
   // How you'll know / fixes → one quiet note). Two-up cards take the page's own color. Stomach size is a picture. ----
-  const xTwo = (a, b2, call) => `<div class="fm-two"><div style="background:var(--ss-bg)"><small style="color:var(--ss-ink)">${F(a[0])}</small><span>${F(a[1])}</span></div><div style="background:${call ? '#fdeee6' : 'var(--ss-bg)'}"><small style="color:${call ? '#9a5a3c' : 'var(--ss-ink)'}">${F(b2[0])}</small><span>${F(b2[1])}</span></div></div>`;
+  const xTwo = (a, b2, call) => `<section class="hub-card" style="padding:14px 4px 12px;margin:0 0 12px"><div class="fm-two" style="margin:0;gap:0">${[[a, false], [b2, call]].map(([[t, d], c], i) => `<div style="background:none;padding:2px 14px;${i ? 'border-left:1px solid var(--line)' : ''}"><small style="font-size:13px;color:${c ? '#9a5a3c' : 'var(--ss-ink)'}">${F(t)}</small><span style="display:block;margin-top:4px;font-size:13.5px;line-height:1.4;color:#4c4757">${F(d)}</span></div>`).join('')}</div></section>`;
   const STOMACH = [
     ['Day 1', 'A marble', '1–2 tsp', `<svg viewBox="0 0 60 56" aria-hidden="true"><circle cx="30" cy="47" r="7" fill="#a9c8ea"/><circle cx="27.5" cy="44.5" r="2.2" fill="#fff" opacity=".8"/></svg>`],
     ['Day 3', 'A walnut', 'About 1 oz', `<svg viewBox="0 0 60 56" aria-hidden="true"><ellipse cx="30" cy="42" rx="12.5" ry="12" fill="#c49a6c"/><path d="M30 31c-3 4 3 7 0 11s3 7 0 11" stroke="#9c7247" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M22 38c2 1 3 3 2 5M38 38c-2 1-3 3-2 5" stroke="#9c7247" stroke-width="1.3" fill="none" stroke-linecap="round"/></svg>`],
@@ -2620,7 +2621,7 @@
   // ---- Milk feeds, only what's new (Nov 7): parents already know how to feed, so this stage shows just what changes.
   // A few rows on the stage page, each one short page. No repeats of Newborn. ----
   Object.assign(HEADART, { 'Feeds now': () => ART.drops(4), 'Evenings': () => ART.often(5), 'Nights': () => ART.often(3), 'Away from home': () => ART.bottle(.55), 'Growing': () => ART.diapers(6) });
-  const yPage = (c, eyebrow, title, lead, body) => qaCss + page(head(eyebrow, title, lead, c) + `<section class="ss-moment">${body}</section>`);
+  const yPage = (c, eyebrow, title, lead, body) => window.__xCollect ? head(window.__xCollect === true ? eyebrow : window.__xCollect, title, lead, c) + `<section class="ss-moment">${body}</section>` : qaCss + page(head(eyebrow, title, lead, c) + `<section class="ss-moment">${body}</section>`);
   P.y_nurse = () => { const fm = formulaFam(), bot = isBottle();
     return yPage(XC.f1, 'Feeds now', 'Quicker feeds are normal', 'He’s better at it now. Many feeds take 5–10 minutes a side, and that’s enough.',
       xNums('', [['5–10 min', 'A side, often'], ['7–9', 'Feeds a day']])
@@ -2737,7 +2738,7 @@
       + `<section class="ss-moment">` + xKnow('Call your pediatrician', 'If he has a fever, refuses milk too, has fewer wet diapers, or keeps vomiting. Call any time you’re unsure.') + `</section>`); };
   window.SHOME = (v) => { const b = isBreast(), fm = formulaFam(), h = H(), early = isEarly();
     const cr = (c, icon, title, sub, id) => h.row({ cat: CAT, icon, title, sub, onclick: go(id) }).replace(/<span class="hub-dot">[\s\S]*?<\/span><span class="hub-row-copy">/, `<span class="hub-dot">${hubArt(icon, CAT).replace('data-art=', 'data-keep=')}</span><span class="hub-row-copy">`).replace('class="hub-row', `style="--sm-bg:${c[0]};--sm-ink:${c[1]}" class="sm-row hub-row`);
-    const R = v === 2 ? [b && [XC.g1, 'drop', 'Iron drops from 4 months', fm ? 'If most of his milk is breast milk' : 'Breast milk is low in iron', 'z_iron'], [XG, 'eye', 'Start solids when he shows all the signs', 'Usually around 6 months', 'z_signs'], [XG, 'plate', 'Purées, finger foods, or both', 'The pros and cons of each', 'z_how'], [XL, 'shield', 'Eczema or food allergies in the family?', 'Plan peanut before solids start', 'z_allergy'], [XG, 'highchair', 'Get set up for the first bite', 'A high chair, a soft spoon, a cup', 'z_setup'], [XL, 'eye', 'Gagging is normal. Choking is silent.', 'Learn the difference, and first aid', 'z_gag']]
+    const R = v === 2 ? [b && [XC.g1, 'drop', 'Iron drops from 4 months', fm ? 'If most of his milk is breast milk' : 'Breast milk is low in iron', 'z_iron'], [XG, 'bowl', 'Start when he shows all the signs', 'Signs, choosing, allergies, set up, gagging', 'xa:r2']]
       : v === 3 ? [[XG, 'bowl', 'Start with iron-rich foods', 'Then build variety and texture', 'z_tray'], [XL, 'star', 'Common allergens early', 'Then keep them going', 'z_allergens'], [XL, 'shield', 'Not yet, until his first birthday', 'Honey, whole nuts and more', 'z_notyet'], [XC.d1, 'cup', 'Sips of water from a cup', '4–8 oz a day, at most', 'z_water']]
       : [[XG, 'clock', 'Three meals, plus milk', 'An example day', 'z_day'], [XG, 'hand', 'Soft pieces of family food', 'What he can eat now', 'z_family'], [XC.g1, 'leaf', 'Appetite goes up and down', 'And that’s normal', 'z_appetite'], [XC.d1, 'cup', 'Cups now, whole milk at 12 months', 'What changes at his first birthday', 'z_milk12']];
     const tough = v === 2 ? 'x_tough' : 'z_tough', toughSub = v === 2 ? 'Distracted feeds, spit-up, gas, poop' : 'Gagging, refusing food, a rash, constipation';
@@ -2796,6 +2797,24 @@
       + xKnow('Why early', 'Starting peanut early, and often, lowers the chance of a peanut allergy.'));
 
 
+  // ---- Challenges styling pass (Nov 7): every challenge page gets a picture in a white card, like the rest. ----
+  P.x_refuse = () => xTough('x_refuse', 'Pulling off, refusing or fussing at feeds', 'Usually air, a fast flow, or a stuffy nose. Most of it settles with small changes.',
+      steps([['eye', 'Feed early', 'Before crying starts'], ['hand', 'Burp, then retry', 'Trapped air can feel like full'], isBottle() ? ['bottle', 'Check the nipple', 'Too fast or too slow?'] : ['heart', 'Lean back', 'If milk comes fast'], ['drop', 'Clear his nose', 'Saline and gentle suction']], false)
+      + xKnow('Distracted, from 3–4 months?', 'Feed somewhere quiet and dim, or when he’s drowsy.')
+      + xNote('Call right away:', 'a fever of 100.4°F or higher, day or night.') + xNote('Worth a call:', 'too sleepy to feed most times, or refusing several feeds in a row.'));
+  P.z_refuse = () => yPage(XL, 'Feeding challenges', 'Refusing food is common', 'Some days he’ll eat a lot, some days almost nothing.',
+      steps([['clock', 'Try again later', 'It can take 10–15 tries'], ['hand', 'Let him touch it', 'Playing is learning'], ['smile', 'Eat together', 'He copies you']], false)
+      + xKnow('You decide, he decides', 'You choose what to offer. He chooses whether and how much.')
+      + xNote('Worth a call:', 'refusing most foods for weeks, or fewer wet diapers.'));
+  P.z_teeth = () => yPage(XL, 'Feeding challenges', 'Teething, and shorter feeds', 'Sore gums can make him fussy at feeds for a few days.',
+      steps([['snow', 'Something cold', 'A teether or cold washcloth'], ['bowl', 'Chilled food', 'Yogurt or mashed fruit'], ['clock', 'Shorter feeds', 'More often, for a few days']], false)
+      + xKnow('Not for babies', 'Teething gels with benzocaine, and amber necklaces.')
+      + xNote('Worth a call:', 'a fever, or refusing to drink. Teething doesn’t cause fevers, so look for another reason.'));
+  P.z_sick = () => yPage(XL, 'Feeding challenges', 'Feeding when he’s sick', 'He may eat less for a few days. Milk and fluids matter most.',
+      steps([['drop', 'Milk more often', 'In smaller amounts'], ['heart', 'Clear his nose', 'Saline before feeds'], ['bowl', 'Solids can wait', 'Until he feels better']], false)
+      + xNote('Worth a call:', 'fewer wet diapers, refusing milk, or vomiting that keeps happening.'));
+
+  window.SHOME = (() => { const prev = window.SHOME; return v => { const h = prev(v); if (v !== 2) return h; const i = h.indexOf("xa:r2"); if (i < 0) return h; const j = h.indexOf('<span class="hub-row-copy">', i); return j < 0 ? h : h.slice(0, j) + `<span class="hub-row-copy"><small class="hub-row-eyebrow">${F('Getting ready, step by step')}</small>` + h.slice(j + '<span class="hub-row-copy">'.length); }; })();
   // ---- Milk feeds (6 weeks–4 months), rebuilt on the Newborn model (Nov 5): four subject pages with tabs, grouped by moment. ----
   HEADART['Feeds & rhythm'] = () => ART.often(5);
   P.rhythm1 = () => { const nurse = nurses(), b = isBreast(), bot = isBottle(), fm = formulaFam();
