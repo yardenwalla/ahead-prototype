@@ -179,3 +179,11 @@ The stage strip at the top of every category is gone. Files: `js/stages-nav.js` 
 - The chip opens a stages page (`stages:<category>`): a vertical list with each stage's ages, one line on what changes, and "[name]'s stage now" ("Next checkup" in Health) marked.
 - Reading another stage shows a tinted Preview card: "Looking back" or "Previewing", the stage and its ages, and "Back to [name]'s stage". Sleep, Feeding and Safety add "Make this [name]'s stage" where the stage table allows it (the old strip's Change).
 - QA: `stageItemsLast()` exposes the stage list behind the page last shown. stage-rules, editorial-contracts and progression-followups read it instead of the strip's HTML, so the same rules stay covered.
+
+## Timeline as a path, and Home cards that open it (2026-11-07)
+Picked from three tappable options (path, month by month, a link on Home cards). Files: `js/year-ahead.js`, `css/year-ahead.css`, `js/home-cards.js`.
+- No "Coming up next" cards on top any more, so Timeline no longer looks like a second Home. The path starts at "[Name] now" with the baby's age. The next three changes are the bigger steps right after it, each with its range, how soon, the plain line on what changes, and a small bar showing where the baby is in its usual window.
+- After those, the path goes month by month to the first birthday: each month's smaller changes and its checkup as quiet rows. Changes already behind the baby fold into one "Behind [Name]: N changes" line above.
+- Each change's read-ahead page opens with a small year bar ("On [Name]'s year ahead"): where the change sits in the year and where the baby is now. Tapping it opens the whole Timeline.
+- Home cards about a big change that's still ahead open that change's Timeline page instead of a category page: rolling soon, crawling soon, pulling up soon, the 4-month waking, the crying peak, separation, the next car seat and milk at 12 months. One page, two ways in. Once the change is behind the baby, the card falls back to its old page. `timelineChangeLive(id)` decides.
+- QA: check-all passes except "Solids answer changes stage" in recommendation-quality, which fails the same way on main before this change.

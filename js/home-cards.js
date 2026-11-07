@@ -289,6 +289,9 @@
     'off-menu': "openPage('chg:Feeding:d:tray')", 'solids-late': "openPage('chg:Feeding:d:signs')", cluster: "openPage('chg:Feeding:d:nursing')"
   };
   C.forEach(c => { if (ROUTE[c.id]) c.go = ROUTE[c.id]; });
+  // A card about a big change that's still ahead opens that change's Timeline page (one page, two ways in).
+  const TIMELINE = { 'rolling-soon': 'roll', 'crawl-soon': 'crawl', 'stand-soon': 'pull', 'four-month': 'regress', 'crying-peak': 'crying', separation: 'sep', 'car-seat': 'carseat', milk12: 'milk' };
+  C.forEach(c => { const t = TIMELINE[c.id]; if (!t) return; const base = c.go; c.go = s => (typeof timelineChangeLive === 'function' && timelineChangeLive(t)) ? `openPage('chg:Timeline:c:${t}')` : (typeof base === 'function' ? base(s) : base); });
 
   /* ---------- age basis and Safety's checklist ---------- */
   const BIRTH_AGE = c => c.cat === 'Health';

@@ -109,3 +109,49 @@
 #main .ya-month{background:var(--white,#fff);border:1px solid var(--line,#efeaf2);box-shadow:none}
 #main .ya-chip{background:color-mix(in srgb,var(--year-bg,#e5e0fc) 70%,#fff)}
 #main .ya-chip em small{color:var(--year-ink,#5b4a8b);font-weight:600}
+
+/* Timeline as a path (Nov 7): the baby's spot first, the next three changes as the bigger steps, then month by month */
+#main .ya-pathpage .ya-path{margin-top:16px}
+#main .ya-pathpage .ya-here{padding:6px 0 10px 2px}
+#main .ya-pathpage .ya-here small{margin-left:2px}
+#main .ya-pathpage .ya-row.is-next button{padding:14px 12px 14px 14px;border:1px solid var(--line);background:#fff;box-shadow:none;margin:6px 0}
+#main .ya-pathpage .ya-row.is-next .ya-row-art{width:46px;height:46px;border-radius:15px}
+#main .ya-pathpage .ya-row.is-next .ya-row-art svg{width:26px;height:26px}
+#main .ya-pathpage .ya-row.is-next b{font-size:16.5px;margin:1px 0}
+#main .ya-pathpage .ya-row.is-next .ya-node{top:30px;border-color:var(--year-ink);background:#fff}
+#main .ya-pathpage .ya-when{color:var(--year-ink)!important;font-weight:700}
+#main .ya-pathpage .ya-why{display:block;font-size:13.5px;line-height:1.35;color:#5c5466}
+#main .ya-pathpage .ya-bar u{background:#2B2840}
+#main .ya-pathpage .ya-row:not(.is-next) button{background:transparent;box-shadow:none;padding:8px 10px;margin:0}
+#main .ya-pathpage .ya-row:not(.is-next) .ya-node{top:22px;width:8px;height:8px;left:-15px}
+#main .ya-pathpage .ya-row:not(.is-next) .ya-row-art{width:34px;height:34px;border-radius:12px}
+#main .ya-pathpage .ya-row:not(.is-next) .ya-row-art svg{width:20px;height:20px}
+#main .ya-pathpage .ya-row:not(.is-next) b{font-size:14.5px;font-weight:600}
+#main .ya-pathpage .ya-pin{padding:16px 0 4px 2px;font-size:13px;color:#8a8494}
+#main .ya-pathpage .ya-pin b{color:#2B2840;font-size:15px}
+#main .ya-pathpage .ya-pin .ya-node{top:20px}
+#main .ya-pathpage .ya-end .ya-node{background:#F0B3CB;border-color:#F0B3CB}
+#main .ya-behind{position:relative;padding:0 0 4px 2px}
+#main .ya-behind .ya-node{position:absolute;left:-15px;top:10px;width:8px;height:8px;border-radius:50%;background:#e6dfd4;border:2px solid #e6dfd4}
+#main .ya-behind>button{border:0;background:none;padding:4px 0;font:500 13px Figtree,system-ui,sans-serif;color:#8a8494;cursor:pointer}
+#main .ya-behind>button span{display:inline-block;transition:transform .2s}
+#main .ya-behind.is-open>button span{transform:rotate(90deg)}
+#main .ya-behind-list{display:none;padding:2px 0 6px}
+#main .ya-behind.is-open .ya-behind-list{display:block}
+#main .ya-behind-list button{display:flex;align-items:center;gap:8px;width:100%;padding:5px 0;border:0;background:none;font:500 13.5px Figtree,system-ui,sans-serif;color:#8a8494;text-align:left;cursor:pointer}
+#main .ya-behind-list span{display:grid;place-items:center;width:24px;height:24px;opacity:.6}
+#main .ya-behind-list svg{width:18px;height:18px}
+
+
+/* A change's page: where it sits in the year */
+#main .ya-yearstrip{display:block;width:100%;margin:4px 0 14px;padding:12px 14px 10px;border:1px solid var(--line);border-radius:18px;background:#fff;font:inherit;color:inherit;text-align:left;cursor:pointer}
+#main .ya-ys-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+#main .ya-ys-top b{font-size:13px;font-weight:700;color:var(--year-ink)}
+#main .ya-ys-top em{font-style:normal;font-size:12.5px;font-weight:600;color:#7a4f6d}
+#main .ya-ys-bar{position:relative;display:block;height:8px;margin:26px 0 6px;border-radius:4px;background:#f1ece5}
+#main .ya-ys-bar i{position:absolute;top:0;bottom:0;border-radius:4px;background:var(--year-accent)}
+#main .ya-ys-bar u{position:absolute;top:-5px;width:4px;height:18px;margin-left:-2px;border-radius:2px;background:#2B2840}
+#main .ya-ys-bar u small{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:11px;font-weight:700;color:#2B2840;text-decoration:none}
+#main .ya-ys-ticks{position:relative;display:block;height:14px}
+#main .ya-ys-ticks span{position:absolute;transform:translateX(-50%);font-size:10.5px;color:#8a8494}
+#main .ya-ys-ticks span:first-child{transform:none}
