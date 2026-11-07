@@ -56,7 +56,7 @@
   const doneNow = () => { const an = typeof answers !== 'undefined' ? answers : {};
     // Stages the baby is already past (from the category pages) count as behind too, so the Timeline agrees with them.
     const st = cat => { try { return chgStageIndex(cat); } catch (e) { return -1; } }, sl = st('Sleep'), fg = (() => { try { return feedGroup(st('Feeding')); } catch (e) { return -1; } })();
-    return { roll: typeof rolled === 'function' && rolled(), solids: an.solids === 'Yes' || fg >= 3, ready: fg >= 3, meals: fg >= 4, finger: fg >= 4, crawl: an.crawl === 'Yes', pull: an.pullUp === 'Yes', tooth: an.hasTooth === 'Yes', twonaps: an.twoNaps === 'Yes' || sl >= 3, nights: sl >= 2 }; };
+    return { roll: (typeof rolled === 'function' && rolled()) || an.roll === 'Yes' || ['Tummy to back', 'Back to tummy', 'Both ways'].includes(an.rollDirection), solids: an.solids === 'Yes' || fg >= 3, ready: fg >= 3, meals: fg >= 4, finger: fg >= 4, crawl: an.crawl === 'Yes', pull: an.pullUp === 'Yes', tooth: an.hasTooth === 'Yes', twonaps: an.twoNaps === 'Yes' || sl >= 3, nights: sl >= 2 }; };
   const ageLabel = a => { const m = Math.floor(a), w = Math.floor((a - m) * 4.35); return m === 0 ? `${Math.max(1, w)} week${w === 1 ? '' : 's'}` : `${m} month${m === 1 ? '' : 's'}${w ? `, ${w} week${w === 1 ? '' : 's'}` : ''}`; };
   const whenShort = (c, a) => c.start <= a ? 'any time now' : c.start <= a + 1 ? 'any week now' : `in about ${Math.round(c.start - a)} month${Math.round(c.start - a) === 1 ? '' : 's'}`;
   // A small bar under each next change: its usual window, and where the baby is today.
@@ -82,13 +82,16 @@
     h += `<li class="ya-here">${node}<b>${F(`${nm} now`)}</b><small>${F(ageLabel(a))}</small></li>`;
     h += next.map(c => `<li class="ya-row is-next" style="${yearTheme(c.cat)}">${node}<button onclick="${c.go}"><span class="ya-row-art">${hubArt(c.icon, c.cat)}</span><span class="ya-row-copy"><small class="ya-when">${F(range(c))} · ${F(whenShort(c, a))}</small><b>${F(c.title)}</b><span class="ya-why">${F(c.why)}</span>${windowBar(c, a)}</span>${chev}</button></li>`).join('');
     const months = {}; later.forEach(c => { const m = Math.min(12, Math.max(Math.ceil(a), Math.floor(c.start))); (months[m] = months[m] || []).push(c); });
+    const bm = early ? Math.min(12, Math.max(Math.ceil(a), Math.round(12 - gap))) : null; if (early && 12 > a + gap) months[bm] = months[bm] || [];
     const checks = {}; CHECKUPS.filter(v => v > a + gap).forEach(v => { const m = Math.min(12, Math.max(Math.ceil(a), Math.round(v - gap))); (checks[m] = checks[m] || []).push(v); months[m] = months[m] || []; });
     Object.keys(months).map(Number).sort((x, y) => x - y).forEach(m => {
-      h += `<li class="ya-pin">${node}<b>${F(label(m))}</b> · ${F('around ' + monthDate(m))}</li>`;
+      // Born early: the headings follow adjusted age, so show the month only; "4 months" over a "6-month checkup" reads as a contradiction.
+      h += early ? `<li class="ya-pin">${node}<b>${F('Around ' + monthDate(m))}</b></li>` : `<li class="ya-pin">${node}<b>${F(label(m))}</b> · ${F('around ' + monthDate(m))}</li>`;
       h += months[m].map(c => `<li class="ya-row" style="${yearTheme(c.cat)}">${node}<button onclick="${c.go}"><span class="ya-row-art">${hubArt(c.icon, c.cat)}</span><span class="ya-row-copy"><b>${F(c.title)}</b><small>${F(range(c))}</small></span>${chev}</button></li>`).join('');
       h += (checks[m] || []).map(v => `<li class="ya-row" style="${yearTheme('Health')}">${node}<button onclick="openPage('health-visit:${v}')"><span class="ya-row-art">${hubArt('steth', 'Health')}</span><span class="ya-row-copy"><b>${F(`${v}-month checkup`)}</b><small>${F(gap ? 'By birthday age · growth, development and vaccines' : 'Growth, development and vaccines')}</small></span>${chev}</button></li>`).join('');
+      if (early && m === bm && 12 > a + gap) h += `<li class="ya-pin">${node}<b>${F('First birthday')}</b></li>`;
     });
-    h += `<li class="ya-pin ya-end">${node}<b>${F('First birthday')}</b></li></ol><p class="hub-foot">${F('Ages are typical. Every baby moves at their own pace.')}</p></div>`;
+    h += `<li class="ya-pin ya-end">${node}<b>${F(early ? 'A year, by adjusted age' : 'First birthday')}</b></li></ol><p class="hub-foot">${F('Ages are typical. Every baby moves at their own pace.')}</p></div>`;
     return h;
   };
 

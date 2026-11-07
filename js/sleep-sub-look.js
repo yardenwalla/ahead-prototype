@@ -53,7 +53,7 @@
       const t = body.querySelector('.hub-rough-try'), ul = t && t.nextElementSibling;
       if (!t || !ul || ul.tagName !== 'UL') return;
       const card = document.createElement('section'); card.className = 'ss-do ss-try';
-      card.innerHTML = `<b>Try tonight</b>`; t.replaceWith(card); card.appendChild(ul);
+      card.innerHTML = `<b>Try this</b>`; t.replaceWith(card); card.appendChild(ul);
       const why = body.querySelector('p > b'); if (why && /Likely why/.test(why.textContent)) { why.remove(); body.querySelector('p').classList.add('ss-what'); }
     });
   }

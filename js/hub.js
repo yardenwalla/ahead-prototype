@@ -839,7 +839,7 @@
       const cryLink = mo < 3 ? `<button class="hub-rough-item hub-rough-link" onclick="${go('chg:Sleep:d:crying')}"><span class="hub-dot">${art('heart', cat)}</span><b>${F('Crying a lot and won’t settle')}</b><span class="hub-chev" aria-hidden="true">›</span></button>` : '';
       const body = `<div class="hub-list hub-rough">${cryLink}${items.map(([ic, t, why, tries], i) => `<details class="hub-rough-item"${i ? '' : ''}><summary><span class="hub-dot">${art(ic, cat)}</span><b>${F(t)}</b><span class="hub-chev" aria-hidden="true">›</span></summary><div class="hub-rough-body"><p><b>${F('Likely why.')}</b> ${F(why)}</p><p class="hub-rough-try"><b>${F('Try this')}</b></p><ul>${tries.map(x => `<li>${F(x)}</li>`).join('')}</ul></div></details>`).join('')}</div>`;
       return detail(cat, 'Sleep help', 'Rough day or night?', 'Pick what’s happening. You’ll see the likely reason and what to try.', body
-        + tip('Call your pediatrician', 'If {s} has a fever, isn’t feeding well, seems in pain, or a big change lasts more than two weeks.'), 'moon');
+        + tip('Call your pediatrician', 'For a fever, poor feeding, signs of pain, or a big change that lasts more than two weeks.'), 'moon');
     }
     if (id === 'crying') {
       // The crying curve: builds from 2 weeks, peaks at 6–8 weeks, eases by 3–4 months. A dot shows where Maya is now (adjusted age if born early).

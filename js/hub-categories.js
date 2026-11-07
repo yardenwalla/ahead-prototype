@@ -362,8 +362,8 @@
   // and at any age under 2, a fever lasting more than a day.
   window.feverTemp = m => m < 3 ? '100.4°F' : m < 6 ? '101°F' : '103°F';
   window.feverRule = m => m < 3
-    ? 'A temperature of 100.4°F or higher: call your pediatrician right away, day or night.'
-    : `A temperature of ${feverTemp(m)} or higher, or any fever that lasts more than a day. Call sooner for a rash, unusual sleepiness or fewer wet diapers.`;
+    ? 'Under 3 months: a temperature of 100.4°F or higher. Call your pediatrician right away, day or night.'
+    : `${m < 6 ? 'At 3–6 months' : 'From 6 months'}: a temperature of ${feverTemp(m)} or higher, or any fever that lasts more than a day. Call sooner for a rash, unusual sleepiness or fewer wet diapers.`;
   window.feverBand = m => m < 3 ? 'Under 3 months' : m < 6 ? '3 to 6 months' : '6 months and up';
   function healthDetail(id) {
     const h = H(), under3 = actualMonth() < 3;
