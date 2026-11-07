@@ -190,3 +190,8 @@
 #main .care-v2 .care-pick small { font-size: 13px; color: var(--ink-2, #5e5a75) }
 #main .care-v2 .care-pick > i { font-style: normal; color: #aaa }
 #main .care-v2 .care-pick:focus-visible { outline: 2px solid var(--year-ink, #2a6078); outline-offset: 2px; border-radius: 8px }
+/* Routine split into one card per rhythm (Nov 7). */
+#main .care-v2 .rt-split { margin: 0 0 12px; padding-top: 10px }
+#main .care-v2 .rt-split .rt-head { padding: 4px 0 2px }
+#main .care-v2 .rt-split .rt-head b { font-size: 15px }
+#main .care-v2 .rt-split .rt-group { margin: 0 }
