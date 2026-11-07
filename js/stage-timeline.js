@@ -19,9 +19,11 @@
       { label: 'Two naps', age: 'Starts 6–9 months' }
     ] },
     Feeding: { kind: 'pattern', stages: [
-      { label: 'Milk feeds', age: 'From birth' },                         // newborn feeds, then rhythm and amounts, by age
-      { label: 'Preparing for solids', age: 'From 4 months', setFrom: 4 },  // no solids guidance before 4 months
-      { label: 'Solids', age: 'Once you start', setFrom: 4 }             // first tastes, then textures, then meals: by time since starting and age
+      { label: 'Newborn', age: '0–6 weeks', setUntil: 3 },
+      { label: 'Milk feeds', age: '6 weeks–4 months' },
+      { label: 'Ready for solids', age: '4–6 months', setFrom: 4 },         // no solids guidance before 4 months
+      { label: 'First foods', age: 'Once you start', setFrom: 4 },          // first tastes, then textures
+      { label: 'Meals', age: 'Around 9 months', setFrom: 8 }                // three meals a day: not before about 9 months
     ] },
     Safety: { kind: 'skill', stages: [
       { key: 'setup', label: 'First setup', age: 'From birth' },
@@ -45,8 +47,9 @@
 
   // Can the parent make stage i (index into the table) the baby's stage right now?
   // Safety follows the child: first setup, rolling, crawling, pulling up. Crawling covers "about to move" and "moving".
-  // Feeding keeps six steps inside (newborn feeds, milk feeds, preparing, first tastes, textures, meals); parents see three.
-  window.feedGroup = i => i <= 1 ? 0 : i === 2 ? 1 : 2;
+  // Feeding keeps six steps inside (newborn feeds, milk feeds, preparing, first tastes, textures, meals); parents see five:
+  // first tastes and textures are one stage, First foods.
+  window.feedGroup = i => [0, 1, 2, 3, 3, 4][Math.max(0, Math.min(5, i))];
   window.safetyGroup = k => k === 'moving' ? 'rolling' : k;
   window.stageCanChange = function (cat, i, nowIndex) {
     const T = STAGE_TABLE[cat]; if (!T || T.fixed || !live() || i === nowIndex) return false;

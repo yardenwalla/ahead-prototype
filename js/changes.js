@@ -45,7 +45,7 @@
   function overridden(cat, computed) {
     const o = live() && local.override && local.override[cat];
     if (!o) return computed;
-    const T = window.STAGE_TABLE && STAGE_TABLE[cat], st = T && T.stages[o.i], m = ageNow();
+    const T = window.STAGE_TABLE && STAGE_TABLE[cat], st = T && T.stages[cat === 'Feeding' && typeof feedGroup === 'function' ? feedGroup(o.i) : o.i], m = ageNow();
     if (!st || (st.setFrom != null && m < st.setFrom) || (st.setUntil != null && m > st.setUntil)) { delete local.override[cat]; save(); return computed; }
     return o.i;
   }
@@ -86,6 +86,9 @@
     // From 9 months with no answer, show the step for the age (and Feeding says so).
     if (!known && live()) return typeof foodAssumed === 'function' && foodAssumed() ? (fs === 'established' ? 5 : 4) : 2;
     // The parent told us (Rule 2). Their answer holds; Home asks again when it may be out of date (Rule 3).
+    // A parent who says they've just started gets First foods, even when no start date is known yet.
+    if (typeof answers !== 'undefined' && answers.solids === 'Yes' && answers.foodExperience === 'new' && !answers.solidsStart) return 3;
+    if (typeof answers !== 'undefined' && answers.solids === 'Yes' && answers.foodExperience === 'established') return 5;
     if (fs === 'preparing') return 2;
     if (fs === 'new') return 3;
     if (fs === 'textures') return 4;
@@ -586,16 +589,17 @@
       else local.override.Sleep = { i, g: sleepComputed(m) };
     }
     if (cat === 'Feeding') {
-      // i is one of the three stages parents see: Milk feeds, Preparing for solids, Solids.
-      if (i === 1) { answers.solids = 'Not yet'; delete answers.foodExperience; delete answers.solidsStart; persist(); }
-      else if (i === 2) { answers.solids = 'Yes'; if (!answers.solidsStart) answers.solidsStart = iso(NOW); persist(); }
-      else local.override.Feeding = { i: inFirstSixWeeks(m) ? 0 : 1, g: feedComputed(m) };
+      // i is one of the five stages parents see: Newborn, Milk feeds, Ready for solids, First foods, Meals.
+      if (i === 2) { answers.solids = 'Not yet'; delete answers.foodExperience; delete answers.solidsStart; persist(); }
+      else if (i === 3 || i === 4) { answers.solids = 'Yes'; answers.foodExperience = i === 3 ? 'new' : 'established'; if (!answers.solidsStart) answers.solidsStart = iso(NOW); persist();
+        local.override.Feeding = { i: i === 3 ? 3 : 5, g: feedComputed(m) }; }
+      else local.override.Feeding = { i: i === 0 ? 0 : 1, g: feedComputed(m) };
     }
     save();
     // A Change counts as the parent's answer, so Home doesn't ask the same thing straight away.
     if (typeof recordCheckin === 'function') {
       if (cat === 'Sleep' && i >= 2) recordCheckin('naps', i === 3 ? 'Yes' : 'Stay');
-      if (cat === 'Feeding' && i >= 1) recordCheckin('food', i === 1 ? 'preparing' : 'new');
+      if (cat === 'Feeding' && i >= 2) recordCheckin('food', i === 2 ? 'preparing' : i === 3 ? 'new' : 'established');
     }
     page = 'topic:' + cat; render(); window.scrollTo(0, 0);
   };

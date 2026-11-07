@@ -59,7 +59,7 @@ for (const early of [false,true]) for (let age=0; age<=12; age++) {
 {
   const a=boot({name:'Sam',dob:'2025-10-21',early:false,feed:'Formula'},{solids:'Yes',foodExperience:'new'});
   a.run("navigate('categories');openPage('topic:Feeding')");
-  check(/First tastes<\/b>[\s\S]{0,400}Start here/.test(a.html()),'Late first bites stay First foods');
+  check(/Tastes, textures and lots of mess/.test(a.html()),'Late first bites stay First foods');
   a.run("openPage('topic:Feeding')");inspect(a,'late first bites');
   check(!/Coming up · Usually 7–9/.test(clean(a.html())),'No elapsed window is called coming up');
   a.run("month=1;openPage('topic:Sleep')");check(a.run("chgStageIndex('Sleep')===0"),'Sleep preview uses selected month');
@@ -86,13 +86,13 @@ for (const early of [false,true]) for (let age=0; age<=12; age++) {
   a.run("openSection('Feeding','bottle-handling')");check(a.run("page==='chg:Feeding:milk'"),'Milk handling opens its reference');
   a.run("openPage('chg:Sleep:settle')");inspect(a,'settling page');
   check(a.html().includes('You stay close, slower')&&!a.html().includes('settling-guide'),'Sleep training shows every method, with no picker');
-  a.run("openPage('topic:Feeding');openPage('chg:Feeding:d:milk');chgChooseMethod('nurse')");
-  check(a.html().includes('value="nurse" selected'),'Milk reference can be selected directly');
+  // Nov 7: Feeding follows the milk set in Baby's details (no separate picker). Old milk links open "How much".
+  a.run("openPage('topic:Feeding');openPage('chg:Feeding:d:milk')");
+  check(/oz/.test(clean(a.html()))&&a.run("page==='chg:Feeding:d:milk'||/Feeding/.test(page)"),'Old milk link opens the amounts page');
   a.run("editingProfile=true;draft={...profile,feed:'Formula'};setupStep=2;document.querySelector('#feed').value='Formula';submitSetup({preventDefault(){}});openPage('topic:Feeding');openPage('chg:Feeding:d:milk')");
-  // This profile was already Formula, so a deliberate Nursing reference is retained.
-  check(a.html().includes('value="nurse" selected'),'Unchanged milk type retains the chosen reference');
+  check(!/breast milk|nursing/i.test(clean(a.html())),'Formula families see only formula amounts');
   a.run("editingProfile=true;draft={...profile};setupStep=2;document.querySelector('#feed').value='Both';submitSetup({preventDefault(){}});openPage('topic:Feeding');openPage('chg:Feeding:d:milk')");
-  check(a.html().includes('value="both" selected'),'Changing milk type updates the default reference');
+  check(/breast milk/i.test(clean(a.html()))&&/formula/i.test(clean(a.html())),'Changing milk type updates the amounts');
   check(!/<dt>Milk<\/dt>/.test(a.html()),'Combined nursing and bottles do not show two unlabeled milk amounts');
   a.run("openPage('chg:Sleep:safe')");
   check(a.html().includes('id="sleep-rolling"')&&a.html().includes('id="sleep-crib-height"'),'Safety links have direct sleep-space targets');
@@ -129,7 +129,7 @@ for (const early of [false,true]) for (let age=0; age<=12; age++) {
   a.run("month=9;openPage('topic:Feeding')");const preview=JSON.parse(a.run('JSON.stringify(history.state)'));
   const c=boot(p,{},store,'2026-11-21T12:00:00Z',{history:true,navigationState:preview});
   // Oct 27: a month picked on Home carries into the categories as a labeled preview, with a way back to now.
-  check(c.run("page==='topic:Feeding'&&month===9")&&/Previewing 9 months/.test(c.html())&&/returnToCurrentMonth/.test(c.html()),'A guide opened from a previewed month says it is a preview and offers the way back');
+  check(c.run("['topic:Feeding','chg:Feeding:mock:dirD'].includes(page)&&month===9")&&/Previewing 9 months/.test(c.html())&&/returnToCurrentMonth/.test(c.html()),'A guide opened from a previewed month says it is a preview and offers the way back');
 }
 // The six-week transition is not postponed until the two-month birthday.
 {

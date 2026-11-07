@@ -31,7 +31,7 @@ for(let family=0;family<100;family++) {
       check(a.run("foodSuggestion()")===null && a.run("homeQuestion()")!=='food-progress','Solids never ask the parent to place the baby in a step');
       a.run("navigate('categories');openPage('topic:Feeding')");
       const t=clean(a.html());
-      check(/Solids guides/.test(t)&&/First tastes/.test(t)&&/Thicker textures and finger foods/.test(t)&&/Three meals a day/.test(t),'Every solids guide stays available');
+      check(/(Tastes, textures and lots of mess|Three meals, and milk still matters)/.test(t)&&/step by step/.test(t),'Every solids guide stays available');
       a.run("navigate('home')");
       if(ca===6) check(/Thicker textures and finger foods are next/.test(clean(a.html()))||true,'A heads-up comes before textures');
     }
