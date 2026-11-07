@@ -199,3 +199,13 @@ Found by simulating 840 families (every feeding method, early/typical/late/born-
 - New cards: tummy time (days 5–42) and leftover formula after an hour (formula and both). 2-month checkup wording for formula families.
 - Copy: the agreed action-first rewrites (poop colors, snuffles, cluster feeds, shorter feeds, 4-month waking, cruising, next car seat, carrier, more waking, poop with solids, two naps). Moved to Timeline: drool, "Solids are getting close", first steps, first words.
 - `home2Audit()` and `home2RecordShown()` expose Home's picks for checks.
+
+## Home round 2: calmer, more useful cards (2026-11-07, preview)
+From the round 2 audit (doc: "Ahead Home audit, round 2"). Files: `js/home-cards.js`, `js/home-copy.js` (v8). Tested on 840 simulated families.
+- Calm by design: at most one card per screen that asks a parent to be careful (safety, the fever rule, honey and choking foods, car seat coats, hot days). Essentials stay until opened, but after 2 views they move down and stop holding their category's spot. Other cards retire after 2 unopened views.
+- New cards: the fever rule for the first 3 months, a pacifier at sleep, flat spots, childcare waitlists (only if nothing is set up in Childcare), no cereal in the bottle, talking back to coos, naps settling into three, drowsy but awake, two decisions (how to start solids, sleep training), baby signs at meals, a "no" to a new food, barefoot indoors, a lovey at 1, and flying (after the parent opens Outings' flying page). The carrier card now shows only after the carrier page is opened.
+- Left Home: snuffles, tub baths, shorter feeds, grabbing, three meals, biting, and the duplicate first-foods and late-allergen cards ("Starting solids? Lead with iron" now asks until 10 months, and peanut and egg follow straight after first foods).
+- When a weekly parent has seen nothing new for 7 days, Home brings forward the most valuable card due in the next 3 weeks (never seasonal or checkup cards).
+- One-tap "Already giving drops" (vitamin D) and "Got it in pregnancy" (RSV). The iron card follows the birthday, like the checkup it names. Checkup cards say how many questions are saved in Health. Choosing two naps in Sleep counts on Home.
+- Results: weekly visits with something new 85% (was 71%), every-2-weeks visits 98% (was 92%), no screen with two caution cards (was 8%), longest quiet stretch 4 weeks (was 6).
+- Not yet built: the optional setup question for late joiners (waiting on Yarden), daycare prep (needs a start date in Childcare), monthly-visitor freshness.
