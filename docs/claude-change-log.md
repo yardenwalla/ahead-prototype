@@ -2,6 +2,22 @@
 
 The original changes below were merged in pull request #1. The new pre-beta QA changes are documented in **`docs/beta-readiness-2026-10-22.md`**, with concrete findings, resulting behavior, verification and limits. Review the new PR diff against main rather than reimplementing either list from an older HTML export. Claude's main-branch copy updates through `6b02109a4fba5bdf8829db29f59c14057537ec85` are preserved.
 
+## Onboarding restyle and welcome copy (Nov 5, 2026)
+
+Merged from the onboarding-v1 preview (`js/welcome.js`, `css/welcome.css`).
+- Labels are sentence case and plum like every tab; both setup steps use Home's month-card blend (the milk step no longer takes Feeding's pink); the welcome line is Home's category line; the born-early box is a plain field.
+- Welcome: the baby sits beside the headline; the three points use the app's own pictures (book, clock, heart).
+- New welcome copy in active, conversational language: "Understand your baby, care for them with confidence, and enjoy every stage." Points: "Everything in one place" (answers based on what pediatricians recommend, rather than calling it "trusted"), "Know what's coming", "Made for your baby".
+- Tried and rejected: a growing-baby hero, live name and age, milk tiles, taped polaroids and a scrapbook-style page.
+
+## Home cards and Timeline style (Nov 5, 2026)
+
+Merged from the home-v2 preview. Full rules, the card library and simulation results are in the project doc "ahead-home-cards"; styling is in the style guide.
+- **Home cards (`js/home-cards.js`, `js/home-copy.js`, `css/home-cards.css`):** a new card library replaces Home's "now" and "coming up" cards, chosen by age, season and what the parent has told the app, and simulated against 1,488 kinds of family. One idea per card; titles 7 words at most, one sentence of 18 words at most; every word lives in `js/home-copy.js`. Must-knows wait until seen (up to 4 weeks) and no fixed two-card limit; good-to-know cards fill in up to 3. Cards carry their own answers ("Already rolling" / "Not yet"), so Home's top question slot only keeps a missed checkup and the milk question. Every card opens a page that continues it (new short pages: RSV shot, first flu shot, clocks changing). A card clears only after about 4 seconds on its page. Memories firsts, Safety checklist ticks, adjusted age for babies born early and places without clock changes are picked up automatically, with nothing new to fill in.
+- **Month card:** one peach-blush-lavender blend for every day and the birthday (the birthday is the richer version), the baby's exact age as the label, and the category line on the birthday card too.
+- **Timeline (`js/year-ahead.js`, `css/year-ahead.css`):** sentence-case plum labels on Timeline, Categories and Memories; white "Coming up next" cards with item icons in soft squares; month cards flat with a hairline and category colors one shade richer; "The 4-month sleep shift" and "The swaddle comes off" match Home.
+- QA: all suites pass except the known "Solids answer changes stage" case in recommendation-quality, which also fails on main without these files.
+
 ## Latest pre-beta pass
 
 Latest correction: **`docs/progression-fixes-2026-10-22.md`** addresses Claude's two stalled-journey findings. Safety now advances preparation beyond saved movement while preserving the actual ability for Play. Feeding gets an evolving 28-day follow-up and a distinct textures answer. The new persisted no-further-answers suite is included in the QA runner. This supersedes the earlier frozen-stage acceptance rules.

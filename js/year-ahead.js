@@ -9,8 +9,8 @@
     ['crying', 0.5, 3, 'Sleep', 'heart', 'The crying peak', 'Fussy evenings, at their worst around 6–8 weeks', "__GO__", '2 weeks–3 months'],
     ['smile', 1.5, 2, 'Development', 'smile', 'First smiles', 'Maya starts smiling back when you smile', "__GO__"],
     ['nights', 1.5, 4, 'Sleep', 'moon', 'Longer nights', 'One longer sleep at night, often 4–5 hours', "__GO__"],
-    ['regress', 3, 5, 'Sleep', 'moon', 'The 4-month sleep regression', 'More night waking, for a few weeks', "__GO__"],
-    ['roll', 4, 6, 'Development', 'roll', 'Rolling', 'Time to stop swaddling', "__GO__"],
+    ['regress', 3, 5, 'Sleep', 'moon', 'The 4-month sleep shift', 'More night waking, for a few weeks', "__GO__"],
+    ['roll', 4, 6, 'Development', 'roll', 'Rolling', 'The swaddle comes off', "__GO__"],
     ['solids', 6, 6.5, 'Feeding', 'bowl', 'Starting solids', 'Food alongside milk, a few bites at first', "__GO__", 'Around 6 months'],
     ['twonaps', 6, 9, 'Sleep', 'sun', 'Three naps become two', 'Two naps a day, and an earlier bedtime', "__GO__"],
     ['crawl', 6, 10, 'Development', 'crawl', 'Crawling', 'Maya can get around, so babyproof first', "__GO__"],
@@ -55,7 +55,7 @@
     const an = typeof answers !== 'undefined' ? answers : {};
     const done = { roll: typeof rolled === 'function' && rolled(), solids: an.solids === 'Yes', crawl: an.crawl === 'Yes', pull: an.pullUp === 'Yes', tooth: an.hasTooth === 'Yes', twonaps: an.twoNaps === 'Yes' };
     const ahead = C.filter(c => c.end > a && !done[c.id]).sort((x, y) => x.start - y.start), next = ahead.slice(0, 3);
-    let h = `<div class="ya-page"><div class="eyebrow">${F('The year ahead')}</div><h1>${F('Timeline')}</h1><p class="next-lead">${F(`The big changes coming for ${nm}, and what each one changes. Tap any to read ahead.`)}</p>`;
+    let h = `<div class="ya-page"><div class="eyebrow ya-eyebrow">${F(`${nm}’s year ahead`)}</div><h1>${F('Timeline')}</h1><p class="next-lead">${F(`The big changes coming for ${nm}, and what each one changes. Tap any to read ahead.`)}</p>`;
     if (next.length) h += `<h2 class="ya-h2">${F('Coming up next')}</h2><div class="ya-next">${next.map(c => `<button class="ya-card" style="${yearTheme(c.cat)}" onclick="${c.go}"><span class="ya-card-art">${hubArt(c.icon, c.cat)}</span><span class="ya-card-copy"><small>${F(range(c))} · ${F(soon(c, a).replace(/^Could happen any time now$/, 'any time now').replace(/^Could start /, '').replace(/^In about/, 'in about'))}</small><b>${F(c.title)}</b><span>${F(c.why)}</span></span><span class="hub-chev" aria-hidden="true">›</span></button>`).join('')}</div>`;
     // Later on: swipe through the months ahead and watch the baby grow. Each month card has that month's picture
     // (the same baby who grows on Home), its date, the changes that usually start then, and a checkup if one is due.

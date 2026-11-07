@@ -1,18 +1,18 @@
 /* Ahead · Onboarding, using the guide's shared palette and illustrations. */
 (function () {
   const POINTS = [
-    ['spark', 'Everything in one place', 'Sleep, feeding, development, play, safety and checkups. One guide for the first year.'],
-    ['dev', 'Know how to support your baby', 'Clear, digestible guidance on what they need and what you can do—without hours of research.'],
-    ['explore', 'For your baby, as they grow', 'What’s relevant now and what to prepare for next, based on their age and what you’ve shared.']
+    ['spark', 'Everything in one place', 'Get answers about sleep, feeding and everyday care, all based on what pediatricians recommend.'],
+    ['rhythm', 'Know what’s coming', 'See what’s changing before it happens, so nothing catches you off guard.'],
+    ['dev', 'Made for your baby', 'Focus on what matters for your baby’s age and stage right now.']
   ];
-
+  const POINT_ART = { spark: ['book', 'Development', '#efedff'], rhythm: ['clock', 'Sleep', '#edf2fe'], dev: ['heart', 'Feeding', '#fceef3'] };
   function welcomeHtml() {
     return `<section class="welcome aw">
       <div class="aw-intro"><div class="eyebrow">Your baby’s first year</div><div class="aw-baby" aria-hidden="true">${homeBabyArt()}</div></div>
       <h1><span>Less searching.</span><span>More confidence</span><span>in what’s next.</span></h1>
-      <p class="aw-lead">Know what matters now and feel ready for what’s next, with guidance tailored to your baby.</p>
-      <div class="aw-spectrum" aria-hidden="true">${Array(7).fill('<span></span>').join('')}</div>
-      <div class="aw-points">${POINTS.map(([i, h, d]) => `<div class="promise aw-point"><span class="aw-point-icon" aria-hidden="true">${icon(i)}</span><div><h3>${h}</h3><p>${d}</p></div></div>`).join('')}</div>
+      <p class="aw-lead">Understand your baby, care for them with confidence, and enjoy every stage.</p>
+      <div class="aw-spectrum" aria-hidden="true">${['#e5e0fc','#f7d9e5','#d9e5fc','#ddf1e5','#f7e6c4','#cfe9f4','#fde3d3','#f8edb3'].map(c => `<span style="background:${c}"></span>`).join('')}</div>
+      <div class="aw-points">${POINTS.map(([i, h, d]) => `<div class="promise aw-point"><span class="aw-point-icon" aria-hidden="true" style="background:${(POINT_ART[i] || [])[2] || ''}">${typeof hubArt === 'function' && POINT_ART[i] ? hubArt(POINT_ART[i][0], POINT_ART[i][1]) : icon(i)}</span><div><h3>${h}</h3><p>${d}</p></div></div>`).join('')}</div>
       <button class="primary aw-start" onclick="startSetup()">Set up your baby’s guide →</button>
     </section>`;
   }

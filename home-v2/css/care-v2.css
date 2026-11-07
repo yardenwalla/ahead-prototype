@@ -1,0 +1,192 @@
+/* Everyday care, rebuilt: the basics grid, tags, the "How it changes" list and the shopping list. */
+#main .care-v2 .care-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px }
+#main .care-v2 .care-tile { display: flex; align-items: center; gap: 10px; background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 12px; text-align: left; min-height: 62px; color: inherit; font: inherit; cursor: pointer }
+#main .care-v2 .care-tile b { font-size: 14.5px; font-weight: 600; line-height: 19px; color: var(--ink, #2b2840) }
+#main .care-v2 .care-tile-ic { flex: none; width: 38px; height: 38px; border-radius: 12px; background: var(--hl-bg); display: grid; place-items: center; padding: 5px }
+#main .care-v2 .care-tile-ic svg { stroke: var(--hl-ink); width: 100%; height: 100% }
+#main .care-v2 .care-tag { font-style: normal; font-size: 11px; font-weight: 700; color: #9a5a3c; background: #fdeee6; border-radius: 99px; padding: 2px 7px; margin-left: 6px; vertical-align: 2px; white-space: nowrap }
+#main .care-v2 .care-strip { padding: 4px 16px }
+#main .care-v2 .care-step { display: grid; grid-template-columns: 104px 1fr; gap: 10px; width: 100%; padding: 12px 0; border: 0; border-top: 1px solid var(--line); background: none; text-align: left; font: inherit; font-size: 14px; line-height: 20px; color: var(--ink, #2b2840); cursor: pointer }
+#main .care-v2 .care-step:first-child { border-top: 0 }
+#main .care-v2 .care-step b { font-weight: 600; font-size: 13px; color: var(--ink-2, #5e5a75) }
+#main .care-v2 .care-step.is-on b { color: var(--ss-ink, #2a6078) }
+#main .care-v2 .care-step.is-on span { font-weight: 600 }
+#main .care-v2 .care-link { margin: 14px 0 }
+#main .care-v2 .care-need { padding: 4px 16px }
+#main .care-v2 .care-need > div { padding: 12px 0; border-top: 1px solid var(--line); display: grid; gap: 2px }
+#main .care-v2 .care-need > div:first-child { border-top: 0 }
+#main .care-v2 .care-need b { font-size: 14.5px; font-weight: 600 }
+#main .care-v2 .care-need span { font-size: 14px; line-height: 20px; color: var(--ink-2, #5e5a75) }
+/* "More" card: one row per extra topic, opening in place */
+#main .care-v2 .care-folds { padding: 0 16px }
+#main .care-v2 .care-fold { border-top: 1px solid var(--line) }
+#main .care-v2 .care-fold:first-child { border-top: 0 }
+#main .care-v2 .care-fold > summary { list-style: none; display: flex; align-items: center; gap: 10px; padding: 14px 0; cursor: pointer }
+#main .care-v2 .care-fold > summary::-webkit-details-marker { display: none }
+#main .care-v2 .care-fold > summary span { flex: 1; display: grid; gap: 2px }
+#main .care-v2 .care-fold > summary b { font-size: 15px; font-weight: 600 }
+#main .care-v2 .care-fold > summary small { font-size: 13px; color: var(--ink-2, #5e5a75) }
+#main .care-v2 .care-fold > summary i { font-style: normal; color: #aaa; transition: transform .2s }
+#main .care-v2 .care-fold[open] > summary i { transform: rotate(90deg) }
+#main .care-v2 .care-fold-body { padding: 0 0 14px }
+#main .care-v2 .care-fold-body > :first-child { margin-top: 0 }
+#main .care-v2 .care-fold-body > :last-child { margin-bottom: 0 }
+#main .care-v2 .care-p { margin: 0 0 8px; font-size: 14.5px; line-height: 22px; color: var(--ink-2, #5e5a75) }
+#main .care-v2 .care-fold-body .care-strip { padding: 0 }
+#main .care-v2 .care-fold-body .care-step:first-child { border-top: 0 }
+/* Step-by-step pictures */
+#main .care-v2 .care-carousel { margin: 0 0 18px }
+#main .care-v2 .care-track { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; margin: 0 -16px; padding: 0 16px 4px; scrollbar-width: none }
+#main .care-v2 .care-track::-webkit-scrollbar { display: none }
+#main .care-v2 .care-card { flex: 0 0 86%; scroll-snap-align: center; margin: 0; background: #fff; border: 1px solid var(--line); border-radius: 22px; padding: 10px 10px 14px; box-sizing: border-box }
+#main .care-v2 .care-card svg { display: block; width: 100%; height: auto }
+#main .care-v2 .care-card figcaption { display: grid; gap: 2px; padding: 10px 6px 0 }
+#main .care-v2 .care-card small { font-size: 12.5px; font-weight: 600; color: var(--cc-ink) }
+#main .care-v2 .care-card b { font-size: 16px; font-weight: 600 }
+#main .care-v2 .care-card span { font-size: 14.5px; line-height: 21px; color: var(--ink-2, #5e5a75) }
+#main .care-v2 .care-dots { display: flex; justify-content: center; gap: 6px; margin: 10px 0 12px }
+#main .care-v2 .care-dots i { width: 6px; height: 6px; border-radius: 3px; background: var(--line); transition: width .2s }
+#main .care-v2 .care-dots i.on { width: 18px; background: var(--cc-ink) }
+#main .care-v2 .care-video { display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: #fff; border: 1px solid var(--line); border-radius: 18px; color: inherit; text-decoration: none }
+#main .care-v2 .care-video > span:nth-child(2) { flex: 1; display: grid }
+#main .care-v2 .care-video b { font-size: 15px; font-weight: 600 }
+#main .care-v2 .care-video small { font-size: 13px; color: var(--ink-2, #5e5a75) }
+#main .care-v2 .care-play { width: 34px; height: 34px; border-radius: 50%; background: var(--cc-bg); color: var(--cc-ink); display: grid; place-items: center; font-size: 12px }
+/* What's new at this stage, the girl/boy and circumcised switches, and the first-week diaper ramp */
+#main .care-v2 .care-newlabel { margin: 4px 2px -4px; font-size: 12.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--ss-ink, var(--year-ink)) }
+#main .care-v2 .care-seg { display: inline-flex; gap: 4px; padding: 4px; margin: 0 0 12px; background: #fff; border: 1px solid var(--line); border-radius: 99px }
+#main .care-v2 .care-seg button { border: 0; background: none; padding: 8px 14px; border-radius: 99px; font: inherit; font-size: 14px; font-weight: 600; color: var(--ink-2, #5e5a75); cursor: pointer }
+#main .care-v2 .care-seg button.is-on { background: var(--ss-bg, var(--year-pale)); color: var(--ss-ink, var(--year-ink)) }
+#main .care-v2 .care-ramp { padding: 4px 16px; margin-bottom: 10px }
+#main .care-v2 .care-ramp > div { display: grid; grid-template-columns: 112px 1fr; gap: 0 10px; padding: 11px 0; border-top: 1px solid var(--line) }
+#main .care-v2 .care-ramp > div:first-child { border-top: 0 }
+#main .care-v2 .care-ramp b { grid-row: span 2; font-size: 13.5px; font-weight: 600; color: var(--ss-ink, var(--year-ink)) }
+#main .care-v2 .care-ramp span { font-size: 15px; font-weight: 600 }
+#main .care-v2 .care-ramp small { font-size: 13px; color: var(--ink-2, #5e5a75) }
+/* "What's this rash?" in the place of Sleep's "Rough night?", in Everyday care's skin color */
+#main .care-v2 .care-rash-card { background: #fdeee6; color: #9a5a3c }
+#main .care-v2 .care-rash-card .hub-rough-moon { background: #fff; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; padding: 8px }
+#main .care-v2 .care-rash-card .hub-rough-moon svg { width: 100%; height: 100%; stroke: #9a5a3c }
+#main .care-v2 .care-rash-card .hub-chev { color: #9a5a3c }
+#main .care-v2 .care-glance .hub-tiles > div { background: var(--year-pale) }
+#main .care-v2 .care-rash-card .hub-rough-copy b { color: #2b2840 }
+#main .care-v2 .care-rash-card .hub-rough-copy small { color: #7a5a4c }
+#main .care-v2 .care-fold-body .hub-steps, #main .care-v2 .care-fold-body ol { margin: 6px 0 8px }
+/* "Something look off?" */
+#main .care-v2 .care-urgent { margin: 0 0 10px; padding: 10px 12px; border-radius: 14px; background: #fbe9e9; font-size: 14.5px; line-height: 21px; color: #2b2840 }
+#main .care-v2 .care-urgent b { color: #a33a3a }
+#main .care-v2 .care-p b { color: var(--ink, #2b2840); font-weight: 600 }
+#main .care-v2 .care-list { margin: 0 0 10px; padding-left: 18px; display: grid; gap: 8px; font-size: 14.5px; line-height: 21px; color: var(--ink-2, #5e5a75) }
+#main .care-v2 .care-list b { color: var(--ink, #2b2840); font-weight: 600 }
+#main .care-v2 .care-more { margin: 0 0 10px }
+#main .care-v2 .care-more > summary { cursor: pointer; font-size: 14px; font-weight: 600; color: var(--ss-ink, #9a5a3c); margin-bottom: 8px }
+/* The calm template: What to do as short numbered steps, one quiet line for when to call */
+#main .care-v2 .care-do { margin: 0; padding-left: 20px; display: grid; gap: 6px; font-size: 15.5px; line-height: 1.5; color: var(--ink) }
+#main .care-v2 .care-call { margin: 4px 4px 16px; font-size: 14.5px; line-height: 1.5; color: var(--ink-2, #5e5a75) }
+#main .care-v2 .care-call b { color: var(--ink, #2b2840); font-weight: 600 }
+#main .care-v2 .ss-do + .care-carousel, #main .care-v2 .ss-do + .hub-embed, #main .care-v2 .ss-do + .hub-figure, #main .care-v2 .ss-do + .hub-card { margin-top: 4px }
+
+/* Care down there, inline on the Diapers page */
+#main .care-down .care-down-row { display: block; margin-top: 8px }
+#main .care-down .care-down-row:first-of-type { margin-top: 0 }
+#main .care-down .care-down-row strong { display: block; font-weight: 600; font-size: 15px; color: var(--ink) }
+#main .care-down .care-seg { margin: 4px 0 10px }
+
+/* Icons on What you'll need and Something look off? */
+#main .care-v2 .care-need > div.care-need-row { display: flex; align-items: flex-start; gap: 12px }
+#main .care-v2 .care-need-copy { display: grid; gap: 2px; flex: 1 }
+/* Own class, not .hub-dot, so the shared icon de-duplicator leaves these chosen icons alone. */
+#main .care-v2 .care-ico { width: 40px; height: 40px; border-radius: 13px; background: var(--year-pale); padding: 4px; flex: none; display: block }
+#main .care-v2 .care-ico svg { width: 100%; height: 100% }
+#main .care-v2 .care-fold > summary span.care-ico { flex: 0 0 40px; display: block }
+
+#main .ss-do .care-down-row { display: block; margin-top: 8px }
+#main .ss-do .care-down-row:first-child { margin-top: 0 }
+#main .ss-do .care-down-row strong { display: block; font-weight: 700 }
+#main .ss-know .care-down-row { display: block; margin-top: 8px }
+#main .ss-know .care-down-row:first-of-type { margin-top: 0 }
+#main .ss-know .care-down-row strong { display: block; font-weight: 600 }
+#main .care-toggles { display: grid; gap: 8px; margin: 0 0 12px }
+#main .care-toggles:empty { display: none }
+#main .care-toggles .care-seg { margin: 0 }
+/* "New" marks a care job that changed at this stage */
+#main .care-v2 .care-new { display: inline-block; margin-left: 8px; padding: 2px 8px; border-radius: 99px; background: var(--hl-bg); color: var(--hl-ink); font-size: 11px; font-weight: 700; font-style: normal; letter-spacing: .02em; vertical-align: 2px }
+#main .care-v2 .care-tile-copy { display: grid; gap: 1px }
+#main .care-v2 .care-tile-copy small { font-size: 12px; line-height: 16px; color: var(--ink-2, #5e5a75) }
+#main .care-v2 .care-tile.is-later { background: transparent; border-style: dashed }
+#main .care-v2 .care-tile.is-later .care-tile-ic { opacity: .6 }
+#main .care-v2 .care-tile { align-items: flex-start }
+/* How it changes: a simple timeline (not more icon circles), each step opens that age's page */
+#main .care-v2 .care-when { padding: 16px 14px 14px; margin: 0 0 12px }
+#main .care-v2 .care-when .hub-fig-title { display: block; margin: 0 4px 14px }
+#main .care-v2 .care-when-line { list-style: none; margin: 0; padding: 0; display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; position: relative }
+#main .care-v2 .care-when-line::before { content: ''; position: absolute; left: 12%; right: 12%; top: 25px; height: 2px; background: var(--line) }
+#main .care-v2 .care-when-line li { position: relative; text-align: center }
+#main .care-v2 .care-when-line button { all: unset; cursor: pointer; display: grid; justify-items: center; gap: 2px; width: 100%; padding: 0 2px; box-sizing: border-box }
+#main .care-v2 .care-when-line i { width: 12px; height: 12px; border-radius: 50%; background: #fff; border: 2px solid var(--ss-ink, #7a7590); margin: 18px 0 8px; position: relative; z-index: 1 }
+#main .care-v2 .care-when-line em { position: absolute; top: -2px; left: 50%; transform: translateX(-50%); font-style: normal; font-size: 10.5px; font-weight: 700; color: #fff; background: var(--ss-ink, #2b2840); border-radius: 99px; padding: 1px 7px }
+#main .care-v2 .care-when-line .is-now i { width: 16px; height: 16px; margin: 16px 0 6px; background: var(--ss-ink, #2b2840) }
+#main .care-v2 .care-when-line .is-here i { background: var(--ss-bg, #eee) }
+#main .care-v2 .care-when-line b { font-size: 13px; line-height: 17px; font-weight: 600; color: var(--ink, #2b2840) }
+#main .care-v2 .care-when-line small { font-size: 11.5px; line-height: 15px; color: var(--ink-2, #5e5a75) }
+
+/* MOCKUP: the care routine card */
+#main .care-v2 .rt-card { background: #fff; border: 1px solid var(--line); border-radius: 24px; padding: 6px 16px 8px; margin: 0 0 16px }
+#main .care-v2 .rt-head { display: flex; justify-content: space-between; align-items: baseline; padding: 12px 2px 4px }
+#main .care-v2 .rt-head b { font-size: 17px; font-weight: 700 }
+#main .care-v2 .rt-head small { font-size: 13px; color: var(--muted) }
+#main .care-v2 .rt-when { margin: 12px 2px 2px; font-size: 12px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--year-ink, #2a6078) }
+#main .care-v2 .rt-line { display: flex; align-items: center; gap: 12px; width: 100%; padding: 10px 0; border: 0; border-top: 1px solid var(--line); background: none; text-align: left; cursor: pointer; min-height: 0 }
+#main .care-v2 .rt-when + .rt-line { border-top: 0 }
+#main .care-v2 .rt-ic { flex: none; width: 40px; height: 40px; border-radius: 12px; background: var(--hl-bg); display: grid; place-items: center }
+#main .care-v2 .rt-ic svg { width: 22px; height: 22px; stroke: var(--hl-ink) }
+#main .care-v2 .rt-copy { flex: 1; min-width: 0; display: grid }
+#main .care-v2 .rt-copy small { font-size: 12.5px; color: var(--muted); display: flex; align-items: center; gap: 6px }
+#main .care-v2 .rt-copy small em { font-style: normal; font-size: 10.5px; font-weight: 700; color: #9a5a3c; background: #fdeee6; border-radius: 99px; padding: 1px 7px }
+#main .care-v2 .rt-copy b { font-size: 15.5px; font-weight: 600; line-height: 1.3 }
+#main .care-v2 .rt-copy i { font-style: normal; font-size: 13px; color: var(--muted); line-height: 1.35 }
+
+/* "What to do" items with no order: dots, not numbers */
+#main .care-v2 .care-do.care-tips { list-style: none; padding-left: 0 }
+#main .care-v2 .care-do.care-tips li { position: relative; padding-left: 18px }
+#main .care-v2 .care-do.care-tips li::before { content: ""; position: absolute; left: 3px; top: .62em; width: 7px; height: 7px; border-radius: 50%; background: currentColor; opacity: .5 }
+/* Everyday care's top card in the same look as Health and Sleep: a soft gradient in its own water blue, with a quiet white circle */
+#main .care-v2 .care-hero { background: linear-gradient(160deg, #d3ecf6, #ecf6fa 58%, #fdeee6) !important; position: relative; overflow: hidden }
+#main .care-v2 .care-hero::after { content: ""; position: absolute; right: -40px; top: -50px; width: 170px; height: 170px; border-radius: 50%; background: #fff; opacity: .35; pointer-events: none }
+#main .care-v2 .care-hero > * { position: relative; z-index: 1 }
+#main .care-v2 .care-hero .hub-eyebrow { color: #2a6078 }
+/* Where a rash shows up: a small outline beside the words */
+#main .care-v2 .care-map { display: grid; grid-template-columns: 108px 1fr; gap: 14px; align-items: center; margin: 4px 0 10px; padding: 12px; background: #fff; border: 1px solid var(--line); border-radius: 18px }
+#main .care-v2 .care-map svg { width: 108px; height: auto; display: block }
+#main .care-v2 .care-map figcaption { display: grid; gap: 3px; min-width: 0 }
+#main .care-v2 .care-map b { font-size: 13px; font-weight: 700; color: #9a5a3c; text-transform: uppercase; letter-spacing: .04em }
+#main .care-v2 .care-map span { font-size: 15px; line-height: 1.4; color: var(--ink) }
+#main .care-v2 .care-map small { font-size: 12.5px; line-height: 1.35; color: var(--muted) }
+/* The glass test */
+#main .care-v2 .care-glass { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 12px; margin: 10px 0 }
+#main .care-v2 .care-glass > div { display: grid; gap: 2px; background: #f4f1ec; border-radius: 14px; padding: 10px; text-align: center }
+#main .care-v2 .care-glass > div.is-urgent { background: #fbe9ec }
+#main .care-v2 .care-glass svg { width: 100%; height: auto; margin-bottom: 4px }
+#main .care-v2 .care-glass b { font-size: 14px }
+#main .care-v2 .care-glass small { font-size: 12.5px; color: var(--muted) }
+#main .care-v2 .care-glass .is-urgent b { color: #a3324f }
+#main .care-v2 .care-glass figcaption { grid-column: 1 / -1; font-size: 13px; color: var(--muted); text-align: center; padding: 0 4px }
+/* Poop colors and the first-week swatches (the swatch style from the Feeding pages) */
+#main .hub-poop { display: flex; flex-direction: column; gap: 8px; padding: 14px }
+#main .hub-poop-row { display: grid; gap: 8px }
+#main .hub-poop-row.is-5 { grid-template-columns: repeat(5, minmax(0, 1fr)) }
+#main .hub-poop-row.is-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 6px }
+#main .hub-poop-row > div { display: flex; flex-direction: column; gap: 4px; min-width: 0 }
+#main .hub-poop-row span { display: block; height: 24px; border-radius: 12px; box-shadow: inset 0 0 0 1px rgba(0,0,0,.08) }
+#main .hub-poop-row b { font-size: 12px; font-weight: 600; line-height: 1.25 }
+#main .hub-poop-label { font-size: 12.5px; font-weight: 700; color: #356651 }
+#main .hub-poop-label.is-call { color: #a3324f }
+#main .care-v2 .care-swatch { display: block; height: 14px; border-radius: 7px; margin-bottom: 6px; box-shadow: inset 0 0 0 1px rgba(0,0,0,.08) }
+/* Something look off?: a short list, each choice opens its own answer */
+#main .care-v2 .care-pick { all: unset; box-sizing: border-box; cursor: pointer; display: flex; align-items: center; gap: 12px; width: 100%; padding: 14px 0; border-top: 1px solid var(--line) }
+#main .care-v2 .care-pick:first-child { border-top: 0 }
+#main .care-v2 .care-pick > span:nth-child(2) { flex: 1; display: grid; gap: 2px; min-width: 0 }
+#main .care-v2 .care-pick b { font-size: 15px; font-weight: 600 }
+#main .care-v2 .care-pick small { font-size: 13px; color: var(--ink-2, #5e5a75) }
+#main .care-v2 .care-pick > i { font-style: normal; color: #aaa }
+#main .care-v2 .care-pick:focus-visible { outline: 2px solid var(--year-ink, #2a6078); outline-offset: 2px; border-radius: 8px }

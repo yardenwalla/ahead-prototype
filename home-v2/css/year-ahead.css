@@ -1,0 +1,111 @@
+/* Timeline reimagined: coming up next as cards, the year as a path */
+#main .ya-page { padding-bottom: 8px }
+#main .ya-page h1 { margin: 2px 0 6px }
+#main .ya-h2 { margin: 22px 0 10px; font-size: 19px }
+#main .ya-next { display: flex; flex-direction: column; gap: 8px }
+#main .ya-card { display: flex; gap: 14px; align-items: center; width: 100%; padding: 12px 14px; border: 0; border-radius: 18px; background: linear-gradient(135deg, var(--year-pale, #f3effb), #fffdf9); box-shadow: 0 1px 2px rgba(43,40,64,.06); text-align: left; font: inherit; color: inherit; cursor: pointer }
+#main .ya-card-art { flex: none; display: grid; place-items: center; width: 46px; height: 46px; border-radius: 15px; background: #fff }
+#main .ya-card-art svg { width: 26px; height: 26px }
+#main .ya-card-copy { flex: 1; min-width: 0 }
+#main .ya-card-copy small { display: block; font-size: 12.5px; font-weight: 700; color: var(--year-ink, #5b4a8b) }
+#main .ya-card-copy b { display: block; margin: 1px 0; font-size: 16.5px; line-height: 1.2 }
+#main .ya-card-copy > span { display: block; font-size: 13.5px; color: #5c5466 }
+#main .ya-card-copy em { display: block; margin-top: 8px; font-style: normal; font-size: 13.5px; font-weight: 600; color: var(--year-ink, #5b4a8b) }
+#main .ya-path { list-style: none; margin: 0; padding: 0 0 0 18px; position: relative }
+#main .ya-path::before { content: ""; position: absolute; left: 6px; top: 8px; bottom: 8px; width: 2px; background: #e6dfd4; border-radius: 2px }
+#main .ya-path li { position: relative }
+#main .ya-node { position: absolute; left: -17px; top: 24px; width: 12px; height: 12px; border-radius: 50%; background: #fff; border: 2px solid #d9d0c4 }
+#main .ya-row button { display: flex; gap: 12px; align-items: center; width: 100%; margin: 4px 0; padding: 12px 12px 12px 14px; border: 0; border-radius: 18px; background: #fffdf9; box-shadow: 0 1px 2px rgba(43,40,64,.05); text-align: left; font: inherit; color: inherit; cursor: pointer }
+#main .ya-row-art { flex: none; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 14px; background: var(--year-pale, #f3effb) }
+#main .ya-row-art svg { width: 24px; height: 24px }
+#main .ya-row-copy { flex: 1; min-width: 0 }
+#main .ya-row-copy b { display: block; font-size: 15.5px; line-height: 1.25 }
+#main .ya-row-copy small { display: block; margin-top: 1px; font-size: 12.5px; color: #8a8494 }
+#main .ya-bar { position: relative; display: block; height: 6px; margin-top: 8px; border-radius: 3px; background: #f1ece5 }
+#main .ya-bar i { position: absolute; top: 0; bottom: 0; border-radius: 3px; background: var(--year-ink, #5b4a8b); opacity: .45 }
+#main .ya-bar u { position: absolute; top: -3px; width: 2px; height: 12px; background: #2B2840; border-radius: 1px }
+#main .ya-row.is-past { opacity: .45 }
+#main .ya-row.is-now .ya-node { border-color: var(--year-ink, #5b4a8b); background: var(--year-ink, #5b4a8b) }
+#main .ya-pin { padding: 8px 0 8px 2px; font-size: 13px; color: #8a8494 }
+#main .ya-pin .ya-node { top: 11px; width: 8px; height: 8px; left: -15px; border-width: 2px }
+#main .ya-pin.is-past { opacity: .5 }
+#main .ya-here { display: flex; align-items: baseline; gap: 8px; padding: 12px 0 12px 2px }
+#main .ya-here .ya-node { top: 14px; left: -20px; width: 18px; height: 18px; background: #2B2840; border: 4px solid #fff; box-shadow: 0 0 0 2px #2B2840 }
+#main .ya-here b { font-size: 16px }
+#main .ya-here small { font-size: 13px; color: #8a8494 }
+
+/* Later on: month cards to swipe, with the baby growing */
+#main .ya-sub { margin: -4px 0 10px; font-size: 14px; color: #8a8494 }
+#main .ya-months { display: grid; grid-auto-flow: column; grid-auto-columns: 74%; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; margin: 0 -16px; padding: 4px 16px 14px; scrollbar-width: none }
+#main .ya-months::-webkit-scrollbar { display: none }
+#main .ya-month { scroll-snap-align: start; display: flex; flex-direction: column; border-radius: 22px; background: #fffdf9; box-shadow: 0 1px 2px rgba(43,40,64,.06), 0 6px 16px rgba(43,40,64,.06); overflow: hidden }
+#main .ya-month-art { display: block; background: #f6f1fb; height: 150px }
+#main .ya-month-art svg { display: block; width: 100%; height: 100% }
+#main .ya-month-head { padding: 12px 14px 4px }
+#main .ya-month-head b { display: block; font-size: 18px }
+#main .ya-month-head small { font-size: 13px; color: #8a8494 }
+#main .ya-month-list { display: flex; flex-direction: column; gap: 6px; padding: 8px 12px 14px }
+#main .ya-chip { display: flex; align-items: center; gap: 8px; width: 100%; padding: 8px 10px; border: 0; border-radius: 12px; background: var(--year-pale, #f3effb); font: inherit; font-size: 14px; font-weight: 600; color: #3e3650; text-align: left; cursor: pointer }
+#main .ya-chip span { display: grid; place-items: center; width: 24px; height: 24px; flex: none }
+#main .ya-chip svg { width: 20px; height: 20px }
+#main .ya-month-pin { padding: 2px 4px; font-size: 12.5px; color: #8a8494 }
+
+/* How changes connect: the areas each change touches */
+#main .ya-touch { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px }
+#main .ya-touch-pill { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px 3px 4px; border-radius: 999px; background: #fff; font-size: 12px; font-weight: 600; color: var(--year-ink, #5b4a8b) }
+#main .ya-touch-pill .cat-icon { width: 16px; height: 16px }
+#main .ya-chip em { flex: 1; font-style: normal }
+#main .ya-chip-areas { display: inline-flex; gap: 2px; font-style: normal }
+#main .ya-chip-areas .cat-icon { width: 16px; height: 16px }
+#main .ya-connect { margin: 4px 2px 0; font-size: 14.5px; line-height: 1.45; color: #5c5466 }
+
+/* What it changes: the change, with a line branching to each area it touches */
+#main .ya-web { margin: 0 0 16px }
+#main .ya-web-root { display: inline-flex; align-items: center; gap: 10px; padding: 10px 16px 10px 10px; border-radius: 999px; background: var(--year-pale, #f3effb); position: relative; z-index: 1 }
+#main .ya-web-root span { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: #fff }
+#main .ya-web-root svg { width: 22px; height: 22px }
+#main .ya-web-root b { font-size: 16px }
+#main .ya-web-list { list-style: none; margin: 0; padding: 6px 0 0 26px; position: relative }
+#main .ya-web-list::before { content: ""; position: absolute; left: 26px; top: -4px; bottom: 30px; width: 2px; background: var(--year-ink, #5b4a8b); opacity: .25; border-radius: 2px }
+#main .ya-web-list li { position: relative; padding: 8px 0 0 22px }
+#main .ya-web-list li::before { content: ""; position: absolute; left: 0; top: 36px; width: 22px; height: 2px; background: #5b4a8b; opacity: .25 }
+#main .ya-web-list li::after { content: ""; position: absolute; left: -4px; top: 33px; width: 8px; height: 8px; border-radius: 50%; background: var(--year-ink, #5b4a8b) }
+#main .ya-web-list button { display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px 12px 12px 12px; border: 0; border-radius: 18px; background: #fffdf9; box-shadow: 0 1px 2px rgba(43,40,64,.06), 0 4px 12px rgba(43,40,64,.05); text-align: left; font: inherit; color: inherit; cursor: pointer }
+#main .ya-web-ic { flex: none; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 14px; background: var(--year-pale, #f3effb) }
+#main .ya-web-ic .cat-icon { width: 26px; height: 26px }
+#main .ya-web-copy { flex: 1; min-width: 0 }
+#main .ya-web-copy small { display: block; font-size: 12px; font-weight: 700; color: var(--year-ink, #5b4a8b) }
+#main .ya-web-copy b { display: block; font-size: 15.5px; line-height: 1.25 }
+#main .ya-web-copy span { display: block; margin-top: 1px; font-size: 13px; color: #7a7484 }
+#main .ya-chip em small { display: block; font-size: 12px; font-weight: 500; color: #8a8494 }
+
+/* Month cards, compact: a small picture of the baby beside the month, the changes underneath */
+#main .ya-months { align-items: start; grid-auto-columns: 78% }
+#main .ya-month { background: linear-gradient(180deg, #f6f1fb 0, #fffdf9 92px) }
+#main .ya-month-top { display: flex; align-items: center; gap: 12px; padding: 12px 14px 4px }
+#main .ya-month-art { position: relative; flex: none; width: 76px; height: 76px; border-radius: 20px; background: #fff; overflow: hidden; box-shadow: 0 1px 3px rgba(43,40,64,.08) }
+#main .ya-month-art .home-month-scene, #main .ya-month-art svg { position: absolute; left: 50%; top: 52%; width: 150px; height: auto; transform: translate(-50%, -50%) }
+#main .ya-month-head { padding: 0 }
+#main .ya-month-head b { font-size: 19px }
+#main .ya-month-list { padding: 8px 12px 12px }
+
+/* Timeline's own illustrations: one object per month for what's coming (Home keeps the growing baby) */
+#main .ya-month-art { background: transparent; box-shadow: none; border-radius: 20px }
+#main .ya-month-art .ya-art { position: absolute; inset: 0; display: block; padding: 9px; border-radius: 20px }
+#main .ya-month-art .ya-art svg { position: static; transform: none; width: 100%; height: 100% }
+#main .ya-month { background: #fffdf9 }
+/* Nov 5: Timeline in the app's own style. The label matches Home's; "Coming up next" cards are white with a hairline,
+   like Home's cards and category rows, and each item icon sits in its category's soft square (circles mean category,
+   squares mean item). The colored blocks in the month cards stay: they're Timeline's own touch. */
+#main .ya-page>.ya-eyebrow{text-transform:none;letter-spacing:0;font-size:13px;line-height:1.4;font-weight:600;color:#7a4f6d}
+#main .ya-card{background:var(--white,#fff);border:1px solid var(--line,#efeaf2);box-shadow:none}
+#main .ya-card-art{background:var(--year-pale,#f3effb);border-radius:14px;width:44px;height:44px}
+#main .ya-chip span{width:30px;height:30px;border-radius:10px;background:var(--white,#fff)}
+#main .ya-chip svg{width:19px;height:19px}
+/* The same sentence-case plum label on every tab's title: Timeline, Categories and Memories (Home's is the age on its month card). */
+#main>.eyebrow,#main .mem-page>.eyebrow,#main .ya-page>.ya-eyebrow{text-transform:none!important;letter-spacing:0!important;font-size:13px!important;line-height:1.4!important;font-weight:600!important;color:#7a4f6d!important}
+/* Month cards sit flat like every other card (white, hairline, no shadow). The blocks keep their color, one shade
+   richer to match Sleep's tiles and the category line, and the age range takes the category's own ink. */
+#main .ya-month{background:var(--white,#fff);border:1px solid var(--line,#efeaf2);box-shadow:none}
+#main .ya-chip{background:color-mix(in srgb,var(--year-bg,#e5e0fc) 70%,#fff)}
+#main .ya-chip em small{color:var(--year-ink,#5b4a8b);font-weight:600}
