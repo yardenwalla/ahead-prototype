@@ -1,4 +1,5 @@
-/* Ahead · Home card copy (v8). Shared with the card simulator: one source for every word on a Home card. */
+/* Ahead · Home card copy (v9). Shared with the card simulator: one source for every word on a Home card.
+   One card, one thought: a card says one thing and opens the one page about it. */
 window.HOME_COPY = {
 "flying": "Sucking helps {his} ears adjust to the pressure change.",
 "flying:t": "Flying soon? Feed at takeoff and landing",
@@ -69,17 +70,17 @@ window.HOME_COPY = {
 "four-month": "It’s common for a few weeks, so keep your routine and wait a minute before going in.",
 "carrier:t": "Ready to face out in the carrier?",
 "carrier": "Once {his} head control is strong, check your carrier’s instructions, since many allow facing out around now.",
-"rolling-soon:t": "Rolling is coming soon",
-"rolling-soon:t-cond": "Rolling soon, or already?",
-"rolling-soon": "Change {him} on the floor or with a hand on {him}, and sweep the floor for small things.",
-"rolling-now:t": "Rolling means a few gear changes",
-"rolling-now:t-other": "Moving more means a few gear changes",
-"rolling-now": "Time to move {him} from the bassinet to the crib, and check swing and bouncer limits too.",
+"rolling-soon:t": "Rolling soon? Change {him} on the floor",
+"rolling-soon:t-cond": "Rolling soon, or already? Floor changes",
+"rolling-soon": "A first roll often comes without warning, so the floor, or a hand on {him}, keeps changes safe.",
+"rolling-now:t": "Now that {N} rolls: time for the crib",
+"rolling-now:t-other": "Moving more? Time for the crib",
+"rolling-now": "Bassinets are only for babies who can’t roll yet, so {he} moves to {his} crib now.",
 "rolling-tummy:t": "Flipping onto {his} tummy at night?",
 "rolling-tummy": "Keep laying {him} on {his} back. Once {he} {rolls|roll} both ways, {he} can sleep how {he} {lands|land}.",
-"sitting-gear:t": "Sitting up means a quick gear check",
-"sitting-gear:t-cond": "Sitting up? A quick gear check",
-"sitting-gear": "Once {he} {sits|sit} alone, the stroller’s upright seat can take over, and check your infant tub’s limit.",
+"sitting-gear:t": "Now that {N} sits: the stroller seat",
+"sitting-gear:t-cond": "Sitting up? Time for the stroller seat",
+"sitting-gear": "Once {he} {sits|sit} alone, {he} can ride in the stroller’s upright seat instead of the bassinet.",
 "first-bite:t": "Before solids: gagging vs choking",
 "first-bite:t-after": "Gagging or choking? How to tell",
 "first-bite": "Gagging is loud and normal while {he} {learns|learn}. Choking is silent. A short first aid video helps.",
