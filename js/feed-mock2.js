@@ -2782,6 +2782,24 @@
       + xDo('What to do', ['Let him feed himself, with a spoon to practice.', 'Cut round foods into thin strips, and quarter grapes lengthwise.', 'Cook hard vegetables until soft, and spread nut butter thin.']));
   window.SHOME = (() => { const prev = window.SHOME; return v => prev(v).replace(hubArt('chair', CAT).replace('data-art=', 'data-keep='), hubArt('highchair', CAT).replace('data-art=', 'data-keep=')).replace(F('Gagging, refusing food, a rash, constipation'), F('Gagging, refusing food, a rash, teething, sick days')); })();
 
+  // ---- Ready for solids: the purées / baby-led weaning choice, and the allergy page restyled (Nov 7). ----
+  const xProsCons = (items) => `<style>#main .xpc{margin:0 0 12px;padding:6px 16px;border-radius:20px;background:#fff;border:1px solid var(--line)}#main .xpc>div{padding:12px 0}#main .xpc>div+div{border-top:1px solid var(--line)}#main .xpc h3{margin:0 0 6px;font-size:16px;display:flex;align-items:center;gap:10px}#main .xpc h3 i{width:32px;height:32px;border-radius:50%;background:var(--ss-bg);display:grid;place-items:center;padding:7px;box-sizing:border-box;flex:none}#main .xpc h3 i svg{width:100%;height:100%}#main .xpc dl{display:grid;grid-template-columns:82px 1fr;gap:4px 10px;margin:0;font-size:14px;line-height:1.4}#main .xpc dt{font-weight:600;color:var(--ss-ink)}#main .xpc dd{margin:0;color:#4c4757}</style><section class="xpc">${items.map(([icon, t, good, mind]) => `<div><h3><i>${hubArt(icon, CAT).replace('data-art=', 'data-keep=')}</i>${F(t)}</h3><dl><dt>${F('Good for')}</dt><dd>${F(good)}</dd><dt>${F('Keep in mind')}</dt><dd>${F(mind)}</dd></dl></div>`).join('')}</section>`;
+  P.z_how = () => yPage(XG, 'Getting ready', 'Purées, finger foods, or both', 'Spoon-feeding and baby-led weaning both work. Many families mix them.',
+      xProsCons([['bowl', 'Spoon-fed purées', 'Easy to see how much he eats, and to get iron-rich foods in. Simple for daycare.', 'Move to thicker, lumpier food by about 8 months. Let him open up for each bite.'], ['avocado', 'Baby-led weaning', 'He feeds himself soft finger foods, joins family meals, and practices chewing early.', 'More mess and gagging at first. Harder to tell how much iron he gets. Shapes need care.'], ['plate', 'A mix of both', 'Spoon iron-rich foods, and offer soft finger foods to practice.', 'Most flexible. Follow the same safe shapes for finger foods.']])
+      + xKnow('Is one better?', 'No. Research doesn’t favor either. When foods are soft and safely shaped, choking risk is similar.'));
+  P.z_setup = () => yPage(XG, 'Getting ready', 'Get set up for the first bite', 'A few things to have before you start, and one skill to learn.',
+      xCompare([['highchair', 'High chair', 'Upright, with a harness and footrest.'], ['bowl', 'Soft spoon', 'And a bib that catches.'], ['cup', 'Open cup', 'For sips of water.']])
+      + xDo('Before you start', ['Learn infant choking first aid. A short class or video is enough.', 'Pick a calm time of day, when he’s not too hungry or tired.']));
+  P.z_allergy = () => yPage(XL, 'Allergies', 'Eczema or food allergies in the family?', 'Some babies need peanut sooner, as early as 4–6 months. Plan it before solids start.',
+      xCompare([['shield', 'Higher risk', 'Severe eczema, or an egg allergy.'], ['smile', 'Everyone else', 'Start peanut and egg with first foods, around 6 months.']])
+      + xDo('If he’s higher risk', ['Ask your pediatrician before starting peanut. They may suggest a test first.', 'Then start peanut early, in a safe form, and keep it going.'])
+      + xKnow('Why early', 'Starting peanut early, and often, lowers the chance of a peanut allergy.'));
+  window.SHOME = (() => { const prev = window.SHOME; return v => { let h = prev(v); if (v !== 2) return h;
+    const row = H().row({ cat: CAT, icon: 'plate', title: 'Purées, finger foods, or both', sub: 'The pros and cons of each', onclick: go('z_how') }).replace(/<span class="hub-dot">[\s\S]*?<\/span><span class="hub-row-copy">/, `<span class="hub-dot">${hubArt('plate', CAT).replace('data-art=', 'data-keep=')}</span><span class="hub-row-copy">`).replace('class="hub-row', `style="--sm-bg:${XG[0]};--sm-ink:${XG[1]}" class="sm-row hub-row`);
+    const k = h.indexOf('<button', h.indexOf(F('Get set up for the first bite')) - 1500 > 0 ? h.lastIndexOf('<button', h.indexOf(F('Get set up for the first bite'))) : 0);
+    const i = h.lastIndexOf('<button', h.indexOf(F('Get set up for the first bite')));
+    return i > 0 ? h.slice(0, i) + row + h.slice(i) : h; }; })();
+
   // ---- Milk feeds (6 weeks–4 months), rebuilt on the Newborn model (Nov 5): four subject pages with tabs, grouped by moment. ----
   HEADART['Feeds & rhythm'] = () => ART.often(5);
   P.rhythm1 = () => { const nurse = nurses(), b = isBreast(), bot = isBottle(), fm = formulaFam();
