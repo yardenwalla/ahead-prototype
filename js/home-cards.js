@@ -140,9 +140,9 @@
 
   // First weeks
   card('vitamin-d', 'Feeding', 1, s => breast(s) && s.d <= 28, s => s.d > 28 ? 'Vitamin D drops, every day' : 'Start vitamin D drops',
-    'Breast milk is low in vitamin D, so pediatricians recommend a 400 IU drop every day, from the first days through the first year.', { must: 1, go: "openPage('chg:Feeding:d:vitd')", catchup: 330, ask: [['Already giving drops', 'void 0']] });
+    'Breast milk is low in vitamin D, so pediatricians recommend a 400 IU drop every day, from the first days through the first year.', { must: 1, grace: 14, go: "openPage('chg:Feeding:d:vitd')", catchup: 42 });   // early weeks only: by later months parents have heard it from their pediatrician
   card('poop-colors', 'Daily rhythm', 2, s => s.d <= 7, 'Poop changes color this week',
-    s => `Black and sticky at first, then green, then ${s.feed === 'breast' ? 'yellow' : 'yellow or tan'} by about day 5. That change means feeding is going well.`, { go: "openPage('topic:Daily rhythm')" });
+    s => `Black and sticky at first, then green, then ${s.feed === 'breast' ? 'yellow' : 'yellow or tan'} by about day 5. That change means feeding is going well.`, { grace: 0, go: "openPage('topic:Daily rhythm')" });
   card('safe-sleep', 'Sleep', 1, s => s.d <= 21, '{N}’s safest sleep spot', 'On {his} back, in a bare crib or bassinet in your room, for at least 6 months. It can halve the risk of SIDS.',
     { safety: 1, must: 1, catchup: 30, go: "openPage('chg:Sleep:d:where')" });
   card('day-night', 'Sleep', 4, s => s.d >= 7 && s.d <= 35, 'Days and nights mixed up?', 'Common now, and it usually sorts out by 6–8 weeks. Bright days and dim, quiet night feeds help {his} body clock.', { go: "openPage('chg:Sleep:d:daynight')" });
@@ -153,23 +153,23 @@
   card('first-bottle', 'Feeding', 4, s => s.feed === 'breast' && s.d >= 21 && s.d <= 42, 'A first bottle, if you’ll ever need one', '3 to 6 weeks is the easiest time, once nursing is going well. Babies who don’t try one early can resist it later.', { go: "openPage('chg:Feeding:d:bottles')" });
   card('crying-peak', 'Sleep', 4, s => s.d >= 35 && s.d <= 63, 'The fussiest weeks: they ease by 3–4 months', 'Crying usually peaks around 6–8 weeks, and some evenings nothing works. That isn’t you. At your limit, put {him} down safely and step away.', { go: "openPage('chg:Sleep:d:crying')" });
   // 6 weeks to 4 months
-  card('routine', 'Sleep', 3, s => s.d >= 42 && s.d <= 70, 'Nights start to stretch: add a bedtime routine', 'Bath, feed, song: a short routine in the same order helps that longer stretch land at night instead of the afternoon.', { catchup: 150, go: "openPage('chg:Sleep:d:routine')" });
+  card('routine', 'Sleep', 3, s => s.d >= 42 && s.d <= 70, 'Nights start to stretch: add a bedtime routine', 'Bath, feed, song: a short routine in the same order helps that longer stretch land at night instead of the afternoon.', { catchup: 90, go: "openPage('chg:Sleep:d:routine')" });
   card('fewer-poops', 'Daily rhythm', 4, s => s.feed === 'breast' && s.d >= 42 && s.d <= 90, 'Days without a poop can be normal', 'After about 6 weeks, some breastfed babies go days between poops. Wet diapers, 6 or more a day, tell you {hes} getting enough.', { go: "openPage('topic:Daily rhythm')" });
   card('swaddle', 'Safety', 1, s => s.d >= 49 && s.d <= 120 && !s.swaddle && !moved(s, 'rolling', 'sitting', 'crawling', 'pulling'), 'If you swaddle: when to stop',
     'At the first sign of rolling, which can be as early as 2 months. That day, switch to a sleep sack with arms free.',
-    Object.assign({ safety: 1, must: 1, go: "openPage('chg:Sleep:d:swaddleoff')" }, ask([['In a sleep sack now', "setAnswer('swaddleStopped','Yes')"], ['We don’t swaddle', "setAnswer('neverSwaddled','Yes')"]])));
-  card('swaddle-now', 'Safety', 1, s => !s.swaddle && moved(s, 'rolling', 'sitting', 'crawling', 'pulling') && s.d <= 240, s => moved(s, 'rolling') ? '{Ns} rolling: time to stop swaddling' : 'Time to stop swaddling',
+    Object.assign({ grace: 14, safety: 1, must: 1, go: "openPage('chg:Sleep:d:swaddleoff')" }, ask([['In a sleep sack now', "setAnswer('swaddleStopped','Yes')"], ['We don’t swaddle', "setAnswer('neverSwaddled','Yes')"]])));
+  card('swaddle-now', 'Safety', 1, s => !s.swaddle && moved(s, 'rolling', 'sitting', 'crawling', 'pulling') && s.d <= 180, s => moved(s, 'rolling') ? '{Ns} rolling: time to stop swaddling' : 'Time to stop swaddling',
     'If {hes} still swaddled, switch to a sleep sack with arms free tonight. A swaddled baby who rolls can’t push up.',
     Object.assign({ fromAnswer: 1, safety: 1, must: 1, go: "openPage('chg:Sleep:d:swaddleoff')" }, ask([['In a sleep sack now', "setAnswer('swaddleStopped','Yes')"], ['We don’t swaddle', "setAnswer('neverSwaddled','Yes')"]])));
   card('distracted', 'Feeding', 4, s => s.d >= 90 && s.d <= 135, 'Suddenly pulling off to look around?', 'Common around 3–5 months: everything is more interesting than milk. A quiet, dim room helps.', { go: "openPage('chg:Feeding:d:cues')" });
   card('iron', 'Feeding', 3, s => breast(s) && s.d >= 100 && s.d <= 122 && !(typeof healthRecord === 'function' && healthRecord(4) && healthRecord(4).status === 'attended'), 'Ask about iron at the 4-month checkup',
     s => s.feed === 'breast' ? 'Pediatricians recommend iron drops for breastfed babies from 4 months until iron-rich foods are going well. A quick question at this visit.' : 'For mostly breastfed babies, pediatricians recommend iron drops from 4 months until iron-rich foods are going well. Worth asking.', { go: "openPage('health-visit:4')" });
-  card('four-month', 'Sleep', 3, s => s.d >= 100 && s.d <= 140, 'More waking? Common around 4 months', 'More waking for a few weeks is common now. It’s {his} sleep maturing, not something you broke.', { catchup: 165, go: "openPage('chg:Sleep:d:regress')" });
+  card('four-month', 'Sleep', 3, s => s.d >= 100 && s.d <= 140, 'More waking? Common around 4 months', 'More waking for a few weeks is common now. It’s {his} sleep maturing, not something you broke.', { catchup: 150, go: "openPage('chg:Sleep:d:regress')" });
   // Rolling
   const MOVE_ASK = (yes, key) => ask([[yes, `setAnswer('${key}','Yes')`], ['Not yet', key === 'roll' ? "setAnswer('rollDirection','Not yet')" : `setAnswer('${key}','Not yet')`]]);
   const fresh7 = (s, k) => s.notYet[k] && s.moveAt != null && s.moveAt <= 7;
   const freshNo = (s, k) => s.notYet[k] && s.moveAt != null && s.moveAt <= 28;
-  card('rolling-soon', 'Safety', 1, s => s.d >= 105 && s.d <= 200 && (s.move == null || s.move === 'none'),
+  card('rolling-soon', 'Safety', 1, s => s.d >= 105 && s.d <= 180 && (s.move == null || s.move === 'none'),
     s => fresh7(s, 'rolling') ? 'Rolling is coming: two quick changes' : 'Rolling, or about to? Two quick changes',
     'Usually between 4 and 6 months. Change {him} on the floor or with a hand on {him}, and sweep the floor for small things.',
     Object.assign({ safety: 1, must: 1, topic: 'move', go: "openPage('safety-stage:rolling')" }, MOVE_ASK('Already rolling', 'roll')));
@@ -186,7 +186,7 @@
   card('first-bite', 'Feeding', 3, s => (s.d >= 150 && s.d <= 200 && s.solids !== 'started') || (s.solidsDays != null && s.solidsDays <= 45 && s.solidsTold != null && s.solidsTold <= 28 && opened(s, 'solids-1')),
     s => s.solidsDays == null ? 'Before the first bite: gagging vs choking' : 'Gagging vs choking: how to tell',
     'Gagging is loud, red-faced and normal: it’s how {he} {learns|learn}. Choking is silent. A short infant first aid video before you start helps.', { must: 1, topic: 'food', go: "openPage('chg:Feeding:d:setup')" });
-  card('solids-maybe', 'Feeding', 3, s => s.d >= 176 && s.d <= 300 && s.solids !== 'started', 'Starting solids? Lead with iron', 'Iron runs low around 6 months, so meat, beans, lentils or iron-fortified oatmeal make the best first foods.',
+  card('solids-maybe', 'Feeding', 3, s => s.d >= 176 && s.d <= 240 && s.solids !== 'started', 'Starting solids? Lead with iron', 'Iron runs low around 6 months, so meat, beans, lentils or iron-fortified oatmeal make the best first foods.',
     Object.assign({ must: 1, topic: 'food', go: "openPage('chg:Feeding:d:food')" }, ask([['Started already', "home2Solids(true)"], ['Not yet', "home2Solids(false)"]])));
   card('solids-2', 'Feeding', 2, s => s.solidsDays != null && s.solidsDays >= 0 && s.solidsDays <= 120, 'Offer peanut and egg early', 'Giving common allergens early, then keeping them in {his} week, lowers the chance of a food allergy. Severe eczema? Ask your pediatrician first.', { fromAnswer: 1, must: 1, go: "openPage('chg:Feeding:d:allergens')" });
   card('off-menu', 'Feeding', 2, s => s.solidsDays != null && s.solidsTold != null && s.solidsTold <= 70 && (opened(s, 'solids-1') || opened(s, 'solids-maybe') || s.solidsDays > 45), 'Still off the menu until 1', 'No honey, and no whole grapes, nuts or popcorn: they’re common choking risks before {his} first birthday.', { must: 1, go: "openPage('chg:Feeding:d:food')" });
@@ -212,14 +212,14 @@
   card('stuck-standing', 'Sleep', 4, s => moved(s, 'pulling') && s.moveAt != null && s.moveAt >= 5 && s.moveAt <= 35, 'Standing in the crib and can’t get down?', 'Very common for a few weeks. Practice bending {his} knees to sit down during the day.', { go: "openPage('chg:Sleep:d:nightwake')" });
   card('new-skills-sleep', 'Sleep', 4, s => moved(s, 'crawling') && s.moveAt != null && s.moveAt >= 3 && s.moveAt <= 24, 'New skills, more waking: it passes', 'Extra waking for a week or two is common while {he} {practices|practice}. Keeping bedtime the same helps.', { go: "openPage('chg:Sleep:d:regress')" });
   // Sleep shifts
-  card('six-month-sleep', 'Sleep', 3, s => s.d >= 183 && s.d <= 215, '{His} own room is now an option', 'Where {he} {sleeps|sleep} from here is your call: the room-sharing advice covers the first 6 months.', { catchup: 240, go: "openPage('chg:Sleep:d:where')" });
+  card('six-month-sleep', 'Sleep', 3, s => s.d >= 183 && s.d <= 215, '{His} own room is now an option', 'Where {he} {sleeps|sleep} from here is your call: the room-sharing advice covers the first 6 months.', { catchup: 215, go: "openPage('chg:Sleep:d:where')" });
   card('two-naps-soon', 'Sleep', 3, s => s.d >= 200 && s.d <= 270 && s.naps !== 2, 'Ready for two naps?', 'Between 6 and 9 months, the late nap often stops fitting, or bedtime drifts later. A week of that is the sign.',
     Object.assign({ topic: 'naps', go: "openPage('chg:Sleep:d:catnap')" }, ask([['On two naps', "home2Naps(2)"], ['Still three', "home2Naps(3)"]])));
   card('two-naps', 'Sleep', 3, s => s.naps === 2 && s.d <= 300 && s.napsAt != null && s.napsAt <= 28, 'Two naps: bedtime moves earlier', 'While {he} {adjusts|adjust}, move bedtime about 30 minutes earlier. The switch takes a week or two.', { fromAnswer: 1, go: "openPage('chg:Sleep:d:catnap')" });
-  card('separation', 'Daily rhythm', 4, s => s.d >= 240 && s.d <= 290, 'Clingier lately? It’s a good sign', 'Common from about 8 months, and it means {he} {knows|know} you. A short, same-every-time goodbye helps.', { catchup: 330, go: "openPage('topic:Development')" });
+  card('separation', 'Daily rhythm', 4, s => s.d >= 240 && s.d <= 290, 'Clingier lately? It’s a good sign', 'Common from about 8 months, and it means {he} {knows|know} you. A short, same-every-time goodbye helps.', { catchup: 300, go: "openPage('topic:Development')" });
   // Teeth
-  card('teething', 'Daily rhythm', 4, s => s.d >= 165 && s.d <= 300 && s.tooth !== true, 'Teething can start weeks before a tooth', 'Drool and chewing often start weeks before the first tooth, usually between 6 and 10 months. A chilled (not frozen) teething ring helps.',
-    Object.assign({ topic: 'tooth', catchup: 200, go: "openPage('chg:Daily rhythm:d:gums')" }, ask([['Has a tooth', "home2Tooth(true)"], ['Not yet', "home2Tooth(false)"]])));
+  card('teething', 'Daily rhythm', 4, s => s.d >= 150 && s.d <= 240 && s.tooth !== true, 'Teething can start weeks before a tooth', 'Drool and chewing often start weeks before the first tooth, usually between 6 and 10 months. A chilled (not frozen) teething ring helps.',
+    Object.assign({ topic: 'tooth', catchup: 240, go: "openPage('chg:Daily rhythm:d:gums')" }, ask([['Has a tooth', "home2Tooth(true)"], ['Not yet', "home2Tooth(false)"]])));
   card('first-tooth', 'Daily rhythm', 3, s => s.tooth === true && s.toothAt != null && s.toothAt <= 28, 'Teeth are here: time to brush', 'Brush twice a day with a rice-grain smear of fluoride toothpaste, the last time after the bedtime feed.', { fromAnswer: 1, go: "openPage('chg:Daily rhythm:d:teeth')" });
   card('dentist', 'Health', 4, s => s.tooth === true && ((opened(s, 'first-tooth') && s.toothAt >= 10 && s.toothAt <= 60) || s.d >= 320), 'The first dentist visit comes early', 'Book it once the first tooth is in, and by {his} first birthday. They’ll check {his} teeth and show you how to brush.', { go: "openPage('chg:Daily rhythm:d:teeth')" });
   // Round 2 (Nov 7): timely discoveries, new options and cards from what the parent does in Ahead.
@@ -227,7 +227,7 @@
   card('sleep-training', 'Sleep', 4, s => s.d >= 125 && s.d <= 180, 'Sleep training is an option, not a must', 'Some families try it from about 4–6 months, and many never do. Either way is fine.', { go: "openPage('sleep-stage:prepare')" });
   card('flying', 'Out and about', 3, s => visited('fly') && visited('fly') >= Date.now() - 21 * DAY, 'Flying soon? Feed at takeoff and landing', 'Sucking helps {his} ears adjust to the pressure change.', { go: "openPage('chg:Out and about:d:fly')" });
   card('carrier', 'Out and about', 4, s => visited('carry') && s.d >= 120 && s.d <= 170, 'Ready to face out in the carrier?', 'Once {his} head control is strong, check your carrier’s instructions, since many allow facing out around now.', { go: "openPage('chg:Out and about:d:carry')" });
-  card('fever-rule', 'Health', 2, s => s.d >= 3 && s.d <= 45, 'One rule for the first 3 months', 'A temperature of 100.4°F or more means calling your pediatrician, day or night. Save the after-hours number now.', { must: 1, go: "openPage('topic:Health')" });
+  card('fever-rule', 'Health', 2, s => s.d >= 3 && s.d <= 45, 'One rule for the first 3 months', 'A temperature of 100.4°F or more means calling your pediatrician, day or night. Save the after-hours number now.', { grace: 14, must: 1, go: "openPage('topic:Health')" });
   card('pacifier', 'Sleep', 3, s => s.d >= (s.feed === 'formula' ? 7 : 21) && s.d <= 49, 'A pacifier at sleep time helps', 'Offering one for naps and bedtime lowers SIDS risk, and it’s fine if it falls out.', { go: "openPage('chg:Sleep:d:where')" });
   card('flat-spots', 'Sleep', 4, s => s.d >= 21 && s.d <= 75, 'Switch which end {his} head goes', 'Alternating each night, plus tummy time, helps prevent a flat spot on the back of {his} head.', { go: "openPage('chg:Sleep:d:where')" });
   card('childcare-waitlist', 'Childcare', 3, s => s.d >= 28 && s.d <= 90 && !childcareSet(), 'Need childcare later? Look now', 'Infant spots can have waitlists of several months, so it helps to start looking early.', { go: "openPage('topic:Childcare')" });
@@ -242,7 +242,7 @@
   // Health
   card('checkup', 'Health', 2, s => !!checkupNow(s), s => { const c = checkupNow(s); return c.label[0].toUpperCase() + c.label.slice(1) + ' checkup: what to know'; }, s => TIP[checkupNow(s).label],
     { slot: s => checkupNow(s) && checkupNow(s).ahead >= 2 ? 'soon' : 'now', go: s => `openPage('health-visit:${checkupNow(s).age}')`, key: s => { const v = checkupNow(s); return v ? 'checkup:' + v.label + (v.ahead <= 3 ? ':week' : '') : 'checkup'; } });
-  card('rsv', 'Health', 2, s => [10, 11, 12, 1, 2, 3].includes(month_(s)) && s.d <= 243 && [4, 5, 6, 7, 8, 9].includes(s.birth.getMonth() + 1), 'Born before RSV season? Ask about the shot', 'It’s the top reason babies end up in the hospital. An antibody shot protects babies under 8 months through their first season.', { go: "openPage('topic:Health')", ask: [['Got it in pregnancy', 'void 0']] });
+  card('rsv', 'Health', 2, s => [10, 11, 12, 1, 2, 3].includes(month_(s)) && s.d <= 243 && [4, 5, 6, 7, 8, 9].includes(s.birth.getMonth() + 1), 'Born before RSV season? Ask about the shot', 'It’s the top reason babies end up in the hospital. An antibody shot protects babies under 8 months through their first season.', { go: "openPage('topic:Health')"});
   card('flu', 'Health', 3, s => [9, 10, 11, 12, 1, 2].includes(month_(s)) && s.d >= 183, 'Flu season: {his} first shot can start', '{His} first season takes two doses, 4 weeks apart, so starting early means {hes} covered sooner.', { go: "openPage('topic:Health')" });
   // Gear, outings, seasons
   card('sunscreen', 'Out and about', 4, s => s.d >= 180 && s.d <= 230 && month_(s) >= 4 && month_(s) <= 9, 'Sunscreen is fine to use now', 'SPF 30 or more on skin you can’t cover. Shade and a hat still come first.', { go: "openPage('chg:Daily rhythm:d:sun')" });
@@ -298,12 +298,16 @@
     'off-menu': "openPage('chg:Feeding:d:tray')", 'solids-late': "openPage('chg:Feeding:d:signs')", cluster: "openPage('chg:Feeding:d:nursing')"
   };
   C.forEach(c => { if (ROUTE[c.id]) c.go = ROUTE[c.id]; });
+  // Cards are notifications, not a form: no buttons on them. Home learns from its one top question, Memories,
+  // Development's "Seen it", and the Feeding and Sleep stages. Opening or dismissing a card clears it.
+  C.forEach(c => { delete c.ask; delete c.done; });
   // A card about a big change that's still ahead opens that change's Timeline page (one page, two ways in).
   const TIMELINE = { 'rolling-soon': 'roll', 'crawl-soon': 'crawl', 'stand-soon': 'pull', 'four-month': 'regress', 'crying-peak': 'crying', separation: 'sep', 'car-seat': 'carseat', milk12: 'milk' };
   C.forEach(c => { const t = TIMELINE[c.id]; if (!t) return; const base = c.go; c.go = s => (typeof timelineChangeLive === 'function' && timelineChangeLive(t)) ? `openPage('chg:Timeline:c:${t}')` : (typeof base === 'function' ? base(s) : base); });
 
   /* ---------- age basis and Safety's checklist ---------- */
-  const BIRTH_AGE = c => c.cat === 'Health' || c.id === 'iron';
+  // Development and sleep cards follow a preemie's adjusted age; the first-days basics and leave planning follow the birthday.
+  const BIRTH_AGE = c => c.cat === 'Health' || ['iron', 'vitamin-d', 'poop-colors', 'safe-sleep', 'formula-hour', 'first-bottle', 'pacifier', 'childcare-waitlist'].includes(c.id);
   const DONE_IN_SAFETY = { 'rolling-soon': ['small', 'changing'], reaching: ['small'], 'crawl-soon': ['gates', 'storage', 'outlets', 'anchor'], 'crawl-now': ['gates'] };
   const DONE_ANSWER = { 'stand-soon': () => answers.mattressLowest === 'Yes', 'stand-now': () => answers.mattressLowest === 'Yes' && !0, 'sitting-gear': () => answers.mattressLowered === 'Yes' || answers.mattressLowest === 'Yes' };
   const doneElsewhere = (c, s) => (DONE_IN_SAFETY[c.id] && DONE_IN_SAFETY[c.id].every(safetyDone)) || (c.id === 'stand-soon' && DONE_ANSWER['stand-soon']()) || (c.id === 'stand-now' && !opened(s, 'stand-soon') && answers.mattressLowest === 'Yes') || (c.id === 'sitting-gear' && DONE_ANSWER['sitting-gear']()) || (c.id === 'clocks' && noDst);
@@ -322,9 +326,8 @@
   const caution = c => !!c.safety || CAUTION.includes(c.id);
   function pick(s) {
     const first = s.firstDay === iso(NOW);
-    // Movement and food questions now live on the cards themselves (Home's top slot only asks about a missed checkup
-    // or milk), so nothing is held back waiting for a question the parent never sees.
-    const qTopic = null;
+    // While Home's one question is about a topic, cards on that topic wait for the answer.
+    const qTopic = s.q === 'movement' || s.q === 'crawl' || s.q === 'stand' ? 'move' : s.q === 'food' || s.q === 'food-progress' ? 'food' : s.q === 'naps' ? 'naps' : null;
     const live = C.filter(c => {
       if (c.once !== false && s.opened[KEY(c, s)] != null) return false;
       const sk = s.snooze[KEY(c, s)]; if (sk != null && Date.now() - sk < 21 * DAY) return false;
@@ -335,7 +338,7 @@
       const sc = forCard(c, s);
       let ok = false; try { ok = c.show(sc); } catch (e) {}
       if (ok) return true;
-      if (c.must && s.seen[c.id] == null && wasTrue(c, sc, 28, 2)) return true;      // waits for the parent
+      if (c.must && s.seen[c.id] == null && wasTrue(c, sc, c.grace != null ? c.grace : 7, 1)) return true;      // waits briefly for the parent, never past its moment
       return !!(first && c.catchup && sc.d <= c.catchup && wasTrue(c, sc, 400, 7));
     });
     const leaving = c => { const sc = forCard(c, s); try { return !c.show(at(sc, sc.d + 4)); } catch (e) { return true; } };
@@ -388,7 +391,7 @@
   window.home2Naps = n => { const st = store(); st.napsAt = iso(NOW); save(st); setAnswer('twoNaps', n === 2 ? 'Yes' : 'Stay'); };
   const ANSWERED = { 'Already rolling': 'Home now shows what rolling changes.', 'Already crawling': 'Home now shows what crawling changes.', 'Already pulling up': 'Home now shows what standing changes.',
     'Not yet': 'We’ll check back in a few weeks.', 'Started already': 'Home now shows first foods.', 'In a sleep sack now': 'One less thing to change when rolling starts.', 'We don’t swaddle': 'We won’t bring swaddling up again.',
-    'Has a tooth': 'Home now shows tooth care.', 'Already giving drops': 'We won’t bring drops up again.', 'Got it in pregnancy': 'We won’t bring the RSV shot up again.', 'On two naps': 'Home now shows the bedtime change.', 'Still three': 'We’ll check back in a few weeks.' };
+    'Has a tooth': 'Home now shows tooth care.', 'On two naps': 'Home now shows the bedtime change.', 'Still three': 'We’ll check back in a few weeks.' };
 
   /* ---------- markup ---------- */
   function row(c, s0) {
@@ -464,6 +467,18 @@
     return `<div class="quiet-category hub-page hub-detail" style="${yearTheme(P0.cat)}"><div class="guide-detail-top"><div class="monthly-page-header"><button class="monthly-back" onclick="back()" aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5-7 7 7 7"></path></svg></button><div><h1>${esc(typeof displayTopic === 'function' ? displayTopic(P0.cat) : P0.cat)}</h1><p>${esc(name())} · ${esc(monthLabel(actualMonth()))}</p></div><span class="monthly-save" aria-hidden="true"></span></div></div>`
       + `<div class="dev-area-head ss-head"><p class="hub-context">${esc(P0.ctx)}</p><h1>${esc(P0.title)}</h1></div><section class="ss-moment"><p class="ss-what">${esc(w(s, P0.what))}</p><section class="ss-do"><b>What to do</b><p>${esc(w(s, P0.doIt))}</p></section>${k(P0.know)}${k(P0.know2)}</section></div>`;
   }
+  // Home asks at most one question a week, so it never feels like a form. The missed-checkup question is separate.
+  if (typeof window.homeQuestion === 'function') {
+    const baseQ = window.homeQuestion;
+    window.homeQuestion = homeQuestion = function () {
+      const k = baseQ(); if (!k) return k;
+      const key = 'ahead-home2-lastq:' + journeyKey();
+      let last = null; try { last = JSON.parse(localStorage.getItem(key)); } catch (e) {}
+      if (last && last.k !== k && NOW.getTime() - last.at < 7 * DAY) return null;
+      if (!last || last.k !== k) { try { localStorage.setItem(key, JSON.stringify({ k, at: NOW.getTime() })); } catch (e) {} }
+      return k;
+    };
+  }
   window.render = render = function () {
     try { noteVisit(page); } catch (e) {}
     if (typeof page === 'string' && page.startsWith('home2:') && PAGES[page.slice(6)]) {
@@ -521,8 +536,7 @@
         bd.insertAdjacentHTML('beforeend', spec);
       }
     } catch (e) {}
-    // 1. Cards carry their own answers, so the top slot keeps only questions no card can ask: a missed checkup, and the milk question.
-    main.querySelectorAll('section.hub-q, section.connected-checkin').forEach(q => { const h = q.innerHTML; if (!/hubVisit|answerHomeQuestion\('milk'/.test(h)) q.remove(); });
+    // Home asks at most one question, in its own slot at the top; the cards below are notifications only.
     const s = state(), { now, soon } = pick(s);
     // remember what was shown, for "waits until seen"
     recordShown(s, now, soon);
