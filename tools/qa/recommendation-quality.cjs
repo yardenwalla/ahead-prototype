@@ -48,7 +48,8 @@ for (const feed of ['Breast milk','Formula','Both']) for (const experience of ['
 }
 for(const experience of ['preparing','new','established']) {
   const a=family(9);a.run(`navigate('categories');openPage('topic:Feeding');setFeedingStage('${experience}');openPage('topic:Feeding')`);
-  check(a.run("feedGroup(chgStageIndex('Feeding'))")==={preparing:2,new:3,established:4}[experience],'Solids answer changes stage');
+  // Started three months ago at 9 months sits on the First foods / Meals boundary, so either is right there.
+  check({preparing:[2],new:[3,4],established:[4]}[experience].includes(a.run("feedGroup(chgStageIndex('Feeding'))")),'Solids answer changes stage');
   if(experience==='preparing') check(clean(a.html()).includes('Bring your feeding questions to the checkup'),'Later starters get a concrete checkup connection');
   else check(/(Tastes, textures and lots of mess|Three meals, and milk still matters)/.test(clean(a.html())) && /step by step/.test(clean(a.html())),'Every solids guide stays available, whatever the age');
 }
