@@ -2968,7 +2968,9 @@
       .replace('<section class="ss-do">', h2('Fewer top-ups? Cut back slowly') + xCompare([['eye', 'When', 'Gaining well, and your pediatrician agrees.'], ['drop', 'Go slowly', 'About ½ oz less in one top-up, every few days.'], ['diaper', 'Watch diapers', 'Still 6+ wet a day? Keep going. Fewer? Go back a step.']]) + '<section class="ss-do">'); }; })();
 
   const base = window.changesRoute;
-  window.changesRoute = function (r) { const [, cat, s, a, x] = r.split(':'); if (cat === CAT && s === 'mock' && P[a]) { window.__fdLast = r; const out = P[a](x); return calm(a, a === 'dirD' ? out : tidy(out)); } return base(r); };
+  // Home cards link to the old Feeding detail pages; send each to the page that now covers it.
+  const OLDD = { vitd: 'xa:growth.3', signs: 'xa:r2.0', notready: 'xa:r2.0', setup: 'xa:r2.3', food: 'xa:f3.0', tray: 'xa:f3.0', lumpy: 'xa:f3.0', allergens: 'xa:f3.1', cup: 'xa:f3.3', day: 'xa:m4.0', milk12: 'z_milk12', after: 'z_milk12', cues: 'xa:feed.0', nursing: 'y_nurse', bottles: 'y_away', pump: 'y_away' };
+  window.changesRoute = function (r) { { const q = String(r).split(':'); if (q[1] === CAT && q[2] === 'd' && OLDD[q[3]]) r = 'chg:' + CAT + ':mock:' + OLDD[q[3]]; } const [, cat, s, a, x] = r.split(':'); if (cat === CAT && s === 'mock' && P[a]) { window.__fdLast = r; const out = P[a](x); return calm(a, a === 'dirD' ? out : tidy(out)); } return base(r); };
   const op = window.openPage;
   window.openPage = openPage = function (r, ...rest) { if (r === 'topic:Feeding') r = 'chg:Feeding:mock:dirD'; return op.call(this, r, ...rest); };
 })();
