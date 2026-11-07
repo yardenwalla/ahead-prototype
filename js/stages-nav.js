@@ -85,7 +85,7 @@
     const what = oi < ci ? 'Looking back' : cat === 'Health' ? 'Coming up' : 'Previewing';
     const stage = cat === 'Health' ? on.label.replace(/ months?$/, '-month').replace('First week', 'First-week') + ' checkup' : on.label;
     const when = ['Development', 'Daily rhythm', 'Health'].includes(cat) ? '' : ageOf(on) || (old && old.querySelector('span') ? old.querySelector('span').textContent.replace(/^[^·]*·\s*/, '') : '');
-    const backTxt = cat === 'Health' ? 'next checkup' : `${nm()}’s stage`;
+    const backTxt = cat === 'Health' ? 'your next checkup' : `${nm()}’s stage`;
     const changeable = on.change && CHANGEABLE.includes(cat);
     const icon = typeof catIcon === 'function' ? catIcon(cat) : '';
     const html = `<section class="hub-preview st-banner${changeable ? ' has-make' : ''}" aria-label="${what}"><div class="st-banner-top"><span class="st-banner-icon" aria-hidden="true">${icon}</span><div class="st-banner-copy"><small>${what}</small><b>${esc(stage)}${when ? ` <i>· ${esc(when)}</i>` : ''}</b></div>${changeable ? '' : `<button class="st-btn st-btn-back" onclick="${topicGo(cat)}">Back to ${backTxt}</button>`}</div>${changeable ? `<div class="st-banner-actions"><button class="st-btn st-btn-back" onclick="${topicGo(cat)}">Back to ${backTxt}</button><button class="st-btn st-btn-make" onclick="${on.change}">Make this ${nm()}’s stage</button></div>` : ''}</section>`;

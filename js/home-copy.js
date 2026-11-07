@@ -128,7 +128,7 @@ window.HOME_COPY = {
 "checkup:12-month": "Expect a quick blood test for iron, often lead too, plus vaccines.",
 "rsv:t": "Ask about the RSV shot",
 "rsv": "RSV is the top reason babies are hospitalized, and one shot greatly lowers {his} risk all season.",
-"flu:t": "Flu shots, from 6 months, in flu season",
+"flu:t": "First flu shots can start now",
 "flu": "Two doses a month apart the first season, so starting early helps.",
 "sunscreen:t": "Sunscreen is OK to use now",
 "sunscreen": "SPF 30 or more on skin you can’t cover, with shade and a hat first.",

@@ -263,7 +263,7 @@
     if (live() && age === focus) {   // a missed checkup shows here too, so it isn't missed by parents who skip Home
       let skipped = {}; try { skipped = JSON.parse(localStorage.getItem('ahead-visit-skipped:' + journeyKey())) || {}; } catch (e) {}
       const prev = WELL_VISITS[WELL_VISITS.indexOf(focus) - 1], missed = prev != null && !healthRecord(prev) && !skipped[prev] ? prev : null;
-      if (missed != null) missedLine = `<section class="hub-missed"><p>${F(`The ${healthJourneyLabel(missed).charAt(0).toLowerCase() + healthJourneyLabel(missed).slice(1)} isn’t in Memories yet.`)}</p><div><button onclick="hubVisitYes(${missed})">Add it</button><button onclick="hubVisitSkipped(${missed})">We skipped it</button></div></section>`;
+      if (missed != null) missedLine = `<section class="hub-missed"><p>${F(`Had the ${healthJourneyLabel(missed).charAt(0).toLowerCase() + healthJourneyLabel(missed).slice(1)}? Mark it done, or tell us you skipped it.`)}</p><div><button onclick="hubVisitYes(${missed})">Add it</button><button onclick="hubVisitSkipped(${missed})">We skipped it</button></div></section>`;
     }
     let b = h.hero({ eyebrow: eyebrow2, title, lead: conceptHealthSummary(age), button: done ? { label: 'Add notes from the checkup', onclick: `openHealthDetail(${age},'notes')` } : pastDue ? { label: 'Add it to Memories', onclick: `openPage('visit-form:${age}')` } : { label: planned ? 'Change the date' : 'Save the date', onclick: `openPage('visit-form:plan-${age}')` } });
     if (pastDue) b += `<div class="hub-browse"><button class="hub-link" onclick="openPage('visit-form:plan-${age}')">${F('Booked for later? Save the date')} ›</button></div>`;

@@ -644,7 +644,7 @@
         ['Routine', { icon: 'book', title: age >= 3 ? 'Your bedtime routine' : 'Start a short bedtime routine', sub: age >= 3 ? 'And move bedtime a little earlier' : 'From about 6–8 weeks: a feed, a song, then down', onclick: go('chg:Sleep:d:routine') }],
         ['Safe sleep', safe || { icon: 'sack', title: 'Stop swaddling at the first try to roll', sub: 'Then a sleep sack, arms free', onclick: go('chg:Sleep:d:swaddleoff') }]],
       rhythm: age < 6 ? [
-        ['Night sleep', { icon: 'moon', title: 'Waking more? Common around 4 months', sub: 'It usually passes in a few weeks', onclick: go('chg:Sleep:d:regress') }],
+        ['Night sleep', { icon: 'moon', title: 'The 4-month sleep regression', sub: 'Waking more for a few weeks. It passes', onclick: go('chg:Sleep:d:regress') }],
         ['Naps', { icon: 'clock', title: 'Naps settle into set times', sub: 'When {s’s} usually sleepy', onclick: go('chg:Sleep:d:predictable') }],
         ['Routine', { icon: 'book', title: 'Your bedtime routine', sub: 'Now with a set bedtime, around 7–8 pm', onclick: go('chg:Sleep:d:routine') }],
         ['Safe sleep', safe || { icon: 'roll', title: 'Rolling onto {p} tummy?', sub: 'What to do before and after {s} can roll back', onclick: go('chg:Sleep:d:rolling') }]] : [

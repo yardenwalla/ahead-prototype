@@ -442,6 +442,12 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
      at most one picture or video (only when it teaches), one sentence on what's normal, and one quiet line on
      when to call. A red line only for something truly urgent. Nothing else. */
   const Q2 = {
+    // Newborn diapers in one place (Nov 7): how many, how to change, and cleaning down there.
+    newdiapers: { k: 'diapers', title: 'Diapers in the first weeks', W: 'About 8–12 changes a day at first. Wet diapers are how you know feeding is going well.',
+      do: ['Keep a rough count of wet diapers this week: 6 or more a day from about day 6.', 'Wipe front to back, and let the skin dry.', 'Keep one hand on {o} on the changing table, always.'], vis: () => `<h2 class="hub-h2">${F('Wet diapers, day by day')}</h2>` + ramp() + `<h2 class="hub-h2">${F('How to change one')}</h2>` + diaperCarousel(),
+      N: 'Black, sticky poop for the first few days, then yellow and seedy (tan if formula). A pink stain in the first days is usually just very concentrated pee.',
+      call: 'Fewer wet diapers than this, or black poop after day 3.', urgent: 'White, gray or chalky poop: call right away.',
+      extra: () => `<h2 class="hub-h2">${F('Cleaning down there')}</h2>` + downThere() },
     firstweek: { k: 'diapers', title: 'Diapers in the first week', W: 'Wet diapers build up day by day as feeding gets going.',
       do: ['Feed often, 8–12 times a day.', 'Keep a rough count of wet diapers this week.', 'From about day 6, expect 6 or more a day.'], vis: () => ramp(),
       N: 'Black, sticky poop for the first few days, then yellow and seedy (tan if formula). A pink stain in the first days is usually just very concentrated pee.',
@@ -797,14 +803,14 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   // A line that changed at this stage carries "New".
   const ROUTINE = () => [
     { title: 'Most of what looks odd is normal', lead: 'The first weeks are the busiest for care, and it gets quicker fast.',
-      groups: [['Every day', [['wet', 'Wet diapers', 'Count them this week', 'By day 6, at least 6 a day', 1, 'firstweek'], ['diapers', 'Diaper changes', '8–12 a day', 'Wipe front to back', 1, 'change'], ['down', 'Care down there', ...(profile.pronouns === 'she' ? ['Wipe front to back', 'A little discharge is normal'] : profile.pronouns === 'he' ? ['Gentle, with warm water', 'Circumcised or not, both are covered'] : ['Gentle, with warm water', 'Care for girls and boys']), 1, 'downthere'], ['cord', 'The cord', 'Keep it clean and dry', 'It falls off in 1–3 weeks', 1], ['teeth', 'Gums', 'Wipe twice a day', 'With a soft, clean cloth', 1, 'gums'], ['clothes', 'Clothes', 'One layer more than you', 'No hat indoors']]],
+      groups: [['Every day', [['diapers', 'Diapers', '8–12 changes a day', 'At least 6 wet a day by day 6, and care down there', 1, 'newdiapers'], ['cord', 'The cord', 'Keep it clean and dry', 'It falls off in 1–3 weeks', 1], ['teeth', 'Gums', 'Wipe twice a day', 'With a soft, clean cloth', 1, 'gums'], ['clothes', 'Clothes', 'One layer more than you', 'No hat indoors']]],
                ['Each week', [['bath', 'Sponge baths', '2 or 3 a week', 'Until the cord falls off', 1], ['nails', 'Nails', 'Trim once a week', 'They grow fast, and they’re sharp']]]] },
     { title: 'Care settles into a rhythm', lead: 'The cord has healed, so tub baths can start, and most days look alike now.',
       groups: [['Every day', [['diapers', 'Diapers', 'At least 6 wet a day', 'Fewer poops can be normal now', 1], ['skin', 'Skin', 'Plain water on the face', 'Baby acne and cradle cap are common', 1, 'acne'], ['teeth', 'Gums', 'Wipe twice a day', 'With a soft, clean cloth', 0, 'gums'], ['clothes', 'Clothes', 'One layer more than you', 'No hat indoors']]],
                ['Each week', [['bath', 'Tub baths', 'About 3 a week', 'Hair at 2 or 3 of them', 1], ['nails', 'Nails', 'Trim once a week', 'Easiest while asleep']]],
                ['Outside', [['sun', 'Sun', 'Shade first', 'Long sleeves and a wide-brimmed hat']]]] },
     { title: 'Drool and busy hands', lead: 'Teething often starts, and bath time gets more fun. At 6 months, sunscreen can join shade.',
-      groups: [['Every day', [hasTooth() ? ['teeth', 'Teeth and teething', 'Brush twice a day', 'A rice-grain smear of toothpaste. A chilled ring helps sore gums', 1, 'teething'] : ['teeth', 'Teething and gums', 'Chewing and drool are normal', 'Wipe gums twice a day. A chilled ring helps', 1, 'teething'], ['skin', 'Drool', 'Pat the chin dry often', 'It keeps drool rash away', 1], ['diapers', 'Diapers', 'At least 6 wet a day', 'Poop changes once solids start']]],
+      groups: [['Every day', [hasTooth() ? ['teeth', 'Teeth and teething', 'Brush twice a day', 'A rice-grain smear of toothpaste. A chilled ring helps sore gums', 1, 'teething'] : ['teeth', 'Teething, drool and gums', 'Chewing and drool are normal', 'Wipe gums twice a day and pat the chin dry. A chilled ring helps', 1, 'teething'], ['diapers', 'Diapers', 'At least 6 wet a day', 'Poop changes once solids start']]],
                ['Each week', [['bath', 'Baths', 'About 3 a week', 'Often part of bedtime'], ['nails', 'Nails', 'Trim once a week', '']]],
                ['Outside', [['sun', 'Sun', careAge() >= 6 ? 'Shade, then SPF 30' : 'Shade first', careAge() >= 6 ? 'Sunscreen can start now' : 'Sunscreen only if there’s no shade', careAge() >= 6 ? 1 : 0]]]] },
     { title: 'First teeth and first steps', lead: 'Brushing starts with the first tooth, and the big tub comes once Maya sits steadily.',
