@@ -330,7 +330,7 @@
   const realStage = () => { const pk = picked(); if (pk != null && pk >= 0 && pk <= 4) return pk; try { const pr = typeof profile !== 'undefined' ? profile : {}; if (!pr.dob) return 1;
       const from = pr.early && pr.due ? new Date(pr.due + 'T12:00:00') : new Date(pr.dob + 'T12:00:00'), days = Math.max(0, (NOW - from) / 864e5), mo = days / 30.44;
       let v = days < 42 ? 0 : mo < 4 ? 1 : mo < 6 ? 2 : mo < 9 ? 3 : 4; const sol = typeof answers !== 'undefined' ? answers.solids : undefined;
-      if (v >= 3 && sol === 'Not yet') v = 2; else if (v === 3 && sol !== 'Yes') v = 2; else if (v === 2 && sol === 'Yes') v = 3; return v; } catch (e) { return 1; } };
+      if (v >= 3 && sol === 'Not yet') v = 2; else if (v === 3 && sol !== 'Yes') v = 2; else if (v === 2 && sol === 'Yes') v = 3; else if (v === 4 && sol === 'Yes' && ['new', 'starting'].includes(answers.foodExperience)) v = 3; return v; } catch (e) { return 1; } };
   window.__fdReal = realStage;
   const ageMo = () => { try { const pr = profile; const from = pr.early && pr.due ? new Date(pr.due + 'T12:00:00') : new Date(pr.dob + 'T12:00:00'); return (NOW - from) / 864e5 / 30.44; } catch (e) { return 12; } };
   const stg = () => (window.__fdStage == null ? realStage() : window.__fdStage);
@@ -2214,7 +2214,7 @@
 
   P.m_days = () => { const nurse = nurses(), b = isBreast();
     const dayHtml = (P.day() || ''), k0 = dayHtml.indexOf('<div class="hub-card" style="padding:14px 14px 8px">'), e0 = k0 >= 0 ? dayHtml.indexOf('<figure', k0) : -1, ribbon = k0 >= 0 && e0 > k0 ? dayHtml.slice(k0, e0) : '';
-    const fix = h => { const t = document.createElement('div'); t.innerHTML = h; return t.innerHTML; };
+    const fix = h => { if (typeof document.createElement !== 'function') return h; const t = document.createElement('div'); t.innerHTML = h; return t.innerHTML; };
     return cPage('Days and nights', b ? 'About every 2–3 hours, around the clock' : 'About every 2–4 hours, around the clock', 'Led by his cues. It gets more predictable by about 6 weeks.',
       `<section class="hub-card" style="padding:16px 16px 12px;margin:0 0 12px"><b style="display:block;font-size:17px;margin:0 0 10px">${F('A day of feeds')}</b><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div><strong style="display:block;font-size:28px;line-height:1.1">${b ? '8–12' : '6–10'}</strong><small style="display:block;color:var(--muted,#6b6578);font-size:13.5px;margin-top:3px">${F('Feeds a day')}</small></div><div><strong style="display:block;font-size:28px;line-height:1.1">${b ? '2–3 hrs' : '2–4 hrs'}</strong><small style="display:block;color:var(--muted,#6b6578);font-size:13.5px;margin-top:3px">${F('From the start of one feed')}</small></div></div>${fix(ribbon.replace('<div class="hub-card" style="padding:14px 14px 8px">', '<div style="padding:10px 0 0;margin-top:10px;border-top:1px solid var(--line,#f0e8eb)">'))}</section>`
       + h2('At night') + cDo('Keep it quick and calm', ['Dim light, quiet voice, no play.', 'Change his diaper only if it’s needed.', 'Bright days and dark nights help him sort day from night.'])
@@ -2286,7 +2286,7 @@
       + xKnow('How you’ll know he got enough', 'Wet diapers through the day, and he’s content for a while between most feeds.'));
   P.x_day = () => { const b = isBreast();
     const dayHtml = (P.day() || ''), k0 = dayHtml.indexOf('<div class="hub-card" style="padding:14px 14px 8px">'), e0 = k0 >= 0 ? dayHtml.indexOf('<figure', k0) : -1, ribbon = k0 >= 0 && e0 > k0 ? dayHtml.slice(k0, e0) : '';
-    const fix = h => { const t = document.createElement('div'); t.innerHTML = h; return t.innerHTML; };
+    const fix = h => { if (typeof document.createElement !== 'function') return h; const t = document.createElement('div'); t.innerHTML = h; return t.innerHTML; };
     return xPage('routine', 'x_day', b ? 'Feed about every 2–3 hours' : 'Feed about every 2–4 hours', 'Led by his cues, day and night. It gets more predictable by about 6 weeks.',
       `<section class="hub-card" style="padding:16px 16px 12px;margin:0 0 12px"><b style="display:block;font-size:17px;margin:0 0 10px">${F('A day of feeds')}</b><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div><strong style="display:block;font-size:28px;line-height:1.1">${b ? '8–12' : '6–10'}</strong><small style="display:block;color:var(--muted,#6b6578);font-size:13.5px;margin-top:3px">${F('Feeds a day')}</small></div><div><strong style="display:block;font-size:28px;line-height:1.1">${b ? '2–3 hrs' : '2–4 hrs'}</strong><small style="display:block;color:var(--muted,#6b6578);font-size:13.5px;margin-top:3px">${F('From the start of one feed')}</small></div></div>${fix(ribbon.replace('<div class="hub-card" style="padding:14px 14px 8px">', '<div style="padding:10px 0 0;margin-top:10px;border-top:1px solid var(--line,#f0e8eb)">'))}</section>`
       + xDo('What to do', ['Count from the start of one feed to the start of the next.', 'Some feeds come close together, some further apart. Both are normal.', 'A quick note of feeds and diapers helps in the first weeks.'])
@@ -2926,7 +2926,7 @@
     const tb = [...m.querySelectorAll('.fd-tabs button')].find(b => b.textContent.toLowerCase().includes(j[0].toLowerCase())); if (tb) tb.click();
     const d = j[1] && [...m.querySelectorAll('.fd-panel:not([hidden]) details.fd-acc, details.fd-acc')].find(x => getComputedStyle(x.closest('.fd-panel') || x).display !== 'none' && x.querySelector('summary').textContent.toLowerCase().includes(j[1].toLowerCase()));
     if (d) { d.open = true; setTimeout(() => d.scrollIntoView({ block: 'center' }), 30); } else if (tb) tb.scrollIntoView({ block: 'start' }); };
-  { const obs = new MutationObserver(() => { if (window.__fdJump && document.querySelector('#main .fd-tabs')) setTimeout(window.__fdApplyJump, 20); }); const start = () => { const m = document.querySelector('#main'); if (m) obs.observe(m, { childList: true }); }; if (document.readyState !== 'loading') start(); else document.addEventListener('DOMContentLoaded', start); }
+  if (typeof MutationObserver !== "undefined") { const obs = new MutationObserver(() => { if (window.__fdJump && document.querySelector('#main .fd-tabs')) setTimeout(window.__fdApplyJump, 20); }); const start = () => { const m = document.querySelector('#main'); if (m) obs.observe(m, { childList: true }); }; if (document.readyState !== 'loading') start(); else document.addEventListener('DOMContentLoaded', start); }
   const dirD0 = P.dirD; P.dirD = function (...a) { window.__fdPills = true; try { return dirD0.apply(this, a); } finally { window.__fdPills = false; } };
   const rnd = window.render;
   const curPage = () => { try { return (0, eval)('page'); } catch (e) { return ''; } };
@@ -2966,6 +2966,11 @@
   P.y_bottle = (() => { const prev = P.y_bottle; return () => { const h = prev(); if (!(nurses() && formulaFam())) return h;
     return h.replace(F('Many babies need fewer top-ups as nursing gets easier. Your pediatrician can help you cut back.'), F('Many babies need fewer top-ups as nursing gets easier. Cut back slowly, with your pediatrician’s okay.'))
       .replace('<section class="ss-do">', h2('Fewer top-ups? Cut back slowly') + xCompare([['eye', 'When', 'Gaining well, and your pediatrician agrees.'], ['drop', 'Go slowly', 'About ½ oz less in one top-up, every few days.'], ['diaper', 'Watch diapers', 'Still 6+ wet a day? Keep going. Fewer? Go back a step.']]) + '<section class="ss-do">'); }; })();
+
+
+  // Late starters: past about 7 months and not started yet, the stage lead says so and points to the checkup.
+  P.dirD = (() => { const prev = P.dirD; return (v) => { const h = prev(v); if (window.__fdStage !== 2 || ageMo() < 7) return h;
+    return h.replace(F('Milk is still all Ari needs. Most babies start solids around 6 months, once they show the signs.'), F('Iron matters more after 6 months, so it’s worth starting soon. Bring your feeding questions to the checkup.')); }; })();
 
   const base = window.changesRoute;
   // Home cards link to the old Feeding detail pages; send each to the page that now covers it.

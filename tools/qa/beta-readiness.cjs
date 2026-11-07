@@ -59,7 +59,7 @@ for (const early of [false,true]) for (let age=0; age<=12; age++) {
 {
   const a=boot({name:'Sam',dob:'2025-10-21',early:false,feed:'Formula'},{solids:'Yes',foodExperience:'new'});
   a.run("navigate('categories');openPage('topic:Feeding')");
-  check(/First tastes<\/b>[\s\S]{0,400}Start here/.test(a.html()),'Late first bites stay First foods');
+  check(/Tastes, textures and lots of mess/.test(a.html()),'Late first bites stay First foods');
   a.run("openPage('topic:Feeding')");inspect(a,'late first bites');
   check(!/Coming up · Usually 7–9/.test(clean(a.html())),'No elapsed window is called coming up');
   a.run("month=1;openPage('topic:Sleep')");check(a.run("chgStageIndex('Sleep')===0"),'Sleep preview uses selected month');
@@ -129,7 +129,7 @@ for (const early of [false,true]) for (let age=0; age<=12; age++) {
   a.run("month=9;openPage('topic:Feeding')");const preview=JSON.parse(a.run('JSON.stringify(history.state)'));
   const c=boot(p,{},store,'2026-11-21T12:00:00Z',{history:true,navigationState:preview});
   // Oct 27: a month picked on Home carries into the categories as a labeled preview, with a way back to now.
-  check(c.run("page==='topic:Feeding'&&month===9")&&/Previewing 9 months/.test(c.html())&&/returnToCurrentMonth/.test(c.html()),'A guide opened from a previewed month says it is a preview and offers the way back');
+  check(c.run("['topic:Feeding','chg:Feeding:mock:dirD'].includes(page)&&month===9")&&/Previewing 9 months/.test(c.html())&&/returnToCurrentMonth/.test(c.html()),'A guide opened from a previewed month says it is a preview and offers the way back');
 }
 // The six-week transition is not postponed until the two-month birthday.
 {

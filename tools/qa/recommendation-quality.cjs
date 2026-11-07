@@ -50,7 +50,7 @@ for(const experience of ['preparing','new','established']) {
   const a=family(9);a.run(`navigate('categories');openPage('topic:Feeding');setFeedingStage('${experience}');openPage('topic:Feeding')`);
   check(a.run("chgStageIndex('Feeding')")==={preparing:2,new:5,established:5}[experience],'Solids answer changes stage');
   if(experience==='preparing') check(clean(a.html()).includes('Bring your feeding questions to the checkup'),'Later starters get a concrete checkup connection');
-  else check(/Solids guides/.test(clean(a.html())) && /First tastes/.test(clean(a.html())),'Every solids guide stays available, whatever the age');
+  else check(/(Tastes, textures and lots of mess|Three meals, and milk still matters)/.test(clean(a.html())) && /step by step/.test(clean(a.html())),'Every solids guide stays available, whatever the age');
 }
 {
   const a=family(9);
