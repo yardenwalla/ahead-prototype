@@ -190,10 +190,10 @@ Picked from three tappable options (path, month by month, a link on Home cards).
 
 ## Home audit fixes (2026-11-07)
 Found by simulating 840 families (every feeding method, early/typical/late/born-early babies, a parent who never answers, 4 visit rhythms, 7 join ages, 4 birth seasons) through the live code: 22,740 Home screens. Files: `js/home-cards.js`, `js/home-copy.js` (v7.3).
-- "Not yet" now snoozes a card for 3 weeks instead of closing it, so Home keeps learning (the toast already promised "We'll check back"). Before, one "Not yet" ended the thread: Home never learned rolling for 74% of answering families and solids for 99%, and 402 screens told families who had started solids "No solids yet?".
+- "Not yet" now snoozes a card for 3 weeks instead of closing it, so Home keeps learning (the toast already promised "We'll check back"). Before, one "Not yet" ended the thread: Home never learned rolling for 76% of answering families and solids for 99%, and 413 screens told families who had started solids "No solids yet?".
 - Movement and food cards no longer wait on a question Home doesn't show any more (`qTopic`), which held babyproofing back for weeks.
 - A card shown on 3 visits without a tap retires, so an unopened card (often vitamin D) no longer blocks its category for months.
-- One safety card per screen, as the rules say (1,440 screens had two).
+- One safety card per screen, as the rules say (511 screens had two).
 - Checkup cards show twice (coming up, then that week), not on every visit.
 - Earlier babyproofing (from 6 months, or once rolling), mattress-down from crawling, allergens 3 days after first foods.
 - New cards: tummy time (days 5–42) and leftover formula after an hour (formula and both). 2-month checkup wording for formula families.
