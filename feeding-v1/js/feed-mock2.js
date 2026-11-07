@@ -2027,8 +2027,6 @@
   // 1. Feeding routine
   // Compact building blocks, same look as the app: small tinted icons, list rows in one card, thin folded questions.
   const CCSS = `<style>
-#main .nbc .hub-hero,#main .nbc .dev-area-head{padding-top:16px!important;padding-bottom:16px!important;min-height:0!important}
-#main .nbc .dev-area-head-art{display:none!important}
 #main .nbc .hub-h2{margin:22px 0 4px}
 #main .nbc .c-lead{margin:0 0 10px;font-size:15px;line-height:1.45;color:var(--muted,#6b6578)}
 #main .nbc .c-list{list-style:none;margin:0 0 12px;padding:4px 14px;background:var(--card,#fff);border:1px solid var(--line,#efe8ea);border-radius:18px}
@@ -2038,18 +2036,15 @@
 #main .nbc .c-list li>i svg{width:18px;height:18px}
 #main .nbc .c-list b{display:block;font-size:15px;font-weight:600;line-height:1.35}
 #main .nbc .c-list small{display:block;font-size:13.5px;line-height:1.4;color:var(--muted,#6b6578);margin-top:1px}
-#main .nbc .fd-acc{margin:0;border-radius:0;border:0;border-bottom:1px solid var(--line,#efe8ea);background:none;box-shadow:none}
-#main .nbc .fd-acc summary{padding:13px 2px!important}
-#main .nbc .fd-acc .fd-acc-ico{display:none!important}
-#main .nbc .fd-acc summary b{font-size:15.5px}
-#main .nbc .fd-acc-body{padding:0 2px 12px!important}
 #main .nbc .hub-tiles{gap:8px}#main .nbc .hub-fig-title:empty{display:none}#main .nbc .c-grid{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:14px 16px;background:var(--card,#fff);border:1px solid var(--line,#efe8ea);border-radius:20px;padding:16px;margin:0 0 12px}#main .nbc .c-grid-art{position:absolute;top:-14px;right:16px;width:44px;height:44px;border-radius:50%;background:#fff;display:grid;place-items:center;padding:10px;box-sizing:border-box;box-shadow:0 2px 8px rgba(80,40,60,.08)}#main .nbc .c-grid{padding-top:20px}#main .nbc .c-grid b{display:block;font-size:15px;font-weight:600;line-height:1.3}#main .nbc .c-grid small{display:block;font-size:13.5px;line-height:1.4;color:var(--muted,#6b6578);margin-top:2px}
 </style>`;
   const cGrid = (xs, icon, tint) => `<div class="c-grid"${tint ? ` style="background:${tint[0]};border-color:transparent"` : ''}>${icon ? `<span class="c-grid-art" style="color:${tint ? tint[1] : C.pink[1]}">${hubArt(icon, CAT)}</span>` : ''}${xs.filter(Boolean).map(([, t, sub]) => `<div><b>${F(t)}</b><small>${F(sub)}</small></div>`).join('')}</div>`;
+  const cDo = (label, xs) => `<section class="ss-do" style="--ss-bg:${C.pink[0]};--ss-ink:${C.pink[1]}"><b>${F(label)}</b><ul class="ss-do-list">${xs.filter(Boolean).map(t => `<li>${F(t)}</li>`).join('')}</ul></section>`;
   const cLead = t => `<p class="c-lead">${F(t)}</p>`;
   const cList = (xs, numbered) => `<ul class="c-list">${xs.filter(Boolean).map((x, i) => `<li><i>${numbered ? i + 1 : hubArt(x[0], CAT)}</i><span><b>${F(numbered ? x[0] : x[1])}</b>${(numbered ? x[1] : x[2]) ? `<small>${F(numbered ? x[1] : x[2])}</small>` : ''}</span></li>`).join('')}</ul>`;
   const cPage = (ctx, title, leadT, inner) => `<div class="nbc">` + nbPage(ctx, title, leadT, C.pink, tabCss + illCss + irowsCss + CCSS + inner) + `</div>`;
 
+  HEADART['Feeding routine'] = () => ART.often(5);
   P.nb_routine = () => { const nurse = nurses(), b = isBreast(), bot = isBottle(), fm = formulaFam();
     const dayHtml = (P.day() || ''), k0 = dayHtml.indexOf('<div class="hub-card" style="padding:14px 14px 8px">'), e0 = k0 >= 0 ? dayHtml.indexOf('<figure', k0) : -1, ribbon = k0 >= 0 && e0 > k0 ? dayHtml.slice(k0, e0) : '';
     return cPage('Feeding routine', 'Feeding routine', 'What feeding looks like now, what might surprise you, and how to make it easier.',
@@ -2058,9 +2053,9 @@
       + cueStrip().replace(`<b class="hub-fig-title">${F('Hunger cues, early to late')}</b>`, '')
       + accs([['eye', 'Hungry, or wants comfort?', '', ['~If it’s been a while, offer a feed. If he just ate, a cuddle or a pacifier' + (nurse ? ' (once nursing is going well)' : '') + ' may settle him.'], '', '']])
       + h2('Some newborns need waking') + cLead('Until he’s back to birth weight, about every 3 hours.')
-      + cGrid([['shirt', 'Undress him', 'Down to his diaper'], ['hand', 'Stroke his feet', 'Or his back, gently'], ['diaper', 'Change his diaper', 'Midway through'], b && nurse ? ['drop', 'Breast compressions', 'Keep milk flowing'] : ['smile', 'Pause and burp', 'Then offer again']], 'sun', ['#fff3dc', '#8a6a2a'])
+      + cDo('Try this', ['Undress him down to his diaper.', 'Stroke his feet or back, gently.', 'Change his diaper midway through.', b && nurse ? 'Use breast compressions to keep milk flowing.' : 'Pause, burp, then offer again.'])
       + h2('Evenings can get intense') + cLead('Feed after feed for a few hours is normal.')
-      + cGrid([[b ? 'roll' : 'bottle', b ? 'Switch sides often' : 'Smaller bottles', b ? 'Keeps milk flowing' : 'More often'], ['diaper', 'Change first', 'So he stays sleepy after'], ['moon', 'Dim and quiet', 'Save play for the day'], ['heart', 'Take turns', 'A longer stretch each']], 'moon', ['#efedff', '#625084'])
+      + cDo('What helps', [b ? 'Switch sides often to keep milk flowing.' : 'Offer smaller bottles, more often.', 'Change his diaper before the feed, so he stays sleepy after.', 'Keep nights dim and quiet. Save play for the day.', 'Take turns, so you each get a longer stretch.'])
       + h2('It won’t always be this frequent') + hubStageStrip({ title: '', items: [['clock', 'Around 6 weeks', 'Fussy evenings peak, then ease'], ['moon', '6–8 weeks', 'Cluster feeding eases'], ['smile', '2–3 months', 'A longer night stretch']], cat: CAT })
       + h2('Common questions') + accs([['eye', 'Days and nights mixed up?', '', ['~Keep days bright and nights quiet and boring. It improves over a few weeks.'], '', ''], ['eye', 'Should I track feeds?', '', ['~A short note of feeds and diapers helps at first. Stop once things feel settled, unless your pediatrician asks you to keep going.'], '', '']])); };
 
