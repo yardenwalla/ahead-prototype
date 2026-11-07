@@ -2642,7 +2642,8 @@
   P.y_away = () => { const b = isBreast();
     return yPage(XC.p1, 'Away from home', 'Bottles for daycare, a sitter or a day out', 'The same safe bottles, packed to travel.',
       xCompare([['star', 'Label', 'His name and the date on every bottle.'], ['snow', 'Keep cold', 'A cooler with ice packs, up to 24 hours.'], ['clock', 'How much', b ? 'About 1–1½ oz for each hour you’re apart.' : 'Pre-measured powder, water separately.']])
-      + xDo('What to tell caregivers', ['Feed on cue, not the clock.', 'Hold the bottle level, and let him pause.', b ? 'Small bottles, so less is wasted.' : 'Mix right before the feed.'])); };
+      + xDo('What to tell caregivers', ['Feed on cue, not the clock.', 'Hold the bottle level, and let him pause.', b ? 'Small bottles, so less is wasted.' : 'Mix right before the feed.'])
+      + (b ? xNote('Before you’re apart:', 'build a small freezer stash over a few weeks, and have someone else give a bottle once or twice a week.') : '')); };
   P.y_growth = () => { const b = isBreast();
     return yPage(XC.g1, 'Growing', b ? 'Fewer poops can be normal now' : 'Steady growth at checkups', b ? 'After about 6 weeks, some breastfed babies poop only every few days. Soft is what matters.' : 'Your pediatrician weighs him at 2 and 4 months.',
       xNums('', [['6+', 'Wet diapers a day, still'], ['About 2×', 'Birth weight by 4–5 months']])
@@ -2736,7 +2737,7 @@
       + `<section class="ss-moment">` + xKnow('Call your pediatrician', 'If he has a fever, refuses milk too, has fewer wet diapers, or keeps vomiting. Call any time you’re unsure.') + `</section>`); };
   window.SHOME = (v) => { const b = isBreast(), fm = formulaFam(), h = H(), early = isEarly();
     const cr = (c, icon, title, sub, id) => h.row({ cat: CAT, icon, title, sub, onclick: go(id) }).replace(/<span class="hub-dot">[\s\S]*?<\/span><span class="hub-row-copy">/, `<span class="hub-dot">${hubArt(icon, CAT).replace('data-art=', 'data-keep=')}</span><span class="hub-row-copy">`).replace('class="hub-row', `style="--sm-bg:${c[0]};--sm-ink:${c[1]}" class="sm-row hub-row`);
-    const R = v === 2 ? [[XG, 'eye', 'Start solids when he shows all the signs', 'Usually around 6 months', 'z_signs'], [XG, 'chair', 'Get set up for the first bite', 'And learn choking first aid', 'z_setup'], [XL, 'shield', 'Eczema or food allergies in the family?', 'Ask about starting peanut sooner', 'z_allergy'], b && [XC.g1, 'drop', 'Iron drops from 4 months', fm ? 'If most of his milk is breast milk' : 'Breast milk is low in iron', 'z_iron']]
+    const R = v === 2 ? [[XG, 'eye', 'Start solids when he shows all the signs', 'Usually around 6 months', 'z_signs'], [XG, 'highchair', 'Get set up for the first bite', 'And learn choking first aid', 'z_setup'], [XL, 'shield', 'Eczema or food allergies in the family?', 'Ask about starting peanut sooner', 'z_allergy'], b && [XC.g1, 'drop', 'Iron drops from 4 months', fm ? 'If most of his milk is breast milk' : 'Breast milk is low in iron', 'z_iron']]
       : v === 3 ? [[XG, 'bowl', 'Start with iron-rich foods', 'Then build variety and texture', 'z_tray'], [XL, 'star', 'Common allergens early', 'Then keep them going', 'z_allergens'], [XL, 'eye', 'Gagging is normal. Choking is silent.', 'How to tell, and what to do', 'z_gag'], [XL, 'shield', 'Not yet, until his first birthday', 'Honey, whole nuts and more', 'z_notyet'], [XC.d1, 'cup', 'Sips of water from a cup', '4–8 oz a day, at most', 'z_water']]
       : [[XG, 'clock', 'Three meals, plus milk', 'An example day', 'z_day'], [XG, 'hand', 'Soft pieces of family food', 'What he can eat now', 'z_family'], [XC.d1, 'cup', 'Cups now, whole milk at 12 months', 'What changes at his first birthday', 'z_milk12'], [XC.g1, 'leaf', 'Appetite goes up and down', 'And that’s normal', 'z_appetite']];
     const tough = v === 2 ? 'x_tough' : 'z_tough', toughSub = v === 2 ? 'Distracted feeds, spit-up, gas, poop' : 'Gagging, refusing food, a rash, constipation';
@@ -2745,6 +2746,41 @@
       : v === 3 ? [['Normal', 'Gagging, mess, a few bites a day, and changes in poop.'], ['Call your pediatrician', 'Hives or vomiting after a food, or fewer wet diapers. Choking or trouble breathing: call 911.']]
       : [['Normal', 'Big days and small days, and lots of mess.'], ['Call your pediatrician', 'Refusing most foods for weeks, or a reaction after a food. Trouble breathing: call 911.']];
     return `<h2 class="hub-h2">${F('What’s new now')}</h2><div class="hub-list">${R.filter(Boolean).map(r => cr(...r)).join('')}</div>` + rough + h.versus('Normal, or time to call?', vs[0], vs[1]); };
+
+  // ---- Solids depth pass (Nov 7): bring back what the old solids pages had (textures by age, safe shapes, the full
+  // gagging vs choking page with first aid, teething and sick days), and use the right icons. ----
+  P.z_signs = () => yPage(XG, 'Getting ready', 'Start solids when he shows all the signs', 'Usually around 6 months, and not before 4. Milk is still all he needs until then.',
+      steps([['head', 'Steady head', 'Holds it up well'], ['sit', 'Sits with support', 'In a high chair'], ['eye', 'Interested', 'Watches and reaches for food'], ['swallow', 'Swallows', 'Doesn’t push food back out']], false)
+      + xDo('What to do', ['Wait for all four signs, not just one.', 'Ask your pediatrician at the 4- or 6-month checkup.'])
+      + xKnow('Good to know', 'Starting early doesn’t help him sleep longer.'));
+  P.z_setup = () => yPage(XG, 'Getting ready', 'Get set up for the first bite', 'A few things to have before you start, and one skill to learn.',
+      xCompare([['highchair', 'High chair', 'Upright, with a harness and footrest.'], ['bowl', 'Soft spoon', 'And a bib that catches.'], ['cup', 'Open cup', 'For sips of water.']])
+      + xDo('Before you start', ['Learn infant choking first aid. A short class or video is enough.', 'Pick a calm time of day, when he’s not too hungry or tired.'])
+      + xKnow('Purées, finger foods, or both?', 'All work. Spoon-fed purées, soft finger strips, or a mix. Pick what suits your family.'));
+  P.z_tray = () => { const b = isBreast(), fm = formulaFam();
+    return yPage(XG, 'On the tray', 'Start with iron-rich foods, then build variety', 'There’s no required order, and a few bites is plenty. Textures change as he grows.',
+      hubStageStrip({ title: 'Textures, as he grows', items: [['bowl', 'Around 6 months', 'Smooth and mashed'], ['strips', '6–8 months', 'Soft, finger-size strips'], ['pieces', '9 months on', 'Soft, pea-size pieces']], cat: CAT })
+      + xDo('What to do', ['First: iron-rich foods like meat, beans, eggs or iron-fortified cereal.', 'Then vegetables, fruit and soft family food, in any order.', 'Once a day at first, then 2–3 times a day by 8–9 months.', 'Let him lead: wait for an open mouth, stop when he turns away.'])
+      + xKnow('Milk still comes first', b && !fm ? 'Keep nursing on demand. Solids add to milk, they don’t replace it yet.' : 'About 24–32 oz of ' + (b ? 'milk' : 'formula') + ' a day. Solids add to it, they don’t replace it yet.')
+      + xNote('Safe shapes:', 'soft enough to squash between finger and thumb.')); };
+  P.z_gag = () => yPage(XL, 'Safety', 'Gagging is normal. Choking is silent.', 'Gagging is how he learns to handle food. Stay close, and stay calm.',
+      xTwo(['Gagging: normal', 'Loud: coughing, sputtering, red face, tongue out. Let him work it out.'], ['Choking: act now', 'Silent or a high squeak, can’t cough or cry, turning blue.'], true)
+      + xFix('Making it less likely', [['Sitting upright', 'Always, and always watched.'], ['Safe shapes', 'Soft and squashable, finger-size.'], ['No rushing', 'Seated for every bite, never on the move.']])
+      + h2('If he’s choking') + steps([['hand', 'Back blows, 5 times', 'Face down along your forearm, head lower than his chest'], ['heart', 'Chest thrusts, 5 times', 'Face up, two fingers in the middle of his chest'], ['clock', 'Repeat', 'Until it comes out, or help arrives']], true)
+      + `<p class="ss-small"><a href="https://www.youtube.com/results?search_query=red+cross+infant+choking+first+aid" target="_blank" rel="noopener" style="color:var(--ss-ink);font-weight:600">${F('Watch infant choking first aid')} ↗</a> ${F('American Red Cross.')}</p>`
+      + xNote('Call 911', 'if he can’t cough, cry or breathe. Have someone call while you start back blows. If he stops responding, start CPR.'));
+  P.z_teeth = () => yPage(XL, 'Feeding challenges', 'Teething, and shorter feeds', 'Sore gums can make him fussy at feeds for a few days.',
+      xDo('What helps', ['A cold teether or a clean, cold washcloth to chew before feeds.', 'Chilled soft foods, like yogurt or mashed fruit.', 'Shorter, more frequent feeds for a few days.'])
+      + xKnow('Not for babies', 'Teething gels with benzocaine, and amber necklaces.')
+      + xNote('Worth a call:', 'a fever over 102°F, or refusing to drink. Teething doesn’t cause high fevers.'));
+  P.z_sick = () => yPage(XL, 'Feeding challenges', 'Feeding when he’s sick', 'He may eat less for a few days. Milk and fluids matter most.',
+      xDo('What helps', ['Offer milk more often, in smaller amounts.', 'Stuffy nose? Saline drops and gentle suction before feeds.', 'Solids can wait until he feels better.'])
+      + xNote('Worth a call:', 'fewer wet diapers, refusing milk, or vomiting that keeps happening.'));
+  P.z_tough = (() => { const prev = P.z_tough; return () => prev().replace('</div><section class="ss-moment">', [['z_teeth', 'tooth', 'Teething and feeds', 'Sore gums, shorter feeds'], ['z_sick', 'thermo', 'Sick, or a stuffy nose', 'Feeding when he’s unwell']].map(([id, icon, title, sub]) => H().row({ cat: CAT, icon, title, sub, onclick: go(id) }).replace(/<span class="hub-dot">[\s\S]*?<\/span><span class="hub-row-copy">/, `<span class="hub-dot">${hubArt(icon, CAT).replace('data-art=', 'data-keep=')}</span><span class="hub-row-copy">`)).join('') + '</div><section class="ss-moment">'); })();
+  P.z_family = () => yPage(XG, 'On the tray', 'Soft pieces of family food', 'Once he picks things up with finger and thumb, most of what you eat works, softened and cut small.',
+      xCompare([['pieces', 'Pea-size', 'Soft pieces he can pinch.'], ['plate', 'Unsalted', 'Set his portion aside before salting.'], ['meat', 'Iron-rich', 'Something with iron at each meal.']])
+      + xDo('What to do', ['Let him feed himself, with a spoon to practice.', 'Cut round foods into thin strips, and quarter grapes lengthwise.', 'Cook hard vegetables until soft, and spread nut butter thin.']));
+  window.SHOME = (() => { const prev = window.SHOME; return v => prev(v).replace(hubArt('chair', CAT).replace('data-art=', 'data-keep='), hubArt('highchair', CAT).replace('data-art=', 'data-keep=')).replace(F('Gagging, refusing food, a rash, constipation'), F('Gagging, refusing food, a rash, teething, sick days')); })();
 
   // ---- Milk feeds (6 weeks–4 months), rebuilt on the Newborn model (Nov 5): four subject pages with tabs, grouped by moment. ----
   HEADART['Feeds & rhythm'] = () => ART.often(5);
