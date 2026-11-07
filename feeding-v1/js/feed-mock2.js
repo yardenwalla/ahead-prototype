@@ -1701,8 +1701,7 @@
       + tabbed('#c27a52', [
         ['A day', h2('What a day of feeds looks like') + ribbon
           + small('This is an example, not a schedule.', 'He leads, and no two days look the same.')
-          + h2('How long a feed takes') + H().tiles([['How long', 'It varies', b && nurse ? 'Often 10–20 min a side at first' : 'Often 10–20 minutes a bottle'], ['When to stop', 'When he’s done', 'He slows, lets go or turns away']])
-          + small('Short and long feeds can both be normal,', 'especially at first. Watch his diapers and weight, not just the minutes.')
+          + h2('How long a feed takes') + small('It varies.', (b && nurse ? 'Often 10–20 minutes a side at first' : 'Often 10–20 minutes a bottle') + ', but short and long feeds can both be normal. Watch his diapers and weight, not the minutes.')
           + qa([
             ['sun', 'Should I wake him to feed?', ['~Yes, if it’s been about 3 hours, until he’s back to birth weight. That’s usually around 2 weeks, and your pediatrician will tell you when you can stop.']],
             ['moon', 'How do I keep him awake during a feed?', ['~Newborns often doze off mid-feed.', { html: steps([['shirt', 'Undress him', 'Down to his diaper'], ['hand', 'Stroke his feet', 'Or his back'], ['diaper', 'Change his diaper', 'Halfway through'], b && nurse ? ['drop', 'Squeeze gently', 'Behind the nipple, to keep milk flowing'] : ['smile', 'Pause and burp', 'Then offer again']], false) }]],
