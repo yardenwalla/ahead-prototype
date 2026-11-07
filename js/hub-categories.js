@@ -356,12 +356,14 @@
   function detailFrame(cat, context, title, lead, inner) {
     return `<div class="quiet-category hub-page hub-detail" data-overview="${cat}" style="${yearTheme(cat)}">${detailPageTop(cat)}<div class="hub-detail-head"><span class="hub-big">${hubArt(hubPageIcon(cat, title), cat)}</span><p class="hub-context">${F(context)}</p><h1>${F(title)}</h1>${lead ? `<p class="hub-lead">${F(lead)}</p>` : ''}</div>${inner}</div>`;
   }
-  // One fever rule, used everywhere fever comes up. Source: AAP, HealthyChildren.org "Fever: When to Call the Pediatrician":
-  // under 3 months, 100.4°F or higher; any age, a fever that keeps rising above 104°F; under 2, a fever lasting more than 24 hours.
+  // One fever rule, used everywhere fever comes up (Ahead content standard, AAP / HealthyChildren.org):
+  // under 3 months, 100.4°F or higher; 3–6 months, 101°F or higher; 6 months and up, 103°F or higher;
+  // and at any age under 2, a fever lasting more than a day.
+  window.feverTemp = m => m < 3 ? '100.4°F' : m < 6 ? '101°F' : '103°F';
   window.feverRule = m => m < 3
     ? 'A temperature of 100.4°F or higher: call your pediatrician right away, day or night.'
-    : 'A fever that keeps going above 104°F, lasts more than a day, or comes with a rash, unusual sleepiness or fewer wet diapers.';
-  window.feverBand = m => m < 3 ? 'Under 3 months' : '3 months and up';
+    : `A temperature of ${feverTemp(m)} or higher, or any fever that lasts more than a day. Call sooner for a rash, unusual sleepiness or fewer wet diapers.`;
+  window.feverBand = m => m < 3 ? 'Under 3 months' : m < 6 ? '3 to 6 months' : '6 months and up';
   function healthDetail(id) {
     const h = H(), under3 = actualMonth() < 3;
     if (id === 'you') return detailFrame('Health', 'Looking after you', 'How are you doing?', 'Caring for a new baby is a lot, for every parent. Your health matters too, and asking for help is part of looking after Maya.',
@@ -374,7 +376,7 @@
     // (take a temperature, help them feel better, tummy bugs, colds), and the emergency signs last (AAP, HealthyChildren.org).
     const m = actualMonth(), u3 = m < 3;
     const call911 = `<section class="hub-card hub-callout"><b>${F('Call 911 right away')}</b><p>${F('If Maya struggles to breathe or turns blue, won’t wake or is floppy, or has a seizure.')}</p></section>`;
-    const feverCard = `<section class="hub-card hub-fever is-calm"><div class="hub-fever-bands is-one"><div><small>${F(feverBand(m))}</small><b>${u3 ? '100.4°F<span> or higher</span>' : 'Above 104°F<span> and keeps going up</span>'}</b><p>${F(u3 ? 'Call your pediatrician right away, day or night.' : 'Or a fever that lasts more than a day. Call your pediatrician.')}</p></div></div><p class="hub-fever-note">${F('Also call if Maya seems very unwell, has a rash, is unusually sleepy, or is still unwell after the fever comes down.')}</p></section>`;
+    const feverCard = `<section class="hub-card hub-fever is-calm"><div class="hub-fever-bands is-one"><div><small>${F(feverBand(m))}</small><b>${feverTemp(m)}<span> or higher</span></b><p>${F(u3 ? 'Call your pediatrician right away, day or night.' : 'Or a fever that lasts more than a day. Call your pediatrician.')}</p></div></div><p class="hub-fever-note">${F('Also call if Maya seems very unwell, has a rash, is unusually sleepy, or is still unwell after the fever comes down.')}</p></section>`;
     // One flow, in the order a parent lives it: check for a fever and know when that means calling,
     // make them comfortable, then the two common bugs, and the emergency signs last.
     const thermo = () => {

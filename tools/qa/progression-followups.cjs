@@ -67,7 +67,7 @@ for(let family=0;family<100;family++) {
   check(w.run("foodStage()==='textures'"),'An 8-month-old who started a while ago is on textures');
   check(k.run("homeQuestionQueue().includes('crawl')"),'Moving question is a candidate from 6 months');
   const f=boot({name:'Ava',dob:'2026-06-20',feed:'Both',pronouns:'she'},{},{},'2026-10-27T12:00:00Z');
-  check(/104°F/.test(f.run('feverRule(actualMonth())')) && /more than a day/.test(f.run('feverRule(actualMonth())')),'From 3 months: the fever rule follows the AAP (104°F, or more than a day)');
+  { const r=f.run('feverRule(actualMonth())'), m=f.run('actualMonth()'); check(new RegExp(m<6?'101°F':'103°F').test(r) && /more than a day/.test(r),'From 3 months: the fever rule follows the age band (101°F at 3–6 months, 103°F from 6, or more than a day)'); }
   const l=boot({name:'Lila',dob:'2026-04-02',feed:'Both',pronouns:'she'},{},{},'2026-10-27T12:00:00Z');
   l.run("navigate('categories');openPage('topic:Health')");
   check(l.run("((stageItemsLast()||{}).items||[]).some(x => x.now && x.nowLabel === 'Next')"),'A checkup months away is marked Next, not Now');

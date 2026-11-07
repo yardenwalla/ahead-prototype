@@ -66,7 +66,7 @@
     const list = `<h2 class="hub-h2">At this checkup</h2><div class="hub-list">${row('shield', 'blue', 'Shots', shotsSub)}${doses(v.shots)}${v.oral ? row('drop', 'green', 'By mouth', 'Drops, not a shot') + doses(v.oral) : ''}</div>`;
     const season = `<h2 class="hub-h2">Depends on the season</h2><div class="hub-list">${row('snow', 'peach', title, 'Your pediatrician will say which are due')}<ul class="hv-doses">${s.map(([n, d]) => `<li><b>${n}</b><em>${d}</em></li>`).join('')}</ul></div>`;
     // REVIEW: for babies under 3 months, any fever of 100.4°F or more needs a call.
-    const call = age <= 2 ? 'A fever of 100.4°F or higher while {s} {are|is} under 3 months, crying that won’t stop for 3 hours, or swelling that keeps growing.' : 'A fever that keeps going above 104°F, crying for 3 hours or more, or swelling that keeps growing.';
+    const call = age <= 2 ? 'A fever of 100.4°F or higher while {s} {are|is} under 3 months, crying that won’t stop for 3 hours, or swelling that keeps growing.' : 'A fever of ' + (typeof feverTemp === 'function' ? feverTemp(age) : '101°F') + ' or higher, crying for 3 hours or more, or swelling that keeps growing.';
     const after = H().versus('After the shots', ['Normal for a day or two', 'Fussy or sleepy, a low fever, and a sore red spot where the shot went in.' + (age === 12 ? ' A fever or rash 1–2 weeks later can also be normal after MMR and chickenpox.' : '')], ['Call your pediatrician', call]);
     return frame(head(age, 'blue', 'Vaccines', v.lead) + list + season + after + H().note('Based on the schedule pediatricians recommend. Your pediatrician confirms what’s due from Maya’s record.'));
   }

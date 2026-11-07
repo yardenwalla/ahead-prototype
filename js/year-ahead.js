@@ -66,7 +66,10 @@
     const a = ageNow(), nm = name(), done = doneNow();
     const ahead = C.filter(c => c.end > a && !done[c.id]).sort((x, y) => x.start - y.start), next = ahead.slice(0, 3), later = ahead.slice(3);
     const behind = C.filter(c => c.end <= a || done[c.id]).sort((x, y) => x.start - y.start);
-    const born = parse(profile.dob), monthDate = m => { const d = new Date(born); d.setMonth(d.getMonth() + m); return d.toLocaleDateString('en-US', { month: 'long' }); };
+    // Ages here follow adjusted age for a baby born early, so dates count from the due date to match.
+    // Checkups follow the birthday, so each sits at the adjusted month it falls in.
+    const early = !!(profile.early && profile.due), born = parse(early ? profile.due : profile.dob), gap = early ? Math.max(0, (parse(profile.due) - parse(profile.dob)) / MONTH) : 0;
+    const monthDate = m => { const d = new Date(born); d.setMonth(d.getMonth() + m); return d.toLocaleDateString('en-US', { month: 'long' }); };
     const label = m => m >= 12 ? '1 year' : `${m} months`;
     const node = '<span class="ya-node" aria-hidden="true"></span>', chev = '<span class="hub-chev" aria-hidden="true">›</span>';
     let h = `<div class="ya-page ya-pathpage"><div class="eyebrow ya-eyebrow">${F(`${nm}’s year ahead`)}</div><h1>${F('Timeline')}</h1><p class="next-lead">${F(`Where ${nm} is now, and the big changes ahead. Tap any to read ahead.`)}</p><ol class="ya-path">`;
@@ -74,11 +77,11 @@
     h += `<li class="ya-here">${node}<b>${F(`${nm} now`)}</b><small>${F(ageLabel(a))}</small></li>`;
     h += next.map(c => `<li class="ya-row is-next" style="${yearTheme(c.cat)}">${node}<button onclick="${c.go}"><span class="ya-row-art">${hubArt(c.icon, c.cat)}</span><span class="ya-row-copy"><small class="ya-when">${F(range(c))} · ${F(whenShort(c, a))}</small><b>${F(c.title)}</b><span class="ya-why">${F(c.why)}</span>${windowBar(c, a)}</span>${chev}</button></li>`).join('');
     const months = {}; later.forEach(c => { const m = Math.min(12, Math.max(Math.ceil(a), Math.floor(c.start))); (months[m] = months[m] || []).push(c); });
-    CHECKUPS.filter(v => v > a).forEach(v => { months[v] = months[v] || []; });
+    const checks = {}; CHECKUPS.filter(v => v > a + gap).forEach(v => { const m = Math.min(12, Math.max(Math.ceil(a), Math.round(v - gap))); (checks[m] = checks[m] || []).push(v); months[m] = months[m] || []; });
     Object.keys(months).map(Number).sort((x, y) => x - y).forEach(m => {
       h += `<li class="ya-pin">${node}<b>${F(label(m))}</b> · ${F('around ' + monthDate(m))}</li>`;
       h += months[m].map(c => `<li class="ya-row" style="${yearTheme(c.cat)}">${node}<button onclick="${c.go}"><span class="ya-row-art">${hubArt(c.icon, c.cat)}</span><span class="ya-row-copy"><b>${F(c.title)}</b><small>${F(range(c))}</small></span>${chev}</button></li>`).join('');
-      if (CHECKUPS.includes(m) && m > a) h += `<li class="ya-row" style="${yearTheme('Health')}">${node}<button onclick="openPage('health-visit:${m}')"><span class="ya-row-art">${hubArt('steth', 'Health')}</span><span class="ya-row-copy"><b>${F(`${m}-month checkup`)}</b><small>${F('Growth, development and vaccines')}</small></span>${chev}</button></li>`;
+      h += (checks[m] || []).map(v => `<li class="ya-row" style="${yearTheme('Health')}">${node}<button onclick="openPage('health-visit:${v}')"><span class="ya-row-art">${hubArt('steth', 'Health')}</span><span class="ya-row-copy"><b>${F(`${v}-month checkup`)}</b><small>${F(gap ? 'By birthday age · growth, development and vaccines' : 'Growth, development and vaccines')}</small></span>${chev}</button></li>`).join('');
     });
     h += `<li class="ya-pin ya-end">${node}<b>${F('First birthday')}</b></li></ol><p class="hub-foot">${F('Ages are typical. Every baby moves at their own pace.')}</p></div>`;
     return h;
