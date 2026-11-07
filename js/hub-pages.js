@@ -62,7 +62,7 @@
   window.hubPhotoFor = m => photos()[m] || null;
   // A photo is chosen with a real file input inside a <label>: tapping the label opens the picker natively,
   // which works in Safari and in-app viewers where a script-triggered picker is blocked.
-  window.hubPhotoInput = m => `<input type="file" accept="image/*" class="hub-photo-input" onchange="hubPhotoChosen(${m},this)" tabindex="-1" aria-hidden="true">`;
+  window.hubPhotoInput = m => `<input type="file" accept="image/*" class="hub-photo-input" onchange="hubPhotoChosen(${m},this)">`;
   window.hubPhotoChosen = function (m, input) {
     const file = input.files && input.files[0]; if (!file) return;
     // Photos are kept sharp enough for the monthly Story (about 840px). If the phone runs out of room, a smaller copy is kept instead.
@@ -179,7 +179,7 @@
       let html = baseHome();
       // Born early: the adjusted age sits next to the age at the top, and opens About age.
       html = html.replace(/<p class="connected-age-note">[\s\S]*?<\/p>/, '');
-      if (profile.early && profile.due && isCurrent()) html = html.replace(/(<span class="home-age">)([^<]*)(<\/span>)/, (m0, a1, age, a3) => `${a1}${age.trim()} <button class="hub-agechip" onclick="openPage('age-context')" aria-label="${esc2(monthLabel(adjustedMonth(actualMonth())))} adjusted. About age">· ${esc2(String(adjustedMonth(actualMonth())))} adjusted <span aria-hidden="true">ⓘ</span></button>${a3}`);
+      if (profile.early && profile.due && isCurrent()) html = html.replace(/(<span class="home-age">)([^<]*)(<\/span>)/, (m0, a1, age, a3) => `${a1}${age.trim()} <button class="hub-agechip" onclick="openPage('age-context')" aria-label="${esc2(monthLabel(adjustedMonth(actualMonth())))} adjusted. About age">· ${esc2(monthLabel(adjustedMonth(actualMonth())))} adjusted <span aria-hidden="true">ⓘ</span></button>${a3}`);
       // Born early: the month strip also marks the adjusted month, so both ages are visible at a glance.
       if (profile.early && profile.due && isCurrent()) { const adj = adjustedMonth(actualMonth()); if (adj !== actualMonth()) html = html.replace(new RegExp(`(<button class="month[^"]*)("[^>]*onclick="setMonth\\(${adj}\\)"[^>]*><b>[^<]*</b><span>)mo(</span>)`), '$1 is-adjusted$2adj$3'); }
       const b = monthBirthday();
@@ -187,7 +187,7 @@
       const nm = esc2(name()), label = b.m === 12 ? '1 year' : `${b.m} month${b.m === 1 ? '' : 's'}`, plabel = b.m === 12 ? 'first-birthday' : `${b.m}-month`, photo = window.hubPhotoFor(b.m);
       const title = b.since === 0 ? (b.m === 12 ? `${nm} is 1 year old today` : `${nm} is ${label} old today`) : (b.m === 12 ? `${nm} turned 1` : `${nm} turned ${label}`);
       const lead = photo ? (b.firsts.length ? `Here’s what you noticed this month. The photo is in Memories.` : `Another month of firsts. The photo is in Memories.`) : (b.firsts.length ? `Here’s what you noticed this month. Add a photo to keep it in Memories.` : `Another month of firsts. Add a photo to keep this one in Memories.`);
-      const card = `<div class="home-summary connected-summary-intro hub-bday"><span class="hub-bday-num" aria-hidden="true">${b.m === 12 ? '1' : b.m}</span><span class="hub-bday-spark" aria-hidden="true">✦</span><p class="hub-bday-eyebrow">${b.m === 12 ? 'Happy first birthday' : 'Happy ' + label}${profile.early && profile.due && adjustedMonth(actualMonth()) !== actualMonth() ? ` <button class="hub-agechip" onclick="openPage('age-context')" aria-label="${esc2(monthLabel(adjustedMonth(actualMonth())))} adjusted. About age">· ${esc2(String(adjustedMonth(actualMonth())))} adjusted <span aria-hidden="true">ⓘ</span></button>` : ''}</p><h1>${title}</h1><p class="hub-bday-lead">${lead}</p>${b.firsts.length ? `<div class="hub-bday-chips">${b.firsts.map(r => `<span>✓ ${esc2(r.title)}</span>`).join('')}</div>` : ''}<label class="hub-bday-photo" role="button">${photo ? `<img src="${photo}" alt="">Change the ${plabel} photo` : `<i aria-hidden="true">＋</i>Add a ${plabel} photo`}${hubPhotoInput(b.m)}</label>${photo && b.m <= 11 && typeof storyShare === 'function' ? `<button class="hub-bday-share" onclick="storyShare(${b.m})">Share ${nm}’s ${plabel} photo</button>` : ''}</div>`;
+      const card = `<div class="home-summary connected-summary-intro hub-bday"><span class="hub-bday-num" aria-hidden="true">${b.m === 12 ? '1' : b.m}</span><span class="hub-bday-spark" aria-hidden="true">✦</span><p class="hub-bday-eyebrow">${b.m === 12 ? 'Happy first birthday' : 'Happy ' + label}${profile.early && profile.due && adjustedMonth(actualMonth()) !== actualMonth() ? ` <button class="hub-agechip" onclick="openPage('age-context')" aria-label="${esc2(monthLabel(adjustedMonth(actualMonth())))} adjusted. About age">· ${esc2(monthLabel(adjustedMonth(actualMonth())))} adjusted <span aria-hidden="true">ⓘ</span></button>` : ''}</p><h1>${title}</h1><p class="hub-bday-lead">${lead}</p>${b.firsts.length ? `<div class="hub-bday-chips">${b.firsts.map(r => `<span>✓ ${esc2(r.title)}</span>`).join('')}</div>` : ''}<label class="hub-bday-photo" role="button">${photo ? `<img src="${photo}" alt="">Change the ${plabel} photo` : `<i aria-hidden="true">＋</i>Add a ${plabel} photo`}${hubPhotoInput(b.m)}</label>${photo && b.m <= 11 && typeof storyShare === 'function' ? `<button class="hub-bday-share" onclick="storyShare(${b.m})">Share ${nm}’s ${plabel} photo</button>` : ''}</div>`;
       return html.replace(/<div class="home-summary connected-summary-intro">[\s\S]*?<div class="home-summary-spectrum"[\s\S]*?<\/div><\/div>/, card);
     };
   }
@@ -226,7 +226,7 @@
   window.hubAgePage = function () {
     const nm = esc2(name());
     if (!(profile.early && profile.due)) return `<div class="quiet-category hub-page hub-detail" style="${yearTheme('You')}">${hubPageTop(`${esc2(name())}’s age`)}<div class="hub-detail-head"><span class="hub-big">${hubArt('clock', 'You')}</span><p class="hub-context">${nm}’s age</p><h1>Every guide uses ${nm}’s age</h1><p class="hub-lead">If ${nm} was born early, add the due date in ${nm}’s details and guides can use adjusted age instead.</p></div></div>`;
-    const head = `<div class="hub-detail-head"><span class="hub-big">${hubArt('clock', 'You')}</span><p class="hub-context">Born early</p><h1>Two ages, one ${nm}</h1><p class="hub-lead">Guides use adjusted age by default. Checkups always use the birthday.</p></div>`;
+    const head = `<div class="hub-detail-head"><span class="hub-big">${hubArt('clock', 'You')}</span><p class="hub-context">Born early</p><h1>Two ages, one ${nm}</h1><p class="hub-lead">Guides use adjusted age by default. Checkups always use the birthday.</p><p class="hub-lead" style="font-size:15px">Keep adjusted age while ${nm} seems younger than the birthday says. Switch an area to birthday age once ${nm} has caught up there; many babies do by about 2.</p></div>`;
     return `<div class="quiet-category hub-page hub-detail" style="${yearTheme('You')}">${hubPageTop(`${esc2(name())}’s age`)}${head}${hubAgeBlock()}</div>`;
   };
 
@@ -519,7 +519,7 @@
       ['Out and about', 'home', 'Errands, walks and first outings', 'chg:Out and about:d:errands', 'outing outings errand errands store grocery shopping cart walk walks park cafe restaurant crowds germs first outing leave the house doctor waiting room nursing in public'],
       ['Out and about', 'sun', 'Hot and cold days out', 'chg:Out and about:d:weather', 'hot heat summer cold winter snow weather temperature bug spray insect repellent mosquito deet overheating stroller cover car seat coat'],
       ['Out and about', 'plane', 'Going abroad with a baby', 'chg:Out and about:d:abroad', 'abroad international passport vaccine vaccines shots measles travel clinic water mosquito jet lag mexico europe overseas'],
-      ['Out and about', 'thermo', 'Going abroad: if Maya gets sick', 'chg:Out and about:d:abroad', 'sick trip travel vacation fever diarrhea vomiting first aid kit medicine travel insurance urgent care'],
+      ['Out and about', 'thermo', 'Going abroad: if your baby gets sick', 'chg:Out and about:d:abroad', 'sick trip travel vacation fever diarrhea vomiting first aid kit medicine travel insurance urgent care'],
       ['Daily rhythm', 'tooth', 'Teething, drool and gums', 'chg:Daily rhythm:d:gums', 'teething teethe gums drool drooling sore chewing teeth tooth'],
       ['Daily rhythm', 'bath', 'Diaper rash and skin', 'chg:Daily rhythm:d:skin', 'diaper rash rashes skin cradle cap dry eczema'],
       ['Daily rhythm', 'bath', 'Giving a bath', 'chg:Daily rhythm:d:tub', 'bath tub bathing wash'],
@@ -596,7 +596,7 @@
     const baseCategories = journeyCategories;
     window.journeyCategories = journeyCategories = function () {
       // Search sits at the top; there is no separate Resources section (outside links live inside each guide).
-      const search = `<div class="hub-search hub-cat-search"><input class="search" type="search" placeholder="Search: naps, formula, rash, fever…" aria-label="Search guidance" oninput="searchGuides(this.value)" value="${esc2(query || '')}"><div id="results" class="hub-list hub-results" ${query ? '' : 'hidden'}></div></div>`;
+      const search = `<div class="hub-search hub-cat-search"><input class="search" type="search" placeholder="Try: teething, short naps, fever…" aria-label="Search guidance" oninput="searchGuides(this.value)" value="${esc2(query || '')}"><div id="results" class="hub-list hub-results" ${query ? '' : 'hidden'}></div></div>`;
       if (query) setTimeout(() => { if (document.querySelector('.hub-cat-search')) searchGuides(query); }, 0);
       return baseCategories().replace(/<div class="journey-utility-links">[\s\S]*<\/div>$/, '').replace(/(<h1>Categories<\/h1>)/, '$1' + search);
     };

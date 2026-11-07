@@ -16,7 +16,7 @@
 #main .st-one { font-size: 14px; line-height: 1.4; color: #6f6979 }
 #main .st-tag { align-self: flex-start; margin-bottom: 4px; padding: 3px 9px; border-radius: 999px; background: var(--year-ink); color: #fff; font-size: 11.5px; font-weight: 700 }
 #main .st-card .st-chev { position: absolute; right: 14px; top: 50%; transform: translateY(-50%) }
-#main .st-foot { margin: 10px 0 0; font-size: 13px; color: #8a8494; line-height: 1.45 }
+#main .st-foot { margin: 10px 0 0; font-size: 13px; color: #6b6474; line-height: 1.45 }
 
 
 /* Integrated: a small chip in the top card's eyebrow row */

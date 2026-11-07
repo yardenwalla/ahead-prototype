@@ -11,19 +11,21 @@
     ['nights', 1.5, 4, 'Sleep', 'moon', 'Longer nights', 'One longer sleep at night, often 4–5 hours', "__GO__"],
     ['regress', 3, 5, 'Sleep', 'moon', 'The 4-month sleep shift', 'More night waking, for a few weeks', "__GO__"],
     ['roll', 4, 6, 'Development', 'roll', 'Rolling', 'The swaddle comes off', "__GO__"],
-    ['solids', 6, 6.5, 'Feeding', 'bowl', 'Starting solids', 'Food alongside milk, a few bites at first', "__GO__", 'Around 6 months'],
+    ['ready', 4, 6, 'Feeding', 'highchair', 'Ready for solids', 'Watching for the signs, and choosing how to start', "__GO__", '4–6 months'],
+    ['solids', 6, 6.5, 'Feeding', 'bowl', 'First foods', 'Food alongside milk, a few bites at first', "__GO__", 'Around 6 months'],
     ['twonaps', 6, 9, 'Sleep', 'sun', 'Three naps become two', 'Two naps a day, and an earlier bedtime', "__GO__"],
     ['crawl', 6, 10, 'Development', 'crawl', 'Crawling', 'Maya can get around, so babyproof first', "__GO__"],
     ['sit', 6, 9, 'Development', 'sit', 'Sitting up', 'Maya sits up without your help', "__GO__"],
     ['tooth', 6, 12, 'Daily rhythm', 'tooth', 'The first tooth', 'Time to start brushing', "__GO__"],
-    ['finger', 7, 9, 'Feeding', 'bowl', 'Textures and finger foods', 'Lumpier food, and pieces to pick up', "__GO__"],
+    ['finger', 7, 9, 'Feeding', 'bowl', 'Thicker textures', 'Lumpier food, and pieces to pick up', "__GO__"],
+    ['meals', 9, 10, 'Feeding', 'plate', 'Meals', 'Soft pieces of family food, three times a day', "__GO__", 'Around 9 months'],
     ['carseat', 9, 12, 'Out and about', 'car', 'A bigger car seat', 'Most outgrow the infant seat by height', "__GO__", 'Often in the first year'],
     ['sep', 8, 10, 'Development', 'heart', 'Separation anxiety', 'Goodbyes and bedtime can get harder', "__GO__"],
     ['pull', 9, 12, 'Development', 'stand', 'Pulling up to stand', 'Maya stands holding furniture, so anchor it', "__GO__"],
     ['words', 10, 14, 'Development', 'chat', 'First words', 'Often “mama” or “dada” for a parent', "__GO__"],
     ['milk', 12, 12.5, 'Feeding', 'cup', 'Milk at 12 months', 'Whole milk from a cup can replace formula', "__GO__", 'At 12 months'],
     ['steps', 12, 15, 'Development', 'stand', 'First steps', 'Walking holding on, then on {p} own', "__GO__"]
-  ].map(([id, start, end, cat, icon, title, why, go, range]) => ({ id, start, end, cat, icon, title, why, go: `openPage('chg:Timeline:c:${id}')`, range: range || `${start}–${end} months` }));
+  ].map(([id, start, end, cat, icon, title, why, go, range]) => ({ id, start, end, cat, icon, title, why, go: ({ ready: "openPage('chg:Feeding:mock:dirD:2')", meals: "openPage('chg:Feeding:mock:dirD:4')" })[id] || `openPage('chg:Timeline:c:${id}')`, range: range || `${start}–${end} months` }));
   const CHECKUPS = [2, 4, 6, 9, 12];
   const TOUCH = {
     smile: 'More face-to-face time, and play starts to feel like a conversation.',
@@ -51,7 +53,10 @@
   const soon = (c, a) => c.start <= a ? 'Could happen any time now' : c.start <= a + 1 ? 'Could start any week now' : `In about ${Math.round(c.start - a)} month${Math.round(c.start - a) === 1 ? '' : 's'}`;
 
   // The baby's reported changes, so a change they've already told us about drops behind them.
-  const doneNow = () => { const an = typeof answers !== 'undefined' ? answers : {}; return { roll: typeof rolled === 'function' && rolled(), solids: an.solids === 'Yes', crawl: an.crawl === 'Yes', pull: an.pullUp === 'Yes', tooth: an.hasTooth === 'Yes', twonaps: an.twoNaps === 'Yes' }; };
+  const doneNow = () => { const an = typeof answers !== 'undefined' ? answers : {};
+    // Stages the baby is already past (from the category pages) count as behind too, so the Timeline agrees with them.
+    const st = cat => { try { return chgStageIndex(cat); } catch (e) { return -1; } }, sl = st('Sleep'), fg = (() => { try { return feedGroup(st('Feeding')); } catch (e) { return -1; } })();
+    return { roll: typeof rolled === 'function' && rolled(), solids: an.solids === 'Yes' || fg >= 3, ready: fg >= 3, meals: fg >= 4, finger: fg >= 4, crawl: an.crawl === 'Yes', pull: an.pullUp === 'Yes', tooth: an.hasTooth === 'Yes', twonaps: an.twoNaps === 'Yes' || sl >= 3, nights: sl >= 2 }; };
   const ageLabel = a => { const m = Math.floor(a), w = Math.floor((a - m) * 4.35); return m === 0 ? `${Math.max(1, w)} week${w === 1 ? '' : 's'}` : `${m} month${m === 1 ? '' : 's'}${w ? `, ${w} week${w === 1 ? '' : 's'}` : ''}`; };
   const whenShort = (c, a) => c.start <= a ? 'any time now' : c.start <= a + 1 ? 'any week now' : `in about ${Math.round(c.start - a)} month${Math.round(c.start - a) === 1 ? '' : 's'}`;
   // A small bar under each next change: its usual window, and where the baby is today.

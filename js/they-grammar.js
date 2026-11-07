@@ -27,17 +27,29 @@
     while ((n = w.nextNode())) { if (!/\bthey\b|\bthey’s\b/i.test(n.nodeValue)) continue; const f = window.theyGrammar(n.nodeValue); if (f !== n.nodeValue) n.nodeValue = f; }
   };
   const on = () => typeof profile !== 'undefined' && profile && profile.pronouns === 'they';
+  // No name given: "your baby" stands in for it, so it needs a capital where a name would start a line or sentence.
+  const noName = () => typeof profile !== 'undefined' && profile && !profile.name;
+  const capBaby = root => {
+    if (!root || typeof document === 'undefined' || typeof document.createTreeWalker !== 'function') return;
+    const w = document.createTreeWalker(root, 4); let n;
+    while ((n = w.nextNode())) {
+      if (!/your baby/.test(n.nodeValue)) continue;
+      let v = n.nodeValue.replace(/([.!?]\s+)your baby/g, '$1Your baby');
+      if (/^\s*your baby/.test(v) && !n.previousSibling) v = v.replace(/^(\s*)your baby/, '$1Your baby');
+      if (v !== n.nodeValue) n.nodeValue = v;
+    }
+  };
   const prev = window.render;
   if (typeof prev === 'function') window.render = render = function (...a) {
     const out = prev.apply(this, a);
-    try { if (on()) { fixTree(document.getElementById('main')); document.querySelectorAll('.hub-toast').forEach(fixTree); } } catch (e) {}
+    try { if (on()) { fixTree(document.getElementById('main')); document.querySelectorAll('.hub-toast').forEach(fixTree); } if (noName()) capBaby(document.getElementById('main')); } catch (e) {}
     return out;
   };
   // Changes made inside a page without a full render (a stepper step, a toast) get the same pass.
   try {
     if (typeof MutationObserver !== 'undefined' && typeof document !== 'undefined' && document.body) {
       let busy = false;
-      new MutationObserver(ms => { if (busy || !on()) return; busy = true; try { ms.forEach(m => m.addedNodes.forEach(x => x.nodeType === 1 ? fixTree(x) : x.nodeType === 3 && fixTree(x.parentNode))); } catch (e) {} busy = false; })
+      new MutationObserver(ms => { if (busy || !(on() || noName())) return; busy = true; try { ms.forEach(m => m.addedNodes.forEach(x => { const el = x.nodeType === 1 ? x : x.parentNode; if (on()) fixTree(el); if (noName()) capBaby(el); })); } catch (e) {} busy = false; })
         .observe(document.body, { childList: true, subtree: true });
     }
   } catch (e) {}
