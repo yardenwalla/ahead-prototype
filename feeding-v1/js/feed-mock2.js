@@ -2678,7 +2678,7 @@
       + xKnow('Good to know', 'Starting early doesn’t help him sleep longer.'));
   P.z_setup = () => yPage(XG, 'Getting ready', 'Get set up for the first bite', 'A few things to have before you start, and one skill to learn.',
       xCompare([['chair', 'High chair', 'Upright, with a harness and footrest.'], ['bowl', 'Soft spoon', 'And a bib that catches.'], ['cup', 'Open cup', 'For sips of water.']])
-      + xDo('Before you start', ['Learn infant choking first aid. A short class or video is enough.', 'Pick a calm time of day, when he’s not too hungry or tired.'])
+      + xDo('Before you start', ['Learn the difference between gagging and choking, and infant first aid. It’s next.', 'Pick a calm time of day, when he’s not too hungry or tired.'])
       + xKnow('Purées, finger foods, or both?', 'All work. Spoon-fed purées, soft finger strips, or a mix. Pick what suits your family.'));
   P.z_allergy = () => yPage(XL, 'Allergies', 'Eczema or food allergies in the family?', 'Babies at higher risk may need peanut sooner, as early as 4–6 months.',
       xTwo(['Higher risk', 'Severe eczema, or an egg allergy.'], ['What to do', 'Ask your pediatrician before starting peanut. They may test first.'])
@@ -2696,7 +2696,7 @@
       chips(['Peanut', 'Egg', 'Dairy', 'Wheat', 'Soy', 'Fish', 'Shellfish', 'Sesame', 'Tree nuts'])
       + xDo('What to do', ['One new allergen at a time, at home, earlier in the day.', 'Peanut as thinned peanut butter or powder. Egg well cooked.', 'Once it’s in, offer it a few times a week.'])
       + xNote('Call 911:', 'trouble breathing, swelling of the face or lips, or repeated vomiting after a new food.'));
-  P.z_gag = () => yPage(XL, 'Safety', 'Gagging is normal. Choking is silent.', 'Gagging is how he learns to handle food. Stay close, and stay calm.',
+  P.z_gag = () => yPage(XL, 'Safety', 'Gagging is normal. Choking is silent.', 'Learn this before the first bite. Gagging is how he learns to handle food, and it can look scary.',
       xTwo(['Gagging', 'Loud: coughing, sputtering, eyes watering. Let him work it out.'], ['Choking', 'Silent: can’t cry or cough, turning blue. Start first aid and call 911.'], true)
       + xDo('What to do', ['Always seated upright, and always with you.', 'Soft pieces that squish between your fingers.'])
       + xKnow('Choking first aid', 'Face down on your forearm, 5 back blows. Then face up, 5 chest thrusts. Repeat until it’s out.'));
@@ -2737,8 +2737,8 @@
       + `<section class="ss-moment">` + xKnow('Call your pediatrician', 'If he has a fever, refuses milk too, has fewer wet diapers, or keeps vomiting. Call any time you’re unsure.') + `</section>`); };
   window.SHOME = (v) => { const b = isBreast(), fm = formulaFam(), h = H(), early = isEarly();
     const cr = (c, icon, title, sub, id) => h.row({ cat: CAT, icon, title, sub, onclick: go(id) }).replace(/<span class="hub-dot">[\s\S]*?<\/span><span class="hub-row-copy">/, `<span class="hub-dot">${hubArt(icon, CAT).replace('data-art=', 'data-keep=')}</span><span class="hub-row-copy">`).replace('class="hub-row', `style="--sm-bg:${c[0]};--sm-ink:${c[1]}" class="sm-row hub-row`);
-    const R = v === 2 ? [b && [XC.g1, 'drop', 'Iron drops from 4 months', fm ? 'If most of his milk is breast milk' : 'Breast milk is low in iron', 'z_iron'], [XG, 'eye', 'Start solids when he shows all the signs', 'Usually around 6 months', 'z_signs'], [XG, 'plate', 'Purées, finger foods, or both', 'The pros and cons of each', 'z_how'], [XL, 'shield', 'Eczema or food allergies in the family?', 'Plan peanut before solids start', 'z_allergy'], [XG, 'highchair', 'Get set up for the first bite', 'And learn choking first aid', 'z_setup']]
-      : v === 3 ? [[XG, 'bowl', 'Start with iron-rich foods', 'Then build variety and texture', 'z_tray'], [XL, 'eye', 'Gagging is normal. Choking is silent.', 'How to tell, and what to do', 'z_gag'], [XL, 'star', 'Common allergens early', 'Then keep them going', 'z_allergens'], [XL, 'shield', 'Not yet, until his first birthday', 'Honey, whole nuts and more', 'z_notyet'], [XC.d1, 'cup', 'Sips of water from a cup', '4–8 oz a day, at most', 'z_water']]
+    const R = v === 2 ? [b && [XC.g1, 'drop', 'Iron drops from 4 months', fm ? 'If most of his milk is breast milk' : 'Breast milk is low in iron', 'z_iron'], [XG, 'eye', 'Start solids when he shows all the signs', 'Usually around 6 months', 'z_signs'], [XG, 'plate', 'Purées, finger foods, or both', 'The pros and cons of each', 'z_how'], [XL, 'shield', 'Eczema or food allergies in the family?', 'Plan peanut before solids start', 'z_allergy'], [XG, 'highchair', 'Get set up for the first bite', 'A high chair, a soft spoon, a cup', 'z_setup'], [XL, 'eye', 'Gagging is normal. Choking is silent.', 'Learn the difference, and first aid', 'z_gag']]
+      : v === 3 ? [[XG, 'bowl', 'Start with iron-rich foods', 'Then build variety and texture', 'z_tray'], [XL, 'star', 'Common allergens early', 'Then keep them going', 'z_allergens'], [XL, 'shield', 'Not yet, until his first birthday', 'Honey, whole nuts and more', 'z_notyet'], [XC.d1, 'cup', 'Sips of water from a cup', '4–8 oz a day, at most', 'z_water']]
       : [[XG, 'clock', 'Three meals, plus milk', 'An example day', 'z_day'], [XG, 'hand', 'Soft pieces of family food', 'What he can eat now', 'z_family'], [XC.g1, 'leaf', 'Appetite goes up and down', 'And that’s normal', 'z_appetite'], [XC.d1, 'cup', 'Cups now, whole milk at 12 months', 'What changes at his first birthday', 'z_milk12']];
     const tough = v === 2 ? 'x_tough' : 'z_tough', toughSub = v === 2 ? 'Distracted feeds, spit-up, gas, poop' : 'Gagging, refusing food, a rash, constipation';
     const rough = `<button class="hub-rough-card care-rash-card" style="background:#fbe4ec;color:#9b4766;margin-top:12px" onclick="${go(tough)}"><span class="hub-rough-moon" aria-hidden="true">${hubArt('heart', CAT)}</span><span class="hub-rough-copy"><b>${F('Feeding challenges')}</b><small>${F(toughSub)}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`;
@@ -2755,7 +2755,7 @@
       + xKnow('Good to know', 'Starting early doesn’t help him sleep longer.'));
   P.z_setup = () => yPage(XG, 'Getting ready', 'Get set up for the first bite', 'A few things to have before you start, and one skill to learn.',
       xCompare([['highchair', 'High chair', 'Upright, with a harness and footrest.'], ['bowl', 'Soft spoon', 'And a bib that catches.'], ['cup', 'Open cup', 'For sips of water.']])
-      + xDo('Before you start', ['Learn infant choking first aid. A short class or video is enough.', 'Pick a calm time of day, when he’s not too hungry or tired.'])
+      + xDo('Before you start', ['Learn the difference between gagging and choking, and infant first aid. It’s next.', 'Pick a calm time of day, when he’s not too hungry or tired.'])
       + xKnow('Purées, finger foods, or both?', 'All work. Spoon-fed purées, soft finger strips, or a mix. Pick what suits your family.'));
   P.z_tray = () => { const b = isBreast(), fm = formulaFam();
     return yPage(XG, 'On the tray', 'Start with iron-rich foods, then build variety', 'There’s no required order, and a few bites is plenty. Textures change as he grows.',
@@ -2763,7 +2763,7 @@
       + xDo('What to do', ['First: iron-rich foods like meat, beans, eggs or iron-fortified cereal.', 'Then vegetables, fruit and soft family food, in any order.', 'Once a day at first, then 2–3 times a day by 8–9 months.', 'Let him lead: wait for an open mouth, stop when he turns away.'])
       + xKnow('Milk still comes first', b && !fm ? 'Keep nursing on demand. Solids add to milk, they don’t replace it yet.' : 'About 24–32 oz of ' + (b ? 'milk' : 'formula') + ' a day. Solids add to it, they don’t replace it yet.')
       + xNote('Safe shapes:', 'soft enough to squash between finger and thumb.')); };
-  P.z_gag = () => yPage(XL, 'Safety', 'Gagging is normal. Choking is silent.', 'Gagging is how he learns to handle food. Stay close, and stay calm.',
+  P.z_gag = () => yPage(XL, 'Safety', 'Gagging is normal. Choking is silent.', 'Learn this before the first bite. Gagging is how he learns to handle food, and it can look scary.',
       xTwo(['Gagging: normal', 'Loud: coughing, sputtering, red face, tongue out. Let him work it out.'], ['Choking: act now', 'Silent or a high squeak, can’t cough or cry, turning blue.'], true)
       + xFix('Making it less likely', [['Sitting upright', 'Always, and always watched.'], ['Safe shapes', 'Soft and squashable, finger-size.'], ['No rushing', 'Seated for every bite, never on the move.']])
       + h2('If he’s choking') + steps([['hand', 'Back blows, 5 times', 'Face down along your forearm, head lower than his chest'], ['heart', 'Chest thrusts, 5 times', 'Face up, two fingers in the middle of his chest'], ['clock', 'Repeat', 'Until it comes out, or help arrives']], true)
@@ -2789,7 +2789,7 @@
       + xKnow('Is one better?', 'No. Research doesn’t favor either. When foods are soft and safely shaped, choking risk is similar.'));
   P.z_setup = () => yPage(XG, 'Getting ready', 'Get set up for the first bite', 'A few things to have before you start, and one skill to learn.',
       xCompare([['highchair', 'High chair', 'Upright, with a harness and footrest.'], ['bowl', 'Soft spoon', 'And a bib that catches.'], ['cup', 'Open cup', 'For sips of water.']])
-      + xDo('Before you start', ['Learn infant choking first aid. A short class or video is enough.', 'Pick a calm time of day, when he’s not too hungry or tired.']));
+      + xDo('Before you start', ['Learn the difference between gagging and choking, and infant first aid. It’s next.', 'Pick a calm time of day, when he’s not too hungry or tired.']));
   P.z_allergy = () => yPage(XL, 'Allergies', 'Eczema or food allergies in the family?', 'Some babies need peanut sooner, as early as 4–6 months. Plan it before solids start.',
       xCompare([['shield', 'Higher risk', 'Severe eczema, or an egg allergy.'], ['smile', 'Everyone else', 'Start peanut and egg with first foods, around 6 months.']])
       + xDo('If he’s higher risk', ['Ask your pediatrician before starting peanut. They may suggest a test first.', 'Then start peanut early, in a safe form, and keep it going.'])
