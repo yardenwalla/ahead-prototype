@@ -2002,93 +2002,208 @@
       + h2('Pulling off and fussing') + steps([['eye', 'Feed early', 'Before crying starts'], ['smile', 'Burp, then retry', 'Trapped air feels like full'], bot ? ['bottle', 'Check the nipple', 'Too fast or too slow?'] : ['drop', 'Fast letdown?', 'Lean back, so he feeds against gravity']], false)
       + h2('A stuffy nose') + steps([['drop', 'Clear it first', 'Saline drops and gentle suction'], ['clock', 'Smaller, more often', 'Little feeds add up'], ['sit', 'Keep him upright', 'Breathing is easier']], false)
       + gtk([['diaper', 'Not eating much', 'Short feeds can still be full ones. Watch diapers and weight. ' + (b ? 'A lactation consultant can check the latch.' : 'Your pediatrician can check the bottle and nipple.')], b && ['heart', 'Lactation consultant', 'For latch, pain and supply. Most insurance covers it.'], ['steth', 'Your pediatrician', 'For weight and feeds, any time you’re unsure.'], ['smile', 'How you’re doing', 'If you feel low or overwhelmed most days, tell your doctor. You can also call or text 1-833-852-6262.']])); };
-  // ---- Newborn in five categories (Nov 6): routine, skills, milk & food prep, nutrition & growth, challenges. ----
-  // Each category page shows one topic at a time (tabs), so a screen holds two or three things, not ten.
-  const holds = () => `<style>#main .fd-holds .fd-ill{display:flex!important;overflow-x:auto;scroll-snap-type:x mandatory;gap:10px;margin:0 -16px;padding:0 16px 4px!important;scroll-padding:0 16px;scrollbar-width:none}#main .fd-holds .fd-ill::-webkit-scrollbar{display:none}#main .fd-holds .fd-ill>figure{flex:0 0 46%;scroll-snap-align:start;margin:0}#main .fd-holds-hint{margin:6px 0 4px;font-size:13px;color:var(--muted,#776)}</style><div class="fd-holds">` + illGrid([[ILL.crossCradle(PAL), 'Cross-cradle', 'Easiest to learn on'], [ILL.football(PAL), 'Football', 'Good after a C-section'], [ILL.laidBack(PAL), 'Laid-back', 'Slows a fast flow'], [ILL.cradle(PAL), 'Cradle', 'Once latching is easy']]) + `<p class="fd-holds-hint">${F('Swipe for all 4. In any hold, bring him to you, not you to him.')}</p></div>`;
-  const nbTabs = tabs => tabbed('#c46b8e', tabs.filter(Boolean));
+  // ---- Newborn in five categories, calm text-first layout (Nov 6, from Yarden's reference screens). ----
+  // Plain title and lead (no hero card), tinted summary cards with checks, small line icons without circles,
+  // numbered text steps, segmented pickers, nav rows to short reference pages, and questions folded at the end.
+  const KCSS = `<style>
+#main .nb5{--kt:#fbeef2;--kl:#ece4e8;--km:#6f6878;--ki:#9b4766}
+#main .nb5 .k-eye{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--km);margin:4px 0 6px}
+#main .nb5 .k-h1{font-size:28px;line-height:1.15;margin:0 0 8px;font-weight:700}
+#main .nb5 .k-lead{color:var(--km);font-size:15.5px;line-height:1.5;margin:0 0 18px}
+#main .nb5 .k-h{font-size:20px;line-height:1.25;font-weight:700;margin:26px 0 6px}
+#main .nb5 .k-sub{font-size:15px;line-height:1.5;margin:0 0 12px}
+#main .nb5 .k-tint{background:var(--kt);border-radius:22px;padding:18px 18px 16px;margin:0 0 18px}
+#main .nb5 .k-card{background:var(--card,#fff);border:1px solid var(--kl);border-radius:22px;padding:18px;margin:0 0 14px}
+#main .nb5 .k-title{display:flex;gap:10px;align-items:center;font-size:17px;font-weight:700;line-height:1.3;margin:0 0 8px}
+#main .nb5 .k-ico{width:22px;height:22px;flex:none;color:var(--ki);display:grid;place-items:center}
+#main .nb5 .k-ico svg{width:22px;height:22px}
+#main .nb5 .k-p{font-size:15px;line-height:1.55;margin:0 0 10px}
+#main .nb5 .k-mute{color:var(--km);font-size:13.5px;line-height:1.5;margin:8px 0 0}
+#main .nb5 .k-note{background:var(--kt);border-radius:16px;padding:12px 14px;font-size:15px;line-height:1.5;margin:8px 0 6px}
+#main .nb5 .k-note b{display:block;margin:0 0 2px}
+#main .nb5 .k-checks,#main .nb5 .k-rows,#main .nb5 .k-ol{list-style:none;margin:6px 0 4px;padding:0;display:grid;gap:12px}
+#main .nb5 .k-checks li,#main .nb5 .k-rows li,#main .nb5 .k-ol li{display:grid;grid-template-columns:24px 1fr;gap:12px;align-items:start}
+#main .nb5 .k-checks li>i{color:#356651;font-style:normal;font-weight:700;line-height:1.4}
+#main .nb5 .k-ol li>i{font-style:normal;font-size:17px;color:var(--ink,#2b2840);line-height:1.35;text-align:center}
+#main .nb5 li b{display:block;font-weight:600;font-size:15.5px;line-height:1.35}
+#main .nb5 li small{display:block;color:var(--km);font-size:14px;line-height:1.45;margin-top:2px}
+#main .nb5 .k-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px 14px;margin:8px 0 6px}
+#main .nb5 .k-grid b{display:block;font-weight:600;font-size:15.5px;margin-top:6px}
+#main .nb5 .k-grid small{display:block;color:var(--km);font-size:14px;line-height:1.4}
+#main .nb5 .k-div{border:0;border-top:1px solid var(--kl);margin:22px 0 0}
+#main .nb5 .k-nav{display:flex;gap:14px;align-items:center;width:100%;text-align:left;background:var(--card,#fff);border:1px solid var(--kl);border-radius:18px;padding:16px;margin:0 0 10px;font:inherit;color:inherit;cursor:pointer}
+#main .nb5 .k-nav b{display:block;font-weight:600;font-size:16px}
+#main .nb5 .k-nav small{display:block;color:var(--km);font-size:14px;margin-top:2px}
+#main .nb5 .k-nav>span:nth-child(2){flex:1;min-width:0}
+#main .nb5 .k-nav>i{font-style:normal;color:var(--km);font-size:20px}
+#main .nb5 details.k-q{border-bottom:1px solid var(--kl);padding:14px 2px}
+#main .nb5 details.k-q>summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;gap:12px;font-size:16px;font-weight:600;line-height:1.35}
+#main .nb5 details.k-q>summary::-webkit-details-marker{display:none}
+#main .nb5 details.k-q>summary::after{content:'⌄';color:var(--km);font-size:20px;line-height:1;transition:transform .2s}
+#main .nb5 details.k-q[open]>summary::after{transform:rotate(180deg)}
+#main .nb5 details.k-q>summary small{display:block;font-weight:400;color:var(--km);font-size:13.5px;margin-top:2px}
+#main .nb5 details.k-q>div{padding-top:10px;font-size:15px;line-height:1.55}
+#main .nb5 details.k-q>div p{margin:0 0 8px}
+#main .nb5 .k-seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:4px;margin:0 0 6px}
+#main .nb5 .k-seg>button{border:0;background:none;border-radius:999px;padding:9px 2px;font:inherit;font-size:14px;color:var(--km);cursor:pointer;white-space:nowrap}
+#main .nb5 .k-pick>.k-pane{display:none}
+#main .nb5 .k-pick.k-chips .k-seg{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 4px}#main .nb5 .k-pick.k-chips .k-seg>button{background:rgba(255,255,255,.6);border:1px solid var(--kl);padding:7px 14px;white-space:nowrap}
+#main .nb5 .k-two{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0 6px}
+#main .nb5 .k-two>div{border-radius:18px;padding:14px;font-size:14.5px;line-height:1.45}
+#main .nb5 .k-two>div b{display:flex;gap:6px;align-items:center;font-size:15.5px;margin:0 0 6px}
+#main .nb5 .k-two>div:first-child{background:#e9f2ec}
+#main .nb5 .k-two>div:last-child{background:#f8efe8}
+#main .nb5 .k-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:6px 0 10px}
+#main .nb5 .k-stats strong{display:block;font-size:30px;line-height:1.1;font-weight:700}
+#main .nb5 .k-stats small{display:block;color:var(--km);font-size:14px;margin-top:4px}
+#main .nb5 .k-dayrow{display:flex;justify-content:space-between;gap:4px;margin:10px 0 4px}
+#main .nb5 .k-dayrow>span{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;color:var(--km)}
+#main .nb5 .k-dayrow svg{width:18px;height:18px}
+#main .nb5 .k-flow{display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin:12px 0 6px;text-align:center}
+#main .nb5 .k-flow>span{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:14px}
+#main .nb5 .k-flow>em{font-style:normal;color:var(--km);padding-top:2px}
+#main .nb5 .k-flow svg{width:22px;height:22px}
+#main .nb5 .k-tbl{display:grid;grid-template-columns:110px 1fr;gap:10px 14px;font-size:15px;line-height:1.45;margin:6px 0 0}
+#main .nb5 .k-tbl>b{font-weight:600}
+#main .nb5 .k-tbl>span{color:var(--km)}
+#main .nb5 .k-big{font-size:34px;font-weight:700;line-height:1.1;margin:8px 0 2px}
+#main .nb5 .k-dot{display:inline-block;width:34px;height:34px;border-radius:50%;vertical-align:middle;margin-right:10px}
+#main .nb5 .k-eyelabel{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--km);margin:22px 0 10px}
+#main .nb5 .fd-holds .fd-ill{display:flex!important;overflow-x:auto;scroll-snap-type:x mandatory;gap:10px;margin:0 -16px;padding:0 16px 4px!important;scroll-padding:0 16px;scrollbar-width:none}
+#main .nb5 .fd-holds .fd-ill>figure{flex:0 0 46%;scroll-snap-align:start;margin:0}
+</style>`;
+  const kI = icon => `<span class="k-ico">${hubArt(icon, CAT)}</span>`;
+  const kH = (t, sub) => `<h2 class="k-h">${F(t)}</h2>` + (sub ? `<p class="k-sub">${F(sub)}</p>` : '');
+  const kP = t => `<p class="k-p">${F(t)}</p>`;
+  const kMute = t => `<p class="k-mute">${F(t)}</p>`;
+  const kNote = (b, t) => `<div class="k-note">${b ? `<b>${F(b)}</b>` : ''}${F(t)}</div>`;
+  const kChecks = xs => `<ul class="k-checks">${xs.filter(Boolean).map(([t, s]) => `<li><i>✓</i><span><b>${F(t)}</b>${s ? `<small>${F(s)}</small>` : ''}</span></li>`).join('')}</ul>`;
+  const kOl = xs => `<ol class="k-ol">${xs.filter(Boolean).map(([t, s], i) => `<li><i>${i + 1}</i><span><b>${F(t)}</b>${s ? `<small>${F(s)}</small>` : ''}</span></li>`).join('')}</ol>`;
+  const kRows = xs => `<ul class="k-rows">${xs.filter(Boolean).map(([icon, t, s]) => `<li>${kI(icon)}<span><b>${F(t)}</b>${s ? `<small>${F(s)}</small>` : ''}</span></li>`).join('')}</ul>`;
+  const kGrid = xs => `<div class="k-grid">${xs.filter(Boolean).map(([icon, t, s]) => `<div>${kI(icon)}<b>${F(t)}</b><small>${F(s)}</small></div>`).join('')}</div>`;
+  const kCard = (icon, title, inner, tint) => `<section class="${tint ? 'k-tint' : 'k-card'}"><div class="k-title">${icon ? kI(icon) : ''}<span>${F(title)}</span></div>${inner}</section>`;
+  const kQ = (q, inner, sub) => `<details class="k-q"><summary><span>${F(q)}${sub ? `<small>${F(sub)}</small>` : ''}</span></summary><div>${inner}</div></details>`;
+  const kQs = (title, xs) => { xs = xs.filter(Boolean); return xs.length ? (title ? kH(title) : '') + xs.map(([q, a, sub]) => kQ(q, Array.isArray(a) ? a.map(x => x[0] === '<' ? x : `<p>${F(x)}</p>`).join('') : (a[0] === '<' ? a : `<p>${F(a)}</p>`), sub)).join('') : ''; };
+  const kNav = xs => xs.filter(Boolean).map(([icon, t, s, id]) => `<button class="k-nav" onclick="${go('nb_' + id)}">${kI(icon)}<span><b>${F(t)}</b><small>${F(s)}</small></span><i>›</i></button>`).join('');
+  const kTwo = (a, b) => `<div class="k-two"><div><b>✓ ${F(a[0])}</b>${F(a[1])}</div><div><b>! ${F(b[0])}</b>${F(b[1])}</div></div>`;
+  const kTbl = rows => `<div class="k-tbl">${rows.map(([a, b]) => `<b>${F(a)}</b><span>${F(b)}</span>`).join('')}</div>`;
+  const kDiv = () => `<hr class="k-div">`;
+  let kPickN = 0;
+  // A segmented picker: one pane at a time. Opens on `on`.
+  const kPick = (items, on = 0, chips) => { items = items.filter(Boolean); const id = 'kp' + (++kPickN);
+    const css = `<style>${items.map((_, i) => `#main .nb5 #${id}[data-on="${i}"]>.k-pane[data-i="${i}"]{display:block}#main .nb5 #${id}[data-on="${i}"]>.k-seg>button[data-i="${i}"]{background:${chips ? '#fff' : '#f3ecef'};color:var(--ink,#2b2840);font-weight:600}`).join('')}</style>`;
+    return css + `<div class="k-pick${chips ? ' k-chips' : ''}" id="${id}" data-on="${Math.min(Math.max(0, on), items.length - 1)}"><div class="k-seg">${items.map(([l], i) => `<button data-i="${i}" onclick="this.closest('.k-pick').dataset.on='${i}'">${F(l)}</button>`).join('')}</div>${items.map(([, h], i) => `<div class="k-pane" data-i="${i}">${h}</div>`).join('')}</div>`; };
+  const kPage = (title, leadT, inner) => qaCss + page(KCSS + `<div class="nb5"><p class="k-eye">${F('Feeding / Newborn')}</p><h1 class="k-h1">${F(title)}</h1><p class="k-lead">${F(leadT)}</p>${inner}</div>`);
+  const kHolds = () => `<div class="fd-holds">` + illGrid([[ILL.crossCradle(PAL), 'Cross-cradle', 'Easiest to learn on'], [ILL.football(PAL), 'Football', 'Good after a C-section'], [ILL.laidBack(PAL), 'Laid-back', 'Slows a fast flow'], [ILL.cradle(PAL), 'Cradle', 'Once latching is easy']]) + `<p class="k-mute">${F('Swipe for all four.')}</p></div>`;
+  const svgI = n => ({ bottle: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M10 3v3l-2 3v11a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V9l-2-3V3"/><path d="M8 13h8"/></svg>', moon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>', clock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>', heart: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>' })[n];
 
   // 1. Feeding routine
   P.nb_routine = () => { const nurse = nurses(), b = isBreast(), bot = isBottle(), fm = formulaFam();
-    const dayHtml = (P.day() || ''), k = dayHtml.indexOf('<div class="hub-card" style="padding:14px 14px 8px">'), e = k >= 0 ? dayHtml.indexOf('<figure', k) : -1, ribbon = k >= 0 && e > k ? dayHtml.slice(k, e) : '';
-    return nbPage('Feeding routine', 'Little and often, led by his cues', 'When to feed, how much, and what a day and night can look like.', C.pink, nbTabs([
-      ['Day', h2('A typical day') + ribbon + small('An example, not a schedule.', (b ? 'About every 2–3 hours' : 'About every 2–4 hours') + ', counted from the start of a feed.' + (bot ? (nurse && fm ? ' Top-ups are small, often 1–2 oz.' : ' About 1–3 oz a bottle at first.') : ''))
-        + h2('When to feed') + cueStrip().replace(F('Hunger cues, early to late'), F('Early to late'))
-        + h2('A sleepy feeder') + steps([['sun', 'Wake him after 3 hours', 'Until he’s back to birth weight'], ['shirt', 'Undress him', 'Down to his diaper'], ['hand', 'Stroke his feet', 'Or his back'], ['diaper', 'Change his diaper', 'Halfway through']], false)],
-      ['Evenings and nights', h2('Why evenings feel nonstop') + hubStageStrip({ title: 'A typical evening', items: [['clock', 'Late afternoon', 'Feeds start bunching up'], ['moon', 'Evening', 'Feed after feed for a few hours'], ['smile', 'Later at night', 'Often a longer sleep']], cat: CAT })
-        + small('That’s cluster feeding.', b ? 'It doesn’t mean you’re low on milk. It’s how he tells your body to make more.' : 'It’s normal on formula too. It’s how he fills up.')
-        + h2('Getting through') + steps([b ? ['roll', 'Switch sides often', 'Keeps milk flowing'] : ['bottle', 'Smaller bottles', 'More often'], ['diaper', 'Change first', 'So he stays sleepy after'], ['moon', 'Dim and quiet', 'Save play for the day'], ['heart', 'Take turns', 'So you each get a longer stretch']], false)
-        + h2('When it gets easier') + hubAgeTiles({ title: '', items: [['Around 6 weeks', 'Fussy evenings peak', 'Then slowly ease'], ['6–8 weeks', 'Cluster feeding eases', 'Feeds spread out'], ['By 2–3 months', 'A longer night stretch', 'Often 3–5 hours']], cat: CAT })]])); };
+    const times = ['6a', '9a', '12p', '3p', '6p', '9p', '12a', '3a'];
+    return kPage('Feeding routine', 'What feeding looks like now, what might surprise you, and how to make it easier.',
+      `<section class="k-tint"><div class="k-title"><span style="flex:1">${F('Your feeding rhythm')}</span>${kI('clock')}</div>`
+        + `<div class="k-stats"><div><strong>${b ? '8–12' : '6–10'}</strong><small>${F(nurse ? 'Feeds a day' : b ? 'Feeds a day' : 'Bottles a day')}</small></div><div><strong>${b ? '2–3 hrs' : '2–4 hrs'}</strong><small>${F('Typically, from the start of one feed')}</small></div></div>`
+        + kP('Feed based on hunger cues rather than an exact schedule.' + (bot ? (nurse && fm ? ' Top-ups are small, often 1–2 oz.' : ' Bottles start around 1–3 oz.') : ''))
+        + `<div class="k-card" style="margin:8px 0 0;padding:14px"><b style="font-size:15px">${F('A typical day')}</b><div class="k-dayrow">${times.map((t, i) => `<span>${svgI(i < 6 ? 'bottle' : 'moon')}${t}</span>`).join('')}</div><p class="k-mute" style="margin:2px 0 0">${F('An example, not a schedule.')}</p></div></section>`
+      + `<p class="k-eyelabel">${F('The things worth knowing')}</p>`
+      + kCard('heart', 'Know when he’s hungry', kP('Rooting, fists to his mouth and searching for milk are early signs. Crying is a late sign.') + kNote('', 'Not sure? Offer a feed. If he just ate, he may want comfort instead.')
+        + kQ('How to tell hunger from comfort', kTbl([['Hungry', 'Rooting and fists to mouth, and it’s been a while since a feed.'], ['Comfort', 'He just fed. A cuddle or a pacifier' + (nurse ? ', once nursing is going well,' : '') + ' may settle him.']])))
+      + kCard('moon', 'Some newborns need waking', kP('Until he’s back to birth weight, your pediatrician may recommend waking him for a feed about every 3 hours.') + `<b style="display:block;margin:4px 0 6px">${F('Try this:')}</b>` + kOl([['Undress him to his diaper'], ['Gently stroke his feet or back'], ['Change his diaper midway'], b && nurse ? ['Use breast compressions'] : ['Pause, burp, then offer again']]) + kMute('Follow his own feeding plan, especially if he was born early or is gaining slowly.'))
+      + kCard('sun', 'Evenings can get intense', kP('He might want to feed again and again for a few hours. That’s cluster feeding, and it’s common.' + (b ? ' It doesn’t mean you’re low on milk.' : ''))
+        + `<p class="k-eye" style="margin-top:10px">${F('A typical evening')}</p><div class="k-flow"><span>${svgI('clock')}${F('Feeds bunch up')}</span><em>→</em><span>${svgI('bottle')}${F('Frequent feeds')}</span><em>→</em><span>${svgI('moon')}${F('A longer rest')}</span></div>`
+        + kQ('Four ways to make nights easier', kOl([[b ? 'Switch sides often' : 'Offer smaller bottles', b ? 'Keeps milk flowing when he slows' : 'More often, not one big one'], ['Change first', 'Before the feed, so he stays sleepy after'], ['Keep it dim and quiet', 'Save talking and play for the day'], ['Take turns', 'So each of you gets a longer stretch']])))
+      + kCard('star', 'It won’t always be this frequent', kTbl([['Around 6 weeks', 'Fussy evenings peak, then ease.'], ['6–8 weeks', 'Cluster feeding becomes less frequent.'], ['2–3 months', 'Many babies sleep a longer stretch.']]))
+      + kQ('Two more things parents ask', `<p><b>${F('Days and nights mixed up?')}</b> ${F('Keep days bright and nights quiet and boring. It improves over a few weeks.')}</p><p><b>${F('Should you track feeds?')}</b> ${F('A short-term note of feeds and diapers helps at first. Stop once things feel settled, unless your pediatrician asks you to keep going.')}</p>`, 'Days vs. nights · Tracking feeds')); };
 
   // 2. Feeding skills
   P.nb_skills = () => { const nurse = nurses(), bot = isBottle(), fm = formulaFam(), b = isBreast();
-    return nbPage('Feeding skills', nurse && bot ? 'Nursing, bottles and burping' : nurse ? 'Nursing and burping' : 'Bottle-feeding and burping', 'It takes practice for you both. Most of it clicks within a few weeks.', C.pink, nbTabs([
-      nurse && ['Nursing', h2('Pick a hold') + holds()
-        + h2('Latch, step by step') + steps([['mouth', 'Nose to nipple', 'Head and body in a line'], ['eye', 'Wait for a wide mouth', 'Like a yawn'], ['heart', 'Chin first', 'Bring him in quickly']], true)
-        + two(['Good latch', 'Lips flared. Long sucks and swallows. A strong tug, not a pinch.'], ['Shallow latch', 'Clicking, dimpled cheeks, or pinching all feed. Try again.', '#fdeee6', '#9a5a3c'])
-        + fixes([['eye', 'Watch a good latch', [{ html: hubEmbed('y--syZR0u1E', 'A good latch, step by step', 'Global Health Media') }]]])
-        + h2('Through a feed') + tl('', [['When he slows', 'hand', 'Burp, then offer the other side.'], fm && ['Still hungry?', 'bottle', 'A small, paced formula top-up.'], ['Next feed', 'clock', 'Start on the last side. A hair tie on your wrist helps.']])],
-      bot && ['Bottles', h2('Paced bottle feeding') + steps([['sit', 'Hold him semi-upright', 'Head higher than his tummy'], ['mouth', 'Touch his lip', 'Let him draw it in'], ['bottle', 'Fairly level', 'Milk just fills the tip'], ['clock', 'Pause often', 'Every few sucks'], ['eye', 'Stop when he’s done', 'Even if milk is left']], true)
-        + small('Never prop a bottle.', 'Always hold him and the bottle.')
-        + h2('Is the nipple right?') + two(['Too slow', 'He sucks hard, gets frustrated, and the nipple flattens.'], ['Too fast', 'He gulps, coughs, or milk spills out.', '#fdeee6', '#9a5a3c'])
-        + (nurse ? small('Won’t take a bottle?', 'Someone else offers, before he’s very hungry, with a slow-flow nipple.') : '')],
-      ['Burping', h2('Three ways to burp') + illGrid([[ILL.shoulder(PALT), 'Over your shoulder', 'His chin on a burp cloth'], [ILL.sitting(PALT), 'Sitting on your lap', 'Support his chin and chest'], [ILL.tummy(PALT), 'Tummy-down', 'Across your lap']])
-        + small(b && !bot ? 'Burp between sides, and at the end.' : bot && !b ? 'Burp every 2–3 oz, and at the end.' : 'Burp between sides or every 2–3 oz, and at the end.', 'No burp after a minute or two? Carry on.')]])); };
+    return kPage('Feeding skills', 'Feeding takes practice for both of you. Here’s how to get comfortable with the basics.', kPick([
+      nurse && ['Nursing', kH('Getting a comfortable latch', 'Start with a position that supports you both. Bring him to your breast, rather than leaning forward.') + kHolds()
+        + kH('Latch, step by step') + kOl([['Nose to nipple', 'Keep his head and body in a line.'], ['Wait for a wide mouth', 'Like a yawn.'], ['Bring him in, chin first', 'Chin touching the breast, close to you.']])
+        + kTwo(['Good latch', 'Flared lips, long sucks and swallows, a strong tug rather than pinching.'], ['Adjust the latch', 'Clicking, dimpled cheeks or pinching that lasts. Break the seal and try again.'])
+        + kH('Through a feed') + kP('Start at early hunger cues. When sucking slows, burp and offer the other side.' + (fm ? ' Still hungry? A small, paced formula top-up.' : '') + ' At the next feed, start with the last side.')
+        + kQ('Watch a good latch', hubEmbed('y--syZR0u1E', 'A good latch, step by step', 'Global Health Media'))
+        + kQ('Common issues and adjustments', `<p><b>${F('Dozing off?')}</b> ${F('Squeeze gently behind the nipple, or switch sides.')}</p><p><b>${F('Gulping or coughing?')}</b> ${F('Lean back, so he feeds against gravity.')}</p><p><b>${F('Sore nipples?')}</b> ${F('Re-latch. Balm or your own milk after feeds. If most feeds hurt, see a lactation consultant soon.')}</p>`)],
+      bot && ['Bottles', kH('Paced bottle feeding', 'Help him control the pace instead of milk flowing too quickly.')
+        + kOl([['Hold him semi-upright', 'His head higher than his tummy.'], ['Touch the nipple to his lip', 'Let him draw it in.'], ['Keep the bottle fairly level', 'Just enough milk to fill the tip.'], ['Pause regularly', 'Tip the bottle down every few sucks.'], ['Stop at fullness cues', 'There’s no need to finish the bottle.']])
+        + `<div style="margin:18px 0 0"><b style="font-size:17px">${F('Is the nipple flow right?')}</b>` + kP('Too slow: he works hard, gets frustrated, or the nipple flattens.') + kP('Too fast: gulping, coughing, or milk spilling out.') + `</div>`
+        + kP('Always hold him and the bottle. Never prop a bottle.')
+        + kQ('Common issues and adjustments', `${nurse ? `<p><b>${F('Won’t take a bottle?')}</b> ${F('Someone else offers, before he’s very hungry, with a slow-flow nipple.')}</p>` : ''}<p><b>${F('Drinks it too fast?')}</b> ${F('Pause more often, and hold him more upright.')}</p><p><b>${F('Falls asleep?')}</b> ${F('Burp, switch sides, then offer again.')}</p>`)],
+      ['Burping', kH('Three ways to burp', 'Try a comfortable position with gentle support for his head and neck.')
+        + `<div class="k-grid" style="grid-template-columns:repeat(3,1fr);text-align:center">${[['smile', 'Shoulder'], ['sit', 'Sitting'], ['hand', 'Across your lap']].map(([i, t]) => `<div style="display:flex;flex-direction:column;align-items:center">${kI(i)}<b>${F(t)}</b></div>`).join('')}</div>`
+        + kP((b && bot ? 'Try between sides or every 2–3 oz' : b ? 'Try between sides' : 'Try every 2–3 oz') + ', and at the end. If no burp comes after a minute or two, you can carry on.')
+        + kQ('Common issues and adjustments', `<p><b>${F('Spit-up after a burp?')}</b> ${F('Common. Hold him upright for a bit after feeds.')}</p><p><b>${F('Hiccups?')}</b> ${F('Harmless. They stop on their own.')}</p>`)]])); };
 
-  // 3. Milk and food preparation
-  P.nb_prep = () => { const nurse = nurses(), pump = pumps(), fm = formulaFam(), b = isBreast(), bot = isBottle(), mostlyB = fd() === 'Breast milk';
-    return nbPage('Milk and food preparation', b && fm ? 'Your milk, and formula' : b ? (pump ? 'Your milk, pumping and storing' : 'Building your milk') : 'Making formula safely', b ? 'What happens to your milk week by week, and how to keep every bottle safe.' : 'Any standard formula works. Making it safely matters most in the first months.', C.pink, nbTabs([
-      b && ['Your milk', milkLine('The first weeks', [['Days 1–2', 'Colostrum'], ['Days 2–5', 'Milk comes in'], ['Weeks 1–6', 'Supply builds'], ['6–12 weeks', 'Supply settles']], (d => d < 2 ? 0 : d < 5 ? 1 : d < 42 ? 2 : 3)(babyDays())) + stageCar([
-            ['Days 1–2', 'Colostrum', lead('Your first milk comes in small amounts. It’s thick and sticky, and it’s all he needs right now. What you do now builds your supply.')
-          + steps([[nurse ? 'heart' : 'drop', nurse ? 'Feed often' : 'Pump often', nurse ? '8–12 times a day. Every feed tells your body to make more' : '8–12 times a day, both sides'], ['hand', 'Hand express', 'Colostrum is sticky, so it’s often easier by hand than with a pump'], ['cup', 'Give it on a spoon', 'Or a syringe. Every drop counts'], ['sofa', 'Skin to skin', 'Helps ' + (nurse ? 'him feed and ' : '') + 'your milk flow']], true)
-          + fixes([['hand', 'How to hand express', [{ html: steps([['hand', 'Place your fingers', 'Thumb above, fingers below, an inch behind the nipple'], ['heart', 'Press back', 'Gently, toward your chest'], ['drop', 'Squeeze, then release', 'Roll thumb and fingers together, slowly'], ['wave', 'Move around', 'To reach every part of the breast']], true) }, '~A few drops at first is normal. It gets easier with practice.']]])],
-            ['Days 2–5', 'Your milk comes in', lead('Your breasts feel fuller, heavier and warmer, and the milk turns thinner and whiter. That’s normal.')
-          + two(['Normal fullness', 'Heavy and warm. Softens after a ' + (nurse ? 'feed.' : 'session.')], ['Engorged', nurse ? 'Hard, tight and sore. Hard for him to latch.' : 'Hard, tight and sore. Pumping feels harder.', '#fdeee6', '#9a5a3c'])
-          + fixes([['snow', 'Very full? What helps, in order', [{ html: tl('In order', [['Before ' + (nurse ? 'a feed' : 'pumping'), 'hand', 'Press your fingertips around the nipple for a minute, or hand express a little, to soften it' + (nurse ? ', so he can latch.' : '.')], [nurse ? 'During the feed' : 'While you pump', 'heart', nurse ? 'Feed often, every 2–3 hours. Let him finish the first side.' : 'Keep to your usual schedule. Start on a low setting.'], ['Right after', 'snow', 'A cold pack on each breast eases the swelling.'], ['In between', 'drop', 'Light strokes toward your armpit. Skip deep massage.'], ['All day', 'shirt', 'A supportive bra that isn’t tight.']]) }]],
-            ['shirt', 'Leaking?', ['~Common now, and it eases as your supply settles.', 'Press gently on the nipple when you feel a letdown coming.', 'A milk catcher on the other side saves the milk.']]])],
-            ['Weeks 1–6', 'Keep building', lead('The more milk is removed, the more you make. Your body is learning how much he needs.')
-          + steps([[nurse ? 'eye' : 'clock', nurse ? 'Feed on cue' : 'Keep a steady routine', nurse ? 'Both sides, whenever he’s hungry' : 'Every 2–3 hours, both sides'], ['moon', 'Keep night ' + (nurse ? 'feeds' : 'sessions'), 'They help build supply'], ['steth', 'Get help early', 'If it hurts, or he’s not gaining']], false)
-          + two(['Signs it’s working', (nurse ? 'You hear him swallow, and your breasts feel softer after a feed. ' : 'Your breasts feel softer after pumping. ') + 'His weight is on track' + (mostlyB ? ', with 3 or more yellow poops a day in the first weeks.' : '.')], ['Not a sign of low supply', 'How much you pump, or breasts that feel softer after the first weeks.', '#f5efe3', '#8a6a2c'])],
-            ['6–12 weeks', 'It settles', lead('Your body has learned how much he needs, so you make about that much. Softer breasts alone don’t mean less milk, but a real dip can happen now, and it’s usually fixable.')
-              + steps([['hand', 'Softer breasts', 'Even before a ' + (nurse ? 'feed' : 'session')], ['shirt', 'Less leaking', 'Some people stop leaking'], ['clock', nurse ? 'Quicker feeds' : 'Steadier output', nurse ? 'He gets milk out faster' : 'Your amounts even out'], ['drop', 'Milder letdowns', 'You may not feel them']], false)
-              + two(['Normal now', 'Softer breasts, less leaking, ' + (nurse ? 'shorter feeds' : 'steady pumping amounts') + ', and a fussy day here and there.'], ['Worth a check', 'Fewer wet diapers, slower weight gain, or he seems hungry after most feeds.', '#fdeee6', '#9a5a3c'])
-              + fixes([['eye', 'Feels like your milk dropped?', ['~Sometimes it’s just the softer feeling. But a real dip can happen around now too. Common causes:', 'Dropping ' + (nurse ? 'feeds' : 'sessions') + ', or long night stretches, before your supply has settled.', 'Going back to work, with fewer ' + (nurse ? 'feeds or pumps' : 'sessions') + ' in the day.', 'Your period coming back, or birth control with estrogen.', 'Being sick, stressed, or not eating and drinking enough.', '~What helps: remove milk more often for a few days, ' + (nurse ? 'with extra feeds or a pump after a feed' : 'with an extra session or two') + '. A growth spurt (around 6 weeks and 3 months) works the same way, and supply catches up in 2–3 days. Still low after a week? See a lactation consultant.']]])]], (d => d < 2 ? 0 : d < 5 ? 1 : d < 42 ? 2 : 3)(babyDays()))
-        + gtk([['cup', 'Eating and drinking', 'Caffeine up to 300 mg a day. Skip alcohol for now. 8–12 oz a week of low-mercury fish.'], ['drop', 'Lactation foods', 'Little good evidence they raise supply. Removing milk often is what works.']])],
-      pump && ['Pumping', h2(nurse ? 'When to pump' : 'How often') + tl('', nurse ? [['First weeks', 'heart', 'Only if you need to, like after a top-up.'], ['Around 3–4 weeks', 'bottle', 'Start pumping for a first bottle.'], ['When you’re apart', 'clock', 'About every 3 hours.']] : [['Every 2–3 hours', 'drop', '8–12 times a day, about 15–20 minutes each.'], ['At night', 'moon', 'Keep at least one session for now.']])
-        + h2('Each session') + steps([['shirt', 'Set up', 'Hands-free bra, clean parts'], ['eye', 'Check the flange', 'Nipple moves freely'], ['hand', 'Comfortable suction', 'Stronger isn’t better'], ['clock', '15–20 minutes', 'Until milk slows to drips']], true)],
-      fm && ['Formula', h2('Making a bottle') + steps([['hand', 'Wash', 'Hands, counter and bottle'], ['drop', 'Boil the water', 'Let it sit about 5 minutes'], ['bowl', 'Water, then powder', 'As the label says. Level scoops'], ['snow', 'Cool and test', 'Warm, not hot, on your wrist'], ['clock', 'Use within 2 hours', 'Or fridge it for up to 24']], true)
-        + small('Why hot water?', 'Powder isn’t sterile, and babies under 2 months are most at risk. Ready-to-feed is sterile and skips this step.')],
-      (pump || bot) && ['Storing and cleaning', (pump ? h2('Breast milk') + storeTable([['Fresh', '4 hours', '4 days', '6 months is best'], ['Thawed', '1–2 hours', '24 hours', 'Never refreeze'], ['After a feed', '2 hours', 'Toss it', 'Toss it']]) : '')
-        + (fm ? h2('Formula') + storeTable([['Made', '2 hours', '24 hours', 'Don’t freeze'], ['Once he starts', '1 hour', 'Toss it', 'Toss it']]) : '')
-        + h2('Cleaning, after every feed') + steps([['hand', 'Take apart', 'Every piece'], ['drop', 'Wash', 'Hot soapy water or dishwasher'], ['heart', 'Air-dry', 'On a clean rack'], ['snow', 'Sanitize daily', 'Most important under 2 months']], true)]])); };
+  // 3. Milk and preparation
+  P.nb_prep = () => { const nurse = nurses(), pump = pumps(), fm = formulaFam(), b = isBreast(), bot = isBottle();
+    const now = (d => d < 2 ? 0 : d < 5 ? 1 : d < 42 ? 2 : 3)(babyDays());
+    const stage = (t, p, xs) => `<h3 style="font-size:18px;margin:14px 0 6px">${F(t)}</h3>` + kP(p) + kChecks(xs.map(x => [x]));
+    return kPage('Milk and preparation', b ? 'What happens to your milk supply, and how to prepare, store and handle feeds safely.' : 'How to prepare, store and handle feeds safely.',
+      (b ? kCard('leaf', 'Your milk, week by week', kP('Your milk changes quickly after birth. Here’s what to expect at each stage.') + kPick([
+          ['Days 1–2', stage('Colostrum', 'Your first milk is thick and concentrated. Small amounts are expected.', [(nurse ? 'Feed' : 'Express') + ' often, 8–12 times a day.', 'Hand expression can help collect colostrum.', 'Skin to skin supports feeding.'])],
+          ['Days 2–5', stage('Your milk comes in', 'Breasts feel fuller and heavier, and milk turns thinner and whiter.', [(nurse ? 'Keep feeding' : 'Keep pumping') + ' often to stay comfortable.', 'Very full? Soften first, then a cold pack after.', 'Leaking is common, and it eases.'])],
+          ['Wks 1–6', stage('Supply builds', 'The more milk is removed, the more you make.', [(nurse ? 'Feed on cue, both sides.' : 'Keep a steady routine, both sides.'), 'Night ' + (nurse ? 'feeds' : 'sessions') + ' help build supply.', 'Get help early if it hurts or he isn’t gaining.'])],
+          ['Wks 6–12', stage('Supply settles', 'Softer breasts and less leaking are normal. A real dip can happen too, and is usually fixable.', ['Fewer ' + (nurse ? 'feeds' : 'sessions') + ' too fast, work or your period can lower supply.', 'Remove milk more often for a few days to bring it back.'])]], now), true) : '')
+      + kH('Preparing a feed', 'Practical steps for how you feed.') + kNav([b && ['drop', pump ? 'Expressing milk' : 'Hand expression', pump ? 'Pumping, hand expression and getting milk ready' : 'Softening a full breast, saving colostrum', 'express'], fm && ['bowl', 'Preparing formula', 'Mixing, cooling and which kind', 'mix']])
+      + ((pump || bot) ? kH('Keeping feeds safe', 'Useful references for everyday feeding.') + kNav([['fridge', 'Storing milk safely', (pump ? 'Fridge, freezer, thawing and leftovers' : 'How long formula keeps'), 'store'], ['drop', 'Cleaning equipment', (pump ? 'Bottles, pump parts and sanitizing' : 'Bottles, nipples and sanitizing'), 'clean']]) : '')
+      + (b ? `<div style="margin:18px 0 0">` + `<div class="k-title">${kI('idea')}<span>${F('Worth knowing')}</span></div>` + kP('Milk supply isn’t measured by how full your breasts feel or by one pumping session. Feeding, diapers and growth matter more.') + `</div>` : '')
+      + kQs('Good to know', [b && ['Does eating certain foods increase supply?', 'There’s little good evidence that lactation foods or brewer’s yeast raise supply. Removing milk often is what works. Ask before herbal supplements like fenugreek.'], b && ['What can I eat and drink?', 'Caffeine up to 300 mg a day. Skip alcohol for now. 8–12 oz a week of low-mercury fish. A glass of water at each feed.'], (pump || fm) && ['How can I make night feeds easier?', pump ? 'A spare set of pump parts, and a cooler by the bed until morning.' : 'Ready-to-feed at 3 am, or water measured into clean bottles ahead.'], pump && ['What if I want to stop pumping?', 'Taper over a few weeks: shorten sessions, space them out, then drop one at a time. Your mood can dip as milk slows. Tell your doctor if it does.']])); };
+
+  P.nb_express = () => { const nurse = nurses(), pump = pumps();
+    return kPage(pump ? 'Expressing milk' : 'Hand expression', pump ? 'Pumping, hand expression and getting milk ready.' : 'Handy for softening a full breast so he can latch, and for saving colostrum.',
+      (pump ? kH(nurse ? 'When to pump' : 'How often') + kTbl(nurse ? [['First weeks', 'Only if you need to, like after a top-up.'], ['3–4 weeks', 'Start pumping for a first bottle.'], ['Apart', 'About every 3 hours.']] : [['Every 2–3 hours', '8–12 times a day, 15–20 minutes each.'], ['At night', 'Keep at least one session for now.']])
+        + kH('Each session') + kOl([['Set up', 'A hands-free bra and clean parts.'], ['Check the flange', 'Your nipple should move freely, without rubbing.'], ['Comfortable suction', 'Stronger isn’t better.'], ['15–20 minutes', 'Until milk slows to drips, plus a minute.'], ['Date the milk', 'Then fridge or freezer.']]) : '')
+      + kH('Hand expression') + kOl([['Place your fingers', 'Thumb above, fingers below, an inch behind the nipple.'], ['Press back', 'Gently, toward your chest.'], ['Squeeze, then release', 'Roll thumb and fingers together, slowly.'], ['Move around', 'To reach every part of the breast.']])
+      + (pump ? kH('Getting breast milk ready') + kOl([['From the fridge', 'Or thawed overnight in the fridge.'], ['Swirl, don’t shake', 'The fat separates. That’s normal.'], ['Warm or cool', 'Test on your wrist. Skip the microwave.']]) : '')
+      + kQs('Common issues', [pump && ['Pumping hurts', 'Usually the flange size or the suction. Check the fit, lower the suction, and try a little balm or oil inside the tunnel. Still hurts? See a lactation consultant.'], pump && ['Getting less than you hoped', 'It varies a lot, especially at first. Warmth before, massage during, and a minute of hand expression at the end all help.' + (nurse ? ' What you pump isn’t a measure of your supply.' : '')], pump && ['Suction dropped', 'Replace the valves and membranes. Worn parts pump less.'], ['Only drops at first', 'Normal in the first days. Colostrum comes in small amounts.']])); };
+
+  P.nb_mix = () => kPage('Preparing formula', 'Any standard, iron-fortified formula works. Making it safely matters most in the first months.',
+    kH('Making a bottle') + kOl([['Wash', 'Your hands, the counter and the bottle.'], ['Boil the water', 'Then let it sit about 5 minutes.'], ['Water first, then powder', 'The amounts on the label. Level scoops.'], ['Cool and test', 'Under cold water. Warm, not hot, on your wrist.'], ['Use within 2 hours', 'Or fridge it for up to 24.']])
+    + kNote('Why hot water?', 'Powder isn’t sterile, and babies under 2 months, born early or with a weak immune system are most at risk. Ready-to-feed is sterile and skips this step.')
+    + kH('Which kind?') + kRows([['bottle', 'Ready-to-feed', 'Pour and feed. Sterile until opened. Costs most.'], ['drop', 'Liquid concentrate', 'Mix with water as the label says. Sterile until opened.'], ['bowl', 'Powder', 'Mix with hot water. Not sterile. Costs least.']])
+    + kP('Follow the label exactly. Watered-down or extra-strong formula isn’t safe.')
+    + kQs('Good to know', [['Is tap water safe?', 'Ask your pediatrician whether your water is safe, and whether to boil it.'], ['Can I switch brands?', 'Most babies switch between standard brands without trouble. Check before a special formula.'], ['Is it the formula?', 'Gas, fussing and spit-up happen on any formula. Blood in his poop, a rash, vomiting after most feeds or slow weight gain are worth a call.']]));
+
+  P.nb_store = () => { const pump = pumps(), fm = formulaFam();
+    return kPage('Storing milk safely', 'How long it keeps, and what to do with leftovers.',
+      (pump ? kH('Breast milk') + storeTable([['Fresh', '4 hours', '4 days', '6 months is best'], ['Thawed', '1–2 hours', '24 hours', 'Never refreeze'], ['After a feed', '2 hours', 'Toss it', 'Toss it']]) : '')
+      + (fm ? kH('Formula') + storeTable([['Made', '2 hours', '24 hours', 'Don’t freeze'], ['Once he starts', '1 hour', 'Toss it', 'Toss it']]) : '')
+      + kQs('Good to know', [pump && ['Freezing breast milk', 'Flat in 2–4 oz bags, with a little room at the top. Thaw in the fridge overnight or in warm water.'], ['Warming a bottle', 'Warm water or a bottle warmer, then test on your wrist. Room temperature or cold is fine too. Skip the microwave.'], ['Out and about', (fm ? 'Ready-to-feed needs no water. ' : '') + (pump ? 'A cooler with ice packs keeps breast milk for up to 24 hours, and it’s allowed through airport security.' : 'Or carry powder and water separately.')]])); };
+
+  P.nb_clean = () => kPage('Cleaning equipment', 'After every feed, and a little extra in the first months.',
+    kH('After every feed') + kOl([['Take it apart', 'Bottle, nipple, ring, valve' + (pumps() ? ', and pump parts.' : '.')], ['Wash', 'Hot, soapy water and a brush, or the dishwasher.'], ['Air-dry', 'On a clean rack, not a used towel.']])
+    + kNote('Sanitize once a day', 'Boil for 5 minutes, steam, or use the dishwasher’s sanitize setting. Most important under 2 months, for babies born early, or with a weak immune system.'));
 
   // 4. Nutrition and growth
   P.nb_growth = () => { const fm = formulaFam(), b = isBreast(), br = b && fd() === 'Breast milk', fmOnly = fd() === 'Formula';
-    return nbPage('Nutrition and growth', 'Is he getting enough?', 'Diapers and weight tell you more than minutes or ounces.', C.pink, nbTabs([
-      ['Getting enough', h2('Wet diapers, the first week') + tl('', [['Days 1–2', 'diaper', 'About 1–2 a day.'], ['Days 3–4', 'diaper', 'About 3–4 a day.'], ['Day 5', 'diaper', 'About 5 a day.'], ['Day 6 on', 'drop', '6 or more a day, pale yellow.']])
-        + h2('Poop, the first week') + illGrid([[ILL.poop('#2b2622'), 'Days 1–2', 'Black and sticky'], [ILL.poop('#5f6b33'), 'Days 3–4', 'Greenish'], [ILL.poop(br ? '#d4a23a' : fmOnly ? '#b98a4e' : '#c99642'), 'By day 5', br ? 'Yellow and seedy' : fmOnly ? 'Tan, like peanut butter' : 'Yellow to tan']])
-        + h2('How to tell he’s full') + fullTiles()],
-      ['Growth and nutrients', h2('Weight') + H().tiles([['First days', 'Some weight loss', 'Up to about 10% is common'], ['By about 2 weeks', 'Back to birth weight', 'The surest sign it’s going well']])
-        + small('Extra hungry for a few days?', 'A growth spurt, often around 2–3 weeks. Feed more, and it passes.')
-        + h2('Key nutrients') + H().tiles([['Vitamin D', b ? '400 IU every day' : 'Built into formula', b ? 'Drops, from the first days' : 'Drops until he drinks 32 oz a day'], ['Iron', fm ? 'In the formula' : 'Ask at 4 months', fm ? 'Choose one with iron' : 'Breastfed babies may need drops'], ['Water', 'None yet', 'Milk is all he needs'], ['Food or juice', 'Not yet', 'Around 6 months']])]])); };
+    const d = babyDays(), now = d < 2 ? 0 : d < 4 ? 1 : d < 5 ? 2 : 3;
+    const day = (wet, color, poop, sub) => `<div class="k-grid" style="margin-top:14px"><div>${kI('drop')}<b>${F('Wet diapers')}</b><div class="k-big">${wet}</div><small>${F('Per 24 hours')}</small></div><div>${kI('diaper')}<b>${F('Poop')}</b><div style="display:flex;align-items:center;margin-top:10px"><span class="k-dot" style="background:${color}"></span><b style="margin:0">${F(poop)}</b></div><small>${F(sub)}</small></div></div>`;
+    const ylw = br ? '#d4a23a' : fmOnly ? '#b98a4e' : '#c99642', ylwT = br ? 'Yellow and seedy' : fmOnly ? 'Tan, like peanut butter' : 'Yellow to tan';
+    return kPage('Nutrition and growth', 'The signs that feeding is going well, and what to expect as he grows.',
+      kCard('heart', 'Is he getting enough?', kP('You don’t have to measure every feed. These three signs give you a better picture.') + kChecks([['Wet diapers', 'The number goes up over the first week.'], ['Good feeds', 'Swallowing, comfortable feeds, and fullness cues.'], ['Weight gain', 'Your pediatrician checks it’s on track.']]), true)
+      + kH('Diapers in the first week', 'Wet diapers and poop change together as he takes in more milk.')
+      + `<section class="k-card"><p class="k-eye">${F('His age in days')}</p>` + kPick([['1–2', day('1–2', '#2b2622', 'Black and sticky', 'Meconium, his first poop.')], ['3–4', day('3–4', '#5f6b33', 'Greenish', 'Changing as milk comes in.')], ['5', day('5', ylw, 'Lighter', 'Turning ' + (fmOnly ? 'tan.' : 'yellow.'))], ['6+', day('6+', ylw, ylwT, 'How often can vary.')]], now) + kMute('Your pediatrician’s plan comes first.') + `</section>`
+      + `<b style="display:block;font-size:17px;margin:4px 2px 4px">${F('What’s worth a call?')}</b>` + kP('Too few wet diapers, poor feeding, or poop that stays dark after the first few days. White, bloody, or black poop after the first days needs a call the same day.')
+      + kDiv() + kH('How to tell he’s full', 'Babies have their own ways of showing they’re finished.')
+      + kGrid([['hand', 'Relaxed hands', 'Fists loosen'], ['eye', 'Turns away', 'Stops seeking milk'], ['moon', 'Slows down', 'Fewer, lazier sucks'], ['heart', 'Looks content', 'Settles after feeding']])
+      + kMute('One cue alone doesn’t prove a full feed. Look at feeds, diapers and growth together.')
+      + kDiv() + kH('What to expect with weight') + kRows([['drop', 'The first few days', 'Some weight loss is expected after birth, up to about 10%. Your pediatrician checks how much.'], ['star', 'Around 2 weeks', 'Most babies are back to birth weight. Babies born early may follow a different plan.']])
+      + kNote('Extra hungry for a few days?', 'A growth spurt can mean more frequent feeding, often around 2–3 weeks. Follow his cues and keep an eye on diapers.')
+      + kH('Key nutrients', 'Milk gives him what he needs, with a few things to know.') + kRows([['sun', 'Vitamin D', b ? '400 IU drops every day, from the first days, for breastfed and partly breastfed babies.' : 'Formula has it built in. Ask about drops until he drinks about 32 oz a day.'], ['shield', 'Iron', fm ? 'Iron-fortified formula has what he needs.' : 'Breastfed babies may need iron drops around 4 months, sooner if born early. Ask your pediatrician.'], ['drop', 'Water', 'No extra water or juice for healthy newborns.'], ['bottle', 'Food', 'Milk is his whole diet. Solids usually start around 6 months.']])
+      + kDiv() + kQs('Good to know', [b && ['How do I give vitamin D drops?', 'Use the dropper that comes with them, on the nipple or inside his cheek.'], ['What if he doesn’t poop every day?', br ? 'In the first weeks, most breastfed babies poop often. Later, some go days between, and that’s fine if it’s soft.' : 'Some babies on formula go a day or two between poops. Soft matters more than how often.'], ['Does he need a different feeding plan?', 'Babies born early, or slow to regain weight, often have a plan from their pediatrician. Follow it first.']])); };
 
   // 5. Feeding challenges
   P.nb_challenges = () => { const nurse = nurses(), pump = pumps(), b = isBreast(), bot = isBottle();
-    return nbPage('Feeding challenges', 'What’s normal, and what helps', 'Most hard feeds have a simple cause. Pick what you’re seeing.', C.pink,
-      nbTabs([
-      ['Spit-up', h2('How much is normal?') + H().tiles([['What matters most', 'Comfortable and growing', 'More than how much comes up'], ['How much', 'A tablespoon or two', 'Spread out, it looks like more']])
-        + h2('What helps') + steps([['sit', 'Upright after', 'For 20–30 minutes'], ['clock', 'Smaller feeds', 'More often'], ['eye', 'Stop before overfull', 'When he slows']], false)
-        + small('Call if it’s forceful,', 'green or bloody, or he cries or arches at most feeds. For sleep, flat on his back, even with spit-up.')],
-      ['Gas and crying', h2('Seems gassy?') + steps([['smile', 'Burp mid-feed', 'Not just at the end'], ['hand', 'Bicycle his legs', 'Gently, on his back'], ['mat', 'Tummy time', 'Awake and watched']], false)
-        + h2('Crying that won’t stop') + steps([['eye', 'Check', 'Hunger, burp, diaper, too warm'], ['moon', 'Soothe', 'Swaddle, hold, shush, sway'], ['heart', 'Step away', 'On his back, somewhere safe']], true)
-        + small('Never shake him.', 'Call someone to take over if you need to. Fussy evenings peak around 6 weeks and ease by 3–4 months.')],
-      ['Fussy feeds', h2('Pulling off, dozing, gulping') + steps([['eye', 'Feed early', 'Before crying starts'], ['smile', 'Burp, then retry', 'Trapped air feels like full'], bot ? ['bottle', 'Check the nipple', 'Too fast or too slow?'] : ['drop', 'Gulping?', 'Lean back, so he feeds against gravity']], false)
-        + small('A stuffy nose?', 'Saline drops and gentle suction before feeds, and keep him upright.')],
-      ['Poop', h2('Colors to call about') + illGrid([[ILL.poop('#e9e4d6'), 'White or pale', 'Call the same day'], [ILL.poop('#b3362c'), 'Red', 'Blood in his poop'], [ILL.poop('#2b2622'), 'Black', 'After the first few days']])
-        + small('Normal:', 'yellow, green, tan or mustard, seedy or a little mucus. Straining and going red is normal too. Hard pebbles are worth a call.')],
-      b && ['Breast pain', (nurse ? h2('Sore nipples') + steps([['mouth', 'Re-latch', 'A finger in his mouth’s corner'], ['drop', 'Soothe', 'Balm or your milk, after feeds'], ['shield', 'Protect', 'Breast shells between feeds']], false) : '')
-        + (pump ? h2('Pumping hurts') + steps([['eye', 'Check the flange', 'Nipple moves freely'], ['hand', 'Lower the suction', 'Highest comfortable level'], ['cup', 'Balm or oil', 'Inside the tunnel']], false) : '')
-        + h2('A tender lump') + two(['Clogged duct', 'Tender, and you feel well. Keep going, use a cold pack, skip deep massage.'], ['Call your doctor', 'Red and painful, with a fever or chills, or burning pain.', '#fdeee6', '#9a5a3c'])]])
-      + gtk([['steth', 'Who can help', (b ? 'A lactation consultant for latch, pain and supply. ' : '') + 'Your pediatrician for weight and feeds.'], ['smile', 'How you’re doing', 'Feeling low or overwhelmed most days? Tell your doctor, or call or text 1-833-852-6262.']])); };
+    const call = t => `<b style="display:block;font-size:16px;margin:14px 0 4px">${F('What’s worth a call?')}</b>` + kP(t);
+    return kPage('Feeding challenges', 'What’s normal, what helps, and when to call. Pick what you’re seeing.',
+      kTwo(['Usually normal', 'Frequent feeds, fussy evenings, some spit-up, grunting, dozing mid-feed.'], ['Call your pediatrician', 'Too few wet diapers, too sleepy to feed, green vomit, pale poop, or a fever of 100.4°F.'])
+      + `<div style="height:10px"></div>` + kPick([
+      ['Spit-up', kH('Is this much spit-up normal?', 'Usually. A tablespoon or two at a time is common, and it looks like more once it spreads out.') + kRows([['sit', 'Upright after feeds', 'For 20–30 minutes.'], ['clock', 'Smaller feeds, more often', 'Big feeds come back up more.'], ['eye', 'Stop when he slows', 'Don’t push him to finish.']]) + kP('For sleep, flat on his back, even with spit-up. Wedges and inclined sleepers aren’t safe.') + call('Forceful vomiting, green or bloody, or crying and arching at most feeds.')],
+      ['Gas and crying', kH('Seems gassy?') + kRows([['smile', 'Burp mid-feed', 'Not just at the end.'], ['hand', 'Bicycle his legs', 'Gently, on his back.'], ['mat', 'Tummy time', 'When he’s awake and watched.']]) + kH('Crying that won’t stop') + kOl([['Check', 'Hunger, a burp, a diaper, too warm.'], ['Soothe', 'Swaddle, hold, shush, sway, or a pacifier.'], ['Step away', 'Lay him on his back somewhere safe.']]) + kNote('Never shake him.', 'Even when you’re exhausted. Call someone to take over if you need to.') + call('Crying for 3 or more hours a day, or grunting with every breath.')],
+      ['Fussy feeds', kH('Pulling off, dozing, gulping') + kRows([['eye', 'Feed early', 'Before crying starts.'], ['smile', 'Burp, then retry', 'Trapped air can feel like full.'], bot ? ['bottle', 'Check the nipple', 'Too fast or too slow?'] : ['drop', 'Gulping?', 'Lean back, so he feeds against gravity.']]) + kP('A stuffy nose? Saline drops and gentle suction before feeds, and keep him upright.') + call('Too sleepy to feed most times, or refusing several feeds in a row.')],
+      ['Poop', kH('Colors to call about') + kRows([['diaper', 'White or very pale', 'Call the same day.'], ['drop', 'Red', 'Could be blood.'], ['diaper', 'Black, after the first few days', 'Worth a call.']]) + kP('Normal: yellow, green, tan or mustard, seedy or a little mucus. Straining and going red is normal too. Hard pebbles are worth a call.')],
+      b && ['Breast pain', kH('Pain isn’t something to push through') + (nurse ? kRows([['mouth', 'Sore nipples', 'Re-latch, then balm or your own milk after feeds. Shells between feeds.']]) : '') + (pump ? kRows([['eye', 'Pumping hurts', 'Check the flange size and lower the suction.']]) : '') + kRows([['heart', 'A tender lump', 'Often a clogged duct. Keep feeding or pumping, use a cold pack, skip deep massage.'], ['drop', 'Burning or itching', 'Can be thrush. See your doctor.']]) + call('A red, painful breast with a fever or chills. Call your own doctor.')]], 0, true)
+      + kDiv() + kQs('Good to know', [['Who can help?', (b ? 'A lactation consultant for latch, pain and supply, often covered by insurance. ' : '') + 'Your pediatrician for weight and feeds, any time you’re unsure.'], ['How are you doing?', 'If you feel low or overwhelmed most days, tell your doctor. You can also call or text 1-833-852-6262, any time.']])); };
   // ---- Milk feeds (6 weeks–4 months), rebuilt on the Newborn model (Nov 5): four subject pages with tabs, grouped by moment. ----
   HEADART['Feeds & rhythm'] = () => ART.often(5);
   P.rhythm1 = () => { const nurse = nurses(), b = isBreast(), bot = isBottle(), fm = formulaFam();
