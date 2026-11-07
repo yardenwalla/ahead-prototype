@@ -2421,11 +2421,11 @@
   P.x_latch = () => xPage('feed', 'x_latch', 'A deep latch feels like a tug, not a pinch', 'Get comfortable first, with a pillow under him. Bring him to you, not you to him.',
       kHolds() + xDo('Step by step', ['Nose to nipple, head and body in a line.', 'Wait for a wide mouth, like a yawn.', 'Bring him in chin first.'], true)
       + xKnow('How you’ll know it’s right', 'Flared lips, long sucks with swallows, and a tug, not a pinch.')
-      + xFix('If it’s not going smoothly', [['Clicking or pinching', 'Break the seal with a finger, and try again.'], ['Gulping or coughing', 'Lean back, so he feeds against gravity.'], ['Too sleepy to latch', 'Hand express a few drops of colostrum onto a spoon.']])
+      + xFix('If it’s not going smoothly', [['Clicking or pinching', 'Break the seal with a finger, and try again.'], ['Gulping or coughing', 'Lean back, so he feeds against gravity.'], ['Too sleepy to latch', 'Hand express a few drops of colostrum onto a spoon.'], ['Breast very full and firm', 'Hand express a little first, so he can latch.']])
       + latchVideo() + xNote('Worth a call:', 'most feeds hurt. A lactation consultant can help, and check for tongue-tie.'));
   P.x_burp = () => { const b = isBreast(), bot = isBottle(), nurse = nurses();
     const holds = illGrid([[ILL.shoulder(PALT), 'Over your shoulder', 'Chin on a burp cloth'], [ILL.sitting(PALT), 'Sitting on your lap', 'Support chin and chest'], [ILL.tummy(PALT), 'Tummy-down', 'Across your lap']]);
-    return nurse ? xPage('feed', 'x_burp', 'When he slows, burp him and offer the other side', 'Often 10–20 minutes a side at first. Some feeds take one side, some both.',
+    return nurse ? xPage('feed', 'x_burp', 'When he slows, burp him and offer the other side', 'Often 10–20 minutes a side at first, but watch him, not the clock. Some feeds take one side, some both.',
       holds + xDo('What to do', ['When sucking slows, burp him.', 'Then offer the other side.', 'Start the next feed on the last side.'])
       + xFix('If it’s not going smoothly', [['Dozing off', 'Switch sides, or squeeze gently behind the nipple.'], ['Spit-up or hiccups', 'Common, and harmless.']])
       + (!bot ? xNote('A first bottle?', 'Around 3–4 weeks, once nursing is going well.') : ''))
@@ -2433,12 +2433,12 @@
       holds + xDo('What to do', ['Pause every 2–3 oz, and at the end.', 'Firm pats or slow circles on his back.', 'No burp after a minute or two? Carry on.'])
       + xKnow('Good to know', 'A little spit-up and hiccups are common, and harmless.')); };
   P.x_bottle = () => { const nurse = nurses(), fm = formulaFam(), top = nurse && fm;
-    return xPage('feed', 'x_bottle', top ? 'Top up with a small, paced bottle' : 'Pace each bottle, and stop when he’s done', top ? 'Only if he still seems hungry after both sides.' : 'Let him set the pace. A bottle often takes 10–20 minutes.',
+    return xPage('feed', 'x_bottle', top ? 'Top up with a small, paced bottle' : 'Pace each bottle, and stop when he’s done', top ? 'Only if he still seems hungry after both sides, or if your pediatrician suggests it.' : 'Let him set the pace. A bottle often takes 10–20 minutes.',
       (top ? H().tiles([['A top-up', '½–2 oz', 'After nursing'], ['Burp', 'Every 2–3 oz', 'And at the end']])
         : H().tiles([['Day 1', '1–2 tsp', 'A feed'], ['Day 3', 'About 1 oz', 'A feed'], ['Week 1', '1½–2 oz', 'A feed'], ['Weeks 2–4', '2–4 oz', 'A feed']]))
       + xDo('Step by step', ['Hold him semi-upright.', 'Touch his lip, and let him draw the nipple in.', 'Keep the bottle level, and pause every few sucks.', 'Stop when he’s done, even if milk is left.'], true)
       + xFix('If it’s not going smoothly', [['Gulping or spilling', 'Try a slower nipple.'], ['Working hard, frustrated', 'Try a faster nipple.'], ['Falls asleep', 'Burp, then offer again.'], nurse && ['Won’t take a bottle', 'Have someone else offer it.']])
-      + xNote('Never prop a bottle.', 'Any bottle he takes well works, wide or narrow, with a slow-flow nipple.')); };
+      + (top ? xNote('Topping up most feeds?', 'Ask a lactation consultant how to keep your milk up, like pumping after.') : '') + xNote('Never prop a bottle.', 'Any bottle he takes well works, wide or narrow, with a slow-flow nipple.')); };
   P.x_store = () => { const b = isBreast(), fm = formulaFam();
     return xPage('prep', 'x_store', 'How long milk keeps', 'Once he starts a bottle, use it soon, then toss what’s left.',
       (b ? (fm ? h2('Breast milk') : '') + storeTable([['Fresh', '4 hours', '4 days', '6 months'], ['Thawed', '1–2 hours', '24 hours', 'Never refreeze']]) : '')
@@ -2507,7 +2507,7 @@
       (b && fm ? xCompare([['drop', 'Breast milk', 'Changes as he grows, and helps protect him from some illnesses.'], ['bottle', 'Formula', 'Everything he needs to grow, with vitamin D and iron.']])
         : b ? xCompare([['drop', 'Breast milk', 'Changes as he grows, and helps protect him from some illnesses.'], ['star', 'Vitamin D', 'Drops every day, from the first days.']])
         : xCompare([['bottle', 'Ready-to-feed', 'Pour and feed. Easiest, costs most.'], ['drop', 'Concentrate', 'Mix with water.'], ['bowl', 'Powder', 'Mix with hot water. Costs least.']]))
-      + xDo('What to do', b && fm ? ['Use any standard, iron-fortified formula.', 'They can share a bottle once the formula is mixed. Never add powder to breast milk.'] : b ? ['Give vitamin D drops every day.', 'If you ever add formula, any standard, iron-fortified one works.'] : ['Follow the label exactly. Never water it down.', 'Switching between standard brands is fine.', 'Ask before a special formula.'])); };
+      + xDo('What to do', b && fm ? ['Use any standard, iron-fortified formula.', 'Offer breast milk first, then formula, so none of the breast milk goes to waste.'] : b ? ['Give vitamin D drops every day.', 'If you ever add formula, any standard, iron-fortified one works.'] : ['Follow the label exactly. Never water it down.', 'Switching between standard brands is fine.', 'Ask before a special formula.'])); };
   P.x_bottle = (() => { const prev = P.x_bottle; return () => { const nurse = nurses(), fm = formulaFam(); const h = prev(); if (!(nurse && fm)) return h;
     const i = h.indexOf('<div class="hub-tiles'), j = h.indexOf('<section class="ss-do">', i); if (i < 0 || j < 0) return h;
     return h.slice(0, i) + xNums('A top-up', [['½–2 oz', 'After nursing, if still hungry'], ['2–3 oz', 'Burp every'], ]) + h.slice(j); }; })();
@@ -2525,7 +2525,8 @@
       + xKnow('How you’ll know it’s going well', 'Heavy diapers, and poop that turns from black to green to ' + (fmOnly ? 'tan' : 'yellow') + ' by day 5.')
       + xNote('Worth a call:', 'fewer wet diapers, dark urine, or black poop after day 5.')); };
 
-  P.x_bottle = (() => { const prev = P.x_bottle; return () => prev().replace(xNums('A top-up', [['½–2 oz', 'After nursing, if still hungry'], ['2–3 oz', 'Burp every']]), xNums('A top-up', [['½–2 oz', 'After nursing, only if he still seems hungry']])); })();
+  const topUpViz = () => `<section class="hub-card" style="padding:16px;margin:0 0 12px;display:flex;gap:16px;align-items:center"><svg viewBox="0 0 40 72" style="flex:none;width:44px;height:auto" aria-hidden="true"><path d="M15 4h10v8H15z" fill="#e9c6d3"/><path d="M12 12h16l3 8v44a6 6 0 0 1-6 6H15a6 6 0 0 1-6-6V20Z" fill="#fff" stroke="#d9b3c2" stroke-width="2"/><path d="M10 52h20v12a5 5 0 0 1-5 5H15a5 5 0 0 1-5-5Z" fill="#f6dbe5"/>${[30, 40, 52].map(y => `<path d="M24 ${y}h5" stroke="#d9b3c2" stroke-width="1.5"/>`).join('')}</svg><div><small style="display:block;font-size:12.5px;font-weight:600;color:var(--ss-ink)">${F('A top-up')}</small><strong style="display:block;font-size:28px;line-height:1.1;margin:2px 0">${F('½–2 oz')}</strong><span style="display:block;font-size:13.5px;line-height:1.4;color:#4c4757">${F('A small bottle after nursing. Your pediatrician or lactation consultant can tell you how much.')}</span></div></section>`;
+  P.x_bottle = (() => { const prev = P.x_bottle; return () => prev().replace(xNums('A top-up', [['½–2 oz', 'After nursing, if still hungry'], ['2–3 oz', 'Burp every']]), topUpViz()); })();
   const weightViz = () => { const W = 300, H = 120, x = d => 18 + d / 28 * (W - 36), y = v => 70 - v * 4.2;
     const pts = [[0, 0], [2, -5], [4, -7], [7, -4], [11, -1], [14, 0], [21, 3.5], [28, 7]].map(([d, v]) => `${x(d).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
     return `<section class="hub-card" style="padding:14px 14px 10px;margin:0 0 12px"><b style="display:block;font-size:15px;margin:0 2px 6px">${F('His first month')}</b><svg viewBox="0 0 ${W} ${H}" style="display:block;width:100%;height:auto" aria-label="${F('Weight dips in the first days, is back to birth weight by about 2 weeks, then climbs')}">`
