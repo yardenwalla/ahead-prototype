@@ -220,3 +220,4 @@ Files: `js/home-cards.js`, `js/home-copy.js` (v10), `js/stages.js`.
 - Home's question can ask "Any teeth yet?" from 6 months to the first birthday, only on a week with nothing new. A "Not yet" rests 6 weeks.
 - "Poop changes with solids" stays on Home (Yarden, Nov 7).
 - Results (840 simulated families): weekly visits with something new 86% (was 84%); month 10 82% (73%), month 11 71% (68%); first teeth known for 54% of families (was 0%); weekly visits with a question 19% (18%).
+- Home's cards are set once a day. Opening or dismissing a card removes it without pulling in the next one, so "That's everything for today" stays true (and reads "You're all caught up for today" once they're all cleared). Before, Home re-picked on every redraw, so a × swapped in a new card. A card unlocked by answering Home's question still shows on the same visit.
