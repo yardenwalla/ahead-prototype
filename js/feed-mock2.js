@@ -2056,12 +2056,13 @@
       + ribbon + cLead('An example, not a schedule. Follow his hunger cues.' + (bot ? (nurse && fm ? ' Top-ups are small, often 1–2 oz.' : ' Bottles start around 1–3 oz.') : ''))
       + h2('Know when he’s hungry') + cLead('Feed at the early signs. Crying is a late sign.')
       + cueStrip().replace(F('Hunger cues, early to late'), F('Early to late'))
+      + accs([['eye', 'Hungry, or wants comfort?', '', ['~If it’s been a while, offer a feed. If he just ate, a cuddle or a pacifier' + (nurse ? ' (once nursing is going well)' : '') + ' may settle him.'], '', '']])
       + h2('Some newborns need waking') + cLead('Until he’s back to birth weight, your pediatrician may suggest waking him about every 3 hours. Try:')
       + cList([['Undress him to his diaper'], ['Gently stroke his feet or back'], ['Change his diaper midway'], [b && nurse ? 'Use breast compressions' : 'Pause, burp, then offer again']], true)
       + h2('Evenings can get intense') + cLead('Feeding again and again for a few hours is cluster feeding. It’s common' + (b ? ', and it doesn’t mean you’re low on milk.' : '.'))
       + cList([[b ? 'roll' : 'bottle', b ? 'Switch sides often' : 'Smaller bottles, more often', b ? 'Keeps milk flowing when he slows' : 'Instead of one big one'], ['diaper', 'Change first', 'Before the feed, so he stays sleepy after'], ['moon', 'Keep nights dim and quiet', 'Save talking and play for the day'], ['heart', 'Take turns', 'So each of you gets a longer stretch']])
       + h2('It won’t always be this frequent') + cList([['clock', 'Around 6 weeks', 'Fussy evenings peak, then ease'], ['moon', '6–8 weeks', 'Cluster feeding eases'], ['smile', '2–3 months', 'Many babies sleep a longer stretch']])
-      + h2('Common questions') + accs([['eye', 'Hungry, or wants comfort?', '', ['~If it’s been a while, offer a feed. If he just ate, a cuddle or a pacifier' + (nurse ? ' (once nursing is going well)' : '') + ' may settle him.'], '', ''], ['eye', 'Days and nights mixed up?', '', ['~Keep days bright and nights quiet and boring. It improves over a few weeks.'], '', ''], ['eye', 'Should I track feeds?', '', ['~A short note of feeds and diapers helps at first. Stop once things feel settled, unless your pediatrician asks you to keep going.'], '', '']])); };
+      + h2('Common questions') + accs([['eye', 'Days and nights mixed up?', '', ['~Keep days bright and nights quiet and boring. It improves over a few weeks.'], '', ''], ['eye', 'Should I track feeds?', '', ['~A short note of feeds and diapers helps at first. Stop once things feel settled, unless your pediatrician asks you to keep going.'], '', '']])); };
 
   // 2. Feeding skills
   P.nb_skills = () => { const nurse = nurses(), bot = isBottle(), fm = formulaFam(), b = isBreast();
