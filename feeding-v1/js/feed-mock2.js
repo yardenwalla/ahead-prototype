@@ -2946,6 +2946,27 @@
     const list = h.slice(i, j + 6); if ((list.match(/sm-row hub-row/g) || []).length !== 1) return h;
     return h.slice(0, i) + seqCss + seqCard(area, 'bowl', v === 3 ? 'Iron first, then lots of variety' : 'Start when he shows all the signs') + h.slice(j + 6); }; })();
 
+
+  // ---- Simulation gaps (Nov 7), folded in to keep the stage pages calm. ----
+  // 1. Nursing-only families get one row for time apart, since they never see the bottle walkthrough.
+  const awayNurse = P.y_away;
+  P.y_away = () => !(nurses() && !isBottle()) ? awayNurse() : yPage(XC.p1, 'Time apart', 'Getting ready for work or a sitter', 'Start a few weeks ahead, so he knows a bottle and there’s milk in the freezer.',
+      xCompare([['bottle', 'A first bottle', '2–3 weeks ahead. Someone else offers it.'], ['snow', 'A small stash', 'Freeze 2–4 oz bags, a little at a time.'], ['clock', 'How much', 'About 1–1½ oz for each hour apart.']])
+      + h2('How long breast milk keeps') + storeTable([['Fresh', '4 hours', '4 days', '6 months is best, 12 is fine'], ['Thawed', '1–2 hours', '24 hours', 'Never refreeze'], ['Left after a feed', '2 hours', 'Toss it', 'Toss it']])
+      + xDo('What to tell caregivers', ['Feed on cue, not the clock.', 'Hold the bottle level, and let him pause.', 'Small bottles, so less is wasted.'])
+      + xKnow('When you’re together', 'Nurse as usual. Many babies nurse more in the evenings after a day apart.'));
+  window.M1HOME = (() => { const prev = window.M1HOME; return () => { const h = prev(); if (!(nurses() && !isBottle())) return h;
+    const row = H().row({ cat: CAT, icon: 'bag', title: 'Going back to work, or a sitter?', sub: 'A first bottle, and a small milk stash', onclick: go('y_away') }).replace(/<span class="hub-dot">[\s\S]*?<\/span><span class="hub-row-copy">/, `<span class="hub-dot">${hubArt('bag', CAT).replace('data-art=', 'data-keep=')}</span><span class="hub-row-copy">`).replace('class="hub-row', `style="--sm-bg:${XC.p1[0]};--sm-ink:${XC.p1[1]}" class="sm-row hub-row`);
+    const i = h.indexOf('</div><button class="hub-rough-card'); return i < 0 ? h : h.slice(0, i) + row + h.slice(i); }; })();
+  // 2. Pumping-only families: one line on the newborn day about how often to pump, beside the pump marks on the ribbon.
+  P.x_day = (() => { const prev = P.x_day; return () => { const h = prev(); if (!onlyPump() || formulaFam()) return h;
+    const t = `<li>${F('Days 3–5: expect hungrier, more frequent feeds as your milk comes in.')}</li>`;
+    return h.replace(t, t + `<li>${F('Pump about as often as he feeds, 8 or more times a day, including once at night.')}</li>`); }; })();
+  // 3. Nursing + formula: cutting back top-ups, as three tiles instead of one line.
+  P.y_bottle = (() => { const prev = P.y_bottle; return () => { const h = prev(); if (!(nurses() && formulaFam())) return h;
+    return h.replace(F('Many babies need fewer top-ups as nursing gets easier. Your pediatrician can help you cut back.'), F('Many babies need fewer top-ups as nursing gets easier. Cut back slowly, with your pediatrician’s okay.'))
+      .replace('<section class="ss-do">', h2('Fewer top-ups? Cut back slowly') + xCompare([['eye', 'When', 'Gaining well, and your pediatrician agrees.'], ['drop', 'Go slowly', 'About ½ oz less in one top-up, every few days.'], ['diaper', 'Watch diapers', 'Still 6+ wet a day? Keep going. Fewer? Go back a step.']]) + '<section class="ss-do">'); }; })();
+
   const base = window.changesRoute;
   window.changesRoute = function (r) { const [, cat, s, a, x] = r.split(':'); if (cat === CAT && s === 'mock' && P[a]) { window.__fdLast = r; const out = P[a](x); return calm(a, a === 'dirD' ? out : tidy(out)); } return base(r); };
   const op = window.openPage;
