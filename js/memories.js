@@ -81,7 +81,7 @@
         ? `<div class="mem-story-wrap"><label class="mem-story is-plain" aria-label="Change the newborn photo"><img src="${photo(0)}" alt=""><em>Newborn</em>${hubPhotoInput(0)}</label>${remove(0)}</div>`
         : `<label class="mem-story is-plain is-empty" aria-label="Add the newborn photo"><em>Newborn</em><span class="mem-story-add">＋ Add photo</span>${hubPhotoInput(0)}</label>`;
       if (!designs) return photo(m) ? `<div class="mem-story-wrap"><label class="mem-story is-plain"><img src="${photo(m)}" alt=""><em>${label(m)}</em>${hubPhotoInput(m)}</label>${remove(m)}</div>` : '';
-      if (photo(m)) return `<div class="mem-story-wrap"><button class="mem-story" onclick="storyShare(${m})" aria-label="Open the ${L(m)} Story"><img data-story-thumb="${m}" alt=""></button>${remove(m)}</div>`;
+      if (photo(m)) return `<div class="mem-story-wrap"><button class="mem-story" onclick="storyShare(${m})" aria-label="Open the ${L(m)} card"><img data-story-thumb="${m}" alt=""></button>${remove(m)}</div>`;
       return `<label class="mem-story is-empty" aria-label="Add the ${L(m)} photo"><img data-story-thumb="${m}" alt="">${quiet ? '' : '<span class="mem-story-add">＋ Add photo</span>'}${hubPhotoInput(m)}</label>`;
     };
     const bigs = bigFirsts(firsts);
@@ -101,7 +101,7 @@
     // Nothing saved yet: a welcoming card, with the year's designs waiting underneath.
     if (!have.length && !firsts.length) {
       const P = typeof babyPronouns === 'function' ? babyPronouns() : { p: 'their' };
-      b += `<section class="mem-welcome"><h2>${esc2(now === 0 ? `${name()}’s year starts here` : `${name()}’s year, one photo a month`)}</h2><p>${esc2(`Add a photo each month and it becomes a little Story to keep and share. By ${P.p} first birthday, all twelve hang together on one page.`)}</p><div class="mem-welcome-actions"><label class="primary mem-welcome-btn">${esc2(`Add ${now === 0 ? 'a newborn' : now === 12 ? 'a first-birthday' : `the ${now}-month`} photo`)}${hubPhotoInput(now)}</label></div></section>`;
+      b += `<section class="mem-welcome"><h2>${esc2(now === 0 ? `${name()}’s year starts here` : `${name()}’s year, one photo a month`)}</h2><p>${esc2(`Add a photo each month and it becomes a little keepsake card to share. By ${P.p} first birthday, all twelve hang together on one page.`)}</p><div class="mem-welcome-actions"><label class="primary mem-welcome-btn">${esc2(`Add ${now === 0 ? 'a newborn' : now === 12 ? 'a first-birthday' : `the ${now}-month`} photo`)}${hubPhotoInput(now)}</label></div></section>`;
       // The welcome button already adds this month's photo, so its tile doesn't repeat the button.
       b += `<div class="mem-head"><h2>Month by month</h2></div><div class="mem-stories" tabindex="0" role="region" aria-label="Month by month photos">${months.map(m => card(m, m === now)).join('')}</div>`;
       b += bookCard + `<p class="hub-foot">Photos and entries stay on this device.</p></div>`;

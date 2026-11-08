@@ -214,7 +214,7 @@
     sheet = document.createElement('div');
     sheet.className = 'story-sheet'; sheet.setAttribute('role', 'dialog'); sheet.setAttribute('aria-modal', 'true');
     sheet.setAttribute('aria-label', isYear ? `${babyName()}’s first year` : m === 0 ? `${babyName()}’s newborn photo` : `${babyName()}’s ${m}-month photo`);
-    const eyebrow = opts.saved ? 'Photo saved · Ready for your Story' : isYear ? 'Happy first birthday' : m === 0 ? 'Newborn' : m === 12 ? '1 year' : `${m} month${m === 1 ? '' : 's'}`;
+    const eyebrow = opts.saved ? 'Photo saved · Ready to share' : isYear ? 'Happy first birthday' : m === 0 ? 'Newborn' : m === 12 ? '1 year' : `${m} month${m === 1 ? '' : 's'}`;
     const title = isYear ? `${nm}’s first year` : m === 0 ? `Hello, ${nm}` : m === 12 ? `${nm} is one!` : `${nm} is ${WORDS[m - 1]}`;
     const note = isYear
       ? (have < 12 ? `${12 - have} month${12 - have === 1 ? ' doesn’t' : 's don’t'} have a photo yet. Add ${12 - have === 1 ? 'it' : 'them'} in Memories and they’ll appear here.` : 'All twelve months, on one page.')
