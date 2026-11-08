@@ -421,8 +421,8 @@
       // A checkup whose time has passed asks when it was, not when it will be.
       try { if (planned && (NOW - parse(profile.dob)) / 2629746e3 > Math.max(age, 0.25) + 0.5) planned = false; } catch (e) {}
       const old = healthRecord(age), key = (planned ? 'plan-' : '') + age;
-      const form = `<form class="hub-card hub-form" onsubmit="submitVisitForm(event,'${key}')"><label for="visitDate">${planned ? 'Appointment date' : 'Date of the visit'}</label><input id="visitDate" type="date" min="${profile.dob}" ${!planned ? `max="${iso(NOW)}"` : ''} value="${planned && old?.date ? old.date : iso(NOW)}" required>${journeyError ? `<p class="journey-error" role="alert">${esc2(journeyError)}</p>` : ''}<button class="hub-button">${planned ? 'Save the date' : 'Save to Memories'}</button><button type="button" class="hub-link is-quiet hub-cancel" onclick="back()">Cancel</button></form>`;
-      return detailPage('Health', healthJourneyLabel(age), planned ? 'When is the appointment?' : 'When was the visit?', planned ? 'We’ll remind you on Home as it gets close.' : 'It goes in Memories.', form.replace(/Maya/g, esc2(name())), 'steth');
+      const form = `<form class="hub-card hub-form" onsubmit="submitVisitForm(event,'${key}')"><label for="visitDate">${planned ? 'Appointment date' : 'Date of the visit'}</label><input id="visitDate" type="date" min="${profile.dob}" ${!planned ? `max="${iso(NOW)}"` : ''} value="${planned && old?.date ? old.date : iso(NOW)}" required>${journeyError ? `<p class="journey-error" role="alert">${esc2(journeyError)}</p>` : ''}<button class="hub-button">${planned ? 'Save the date' : 'Mark it as done'}</button><button type="button" class="hub-link is-quiet hub-cancel" onclick="back()">Cancel</button></form>`;
+      return detailPage('Health', healthJourneyLabel(age), planned ? 'When is the appointment?' : 'When was the visit?', planned ? 'We’ll remind you on Home as it gets close.' : 'You’ll see it checked off in Health.', form.replace(/Maya/g, esc2(name())), 'steth');
     };
   }
 
@@ -511,7 +511,7 @@
       ['Health', 'steth', 'Fever and sick days: when to call', 'chg:Health:d:sick', 'fever temperature sick ill cold cough vomit vomiting diarrhea breathing medicine tylenol acetaminophen ibuprofen emergency call doctor'],
       ['Health', 'heart', 'How are you doing?', 'chg:Health:d:you', 'postpartum depression anxiety baby blues overwhelmed mom dad parent me tired exhausted exhaustion sad lonely stressed help crying myself'],
       ['Health', 'steth', 'Checkups and vaccines', 'topic:Health', 'checkup checkups visit well child doctor appointment vaccine vaccines shots immunizations'],
-      ['Safety', 'shield', 'Swings, bouncers and floor seats', 'chg:Safety:d:gear', 'swing bouncer bouncy seat rocker floor seat bumbo activity center jumper weight limit'],
+      ['Safety', 'shield', 'Swings, bouncers and floor seats', 'chg:Safety:d:step:gear', 'swing bouncer bouncy seat rocker floor seat bumbo activity center jumper weight limit'],
       ['Childcare', 'home', 'Childcare: daycare, nannies, sitters and family', 'topic:Childcare', 'childcare child care daycare day care nanny nanny share babysitter sitter grandparents family caregiver back to work return to work'],
       ['Childcare', 'heart', 'Settle in: each day, sick days, moving up', 'chg:Childcare:d:start', 'settle settling first week drop off dropoff pickup pick up daily report notes handoff sick day sick days fever policy home toddler room moving up goodbyes separation'],
       ['Childcare', 'notepad', 'Care card for caregivers', 'chg:Childcare:d:card', 'care card caregiver babysitter instructions emergency contacts allergies routine handover'],
@@ -816,7 +816,7 @@ window.hubCenterStages = function () {
     if (typeof recordCheckin === 'function') recordCheckin('visit:' + a, 'Yes');   // one question per visit: this was it
     const d = due(a), r = saveJourneyVisit(a, { date: iso(d < NOW ? d : NOW), status: 'attended' });
     render();
-    if (r) hubToast('Saved', `The ${label(a)} is in Memories.`, changeDate(r));
+    if (r) hubToast('Saved', `The ${label(a)} is marked as done.`, changeDate(r));
   };
   window.hubVisitBooked = function (a) {
     let o = {}; try { o = JSON.parse(localStorage.getItem('ahead-visit-ask:' + journeyKey())) || {}; } catch (e) {}
@@ -836,7 +836,7 @@ window.hubCenterStages = function () {
     try { journeyNotice = null; } catch (e) {}   // one confirmation, not two
     while (historyStack.length && /^(visit-form|chg:Timeline:visit)/.test(historyStack[historyStack.length - 1])) historyStack.pop();
     if (historyStack.length) back(); else navigate('home');
-    hubToast('Saved', r.status === 'planned' ? `We’ll remind you on Home before ${journeyDateLabel(r.date)}.` : `Marked as done. You’ll see it in ${name()}’s year in Memories.`);
+    hubToast('Saved', r.status === 'planned' ? `We’ll remind you on Home before ${journeyDateLabel(r.date)}.` : `Marked as done. You’ll see it checked off in Health.`);
   };
 })();
 

@@ -269,16 +269,17 @@
       const prev = WELL_VISITS[WELL_VISITS.indexOf(focus) - 1], missed = prev != null && !healthRecord(prev) && !skipped[prev] ? prev : null;
       if (missed != null) missedLine = `<section class="hub-missed"><p>${F(`Had the ${healthJourneyLabel(missed).charAt(0).toLowerCase() + healthJourneyLabel(missed).slice(1)}${(() => { const d = missed === 0 ? new Date(parse(profile.dob).getTime() + 5 * 864e5) : addMonths(parse(profile.dob), missed); return d.getMonth() === NOW.getMonth() && d.getFullYear() === NOW.getFullYear() ? '' : ' back in ' + d.toLocaleDateString('en-US', { month: 'long' }); })()}? Mark it done, or tell us you skipped it.`)}</p><div><button onclick="hubVisitYes(${missed})">Mark it done</button><button onclick="hubVisitSkipped(${missed})">We skipped it</button></div></section>`;
     }
-    let b = h.hero({ eyebrow: eyebrow2, title, lead: conceptHealthSummary(age), button: done ? { label: 'Add notes from the checkup', onclick: `openHealthDetail(${age},'notes')` } : pastDue ? { label: 'Add it to Memories', onclick: `openPage('visit-form:${age}')` } : { label: planned ? 'Change the date' : 'Save the date', onclick: `openPage('visit-form:plan-${age}')` } });
+    let b = h.hero({ eyebrow: eyebrow2, title, lead: conceptHealthSummary(age), button: done ? { label: 'Add notes from the checkup', onclick: `openHealthDetail(${age},'notes')` } : pastDue ? { label: 'Mark it as done', onclick: `openPage('visit-form:${age}')` } : { label: planned ? 'Change the date' : 'Save the date', onclick: `openPage('visit-form:plan-${age}')` } });
     if (pastDue) b += `<div class="hub-browse"><button class="hub-link" onclick="openPage('visit-form:plan-${age}')">${F('Booked for later? Save the date')} ›</button></div>`;
     else if (!done && !farAhead) b += `<div class="hub-browse"><button class="hub-link" onclick="openPage('visit-form:${age}')">${F(planned && record.date < iso(NOW) ? 'Been already? Mark it as done' : 'Already had this checkup? Mark it as done')} ›</button></div>`;
-    if (live() && age !== focus) b += back('Back to your next checkup', `openPage('health-visit:${focus}')`);
+    // The banner at the top already has "Back to your next checkup", so it isn't repeated here.
     b += h.list('For the checkup', [
       h.row({ icon: 'clock', cat: 'Health', title: 'What to expect', sub: EXPECT[age], onclick: `openHealthDetail(${age},'expect')` }),
       `<span id="health-vaccines"></span>` + h.row({ icon: 'shield', cat: 'Health', title: 'Vaccines', sub: age === 0 ? 'Hepatitis B, and protection against RSV, a common winter virus' : ({ 1: 'Second hepatitis B shot (some offices give it at 2 months instead)', 2: 'Whooping cough, tetanus and diphtheria (DTaP), polio and more', 4: 'Whooping cough, tetanus and diphtheria (DTaP), polio and more', 6: 'Whooping cough, tetanus and diphtheria (DTaP) and more' + ([8, 9, 10, 11, 0, 1, 2].includes(NOW.getMonth()) ? ', plus {p} first flu shot' : ''), 9: 'Usually catch-up only' + ([8, 9, 10, 11, 0, 1, 2].includes(NOW.getMonth()) ? ', plus a flu shot' : ''), 12: 'Measles, mumps and rubella (MMR), chickenpox, hepatitis A and boosters' })[age] || 'What’s due at this checkup', onclick: `openHealthDetail(${age},'vaccines')` }),
       h.row({ icon: 'notepad', cat: 'Health', title: 'Questions and notes', sub: visitNotesFor(age) ? 'Your questions, and notes from this checkup' : 'Bring your questions, and jot down the answers', onclick: `openHealthDetail(${age},'questions')` })
     ]);
-    b += h.list('Between checkups', [
+    // "Between checkups" belongs to the Health home (the current checkup), not to every checkup page.
+    if (!live() || age === focus) b += h.list('Between checkups', [
       h.row({ icon: 'thermo', cat: 'Health', title: `When Maya seems sick`, sub: 'Fevers, tummy bugs and when to call', onclick: "openPage('chg:Health:d:sick')" }),
       h.row({ icon: 'drop', cat: 'Health', title: 'Colds and stuffy noses', sub: 'Saline, suction, and when it’s an ear infection', onclick: "openPage('chg:Health:d:cold')" }),
       actualMonth() >= 3 ? h.row({ icon: 'tooth', cat: 'Health', title: 'Teething', sub: 'Drool, chewing and sore gums, and what helps', onclick: "openPage('chg:Daily rhythm:d:gums')" }) : '',
@@ -385,7 +386,7 @@
     // (take a temperature, help them feel better, tummy bugs, colds), and the emergency signs last (AAP, HealthyChildren.org).
     const m = actualMonth(), u3 = m < 3;
     const call911 = `<section class="hub-card hub-callout is-urgent"><b>${F('Call 911 right away')}</b><p>${F('If Maya struggles to breathe or turns blue, won’t wake or is floppy, or has a seizure.')}</p></section>`;
-    const feverCard = `<section class="hub-card hub-fever is-calm"><div class="hub-fever-bands is-one"><div><small>${F(feverBand(m))}</small><b>${feverTemp(m)}<span> or higher</span></b><p>${F(u3 ? 'Call your pediatrician right away, day or night.' : (m < 6 ? 'Call your pediatrician now, even at night. Someone answers day or night.' : 'Or a fever that lasts more than a day. Call your pediatrician.'))}</p></div></div><p class="hub-fever-note">${F('Also call if Maya seems very unwell, has a rash, is unusually sleepy, or is still unwell after the fever comes down.' + feverEarlyNote())}</p></section>`;
+    const feverCard = `<section class="hub-card hub-fever is-calm"><div class="hub-fever-bands is-one"><div><small>${F(feverBand(m))}</small><b>${feverTemp(m)}<span> or higher</span></b><p>${F(u3 ? 'Call your pediatrician right away, day or night.' : (m < 6 ? 'Call your pediatrician now, day or night.' : 'Or a fever that lasts more than a day. Call your pediatrician.'))}</p></div></div><p class="hub-fever-note">${F('Also call if Maya seems very unwell, has a rash, is unusually sleepy, or is still unwell after the fever comes down.' + feverEarlyNote())}</p></section>`;
     // One flow, in the order a parent lives it: check for a fever and know when that means calling,
     // make them comfortable, then the two common bugs, and the emergency signs last.
     const thermo = () => {
@@ -435,11 +436,6 @@
       + (window.hubSigns ? hubSigns() : '')
       + `<h2 class="hub-h2">${F('What helps')}</h2>` + hubIconSteps([['star', 'Start with 2 or 3', 'Ones you’ll use every day'], ['chat', 'Say it as you sign', '“More?”'], ['heart', 'Cheer {p} version', 'Even if it looks different']], 'Development', F('Start with two or three signs, say the word as you sign it, and cheer the baby’s version.'), false));
     if (cat === 'Development' && screen === 'd' && a === 'faq') { const ref = DEV_STAGES[b] ? Number(b) : devRef(); return detailFrame('Development', DEV_STAGES[ref].title, 'What other parents ask', '', devCommonQuestions(ref).replace('<h2>Common questions</h2>', '').replace('class="common-questions"', 'class="common-questions hub-faq"')); }
-    // Swings, bouncers and floor seats: the label's limits, straps, the floor, and never for sleep (AAP, CPSC).
-    if (cat === 'Safety' && screen === 'd' && a === 'gear') return detailFrame('Safety', 'Safety', 'Swings, bouncers and floor seats', 'Handy for a few minutes of hands-free time. A few habits keep them safe.',
-      hubIconSteps([['notepad', 'Check the label', 'Weight and age limits. Stop once Maya reaches them.'], ['hand', 'Strap in every time', 'Even for a minute'], ['home', 'On the floor', 'Never on a table, counter, bed or sofa'], ['moon', 'Not for sleep', 'Fell asleep? Move {o} to {p} crib, on {p} back']], 'Safety', 'Check the weight and age limits, strap in every time, keep it on the floor, and never use it for sleep.', false)
-      + H().tip('When to stop using a bouncer', 'Once Maya can sit up on {p} own or tries to climb out, even if {s’s} under the weight limit.')
-      + H().tip('Stay close', 'Keep Maya within sight, and keep older kids and pets from rocking or pushing it.'));
     // Colds and stuffy noses: saline and suction, a cool-mist humidifier, no cold medicines, and when to call (AAP).
     if (cat === 'Health' && screen === 'd' && a === 'cold') return detailFrame('Health', 'Health', 'Colds and stuffy noses', 'Most babies catch several colds in the first year. They usually clear up on their own in about 7–10 days.',
       // Clearing the nose is an order (saline, then suction); the rest are separate things that help.
