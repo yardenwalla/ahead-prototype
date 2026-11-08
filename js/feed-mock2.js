@@ -247,9 +247,11 @@
 
   /* ---------- The cheat sheet, every stage ---------- */
   const STAGES = [['Newborn', '0–6 weeks'], ['Milk feeds', '6 weeks–4 months'], ['Ready for solids', '4–6 months'], ['First foods', '6–9 months'], ['Meals', '9–12 months']];
+  // One vitamin D rule, said for the family's own milk: any breast milk, or under about 32 oz of formula a day.
+  const vdLine = (b, fm) => b && fm ? 'vitamin D drops, as long as he gets any breast milk or less than 32 oz of formula.' : b ? 'vitamin D drops, as long as he gets any breast milk.' : 'vitamin D drops, until he drinks about 32 oz of formula a day.';
   const SHEET = (v, feed) => { const b = feed !== 'Formula', f = feed !== 'Breast milk', both = feed === 'Both', fm = f, nurse = b && how() !== 'Pumping' && how() !== 'Stored', pump = b && how() !== 'Nursing', bottle = fm || pump;
     const T = (c, art, l, val, sub, to) => [c, art, l, val, sub, to];
-    const VDNOTE = ['Every day:', 'vitamin D drops, as long as he gets any breast milk or less than 32 oz of formula.'];
+    const VDNOTE = ['Every day:', vdLine(b, fm)];
     const enough = T('yellow', ART.diapers(6), 'Getting enough', '6+ wet diapers', v === 0 ? (typeof profile !== 'undefined' && profile.early ? 'A day once home, and steady gains' : 'By day 6. Back to birth weight by 2 weeks') : 'A day, and steady growth', v <= 1 ? '' : 'enough');
     const S = [
       { hero: ['Little and often, day and night', 'What to expect once you’re home: frequent feeds day and night, getting easier by about 6 weeks.'],
@@ -269,12 +271,12 @@
         tough: 'Distracted feeds, spit-up, gas', next: ['Next, around 6 months', 'First foods'] },
       { hero: ['Tastes, textures and lots of mess', 'Milk is still the main food. Solids are for learning, a few bites at a time.'],
         tiles: [T('pink', ART.drops(5), 'Milk', !bottle ? 'On demand' : nurse ? '4–5 milk feeds' : '4–5 bottles', !bottle ? 'Still his main food' : nurse ? 'Nursing or bottles' : !f ? 'Milk still comes first' : '24–32 oz a day in all'), T('green', `<svg viewBox="0 0 120 40">${[0, 1].map(i => `<path d="M${8 + i * 36} 16 h28 q0 14 -14 14 q-14 0 -14 -14Z" fill="#356651" fill-opacity=".7"/>`).join('')}</svg>`, 'Solids', '1, then 2–3 meals', 'Building up by 8–9 months'), T('blue', ART.bottle(.3), 'Water', 'Sips with meals', 'From an open cup'), enough],
-        note: ['Every day:', 'an iron-rich food, like meat, beans, eggs or iron-fortified cereal.' + (feed === 'Breast milk' ? ' Iron drops too, until iron-rich foods are going well.' : '') + ' And vitamin D drops, as long as he gets any breast milk or less than 32 oz of formula.'],
+        note: ['Every day:', 'an iron-rich food, like meat, beans, eggs or iron-fortified cereal.' + (feed === 'Breast milk' ? ' Iron drops too, until iron-rich foods are going well.' : '') + ' And ' + vdLine(b, fm)],
         groups: [['On the tray', [['green', 'bowl', 'First foods', 'Soft, mashed or in finger strips', 'prep'], ['peach', 'heart', 'Allergens', 'Peanut and egg early, then often', 'allergens'], ['lilac', 'shield', 'Not yet', 'No honey, whole nuts or cow’s milk to drink', 'notyet']]], ['Common now', [['blue', 'smile', 'Gagging', 'Loud and normal. It’s how he learns', 'gag'], ['yellow', 'clock', 'Tiny amounts', 'A few bites is plenty', 'pace']]]],
         tough: 'Gagging, refusing food, constipation', next: ['Next, around 9 months', 'Meals'] },
       { hero: ['Three meals, and milk still matters', 'Ari eats more like the family now. Milk drops a little as meals grow.'],
         tiles: [T('green', `<svg viewBox="0 0 120 40">${[0, 1, 2].map(i => `<path d="M${8 + i * 36} 16 h28 q0 14 -14 14 q-14 0 -14 -14Z" fill="#356651" fill-opacity=".7"/>`).join('')}</svg>`, 'Meals', '3 a day', 'Plus a snack or two'), T('pink', ART.drops(4), 'Milk', !bottle ? 'Fewer feeds' : nurse ? '3–4 milk feeds' : '3–4 bottles', !bottle || !f ? 'Around meals' : nurse ? 'Nursing or bottles' : '6–8 oz each'), T('blue', ART.bottle(.5), 'Water', '4–8 oz', 'A day, from a cup'), enough],
-        note: ['Every day:', 'an iron-rich food at a meal. And vitamin D drops, as long as he gets any breast milk or less than 32 oz of formula.'],
+        note: ['Every day:', 'an iron-rich food at a meal. And ' + vdLine(b, fm)],
         groups: [['On the tray', [['green', 'bowl', 'Family food', 'Soft pieces, no added salt', 'family'], ['lilac', 'shield', 'Not yet', 'No honey, whole nuts or cow’s milk to drink', 'notyet']]], ['Common now', [['yellow', 'clock', 'Appetite', 'Up one day, down the next', 'appetite'], ['peach', 'heart', 'Picky days', 'New foods can take 10+ tries', 'picky'], ['blue', 'drop', 'Cups', 'Practice now. Milk moves to a cup at 1', 'cups']]]],
         tough: 'Refusing food, gagging, a rash after a new food', next: ['After the first birthday', 'Cow’s milk, and family meals'] }
     ];
@@ -2494,7 +2496,7 @@
   const stomachViz = (title) => `<style>#main .xst{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;text-align:center}#main .xst svg{width:100%;max-width:64px;height:auto;display:block;margin:0 auto 4px}#main .xst small{display:block;font-size:12px;font-weight:600;color:var(--ss-ink)}#main .xst b{display:block;font-size:15px;margin:1px 0}#main .xst span{display:block;font-size:12px;color:var(--muted,#6b6578);line-height:1.3}</style><section class="hub-card" style="padding:14px 12px 14px;margin:0 0 12px"><b style="display:block;font-size:15px;margin:0 4px 10px">${F(title)}</b><div class="xst">${STOMACH.map(([d, thing, amt, svg]) => `<div>${svg}<small>${F(d)}</small><b>${F(amt)}</b><span>${F(thing)}</span></div>`).join('')}</div></section>`;
   P.x_amount = () => xPage('growth', 'x_amount', 'Small feeds are all he needs at first', 'His stomach is tiny, and grows fast. That’s why he feeds so often.',
       stomachViz('His stomach, and about how much a feed holds')
-      + xDo('What to do', [isBreast() && formulaFam() ? 'Breast milk or formula, follow his cues, not the ounces.' : 'Follow his cues, not the ounces.', nurses() ? 'Nursing? You won’t see ounces, and that’s fine.' : 'Offer a little more only if he still seems hungry.'])
+      + xDo('What to do', [isBreast() && formulaFam() ? 'Breast milk or formula, follow his cues, not the ounces.' : formulaFam() ? 'Follow his cues, not the ounces on the formula label.' : 'Follow his cues, not the ounces.', nurses() ? 'Nursing? You won’t see ounces, and that’s fine.' : 'Offer a little more only if he still seems hungry.'])
       + xKnow('How you’ll know it’s enough', nurses() ? 'Wet diapers and steady weight, not ounces.' : 'You can’t see it in a feed, but you can in his diapers and weight. That’s next.'));
   P.x_bottle = (() => { const prev = P.x_bottle; return () => { const nurse = nurses(), fm = formulaFam(); if (nurse && fm) return prev();
     const h = prev(), i = h.indexOf('<div class="hub-tiles'); if (i < 0) return h; const j = h.indexOf('<section class="ss-do">', i);
@@ -2560,7 +2562,7 @@
       + xDo('What to do', ['First checkup at 3–5 days old, usually a day or two after you get home.', 'Feed on cue. No need to weigh at home.', 'Extra hungry for a few days? Often a growth spurt.'])
       + xNote('Born early or slow to gain?', 'Follow your pediatrician’s feeding plan first.') + xNote('Worth a call:', 'not back to birth weight by 2 weeks.'));
   P.x_vitd = () => { const b = isBreast(), fm = formulaFam(), early = isEarly();
-    return yPage(XC.g1, 'Every day', 'Vitamin D drops, every day', 'Keep them going as long as he gets any breast milk or less than 32 oz of formula.',
+    return yPage(XC.g1, 'Every day', 'Vitamin D drops, every day', 'Keep them going ' + vdLine(b, fm).replace('vitamin D drops, ', ''),
       xCompare([['sun', 'Vitamin D', '400 IU a day, as drops, from the first days.'], ['star', 'Iron', early && b ? 'Drops from about 1 month, for babies born early.' : b && fm ? 'Formula has iron. He gets breast milk too, so ask about iron drops at the next checkup.' : fm ? 'In the formula. Choose one with iron.' : 'Drops from 4 months, since breast milk is low in iron. Ask at the next checkup.']])
       + xDo('How to give drops', ['Use the dropper that comes with them, and the dose on the label.', (nurses() ? 'Drip it on the nipple just before a feed, or inside his cheek.' : 'Drip it slowly inside his cheek.'), 'Or mix it into about 1 oz of milk, and make sure he finishes it.'])
       + (ageMo() < 6 ? xNote('No water yet.', 'Milk is all he needs until about 6 months, even on hot days.') : '')); };
