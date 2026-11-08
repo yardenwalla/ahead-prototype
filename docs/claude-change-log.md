@@ -221,3 +221,9 @@ Files: `js/home-cards.js`, `js/home-copy.js` (v10), `js/stages.js`.
 - "Poop changes with solids" stays on Home (Yarden, Nov 7).
 - Results (840 simulated families): weekly visits with something new 86% (was 84%); month 10 82% (73%), month 11 71% (68%); first teeth known for 54% of families (was 0%); weekly visits with a question 19% (18%).
 - Home's cards are set once a day. Opening or dismissing a card removes it without pulling in the next one, so "That's everything for today" stays true (and reads "You're all caught up for today" once they're all cleared). Before, Home re-picked on every redraw, so a × swapped in a new card. A card unlocked by answering Home's question still shows on the same visit.
+
+## Home: peanut and egg on time (2026-11-07, preview)
+File: `js/home-cards.js`.
+- No setup question for late joiners (Yarden: "If they're past that point they should already know about it").
+- "Offer peanut and egg early" shows only in the early weeks of solids: the first 3 weeks at any age, or up to 2 months while the baby is under 8½ months. A parent who joins at 10 months with solids long under way doesn't get it late. Honey and choking foods are unchanged: their window runs to the first birthday.
+- Results (840 simulated families): the card never shows to an older baby long into solids; families who skip it are mostly late joiners and monthly visitors who were already past that point. Everything else unchanged (weekly visits with something new 86%).
