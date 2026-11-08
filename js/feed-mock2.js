@@ -659,9 +659,8 @@
       + small('Still preferring the bottle?', 'a lactation consultant can help.')),
 
     formula: () => { const v = stg(), both = fd() === 'Both';
-      return page(head('Bottles', 'Making formula', 'Follow the label exactly. The amounts matter.', C.peach)
+      return page(head('Bottles', 'Making formula', 'Follow the label exactly. Extra water or powder changes what he gets.', C.peach)
       + steps([['hand', 'Wash your hands', 'And use a clean bottle'], ['drop', 'Water first', 'The amount on the label'], ['bowl', 'Level scoops', 'Then shake well'], ['heart', 'Test on your wrist', 'Warm or room temperature']], true)
-      + know('Never add extra water', 'Extra water or extra powder isn’t safe. Always use the amounts on the label.')
       + (v <= 1 ? small('Safe water:', 'under 2 months, if he was born early, or if he has a weak immune system, boil the water and let it cool for about 5 minutes before mixing. Cool the bottle before feeding. After that, clean tap or bottled water is fine.') : small('Water:', 'clean tap or bottled water is fine.'))
       + h2('How long it lasts') + steps([['clock', '2 hours', 'After making it'], ['hand', '1 hour', 'Once he starts. Toss the rest'], ['snow', '24 hours', 'In the fridge. Night bottles can be made ahead']], false)
       + (both ? h2('Mixing with breast milk') + steps([['bowl', 'Make the formula with water', 'Breast milk can’t replace the water'], ['drop', 'Then add breast milk', 'Or give the breast milk first, then top up with formula so less goes to waste']], true) : '')
@@ -700,7 +699,7 @@
   const v_small = h => { const j = h.indexOf('ss-head'), i = j > 0 ? h.indexOf('</div>', j) + 6 : -1; return i > 5 ? h.slice(0, i) + small('Your care team’s targets come first.', 'If they gave you any, go by those.') + h.slice(i) : h; };
   const planLine = () => know('Your care team’s plan comes first', 'If your NICU or pediatrician gave you amounts, a recipe or wake times, follow those over the general numbers here.');
   ['enough', 'formula', 'basics', 'sleepy', 'signs'].forEach(k => { const old = P[k]; P[k] = (...a) => { let h = old(...a); if (!isEarly()) return h;
-    if (k === 'formula') h = h.replace(F('Extra water or extra powder isn’t safe. Always use the amounts on the label.'), F('Unless your care team gave you a special recipe, use the amounts on the label. Never add extra water.')).replace(F('any standard iron-fortified infant formula. Ask your pediatrician before switching to a special one.'), F('use the one your care team recommends, and ask before switching.'));
+    if (k === 'formula') h = h.replace(F('Follow the label exactly. Extra water or powder changes what he gets.'), F('Unless your care team gave you a special recipe, follow the label exactly. Never add extra water.')).replace(F('any standard iron-fortified infant formula. Ask your pediatrician before switching to a special one.'), F('use the one your care team recommends, and ask before switching.'));
     if (k === 'basics') return h.replace('</table></div>', '</table></div>' + small('Fortified milk', 'can keep for less time. Follow your care team’s instructions.'));
     if (k === 'signs') return h.replace(/<\/div>$/, small('Because he was born early,', 'go by these signs and his adjusted age, and check with his pediatrician before starting.') + '</div>');
     if (k === 'sleepy') h = h.replace(F('Newborns often doze off mid-feed. Until he’s back to birth weight, wake him if it’s been about 3 hours.'), F('Babies born early often stay sleepy at feeds for longer. Follow your care team’s advice on how often to wake him.'));
@@ -1070,7 +1069,7 @@
      5. The baby's own name and pronoun everywhere (the copy was written for a boy named Ari). */
   const NO_CALL = ['burp', 'snack', 'cluster', 'spurt', 'distract', 'picky', 'tiny', 'howlong', 'milkmeals', 'combo', 'pump', 'teethfeed', 'refusebottle', 'prefbottle', 'hiccups', 'biting'];
   const SWAP = [
-    ['Never flat on his back,', 'Keep his head higher than his tummy,'], ['and never prop the bottle.', 'and hold the bottle for every feed.'],
+    ['Never flat on his back,', 'Hold the bottle for every feed.'], ['and never prop the bottle.', 'Never prop it.'],
     ['Never the microwave.', 'Skip the microwave.'],
     ['Never add extra water', 'Stick to the label'], ['Extra water or extra powder isn’t safe. Always use the amounts on the label.', 'The label’s water and scoops, every time. Extra water or powder changes what he gets.'],
     ['Unless your care team gave you a special recipe, use the amounts on the label. Never add extra water.', 'Unless your care team gave you a special recipe, the label’s water and scoops, every time.'],
@@ -2734,9 +2733,13 @@
       + xDo('What to do', ['Let him feed himself, with a spoon to practice.', 'Keep cutting round foods, like grapes, lengthwise.']));
   P.z_milk12 = () => { const b = isBreast(), bot = isBottle(), fm = formulaFam();
     return yPage(XC.d1, 'Milk', 'Cups now, and whole milk at 12 months', 'A few things change around his first birthday.',
-      tl('', [['Now', 'cup', 'Practice with an open or straw cup'], ['12 months', 'drop', fm ? 'Formula to whole cow’s milk, about 16 oz a day' : 'Whole cow’s milk in a cup, if you like'], ['12–18 months', 'bottle', bot ? (nurses() ? 'Bottles phase out. Nursing can keep going' : 'Bottles phase out') : 'Nursing can keep going as long as you both like']])
-      + xDo('What to do', ['Whole milk, not low-fat, until age 2.', 'Serve milk in a cup, with meals.'])
-      + xKnow('No more than 24 oz a day', 'More milk crowds out iron-rich food.')); };
+      tl('', [['Now', 'cup', 'Practice with an open or straw cup'], ['12 months', 'drop', fm ? 'Formula to whole cow’s milk, about 16 oz a day' : 'Whole cow’s milk in a cup, if you like'], ['12–18 months', 'bottle', bot ? (nurses() ? 'Bottles phase out, bedtime last. Nursing can keep going' : 'Bottles phase out, the bedtime one last') : 'Nursing can keep going as long as you both like']])
+      + xDo('What to do', ['Whole milk, not low-fat, until age 2.', 'Serve milk in a cup, with meals.', bot && 'Swap one bottle for a cup at a time, about a week apart.'])
+      + xKnow('No more than 24 oz a day', (b ? 'That counts cow’s milk from a cup, not nursing. ' : '') + 'More milk crowds out iron-rich food.')
+      + (bot ? xNote('Picky about the taste?', 'Mix it half and half with ' + (fm ? 'formula' : 'breast milk') + ' for a week. Toddler formula isn’t needed.') : '')
+      + xNote('Vitamin D after 1:', 'ask your pediatrician what he needs.')); };
+  // One page for the 12-month milk switch: "At 12 months" opens the same page.
+  P.at12 = P.z_milk12;
   P.z_appetite = () => yPage(XC.g1, 'Appetite', 'Appetite goes up and down', 'A big day, then a few small ones, is normal. Growth slows after the first months.',
       xNums('', [['10–15', 'Tries before a new food sticks'], ['A week', 'The right time frame to judge']]) + xDo('What to do', ['Keep offering, without pressure.', 'Look at the week, not one meal.'])
       + xKnow('How you’ll know he’s getting enough', 'Wet diapers, energy, and steady growth at his 9- and 12-month checkups.'));
