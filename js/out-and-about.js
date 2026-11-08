@@ -139,9 +139,9 @@
   // rear-facing past 1. Each depends on the gear's label, so the row says to check it, never that it's time.
   const NOWS = [
     [0, 'Short outings are good for you both', 'Fresh air and a change of scene help, even in the first weeks.', 'errands'],
-    [2, 'Longer trips may feel easier soon', 'As feeds start to spread out, a long drive or a first flight gets more doable.', 'road'],
-    [4, 'Facing out may be next', 'It depends on your carrier’s height and weight limits, and on {p} head control. You’ll find the limits in the carrier’s instructions.', 'carry', ['Maya may be ready to face out soon', 'It depends on {p} head control and your carrier’s limits. Its instructions say when.', 'See the carrier guide']],
-    [6, 'Shopping carts, snacks and sleepovers', 'The shopping cart’s own seat, snacks out, and babyproofing when you stay over.', 'errands'],
+    [2, 'Ready for a longer trip?', 'As feeds spread out, a long drive or a first flight gets easier.', 'road'],
+    [4, 'Ready to face out?', 'Once Maya holds {p} head steady, check your carrier’s limits.', 'carry', ['Ready to face out?', 'Once Maya holds {p} head steady, check your carrier’s limits. Its instructions say when.', 'See the carrier guide']],
+    [6, 'Snacks on the go, and {p} first night away', 'The shopping cart’s own seat, snacks out, and babyproofing when you stay over.', 'errands'],
     [9, 'Watch the car seat’s limits', 'Moving to a convertible seat depends on the infant seat’s height and weight limits, printed on a sticker on the seat.', 'car', ['Maya may outgrow the infant car seat soon', 'Many babies do in the first year. The height and weight limits are on a sticker on the seat.', 'See which seat comes next']],
     [12, 'Rear-facing after the first birthday, too', 'Keep {o} rear-facing for as long as the seat allows.', 'car', ['Keep Maya rear-facing after the first birthday', 'Until the seat’s rear-facing limits, often age 2 or older. It protects {p} head and neck best.', 'See why it matters']]
   ];
@@ -155,7 +155,8 @@
     b += places(v) + seasonCard() + gear(v);
     b += h.versus('In the car', ['Every time', 'Look in the back seat before you walk away.'], ['Never', 'Leave Maya alone in the car, even for a minute.']);
     if (nx) b += h.next(`Coming up around ${nx[0]} months`, nx[1], open(nx[3]));
-    b += h.note('Car seats, carriers and strollers each have their own height and weight limits. You’ll find them in the manual and on the gear itself.');
+    // Only when neither the top card nor Coming up already talks about gear limits, so it's never said twice.
+    if (!n[4] && !(nx && nx[4])) b += h.note('Car seats, carriers and strollers each have their own height and weight limits. You’ll find them in the manual and on the gear itself.');
     return `<div class="quiet-category hub-page" data-overview="${CAT}" style="${yearTheme(CAT)}">${monthlyPageHeader(CAT)}${b}</div>`;
   }
 
@@ -249,7 +250,7 @@
         'Feed first. In any car the baby rides in their own car seat. A carrier keeps your hands free. Head home whenever you like.', 'Plan your outing')
       + ifs([
         ['bottle', 'Hungry while you’re out', feedLine],
-        ['heart', 'Crying in public', 'It happens to every parent. Step outside, or walk with {o} close.'],
+        ['heart', 'Crying in public', 'Step outside, or walk with {o} close.'],
         ['diaper', 'A blowout', 'A family restroom, or your changing pad on a clean flat spot.']],
         'If the baby is hungry, feed them where you are. Crying in public happens to everyone. For a blowout, find a family restroom or use your changing pad.')
       + good([
@@ -258,7 +259,7 @@
         bf ? ['fridge', 'Pumped milk', 'Fine cool or at room temperature. No need to warm it.'] : null,
         m >= 6 ? ['bag', 'Bring {p} own food', 'Something soft from home, a bib and a spoon. A placemat keeps the tray clean.'] : ['hand', 'Holding {o}', 'It’s fine to ask people to wash their hands first, or to say no.']]));
 
-    if (id === 'road') return sub('road', 'Road trips', 'Road trips', 'Plan a stop every couple of hours.',
+    if (id === 'road') return sub('road', 'Road trips', 'Long drives with Maya', 'Plan a stop every 2 hours to feed, change and stretch.',
       hubDayMarkers({ title: 'Plan your drive', events: [[9 * 60, 'car', 'Leave as a nap starts'], [11 * 60, 'bottle', 'Stop to feed and change'], [13 * 60, 'mat', m >= 6 ? 'Stop for a snack and a stretch' : 'Stop to feed and stretch'], [15 * 60, 'home', 'Arrive']], from: 8 * 60, to: 16 * 60, cat: CAT, caption: 'Leave at 9 as a nap starts, stop at 11 to feed and change, stop at 1 to feed and stretch, arrive at 3.' })
       + pack([['toy', 'Soft toys only', 'Hard ones can fly in a sudden stop'], fm ? ['bottle', 'One extra bottle', 'In case of traffic'] : null])
       + ifs([
@@ -266,7 +267,7 @@
         ['clock', 'Driving on your own', 'Plan a few more stops. Check on {o} only when you’re parked.'],
         ],
         'If the baby cries while you drive, pull over first. On your own, plan more stops and check on the baby only when parked.')
-      + good([['steth', 'Born early?', 'Ask your pediatrician how long rides can be.'], ['moon', 'Naps on the road', 'Naps in the car seat are fine while you drive. When you stop, move {o} to a crib or play yard.'], bf ? ['mouth', 'Nursing or pumping on the road', 'Park first. {S} {stay|stays} buckled in whenever the car is moving.'] : null]));
+      + good([typeof profile !== 'undefined' && profile.early ? ['steth', 'Born early?', 'Ask your pediatrician how long rides can be.'] : null, ['moon', 'Naps on the road', 'Naps in the car seat are fine while you drive. When you stop, move {o} to a crib or play yard.'], bf ? ['mouth', 'Nursing or pumping on the road', 'Park first. {S} {stay|stays} buckled in whenever the car is moving.'] : null]));
 
     if (id === 'fly') return sub('fly', 'Flying', 'Flying with Maya', 'Most of the planning happens when you book.',
       H().versus('Where will Maya sit?', ['Own seat', 'Safest, buckled into a car seat labeled for aircraft.'], ['On your lap', 'Often free on US flights under 2, but less safe if there’s turbulence.'])
@@ -292,7 +293,7 @@
       + pack([['thermo', 'A thermometer', 'And the medicines your pediatrician okays'], ['drop', 'Rehydration salts', 'Ask your pediatrician which kind'], ['car', '{P} car seat', 'Taxis abroad may not have one']])
       + tiles('While you’re there', [['Water', 'Sealed bottled, or boiled', fm ? 'For formula, your drinks and washing bottles' : 'For your drinks, and for washing bottles'], ['Mosquitoes', 'Netting', 'Over the crib and stroller'], ['Food', 'Cooked, or fruit you peel', 'Once {s’s} eating solids'], ['Drinks', 'No ice', 'It’s often made with tap water']])
       + good([['notepad', 'If one parent can’t come', 'They sign a notarized consent form for the passport appointment instead.']])
-      + calls(['Call a doctor', 'A fever, fewer wet diapers, a dry mouth, or diarrhea that keeps going.'], ['Get care right away', 'Any fever under 3 months or in a malaria area, trouble breathing, or hard to wake.']));
+      + calls(['Call a doctor', 'A fever, fewer wet diapers, a dry mouth, or diarrhea that keeps going.'], ['Get care right away', m < 3 ? 'Any fever under 3 months or in a malaria area, trouble breathing, or hard to wake.' : 'Any fever in a malaria area, trouble breathing, or hard to wake.']));
 
     if (id === 'away') return sub('away', 'Staying away', 'Staying with family or in a hotel', 'Most homes and hotel rooms aren’t set up for babies. Ten minutes when you arrive covers most of it.',
       awayList(m)
@@ -303,7 +304,7 @@
         'A few off nights are normal. If you get advice, share one rule kindly: on the back, in a bare crib.')
       + good([['shield', 'Which crib is safe?', 'A play yard, or a crib made after June 2011. Never an adult bed or a couch.'], ['hand', 'Pets', 'Never leave {o} alone with a pet, even a gentle one.'], m >= 6 ? ['bowl', 'Grandparents and treats', 'Share your food rules once, kindly, before the first meal.'] : null]));
 
-    if (id === 'water') return sub('water', 'Pool or beach', 'Pool or beach', 'Babies get cold and overheat faster than you do, so short visits work best.',
+    if (id === 'water') return sub('water', 'Pool or beach', 'A day by the water', 'Babies get cold and overheat faster than you do, so short visits work best.',
       todo('In the water', 'Hold {o} the whole time, even with a float.')
       + ifs([
         ['clock', 'Go early', 'Before the strongest sun'],
@@ -320,11 +321,11 @@
     if (id === 'weather') {
       const view = weatherView || season();
       const seg = `<div class="hub-seg oa-seg" role="tablist">${[['hot', 'Hot days'], ['cold', 'Cold days']].map(([k, t]) => `<button role="tab" aria-selected="${view === k}" class="${view === k ? 'is-on' : ''}" onclick="oaWeather('${k}')">${t}</button>`).join('')}</div>`;
-      const hot = `<h2 class="hub-h2">${F('What to do')}</h2>` + steps([['clock', 'Go out early or late', 'When it’s cooler out'], m < 6 ? ['sun', 'Shade, not sunscreen', 'Only if there’s no shade: a little on the face'] : ['sun', 'Sunscreen', 'SPF 30 or more, every 2 hours'], ['bottle', 'Keep {o} hydrated', m < 6 ? 'With extra milk feeds. No water before 6 months' : 'With extra milk feeds and sips of water'], ['car', 'Cool the car first', 'Then touch the car seat buckles: they can burn']], 'Go out early or late, keep her in the shade, keep her hydrated with extra milk feeds, and cool the car first.')
+      const hot = `<h2 class="hub-h2">${F('What to do')}</h2>` + steps([['clock', 'Go out early or late', 'When it’s cooler out'], m < 6 ? ['sun', 'Shade, not sunscreen', 'Only if there’s no shade: a little on the face'] : ['sun', 'Sunscreen', 'SPF 30 or more, every 2 hours'], ['bottle', 'Keep {o} hydrated', m < 6 ? 'With extra milk feeds. No water before 6 months' : 'With extra milk feeds and sips of water'], ['car', 'Cool the car first', 'Then touch the car seat buckles: they can burn']], 'Go out early or late, keep {o} in the shade, keep {o} hydrated with extra milk feeds, and cool the car first.')
         + good([['thermo', 'How hot is too hot?', 'When the heat index is 90°F or more, keep outings short or stay in.'], m >= 2 ? ['leaf', 'Bug spray, from 2 months', 'Up to 30% DEET, or picaridin. Spray your hands, then rub it on {p} skin, not {p} hands.'] : ['leaf', 'Bug spray, from 2 months', 'Not yet. Until then, use netting over the stroller.'], ['fridge', 'Milk on hot days', 'Keep it in a cooler with ice packs, never in a hot car.']])
         + calls(['Call your pediatrician', 'Any sunburn, or fewer wet diapers than usual.'], ['Call 911', 'Hot to the touch and floppy or hard to wake.']);
-      const cold = `<h2 class="hub-h2">${F('What to do')}</h2>` + steps([['clock', 'Warm up the car first', 'So {s} can ride in thin layers'], ['car', 'In the car seat', 'Thin layers, then a blanket over the buckled straps'], ['shirt', 'One more layer on walks', 'Plus a hat and mittens'], ['hand', 'Check if {s’s} warm enough', 'Feel {p} chest. Cold hands are normal']], 'Warm up the car first. In the car seat, thin layers with a blanket over the buckled straps. On walks, one more layer than you. Feel her chest to check she’s warm enough.')
-        + good([['snow', 'How cold is too cold?', 'There’s no set temperature. Keep walks short when it’s very cold or windy.'], ['carrier', 'In a carrier', 'Your coat can go over you both, with {p} face uncovered.'], ['home', 'Once you’re somewhere warm', 'Take off {p} hat and extra layers, so {s} {don’t|doesn’t} overheat.']])
+      const cold = `<h2 class="hub-h2">${F('What to do')}</h2>` + steps([['clock', 'Warm up the car first', 'Before you buckle {o} in'], ['car', 'In the car seat', 'Thin layers, then a blanket over the buckled straps'], ['shirt', 'One more layer on walks', 'Plus a hat and mittens'], ['hand', 'Check if {s’s} warm enough', 'Feel {p} chest. Cold hands are normal']], 'Warm up the car first. In the car seat, thin layers with a blanket over the buckled straps. On walks, one more layer than you. Feel {p} chest to check {s’s} warm enough.')
+        + good([['snow', 'Too cold for a walk?', 'Keep walks short when it’s very cold or windy.'], ['carrier', 'In a carrier', 'Your coat can go over you both, with {p} face uncovered.'], ['home', 'Once you’re somewhere warm', 'Take off {p} hat and extra layers, so {s} {don’t|doesn’t} overheat.']])
         + calls(['Call your pediatrician', 'Skin that’s pale, gray or blistered after being out in the cold.'], ['Call 911', 'Cold to the touch and floppy or hard to wake.']);
       return sub(view, 'Hot and cold days', view === 'hot' ? 'Hot days out' : 'Cold days out', view === 'hot' ? 'Babies heat up faster than you do.' : 'Babies lose heat faster than you do.',
         seg + (view === 'hot' ? hot : cold));
@@ -353,8 +354,8 @@
       + timeline('Lying back, then sitting up', [['From birth', 'stroller', 'Lying back, or with the infant car seat clicked on.'], ['Sits steadily', 'back', 'Sitting up, if the stroller’s instructions allow it.']], 'Lying back from birth, or with the infant car seat clicked on. Sitting up once the baby sits steadily, if the stroller allows it.')
       + good([['car', 'A car seat on the frame', 'Listen for the click, then tug to check it’s locked on.'], ['stroller', 'On a bus or train', 'Brakes on and a hand on the stroller while it moves.']]));
 
-    if (id === 'bag') return sub('gear', 'Your gear', 'Packing the diaper bag', 'Packed for how Maya is fed. Ticks clear overnight, so it’s ready next time.',
-      bagList(m) + good([fm && ['bottle', 'Mixed formula', 'Use it within 2 hours of mixing, or within 1 hour once the feed starts.'], bf && pumps() && ['fridge', 'Pumped milk', 'Keeps 4 hours at room temperature, or a day in a cooler with ice packs. Once a feed starts, use it within 2 hours.']]));
+    if (id === 'bag') return sub('gear', 'Your gear', 'Packing the diaper bag', 'Everything Maya needs for a few hours out, packed for how {s} {is} fed.',
+      bagList(m) + good([fm && ['bottle', 'Formula you’ve made up', 'Use it within 2 hours of mixing, or within 1 hour once the feed starts.'], bf && pumps() && ['fridge', 'Pumped milk', 'Keeps 4 hours at room temperature, or a day in a cooler with ice packs. Once a feed starts, use it within 2 hours.']]));
 
     if (id === 'sick') return detail('abroad');
     if (id === 'snacks') return detail('errands');

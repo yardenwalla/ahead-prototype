@@ -173,7 +173,7 @@
         ['coin', 'Help from your state', 'If you qualify. Your referral agency helps you apply.'],
         ['notepad', 'A pre-tax care account', 'Through many jobs. A new baby lets you join mid-year.'],
         ['shield', 'A tax credit', 'Takes part of what you pay off your taxes.'],
-        ['home', 'Early Head Start', 'Free care, for families who qualify.']],
+        ['home', 'Early Head Start', 'A free federal program for babies, for families who qualify.']],
         'Help from your state, a pre-tax care account through work, a federal tax credit, and Early Head Start.')
       + rows('', [['hand', 'If you hire a nanny', 'You’re usually their employer, with taxes to pay. A nanny payroll service can handle them.']])
       + good([['eye', 'Prices vary a lot', 'A nanny usually costs most, then a daycare center, then a home daycare. Ask each place for the full cost, fees included.'], ['lock', 'Deposits', 'Many daycares ask for a deposit or a fee to hold a spot.'], ['heart', 'Paying family', 'Paying a relative may still count toward the tax credit. Ask a tax professional.']]), 'coin');
@@ -251,7 +251,7 @@
       const qs = FIT_Q.map(([q, label, opts]) => `<section class="hub-card cc-sec"><b class="cc-sec-title">${F(label)}</b><div class="cc-chips">${opts.map(o => `<button class="cc-chip${f[q] === o ? ' is-on' : ''}" aria-pressed="${f[q] === o}" onclick="ccFit('${q}','${o.replace(/'/g, '\\\'')}')">${F(o)}</button>`).join('')}</div></section>`).join('');
       const res = done ? `<h2 class="hub-h2">${F('Worth looking at first')}</h2><div class="oa-places">${top.map(k => { const c = PAL[k === 'share' ? 'nanny' : k], nm = k === 'share' ? 'Nanny share' : TYPES[k].name; return `<button class="oa-place" style="--oa-bg:${c[0]};--oa-ink:${c[1]}" onclick="openPage('chg:${CAT}:d:${k}')"><span class="oa-place-art">${SHAPE[k === 'share' ? 'nanny' : k](c)}</span><b>${F(nm)}</b><small>${F(WHY[k])}</small></button>`; }).join('')}</div>` : '';
       return sub('fit', 'Kinds of care', 'Which care fits us?', 'Four quick taps. There’s no wrong answer, and many families end up with a mix.',
-        qs + (res || `<p class="cc-lead cc-fit-wait">${F('Your matches show up here once you’ve answered all four.')}</p>`));
+        qs + (res || `<p class="cc-lead cc-fit-wait">${F(`${FIT_Q.filter(([q]) => f[q]).length} of 4 answered. Your matches show up here once you’ve answered all four.`)}</p>`));
     }
 
     if (id === 'start') return sub('start', 'Once care starts', 'Settle in', 'The first months are about building trust, on both sides.',
@@ -283,7 +283,7 @@
         ['clock', 'A sitter for a break', 'A few hours to rest or get out.', go('sitter')]],
         'A postpartum doula helps with feeding and recovery. Overnight help covers nights. Family and friends can help with specific tasks. A sitter gives you a break.')
       + rows('Where to look', [['smile', 'Other parents', 'Ask who helped them, and what it was like'], ['steth', 'Your hospital or pediatrician’s office', 'Many keep lists of local doulas and newborn care specialists'], ['eye', 'Doula directories and agencies', 'Search for postpartum doulas near you']])
-      + good([['coin', 'Insurance may help', 'Some health plans and state Medicaid programs cover doula care. Ask yours.'], ['notepad', 'Book early', 'Doulas and overnight help often fill up, so ask a few weeks ahead.'], ['chat', 'Asking is OK', 'Most people want to help. They just need to know how.']]), 'heart');
+      + good([['coin', 'Insurance may help', 'Some insurance and some state health plans cover doula care. Ask yours.'], ['notepad', 'Book early', 'Doulas and overnight help often fill up, so ask a few weeks ahead.']]), 'heart');
     return null;
   }
 

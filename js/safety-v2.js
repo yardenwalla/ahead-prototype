@@ -39,7 +39,7 @@
     swaddle: { t: 'Stop swaddling at the first try to roll', s: 'Some babies try at 2 months. Then a sleep sack, arms free', i: 'sack', c: 'sleep', go: "openPage('chg:Sleep:d:swaddleoff')", sleep: true },
     bassinet: { t: 'Move from the bassinet to the crib', s: 'Once {s} {try|tries} to roll or push up, or at its weight limit', i: 'crib', c: 'sleep', go: "openPage('chg:Sleep:d:where')", sleep: true },
     small: { t: 'Clear the floor where {s} {play|plays}', s: 'Coins, button batteries and small parts out of reach', i: 'coin', c: 'floor',
-      fig: 'tube', tiles: [['mat', 'A firm play mat', 'On the floor, away from edges and cords'], ['eye', 'Look at floor level', 'For coins, magnets and older kids’ toy pieces'], ['battery', 'Battery covers screwed shut', 'On remotes, key fobs and musical toys']],
+      fig: 'tube', tiles: [['mat', 'A firm play mat', 'On the floor, away from edges and cords'], ['eye', 'Floor check', 'Coins, magnets, older kids’ toys'], ['battery', 'Battery covers screwed shut', 'On remotes, key fobs and musical toys']],
       why: 'Rolling brings the floor within reach, and everything {s} {find|finds} goes in {p} mouth.',
       steps: ['Give {o} a firm play mat on the floor, away from furniture edges and cords. Beds and sofas aren’t safe for rolling practice.', 'Look around {p} play space at floor level for coins, magnets and pieces of older children’s toys.', 'Anything that fits inside an empty toilet-paper tube is small enough to choke on. Keep it out of reach.', 'Check that remotes, key fobs, musical books and toys have battery covers that screw shut. Keep spare batteries up high.'],
       tip: ['Button batteries are an emergency', 'If you think {s} swallowed a button battery or a magnet, go to the ER right away.'],
@@ -55,7 +55,7 @@
       tip: ['Skip seated walkers with wheels', 'They let babies move fast toward stairs and other hazards, and they don’t help with walking. Floor play or a stationary activity center is safer.'],
       links: [['Room-by-room babyproofing · AAP', aap], ['Find a professional childproofer · Paid', 'https://www.childproofingexperts.com/find-a-professional/'], ['Seated walkers · AAP', 'https://www.healthychildren.org/English/safety-prevention/at-home/Pages/Baby-Walkers-A-Dangerous-Choice.aspx']] },
     storage: { t: 'Lock up cabinets and drawers', s: 'Medicines, cleaners, knives and plastic bags locked up; bathroom and laundry closed off', i: 'lock', c: 'high',
-      tiles: [['lock', 'Latch it', 'Cabinets and drawers with medicines, cleaners, pods, knives or plastic bags'], ['up', 'Up high too', 'Medicines and cleaners, as well as latched'], ['home', 'Close off rooms', 'Bathroom, laundry and garage, with knob covers or a gate']],
+      tiles: [['lock', 'Latch it', 'Medicines, cleaners, pods, knives, bags'], ['up', 'Up high too', 'Medicines and cleaners, as well as latched'], ['home', 'Close off rooms', 'Bathroom, laundry and garage, with knob covers or a gate']],
       why: 'Crawling babies open every low door and drawer they can reach.',
       steps: ['Fit child latches or locks on cabinets and drawers that hold medicines, cleaners, detergent pods, knives or plastic bags.', 'Better still, move medicines and cleaners up high as well as latched.', 'Keep the bathroom, laundry room and garage closed off with door knob covers or a gate.'],
       tip: ['Relatch every time', 'Pull the door after you close it to check the latch holds.'],
@@ -91,8 +91,8 @@
   };
   const STAGES = [
     { key: 'setup', label: 'First setup', age: 'From birth', title: 'Five things to set up once', lead: 'Before Maya can move, safety is about where {s} {ride|rides}, {sleep|sleeps} and {get|gets} changed.', ids: ['seat', 'sleep', 'cribspot', 'changing', 'gear'] },
-    { key: 'reaching', label: 'Rolling', age: '3–6 months', title: 'Rolling puts the floor in reach', lead: 'Before Maya rolls, take the swaddle off and clear the floor. Rolling brings small things within reach, and a bassinet stops being safe.', ids: ['swaddle', 'bassinet', 'small', 'bags'] },
-    { key: 'rolling', label: 'Crawling', age: '6–9 months', title: 'Crawling opens up every room', lead: 'Most babies start moving between 6 and 10 months. Do the low, reachable things first.', ids: ['gates', 'storage', 'outlets', 'mattress'] },
+    { key: 'reaching', label: 'Rolling', age: '3–6 months', title: 'Rolling puts the floor in reach', lead: 'At the first sign of rolling, the swaddle comes off and the floor needs clearing. Rolling brings small things within reach, and a bassinet stops being safe.', ids: ['swaddle', 'bassinet', 'small', 'bags'] },
+    { key: 'rolling', label: 'Crawling', age: '6–9 months', title: 'Crawling opens up every room', lead: 'Most babies start crawling between 6 and 9 months. Do the low, reachable things first.', ids: ['gates', 'storage', 'outlets', 'mattress'] },
     { key: 'pulling', label: 'Pulling up', age: '9 months+', title: 'Standing brings everything higher into reach', lead: 'Furniture becomes a handhold, and windows, the stove and water are suddenly within reach.', ids: ['anchor', 'windows', 'kitchen', 'pool', 'mattress2'] }
   ];
   const group = k => k === 'moving' ? 'rolling' : k;
@@ -139,7 +139,7 @@
     // Joined later, or skipped a stage? One quiet line back to the earliest stage with steps still open.
     if (live && i === nowI) {
       const left = STAGES.slice(0, i).map(s2 => [s2, s2.ids.filter(x => !status(x)).length]).filter(x => x[1]);
-      if (left.length) b += `<button class="sf-earlier" onclick="openPage('safety-stage:${left[0][0].key}')">${F(`Catch up: ${left.reduce((t, x) => t + x[1], 0)} earlier ${left.reduce((t, x) => t + x[1], 0) === 1 ? 'step' : 'steps'} not ticked yet`)} ›</button>`;
+      if (left.length) b += `<button class="sf-earlier" onclick="openPage('safety-stage:${left[0][0].key}')">${F(`${left.reduce((t, x) => t + x[1], 0)} ${left.reduce((t, x) => t + x[1], 0) === 1 ? 'step from an earlier stage is' : 'steps from earlier stages are'} still open`)} ›</button>`;
     }
     b += h.versus('If something goes wrong', ['Poison Help', 'Call 1-800-222-1222 if Maya swallows something that could be harmful.'], ['Call 911', 'If {s} can’t breathe or won’t wake. A swallowed battery or magnet means the ER right away.']);
     // Choking first aid lives in Feeding; the safety net links to it.
