@@ -93,21 +93,21 @@
       ? `<button class="mem-yearcard" onclick="storyShare('year')"><span class="mem-yearcard-pic"><img data-story-thumb="year" alt=""></span><span><b>${esc2(`${name()}’s first year`)}</b><small>All twelve months on one page, as a photo or a video.</small></span><span class="mem-row-go" aria-hidden="true">›</span></button>` : '';
     if (designs) setTimeout(() => window.storyHydrate && storyHydrate(), 0);
     let b = `<div class="mem-page"><div class="eyebrow">Memories</div><h1>${nm}’s first year</h1>`;
-    // Nothing saved yet: a welcoming card, with the year's designs waiting underneath.
-    if (!have.length && !firsts.length) {
-      const P = typeof babyPronouns === 'function' ? babyPronouns() : { p: 'their' };
-      b += `<section class="mem-welcome"><h2>${esc2(now === 0 ? `${name()}’s year starts here` : `${name()}’s year, one photo a month`)}</h2><p>${esc2(`Add a photo each month and it becomes a little Story to keep and share. By ${P.p} first birthday, all twelve hang together on one page.`)}</p><div class="mem-welcome-actions"><label class="primary mem-welcome-btn">${esc2(`Add ${now === 0 ? 'a newborn' : now === 12 ? 'a first-birthday' : `the ${now}-month`} photo`)}${hubPhotoInput(now)}</label><button class="mem-welcome-btn is-quiet" onclick="openPage('chg:Timeline:milestone')">Save a first</button></div></section>`;
-      // The welcome button already adds this month's photo, so its tile doesn't repeat the button.
-      b += `<div class="mem-head"><h2>Month by month</h2></div><div class="mem-stories" tabindex="0" role="region" aria-label="Month by month photos">${months.map(m => card(m, m === now)).join('')}</div>`;
-      b += `<p class="hub-foot">Photos and entries stay on this device.</p></div>`;
-      return `<div class="quiet-category hub-page hub-timeline-page" style="${yearTheme('Memories')}">${b}</div>`;
-    }
-    b += `${year}<div class="mem-head"><h2>Month by month</h2>${have.length >= 2 ? `<button class="mem-play-link" onclick="memPlay()"><span aria-hidden="true">▶</span> Play the year</button>` : ''}</div>${strip}`;
-
     // The memory book: one card that opens it, styled like the book's own cover. Saving a first stays one tap.
     const stack = `<span class="bk-stack" aria-hidden="true"><span class="bk-stack-back"></span><span class="bk-stack-mid"></span><span class="bk-stack-front"><i></i><svg viewBox="0 0 40 40"><path d="M20 31s-9-5.6-9-12.2A5 5 0 0 1 20 16a5 5 0 0 1 9 2.8C29 25.4 20 31 20 31Z" fill="none" stroke="#f08b72" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>`;
     const count = bigs.length ? `${bigs.length} first${bigs.length === 1 ? '' : 's'} so far` : firsts.length ? `${firsts.length} thing${firsts.length === 1 ? '' : 's'} you’ve noticed` : 'Firsts you save are written here';
-    b += `<div class="mem-bookcard"><button class="mem-bookcard-open" onclick="openPage('${firsts.length ? 'chg:Timeline:firsts' : 'chg:Timeline:milestone'}')"><span class="mem-bookcard-art">${stack}</span><span class="mem-bookcard-copy"><b>${esc2(`${name()}’s memory book`)}</b><small>${esc2(count)}</small>${firsts.length ? `<em>${esc2('Open the book')} ›</em>` : ''}</span></button><button class="mem-bookcard-save" onclick="openPage('chg:Timeline:milestone')">＋ Save a first</button></div>`;
+    const bookCard = `<div class="mem-bookcard"><button class="mem-bookcard-open" onclick="openPage('${firsts.length ? 'chg:Timeline:firsts' : 'chg:Timeline:milestone'}')"><span class="mem-bookcard-art">${stack}</span><span class="mem-bookcard-copy"><b>${esc2(`${name()}’s memory book`)}</b><small>${esc2(count)}</small>${firsts.length ? `<em>${esc2('Open the book')} ›</em>` : ''}</span></button><button class="mem-bookcard-save" onclick="openPage('chg:Timeline:milestone')">＋ Save a first</button></div>`;
+
+    // Nothing saved yet: a welcoming card, with the year's designs waiting underneath.
+    if (!have.length && !firsts.length) {
+      const P = typeof babyPronouns === 'function' ? babyPronouns() : { p: 'their' };
+      b += `<section class="mem-welcome"><h2>${esc2(now === 0 ? `${name()}’s year starts here` : `${name()}’s year, one photo a month`)}</h2><p>${esc2(`Add a photo each month and it becomes a little Story to keep and share. By ${P.p} first birthday, all twelve hang together on one page.`)}</p><div class="mem-welcome-actions"><label class="primary mem-welcome-btn">${esc2(`Add ${now === 0 ? 'a newborn' : now === 12 ? 'a first-birthday' : `the ${now}-month`} photo`)}${hubPhotoInput(now)}</label></div></section>`;
+      // The welcome button already adds this month's photo, so its tile doesn't repeat the button.
+      b += `<div class="mem-head"><h2>Month by month</h2></div><div class="mem-stories" tabindex="0" role="region" aria-label="Month by month photos">${months.map(m => card(m, m === now)).join('')}</div>`;
+      b += bookCard + `<p class="hub-foot">Photos and entries stay on this device.</p></div>`;
+      return `<div class="quiet-category hub-page hub-timeline-page" style="${yearTheme('Memories')}">${b}</div>`;
+    }
+    b += `${year}<div class="mem-head"><h2>Month by month</h2>${have.length >= 2 ? `<button class="mem-play-link" onclick="memPlay()"><span aria-hidden="true">▶</span> Play the year</button>` : ''}</div>${strip}` + bookCard;
 
     // Checkups: a quiet record.
     if (visits.length) b += `<details class="mem-visits"><summary><span>${esc2('Checkups')}</span><small>${visits.length ? `${visits.length} saved` : 'None saved yet'}</small></summary>${visits.map(r => `<button class="mem-visit" onclick="openPage('event-edit:${r.id}')"><b>${esc2(r.title)}</b><small>${esc2(journeyDateLabel(r.date))}</small></button>`).join('')}<button class="textlink" onclick="openPage('chg:Timeline:visit')">＋ Record a visit</button></details>`;
