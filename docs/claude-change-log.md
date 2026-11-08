@@ -187,3 +187,37 @@ Picked from three tappable options (path, month by month, a link on Home cards).
 - Each change's read-ahead page opens with a small year bar ("On [Name]'s year ahead"): where the change sits in the year and where the baby is now. Tapping it opens the whole Timeline.
 - Home cards about a big change that's still ahead open that change's Timeline page instead of a category page: rolling soon, crawling soon, pulling up soon, the 4-month waking, the crying peak, separation, the next car seat and milk at 12 months. One page, two ways in. Once the change is behind the baby, the card falls back to its old page. `timelineChangeLive(id)` decides.
 - QA: check-all passes except "Solids answer changes stage" in recommendation-quality, which fails the same way on main before this change.
+
+## Home audit fixes (2026-11-07)
+Found by simulating 840 families (every feeding method, early/typical/late/born-early babies, a parent who never answers, 4 visit rhythms, 7 join ages, 4 birth seasons) through the live code: 22,740 Home screens. Files: `js/home-cards.js`, `js/home-copy.js` (v7.3).
+- "Not yet" now snoozes a card for 3 weeks instead of closing it, so Home keeps learning (the toast already promised "We'll check back"). Before, one "Not yet" ended the thread: Home never learned rolling for 76% of answering families and solids for 99%, and 413 screens told families who had started solids "No solids yet?".
+- Movement and food cards no longer wait on a question Home doesn't show any more (`qTopic`), which held babyproofing back for weeks.
+- A card shown on 3 visits without a tap retires, so an unopened card (often vitamin D) no longer blocks its category for months.
+- One safety card per screen, as the rules say (511 screens had two).
+- Checkup cards show twice (coming up, then that week), not on every visit.
+- Earlier babyproofing (from 6 months, or once rolling), mattress-down from crawling, allergens 3 days after first foods.
+- New cards: tummy time (days 5–42) and leftover formula after an hour (formula and both). 2-month checkup wording for formula families.
+- Copy: the agreed action-first rewrites (poop colors, snuffles, cluster feeds, shorter feeds, 4-month waking, cruising, next car seat, carrier, more waking, poop with solids, two naps). Moved to Timeline: drool, "Solids are getting close", first steps, first words.
+- `home2Audit()` and `home2RecordShown()` expose Home's picks for checks.
+
+## Home round 2: calmer, more useful cards (2026-11-07, preview)
+From the round 2 audit (doc: "Ahead Home audit, round 2"). Files: `js/home-cards.js`, `js/home-copy.js` (v8). Tested on 840 simulated families.
+- Calm by design: at most one card per screen that asks a parent to be careful (safety, the fever rule, honey and choking foods, car seat coats, hot days). Essentials stay until opened, but after 2 views they move down and stop holding their category's spot. Other cards retire after 2 unopened views.
+- New cards: the fever rule for the first 3 months, a pacifier at sleep, flat spots, childcare waitlists (only if nothing is set up in Childcare), no cereal in the bottle, talking back to coos, naps settling into three, drowsy but awake, two decisions (how to start solids, sleep training), baby signs at meals, a "no" to a new food, barefoot indoors, a lovey at 1, and flying (after the parent opens Outings' flying page). The carrier card now shows only after the carrier page is opened.
+- Left Home: snuffles, tub baths, shorter feeds, grabbing, three meals, biting, and the duplicate first-foods and late-allergen cards ("Starting solids? Lead with iron" now asks until 10 months, and peanut and egg follow straight after first foods).
+- When a weekly parent has seen nothing new for 7 days, Home brings forward the most valuable card due in the next 3 weeks (never seasonal or checkup cards).
+- No buttons on cards: Home reads as notifications, not a form. It learns from one top question at most once a week, Memories, Development's "Seen it", and the Feeding and Sleep stages. The iron card follows the birthday, like the checkup it names. Checkup cards say how many questions are saved in Health. Choosing two naps in Sleep counts on Home.
+- One card, one thought: "Sitting up?" is now just the stroller seat, "Rolling soon?" just changing on the floor, and "Now that she rolls" just the move to the crib. Each opens the one page it talks about.
+- Timeliness: a card never shows after its moment has passed. Essentials wait at most 7 days for a parent who hasn't opened the app (none for first-week cards, 14 for vitamin D, swaddling, first bites and the fever rule), down from 28. Vitamin D only shows in the early weeks. Rolling soon ends at 6 months, teething and "Starting solids?" at 8 months. A new parent's first visit only catches up cards that are still useful. First-days basics, pacifiers and childcare follow the birthday; development and sleep cards follow a preemie's adjusted age.
+- Home's question only when it's needed: crawling, pulling up, solids starting and a skipped milk answer can ask any week, since their guidance can't wait. The nap question waits for a visit with nothing new on Home. New "Is [name] pulling up to stand?" from 8 months for crawlers (9 for everyone), asked only after "Mattress down" has shown, so it never hides that card. Weekly visits with a question: 18% (was 16%); nap questions fell from 322 to 124.
+- Results: weekly visits with something new 84% (was 71%); month 11 is 68% (55% before the standing question), every-2-weeks visits 99% (was 92%), no screen with two caution cards (was 8%), longest quiet stretch 4 weeks (was 6). Cards shown after their window fell from 2,906 to 1,068, and what's left is preemies on adjusted age and useful first-visit catch-ups.
+- Not yet built: the optional setup question for late joiners (waiting on Yarden), daycare prep (needs a start date in Childcare), monthly-visitor freshness.
+
+## Home: first teeth (2026-11-07, preview)
+Files: `js/home-cards.js`, `js/home-copy.js` (v10), `js/stages.js`.
+- New card "First tooth in, or on the way?" (brushing starts with the first tooth), from 6 months, when first teeth are most common, through 10 months. It's a good-to-know card, so it lands on a week with room. True either way, so Home doesn't need to know.
+- "The first dentist visit comes early" now shows for every baby around 10½–12 months (due by the first birthday, tooth or not), and still a few weeks after a first tooth when Home knows.
+- Home's question can ask "Any teeth yet?" from 6 months to the first birthday, only on a week with nothing new. A "Not yet" rests 6 weeks.
+- "Poop changes with solids" stays on Home (Yarden, Nov 7).
+- Results (840 simulated families): weekly visits with something new 86% (was 84%); month 10 82% (73%), month 11 71% (68%); first teeth known for 54% of families (was 0%); weekly visits with a question 19% (18%).
+- Home's cards are set once a day. Opening or dismissing a card removes it without pulling in the next one, so "That's everything for today" stays true (and reads "You're all caught up for today" once they're all cleared). Before, Home re-picked on every redraw, so a × swapped in a new card. A card unlocked by answering Home's question still shows on the same visit.
