@@ -31,7 +31,7 @@
     const two = list.length > 2 ? [list[i], list[(i + 1) % list.length]] : list;
     return `<section class="hub-card dev-awake"><span class="hub-card-head"><b>${F('Try today')}</b></span><div class="dev-ideas">${two.map(a => tile(a, ref)).join('')}</div>`
       // From 6 months: a few baby signs, so Maya can say what she wants before she has the words. One of the things to try, inside the same card.
-      + `<button class="hub-link dev-more-link" onclick="openPage('chg:Development:d:more:${ref}')">${F('More ideas for awake time')} ›</button></section>`;
+      + `<button class="hub-link dev-more-link" onclick="openPage('chg:Development:d:more:${ref}')">${F('More ways to play')} ›</button></section>`;
   };
   // How long Maya is usually awake at a time, by the age the guides follow (adjusted age for babies born early). Same ranges as Sleep.
   // Awake time comes from Sleep, so the two tabs always give the same number: Sleep's stage for this baby
@@ -40,10 +40,10 @@
   const WAKE = m => { try { if ((typeof isCurrent !== 'function' || isCurrent()) && typeof chgStageIndex === 'function') { const i = chgStageIndex('Sleep'); if (SLEEP_WAKE[i]) return SLEEP_WAKE[i]; } } catch (e) {} return m < 2 ? '45–60 minutes' : m < 4 ? '1–1½ hours' : m < 7 ? '2–2½ hours' : '2½–4 hours'; };
   // On Movement, the idea that answers the big question of the age.
   const MOVE = {
-    4: { id: 'tummy-picture', title: 'A picture at floor level', why: 'Turning to look is how rolling starts.', steps: ['During tummy time, prop a bold picture where Maya can see it.', 'Lie down facing {o} and talk about it.', 'Move it a little to one side so {s} turns to look.'] },
-    6: { id: 'supported-reach', title: 'A toy beside your knee', why: 'Reaching while sitting builds the balance {s} needs to sit on {p} own.', steps: ['Sit Maya on the floor, supported around {p} chest as needed.', 'Hold a toy close beside your knee.', 'Let {o} lean and reach for it.'] },
-    9: { id: 'toy-reach', hero: 9, title: 'A toy just out of reach', why: 'A reason to move is all most babies need.', steps: ['Put a favorite toy on the floor, a little out of Maya’s reach.', 'Cheer {o} on as {s} scoots, rolls or crawls toward it.', 'If {s} gets frustrated, move it a bit closer.'] },
-    12: { id: 'cruise-toy', hero: 12, title: 'Cruise to a toy', why: 'Stepping along furniture comes before first steps.', steps: ['Put a toy at the far end of a sturdy sofa or low table.', 'Let Maya hold on and step sideways to reach it.', 'Keep the floor around the sofa clear of toys.'] }
+    4: { id: 'tummy-picture', title: 'A picture at floor level', why: 'Turning to look is how rolling starts.', steps: ['During tummy time, prop a bold picture where Maya can see it.', 'Lie down facing {o} and talk about it.', 'Move it a little to one side so {s} turns to look.'], notice: 'A turn of the head, or a push up to look, counts.' },
+    6: { id: 'supported-reach', title: 'A toy beside your knee', why: 'Reaching while sitting builds the balance {s} needs to sit on {p} own.', steps: ['Sit Maya on the floor, supported around {p} chest as needed.', 'Hold a toy close beside your knee.', 'Let {o} lean and reach for it.'], notice: 'A lean and a grab counts, even if {s} tips over. Keep a hand close.' },
+    9: { id: 'toy-reach', hero: 9, title: 'A toy just out of reach', why: 'A reason to move is all most babies need.', steps: ['Put a favorite toy on the floor, a little out of Maya’s reach.', 'Cheer {o} on as {s} scoots, rolls or crawls toward it.', 'If {s} gets frustrated, move it a bit closer.'], notice: 'Scooting, rolling or crawling toward it all count.' },
+    12: { id: 'cruise-toy', hero: 12, title: 'Cruise to a toy', why: 'Stepping along furniture comes before first steps.', steps: ['Put a toy at the far end of a sturdy sofa or low table.', 'Let Maya hold on and step sideways to reach it.', 'Clear other toys off the floor so {s} doesn’t trip.'], notice: '{S} might shuffle one step, or just stand and look at the toy. Both count.' }
   };
   const moveArt = mv => mv.hero ? (window.devHeroArt ? devHeroArt(mv.hero) : '') : devPlayArt(mv.id);
   window.devMoveIdea = ref => MOVE[ref] ? Object.assign({}, MOVE[ref], { art: moveArt(MOVE[ref]) }) : null;
@@ -80,12 +80,12 @@
     const extra = (MORE[ref] || []).filter(id => !shown.has(id)).map(find).filter(Boolean);
     const more = extra.filter(Boolean).length ? `<details class="dev-more-ideas"><summary><span>${F(`${extra.length} more ideas`)}</span><span class="faq-plus" aria-hidden="true">＋</span></summary><ul class="dev-more-list">${extra.filter(Boolean).map(a => `<li><button onclick="openPage('chg:Development:d:idea:${ref}:${a.id}')"><span>${F(B(a.title))}</span><span class="hub-chev" aria-hidden="true">›</span></button></li>`).join('')}</ul></details>` : '';
     const signs = false && ref >= 6 ? h.list('', [h.row({ icon: 'signs', cat: 'Development', title: 'Try a few baby signs', sub: 'More, eat, milk and all done', onclick: `openPage('chg:Development:d:signs')` })]) : '';
-    return frame('Ideas to try together', `Awake time · by ${ref === 12 ? '1 year' : ref + ' months'}`, lead, `<div class="dev-ideas is-grid">${pics.map(a => tile(a, ref)).join('')}</div>${more}`);
+    return frame('Ideas to try together', `Play ideas · by ${ref === 12 ? '1 year' : ref + ' months'}`, lead, `<div class="dev-ideas is-grid">${pics.map(a => tile(a, ref)).join('')}</div>${more}`);
   }
   function movePage(ref) {
     const mv = window.devMoveIdea(ref), h = H();
     if (!mv) return ideasPage(ref);
-    return frame(mv.title, 'Try this together', mv.why, `<figure class="dev-idea-hero">${mv.art}</figure>` + h.steps(mv.steps) + h.note('Stay close, and stop when Maya looks away or fusses. That’s {p} way of saying “enough for now.”'));
+    return frame(mv.title, 'Ideas to try together', mv.why, `<figure class="dev-idea-hero">${mv.art}</figure>` + h.steps(mv.steps) + (mv.notice ? h.tip('What to notice', B(mv.notice)) : '') + h.note('Stay close, and stop when Maya looks away or fusses. That’s {p} way of saying “enough for now.”'));
   }
   function ideaPage(ref, id) {
     const a = find(id), h = H();

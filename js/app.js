@@ -2121,7 +2121,7 @@ const DEV_STAGES={
 9:{rail:'7–9 mo',title:'Sitting up and finding things',body:'Sitting frees both hands. Expect babbling, looking for dropped toys and protest when you leave.',summaries:{Social:'Recognizing people, responding to their name and peekaboo.',Talking:'Repeated babbles and raising arms to be picked up.',Thinking:'Looking for dropped things and bringing objects together.',Movement:'Getting into sitting, moving toys between hands and finger raking.'}},
 12:{rail:'10–12 mo',title:'Waving, copying and pulling up',body:'Waving, joining in familiar games and pulling up to stand.',summaries:{Social:'Joining a familiar game with you.',Talking:'Waving, names for parents and responding to “no.”',Thinking:'Putting things in and looking for something hidden.',Movement:'Pulling up, supported steps, cup use and a thumb-and-finger grasp.'}}
 };
-const DEV_DOMAINS={Social:{title:'Social',icon:'health'},Talking:{title:'Communication',icon:'rhythm'},Thinking:{title:'Thinking',icon:'spark'},Movement:{title:'Movement',icon:'dev'}};
+const DEV_DOMAINS={Social:{title:'Social',icon:'health'},Talking:{title:'Talking',icon:'rhythm'},Thinking:{title:'Thinking',icon:'spark'},Movement:{title:'Movement',icon:'dev'}};
 const DEV_EXAMPLES={
 'Settles with your voice or touch':'When baby is upset, your voice or a cuddle helps them calm down, at least a little. Not every cry will stop.',
 'Looks at your face':'In a calm, awake moment, baby looks at your face while you hold them or talk.',
@@ -2147,16 +2147,16 @@ const DEV_EXAMPLES={
 'Swipes at toys':'Baby swings an arm toward a nearby toy. A deliberate swipe can come before an accurate grasp.',
 'Brings hands to mouth':'Baby brings their hands to their mouth to explore their fingers.',
 'Pushes onto elbows during tummy time':'During supervised awake tummy time, baby props themselves up on their forearms.',
-'Knows familiar people':'Baby reacts differently to people they see often, perhaps brightening or calming down around familiar faces.',
+'Knows familiar people':'Baby lights up or settles down around people they see a lot.',
 'Likes looking at self in a mirror':'Baby is interested in their reflection. That doesn’t mean they recognize themselves yet.',
 'Laughs':'A game, a voice or a funny face makes baby laugh out loud.',
 'Takes turns making sounds with you':'Baby makes a sound, you answer, and they answer back.',
 'Blows raspberries':'Baby sticks out their tongue and blows, making a bubbly sound.',
-'Squeals':'High squealing sounds during awake moments, separate from crying.',
+'Squeals':'Baby lets out happy, high squeals. That’s play, not crying.',
 'Puts things in mouth to explore':'Baby brings toys to their mouth to find out what each one is like.',
 'Reaches to grab a toy':'Baby reaches for a toy they want, instead of only holding one you give them.',
-'Closes lips to show they don’t want more food':'During feeding, baby closes their mouth instead of opening for more. Notice this response rather than trying to get another bite in.',
-'Rolls tummy to back':'Baby turns from lying on their tummy onto their back. Rolling from back to tummy is a different movement.',
+'Closes lips to show they don’t want more food':'When baby has had enough, they close their mouth instead of opening for more. That means they’re done, so there’s no need to coax more.',
+'Rolls tummy to back':'Baby turns from lying on their tummy onto their back.',
 'Pushes up with straight arms on tummy':'On their tummy (with you there), baby pushes up on straight arms, chest off the floor.',
 'Leans on hands when sitting':'Sat up, baby props themselves on their hands. Sitting hands-free comes later.',
 'May be shy or clingy with strangers':'Baby may stay close to a familiar caregiver or hesitate with someone they don’t know well.',

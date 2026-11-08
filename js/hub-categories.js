@@ -46,7 +46,7 @@
   const playLineRaw = a => { const s = typeof conceptPlaySuggestion === 'function' ? conceptPlaySuggestion(a) : ''; return s && !s.startsWith(a.why || '\u0000') ? firstSentence(s) : firstSentence(a.how || a.why); };
 
   /* ---------- Development: "What might I see, and how can I help?" ---------- */
-  const DOMAIN_TITLES = { Social: 'Social', Talking: 'Communication', Thinking: 'Thinking', Movement: 'Movement' };
+  const DOMAIN_TITLES = { Social: 'Social', Talking: 'Talking', Thinking: 'Thinking', Movement: 'Movement' };
   const DOMAIN_ICONS = { Social: 'smile', Talking: 'chat', Thinking: 'idea', Movement: 'sit' };
   // Seen in the baby book, or reported elsewhere (rolling, crawling): the same test the area page uses.
   const devSkillSeen = l => { const key = journeySkillKey(l); return !!(journeyData().records.find(r => r.type === 'milestone' && r.skillKey === key) || skillSeen(l)); };
@@ -65,7 +65,7 @@
       const labels = DEVELOPMENT_DOMAINS[ref][d] || [], c = window.devTileColors ? devTileColors(d) : null, hl = (window.DEV_HEADLINE || {})[ref]?.[d];
       const moving = d === 'Movement' && live() && ref === now && (answers.pullUp === 'Yes' || answers.crawl === 'Yes');
       const line = moving ? (answers.pullUp === 'Yes' ? 'Already pulling up' : 'Already crawling') : hl ? hl[0] : (st.summaries[d] || '');
-      return `<button class="hub-domain-tile dev-tile" style="${c ? `--dt-bg:${c[0]};--dt-ink:${c[1]}` : ''}" onclick="openPage('development-domain:${ref}:${d}')"><span class="dev-tile-art">${window.devTileArt ? devTileArt(d, ref) : h.art(DOMAIN_ICONS[d], 'Development')}</span><small class="dev-tile-label">${DOMAIN_TITLES[d]}</small><b class="dev-tile-line">${(window.hubBabyify || (x => x))(F(line))}</b><span class="dev-tile-count">${labels.length ? `<span class="dev-tile-ticks" aria-hidden="true">${labels.map(devSkillSeen).sort((x, y) => y - x).map(v => `<i class="${v ? 'is-seen' : ''}"></i>`).join('')}</span>` : ''}${F(`${labels.length} skill${labels.length === 1 ? '' : 's'}`)} ›</span></button>`;
+      return `<button class="hub-domain-tile dev-tile" style="${c ? `--dt-bg:${c[0]};--dt-ink:${c[1]}` : ''}" onclick="openPage('development-domain:${ref}:${d}')"><span class="dev-tile-art">${window.devTileArt ? devTileArt(d, ref) : h.art(DOMAIN_ICONS[d], 'Development')}</span><small class="dev-tile-label">${DOMAIN_TITLES[d]}</small><b class="dev-tile-line">${(window.hubBabyify || (x => x))(F(line))}</b><span class="dev-tile-count">${F(labels.length ? `${labels.filter(devSkillSeen).length} of ${labels.length} seen` : 'See skills')} ›</span></button>`;
     }).join('');
     const other = live() && ref !== now;
     b += `<section class="hub-card hub-glance is-static"><span class="hub-card-head"><b>${F(other ? `What babies work on by ${age}` : 'What Maya is working on')}</b></span><div class="hub-domain-tiles">${domainTiles}</div></section>`;
@@ -381,7 +381,7 @@
     const thermo = () => {
       // Which thermometer, by age: rectal is most accurate all year; armpit works for a quick check (fever from 99°F);
       // forehead works at any age; ear readings only from 6 months.
-      const fe = u3 ? ['Forehead', 'Fine for a quick check. If it reads 100.4°F or higher, check rectally'] : m < 6 ? ['Forehead', 'Reliable now. Ear thermometers work from 6 months'] : ['Forehead or ear', 'Both reliable now'];
+      const fe = u3 ? ['Forehead', 'Fine for a quick check. If it reads 100.4°F or higher, check rectally'] : m < 6 ? ['Forehead', 'Fine for a quick check. Ear thermometers work from 6 months'] : ['Forehead or ear', 'Both reliable now'];
       const tile = (icon, t, d, good) => `<div${good ? ' class="is-good"' : ''}><span class="hub-dot">${h.art(icon, 'Health')}</span><b>${F(t)}</b><p>${F(d)}</p></div>`;
       return `<div class="hub-card hub-thermo is-three">${tile('thermo', 'Rectal', 'The most accurate reading for babies', true)}${tile('hand', 'Armpit', u3 ? 'Easy, but less accurate. If it reads 99°F or higher, check rectally' : 'Easy, but less accurate. A fever starts at 99°F this way')}${tile('eye', fe[0], fe[1])}</div>`
         // How to take a rectal temperature, in the order you do it (AAP, HealthyChildren.org).
@@ -419,7 +419,7 @@
   const baseRoute = window.changesRoute;
   window.changesRoute = function (p) {
     const [, cat, screen, a, b] = p.split(':');
-    if (cat === 'Development' && screen === 'd' && a === 'signs') return detailFrame('Development', 'Development & play', 'Try a few baby signs', 'A few simple signs let Maya tell you what {s} {want|wants} before {s} can say it. Tap one to watch it.',
+    if (cat === 'Development' && screen === 'd' && a === 'signs') return detailFrame('Development', 'Talking', 'Try a few baby signs', 'A few simple signs let Maya tell you what {s} {want|wants} before {s} can say it.',
       // "When" is a question, so it's an answer card first; the tips aren't an order, so they're tiles.
       H().qa([['When will {s} sign back?', 'Around 8–12 months', 'Signing won’t slow down {p} talking.']])
       + (window.hubSigns ? hubSigns() : '')
@@ -465,7 +465,7 @@
       const routine = (html.slice(0, cut < 0 ? html.length : cut).match(/vaccine-detail/g) || []).length, seasonal = cut < 0 ? 0 : (html.slice(cut).match(/vaccine-detail/g) || []).length;
       const tiles = `<div class="hub-vax-count"><div><b>${routine}</b><span>${F('routine vaccines to expect')}</span></div>${seasonal ? `<div><b>${seasonal}</b><span>${F('seasonal ones to ask about')}</span></div>` : ''}</div>`;
       // After the shots: what's normal, and when to call (AAP).
-      const after = age === 0 ? '' : H().versus('After the shots', ['Normal for a day or two', 'Fussy or sleepy, a low fever, and a sore, red spot where the shot went in.'], ['Call your pediatrician', 'A fever of 104°F or higher, crying for 3 hours or more, or swelling that keeps growing.']);
+      const after = age === 0 ? '' : H().versus('After the shots', ['Normal for a day or two', 'Fussy or sleepy, a low fever, and a sore, red spot where the shot went in.'], ['Call your pediatrician', `A fever of ${feverTemp(age)} or higher${age < 3 ? ' (call right away under 3 months)' : ''}, crying for 3 hours or more, or swelling that keeps growing.`]);
       const combo = `<p class="hub-vax-combo">${F('Many of these come combined, so it’s usually fewer shots than the list suggests. Some offices give 3 or more in one.')}</p>`;
       const out = (routine >= 2 ? html.replace(/(<section class="health-vaccines"><h2>[^<]*<\/h2>)/, `$1${combo}`) : html).replace('<p class="health-small">Combination vaccines may mean fewer injections.</p>', '');
       // October to March, the seasonal ones are marked "In season now", since this is when to ask for them.

@@ -394,7 +394,7 @@
   }
   function recordMilestonePage() {
     const h = H(), ov = hubStageOverride('Development'), ref = DEV_STAGES[ov] ? Number(ov) : devRef(developmentMonth(actualMonth())), st = DEV_STAGES[ref], age = ref === 12 ? '1 year' : ref + ' months';
-    const ICON = { Social: 'smile', Talking: 'chat', Thinking: 'idea', Movement: 'sit' }, TITLE = { Social: 'Social', Talking: 'Communication', Thinking: 'Thinking', Movement: 'Movement' };
+    const ICON = { Social: 'smile', Talking: 'chat', Thinking: 'idea', Movement: 'sit' }, TITLE = { Social: 'Social', Talking: 'Talking', Thinking: 'Thinking', Movement: 'Movement' };
     const tiles = Object.keys(DEV_DOMAINS).map(d => `<button class="hub-domain-tile" onclick="openPage('development-domain:${ref}:${d}')">${h.art(ICON[d], 'Development')}<b>${TITLE[d]}</b><small>${F(st.summaries[d] || '')}</small><span>${F('Pick a skill')} ›</span></button>`).join('');
     return detailPage('Development', 'Memories', 'Save a milestone', `Pick an area, then tap “Seen it” on anything Maya’s doing. Skills for ${age} are shown first.`,
       `<section class="hub-card hub-glance is-static"><div class="hub-domain-tiles">${tiles}</div></section>`

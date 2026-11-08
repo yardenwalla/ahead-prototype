@@ -728,6 +728,9 @@
 /* Videos that play in the page */
 #main .hub-embed { margin: 0 0 14px; border-radius: 18px; overflow: hidden; background: var(--white); border: 1px solid var(--line) }
 #main .hub-embed-poster, #main .hub-embed-frame { display: block; width: 100%; aspect-ratio: 16 / 9; border: 0; background: #2f2a33 center / cover no-repeat; position: relative; cursor: pointer; padding: 0 }
+/* Until the video's picture loads (or when it can't: offline, blocked), the poster is the page's soft color with the play button, not a black box. */
+#main .hub-embed-poster { background-color: #ece7e0 }
+#main .hub-embed-poster .hub-embed-play { background: #2f2a33; color: #fff }
 #main .hub-embed-play { position: absolute; left: 50%; top: 50%; width: 58px; height: 58px; margin: -29px 0 0 -29px; border-radius: 50%; background: rgba(255, 255, 255, .92); color: #2f2a33; display: grid; place-items: center; box-shadow: 0 4px 18px rgba(0, 0, 0, .25) }
 #main .hub-embed-play svg { width: 26px; height: 26px; margin-left: 3px }
 #main .hub-embed figcaption { padding: 10px 14px 12px }
@@ -1380,6 +1383,10 @@
 #main .dev-tile-ticks { display: inline-flex; gap: 4px }
 #main .dev-tile-ticks i { width: 9px; height: 9px; border-radius: 50%; border: 1.5px solid var(--dt-ink); opacity: .55; box-sizing: border-box }
 #main .dev-tile-ticks i.is-seen { background: var(--dt-ink); opacity: 1 }
+/* One color per screen: the hero carries Development's color; the four area tiles are white, each with its own small picture. */
+#main .dev-tile { background: var(--white, #fff) !important; box-shadow: inset 0 0 0 1px var(--line, #e7e1d8) }
+#main .dev-tile .dev-tile-label { color: var(--muted, #625d68) !important }
+#main .dev-tile .dev-tile-count { color: var(--year-ink) !important }
 
 /* Health: one fever rule (the baby's own), and the poop color card */
 #main .hub-fever-bands.is-one { grid-template-columns: 1fr }
