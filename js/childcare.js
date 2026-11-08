@@ -106,7 +106,7 @@
         ['Before you sign', 'check', 'Easy to ask by email', [['Are you trained in infant CPR?', 'Yes, and it’s kept current.'], ['Has every adult in the home had a background check?', 'Yes, everyone over 18.'], ['Are there pets, a pool or guns in the home?', 'Pets kept apart, any pool fenced, any guns locked and unloaded.'], ['When does a sick child stay home?', 'A clear, written policy.'], ['Can I have it in writing?', 'Hours, fees, closed days, and how much notice either side gives.'], ['Are children and staff up to date on vaccines?', 'Yes, with a clear policy, and hand-washing before feeds and after changes.']]]] },
     nanny: { icon: 'hand', name: 'Nanny or nanny share', short: 'One-on-one at home. Sharing costs less', who: 'person',
       lead: 'A caregiver who looks after your baby at home. In a nanny share, two families split one nanny.',
-      good: 'You want one-on-one care at home, on a schedule that fits yours.', mind: 'You’re usually their employer, with taxes to handle. And you’ll need backup when they’re sick or away.',
+      good: 'You want one-on-one care at home, on a schedule that fits yours.', mind: 'You’re usually their employer, with taxes to handle. Agree on paid time off up front, and plan backup for when they’re sick or away.',
       when: ['About 3 months ahead', 'That leaves time for interviews, references and a paid trial day.'],
       steps: [['Before you meet', 'check', 'A short phone call. Listen for:', [['Which days and hours can you work?', 'A clear answer that matches what you need.'], ['What pay are you looking for?', 'So you both know it fits before you meet.'], ['How long have you cared for babies under 1?', 'Real experience with babies this young.']]],
         ['At the interview: watch for', 'look', 'Have Maya there if you can', [['How they are with Maya', 'They get down to {p} level, talk and smile.'], ['Phone away, full attention', 'On Maya, and on you.']]],
@@ -269,14 +269,15 @@
         ['moon', 'Short naps at care?', 'An earlier bedtime that night helps']])
       + H().versus('Sick days: care or home?', ['Usually fine to go', 'A runny nose, if {s} {are|is} eating and playing as usual.'],
         ['Usually a day at home', m < 3 ? 'Any fever: call your pediatrician first. And after vomiting or diarrhea.' : 'Until 24 hours without a fever, and without fever medicine. And after vomiting or diarrhea.'])
-      + H().note('Every place has its own sick policy. Ask for it in writing.')
+      + H().note('Lots of colds are common in the first year of care. Every place has its own sick policy, so ask for it in writing.')
       + `<h2 class="hub-h2">${F('Signs it’s going well')}</h2>` + H().tips(['{S} {seem|seems} settled at pickup, even if drop-off has tears.', 'The caregiver tells you about small problems, not just good news.', 'You can call or drop in anytime.'])
       + picSteps('When things don’t go to plan', [
         ['smile', 'Something small', 'Bring it up early and kindly.'],
         ['heart', 'Harder drop-offs', 'Common from 8 months. Keep goodbyes short and warm.'],
-        ['shield', 'A real worry', 'Injuries or unsafe sleep: keep {o} home and speak up.']],
+        ['shield', 'A real worry', 'Injuries or unsafe sleep: keep {o} home and speak up. At licensed care, you can also report it to your state.']],
         'Bring small things up early. Harder drop-offs from around 8 months are common, so keep goodbyes short. For injuries or unsafe sleep, keep the baby home and speak up right away.')
-      + good([['thermo', 'Lots of colds at first', 'Common in the first year of care. Line up backup care', go('backup')], ['book', 'A real worry at licensed care?', 'You can also report it on your state’s child care website'], (() => { const ch = typeof chosenNow === 'function' ? chosenNow() : null; return !ch || ch.k === 'nanny' ? ['hand', 'If you have a nanny', 'Agree on paid time off up front, and check in on pay once a year'] : null; })()]), 'heart');
+      // Its three notes moved: colds to the sick-days note, reporting to "A real worry", nanny time off to the nanny page.
+      , 'heart');
     // Doulas and help with recovery belong to the first weeks. From 4 months, the same page is about care for the baby.
     if (id === 'help') { const early = m < 4; return sub('help', 'Kinds of care', 'Extra help at home', early ? 'Help in the early months isn’t only for when you go back to work.' : 'Help at home isn’t only for when you go back to work.',
       picSteps('Kinds of help', early ? [
