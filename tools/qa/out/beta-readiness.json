@@ -3,7 +3,5 @@
   "renders": 7524,
   "destinations": 6251,
   "externalLinks": 5,
-  "failures": [
-    "Changing milk type updates the amounts"
-  ]
+  "failures": []
 }
