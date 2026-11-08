@@ -195,3 +195,8 @@
 #main .care-v2 .rt-split .rt-head { padding: 4px 0 2px }
 #main .care-v2 .rt-split .rt-head b { font-size: 15px }
 #main .care-v2 .rt-split .rt-group { margin: 0 }
+/* "How to change one" folds behind a tap on the newborn diapers page. */
+#main .care-v2 .care-howto { padding: 14px 16px }
+#main .care-v2 .care-howto > summary { cursor: pointer; font-weight: 700; color: var(--ss-ink, var(--ink)); list-style: none }
+#main .care-v2 .care-howto > summary::after { content: " ›" }
+#main .care-v2 .care-howto[open] > summary { margin-bottom: 12px }

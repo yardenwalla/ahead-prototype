@@ -189,7 +189,7 @@
     const callG = 'Bleeding that lasts more than 3–4 days, or starts after the first week.', callC = 'After a circumcision: bleeding bigger than a quarter, swelling, pus-filled blisters, a fever, no pee within 8 hours, or a plastic ring still on after 10 days.';
     return pr === 'she' ? girl + callTip(callG) : pr === 'he' ? circ + boy + callTip(callC) : girl + circ + boy + callTip(`Girls: ${callG.charAt(0).toLowerCase() + callG.slice(1)} ${callC}`);
   };
-  const ramp = () => `<div class="hub-card care-ramp">${[['Days 1–2', '1–2 wet', 'Black, sticky poop', '#2f2a26'], ['Days 3–4', '3 or more wet', 'Turning green, then yellow', '#5e5a2c'], ['Day 5', '5 or more wet', 'Yellow and seedy if breastfed, tan if formula', '#d9a62a'], ['From about day 6', '6 or more wet', 'Often a poop after feeds', '#d9a62a']].map(([d, w, p, c]) => `<div><i class="care-swatch" style="background:${c}"></i><b>${F(d)}</b><span>${F(w)}</span><small>${F(p)}</small></div>`).join('')}</div>`;
+  const ramp = () => `<div class="hub-card care-ramp">${[['Days 1–2', '1–2 wet', 'Black, sticky poop. A pink stain is usually just concentrated pee', '#2f2a26'], ['Days 3–4', '3 or more wet', 'Turning green, then yellow', '#5e5a2c'], ['Day 5', '5 or more wet', 'Yellow and seedy if breastfed, tan if formula', '#d9a62a'], ['From about day 6', '6 or more wet', 'Often a poop after feeds', '#d9a62a']].map(([d, w, p, c]) => `<div><i class="care-swatch" style="background:${c}"></i><b>${F(d)}</b><span>${F(w)}</span><small>${F(p)}</small></div>`).join('')}</div>`;
   const rashHow = () => H().steps(['Change often, and let the skin air out when you can.', 'A thick layer of zinc oxide or petroleum cream at every change. Fragrance-free wipes, and no antibiotic ointment.', 'Shiny, bright red in the skin folds is often yeast, which needs a different cream. Regular diaper rash usually spares the folds.']) + H().tip('Call your pediatrician', 'Not better in 2–3 days, or blisters, pus, oozing or a fever.');
   // Each rash opens right here: what it looks like, what helps, when to call. One tap, never two.
   const rashLink = ids => `<div class="hub-card care-folds">${ids.map(id => { const r = RASH[id];
@@ -444,13 +444,12 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   const Q2 = {
     // Newborn diapers in one place (Nov 7): how many, how to change, and cleaning down there.
     newdiapers: { k: 'diapers', title: 'Diapers in the first weeks', W: 'About 8–12 changes a day at first. Wet diapers are how you know feeding is going well.',
-      do: ['Keep a rough count of wet diapers this week: 6 or more a day from about day 6.', 'Wipe front to back, and let the skin dry.', 'Keep one hand on {o} on the changing table, always.'], vis: () => `<h2 class="hub-h2">${F('Wet diapers, day by day')}</h2>` + ramp() + `<h2 class="hub-h2">${F('How to change one')}</h2>` + diaperCarousel(),
-      N: 'Black, sticky poop for the first few days, then yellow and seedy (tan if formula). A pink stain in the first days is usually just very concentrated pee.',
+      // The table already shows the count and the poop colors, so neither is said again; the how-to is one tap away.
+      do: ['Wipe front to back, and let the skin dry.', 'Keep one hand on {o} on the changing table, always.'], vis: () => `<h2 class="hub-h2">${F('Wet diapers, day by day')}</h2>` + ramp() + `<details class="hub-card care-howto"><summary>${F('How to change one, step by step')}</summary>${diaperCarousel()}</details>`,
       call: 'Fewer wet diapers than this, or black poop after day 3.', urgent: 'White, gray or chalky poop: call right away.',
       extra: () => `<h2 class="hub-h2">${F('Cleaning down there')}</h2>` + downThere() },
     firstweek: { k: 'diapers', title: 'Diapers in the first week', W: 'Wet diapers build up day by day as feeding gets going.',
       do: ['Feed often, 8–12 times a day.', 'Keep a rough count of wet diapers this week.', 'From about day 6, expect 6 or more a day.'], vis: () => ramp(),
-      N: 'Black, sticky poop for the first few days, then yellow and seedy (tan if formula). A pink stain in the first days is usually just very concentrated pee.',
       call: 'Fewer wet diapers than this, or black poop after day 3.', urgent: 'White, gray or chalky poop: call right away.' },
     change: { k: 'diapers', title: 'How to change a diaper', W: 'About 8–12 times a day at first. It gets quick.',
       do: ['Have a clean diaper, wipes and cream within reach.', 'Wipe front to back, and let the skin dry.', 'Keep one hand on {o} on the changing table, always.'], vis: () => diaperCarousel(),
@@ -748,6 +747,8 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     const rashOrder = [['newborn', 'peeling', 'acne'], ['acne', 'cradle', 'strawberry'], ['drool', 'eczema', 'heat'], ['drool', 'eczema', 'heat']][now];
     const rest = RASH_ORDER.concat('strawberry', 'newborn').filter((id, i, a) => a.indexOf(id) === i && !rashOrder.includes(id) && !(now >= 2 && ['newborn', 'peeling', 'strawberry', 'acne', 'cradle'].includes(id)) && !(now === 1 && ['newborn', 'peeling'].includes(id)) && !(now === 0 && id === 'strawberry') && !(now <= 1 && id === 'drool'));
     const under3 = now === 0 || (now === 1 && (!live() || actualMonth() < 3));
+    const rashCall = 'A rash with a fever, blisters or pus, or one that spreads.' + (now === 0 ? ' Call right away for tiny blisters in the first 2 weeks.' : '') + (under3 ? ' Under 3 months, a fever of 100.4°F or higher means calling right away.' : '');
+    const otherRashes = `<div class="hub-list care-link">${rowK('look', 'Other rashes', rest.slice(0, 3).map((id, i) => i ? RASH[id].t.toLowerCase() : RASH[id].t).join(', ') + ' and more', `openPage('chg:${CAT}:d:look:${now}:rashmore')`)}</div>`;
     const items = {
       poop: ['Poop or pee looks different', 'Colors, fewer poops, and when to call', poopChart()
         + `<h2 class="hub-h2">${F('Also normal')}</h2>` + hubIconSteps([
@@ -755,8 +756,11 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
           ['diaper', 'Straining, going red', 'Even when it comes out soft'],
           solidsOn || now >= 2 ? ['bowl', 'Thicker with solids', 'Hard? Pears, prunes, peaches'] : ['drop', '6+ wet diapers', 'Every day']], CAT, 'Also normal.', false)
         + block('', '', 'Fewer than 6 wet diapers a day after the first week, hard pebble-like poop, or watery poop many times a day' + (now <= 1 ? ' (right away under 3 months)' : '') + '.', 'White, gray or chalky poop. Call your pediatrician right away.')],
-      rash: ['Spots, bumps or dry skin', now >= 2 ? 'Drool rash, eczema, heat rash' : 'Rashes, acne, cradle cap', `<h2 class="hub-h2">${F('Common now')}</h2>` + rashLink(rashOrder) + `<h2 class="hub-h2">${F('Other rashes')}</h2>` + rashLink(rest)
-        + `<h2 class="hub-h2">${F('Worried? Try the glass test')}</h2>` + glassTest() + block('', '', 'A rash with blisters, pus or oozing, or one that keeps spreading.' + (now === 0 ? ' Call right away for clusters of tiny blisters in the first 2 weeks.' : '') + (!under3 ? ' A rash with a fever.' : ''), (under3 ? 'A rash with a fever of 100.4°F or higher: under 3 months, call your pediatrician right away, day or night. ' : '') + 'Purple or red dots that don’t fade when you press a glass on them: call 911.')],
+      rash: ['Spots, bumps or dry skin', now >= 2 ? 'Drool rash, eczema, heat rash' : 'Rashes, acne, cradle cap', `<h2 class="hub-h2">${F('Common now')}</h2>` + rashLink(rashOrder) + otherRashes
+        // One call line: the glass test above already holds the 911 sign.
+        + `<h2 class="hub-h2">${F('Worried? Try the glass test')}</h2>` + glassTest() + block('', '', rashCall)],
+      // The less common rashes for this age, on their own page, each with what it looks like and what to do.
+      rashmore: ['Other rashes', 'Less common at this age', rashLink(rest) + block('', '', rashCall)],
       cord: ['The cord', 'Smell, crust or a little blood', ans('What’s normal', [['cord', 'Darkens and dries', 'A little crust is fine'], ['drop', 'A spot of blood', 'When it falls off'], ['clock', 'Falls off', 'Usually at 1–3 weeks']],
         'A yellow, smelly discharge, redness around it, crying when you touch it, or still on after 3 weeks. A small, moist pink bump after it falls off is common, and your pediatrician can treat it quickly.')],
       eyes: ['Sticky eyes or a noisy nose', 'Noisy breathing, sneezing, tear ducts', ans('Usually normal, and what helps', [['drop', 'Snuffly breathing', 'Dried milk or mucus, not a cold'], ['eye', 'A watery eye', 'Not red: a blocked tear duct'], ['hand', 'Sticky eyes', 'Wipe from the inside corner out'], ['steth', 'A stuffy nose', 'Saline drops, gentle suction']],
