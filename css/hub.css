@@ -1491,3 +1491,4 @@ label:has(> .hub-photo-input:focus-visible) { outline: 2px solid #884866; outlin
 
 /* Search: the section a result opened, highlighted for a moment. */
 #main .hub-found{outline:2px solid var(--ss-ink,var(--leaf,#526c47));outline-offset:3px;border-radius:12px;transition:outline-color .6s}
+#main .cc-times label.is-off { opacity: .45 }

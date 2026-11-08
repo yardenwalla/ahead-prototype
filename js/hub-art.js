@@ -84,6 +84,7 @@
     cube: (c) => `<path d="M12 3.5 19.5 7.5v9L12 20.5 4.5 16.5v-9Z" fill="${c.bg}"/><path d="M4.5 7.5 12 11.5l7.5-4M12 11.5v9"/>`,
     hidden: (c) => `<circle cx="16.5" cy="10" r="3" fill="#f3d58a"/><path d="M3 19c1-6 4-9 8-9s7 3 8 9Z" fill="${c.bg}"/><path d="M6.5 15.5c1.2-1.5 2.6-2.2 4.2-2.2"/>`,
     toss: (c) => `<circle cx="18" cy="17" r="3" fill="${c.bg}"/><path d="M4 18C5 9 10 5 15 6" stroke-dasharray="1.5 2.2"/><path d="M13.5 4.2 15.3 6l-2 1.4"/>`,
+    swaddle: (c) => `<circle cx="12" cy="5.8" r="2.8" fill="${c.bg}"/><path d="M7.5 11a4.5 4.5 0 0 1 9 0v6a4.5 4.5 0 0 1-9 0Z" fill="${c.bg}"/><path d="M7.5 11.5l9 4.5M16.5 11.5 12 13.8"/>`,
     towel: (c) => `<rect x="5" y="3.5" width="14" height="17" rx="2" fill="${c.bg}"/><path d="M5 8h14M5 16h14"/>`
   };
   /* Figures: flat, outline-free scenes on a soft backdrop. Words live in HTML under the picture, in the app's type. */

@@ -73,9 +73,11 @@
   window.nextPage = function () {
     const a = ageNow(), nm = name(), done = doneNow();
     // Born early, with Development on birthday age: its rows sit by birthday age (shifted onto this adjusted-age path).
-    const devBday = !!(profile.early && profile.due) && typeof hubAgeFor === 'function' && hubAgeFor('dev', actualMonth()) === actualMonth() && hubAgeFor('care', actualMonth()) !== actualMonth();
-    const shift = devBday ? Math.max(0, (parse(profile.due) - parse(profile.dob)) / MONTH) : 0;
-    const CC = C.map(c => shift && c.cat === 'Development' ? Object.assign({}, c, { start: c.start - shift, end: c.end - shift }) : c);
+    // Safety has its own switch, so its rows shift the same way when it follows the birthday.
+    const bday = g => !!(profile.early && profile.due) && typeof hubAgeFor === 'function' && hubAgeFor(g, actualMonth()) === actualMonth() && hubAgeFor('care', actualMonth()) !== actualMonth();
+    const gap0 = profile.early && profile.due ? Math.max(0, (parse(profile.due) - parse(profile.dob)) / MONTH) : 0;
+    const shiftFor = cat => (cat === 'Development' && bday('dev')) || (cat === 'Safety' && bday('safety')) ? gap0 : 0;
+    const CC = C.map(c => shiftFor(c.cat) ? Object.assign({}, c, { start: c.start - shiftFor(c.cat), end: c.end - shiftFor(c.cat) }) : c);
     const ahead = CC.filter(c => c.end > a && !done[c.id]).sort((x, y) => x.start - y.start || x.end - y.end), next = ahead.slice(0, 3), later = ahead.slice(3);
     const behind = CC.filter(c => c.end <= a || done[c.id]).sort((x, y) => x.start - y.start || x.end - y.end);
     // Ages here follow adjusted age for a baby born early, so dates count from the due date to match.
@@ -84,11 +86,11 @@
     const monthDate = m => { const d = new Date(born); d.setMonth(d.getMonth() + m); return d.toLocaleDateString('en-US', { month: 'long' }); };
     const label = m => m >= 12 ? '1 year' : `${m} months`;
     const node = '<span class="ya-node" aria-hidden="true"></span>', chev = '<span class="hub-chev" aria-hidden="true">›</span>';
-    let h = `<div class="ya-page ya-pathpage"><div class="eyebrow ya-eyebrow">${F(`${nm}’s year ahead`)}</div><h1>${F('Timeline')}</h1><p class="next-lead">${F(`Where ${nm} is now, and the big changes ahead. Tap any to read ahead.`)}${early ? ' ' + F(devBday ? `Feeding, sleep and care follow ${nm}’s adjusted age. Development and checkups follow {p} birthday.` : `The ages follow ${nm}’s adjusted age. Checkups follow {p} birthday.`) : ''}</p><ol class="ya-path">`;
+    let h = `<div class="ya-page ya-pathpage"><div class="eyebrow ya-eyebrow">${F(`${nm}’s year ahead`)}</div><h1>${F('Timeline')}</h1><p class="next-lead">${F(`Where ${nm} is now, and the big changes ahead. Tap any to read ahead.`)}${early ? ' ' + F(bday('dev') || bday('safety') ? `Feeding, sleep and care follow ${nm}’s adjusted age. ${bday('dev') && bday('safety') ? 'Development, safety' : bday('dev') ? 'Development' : 'Safety'} and checkups follow {p} birthday.` : `The ages follow ${nm}’s adjusted age. Checkups follow {p} birthday.`) : ''}</p><ol class="ya-path">`;
     if (behind.length) h += `<li class="ya-behind">${node}<button onclick="this.parentNode.classList.toggle('is-open')" aria-expanded="false">${F(`Earlier on (${behind.length})`)} <span aria-hidden="true">›</span></button><div class="ya-behind-list">${behind.map(c => `<button style="${yearTheme(c.cat)}" onclick="${c.go}"><span>${hubArt(c.icon, c.cat)}</span>${F(c.title)}</button>`).join('')}</div></li>`;
     h += `<li class="ya-here">${node}<b>${F(`${nm} now`)}</b><small>${F(early ? ageLabel(a) + ' adjusted' : (typeof babyAge === 'function' ? babyAge() : ageLabel(a)))}</small></li>`;
     h += '%%DUENOW%%';
-    h += next.map(c => `<li class="ya-row is-next" style="${yearTheme(c.cat)}">${node}<button onclick="${c.go}"><span class="ya-row-art">${hubArt(c.icon, c.cat)}</span><span class="ya-row-copy"><small class="ya-when">${F(range(c))} · ${F(whenShort(c, a))}</small><b>${F(c.title)}</b><span class="ya-why">${F(c.id === 'crying' && a >= 2 ? 'Past the worst. Fussy evenings ease over the next few weeks' : c.why)}</span>${windowBar(c, a + (c.cat === 'Development' ? shift : 0))}</span>${chev}</button></li>`).join('');
+    h += next.map(c => `<li class="ya-row is-next" style="${yearTheme(c.cat)}">${node}<button onclick="${c.go}"><span class="ya-row-art">${hubArt(c.icon, c.cat)}</span><span class="ya-row-copy"><small class="ya-when">${F(range(c))} · ${F(whenShort(c, a))}</small><b>${F(c.title)}</b><span class="ya-why">${F(c.id === 'crying' && a >= 2 ? 'Past the worst. Fussy evenings ease over the next few weeks' : c.why)}</span>${windowBar(c, a + shiftFor(c.cat))}</span>${chev}</button></li>`).join('');
     const months = {}; later.forEach(c => { const m = Math.min(12, Math.max(Math.ceil(a), Math.floor(c.start))); (months[m] = months[m] || []).push(c); });
     const bm = early ? Math.min(12, Math.max(Math.ceil(a), Math.round(12 - gap))) : null; if (early && 12 > a + gap) months[bm] = months[bm] || [];
     // A checkup due now (within about 3 weeks) and not marked done stays on the path, beside "now".

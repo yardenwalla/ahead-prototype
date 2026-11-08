@@ -34,7 +34,7 @@
       const chips = (opts, on, fn) => `<div class="hub-where-chips">${opts.map(([v, l]) => `<button class="${on === v ? 'is-on' : ''}" aria-pressed="${on === v}" onclick="${fn(v)}">${esc2(l)}</button>`).join('')}</div>`;
       const safetyRow = () => {
         const stage = STAGE_TABLE.Safety.stages[safeI] ? STAGE_TABLE.Safety.stages[safeI].label : '';
-        const dm = developmentMonth(actualMonth());
+        const dm = safetyMonth(actualMonth());
         const moveNow = answers.pullUp === 'Yes' ? 'pulling' : answers.crawl === 'Yes' ? 'crawling' : (answers.roll === 'Yes' || ['Tummy to back', 'Back to tummy', 'Both ways'].includes(answers.rollDirection)) ? 'rolling' : (answers.roll === 'Not yet' || answers.crawl === 'Not yet') ? 'none' : null;
         const ahead = { First_setup: 'none', Rolling: 'rolling', Crawling: 'crawling', 'Pulling up': 'pulling' };
         const why = stage === 'First setup' ? 'Showing first setup.' : `Showing the ${stage.toLowerCase()} stage${moveNow !== ahead[stage] ? `, so your home is ready before ${nm} gets there` : ''}.`;

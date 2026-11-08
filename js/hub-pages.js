@@ -199,19 +199,22 @@
   const adjustedMonth = developmentMonth;
   // The adjusted age in words, always from the due date (adjustedAge() counts months by the age Development follows).
   const adjText = () => { const a = typeof adjustedAge === 'function' ? adjustedAge() : ''; return a && !/month|year/.test(a) ? a : monthLabel(adjustedMonth(actualMonth())); };
-  const ageMode = group => (profile.early && profile.due && profile.ageMode && profile.ageMode[group]) || 'adjusted';
+  // Safety has its own switch. Families who set development before it existed keep safety where it was.
+  const ageMode = group => (profile.early && profile.due && profile.ageMode && (profile.ageMode[group] || (group === 'safety' ? profile.ageMode.dev : null))) || 'adjusted';
   window.hubAgeFor = function (group, m = month) { return ageMode(group) === 'birthday' ? m : adjustedMonth(m); };
   developmentMonth = function (m = month) { return ageMode('dev') === 'birthday' ? m : adjustedMonth(m); };
   window.developmentMonth = developmentMonth;
+  window.safetyMonth = function (m = month) { return ageMode('safety') === 'birthday' ? m : adjustedMonth(m); };
   window.hubSetAgeMode = function (group, value) {
-    profile.ageMode = Object.assign({}, profile.ageMode, { [group]: value }); persist();
+    const pinned = group === 'dev' && !(profile.ageMode && profile.ageMode.safety) ? { safety: ageMode('safety') } : {};
+    profile.ageMode = Object.assign({}, profile.ageMode, pinned, { [group]: value }); persist();
     const y = scrollY; render(); scrollTo(0, y);
-    hubToast('Updated', `${group === 'dev' ? 'Development, play and safety' : 'Feeding, sleep and care'} will follow ${value === 'birthday' ? 'birthday age' : 'adjusted age'}.`);
+    hubToast('Updated', `${group === 'dev' ? 'Development and play' : group === 'safety' ? 'Safety' : 'Feeding, sleep and care'} will follow ${value === 'birthday' ? 'birthday age' : 'adjusted age'}.`);
   };
   if (typeof topicAge === 'function') {
     window.topicAge = topicAge = t => {
       if (!profile.early || !profile.due) return monthLabel(month);
-      const group = t === 'Development' || t === 'Safety' ? 'dev' : ['Feeding', 'Sleep', 'Daily rhythm'].includes(t) ? 'care' : null;
+      const group = t === 'Development' ? 'dev' : t === 'Safety' ? 'safety' : ['Feeding', 'Sleep', 'Daily rhythm'].includes(t) ? 'care' : null;
       return group && ageMode(group) === 'adjusted' ? monthLabel(adjustedMonth(month)) + ' adjusted' : monthLabel(month);
     };
   }
@@ -222,7 +225,8 @@
     const seg = group => `<div class="hub-seg" role="group" aria-label="Which age"><button class="${ageMode(group) === 'adjusted' ? 'is-on' : ''}" aria-pressed="${ageMode(group) === 'adjusted'}" onclick="hubSetAgeMode('${group}','adjusted')">Adjusted</button><button class="${ageMode(group) === 'birthday' ? 'is-on' : ''}" aria-pressed="${ageMode(group) === 'birthday'}" onclick="hubSetAgeMode('${group}','birthday')">Birthday</button></div>`;
     const tile = (k, v, s2) => `<div><small>${k}</small><b>${esc2(v)}</b><span>${s2}</span></div>`;
     return `<section class="hub-card hub-ages"><div class="hub-tiles">${tile('Birthday age', monthLabel(birthdayAge()), 'Checkups')}${tile('Adjusted age', monthLabel(adjustedMonth(actualMonth())), 'From the due date')}</div>`
-      + `<div class="hub-agemode-row"><span><b>Development, play and safety</b><small>${esc2(monthLabel(developmentMonth(actualMonth())))}</small></span>${seg('dev')}</div>`
+      + `<div class="hub-agemode-row"><span><b>Development and play</b><small>${esc2(monthLabel(developmentMonth(actualMonth())))}</small></span>${seg('dev')}</div>`
+      + `<div class="hub-agemode-row"><span><b>Safety</b><small>${esc2(monthLabel(safetyMonth(actualMonth())))}</small></span>${seg('safety')}</div>`
       + `<div class="hub-agemode-row"><span><b>Feeding, sleep, care</b><small>${esc2(monthLabel(hubAgeFor('care', actualMonth())))}</small></span>${seg('care')}</div></section>`;
   };
   window.hubAgePage = function () {
@@ -255,7 +259,7 @@
       b += `<h2 class="hub-h2">Where ${nm} is now</h2><p class="hub-where-lead">This sets what each guide shows. Tap to change it if it’s not quite right.</p><section class="hub-card hub-where">`
         + pick('Feeding', 'Feeding', feedGroup(chgStageIndex('Feeding')), STAGE_TABLE.Feeding.stages.map(x => x.label))
         + pick('Sleep', 'Sleep', chgStageIndex('Sleep'), STAGE_TABLE.Sleep.stages.map(x => x.label))
-        + pick('Safety', 'Safety', safeI, STAGE_TABLE.Safety.stages.map(x => x.label)).replace(/<\/div><\/div>$/, (developmentMonth(actualMonth()) >= 5 ? `<p class="hub-where-sub">How ${nm} moves</p>${hubMovingChips()}` : '') + '</div></div>')
+        + pick('Safety', 'Safety', safeI, STAGE_TABLE.Safety.stages.map(x => x.label)).replace(/<\/div><\/div>$/, (safetyMonth(actualMonth()) >= 5 ? `<p class="hub-where-sub">How ${nm} moves</p>${hubMovingChips()}` : '') + '</div></div>')
         + fixed('Development', 'Development & play', 'By ' + devRef(developmentMonth(actualMonth())) + ' months', 'dev')
         + fixed('Daily rhythm', 'Everyday care', careNow, 'care')
         + fixed('Health', 'Health', 'Next: ' + healthJourneyLabel(healthJourneyFocus()), 'birthday')

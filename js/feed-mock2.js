@@ -1877,7 +1877,7 @@
     const TONE = { routine: ['#e7effc', '#46638c'], feed: ['#fbe4ec', '#9b4766'], prep: ['#fdeee6', '#9a5a3c'], growth: ['#fff3dc', '#8a6a2a'] };
     const cr = (label, icon, title, sub, area) => h.row({ cat: CAT, icon, title, sub, onclick: go('xa:' + area) }).replace(/<span class="hub-dot">[\s\S]*?<\/span><span class="hub-row-copy">/, `<span class="hub-dot">${hubArt(icon, CAT).replace('data-art=', 'data-keep=')}</span><span class="hub-row-copy">`).replace('<span class="hub-row-copy">', `<span class="hub-row-copy"><small class="hub-row-eyebrow">${F(label)}</small>`).replace('class="hub-row', `style="--sm-bg:${TONE[area][0]};--sm-ink:${TONE[area][1]}" class="sm-row hub-row`);
     const R = [
-      ['A feed, step by step', nurse ? 'hand' : 'bottle', 'From his first cue to the last burp', nurse && fm ? 'Hungry, latch on, burp and switch, top up, full' : nurse ? 'Hungry, latch on, burp and switch, full' : 'Hungry, bottle, burp, full', 'feed'],
+      ['A feed, step by step', 'hand', 'From his first cue to the last burp', nurse && fm ? 'Hungry, latch on, burp and switch, top up, full' : nurse ? 'Hungry, latch on, burp and switch, full' : 'Hungry, bottle, burp, full', 'feed'],
       ['His day and night', 'clock', 'Busy evenings, quick and calm nights', 'Day, evening and night', 'routine'],
       bot && ['Bottles, start to finish', 'bottle', 'Make every bottle the same safe way', 'Choose, make, store and clean', 'prep'],
       ['Is he getting enough?', 'leaf', 'Diapers and weight tell you, not ounces', 'How much, diapers, weight, vitamin D', 'growth']];
