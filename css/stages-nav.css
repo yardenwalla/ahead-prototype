@@ -46,3 +46,7 @@
 #main .hub-preview.st-banner { background: var(--year-pale); box-shadow: none; border: 1px solid color-mix(in srgb, var(--year-accent) 55%, transparent) }
 #main .st-banner-icon { background: #fff }
 #main .st-banner .st-btn-back { background: #fff }
+
+/* Long names ("Make this your baby’s stage") wrap instead of running off narrow screens. */
+#main .st-banner .st-btn-make { white-space: normal; line-height: 1.2; padding-top: 6px; padding-bottom: 6px; text-align: center }
+#main .st-banner-actions { flex-wrap: wrap }

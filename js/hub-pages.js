@@ -226,7 +226,7 @@
   window.hubAgePage = function () {
     const nm = esc2(name());
     if (!(profile.early && profile.due)) return `<div class="quiet-category hub-page hub-detail" style="${yearTheme('You')}">${hubPageTop(`${esc2(name())}’s age`)}<div class="hub-detail-head"><span class="hub-big">${hubArt('clock', 'You')}</span><p class="hub-context">${nm}’s age</p><h1>Every guide uses ${nm}’s age</h1><p class="hub-lead">If ${nm} was born early, add the due date in ${nm}’s details and guides can use adjusted age instead.</p></div></div>`;
-    const head = `<div class="hub-detail-head"><span class="hub-big">${hubArt('clock', 'You')}</span><p class="hub-context">Born early</p><h1>Two ages, one ${nm}</h1><p class="hub-lead">Guides use adjusted age by default. Checkups always use the birthday. If one area still doesn’t match ${nm}, open its stages and pick the one that fits.</p><p class="hub-lead" style="font-size:15px">Keep adjusted age while ${nm} seems younger than the birthday says. Switch an area to birthday age once ${nm} has caught up there; many babies do by about 2.</p></div>`;
+    const head = `<div class="hub-detail-head"><span class="hub-big">${hubArt('clock', 'You')}</span><p class="hub-context">Born early</p><h1>${profile.name ? `Two ages, one ${nm}` : 'Two ages, one baby'}</h1><p class="hub-lead">Guides use adjusted age by default. Checkups always use the birthday. If one area still doesn’t match ${nm}, open its stages and pick the one that fits.</p><p class="hub-lead" style="font-size:15px">Keep adjusted age while ${nm} seems younger than the birthday says. Switch an area to birthday age once ${nm} has caught up there; many babies do by about 2.</p></div>`;
     return `<div class="quiet-category hub-page hub-detail" style="${yearTheme('You')}">${hubPageTop(`${esc2(name())}’s age`)}${head}${hubAgeBlock()}</div>`;
   };
 
@@ -411,6 +411,8 @@
   /* ---------- the visit date form ---------- */
   if (typeof routineVisitDatePage === 'function') {
     window.routineVisitDatePage = routineVisitDatePage = function (age, planned = false) {
+      // A checkup whose time has passed asks when it was, not when it will be.
+      try { if (planned && (NOW - parse(profile.dob)) / 2629746e3 > Math.max(age, 0.25) + 0.5) planned = false; } catch (e) {}
       const old = healthRecord(age), key = (planned ? 'plan-' : '') + age;
       const form = `<form class="hub-card hub-form" onsubmit="submitVisitForm(event,'${key}')"><label for="visitDate">${planned ? 'Appointment date' : 'Date of the visit'}</label><input id="visitDate" type="date" min="${profile.dob}" ${!planned ? `max="${iso(NOW)}"` : ''} value="${planned && old?.date ? old.date : iso(NOW)}" required>${journeyError ? `<p class="journey-error" role="alert">${esc2(journeyError)}</p>` : ''}<button class="hub-button">${planned ? 'Save the date' : 'Save to Memories'}</button><button type="button" class="hub-link is-quiet hub-cancel" onclick="back()">Cancel</button></form>`;
       return detailPage('Health', healthJourneyLabel(age), planned ? 'When is the appointment?' : 'When was the visit?', planned ? 'We’ll remind you on Home as it gets close.' : 'It goes in Memories.', form.replace(/Maya/g, esc2(name())), 'steth');

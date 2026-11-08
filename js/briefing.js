@@ -272,7 +272,7 @@
     if (live() || month <= actualMonth() || typeof hubAgeFor !== 'function') return '';
     const nowM = actualMonth(), care = x => hubAgeFor('care', x), dev = x => developmentMonth(x);
     const feed = c => c >= 9 ? 'Three meals a day, with milk alongside' : c >= 7 ? 'Thicker textures and finger foods' : c >= 6 ? 'First tastes of solids' : c >= 4 ? 'Getting ready for solids' : null;
-    const sleep = c => c >= 8 ? 'Likely down to two naps' : c >= 4 ? 'Usually three naps' : c >= 1.5 ? 'Longer stretches at night' : null;
+    const sleep = c => c >= 8 ? 'Often down to two naps' : c >= 4 ? 'Usually three naps' : c >= 1.5 ? 'Longer stretches at night' : null;
     const safe = d => d >= 9 ? 'Pulling up: anchor furniture and lower the crib mattress' : d >= 6 ? 'On the move: stair gates and babyproofing' : d >= 3 ? 'Reaching and rolling: clear the floor, stop swaddling' : null;
     const devT = d => { const k = typeof devRef === 'function' ? devRef(d) : null; return k != null && DEV_STAGES[k] ? DEV_STAGES[k].title : null; };
     const visit = x => WELL_VISITS.includes(x) ? healthJourneyLabel(x) : null;

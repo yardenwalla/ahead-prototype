@@ -127,7 +127,7 @@
     const n = bagItems(ageNow()).length, on = bagItems(ageNow()).filter(i => bagGet().includes(i[1])).length;
     return `<h2 class="hub-h2">${F('Your gear')}</h2><div class="hub-list">`
       + gearRow('car', 'car', 'Car seat', 'Setting it up, and which seat when', 'car')
-      + gearRow('stroller', 'stroller', 'Stroller', 'Harness, brakes and shade', 'stroller')
+      + gearRow('stroller', 'stroller', 'Stroller', 'Harness, brakes and the right recline', 'stroller')
       + gearRow('carrier', 'carrier', 'Carrier', 'Facing in, facing out, and on your back', 'carry')
       + gearRow('bag', 'bag', 'Diaper bag', 'Packed for how Maya is fed', 'bag', on ? `${on} of ${n} packed` : '')
 
@@ -276,7 +276,7 @@
         ['At the gate', 'stroller', 'Gate-check the stroller. It waits at the plane door.'],
         ['Takeoff and landing', 'plane', bf && !fm && how() === 'Nursing' ? 'Nurse {o}, or offer a pacifier.' : 'A feed or a pacifier helps {p} ears.']],
         'When you book, add the baby, ask about a bassinet seat and check the car seat is certified for aircraft. Milk, formula and your pump can go through security. Gate-check the stroller. Feed or offer a pacifier at takeoff and landing.')
-      + pack([fm ? ['bottle', 'One extra bottle', 'In case of delays'] : null, ['diaper', 'Diapers for the trip, plus extra', 'At least one more than you think, for delays'], ['shirt', 'A change of clothes', 'For {o}, and a top for you, in your carry-on'], ageNow() >= 6 ? ['bowl', 'Snacks {s} already eats', 'Soft and easy, for delays'] : null, ['drop', 'Medicine you might need', 'A fever reducer your pediatrician has OK’d, with its syringe'], ['book', 'Proof of {p} age', 'Like {p} birth certificate, for a lap seat']])
+      + pack([fm ? ['bottle', 'One extra bottle', 'In case of delays'] : null, ['diaper', 'Diapers for the trip, plus extra', 'At least one more than you think, for delays'], ['shirt', 'A change of clothes', 'For {o}, and a top for you, in your carry-on'], ageNow() >= 6 ? ['bowl', 'Snacks {s} already eats', 'Soft and easy, for delays'] : null, m >= 3 ? ['drop', 'Medicine you might need', 'A fever reducer your pediatrician has OK’d, with its syringe'] : ['chat', 'Your pediatrician’s number', 'Under 3 months, any fever means calling them first'], ['book', 'Proof of {p} age', 'Like {p} birth certificate, for a lap seat']])
       + ifs([
         ['heart', 'Crying on board', 'Walk the aisle when the seatbelt sign is off, or offer a feed. Most people understand.'],
         ['hand', 'A diaper change', 'Ask the crew which restroom has the fold-down table.']],

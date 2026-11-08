@@ -71,7 +71,7 @@
       why: 'Standing puts windows and blind cords within reach.',
       steps: ['Fit window stops, small locks that keep windows from opening more than 4 inches. Screens don’t stop falls.', 'Keep at least one window in each room that an adult can open fully in a fire.', 'Swap corded blinds and shades for cordless ones. Tying up the pull cord isn’t enough: inner cords and loops can still be reached, from the floor or from furniture.', 'Move cribs and furniture {s} could climb away from windows.'],
       links: [['Window safety · CPSC', cpsc]] },
-    kitchen: { t: 'Fit stove knob covers and an oven lock', s: 'Once {s} can reach the front of the stove', i: 'fridge', c: 'high',
+    kitchen: { t: 'Fit stove knob covers and an oven lock', s: 'Before {s} can reach the front of the stove', i: 'fridge', c: 'high',
       tiles: [['fridge', 'Knob covers', 'So the burners can’t be turned on'], ['lock', 'An oven lock', 'So the door stays shut'], ['cup', 'Back burners', 'With pot handles turned in']],
       why: 'Standing brings stove knobs and the oven door within reach.',
       steps: ['Fit knob covers so {s} can’t turn the burners on.', 'Add an oven lock so the door stays shut.', 'Cook on the back burners when you can, with pot handles turned in.'],
@@ -86,7 +86,7 @@
   };
   const STAGES = [
     { key: 'setup', label: 'First setup', age: 'From birth', title: 'Four things to set up once', lead: 'Before Maya can move, safety is about where {s} {ride|rides}, {sleep|sleeps} and {get|gets} changed.', ids: ['seat', 'sleep', 'changing', 'gear'] },
-    { key: 'reaching', label: 'Rolling', age: '3–6 months', title: 'Rolling puts the floor in reach', lead: 'Once Maya rolls, {s} can get out of a swaddle or a bassinet, and small things on the floor are in reach.', ids: ['swaddle', 'bassinet', 'small', 'bags'] },
+    { key: 'reaching', label: 'Rolling', age: '3–6 months', title: 'Rolling puts the floor in reach', lead: 'Before Maya rolls, take the swaddle off and clear the floor. Rolling brings small things within reach, and a bassinet stops being safe.', ids: ['swaddle', 'bassinet', 'small', 'bags'] },
     { key: 'rolling', label: 'Crawling', age: '6–9 months', title: 'Crawling opens up every room', lead: 'Most babies start moving between 6 and 10 months. Do the low, reachable things first.', ids: ['gates', 'storage', 'outlets', 'mattress'] },
     { key: 'pulling', label: 'Pulling up', age: '9 months+', title: 'Standing brings everything higher into reach', lead: 'Furniture becomes a handhold, and windows, the stove and water are suddenly within reach.', ids: ['anchor', 'windows', 'kitchen', 'pool', 'mattress2'] }
   ];
