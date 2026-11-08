@@ -436,7 +436,7 @@
         tiles([['How long', '10–20 min a side', 'Some babies take longer, and that’s fine'], ['Sides', 'Offer both', 'Start with the side you ended on last time'], ['Burping', 'Between sides', 'And at the end, if {s} {seem|seems} uncomfortable'], ['Done when', '{s} {let|lets} go', 'Relaxed hands, sleepy and content']])
         + `<h2 class="hub-h2">${F('Growth spurts')}</h2>` + hubStageStrip({ title: 'Days of feeding more often, around', items: [['clock', '2–3 weeks', 'For 2–3 days'], ['clock', '6 weeks', 'For 2–3 days'], ['clock', '3 months', 'For 2–3 days']], cat, caption: 'Growth spurts often come around 2–3 weeks, 6 weeks and 3 months, each lasting 2–3 days.' })
         + tip('Feeding nonstop for a day or two?', 'That’s usually a growth spurt, not low supply. Feeding more often is how your body makes more milk.')
-        + versus('Sore breasts: normal, or time to call?', ['Normal', 'Full, heavy breasts in the first week, and some tenderness as you both learn.'], ['Call your doctor today', 'A hot, red, painful area, fever or chills, or cracked nipples that aren’t healing.'])
+        + versus('Sore breasts: normal, or time to call?', ['Normal', 'Full and a little tender at first.'], ['Call your doctor today', 'A hot, red, painful spot, fever or chills, or cracks that won’t heal.'])
         + list('', [row({ icon: 'mouth', title: 'Get a good latch', sub: 'Most nipple pain comes from the latch', onclick: go('chg:Feeding:d:latch') })]), 'heart');
     }
     if (id === 'pump') {
@@ -688,26 +688,26 @@
       h += hero({ eyebrow: 'Round-the-clock sleep', title: 'Short sleeps, day and night', lead: 'For now, feeds set the rhythm. Sleep comes in short stretches, day and night, with no pattern yet. Sleep when Maya sleeps, even during the day.' }) + B;
       h += nightCard(key, now);
       h += sleepFour(key, now, view);
-      h += versus('Normal, or time to call?', ['Normal', 'Waking every 2–3 hours, grunts and squeaks, and breathing that speeds up or pauses for a few seconds. Give {o} a moment before you pick {o} up.'], ['Call your pediatrician', 'Hard to wake for feeds, or ' + (actualMonth() < 3 ? 'a temperature of 100.4°F or higher.' : 'a fever with poor sleep or feeding.') + ' Trouble breathing, a pause of 20 seconds or more, or blue lips: call 911.']);
+      h += versus('Normal, or time to call?', ['Normal', 'Waking every 2–3 hours, grunts, squeaks, and breathing pauses of a few seconds.'], ['Call your pediatrician', 'Hard to wake for feeds, or ' + (actualMonth() < 3 ? '100.4°F or higher.' : 'a fever with poor feeding.') + ' Blue lips or a 20-second pause: call 911.']);
     }
     if (key === 'daynight') {
       h += hero({ eyebrow: 'Longer nights', title: 'Nights are starting to stretch', lead: 'Maya starts to tell day from night, and the longest sleep moves to the night. Fussy evenings often peak around 6–8 weeks, then ease.' }) + B;
       h += nightCard(key, now);
       h += sleepFour(key, now, view);
-      h += versus('Normal, or time to call?', ['Normal', 'A long stretch one night and not the next, fussier evenings, and fussing in light sleep. Pause a minute before going in. Picking {o} up too soon can wake {o} fully.'], ['Call your pediatrician', (actualMonth() < 3 ? 'A temperature of 100.4°F or higher: call right away. Also snoring most nights, or gasping in sleep.' : 'A fever with poor sleep or feeding, snoring most nights, or gasping in sleep.') + ' Long pauses in breathing or blue lips: call 911.']);
+      h += versus('Normal, or time to call?', ['Normal', 'Good nights and bad nights, and fussing in light sleep.'], ['Call your pediatrician', (actualMonth() < 3 ? '100.4°F or higher (right away), or snoring or gasping most nights.' : 'A fever with poor feeding, or snoring or gasping most nights.') + ' Blue lips or long breathing pauses: call 911.']);
     }
     if (key === 'rhythm') {
       h += napAsk(now, age) + hero({ eyebrow: 'Three naps', title: 'Naps start happening at set times', lead: 'Sleep settles into a pattern you can plan your days around. It’s also when many families start thinking about sleep training.', extra: trainRow }) + B;
       h += nightCard(key, now);
       h += sleepFour(key, now, view);
-      h += versus('Normal, or time to call?', ['Normal', 'Naps of 30–45 minutes, and a short cry when {s} {half-wake|half-wakes} that settles in a few minutes.'], ['Call your pediatrician', 'Snoring most nights, gasping in sleep, ear pulling, a big change that lasts more than two weeks, or ' + sleepFever() + '. Long pauses in breathing or blue lips: call 911.']);
+      h += versus('Normal, or time to call?', ['Normal', 'Naps of 30–45 minutes, and short cries that settle.'], ['Call your pediatrician', 'Snoring or gasping, ear pulling, or ' + sleepFever() + '. Blue lips or long breathing pauses: call 911.']);
     }
     if (key === 'two') {
       const settled = answers.twoNaps === 'Yes' || age >= 10 || (now && answers.twoNaps !== 'Not yet');
       h += napAsk(now, age) + hero({ eyebrow: 'Two naps', title: settled ? 'Two naps a day' : 'Two naps are on the way', lead: settled ? 'Days settle into a morning and an afternoon nap, and nights get longer. ' + (m() >= 8 ? 'New skills like standing can stir up nights for a while.' : 'New skills can stir up nights for a while.') : 'The late catnap is on its way out, and days move toward two naps. Nights keep getting longer.' , extra: trainRow }) + B;
       h += nightCard(key, now);
       h += sleepFour(key, now, view);
-      h += versus('Normal, or time to call?', ['Normal', (m() >= 8 ? 'Standing up in the crib, protest' : 'Protest') + ' at bedtime, and a short cry in the night that settles in a few minutes.'], ['Call your pediatrician', 'Snoring most nights, gasping in sleep, ear pulling, a big change that lasts more than two weeks, or ' + sleepFever() + '. Long pauses in breathing or blue lips: call 911.']);
+      h += versus('Normal, or time to call?', ['Normal', (m() >= 8 ? 'Standing in the crib, protest' : 'Protest') + ' at bedtime, and short cries that settle.'], ['Call your pediatrician', 'Snoring or gasping, ear pulling, or ' + sleepFever() + '. Blue lips or long breathing pauses: call 911.']);
     }
     const D = C().DATA.Sleep, N = D.CH[view + 1], A = D.CH[view].after;
     if (N) { const a = (STAGE_TABLE.Sleep.stages[view + 1]?.age || '').replace(/^(From|Starts) /, ''), w = /wks/.test(a) ? '6 weeks' : a.split('–')[0] + (/months/.test(a) && !/–\d/.test(a.split('–')[0] + '–') ? ' months' : ''); h += next(view === 2 && age >= 6 ? 'Next, when Maya is on two naps most days' : `Next, usually from ${w.replace(/^(\d+)$/, '$1 months')}${sleepAdj() ? ' adjusted age' : ''}`, N.rail, `chgGo('chg:Sleep:s:${view + 1}')`); }
@@ -911,7 +911,7 @@
         + `<h2 class="hub-h2">${F('Common reasons')}</h2>` + hubIconSteps([['stand', 'New skills', 'Practicing standing or crawling, even half asleep'], ['heart', 'Missing you', 'Separation anxiety peaks around 8–10 months'], ['tooth', 'Teeth or a cold', 'Discomfort wakes {o} up'], ['bottle', 'Habit or hunger', 'Ask your pediatrician if night feeds are still needed']], cat, 'New skills, missing you, teeth or a cold, or habit and hunger.', false)
         + `<h2 class="hub-h2">${F('What helps')}</h2>`
         + tips(['Keep it brief: a pat, a few quiet words, then out.', 'Stuck standing? Practice sitting back down during the day.', 'Respond the same way each time, so {s} {know|knows} what to expect.'])
-        + versus('Normal, or time to call?', ['Normal', 'One or two wakings a night that settle with a little help.'], ['Call your pediatrician', 'Snoring, pauses in breathing, fever or ear pulling, or a big change that lasts more than two weeks.']), 'moon');
+        + versus('Normal, or time to call?', ['Normal', 'One or two wakings a night that settle with a little help.'], ['Call your pediatrician', 'Snoring, breathing pauses, a fever or ear pulling.']), 'moon');
     }
     if (id === 'where') {
       return detail(cat, 'Sleep', 'Where Maya sleeps', 'In your room for the first 6 months, in {p} own sleep space. After that, where {s} {sleep|sleeps} is your family’s call.',

@@ -1883,7 +1883,7 @@
       ['Is he getting enough?', 'leaf', 'Diapers and weight tell you, not ounces', 'How much, diapers, weight, vitamin D', 'growth']];
     const rough = `<button class="hub-rough-card care-rash-card" style="background:#fbe4ec;color:#9b4766;margin-top:12px" onclick="${go('x_tough')}"><span class="hub-rough-moon" aria-hidden="true">${hubArt('heart', CAT)}</span><span class="hub-rough-copy"><b>${F('Feeding challenges')}</b><small>${F('Spit-up, gas, refusing feeds, poop')}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`;
     return `<h2 class="hub-h2">${F(stg() === realStage() ? 'How to help Ari feed now' : 'How newborn feeds work')}</h2><div class="hub-list">${R.filter(Boolean).map(r => cr(...r)).join('')}</div>` + rough
-      + h.versus('Normal, or time to call?', ['Normal', 'Frequent feeds, fussy evenings, spit-up, grunting.'], ['Call your pediatrician', 'Fewer wet diapers, too sleepy to feed, green vomit, pale poop, or a fever of 100.4°F under 3 months.']); };
+      + h.versus('Normal, or time to call?', ['Normal', 'Frequent feeds, fussy evenings, spit-up.'], ['Call your pediatrician', 'Fewer wet diapers, too sleepy to feed, green vomit, or a fever.']); };
   P.nb_off = () => { const b = isBreast();
     const rows = [['moon', 'Nonstop evenings', 'Cluster feeding, and getting through the night', 'eve'], ['bottle', 'Spit-up', 'How much is normal, and burping', 'spit'], ['drop', 'Gas and crying', 'What helps, and when it won’t stop', 'gas'], ['diaper', 'Poop', 'Colors, and how often', 'poop'], b && ['heart', 'Breast or nipple pain', 'Sore nipples, lumps, burning', 'pain'], ['eye', 'Fussy, sleepy or not eating', 'What to try, and who can help', 'hard']].filter(Boolean);
     return qaCss + page(head('Tough feed?', 'What’s going on?', 'Pick what you’re seeing. Most of it is common, and something here helps.', C.pink)
@@ -2632,7 +2632,7 @@
       ['Is he getting enough?', 'leaf', 'Wet diapers and steady growth', 'Diapers, weight, vitamin D', 'g1']];
     const rough = `<button class="hub-rough-card care-rash-card" style="background:#fbe4ec;color:#9b4766;margin-top:12px" onclick="${go('x_tough')}"><span class="hub-rough-moon" aria-hidden="true">${hubArt('heart', CAT)}</span><span class="hub-rough-copy"><b>${F('Feeding challenges')}</b><small>${F('Spit-up, gas and crying, distracted or refusing, poop')}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`;
     return `<h2 class="hub-h2">${F('How to help Ari feed now')}</h2><div class="hub-list">${R.filter(Boolean).map(r => cr(...r)).join('')}</div>` + rough
-      + h.versus('Normal, or time to call?', ['Normal', 'Shorter feeds, fussy evenings, spit-up' + (b ? ', fewer poops' : '') + '.'], ['Call your pediatrician', 'Fewer than 6 wet diapers, refusing several feeds, forceful vomiting, or a fever of 100.4°F under 3 months.']); };
+      + h.versus('Normal, or time to call?', ['Normal', 'Shorter feeds, fussy evenings, spit-up' + (b ? ', fewer poops' : '') + '.'], ['Call your pediatrician', 'Fewer than 6 wet diapers, refusing feeds, forceful vomiting, or a fever.']); };
 
   // ---- Milk feeds, only what's new (Nov 7): parents already know how to feed, so this stage shows just what changes.
   // A few rows on the stage page, each one short page. No repeats of Newborn. ----
@@ -2675,7 +2675,7 @@
       ['g1', 'leaf', b ? 'Fewer poops can be normal' : 'Steady growth at checkups', b ? 'Wet diapers still tell you' : 'At 2 and 4 months', 'y_growth']];
     const rough = `<button class="hub-rough-card care-rash-card" style="background:#fbe4ec;color:#9b4766;margin-top:12px" onclick="${go('x_tough')}"><span class="hub-rough-moon" aria-hidden="true">${hubArt('heart', CAT)}</span><span class="hub-rough-copy"><b>${F('Feeding challenges')}</b><small>${F('Spit-up, gas and crying, distracted or refusing, poop')}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`;
     return `<h2 class="hub-h2">${F('What’s new now')}</h2><div class="hub-list">${R.filter(Boolean).map(r => cr(...r)).join('')}</div>` + rough
-      + h.versus('Normal, or time to call?', ['Normal', 'Shorter feeds, fussy evenings, spit-up' + (b ? ', fewer poops' : '') + '.'], ['Call your pediatrician', 'Fewer than 6 wet diapers, refusing several feeds, forceful vomiting, or a fever of 100.4°F under 3 months.']); };
+      + h.versus('Normal, or time to call?', ['Normal', 'Shorter feeds, fussy evenings, spit-up' + (b ? ', fewer poops' : '') + '.'], ['Call your pediatrician', 'Fewer than 6 wet diapers, refusing feeds, forceful vomiting, or a fever.']); };
 
   // Night feeds, told as feeding (not sleep)
   P.y_night = () => yPage(XC.d1, 'Nights', 'Night feeds start to spread out', 'Many babies go one longer stretch between feeds, often 4–6 hours, by 2–3 months.',
@@ -2760,7 +2760,7 @@
     const tough = v === 2 ? 'x_tough' : 'z_tough', toughSub = v === 2 ? 'Distracted feeds, spit-up, gas' : 'Gagging, refusing food, a rash, constipation';
     const rough = `<button class="hub-rough-card care-rash-card" style="background:#fbe4ec;color:#9b4766;margin-top:12px" onclick="${go(tough)}"><span class="hub-rough-moon" aria-hidden="true">${hubArt('heart', CAT)}</span><span class="hub-rough-copy"><b>${F('Feeding challenges')}</b><small>${F(toughSub)}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`;
     const vs = v === 2 ? [['Normal', 'Quick, distracted feeds, and interest in your food.'], ['Call your pediatrician', 'Refusing feeds, fewer than 6 wet diapers, or forceful vomiting.']]
-      : v === 3 ? [['Normal', 'Gagging, mess, a few bites a day, and changes in poop.'], ['Call your pediatrician', 'Hives or vomiting after a food, or fewer wet diapers. Choking or trouble breathing: call 911.']]
+      : v === 3 ? [['Normal', 'Gagging, mess, a few bites a day, and changes in poop.'], ['Call your pediatrician', 'A few hives or vomiting after a food. Hives all over or trouble breathing: call 911.']]
       : [['Normal', 'Big days and small days, and lots of mess.'], ['Call your pediatrician', 'Refusing most foods for weeks, or a reaction after a food. Trouble breathing: call 911.']];
     return `<h2 class="hub-h2">${F('What’s new now')}</h2><div class="hub-list">${R.filter(Boolean).map(r => cr(...r)).join('')}</div>` + rough + h.versus('Normal, or time to call?', vs[0], vs[1]); };
 
