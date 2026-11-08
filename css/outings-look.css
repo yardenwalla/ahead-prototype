@@ -75,3 +75,4 @@
 #main .hub-detail[data-overview="Childcare"] .oa-timeline { margin-bottom: 22px }
 #main .oa-away-head { display: flex; align-items: baseline; justify-content: space-between }
 #main .oa-away-head .hub-link { font-size: 14px }
+#main .oa-hero-go { color: var(--year-ink) }

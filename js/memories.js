@@ -49,7 +49,7 @@
       const firstsHtml = (by[m] || []).map(r => `<button class="bk-first" onclick="openPage('event-edit:${r.id}')"><span class="bk-ic" style="${TONE(r)}">${hubArt(ICON(r), 'Development')}</span><span class="bk-copy"><b>${esc2(keepTitle(r))}</b><small>${esc2(day(r.date))}</small>${r.notes ? `<q>${esc2(String(r.notes).slice(0, 140))}</q>` : ''}</span></button>`).join('');
       const tags = also[m] ? `<div class="bk-also"><span class="bk-also-label">${esc2(by[m] ? 'Also this month' : 'Noticed this month')}</span><div class="bk-tags">${also[m].map(r => `<button class="bk-tag" style="${TONE(r)}" onclick="openPage('event-edit:${r.id}')">${esc2(r.title)}</button>`).join('')}</div></div>` : '';
       // The month's photo, taped in on the right. No photo yet: an empty polaroid that adds one.
-      const photo = pic ? `<span class="bk-photo" style="--tape:${tape};--tilt:${tilt}deg"><i></i><img src="${pic}" alt=""></span>`
+      const photo = pic ? `<span class="bk-photo" style="--tape:${tape};--tilt:${tilt}deg"><i></i><img src="${pic}" alt="${esc2(WORDS[m])} photo"><em class="bk-photo-cap">${esc2(m === 0 ? 'Newborn photo' : m === 12 ? 'Birthday photo' : m + '-month photo')}</em></span>`
         : `<label class="bk-photo is-empty" style="--tape:${tape};--tilt:${tilt}deg" aria-label="Add the ${esc2(WORDS[m].toLowerCase())} photo"><i></i><span class="bk-photo-add">＋</span>${typeof hubPhotoInput === 'function' ? hubPhotoInput(m) : ''}</label>`;
       return `<section class="bk-page"><div class="bk-body"><h2 class="bk-month">${esc2(WORDS[m])}</h2>${firstsHtml ? `<div class="bk-firsts">${firstsHtml}</div>` : ''}${tags}</div>${photo}</section>`;
     };

@@ -157,7 +157,7 @@
   const nextFor = m => NOWS.find(n => n[0] > m && !due(n, m));
   function outAndAbout() {
     const m = ageNow(), v = stageFor(m), h = H(), n = nowFor(m), nx = nextFor(m);
-    let b = `<header class="hub-hero oa-hero"><p class="hub-eyebrow">${F(m < 1 ? 'In the first weeks' : `At ${m} ${m === 1 ? 'month' : 'months'}`)}</p><h1>${F(n[1])}</h1><p class="hub-lead">${F(n[2])}</p></header>`;
+    let b = `<header class="hub-hero oa-hero"><p class="hub-eyebrow">${F(m < 1 ? 'In the first weeks' : `At ${m} ${m === 1 ? 'month' : 'months'}`)}</p><h1>${F(n[1])}</h1><p class="hub-lead">${F(n[2])}</p><button class="cc-hero-go oa-hero-go" onclick="${open(n[3])}">${F(n[4] ? n[4][2] : ({ errands: 'See around town', road: 'Plan a longer trip' })[n[3]] || 'See the guide')} ›</button></header>`;
     b += places(v) + seasonCard() + gear(v);
     b += h.versus('In the car', ['Every time', 'Look in the back seat before you walk away.'], ['Never', 'Leave Maya alone in the car, even for a minute.']);
     if (nx) b += h.next(`Coming up around ${nx[0]} months`, nx[1], open(nx[3]));
@@ -188,7 +188,7 @@
       f !== 'Formula' && pumping() ? ['bottle', 'pump', 'Your pump and bottles with lids', 'If you’ll pump while you’re out'] : null,
       f !== 'Formula' && pumps() ? ['fridge', 'pumped', 'Pumped milk in a cooler with ice packs', 'If you’re bringing bottles'] : null,
       f !== 'Formula' && !pumps() ? ['heart', 'cover', 'A nursing cover or scarf', 'Only if you like one'] : null,
-      f !== 'Breast milk' ? ['cube', 'formula', 'Formula for each feed, plus one', 'Ready-to-feed, or powder and water packed apart'] : null,
+      f !== 'Breast milk' ? ['cube', 'formula', 'Formula for each feed, plus one', 'Or powder and water, kept apart'] : null,
       f !== 'Breast milk' ? ['cup', 'bottles', 'Clean bottles', 'One for each feed'] : null,
       m < 12 ? ['pacifier', 'pacifier', 'A pacifier, if {s} {use|uses} one', 'And a spare'] : null,
       ['sun', 'hat', 'A hat', 'Sun hat or warm hat'],
@@ -276,19 +276,20 @@
       + good([typeof profile !== 'undefined' && profile.early ? ['steth', 'Born early?', 'Ask your pediatrician how long rides can be.'] : null, ['moon', 'Naps on the road', 'Naps in the car seat are fine while you drive. When you stop, move {o} to a crib or play yard.'], bf ? ['mouth', 'Nursing or pumping on the road', 'Park first. {S} {stay|stays} buckled in whenever the car is moving.'] : null]));
 
     if (id === 'fly') return sub('fly', 'Flying', 'Flying with Maya', 'Most of the planning happens when you book.',
-      H().versus('Where will Maya sit?', ['Own seat', 'Safest, buckled into a car seat labeled for aircraft.'], ['On your lap', 'Often free on US flights under 2, but less safe if there’s turbulence.'])
+      H().versus('Where will Maya sit?', ['Own seat', 'Safest, in a car seat labeled for aircraft.'], ['On your lap', 'Often free under 2, but less safe in turbulence.'])
       + plan('Plan your flight', [
         ['When you book', 'notepad', 'Add {o}, ask about a bassinet seat, and check the car seat says “aircraft” in red.'],
         ['At security', 'bag', bf && !fm && !pumps() ? 'Nothing extra for nursing. If you bring pumped milk, tell the officer.' : bf && !fm && !pumping() ? 'Breast milk can go through, even more than 3.4 oz. Tell the officer.' : bf && !fm ? 'Pumped milk and your pump can go through. Tell the officer.' : !bf ? 'Formula and water can go through. Tell the officer.' : pumping() ? 'Milk, formula and your pump can go through. Tell the officer.' : 'Breast milk and formula can go through. Tell the officer.'],
         ['At the gate', 'stroller', 'Gate-check the stroller. It waits at the plane door.'],
-        ['Takeoff and landing', 'plane', bf && !fm && how() === 'Nursing' ? 'Nurse {o}, or offer a pacifier.' : 'A feed or a pacifier helps {p} ears.']],
-        'When you book, add the baby, ask about a bassinet seat and check the car seat is certified for aircraft. Milk, formula and your pump can go through security. Gate-check the stroller. Feed or offer a pacifier at takeoff and landing.')
+        ['Takeoff and landing', 'plane', 'Out of the carrier, then ' + (bf && !fm && how() === 'Nursing' ? 'nurse {o} or offer a pacifier.' : 'a feed or a pacifier for {p} ears.')],
+        ['After you land', 'clock', 'Short trip? Keep naps on home time. Longer? Shift them a little each day.']],
+        'When you book, add the baby, ask about a bassinet seat and check the car seat is certified for aircraft. Milk, formula and your pump can go through security. Gate-check the stroller. At takeoff and landing, take the baby out of the carrier and feed or offer a pacifier. After landing, keep naps on home time for short trips, or shift them a little each day.')
       + pack([fm ? ['bottle', 'One extra bottle', 'In case of delays'] : null, ['diaper', 'Diapers for the trip, plus extra', 'At least one more than you think, for delays'], ['shirt', 'A change of clothes', 'For {o}, and a top for you, in your carry-on'], eats() ? ['bowl', 'Snacks {s} already eats', 'Soft and easy, for delays'] : null, m >= 3 ? ['drop', 'Medicine you might need', 'A fever reducer your pediatrician has OK’d, with its syringe'] : ['chat', 'Your pediatrician’s number', 'Under 3 months, any fever means calling them first'], ['book', 'Proof of {p} age', 'Like {p} birth certificate, for a lap seat']])
       + ifs([
-        ['heart', 'Crying on board', 'Walk the aisle when the seatbelt sign is off, or offer a feed. Most people understand.'],
+        ['heart', 'Crying on board', 'Walk the aisle or offer a feed. Most people understand.'],
         ['hand', 'A diaper change', 'Ask the crew which restroom has the fold-down table.']],
         'If the baby cries, walk the aisle or offer a feed. Ask the crew which restroom has a changing table.')
-      + good([m < 2 ? ['steth', 'Flying in the first weeks', 'Ask your pediatrician first.'] : null, ['carrier', 'A carrier in the airport', 'Handy for getting through. Take {o} out of it before takeoff and landing.'], ['clock', 'Time zones', 'On a short trip, keep naps near home time. On a longer one, shift them a little each day.']]));
+      + (m < 2 ? good([['steth', 'Flying in the first weeks', 'Ask your pediatrician first.']]) : ''));
 
     if (id === 'abroad') return sub('abroad', 'Going abroad', 'Going abroad with Maya', 'Plan the flight as usual, then add these steps. The passport comes first.',
       plan('Plan your trip', [

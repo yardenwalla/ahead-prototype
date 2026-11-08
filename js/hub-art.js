@@ -85,6 +85,9 @@
     hidden: (c) => `<circle cx="16.5" cy="10" r="3" fill="#f3d58a"/><path d="M3 19c1-6 4-9 8-9s7 3 8 9Z" fill="${c.bg}"/><path d="M6.5 15.5c1.2-1.5 2.6-2.2 4.2-2.2"/>`,
     toss: (c) => `<circle cx="18" cy="17" r="3" fill="${c.bg}"/><path d="M4 18C5 9 10 5 15 6" stroke-dasharray="1.5 2.2"/><path d="M13.5 4.2 15.3 6l-2 1.4"/>`,
     swaddle: (c) => `<circle cx="12" cy="5.8" r="2.8" fill="${c.bg}"/><path d="M7.5 11a4.5 4.5 0 0 1 9 0v6a4.5 4.5 0 0 1-9 0Z" fill="${c.bg}"/><path d="M7.5 11.5l9 4.5M16.5 11.5 12 13.8"/>`,
+    stove: (c) => `<rect x="3.5" y="9" width="17" height="11" rx="2" fill="${c.bg}"/><circle cx="8.5" cy="14.5" r="2.2"/><circle cx="15.5" cy="14.5" r="2.2"/><path d="M8.5 13.3v1.2M15.5 13.3v1.2M6 5.5h3M15 5.5h3"/>`,
+    pot: (c) => `<path d="M5 10h14v6.5a3.5 3.5 0 0 1-3.5 3.5h-7A3.5 3.5 0 0 1 5 16.5Z" fill="${c.bg}"/><path d="M3 10h18M19 12.5h2.5M10 7.5h4M12 7.5V6"/>`,
+    sunrise: (c) => `<path d="M6.5 16a5.5 5.5 0 0 1 11 0Z" fill="${c.bg}"/><path d="M3 16h18M5 19.5h14M12 5v3M5.6 8.6l1.8 1.8M18.4 8.6l-1.8 1.8"/>`,
     towel: (c) => `<rect x="5" y="3.5" width="14" height="17" rx="2" fill="${c.bg}"/><path d="M5 8h14M5 16h14"/>`
   };
   /* Figures: flat, outline-free scenes on a soft backdrop. Words live in HTML under the picture, in the app's type. */

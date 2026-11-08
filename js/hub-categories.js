@@ -40,7 +40,7 @@
   const back = (label, onclick) => `<div class="hub-browse"><button class="hub-link is-quiet" onclick="${onclick}">${F(label)} ›</button></div>`;
   const firstSentence = t => ((String(t || '').match(/^.*?[.!?](\s|$)/) || [String(t || '')])[0]).trim().replace(/\.$/, '');
   // Each check's own picture, so no two rows on a page share an icon.
-  const SAFETY_ICON = { seat: 'car', water: 'thermo', alarms: 'alarm', pool: 'drop', gates: 'gate', storage: 'lock', outlets: 'plug', anchor: 'dresser', windows: 'window', cords: 'cord', doors: 'home', walkers: 'stroller', batteries: 'battery', bags: 'bag', small: 'coin', rollspace: 'mat', changing: 'diaper' };
+  const SAFETY_ICON = { seat: 'car', water: 'thermo', alarms: 'alarm', pool: 'drop', gates: 'gate', storage: 'lock', outlets: 'plug', anchor: 'dresser', windows: 'window', cords: 'cord', doors: 'home', walkers: 'stroller', batteries: 'battery', bags: 'bag', small: 'coin', rollspace: 'mat', changing: 'diaper', kitchen: 'stove' };
   const SAFETY_SUB = { gates: 'Top of stairs: screwed in, so it can’t give way', windows: 'Small locks, so they open no more than 4 inches', anchor: 'So they can’t tip if Maya pulls on them', cords: 'Hanging cords can wrap around a baby’s neck', storage: 'Up high, with a child lock on the cabinet', small: 'Coins, magnets and pieces of older kids’ toys' };
   const shortLine = t => { const f = firstSentence(t); const cut = f.length > 72 && f.includes(',') ? f.slice(0, f.indexOf(',')) : f; return cut.split(/\s+/).length < 3 ? f : cut; };
   // One thing to try, phrased as an action: the short prompt if there is one, otherwise the first line of how to do it.
@@ -286,7 +286,7 @@
     ]);
     // "Between checkups" shows on every checkup page; "When to call" uses Maya's age now, so it shows on the current checkup only.
     const nowPage = !live() || age === focus;
-    if (nowPage) b += h.versus('When to call', ['Call your pediatrician', profile.early && profile.due ? feverRule(actualMonth()).replace(/^(Under 3 months|At 3–6 months|From 6 months):/, '$1 (by birthday age):') : feverRule(actualMonth())], ['Call 911', 'Struggles to breathe or turns blue, won’t wake or is floppy, or has a seizure.']);
+    if (nowPage) b += h.versus('When to call', ['Call your pediatrician', profile.early && profile.due ? feverRule(actualMonth()).replace(/^(Under 3 months|At 3–6 months|From 6 months):/, '$1 (by birthday age):') + feverEarlyNote() : feverRule(actualMonth())], ['Call 911', 'Struggles to breathe or turns blue, won’t wake or is floppy, or has a seizure.']);
     const nx = WELL_VISITS[WELL_VISITS.indexOf(age) + 1];
     if (nx != null) b += h.next(live() && age === focus ? 'After that' : 'Next checkup', healthJourneyLabel(nx), `openPage('health-visit:${nx}')`);
     return frame('Health', `data-health-journey="${age}"`, pills + missedLine, b);
@@ -371,6 +371,7 @@
   window.feverRule = m => m < 3
     ? 'Under 3 months: a temperature of 100.4°F or higher. Call your pediatrician right away, day or night.'
     : `${m < 6 ? 'At 3–6 months' : 'From 6 months'}: a temperature of ${feverTemp(m)} or higher, or any fever that lasts more than a day. Call sooner for a rash, unusual sleepiness or fewer wet diapers.`;
+  window.feverEarlyNote = () => (typeof profile !== 'undefined' && profile.early && profile.due) ? ' Born early? Ask your pediatrician if a lower temperature should mean a call for {o}.' : '';
   window.feverBand = m => m < 3 ? 'Under 3 months' : m < 6 ? '3 to 6 months' : '6 months and up';
   function healthDetail(id) {
     const h = H(), under3 = actualMonth() < 3;
@@ -384,7 +385,7 @@
     // (take a temperature, help them feel better, tummy bugs, colds), and the emergency signs last (AAP, HealthyChildren.org).
     const m = actualMonth(), u3 = m < 3;
     const call911 = `<section class="hub-card hub-callout is-urgent"><b>${F('Call 911 right away')}</b><p>${F('If Maya struggles to breathe or turns blue, won’t wake or is floppy, or has a seizure.')}</p></section>`;
-    const feverCard = `<section class="hub-card hub-fever is-calm"><div class="hub-fever-bands is-one"><div><small>${F(feverBand(m))}</small><b>${feverTemp(m)}<span> or higher</span></b><p>${F(u3 ? 'Call your pediatrician right away, day or night.' : (m < 6 ? 'Call your pediatrician now, even at night. Someone answers day or night.' : 'Or a fever that lasts more than a day. Call your pediatrician.'))}</p></div></div><p class="hub-fever-note">${F('Also call if Maya seems very unwell, has a rash, is unusually sleepy, or is still unwell after the fever comes down.')}</p></section>`;
+    const feverCard = `<section class="hub-card hub-fever is-calm"><div class="hub-fever-bands is-one"><div><small>${F(feverBand(m))}</small><b>${feverTemp(m)}<span> or higher</span></b><p>${F(u3 ? 'Call your pediatrician right away, day or night.' : (m < 6 ? 'Call your pediatrician now, even at night. Someone answers day or night.' : 'Or a fever that lasts more than a day. Call your pediatrician.'))}</p></div></div><p class="hub-fever-note">${F('Also call if Maya seems very unwell, has a rash, is unusually sleepy, or is still unwell after the fever comes down.' + feverEarlyNote())}</p></section>`;
     // One flow, in the order a parent lives it: check for a fever and know when that means calling,
     // make them comfortable, then the two common bugs, and the emergency signs last.
     const thermo = () => {
@@ -445,10 +446,10 @@
       `<h2 class="hub-h2">${F('Clearing a stuffy nose')}</h2>` + hubIconSteps([['drop', 'Saline drops', 'A few drops in each nostril loosen the mucus'], ['swallow', 'Then gentle suction', 'A bulb syringe or nasal aspirator, before feeds and sleep']], 'Health', 'Saline drops first, then gentle suction before feeds and sleep.', true)
       + `<h2 class="hub-h2">${F('Also helps')}</h2>` + hubIconSteps([['snow', 'Cool-mist humidifier', 'In {p} room at night. Clean it every day'], ['bottle', 'Keep feeds going', 'Smaller, more frequent feeds are fine']], 'Health', 'A cool-mist humidifier at night, and plenty of feeds.', false)
       + H().tip('Skip cough and cold medicines', 'They aren’t safe for babies. No honey before 1 year either.')
-      + H().versus('When to call', ['Call your pediatrician', actualMonth() < 3 ? 'Under 3 months: a temperature of 100.4°F or higher (call right away), fewer wet diapers, or a cough or cold that lasts more than 10 days.' : `${actualMonth() < 6 ? 'At 3–6 months' : 'From 6 months'}: a temperature of ${feverTemp(actualMonth())} or higher, a fever that lasts more than a day, fewer wet diapers, or a cough or cold that lasts more than 10 days.`], ['Call 911', 'Struggles to breathe, ribs pulling in with each breath, or lips turning blue.'])
+      // One call box for the page (merged): the ear signs sit just above it, and the call box covers them.
       + `<h2 class="hub-h2">${F('When it might be an ear infection')}</h2>`
-      + `<div class="hub-card hub-looks"><b class="hub-fig-title">${F('Ear infections often follow a cold. Look for:')}</b><ul>${['Fussing and crying, especially lying down', 'Trouble sleeping, or a new fever', 'Pulling at an ear, along with any of the above', 'Fluid draining from the ear'].map(t => `<li>${F(t)}</li>`).join('')}</ul></div>`
-      + H().tip('Call your pediatrician', 'If you see these signs. Pulling at an ear on its own, without a cold or fever, is usually nothing.')
+      + `<div class="hub-card hub-looks"><b class="hub-fig-title">${F('Ear infections often follow a cold. Look for:')}</b><ul>${['Fussing and crying, especially lying down', 'Trouble sleeping, or a new fever', 'Pulling at an ear, along with any of the above', 'Fluid draining from the ear'].map(t => `<li>${F(t)}</li>`).join('')}</ul><p class="hub-fever-note">${F('Pulling at an ear on its own, without a cold or fever, is usually nothing.')}</p></div>`
+      + H().versus('When to call', ['Call your pediatrician', actualMonth() < 3 ? 'Under 3 months: a temperature of 100.4°F or higher (call right away), fewer wet diapers, a cough or cold that lasts more than 10 days, or signs of an ear infection.' : `${actualMonth() < 6 ? 'At 3–6 months' : 'From 6 months'}: a temperature of ${feverTemp(actualMonth())} or higher, a fever that lasts more than a day, fewer wet diapers, a cough or cold that lasts more than 10 days, or signs of an ear infection.`], ['Call 911', 'Struggles to breathe, ribs pulling in with each breath, or lips turning blue.'])
       + H().note('Wash hands often and keep sick visitors away, especially in the first months.'));
     if (cat === 'Health' && screen === 'd') { const pg = healthDetail(a); if (pg) return pg; }
     if (cat === 'Daily rhythm' && screen === 's') return everydayCare(Number(a));

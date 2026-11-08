@@ -147,7 +147,7 @@
   // Setting up a backup is a to-do list, so it's a checklist you can tick, kept on this phone.
   const BACKUP = [['Name two backup people', 'Family, friends or a sitter you could call at short notice.', 'heart'], ['Ask work about backup care', 'Some jobs offer backup care days.', 'notepad'], ['Save their numbers', 'In your phone, and on Maya’s care card under “Who to call”.', 'moon']];
   window.ccBackupTick = i => { const on = load('ahead-childcare-backup', []); save('ahead-childcare-backup', on.includes(i) ? on.filter(x => x !== i) : on.concat(i)); rerender(); };
-  const backupList = () => { const on = load('ahead-childcare-backup', []); return `<h2 class="hub-h2">${F('Set up your backup')}</h2>` + H().ticks(BACKUP, i => on.includes(i), i => `ccBackupTick(${i})`, CAT); };
+  const backupList = () => { const on = load('ahead-childcare-backup', []); return `<h2 class="hub-h2">${F('Set up your backup')}</h2>` + H().ticks(BACKUP, i => on.includes(i), i => `ccBackupTick(${i})`, CAT) + (BACKUP.every((_, i) => on.includes(i)) ? H().note('Your backup plan is set. Check it again whenever your care changes.') : ''); };
 
   function journey(id) {
     const h = H(), m = typeof actualMonth === 'function' ? actualMonth() : 0, fd = feedNow(), bm = fd !== 'Formula', fm = fd !== 'Breast milk';
@@ -249,7 +249,9 @@
     if (id === 'fit') {
       const f = load('ahead-childcare-fit', {}), done = FIT_Q.every(([q]) => f[q]), top = done ? fitResults(f) : [];
       const qs = FIT_Q.map(([q, label, opts]) => `<section class="hub-card cc-sec"><b class="cc-sec-title">${F(label)}</b><div class="cc-chips">${opts.map(o => `<button class="cc-chip${f[q] === o ? ' is-on' : ''}" aria-pressed="${f[q] === o}" onclick="ccFit('${q}','${o.replace(/'/g, '\\\'')}')">${F(o)}</button>`).join('')}</div></section>`).join('');
-      const res = done ? `<h2 class="hub-h2">${F('Worth looking at first')}</h2><div class="oa-places">${top.map(k => { const c = PAL[k === 'share' ? 'nanny' : k], nm = k === 'share' ? 'Nanny share' : TYPES[k].name; return `<button class="oa-place" style="--oa-bg:${c[0]};--oa-ink:${c[1]}" onclick="openPage('chg:${CAT}:d:${k}')"><span class="oa-place-art">${SHAPE[k === 'share' ? 'nanny' : k](c)}</span><b>${F(nm)}</b><small>${F(WHY[k])}</small></button>`; }).join('')}</div>` : '';
+      const res = done ? `<h2 class="hub-h2">${F('Worth looking at first')}</h2><div class="oa-places">${top.map(k => { const c = PAL[k === 'share' ? 'nanny' : k], nm = k === 'share' ? 'Nanny share' : TYPES[k].name; return `<button class="oa-place" style="--oa-bg:${c[0]};--oa-ink:${c[1]}" onclick="openPage('chg:${CAT}:d:${k}')"><span class="oa-place-art">${SHAPE[k === 'share' ? 'nanny' : k](c)}</span><b>${F(nm)}</b><small>${F(WHY[k])}</small></button>`; }).join('')}</div>`
+        // A next step: the top match, step by step, and a way back to the plan.
+        + (() => { const k = top[0], tk = k === 'share' ? 'nanny' : k, nm = k === 'share' ? 'Nanny share' : TYPES[k].name; return `<button class="hub-button cc-quiz-next" onclick="openPage('chg:${CAT}:d:${tk}')">${F(`Next: ${nm}, step by step`)} ›</button><button class="hub-link cc-back-plan" onclick="openPage('chg:${CAT}:d:plan')">${F('Back to your plan')} ›</button>`; })() : '';
       return sub('fit', 'Kinds of care', 'Which care fits us?', 'Four quick taps. There’s no wrong answer, and many families end up with a mix.',
         qs + (res || `<p class="cc-lead cc-fit-wait">${F(`${FIT_Q.filter(([q]) => f[q]).length} of 4 answered. Your matches show up here once you’ve answered all four.`)}</p>`));
     }
@@ -496,7 +498,8 @@
   window.ccText = (k, v) => { const c = card(); c[k] = v; save('ahead-carecard', c); };
   window.ccCardMode = function (mode) { const c = card(); c.saved = mode === 'view'; save('ahead-carecard', c); scrollTo(0, 0); render(); };
   const chips = (k, multi, c) => `<div class="cc-chips">${OPT[k].map(v => { const on = multi ? (c[k] || []).includes(v) : c[k] === v; return `<button class="cc-chip${on ? ' is-on' : ''}" aria-pressed="${on}" onclick="ccPick('${k}','${v.replace(/'/g, '\\\'')}',${multi})">${F(v === 'On their own' ? 'On {p} own' : v)}</button>`; }).join('')}</div>`;
-  const input = (k, label, c, type = 'text') => `<label class="cc-field"><span>${F(label)}</span><input type="${type}" value="${esc3(c[k])}" oninput="ccText('${k}', this.value)" autocomplete="off"></label>`;
+  const input = (k, label, c, type = 'text') => `<label class="cc-field"><span>${F(label)}</span><input type="${type}" ${type === 'tel' ? 'inputmode="tel" onblur="ccPhoneCheck(this)"' : ''} value="${esc3(c[k])}" oninput="ccText('${k}', this.value)" autocomplete="off">${type === 'tel' ? `<small class="cc-field-warn" hidden>${F('That doesn’t look like a phone number.')}</small>` : ''}</label>`;
+  window.ccPhoneCheck = el => { const w = el.parentElement.querySelector('.cc-field-warn'); if (w) w.hidden = !el.value || /^[\d\s()+.\-]{7,}$/.test(el.value.trim()); };
   // What the caregiver sees, in plain sentences.
   function cardLines(c) {
     const P = babyPronouns(), L = [];
@@ -587,12 +590,13 @@
     if (navigator.share && (!navigator.canShare || navigator.canShare(data))) {
       try { await navigator.share(data); return; } catch (e) { if (e && e.name === 'AbortError') return; }
     }
-    try { await navigator.clipboard.writeText(url); if (done) { done.textContent = F('Link copied. Paste it into a text or email.'); done.hidden = false; } } catch (e) { fallback(); }
+    try { await navigator.clipboard.writeText(url); if (done) { done.textContent = F('Link copied. Paste it into a text or email.'); done.hidden = false; } if (typeof hubToast === 'function') hubToast('Link copied', 'Paste it into a text or email.'); } catch (e) { fallback(); }
   };
   window.ccCopy = async function (btn) {
     const input = btn.previousElementSibling; input.select(); input.setSelectionRange(0, 99999);
     let ok = false; try { await navigator.clipboard.writeText(input.value); ok = true; } catch (e) { try { ok = document.execCommand('copy'); } catch (e2) {} }
     btn.textContent = ok ? 'Copied' : 'Select and copy';
+    if (ok && typeof hubToast === 'function') hubToast('Link copied', 'Paste it into a text or email.');
   };
 
   /* ---------- routes ---------- */

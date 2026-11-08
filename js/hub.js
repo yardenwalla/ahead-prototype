@@ -76,9 +76,9 @@
 
   /* ---------- feeding facts ---------- */
   const m = () => C().ageNow();
-  // Sleep follows adjusted age for a baby born early (unless the parent chose birthday age). Fever numbers use the same age, like the other Sleep call boxes.
+  // Sleep follows adjusted age for a baby born early, but fever numbers follow the AAP's age bands by birthday age, the same as Health.
   const sleepAdj = () => !!(profile.early && profile.due && typeof actualMonth === 'function' && m() !== actualMonth());
-  const sleepFever = () => { const a = m(); return a < 3 ? 'a temperature of 100.4°F or higher' : a < 6 ? 'a fever of 101°F or higher' : 'a fever of 103°F or higher, or one that lasts more than a day'; };
+  const sleepFever = () => { const a = actualMonth(); return a < 3 ? 'a temperature of 100.4°F or higher' : a < 6 ? 'a fever of 101°F or higher' : 'a fever of 103°F or higher, or one that lasts more than a day'; };
   const meth = () => C().method();
   const nursing = () => meth() === 'nurse';
   // One list of choking risks, used wherever foods come up (AAP).
@@ -398,7 +398,7 @@
         `<div class="hub-card"><div class="hub-card-head"><b>${F(t ? 'Tick the ones Maya has tried' : 'Has Maya tried any of these yet? Tick them')}</b><span class="hub-chip">${t} of ${ALLERGENS.length}</span></div><div class="chg-choices hub-chips">${ALLERGENS.map(([k]) => `<button class="${tried(k) ? 'is-on' : ''}" aria-pressed="${tried(k)}" onclick="hubAllergen('${k}')">${tried(k) ? '✓ ' : ''}${k}</button>`).join('')}</div></div>`
         + (tried('Peanut') ? '' : note('Severe eczema or an egg allergy? Talk to your pediatrician before trying peanut.'))
         + steps([(() => { const nx = ALLERGENS.find(x => !tried(x[0])); return nx ? `${nx[0]} is next. Try ${nx[1]}.` : 'Maya has tried them all. Keep offering each one a few times a week.'; })(), 'Offer a small amount early in the day, so you can watch how {s} {do|does} afterward.', 'Once it goes well, keep offering it a few times a week. That’s what helps most.'])
-        + `<section class="hub-card hub-versus"><h3>${F('If something seems off')}</h3><div class="hub-vs"><div><b>Call your pediatrician</b><p>${F('A few hives around the mouth, or vomiting after a new food.')}</p></div><div class="is-urgent"><b>Call 911</b><p>${F('Trouble breathing, swelling of the lips or tongue, or {s} {seem|seems} floppy or pale.')}</p></div></div></section>`
+        + `<section class="hub-card hub-versus"><h3>${F('If something seems off')}</h3><div class="hub-vs"><div><b>Call your pediatrician</b><p>${F('A few hives around the mouth, or vomiting after a new food.')}</p></div><div class="is-urgent"><b>Call 911</b><p>${F('Trouble breathing, swelling of the lips or tongue, hives all over, hives with vomiting, or {s} {seem|seems} floppy or pale.')}</p></div></div></section>`
 , 'peanut');
     }
     if (id === 'pace') {
@@ -688,13 +688,13 @@
       h += hero({ eyebrow: 'Round-the-clock sleep', title: 'Short sleeps, day and night', lead: 'For now, feeds set the rhythm. Sleep comes in short stretches, day and night, with no pattern yet. Sleep when Maya sleeps, even during the day.' }) + B;
       h += nightCard(key, now);
       h += sleepFour(key, now, view);
-      h += versus('Normal, or time to call?', ['Normal', 'Waking every 2–3 hours, grunts and squeaks, and breathing that speeds up or pauses for a few seconds. Give {o} a moment before you pick {o} up.'], ['Call your pediatrician', 'Hard to wake for feeds, or ' + (m() < 3 ? 'a temperature of 100.4°F or higher.' : 'a fever with poor sleep or feeding.') + ' Trouble breathing, a pause of 20 seconds or more, or blue lips: call 911.']);
+      h += versus('Normal, or time to call?', ['Normal', 'Waking every 2–3 hours, grunts and squeaks, and breathing that speeds up or pauses for a few seconds. Give {o} a moment before you pick {o} up.'], ['Call your pediatrician', 'Hard to wake for feeds, or ' + (actualMonth() < 3 ? 'a temperature of 100.4°F or higher.' : 'a fever with poor sleep or feeding.') + ' Trouble breathing, a pause of 20 seconds or more, or blue lips: call 911.']);
     }
     if (key === 'daynight') {
       h += hero({ eyebrow: 'Longer nights', title: 'Nights are starting to stretch', lead: 'Maya starts to tell day from night, and the longest sleep moves to the night. Fussy evenings often peak around 6–8 weeks, then ease.' }) + B;
       h += nightCard(key, now);
       h += sleepFour(key, now, view);
-      h += versus('Normal, or time to call?', ['Normal', 'A long stretch one night and not the next, fussier evenings, and fussing in light sleep. Pause a minute before going in. Picking {o} up too soon can wake {o} fully.'], ['Call your pediatrician', (m() < 3 ? 'A temperature of 100.4°F or higher: call right away. Also snoring most nights, or gasping in sleep.' : 'A fever with poor sleep or feeding, snoring most nights, or gasping in sleep.') + ' Long pauses in breathing or blue lips: call 911.']);
+      h += versus('Normal, or time to call?', ['Normal', 'A long stretch one night and not the next, fussier evenings, and fussing in light sleep. Pause a minute before going in. Picking {o} up too soon can wake {o} fully.'], ['Call your pediatrician', (actualMonth() < 3 ? 'A temperature of 100.4°F or higher: call right away. Also snoring most nights, or gasping in sleep.' : 'A fever with poor sleep or feeding, snoring most nights, or gasping in sleep.') + ' Long pauses in breathing or blue lips: call 911.']);
     }
     if (key === 'rhythm') {
       h += napAsk(now, age) + hero({ eyebrow: 'Three naps', title: 'Naps start happening at set times', lead: 'Sleep settles into a pattern you can plan your days around. It’s also when many families start thinking about sleep training.', extra: trainRow }) + B;
@@ -839,7 +839,7 @@
         ['moon', 'Waking a lot at night', mo < 4 ? 'At this age, waking to feed is normal and healthy. Hunger is the usual reason.' : mo < 6 ? 'Around 4 months, sleep cycles change, and many babies wake between them for a few weeks. Being overtired makes it worse.' : 'The usual reasons: overtired from short naps or a late bedtime, a new skill, teething or a cold, or needing the same help to fall back asleep each time.', mo < 4 ? ['Pause a minute first. {s} may still be asleep', 'Feed if it’s been 2–3 hours or more', 'Keep feeds dark and boring, with no play'] : ['Pause a minute or two first. A cry between sleep cycles often settles', 'Try bedtime 30 minutes earlier for a few nights', 'Keep visits brief, dark and boring', mo >= 6 ? 'Still waking every hour or two? Ask your pediatrician about night feeds, or look at sleep training if you want to' : 'At bedtime, try putting {o} down sleepy but still awake once a day']],
         mo >= 2 && ['clock', 'Fighting bedtime', 'Usually the timing: overtired, or not quite tired enough.', ['Overtired looks like rubbing eyes, arching and hard-to-settle crying. Start bedtime earlier', 'Not tired yet? Look at the last stretch awake: about ' + ww + ' now', 'Dim the lights and keep the same steps 20–30 minutes before bed']],
         mo >= 3 && ['sun', 'Short naps', mo < 6 ? 'Naps of 30–45 minutes are very common at 3–5 months. They get longer with time.' : 'Usually the timing is a little off, or the room is too bright. Teething, a cold or a new skill can shorten naps for a week or two.' + (mo < 10 ? ' Fighting the last nap most days can mean it’s time for two naps.' : ''), ['Give it a few minutes before going in. {S} may resettle', 'Try moving the nap 15 minutes earlier or later', 'A dark room and white noise help']],
-        mo >= 4 && ['eye', 'Up too early', 'Often a bedtime that’s too late, a room that gets light early, or a last nap that runs late.', ['Before 6 am, treat it as night: dark, quiet, brief', 'Blackout curtains help', 'Try bedtime 15–30 minutes earlier for a week']]
+        mo >= 4 && ['sunrise', 'Up too early', 'Often a bedtime that’s too late, a room that gets light early, or a last nap that runs late.', ['Before 6 am, treat it as night: dark, quiet, brief', 'Blackout curtains help', 'Try bedtime 15–30 minutes earlier for a week']]
       ].filter(Boolean);
       const cryLink = mo < 3 ? `<button class="hub-rough-item hub-rough-link" onclick="${go('chg:Sleep:d:crying')}"><span class="hub-dot">${art('heart', cat)}</span><b>${F('Crying a lot and won’t settle')}</b><span class="hub-chev" aria-hidden="true">›</span></button>` : '';
       const body = `<div class="hub-list hub-rough">${cryLink}${items.map(([ic, t, why, tries], i) => `<details class="hub-rough-item"${i ? '' : ''}><summary><span class="hub-dot">${art(ic, cat)}</span><b>${F(t)}</b><span class="hub-chev" aria-hidden="true">›</span></summary><div class="hub-rough-body"><p><b>${F('Likely why.')}</b> ${F(why)}</p><p class="hub-rough-try"><b>${F('Try this')}</b></p><ul>${tries.map(x => `<li>${F(x)}</li>`).join('')}</ul></div></details>`).join('')}</div>`;
@@ -923,7 +923,7 @@
         + `<h2 class="hub-h2">${F('Moving to {p} own room')}</h2>`
         + tips(['Keep the same bedtime steps, so the new room feels familiar.', 'Try naps in the new room for a few days first.', 'Set it up the same way: firm, flat and empty, on {p} back.'])
         + tip('No rush', 'Plenty of families room-share longer. Either way is fine after 6 months.')
-      + `<h2 class="hub-h2">${F('Setting up the room')}</h2>` + tiles([['Temperature', 'About 68–72°F', 'Comfortable for you in a T-shirt'], ['Clothes', 'One layer more', 'Than you’re wearing, like a sleep sack over pajamas'], ['White noise', 'Low and steady', 'Across the room, not by the crib'], ['Light', 'Dark for night', 'A dim night light for feeds']]), 'crib');
+      + `<h2 class="hub-h2">${F('Setting up the room')}</h2>` + tiles([['Temperature', 'About 68–72°F', 'Comfortable for you in a T-shirt'], ['Clothes', 'One layer more', 'A sleep sack over pajamas'], ['White noise', 'Low and steady', 'Across the room, not by the crib'], ['Light', 'Dark for night', 'A dim night light for feeds']]), 'crib');
     }
     if (id === 'catnap') {
       return detail(cat, 'Two naps', answers.twoNaps === 'Yes' || age >= 10 ? 'When a nap runs short' : 'Moving to two naps', '',

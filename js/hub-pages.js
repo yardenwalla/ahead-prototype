@@ -73,9 +73,8 @@
       if (ok && typeof storyResetPosition === 'function') storyResetPosition(m);
       const y = scrollY; render(); scrollTo(0, y);
       if (!ok) return hubToast('Couldn’t keep that photo', 'This viewer can’t store photos. Open Ahead in your phone’s browser to keep them.');
-      // Months 1–11 have a Story design: show it straight away, ready to share.
-      if (m >= 0 && m <= 12 && typeof storyShare === 'function') return storyShare(m, { saved: true });
-      hubToast('Photo saved', `${m === 0 ? 'Newborn' : m === 12 ? '1 year' : m + ' month' + (m === 1 ? '' : 's')} · in Memories`);
+      // Saved first, calmly. Sharing is one tap away, never automatic.
+      hubToast('Photo saved', `${m === 0 ? 'Newborn' : m === 12 ? '1 year' : m + ' month' + (m === 1 ? '' : 's')} · in Memories`, typeof storyShare === 'function' ? ['Share', `storyShare(${m}, { saved: true })`] : null);
     };
     // The whole photo is kept (short side `size`, long side up to 1.5×), so a parent can move it inside the polaroid later.
     const shrink = (img, size, q) => {
@@ -188,6 +187,8 @@
       const title = b.since === 0 ? (b.m === 12 ? `${nm} is 1 year old today` : `${nm} is ${label} old today`) : (b.m === 12 ? `${nm} turned 1` : `${nm} turned ${label}`);
       const lead = photo ? (b.firsts.length ? `Here’s what you noticed this month. The photo is in Memories.` : `Another month of firsts. The photo is in Memories.`) : (b.firsts.length ? `Here’s what you noticed this month. Add a photo to keep it in Memories.` : `Another month of firsts. Add a photo to keep this one in Memories.`);
       const card = `<div class="home-summary connected-summary-intro hub-bday"><span class="hub-bday-num" aria-hidden="true">${b.m === 12 ? '1' : b.m}</span><span class="hub-bday-spark" aria-hidden="true">✦</span><p class="hub-bday-eyebrow">${b.m === 12 ? 'Happy first birthday' : 'Happy ' + label}${profile.early && profile.due && adjustedMonth(actualMonth()) !== actualMonth() ? ` <button class="hub-agechip" onclick="openPage('age-context')" aria-label="${esc2(monthLabel(adjustedMonth(actualMonth())))} adjusted. About age">· ${esc2(adjText())} adjusted <span aria-hidden="true">ⓘ</span></button>` : ''}</p><h1>${title}</h1><p class="hub-bday-lead">${lead}</p>${b.firsts.length ? `<div class="hub-bday-chips">${b.firsts.map(r => `<span>✓ ${esc2(r.title)}</span>`).join('')}</div>` : ''}<label class="hub-bday-photo" role="button">${photo ? `<img src="${photo}" alt="">Change the ${plabel} photo` : `<i aria-hidden="true">＋</i>Add a ${plabel} photo`}${hubPhotoInput(b.m)}</label>${photo && b.m <= 11 && typeof storyShare === 'function' ? `<button class="hub-bday-share" onclick="storyShare(${b.m})">Share ${nm}’s ${plabel} photo</button>` : ''}</div>`;
+      // On a month birthday the age at the top says the same thing as the card ("1 month", not "4 weeks").
+      if (b.m < 3) html = html.replace(/(<p class="home-age-line">[^<·]*· )[^<]*?(weeks?|days?)(?=[ <])/, `$1${label}`);
       return html.replace(/<div class="home-summary connected-summary-intro">[\s\S]*?<div class="home-summary-spectrum"[\s\S]*?<\/div><\/div>/, card);
     };
   }
@@ -209,7 +210,7 @@
     const pinned = group === 'dev' && !(profile.ageMode && profile.ageMode.safety) ? { safety: ageMode('safety') } : {};
     profile.ageMode = Object.assign({}, profile.ageMode, pinned, { [group]: value }); persist();
     const y = scrollY; render(); scrollTo(0, y);
-    hubToast('Updated', `${group === 'dev' ? 'Development and play' : group === 'safety' ? 'Safety' : 'Feeding, sleep and care'} will follow ${value === 'birthday' ? 'birthday age' : 'adjusted age'}.`);
+    // The switch itself shows the change (and the age under it updates), so no message covers it.
   };
   if (typeof topicAge === 'function') {
     window.topicAge = topicAge = t => {

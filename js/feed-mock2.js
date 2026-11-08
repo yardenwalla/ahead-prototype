@@ -344,7 +344,7 @@
   const earlyMo = () => { try { return profile.early && profile.due ? Math.max(0, Math.round((new Date(profile.due + 'T12:00:00') - new Date(profile.dob + 'T12:00:00')) / 864e5 / 30.44)) : 0; } catch (e) { return 0; } };
   const solidsLead = () => earlyMo() > 0 ? 'Milk is still all Ari needs. Most babies start solids around 6 months adjusted, about ' + (6 + earlyMo()) + ' months after birth for Ari.' : 'Milk is still all Ari needs. Most babies start solids around 6 months, once they show the signs.';
   // Fever rule for the baby's age (AAP): under 3 months 100.4°F, 3–6 months 101°F, 6 months on 103°F or a fever lasting over a day.
-  const fever = (day = true) => { const m = ageMo(); return m < 3 ? 'a fever of 100.4°F or higher' + (day ? ', day or night' : '') : m < 6 ? 'a fever of 101°F or higher' : 'a fever of 103°F or higher, or one that lasts more than a day'; };
+  const fever = (day = true) => { const m = typeof actualMonth === 'function' ? actualMonth() : ageMo(); return m < 3 ? 'a fever of 100.4°F or higher' + (day ? ', day or night' : '') : m < 6 ? 'a fever of 101°F or higher' : 'a fever of 103°F or higher, or one that lasts more than a day'; };
   const poopGo = () => { let v = 1; try { const d = (NOW - new Date(profile.dob + 'T12:00:00')) / 864e5, m = typeof hubAgeFor === 'function' ? hubAgeFor('care', actualMonth()) : developmentMonth(actualMonth()); v = d < 28 ? 0 : m < 4 ? 1 : m < 7 ? 2 : 3; } catch (e) {} return `openPage('chg:Daily rhythm:d:look:${v}:poop')`; };
   const formulaFam = () => fd() !== 'Breast milk' && fd() !== 'Prefer not to say';
   const ctx = (c) => c;
@@ -744,7 +744,7 @@
   P.isformula = () => page(head('Tough feed?', 'Is it the formula?', 'Most gas, fussing and spit-up isn’t the formula, and switching often doesn’t help. It can also make it harder to tell what’s going on.', C.peach)
     + h2('Before you switch') + steps([['bottle', 'Check the bottle first', 'A slower nipple and paced feeds often help'], ['hand', 'Burp more often', 'Every 2–3 oz'], ['heart', 'Ask your pediatrician first', 'Before switching to a special formula']], false)
     + h2('Worth asking about') + p('Blood or mucus in his poop, a rash or hives, vomiting after most feeds, slow weight gain, or crying after every feed. These can point to a milk protein allergy.')
-    + `<p class="care-urgent"><b>${F('Call 911:')}</b> ${F('trouble breathing, or swelling of his face, lips or tongue.')}</p>`);
+    + `<p class="care-urgent"><b>${F('Call 911:')}</b> ${F('trouble breathing, swelling of his face, lips or tongue, or hives all over.')}</p>`);
   // A day at a glance: one picture of the whole day instead of a long list. Cluster feeding is a note, not a slot.
   const dayOld = P.day;
   P.day = () => { const v = stg(); if (v >= 3) return dayOld();
@@ -2612,7 +2612,7 @@
       : P.x_bm(); };
   P.y_away = () => { const b = isBreast(), fm = formulaFam();
     return xPage('p1', 'y_away', 'Bottles away from home', 'For daycare, a sitter or a day out.',
-      xCompare([['star', 'Label', 'His name and the date on every bottle.'], ['snow', 'Keep cold', 'A cooler with ice packs, up to 24 hours.'], ['clock', 'How much', b ? 'About 1–1½ oz for each hour you’re apart.' : 'Pre-measured powder, water separately.']])
+      xCompare([['star', 'Label', 'His name and date on each bottle.'], ['snow', 'Keep cold', 'Cooler and ice packs: 24 hours.'], ['clock', 'How much', b ? '1–1½ oz per hour apart.' : 'Pre-measured powder, water separately.']])
       + xDo('What to do', ['Show caregivers paced bottle feeding.', b ? 'Send a few small bottles, so less is wasted.' : 'Mix right before the feed.', 'Ask them to feed on cue, not the clock.'])); };
   P.y_diapers = () => { const b = isBreast();
     return xPage('g1', 'y_diapers', 'Diapers still tell you', 'Wet diapers are the everyday sign he’s getting enough.',
@@ -2658,7 +2658,7 @@
       + xKnow('More on nights', 'Sleep has the rest: routines, naps and the 4-month changes.'));
   P.y_away = () => { const b = isBreast();
     return yPage(XC.p1, 'Away from home', 'Bottles for daycare, a sitter or a day out', 'The same safe bottles, packed to travel.',
-      xCompare([['star', 'Label', 'His name and the date on every bottle.'], ['snow', 'Keep cold', 'A cooler with ice packs, up to 24 hours.'], ['clock', 'How much', b ? 'About 1–1½ oz for each hour you’re apart.' : 'Pre-measured powder, water separately.']])
+      xCompare([['star', 'Label', 'His name and date on each bottle.'], ['snow', 'Keep cold', 'Cooler and ice packs: 24 hours.'], ['clock', 'How much', b ? '1–1½ oz per hour apart.' : 'Pre-measured powder, water separately.']])
       + xDo('What to tell caregivers', ['Feed on cue, not the clock.', 'Hold the bottle level, and let him pause.', b ? 'Small bottles, so less is wasted.' : 'Mix right before the feed.'])
       + (b ? xNote('Before you’re apart:', 'build a small freezer stash over a few weeks, and have someone else give a bottle once or twice a week.') : '')); };
   P.y_growth = () => { const b = isBreast();
@@ -2711,7 +2711,7 @@
   P.z_allergens = () => yPage(XL, 'Allergies', 'Common allergens early, then keep them going', 'Early and often lowers the chance of a food allergy.',
       chips(['Peanut', 'Egg', 'Dairy', 'Wheat', 'Soy', 'Fish', 'Shellfish', 'Sesame', 'Tree nuts'])
       + xDo('What to do', ['One new allergen at a time, at home, earlier in the day.', 'Peanut as thinned peanut butter or powder. Egg well cooked.', 'Once it’s in, offer it a few times a week.'])
-      + xNote('Call 911:', 'trouble breathing, swelling of the face or lips, or he’s very sleepy or floppy. Call your pediatrician for hives or vomiting.'));
+      + xNote('Call 911:', 'trouble breathing, swelling of the face or lips, hives all over, hives with vomiting, or he’s very sleepy or floppy. Call your pediatrician for a few hives or vomiting on its own.'));
   P.z_gag = () => yPage(XL, 'Safety', 'Gagging is normal. Choking is silent.', 'Gagging is how he learns to handle food. It’s loud and looks scary. Choking is silent.',
       xTwo(['Gagging', 'Loud: coughing, sputtering, eyes watering. Let him work it out.'], ['Choking', 'Silent: can’t cry or cough, turning blue. Start first aid and call 911.'], true)
       + xDo('What to do', ['Always seated upright, and always with you.', 'Soft pieces that squish between your fingers.'])
@@ -2746,9 +2746,9 @@
       xDo('What helps', ['Offer it again another day. It can take 10–15 tries.', 'Let him touch and play with it.', 'Eat together, so he sees you eat it.'])
       + xNote('Worth a call:', 'refusing most foods for weeks, or fewer wet diapers.'));
   P.z_reaction = () => yPage(XL, 'Feeding challenges', 'A rash or reaction after a new food', 'A little redness around the mouth is often from acidic food. A true reaction looks different.',
-      xTwo(['Usually fine', 'Redness only where food touched, that fades.'], ['Call your pediatrician', 'Hives, vomiting, or a rash that spreads.'], true)
+      xTwo(['Usually fine', 'Redness only where food touched, that fades.'], ['Call your pediatrician', 'A few hives, vomiting, or a rash that spreads.'], true)
       + xDo('What to do', ['Note the food and what happened. A photo helps.', 'Hold off on that food, and ask your pediatrician before trying it again.'])
-      + xKnow('Call 911', 'Trouble breathing, swelling of the lips or face, or he’s very sleepy or floppy.'));
+      + xKnow('Call 911', 'Trouble breathing, swelling of the lips or face, hives all over, hives with vomiting, or he’s very sleepy or floppy.'));
   P.z_tough = () => { const rows = [['z_gag', 'eye', 'Gagging', 'Normal, and how to tell it from choking'], ['z_refuse', 'heart', 'Refusing food', 'Common, and what helps'], ['z_reaction', 'star', 'A rash after a new food', 'What’s fine, and when to call'], ['x_poop', 'diaper', 'Constipation', 'Common with new foods']];
     return qaCss + page(head('Feeding challenges', 'Something not quite right?', 'Pick what’s happening.', XL) + `<div class="hub-list">${rows.map(([id, icon, title, sub]) => H().row({ cat: CAT, icon, title, sub, onclick: id === 'x_poop' ? poopGo() : id === 'z_gag' ? "openPage('chg:Feeding:safe')" : go(id) }).replace(/<span class="hub-dot">[\s\S]*?<\/span><span class="hub-row-copy">/, `<span class="hub-dot">${hubArt(icon, CAT).replace('data-art=', 'data-keep=')}</span><span class="hub-row-copy">`)).join('')}</div>`
       + `<section class="ss-moment">` + xKnow('Call your pediatrician', 'If he has ' + fever(false) + ', refuses milk too, has fewer wet diapers, or keeps vomiting. Call any time you’re unsure.') + `</section>`); };
@@ -2979,7 +2979,7 @@
   // 3. Nursing + formula: cutting back top-ups, as three tiles instead of one line.
   P.y_bottle = (() => { const prev = P.y_bottle; return () => { const h = prev(); if (!(nurses() && formulaFam())) return h;
     return h.replace(F('Many babies need fewer top-ups as nursing gets easier. Your pediatrician can help you cut back.'), F('Many babies need fewer top-ups as nursing gets easier. Cut back slowly, with your pediatrician’s okay.'))
-      .replace('<section class="ss-do">', h2('Fewer top-ups? Cut back slowly') + xCompare([['eye', 'When', 'Gaining well, and your pediatrician agrees.'], ['drop', 'Go slowly', 'About ½ oz less in one top-up, every few days.'], ['diaper', 'Watch diapers', 'Still 6+ wet a day? Keep going. Fewer? Go back a step.']]) + '<section class="ss-do">'); }; })();
+      .replace('<section class="ss-do">', h2('Fewer top-ups? Cut back slowly') + xCompare([['eye', 'When', 'Gaining well, and your pediatrician agrees.'], ['drop', 'Go slowly', 'About ½ oz less in one top-up, every few days.'], ['diaper', 'Watch diapers', '6+ wet a day? Keep going. Fewer? Go back.']]) + '<section class="ss-do">'); }; })();
 
 
   // Late starters: past about 7 months and not started yet, the stage lead says so and points to the checkup.
