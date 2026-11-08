@@ -17,7 +17,7 @@
     if (typeof profile === 'undefined' || !profile.early || !profile.due || typeof parse !== 'function') return '';
     const days = Math.max(0, Math.floor((NOW - parse(profile.due)) / 864e5));
     if (days < 7) return 'newborn';
-    return fromDays(days, typeof developmentMonth === 'function' && typeof actualMonth === 'function' ? developmentMonth(actualMonth()) : Math.floor(days / 30.44));
+    return fromDays(days, typeof ageMonths === 'function' ? ageMonths(parse(profile.due), NOW) : Math.floor(days / 30.44));
   };
   const cur = () => typeof month === 'undefined' || typeof actualMonth !== 'function' || month === actualMonth();
   if (typeof window.topicAge === 'function') {

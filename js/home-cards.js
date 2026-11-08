@@ -55,7 +55,8 @@
   const safetyDone = id => { try { return ['done', 'na'].includes((journeyData().checks.safetyHome || {})[id]); } catch (e) { return false; } };
   function tickSafety(ids) { try { const data = journeyData(); data.checks.safetyHome = Object.assign({}, data.checks.safetyHome || {}); ids.forEach(id => { if (!data.checks.safetyHome[id]) data.checks.safetyHome[id] = 'done'; }); saveJourneyData(data); } catch (e) {} }
   // Born early: cards follow adjusted age, except Health (checkups and shots follow the birthday).
-  const adjustedDays = () => (profile.early && profile.due && (typeof ageMode !== 'function' || ageMode('dev') !== 'birthday')) ? Math.floor((NOW - parse(profile.due)) / DAY) : null;
+  // Each card follows its own area's setting: Development and Safety share one, Feeding, Sleep and Everyday care the other.
+  const adjustedDays = (group = 'dev') => (profile.early && profile.due && ((profile.ageMode && profile.ageMode[group]) || 'adjusted') !== 'birthday') ? Math.floor((NOW - parse(profile.due)) / DAY) : null;
   // Places that don't change their clocks
   const noDst = (() => { try { return ['America/Phoenix', 'Pacific/Honolulu', 'America/Puerto_Rico'].includes(Intl.DateTimeFormat().resolvedOptions().timeZone); } catch (e) { return false; } })();
 
@@ -80,7 +81,7 @@
     const solids = start ? 'started' : (a.solids === 'Not yet' || st.solidsNo) ? 'notyet' : null;
     const solidsAt = st.solidsToldAt || (sd.food) || (a.solidsStart) || null;
     return {
-      d, dBirth: d, dAdj: adjustedDays(), feed, date: new Date(NOW), birth: dob, n: name(), p: babyPronouns(),
+      d, dBirth: d, dAdj: adjustedDays('dev'), dAdjCare: adjustedDays('care'), feed, date: new Date(NOW), birth: dob, n: name(), p: babyPronouns(),
       move, notYet, moveAt: moveAt ? daysSince(moveAt) : null,
       swaddle: a.swaddleStopped === 'Yes' ? 'sack' : a.neverSwaddled === 'Yes' ? 'never' : null,
       solids, solidsDays: start ? Math.floor((NOW - start) / DAY) : null, solidsTold: solidsAt ? daysSince(solidsAt) : null,
@@ -124,7 +125,7 @@
   }
   const TIP = {
     'first-week': 'They’ll check {his} weight (most lose a little, then regain it by 2 weeks) and look for jaundice.',
-    '1-month': 'They’ll ask how you’re doing too. It’s a good moment to say if things feel heavy.',
+    '1-month': 'Your pediatrician will ask how you’re doing too. It’s a good moment to say if things feel heavy.',
     '2-month': 'The first main round of vaccines. Nursing or a bottle during the shots calms most babies.',
     '4-month': 'Vaccines, and a good time to ask about sleep and when to start solids.',
     '6-month': 'Vaccines, first foods and teeth, and the flu shot if it’s the season.',
@@ -314,7 +315,8 @@
   const DONE_IN_SAFETY = { 'rolling-soon': ['small', 'changing'], reaching: ['small'], 'crawl-soon': ['gates', 'storage', 'outlets', 'anchor'], 'crawl-now': ['gates'] };
   const DONE_ANSWER = { 'stand-soon': () => answers.mattressLowest === 'Yes', 'stand-now': () => answers.mattressLowest === 'Yes' && !0, 'sitting-gear': () => answers.mattressLowered === 'Yes' || answers.mattressLowest === 'Yes' };
   const doneElsewhere = (c, s) => (DONE_IN_SAFETY[c.id] && DONE_IN_SAFETY[c.id].every(safetyDone)) || (c.id === 'stand-soon' && DONE_ANSWER['stand-soon']()) || (c.id === 'stand-now' && !opened(s, 'stand-soon') && answers.mattressLowest === 'Yes') || (c.id === 'sitting-gear' && DONE_ANSWER['sitting-gear']()) || (c.id === 'clocks' && noDst);
-  const forCard = (c, s) => (s.dAdj != null && !BIRTH_AGE(c)) ? at(s, s.dAdj) : s;
+  const CARE_AGE = c => ['Feeding', 'Sleep', 'Daily rhythm'].includes(c.cat) || /^swaddle/.test(c.id);
+  const forCard = (c, s) => { if (BIRTH_AGE(c)) return s; const adj = CARE_AGE(c) ? s.dAdjCare : s.dAdj; return adj != null ? at(s, adj) : s; };
 
   /* ---------- picking ---------- */
   let peeking = false;   // working out Home's cards before its question is chosen

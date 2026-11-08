@@ -139,7 +139,7 @@ window.HOME_COPY = {
 "checkup:t": "The {visit} checkup is this week",
 "checkup:t-soon": "The {visit} checkup is coming up",
 "checkup:first-week": "They’ll check {his} weight and look for jaundice, so bring any feeding questions.",
-"checkup:1-month": "They’ll ask how you’re doing too, so it’s a good moment to share how things feel.",
+"checkup:1-month": "Your pediatrician will ask how you’re doing too, so it’s a good moment to share how things feel.",
 "checkup:2-month": "{His} first main round of vaccines. Nursing or a bottle during the shots helps.",
 "checkup:2-month:formula": "{His} first main round of vaccines. A bottle during the shots helps.",
 "checkup:4-month": "Vaccines, plus a good time to ask about sleep and starting solids.",
