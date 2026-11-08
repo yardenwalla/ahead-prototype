@@ -9,7 +9,7 @@
     ['crying', 0.5, 4, 'Sleep', 'heart', 'The crying peak', 'Fussy evenings, at their worst around 6–8 weeks', "__GO__", '2 weeks–4 months'],
     ['smile', 1.5, 2, 'Development', 'smile', 'First smiles', 'Maya starts smiling back when you smile', "__GO__"],
     ['nights', 1.5, 4, 'Sleep', 'moon', 'Longer nights', 'One longer sleep at night, often 4–5 hours', "__GO__"],
-    ['regress', 3, 5, 'Sleep', 'moon', 'The 4-month sleep regression', 'More night waking, for a few weeks', "__GO__"],
+    ['regress', 3, 5, 'Sleep', 'moon', 'The sleep regression', 'More night waking, for a few weeks', "__GO__"],
     ['roll', 4, 6, 'Development', 'roll', 'Rolling', 'Clear the floor, and never leave {o} on a bed or sofa', "__GO__", 'Usually 4–6 months'],
     ['ready', 4, 6, 'Feeding', 'highchair', 'Ready for solids', 'Watching for the signs, and choosing how to start', "__GO__", '4–6 months'],
     ['solids', 6, 6.5, 'Feeding', 'bowl', 'First foods', 'Food alongside milk, a few bites at first', "__GO__", 'Around 6 months'],
@@ -61,7 +61,7 @@
     const own = (() => { try { return (journeyData().records || []).filter(r => r.type === 'milestone').map(r => String(r.title || '').toLowerCase()).join(' | '); } catch (e) { return ''; } })(), saw = re => re.test(own);
     return { smile: saw(/smil/), sit: saw(/\bsat\b|sits|sitting/), words: saw(/word|mama|dada/), steps: saw(/step|walk/), roll: saw(/roll/) || (typeof rolled === 'function' && rolled()) || an.roll === 'Yes' || ['Tummy to back', 'Back to tummy', 'Both ways'].includes(an.rollDirection), solids: an.solids === 'Yes' || fg >= 3, ready: fg >= 3, meals: fg >= 4, finger: fg >= 4, crawl: an.crawl === 'Yes' || saw(/crawl/), pull: an.pullUp === 'Yes' || saw(/pull|stand/), tooth: an.hasTooth === 'Yes' || saw(/tooth/), twonaps: an.twoNaps === 'Yes' || sl >= 3, nights: sl >= 2 }; };
   const ageLabel = a => { const m = Math.floor(a), w = Math.floor((a - m) * 4.35); return m === 0 ? `${Math.max(1, w)} week${w === 1 ? '' : 's'}` : `${m} month${m === 1 ? '' : 's'}${w ? `, ${w} week${w === 1 ? '' : 's'}` : ''}`; };
-  const whenShort = (c, a) => c.id === 'crying' && a >= 2 ? 'easing now' : c.start <= a ? 'any time now' : c.start <= a + 1 ? 'any week now' : `in about ${Math.round(c.start - a)} month${Math.round(c.start - a) === 1 ? '' : 's'}`;
+  const whenShort = (c, a) => c.id === 'crying' && a >= 2 ? 'easing now' : c.id === 'crawl' && c.end - a <= 1 ? 'some babies skip it' : c.start <= a ? 'any time now' : c.start <= a + 1 ? 'any week now' : `in about ${Math.round(c.start - a)} month${Math.round(c.start - a) === 1 ? '' : 's'}`;
   // A small bar under each next change: its usual window, and where the baby is today.
   const windowBar = (c, a) => { const p = PAGES[c.id]; if (!p) return ''; const [from, to, zs, ze] = p.bar, pct = v => Math.max(0, Math.min(100, (v - from) / (to - from) * 100)); return `<span class="ya-bar" aria-hidden="true"><i style="left:${pct(zs)}%;width:${pct(ze) - pct(zs)}%"></i>${a >= from && a <= to ? `<u style="left:${pct(a)}%"></u>` : ''}</span>`; };
   // Home uses this to open a change's page only while the change is still ahead.
@@ -72,19 +72,23 @@
      Changes behind the baby fold into one quiet line above. Every change opens its read-ahead page. */
   window.nextPage = function () {
     const a = ageNow(), nm = name(), done = doneNow();
-    const ahead = C.filter(c => c.end > a && !done[c.id]).sort((x, y) => x.start - y.start || x.end - y.end), next = ahead.slice(0, 3), later = ahead.slice(3);
-    const behind = C.filter(c => c.end <= a || done[c.id]).sort((x, y) => x.start - y.start || x.end - y.end);
+    // Born early, with Development on birthday age: its rows sit by birthday age (shifted onto this adjusted-age path).
+    const devBday = !!(profile.early && profile.due) && typeof hubAgeFor === 'function' && hubAgeFor('dev', actualMonth()) === actualMonth() && hubAgeFor('care', actualMonth()) !== actualMonth();
+    const shift = devBday ? Math.max(0, (parse(profile.due) - parse(profile.dob)) / MONTH) : 0;
+    const CC = C.map(c => shift && c.cat === 'Development' ? Object.assign({}, c, { start: c.start - shift, end: c.end - shift }) : c);
+    const ahead = CC.filter(c => c.end > a && !done[c.id]).sort((x, y) => x.start - y.start || x.end - y.end), next = ahead.slice(0, 3), later = ahead.slice(3);
+    const behind = CC.filter(c => c.end <= a || done[c.id]).sort((x, y) => x.start - y.start || x.end - y.end);
     // Ages here follow adjusted age for a baby born early, so dates count from the due date to match.
     // Checkups follow the birthday, so each sits at the adjusted month it falls in.
     const early = !!(profile.early && profile.due), born = parse(early ? profile.due : profile.dob), gap = early ? Math.max(0, (parse(profile.due) - parse(profile.dob)) / MONTH) : 0;
     const monthDate = m => { const d = new Date(born); d.setMonth(d.getMonth() + m); return d.toLocaleDateString('en-US', { month: 'long' }); };
     const label = m => m >= 12 ? '1 year' : `${m} months`;
     const node = '<span class="ya-node" aria-hidden="true"></span>', chev = '<span class="hub-chev" aria-hidden="true">›</span>';
-    let h = `<div class="ya-page ya-pathpage"><div class="eyebrow ya-eyebrow">${F(`${nm}’s year ahead`)}</div><h1>${F('Timeline')}</h1><p class="next-lead">${F(`Where ${nm} is now, and the big changes ahead. Tap any to read ahead.`)}${early ? ' ' + F(`The ages follow ${nm}’s adjusted age. Checkups follow {p} birthday.`) : ''}</p><ol class="ya-path">`;
+    let h = `<div class="ya-page ya-pathpage"><div class="eyebrow ya-eyebrow">${F(`${nm}’s year ahead`)}</div><h1>${F('Timeline')}</h1><p class="next-lead">${F(`Where ${nm} is now, and the big changes ahead. Tap any to read ahead.`)}${early ? ' ' + F(devBday ? `Feeding, sleep and care follow ${nm}’s adjusted age. Development and checkups follow {p} birthday.` : `The ages follow ${nm}’s adjusted age. Checkups follow {p} birthday.`) : ''}</p><ol class="ya-path">`;
     if (behind.length) h += `<li class="ya-behind">${node}<button onclick="this.parentNode.classList.toggle('is-open')" aria-expanded="false">${F(`Earlier on (${behind.length})`)} <span aria-hidden="true">›</span></button><div class="ya-behind-list">${behind.map(c => `<button style="${yearTheme(c.cat)}" onclick="${c.go}"><span>${hubArt(c.icon, c.cat)}</span>${F(c.title)}</button>`).join('')}</div></li>`;
     h += `<li class="ya-here">${node}<b>${F(`${nm} now`)}</b><small>${F(early ? ageLabel(a) + ' adjusted' : (typeof babyAge === 'function' ? babyAge() : ageLabel(a)))}</small></li>`;
     h += '%%DUENOW%%';
-    h += next.map(c => `<li class="ya-row is-next" style="${yearTheme(c.cat)}">${node}<button onclick="${c.go}"><span class="ya-row-art">${hubArt(c.icon, c.cat)}</span><span class="ya-row-copy"><small class="ya-when">${F(range(c))} · ${F(whenShort(c, a))}</small><b>${F(c.title)}</b><span class="ya-why">${F(c.id === 'crying' && a >= 2 ? 'Past the worst. Fussy evenings ease over the next few weeks' : c.why)}</span>${windowBar(c, a)}</span>${chev}</button></li>`).join('');
+    h += next.map(c => `<li class="ya-row is-next" style="${yearTheme(c.cat)}">${node}<button onclick="${c.go}"><span class="ya-row-art">${hubArt(c.icon, c.cat)}</span><span class="ya-row-copy"><small class="ya-when">${F(range(c))} · ${F(whenShort(c, a))}</small><b>${F(c.title)}</b><span class="ya-why">${F(c.id === 'crying' && a >= 2 ? 'Past the worst. Fussy evenings ease over the next few weeks' : c.why)}</span>${windowBar(c, a + (c.cat === 'Development' ? shift : 0))}</span>${chev}</button></li>`).join('');
     const months = {}; later.forEach(c => { const m = Math.min(12, Math.max(Math.ceil(a), Math.floor(c.start))); (months[m] = months[m] || []).push(c); });
     const bm = early ? Math.min(12, Math.max(Math.ceil(a), Math.round(12 - gap))) : null; if (early && 12 > a + gap) months[bm] = months[bm] || [];
     // A checkup due now (within about 3 weeks) and not marked done stays on the path, beside "now".

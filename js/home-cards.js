@@ -286,7 +286,7 @@
   set('stand-now', pickK(s => opened(s, 'stand-soon') ? 'stand-now:t-after' : 'stand-now:t'), pickK(s => opened(s, 'stand-soon') ? 'stand-now:after' : 'stand-now'));
   set('hot-days', pickK(s => s.d < 183 ? 'hot-days:t' : 'hot-days:t-older'), pickK(s => s.d < 183 ? 'hot-days' : 'hot-days:older'));
   set('milk12', null, pickK(s => K['milk12:' + s.feed] ? 'milk12:' + s.feed : 'milk12'));
-  set('checkup', s => (K[checkupNow(s).ahead >= 2 ? 'checkup:t-soon' : 'checkup:t'] || '').replace('{visit}', checkupNow(s).label), s => { const v = checkupNow(s), base = K['checkup:' + v.label + ':' + s.feed] || K['checkup:' + v.label] || ''; let n = 0; try { n = ((journeyData().questions || {})[v.age] || []).length; } catch (e) {} return n ? base + ` You have ${n} question${n === 1 ? '' : 's'} saved.` : base; });
+  set('checkup', s => (K[checkupNow(s).ahead >= 2 ? 'checkup:t-soon' : 'checkup:t'] || '').replace('{visit}', checkupNow(s).label), s => { const v = checkupNow(s), base = K['checkup:' + v.label + ':' + s.feed] || (v.label === '6-month' && ![9, 10, 11, 12, 1, 2, 3].includes(month_(s)) && K['checkup:6-month:off']) || K['checkup:' + v.label] || ''; let n = 0; try { n = ((journeyData().questions || {})[v.age] || []).length; } catch (e) {} return n ? base + ` You have ${n} question${n === 1 ? '' : 's'} saved.` : base; });
 
   /* ---------- every card opens a page that continues it ---------- */
   const ROUTE = {
@@ -503,6 +503,8 @@
       const standWaits = () => { const st = store(); return !(st.seen || {})['stand-soon'] && !(st.opened || {})['stand-soon']; };
       if (!up && next === 'stand' && standWaits()) return null;
       const k = baseQ(); if (!k) return k;
+      // Born early: solids follow adjusted age, so don't ask about them before 6 months adjusted.
+      if (k === 'food' && profile.early && profile.due && typeof hubAgeFor === 'function' && hubAgeFor('care', actualMonth()) < 6) return null;
       if (k === 'stand' && !(up && last.k === 'stand') && standWaits()) return null;
       if (last && last.k !== k && NOW.getTime() - last.at < 7 * DAY) return null;
       if (!last || last.k !== k) { try { localStorage.setItem(key, JSON.stringify({ k, at: NOW.getTime() })); } catch (e) {} }

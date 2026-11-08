@@ -236,7 +236,7 @@
     done: ['All done', '“I’m finished.”', 'Hold your hands up and twist them out, back and forth.', '7xQE2N0z7gM']
   };
   window.hubSigns = function () {
-    return `<div class="hub-signs">${Object.values(SIGN_LIST).map(([w, m, how, id]) => `<div class="hub-sign">${window.hubEmbed(id, `The sign for ${w.toLowerCase()}`, 'ASL University', { small: true, loop: true })}<b>${w}</b><span class="hub-sign-means">${m}</span><small>${how}</small></div>`).join('')}</div><p class="hub-embed-credit">${F2('Clips from ASL University (Dr. Bill Vicars).')}</p>`;
+    return `<div class="hub-signs">${Object.values(SIGN_LIST).map(([w, m, how, id]) => `<div class="hub-sign">${window.hubEmbed(id, `The sign for ${w.toLowerCase()}`, 'ASL University', { small: true, loop: true })}<b>${w}</b><span class="hub-sign-means">${m}</span><small>${how}</small></div>`).join('')}</div><p class="hub-embed-credit">${F2('Clips of American Sign Language from ASL University (Dr. Bill Vicars).')}</p>`;
   };
 
   // Videos that play right on the page. Nothing loads from YouTube until the parent taps play.

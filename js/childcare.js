@@ -118,7 +118,7 @@
       when: ['A few weeks ahead', 'Enough time to talk through the routine and do a practice day together.'],
       steps: [['Talk it through', 'talk', 'Kindly, before the first day', [['Back to sleep, in a bare crib, even for naps', 'No blankets, bumpers or tummy sleeping. The biggest change since they had babies.'], ['The car seat, every ride', 'Rear-facing and buckled snugly, even for short trips.'], ['The day: naps, bedtime and feeds', 'Share {p} care card, so you both follow the same routine.'], ['Crying can wear anyone down', 'Put Maya down somewhere safe and take a minute. Never shake a baby.'], ['Infant CPR', 'A short class is worth it for anyone caring for {o} regularly.']]]] },
     sitter: { icon: 'moon', name: 'Babysitter', short: 'For a few hours', who: 'person',
-      lead: 'Someone who watches your baby now and then. A few hours to yourself is good for your baby too.',
+      lead: 'Someone who watches Maya for a few hours now and then, so {s} {get|gets} used to another caring adult.',
       good: 'You need a few hours of help, not regular care.', mind: 'Keep the first night short, and stay reachable.',
       when: ['A week or two ahead', 'Time for a short first visit while you’re at home, so everyone gets comfortable.'],
       steps: [['Before the sitter comes', 'check', 'A quick message or call. Listen for:', [['Have you looked after babies this young?', 'Yes, more than once.'], ['Are you trained in infant CPR?', 'Yes, ideally in the last 2 years.'], ['Can I call a family you’ve sat for?', 'Yes, gladly.']]],
@@ -165,7 +165,7 @@
         ['moon', 'Hours outside 9 to 5', 'Ask home daycares and nannies about early or late hours.'],
         ['eye', 'Nothing feels right', 'Keep looking. Family or a sitter can fill the gap.']],
         'Starting soon: ask your referral agency who has openings. Odd hours: ask home daycares and nannies. Nothing right yet: keep looking, with family or a sitter in between.')
-      + good([['steth', 'Born early?', 'Ask your pediatrician when, and what kind of care, makes sense for {o}.'], ['notepad', 'Waitlists move', 'Check in every month or so. Spots open up.'], ['blocks', 'A mix is common', 'Family two days and daycare three is a plan too.']])
+      + good([typeof profile !== 'undefined' && profile.early ? ['steth', 'Born early?', 'Ask your pediatrician when, and what kind of care, makes sense for {o}.'] : null, ['notepad', 'Waitlists move', 'Check in every month or so. Spots open up.'], ['blocks', 'A mix is common', 'Family two days and daycare three is a plan too.']])
       + `<button class="hub-button is-secondary cc-add" onclick="openPage('chg:${CAT}:d:fit')">${F('Next: Which care fits us?')} ›</button>`, 'notepad');
 
     if (id === 'pay') return sub('pay', 'Setting it up', 'Paying for care', 'Care is one of a family’s biggest monthly costs. There are more ways to pay less than most parents know.',
@@ -275,15 +275,21 @@
         ['shield', 'A real worry', 'Injuries or unsafe sleep: keep {o} home and speak up.']],
         'Bring small things up early. Harder drop-offs from around 8 months are common, so keep goodbyes short. For injuries or unsafe sleep, keep the baby home and speak up right away.')
       + good([['thermo', 'Lots of colds at first', 'Common in the first year of care. Line up backup care', go('backup')], ['book', 'A real worry at licensed care?', 'You can also report it on your state’s child care website'], (() => { const ch = typeof chosenNow === 'function' ? chosenNow() : null; return !ch || ch.k === 'nanny' ? ['hand', 'If you have a nanny', 'Agree on paid time off up front, and check in on pay once a year'] : null; })()]), 'heart');
-    if (id === 'help') return sub('help', 'Kinds of care', 'Extra help at home', 'Help in the early months isn’t only for when you go back to work.',
-      picSteps('Kinds of help', [
+    // Doulas and help with recovery belong to the first weeks. From 4 months, the same page is about care for the baby.
+    if (id === 'help') { const early = m < 4; return sub('help', 'Kinds of care', 'Extra help at home', early ? 'Help in the early months isn’t only for when you go back to work.' : 'Help at home isn’t only for when you go back to work.',
+      picSteps('Kinds of help', early ? [
         ['heart', 'A postpartum doula', 'Feeding, rest and recovery in the first weeks.'],
         ['moon', 'Overnight help', 'A trained night nanny covers nights.'],
         ['home', 'Family and friends', 'Ask for one thing: a meal, laundry, an hour.'],
-        ['clock', 'A sitter for a break', 'A few hours to rest or get out.', go('sitter')]],
-        'A postpartum doula helps with feeding and recovery. Overnight help covers nights. Family and friends can help with specific tasks. A sitter gives you a break.')
-      + rows('Where to look', [['smile', 'Other parents', 'Ask who helped them, and what it was like'], ['steth', 'Your hospital or pediatrician’s office', 'Many keep lists of local doulas and newborn care specialists'], ['eye', 'Doula directories and agencies', 'Search for postpartum doulas near you']])
-      + good([['coin', 'Insurance may help', 'Some insurance and some state health plans cover doula care. Ask yours.'], ['notepad', 'Book early', 'Doulas and overnight help often fill up, so ask a few weeks ahead.']]), 'heart');
+        ['clock', 'A sitter for a break', 'A few hours to rest or get out.', go('sitter')]] : [
+        ['heart', 'A helper while you’re home', 'Someone plays with Maya while you get things done.'],
+        ['moon', 'Overnight help', 'A night nanny looks after Maya, so nights are covered.'],
+        ['home', 'Family and friends', 'An hour or an afternoon with Maya.'],
+        ['clock', 'A sitter', 'A few hours with Maya, now and then.', go('sitter')]],
+        early ? 'A postpartum doula helps with feeding and recovery. Overnight help covers nights. Family and friends can help with specific tasks. A sitter gives you a break.' : 'A helper plays with Maya while you’re home. A night nanny covers nights. Family and friends can spend an hour or an afternoon with Maya. A sitter looks after Maya for a few hours.')
+      + rows('Where to look', early ? [['smile', 'Other parents', 'Ask who helped them, and what it was like'], ['steth', 'Your hospital or pediatrician’s office', 'Many keep lists of local doulas and newborn care specialists'], ['eye', 'Doula directories and agencies', 'Search for postpartum doulas near you']]
+        : [['smile', 'Other parents', 'Ask who helped them, and what it was like'], ['steth', 'Your pediatrician’s office', 'Some keep lists of local nannies and sitters'], ['eye', 'Caregiver websites and agencies', 'Search for part-time or overnight help near you']])
+      + good([early ? ['coin', 'Insurance may help', 'Some insurance and some state health plans cover doula care. Ask yours.'] : null, ['notepad', 'Book early', early ? 'Doulas and overnight help often fill up, so ask a few weeks ahead.' : 'Overnight help often fills up, so ask a few weeks ahead.']]), 'heart'); }
     return null;
   }
 
@@ -351,7 +357,7 @@
     // The same shape as Outings: one card to start, the kinds of care as tiles, the care card, then one list
     // for setting care up, in the order you meet it. No step rail: the app can't know where a family is.
     let b = `<header class="hub-hero cc-hero"><p class="hub-eyebrow">${F('Find care')}</p><h1>${F(n[0])}</h1><p class="hub-lead">${F(n[1])}</p><button class="cc-hero-go" onclick="openPage('chg:${CAT}:d:plan')">${F(n[2])} ›</button></header>`;
-    const kinds = [['center'], ['home'], ['nanny'], ['family'], ['sitter', 'For a night out, or a break'], ['help', am < 4 ? 'A doula or overnight help, early on' : 'A doula, night help or a sitter', 'Extra help at home']];
+    const kinds = [['center'], ['home'], ['nanny'], ['family'], ['sitter', 'For a night out, or a break'], ['help', am < 4 ? 'A doula or overnight help, early on' : 'A helper while you’re home, or at night', 'Extra help at home']];
     b += `<h2 class="hub-h2">${F('What kind of care?')}</h2><div class="oa-places">${kinds.map(([k, short, title]) => { const t = TYPES[k] || {}, c = PAL[k], m = (list[k] || []).length;
       return `<button class="oa-place" style="--oa-bg:${c[0]};--oa-ink:${c[1]}" onclick="openPage('chg:${CAT}:d:${k}')"><span class="oa-place-art">${SHAPE[k](c)}</span><b>${F(title || t.name)}</b><small>${F(m ? `${m} on your shortlist` : short || t.short)}</small></button>`; }).join('')}</div>`
       + `<button class="hub-link cc-quiz-link" onclick="openPage('chg:${CAT}:d:fit')">${F('Not sure which? Take the quick quiz')} ›</button>`;

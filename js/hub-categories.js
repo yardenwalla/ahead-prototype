@@ -8,6 +8,8 @@
   const H = () => window.__hub;
   const F = s => H().F(s);
   const live = () => typeof isCurrent !== 'function' || isCurrent();
+  // Born early, with Development set to birthday age: the skills run ahead of adjusted age.
+  const earlyBday = () => live() && !!(profile.early && profile.due) && developmentMonth(actualMonth()) === actualMonth() && ageMonths(parse(profile.due), NOW) < actualMonth();
   const monthsLabel = n => n === 0 ? 'Newborn' : n === 12 ? '1 year' : n === 1 ? '1 month' : n + ' months';
   function frame(cat, attrs, pillsHtml, body) {
     return `<div class="quiet-category hub-page" data-overview="${cat}" style="${yearTheme(cat)}" ${attrs}>${monthlyPageHeader(cat)}${pillsHtml}${body}<p class="hub-foot">${cat === 'Health' ? 'Your pediatrician may schedule checkups a little differently.' : 'Ages are typical. Every baby moves at their own pace.'}</p></div>`;
@@ -47,6 +49,8 @@
 
   /* ---------- Development: "What might I see, and how can I help?" ---------- */
   const DOMAIN_TITLES = { Social: 'Social', Talking: 'Talking', Thinking: 'Thinking', Movement: 'Movement' };
+  // Tile words: a name for a parent that fits every family, and "pat-a-cake" kept on one line (non-breaking hyphens).
+  const TILE_WORDS = { 'Calls you mama or dada': 'Has a name for you, like mama or dada', 'Plays pat-a-cake': 'Plays pat‑a‑cake' };
   const DOMAIN_ICONS = { Social: 'smile', Talking: 'chat', Thinking: 'idea', Movement: 'sit' };
   // Seen in the baby book, or reported elsewhere (rolling, crawling): the same test the area page uses.
   const devSkillSeen = l => { const key = journeySkillKey(l); return !!(journeyData().records.find(r => r.type === 'milestone' && r.skillKey === key) || skillSeen(l)); };
@@ -54,18 +58,18 @@
     const now = devNow(), ref = DEV_STAGES[selected] ? Number(selected) : now, age = ref + ' months';
     const st = DEV_STAGES[ref], h = H();
     // Born early: say which age Development follows, and switch it in one tap.
-    const ageNote = live() && profile.early && profile.due ? (() => { const adj = developmentMonth(actualMonth()) !== actualMonth(); return `<p class="hub-agebasis">${F(adj ? `Following Maya’s adjusted age (${monthsLabel(developmentMonth(actualMonth()))}).` : `Following Maya’s birthday age (${monthsLabel(actualMonth())}).`)} <button onclick="hubSetAgeMode('dev','${adj ? 'birthday' : 'adjusted'}')">${adj ? 'Use birthday age' : 'Use adjusted age'}</button></p>`; })() : '';
+    const ageNote = live() && profile.early && profile.due ? (() => { const adj = developmentMonth(actualMonth()) !== actualMonth(); return `<p class="hub-agebasis">${F(adj ? `Following Maya’s adjusted age (${monthsLabel(developmentMonth(actualMonth()))}).` : `Following Maya’s birthday age (${monthsLabel(actualMonth())}). Born early, Maya can get there a bit later.`)} <button onclick="hubSetAgeMode('dev','${adj ? 'birthday' : 'adjusted'}')">${adj ? 'Use birthday age' : 'Use adjusted age'}</button></p>`; })() : '';
     const devKeys = Object.keys(DEV_STAGES).map(Number), nowI = devKeys.indexOf(now);
     const pills = h.pills('Development by age', devKeys.map((k, i) => ({ label: STAGE_TABLE.Development.stages[i].label, age: STAGE_TABLE.Development.stages[i].age, on: k === ref, now: live() && k === now, onclick: `openPage('development-stage:${k}')`, change: stageCanChange('Development', i, nowI) ? `hubChangeStage('Development',${i})` : '' })), 'Development');
     // The top card: what this age looks like, with the answer to the big worry of the age in its own words.
-    const LEAD = { 4: 'Play starts to feel like a conversation: smiles, little sounds and swiping at toys. Rolling usually follows, between 4 and 6 months.', 9: 'Sitting frees both hands for babbling, banging and finding things. Not crawling yet? Many babies skip it.', 12: 'Waving, copying and pulling up to stand. First steps usually come between 12 and 15 months.' };
+    const LEAD = { 4: 'Play starts to feel like a conversation: smiles, little sounds and swiping at toys. Rolling usually follows, between 4 and 6 months.', 9: 'Sitting frees both hands for babbling, banging and finding things. Not crawling yet? Many babies skip it.', 12: 'Waving bye-bye, copying what you do and pulling up on furniture.' };
     let b = `<section class="dev-hero"><p class="dev-hero-eyebrow">${F(`What to look for by ${ref === 12 ? '12 months' : age}`)}</p><h1>${F(st.title)}</h1><p class="dev-hero-lead">${F(LEAD[ref] || st.body)}</p></section>`;
     // What Maya is working on: four areas, each with a line of what you might see.
     const domainTiles = Object.keys(DEV_DOMAINS).map(d => {
       const labels = DEVELOPMENT_DOMAINS[ref][d] || [], c = window.devTileColors ? devTileColors(d) : null, hl = (window.DEV_HEADLINE || {})[ref]?.[d];
       const moving = d === 'Movement' && live() && ref === now && (answers.pullUp === 'Yes' || answers.crawl === 'Yes');
       const line = moving ? (answers.pullUp === 'Yes' ? 'Already pulling up' : 'Already crawling') : hl ? hl[0] : (st.summaries[d] || '');
-      return `<button class="hub-domain-tile dev-tile" style="${c ? `--dt-bg:${c[0]};--dt-ink:${c[1]}` : ''}" onclick="openPage('development-domain:${ref}:${d}')"><span class="dev-tile-art">${window.devTileArt ? devTileArt(d, ref) : h.art(DOMAIN_ICONS[d], 'Development')}</span><small class="dev-tile-label">${DOMAIN_TITLES[d]}</small><b class="dev-tile-line">${(window.hubBabyify || (x => x))(F(line))}</b><span class="dev-tile-count">${labels.length ? `<span class="dev-tile-ticks" aria-hidden="true">${labels.map(devSkillSeen).sort((x, y) => y - x).map(v => `<i class="${v ? 'is-seen' : ''}"></i>`).join('')}</span>` : ''}${F(`${labels.filter(devSkillSeen).length} of ${labels.length} seen`)} ›</span></button>`;
+      return `<button class="hub-domain-tile dev-tile" style="${c ? `--dt-bg:${c[0]};--dt-ink:${c[1]}` : ''}" onclick="openPage('development-domain:${ref}:${d}')"><span class="dev-tile-art">${window.devTileArt ? devTileArt(d, ref) : h.art(DOMAIN_ICONS[d], 'Development')}</span><small class="dev-tile-label">${DOMAIN_TITLES[d]}</small><b class="dev-tile-line">${(window.hubBabyify || (x => x))(F(TILE_WORDS[line] || line))}</b><span class="dev-tile-count">${labels.length ? `<span class="dev-tile-ticks" aria-hidden="true">${labels.map(devSkillSeen).sort((x, y) => y - x).map(v => `<i class="${v ? 'is-seen' : ''}"></i>`).join('')}</span>` : ''}${F(`${labels.filter(devSkillSeen).length} of ${labels.length}`)} ›</span></button>`;
     }).join('');
     const other = live() && ref !== now;
     b += `<section class="hub-card hub-glance is-static"><span class="hub-card-head"><b>${F(other ? `What babies work on by ${age}` : 'What Maya is working on')}</b></span><div class="hub-domain-tiles">${domainTiles}</div></section>`;
@@ -263,7 +267,7 @@
     if (live() && age === focus) {   // a missed checkup shows here too, so it isn't missed by parents who skip Home
       let skipped = {}; try { skipped = JSON.parse(localStorage.getItem('ahead-visit-skipped:' + journeyKey())) || {}; } catch (e) {}
       const prev = WELL_VISITS[WELL_VISITS.indexOf(focus) - 1], missed = prev != null && !healthRecord(prev) && !skipped[prev] ? prev : null;
-      if (missed != null) missedLine = `<section class="hub-missed"><p>${F(`Had the ${healthJourneyLabel(missed).charAt(0).toLowerCase() + healthJourneyLabel(missed).slice(1)}? Mark it done, or tell us you skipped it.`)}</p><div><button onclick="hubVisitYes(${missed})">Mark it done</button><button onclick="hubVisitSkipped(${missed})">We skipped it</button></div></section>`;
+      if (missed != null) missedLine = `<section class="hub-missed"><p>${F(`Had the ${healthJourneyLabel(missed).charAt(0).toLowerCase() + healthJourneyLabel(missed).slice(1)}${(() => { const d = missed === 0 ? new Date(parse(profile.dob).getTime() + 5 * 864e5) : addMonths(parse(profile.dob), missed); return d.getMonth() === NOW.getMonth() && d.getFullYear() === NOW.getFullYear() ? '' : ' back in ' + d.toLocaleDateString('en-US', { month: 'long' }); })()}? Mark it done, or tell us you skipped it.`)}</p><div><button onclick="hubVisitYes(${missed})">Mark it done</button><button onclick="hubVisitSkipped(${missed})">We skipped it</button></div></section>`;
     }
     let b = h.hero({ eyebrow: eyebrow2, title, lead: conceptHealthSummary(age), button: done ? { label: 'Add notes from the checkup', onclick: `openHealthDetail(${age},'notes')` } : pastDue ? { label: 'Add it to Memories', onclick: `openPage('visit-form:${age}')` } : { label: planned ? 'Change the date' : 'Save the date', onclick: `openPage('visit-form:plan-${age}')` } });
     if (pastDue) b += `<div class="hub-browse"><button class="hub-link" onclick="openPage('visit-form:plan-${age}')">${F('Booked for later? Save the date')} ›</button></div>`;
@@ -271,7 +275,7 @@
     if (live() && age !== focus) b += back('Back to your next checkup', `openPage('health-visit:${focus}')`);
     b += h.list('For the checkup', [
       h.row({ icon: 'clock', cat: 'Health', title: 'What to expect', sub: EXPECT[age], onclick: `openHealthDetail(${age},'expect')` }),
-      `<span id="health-vaccines"></span>` + h.row({ icon: 'shield', cat: 'Health', title: 'Vaccines', sub: age === 0 ? 'Hepatitis B, and protection against RSV, a common winter virus' : ({ 1: 'Second hepatitis B shot (some offices give it at 2 months instead)', 2: 'Whooping cough, tetanus and diphtheria (DTaP), polio and more', 4: 'Whooping cough, tetanus and diphtheria (DTaP), polio and more', 6: 'Whooping cough, tetanus and diphtheria (DTaP) and more, plus flu in season', 9: 'Usually catch-up only, plus flu in season', 12: 'Measles, mumps and rubella (MMR), chickenpox, hepatitis A and boosters' })[age] || 'What’s due at this checkup', onclick: `openHealthDetail(${age},'vaccines')` }),
+      `<span id="health-vaccines"></span>` + h.row({ icon: 'shield', cat: 'Health', title: 'Vaccines', sub: age === 0 ? 'Hepatitis B, and protection against RSV, a common winter virus' : ({ 1: 'Second hepatitis B shot (some offices give it at 2 months instead)', 2: 'Whooping cough, tetanus and diphtheria (DTaP), polio and more', 4: 'Whooping cough, tetanus and diphtheria (DTaP), polio and more', 6: 'Whooping cough, tetanus and diphtheria (DTaP) and more' + ([8, 9, 10, 11, 0, 1, 2].includes(NOW.getMonth()) ? ', plus {p} first flu shot' : ''), 9: 'Usually catch-up only' + ([8, 9, 10, 11, 0, 1, 2].includes(NOW.getMonth()) ? ', plus a flu shot' : ''), 12: 'Measles, mumps and rubella (MMR), chickenpox, hepatitis A and boosters' })[age] || 'What’s due at this checkup', onclick: `openHealthDetail(${age},'vaccines')` }),
       h.row({ icon: 'notepad', cat: 'Health', title: 'Questions and notes', sub: visitNotesFor(age) ? 'Your questions, and notes from this checkup' : 'Bring your questions, and jot down the answers', onclick: `openHealthDetail(${age},'questions')` })
     ]);
     b += h.list('Between checkups', [
@@ -282,7 +286,7 @@
     ]);
     // "Between checkups" shows on every checkup page; "When to call" uses Maya's age now, so it shows on the current checkup only.
     const nowPage = !live() || age === focus;
-    if (nowPage) b += h.versus('When to call', ['Call your pediatrician', feverRule(actualMonth())], ['Call 911', 'Struggles to breathe or turns blue, won’t wake or is floppy, or has a seizure.']);
+    if (nowPage) b += h.versus('When to call', ['Call your pediatrician', profile.early && profile.due ? feverRule(actualMonth()).replace(/^(Under 3 months|At 3–6 months|From 6 months):/, '$1 (by birthday age):') : feverRule(actualMonth())], ['Call 911', 'Struggles to breathe or turns blue, won’t wake or is floppy, or has a seizure.']);
     const nx = WELL_VISITS[WELL_VISITS.indexOf(age) + 1];
     if (nx != null) b += h.next(live() && age === focus ? 'After that' : 'Next checkup', healthJourneyLabel(nx), `openPage('health-visit:${nx}')`);
     return frame('Health', `data-health-journey="${age}"`, pills + missedLine, b);
@@ -324,7 +328,7 @@
   const devAreaIdea = (ref, domain) => { const id = AREA_IDEA[ref]?.[domain]; if (!id || typeof playStageModel !== 'function') return null; for (let m = 0; m <= 12; m++) { const x = playStageModel(m), a = [...(x.primary || []), ...(x.more || [])].find(y => y.id === id); if (a) return a; } return null; };
   function developmentDomainPageSigns(ref, domain, rows, big, tc, meta, age, h) {
     const tryCard = `<section class="hub-card dev-try"><span class="hub-card-head"><b>${F('Try this together')}</b></span><button class="dev-try-row" onclick="openPage('chg:Development:d:signs')"><span class="dev-idea-art dev-signs-art">${h.art('signs', 'Development')}</span><span class="hub-row-copy"><b>${F('Teach a few simple signs')}</b><small>${F('More, eat, milk and all done, so Maya can tell you before {s} can say it')}</small></span><span class="hub-chev" aria-hidden="true">›</span></button></section>`;
-    const call = `<p class="dev-call">${F('Not all of these yet? Mention it at {p} next checkup. Call sooner if Maya loses a skill {s} had.')}</p>`;
+    const call = `<p class="dev-call">${F(earlyBday() ? 'Maya was born early, so it’s normal to reach these closer to {p} adjusted age. Call sooner if Maya loses a skill {s} had.' : 'Not all of these yet? Mention it at {p} next checkup. Call sooner if Maya loses a skill {s} had.')}</p>`;
     const credit = rows.includes('dev-see') ? `<p class="dev-credit">${F('Photos and videos: Source CDC, free at cdc.gov. The CDC doesn’t endorse Ahead.')}</p>` : '';
     return `<div class="quiet-category hub-page hub-detail dev-area-page is-${domain}" data-overview="Development" style="${yearTheme('Development')}${tc ? `;--area:${tc[0]};--area-ink:${tc[1]}` : ''}">${detailPageTop('Development')}<div class="dev-area-head">${window.devTileArt ? `<span class="dev-area-head-art">${devTileArt(domain, ref)}</span>` : ''}<p class="hub-context">${esc(`By ${age}`)}</p><h1>${esc(meta.title)}</h1><p class="hub-lead">${esc(DEV_STAGES[ref].summaries[domain])}</p></div><p class="dev-sub">${F(`Working on now, by ${age}`)}</p><div class="hub-ticks">${rows}</div>${big}${tryCard}${call}${credit}</div>`;
   }
@@ -340,10 +344,10 @@
     const rows = ordered.map(l => { const key = journeySkillKey(l), rec = journeyData().records.find(r => r.type === 'milestone' && r.skillKey === key) || (skillSeen(l) ? { reported: true } : null);
       const see = window.devSeeButton ? devSeeButton(key, clearMilestone(l)) : '';
       const desc = (window.hubBabyify || (x => x))(F(DEV_EXAMPLES[l] || ''));
-      return `<div class="hub-tick is-habit dev-skill"><span class="hub-tick-art">${h.art(SKILL_ICON(l), 'Development')}</span><span class="hub-row-copy"><b>${(window.hubBabyify || (x => x))(F(clearMilestone(l)))}</b>${desc ? `<small>${desc}</small>` : ''}${see}</span>${rec ? `<span class="hub-chip is-done">${F('Seen')} ✓</span>` : `<button class="hub-seen" onclick="hubSeen('${key}')">${F('Seen it')}</button>`}${see ? `<div class="dev-media" hidden></div>` : ''}</div>`; }).join('');
+      return `<div class="hub-tick is-habit dev-skill"><span class="hub-tick-art">${h.art(SKILL_ICON(l), 'Development')}</span><span class="hub-row-copy"><b>${(window.hubBabyify || (x => x))(F(clearMilestone(l) === 'Closes lips to show they don’t want more food' ? 'Shows when they’re full' : clearMilestone(l)))}</b>${desc ? `<small>${desc}</small>` : ''}${see}</span>${rec ? `<span class="hub-chip is-done">${F('Seen')} ✓</span>` : `<button class="hub-seen" onclick="hubSeen('${key}')">${F('Seen it')}</button>`}${see ? `<div class="dev-media" hidden></div>` : ''}</div>`; }).join('');
     // The big question, only on the area it's about.
     const W = DEV_BIG_BAR[ref], nowMo = live() ? (NOW - parse(profile.early && profile.due && developmentMonth(actualMonth()) !== actualMonth() ? profile.due : profile.dob)) / 2629746e3 : null;
-    const big = DEV_BIG[ref] && DEV_BIG[ref][0] === domain ? `<section class="hub-card dev-bigq"><span class="hub-card-head"><b>${F(DEV_BIG[ref][1])}</b></span>${W && window.hubWindowBar ? hubWindowBar({ title: '', from: W[0], to: W[1], zones: [[W[2], W[3], W[4], 'band']], ticks: W[5], now: nowMo, cat: 'Development', caption: F(DEV_BIG[ref][2]) }) : ''}<p class="dev-bigq-a">${F(DEV_BIG[ref][2])}</p></section>` : '';
+    const big = DEV_BIG[ref] && DEV_BIG[ref][0] === domain ? `<section class="hub-card dev-bigq"><span class="hub-card-head"><b>${F(DEV_BIG[ref][1])}</b></span>${W && window.hubWindowBar ? hubWindowBar({ title: '', from: W[0], to: W[1], zones: [[W[2], W[3], W[4], 'band']], ticks: W[5], now: nowMo, cat: 'Development', caption: F(DEV_BIG[ref][2]) }) : ''}<p class="dev-bigq-a">${F(ref === 6 && earlyBday() ? 'Most babies sit without support by about 9 months. Born early, Maya can get there closer to 9 months adjusted.' : DEV_BIG[ref][2])}</p></section>` : '';
     // Try this together: on Movement, the idea that helps with the big question; elsewhere, an idea for one of these skills.
     const move = domain === 'Movement' && window.devMoveIdea ? devMoveIdea(ref) : null;
     const act = !move && devAreaIdea(ref, domain);
@@ -351,7 +355,7 @@
     // From 6 months, Communication's idea is baby signs: a way to help Maya say what {s} {want|wants} before the words come.
     if (domain === 'Talking' && ref >= 6) return developmentDomainPageSigns(ref, domain, rows, big, tc, meta, age, h);
     const tryCard = move || act ? `<section class="hub-card dev-try"><span class="hub-card-head"><b>${F('Try this together')}</b></span><button class="dev-try-row" onclick="openPage('${move ? `chg:Development:d:move:${ref}` : `chg:Development:d:idea:${ref}:${act.id}`}')">${pic ? `<span class="dev-idea-art">${pic}</span>` : ''}<span class="hub-row-copy"><b>${F(move ? move.title : act.title)}</b><small>${move ? F(move.why) : playLine(act)}</small></span><span class="hub-chev" aria-hidden="true">›</span></button></section>` : '';
-    const call = `<p class="dev-call">${F('Not all of these yet? Mention it at {p} next checkup. Call sooner if Maya loses a skill {s} had.')}</p>`;
+    const call = `<p class="dev-call">${F(earlyBday() ? 'Maya was born early, so it’s normal to reach these closer to {p} adjusted age. Call sooner if Maya loses a skill {s} had.' : 'Not all of these yet? Mention it at {p} next checkup. Call sooner if Maya loses a skill {s} had.')}</p>`;
     const credit = rows.includes('dev-see') ? `<p class="dev-credit">${F('Photos and videos: Source CDC, free at cdc.gov. The CDC doesn’t endorse Ahead.')}</p>` : '';
     return `<div class="quiet-category hub-page hub-detail dev-area-page is-${domain}" data-overview="Development" style="${yearTheme('Development')}${tc ? `;--area:${tc[0]};--area-ink:${tc[1]}` : ''}">${detailPageTop('Development')}<div class="dev-area-head">${window.devTileArt ? `<span class="dev-area-head-art">${devTileArt(domain, ref)}</span>` : ''}<p class="hub-context">${esc(`By ${age}`)}</p><h1>${esc(meta.title)}</h1><p class="hub-lead">${esc(DEV_STAGES[ref].summaries[domain])}</p></div><p class="dev-sub">${F(`Working on now, by ${age}`)}</p><div class="hub-ticks">${rows}</div>${big}${tryCard}${call}${credit}</div>`;
   };
@@ -415,7 +419,7 @@
     }
     if (id === 'sick-tummy') {
       return detailFrame('Health', 'When Maya seems sick', 'Vomiting or diarrhea', 'Usually a tummy bug that passes in a day or two. Keeping {o} drinking is what matters.',
-        hubIconSteps([['bottle', 'Keep feeds going', 'Breast milk or formula, a little at a time'], ['diaper', 'Watch the diapers', 'Far fewer wet ones can mean dehydration'], ['steth', 'Ask before medicine', 'Or any rehydration drink']], 'Health', 'Keep feeds going a little at a time, watch the wet diapers, and ask before giving medicine.', false)
+        hubIconSteps([['bottle', 'Keep feeds going', 'Breast milk or formula, a little at a time'], ['diaper', 'Watch the diapers', 'Far fewer wet ones can mean dehydration'], ['steth', 'Ask first', 'Before any medicine or rehydration drink']], 'Health', 'Keep feeds going a little at a time, watch the wet diapers, and ask before giving medicine.', false)
         + h.versus('Normal, or time to call?', ['Normal', 'A few loose poops or a vomit or two for a day or so, while {s} still {feed|feeds} and has wet diapers.'], ['Call your pediatrician', 'Can’t keep feeds down, green or bloody vomit, blood in the poop, a swollen belly, a dry mouth or no tears.'])
         + call911);
     }
@@ -426,14 +430,14 @@
     const [, cat, screen, a, b] = p.split(':');
     if (cat === 'Development' && screen === 'd' && a === 'signs') return detailFrame('Development', 'Development & play', 'Try a few baby signs', 'A few simple signs let Maya tell you what {s} {want|wants} before {s} can say it. Tap one to watch it.',
       // "When" is a question, so it's an answer card first; the tips aren't an order, so they're tiles.
-      H().qa([['When will {s} sign back?', 'Around 8–12 months', 'Signing won’t slow down {p} talking.']])
+      H().qa([['When will {s} sign back?', 'Around 8–12 months', earlyBday() ? 'Babies born early often sign back a bit later. Signing won’t slow down {p} talking.' : 'Signing won’t slow down {p} talking.']])
       + (window.hubSigns ? hubSigns() : '')
       + `<h2 class="hub-h2">${F('What helps')}</h2>` + hubIconSteps([['star', 'Start with 2 or 3', 'Ones you’ll use every day'], ['chat', 'Say it as you sign', '“More?”'], ['heart', 'Cheer {p} version', 'Even if it looks different']], 'Development', F('Start with two or three signs, say the word as you sign it, and cheer the baby’s version.'), false));
     if (cat === 'Development' && screen === 'd' && a === 'faq') { const ref = DEV_STAGES[b] ? Number(b) : devRef(); return detailFrame('Development', DEV_STAGES[ref].title, 'What other parents ask', '', devCommonQuestions(ref).replace('<h2>Common questions</h2>', '').replace('class="common-questions"', 'class="common-questions hub-faq"')); }
     // Swings, bouncers and floor seats: the label's limits, straps, the floor, and never for sleep (AAP, CPSC).
     if (cat === 'Safety' && screen === 'd' && a === 'gear') return detailFrame('Safety', 'Safety', 'Swings, bouncers and floor seats', 'Handy for a few minutes of hands-free time. A few habits keep them safe.',
       hubIconSteps([['shield', 'Check the label', 'Weight and age limits. Stop once Maya reaches them.'], ['hand', 'Strap in every time', 'Even for a minute'], ['home', 'On the floor', 'Never on a table, counter, bed or sofa'], ['moon', 'Not for sleep', 'Fell asleep? Move {o} to {p} crib, on {p} back']], 'Safety', 'Check the weight and age limits, strap in every time, keep it on the floor, and never use it for sleep.', false)
-      + H().tip('When to stop using a bouncer', 'Once Maya can sit up on {p} own or {try|tries} to climb out, even if {s’s} under the weight limit.')
+      + H().tip('When to stop using a bouncer', 'Once Maya can sit up on {p} own or tries to climb out, even if {s’s} under the weight limit.')
       + H().tip('Stay close', 'Keep Maya within sight, and keep older kids and pets from rocking or pushing it.'));
     // Colds and stuffy noses: saline and suction, a cool-mist humidifier, no cold medicines, and when to call (AAP).
     if (cat === 'Health' && screen === 'd' && a === 'cold') return detailFrame('Health', 'Health', 'Colds and stuffy noses', 'Most babies catch several colds in the first year. They usually clear up on their own in about 7–10 days.',
@@ -441,9 +445,9 @@
       `<h2 class="hub-h2">${F('Clearing a stuffy nose')}</h2>` + hubIconSteps([['drop', 'Saline drops', 'A few drops in each nostril loosen the mucus'], ['swallow', 'Then gentle suction', 'A bulb syringe or nasal aspirator, before feeds and sleep']], 'Health', 'Saline drops first, then gentle suction before feeds and sleep.', true)
       + `<h2 class="hub-h2">${F('Also helps')}</h2>` + hubIconSteps([['snow', 'Cool-mist humidifier', 'In {p} room at night. Clean it every day'], ['bottle', 'Keep feeds going', 'Smaller, more frequent feeds are fine']], 'Health', 'A cool-mist humidifier at night, and plenty of feeds.', false)
       + H().tip('Skip cough and cold medicines', 'They aren’t safe for babies. No honey before 1 year either.')
-      + H().versus('When to call', ['Call your pediatrician', actualMonth() < 3 ? 'A temperature of 100.4°F or higher (call right away), fewer wet diapers, ear pulling, or a cough or cold that lasts more than 10 days.' : `A temperature of ${feverTemp(actualMonth())} or higher, a fever that lasts more than a day, fewer wet diapers, ear pulling, or a cough or cold that lasts more than 10 days.`], ['Call 911', 'Struggles to breathe, ribs pulling in with each breath, or lips turning blue.'])
+      + H().versus('When to call', ['Call your pediatrician', actualMonth() < 3 ? 'Under 3 months: a temperature of 100.4°F or higher (call right away), fewer wet diapers, or a cough or cold that lasts more than 10 days.' : `${actualMonth() < 6 ? 'At 3–6 months' : 'From 6 months'}: a temperature of ${feverTemp(actualMonth())} or higher, a fever that lasts more than a day, fewer wet diapers, or a cough or cold that lasts more than 10 days.`], ['Call 911', 'Struggles to breathe, ribs pulling in with each breath, or lips turning blue.'])
       + `<h2 class="hub-h2">${F('When it might be an ear infection')}</h2>`
-      + `<div class="hub-card hub-looks"><b class="hub-fig-title">${F('Ear infections often follow a cold. Look for')}</b><ul>${['Fussing and crying, especially lying down', 'Trouble sleeping, or a new fever', 'Pulling at an ear, along with these', 'Fluid draining from the ear'].map(t => `<li>${F(t)}</li>`).join('')}</ul></div>`
+      + `<div class="hub-card hub-looks"><b class="hub-fig-title">${F('Ear infections often follow a cold. Look for:')}</b><ul>${['Fussing and crying, especially lying down', 'Trouble sleeping, or a new fever', 'Pulling at an ear, along with any of the above', 'Fluid draining from the ear'].map(t => `<li>${F(t)}</li>`).join('')}</ul></div>`
       + H().tip('Call your pediatrician', 'If you see these signs. Pulling at an ear on its own, without a cold or fever, is usually nothing.')
       + H().note('Wash hands often and keep sick visitors away, especially in the first months.'));
     if (cat === 'Health' && screen === 'd') { const pg = healthDetail(a); if (pg) return pg; }
