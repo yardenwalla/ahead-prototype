@@ -28,3 +28,5 @@
 #main .sf-tube svg { width: 130px; flex: none }
 #main .sf-tube figcaption { font-size: 14px; line-height: 1.45; color: #5c5361 }
 #main .sf-tube figcaption b { display: block; color: var(--ink); font-size: 15px; margin-bottom: 2px }
+/* Step pages: a choice card is two white sides, so it doesn't add a second color to the page. */
+#main .hub-detail[data-overview="Safety"] .hub-vs > div { background: #fff; border: 1px solid var(--line) }
