@@ -114,11 +114,11 @@
         ['Before you hire', 'check', 'Worth doing every time', [['Call two families they’ve worked for', 'Ask what they loved, and anything they’d change.'], ['A background check', 'Most nanny agencies and sites can run one.'], ['Infant CPR', 'Current, or a class before they start.'], ['A paid trial day', 'While you’re home, to see how it feels.'], ['A written agreement', 'Hours, pay, paid days off, sick days, and how much notice either of you gives.']]]] },
     family: { icon: 'heart', name: 'Family or friends', short: 'Flexible, and someone you trust', who: 'person', talk: true,
       lead: 'A grandparent, relative or friend looks after your baby, at your home or theirs.',
-      good: 'You’d like someone who already loves Maya, with flexible timing.', mind: 'Advice has changed since they had babies. Talk it through early, kindly and clearly.',
+      good: 'You’d like someone who already loves Maya, with flexible timing.', mind: 'Some safety advice is new since they had babies. Talk it through early and kindly.',
       when: ['A few weeks ahead', 'Enough time to talk through the routine and do a practice day together.'],
       steps: [['Talk it through', 'talk', 'Kindly, before the first day', [['Back to sleep, in a bare crib, even for naps', 'No blankets, bumpers or tummy sleeping. The biggest change since they had babies.'], ['The car seat, every ride', 'Rear-facing and buckled snugly, even for short trips.'], ['The day: naps, bedtime and feeds', 'Share {p} care card, so you both follow the same routine.'], ['Crying can wear anyone down', 'Put Maya down somewhere safe and take a minute. Never shake a baby.'], ['Infant CPR', 'A short class is worth it for anyone caring for {o} regularly.']]]] },
     sitter: { icon: 'moon', name: 'Babysitter', short: 'For a few hours', who: 'person',
-      lead: 'Someone who watches your baby now and then. A few hours to yourself is good for your baby too.',
+      lead: 'Someone who watches Maya for a few hours now and then, so {s} {get|gets} used to another caring adult.',
       good: 'You need a few hours of help, not regular care.', mind: 'Keep the first night short, and stay reachable.',
       when: ['A week or two ahead', 'Time for a short first visit while you’re at home, so everyone gets comfortable.'],
       steps: [['Before the sitter comes', 'check', 'A quick message or call. Listen for:', [['Have you looked after babies this young?', 'Yes, more than once.'], ['Are you trained in infant CPR?', 'Yes, ideally in the last 2 years.'], ['Can I call a family you’ve sat for?', 'Yes, gladly.']]],
@@ -128,8 +128,8 @@
 
   // Where to actually look, by type. Kinds of places only, never a named site or company.
   const WHERE = {
-    center: [['shield', 'Your state’s child care website', 'Every licensed center near you, with its inspection reports'], ['chat', 'Your local child care referral agency', 'It’s free, and they know who has openings'], ['heart', 'Other parents nearby', 'Neighborhood groups, and friends with older kids']],
-    home: [['shield', 'Your state’s child care website', 'Licensed home daycares near you, with inspection reports'], ['chat', 'Your local child care referral agency', 'It’s free, and they know who has openings'], ['heart', 'Other parents nearby', 'Ask who they used, and how they found them']],
+    center: [['book', 'Your state’s child care website', 'Every licensed center near you, with its inspection reports'], ['chat', 'Your local child care referral agency', 'It’s free, and they know who has openings'], ['heart', 'Other parents nearby', 'Neighborhood groups, and friends with older kids']],
+    home: [['book', 'Your state’s child care website', 'Licensed home daycares near you, with inspection reports'], ['chat', 'Your local child care referral agency', 'It’s free, and they know who has openings'], ['heart', 'Other parents nearby', 'Ask who they used, and how they found them']],
     nanny: [['heart', 'Local parent groups', 'The most common way to find a nanny, or a family to share one'], ['notepad', 'A nanny agency', 'They find and screen candidates for you, for a fee'], ['eye', 'Caregiver websites', 'Lots of choice, and you do the checking yourself']],
     sitter: [['heart', 'Friends and other parents', 'Ask who they trust'], ['eye', 'Caregiver websites', 'Many list sitters near you'], ['blocks', 'Daycare teachers', 'Many babysit evenings. Check that their center is OK with it']]
   };
@@ -145,9 +145,9 @@
   const feedNow = () => (typeof profile !== 'undefined' && profile.feed) || 'Breast milk';
 
   // Setting up a backup is a to-do list, so it's a checklist you can tick, kept on this phone.
-  const BACKUP = [['Name two backup people', 'Family, friends or a sitter you could call at short notice.', 'heart'], ['Ask work about backup care', 'Some jobs offer backup care days.', 'notepad'], ['Save their numbers', 'In your phone, and on the fridge.', 'moon']];
+  const BACKUP = [['Name two backup people', 'Family, friends or a sitter you could call at short notice.', 'heart'], ['Ask work about backup care', 'Some jobs offer backup care days.', 'notepad'], ['Save their numbers', 'In your phone, and on Maya’s care card under “Who to call”.', 'moon']];
   window.ccBackupTick = i => { const on = load('ahead-childcare-backup', []); save('ahead-childcare-backup', on.includes(i) ? on.filter(x => x !== i) : on.concat(i)); rerender(); };
-  const backupList = () => { const on = load('ahead-childcare-backup', []); return `<h2 class="hub-h2">${F('Set up your backup')}</h2>` + H().ticks(BACKUP, i => on.includes(i), i => `ccBackupTick(${i})`, CAT); };
+  const backupList = () => { const on = load('ahead-childcare-backup', []); return `<h2 class="hub-h2">${F('Set up your backup')}</h2>` + H().ticks(BACKUP, i => on.includes(i), i => `ccBackupTick(${i})`, CAT) + (BACKUP.every((_, i) => on.includes(i)) ? H().note('Your backup plan is set. Check it again whenever your care changes.') : ''); };
 
   function journey(id) {
     const h = H(), m = typeof actualMonth === 'function' ? actualMonth() : 0, fd = feedNow(), bm = fd !== 'Formula', fm = fd !== 'Breast milk';
@@ -161,19 +161,19 @@
         'Six months before, join daycare waitlists. Three months before, visit home daycares or meet nannies. Six to eight weeks before, decide and sign up. Two weeks before, get ready for day one.')
       + H().note('Less time than this? That’s common. See below.')
       + picSteps('When things don’t go to plan', [
-        ['clock', 'Short on time?', 'You can still find good care. Your local child care referral agency is free, and knows who has openings now. Your state’s child care website can point you to yours.'],
-        ['moon', 'Hours outside 9 to 5', 'Ask home daycares and nannies about early, late or weekend hours.'],
-        ['heart', 'Nothing feels right yet', 'Keep looking. Family or a sitter can bridge the gap.']],
+        ['chat', 'Short on time?', 'Your local child care referral agency is free and knows who has openings.'],
+        ['moon', 'Hours outside 9 to 5', 'Ask home daycares and nannies about early or late hours.'],
+        ['smile', 'Nothing feels right', 'Keep looking. Family or a sitter can fill the gap.']],
         'Starting soon: ask your referral agency who has openings. Odd hours: ask home daycares and nannies. Nothing right yet: keep looking, with family or a sitter in between.')
-      + good([['steth', 'Born early?', 'Ask your pediatrician when, and what kind of care, makes sense for {o}.'], ['notepad', 'Waitlists move', 'Check in every month or so. Spots open up.'], ['blocks', 'A mix is common', 'Family two days and daycare three is a plan too.']])
+      + good([typeof profile !== 'undefined' && profile.early ? ['steth', 'Born early?', 'Ask your pediatrician when, and what kind of care, makes sense for {o}.'] : null, ['eye', 'Waitlists move', 'Check in every month or so. Spots open up.'], ['blocks', 'A mix is common', 'Family two days and daycare three is a plan too.']])
       + `<button class="hub-button is-secondary cc-add" onclick="openPage('chg:${CAT}:d:fit')">${F('Next: Which care fits us?')} ›</button>`, 'notepad');
 
     if (id === 'pay') return sub('pay', 'Setting it up', 'Paying for care', 'Care is one of a family’s biggest monthly costs. There are more ways to pay less than most parents know.',
       picSteps('Ways to pay less', [
-        ['coin', 'Help from your state', 'For families who qualify. Your local child care referral agency can help you apply, for free.'],
-        ['notepad', 'A pre-tax care account', 'Through many jobs. A birth or starting care usually lets you sign up mid-year. Ask HR.'],
-        ['shield', 'A tax credit', 'Lowers your taxes by part of what you pay. Claim it at tax time.'],
-        ['home', 'Early Head Start', 'Free for families who qualify. Your referral agency knows if there’s one near you.']],
+        ['coin', 'Help from your state', 'If you qualify. Your referral agency helps you apply.'],
+        ['notepad', 'A pre-tax care account', 'Through many jobs. A new baby lets you join mid-year.'],
+        ['shield', 'A tax credit', 'Takes part of what you pay off your taxes.'],
+        ['home', 'Early Head Start', 'A free federal program for babies, for families who qualify.']],
         'Help from your state, a pre-tax care account through work, a federal tax credit, and Early Head Start.')
       + rows('', [['hand', 'If you hire a nanny', 'You’re usually their employer, with taxes to pay. A nanny payroll service can handle them.']])
       + good([['eye', 'Prices vary a lot', 'A nanny usually costs most, then a daycare center, then a home daycare. Ask each place for the full cost, fees included.'], ['lock', 'Deposits', 'Many daycares ask for a deposit or a fee to hold a spot.'], ['heart', 'Paying family', 'Paying a relative may still count toward the tax credit. Ask a tax professional.']]), 'coin');
@@ -187,23 +187,23 @@
           ['2 weeks before', 'heart', 'Fill in Maya’s care card, and name two backup people.'],
           ['The week before', 'clock', 'A short visit together, then a short day.'],
           ['The night before', 'bag', 'Pack and label everything.'],
-          ['Day one', 'heart', 'A quick, warm goodbye.']]
+          ['Day one', 'sun', 'A quick, warm goodbye.']]
         : atHome ? [
           ['3 weeks before', 'notepad', 'Agree on hours, pay and duties in writing.'],
           ['2 weeks before', 'heart', 'Fill in Maya’s care card, and name two backup people.'],
           ['The week before', 'clock', 'A paid trial day, with you at home.'],
           ['The night before', 'home', 'Leave the care card out, and stock bottles, diapers and clothes.'],
-          ['Day one', 'heart', 'A quick, warm goodbye.']]
+          ['Day one', 'sun', 'A quick, warm goodbye.']]
         : kind === 'family' ? [
           ['2 weeks before', 'chat', 'Talk through safe sleep, the car seat and the day’s rhythm.'],
           ['The week before', 'clock', 'A practice day together.'],
           ['The night before', 'bag', 'Pack and label everything, if it’s at their place.'],
-          ['Day one', 'heart', 'A quick, warm goodbye.']]
+          ['Day one', 'sun', 'A quick, warm goodbye.']]
         : [
-          ['2 weeks before', 'notepad', 'Fill in Maya’s care card, and name two backup people.'],
+          ['2 weeks before', 'heart', 'Fill in Maya’s care card, and name two backup people.'],
           ['The week before', 'clock', 'A short visit together, then a short day.'],
           ['The night before', 'bag', 'Pack and label everything.'],
-          ['Day one', 'heart', 'A quick, warm goodbye.']];
+          ['Day one', 'sun', 'A quick, warm goodbye.']];
       const lead = atHome ? 'A paid trial day, with you at home, makes the real start easier for you all.' : kind === 'family' ? 'A practice day together makes the real start easier for everyone.' : 'A visit and a short practice day first make the real start easier for you both.';
       return sub('ready', 'Setting it up', who ? `Get ready for ${who}` : 'Get ready for day one', lead,
       (just ? `<div class="hub-card cc-chosen-note"><b>${F(`You chose ${who}.`)}</b><span>${F('Here’s how to get ready for day one.')}</span></div>` : '')
@@ -214,26 +214,26 @@
         ['bottle', bm && fm ? 'Milk or formula for each feed, plus one extra' : bm ? 'Pumped milk for each feed, plus one extra' : 'Formula for each feed, plus one extra',
           (bm ? 'Bottles labeled with {p} name and the date, in a cooler bag' : 'With clean bottles, labeled with {p} name') + (m >= 6 ? '. Food too, if your caregiver doesn’t provide it' : '')],
         ['shirt', 'A spare outfit or two', 'For spills and blowouts'],
-        ['heart', 'Diapers, wipes and cream', atHome ? 'Where your nanny can find them' : 'If your caregiver asks for them']])
+        ['diaper', 'Diapers, wipes and cream', atHome ? 'Where your nanny can find them' : 'If your caregiver asks for them']])
       + picSteps('When things don’t go to plan', [
-        m < 9 ? ['bottle', 'Won’t take a bottle', 'Common at first. Let the caregiver try while you’re out of the room.'] : null,
-        ['heart', 'Tears at drop-off', 'Keep goodbyes short and the same each day. Ask for a text once {s’s} settled.'],
-        ['clock', 'Running low', (bm && fm ? 'Ask the caregiver to text you when milk, formula, diapers or clothes run low.' : bm ? 'Ask the caregiver to text you when milk, diapers or clothes run low.' : 'Ask the caregiver to text you when formula, diapers or clothes run low.')],
-        ['chat', 'Something feels off', 'Talk to the caregiver early. If it still doesn’t feel right, it’s OK to change.']],
+        m < 9 ? ['cup', 'Won’t take a bottle', 'Let the caregiver try, with you out of the room.'] : null,
+        ['smile', 'Tears at drop-off', 'Keep goodbyes short. Ask for a text once {s’s} settled.'],
+        ['eye', 'Running low', 'Ask for a text when ' + (bm && fm ? 'milk, formula or diapers' : bm ? 'milk or diapers' : 'formula or diapers') + ' run low.'],
+        ['chat', 'Something feels off', 'Talk early. It’s OK to change care.']],
         'If the baby won’t take a bottle, let the caregiver try while you’re away. Keep goodbyes short. Ask to hear when every bottle is finished. If something feels off, talk early.')
-      + good([['bottle', 'Ask about feeds', 'How many feeds to expect, and how the caregiver warms bottles.'], ['heart', 'Your feelings count', 'The first weeks can be hard on you too. It usually gets easier.']])
+      + good([['drop', 'Ask about feeds', 'How many feeds to expect, and how the caregiver warms bottles.']])
       + `<button class="hub-button is-secondary cc-add" onclick="ccStarted()">${F('Care has started? Next: Settle in')} ›</button>`, 'bag');
     }
 
     if (id === 'backup') return sub('backup', 'Setting it up', 'When care falls through', 'Every family has days when care doesn’t happen. A plan made now makes them easier.',
       backupList()
       + picSteps('When things don’t go to plan', [
-        ['thermo', '{S’s} sick', 'Take turns with a partner if you can, or call your backup. Your daycare’s sick policy says when {s} can go back, so ask for it.'],
-        ['home', 'The caregiver is sick', 'Call your backup, or a sitter you’ve used before.'],
-        ['hand', 'Your nanny quits', 'Family or a sitter for now. Then a nanny agency, or your referral agency for daycare openings.'],
-        ['notepad', 'Closed days', 'Daycares close on holidays. Plan those days early, with family, a sitter or time off.']],
-        'When the baby is sick, take turns or call your backup. When the caregiver is sick, call a sitter. If a nanny quits, cover with family or a temporary nanny. Plan daycare holidays early.')
-      + good([['blocks', 'Changing care', 'Overlap the old and new care for a few days if you can.'], ['notepad', 'Sick days at work', 'Many jobs, and some states, let you use sick days to care for your child. Ask HR.']]), 'shield');
+        ['thermo', '{S’s} sick', 'Call your backup, or keep {o} home.'],
+        ['home', 'The caregiver is sick', 'Call your backup, or a sitter you know.'],
+        ['hand', 'Your caregiver leaves', 'Family or a sitter for now, while you find new care.'],
+        ['sun', 'Closed days', 'Plan holidays early: family, a sitter or time off.']],
+        'When the baby is sick, take turns or call your backup. When the caregiver is sick, call a sitter. If your caregiver leaves, cover with family or a sitter while you find new care. Plan daycare holidays early.')
+      + good([['blocks', 'Changing care', 'Overlap the old and new care for a few days if you can.']]), 'shield');
 
     if (id === 'share') return sub('nanny', 'Nanny or nanny share', 'Sharing a nanny', 'Two families split one nanny, for close to one-on-one care at a lower cost.',
       `<h2 class="hub-h2">${F('How to set it up')}</h2>` + hubIconSteps([
@@ -244,44 +244,54 @@
         ['thermo', 'One child is sick', 'Agree up front whether the share goes ahead, and at whose home.'],
         ['hand', 'A family leaves', 'Agree how much notice each family gives, so the nanny isn’t left short.']],
         'Agree up front what happens when one baby is sick, and how much notice a family gives before leaving.')
-      + good([['notepad', 'Two employers', 'Each family pays its share, and its own taxes.'], ['clock', 'Schedules change', 'Check in every few months as naps and needs shift.']]), 'hand');
+      + good([['coin', 'Two employers', 'Each family pays its share, and its own taxes.'], ['clock', 'Schedules change', 'Check in every few months as naps and needs shift.']]), 'hand');
 
     if (id === 'fit') {
       const f = load('ahead-childcare-fit', {}), done = FIT_Q.every(([q]) => f[q]), top = done ? fitResults(f) : [];
       const qs = FIT_Q.map(([q, label, opts]) => `<section class="hub-card cc-sec"><b class="cc-sec-title">${F(label)}</b><div class="cc-chips">${opts.map(o => `<button class="cc-chip${f[q] === o ? ' is-on' : ''}" aria-pressed="${f[q] === o}" onclick="ccFit('${q}','${o.replace(/'/g, '\\\'')}')">${F(o)}</button>`).join('')}</div></section>`).join('');
-      const res = done ? `<h2 class="hub-h2">${F('Worth looking at first')}</h2><div class="oa-places">${top.map(k => { const c = PAL[k === 'share' ? 'nanny' : k], nm = k === 'share' ? 'Nanny share' : TYPES[k].name; return `<button class="oa-place" style="--oa-bg:${c[0]};--oa-ink:${c[1]}" onclick="openPage('chg:${CAT}:d:${k}')"><span class="oa-place-art">${SHAPE[k === 'share' ? 'nanny' : k](c)}</span><b>${F(nm)}</b><small>${F(WHY[k])}</small></button>`; }).join('')}</div>` : '';
+      const res = done ? `<h2 class="hub-h2">${F('Worth looking at first')}</h2><div class="oa-places">${top.map(k => { const c = PAL[k === 'share' ? 'nanny' : k], nm = k === 'share' ? 'Nanny share' : TYPES[k].name; return `<button class="oa-place" style="--oa-bg:${c[0]};--oa-ink:${c[1]}" onclick="openPage('chg:${CAT}:d:${k}')"><span class="oa-place-art">${SHAPE[k === 'share' ? 'nanny' : k](c)}</span><b>${F(nm)}</b><small>${F(WHY[k])}</small></button>`; }).join('')}</div>`
+        // A next step: the top match, step by step, and a way back to the plan.
+        + (() => { const k = top[0], tk = k === 'share' ? 'nanny' : k, nm = k === 'share' ? 'Nanny share' : TYPES[k].name; return `<button class="hub-button cc-quiz-next" onclick="openPage('chg:${CAT}:d:${tk}')">${F(`Next: ${nm}, step by step`)} ›</button><button class="hub-link cc-back-plan" onclick="openPage('chg:${CAT}:d:plan')">${F('Back to your plan')} ›</button>`; })() : '';
       return sub('fit', 'Kinds of care', 'Which care fits us?', 'Four quick taps. There’s no wrong answer, and many families end up with a mix.',
-        qs + (res || `<p class="cc-lead cc-fit-wait">${F('Your matches show up here once you’ve answered all four.')}</p>`));
+        qs + (res || `<p class="cc-lead cc-fit-wait">${F(`${FIT_Q.filter(([q]) => f[q]).length} of 4 answered. Your matches show up here once you’ve answered all four.`)}</p>`));
     }
 
     if (id === 'start') return sub('start', 'Once care starts', 'Settle in', 'The first months are about building trust, on both sides.',
       tl('Plan the first months', [
         ['The first week', 'clock', 'Short days, and a quick chat at pickup.'],
         ['After a month', 'chat', 'A proper check-in about what’s working.'],
-        ['Every few months', 'notepad', 'Update Maya’s care card.']],
-        'In the first week, short days and a chat at pickup. After a month, a proper check-in. Every few months, update the care card.')
-      + picSteps('Signs it’s going well', [
-        ['smile', '{S} {seem|seems} settled', 'Content at pickup, even if drop-off has tears.'],
-        ['notepad', 'You hear about the day', 'Feeds, naps and diapers, without having to ask.'],
-        ['chat', 'Problems come to you', 'The caregiver tells you about small things, not just good news.'],
-        ['home', 'You’re welcome anytime', 'You can call or drop in without it being a big deal.']],
-        'The baby seems settled at pickup, you hear about the day, the caregiver tells you about problems, and you are welcome anytime.')
+        ['Every few months', 'notepad', 'Update Maya’s care card.'],
+        ...(m >= 9 ? [['Around 12–18 months', 'home', 'Many centers move babies up to the toddler room. Ask for a few short visits first.']] : [])],
+        'In the first week, short days and a chat at pickup. After a month, a proper check-in. Every few months, update the care card.' + (m >= 9 ? ' Around 12 to 18 months, many centers move babies up to the toddler room.' : ''))
+      + rows('Each day', [
+        ['bag', 'At drop-off', 'Say how the night went and when {s} last ate'],
+        ['eye', 'At pickup', 'Look over the day’s notes: feeds, naps and diapers'],
+        ['moon', 'Short naps at care?', 'An earlier bedtime that night helps']])
+      + H().versus('Sick days: care or home?', ['Usually fine to go', 'A runny nose, if {s} {are|is} eating and playing as usual.'],
+        ['Usually a day at home', m < 3 ? 'Any fever: call your pediatrician first. And after vomiting or diarrhea.' : 'Until 24 hours without a fever, and without fever medicine. And after vomiting or diarrhea.'])
+      + H().note('Every place has its own sick policy. Ask for it in writing.')
+      + `<h2 class="hub-h2">${F('Signs it’s going well')}</h2>` + H().tips(['{S} {seem|seems} settled at pickup, even if drop-off has tears.', 'The caregiver tells you about small problems, not just good news.', 'You can call or drop in anytime.'])
       + picSteps('When things don’t go to plan', [
-        ['chat', 'Something small bothers you', 'Bring it up early and kindly. Most things are easy to fix.'],
-        ['heart', 'Harder drop-offs', 'Common from around 8 months, as {s} {learn|learns} to miss you. A short, warm goodbye helps.'],
-        ['shield', 'A real worry', 'Unexplained injuries or unsafe sleep. Keep {o} home and speak up right away. For licensed care, you can also report it on your state’s child care website.']],
-        'Bring small things up early. Harder drop-offs from around 8 months are common. Act right away on real safety worries.')
-      + good([['hand', 'If you have a nanny', 'Agree on paid time off up front, and check in on pay once a year.']]), 'heart');
-
-    if (id === 'help') return sub('help', 'Kinds of care', 'Extra help at home', 'Help in the early months isn’t only for when you go back to work.',
-      picSteps('Kinds of help', [
-        ['heart', 'A postpartum doula', 'Help with feeding, rest and recovery in the first weeks.'],
-        ['moon', 'Overnight help', 'A newborn care specialist looks after nights so you can sleep.'],
-        ['home', 'Family and friends', 'Ask for something specific: a meal, laundry, an hour with {o}.'],
-        ['clock', 'A sitter for a break', 'A few hours to rest, see a friend or get out.', go('sitter')]],
-        'A postpartum doula helps with feeding and recovery. Overnight help covers nights. Family and friends can help with specific tasks. A sitter gives you a break.')
-      + rows('Where to look', [['heart', 'Other parents', 'Ask who helped them, and what it was like'], ['steth', 'Your hospital or pediatrician’s office', 'Many keep lists of local doulas and newborn care specialists'], ['eye', 'Doula directories and agencies', 'Search for postpartum doulas near you']])
-      + good([['coin', 'Insurance may help', 'Some health plans and state Medicaid programs cover doula care. Ask yours.'], ['clock', 'Book early', 'Doulas and overnight help often fill up, so ask a few weeks ahead.'], ['chat', 'Asking is OK', 'Most people want to help. They just need to know how.']]), 'heart');
+        ['smile', 'Something small', 'Bring it up early and kindly.'],
+        ['heart', 'Harder drop-offs', 'Common from 8 months. Keep goodbyes short and warm.'],
+        ['shield', 'A real worry', 'Injuries or unsafe sleep: keep {o} home and speak up.']],
+        'Bring small things up early. Harder drop-offs from around 8 months are common, so keep goodbyes short. For injuries or unsafe sleep, keep the baby home and speak up right away.')
+      + good([['thermo', 'Lots of colds at first', 'Common in the first year of care. Line up backup care', go('backup')], ['book', 'A real worry at licensed care?', 'You can also report it on your state’s child care website'], (() => { const ch = typeof chosenNow === 'function' ? chosenNow() : null; return !ch || ch.k === 'nanny' ? ['hand', 'If you have a nanny', 'Agree on paid time off up front, and check in on pay once a year'] : null; })()]), 'heart');
+    // Doulas and help with recovery belong to the first weeks. From 4 months, the same page is about care for the baby.
+    if (id === 'help') { const early = m < 4; return sub('help', 'Kinds of care', 'Extra help at home', early ? 'Help in the early months isn’t only for when you go back to work.' : 'Help at home isn’t only for when you go back to work.',
+      picSteps('Kinds of help', early ? [
+        ['heart', 'A postpartum doula', 'Feeding, rest and recovery in the first weeks.'],
+        ['moon', 'Overnight help', 'A trained night nanny covers nights.'],
+        ['home', 'Family and friends', 'Ask for one thing: a meal, laundry, an hour.'],
+        ['clock', 'A sitter for a break', 'A few hours to rest or get out.', go('sitter')]] : [
+        ['heart', 'A helper while you’re home', 'Someone plays with Maya while you get things done.'],
+        ['moon', 'Overnight help', 'A night nanny looks after Maya, so nights are covered.'],
+        ['home', 'Family and friends', 'An hour or an afternoon with Maya.'],
+        ['clock', 'A sitter', 'A few hours with Maya, now and then.', go('sitter')]],
+        early ? 'A postpartum doula helps with feeding and recovery. Overnight help covers nights. Family and friends can help with specific tasks. A sitter gives you a break.' : 'A helper plays with Maya while you’re home. A night nanny covers nights. Family and friends can spend an hour or an afternoon with Maya. A sitter looks after Maya for a few hours.')
+      + rows('Where to look', early ? [['smile', 'Other parents', 'Ask who helped them, and what it was like'], ['steth', 'Your hospital or pediatrician’s office', 'Many keep lists of local doulas and newborn care specialists'], ['eye', 'Doula directories and agencies', 'Search for postpartum doulas near you']]
+        : [['smile', 'Other parents', 'Ask who helped them, and what it was like'], ['steth', 'Your pediatrician’s office', 'Some keep lists of local nannies and sitters'], ['eye', 'Caregiver websites and agencies', 'Search for part-time or overnight help near you']])
+      + good([early ? ['coin', 'Insurance may help', 'Some insurance and some state health plans cover doula care. Ask yours.'] : null, ['notepad', 'Book early', early ? 'Doulas and overnight help often fill up, so ask a few weeks ahead.' : 'Overnight help often fills up, so ask a few weeks ahead.']]), 'heart'); }
     return null;
   }
 
@@ -345,20 +355,20 @@
     return `<button class="hub-rough-card cc-card-button" onclick="openPage('chg:${CAT}:d:card')"><span class="hub-rough-moon" aria-hidden="true">${hubArt('notepad', CAT)}</span><span class="hub-rough-copy"><b>${F(`${name()}’s care card`)}</b><small>${F(card.saved ? 'Ready to send to any caregiver' : 'Feeds, naps and who to call, ready to share')}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`;
   }
   function childcare() {
-    const card = load('ahead-carecard', {}), list = shortlist(), n = NOW_CARD.plan;
+    const card = load('ahead-carecard', {}), list = shortlist(), n = NOW_CARD.plan, am = typeof actualMonth === 'function' ? actualMonth() : 0, fd0 = feedNow(), bm0 = fd0 !== 'Formula', fm0 = fd0 !== 'Breast milk';
     // The same shape as Outings: one card to start, the kinds of care as tiles, the care card, then one list
     // for setting care up, in the order you meet it. No step rail: the app can't know where a family is.
     let b = `<header class="hub-hero cc-hero"><p class="hub-eyebrow">${F('Find care')}</p><h1>${F(n[0])}</h1><p class="hub-lead">${F(n[1])}</p><button class="cc-hero-go" onclick="openPage('chg:${CAT}:d:plan')">${F(n[2])} ›</button></header>`;
-    const kinds = [['center'], ['home'], ['nanny'], ['family'], ['sitter', 'For a night out, or a break'], ['help', 'A doula or overnight help, early on', 'Extra help at home']];
+    const kinds = [['center'], ['home'], ['nanny'], ['family'], ['sitter', 'For a night out, or a break'], ['help', am < 4 ? 'A doula or overnight help, early on' : 'A helper while you’re home, or at night', 'Extra help at home']];
     b += `<h2 class="hub-h2">${F('What kind of care?')}</h2><div class="oa-places">${kinds.map(([k, short, title]) => { const t = TYPES[k] || {}, c = PAL[k], m = (list[k] || []).length;
       return `<button class="oa-place" style="--oa-bg:${c[0]};--oa-ink:${c[1]}" onclick="openPage('chg:${CAT}:d:${k}')"><span class="oa-place-art">${SHAPE[k](c)}</span><b>${F(title || t.name)}</b><small>${F(m ? `${m} on your shortlist` : short || t.short)}</small></button>`; }).join('')}</div>`
       + `<button class="hub-link cc-quiz-link" onclick="openPage('chg:${CAT}:d:fit')">${F('Not sure which? Take the quick quiz')} ›</button>`;
     b += careCardButton(card);
     b += `<h2 class="hub-h2">${F('Setting it up')}</h2><div class="hub-list">`
       + homeRow('pay', 'coin', 'Paying for care', 'Help from your state, work and taxes', 'pay')
-      + homeRow('ready', 'bag', 'Get ready for day one', 'A practice day first, and what to send', 'ready')
+      + homeRow('ready', 'bag', 'Get ready for day one', `A practice day first, and packing ${bm0 && fm0 ? 'milk and formula' : bm0 ? 'pumped milk' : 'formula'}`, 'ready')
       + homeRow('backup', 'shield', 'When care falls through', 'Sick days, closed days, a caregiver who quits', 'backup')
-      + homeRow('start', 'heart', 'Settle in', 'The first months, and when to speak up', 'start') + `</div>`;
+      + homeRow('start', 'heart', 'Settle in', am >= 9 ? 'Each day, sick days and moving up a room' : am >= 7 ? 'Each day, sick days and harder goodbyes' : 'Each day, sick days and when to speak up', 'start') + `</div>`;
     return frame(b);
   }
 
@@ -416,12 +426,12 @@
       + (ed ? `<div class="cc-q-add"><input id="ccNewQ" placeholder="${esc3('Add your own question')}" autocomplete="off" onkeydown="if(event.key==='Enter')ccQAdd('${k}')"><button onclick="ccQAdd('${k}')">${F('Add')}</button></div>${changed ? `<button class="cc-q-reset" onclick="ccQReset('${k}')">${F('Bring back our questions')}</button>` : ''}` : '') + `</div>`;
     const shortRows = mine.map(c => h.row({ icon: t.icon, cat: CAT, title: esc3(c.name || 'Unnamed'), sub: c.chosen ? F(t.talk ? 'Helping' : 'Chosen') : `${(c.checks || []).filter(x => Q.some(y => y.key === x)).length} of ${Q.length} ${t.talk ? 'talked through' : 'checked'}${c.notes ? ' · has notes' : ''}`, onclick: `openPage('chg:${CAT}:d:cand-${k}-${c.id}')` }));
     return sub(k, 'Kinds of care', t.name, t.lead,
-      `<section class="hub-card cc-fit"><div><b>${F('A good fit if')}</b><p>${F(t.good)}</p></div><div><b>${F('Keep in mind')}</b><p>${F(t.mind)}</p></div><div class="cc-when"><span class="cc-when-art">${hubArt('clock', CAT)}</span><div><small>${F(t.talk ? 'When to ask' : 'When to start looking')}</small><b>${F(t.when[0])}</b><p>${F(t.when[1])}</p></div></div></section>`
+      `<section class="hub-card cc-fit"><div><b>${F('A good fit if')}</b><p>${F(t.good)}</p></div><div><b>${F('Keep in mind')}</b><p>${F(t.mind)}</p></div><div class="cc-when"><span class="cc-when-art">${hubArt('idea', CAT)}</span><div><small>${F(t.talk ? 'When to ask' : 'When to start looking')}</small><b>${F(t.when[0])}</b><p>${F(t.when[1])}</p></div></div></section>`
       + (k === 'center' && typeof profile !== 'undefined' && profile.early ? h.tip('Born early?', 'Ask your pediatrician when group care makes sense for {o}.') : '')
       + (WHERE[k] ? rows('Where to look', WHERE[k]) : '')
       + (k === 'family' ? rows('Before you agree', [['clock', 'The hours', 'Can they do your hours, week after week?'], ['chat', 'Speaking up', 'Could you tell them if you’d like something done differently?'], ['heart', 'A trial week', 'Try it first. It’s OK to say thank you, and choose something else.']]) : '')
       + (k === 'sitter' || k === 'family' ? careCardButton(load('ahead-carecard', {})) : '')
-      + (k === 'nanny' ? rows('', [['heart', 'Sharing a nanny', 'Finding a family, and what to agree up front', go('share')]]) : '')
+      + (k === 'nanny' ? rows('', [['hand', 'Sharing a nanny', 'Finding a family, and what to agree up front', go('share')]]) : '')
       + `<div class="cc-qhead"><h2 class="hub-h2">${F(t.talk ? 'Things to talk through' : t.who === 'place' ? 'Checking a place' : 'Finding the right person')}</h2></div>` + qs
       + `<h2 class="hub-h2">${F(t.talk ? 'Who’s helping' : 'Your shortlist')}</h2>`
       + (mine.length ? h.list('', shortRows) + (mine.some(c => c.chosen) ? rows('', [['bag', 'Get ready for day one', 'Easing in, and what to send', go('ready')]]) : '') : `<p class="cc-lead">${F(t.talk ? `Add each person who’ll help, and tick off what you’ve talked through.` : `Add each ${noun} you’re considering. The steps above become a checklist for each one, with space for notes.`)}</p>`)
@@ -488,7 +498,8 @@
   window.ccText = (k, v) => { const c = card(); c[k] = v; save('ahead-carecard', c); };
   window.ccCardMode = function (mode) { const c = card(); c.saved = mode === 'view'; save('ahead-carecard', c); scrollTo(0, 0); render(); };
   const chips = (k, multi, c) => `<div class="cc-chips">${OPT[k].map(v => { const on = multi ? (c[k] || []).includes(v) : c[k] === v; return `<button class="cc-chip${on ? ' is-on' : ''}" aria-pressed="${on}" onclick="ccPick('${k}','${v.replace(/'/g, '\\\'')}',${multi})">${F(v === 'On their own' ? 'On {p} own' : v)}</button>`; }).join('')}</div>`;
-  const input = (k, label, c, type = 'text') => `<label class="cc-field"><span>${F(label)}</span><input type="${type}" value="${esc3(c[k])}" oninput="ccText('${k}', this.value)" autocomplete="off"></label>`;
+  const input = (k, label, c, type = 'text') => `<label class="cc-field"><span>${F(label)}</span><input type="${type}" ${type === 'tel' ? 'inputmode="tel" onblur="ccPhoneCheck(this)"' : ''} value="${esc3(c[k])}" oninput="ccText('${k}', this.value)" autocomplete="off">${type === 'tel' ? `<small class="cc-field-warn" hidden>${F('That doesn’t look like a phone number.')}</small>` : ''}</label>`;
+  window.ccPhoneCheck = el => { const w = el.parentElement.querySelector('.cc-field-warn'); if (w) w.hidden = !el.value || /^[\d\s()+.\-]{7,}$/.test(el.value.trim()); };
   // What the caregiver sees, in plain sentences.
   function cardLines(c) {
     const P = babyPronouns(), L = [];
@@ -501,8 +512,9 @@
     if (c.bedtime) L.push(['Bedtime', clock(c.bedtime)]);
     if ((c.calm || []).length) L.push(['What helps', c.calm.map((x, i) => i ? x.toLowerCase() : x).join(', ')]);
     if (c.allergy) L.push(['Allergies and medicines', c.allergy === 'Yes' ? (c.allergyText || 'Yes, ask us') : 'None known']);
+    if (c.pName || c.pPhone) L.push(['Parent', [c.pName, c.pPhone].filter(Boolean).join(' · ')]);
     if (c.docName || c.docPhone) L.push(['Pediatrician', [c.docName, c.docPhone].filter(Boolean).join(' · ')]);
-    [[c.c1Name, c.c1Phone], [c.c2Name, c.c2Phone]].filter(([n, p]) => n || p).forEach(([n, p], i) => L.push([i ? 'Or' : 'Call us', [n, p].filter(Boolean).join(' · ')]));
+    [[c.c1Name, c.c1Phone], [c.c2Name, c.c2Phone]].filter(([n, p]) => n || p).forEach(([n, p], i) => L.push([i ? 'Or' : 'Backup', [n, p].filter(Boolean).join(' · ')]));
     if (c.other) L.push(['Also', c.other]);
     return L;
   }
@@ -521,12 +533,13 @@
     return sub('card', 'Care card', `${nm}’s care card`, 'Tap what fits. It takes about a minute, and you can share it with any caregiver.',
       sec('Feeding', chips('milk', false, c) + `<p class="cc-q-label">${F('How often')}</p>` + chips('often', false, c) + (bottles ? `<p class="cc-q-label">${F('Per bottle')}</p>` + chips('oz', false, c) : '') + (typeof actualMonth === 'function' && actualMonth() >= 5 ? `<p class="cc-q-label">${F('Solids')}</p>` + chips('solids', false, c) : ''))
       + sec('Sleep', `<p class="cc-q-label">${F('Naps a day')}</p>` + chips('naps', false, c)
-        + (c.naps ? `<p class="cc-q-label">${F('Usual nap times')}</p><div class="cc-times">${Array.from({ length: c.naps === '4 or more' ? 4 : Number(c.naps) }, (_, i) => `<label><span>${F(['First', 'Second', 'Third', 'Fourth'][i])}</span><input type="time" value="${esc3((c.napTimes || [])[i])}" onchange="ccNapTime(${i}, this.value)"></label>`).join('')}</div>` : '')
+        // Always four time boxes, so picking a number of naps never pushes the rest of the form down. Unused ones stay faded.
+        + (() => { const n = c.naps === '4 or more' ? 4 : Number(c.naps) || 0; return `<p class="cc-q-label">${F('Usual nap times')}</p><div class="cc-times cc-nap-times">${[0, 1, 2, 3].map(i => `<label class="${i < n ? '' : 'is-off'}"><span>${F(['First', 'Second', 'Third', 'Fourth'][i])}</span><input type="time" value="${esc3((c.napTimes || [])[i])}" onchange="ccNapTime(${i}, this.value)" ${i < n ? '' : 'disabled tabindex="-1"'}></label>`).join('')}</div>`; })()
         + `<div class="cc-times"><label><span>${F('Bedtime')}</span><input type="time" value="${esc3(c.bedtime)}" onchange="ccText('bedtime', this.value)"></label></div>`
         + `<p class="cc-q-label">${F('Falls asleep with')}</p>` + chips('asleep', true, c))
       + sec('What helps when {s’s} upset', chips('calm', true, c))
       + sec('Allergies or medicines', chips('allergy', false, c) + (c.allergy === 'Yes' ? input('allergyText', 'Which ones', c) : ''))
-      + sec('Who to call', input('c1Name', 'Name', c) + input('c1Phone', 'Phone', c, 'tel') + input('c2Name', 'Second person (optional)', c) + input('c2Phone', 'Phone', c, 'tel') + input('docName', 'Pediatrician', c) + input('docPhone', 'Pediatrician’s phone', c, 'tel'))
+      + sec('Who to call', input('pName', 'Your name', c) + input('pPhone', 'Your phone', c, 'tel') + input('c1Name', 'Backup person', c) + input('c1Phone', 'Their phone', c, 'tel') + input('c2Name', 'Second backup (optional)', c) + input('c2Phone', 'Their phone', c, 'tel') + input('docName', 'Pediatrician', c) + input('docPhone', 'Pediatrician’s phone', c, 'tel'))
       + sec('Anything else (optional)', `<input class="cc-other" value="${esc3(c.other)}" oninput="ccText('other', this.value)" placeholder="${esc3('For example, likes being sung to')}" autocomplete="off">`)
       + `<p class="cc-always"><b>${F('Always included')}</b>${F(ALWAYS())}</p>`
       + `<div class="cc-actions"><button class="hub-button" onclick="ccCardMode('view')">${F('Save the card')}</button></div>`, 'notepad');
@@ -542,7 +555,7 @@
       milk: c.milk, often: c.often, oz: c.milk ? c.oz : null, solids: c.solids, naps: c.naps,
       times: (c.napTimes || []).slice(0, n).filter(Boolean).map(clock), bed: clock(c.bedtime), asleep: low(c.asleep, `On ${P.p} own`), calm: low(c.calm),
       allergy: c.allergy ? (c.allergy === 'Yes' ? (c.allergyText || 'Yes, please ask us') : 'None known') : null, other: c.other,
-      c: [[c.c1Name, c.c1Phone], [c.c2Name, c.c2Phone]], doc: [c.docName, c.docPhone], a: ALWAYS() };
+      par: (c.pName || c.pPhone) ? [c.pName, c.pPhone] : null, c: [[c.c1Name, c.c1Phone], [c.c2Name, c.c2Phone]], doc: [c.docName, c.docPhone], a: ALWAYS() };
     Object.keys(data).forEach(k => { if (data[k] == null || data[k] === '' || (Array.isArray(data[k]) && !data[k].length)) delete data[k]; });
     return data;
   };
@@ -561,8 +574,9 @@
     if (d.calm) L.push(`If upset, try: ${d.calm.join(', ').toLowerCase()}`);
     if (d.allergy) L.push(`Allergies: ${d.allergy}`);
     if (d.other) L.push(d.other);
+    if (d.par) L.push(`Parent: ${d.par.filter(Boolean).join(' ')}`);
     const calls = (d.c || []).filter(x => x && (x[0] || x[1])).map(x => x.filter(Boolean).join(' '));
-    if (calls.length) L.push(`Call: ${calls.join(' · ')}`);
+    if (calls.length) L.push(`Backup: ${calls.join(' · ')}`);
     if (d.doc && (d.doc[0] || d.doc[1])) L.push(`Pediatrician: ${d.doc.filter(Boolean).join(' ')}`);
     if (d.a) L.push(d.a);
     L.push('', `Full card: ${ccCardLink()}`);
@@ -576,12 +590,13 @@
     if (navigator.share && (!navigator.canShare || navigator.canShare(data))) {
       try { await navigator.share(data); return; } catch (e) { if (e && e.name === 'AbortError') return; }
     }
-    try { await navigator.clipboard.writeText(url); if (done) { done.textContent = F('Link copied. Paste it into a text or email.'); done.hidden = false; } } catch (e) { fallback(); }
+    try { await navigator.clipboard.writeText(url); if (done) { done.textContent = F('Link copied. Paste it into a text or email.'); done.hidden = false; } if (typeof hubToast === 'function') hubToast('Link copied', 'Paste it into a text or email.'); } catch (e) { fallback(); }
   };
   window.ccCopy = async function (btn) {
     const input = btn.previousElementSibling; input.select(); input.setSelectionRange(0, 99999);
     let ok = false; try { await navigator.clipboard.writeText(input.value); ok = true; } catch (e) { try { ok = document.execCommand('copy'); } catch (e2) {} }
     btn.textContent = ok ? 'Copied' : 'Select and copy';
+    if (ok && typeof hubToast === 'function') hubToast('Link copied', 'Paste it into a text or email.');
   };
 
   /* ---------- routes ---------- */

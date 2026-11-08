@@ -6,30 +6,34 @@
   const MONTH = 30.4375 * 864e5;
   const ageNow = () => { const from = profile.early && profile.due ? parse(profile.due) : parse(profile.dob); return (NOW - from) / MONTH; };
   const C = [
-    ['crying', 0.5, 3, 'Sleep', 'heart', 'The crying peak', 'Fussy evenings, at their worst around 6–8 weeks', "__GO__", '2 weeks–3 months'],
+    ['crying', 0.5, 4, 'Sleep', 'heart', 'The crying peak', 'Fussy evenings, at their worst around 6–8 weeks', "__GO__", '2 weeks–4 months'],
     ['smile', 1.5, 2, 'Development', 'smile', 'First smiles', 'Maya starts smiling back when you smile', "__GO__"],
     ['nights', 1.5, 4, 'Sleep', 'moon', 'Longer nights', 'One longer sleep at night, often 4–5 hours', "__GO__"],
-    ['regress', 3, 5, 'Sleep', 'moon', 'The 4-month sleep shift', 'More night waking, for a few weeks', "__GO__"],
-    ['roll', 4, 6, 'Development', 'roll', 'Rolling', 'The swaddle comes off', "__GO__"],
-    ['solids', 6, 6.5, 'Feeding', 'bowl', 'Starting solids', 'Food alongside milk, a few bites at first', "__GO__", 'Around 6 months'],
+    ['regress', 3, 5, 'Sleep', 'moon', 'The sleep regression', 'More night waking, for a few weeks', "__GO__"],
+    ['roll', 4, 6, 'Development', 'roll', 'Rolling', 'Clear the floor, and never leave {o} on a bed or sofa', "__GO__", 'Usually 4–6 months'],
+    ['ready', 4, 6, 'Feeding', 'highchair', 'Ready for solids', 'Watching for the signs, and choosing how to start', "__GO__", '4–6 months'],
+    ['solids', 6, 6.5, 'Feeding', 'bowl', 'First foods', 'Food alongside milk, a few bites at first', "__GO__", 'Around 6 months'],
     ['twonaps', 6, 9, 'Sleep', 'sun', 'Three naps become two', 'Two naps a day, and an earlier bedtime', "__GO__"],
     ['crawl', 6, 10, 'Development', 'crawl', 'Crawling', 'Maya can get around, so babyproof first', "__GO__"],
     ['sit', 6, 9, 'Development', 'sit', 'Sitting up', 'Maya sits up without your help', "__GO__"],
     ['tooth', 6, 12, 'Daily rhythm', 'tooth', 'The first tooth', 'Time to start brushing', "__GO__"],
-    ['finger', 7, 9, 'Feeding', 'bowl', 'Textures and finger foods', 'Lumpier food, and pieces to pick up', "__GO__"],
-    ['carseat', 9, 12, 'Out and about', 'car', 'A bigger car seat', 'Most outgrow the infant seat by height', "__GO__", 'Often in the first year'],
+    ['finger', 7, 9, 'Feeding', 'bowl', 'Thicker textures', 'Lumpier food, and pieces to pick up', "__GO__"],
+    ['meals', 9, 10, 'Feeding', 'plate', 'Three meals a day', 'Soft pieces of family food, three times a day', "__GO__", 'Around 9 months'],
+    ['carseat', 9, 12, 'Out and about', 'car', 'Outgrowing the infant car seat', 'Most outgrow the infant seat by height', "__GO__", 'When {p} head nears the top of the seat'],
     ['sep', 8, 10, 'Development', 'heart', 'Separation anxiety', 'Goodbyes and bedtime can get harder', "__GO__"],
     ['pull', 9, 12, 'Development', 'stand', 'Pulling up to stand', 'Maya stands holding furniture, so anchor it', "__GO__"],
     ['words', 10, 14, 'Development', 'chat', 'First words', 'Often “mama” or “dada” for a parent', "__GO__"],
-    ['milk', 12, 12.5, 'Feeding', 'cup', 'Milk at 12 months', 'Whole milk from a cup can replace formula', "__GO__", 'At 12 months'],
+    ['milk', 12, 12.5, 'Feeding', 'cup', 'Switching to whole milk', 'Whole milk from a cup can replace formula', "__GO__", 'At 12 months'],
     ['steps', 12, 15, 'Development', 'stand', 'First steps', 'Walking holding on, then on {p} own', "__GO__"]
-  ].map(([id, start, end, cat, icon, title, why, go, range]) => ({ id, start, end, cat, icon, title, why, go: `openPage('chg:Timeline:c:${id}')`, range: range || `${start}–${end} months` }));
-  const CHECKUPS = [2, 4, 6, 9, 12];
+  ].map(([id, start, end, cat, icon, title, why, go, range]) => ({ id, start, end, cat, icon, title, why, go: ({ ready: "openPage('chg:Feeding:mock:dirD:2')", meals: "openPage('chg:Feeding:mock:dirD:4')" })[id] || `openPage('chg:Timeline:c:${id}')`, range: range || `${start}–${end} months` }));
+  const CHECKUPS = [1, 2, 4, 6, 9, 12];   // the same well visits Health shows (after the first-week visit)
+  // One line per checkup, the same as Health's checkups list.
+  const CHECK_LINE = { 1: 'Growth, feeding and how you’re doing', 2: 'The first main round of vaccines', 4: 'Movement, feeding and sleep questions, and vaccines', 6: 'First foods and teeth, and vaccines', 9: 'A development check, growth and catch-up vaccines', 12: 'Anemia and lead checks, milk and cups, and vaccines' };
   const TOUCH = {
     smile: 'More face-to-face time, and play starts to feel like a conversation.',
     nights: 'A longer stretch at night, and a good time to start a bedtime routine.',
     regress: 'More night waking for a few weeks, so protect your own rest too.',
-    roll: 'The swaddle comes off, beds and sofas are off-limits, and the floor needs clearing.',
+    roll: 'Beds and sofas are off-limits, and the floor needs clearing.',
     sit: 'The crib mattress goes lower, and the bouncer’s days are numbered.',
     twonaps: 'Bedtime moves earlier, and there’s more time for outings between naps.',
     tooth: 'Brushing starts, and sore gums can mean fussier days.',
@@ -51,9 +55,13 @@
   const soon = (c, a) => c.start <= a ? 'Could happen any time now' : c.start <= a + 1 ? 'Could start any week now' : `In about ${Math.round(c.start - a)} month${Math.round(c.start - a) === 1 ? '' : 's'}`;
 
   // The baby's reported changes, so a change they've already told us about drops behind them.
-  const doneNow = () => { const an = typeof answers !== 'undefined' ? answers : {}; return { roll: typeof rolled === 'function' && rolled(), solids: an.solids === 'Yes', crawl: an.crawl === 'Yes', pull: an.pullUp === 'Yes', tooth: an.hasTooth === 'Yes', twonaps: an.twoNaps === 'Yes' }; };
+  const doneNow = () => { const an = typeof answers !== 'undefined' ? answers : {};
+    // Stages the baby is already past (from the category pages) count as behind too, so the Timeline agrees with them.
+    const st = cat => { try { return chgStageIndex(cat); } catch (e) { return -1; } }, sl = st('Sleep'), fg = (() => { try { return feedGroup(st('Feeding')); } catch (e) { return -1; } })();
+    const own = (() => { try { return (journeyData().records || []).filter(r => r.type === 'milestone').map(r => String(r.title || '').toLowerCase()).join(' | '); } catch (e) { return ''; } })(), saw = re => re.test(own);
+    return { smile: saw(/smil/), sit: saw(/\bsat\b|sits|sitting/), words: saw(/word|mama|dada/), steps: saw(/step|walk/), roll: saw(/roll/) || (typeof rolled === 'function' && rolled()) || an.roll === 'Yes' || ['Tummy to back', 'Back to tummy', 'Both ways'].includes(an.rollDirection), solids: an.solids === 'Yes' || fg >= 3, ready: fg >= 3, meals: fg >= 4, finger: fg >= 4, crawl: an.crawl === 'Yes' || saw(/crawl/), pull: an.pullUp === 'Yes' || saw(/pull|stand/), tooth: an.hasTooth === 'Yes' || saw(/tooth/), twonaps: an.twoNaps === 'Yes' || sl >= 3, nights: sl >= 2 }; };
   const ageLabel = a => { const m = Math.floor(a), w = Math.floor((a - m) * 4.35); return m === 0 ? `${Math.max(1, w)} week${w === 1 ? '' : 's'}` : `${m} month${m === 1 ? '' : 's'}${w ? `, ${w} week${w === 1 ? '' : 's'}` : ''}`; };
-  const whenShort = (c, a) => c.start <= a ? 'any time now' : c.start <= a + 1 ? 'any week now' : `in about ${Math.round(c.start - a)} month${Math.round(c.start - a) === 1 ? '' : 's'}`;
+  const whenShort = (c, a) => c.id === 'crying' && a >= 2 ? 'easing now' : c.id === 'crawl' && c.end - a <= 1 ? 'some babies skip it' : c.start <= a ? 'any time now' : c.start <= a + 1 ? 'any week now' : `in about ${Math.round(c.start - a)} month${Math.round(c.start - a) === 1 ? '' : 's'}`;
   // A small bar under each next change: its usual window, and where the baby is today.
   const windowBar = (c, a) => { const p = PAGES[c.id]; if (!p) return ''; const [from, to, zs, ze] = p.bar, pct = v => Math.max(0, Math.min(100, (v - from) / (to - from) * 100)); return `<span class="ya-bar" aria-hidden="true"><i style="left:${pct(zs)}%;width:${pct(ze) - pct(zs)}%"></i>${a >= from && a <= to ? `<u style="left:${pct(a)}%"></u>` : ''}</span>`; };
   // Home uses this to open a change's page only while the change is still ahead.
@@ -64,23 +72,46 @@
      Changes behind the baby fold into one quiet line above. Every change opens its read-ahead page. */
   window.nextPage = function () {
     const a = ageNow(), nm = name(), done = doneNow();
-    const ahead = C.filter(c => c.end > a && !done[c.id]).sort((x, y) => x.start - y.start), next = ahead.slice(0, 3), later = ahead.slice(3);
-    const behind = C.filter(c => c.end <= a || done[c.id]).sort((x, y) => x.start - y.start);
-    const born = parse(profile.dob), monthDate = m => { const d = new Date(born); d.setMonth(d.getMonth() + m); return d.toLocaleDateString('en-US', { month: 'long' }); };
+    // Born early, with Development on birthday age: its rows sit by birthday age (shifted onto this adjusted-age path).
+    // Safety has its own switch, so its rows shift the same way when it follows the birthday.
+    const bday = g => !!(profile.early && profile.due) && typeof hubAgeFor === 'function' && hubAgeFor(g, actualMonth()) === actualMonth() && hubAgeFor('care', actualMonth()) !== actualMonth();
+    const gap0 = profile.early && profile.due ? Math.max(0, (parse(profile.due) - parse(profile.dob)) / MONTH) : 0;
+    const shiftFor = cat => (cat === 'Development' && bday('dev')) || (cat === 'Safety' && bday('safety')) ? gap0 : 0;
+    const CC = C.map(c => shiftFor(c.cat) ? Object.assign({}, c, { start: c.start - shiftFor(c.cat), end: c.end - shiftFor(c.cat) }) : c);
+    const ahead = CC.filter(c => c.end > a && !done[c.id]).sort((x, y) => x.start - y.start || x.end - y.end), next = ahead.slice(0, 3), later = ahead.slice(3);
+    const behind = CC.filter(c => c.end <= a || done[c.id]).sort((x, y) => x.start - y.start || x.end - y.end);
+    // Ages here follow adjusted age for a baby born early, so dates count from the due date to match.
+    // Checkups follow the birthday, so each sits at the adjusted month it falls in.
+    const early = !!(profile.early && profile.due), born = parse(early ? profile.due : profile.dob), gap = early ? Math.max(0, (parse(profile.due) - parse(profile.dob)) / MONTH) : 0;
+    const monthDate = m => { const d = new Date(born); d.setMonth(d.getMonth() + m); return d.toLocaleDateString('en-US', { month: 'long' }); };
     const label = m => m >= 12 ? '1 year' : `${m} months`;
     const node = '<span class="ya-node" aria-hidden="true"></span>', chev = '<span class="hub-chev" aria-hidden="true">›</span>';
-    let h = `<div class="ya-page ya-pathpage"><div class="eyebrow ya-eyebrow">${F(`${nm}’s year ahead`)}</div><h1>${F('Timeline')}</h1><p class="next-lead">${F(`Where ${nm} is now, and the big changes ahead. Tap any to read ahead.`)}</p><ol class="ya-path">`;
-    if (behind.length) h += `<li class="ya-behind">${node}<button onclick="this.parentNode.classList.toggle('is-open')" aria-expanded="false">${F(`Behind ${nm}: ${behind.length} ${behind.length === 1 ? 'change' : 'changes'}`)} <span aria-hidden="true">›</span></button><div class="ya-behind-list">${behind.map(c => `<button style="${yearTheme(c.cat)}" onclick="${c.go}"><span>${hubArt(c.icon, c.cat)}</span>${F(c.title)}</button>`).join('')}</div></li>`;
-    h += `<li class="ya-here">${node}<b>${F(`${nm} now`)}</b><small>${F(ageLabel(a))}</small></li>`;
-    h += next.map(c => `<li class="ya-row is-next" style="${yearTheme(c.cat)}">${node}<button onclick="${c.go}"><span class="ya-row-art">${hubArt(c.icon, c.cat)}</span><span class="ya-row-copy"><small class="ya-when">${F(range(c))} · ${F(whenShort(c, a))}</small><b>${F(c.title)}</b><span class="ya-why">${F(c.why)}</span>${windowBar(c, a)}</span>${chev}</button></li>`).join('');
+    let h = `<div class="ya-page ya-pathpage"><div class="eyebrow ya-eyebrow">${F(`${nm}’s year ahead`)}</div><h1>${F('Timeline')}</h1><p class="next-lead">${F(`Where ${nm} is now, and the big changes ahead. Tap any to read ahead.`)}${early ? ' ' + F(bday('dev') || bday('safety') ? `Feeding, sleep and care follow ${nm}’s adjusted age. ${bday('dev') && bday('safety') ? 'Development, safety' : bday('dev') ? 'Development' : 'Safety'} and checkups follow {p} birthday.` : `The ages follow ${nm}’s adjusted age. Checkups follow {p} birthday.`) : ''}</p><ol class="ya-path">`;
+    if (behind.length) h += `<li class="ya-behind">${node}<button onclick="this.parentNode.classList.toggle('is-open')" aria-expanded="false">${F(`Earlier on (${behind.length})`)} <span aria-hidden="true">›</span></button><div class="ya-behind-list">${behind.map(c => `<button style="${yearTheme(c.cat)}" onclick="${c.go}"><span>${hubArt(c.icon, c.cat)}</span>${F(c.title)}</button>`).join('')}</div></li>`;
+    h += `<li class="ya-here">${node}<b>${F(`${nm} now`)}</b><small>${F(early ? ageLabel(a) + ' adjusted' : (typeof babyAge === 'function' ? babyAge() : ageLabel(a)))}</small></li>`;
+    h += '%%DUENOW%%';
+    h += next.map(c => `<li class="ya-row is-next" style="${yearTheme(c.cat)}">${node}<button onclick="${c.go}"><span class="ya-row-art">${hubArt(c.icon, c.cat)}</span><span class="ya-row-copy"><small class="ya-when">${F(range(c))} · ${F(whenShort(c, a))}</small><b>${F(c.title)}</b><span class="ya-why">${F(c.id === 'crying' && a >= 2 ? 'Past the worst. Fussy evenings ease over the next few weeks' : c.why)}</span>${windowBar(c, a + shiftFor(c.cat))}</span>${chev}</button></li>`).join('');
     const months = {}; later.forEach(c => { const m = Math.min(12, Math.max(Math.ceil(a), Math.floor(c.start))); (months[m] = months[m] || []).push(c); });
-    CHECKUPS.filter(v => v > a).forEach(v => { months[v] = months[v] || []; });
+    const bm = early ? Math.min(12, Math.max(Math.ceil(a), Math.round(12 - gap))) : null; if (early && 12 > a + gap) months[bm] = months[bm] || [];
+    // A checkup due now (within about 3 weeks) and not marked done stays on the path, beside "now".
+    const attended = v => { try { const r = healthRecord(v); return r && r.status === 'attended'; } catch (e) { return false; } };
+    const checks = {}, dueNow = [];
+    CHECKUPS.filter(v => (v > a + gap || (v > a + gap - 0.75)) && !attended(v)).forEach(v => {
+      // Due now (on or before today's age): it sits with "now", not under next month.
+      if (v - gap <= a + 0.25) { dueNow.push(v); return; }
+      const m = Math.min(12, Math.max(Math.ceil(a), Math.round(v - gap))); (checks[m] = checks[m] || []).push(v); months[m] = months[m] || []; });
+    const checkRow = (v, sub) => `<li class="ya-row" style="${yearTheme('Health')}">${node}<button onclick="openPage('health-visit:${v}')"><span class="ya-row-art">${hubArt('steth', 'Health')}</span><span class="ya-row-copy"><b>${F(`${v}-month checkup`)}</b><small>${F(sub)}</small></span>${chev}</button></li>`;
     Object.keys(months).map(Number).sort((x, y) => x - y).forEach(m => {
-      h += `<li class="ya-pin">${node}<b>${F(label(m))}</b> · ${F('around ' + monthDate(m))}</li>`;
+      // Born early: the headings follow adjusted age, so show the month only; "4 months" over a "6-month checkup" reads as a contradiction.
+      // A heading for the month we're in would just repeat "[name] now", so its rows follow on without one.
+      const thisMonth = (() => { const d = new Date(born); d.setMonth(d.getMonth() + m); return d.getFullYear() === NOW.getFullYear() && d.getMonth() === NOW.getMonth(); })();
+      if (!thisMonth) h += early ? `<li class="ya-pin">${node}<b>${F('Around ' + monthDate(m))}</b></li>` : `<li class="ya-pin">${node}<b>${F(label(m))}</b> · ${F('around ' + monthDate(m))}</li>`;
       h += months[m].map(c => `<li class="ya-row" style="${yearTheme(c.cat)}">${node}<button onclick="${c.go}"><span class="ya-row-art">${hubArt(c.icon, c.cat)}</span><span class="ya-row-copy"><b>${F(c.title)}</b><small>${F(range(c))}</small></span>${chev}</button></li>`).join('');
-      if (CHECKUPS.includes(m) && m > a) h += `<li class="ya-row" style="${yearTheme('Health')}">${node}<button onclick="openPage('health-visit:${m}')"><span class="ya-row-art">${hubArt('steth', 'Health')}</span><span class="ya-row-copy"><b>${F(`${m}-month checkup`)}</b><small>${F('Growth, development and vaccines')}</small></span>${chev}</button></li>`;
+      h += (checks[m] || []).map(v => checkRow(v, gap ? 'By birthday age · ' + CHECK_LINE[v].charAt(0).toLowerCase() + CHECK_LINE[v].slice(1) : CHECK_LINE[v])).join('');
+      if (early && m === bm && 12 > a + gap) h += `<li class="ya-pin">${node}<b>${F('First birthday')}</b></li>`;
     });
-    h += `<li class="ya-pin ya-end">${node}<b>${F('First birthday')}</b></li></ol><p class="hub-foot">${F('Ages are typical. Every baby moves at their own pace.')}</p></div>`;
+    h += `<li class="ya-pin ya-end">${node}<b>${F(early ? 'A year, by adjusted age' : 'First birthday')}</b></li></ol><p class="hub-foot">${F('Ages are typical. Every baby moves at their own pace.')}</p></div>`;
+    h = h.replace('%%DUENOW%%', dueNow.map(v => checkRow(v, 'Due now · ' + (gap ? 'by birthday age · ' : '') + CHECK_LINE[v].charAt(0).toLowerCase() + CHECK_LINE[v].slice(1))).join(''));
     return h;
   };
 
@@ -104,10 +135,10 @@
       rows: [['sun', 'Sleep', 'Help {o} tell day from night', 'Bright days, dim and quiet nights', "openPage('chg:Sleep:d:daynight')"], ['book', 'Sleep', 'Start a short bedtime routine', 'From about 6–8 weeks', "openPage('chg:Sleep:d:routine')"], ['moon', 'Sleep', 'How long {s} can sleep at night', 'The longest stretch grows over months', "openPage('chg:Sleep:d:stretch')"]],
       tip: ['Still waking every 2–3 hours?', 'That’s normal for many babies this age, especially breastfed babies. Stretches grow over months, not nights.'] },
     regress: { lead: 'Around 4 months, sleep cycles mature, and many babies wake more for a few weeks. It’s a step forward, not backward.', bar: [1, 7, 3, 5, 'Often here'], signs: ['More night waking than a few weeks ago', 'Naps of 30–45 minutes', 'Harder to put down asleep'],
-      rows: [['moon', 'Sleep', 'What helps during the regression', 'Wait a minute before going in', "openPage('chg:Sleep:d:regress')"], ['moon', 'Sleep', 'Rough night? Quick fixes', 'Waking a lot, short naps, up too early', "openPage('chg:Sleep:d:rough')"], ['heart', 'Health', 'Looking after you', 'Broken sleep is hard. Your rest matters too', "openPage('chg:Health:d:you')"]],
+      rows: [['moon', 'Sleep', 'What helps during the regression', 'Wait a minute before going in', "openPage('chg:Sleep:d:regress')"], ['moon', 'Sleep', 'Rough day or night? Quick fixes', 'Waking a lot, short naps, up too early', "openPage('chg:Sleep:d:rough')"], ['heart', 'Health', 'Looking after you', 'Broken sleep is hard. Your rest matters too', "openPage('chg:Health:d:you')"]],
       tip: ['Waking with a fever, poor feeding or pain?', 'That’s not the regression. Call your pediatrician.'] },
-    roll: { lead: 'Most babies roll between 4 and 6 months, and some try as early as 2 months. Rolling changes how {s} sleeps and where {s} can go.', bar: [2, 8, 4, 6, 'Rolling'], signs: ['Rocking side to side on {p} back', 'Pushing up on straight arms in tummy time', 'Rolling onto {p} side'],
-      rows: [['sack', 'Sleep', 'Stop swaddling at the first try to roll', 'Then a sleep sack, arms free', "openPage('chg:Sleep:d:swaddleoff')"], ['coin', 'Safety', 'Clear the floor where {s} plays', 'Small things go straight in the mouth', "openPage('chg:Safety:d:step:small')"], ['shield', 'Safety', 'Beds and sofas are off-limits', 'Even for a second', "openPage('safety-stage:reaching')"], ['mat', 'Development', 'Tummy time to practice', 'A toy just to one side helps', "openPage('development-domain:6:Movement')"]],
+    roll: { lead: 'Rolling usually starts at 4–6 months. It changes how {s} sleeps and where {s} can go.', bar: [2, 8, 4, 6, 'Rolling'], signs: ['Rocking side to side on {p} back', 'Pushing up on straight arms in tummy time', 'Rolling onto {p} side'],
+      rows: [['sack', 'Sleep', 'Stop swaddling at the first signs of trying to roll', 'Then a sleep sack, arms free', "openPage('chg:Sleep:d:swaddleoff')"], ['coin', 'Safety', 'Clear the floor where {s} plays', 'Small things go straight in the mouth', "openPage('chg:Safety:d:step:small')"], ['shield', 'Safety', 'Beds and sofas are off-limits', 'Even for a second', "openPage('safety-stage:reaching')"], ['mat', 'Development', 'Tummy time to practice', 'A toy just to one side helps', "openPage('development-domain:6:Movement')"]],
       tip: ['Rolled onto {p} tummy in sleep?', 'Always put {o} down on {p} back. Once {s} rolls both ways on {p} own, {s} can stay how {s} lands.'] },
     sit: { lead: 'Most babies sit on their own by about 9 months. First comes sitting propped on their hands.', bar: [4, 12, 6, 9, 'Sitting up'], signs: ['Sitting propped on {p} hands', 'A steady head and back', 'Reaching for toys while sitting'],
       rows: [['crib', 'Sleep', 'Lower the crib mattress', 'Before {s} can sit on {p} own', "openPage('chg:Sleep:d:mattress')"], ['mat', 'Safety', 'Time to retire the bouncer', 'Once {s} sits up or tries to climb out', "openPage('chg:Safety:d:gear')"], ['sit', 'Development', 'A toy beside your knee', 'Reaching while sitting builds balance', "openPage('development-domain:6:Movement')"]],
@@ -119,7 +150,7 @@
       rows: [['tooth', 'Daily rhythm', 'Start brushing', 'A rice-grain smear of fluoride toothpaste', "openPage('chg:Daily rhythm:d:teeth')"], ['tooth', 'Daily rhythm', 'Soothing sore gums', 'A clean finger or a chilled teething ring', "openPage('chg:Daily rhythm:d:gums')"], ['thermo', 'Health', 'Teething doesn’t cause a high fever', 'A fever means checking for something else', "openPage('chg:Health:d:sick')"]],
       tip: ['No tooth yet?', 'Some babies get their first tooth later. Ask at a checkup if you don’t see any by 18 months.'] },
     crawl: { lead: 'Most babies start moving between 6 and 10 months. Some scoot or roll instead, and some skip crawling altogether.', bar: [4, 12, 6, 10, 'Crawling'], signs: ['Rocking on hands and knees', 'Pushing up high during tummy time', 'Pivoting in circles on {p} tummy'],
-      rows: [['shield', 'Safety', 'Babyproof before {s} moves', 'Stair gates, cabinet locks and outlet covers', "openPage('safety-stage:rolling')"], ['crib', 'Sleep', 'Lower the crib mattress', 'Before {s} can push up and lean over', "openPage('chg:Sleep:d:mattress')"], ['crawl', 'Development', 'Lots of floor time to practice', 'A toy just out of reach helps', "openPage('development-domain:9:Movement')"], ['stroller', 'Out and about', 'Outings get busier', 'A blanket won’t keep {o} put for long', "openPage('topic:Out and about')"]],
+      rows: [['shield', 'Safety', 'Babyproof before {s} moves', 'Stair gates, cabinet locks and outlet covers', "openPage('safety-stage:rolling')"], ['crib', 'Sleep', 'Lower the crib mattress', 'Before {s} can sit on {p} own', "openPage('chg:Sleep:d:mattress')"], ['crawl', 'Development', 'Lots of floor time to practice', 'A toy just out of reach helps', "openPage('development-domain:9:Movement')"], ['stroller', 'Out and about', 'Outings get busier', 'A blanket won’t keep {o} put for long', "openPage('topic:Out and about')"]],
       tip: ['Not crawling by 10 months?', 'Many babies skip crawling and go straight to pulling up. If Maya isn’t moving around at all, mention it at the 9-month checkup.'] },
     solids: { lead: 'Around 6 months, food joins milk. It starts with a few bites a day, and milk stays the main food for months.', bar: [4, 9, 5.4, 7, 'About 6 months'], signsTitle: 'Signs {s’s} ready', signs: ['Holds {p} head steady on {p} own', 'Sits with a little support', 'Leans in when food comes {p} way', 'Swallows food instead of pushing it out'],
       rows: [['highchair', 'Feeding', 'Get set up for the first bite', 'A high chair, a soft spoon and a bib', "openPage('chg:Feeding:d:setup')"], ['shield', 'Safety', 'Learn infant choking first aid', 'And how gagging is different', "openPage('chg:Feeding:safe')"], ['bowl', 'Feeding', 'Decide how you’d like to start', 'Spoon-feeding, finger foods or a bit of both', "openPage('chg:Feeding:d:approach')"], ['steth', 'Health', 'Ask about allergens at the checkup', 'The 6-month checkup is a good time', "openPage('health-visit:6')"]],
@@ -152,12 +183,12 @@
   function changePage(id) {
     const h = H(), c = C.find(x => x.id === id), p = PAGES[id]; if (!c || !p) return null;
     const a = ageNow(), cat = c.cat, past = c.end <= a, now = c.start <= a && c.end > a;
-    const when = past ? 'Already behind ' + name() : now ? 'Happening around now' : c.start - a <= 1 ? 'Could start any week now' : `In about ${Math.round(c.start - a)} month${Math.round(c.start - a) === 1 ? '' : 's'}`;
+    const when = past ? 'Already behind ' + name() : now ? 'Any time now' : c.start - a <= 1 ? 'Could start any week now' : `In about ${Math.round(c.start - a)} month${Math.round(c.start - a) === 1 ? '' : 's'}`;
     const look = `${p.signsTitle || 'Signs it’s close'}: ${p.signs.map(x => x.charAt(0).toLowerCase() + x.slice(1)).join(', ')}.`;
     return h.detail(cat, `${range(c)} · ${when}`, c.title, p.lead + ' ' + look,
       `<p class="ya-connect">${F(`Here’s what it changes, and how to get ready.`)}</p>`
       + h.list('What it changes', p.rows.slice(0, 4).map(([icon, rc, title, sub, go]) => h.row({ icon, cat: rc, title, sub, onclick: go }).replace('<span class="hub-row-copy">', `<span class="hub-row-copy"><small class="hub-row-eyebrow">${F(AREA[rc] || rc)}</small>`)))
-      + h.tip(p.tip[0], p.tip[1]), c.icon).replace('<div class="hub-detail-head">', yearStrip(c) + '<div class="hub-detail-head">');
+      + h.tip(p.tip[0], p.tip[1]), c.icon);
   }
   const base = window.changesRoute;
   window.changesRoute = function (p) { const m = /^chg:Timeline:c:(\w+)$/.exec(p); if (m) { const pg = changePage(m[1]); if (pg) return pg; } return base(p); };

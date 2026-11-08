@@ -12,6 +12,7 @@
   function keep(d) { try { localStorage.setItem(store(), JSON.stringify(d)); } catch (e) {} }
   const nowMs = () => NOW.getTime();
   const dm = () => developmentMonth(actualMonth());
+  const sm = () => safetyMonth(actualMonth());
 
   window.recordCheckin = function (key, value) { const d = load(); d.last[key] = { value, at: nowMs() }; delete d.shown[key]; d.ignored = 0; keep(d); };
 
@@ -182,11 +183,11 @@
   function byAge(a) { return a >= 9 ? 'pulling' : a >= 8 ? 'moving' : a >= 6 ? 'rolling' : a >= 3 ? 'reaching' : 'setup'; }
   function reportedStage() {
     const s = answered(), chosen = ORDER.includes(answers.movementGuide) ? answers.movementGuide : null;
-    return [s, chosen].filter(Boolean).sort((a,b)=>ORDER.indexOf(b)-ORDER.indexOf(a))[0] || (dm()<3?'setup':'reaching');
+    return [s, chosen].filter(Boolean).sort((a,b)=>ORDER.indexOf(b)-ORDER.indexOf(a))[0] || (sm()<3?'setup':'reaching');
   }
-  window.safetyAgeForward = function () { const s = reportedStage(), g = byAge(dm()); return ORDER.indexOf(g) > Math.max(1, ORDER.indexOf(s)) ? g : null; };
+  window.safetyAgeForward = function () { const s = reportedStage(), g = byAge(sm()); return ORDER.indexOf(g) > Math.max(1, ORDER.indexOf(s)) ? g : null; };
   function stageGuess() {
-    const s = reportedStage(), g = byAge(dm());
+    const s = reportedStage(), g = byAge(sm());
     return ORDER.indexOf(g) > ORDER.indexOf(s) ? g : s;
   }
   // A parent's pick (Change on the timeline) holds, in either direction, until they change it

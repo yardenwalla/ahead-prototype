@@ -55,7 +55,9 @@
   const safetyDone = id => { try { return ['done', 'na'].includes((journeyData().checks.safetyHome || {})[id]); } catch (e) { return false; } };
   function tickSafety(ids) { try { const data = journeyData(); data.checks.safetyHome = Object.assign({}, data.checks.safetyHome || {}); ids.forEach(id => { if (!data.checks.safetyHome[id]) data.checks.safetyHome[id] = 'done'; }); saveJourneyData(data); } catch (e) {} }
   // Born early: cards follow adjusted age, except Health (checkups and shots follow the birthday).
-  const adjustedDays = () => (profile.early && profile.due && (typeof ageMode !== 'function' || ageMode('dev') !== 'birthday')) ? Math.floor((NOW - parse(profile.due)) / DAY) : null;
+  // Each card follows its own area's setting: Development and Safety share one, Feeding, Sleep and Everyday care the other.
+  const modeOf = group => (profile.ageMode && (profile.ageMode[group] || (group === 'safety' ? profile.ageMode.dev : null))) || 'adjusted';
+  const adjustedDays = (group = 'dev') => (profile.early && profile.due && modeOf(group) !== 'birthday') ? Math.floor((NOW - parse(profile.due)) / DAY) : null;
   // Places that don't change their clocks
   const noDst = (() => { try { return ['America/Phoenix', 'Pacific/Honolulu', 'America/Puerto_Rico'].includes(Intl.DateTimeFormat().resolvedOptions().timeZone); } catch (e) { return false; } })();
 
@@ -80,7 +82,7 @@
     const solids = start ? 'started' : (a.solids === 'Not yet' || st.solidsNo) ? 'notyet' : null;
     const solidsAt = st.solidsToldAt || (sd.food) || (a.solidsStart) || null;
     return {
-      d, dBirth: d, dAdj: adjustedDays(), feed, date: new Date(NOW), birth: dob, n: name(), p: babyPronouns(),
+      d, dBirth: d, dAdj: adjustedDays('dev'), dAdjCare: adjustedDays('care'), dAdjSafe: adjustedDays('safety'), feed, date: new Date(NOW), birth: dob, n: name(), p: babyPronouns(),
       move, notYet, moveAt: moveAt ? daysSince(moveAt) : null,
       swaddle: a.swaddleStopped === 'Yes' ? 'sack' : a.neverSwaddled === 'Yes' ? 'never' : null,
       solids, solidsDays: start ? Math.floor((NOW - start) / DAY) : null, solidsTold: solidsAt ? daysSince(solidsAt) : null,
@@ -124,7 +126,7 @@
   }
   const TIP = {
     'first-week': 'They’ll check {his} weight (most lose a little, then regain it by 2 weeks) and look for jaundice.',
-    '1-month': 'They’ll ask how you’re doing too. It’s a good moment to say if things feel heavy.',
+    '1-month': 'Your pediatrician will ask how you’re doing too. It’s a good moment to say if things feel heavy.',
     '2-month': 'The first main round of vaccines. Nursing or a bottle during the shots calms most babies.',
     '4-month': 'Vaccines, and a good time to ask about sleep and when to start solids.',
     '6-month': 'Vaccines, first foods and teeth, and the flu shot if it’s the season.',
@@ -156,13 +158,13 @@
   card('routine', 'Sleep', 3, s => s.d >= 42 && s.d <= 70, 'Nights start to stretch: add a bedtime routine', 'Bath, feed, song: a short routine in the same order helps that longer stretch land at night instead of the afternoon.', { catchup: 90, go: "openPage('chg:Sleep:d:routine')" });
   card('fewer-poops', 'Daily rhythm', 4, s => s.feed === 'breast' && s.d >= 42 && s.d <= 90, 'Days without a poop can be normal', 'After about 6 weeks, some breastfed babies go days between poops. Wet diapers, 6 or more a day, tell you {hes} getting enough.', { go: "openPage('topic:Daily rhythm')" });
   card('swaddle', 'Safety', 1, s => s.d >= 49 && s.d <= 120 && !s.swaddle && !moved(s, 'rolling', 'sitting', 'crawling', 'pulling'), 'If you swaddle: when to stop',
-    'At the first sign of rolling, which can be as early as 2 months. That day, switch to a sleep sack with arms free.',
+    'Rolling usually starts at 4–6 months. At the first signs of trying, switch to a sleep sack with arms free.',
     Object.assign({ grace: 14, safety: 1, must: 1, go: "openPage('chg:Sleep:d:swaddleoff')" }, ask([['In a sleep sack now', "setAnswer('swaddleStopped','Yes')"], ['We don’t swaddle', "setAnswer('neverSwaddled','Yes')"]])));
   card('swaddle-now', 'Safety', 1, s => !s.swaddle && moved(s, 'rolling', 'sitting', 'crawling', 'pulling') && s.d <= 180, s => moved(s, 'rolling') ? '{Ns} rolling: time to stop swaddling' : 'Time to stop swaddling',
     'If {hes} still swaddled, switch to a sleep sack with arms free tonight. A swaddled baby who rolls can’t push up.',
     Object.assign({ fromAnswer: 1, safety: 1, must: 1, go: "openPage('chg:Sleep:d:swaddleoff')" }, ask([['In a sleep sack now', "setAnswer('swaddleStopped','Yes')"], ['We don’t swaddle', "setAnswer('neverSwaddled','Yes')"]])));
   card('distracted', 'Feeding', 4, s => s.d >= 90 && s.d <= 135, 'Suddenly pulling off to look around?', 'Common around 3–5 months: everything is more interesting than milk. A quiet, dim room helps.', { go: "openPage('chg:Feeding:d:cues')" });
-  card('iron', 'Feeding', 3, s => breast(s) && s.d >= 100 && s.d <= 122 && !(typeof healthRecord === 'function' && healthRecord(4) && healthRecord(4).status === 'attended'), 'Ask about iron at the 4-month checkup',
+  card('iron', 'Feeding', 3, s => breast(s) && (profile.early ? s.d >= 28 : s.d >= 100) && s.d <= 122 && !(typeof healthRecord === 'function' && healthRecord(4) && healthRecord(4).status === 'attended'), 'Ask about iron at the 4-month checkup',
     s => s.feed === 'breast' ? 'Pediatricians recommend iron drops for breastfed babies from 4 months until iron-rich foods are going well. A quick question at this visit.' : 'For mostly breastfed babies, pediatricians recommend iron drops from 4 months until iron-rich foods are going well. Worth asking.', { go: "openPage('health-visit:4')" });
   card('four-month', 'Sleep', 3, s => s.d >= 100 && s.d <= 140, 'More waking? Common around 4 months', 'More waking for a few weeks is common now. It’s {his} sleep maturing, not something you broke.', { catchup: 150, go: "openPage('chg:Sleep:d:regress')" });
   // Rolling
@@ -275,7 +277,7 @@
   set('poop-colors', null, pickK(s => s.feed === 'breast' ? 'poop-colors:breast' : 'poop-colors'));
   set('cluster', null, pickK(s => s.feed === 'breast' ? 'cluster:breast' : 'cluster'));
   set('swaddle-now', pickK(s => moved(s, 'rolling') ? 'swaddle-now:t' : 'swaddle-now:t-other'));
-  set('iron', null, pickK(s => s.feed === 'breast' ? 'iron:breast' : 'iron'));
+  set('iron', pickK(s => profile.early ? 'iron:t-early' : 'iron:t'), pickK(s => profile.early ? 'iron:early' : s.feed === 'breast' ? 'iron:breast' : 'iron'));
   set('rolling-soon', pickK(s => fresh7(s, 'rolling') ? 'rolling-soon:t' : 'rolling-soon:t-cond'));
   set('crawl-soon', pickK(s => fresh7(s, 'crawling') ? 'crawl-soon:t' : 'crawl-soon:t-cond'));
   set('stand-soon', pickK(s => fresh7(s, 'pulling') ? 'stand-soon:t' : 'stand-soon:t-cond'), pickK(s => fresh7(s, 'pulling') ? 'stand-soon' : 'stand-soon:cond'));
@@ -286,7 +288,7 @@
   set('stand-now', pickK(s => opened(s, 'stand-soon') ? 'stand-now:t-after' : 'stand-now:t'), pickK(s => opened(s, 'stand-soon') ? 'stand-now:after' : 'stand-now'));
   set('hot-days', pickK(s => s.d < 183 ? 'hot-days:t' : 'hot-days:t-older'), pickK(s => s.d < 183 ? 'hot-days' : 'hot-days:older'));
   set('milk12', null, pickK(s => K['milk12:' + s.feed] ? 'milk12:' + s.feed : 'milk12'));
-  set('checkup', s => (K[checkupNow(s).ahead >= 2 ? 'checkup:t-soon' : 'checkup:t'] || '').replace('{visit}', checkupNow(s).label), s => { const v = checkupNow(s), base = K['checkup:' + v.label + ':' + s.feed] || K['checkup:' + v.label] || ''; let n = 0; try { n = ((journeyData().questions || {})[v.age] || []).length; } catch (e) {} return n ? base + ` You have ${n} question${n === 1 ? '' : 's'} saved.` : base; });
+  set('checkup', s => (K[checkupNow(s).ahead >= 2 ? 'checkup:t-soon' : 'checkup:t'] || '').replace('{visit}', checkupNow(s).label), s => { const v = checkupNow(s), base = K['checkup:' + v.label + ':' + s.feed] || (v.label === '6-month' && ![9, 10, 11, 12, 1, 2, 3].includes(month_(s)) && K['checkup:6-month:off']) || K['checkup:' + v.label] || ''; let n = 0; try { n = ((journeyData().questions || {})[v.age] || []).length; } catch (e) {} return n ? base + ` You have ${n} question${n === 1 ? '' : 's'} saved.` : base; });
 
   /* ---------- every card opens a page that continues it ---------- */
   const ROUTE = {
@@ -314,7 +316,8 @@
   const DONE_IN_SAFETY = { 'rolling-soon': ['small', 'changing'], reaching: ['small'], 'crawl-soon': ['gates', 'storage', 'outlets', 'anchor'], 'crawl-now': ['gates'] };
   const DONE_ANSWER = { 'stand-soon': () => answers.mattressLowest === 'Yes', 'stand-now': () => answers.mattressLowest === 'Yes' && !0, 'sitting-gear': () => answers.mattressLowered === 'Yes' || answers.mattressLowest === 'Yes' };
   const doneElsewhere = (c, s) => (DONE_IN_SAFETY[c.id] && DONE_IN_SAFETY[c.id].every(safetyDone)) || (c.id === 'stand-soon' && DONE_ANSWER['stand-soon']()) || (c.id === 'stand-now' && !opened(s, 'stand-soon') && answers.mattressLowest === 'Yes') || (c.id === 'sitting-gear' && DONE_ANSWER['sitting-gear']()) || (c.id === 'clocks' && noDst);
-  const forCard = (c, s) => (s.dAdj != null && !BIRTH_AGE(c)) ? at(s, s.dAdj) : s;
+  const CARE_AGE = c => ['Feeding', 'Sleep', 'Daily rhythm'].includes(c.cat) || /^swaddle/.test(c.id);
+  const forCard = (c, s) => { if (BIRTH_AGE(c)) return s; const adj = CARE_AGE(c) ? s.dAdjCare : c.cat === 'Safety' ? s.dAdjSafe : s.dAdj; return adj != null ? at(s, adj) : s; };
 
   /* ---------- picking ---------- */
   let peeking = false;   // working out Home's cards before its question is chosen
@@ -459,13 +462,13 @@
   /* ---------- put it on Home ---------- */
   const baseRender = window.render;
   const PAGES = {
-    rsv: { cat: 'Health', ctx: 'Vaccines', title: 'The RSV shot', what: 'RSV is a common cold virus that can make young babies very sick, and it’s the top reason babies end up in hospital.',
+    rsv: { cat: 'Health', ctx: 'Vaccines', title: 'The RSV shot', what: 'RSV is a common winter virus. For most adults it’s a cold, but it can make young babies very sick. One shot protects them for the season.',
       doIt: 'If {N} was born before RSV season and hasn’t had the shot, ask at the next checkup or call to book it.',
       know: ['Who it’s for', 'Babies under 8 months in their first RSV season, usually October to March. Babies born during the season often get it before leaving hospital.'],
-      know2: ['If you had the RSV vaccine in pregnancy', 'At least 2 weeks before birth, most babies don’t need the shot as well. Your pediatrician can confirm.'] },
+      know2: ['Had the RSV vaccine in pregnancy?', 'If it was at least 2 weeks before birth, most babies don’t need the shot too. Your pediatrician can confirm.'] },
     flu: { cat: 'Health', ctx: 'Vaccines', title: 'A first flu shot', what: 'From 6 months, babies can have the flu shot each fall and winter.',
       doIt: 'Ask at the next checkup, or book it on its own. The first season takes two doses, 4 weeks apart.',
-      know: ['Why two doses', 'The first dose primes {his} body and the second gives full protection, so starting early in the season helps.'],
+      know: ['Why two doses', 'The first dose starts {his} protection and the second completes it, so starting early in the season helps.'],
       know2: ['After the shot', 'A sore leg or a low fever for a day is common.'] },
     clocks: { cat: 'Sleep', ctx: 'Daily rhythm', title: 'When the clocks change', what: 'A one-hour jump can throw naps and bedtime off for a few days.',
       doIt: 'Starting a few days before, move naps and bedtime by about 15 minutes a day, so the change is done by the weekend.',
@@ -475,8 +478,11 @@
   function pageHtml(id) {
     const P0 = PAGES[id], s = state();
     const k = ([t, b]) => `<p class="ss-know"><b>${esc(t)}</b>${esc(w(s, b))}</p>`;
-    return `<div class="quiet-category hub-page hub-detail" style="${yearTheme(P0.cat)}"><div class="guide-detail-top"><div class="monthly-page-header"><button class="monthly-back" onclick="back()" aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5-7 7 7 7"></path></svg></button><div><h1>${esc(typeof displayTopic === 'function' ? displayTopic(P0.cat) : P0.cat)}</h1><p>${esc(name())} · ${esc(monthLabel(actualMonth()))}</p></div><span class="monthly-save" aria-hidden="true"></span></div></div>`
-      + `<div class="dev-area-head ss-head"><p class="hub-context">${esc(P0.ctx)}</p><h1>${esc(P0.title)}</h1></div><section class="ss-moment"><p class="ss-what">${esc(w(s, P0.what))}</p><section class="ss-do"><b>What to do</b><p>${esc(w(s, P0.doIt))}</p></section>${k(P0.know)}${k(P0.know2)}</section></div>`;
+    // The same subpage look as every other guide: a soft colored header with a small picture, and the page's color inside.
+    const pal = (typeof YEAR_PALETTES !== 'undefined' && YEAR_PALETTES[P0.cat]) || { bg: '#eef8f1', ink: '#356651' };
+    const ART = { rsv: 'shield', flu: 'steth', clocks: 'clock' };
+    return `<div class="quiet-category hub-page hub-detail care-v2" data-ss="1" data-overview="${esc(P0.cat)}" style="${yearTheme(P0.cat)};--ss-bg:${pal.bg};--ss-ink:${pal.ink}"><div class="guide-detail-top"><div class="monthly-page-header"><button class="monthly-back" onclick="back()" aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5-7 7 7 7"></path></svg></button><div><h1>${esc(typeof displayTopic === 'function' ? displayTopic(P0.cat) : P0.cat)}</h1><p>${esc(name())} · ${esc(monthLabel(actualMonth()))}</p></div><span class="monthly-save" aria-hidden="true"></span></div></div>`
+      + `<div class="dev-area-head ss-head" style="--area:${pal.bg};--area-ink:${pal.ink}">${typeof hubArt === 'function' ? `<span class="dev-area-head-art" aria-hidden="true">${hubArt(ART[id] || 'steth', P0.cat)}</span>` : ''}<p class="hub-context">${esc(P0.ctx)}</p><h1>${esc(P0.title)}</h1></div><section class="ss-moment"><p class="ss-what">${esc(w(s, P0.what))}</p><section class="ss-do"><b>What to do</b><p>${esc(w(s, P0.doIt))}</p></section>${k(P0.know)}${k(P0.know2)}</section></div>`;
   }
   // Home asks at most one question a week, so it never feels like a form. The missed-checkup question is separate.
   // Only when it's needed. Questions whose answer brings time-sensitive guidance can ask any week: crawling and
@@ -500,6 +506,8 @@
       const standWaits = () => { const st = store(); return !(st.seen || {})['stand-soon'] && !(st.opened || {})['stand-soon']; };
       if (!up && next === 'stand' && standWaits()) return null;
       const k = baseQ(); if (!k) return k;
+      // Born early: solids follow adjusted age, so don't ask about them before 6 months adjusted.
+      if (k === 'food' && profile.early && profile.due && typeof hubAgeFor === 'function' && hubAgeFor('care', actualMonth()) < 6) return null;
       if (k === 'stand' && !(up && last.k === 'stand') && standWaits()) return null;
       if (last && last.k !== k && NOW.getTime() - last.at < 7 * DAY) return null;
       if (!last || last.k !== k) { try { localStorage.setItem(key, JSON.stringify({ k, at: NOW.getTime() })); } catch (e) {} }
@@ -579,7 +587,7 @@
       const dob = parse(profile.dob), now = new Date(NOW), days = Math.floor((now - dob) / DAY);
       let m = (now.getFullYear() - dob.getFullYear()) * 12 + now.getMonth() - dob.getMonth(); if (now.getDate() < dob.getDate()) m--;
       const since = new Date(dob); since.setMonth(dob.getMonth() + m); const wks = Math.floor((now - since) / DAY / 7);
-      const ageText = days < 91 ? (days < 7 ? `${days} day${days === 1 ? '' : 's'} old` : `${Math.floor(days / 7)} weeks old`) : `${m} months${wks ? `, ${wks} week${wks > 1 ? 's' : ''}` : ''}`;
+      const ageText = days < 91 ? (days < 7 ? `${days} day${days === 1 ? '' : 's'} old` : `${Math.floor(days / 7)} week${Math.floor(days / 7) === 1 ? '' : 's'} old`) : `${m} months${wks ? `, ${wks} week${wks > 1 ? 's' : ''}` : ''}`;
       const eb = main.querySelector('.connected-summary-intro:not(.hub-bday) .home-month-eyebrow'); if (eb) eb.textContent = ageText;
       const bd = main.querySelector('.connected-summary-intro.hub-bday');
       if (bd && !bd.querySelector('.home-summary-spectrum')) {

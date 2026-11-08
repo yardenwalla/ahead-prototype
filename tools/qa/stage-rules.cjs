@@ -114,9 +114,9 @@ for (const [cat, route, i] of [['Safety', 'safety-stage:reaching', 1], ['Sleep',
   const a = family(5); a.run("navigate('categories');openPage('explore')");
   const find = q => { a.run(`searchGuides(${JSON.stringify(q)})`); return a.run("document.querySelector('.hub-results').innerHTML").replace(/<[^>]+>/g, ' '); };
   for (const [q, expect] of [['fever', 'Fever and sick days'], ['how much formula', 'How much milk or formula'], ['spit up', 'Spit-up'], ['diaper rash', 'Diaper rash'],
-    ['constipation', 'When to call your pediatrician'], ['swaddle', 'Swaddling'], ['teething', 'Teething, drool and gums'], ['vaccines', 'Checkups and vaccines'], ['sleep regression', '4-month sleep change']])
+    ['constipation', 'When to call your pediatrician'], ['swaddle', 'Swaddling'], ['teething', 'Teething'], ['vaccines', 'Checkups and vaccines'], ['sleep regression', '4-month sleep change']])
     check(find(q).includes(expect), `Search “${q}” finds ${expect}`);
-  check(/No guide for/.test(find('zebra')), 'Search with no match says so and suggests words');
+  check(/Nothing on/.test(find('zebra')), 'Search with no match says so and suggests words');
   a.run("navigate('home');setMonth(8)");
   check(/Coming up · 8 months/.test(a.html()) && !/Likely around now/.test(a.html()), 'A future month on Home reads as a preview');
 }
@@ -132,6 +132,6 @@ for (const [cat, route, i] of [['Safety', 'safety-stage:reaching', 1], ['Sleep',
   a.run("navigate('home')");
   check(/hub-agechip/.test(a.html()) && !/connected-age-note/.test(a.html()), 'Home shows the adjusted age next to the age, once');
   a.run("openPage('age-context')");
-  check(/Two ages, one Ari/.test(a.html()) && /Development, play and safety/.test(a.html()), 'About age explains both ages and lets you switch which one each area follows');
+  check(/Two ages, one Ari/.test(a.html()) && /Development and play/.test(a.html()) && /hubSetAgeMode\('safety'/.test(a.html()), 'About age explains both ages and lets you switch which one each area follows');
 }
 console.log(JSON.stringify({ suite: 'stage-rules', checks, status: 'passed' }, null, 2));

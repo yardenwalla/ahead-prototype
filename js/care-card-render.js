@@ -33,7 +33,8 @@ window.aheadCareCard = function (d, inApp) {
   if (d.other) know.push(row('note', 'nap', 'Also', esc(d.other)));
   if (know.length) h += `<h2 class="acc-h2">Good to know</h2><div class="list">${know.join('')}</div>`;
   // Who to call: each one taps to call.
-  const calls = (d.c || []).filter(c => c[0] || c[1]).map(([nm, ph]) => row('phone', 'green', esc(ph || ''), esc(nm || 'Call'), ph ? '<span class="call-btn">Call</span>' : '', ph ? 'tel:' + tel(ph) : ''));
+  const calls = d.par && (d.par[0] || d.par[1]) ? [row('phone', 'green', `Parent${d.par[1] ? ' · ' + esc(d.par[1]) : ''}`, esc(d.par[0] || 'Parent'), d.par[1] ? '<span class="call-btn">Call</span>' : '', d.par[1] ? 'tel:' + tel(d.par[1]) : '')] : [];
+  calls.push(...(d.c || []).filter(c => c[0] || c[1]).map(([nm, ph]) => row('phone', 'green', `Backup${ph ? ' · ' + esc(ph) : ''}`, esc(nm || 'Backup'), ph ? '<span class="call-btn">Call</span>' : '', ph ? 'tel:' + tel(ph) : '')));
   if (d.doc && (d.doc[0] || d.doc[1])) calls.push(row('steth', 'blue', `Pediatrician${d.doc[1] ? ' · ' + esc(d.doc[1]) : ''}`, esc(d.doc[0] || 'Pediatrician'), d.doc[1] ? '<span class="call-btn">Call</span>' : '', d.doc[1] ? 'tel:' + tel(d.doc[1]) : ''));
   if (calls.length) h += `<h2 class="acc-h2">Who to call</h2><div class="list">${calls.join('')}</div><p class="note">In an emergency, call 911 first.</p>`;
   // Safe sleep, always included, in the calm night color.

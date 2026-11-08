@@ -29,9 +29,9 @@
   window.devTodayCard = ref => {
     const list = stageIdeas(ref), d = Math.floor((typeof NOW !== 'undefined' ? NOW : new Date()) / 864e5), i = list.length ? d % list.length : 0;
     const two = list.length > 2 ? [list[i], list[(i + 1) % list.length]] : list;
-    return `<section class="hub-card dev-awake"><span class="hub-card-head"><b>${F('Try today')}</b></span><div class="dev-ideas">${two.map(a => tile(a, ref)).join('')}</div>`
+    return `<section class="hub-card dev-awake"><span class="hub-card-head"><b>${F((typeof isCurrent !== 'function' || isCurrent()) && devRef(developmentMonth(actualMonth())) !== ref ? 'Ideas for this age' : 'Try today')}</b></span><div class="dev-ideas">${two.map(a => tile(a, ref)).join('')}</div>`
       // From 6 months: a few baby signs, so Maya can say what she wants before she has the words. One of the things to try, inside the same card.
-      + `<button class="hub-link dev-more-link" onclick="openPage('chg:Development:d:more:${ref}')">${F('More ideas for awake time')} ›</button></section>`;
+      + `<button class="hub-link dev-more-link" onclick="openPage('chg:Development:d:more:${ref}')">${F('More ways to play')} ›</button></section>`;
   };
   // How long Maya is usually awake at a time, by the age the guides follow (adjusted age for babies born early). Same ranges as Sleep.
   // Awake time comes from Sleep, so the two tabs always give the same number: Sleep's stage for this baby
@@ -43,7 +43,7 @@
     4: { id: 'tummy-picture', title: 'A picture at floor level', why: 'Turning to look is how rolling starts.', steps: ['During tummy time, prop a bold picture where Maya can see it.', 'Lie down facing {o} and talk about it.', 'Move it a little to one side so {s} turns to look.'] },
     6: { id: 'supported-reach', title: 'A toy beside your knee', why: 'Reaching while sitting builds the balance {s} needs to sit on {p} own.', steps: ['Sit Maya on the floor, supported around {p} chest as needed.', 'Hold a toy close beside your knee.', 'Let {o} lean and reach for it.'] },
     9: { id: 'toy-reach', hero: 9, title: 'A toy just out of reach', why: 'A reason to move is all most babies need.', steps: ['Put a favorite toy on the floor, a little out of Maya’s reach.', 'Cheer {o} on as {s} scoots, rolls or crawls toward it.', 'If {s} gets frustrated, move it a bit closer.'] },
-    12: { id: 'cruise-toy', hero: 12, title: 'Cruise to a toy', why: 'Stepping along furniture comes before first steps.', steps: ['Put a toy at the far end of a sturdy sofa or low table.', 'Let Maya hold on and step sideways to reach it.', 'Stay close and keep the floor clear.'] }
+    12: { id: 'cruise-toy', hero: 12, title: 'Cruise to a toy', why: 'Stepping along furniture comes before first steps.', steps: ['Put a toy at the far end of a sturdy sofa or low table.', 'Let Maya hold on and step sideways to reach it.', 'Clear other toys off the floor so {s} doesn’t trip.'] }
   };
   const moveArt = mv => mv.hero ? (window.devHeroArt ? devHeroArt(mv.hero) : '') : devPlayArt(mv.id);
   window.devMoveIdea = ref => MOVE[ref] ? Object.assign({}, MOVE[ref], { art: moveArt(MOVE[ref]) }) : null;
@@ -68,6 +68,8 @@
   const NO_MEDIA = new Set(['laughs', 'squeals', 'chuckles-during-play', 'smiles-back-at-you', 'makes-sounds-beyond-crying', 'responds-to-loud-sounds', 'moves-both-arms-and-legs', 'looks-at-your-face', 'seems-glad-to-see-you', 'likes-looking-at-self-in-a-mirror', 'waves-goodbye', 'raises-arms-to-be-picked-up', 'enjoys-peekaboo', 'coos', 'brings-hands-to-mouth', 'puts-things-in-mouth-to-explore']);
   window.devSeeButton = (key, title) => (typeof DEV_EXAMPLE_LINKS !== 'undefined' && DEV_EXAMPLE_LINKS[key] && !NO_MEDIA.has(key)) ? `<button class="dev-see" aria-expanded="false" data-title="${title}" onclick="devSeeIt(this,'${key}')">See what it looks like</button>` : '';
 
+  // An idea from a later stage than the baby's says so in its kicker, so it doesn't read as one for today.
+  const ahead = ref => (typeof isCurrent !== 'function' || isCurrent()) && ref > devRef(developmentMonth(actualMonth())) ? ` · by ${ref === 12 ? '1 year' : ref + ' months'}` : '';
   function frame(title, context, lead, inner) {
     return `<div class="quiet-category hub-page hub-detail" data-overview="Development" style="${yearTheme('Development')}">${detailPageTop('Development')}<div class="hub-detail-head"><p class="hub-context">${F(context)}</p><h1>${F(title)}</h1>${lead ? `<p class="hub-lead">${F(lead)}</p>` : ''}</div>${inner}</div>`;
   }
@@ -80,18 +82,18 @@
     const extra = (MORE[ref] || []).filter(id => !shown.has(id)).map(find).filter(Boolean);
     const more = extra.filter(Boolean).length ? `<details class="dev-more-ideas"><summary><span>${F(`${extra.length} more ideas`)}</span><span class="faq-plus" aria-hidden="true">＋</span></summary><ul class="dev-more-list">${extra.filter(Boolean).map(a => `<li><button onclick="openPage('chg:Development:d:idea:${ref}:${a.id}')"><span>${F(B(a.title))}</span><span class="hub-chev" aria-hidden="true">›</span></button></li>`).join('')}</ul></details>` : '';
     const signs = false && ref >= 6 ? h.list('', [h.row({ icon: 'signs', cat: 'Development', title: 'Try a few baby signs', sub: 'More, eat, milk and all done', onclick: `openPage('chg:Development:d:signs')` })]) : '';
-    return frame('Ideas to try together', `Awake time · by ${ref === 12 ? '1 year' : ref + ' months'}`, lead, `<div class="dev-ideas is-grid">${pics.map(a => tile(a, ref)).join('')}</div>${more}`);
+    return frame('Ideas to try together', `Play ideas · by ${ref === 12 ? '1 year' : ref + ' months'}`, lead, `<div class="dev-ideas is-grid">${pics.map(a => tile(a, ref)).join('')}</div>${more}`);
   }
   function movePage(ref) {
     const mv = window.devMoveIdea(ref), h = H();
     if (!mv) return ideasPage(ref);
-    return frame(mv.title, 'Try this together', mv.why, `<figure class="dev-idea-hero">${mv.art}</figure>` + h.steps(mv.steps) + h.note('Stay close, and stop when Maya looks away or fusses. That’s {p} way of saying “enough for now.”'));
+    return frame(mv.title, 'Try this together' + ahead(ref), mv.why, `<figure class="dev-idea-hero">${mv.art}</figure>` + h.steps(mv.steps) + h.note('Stay close, and stop when Maya looks away or fusses. That’s {p} way of saying “enough for now.”'));
   }
   function ideaPage(ref, id) {
     const a = find(id), h = H();
     if (!a) return ideasPage(ref);
     const ctx = ctxFor(a), steps = (typeof playInstructionSteps === 'function' ? playInstructionSteps(a.how) : [a.how]).map(s => B(s));
-    return frame(B(a.title), 'Ideas to try together', B(ctx.explain || a.why || ''),
+    return frame(B(a.title), 'Ideas to try together' + ahead(ref), B(ctx.explain || a.why || ''),
       (devPlayArt(a.id) ? `<figure class="dev-idea-hero">${devPlayArt(a.id)}</figure>` : '') + h.steps(steps) + (ctx.notice ? h.tip('What to notice', B(ctx.notice)) : '')
       + h.note('Stay close, and stop when Maya looks away or fusses. That’s {p} way of saying “enough for now.”'));
   }

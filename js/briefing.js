@@ -93,10 +93,10 @@
         body: `Switch to a sleep sack that leaves ${p.p} arms free. During the day, plenty of floor time helps ${p.o} practice.`,
         tools: homePriorityTools(priority), link: link("openSection('Sleep','sleep-rolling')", 'See what to change') });
       else if (developmentMonth(actualMonth()) >= 6) out.push({ topic: 'Sleep', key: 'rolling-soon', title: 'Once rolling starts, swaddling stops',
-        body: `Most babies roll by about 6 months. If ${n()} still sleeps swaddled, switch to a sleep sack that leaves ${p.p} arms free.`,
+        body: `Rolling usually starts at 4–6 months. If ${n()} still sleeps swaddled, switch to a sleep sack that leaves ${p.p} arms free.`,
         tools: homePriorityTools(priority), link: link("openSection('Sleep','sleep-rolling')", 'See what to change') });
       else out.push({ topic: 'Sleep', key: 'rolling-soon', title: 'Rolling is on the way',
-        body: `Most babies first try between 3 and 6 months. If you swaddle, that first try is your cue to switch to a sleep sack.`,
+        body: `Rolling usually starts at 4–6 months. If you swaddle, stop at the first signs of trying to roll and switch to a sleep sack.`,
         tools: homePriorityTools(priority), link: link("openSection('Sleep','sleep-rolling')", 'See what to change') });
     }
 
@@ -272,7 +272,7 @@
     if (live() || month <= actualMonth() || typeof hubAgeFor !== 'function') return '';
     const nowM = actualMonth(), care = x => hubAgeFor('care', x), dev = x => developmentMonth(x);
     const feed = c => c >= 9 ? 'Three meals a day, with milk alongside' : c >= 7 ? 'Thicker textures and finger foods' : c >= 6 ? 'First tastes of solids' : c >= 4 ? 'Getting ready for solids' : null;
-    const sleep = c => c >= 8 ? 'Likely down to two naps' : c >= 4 ? 'Usually three naps' : c >= 1.5 ? 'Longer stretches at night' : null;
+    const sleep = c => c >= 8 ? 'Often down to two naps' : c >= 4 ? 'Usually three naps' : c >= 1.5 ? 'Longer stretches at night' : null;
     const safe = d => d >= 9 ? 'Pulling up: anchor furniture and lower the crib mattress' : d >= 6 ? 'On the move: stair gates and babyproofing' : d >= 3 ? 'Reaching and rolling: clear the floor, stop swaddling' : null;
     const devT = d => { const k = typeof devRef === 'function' ? devRef(d) : null; return k != null && DEV_STAGES[k] ? DEV_STAGES[k].title : null; };
     const visit = x => WELL_VISITS.includes(x) ? healthJourneyLabel(x) : null;
@@ -312,7 +312,7 @@
 
     const close = !live() ? '' : !now.length && !next.length ? `You’re all caught up for now.` : !now.length ? `Nothing to do right now. We’ll bring things up as they get closer.` : `That’s everything for now.`;
 
-    let h = `${live() ? `<p class="home-age-line">${esc(name())} · ${esc(monthLabel(actualMonth()))}${profile.early && profile.due && typeof developmentMonth === 'function' && developmentMonth(actualMonth()) !== actualMonth() ? ` <button class="hub-agechip" onclick="openPage('age-context')" aria-label="${esc(monthLabel(developmentMonth(actualMonth())))} adjusted. About age">· ${developmentMonth(actualMonth())} adjusted <span aria-hidden="true">ⓘ</span></button>` : ''}</p>` : ''}<section class="connected-now" aria-label="What matters now"><div class="connected-summary"><div class="home-summary connected-summary-intro"><div class="home-summary-heading"><div class="home-month-eyebrow">${!live() ? (month > actualMonth() ? 'Coming up · ' : 'Looking back · ') + (month === 0 ? 'Newborn' : month + (month === 1 ? ' month' : ' months')) : 'What matters now'}</div><h1>${focus.title}</h1></div><span class="home-summary-art" aria-hidden="true">${homeMonthArt(month)}</span><p class="heroanswer">${focus.body}</p><div class="home-summary-spectrum" aria-hidden="true">${TOPICS.map(([t]) => `<span style="background:${YEAR_PALETTES[t].bg}"></span>`).join('')}</div></div>`;
+    let h = `${live() ? `<p class="home-age-line">${esc(name())} · ${esc(typeof babyAge === 'function' && babyAge() ? babyAge() : monthLabel(actualMonth()))}${profile.early && profile.due && typeof adjustedAge === 'function' && adjustedAge() ? ` <button class="hub-agechip" onclick="openPage('age-context')" aria-label="${esc(typeof adjustedAge === 'function' ? adjustedAge() : monthLabel(developmentMonth(actualMonth())))} adjusted. About age">· ${esc(typeof adjustedAge === 'function' ? adjustedAge() : developmentMonth(actualMonth()))} adjusted <span aria-hidden="true">ⓘ</span></button>` : ''}</p>` : ''}<section class="connected-now" aria-label="What matters now"><div class="connected-summary"><div class="home-summary connected-summary-intro"><div class="home-summary-heading"><div class="home-month-eyebrow">${!live() ? (month > actualMonth() ? 'Coming up · ' : 'Looking back · ') + (month === 0 ? 'Newborn' : month + (month === 1 ? ' month' : ' months')) : 'What matters now'}</div><h1>${focus.title}</h1></div><span class="home-summary-art" aria-hidden="true">${homeMonthArt(month)}</span><p class="heroanswer">${focus.body}</p><div class="home-summary-spectrum" aria-hidden="true">${TOPICS.map(([t]) => `<span style="background:${YEAR_PALETTES[t].bg}"></span>`).join('')}</div></div>`;
     if (now.length) h += `<div class="connected-summary-links">${now.map(row).join('')}</div>`;
     h += `</div>${homeMomentRow()}</section>`;
     h += previewChanges();

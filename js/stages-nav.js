@@ -44,7 +44,9 @@
     const ci = items.findIndex(x => x.now);
     const list = items.map((it, i) => {
       const cls = it.now ? 'is-now' : ci >= 0 && i < ci ? 'is-past' : '';
-      const age = ageOf(it);
+      let age = ageOf(it);
+      // Checkups behind the baby say whether they're marked, so a parent can see what may have been missed.
+      if (cat === 'Health' && ci >= 0 && i < ci) { try { const v = WELL_VISITS[i], r = typeof healthRecord === 'function' ? healthRecord(v) : null, sk = (() => { try { return !!(JSON.parse(localStorage.getItem('ahead-visit-skipped:' + journeyKey())) || {})[v]; } catch (e) { return false; } })(); age = r && r.status === 'attended' ? 'Done' : sk ? 'Skipped' : 'Not marked yet · tap to add it'; } catch (e) {} }
       return `<li class="st-item ${cls}"><span class="st-node" aria-hidden="true">${it.now && typeof catIcon === 'function' ? catIcon(cat) : ''}</span><button class="st-card" onclick="${it.now ? topicGo(cat) : it.onclick}">${it.now ? `<span class="st-tag">${nowTag(cat)}</span>` : ''}<b>${esc(it.label)}</b>${age ? `<small class="st-age">${esc(age)}</small>` : ''}<span class="st-one">${esc(fill((ONE[cat] || [])[i] || ''))}</span><span class="st-chev" aria-hidden="true">›</span></button></li>`;
     }).join('');
     const foot = cat === 'Health' ? `Checkups follow ${nm()}’s birthday.` : CHANGEABLE.includes(cat) ? `Ages are typical. If ${nm()} seems more like another stage, open it and tap “Make this ${nm()}’s stage”.` : 'Ages are typical. Every baby moves at their own pace.';
@@ -83,7 +85,7 @@
     const what = oi < ci ? 'Looking back' : cat === 'Health' ? 'Coming up' : 'Previewing';
     const stage = cat === 'Health' ? on.label.replace(/ months?$/, '-month').replace('First week', 'First-week') + ' checkup' : on.label;
     const when = ['Development', 'Daily rhythm', 'Health'].includes(cat) ? '' : ageOf(on) || (old && old.querySelector('span') ? old.querySelector('span').textContent.replace(/^[^·]*·\s*/, '') : '');
-    const backTxt = cat === 'Health' ? 'next checkup' : `${nm()}’s stage`;
+    const backTxt = cat === 'Health' ? 'your next checkup' : `${nm()}’s stage`;
     const changeable = on.change && CHANGEABLE.includes(cat);
     const icon = typeof catIcon === 'function' ? catIcon(cat) : '';
     const html = `<section class="hub-preview st-banner${changeable ? ' has-make' : ''}" aria-label="${what}"><div class="st-banner-top"><span class="st-banner-icon" aria-hidden="true">${icon}</span><div class="st-banner-copy"><small>${what}</small><b>${esc(stage)}${when ? ` <i>· ${esc(when)}</i>` : ''}</b></div>${changeable ? '' : `<button class="st-btn st-btn-back" onclick="${topicGo(cat)}">Back to ${backTxt}</button>`}</div>${changeable ? `<div class="st-banner-actions"><button class="st-btn st-btn-back" onclick="${topicGo(cat)}">Back to ${backTxt}</button><button class="st-btn st-btn-make" onclick="${on.change}">Make this ${nm()}’s stage</button></div>` : ''}</section>`;

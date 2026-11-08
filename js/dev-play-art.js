@@ -116,5 +116,74 @@
   };
   // Four ideas per stage, in the order a parent might try them.
   window.DEV_STAGE_IDEAS = { 2: ['close-face', 'chest-chat', 'bold-picture', 'song-listen'], 4: ['mirror-company', 'easy-grip', 'tummy-picture', 'crinkle-book'], 6: ['two-hands', 'peek-face', 'supported-reach', 'floor-drum'], 9: ['hidden-toy', 'empty-basket', 'ball-turns', 'hello-wave'], 12: ['pretend-cup', 'stack-pair', 'action-book', 'two-baskets'] };
+  /* Pictures for the rest of the ideas, built from the same pieces: a baby on the back, on the tummy, sitting, crawling
+     or standing; a grown-up close by; and one simple object for the idea. Tummy time always has a grown-up nearby. */
+  const held = (c, x = 52, y = 44) => grownup(c, x, y, 1) + `<rect x="${x + 22}" y="${y + 30}" width="40" height="22" rx="11" fill="${c.bg}"/>` + face(c, x + 40, y + 18, 13, -2) + `<path d="M${x - 8} ${y + 48}c14 4 50 6 70 2" stroke="${HK}" stroke-width="9" stroke-linecap="round" fill="none"/>`;
+  const windowFrame = (x, y) => `<rect x="${x - 20}" y="${y - 22}" width="40" height="44" rx="4" fill="#fff"/><path d="M${x} ${y - 22}v44M${x - 20} ${y}h40" stroke="${SKY}" stroke-width="3"/>`;
+  const photo = (x, y, rot = -6) => `<g transform="rotate(${rot} ${x} ${y})"><rect x="${x - 13}" y="${y - 15}" width="26" height="30" rx="2" fill="#fff"/><circle cx="${x}" cy="${y - 3}" r="7" fill="${HK}"/><rect x="${x - 9}" y="${y + 6}" width="18" height="5" rx="2.5" fill="${MINT}"/></g>`;
+  const spoon = (x, y, rot = 30) => `<g transform="rotate(${rot} ${x} ${y})"><ellipse cx="${x}" cy="${y - 10}" rx="4" ry="6" fill="${SUN}"/><rect x="${x - 1.5}" y="${y - 5}" width="3" height="18" rx="1.5" fill="${SUN}"/></g>`;
+  const tub = (c, x, y) => `<rect x="${x - 13}" y="${y - 16}" width="26" height="16" rx="4" fill="${MINT}"/><rect x="${x - 15}" y="${y - 20}" width="30" height="6" rx="3" fill="${ROSE}"/>`;
+  const drops = (c, x, y) => `<path d="M${x} ${y}q-4 6 0 9q4-3 0-9Z" fill="${SKY}"/><path d="M${x + 8} ${y + 6}q-3 5 0 7q3-2 0-7Z" fill="${SKY}"/>`;
+  const S2 = {
+    'slow-song': c => svg(held(c) + notes(c, 108, 34), c),
+    'voice-tour': c => svg(held(c, 46, 44) + photo(120, 48, 6), c),
+    'rhyme-cuddle': c => svg(held(c) + notes(c, 112, 30) + wave(c, 100, 40), c),
+    'expression': c => svg(grownup(c, 52, 44, 1) + back(c, 104, 88) + `<path d="M46 56q6 5 12 0" stroke="${c.ink}" stroke-opacity=".6" stroke-width="2" fill="none" stroke-linecap="round"/>`, c),
+    'floor-company': c => svg(back(c, 92, 84) + grownup(c, 40, 60, 1), c),
+    'sound-answer': c => svg(held(c) + wave(c, 108, 52) + wave(c, 32, 40), c),
+    'book-voices': c => svg(held(c, 44, 44) + `<g transform="rotate(-6 122 58)">${book(c, 122, 50, 34)}</g>`, c),
+    'outside-pause': c => svg(held(c, 48, 50) + windowFrame(122, 46), c),
+    'face-follow': c => svg(back(c, 92, 86) + grownup(c, 56, 36, 1) + `<path d="M76 30q14-6 28 0" stroke="${c.ink}" stroke-opacity=".3" stroke-width="2" fill="none" stroke-dasharray="2 4" stroke-linecap="round"/>`, c),
+    'smile-pause': c => svg(held(c) + `<path d="M104 30h.01M112 30h.01M120 30h.01" stroke="${c.ink}" stroke-opacity=".45" stroke-width="4" stroke-linecap="round"/>`, c),
+    'change-chat': c => svg(`<rect x="44" y="90" width="84" height="8" rx="4" fill="${c.ink}" fill-opacity=".25"/>` + back(c, 96, 78) + grownup(c, 132, 40, -1) + wave(c, 116, 32), c),
+    'face-picture': c => svg(back(c, 92, 84) + `<g transform="rotate(-8 56 40)">${card(56, 40)}</g>` + grownup(c, 128, 40, -1), c),
+    'palm-touch': c => svg(back(c, 86, 82) + `<path d="M40 56c10 6 18 12 22 20" stroke="${HK}" stroke-width="9" stroke-linecap="round" fill="none"/>` + `<circle cx="62" cy="76" r="5" fill="${HK}"/>`, c),
+    'tummy-reflection': c => svg(tummy(c, 76, 86) + mirror(c, 124, 62), c),
+    'follow-toy': c => svg(back(c, 92, 86) + rattle(56, 40, -20) + `<path d="M66 34q22-12 44 0" stroke="${c.ink}" stroke-opacity=".3" stroke-width="2" fill="none" stroke-dasharray="2 4" stroke-linecap="round"/>`, c),
+    'sock-puppet': c => svg(back(c, 96, 86) + `<path d="M40 48c0-14 10-20 20-18s14 12 10 22l-4 26h-22Z" fill="${ROSE}"/><circle cx="52" cy="42" r="2.4" fill="#4b4560"/><circle cx="62" cy="42" r="2.4" fill="#4b4560"/>` + wave(c, 72, 34), c),
+    'barefoot-kicks': c => svg(back(c, 80, 82) + `<circle cx="120" cy="72" r="5" fill="${SK}"/><circle cx="124" cy="82" r="5" fill="${SK}"/>` + wave(c, 128, 62), c),
+    'touch-rhyme': c => svg(back(c, 92, 84) + grownup(c, 132, 40, -1) + notes(c, 50, 40), c),
+    'fabric-feel': c => svg(back(c, 92, 84, { up: false }) + cloth(c, 60, 64), c),
+    'tummy-side': c => svg(tummy(c, 86, 86) + rattle(46, 78, -30) + grownup(c, 128, 40, -1), c),
+    'lap-sway': c => svg(held(c) + notes(c, 110, 32) + `<path d="M24 100q10-6 20 0" stroke="${c.ink}" stroke-opacity=".3" stroke-width="2" fill="none" stroke-linecap="round"/>`, c),
+    'page-pat': c => svg(tummy(c, 78, 86) + `<g transform="rotate(4 120 70)">${book(c, 120, 62, 34)}</g>`, c),
+    'feet-discovery': c => svg(back(c, 82, 82) + `<circle cx="118" cy="62" r="5" fill="${SK}"/><circle cx="110" cy="58" r="5" fill="${SK}"/>`, c),
+    'roll-interest': c => svg(back(c, 80, 84) + rattle(122, 82, 40) + `<path d="M102 70q8-8 12 0" stroke="${c.ink}" stroke-opacity=".35" stroke-width="2" fill="none" stroke-linecap="round"/>`, c),
+    'sound-side': c => svg(back(c, 92, 84) + rattle(42, 72, -40) + wave(c, 46, 54), c),
+    'texture-pair': c => svg(sit(c, 64, 98, { right: [[80, 78], [94, 84]] }) + cloth(c, 104, 98) + `<circle cx="130" cy="92" r="7" fill="${SUN}"/><path d="M126 90h.01M131 94h.01M133 89h.01" stroke="#fff" stroke-width="2" stroke-linecap="round"/>`, c),
+    'rhyming-page': c => svg(sit(c, 60, 98, { right: [[76, 76], [88, 72]] }) + `<g transform="rotate(-6 112 66)">${book(c, 112, 60, 38)}</g>` + notes(c, 118, 34), c),
+    'basket-out': c => svg(sit(c, 60, 98, { right: [[76, 80], [92, 78]] }) + basket(c, 114, 96) + block(110, 72, 10, ROSE), c),
+    'mirror-faces': c => svg(sit(c, 66, 98, { right: [[82, 74], [92, 70]] }) + mirror(c, 116, 52) + grownup(c, 36, 40, 1), c),
+    'leaf-watch': c => svg(held(c, 46, 48) + leaf(118, 30, 8, MINT) + leaf(132, 50, 6, '#cfe7b8') + leaf(110, 58, 5, MINT), c),
+    'partly-hide': c => svg(sit(c, 60, 98, { right: [[76, 80], [92, 86]] }) + `<circle cx="116" cy="88" r="7" fill="${ROSE}"/>` + cloth(c, 112, 98), c),
+    'drop-return': c => svg(sit(c, 58, 98, { right: [[74, 74], [86, 64]] }) + `<path d="M92 66v18" stroke="${c.ink}" stroke-opacity=".3" stroke-width="2" stroke-dasharray="2 4" stroke-linecap="round"/>` + ball(96, 92, 7), c),
+    'texture-basket': c => svg(sit(c, 60, 98, { right: [[76, 80], [92, 80]] }) + basket(c, 114, 96) + spoon(106, 80, -20) + cloth(c, 122, 84), c),
+    'animal-sounds': c => svg(sit(c, 60, 98, { right: [[76, 76], [88, 72]] }) + bear(c, 116, 98) + wave(c, 98, 54), c),
+    'roll-ball': c => svg(sit(c, 52, 98, { right: [[68, 82], [80, 88]] }) + ball(100, 92, 8) + `<path d="M112 92h14" stroke="${c.ink}" stroke-opacity=".3" stroke-width="2" stroke-dasharray="2 4" stroke-linecap="round"/>`, c),
+    'song-pause': c => svg(sit(c, 98, 98) + grownup(c, 44, 46, 1) + notes(c, 72, 30), c),
+    'bang-two': c => svg(sit(c, 80, 98, { left: [[64, 76], [70, 68]], right: [[96, 76], [90, 68]] }) + block(64, 58, 11, ROSE) + block(86, 58, 11, MINT) + wave(c, 98, 48), c),
+    'spoon-bowl': c => svg(sit(c, 62, 98, { right: [[78, 78], [94, 80]] }) + bowl(c, 112, 96) + spoon(104, 84, 40), c),
+    'lift-flap': c => svg(sit(c, 60, 98, { right: [[76, 76], [90, 70]] }) + `<g transform="rotate(-6 114 66)">${book(c, 114, 60, 38)}<path d="M114 64l12-6v12Z" fill="${SUN}"/></g>`, c),
+    'family-photos': c => svg(sit(c, 60, 98, { right: [[76, 74], [88, 66]] }) + photo(112, 56, 6), c),
+    'peek-corner': c => svg(crawl(c, 64, 96) + `<rect x="108" y="44" width="10" height="54" rx="3" fill="${c.ink}" fill-opacity=".3"/>` + `<circle cx="124" cy="58" r="8" fill="${HK}"/>`, c),
+    'drum-copy': c => svg(sit(c, 60, 98, { right: [[76, 80], [90, 80]] }) + bowl(c, 100, 96) + spoon(96, 76, 40) + grownup(c, 132, 46, -1), c),
+    'choose-two': c => svg(sit(c, 80, 98, { left: [[64, 80], [56, 84]], right: [[96, 80], [104, 84]] }) + ball(46, 92, 7) + block(108, 84, 12, ROSE), c),
+    'knock-stack': c => svg(sit(c, 56, 98, { right: [[72, 80], [88, 78]] }) + block(100, 84, 14, MINT) + `<g transform="rotate(20 116 70)">${block(108, 62, 12, ROSE)}</g>` + block(122, 88, 10, SUN), c),
+    'give-back': c => svg(sit(c, 64, 98, { right: [[80, 78], [94, 72]] }) + ball(100, 70, 6) + grownup(c, 128, 46, -1), c),
+    'put-in': c => svg(sit(c, 60, 98, { right: [[76, 76], [90, 70]] }) + tub(c, 112, 98) + block(106, 66, 9, ROSE), c),
+    'follow-point': c => svg(sit(c, 98, 98, { left: [[84, 76], [80, 70]] }) + grownup(c, 44, 46, 1) + `<path d="M58 60l14-14" stroke="${HK}" stroke-width="5" stroke-linecap="round"/>` + ball(84, 30, 6), c),
+    'open-close': c => svg(sit(c, 60, 98, { right: [[76, 76], [90, 72]] }) + `<g transform="rotate(-6 116 66)">${book(c, 116, 62, 40)}</g>`, c),
+    'ball-slope': c => svg(sit(c, 52, 98, { right: [[68, 80], [80, 76]] }) + `<path d="M84 64l48 30" stroke="${c.ink}" stroke-opacity=".35" stroke-width="5" stroke-linecap="round"/>` + ball(108, 72, 6), c),
+    'stir-bowl': c => svg(sit(c, 62, 98, { right: [[78, 78], [94, 78]] }) + bowl(c, 110, 96) + spoon(104, 82, 20), c),
+    'loose-lid': c => svg(sit(c, 60, 98, { right: [[76, 78], [92, 78]] }) + tub(c, 112, 98) + `<circle cx="112" cy="70" r="4" fill="${SUN}"/>`, c),
+    'gesture-song': c => svg(sit(c, 98, 98, { left: [[84, 70], [80, 58]], right: [[112, 70], [116, 58]] }) + grownup(c, 44, 46, 1) + notes(c, 70, 30), c),
+    'teddy-hug': c => svg(sit(c, 66, 98, { right: [[82, 78], [96, 82]] }) + bear(c, 108, 98), c),
+    'name-find': c => svg(sit(c, 60, 98, { right: [[76, 80], [90, 84]] }) + ball(116, 90, 8) + block(96, 88, 10, ROSE) + `<path d="M108 66q8-8 16 0" stroke="${c.ink}" stroke-opacity=".35" stroke-width="2" fill="none" stroke-linecap="round"/>`, c),
+    'feed-teddy': c => svg(sit(c, 60, 98, { right: [[76, 76], [90, 72]] }) + spoon(98, 74, 50) + bear(c, 122, 98), c),
+    'water-pour': c => svg(sit(c, 56, 98, { right: [[72, 74], [86, 70]] }) + cup(94, 72) + drops(c, 100, 76) + bowl(c, 110, 98), c),
+    'body-song': c => svg(sit(c, 98, 98, { left: [[84, 76], [76, 70]], right: [[112, 76], [120, 70]] }) + grownup(c, 44, 46, 1) + notes(c, 70, 28), c),
+    'hide-helper': c => svg(sit(c, 60, 98, { right: [[76, 80], [92, 86]] }) + cloth(c, 110, 98) + grownup(c, 136, 46, -1), c)
+  };
+  Object.keys(S2).forEach(k => { if (!S[k]) S[k] = S2[k]; });
   window.devPlayArt = id => (S[id] ? S[id](pal()) : '');
 })();

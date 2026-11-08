@@ -84,6 +84,10 @@
     cube: (c) => `<path d="M12 3.5 19.5 7.5v9L12 20.5 4.5 16.5v-9Z" fill="${c.bg}"/><path d="M4.5 7.5 12 11.5l7.5-4M12 11.5v9"/>`,
     hidden: (c) => `<circle cx="16.5" cy="10" r="3" fill="#f3d58a"/><path d="M3 19c1-6 4-9 8-9s7 3 8 9Z" fill="${c.bg}"/><path d="M6.5 15.5c1.2-1.5 2.6-2.2 4.2-2.2"/>`,
     toss: (c) => `<circle cx="18" cy="17" r="3" fill="${c.bg}"/><path d="M4 18C5 9 10 5 15 6" stroke-dasharray="1.5 2.2"/><path d="M13.5 4.2 15.3 6l-2 1.4"/>`,
+    swaddle: (c) => `<circle cx="12" cy="5.8" r="2.8" fill="${c.bg}"/><path d="M7.5 11a4.5 4.5 0 0 1 9 0v6a4.5 4.5 0 0 1-9 0Z" fill="${c.bg}"/><path d="M7.5 11.5l9 4.5M16.5 11.5 12 13.8"/>`,
+    stove: (c) => `<rect x="3.5" y="9" width="17" height="11" rx="2" fill="${c.bg}"/><circle cx="8.5" cy="14.5" r="2.2"/><circle cx="15.5" cy="14.5" r="2.2"/><path d="M8.5 13.3v1.2M15.5 13.3v1.2M6 5.5h3M15 5.5h3"/>`,
+    pot: (c) => `<path d="M5 10h14v6.5a3.5 3.5 0 0 1-3.5 3.5h-7A3.5 3.5 0 0 1 5 16.5Z" fill="${c.bg}"/><path d="M3 10h18M19 12.5h2.5M10 7.5h4M12 7.5V6"/>`,
+    sunrise: (c) => `<path d="M6.5 16a5.5 5.5 0 0 1 11 0Z" fill="${c.bg}"/><path d="M3 16h18M5 19.5h14M12 5v3M5.6 8.6l1.8 1.8M18.4 8.6l-1.8 1.8"/>`,
     towel: (c) => `<rect x="5" y="3.5" width="14" height="17" rx="2" fill="${c.bg}"/><path d="M5 8h14M5 16h14"/>`
   };
   /* Figures: flat, outline-free scenes on a soft backdrop. Words live in HTML under the picture, in the app's type. */
@@ -236,7 +240,7 @@
     done: ['All done', '“I’m finished.”', 'Hold your hands up and twist them out, back and forth.', '7xQE2N0z7gM']
   };
   window.hubSigns = function () {
-    return `<div class="hub-signs">${Object.values(SIGN_LIST).map(([w, m, how, id]) => `<div class="hub-sign">${window.hubEmbed(id, `The sign for ${w.toLowerCase()}`, 'ASL University', { small: true, loop: true })}<b>${w}</b><span class="hub-sign-means">${m}</span><small>${how}</small></div>`).join('')}</div><p class="hub-embed-credit">${F2('Clips from ASL University (Dr. Bill Vicars). Tap a picture to play it on a loop.')}</p>`;
+    return `<div class="hub-signs">${Object.values(SIGN_LIST).map(([w, m, how, id]) => `<div class="hub-sign">${window.hubEmbed(id, `The sign for ${w.toLowerCase()}`, 'ASL University', { small: true, loop: true })}<b>${w}</b><span class="hub-sign-means">${m}</span><small>${how}</small></div>`).join('')}</div><p class="hub-embed-credit">${F2('Clips of American Sign Language from ASL University (Dr. Bill Vicars).')}</p>`;
   };
 
   // Videos that play right on the page. Nothing loads from YouTube until the parent taps play.
@@ -346,10 +350,9 @@
       const holder = svg.closest('.hub-row, .hub-tick, button, div') || svg.parentElement;
       const text = (holder.querySelector('b') || holder).textContent + ' ' + ((holder.querySelector('small') || {}).textContent || '');
       const fits = HINTS.filter(([re]) => re.test((holder.querySelector('b') || holder).textContent)).map(([, n]) => n).filter(n => ART[n]);
-      // The icon follows the row's words: keep it if the title supports it, otherwise switch to the first icon that fits.
-      if (!used.has(name) && (!fits.length || fits.includes(name))) { used.add(name); return; }
+      // An icon the page chose stays. Only a repeat on the same page is swapped, for one that fits the row's words.
+      if (!used.has(name)) { used.add(name); return; }
       const hint = [...fits, ...HINTS.filter(([re]) => re.test(text)).map(([, n]) => n)].find(n => ART[n] && !used.has(n));
-      if (!hint && !used.has(name)) { used.add(name); return; }
       const pick = hint || POOL.find(n => ART[n] && !used.has(n));
       if (!pick) return;
       used.add(pick);

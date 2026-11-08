@@ -43,7 +43,7 @@
     Health: { kind: 'calendar', fixed: true, stages: [0, 1, 2, 4, 6, 9, 12].map(a => ({ key: a, label: a === 0 ? 'First week' : a + (a === 1 ? ' month' : ' months') })) }
   };
 
-  const guideAge = cat => (cat === 'Development' ? developmentMonth(ageNow()) : typeof hubAgeFor === 'function' ? hubAgeFor('care', ageNow()) : ageNow());
+  const guideAge = cat => (cat === 'Development' ? developmentMonth(ageNow()) : cat === 'Safety' ? safetyMonth(ageNow()) : typeof hubAgeFor === 'function' ? hubAgeFor('care', ageNow()) : ageNow());
 
   // Can the parent make stage i (index into the table) the baby's stage right now?
   // Safety follows the child: first setup, rolling, crawling, pulling up. Crawling covers "about to move" and "moving".
