@@ -31,3 +31,5 @@
 /* What to do, one idea per line */
 #main .ss-do-list { margin: 0; padding-left: 18px; font-size: 15.5px; line-height: 1.5; color: var(--ink) }
 #main .ss-do-list li + li { margin-top: 6px }
+/* Sleep subpages: one color per screen. Tiles and two-up cards are white with a hairline, so only "What to do" carries the page color. */
+#main .hub-detail[data-ss][data-overview="Sleep"] .hub-tiles > div:not(.sm-tile), #main .hub-detail[data-overview="Sleep"] .hub-two > div { background: #fff; border: 1px solid var(--line) }

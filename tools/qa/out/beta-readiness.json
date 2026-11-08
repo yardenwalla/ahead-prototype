@@ -1,7 +1,9 @@
 {
-  "checks": 85742,
-  "renders": 7464,
-  "destinations": 6191,
+  "checks": 84243,
+  "renders": 7524,
+  "destinations": 6251,
   "externalLinks": 5,
-  "failures": []
+  "failures": [
+    "Changing milk type updates the amounts"
+  ]
 }
