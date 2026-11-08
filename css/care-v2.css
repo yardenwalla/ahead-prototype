@@ -195,7 +195,3 @@
 #main .care-v2 .rt-split .rt-head { padding: 4px 0 2px }
 #main .care-v2 .rt-split .rt-head b { font-size: 15px }
 #main .care-v2 .rt-split .rt-group { margin: 0 }
-/* The home's "Everything else, every day" fold: the same rows, tucked under the lines that change now. */
-#main .care-v2 .rt-more { border-top: 1px solid var(--line) }
-#main .care-v2 .rt-more > summary { padding: 12px 0 }
-#main .care-v2 .rt-more[open] > summary { padding-bottom: 4px }

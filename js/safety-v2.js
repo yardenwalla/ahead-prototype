@@ -20,6 +20,11 @@
       tip: ['Get it checked', 'Trained car-seat checkers can look over the installation and show you the harness fit. Many fire stations and hospitals offer it, often for free.'],
       links: [['Find a car-seat check near you · NHTSA', 'https://www.nhtsa.gov/campaign/right-seat']] },
     sleep: { t: 'Set up a bare crib', s: 'Firm, flat and empty, in your room', i: 'moon', c: 'sleep', go: "openPage('chg:Sleep:safe')", sleep: true },
+    cribspot: { t: 'Keep the crib or bassinet away from windows', s: 'And away from blind and monitor cords', i: 'window', c: 'sleep',
+      tiles: [['crib', 'Away from windows', 'Not under or right beside one'], ['cord', 'Cordless blinds', 'Tying up the cord isn’t enough'], ['home', 'Monitor cords', 'At least 3 feet from the crib']],
+      why: 'Cords from blinds, shades and monitors can wrap around {p} neck. It can happen from birth, so this comes first.',
+      steps: ['Put the crib or bassinet away from windows.', 'Swap corded blinds and shades near it for cordless ones. Tying up the pull cord isn’t enough.', 'Keep monitor cords at least 3 feet from the crib or bassinet.'],
+      links: [['Window covering cords · CPSC', cpsc]] },
     changing: { t: 'Set up your changing spot', s: 'Supplies within arm’s reach, or a mat on the floor', i: 'diaper', c: 'body',
       vs: ['Where to change {o}', ['On a changing table', 'Use the strap, and keep one hand on {o} every time.'], ['On the floor', 'A mat on the floor. Never a bed or sofa, even for a second.']], tiles: null,
       tip: ['Everything within reach', 'Diapers, wipes and a change of clothes, so you never need to step away.'],
@@ -69,9 +74,9 @@
       steps: ['Fit anti-tip straps to dressers, bookcases and other tall furniture {s} could pull on.', 'Mount TVs on the wall, or strap them to the furniture they stand on.', 'Do it any time before {s} {pull|pulls} up. Many families do it while babyproofing for crawling.'],
       links: [['Anchor it · CPSC', cpsc]] },
     windows: { t: 'Make windows and blinds safe', s: 'Open no more than 4 inches, and no hanging cords', i: 'window', c: 'car',
-      tiles: [['lock', 'Window stops', 'Open 4 inches at most. Screens don’t stop falls'], ['home', 'One way out', 'One window per room an adult can open fully, for a fire'], ['cord', 'Cordless blinds', 'Tied-up cords can still be reached'], ['crib', 'Furniture away', 'Cribs and climbable things away from windows']],
-      why: 'Standing puts windows within reach. Blind cords near a crib are a risk from birth, so check those first.',
-      steps: ['Fit window stops, small locks that keep windows from opening more than 4 inches. Screens don’t stop falls.', 'Keep at least one window in each room that an adult can open fully in a fire.', 'Swap corded blinds and shades for cordless ones. Tying up the pull cord isn’t enough: inner cords and loops can still be reached, from the floor or from furniture.', 'Move cribs and furniture {s} could climb away from windows.'],
+      tiles: [['lock', 'Window stops', 'Open 4 inches at most. Screens don’t stop falls'], ['home', 'One way out', 'One window per room an adult can open fully, for a fire'], ['cord', 'Cordless blinds', 'Tied-up cords can still be reached'], ['crib', 'Furniture away', 'Nothing to climb near a window']],
+      why: 'Standing puts windows within reach.',
+      steps: ['Fit window stops, small locks that keep windows from opening more than 4 inches. Screens don’t stop falls.', 'Keep at least one window in each room that an adult can open fully in a fire.', 'Swap corded blinds and shades for cordless ones. Tying up the pull cord isn’t enough: inner cords and loops can still be reached, from the floor or from furniture.', 'Move furniture {s} could climb away from windows.'],
       links: [['Window safety · CPSC', cpsc]] },
     kitchen: { t: 'Fit stove knob covers and an oven lock', s: 'Before {s} can reach the front of the stove', i: 'sfknob', c: 'high',
       tiles: [['shield', 'Knob covers', 'So the burners can’t be turned on'], ['lock', 'An oven lock', 'So the door stays shut'], ['sfpot', 'Back burners', 'With pot handles turned in']],
@@ -101,7 +106,7 @@
     window.hubArt.sf = true;
   }
   const STAGES = [
-    { key: 'setup', label: 'First setup', age: 'From birth', title: 'Four things to set up once', lead: 'Before Maya can move, safety is about where {s} {ride|rides}, {sleep|sleeps} and {get|gets} changed.', ids: ['seat', 'sleep', 'changing', 'gear'] },
+    { key: 'setup', label: 'First setup', age: 'From birth', title: 'Five things to set up once', lead: 'Before Maya can move, safety is about where {s} {ride|rides}, {sleep|sleeps} and {get|gets} changed.', ids: ['seat', 'sleep', 'cribspot', 'changing', 'gear'] },
     { key: 'reaching', label: 'Rolling', age: '3–6 months', title: 'Rolling puts the floor in reach', lead: 'At the first sign of rolling, the swaddle comes off and the floor needs clearing. Rolling brings small things within reach, and a bassinet stops being safe.', ids: ['rollsleep', 'small', 'bags'] },
     { key: 'rolling', label: 'Crawling', age: '6–9 months', title: 'Crawling opens up every room', lead: 'Most babies start crawling between 6 and 9 months. Do the low, reachable things first, and keep water out of reach.', ids: ['gates', 'storage', 'outlets', 'pool', 'mattress'] },
     { key: 'pulling', label: 'Pulling up', age: '9 months+', title: 'Standing brings everything higher into reach', lead: 'Furniture becomes a handhold, and windows and the stove are suddenly within reach.', ids: ['anchor', 'windows', 'kitchen', 'mattress2'] }
@@ -185,7 +190,7 @@
   const baseRoute = window.changesRoute;
   window.changesRoute = function (p) { const m = /^chg:Safety:d:step:(\w+)$/.exec(p); return m ? stepPage(m[1]) : baseRoute(p); };
   // Older checklist ids open the step that now holds them.
-  const MAP = { batteries: 'small', rollspace: 'small', doors: 'storage', cords: 'windows', walkers: 'gear', changing: 'changing', seat: 'seat', small: 'small', bags: 'bags', gates: 'gates', storage: 'storage', outlets: 'outlets', anchor: 'anchor', windows: 'windows', pool: 'pool' };
+  const MAP = { batteries: 'small', rollspace: 'small', doors: 'storage', cords: 'windows', cribspot: 'cribspot', walkers: 'gear', changing: 'changing', seat: 'seat', small: 'small', bags: 'bags', gates: 'gates', storage: 'storage', outlets: 'outlets', anchor: 'anchor', windows: 'windows', pool: 'pool' };
   window.openHomeSafetyCheck = openHomeSafetyCheck = function (owner, id) { const to = MAP[id]; openPage(to ? `chg:Safety:d:step:${to}` : 'topic:Safety'); };
   window.openSafetyChecklist = openSafetyChecklist = function () { openPage('topic:Safety'); };
 })();

@@ -1383,11 +1383,6 @@
 #main .dev-tile-ticks { display: inline-flex; gap: 4px }
 #main .dev-tile-ticks i { width: 9px; height: 9px; border-radius: 50%; border: 1.5px solid var(--dt-ink); opacity: .55; box-sizing: border-box }
 #main .dev-tile-ticks i.is-seen { background: var(--dt-ink); opacity: 1 }
-/* One color per screen: the hero carries Development's color; the four area tiles are white, each with its own small picture. */
-#main .dev-tile { background: var(--white, #fff) !important; box-shadow: inset 0 0 0 1px var(--line, #e7e1d8) }
-#main .dev-tile .dev-tile-label { color: var(--muted, #625d68) !important }
-#main .dev-tile .dev-tile-count { color: var(--year-ink) !important }
-
 /* Health: one fever rule (the baby's own), and the poop color card */
 #main .hub-fever-bands.is-one { grid-template-columns: 1fr }
 #main .hub-fever-bands.is-one b { font-size: 24px }
