@@ -145,7 +145,7 @@
   const feedNow = () => (typeof profile !== 'undefined' && profile.feed) || 'Breast milk';
 
   // Setting up a backup is a to-do list, so it's a checklist you can tick, kept on this phone.
-  const BACKUP = [['Name two backup people', 'Family, friends or a sitter you could call at short notice.', 'heart'], ['Ask work about backup care', 'Some jobs offer backup care days.', 'notepad'], ['Save their numbers', 'In your phone, and on the fridge.', 'moon']];
+  const BACKUP = [['Name two backup people', 'Family, friends or a sitter you could call at short notice.', 'heart'], ['Ask work about backup care', 'Some jobs offer backup care days.', 'notepad'], ['Save their numbers', 'In your phone, and on Maya’s care card under “Who to call”.', 'moon']];
   window.ccBackupTick = i => { const on = load('ahead-childcare-backup', []); save('ahead-childcare-backup', on.includes(i) ? on.filter(x => x !== i) : on.concat(i)); rerender(); };
   const backupList = () => { const on = load('ahead-childcare-backup', []); return `<h2 class="hub-h2">${F('Set up your backup')}</h2>` + H().ticks(BACKUP, i => on.includes(i), i => `ccBackupTick(${i})`, CAT); };
 
@@ -230,9 +230,9 @@
       + picSteps('When things don’t go to plan', [
         ['thermo', '{S’s} sick', 'Call your backup, or keep {o} home.'],
         ['home', 'The caregiver is sick', 'Call your backup, or a sitter you know.'],
-        ['hand', 'Your nanny quits', 'Family or a sitter for now, then an agency.'],
+        ['hand', 'Your caregiver leaves', 'Family or a sitter for now, while you find new care.'],
         ['sun', 'Closed days', 'Plan holidays early: family, a sitter or time off.']],
-        'When the baby is sick, take turns or call your backup. When the caregiver is sick, call a sitter. If a nanny quits, cover with family or a temporary nanny. Plan daycare holidays early.')
+        'When the baby is sick, take turns or call your backup. When the caregiver is sick, call a sitter. If your caregiver leaves, cover with family or a sitter while you find new care. Plan daycare holidays early.')
       + good([['blocks', 'Changing care', 'Overlap the old and new care for a few days if you can.']]), 'shield');
 
     if (id === 'share') return sub('nanny', 'Nanny or nanny share', 'Sharing a nanny', 'Two families split one nanny, for close to one-on-one care at a lower cost.',
