@@ -560,10 +560,10 @@
   const safeDone = () => SLEEP_SETUP.filter(x => x.task != null && sleepTaskOn(x.task)).length;
   function sleepGlance(key) {
     return {
-      clock: [['Naps', 'No pattern', 'Sleep comes and goes all day'], ['Time awake', '45–60 min', 'Between sleeps'], ['Bedtime', 'Not yet', 'Day and night are mixed up'], ['Longest sleep', '2–4 hours', 'Day or night']],
-      daynight: [['Naps', '4–5 a day', 'Short and frequent'], ['Time awake', '1–1½ hours', 'Between sleeps'], ['Bedtime', 'Often late', 'Moves earlier at 3–4 months'], ['Longest sleep', '3–5 hours', '5 or more by 3–4 months']],
-      rhythm: [['Naps', '3 a day', 'Last one: a short late-day catnap'], ['Time awake', '2–2½ hours', 'Between sleeps'], ['Bedtime', '7–8 pm', 'Most nights'], ['Longest sleep', m() >= 6 ? '6–8 hours' : '5+ hours', m() >= 6 ? 'At night, some longer' : '6–8 hours by 6 months']],
-      two: [['Naps', '2 a day', 'Morning and afternoon'], ['Time awake', '2½–4 hours', 'Between sleeps'], ['Bedtime', '7–8 pm', 'Most nights'], ['Longest sleep', m() >= 9 ? '10–12 hours' : '6–8 hours', m() >= 9 ? 'Some still wake once' : '10–12 by 9–12 months']]
+      clock: [['Naps', 'No pattern', 'Sleep comes and goes all day'], ['Wake window', '45–60 min', 'Between sleeps'], ['Bedtime', 'Not yet', 'Day and night are mixed up'], ['Longest sleep', '2–4 hours', 'Day or night']],
+      daynight: [['Naps', '4–5 a day', 'Short and frequent'], ['Wake window', '1–1½ hours', 'Between sleeps'], ['Bedtime', 'Often late', 'Moves earlier at 3–4 months'], ['Longest sleep', '3–5 hours', '5 or more by 3–4 months']],
+      rhythm: [['Naps', '3 a day', 'Last one: a short late-day catnap'], ['Wake window', '2–2½ hours', 'Between sleeps'], ['Bedtime', '7–8 pm', 'Most nights'], ['Longest sleep', m() >= 6 ? '6–8 hours' : '5+ hours', m() >= 6 ? 'At night, some longer' : '6–8 hours by 6 months']],
+      two: [['Naps', '2 a day', 'Morning and afternoon'], ['Wake window', '2½–4 hours', 'Between sleeps'], ['Bedtime', '7–8 pm', 'Most nights'], ['Longest sleep', m() >= 9 ? '10–12 hours' : '6–8 hours', m() >= 9 ? 'Some still wake once' : '10–12 by 9–12 months']]
     }[key];
   }
   const NIGHT = {
@@ -838,7 +838,7 @@
       ].filter(Boolean);
       const cryLink = mo < 3 ? `<button class="hub-rough-item hub-rough-link" onclick="${go('chg:Sleep:d:crying')}"><span class="hub-dot">${art('heart', cat)}</span><b>${F('Crying a lot and won’t settle')}</b><span class="hub-chev" aria-hidden="true">›</span></button>` : '';
       const body = `<div class="hub-list hub-rough">${cryLink}${items.map(([ic, t, why, tries], i) => `<details class="hub-rough-item"${i ? '' : ''}><summary><span class="hub-dot">${art(ic, cat)}</span><b>${F(t)}</b><span class="hub-chev" aria-hidden="true">›</span></summary><div class="hub-rough-body"><p><b>${F('Likely why.')}</b> ${F(why)}</p><p class="hub-rough-try"><b>${F('Try this')}</b></p><ul>${tries.map(x => `<li>${F(x)}</li>`).join('')}</ul></div></details>`).join('')}</div>`;
-      return detail(cat, 'Sleep help', 'Rough day or night?', 'Pick what’s happening. You’ll see the likely reason and what to try.', body
+      return detail(cat, 'Sleep help', 'Rough day or night?', 'Pick what’s happening. You’ll see what’s often behind it and what to try.', body
         + tip('Call your pediatrician', 'For a fever, poor feeding, signs of pain, or a big change that lasts more than two weeks.'), 'moon');
     }
     if (id === 'crying') {

@@ -134,7 +134,7 @@
     // Joined later, or skipped a stage? One quiet line back to the earliest stage with steps still open.
     if (live && i === nowI) {
       const left = STAGES.slice(0, i).map(s2 => [s2, s2.ids.filter(x => !status(x)).length]).filter(x => x[1]);
-      if (left.length) b += `<button class="sf-earlier" onclick="openPage('safety-stage:${left[0][0].key}')">${F('Earlier steps: ' + left.map(([s2, n]) => `${n} from ${s2.label}`).join(', ') + ', if you haven’t done them')} ›</button>`;
+      if (left.length) b += `<button class="sf-earlier" onclick="openPage('safety-stage:${left[0][0].key}')">${F(`Catch up: ${left.reduce((t, x) => t + x[1], 0)} earlier ${left.reduce((t, x) => t + x[1], 0) === 1 ? 'step' : 'steps'} not ticked yet`)} ›</button>`;
     }
     b += h.versus('If something goes wrong', ['Poison Help', 'Call 1-800-222-1222 if Maya swallows something that could be harmful.'], ['Call 911', 'If {s} can’t breathe or won’t wake. A swallowed battery or magnet means the ER right away.']);
     // Choking first aid lives in Feeding; the safety net links to it.

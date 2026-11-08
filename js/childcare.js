@@ -278,7 +278,7 @@
     if (id === 'help') return sub('help', 'Kinds of care', 'Extra help at home', 'Help in the early months isn’t only for when you go back to work.',
       picSteps('Kinds of help', [
         ['heart', 'A postpartum doula', 'Feeding, rest and recovery in the first weeks.'],
-        ['moon', 'Overnight help', 'A newborn care specialist covers nights.'],
+        ['moon', 'Overnight help', 'A trained night nanny covers nights.'],
         ['home', 'Family and friends', 'Ask for one thing: a meal, laundry, an hour.'],
         ['clock', 'A sitter for a break', 'A few hours to rest or get out.', go('sitter')]],
         'A postpartum doula helps with feeding and recovery. Overnight help covers nights. Family and friends can help with specific tasks. A sitter gives you a break.')

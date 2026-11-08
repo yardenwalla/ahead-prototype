@@ -231,7 +231,7 @@
 
   // Staying away: the setup is a checklist, ticked off in each new place. Ticks are kept on this phone; "Start over" clears them.
   const AWAY_KEY = 'ahead-away';
-  const awayItems = m => [['Ask for a crib, or bring a play yard', 'At a hotel, ask for a room away from the pool', 'notepad'], ['Check the crib, then empty it', 'No loose or missing parts. Away from windows and cords', 'crib'], m >= 6 ? ['Things up high, at {p} level', 'Medicines, cleaners, cords and small things. Block any stairs', 'lock'] : ['Bags with medicines up high', 'Yours and everyone else’s', 'bag'], m >= 6 ? ['Bathroom doors closed', 'And an adult right beside {o} near any water', 'bath'] : null, ['Same bedtime as at home', 'The same steps, in {p} own sleep sack', 'clock']].filter(Boolean);
+  const awayItems = m => [['Ask for a crib, or bring a play yard', 'At a hotel, ask for a room away from the pool', 'notepad'], ['Check the crib, then empty it', 'No loose or missing parts. Away from windows and cords', 'crib'], m >= 6 ? ['Medicines and cleaners up high', 'Cords and small things too, at {p} level. Block any stairs', 'lock'] : ['Bags with medicines up high', 'Yours and everyone else’s', 'bag'], m >= 6 ? ['Bathroom doors closed', 'And an adult right beside {o} near any water', 'bath'] : null, ['Same bedtime as at home', 'The same steps, in {p} own sleep sack', 'clock']].filter(Boolean);
   window.oaAwayTick = i => { let on = []; try { on = JSON.parse(localStorage.getItem(AWAY_KEY)) || []; } catch (e) {} on = on.includes(i) ? on.filter(x => x !== i) : on.concat(i); try { localStorage.setItem(AWAY_KEY, JSON.stringify(on)); } catch (e) {} const y = scrollY; render(); scrollTo(0, y); };
   window.oaAwayReset = () => { try { localStorage.removeItem(AWAY_KEY); } catch (e) {} const y = scrollY; render(); scrollTo(0, y); };
   const awayList = m => { let on = []; try { on = JSON.parse(localStorage.getItem(AWAY_KEY)) || []; } catch (e) {} return `<div class="oa-away-head"><h2 class="hub-h2">${F('Set up your stay')}</h2>${on.length ? `<button class="hub-link" onclick="oaAwayReset()">${F('Start over')}</button>` : ''}</div>` + H().ticks(awayItems(m), i => on.includes(i), i => `oaAwayTick(${i})`, CAT); };
@@ -303,7 +303,7 @@
         'A few off nights are normal. If you get advice, share one rule kindly: on the back, in a bare crib.')
       + good([['shield', 'Which crib is safe?', 'A play yard, or a crib made after June 2011. Never an adult bed or a couch.'], ['hand', 'Pets', 'Never leave {o} alone with a pet, even a gentle one.'], m >= 6 ? ['bowl', 'Grandparents and treats', 'Share your food rules once, kindly, before the first meal.'] : null]));
 
-    if (id === 'water') return sub('water', 'Pool or beach', 'Pool or beach', 'Go early, stay in the shade, and keep dips short.',
+    if (id === 'water') return sub('water', 'Pool or beach', 'Pool or beach', 'Babies get cold and overheat faster than you do, so short visits work best.',
       todo('In the water', 'Hold {o} the whole time, even with a float.')
       + ifs([
         ['clock', 'Go early', 'Before the strongest sun'],
@@ -335,7 +335,7 @@
       const install = `<h2 class="hub-h2">${F('Setting it up')}</h2>` + steps([['car', 'Pick one way to install it', 'Lower anchors or the seat belt, not both'], ['hand', 'Check it’s tight', 'Tug where it’s belted in: less than 1 inch of movement'], ['back', 'Set the recline', 'To the angle line on the seat'], ['shield', 'Buckle {o} in snugly', 'Harness straps at or below {p} shoulders']], 'Install it with the lower anchors or the seat belt, not both, so it moves less than 1 inch where it’s belted. Set the recline to the angle line. Buckle the straps at or below the shoulders.', true);
       // One page for the whole first year and beyond: no stages, so the seat-by-seat path shows from day one,
       // and Good to know holds what's true at any age. The home's "Coming up" card points back here when the limits matter.
-      return sub('gear', 'Your gear', 'Car seat basics', 'Rear-facing in the back seat, for as long as the seat allows.',
+      return sub('gear', 'Your gear', 'Car seat basics', 'A quick check before every drive keeps {o} as safe as possible.',
         hubFigure('carseat', CAT, 'Rear-facing in the back seat, chest clip level with the armpits, straps snug with no slack to pinch, and no puffy coat underneath.')
         + install
         + timeline('Which seat, and when', [['From birth', 'car', 'An infant seat, rear-facing.'], ['At its limit', 'car', 'A convertible seat, still rear-facing.'], ['Often age 2 or older', 'car', 'Forward-facing, after its rear-facing limits.']], 'An infant seat rear-facing from birth, a convertible seat still rear-facing once the infant seat’s limit is reached, and forward-facing only after its rear-facing limits, often age 2 or older.')
@@ -348,7 +348,7 @@
       + timeline('Ways to carry, as {s} {grow|grows}', [['From birth', 'carrier', 'Facing in, face above the fabric.'], ['Head steady', 'eye', 'Facing out, for short awake times, within the carrier’s limits.'], ['Sits steadily', 'back', 'On your back, within the carrier’s limits.']], 'Facing in from birth. Facing out once the head is steady, for short awake times, within the carrier’s limits. On your back once sitting steadily.')
       + good([['hand', 'Snug enough', 'When you lean forward, {s} {stay|stays} against you without slumping.'], ['moon', 'Asleep in the carrier', 'Move {o} to a flat bed when you can.'], ['cup', 'Away from the stove', 'And from hot drinks, while {s’s} in the carrier.']]));
 
-    if (id === 'stroller') return sub('gear', 'Your gear', 'Stroller basics', 'Harness on every time, and brakes on whenever you stop.',
+    if (id === 'stroller') return sub('gear', 'Your gear', 'Stroller basics', 'A quick check each outing keeps {o} snug and the stroller steady.',
       hubFigure('stroller', CAT, 'Harness on every time, brakes on when you stop, no bags on the handles and no blanket over the top.')
       + timeline('Lying back, then sitting up', [['From birth', 'stroller', 'Lying back, or with the infant car seat clicked on.'], ['Sits steadily', 'back', 'Sitting up, if the stroller’s instructions allow it.']], 'Lying back from birth, or with the infant car seat clicked on. Sitting up once the baby sits steadily, if the stroller allows it.')
       + good([['car', 'A car seat on the frame', 'Listen for the click, then tug to check it’s locked on.'], ['stroller', 'On a bus or train', 'Brakes on and a hand on the stroller while it moves.']]));

@@ -1018,7 +1018,7 @@
       [['shield', 'Gagging or choking?', 'How to tell, and what to do', 'gag'], ['bowl', 'Refusing food', 'Light days, and what helps', 'refusefood'], ['eye', 'A rash after a new food', 'When it’s an allergy', 'rash'], ['tooth', 'Teething and feeds', 'Sore gums, shorter feeds', 'teethfeed'], ['eye', 'Sick, or a stuffy nose', 'Feeding when he’s unwell', 'sick']],
       [['shield', 'Gagging or choking?', 'How to tell, and what to do', 'gag'], ['heart', 'Picky days', 'New foods can take 10–15 tries', 'picky'], ['bowl', 'Refusing food', 'Light days, and what helps', 'refusefood'], ['eye', 'A rash after a new food', 'When it’s an allergy', 'rash'], nurse && ['hand', 'Biting while nursing', 'Once teeth come', 'biting'], ['eye', 'Sick, or a stuffy nose', 'Feeding when he’s unwell', 'sick']]
     ][v].filter(Boolean).filter(x => P[x[3]]);
-    return page(head('Feeding', 'Tough feed?', 'Pick what’s happening. You’ll see the likely reason and what to try.')
+    return page(head('Feeding', 'Tough feed?', 'Pick what’s happening. You’ll see what’s often behind it and what to try.')
       + `<div class="hub-card care-folds care-lookoff">${L.map(pick).join('')}</div>`
       + (br ? h2('For you') + `<div class="hub-card care-folds care-lookoff">${pick(['heart', 'A tender lump in your breast', 'A clogged duct, and what helps', 'lump'])}</div>` : '')
       + `<div class="hub-list" style="margin-top:12px"><button class="hub-row hl-row" style="--hl-bg:${C.lilac[0]};--hl-ink:${C.lilac[1]}" onclick="${go('help')}"><span class="fd-dot" style="width:42px;height:42px;border-radius:13px;background:var(--hl-bg);color:var(--hl-ink);padding:9px;box-sizing:border-box;flex:none;display:grid;place-items:center">${hubArt('hand', CAT)}</span><span class="hub-row-copy"><small>${F('Support')}</small><b>${F('You don’t have to figure this out alone')}</b><small>${F('Who can help, and how you’re doing')}</small></span><span class="hub-chev" aria-hidden="true">›</span></button></div>`); };
@@ -2426,7 +2426,7 @@
   P.x_cues = () => xPage('feed', 'x_cues', 'Start at his early hunger cues', 'Feeding before he cries is easier for you both.',
       cueStrip().replace(`<b class="hub-fig-title">${F('Hunger cues, early to late')}</b>`, '')
       + xDo('What to do', ['Offer a feed at the first stirring or rooting.', 'Already crying? Calm him with a cuddle first.'])
-      + xKnow('Hungry, or wants comfort?', 'A while since his last feed? Likely hunger. Just fed? Try a cuddle' + (nurses() ? ', or a pacifier once nursing is going well.' : ' or a pacifier.')));
+      + xKnow('Hungry, or wants comfort?', 'A while since his last feed? Offer one. Just fed? Try a cuddle' + (nurses() ? ', or a pacifier once nursing is going well.' : ' or a pacifier.')));
   P.x_night = () => { const b = isBreast(), nurse = nurses();
     return xPage('routine', 'x_night', 'At night, keep feeds quick and calm', 'Dim, quiet nights and bright days help him learn day from night.',
       steps([['sun', 'By day', 'Bright, normal noise, play'], ['moon', 'At night', 'Dim, quiet, back down']], false)
@@ -2778,7 +2778,7 @@
       xTwo(['Gagging: normal', 'Loud: coughing, sputtering, red face, tongue out. Let him work it out.'], ['Choking: act now', 'Silent or a high squeak, can’t cough or cry, turning blue.'], true)
       + xFix('Making it less likely', [['Sitting upright', 'Always, and always watched.'], ['Safe shapes', 'Soft and squashable, finger-size.'], ['No rushing', 'Seated for every bite, never on the move.']])
       + h2('If he’s choking') + steps([['hand', 'Back blows, 5 times', 'Face down along your forearm, head lower than his chest'], ['heart', 'Chest thrusts, 5 times', 'Face up, two fingers in the middle of his chest'], ['clock', 'Repeat', 'Until it comes out, or help arrives']], true)
-      + `<p class="ss-small"><a href="https://www.youtube.com/results?search_query=red+cross+infant+choking+first+aid" target="_blank" rel="noopener" style="color:var(--ss-ink);font-weight:600">${F('Watch infant choking first aid')} ↗</a> ${F('American Red Cross.')}</p>`
+      + `<p class="ss-small"><a href="https://www.redcross.org/take-a-class/resources/learn-first-aid/infant-choking" target="_blank" rel="noopener" style="color:var(--ss-ink);font-weight:600">${F('Watch infant choking first aid')} ↗</a> ${F('American Red Cross.')}</p>`
       + xNote('Call 911', 'if he can’t cough, cry or breathe. Have someone call while you start back blows. If he stops responding, start CPR.'));
   P.z_teeth = () => yPage(XL, 'Feeding challenges', 'Teething, and shorter feeds', 'Sore gums can make him fussy at feeds for a few days.',
       xDo('What helps', ['A cold teether or a clean, cold washcloth to chew before feeds.', 'Chilled soft foods, like yogurt or mashed fruit.', 'Shorter, more frequent feeds for a few days.'])

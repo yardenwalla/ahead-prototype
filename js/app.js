@@ -635,15 +635,15 @@ ball:'<circle cx="202" cy="132" r="20" fill="#dcc29d"/><path d="m187 120 31 25m-
 const base=extras[scene]?'held':scene;let svg=devMilestoneArt(base,false,age,'Daily rhythm');if(extras[scene])svg=svg.replace('</svg>',`<g stroke="${BABY_ART.outline}" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">${extras[scene]}</g></svg>`);return svg;}
 function playActivityRows(ideas,phase=playPhase()){return ideas.map(activity=>`<article class="play-idea" data-play-id="${activity.id}" data-play-kind="${activity.kind}" id="play-${activity.id}"><button class="play-activity-card" onclick="openPage('play-activity:${phase.lo}:${activity.id}')"><span class="play-card-art" aria-hidden="true">${playActivityArt(activity,phase)}</span><span class="play-card-copy"><span class="play-card-title">${activity.title}</span><span class="play-why">${activity.why}</span></span><span class="play-card-chevron" aria-hidden="true">›</span></button></article>`).join('');}
 const PLAY_CONTEXT={
-  'water-pour': {needs:'A shallow bowl, two sturdy cups, a little lukewarm water and a washable spot.',explain:'Tipping a cup makes water move, giving grasping and turning an immediate result.',notice:'Baby may splash, hold the cup or watch you pour. Independent pouring is not required.',extend:'Help baby scoop a little water back into the cup, then tip it into the bowl again.'},
-  'face-follow': {needs:'Your face and a comfortable supported position.',explain:'A familiar face gives baby a reason to explore a small shift in gaze.',notice:'Their eyes may follow a little, or stay where you started. Bring your face back if they lose interest.',extend:'Try a small movement toward the other side, pausing in the middle.'},
-  'sock-puppet': {needs:'A clean sock on your hand or one intact baby-safe soft toy.',explain:'A playful voice and a moving character bring watching and listening into the same game.',notice:'Baby may watch the character, turn toward your voice or answer with a movement or sound.',extend:'Let the character look toward baby and wait for their next response.'},
-  'smile-pause': {needs:'Your face and a quiet moment while baby is alert.',explain:'Waiting after a smile gives baby space to join a social exchange.',notice:'A look, a small smile or a wiggle can be their reply.',extend:'Copy the expression they make, then leave another pause.'},
-  'change-chat': {needs:'An ordinary diaper change, with supplies already within reach.',explain:'A familiar care routine gives your words a predictable context.',notice:'They may quieten, watch your face or move when they hear your voice.',extend:'Use the same short phrase before each familiar step.'},
-  'face-picture': {needs:'One high-contrast picture and a comfortable supported position.',explain:'Two nearby things to look at invite a small shift of attention.',notice:'They may keep looking at just one thing. Let their interest lead.',extend:'Bring your face back beside the picture and name what caught their eye.'},
-  'song-listen': {needs:'One short song you know by heart.',explain:'A pause makes room for baby’s sound or movement within your song.',notice:'A look or kick is a response too; they don’t need to make a sound.',extend:'Answer a sound they make before carrying on with the song.'},
-  'palm-touch': {needs:'Your clean hand and a calm moment of back play.',explain:'A gentle touch helps baby notice their hand while you respond to their movements.',notice:'They may open their hand, curl their fingers or move away.',extend:'Offer your palm near the other hand on a later turn.'},
-  'tummy-reflection': {needs:'A firm floor mat and a securely positioned shatterproof baby mirror.',explain:'An interesting face at floor level gives a brief head lift a purpose.',notice:'A small lift or turning the head to the side counts; stop before they are tired.',extend:'Join the reflection by lying beside the mirror and talking softly.'},
+  'water-pour': {needs:'A shallow bowl, two sturdy cups, a little lukewarm water and a washable spot.',explain:'Tipping a cup and watching the water move shows baby their hands can make things happen.',notice:'Baby may splash, hold the cup or watch you pour. Independent pouring is not required.',extend:'Help baby scoop a little water back into the cup, then tip it into the bowl again.'},
+  'face-follow': {needs:'Your face and a comfortable supported position.',explain:'Moving your face a little gives baby a reason to follow you with their eyes.',notice:'Their eyes may follow a little, or stay where you started. Bring your face back if they lose interest.',extend:'Try a small movement toward the other side, pausing in the middle.'},
+  'sock-puppet': {needs:'A clean sock on your hand or one intact baby-safe soft toy.',explain:'A talking puppet is something fun to watch and listen to at the same time.',notice:'Baby may watch the character, turn toward your voice or answer with a movement or sound.',extend:'Let the character look toward baby and wait for their next response.'},
+  'smile-pause': {needs:'Your face and a quiet moment while baby is alert.',explain:'Waiting after you smile gives baby a chance to smile or wiggle back.',notice:'A look, a small smile or a wiggle can be their reply.',extend:'Copy the expression they make, then leave another pause.'},
+  'change-chat': {needs:'An ordinary diaper change, with supplies already within reach.',explain:'Talking through each diaper change gives baby familiar words at a familiar time.',notice:'They may quieten, watch your face or move when they hear your voice.',extend:'Use the same short phrase before each familiar step.'},
+  'face-picture': {needs:'One high-contrast picture and a comfortable supported position.',explain:'Two things to look at, close together, let baby choose where to look.',notice:'They may keep looking at just one thing. Let their interest lead.',extend:'Bring your face back beside the picture and name what caught their eye.'},
+  'song-listen': {needs:'One short song you know by heart.',explain:'A pause in your song leaves room for baby to answer with a sound or a kick.',notice:'A look or kick is a response too; they don’t need to make a sound.',extend:'Answer a sound they make before carrying on with the song.'},
+  'palm-touch': {needs:'Your clean hand and a calm moment of back play.',explain:'A gentle touch helps baby notice their hands, and your reply to every move.',notice:'They may open their hand, curl their fingers or move away.',extend:'Offer your palm near the other hand on a later turn.'},
+  'tummy-reflection': {needs:'A firm floor mat and a securely positioned shatterproof baby mirror.',explain:'A face to find on the floor gives baby a reason to lift their head.',notice:'A small lift or turning the head to the side counts; stop before they are tired.',extend:'Join the reflection by lying beside the mirror and talking softly.'},
   "close-face": {
     "needs": "No toys needed; a comfortable place to hold baby.",
     "explain": "A pause after your smile gives baby time to answer with a look or a wiggle.",
@@ -652,427 +652,427 @@ const PLAY_CONTEXT={
   },
   "slow-song": {
     "needs": "Your voice and a comfortable place to stand or sit.",
-    "explain": "A familiar voice and a repeating rhythm give baby something predictable to listen to.",
+    "explain": "Your voice and a steady rhythm are lovely, easy things to listen to.",
     "notice": "Baby may look toward you or settle against you. Quiet listening counts too.",
     "extend": "Repeat one line, leaving a little pause before singing it again."
   },
   "chest-chat": {
     "needs": "A comfortable reclined position while you are fully awake.",
-    "explain": "Your face gives baby a reason to lift their head, for just a moment at a time.",
+    "explain": "Your face gives baby a reason to lift their head, even for a moment.",
     "notice": "A small head lift or turn toward your voice is enough; rest their head when they need a break.",
     "extend": "Move your face slightly to one side and wait for their interest."
   },
   "bold-picture": {
     "needs": "One high-contrast baby picture or board-book page.",
-    "explain": "Keeping the picture still gives baby time to focus before anything changes.",
+    "explain": "Holding the picture still gives baby time to take it in.",
     "notice": "Their eyes may settle on the picture for a moment, then look away.",
     "extend": "Slowly move it a small distance and see whether their gaze follows."
   },
   "voice-tour": {
     "needs": "A window or picture to stop beside; no special toys.",
-    "explain": "Naming one thing while you both look connects a word, a voice and a place.",
+    "explain": "Naming what you both see links a word with the thing.",
     "notice": "A look toward the window or a pause in movement can be a response.",
     "extend": "Return to the same spot later and use the same simple words."
   },
   "rhyme-cuddle": {
     "needs": "A comfortable hold and a short rhyme you remember.",
-    "explain": "The rise and fall of your voice makes everyday language interesting to hear.",
+    "explain": "The ups and downs of your voice make everyday talk fun to hear.",
     "notice": "Baby might watch your mouth, move or simply listen.",
     "extend": "Leave a pause at the end of a familiar line before repeating it."
   },
   "expression": {
     "needs": "No toys; a position where baby can see your face.",
-    "explain": "Changing one expression at a time makes a social exchange easier to follow.",
+    "explain": "One new face at a time is easy for baby to follow and copy.",
     "notice": "They might watch closely, open their mouth or move their eyebrows; copying isn’t necessary.",
     "extend": "Copy their expression instead and let them lead the exchange."
   },
   "floor-company": {
     "needs": "A firm floor mat with space for you to lie beside baby.",
-    "explain": "Your face at floor level makes looking up part of being together.",
+    "explain": "Getting down on the floor makes looking up feel like being together.",
     "notice": "Notice a brief lift or a turn toward your voice, with rests between efforts.",
     "extend": "Sing one short line from their eye level and pause for a response."
   },
   "sound-answer": {
     "needs": "No equipment; a quiet moment when baby is alert.",
-    "explain": "Taking turns with sounds introduces the rhythm of a conversation before words.",
+    "explain": "Trading sounds is baby’s first taste of a conversation.",
     "notice": "A look, kick or another little sound can be their reply.",
     "extend": "Copy a new sound they choose rather than asking for a particular one."
   },
   "book-voices": {
     "needs": "A picture book and a comfortable supported hold.",
-    "explain": "A change in your voice makes listening fun, long before the story makes sense.",
+    "explain": "Funny voices make a book fun long before the words mean anything.",
     "notice": "They may look toward your mouth or become still as you change voices.",
     "extend": "Pause on one picture and add a short sound for it."
   },
   "outside-pause": {
     "needs": "A comfortable spot by a window.",
-    "explain": "Sharing one sound helps baby notice it without a busy stream of new things.",
+    "explain": "One sound at a time is easier to notice than a busy room.",
     "notice": "They may become quiet, move their eyes or turn toward the sound.",
     "extend": "Wait for another sound, then name that one too."
   },
   "follow-toy": {
     "needs": "One bright baby-safe toy and a firm floor mat.",
-    "explain": "Following a slowly moving object lets eyes and head explore a change in direction.",
+    "explain": "Watching a toy move slowly helps baby’s eyes and head work together.",
     "notice": "Their eyes might follow only part of the movement. Bring the toy back into view.",
     "extend": "Try a small movement toward the other side, with a pause in the middle."
   },
   "tummy-picture": {
     "needs": "A firm floor mat and an upright baby picture or sturdy book.",
-    "explain": "A picture and your voice offer something interesting at eye level during tummy play.",
+    "explain": "A picture and your voice give baby something to look at during tummy time.",
     "notice": "Baby may briefly lift their head, look at the picture or turn toward you.",
     "extend": "Move the picture a little to one side, staying close to their eye level."
   },
   "barefoot-kicks": {
     "needs": "A firm floor mat and space for baby’s legs to move.",
-    "explain": "Free kicking gives baby chances to explore how their own body moves.",
+    "explain": "Kicking freely lets baby discover how their body moves.",
     "notice": "Notice a stretch, a kick or a pause; there is no pattern to copy.",
     "extend": "Describe a movement they choose: “Your feet went up!”"
   },
   "touch-rhyme": {
     "needs": "No toys; a comfortable position for gentle touch.",
-    "explain": "Repeating words with the same gentle touches makes the sequence familiar.",
+    "explain": "The same words with the same touches soon feel familiar and fun.",
     "notice": "Baby may look at your hand, wiggle or pause when you stop.",
     "extend": "Pause before the last touch and watch for their response."
   },
   "fabric-feel": {
     "needs": "An intact washable baby fabric book.",
-    "explain": "A still texture within reach gives baby a chance to connect looking with touch.",
+    "explain": "A soft page within reach lets baby look, then touch.",
     "notice": "Brushing the fabric with an open hand counts; they don’t need to grasp it.",
     "extend": "Offer a different page with another texture, one at a time."
   },
   "easy-grip": {
     "needs": "A light, one-piece baby rattle with an easy-to-hold handle.",
-    "explain": "A sound that follows their own movement is a simple way to explore cause and effect.",
+    "explain": "When baby moves and hears a rattle, they start to learn that they made it happen.",
     "notice": "A short grasp, a shake or watching the handle are all ways to join in.",
     "extend": "Pause your own movement so baby can explore making the sound."
   },
   "mirror-company": {
     "needs": "A shatterproof baby mirror.",
-    "explain": "Looking at your faces together makes expressions part of the game. Baby doesn’t need to recognize their own reflection.",
+    "explain": "Making faces together in the mirror turns looking into a game. Baby won’t know it’s them yet.",
     "notice": "They might look between your face and the reflection, or reach toward it.",
     "extend": "Make one expression in the mirror, then copy theirs."
   },
   "tummy-side": {
     "needs": "A firm floor mat; your face is the play material.",
-    "explain": "Looking toward someone slightly to the side brings a small turn into familiar floor play.",
+    "explain": "Calling from a little to the side gives baby a reason to turn.",
     "notice": "A shift of the eyes or a small head turn counts.",
     "extend": "Try the other side on another turn, without moving their head for them."
   },
   "crinkle-book": {
     "needs": "An intact baby crinkle book.",
-    "explain": "Pressing or squeezing a page can connect a hand action with a sound.",
+    "explain": "Squeezing a page and hearing it crinkle links a hand action with a sound.",
     "notice": "They may brush the page, squeeze it or watch you make the sound.",
     "extend": "Wait before crinkling it yourself so they have a chance to try."
   },
   "lap-sway": {
     "needs": "A supported hold on your lap and a familiar song.",
-    "explain": "Feeling a gentle rhythm while hearing your voice connects movement and listening.",
+    "explain": "Swaying while you sing lets baby feel the rhythm with you.",
     "notice": "They may watch you, move with the rhythm or prefer still listening.",
     "extend": "Pause the sway at a familiar point in the song, then continue if they enjoy it."
   },
   "page-pat": {
     "needs": "One sturdy board book.",
-    "explain": "A picture within comfortable reach lets looking and touching become part of reading.",
+    "explain": "A picture within reach turns reading into looking and touching.",
     "notice": "A brush of the hand or a pat is enough; turning a page isn’t needed.",
     "extend": "Name the picture they touch instead of choosing the next one yourself."
   },
   "feet-discovery": {
     "needs": "A firm floor mat; no toys needed.",
-    "explain": "Seeing and feeling their feet helps baby learn how their body moves.",
+    "explain": "Seeing and feeling their feet helps baby learn about their body.",
     "notice": "They may look down, kick, reach or simply watch your hand touch a foot.",
     "extend": "Pause after naming one foot and follow the movement baby chooses."
   },
   "roll-interest": {
     "needs": "A firm floor mat and one favorite baby-safe toy.",
-    "explain": "A nearby toy gives looking, reaching and turning the same interesting destination.",
+    "explain": "A favorite toy just out of the way gives baby a reason to look, reach and turn.",
     "notice": "Looking or reaching toward the toy counts. They don't need to complete a roll.",
     "extend": "Offer the toy on the other side during a later turn, keeping it easy to reach."
   },
   "sound-side": {
     "needs": "A softly sounding one-piece baby rattle.",
-    "explain": "A visible sound source brings listening and looking into the same game.",
+    "explain": "Seeing the rattle as it sounds connects listening and looking.",
     "notice": "Baby may move their eyes before turning their head, or keep watching the rattle.",
     "extend": "Pause the sound, then make it once more and wait."
   },
   "texture-pair": {
     "needs": "Two intact baby-safe toys with different surfaces.",
-    "explain": "Exploring one surface and then another gives hands something to compare.",
+    "explain": "Feeling smooth, then bumpy, gives little hands something to compare.",
     "notice": "They may grip, rub or mouth a toy, or keep choosing one over the other.",
     "extend": "Offer the two toys where both can be seen and follow their choice."
   },
   "peek-face": {
     "needs": "Just your hands and face.",
-    "explain": "A familiar face disappearing briefly and returning makes a predictable social game.",
+    "explain": "Your face going away and coming back is a surprise baby can count on.",
     "notice": "A look, kick, smile or still attention can be their response; laughter isn’t required.",
     "extend": "Pause just before the reveal and let their interest set the pace."
   },
   "rhyming-page": {
     "needs": "A sturdy picture book; your rhyme can be only two words.",
-    "explain": "Pairing a repeated sound with a picture connects shared reading and listening.",
+    "explain": "A rhyme for a picture makes reading fun to listen to.",
     "notice": "They might look at the picture, pat the page or make a sound in the pause.",
     "extend": "Use the same rhyme when that picture appears another time."
   },
   "two-hands": {
     "needs": "One light, easy-to-grasp baby toy.",
-    "explain": "Turning one object creates opportunities for both hands to work around the same thing.",
+    "explain": "Turning one toy gets both hands working together.",
     "notice": "Holding it with both hands, or touching it with the second hand, counts. Passing it between hands isn’t required.",
     "extend": "Let baby choose which hand receives the toy rather than placing it for them."
   },
   "basket-out": {
     "needs": "One large baby-safe toy and a shallow lightweight open basket.",
-    "explain": "Reaching into a container adds a place to find an object, beyond simply holding it.",
+    "explain": "Reaching into a basket adds a place to find something, not just hold it.",
     "notice": "They may touch the rim, reach inside or lift the toy partway.",
     "extend": "Return the toy to the basket while they watch and offer another turn."
   },
   "mirror-faces": {
     "needs": "A shatterproof baby mirror and a supported place to sit together.",
-    "explain": "Copying baby’s expression makes the exchange responsive to what they do.",
+    "explain": "Copying baby’s face shows them you’re paying attention.",
     "notice": "Watch for a change in expression, a glance at you or a reach toward the mirror.",
     "extend": "Let baby make the first face, then answer with yours."
   },
   "floor-drum": {
     "needs": "A sturdy lightweight plastic bowl.",
-    "explain": "A tap that makes a sound gives baby an immediate result from a hand action.",
+    "explain": "Tapping and hearing a sound right away shows baby their hands make things happen.",
     "notice": "A pat, scrape or accidental tap can start the game.",
     "extend": "Copy the rhythm of their taps rather than setting your own."
   },
   "supported-reach": {
     "needs": "A firm floor mat, one baby-safe toy and your hands to steady them.",
-    "explain": "A small sideways reach adds an interesting hand action while you support sitting.",
+    "explain": "A small reach to the side adds a challenge while you help baby sit.",
     "notice": "They may look toward the toy, lean a little or touch it while you keep them supported.",
     "extend": "Move the toy toward the other knee on a later turn, keeping it close."
   },
   "leaf-watch": {
     "needs": "A shaded outdoor spot or a comfortable view through a window.",
-    "explain": "Changing leaves give you a real movement to name and notice together.",
+    "explain": "Moving leaves are something real to watch and name together.",
     "notice": "Their gaze may follow one branch or return to a patch of light.",
     "extend": "Follow the branch baby chooses to watch and describe what it does."
   },
   "partly-hide": {
     "needs": "One large baby-safe toy and a small cloth used only during supervised play.",
-    "explain": "Leaving part visible connects the visible piece with the toy hidden underneath.",
+    "explain": "Seeing part of the toy helps baby work out the rest is still there.",
     "notice": "They may look at the cloth, touch the exposed toy or watch you uncover it.",
     "extend": "Cover a little more of the toy if they are enjoying finding it."
   },
   "drop-return": {
     "needs": "A large baby-safe toy and a floor mat.",
-    "explain": "Watching where a released toy goes connects letting go with an observable result.",
+    "explain": "Watching where a dropped toy lands links letting go with what happens next.",
     "notice": "Baby might watch it land or look toward where it went; intentional dropping isn’t necessary.",
     "extend": "Let them watch you retrieve it before offering another turn."
   },
   "texture-basket": {
     "needs": "Two large intact baby-safe objects and a low open basket.",
-    "explain": "Choosing between objects lets baby direct what their hands explore.",
+    "explain": "Picking between two things lets baby choose what to explore.",
     "notice": "They may return to one object, swap between them or explore the basket itself.",
     "extend": "Change just one object next time, keeping the other familiar."
   },
   "animal-sounds": {
     "needs": "A sturdy book with an animal picture.",
-    "explain": "Naming an animal and adding a sound links a picture with playful language.",
+    "explain": "An animal sound makes a picture playful and easy to remember.",
     "notice": "Baby may look at the animal, move their mouth or answer with any sound.",
     "extend": "Pause before the familiar animal sound and leave space for their turn."
   },
   "roll-ball": {
     "needs": "A large baby-safe ball and clear floor space.",
-    "explain": "A slow-moving ball gives baby something to watch, stop or reach toward.",
+    "explain": "A slow ball is something to watch, stop or reach for.",
     "notice": "They may track it with their eyes or put out a hand; moving after it isn’t required.",
     "extend": "Change the direction slightly while keeping the ball close."
   },
   "song-pause": {
     "needs": "A familiar song; no toys needed.",
-    "explain": "A gap in a repeated song creates a place for baby to join the exchange.",
+    "explain": "A pause in a familiar song leaves room for baby to join in.",
     "notice": "A look, movement or sound in the gap can be a turn.",
     "extend": "Let baby’s movement or sound be your cue to sing the next line."
   },
   "bang-two": {
     "needs": "Two light one-piece baby toys, plus your own pair to demonstrate.",
-    "explain": "Bringing two objects together combines two-handed movement with a sound.",
+    "explain": "Banging two toys together uses both hands and makes a fun noise.",
     "notice": "They may touch the toys together, tap yours or explore them separately.",
     "extend": "Copy their taps and pause for them to begin another turn."
   },
   "spoon-bowl": {
     "needs": "A large baby-safe spoon and a sturdy lightweight bowl.",
-    "explain": "Different ways of touching the same objects create different sounds and sensations.",
+    "explain": "Tapping, turning and stirring make different sounds and feelings.",
     "notice": "Baby may tap, turn, put down or mouth the spoon; stirring isn’t required.",
     "extend": "Tap the rim once, then the bottom, and let baby choose what to explore."
   },
   "lift-flap": {
     "needs": "A sturdy baby flap book with intact pages.",
-    "explain": "Lifting a flap links a hand action with a picture appearing.",
+    "explain": "Lifting a flap and finding a picture is a little surprise every time.",
     "notice": "They may reach for the flap or pat the revealed picture while you help.",
     "extend": "Pause before opening a familiar flap so baby can start the action."
   },
   "ball-turns": {
     "needs": "A large soft ball and floor space to sit close together.",
-    "explain": "Waiting for a response makes a moving object part of an exchange with you.",
+    "explain": "Waiting for the ball to come back turns it into taking turns.",
     "notice": "A touch or push can be their turn; you can handle the rolling back.",
     "extend": "Wait a little longer for their movement before helping the ball return."
   },
   "family-photos": {
     "needs": "One printed photo of someone baby knows, held by you.",
-    "explain": "A name paired with a familiar face connects everyday relationships and language.",
+    "explain": "Naming people in photos links faces you love with their names.",
     "notice": "They might look closely, touch the photo or glance toward the person if nearby.",
     "extend": "Say a familiar greeting to the person in the photo and pause."
   },
   "peek-corner": {
     "needs": "A stable chair and a clear nearby floor spot.",
-    "explain": "Finding your face in a slightly different place makes a familiar game feel new.",
+    "explain": "Popping up somewhere new makes peekaboo feel new again.",
     "notice": "They may look toward the chair edge or wait for your return.",
     "extend": "Reappear on the other side while staying close and in an easy line of sight."
   },
   "hidden-toy": {
     "needs": "A large baby-safe toy and a small cloth used only during supervised play.",
-    "explain": "Watching a toy disappear and finding it again gives memory a playful purpose.",
+    "explain": "Finding a hidden toy helps baby remember where things go.",
     "notice": "They might look at the hiding place, touch the cloth or uncover the toy with help.",
     "extend": "Let baby see the toy hidden in a different nearby spot."
   },
   "empty-basket": {
     "needs": "Three large baby-safe toys and a shallow open basket.",
-    "explain": "Taking objects out offers repeated chances to grasp, release and choose.",
+    "explain": "Taking things out gives lots of practice grabbing, letting go and choosing.",
     "notice": "They may remove one toy, tip the basket or explore its edge.",
     "extend": "Hold out the empty basket and see whether baby wants to put a toy back."
   },
   "hello-wave": {
     "needs": "A familiar person or baby-safe toy to greet.",
-    "explain": "A repeated greeting gives a hand movement a social purpose.",
+    "explain": "Waving hello and goodbye gives a hand movement a meaning.",
     "notice": "A raised hand, arm movement or look can be their answer; a neat wave isn’t needed.",
     "extend": "Wave when someone actually arrives or leaves, using the same words."
   },
   "drum-copy": {
     "needs": "A sturdy lightweight bowl to pat.",
-    "explain": "Copying their beat shows that something they do can start an exchange with you.",
+    "explain": "Copying baby’s beat shows them they can start a game with you.",
     "notice": "Their rhythm may change or stop; follow what they do rather than asking for a pattern.",
     "extend": "Add one soft tap after copying, then wait for baby’s next idea."
   },
   "choose-two": {
     "needs": "Two large familiar baby-safe toys.",
-    "explain": "Naming what catches their attention connects their interest with a word.",
+    "explain": "Naming what baby looks at links what they’re curious about with a word.",
     "notice": "Looking or reaching is enough to choose; pointing or speaking isn’t necessary.",
     "extend": "Swap the toys’ positions on another turn and follow their interest."
   },
   "knock-stack": {
     "needs": "Two large lightweight baby blocks.",
-    "explain": "A small tower makes the effect of a touch easy to see.",
+    "explain": "A small tower makes it easy to see what a touch can do.",
     "notice": "Baby might brush the blocks, push them or watch the fall.",
     "extend": "Let them watch you rebuild, then wait for their chosen way to join in."
   },
   "give-back": {
     "needs": "One large baby-safe toy; a second can help you demonstrate.",
-    "explain": "Returning a toy straight away makes giving part of a back-and-forth game.",
+    "explain": "Handing the toy straight back makes giving part of a game.",
     "notice": "They might hold the toy toward you without releasing it; you can wait.",
     "extend": "Offer your toy first, then hold out a hand for another exchange."
   },
   "put-in": {
     "needs": "One large baby-safe block and a wide lightweight open container.",
-    "explain": "A visible destination gives releasing an object a purpose.",
+    "explain": "Something to drop it into gives letting go a reason.",
     "notice": "Baby may hold the block over the opening, drop it nearby or take it out instead.",
     "extend": "Offer a second block after the first goes in, without asking for a full container."
   },
   "follow-point": {
     "needs": "A nearby everyday object you can both see.",
-    "explain": "Following an interest with a point and a name connects attention, gesture and words.",
+    "explain": "Pointing and naming shows baby where to look, and the word for it.",
     "notice": "They may look at your hand before looking toward the object.",
     "extend": "Follow something baby points or looks toward and name it for them."
   },
   "open-close": {
     "needs": "One sturdy board book.",
-    "explain": "Opening the cover changes what can be seen, with a clear action baby can help control.",
+    "explain": "Opening and closing a cover lets baby control what they see.",
     "notice": "They may push the cover, reach for the picture or watch you open it.",
     "extend": "Let baby start opening the cover before you help finish the movement."
   },
   "ball-slope": {
     "needs": "A sturdy board book and large baby-safe ball, kept low on the floor.",
-    "explain": "A small slope changes how the ball moves, giving a familiar object something new to do.",
+    "explain": "A small slope gives a familiar ball something new to do.",
     "notice": "Watching the ball travel or reaching when it stops is enough.",
     "extend": "Let baby release the ball from the top with your help if they reach for a turn."
   },
   "stir-bowl": {
     "needs": "An empty sturdy bowl and a large baby-safe spoon.",
-    "explain": "Copying an everyday action introduces using an object in a familiar way.",
+    "explain": "Copying what you do with a spoon is how pretend play starts.",
     "notice": "Tapping the bowl or moving the spoon in any direction counts.",
     "extend": "Copy their version of stirring, then wait to see what they try next."
   },
   "two-baskets": {
     "needs": "Two low open containers and one large baby-safe toy.",
-    "explain": "Two nearby destinations create a reason to pick up, move and release an object.",
+    "explain": "Two baskets give baby a reason to pick up, carry and let go.",
     "notice": "They may move the toy between hands or into either container.",
     "extend": "Let baby choose which container receives the toy next."
   },
   "loose-lid": {
     "needs": "A shallow wide tub, an oversized loose lid and one large baby-safe toy.",
-    "explain": "Moving the lid reveals an object, connecting an action with a small discovery.",
+    "explain": "Lifting a lid to find a toy is a small, happy surprise.",
     "notice": "They may push the lid aside, look under it or reach in after you open it.",
     "extend": "Let baby watch you replace the lid loosely, then offer another turn."
   },
   "gesture-song": {
     "needs": "A familiar song with one clap or wave.",
-    "explain": "A recognizable action creates a way to join a song without using words.",
+    "explain": "Doing the actions lets baby join a song before they can sing.",
     "notice": "An arm movement or a small clap attempt can be their version.",
     "extend": "Pause the singing and follow the gesture baby chooses next."
   },
   "teddy-hug": {
     "needs": "One intact baby-safe soft toy.",
-    "explain": "A familiar caring action gives baby something they can explore through imitation.",
+    "explain": "Hugging teddy lets baby copy the care you give them.",
     "notice": "They may pat, squeeze or touch teddy rather than copy a hug.",
     "extend": "Offer teddy to another familiar person and let baby watch or join in."
   },
   "stack-pair": {
     "needs": "Two large lightweight baby blocks.",
-    "explain": "Placing one object on another brings grasping and releasing into a simple building game.",
+    "explain": "Putting one block on another is baby’s first building game.",
     "notice": "Baby might touch the top block, place it beside the other or knock both down.",
     "extend": "Offer the top block and keep the base steady if baby reaches to place it."
   },
   "name-find": {
     "needs": "Two familiar large baby-safe toys.",
-    "explain": "A familiar word gives baby a reason to look toward an object during play.",
+    "explain": "Hearing a word they know gives baby a reason to look for the thing.",
     "notice": "A glance toward the named toy is a response; choosing another is still play.",
     "extend": "Name an object baby is already holding, then look at it together."
   },
   "pretend-cup": {
     "needs": "An empty baby-safe cup; a second cup if you want your own.",
-    "explain": "Copying a pretend sip brings a familiar routine into make-believe.",
+    "explain": "A pretend sip turns a cup baby knows into make-believe.",
     "notice": "They may turn the cup, bring it toward their face or watch you sip.",
     "extend": "Offer a pretend sip to a baby-safe soft toy while baby watches."
   },
   "feed-teddy": {
     "needs": "An empty baby spoon and an intact baby-safe soft toy.",
-    "explain": "A pretend bite uses a mealtime action in a new setting.",
+    "explain": "Feeding teddy brings mealtime into make-believe.",
     "notice": "They may bring the spoon near teddy or explore it on their own.",
     "extend": "Let baby choose whether teddy or another familiar toy gets the next pretend bite."
   },
   "toy-homes": {
     "needs": "Two large baby-safe toys and two wide open containers.",
-    "explain": "Choosing a place for an object creates practice with putting in and taking out.",
+    "explain": "Choosing where things go gives lots of practice putting in and taking out.",
     "notice": "Baby may use one container for everything; sorting isn’t the aim.",
     "extend": "Move a toy to another container while they watch and offer a turn."
   },
   "body-song": {
     "needs": "Your voice and a simple song about hands or feet.",
-    "explain": "Showing a body part while naming it links a word with a visible movement.",
+    "explain": "Naming a body part while you move it links the word with what it does.",
     "notice": "They may move a hand, look toward your foot or listen to the song.",
     "extend": "Name the body part baby moves, even if it changes your song."
   },
   "action-book": {
     "needs": "A sturdy picture book showing a familiar action.",
-    "explain": "Copying a pictured action connects shared reading with something you can do together.",
+    "explain": "Doing what’s in the picture turns a book into something you play together.",
     "notice": "Baby may watch, touch the picture or offer a smaller version of the action.",
     "extend": "Let baby choose a page and copy the action you find there."
   },
   "hide-helper": {
     "needs": "A large baby-safe toy and a low open basket.",
-    "explain": "Choosing a hiding spot adds a new role to an already familiar finding game.",
+    "explain": "Letting baby choose the hiding spot gives them a new part in the game.",
     "notice": "They may put the toy beside the basket or watch you hide it.",
     "extend": "Swap roles: look for the toy wherever baby has placed it."
   },
   "movement-route": {
     "needs": "A clear floor space and one large baby-safe toy.",
-    "explain": "A toy gives the movement baby already uses an interesting destination.",
+    "explain": "A toy at the end of the sofa gives cruising somewhere to go.",
     "notice": "Reaching, pivoting, scooting or crawling can all be ways to join in.",
     "extend": "Let baby choose the next toy to move toward, keeping the route clear."
   },
   "standing-play": {
     "needs": "A familiar stable anchored support and one baby-safe toy.",
-    "explain": "A toy near their hands gives baby something to do while using a support they already pull up on.",
+    "explain": "A toy near the support baby pulls up on gives them something to do while standing.",
     "notice": "They may explore with one hand, use both for support or return to the floor.",
     "extend": "Offer a different texture within easy reach, without asking them to step or let go."
   }

@@ -459,13 +459,13 @@
   /* ---------- put it on Home ---------- */
   const baseRender = window.render;
   const PAGES = {
-    rsv: { cat: 'Health', ctx: 'Vaccines', title: 'The RSV shot', what: 'RSV is a common cold virus that can make young babies very sick, and it’s the top reason babies end up in hospital.',
+    rsv: { cat: 'Health', ctx: 'Vaccines', title: 'The RSV shot', what: 'RSV is a common winter virus. For most adults it’s a cold, but it can make young babies very sick. One shot protects them for the season.',
       doIt: 'If {N} was born before RSV season and hasn’t had the shot, ask at the next checkup or call to book it.',
       know: ['Who it’s for', 'Babies under 8 months in their first RSV season, usually October to March. Babies born during the season often get it before leaving hospital.'],
-      know2: ['If you had the RSV vaccine in pregnancy', 'At least 2 weeks before birth, most babies don’t need the shot as well. Your pediatrician can confirm.'] },
+      know2: ['Had the RSV vaccine in pregnancy?', 'If it was at least 2 weeks before birth, most babies don’t need the shot too. Your pediatrician can confirm.'] },
     flu: { cat: 'Health', ctx: 'Vaccines', title: 'A first flu shot', what: 'From 6 months, babies can have the flu shot each fall and winter.',
       doIt: 'Ask at the next checkup, or book it on its own. The first season takes two doses, 4 weeks apart.',
-      know: ['Why two doses', 'The first dose primes {his} body and the second gives full protection, so starting early in the season helps.'],
+      know: ['Why two doses', 'The first dose starts {his} protection and the second completes it, so starting early in the season helps.'],
       know2: ['After the shot', 'A sore leg or a low fever for a day is common.'] },
     clocks: { cat: 'Sleep', ctx: 'Daily rhythm', title: 'When the clocks change', what: 'A one-hour jump can throw naps and bedtime off for a few days.',
       doIt: 'Starting a few days before, move naps and bedtime by about 15 minutes a day, so the change is done by the weekend.',
@@ -475,8 +475,11 @@
   function pageHtml(id) {
     const P0 = PAGES[id], s = state();
     const k = ([t, b]) => `<p class="ss-know"><b>${esc(t)}</b>${esc(w(s, b))}</p>`;
-    return `<div class="quiet-category hub-page hub-detail" style="${yearTheme(P0.cat)}"><div class="guide-detail-top"><div class="monthly-page-header"><button class="monthly-back" onclick="back()" aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5-7 7 7 7"></path></svg></button><div><h1>${esc(typeof displayTopic === 'function' ? displayTopic(P0.cat) : P0.cat)}</h1><p>${esc(name())} · ${esc(monthLabel(actualMonth()))}</p></div><span class="monthly-save" aria-hidden="true"></span></div></div>`
-      + `<div class="dev-area-head ss-head"><p class="hub-context">${esc(P0.ctx)}</p><h1>${esc(P0.title)}</h1></div><section class="ss-moment"><p class="ss-what">${esc(w(s, P0.what))}</p><section class="ss-do"><b>What to do</b><p>${esc(w(s, P0.doIt))}</p></section>${k(P0.know)}${k(P0.know2)}</section></div>`;
+    // The same subpage look as every other guide: a soft colored header with a small picture, and the page's color inside.
+    const pal = (typeof YEAR_PALETTES !== 'undefined' && YEAR_PALETTES[P0.cat]) || { bg: '#eef8f1', ink: '#356651' };
+    const ART = { rsv: 'shield', flu: 'steth', clocks: 'clock' };
+    return `<div class="quiet-category hub-page hub-detail care-v2" data-ss="1" data-overview="${esc(P0.cat)}" style="${yearTheme(P0.cat)};--ss-bg:${pal.bg};--ss-ink:${pal.ink}"><div class="guide-detail-top"><div class="monthly-page-header"><button class="monthly-back" onclick="back()" aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5-7 7 7 7"></path></svg></button><div><h1>${esc(typeof displayTopic === 'function' ? displayTopic(P0.cat) : P0.cat)}</h1><p>${esc(name())} · ${esc(monthLabel(actualMonth()))}</p></div><span class="monthly-save" aria-hidden="true"></span></div></div>`
+      + `<div class="dev-area-head ss-head" style="--area:${pal.bg};--area-ink:${pal.ink}">${typeof hubArt === 'function' ? `<span class="dev-area-head-art" aria-hidden="true">${hubArt(ART[id] || 'steth', P0.cat)}</span>` : ''}<p class="hub-context">${esc(P0.ctx)}</p><h1>${esc(P0.title)}</h1></div><section class="ss-moment"><p class="ss-what">${esc(w(s, P0.what))}</p><section class="ss-do"><b>What to do</b><p>${esc(w(s, P0.doIt))}</p></section>${k(P0.know)}${k(P0.know2)}</section></div>`;
   }
   // Home asks at most one question a week, so it never feels like a form. The missed-checkup question is separate.
   // Only when it's needed. Questions whose answer brings time-sensitive guidance can ask any week: crawling and

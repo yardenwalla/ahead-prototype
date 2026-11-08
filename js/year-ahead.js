@@ -178,7 +178,7 @@
     return h.detail(cat, `${range(c)} · ${when}`, c.title, p.lead + ' ' + look,
       `<p class="ya-connect">${F(`Here’s what it changes, and how to get ready.`)}</p>`
       + h.list('What it changes', p.rows.slice(0, 4).map(([icon, rc, title, sub, go]) => h.row({ icon, cat: rc, title, sub, onclick: go }).replace('<span class="hub-row-copy">', `<span class="hub-row-copy"><small class="hub-row-eyebrow">${F(AREA[rc] || rc)}</small>`)))
-      + h.tip(p.tip[0], p.tip[1]), c.icon).replace('<div class="hub-detail-head">', yearStrip(c) + '<div class="hub-detail-head">');
+      + h.tip(p.tip[0], p.tip[1]), c.icon);
   }
   const base = window.changesRoute;
   window.changesRoute = function (p) { const m = /^chg:Timeline:c:(\w+)$/.exec(p); if (m) { const pg = changePage(m[1]); if (pg) return pg; } return base(p); };
