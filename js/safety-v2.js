@@ -100,6 +100,7 @@
     // Sleep's own answers count, so ticking in either place shows in both.
     if (id === 'swaddle') return answers.swaddleStopped === 'Yes' || answers.neverSwaddled ? 'done' : stored(id);
     if (id === 'mattress') return answers.mattressLowered === 'Yes' || answers.mattressLowest === 'Yes' ? 'done' : stored(id);
+    if (id === 'bassinet' && answers.inCrib === 'Yes') return 'done';
     if (id === 'mattress2') return answers.mattressLowest === 'Yes' ? 'done' : stored(id);
     if (id === 'sleep' && typeof safeDone === 'function' && typeof SLEEP_TASKS !== 'undefined' && safeDone() === SLEEP_TASKS) return 'done';
     if (id === 'small') { const a = stored('small'), b = stored('batteries'); return a === 'done' || b === 'done' ? 'done' : a || b; }
@@ -110,6 +111,7 @@
     const ids = id === 'small' ? ['small', 'batteries'] : id === 'storage' ? ['storage', 'doors'] : id === 'windows' ? ['windows', 'cords'] : [id];
     ids.forEach(x => { if (v) d.checks.safetyHome[x] = v; else delete d.checks.safetyHome[x]; });
     if (id === 'swaddle' && v === 'done') answers.swaddleStopped = 'Yes';
+    if (id === 'bassinet' && v === 'done') answers.inCrib = 'Yes';
     if (id === 'mattress' && v === 'done') answers.mattressLowered = 'Yes';
     if (id === 'mattress2' && v === 'done') answers.mattressLowest = 'Yes';
     if (typeof persist === 'function') persist();
