@@ -19,7 +19,7 @@
 
   /* ---------- use what the app already knows (no new questions) ---------- */
   // A first saved in Memories ("Rolls over", "Crawling", "First tooth") counts as the parent telling us.
-  const MEM = [['pulling', /pull(s|ing|ed)? (up|to stand)|stands? (up|holding|with)|cruis/i], ['crawling', /crawl|scoot/i], ['sitting', /sits?( up)? without|sitting (up|alone|on)|sits alone/i], ['rolling', /roll/i], ['tooth', /tooth|teeth/i]];
+  const MEM = [['pulling', /pull(s|ing|ed)? (up|to stand)|stands? (up|holding|with)|cruis/i], ['crawling', /crawl|scoot/i], ['sitting', /sits?( up)? without|sitting (up|alone|on)|sits alone|\bsat (up|alone|on|without)\b/i], ['rolling', /roll/i], ['tooth', /tooth|teeth/i]];
   function memoryFirsts() {
     const out = {};
     try {
@@ -570,6 +570,9 @@
     const justAnswered = Date.now() - s.answeredAt < 12 * 3600e3, had = new Set([...(st.today.now || []), ...(st.today.soon || [])]);
     const fresh = justAnswered ? [...r.now, ...r.soon].filter(c => (c.fromAnswer || c.must) && !had.has(c.id)) : [];
     if (fresh.length) { out.now = fresh.concat(out.now); st.today.now = fresh.map(c => c.id).concat(st.today.now || []); save(st); }
+    // A checkup date saved today joins today's cards right away, so a visit tomorrow isn't missed.
+    const ck = [...r.now, ...r.soon].find(c => c.id === 'checkup' && !had.has(c.id) && !fresh.includes(c));
+    if (ck) { const box = r.soon.includes(ck) ? 'soon' : 'now'; out[box] = [ck].concat(out[box]); st.today[box] = [ck.id].concat(st.today[box] || []); save(st); }
     out.cleared = had.size > 0 && !out.now.length && !out.soon.length;
     return out;
   }

@@ -139,7 +139,7 @@
       const row = document.querySelectorAll('#main .hub-tick')[idx];
       if (row) { row.classList.add('is-celebrate'); row.insertAdjacentHTML('beforeend', '<span class="hub-burst" aria-hidden="true"><i>✦</i><i>✧</i><i>✦</i><i>✧</i></span>'); }
       const rec = journeyData().records.find(r => r.type === 'milestone' && r.skillKey === key);
-      if (rec) hubToast('A first, saved', `“${rec.title}” is in Memories · ${journeyDateLabel(rec.date)}`, ['Change date', `document.querySelectorAll('.hub-toast').forEach(t=>t.remove());openPage('event-edit:${rec.id}')`]);
+      if (rec) hubToast(typeof memIsBig !== 'function' || memIsBig(rec) ? 'A first, saved' : 'Saved', `“${rec.title}” is in Memories · ${journeyDateLabel(rec.date)}`, ['Change date', `document.querySelectorAll('.hub-toast').forEach(t=>t.remove());openPage('event-edit:${rec.id}')`]);
     };
   }
 
@@ -381,7 +381,7 @@
       stops += `<div class="hub-tl-stop">${node}<span class="hub-tl-head"><b>${label}</b><small>${esc2(sub)}</small></span></div><div class="hub-tl-items">${rows.map(r => item(r)).join('')}</div>`;
     }
     const empty = !journeyData().records.some(r => r.type === 'milestone' || r.status === 'attended');
-    let b = `<div class="eyebrow">Memories</div><h1>${nm}’s first year</h1>` + (empty ? `<p class="hub-lead">${esc2(`Firsts and checkups you save will show up here, along with a photo for each month.`)}</p>` : '');
+    let b = `<div class="eyebrow">Memories</div><h1>${nm}’s first year</h1>` + (empty ? `<p class="hub-lead">${esc2(`Firsts you save will show up here, along with a photo for each month.`)}</p>` : '');
     b += `<div class="hub-two-actions hub-tl-actions"><button class="hub-button" onclick="openPage('chg:Timeline:visit')">Record a visit</button><button class="hub-button is-secondary" onclick="openPage('chg:Timeline:milestone')">Save a first</button></div>`;
     b += `<div class="hub-tl-line">${stops}</div>`;
     b += H().note('Photos and entries stay on this device.');
@@ -421,7 +421,7 @@
       // A checkup whose time has passed asks when it was, not when it will be.
       try { if (planned && (NOW - parse(profile.dob)) / 2629746e3 > Math.max(age, 0.25) + 0.5) planned = false; } catch (e) {}
       const old = healthRecord(age), key = (planned ? 'plan-' : '') + age;
-      const form = `<form class="hub-card hub-form" onsubmit="submitVisitForm(event,'${key}')"><label for="visitDate">${planned ? 'Appointment date' : 'Date of the visit'}</label><input id="visitDate" type="date" min="${profile.dob}" ${!planned ? `max="${iso(NOW)}"` : ''} value="${planned && old?.date ? old.date : iso(NOW)}" required>${journeyError ? `<p class="journey-error" role="alert">${esc2(journeyError)}</p>` : ''}<button class="hub-button">${planned ? 'Save the date' : 'Mark it as done'}</button><button type="button" class="hub-link is-quiet hub-cancel" onclick="back()">Cancel</button></form>`;
+      const form = `<form class="hub-card hub-form" onsubmit="submitVisitForm(event,'${key}')"><label for="visitDate">${planned ? 'Appointment date' : 'Date of the visit'}</label><input id="visitDate" type="date" min="${profile.dob}" ${!planned ? `max="${iso(NOW)}"` : ''} value="${planned ? (old?.date || (() => { const d = age === 0 ? new Date(parse(profile.dob).getTime() + 5 * 864e5) : addMonths(parse(profile.dob), age); return iso(d > NOW ? d : NOW); })()) : iso(NOW)}" required>${journeyError ? `<p class="journey-error" role="alert">${esc2(journeyError)}</p>` : ''}<button class="hub-button">${planned ? 'Save the date' : 'Mark it as done'}</button><button type="button" class="hub-link is-quiet hub-cancel" onclick="back()">Cancel</button></form>`;
       return detailPage('Health', healthJourneyLabel(age), planned ? 'When is the appointment?' : 'When was the visit?', planned ? 'We’ll remind you on Home as it gets close.' : 'You’ll see it checked off in Health.', form.replace(/Maya/g, esc2(name())), 'steth');
     };
   }
@@ -773,7 +773,8 @@
     const data = journeyData();
     data.records.push({ id: 'milestone-own-' + Date.now(), type: 'milestone', title: t.trim().slice(0, 80), date: d, notes: '', status: 'attended', own: true });
     if (!saveJourneyData(data)) return hubToast('Couldn’t save that', 'This viewer can’t store entries.');
-    navigate('timeline'); hubToast('A first, saved', `“${t.trim()}” is in Memories · ${journeyDateLabel(d)}`);
+    const rec = data.records[data.records.length - 1];
+    navigate('timeline'); hubToast('A first, saved', `“${t.trim()}” is in Memories · ${journeyDateLabel(d)}`, ['Change date', `document.querySelectorAll('.hub-toast').forEach(t=>t.remove());openPage('event-edit:${rec.id}')`]);
   };
   window.hubFirstFill = t => { const el = document.getElementById('firstTitle'); if (el) { el.value = t; el.focus(); } };
 
@@ -793,8 +794,9 @@
   if (typeof submitJourneyEdit !== 'function') return;
   const base = submitJourneyEdit;
   window.submitJourneyEdit = submitJourneyEdit = function (e, id) {
+    const rec = journeyData().records.find(x => x.id === id), visit = rec && rec.type === 'visit';
     const r = base(e, id);
-    if (typeof hubToast === 'function' && typeof page !== 'undefined' && !String(page).startsWith('event-edit')) setTimeout(() => hubToast('Date updated', 'Memories are up to date.'), 0);
+    if (typeof hubToast === 'function' && typeof page !== 'undefined' && !String(page).startsWith('event-edit')) setTimeout(() => hubToast('Date updated', visit ? 'It’s changed in Health.' : 'Memories are up to date.'), 0);
     return r;
   };
 })();
@@ -836,7 +838,7 @@ window.hubCenterStages = function () {
     try { journeyNotice = null; } catch (e) {}   // one confirmation, not two
     while (historyStack.length && /^(visit-form|chg:Timeline:visit)/.test(historyStack[historyStack.length - 1])) historyStack.pop();
     if (historyStack.length) back(); else navigate('home');
-    hubToast('Saved', r.status === 'planned' ? `We’ll remind you on Home before ${journeyDateLabel(r.date)}.` : `Marked as done. You’ll see it checked off in Health.`);
+    hubToast('Saved', r.status === 'planned' ? (r.date === iso(NOW) ? 'It’s on Home for today.' : `We’ll remind you on Home before ${journeyDateLabel(r.date)}.`) : `Marked as done. You’ll see it checked off in Health.`);
   };
 })();
 

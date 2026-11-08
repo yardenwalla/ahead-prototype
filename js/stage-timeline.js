@@ -98,7 +98,9 @@
     return {
       answers: JSON.parse(JSON.stringify(answers)),
       chg: typeof chgGetOverride === 'function' ? chgGetOverride(cat) : null,
-      hub: typeof hubStageOverrideRaw === 'function' ? hubStageOverrideRaw(cat === 'Daily rhythm' ? 'Care' : cat) : null
+      hub: typeof hubStageOverrideRaw === 'function' ? hubStageOverrideRaw(cat === 'Daily rhythm' ? 'Care' : cat) : null,
+      // A stage pick also counts as answering Home's question; Undo takes that back too, so Home can still ask.
+      checkins: (() => { try { return localStorage.getItem('ahead-v2-checkins:' + journeyKey()); } catch (e) { return null; } })()
     };
   }
   function restore(cat, s) {
@@ -106,6 +108,7 @@
     Object.assign(answers, s.answers); persist();
     if (typeof chgSetOverride === 'function') chgSetOverride(cat, s.chg);
     if (typeof hubStageOverrideRestore === 'function') hubStageOverrideRestore(cat === 'Daily rhythm' ? 'Care' : cat, s.hub);
+    try { const k = 'ahead-v2-checkins:' + journeyKey(); s.checkins == null ? localStorage.removeItem(k) : localStorage.setItem(k, s.checkins); } catch (e) {}
   }
   let undoState = null;
   function toast(cat, labelText) {
