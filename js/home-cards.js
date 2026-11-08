@@ -156,7 +156,7 @@
   card('routine', 'Sleep', 3, s => s.d >= 42 && s.d <= 70, 'Nights start to stretch: add a bedtime routine', 'Bath, feed, song: a short routine in the same order helps that longer stretch land at night instead of the afternoon.', { catchup: 90, go: "openPage('chg:Sleep:d:routine')" });
   card('fewer-poops', 'Daily rhythm', 4, s => s.feed === 'breast' && s.d >= 42 && s.d <= 90, 'Days without a poop can be normal', 'After about 6 weeks, some breastfed babies go days between poops. Wet diapers, 6 or more a day, tell you {hes} getting enough.', { go: "openPage('topic:Daily rhythm')" });
   card('swaddle', 'Safety', 1, s => s.d >= 49 && s.d <= 120 && !s.swaddle && !moved(s, 'rolling', 'sitting', 'crawling', 'pulling'), 'If you swaddle: when to stop',
-    'At the first sign of rolling, which can be as early as 2 months. That day, switch to a sleep sack with arms free.',
+    'Rolling usually starts at 4–6 months. At the first signs of trying, switch to a sleep sack with arms free.',
     Object.assign({ grace: 14, safety: 1, must: 1, go: "openPage('chg:Sleep:d:swaddleoff')" }, ask([['In a sleep sack now', "setAnswer('swaddleStopped','Yes')"], ['We don’t swaddle', "setAnswer('neverSwaddled','Yes')"]])));
   card('swaddle-now', 'Safety', 1, s => !s.swaddle && moved(s, 'rolling', 'sitting', 'crawling', 'pulling') && s.d <= 180, s => moved(s, 'rolling') ? '{Ns} rolling: time to stop swaddling' : 'Time to stop swaddling',
     'If {hes} still swaddled, switch to a sleep sack with arms free tonight. A swaddled baby who rolls can’t push up.',

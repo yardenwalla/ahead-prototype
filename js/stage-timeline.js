@@ -27,7 +27,7 @@
     ] },
     Safety: { kind: 'skill', stages: [
       { key: 'setup', label: 'First setup', age: 'From birth' },
-      { key: 'reaching', label: 'Rolling', age: '3–6 months' },
+      { key: 'reaching', label: 'Rolling', age: '4–6 months' },
       { key: 'rolling', label: 'Crawling', age: '6–9 months' },   // before and after the first crawl
       { key: 'pulling', label: 'Pulling up', age: '9 months+' }   // standing, cruising and first steps
     ] },
