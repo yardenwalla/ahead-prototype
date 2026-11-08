@@ -346,10 +346,9 @@
       const holder = svg.closest('.hub-row, .hub-tick, button, div') || svg.parentElement;
       const text = (holder.querySelector('b') || holder).textContent + ' ' + ((holder.querySelector('small') || {}).textContent || '');
       const fits = HINTS.filter(([re]) => re.test((holder.querySelector('b') || holder).textContent)).map(([, n]) => n).filter(n => ART[n]);
-      // The icon follows the row's words: keep it if the title supports it, otherwise switch to the first icon that fits.
-      if (!used.has(name) && (!fits.length || fits.includes(name))) { used.add(name); return; }
+      // An icon the page chose stays. Only a repeat on the same page is swapped, for one that fits the row's words.
+      if (!used.has(name)) { used.add(name); return; }
       const hint = [...fits, ...HINTS.filter(([re]) => re.test(text)).map(([, n]) => n)].find(n => ART[n] && !used.has(n));
-      if (!hint && !used.has(name)) { used.add(name); return; }
       const pick = hint || POOL.find(n => ART[n] && !used.has(n));
       if (!pick) return;
       used.add(pick);

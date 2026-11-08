@@ -310,7 +310,10 @@
     12: [8, 18, 12, 15, 'First steps', [[8, '8 mo'], [12, '1 year'], [15, '15 mo'], [18, '18 mo']]]
   };
   // An icon that matches each skill's words.
-  const SKILL_ICON = l => { const t = l.toLowerCase();
+  // Skills whose words would draw the same icon as another skill in the same area get their own.
+  const SKILL_OWN = [[/arms and (both )?legs/i, 'wave'], [/glad to see/i, 'heart'], [/looks at a toy/i, 'toy'], [/swipes/i, 'ball'], [/chuckles/i, 'heart'], [/keep your attention/i, 'chat'],
+    [/sounds back/i, 'music'], [/knows familiar/i, 'heart'], [/squeal/i, 'music'], [/takes turns making sounds/i, 'ear'], [/closes lips/i, 'bowl'], [/gets (in)?to sitting/i, 'mat'], [/when you leave/i, 'heart'], [/holding (on to )?furniture/i, 'dresser']];
+  const SKILL_ICON = l => { const t = l.toLowerCase(); const own = SKILL_OWN.find(([re]) => re.test(t)); if (own) return own[1];
     return /peekaboo|hid|dropped/.test(t) ? 'peek' : /wave|goodbye/.test(t) ? 'wave' : /roll/.test(t) ? 'roll' : /crawl/.test(t) ? 'crawl' : /stand|pull|steps|furniture/.test(t) ? 'stand' : /sit/.test(t) ? 'sit' : /tummy|push/.test(t) ? 'mat' : /head/.test(t) ? 'head'
       : /cup|drink/.test(t) ? 'cup' : /mouth|lips|food|breast|bottle|feed/.test(t) ? 'mouth' : /mirror/.test(t) ? 'mirror' : /name|voice|loud|sound|hear/.test(t) && !/makes|babble/.test(t) ? 'ear'
       : /smil|laugh|chuckle|glad|familiar|shy|clingy|game|pat-a-cake/.test(t) ? 'smile' : /coo|babble|raspberr|squeal|word|mama|dada|sounds|no/.test(t) ? 'chat' : /look|watch|face|expression|eyes/.test(t) ? 'eye'

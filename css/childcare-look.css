@@ -5,7 +5,7 @@
 #main .hub-page[data-overview="Childcare"] .hub-h2 { margin-top: 4px }
 /* Subpages: everything takes the page's own color, set from the tile or row the parent tapped. */
 #main .hub-detail[data-overview="Childcare"] .hub-strip, #main .hub-detail[data-overview="Childcare"] .hub-daymarks { --ink: var(--ss-ink) !important; --bg: var(--ss-bg) !important; --pale: var(--ss-bg) !important }
-#main .hub-detail[data-overview="Childcare"] .cc-extra { background: var(--ss-bg) }
+#main .hub-detail[data-overview="Childcare"] .cc-extra { background: var(--white, #fffefb) }
 #main .hub-detail[data-overview="Childcare"] .cc-extra > small { color: var(--ss-ink) }
 #main .hub-detail[data-overview="Childcare"] .cc-fit > div:first-child { background: var(--ss-bg) }
 #main .hub-detail[data-overview="Childcare"] .cc-fit b { color: var(--ss-ink) }
@@ -56,8 +56,8 @@
 #main .hub-detail .cc-share svg { width: 18px; height: 18px }
 #main .hub-detail .cc-edit { display: block; margin: 6px auto 14px }
 /* When to start looking: its own labeled row in the fit card, with a clock */
-#main .hub-detail .cc-fit .cc-when { grid-column: 1 / -1; display: flex; gap: 12px; align-items: flex-start; padding: 12px; border-radius: 14px; background: var(--ss-bg, #fcf3cf) }
-#main .hub-detail .cc-fit .cc-when-art { flex: none; width: 36px; height: 36px; border-radius: 11px; background: #fff; display: grid; place-items: center; color: var(--ss-ink) }
+#main .hub-detail .cc-fit .cc-when { grid-column: 1 / -1; display: flex; gap: 12px; align-items: flex-start; padding: 12px 2px 2px; border-top: 1px solid var(--line, #e1e5d9); background: none }
+#main .hub-detail .cc-fit .cc-when-art { flex: none; width: 36px; height: 36px; border-radius: 11px; background: var(--ss-bg, #fcf3cf); display: grid; place-items: center; color: var(--ss-ink) }
 #main .hub-detail .cc-fit .cc-when-art svg { width: 20px; height: 20px }
 #main .hub-detail .cc-fit .cc-when small { display: block; font-size: 14px; font-weight: 700; color: var(--ss-ink); margin-bottom: 2px }
 #main .hub-detail .cc-fit .cc-when b { display: block; font-size: 15px; font-weight: 600; color: var(--ink) !important; margin: 0 0 2px }

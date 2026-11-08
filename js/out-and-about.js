@@ -177,7 +177,7 @@
       ['diaper', 'diapers', 'Diapers', m < 6 ? 'One for every 2 hours out, plus 2 spares' : 'One for every 3 hours out, plus 2 spares'],
       ['towel', 'wipes', 'Wipes and a changing pad', 'And a bag for dirty diapers'],
       ['shirt', 'clothes', 'A spare outfit', 'For {o}, and a top for you, for blowouts'],
-      ['heart', 'burp', 'Burp cloths', ''],
+      ['drop', 'burp', 'Burp cloths', ''],
       f !== 'Formula' && pumping() ? ['bottle', 'pump', 'Your pump and bottles with lids', 'If you’ll pump while you’re out'] : null,
       f !== 'Formula' && pumps() ? ['fridge', 'pumped', 'Pumped milk in a cooler with ice packs', 'If you’re bringing bottles'] : null,
       f !== 'Formula' && !pumps() ? ['heart', 'cover', 'A nursing cover or scarf', 'Only if you like one'] : null,
@@ -231,7 +231,7 @@
 
   // Staying away: the setup is a checklist, ticked off in each new place. Ticks are kept on this phone; "Start over" clears them.
   const AWAY_KEY = 'ahead-away';
-  const awayItems = m => [['Ask for a crib, or bring a play yard', 'At a hotel, ask for a room away from the pool', 'notepad'], ['Check the crib, then empty it', 'No loose or missing parts. Away from windows and cords', 'crib'], m >= 6 ? ['Things up high, at {p} level', 'Medicines, cleaners, cords and small things. Block any stairs', 'lock'] : ['Bags with medicines up high', 'Yours and everyone else’s', 'bag'], m >= 6 ? ['Bathroom doors closed', 'And an adult right beside {o} near any water', 'bath'] : null, ['Same bedtime as at home', 'The same steps, in {p} own sleep sack', 'moon']].filter(Boolean);
+  const awayItems = m => [['Ask for a crib, or bring a play yard', 'At a hotel, ask for a room away from the pool', 'notepad'], ['Check the crib, then empty it', 'No loose or missing parts. Away from windows and cords', 'crib'], m >= 6 ? ['Things up high, at {p} level', 'Medicines, cleaners, cords and small things. Block any stairs', 'lock'] : ['Bags with medicines up high', 'Yours and everyone else’s', 'bag'], m >= 6 ? ['Bathroom doors closed', 'And an adult right beside {o} near any water', 'bath'] : null, ['Same bedtime as at home', 'The same steps, in {p} own sleep sack', 'clock']].filter(Boolean);
   window.oaAwayTick = i => { let on = []; try { on = JSON.parse(localStorage.getItem(AWAY_KEY)) || []; } catch (e) {} on = on.includes(i) ? on.filter(x => x !== i) : on.concat(i); try { localStorage.setItem(AWAY_KEY, JSON.stringify(on)); } catch (e) {} const y = scrollY; render(); scrollTo(0, y); };
   window.oaAwayReset = () => { try { localStorage.removeItem(AWAY_KEY); } catch (e) {} const y = scrollY; render(); scrollTo(0, y); };
   const awayList = m => { let on = []; try { on = JSON.parse(localStorage.getItem(AWAY_KEY)) || []; } catch (e) {} return `<div class="oa-away-head"><h2 class="hub-h2">${F('Set up your stay')}</h2>${on.length ? `<button class="hub-link" onclick="oaAwayReset()">${F('Start over')}</button>` : ''}</div>` + H().ticks(awayItems(m), i => on.includes(i), i => `oaAwayTick(${i})`, CAT); };
@@ -253,10 +253,10 @@
         ['diaper', 'A blowout', 'A family restroom, or your changing pad on a clean flat spot.']],
         'If the baby is hungry, feed them where you are. Crying in public happens to everyone. For a blowout, find a family restroom or use your changing pad.')
       + good([
-        ['car', 'Car seats and shopping carts', m >= 6 ? 'Use the cart’s own seat with the strap on, not the infant seat on top.' : 'An infant seat can tip off the top of a cart. Use a carrier or the stroller.'],
-        m >= 6 ? ['highchair', 'Eating out', 'A steady high chair, strapped in and pulled back from the table. Hot food to the middle.'] : ['carseat', 'Eating out', 'The car seat stays on the floor or in the stroller, never on top of a high chair.'],
+        ['shield', 'Car seats and shopping carts', m >= 6 ? 'Use the cart’s own seat with the strap on, not the infant seat on top.' : 'An infant seat can tip off the top of a cart. Use a carrier or the stroller.'],
+        m >= 6 ? ['bowl', 'Eating out', 'A steady high chair, strapped in and pulled back from the table. Hot food to the middle.'] : ['bowl', 'Eating out', 'The car seat stays on the floor or in the stroller, never on top of a high chair.'],
         bf ? ['fridge', 'Pumped milk', 'Fine cool or at room temperature. No need to warm it.'] : null,
-        m >= 6 ? ['bowl', 'Bring {p} own food', 'Something soft from home, a bib and a spoon. A placemat keeps the tray clean.'] : ['hand', 'Holding {o}', 'It’s fine to ask people to wash their hands first, or to say no.']]));
+        m >= 6 ? ['bag', 'Bring {p} own food', 'Something soft from home, a bib and a spoon. A placemat keeps the tray clean.'] : ['hand', 'Holding {o}', 'It’s fine to ask people to wash their hands first, or to say no.']]));
 
     if (id === 'road') return sub('road', 'Road trips', 'Road trips', 'Plan a stop every couple of hours.',
       hubDayMarkers({ title: 'Plan your drive', events: [[9 * 60, 'car', 'Leave as a nap starts'], [11 * 60, 'bottle', 'Stop to feed and change'], [13 * 60, 'mat', m >= 6 ? 'Stop for a snack and a stretch' : 'Stop to feed and stretch'], [15 * 60, 'home', 'Arrive']], from: 8 * 60, to: 16 * 60, cat: CAT, caption: 'Leave at 9 as a nap starts, stop at 11 to feed and change, stop at 1 to feed and stretch, arrive at 3.' })
@@ -276,10 +276,10 @@
         ['At the gate', 'stroller', 'Gate-check the stroller. It waits at the plane door.'],
         ['Takeoff and landing', 'plane', bf && !fm && how() === 'Nursing' ? 'Nurse {o}, or offer a pacifier.' : 'A feed or a pacifier helps {p} ears.']],
         'When you book, add the baby, ask about a bassinet seat and check the car seat is certified for aircraft. Milk, formula and your pump can go through security. Gate-check the stroller. Feed or offer a pacifier at takeoff and landing.')
-      + pack([fm ? ['bottle', 'One extra bottle', 'In case of delays'] : null, ['diaper', 'Diapers for the trip, plus extra', 'At least one more than you think, for delays'], ['shirt', 'A change of clothes', 'For {o}, and a top for you, in your carry-on'], ageNow() >= 6 ? ['bowl', 'Snacks {s} already eats', 'Soft and easy, for delays'] : null, ['drop', 'Medicine you might need', 'A fever reducer your pediatrician has OK’d, with its syringe'], ['notepad', 'Proof of {p} age', 'Like {p} birth certificate, for a lap seat']])
+      + pack([fm ? ['bottle', 'One extra bottle', 'In case of delays'] : null, ['diaper', 'Diapers for the trip, plus extra', 'At least one more than you think, for delays'], ['shirt', 'A change of clothes', 'For {o}, and a top for you, in your carry-on'], ageNow() >= 6 ? ['bowl', 'Snacks {s} already eats', 'Soft and easy, for delays'] : null, ['drop', 'Medicine you might need', 'A fever reducer your pediatrician has OK’d, with its syringe'], ['book', 'Proof of {p} age', 'Like {p} birth certificate, for a lap seat']])
       + ifs([
         ['heart', 'Crying on board', 'Walk the aisle when the seatbelt sign is off, or offer a feed. Most people understand.'],
-        ['diaper', 'A diaper change', 'Ask the crew which restroom has the fold-down table.']],
+        ['hand', 'A diaper change', 'Ask the crew which restroom has the fold-down table.']],
         'If the baby cries, walk the aisle or offer a feed. Ask the crew which restroom has a changing table.')
       + good([m < 2 ? ['steth', 'Flying in the first weeks', 'Ask your pediatrician first.'] : null, ['carrier', 'A carrier in the airport', 'Handy for getting through. Take {o} out of it before takeoff and landing.'], ['clock', 'Time zones', 'On a short trip, keep naps near home time. On a longer one, shift them a little each day.']]));
 
@@ -296,12 +296,12 @@
 
     if (id === 'away') return sub('away', 'Staying away', 'Staying with family or in a hotel', 'Most homes and hotel rooms aren’t set up for babies. Ten minutes when you arrive covers most of it.',
       awayList(m)
-      + pack([['sack', '{P} sleep sack', 'It smells like home'], ['crib', 'The play yard’s own sheet', 'Only the one made for it'], ['moon', 'A night light', 'For feeds in a dark, new room']])
+      + pack([['sack', '{P} sleep sack', 'It smells like home'], ['home', 'The play yard’s own sheet', 'Only the one made for it'], ['star', 'A night light', 'For feeds in a dark, new room']])
       + ifs([
         ['moon', 'A rough first night', 'New places can unsettle sleep. A few off nights are normal.'],
         ['heart', 'Well-meant advice', 'Share one rule kindly: on {p} back, in a bare crib.']],
         'A few off nights are normal. If you get advice, share one rule kindly: on the back, in a bare crib.')
-      + good([['shield', 'Which crib is safe?', 'A play yard, or a crib made after June 2011. Never an adult bed or a couch.'], ['heart', 'Pets', 'Never leave {o} alone with a pet, even a gentle one.'], m >= 6 ? ['bowl', 'Grandparents and treats', 'Share your food rules once, kindly, before the first meal.'] : null]));
+      + good([['shield', 'Which crib is safe?', 'A play yard, or a crib made after June 2011. Never an adult bed or a couch.'], ['hand', 'Pets', 'Never leave {o} alone with a pet, even a gentle one.'], m >= 6 ? ['bowl', 'Grandparents and treats', 'Share your food rules once, kindly, before the first meal.'] : null]));
 
     if (id === 'water') return sub('water', 'Pool or beach', 'Pool or beach', 'Go early, stay in the shade, and keep dips short.',
       todo('In the water', 'Hold {o} the whole time, even with a float.')
