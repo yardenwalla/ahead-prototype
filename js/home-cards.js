@@ -156,13 +156,13 @@
   card('routine', 'Sleep', 3, s => s.d >= 42 && s.d <= 70, 'Nights start to stretch: add a bedtime routine', 'Bath, feed, song: a short routine in the same order helps that longer stretch land at night instead of the afternoon.', { catchup: 90, go: "openPage('chg:Sleep:d:routine')" });
   card('fewer-poops', 'Daily rhythm', 4, s => s.feed === 'breast' && s.d >= 42 && s.d <= 90, 'Days without a poop can be normal', 'After about 6 weeks, some breastfed babies go days between poops. Wet diapers, 6 or more a day, tell you {hes} getting enough.', { go: "openPage('topic:Daily rhythm')" });
   card('swaddle', 'Safety', 1, s => s.d >= 49 && s.d <= 120 && !s.swaddle && !moved(s, 'rolling', 'sitting', 'crawling', 'pulling'), 'If you swaddle: when to stop',
-    'Rolling usually starts at 4–6 months. At the first signs of trying, switch to a sleep sack with arms free.',
+    'At the first sign of rolling, which can be as early as 2 months. That day, switch to a sleep sack with arms free.',
     Object.assign({ grace: 14, safety: 1, must: 1, go: "openPage('chg:Sleep:d:swaddleoff')" }, ask([['In a sleep sack now', "setAnswer('swaddleStopped','Yes')"], ['We don’t swaddle', "setAnswer('neverSwaddled','Yes')"]])));
   card('swaddle-now', 'Safety', 1, s => !s.swaddle && moved(s, 'rolling', 'sitting', 'crawling', 'pulling') && s.d <= 180, s => moved(s, 'rolling') ? '{Ns} rolling: time to stop swaddling' : 'Time to stop swaddling',
     'If {hes} still swaddled, switch to a sleep sack with arms free tonight. A swaddled baby who rolls can’t push up.',
     Object.assign({ fromAnswer: 1, safety: 1, must: 1, go: "openPage('chg:Sleep:d:swaddleoff')" }, ask([['In a sleep sack now', "setAnswer('swaddleStopped','Yes')"], ['We don’t swaddle', "setAnswer('neverSwaddled','Yes')"]])));
   card('distracted', 'Feeding', 4, s => s.d >= 90 && s.d <= 135, 'Suddenly pulling off to look around?', 'Common around 3–5 months: everything is more interesting than milk. A quiet, dim room helps.', { go: "openPage('chg:Feeding:d:cues')" });
-  card('iron', 'Feeding', 3, s => breast(s) && (profile.early ? s.d >= 28 : s.d >= 100) && s.d <= 122 && !(typeof healthRecord === 'function' && healthRecord(4) && healthRecord(4).status === 'attended'), 'Ask about iron at the 4-month checkup',
+  card('iron', 'Feeding', 3, s => breast(s) && s.d >= 100 && s.d <= 122 && !(typeof healthRecord === 'function' && healthRecord(4) && healthRecord(4).status === 'attended'), 'Ask about iron at the 4-month checkup',
     s => s.feed === 'breast' ? 'Pediatricians recommend iron drops for breastfed babies from 4 months until iron-rich foods are going well. A quick question at this visit.' : 'For mostly breastfed babies, pediatricians recommend iron drops from 4 months until iron-rich foods are going well. Worth asking.', { go: "openPage('health-visit:4')" });
   card('four-month', 'Sleep', 3, s => s.d >= 100 && s.d <= 140, 'More waking? Common around 4 months', 'More waking for a few weeks is common now. It’s {his} sleep maturing, not something you broke.', { catchup: 150, go: "openPage('chg:Sleep:d:regress')" });
   // Rolling
@@ -275,7 +275,7 @@
   set('poop-colors', null, pickK(s => s.feed === 'breast' ? 'poop-colors:breast' : 'poop-colors'));
   set('cluster', null, pickK(s => s.feed === 'breast' ? 'cluster:breast' : 'cluster'));
   set('swaddle-now', pickK(s => moved(s, 'rolling') ? 'swaddle-now:t' : 'swaddle-now:t-other'));
-  set('iron', pickK(s => profile.early ? 'iron:t-early' : 'iron:t'), pickK(s => profile.early ? 'iron:early' : s.feed === 'breast' ? 'iron:breast' : 'iron'));
+  set('iron', null, pickK(s => s.feed === 'breast' ? 'iron:breast' : 'iron'));
   set('rolling-soon', pickK(s => fresh7(s, 'rolling') ? 'rolling-soon:t' : 'rolling-soon:t-cond'));
   set('crawl-soon', pickK(s => fresh7(s, 'crawling') ? 'crawl-soon:t' : 'crawl-soon:t-cond'));
   set('stand-soon', pickK(s => fresh7(s, 'pulling') ? 'stand-soon:t' : 'stand-soon:t-cond'), pickK(s => fresh7(s, 'pulling') ? 'stand-soon' : 'stand-soon:cond'));
@@ -286,7 +286,7 @@
   set('stand-now', pickK(s => opened(s, 'stand-soon') ? 'stand-now:t-after' : 'stand-now:t'), pickK(s => opened(s, 'stand-soon') ? 'stand-now:after' : 'stand-now'));
   set('hot-days', pickK(s => s.d < 183 ? 'hot-days:t' : 'hot-days:t-older'), pickK(s => s.d < 183 ? 'hot-days' : 'hot-days:older'));
   set('milk12', null, pickK(s => K['milk12:' + s.feed] ? 'milk12:' + s.feed : 'milk12'));
-  set('checkup', s => (K[checkupNow(s).ahead >= 2 ? 'checkup:t-soon' : 'checkup:t'] || '').replace('{visit}', checkupNow(s).label), s => { const v = checkupNow(s), base = (profile.early && K['checkup:' + v.label + ':early']) || K['checkup:' + v.label + ':' + s.feed] || K['checkup:' + v.label] || ''; let n = 0; try { n = ((journeyData().questions || {})[v.age] || []).length; } catch (e) {} return n ? base + ` You have ${n} question${n === 1 ? '' : 's'} saved.` : base; });
+  set('checkup', s => (K[checkupNow(s).ahead >= 2 ? 'checkup:t-soon' : 'checkup:t'] || '').replace('{visit}', checkupNow(s).label), s => { const v = checkupNow(s), base = K['checkup:' + v.label + ':' + s.feed] || K['checkup:' + v.label] || ''; let n = 0; try { n = ((journeyData().questions || {})[v.age] || []).length; } catch (e) {} return n ? base + ` You have ${n} question${n === 1 ? '' : 's'} saved.` : base; });
 
   /* ---------- every card opens a page that continues it ---------- */
   const ROUTE = {
@@ -583,7 +583,7 @@
       let m = (now.getFullYear() - dob.getFullYear()) * 12 + now.getMonth() - dob.getMonth(); if (now.getDate() < dob.getDate()) m--;
       const since = new Date(dob); since.setMonth(dob.getMonth() + m); const wks = Math.floor((now - since) / DAY / 7);
       const ageText = days < 91 ? (days < 7 ? `${days} day${days === 1 ? '' : 's'} old` : `${Math.floor(days / 7)} weeks old`) : `${m} months${wks ? `, ${wks} week${wks > 1 ? 's' : ''}` : ''}`;
-      const eb = main.querySelector('.connected-summary-intro:not(.hub-bday) .home-month-eyebrow'); if (eb) eb.remove();   // the header above already says the age ('Leo · 4 weeks'), so the card doesn't repeat it
+      const eb = main.querySelector('.connected-summary-intro:not(.hub-bday) .home-month-eyebrow'); if (eb) eb.textContent = ageText;
       const bd = main.querySelector('.connected-summary-intro.hub-bday');
       if (bd && !bd.querySelector('.home-summary-spectrum')) {
         const spec = document.querySelector('.home-summary-spectrum') ? '' : `<div class="home-summary-spectrum" aria-hidden="true">${['#e5e0fc', '#f7d9e5', '#d9e5fc', '#ddf1e5', '#f7e6c4', '#cfe9f4', '#fde3d3', '#f8edb3'].map(c => `<span style="background:${c}"></span>`).join('')}</div>`;

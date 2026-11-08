@@ -246,7 +246,7 @@
       const pick = (cat, title, nowI, labels) => `<div class="hub-where-row"><span class="hub-dot" style="${yearTheme(cat)}">${catIcon(cat)}</span><div class="hub-where-copy"><b>${title}</b><div class="hub-where-chips" role="group" aria-label="${title} stage">${labels.map((l, i) => { const on = i === nowI, ok = on || stageCanChange(cat, i, nowI); return `<button class="${on ? 'is-on' : ''}" ${on ? 'aria-pressed="true"' : ok ? `onclick="hubProfileStage('${cat}',${i})"` : 'disabled'}>${esc2(l)}</button>`; }).join('')}</div></div></div>`;
       const twoAges = profile.early && profile.due && adjustedMonth(actualMonth()) !== actualMonth();
       // Born early: say which age each one follows, since there are two.
-      const fixed = (cat, title, label, basis) => `<div class="hub-where-row"><span class="hub-dot" style="${yearTheme(cat)}">${catIcon(cat)}</span><div class="hub-where-copy"><b>${title}</b><small>${esc2(label)} · ${twoAges ? (basis === 'birthday' ? `by ${nm}’s birthday age` : `by ${basis === 'dev' ? (ageMode('dev') === 'birthday' ? 'birthday' : 'adjusted') : (ageMode('care') === 'birthday' ? 'birthday' : 'adjusted')} age`) : `changes as ${nm} grows`}</small></div></div>`;
+      const fixed = (cat, title, label, basis) => `<div class="hub-where-row"><span class="hub-dot" style="${yearTheme(cat)}">${catIcon(cat)}</span><div class="hub-where-copy"><b>${title}</b><small>${esc2(label)} · ${twoAges ? (basis === 'birthday' ? `follows ${nm}’s birthday` : `follows ${basis === 'dev' ? (ageMode('dev') === 'birthday' ? 'birthday' : 'adjusted') : (ageMode('care') === 'birthday' ? 'birthday' : 'adjusted')} age`) : `follows ${nm}’s age`}</small></div></div>`;
       const careRail = ['Newborn', '1–3 months', '4–6 months', '7–12 months'];
       const careNow = (() => { const d = (NOW - parse(profile.dob)) / 864e5, mm = hubAgeFor('care', actualMonth()); return careRail[d < 21 ? 0 : mm < 4 ? 1 : mm < 7 ? 2 : 3]; })();
       const safeI = STAGE_TABLE.Safety.stages.findIndex(p => p.key === safetyGroup(safetyStageNow()));
@@ -259,7 +259,7 @@
         + fixed('Health', 'Health', 'Next: ' + healthJourneyLabel(healthJourneyFocus()), 'birthday')
         + `</section>`;
       b += `<button class="you-link" onclick="openPage('trust')">How we choose guidance ›</button>`;
-      b += h.note(window.AHEAD_STORAGE_PERSISTS === false ? 'This viewer can’t keep your entries after you close it. Open Ahead in your phone’s browser to keep them.' : 'Your answers, notes and photos stay on this phone.');
+      b += h.note(window.AHEAD_STORAGE_PERSISTS === false ? 'This viewer can’t keep your entries after you close it. Open Ahead in your phone’s browser to keep them.' : 'Your answers, notes and photos stay in this browser on this device.');
       return `<div class="quiet-category hub-page hub-detail" style="${yearTheme('You')}">${hubPageTop(`${esc2(name())}’s details`)}${b}</div>`;
     };
   }
@@ -394,7 +394,7 @@
   }
   function recordMilestonePage() {
     const h = H(), ov = hubStageOverride('Development'), ref = DEV_STAGES[ov] ? Number(ov) : devRef(developmentMonth(actualMonth())), st = DEV_STAGES[ref], age = ref === 12 ? '1 year' : ref + ' months';
-    const ICON = { Social: 'smile', Talking: 'chat', Thinking: 'idea', Movement: 'sit' }, TITLE = { Social: 'Social', Talking: 'Talking', Thinking: 'Thinking', Movement: 'Movement' };
+    const ICON = { Social: 'smile', Talking: 'chat', Thinking: 'idea', Movement: 'sit' }, TITLE = { Social: 'Social', Talking: 'Communication', Thinking: 'Thinking', Movement: 'Movement' };
     const tiles = Object.keys(DEV_DOMAINS).map(d => `<button class="hub-domain-tile" onclick="openPage('development-domain:${ref}:${d}')">${h.art(ICON[d], 'Development')}<b>${TITLE[d]}</b><small>${F(st.summaries[d] || '')}</small><span>${F('Pick a skill')} ›</span></button>`).join('');
     return detailPage('Development', 'Memories', 'Save a milestone', `Pick an area, then tap “Seen it” on anything Maya’s doing. Skills for ${age} are shown first.`,
       `<section class="hub-card hub-glance is-static"><div class="hub-domain-tiles">${tiles}</div></section>`
@@ -671,14 +671,7 @@
       // Search sits at the top; there is no separate Resources section (outside links live inside each guide).
       const search = `<div class="hub-search hub-cat-search"><input class="search" type="search" placeholder="Try: teething, short naps, fever…" aria-label="Search guidance" oninput="searchGuides(this.value)" value="${esc2(query || '')}"><div id="results" class="hub-list hub-results" ${query ? '' : 'hidden'}></div></div>`;
       if (query) setTimeout(() => { if (document.querySelector('.hub-cat-search')) searchGuides(query); }, 0);
-      // One style for every subtitle: a short phrase for what's in focus now (not a bare stage name or a question).
-      const SUB = { Feeding: { Newborn: 'Newborn feeds', 'Ready for solids': 'Getting ready for solids', 'First foods': 'Starting solids', Meals: 'Meals alongside milk' },
-        Sleep: { 'Three naps': 'Three naps a day', 'Two naps': 'Two naps a day' },
-        Safety: { 'First setup': 'Setting up your home', Rolling: 'Getting ready for rolling', Crawling: 'Babyproofing for crawling', 'Pulling up': 'What’s in reach when standing' },
-        'Out and about': { 'Short outings are good for you both': 'Short outings', 'Ready for a longer trip?': 'Planning a longer trip', 'Ready to face out?': 'Facing out in the carrier', 'Watch the car seat’s limits': 'Outgrowing the infant car seat' },
-        Childcare: { 'Daycare, nannies, sitters and family': actualMonth() < 6 ? 'Finding care that fits' : 'Settling into care and sick days' } };
-      const subs = h => h.replace(/(data-cat="([^"]+)"[\s\S]*?<small>)([^<]*)(<\/small>)/g, (m, a, cat, t, z) => a + esc2(((SUB[cat] || {})[t.replace(/&amp;/g, '&').replace(/&#39;/g, '’')]) || t).replace(/&amp;amp;/g, '&amp;') + z);
-      return subs(baseCategories()).replace(/<div class="journey-utility-links">[\s\S]*<\/div>$/, '').replace(/(<h1>Categories<\/h1>)/, '$1' + search);
+      return baseCategories().replace(/<div class="journey-utility-links">[\s\S]*<\/div>$/, '').replace(/(<h1>Categories<\/h1>)/, '$1' + search);
     };
   }
 
@@ -726,7 +719,7 @@
     const skip = (html.match(/class="connected-skip" onclick="([^"]*)"/) || [])[1];
     const extra = (html.match(/class="connected-checkin([^"]*)"/) || [])[1] || '';
     const label = extra.includes('chg-checkin') ? '' : ({ 'Daily rhythm': 'Everyday care', Development: 'Development & play' }[cat] || cat);
-    return `<section class="connected-checkin${extra} hub-q" style="${yearTheme(cat)}" aria-label="Quick question"><div class="hub-q-head"><span class="hub-dot">${catIcon(cat)}</span><div class="hub-q-copy"><small>${label ? esc2(label) : 'Quick question'}</small><h2>${t}</h2>${why ? `<p>${why}</p>` : ''}</div></div><div class="connected-checkin-choices">${choices}${skip ? `<button class="hub-q-skip" onclick="${skip}" aria-label="Skip for now">Skip</button>` : ''}</div></section>`;
+    return `<section class="connected-checkin${extra} hub-q" style="${yearTheme(cat)}" aria-label="Quick question"><div class="hub-q-head"><span class="hub-dot">${catIcon(cat)}</span><div class="hub-q-copy"><small>${label ? esc2(label) + ' · ' : ''}Quick question</small><h2>${t}</h2>${why ? `<p>${why}</p>` : ''}</div></div><div class="connected-checkin-choices">${choices}${skip ? `<button class="hub-q-skip" onclick="${skip}" aria-label="Skip for now">Skip</button>` : ''}</div></section>`;
   };
   if (typeof window.feedingCheckinMarkup === 'function') {
     const baseFeedQ = window.feedingCheckinMarkup;

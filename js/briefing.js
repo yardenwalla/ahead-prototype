@@ -93,10 +93,10 @@
         body: `Switch to a sleep sack that leaves ${p.p} arms free. During the day, plenty of floor time helps ${p.o} practice.`,
         tools: homePriorityTools(priority), link: link("openSection('Sleep','sleep-rolling')", 'See what to change') });
       else if (developmentMonth(actualMonth()) >= 6) out.push({ topic: 'Sleep', key: 'rolling-soon', title: 'Once rolling starts, swaddling stops',
-        body: `Rolling usually starts at 4–6 months. If ${n()} still sleeps swaddled, switch to a sleep sack that leaves ${p.p} arms free.`,
+        body: `Most babies roll by about 6 months. If ${n()} still sleeps swaddled, switch to a sleep sack that leaves ${p.p} arms free.`,
         tools: homePriorityTools(priority), link: link("openSection('Sleep','sleep-rolling')", 'See what to change') });
       else out.push({ topic: 'Sleep', key: 'rolling-soon', title: 'Rolling is on the way',
-        body: `Rolling usually starts at 4–6 months. If you swaddle, stop at the first signs of trying to roll and switch to a sleep sack.`,
+        body: `Most babies first try between 3 and 6 months. If you swaddle, that first try is your cue to switch to a sleep sack.`,
         tools: homePriorityTools(priority), link: link("openSection('Sleep','sleep-rolling')", 'See what to change') });
     }
 
