@@ -139,7 +139,7 @@
       const row = document.querySelectorAll('#main .hub-tick')[idx];
       if (row) { row.classList.add('is-celebrate'); row.insertAdjacentHTML('beforeend', '<span class="hub-burst" aria-hidden="true"><i>✦</i><i>✧</i><i>✦</i><i>✧</i></span>'); }
       const rec = journeyData().records.find(r => r.type === 'milestone' && r.skillKey === key);
-      if (rec) hubToast(typeof memIsBig !== 'function' || memIsBig(rec) ? 'A first, saved' : 'Saved', `“${rec.title}” is in Memories · ${journeyDateLabel(rec.date)}`, ['Change date', `document.querySelectorAll('.hub-toast').forEach(t=>t.remove());openPage('event-edit:${rec.id}')`]);
+      if (rec) hubToast(typeof memIsBig !== 'function' || memIsBig(rec) ? 'A first, saved' : 'Saved', `“${rec.title}” is in Memories · ${journeyDateLabel(rec.date)}`, ['See it in the book', `document.querySelectorAll('.hub-toast').forEach(t=>t.remove());openPage('chg:Timeline:firsts')`]);
     };
   }
 
@@ -233,8 +233,14 @@
   window.hubAgePage = function () {
     const nm = esc2(name());
     if (!(profile.early && profile.due)) return `<div class="quiet-category hub-page hub-detail" style="${yearTheme('You')}">${hubPageTop(`${esc2(name())}’s age`)}<div class="hub-detail-head"><span class="hub-big">${hubArt('clock', 'You')}</span><p class="hub-context">${nm}’s age</p><h1>Every guide uses ${nm}’s age</h1><p class="hub-lead">If ${nm} was born early, add the due date in ${nm}’s details and guides can use adjusted age instead.</p></div></div>`;
-    const head = `<div class="hub-detail-head"><span class="hub-big">${hubArt('clock', 'You')}</span><p class="hub-context">Born early</p><h1>${profile.name ? `Two ages, one ${nm}` : 'Two ages, one baby'}</h1><p class="hub-lead">Guides use adjusted age by default. Checkups always use the birthday. If one area still doesn’t match ${nm}, open its stages and pick the one that fits.</p><p class="hub-lead" style="font-size:15px">Keep adjusted age while ${nm} seems younger than the birthday says. Switch an area to birthday age once ${nm} has caught up there; many babies do by about 2.</p></div>`;
-    return `<div class="quiet-category hub-page hub-detail" style="${yearTheme('You')}">${hubPageTop(`${esc2(name())}’s age`)}${head}${hubAgeBlock()}</div>`;
+    const P = typeof babyPronouns === 'function' ? babyPronouns() : { s: 'they', p: 'their' };
+    const bday = monthLabel(birthdayAge()), adj = monthLabel(adjustedMonth(actualMonth()));
+    // Two big ages, side by side, then which guides follow which. One idea per line, no gray block of text.
+    const head = `<div class="hub-detail-head"><span class="hub-big">${hubArt('clock', 'You')}</span><p class="hub-context">Born early</p><h1>${profile.name ? `${nm} has two ages` : 'Your baby has two ages'}</h1><p class="hub-lead">${esc2(`Guides follow ${P.p} adjusted age. Checkups follow ${P.p} birthday.`)}</p></div>`;
+    const duo = `<div class="age-duo"><div class="age-duo-tile is-bday"><small>Birthday age</small><b>${esc2(bday)}</b><span>Checkups and shots</span></div><div class="age-duo-tile is-adj"><small>Adjusted age</small><b>${esc2(adj)}</b><span>Guides and milestones</span></div></div>`;
+    const rows = hubAgeBlock().replace(/<div class="hub-tiles">[\s\S]*?<\/div><\/div><\/div>/, '');
+    const tip = `<p class="age-tip">${esc2(`Once ${name()} catches up in an area, switch it to birthday age. Many babies do by age 2.`)}</p>`;
+    return `<div class="quiet-category hub-page hub-detail age-page" style="${yearTheme('You')}">${hubPageTop(`${esc2(name())}’s age`)}${head}${duo}<h2 class="hub-h2">Which age each guide follows</h2>${rows}${tip}</div>`;
   };
 
   // Change a stage from Baby's details and stay there (Undo still works from the message).
@@ -774,7 +780,7 @@
     data.records.push({ id: 'milestone-own-' + Date.now(), type: 'milestone', title: t.trim().slice(0, 80), date: d, notes: '', status: 'attended', own: true });
     if (!saveJourneyData(data)) return hubToast('Couldn’t save that', 'This viewer can’t store entries.');
     const rec = data.records[data.records.length - 1];
-    navigate('timeline'); hubToast('A first, saved', `“${t.trim()}” is in Memories · ${journeyDateLabel(d)}`, ['Change date', `document.querySelectorAll('.hub-toast').forEach(t=>t.remove());openPage('event-edit:${rec.id}')`]);
+    navigate('timeline'); hubToast('A first, saved', `“${t.trim()}” is in Memories · ${journeyDateLabel(d)}`, ['See it in the book', `document.querySelectorAll('.hub-toast').forEach(t=>t.remove());openPage('chg:Timeline:firsts')`]);
   };
   window.hubFirstFill = t => { const el = document.getElementById('firstTitle'); if (el) { el.value = t; el.focus(); } };
 

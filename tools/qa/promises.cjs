@@ -47,7 +47,7 @@ for (const [title, skill, age] of [['Sat up', 'Sits without support', 9], ['Roll
   open(a, 'chg:Timeline:milestone');
   a.run(`document.getElementById = id => ({ firstTitle: { value: ${JSON.stringify(title)} }, firstDate: { value: '${at(age).slice(0, 10)}' } })[id]; hubSaveFirst()`);
   check(new RegExp(title).test(text(open(a, 'chg:Timeline:firsts'))), `“${title}” shows in the memory book`);
-  check(/in Memories/.test(toasts(a)) && /Change date/.test(toasts(a)), `“${title}”: the confirmation says Memories and offers Change date`);
+  check(/in Memories/.test(toasts(a)) && /See it in the book/.test(toasts(a)), `“${title}”: the confirmation says Memories and offers See it in the book`);
   check(a.run(`skillSeen(${JSON.stringify(skill)})`), `“${title}” counts as seen for “${skill}” in Development`);
 }
 
