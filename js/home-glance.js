@@ -28,7 +28,8 @@
     const now = ahead.filter(c => c.start <= a + 1).slice(0, 3);
     // The change that asks most of the parent leads; ties go to the one that's closest.
     const RANK = ['crying', 'crawl', 'roll', 'pull', 'ready', 'solids', 'steps', 'regress', 'sit', 'finger', 'meals', 'milk', 'twonaps', 'tooth', 'sep', 'carseat', 'nights', 'smile', 'words'];
-    const lead = now.slice().sort((p, q) => RANK.indexOf(p.id) - RANK.indexOf(q.id))[0];
+    const rank = c => c.id === 'crying' && a >= 2.5 ? 99 : RANK.indexOf(c.id);   // once the peak has passed, crying steps back
+    const lead = now.slice().sort((p, q) => rank(p) - rank(q))[0];
     return { a, lead, also: now.filter(c => c !== lead), later: ahead.filter(c => c.start > a + 1) };
   }
 
@@ -57,13 +58,13 @@
 
   function hero(c, a) {
     const y = Y(), p = y.PAGES[c.id], t = TIPS[c.id] || [p.rows.slice(0, 3).map(r => r[2]), []];
-    hero.skip = t[1];
+    hero.skip = [];
     return `<section class="hg-hero">
       <span class="hg-hero-art" aria-hidden="true">${typeof homeMonthArt === 'function' ? homeMonthArt(actualMonth()).replace('<svg ', '<svg preserveAspectRatio="xMidYMid meet" ') : ''}</span>
       <div class="hg-hero-copy">
         <p class="hg-eyebrow">${F('Right now')}</p>
         <h1>${F(HEAD[c.id] || c.title)}</h1>
-        <p class="hg-lead">${F(y.TOUCH[c.id] || p.lead)}</p>
+        <p class="hg-lead">${F(HELPS.includes(c.id) ? p.lead.split(/(?<=\.)\s/).slice(0, 2).join(' ') : `${p.signsTitle || 'Signs it’s close'}: ${p.signs.map((x, i) => i ? x.charAt(0).toLowerCase() + x.slice(1) : x.charAt(0).toLowerCase() + x.slice(1)).join(', ')}.`)}</p>
         <div class="hg-window"><span class="hg-window-label"><b>${F(y.range(c))}</b> · ${F(y.whenShort(c, a))}</span>${y.windowBar(c, a)}</div>
         <button class="hg-btn" onclick="${c.go}">${F('See what it changes')} <span aria-hidden="true">→</span></button>
       </div><div class="hg-spectrum" aria-hidden="true">${['Development', 'Feeding', 'Sleep', 'Health', 'Safety', 'Daily rhythm', 'Out and about'].map(t => `<span style="background:${YEAR_PALETTES[t] ? YEAR_PALETTES[t].bg : '#eee'}"></span>`).join('')}</div></section>`;
@@ -77,15 +78,16 @@
   const POOL = [
     ['Feeding', 0, 1, 3, '6+ wet diapers a day', 'From about day 5, the easiest sign {s’s} getting enough milk', 'chg:Feeding:d:enough'],
     ['Feeding', 0, 1.5, 2.5, 'Vitamin D drops', 'Nursed babies need 400 IU a day from the first days. Breast milk is low in it', 'chg:Feeding:mock:xa:growth', '', 'breast'],
-    ['Sleep', 0, 2, 2, 'Pacifiers and SIDS', 'Offering one at sleep lowers the risk. It’s fine if it falls out', 'chg:Sleep:d:where'],
+    ['Sleep', 0, 4, 2, 'Pacifiers and SIDS', 'Offering one at sleep lowers the risk. It’s fine if it falls out', 'chg:Sleep:d:where'],
     ['Safety', 0, 1.5, 2, 'The car seat pinch test', 'If you can pinch a fold of strap at {p} shoulder, tighten it', 'chg:Out and about:d:car'],
-    ['Health', 0.5, 3, 2.5, 'Baby blues', 'They should lift by 2 weeks. Lasting longer? Tell your doctor', 'chg:Health:d:you'],
-    ['Health', 0.5, 1.25, 2.5, 'The 1-month checkup', 'It checks on you too. Expect questions about your mood', 'health-visit:1', 'bday'],
+    ['Health', 0.5, 1.25, 2.5, 'The 1-month checkup', 'Mostly weight and feeding. Bring a rough count of wet diapers', 'health-visit:1', 'bday'],
     ['Feeding', 0.5, 2, 2.5, 'Growth spurts', 'Extra-hungry days around 3 and 6 weeks are normal, not a supply problem', 'chg:Feeding:d:enough'],
     ['Sleep', 0.5, 2.5, 2.5, 'Crying peaks at 6–8 weeks', 'Then it eases by 3–4 months. It’s OK to put {o} down safely and step away', 'chg:Sleep:d:crying'],
     ['Health', 1.5, 2.25, 3, '2-month vaccines', 'The first big round. A low fever for a day after is common', 'health-visit:2', 'bday'],
     ['Development', 1.5, 4.5, 2.5, 'Flat spots', 'Switch which end of the crib {p} head goes each night. Awake tummy time helps too', 'chg:Development:d:idea:4:tummy'],
     ['Feeding', 1, 4, 2, 'Spit-up', 'Common until about 4–6 months. If {s’s} growing and content, it’s usually fine', 'chg:Feeding:d:enough'],
+    ['Daily rhythm', 2.5, 4.5, 2, 'Drool', 'Lots of it from about 3 months is normal, and usually not teething yet', 'chg:Daily rhythm:d:gums'],
+    ['Health', 3.5, 4.25, 2.5, '4-month vaccines', 'The second round, mostly the same shots as at 2 months', 'health-visit:4', 'bday'],
     ['Feeding', 2, 4, 2, 'Shorter feeds', '{S’s} getting faster at feeding, not eating less', 'chg:Feeding:d:enough'],
     ['Feeding', 3, 5, 2, 'Distracted feeding', 'Pulling off to look around is normal now. A quiet, dim room helps', 'chg:Feeding:d:cues'],
     ['Sleep', 3, 5, 3, 'The 4-month sleep change', 'More waking for a few weeks means {p} sleep is maturing, not going backward', 'chg:Sleep:d:regress'],
@@ -113,6 +115,10 @@
     ['Sleep', 11, 12.5, 2, 'No soft toys yet', 'Keep the crib bare until {p} first birthday', 'chg:Sleep:d:lovey'],
     ['Health', 11, 12.5, 3, 'The 12-month checkup', 'It includes an anemia check, usually a quick finger prick', 'health-visit:12', 'bday']
   ];
+  const OF = { 'Crying peaks at 6–8 weeks': 'crying', 'The 4-month sleep change': 'regress', 'Swaddling and rolling': 'roll', 'Rolling in {p} sleep': 'roll',
+    'Signs {s’s} ready for solids': ['ready', 'solids'], 'Gagging vs choking': 'finger', 'Finger-sized pieces': 'finger',
+    'Night waking': 'sep', 'The next car seat': 'carseat', 'Barefoot is best': 'steps', 'The stove': 'pull', '16–24 oz of milk': 'milk', 'No cow’s milk to drink yet': 'milk',
+    'The first dentist visit': 'tooth', 'Stuck standing in the crib': 'pull' };
   function picks() {
     const adj = Y().ageNow(), bday = (NOW - parse(profile.dob)) / (30.4375 * 864e5);
     const flu = NOW.getMonth() >= 8 || NOW.getMonth() <= 2;   // September to March
@@ -120,8 +126,8 @@
       .filter(({ t, a }) => a >= t[1] && a < t[2] && (t[8] !== 'season' || flu) && (t[8] !== 'breast' || /breast|both|nurs/i.test(String(profile.feed || '') + String(profile.feedHow || ''))))
       .map(({ t, a }) => ({ t, score: t[3] + (a - t[1] < 1 ? 0.5 : 0) - (t[2] - a < 0.5 ? 0.25 : 0) }))
       .sort((x, y) => y.score - x.score || y.t[1] - x.t[1]);
-    const out = [], per = {}, gos = new Set(hero.skip || []);
-    for (const { t } of live) { if (out.length === 4) break; if ((per[t[0]] || 0) >= 2 || gos.has(t[6])) continue; per[t[0]] = (per[t[0]] || 0) + 1; gos.add(t[6]); out.push(t); }
+    const out = [], per = {}, gos = new Set((hero.skip || []).concat(picks.taken || []));
+    for (const { t } of live) { if (out.length === 4) break; if ((per[t[0]] || 0) >= 2 || gos.has(t[6]) || [].concat(OF[t[4]] || []).includes(picks.lead)) continue; per[t[0]] = (per[t[0]] || 0) + 1; out.push(t); }
     return out;
   }
   function glance() {
@@ -137,13 +143,14 @@
   // Play ideas wait for the change's own page; these are the things worth doing before it arrives.
   // This month's focus: what to do for the changes happening now, one row each, taking turns.
   function focus(now) {
-    const y = Y(), picked = [], seen = new Set((glance.gos || []).map(g => `openPage('${g}')`));
+    const y = Y(), picked = [], seen = new Set(["openPage('chg:Health:d:you')"]);
     for (let i = 0; i < 5 && picked.length < 3; i++) for (const c of now) {
       const r = y.PAGES[c.id].rows.filter(r => r[1] !== 'Development')[i];
       if (r && !seen.has(r[4]) && picked.length < 3) { seen.add(r[4]); picked.push([c, r]); }
     }
     if (!picked.length) return '';
     const row = ([c, [icon, cat, title, sub, go]]) => `<button class="hub-row hg-row" onclick="${go}"><span class="hub-dot">${hubArt(icon, cat)}</span><span class="hub-row-copy"><small class="hub-row-eyebrow">${F(c.title)}</small><b>${F(title)}</b><small>${F(sub)}</small></span>${chev}</button>`;
+    picks.taken = picked.map(([, r]) => (/openPage\('([^']+)'\)/.exec(r[4]) || [])[1]).filter(Boolean);
     return `<h2 class="hg-h2">${F('This month’s focus')}</h2><div class="hub-list hg-list">${picked.map(row).join('')}</div>`;
   }
 
@@ -161,7 +168,7 @@
     const photo = b.querySelector('.hub-bday-photo'); if (!photo || photo.querySelector('img')) return '';   // photo already added
     const m = +((b.querySelector('.hub-bday-num') || {}).textContent || 0); if (!m || m > 11) return '';
     const input = photo.querySelector('input'); const words = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven'];
-    return `<label class="hg-banner" role="button"><img class="hg-banner-img" src="assets/share/month-${m}.jpg" alt=""><span class="hg-banner-copy"><b>${F(`${name()} is ${words[m]} month${m === 1 ? '' : 's'}`)}</b><small>${F(`Add {p} ${m}-month photo to Memories`)}</small></span><span class="hg-banner-plus" aria-hidden="true">＋</span>${input ? input.outerHTML : ''}</label>`;
+    return `<label class="hg-banner" role="button"><span class="hg-banner-img"><img src="assets/share/month-${m}.jpg" alt=""></span><span class="hg-banner-copy"><b>${F(`${name()} is ${words[m]} month${m === 1 ? '' : 's'}`)}</b><small>${F(`Add {p} ${m}-month photo to Memories`)}</small></span><span class="hg-banner-plus" aria-hidden="true">＋</span>${input ? input.outerHTML : ''}</label>`;
   }
 
   function paintGlance() {
@@ -173,7 +180,9 @@
     let h = '<div class="hg-page">' + (ageLine ? ageLine.outerHTML : '') + banner(main);
     h += hero(lead, a);
     h += question ? question.outerHTML : '';
-    h += glance() + focus([lead, ...rest]) + comingUp(later, a);
+    picks.lead = lead.id; picks.taken = [];
+    const fo = focus([lead, ...rest].filter(c => !(c.id === 'crying' && a >= 2.5) && !(c === lead && c.id === 'crying')));   // the fussy-weeks card already says what helps
+    h += glance() + fo + comingUp(later, a);
     h += `<p class="connected-preview-footnote">${F('Ahead isn’t medical advice and doesn’t replace your pediatrician.')}</p></div>`;
     main.innerHTML = h;
   }
