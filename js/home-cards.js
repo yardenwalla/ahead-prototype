@@ -625,4 +625,5 @@
   window.home2Settle = () => settlePending();
   window.home2Debug = () => { const s = state(), r = pick(s); return { d: s.d, move: s.move, now: r.now.map(c => c.id + ' · ' + w(s, T(c.title)(s))), soon: r.soon.map(c => c.id + ' · ' + w(s, T(c.title)(s))) }; };
   window.home2TileLine = topic => { try { return tileLine(topic, state()); } catch (e) { return ''; } };
+  window.home2PageHeadlines = () => { try { return pageHeadlines(); } catch (e) { return {}; } };
 })();

@@ -295,6 +295,16 @@
   if (BASE_CATS) {
     window.journeyCategories = journeyCategories = function () {
       let html = BASE_CATS().replace(/<h1>Categories<\/h1>/, '<h1>Guides</h1>').replace(/Guidance for /, 'For ');
+      // Each tile says what the guide covers right now: the headline its page opens with, plus the short stage label when it adds something.
+      const heads = typeof window.home2PageHeadlines === 'function' && (typeof isCurrent !== 'function' || isCurrent()) ? home2PageHeadlines() : {};
+      html = html.replace(/(data-cat="([^"]+)"[\s\S]*?)<small>([\s\S]*?)<\/small>/g, (all, pre, cat, small) => {
+        const status = small.replace(/<[^>]+>/g, '').trim(), head = (heads[cat] || '').trim(), lo = x => x.toLowerCase().replace(/[‐‑–]/g, '-').replace(/\s+/g, ' ');
+        if (!head) return all;
+        const same = lo(head).includes(lo(status)) || lo(status).includes(lo(head)), short = status.split(/\s+/).length <= 4;
+        if (same) return `${pre}<small>${esc(head)}</small>`;
+        if (!short) return `${pre}<small>${small}</small>`;
+        return `${pre}<em class="dir-chip">${small}</em><small>${esc(head)}</small>`;
+      });
       const upd = guidesUpdated();
       upd.forEach(cat => { html = html.replace(new RegExp(`(data-cat="${cat}"[\\s\\S]*?<b>[^<]*)(</b>)`), '$1 <span class="guide-upd">Updated</span>$2'); });
       return html;
