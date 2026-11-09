@@ -70,83 +70,66 @@
       </div><div class="hg-spectrum" aria-hidden="true">${['Development', 'Feeding', 'Sleep', 'Health', 'Safety', 'Daily rhythm', 'Out and about'].map(t => `<span style="background:${YEAR_PALETTES[t] ? YEAR_PALETTES[t].bg : '#eee'}"></span>`).join('')}</div></section>`;
   }
 
-  // Good to know this month: the four things that matter most for Maya right now, from any area.
-  // Each has the ages it applies to (adjusted age; Health by birthday age, like checkups and fever) and a weight:
-  // 3 = do it now or it's easy to get wrong, 2 = useful, 1 = filler. Things that just became true rank a little higher.
-  // [area, from, to, weight, the thing to know, one line, page]
-  // Each tile is one idea, complete on the card: the title is the fact, the line says why or what to do.
-  const POOL = [
-    ['Feeding', 0, 1, 3, '6+ wet diapers a day', 'From about day 5, the easiest sign {s’s} getting enough milk', 'chg:Feeding:d:enough'],
-    ['Feeding', 0, 1.5, 2.5, 'Vitamin D drops', 'Nursed babies need 400 IU a day from the first days. Breast milk is low in it', 'chg:Feeding:mock:xa:growth', '', 'breast'],
-    ['Sleep', 0, 4, 2, 'Pacifiers at sleep', 'Offering one at naps and bedtime is recommended. It’s fine if it falls out', 'chg:Sleep:d:where'],
-    ['Health', 0.5, 1.25, 2.5, 'The 1-month checkup', 'Mostly weight and feeding. Bring a rough count of wet diapers', 'health-visit:1', 'bday'],
-    ['Feeding', 0.5, 2, 2.5, 'Growth spurts', 'Extra-hungry days around 3 and 6 weeks are normal, not a supply problem', 'chg:Feeding:d:enough'],
-    ['Sleep', 0.5, 2.5, 2.5, 'Crying peaks at 6–8 weeks', 'Then it eases by 3–4 months. It’s OK to put {o} down safely and step away', 'chg:Sleep:d:crying'],
-    ['Health', 1.5, 2.25, 3, '2-month vaccines', 'The first big round. A low fever for a day after is common', 'health-visit:2', 'bday'],
-    ['Development', 1.5, 4.5, 2.5, 'Flat spots', 'Switch which end of the crib {p} head goes each night. Awake tummy time helps too', 'chg:Development:d:idea:4:tummy'],
-    ['Feeding', 1, 4, 2, 'Spit-up', 'Common until about 4–6 months. If {s’s} growing and content, it’s usually fine', 'chg:Feeding:d:enough'],
-    ['Daily rhythm', 2.5, 4.5, 2, 'Drool', 'Lots of it from about 3 months is normal, and usually not teething yet', 'chg:Daily rhythm:d:gums'],
-    ['Health', 3.5, 4.25, 2.5, '4-month vaccines', 'The second round, mostly the same shots as at 2 months', 'health-visit:4', 'bday'],
-    ['Feeding', 2, 4, 2, 'Shorter feeds', '{S’s} getting faster at feeding, not eating less', 'chg:Feeding:d:enough'],
-    ['Feeding', 3, 5, 2, 'Distracted feeding', 'Pulling off to look around is normal now. A quiet, dim room helps', 'chg:Feeding:d:cues'],
-    ['Sleep', 3, 5, 3, 'The 4-month sleep change', 'More waking for a few weeks means {p} sleep is maturing, not going backward', 'chg:Sleep:d:regress'],
-    ['Sleep', 3, 5, 2.5, 'Swaddling and rolling', 'Once {s} tries to roll, the swaddle comes off for good. Arms free in a sleep sack', 'chg:Sleep:d:swaddleoff'],
-    ['Feeding', 4, 6, 3, 'Peanut, early', 'Offering it early, thinned, lowers the chance of a peanut allergy', 'chg:Feeding:d:allergens'],
-    ['Sleep', 4, 6, 2, 'Rolling in {p} sleep', 'Once {s} rolls both ways, {s} can stay how {s} lands', 'chg:Sleep:d:rolling'],
-    ['Feeding', 4.5, 6.5, 3, 'Signs {s’s} ready for solids', 'Steady head, sits with help, leans in for food, and swallows it', 'chg:Feeding:d:signs'],
-    ['Sleep', 5, 8, 2, 'Sleep training', 'It’s optional: a family choice, not a milestone', 'chg:Sleep:d:method'],
-    ['Health', 6, 9, 2.75, 'The first flu shot', 'It’s 2 doses, 4 weeks apart. After that, one a year', 'health-visit:6', 'bday', 'season'],
-    ['Feeding', 6, 8, 3, 'Iron', '{P} stores run low around 6 months. Meat, beans and fortified cereal refill them', 'chg:Feeding:d:food'],
-    ['Health', 7, 12, 1.5, 'The first dentist visit', 'Due once a tooth shows, and by {p} first birthday', 'chg:Daily rhythm:d:teeth'],
-    ['Feeding', 7.5, 9.5, 3, 'Finger-sized pieces', 'Soft enough to squash between your fingers. Quarter grapes lengthwise', 'chg:Feeding:d:finger'],
-    ['Sleep', 8, 10, 2, 'Night waking', 'Separation anxiety can bring it back. The same short goodbye helps', 'chg:Sleep:d:nightwake'],
-    ['Health', 8.25, 9.75, 2.5, 'The 9-month checkup', 'It includes a development screen. Jot down your questions', 'health-visit:9', 'bday'],
-    ['Feeding', 9, 11, 3, 'No cow’s milk to drink yet', 'Wait until 12 months. Yogurt and cheese are fine now', 'chg:Feeding:d:milk12'],
-    ['Sleep', 9, 11, 2, 'Stuck standing in the crib', 'Practice sitting back down during the day. It gets easier at night', 'chg:Sleep:d:rough'],
-    ['Daily rhythm', 9, 12.5, 2, 'Barefoot is best', 'Bare feet help balance for first steps. Save shoes for outside', 'chg:Daily rhythm:d:steps'],
-    ['Safety', 9, 12.5, 2.5, 'The next car seat', 'It still faces back, often until past age 2', 'chg:Out and about:d:car'],
-    ['Feeding', 11, 12.5, 3, '16–24 oz of milk', 'About right a day after {p} first birthday. More crowds out food', 'chg:Feeding:d:milk12'],
-    ['Sleep', 11, 12.5, 2, 'No soft toys yet', 'Keep the crib bare until {p} first birthday', 'chg:Sleep:d:lovey'],
-    ['Health', 11, 12.5, 3, 'The 12-month checkup', 'It includes an anemia check, usually a quick finger prick', 'health-visit:12', 'bday']
+  // This month for Maya: three cards, the things parents wish they'd known and the things that change their day.
+  // A card earns a place on Home only if it is proactive (no warnings, emergencies or "when to call": those live in the
+  // categories and search), non-obvious, true for this month, about the baby, and changes what you do or expect.
+  // [area, art, from, to, weight, headline (the whole point), one line, page, Timeline change it belongs to, flag]
+  // Ages are adjusted age; checkups follow the birthday ('bday').
+  const CARDS = [
+    ['Feeding', 'bowl', 0, 1, 3, 'Newborns feed 8–12 times a day', 'Day and night. Bunched-up evening feeds are normal, not a sign of low milk', 'chg:Feeding:d:enough'],
+    ['Sleep', 'moon', 0, 1.5, 3, 'Days and nights start out mixed up', 'Most babies sort it out by 6–8 weeks. Bright days and dim nights help', 'chg:Sleep:d:daynight', 'nights'],
+    ['Feeding', 'bowl', 0, 1, 2.5, 'Wet diapers show feeding is working', '6 or more a day from about day 5', 'chg:Feeding:d:enough'],
+    ['Feeding', 'bowl', 0, 1.5, 2, 'Nursed babies need vitamin D drops', '400 IU a day, from the first days', 'chg:Feeding:mock:xa:growth', '', 'breast'],
+    ['Feeding', 'bowl', 0.5, 2, 2.5, 'Growth spurts make babies extra hungry', 'Expect a few days of near-constant feeding around 3 and 6 weeks', 'chg:Feeding:d:enough'],
+    ['Sleep', 'heart', 0.5, 2.5, 3, 'Crying peaks around 6–8 weeks', 'Then it eases by 3–4 months. Evenings are usually the hardest', 'chg:Sleep:d:crying', 'crying'],
+    ['Development', 'smile', 1, 2, 2.5, 'Real smiles arrive around 6–8 weeks', 'The first ones that answer yours, not just in sleep', 'development-domain:2:Social', 'smile'],
+    ['Sleep', 'clock', 1.5, 3.5, 2.5, 'Babies this age can only stay awake about an hour', 'Fussing after 60–90 minutes up often means tired, not hungry', 'chg:Sleep:d:cues'],
+    ['Feeding', 'bowl', 2, 4, 2, 'Feeds get much faster', 'Ten minutes can be a full feed now. Quicker isn’t less', 'chg:Feeding:d:enough'],
+    ['Development', 'mat', 1.5, 4.5, 2, 'Flat spots are common now', 'Switch which end of the crib {p} head goes, and add awake tummy time', 'chg:Development:d:idea:4:tummy'],
+    ['Sleep', 'sun', 2, 4, 2.5, 'Short naps are normal until about 4 months', '30–45 minutes is typical. Naps lengthen as sleep matures', 'chg:Sleep:d:napsearly'],
+    ['Daily rhythm', 'tooth', 2.5, 4.5, 2, 'Drool isn’t always teething', 'Lots of drool from 3 months is normal. Teeth usually come later', 'chg:Daily rhythm:d:gums'],
+    ['Sleep', 'moon', 3, 5, 3, 'Sleep often gets worse around 4 months', 'For a few weeks. It means {p} sleep is maturing, not going backward', 'chg:Sleep:d:regress', 'regress'],
+    ['Feeding', 'bowl', 3, 5, 2, 'Distracted feeding is a phase', 'Pulling off to look around is normal. A quiet, dim room helps', 'chg:Feeding:d:cues'],
+    ['Sleep', 'sack', 3, 5, 2.5, 'The swaddle comes off at the first roll', 'Have a sleep sack ready before rolling starts', 'chg:Sleep:d:swaddleoff', 'roll'],
+    ['Feeding', 'bowl', 4, 6.5, 3, 'Early peanut lowers allergy risk', 'Offer it thinned with first foods, then keep it in the rotation', 'chg:Feeding:d:allergens'],
+    ['Feeding', 'highchair', 4.5, 6.5, 3, 'Readiness matters more than age for solids', 'Steady head, sits with help, leans in, and swallows instead of pushing food out', 'chg:Feeding:d:signs', 'ready'],
+    ['Sleep', 'moon', 5, 8, 2, 'Sleep training is optional', 'A family choice, not a milestone', 'chg:Sleep:d:method'],
+    ['Feeding', 'bowl', 6, 8, 3, 'Iron matters most in first foods', '{P} stores run low around 6 months. Meat, beans and fortified cereal refill them', 'chg:Feeding:d:food'],
+    ['Feeding', 'bowl', 6, 8, 2.5, 'Milk is still the main food', 'First meals are practice. A few bites a day is plenty', 'chg:Feeding:d:milk'],
+    ['Sleep', 'sun', 6, 9, 2.5, 'Two naps free up your day', 'When the late catnap drops, there’s time for longer outings', 'chg:Sleep:d:catnap', 'twonaps'],
+    ['Health', 'steth', 6, 9, 2, 'The first flu shot is 2 doses', '4 weeks apart, then once a year', 'health-visit:6', '', 'season', 'bday'],
+    ['Feeding', 'bowl', 7.5, 9.5, 3, '{S} can start feeding {r}', 'Soft finger foods, cut the size of your finger', 'chg:Feeding:d:finger', 'finger'],
+    ['Development', 'chat', 8, 11, 2.5, '{S} understands more than {s} can say', 'Name things as you go. {P} name and “no” often land first', 'development-domain:12:Talking'],
+    ['Sleep', 'moon', 8, 10, 2, 'Separation anxiety can bring night waking back', 'The same short goodbye at bedtime helps', 'chg:Sleep:d:nightwake', 'sep'],
+    ['Health', 'steth', 8.25, 9.75, 2, 'The 9-month checkup looks at development', 'Note how {s} moves, babbles and plays, to share', 'health-visit:9', '', '', 'bday'],
+    ['Feeding', 'cup', 9, 11.5, 3, 'No cow’s milk to drink until 12 months', 'Yogurt and cheese are fine now', 'chg:Feeding:d:milk12', 'milk'],
+    ['Daily rhythm', 'stand', 9, 12.5, 2, 'Bare feet help first steps', 'Save shoes for outside', 'chg:Daily rhythm:d:steps', 'steps'],
+    ['Out and about', 'car', 9, 12.5, 2, 'The next car seat still faces back', 'Often until past age 2', 'chg:Out and about:d:car', 'carseat'],
+    ['Sleep', 'sun', 10, 12.5, 2, 'Two naps usually last past the first birthday', 'Most move to one nap at 13–18 months', 'chg:Sleep:d:after'],
+    ['Feeding', 'cup', 11, 12.5, 3, 'At 1, milk drops to 16–24 oz a day', 'More can crowd out iron-rich food', 'chg:Feeding:d:milk12', 'milk'],
+    ['Health', 'steth', 11, 12.5, 2.5, 'The 12-month checkup includes an iron check', 'Usually a quick finger prick', 'health-visit:12', '', '', 'bday']
   ];
-  const OF = { 'Crying peaks at 6–8 weeks': 'crying', 'The 4-month sleep change': 'regress', 'Swaddling and rolling': 'roll', 'Rolling in {p} sleep': 'roll',
-    'Signs {s’s} ready for solids': ['ready', 'solids'], 'Gagging vs choking': 'finger', 'Finger-sized pieces': 'finger',
-    'Night waking': 'sep', 'The next car seat': 'carseat', 'Barefoot is best': 'steps', 'The stove': 'pull', '16–24 oz of milk': 'milk', 'No cow’s milk to drink yet': 'milk',
-    'The first dentist visit': 'tooth', 'Stuck standing in the crib': 'pull' };
-  function picks() {
+  function cards(lead) {
     const adj = Y().ageNow(), bday = (NOW - parse(profile.dob)) / (30.4375 * 864e5);
     const flu = NOW.getMonth() >= 8 || NOW.getMonth() <= 2;   // September to March
-    const live = POOL.map(t => { const a = t[7] === 'bday' ? bday : adj; return { t, a }; })
-      .filter(({ t, a }) => a >= t[1] && a < t[2] && (t[8] !== 'season' || flu) && (t[8] !== 'breast' || /breast|both|nurs/i.test(String(profile.feed || '') + String(profile.feedHow || ''))))
-      .map(({ t, a }) => ({ t, score: t[3] + (a - t[1] < 1 ? 0.5 : 0) - (t[2] - a < 0.5 ? 0.25 : 0) }))
-      .sort((x, y) => y.score - x.score || y.t[1] - x.t[1]);
-    const out = [], per = {}, gos = new Set((hero.skip || []).concat(picks.taken || []));
-    for (const { t } of live) { if (out.length === 4) break; if ((per[t[0]] || 0) >= 2 || gos.has(t[6]) || [].concat(OF[t[4]] || []).includes(picks.lead)) continue; per[t[0]] = (per[t[0]] || 0) + 1; out.push(t); }
+    const nursing = /breast|both|nurs/i.test(String(profile.feed || '') + String(profile.feedHow || ''));
+    const live = CARDS.map(t => ({ t, a: t[11] === 'bday' ? bday : adj }))
+      .filter(({ t, a }) => a >= t[2] && a < t[3] && t[8] !== lead && (t[10] !== 'season' || flu) && (t[10] !== 'breast' || nursing))
+      .map(({ t, a }) => ({ t, score: t[4] + (a - t[2] < 1 ? 0.5 : 0) }))
+      .sort((x, y) => y.score - x.score || y.t[2] - x.t[2]).map(x => x.t);
+    // Three different areas when possible, so the section never reads as one topic.
+    const out = [], used = new Set();
+    for (const t of live) if (out.length < 3 && !used.has(t[0])) { out.push(t); used.add(t[0]); }
+    for (const t of live) if (out.length < 3 && !out.includes(t)) out.push(t);
     return out;
   }
-  function glance() {
-    const rows = picks(); glance.gos = rows.map(t => t[6]);
-    if (rows.length < 2) return '';
-    const label = c => c === 'Daily rhythm' ? 'Everyday care' : c;
-    const tile = t => `<button class="hg-tile" style="${yearTheme(t[0])}" onclick="openPage('${t[6]}')"><span class="hg-tile-top"><span class="hg-tile-ic">${typeof catIcon === 'function' ? catIcon(t[0]) : ''}</span><small class="hg-tile-cat">${F(label(t[0]))}</small></span><b>${F(t[4])}</b><small>${F(t[5])}</small></button>`;
-    return `<h2 class="hg-h2">${F('Good to know this month')}</h2><div class="hg-tiles">${rows.map(tile).join('')}</div>`;
+  function month(lead) {
+    const list = cards(lead); if (!list.length) return '';
+    const label = c => c === 'Daily rhythm' ? 'Everyday care' : c === 'Out and about' ? 'Outings' : c === 'Development' ? 'Development' : c;
+    return `<h2 class="hg-h2">${F(`This month for ${name()}`)}</h2><div class="hg-cards">${list.map(t => `<button class="hg-card" style="${yearTheme(t[0])}" onclick="openPage('${t[7]}')"><span class="hg-card-art" aria-hidden="true">${hubArt(t[1], t[0])}</span><span class="hg-card-copy"><small>${F(label(t[0]))}</small><b>${F(t[5])}</b><span>${F(t[6])}</span></span>${chev}</button>`).join('')}</div>`;
   }
-  window.homeGlancePicks = () => picks().map(t => t[4]);
-
-  // What the closest changes affect, one row each, taking turns so no single change fills the list.
-  // Play ideas wait for the change's own page; these are the things worth doing before it arrives.
-  // This month's focus: what to do for the changes happening now, one row each, taking turns.
-  function focus(now) {
-    const y = Y(), picked = [], seen = new Set(["openPage('chg:Health:d:you')"]);
-    for (let i = 0; i < 5 && picked.length < 3; i++) for (const c of now) {
-      const r = y.PAGES[c.id].rows.filter(r => r[1] !== 'Development')[i];
-      if (r && !seen.has(r[4]) && picked.length < 3) { seen.add(r[4]); picked.push([c, r]); }
-    }
-    if (!picked.length) return '';
-    const row = ([c, [icon, cat, title, sub, go]]) => `<button class="hub-row hg-row" onclick="${go}"><span class="hub-dot">${hubArt(icon, cat)}</span><span class="hub-row-copy"><small class="hub-row-eyebrow">${F(c.title)}</small><b>${F(title)}</b><small>${F(sub)}</small></span>${chev}</button>`;
-    picks.taken = picked.map(([, r]) => (/openPage\('([^']+)'\)/.exec(r[4]) || [])[1]).filter(Boolean);
-    return `<h2 class="hg-h2">${F('This month’s focus')}</h2><div class="hub-list hg-list">${picked.map(row).join('')}</div>`;
-  }
+  window.homeGlancePicks = () => { try { return cards(changes().lead.id).map(t => t[5]); } catch (e) { return []; } };
+  window.homeCardText = () => CARDS.map(t => t[5] + ' ' + t[6]);
 
   function comingUp(later, a) {
     const two = later.slice(0, 2); if (!two.length) return '';
@@ -174,9 +157,7 @@
     let h = '<div class="hg-page">' + (ageLine ? ageLine.outerHTML : '') + banner(main);
     h += hero(lead, a);
     h += question ? question.outerHTML : '';
-    picks.lead = lead.id; picks.taken = [];
-    const fo = focus([lead, ...rest].filter(c => !(c.id === 'crying' && a >= 2.5) && !(c === lead && c.id === 'crying')));   // the fussy-weeks card already says what helps
-    h += glance() + fo + comingUp(later, a);
+    h += month(lead.id) + comingUp(later, a);
     h += `<p class="connected-preview-footnote">${F('Ahead isn’t medical advice and doesn’t replace your pediatrician.')}</p></div>`;
     main.innerHTML = h;
   }
