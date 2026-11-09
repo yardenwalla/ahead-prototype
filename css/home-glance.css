@@ -2,16 +2,20 @@
 #main .hg-page { display: flex; flex-direction: column }
 #main .hg-page .home-age-line { margin-bottom: 12px }
 
-#main .hg-hero { position: relative; border-radius: 26px; background: var(--year-pale, #f6f1fb); overflow: hidden; border: 1px solid rgba(0, 0, 0, .04) }
+#main .hg-hero { position: relative; border-radius: 26px; overflow: hidden; border: 1px solid #f0dde3; background: radial-gradient(circle at 96% 4%, rgba(255,255,255,.6) 0 30%, transparent 30.5%), linear-gradient(160deg, #fef2e8 0%, #fdeef3 52%, #f3effc 100%) }
+#main .hg-spectrum { display: flex; height: 6px }
+#main .hg-spectrum span { flex: 1 }
+#main .hg-bday { margin-bottom: 14px }
+#main .hg-bday .hub-bday { border-radius: 24px }
 #main .hg-hero-art { display: block; height: 160px; margin: 14px 12px 0; overflow: hidden }
 #main .hg-hero-art .home-month-scene, #main .hg-hero-art svg { display: block !important; width: 100% !important; height: 100% !important; max-width: none !important; max-height: none !important; margin: 0 !important }
 #main .hg-hero-copy { padding: 16px 20px 20px }
-#main .hg-eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--year-ink, #5b4a8b); margin: 0 }
+#main .hg-eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #7a4f6d; margin: 0 }
 #main .hg-hero h1 { font-size: 29px; line-height: 1.12; letter-spacing: -.02em; margin: 6px 0 8px; color: #2B2840; font-weight: 700; font-family: inherit }
 #main .hg-lead { font-size: 15px; line-height: 1.45; color: #4a4658; margin: 0 }
 #main .hg-window { margin: 14px 0 16px; background: rgba(255, 255, 255, .7); border-radius: 14px; padding: 10px 12px 12px }
 #main .hg-window-label { font-size: 13px; color: #4a4658 }
-#main .hg-window-label b { color: var(--year-ink, #5b4a8b) }
+#main .hg-window-label b { color: #7a4f6d }
 #main .hg-window .ya-bar { background: rgba(0, 0, 0, .07) }
 #main .hg-btn { display: inline-flex; align-items: center; gap: 8px; min-height: 46px; padding: 0 20px; border-radius: 999px; background: #2B2840; color: #fff; font-size: 15px; font-weight: 600 }
 
@@ -32,13 +36,13 @@
 #main .hg-row .hub-row-copy { display: flex; flex-direction: column; align-items: flex-start }
 #main .hg-row .hub-row-eyebrow { display: block; font-size: 12px; font-weight: 600; color: var(--muted, #6b6670); margin-bottom: 1px }
 
-#main .hg-next { display: block; width: 100%; text-align: left; margin-top: 26px; padding: 16px 18px 18px; border-radius: 22px; background: #f0ebf7 }
+#main .hg-next { display: block; width: 100%; margin-top: 26px; padding: 16px 18px 18px; border-radius: 22px; background: #f0ebf7 }
 #main .hg-next-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 14px }
 #main .hg-next-head b { font-size: 18px; color: #2B2840 }
-#main .hg-next-head em { font-style: normal; font-size: 13.5px; font-weight: 600; color: #5b4a8b }
+#main .hg-next-all { font-size: 13.5px; font-weight: 600; color: #5b4a8b; min-height: 32px; padding: 0 }
 #main .hg-stops { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 14px }
 #main .hg-stops:before { content: ""; position: absolute; left: 7px; right: calc(50% - 7px); top: 6px; height: 2px; background: #d5cde6 }
-#main .hg-stop { position: relative; display: flex; flex-direction: column; gap: 4px }
+#main .hg-stop { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; text-align: left; padding: 0; min-height: 0 }
 #main .hg-stop i { width: 14px; height: 14px; border-radius: 50%; background: #fff; border: 3px solid #8e80c4; margin-bottom: 6px; position: relative }
 #main .hg-stop small { font-size: 12.5px; font-weight: 700; color: #5b4a8b }
 #main .hg-stop-row { display: flex; align-items: center; gap: 8px }
