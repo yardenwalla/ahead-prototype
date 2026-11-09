@@ -51,3 +51,7 @@
 #main .hg-stop b { font-size: 15px; line-height: 1.2; color: #2B2840 }
 #main .hg-stop-why { font-size: 13px; line-height: 1.35; color: #5e5a6b }
 #main .hg-page .connected-preview-footnote { margin-top: 24px }
+#main .hg-bday-tag { color: #b0567a }
+#main .hg-bday-photo { margin-top: 12px }
+#main .hg-bday-photo .hub-bday-photo { display: flex; align-items: center; gap: 10px; width: 100%; background: rgba(255,255,255,.75); border-radius: 14px; padding: 10px 12px; font-size: 14.5px; font-weight: 600; color: #2B2840; cursor: pointer }
+#main .hg-bday-photo img { width: 40px; height: 40px; border-radius: 8px; object-fit: cover }
