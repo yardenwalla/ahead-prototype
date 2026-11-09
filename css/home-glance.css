@@ -394,3 +394,5 @@
 #main .hg-rows { margin: 0 0 12px }
 #main .hg-page .hub-h2 { margin: 22px 2px 10px }
 #main .hg-rows .hg-new-dot { padding: 7px !important }
+#main .hg-tl { width: 100%; text-align: left; margin: 2px 0 12px }
+#main .hg-tl { font-size: 15.5px !important; font-weight: 600 !important; color: var(--ink) !important; padding: 16px 4px !important }

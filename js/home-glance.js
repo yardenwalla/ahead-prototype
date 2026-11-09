@@ -261,7 +261,7 @@
     return `<section class="he-hero" style="${monthTheme(m)}"><p class="he-eyebrow">${F(when)} · ${F(`Through ${name()}’s eyes`)}</p><div class="he-copy"><h1>${F(P(M.eyes[0]))}</h1><p class="he-lead">${F(P(M.eyes[1]))}</p>${m <= 4 ? `<button class="he-see" onclick="homeEyes(true)"><span aria-hidden="true">👁</span> ${F(`See what ${name()} sees`)}</button>` : ''}</div><span class="he-art" aria-hidden="true">${art}</span></section>
       <h2 class="hub-h2">${F('You might notice…')}</h2>
       <div class="hub-list hg-rows">${M.notice.map(row).join('')}</div>
-      <div class="hub-list hg-rows"><button class="hub-row" onclick="navigate('next')"><span class="hub-dot hg-new-dot"><svg viewBox="0 0 24 24" fill="none" stroke="#7A4F6D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 6h.01M5 12h.01M5 18h.01M9 6h10M9 12h10M9 18h10"/></svg></span><span class="hub-row-copy"><b>${F(`Explore ${name()}’s timeline`)}</b><small>${F(next ? `Next: ${next.title.charAt(0).toLowerCase() + next.title.slice(1)}, ${Y().whenShort(next, a)}` : 'The big changes still ahead')}</small></span>${chev}</button></div>` + newInGuides();
+      <button class="hub-more hg-tl" onclick="navigate('next')"><span>${F(`Explore ${name()}’s timeline`)}</span>${chev}</button>` + newInGuides();
   }
 
   /* ---------- Guides: what changed as she grew ----------
