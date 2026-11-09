@@ -1525,3 +1525,8 @@ label:has(> .hub-photo-input:focus-visible) { outline: 2px solid #884866; outlin
 #main .hub-own-first .mem-month-chips { margin: 4px 0 16px }
 #main .mem-move-card { padding: 16px }
 #main .mem-move-remove { display: block; margin: 18px auto 0 }
+/* Memory book: make it clear moments can be tapped */
+#main .bk-hint { margin: 6px 0 0; font-size: 13.5px; color: #6c6880 }
+#main .bk-first { position: relative; padding-right: 22px }
+#main .bk-go { position: absolute; right: 2px; top: 50%; transform: translateY(-50%); color: #a9a4b5; font-size: 20px }
+#main .bk-tag-go { margin-left: 5px; opacity: .55; font-weight: 700 }
