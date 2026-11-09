@@ -1,0 +1,19 @@
+/* One color per subpage. A subpage takes the soft color of the tile or row the parent tapped (--ss-bg / --ss-ink),
+   and everything inside it follows: tiles, "now" markers, icon squares and figures. Category colors stay on hubs.
+   Red stays only for real warnings (call 911, call right away). */
+#main .hub-detail[data-ss] { --year-pale: var(--ss-bg) !important }
+#main .hub-detail[data-ss] .hub-figure { --ink: var(--ss-ink) !important; --bg: var(--ss-bg) !important; --pale: var(--ss-bg) !important }
+#main .hub-detail[data-ss] .hub-tick-art, #main .hub-detail[data-ss] .hub-strip-art, #main .hub-detail[data-ss] .hub-layers > div.is-baby { background: var(--ss-bg) !important }
+#main .hub-detail[data-ss] :is(.hub-tick-art, .hub-strip-art, .hub-layers) svg,
+#main .hub-detail[data-ss] :is(.hub-tick-art, .hub-strip-art, .hub-layers) svg [stroke]:not([stroke="none"]) { stroke: var(--ss-ink) }
+#main .hub-detail[data-ss] :is(.hub-tick-art, .hub-strip-art, .hub-iconstep-art, .hub-layers, .hub-dot) svg [fill]:not([fill="none"]) { fill: color-mix(in srgb, var(--ss-bg) 55%, #fff) }
+#main .hub-detail[data-ss] .hub-layers > i { color: var(--ss-ink) }
+#main .hub-detail[data-ss] .hub-tick-box { border-color: color-mix(in srgb, var(--ss-ink) 45%, #fff) }
+#main .hub-detail[data-ss] .hub-tick.is-on .hub-tick-box { background: var(--ss-ink); border-color: var(--ss-ink) }
+/* "A day at home" isn't an emergency, so it takes a deeper shade of the page's own color instead of warning red. */
+#main .hub-detail[data-cc-page="start"] .hub-vs > .is-urgent { background: color-mix(in srgb, var(--ss-ink) 14%, #fff) }
+#main .hub-detail[data-cc-page="start"] .hub-vs > .is-urgent b { color: var(--ss-ink) }
+#main .hub-detail[data-ss] .hub-tiles small { color: var(--ss-ink) }
+#main .hub-detail[data-ss] .hub-thermo .is-good { background: var(--ss-bg) }
+#main .hub-detail[data-ss] .hub-thermo .is-good svg [stroke]:not([stroke="none"]) { stroke: var(--ss-ink) }
+#main .hub-detail[data-ss] .hub-count-row svg [stroke]:not([stroke="none"]), #main .hub-detail[data-ss] .hub-count-row svg { stroke: var(--ss-ink) }
