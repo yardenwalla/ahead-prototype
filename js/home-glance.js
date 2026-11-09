@@ -253,7 +253,7 @@
     const m = Math.floor(a), wk = Math.max(1, Math.round(a * 4.35)), when = m < 2 ? `${wk} week${wk === 1 ? '' : 's'}` : `Month ${m}`;
     const art = typeof homeMonthArt === 'function' ? homeMonthArt(actualMonth()).replace('<svg ', '<svg preserveAspectRatio="xMidYMid meet" ') : '';
     const row = ([title, why, cat, icon, go]) => {
-      const inner = `<span class="hn-art" style="${yearTheme(cat)}">${typeof catIcon === 'function' ? catIcon(cat) : hubArt(icon, cat)}</span><span class="hn-copy"><b>${F(P(title))}</b><span>${F(P(why))}</span></span>${go ? chev : ''}`;
+      const inner = `<span class="hn-art" style="${yearTheme(cat)}"><i>${hubArt(icon, cat)}</i></span><span class="hn-copy"><b>${F(P(title))}</b><span>${F(P(why))}</span></span>${go ? chev : ''}`;
       return go ? `<button class="hn-row" onclick="openPage('${go}')">${inner}</button>` : `<div class="hn-row">${inner}</div>`;
     };
     return `<section class="he-hero" style="${monthTheme(m)}"><p class="he-eyebrow">${F(when)} · ${F(`Through ${name()}’s eyes`)}</p><div class="he-copy"><h1>${F(P(M.eyes[0]))}</h1><p class="he-lead">${F(P(M.eyes[1]))}</p>${m <= 4 ? `<button class="he-see" onclick="homeEyes(true)"><span aria-hidden="true">👁</span> ${F(`See what ${name()} sees`)}</button>` : ''}</div><span class="he-art" aria-hidden="true">${art}</span></section>

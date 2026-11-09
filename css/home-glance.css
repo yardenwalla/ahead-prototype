@@ -318,6 +318,10 @@
 #main .hx-copy small { display: block; margin-top: 2px; font-size: 13.5px; line-height: 1.35; color: #5e5a6b }
 #main .hx-copy .guide-upd { vertical-align: 2px; margin-left: 4px; font-size: 11px; padding: 2px 7px }
 
-/* Back to the timeline link and the guides card on their own */
-#main .hn-timeline { margin-top: 14px !important; border-top: 0 !important; padding: 6px 4px 14px !important }
-#main .hn-art svg { width: 30px !important; height: 30px !important }
+/* Row pictures in the same colors as the Guides tiles: the guide's color, the picture on a white circle */
+#main .hn-art { background: var(--year-bg, #e5e0fc) !important; border-radius: 16px !important }
+#main .hn-art i { width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,.88); display: grid; place-items: center }
+#main .hn-art i svg { width: 26px !important; height: 26px !important }
+#main .hg-guides-stack i { background: var(--year-bg, #e5e0fc) !important }
+/* The timeline link, as it was */
+#main .hn-timeline { margin-top: 12px !important; padding: 18px 4px !important; border-top: 0 !important }
