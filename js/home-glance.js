@@ -78,8 +78,7 @@
   const POOL = [
     ['Feeding', 0, 1, 3, '6+ wet diapers a day', 'From about day 5, the easiest sign {s’s} getting enough milk', 'chg:Feeding:d:enough'],
     ['Feeding', 0, 1.5, 2.5, 'Vitamin D drops', 'Nursed babies need 400 IU a day from the first days. Breast milk is low in it', 'chg:Feeding:mock:xa:growth', '', 'breast'],
-    ['Sleep', 0, 4, 2, 'Pacifiers and SIDS', 'Offering one at sleep lowers the risk. It’s fine if it falls out', 'chg:Sleep:d:where'],
-    ['Safety', 0, 1.5, 2, 'The car seat pinch test', 'If you can pinch a fold of strap at {p} shoulder, tighten it', 'chg:Out and about:d:car'],
+    ['Sleep', 0, 4, 2, 'Pacifiers at sleep', 'Offering one at naps and bedtime is recommended. It’s fine if it falls out', 'chg:Sleep:d:where'],
     ['Health', 0.5, 1.25, 2.5, 'The 1-month checkup', 'Mostly weight and feeding. Bring a rough count of wet diapers', 'health-visit:1', 'bday'],
     ['Feeding', 0.5, 2, 2.5, 'Growth spurts', 'Extra-hungry days around 3 and 6 weeks are normal, not a supply problem', 'chg:Feeding:d:enough'],
     ['Sleep', 0.5, 2.5, 2.5, 'Crying peaks at 6–8 weeks', 'Then it eases by 3–4 months. It’s OK to put {o} down safely and step away', 'chg:Sleep:d:crying'],
@@ -94,14 +93,10 @@
     ['Sleep', 3, 5, 2.5, 'Swaddling and rolling', 'Once {s} tries to roll, the swaddle comes off for good. Arms free in a sleep sack', 'chg:Sleep:d:swaddleoff'],
     ['Feeding', 4, 6, 3, 'Peanut, early', 'Offering it early, thinned, lowers the chance of a peanut allergy', 'chg:Feeding:d:allergens'],
     ['Sleep', 4, 6, 2, 'Rolling in {p} sleep', 'Once {s} rolls both ways, {s} can stay how {s} lands', 'chg:Sleep:d:rolling'],
-    ['Safety', 4, 7, 2, 'The toilet-roll test', 'If it fits through a toilet-paper tube, it’s small enough to choke on', 'chg:Safety:d:step:small'],
     ['Feeding', 4.5, 6.5, 3, 'Signs {s’s} ready for solids', 'Steady head, sits with help, leans in for food, and swallows it', 'chg:Feeding:d:signs'],
     ['Sleep', 5, 8, 2, 'Sleep training', 'It’s optional: a family choice, not a milestone', 'chg:Sleep:d:method'],
     ['Health', 6, 9, 2.75, 'The first flu shot', 'It’s 2 doses, 4 weeks apart. After that, one a year', 'health-visit:6', 'bday', 'season'],
     ['Feeding', 6, 8, 3, 'Iron', '{P} stores run low around 6 months. Meat, beans and fortified cereal refill them', 'chg:Feeding:d:food'],
-    ['Feeding', 6, 12, 2.5, 'No honey yet', 'Not until {p} first birthday, even baked in. It can cause botulism', 'chg:Feeding:d:food'],
-    ['Feeding', 6.5, 8.5, 2.5, 'Gagging vs choking', 'Gagging is noisy and normal. Choking is silent', 'chg:Feeding:safe'],
-    ['Safety', 7, 11, 2.5, 'Button batteries', 'If {s} might have swallowed one, go to the ER right away', 'chg:Safety:d:step:small'],
     ['Health', 7, 12, 1.5, 'The first dentist visit', 'Due once a tooth shows, and by {p} first birthday', 'chg:Daily rhythm:d:teeth'],
     ['Feeding', 7.5, 9.5, 3, 'Finger-sized pieces', 'Soft enough to squash between your fingers. Quarter grapes lengthwise', 'chg:Feeding:d:finger'],
     ['Sleep', 8, 10, 2, 'Night waking', 'Separation anxiety can bring it back. The same short goodbye helps', 'chg:Sleep:d:nightwake'],
@@ -110,7 +105,6 @@
     ['Sleep', 9, 11, 2, 'Stuck standing in the crib', 'Practice sitting back down during the day. It gets easier at night', 'chg:Sleep:d:rough'],
     ['Daily rhythm', 9, 12.5, 2, 'Barefoot is best', 'Bare feet help balance for first steps. Save shoes for outside', 'chg:Daily rhythm:d:steps'],
     ['Safety', 9, 12.5, 2.5, 'The next car seat', 'It still faces back, often until past age 2', 'chg:Out and about:d:car'],
-    ['Safety', 10, 12.5, 2, 'The stove', 'Standing brings it in reach. Turn pot handles in', 'safety-stage:pulling'],
     ['Feeding', 11, 12.5, 3, '16–24 oz of milk', 'About right a day after {p} first birthday. More crowds out food', 'chg:Feeding:d:milk12'],
     ['Sleep', 11, 12.5, 2, 'No soft toys yet', 'Keep the crib bare until {p} first birthday', 'chg:Sleep:d:lovey'],
     ['Health', 11, 12.5, 3, 'The 12-month checkup', 'It includes an anemia check, usually a quick finger prick', 'health-visit:12', 'bday']
@@ -168,7 +162,7 @@
     const photo = b.querySelector('.hub-bday-photo'); if (!photo || photo.querySelector('img')) return '';   // photo already added
     const m = +((b.querySelector('.hub-bday-num') || {}).textContent || 0); if (!m || m > 11) return '';
     const input = photo.querySelector('input'); const words = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven'];
-    return `<label class="hg-banner" role="button"><span class="hg-banner-img"><img src="assets/share/month-${m}.jpg" alt=""></span><span class="hg-banner-copy"><b>${F(`${name()} is ${words[m]} month${m === 1 ? '' : 's'}`)}</b><small>${F(`Add {p} ${m}-month photo to Memories`)}</small></span><span class="hg-banner-plus" aria-hidden="true">＋</span>${input ? input.outerHTML : ''}</label>`;
+    return `<label class="hg-banner" role="button"><img class="hg-banner-img" src="assets/home/balloon-${m}.jpg" alt=""><span class="hg-banner-copy"><b>${F(`${name()} is ${words[m]} month${m === 1 ? '' : 's'}`)}</b><small>${F(`Add {p} ${m}-month photo to Memories`)}</small></span><span class="hg-banner-plus" aria-hidden="true">＋</span>${input ? input.outerHTML : ''}</label>`;
   }
 
   function paintGlance() {
