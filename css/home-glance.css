@@ -317,3 +317,7 @@
 #main .hx-copy b { display: block; font-size: 16px; color: #2B2840 }
 #main .hx-copy small { display: block; margin-top: 2px; font-size: 13.5px; line-height: 1.35; color: #5e5a6b }
 #main .hx-copy .guide-upd { vertical-align: 2px; margin-left: 4px; font-size: 11px; padding: 2px 7px }
+
+/* Back to the timeline link and the guides card on their own */
+#main .hn-timeline { margin-top: 14px !important; border-top: 0 !important; padding: 6px 4px 14px !important }
+#main .hn-art svg { width: 30px !important; height: 30px !important }
