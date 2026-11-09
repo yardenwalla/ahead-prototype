@@ -75,4 +75,14 @@ for (const [title, skill, age] of [['Sat up', 'Sits without support', 9], ['Roll
   check(!/Sunscreen and water|4–8 ounces/.test(sun), 'The sun page doesn’t teach water; Feeding does');
 }
 
+// 7. Nov 8: Seen it has no dates, and a moment can move to another month of the book.
+{
+  const a = family(7);
+  a.run(`hubSeen(journeySkillKey('Laughs'))`);
+  check(!/· (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)/.test(toasts(a)), 'Seen it confirms without a date');
+  const id = a.run(`journeyData().records.find(r => r.type === 'milestone').id`);
+  a.run(`memMoveTo(3, '${id}')`);
+  check(a.run(`memMonthOf(journeyData().records.find(r => r.id === '${id}').date)`) === 3, 'Moving a moment puts it in that month of the book');
+}
+
 console.log(`Promise checks: ${checks} passed`);

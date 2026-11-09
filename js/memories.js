@@ -29,7 +29,7 @@
   // One first: icon, what happened, when, and the note (or an invitation to add one).
   const firstRow = (r, withMonth = true) => {
     const dob = parse(profile.dob);
-    return `<button class="mem-row" onclick="openPage('event-edit:${r.id}')"><span class="mem-row-ic is-toned" style="${TONE(r)}">${hubArt(ICON(r), 'Development')}</span><span class="mem-row-copy"><b>${esc2(keepTitle(r))}</b><small>${esc2(journeyDateLabel(r.date))}${withMonth ? ` · ${esc2(longLabel(monthOf(dob, r.date)))}` : ''}</small>${r.notes ? `<q>${esc2(String(r.notes).slice(0, 90))}</q>` : ''}</span><span class="mem-row-go" aria-hidden="true">›</span></button>`;
+    return `<button class="mem-row" onclick="openPage('event-edit:${r.id}')"><span class="mem-row-ic is-toned" style="${TONE(r)}">${hubArt(ICON(r), 'Development')}</span><span class="mem-row-copy"><b>${esc2(keepTitle(r))}</b>${withMonth ? `<small>${esc2(longLabel(monthOf(dob, r.date)))}</small>` : ''}${r.notes ? `<q>${esc2(String(r.notes).slice(0, 90))}</q>` : ''}</span><span class="mem-row-go" aria-hidden="true">›</span></button>`;
   };
   // All firsts, by month, newest first. Its own page, so Memories itself never grows long.
   const allFirsts = () => {
@@ -47,7 +47,7 @@
     const day = d => parse(d).toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
     const pageOf = (m, k) => {
       const pic = typeof hubPhotoFor === 'function' ? hubPhotoFor(m) : null, tape = TAPE[m], tilt = k % 2 ? -4 : 4;
-      const firstsHtml = (by[m] || []).map(r => `<button class="bk-first" onclick="openPage('event-edit:${r.id}')"><span class="bk-ic" style="${TONE(r)}">${hubArt(ICON(r), 'Development')}</span><span class="bk-copy"><b>${esc2(keepTitle(r))}</b><small>${esc2(day(r.date))}</small>${r.notes ? `<q>${esc2(String(r.notes).slice(0, 140))}</q>` : ''}</span></button>`).join('');
+      const firstsHtml = (by[m] || []).map(r => `<button class="bk-first" onclick="openPage('event-edit:${r.id}')"><span class="bk-ic" style="${TONE(r)}">${hubArt(ICON(r), 'Development')}</span><span class="bk-copy"><b>${esc2(keepTitle(r))}</b>${r.notes ? `<q>${esc2(String(r.notes).slice(0, 140))}</q>` : ''}</span></button>`).join('');
       const tags = also[m] ? `<div class="bk-also"><span class="bk-also-label">${esc2(by[m] ? 'Also this month' : 'Noticed this month')}</span><div class="bk-tags">${also[m].map(r => `<button class="bk-tag" style="${TONE(r)}" onclick="openPage('event-edit:${r.id}')">${esc2(r.title)}</button>`).join('')}</div></div>` : '';
       // The month's photo, taped in on the right. No photo yet: an empty polaroid that adds one.
       const photo = pic ? `<span class="bk-photo" style="--tape:${tape};--tilt:${tilt}deg"><i></i><img src="${pic}" alt="${esc2(WORDS[m])} photo"><em class="bk-photo-cap">${esc2(m === 0 ? 'Newborn photo' : m === 12 ? 'Birthday photo' : m + '-month photo')}</em></span>`

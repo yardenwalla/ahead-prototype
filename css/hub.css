@@ -1517,3 +1517,11 @@ label:has(> .hub-photo-input:focus-visible) { outline: 2px solid #884866; outlin
 #main .age-tip { margin: 14px 4px 0; padding: 12px 14px; border-radius: 14px; background: #eef6f0; color: #356651; font-size: 14.5px; line-height: 1.4 }
 #main .age-page .hub-ages .hub-tiles { display: none }
 #main .age-page .hub-ages .hub-tiles + .hub-agemode-row { border-top: 0 }
+
+/* Month chips: where a moment sits in the book, no dates */
+#main .mem-month-chips { display: flex; flex-wrap: wrap; gap: 8px }
+#main .mem-month-chips button { border: 1px solid var(--line, #e6e1da); background: #fff; border-radius: 999px; padding: 9px 14px; font: inherit; font-size: 14.5px; font-weight: 600; color: #4e4a63; cursor: pointer }
+#main .mem-month-chips button.is-on { background: #2B2840; border-color: #2B2840; color: #fff }
+#main .hub-own-first .mem-month-chips { margin: 4px 0 16px }
+#main .mem-move-card { padding: 16px }
+#main .mem-move-remove { display: block; margin: 18px auto 0 }
