@@ -386,3 +386,11 @@
 #main .hg-new-count { flex: none; margin-right: 2px }
 #main .hg-newlist .hub-row { text-align: left }
 #main .hg-newlist .hub-row-copy b { white-space: nowrap }
+
+/* Home's lists are the app's own components now: no custom sizes */
+#main .hg-rows .hub-row { text-align: left }
+#main .hg-rows .hub-row-copy b, #main .hg-newlist .hub-row-copy b { white-space: normal }
+#main .hg-newlist .hub-row-copy b { white-space: nowrap }
+#main .hg-rows { margin: 0 0 12px }
+#main .hg-page .hub-h2 { margin: 22px 2px 10px }
+#main .hg-rows .hg-new-dot { padding: 7px !important }

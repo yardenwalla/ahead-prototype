@@ -253,16 +253,15 @@
     const m = Math.floor(a), wk = Math.max(1, Math.round(a * 4.35)), when = m < 2 ? `${wk} week${wk === 1 ? '' : 's'}` : `Month ${m}`;
     const art = typeof homeMonthArt === 'function' ? homeMonthArt(actualMonth()).replace('<svg ', '<svg preserveAspectRatio="xMidYMid meet" ') : '';
     const row = ([title, why, cat, icon, go]) => {
-      // The guides' row look (Health and Safety): a soft color for what the row is about, the drawing in that color's deep ink.
+      // The app's own row (hub-row + hub-dot), with Health/Safety's soft topic color behind the drawing.
       const tone = ({ Sleep: ['#e7effc', '#46638c'], Feeding: ['#fdeef2', '#a24d6a'], Development: ['#ecebfb', '#4f4a8c'], 'Daily rhythm': ['#fff3dc', '#8a6a2a'] })[cat] || ['#e6f5ec', '#356651'];
-      const inner = `<span class="hub-dot">${hubArt(icon, cat)}</span><span class="hn-copy"><b>${F(P(title))}</b><span>${F(P(why))}</span></span>${go ? chev : ''}`;
-      const st = `--hl-bg:${tone[0]};--hl-ink:${tone[1]}`;
-      return go ? `<button class="hn-row hl-row" style="${st}" onclick="openPage('${go}')">${inner}</button>` : `<div class="hn-row hl-row" style="${st}">${inner}</div>`;
+      const st = `--hl-bg:${tone[0]};--hl-ink:${tone[1]}`, inner = `<span class="hub-dot">${hubArt(icon, cat)}</span><span class="hub-row-copy"><b>${F(P(title))}</b><small>${F(P(why))}</small></span>`;
+      return go ? `<button class="hub-row hl-row" style="${st}" onclick="openPage('${go}')">${inner}${chev}</button>` : `<div class="hub-row hl-row is-static" style="${st}">${inner}</div>`;
     };
     return `<section class="he-hero" style="${monthTheme(m)}"><p class="he-eyebrow">${F(when)} · ${F(`Through ${name()}’s eyes`)}</p><div class="he-copy"><h1>${F(P(M.eyes[0]))}</h1><p class="he-lead">${F(P(M.eyes[1]))}</p>${m <= 4 ? `<button class="he-see" onclick="homeEyes(true)"><span aria-hidden="true">👁</span> ${F(`See what ${name()} sees`)}</button>` : ''}</div><span class="he-art" aria-hidden="true">${art}</span></section>
-      <h2 class="hub-h2 hn-h2">${F('You might notice…')}</h2>
-      <div class="hn-list">${M.notice.map(row).join('')}</div>
-      <button class="hn-timeline" onclick="navigate('next')"><span>${F(`Explore ${name()}’s timeline`)}</span>${chev}</button>` + newInGuides();
+      <h2 class="hub-h2">${F('You might notice…')}</h2>
+      <div class="hub-list hg-rows">${M.notice.map(row).join('')}</div>
+      <div class="hub-list hg-rows"><button class="hub-row" onclick="navigate('next')"><span class="hub-dot hg-new-dot"><svg viewBox="0 0 24 24" fill="none" stroke="#7A4F6D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 6h.01M5 12h.01M5 18h.01M9 6h10M9 12h10M9 18h10"/></svg></span><span class="hub-row-copy"><b>${F(`Explore ${name()}’s timeline`)}</b><small>${F(next ? `Next: ${next.title.charAt(0).toLowerCase() + next.title.slice(1)}, ${Y().whenShort(next, a)}` : 'The big changes still ahead')}</small></span>${chev}</button></div>` + newInGuides();
   }
 
   /* ---------- Guides: what changed as she grew ----------
