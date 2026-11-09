@@ -148,12 +148,52 @@
     return `<label class="hg-banner" role="button"><img class="hg-banner-img" src="assets/home/balloon-${m}.jpg" alt=""><span class="hg-banner-copy"><b>${F(`${name()} is ${words[m]} month${m === 1 ? '' : 's'}`)}</b><small>${F(`Add {p} ${m}-month photo to Memories`)}</small></span><span class="hg-banner-plus" aria-hidden="true">＋</span>${input ? input.outerHTML : ''}</label>`;
   }
 
+  // Home as a monthly snapshot (Nov 9 mock, 3 months written): a short headline about the month,
+  // "Through her eyes", and four glanceable tiles: sleep, feeding, talking and play, her body.
+  // A tile links only when a page covers it in more depth. [label, category, big phrase, few words, page or '']
+  const MONTHS = {
+    1: { head: 'The hardest weeks, then it gets easier', eyes: ['Sees 8–12 inches', 'Just about your face, when you hold her'],
+      tiles: [['Sleep', 'Sleep', 'Awake ~1 hour', 'Fussing after that usually means tired', 'chg:Sleep:d:cues'],
+        ['Feeding', 'Feeding', 'Growth spurts', 'Near-constant feeds around 3 and 6 weeks', 'chg:Feeding:d:enough'],
+        ['Talking and play', 'Development', 'First smiles soon', 'Real ones arrive around 6–8 weeks', 'development-domain:2:Social'],
+        ['Her body', 'Daily rhythm', 'Fewer poops', 'Every few days can be normal now', 'chg:Daily rhythm:d:look:2:poop']] },
+    5: { head: 'Her world is opening up', eyes: ['Judging distance', 'Why her reaching got so accurate'],
+      tiles: [['Sleep', 'Sleep', 'Awake ~2 hours', 'Between naps. Fussing sooner means tired', 'chg:Sleep:d:cues'],
+        ['Feeding', 'Feeding', 'Distracted feeds', 'Normal now. A quiet room helps', 'chg:Feeding:d:cues'],
+        ['Talking and play', 'Development', 'Mouthing everything', 'It’s how she learns what things are', ''],
+        ['Her body', 'Daily rhythm', 'Drool isn’t teeth', 'First teeth come at 6–12 months', 'chg:Daily rhythm:d:gums']] },
+    8: { head: 'She knows when you leave the room', eyes: ['Spots tiny things', 'Crumbs on the rug are fascinating now'],
+      tiles: [['Sleep', 'Sleep', 'Night waking', 'Separation anxiety often peaks now', 'chg:Sleep:d:nightwake'],
+        ['Feeding', 'Feeding', 'The dropping game', 'She’s checking things still exist', ''],
+        ['Talking and play', 'Development', '“Bababa, dadada”', 'Practice. Not “dad” just yet', 'development-domain:12:Talking'],
+        ['Her body', 'Daily rhythm', 'Poop changes', 'Firmer and smellier with more solids', 'chg:Daily rhythm:d:look:3:poop']] }
+  };
+  function monthCard(M, lead, a) {
+    const y = Y(), age = typeof babyAge === 'function' ? babyAge() : monthLabel(actualMonth());
+    const tile = ([label, cat, big, sub, go]) => {
+      const inner = `<span class="hs-tile-top"><span class="hs-ic">${typeof catIcon === 'function' ? catIcon(cat) : ''}</span><small>${F(label)}</small></span><b>${F(big)}</b><span class="hs-sub">${F(sub)}</span>`;
+      return go ? `<button class="hs-tile" style="${yearTheme(cat)}" onclick="openPage('${go}')">${inner}</button>` : `<div class="hs-tile" style="${yearTheme(cat)}">${inner}</div>`;
+    };
+    return `<section class="hs-hero">
+        <span class="hs-art" aria-hidden="true">${typeof homeMonthArt === 'function' ? homeMonthArt(actualMonth()).replace('<svg ', '<svg preserveAspectRatio="xMidYMid meet" ') : ''}</span>
+        <p class="hs-eyebrow">${F(`${name()} · ${age}`)}</p><h1>${F(M.head)}</h1>
+        <div class="hs-eyes"><span class="hs-eyes-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></span><span><small>${F(`Through ${name()}’s eyes`)}</small><b>${F(M.eyes[0])}</b><span>${F(M.eyes[1])}</span></span></div>
+      </section>
+      <div class="hs-grid">${M.tiles.map(tile).join('')}</div>
+      ${lead ? `<button class="hs-next" onclick="${lead.go}"><span><small>${F('On Timeline · ' + y.whenShort(lead, a))}</small><b>${F(lead.title)}</b></span>${chev}</button>` : ''}`;
+  }
+
   function paintGlance() {
     const main = document.getElementById('main'); if (!main || !Y() || !H()) return;
     if (main.querySelector('.bday-year')) return;   // the first birthday has its own page: Ahead's year ends there
     const { a, lead, also: rest, later } = changes();
     if (!lead) return;
     const ageLine = main.querySelector('.home-age-line'), question = main.querySelector('.connected-checkin');
+    const M = MONTHS[Math.floor(a)];
+    if (M) {
+      main.innerHTML = '<div class="hg-page">' + banner(main) + monthCard(M, lead, a) + (question ? question.outerHTML : '') + `<p class="connected-preview-footnote">${F('Ahead isn’t medical advice and doesn’t replace your pediatrician.')}</p></div>`;
+      return;
+    }
     let h = '<div class="hg-page">' + (ageLine ? ageLine.outerHTML : '') + banner(main);
     h += hero(lead, a);
     h += question ? question.outerHTML : '';
