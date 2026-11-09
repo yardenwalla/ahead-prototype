@@ -301,9 +301,12 @@
     };
   }
   function guidesRow() {
-    const n = guidesUpdated().length;
-    return `<button class="hg-guides" onclick="navigate('categories')"><span class="hg-guides-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"/></svg></span>
-      <span class="hg-guides-copy"><b>${F(n ? `New in ${name()}’s guides` : `${name()}’s guides`)}</b><small>${F(n ? 'A few changed as {s’s} grown' : 'Practical help for where {s} is now')}</small></span>${n ? `<span class="hg-guides-chip">${n} update${n === 1 ? '' : 's'}</span>` : ''}${chev}</button>`;
+    const upd = guidesUpdated(), n = upd.length;
+    const art = n ? `<span class="hg-guides-stack" aria-hidden="true">${upd.slice(0, 3).map(c => `<i style="${yearTheme(c)}">${typeof catIcon === 'function' ? catIcon(c) : ''}</i>`).join('')}</span>`
+      : `<span class="hg-guides-stack" aria-hidden="true"><i style="${yearTheme('Feeding')}">${typeof catIcon === 'function' ? catIcon('Feeding') : ''}</i><i style="${yearTheme('Sleep')}">${typeof catIcon === 'function' ? catIcon('Sleep') : ''}</i></span>`;
+    const names = upd.map(c => typeof displayTopic === 'function' ? displayTopic(c) : c);
+    const sub = n ? (n === 1 ? `${names[0]} changed as {s’s} grown` : n === 2 ? `${names[0]} and ${names[1]} changed as {s’s} grown` : `${names[0]}, ${names[1]} and more changed as {s’s} grown`) : 'Practical help for where {s} is now';
+    return `<button class="hg-guides" onclick="navigate('categories')">${art}<span class="hg-guides-copy"><b>${F(n ? `New in ${name()}’s guides` : `${name()}’s guides`)}</b><small>${F(sub)}</small></span>${n ? `<span class="hg-guides-chip">${n}</span>` : ''}${chev}</button>`;
   }
 
   function paintGlance() {

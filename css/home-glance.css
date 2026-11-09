@@ -234,3 +234,19 @@
 #main .hg-guides-chip, #main .guide-upd { background: #2B2840 !important; color: #fff !important }
 #main .hg-page > .connected-checkin + .he-hero, #main .hg-page > .hg-banner + .connected-checkin { margin-top: 0 }
 #main .hg-page > .connected-checkin { margin-bottom: 14px }
+
+/* Guides card: a warm tint and the icons of the guides that changed */
+#main .hg-guides { background: #fbf3ec !important; border: 1px solid #f0e2d6 !important; padding: 16px 14px 16px 16px }
+#main .hg-guides-ic { display: none }
+#main .hg-guides-stack { display: flex; flex: none }
+#main .hg-guides-stack i { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; background: var(--year-pale, #f3eefb); color: var(--year-ink, #5b4a8b); border: 2px solid #fbf3ec }
+#main .hg-guides-stack i + i { margin-left: -12px }
+#main .hg-guides-stack i svg { width: 20px; height: 20px }
+/* "Updated": a warm coral of its own, not any guide's color */
+#main .hg-guides-chip, #main .guide-upd { background: #e8775a !important; color: #fff !important }
+#main .hg-guides-chip { min-width: 26px; text-align: center; padding: 3px 8px }
+/* Smaller question card on Home: answers in one row, "We skipped it" as a quiet link */
+#main .hg-page .connected-checkin { padding: 12px 14px !important; border-radius: 18px }
+#main .hg-page .connected-checkin .connected-checkin-choices { display: flex; flex-wrap: wrap; gap: 6px }
+#main .hg-page .connected-checkin .connected-checkin-choices button { flex: 1 1 0; min-height: 38px; font-size: 14px }
+#main .hg-page .connected-checkin .connected-checkin-choices button:nth-child(3) { flex: 1 1 100%; min-height: 28px; background: none !important; font-size: 13px; font-weight: 600; text-decoration: underline; color: var(--muted, #6b6670) !important }
