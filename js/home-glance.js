@@ -41,60 +41,74 @@
       </div></section>`;
   }
 
-  // At a glance: one thing per area that's true for Maya this month and easy to miss, never the stage name.
-  // Each is a rule of thumb, a number that changes with age, or a step that's due now, and opens the page that explains it.
-  // [area, the thing to know, one line, page]. Feeding, sleep and safety follow adjusted age; fever follows birthday age (AAP).
-  const FEVER = m => m < 3 ? ['100.4°F', 'Under 3 months, this means calling right away, day or night', "openPage('chg:Health:d:sick')"]
-    : m < 6 ? ['101°F', 'From 3 months, call at this or higher, or sooner if {s} seems very ill', "openPage('chg:Health:d:sick')"]
-    : ['103°F', 'From 6 months, call at this, or for any fever lasting more than a day', "openPage('chg:Health:d:sick')"];
-  const KNOW = {
-    0: { Feeding: ['6+ wet diapers', 'A day from about day 5 is the clearest sign feeds are going well', "openPage('chg:Feeding:d:enough')"],
-         Sleep: ['A pacifier at sleep', 'Offering one at naps and bedtime lowers SIDS risk. Nursing? Wait until feeds are going well', "openPage('chg:Sleep:d:where')"],
-         Safety: ['Car seat straps', 'Snug enough that you can’t pinch any slack at the shoulder. No puffy coats underneath', "openPage('chg:Out and about:d:car')"] },
-    1: { Feeding: ['Growth spurts', 'A few extra-hungry days around 3 and 6 weeks are normal, not a supply problem', "openPage('chg:Feeding:d:enough')"],
-         Sleep: ['Your room, {p} own bed', 'Room-sharing on a separate sleep surface for the first 6 months lowers SIDS risk', "openPage('chg:Sleep:d:where')"],
-         Safety: ['One hand on {o}', 'Wriggling starts early. On the changing table, never step away', "openPage('chg:Safety:d:step:changing')"] },
-    2: { Feeding: ['Shorter feeds', 'Feeds get faster as {s} gets better at it. Quicker isn’t less', "openPage('chg:Feeding:d:milk:rhythm')"],
-         Sleep: ['A bedtime routine', 'Start a short one now: the same 2 or 3 steps each night', "openPage('chg:Sleep:d:routine')"],
-         Safety: ['Not on the bed or sofa', 'Wriggling can tip {o} off, even before {s} rolls. The floor is safest', "openPage('safety-stage:reaching')"] },
-    3: { Feeding: ['Distracted feeds', 'Pulling off to look around is normal. A quiet, dim room helps', "openPage('chg:Feeding:d:cues')"],
-         Sleep: ['The 4-month change', 'More waking for a few weeks is sleep maturing, not going backward', "openPage('chg:Sleep:d:regress')"],
-         Safety: ['Swaddle off', 'At the first try to roll, switch to a sleep sack, arms free', "openPage('chg:Sleep:d:swaddleoff')"] },
-    4: { Feeding: ['Peanut, early', 'Early peanut lowers allergy risk. Eczema? Ask your pediatrician about timing', "openPage('chg:Feeding:d:allergens')"],
-         Sleep: ['Rolled onto {p} tummy?', 'Still put {o} down on {p} back. Once {s} rolls both ways, {s} can stay how {s} lands', "openPage('chg:Sleep:d:rolling')"],
-         Safety: ['The toilet-roll test', 'Anything that fits through a toilet-paper tube can choke {o}', "openPage('chg:Safety:d:step:small')"] },
-    5: { Feeding: ['4 signs {s’s} ready', 'Age alone doesn’t decide solids. Tick off the signs as you see them', "openPage('chg:Feeding:d:signs')"],
-         Sleep: ['Lower the crib mattress', 'Do it before {s} can sit up on {p} own, not after', "openPage('chg:Sleep:d:mattress')"],
-         Safety: ['Choking first aid', 'Learn it before the first bite, so you’re ready if you ever need it', "openPage('chg:Feeding:safe')"] },
-    6: { Feeding: ['Iron first', 'The iron {s} was born with runs low around now. Meat, beans or fortified cereal help', "openPage('chg:Feeding:d:food')"],
-         Sleep: ['The catnap goes', 'When {s} skips the late nap, bring bedtime earlier', "openPage('chg:Sleep:d:catnap')"],
-         Safety: ['Gates go in now', 'Screw-mounted at the top of stairs. A pressure gate there can give way', "openPage('chg:Safety:d:step:gates')"] },
-    7: { Feeding: ['Gagging vs choking', 'Loud and red-faced is gagging, and normal. Silent is choking', "openPage('chg:Feeding:safe')"],
-         Sleep: ['Night waking again', 'Separation anxiety can wake {o}. The same short goodbye helps', "openPage('chg:Sleep:d:nightwake')"],
-         Safety: ['Anchor furniture', 'Dressers, bookcases and TVs, before {s} pulls up on them', "openPage('chg:Safety:d:step:anchor')"] },
-    8: { Feeding: ['Finger-sized pieces', 'Soft enough to squash between your fingers. Quarter grapes lengthwise', "openPage('chg:Feeding:d:finger')"],
-         Sleep: ['Mattress to its lowest', 'Before {s} pulls up to stand in the crib', "openPage('chg:Sleep:d:mattress')"],
-         Safety: ['Poison Help', 'Save 1-800-222-1222 now. Medicines and cleaners go up high', "openPage('chg:Safety:d:step:storage')"] },
-    9: { Feeding: ['No cow’s milk to drink', 'Wait until 12 months. Yogurt and cheese are fine now', "openPage('chg:Feeding:d:milk12')"],
-         Sleep: ['Standing in the crib', 'Practice sitting back down in the day. It gets easier at night', "openPage('chg:Sleep:d:rough')"],
-         Safety: ['Window stops', 'Windows should open no more than 4 inches', "openPage('chg:Safety:d:step:windows')"] },
-    10: { Feeding: ['Practice with a cup', 'Bottles phase out between 12 and 18 months. Starting now makes it easier', "openPage('chg:Feeding:d:milk12')"],
-         Sleep: ['Two naps for a while', 'Most keep two naps until 13–18 months', "openPage('chg:Sleep:d:after')"],
-         Safety: ['Still rear-facing', 'Keep {o} facing back until the seat’s rear-facing limit, often past age 2', "openPage('chg:Out and about:d:car')"] },
-    11: { Feeding: ['16–24 oz of milk', 'A day after the first birthday. More can crowd out iron-rich food', "openPage('chg:Feeding:d:milk12')"],
-         Sleep: ['A lovey at 1 year', 'Soft toys stay out of the crib until {p} first birthday', "openPage('chg:Sleep:d:lovey')"],
-         Safety: ['Higher up', 'Standing brings the stove, tablecloths and hot drinks into reach', "openPage('safety-stage:pulling')"] }
-  };
-  const HEALTH_DUE = { 0: ['1-month checkup', 'Growth, feeding and how you’re doing'], 1: ['2-month vaccines', 'The first main round. A low fever after is common'], 6: ['First flu shot', 'From 6 months. The first season takes two doses, 4 weeks apart'], 7: ['First tooth? Dentist', 'The first dental visit is after the first tooth, by {p} first birthday'], 8: ['9-month checkup', 'It includes a development screen. Jot down your questions'], 11: ['12-month checkup', 'Anemia and lead checks, and the MMR and chickenpox shots'] };
+  // Good to know this month: the four things that matter most for Maya right now, from any area.
+  // Each has the ages it applies to (adjusted age; Health by birthday age, like checkups and fever) and a weight:
+  // 3 = do it now or it's easy to get wrong, 2 = useful, 1 = filler. Things that just became true rank a little higher.
+  // [area, from, to, weight, the thing to know, one line, page]
+  const POOL = [
+    ['Feeding', 0, 1, 3, '6+ wet diapers', 'A day from about day 5 is the clearest sign feeds are going well', 'chg:Feeding:d:enough'],
+    ['Sleep', 0, 2, 2, 'A pacifier at sleep', 'Offering one at naps and bedtime lowers SIDS risk. Nursing? Wait until feeds are going well', 'chg:Sleep:d:where'],
+    ['Sleep', 0, 3, 2, 'Your room, {p} own bed', 'Room-sharing on a separate sleep surface for the first 6 months lowers SIDS risk', 'chg:Sleep:d:where'],
+    ['Safety', 0, 1.5, 2, 'Car seat straps', 'Snug enough that you can’t pinch any slack at the shoulder. No puffy coats underneath', 'chg:Out and about:d:car'],
+    ['Health', 0, 3, 3, '100.4°F', 'Under 3 months, this means calling right away, day or night', 'chg:Health:d:sick', 'bday'],
+    ['Feeding', 0.5, 2, 2, 'Growth spurts', 'A few extra-hungry days around 3 and 6 weeks are normal, not a supply problem', 'chg:Feeding:d:enough'],
+    ['Safety', 1, 3, 2, 'One hand on {o}', 'Wriggling starts early. On the changing table, never step away', 'chg:Safety:d:step:changing'],
+    ['Sleep', 1.5, 3.5, 2, 'A bedtime routine', 'Start a short one now: the same 2 or 3 steps each night', 'chg:Sleep:d:routine'],
+    ['Safety', 2, 4, 2, 'Not on the bed or sofa', 'Wriggling can tip {o} off, even before {s} rolls. The floor is safest', 'safety-stage:reaching'],
+    ['Feeding', 2, 4, 1, 'Shorter feeds', 'Feeds get faster as {s} gets better at it. Quicker isn’t less', 'chg:Feeding:d:enough'],
+    ['Health', 3, 4, 3, 'Now 101°F', 'The fever to call about changes at 3 months. Sooner if {s} seems very ill', 'chg:Health:d:sick', 'bday'],
+    ['Sleep', 3, 5, 3, 'The 4-month change', 'More waking for a few weeks is sleep maturing, not going backward', 'chg:Sleep:d:regress'],
+    ['Sleep', 3, 5, 3, 'Swaddle off', 'At the first try to roll, switch to a sleep sack, arms free', 'chg:Sleep:d:swaddleoff'],
+    ['Feeding', 3, 5, 2, 'Distracted feeds', 'Pulling off to look around is normal. A quiet, dim room helps', 'chg:Feeding:d:cues'],
+    ['Feeding', 4, 6, 3, 'Peanut, early', 'Early peanut lowers allergy risk. Eczema? Ask your pediatrician about timing', 'chg:Feeding:d:allergens'],
+    ['Sleep', 4, 6, 2, 'Rolled onto {p} tummy?', 'Still put {o} down on {p} back. Once {s} rolls both ways, {s} can stay how {s} lands', 'chg:Sleep:d:rolling'],
+    ['Safety', 4, 7, 2, 'The toilet-roll test', 'Anything that fits through a toilet-paper tube can choke {o}', 'chg:Safety:d:step:small'],
+    ['Feeding', 4.5, 6.5, 3, '4 signs {s’s} ready', 'Age alone doesn’t decide solids. Tick off the signs as you see them', 'chg:Feeding:d:signs'],
+    ['Sleep', 5, 7, 3, 'Lower the crib mattress', 'Do it before {s} can sit up on {p} own, not after', 'chg:Sleep:d:mattress'],
+    ['Safety', 5, 7, 3, 'Choking first aid', 'Learn it before the first bite, so you’re ready if you ever need it', 'chg:Feeding:safe'],
+    ['Health', 6, 7, 2, 'Now 103°F', 'The fever to call about changes at 6 months. Also call if a fever lasts more than a day', 'chg:Health:d:sick', 'bday'],
+    ['Health', 6, 7.5, 3, 'First flu shot', 'From 6 months. The first season takes two doses, 4 weeks apart', 'health-visit:6', 'bday', 'flu'],
+    ['Feeding', 6, 8, 3, 'Iron first', 'The iron {s} was born with runs low around now. Meat, beans or fortified cereal help', 'chg:Feeding:d:food'],
+    ['Sleep', 6, 9, 2, 'The catnap goes', 'When {s} skips the late nap, bring bedtime earlier', 'chg:Sleep:d:catnap'],
+    ['Safety', 6, 8, 2, 'Gates go in now', 'Screw-mounted at the top of stairs. A pressure gate there can give way', 'chg:Safety:d:step:gates'],
+    ['Feeding', 6.5, 8.5, 2, 'Gagging vs choking', 'Loud and red-faced is gagging, and normal. Silent is choking', 'chg:Feeding:safe'],
+    ['Safety', 7, 9.5, 3, 'Anchor furniture', 'Dressers, bookcases and TVs, before {s} pulls up on them', 'chg:Safety:d:step:anchor'],
+    ['Feeding', 7.5, 9.5, 3, 'Finger-sized pieces', 'Soft enough to squash between your fingers. Quarter grapes lengthwise', 'chg:Feeding:d:finger'],
+    ['Sleep', 8, 10, 3, 'Mattress to its lowest', 'Before {s} pulls up to stand in the crib', 'chg:Sleep:d:mattress'],
+    ['Sleep', 8, 10, 2, 'Night waking again', 'Separation anxiety can wake {o}. The same short goodbye helps', 'chg:Sleep:d:nightwake'],
+    ['Health', 8.25, 9.75, 2.5, 'The 9-month checkup', 'It includes a development screen. Jot down your questions', 'health-visit:9', 'bday'],
+    ['Safety', 8, 11, 2, 'Window stops', 'Windows should open no more than 4 inches', 'chg:Safety:d:step:windows'],
+    ['Feeding', 9, 11, 3, 'No cow’s milk to drink', 'Wait until 12 months. Yogurt and cheese are fine now', 'chg:Feeding:d:milk12'],
+    ['Sleep', 9, 11, 2, 'Standing in the crib', 'Practice sitting back down in the day. It gets easier at night', 'chg:Sleep:d:rough'],
+    ['Daily rhythm', 9, 12.5, 2, 'Barefoot indoors', 'Bare feet help balance for cruising and first steps. Shoes are for outside', 'chg:Daily rhythm:d:steps'],
+    ['Safety', 9, 12.5, 2.5, 'Still rear-facing', 'The next car seat faces back too, often past age 2', 'chg:Out and about:d:car'],
+    ['Feeding', 9.5, 12, 2, 'Practice with a cup', 'Bottles phase out between 12 and 18 months. Starting now makes it easier', 'chg:Feeding:d:milk12'],
+    ['Safety', 10, 12.5, 2, 'Higher up', 'Standing brings the stove, tablecloths and hot drinks into reach', 'safety-stage:pulling'],
+    ['Feeding', 11, 12.5, 3, '16–24 oz of milk', 'A day after the first birthday. More can crowd out iron-rich food', 'chg:Feeding:d:milk12'],
+    ['Sleep', 11, 12.5, 2, 'A lovey at 1 year', 'Soft toys stay out of the crib until {p} first birthday', 'chg:Sleep:d:lovey'],
+    ['Health', 11, 12.5, 3, 'The 12-month checkup', 'Anemia and lead checks, and the MMR and chickenpox shots', 'health-visit:12', 'bday'],
+    ['Health', 0.5, 1.25, 2.5, 'The 1-month checkup', 'Growth, feeding, and how you’re doing too', 'health-visit:1', 'bday'],
+    ['Health', 1.5, 2.25, 3, 'The 2-month vaccines', 'The first main round. A low fever after is common', 'health-visit:2', 'bday']
+  ];
+  function picks() {
+    const adj = Y().ageNow(), bday = (NOW - parse(profile.dob)) / (30.4375 * 864e5);
+    const flu = NOW.getMonth() >= 8 || NOW.getMonth() <= 2;   // September to March
+    const live = POOL.map(t => { const a = t[7] === 'bday' ? bday : adj; return { t, a }; })
+      .filter(({ t, a }) => a >= t[1] && a < t[2] && (t[8] !== 'flu' || flu))
+      .map(({ t, a }) => ({ t, score: t[3] + (a - t[1] < 1 ? 0.5 : 0) - (t[2] - a < 0.5 ? 0.25 : 0) }))
+      .sort((x, y) => y.score - x.score || y.t[1] - x.t[1]);
+    const out = [], per = {}, gos = new Set();
+    for (const { t } of live) { if (out.length === 4) break; if ((per[t[0]] || 0) >= 2 || gos.has(t[6])) continue; per[t[0]] = (per[t[0]] || 0) + 1; gos.add(t[6]); out.push(t); }
+    return out;
+  }
   function glance() {
-    const adj = Math.max(0, Math.min(11, Math.floor(Y().ageNow()))), bday = Math.max(0, Math.min(11, actualMonth()));
-    const k = KNOW[adj], due = HEALTH_DUE[bday], fever = FEVER(bday);
-    const health = due && !(bday === 6 && (NOW.getMonth() > 2 && NOW.getMonth() < 8)) ? [due[0], due[1], bday === 7 ? "openPage('chg:Daily rhythm:d:teeth')" : `openPage('health-visit:${({ 0: 1, 1: 2, 6: 6, 8: 9, 11: 12 })[bday]}')`] : fever;
-    const rows = [['Feeding', k.Feeding], ['Sleep', k.Sleep], ['Health', health], ['Safety', k.Safety]];
-    const tile = ([cat, [big, line, go]]) => `<button class="hg-tile" style="${yearTheme(cat)}" onclick="${go}"><span class="hg-tile-top"><span class="hg-tile-ic">${typeof catIcon === 'function' ? catIcon(cat) : ''}</span><small class="hg-tile-cat">${F(cat)}</small></span><b>${F(big)}</b><small>${F(line)}</small></button>`;
-    glance.gos = rows.map(r => r[1][2]);
+    const rows = picks(); glance.gos = rows.map(t => `openPage('${t[6]}')`);
+    if (rows.length < 2) return '';
+    const label = c => c === 'Daily rhythm' ? 'Everyday care' : c;
+    const tile = t => `<button class="hg-tile" style="${yearTheme(t[0])}" onclick="openPage('${t[6]}')"><span class="hg-tile-top"><span class="hg-tile-ic">${typeof catIcon === 'function' ? catIcon(t[0]) : ''}</span><small class="hg-tile-cat">${F(label(t[0]))}</small></span><b>${F(t[4])}</b><small>${F(t[5])}</small></button>`;
     return `<h2 class="hg-h2">${F('Good to know this month')}</h2><div class="hg-tiles">${rows.map(tile).join('')}</div>`;
   }
+  window.homeGlancePicks = () => picks().map(t => t[4]);
 
   // What the closest changes affect, one row each, taking turns so no single change fills the list.
   // Play ideas wait for the change's own page; these are the things worth doing before it arrives.
