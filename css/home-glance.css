@@ -168,3 +168,27 @@
 #main .hs-switch { text-align: center; font-size: 12.5px; color: #8a8494; margin: 18px 0 0 }
 #main .hs-switch button { min-height: 32px; padding: 0 4px; font-size: 12.5px; color: #8a8494; text-decoration: underline }
 #main .hs-switch button.on { color: #2B2840; font-weight: 700; text-decoration: none }
+/* Home: Through her eyes + You might notice */
+#main .he-hero { position: relative; display: grid; grid-template-columns: 1fr 42%; align-items: center; gap: 6px; padding: 22px 0 22px 20px; border-radius: 28px; overflow: hidden; border: 1px solid #f0dde3; background: radial-gradient(circle at 96% 4%, rgba(255,255,255,.6) 0 30%, transparent 30.5%), linear-gradient(160deg, #fef2e8 0%, #fdeef3 52%, #f3effc 100%) }
+#main .he-eyebrow { margin: 0; font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #7a4f6d }
+#main .he-hero h1 { font-family: inherit; font-size: 27px; line-height: 1.12; letter-spacing: -.02em; font-weight: 800; color: #2B2840; margin: 8px 0 10px }
+#main .he-lead { margin: 0; font-size: 15px; line-height: 1.45; color: #4a4658 }
+#main .he-art { display: block; align-self: stretch; margin-right: -8px }
+#main .he-art .home-month-scene, #main .he-art svg { display: block !important; width: 100% !important; height: 100% !important; max-width: none !important; max-height: none !important }
+#main .hn-h2 { font-size: 22px; font-weight: 800; letter-spacing: -.02em; color: #2B2840; margin: 26px 4px 6px; font-family: inherit }
+#main .hn-list { display: flex; flex-direction: column }
+#main .hn-row { display: flex; align-items: center; gap: 16px; width: 100%; text-align: left; padding: 14px 4px; min-height: 0; background: none }
+#main .hn-row + .hn-row { border-top: 1px solid #ebe4da }
+#main .hn-art { width: 60px; height: 60px; flex: none; border-radius: 18px; background: var(--year-pale, #f3eefb); display: grid; place-items: center }
+#main .hn-art svg { width: 34px; height: 34px }
+#main .hn-copy { flex: 1; min-width: 0 }
+#main .hn-copy b { display: block; font-size: 17px; line-height: 1.25; letter-spacing: -.01em; color: #2B2840; margin-bottom: 3px }
+#main .hn-copy span { display: block; font-size: 14.5px; line-height: 1.45; color: #4a4658 }
+#main .hn-timeline { display: flex; align-items: center; justify-content: space-between; width: 100%; margin-top: 10px; padding: 18px 4px; border-top: 1px solid #ebe4da; font-size: 17px; font-weight: 700; color: #2B2840 }
+#main .hn-timeline + .connected-checkin { margin-top: 12px }
+#main .he-hero { grid-template-columns: 56% 1fr; row-gap: 0; padding-top: 20px }
+#main .he-eyebrow { grid-column: 1 / -1; margin-bottom: 4px }
+#main .he-hero h1 { margin-top: 4px }
+#main .he-art { overflow: visible }
+#main .he-art svg { transform: scale(1.3); transform-origin: 100% 55% }
+#main .he-copy { position: relative; z-index: 1 }
