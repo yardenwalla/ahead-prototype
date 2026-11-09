@@ -313,11 +313,17 @@
     };
   }
   // "New in Maya's guides", as in Yarden's Home reference: a soft lavender card, a sparkle, one line, and the count.
+  // Several guides changed: open Guides and briefly glow the ones that changed, so the eye goes straight to them.
+  window.homeGuidesFlash = cats => {
+    navigate('categories');
+    setTimeout(() => cats.forEach(c => { const el = document.querySelector(`.category-directory-row[data-cat="${c}"]`); if (el) { el.classList.add('is-flash'); setTimeout(() => el.classList.remove('is-flash'), 1800); } }), 60);
+  };
   function newInGuides() {
     // The app's own tappable row (hub-list + hub-row + hub-dot), exactly as the guides use it: white card, hairline, soft square.
     const n = guidesUpdated().length;
     const spark = `<svg viewBox="0 0 32 32" fill="none" stroke="#7A4F6D" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M13 6c.8 4.4 2.3 5.9 6.7 6.7-4.4.8-5.9 2.3-6.7 6.7-.8-4.4-2.3-5.9-6.7-6.7C10.7 11.9 12.2 10.4 13 6Z" fill="#fff"/><path d="M23.5 17.5c.4 2.2 1.1 2.9 3.3 3.3-2.2.4-2.9 1.1-3.3 3.3-.4-2.2-1.1-2.9-3.3-3.3 2.2-.4 2.9-1.1 3.3-3.3Z" fill="#f1d697" stroke="#c9a24a"/></svg>`;
-    return `<div class="hub-list hg-newlist"><button class="hub-row" onclick="navigate('categories')"><span class="hub-dot hg-new-dot">${spark}</span><span class="hub-row-copy"><b>${F(n ? `New in ${name()}’s guides` : `${name()}’s guides`)}</b><small>${F(n ? 'A few things changed as {s’s} grown' : 'Practical help for where {s} is now')}</small></span>${n ? `<span class="guide-upd hg-new-count">${n} new</span>` : ''}${chev}</button></div>`;
+    const upd = guidesUpdated(), go = upd.length === 1 ? `openPage('topic:${upd[0]}')` : upd.length ? `homeGuidesFlash(${JSON.stringify(upd).replace(/"/g, '&quot;')})` : "navigate('categories')";
+    return `<div class="hub-list hg-newlist"><button class="hub-row" onclick="${go}"><span class="hub-dot hg-new-dot">${spark}</span><span class="hub-row-copy"><b>${F(n ? `New in ${name()}’s guides` : `${name()}’s guides`)}</b><small>${F(n ? 'A few things changed as {s’s} grown' : 'Practical help for where {s} is now')}</small></span>${n ? `<span class="guide-upd hg-new-count">${n} new</span>` : ''}${chev}</button></div>`;
   }
 
   // The page ends with two small matching tiles: what's next on Timeline, and what changed in Guides.

@@ -155,3 +155,20 @@
 #main .ya-ys-ticks{position:relative;display:block;height:14px}
 #main .ya-ys-ticks span{position:absolute;transform:translateX(-50%);font-size:10.5px;color:#8a8494}
 #main .ya-ys-ticks span:first-child{transform:none}
+
+/* ---------- Style guide pass (Nov 9): months as flat white cards with hairlines, no shadows, the guides' sizes ---------- */
+#main .ya-pathpage .ya-row button { box-shadow: none !important; background: #fff !important; border: 1px solid #EFEAF2 !important; border-radius: 0 !important; margin: 0 !important; padding: 12px 14px !important; gap: 12px !important }
+#main .ya-pathpage .ya-row + .ya-row button { border-top: 0 !important }
+/* Each month's rows read as one card: round the first and last row of the group */
+#main .ya-pathpage .ya-pin + .ya-row button, #main .ya-pathpage .ya-here + .ya-row button, #main .ya-pathpage .ya-row.is-next:first-of-type button { border-top-left-radius: 22px !important; border-top-right-radius: 22px !important }
+#main .ya-pathpage .ya-row:has(+ .ya-pin) button, #main .ya-pathpage .ya-row:last-child button { border-bottom-left-radius: 22px !important; border-bottom-right-radius: 22px !important }
+/* The next few changes stay their own cards, with a hairline and space between */
+#main .ya-pathpage .ya-row.is-next button { border-radius: 22px !important; border: 1px solid #EFEAF2 !important; margin: 0 0 10px !important; padding: 14px !important }
+#main .ya-pathpage .ya-row.is-next + .ya-row.is-next button { border-top: 1px solid #EFEAF2 !important }
+#main .ya-pathpage .ya-pin { margin-top: 18px !important }
+/* Item squares and type as in the guides: 42px soft square, title 15.5/20 600, line 13.5 in Ink 2 */
+#main .ya-pathpage .ya-row-art { width: 42px !important; height: 42px !important; border-radius: 13px !important }
+#main .ya-pathpage .ya-row-art svg { width: 30px !important; height: 30px !important }
+#main .ya-pathpage .ya-row-copy b { font-size: 15.5px !important; line-height: 20px !important; font-weight: 600 !important; color: #2B2840 }
+#main .ya-pathpage .ya-row-copy small:not(.ya-when), #main .ya-pathpage .ya-why { font-size: 13.5px !important; line-height: 19px !important; color: #5E5A75 !important }
+#main .ya-pathpage .ya-when { font-size: 12.5px !important; font-weight: 600 !important }

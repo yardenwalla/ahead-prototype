@@ -403,3 +403,6 @@
 #main .hg-page .connected-checkin { margin-bottom: 12px !important }
 #main .hg-page .he-hero { margin-bottom: 0 }
 #main .hg-page .hub-h2 { margin: 20px 2px 10px !important }
+
+#main .category-directory-row.is-flash { animation: guideFlash 1.8s ease-out }
+@keyframes guideFlash { 0%, 35% { box-shadow: 0 0 0 3px #e8775a, 0 6px 18px rgba(232,119,90,.25) } 100% { box-shadow: 0 0 0 0 rgba(232,119,90,0) } }
