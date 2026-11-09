@@ -318,10 +318,11 @@
 #main .hx-copy small { display: block; margin-top: 2px; font-size: 13.5px; line-height: 1.35; color: #5e5a6b }
 #main .hx-copy .guide-upd { vertical-align: 2px; margin-left: 4px; font-size: 11px; padding: 2px 7px }
 
-/* Row pictures in the same colors as the Guides tiles: the guide's color, the picture on a white circle */
-#main .hn-art { background: var(--year-bg, #e5e0fc) !important; border-radius: 16px !important }
-#main .hn-art i { width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,.88); display: grid; place-items: center }
-#main .hn-art i svg { width: 26px !important; height: 26px !important }
+/* Row pictures follow the style guide: items sit in their category's soft rounded square, exactly as rows do inside the guides (.hub-dot). */
 #main .hg-guides-stack i { background: var(--year-bg, #e5e0fc) !important }
 /* The timeline link, as it was */
 #main .hn-timeline { margin-top: 12px !important; padding: 18px 4px !important; border-top: 0 !important }
+#main .hn-row { gap: 12px !important }
+/* Style guide type: card titles 15.5/20 600, body 14.5/22 in Ink 2 */
+#main .hn-copy b { font-size: 15.5px !important; line-height: 20px !important; font-weight: 600 !important; letter-spacing: 0 !important }
+#main .hn-copy span { font-size: 14.5px !important; line-height: 22px !important; color: #5E5A75 !important }
