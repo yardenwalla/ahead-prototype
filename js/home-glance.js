@@ -260,9 +260,9 @@
       return go ? `<button class="hn-row hl-row" style="${st}" onclick="openPage('${go}')">${inner}</button>` : `<div class="hn-row hl-row" style="${st}">${inner}</div>`;
     };
     return `<section class="he-hero" style="${monthTheme(m)}"><p class="he-eyebrow">${F(when)} · ${F(`Through ${name()}’s eyes`)}</p><div class="he-copy"><h1>${F(P(M.eyes[0]))}</h1><p class="he-lead">${F(P(M.eyes[1]))}</p>${m <= 4 ? `<button class="he-see" onclick="homeEyes(true)"><span aria-hidden="true">👁</span> ${F(`See what ${name()} sees`)}</button>` : ''}</div><span class="he-art" aria-hidden="true">${art}</span></section>
-      <h2 class="hn-h2">${F('You might notice…')}</h2>
+      <h2 class="hub-h2 hn-h2">${F('You might notice…')}</h2>
       <div class="hn-list">${M.notice.map(row).join('')}</div>
-      <button class="hn-timeline" onclick="navigate('next')"><span>${F(`Explore ${name()}’s timeline`)}</span>${chev}</button>` + guidesRow();
+      ` + timelineCard(next, a) + guidesRow();
   }
 
   /* ---------- Guides: what changed as she grew ----------
@@ -313,13 +313,19 @@
       return html;
     };
   }
+  // Style guide: Home is white and cream; categories show as their mark in a soft circle; links to other places are white rows.
+  function timelineCard(next, a) {
+    if (!next) return '';
+    const ink = (YEAR_PALETTES[next.cat] || {}).ink || '#5b4a8b';
+    return `<h2 class="hub-h2 hn-h2">${F(`${name()}’s timeline`)}</h2><div class="hub-list hx-card"><button class="hub-row hx-row" style="${yearTheme(next.cat)}" onclick="${next.go}"><span class="hub-dot">${hubArt(next.icon, next.cat)}</span><span class="hub-row-copy"><small class="hx-when" style="color:${ink}">${F(Y().range(next) + ' · ' + Y().whenShort(next, a))}</small><b>${F(next.title)}</b><small>${F(next.why)}</small></span>${chev}</button>
+      <button class="hub-row hx-row hx-all" onclick="navigate('next')"><span class="hub-row-copy"><b>${F('See the whole year')}</b></span>${chev}</button></div>`;
+  }
   function guidesRow() {
-    const upd = guidesUpdated(), n = upd.length;
-    const art = n ? `<span class="hg-guides-stack" aria-hidden="true">${upd.slice(0, 3).map(c => `<i style="${yearTheme(c)}">${typeof catIcon === 'function' ? catIcon(c) : ''}</i>`).join('')}</span>`
-      : `<span class="hg-guides-stack" aria-hidden="true"><i style="${yearTheme('Feeding')}">${typeof catIcon === 'function' ? catIcon('Feeding') : ''}</i><i style="${yearTheme('Sleep')}">${typeof catIcon === 'function' ? catIcon('Sleep') : ''}</i></span>`;
+    const upd = guidesUpdated(), n = upd.length, show = n ? upd.slice(0, 3) : ['Feeding', 'Sleep', 'Development'];
     const names = upd.map(c => typeof displayTopic === 'function' ? displayTopic(c) : c);
     const sub = n ? (n === 1 ? `${names[0]} changed as {s’s} grown` : n === 2 ? `${names[0]} and ${names[1]} changed as {s’s} grown` : `${names[0]}, ${names[1]} and more changed as {s’s} grown`) : 'Practical help for where {s} is now';
-    return `<button class="hg-guides" onclick="navigate('categories')">${art}<span class="hg-guides-copy"><b>${F(n ? `New in ${name()}’s guides` : `${name()}’s guides`)}</b><small>${F(sub)}</small></span>${n ? `<span class="hg-guides-chip">${n}</span>` : ''}${chev}</button>`;
+    const marks = `<span class="hx-marks" aria-hidden="true">${show.map(c => `<i style="${yearTheme(c)}">${typeof catIcon === 'function' ? catIcon(c) : ''}</i>`).join('')}</span>`;
+    return `<h2 class="hub-h2 hn-h2">${F(`${name()}’s guides`)}</h2><div class="hub-list hx-card"><button class="hub-row hx-row" onclick="navigate('categories')">${marks}<span class="hub-row-copy"><b>${n ? '<i class="hx-new" aria-hidden="true"></i>' : ''}${F(n ? `${n} guide${n === 1 ? '' : 's'} updated` : 'Everything for this month')}</b><small>${F(sub)}</small></span>${chev}</button></div>`;
   }
 
   // Where to go next: Timeline and Guides as two rows in one card, each saying what's waiting there.

@@ -326,3 +326,23 @@
 /* Style guide type: card titles 15.5/20 600, body 14.5/22 in Ink 2 */
 #main .hn-copy b { font-size: 15.5px !important; line-height: 20px !important; font-weight: 600 !important; letter-spacing: 0 !important }
 #main .hn-copy span { font-size: 14.5px !important; line-height: 22px !important; color: #5E5A75 !important }
+
+/* Style guide pass: headings as in the guides, white cards with hairlines, category marks in circles, items in squares */
+#main .hn-h2 { font-size: 17px !important; font-weight: 650 !important; letter-spacing: 0 !important; margin: 24px 2px 10px !important; color: var(--ink) !important }
+#main .he-hero h1 { font-family: var(--display-font) !important; font-weight: 800 !important }
+#main .hn-list, #main .hx-card { background: #fff !important; border: 1px solid #EFEAF2 !important; border-radius: 22px !important; padding: 0 !important; overflow: hidden }
+#main .hn-list { padding: 0 14px !important }
+#main .hn-row + .hn-row { border-top-color: #EFEAF2 !important }
+#main .hx-card .hx-row { padding: 13px 14px !important }
+#main .hx-card .hx-row + .hx-row { border-top: 1px solid #EFEAF2 }
+#main .hx-when { display: block; font-size: 12.5px !important; font-weight: 600; margin-bottom: 1px }
+#main .hx-row .hub-row-copy b { font-size: 15.5px; font-weight: 600; color: var(--ink) }
+#main .hx-row .hub-row-copy small:last-child { font-size: 13.5px; color: #5E5A75 }
+#main .hx-all { min-height: 48px }
+#main .hx-all .hub-row-copy b { font-size: 14.5px; color: #5E5A75 }
+#main .hx-marks { display: flex; flex: none }
+#main .hx-marks i { width: 40px; height: 40px; border-radius: 50%; background: var(--year-pale, #f3eefb); display: grid; place-items: center; border: 2px solid #fff }
+#main .hx-marks i + i { margin-left: -14px }
+#main .hx-marks i svg { width: 22px; height: 22px }
+#main .hx-card .guide-upd { font-size: 11px; padding: 2px 7px; vertical-align: 2px; margin-left: 4px }
+#main .hx-new { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #e8775a; margin-right: 7px; vertical-align: 2px }
