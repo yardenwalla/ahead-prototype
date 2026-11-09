@@ -15,6 +15,7 @@ P = lambda m, **k: profile(m, k.get('feed', 'Formula'), k.get('how', ''), k.get(
 first = lambda t, chip=False: [("hubFirstFill(%s)" % json.dumps(t)) if chip else f"document.getElementById('firstTitle').value={json.dumps(t)}",
                                 f"document.getElementById('firstDate').value='{day(-3)}'", "hubSaveFirst()"]
 M = "openPage('chg:Timeline:milestone')"
+E = profile(7, 'Formula', '', 'he', 'Theo', 10)   # 7 months old, born 10 weeks early
 FLOWS = [
  # Memories: firsts (typed and picked), and that each counts in Development
  ('First typed: Rolls over', P(5), [M] + first('Rolls over')),
@@ -54,6 +55,11 @@ FLOWS = [
  ('Stage Undo: Safety', P(5), ["openPage('safety-stage:rolling')", "CLICK:Make this", "TOAST:Undo", "SAME"]),
  ('Stage Undo: Sleep', P(5), ["openPage('chg:Sleep:s:1')", "CLICK:Make this", "TOAST:Undo", "SAME"]),
  ('Stage Undo: Feeding', P(5), ["openPage('chg:Feeding:mock:dirD:3')", "CLICK:Make this", "TOAST:Undo", "SAME"]),
+ # Born early: each category can follow its own stage. Changing one must leave the others alone.
+ ('Born 10 weeks early: Sleep to a later stage', E, ["openPage('chg:Sleep:s:3')", "CLICK:Make this"]),
+ ('Born 10 weeks early: Feeding to a later stage', E, ["openPage('chg:Feeding:mock:dirD:3')", "CLICK:Make this"]),
+ ('Born 10 weeks early: Development to actual age (NOT FOUND = no way to switch yet)', E, ["openPage('development-stage:6')", "CLICK:Make this"]),
+ ('Born 10 weeks early: Safety to a later stage', E, ["openPage('safety-stage:pulling')", "CLICK:Make this"]),
  # Profile
  ('Profile: Feeding stage First foods', P(6.3), ["navigate('profile')", "CLICK:First foods"]),
  ('Profile: Two naps', P(7), ["navigate('profile')", "CLICK:Two naps"]),
