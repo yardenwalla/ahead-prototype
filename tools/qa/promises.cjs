@@ -57,4 +57,22 @@ for (const [title, skill, age] of [['Sat up', 'Sits without support', 9], ['Roll
   check(!/months photo/.test(open(a, 'timeline')), 'Photo labels read “the 4-month photo”, not “the 4 months photo”');
 }
 
+// 5. Nov 8 feedback: every "Seen it" counts in Memories, and the memory book sits above the months.
+{
+  const a = family(7);
+  a.run(`hubSeen(journeySkillKey('Laughs')); hubSeen(journeySkillKey('Blows raspberries')); hubSeen(journeySkillKey('Squeals'))`);
+  const t = text(open(a, 'timeline'));
+  check(/3 moments so far/.test(t), 'Memories counts every saved moment, not just the big firsts');
+  check(t.indexOf('memory book') < t.indexOf('Month by month'), 'The memory book card sits above Month by month');
+  check(/See it in the book/.test(toasts(a)) && !/Change date/.test(toasts(a)), 'Seen it offers See it in the book, not Change date');
+}
+
+// 6. Everyday care: no shopping list, and the sun page is about sun, not water.
+{
+  const a = family(7);
+  check(!/What you’ll need/.test(open(a, 'topic:Daily rhythm')), 'Everyday care has no What you’ll need link');
+  const sun = text(open(a, 'chg:Daily rhythm:d:sun'));
+  check(!/Sunscreen and water|4–8 ounces/.test(sun), 'The sun page doesn’t teach water; Feeding does');
+}
+
 console.log(`Promise checks: ${checks} passed`);
