@@ -215,17 +215,48 @@
         ['She has no teeth yet', 'First teeth come anywhere from about 6 to 12 months. Some babies turn 1 with none.', 'Daily rhythm', 'tooth', 'chg:Daily rhythm:d:teeth'],
         ['She’s eating a little less', 'Growth slows down after the first year, and her appetite often slows down with it.', 'Feeding', 'bowl', '']] }
   };
+  // Each month's card takes the color of that month's balloon in Memories, so the two tabs feel like one book.
+  const BALLOON = ['#f2a98a', '#4da9d4', '#6c91b1', '#619863', '#659056', '#4da5d0', '#e9b553', '#eb9669', '#e37889', '#e98067', '#9a6fa4', '#d9708a'];
+  const mix = (hex, w, to = 255) => '#' + [1, 3, 5].map(i => Math.round(parseInt(hex.slice(i, i + 2), 16) * (1 - w) + to * w).toString(16).padStart(2, '0')).join('');
+  const monthTheme = m => { const c = BALLOON[Math.max(0, Math.min(11, m))];
+    return `--m-bg1:${mix(c, .84)};--m-bg2:${mix(c, .92)};--m-line:${mix(c, .7)};--m-ink:${mix(c, .45, 30)};--m-chip:${mix(c, .78)}`; };
+
+  // "See what Maya sees": the month's picture twice, as you see it and as she does. Filters follow how vision
+  // develops: blurry and nearly colorless at first, color filling in by 4–5 months, sharp detail by about 9 months.
+  const VIEW = [['blur(4px) grayscale(.8)', 'Beyond about a foot, the world is a soft blur, mostly in light and dark.'],
+    ['blur(3.2px) grayscale(.7) contrast(1.35)', 'Faces up close are clearest. Colors are still faint.'],
+    ['blur(2.4px) saturate(.45) contrast(1.2)', 'Colors are starting to come through, but softly.'],
+    ['blur(1.8px) saturate(.6)', 'Moving things are easier to follow. Colors are getting stronger.'],
+    ['blur(1.2px) saturate(.85)', 'Colors are filling in, and bright, bold things really stand out.'],
+    ['blur(.8px)', 'She can judge distance now, so the world feels within reach.'],
+    ['blur(.5px)', 'She can spot you across the room.'],
+    ['blur(.35px)', 'Her vision is close to yours, just a little softer.'],
+    ['blur(.2px)', 'She sees nearly what you see.'],
+    ['none', 'She sees tiny details now, like a crumb on the rug.'], ['none', 'She sees what you see.'], ['none', 'She sees what you see.']];
+  window.homeEyes = open => {
+    const old = document.querySelector('.hv-sheet'); if (old) old.remove(); if (!open) return;
+    const m = Math.max(0, Math.min(11, Math.floor(Y().ageNow()))), art = typeof homeMonthArt === 'function' ? homeMonthArt(actualMonth()).replace('<svg ', '<svg preserveAspectRatio="xMidYMid meet" ') : '';
+    const d = document.createElement('div'); d.className = 'hv-sheet'; d.setAttribute('role', 'dialog'); d.setAttribute('aria-label', F(`What ${name()} sees`));
+    d.innerHTML = `<div class="hv-card" style="${monthTheme(m)}"><button class="hv-close" onclick="homeEyes(false)" aria-label="Close">×</button>
+      <p class="hv-eyebrow">${F(`Through ${name()}’s eyes`)}</p>
+      <div class="hv-pair"><figure><span class="hv-art">${art}</span><figcaption>${F('What you see')}</figcaption></figure>
+      <figure><span class="hv-art hv-hers" style="--hv-filter:${VIEW[m][0]}">${art}</span><figcaption>${F(`What ${name()} sees`)}</figcaption></figure></div>
+      <p class="hv-line">${F(VIEW[m][1])}</p></div>`;
+    d.onclick = e => { if (e.target === d) homeEyes(false); };
+    document.body.appendChild(d); requestAnimationFrame(() => d.classList.add('is-on'));
+  };
+
   // The copy is written for "she". Turn it into pronoun tokens so it reads right for every baby.
   const P = t => String(t).replace(/\bherself\b/g, '{r}').replace(/\b(hold|feed|keeps|to|with|for|give|let|watch|help|tell) her\b/g, '$1 {o}')
     .replace(/\bher\b/g, '{p}').replace(/\bHer\b/g, '{P}').replace(/\bShe’s\b/g, '{S’s}').replace(/\bshe’s\b/g, '{s’s}').replace(/\bShe\b/g, '{S}').replace(/\bshe\b/g, '{s}');
   function monthCard(M, lead, a, next) {
-    const m = Math.floor(a), when = m < 2 ? `${Math.max(1, Math.round(a * 4.35))} weeks` : `Month ${m}`;
+    const m = Math.floor(a), wk = Math.max(1, Math.round(a * 4.35)), when = m < 2 ? `${wk} week${wk === 1 ? '' : 's'}` : `Month ${m}`;
     const art = typeof homeMonthArt === 'function' ? homeMonthArt(actualMonth()).replace('<svg ', '<svg preserveAspectRatio="xMidYMid meet" ') : '';
     const row = ([title, why, cat, icon, go]) => {
       const inner = `<span class="hn-art" style="${yearTheme(cat)}">${hubArt(icon, cat)}</span><span class="hn-copy"><b>${F(P(title))}</b><span>${F(P(why))}</span></span>${go ? chev : ''}`;
       return go ? `<button class="hn-row" onclick="openPage('${go}')">${inner}</button>` : `<div class="hn-row">${inner}</div>`;
     };
-    return `<section class="he-hero"><p class="he-eyebrow">${F(when)} · ${F(`Through ${name()}’s eyes`)}</p><div class="he-copy"><h1>${F(P(M.eyes[0]))}</h1><p class="he-lead">${F(P(M.eyes[1]))}</p></div><span class="he-art" aria-hidden="true">${art}</span></section>
+    return `<section class="he-hero" style="${monthTheme(m)}"><p class="he-eyebrow">${F(when)} · ${F(`Through ${name()}’s eyes`)}</p><div class="he-copy"><h1>${F(P(M.eyes[0]))}</h1><p class="he-lead">${F(P(M.eyes[1]))}</p>${m <= 4 ? `<button class="he-see" onclick="homeEyes(true)"><span aria-hidden="true">👁</span> ${F(`See what ${name()} sees`)}</button>` : ''}</div><span class="he-art" aria-hidden="true">${art}</span></section>
       <h2 class="hn-h2">${F('You might notice…')}</h2>
       <div class="hn-list">${M.notice.map(row).join('')}</div>
       <button class="hn-timeline" onclick="navigate('next')"><span>${F(`Explore ${name()}’s timeline`)}</span>${chev}</button>`;

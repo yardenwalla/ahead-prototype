@@ -196,3 +196,22 @@
 #main .he-hero h1 { font-size: 24px }
 #main .he-art { align-self: center; height: 96px; margin: 0 }
 #main .he-art svg { transform: scale(1.15) !important; transform-origin: 50% 50% !important }
+
+/* Month colors and "See what Maya sees" */
+#main .he-hero { background: radial-gradient(circle at 96% 4%, rgba(255,255,255,.55) 0 30%, transparent 30.5%), linear-gradient(160deg, var(--m-bg1, #fef2e8) 0%, var(--m-bg2, #fdeef3) 60%, #fffaf6 100%) !important; border-color: var(--m-line, #f0dde3) !important; transition: background .4s }
+#main .he-eyebrow { color: var(--m-ink, #7a4f6d) !important }
+#main .he-see { display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; min-height: 36px; padding: 0 14px; border-radius: 999px; background: rgba(255,255,255,.85); color: var(--m-ink, #5b4a8b); font-size: 14px; font-weight: 700; box-shadow: 0 1px 3px rgba(43,40,64,.08) }
+.hv-sheet { position: fixed; inset: 0; z-index: 50; display: flex; align-items: flex-end; justify-content: center; background: rgba(30,26,40,0); transition: background .25s }
+.hv-sheet.is-on { background: rgba(30,26,40,.45) }
+.hv-card { position: relative; width: min(460px, 100%); padding: 22px 20px 28px; border-radius: 28px 28px 0 0; background: linear-gradient(160deg, var(--m-bg1), #fffaf6 70%); transform: translateY(100%); transition: transform .3s ease-out; font-family: inherit }
+.hv-sheet.is-on .hv-card { transform: none }
+.hv-close { position: absolute; right: 14px; top: 10px; width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,.8); font-size: 22px; line-height: 1; color: #2B2840 }
+.hv-eyebrow { margin: 0 0 14px; font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--m-ink) }
+.hv-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px }
+.hv-pair figure { margin: 0 }
+.hv-art { display: block; height: 130px; border-radius: 18px; overflow: hidden; background: #fff }
+.hv-art svg { display: block; width: 100%; height: 100% }
+.hv-hers svg { filter: none; transition: filter 1.4s ease .35s }
+.hv-sheet.is-on .hv-hers svg { filter: var(--hv-filter) }
+.hv-pair figcaption { margin-top: 8px; text-align: center; font-size: 13px; font-weight: 600; color: #5e5a6b }
+.hv-line { margin: 16px 2px 0; font-size: 17px; line-height: 1.4; font-weight: 600; color: #2B2840; text-align: center }
