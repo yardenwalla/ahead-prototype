@@ -262,7 +262,7 @@
     return `<section class="he-hero" style="${monthTheme(m)}"><p class="he-eyebrow">${F(when)} · ${F(`Through ${name()}’s eyes`)}</p><div class="he-copy"><h1>${F(P(M.eyes[0]))}</h1><p class="he-lead">${F(P(M.eyes[1]))}</p>${m <= 4 ? `<button class="he-see" onclick="homeEyes(true)"><span aria-hidden="true">👁</span> ${F(`See what ${name()} sees`)}</button>` : ''}</div><span class="he-art" aria-hidden="true">${art}</span></section>
       <h2 class="hub-h2 hn-h2">${F('You might notice…')}</h2>
       <div class="hn-list">${M.notice.map(row).join('')}</div>
-      ` + footTiles(next, a);
+      <button class="hn-timeline" onclick="navigate('next')"><span>${F(`Explore ${name()}’s timeline`)}</span>${chev}</button>` + newInGuides();
   }
 
   /* ---------- Guides: what changed as she grew ----------
@@ -313,6 +313,13 @@
       return html;
     };
   }
+  // "New in Maya's guides", as in Yarden's Home reference: a soft lavender card, a sparkle, one line, and the count.
+  function newInGuides() {
+    const n = guidesUpdated().length;
+    const spark = `<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M13 5c.8 4.6 2.4 6.2 7 7-4.6.8-6.2 2.4-7 7-.8-4.6-2.4-6.2-7-7 4.6-.8 6.2-2.4 7-7Z" fill="#fff"/><path d="M24 17c.4 2.3 1.2 3.1 3.5 3.5-2.3.4-3.1 1.2-3.5 3.5-.4-2.3-1.2-3.1-3.5-3.5 2.3-.4 3.1-1.2 3.5-3.5Z" fill="#f1d697" stroke="#c9a24a"/><circle cx="25" cy="7.5" r="1.4" fill="#f0b3cb" stroke="none"/></svg>`;
+    return `<button class="hg-new" onclick="navigate('categories')"><span class="hg-new-ic">${spark}</span><span class="hg-new-copy"><b>${F(n ? `New in ${name()}’s guides` : `${name()}’s guides`)}</b><small>${F(n ? 'A few things have changed as {s’s} grown.' : 'Practical help for where {s} is now.')}</small></span>${n ? `<span class="hg-new-pill">${n} update${n === 1 ? '' : 's'}</span>` : ''}${chev}</button>`;
+  }
+
   // The page ends with two small matching tiles: what's next on Timeline, and what changed in Guides.
   function footTiles(next, a) {
     const upd = guidesUpdated(), n = upd.length, show = n ? upd.slice(0, 3) : ['Feeding', 'Sleep', 'Development'];
