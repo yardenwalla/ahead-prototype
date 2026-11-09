@@ -9,3 +9,20 @@ const rows = block.split('\n').filter(l => l.trim().startsWith('['));
 const bad = rows.filter(l => { const t = l.match(/'(?:[^'\\]|\\.)*'/g) || []; return BANNED.test(t.slice(2, 4).join(' ')) || BANNED.test(t[4] || '') || BANNED.test(t[5] || ''); });
 if (bad.length) { console.error('home-value: warnings on Home:\n' + bad.join('\n')); process.exit(1); }
 console.log(JSON.stringify({ suite: 'home-value', cards: rows.length, status: 'passed' }));
+// Every month's Home copy keeps the same shape: short titles, one-to-two-sentence explanations, nothing repeated.
+const m = src.match(/const MONTHS = (\{[\s\S]*?\n  \});/);
+if (m) {
+  const MONTHS = new Function('return ' + m[1])(), words = t => t.trim().split(/\s+/).length, bad2 = [], seen = new Map();
+  for (const [k, M] of Object.entries(MONTHS)) {
+    if (words(M.eyes[0]) > 7) bad2.push(`${k}: eyes headline too long`);
+    if (words(M.eyes[1]) < 12 || words(M.eyes[1]) > 19) bad2.push(`${k}: eyes line is ${words(M.eyes[1])} words`);
+    for (const [t, why] of M.notice) {
+      if (words(t) > 7) bad2.push(`${k}: title too long: ${t}`);
+      if (words(why) < 10 || words(why) > 19) bad2.push(`${k}: "${t}" explanation is ${words(why)} words`);
+      if (BANNED.test(t + ' ' + why)) bad2.push(`${k}: warning on Home: ${t}`);
+      const key = t.toLowerCase(); if (seen.has(key)) bad2.push(`${k}: "${t}" repeats month ${seen.get(key)}`); seen.set(key, k);
+    }
+  }
+  if (bad2.length) { console.error('home-value: month copy:\n' + bad2.join('\n')); process.exit(1); }
+  console.log(JSON.stringify({ suite: 'home-value', months: Object.keys(MONTHS).length, status: 'passed' }));
+}
