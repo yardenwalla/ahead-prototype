@@ -103,16 +103,16 @@
     const count = firsts.length ? `${firsts.length} moment${firsts.length === 1 ? '' : 's'} so far` : 'Firsts you save are written here';
     const newest = have.length ? have[have.length - 1] : null;
     const realStack = newest != null ? stack.replace(/<span class="bk-stack-front"><i><\/i><svg[\s\S]*?<\/svg><\/span>/, `<span class="bk-stack-front has-photo"><i></i><img src="${photo(newest)}" alt=""></span>`) : null;
-    const art = realStack ? `<span class="mem-bookcard-art">${realStack}</span>` : '';
-    const addArt = realStack || !firsts.length ? '' : `<label class="mem-bookcard-art is-add" aria-label="Add the ${now === 0 ? 'newborn' : now === 12 ? 'first-birthday' : now + '-month'} photo">${stack.replace(/<svg[\s\S]*?<\/svg>/, '<b class="mem-add-plus" aria-hidden="true">＋</b>')}${hubPhotoInput(now)}</label>`;
+    // The newest real photo when there is one; until then, the little keepsake drawing.
+    const art = `<span class="mem-bookcard-art">${realStack || stack}</span>`;
+    const addArt = '';
     const bookCard = `<div class="mem-bookcard${addArt ? ' has-add' : ''}"><button class="mem-bookcard-open" onclick="openPage('${firsts.length ? 'chg:Timeline:firsts' : 'chg:Timeline:milestone'}')">${art}<span class="mem-bookcard-copy"><b>${esc2(`${name()}’s memory book`)}</b><small>${esc2(count)}</small>${firsts.length ? `<em>${esc2('Open the book')} ›</em>` : ''}</span></button>${addArt}<button class="mem-bookcard-save" onclick="openPage('chg:Timeline:milestone')">＋ Save a first</button></div>`;
 
     // Nothing saved yet: a welcoming card, with the year's designs waiting underneath.
     if (!have.length && !firsts.length) {
       const P = typeof babyPronouns === 'function' ? babyPronouns() : { p: 'their' };
-      b += `<section class="mem-welcome"><h2>${esc2(now === 0 ? `${name()}’s year starts here` : `${name()}’s year, one photo a month`)}</h2><p>${esc2(`Add a photo each month and it becomes a little keepsake card to share. By ${P.p} first birthday, all twelve hang together on one page.`)}</p><div class="mem-welcome-actions"><label class="primary mem-welcome-btn">${esc2(`Add ${now === 0 ? 'a newborn' : now === 12 ? 'a first-birthday' : `the ${now}-month`} photo`)}${hubPhotoInput(now)}</label></div></section>`;
-      // The welcome button already adds this month's photo, so its tile doesn't repeat the button.
-      b += bookCard + `<div class="mem-head"><h2>Month by month</h2></div><div class="mem-stories" tabindex="0" role="region" aria-label="Month by month photos">${months.map(m => card(m, m === now ? true : false)).join('')}</div>`;
+      // The memory book leads; the months underneath say what they're for in one line, and every month has its +.
+      b += bookCard + `<div class="mem-head"><h2>Month by month</h2></div><p class="mem-sub">${esc2(`Add a photo each month. By ${P.p} first birthday, all twelve hang together on one page.`)}</p><div class="mem-stories" tabindex="0" role="region" aria-label="Month by month photos">${months.map(m => card(m)).join('')}</div>`;
       b += `<p class="hub-foot">Photos and entries stay on this device.</p></div>`;
       return `<div class="quiet-category hub-page hub-timeline-page" style="${yearTheme('Memories')}">${b}</div>`;
     }
