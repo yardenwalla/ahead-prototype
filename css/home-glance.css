@@ -55,3 +55,20 @@
 #main .hg-bday-photo { margin-top: 12px }
 #main .hg-bday-photo .hub-bday-photo { display: flex; align-items: center; gap: 10px; width: 100%; background: rgba(255,255,255,.75); border-radius: 14px; padding: 10px 12px; font-size: 14.5px; font-weight: 600; color: #2B2840; cursor: pointer }
 #main .hg-bday-photo img { width: 40px; height: 40px; border-radius: 8px; object-fit: cover }
+#main .hg-list-label { font-size: 13px; font-weight: 700; color: #7a4f6d; margin: 0 0 8px }
+#main .hg-hero .hg-list { background: rgba(255,255,255,.8); border: 0; border-radius: 18px }
+#main .hg-hero .hg-window { margin-bottom: 16px }
+#main .hg-more { display: block; margin-top: 10px; min-height: 36px; padding: 0; font-size: 14px; font-weight: 600; color: #5b4a8b }
+#main .hg-also { display: flex; flex-direction: column; gap: 10px }
+#main .hg-also-card { display: flex; align-items: center; gap: 12px; text-align: left; padding: 14px 16px; border-radius: 20px; background: #fffdf9; border: 1px solid #ece5da }
+#main .hg-also-art { width: 44px; height: 44px; flex: none; border-radius: 14px; background: var(--year-pale, #f3eefb); display: grid; place-items: center }
+#main .hg-also-art svg { width: 28px; height: 28px }
+#main .hg-also-copy { flex: 1 }
+#main .hg-also-copy b { display: block; font-size: 16px; color: #2B2840 }
+#main .hg-also-copy small { display: block; font-size: 13.5px; line-height: 1.4; color: #5e5a6b; margin-top: 2px }
+#main .hg-banner { display: flex !important; align-items: center; gap: 10px; margin: 0 0 12px; padding: 12px 14px; border-radius: 16px; background: linear-gradient(100deg, #fdeee5, #fbeaf1 50%, #efedff); font-size: 14.5px; font-weight: 600; color: #2B2840; cursor: pointer }
+#main .hg-tile b { font-size: 15.5px !important }
+#main .hg-tips { list-style: none; margin: 0; padding: 4px 14px; background: rgba(255,255,255,.8); border-radius: 18px }
+#main .hg-tips li { position: relative; padding: 11px 0 11px 26px; font-size: 15px; line-height: 1.4; color: #2B2840 }
+#main .hg-tips li + li { border-top: 1px solid #f0e8ee }
+#main .hg-tips li:before { content: "✓"; position: absolute; left: 0; top: 11px; width: 18px; height: 18px; border-radius: 50%; background: #f6dfe8; color: #b0567a; font-size: 11px; font-weight: 800; display: grid; place-items: center }
