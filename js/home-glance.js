@@ -262,7 +262,7 @@
     return `<section class="he-hero" style="${monthTheme(m)}"><p class="he-eyebrow">${F(when)} · ${F(`Through ${name()}’s eyes`)}</p><div class="he-copy"><h1>${F(P(M.eyes[0]))}</h1><p class="he-lead">${F(P(M.eyes[1]))}</p>${m <= 4 ? `<button class="he-see" onclick="homeEyes(true)"><span aria-hidden="true">👁</span> ${F(`See what ${name()} sees`)}</button>` : ''}</div><span class="he-art" aria-hidden="true">${art}</span></section>
       <h2 class="hub-h2 hn-h2">${F('You might notice…')}</h2>
       <div class="hn-list">${M.notice.map(row).join('')}</div>
-      ` + timelineCard(next, a) + guidesRow();
+      ` + footTiles(next, a);
   }
 
   /* ---------- Guides: what changed as she grew ----------
@@ -313,6 +313,17 @@
       return html;
     };
   }
+  // The page ends with two small matching tiles: what's next on Timeline, and what changed in Guides.
+  function footTiles(next, a) {
+    const upd = guidesUpdated(), n = upd.length, show = n ? upd.slice(0, 3) : ['Feeding', 'Sleep', 'Development'];
+    const names = upd.map(c => typeof displayTopic === 'function' ? displayTopic(c) : c);
+    const ink = next ? ((YEAR_PALETTES[next.cat] || {}).ink || '#5b4a8b') : '#5b4a8b';
+    const tl = next ? `<button class="hf-tile" onclick="${next.go}"><small>${F('Next on Timeline')}</small><span class="hf-art hl-row" style="--hl-bg:${(YEAR_PALETTES[next.cat] || {}).pale || '#efedff'};--hl-ink:${ink}"><span class="hub-dot">${hubArt(next.icon, next.cat)}</span></span><b>${F(next.title)}</b><span class="hf-sub" style="color:${ink}">${F(Y().whenShort(next, a).replace(/^./, c => c.toUpperCase()))}</span></button>`
+      : `<button class="hf-tile" onclick="navigate('next')"><small>${F('Timeline')}</small><b>${F('The year ahead')}</b></button>`;
+    const gd = `<button class="hf-tile" onclick="navigate('categories')"><small>${F('Guides')}</small><span class="hf-marks" aria-hidden="true">${show.map(c => `<i style="${yearTheme(c)}">${typeof catIcon === 'function' ? catIcon(c) : ''}</i>`).join('')}</span><b>${n ? `<i class="hx-new" aria-hidden="true"></i>${F(`${n} updated`)}` : F('This month')}</b><span class="hf-sub">${F(n ? (n === 1 ? names[0] : n === 2 ? `${names[0]} and ${names[1]}` : `${names[0]} and more`) : 'Everything for now')}</span></button>`;
+    return `<div class="hf-grid">${tl}${gd}</div>`;
+  }
+
   // Style guide: Home is white and cream; categories show as their mark in a soft circle; links to other places are white rows.
   function timelineCard(next, a) {
     if (!next) return '';

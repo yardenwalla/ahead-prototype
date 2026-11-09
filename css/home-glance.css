@@ -346,3 +346,18 @@
 #main .hx-marks i svg { width: 22px; height: 22px }
 #main .hx-card .guide-upd { font-size: 11px; padding: 2px 7px; vertical-align: 2px; margin-left: 4px }
 #main .hx-new { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #e8775a; margin-right: 7px; vertical-align: 2px }
+
+/* The page ends with two small matching tiles */
+#main .hf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px }
+#main .hf-tile { display: flex; flex-direction: column; align-items: flex-start; text-align: left; gap: 2px; min-height: 0; padding: 14px; border-radius: 22px; background: #fff; border: 1px solid #EFEAF2 }
+#main .hf-tile > small { font-size: 12.5px; font-weight: 600; color: #5E5A75; margin-bottom: 8px }
+#main .hf-art { display: block; margin-bottom: 8px }
+#main .hf-tile b { font-size: 15.5px; line-height: 20px; font-weight: 600; color: var(--ink) }
+#main .hf-sub { font-size: 13px; line-height: 18px; color: #5E5A75; font-weight: 500 }
+#main .hf-marks { display: flex; margin-bottom: 8px; height: 42px; align-items: center }
+#main .hf-marks i { width: 38px; height: 38px; border-radius: 50%; background: var(--year-pale, #f3eefb); display: grid; place-items: center; border: 2px solid #fff }
+#main .hf-marks i + i { margin-left: -12px }
+#main .hf-marks i svg { width: 22px; height: 22px }
+#main .hf-grid + .connected-preview-footnote { margin-top: 22px }
+#main .hf-art .hub-dot { display: block; width: 42px; height: 42px }
+
