@@ -123,7 +123,7 @@
     for (const t of live) if (out.length < 3 && !out.includes(t)) out.push(t);
     return out;
   }
-  function month(lead) {
+  function monthCards(lead) {
     const list = cards(lead); if (!list.length) return '';
     const label = c => c === 'Daily rhythm' ? 'Everyday care' : c === 'Out and about' ? 'Outings' : c === 'Development' ? 'Development' : c;
     return `<h2 class="hg-h2">${F(`This month for ${name()}`)}</h2><div class="hg-cards">${list.map(t => `<button class="hg-card" style="${yearTheme(t[0])}" onclick="openPage('${t[7]}')"><span class="hg-card-art" aria-hidden="true">${hubArt(t[1], t[0])}</span><span class="hg-card-copy"><small>${F(label(t[0]))}</small><b>${F(t[5])}</b><span>${F(t[6])}</span></span>${chev}</button>`).join('')}</div>`;
@@ -259,7 +259,51 @@
     return `<section class="he-hero" style="${monthTheme(m)}"><p class="he-eyebrow">${F(when)} · ${F(`Through ${name()}’s eyes`)}</p><div class="he-copy"><h1>${F(P(M.eyes[0]))}</h1><p class="he-lead">${F(P(M.eyes[1]))}</p>${m <= 4 ? `<button class="he-see" onclick="homeEyes(true)"><span aria-hidden="true">👁</span> ${F(`See what ${name()} sees`)}</button>` : ''}</div><span class="he-art" aria-hidden="true">${art}</span></section>
       <h2 class="hn-h2">${F('You might notice…')}</h2>
       <div class="hn-list">${M.notice.map(row).join('')}</div>
-      <button class="hn-timeline" onclick="navigate('next')"><span>${F(`Explore ${name()}’s timeline`)}</span>${chev}</button>`;
+      <button class="hn-timeline" onclick="navigate('next')"><span>${F(`Explore ${name()}’s timeline`)}</span>${chev}</button>` + guidesRow();
+  }
+
+  /* ---------- Guides: what changed as she grew ----------
+     A guide is "Updated" when what it leads with this month differs from last month, until the parent opens it.
+     Nothing is held back: the change shows the day the month turns. */
+  const OPENED = () => 'ahead-guides-opened:' + journeyKey();
+  const opened = () => { try { return JSON.parse(localStorage.getItem(OPENED())) || {}; } catch (e) { return {}; } };
+  const guideLines = m => {
+    const keep = month; let html = '';
+    try { month = m; html = BASE_CATS(); } catch (e) {} finally { month = keep; }
+    const out = {}; html.replace(/data-cat="([^"]+)"[\s\S]*?<small>([\s\S]*?)<\/small>/g, (x, cat, line) => { out[cat] = line.replace(/<[^>]+>/g, '').trim(); });
+    return out;
+  };
+  let updCache = { key: null, list: [] };
+  window.guidesUpdated = () => {
+    if (typeof BASE_CATS !== 'function' || typeof isCurrent === 'function' && !isCurrent()) return [];
+    const m = actualMonth(), key = m + '|' + JSON.stringify(opened()) + '|' + journeyKey();
+    if (updCache.key === key) return updCache.list;
+    let list = [];
+    if (m >= 1) { const now = guideLines(m), before = guideLines(m - 1), seen = opened(); list = Object.keys(now).filter(c => before[c] && now[c] !== before[c] && seen[c] !== m); }
+    updCache = { key, list }; return list;
+  };
+  // Opening a guide clears its "Updated" tag for this month.
+  if (typeof window.openPage === 'function') {
+    const baseOpen = window.openPage;
+    window.openPage = openPage = function (p) {
+      const t = /^topic:(.+)$/.exec(String(p || ''));
+      if (t) { try { const o = opened(); o[t[1]] = actualMonth(); localStorage.setItem(OPENED(), JSON.stringify(o)); } catch (e) {} }
+      return baseOpen.apply(this, arguments);
+    };
+  }
+  const BASE_CATS = typeof window.journeyCategories === 'function' ? window.journeyCategories : null;
+  if (BASE_CATS) {
+    window.journeyCategories = journeyCategories = function () {
+      let html = BASE_CATS().replace(/<h1>Categories<\/h1>/, '<h1>Guides</h1>').replace(/Guidance for /, 'For ');
+      const upd = guidesUpdated();
+      upd.forEach(cat => { html = html.replace(new RegExp(`(data-cat="${cat}"[\\s\\S]*?<b>[^<]*)(</b>)`), '$1 <span class="guide-upd">Updated</span>$2'); });
+      return html;
+    };
+  }
+  function guidesRow() {
+    const n = guidesUpdated().length;
+    return `<button class="hg-guides" onclick="navigate('categories')"><span class="hg-guides-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"/></svg></span>
+      <span class="hg-guides-copy"><b>${F(n ? `New in ${name()}’s guides` : `${name()}’s guides`)}</b><small>${F(n ? 'A few changed as {s’s} grown' : 'Practical help for where {s} is now')}</small></span>${n ? `<span class="hg-guides-chip">${n} update${n === 1 ? '' : 's'}</span>` : ''}${chev}</button>`;
   }
 
   function paintGlance() {
@@ -270,13 +314,13 @@
     if (!lead && !M) return;
     const ageLine = main.querySelector('.home-age-line'), question = main.querySelector('.connected-checkin');
     if (M) {
-      main.innerHTML = '<div class="hg-page">' + banner(main) + monthCard(M, lead, a, [lead, ...rest, ...later].find(c => !({1:['crying'],5:[],8:['sep']}[Math.floor(a)] || []).includes(c.id))) + (question ? question.outerHTML : '') + `<p class="connected-preview-footnote">${F('Ahead isn’t medical advice and doesn’t replace your pediatrician.')}</p></div>`;
+      main.innerHTML = '<div class="hg-page">' + banner(main) + (question ? question.outerHTML : '') + monthCard(M, lead, a, [lead, ...rest, ...later].find(c => !({1:['crying'],5:[],8:['sep']}[Math.floor(a)] || []).includes(c.id))) + `<p class="connected-preview-footnote">${F('Ahead isn’t medical advice and doesn’t replace your pediatrician.')}</p></div>`;
       return;
     }
     let h = '<div class="hg-page">' + (ageLine ? ageLine.outerHTML : '') + banner(main);
     h += hero(lead, a);
     h += question ? question.outerHTML : '';
-    h += month(lead.id) + comingUp(later, a);
+    h += monthCards(lead.id) + comingUp(later, a);
     h += `<p class="connected-preview-footnote">${F('Ahead isn’t medical advice and doesn’t replace your pediatrician.')}</p></div>`;
     main.innerHTML = h;
   }
