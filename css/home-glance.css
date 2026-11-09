@@ -248,5 +248,11 @@
 /* Smaller question card on Home: answers in one row, "We skipped it" as a quiet link */
 #main .hg-page .connected-checkin { padding: 12px 14px !important; border-radius: 18px }
 #main .hg-page .connected-checkin .connected-checkin-choices { display: flex; flex-wrap: wrap; gap: 6px }
-#main .hg-page .connected-checkin .connected-checkin-choices button { flex: 1 1 0; min-height: 38px; font-size: 14px }
-#main .hg-page .connected-checkin .connected-checkin-choices button:nth-child(3) { flex: 1 1 100%; min-height: 28px; background: none !important; font-size: 13px; font-weight: 600; text-decoration: underline; color: var(--muted, #6b6670) !important }
+
+
+/* Home's question, as compact as Home's card answers on main: small outlined buttons in one row, under the text */
+#main .hg-page .connected-checkin { padding: 12px 14px 14px !important; border-radius: 18px !important }
+#main .hg-page .connected-checkin .hub-q-head { margin-bottom: 8px !important }
+#main .hg-page .connected-checkin .connected-checkin-choices { display: flex !important; flex-wrap: nowrap !important; gap: 8px; padding-left: 42px }
+#main .hg-page .connected-checkin .connected-checkin-choices button:not(.hub-q-skip) { flex: 1 1 0 !important; white-space: nowrap; min-height: 36px !important; padding: 6px 4px !important; border: 1px solid var(--line, #e3dfe5) !important; border-radius: 11px !important; background: var(--white, #fffefa) !important; color: var(--ink, #302d3c) !important; font: 500 12.5px/1.2 Figtree, system-ui, sans-serif !important; text-decoration: none !important }
+#main .hg-page .connected-checkin .connected-checkin-choices { padding-left: 46px; gap: 6px }
