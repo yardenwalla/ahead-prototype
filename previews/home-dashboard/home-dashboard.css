@@ -1,0 +1,19 @@
+/* Home preview: What's ahead, a dashboard of six tiles */
+#main .hd-dash, #main .hd-week { margin: 26px 0 0 }
+#main .hd-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin: 0 2px 12px }
+#main .hd-head h2 { margin: 0; font-size: 21px; letter-spacing: -.01em }
+#main .hd-link { border: 0; background: none; font: inherit; font-size: 14px; font-weight: 600; color: #5b4a8b; cursor: pointer; padding: 0 }
+#main .hd-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px }
+#main .hd-tile { display: flex; flex-direction: column; align-items: flex-start; min-height: 168px; padding: 14px 14px 15px; border: 0; border-radius: 22px; background: var(--year-pale, #f6f2fd); text-align: left; font: inherit; color: #2B2840; cursor: pointer }
+#main .hd-area { display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 600; color: var(--year-ink, #5b4a8b) }
+#main .hd-ic { width: 26px; height: 26px; border-radius: 9px; background: #fff; display: grid; place-items: center }
+#main .hd-ic svg { width: 17px; height: 17px }
+#main .hd-when { margin-top: 14px; font-size: 12.5px; font-weight: 600; color: #6c6880 }
+#main .hd-big { margin: 3px 0 6px; font-size: 21px; line-height: 1.12; letter-spacing: -.01em; font-weight: 700 }
+#main .hd-big.is-quiet { color: #8b879a }
+#main .hd-line { font-size: 13.5px; line-height: 1.35; color: #4e4a63 }
+#main .hd-meter { display: block; width: 100%; height: 6px; margin: 0 0 8px; border-radius: 3px; background: rgba(255,255,255,.9); overflow: hidden }
+#main .hd-meter i { display: block; height: 100%; border-radius: 3px; background: var(--year-ink, #5b4a8b) }
+#main .hd-tile.is-quiet { background: #f4f2ef }
+#main .hd-week-list { display: grid; gap: 10px }
+#main .hd-week-list .home2-card { background: #fff; border: 1px solid var(--line, #ece7e1); border-radius: 20px; padding: 4px 6px }
