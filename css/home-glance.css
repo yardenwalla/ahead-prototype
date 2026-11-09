@@ -396,3 +396,10 @@
 #main .hg-rows .hg-new-dot { padding: 7px !important }
 #main .hg-tl { width: 100%; text-align: left; margin: 2px 0 12px }
 #main .hg-tl { font-size: 15.5px !important; font-weight: 600 !important; color: var(--ink) !important; padding: 16px 4px !important }
+/* One rhythm: 12px between blocks, the timeline link sits tight between the two cards */
+#main .hg-page .hg-rows { margin: 0 !important }
+#main .hg-tl { margin: 2px 0 !important; padding: 12px 4px !important; min-height: 0 !important }
+#main .hg-newlist { margin: 0 0 12px !important }
+#main .hg-page .connected-checkin { margin-bottom: 12px !important }
+#main .hg-page .he-hero { margin-bottom: 0 }
+#main .hg-page .hub-h2 { margin: 20px 2px 10px !important }
