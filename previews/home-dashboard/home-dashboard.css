@@ -17,3 +17,16 @@
 #main .hd-tile.is-quiet { background: #f4f2ef }
 #main .hd-week-list { display: grid; gap: 10px }
 #main .hd-week-list .home2-card { background: #fff; border: 1px solid var(--line, #ece7e1); border-radius: 20px; padding: 4px 6px }
+/* v2: one hero, three glances */
+#main .hd-hero { position: relative; display: block; width: 100%; padding: 20px 20px 18px; border: 0; border-radius: 26px; background: var(--year-pale, #f6f2fd); text-align: left; font: inherit; color: #2B2840; cursor: pointer; overflow: hidden }
+#main .hd-hero-art { position: absolute; right: 16px; top: 16px; width: 64px; height: 64px; border-radius: 20px; background: #fff; display: grid; place-items: center }
+#main .hd-hero-art svg { width: 42px; height: 42px }
+#main .hd-hero .hd-when { display: block; margin: 0; color: var(--year-ink, #5b4a8b) }
+#main .hd-hero-title { display: block; margin: 6px 80px 6px 0; font-size: 26px; line-height: 1.1; letter-spacing: -.02em }
+#main .hd-hero .hd-line { display: block; max-width: 85%; font-size: 15.5px }
+#main .hd-hero-go { display: inline-block; margin-top: 14px; font-size: 14.5px; font-weight: 700; color: var(--year-ink, #5b4a8b) }
+#main .hd-glance { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px }
+#main .hd-mini { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; padding: 13px 12px 14px; border: 1px solid var(--line, #ece7e1); border-radius: 20px; background: #fff; text-align: left; font: inherit; color: #2B2840; cursor: pointer }
+#main .hd-mini .hd-ic { background: var(--year-pale, #f6f2fd); margin-bottom: 6px }
+#main .hd-mini b { font-size: 17px; letter-spacing: -.01em; white-space: nowrap }
+#main .hd-mini span:last-child { font-size: 13px; line-height: 1.25; color: #5E5A75 }

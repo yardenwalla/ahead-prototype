@@ -71,19 +71,30 @@
   // Only what can't wait stays a weekly card.
   const THIS_WEEK = ['checkup', 'rsv', 'flu', 'clocks', 'hot-days', 'cold-car-seat', 'swaddle', 'swaddle-now', 'rolling-now', 'crawl-now', 'stand-now', 'stand-soon', 'car-seat', 'vitamin-d', 'safe-sleep', 'fever-rule'];
 
+  // Every change still ahead (or underway, but started recently), across areas, soonest first.
+  function upcoming() {
+    const C = window.__yaC || [], done = window.__yaDone ? window.__yaDone() : {}, a = careAge();
+    return C.filter(x => T[x.id] && !done[x.id] && x.end > a && a - x.start < 1.5 && x.start <= a + 3)
+      .sort((x, y) => x.start - y.start || x.end - y.end).map(c => ({ c, when: when(c, a), soon: a >= c.start }));
+  }
+  const shortWhen = (c, a) => { if (a >= c.start) return 'Now'; if (c.start - a < 0.75) return 'Soon'; const n = Math.round(c.start - a); return `In ${n} month${n === 1 ? '' : 's'}`; };
+
+  // v2, after walking through it as parents: one thing that matters most, then three glances. Nothing to read twice.
   function paint() {
     const main = document.getElementById('main'); if (!main || !main.querySelector('.connected-now') || main.querySelector('.hd-dash')) return;
-    const week = [...main.querySelectorAll('.home2-card')].filter(el => THIS_WEEK.includes(el.dataset.card)).slice(0, 2);
+    const week = [...main.querySelectorAll('.home2-card')].filter(el => THIS_WEEK.includes(el.dataset.card)).slice(0, 1);
     main.querySelectorAll('.connected-summary-links, section.connected-ahead:not(.brief-preview)').forEach(e => e.remove());
     const close = main.querySelector('.brief-close'); if (close) close.remove();
-    const tiles = TILE.map(([cat, label]) => {
-      const t = cat === 'Health' ? healthTile() : cat === 'Safety' ? safetyTile() : nextChange(cat);
-      const body = t
-        ? `<small class="hd-when">${esc(t.eyebrow)}</small><b class="hd-big">${esc(t.big)}</b>${t.meter != null ? `<span class="hd-meter"><i style="width:${Math.round(t.meter * 100)}%"></i></span>` : ''}<span class="hd-line">${esc(t.line)}</span>`
-        : `<small class="hd-when">Nothing new soon</small><b class="hd-big is-quiet">All set</b><span class="hd-line">No changes coming in the next few months.</span>`;
-      return `<button class="hd-tile${t ? '' : ' is-quiet'}" style="${yearTheme(cat)}" onclick="${t ? t.go : `openPage('topic:${cat}')`}"><span class="hd-area"><span class="hd-ic">${icon(cat)}</span>${esc(label)}</span>${body}</button>`;
-    }).join('');
-    let h = `<section class="hd-dash"><div class="hd-head"><h2>${esc(`What’s ahead for ${name()}`)}</h2><button class="hd-link" onclick="navigate('next')">The year ›</button></div><div class="hd-grid">${tiles}</div></section>`;
+    const a = careAge(), up = upcoming(), hero = up[0];
+    let h = '<section class="hd-dash">';
+    if (hero) h += `<div class="hd-head"><h2>${esc(`Up next for ${name()}`)}</h2></div><button class="hd-hero" style="${yearTheme(hero.c.cat)}" onclick="${hero.c.go}"><span class="hd-hero-art">${typeof hubArt === 'function' ? hubArt(hero.c.icon, hero.c.cat) : ''}</span><small class="hd-when">${esc(hero.when)}</small><b class="hd-hero-title">${esc(T[hero.c.id][0])}</b><span class="hd-line">${esc(fill(T[hero.c.id][1]))}</span><span class="hd-hero-go">Read ahead ›</span></button>`;
+    // Three glances: the next checkup, then the next changes in other areas. A word or two each.
+    const glance = [];
+    const ht = healthTile(); if (ht) glance.push({ cat: 'Health', top: ht.big, label: 'Checkup', go: ht.go });
+    const used = new Set(hero ? [hero.c.cat] : []);
+    up.slice(1).forEach(({ c }) => { if (glance.length < 3 && !used.has(c.cat)) { used.add(c.cat); glance.push({ cat: c.cat, top: shortWhen(c, a), label: T[c.id][0], go: c.go }); } });
+    if (glance.length) h += `<div class="hd-glance" style="grid-template-columns:repeat(${glance.length},1fr)">${glance.map(g => `<button class="hd-mini" style="${yearTheme(g.cat)}" onclick="${g.go}"><span class="hd-ic">${icon(g.cat)}</span><b>${esc(g.top)}</b><span>${esc(g.label)}</span></button>`).join('')}</div>`;
+    h += '</section>';
     if (week.length) h += `<section class="hd-week"><div class="hd-head"><h2>This week</h2></div><div class="hd-week-list"></div></section>`;
     main.querySelector('.connected-now').insertAdjacentHTML('afterend', h);
     const list = main.querySelector('.hd-week-list'); if (list) week.forEach(el => list.appendChild(el));
