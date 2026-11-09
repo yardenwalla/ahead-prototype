@@ -303,3 +303,17 @@
 #main .category-directory-row .directory-copy small { font-size: 12.5px !important; margin-top: 2px }
 #main .category-directory-row .dir-chip { font-size: 11px; margin: 3px 0 1px }
 #main .category-directory-row .guide-upd { top: 10px; right: 10px; font-size: 11px; padding: 2px 7px }
+
+/* Home, cohesive pass: lists live in white cards, like the rest of the app */
+#main .hn-list { background: #fffdf9; border: 1px solid #ece5da; border-radius: 22px; padding: 2px 14px }
+#main .hn-row { padding: 14px 0 !important }
+#main .hn-h2 { margin: 24px 4px 10px !important; font-size: 20px !important }
+#main .hx-card { background: #fffdf9; border: 1px solid #ece5da; border-radius: 22px; padding: 2px 14px }
+#main .hx-row { display: flex; align-items: center; gap: 14px; width: 100%; text-align: left; padding: 14px 0; min-height: 0 }
+#main .hx-row + .hx-row { border-top: 1px solid #f0e9df }
+#main .hx-art { width: 48px; height: 48px; flex: none; border-radius: 15px; background: var(--year-pale, #f3eefb); color: var(--year-ink, #5b4a8b); display: grid; place-items: center }
+#main .hx-art svg { width: 28px; height: 28px }
+#main .hx-copy { flex: 1; min-width: 0 }
+#main .hx-copy b { display: block; font-size: 16px; color: #2B2840 }
+#main .hx-copy small { display: block; margin-top: 2px; font-size: 13.5px; line-height: 1.35; color: #5e5a6b }
+#main .hx-copy .guide-upd { vertical-align: 2px; margin-left: 4px; font-size: 11px; padding: 2px 7px }

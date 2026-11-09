@@ -259,7 +259,7 @@
     return `<section class="he-hero" style="${monthTheme(m)}"><p class="he-eyebrow">${F(when)} · ${F(`Through ${name()}’s eyes`)}</p><div class="he-copy"><h1>${F(P(M.eyes[0]))}</h1><p class="he-lead">${F(P(M.eyes[1]))}</p>${m <= 4 ? `<button class="he-see" onclick="homeEyes(true)"><span aria-hidden="true">👁</span> ${F(`See what ${name()} sees`)}</button>` : ''}</div><span class="he-art" aria-hidden="true">${art}</span></section>
       <h2 class="hn-h2">${F('You might notice…')}</h2>
       <div class="hn-list">${M.notice.map(row).join('')}</div>
-      <button class="hn-timeline" onclick="navigate('next')"><span>${F(`Explore ${name()}’s timeline`)}</span>${chev}</button>` + guidesRow();
+      ` + exploreCard(next, a);
   }
 
   /* ---------- Guides: what changed as she grew ----------
@@ -317,6 +317,18 @@
     const names = upd.map(c => typeof displayTopic === 'function' ? displayTopic(c) : c);
     const sub = n ? (n === 1 ? `${names[0]} changed as {s’s} grown` : n === 2 ? `${names[0]} and ${names[1]} changed as {s’s} grown` : `${names[0]}, ${names[1]} and more changed as {s’s} grown`) : 'Practical help for where {s} is now';
     return `<button class="hg-guides" onclick="navigate('categories')">${art}<span class="hg-guides-copy"><b>${F(n ? `New in ${name()}’s guides` : `${name()}’s guides`)}</b><small>${F(sub)}</small></span>${n ? `<span class="hg-guides-chip">${n}</span>` : ''}${chev}</button>`;
+  }
+
+  // Where to go next: Timeline and Guides as two rows in one card, each saying what's waiting there.
+  function exploreCard(next, a) {
+    const upd = guidesUpdated(), n = upd.length, names = upd.map(c => typeof displayTopic === 'function' ? displayTopic(c) : c);
+    const tl = next ? `Next up: ${next.title.charAt(0).toLowerCase() + next.title.slice(1)}, ${Y().whenShort(next, a)}` : 'The big changes still ahead';
+    const gd = n ? (n === 1 ? `${names[0]} changed as {s’s} grown` : `${names[0]} and ${n === 2 ? names[1] : 'more'} changed as {s’s} grown`) : 'Practical help for where {s} is now';
+    const tlArt = `<span class="hx-art" style="${yearTheme(next ? next.cat : 'Development')}">${next ? hubArt(next.icon, next.cat) : ''}</span>`;
+    const gdArt = `<span class="hx-art" style="${yearTheme(upd[0] || 'Feeding')}">${typeof catIcon === 'function' ? catIcon(upd[0] || 'Feeding') : ''}</span>`;
+    return `<h2 class="hn-h2">${F('Keep exploring')}</h2><div class="hx-card">
+      <button class="hx-row" onclick="navigate('next')">${tlArt}<span class="hx-copy"><b>${F(`${name()}’s timeline`)}</b><small>${F(tl)}</small></span>${chev}</button>
+      <button class="hx-row" onclick="navigate('categories')">${gdArt}<span class="hx-copy"><b>${F(`${name()}’s guides`)}${n ? ` <span class="guide-upd">${n} updated</span>` : ''}</b><small>${F(gd)}</small></span>${chev}</button></div>`;
   }
 
   function paintGlance() {
