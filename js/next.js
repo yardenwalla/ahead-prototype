@@ -53,7 +53,7 @@
     });
     // The Timeline holds the big moments only: the changes parents anticipate and plan around.
     // Smaller stage details (three naps, textures, sunscreen, car seats) stay in their category.
-    const BIG = ['Nights start to stretch', 'The 4-month sleep regression', 'The late nap drops, leaving two', 'Two naps become one', 'First tastes of solids', 'The milk change at 12 months', 'Rolling brings the floor within reach', 'Crawling opens up the whole room', 'The first tooth arrives', 'Cruising and first steps'];
+    const BIG = ['Nights start to stretch', 'The 4-month sleep regression', 'The late nap drops, leaving two', 'Two naps become one', 'First tastes of solids', 'The milk change at 12 months', 'Crawling opens up the whole room', 'The first tooth arrives', 'Cruising and first steps'];
     const keep = x => x.cat === 'Development' || x.cat === 'Health' || BIG.includes(x.title);
     const cur = cat => (typeof chgStageIndex === 'function' ? chgStageIndex(cat) : null);
     return list.filter(x => keep(x) && !x.skip && !(x.soonOnly && ageAt(careFrom()) >= 7)).map(x => {

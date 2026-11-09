@@ -1516,3 +1516,4 @@ label:has(> .hub-photo-input:focus-visible) { outline: 2px solid #884866; outlin
 #main .age-page .hub-agemode-row small { color: #6c6880 }
 #main .age-tip { margin: 14px 4px 0; padding: 12px 14px; border-radius: 14px; background: #eef6f0; color: #356651; font-size: 14.5px; line-height: 1.4 }
 #main .age-page .hub-ages .hub-tiles { display: none }
+#main .age-page .hub-ages .hub-tiles + .hub-agemode-row { border-top: 0 }
