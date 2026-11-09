@@ -379,3 +379,10 @@
 #main .hg-new { background: #F5F1EA !important; border-color: #ECE6DC !important }
 #main .hg-new-ic { color: #4d443b !important }
 #main .hg-new-pill { background: #e8775a !important; color: #fff !important; border: 0 !important }
+
+/* The guides row is the app's own row component; only its square takes Home's Sunrise tint so it isn't any one category */
+#main .hg-newlist { margin-top: 4px }
+#main .hg-new-dot { background: linear-gradient(160deg, #FEF2E8, #FDEEF3 52%, #F3EFFC) !important; padding: 7px !important }
+#main .hg-new-count { flex: none; margin-right: 2px }
+#main .hg-newlist .hub-row { text-align: left }
+#main .hg-newlist .hub-row-copy b { white-space: nowrap }

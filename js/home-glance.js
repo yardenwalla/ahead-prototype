@@ -315,9 +315,10 @@
   }
   // "New in Maya's guides", as in Yarden's Home reference: a soft lavender card, a sparkle, one line, and the count.
   function newInGuides() {
+    // The app's own tappable row (hub-list + hub-row + hub-dot), exactly as the guides use it: white card, hairline, soft square.
     const n = guidesUpdated().length;
-    const spark = `<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M13 5c.8 4.6 2.4 6.2 7 7-4.6.8-6.2 2.4-7 7-.8-4.6-2.4-6.2-7-7 4.6-.8 6.2-2.4 7-7Z" fill="#fff"/><path d="M24 17c.4 2.3 1.2 3.1 3.5 3.5-2.3.4-3.1 1.2-3.5 3.5-.4-2.3-1.2-3.1-3.5-3.5 2.3-.4 3.1-1.2 3.5-3.5Z" fill="#f1d697" stroke="#c9a24a"/><circle cx="25" cy="7.5" r="1.4" fill="#f0b3cb" stroke="none"/></svg>`;
-    return `<button class="hg-new" onclick="navigate('categories')"><span class="hg-new-ic">${spark}</span><span class="hg-new-copy"><b>${F(n ? `New in ${name()}’s guides` : `${name()}’s guides`)}</b><small>${F(n ? 'A few things have changed as {s’s} grown.' : 'Practical help for where {s} is now.')}</small></span>${n ? `<span class="hg-new-pill">${n} update${n === 1 ? '' : 's'}</span>` : ''}${chev}</button>`;
+    const spark = `<svg viewBox="0 0 32 32" fill="none" stroke="#7A4F6D" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M13 6c.8 4.4 2.3 5.9 6.7 6.7-4.4.8-5.9 2.3-6.7 6.7-.8-4.4-2.3-5.9-6.7-6.7C10.7 11.9 12.2 10.4 13 6Z" fill="#fff"/><path d="M23.5 17.5c.4 2.2 1.1 2.9 3.3 3.3-2.2.4-2.9 1.1-3.3 3.3-.4-2.2-1.1-2.9-3.3-3.3 2.2-.4 2.9-1.1 3.3-3.3Z" fill="#f1d697" stroke="#c9a24a"/></svg>`;
+    return `<div class="hub-list hg-newlist"><button class="hub-row" onclick="navigate('categories')"><span class="hub-dot hg-new-dot">${spark}</span><span class="hub-row-copy"><b>${F(n ? `New in ${name()}’s guides` : `${name()}’s guides`)}</b><small>${F(n ? 'A few things changed as {s’s} grown' : 'Practical help for where {s} is now')}</small></span>${n ? `<span class="guide-upd hg-new-count">${n} new</span>` : ''}${chev}</button></div>`;
   }
 
   // The page ends with two small matching tiles: what's next on Timeline, and what changed in Guides.
