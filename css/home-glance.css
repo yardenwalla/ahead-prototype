@@ -19,10 +19,12 @@
 
 #main .hg-h2 { font-size: 20px; font-weight: 700; letter-spacing: -.01em; color: #2B2840; margin: 26px 2px 10px; font-family: inherit }
 #main .hg-tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px }
-#main .hg-tile { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; text-align: left; padding: 14px; border-radius: 20px; background: #fffdf9; border: 1px solid #ece5da; min-height: 112px }
-#main .hg-tile-ic { width: 36px; height: 36px; border-radius: 12px; display: grid; place-items: center; background: var(--year-pale, #f3eefb); color: var(--year-ink, #5b4a8b); margin-bottom: 8px }
-#main .hg-tile-ic svg { width: 22px; height: 22px }
-#main .hg-tile b { font-size: 15px; color: #2B2840 }
+#main .hg-tile { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; text-align: left; padding: 14px; border-radius: 20px; background: #fffdf9; border: 1px solid #ece5da; min-height: 132px }
+#main .hg-tile-top { display: flex; align-items: center; gap: 7px; margin-bottom: 8px }
+#main .hg-tile-ic { width: 28px; height: 28px; border-radius: 9px; display: grid; place-items: center; background: var(--year-pale, #f3eefb); color: var(--year-ink, #5b4a8b) }
+#main .hg-tile-cat { font-size: 12px !important; font-weight: 600; color: var(--year-ink, #5b4a8b) !important }
+#main .hg-tile-ic svg { width: 18px; height: 18px }
+#main .hg-tile b { font-size: 16.5px; line-height: 1.2; color: #2B2840; margin-bottom: 3px }
 #main .hg-tile small { font-size: 13.5px; line-height: 1.35; color: #5e5a6b }
 
 #main .hg-list { background: #fffdf9; border: 1px solid #ece5da; border-radius: 22px; overflow: hidden }
