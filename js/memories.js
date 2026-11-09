@@ -16,6 +16,7 @@
   // The firsts parents remember. A first the parent typed in themselves always counts.
   const BIG = /smile|laugh|roll|sits? (up|without)|sitting|tooth|crawl|first word|mama|dada|name for a parent|says a word|pulls? (up|to stand)|stand|first steps|takes? (a few )?steps|walk|waves?/i;
   const isBig = r => r.own || !r.skillKey || BIG.test(String(r.title));
+  window.memIsBig = isBig;
   // The big firsts get baby-book titles; everything else keeps its own words.
   const KEEP = [[/smiles? back|smiles at you|social smile/i, 'First smile'], [/laugh|chuckle/i, 'First laugh'], [/roll/i, 'First roll'], [/sits? (up|without)|sitting/i, 'Sitting up'], [/crawl/i, 'Crawling'], [/tooth/i, 'First tooth'], [/mama|dada|first word|says a word|name for a parent/i, 'First word'], [/wave/i, 'Waving bye-bye'], [/pulls? (up|to stand)|stand/i, 'Pulling up to stand'], [/steps|walk/i, 'First steps']];
   const keepTitle = r => { if (r.own || !r.skillKey) return r.title; const k = KEEP.find(([re]) => re.test(String(r.title))); return k ? k[1] : r.title; };
@@ -82,7 +83,7 @@
         : `<label class="mem-story is-plain is-empty" aria-label="Add the newborn photo"><em>Newborn</em><span class="mem-story-add">＋ Add photo</span>${hubPhotoInput(0)}</label>`;
       if (!designs) return photo(m) ? `<div class="mem-story-wrap"><label class="mem-story is-plain"><img src="${photo(m)}" alt=""><em>${label(m)}</em>${hubPhotoInput(m)}</label>${remove(m)}</div>` : '';
       if (photo(m)) return `<div class="mem-story-wrap"><button class="mem-story" onclick="storyShare(${m})" aria-label="Open the ${L(m)} card"><img data-story-thumb="${m}" alt=""></button>${remove(m)}</div>`;
-      return `<label class="mem-story is-empty" aria-label="Add the ${L(m)} photo"><img data-story-thumb="${m}" alt="">${quiet ? '' : '<span class="mem-story-add">＋ Add photo</span>'}${hubPhotoInput(m)}</label>`;
+      return `<label class="mem-story is-empty" aria-label="Add the ${m === 0 ? 'newborn' : m === 12 ? 'first-birthday' : m + '-month'} photo"><img data-story-thumb="${m}" alt="">${quiet ? '' : '<span class="mem-story-add">＋ Add photo</span>'}${hubPhotoInput(m)}</label>`;
     };
     const bigs = bigFirsts(firsts);
     // Newest first, only the months the baby has reached.
@@ -126,7 +127,8 @@
         .replace(/<div class="eyebrow">[^<]*<\/div><h1>/, `<div class="hub-detail-head"><span class="hub-big${record.type === 'milestone' ? ' mem-big is-toned" style="' + TONE(record) : ''}">${hubArt(record.type === 'milestone' ? ICON(record) : 'steth', cat)}</span><p class="hub-context">${record.type === 'milestone' ? 'A first' : 'Checkup'}</p><h1>`)
         .replace('</h1><form', '</h1></div><form')
         .replace('>Save date</button>', '>Save</button>');
-      if (record.type !== 'milestone') return html;
+      // A checkup lives in Health, not Memories: undoing it says so, and goes back to Health.
+      if (record.type !== 'milestone') return html.replace(`navigate('timeline')">Remove from Memories`, `openPage('topic:Health')">Mark as not done`);
       html = html.replace(/<details class="guide-detail"><summary>Your saved note[\s\S]*?<\/details>/, '');
       return html.replace('<button class="primary">', `<label for="editNote">A note (optional)</label><textarea id="editNote" maxlength="200" rows="3" placeholder="${esc2('What happened, who was there…')}">${esc2(record.notes || '')}</textarea><button class="primary">`);
     };

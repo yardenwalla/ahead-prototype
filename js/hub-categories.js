@@ -3,7 +3,11 @@
    at most 3 rows, a must-know card, coming up, and details one tap away (the existing focused pages). */
 (function () {
   // A skill counts as seen if it's saved in Memories, or the parent already told us (crawling, pulling up, rolling).
+  // A first the parent typed or picked ("Sat up", "Rolls over") counts for the matching big skill too.
+  const firstKind = t => /pull(s|ing|ed)? (up|to stand)|stood|cruis/i.test(t) ? 'pull' : /crawl/i.test(t) ? 'crawl' : /\bsat\b|\bsits?\b|sitting/i.test(t) ? 'sit' : /\broll/i.test(t) ? 'roll' : /tooth|teeth/i.test(t) ? 'tooth' : '';
+  const skillKind = l => /pulls? (up|to stand)/i.test(l) ? 'pull' : /crawl/i.test(l) ? 'crawl' : /sits without|gets into sitting|sits up/i.test(l) ? 'sit' : /\broll/i.test(l) ? 'roll' : /tooth/i.test(l) ? 'tooth' : '';
   window.skillSeen = l => journeyData().records.some(r => r.type === 'milestone' && r.skillKey === journeySkillKey(l))
+    || (skillKind(l) && journeyData().records.some(r => r.type === 'milestone' && r.status === 'attended' && !r.skillKey && firstKind(r.title || '') === skillKind(l)))
     || (typeof answers !== 'undefined' && ((answers.crawl === 'Yes' && /crawl/i.test(l)) || (answers.pullUp === 'Yes' && /pull(s|ing)? (up|to stand)/i.test(l)) || ((answers.roll === 'Yes' || answers.crawl === 'Yes') && /\broll/i.test(l)) || (answers.hasTooth === 'Yes' && /tooth/i.test(l))));
   const H = () => window.__hub;
   const F = s => H().F(s);
