@@ -375,3 +375,7 @@
 #main .hg-new-ic { width: 28px; height: 28px }
 #main .hg-new-copy b { white-space: nowrap; font-size: 15px }
 #main .hg-new-pill { font-size: 11.5px; padding: 2px 8px }
+/* No purple: the app's warm neutral (Memories' cream), warm ink, and the same coral pill as "Updated" on the Guides tab */
+#main .hg-new { background: #F5F1EA !important; border-color: #ECE6DC !important }
+#main .hg-new-ic { color: #4d443b !important }
+#main .hg-new-pill { background: #e8775a !important; color: #fff !important; border: 0 !important }
