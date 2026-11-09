@@ -148,39 +148,51 @@
     return `<label class="hg-banner" role="button"><img class="hg-banner-img" src="assets/home/balloon-${m}.jpg" alt=""><span class="hg-banner-copy"><b>${F(`${name()} is ${words[m]} month${m === 1 ? '' : 's'}`)}</b><small>${F(`Add {p} ${m}-month photo to Memories`)}</small></span><span class="hg-banner-plus" aria-hidden="true">＋</span>${input ? input.outerHTML : ''}</label>`;
   }
 
-  // Home as a monthly snapshot (Nov 9 mock, 3 months written): a short headline about the month,
-  // "Through her eyes", and four glanceable tiles: sleep, feeding, talking and play, her body.
-  // A tile links only when a page covers it in more depth. [label, category, big phrase, few words, page or '']
+  // Home as a monthly snapshot (Nov 9 mock, 3 months written). Two layouts to compare:
+  //   swipe: a month card, then highlights you swipe through, one full sentence each
+  //   lean:  the month card does the lifting (headline + one explaining sentence), then three single-sentence rows
+  // [area label, category, sentence, page or '']. The last highlight is "Through her eyes".
   const MONTHS = {
-    1: { head: 'The hardest weeks, then it gets easier', eyes: ['Sees 8–12 inches', 'Just about your face, when you hold her'],
-      tiles: [['Sleep', 'Sleep', 'Awake ~1 hour', 'Fussing after that usually means tired', 'chg:Sleep:d:cues'],
-        ['Feeding', 'Feeding', 'Growth spurts', 'Near-constant feeds around 3 and 6 weeks', 'chg:Feeding:d:enough'],
-        ['Talking and play', 'Development', 'First smiles soon', 'Real ones arrive around 6–8 weeks', 'development-domain:2:Social'],
-        ['Her body', 'Daily rhythm', 'Fewer poops', 'Every few days can be normal now', 'chg:Daily rhythm:d:look:2:poop']] },
-    5: { head: 'Her world is opening up', eyes: ['Judging distance', 'Why her reaching got so accurate'],
-      tiles: [['Sleep', 'Sleep', 'Awake ~2 hours', 'Between naps. Fussing sooner means tired', 'chg:Sleep:d:cues'],
-        ['Feeding', 'Feeding', 'Distracted feeds', 'Normal now. A quiet room helps', 'chg:Feeding:d:cues'],
-        ['Talking and play', 'Development', 'Mouthing everything', 'It’s how she learns what things are', ''],
-        ['Her body', 'Daily rhythm', 'Drool isn’t teeth', 'First teeth come at 6–12 months', 'chg:Daily rhythm:d:gums']] },
-    8: { head: 'She knows when you leave the room', eyes: ['Spots tiny things', 'Crumbs on the rug are fascinating now'],
-      tiles: [['Sleep', 'Sleep', 'Night waking', 'Separation anxiety often peaks now', 'chg:Sleep:d:nightwake'],
-        ['Feeding', 'Feeding', 'The dropping game', 'She’s checking things still exist', ''],
-        ['Talking and play', 'Development', '“Bababa, dadada”', 'Practice. Not “dad” just yet', 'development-domain:12:Talking'],
-        ['Her body', 'Daily rhythm', 'Poop changes', 'Firmer and smellier with more solids', 'chg:Daily rhythm:d:look:3:poop']] }
+    1: { head: 'Maya is in the fussiest stretch', lead: 'Crying usually peaks around 6–8 weeks, then eases by 3–4 months. Evenings are often the hardest.',
+      eyes: 'She sees best 8–12 inches away, right about where your face is when you hold her.',
+      hi: [['Sleep', 'Sleep', 'She can only stay awake about an hour. Fussing after that usually means tired.', 'chg:Sleep:d:cues'],
+        ['Feeding', 'Feeding', 'Growth spurts around 3 and 6 weeks mean a few days of near-constant feeding.', 'chg:Feeding:d:enough'],
+        ['Play', 'Development', 'Real smiles, the ones that answer yours, arrive around 6–8 weeks.', 'development-domain:2:Social'],
+        ['Her body', 'Daily rhythm', 'After about 6 weeks, a few days between poops can be completely normal.', 'chg:Daily rhythm:d:look:2:poop']] },
+    5: { head: 'Maya wants to touch and taste everything', lead: 'It’s how she learns, and it’s why feeds and naps can feel more distracted right now.',
+      eyes: 'She’s starting to judge distance, so her reaching just got much better.',
+      hi: [['Sleep', 'Sleep', 'She can usually stay awake about 2 hours between naps.', 'chg:Sleep:d:cues'],
+        ['Feeding', 'Feeding', 'Pulling off mid-feed to look around is normal now.', 'chg:Feeding:d:cues'],
+        ['Play', 'Development', 'Everything goes in her mouth. It’s how she learns what things are.', ''],
+        ['Her body', 'Daily rhythm', 'All that drool doesn’t mean teeth yet.', 'chg:Daily rhythm:d:gums']] },
+    8: { head: 'Maya knows when you leave the room', lead: 'It’s called separation anxiety, and it’s behind the clinginess, the tears at goodbye and the night waking.',
+      eyes: 'She can spot a crumb on the rug now, and she’ll want to pick it up.',
+      hi: [['Sleep', 'Sleep', 'Night waking often comes back for a while. A short, same goodbye helps.', 'chg:Sleep:d:nightwake'],
+        ['Feeding', 'Feeding', 'Dropping food again and again is a game. She’s checking things still exist.', ''],
+        ['Play', 'Development', '“Bababa” and “dadada” are practice, not “dad” just yet.', 'development-domain:12:Talking'],
+        ['Her body', 'Daily rhythm', 'More solids means firmer, smellier poop. All normal.', 'chg:Daily rhythm:d:look:3:poop']] }
   };
-  function monthCard(M, lead, a) {
-    const y = Y(), age = typeof babyAge === 'function' ? babyAge() : monthLabel(actualMonth());
-    const tile = ([label, cat, big, sub, go]) => {
-      const inner = `<span class="hs-tile-top"><span class="hs-ic">${typeof catIcon === 'function' ? catIcon(cat) : ''}</span><small>${F(label)}</small></span><b>${F(big)}</b><span class="hs-sub">${F(sub)}</span>`;
-      return go ? `<button class="hs-tile" style="${yearTheme(cat)}" onclick="openPage('${go}')">${inner}</button>` : `<div class="hs-tile" style="${yearTheme(cat)}">${inner}</div>`;
-    };
-    return `<section class="hs-hero">
-        <span class="hs-art" aria-hidden="true">${typeof homeMonthArt === 'function' ? homeMonthArt(actualMonth()).replace('<svg ', '<svg preserveAspectRatio="xMidYMid meet" ') : ''}</span>
-        <p class="hs-eyebrow">${F(`${name()} · ${age}`)}</p><h1>${F(M.head)}</h1>
-        <div class="hs-eyes"><span class="hs-eyes-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></span><span><small>${F(`Through ${name()}’s eyes`)}</small><b>${F(M.eyes[0])}</b><span>${F(M.eyes[1])}</span></span></div>
-      </section>
-      <div class="hs-grid">${M.tiles.map(tile).join('')}</div>
-      ${lead ? `<button class="hs-next" onclick="${lead.go}"><span><small>${F('On Timeline · ' + y.whenShort(lead, a))}</small><b>${F(lead.title)}</b></span>${chev}</button>` : ''}`;
+  const EYE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>';
+  const homeStyle = () => { try { return localStorage.getItem('ahead-home-style') || 'swipe'; } catch (e) { return 'swipe'; } };
+  window.homeStyle = st => { try { localStorage.setItem('ahead-home-style', st); } catch (e) {} render(); scrollTo(0, 0); };
+  function monthCard(M, lead, a, next) {
+    const age = typeof babyAge === 'function' ? babyAge() : monthLabel(actualMonth()), lean = homeStyle() === 'lean';
+    const art = typeof homeMonthArt === 'function' ? homeMonthArt(actualMonth()).replace('<svg ', '<svg preserveAspectRatio="xMidYMid meet" ') : '';
+    const eyes = ['Through her eyes', 'eyes', M.eyes, ''];
+    const icon = (cat) => cat === 'eyes' ? EYE : (typeof catIcon === 'function' ? catIcon(cat) : '');
+    const label = l => l === 'Through her eyes' ? F(`Through ${name()}’s eyes`) : F(l);
+    const open = (go, inner, cls, cat) => go ? `<button class="${cls}" style="${cat === 'eyes' ? '' : yearTheme(cat)}" onclick="openPage('${go}')">${inner}</button>` : `<div class="${cls}" style="${cat === 'eyes' ? '' : yearTheme(cat)}">${inner}</div>`;
+    let h = `<section class="hs-hero"><span class="hs-art" aria-hidden="true">${art}</span><p class="hs-eyebrow">${F(`${name()} · ${age}`)}</p><h1>${F(M.head)}</h1>${lean ? `<p class="hs-lead">${F(M.lead)}</p>` : ''}</section>`;
+    if (lean) {
+      const rows = [M.hi[0], M.hi[1], eyes];
+      h += `<div class="hl-rows">${rows.map(([l, cat, t, go]) => open(go, `<span class="hl-ic ${cat === 'eyes' ? 'is-eyes' : ''}">${icon(cat)}</span><span class="hl-copy"><small>${label(l)}</small><span>${F(t)}</span></span>${go ? chev : ''}`, 'hl-row', cat)).join('')}</div>`;
+    } else {
+      const cards = [...M.hi, eyes];
+      h += `<div class="hw-row" onscroll="const i=Math.round(this.scrollLeft/(this.firstElementChild.offsetWidth+12));this.nextElementSibling.querySelectorAll('i').forEach((d,k)=>d.classList.toggle('on',k===i))">${cards.map(([l, cat, t, go]) => open(go, `<span class="hw-ic ${cat === 'eyes' ? 'is-eyes' : ''}">${icon(cat)}</span><small>${label(l)}</small><b>${F(t)}</b>`, 'hw-card' + (cat === 'eyes' ? ' is-eyes' : ''), cat)).join('')}</div><div class="hw-dots" aria-hidden="true">${cards.map((_, i) => `<i class="${i ? '' : 'on'}"></i>`).join('')}</div>`;
+    }
+    if (next) h += `<button class="hs-next" onclick="${next.go}"><span><small>${F('Next on Timeline · ' + Y().whenShort(next, a))}</small><b>${F(next.title)}</b></span>${chev}</button>`;
+    h += `<p class="hs-switch">Mock: <button onclick="homeStyle('swipe')" class="${lean ? '' : 'on'}">Swipe</button> · <button onclick="homeStyle('lean')" class="${lean ? 'on' : ''}">Lean</button></p>`;
+    return h;
   }
 
   function paintGlance() {
@@ -191,7 +203,7 @@
     const ageLine = main.querySelector('.home-age-line'), question = main.querySelector('.connected-checkin');
     const M = MONTHS[Math.floor(a)];
     if (M) {
-      main.innerHTML = '<div class="hg-page">' + banner(main) + monthCard(M, lead, a) + (question ? question.outerHTML : '') + `<p class="connected-preview-footnote">${F('Ahead isn’t medical advice and doesn’t replace your pediatrician.')}</p></div>`;
+      main.innerHTML = '<div class="hg-page">' + banner(main) + monthCard(M, lead, a, [lead, ...rest, ...later].find(c => !({1:['crying'],5:[],8:['sep']}[Math.floor(a)] || []).includes(c.id))) + (question ? question.outerHTML : '') + `<p class="connected-preview-footnote">${F('Ahead isn’t medical advice and doesn’t replace your pediatrician.')}</p></div>`;
       return;
     }
     let h = '<div class="hg-page">' + (ageLine ? ageLine.outerHTML : '') + banner(main);
