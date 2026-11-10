@@ -67,7 +67,7 @@
     const pills = h.pills('Development by age', devKeys.map((k, i) => ({ label: STAGE_TABLE.Development.stages[i].label, age: STAGE_TABLE.Development.stages[i].age, on: k === ref, now: live() && k === now, onclick: `openPage('development-stage:${k}')`, change: stageCanChange('Development', i, nowI) ? `hubChangeStage('Development',${i})` : '' })), 'Development');
     // The top card: what this age looks like, with the answer to the big worry of the age in its own words.
     const LEAD = { 4: 'Play starts to feel like a conversation: smiles, little sounds and swiping at toys. Rolling usually follows, between 4 and 6 months.', 9: 'Sitting frees both hands for babbling, banging and finding things. Not crawling yet? Many babies skip it.', 12: 'Waving bye-bye, copying what you do and pulling up on furniture.' };
-    let b = `<section class="dev-hero"><p class="dev-hero-eyebrow">${F(`What to look for by ${ref === 12 ? '12 months' : age}`)}</p><h1>${F(st.title)}</h1><p class="dev-hero-lead">${F(LEAD[ref] || st.body)}</p></section>`;
+    let b = `<section class="dev-hero"><p class="dev-hero-eyebrow">${F(`By ${ref === 12 ? '12 months' : age}`)}</p><h1>${F(st.title)}</h1><p class="dev-hero-lead">${F(LEAD[ref] || st.body)}</p></section>`;
     // What Maya is working on: four areas, each with a line of what you might see.
     const domainTiles = Object.keys(DEV_DOMAINS).map(d => {
       const labels = DEVELOPMENT_DOMAINS[ref][d] || [], c = window.devTileColors ? devTileColors(d) : null, hl = (window.DEV_HEADLINE || {})[ref]?.[d];

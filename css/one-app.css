@@ -39,3 +39,11 @@ html body #main .rt-card b, html body #main .dev-play-list b { font-size: 15.5px
 html body #main .hub-card-head, html body #main .hub-card-head b, html body #main .dev-awake b, html body #main .dev-try b, html body #main .hub-card > b:first-child { font-size: 17px !important; font-weight: 650 !important }
 html body #main div.eyebrow, html body #main .ya-eyebrow { font-size: 12.5px !important; font-weight: 650 !important }
 html body #main .hg-page .connected-checkin, html body #main .connected-checkin.hub-q { border-radius: 20px !important }
+
+/* Capitals for the label on each page's top card and tab header (Home's month card, guide heroes, Guides / Timeline /
+   Memories headers): one calm, consistent opener. Labels inside lists and rows stay in normal case. (Yarden, Nov 10) */
+html body #main .he-eyebrow, html body #main .hub-hero .hub-eyebrow, html body #main .dev-hero-eyebrow, html body #main div.eyebrow, html body #main .ya-eyebrow {
+  font-size: 12px !important; font-weight: 700 !important; letter-spacing: .07em !important; text-transform: uppercase !important }
+html body #main .ya-page > .ya-eyebrow, html body #main .mem-page > .eyebrow, html body #main > .eyebrow {
+  font-size: 12px !important; font-weight: 700 !important; letter-spacing: .05em !important; text-transform: uppercase !important }
+html body #main .he-eyebrow, html body #main .hub-hero .hub-eyebrow, html body #main .dev-hero-eyebrow, html body #main div.eyebrow { letter-spacing: .05em !important }
