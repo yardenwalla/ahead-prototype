@@ -46,7 +46,7 @@
   const tiles = ts => `<div class="hub-tiles">${ts.map(t => `<div><small>${F(t[0])}</small><b>${F(t[1])}</b><span>${F(t[2])}</span></div>`).join('')}</div>`;
   const glanceCard = (title, ts, onclick, note = '') => `<button class="hub-card hub-glance" onclick="${onclick}"><span class="hub-card-head"><b>${F(title)}</b>${chev}</span>${tiles(ts)}${note ? `<span class="hub-card-note">${F(note)}</span>` : ''}</button>`;
   // Normal versus call: two boxes side by side, with an optional link underneath.
-  const versus = (title, a, b, link) => `<section class="hub-card hub-versus"><h3>${F(title)}</h3><div class="hub-vs"><div><b>${F(a[0])}</b><p>${F(a[1])}</p></div><div class="is-urgent"><b>${F(b[0])}</b><p>${F(b[1])}</p></div></div>${link ? `<button class="hub-link" onclick="${link[1]}">${F(link[0])} ›</button>` : ''}</section>`;
+  const versus = (title, a, b, link) => `<section class="hub-card hub-versus"><h3>${F(title)}</h3><div class="hub-vs"><div><b>${F(a[0])}</b><p>${F(a[1])}</p></div><div class="${/911/.test(b[0]) ? 'is-urgent' : 'is-call'}"><b>${F(b[0])}</b><p>${F(b[1])}</p></div></div>${link ? `<button class="hub-link" onclick="${link[1]}">${F(link[0])} ›</button>` : ''}</section>`;
   const next = (when, title, onclick, extra = '') => `<button class="hub-next" onclick="${onclick}"><span><small>${F(when)}</small><b>${F(title)}</b></span>${chev}</button>${extra}`;
   const trainRow = `<button class="hub-pillrow" onclick="openPage('chg:Sleep:settle')"><span>${'Sleep training, if you choose it'}</span>${chev}</button>`;
   const listMore = (label, onclick) => `<button class="hub-list-more" onclick="${onclick}"><span>${F(label)}</span>${chev}</button>`;
@@ -200,7 +200,7 @@
     if (now && typeof feedingCheckinMarkup === 'function' && !(typeof foodAssumed === 'function' && foodAssumed())) h += feedingCheckinMarkup();
     // Reading a step that isn't the baby's: say so, and offer the way back.
     if (guide) h += `<div class="hub-preview"><span>${F('Solids guide · ' + ({ first: 'usually from about 6 months', textures: 'usually around 7–8 months', meals: 'usually around 9–10 months' }[key] || ''))}</span></div>`;
-    else if (!now && C().live()) h += `<div class="hub-preview"><span>${view > cur ? 'Preview' : 'Looking back'} · ${F(STAGE_RAIL_AGE[key] || '')}</span><button onclick="openPage('topic:Feeding')">${F('Back to Maya’s stage')}</button></div>`;
+    else if (!now && C().live()) h += `<div class="hub-preview"><span>${view > cur ? 'Preview' : 'Looking back'} · ${F(STAGE_RAIL_AGE[key] || '')}</span><button onclick="openPage('topic:Feeding')">${F('Back to where Maya is now')}</button></div>`;
     // A parent who hasn't answered, from 9 months: show the step for the age, and say so.
     if (now && typeof foodAssumed === 'function' && foodAssumed()) h += `${solidsAsk('We’re showing solids for Maya’s age. {Have|Has} {s} started?')}`;
     // Inside Solids: one quiet way to say where the baby really is, forward or back.
@@ -683,7 +683,7 @@
     let h = '';
     let B = browseLinks(cat, view, cur);
     // Browsing another sleep stage: label it, same as Feeding.
-    if (!now && C().live()) h += `<div class="hub-preview"><span>${view > cur ? 'Preview' : 'Looking back'} · ${F(STAGE_TABLE.Sleep.stages[view]?.age || '')}</span><button onclick="openPage('topic:Sleep')">${F('Back to Maya’s stage')}</button></div>`;
+    if (!now && C().live()) h += `<div class="hub-preview"><span>${view > cur ? 'Preview' : 'Looking back'} · ${F(STAGE_TABLE.Sleep.stages[view]?.age || '')}</span><button onclick="openPage('topic:Sleep')">${F('Back to where Maya is now')}</button></div>`;
     if (key === 'clock') {
       const n = safeDone(), all = SLEEP_TASKS;
       h += hero({ eyebrow: 'Round-the-clock sleep', title: 'Short sleeps, day and night', lead: 'For now, feeds set the rhythm. Sleep comes in short stretches, day and night, with no pattern yet. Sleep when Maya sleeps, even during the day.' }) + B;

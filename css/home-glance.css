@@ -473,3 +473,9 @@
 /* Guides tab: full guide color again (Yarden picked it, Nov 10); new ones keep the coral outline and "New" pill. */
 #main .category-directory-row, #main .category-directory-row[data-new] { background: radial-gradient(circle at 100% 0, rgba(255,255,255,.5) 0 30%, transparent 30.5%), var(--year-bg, #e8e2f6) !important }
 #main .category-directory-row .directory-copy small { color: var(--year-ink, #5b4a8b) !important }
+
+/* Nov 10 review: the question card gets shorter, not taller. Same icon, label, colors and full-width answers;
+   the "why" line and the answers sit a little tighter. */
+#main .hg-page > .connected-checkin { padding-top: 10px !important; padding-bottom: 10px !important }
+#main .hg-page > .connected-checkin .hub-q-head { margin-bottom: 6px !important }
+#main .hg-page > .connected-checkin .connected-checkin-choices button:not(.hub-q-skip) { min-height: 32px !important; padding-top: 4px !important; padding-bottom: 4px !important }

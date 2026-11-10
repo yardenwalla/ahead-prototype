@@ -703,6 +703,9 @@
     };
   }
   window.hubPastVisitToConfirm = function () {
+    // Nov 10 (Yarden): no checkup question. Checkups follow the AAP schedule, and Health moves on to the next one
+    // by age (17 days after the usual date). "Mark it as done" on Health stays, for parents who want it.
+    return null;
     if (!isCurrent()) return null;
     let snooze = {}; try { snooze = JSON.parse(localStorage.getItem(SNOOZE())) || {}; } catch (e) {}
     // Only the latest past checkup, only if the parent was already using Ahead when it was due, until it's answered.

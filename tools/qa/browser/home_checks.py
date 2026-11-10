@@ -2,7 +2,7 @@
 Serve the app first:  python3 -m http.server 8765   then:  python3 tools/qa/browser/home_checks.py
 Fails (exit 1) if:
   1. a month birthday shows the photo banner AND a question (it's one or the other: the banner first),
-  2. the question doesn't come back once the birthday photo is added,
+  2. a checkup question shows on Home at all (Health moves on by age; Nov 10),
   3. anything on Home runs off a small (320px) phone,
   4. a Home tap throws an error or does nothing,
   5. on a month birthday the month card names another month than the balloon (checked in two time zones)."""
@@ -50,9 +50,10 @@ async def main():
         await load(pg, months_ago(5))
         await pg.set_input_files('.hg-banner input[type=file]', png); await pg.wait_for_timeout(600)
         await pg.evaluate("navigate('home')"); await pg.wait_for_timeout(250)
-        check(await has(pg, '.connected-checkin'), '5 months: the checkup question comes back after the birthday photo')
-        await load(pg, T - dt.timedelta(days=160))
-        check(await has(pg, '.connected-checkin'), 'Not a birthday: the question shows as usual')
+        # Nov 10: Home no longer asks about past checkups (Health moves on by age), so no checkup question at all.
+        check(not await pg.evaluate("[...document.querySelectorAll('.hg-page .connected-checkin')].some(q => /checkup/i.test(q.textContent))"), '5 months: no checkup question after the birthday photo')
+        await load(pg, T - dt.timedelta(days=190))
+        check(await has(pg, '.connected-checkin'), 'Not a birthday: the solids question shows as usual at 6 months')
         # 3-4. Small phone, and every Home tap
         small = await b.new_page(viewport={'width': 320, 'height': 640})
         for days, pr, feed in [(10, 'she', 'Formula'), (75, 'they', 'Both'), (160, 'he', 'Breast milk'), (245, 'she', 'Both'), (340, 'they', 'Formula')]:

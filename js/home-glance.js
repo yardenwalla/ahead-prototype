@@ -172,7 +172,7 @@
           ['She’s pooping less often', 'Fewer poops is normal now. On formula, most babies still go most days.']]] },
     2: { eyes: ['Colors are coming into focus', 'She’s starting to see colors more clearly. Her eyes may cross now and then until about 4 months.'],
       notice: [['She stares at her hands', 'She’s discovering that those hands are hers, and she can move them.', 'Development', 'hand', ''],
-        ['She coos when you talk', 'It’s her first conversation. Pause after you speak, and she’ll coo back.', 'Development', 'chat', 'development-domain:2:Talking'],
+        ['She coos when you talk', 'It’s her first conversation. She takes turns, cooing when you pause.', 'Development', 'chat', 'development-domain:2:Talking'],
         ['She spits up a lot', 'It’s common. It peaks around 4 months and is usually gone by age 1.', 'Feeding', 'drop', 'chg:Feeding:mock:spit'],
         ['She sleeps longer at night', 'One longer stretch often shows up around now, on her own timeline.', 'Sleep', 'moon', 'chg:Sleep:d:stretch']] },
     3: { eyes: ['Moving things are fascinating', 'She can follow a toy smoothly from side to side now, so slow, sweeping games are a hit.'],
@@ -180,30 +180,30 @@
         ['She keeps pulling off mid-feed', 'There’s so much to look at now. Distracted feeding is common.', 'Feeding', 'eye', 'chg:Feeding:mock:distract'],
         ['She sucks on her hands', 'It’s one of her first ways to calm herself, not always hunger.', 'Development', 'mouth', ''],
         ['She laughs out loud', 'It often starts around 3–4 months: her first way to share a joke.', 'Development', 'smile', '']] },
-    4: { eyes: ['Colors are getting brighter', 'Around 4–5 months, her color vision fills in, so bold, bright toys and books suddenly grab her.'],
+    4: { eyes: ['Her eyes work as a team now', 'Both eyes now move together, so she sees depth and can judge how far away a toy is.'],
       notice: [['She’s waking more at night', 'Her sleep cycles are maturing, so she may wake more for a few weeks.', 'Sleep', 'moon', 'chg:Sleep:d:regress'],
-        ['Her naps are short', 'Short naps, even 30 minutes, are normal now. Longer ones come later.', 'Sleep', 'clock', 'chg:Sleep:d:napsearly'],
-        ['All the squealing and raspberries', 'She’s practicing the mouth moves she’ll need to talk. Make them back.', 'Development', 'music', ''],
+        ['Her naps are short', 'Short naps, even 30 minutes, are normal now. Longer ones come later.', 'Sleep', 'clock', 'chg:Sleep:d:predictable'],
+        ['She squeals and blows raspberries', 'She’s practicing the mouth moves she’ll need to talk.', 'Development', 'music', ''],
         ['She grabs your hair and glasses', 'Reaching is brand new. She grabs whatever is close, not on purpose.', 'Development', 'hand', '']] },
     5: { eyes: ['The world is within reach', 'She’s getting better at judging distance, so her reaching suddenly looks much more intentional.'],
       notice: [['Everything goes in her mouth', 'Mouthing is how she learns what things feel like, taste like and do.', 'Development', 'mouth', ''],
         ['She’s fussy after two hours awake', 'Many babies this age manage about two hours awake before the next nap.', 'Sleep', 'clock', 'chg:Sleep:d:day:2'],
-        ['She’s watching you eat', 'Interest in food is one clue that solids are getting close.', 'Feeding', 'highchair', 'chg:Feeding:d:signs'],
+        ['She grabs her feet', 'Feet are her newest toy. She’s learning where her body ends.', 'Development', 'back', ''],
         ['She shrieks just for fun', 'She’s finding out how loud she can be. It’s play, not upset.', 'Development', 'ear', '']] },
     6: { eyes: ['She can spot you across the room', 'Her distance vision has sharpened, so she may light up before you even get close.'],
-      notice: [['She only eats a few bites', 'First meals are practice. Milk is still her main food.', 'Feeding', 'bowl', 'chg:Feeding:d:food'],
-        ['Her poop looks different', 'Solids make it firmer, smellier and sometimes the color of her food.', 'Daily rhythm', 'diaper', 'chg:Daily rhythm:d:look:3:poop'],
-        ['She babbles “ba-ba-ba”', 'It’s practice for words. Talk back and she’ll keep going.', 'Development', 'chat', ''],
-        ['She’s shy with new people', 'It’s a sign she knows who her people are. Give her time to warm up.', 'Development', 'peek', '']] },
+      notice: [['First bites are mostly practice', 'When solids start, milk stays her main food for months.', 'Feeding', 'bowl', 'chg:Feeding:d:food'],
+        ['Her poop will change with solids', 'Once she eats food, it gets firmer, smellier, and sometimes colorful.', 'Daily rhythm', 'diaper', 'chg:Daily rhythm:d:look:3:poop'],
+        ['She babbles “ba-ba-ba”', 'It’s practice for words, one sound at a time.', 'Development', 'chat', ''],
+        ['She’s shy with new people', 'It’s a sign she knows who her people are.', 'Development', 'peek', '']] },
     7: { eyes: ['She loves the baby in the mirror', 'She doesn’t know it’s her yet. Recognizing herself usually comes after her first birthday.'],
       notice: [['She fights the late nap', 'She can stay up longer now, so the last nap pushes into bedtime.', 'Sleep', 'sun', 'chg:Sleep:d:catnap'],
         ['She rocks on hands and knees', 'She’s getting arms and legs to work together. Some babies skip crawling.', 'Development', 'crawl', ''],
         ['She bangs and drops everything', 'She’s learning cause and effect. Expect lots of repeats.', 'Development', 'blocks', ''],
-        ['She grabs for the spoon', 'She wants to do it herself. A spoon of her own while you feed her helps.', 'Feeding', 'eat', '']] },
-    8: { eyes: ['She knows you still exist', 'She now understands things are still there when she can’t see them. It’s why goodbyes got harder.'],
+        ['She wants to do it herself', 'The spoon, the cup, your hands: she’s practicing doing it her way.', 'Development', 'hand', '']] },
+    8: { eyes: ['Peekaboo just got exciting', 'She now knows things still exist when she can’t see them, so hiding and finding is a thrill.'],
       notice: [['She cries when you leave', 'That’s separation anxiety. It shows how attached she is, and it eases.', 'Development', 'wave', ''],
-        ['She’s waking at night again', 'New skills and missing you can bring waking back. Keep goodbyes short.', 'Sleep', 'moon', 'chg:Sleep:d:nightwake'],
-        ['She drops food again and again', 'It’s a game: she’s testing where things go and that they come back.', 'Feeding', 'toss', ''],
+        ['She’s waking at night again', 'New skills like crawling often bring night waking back for a while.', 'Sleep', 'moon', 'chg:Sleep:d:nightwake'],
+        ['She bounces to music', 'She feels the beat long before she can dance, and loves to move to it.', 'Development', 'music', ''],
         ['She says “dadada”', 'It’s practice with sounds, and usually doesn’t mean “dad” yet.', 'Development', 'chat', 'development-domain:9:Talking']] },
     9: { eyes: ['She follows where you look', 'She’s starting to follow your gaze and gestures, so naming what you’re both looking at lands now.'],
       notice: [['She’s fascinated by crumbs', 'She’s learning to pinch tiny things between thumb and finger.', 'Development', 'pieces', ''],
@@ -211,14 +211,14 @@
         ['She lifts her arms to you', 'She’s asking to be picked up, with her body before her words.', 'Development', 'heart', ''],
         ['She turns down new foods', 'Normal. Many babies need 10–15 tries before they like a food.', 'Feeding', 'plate', 'chg:Feeding:mock:picky']] },
     10: { eyes: ['Words are starting to mean things', 'She’s learning that the sounds you make stand for things, like her name, “bath” and “milk”.'],
-      notice: [['She can’t get down in the crib', 'She can pull up but can’t sit back down yet. Daytime practice helps.', 'Sleep', 'crib', 'chg:Sleep:d:nightwake'],
+      notice: [['She can’t get down in the crib', 'She can pull up, but sitting back down is a skill she hasn’t got yet.', 'Sleep', 'crib', 'chg:Sleep:d:nightwake'],
         ['She cruises along the sofa', 'Stepping sideways while holding on builds balance for walking.', 'Development', 'sofa', ''],
-        ['She copies your sounds and faces', 'Imitation is how she learns. Make a sound, pause, and see.', 'Development', 'mirror', ''],
+        ['She copies your sounds and faces', 'Imitation is how she learns, so she watches your mouth closely.', 'Development', 'mirror', ''],
         ['She throws her food', 'It’s often how she tells you she’s full, before she has words.', 'Feeding', 'toss', '']] },
     11: { eyes: ['She knows faces in photos', 'She may recognize people she knows in pictures now, so family photos make great first books.'],
       notice: [['She pauses when you say “no”', 'She’s starting to understand it, but stopping herself is still hard.', 'Development', 'idea', ''],
-        ['She’s starting to wave', 'She learns by copying you. Wave back, and say the word too.', 'Development', 'wave', ''],
-        ['She has no teeth yet', 'Teeth come anywhere from 6 to 12 months. Some turn 1 with none.', 'Daily rhythm', 'tooth', 'chg:Daily rhythm:d:teeth'],
+        ['She’s starting to wave', 'She learns gestures by copying you, so “bye-bye” often comes first.', 'Development', 'wave', ''],
+        ['Her teeth keep their own schedule', 'Teeth come anywhere from 6 to 12 months. Some babies turn 1 with none.', 'Daily rhythm', 'tooth', 'chg:Daily rhythm:d:p:teething'],
         ['She’s eating a little less', 'Growth slows toward her first birthday, and so does her appetite.', 'Feeding', 'plate', '']] }
   };
   // Each month's card takes the color of that month's balloon in Memories, so the two tabs feel like one book.
@@ -410,7 +410,9 @@
     // Same size, same build (mark, title, one line), so they read as a pair and as "where to go next".
     const circles = (moved.length ? moved.map(q => q.cat) : set.slice(0, 4)).slice(0, 4)
       .map(c => `<span class="hg-gtile-mark" style="${yearTheme(c)}">${typeof catIcon === 'function' ? catIcon(c) : ''}</span>`).join('');
-    const gLine = moved.length === 1 ? P((moveCopy(moved[0].cat, moved[0].key) || [line])[0]) : moved.length ? `${moved.length} guides changed for ${nm}` : `Set to ${nm} at ${age}`;
+    // Several guides changed: name the first (Health, Safety, Feeding… order), not just a count.
+    const top = moved.length ? (moveCopy(moved[0].cat, moved[0].key) || [line])[0] : '';
+    const gLine = moved.length === 1 ? P(top) : moved.length ? `${P(top)}, plus ${moved.length - 1} more` : `Set to ${nm} at ${age}`;
     const gTitle = moved.length === 1 ? label(moved[0].cat) : moved.length ? `${nm}’s guides` : `${nm}’s guides`;
     const path = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="5.5" cy="17.5" r="2"/><circle cx="18.5" cy="6.5" r="2"/><path d="M7.4 16.6c3.2-1.4 1.6-6.2 5-8 1.7-.9 2.6-1.1 4.2-1.3"/></svg>';
     const nextT = (next || '').replace(/^Next up: /, '').replace(/^The /, 'the ');

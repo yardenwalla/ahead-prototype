@@ -524,7 +524,7 @@ const FOOD_ORDER=['new','textures','established'];
 function foodCareAge(){return typeof hubAgeFor==='function'?hubAgeFor('care',actualMonth()):month}
 function foodBase(){const adj=typeof hubAgeFor==='function'&&profile.early&&profile.due&&hubAgeFor('care',actualMonth())!==actualMonth();return parse(adj?profile.due:profile.dob)}
 // No answer by 9 months: assume solids started, and show the page for the age.
-function foodAssumed(){return isCurrent()&&!hasFoodAnswer()&&foodCareAge()>=9}
+function foodAssumed(){return isCurrent()&&!hasFoodAnswer()&&foodCareAge()>=7}/* 87% of US babies have started complementary foods by 7 months (CDC, NHANES 2009–2014), so with no answer Feeding moves on then */
 function foodStartDate(){if(foodAssumed())return addMonths(foodBase(),6);const d=answers.solidsStart||(answers.stageDates&&answers.stageDates.food);return d?parse(d):null}
 // When each part of solids begins, for this baby.
 function foodPhaseDates(){const st=foodStartDate();if(!st)return null;const later=(a,b)=>a>b?a:b,tx=later(new Date(st.getTime()+28*864e5),addMonths(foodBase(),7)),ml=later(new Date(tx.getTime()+42*864e5),addMonths(foodBase(),9));return {new:st,textures:tx,established:ml}}

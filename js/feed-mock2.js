@@ -263,7 +263,7 @@
         tiles: [T('blue', ART.often(4), 'How often', 'Every 3–4 hours', 'From the start of one feed'), T('pink', ART.drops(6), 'Feeds a day', b && !bottle ? 'On demand' : both ? '5–8' : pump && !fm ? '5–6' : '4–6', both ? (nurse ? 'Nursing and bottles' : 'Bottles of breast milk and formula') : b ? (nurse ? 'Quick, distracted feeds' : 'About 24–30 oz in all') : 'Up to about 32 oz in all'), !bottle ? T('peach', ART.bottle(.6), 'Each feed', 'Until he lets go', 'Often only 5–10 minutes') : T('peach', ART.bottle(.6), 'Per bottle', fm && pump ? '3–6 oz' : fm ? '4–6 oz' : '4–5 oz', fm && pump ? '3–4 oz breast milk, 4–6 oz formula' : fm && nurse ? 'A full bottle. Top-ups are smaller' : fm ? 'Of formula' : 'Of breast milk'), enough],
         note: ['Every day', b ? 'Vitamin D drops, as long as Ari gets any breast milk.' : 'Vitamin D drops, until Ari drinks about 32 oz of formula a day. Formula has the iron.'],
         groups: [['Getting ready', [['green', 'bowl', 'Ready for solids?', 'Sits with support, opens for a spoon', 'signs'], ['peach', 'heart', 'Eczema or food allergies in the family?', 'Ask about starting peanut early', 'allergy'], ['lilac', 'star', 'Set up', 'A high chair, a soft spoon, a bib', 'setup']]], ['Common now', [['blue', 'eye', 'Distracted feeds', 'A quiet spot helps', 'distract']]]],
-        tough: 'Distracted feeds, spit-up, gas', next: [earlyMo() > 0 ? 'Next, around 6 months adjusted' : 'Next, around 6 months', 'First foods'] },
+        tough: 'Distracted feeds, spit-up, gas', next: [ageMo() >= 6 ? 'Next, whenever solids start' : earlyMo() > 0 ? 'Next, around 6 months adjusted' : 'Next, around 6 months', 'First foods'] },
       { hero: ['Tastes, textures and lots of mess', 'Milk is still the main food. Solids are for learning, a few bites at a time.'],
         tiles: [T('pink', ART.drops(5), 'Milk', !bottle ? 'On demand' : nurse ? '4–5 milk feeds' : '4–5 bottles', !bottle ? 'Still his main food' : nurse ? 'Nursing or bottles' : !f ? 'Milk still comes first' : '24–32 oz a day in all'), T('green', `<svg viewBox="0 0 120 40">${[0, 1].map(i => `<path d="M${8 + i * 36} 16 h28 q0 14 -14 14 q-14 0 -14 -14Z" fill="#356651" fill-opacity=".7"/>`).join('')}</svg>`, 'Solids', '1, then 2–3 meals', 'Building up by 8–9 months'), T('blue', ART.bottle(.3), 'Water', 'Sips with meals', 'From an open cup'), enough],
         note: ['Every day', 'An iron-rich food, like meat, beans, eggs or iron-fortified cereal.' + (b ? ' Vitamin D drops, as long as Ari gets any breast milk.' + (isEarly() ? ' Iron drops too, until 12 months.' : feed === 'Breast milk' ? ' Iron drops too, until iron-rich foods are going well.' : '') : ' Vitamin D drops, until Ari drinks about 32 oz of formula a day.')],
@@ -3000,8 +3000,9 @@
   // and give a one-tap way back to Ready for solids.
   P.dirD = (() => { const prev = P.dirD; return (v) => { const h = prev(v);
     try { if (v != null && v !== window.__fdReal()) return h; if (typeof hasFoodAnswer !== 'function' || hasFoodAnswer() || !(typeof foodAssumed === 'function' && foodAssumed())) return h; } catch (e) { return h; }
-    const note = `<p class="hub-lead" style="margin-top:10px;font-size:14px">${F('We’re showing solids for Ari’s age.')} <button type="button" onclick="hubChangeStage('Feeding',2)" style="border:0;background:none;padding:0;font:inherit;font-weight:700;color:inherit;text-decoration:underline;cursor:pointer">${F('Not started yet?')}</button></p>`;
-    return h.replace('</header><section class="hub-card hub-glance', note + '</header><section class="hub-card hub-glance'); }; })();
+    // Nov 10 (Yarden): not inside the main card, which it bloated. One quiet link under it.
+    const note = `<div class="hub-browse fd-assumed"><button class="hub-link" onclick="hubChangeStage('Feeding',2)">${F('Not started solids yet?')} ›</button></div>`;
+    return h.replace('</header><section class="hub-card hub-glance', '</header>' + note + '<section class="hub-card hub-glance'); }; })();
 
 
   // Once solids start, choking first aid is one tap from the stage page, under "Normal, or time to call?".

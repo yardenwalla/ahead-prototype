@@ -1531,3 +1531,6 @@ label:has(> .hub-photo-input:focus-visible) { outline: 2px solid #884866; outlin
 #main .bk-go { position: absolute; right: 2px; top: 50%; transform: translateY(-50%); color: #a9a4b5; font-size: 20px }
 #main .bk-tag-go { margin-left: 5px; opacity: .55; font-weight: 700 }
 #main .mem-sub { margin: -4px 2px 12px; font-size: 14.5px; line-height: 1.4; color: #6c6880 }
+/* "Call your pediatrician" is a calm next step, not an emergency: warm and quiet. Red stays for Call 911 (Nov 10 review). */
+#main .hub-vs div.is-call { background: #f7efe6 }
+#main .hub-vs .is-call b { color: #7a4b2c }

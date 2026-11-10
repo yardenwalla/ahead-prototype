@@ -64,8 +64,9 @@ for (const [cat, age, i, label] of [['Sleep', 7, 3, 'Two naps'], ['Sleep', 10, 2
   a = family(9); a.run("openPage('topic:Sleep')"); check(nowName(a) === 'Two naps', 'Sleep at 9 months guesses Two naps');
   a = family(11, { twoNaps: 'Not yet' }); a.run("openPage('topic:Sleep')"); check(nowName(a) === 'Three naps', 'A parent’s “not yet” holds past 9 months');
   a = family(6, { twoNaps: 'Yes' }); a.run("openPage('topic:Sleep')"); check(nowName(a) === 'Two naps', 'A parent’s “two naps” wins before 9 months');
-  a = family(8); a.run("openPage('topic:Feeding')"); check(nowName(a) === 'Ready for solids', 'Feeding with no solids answer waits on Ready for solids');
-  a = family(10); a.run("openPage('topic:Feeding')"); check(['First foods', 'Meals'].includes(nowName(a)) && /We’re showing solids for Ari’s age/.test(a.html()), 'From 9 months with no answer, Feeding shows solids for the age and says so');
+  a = family(6); a.run("openPage('topic:Feeding')"); check(nowName(a) === 'Ready for solids', 'Feeding with no solids answer waits on Ready for solids');
+  a = family(8); a.run("openPage('topic:Feeding')"); check(['First foods', 'Meals'].includes(nowName(a)) && /Not started solids yet\?/.test(a.html()), 'From 7 months with no answer (87% have started), Feeding shows solids for the age and says so');
+  a = family(10); a.run("openPage('topic:Feeding')"); check(['First foods', 'Meals'].includes(nowName(a)) && /Not started solids yet\?/.test(a.html()), 'At 10 months with no answer, Feeding shows solids for the age');
   a = family(10, { solids: 'Not yet' }); a.run("openPage('topic:Feeding')"); check(nowName(a) === 'Ready for solids', 'A parent’s “not yet” holds at 10 months');
   a = family(10, { solids: 'Yes', foodExperience: 'new' }); a.run("openPage('topic:Feeding')"); check(nowName(a) === 'First foods', 'A parent’s “we’ve started” holds');
   a = family(5); a.run("openPage('topic:Feeding')"); check(nowName(a) === 'Ready for solids', 'Ready for solids shows from 4 months');
