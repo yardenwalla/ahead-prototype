@@ -3000,8 +3000,9 @@
   // and give a one-tap way back to Ready for solids.
   P.dirD = (() => { const prev = P.dirD; return (v) => { const h = prev(v);
     try { if (v != null && v !== window.__fdReal()) return h; if (typeof hasFoodAnswer !== 'function' || hasFoodAnswer() || !(typeof foodAssumed === 'function' && foodAssumed())) return h; } catch (e) { return h; }
-    const note = `<p class="hub-lead" style="margin-top:10px;font-size:14px">${F('We’re showing solids for Ari’s age.')} <button type="button" onclick="hubChangeStage('Feeding',2)" style="border:0;background:none;padding:0;font:inherit;font-weight:700;color:inherit;text-decoration:underline;cursor:pointer">${F('Not started yet?')}</button></p>`;
-    return h.replace('</header><section class="hub-card hub-glance', note + '</header><section class="hub-card hub-glance'); }; })();
+    // Nov 10 (Yarden): not inside the main card, which it bloated. One quiet link under it, like Health's "Booked for later?".
+    const note = `<div class="hub-browse fd-assumed"><button class="hub-link" onclick="hubChangeStage('Feeding',2)">${F('Not started solids yet?')} ›</button></div>`;
+    return h.replace('</header><section class="hub-card hub-glance', '</header>' + note + '<section class="hub-card hub-glance'); }; })();
 
 
   // Once solids start, choking first aid is one tap from the stage page, under "Normal, or time to call?".

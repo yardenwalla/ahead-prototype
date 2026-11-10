@@ -139,7 +139,7 @@
     const rows = st.ids.map((id, k) => { const x = STEP[id], c = C[x.c], s = sts[k];
       return `<button class="hub-row hl-row sf-row${s ? ' is-' + s : ''}" style="--hl-bg:${c[0]};--hl-ink:${c[1]}" onclick="${open(id)}"><span class="hub-dot">${hubArt(x.i, 'Safety')}</span><span class="hub-row-copy"><b>${F(x.t)}</b><small>${s === 'na' ? 'Doesn’t apply to your home' : F(x.s) + (x.sleep ? ' · In Sleep' : x.out ? ' · In Outings' : '')}</small></span><span class="sf-tick" role="checkbox" aria-checked="${s === 'done'}" aria-label="Mark done: ${x.t.replace(/"/g, '')}" onclick="event.stopPropagation();sfSet('${id}','${s === 'done' ? '' : 'done'}')">${s === 'done' ? '✓' : s === 'na' ? '–' : ''}</span></button>`; }).join('');
     let b = `<header class="hub-hero sf-hero"><p class="hub-eyebrow">${st.label} · ${st.age}</p><h1>${F(st.title)}</h1><p class="hub-lead">${F(st.lead)}</p></header>`;
-    b += `<div class="sf-head"><h2 class="hub-h2">${F(i < nowI && live ? 'Done these yet?' : i > nowI && live ? 'Get ready for this' : 'Do these now')}</h2><span class="sf-count">${of ? (done ? `${done} of ${of} done` : '') : 'None apply'}</span></div><div class="hub-list sf-list">${rows}</div>`;
+    b += `<div class="sf-head"><h2 class="hub-h2">${F(i < nowI && live ? 'Done these yet?' : i > nowI && live ? 'Get ready for this' : 'Do these now')}</h2><span class="sf-count">${of ? `${done} of ${of} done` : 'None apply'}</span></div><div class="hub-list sf-list">${rows}</div>`;
     // Joined later, or skipped a stage? One quiet line back to the earliest stage with steps still open.
     if (live && i === nowI) {
       // Only stages that started while the parent was using Ahead: a parent who joins later has done the earlier steps.

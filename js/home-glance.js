@@ -188,7 +188,7 @@
     5: { eyes: ['The world is within reach', 'She’s getting better at judging distance, so her reaching suddenly looks much more intentional.'],
       notice: [['Everything goes in her mouth', 'Mouthing is how she learns what things feel like, taste like and do.', 'Development', 'mouth', ''],
         ['She’s fussy after two hours awake', 'Many babies this age manage about two hours awake before the next nap.', 'Sleep', 'clock', 'chg:Sleep:d:day:2'],
-        ['She grabs her feet', 'Feet are her newest toy. She’s learning where her body ends.', 'Feeding', 'highchair', 'chg:Feeding:d:signs'],
+        ['She grabs her feet', 'Feet are her newest toy. She’s learning where her body ends.', 'Development', 'back', ''],
         ['She shrieks just for fun', 'She’s finding out how loud she can be. It’s play, not upset.', 'Development', 'ear', '']] },
     6: { eyes: ['She can spot you across the room', 'Her distance vision has sharpened, so she may light up before you even get close.'],
       notice: [['First bites are mostly practice', 'When solids start, milk stays her main food for months.', 'Feeding', 'bowl', 'chg:Feeding:d:food'],
@@ -199,11 +199,11 @@
       notice: [['She fights the late nap', 'She can stay up longer now, so the last nap pushes into bedtime.', 'Sleep', 'sun', 'chg:Sleep:d:catnap'],
         ['She rocks on hands and knees', 'She’s getting arms and legs to work together. Some babies skip crawling.', 'Development', 'crawl', ''],
         ['She bangs and drops everything', 'She’s learning cause and effect. Expect lots of repeats.', 'Development', 'blocks', ''],
-        ['She wants to do it herself', 'The spoon, the cup, your hands: she’s practicing doing it her way.', 'Feeding', 'eat', '']] },
+        ['She wants to do it herself', 'The spoon, the cup, your hands: she’s practicing doing it her way.', 'Development', 'hand', '']] },
     8: { eyes: ['Peekaboo just got exciting', 'She now knows things still exist when she can’t see them, so hiding and finding is a thrill.'],
       notice: [['She cries when you leave', 'That’s separation anxiety. It shows how attached she is, and it eases.', 'Development', 'wave', ''],
         ['She’s waking at night again', 'New skills like crawling often bring night waking back for a while.', 'Sleep', 'moon', 'chg:Sleep:d:nightwake'],
-        ['She bounces to music', 'She feels the beat long before she can dance, and loves to move to it.', 'Feeding', 'toss', ''],
+        ['She bounces to music', 'She feels the beat long before she can dance, and loves to move to it.', 'Development', 'music', ''],
         ['She says “dadada”', 'It’s practice with sounds, and usually doesn’t mean “dad” yet.', 'Development', 'chat', 'development-domain:9:Talking']] },
     9: { eyes: ['She follows where you look', 'She’s starting to follow your gaze and gestures, so naming what you’re both looking at lands now.'],
       notice: [['She’s fascinated by crumbs', 'She’s learning to pinch tiny things between thumb and finger.', 'Development', 'pieces', ''],
@@ -431,7 +431,7 @@
   const BASE_CATS = typeof window.journeyCategories === 'function' ? window.journeyCategories : null;
   if (BASE_CATS) {
     window.journeyCategories = journeyCategories = function () {
-      let html = BASE_CATS().replace(/<h1>Categories<\/h1>/, '<h1>Guides</h1>').replace(/Guidance for /, '');
+      let html = BASE_CATS().replace(/<h1>Categories<\/h1>/, '<h1>Guides</h1>').replace(/Guidance for /, 'For ');
       // Each tile says what the guide covers right now: the headline its page opens with, plus the short stage label when it adds something.
       const live = typeof isCurrent !== 'function' || isCurrent();
       const moved = live && window.guideMoves ? window.guideMoves() : [], nowAt = live ? guideNow() : {};

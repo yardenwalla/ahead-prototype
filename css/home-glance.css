@@ -474,8 +474,8 @@
 #main .category-directory-row, #main .category-directory-row[data-new] { background: radial-gradient(circle at 100% 0, rgba(255,255,255,.5) 0 30%, transparent 30.5%), var(--year-bg, #e8e2f6) !important }
 #main .category-directory-row .directory-copy small { color: var(--year-ink, #5b4a8b) !important }
 
-/* Nov 10 review: the question stays above the month card, with its icon, label and colors, but lighter:
-   the answers are pills sized to their words instead of full-width bars, so the card reads as a quick tap. */
-#main .hg-page > .connected-checkin .connected-checkin-choices { flex-wrap: wrap !important }
-#main .hg-page > .connected-checkin .connected-checkin-choices button:not(.hub-q-skip) { flex: 0 0 auto !important; min-height: 34px !important; padding: 6px 16px !important; border-radius: 999px !important }
-#main .hg-page > .connected-checkin .hub-q-copy p { font-size: 12.5px !important }
+/* Nov 10 review: the question card gets shorter, not taller. Same icon, label, colors and full-width answers;
+   the "why" line and the answers sit a little tighter. */
+#main .hg-page > .connected-checkin { padding-top: 10px !important; padding-bottom: 10px !important }
+#main .hg-page > .connected-checkin .hub-q-head { margin-bottom: 6px !important }
+#main .hg-page > .connected-checkin .connected-checkin-choices button:not(.hub-q-skip) { min-height: 32px !important; padding-top: 4px !important; padding-bottom: 4px !important }

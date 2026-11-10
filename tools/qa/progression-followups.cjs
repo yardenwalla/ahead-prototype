@@ -44,7 +44,7 @@ for(let family=0;family<100;family++) {
   check(a.run('feedingCheckinModel()===null'),'Started solids never trigger a follow-up question');
   const c=boot({name:'Ezra',dob:'2026-01-10',feed:'Both',pronouns:'he'},{},{},'2026-10-27T12:00:00Z');
   c.run("navigate('categories');openPage('topic:Feeding')");
-  check(/We’re showing solids for Ezra’s age/.test(c.html()),'A parent who never answers sees solids for the age, and the page says so');
+  check(/Not started solids yet\?/.test(c.html()),'A parent who never answers sees solids for the age, and one link under the main card lets the parent go back');
   c.run("navigate('home')");
   check(c.run("homeQuestion()")!=='food','Home does not repeat the solids question that Feeding already asks');
   const h=boot({name:'Leo',dob:'2026-04-20',feed:'Formula',pronouns:'he'},{solids:'Yes',solidsStart:'2026-10-01'},{},'2026-10-27T12:00:00Z');
