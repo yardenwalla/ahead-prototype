@@ -269,37 +269,94 @@
     return `<section class="he-hero" style="${monthTheme(m)}"><p class="he-eyebrow">${F(when)} · ${F(`Through ${name()}’s eyes`)}</p><div class="he-copy"><h1>${F(P(M.eyes[0]))}</h1><p class="he-lead">${F(P(M.eyes[1]))}</p>${m <= 4 ? `<button class="he-see" onclick="homeEyes(true)"><span aria-hidden="true">👁</span> ${F(`See what ${name()} sees`)}</button>` : ''}</div><span class="he-art" aria-hidden="true">${art}</span></section>
       <h2 class="hub-h2">${F('You might notice…')}</h2>
       <div class="hub-list hg-rows">${M.notice.map(row).join('')}</div>
-      <button class="hub-more hg-tl" onclick="navigate('next')"><span>${F(`Explore ${name()}’s timeline`)}</span>${chev}</button>` + newInGuides();
+      <button class="hub-more hg-tl" onclick="navigate('next')"><span>${F(`Explore ${name()}’s timeline`)}</span>${chev}</button>` + guideNews();
   }
 
-  /* ---------- Guides: what changed as she grew ----------
-     A guide is "Updated" when what it leads with this month differs from last month, until the parent opens it.
-     Nothing is held back: the change shows the day the month turns. */
-  const OPENED = () => 'ahead-guides-opened:' + journeyKey();
-  const opened = () => { try { return JSON.parse(localStorage.getItem(OPENED())) || {}; } catch (e) { return {}; } };
-  const guideLines = m => {
-    const keep = month; let html = '';
-    try { month = m; html = BASE_CATS(); } catch (e) {} finally { month = keep; }
-    const out = {}; html.replace(/data-cat="([^"]+)"[\s\S]*?<small>([\s\S]*?)<\/small>/g, (x, cat, line) => { out[cat] = line.replace(/<[^>]+>/g, '').trim(); });
+  /* ---------- Guides: what moved for her ----------
+     Each guide moves on its own trigger (naps, moving, solids, the next checkup, the next set of skills, an age range),
+     not on a monthly clock. When one moves, Home says so once, in plain words, and opens that guide. One at a time:
+     at 6 months three can move together, and a stack of rows would be dense. Opening the guide (or two weeks) clears it.
+     A move the parent caused (an answer, "Make this her stage") isn't announced: its own confirmation already said so. */
+  const MOVE_ORDER = ['Health', 'Safety', 'Feeding', 'Sleep', 'Development', 'Daily rhythm'];
+  // [title, what's in the guide, icon], keyed by guide and its stage now. Written for she/her; P() swaps pronouns.
+  const MOVE_COPY = {
+    Health: k => k === 'First week' ? null : [`Her ${k.replace(/ months?$/, '-month')} checkup is coming up`, 'What happens, and questions to bring', 'steth'],
+    Safety: { Rolling: ['She could start rolling soon', 'Stop swaddling, and get small things off the floor', 'roll'],
+      Crawling: ['She’ll be on the move soon', 'Gates, locks and covers, before she crawls', 'gate'],
+      'Pulling up': ['She’ll be pulling up soon', 'Anchor furniture, and keep water and the stove out of reach', 'dresser'] },
+    Feeding: { 'Milk feeds': ['Her feeds are getting quicker', 'Fewer, faster feeds are normal now', 'bottle'],
+      'Ready for solids': ['Solids are coming up', 'The signs she’s ready, and what you’ll need', 'highchair'],
+      new: ['She’s starting solids', 'First tastes, and letting her set the pace', 'bowl'],
+      textures: ['She’s ready for thicker textures', 'From purées to soft pieces, cut safely', 'pieces'],
+      established: ['She’s ready for three meals a day', 'A sample day of meals and milk', 'plate'] },
+    Sleep: { 'Longer nights': ['Her nights are getting longer', 'Days and nights start to sort out', 'moon'],
+      'Three naps': ['Her naps are settling', 'Three naps at set times, and a regular bedtime', 'clock'],
+      'Two naps': ['She may be ready for two naps', 'A morning nap, an afternoon nap and longer nights', 'sun'] },
+    Development: { 'By 4 months': ['Her next skills, by 4 months', 'Smiles, little sounds and swiping at toys', 'smile'],
+      'By 6 months': ['Her next skills, by 6 months', 'Reaching, laughing and rolling', 'hand'],
+      'By 9 months': ['Her next skills, by 9 months', 'Sitting up, babbling and finding hidden toys', 'peek'],
+      'By 12 months': ['Her next skills, by her first birthday', 'Waving, copying and pulling up', 'wave'] },
+    'Daily rhythm': { '1–3 months': ['Care is settling into a rhythm', 'Tub baths, nails and dressing', 'tub'],
+      '4–6 months': ['Drool and teething may start', 'Gums, bath time and shade', 'tooth'],
+      '7–12 months': ['Brushing starts with her first tooth', 'Teeth, bath time and getting dressed', 'tooth'] }
+  };
+  const moveCopy = (cat, key) => { const c = MOVE_COPY[cat]; return typeof c === 'function' ? c(key) : (c && c[key]) || null; };
+  // Where each guide is now: the "now" stage its own page marks (Feeding: the solids step once solids start).
+  const guideNow = () => {
+    const out = {};
+    for (const c of MOVE_ORDER) {
+      try {
+        if (c === 'Feeding') { const f = foodStage(), a = Y().ageNow(); out[c] = f !== 'preparing' ? f : a < 1.4 ? 'Newborn' : a < 4 ? 'Milk feeds' : 'Ready for solids'; continue; }
+        categoryPage(c); const it = ((typeof stageItemsLast === 'function' && stageItemsLast()) || {}).items || [], n = it.find(x => x.now);
+        if (n) out[c] = n.label;
+      } catch (e) {}
+    }
     return out;
   };
-  let updCache = { key: null, list: [] };
-  window.guidesUpdated = () => {
-    if (typeof BASE_CATS !== 'function' || typeof isCurrent === 'function' && !isCurrent()) return [];
-    const m = actualMonth(), key = m + '|' + JSON.stringify(opened()) + '|' + journeyKey();
-    if (updCache.key === key) return updCache.list;
-    let list = [];
-    if (m >= 1) { const now = guideLines(m), before = guideLines(m - 1), seen = opened(); list = Object.keys(now).filter(c => before[c] && now[c] !== before[c] && seen[c] !== m); }
-    updCache = { key, list }; return list;
+  const MOVES = () => 'ahead-guide-moves:' + journeyKey();
+  const readMoves = () => { try { return JSON.parse(localStorage.getItem(MOVES())) || null; } catch (e) { return null; } };
+  const saveMoves = s => { try { localStorage.setItem(MOVES(), JSON.stringify(s)); } catch (e) {} };
+  // First visit: compare with where she was a month ago, so a parent who joins mid-month still hears what just moved.
+  const monthAgo = () => { const t = NOW.getTime(), keep = month; try { NOW.setTime(t - 30 * 864e5); month = actualMonth(); return guideNow(); } finally { NOW.setTime(t); month = keep; } };
+  let moveCache = { key: null, list: [] };
+  window.guideMoves = function (silent) {
+    if (typeof isCurrent === 'function' && !isCurrent()) return [];
+    const now = guideNow(), stamp = JSON.stringify(now) + localStorage.getItem(MOVES());
+    if (!silent && moveCache.key === stamp) return moveCache.list;
+    const s = readMoves() || { known: monthAgo(), queue: [] }, t = NOW.getTime();
+    for (const c of Object.keys(now)) {
+      if (s.known[c] === undefined || s.known[c] === now[c]) continue;
+      s.queue = s.queue.filter(q => q.cat !== c);
+      if (!silent && moveCopy(c, now[c])) s.queue.push({ cat: c, key: now[c], at: t });
+    }
+    s.known = Object.assign({}, s.known, now);
+    s.queue = s.queue.filter(q => now[q.cat] === q.key && t - q.at < 14 * 864e5).sort((a, b) => MOVE_ORDER.indexOf(a.cat) - MOVE_ORDER.indexOf(b.cat));
+    saveMoves(s);
+    moveCache = { key: JSON.stringify(now) + localStorage.getItem(MOVES()), list: s.queue };
+    return s.queue;
   };
-  // Opening a guide clears its "Updated" tag for this month.
+  const clearMove = cat => { const s = readMoves(); if (!s) return; s.queue = s.queue.filter(q => q.cat !== cat); saveMoves(s); };
+  window.guidesUpdated = () => window.guideMoves().map(q => q.cat);
+  // Opening the guide clears its news.
   if (typeof window.openPage === 'function') {
     const baseOpen = window.openPage;
     window.openPage = openPage = function (p) {
-      const t = /^topic:(.+)$/.exec(String(p || ''));
-      if (t) { try { const o = opened(); o[t[1]] = actualMonth(); localStorage.setItem(OPENED(), JSON.stringify(o)); } catch (e) {} }
+      const t = /^(?:topic|chg):([^:]+)/.exec(String(p || ''));
+      if (t) clearMove(t[1]);
       return baseOpen.apply(this, arguments);
     };
+  }
+  // A stage the parent set themselves (an answer, "Make this her stage") was already confirmed: take it in quietly.
+  ['setAnswer', 'hubChangeStage', 'setFeedingStage'].forEach(fn => {
+    const base = window[fn]; if (typeof base !== 'function') return;
+    window[fn] = function () { const r = base.apply(this, arguments); try { if (readMoves()) window.guideMoves(true); } catch (e) {} return r; };
+  });
+  function guideNews() {
+    const q = window.guideMoves(); if (!q.length) return '';
+    const { cat } = q[0], c = moveCopy(cat, q[0].key); if (!c) return '';
+    const [title, why, icon] = c, label = typeof displayTopic === 'function' ? displayTopic(cat) : cat;
+    const tone = ({ Sleep: ['#e7effc', '#46638c'], Feeding: ['#fdeef2', '#a24d6a'], Development: ['#ecebfb', '#4f4a8c'], 'Daily rhythm': ['#fff3dc', '#8a6a2a'], Safety: ['#fdf1dc', '#8a5a1e'] })[cat] || ['#e6f5ec', '#356651'];
+    return `<h2 class="hub-h2">${F(`New in ${name()}’s guides`)}</h2><div class="hub-list hg-rows hg-news"><button class="hub-row hl-row" style="--hl-bg:${tone[0]};--hl-ink:${tone[1]}" onclick="openPage('topic:${cat}')"><span class="hub-dot">${hubArt(icon, cat)}</span><span class="hub-row-copy"><b>${F(P(title))}</b><small>${F(`${label} · ${P(why)}`)}</small></span>${chev}</button></div>`;
   }
   const BASE_CATS = typeof window.journeyCategories === 'function' ? window.journeyCategories : null;
   if (BASE_CATS) {
@@ -311,12 +368,9 @@
         const status = small.replace(/<[^>]+>/g, '').trim(), head = (heads[cat] || '').trim(), lo = x => x.toLowerCase().replace(/[‐‑–]/g, '-').replace(/\s+/g, ' ');
         if (!head) return all;
         const same = lo(head).includes(lo(status)) || lo(status).includes(lo(head)), short = status.split(/\s+/).length <= 4;
-        if (same) return `${pre}<small>${esc(head)}</small>`;
-        if (!short) return `${pre}<small>${small}</small>`;
-        return `${pre}<em class="dir-chip">${small}</em><small>${esc(head)}</small>`;
+        // One line per tile, no stage pills: "stage" is our word, not a parent's (Yarden, Nov 9).
+        return `${pre}<small>${esc(same || short ? head : status)}</small>`;
       });
-      const upd = guidesUpdated();
-      upd.forEach(cat => { html = html.replace(new RegExp(`(data-cat="${cat}"[\\s\\S]*?<b>[^<]*)(</b>)`), '$1 <span class="guide-upd">Updated</span>$2'); });
       return html;
     };
   }
