@@ -4,7 +4,8 @@ Fails (exit 1) if:
   1. a month birthday shows the photo banner AND a question (it's one or the other: the banner first),
   2. the question doesn't come back once the birthday photo is added,
   3. anything on Home runs off a small (320px) phone,
-  4. a Home tap throws an error or does nothing."""
+  4. a Home tap throws an error or does nothing,
+  5. on a month birthday the month card names another month than the balloon (checked in two time zones)."""
 import asyncio, calendar, datetime as dt, sys, base64, tempfile, os
 from playwright.async_api import async_playwright
 
@@ -69,6 +70,20 @@ async def main():
                 after = await pg.evaluate("page + document.querySelector('#main').innerHTML.length + !!document.querySelector('.hv-sheet')")
                 check(len(errors) == e0, f'{days} days: Home tap {i} throws no error {errors[e0:e0+1]}')
                 check(after != before, f'{days} days: Home tap {i} does something')
+
+        # 5. Month birthdays: the card and the balloon agree, in two time zones. Dates are made in the page's own zone.
+        for tz in ('UTC', 'America/Los_Angeles'):
+            ctx = await b.new_context(viewport={'width': 390, 'height': 844}, timezone_id=tz); tp = await ctx.new_page()
+            for m in range(2, 12):
+                for back, want in ((0, m), (1, m - 1)):
+                    await tp.goto(BASE)
+                    await tp.evaluate("""([m, back]) => { const d = new Date(); d.setMonth(d.getMonth() - m); d.setDate(d.getDate() + back);
+                      const iso = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+                      localStorage.clear(); localStorage.setItem('ahead-v2-profile', JSON.stringify({ name: 'Maya', pronouns: 'she', dob: iso, feed: 'Both', id: 'tz', joined: iso, example: false })) }""", [m, back])
+                    await tp.goto(BASE); await tp.wait_for_timeout(300); await tp.evaluate("navigate('home')"); await tp.wait_for_timeout(200)
+                    eb = await tp.evaluate("(document.querySelector('.he-eyebrow')||{}).innerText||''")
+                    check((f'MONTH {want} ' in eb.upper() + ' ') if want >= 2 else 'WEEKS' in eb.upper(), f'{tz}: {m} months{" minus a day" if back else ""} says Month {want} (got {eb!r})')
+            await ctx.close()
         await b.close()
     print(f'Home browser checks: {passed} passed' + (f', {len(fails)} failed' if fails else ''))
     for f in fails: print('  FAIL', f)

@@ -412,3 +412,6 @@
   #main .hg-page .connected-checkin .connected-checkin-choices { flex-wrap: wrap !important; padding-left: 0 }
   #main .hg-page .connected-checkin .connected-checkin-choices button:not(.hub-q-skip) { flex: 1 1 auto !important }
 }
+
+/* The balloon is a cut-out (transparent PNG): show the whole number, no crop, no box. */
+#main .hg-banner-img { width: 56px; height: 64px; border-radius: 0; object-fit: contain; object-position: center; filter: drop-shadow(0 2px 3px rgba(43, 40, 64, .12)) }

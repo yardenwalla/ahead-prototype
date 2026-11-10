@@ -22,6 +22,10 @@
   // Changes you live through get "What helps"; changes you can get ahead of get "Before it starts".
   const HELPS = ['crying', 'regress', 'sep', 'tooth', 'nights', 'smile', 'twonaps'];
 
+  // Home's month is the calendar month, like the birthday card and Memories (from the due date if born early).
+  // The timeline's fractional age (days ÷ 30.44) fell short on some month birthdays: "ten months" over a Month 9 card.
+  const homeMonth = () => Math.max(0, Math.min(11, ageMonths(parse(profile.early && profile.due ? profile.due : profile.dob), NOW)));
+  window.homeMonth = homeMonth;
   function changes() {
     const y = Y(), a = y.ageNow(), done = y.doneNow();
     const ahead = y.C.filter(c => c.end > a && !done[c.id] && y.PAGES[c.id]).sort((p, q) => p.start - q.start || p.end - q.end);
@@ -145,7 +149,7 @@
     const photo = b.querySelector('.hub-bday-photo'); if (!photo || photo.querySelector('img')) return '';   // photo already added
     const m = +((b.querySelector('.hub-bday-num') || {}).textContent || 0); if (!m || m > 11) return '';
     const input = photo.querySelector('input'); const words = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven'];
-    return `<label class="hg-banner" role="button"><img class="hg-banner-img" src="assets/home/balloon-${m}.jpg" alt=""><span class="hg-banner-copy"><b>${F(`${name()} is ${words[m]} month${m === 1 ? '' : 's'}`)}</b><small>${F(`Add {p} ${m}-month photo to Memories`)}</small></span><span class="hg-banner-plus" aria-hidden="true">＋</span>${input ? input.outerHTML : ''}</label>`;
+    return `<label class="hg-banner" role="button"><img class="hg-banner-img" src="assets/home/balloon-${m}.png" alt=""><span class="hg-banner-copy"><b>${F(`${name()} is ${words[m]} month${m === 1 ? '' : 's'}`)}</b><small>${F(`Add {p} ${m}-month photo to Memories`)}</small></span><span class="hg-banner-plus" aria-hidden="true">＋</span>${input ? input.outerHTML : ''}</label>`;
   }
 
   // Home as "Through her eyes" + "You might notice…" (Nov 9 mock, 3 months written).
@@ -237,7 +241,7 @@
     ['none', 'She sees tiny details now, like a crumb on the rug.'], ['none', 'She sees what you see.'], ['none', 'She sees what you see.']];
   window.homeEyes = open => {
     const old = document.querySelector('.hv-sheet'); if (old) old.remove(); if (!open) return;
-    const m = Math.max(0, Math.min(11, Math.floor(Y().ageNow()))), art = typeof homeMonthArt === 'function' ? homeMonthArt(actualMonth()).replace('<svg ', '<svg preserveAspectRatio="xMidYMid meet" ') : '';
+    const m = homeMonth(), art = typeof homeMonthArt === 'function' ? homeMonthArt(actualMonth()).replace('<svg ', '<svg preserveAspectRatio="xMidYMid meet" ') : '';
     const d = document.createElement('div'); d.className = 'hv-sheet'; d.setAttribute('role', 'dialog'); d.setAttribute('aria-label', F(`What ${name()} sees`));
     d.innerHTML = `<div class="hv-card" style="${monthTheme(m)}"><button class="hv-close" onclick="homeEyes(false)" aria-label="Close">×</button>
       <p class="hv-eyebrow">${F(`Through ${name()}’s eyes`)}</p>
@@ -252,7 +256,7 @@
   const P = t => String(t).replace(/\bherself\b/g, '{r}').replace(/\b(hold|feed|keeps|to|with|for|give|let|watch|help|tell) her\b/g, '$1 {o}')
     .replace(/\bher\b/g, '{p}').replace(/\bHer\b/g, '{P}').replace(/\bShe’s\b/g, '{S’s}').replace(/\bshe’s\b/g, '{s’s}').replace(/\bShe\b/g, '{S}').replace(/\bshe\b/g, '{s}');
   function monthCard(M, lead, a, next) {
-    const m = Math.floor(a), wk = Math.max(1, Math.round(a * 4.35)), when = m < 2 ? `${wk} week${wk === 1 ? '' : 's'}` : `Month ${m}`;
+    const m = homeMonth(), wk = Math.max(1, Math.round(a * 4.35)), when = m < 2 ? `${wk} week${wk === 1 ? '' : 's'}` : `Month ${m}`;
     const art = typeof homeMonthArt === 'function' ? homeMonthArt(actualMonth()).replace('<svg ', '<svg preserveAspectRatio="xMidYMid meet" ') : '';
     // A row can carry a formula version [title, why] as its sixth item: Feeding gives formula families other numbers.
     const row = ([title, why, cat, icon, go, formula]) => {
@@ -372,13 +376,13 @@
     const main = document.getElementById('main'); if (!main || !Y() || !H()) return;
     if (main.querySelector('.bday-year')) return;   // the first birthday has its own page: Ahead's year ends there
     const { a, lead, also: rest, later } = changes();
-    const M = MONTHS[Math.max(0, Math.min(11, Math.floor(a)))];
+    const M = MONTHS[homeMonth()];
     if (!lead && !M) return;
     // One card above the month card, never two: on a month birthday the photo banner shows and the question waits
     // until the photo is added or the birthday has passed (Yarden, Nov 9).
     const ageLine = main.querySelector('.home-age-line'), top = banner(main), question = top ? null : main.querySelector('.connected-checkin');
     if (M) {
-      main.innerHTML = '<div class="hg-page">' + top + (question ? question.outerHTML : '') + monthCard(M, lead, a, [lead, ...rest, ...later].find(c => !({1:['crying'],5:[],8:['sep']}[Math.floor(a)] || []).includes(c.id))) + `<p class="connected-preview-footnote">${F('Ahead isn’t medical advice and doesn’t replace your pediatrician.')}</p></div>`;
+      main.innerHTML = '<div class="hg-page">' + top + (question ? question.outerHTML : '') + monthCard(M, lead, a, [lead, ...rest, ...later].find(c => !({1:['crying'],5:[],8:['sep']}[homeMonth()] || []).includes(c.id))) + `<p class="connected-preview-footnote">${F('Ahead isn’t medical advice and doesn’t replace your pediatrician.')}</p></div>`;
       return;
     }
     let h = '<div class="hg-page">' + (ageLine ? ageLine.outerHTML : '') + top;
