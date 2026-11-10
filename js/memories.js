@@ -97,7 +97,7 @@
     const year = designs && now === 12 && Array.from({ length: 12 }, (_, i) => photo(i + 1)).some(Boolean)
       ? `<button class="mem-yearcard" onclick="storyShare('year')"><span class="mem-yearcard-pic"><img data-story-thumb="year" alt=""></span><span><b>${esc2(`${name()}’s first year`)}</b><small>All twelve months on one page, as a photo or a video.</small></span><span class="mem-row-go" aria-hidden="true">›</span></button>` : '';
     if (designs) setTimeout(() => window.storyHydrate && storyHydrate(), 0);
-    let b = `<div class="mem-page"><div class="eyebrow">${typeof babyAge === 'function' ? babyAge() + ' of memories' : 'Memories'}</div><h1>${nm}’s first year</h1>`;
+    let b = `<div class="mem-page"><div class="eyebrow">Memories</div><h1>${nm}’s first year</h1>`;
     // The memory book: one card that opens it, styled like the book's own cover. Saving a first stays one tap.
     const stack = `<span class="bk-stack" aria-hidden="true"><span class="bk-stack-back"></span><span class="bk-stack-mid"></span><span class="bk-stack-front"><i></i><svg viewBox="0 0 40 40"><path d="M20 31s-9-5.6-9-12.2A5 5 0 0 1 20 16a5 5 0 0 1 9 2.8C29 25.4 20 31 20 31Z" fill="none" stroke="#f08b72" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>`;
     const count = firsts.length ? `${firsts.length} moment${firsts.length === 1 ? '' : 's'} so far` : 'Firsts you save are written here';

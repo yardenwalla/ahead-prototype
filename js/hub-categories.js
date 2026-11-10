@@ -265,7 +265,9 @@
     // The buttons follow the checkup's timing: past due asks to add it, far ahead only saves a date.
     const dueAt = age === 0 ? new Date(parse(profile.dob).getTime() + 5 * 864e5) : addMonths(parse(profile.dob), age), dueDays = Math.round((dueAt - NOW) / 864e5);
     const pastDue = live() && !done && !planned && dueDays < -14, farAhead = !done && !planned && dueDays > 14;
-    const eyebrow2 = pastDue ? `Was due ${dueWhen(iso(dueAt))}` : eyebrow;
+    // One line on a phone (Nov 10, Yarden): a short date, "Due Oct 25", not "Was due around October 25".
+    const shortDate = d => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    const eyebrow2 = pastDue ? `Due ${shortDate(dueAt)}` : String(eyebrow).replace(/^Due around .+$/, () => `Due ${shortDate(dueAt)}`);
     // A past checkup that was never confirmed doesn't vanish: one quiet line on the current checkup.
     let missedLine = '';
     if (live() && age === focus) {   // a missed checkup shows here too, so it isn't missed by parents who skip Home
@@ -279,8 +281,8 @@
       if (missed != null) missedLine = `<section class="hub-missed"><p>${F(`Had the ${healthJourneyLabel(missed).charAt(0).toLowerCase() + healthJourneyLabel(missed).slice(1)}${(() => { const d = missed === 0 ? new Date(parse(profile.dob).getTime() + 5 * 864e5) : addMonths(parse(profile.dob), missed); return d.getMonth() === NOW.getMonth() && d.getFullYear() === NOW.getFullYear() ? '' : ' back in ' + d.toLocaleDateString('en-US', { month: 'long' }); })()}? Mark it done, or tell us you skipped it.`)}</p><div><button onclick="hubVisitYes(${missed})">Mark it done</button><button onclick="hubVisitSkipped(${missed})">We skipped it</button></div></section>`;
     }
     let b = h.hero({ eyebrow: eyebrow2, title, lead: conceptHealthSummary(age), button: done ? { label: 'Add notes from the checkup', onclick: `openHealthDetail(${age},'notes')` } : pastDue ? { label: 'Mark it as done', onclick: `openPage('visit-form:${age}')` } : { label: planned ? 'Change the date' : 'Save the date', onclick: `openPage('visit-form:plan-${age}')` } });
-    if (pastDue) b += `<div class="hub-browse"><button class="hub-link" onclick="openPage('visit-form:plan-${age}')">${F('Booked for later? Save the date')} ›</button></div>`;
-    else if (!done && !farAhead) b += `<div class="hub-browse"><button class="hub-link" onclick="openPage('visit-form:${age}')">${F(planned && record.date < iso(NOW) ? 'Been already? Mark it as done' : 'Already had this checkup? Mark it as done')} ›</button></div>`;
+    // "Booked for later? Save the date" is gone (Nov 10): Health moves on by age, so a saved date isn't needed.
+    if (!pastDue && !done && !farAhead) b += `<div class="hub-browse"><button class="hub-link" onclick="openPage('visit-form:${age}')">${F(planned && record.date < iso(NOW) ? 'Been already? Mark it as done' : 'Already had this checkup? Mark it as done')} ›</button></div>`;
     // The banner at the top already has "Back to your next checkup", so it isn't repeated here.
     b += h.list('For the checkup', [
       h.row({ icon: 'clock', cat: 'Health', title: 'What to expect', sub: EXPECT[age], onclick: `openHealthDetail(${age},'expect')` }),

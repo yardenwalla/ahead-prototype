@@ -8,7 +8,7 @@
   const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
   const nm = () => esc(typeof name === 'function' ? name() : 'your baby');
   const live = () => typeof isCurrent !== 'function' || isCurrent();
-  const TITLE = { Sleep: 'Sleep, step by step', Feeding: 'Feeding, step by step', Safety: 'Safety, step by step', Development: 'Development by age', 'Daily rhythm': 'Everyday care by age', Health: 'Checkups' };
+  const TITLE = { Sleep: 'Sleep stages', Feeding: 'Feeding stages', Safety: 'Safety stages', Development: 'Development by age', 'Daily rhythm': 'Everyday care by age', Health: 'Checkups' };
   const LEAD = {
     Sleep: 'Sleep changes in steps. Tap one to see what to expect.',
     Feeding: 'From milk to first foods to family meals. Tap one to see what to expect.',
@@ -71,7 +71,7 @@
     const hero = kids.find(e => e.matches('.hub-hero, .dev-hero, header')) || kids[0];   // the top card (skip the born-early age switch)
     // The chip: on the top card's first line when it has one, otherwise in its top corner.
     if (hero && !m.querySelector('.st-chip')) {
-      const chip = `<button class="st-chip" onclick="openPage('stages:${cat}')">${cat === 'Health' ? 'All checkups' : ['Sleep', 'Feeding', 'Safety'].includes(cat) ? 'Step by step' : 'All ages'} <span aria-hidden="true">›</span></button>`;
+      const chip = `<button class="st-chip" onclick="openPage('stages:${cat}')">${cat === 'Health' ? 'All checkups' : 'All stages'} <span aria-hidden="true">›</span></button>`;
       const eb = hero.querySelector('.hub-eyebrow');
       if (eb && hero.firstElementChild === eb) { eb.classList.add('st-eyebrow'); eb.insertAdjacentHTML('beforeend', chip); }
       else { hero.classList.add('st-has-chip'); hero.insertAdjacentHTML('afterbegin', chip.replace('class="st-chip"', 'class="st-chip st-chip-abs"')); }

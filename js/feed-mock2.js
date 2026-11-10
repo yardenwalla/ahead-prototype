@@ -3000,7 +3000,7 @@
   // and give a one-tap way back to Ready for solids.
   P.dirD = (() => { const prev = P.dirD; return (v) => { const h = prev(v);
     try { if (v != null && v !== window.__fdReal()) return h; if (typeof hasFoodAnswer !== 'function' || hasFoodAnswer() || !(typeof foodAssumed === 'function' && foodAssumed())) return h; } catch (e) { return h; }
-    // Nov 10 (Yarden): not inside the main card, which it bloated. One quiet link under it, like Health's "Booked for later?".
+    // Nov 10 (Yarden): not inside the main card, which it bloated. One quiet link under it.
     const note = `<div class="hub-browse fd-assumed"><button class="hub-link" onclick="hubChangeStage('Feeding',2)">${F('Not started solids yet?')} ›</button></div>`;
     return h.replace('</header><section class="hub-card hub-glance', '</header>' + note + '<section class="hub-card hub-glance'); }; })();
 
