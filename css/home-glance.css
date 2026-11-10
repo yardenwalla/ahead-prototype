@@ -406,3 +406,9 @@
 
 #main .category-directory-row.is-flash { animation: guideFlash 1.8s ease-out }
 @keyframes guideFlash { 0%, 35% { box-shadow: 0 0 0 3px #e8775a, 0 6px 18px rgba(232,119,90,.25) } 100% { box-shadow: 0 0 0 0 rgba(232,119,90,0) } }
+
+/* Small phones (320–360px): the three answers fit without the indent, and wrap if they still don't. */
+@media (max-width: 360px) {
+  #main .hg-page .connected-checkin .connected-checkin-choices { flex-wrap: wrap !important; padding-left: 0 }
+  #main .hg-page .connected-checkin .connected-checkin-choices button:not(.hub-q-skip) { flex: 1 1 auto !important }
+}

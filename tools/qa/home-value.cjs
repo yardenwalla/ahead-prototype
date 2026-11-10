@@ -16,11 +16,11 @@ if (m) {
   for (const [k, M] of Object.entries(MONTHS)) {
     if (words(M.eyes[0]) > 7) bad2.push(`${k}: eyes headline too long`);
     if (words(M.eyes[1]) < 12 || words(M.eyes[1]) > 19) bad2.push(`${k}: eyes line is ${words(M.eyes[1])} words`);
-    for (const [t, why] of M.notice) {
+    for (const [t, why, variant] of M.notice.flatMap(r => r[5] ? [r, [...r[5], 'formula']] : [r])) {
       if (words(t) > 7) bad2.push(`${k}: title too long: ${t}`);
       if (words(why) < 10 || words(why) > 19) bad2.push(`${k}: "${t}" explanation is ${words(why)} words`);
       if (BANNED.test(t + ' ' + why)) bad2.push(`${k}: warning on Home: ${t}`);
-      const key = t.toLowerCase(); if (seen.has(key)) bad2.push(`${k}: "${t}" repeats month ${seen.get(key)}`); seen.set(key, k);
+      const key = t.toLowerCase(); if (seen.has(key) && variant !== 'formula') bad2.push(`${k}: "${t}" repeats month ${seen.get(key)}`); seen.set(key, k);
     }
   }
   if (bad2.length) { console.error('home-value: month copy:\n' + bad2.join('\n')); process.exit(1); }

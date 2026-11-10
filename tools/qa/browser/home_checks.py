@@ -1,0 +1,77 @@
+"""Browser checks for the monthly Home (it needs a real page, so the node checks can't draw it).
+Serve the app first:  python3 -m http.server 8765   then:  python3 tools/qa/browser/home_checks.py
+Fails (exit 1) if:
+  1. a month birthday shows the photo banner AND a question (it's one or the other: the banner first),
+  2. the question doesn't come back once the birthday photo is added,
+  3. anything on Home runs off a small (320px) phone,
+  4. a Home tap throws an error or does nothing."""
+import asyncio, calendar, datetime as dt, sys, base64, tempfile, os
+from playwright.async_api import async_playwright
+
+BASE = os.environ.get('AHEAD_URL', 'http://localhost:8765/index.html')
+T = dt.date.today()
+fails, passed = [], 0
+def check(ok, msg):
+    global passed
+    if ok: passed += 1
+    else: fails.append(msg)
+
+def months_ago(n):
+    y, m = divmod(T.month - 1 - n, 12); yy, mm = T.year + y, m + 1
+    return dt.date(yy, mm, min(T.day, calendar.monthrange(yy, mm)[1]))
+
+async def load(pg, dob, pr='she', feed='Breast milk'):
+    prof = dict(name='Maya', pronouns=pr, dob=dob.isoformat(), due='', early=False, feed=feed, example=False, id='hc', joined=dob.isoformat())
+    await pg.goto(BASE)
+    await pg.evaluate("p=>{localStorage.clear();localStorage.setItem('ahead-v2-profile',JSON.stringify(p))}", prof)
+    await pg.goto(BASE); await pg.wait_for_timeout(400)
+    await pg.evaluate("navigate('home')"); await pg.wait_for_timeout(250)
+
+has = lambda pg, sel: pg.evaluate(f"!!document.querySelector('.hg-page {sel}')")
+
+async def main():
+    async with async_playwright() as p:
+        b = await p.chromium.launch()
+        pg = await b.new_page(viewport={'width': 390, 'height': 844})
+        errors = []; pg.on('pageerror', lambda e: errors.append(str(e)))
+        png = os.path.join(tempfile.mkdtemp(), 'p.png')
+        open(png, 'wb').write(base64.b64decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=='))
+        # 1-2. Birthdays: banner or question, never both
+        for m in range(1, 12):
+            await load(pg, months_ago(m))
+            ban, q = await has(pg, '.hg-banner'), await has(pg, '.connected-checkin')
+            check(ban, f'{m}-month birthday shows the photo banner')
+            check(not (ban and q), f'{m}-month birthday shows the banner or a question, not both')
+            if ban:
+                await pg.set_input_files('.hg-banner input[type=file]', png); await pg.wait_for_timeout(600)
+                await pg.evaluate("navigate('home')"); await pg.wait_for_timeout(250)
+                check(not await has(pg, '.hg-banner'), f'{m} months: the banner leaves once the photo is added')
+        await load(pg, months_ago(5))
+        await pg.set_input_files('.hg-banner input[type=file]', png); await pg.wait_for_timeout(600)
+        await pg.evaluate("navigate('home')"); await pg.wait_for_timeout(250)
+        check(await has(pg, '.connected-checkin'), '5 months: the checkup question comes back after the birthday photo')
+        await load(pg, T - dt.timedelta(days=160))
+        check(await has(pg, '.connected-checkin'), 'Not a birthday: the question shows as usual')
+        # 3-4. Small phone, and every Home tap
+        small = await b.new_page(viewport={'width': 320, 'height': 640})
+        for days, pr, feed in [(10, 'she', 'Formula'), (75, 'they', 'Both'), (160, 'he', 'Breast milk'), (245, 'she', 'Both'), (340, 'they', 'Formula')]:
+            await load(small, T - dt.timedelta(days=days), pr, feed)
+            off = await small.evaluate("""() => { const vw = document.documentElement.clientWidth;
+              return [...document.querySelectorAll('.hg-page *')].filter(e => e.offsetParent && e.getBoundingClientRect().right > vw + 1).map(e => (e.innerText || e.className).slice(0, 40)) }""")
+            check(not off, f'{days} days at 320px: nothing runs off screen {off[:2]}')
+            await load(pg, T - dt.timedelta(days=days), pr, feed)
+            n = await pg.evaluate("document.querySelectorAll('.hg-page [onclick]').length")
+            for i in range(n):
+                await load(pg, T - dt.timedelta(days=days), pr, feed)
+                before = await pg.evaluate("page + document.querySelector('#main').innerHTML.length + !!document.querySelector('.hv-sheet')")
+                e0 = len(errors)
+                await pg.evaluate(f"document.querySelectorAll('.hg-page [onclick]')[{i}].click()"); await pg.wait_for_timeout(250)
+                after = await pg.evaluate("page + document.querySelector('#main').innerHTML.length + !!document.querySelector('.hv-sheet')")
+                check(len(errors) == e0, f'{days} days: Home tap {i} throws no error {errors[e0:e0+1]}')
+                check(after != before, f'{days} days: Home tap {i} does something')
+        await b.close()
+    print(f'Home browser checks: {passed} passed' + (f', {len(fails)} failed' if fails else ''))
+    for f in fails: print('  FAIL', f)
+    sys.exit(1 if fails else 0)
+
+asyncio.run(main())
