@@ -155,3 +155,7 @@
 #main .ya-ys-ticks{position:relative;display:block;height:14px}
 #main .ya-ys-ticks span{position:absolute;transform:translateX(-50%);font-size:10.5px;color:#8a8494}
 #main .ya-ys-ticks span:first-child{transform:none}
+
+/* Icons only (Nov 9): item squares match the guides' rows (.hub-dot): 42px soft square, 13px corners, drawing filling it */
+#main .ya-pathpage .ya-row-art { width: 42px !important; height: 42px !important; border-radius: 13px !important; padding: 4px; background: var(--year-pale, #f3effb) }
+#main .ya-pathpage .ya-row-art svg { width: 100% !important; height: 100% !important }

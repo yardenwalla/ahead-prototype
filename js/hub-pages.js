@@ -139,7 +139,7 @@
       const row = document.querySelectorAll('#main .hub-tick')[idx];
       if (row) { row.classList.add('is-celebrate'); row.insertAdjacentHTML('beforeend', '<span class="hub-burst" aria-hidden="true"><i>✦</i><i>✧</i><i>✦</i><i>✧</i></span>'); }
       const rec = journeyData().records.find(r => r.type === 'milestone' && r.skillKey === key);
-      if (rec) hubToast(typeof memIsBig !== 'function' || memIsBig(rec) ? 'A first, saved' : 'Saved', `“${rec.title}” is in Memories · ${journeyDateLabel(rec.date)}`, ['Change date', `document.querySelectorAll('.hub-toast').forEach(t=>t.remove());openPage('event-edit:${rec.id}')`]);
+      if (rec) hubToast(typeof memIsBig !== 'function' || memIsBig(rec) ? 'A first, saved' : 'Saved', `“${rec.title}” is in Memories`, ['See it in the book', `document.querySelectorAll('.hub-toast').forEach(t=>t.remove());openPage('chg:Timeline:firsts')`]);
     };
   }
 
@@ -186,7 +186,7 @@
       const nm = esc2(name()), label = b.m === 12 ? '1 year' : `${b.m} month${b.m === 1 ? '' : 's'}`, plabel = b.m === 12 ? 'first-birthday' : `${b.m}-month`, photo = window.hubPhotoFor(b.m);
       const title = b.since === 0 ? (b.m === 12 ? `${nm} is 1 year old today` : `${nm} is ${label} old today`) : (b.m === 12 ? `${nm} turned 1` : `${nm} turned ${label}`);
       const lead = photo ? (b.firsts.length ? `Here’s what you noticed this month. The photo is in Memories.` : `Another month of firsts. The photo is in Memories.`) : (b.firsts.length ? `Here’s what you noticed this month. Add a photo to keep it in Memories.` : `Another month of firsts. Add a photo to keep this one in Memories.`);
-      const card = `<div class="home-summary connected-summary-intro hub-bday"><span class="hub-bday-num" aria-hidden="true">${b.m === 12 ? '1' : b.m}</span><span class="hub-bday-spark" aria-hidden="true">✦</span><p class="hub-bday-eyebrow">${b.m === 12 ? 'Happy first birthday' : 'Happy ' + label}${profile.early && profile.due && adjustedMonth(actualMonth()) !== actualMonth() ? ` <button class="hub-agechip" onclick="openPage('age-context')" aria-label="${esc2(monthLabel(adjustedMonth(actualMonth())))} adjusted. About age">· ${esc2(adjText())} adjusted <span aria-hidden="true">ⓘ</span></button>` : ''}</p><h1>${title}</h1><p class="hub-bday-lead">${lead}</p>${b.firsts.length ? `<div class="hub-bday-chips">${b.firsts.map(r => `<span>✓ ${esc2(r.title)}</span>`).join('')}</div>` : ''}<label class="hub-bday-photo" role="button">${photo ? `<img src="${photo}" alt="">Change the ${plabel} photo` : `<i aria-hidden="true">＋</i>Add a ${plabel} photo`}${hubPhotoInput(b.m)}</label>${photo && b.m <= 11 && typeof storyShare === 'function' ? `<button class="hub-bday-share" onclick="storyShare(${b.m})">Share ${nm}’s ${plabel} photo</button>` : ''}</div>`;
+      const card = `<div class="home-summary connected-summary-intro hub-bday"><span class="hub-bday-num" aria-hidden="true">${b.m === 12 ? '1' : b.m}</span><span class="hub-bday-spark" aria-hidden="true">✦</span><p class="hub-bday-eyebrow">${b.m === 12 ? 'Happy first birthday' : 'Happy ' + label}${profile.early && profile.due && adjustedMonth(actualMonth()) !== actualMonth() ? ` <button class="hub-agechip" onclick="openPage('age-context')" aria-label="${esc2(monthLabel(adjustedMonth(actualMonth())))} adjusted. About age">· ${esc2(adjText())} adjusted <span aria-hidden="true">ⓘ</span></button>` : ''}</p><h1>${title}</h1><p class="hub-bday-lead">${lead}</p>${b.firsts.length ? `<div class="hub-bday-chips">${b.firsts.map(r => `<span>✓ ${esc2(r.title)}</span>`).join('')}</div>` : ''}<label class="hub-bday-photo" role="button">${photo ? `<img src="${photo}" alt="">Change the ${plabel} photo` : `<i aria-hidden="true">＋</i>Add ${/^(8|11)-/.test(plabel) ? "an" : "a"} ${plabel} photo`}${hubPhotoInput(b.m)}</label>${photo && b.m <= 11 && typeof storyShare === 'function' ? `<button class="hub-bday-share" onclick="storyShare(${b.m})">Share ${nm}’s ${plabel} photo</button>` : ''}</div>`;
       // On a month birthday the age at the top says the same thing as the card ("1 month", not "4 weeks").
       if (b.m < 3) html = html.replace(/(<p class="home-age-line">[^<·]*· )[^<]*?(weeks?|days?)(?=[ <])/, `$1${label}`);
       return html.replace(/<div class="home-summary connected-summary-intro">[\s\S]*?<div class="home-summary-spectrum"[\s\S]*?<\/div><\/div>/, card);
@@ -233,8 +233,14 @@
   window.hubAgePage = function () {
     const nm = esc2(name());
     if (!(profile.early && profile.due)) return `<div class="quiet-category hub-page hub-detail" style="${yearTheme('You')}">${hubPageTop(`${esc2(name())}’s age`)}<div class="hub-detail-head"><span class="hub-big">${hubArt('clock', 'You')}</span><p class="hub-context">${nm}’s age</p><h1>Every guide uses ${nm}’s age</h1><p class="hub-lead">If ${nm} was born early, add the due date in ${nm}’s details and guides can use adjusted age instead.</p></div></div>`;
-    const head = `<div class="hub-detail-head"><span class="hub-big">${hubArt('clock', 'You')}</span><p class="hub-context">Born early</p><h1>${profile.name ? `Two ages, one ${nm}` : 'Two ages, one baby'}</h1><p class="hub-lead">Guides use adjusted age by default. Checkups always use the birthday. If one area still doesn’t match ${nm}, open its stages and pick the one that fits.</p><p class="hub-lead" style="font-size:15px">Keep adjusted age while ${nm} seems younger than the birthday says. Switch an area to birthday age once ${nm} has caught up there; many babies do by about 2.</p></div>`;
-    return `<div class="quiet-category hub-page hub-detail" style="${yearTheme('You')}">${hubPageTop(`${esc2(name())}’s age`)}${head}${hubAgeBlock()}</div>`;
+    const P = typeof babyPronouns === 'function' ? babyPronouns() : { s: 'they', p: 'their' };
+    const bday = monthLabel(birthdayAge()), adj = monthLabel(adjustedMonth(actualMonth()));
+    // Two big ages, side by side, then which guides follow which. One idea per line, no gray block of text.
+    const head = `<div class="hub-detail-head"><span class="hub-big">${hubArt('clock', 'You')}</span><p class="hub-context">Born early</p><h1>${profile.name ? `${nm} has two ages` : 'Your baby has two ages'}</h1><p class="hub-lead">${esc2(`Guides follow ${P.p} adjusted age. Checkups follow ${P.p} birthday.`)}</p></div>`;
+    const duo = `<div class="age-duo"><div class="age-duo-tile is-bday"><small>Birthday age</small><b>${esc2(bday)}</b><span>Checkups and shots</span></div><div class="age-duo-tile is-adj"><small>Adjusted age</small><b>${esc2(adj)}</b><span>Guides and milestones</span></div></div>`;
+    const rows = hubAgeBlock().replace(/<div class="hub-tiles">[\s\S]*?<\/div><\/div><\/div>/, '');
+    const tip = `<p class="age-tip">${esc2(`Once ${name()} catches up in an area, switch it to birthday age. Many babies do by age 2.`)}</p>`;
+    return `<div class="quiet-category hub-page hub-detail age-page" style="${yearTheme('You')}">${hubPageTop(`${esc2(name())}’s age`)}${head}${duo}<h2 class="hub-h2">Which age each guide follows</h2>${rows}${tip}</div>`;
   };
 
   // Change a stage from Baby's details and stay there (Undo still works from the message).
@@ -410,8 +416,8 @@
   // One place to save any first, whatever it's about. Ideas follow the baby's age and only fill in the field.
   function saveFirstPage() {
     const a = developmentMonth(actualMonth()), ideas = a < 2 ? ['First smile', 'First bath', 'First outing', 'Lifted head on tummy'] : a < 5 ? ['First laugh', 'Held head up', 'Rolled over', 'Grabbed a toy'] : a < 8 ? ['Sat up', 'First taste of food', 'First tooth', 'Rolled over'] : a < 11 ? ['Crawled', 'Pulled up', 'First tooth', 'Waved bye-bye'] : ['First word', 'First steps', 'Waved bye-bye', 'Clapped'];
-    return detailPage('Development', 'Firsts', 'Save a first', 'What did Maya do? It goes in Memories with the date.',
-      `<section class="hub-card hub-own-first"><label for="firstTitle">${F('What happened')}</label><input id="firstTitle" class="search" maxlength="80" placeholder="${F('For example, ' + ideas[0].charAt(0).toLowerCase() + ideas[0].slice(1))}"><p class="hub-own-ideas">${F('Ideas')}</p><div class="hub-choice-chips">${ideas.map(t => `<button onclick="hubFirstFill('${t}')">${t}</button>`).join('')}</div><label for="firstDate">${F('When')}</label><input id="firstDate" class="search" type="date" min="${profile.dob}" max="${iso(NOW)}" value="${iso(NOW)}"><button class="hub-button" onclick="hubSaveFirst()">${F('Save to Memories')}</button></section>`, 'star');
+    return detailPage('Development', 'Firsts', 'Save a first', 'What did Maya do? It goes in Memories.',
+      `<section class="hub-card hub-own-first"><label for="firstTitle">${F('What happened')}</label><input id="firstTitle" class="search" maxlength="80" placeholder="${F('For example, ' + ideas[0].charAt(0).toLowerCase() + ideas[0].slice(1))}"><p class="hub-own-ideas">${F('Ideas')}</p><div class="hub-choice-chips">${ideas.map(t => `<button onclick="hubFirstFill('${t}')">${t}</button>`).join('')}</div><p class="hub-own-ideas">${F('Which month?')}</p>${memMonthChips(actualMonth(), 'hubFirstMonth')}<button class="hub-button" onclick="hubSaveFirst()">${F('Save to Memories')}</button></section>`, 'star');
   }
   function detailPage(cat, context, title, lead, inner, artName) { return H().detail(cat, context, title, lead, inner, artName); }
 
@@ -767,14 +773,13 @@
 
   /* ---------- Your own firsts, with a date ---------- */
   window.hubSaveFirst = function () {
-    const t = (document.getElementById('firstTitle') || {}).value || '', d = (document.getElementById('firstDate') || {}).value || '';
-    if (!t.trim() || !d) return hubToast('Add a name and a date', 'For example: Crawling, Oct 18.');
-    if (d > iso(NOW) || d < profile.dob) return hubToast('Check the date', 'Pick a day between the birthday and today.');
+    const t = (document.getElementById('firstTitle') || {}).value || '', d = memMonthDate(window.__firstMonth != null ? window.__firstMonth : actualMonth());
+    if (!t.trim()) return hubToast('Add what happened', 'For example: Crawled.');
     const data = journeyData();
     data.records.push({ id: 'milestone-own-' + Date.now(), type: 'milestone', title: t.trim().slice(0, 80), date: d, notes: '', status: 'attended', own: true });
     if (!saveJourneyData(data)) return hubToast('Couldn’t save that', 'This viewer can’t store entries.');
     const rec = data.records[data.records.length - 1];
-    navigate('timeline'); hubToast('A first, saved', `“${t.trim()}” is in Memories · ${journeyDateLabel(d)}`, ['Change date', `document.querySelectorAll('.hub-toast').forEach(t=>t.remove());openPage('event-edit:${rec.id}')`]);
+    window.__firstMonth = null; navigate('timeline'); hubToast('A first, saved', `“${t.trim()}” is in Memories`, ['See it in the book', `document.querySelectorAll('.hub-toast').forEach(t=>t.remove());openPage('chg:Timeline:firsts')`]);
   };
   window.hubFirstFill = t => { const el = document.getElementById('firstTitle'); if (el) { el.value = t; el.focus(); } };
 
@@ -913,4 +918,32 @@ window.hubCenterStages = function () {
       return top + celebration();
     };
   }
+})();
+
+
+/* Seen it has no dates: parents rarely remember the day. Each moment sits in a month of the book,
+   and tapping it lets the parent move it to another month, or remove it. */
+(function () {
+  const WORDS = ['Newborn', '1 month', '2 months', '3 months', '4 months', '5 months', '6 months', '7 months', '8 months', '9 months', '10 months', '11 months', '12 months'];
+  window.memMonthOf = d => { const b = parse(profile.dob), x = parse(d); let m = (x.getFullYear() - b.getFullYear()) * 12 + x.getMonth() - b.getMonth(); if (x.getDate() < b.getDate()) m--; return Math.max(0, Math.min(12, m)); };
+  // A month's date: today for this month, otherwise the middle of that month.
+  window.memMonthDate = m => { const now = actualMonth(); if (m >= now) return iso(NOW); const d = addMonths(parse(profile.dob), m); d.setDate(d.getDate() + 14); return iso(d > NOW ? NOW : d); };
+  window.memMonthChips = (on, fn, id) => `<div class="mem-month-chips" role="radiogroup">${WORDS.slice(0, Math.min(12, actualMonth()) + 1).map((w, m) => `<button type="button" role="radio" aria-checked="${m === on}" class="${m === on ? 'is-on' : ''}" onclick="${fn}(${m}${id ? `,'${id}'` : ''}, this)">${w}</button>`).join('')}</div>`;
+  window.hubFirstMonth = (m, el) => { window.__firstMonth = m; el.parentNode.querySelectorAll('button').forEach(b => { b.classList.toggle('is-on', b === el); b.setAttribute('aria-checked', b === el); }); };
+  window.memMoveTo = function (m, id) {
+    const data = journeyData(), r = data.records.find(x => x.id === id); if (!r) return;
+    const before = r.date; r.date = memMonthDate(m);
+    if (!saveJourneyData(data)) return hubToast('Couldn’t save that', 'This viewer can’t store entries.');
+    openPage('chg:Timeline:firsts');
+    hubToast('Moved', `“${r.title}” is now in ${m === 0 ? 'the newborn month' : WORDS[m]}.`, ['Undo', `document.querySelectorAll('.hub-toast').forEach(t=>t.remove());memUndoMove('${id}','${before}')`]);
+  };
+  window.memUndoMove = (id, d) => { const data = journeyData(), r = data.records.find(x => x.id === id); if (r) { r.date = d; saveJourneyData(data); render(); } };
+  if (typeof journeyEventEdit !== 'function') return;
+  const base = journeyEventEdit;
+  window.journeyEventEdit = journeyEventEdit = function (id) {
+    const r = journeyData().records.find(x => x.id === id);
+    if (!r || r.type !== 'milestone') return base(id);
+    const m = memMonthOf(r.date);
+    return `<div class="quiet-category hub-page hub-detail mem-move" style="${yearTheme('Memories')}">${typeof detailPageTop === 'function' ? detailPageTop('Memories') : ''}<div class="hub-detail-head"><p class="hub-context">In ${esc(name())}’s memory book</p><h1>${esc(r.title)}</h1><p class="hub-lead">${esc('In the wrong month? Tap the right one and it moves.')}</p></div><section class="hub-card mem-move-card">${memMonthChips(m, 'memMoveTo', id)}</section><button class="journey-remove mem-move-remove" type="button" onclick="if(removeJourneyRecord('${id}'))openPage('chg:Timeline:firsts')">Remove from Memories</button></div>`;
+  };
 })();

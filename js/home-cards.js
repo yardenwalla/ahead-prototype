@@ -428,7 +428,7 @@
     }
     if (topic === 'Sleep') return s.naps === 2 ? 'Two naps, longer nights' : m < 1.5 ? 'Short sleeps around the clock' : m < 3 ? 'One longer stretch at night' : m < 7 ? 'Regular naps, a set bedtime' : m < 9 ? 'Moving toward two naps' : 'Usually two naps by now';
     if (topic === 'Safety') return moved(s, 'pulling') ? 'Pulling up: furniture and the stove' : moved(s, 'crawling') ? 'Crawling: gates and locks' : moved(s, 'rolling', 'sitting') ? 'Rolling: swaddle off, floor clear' : m >= 9 ? 'Crawling and pulling up' : m >= 6 ? 'Crawling, or getting ready' : m >= 3 ? 'Reaching: hot drinks, small things' : 'First setup: car seat and crib';
-    if (topic === 'Health') { const c = checkupNow(s); if (c) return `${c.label[0].toUpperCase() + c.label.slice(1)} checkup ${c.ahead > 0 ? 'in ' + c.ahead + ' days' : 'now'}`;
+    if (topic === 'Health') { const c = checkupNow(s); if (c) return `${c.label[0].toUpperCase() + c.label.slice(1)} checkup ${c.ahead > 0 ? 'in ' + c.ahead + (c.ahead === 1 ? ' day' : ' days') : 'now'}`;
       const nx = VISITS.find(([, , day]) => day > s.d); return nx ? `Next: ${nx[1]} checkup` : 'Checkups for year two'; }
     if (topic === 'Development') return m < 2 ? 'First looks and smiles' : m < 4 ? 'Smiles, sounds, swiping' : m < 6 ? 'Reaching, laughing, rolling' : m < 9 ? 'Sitting, babbling, finding things' : 'Waving, copying, pulling up';
     if (topic === 'Daily rhythm') return s.tooth === true ? 'Brushing first teeth' : m < 1 ? 'Cord care and sponge baths' : m < 4 ? 'Tub baths and a rhythm' : 'Drool, gums and bath play';
@@ -624,4 +624,6 @@
   };
   window.home2Settle = () => settlePending();
   window.home2Debug = () => { const s = state(), r = pick(s); return { d: s.d, move: s.move, now: r.now.map(c => c.id + ' · ' + w(s, T(c.title)(s))), soon: r.soon.map(c => c.id + ' · ' + w(s, T(c.title)(s))) }; };
+  window.home2TileLine = topic => { try { return tileLine(topic, state()); } catch (e) { return ''; } };
+  window.home2PageHeadlines = () => { try { return pageHeadlines(); } catch (e) { return {}; } };
 })();

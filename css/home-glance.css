@@ -1,0 +1,475 @@
+/* Home at a glance: the app's own cards, colors and Timeline bars, in four short sections. */
+#main .hg-page { display: flex; flex-direction: column }
+#main .hg-page .home-age-line { margin-bottom: 12px }
+
+#main .hg-hero { position: relative; border-radius: 26px; overflow: hidden; border: 1px solid #f0dde3; background: radial-gradient(circle at 96% 4%, rgba(255,255,255,.6) 0 30%, transparent 30.5%), linear-gradient(160deg, #fef2e8 0%, #fdeef3 52%, #f3effc 100%) }
+#main .hg-spectrum { display: flex; height: 6px }
+#main .hg-spectrum span { flex: 1 }
+#main .hg-bday { margin-bottom: 14px }
+#main .hg-bday .hub-bday { border-radius: 24px }
+#main .hg-hero-art { display: block; height: 160px; margin: 14px 12px 0; overflow: hidden }
+#main .hg-hero-art .home-month-scene, #main .hg-hero-art svg { display: block !important; width: 100% !important; height: 100% !important; max-width: none !important; max-height: none !important; margin: 0 !important }
+#main .hg-hero-copy { padding: 16px 20px 20px }
+#main .hg-eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #7a4f6d; margin: 0 }
+#main .hg-hero h1 { font-size: 29px; line-height: 1.12; letter-spacing: -.02em; margin: 6px 0 8px; color: #2B2840; font-weight: 700; font-family: inherit }
+#main .hg-lead { font-size: 15px; line-height: 1.45; color: #4a4658; margin: 0 }
+#main .hg-window { margin: 14px 0 16px; background: rgba(255, 255, 255, .7); border-radius: 14px; padding: 10px 12px 12px }
+#main .hg-window-label { font-size: 13px; color: #4a4658 }
+#main .hg-window-label b { color: #7a4f6d }
+#main .hg-window .ya-bar { background: rgba(0, 0, 0, .07) }
+#main .hg-btn { display: inline-flex; align-items: center; gap: 8px; min-height: 46px; padding: 0 20px; border-radius: 999px; background: #2B2840; color: #fff; font-size: 15px; font-weight: 600 }
+
+#main .hg-page .connected-checkin { margin-top: 14px }
+
+#main .hg-h2 { font-size: 20px; font-weight: 700; letter-spacing: -.01em; color: #2B2840; margin: 26px 2px 10px; font-family: inherit }
+#main .hg-tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px }
+#main .hg-tile { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; text-align: left; padding: 14px; border-radius: 20px; background: #fffdf9; border: 1px solid #ece5da; min-height: 132px }
+#main .hg-tile-top { display: flex; align-items: center; gap: 7px; margin-bottom: 8px }
+#main .hg-tile-ic { width: 28px; height: 28px; border-radius: 9px; display: grid; place-items: center; background: var(--year-pale, #f3eefb); color: var(--year-ink, #5b4a8b) }
+#main .hg-tile-cat { font-size: 12px !important; font-weight: 600; color: var(--year-ink, #5b4a8b) !important }
+#main .hg-tile-ic svg { width: 18px; height: 18px }
+#main .hg-tile b { font-size: 16.5px; line-height: 1.2; color: #2B2840; margin-bottom: 3px }
+#main .hg-tile small { font-size: 13.5px; line-height: 1.35; color: #5e5a6b }
+
+#main .hg-list { background: #fffdf9; border: 1px solid #ece5da; border-radius: 22px; overflow: hidden }
+#main .hg-row { text-align: left }
+#main .hg-row .hub-row-copy { display: flex; flex-direction: column; align-items: flex-start }
+#main .hg-row .hub-row-eyebrow { display: block; font-size: 12px; font-weight: 600; color: var(--muted, #6b6670); margin-bottom: 1px }
+
+#main .hg-next { display: block; width: 100%; margin-top: 26px; padding: 16px 18px 18px; border-radius: 22px; background: #f0ebf7 }
+#main .hg-next-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 14px }
+#main .hg-next-head b { font-size: 18px; color: #2B2840 }
+#main .hg-next-all { font-size: 13.5px; font-weight: 600; color: #5b4a8b; min-height: 32px; padding: 0 }
+#main .hg-stops { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 14px }
+#main .hg-stops:before { content: ""; position: absolute; left: 7px; right: calc(50% - 7px); top: 6px; height: 2px; background: #d5cde6 }
+#main .hg-stop { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; text-align: left; padding: 0; min-height: 0 }
+#main .hg-stop i { width: 14px; height: 14px; border-radius: 50%; background: #fff; border: 3px solid #8e80c4; margin-bottom: 6px; position: relative }
+#main .hg-stop small { font-size: 12.5px; font-weight: 700; color: #5b4a8b }
+#main .hg-stop-row { display: flex; align-items: center; gap: 8px }
+#main .hg-stop-art { width: 30px; height: 30px; flex: none; border-radius: 10px; background: var(--year-pale, #fff); display: grid; place-items: center }
+#main .hg-stop-art svg { width: 22px; height: 22px }
+#main .hg-stop b { font-size: 15px; line-height: 1.2; color: #2B2840 }
+#main .hg-stop-why { font-size: 13px; line-height: 1.35; color: #5e5a6b }
+#main .hg-page .connected-preview-footnote { margin-top: 24px }
+#main .hg-bday-tag { color: #b0567a }
+#main .hg-bday-photo { margin-top: 12px }
+#main .hg-bday-photo .hub-bday-photo { display: flex; align-items: center; gap: 10px; width: 100%; background: rgba(255,255,255,.75); border-radius: 14px; padding: 10px 12px; font-size: 14.5px; font-weight: 600; color: #2B2840; cursor: pointer }
+#main .hg-bday-photo img { width: 40px; height: 40px; border-radius: 8px; object-fit: cover }
+#main .hg-list-label { font-size: 13px; font-weight: 700; color: #7a4f6d; margin: 0 0 8px }
+#main .hg-hero .hg-list { background: rgba(255,255,255,.8); border: 0; border-radius: 18px }
+#main .hg-hero .hg-window { margin-bottom: 16px }
+#main .hg-more { display: block; margin-top: 10px; min-height: 36px; padding: 0; font-size: 14px; font-weight: 600; color: #5b4a8b }
+#main .hg-also { display: flex; flex-direction: column; gap: 10px }
+#main .hg-also-card { display: flex; align-items: center; gap: 12px; text-align: left; padding: 14px 16px; border-radius: 20px; background: #fffdf9; border: 1px solid #ece5da }
+#main .hg-also-art { width: 44px; height: 44px; flex: none; border-radius: 14px; background: var(--year-pale, #f3eefb); display: grid; place-items: center }
+#main .hg-also-art svg { width: 28px; height: 28px }
+#main .hg-also-copy { flex: 1 }
+#main .hg-also-copy b { display: block; font-size: 16px; color: #2B2840 }
+#main .hg-also-copy small { display: block; font-size: 13.5px; line-height: 1.4; color: #5e5a6b; margin-top: 2px }
+#main .hg-banner { display: flex !important; align-items: center; gap: 10px; margin: 0 0 12px; padding: 12px 14px; border-radius: 16px; background: linear-gradient(100deg, #fdeee5, #fbeaf1 50%, #efedff); font-size: 14.5px; font-weight: 600; color: #2B2840; cursor: pointer }
+
+#main .hg-tips { list-style: none; margin: 0; padding: 4px 14px; background: rgba(255,255,255,.8); border-radius: 18px }
+#main .hg-tips li { position: relative; padding: 11px 0 11px 26px; font-size: 15px; line-height: 1.4; color: #2B2840 }
+#main .hg-tips li + li { border-top: 1px solid #f0e8ee }
+#main .hg-tips li:before { content: "✓"; position: absolute; left: 0; top: 11px; width: 18px; height: 18px; border-radius: 50%; background: #f6dfe8; color: #b0567a; font-size: 11px; font-weight: 800; display: grid; place-items: center }
+#main .hg-banner { display: flex !important; align-items: center; gap: 12px; margin: 0 0 14px; padding: 10px 14px 10px 10px; border-radius: 18px; background: linear-gradient(100deg, #fdeee5 0%, #fbeaf1 30%, #efedff 62%, #edf2fe 100%); cursor: pointer }
+#main .hg-banner input { display: none }
+#main .hg-banner-img { width: 56px; height: 56px; flex: none; border-radius: 12px; object-fit: cover; object-position: center top }
+#main .hg-banner-copy { flex: 1 }
+#main .hg-banner-copy b { display: block; font-family: AheadHand, Caveat, cursive; font-weight: 600; font-size: 26px; line-height: 1.05; color: #2b2840 }
+#main .hg-banner-copy small { font-size: 13px; color: #6b6670 }
+#main .hg-banner-plus { width: 32px; height: 32px; border-radius: 50%; background: #2b2840; color: #fff; display: grid; place-items: center; font-size: 16px; flex: none }
+#main .hg-cards { display: flex; flex-direction: column; gap: 10px }
+#main .hg-card { display: flex; align-items: center; gap: 14px; width: 100%; text-align: left; padding: 16px; border-radius: 22px; background: #fffdf9; border: 1px solid #ece5da }
+#main .hg-card-art { width: 56px; height: 56px; flex: none; border-radius: 16px; background: var(--year-pale, #f3eefb); display: grid; place-items: center }
+#main .hg-card-art svg { width: 36px; height: 36px }
+#main .hg-card-copy { flex: 1; min-width: 0 }
+#main .hg-card-copy small { display: block; font-size: 12px; font-weight: 600; color: var(--year-ink, #5b4a8b) }
+#main .hg-card-copy b { display: block; font-size: 17px; line-height: 1.25; color: #2B2840; margin: 2px 0 3px }
+#main .hg-card-copy span { display: block; font-size: 14px; line-height: 1.4; color: #5e5a6b }
+
+/* Home as a monthly explainer */
+#main .hm-card { border-radius: 28px; overflow: hidden; border: 1px solid #f0dde3; background: radial-gradient(circle at 96% 4%, rgba(255,255,255,.6) 0 30%, transparent 30.5%), linear-gradient(160deg, #fef2e8 0%, #fdeef3 52%, #f3effc 100%) }
+#main .hm-top { padding: 14px 20px 6px }
+#main .hm-art { display: block; height: 150px }
+#main .hm-art .home-month-scene, #main .hm-art svg { display: block !important; width: 100% !important; height: 100% !important; max-width: none !important; max-height: none !important }
+#main .hm-eyebrow { margin: 8px 0 0; font-size: 13px; font-weight: 600; color: #7a4f6d }
+#main .hm-top h1 { font-family: inherit; font-size: 21px; line-height: 1.3; letter-spacing: -.01em; font-weight: 700; color: #2B2840; margin: 6px 0 4px }
+#main .hm-eyes { display: flex; gap: 12px; align-items: flex-start; margin: 12px 14px 0; padding: 14px; border-radius: 18px; background: rgba(255,255,255,.65) }
+#main .hm-eyes-ic { width: 36px; height: 36px; flex: none; border-radius: 50%; background: #efe7fb; color: #5b4a8b; display: grid; place-items: center }
+#main .hm-eyes-ic svg { width: 20px; height: 20px }
+#main .hm-eyes small, #main .hm-copy small { display: block; font-size: 12px; font-weight: 700; color: #5b4a8b; margin-bottom: 2px }
+#main .hm-eyes span span { display: block; font-size: 15px; line-height: 1.45; color: #2B2840 }
+#main .hm-lines { margin: 10px 14px 0; background: #fffdf9; border-radius: 20px; overflow: hidden }
+#main .hm-line { display: flex; align-items: flex-start; gap: 12px; width: 100%; text-align: left; padding: 14px; min-height: 0 }
+#main .hm-line + .hm-line { border-top: 1px solid #f1eadf }
+#main .hm-line .hub-chev { align-self: center }
+#main .hm-ic { width: 32px; height: 32px; flex: none; border-radius: 10px; background: var(--year-pale, #f3eefb); color: var(--year-ink, #5b4a8b); display: grid; place-items: center; margin-top: 2px }
+#main .hm-ic svg { width: 19px; height: 19px }
+#main .hm-copy { flex: 1 }
+#main .hm-copy small { color: var(--year-ink, #5b4a8b) }
+#main .hm-copy span { display: block; font-size: 15px; line-height: 1.45; color: #2B2840 }
+#main .hm-next { display: flex; align-items: center; gap: 10px; width: calc(100% - 28px); margin: 12px 14px 16px; padding: 12px 16px; border-radius: 16px; background: rgba(255,255,255,.65); text-align: left }
+#main .hm-next > span { flex: 1; min-width: 0; display: block }
+#main .hm-next small { display: block; font-size: 12px; font-weight: 600; color: #7a4f6d }
+#main .hm-next b { display: block; font-size: 15.5px; color: #2B2840 }
+#main .hg-page .hm-card + .connected-checkin { margin-top: 14px }
+#main .hm-next { display: grid !important; grid-template-columns: 1fr auto; align-items: center }
+#main .hm-next > span { width: auto !important; max-width: none !important }
+/* Home as a monthly snapshot */
+#main .hs-hero { border-radius: 28px; padding: 14px 18px 16px; border: 1px solid #f0dde3; background: radial-gradient(circle at 96% 4%, rgba(255,255,255,.6) 0 30%, transparent 30.5%), linear-gradient(160deg, #fef2e8 0%, #fdeef3 52%, #f3effc 100%) }
+#main .hs-art { display: block; height: 130px }
+#main .hs-art .home-month-scene, #main .hs-art svg { display: block !important; width: 100% !important; height: 100% !important; max-width: none !important; max-height: none !important }
+#main .hs-eyebrow { margin: 6px 0 0; font-size: 13px; font-weight: 600; color: #7a4f6d }
+#main .hs-hero h1 { font-family: inherit; font-size: 26px; line-height: 1.15; letter-spacing: -.02em; font-weight: 700; color: #2B2840; margin: 4px 0 12px }
+#main .hs-eyes { display: flex; gap: 12px; align-items: center; padding: 12px 14px; border-radius: 18px; background: rgba(255,255,255,.7) }
+#main .hs-eyes-ic { width: 38px; height: 38px; flex: none; border-radius: 50%; background: #efe7fb; color: #5b4a8b; display: grid; place-items: center }
+#main .hs-eyes-ic svg { width: 21px; height: 21px }
+#main .hs-eyes small { display: block; font-size: 12px; font-weight: 700; color: #5b4a8b }
+#main .hs-eyes b { display: block; font-size: 16px; color: #2B2840; line-height: 1.25 }
+#main .hs-eyes span span { display: block; font-size: 13.5px; color: #5e5a6b }
+#main .hs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px }
+#main .hs-tile { display: flex; flex-direction: column; align-items: flex-start; text-align: left; padding: 14px; border-radius: 20px; background: #fffdf9; border: 1px solid #ece5da; min-height: 128px }
+#main .hs-tile-top { display: flex; align-items: center; gap: 7px; margin-bottom: 10px }
+#main .hs-ic { width: 28px; height: 28px; border-radius: 9px; display: grid; place-items: center; background: var(--year-pale, #f3eefb); color: var(--year-ink, #5b4a8b) }
+#main .hs-ic svg { width: 18px; height: 18px }
+#main .hs-tile-top small { font-size: 12px; font-weight: 600; color: var(--year-ink, #5b4a8b) }
+#main .hs-tile b { font-size: 18px; line-height: 1.2; letter-spacing: -.01em; color: #2B2840 }
+#main .hs-sub { margin-top: 4px; font-size: 13px; line-height: 1.35; color: #5e5a6b }
+#main .hs-next { display: grid !important; grid-template-columns: 1fr auto; align-items: center; gap: 10px; width: 100%; margin-top: 12px; padding: 14px 16px; border-radius: 18px; background: #f0ebf7; text-align: left }
+#main .hs-next small { display: block; font-size: 12px; font-weight: 600; color: #5b4a8b }
+#main .hs-next b { display: block; font-size: 16px; color: #2B2840 }
+#main .hg-page .hs-next + .connected-checkin { margin-top: 14px }
+/* Mock: swipe and lean */
+#main .hs-lead { margin: 0; font-size: 15.5px; line-height: 1.45; color: #4a4658 }
+#main .hs-hero h1 { margin-bottom: 6px }
+#main .hw-row { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-left: 20px; margin: 14px -20px 0; padding: 2px 20px 4px; scrollbar-width: none }
+#main .hw-row::-webkit-scrollbar { display: none }
+#main .hw-card { flex: 0 0 76%; scroll-snap-align: start; display: flex; flex-direction: column; align-items: flex-start; text-align: left; min-height: 170px; padding: 18px; border-radius: 24px; background: #fffdf9; border: 1px solid #ece5da }
+#main .hw-card.is-eyes { background: linear-gradient(150deg, #f3effc, #fdeef3); border-color: #e9e0f5 }
+#main .hw-ic { width: 40px; height: 40px; border-radius: 13px; display: grid; place-items: center; background: var(--year-pale, #f3eefb); color: var(--year-ink, #5b4a8b); margin-bottom: 14px }
+#main .hw-ic.is-eyes { background: #fff; color: #5b4a8b; border-radius: 50% }
+#main .hw-ic svg { width: 22px; height: 22px }
+#main .hw-card small { font-size: 12px; font-weight: 700; color: var(--year-ink, #5b4a8b); margin-bottom: 4px }
+#main .hw-card.is-eyes small { color: #5b4a8b }
+#main .hw-card b { font-size: 19px; line-height: 1.3; font-weight: 600; letter-spacing: -.01em; color: #2B2840 }
+#main .hw-dots { display: flex; justify-content: center; gap: 6px; margin-top: 10px }
+#main .hw-dots i { width: 6px; height: 6px; border-radius: 3px; background: #d9d2e3; transition: width .2s }
+#main .hw-dots i.on { width: 18px; background: #5b4a8b }
+#main .hl-rows { margin-top: 12px; background: #fffdf9; border: 1px solid #ece5da; border-radius: 22px; overflow: hidden }
+#main .hl-row { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; padding: 14px 16px; min-height: 0 }
+#main .hl-row + .hl-row { border-top: 1px solid #f1eadf }
+#main .hl-ic { width: 36px; height: 36px; flex: none; border-radius: 11px; display: grid; place-items: center; background: var(--year-pale, #f3eefb); color: var(--year-ink, #5b4a8b) }
+#main .hl-ic.is-eyes { background: #efe7fb; color: #5b4a8b; border-radius: 50% }
+#main .hl-ic svg { width: 20px; height: 20px }
+#main .hl-copy { flex: 1 }
+#main .hl-copy small { display: block; font-size: 12px; font-weight: 700; color: var(--year-ink, #5b4a8b) }
+#main .hl-copy span { display: block; font-size: 15.5px; line-height: 1.4; color: #2B2840 }
+#main .hs-switch { text-align: center; font-size: 12.5px; color: #8a8494; margin: 18px 0 0 }
+#main .hs-switch button { min-height: 32px; padding: 0 4px; font-size: 12.5px; color: #8a8494; text-decoration: underline }
+#main .hs-switch button.on { color: #2B2840; font-weight: 700; text-decoration: none }
+/* Home: Through her eyes + You might notice */
+#main .he-hero { position: relative; display: grid; grid-template-columns: 1fr 42%; align-items: center; gap: 6px; padding: 22px 0 22px 20px; border-radius: 28px; overflow: hidden; border: 1px solid #f0dde3; background: radial-gradient(circle at 96% 4%, rgba(255,255,255,.6) 0 30%, transparent 30.5%), linear-gradient(160deg, #fef2e8 0%, #fdeef3 52%, #f3effc 100%) }
+#main .he-eyebrow { margin: 0; font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #7a4f6d }
+#main .he-hero h1 { font-family: inherit; font-size: 27px; line-height: 1.12; letter-spacing: -.02em; font-weight: 800; color: #2B2840; margin: 8px 0 10px }
+#main .he-lead { margin: 0; font-size: 15px; line-height: 1.45; color: #4a4658 }
+#main .he-art { display: block; align-self: stretch; margin-right: -8px }
+#main .he-art .home-month-scene, #main .he-art svg { display: block !important; width: 100% !important; height: 100% !important; max-width: none !important; max-height: none !important }
+#main .hn-h2 { font-size: 22px; font-weight: 800; letter-spacing: -.02em; color: #2B2840; margin: 26px 4px 6px; font-family: inherit }
+#main .hn-list { display: flex; flex-direction: column }
+#main .hn-row { display: flex; align-items: center; gap: 16px; width: 100%; text-align: left; padding: 14px 4px; min-height: 0; background: none }
+#main .hn-row + .hn-row { border-top: 1px solid #ebe4da }
+#main .hn-art { width: 60px; height: 60px; flex: none; border-radius: 18px; background: var(--year-pale, #f3eefb); display: grid; place-items: center }
+#main .hn-art svg { width: 34px; height: 34px }
+#main .hn-copy { flex: 1; min-width: 0 }
+#main .hn-copy b { display: block; font-size: 17px; line-height: 1.25; letter-spacing: -.01em; color: #2B2840; margin-bottom: 3px }
+#main .hn-copy span { display: block; font-size: 14.5px; line-height: 1.45; color: #4a4658 }
+#main .hn-timeline { display: flex; align-items: center; justify-content: space-between; width: 100%; margin-top: 10px; padding: 18px 4px; border-top: 1px solid #ebe4da; font-size: 17px; font-weight: 700; color: #2B2840 }
+#main .hn-timeline + .connected-checkin { margin-top: 12px }
+#main .he-hero { grid-template-columns: 56% 1fr; row-gap: 0; padding-top: 20px }
+#main .he-eyebrow { grid-column: 1 / -1; margin-bottom: 4px }
+#main .he-hero h1 { margin-top: 4px }
+#main .he-art { overflow: visible }
+#main .he-art svg { transform: scale(1.3); transform-origin: 100% 55% }
+#main .he-copy { position: relative; z-index: 1 }
+#main .he-hero { grid-template-columns: 1fr 104px !important; column-gap: 8px; padding: 20px 16px 20px 20px }
+#main .he-hero h1 { font-size: 24px }
+#main .he-art { align-self: center; height: 96px; margin: 0 }
+#main .he-art svg { transform: scale(1.15) !important; transform-origin: 50% 50% !important }
+
+/* Month colors and "See what Maya sees" */
+#main .he-hero { background: radial-gradient(circle at 96% 4%, rgba(255,255,255,.55) 0 30%, transparent 30.5%), linear-gradient(160deg, var(--m-bg1, #fef2e8) 0%, var(--m-bg2, #fdeef3) 60%, #fffaf6 100%) !important; border-color: var(--m-line, #f0dde3) !important; transition: background .4s }
+#main .he-eyebrow { color: var(--m-ink, #7a4f6d) !important }
+#main .he-see { display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; min-height: 36px; padding: 0 14px; border-radius: 999px; background: rgba(255,255,255,.85); color: var(--m-ink, #5b4a8b); font-size: 14px; font-weight: 700; box-shadow: 0 1px 3px rgba(43,40,64,.08) }
+.hv-sheet { position: fixed; inset: 0; z-index: 50; display: flex; align-items: flex-end; justify-content: center; background: rgba(30,26,40,0); transition: background .25s }
+.hv-sheet.is-on { background: rgba(30,26,40,.45) }
+.hv-card { position: relative; width: min(460px, 100%); padding: 22px 20px 28px; border-radius: 28px 28px 0 0; background: linear-gradient(160deg, var(--m-bg1), #fffaf6 70%); transform: translateY(100%); transition: transform .3s ease-out; font-family: inherit }
+.hv-sheet.is-on .hv-card { transform: none }
+.hv-close { position: absolute; right: 14px; top: 10px; width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,.8); font-size: 22px; line-height: 1; color: #2B2840 }
+.hv-eyebrow { margin: 0 0 14px; font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--m-ink) }
+.hv-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px }
+.hv-pair figure { margin: 0 }
+.hv-art { display: block; height: 130px; border-radius: 18px; overflow: hidden; background: #fff }
+.hv-art svg { display: block; width: 100%; height: 100% }
+.hv-hers svg { filter: none; transition: filter 1.4s ease .35s }
+.hv-sheet.is-on .hv-hers svg { filter: var(--hv-filter) }
+.hv-pair figcaption { margin-top: 8px; text-align: center; font-size: 13px; font-weight: 600; color: #5e5a6b }
+.hv-line { margin: 16px 2px 0; font-size: 17px; line-height: 1.4; font-weight: 600; color: #2B2840; text-align: center }
+
+/* Guides on Home, and "Updated" on the Guides tab */
+#main .hg-guides { display: flex; align-items: center; gap: 12px; width: 100%; margin-top: 4px; padding: 16px; border-radius: 22px; text-align: left; background: linear-gradient(100deg, #fdeee5 0%, #fbeaf1 35%, #efedff 70%, #edf2fe 100%) }
+#main .hg-guides-ic { width: 40px; height: 40px; flex: none; border-radius: 13px; background: rgba(255,255,255,.8); color: #5b4a8b; display: grid; place-items: center }
+#main .hg-guides-ic svg { width: 22px; height: 22px }
+#main .hg-guides-copy { flex: 1; min-width: 0 }
+#main .hg-guides-copy b { display: block; font-size: 16.5px; color: #2B2840 }
+#main .hg-guides-copy small { display: block; font-size: 13.5px; color: #5e5a6b; margin-top: 2px }
+#main .hg-guides-chip { flex: none; font-size: 12.5px; font-weight: 700; color: #5b4a8b; background: #fff; border-radius: 999px; padding: 4px 10px }
+#main .hn-timeline + .hg-guides { margin-top: 2px }
+#main .hg-guides + .connected-checkin { margin-top: 14px }
+#main .guide-upd { display: inline-block; vertical-align: 2px; margin-left: 6px; font-size: 11.5px; font-weight: 700; letter-spacing: .01em; color: #5b4a8b; background: #ece6fb; border-radius: 999px; padding: 2px 8px }
+
+/* Calmer: one gradient (the month card); the guides row is a plain card; "Updated" has its own color */
+#main .hg-guides { background: #fffdf9 !important; border: 1px solid #ece5da }
+#main .hg-guides-ic { background: #f3efe9 !important; color: #2B2840 !important }
+#main .hg-guides-chip, #main .guide-upd { background: #2B2840 !important; color: #fff !important }
+#main .hg-page > .connected-checkin + .he-hero, #main .hg-page > .hg-banner + .connected-checkin { margin-top: 0 }
+#main .hg-page > .connected-checkin { margin-bottom: 14px }
+
+/* Guides card: a warm tint and the icons of the guides that changed */
+#main .hg-guides { background: #fbf3ec !important; border: 1px solid #f0e2d6 !important; padding: 16px 14px 16px 16px }
+#main .hg-guides-ic { display: none }
+#main .hg-guides-stack { display: flex; flex: none }
+#main .hg-guides-stack i { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; background: var(--year-pale, #f3eefb); color: var(--year-ink, #5b4a8b); border: 2px solid #fbf3ec }
+#main .hg-guides-stack i + i { margin-left: -12px }
+#main .hg-guides-stack i svg { width: 20px; height: 20px }
+/* "Updated": a warm coral of its own, not any guide's color */
+#main .hg-guides-chip, #main .guide-upd { background: #e8775a !important; color: #fff !important }
+#main .hg-guides-chip { min-width: 26px; text-align: center; padding: 3px 8px }
+/* Smaller question card on Home: answers in one row, "We skipped it" as a quiet link */
+#main .hg-page .connected-checkin { padding: 12px 14px !important; border-radius: 18px }
+#main .hg-page .connected-checkin .connected-checkin-choices { display: flex; flex-wrap: wrap; gap: 6px }
+
+
+/* Home's question, as compact as Home's card answers on main: small outlined buttons in one row, under the text */
+#main .hg-page .connected-checkin { padding: 12px 14px 14px !important; border-radius: 18px !important }
+#main .hg-page .connected-checkin .hub-q-head { margin-bottom: 8px !important }
+#main .hg-page .connected-checkin .connected-checkin-choices { display: flex !important; flex-wrap: nowrap !important; gap: 8px; padding-left: 42px }
+#main .hg-page .connected-checkin .connected-checkin-choices button:not(.hub-q-skip) { flex: 1 1 0 !important; white-space: nowrap; min-height: 36px !important; padding: 6px 4px !important; border: 1px solid var(--line, #e3dfe5) !important; border-radius: 11px !important; background: var(--white, #fffefa) !important; color: var(--ink, #302d3c) !important; font: 500 12.5px/1.2 Figtree, system-ui, sans-serif !important; text-decoration: none !important }
+#main .hg-page .connected-checkin .connected-checkin-choices { padding-left: 46px; gap: 6px }
+
+/* ---------- Polish pass (Nov 9): bigger month picture, even rhythm, Guides as tiles ---------- */
+/* Main card: the headline runs full width, the picture sits large in the lower right and bleeds off the edge. */
+#main .he-hero { display: block !important; position: relative; min-height: 236px; padding: 20px 20px 22px !important; overflow: hidden }
+#main .he-hero .he-copy { position: relative; z-index: 1 }
+#main .he-hero h1 { max-width: 92% }
+#main .he-hero .he-lead { max-width: 60% }
+#main .he-hero .he-art { position: absolute !important; right: -18px; bottom: -6px; width: 50%; height: 150px; margin: 0 !important }
+#main .he-hero .he-art svg { transform: none !important }
+/* One rhythm down the page: 24px between sections, light dividers, matching radii. */
+#main .hn-h2 { margin: 24px 4px 4px !important }
+#main .hn-row { padding: 13px 2px !important }
+#main .hn-row + .hn-row { border-top-color: #f0e9df !important }
+#main .hn-art { width: 54px !important; height: 54px !important; border-radius: 16px !important }
+#main .hn-art svg { width: 32px !important; height: 32px !important }
+#main .hn-timeline { margin-top: 8px !important; padding: 16px 2px !important; border-top-color: #f0e9df !important; font-size: 16px !important }
+#main .hg-guides { margin-top: 6px !important; border-radius: 20px !important }
+/* Guides tab: two-by-four tiles, same card language as the rest of the app. */
+#main .category-directory { display: grid !important; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 !important; background: none !important; border: 0 !important; box-shadow: none !important }
+#main .category-directory-row { position: relative; display: flex !important; flex-direction: column; align-items: flex-start !important; gap: 10px !important; min-height: 138px; padding: 16px 14px !important; border-radius: 20px !important; background: #fffdf9 !important; border: 1px solid #ece5da !important; text-align: left }
+#main .category-directory-row + .category-directory-row { border-top: 1px solid #ece5da !important }
+#main .category-directory-row .directory-art { width: 48px !important; height: 48px !important; border-radius: 15px !important; background: var(--year-pale, #f3eefb) !important }
+#main .category-directory-row .directory-art svg { width: 30px !important; height: 30px !important }
+#main .category-directory-row .directory-copy b { display: block; font-size: 16px; line-height: 1.25 }
+#main .category-directory-row .directory-copy small { display: block; margin-top: 3px; font-size: 13px; line-height: 1.35 }
+#main .category-directory-row .directory-chevron { display: none !important }
+#main .category-directory-row .guide-upd { position: absolute; top: 12px; right: 12px; margin: 0 }
+/* Guides tiles in each guide's own color, like that guide's page header: tinted card, soft corner circle, picture on white */
+#main .category-directory { grid-auto-rows: 1fr; gap: 12px !important }
+#main .category-directory-row { min-height: 150px; padding: 16px !important; border: 0 !important; overflow: hidden; background: radial-gradient(circle at 100% 0, rgba(255,255,255,.55) 0 34%, transparent 34.5%), var(--year-bg, #f3eefb) !important }
+#main .category-directory-row + .category-directory-row { border-top: 0 !important }
+#main .category-directory-row .directory-art { width: 56px !important; height: 56px !important; border-radius: 50% !important; background: rgba(255,255,255,.85) !important; box-shadow: 0 1px 2px rgba(43,40,64,.06) }
+#main .category-directory-row .directory-art svg { width: 34px !important; height: 34px !important }
+#main .category-directory-row .directory-copy b { font-size: 16.5px; color: #2B2840 }
+#main .category-directory-row .directory-copy small { color: var(--year-ink, #5b4a8b) !important; opacity: .9; font-weight: 500 }
+
+#main .category-directory-row .dir-chip { display: inline-block; margin: 4px 0 2px; font-style: normal; font-size: 11.5px; font-weight: 700; color: var(--year-ink, #5b4a8b); background: rgba(255,255,255,.7); border-radius: 999px; padding: 2px 9px }
+#main .category-directory-row .directory-copy small { font-size: 13.5px !important; line-height: 1.35 !important }
+/* Smaller tiles */
+#main .category-directory { gap: 10px !important; grid-auto-rows: auto !important }
+#main .category-directory-row { min-height: 0 !important; padding: 12px 12px 14px !important; gap: 8px !important; border-radius: 18px !important }
+#main .category-directory-row .directory-art { width: 42px !important; height: 42px !important }
+#main .category-directory-row .directory-art svg { width: 26px !important; height: 26px !important }
+#main .category-directory-row .directory-copy b { font-size: 15px !important }
+#main .category-directory-row .directory-copy small { font-size: 12.5px !important; margin-top: 2px }
+#main .category-directory-row .dir-chip { font-size: 11px; margin: 3px 0 1px }
+#main .category-directory-row .guide-upd { top: 10px; right: 10px; font-size: 11px; padding: 2px 7px }
+
+/* Home, cohesive pass: lists live in white cards, like the rest of the app */
+#main .hn-list { background: #fffdf9; border: 1px solid #ece5da; border-radius: 22px; padding: 2px 14px }
+#main .hn-row { padding: 14px 0 !important }
+#main .hn-h2 { margin: 24px 4px 10px !important; font-size: 20px !important }
+#main .hx-card { background: #fffdf9; border: 1px solid #ece5da; border-radius: 22px; padding: 2px 14px }
+#main .hx-row { display: flex; align-items: center; gap: 14px; width: 100%; text-align: left; padding: 14px 0; min-height: 0 }
+#main .hx-row + .hx-row { border-top: 1px solid #f0e9df }
+#main .hx-art { width: 48px; height: 48px; flex: none; border-radius: 15px; background: var(--year-pale, #f3eefb); color: var(--year-ink, #5b4a8b); display: grid; place-items: center }
+#main .hx-art svg { width: 28px; height: 28px }
+#main .hx-copy { flex: 1; min-width: 0 }
+#main .hx-copy b { display: block; font-size: 16px; color: #2B2840 }
+#main .hx-copy small { display: block; margin-top: 2px; font-size: 13.5px; line-height: 1.35; color: #5e5a6b }
+#main .hx-copy .guide-upd { vertical-align: 2px; margin-left: 4px; font-size: 11px; padding: 2px 7px }
+
+/* Row pictures follow the style guide: items sit in their category's soft rounded square, exactly as rows do inside the guides (.hub-dot). */
+#main .hg-guides-stack i { background: var(--year-bg, #e5e0fc) !important }
+/* The timeline link, as it was */
+#main .hn-timeline { margin-top: 12px !important; padding: 18px 4px !important; border-top: 0 !important }
+#main .hn-row { gap: 12px !important }
+/* Style guide type: card titles 15.5/20 600, body 14.5/22 in Ink 2 */
+#main .hn-copy b { font-size: 15.5px !important; line-height: 20px !important; font-weight: 600 !important; letter-spacing: 0 !important }
+#main .hn-copy span { font-size: 14.5px !important; line-height: 22px !important; color: #5E5A75 !important }
+
+/* Style guide pass: headings as in the guides, white cards with hairlines, category marks in circles, items in squares */
+#main .hn-h2 { font-size: 17px !important; font-weight: 650 !important; letter-spacing: 0 !important; margin: 24px 2px 10px !important; color: var(--ink) !important }
+#main .he-hero h1 { font-family: var(--display-font) !important; font-weight: 800 !important }
+#main .hn-list, #main .hx-card { background: #fff !important; border: 1px solid #EFEAF2 !important; border-radius: 22px !important; padding: 0 !important; overflow: hidden }
+#main .hn-list { padding: 0 14px !important }
+#main .hn-row + .hn-row { border-top-color: #EFEAF2 !important }
+#main .hx-card .hx-row { padding: 13px 14px !important }
+#main .hx-card .hx-row + .hx-row { border-top: 1px solid #EFEAF2 }
+#main .hx-when { display: block; font-size: 12.5px !important; font-weight: 600; margin-bottom: 1px }
+#main .hx-row .hub-row-copy b { font-size: 15.5px; font-weight: 600; color: var(--ink) }
+#main .hx-row .hub-row-copy small:last-child { font-size: 13.5px; color: #5E5A75 }
+#main .hx-all { min-height: 48px }
+#main .hx-all .hub-row-copy b { font-size: 14.5px; color: #5E5A75 }
+#main .hx-marks { display: flex; flex: none }
+#main .hx-marks i { width: 40px; height: 40px; border-radius: 50%; background: var(--year-pale, #f3eefb); display: grid; place-items: center; border: 2px solid #fff }
+#main .hx-marks i + i { margin-left: -14px }
+#main .hx-marks i svg { width: 22px; height: 22px }
+#main .hx-card .guide-upd { font-size: 11px; padding: 2px 7px; vertical-align: 2px; margin-left: 4px }
+#main .hx-new { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #e8775a; margin-right: 7px; vertical-align: 2px }
+
+/* The page ends with two small matching tiles */
+#main .hf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px }
+#main .hf-tile { display: flex; flex-direction: column; align-items: flex-start; text-align: left; gap: 2px; min-height: 0; padding: 14px; border-radius: 22px; background: #fff; border: 1px solid #EFEAF2 }
+#main .hf-tile > small { font-size: 12.5px; font-weight: 600; color: #5E5A75; margin-bottom: 8px }
+#main .hf-art { display: block; margin-bottom: 8px }
+#main .hf-tile b { font-size: 15.5px; line-height: 20px; font-weight: 600; color: var(--ink) }
+#main .hf-sub { font-size: 13px; line-height: 18px; color: #5E5A75; font-weight: 500 }
+#main .hf-marks { display: flex; margin-bottom: 8px; height: 42px; align-items: center }
+#main .hf-marks i { width: 38px; height: 38px; border-radius: 50%; background: var(--year-pale, #f3eefb); display: grid; place-items: center; border: 2px solid #fff }
+#main .hf-marks i + i { margin-left: -12px }
+#main .hf-marks i svg { width: 22px; height: 22px }
+#main .hf-grid + .connected-preview-footnote { margin-top: 22px }
+#main .hf-art .hub-dot { display: block; width: 42px; height: 42px }
+
+
+/* New in Maya's guides: a soft lavender card (the Sunrise lavender), plum sparkle, a quiet pill */
+#main .hg-new { display: flex; align-items: center; gap: 12px; width: 100%; margin-top: 4px; padding: 16px 14px 16px 16px; border-radius: 22px; background: #F3EFFC; border: 1px solid #E9E3FB; text-align: left }
+#main .hg-new-ic { width: 34px; height: 34px; flex: none; color: #5b4a8b }
+#main .hg-new-ic svg { width: 100%; height: 100% }
+#main .hg-new-copy { flex: 1; min-width: 0 }
+#main .hg-new-copy b { display: block; font-size: 15.5px; line-height: 20px; font-weight: 600; color: var(--ink) }
+#main .hg-new-copy small { display: block; margin-top: 2px; font-size: 13px; line-height: 18px; color: #5E5A75 }
+#main .hg-new-pill { flex: none; font-size: 12px; font-weight: 700; color: #5b4a8b; background: #fff; border: 1px solid #E2DAF6; border-radius: 999px; padding: 3px 10px }
+#main .hn-timeline { margin-top: 10px !important; padding: 16px 4px !important; border-top: 0 !important }
+#main .hg-new { gap: 10px; padding: 14px 12px 14px 14px }
+#main .hg-new-ic { width: 28px; height: 28px }
+#main .hg-new-copy b { white-space: nowrap; font-size: 15px }
+#main .hg-new-pill { font-size: 11.5px; padding: 2px 8px }
+/* No purple: the app's warm neutral (Memories' cream), warm ink, and the same coral pill as "Updated" on the Guides tab */
+#main .hg-new { background: #F5F1EA !important; border-color: #ECE6DC !important }
+#main .hg-new-ic { color: #4d443b !important }
+#main .hg-new-pill { background: #e8775a !important; color: #fff !important; border: 0 !important }
+
+/* The guides row is the app's own row component; only its square takes Home's Sunrise tint so it isn't any one category */
+#main .hg-newlist { margin-top: 4px }
+#main .hg-new-dot { background: linear-gradient(160deg, #FEF2E8, #FDEEF3 52%, #F3EFFC) !important; padding: 7px !important }
+#main .hg-new-count { flex: none; margin-right: 2px }
+#main .hg-newlist .hub-row { text-align: left }
+#main .hg-newlist .hub-row-copy b { white-space: nowrap }
+
+/* Home's lists are the app's own components now: no custom sizes */
+#main .hg-rows .hub-row { text-align: left }
+#main .hg-rows .hub-row-copy b, #main .hg-newlist .hub-row-copy b { white-space: normal }
+#main .hg-newlist .hub-row-copy b { white-space: nowrap }
+#main .hg-rows { margin: 0 0 12px }
+#main .hg-page .hub-h2 { margin: 22px 2px 10px }
+#main .hg-rows .hg-new-dot { padding: 7px !important }
+#main .hg-tl { width: 100%; text-align: left; margin: 2px 0 12px }
+#main .hg-tl { font-size: 15.5px !important; font-weight: 600 !important; color: var(--ink) !important; padding: 16px 4px !important }
+/* One rhythm: 12px between blocks, the timeline link sits tight between the two cards */
+#main .hg-page .hg-rows { margin: 0 !important }
+#main .hg-tl { margin: 2px 0 !important; padding: 12px 4px !important; min-height: 0 !important }
+#main .hg-newlist { margin: 0 0 12px !important }
+#main .hg-page .connected-checkin { margin-bottom: 12px !important }
+#main .hg-page .he-hero { margin-bottom: 0 }
+#main .hg-page .hub-h2 { margin: 20px 2px 10px !important }
+
+#main .category-directory-row.is-flash { animation: guideFlash 1.8s ease-out }
+@keyframes guideFlash { 0%, 35% { box-shadow: 0 0 0 3px #e8775a, 0 6px 18px rgba(232,119,90,.25) } 100% { box-shadow: 0 0 0 0 rgba(232,119,90,0) } }
+
+/* Small phones (320–360px): the three answers fit without the indent, and wrap if they still don't. */
+@media (max-width: 360px) {
+  #main .hg-page .connected-checkin .connected-checkin-choices { flex-wrap: wrap !important; padding-left: 0 }
+  #main .hg-page .connected-checkin .connected-checkin-choices button:not(.hub-q-skip) { flex: 1 1 auto !important }
+}
+
+/* The balloon is a cut-out (transparent PNG): show the whole number, no crop, no box. */
+#main .hg-banner-img { width: 56px; height: 64px; border-radius: 0; object-fit: contain; object-position: center; filter: drop-shadow(0 2px 3px rgba(43, 40, 64, .12)) }
+
+/* Her guides block (two states) and the slim timeline card: white, hairline, circles for guides. */
+#main .hg-guides-card, #main .hg-tl-card { display: flex; position: relative; width: 100%; border: 1px solid var(--line, #ebe6dd); border-radius: 20px; background: #fffdf9; text-align: left; font: inherit; color: var(--ink, #2B2840); cursor: pointer }
+#main .hg-guides-card { flex-direction: column; align-items: flex-start; gap: 12px; margin-top: 24px; padding: 16px 44px 16px 16px }
+#main .hg-guides-card > :last-child:not(.hg-guides-copy), #main .hg-tl-card > :last-child:not(.hg-guides-copy) { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: #9a95a8 }
+#main .hg-marks { display: flex; align-items: center }
+#main .hg-gtile-mark { flex: none; display: grid; place-items: center; width: 40px; height: 40px; margin-right: -8px; border-radius: 50%; background: var(--year-pale, #f3effb); box-shadow: 0 0 0 3px #fffdf9; transition: opacity .2s }
+#main .hg-gtile-mark svg { width: 24px; height: 24px }
+#main .hg-gtile-mark.is-quiet { opacity: .28; filter: grayscale(.6) }
+#main .hg-new-tag { margin-left: 18px; font-style: normal; font-size: 12px; font-weight: 650; line-height: 16px; padding: 3px 9px; border-radius: 999px; background: #fdebe4; color: #c4583a }
+#main .hg-guides-copy { min-width: 0 }
+#main .hg-guides-copy b { display: block; font-size: 15.5px; line-height: 20px; font-weight: 600 }
+#main .hg-guides-copy small { display: block; margin-top: 2px; font-size: 13.5px; line-height: 18px; color: #5E5A75 }
+#main .hg-tl-card { align-items: center; gap: 12px; margin-top: 10px; padding: 14px 44px 14px 16px }
+#main .hg-tl-mark { flex: none; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 13px; background: #eef4ef; color: #4f8a6a }
+#main .hg-tl-mark svg { width: 22px; height: 22px }
+#main .hg-guides-card.is-new { gap: 10px }
+#main .hg-new-eyebrow { font-size: 12.5px; font-weight: 650; letter-spacing: .02em; color: #c4583a }
+#main .hg-chips { display: flex; flex-wrap: wrap; gap: 8px }
+#main .hg-chip { display: inline-flex; align-items: center; gap: 8px; padding: 5px 12px 5px 5px; border-radius: 999px; background: var(--year-pale, #f3effb); color: var(--year-ink, #5b4a8b); font-size: 14px; font-weight: 600; line-height: 18px }
+#main .hg-chip-mark { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: #fff }
+#main .hg-chip-mark svg { width: 20px; height: 20px }
+
+/* End of Home: Guides and Timeline as an equal pair of tiles. */
+#main .hg-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 26px }
+#main .hg-ptile { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; min-height: 148px; padding: 16px 14px; border: 1px solid var(--line, #ebe6dd); border-radius: 20px; background: #fffdf9; text-align: left; font: inherit; color: var(--ink, #2B2840); cursor: pointer }
+#main .hg-ptile .hg-marks, #main .hg-ptile .hg-tl-mark { margin-bottom: 10px }
+#main .hg-ptile .hg-gtile-mark { width: 36px; height: 36px; margin-right: -7px }
+#main .hg-ptile .hg-gtile-mark svg { width: 22px; height: 22px }
+#main .hg-ptile .hg-tl-mark { width: 36px; height: 36px; border-radius: 12px }
+#main .hg-ptile b { font-size: 15.5px; line-height: 20px; font-weight: 600 }
+#main .hg-ptile small { font-size: 13.5px; line-height: 18px; color: #5E5A75 }
+#main .hg-ptile.is-new { border-color: #f3cfc2; background: #fff8f4 }
+#main .hg-dot-new { position: absolute; top: 14px; right: 14px; width: 9px; height: 9px; border-radius: 50%; background: #e8775a }
+
+/* Guides tab: a guide that moved for her keeps this until it's opened. */
+#main .category-directory-row .guide-new { display: inline-block; margin-left: 6px; vertical-align: 2px; padding: 2px 8px; border-radius: 999px; background: #e8775a; color: #fff; font-size: 11.5px; font-weight: 700; line-height: 15px; letter-spacing: .01em }
+#main .category-directory-row small.guide-new-line { color: var(--year-ink, #5b4a8b) !important; font-weight: 600 }
+#main .category-directory-row { position: relative }
+#main .category-directory-row .guide-new { position: absolute; top: 14px; right: 14px; margin: 0 }
+
+/* Guides tab, Nov 10 pass: equal tiles, softer color so the new ones stand out, "New" above the title, less gap. */
+#main .category-directory { grid-auto-rows: 1fr !important; margin-top: 4px !important }
+#main .category-directory-row { min-height: 128px !important; background: radial-gradient(circle at 100% 0, rgba(255,255,255,.6) 0 30%, transparent 30.5%), var(--year-pale, #f3eefb) !important }
+#main .category-directory-row[data-new] { background: radial-gradient(circle at 100% 0, rgba(255,255,255,.5) 0 30%, transparent 30.5%), var(--year-bg, #e8e2f6) !important }
+#main .category-directory-row .guide-new { position: static !important; display: inline-block; margin: 0 0 5px !important; padding: 2px 8px; border-radius: 999px; background: #e8775a; color: #fff; font-size: 11px; font-weight: 700; line-height: 15px }
+#main .category-directory-row .directory-copy small { color: #5E5A75 !important; font-weight: 500 }
+#main .category-directory-row small.guide-new-line { color: var(--year-ink, #5b4a8b) !important; font-weight: 600 }
+/* New guides: same soft color as the rest, marked by a coral outline that matches the "New" pill (Yarden, Nov 10). */
+#main .category-directory-row[data-new] { background: radial-gradient(circle at 100% 0, rgba(255,255,255,.6) 0 30%, transparent 30.5%), var(--year-pale, #f3eefb) !important; box-shadow: inset 0 0 0 2px #e8775a !important }
+
+/* Home's Guides tile when something's new: the same coral outline and "New" pill as the Guides tab. */
+#main .hg-ptile.is-new { background: #fffdf9 !important; border-color: transparent !important; box-shadow: inset 0 0 0 2px #e8775a }
+#main .hg-ptile .hg-dot-new { display: none }
+#main .hg-ptile .hg-new-pill { align-self: flex-start; margin: -2px 0 4px; padding: 2px 8px; border-radius: 999px; background: #e8775a; color: #fff; font-size: 11px; font-weight: 700; line-height: 15px; font-style: normal }
+/* Guides tab: full guide color again (Yarden picked it, Nov 10); new ones keep the coral outline and "New" pill. */
+#main .category-directory-row, #main .category-directory-row[data-new] { background: radial-gradient(circle at 100% 0, rgba(255,255,255,.5) 0 30%, transparent 30.5%), var(--year-bg, #e8e2f6) !important }
+#main .category-directory-row .directory-copy small { color: var(--year-ink, #5b4a8b) !important }

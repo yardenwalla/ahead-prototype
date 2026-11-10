@@ -1493,3 +1493,41 @@ label:has(> .hub-photo-input:focus-visible) { outline: 2px solid #884866; outlin
 #main .hub-found{outline:2px solid var(--ss-ink,var(--leaf,#526c47));outline-offset:3px;border-radius:12px;transition:outline-color .6s}
 #main .cc-times label.is-off { opacity: .45 }
 #main .bk-photo .bk-photo-cap { position: absolute; left: 0; right: 0; bottom: 2px; font-style: normal; font-size: 9.5px; font-weight: 600; text-align: center; color: #9a8f88; line-height: 1.2 }
+
+/* Memories: a clear + on every empty month, and a real photo on the memory book card */
+#main .mem-story.is-empty { position: relative }
+#main .mem-story-plus { position: absolute; left: 50%; top: 61%; transform: translate(-50%, -50%); width: 52px; height: 52px; border-radius: 50%; background: #2B2840; color: #fff; display: grid; place-items: center; font-size: 26px; font-weight: 500; line-height: 1; box-shadow: 0 4px 14px rgba(43, 40, 64, .25); pointer-events: none }
+#main .bk-stack-front.has-photo img { position: absolute; inset: 9px 9px 22px; width: calc(100% - 18px); height: calc(100% - 31px); object-fit: cover; border-radius: 2px }
+#main .bk-stack-front.has-photo i { z-index: 1 }
+#main .mem-bookcard.has-add .mem-bookcard-open { padding-right: 130px }
+#main label.mem-bookcard-art.is-add { position: absolute; right: 18px; top: 18px; cursor: pointer }
+#main .mem-add-plus { position: absolute; inset: 0; display: grid; place-items: center; font-size: 34px; font-weight: 500; color: #2B2840 }
+
+/* Baby's age (born early): two big ages in color, then which guide follows which */
+#main .age-page .hub-detail-head { margin-bottom: 14px }
+#main .age-duo { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 0 0 22px }
+#main .age-duo-tile { border-radius: 20px; padding: 16px 16px 15px }
+#main .age-duo-tile small { display: block; font-size: 13px; font-weight: 600 }
+#main .age-duo-tile b { display: block; margin: 6px 0 4px; font-size: 30px; line-height: 1.05; letter-spacing: -.02em; color: #2B2840 }
+#main .age-duo-tile span { display: block; font-size: 13.5px; line-height: 1.3 }
+#main .age-duo-tile.is-bday { background: #fdeee6 } #main .age-duo-tile.is-bday small, #main .age-duo-tile.is-bday span { color: #9a5a3c }
+#main .age-duo-tile.is-adj { background: #e7effc } #main .age-duo-tile.is-adj small, #main .age-duo-tile.is-adj span { color: #46638c }
+#main .age-page .hub-ages { padding-top: 4px }
+#main .age-page .hub-agemode-row small { color: #6c6880 }
+#main .age-tip { margin: 14px 4px 0; padding: 12px 14px; border-radius: 14px; background: #eef6f0; color: #356651; font-size: 14.5px; line-height: 1.4 }
+#main .age-page .hub-ages .hub-tiles { display: none }
+#main .age-page .hub-ages .hub-tiles + .hub-agemode-row { border-top: 0 }
+
+/* Month chips: where a moment sits in the book, no dates */
+#main .mem-month-chips { display: flex; flex-wrap: wrap; gap: 8px }
+#main .mem-month-chips button { border: 1px solid var(--line, #e6e1da); background: #fff; border-radius: 999px; padding: 9px 14px; font: inherit; font-size: 14.5px; font-weight: 600; color: #4e4a63; cursor: pointer }
+#main .mem-month-chips button.is-on { background: #2B2840; border-color: #2B2840; color: #fff }
+#main .hub-own-first .mem-month-chips { margin: 4px 0 16px }
+#main .mem-move-card { padding: 16px }
+#main .mem-move-remove { display: block; margin: 18px auto 0 }
+/* Memory book: make it clear moments can be tapped */
+#main .bk-hint { margin: 6px 0 0; font-size: 13.5px; color: #6c6880 }
+#main .bk-first { position: relative; padding-right: 22px }
+#main .bk-go { position: absolute; right: 2px; top: 50%; transform: translateY(-50%); color: #a9a4b5; font-size: 20px }
+#main .bk-tag-go { margin-left: 5px; opacity: .55; font-weight: 700 }
+#main .mem-sub { margin: -4px 2px 12px; font-size: 14.5px; line-height: 1.4; color: #6c6880 }

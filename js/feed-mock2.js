@@ -2672,7 +2672,7 @@
       bot && ['p1', 'bag', 'Bottles away from home', 'Daycare, a sitter or a day out', 'y_away'],
       ['g1', 'leaf', b ? 'Fewer poops can be normal' : 'Steady growth at checkups', b ? 'Wet diapers still tell you' : 'At 2 and 4 months', 'y_growth']];
     const rough = `<button class="hub-rough-card care-rash-card" style="background:#fbe4ec;color:#9b4766;margin-top:12px" onclick="${go('x_tough')}"><span class="hub-rough-moon" aria-hidden="true">${hubArt('heart', CAT)}</span><span class="hub-rough-copy"><b>${F('Feeding challenges')}</b><small>${F('Spit-up, gas and crying, distracted or refusing, poop')}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`;
-    return `<h2 class="hub-h2">${F('What’s new now')}</h2><div class="hub-list">${R.filter(Boolean).map(r => cr(...r)).join('')}</div>` + rough
+    return `<h2 class="hub-h2">${F(`Right now for ${name()}`)}</h2><div class="hub-list">${R.filter(Boolean).map(r => cr(...r)).join('')}</div>` + rough
       + h.versus('Normal, or time to call?', ['Normal', 'Shorter feeds, fussy evenings, spit-up' + (b ? ', fewer poops' : '') + '.'], ['Call your pediatrician', 'Fewer than 6 wet diapers, refusing feeds, forceful vomiting, or a fever.']); };
 
   // Night feeds, told as feeding (not sleep)
@@ -2764,7 +2764,7 @@
     const vs = v === 2 ? [['Normal', 'Quick, distracted feeds, and interest in your food.'], ['Call your pediatrician', 'Refusing feeds, fewer than 6 wet diapers, or forceful vomiting.']]
       : v === 3 ? [['Normal', 'Gagging, mess, a few bites a day, and changes in poop.'], ['Call your pediatrician', 'A few hives or vomiting after a food. Hives all over or trouble breathing: call 911.']]
       : [['Normal', 'Big days and small days, and lots of mess.'], ['Call your pediatrician', 'Refusing most foods for weeks, or a reaction after a food. Trouble breathing: call 911.']];
-    return `<h2 class="hub-h2">${F('What’s new now')}</h2><div class="hub-list">${R.filter(Boolean).map(r => cr(...r)).join('')}</div>` + rough + h.versus('Normal, or time to call?', vs[0], vs[1]); };
+    return `<h2 class="hub-h2">${F(`Right now for ${name()}`)}</h2><div class="hub-list">${R.filter(Boolean).map(r => cr(...r)).join('')}</div>` + rough + h.versus('Normal, or time to call?', vs[0], vs[1]); };
 
   // ---- Solids depth pass (Nov 7): bring back what the old solids pages had (textures by age, safe shapes, the full
   // gagging vs choking page with first aid, teething and sick days), and use the right icons. ----

@@ -29,7 +29,7 @@
   // One first: icon, what happened, when, and the note (or an invitation to add one).
   const firstRow = (r, withMonth = true) => {
     const dob = parse(profile.dob);
-    return `<button class="mem-row" onclick="openPage('event-edit:${r.id}')"><span class="mem-row-ic is-toned" style="${TONE(r)}">${hubArt(ICON(r), 'Development')}</span><span class="mem-row-copy"><b>${esc2(keepTitle(r))}</b><small>${esc2(journeyDateLabel(r.date))}${withMonth ? ` · ${esc2(longLabel(monthOf(dob, r.date)))}` : ''}</small>${r.notes ? `<q>${esc2(String(r.notes).slice(0, 90))}</q>` : ''}</span><span class="mem-row-go" aria-hidden="true">›</span></button>`;
+    return `<button class="mem-row" onclick="openPage('event-edit:${r.id}')"><span class="mem-row-ic is-toned" style="${TONE(r)}">${hubArt(ICON(r), 'Development')}</span><span class="mem-row-copy"><b>${esc2(keepTitle(r))}</b>${withMonth ? `<small>${esc2(longLabel(monthOf(dob, r.date)))}</small>` : ''}${r.notes ? `<q>${esc2(String(r.notes).slice(0, 90))}</q>` : ''}</span><span class="mem-row-go" aria-hidden="true">›</span></button>`;
   };
   // All firsts, by month, newest first. Its own page, so Memories itself never grows long.
   const allFirsts = () => {
@@ -47,8 +47,8 @@
     const day = d => parse(d).toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
     const pageOf = (m, k) => {
       const pic = typeof hubPhotoFor === 'function' ? hubPhotoFor(m) : null, tape = TAPE[m], tilt = k % 2 ? -4 : 4;
-      const firstsHtml = (by[m] || []).map(r => `<button class="bk-first" onclick="openPage('event-edit:${r.id}')"><span class="bk-ic" style="${TONE(r)}">${hubArt(ICON(r), 'Development')}</span><span class="bk-copy"><b>${esc2(keepTitle(r))}</b><small>${esc2(day(r.date))}</small>${r.notes ? `<q>${esc2(String(r.notes).slice(0, 140))}</q>` : ''}</span></button>`).join('');
-      const tags = also[m] ? `<div class="bk-also"><span class="bk-also-label">${esc2(by[m] ? 'Also this month' : 'Noticed this month')}</span><div class="bk-tags">${also[m].map(r => `<button class="bk-tag" style="${TONE(r)}" onclick="openPage('event-edit:${r.id}')">${esc2(r.title)}</button>`).join('')}</div></div>` : '';
+      const firstsHtml = (by[m] || []).map(r => `<button class="bk-first" onclick="openPage('event-edit:${r.id}')"><span class="bk-ic" style="${TONE(r)}">${hubArt(ICON(r), 'Development')}</span><span class="bk-copy"><b>${esc2(keepTitle(r))}</b>${r.notes ? `<q>${esc2(String(r.notes).slice(0, 140))}</q>` : ''}</span><span class="bk-go" aria-hidden="true">›</span></button>`).join('');
+      const tags = also[m] ? `<div class="bk-also"><span class="bk-also-label">${esc2(by[m] ? 'Also this month' : 'Noticed this month')}</span><div class="bk-tags">${also[m].map(r => `<button class="bk-tag" style="${TONE(r)}" onclick="openPage('event-edit:${r.id}')">${esc2(r.title)}<span class="bk-tag-go" aria-hidden="true">›</span></button>`).join('')}</div></div>` : '';
       // The month's photo, taped in on the right. No photo yet: an empty polaroid that adds one.
       const photo = pic ? `<span class="bk-photo" style="--tape:${tape};--tilt:${tilt}deg"><i></i><img src="${pic}" alt="${esc2(WORDS[m])} photo"><em class="bk-photo-cap">${esc2(m === 0 ? 'Newborn photo' : m === 12 ? 'Birthday photo' : m + '-month photo')}</em></span>`
         : `<label class="bk-photo is-empty" style="--tape:${tape};--tilt:${tilt}deg" aria-label="Add the ${esc2(WORDS[m].toLowerCase())} photo"><i></i><span class="bk-photo-add">＋</span>${typeof hubPhotoInput === 'function' ? hubPhotoInput(m) : ''}</label>`;
@@ -56,7 +56,11 @@
     };
     const inner = `<div class="bk-book">${months.map(pageOf).join('')}</div>`;
     // A header in the same keepsake style: the title, and a little stack of taped polaroids.
-    const head = `<header class="bk-head"><div class="bk-head-copy"><p class="bk-eyebrow">${hubArt('star', 'Development')}<span>Memories</span></p><h1>${esc2(`${name()}’s memory book`)}</h1><p class="bk-count">${esc2(big.length ? `${big.length} first${big.length === 1 ? '' : 's'} so far.` : 'The big ones will collect here.')}</p></div><span class="bk-stack" aria-hidden="true"><span class="bk-stack-back"></span><span class="bk-stack-mid"></span><span class="bk-stack-front"><i></i><svg viewBox="0 0 40 40"><path d="M20 31s-9-5.6-9-12.2A5 5 0 0 1 20 16a5 5 0 0 1 9 2.8C29 25.4 20 31 20 31Z" fill="none" stroke="#f08b72" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span></header>`;
+    let head = `<header class="bk-head"><div class="bk-head-copy"><p class="bk-eyebrow">${hubArt('star', 'Development')}<span>Memories</span></p><h1>${esc2(`${name()}’s memory book`)}</h1><p class="bk-count">${esc2(all.length ? `${all.length} moment${all.length === 1 ? '' : 's'} so far.` : 'The big ones will collect here.')}</p>${all.length ? `<p class="bk-hint">${esc2('In the wrong month? Tap any moment to move it.')}</p>` : ''}</div><span class="bk-stack" aria-hidden="true"><span class="bk-stack-back"></span><span class="bk-stack-mid"></span><span class="bk-stack-front"><i></i><svg viewBox="0 0 40 40"><path d="M20 31s-9-5.6-9-12.2A5 5 0 0 1 20 16a5 5 0 0 1 9 2.8C29 25.4 20 31 20 31Z" fill="none" stroke="#f08b72" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span></header>`;
+    { // The header's polaroid shows the newest real photo, not a placeholder.
+      const pm = [12,11,10,9,8,7,6,5,4,3,2,1,0].find(m => typeof hubPhotoFor === 'function' && hubPhotoFor(m));
+      if (pm != null) head = head.replace(/<span class="bk-stack-front"><i><\/i><svg[\s\S]*?<\/svg><\/span>/, `<span class="bk-stack-front has-photo"><i></i><img src="${hubPhotoFor(pm)}" alt=""></span>`);
+    }
     return `<div class="quiet-category hub-page hub-detail bk-screen" data-overview="Memories" style="${yearTheme('Memories')}">${typeof detailPageTop === 'function' ? detailPageTop('Memories') : ''}${head}${months.length ? inner : `<p class="mem-empty">${esc2('Nothing saved yet.')}</p>`}</div>`;
   };
   if (typeof window.changesRoute === 'function') {
@@ -83,12 +87,12 @@
         : `<label class="mem-story is-plain is-empty" aria-label="Add the newborn photo"><em>Newborn</em><span class="mem-story-add">＋ Add photo</span>${hubPhotoInput(0)}</label>`;
       if (!designs) return photo(m) ? `<div class="mem-story-wrap"><label class="mem-story is-plain"><img src="${photo(m)}" alt=""><em>${label(m)}</em>${hubPhotoInput(m)}</label>${remove(m)}</div>` : '';
       if (photo(m)) return `<div class="mem-story-wrap"><button class="mem-story" onclick="storyShare(${m})" aria-label="Open the ${L(m)} card"><img data-story-thumb="${m}" alt=""></button>${remove(m)}</div>`;
-      return `<label class="mem-story is-empty" aria-label="Add the ${m === 0 ? 'newborn' : m === 12 ? 'first-birthday' : m + '-month'} photo"><img data-story-thumb="${m}" alt="">${quiet ? '' : '<span class="mem-story-add">＋ Add photo</span>'}${hubPhotoInput(m)}</label>`;
+      return `<label class="mem-story is-empty" aria-label="Add the ${m === 0 ? 'newborn' : m === 12 ? 'first-birthday' : m + '-month'} photo"><img data-story-thumb="${m}" alt="">${quiet === true ? '' : '<span class="mem-story-plus" aria-hidden="true">＋</span>'}${hubPhotoInput(m)}</label>`;
     };
     const bigs = bigFirsts(firsts);
     // Newest first, only the months the baby has reached.
     const months = Array.from({ length: now + 1 }, (_, i) => now - i);
-    const strip = `<div class="mem-stories" tabindex="0" role="region" aria-label="Month by month photos">${months.map(card).join('')}</div>`;
+    const strip = `<div class="mem-stories" tabindex="0" role="region" aria-label="Month by month photos">${months.map(m => card(m)).join('')}</div>`;
     // At the first birthday, the whole year on one page sits above the row, as its own thing.
     const year = designs && now === 12 && Array.from({ length: 12 }, (_, i) => photo(i + 1)).some(Boolean)
       ? `<button class="mem-yearcard" onclick="storyShare('year')"><span class="mem-yearcard-pic"><img data-story-thumb="year" alt=""></span><span><b>${esc2(`${name()}’s first year`)}</b><small>All twelve months on one page, as a photo or a video.</small></span><span class="mem-row-go" aria-hidden="true">›</span></button>` : '';
@@ -96,19 +100,23 @@
     let b = `<div class="mem-page"><div class="eyebrow">Memories</div><h1>${nm}’s first year</h1>`;
     // The memory book: one card that opens it, styled like the book's own cover. Saving a first stays one tap.
     const stack = `<span class="bk-stack" aria-hidden="true"><span class="bk-stack-back"></span><span class="bk-stack-mid"></span><span class="bk-stack-front"><i></i><svg viewBox="0 0 40 40"><path d="M20 31s-9-5.6-9-12.2A5 5 0 0 1 20 16a5 5 0 0 1 9 2.8C29 25.4 20 31 20 31Z" fill="none" stroke="#f08b72" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>`;
-    const count = bigs.length ? `${bigs.length} first${bigs.length === 1 ? '' : 's'} so far` : firsts.length ? `${firsts.length} thing${firsts.length === 1 ? '' : 's'} you’ve noticed` : 'Firsts you save are written here';
-    const bookCard = `<div class="mem-bookcard"><button class="mem-bookcard-open" onclick="openPage('${firsts.length ? 'chg:Timeline:firsts' : 'chg:Timeline:milestone'}')"><span class="mem-bookcard-art">${stack}</span><span class="mem-bookcard-copy"><b>${esc2(`${name()}’s memory book`)}</b><small>${esc2(count)}</small>${firsts.length ? `<em>${esc2('Open the book')} ›</em>` : ''}</span></button><button class="mem-bookcard-save" onclick="openPage('chg:Timeline:milestone')">＋ Save a first</button></div>`;
+    const count = firsts.length ? `${firsts.length} moment${firsts.length === 1 ? '' : 's'} so far` : 'Firsts you save are written here';
+    const newest = have.length ? have[have.length - 1] : null;
+    const realStack = newest != null ? stack.replace(/<span class="bk-stack-front"><i><\/i><svg[\s\S]*?<\/svg><\/span>/, `<span class="bk-stack-front has-photo"><i></i><img src="${photo(newest)}" alt=""></span>`) : null;
+    // The newest real photo when there is one; until then, the little keepsake drawing.
+    const art = `<span class="mem-bookcard-art">${realStack || stack}</span>`;
+    const addArt = '';
+    const bookCard = `<div class="mem-bookcard${addArt ? ' has-add' : ''}"><button class="mem-bookcard-open" onclick="openPage('${firsts.length ? 'chg:Timeline:firsts' : 'chg:Timeline:milestone'}')">${art}<span class="mem-bookcard-copy"><b>${esc2(`${name()}’s memory book`)}</b><small>${esc2(count)}</small>${firsts.length ? `<em>${esc2('Open the book')} ›</em>` : ''}</span></button>${addArt}<button class="mem-bookcard-save" onclick="openPage('chg:Timeline:milestone')">＋ Save a first</button></div>`;
 
     // Nothing saved yet: a welcoming card, with the year's designs waiting underneath.
     if (!have.length && !firsts.length) {
       const P = typeof babyPronouns === 'function' ? babyPronouns() : { p: 'their' };
-      b += `<section class="mem-welcome"><h2>${esc2(now === 0 ? `${name()}’s year starts here` : `${name()}’s year, one photo a month`)}</h2><p>${esc2(`Add a photo each month and it becomes a little keepsake card to share. By ${P.p} first birthday, all twelve hang together on one page.`)}</p><div class="mem-welcome-actions"><label class="primary mem-welcome-btn">${esc2(`Add ${now === 0 ? 'a newborn' : now === 12 ? 'a first-birthday' : `the ${now}-month`} photo`)}${hubPhotoInput(now)}</label></div></section>`;
-      // The welcome button already adds this month's photo, so its tile doesn't repeat the button.
-      b += `<div class="mem-head"><h2>Month by month</h2></div><div class="mem-stories" tabindex="0" role="region" aria-label="Month by month photos">${months.map(m => card(m, m === now)).join('')}</div>`;
-      b += bookCard + `<p class="hub-foot">Photos and entries stay on this device.</p></div>`;
+      // The memory book leads; the months underneath say what they're for in one line, and every month has its +.
+      b += bookCard + `<div class="mem-head"><h2>Month by month</h2></div><p class="mem-sub">${esc2(`Add a photo each month. By ${P.p} first birthday, all twelve hang together on one page.`)}</p><div class="mem-stories" tabindex="0" role="region" aria-label="Month by month photos">${months.map(m => card(m)).join('')}</div>`;
+      b += `<p class="hub-foot">Photos and entries stay on this device.</p></div>`;
       return `<div class="quiet-category hub-page hub-timeline-page" style="${yearTheme('Memories')}">${b}</div>`;
     }
-    b += `${year}<div class="mem-head"><h2>Month by month</h2>${have.length >= 2 ? `<button class="mem-play-link" onclick="memPlay()"><span aria-hidden="true">▶</span> Play the year</button>` : ''}</div>${strip}` + bookCard;
+    b += bookCard + `${year}<div class="mem-head"><h2>Month by month</h2>${have.length >= 2 ? `<button class="mem-play-link" onclick="memPlay()"><span aria-hidden="true">▶</span> Play the year</button>` : ''}</div>${strip}`;
 
     // Checkups: a quiet record.
     if (visits.length) b += `<details class="mem-visits"><summary><span>${esc2('Checkups')}</span><small>${visits.length ? `${visits.length} saved` : 'None saved yet'}</small></summary>${visits.map(r => `<button class="mem-visit" onclick="openPage('event-edit:${r.id}')"><b>${esc2(r.title)}</b><small>${esc2(journeyDateLabel(r.date))}</small></button>`).join('')}<button class="textlink" onclick="openPage('chg:Timeline:visit')">＋ Record a visit</button></details>`;

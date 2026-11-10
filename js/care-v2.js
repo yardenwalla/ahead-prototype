@@ -36,7 +36,7 @@
     return `<button class="hub-row hl-row" style="--hl-bg:${c[0]};--hl-ink:${c[1]}" onclick="${onclick}"><span class="hub-dot">${hubArt(ICON[k], CAT)}</span><span class="hub-row-copy"><b>${F(title)}</b>${sub ? `<small>${F(sub)}</small>` : ''}</span><span class="hub-chev" aria-hidden="true">›</span></button>`; };
   const tile = (k, t, v) => `<button class="care-tile" style="--hl-bg:${COL[k][0]};--hl-ink:${COL[k][1]}" onclick="${k === 'cord' ? `openPage('chg:${CAT}:d:cord')` : go(k, v)}"><span class="care-tile-ic">${hubArt(ICON[k], CAT)}</span><b>${F(t)}</b></button>`;
 
-  const BASICS = [['diapers', 'Diapers'], ['bath', 'Baths and hair'], ['skin', 'Skin and rashes'], ['clothes', 'Clothes'], ['sun', 'Sun and heat'], ['teeth', 'Gums and teeth'], ['nails', 'Nails, ears, nose'], ['need', 'What you’ll need']];
+  const BASICS = [['diapers', 'Diapers'], ['bath', 'Baths and hair'], ['skin', 'Skin and rashes'], ['clothes', 'Clothes'], ['sun', 'Sun and heat'], ['teeth', 'Gums and teeth'], ['nails', 'Nails, ears, nose']];
   // "Right now": only what changes at this stage (the content map), each opening its topic at this stage.
   const HOME = [
     { title: 'Diapers, the cord and first baths', lead: 'It feels like a lot at first, and it gets quicker fast.',
@@ -44,7 +44,7 @@
     { title: 'Tub baths and skin care', lead: 'The cord has healed, and care settles into a rhythm.',
       news: () => [['bath', 'Tub baths can start', 'About 3 a week, and hair too', go('bath', 1)], ['skin', 'Baby acne and cradle cap', 'Common now, and easy to care for', go('skin', 1)], ['diapers', 'Fewer poops can be normal', 'And straining isn’t constipation', go('diapers', 1)]] },
     { title: 'Drool, sun and busy hands', lead: 'Busy hands, lots of drool, and more time outside.',
-      news: () => [['teeth', 'Teething', 'What helps, and what to skip', go('teeth', 2)], ['sun', 'Sunscreen and water', careAge() >= 6 ? 'Both can start now' : 'Both start at 6 months', go('sun', 2)], ['skin', 'Drool rash and eczema', 'Common now', go('skin', 2)], solids() && live() && answers.solids === 'Yes' ? ['diapers', 'Poop with solids', 'What’s normal now', go('diapers', 2)] : null].filter(Boolean) },
+      news: () => [['teeth', 'Teething', 'What helps, and what to skip', go('teeth', 2)], ['sun', 'Sunscreen', careAge() >= 6 ? 'It can start now' : 'It can start at 6 months', go('sun', 2)], ['skin', 'Drool rash and eczema', 'Common now', go('skin', 2)], solids() && live() && answers.solids === 'Yes' ? ['diapers', 'Poop with solids', 'What’s normal now', go('diapers', 2)] : null].filter(Boolean) },
     { title: 'First teeth and first steps', lead: 'Maya sits up, pulls up, and the first teeth arrive.',
       news: () => [['teeth', hasTooth() ? 'Brushing and a first dental visit' : 'Brushing starts with the first tooth', 'Twice a day, a rice-grain smear', go('teeth', 3)], ['bath', 'The big tub', 'And why to skip bath seats', go('bath', 3)], ['clothes', 'Shoes, or bare feet?', 'Bare feet indoors, soft shoes outside', go('clothes', 3)]] }
   ];
@@ -254,14 +254,14 @@
 
     sun: v => topicPage('sun', v, {
       title: 'Sun and heat',
-      lead: ['Young skin burns easily, so shade comes first.', '', sixPlus(v) ? 'Sunscreen and sips of water can start now.' : 'Sunscreen and water can start at 6 months.', ''],
+      lead: ['Young skin burns easily, so shade comes first.', '', sixPlus(v) ? 'Sunscreen can start now.' : 'Sunscreen can start at 6 months.', ''],
       news: [
-        [['Shade, not sunscreen', p_('Keep {o} out of direct sun: shade, light long sleeves and a wide-brimmed hat. If there’s no shade, a little sunscreen on small spots like the face is OK.')], ['No water yet', p_('Even on hot days, extra milk feeds are all {s} {need|needs}. No water before 6 months.')]],
+        [['Shade, not sunscreen', p_('Keep {o} out of direct sun: shade, light long sleeves and a wide-brimmed hat. If there’s no shade, a little sunscreen on small spots like the face is OK.')]],
         [],
-        [['Sunscreen from 6 months', p_('Broad-spectrum (it says so on the label), SPF 30 or more. Mineral (zinc oxide or titanium) is gentlest; skip sprays. Put it on 15–30 minutes before going out, and again every 2 hours and after water.')], ['Water from 6 months', p_('Small sips from a cup with meals, about 4–8 ounces a day in all. Milk is still the main drink.')]],
+        [['Sunscreen from 6 months', p_('Broad-spectrum (it says so on the label), SPF 30 or more. Mineral (zinc oxide or titanium) is gentlest; skip sprays. Put it on 15–30 minutes before going out, and again every 2 hours and after swimming.')]],
         []
       ],
-      base: [!sixPlus(v) ? ['Sun protection', 'Shade first', p_('Shade, light long sleeves and a wide-brimmed hat. A little sunscreen on the face only if there’s no shade.')] : ['Sun protection', 'Shade, a hat and SPF 30', p_('Shade and a hat first, then sunscreen on skin you can’t cover, every 2 hours and after water.')], ['Hot days', 'Layers, feeds and the stroller', H().steps(['One light layer, and shade or indoors at midday.', sixPlus(v) ? 'Extra milk feeds, and sips of water.' : 'Extra milk feeds. No water before 6 months.', 'Don’t cover the stroller with a blanket. It traps heat. Use the canopy or a clip-on shade.'])], ['At the pool or beach', 'What to bring', p_('Swim diapers, a sun shirt and a hat' + (sixPlus(v) ? ', and mineral sunscreen.' : '.') + ' Keep a hand on {o} in any water, even shallow.')]],
+      base: [!sixPlus(v) ? ['Sun protection', 'Shade first', p_('Shade, light long sleeves and a wide-brimmed hat. A little sunscreen on the face only if there’s no shade.')] : ['Sun protection', 'Shade, a hat and SPF 30', p_('Shade and a hat first, then sunscreen on skin you can’t cover, every 2 hours and after swimming.')], ['Hot days', 'Layers, feeds and the stroller', H().steps(['One light layer, and shade or indoors at midday.', F('Extra milk feeds keep {o} hydrated.'), 'Don’t cover the stroller with a blanket. It traps heat. Use the canopy or a clip-on shade.'])], ['At the pool or beach', 'What to bring', p_('Swim diapers, a sun shirt and a hat' + (sixPlus(v) ? ', and mineral sunscreen.' : '.') + ' Keep a hand on {o} in any water, even shallow.')]],
       call: () => H().versus('Normal, or time to call?', ['Normal', 'A little pink and sweaty, cooling off in the shade.'], ['Call your pediatrician', 'Any sunburn before age 1, or fewer wet diapers.']) + urgent('Hot and flushed and hard to wake, floppy, or not feeding. Cool {o} down and call 911. Never leave {o} in a car.')
     }),
 
@@ -348,7 +348,7 @@
   const paste = () => `<figure class="hub-figure hub-paste" role="img" aria-label="Use a smear of toothpaste the size of a grain of rice, not a pea-sized amount."><div class="is-yes"><svg viewBox="0 0 160 60" aria-hidden="true"><rect x="58" y="34" width="96" height="14" rx="7" fill="#cfe3db"/><rect x="8" y="30" width="56" height="20" rx="8" fill="#a9cbbd"/>${Array.from({ length: 9 }, (_, i) => `<rect x="${12 + i * 5.6}" y="16" width="3.4" height="15" rx="1.7" fill="#cfe3db"/>`).join('')}<ellipse cx="34" cy="14" rx="4.5" ry="2.6" fill="#fff" stroke="#7fb0cc" stroke-width="1.3"/></svg><b>✓ ${F('A grain of rice')}</b><small>${F('Under 3 years')}</small></div><div class="is-no"><svg viewBox="0 0 160 60" aria-hidden="true"><rect x="58" y="34" width="96" height="14" rx="7" fill="#cfe3db"/><rect x="8" y="30" width="56" height="20" rx="8" fill="#a9cbbd"/>${Array.from({ length: 9 }, (_, i) => `<rect x="${12 + i * 5.6}" y="16" width="3.4" height="15" rx="1.7" fill="#cfe3db"/>`).join('')}<circle cx="34" cy="8" r="9" fill="#fff" stroke="#7fb0cc" stroke-width="1.3"/></svg><b>${F('Not a pea')}</b><small>${F('That’s from age 3')}</small></div></figure>`;
   const layers = () => `<figure class="hub-figure hub-layers" role="img" aria-label="Dress baby in one more layer than you’re wearing."><div><span>${hubArt('shirt', CAT)}${hubArt('shirt', CAT)}</span><b>${F('You')}</b><small>${F('Comfortable in 2 layers')}</small></div><i aria-hidden="true">+1</i><div class="is-baby"><span>${hubArt('shirt', CAT)}${hubArt('shirt', CAT)}${hubArt('shirt', CAT)}</span><b>${F('Maya')}</b><small>${F('Needs 3')}</small></div></figure>`;
   const toothBtn = (here) => live() && !hasTooth() ? `<button class="hub-already" onclick="careSet('hasTooth','Yes')${here ? '' : `;openPage('chg:${CAT}:d:p:brush')`}">${F(here ? 'Got a first tooth? Tap to mark it' : 'Got a first tooth? See how to brush')}</button>` : '';
-const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: 'Sun protection by age', items: [['Under 6 months', 'Shade first', 'No shade? A little sunscreen on small areas'], ['6 months and up', 'Shade + SPF 30', 'Sunscreen on skin you can’t cover']], nowIndex: careAge() < 6 ? 0 : 1, cat: CAT, caption: 'Under 6 months, shade, clothes and a hat. From 6 months, shade plus SPF 30 sunscreen, reapplied every 2 hours and after water.' }) : '';
+const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: 'Sun protection by age', items: [['Under 6 months', 'Shade first', 'No shade? A little sunscreen on small areas'], ['6 months and up', 'Shade + SPF 30', 'Sunscreen on skin you can’t cover']], nowIndex: careAge() < 6 ? 0 : 1, cat: CAT, caption: 'Under 6 months, shade, clothes and a hat. From 6 months, shade plus SPF 30 sunscreen, reapplied every 2 hours and after swimming.' }) : '';
   const callTip = t => H().tip('Call your pediatrician', t);
   // Diaper rash: the two things that help as tiles, and when it's more than a rash.
   const rashBlock = (one, calls) => calls ? rashBlock(true).replace('A diaper rash not better', `${F(calls)} Or a rash not better`) : `<h2 class="hub-h2">${F('If a diaper rash starts')}</h2>` + hubIconSteps([['diaper', 'Change often', 'And let the skin air out'], ['shield', 'Thick zinc cream', 'A thick layer, every change']], CAT, 'Change often and let the skin air out, and use a thick layer of zinc cream at every change.', false)
@@ -397,8 +397,8 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     drool: { i: 'drop', k: 'skin', late: true, title: 'Drool rash and eczema', vis: () => rashLink(['drool', 'eczema']),
       W: 'All that drool, and dry air, can leave {p} skin red and rough.', D: '',
       },
-    six: { k: 'sun', vis: () => sunAges(), title: () => careAge() >= 7 ? 'Shade first, then sunscreen on bare skin' : 'Start sunscreen and water at 6 months', W: 'Shade and a hat still come first.', strip: () => hubStageStrip({ title: 'When to put sunscreen on', items: [['clock', 'Before you go out', '15–30 minutes ahead'], ['sun', 'Every 2 hours', 'Again, all day'], ['drop', 'After water', 'Again, every time']], cat: CAT, caption: 'Put sunscreen on 15 to 30 minutes before going out, again every 2 hours, and again after water.' }), K: 'Broad-spectrum, SPF 30 or more. Mineral is gentlest; skip sprays.', Kl: 'Which sunscreen', D: '',
-      Y: 'Extra milk feeds, plus up to 4–8 ounces of water a day from a cup. One light layer, and the canopy, not a blanket, over the stroller.', Yl: 'Hot days',
+    six: { k: 'sun', vis: () => sunAges(), title: () => careAge() >= 7 ? 'Shade first, then sunscreen on bare skin' : 'Start sunscreen at 6 months', W: 'Shade and a hat still come first.', strip: () => hubStageStrip({ title: 'When to put sunscreen on', items: [['clock', 'Before you go out', '15–30 minutes ahead'], ['sun', 'Every 2 hours', 'Again, all day'], ['drop', 'After a swim', 'Again, every time']], cat: CAT, caption: 'Put sunscreen on 15 to 30 minutes before going out, again every 2 hours, and again after water.' }), K: 'Broad-spectrum, SPF 30 or more. Mineral is gentlest; skip sprays.', Kl: 'Which sunscreen', D: '',
+      Y: 'Extra milk feeds. One light layer, and the canopy, not a blanket, over the stroller.', Yl: 'Hot days',
       extra: () => callTip('Any sunburn before age 1, right away.') + urgent('Hot and flushed and hard to wake, floppy, or not feeding. Cool {o} down and call 911.') },
     after1: { k: 'bath', ctx: 'After 1', title: 'Brushing and baths after 1', W: 'Care stays much the same as {s} {become|becomes} a toddler.', tilesT: 'What carries on', tiles: () => [['tooth', 'Brushing', 'Twice a day, a rice-grain smear'], ['bath', 'Baths', 'A few times a week, a hand on {o}'], ['stand', 'Shoes', 'Soft and flexible, once walking outside']],
       K: 'By the first birthday, if you haven’t been yet.', Kl: 'First dental visit' },
@@ -466,11 +466,11 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     gums: { k: 'teeth', title: 'Wipe {p} gums', W: 'A clean mouth before teeth come gets {o} used to it.',
       do: ['Twice a day, with a soft, clean cloth.', 'After the first feed and before bed.'], N: 'First teeth usually come around 6 months.' },
     shade: { k: 'sun', title: 'Shade first', W: 'Under 6 months, skin burns fast and babies overheat easily.',
-      do: ['Shade, light long sleeves and a wide-brimmed hat.', 'On hot days, extra milk feeds (no water yet), and the canopy, not a blanket, over the stroller.', 'No shade at all? Ask your pediatrician about a little sunscreen on the face.'], call: 'Any sunburn.' },
+      do: ['Shade, light long sleeves and a wide-brimmed hat.', 'On hot days, extra milk feeds, and the canopy, not a blanket, over the stroller.', 'No shade at all? Ask your pediatrician about a little sunscreen on the face.'], call: 'Any sunburn.' },
     teething: { k: 'teeth', title: 'Teething', W: 'The first tooth usually comes around 6 months. Anywhere from 4 to 12 is normal.',
       do: ['Rub {p} gums with a clean finger.', 'Offer a firm teething ring, chilled in the fridge, not frozen.', 'Skip numbing gels and teething necklaces.'], N: 'Drool, chewing on everything and extra fussing.', call: 'A fever, diarrhea or a rash: teething doesn’t cause those.' },
-    six: { k: 'sun', title: 'Sunscreen and water from 6 months', W: 'Shade and a hat still come first.',
-      do: ['Sunscreen: broad-spectrum, SPF 30 or more, every 2 hours.', 'Mineral is gentlest. Skip sprays.', 'Water: small sips from a cup with meals, about 4–8 ounces a day.'], call: 'Any sunburn.' },
+    six: { k: 'sun', title: 'Sunscreen from 6 months', W: 'Shade and a hat still come first.',
+      do: ['Sunscreen: broad-spectrum, SPF 30 or more, every 2 hours.', 'Mineral is gentlest. Skip sprays.'], call: 'Any sunburn.' },
     brush: { k: 'teeth', title: () => hasTooth() ? 'Brushing' : 'Brushing, from the first tooth', W: () => hasTooth() ? 'Twice a day keeps new teeth healthy.' : 'No tooth yet is normal. Some come close to the first birthday.',
       do: ['A soft baby toothbrush, twice a day, including before bed. No bottle in bed.', 'A rice-grain smear of fluoride toothpaste. No need to rinse.', 'First dental visit by the first birthday.'], vis: () => paste(), extra: () => toothBtn() },
     bigtub: { k: 'bath', title: 'The big tub', W: 'Once {s} {sit|sits} steadily on {p} own.',
@@ -601,7 +601,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
         doText: 'Dress {o} in one more layer than you. No hats indoors. Choose snaps or zips, with no ties or strings near the neck. No puffy coats under car seat straps.',
         normal: 'Feel the back of {p} neck: sweaty means too warm, cool means add a layer.', vis: () => layers() },
       1: { line: 'Shade, not sunscreen', answer: 'Under 6 months, keep {o} out of direct sun.', 
-        doText: 'Shade, light long sleeves and a wide-brimmed hat. On hot days, extra milk feeds, and no water yet. No shade at all? Ask your pediatrician about a little sunscreen on the face.',
+        doText: 'Shade, light long sleeves and a wide-brimmed hat. On hot days, extra milk feeds. No shade at all? Ask your pediatrician about a little sunscreen on the face.',
         normal: 'Too much sun shows as pink skin, often hours later.', call: 'Any sunburn.' },
       2: { line: 'Sunscreen from 6 months', get answer() { return sixNow() ? 'At 6 months, sunscreen can join shade and a hat.' : 'Shade only until 6 months. Then sunscreen can join in.'; }, 
         get doText() { return sixNow() ? 'Shade and a hat first. Then broad-spectrum sunscreen, SPF 30 or more, every 2 hours. Mineral is gentlest.' : 'Keep {o} in the shade, with light long sleeves and a wide-brimmed hat. From 6 months, add SPF 30 sunscreen every 2 hours.'; },
@@ -710,7 +710,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
       rows: () => ['brush', 'bigtub', walkingSoon() ? 'feet' : null, 'wriggly'].filter(Boolean),
       call: ['Wriggly changes, firmer poop, and no tooth yet.', 'A fever, hard poop for days, or any sunburn.'] }
   ];
-  // "Now" means now: sunscreen and water only from 6 months, shoes only once pulling up and cruising are close.
+  // "Now" means now: sunscreen only from 6 months, shoes only once pulling up and cruising are close.
   const sixNow = () => !live() || careAge() >= 6;
   const rollingNow = () => live() && (answers.roll === 'Yes' || answers.rollDirection === 'Trying to roll');
   const walkingSoon = () => !live() || careAge() >= 9 || answers.pullUp === 'Yes';
@@ -722,7 +722,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     const pills = h.pills('Everyday care by age', T.map((s, i) => ({ label: s.label, age: s.age, on: i === v, now: live() && i === now, onclick: `openPage('chg:${CAT}:s:${i}')`, change: typeof stageCanChange === 'function' && stageCanChange(CAT, i, now) ? `hubChangeStage('${CAT}',${i})` : '' })), CAT);
     let b = `<header class="hub-hero care-hero"><p class="hub-eyebrow">${STAGE[v]}</p><h1>${F(st.title)}</h1><p class="hub-lead">${F(st.lead)}</p></header>`;
     // No tiles: Everyday care's answers are mostly actions, not numbers, so they read better as rows (like Health).
-    const shop = v === 1 ? '' : `<div class="hub-browse care-shop"><button class="hub-link" onclick="${go('need', v)}">${F(v === 0 ? 'Getting ready? What you’ll need' : 'What you’ll need now')} ›</button></div>`;
+    const shop = '';
     b += `<h2 class="hub-h2">${F(live() && v !== now ? `New at ${STAGE[v].toLowerCase() === 'newborn' ? 'the newborn stage' : STAGE[v]}` : 'New for Maya now')}</h2><div class="hub-list">${NEWNOW[v].map(k => topicRow(k, v)).join('')}</div>`;
     b += `<h2 class="hub-h2">${F('All the basics')}</h2><div class="care-grid">${BASIC6.map(k => basicTile(k, v)).join('')}</div>` + shop;
     b += `<button class="hub-rough-card care-rash-card" onclick="openPage('chg:${CAT}:d:look:${v}')"><span class="hub-rough-moon" aria-hidden="true">${hubArt('eye', CAT)}</span><span class="hub-rough-copy"><b>${F('Something look off?')}</b><small>${F(['Poop, rashes, the cord, eyes and more', 'Poop, rashes, eyes and more', 'Drool, rashes, poop and more', 'Drool, rashes, poop and more'][v])}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`;
@@ -835,7 +835,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     // One card per rhythm (every day, each week, outside), so the routine reads in short pieces, like Sleep and Feeding.
     b += `<h2 class="hub-h2">${F(`${live() && v === now ? name() + '’s' : 'The'} care routine`)}</h2>`
       + st.groups.map(([g, items]) => `<section class="rt-card rt-split"><div class="rt-head"><b>${F(g)}</b></div><div class="rt-group">${items.map(line).join('')}</div></section>`).join('')
-      + (v === 1 ? '' : `<div class="hub-browse care-shop"><button class="hub-link" onclick="${go('need', v)}">${F(v === 0 ? 'Getting ready? What you’ll need' : live() && v === now ? 'What you’ll need now' : `What you’ll need at ${STAGE[v]}`)} ›</button></div>`);
+      + '';
     b += `<button class="hub-rough-card care-rash-card" onclick="openPage('chg:${CAT}:d:look:${v}')"><span class="hub-rough-moon" aria-hidden="true">${hubArt('eye', CAT)}</span><span class="hub-rough-copy"><b>${F('Something look off?')}</b><small>${F(['Poop, rashes, the cord, eyes and more', 'Poop, rashes, eyes and more', 'Drool, rashes, poop and more', 'Drool, rashes, poop and more'][v])}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`;
     b += nx ? h.next(v === 0 ? 'Next, after the first few weeks' : `Next, usually from ${STAGE[v + 1].split('–')[0]} months`, nx.title, `openPage('chg:${CAT}:s:${v + 1}')`)
       : h.next('After the first birthday', 'Brushing and baths after 1', `openPage('chg:${CAT}:d:after1')`);

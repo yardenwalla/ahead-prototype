@@ -192,4 +192,6 @@
   }
   const base = window.changesRoute;
   window.changesRoute = function (p) { const m = /^chg:Timeline:c:(\w+)$/.exec(p); if (m) { const pg = changePage(m[1]); if (pg) return pg; } return base(p); };
+  // Home reads the same changes, so both tabs always agree.
+  window.__ya = { C, PAGES, TOUCH, ageNow, doneNow, range, whenShort, windowBar, F };
 })();
