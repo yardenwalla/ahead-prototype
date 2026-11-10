@@ -634,7 +634,7 @@
     const cr = (label, o) => row({ cat, ...o }).replace('<span class="hub-row-copy">', `<span class="hub-row-copy"><small class="hub-row-eyebrow">${F(label)}</small>`);
     const settled = answers.twoNaps === 'Yes' || age >= 10 || (now && answers.twoNaps !== 'Not yet');
     const mat = now ? mattressRow(o => o) : null, swd = now && swaddleDue() ? swaddleRow(o => o) : null;
-    const safe = (swd && (key === 'rhythm' && age >= 4 ? { icon: 'roll', title: 'Rolling onto {p} tummy?', sub: 'Stop swaddling at the first try to roll. Here’s what to do', chipText: swd.chipText, chipTone: swd.chipTone, onclick: go('chg:Sleep:d:rolling') } : { ...swd, onclick: go('chg:Sleep:d:swaddleoff') })) || (mat && { ...mat, onclick: go('chg:Sleep:d:mattress') });
+    const safe = (swd && (key === 'rhythm' && age >= 4 ? { icon: 'roll', title: 'Rolling onto {p} tummy?', sub: 'Stop swaddling at {p} first try to roll', chipText: swd.chipText, chipTone: swd.chipTone, onclick: go('chg:Sleep:d:rolling') } : { ...swd, onclick: go('chg:Sleep:d:swaddleoff') })) || (mat && { ...mat, onclick: go('chg:Sleep:d:mattress') });
     const n = safeDone(), all = SLEEP_TASKS, days = (NOW - parse(profile.dob)) / 864e5;
     const R = {
       clock: [
