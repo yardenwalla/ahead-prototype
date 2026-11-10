@@ -262,7 +262,8 @@
     const row = ([title, why, cat, icon, go, formula]) => {
       if (formula && profile.feed === 'Formula') [title, why] = formula;
       // The app's own row (hub-row + hub-dot), with Health/Safety's soft topic color behind the drawing.
-      const tone = ({ Sleep: ['#e7effc', '#46638c'], Feeding: ['#fdeef2', '#a24d6a'], Development: ['#ecebfb', '#4f4a8c'], 'Daily rhythm': ['#fff3dc', '#8a6a2a'] })[cat] || ['#e6f5ec', '#356651'];
+      // Each guide's own color from the shared palette, the same as on Guides, its page and the Timeline.
+      const pal = YEAR_PALETTES[cat] || YEAR_PALETTES.Health, tone = [pal.pale, pal.ink];
       const st = `--hl-bg:${tone[0]};--hl-ink:${tone[1]}`, inner = `<span class="hub-dot">${hubArt(icon, cat)}</span><span class="hub-row-copy"><b>${F(P(title))}</b><small>${F(P(why))}</small></span>`;
       return go ? `<button class="hub-row hl-row" style="${st}" onclick="openPage('${go}')">${inner}${chev}</button>` : `<div class="hub-row hl-row is-static" style="${st}">${inner}</div>`;
     };

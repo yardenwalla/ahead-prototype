@@ -84,6 +84,15 @@ async def main():
                     eb = await tp.evaluate("(document.querySelector('.he-eyebrow')||{}).innerText||''")
                     check((f'MONTH {want} ' in eb.upper() + ' ') if want >= 2 else 'WEEKS' in eb.upper(), f'{tz}: {m} months{" minus a day" if back else ""} says Month {want} (got {eb!r})')
             await ctx.close()
+
+        # 6. One app: Home's rows use each guide's own color from the shared palette (Nov 10: Everyday care was yellow on Home, blue everywhere else).
+        for days in (36, 160, 245):
+            await load(pg, T - dt.timedelta(days=days))
+            bad = await pg.evaluate("""() => [...document.querySelectorAll('.hg-page .hl-row')].map(r => {
+                const go = (r.getAttribute('onclick') || '').match(/(?:chg|topic):([^:']+)/), cat = go ? go[1] : null, pal = cat && YEAR_PALETTES[cat];
+                const bg = r.style.getPropertyValue('--hl-bg').trim().toLowerCase();
+                return pal && bg !== pal.pale.toLowerCase() ? cat + ' ' + bg + ' vs ' + pal.pale : null }).filter(Boolean)""")
+            check(not bad, f'{days} days: Home rows use their guide colors {bad[:2]}')
         await b.close()
     print(f'Home browser checks: {passed} passed' + (f', {len(fails)} failed' if fails else ''))
     for f in fails: print('  FAIL', f)
