@@ -375,6 +375,8 @@
       const k = (0.8 + 0.2 * (m - 1) / 11).toFixed(3), t = `translate(${(130 * (1 - k)).toFixed(1)} ${(150 * (1 - k)).toFixed(1)}) scale(${k})`;
       art = art.replace(/(v24H18Z"[^>]*\/>)([\s\S]*)<\/svg>$/, `$1<g transform="${t}">$2</g></svg>`);
     }
+    // Home's month card isn't tappable art: the crawl drawing's little motion arrow read as a button there, so it goes.
+    art = art.replace(/<path d="m207 87 8 5-8 5m-7-5h15"[^>]*\/>/, '');
     if (m === 12) art = art.replace(/<\/svg>$/, balloon + '</svg>');
     return `<span class="home-month-scene" data-home-art-month="${m}" data-home-art-scene="${scene || 'newborn'}">${art}</span>`;
   };

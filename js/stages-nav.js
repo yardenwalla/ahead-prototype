@@ -8,11 +8,11 @@
   const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
   const nm = () => esc(typeof name === 'function' ? name() : 'your baby');
   const live = () => typeof isCurrent !== 'function' || isCurrent();
-  const TITLE = { Sleep: 'Sleep stages', Feeding: 'Feeding stages', Safety: 'Safety stages', Development: 'Development by age', 'Daily rhythm': 'Everyday care by age', Health: 'Checkups' };
+  const TITLE = { Sleep: 'Sleep by age', Feeding: 'Feeding by age', Safety: 'Safety by age', Development: 'Development by age', 'Daily rhythm': 'Everyday care by age', Health: 'Checkups' };
   const LEAD = {
-    Sleep: 'Sleep changes in steps. Tap a stage to see what to expect.',
-    Feeding: 'From milk to first foods to family meals. Tap a stage to see what to expect.',
-    Safety: 'Each stage brings a few things to change at home, before your baby can reach them.',
+    Sleep: 'Sleep changes in steps. Tap one to see what to expect.',
+    Feeding: 'From milk to first foods to family meals. Tap one to see what to expect.',
+    Safety: 'Each new skill brings a few things to change at home, before your baby can reach them.',
     Development: 'What most babies do by each age. Tap one to see what to look for.',
     'Daily rhythm': 'How everyday care changes through the first year.',
     Health: 'Seven checkups in the first year. Tap one to see what happens.'
@@ -36,7 +36,7 @@
   window.stageItemsLast = () => seen;
   if (window.__hub) window.__hub.pills = (label, items, cat) => window.stageTimeline(cat || 'Development', items, label);
 
-  const nowTag = cat => cat === 'Health' ? 'Next checkup' : `${nm()}’s stage now`;
+  const nowTag = cat => cat === 'Health' ? 'Next checkup' : `Where ${nm()} is now`;
   const topicGo = cat => `openPage('topic:${cat}')`;
 
   function stagesPage(cat) {
@@ -49,7 +49,7 @@
       if (cat === 'Health' && ci >= 0 && i < ci) { try { const v = WELL_VISITS[i], r = typeof healthRecord === 'function' ? healthRecord(v) : null, sk = (() => { try { return !!(JSON.parse(localStorage.getItem('ahead-visit-skipped:' + journeyKey())) || {})[v]; } catch (e) { return false; } })(); age = r && r.status === 'attended' ? 'Done' : sk ? 'Skipped' : 'Not marked yet · tap to add it'; } catch (e) {} }
       return `<li class="st-item ${cls}"><span class="st-node" aria-hidden="true">${it.now && typeof catIcon === 'function' ? catIcon(cat) : ''}</span><button class="st-card" onclick="${it.now ? topicGo(cat) : it.onclick}">${it.now ? `<span class="st-tag">${nowTag(cat)}</span>` : ''}<b>${esc(it.label)}</b>${age ? `<small class="st-age">${esc(age)}</small>` : ''}<span class="st-one">${esc(fill((ONE[cat] || [])[i] || ''))}</span><span class="st-chev" aria-hidden="true">›</span></button></li>`;
     }).join('');
-    const foot = cat === 'Health' ? `Checkups follow ${nm()}’s birthday.` : CHANGEABLE.includes(cat) ? `Ages are typical. If ${nm()} seems more like another stage, open it and tap “Make this ${nm()}’s stage”.` : 'Ages are typical. Every baby moves at their own pace.';
+    const foot = cat === 'Health' ? `Checkups follow ${nm()}’s birthday.` : CHANGEABLE.includes(cat) ? `Ages are typical. If another one fits ${nm()} better, open it and tap “This fits ${nm()}”.` : 'Ages are typical. Every baby moves at their own pace.';
     return `<div class="quiet-category hub-page hub-detail" style="${yearTheme(cat)}">${hubPageTop(TITLE[cat] || 'Stages')}<p class="st-lead">${esc(LEAD[cat] || '')}</p><ol class="st-list">${list}</ol><p class="st-foot">${foot}</p></div>`;
   }
 
@@ -71,7 +71,7 @@
     const hero = kids.find(e => e.matches('.hub-hero, .dev-hero, header')) || kids[0];   // the top card (skip the born-early age switch)
     // The chip: on the top card's first line when it has one, otherwise in its top corner.
     if (hero && !m.querySelector('.st-chip')) {
-      const chip = `<button class="st-chip" onclick="openPage('stages:${cat}')">${cat === 'Health' ? 'All checkups' : 'All stages'} <span aria-hidden="true">›</span></button>`;
+      const chip = `<button class="st-chip" onclick="openPage('stages:${cat}')">${cat === 'Health' ? 'All checkups' : 'All ages'} <span aria-hidden="true">›</span></button>`;
       const eb = hero.querySelector('.hub-eyebrow');
       if (eb && hero.firstElementChild === eb) { eb.classList.add('st-eyebrow'); eb.insertAdjacentHTML('beforeend', chip); }
       else { hero.classList.add('st-has-chip'); hero.insertAdjacentHTML('afterbegin', chip.replace('class="st-chip"', 'class="st-chip st-chip-abs"')); }
@@ -85,10 +85,10 @@
     const what = oi < ci ? 'Looking back' : cat === 'Health' ? 'Coming up' : 'Previewing';
     const stage = cat === 'Health' ? on.label.replace(/ months?$/, '-month').replace('First week', 'First-week') + ' checkup' : on.label;
     const when = ['Development', 'Daily rhythm', 'Health'].includes(cat) ? '' : ageOf(on) || (old && old.querySelector('span') ? old.querySelector('span').textContent.replace(/^[^·]*·\s*/, '') : '');
-    const backTxt = cat === 'Health' ? 'your next checkup' : `${nm()}’s stage`;
+    const backTxt = cat === 'Health' ? 'your next checkup' : `where ${nm()} is now`;
     const changeable = on.change && CHANGEABLE.includes(cat);
     const icon = typeof catIcon === 'function' ? catIcon(cat) : '';
-    const html = `<section class="hub-preview st-banner${changeable ? ' has-make' : ''}" aria-label="${what}"><div class="st-banner-top"><span class="st-banner-icon" aria-hidden="true">${icon}</span><div class="st-banner-copy"><small>${what}</small><b>${esc(stage)}${when ? ` <i>· ${esc(when)}</i>` : ''}</b></div>${changeable ? '' : `<button class="st-btn st-btn-back" onclick="${topicGo(cat)}">Back to ${backTxt}</button>`}</div>${changeable ? `<div class="st-banner-actions"><button class="st-btn st-btn-back" onclick="${topicGo(cat)}">Back to ${backTxt}</button><button class="st-btn st-btn-make" onclick="${on.change}">Make this ${nm()}’s stage</button></div>` : ''}</section>`;
+    const html = `<section class="hub-preview st-banner${changeable ? ' has-make' : ''}" aria-label="${what}"><div class="st-banner-top"><span class="st-banner-icon" aria-hidden="true">${icon}</span><div class="st-banner-copy"><small>${what}</small><b>${esc(stage)}${when ? ` <i>· ${esc(when)}</i>` : ''}</b></div>${changeable ? '' : `<button class="st-btn st-btn-back" onclick="${topicGo(cat)}">Back to ${backTxt}</button>`}</div>${changeable ? `<div class="st-banner-actions"><button class="st-btn st-btn-back" onclick="${topicGo(cat)}">Back to ${backTxt}</button><button class="st-btn st-btn-make" onclick="${on.change}">This fits ${nm()}</button></div>` : ''}</section>`;
     if (old) old.outerHTML = html; else if (hero) hero.insertAdjacentHTML('beforebegin', html);
   };
   if (typeof activeNavigationTab === 'function') {

@@ -69,7 +69,7 @@
       why: 'Outlets and cords sit right at crawling height.',
       steps: ['Use plug-in outlet covers {s} can’t pull out and that are too big to swallow.', 'Move lamp and charger cords out of reach, or tuck them behind furniture.', 'If you’re replacing outlets, tamper-resistant ones have built-in shutters.'],
       links: [['Childproofing your home · CPSC', cpsc]] },
-    mattress: { t: 'Lower the crib mattress', s: 'Before {s} sits up, often around 6 months', i: 'crib', c: 'sleep', go: "openPage('chg:Sleep:d:mattress')", sleep: true },
+    mattress: { t: 'Lower the crib mattress', s: 'Once {s} can sit up, the lowest setting is safest', i: 'crib', c: 'sleep', go: "openPage('chg:Sleep:d:mattress')", sleep: true },
     anchor: { hi: 'stand', t: 'Strap furniture and TVs to the wall', s: 'So nothing tips if {s} {pull|pulls} on it', i: 'dresser', c: 'body',
       tiles: [['dresser', 'Anti-tip straps', 'On dressers, bookcases and tall furniture'], ['blocks', 'TVs too', 'On the wall, or strapped to their stand'], ['clock', 'When', 'Now, before {s} {pull|pulls} on them']],
       why: 'Babies use furniture as a handhold to pull up, and dressers, bookcases and TVs can tip over onto them.',
@@ -139,11 +139,14 @@
     const rows = st.ids.map((id, k) => { const x = STEP[id], c = C[x.c], s = sts[k];
       return `<button class="hub-row hl-row sf-row${s ? ' is-' + s : ''}" style="--hl-bg:${c[0]};--hl-ink:${c[1]}" onclick="${open(id)}"><span class="hub-dot">${hubArt(x.i, 'Safety')}</span><span class="hub-row-copy"><b>${F(x.t)}</b><small>${s === 'na' ? 'Doesn’t apply to your home' : F(x.s) + (x.sleep ? ' · In Sleep' : x.out ? ' · In Outings' : '')}</small></span><span class="sf-tick" role="checkbox" aria-checked="${s === 'done'}" aria-label="Mark done: ${x.t.replace(/"/g, '')}" onclick="event.stopPropagation();sfSet('${id}','${s === 'done' ? '' : 'done'}')">${s === 'done' ? '✓' : s === 'na' ? '–' : ''}</span></button>`; }).join('');
     let b = `<header class="hub-hero sf-hero"><p class="hub-eyebrow">${st.label} · ${st.age}</p><h1>${F(st.title)}</h1><p class="hub-lead">${F(st.lead)}</p></header>`;
-    b += `<div class="sf-head"><h2 class="hub-h2">${F(i < nowI && live ? 'Done these yet?' : i > nowI && live ? 'Get ready for this stage' : 'Do these now')}</h2><span class="sf-count">${of ? `${done} of ${of} done` : 'None apply'}</span></div><div class="hub-list sf-list">${rows}</div>`;
+    b += `<div class="sf-head"><h2 class="hub-h2">${F(i < nowI && live ? 'Done these yet?' : i > nowI && live ? 'Get ready for this' : 'Do these now')}</h2><span class="sf-count">${of ? (done ? `${done} of ${of} done` : '') : 'None apply'}</span></div><div class="hub-list sf-list">${rows}</div>`;
     // Joined later, or skipped a stage? One quiet line back to the earliest stage with steps still open.
     if (live && i === nowI) {
-      const left = STAGES.slice(0, i).map(s2 => [s2, s2.ids.filter(x => !status(x)).length]).filter(x => x[1]);
-      if (left.length) b += `<button class="sf-earlier" onclick="openPage('safety-stage:${left[0][0].key}')">${F(`${left.reduce((t, x) => t + x[1], 0)} ${left.reduce((t, x) => t + x[1], 0) === 1 ? 'step from an earlier stage is' : 'steps from earlier stages are'} still open`)} ›</button>`;
+      // Only stages that started while the parent was using Ahead: a parent who joins later has done the earlier steps.
+      const START = { setup: 0, reaching: 3, rolling: 6, pulling: 9 };
+      let joinMo = 0; try { if (profile.joined && profile.dob) joinMo = (parse(profile.joined) - parse(profile.dob)) / 864e5 / 30.44; } catch (e) {}
+      const left = STAGES.slice(0, i).filter(s2 => (START[s2.key] ?? 0) >= joinMo - 0.5).map(s2 => [s2, s2.ids.filter(x => !status(x)).length]).filter(x => x[1]);
+      if (left.length) b += `<button class="sf-earlier" onclick="openPage('safety-stage:${left[0][0].key}')">${F(`${left.reduce((t, x) => t + x[1], 0)} ${left.reduce((t, x) => t + x[1], 0) === 1 ? 'earlier step is' : 'earlier steps are'} still open`)} ›</button>`;
     }
     b += h.versus('If something goes wrong', ['Poison Help', 'Call 1-800-222-1222 if Maya swallows something that could be harmful.'], ['Call 911', 'If {s} can’t breathe or won’t wake. A swallowed battery or magnet means the ER right away.']);
     // Choking first aid lives in Feeding; the safety net links to it.

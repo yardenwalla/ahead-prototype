@@ -73,7 +73,7 @@
       const labels = DEVELOPMENT_DOMAINS[ref][d] || [], c = window.devTileColors ? devTileColors(d) : null, hl = (window.DEV_HEADLINE || {})[ref]?.[d];
       const moving = d === 'Movement' && live() && ref === now && (answers.pullUp === 'Yes' || answers.crawl === 'Yes');
       const line = moving ? (answers.pullUp === 'Yes' ? 'Already pulling up' : 'Already crawling') : hl ? hl[0] : (st.summaries[d] || '');
-      return `<button class="hub-domain-tile dev-tile" style="${c ? `--dt-bg:${c[0]};--dt-ink:${c[1]}` : ''}" onclick="openPage('development-domain:${ref}:${d}')"><span class="dev-tile-art">${window.devTileArt ? devTileArt(d, ref) : h.art(DOMAIN_ICONS[d], 'Development')}</span><small class="dev-tile-label">${DOMAIN_TITLES[d]}</small><b class="dev-tile-line">${(window.hubBabyify || (x => x))(F(TILE_WORDS[line] || line))}</b><span class="dev-tile-count">${labels.length ? `<span class="dev-tile-ticks" aria-hidden="true">${labels.map(devSkillSeen).sort((x, y) => y - x).map(v => `<i class="${v ? 'is-seen' : ''}"></i>`).join('')}</span>` : ''}${F(`${labels.filter(devSkillSeen).length} of ${labels.length}`)} ›</span></button>`;
+      return `<button class="hub-domain-tile dev-tile" style="${c ? `--dt-bg:${c[0]};--dt-ink:${c[1]}` : ''}" onclick="openPage('development-domain:${ref}:${d}')"><span class="dev-tile-art">${window.devTileArt ? devTileArt(d, ref) : h.art(DOMAIN_ICONS[d], 'Development')}</span><small class="dev-tile-label">${DOMAIN_TITLES[d]}</small><b class="dev-tile-line">${(window.hubBabyify || (x => x))(F(TILE_WORDS[line] || line))}</b><span class="dev-tile-count">${labels.length ? `<span class="dev-tile-ticks" aria-hidden="true">${labels.map(devSkillSeen).sort((x, y) => y - x).map(v => `<i class="${v ? 'is-seen' : ''}"></i>`).join('')}</span>` : ''}${labels.filter(devSkillSeen).length ? F(`${labels.filter(devSkillSeen).length} seen`) : ''} ›</span></button>`;
     }).join('');
     const other = live() && ref !== now;
     b += `<section class="hub-card hub-glance is-static"><span class="hub-card-head"><b>${F(other ? `What babies work on by ${age}` : 'What Maya is working on')}</b></span><div class="hub-domain-tiles">${domainTiles}</div></section>`;
@@ -270,7 +270,11 @@
     let missedLine = '';
     if (live() && age === focus) {   // a missed checkup shows here too, so it isn't missed by parents who skip Home
       let skipped = {}; try { skipped = JSON.parse(localStorage.getItem('ahead-visit-skipped:' + journeyKey())) || {}; } catch (e) {}
-      const prev = WELL_VISITS[WELL_VISITS.indexOf(focus) - 1], missed = prev != null && !healthRecord(prev) && !skipped[prev] ? prev : null;
+      const prev = WELL_VISITS[WELL_VISITS.indexOf(focus) - 1];
+      // A checkup that was due before the parent joined Ahead is assumed done, like Home's question (late joiners have done the earlier steps).
+      const prevDue = prev == null ? null : prev === 0 ? new Date(parse(profile.dob).getTime() + 5 * 864e5) : addMonths(parse(profile.dob), prev);
+      const before = profile.joined && prevDue && prevDue < parse(profile.joined);
+      const missed = prev != null && !before && !healthRecord(prev) && !skipped[prev] ? prev : null;
       if (missed != null) missedLine = `<section class="hub-missed"><p>${F(`Had the ${healthJourneyLabel(missed).charAt(0).toLowerCase() + healthJourneyLabel(missed).slice(1)}${(() => { const d = missed === 0 ? new Date(parse(profile.dob).getTime() + 5 * 864e5) : addMonths(parse(profile.dob), missed); return d.getMonth() === NOW.getMonth() && d.getFullYear() === NOW.getFullYear() ? '' : ' back in ' + d.toLocaleDateString('en-US', { month: 'long' }); })()}? Mark it done, or tell us you skipped it.`)}</p><div><button onclick="hubVisitYes(${missed})">Mark it done</button><button onclick="hubVisitSkipped(${missed})">We skipped it</button></div></section>`;
     }
     let b = h.hero({ eyebrow: eyebrow2, title, lead: conceptHealthSummary(age), button: done ? { label: 'Add notes from the checkup', onclick: `openHealthDetail(${age},'notes')` } : pastDue ? { label: 'Mark it as done', onclick: `openPage('visit-form:${age}')` } : { label: planned ? 'Change the date' : 'Save the date', onclick: `openPage('visit-form:plan-${age}')` } });
@@ -286,8 +290,8 @@
     if (!live() || age === focus) b += h.list('Between checkups', [
       h.row({ icon: 'thermo', cat: 'Health', title: `When Maya seems sick`, sub: 'Fevers, tummy bugs and when to call', onclick: "openPage('chg:Health:d:sick')" }),
       h.row({ icon: 'drop', cat: 'Health', title: 'Colds and stuffy noses', sub: 'Saline, suction, and when it’s an ear infection', onclick: "openPage('chg:Health:d:cold')" }),
-      actualMonth() >= 3 ? h.row({ icon: 'tooth', cat: 'Health', title: 'Teething', sub: 'Drool, chewing and sore gums, and what helps', onclick: "openPage('chg:Daily rhythm:d:gums')" }) : '',
-      h.row({ icon: 'heart', cat: 'Health', title: 'How are you doing?', sub: 'Your health matters too', onclick: "openPage('chg:Health:d:you')" })
+      actualMonth() >= 3 ? h.row({ icon: 'tooth', cat: 'Health', title: 'Teething', sub: 'Drool, chewing and sore gums, and what helps', onclick: "openPage('chg:Daily rhythm:d:gums')" }) : ''
+      // "How are you doing?" (the parent's own health) left this list: the guides stay about the baby (Yarden). Its page stays in search.
     ]);
     // "Between checkups" shows on every checkup page; "When to call" uses Maya's age now, so it shows on the current checkup only.
     const nowPage = !live() || age === focus;

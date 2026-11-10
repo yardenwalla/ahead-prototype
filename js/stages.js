@@ -32,8 +32,11 @@
     // From 6 months: is the baby moving around yet? A yes switches Safety and Sleep to "now that they're moving".
     // From 8 months it's asked before solids, because the safety changes matter more by then.
     const moving = a >= 6 && answers.crawl !== 'Yes' && answers.pullUp !== 'Yes' && due(d, 'crawl', ['Not yet']);
-    if (moving && a >= 8) out.push('crawl');
+    // With no solids answer at all, solids come first even past 8 months: until then, Feeding can't move on.
+    const noFood = typeof hasFoodAnswer === 'function' && !hasFoodAnswer();
+    if (moving && a >= 8 && !noFood) out.push('crawl');
     if (food) out.push(food.key);
+    if (moving && a >= 8 && noFood) out.push('crawl');
     // From 8 months for a crawler (9 for everyone): is the baby pulling up? Home shows its cruising and standing-height
     // cards once it knows. Solids come first: a late start matters more.
     if (a >= 8 && answers.pullUp !== 'Yes' && (answers.crawl === 'Yes' || a >= 9) && due(d, 'stand', ['Not yet'])) out.push('stand');
