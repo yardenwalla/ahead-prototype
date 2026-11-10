@@ -269,7 +269,7 @@
     return `<section class="he-hero" style="${monthTheme(m)}"><p class="he-eyebrow">${F(when)} · ${F(`Through ${name()}’s eyes`)}</p><div class="he-copy"><h1>${F(P(M.eyes[0]))}</h1><p class="he-lead">${F(P(M.eyes[1]))}</p>${m <= 4 ? `<button class="he-see" onclick="homeEyes(true)"><span aria-hidden="true">👁</span> ${F(`See what ${name()} sees`)}</button>` : ''}</div><span class="he-art" aria-hidden="true">${art}</span></section>
       <h2 class="hub-h2">${F('You might notice…')}</h2>
       <div class="hub-list hg-rows">${M.notice.map(row).join('')}</div>
-      <button class="hub-more hg-tl" onclick="navigate('next')"><span>${F(`Explore ${name()}’s timeline`)}</span>${chev}</button>` + guideNews();
+      ` + guidesCard();
   }
 
   /* ---------- Guides: what moved for her ----------
@@ -307,8 +307,11 @@
     for (const c of MOVE_ORDER) {
       try {
         if (c === 'Feeding') { const f = foodStage(), a = Y().ageNow(); out[c] = f !== 'preparing' ? f : a < 1.4 ? 'Newborn' : a < 4 ? 'Milk feeds' : 'Ready for solids'; continue; }
-        categoryPage(c); const it = ((typeof stageItemsLast === 'function' && stageItemsLast()) || {}).items || [], n = it.find(x => x.now);
-        if (n) out[c] = n.label;
+        // Read the stage quietly: stageTimeline also tells the stages chip which page it's on, so restore it after.
+        const keep = window.stageTimeline; let items = [];
+        window.stageTimeline = (cat, list) => { items = list || []; return ''; };
+        try { categoryPage(c); } finally { window.stageTimeline = keep; }
+        const n = items.find(x => x.now); if (n) out[c] = n.label;
       } catch (e) {}
     }
     return out;
@@ -330,7 +333,7 @@
       if (!silent && moveCopy(c, now[c])) s.queue.push({ cat: c, key: now[c], at: t });
     }
     s.known = Object.assign({}, s.known, now);
-    s.queue = s.queue.filter(q => now[q.cat] === q.key && t - q.at < 14 * 864e5).sort((a, b) => MOVE_ORDER.indexOf(a.cat) - MOVE_ORDER.indexOf(b.cat));
+    s.queue = s.queue.filter(q => now[q.cat] === q.key && (!q.shown || t - q.shown < 14 * 864e5)).sort((a, b) => MOVE_ORDER.indexOf(a.cat) - MOVE_ORDER.indexOf(b.cat));
     saveMoves(s);
     moveCache = { key: JSON.stringify(now) + localStorage.getItem(MOVES()), list: s.queue };
     return s.queue;
@@ -351,25 +354,102 @@
     const base = window[fn]; if (typeof base !== 'function') return;
     window[fn] = function () { const r = base.apply(this, arguments); try { if (readMoves()) window.guideMoves(true); } catch (e) {} return r; };
   });
-  function guideNews() {
-    const q = window.guideMoves(); if (!q.length) return '';
-    const { cat } = q[0], c = moveCopy(cat, q[0].key); if (!c) return '';
-    const [title, why, icon] = c, label = typeof displayTopic === 'function' ? displayTopic(cat) : cat;
-    const tone = ({ Sleep: ['#e7effc', '#46638c'], Feeding: ['#fdeef2', '#a24d6a'], Development: ['#ecebfb', '#4f4a8c'], 'Daily rhythm': ['#fff3dc', '#8a6a2a'], Safety: ['#fdf1dc', '#8a5a1e'] })[cat] || ['#e6f5ec', '#356651'];
-    return `<h2 class="hub-h2">${F(`New in ${name()}’s guides`)}</h2><div class="hub-list hg-rows hg-news"><button class="hub-row hl-row" style="--hl-bg:${tone[0]};--hl-ink:${tone[1]}" onclick="openPage('topic:${cat}')"><span class="hub-dot">${hubArt(icon, cat)}</span><span class="hub-row-copy"><b>${F(P(title))}</b><small>${F(`${label} · ${P(why)}`)}</small></span>${chev}</button></div>`;
+  // "Your guides for where she is now" (Yarden's Nov 9 reference): three small guide tiles, each with a pill naming
+  // what it's on for her now. Guides that just moved come first, and the card says "Updated for 6 months" until
+  // they're opened. Circles are categories (style guide), so each tile carries its guide's mark in a white circle.
+  const SHORT = {
+    Health: k => k === 'First week' ? 'First checkup' : k.replace(/ months?$/, '-month') + ' checkup',
+    Safety: { 'First setup': 'First setup', Rolling: 'Rolling', Crawling: 'Before crawling', 'Pulling up': 'Pulling up' },
+    Feeding: { Newborn: 'Newborn feeds', 'Milk feeds': 'Milk feeds', 'Ready for solids': 'Ready for solids', new: 'First tastes', textures: 'Thicker textures', established: 'Three meals' },
+    Sleep: { 'Round-the-clock sleep': 'Newborn sleep', 'Longer nights': 'Longer nights', 'Three naps': 'Three naps', 'Two naps': 'Two naps' },
+    Development: k => k.replace(/^By (\d+) months$/, '$1-month skills'),
+    'Daily rhythm': { Newborn: 'Newborn care', '1–3 months': 'Baths & routine', '4–6 months': 'Drool & teething', '7–12 months': 'First teeth' }
+  };
+  // The line under each guide on the Guides tab: one plain, personal sentence about where she is (she/her; P() swaps).
+  const TILE = {
+    Feeding: { Newborn: 'Learning her hunger cues', 'Milk feeds': 'Fewer, faster feeds for her', 'Ready for solids': 'Getting her ready for solids', new: 'Her first tastes of food', textures: 'Thicker textures for her', established: 'Three meals a day for her' },
+    Sleep: { 'Round-the-clock sleep': 'Sleep around the clock, for now', 'Longer nights': 'Her nights are getting longer', 'Three naps': 'Three naps a day, at set times', 'Two naps': 'Two naps and longer nights' },
+    Development: { 'By 2 months': 'Her first smiles and coos', 'By 4 months': 'Her smiles, coos and first grabs', 'By 6 months': 'Her reaching, laughing and rolling', 'By 9 months': 'Her sitting, babbling and crawling', 'By 12 months': 'Her first words and steps' },
+    Safety: { 'First setup': 'A safe space for her from day one', Rolling: 'Ready for her first rolls', Crawling: 'Ready for her to crawl', 'Pulling up': 'Ready for her to pull up' },
+    Health: k => k === 'First week' ? 'Her first-week checkup' : `Her ${k.replace(/ months?$/, '-month')} checkup is next`,
+    'Daily rhythm': { Newborn: 'Baths, diapers and cord care', '1–3 months': 'Baths, nails and dressing her', '4–6 months': 'Drool, gums and bath time', '7–12 months': 'Her first teeth and bath time' }
+  };
+  const tileLine = (cat, key) => { const t = TILE[cat]; return !key ? '' : typeof t === 'function' ? t(key) : (t && t[key]) || ''; };
+  const shortOf = (cat, key) => { const t = SHORT[cat]; return !key ? '' : typeof t === 'function' ? t(key) : (t && t[key]) || ''; };
+  function guidesCard() {
+    // One guides block, two states (Yarden, Nov 10). Nothing new: "Maya's guides", the guides' marks as circles,
+    // opens the Guides tab. Something new: the same block; only the changed guides' circles stay in color, a coral
+    // "New", and it says what changed. One guide opens it; several open Guides with those tiles glowing.
+    // Then a slim timeline card in the same style, naming what's actually next for her.
+    const moved = window.guideMoves(), m = homeMonth(), nm = name();
+    const age = m < 2 ? `${Math.max(1, Math.round(Y().ageNow() * 4.35))} weeks` : `${m} months`;
+    const label = c => typeof displayTopic === 'function' ? displayTopic(c) : c;
+    const set = ['Feeding', 'Sleep', 'Development', 'Safety', 'Health', 'Daily rhythm'];
+    const isNew = c => moved.some(q => q.cat === c);
+    const marks = set.map(c => `<span class="hg-gtile-mark${moved.length && !isNew(c) ? ' is-quiet' : ''}" style="${yearTheme(c)}">${typeof catIcon === 'function' ? catIcon(c) : ''}</span>`).join('');
+    const list = l => l.length < 3 ? l.join(' and ') : l.slice(0, -1).join(', ') + ' and ' + l[l.length - 1];
+    let title = `${nm}’s guides`, line = `Personalized for ${nm} at ${age}`, go = "navigate('categories')";
+    if (moved.length === 1) {
+      const q = moved[0], c = moveCopy(q.cat, q.key);
+      title = `New in ${label(q.cat)}`; line = c ? P(c[0]) : `Updated for ${age}`; go = `openPage('topic:${q.cat}')`;
+    } else if (moved.length) {
+      const cats = moved.map(q => q.cat);
+      title = `New in ${nm}’s guides`; line = `${list(cats.map(label))} changed for ${nm}`;
+      go = `homeGuidesFlash(${JSON.stringify(cats).replace(/"/g, '&quot;')})`;
+    }
+    // What's next on her timeline: the first change that hasn't started yet (or the one under way).
+    let next = '';
+    try {
+      const ya = window.__ya, a = ya.ageNow(), done = ya.doneNow();
+      const ahead = ya.C.filter(c => c.end > a && !done[c.id]).sort((x, y) => x.start - y.start || x.end - y.end);
+      const n = ahead[0];  // the same first row the Timeline shows under "Maya now"
+      if (n) next = `Next up: ${F(n.title)}, ${F(ya.whenShort(n, a))}`;
+    } catch (e) {}
+    // The end of Home is navigation, not more content: two equal tiles side by side, Guides and Timeline.
+    // Same size, same build (mark, title, one line), so they read as a pair and as "where to go next".
+    const circles = (moved.length ? moved.map(q => q.cat) : set.slice(0, 4)).slice(0, 4)
+      .map(c => `<span class="hg-gtile-mark" style="${yearTheme(c)}">${typeof catIcon === 'function' ? catIcon(c) : ''}</span>`).join('');
+    const gLine = moved.length === 1 ? P((moveCopy(moved[0].cat, moved[0].key) || [line])[0]) : moved.length ? `${moved.length} guides changed for ${nm}` : `Set to ${nm} at ${age}`;
+    const gTitle = moved.length === 1 ? label(moved[0].cat) : moved.length ? `${nm}’s guides` : `${nm}’s guides`;
+    const path = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="5.5" cy="17.5" r="2"/><circle cx="18.5" cy="6.5" r="2"/><path d="M7.4 16.6c3.2-1.4 1.6-6.2 5-8 1.7-.9 2.6-1.1 4.2-1.3"/></svg>';
+    const nextT = (next || '').replace(/^Next up: /, '').replace(/^The /, 'the ');
+    return `<div class="hg-pair">
+      <button class="hg-ptile${moved.length ? ' is-new' : ''}" onclick="${go}">${moved.length ? '<i class="hg-dot-new" aria-label="New"></i>' : ''}<span class="hg-marks">${circles}</span>${moved.length ? '<i class="hg-new-pill">New</i>' : ''}<b>${F(P(gTitle))}</b><small>${F(gLine)}</small></button>
+      <button class="hg-ptile" onclick="navigate('next')"><span class="hg-tl-mark">${path}</span><b>${F(`${nm}’s timeline`)}</b><small>${nextT ? `Next: ${nextT}` : F('What’s coming up')}</small></button>
+    </div>`;
   }
+
+
+
+
+
+
+
   const BASE_CATS = typeof window.journeyCategories === 'function' ? window.journeyCategories : null;
   if (BASE_CATS) {
     window.journeyCategories = journeyCategories = function () {
       let html = BASE_CATS().replace(/<h1>Categories<\/h1>/, '<h1>Guides</h1>').replace(/Guidance for /, 'For ');
       // Each tile says what the guide covers right now: the headline its page opens with, plus the short stage label when it adds something.
+      const live = typeof isCurrent !== 'function' || isCurrent();
+      const moved = live && window.guideMoves ? window.guideMoves() : [], nowAt = live ? guideNow() : {};
       const heads = typeof window.home2PageHeadlines === 'function' && (typeof isCurrent !== 'function' || isCurrent()) ? home2PageHeadlines() : {};
       html = html.replace(/(data-cat="([^"]+)"[\s\S]*?)<small>([\s\S]*?)<\/small>/g, (all, pre, cat, small) => {
         const status = small.replace(/<[^>]+>/g, '').trim(), head = (heads[cat] || '').trim(), lo = x => x.toLowerCase().replace(/[‐‑–]/g, '-').replace(/\s+/g, ' ');
         if (!head) return all;
         const same = lo(head).includes(lo(status)) || lo(status).includes(lo(head)), short = status.split(/\s+/).length <= 4;
         // One line per tile, no stage pills: "stage" is our word, not a parent's (Yarden, Nov 9).
-        return `${pre}<small>${esc(same || short ? head : status)}</small>`;
+        // A guide that moved for her keeps a coral "New" and says what changed, until it's opened (or two weeks after
+        // it was first shown): no blink to miss, and it's still there when she comes back.
+        const mv = moved.find(q => q.cat === cat), c = mv && moveCopy(mv.cat, mv.key);
+        if (c) return `${pre.replace(/^data-cat="([^"]+)"/, 'data-cat="$1" data-new="1"').replace(/(<span class="directory-copy">)/, '$1<span class="guide-new">New</span>')}<small class="guide-new-line">${F(P(c[0]))}</small>`;
+        const mine = tileLine(cat, nowAt[cat]);
+        return `${pre}<small>${mine ? F(P(mine)) : esc(same || short ? head : status)}</small>`;
+      });
+      // What's new for her comes first.
+      if (moved.length) html = html.replace(/(<section class="category-directory"[^>]*>)([\s\S]*?)(<\/section>)/, (all, open, rows, close) => {
+        const list = rows.split(/(?=<button class="category-directory-row)/).filter(r => r.trim());
+        const isNew = r => /data-new="1"/.test(r);
+        return open + list.filter(isNew).concat(list.filter(r => !isNew(r))).join('') + close;
       });
       return html;
     };

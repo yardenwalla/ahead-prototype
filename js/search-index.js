@@ -116,7 +116,7 @@ window.SEARCH_DEEP = [["topic:Development","Development & play","Smiles back at 
 ["chg:Sleep:d:crying","","Crying a lot","What helps, and when it eases",8191,1],
 ["chg:Feeding:mock:x_refuse","","Distracted, pulling off or refusing","Fussy, sleepy or stuffy",8191,1],
 ["chg:Daily rhythm:d:look:3:poop","","Poop looks off, or {s}’s constipated","Colors, and what helps",8064,1],
-["chg:Feeding:mock:dirD:1","Feeding","What’s new now","",8191,0],
+["chg:Feeding:mock:dirD:1","Feeding","Right now","",8191,0],
 ["chg:Feeding:mock:y_bottle","","Bigger bottles, same slow pace","How much now, and nipple size",8191,1],
 ["chg:Feeding:mock:xa:m1e","","Fussy evenings ease, night feeds spread out","Evenings and nights",8191,1],
 ["chg:Feeding:mock:y_away","","Bottles away from home","Daycare, a sitter or a day out",8191,1],

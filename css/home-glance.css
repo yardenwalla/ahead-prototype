@@ -415,3 +415,61 @@
 
 /* The balloon is a cut-out (transparent PNG): show the whole number, no crop, no box. */
 #main .hg-banner-img { width: 56px; height: 64px; border-radius: 0; object-fit: contain; object-position: center; filter: drop-shadow(0 2px 3px rgba(43, 40, 64, .12)) }
+
+/* Her guides block (two states) and the slim timeline card: white, hairline, circles for guides. */
+#main .hg-guides-card, #main .hg-tl-card { display: flex; position: relative; width: 100%; border: 1px solid var(--line, #ebe6dd); border-radius: 20px; background: #fffdf9; text-align: left; font: inherit; color: var(--ink, #2B2840); cursor: pointer }
+#main .hg-guides-card { flex-direction: column; align-items: flex-start; gap: 12px; margin-top: 24px; padding: 16px 44px 16px 16px }
+#main .hg-guides-card > :last-child:not(.hg-guides-copy), #main .hg-tl-card > :last-child:not(.hg-guides-copy) { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: #9a95a8 }
+#main .hg-marks { display: flex; align-items: center }
+#main .hg-gtile-mark { flex: none; display: grid; place-items: center; width: 40px; height: 40px; margin-right: -8px; border-radius: 50%; background: var(--year-pale, #f3effb); box-shadow: 0 0 0 3px #fffdf9; transition: opacity .2s }
+#main .hg-gtile-mark svg { width: 24px; height: 24px }
+#main .hg-gtile-mark.is-quiet { opacity: .28; filter: grayscale(.6) }
+#main .hg-new-tag { margin-left: 18px; font-style: normal; font-size: 12px; font-weight: 650; line-height: 16px; padding: 3px 9px; border-radius: 999px; background: #fdebe4; color: #c4583a }
+#main .hg-guides-copy { min-width: 0 }
+#main .hg-guides-copy b { display: block; font-size: 15.5px; line-height: 20px; font-weight: 600 }
+#main .hg-guides-copy small { display: block; margin-top: 2px; font-size: 13.5px; line-height: 18px; color: #5E5A75 }
+#main .hg-tl-card { align-items: center; gap: 12px; margin-top: 10px; padding: 14px 44px 14px 16px }
+#main .hg-tl-mark { flex: none; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 13px; background: #eef4ef; color: #4f8a6a }
+#main .hg-tl-mark svg { width: 22px; height: 22px }
+#main .hg-guides-card.is-new { gap: 10px }
+#main .hg-new-eyebrow { font-size: 12.5px; font-weight: 650; letter-spacing: .02em; color: #c4583a }
+#main .hg-chips { display: flex; flex-wrap: wrap; gap: 8px }
+#main .hg-chip { display: inline-flex; align-items: center; gap: 8px; padding: 5px 12px 5px 5px; border-radius: 999px; background: var(--year-pale, #f3effb); color: var(--year-ink, #5b4a8b); font-size: 14px; font-weight: 600; line-height: 18px }
+#main .hg-chip-mark { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: #fff }
+#main .hg-chip-mark svg { width: 20px; height: 20px }
+
+/* End of Home: Guides and Timeline as an equal pair of tiles. */
+#main .hg-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 26px }
+#main .hg-ptile { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; min-height: 148px; padding: 16px 14px; border: 1px solid var(--line, #ebe6dd); border-radius: 20px; background: #fffdf9; text-align: left; font: inherit; color: var(--ink, #2B2840); cursor: pointer }
+#main .hg-ptile .hg-marks, #main .hg-ptile .hg-tl-mark { margin-bottom: 10px }
+#main .hg-ptile .hg-gtile-mark { width: 36px; height: 36px; margin-right: -7px }
+#main .hg-ptile .hg-gtile-mark svg { width: 22px; height: 22px }
+#main .hg-ptile .hg-tl-mark { width: 36px; height: 36px; border-radius: 12px }
+#main .hg-ptile b { font-size: 15.5px; line-height: 20px; font-weight: 600 }
+#main .hg-ptile small { font-size: 13.5px; line-height: 18px; color: #5E5A75 }
+#main .hg-ptile.is-new { border-color: #f3cfc2; background: #fff8f4 }
+#main .hg-dot-new { position: absolute; top: 14px; right: 14px; width: 9px; height: 9px; border-radius: 50%; background: #e8775a }
+
+/* Guides tab: a guide that moved for her keeps this until it's opened. */
+#main .category-directory-row .guide-new { display: inline-block; margin-left: 6px; vertical-align: 2px; padding: 2px 8px; border-radius: 999px; background: #e8775a; color: #fff; font-size: 11.5px; font-weight: 700; line-height: 15px; letter-spacing: .01em }
+#main .category-directory-row small.guide-new-line { color: var(--year-ink, #5b4a8b) !important; font-weight: 600 }
+#main .category-directory-row { position: relative }
+#main .category-directory-row .guide-new { position: absolute; top: 14px; right: 14px; margin: 0 }
+
+/* Guides tab, Nov 10 pass: equal tiles, softer color so the new ones stand out, "New" above the title, less gap. */
+#main .category-directory { grid-auto-rows: 1fr !important; margin-top: 4px !important }
+#main .category-directory-row { min-height: 128px !important; background: radial-gradient(circle at 100% 0, rgba(255,255,255,.6) 0 30%, transparent 30.5%), var(--year-pale, #f3eefb) !important }
+#main .category-directory-row[data-new] { background: radial-gradient(circle at 100% 0, rgba(255,255,255,.5) 0 30%, transparent 30.5%), var(--year-bg, #e8e2f6) !important }
+#main .category-directory-row .guide-new { position: static !important; display: inline-block; margin: 0 0 5px !important; padding: 2px 8px; border-radius: 999px; background: #e8775a; color: #fff; font-size: 11px; font-weight: 700; line-height: 15px }
+#main .category-directory-row .directory-copy small { color: #5E5A75 !important; font-weight: 500 }
+#main .category-directory-row small.guide-new-line { color: var(--year-ink, #5b4a8b) !important; font-weight: 600 }
+/* New guides: same soft color as the rest, marked by a coral outline that matches the "New" pill (Yarden, Nov 10). */
+#main .category-directory-row[data-new] { background: radial-gradient(circle at 100% 0, rgba(255,255,255,.6) 0 30%, transparent 30.5%), var(--year-pale, #f3eefb) !important; box-shadow: inset 0 0 0 2px #e8775a !important }
+
+/* Home's Guides tile when something's new: the same coral outline and "New" pill as the Guides tab. */
+#main .hg-ptile.is-new { background: #fffdf9 !important; border-color: transparent !important; box-shadow: inset 0 0 0 2px #e8775a }
+#main .hg-ptile .hg-dot-new { display: none }
+#main .hg-ptile .hg-new-pill { align-self: flex-start; margin: -2px 0 4px; padding: 2px 8px; border-radius: 999px; background: #e8775a; color: #fff; font-size: 11px; font-weight: 700; line-height: 15px; font-style: normal }
+/* Guides tab: full guide color again (Yarden picked it, Nov 10); new ones keep the coral outline and "New" pill. */
+#main .category-directory-row, #main .category-directory-row[data-new] { background: radial-gradient(circle at 100% 0, rgba(255,255,255,.5) 0 30%, transparent 30.5%), var(--year-bg, #e8e2f6) !important }
+#main .category-directory-row .directory-copy small { color: var(--year-ink, #5b4a8b) !important }
