@@ -3146,7 +3146,7 @@
   P.nb_enough = () => { const nurse = nurses();
     return yPage(XC.growth, 'Is he getting enough?', 'Wet diapers are your everyday sign', 'You don’t need to measure feeds. Diapers every day, and weight at checkups, tell you.',
       firstCard(xBody(P.x_enough)) + weightViz()
-      + xDo('What to look for', [nurse ? 'During feeds: long sucks, and swallows you can hear.' : '', 'After most feeds: he’s content for a while.', 'Keep a quick note of feeds and diapers until things feel settled.', 'Go to the early weight checks. No need to weigh at home.'])
+      + xDo('What to look for', [nurse ? 'During feeds: long sucks, and swallows you can hear.' : '', isBreast() ? 'From day 6: 3 or more poops a day, too.' : '', 'After most feeds: he’s content for a while.', 'Keep a quick note of feeds and diapers until things feel settled.', 'Go to the early weight checks. No need to weigh at home.'])
       + xNote('Worth a call:', 'fewer wet diapers, dark urine, black poop after day 5, or not back to birth weight by 2 weeks.')); };
   // Milk feeds, to 3 months
   P.m1_now = () => { const nurse = nurses(), bot = isBottle(), fm = formulaFam();
@@ -3186,9 +3186,9 @@
       steps([['head', 'Steady head', 'Holds it up well'], ['sit', 'Sits with support', 'In a high chair'], ['eye', 'Interested', 'Reaches for food'], ['swallow', 'Swallows', 'Moves food back, not out']], false)
       + xDo('What to do', [ageMo() < 6 ? 'Ask about it at his 6-month checkup.' : 'Ask about it at his next checkup.'])
       + xKnow('Good to know', 'Starting early doesn’t help him sleep longer.'));
-  P.z_start = () => yPage(XG, 'How to start', 'Spoon, fingers or both. All work.', 'Start with iron-rich foods, made soft and safe.',
+  P.z_start = () => yPage(XG, 'How to start', 'Spoon, fingers or both. All work.', 'Research doesn’t favor one. When food is soft and safely shaped, the choking risk is similar.',
       xCompare([['bowl', 'Spoon-fed', 'Easy to get iron in. Thicker and lumpier over time.'], ['hand', 'Finger foods', 'He feeds himself soft strips from the start.'], ['star', 'A mix', 'Spoon iron-rich foods, and offer soft strips to practice.']])
-      + h2('Good first foods') + chips(['Meat', 'Beans or lentils', 'Iron-fortified oatmeal', 'Egg, well cooked', 'Avocado', 'Sweet potato'])
+      + h2('Start with iron-rich foods') + chips(['Meat', 'Beans or lentils', 'Iron-fortified oatmeal', 'Egg, well cooked', 'Avocado', 'Sweet potato'])
       + xDo('Make it safe', ['Smooth or mashed, or soft strips that squish between your fingers.', 'No added salt or sugar.', 'Always seated upright, and always with you.'])
       + xKnow('Before the first bite', 'A high chair with a harness, a soft spoon, and an open cup.')
       + gLink('Learn choking first aid', 'z_gag'));
@@ -3201,12 +3201,14 @@
   // First foods, early
   const zMealFirst2 = () => yPage(XG, 'How a meal goes', 'A few bites is a good meal', 'Solids are practice for now. Let him set the pace.',
       steps([['highchair', 'Sit him up', 'Strapped in, facing you, at a calm time'], ['bowl', 'Offer a little', 'A spoonful, or a soft strip to hold'], ['eye', 'Let him lead', 'Opens up, more. Turns away, done']], true)
-      + xDo('What to expect', ['Mess, and funny faces at new tastes.', 'Most of it ends up on the tray at first.']));
+      + xDo('What to expect', ['Mess, and funny faces at new tastes.', 'Most of it ends up on the tray at first.'])
+      + gLink('Good first foods, and making them safe', 'z_start'));
   P.z_milkfood = () => { const b = isBreast(), bot = isBottle(), m = nurses() && bot ? 'Nursing or a bottle' : bot ? 'A bottle' : 'Nursing';
     return yPage(XC.d1, 'Milk and solids together', 'No set order for milk and meals', 'A meal fits in wherever he’s awake and happy.',
       tl('A day, for example', [['Waking', 'sun', m], ['Later morning', 'bowl', 'A meal, with sips of water'], ['Through the day', 'drop', 'Milk feeds, as usual'], ['Bedtime', 'moon', m]])
       + xDo('What helps', ['Milk before or after is fine. Do what works for him.', 'Water from an open or straw cup. Hold it, and let him try.'])
-      + xKnow('As meals grow', 'Milk drops a little at a time, mostly after 9 months.')); };
+      + xKnow('As meals grow', 'Milk drops a little at a time, mostly after 9 months.')
+      + xNote('How you’ll know he’s getting enough:', 'wet diapers through the day, energy, and steady growth at checkups.')); };
   // First foods, later
   P.z_textures = () => yPage(XG, 'Beyond purées', 'Thicker, lumpier, then soft pieces', 'Move on when he handles the last texture easily.',
       hubStageStrip({ title: 'Textures, as he grows', items: [['bowl', 'Around 6 months', 'Smooth and mashed'], ['avocado', '7–8 months', 'Lumpy mash, soft strips'], ['lentils', '9 months on', 'Soft, chopped family food']], cat: CAT })
@@ -3224,13 +3226,15 @@
   // Meals
   const zMealMeals2 = () => yPage(XG, 'Feeding himself', 'Family food, cut small', 'Most of what you eat works for him now, softened and unsalted.',
       xCompare([['bowl', 'From your plate', 'Take out his portion before adding salt.'], ['hand', 'He feeds himself', 'Fingers first, a spoon to practice.']])
-      + h2('Ideas from your plate') + chips(['Shredded chicken', 'Scrambled egg', 'Squashed beans', 'Soft pasta', 'Banana or ripe pear', 'Soft-cooked veggies']));
+      + h2('Ideas from your plate') + chips(['Shredded chicken', 'Scrambled egg', 'Squashed beans', 'Soft pasta', 'Banana or ripe pear', 'Soft-cooked veggies'])
+      + gLink('How to cut and cook foods safely', 'z_shapes'));
   P.z_meal = () => (stg() >= 4 ? zMealMeals2() : zMealFirst2());
   P.z_day = () => { const bot = isBottle(), m = nurses() && bot ? 'Nursing or a bottle' : bot ? 'A bottle' : 'Nursing';
     return yPage(XC.g1, 'Meals, snacks and milk', 'Big days and small days are normal', 'You choose what and when. He chooses how much.',
       tl('A day, for example', [['Waking', 'sun', m + ', then breakfast'], ['Midday', 'bowl', 'Lunch, a snack, and milk after'], ['Evening', 'moon', 'Dinner, then ' + m.toLowerCase() + ' before bed']])
       + weekViz().replace(F('Big days and small days even out over the week.'), F('They even out over the week.'))
-      + xDo('What helps', ['Keep offering, without pressure.', 'Look at the week, not one meal.'])); };
+      + xDo('What helps', ['Keep offering, without pressure.', 'Look at the week, not one meal.'])
+      + xNote('How you’ll know he’s getting enough:', 'wet diapers through the day, energy, and steady growth at his 9- and 12-month checkups.')); };
   // One page per subject: older links open the page that now covers it.
   Object.assign(P, { y_nurse: () => P.m1_now(), y_bottle: () => P.m1_now(), y_away: () => (stg() === 1 && ageMo() < 3 ? P.m1_apart() : P.m2_away()), y_night: () => P.m1_eve(), y_evening: () => P.m1_eve(),
     z_signs: () => P.z_ready(), z_setup: () => P.z_start(), z_tray: () => P.z_start(), z_allergy: () => P.z_plan(), z_notyet: () => P.z_plan(), z_water: () => P.z_milkfood(), z_family: () => P.z_meal(), z_appetite: () => P.z_day() });
@@ -3265,6 +3269,7 @@
     h = h.slice(0, i) + `<div class="hub-list">${GUIDES().map(gRow).join('')}` + h.slice(j);
     // Iron drops sit with vitamin D in the "Every day" line from 4 months, for babies on breast milk.
     if (stg() === 2 && isBreast()) h = h.replace(/(<span class="hub-card-note"><b>Every day<\/b>[^<]*)(<\/span>)/, `$1 ${F(isEarly() ? 'Iron drops too.' : formulaFam() ? 'Iron drops too, if most of his milk is breast milk.' : 'Iron drops too, from 4 months.')}$2<button class="hub-link" style="display:block;margin:8px 4px 0" onclick="${go('z_iron')}">${F('About iron drops')} ›</button>`);
+    if (stg() >= 3) h = h.replace(`<div class="hub-browse"><button class="hub-link" onclick="${go('z_gag')}">`, `<div class="hub-browse"><button class="hub-link" onclick="${go('z_plan')}">${F('Foods to skip, and choking risks')} ›</button></div><div class="hub-browse"><button class="hub-link" onclick="${go('z_gag')}">`);
     return h.replace(F('Spit-up, distracted feeds, slow gain and more'), F('Spit-up, refusing feeds, slow gain and more')); }; })();
   P.z_milk12 = (() => { const prev = P.z_milk12; return () => prev().replace('<p class="hub-context">' + F('Milk') + '</p>', '<p class="hub-context">' + F('Turning 1') + '</p>').replace('<li>' + F('Serve milk in a cup, with meals.') + '</li>', '').split(F('Practice with an open or straw cup')).join(F('An open or straw cup at every meal')); })(); P.at12 = P.z_milk12;
   // Distracted feeds have their own guide from 3 months; the challenge page points there instead of repeating it.
