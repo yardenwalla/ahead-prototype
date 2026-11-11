@@ -3105,6 +3105,34 @@
     const tryCard = `<div class="fd-try"><i aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 6"/></svg></i><div><small>${F('One thing to try')}</small><p>${F(tryT)}</p></div></div>`;
     return h.slice(0, a) + discCss + hero + '</header>' + tryCard + h.slice(e + 9); }; })();
 
+  // ---- Glance, lighter (Nov 11, Yarden: "do the tiles like the inspiration, it looks too bulky"):
+  // three small tiles in a row, a number on each, no pictures. "How often" folds into Feeds a day; once solids start,
+  // the tiles are Milk, Solids and Water. ----
+  const glanceCss = `<style>#main .fd-gl-h{margin:18px 2px 10px}#main .fd-glance{padding:10px!important}#main .fd-glance .fd-gl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}#main .fd-gl>*{all:unset;box-sizing:border-box;display:block;border-radius:12px;background:var(--sm-bg);padding:10px 10px 11px;min-width:0}#main .fd-gl>button{cursor:pointer}#main .fd-gl small{display:block;font-size:11px;font-weight:700;color:var(--sm-ink);line-height:1.25}#main .fd-gl b{display:block;font-size:17px;line-height:1.2;letter-spacing:-.2px;color:var(--ink,#2b2732);margin-top:5px;overflow-wrap:break-word}#main .fd-gl span{display:block;font-size:11.5px;line-height:1.3;color:#6d666d;margin-top:4px}#main .fd-glance .hub-card-note{display:block;margin:10px 4px 2px;font-size:13px;line-height:1.45}</style>`;
+  const lighten = h => { const a = h.indexOf('<section class="hub-card hub-glance'), e = h.indexOf('</section>', a); if (a < 0 || e < 0) return h;
+    const sec = h.slice(a, e), re = /<(div|button) class="sm-tile[^"]*" style="--sm-bg:([^;]+);--sm-ink:([^;"]+)[^"]*"(?: onclick="([^"]*)")?><span class="sm-art">[\s\S]*?<small>([\s\S]*?)<\/small><b>([\s\S]*?)<\/b><span>([\s\S]*?)<\/span><\/(?:div|button)>/g;
+    const T = {}; let m; while ((m = re.exec(sec))) T[m[5]] = { bg: m[2], ink: m[3], go: m[4], l: m[5], v: m[6], s: m[7].replace(/ ›$/, '') };
+    const cap = x => x.charAt(0).toUpperCase() + x.slice(1), out = [];
+    if (T['Feeds a day']) { const f = T['Feeds a day'], oz = /oz/.test(f.s) ? f.s : '';
+      out.push({ ...f, v: f.v === 'On demand' && T['How often'] ? '5–8' : f.v, s: T['How often'] ? T['How often'].v : f.s });
+      if (T['Each feed']) { const x = T['Each feed'], mm = x.s.match(/(\d+–\d+) minutes\s*(.*)$/); out.push(mm ? { ...x, v: mm[1] + ' min', s: cap((mm[2] ? mm[2] + ', ' : '') + x.v.toLowerCase()) } : x); }
+      if (T['Per bottle']) { const x = T['Per bottle']; out.push({ ...x, s: oz ? oz.replace('Up to about 32 oz in all', 'Up to about 32 oz a day') : x.s }); }
+      if (T['Getting enough']) { const x = T['Getting enough']; out.push({ ...x, l: F('Wet diapers'), v: x.v.replace(/ wet diapers$/, ''), s: x.s }); }
+    } else {
+      const ml = T['Milk'], so = T['Solids'], me = T['Meals'], wa = T['Water'];
+      if (me) out.push(me); else if (ml) out.push({ ...ml, v: ml.v.replace(' milk feeds', ' feeds') });
+      if (so) out.push({ ...so, v: /^1, then 2–3 meals$/.test(so.v) ? '1–3 meals' : so.v, s: /^1, then/.test(so.v) ? F('A day, 2–3 by 8–9 months') : so.s });
+      if (ml && me) out.splice(1, 0, { ...ml, v: ml.v.replace(' milk feeds', ' feeds').replace(/^Fewer feeds$/, '3–4 feeds') });
+      if (wa) out.push({ ...wa, v: '4–8 oz', s: /Sips/.test(wa.v) ? F('A day at most, from a cup') : wa.s });
+    }
+    out.forEach(x => { const bm = /^(\d+–\d+) bottles$/.exec(x.v); if (bm) { x.v = bm[1]; x.s = F('Bottles, ') + x.s.replace(/ a day in all$/, ' a day'); } });
+    if (out.length < 3) return h;
+    const tiles = out.slice(0, 3).map(x => { const st = `style="--sm-bg:${x.bg};--sm-ink:${x.ink}"`;
+      const inner = `<small>${x.l}</small><b>${x.v}</b><span>${x.s}${x.go ? ' ›' : ''}</span>`;
+      return x.go ? `<button ${st} onclick="${x.go}">${inner}</button>` : `<div ${st}>${inner}</div>`; }).join('');
+    return h.slice(0, a) + glanceCss + `<h2 class="hub-h2 fd-gl-h">${F('Feeding at a glance')}</h2><section class="hub-card hub-glance is-static fd-glance"><div class="fd-gl">${tiles}</div>` + sec.slice(sec.lastIndexOf('</div>', sec.indexOf('<span class="hub-card-note">') > 0 ? sec.indexOf('<span class="hub-card-note">') : sec.length) + 6) + h.slice(e); };
+  P.dirD = (() => { const prev = P.dirD; return v => lighten(prev(v)); })();
+
   const base = window.changesRoute;
   // Home cards link to the old Feeding detail pages; send each to the page that now covers it.
   // Every older Feeding link (Home cards, the year view, Safety, briefings) opens the page that now covers it.
