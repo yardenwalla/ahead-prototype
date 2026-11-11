@@ -69,12 +69,23 @@ return back("Development")+heading(m.age+" · "+state.id,domain[0], "These are t
 if(state.screen==="explore"){let domains=Object.keys(m.domains),tiles=domains.map((name,j)=>{let d=m.domains[name],flags=ensure("dev-"+i+"-"+name),seen=d[1].filter((_,j)=>flags[j]).length;return card(name,d[0]+" · "+seen+" of "+d[1].length+" seen","domain",name,["♡","♫","✳","↗"][j])}).join("");
 return back("Development")+heading(m.age+" · ALL MILESTONES","Explore all milestones","Every skill at this checkpoint, in four areas. Marking something as seen is always optional.")+'<div class="x-grid">'+tiles+"</div>"+block("What to remember","<p>These are typical developmental checkpoints, not a score. If you have concerns or Maya loses a skill, talk with her pediatrician.</p>")+footer()}
 if(state.screen==="play"){let n=Number(state.id);let p=m.play[n];if(!p)return "";return back("Development")+heading(m.age+" · IDEA TO TRY",p[0],p[1])+block("Try it",bullets(p[2]))+block("What to notice","<p>Follow Maya's interest. A few enjoyable minutes count; stop when she looks away or seems finished.</p>")+footer()}
-let f=feature[i],key=highlights[i];let items=key.map((x,j)=>{let d=m.domains[x.d],label=d[1][x.n],flags=ensure("dev-"+i+"-"+x.d),done=!!flags[x.n];return '<button class="dev-feature-row '+(done?"is-seen":"")+'" data-act="skill" data-id="'+esc(x.d)+'" data-index="'+x.n+'"><span class="dev-feature-check">'+(done?"✓":"")+'</span><span class="dev-feature-copy"><b>'+esc(label)+'</b><small>'+esc(x.why)+'</small><em>'+esc(x.d)+'</em></span><span class="dev-feature-action">'+(done?"Seen":"Mark seen")+'</span></button>'}).join("");
+let f=feature[i],key=highlights[i];
+let milestones=key.map((x,j)=>{
+ let d=m.domains[x.d],label=d[1][x.n],flags=ensure("dev-"+i+"-"+x.d),done=!!flags[x.n];
+ let ico=({Social:"♡",Talking:"♫",Thinking:"✳",Movement:"↗"})[x.d];
+ return '<button class="dev-polished-row" data-act="domain" data-id="'+esc(x.d)+'"><span class="dev-polished-icon">'+ico+'</span><span class="dev-polished-copy"><small>'+esc(x.d)+'</small><b>'+esc(label)+'</b></span>'+(done?'<span class="dev-polished-seen">✓ Seen</span>':'<span class="dev-polished-arrow">›</span>')+'</button>';
+}).join("");
 let p=m.play[f.play];
-let top='<section class="dev-main-discovery"><span class="x-eye">A LITTLE DISCOVERY · '+esc(m.age).toUpperCase()+'</span><h2>'+esc(f.title)+'</h2><p>'+esc(f.detail)+'</p>'+art("Development",i)+'</section>';
-let primaryPlay='<button class="dev-featured-play" data-act="play" data-id="'+f.play+'"><span class="dev-play-symbol">✳</span><span class="dev-play-words"><small>TRY THIS TOGETHER · A FEW MINUTES</small><b>'+esc(p[0])+'</b><span>'+esc(f.playwhy)+'</span></span><span class="x-right">›</span></button>';
-let other=m.play.map((q,j)=>j===f.play?"":row(q[0],q[1],"play",j,"✦")).join("");
-return pageTitle("Development & play")+agebar(D.development,i,"stage")+top+section("Three milestones to look for",'<p class="dev-section-lead">Selected for what parents tend to notice, what matters next and how these skills connect to daily life. You can mark them if you like.</p><div class="dev-feature-list">'+items+"</div>")+section("Try this together",primaryPlay)+(other?'<div class="dev-other-play">'+other+"</div>":"")+section("All milestones",list(row("Explore all milestones","Social · Talking · Thinking · Movement","explore",null,"◎")))+block(m.big[0],"<p>"+esc(m.big[1])+"</p>")+note("These highlights aren't the only important skills, and development isn't a checklist race. Use adjusted-age guidance with your care team if Maya was born early.")+(i<4?'<button class="x-next" data-act="stage" data-index="'+(i+1)+'"><small>COMING UP</small><b>By '+esc(D.development[i+1].name)+'</b></button>':"");
+let lead=f.detail;
+let top=hero("A LITTLE DISCOVERY · "+m.age,f.title,lead,m.aha,m.explain,null,"Development",i);
+let primaryPlay='<button class="dev-polished-play" data-act="play" data-id="'+f.play+'"><span class="dev-polished-play-symbol">✳</span><span class="dev-polished-play-copy"><small>TRY THIS TOGETHER · A FEW MINUTES</small><b>'+esc(p[0])+'</b><span>'+esc(p[1])+'</span></span><span class="dev-polished-arrow">›</span></button>';
+return pageTitle("Development & play")+agebar(D.development,i,"stage")+top
+ +section("Three milestones to look for",'<div class="dev-polished-list">'+milestones+'</div>')
+ +section("Try this together",primaryPlay)
+ +'<button class="dev-polished-explore" data-act="explore"><span><b>Explore all milestones</b><small>Social · Talking · Thinking · Movement</small></span><span class="dev-polished-arrow">›</span></button>'
+ +note("These are examples of skills to notice—not a test or a ranking. You can mark skills as seen inside each area. For babies born early, ask your clinician about adjusted age.")
+ +(i<4?'<button class="x-next" data-act="stage" data-index="'+(i+1)+'"><small>COMING UP</small><b>By '+esc(D.development[i+1].name)+'</b></button>':"");
+
 }
 function care(){let i=Math.max(0,Math.min(3,state.i)),m=D.care[i];if(state.screen==="topic"){let d=D.careTopics[state.id];if(!d)return "";return back("Everyday care")+heading(m.name+" · "+d.title,d.title,d.lead)+block("What's different now","<p><strong>"+esc(d.stage[i][0])+".</strong> "+esc(d.stage[i][1])+"</p>")+block("How to do it",bullets(d.how))+('<div class="x-note">'+esc(d.watch)+"</div>")+footer()}
 let news=list(m.news.map(x=>row(x[0],x[1],"topic",x[2],"✳")).join(""));
