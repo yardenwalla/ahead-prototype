@@ -71,7 +71,7 @@ for (const [cat, age, i, label] of [['Sleep', 7, 3, 'Two naps'], ['Sleep', 10, 2
   a = family(10, { solids: 'Yes', foodExperience: 'new' }); a.run("openPage('topic:Feeding')"); check(nowName(a) === 'First foods', 'A parent’s “we’ve started” holds');
   a = family(5); a.run("openPage('topic:Feeding')"); check(nowName(a) === 'Ready for solids', 'Ready for solids shows from 4 months');
   a = family(3); a.run("openPage('topic:Feeding')"); check(nowName(a) === 'Milk feeds', 'Milk feeds before 4 months');
-  a = family(4, { solids: 'Yes', solidsStart: '2026-02-21' }); a.run("openPage('topic:Feeding')"); check(nowName(a) === 'First foods' && a.html().includes('Tastes, textures'), 'Starting at 4 months opens First foods');
+  a = family(4, { solids: 'Yes', solidsStart: '2026-02-21' }); a.run("openPage('topic:Feeding')"); check(nowName(a) === 'First foods' && /hub-eyebrow[^>]*>First foods/.test(a.html()), 'Starting at 4 months opens First foods');
   for (const age of [0, 3, 7, 11]) { const c = family(age); c.run("openPage('topic:Daily rhythm')"); const st = stages(c); check(st.length === 4 && st.filter(x => /is-now/.test(x.cls)).length === 1 && !st.some(x => x.change), `Everyday care at ${age} months has a read-only timeline`); for (let i = 0; i < 4; i++) { c.run(`openPage('chg:Daily rhythm:s:${i}')`); const v = stages(c); check(v[i] && /is-on/.test(v[i].cls) && !v.some(x => x.change), `Everyday care: stage ${i} can be read, never changed`); } }
 }
 // Rule 3: an old "not yet" brings the naps question back to Home a month later.
