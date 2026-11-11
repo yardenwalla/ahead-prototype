@@ -2832,7 +2832,7 @@
       steps([['drop', 'Milk more often', 'In smaller amounts'], ['heart', 'Clear his nose', 'Saline before feeds'], ['bowl', 'Solids can wait', 'Until he feels better']], false)
       + xNote('Worth a call:', 'fewer wet diapers, refusing milk, or vomiting that keeps happening.'));
 
-  window.SHOME = (() => { const prev = window.SHOME; return v => { const h = prev(v); if (v !== 2) return h; const i = h.indexOf("xa:r2"); if (i < 0) return h; const j = h.indexOf('<span class="hub-row-copy">', i); return j < 0 ? h : h.slice(0, j) + `<span class="hub-row-copy"><small class="hub-row-eyebrow">${F('Getting ready, step by step')}</small>` + h.slice(j + '<span class="hub-row-copy">'.length); }; })();
+  window.SHOME = (() => { const prev = window.SHOME; return v => { const h = prev(v); if (v !== 2) return h; const i = h.indexOf("xa:r2"); if (i < 0) return h; const j = h.indexOf('<span class="hub-row-copy">', i); return j < 0 ? h : h.slice(0, j) + `<span class="hub-row-copy"><small class="hub-row-eyebrow">${F('Getting ready for solids')}</small>` + h.slice(j + '<span class="hub-row-copy">'.length); }; })();
   const xEyebrow = (h, key, label) => { const i = h.indexOf(key); if (i < 0) return h; const j = h.indexOf('<span class="hub-row-copy">', i); return j < 0 ? h : h.slice(0, j) + `<span class="hub-row-copy"><small class="hub-row-eyebrow">${F(label)}</small>` + h.slice(j + '<span class="hub-row-copy">'.length); };
   window.SHOME = (() => { const prev = window.SHOME; return v => v === 3 ? xEyebrow(xEyebrow(xEyebrow(prev(v), 'mock:z_meal', 'How a meal goes'), 'mock:z_allergens', 'Common allergens'), 'mock:z_notyet', 'Foods to skip') : v === 4 ? xEyebrow(xEyebrow(prev(v), 'mock:z_meal', 'How a meal goes'), 'mock:z_appetite', 'Appetite') : prev(v); })();
   window.M1HOME = (() => { const prev = window.M1HOME; return () => xEyebrow(prev(), 'xa:m1e', 'Evenings and nights'); })();
@@ -3017,12 +3017,14 @@
   // textures as he grows, and one note. Iron-rich foods are named where a parent needs them. ----
   HEADART['How a meal goes'] = HEADART['Food'];
   const zMealFirst = () => yPage(XG, 'How a meal goes', 'A few bites is a good meal', 'Solids are practice for now. Let him set the pace.',
-      steps([['highchair', 'Sit him up', 'Strapped in, facing you'], ['meat', 'Offer iron first', 'Meat, beans, eggs or fortified cereal'], ['eye', 'Let him lead', 'Open mouth, more. Turns away, done'], ['clock', 'Build slowly', 'Once a day, then 2–3 meals by 8–9 months']], true)
+      steps([['highchair', 'Sit him up', 'Strapped in, facing you'], ['meat', 'Offer iron first', 'A spoonful of mash, or a soft strip'], ['eye', 'Let him lead', 'Open mouth, more. Turns away, done'], ['clock', 'Build slowly', 'Once a day, then 2–3 meals by 8–9 months']], true)
+      + h2('Ideas to try') + chips(['Meat', 'Beans or lentils', 'Iron-fortified oatmeal', 'Egg, well cooked', 'Avocado', 'Sweet potato'])
       + hubStageStrip({ title: 'Textures, as he grows', items: [['bowl', 'Around 6 months', 'Smooth and mashed'], ['avocado', '6–8 months', 'Soft, finger-size strips'], ['lentils', '9 months on', 'Soft, pea-size pieces']], cat: CAT })
       + xNote('Gagging is normal', 'while he learns. It’s loud. Choking is silent.'));
   // From 9 months (the Meals stage), the same row opens what a meal looks like now. Not a sequence, so no numbers.
   const zMealMeals = () => yPage(XG, 'How a meal goes', 'Family food, cut small', 'You choose what and when. He chooses how much.',
       steps([['drop', 'Milk after meals', 'First thing in the morning, milk first is fine'], ['lentils', 'Soft, small pieces', 'Unsalted, with iron at each meal'], ['hand', 'He feeds himself', 'Fingers first, a spoon to practice']], false)
+      + h2('Ideas from your plate') + chips(['Shredded chicken', 'Scrambled egg', 'Squashed beans', 'Soft pasta', 'Banana or ripe pear', 'Soft-cooked veggies'])
       + xNote('Still cut it small:', 'quarter grapes lengthwise, cook hard veg until soft, and spread nut butter thin.'));
   P.z_meal = () => (stg() >= 4 ? zMealMeals() : zMealFirst());
 
@@ -3053,7 +3055,14 @@
     .split("mock:xa:routine'").join("mock:nb_eve'").split("mock:xa:growth'").join("mock:nb_enough'")
     .split(F('His day and night')).join(F('Evenings and nights')).split(F('Busy evenings, quick and calm nights')).join(F('Busy evenings, then quick, calm nights')).split(F('Day, evening and night')).join(F('Cluster feeds, and nights'))
     .split(F('How much, diapers, weight, vitamin D')).join(F('Diapers every day, weight at checkups')); })();
-  window.M1HOME = (() => { const prev = window.M1HOME; return () => prev().split("mock:xa:m1e'").join("mock:m1_eve'").split(F('Evenings, then nights')).join(F('Calmer evenings, longer nights')); })();
+  window.M1HOME = (() => { const prev = window.M1HOME; return () => prev().split("mock:xa:m1e'").join("mock:m1_eve'").split(F('Evenings, then nights')).join(F('Calmer evenings, longer nights'))
+    .split(F('Going back to work, or a sitter?')).join(F('A first bottle')).split(F('A first bottle, and a small milk stash')).join(F('For a partner, a sitter or work')); })();
+  P.y_away = (() => { const prev = P.y_away; return () => { const h = prev(); if (!(nurses() && !isBottle())) return h;
+    return h.split(F('Getting ready for work or a sitter')).join(F('A first bottle, and time apart')).split(F('Start a few weeks ahead, so he knows a bottle and there’s milk in the freezer.')).join(F('Once nursing is going well, a bottle lets someone else feed him: a partner, a sitter, or care while you work.')).split(F('2–3 weeks ahead. Someone else offers it.')).join(F('Someone else offers it, when he’s calm.')); }; })();
+
+  // Every row on a stage page carries an eyebrow naming its topic, the same on every stage (Nov 11).
+  window.M1HOME = (() => { const prev = window.M1HOME; return () => { let h = prev(); [['mock:y_nurse', 'Feeds now'], ['mock:y_bottle', 'Feeds now'], ['mock:y_away', nurses() && !isBottle() ? 'Time apart' : 'Away from home']].forEach(([k, l]) => { if (h.includes(k)) h = xEyebrow(h, k, l); }); return h.split(F('Bottles away from home')).join(F('Bottles for daycare or a day out')).split(F('Daycare, a sitter or a day out')).join(F('Label, keep cold, and pack it to mix')); }; })();
+  window.SHOME = (() => { const prev = window.SHOME; return v => { let h = prev(v); if (v === 2) h = xEyebrow(h, 'mock:z_iron', 'Iron'); if (v === 4) h = xEyebrow(h, 'mock:z_milk12', 'Milk'); return h; }; })();
 
   const base = window.changesRoute;
   // Home cards link to the old Feeding detail pages; send each to the page that now covers it.
