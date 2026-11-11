@@ -3083,25 +3083,6 @@
   window.M1HOME = (() => { const prev = window.M1HOME; return () => { let h = prev(); [['mock:y_nurse', 'Feeds now'], ['mock:y_bottle', 'Feeds now'], ['mock:y_away', nurses() && !isBottle() ? 'Time apart' : 'Away from home']].forEach(([k, l]) => { if (h.includes(k)) h = xEyebrow(h, k, l); }); return h.split(F('Bottles away from home')).join(F('Bottles for daycare or a day out')).split(F('Daycare, a sitter or a day out')).join(F('Label, keep cold, and pack it to mix')); }; })();
   window.SHOME = (() => { const prev = window.SHOME; return v => { let h = prev(v); if (v === 2) h = xEyebrow(h, 'mock:z_iron', 'Iron'); if (v === 4) h = xEyebrow(h, 'mock:z_milk12', 'Milk'); return h; }; })();
 
-  // ---- Start here (Nov 11): each stage's main thing leads the page, right under the top card, as a short
-  // picture strip and one tap. It comes out of the "Right now" list, so nothing shows twice. ----
-  const FEAT = v => { const nurse = nurses(), bot = isBottle(), G = XG, Pk = XC.feed;
-    return [
-      { key: 'mock:xa:feed\'', c: Pk, title: 'Learning to feed', cta: 'A feed, step by step', items: [['eye', 'Spot hunger early'], nurse ? ['heart', 'A deep latch'] : ['bottle', 'Pace the bottle'], ['hand', nurse ? 'Burp and switch' : 'Burp'], ['smile', 'Stop when full']] },
-      nurse ? { key: 'mock:y_nurse\'', c: Pk, title: 'Quicker feeds are still enough', cta: 'Quicker feeds are normal', items: [['clock', '5–10 min a side'], ['drop', '7–9 feeds a day'], ['diaper', 'Diapers still tell you']] }
-        : { key: 'mock:y_bottle\'', c: Pk, title: 'Bigger bottles, same slow pace', cta: 'How much now, and nipple size', items: [['bottle', '4–6 oz a bottle'], ['clock', 'Let him pause'], ['diaper', 'Diapers still tell you']] },
-      { key: 'mock:xa:r2\'', c: G, title: 'Watch for all four signs', cta: 'Getting ready for solids', items: [['head', 'Steady head'], ['sit', 'Sits with support'], ['eye', 'Reaches for food'], ['swallow', 'Swallows food']] },
-      { key: 'mock:z_meal\'', c: G, title: 'A few bites, and let him lead', cta: 'How a meal goes', items: [['highchair', 'Sit him up'], ['meat', 'Iron first'], ['eye', 'He leads'], ['clock', 'Build slowly']] },
-      { key: 'mock:z_meal\'', c: G, title: 'Family food, cut small', cta: 'How a meal goes', items: [['lentils', 'Soft, small pieces'], ['hand', 'He feeds himself'], ['drop', 'Milk after meals']] }][v]; };
-  const featCss = `<style>#main .fd-start{padding:0;overflow:hidden;margin:0 0 14px;border:0;background:var(--fs-bg);display:block;width:100%;text-align:left;font:inherit;cursor:pointer;border-radius:22px}#main .fd-start-top{display:block;padding:16px 18px 4px}#main .fd-start-top small{display:block;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--fs-ink)}#main .fd-start-top b{display:block;font-size:20px;line-height:1.25;margin-top:4px;color:var(--ink,#2b2732)}#main .fd-start-row{display:grid !important;gap:6px;padding:12px 12px 14px}#main .fd-start-row>span{display:block;text-align:center}#main .fd-start-row i{display:grid;place-items:center;width:46px;height:46px;margin:0 auto 6px;border-radius:50%;background:#fff;color:var(--fs-ink)}#main .fd-start-row i svg{width:26px;height:26px}#main .fd-start-row i svg{color:var(--fs-ink)!important}#main .fd-start-row i svg [stroke]:not([stroke=none]){stroke:var(--fs-ink)!important}#main .fd-start-row em{display:block;font-style:normal;font-size:12.5px;font-weight:700;line-height:1.25;color:var(--ink,#2b2732)}#main .fd-start-go{background:#fff;padding:13px 18px;display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:15px;color:var(--fs-ink)}</style>`;
-  P.dirD = (() => { const prev = P.dirD; return (v) => { let h = prev(v); const st = v == null ? stg() : v; const f = FEAT(st); if (!f) return h;
-    const re = new RegExp('<button[^>]*onclick="[^"]*' + f.key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\)"[^>]*>[\\s\\S]*?</button>'); const m = h.match(re); if (!m) return h;
-    const on = (m[0].match(/onclick="([^"]*)"/) || [])[1] || '';
-    h = h.replace(m[0], '');
-    h = h.replace(/<h2 class="hub-h2">[^<]*<\/h2><div class="hub-list"><\/div>/, '');
-    const card = featCss + `<button type="button" class="hub-card fd-start" style="--fs-bg:${f.c[0]};--fs-ink:${f.c[1]}" onclick="${on}"><span class="fd-start-top"><small>${F('Start here')}</small><b>${F(f.title)}</b></span><span class="fd-start-row" style="grid-template-columns:repeat(${f.items.length},1fr)">${f.items.map(([ic, t]) => `<span><i>${hubArt(ic, CAT).replace('data-art=', 'data-keep=').replace(/#884866/gi, f.c[1]).replace(/#f7d9e5/gi, f.c[0])}</i><em>${F(t)}</em></span>`).join('')}</span><span class="fd-start-go">${F(f.cta)}<span aria-hidden="true">›</span></span></button>`;
-    const at = h.indexOf('<section class="hub-card hub-glance'); return at < 0 ? h : h.slice(0, at) + card + h.slice(at); }; })();
-
   const base = window.changesRoute;
   // Home cards link to the old Feeding detail pages; send each to the page that now covers it.
   // Every older Feeding link (Home cards, the year view, Safety, briefings) opens the page that now covers it.
