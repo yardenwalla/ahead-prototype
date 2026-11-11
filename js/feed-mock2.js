@@ -3171,10 +3171,10 @@
       steps([['moon', 'Feed when he’s drowsy', 'Just waking, or before sleep'], ['hand', 'Something to hold', 'Your finger, or a soft toy'], ['smile', 'Talk less', 'Save the chat for after']], false)
       + xDo('If he pops off', ['End the feed, and try again a little later.', 'No need to chase him or force it.'])
       + xNote('Worth a call:', 'fewer wet diapers than usual, or feeding much less for more than a few days.'));
-  P.m2_night = () => yPage(XC.d1, 'Evenings and nights', 'Waking more? Night feeds can come back', 'Around 4 months, sleep changes, and many babies wake more for a while. Feeding him back to sleep is fine.',
-      xNums('', [['1–2', 'Night feeds, still common'], ['A few weeks', 'How long extra waking often lasts']])
-      + xDo('What helps', ['Distracted by day? He may make up for it at night for a while.', 'Not every waking needs a feed. Give him a minute to settle first.', 'Dropping night feeds is a choice to make with your pediatrician.'])
-      + gLink('More on sleep at 4 months', "openPage('topic:Sleep')"));
+  P.m2_night = () => yPage(XC.d1, 'Evenings and nights', 'Night feeds are still common', 'Many babies still feed once or twice a night around 4 months. Feeding him back to sleep is fine.',
+      xNums('', [['1–2', 'Night feeds, still common']])
+      + xDo('What helps', ['Distracted by day? He may make up for it at night for a while.', 'Dropping night feeds is a choice to make with your pediatrician.'])
+      + gLink('Waking more than that? Sleep has what’s changing', "openPage('topic:Sleep')"));
   P.m2_away = () => { const b = isBreast(), fm = formulaFam(), nurse = nurses();
     return yPage(XC.p1, 'Time apart', b ? 'How much milk to leave' : 'Bottles for daycare or a day out', b ? 'Small bottles, labeled and kept cold, so little goes to waste.' : 'The same safe bottles, packed to travel.',
       (b ? xNums('', [['1–1½ oz', 'For each hour apart'], ['2–4 oz', 'Per bag or bottle, so less is wasted']]) + h2('How long breast milk keeps') + storeTable([['Fresh', '4 hours', '4 days', '6 months is best, 12 is fine'], ['Thawed', '1–2 hours', '24 hours', 'Never refreeze'], ['Left after a feed', '2 hours', 'Toss it', 'Toss it']]) : '')
@@ -3247,7 +3247,7 @@
       [XC.d1, 'moon', 'Evenings and nights', 'Night feeds are still normal', 'How night feeding evolves', 'm1_eve'],
       [XC.p1, 'bag', 'Time apart', nurse && !bot ? 'A first bottle' : 'Feeding with someone else', 'Feeding with another caregiver', 'm1_apart']];
     if (v === 1) return [[XC.f1, 'eye', 'Distracted feeds', 'Short daytime feeds are okay', 'What helps when everything catches his attention', 'm2_distract'],
-      [XC.d1, 'moon', 'Evenings and nights', 'Waking more? Night feeds can come back', 'Feeding as night sleep changes', 'm2_night'],
+      [XC.d1, 'moon', 'Evenings and nights', 'Night feeds are still common', 'Feeding as night sleep changes', 'm2_night'],
       [XC.p1, 'bag', 'Time apart', isBreast() ? 'How much milk to leave' : 'Bottles for daycare or a day out', 'Bottles, milk and feeds while you’re away', 'm2_away']];
     if (v === 2) return [[XG, 'eye', 'Is he ready?', 'Ready around 6 months, never before 4', 'The skills to look for', 'z_ready'],
       [XG, 'highchair', 'How to start', 'Spoon, fingers or both. All work.', 'First foods, iron and safe preparation', 'z_start'],
