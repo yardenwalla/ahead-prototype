@@ -34,7 +34,7 @@ const ensure=(k)=>{if(!stored[k])stored[k]={};return stored[k]};
 const setState=(cat,i=0,screen="home",id=null,sub=null)=>{state.cat=cat;state.i=i;state.screen=screen;state.id=id;state.sub=sub;render();window.scrollTo({top:0,behavior:"instant"})};
 const hash=()=>"#"+state.cat.toLowerCase()+"/"+(state.i+1)+(state.screen==="home"?"":"/"+state.screen+(state.id!==null?"-"+enc(state.id):"")+(state.sub!==null?"-"+enc(state.sub):""));
 function routeFromHash(h){let q=h.replace(/^#/,"").split("/");let cat=CATS.find(x=>x[0].toLowerCase()===q[0]);if(!cat||cat[0]==="Sleep"||cat[0]==="Feeding")return null;let i=Math.max(0,(parseInt(q[1],10)||1)-1);let piece=q[2]||"home",parts=piece.split("-"),screen=parts.shift()||"home",rest=parts.join("-");let id=null,sub=null;
-if(screen==="domain"){id=decodeURIComponent(rest)}else if(screen==="play"){const a=rest.split("--");id=decodeURIComponent(a[0]||"0");sub=decodeURIComponent(a[1]||"0")}else if(screen==="topic"||screen==="step"||screen==="place"||screen==="gear"||screen==="type"||screen==="tool"||screen==="visit"||screen==="utility"){id=decodeURIComponent(rest)}else if(!["home","quiz","card","explore"].includes(screen)){screen="home"}return {cat:cat[0],i,screen,id,sub}}
+if(screen==="domain"){id=decodeURIComponent(rest)}else if(screen==="play"){const a=rest.split("--");id=decodeURIComponent(a[0]||"0");sub=decodeURIComponent(a[1]||"0")}else if(screen==="topic"||screen==="step"||screen==="place"||screen==="gear"||screen==="type"||screen==="tool"||screen==="visit"||screen==="utility"){id=decodeURIComponent(rest)}else if(!["home","quiz","card","explore","help"].includes(screen)){screen="home"}return {cat:cat[0],i,screen,id,sub}}
 function drawNav(){head.innerHTML=CATS.map(c=>'<button type="button" data-cat="'+c[0]+'" class="'+(state.cat===c[0]?"active":"")+'">'+c[2]+' '+esc(c[1])+'</button>').join("");const on=head.querySelector(".active");if(on)on.scrollIntoView({inline:"nearest",block:"nearest"})}
 function render(){drawNav();let isBase=state.cat==="Sleep"||state.cat==="Feeding";originalView.style.display=isBase?"":"none";root.style.display=isBase?"none":"block";oldTop.style.display=isBase?"":"none";oldCount.style.display=isBase?"":"none";const t=document.querySelector(".outside-foot");if(t)t.textContent="Shareable design concept · All eight guide categories · Example baby Maya · Interactions save on this browser only · Not the live Ahead app.";
 if(isBase){document.querySelector('#tabs [data-cat="'+state.cat+'"]')?.click();return}
@@ -50,47 +50,53 @@ case "Childcare":html=childcare();break;}
 root.innerHTML=html;const on=root.querySelector(".x-stagebar button.active");if(on)on.scrollIntoView({inline:"nearest",block:"nearest"});
 }
 function development(){let m=D.development[Math.max(0,Math.min(4,state.i))],i=state.i;
-const highlights=[
-  [{d:"Social",n:2,why:"She smiles when you smile or talk to her."},{d:"Talking",n:0,why:"Her little sounds are the beginning of conversation."},{d:"Movement",n:0,why:"Stronger neck and shoulders help her explore."}],
-  [{d:"Movement",n:0,why:"Better head control opens up new ways to explore."},{d:"Social",n:1,why:"That first chuckle is a new way to connect."},{d:"Talking",n:1,why:"She starts answering your voice with sounds."}],
-  [{d:"Movement",n:0,why:"Rolling brings new movement—and new safety needs."},{d:"Movement",n:2,why:"Leaning on her hands is early sitting practice."},{d:"Talking",n:0,why:"Making sounds back and forth is early communication."}],
-  [{d:"Movement",n:1,why:"Sitting frees her hands to play and explore."},{d:"Thinking",n:0,why:"Searching for a dropped toy shows growing memory."},{d:"Talking",n:0,why:"Responding to her name is a big communication step."}],
-  [{d:"Movement",n:0,why:"Pulling to stand gives her a whole new perspective."},{d:"Talking",n:0,why:"Waving makes communication visible."},{d:"Thinking",n:0,why:"Putting things into containers builds problem-solving skills."}]
-];
-const feature=[
-  {title:"That first smile is a conversation.",detail:"When she smiles back at you, she's connecting your face, voice and attention.",play:0,playwhy:"Give her a chance to answer your smile."},
-  {title:"She's learning that her actions get a response.",detail:"Looking, laughing and reaching are all ways she's discovering how to interact.",play:1,playwhy:"A toy within reach connects seeing and doing."},
-  {title:"Rolling and sitting change her world.",detail:"Body control is growing fast. As she learns to roll and support herself, new play becomes possible—and safe sleep and floor spaces matter more.",play:1,playwhy:"Reaching during supervised floor play gives her a reason to shift her weight."},
-  {title:"Sitting opens up a world of discovery.",detail:"With her hands free, she can explore toys, find dropped things and play more independently.",play:0,playwhy:"A simple hiding game makes new thinking skills visible."},
-  {title:"She's standing up to see what's next.",detail:"Pulling up, copying and gestures bring new independence—and mean a new round of babyproofing.",play:1,playwhy:"Playing with blocks builds coordination and lets her experiment with cause and effect."}
-];
 if(state.screen==="domain"){let domain=m.domains[state.id];if(!domain)return "";const key="dev-"+i+"-"+state.id;const flags=ensure(key),n=domain[1].filter((_,j)=>flags[j]).length;let skills='<div class="x-list">'+domain[1].map((x,j)=>'<button class="x-check '+(flags[j]?"done":"")+'" data-act="skill" data-id="'+esc(state.id)+'" data-index="'+j+'"><span class="x-tick">'+(flags[j]?"✓":"")+'</span><span><b>'+esc(x)+'</b><small>'+(flags[j]?"Seen it":"Tap when you've noticed it")+'</small></span></button>').join("")+'</div>';
 return back("Development")+heading(m.age+" · "+state.id,domain[0], "These are typical skills around this checkpoint, not a pass–fail test.")+'<div class="x-counter">'+n+" of "+domain[1].length+" seen</div>"+skills+block("Try this together",bullets(m.play[0][2]),"")+note("Milestones vary. If you're worried about progress, or a skill disappears, contact your pediatrician. For a baby born early, consider adjusted age with the care team.")+footer()}
-if(state.screen==="explore"){let domains=Object.keys(m.domains),tiles=domains.map((name,j)=>{let d=m.domains[name],flags=ensure("dev-"+i+"-"+name),seen=d[1].filter((_,j)=>flags[j]).length;return card(name,d[0]+" · "+seen+" of "+d[1].length+" seen","domain",name,["♡","♫","✳","↗"][j])}).join("");
-return back("Development")+heading(m.age+" · ALL MILESTONES","Explore all milestones","Every skill at this checkpoint, in four areas. Marking something as seen is always optional.")+'<div class="x-grid">'+tiles+"</div>"+block("What to remember","<p>These are typical developmental checkpoints, not a score. If you have concerns or Maya loses a skill, talk with her pediatrician.</p>")+footer()}
 if(state.screen==="play"){let n=Number(state.id);let p=m.play[n];if(!p)return "";return back("Development")+heading(m.age+" · IDEA TO TRY",p[0],p[1])+block("Try it",bullets(p[2]))+block("What to notice","<p>Follow Maya's interest. A few enjoyable minutes count; stop when she looks away or seems finished.</p>")+footer()}
-let f=feature[i],key=highlights[i];
-let milestones=key.map((x,j)=>{
- let d=m.domains[x.d],label=d[1][x.n],flags=ensure("dev-"+i+"-"+x.d),done=!!flags[x.n];
- let ico=({Social:"♡",Talking:"♫",Thinking:"✳",Movement:"↗"})[x.d];
- return '<button class="dev-polished-row" data-act="domain" data-id="'+esc(x.d)+'"><span class="dev-polished-icon">'+ico+'</span><span class="dev-polished-copy"><small>'+esc(x.d)+'</small><b>'+esc(label)+'</b></span>'+(done?'<span class="dev-polished-seen">✓ Seen</span>':'<span class="dev-polished-arrow">›</span>')+'</button>';
-}).join("");
-let p=m.play[f.play];
-let lead=f.detail;
-let top=hero("A LITTLE DISCOVERY · "+m.age,f.title,lead,m.aha,m.explain,null,"Development",i);
-let primaryPlay='<button class="dev-polished-play" data-act="play" data-id="'+f.play+'"><span class="dev-polished-play-symbol">✳</span><span class="dev-polished-play-copy"><small>TRY THIS TOGETHER · A FEW MINUTES</small><b>'+esc(p[0])+'</b><span>'+esc(p[1])+'</span></span><span class="dev-polished-arrow">›</span></button>';
-return pageTitle("Development & play")+agebar(D.development,i,"stage")+top
- +section("Three milestones to look for",'<div class="dev-polished-list">'+milestones+'</div>')
- +section("Try this together",primaryPlay)
- +'<button class="dev-polished-explore" data-act="explore"><span><b>Explore all milestones</b><small>Social · Talking · Thinking · Movement</small></span><span class="dev-polished-arrow">›</span></button>'
- +note("These are examples of skills to notice—not a test or a ranking. You can mark skills as seen inside each area. For babies born early, ask your clinician about adjusted age.")
- +(i<4?'<button class="x-next" data-act="stage" data-index="'+(i+1)+'"><small>COMING UP</small><b>By '+esc(D.development[i+1].name)+'</b></button>':"");
-
+let tiles=Object.keys(m.domains).map((name,j)=>{let d=m.domains[name],seen=Object.values(ensure("dev-"+i+"-"+name)).filter(Boolean).length;return card(name,d[0]+" · "+seen+" of "+d[1].length+" seen","domain",name,["♡","♫","✳","↗"][j])}).join("");
+let plays=m.play.map((p,j)=>card(p[0],p[1],"play",j,j?"▣":"✦")).join("");
+return pageTitle("Development & play")+agebar(D.development,i,"stage")+hero("A LITTLE DISCOVERY · "+m.age,m.headline,m.lead,m.aha,m.explain,m.try,"Development",i)+section("What Maya is working on",'<div class="x-grid">'+tiles+"</div>")+section("Try together today",'<div class="x-grid">'+plays+'</div>')+block(m.big[0],"<p>"+esc(m.big[1])+"</p>")+note("The current Ahead app also includes more play ideas. This preview showcases the core developmental checkpoint and two featured activities.")+(i<4?'<button class="x-next" data-act="stage" data-index="'+(i+1)+'"><small>COMING UP</small><b>By '+esc(D.development[i+1].name)+'</b></button>':"");
 }
-function care(){let i=Math.max(0,Math.min(3,state.i)),m=D.care[i];if(state.screen==="topic"){let d=D.careTopics[state.id];if(!d)return "";return back("Everyday care")+heading(m.name+" · "+d.title,d.title,d.lead)+block("What's different now","<p><strong>"+esc(d.stage[i][0])+".</strong> "+esc(d.stage[i][1])+"</p>")+block("How to do it",bullets(d.how))+('<div class="x-note">'+esc(d.watch)+"</div>")+footer()}
-let news=list(m.news.map(x=>row(x[0],x[1],"topic",x[2],"✳")).join(""));
-let basics=Object.keys(D.careTopics).filter(x=>i===0||x!=="cord").map((k,j)=>card(D.careTopics[k].title,D.careTopics[k].stage[i][0],"topic",k,["◷","◡","♡","✧","☀","✦","◎","◦"][j%8])).join("");
-return pageTitle("Everyday care")+agebar(D.care,i,"stage")+hero("A LITTLE DISCOVERY · "+m.name,m.headline,m.lead,m.aha,m.explain,m.try,"Care",i)+section("What's different now",news)+section("All the basics",'<div class="x-grid">'+basics+"</div>")+note("Hands-on everyday care stays accessible at every age. Sleep setup, illness and feeding safety continue to live in their own categories.")+(i<3?'<button class="x-next" data-act="stage" data-index="'+(i+1)+'"><small>COMING UP</small><b>'+esc(D.care[i+1].name)+'</b></button>':"");
+function care(){
+let i=Math.max(0,Math.min(3,state.i)),m=D.care[i],key=state.id,d=key?D.careTopics[key]:null;
+const titleMap={diapers:"Diapers",bath:"Baths & hair",skin:"Skin & rashes",teeth:"Gums & teeth",clothes:"Getting dressed",sun:"Sun & heat",nails:"Nails, ears & nose",cord:"Cord stump"};
+const iconMap={diapers:"◷",bath:"◡",skin:"♡",teeth:"✦",clothes:"♧",sun:"☀",nails:"◎",cord:"◦"};
+const primary=["diapers","bath","skin","teeth"];
+const expanded=["clothes","sun","nails",...(i===0?["cord"]:[])];
+const quick=k=>{let t=D.careTopics[k];return '<button class="care-action" data-act="topic" data-id="'+k+'"><span class="care-action-art art-'+k+'">'+iconMap[k]+'</span><b>'+esc(titleMap[k])+'</b><small>'+esc(t.stage[i][0])+'</small></button>'};
+const notice=n=>'<button class="care-change" data-act="topic" data-id="'+esc(n[2])+'"><span class="care-change-text"><b>'+esc(n[0])+'</b><small>'+esc(n[1])+'</small></span><span class="care-chev">›</span></button>';
+if(state.screen==="topic"&&d){
+const val=d.stage[i],steps=d.how;
+return back("Everyday care")+agebar(D.care,i,"stage")
+ +'<div class="care-topic-hero"><div class="x-eye">EVERYDAY CARE · '+esc(m.name).toUpperCase()+'</div><h2>'+esc(d.title)+'</h2><p>'+esc(d.lead)+'</p><div class="care-topic-now"><span class="care-topic-star">✳</span><span><small>FOR MAYA RIGHT NOW</small><b>'+esc(val[0])+'</b><span>'+esc(val[1])+'</span></span></div></div>'
+ +section("How to do it",'<div class="care-step-list">'+steps.map((x,j)=>'<div class="care-step"><span>'+(j+1)+'</span><p>'+esc(x)+'</p></div>').join("")+"</div>")
+ +'<div class="care-when"><b>When to check in</b><p>'+esc(d.watch)+'</p></div>'
+ +'<button class="care-next-topic" data-act="back">‹ Back to everyday care</button>'
+ +note("General reference information. Ask your pediatrician about symptoms, particularly in the newborn period.");
+}
+if(state.screen==="help"){
+ const questions=[
+ ["A diaper looks different","Changes in pee or poop","diapers","◷"],
+ ["Redness, bumps or a rash","Skin changes and irritation","skin","♡"],
+ ["Lots of drool or chewing","Gums and possible teething","teeth","✦"],
+ ["Warm outside or too much sun","How to protect her skin","sun","☀"],
+ ["Bath-time worries","Safe water and supervision","bath","◡"]
+ ];
+ return back("Everyday care")+heading("EVERYDAY CARE · QUICK HELP","Does this look normal?","Find a practical explanation for something you are noticing. This is not a diagnosis.")
+ +list(questions.map(q=>row(q[0],q[1],"topic",q[2],q[3])).join(""))
+ +'<div class="x-urgent"><b>Get medical help when needed.</b> If Maya seems very unwell, has difficulty breathing, or is hard to wake, seek urgent care. For a baby younger than 3 months with a temperature of 100.4°F (38°C) or higher, contact a clinician right away.</div>'
+ +note("Illness diagnosis and fever guidance belong in Health. This tool points to everyday care references.")
+ +footer();
+}
+return pageTitle("Everyday care")+agebar(D.care,i,"stage")
+ +'<section class="care-new-header"><span class="x-eye">'+esc(m.name).toUpperCase()+' · CARE AT THIS STAGE</span><h1>Everyday care, made a little easier.</h1><p>Quick answers for the things you actually do, with guidance that changes as Maya grows.</p></section>'
+ +section("What do you need help with?",'<div class="care-action-grid">'+primary.map(quick).join("")+"</div>")
+ +'<div class="care-help"><span class="care-help-symbol">?</span><span class="care-help-copy"><b>Does something look different?</b><small>Poop, skin, drool and more: what is common and what needs a call.</small></span><button data-act="help">Find out ›</button></div>'
+ +section("New around now",'<div class="care-changes">'+m.news.slice(0,3).map(notice).join("")+"</div>")
+ +section("More everyday basics",list(expanded.map(k=>row(titleMap[k],D.careTopics[k].stage[i][0],"topic",k,iconMap[k])).join("")))
+ +'<p class="care-safety-foot">Every bath and change: gather everything first, keep a hand on baby on raised surfaces, and never leave baby alone in water.</p>'
+ +note("Everyday care stays practical and baby-focused. Sleep, feeding, illness and home babyproofing each have their own guide.")
+ +(i<3?'<button class="x-next" data-act="stage" data-index="'+(i+1)+'"><small>COMING UP</small><b>'+esc(D.care[i+1].name)+' · '+esc(D.care[i+1].headline)+'</b></button>':"");
 }
 function safety(){let i=Math.max(0,Math.min(3,state.i)),s=D.safety[i],p=ensure("safe-"+i);if(state.screen==="step"){let q=s.steps.find(x=>x[0]===state.id);if(!q)return "";return back("Safety")+heading(s.name+" · SAFETY STEP",q[1],q[2])+block("Do this",bullets(q[3]))+'<div class="x-note">'+esc(q[4])+'</div><div class="x-inline-actions"><button class="x-primary" data-act="safe-status" data-id="'+esc(q[0])+'" data-value="done">'+(p[q[0]]==="done"?"✓ Done":"Mark done")+'</button><button class="x-secondary" data-act="safe-status" data-id="'+esc(q[0])+'" data-value="na">Doesn’t apply</button></div>'+footer()}
 let applicable=s.steps.filter(q=>p[q[0]]!=="na"),done=applicable.filter(q=>p[q[0]]==="done").length;
@@ -129,6 +135,7 @@ return back("Childcare")+heading("A FEW QUICK QUESTIONS","Which care might fit?"
 function dispatch(e){let c=e.target.closest("[data-cat]");if(c&&head.contains(c)){let name=c.dataset.cat;if(name==="Sleep"||name==="Feeding"){state.cat=name;drawNav();root.style.display="none";originalView.style.display="";oldTop.style.display="";oldCount.style.display="";document.querySelector('#tabs [data-cat="'+name+'"]')?.click();return;}setState(name);return}
 let btn=e.target.closest("[data-act]");if(!btn||!root.contains(btn))return;let a=btn.dataset.act,id=btn.dataset.id,idx=Number(btn.dataset.index);
 if(a==="stage"){setState(state.cat,idx);return}
+if(a==="help"){setState(state.cat,state.i,"help");return}
 if(a==="back"){setState(state.cat,state.i);return}
 if(["domain","play","topic","step","place","gear","type","tool","visit","utility","explore"].includes(a)){setState(state.cat,state.i,a,id);return}
 if(a==="skill"){let d=ensure("dev-"+state.i+"-"+id);d[idx]=!d[idx];persist();render();return}
