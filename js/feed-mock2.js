@@ -3026,6 +3026,35 @@
       + xNote('Still cut it small:', 'quarter grapes lengthwise, cook hard veg until soft, and spread nut butter thin.'));
   P.z_meal = () => (stg() >= 4 ? zMealMeals() : zMealFirst());
 
+
+  // ---- Steps only where a parent does things in that order (Nov 11). "Is he getting enough?" and "Evenings and nights"
+  // aren't sequences, so each becomes one page written as one story, and vitamin D moves behind the "Every day" line. ----
+  const xBody = fn => { const k = window.__xCollect; window.__xCollect = true; let h = ''; try { h = fn() || ''; } finally { window.__xCollect = k; } const i = h.indexOf('<section class="ss-moment">'); return i < 0 ? '' : h.slice(i + 27, h.lastIndexOf('</section>')); };
+  const firstCard = b => { const js = ['<section class="ss-do">', '<div class="hub-tip', '<p class="ss-know"', '<p class="ss-small"'].map(t => b.indexOf(t)).filter(j => j >= 0); return js.length ? b.slice(0, Math.min(...js)) : b; };
+  P.nb_enough = () => { const b = isBreast();
+    return yPage(XC.growth, 'Is he getting enough?', 'Wet diapers are your everyday sign', 'You don’t need to measure feeds. Diapers every day, and weight at checkups, tell you.',
+      firstCard(xBody(P.x_enough)) + weightViz()
+      + xDo('What to do', ['From day 6: 6 or more wet diapers a day' + (b ? ', and 3 or more poops.' : '.'), 'Keep a quick note of feeds and diapers until things feel settled.', 'Go to the early weight checks. No need to weigh at home.'])
+      + xNote('Worth a call:', 'fewer wet diapers, dark urine, black poop after day 5, or not back to birth weight by 2 weeks.')); };
+  P.nb_eve = () => { const nurse = nurses();
+    return yPage(XC.routine, 'Evenings and nights', 'Busy evenings, then quick, calm nights', 'Feeding again and again in the evening is called cluster feeding. It eases by 6–8 weeks.',
+      firstCard(xBody(P.x_day))
+      + xDo('What helps', [nurse ? 'Evenings: switch sides often, and take turns so you each get a break.' : 'Evenings: smaller bottles, more often, and take turns so you each get a break.', 'Nights: lights low, voices quiet, no play.', 'Change his diaper at night only if it’s needed.', 'Until he’s back to birth weight, wake him if 3 hours pass.'])
+      + xNote('Hard to wake?', 'Undress him to his diaper, or stroke his feet.') + xNote('Worth a call:', 'too sleepy to feed most times.')); };
+  P.nb_vitd = () => { const b = isBreast();
+    return yPage(XC.growth, 'Every day', b ? 'Vitamin D drops, every day' : 'Vitamin D drops, until about 32 oz a day', b ? 'Breast milk is low in vitamin D, so he needs drops from the first days.' : 'Formula has iron and some vitamin D. Until he drinks about 32 oz a day, he needs drops too.',
+      xBody(P.x_vitd)); };
+  P.m1_eve = () => { const ev = xBody(P.y_evening);
+    return yPage(XC.d1, 'Evenings and nights', 'Calmer evenings, longer nights', 'Fussy evenings peak around 6 weeks and ease by 3–4 months. Many babies go one longer stretch at night by 2–3 months.',
+      firstCard(ev)
+      + xDo('What helps', ['Evenings: feed when he asks, keep the lights low, and take turns.', 'Nights: once your pediatrician says he’s gaining well, you can stop waking him for feeds.', 'Still feed when he wakes hungry.'])
+      + xNote('Worth a call:', 'crying 3 or more hours a day, or crying that sounds different.')); };
+  window.NBHOME = (() => { const prev = window.NBHOME; return () => prev()
+    .split("mock:xa:routine'").join("mock:nb_eve'").split("mock:xa:growth'").join("mock:nb_enough'")
+    .split(F('His day and night')).join(F('Evenings and nights')).split(F('Busy evenings, quick and calm nights')).join(F('Busy evenings, then quick, calm nights')).split(F('Day, evening and night')).join(F('Cluster feeds, and nights'))
+    .split(F('How much, diapers, weight, vitamin D')).join(F('Diapers every day, weight at checkups')); })();
+  window.M1HOME = (() => { const prev = window.M1HOME; return () => prev().split("mock:xa:m1e'").join("mock:m1_eve'").split(F('Evenings, then nights')).join(F('Calmer evenings, longer nights')); })();
+
   const base = window.changesRoute;
   // Home cards link to the old Feeding detail pages; send each to the page that now covers it.
   // Every older Feeding link (Home cards, the year view, Safety, briefings) opens the page that now covers it.
@@ -3061,8 +3090,8 @@
     window.changesRoute = function (r) { let h = cr.apply(this, arguments);
       if (typeof h !== 'string' || !/^chg:Feeding:/.test(String(r))) return h;
       SAY_ONCE.forEach(([a, b]) => { h = h.split ? (typeof a === 'string' ? h.split(a).join(b) : h.replace(a, b)) : h; });
-      // The bottle feed already shows ounces in the glance; the stomach sizes live in "Is he getting enough?".
-      if (/xa:feed|x_pace/.test(r)) h = h.replace(/<section class="hub-card" style="padding:14px 12px 14px;margin:0 0 12px"><b[^>]*>About how much, per bottle<\/b><div class="xst">[\s\S]*?<\/div><\/div><\/section>/, '');
+      // Newborn: "Every day" says how to give the drops, one tap away.
+      if (/mock:dirD$|mock:dirD:0$/.test(r) && stg() === 0) h = h.replace(/(<span class="hub-card-note"><b>Every day<\/b>[^<]*<\/span>)/, `$1<button class="hub-link" style="display:block;margin:8px 0 0;padding:0" onclick="${go('nb_vitd')}">${F('How to give drops')} ›</button>`);
       if (ageMo() >= 6) h = h.split(F('Fewer poops can be normal after about 6 weeks. Wet diapers and growth are what count.')).join(F('Wet diapers, and steady growth at checkups, are what count.'));
       h = h.split('<h1>' + F('Vitamin D and iron are in the formula') + '</h1>').join('<h1>' + F('Vitamin D drops, until about 32 oz a day') + '</h1>')
         .replace(/(She|He|They) needs? vitamin D drops until (she|he|they) drinks? about 32 oz a day\./, (m, A, b) => 'Formula has iron and some vitamin D. Until ' + b + ' ' + (b === 'they' ? 'drink' : 'drinks') + ' about 32 oz a day, ' + b + ' ' + (b === 'they' ? 'need' : 'needs') + ' drops too.');
