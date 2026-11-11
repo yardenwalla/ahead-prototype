@@ -98,7 +98,7 @@ for(const experience of ['preparing','new','established']) {
 {
   const a=family(0);a.run("openPage('topic:Sleep');for(let i=0;i<AHEAD_CHANGES.Sleep.SAFE.length;i++)chgToggleSafe('Sleep',i);openPage('topic:Sleep')");
   check(!clean(a.html()).includes('6 of 6 checked'),'Completed newborn setup stops being promoted');
-  check(clean(a.html()).includes('Safe sleep setup'),'Safe sleep reference remains accessible');
+  check(clean(a.html()).includes('Safe sleep checklist'),'Safe sleep reference remains accessible');
   a.run("setAnswer('rollDirection','Trying to roll')");check(clean(a.html()).includes('Stop swaddling now'),'Reported rolling attempts override the generic newborn setup');
 }
 {
