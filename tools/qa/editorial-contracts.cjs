@@ -55,7 +55,7 @@ for (const value of ['new','textures','established']) {
   const nowStage = b.run("(((stageItemsLast()||{}).items||[]).find(x => x.now && x.on) || {}).label");
   check(['First foods','Meals'].includes(nowStage), 'Started solids show a solids stage as the current stage on the timeline');
   check(/step by step/.test(b.html()), 'The solids stage page opens with its steps');
-  for (const i of [3,4,5]) { b.run(`openPage('chg:Feeding:s:${i}')`); check(/(Tastes, textures and lots of mess|Three meals, and milk still matters)/.test(b.html()) && /class="monthly-back"/.test(b.html()), 'Each old solids guide link opens its stage with a way back'); }
+  for (const i of [3,4,5]) { b.run(`openPage('chg:Feeding:s:${i}')`); check(/hub-eyebrow[^>]*>(First foods|Meals)/.test(b.html()) && /class="monthly-back"/.test(b.html()), 'Each old solids guide link opens its stage with a way back'); }
 }
 // Foundational guidance is discoverable initially, then retires after setup.
 {

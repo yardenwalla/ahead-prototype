@@ -59,7 +59,7 @@ for (const early of [false,true]) for (let age=0; age<=12; age++) {
 {
   const a=boot({name:'Sam',dob:'2025-10-21',early:false,feed:'Formula'},{solids:'Yes',foodExperience:'new'});
   a.run("navigate('categories');openPage('topic:Feeding')");
-  check(/Tastes, textures and lots of mess/.test(a.html()),'Late first bites stay First foods');
+  check(/hub-eyebrow[^>]*>First foods/.test(a.html()),'Late first bites stay First foods');
   a.run("openPage('topic:Feeding')");inspect(a,'late first bites');
   check(!/Coming up · Usually 7–9/.test(clean(a.html())),'No elapsed window is called coming up');
   a.run("month=1;openPage('topic:Sleep')");check(a.run("chgStageIndex('Sleep')===0"),'Sleep preview uses selected month');
