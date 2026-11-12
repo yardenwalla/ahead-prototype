@@ -20,6 +20,25 @@
 .choicelist{display:grid;gap:9px}.choice{border:1px solid #ebe4db;border-radius:14px;background:#fff;display:flex;align-items:center;padding:12px;gap:12px;text-align:left;width:100%;color:inherit}.choice.active{border-color:#dcc18e;background:#fffdf7}.choice .rowic{background:#eaf0fa;color:#6c83a2}.choice b{font-size:13px;display:block}.choice small{display:block;font-size:11.5px;color:#898074;margin-top:4px;line-height:1.5}
 .carecard{border:1px solid #eadbc4;border-radius:16px;background:#fff9ed;padding:18px;margin-top:18px}.carecard h3{font-size:20px;color:#59482e;margin:8px 0 14px}.carecard .entry{border-top:1px solid #eadbc5;display:flex;gap:12px;padding:9px 0}.carecard .entry b{width:73px;flex:0 0 73px;font-size:11.4px;color:#91784f}.carecard .entry span{font-size:12px;color:#605443;line-height:1.5}.fieldlabel{display:block;margin:14px 0 6px;color:#716457;font-size:11.5px;font-weight:700}.field{width:100%;border:1px solid #e7dfd3;border-radius:10px;padding:11px 12px;font-size:13px;color:#4d443f;background:white}.fine{font-size:11px;color:#978b7a;line-height:1.68;margin-top:14px}
 .ico{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* Childcare category: always-visible care options and practical toolkit */
+.stage-label{font-size:10px;color:#9c8c75;text-transform:uppercase;letter-spacing:.09em;font-weight:800;margin:-2px 0 8px}
+.home-heading{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin:2px 0 11px}.home-heading h3{font-size:16px}.home-heading small{font-size:11px;color:#958a7e}
+.caregrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.caretile{min-height:126px;padding:13px;border:0;border-radius:14px;text-align:left;color:#484453;background:#eaf0fa;display:flex;flex-direction:column;align-items:flex-start}
+.caretile:nth-child(2){background:#e8f2ec;color:#4d7361}.caretile:nth-child(3){background:#f9eaf1;color:#90647c}
+.caretile:nth-child(4){background:#f9ede3;color:#956c50}.caretile:nth-child(5){background:#eeeaf8;color:#79689c}.caretile:nth-child(6){background:#faf0dd;color:#947448}
+.caretile:hover{filter:brightness(.986)}.tile-illustration{display:grid;place-items:center;height:32px;width:32px;border-radius:10px;background:#ffffff9c}
+.caretile b{font-size:12.8px;line-height:1.35;margin-top:9px}.caretile small{display:block;opacity:.83;font-size:11px;line-height:1.5;margin-top:auto;padding-top:4px}
+.inline-path{padding:14px 0 8px;border:0;background:transparent;color:#8a744b;font-size:12px;font-weight:700;text-align:left;width:100%}
+.care-share{display:flex;align-items:center;gap:13px;width:100%;margin:18px 0 23px;padding:17px 15px;border:0;border-radius:16px;background:#f8edce;text-align:left;color:#5b4824}
+.care-share-copy{flex:1}.care-share-copy .micro{color:#9a7d4b}.care-share-copy b{display:block;font-size:16px;font-family:Nunito,sans-serif;letter-spacing:-.02em;margin:6px 0}.care-share-copy small{display:block;color:#866f4a;font-size:11.7px;line-height:1.5}
+.mini-document{display:flex;flex-direction:column;gap:7px;flex:0 0 46px;width:46px;height:58px;border-radius:8px;background:#fffefa;box-shadow:0 2px 6px #b7a1723b;padding:14px 10px;transform:rotate(-5deg)}
+.mini-document span{display:block;height:4px;background:#ddc7a4;border-radius:3px}.mini-document span:nth-child(2){width:80%}.mini-document span:nth-child(3){width:95%}
+.tools-heading{margin-bottom:5px}
+.tool-row{border:0;border-bottom:1px solid var(--line);background:transparent;color:var(--ink);display:flex;align-items:center;gap:11px;padding:15px 0;text-align:left;width:100%}.tool-row:last-of-type{border-bottom:0}.tool-row .rowic{flex:0 0 42px;height:42px;width:42px}.tool-row:nth-child(2n){--unused:0}.tool-row.suggested .rowic{background:#eaf2e8;color:#64856b}
+.tool-row em{font-style:normal;display:block;font-size:10.5px;font-weight:700;color:#608367;margin-top:5px}
+.page-tail{font-size:10.7px;color:#a09285;line-height:1.65;margin:15px 0 2px}
 @media(max-width:800px){.shell{display:block;max-width:425px;padding:0}.aside{position:static;padding:15px 20px 11px}.aside h1{font-size:18px;margin:5px 0}.aside>p,.aside .explain{display:none}.control{margin-top:12px;padding:12px}.buttons button{padding:8px 10px}.controlsep{padding-top:10px;margin-top:10px}.phone{border:0;border-top:1px solid #ece4da;border-radius:0;box-shadow:none;min-height:80vh}}
 </style></head><body>
 <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
@@ -69,25 +88,29 @@ function top(){return '<div class="screen"><button class="back" data-act="home">
 function rails(){return '<div class="rail">'+stages.map((x,i)=>'<button data-act="stage" data-i="'+i+'" class="'+(i===state.stage?'sel':'')+'">'+x+'</button>').join('')+'</div>'}
 function rows(data){return data.map(x=>'<button class="row" data-act="'+x[3]+'" data-key="'+x[4]+'"><span class="rowic">'+icon(x[0])+'</span><span class="rowtxt"><b>'+x[1]+'</b><small>'+x[2]+'</small></span><span class="chev">›</span></button>').join('')}
 function home(){
-const c=C();let o='<div class="screen"><button class="back" data-act="home">‹ All guides</button><h1 class="title">Childcare</h1>'+rails();
+const c=C();
+let o='<div class="screen"><button class="back" data-act="home">‹ All guides</button><h1 class="title">Childcare</h1><div class="stage-label">WHERE ARE YOU WITH CHILDCARE?</div>'+rails();
 o+='<div class="hero"><div class="micro">'+c.tag+'</div><h2>'+c.title+'</h2><p>'+c.lead+'</p>'+art(state.stage)+'</div>';
-o+='<button class="feature" data-act="feature"><div class="micro">ONE THING WORTH KNOWING</div><h3>'+c.feature+'</h3><p>'+c.sub+'</p><span>Why this matters →</span></button>';
-if(state.stage===0){
-o+='<div class="headrow"><h3>What kind of support?</h3></div><div class="twocol"><button class="tile" data-act="options">'+icon("calendar")+'<b>Regular care</b><small>Daycare, nannies or recurring family help →</small></button><button class="tile" data-act="occasional">'+icon("heart")+'<b>Just a few hours</b><small>A sitter or loved one can help too →</small></button></div>';
-o+='<div class="bottomnote"><div class="micro">WORTH KNOWING</div><p>It is okay to start with a mix of arrangements. You do not have to know your forever solution today.</p></div>';
-}else if(state.stage===1){
-o+='<div class="headrow"><h3>Three things to check</h3><small>Before saying yes</small></div>';
-o+=rows([["heart","How they comfort a baby","Warmth and responsiveness show up in small moments","topic","comfort"],["shield","Safe sleep in their care","Back for every sleep, firm flat empty surface","topic","sleep"],["chat","How they keep you in the loop","Feeds, naps, questions and when they call","topic","updates"]]);
-o+='<button class="secondary" data-act="options">Explore care options and questions</button>';
-}else if(state.stage===2){
-o+='<div class="headrow"><h3>Prepare for day one</h3><small>For '+T().name+'</small></div>';
-o+=rows([["heart","Practice a little handoff",T().ready,"topic","practice"],["book","Share Maya's care card","Feeding, naps, comfort and who to contact","card",""],["bag","Get supplies ready",state.type===2?"Set up the home together":"Know what to pack and label","topic","supplies"]]);
-}else{
-o+='<div class="headrow"><h3>Check in on the little things</h3><small>After care begins</small></div>';
-o+=rows([["chat","What was her day really like?","Feeds, naps and one thing she enjoyed","topic","pickup"],["heart",state.age>=8?"Goodbyes are getting harder":"New routines can take time",state.age>=8?"Separation feelings can grow around this age":"Ask how she settles once you have left","topic","goodbye"],["shield","When something feels off","You should be able to ask and get an answer","topic","concerns"]]);
-}
-o+='<button class="cardlink" data-act="card"><span class="rowic">'+icon("book")+'</span><span style="flex:1"><b>Maya’s care card</b><small>A handoff you can share with any caregiver</small></span><span class="chev">›</span></button>';
-o+='<div class="bottomnote"><div class="micro">LOOKING AHEAD</div><p>'+c.next+(state.stage===3&&state.age>=8?" Separation anxiety can make a previously easy goodbye harder; familiar routines may help.":"")+'</p></div></div>'+nav();return o
+o+='<button class="feature" data-act="feature"><div class="micro">WORTH KNOWING RIGHT NOW</div><h3>'+c.feature+'</h3><p>'+c.sub+'</p><span>Why this matters →</span></button>';
+o+='<div class="home-heading"><h3>Explore your care options</h3><small>All six options</small></div>';
+o+='<div class="caregrid">';
+kinds.forEach((x,i)=>{o+='<button class="caretile" data-act="type" data-i="'+i+'"><span class="tile-illustration">'+icon(["calendar","home","heart","baby","clock","bag"][i])+'</span><b>'+x.name+'</b><small>'+["A team and a routine","A smaller group","Care in your home","Someone familiar","A few hours of help","Doulas, nights and more"][i]+'</small></button>'});
+o+='</div>';
+o+='<button class="inline-path" data-act="fit">Not sure what fits? Explore your options →</button>';
+o+='<button class="care-share" data-act="card"><span class="mini-document"><span></span><span></span><span></span></span><span class="care-share-copy"><span class="micro">READY FOR ANY CAREGIVER</span><b>Maya’s care card</b><small>Feeds, naps, what helps and who to call—all in one place</small></span><span class="chev">›</span></button>';
+o+='<div class="home-heading tools-heading"><h3>Plan & manage childcare</h3><small>Always available</small></div>';
+const suggested=["compare","compare","ready","settle"][state.stage];
+const tools=[
+["compare","shield","Choose with confidence","Tour questions, interviews & your shortlist"],
+["pay","calendar","Costs & paying for care","Fees, assistance, tax benefits and nanny pay"],
+["ready","bag","Get ready for day one","A practice visit, packing and the first handoff"],
+["settle","heart","Settle into care","Drop-offs, sick days and how to stay in sync"],
+["backup","home","When care falls through","Backup people, closures and unexpected sick days"]
+];
+tools.forEach(([id,ico,title,desc])=>{
+o+='<button class="tool-row'+(suggested===id?' suggested':'')+'" data-act="resource" data-id="'+id+'"><span class="rowic">'+icon(ico)+'</span><span class="rowtxt"><b>'+title+'</b><small>'+desc+'</small>'+(suggested===id?'<em>Suggested for you now</em>':'')+'</span><span class="chev">›</span></button>';
+});
+o+='<p class="page-tail">The care options and tools stay here as your situation changes. Ahead simply highlights what matters next.</p></div>'+nav();return o
 }
 function dhero(eyebrow,title,lead){return top()+'<div class="dhero"><div class="micro">'+eyebrow+'</div><h2>'+title+'</h2><p>'+lead+'</p></div>'}
 function feature(){
