@@ -21,7 +21,7 @@
     if(v===0)return is("cord")?
       ["THE FIRST FEW WEEKS","The first tub bath can begin","Once the cord stump is off and the skin has healed, Maya can have a gentle bath in a baby tub.","See how a tub bath works","p:tub"]:
       ["THE FIRST FEW WEEKS","The smallest jobs are the biggest firsts","Diapers, sponge baths and cord care are new skills. You only have to learn them once.","See how to change a diaper","p:change"];
-    if(v===1)return is("cord")?
+    if(v===1)return !is("cord")?
       ["A SMALL CARE CHANGE","The cord is still attached","Keep giving sponge baths until the area heals. If it has not fallen off after about three weeks, contact your pediatrician.","How to care for the cord","p:cord"]:
       ["A NEW LITTLE FIRST","Tub baths can start now","Once the cord area has healed, a warm baby tub replaces sponge baths. Two or three baths a week is plenty.","See how a tub bath works","p:tub"];
     if(v===2){
