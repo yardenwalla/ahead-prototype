@@ -85,6 +85,9 @@
 .comparison-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:11px 0 0 90px}
 .comparison-actions button{border:1px solid #e0d5c7;background:#fffdfa;border-radius:9px;padding:9px 5px;font-size:11px;color:#806b4b;font-weight:700}
 .comp-warning{font-size:11px;color:#af735a;margin:0 0 10px}
+
+.guide-tabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:9px 0 13px}.guide-tabs::-webkit-scrollbar{display:none}.guide-tabs button{white-space:nowrap;border:0;background:#f1eee9;color:#8d7f70;border-radius:99px;padding:9px 12px;font-size:10.9px;font-weight:700}.guide-tabs button.on{background:#e9f1e8;color:#5a7d5f}
+.tab-title{margin:6px 0 4px!important;font-size:14px!important}.tab-note{font-size:11.6px!important;line-height:1.6!important;color:#94887e!important;margin-bottom:6px!important}
 @media(max-width:800px){.shell{display:block;max-width:425px;padding:0}.aside{position:static;padding:15px 20px 11px}.aside h1{font-size:18px;margin:5px 0}.aside>p,.aside .explain{display:none}.control{margin-top:12px;padding:12px}.buttons button{padding:8px 10px}.controlsep{padding-top:10px;margin-top:10px}.phone{border:0;border-top:1px solid #ece4da;border-radius:0;box-shadow:none;min-height:80vh}}
 </style></head><body>
 <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
@@ -112,7 +115,7 @@ const content=[
 {tag:"PREPARING FOR DAY ONE",title:"Make the first day feel a little familiar",lead:"The care routine is already familiar to you. A practice handoff and a simple care card help someone else learn it.",feature:"The first day should not be the first introduction",sub:"A short visit together lets the caregiver learn Maya's signals while you are still there.",why:"A practice visit helps a caregiver understand the baby's feeding, sleep and comfort cues. It also lets parents ask questions.",doIt:"If possible, schedule a short practice visit, demonstrate a feed or soothing routine, and agree on when you would like updates.",next:"Once care starts, your best clues are how Maya is comforted, how the day goes, and whether you can ask questions."},
 {tag:"WHEN CARE IS UNDERWAY",title:"Trust builds in the little handoffs",lead:"You can learn a lot from one good question at pickup. You deserve to know what Maya's day was like.",feature:"She was fine is not the full story",sub:"The helpful update is what she ate, how she slept, what soothed her, and what made her smile.",why:"Specific, regular communication helps caregivers and parents respond consistently as baby's needs change.",doIt:"Ask how Maya settled after you left. Follow up on feeds, naps and one good moment from the day.",next:"As Maya starts solids, changes naps, or becomes more mobile, update her care card."}
 ];
-let state={stage:0,type:0,age:6,page:"home",mode:"all",topic:"",resourceId:"compare",checks:{},shortlist:[],activeCandidate:0,candidate:"",fit:{},card:{feed:"Breast milk",naps:"2 naps",soothe:"Rocking and a song",allergies:"Not specified",contact:""},copyMessage:"",careStarted:false,compareLeft:0,compareRight:1};
+let state={stage:0,type:0,age:6,page:"home",mode:"all",topic:"",resourceId:"compare",checks:{},shortlist:[],activeCandidate:0,candidate:"",fit:{},card:{feed:"Breast milk",naps:"2 naps",soothe:"Rocking and a song",allergies:"Not specified",contact:""},copyMessage:"",careStarted:false,compareLeft:0,compareRight:1,typeTab:0,candidateTab:0};
 function syncStage(){
 state.stage=state.careStarted?3:state.shortlist.some(c=>c.chosen)?2:state.shortlist.length?1:0;
 }
@@ -242,6 +245,7 @@ const BASELINE_TYPES = {
         ['On the visit: ask', 'ask', 'Before the sitter’s first time alone', [['What would you do in an emergency?', 'Call 911 first, then you.'], ['What would you do if Maya wouldn’t settle?', 'Hold, rock and soothe, and text you if it lasts.']]]] },
   };
 const typeKeys=["center","home","nanny","family","sitter",null];
+function babyify(t){return String(t||"").replace(/\{p\}/g,"Maya’s").replace(/\{o\}/g,"her").replace(/\{s\}/g,"she").replace(/\{S\}/g,"She").replace(/\{s’s\}/g,"Maya’s")}
 function fullSteps(i){const k=typeKeys[i];return k&&BASELINE_TYPES[k]?BASELINE_TYPES[k].steps:[["Before you arrange","ask","Questions worth asking",deepTypes[i].questions.map(q=>[q,"Talk through this before care begins."])]]}
 function flatQs(i){return fullSteps(i).flatMap(step=>step[3].map(pair=>pair[0]))}
 function stepItems(i,tab){const steps=fullSteps(i),idx=Math.min(tab,steps.length-1),prefix=steps.slice(0,idx).reduce((n,step)=>n+step[3].length,0);return steps[idx][3].map((pair,j)=>({q:pair[0],answer:pair[1],index:prefix+j}))}
@@ -255,14 +259,17 @@ const deepTypes=[
 {fit:"Support while a parent is home, help after birth or overnight coverage.",mind:"A postpartum doula, mother's helper and night nanny provide different services; clarify who is responsible for baby care.",when:"Book early for overnight or postpartum support when possible.",where:"Ask your pediatrician, hospital, local parents or specialized agencies for referrals.",questions:["Exactly what care and hours do you provide?","What training and infant experience do you have?","Who is responsible for sleep, feeds and monitoring overnight?","Can we check references?","What happens if you need to cancel?"]}
 ];
 function typePage(){
-const x=T(),d=deepTypes[state.type];let o=dhero("YOUR CARE OPTIONS",x.name,x.brief);
+const x=T(),d=deepTypes[state.type],st=fullSteps(state.type),which=Math.min(state.typeTab,st.length-1),group=st[which];
+let o=dhero("YOUR CARE OPTIONS",x.name,x.brief);
 o+='<div class="fitpair"><div><span class="micro">A GOOD FIT IF</span><p>'+d.fit+'</p></div><div><span class="micro">KEEP IN MIND</span><p>'+d.mind+'</p></div></div>';
 o+='<div class="section"><h3>When & where to start</h3><p>'+d.when+' '+d.where+'</p></div>';
-o+='<div class="section"><h3>Questions worth asking</h3>';
-d.questions.forEach((q,i)=>{o+='<div class="step"><span class="stepnum">'+(i+1)+'</span><div><b>'+q+'</b></div></div>'});
-o+='</div><div class="callout"><div class="micro">THE HANDOFF</div><p>'+x.ready+'</p></div>';
-o+='<button class="primary" data-act="resource" data-id="compare">See the comparison checklist →</button>';
-o+='<button class="secondary" data-act="resource" data-id="ready">Get ready for day one</button><button class="secondary" data-act="home">Back to all care options</button></div>'+nav();return o
+o+='<div class="section"><h3>What to check, step by step</h3><p>Keep every question available, but focus on one part of the process at a time.</p>';
+o+='<div class="guide-tabs">'+st.map((g,i)=>'<button data-act="typetab" data-i="'+i+'" class="'+(i===which?'on':'')+'">'+babyify(g[0])+'</button>').join('')+'</div>';
+o+='<h3 class="tab-title">'+babyify(group[0])+'</h3><p class="tab-note">'+babyify(group[2])+'</p>';
+group[3].forEach((q,i)=>{o+='<div class="step"><span class="stepnum">'+(i+1)+'</span><div><b>'+babyify(q[0])+'</b><small>'+babyify(q[1])+'</small></div></div>'});
+o+='</div><div class="callout"><div class="micro">GET READY</div><p>'+x.ready+'</p></div>';
+o+='<button class="primary" data-act="resource" data-id="compare">Add an option to your shortlist →</button>';
+o+='<button class="secondary" data-act="resource" data-id="ready">Plan the first handoff</button><button class="secondary" data-act="home">Back to childcare options</button></div>'+nav();return o
 }
 function tickRow(id,title,explain){
 const yes=!!state.checks[id];return '<button class="tickrow" data-act="tick" data-id="'+id+'" aria-pressed="'+yes+'"><span class="tickbox'+(yes?' yes':'')+'">'+(yes?'✓':'')+'</span><span><b>'+title+'</b>'+(explain?'<small>'+explain+'</small>':'')+'</span></button>'
@@ -396,7 +403,7 @@ o+='<div class="comparison-grid"><div class="comparison-head"><b>YOUR OPTIONS</b
 o+=field("Type","type")+field("Days & hours","hours")+field("Cost","cost")+field("Available","availability");
 const checked=p=>Object.values(p.checks||{}).filter(Boolean).length;
 o+='<div class="comparison-row"><b>Talked through</b><p>'+checked(a)+' questions</p><p>'+checked(b)+' questions</p></div>';
-const next=p=>deepTypes[p.typeIndex].questions.find((q,i)=>!p.checks?.[i])||"Follow up on anything unclear";
+const next=p=>flatQs(p.typeIndex).find((q,i)=>!p.checks?.[i])||"Follow up on anything unclear";
 o+='<div class="comparison-row"><b>Still to ask</b><p>'+safe(next(a))+'</p><p>'+safe(next(b))+'</p></div></div>';
 o+='<div class="comparison-actions"><button data-act="candidate" data-i="'+li+'">View '+safe(a.name)+' →</button><button data-act="candidate" data-i="'+ri+'">View '+safe(b.name)+' →</button></div>';
 o+='<div class="callout"><div class="micro">BEFORE YOU DECIDE</div><p>These notes do not verify any provider. Confirm safe sleep, relevant licenses, references, fees and policies for each arrangement.</p></div>';
@@ -440,7 +447,9 @@ return;
 if(a==="tick"){state.checks[b.dataset.id]=!state.checks[b.dataset.id];render();return}
 if(a==="candtick"){const c=state.shortlist[state.activeCandidate];if(c)c.checks[b.dataset.i]=!c.checks[b.dataset.i];render();return}
 if(a==="fitpick"){state.fit[b.dataset.field]=b.dataset.value;render();return}
-if(a==="settype"){state.type=i;render();return}
+if(a==="settype"){state.type=i;state.typeTab=0;render();return}
+if(a==="typetab"){state.typeTab=i;render();return}
+if(a==="candtab"){state.candidateTab=i;render();return}
 if(a==="addcandidate"){const name=(state.candidate||"").trim();if(name){state.shortlist.push({name,type:T().name,typeIndex:state.type,checks:{},notes:"",chosen:false,cost:"",hours:"",availability:""});state.candidate="";render()}return}
 if(a==="remove"){state.shortlist.splice(i,1);render();return}
 if(a==="candidate"){state.activeCandidate=i;state.page="candidate";render();return}
@@ -449,7 +458,7 @@ if(a==="startcare"){state.careStarted=true;state.resourceId="settle";state.page=
 if(a==="comparison"){state.page="comparison";render();return}
 if(a==="resource"){state.resourceId=b.dataset.id;state.page="resource"}
 else if(a==="stage"){state.resourceId=i===3?"settle":i===2?"ready":i===1?"compare":"ready";state.page="resource"}
-else if(a==="type"){state.type=i;state.page="type"}
+else if(a==="type"){state.type=i;state.typeTab=0;state.page="type"}
 else if(a==="occasional"){state.type=4;state.mode="occasional";state.page="options"}
 else if(a==="topic"){state.topic=b.dataset.key;state.page="topic"}
 else{if(a==="options"&&state.page!=="type")state.mode="all";state.page=a}
