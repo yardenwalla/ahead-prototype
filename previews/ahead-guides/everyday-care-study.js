@@ -29,8 +29,8 @@
       if(is("roll"))return ["NOW THAT SHE'S ROLLING","Diaper changes need a new plan","Rolling happens without warning. Giving Maya something to hold—or changing her on the floor—can make it easier.","See tips for wriggly changes","p:wriggly"];
       return ["COMMON AROUND NOW","All that drool, before a tooth","Chewing and sore gums often start before the first tooth appears. There are a few simple ways to help.","What helps sore gums","p:teething"];
     }
-    if(is("tooth"))return ["ONE NEW DAILY HABIT","Brushing starts with the first tooth","A soft baby toothbrush and a rice-grain smear of fluoride toothpaste, morning and night.","See how to brush","p:brush"];
-    if(is("sit"))return ["AS SHE GROWS","The bath changes when she sits steadily","Once Maya can sit steadily, she may be ready for the big tub. A grown-up must still keep a hand on her.","How to move to the big tub","p:bigtub"];
+    if(is("sit"))return ["NOW THAT SHE SITS STEADILY","Bath time has a new setup","Maya may be ready for the big tub. Keep the water shallow and a hand on her throughout the bath.","See the big-tub setup","p:bigtub"];
+    if(is("tooth"))return ["ONE DAILY HABIT","A first tooth means brushing twice a day","A soft baby toothbrush and a rice-grain smear of fluoride toothpaste, morning and night.","See how to brush","p:brush"];
     return ["A LITTLE REASSURANCE","No first tooth yet can be normal","Some babies get their first tooth closer to their first birthday. Keep caring for her gums while you wait.","How to soothe her gums","p:teething"];
   }
   function careRoutine(v){
