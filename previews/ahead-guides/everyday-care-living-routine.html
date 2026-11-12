@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f7f4ee"><title>Ahead — A little clarity for your baby’s first year</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet" data-fonts>
+<link rel="stylesheet" href="../../css/layout.css">
+<link rel="stylesheet" href="../../css/experience.css">
+<link rel="stylesheet" href="../../css/changes.css">
+<link rel="stylesheet" href="../../css/timeline.css">
+<link rel="stylesheet" href="../../css/welcome.css">
+<link rel="stylesheet" href="../../css/briefing.css">
+<link rel="stylesheet" href="../../css/hub.css">
+<link rel="stylesheet" href="../../css/sleep-look.css">
+<link rel="stylesheet" href="../../css/sleep-sub-look.css">
+<link rel="stylesheet" href="../../css/health-look.css">
+<link rel="stylesheet" href="../../css/safety-look.css">
+<link rel="stylesheet" href="../../css/outings-look.css">
+<link rel="stylesheet" href="../../css/childcare-look.css"><link rel="stylesheet" href="../../css/care-card.css">
+<link rel="stylesheet" href="../../css/care-v2.css">
+<link rel="stylesheet" href="../../css/year-ahead.css"><link rel="stylesheet" href="../../css/subpage-color.css"><style>#main .you-avatar.has-photo{overflow:hidden;padding:0}#main .you-avatar.has-photo img{width:100%;height:100%;object-fit:cover;display:block}</style><link rel="stylesheet" href="../../css/stages-nav.css"><link rel="stylesheet" href="../../css/home-cards.css"><link rel="stylesheet" href="../../css/home-glance.css"><link rel="stylesheet" href="../../css/one-app.css"><link rel="stylesheet" href="everyday-care-study.css"></head>
+<body><section id="care-study-controls" aria-label="Everyday Care design comparison, preview settings">
+ <div class="study-intro"><span class="study-eyebrow">Ahead · Product design exploration</span><strong>Everyday care</strong><small>Compare the existing app with the proposed experience. All underlying guide pages are the originals.</small></div>
+ <div class="study-block"><label>Compare designs</label><div class="study-actions"><button class="on" data-view="proposed" onclick="carePreview.view('proposed')">Proposed</button><button data-view="original" onclick="carePreview.view('original')">Original</button></div></div>
+ <div class="study-block"><label>Baby's age</label><div class="study-actions"><button data-age="0" onclick="carePreview.age(0)">10 days</button><button data-age="1" onclick="carePreview.age(1)">2 months</button><button class="on" data-age="2" onclick="carePreview.age(2)">5 months</button><button data-age="3" onclick="carePreview.age(3)">9 months</button></div></div>
+ <div class="study-block"><label>What Maya can do<small>Preview controls only, not added parent questions</small></label><div class="study-actions"><button data-flag="cord" onclick="carePreview.flag('cord')">Cord healed</button><button class="on" data-flag="roll" onclick="carePreview.flag('roll')">Rolling</button><button data-flag="tooth" onclick="carePreview.flag('tooth')">First tooth</button><button data-flag="sit" onclick="carePreview.flag('sit')">Sits steadily</button></div></div>
+ <small class="study-privacy">This preview uses a temporary demo baby, not your saved data.</small>
+</section><div id="shell"><header class="top"><button class="brand" onclick="if(profile&&profile.dob)navigate('home')" aria-label="Ahead home">ahead<span class="dot">.</span></button><button id="profileButton" class="profile" hidden onclick="navigate('profile')" aria-label="Baby profile and check-ins">M</button></header><main id="main" class="page"><div class="app-loading" role="status">Getting your guide ready…</div><noscript><style>.app-loading{display:none}</style><p>Ahead needs JavaScript to open your guide. Enable it in your browser, then reload this page.</p></noscript></main><nav id="nav" class="nav" hidden aria-label="Main navigation"><button class="active" onclick="navigate('home')" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10H6V10M9 20v-7h6v7"/></svg>Home</button><button class="" onclick="navigate('categories')" ><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m16 8-3 5-5 3 3-5Z"/></svg>Guides</button><button class="" onclick="navigate('timeline')" ><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 3"/></svg>Memories</button></nav></div>
+<script>(function storageShim(){
+  const mem=new Map();
+  const d=new Date();d.setMonth(d.getMonth()-5);
+  const fmt=x=>[x.getFullYear(),String(x.getMonth()+1).padStart(2,"0"),String(x.getDate()).padStart(2,"0")].join("-");
+  mem.set("ahead-v2-profile",JSON.stringify({name:"Maya",pronouns:"she",dob:fmt(d),due:"",early:false,feed:"Breast milk",example:true}));
+  mem.set("ahead-v2-answers",JSON.stringify({roll:"Yes",rollDirection:"Both ways",hasTooth:"No",tooth:"No"}));
+  const store={getItem:k=>mem.has(k)?mem.get(k):null,setItem:(k,v)=>mem.set(k,String(v)),removeItem:k=>mem.delete(k),clear:()=>mem.clear(),key:i=>Array.from(mem.keys())[i]??null,get length(){return mem.size}};
+  try{Object.defineProperty(window,"localStorage",{configurable:true,value:store})}catch(e){}
+  try{Object.defineProperty(window,"sessionStorage",{configurable:true,value:store})}catch(e){}
+})();</script>
+<script src="../../js/storage.js"></script>
+<script src="../../js/changes-data.js"></script>
+<script src="../../js/guides-data.js"></script>
+<script src="../../js/app.js"></script>
+<script src="../../js/baby-language.js"></script>
+<script src="../../js/changes.js"></script>
+<script src="../../js/home-rules.js"></script>
+<script src="../../js/timeline.js"></script>
+<script src="../../js/stages.js"></script>
+<script src="../../js/briefing.js"></script>
+<script src="../../js/welcome.js"></script>
+<script src="../../js/hub-art.js"></script>
+<script src="../../js/hub.js"></script>
+<script src="../../js/hub-categories.js"></script>
+  <script src="../../js/hub-pages.js"></script>
+<script src="../../js/stage-timeline.js"></script>
+<script src="../../js/out-and-about.js"></script>
+<script src="../../js/care-card-render.js"></script><script src="../../js/childcare.js"></script>
+<script src="../../js/dev-play-art.js"></script>
+<script src="../../js/dev-play.js"></script>
+<script src="../../js/next.js"></script>
+<script src="../../js/memories.js"></script>
+<script src="../../js/share-story.js"></script>
+<script src="../../js/navigation.js"></script>
+<script src="../../js/sleep-look.js"></script>
+<script src="../../js/sleep-sub-look.js"></script>
+<script src="../../js/health-look.js"></script>
+<script src="../../js/health-visit-pages.js"></script>
+<script src="../../js/sub-look.js"></script>
+<script src="../../js/safety-look.js"></script>
+<script src="../../js/safety-v2.js"></script>
+<script src="../../js/care-v2.js"></script>
+<script src="everyday-care-study.js"></script>
+<script src="../../js/cat-icons.js"></script>
+<script src="../../js/year-ahead-art.js"></script><script src="../../js/year-ahead.js"></script><script src="../../js/profile-v2.js"></script><script src="../../js/stages-nav.js"></script><script src="../../js/feed-mock2.js"></script><script src="../../js/home-copy.js"></script><script src="../../js/home-cards.js"></script><script src="../../js/home-glance.js"></script>
+<script src="../../js/search-index.js"></script><script src="../../js/cohesion.js"></script><script src="../../js/they-grammar.js"></script><script src="../../js/boot.js"></script>
+<script>carePreview.age(2);</script>
+</body>
+</html>
+
