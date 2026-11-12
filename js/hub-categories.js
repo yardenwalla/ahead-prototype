@@ -456,10 +456,10 @@
       // Which thermometer, by age: rectal is most accurate all year; armpit works for a quick check (fever from 99°F);
       // forehead works at any age; ear readings only from 6 months.
       const fe = u3 ? ['Forehead', 'Quick. At 100.4°F or higher, check rectally'] : m < 6 ? ['Forehead', 'Reliable now'] : ['Forehead or ear', 'Both reliable now'];
-      const tile = (icon, t, d, good, more) => `<div${good ? ' class="is-good"' : ''}><span class="hub-dot">${h.art(icon, 'Health')}</span><b>${F(t)}</b><p>${F(d)}</p>${more || ''}</div>`;
-      return `<div class="hub-card hub-thermo is-three">${tile('thermo', 'Rectal', 'The most accurate', true, `<details class="hub-how-in"><summary>${F('How to take it')}</summary><p>${F('Put a little petroleum jelly on the tip. Lay {o} on {p} back, knees bent. Slide it in about half an inch and hold until it beeps.')}</p></details>`)}${tile('hand', 'Armpit', u3 ? 'Quick. At 99°F or higher, check rectally' : 'Quick. A fever starts at 99°F')}${tile('eye', fe[0], fe[1])}</div>`
-        // How to take a rectal temperature, in the order you do it (AAP, HealthyChildren.org).
-        ;
+      // Three ways to take it, as one plain list. Rectal opens a short page on how to do it.
+      const still = (icon, t, d) => `<div class="hub-row is-static"><span class="hub-dot">${h.art(icon, 'Health')}</span><span class="hub-row-copy"><b>${F(t)}</b><small>${F(d)}</small></span></div>`;
+      return h.list('', [h.row({ icon: 'thermo', cat: 'Health', title: 'Rectal', sub: 'The most accurate. How to take it', onclick: "openPage('chg:Health:d:sick-rectal')" }),
+        still('hand', 'Armpit', u3 ? 'Quick. At 99°F or higher, check rectally' : 'Quick. A fever starts at 99°F'), still('eye', fe[0], fe[1])]);
     };
     // The page answers "what's going on?": one row per thing a parent is seeing, each opening a page that covers it
     // whole (how to check, when to call, how to help). The emergency signs apply to all of them, so they sit here.
@@ -481,6 +481,11 @@
         + hubIconSteps([['bottle', 'Extra feeds', 'Little and often'], ['shirt', 'Dress lightly', 'No extra blankets'], ['moon', 'Rest', 'Naps and quiet time']], 'Health', 'Offer extra feeds, dress lightly, and let them rest.', false)
         + h.tip('Medicine', u3 ? 'Under 3 months, ask your pediatrician before any medicine.' : m < 6 ? 'Acetaminophen can help. Ask your pediatrician for the dose.' : 'Acetaminophen or ibuprofen can help. Ask your pediatrician for the dose.')
         + call911);
+    }
+    if (id === 'sick-rectal') {
+      return detailFrame('Health', 'When Maya seems sick', 'Taking a rectal temperature', 'The most accurate reading for babies. Use a digital thermometer.',
+        h.steps(['Put a little petroleum jelly on the tip.', 'Lay {o} on {p} back, knees bent toward {p} chest.', 'Slide it in about half an inch.', 'Hold it there until it beeps.'])
+        + h.note('Wash the thermometer with soap and water after, and keep it just for this.'));
     }
     if (id === 'sick-tummy') {
       return detailFrame('Health', 'When Maya seems sick', 'Vomiting or diarrhea', 'Usually a tummy bug that passes in a day or two. Keeping {o} drinking is what matters.',
