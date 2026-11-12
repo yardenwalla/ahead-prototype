@@ -1549,3 +1549,11 @@ label:has(> .hub-photo-input:focus-visible) { outline: 2px solid #884866; outlin
 #main details.hub-how-in summary::after { content: ' ›' }
 #main details.hub-how-in[open] summary::after { content: ' ⌄' }
 #main details.hub-how-in p { margin: 6px 0 0; font-size: 13.5px; line-height: 1.45 }
+/* Ways to take a temperature: three equal tiles (Nov 12). */
+#main .hub-temps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 0 0 14px }
+#main .hub-temp { all: unset; box-sizing: border-box; display: flex; flex-direction: column; gap: 4px; padding: 12px 11px; border-radius: 16px; background: var(--card, #fffdf9); border: 1px solid var(--line, #ebe6e1); min-width: 0 }
+#main .hub-temp .hub-dot { width: 38px; height: 38px; margin-bottom: 4px }
+#main .hub-temp b { font-size: 15px; line-height: 1.2 }
+#main .hub-temp small { font-size: 12.5px; line-height: 1.35; color: var(--ink-2, #6d666d) }
+#main .hub-temp.is-go { cursor: pointer }
+#main .hub-temp em { font-style: normal; font-weight: 700; font-size: 12.5px; margin-top: auto; padding-top: 4px; color: var(--ss-ink, #9a5a3c) }

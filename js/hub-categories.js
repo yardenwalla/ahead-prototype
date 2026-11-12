@@ -455,11 +455,10 @@
     const thermo = () => {
       // Which thermometer, by age: rectal is most accurate all year; armpit works for a quick check (fever from 99°F);
       // forehead works at any age; ear readings only from 6 months.
-      const fe = u3 ? ['Forehead', 'Quick. At 100.4°F or higher, check rectally'] : m < 6 ? ['Forehead', 'Reliable now'] : ['Forehead or ear', 'Both reliable now'];
-      // Three ways to take it, as one plain list. Rectal opens a short page on how to do it.
-      const still = (icon, t, d) => `<div class="hub-row is-static"><span class="hub-dot">${h.art(icon, 'Health')}</span><span class="hub-row-copy"><b>${F(t)}</b><small>${F(d)}</small></span></div>`;
-      return h.list('', [h.row({ icon: 'thermo', cat: 'Health', title: 'Rectal', sub: 'The most accurate. How to take it', onclick: "openPage('chg:Health:d:sick-rectal')" }),
-        still('hand', 'Armpit', u3 ? 'Quick. At 99°F or higher, check rectally' : 'Quick. A fever starts at 99°F'), still('eye', fe[0], fe[1])]);
+      const fe = u3 ? ['Forehead', 'Quick. 100.4°F+? Check rectally'] : m < 6 ? ['Forehead', 'Reliable now'] : ['Forehead or ear', 'Both reliable now'];
+      // Three ways to take it, as three equal tiles. Rectal opens a short page on how to do it.
+      const tile = (icon, t, d, go) => `<${go ? `button onclick="${go}"` : 'div'} class="hub-temp${go ? ' is-go' : ''}"><span class="hub-dot">${h.art(icon, 'Health')}</span><b>${F(t)}</b><small>${F(d)}</small>${go ? `<em>${F('How to')} ›</em>` : ''}</${go ? 'button' : 'div'}>`;
+      return `<div class="hub-temps">${tile('thermo', 'Rectal', 'Most accurate', "openPage('chg:Health:d:sick-rectal')")}${tile('hand', 'Armpit', u3 ? 'Quick. 99°F+? Check rectally' : 'Quick. Fever from 99°F')}${tile('eye', fe[0], fe[1])}</div>`;
     };
     // The page answers "what's going on?": one row per thing a parent is seeing, each opening a page that covers it
     // whole (how to check, when to call, how to help). The emergency signs apply to all of them, so they sit here.
