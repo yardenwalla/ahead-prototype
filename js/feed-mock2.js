@@ -1109,7 +1109,7 @@
   const calm = (a, h) => {
     if (a !== 'dirD' && a !== 'worry' && a !== 'hard') { const v = stg(), eb = hardIds().includes(a) ? 'Tough feed?' : null;
       if (eb) ['Tough feed?', 'Common now', 'Common around now', 'Something seem off?'].some(x => { const k = '>' + F(x) + '<'; if (h.includes(k)) { h = h.replace(k, '>' + F(eb) + '<'); return true; } }); }
-    if (a === 'dirD') return pron(h.replace(`${F('Example day')} ›`, `${F('Sample day')} ›`));
+    if (a === 'dirD') return pron(h);
     SWAP.forEach(([x, y]) => { h = h.split(F(x)).join(F(y)); });
     // Gather every call box and urgent line, then rebuild them as one card at the end
     const rows = []; let mom = '';
@@ -3096,7 +3096,7 @@
     if (v === 3 && m < 7.5) return [4, 'His tongue has a new job', 'Milk and food use different mouth movements. He’s learning what to do with each new bite.', 'Food comes right back out.', 'That’s practice, not dislike. It happens less as he learns.', 'Offer the same food a few days in a row, and watch him get better at it.'];
     if (v === 3) return [5, 'Lumps are a big leap', 'He’s learning how new textures feel and move in his mouth. Soft lumps give him the practice.', 'He gags on a new texture.', 'Gagging moves food forward, and it happens less as he practices.', 'When he gags, stay calm and let him work it out. Your calm face helps.'];
     return [6, 'The mess is the milestone', 'Picking up food and getting it to his mouth is a skill he practices at every meal.', 'He wants to feed himself.', 'Squished food and spills are practice for his fingers and mouth.', 'Eat with him when you can, so he can copy you.']; };
-  const discCss = `<style>#main .fd-hero .fd-art{display:grid;place-items:center;margin:6px -8px 6px}#main .fd-hero .fd-art svg{width:100%;max-width:290px;height:auto;filter:drop-shadow(0 9px 9px #754b5b18)}#main .fd-aha{background:#fffdfc;border-radius:16px;padding:14px 16px;box-shadow:0 3px 14px #a6798220;margin-top:2px}#main .fd-aha small{display:block;font-size:11px;font-weight:800;letter-spacing:.08em;color:#b87c8f;text-transform:uppercase;margin-bottom:5px}#main .fd-aha b{display:block;font-size:17px;line-height:1.25;color:var(--ink,#2b2732)}#main .fd-aha span{display:block;font-size:14px;line-height:1.45;color:#6d666d;margin-top:5px}#main .fd-try{display:flex;gap:12px;align-items:flex-start;margin:12px 0 4px;border-radius:16px;background:#e5f0e6;padding:14px 16px}#main .fd-try i{flex:none;width:32px;height:32px;border-radius:11px;background:#d0e3d2;color:#487456;display:grid;place-items:center}#main .fd-try small{display:block;font-size:11px;font-weight:800;letter-spacing:.08em;color:#5c7e67;text-transform:uppercase;margin:1px 0 4px}#main .fd-try p{margin:0;font-size:14.5px;line-height:1.45;color:#42634c;font-weight:550}</style>`;
+  const discCss = `<style>#main .fd-hero.fd-disc{display:flex;flex-direction:column;min-height:505px;box-sizing:border-box}#main .fd-hero.fd-disc .fd-art{flex:1}#main .fd-hero .fd-art{display:grid;place-items:center;margin:6px -8px 6px}#main .fd-hero .fd-art svg{width:100%;max-width:290px;height:auto;filter:drop-shadow(0 9px 9px #754b5b18)}#main .fd-aha{background:#fffdfc;border-radius:16px;padding:14px 16px;box-shadow:0 3px 14px #a6798220;margin-top:2px}#main .fd-aha small{display:block;font-size:11px;font-weight:800;letter-spacing:.08em;color:#b87c8f;text-transform:uppercase;margin-bottom:5px}#main .fd-aha b{display:block;font-size:17px;line-height:1.25;color:var(--ink,#2b2732)}#main .fd-aha span{display:block;font-size:14px;line-height:1.45;color:#6d666d;margin-top:5px}#main .fd-try{display:flex;gap:12px;align-items:flex-start;margin:12px 0 4px;border-radius:16px;background:#e5f0e6;padding:14px 16px}#main .fd-try i{flex:none;width:32px;height:32px;border-radius:11px;background:#d0e3d2;color:#487456;display:grid;place-items:center}#main .fd-try small{display:block;font-size:11px;font-weight:800;letter-spacing:.08em;color:#5c7e67;text-transform:uppercase;margin:1px 0 4px}#main .fd-try p{margin:0;font-size:14.5px;line-height:1.45;color:#42634c;font-weight:550}</style>`;
   P.dirD = (() => { const prev = P.dirD; return (v) => { const h = prev(v); const a = h.indexOf('<header class="hub-hero fd-hero">'), e = h.indexOf('</header>', a); if (a < 0 || e < 0) return h;
     const head = h.slice(a, e), m = head.match(/<p class="hub-eyebrow">([^<]*)<\/p>/); if (!m) return h;
     const [n, title, lead, notice, why, tryT] = DISC();
@@ -3108,7 +3108,7 @@
   // ---- Glance, lighter (Nov 11, Yarden: "do the tiles like the inspiration, it looks too bulky"):
   // three small tiles in a row, a number on each, no pictures. "How often" folds into Feeds a day; once solids start,
   // the tiles are Milk, Solids and Water. ----
-  const glanceCss = `<style>#main .fd-gl-h{margin:18px 2px 10px}#main .fd-glance{padding:10px!important}#main .fd-glance .fd-gl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}#main .fd-gl>*{all:unset;box-sizing:border-box;display:block;border-radius:12px;background:var(--sm-bg);padding:10px 10px 11px;min-width:0}#main .fd-gl>button{cursor:pointer}#main .fd-gl small{display:block;font-size:11px;font-weight:700;color:var(--sm-ink);line-height:1.25}#main .fd-gl b{display:block;font-size:17px;line-height:1.2;letter-spacing:-.2px;color:var(--ink,#2b2732);margin-top:5px;overflow-wrap:break-word}#main .fd-gl span{display:block;font-size:11.5px;line-height:1.3;color:#6d666d;margin-top:4px}#main .fd-glance .hub-card-note{display:block;margin:10px 4px 2px;font-size:13px;line-height:1.45}</style>`;
+  const glanceCss = `<style>#main .fd-gl-h{margin:18px 2px 10px}#main .fd-glance{padding:10px!important}#main .fd-glance .fd-gl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}#main .fd-gl>*{all:unset;box-sizing:border-box;display:block;border-radius:12px;background:var(--sm-bg);padding:10px 10px 11px;min-width:0}#main .fd-gl>button{cursor:pointer}#main .fd-gl small{display:block;font-size:11px;font-weight:700;color:var(--sm-ink);line-height:1.25}#main .fd-gl b{display:block;font-size:17px;line-height:1.2;letter-spacing:-.2px;color:var(--ink,#2b2732);margin-top:5px;overflow-wrap:break-word}#main .fd-gl span{display:block;font-size:11.5px;line-height:1.3;color:#6d666d;margin-top:4px}#main .fd-every{line-height:1.5!important}#main .fd-every .hub-link{display:inline!important;line-height:inherit!important;vertical-align:baseline;margin:0!important;min-height:0!important}#main .fd-glance .hub-card-note{display:block;margin:10px 4px 2px;font-size:13px;line-height:1.45}</style>`;
   const lighten = h => { const a = h.indexOf('<section class="hub-card hub-glance'), e = h.indexOf('</section>', a); if (a < 0 || e < 0) return h;
     const sec = h.slice(a, e), re = /<(div|button) class="sm-tile[^"]*" style="--sm-bg:([^;]+);--sm-ink:([^;"]+)[^"]*"(?: onclick="([^"]*)")?><span class="sm-art">[\s\S]*?<small>([\s\S]*?)<\/small><b>([\s\S]*?)<\/b><span>([\s\S]*?)<\/span><\/(?:div|button)>/g;
     const T = {}; let m; while ((m = re.exec(sec))) T[m[5]] = { bg: m[2], ink: m[3], go: m[4], l: m[5], v: m[6], s: m[7].replace(/ ›$/, '') };
@@ -3130,7 +3130,7 @@
     const tiles = out.slice(0, 3).map(x => { const st = `style="--sm-bg:${x.bg};--sm-ink:${x.ink}"`;
       const inner = `<small>${x.l}</small><b>${x.v}</b><span>${x.s}${x.go ? ' ›' : ''}</span>`;
       return x.go ? `<button ${st} onclick="${x.go}">${inner}</button>` : `<div ${st}>${inner}</div>`; }).join('');
-    return h.slice(0, a) + glanceCss + `<h2 class="hub-h2 fd-gl-h">${F('Feeding at a glance')}</h2><section class="hub-card hub-glance is-static fd-glance"><div class="fd-gl">${tiles}</div>` + sec.slice(sec.lastIndexOf('</div>', sec.indexOf('<span class="hub-card-note">') > 0 ? sec.indexOf('<span class="hub-card-note">') : sec.length) + 6) + h.slice(e); };
+    return h.slice(0, a) + glanceCss + `<div style="display:flex;align-items:baseline;justify-content:space-between"><h2 class="hub-h2 fd-gl-h">${F('Feeding at a glance')}</h2><button class="hub-card-cta" onclick="${go('fd_day')}">${F('Example day')} ›</button></div><section class="hub-card hub-glance is-static fd-glance" style="cursor:pointer" onclick="if(!event.target.closest('button'))${go('fd_day').replace(/"/g, '&quot;')}"><div class="fd-gl">${tiles}</div>` + sec.slice(sec.lastIndexOf('</div>', sec.indexOf('<span class="hub-card-note">') > 0 ? sec.indexOf('<span class="hub-card-note">') : sec.length) + 6) + h.slice(e); };
   P.dirD = (() => { const prev = P.dirD; return v => lighten(prev(v)); })();
 
   // ---- Three guides per stage, changing with age (Nov 11, Yarden's table). One home for each fact: the discovery,
@@ -3140,8 +3140,7 @@
   const gLink = (t, id) => `<div class="hub-browse"><button class="hub-link" onclick="${id.startsWith('open') ? id : go(id)}">${F(t)} ›</button></div>`;
   P.nb_eve = () => { const nurse = nurses();
     return yPage(XC.routine, 'Evenings and nights', 'Busy evenings, then quick, calm nights', 'Evenings can be feed after feed. At night, keep feeds short and sleepy.',
-      firstCard(xBody(P.x_day))
-      + xDo('What helps', [nurse ? 'Evenings: switch sides often, and take turns so you each get a break.' : 'Evenings: smaller bottles, more often, and take turns so you each get a break.', 'Nights: lights low, voices quiet, no play.', 'Change his diaper at night only if it’s needed.', 'Until he’s back to birth weight, wake him if 3 hours pass.'])
+      xDo('What helps', [nurse ? 'Evenings: switch sides often, and take turns so you each get a break.' : 'Evenings: smaller bottles, more often, and take turns so you each get a break.', 'Nights: lights low, voices quiet, no play.', 'Change his diaper at night only if it’s needed.', 'Until he’s back to birth weight, wake him if 3 hours pass.'])
       + xNote('Hard to wake?', 'Undress him to his diaper, or stroke his feet.') + xNote('Worth a call:', 'too sleepy to feed most times.')); };
   P.nb_enough = () => { const nurse = nurses();
     return yPage(XC.growth, 'Is he getting enough?', 'Wet diapers are your everyday sign', 'You don’t need to measure feeds. Diapers every day, and weight at checkups, tell you.',
@@ -3205,8 +3204,7 @@
       + gLink('Good first foods, and making them safe', 'z_start'));
   P.z_milkfood = () => { const b = isBreast(), bot = isBottle(), m = nurses() && bot ? 'Nursing or a bottle' : bot ? 'A bottle' : 'Nursing';
     return yPage(XC.d1, 'Milk and solids together', 'No set order for milk and meals', 'A meal fits in wherever he’s awake and happy.',
-      tl('A day, for example', [['Waking', 'sun', m], ['Later morning', 'bowl', 'A meal, with sips of water'], ['Through the day', 'drop', 'Milk feeds, as usual'], ['Bedtime', 'moon', m]])
-      + xDo('What helps', ['Milk before or after is fine. Do what works for him.', 'Water from an open or straw cup. Hold it, and let him try.'])
+      xDo('What helps', ['Milk before or after is fine. Do what works for him.', 'Water from an open or straw cup. Hold it, and let him try.'])
       + xKnow('As meals grow', 'Milk drops a little at a time, mostly after 9 months.')
       + xNote('How you’ll know he’s getting enough:', 'wet diapers through the day, energy, and steady growth at checkups.')); };
   // First foods, later
@@ -3231,8 +3229,7 @@
   P.z_meal = () => (stg() >= 4 ? zMealMeals2() : zMealFirst2());
   P.z_day = () => { const bot = isBottle(), m = nurses() && bot ? 'Nursing or a bottle' : bot ? 'A bottle' : 'Nursing';
     return yPage(XC.g1, 'Meals, snacks and milk', 'Big days and small days are normal', 'You choose what and when. He chooses how much.',
-      tl('A day, for example', [['Waking', 'sun', m + ', then breakfast'], ['Midday', 'bowl', 'Lunch, a snack, and milk after'], ['Evening', 'moon', 'Dinner, then ' + m.toLowerCase() + ' before bed']])
-      + weekViz().replace(F('Big days and small days even out over the week.'), F('They even out over the week.'))
+      weekViz().replace(F('Big days and small days even out over the week.'), F('They even out over the week.'))
       + xDo('What helps', ['Keep offering, without pressure.', 'Look at the week, not one meal.'])
       + xNote('How you’ll know he’s getting enough:', 'wet diapers through the day, energy, and steady growth at his 9- and 12-month checkups.')); };
   // One page per subject: older links open the page that now covers it.
@@ -3272,6 +3269,13 @@
     if (stg() >= 3) h = h.replace(`<div class="hub-browse"><button class="hub-link" onclick="${go('z_gag')}">`, `<div class="hub-browse"><button class="hub-link" onclick="${go('z_plan')}">${F('Foods to skip, and choking risks')} ›</button></div><div class="hub-browse"><button class="hub-link" onclick="${go('z_gag')}">`);
     return h.replace(F('Spit-up, distracted feeds, slow gain and more'), F('Spit-up, refusing feeds, slow gain and more')); }; })();
   P.z_milk12 = (() => { const prev = P.z_milk12; return () => prev().replace('<p class="hub-context">' + F('Milk') + '</p>', '<p class="hub-context">' + F('Turning 1') + '</p>').replace('<li>' + F('Serve milk in a cup, with meals.') + '</li>', '').split(F('Practice with an open or straw cup')).join(F('An open or straw cup at every meal')); })(); P.at12 = P.z_milk12;
+  // Example day, opened from the glance tiles (Nov 11): only the day picture. Cues, amounts and "you decide, he decides"
+  // each have their own home, so they aren't repeated here.
+  P.fd_day = () => { const full = P.day() || '', hd = full.indexOf('dev-area-head'), t = ((full.slice(hd).match(/<h1>([^<]*)<\/h1>/) || [])[1]) || F('An example day');
+    const styles = (full.match(/<style>[\s\S]*?<\/style>/g) || []).join(''), k = full.indexOf('<div class="hub-card"', hd);
+    let pic = ''; if (k > 0) { let depth = 0, x = k; const re = /<div\b|<\/div>/g; re.lastIndex = k; let m; while ((m = re.exec(full))) { depth += m[0] === '</div>' ? -1 : 1; if (depth === 0) { x = re.lastIndex; break; } } pic = full.slice(k, x); }
+    return styles + yPage(XC.f1, 'Example day', t, 'An example, not a schedule. He leads, and no two days look the same.', pic); };
+  HEADART['Example day'] = HEADART['Feeds now'] || (() => ART.often(5));
   // Distracted feeds have their own guide from 3 months; the challenge page points there instead of repeating it.
   P.x_refuse = (() => { const prev = P.x_refuse; return () => prev().replace(xKnow('Distracted, from 3–4 months?', 'Feed somewhere quiet and dim, or when he’s drowsy.'), ageMo() >= 3 ? gLink('Distracted by everything? What helps', 'm2_distract') : ''); })();
   P.x_tough = (() => { const prev = P.x_tough; return () => prev().split(F('Distracted, pulling off or refusing')).join(F('Pulling off or refusing feeds')); })();
@@ -3320,6 +3324,12 @@
   // The old five-step "Getting ready" is now three guides. Any link to it opens the guide that covers that step.
   { const cr = window.changesRoute, R2 = ['z_ready', 'z_start', 'z_plan', 'z_start', 'z_gag'];
     const cr0 = cr; window.changesRoute = function (r, ...a) { let h = cr0.call(this, r, ...a);
+      // "Every day" in one short line (Nov 11): what to give, with the how one tap away.
+      if (typeof h === 'string' && /^chg:Feeding:mock:dirD(:\d)?$/.test(String(r))) { const v = stg(), br = isBreast(), only = formulaFam() && !br;
+        const L = (t, id) => `<button class="hub-link" style="display:inline;padding:0;font:inherit;font-weight:650" onclick="${go(id)}">${F(t)}</button>`;
+        const vd = only ? L('vitamin D drops', 'nb_vitd') + F(', under 32 oz a day') : L('vitamin D', 'nb_vitd');
+        const line = v <= 1 ? (only ? vd : L('vitamin D drops', 'nb_vitd')) : v === 2 ? (br ? `${L('vitamin D', 'nb_vitd')} ${F('and')} ${L('iron', 'z_iron')} ${F('drops')}` : vd) : `${F('iron-rich food,')} ${br ? (v === 3 ? `${L('vitamin D', 'nb_vitd')} ${F('and')} ${L('iron', 'z_iron')} ${F('drops')}` : L('vitamin D drops', 'nb_vitd')) : vd}`;
+        h = h.replace(/<span class="hub-card-note"><b>Every day<\/b>[\s\S]*?<\/span>(?:<button class="hub-link"[^>]*>[^<]*<\/button>)*/, `<span class="hub-card-note fd-every"><b>${F('Every day:')}</b> ${line}</span>`); }
       // Formula: making and storing bottles, one tap from the feed walkthrough.
       if (typeof h === 'string' && /^chg:Feeding:mock:xa:feed(\.\d)?$/.test(String(r)) && formulaFam()) h = h.replace('<button class="hub-next"', `<div class="hub-browse"><button class="hub-link" onclick="openPage('chg:Feeding:mock:xa:prep')">${F('Making, storing and cleaning bottles')} ›</button></div><button class="hub-next"`);
       return h; };
