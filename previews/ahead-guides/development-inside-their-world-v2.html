@@ -20,6 +20,17 @@ button,input{font:inherit}button{cursor:pointer}button:focus-visible,input:focus
 .section{margin-top:23px}.section h3{font-size:15px;margin-bottom:10px}.section p{font-size:12.8px;color:#716771;line-height:1.74}
 .takeaway{margin-top:20px;border-radius:14px;background:#eaf2e8;padding:17px}.takeaway .micro{color:#5e8567}.takeaway p{font-size:12.8px;color:#4d6b54;line-height:1.7;margin-top:9px}
 .row{display:flex;gap:11px;align-items:center;padding:13px 0;border-bottom:1px solid var(--line)}.row:last-child{border-bottom:0}.row-icon{display:grid;place-items:center;width:37px;height:37px;flex:0 0 37px;border-radius:11px;background:#f1eaf5;color:#8f7b9c}.rowtext{flex:1;min-width:0}.rowtext b{font-size:12.5px;display:block;line-height:1.4}.rowtext small{display:block;font-size:11.5px;color:#8a7d87;line-height:1.5;margin-top:3px}.rowtext button{border:0;background:none;color:#8b729a;font-weight:700;font-size:11px;padding:5px 0 0}.seen{border:1px solid #e2d5e6;border-radius:99px;background:transparent;padding:7px 9px;color:#8a7199;font-size:10.8px;font-weight:700;white-space:nowrap}.seen.on{background:#e7f2e9;border-color:#cbded0;color:#52765c}.backbtn{border:1px solid #dfd5e3;background:transparent;border-radius:11px;width:100%;padding:13px;color:#735e83;font-size:12px;font-weight:700;margin-top:22px}.tiny{font-size:11.5px;line-height:1.7;color:#8c818a;margin-top:16px}
+
+/* Milestones remain discoverable without introducing a score or dashboard. */
+.skill-snapshot{background:#f7f3f8;border-radius:12px;padding:12px 14px;margin:11px 0 6px;text-align:left}
+.skill-snapshot .micro{color:#937b9b}
+.skill-snapshot p{font-size:11.8px;color:#796a7f;line-height:1.55;margin-top:5px}
+.skill-snapshot strong{color:#625369}
+.skill-cta{width:100%;border:0;background:transparent;color:#826a94;text-align:left;padding:9px 0 0;font-size:12px;font-weight:700}
+.play-skill{font-size:10.8px!important;font-weight:700;color:#567d5a!important;margin-top:6px}
+.activity-bridge{margin-top:16px;border-radius:13px;background:#f8f4f9;padding:14px}
+.activity-bridge .micro{color:#94779e}
+.activity-bridge p{color:#72657b;font-size:12.3px;line-height:1.68;margin-top:7px}
 @media(max-width:800px){.shell{display:block;max-width:426px;padding:0}.panel{position:static;padding:14px 20px 11px}.panel h1{font-size:18px;margin:4px 0}.panel>p,.panelnote{display:none}.panelcard{margin:11px 0 0;padding:12px}.ageopts button{padding:8px 10px}.toggle{margin-top:10px}.phone{border:0;border-top:1px solid #ebe5e8;border-radius:0;box-shadow:none;min-height:85vh}}
 </style></head><body>
 <svg style="position:absolute;width:0;height:0;overflow:hidden" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -129,6 +140,14 @@ return '<svg viewBox="0 0 89 98" aria-hidden="true"><ellipse cx="45" cy="88" rx=
 function nav(){return '<div class="bottom"><span>'+icon("home")+'Home</span><span class="on">'+icon("list")+'Guides</span><span>'+icon("heart")+'Memories</span></div>'}
 function pageHeader(){return '<div class="content"><button class="back" data-act="home">‹ Development & play</button>'}
 function ageRail(){return '<div class="rail">'+chapters.map((c,i)=>'<button data-act="stage" data-i="'+i+'" class="'+(state.stage===i?'on':'')+'">'+c.label+'</button>').join('')+'</div>'}
+function milestoneSnapshot(){
+const c=S(), noted=[];
+c.skills.forEach((skills,d)=>skills.forEach((row,k)=>{if(seen(d,k))noted.push(row.split("|")[0])}));
+if(noted.length){
+return '<div class="skill-snapshot"><span class="micro">SKILLS YOU’VE NOTICED</span><p><strong>'+noted.slice(0,2).join(' · ')+'</strong>'+(noted.length>2?' and '+(noted.length-2)+' more':'')+'</p><button class="skill-cta" data-act="all">Review milestones →</button></div>';
+}
+return '<div class="skill-snapshot"><span class="micro">YOUR MILESTONE GUIDE</span><p>See what Maya may be doing across all four areas. You can note skills whenever you recognize them.</p><button class="skill-cta" data-act="all">Review milestones →</button></div>';
+}
 function home(){
 const c=S();let out='<div class="content"><button class="back" data-act="home">‹ All guides</button><h1 class="title">Development & play</h1>'+ageRail();
 if(state.preterm)out+='<p style="color:#836a95;font-size:11.4px;margin:-4px 0 13px">Following Maya’s adjusted age in this preview.</p>';
@@ -136,11 +155,11 @@ out+='<div class="hero"><div class="micro">INSIDE MAYA’S WORLD · '+c.age+' MO
 out+='<div class="introline"><h3>Three little things to notice</h3><small>In everyday moments</small></div>';
 c.clues.forEach((cl,i)=>{const sk=findSkill(cl);const checked=sk>=0&&seen(cl.domain,sk);
 out+='<button class="clue" data-act="clue" data-i="'+i+'"><span class="clue-icon">'+icon(cl.icon)+'</span><span class="cluecopy"><b>'+cl.title+'</b><small>'+cl.sub+'</small>'+(checked?'<em>✓ You’ve seen this</em>':'')+'</span><span class="chev">›</span></button>'});
-out+='<div class="play"><div class="playpic">'+playImage(state.stage)+'</div><div><span class="micro">TRY THIS TOGETHER</span><h3>'+c.play.title+'</h3><p>'+c.play.sub+'</p><button data-act="play">See how →</button></div></div>';
+out+='<div class="play"><div class="playpic">'+playImage(state.stage)+'</div><div><span class="micro">TRY THIS TOGETHER</span><h3>'+c.play.title+'</h3><p>'+c.play.sub+'</p><p class="play-skill">Supports: '+c.clues[0].title.toLowerCase()+'</p><button data-act="play">See how →</button></div></div>';
 out+='<div class="question"><button data-act="question" aria-expanded="'+state.qOpen+'"><b>'+c.q+'</b><span class="small">'+(state.qOpen?'−':'＋')+'</span></button>'+(state.qOpen?'<div class="question-answer"><p>'+c.answer+'</p></div>':'')+'</div>';
 out+='<div class="areaIntro"><h3>Development by area</h3><small>Explore the full picture</small></div><div class="areas">';
 names.forEach((name,i)=>{out+='<button class="area" data-act="area" data-i="'+i+'"><span class="label">'+name+'</span><b>'+c.areaLines[i]+'</b><small>Explore milestones ›</small></button>'});
-out+='</div><button class="all" data-act="all">Explore all milestones →</button>';
+out+='</div>'+milestoneSnapshot();
 out+='<div class="ahead"><div class="micro">COMING INTO VIEW</div><p>'+c.next+'</p></div>';
 out+='<p class="note">Every baby develops at their own pace. These are developmental guideposts, not a score. If Maya loses a skill or you have concerns, talk with her pediatrician.</p></div>'+nav();return out
 }
@@ -155,7 +174,7 @@ function activity(){
 const c=S(),p=c.play;let out=pageHeader()+'<div class="detailHero thinking"><div class="micro">ONE MEANINGFUL THING TO TRY</div><h2>'+p.title+'</h2><p>'+p.sub+'</p></div>';
 out+='<section class="section"><h3>How to do it</h3>';
 p.steps.forEach((step,i)=>{out+='<div class="row"><span class="row-icon" style="font-weight:800;font-size:14px">'+(i+1)+'</span><div class="rowtext"><b>'+step+'</b></div></div>'});
-out+='</section><div class="takeaway"><div class="micro">WHY IT HELPS</div><p>'+p.why+'</p></div>';
+out+='</section><div class="activity-bridge"><span class="micro">THE DEVELOPMENTAL CONNECTION</span><p>'+c.clues[0].insight+'</p></div><div class="takeaway"><div class="micro">WHY IT HELPS</div><p>'+p.why+'</p></div>';
 out+='<p class="tiny">Activities are invitations, not assignments. Supervise Maya, follow her interest, and stop if she needs a break.</p>';
 out+='<button class="backbtn" data-act="home">Back to Development</button></div>'+nav();return out
 }
