@@ -108,7 +108,7 @@ o+='<div class="upcoming"><div class="eyebrow">COMING INTO VIEW</div><p>'+e.next
 }
 function notice(){
 var e=data[state.idx],seen=shown(),o=header()+'<div class="dhero"><span class="eyebrow">A LITTLE THING TO NOTICE</span><h2>'+(seen?e.nextNotice:e.notice)+'</h2><p>'+(seen?e.nextSub:e.sub)+'</p></div>';
-o+='<div class="section"><h3>Why this is happening</h3><p>'+e.why+'</p></div><div class="green"><span class="eyebrow">AN EASY WAY TO ENCOURAGE IT</span><p>'+e.playSub+'</p><button class="btn" data-act="activity">Try this together →</button></div><button class="btn" data-act="home">Back to Development</button></div>'+nav();return o
+o+='<div class="section"><h3>Why this is happening</h3><p>'+(seen?'Now that you have noticed one of these changes, there are other small ways Maya may show you what she is learning. Watch for them in your everyday play.':e.why)+'</p></div><div class="green"><span class="eyebrow">AN EASY WAY TO ENCOURAGE IT</span><p>'+e.playSub+'</p><button class="btn" data-act="activity">Try this together →</button></div><button class="btn" data-act="home">Back to Development</button></div>'+nav();return o
 }
 function activity(){
 var e=data[state.idx],o=header()+'<div class="dhero thinking"><span class="eyebrow">ONE THING TO TRY</span><h2>'+e.play+'</h2><p>'+e.playSub+'</p></div><div class="section"><h3>How to do it</h3><p>'+e.how+'</p></div><div class="green"><span class="eyebrow">WHY IT HELPS</span><p>'+e.because+'</p></div><p class="foot">Play is an invitation, not homework. Follow Maya’s interest and stop when she needs a break.</p><button class="btn" data-act="home">Back to Development</button></div>'+nav();return o
@@ -143,7 +143,7 @@ document.getElementById("app").addEventListener("click",function(e){
 var b=e.target.closest("[data-act]");if(!b)return;var a=b.dataset.act,d=Number(b.dataset.domain||0),k=Number(b.dataset.skill||0);
 if(a==="seen"){toggle(d,k);render();return}
 if(a==="age"){state.idx=Number(b.dataset.id);state.page="home"}
-else if(a==="area"){state.area=Number(b.dataset.id);state.page="area"}
+else if(a==="area"){if(b.dataset.id!==undefined)state.area=Number(b.dataset.id);state.page="area"}
 else if(a==="skill"){state.area=d;state.skill=k;state.origin=state.page;state.page="skill"}
 else {state.page=a}
 render();
