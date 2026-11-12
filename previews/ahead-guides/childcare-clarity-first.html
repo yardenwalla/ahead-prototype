@@ -90,6 +90,14 @@
 .tab-title{margin:6px 0 4px!important;font-size:14px!important}.tab-note{font-size:11.6px!important;line-height:1.6!important;color:#94887e!important;margin-bottom:6px!important}
 
 .card-section{border:1px solid #efe9df;border-radius:14px;padding:15px;margin-top:15px}.card-section h3{font-size:15px;margin:0 0 6px}.care-chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:7px}.care-chips button{border:1px solid #e9e0d4;background:#f8f5f0;color:#7d7165;border-radius:99px;padding:8px 11px;font-size:11.2px;font-weight:700}.care-chips button.on{background:#e4eee5;border-color:#c5d8c8;color:#4f7458}
+
+.compare-identity{background:#eaf0fa;border-radius:17px;padding:20px;margin-bottom:21px}.compare-identity .micro{color:#6f82a3}.compare-identity h2{font-size:24px!important;line-height:1.2;margin:10px 0!important;color:#4c6080}.compare-identity p{font-size:12.6px;color:#6b7e99;line-height:1.65}
+.compare-categories{display:flex;align-items:baseline;justify-content:space-between;margin:0 0 12px}.compare-categories strong{font-size:10px;letter-spacing:.07em;color:#887b70}.compare-categories small{font-size:10px;color:#a39587}
+.compare-kind{border:1px solid #ece6dc;border-radius:14px;padding:15px;margin-bottom:10px;background:#fffefa}.compare-kind-head{display:flex;align-items:center;gap:10px}.compare-kind h3{font-size:15px}.compare-kind-icon{width:37px;height:37px;border-radius:11px;background:#f5eee4;color:#9b8066;display:grid;place-items:center}
+.compare-kind:nth-of-type(2n) .compare-kind-icon{background:#e7f1e8;color:#64826c}.compare-kind:nth-of-type(3n) .compare-kind-icon{background:#efeaf7;color:#866f9a}
+.compare-kind-lead{font-size:12px;color:#7d7268;margin:10px 0 12px;line-height:1.6}.compare-facts{display:grid;grid-template-columns:1fr 1fr;gap:12px;border-top:1px solid #f0ebe5;padding-top:12px}
+.compare-facts small{font-size:9.5px;font-weight:800;letter-spacing:.04em;color:#a19588}.compare-facts p{font-size:11.7px;line-height:1.6;color:#72675b;margin:5px 0}
+.compare-kind button{border:0;background:transparent;text-align:left;font-size:11.7px;font-weight:700;color:#876e4d;padding:11px 0 0}
 @media(max-width:800px){.shell{display:block;max-width:425px;padding:0}.aside{position:static;padding:15px 20px 11px}.aside h1{font-size:18px;margin:5px 0}.aside>p,.aside .explain{display:none}.control{margin-top:12px;padding:12px}.buttons button{padding:8px 10px}.controlsep{padding-top:10px;margin-top:10px}.phone{border:0;border-top:1px solid #ece4da;border-radius:0;box-shadow:none;min-height:80vh}}
 </style></head><body>
 <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
@@ -162,6 +170,22 @@ o+='<div class="simple-title"><h3>Make it work</h3></div>';
 ["backup","home","When care falls through","Closures, illness, and a realistic backup plan"]
 ].forEach(([id,ico,title,desc])=>o+='<button class="simple-row" data-act="resource" data-id="'+id+'"><span class="simple-row-icon">'+icon(ico)+'</span><span class="simple-row-copy"><b>'+title+'</b><small>'+desc+'</small></span><span class="chev">›</span></button>');
 o+='<p class="page-tail">Explore any topic in any order. No setup needed.</p></div>'+nav();return o
+}
+function typesCompared(){
+const rows=[
+["Daycare center","Group care with teachers","Usually set hours; ask about coverage","Infant staffing, safe sleep, illness policies and teacher consistency"],
+["Home daycare","Smaller, home-based group","Hours vary; a single provider may need backup","Licensing, people present, mixed-age supervision and sleep setup"],
+["Nanny or nanny share","Care in your home","Agree on hours and coverage for time off","References, trial, contract and household employment responsibilities"],
+["Family & friends","Someone familiar","Depends on their actual availability","Safe sleep, feeding, boundaries and a backup"],
+["Babysitter","Occasional hours of help","Useful for short breaks or outings","Infant experience, emergency plan and a visit together"],
+["Extra help at home","Day, postpartum or overnight support","Scope and hours vary by the service","Training, responsibilities, overnight handoffs and references"]
+];
+let o=top()+'<div class="compare-identity"><div class="micro">A GUIDE TO YOUR OPTIONS</div><h2>Six ways to get help</h2><p>Different arrangements solve different problems. Here’s what to know before you start your search.</p></div>';
+o+='<div class="compare-categories"><strong>WHAT TO KNOW FIRST</strong><small>No questions to answer</small></div>';
+rows.forEach((r,i)=>{o+='<section class="compare-kind"><div class="compare-kind-head"><span class="compare-kind-icon">'+icon(["calendar","home","heart","baby","clock","bag"][i])+'</span><h3>'+r[0]+'</h3></div><p class="compare-kind-lead">'+r[1]+'</p>';
+o+='<div class="compare-facts"><div><small>HOW IT WORKS</small><p>'+r[2]+'</p></div><div><small>WHAT TO CHECK</small><p>'+r[3]+'</p></div></div><button data-act="type" data-i="'+i+'">Explore '+r[0].toLowerCase()+' →</button></section>'});
+o+='<div class="callout"><div class="micro">ONE MORE THING</div><p>Costs and availability depend on where you live. Compare real hours, backup coverage and how caregivers respond to your baby—not just the price.</p></div>';
+o+='<button class="secondary" data-act="home">Back to Childcare</button></div>'+nav();return o
 }
 function dhero(eyebrow,title,lead){return top()+'<div class="dhero"><div class="micro">'+eyebrow+'</div><h2>'+title+'</h2><p>'+lead+'</p></div>'}
 function feature(){
