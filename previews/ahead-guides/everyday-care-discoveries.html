@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f7f4ee">
+<title>Ahead — Everyday Care | Design Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f3ed;--surface:#fffefa;--ink:#342f2c;--muted:#827a74;--line:#ece7e0;--cream:#f8ede5;--peach:#f3e2d6;--purple:#f0e5ee;--purple-ink:#8d6687;--sage:#ebf1e9;--terra:#a47662}
+*{box-sizing:border-box}body{margin:0;color:var(--ink);font-family:Figtree,system-ui,-apple-system,sans-serif;background:var(--bg);-webkit-font-smoothing:antialiased}
+button,select,input{font:inherit}button{cursor:pointer}button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid #aa7f95;outline-offset:3px}
+.workspace{max-width:1030px;margin:0 auto;padding:36px 26px;display:grid;grid-template-columns:minmax(230px,290px) minmax(340px,424px);gap:65px;align-items:start;justify-content:center}
+.controls{padding-top:40px;position:sticky;top:25px}.eyebrow{font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:800;color:var(--terra)}
+.controls h1{font:800 30px/1.15 Nunito,sans-serif;letter-spacing:-.045em;margin:12px 0}.controls p{font-size:14px;line-height:1.65;color:#736a63}.control-card{padding:19px;margin-top:24px;border:1px solid #e6ddd4;background:#fffefa;border-radius:17px}.control-card label{font-size:11px;text-transform:uppercase;letter-spacing:.09em;font-weight:800;color:#8c796e;display:block;margin-bottom:9px}
+select{background:#fff;border:1px solid #e5ddd4;width:100%;border-radius:10px;padding:11px 12px;font-size:14px;color:var(--ink)}
+.toggle{display:flex;gap:11px;align-items:center;margin:16px 0 4px;font-size:13px;line-height:1.4;color:#61574f;cursor:pointer}.toggle input{width:18px;height:18px;accent-color:#aa7c69}
+.note{border-left:3px solid #d6b9ab;padding-left:13px;margin-top:24px}.note strong{font-size:12px}.note p{margin:5px 0;font-size:12px}
+.device{background:var(--surface);border:1px solid #e9e3da;border-radius:27px;box-shadow:0 16px 60px #7a66581c;min-height:760px;overflow:hidden;position:relative}
+.device-inner{padding:21px 23px 26px}.brandbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}.logo{font:800 25px Nunito,sans-serif;letter-spacing:-.06em}.logo span{color:#bb8f7d}.avatar{width:33px;height:33px;display:grid;place-items:center;border-radius:50%;background:#e3d9ce;color:#766455;font-weight:800;font-size:12px}
+.back{border:0;background:transparent;color:#7e7670;font-size:12px;padding:2px 0;display:inline-flex;align-items:center;gap:4px;margin:0 0 12px}.back:hover{text-decoration:underline}
+h2,h3,p{margin-top:0}h2{font:800 28px/1.18 Nunito,sans-serif;letter-spacing:-.044em;margin-bottom:17px}h3{font:800 18px/1.3 Nunito,sans-serif;letter-spacing:-.02em}
+.hero{border-radius:17px;background:var(--cream);padding:20px 20px 0;overflow:hidden}.hero .eyebrow{font-size:10px}.hero h3{font:800 25px/1.2 Nunito,sans-serif;letter-spacing:-.04em;color:#4b3d35;margin:11px 0 8px}.hero p{color:#715e54;font-size:13px;line-height:1.55;margin:0 0 5px}
+.hero-illustration{display:block;width:100%;max-width:320px;height:104px;margin:2px auto 0}
+.feature{border:0;text-align:left;width:100%;background:var(--purple);border-radius:15px;padding:18px 18px 17px;margin:18px 0 23px;color:#453b45;transition:transform .16s,box-shadow .16s}.feature:hover{transform:translateY(-1px);box-shadow:0 6px 18px #9f7b9921}
+.feature .fttop{display:flex;align-items:center;justify-content:space-between;gap:9px;margin-bottom:10px;color:var(--purple-ink)}
+.tag{font-size:10px;font-weight:800;letter-spacing:.075em;text-transform:uppercase}
+.feature h3{font-size:18px;margin:0 0 6px}.feature p{margin:0 0 13px;color:#715f70;font-size:12.5px;line-height:1.55}.tap{display:flex;align-items:center;gap:4px;color:var(--purple-ink);font-size:12px;font-weight:700}
+.section-header{display:flex;justify-content:space-between;align-items:baseline;margin:0 0 7px;gap:10px}.section-header h3{font-size:16px;margin:0}.count{color:#98918a;font-size:11px;white-space:nowrap}
+.update{border:0;background:transparent;padding:14px 0;width:100%;display:flex;text-align:left;gap:11px;align-items:center;color:inherit;border-bottom:1px solid var(--line)}.update:last-child{border-bottom:0}.update:hover .update-title{color:#9c6e59}
+.icon-box{flex:0 0 46px;height:46px;display:grid;place-items:center;border-radius:12px;background:#e8efeb;color:#718875}.update:nth-child(4n+2) .icon-box{background:#f5ebe4;color:#a1826e}.update:nth-child(4n+3) .icon-box{background:#eeebf5;color:#8b789d}.update:nth-child(4n+4) .icon-box{background:#ecf0f6;color:#7887a0}
+.icon{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}.smicon{width:16px;height:16px}
+.update-main{flex:1;min-width:0}.update-title{font-size:13px;font-weight:700;line-height:1.35;display:block}.update-sub{font-size:11.7px;color:#8a817a;line-height:1.5;display:block;margin-top:3px}.chevron{font-size:22px;font-weight:400;color:#b7aca4}
+.upcoming{border:1px solid #eee8e0;border-radius:13px;background:#faf8f5;margin-top:19px;padding:14px 16px}.upcoming .tag{color:#898079;display:flex;align-items:center;gap:6px}.upcoming p{font-size:12px;line-height:1.55;margin:8px 0 0}
+.basics-link{width:100%;border:0;background:transparent;display:flex;align-items:center;text-align:left;gap:11px;padding:16px 0 6px;margin-top:3px;color:var(--ink)}.basics-link .icon-box{background:#f2efeb;color:#8a7f77}.basics-link strong{display:block;font-size:13px}.basics-link small{display:block;font-size:11.5px;color:#8a817a;margin-top:4px}.basics-link .chevron{margin-left:auto}
+.detail-hero{background:var(--cream);padding:21px;border-radius:16px}.detail-hero .eyebrow{font-size:10px}.detail-hero h3{font-size:23px;margin:9px 0 10px}.detail-hero p{color:#715f53;line-height:1.6;font-size:13px;margin:0}.detail-section{margin-top:24px}.detail-section h3{font-size:15px;margin-bottom:8px}.detail-section p{font-size:13px;line-height:1.75;color:#665d57;margin:0}.action-box{background:#ebf2ea;border-radius:14px;padding:17px 18px;margin-top:22px}.action-box strong{color:#4b765a;letter-spacing:.07em;font-size:10px}.action-box p{color:#3e5947;line-height:1.7;font-size:13px;margin:9px 0 0}.related{margin-top:24px;padding-top:17px;border-top:1px solid var(--line)}
+.related button{border:0;background:transparent;width:100%;display:flex;gap:10px;align-items:center;text-align:left;padding:8px 0;color:var(--ink)}.related strong{font-size:13px}.related small{display:block;font-size:11.5px;color:#8b817a;margin-top:5px}
+.guidelist{display:grid;gap:0}.guide-row{background:transparent;border:0;border-bottom:1px solid var(--line);padding:15px 0;display:flex;align-items:center;gap:12px;text-align:left;width:100%;color:var(--ink)}.guide-row:last-child{border-bottom:0}.guide-row strong{font-size:13px;display:block}.guide-row small{font-size:11.5px;color:#8b817a;display:block;margin-top:4px;line-height:1.5}
+.guide-topics{margin-top:17px}.topic{display:flex;gap:10px;align-items:center;border-bottom:1px solid var(--line);padding:13px 0;font-size:13px;color:#5f5750}.topic:last-child{border-bottom:0}.topic .icon{color:#87a08b;width:17px;height:17px}.primary-button{border:1px solid #d9cfc4;color:#66594f;background:#fffefa;border-radius:11px;width:100%;padding:13px;margin-top:21px;font-weight:700;font-size:12px}
+.page-intro{font-size:13px;color:#746b64;line-height:1.65;margin:0 0 18px}
+.bottomnav{border-top:1px solid #efe9e2;display:flex;justify-content:space-around;padding:12px 18px 15px;margin-top:14px}.navitem{border:0;background:transparent;color:#9a9089;display:flex;flex-direction:column;align-items:center;gap:5px;font-size:10px;min-width:70px}.navitem.selected{color:#a47662;font-weight:800}.navitem .icon{width:19px;height:19px}
+.info-note{font-size:11px;color:#9d928a;line-height:1.6;margin-top:13px}
+@media(max-width:800px){.workspace{display:block;padding:0;max-width:430px}.controls{position:static;padding:16px 18px 10px}.controls h1{font-size:18px;margin:3px 0}.controls>p,.controls .note{display:none}.control-card{margin-top:12px;padding:11px 13px}.device{border:0;border-top:1px solid #e8e0d9;border-radius:0;box-shadow:none;min-height:80vh}.device-inner{padding:20px 23px 24px}}
+</style>
+</head>
+<body>
+<svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+<symbol id="i-baby" viewBox="0 0 24 24"><path d="M9 12h.01M15 12h.01M9 16c2 2 4 2 6 0M12 3c-1 0-2 1-2 2s1 2 2 2"/><circle cx="12" cy="13" r="9"/></symbol>
+<symbol id="i-drops" viewBox="0 0 24 24"><path d="M12 3c-3 4-6 7-6 11a6 6 0 0012 0c0-4-3-7-6-11zM9 14a3 3 0 003 3"/></symbol>
+<symbol id="i-heart" viewBox="0 0 24 24"><path d="M20.8 7.7c-1.7-3.2-5.6-3.2-8.8.2-3.2-3.4-7.1-3.4-8.8-.2C.5 13 8 18 12 21c4-3 11.5-8 8.8-13.3z"/></symbol>
+<symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M12 2l2.3 6.7L21 11l-6.7 2.3L12 20l-2.3-6.7L3 11l6.7-2.3L12 2zM19 19l1 3 1-3 2-1-2-1-1-3-1 3-2 1 2 1z"/></symbol>
+<symbol id="i-scissors" viewBox="0 0 24 24"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M8 8l13 13M8 16L21 3"/></symbol>
+<symbol id="i-bath" viewBox="0 0 24 24"><path d="M3 12h18v3a7 7 0 01-7 7H10a7 7 0 01-7-7v-3zM7 12V6a3 3 0 016 0M13 7h3M7 22l-1 1M17 22l1 1"/></symbol>
+<symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l2 2m10 10 2 2M5 19l2-2M17 7l2-2"/></symbol>
+<symbol id="i-smile" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 10h.01M16 10h.01M8 15c2.5 3 5.5 3 8 0"/></symbol>
+<symbol id="i-shirt" viewBox="0 0 24 24"><path d="M8 3l4 2 4-2 5 4-3 5-2-1v10H8V11l-2 1-3-5 5-4z"/></symbol>
+<symbol id="i-foot" viewBox="0 0 24 24"><path d="M7 20c-3-5-2-9 0-13a4 4 0 016 2l1 6c1 3 3 1 5 3 2 2 0 4-3 4H9a3 3 0 01-2-2zM5 4h.01M9 2h.01M13 3h.01"/></symbol>
+<symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4m10-4v4M3 10h18M8 14h3m-3 3h7"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24"><path d="M12 6c-3-2-6-2-10-1v14c4-1 7-1 10 1 3-2 6-2 10-1V5c-4-1-7-1-10 1zM12 6v14"/></symbol>
+<symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></symbol>
+<symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10l9-7 9 7v11H3V10zM9 21v-8h6v8"/></symbol>
+<symbol id="i-list" viewBox="0 0 24 24"><path d="M9 5h12M9 12h12M9 19h12M3 5h1M3 12h1M3 19h1"/></symbol>
+</svg>
+<div class="workspace">
+<aside class="controls">
+<div class="eyebrow">Ahead · design exploration</div>
+<h1>Everyday care</h1>
+<p>A shareable, standalone prototype of the proactive discovery experience. It keeps the five-week layout you preferred and shows how content changes with age and milestones.</p>
+<div class="control-card">
+<label for="ageSelect">Preview baby's age</label><select id="ageSelect"></select>
+<div id="milestone"></div>
+</div>
+<div class="note"><strong>Preview only</strong><p>Built separately from the app. No changes to the main prototype, and no new permanent article per discovery.</p></div>
+</aside>
+<div class="device"><div id="app"></div></div>
+</div>
+<script>
+(function(){
+var item=function(title,desc,guide,why,action,icon){return {title:title,desc:desc,guide:guide,why:why,action:action,icon:icon}};
+var guideKeys=["Diapers & diaper care","Bathing & hair","Skin & rashes","Clothes & sun","Gums & teeth","Nails, eyes & ears"];
+var guideData=[
+{title:guideKeys[0],desc:"Changing, cleaning, stool patterns and diaper rashes",icon:"baby",topics:["How to change a diaper","Cleaning the diaper area","Wet diapers and poop","Diaper rashes","Rolling and wriggly changes"],now:["Early diapers change quickly as feeding becomes established.","Some breastfed babies poop less often after the early weeks.","Rolling can make raised changing surfaces unsafe. The floor is a practical alternative.","Once solids begin, stool color, smell and texture can change."]},
+{title:guideKeys[1],desc:"From sponge baths to splashier baths",icon:"bath",topics:["Cord care and healing","Sponge baths","The first tub bath","Washing hair and cradle cap","Baths with a more mobile baby"],now:["Use sponge baths while the cord area heals.","A baby tub becomes an option after the stump is off and the area has healed.","Continue safe baths as movement and sitting abilities change.","Even once sitting is steady, supervise hands-on the entire bath."]},
+{title:guideKeys[2],desc:"Newborn skin, birthmarks and common rashes",icon:"drops",topics:["Peeling skin and newborn bumps","Baby acne","Cradle cap","Birthmarks and hemangiomas","Dry skin, eczema and drool rash"],now:["Peeling and tiny bumps are common in the first weeks.","Baby acne, cradle cap and some birthmarks may appear in early infancy.","More drooling can mean more irritation around the chin.","Skin care remains gentle; persistent, severe or unusual rashes warrant a clinician's advice."]},
+{title:guideKeys[3],desc:"Layers, temperature, sun protection and shoes",icon:"shirt",topics:["Dressing for the weather","Preventing overheating","Shade before six months","Sunscreen from six months","Bare feet and first shoes"],now:["Dress for comfort and take care to avoid overheating.","Prioritize shade and protective clothing before six months.","Sunscreen joins shade at six months of chronological age.","Bare feet on safe indoor surfaces can help babies learn to balance."]},
+{title:guideKeys[4],desc:"Teething, first teeth, brushing and dental visits",icon:"smile",topics:["Gentle gum care","Drooling and chewing","Teething comfort","Brushing the first teeth","The first dental visit"],now:["There's no toothbrushing to do before the first tooth, but you can wipe gums gently.","Drooling and chewing do not necessarily mean a tooth is imminent.","Start brushing when the first tooth appears.","By the first birthday, arrange the first dental visit."]},
+{title:guideKeys[5],desc:"Small grooming routines made simple",icon:"scissors",topics:["Filing or trimming nails","Gently cleaning the eyes","Cleaning outer ears","Gentle nose care"],now:["Use a baby-safe file or clippers and be gentle around eyes and ears.","Gentle grooming remains the same as your baby grows.","Keep grooming gentle; avoid inserting swabs into ears or nose.","Keep grooming gentle; avoid inserting swabs into ears or nose."]}
+];
+var ages=[
+{label:"2 weeks",eyebrow:"THE FIRST WEEKS",heading:"So many little firsts",lead:"Maya's body is adjusting to life outside the womb. Some of the biggest changes happen in these first weeks.",feature:item("That little belly button has a countdown","The cord is drying and changing. It usually falls off within the first few weeks.",1,"The umbilical stump naturally dries and separates after birth.","Keep the stump clean and dry, fold the diaper below it, and use sponge baths until the area has healed.","heart"),tag:"HAPPENING NOW",updates:[
+item("Diapers change almost every day","From sticky dark poop to lighter stools as milk feeding gets established.",0,"Milk feeding changes baby's stool, and wet diapers offer clues about hydration.","Know the expected stool and wet-diaper patterns for the early days.","baby"),
+item("Peeling and tiny bumps can be normal","Newborn skin is adapting to the outside world.",2,"Newborn skin changes as it adjusts to a drier environment.","Clean gently and avoid picking at peeling skin.","sparkles"),
+item("Tiny nails are surprisingly sharp","They can scratch Maya's face before you expect it.",5,"Newborn nails can be long and thin.","Trim or file carefully when Maya is relaxed.","scissors")],coming:"Baby acne, cradle cap and the first tub bath may be coming soon."},
+{label:"5 weeks",eyebrow:"NEW LITTLE CHANGES",heading:"The newborn routine is changing",lead:"A few new things may appear on Maya's skin, and the first tub bath could be close.",feature:item("The first tub bath is coming","When the cord has fallen off and the area has healed, sponge baths can become tub baths.",1,"The umbilical area needs time to heal before switching from sponge baths.","Once healed, use a baby tub with a little warm water. Support Maya securely, and never leave her alone.","bath"),tag:"A NEW FIRST",updates:[
+item("Baby acne might appear","Small facial bumps can show up in these early weeks.",2,"Baby acne is a common, usually temporary infant skin change.","Wash gently and skip acne treatments unless recommended by a clinician.","drops"),
+item("Cradle cap can show up","Greasy-looking flakes on the scalp are common.",2,"Cradle cap is a common infant scalp condition.","Wash gently and avoid picking at the scales.","sparkles"),
+item("Some birthmarks appear after birth","A new or growing strawberry mark is worth mentioning early.",2,"Some infantile hemangiomas appear after birth and grow quickly.","Have your pediatrician assess a new or growing strawberry-like birthmark, especially near the eyes, nose, mouth or diaper area.","heart"),
+item("Baby hair may shed and regrow","A fuller head of hair can suddenly look much thinner.",1,"Hair naturally goes through growth and shedding cycles.","Typical infant hair shedding needs no special treatment.","scissors")],coming:"Some breastfed babies begin pooping less often over the next few weeks."},
+{label:"3 months",eyebrow:"SETTLING IN",heading:"A few routines are getting easier",lead:"The biggest newborn firsts are behind you, but everyday care continues to change.",feature:item("Fewer poops can be normal","Some breastfed babies begin going several days between bowel movements.",0,"Stool frequency can shift as feeding patterns mature.","Pay attention to stool consistency, feeding, wet diapers and overall well-being—not just frequency.","baby"),tag:"WORTH KNOWING NOW",updates:[
+item("Her skin may need a little extra moisture","Dry patches sometimes start showing up.",2,"Infant skin may become dry or develop eczema.","Use fragrance-free products, and ask about persistently itchy or inflamed patches.","drops"),
+item("Shade is still your best sun protection","Young babies need special protection outdoors.",3,"Infant skin is vulnerable to UV exposure.","Prioritize shade, protective clothing and a brimmed hat.","sun")],coming:"More hand-to-mouth exploration, drool and rolling may be just around the corner."},
+{label:"5 months",eyebrow:"GETTING MORE ACTIVE",heading:"Little movements, bigger changes",lead:"Reaching, grabbing and getting ready to roll are starting to change everyday care.",feature:item("Diaper changes are about to get interesting","Rolling can start unexpectedly—even on a changing table.",0,"Babies can move off a raised changing surface in a moment.","Prepare supplies first and keep a hand on Maya during changes on raised surfaces. The floor is a good alternative.","baby"),tag:"PREPARE FOR THIS",updates:[
+item("All that drool doesn't always mean teeth","Chewing and drooling can start long before a tooth appears.",4,"Babies explore with their mouths as their skills develop.","Offer a safe, age-appropriate teether and gently wipe away excess drool.","smile"),
+item("Drool rash may show up","Constant moisture can irritate the chin and neck.",2,"Wet skin and friction can cause irritation.","Pat dry gently and use a protective barrier when needed.","drops"),
+item("Bath time is getting splashier","Growing movement changes how Maya behaves in the bath.",1,"Reaching, twisting and kicking become more active.","Keep her securely supported and within hands-on reach at all times.","bath")],coming:"At six months, sunscreen can join your sun-protection routine."},
+{label:"6 months",eyebrow:"NEW LITTLE CHANGES",heading:"Some new routines can begin",lead:"Maya's growing abilities are changing how you care for her.",feature:item("Sunscreen can join the routine","Broad-spectrum SPF 30+ sunscreen can now join shade and protective clothing.",3,"Standard infant sunscreen guidance changes at six months of chronological age.","Use broad-spectrum SPF 30+ sunscreen on exposed skin as directed, while continuing shade, hats and protective clothing.","sun"),tag:"NEW AT SIX MONTHS",updates:[
+item("The first tooth might be close","Some babies have one already; others won't for months.",4,"The timing of first teeth varies widely.","Start brushing twice daily with a rice-grain smear of fluoride toothpaste when the first tooth emerges.","smile"),
+item("Poop changes once solids begin","Food can change stool color, texture and smell.",0,"The digestive system begins processing new foods.","Expect stool changes, but seek medical advice for white, gray or chalky stools.","baby"),
+item("A bigger bath may be on the horizon","Sitting steadily can change which bath setup works.",1,"Improving balance changes how Maya can sit during bathing.","Choose a setup suited to her abilities; never depend on a bath seat for safety.","bath")],coming:"First teeth, steadier sitting and wrigglier diaper changes may be next."},
+{label:"9 months",eyebrow:"ON THE MOVE",heading:"A bigger baby, new little routines",lead:"Sitting, moving and early teeth can make familiar routines feel quite different.",feature:item("The first tooth changes the routine","As soon as Maya's first tooth appears, it's time to start brushing.",4,"Teeth need cleaning from when they emerge to help prevent cavities.","Brush twice a day using a soft infant toothbrush and a rice-grain smear of fluoride toothpaste.","smile"),tag:"A MILESTONE TO WATCH",updates:[
+item("Baths are getting splashier","Steadier sitting can mean a different bathing setup.",1,"Maya has more balance and control over her movement.","Use an appropriate tub, shallow water and continuous hands-on supervision.","bath"),
+item("Wriggly diaper changes need a new trick","Crawling and twisting can turn a quick change into an adventure.",0,"A more mobile baby is motivated to move and explore.","Try a toy or familiar song, and consider floor changes.","baby"),
+item("First steps don't mean first shoes","Bare feet help with learning to balance.",3,"Bare feet allow babies to feel and grip the floor.","Practice barefoot on safe indoor surfaces; use flexible shoes when walking outside.","foot")],coming:"By her first birthday, it's time for a first dental visit."}
+];
+var state={age:1,cord:false,roll:false,tooth:false,page:"home",story:0,guide:0,origin:"home"};
+var icon=function(name,small){return '<svg aria-hidden="true" class="icon'+(small?' smicon':'')+'"><use href="#i-'+name+'"></use></svg>'};
+var current=function(){return ages[state.age]};
+function feature(){
+var f=current().feature,tag=current().tag;
+if(state.age===1&&state.cord){f=item("The first tub bath can begin","The cord has fallen off and the area has healed. Maya's bath routine can change now.",1,"The umbilical area has finished healing.","Use a baby tub with a little warm water; support Maya securely and never leave her alone.","bath");tag="A NEW FIRST"}
+if(state.age===3&&state.roll){f=item("Diaper changes just got more interesting","Now that Maya is rolling, the way you set up changes matters even more.",0,"A rolling baby can move suddenly on a raised changing surface.","Get everything ready before starting. Keep a hand on Maya on raised surfaces, or use the floor.","baby");tag="NEW FOR MAYA"}
+if(state.age===5&&state.tooth){f=item("Her first tooth is here!","One tiny tooth brings a new twice-daily routine.",4,"Cleaning teeth from when they emerge helps prevent early tooth decay.","Brush twice daily with a rice-grain smear of fluoride toothpaste, and arrange a first dental visit by the first birthday.","smile");tag="A NEW DAILY ROUTINE"}
+return {data:f,tag:tag}
+}
+function heroIllustration(){return '<svg class="hero-illustration" viewBox="0 0 320 104" role="img" aria-label="Soft illustrated sleeping baby"><ellipse cx="160" cy="93" rx="117" ry="8" fill="#ebd3c3"/><path d="M72 80Q95 55 124 68L168 84H245L255 93H70Z" fill="#d6ada8"/><circle cx="122" cy="46" r="34" fill="#eabda4"/><path d="M96 39Q105 13 134 26" fill="none" stroke="#9d7360" stroke-width="6" stroke-linecap="round"/><path d="M110 50q5 5 10 0m13 0q5 5 10 0" stroke="#986b5d" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M123 63q7 6 13 0" stroke="#c38d81" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M167 80Q190 60 225 44" fill="none" stroke="#eabda4" stroke-width="13" stroke-linecap="round"/><circle cx="230" cy="42" r="9" fill="#eabda4"/><path d="M269 14l3 9 9 3-9 3-3 9-3-9-9-3 9-3Z" fill="#d8b082"/><circle cx="284" cy="59" r="3" fill="#d8b082"/></svg>'}
+function brand(){return '<div class="brandbar"><div class="logo">ahead<span>.</span></div><div class="avatar">M</div></div>'}
+function nav(){return '<div class="bottomnav"><button class="navitem" type="button" data-action="home">'+icon("home")+'Home</button><button class="navitem selected" type="button" data-action="home">'+icon("list")+'Guides</button><button class="navitem" type="button" data-action="home">'+icon("heart")+'Memories</button></div>'}
+function home(){
+var p=current(),f=feature(),s=brand()+'<div class="device-inner" style="padding-top:0"><button class="back" data-action="home">‹ All guides</button><h2>Everyday care</h2>';
+s+='<div class="hero"><div class="eyebrow">'+p.eyebrow+' · '+p.label.toUpperCase()+'</div><h3>'+p.heading+'</h3><p>'+p.lead+'</p>'+heroIllustration()+'</div>';
+s+='<button class="feature" data-action="story" data-index="0"><div class="fttop"><span class="tag">'+f.tag+'</span>'+icon("sparkles")+'</div><h3>'+f.data.title+'</h3><p>'+f.data.desc+'</p><div class="tap">See what this means '+icon("arrow",true)+'</div></button>';
+s+='<div class="section-header"><h3>Also new around now</h3><span class="count">'+p.updates.length+' updates</span></div><div>';
+p.updates.forEach(function(u,i){s+='<button class="update" data-action="story" data-index="'+(i+1)+'"><span class="icon-box">'+icon(u.icon)+'</span><span class="update-main"><span class="update-title">'+u.title+'</span><span class="update-sub">'+u.desc+'</span></span><span class="chevron">›</span></button>'});
+s+='</div><div class="upcoming"><div class="tag">'+icon("calendar",true)+' COMING UP</div><p>'+p.coming+'</p></div>';
+s+='<button class="basics-link" data-action="library"><span class="icon-box">'+icon("book")+'</span><span><strong>Everyday care basics</strong><small>Step-by-step how-tos, always available</small></span><span class="chevron">›</span></button>';
+s+='</div>'+nav();return s
+}
+function backButton(to,label){return '<button class="back" data-action="'+to+'">‹ '+label+'</button>'}
+function getStory(){return state.story===0?feature().data:current().updates[state.story-1]}
+function story(){
+var x=getStory(),g=guideData[x.guide],s=brand()+'<div class="device-inner" style="padding-top:0">'+backButton("home","Everyday care");
+s+='<div class="detail-hero"><div class="eyebrow">'+g.title.toUpperCase()+' · '+current().label.toUpperCase()+'</div><h3>'+x.title+'</h3><p>'+x.desc+'</p></div>';
+s+='<div class="detail-section"><h3>Why this is happening</h3><p>'+x.why+'</p></div><div class="action-box"><strong>'+icon("check",true)+' WHAT TO DO</strong><p>'+x.action+'</p></div>';
+s+='<div class="related"><button data-action="related" data-index="'+x.guide+'"><span class="icon-box">'+icon("book")+'</span><span style="flex:1"><strong>Explore '+g.title+'</strong><small>More guidance in the care library</small></span><span class="chevron">›</span></button></div>';
+s+='<button class="primary-button" data-action="home">Back to what\'s new</button></div>'+nav();return s
+}
+function library(){
+var s=brand()+'<div class="device-inner" style="padding-top:0">'+backButton("home","Everyday care");
+s+='<h2>Everyday care basics</h2><p class="page-intro">Six dependable guides for the practical details. The content adapts to Maya\'s age and the milestones you\'ve shared.</p><div class="guidelist">';
+guideData.forEach(function(g,i){s+='<button class="guide-row" data-action="guide" data-index="'+i+'"><span class="icon-box">'+icon(g.icon)+'</span><span style="flex:1"><strong>'+g.title+'</strong><small>'+g.desc+'</small></span><span class="chevron">›</span></button>'});
+s+='</div></div>'+nav();return s
+}
+function guide(){
+var g=guideData[state.guide],i=state.age===0?0:state.age===1||state.age===2?1:state.age===3?2:3;
+var s=brand()+'<div class="device-inner" style="padding-top:0">'+backButton(state.origin,"Everyday care basics");
+s+='<div class="detail-hero"><div class="eyebrow">EVERYDAY CARE GUIDE</div><h3>'+g.title+'</h3><p>'+g.desc+'</p></div><div class="action-box"><strong>'+icon("sparkles",true)+' RELEVANT TO MAYA NOW</strong><p>'+g.now[i]+'</p></div>';
+s+='<h3 style="font-size:16px;margin:27px 0 7px">In this guide</h3><div class="guide-topics">';
+g.topics.forEach(function(t){s+='<div class="topic">'+icon("check")+'<span>'+t+'</span></div>'});s+='</div><p class="info-note">This preview shows the guide structure. The production app would open the existing illustrated step-by-step content.</p>';
+s+='<button class="primary-button" data-action="home">Back to Everyday care</button></div>'+nav();return s
+}
+function render(){
+document.getElementById("app").innerHTML=state.page==="home"?home():state.page==="story"?story():state.page==="library"?library():guide();
+var select=document.getElementById("ageSelect");select.innerHTML=ages.map(function(a,i){return '<option value="'+i+'"'+(state.age===i?' selected':'')+'>'+a.label+'</option>'}).join("");
+var toggles=document.getElementById("milestone");var name=state.age===1?"cord":state.age===3?"roll":state.age===5?"tooth":null;
+var wording={cord:"The cord has healed",roll:"Maya has started rolling",tooth:"Maya's first tooth is here"};
+toggles.innerHTML=name?'<label class="toggle" style="text-transform:none;letter-spacing:0;font-size:13px;font-weight:500;color:#61574f;margin-bottom:0"><input type="checkbox" id="milestoneCheckbox" '+(state[name]?'checked':'')+'> '+wording[name]+'</label>':'';
+if(name)document.getElementById("milestoneCheckbox").addEventListener("change",function(e){state[name]=e.target.checked;state.page="home";render()});
+}
+document.getElementById("ageSelect").addEventListener("change",function(e){state.age=Number(e.target.value);state.page="home";render()});
+document.getElementById("app").addEventListener("click",function(e){var b=e.target.closest("[data-action]");if(!b)return;var a=b.getAttribute("data-action"),i=Number(b.getAttribute("data-index")||0);
+if(a==="story"){state.story=i;state.page="story"}
+else if(a==="library"){state.page="library"}
+else if(a==="related"){state.guide=i;state.origin="story";state.page="guide"}
+else if(a==="guide"){state.guide=i;state.origin="library";state.page="guide"}
+else if(a==="home"){state.page="home"}
+render();if(window.matchMedia("(max-width:800px)").matches)document.querySelector(".device").scrollIntoView({behavior:"smooth",block:"start"});
+});
+render();
+})();
+</script>
+</body>
+</html>
