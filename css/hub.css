@@ -1534,3 +1534,12 @@ label:has(> .hub-photo-input:focus-visible) { outline: 2px solid #884866; outlin
 /* "Call your pediatrician" is a calm next step, not an emergency: warm and quiet. Red stays for Call 911 (Nov 10 review). */
 #main .hub-vs div.is-call { background: #f7efe6 }
 #main .hub-vs .is-call b { color: #7a4b2c }
+/* A how-to behind a tap (Nov 12): the summary reads like a card label. */
+#main details.hub-how { padding: 13px 16px }
+#main details.hub-how summary { list-style: none; cursor: pointer; font-weight: 650; display: flex; justify-content: space-between }
+#main details.hub-how summary::-webkit-details-marker { display: none }
+#main details.hub-how summary::after { content: '＋'; color: var(--ink-2, #8a8390) }
+#main details.hub-how[open] summary::after { content: '−' }
+#main details.hub-how p { margin: 8px 0 0 }
+/* Development: the milestone a "thing to notice" row points to. */
+#main .dev-skill.is-focus { box-shadow: 0 0 0 2px var(--area-ink, #7a5aa6) inset; border-radius: 14px }
