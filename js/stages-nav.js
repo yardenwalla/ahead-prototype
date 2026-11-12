@@ -45,8 +45,8 @@
     const list = items.map((it, i) => {
       const cls = it.now ? 'is-now' : ci >= 0 && i < ci ? 'is-past' : '';
       let age = ageOf(it);
-      // Checkups behind the baby say whether they're marked, so a parent can see what may have been missed.
-      if (cat === 'Health' && ci >= 0 && i < ci) { try { const v = WELL_VISITS[i], r = typeof healthRecord === 'function' ? healthRecord(v) : null, sk = (() => { try { return !!(JSON.parse(localStorage.getItem('ahead-visit-skipped:' + journeyKey())) || {})[v]; } catch (e) { return false; } })(); age = r && r.status === 'attended' ? 'Done' : sk ? 'Skipped' : 'Not marked yet · tap to add it'; } catch (e) {} }
+      // Health moves on by age (Nov 10): past checkups only say Done if a parent marked one, never "Not marked yet".
+      if (cat === 'Health' && ci >= 0 && i < ci) { try { const r = typeof healthRecord === 'function' ? healthRecord(WELL_VISITS[i]) : null; if (r && r.status === 'attended') age = 'Done'; } catch (e) {} }
       return `<li class="st-item ${cls}"><span class="st-node" aria-hidden="true">${it.now && typeof catIcon === 'function' ? catIcon(cat) : ''}</span><button class="st-card" onclick="${it.now ? topicGo(cat) : it.onclick}">${it.now ? `<span class="st-tag">${nowTag(cat)}</span>` : ''}<b>${esc(it.label)}</b>${age ? `<small class="st-age">${esc(age)}</small>` : ''}<span class="st-one">${esc(fill((ONE[cat] || [])[i] || ''))}</span><span class="st-chev" aria-hidden="true">›</span></button></li>`;
     }).join('');
     const foot = cat === 'Health' ? `Checkups follow ${nm()}’s birthday.` : CHANGEABLE.includes(cat) ? `Ages are typical. If another one fits ${nm()} better, open it and tap “This fits ${nm()}”.` : 'Ages are typical. Every baby moves at their own pace.';

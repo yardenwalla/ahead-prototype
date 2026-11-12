@@ -690,11 +690,11 @@
     const st = slStep(key, age);
     const T = [
       [['Naps', 'Any time', 'No pattern yet'], ['Awake', '45–60 min', 'Between sleeps'], ['Longest sleep', '2–4 hrs', 'Day or night']],
-      [['Naps', '4–5', 'Short ones'], ['Awake', '1–1½ hrs', 'Between sleeps'], ['Longest sleep', '3–5 hrs', 'Often late bedtime']],
-      [['Naps', '3–4', 'Finding set times'], ['Awake', '1½–2½ hrs', 'Between sleeps'], ['Longest sleep', '5+ hrs', 'Bedtime moving earlier']],
-      [['Naps', '3', 'Last one short'], ['Awake', '2–2½ hrs', 'Between sleeps'], ['Longest sleep', age >= 6 ? '6–8 hrs' : '5–6 hrs', 'Bedtime 7–8 pm']],
-      [['Naps', '2', 'Morning, afternoon'], ['Awake', '2½–3½ hrs', 'Between sleeps'], ['Longest sleep', '6–8 hrs', 'Bedtime 7–8 pm']],
-      [['Naps', '2', 'Morning, afternoon'], ['Awake', '2½–4 hrs', 'Between sleeps'], ['Longest sleep', '10–12 hrs', 'Bedtime 7–8 pm']]][st];
+      [['Naps', '4–5', 'Short ones'], ['Awake', '1–1½ hrs', 'Between sleeps'], ['Longest sleep', '3–5 hrs', 'Moving to the night']],
+      [['Naps', '3–4', 'Finding set times'], ['Awake', '1½–2½ hrs', 'Between sleeps'], ['Longest sleep', '5+ hrs', 'Often from bedtime']],
+      [['Naps', '3', 'Last one short'], ['Awake', '2–2½ hrs', 'Between sleeps'], ['Longest sleep', age >= 6 ? '6–8 hrs' : '5–6 hrs', 'After a 7–8 pm bedtime']],
+      [['Naps', '2', 'Morning, afternoon'], ['Awake', '2½–3½ hrs', 'Between sleeps'], ['Longest sleep', '6–8 hrs', 'After a 7–8 pm bedtime']],
+      [['Naps', '2', 'Morning, afternoon'], ['Awake', '2½–4 hrs', 'Between sleeps'], ['Longest sleep', '10–12 hrs', 'After a 7–8 pm bedtime']]][st];
     const C = [['#fff3dc', '#8a6a2a'], ['#e7effc', '#46638c'], ['#e3e6f6', '#3d4a7a']];
     // Tap the tiles (or Example day) for a typical day at this age.
     // Newborn weeks and Longer nights have no set day yet, so only nap stages link to one.
@@ -705,11 +705,11 @@
   function slGuides(key, age, now) {
     const st = slStep(key, age), cat = 'Sleep';
     const G = [
-      [['moon', 'Sleep, step by step', 'Spot the yawn, soothe, then down', 'Sleepy cues, soothing, and getting {o} down', 'chg:Sleep:d:steps0'], ['sun', 'Days and nights', 'Bright days, dim nights', 'Helping {p} body clock', 'chg:Sleep:d:daynight'], ['sack', 'Swaddling', 'Snug arms, loose hips', 'How to swaddle, and when to stop', 'chg:Sleep:d:swaddle']],
-      [['book', 'Bedtime', 'A feed, a song, then down', 'A first bedtime routine', 'chg:Sleep:d:routine'], ['moon', 'The longer stretch', 'It grows over months, not nights', 'How long night sleep gets this year', 'chg:Sleep:d:stretch'], ['clock', 'Naps', 'Short and frequent, by {p} cues', 'Cues, not clocks', 'chg:Sleep:d:napsearly']],
-      [['moon', 'Waking again', 'Wait a minute, then help', 'What helps for a few weeks', 'chg:Sleep:d:regress'], ['heart', 'Falling asleep', 'Down drowsy, some of the time', 'Falling asleep on {p} own, if you want', 'chg:Sleep:d:settle4'], ['clock', 'Naps', 'Naps settle into set times', 'And bedtime moves earlier', 'chg:Sleep:d:predictable']],
-      [['crib', 'Where {s} sleeps', 'Your room until 6 months', 'Bassinet to crib, and {p} own room', 'chg:Sleep:d:where'], ['book', 'Sleep training', 'A family choice, not a must', 'When, and gentle to firmer ways', 'chg:Sleep:settle'], ['book', 'Bedtime', 'Same time, same routine', 'Your bedtime routine now', 'chg:Sleep:d:routine']],
-      [answers.twoNaps === 'Yes' ? ['moon', 'The longer stretch', 'Nights keep getting longer', 'How long night sleep gets this year', 'chg:Sleep:d:stretch'] : ['clock', 'Two naps', 'Ready for two naps?', 'Signs, and how to switch', 'chg:Sleep:d:catnap'], ['moon', 'Night feeds', 'Fewer, as days get fuller', 'How night feeds taper', 'chg:Sleep:d:nightfeeds'], ['book', 'Bedtime', 'Add brushing once teeth come', 'Your bedtime routine now', 'chg:Sleep:d:routine']],
+      [['moon', 'Sleep, step by step', 'Spot the yawn, soothe, then down', 'Cues to watch for, and soothing that works', 'chg:Sleep:d:steps0'], ['sun', 'Days and nights', 'Bright days, dim nights', 'Curtains open by day, quiet feeds at night', 'chg:Sleep:d:daynight'], ['sack', 'Swaddling', 'Snug arms, loose hips', 'How to swaddle, and when to stop', 'chg:Sleep:d:swaddle']],
+      [['book', 'Bedtime', 'A feed, a song, then down', 'Four calm steps, 15–20 minutes', 'chg:Sleep:d:routine'], ['moon', 'The longer stretch', 'It grows over months, not nights', 'From 2–4 hours to 10–12 by a year', 'chg:Sleep:d:stretch'], ['clock', 'Naps', 'Short and frequent, by {p} cues', 'Arms, carrier and stroller naps all count', 'chg:Sleep:d:napsearly']],
+      [['moon', 'Waking again', 'Wait a minute, then help', 'The 4-month regression, and what helps', 'chg:Sleep:d:regress'], ['heart', 'Falling asleep', 'Down drowsy, some of the time', 'Practice once a day, if you want', 'chg:Sleep:d:settle4'], ['clock', 'Naps', 'Naps settle into set times', 'And bedtime moves earlier', 'chg:Sleep:d:predictable']],
+      [['crib', 'Where {s} sleeps', 'Your room until 6 months', 'Bassinet to crib, and {p} own room', 'chg:Sleep:d:where'], ['book', 'Sleep training', 'A family choice, not a must', 'When, and gentle to firmer ways', 'chg:Sleep:settle'], ['book', 'Bedtime', 'Same time, same routine', 'Four calm steps, now at a set time', 'chg:Sleep:d:routine']],
+      [answers.twoNaps === 'Yes' ? ['moon', 'The longer stretch', 'Nights keep getting longer', 'What to expect by {p} first birthday', 'chg:Sleep:d:stretch'] : ['clock', 'Two naps', 'Ready for two naps?', 'Signs, and how to switch', 'chg:Sleep:d:catnap'], ['moon', 'Night feeds', 'Fewer, as days get fuller', 'How night feeds taper', 'chg:Sleep:d:nightfeeds'], ['book', 'Bedtime', 'Add brushing once teeth come', 'The same steps, plus a toothbrush', 'chg:Sleep:d:routine']],
       [['moon', 'Night waking', 'When waking comes back', 'New skills, teeth, and missing you', 'chg:Sleep:d:nightwake'], ['heart', 'Bedtime goodbyes', 'The same short goodbye', 'Separation, and bedtime protests', 'chg:Sleep:d:goodbye'], ['crib', 'Turning 1', 'A small comfort toy is fine after 12 months', 'Sleep after the first birthday', 'chg:Sleep:d:lovey']]][st];
     const COL = { moon: ['#e3e6f6', '#3d4a7a'], sun: ['#fff3dc', '#8a6a2a'], clock: ['#fff3dc', '#8a6a2a'], book: ['#f6e8f3', '#7a4f74'], heart: ['#f6e8f3', '#7a4f74'], sack: ['#e7effc', '#46638c'], crib: ['#e7effc', '#46638c'] };
     const r = ([icon, eb, title, sub, to]) => row({ cat, icon, title, sub, onclick: `openPage('${to}')` }).replace('<span class="hub-row-copy">', `<span class="hub-row-copy"><small class="hub-row-eyebrow">${F(eb)}</small>`).replace('class="hub-row"', `class="hub-row sm-row" style="--sm-bg:${COL[icon][0]};--sm-ink:${COL[icon][1]}"`);
@@ -805,7 +805,7 @@
           `<div class="hub-card hub-looks"><b class="hub-fig-title">${F('What it can look like')}</b><ul>${['Crying as soon as you walk out', 'Wanting only you at bedtime', 'Standing and calling for you'].map(t => `<li>${F(t)}</li>`).join('')}</ul></div>`, 'heart'),
         cues: () => page('Naps', 'Watch for sleepy cues, not the clock', `<div class="hub-card hub-two"><div><b>${F('Getting tired')}</b><p>${F('A quiet stare, yawning, rubbing eyes or turning away.')}</p></div><div><b>${F('Overtired')}</b><p>${F('Fussing, arching or crying that’s hard to settle.')}</p></div></div>`, -1,
           [[W, 'Newborns can only stay awake a short while, and there’s no nap schedule yet.'], [D, 'At the first yawn, stare or eye rub, start winding down: dim light, a feed or a cuddle, then sleep.'], [Y, 'Catching the first cue makes sleep easier for you both.']], '', 'clock'),
-        daynight: () => page('Night sleep', 'Help {o} tell day from night', null, -1,
+        daynight: () => page('Days and nights', 'Help {o} tell day from night', null, -1,
           [[W, 'Babies aren’t born knowing day from night. Light, sound and your routine teach {p} body clock.'], [D, 'By day, open the curtains, chat and play, even around naps. At night, keep lights low and feeds quiet.'], [K, 'Maya is more awake during the day, and {p} longest sleep shifts to the night. Often that first long stretch is 4–5 hours, starting at bedtime.']],
           (mo < 1.5 ? more('Until {s’s} back to birth weight, wake {o} for feeds', "openPage('chg:Feeding:mock:nb_eve')") : ''), 'sun'),
         predictable: () => page('Naps', 'Naps settle into set times', `<div class="hub-two hub-card hub-sched"><div><b>${F('Newborn weeks')}</b><p>${F('Naps any time, whenever {s} {get|gets} sleepy')}</p></div><div class="is-now"><b>${F('Around 3–4 months')}</b><p>${F('About the same times each day, like 9 am, 12:30 and 4 pm')}</p></div></div>`, -1,
@@ -972,7 +972,7 @@
         + versus('Normal, or time to call?', ['Normal', 'One or two wakings a night that settle with a little help.'], ['Call your pediatrician', 'Snoring, breathing pauses, a fever or ear pulling.']), 'moon');
     }
     if (id === 'where') {
-      return detail(cat, 'Sleep', 'Where Maya sleeps', 'In your room for the first 6 months, in {p} own sleep space. After that, where {s} {sleep|sleeps} is your family’s call.',
+      return detail(cat, 'Room and crib', 'Where Maya sleeps', 'In your room for the first 6 months, in {p} own sleep space. After that, where {s} {sleep|sleeps} is your family’s call.',
         hubWindowBar({ title: 'In your room, in {p} own sleep space', from: 0, to: 12, zones: [[0, 6, 'Share a room', 'band'], [6, 12, 'Your call', 'calm']], ticks: [[0, 'Birth'], [6, '6 mo'], [12, '1 year']], now: (NOW - parse(sleepAdj() ? profile.due : profile.dob)) / 2629746e3, cat, caption: 'Keep baby in your room, in their own crib or bassinet, for the first 6 months. After that, moving to their own room is a family choice.' })
         + `<h2 class="hub-h2">${F('Bassinet to crib')}</h2>`
         + hubIconSteps([['clock', 'Check the label', 'Bassinets have a weight limit, usually 15–20 lb'], ['roll', 'Or once {s} {roll|rolls}', 'Or pushes up on hands and knees']], cat, 'Move from the bassinet to the crib at the bassinet’s weight limit, or once baby rolls or pushes up on hands and knees, whichever comes first.', false)
