@@ -367,17 +367,35 @@ o+='</div><div class="callout"><div class="micro">A PRACTICAL RULE</div><p>Have 
 o+='<button class="secondary" data-act="home">Back to Childcare</button></div>'+nav();return o
 }
 function fitPage(){
-let o=dhero("FINDING YOUR FIT","A few ways to narrow the search","Optional: answer the questions that matter to you. You can also browse every type of care directly.");
+let o=dhero("FINDING YOUR FIT","Which care could fit your family?","Four optional questions to narrow the possibilities. You can always browse all six care types without answering.");
 const q=[
-["hours","What schedule do you need?",["Regular weekdays","Part-time or flexible","Evenings or weekends"]],
-["budget","What fits your budget?",["Budget is tight","Some flexibility","Flexible budget"]],
-["style","What are you most comfortable with?",["A group setting","Care in our home","Still exploring"]]
+["hours","Which hours do you need?",["Regular weekdays","Part-time, some days","Evenings or weekends"]],
+["budget","How is the budget?",["Tight","Some room","Flexible"]],
+["family","Could family or friends help?",["Yes, some days","Not really","Not sure"]],
+["style","What feels right for now?",["Other babies around","One-on-one","Not sure yet"]]
 ];
-q.forEach(([id,title,opts])=>{o+='<div class="section"><h3>'+title+'</h3><div class="fit-choices">';opts.forEach(v=>{o+='<button data-act="fitpick" data-field="'+id+'" data-value="'+v+'" class="'+(state.fit[id]===v?'on':'')+'">'+v+'</button>'});o+='</div></div>'});
-let possible=state.fit.style==="Care in our home"?[2,3]:state.fit.hours==="Evenings or weekends"?[2,3,4]:state.fit.budget==="Budget is tight"?[1,3,4]:state.fit.style==="A group setting"?[0,1]:[0,1,2];
-o+='<div class="callout"><div class="micro">WORTH EXPLORING</div><p>These may match some of the preferences you selected. Safety, availability, cost and the actual caregiver still matter.</p></div><div class="choicelist fit-results">';
+q.forEach(([id,title,options])=>{o+='<div class="section"><h3>'+title+'</h3><div class="fit-choices">';options.forEach(v=>{o+='<button data-act="fitpick" data-field="'+id+'" data-value="'+v+'" class="'+(state.fit[id]===v?'on':'')+'">'+v+'</button>'});o+='</div></div>'});
+const chosen=Object.values(state.fit).filter(Boolean).length;
+if(chosen>=2){
+const points=[0,0,0,0,0,0],f=state.fit;
+if(f.hours==="Regular weekdays"){points[0]+=2;points[1]+=1}
+if(f.hours==="Part-time, some days"){points[3]+=2;points[1]+=1;points[4]+=1}
+if(f.hours==="Evenings or weekends"){points[2]+=2;points[3]+=1;points[4]+=1}
+if(f.budget==="Tight"){points[1]+=1;points[3]+=2;points[2]-=1}
+if(f.budget==="Some room"){points[0]+=1;points[1]+=1;points[2]+=1}
+if(f.budget==="Flexible"){points[2]+=2}
+if(f.family==="Yes, some days"){points[3]+=3}
+if(f.family==="Not really"){points[3]-=2}
+if(f.style==="Other babies around"){points[0]+=2;points[1]+=2}
+if(f.style==="One-on-one"){points[2]+=2;points[3]+=1}
+const possible=points.map((score,i)=>({score,i})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,3).map(x=>x.i);
+o+='<div class="callout"><div class="micro">WORTH LOOKING AT FIRST</div><p>These arrangements fit some preferences you selected. This is a starting point—not a safety, cost or quality rating.</p></div><div class="choicelist fit-results">';
 possible.forEach(i=>{o+='<button class="choice" data-act="type" data-i="'+i+'"><span class="rowic">'+icon(["calendar","home","heart","baby","clock","bag"][i])+'</span><span><b>'+kinds[i].name+'</b><small>'+kinds[i].brief+'</small></span><span class="chev">›</span></button>'});
-o+='</div><button class="secondary" data-act="home">Back to all care options</button></div>'+nav();return o
+o+='</div>';
+}else{
+o+='<div class="callout"><div class="micro">KEEP IT EASY</div><p>Answer any two questions to see a few care types worth exploring first. Nothing here limits your options.</p></div>';
+}
+o+='<button class="secondary" data-act="home">Back to all care options</button></div>'+nav();return o
 }
 function candidatePage(){
 const item=state.shortlist[state.activeCandidate];
