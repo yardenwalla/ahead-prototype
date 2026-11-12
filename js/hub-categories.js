@@ -322,21 +322,15 @@
       + (WORTH && !done ? `<section class="hl-worth"><small>${F('Worth knowing before you go')}</small><b>${F(WORTH[0])}</b><p>${F(WORTH[1])}</p></section>` : '');
     // "Booked for later? Save the date" is gone (Nov 10): Health moves on by age, so a saved date isn't needed.
     // The banner at the top already has "Back to your next checkup", so it isn't repeated here.
-    b += h.list('For the checkup', [
+    b += h.list('Your visit, at a glance', [
       h.row({ icon: 'clock', cat: 'Health', title: 'What to expect', sub: EXPECT[age], onclick: `openHealthDetail(${age},'expect')` }),
       `<span id="health-vaccines"></span>` + h.row({ icon: 'shield', cat: 'Health', title: 'Vaccines', sub: age === 0 ? 'Hepatitis B, and protection against RSV, a common winter virus' : ({ 1: 'Second hepatitis B shot (some offices give it at 2 months instead)', 2: 'Whooping cough, tetanus and diphtheria (DTaP), polio and more', 4: 'Whooping cough, tetanus and diphtheria (DTaP), polio and more', 6: 'Whooping cough, tetanus and diphtheria (DTaP) and more' + ([8, 9, 10, 11, 0, 1, 2].includes(NOW.getMonth()) ? ', plus {p} first flu shot' : ''), 9: 'Usually catch-up only' + ([8, 9, 10, 11, 0, 1, 2].includes(NOW.getMonth()) ? ', plus a flu shot' : ''), 12: 'Measles, mumps and rubella (MMR), chickenpox, hepatitis A and boosters' })[age] || 'What’s due at this checkup', onclick: `openHealthDetail(${age},'vaccines')` }),
       h.row({ icon: 'notepad', cat: 'Health', title: 'Questions and notes', sub: visitNotesFor(age) ? 'Your questions, and notes from this checkup' : (ASK ? 'Like: ' + ASK : 'Bring your questions, and jot down the answers'), onclick: `openHealthDetail(${age},'questions')` })
     ]);
-    // "Between checkups" belongs to the Health home (the current checkup), not to every checkup page.
-    if (!live() || age === focus) b += h.list('Between checkups', [
-      h.row({ icon: 'thermo', cat: 'Health', title: `When Maya seems sick`, sub: 'Fevers, tummy bugs and when to call', onclick: "openPage('chg:Health:d:sick')" }),
-      h.row({ icon: 'drop', cat: 'Health', title: 'Colds and stuffy noses', sub: 'Saline, suction, and when it’s an ear infection', onclick: "openPage('chg:Health:d:cold')" }),
-      actualMonth() >= 3 ? h.row({ icon: 'tooth', cat: 'Health', title: 'Teething', sub: 'Drool, chewing and sore gums, and what helps', onclick: "openPage('chg:Daily rhythm:d:gums')" }) : ''
-      // "How are you doing?" (the parent's own health) left this list: the guides stay about the baby (Yarden). Its page stays in search.
-    ]);
-    // "Between checkups" shows on every checkup page; "When to call" uses Maya's age now, so it shows on the current checkup only.
-    const nowPage = !live() || age === focus;
-    if (nowPage) b += h.versus('When to call', ['Call your pediatrician', profile.early && profile.due ? feverRule(actualMonth()).replace(/^(Under 3 months|At 3–6 months|From 6 months):/, '$1 (by birthday age):') + feverEarlyNote() : feverRule(actualMonth())], ['Call 911', 'Struggles to breathe or turns blue, won’t wake or is floppy, or has a seizure.']);
+    // Between checkups, calm (Nov 11, Yarden: "busier than the inspiration"): one row that opens everything about a sick baby
+    // (fever, tummy bugs, colds, and Call 911), with this age's fever line right on it. Teething lives in Everyday care.
+    if (!live() || age === focus) { const a = actualMonth(), fev = a < 3 ? 'Call for a temperature of 100.4°F or higher' : a < 6 ? 'Call for 101°F or higher' : 'Call for 103°F or higher, or a fever over a day';
+      b += h.list('Between checkups', [h.row({ icon: 'thermo', cat: 'Health', title: 'When Maya seems sick', sub: `${fev}. Colds, tummy bugs and more`, onclick: "openPage('chg:Health:d:sick')" })]); }
     const nx = WELL_VISITS[WELL_VISITS.indexOf(age) + 1];
     if (nx != null) b += h.next(live() && age === focus ? 'After that' : 'Next checkup', healthJourneyLabel(nx), `openPage('health-visit:${nx}')`);
     return frame('Health', `data-health-journey="${age}"`, pills + missedLine, b);
