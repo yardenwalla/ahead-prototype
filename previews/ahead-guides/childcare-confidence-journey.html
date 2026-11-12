@@ -52,6 +52,7 @@
 
 .shortlist-name{border:0;background:transparent;flex:1;text-align:left;padding:0;color:inherit}.shortlist-name b{font-size:12.5px}.shortlist-name small{font-size:11px;display:block;color:#8a7b6a;margin-top:3px}
 .notes{width:100%;min-height:96px;resize:vertical;border:1px solid #e6dbcd;border-radius:11px;padding:12px;margin-top:12px;font-size:12.5px;color:#403833;background:white;line-height:1.6}
+.chosenline{display:flex;align-items:center;gap:9px;border:0;border-radius:10px;background:#f2f6ef;padding:10px 13px;margin-top:12px;width:100%;text-align:left;color:#638066}.chosenline svg{height:17px;width:17px}.chosenline span:nth-child(2){flex:1}.chosenline b{font-size:12px;display:block}.chosenline small{font-size:10.7px;display:block;margin-top:3px;color:#8ba18d}
 @media(max-width:800px){.shell{display:block;max-width:425px;padding:0}.aside{position:static;padding:15px 20px 11px}.aside h1{font-size:18px;margin:5px 0}.aside>p,.aside .explain{display:none}.control{margin-top:12px;padding:12px}.buttons button{padding:8px 10px}.controlsep{padding-top:10px;margin-top:10px}.phone{border:0;border-top:1px solid #ece4da;border-radius:0;box-shadow:none;min-height:80vh}}
 </style></head><body>
 <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
@@ -104,6 +105,7 @@ function home(){
 const c=C();
 let o='<div class="screen"><button class="back" data-act="home">‹ All guides</button><h1 class="title">Childcare</h1><div class="stage-label">WHERE ARE YOU WITH CHILDCARE?</div>'+rails();
 o+='<div class="hero"><div class="micro">'+c.tag+'</div><h2>'+c.title+'</h2><p>'+c.lead+'</p>'+art(state.stage)+'</div>';
+const chosen=state.shortlist.find(x=>x.chosen);if(chosen&&state.stage>=2)o+='<button class="chosenline" data-act="resource" data-id="compare">'+icon("check")+'<span><b>Care with '+safe(chosen.name)+'</b><small>Selected · View your shortlist</small></span><span class="chev">›</span></button>';
 o+='<button class="feature" data-act="feature"><div class="micro">WORTH KNOWING RIGHT NOW</div><h3>'+c.feature+'</h3><p>'+c.sub+'</p><span>Why this matters →</span></button>';
 o+='<div class="home-heading"><h3>Explore your care options</h3><small>All six options</small></div>';
 o+='<div class="caregrid">';
