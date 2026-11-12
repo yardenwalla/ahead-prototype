@@ -289,23 +289,32 @@ o+='<button class="primary" data-act="copy">Copy this example card</button><p cl
 o+='<button class="secondary" data-act="home">Back to Childcare</button></div>'+nav();return o
 }
 function render(){
-document.getElementById("app").innerHTML=state.page==="home"?home():state.page==="feature"?feature():state.page==="topic"?topic():state.page==="options"?options():state.page==="type"?typePage():care();
+document.getElementById("app").innerHTML=state.page==="home"?home():state.page==="feature"?feature():state.page==="topic"?topic():state.page==="options"?options():state.page==="type"?typePage():state.page==="resource"?resource():state.page==="fit"?fitPage():care();
 document.getElementById("steps").innerHTML=stages.map((x,i)=>'<button class="'+(state.stage===i?'sel':'')+'" data-stage="'+i+'">'+["Find","Choose","Get ready","Settle in"][i]+'</button>').join('');
 document.getElementById("types").innerHTML=kinds.map((x,i)=>'<button class="'+(state.type===i?'sel':'')+'" data-type="'+i+'">'+["Center","Home","Nanny","Family","Sitter","Extra"][i]+'</button>').join('');
-document.getElementById("ages").innerHTML=[3,9].map(a=>'<button class="'+(state.age===a?'sel':'')+'" data-age="'+a+'">'+a+' mo</button>').join('');
+document.getElementById("ages").innerHTML=[3,6,9].map(a=>'<button class="'+(state.age===a?'sel':'')+'" data-age="'+a+'">'+a+' mo</button>').join('');
 }
 document.getElementById("steps").addEventListener("click",e=>{const b=e.target.closest("[data-stage]");if(b){state.stage=Number(b.dataset.stage);state.page="home";render()}});
 document.getElementById("types").addEventListener("click",e=>{const b=e.target.closest("[data-type]");if(b){state.type=Number(b.dataset.type);state.page="home";render()}});
 document.getElementById("ages").addEventListener("click",e=>{const b=e.target.closest("[data-age]");if(b){state.age=Number(b.dataset.age);state.page="home";render()}});
-document.getElementById("app").addEventListener("input",e=>{if(e.target.dataset.field!==undefined){state.card[e.target.dataset.field]=e.target.value;}});
+document.getElementById("app").addEventListener("input",e=>{if(e.target.dataset.field!==undefined){state.card[e.target.dataset.field]=e.target.value;}if(e.target.dataset.candidate!==undefined){state.candidate=e.target.value;}});
 document.getElementById("app").addEventListener("click",e=>{
-const b=e.target.closest("[data-act]");if(!b)return;const a=b.dataset.act,i=Number(b.dataset.i||0);
+const b=e.target.closest("[data-act]");if(!b)return;
+const a=b.dataset.act,i=Number(b.dataset.i||0);
 if(a==="copy"){
 const msg=document.getElementById("message");
-if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(cardText()).then(()=>{state.copyMessage="Copied. Review the information before sharing.";if(msg)msg.textContent=state.copyMessage}).catch(()=>{state.copyMessage="Copy is unavailable in this browser.";if(msg)msg.textContent=state.copyMessage});}
-else{state.copyMessage="Copy is unavailable in this browser.";if(msg)msg.textContent=state.copyMessage}return;
+if(navigator.clipboard&&navigator.clipboard.writeText){
+navigator.clipboard.writeText(cardText()).then(()=>{state.copyMessage="Copied. Review the information before sharing.";if(msg)msg.textContent=state.copyMessage}).catch(()=>{state.copyMessage="Copy is unavailable in this browser.";if(msg)msg.textContent=state.copyMessage});
+}else{state.copyMessage="Copy is unavailable in this browser.";if(msg)msg.textContent=state.copyMessage}
+return;
 }
-if(a==="stage"){state.stage=i;state.page="home"}
+if(a==="tick"){state.checks[b.dataset.id]=!state.checks[b.dataset.id];render();return}
+if(a==="fitpick"){state.fit[b.dataset.field]=b.dataset.value;render();return}
+if(a==="settype"){state.type=i;render();return}
+if(a==="addcandidate"){const name=(state.candidate||"").trim();if(name){state.shortlist.push({name,type:T().name});state.candidate="";render()}return}
+if(a==="remove"){state.shortlist.splice(i,1);render();return}
+if(a==="resource"){state.resourceId=b.dataset.id;state.page="resource"}
+else if(a==="stage"){state.stage=i;state.page="home"}
 else if(a==="type"){state.type=i;state.page="type"}
 else if(a==="occasional"){state.type=4;state.mode="occasional";state.page="options"}
 else if(a==="topic"){state.topic=b.dataset.key;state.page="topic"}
