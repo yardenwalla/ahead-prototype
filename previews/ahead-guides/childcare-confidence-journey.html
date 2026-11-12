@@ -39,6 +39,16 @@
 .tool-row{border:0;border-bottom:1px solid var(--line);background:transparent;color:var(--ink);display:flex;align-items:center;gap:11px;padding:15px 0;text-align:left;width:100%}.tool-row:last-of-type{border-bottom:0}.tool-row .rowic{flex:0 0 42px;height:42px;width:42px}.tool-row:nth-child(2n){--unused:0}.tool-row.suggested .rowic{background:#eaf2e8;color:#64856b}
 .tool-row em{font-style:normal;display:block;font-size:10.5px;font-weight:700;color:#608367;margin-top:5px}
 .page-tail{font-size:10.7px;color:#a09285;line-height:1.65;margin:15px 0 2px}
+
+.fitpair{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:19px}.fitpair>div{background:#f8f4ee;border-radius:13px;padding:13px}.fitpair .micro{font-size:9.5px;color:#967c58}.fitpair p{font-size:12px;line-height:1.55;color:#665b50;margin-top:7px}
+.tickrow{width:100%;display:flex;gap:10px;align-items:center;border:0;border-bottom:1px solid var(--line);background:transparent;text-align:left;padding:13px 0;color:var(--ink)}.tickrow b{font-size:12.5px;display:block;line-height:1.45}.tickrow small{font-size:11.5px;line-height:1.55;display:block;color:#8c8175;margin-top:3px}
+.tickbox{flex:0 0 21px;width:21px;height:21px;border:1.6px solid #cfc1ae;border-radius:7px;display:grid;place-items:center;color:white;font-size:12px}.tickbox.yes{background:#7b9c7c;border-color:#7b9c7c}
+.guide-selector{margin-top:22px;padding:15px;border-radius:14px;background:#faf7f2}.guide-selector .micro{color:#90765a}.type-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:11px}.type-chips button,.fit-choices button{border:1px solid #e6dacb;background:white;border-radius:99px;padding:8px 11px;font-size:11px;color:#8b7b6a;font-weight:700}.type-chips button.on,.fit-choices button.on{background:#f1e3c3;color:#775e32;border-color:#e4ca98}
+.addcandidate{border:0;border-radius:10px;background:#eaf2e8;color:#56785b;font-size:12px;font-weight:700;padding:11px 14px;margin-top:9px;width:100%}
+.shortlisted{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px 0;border-bottom:1px solid var(--line)}.shortlisted b{font-size:12.5px}.shortlisted small{display:block;font-size:11px;color:#8d8074;margin-top:3px}.shortlisted button{border:0;background:transparent;font-size:11px;color:#9b775a;font-weight:700}
+.references{margin-top:20px;padding:16px;border:1px solid #eee5d7;border-radius:13px}.references b{font-size:12.5px}.references a{display:block;font-size:11.8px;line-height:1.6;color:#82684c;margin-top:10px}
+.step-time{font-size:10.3px!important;text-transform:uppercase;letter-spacing:.03em;color:#9f875e!important;margin:0 0 5px!important}
+.care-share.inpage{margin-top:22px}.fit-choices{display:flex;flex-wrap:wrap;gap:7px}.fit-results{margin-top:15px}
 @media(max-width:800px){.shell{display:block;max-width:425px;padding:0}.aside{position:static;padding:15px 20px 11px}.aside h1{font-size:18px;margin:5px 0}.aside>p,.aside .explain{display:none}.control{margin-top:12px;padding:12px}.buttons button{padding:8px 10px}.controlsep{padding-top:10px;margin-top:10px}.phone{border:0;border-top:1px solid #ece4da;border-radius:0;box-shadow:none;min-height:80vh}}
 </style></head><body>
 <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
@@ -66,7 +76,7 @@ const content=[
 {tag:"PREPARING FOR DAY ONE",title:"Make the first day feel a little familiar",lead:"The care routine is already familiar to you. A practice handoff and a simple care card help someone else learn it.",feature:"The first day should not be the first introduction",sub:"A short visit together lets the caregiver learn Maya's signals while you are still there.",why:"A practice visit helps a caregiver understand the baby's feeding, sleep and comfort cues. It also lets parents ask questions.",doIt:"If possible, schedule a short practice visit, demonstrate a feed or soothing routine, and agree on when you would like updates.",next:"Once care starts, your best clues are how Maya is comforted, how the day goes, and whether you can ask questions."},
 {tag:"WHEN CARE IS UNDERWAY",title:"Trust builds in the little handoffs",lead:"You can learn a lot from one good question at pickup. You deserve to know what Maya's day was like.",feature:"She was fine is not the full story",sub:"The helpful update is what she ate, how she slept, what soothed her, and what made her smile.",why:"Specific, regular communication helps caregivers and parents respond consistently as baby's needs change.",doIt:"Ask how Maya settled after you left. Follow up on feeds, naps and one good moment from the day.",next:"As Maya starts solids, changes naps, or becomes more mobile, update her care card."}
 ];
-let state={stage:0,type:0,age:6,page:"home",mode:"all",topic:"",card:{feed:"Breast milk",naps:"2 naps",soothe:"Rocking and a song",allergies:"Not specified",contact:""},copyMessage:""};
+let state={stage:0,type:0,age:6,page:"home",mode:"all",topic:"",resourceId:"compare",checks:{},shortlist:[],candidate:"",fit:{},card:{feed:"Breast milk",naps:"2 naps",soothe:"Rocking and a song",allergies:"Not specified",contact:""},copyMessage:""};
 function T(){return kinds[state.type]}function C(){return content[state.stage]}
 function icon(x){return '<svg class="ico" aria-hidden="true"><use href="#i-'+x+'"></use></svg>'}
 function safe(x){return String(x||"").replace(/[&<>"]/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]))}
@@ -141,10 +151,128 @@ o+='<div class="section"><h3>Your options</h3><div class="choicelist">';
 kinds.forEach((x,i)=>{if(state.mode==="occasional"&&i!==3&&i!==4&&i!==5)return;o+='<button class="choice'+(i===state.type?' active':'')+'" data-act="type" data-i="'+i+'"><span class="rowic">'+icon(["calendar","home","heart","baby","clock","bag"][i])+'</span><span style="flex:1"><b>'+x.name+'</b><small>'+x.brief+'</small></span><span class="chev">›</span></button>'});
 o+='</div></div><button class="secondary" data-act="home">Back to Childcare</button></div>'+nav();return o
 }
+
+const deepTypes=[
+{fit:"A predictable schedule, a group environment and coverage if one teacher is out.",mind:"Infant places can have waitlists, and you'll need to follow the center's hours and illness policy.",when:"Start exploring early; infant waitlists vary significantly by location.",where:"Use your state's childcare licensing directory and local childcare resource and referral agency.",questions:["Can I see the infant room and the actual sleep spaces?","What is the adult-to-infant ratio throughout the day?","How do you respond when one baby is upset and another needs feeding?","How are feeds, naps and diaper changes recorded?","What happens if a teacher is out sick?"]},
+{fit:"A smaller, home-like setting with potentially mixed ages.",mind:"Care can depend on one provider, so backup matters.",when:"Ask about openings before you need care; availability varies.",where:"Check your state's licensed family childcare listings and local parent referrals.",questions:["Where do infants sleep, separate from older children?","Who else is present in the home during the day?","How do you manage safe sleep and supervision with mixed ages?","What happens when the provider is sick or away?","How do you store labeled milk and record feeds?"]},
+{fit:"Care in your own home, with flexibility around the day.",mind:"You may be a household employer, with payroll, employment and backup responsibilities. Shares need clear agreements among families.",when:"Allow time for interviews, reference checks, a paid trial and a written agreement.",where:"Ask other parents, nanny agencies and reputable caregiver platforms.",questions:["What infant ages have you cared for?","Can we speak to recent families and check references?","How would you handle difficult crying or a refused bottle?","How do you practice safe sleep and respond to emergencies?","Can we agree in writing on hours, pay, leave and duties?"]},
+{fit:"Help from a familiar person who already cares about Maya.",mind:"Shared assumptions can create tension, especially around new safety guidance or boundaries.",when:"Arrange a conversation and practice day before regular care begins.",where:"Start with a direct conversation about realistic availability and responsibilities.",questions:["Can we agree on back sleeping and a bare crib every time?","Are we comfortable talking openly about feeding and soothing?","Can you do these days and hours consistently?","What would happen if you needed to cancel?","Would you feel comfortable calling us right away with a concern?"]},
+{fit:"Occasional outings, a date night, appointments or a few hours of relief.",mind:"A sitter still needs infant experience, a safe sleep plan and clear emergency instructions.",when:"Try a short visit together before the first time alone.",where:"Ask trusted parents for referrals and confirm experience and references.",questions:["Have you cared for a baby Maya's age?","Do you know infant CPR and emergency steps?","Could we speak to a family you've sat for?","How would you soothe a baby who won't settle?","Can we agree on when to call and how to reach us?"]},
+{fit:"Support while a parent is home, help after birth or overnight coverage.",mind:"A postpartum doula, mother's helper and night nanny provide different services; clarify who is responsible for baby care.",when:"Book early for overnight or postpartum support when possible.",where:"Ask your pediatrician, hospital, local parents or specialized agencies for referrals.",questions:["Exactly what care and hours do you provide?","What training and infant experience do you have?","Who is responsible for sleep, feeds and monitoring overnight?","Can we check references?","What happens if you need to cancel?"]}
+];
 function typePage(){
-const x=T();let o=dhero("KIND OF CARE",x.name,x.brief);
-o+='<div class="section"><h3>What to look for</h3><p>'+x.watch+'</p></div>';
-o+='<div class="callout"><div class="micro">GET READY</div><p>'+x.ready+'</p></div><button class="primary" data-act="stage" data-i="2">Plan the first handoff →</button><button class="secondary" data-act="options">See other types of care</button></div>'+nav();return o
+const x=T(),d=deepTypes[state.type];let o=dhero("YOUR CARE OPTIONS",x.name,x.brief);
+o+='<div class="fitpair"><div><span class="micro">A GOOD FIT IF</span><p>'+d.fit+'</p></div><div><span class="micro">KEEP IN MIND</span><p>'+d.mind+'</p></div></div>';
+o+='<div class="section"><h3>When & where to start</h3><p>'+d.when+' '+d.where+'</p></div>';
+o+='<div class="section"><h3>Questions worth asking</h3>';
+d.questions.forEach((q,i)=>{o+='<div class="step"><span class="stepnum">'+(i+1)+'</span><div><b>'+q+'</b></div></div>'});
+o+='</div><div class="callout"><div class="micro">THE HANDOFF</div><p>'+x.ready+'</p></div>';
+o+='<button class="primary" data-act="resource" data-id="compare">See the comparison checklist →</button>';
+o+='<button class="secondary" data-act="resource" data-id="ready">Get ready for day one</button><button class="secondary" data-act="home">Back to all care options</button></div>'+nav();return o
+}
+function tickRow(id,title,explain){
+const yes=!!state.checks[id];return '<button class="tickrow" data-act="tick" data-id="'+id+'" aria-pressed="'+yes+'"><span class="tickbox'+(yes?' yes':'')+'">'+(yes?'✓':'')+'</span><span><b>'+title+'</b>'+(explain?'<small>'+explain+'</small>':'')+'</span></button>'
+}
+function resource(){
+const id=state.resourceId;
+if(id==="compare")return comparePage();
+if(id==="pay")return payPage();
+if(id==="ready")return readyPage();
+if(id==="settle")return settlePage();
+return backupPage();
+}
+function comparePage(){
+let o=dhero("CHOOSING SOMEONE","Know what good care looks like","A shortlist is useful, but how a caregiver responds to babies—and how safe the setting is—matters more than a polished brochure.");
+o+='<section class="section"><h3>Start with three essentials</h3>';
+for(const [id,title,explain] of [
+["comp-warm","Warm, responsive care","Notice how adults talk to babies, pick them up and respond to fussing."],
+["comp-safe","Safe sleep and supervision","Ask to see sleep spaces, staffing, emergency plans and infant CPR training."],
+["comp-clear","Clear communication","Will you hear about feeds, naps, illness, accidents and concerns?"]
+])o+=tickRow(id,title,explain);
+o+='</section><div class="guide-selector"><span class="micro">QUESTIONS FOR A SPECIFIC TYPE OF CARE</span><div class="type-chips">';
+kinds.forEach((x,i)=>{o+='<button data-act="settype" data-i="'+i+'" class="'+(state.type===i?'on':'')+'">'+["Center","Home","Nanny","Family","Sitter","Extra"][i]+'</button>'});
+o+='</div></div><div class="section"><h3>Ask when you visit or meet</h3>';
+deepTypes[state.type].questions.forEach((q,i)=>{o+=tickRow("ask-"+state.type+"-"+i,q,"Use this at an interview or tour.")});
+o+='</div><div class="callout"><div class="micro">DON’T FORGET</div><p>For licensed programs, review your state’s inspection and complaint records. For individual caregivers, check references, training and employment terms as applicable.</p></div>';
+o+='<div class="section"><h3>Your shortlist</h3><p>Keep the places or people you want to follow up with. This demo keeps the list only while the page is open.</p>';
+o+='<label class="fieldlabel" for="candidate">Name of a person or place</label><input id="candidate" class="field" data-candidate="1" value="'+safe(state.candidate)+'" placeholder="e.g. Little Oaks or Sam" autocomplete="off"><button class="addcandidate" data-act="addcandidate">＋ Add to shortlist</button>';
+state.shortlist.forEach((p,i)=>{o+='<div class="shortlisted"><div><b>'+safe(p.name)+'</b><small>'+safe(p.type)+'</small></div><button data-act="remove" data-i="'+i+'">Remove</button></div>'});
+o+='</div><button class="secondary" data-act="home">Back to Childcare</button></div>'+nav();return o
+}
+function payPage(){
+let o=dhero("COSTS & SUPPORT","What will care really cost?","Think beyond the monthly rate. Hours, holidays, deposits and backup days can change the actual cost.");
+o+='<section class="section"><h3>What to ask each caregiver</h3>';
+for(const [a,b] of [
+["The full price","Weekly or monthly cost, registration fees, deposits and late pickup charges."],
+["Paid closures","Are holidays, vacations, sick days or days you travel still charged?"],
+["What's included","Meals, diapers, supplies, outings and additional hours."],
+["Who pays for backup","What happens—and what will you pay—when care is unavailable?"]
+])o+='<div class="step"><span class="stepnum">'+icon("check")+'</span><div><b>'+a+'</b><small>'+b+'</small></div></div>';
+o+='</section><section class="section"><h3>Places to look for financial help</h3>';
+for(const [a,b] of [
+["Your state or territory","Childcare subsidies may be available based on eligibility, including employment or school requirements."],
+["Your employer","Ask about dependent-care benefits and any childcare assistance or referrals."],
+["Federal tax benefits","Dependent-care FSAs and the Child and Dependent Care Credit can help eligible families; you cannot use the same expense for both."],
+["Hiring a nanny","Household employer taxes and wage rules may apply; clarify who handles payroll and paid time off."]
+])o+='<div class="step"><span class="stepnum">'+icon("book")+'</span><div><b>'+a+'</b><small>'+b+'</small></div></div>';
+o+='</section><div class="references"><b>Official resources</b><a target="_blank" rel="noopener noreferrer" href="https://childcare.gov/consumer-education/get-help-paying-for-child-care/child-care-financial-assistance-options">ChildCare.gov: financial assistance ↗</a><a target="_blank" rel="noopener noreferrer" href="https://www.irs.gov/credits-deductions/individuals/child-and-dependent-care-credit-information">IRS: Child and Dependent Care Credit ↗</a></div><p class="fine">Availability and tax rules depend on location, income and the year. Confirm eligibility before making decisions.</p>';
+o+='<button class="secondary" data-act="home">Back to Childcare</button></div>'+nav();return o
+}
+function readyPage(){
+const x=T();let o=dhero("GET READY FOR DAY ONE","Help someone else learn Maya’s world","The goal isn’t to write a parenting manual. It’s to share the few things they need to care for Maya confidently.");
+o+='<div class="fitpair"><div><span class="micro">CARE SETTING</span><p>'+x.name+'</p></div><div><span class="micro">BABY’S AGE</span><p>'+state.age+' months</p></div></div>';
+o+='<div class="section"><h3>A simple countdown</h3>';
+for(const [t,a,b] of [
+["A couple of weeks before","Agree on expectations",x.watch],
+["The week before","Practice together",x.ready],
+["The night before","Share the care card","Confirm feeds, naps, allergies, how to soothe Maya and who to call. Pack or prepare supplies."],
+["The first day","Make the handoff brief and warm","Share any overnight changes and confirm when you’ll get an update."]
+])o+='<div class="step"><span class="stepnum">'+icon("calendar")+'</span><div><small class="step-time">'+t+'</small><b>'+a+'</b><small>'+b+'</small></div></div>';
+o+='</div><button class="care-share inpage" data-act="card"><span class="mini-document"><span></span><span></span><span></span></span><span class="care-share-copy"><span class="micro">MOST USEFUL HANDOFF</span><b>Maya’s care card</b><small>Review her routine, then copy it for a caregiver</small></span><span class="chev">›</span></button>';
+o+='<div class="callout"><div class="micro">WHEN MAYA IS OLDER</div><p>'+(state.age>=8?'Around this age, Maya might protest separations more strongly. A familiar caregiver and consistent goodbye may help.':'A short practice visit can help a young baby and caregiver get familiar with each other. Never feel you have to force a long separation.')+'</p></div>';
+o+='<button class="secondary" data-act="home">Back to Childcare</button></div>'+nav();return o
+}
+function settlePage(){
+let o=dhero("WHEN CARE HAS STARTED","How do you know it’s going well?","Settling in is not a single milestone. Look at the care relationship and how your baby is supported day to day.");
+o+='<div class="section"><h3>Three useful pickup questions</h3>';
+for(const [a,b] of [
+["How did Maya settle after I left?","Especially if the goodbye felt hard."],
+["How were feeding and naps?","A simple update helps you adapt the evening."],
+["What did she enjoy today?","A little happy moment brings you into her day."]
+])o+='<div class="step"><span class="stepnum">'+icon("chat")+'</span><div><b>'+a+'</b><small>'+b+'</small></div></div>';
+o+='</div><div class="callout"><div class="micro">AT '+state.age+' MONTHS</div><p>'+(state.age>=8?'Separation anxiety often becomes more visible in the second half of the first year. You might see harder goodbyes even with a caregiver Maya knows. Ask what happens after you leave.':'New care can take some adjustment. Keep goodbyes calm, and ask for a short update on how Maya settles and responds during the day.')+'</p></div>';
+o+='<div class="section"><h3>When something changes</h3>';
+for(const [a,b] of [
+["Short naps or off-schedule feeds","Share the current routine, listen to the caregiver’s observations and adjust together."],
+["Sick days","Know the program’s written illness policy, who will care for Maya at home and how parents are notified."],
+["Something doesn’t feel right","Ask promptly about what you observed. If you encounter unsafe care, protect Maya and follow up with the licensing agency when appropriate."],
+["Caregiver changes or new rooms","Ask for introductions and a transition plan rather than a sudden switch."]
+])o+='<div class="step"><span class="stepnum">'+icon("heart")+'</span><div><b>'+a+'</b><small>'+b+'</small></div></div>';
+o+='</div><button class="secondary" data-act="resource" data-id="backup">Make a backup plan</button><button class="secondary" data-act="home">Back to Childcare</button></div>'+nav();return o
+}
+function backupPage(){
+let o=dhero("PLAN B","When childcare falls through","A few backup conversations now can spare you a frantic scramble later.");
+o+='<div class="section"><h3>Your backup essentials</h3>';
+for(const [id,a,b] of [
+["backup-person","A person who could help","Who could take Maya for a few hours if the normal plan falls through?"],
+["backup-contact","Everyone knows the contact plan","Who leaves work, handles pickup, or makes the next call?"],
+["backup-closures","Closed days are on the calendar","Check holidays, caregiver leave and the sickness policy now."]
+])o+=tickRow(id,a,b);
+o+='</div><div class="callout"><div class="micro">A PRACTICAL RULE</div><p>Have one backup for expected closures and another for a last-minute sick day. A family member, sitter or temporary arrangement can be part of the plan.</p></div>';
+o+='<button class="secondary" data-act="home">Back to Childcare</button></div>'+nav();return o
+}
+function fitPage(){
+let o=dhero("FINDING YOUR FIT","A few ways to narrow the search","Optional: answer the questions that matter to you. You can also browse every type of care directly.");
+const q=[
+["hours","What schedule do you need?",["Regular weekdays","Part-time or flexible","Evenings or weekends"]],
+["budget","What fits your budget?",["Budget is tight","Some flexibility","Flexible budget"]],
+["style","What are you most comfortable with?",["A group setting","Care in our home","Still exploring"]]
+];
+q.forEach(([id,title,opts])=>{o+='<div class="section"><h3>'+title+'</h3><div class="fit-choices">';opts.forEach(v=>{o+='<button data-act="fitpick" data-field="'+id+'" data-value="'+v+'" class="'+(state.fit[id]===v?'on':'')+'">'+v+'</button>'});o+='</div></div>'});
+let possible=state.fit.style==="Care in our home"?[2,3]:state.fit.hours==="Evenings or weekends"?[2,3,4]:state.fit.budget==="Budget is tight"?[1,3,4]:state.fit.style==="A group setting"?[0,1]:[0,1,2];
+o+='<div class="callout"><div class="micro">WORTH EXPLORING</div><p>These may match some of the preferences you selected. Safety, availability, cost and the actual caregiver still matter.</p></div><div class="choicelist fit-results">';
+possible.forEach(i=>{o+='<button class="choice" data-act="type" data-i="'+i+'"><span class="rowic">'+icon(["calendar","home","heart","baby","clock","bag"][i])+'</span><span><b>'+kinds[i].name+'</b><small>'+kinds[i].brief+'</small></span><span class="chev">›</span></button>'});
+o+='</div><button class="secondary" data-act="home">Back to all care options</button></div>'+nav();return o
 }
 function cardText(){
 const c=state.card;return "Maya's care card (preview)\nFeeding: "+c.feed+"\nSleep: "+c.naps+"\nWhat helps: "+c.soothe+"\nAllergies and medicines: "+c.allergies+"\nParent contact: "+(c.contact||"Please add a contact")+"\nSafe sleep: Place Maya on her back on a firm, flat, empty sleep surface.\nIn an emergency: Call emergency services first, then contact parent.";
