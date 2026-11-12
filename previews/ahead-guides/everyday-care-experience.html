@@ -17,9 +17,11 @@ a{color:inherit}.whole{max-width:1090px;display:grid;grid-template-columns:minma
 .phone-head{padding:19px 23px 12px;display:flex;justify-content:space-between;align-items:center}.brand{font:800 25px Nunito,sans-serif;letter-spacing:-.06em}.brand em{font-style:normal;color:#b78c7b}.avatar{height:34px;width:34px;border-radius:50%;background:#e7dbd1;color:#765f51;font-size:12px;display:grid;place-items:center;font-weight:700}
 .main{padding:8px 23px 28px}.back{border:none;background:none;color:#7f756d;font-size:12px;padding:0;margin:3px 0 13px;display:flex;gap:4px;align-items:center}.back:hover{text-decoration:underline}.page-title{font-size:28px;line-height:1.22;margin-bottom:15px}
 .scroller{display:flex;gap:6px;overflow-x:auto;margin:0 -23px 17px;padding:0 23px 4px;scrollbar-width:none}.scroller::-webkit-scrollbar{display:none}.chip{flex:0 0 auto;border:0;border-radius:40px;background:#f3f0ec;color:#8b817a;font-size:11px;padding:8px 11px;font-weight:700;white-space:nowrap}.chip.active{color:#815d4c;background:#efdfd4}
-.hero{padding:20px;border-radius:24px;background:linear-gradient(160deg,#d3ecf6,#ecf6fa 58%,#fdeee6);position:relative;overflow:hidden;min-height:160px}
-.hero:after{content:"";position:absolute;right:-40px;top:-50px;width:170px;height:170px;border-radius:50%;background:#fff;opacity:.35;pointer-events:none}
-.micro{font-size:10px;font-weight:800;letter-spacing:.075em;text-transform:uppercase}.hero .micro{color:#2a6078;position:relative;z-index:1}.hero h2{font-size:25px;line-height:1.2;margin:12px 0 10px;color:#2b2840;position:relative;z-index:1;max-width:285px}.hero p{font-size:12.8px;line-height:1.62;color:#5e6570;position:relative;z-index:1;max-width:307px}
+.hero{background:#e8f2f8;border-radius:18px;overflow:hidden;padding:20px 20px 0}
+.hero .micro{color:#4d8099;font-size:10px;font-weight:800;letter-spacing:.075em;text-transform:uppercase}
+.hero h2{font-size:24px;color:#345464;line-height:1.19;margin:10px 0;max-width:none}
+.hero p{font-size:13px;line-height:1.55;color:#5d7886;max-width:none}
+.hero-art{display:block;width:100%;max-width:290px;height:103px;margin:3px auto 0}
 .feature{display:block;width:100%;background:var(--lav);border:0;border-radius:14px;text-align:left;padding:18px 18px 17px;margin:18px 0 25px;color:#493d48}.feature:hover{box-shadow:0 6px 16px #b391ad29}.feature-top{display:flex;justify-content:space-between;align-items:center;color:var(--purple)}.feature h3{font-size:18px;line-height:1.32;margin:10px 0 6px}.feature p{font-size:12.5px;line-height:1.58;color:#6e5d69;margin-bottom:13px}.feature .learn{font-size:12px;font-weight:700;color:#8c6485;display:flex;gap:5px;align-items:center}
 .section-title{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:6px}.section-title h3{font-size:16px}.section-title span{font-size:11px;color:#918781;white-space:nowrap}
 .updates{display:grid}.update{display:flex;gap:11px;align-items:center;border:0;border-bottom:1px solid var(--line);padding:13px 0;text-align:left;background:transparent;color:var(--ink);width:100%}.update:last-child{border-bottom:0}.update:hover .utitle{color:#9e755c}.mark{height:43px;width:43px;display:grid;place-items:center;flex-shrink:0;border-radius:11px;background:#eef1ee;color:#7d9682}.update:nth-child(4n+2) .mark{background:#f7ebe4;color:#ad8872}.update:nth-child(4n+3) .mark{background:#efebf5;color:#8f7d9e}.update:nth-child(4n+4) .mark{background:#ebeff5;color:#8d93aa}
@@ -190,9 +192,32 @@ return v;
 function nav(){return '<div class="bottom"><span>'+icon("home")+'Home</span><span class="active">'+icon("list")+'Guides</span><span>'+icon("heart")+'Memories</span></div>'}
 function bar(){return '<div class="main"><button class="back" data-action="home">‹ Everyday care</button>'}
 function rail(){return '<div class="scroller" aria-label="Preview care changes by age">'+episodes.map(function(x,i){return '<button class="chip'+(state.age===i?' active':'')+'" data-action="age" data-index="'+i+'" aria-pressed="'+(state.age===i?'true':'false')+'">'+x.label+'</button>'}).join('')+'</div>'}
+
+function careArtwork(){
+var motifs=[
+'<path d="M248 27h34v27c-2 8-11 12-17 12s-15-4-17-12V27Z" fill="#f7fbfd" stroke="#84b1c4" stroke-width="1.5"/><path d="M248 37l10 6m24-6-10 6" stroke="#84b1c4" stroke-width="2" fill="none"/><path d="M260 56q5 4 10 0" stroke="#94b7c9" stroke-width="2" fill="none"/>',
+'<path d="M241 48h49v8c0 11-8 17-20 17h-8c-12 0-21-6-21-17v-8Z" fill="#b5d6e6" stroke="#78a4b9" stroke-width="1.6"/><path d="M237 47h57" stroke="#78a4b9" stroke-width="3.5" stroke-linecap="round"/><circle cx="252" cy="31" r="5" fill="#fffefd" opacity=".9"/><circle cx="269" cy="25" r="7" fill="#fffefd" opacity=".9"/><circle cx="282" cy="35" r="4" fill="#fffefd" opacity=".9"/>',
+'<path d="M263 30q-20 1-15 19q5 11 17 8q16-1 19-12q4-12-9-17" fill="none" stroke="#90bad0" stroke-width="6" stroke-linecap="round"/><path d="M252 59l-4 8m23-9 4 9" stroke="#82a7ba" stroke-width="3" stroke-linecap="round"/><circle cx="284" cy="21" r="3" fill="#d2b38c"/>',
+'<circle cx="264" cy="46" r="18" fill="#f6f9fc" stroke="#89b3c9" stroke-width="5"/><circle cx="264" cy="46" r="7" fill="#b4d4e3"/><path d="M264 21v-6m0 62v-6m25-25h6m-62 0h-6" stroke="#92b5c7" stroke-width="2" stroke-linecap="round"/>',
+'<circle cx="265" cy="43" r="14" fill="#f4d7a6"/><path d="M265 19v-9m0 66v-9M240 43h-9m68 0h-9M246 25l-7-7m51 51-7-7M284 25l7-7m-45 44-7 7" stroke="#d8b17c" stroke-width="3" stroke-linecap="round"/>',
+'<path d="M254 29q-9 0-10 11q-1 7 3 14l6 15q3 7 8 2l4-14 4 14q5 5 8-2l6-15q4-7 3-14q-1-11-10-11q-6 0-11 3q-5-3-11-3Z" fill="#fffefa" stroke="#94b5c6" stroke-width="2"/><path d="M261 32q5 3 10 0" fill="none" stroke="#b6ccd5" stroke-width="2" stroke-linecap="round"/>',
+'<path d="M241 57q11-6 23-3l10-12q3-3 8 2l-4 15q9 7 12 10q3 4-2 8h-40q-10-1-12-10q0-6 5-10Z" fill="#d8d3cc" stroke="#99a9b2" stroke-width="2"/><path d="M246 67h41" stroke="#f7f7f1" stroke-width="4" stroke-linecap="round"/><path d="M268 55l6 3m-8 3 6 3" stroke="#fffefa" stroke-width="2" stroke-linecap="round"/>'
+];
+return '<svg class="hero-art" viewBox="0 0 300 103" role="img" aria-label="Illustrated baby with an everyday care milestone">'
++'<ellipse cx="146" cy="90" rx="107" ry="7" fill="#d6e5ec"/>'
++'<rect x="31" y="63" width="208" height="23" rx="11" fill="#bdd8e6"/>'
++'<circle cx="95" cy="45" r="26" fill="#e8b89f"/>'
++'<path d="M78 40q7-21 29-15" fill="none" stroke="#9d735f" stroke-width="5" stroke-linecap="round"/>'
++'<path d="M85 48q4 4 8 0m7 0q4 4 8 0" stroke="#916959" stroke-width="2" fill="none"/>'
++'<path d="M123 65q31-27 74 0l13 13h-92z" fill="#a8c8d8"/>'
++'<path d="M148 66q24-19 49-26" fill="none" stroke="#e8b89f" stroke-width="11" stroke-linecap="round"/>'
++'<circle cx="202" cy="40" r="7" fill="#e8b89f"/>'
++motifs[state.age]+'</svg>';
+}
+
 function renderHome(){
 var p=snapshot(),o='<div class="main"><button class="back" data-action="home">‹ All guides</button><h1 class="page-title">Everyday care</h1>'+rail();
-o+='<section class="hero"><div class="micro">'+p.eyebrow+' · '+p.age+'</div><h2>'+p.title+'</h2><p>'+p.lead+'</p></section>';
+o+='<section class="hero"><div class="micro">'+p.eyebrow+' · '+p.age+'</div><h2>'+p.title+'</h2><p>'+p.lead+'</p>'+careArtwork()+'</section>';
 o+='<button class="feature" data-action="story" data-index="0"><div class="feature-top"><span class="micro">'+p.badge+'</span>'+icon("spark",true)+'</div><h3>'+p.feature.title+'</h3><p>'+p.feature.sub+'</p><span class="learn">See what this means '+icon("arrow",true)+'</span></button>';
 o+='<div class="section-title"><h3>Also new around now</h3><span>'+p.more.length+' update'+(p.more.length===1?'':'s')+'</span></div><div class="updates">';
 p.more.forEach(function(x,i){o+='<button class="update" data-action="story" data-index="'+(i+1)+'"><span class="mark">'+icon(x.icon)+'</span><span class="ucopy"><span class="utitle">'+x.title+'</span><span class="usub">'+x.sub+'</span></span><span class="chev">›</span></button>'});
