@@ -3271,10 +3271,25 @@
   P.z_milk12 = (() => { const prev = P.z_milk12; return () => prev().replace('<p class="hub-context">' + F('Milk') + '</p>', '<p class="hub-context">' + F('Turning 1') + '</p>').replace('<li>' + F('Serve milk in a cup, with meals.') + '</li>', '').split(F('Practice with an open or straw cup')).join(F('An open or straw cup at every meal')); })(); P.at12 = P.z_milk12;
   // Example day, opened from the glance tiles (Nov 11): only the day picture. Cues, amounts and "you decide, he decides"
   // each have their own home, so they aren't repeated here.
-  P.fd_day = () => { const full = P.day() || '', hd = full.indexOf('dev-area-head'), t = ((full.slice(hd).match(/<h1>([^<]*)<\/h1>/) || [])[1]) || F('An example day');
-    const styles = (full.match(/<style>[\s\S]*?<\/style>/g) || []).join(''), k = full.indexOf('<div class="hub-card"', hd);
-    let pic = ''; if (k > 0) { let depth = 0, x = k; const re = /<div\b|<\/div>/g; re.lastIndex = k; let m; while ((m = re.exec(full))) { depth += m[0] === '</div>' ? -1 : 1; if (depth === 0) { x = re.lastIndex; break; } } pic = full.slice(k, x); }
-    return styles + yPage(XC.f1, 'Example day', t, 'An example, not a schedule. He leads, and no two days look the same.', pic); };
+  // Example day, opened from the glance tiles: the same day timeline as Sleep's example day. A ribbon from 6 am to 6 am,
+  // with night shaded and each feed or meal marked, then the times in order. An example, not a schedule.
+  P.fd_day = () => { const v = stg(), m = ageMo(), nurse = nurses(), bot = isBottle(), milk = nurse && bot ? 'Nursing or a bottle' : bot ? 'Bottle' : 'Nurse';
+    const H = (h, mm = 0) => h * 60 + mm, f = (t, note) => ['milk', t, milk, note || ''], meal = (t, l, note) => ['meal', t, l, note || ''];
+    const D = v === 0 ? [f(H(6)), f(H(8, 30)), f(H(11)), f(H(13, 30)), f(H(16)), f(H(18), 'Evenings: feeds may bunch up'), f(H(19, 30)), f(H(21)), f(H(23, 30)), f(H(26, 30)), f(H(28, 30))]
+      : v === 1 && m < 3 ? [f(H(7)), f(H(10)), f(H(13)), f(H(16)), f(H(18, 30)), f(H(20, 30), 'Then bed'), f(H(24, 30)), f(H(27, 30))]
+      : v === 1 || v === 2 ? [f(H(7)), f(H(10, 30)), f(H(14)), f(H(17, 30)), f(H(19, 30), 'Then bed'), f(H(27))]
+      : v === 3 ? [f(H(7)), meal(H(8), 'Breakfast', 'A few spoonfuls, something iron-rich'), f(H(11)), f(H(15)), meal(H(17, 30), 'Dinner', 'A small taste of what you’re eating'), f(H(19), 'Then bed')]
+      : [f(H(7)), meal(H(8), 'Breakfast'), meal(H(10), 'Snack'), meal(H(12), 'Lunch', 'Water from a cup'), f(H(13), 'Before a nap'), meal(H(15, 30), 'Snack'), meal(H(17, 30), 'Dinner', 'Soft pieces of family food'), f(H(19), 'Then bed')];
+    const night = v === 0 ? H(21) : H(19, 30), S0 = H(5, 30), W = 24 * 60, pct = t => ((Math.max(S0, Math.min(S0 + W, t)) - S0) / W * 100).toFixed(2);
+    const clock = t => { const x = t % (24 * 60), h = Math.floor(x / 60), mi = x % 60; return `${h % 12 || 12}${mi ? ':' + String(mi).padStart(2, '0') : ''} ${h < 12 ? 'am' : 'pm'}`; };
+    const COL = { milk: '#c46b8e', meal: '#5e9b7a' };
+    const ribbon = `<div class="chg-ribbon" aria-hidden="true"><div class="chg-ribbon-bar" style="position:relative"><i style="left:${pct(night)}%;width:${(100 - pct(night)).toFixed(2)}%;background:#d9def0"></i>${D.map(([k, t]) => `<i style="left:calc(${pct(t)}% - 6px);width:12px;height:12px;top:11px;bottom:auto;border-radius:50%;background:${COL[k]};box-shadow:0 0 0 2px #fff"></i>`).join('')}</div><div class="chg-ribbon-scale">${[[H(6), '6 am'], [H(12), 'noon'], [H(18), '6 pm'], [H(24), 'midnight']].map(([t, l], i) => `<span style="left:${pct(t)}%${i ? '' : ';transform:none'}">${l}</span>`).join('')}</div><div class="chg-ribbon-key"><span><i style="background:${COL.milk}"></i>${F(milk)}</span>${v >= 3 ? `<span><i style="background:${COL.meal}"></i>${F('Meal or snack')}</span>` : ''}<span><i style="background:#d9def0"></i>${F('Night')}</span></div></div>`;
+    // Milk-only days: the times would be a long list of the same word, so the day is grouped by part of the day instead.
+    const PARTS = [['Morning', H(5, 30), H(12)], ['Afternoon', H(12), H(18)], ['Evening', H(18), H(22)], ['Night', H(22), H(29, 30)]];
+    const grouped = v <= 2 ? `<ol class="chg-day">${PARTS.map(([l, a0, b0]) => { const n = D.filter(([, t]) => t >= a0 && t < b0).length; return `<li class="${l === 'Night' ? 'is-bed' : 'is-awake'}"><span>${F(l)}${l === 'Evening' && v === 0 ? `<small style="display:block;font-weight:500;color:var(--muted,#6d666d)">${F('Often closer together')}</small>` : ''}</span><b style="font-weight:650">${n ? n + (n === 1 ? ' feed' : ' feeds') : F('Asleep')}</b></li>`; }).join('')}</ol>` : '';
+    const list = `<ol class="chg-day">${D.map(([k, t, l, note]) => `<li class="${k === 'meal' ? 'is-sleep' : 'is-awake'}"><span>${F(l)}${note ? `<small style="display:block;font-weight:500;color:var(--muted,#6d666d)">${F(note)}</small>` : ''}</span><time>${clock(t)}</time></li>`).join('')}</ol>`;
+    const title = ['A newborn day', m < 3 ? 'A day at 2–3 months' : 'A day at 3–4 months', 'A day at 4–6 months', 'A day at 6–9 months', 'A day at 9–12 months'][v] || 'An example day';
+    return yPage(XC.f1, 'Example day', title, 'An example, not a schedule. He leads, and no two days look the same.', `<section class="hub-card" style="padding:16px">${ribbon}${grouped || list}</section>`); };
   HEADART['Example day'] = HEADART['Feeds now'] || (() => ART.often(5));
   // Distracted feeds have their own guide from 3 months; the challenge page points there instead of repeating it.
   P.x_refuse = (() => { const prev = P.x_refuse; return () => prev().replace(xKnow('Distracted, from 3–4 months?', 'Feed somewhere quiet and dim, or when he’s drowsy.'), ageMo() >= 3 ? gLink('Distracted by everything? What helps', 'm2_distract') : ''); })();
