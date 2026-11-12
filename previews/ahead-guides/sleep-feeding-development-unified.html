@@ -221,6 +221,92 @@ if(location.hash.startsWith('#development/')){const a=location.hash.split('/')[1
 else{const cat=location.hash.startsWith('#feeding/')?'Feeding':'Sleep';nav.querySelectorAll('button').forEach(b=>b.classList.toggle('selected',b.dataset.cat===cat))}
 })();
 </script><style>
+
+/* Health journey refinement — compact, scannable, stage-aware */
+.hv-simulator{display:none;max-width:408px;margin:0 auto 13px;padding:10px 12px;background:#fff;border:1px solid #e8dfdf;border-radius:14px}
+.hv-simulator-label{font-size:10px;text-transform:uppercase;letter-spacing:.8px;color:#94858e;font-weight:800;margin:0 0 8px}
+.hv-simulator-row{display:flex;gap:4px;border-radius:10px;background:#f3efee;padding:3px}
+.hv-simulator-row button{flex:1;font-size:11px;padding:9px 4px;background:transparent;color:#877b83;border-radius:8px;font-weight:710}
+.hv-simulator-row button.is-current{background:white;color:#624958;box-shadow:0 1px 4px #5a365218}
+.hv-simulator-hint{color:#9d9099;font-size:10px;margin-top:7px}
+#healthview .hv2-hero{background:linear-gradient(145deg,#f3e6e8,#f6ebe6 70%,#f8f0e9);border-radius:20px;padding:19px 17px 16px}
+#healthview .hv2-hero .hv2-kicker{font-size:10px;letter-spacing:.8px;font-weight:810;color:#a27689}
+#healthview .hv2-hero h1{font-size:25.5px;line-height:1.15;letter-spacing:-.75px;font-weight:830;margin:9px 0 8px}
+#healthview .hv2-hero p{font-size:13px;line-height:1.53;color:#70646e;margin:0}
+#healthview .hv2-art{display:flex;justify-content:center;height:117px;overflow:hidden;margin:2px 0 0}
+#healthview .hv2-art svg{height:115px;width:100%;max-width:253px}
+#healthview .hv2-insight{padding:12px 13px;background:#fffdfa;border-radius:12px;box-shadow:0 3px 11px #6c4b6010}
+#healthview .hv2-insight small{font-size:9.5px;letter-spacing:.7px;color:#a67789;font-weight:820}
+#healthview .hv2-insight b{display:block;font-size:14px;letter-spacing:-.17px;line-height:1.35;margin:5px 0}
+#healthview .hv2-insight p{font-size:12px;line-height:1.44;color:#82767d}
+#healthview .hv2-section{font-size:16px;letter-spacing:-.25px;font-weight:820;margin:22px 2px 11px;line-height:1.3}
+#healthview .hv2-lead-in{font-size:12.2px;line-height:1.45;margin:-4px 2px 11px;color:#8a7f86}
+#healthview .hv2-visit-utility{display:flex;justify-content:space-between;gap:11px;margin:10px 1px 0}
+#healthview .hv2-visit-utility button{font-size:11px;color:#947487;padding:5px 3px;background:none;font-weight:710;text-align:left}
+#healthview .hv2-visit-utility button:last-child{color:#8c7c87;font-weight:620;text-align:right}
+#healthview .hv2-list{background:white;border:1px solid #ece5e2;border-radius:16px;overflow:hidden}
+#healthview .hv2-row{width:100%;display:flex;gap:11px;text-align:left;align-items:flex-start;padding:13px 13px;background:white;color:#342f37}
+#healthview .hv2-row+.hv2-row{border-top:1px solid #f2ece9}
+#healthview .hv2-row .hv2-n{height:30px;width:30px;border-radius:10px;flex:0 0 30px;display:grid;place-items:center;background:#f7edf0;color:#b07a90;font-size:12px;font-weight:790}
+#healthview .hv2-row:nth-child(2) .hv2-n{background:#eaf1e9;color:#7b9980}
+#healthview .hv2-row:nth-child(3) .hv2-n{background:#f4eee6;color:#9f896c}
+#healthview .hv2-rowcopy{flex:1;min-width:0}
+#healthview .hv2-row b{display:block;font-size:13px;line-height:1.32;margin:0 0 4px}
+#healthview .hv2-row small{font-size:11.8px;color:#827780;line-height:1.42;display:block}
+#healthview .hv2-arrow{color:#b0a3ab;font-size:19px;flex:0 0 12px;align-self:center}
+#healthview .hv2-vaccine{display:flex;align-items:center;gap:12px;background:#fff;border-radius:15px;border:1px solid #ece4e3;padding:14px 14px;margin-top:9px;width:100%;color:#342f37;text-align:left}
+#healthview .hv2-vaccine .hv2-symbol{width:35px;height:35px;border-radius:11px;background:#f1e8f2;color:#957c9f;display:grid;place-items:center;flex:0 0 35px;font-size:20px}
+#healthview .hv2-vaccine .hv2-rowcopy{flex:1}
+#healthview .hv2-vaccine b{font-size:13px;display:block;margin-bottom:4px}
+#healthview .hv2-vaccine small{font-size:11.7px;line-height:1.4;color:#857a82;display:block}
+#healthview .hv2-prepare{margin-top:14px;padding:16px 16px 14px;border-radius:17px;background:#e9f0e9;border:1px solid #dfe9df}
+#healthview .hv2-kicker{font-size:10px;font-weight:820;color:#5e8669;letter-spacing:.9px}
+#healthview .hv2-prepare h3{font-size:16px;line-height:1.3;margin:8px 0;color:#364c3c;letter-spacing:-.25px}
+#healthview .hv2-prepare p{font-size:12.6px;line-height:1.47;color:#526f58;margin:0}
+#healthview .hv2-prep-list{margin:11px 0 0;padding:10px 0 0;border-top:1px solid #d5e4d6;color:#5c7461;font-size:11.6px;line-height:1.54}
+#healthview .hv2-prep-list b{color:#47694e}
+#healthview .hv2-prepare-actions{display:flex;align-items:center;gap:13px;margin-top:11px}
+#healthview .hv2-prepare-actions button{padding:8px 11px;border-radius:9px;font-size:11px;font-weight:800;background:#d2e5d5;color:#466d50}
+#healthview .hv2-prepare-actions .hv2-text-action{background:transparent;padding:5px 0;color:#608269}
+#healthview .hv2-finish{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;padding:11px 13px;border-radius:13px;background:#f6f2ed;border:1px solid #eee6df;text-align:left;width:100%;color:#544a50}
+#healthview .hv2-finish b{display:block;font-size:12.5px;line-height:1.3}
+#healthview .hv2-finish small{color:#887b84;display:block;margin-top:4px;line-height:1.4;font-size:11.2px}
+#healthview .hv2-carelist{background:#fff;border:1px solid #eee6e3;border-radius:15px;overflow:hidden}
+#healthview .hv2-carelist button{padding:12px 14px;display:flex;align-items:center;gap:9px;justify-content:space-between;width:100%;background:#fff;text-align:left;color:#4d4550;font-size:12.7px;font-weight:650}
+#healthview .hv2-carelist button+button{border-top:1px solid #f2ecea}
+#healthview .hv2-carelist .hv2-mini-icon{width:26px;height:26px;display:grid;place-items:center;border-radius:9px;background:#f0e9ed;color:#9c8190;flex:0 0 26px}
+#healthview .hv2-carelist .hv2-care-name{flex:1}
+#healthview .hv2-smallnext{margin-top:13px;width:100%;display:flex;align-items:center;gap:10px;border-radius:14px;padding:12px 14px;background:#f5f1ed;color:#403842;text-align:left}
+#healthview .hv2-smallnext small{display:block;color:#948790;font-size:10px;font-weight:800;letter-spacing:.5px;margin-bottom:4px}
+#healthview .hv2-smallnext b{font-size:12.8px}
+#healthview .hv2-smallnext .hv2-arrow{margin-left:auto}
+#healthview .hv2-footer-note{font-size:10.6px;line-height:1.45;color:#998e96;margin:13px 2px 0}
+#healthview .hv2-afterhero{background:linear-gradient(135deg,#e9f1e9,#eef3ed);border-radius:19px;padding:21px 19px 20px}
+#healthview .hv2-afterhero .hv2-kicker{color:#688b70}
+#healthview .hv2-afterhero h1{font-size:25px;line-height:1.16;letter-spacing:-.7px;margin:10px 0}
+#healthview .hv2-afterhero p{color:#5e7261;font-size:13px;line-height:1.5;margin:0}
+#healthview .hv2-notes-card{margin-top:12px;background:#fff;border:1px solid #ebe3e1;border-radius:16px;padding:16px}
+#healthview .hv2-notes-card .hv2-notes-label{font-size:10px;color:#a7778d;font-weight:800;letter-spacing:.7px}
+#healthview .hv2-notes-card h3{font-size:16px;letter-spacing:-.25px;margin:8px 0}
+#healthview .hv2-notes-card p{font-size:12.5px;line-height:1.5;color:#776d76;margin:0 0 12px;white-space:pre-wrap}
+#healthview .hv2-notes-card button{background:#f1e6ec;padding:9px 11px;border-radius:9px;color:#976a83;font-weight:770;font-size:11.5px}
+#healthview .hv2-nextfocus{background:#f4eff3;border-radius:16px;padding:16px;margin-top:13px}
+#healthview .hv2-nextfocus span{color:#9f7e91;font-size:10px;font-weight:800;letter-spacing:.75px}
+#healthview .hv2-nextfocus h3{font-size:16px;letter-spacing:-.25px;margin:7px 0}
+#healthview .hv2-nextfocus p{font-size:12.4px;color:#786d76;line-height:1.48;margin:0 0 12px}
+#healthview .hv2-nextfocus button{font-size:12px;font-weight:770;color:#865d76;background:transparent;padding:0}
+#healthview .hv2-betweenhero{background:linear-gradient(150deg,#f2e9e8,#f7efe9);border-radius:19px;padding:19px 18px}
+#healthview .hv2-betweenhero .hv2-kicker{color:#ad7d8d}
+#healthview .hv2-betweenhero h1{font-size:26px;letter-spacing:-.68px;line-height:1.18;margin:10px 0}
+#healthview .hv2-betweenhero p{font-size:13px;color:#756970;line-height:1.52;margin:0}
+#healthview .hv2-spotlight{padding:15px;margin-top:13px;border-radius:17px;background:#e9f0e9;display:flex;gap:12px;align-items:center}
+#healthview .hv2-spotlight .hv2-spotcopy{flex:1}
+#healthview .hv2-spotlight small{font-size:9.7px;font-weight:800;letter-spacing:.75px;color:#709278}
+#healthview .hv2-spotlight h3{font-size:16px;color:#35513e;line-height:1.26;letter-spacing:-.2px;margin:7px 0 5px}
+#healthview .hv2-spotlight p{color:#627c6a;font-size:12px;line-height:1.48;margin:0}
+#healthview .hv2-spotlight svg{height:79px;width:79px;flex:0 0 79px}
+#healthview .hv2-spotlight button{font-size:11.5px;color:#51775b;background:none;padding:0;margin-top:9px;font-weight:790}
+
 /* Health concept — scoped; Sleep, Feeding, and Development stay untouched */
 #tri-nav{gap:3px}
 #tri-nav button{font-size:10.5px;padding:9px 1px;white-space:normal}
@@ -333,31 +419,93 @@ if(a==="12")scene='<path d="M58 143q25-32 64-21l15 23H56Z" fill="#bacdbf"/>'+bab
 return '<svg viewBox="0 0 320 160" role="img" aria-label="Illustration of baby and their well visit">'+base+scene+'</svg>';
 }
 function select(a){age=a;modal="";render();history.replaceState(null,"","#health/"+age)}
+
+let scenario="before"; // Preview-only switch; actual app derives this from age and visit status.
+const previewStates=document.createElement("div");
+previewStates.className="hv-simulator";
+previewStates.innerHTML='<div class="hv-simulator-label">Preview parent journey</div><div class="hv-simulator-row"><button data-scenario="before">Before visit</button><button data-scenario="after">After visit</button><button data-scenario="between">Between visits</button></div><div class="hv-simulator-hint">In the app, this view changes automatically based on age and visits.</div>';
+document.querySelector(".phone").before(previewStates);
+previewStates.querySelectorAll("[data-scenario]").forEach(b=>b.onclick=()=>{scenario=b.dataset.scenario;render()});
+const betweenFocus={
+"0":{label:"3 weeks",title:"Tiny changes, lots of questions.",lead:"Even between newborn visits, feeding, skin and sleep can change quickly.",spotTitle:"The cord stump is healing",spot:"Keep it clean and dry. Call about redness spreading around the base, foul discharge, or pain.",link:"Cord stump care"},
+"1":{label:"6 weeks",title:"She's growing. New questions come with it.",lead:"Everyday health changes can happen long before the two-month checkup.",spotTitle:"Little noises aren't always a cold",spot:"Babies can be noisy breathers. Changes in feeding or breathing deserve attention.",link:"Stuffy noses"},
+"2":{label:"3 months",title:"A small sniffle can feel like a big deal.",lead:"As she grows, knowing what's common—and what deserves a call—makes everyday care easier.",spotTitle:"A cold can make feeds trickier",spot:"A stuffy nose may interrupt feeding. Saline and gentle suction before feeds may help.",link:"Colds and congestion"},
+"4":{label:"5 months",title:"Drool, chewing, and maybe first teeth.",lead:"Health changes aren't always tied to a scheduled checkup.",spotTitle:"Teething doesn't explain a true fever",spot:"Chewing and drooling may be common, but a significant fever needs another explanation.",link:"Teething & first teeth"},
+"6":{label:"7 months",title:"Little teeth bring new routines.",lead:"She may be getting her first teeth as the next well visit approaches.",spotTitle:"A tooth changes what you do today",spot:"Once the first tooth appears, brush twice a day with a rice-grain smear of fluoride toothpaste.",link:"First-tooth care"},
+"9":{label:"10 months",title:"More exploring, more to protect.",lead:"New teeth and everyday illnesses can bring questions between well visits.",spotTitle:"New teeth need a tiny routine",spot:"Brush any teeth twice a day with a rice-grain smear of fluoride toothpaste.",link:"Brushing & oral health"},
+"12":{label:"13 months",title:"A new year of everyday health.",lead:"The first-birthday checkup is behind you, but preventive care keeps evolving.",spotTitle:"Has her first dental visit happened?",spot:"Arrange the first dental visit by age one, or when the first tooth appears.",link:"Dental visits"}
+};
+const leaveKnowing={
+"0":["How feeding and weight will be followed","Which newborn results need follow-up","Who to call after hours"],
+"1":["What her growth curve shows","Whether the feeding plan needs adjusting","What protection or vaccines come next"],
+"2":["What the exam and early development checks showed","Which vaccines she received and expected reactions","When the next appointment or follow-up is"],
+"4":["Whether growth and movement concerns need follow-up","The plan for milk, supplements and solids readiness","Vaccines, aftercare and next appointment"],
+"6":["What her growth trend means for feeding","How to fit milk and first foods together","Vaccine aftercare and any follow-up"],
+"9":["What the developmental screening means","Which growth or feeding questions need attention","What to revisit before her first birthday"],
+"12":["When blood-test results will arrive","The milk, cup and tooth-care plan","Her next visit and any follow-up care"]
+};
+const visitPrep={
+"0":"Her hospital discharge information and a recent feeding or diaper pattern.",
+"1":"A feeding question and any changes you've noticed since the first week.",
+"2":"Questions about feeds, sleep or how she responds to faces and sounds.",
+"4":"A short video of a movement you want to discuss, plus feeding or sleep questions.",
+"6":"How feeds and any first foods are going, and a new skill or concern you want to discuss.",
+"9":"Examples of her sounds, movements, social play and any feeding questions.",
+"12":"Changes in milk, cups, teeth, gestures and any test-result questions."
+};
+function checkupName(a){return a==="0"?"first-week checkup":a+"-month checkup"}
+function currentChronAge(){return scenario==="between"?({"0":0,"1":1,"2":3,"4":5,"6":7,"9":10,"12":13}[age]):Number(age)}
+function commonBottom(next){
+return '<h3 class="hv2-section">Everyday health</h3><div class="hv2-carelist">'+
+'<button data-care="teeth"><span class="hv2-mini-icon">✧</span><span class="hv2-care-name">'+(Number(age)<4?"What changes as teeth approach":"Teething & first-tooth care")+'</span><span class="hv2-arrow">›</span></button>'+
+'<button data-care="cold"><span class="hv2-mini-icon">◌</span><span class="hv2-care-name">Colds & stuffy noses</span><span class="hv2-arrow">›</span></button>'+
+'<button data-care="help"><span class="hv2-mini-icon">♡</span><span class="hv2-care-name">When to call the pediatrician</span><span class="hv2-arrow">›</span></button></div>'+
+(next?'<button class="hv2-smallnext" id="hv-next"><span><small>NEXT WELL VISIT</small><b>'+esc(checkupName(next))+'</b></span><span class="hv2-arrow">›</span></button>':'')+
+'<p class="hv2-footer-note">Visit ages are approximate. Your pediatrician sets the schedule and any individual follow-up, especially after an early birth.</p>';
+}
 function render(){
-const d=data[age],ix=ages.indexOf(age),next=ages[ix+1];
+const d=data[age],ix=ages.indexOf(age),next=ages[ix+1],between=betweenFocus[age];
+previewStates.style.display="block";
+previewStates.querySelectorAll("[data-scenario]").forEach(b=>b.classList.toggle("is-current",b.dataset.scenario===scenario));
 const rail=ages.map(a=>'<button data-age="'+a+'" class="'+(a===age?"on":"")+'">'+esc(data[a].label)+'</button>').join("");
-const items=d.topics.map((t,i)=>'<button class="hv-item" data-topic="'+i+'"><span class="hv-item-icon">'+icons[i]+'</span><span class="hv-item-copy"><b>'+esc(t[0])+'</b><small>'+esc(t[1])+'</small></span><span class="hv-chevron">›</span></button>').join("");
-const qCount=(questions[age]||[]).length;
-root.innerHTML='<button class="back" id="hv-back">‹ All guides</button><h2 class="title">Health</h2>'+
-'<nav class="hv-rail" aria-label="Choose a well-child visit">'+rail+'</nav>'+
-'<section class="hv-hero"><div class="hv-eyebrow">'+esc(age==="0"?"FIRST-WEEK CHECKUP":age+"-MONTH CHECKUP")+' · WHAT TO EXPECT</div><h1>'+esc(d.hero)+'</h1><p class="hv-lead">'+esc(d.lead)+'</p><div class="hv-hero-art">'+illustration(age)+'</div><div class="hv-insight"><span>GOOD TO KNOW</span><b>'+esc(d.insight)+'</b><p>'+esc(d.why)+'</p></div></section>'+
-'<div class="hv-visitactions"><button id="hv-book">'+(appointment[age]?"✓ Saved for "+esc(appointment[age]):"＋ Save appointment date")+'</button><button id="hv-done">'+(visited.has(age)?"✓ Visit recorded":"Already had this visit?")+'</button></div>'+
-'<h3 class="hv-sectiontitle">At this checkup</h3><div class="hv-list">'+items+'</div>'+
-'<h3 class="hv-sectiontitle">Vaccines & protection</h3><button class="hv-featurelink" id="hv-vax"><span class="hv-icon" aria-hidden="true">✧</span><span class="hv-main"><b>What may be due</b><small>'+esc(d.vax)+'</small></span><span class="hv-chevron">›</span></button>'+
-'<section class="hv-qcard"><span class="hv-qcard-label">A QUESTION WORTH ASKING</span><div class="hv-qtitle">“'+esc(d.question)+'”</div><p>Keep it handy for the appointment, or add your own.</p><div class="hv-q-actions"><button id="hv-saveq">'+(qCount&&questions[age].includes(d.question)?"Saved ✓":"Save this question")+'</button><button class="hv-textbtn" id="hv-ownq">My questions'+(qCount?" · "+qCount:"")+' ›</button></div></section>'+
-'<section class="hv-between"><h3 class="hv-sectiontitle">Between checkups</h3><button class="hv-featurelink" id="hv-help"><span class="hv-icon" aria-hidden="true">♡</span><span class="hv-main"><b>When to call the pediatrician</b><small>Fevers, worrying symptoms and when not to wait</small></span><span class="hv-chevron">›</span></button></section>'+
-(next?'<button class="hv-next" id="hv-next"><span><small>AFTER THAT</small><b>'+esc(data[next].label==="1 month"?"1-month checkup":data[next].label==="First week"?"First-week checkup":data[next].label+" checkup")+'</b></span><span class="hv-chevron">›</span></button>':'')+
-'<p class="hv-footnote">Typical AAP well-visit ages. Your pediatrician sets the timing and any individual follow-up, especially after an early birth.</p>'+
-'<div class="hv-overlay" id="hv-overlay"><div class="hv-sheet" role="dialog" aria-modal="true" aria-label="Health guide details"><button class="hv-close" id="hv-close" aria-label="Close">×</button><div id="hv-sheetbody"></div></div></div>';
+const top='<button class="back" id="hv-back">‹ All guides</button><h2 class="title">Health</h2><nav class="hv-rail" aria-label="Choose a well-child visit">'+rail+'</nav>';
+let content="";
+if(scenario==="before"){
+const rows=d.topics.map((t,i)=>'<button class="hv2-row" data-topic="'+i+'"><span class="hv2-n">0'+(i+1)+'</span><span class="hv2-rowcopy"><b>'+esc(t[0])+'</b><small>'+esc(t[2])+'</small></span><span class="hv2-arrow">›</span></button>').join("");
+content='<section class="hv2-hero"><div class="hv2-kicker">COMING UP · '+(age==="0"?"FIRST WEEK":age+" MONTHS")+'</div><h1>'+esc(age==="6"?"New foods, new skills, and a growth check.":d.hero)+'</h1><p>'+esc(d.lead)+'</p><div class="hv2-art">'+illustration(age)+'</div><div class="hv2-insight"><small>WORTH KNOWING</small><b>'+esc(d.insight)+'</b><p>'+esc(d.why)+'</p></div></section>'+
+'<div class="hv2-visit-utility"><button id="hv-book">'+(appointment[age]?"✓ Appointment: "+esc(appointment[age]):"+ Save appointment date")+'</button><button id="hv-done">Already had this visit? ›</button></div>'+
+'<h3 class="hv2-section">What happens at this checkup</h3><div class="hv2-list">'+rows+'</div>'+
+'<button class="hv2-vaccine" id="hv-vax"><span class="hv2-symbol">✧</span><span class="hv2-rowcopy"><b>Vaccines & protection</b><small>'+esc(d.vax)+' · See what may be due</small></span><span class="hv2-arrow">›</span></button>'+
+'<section class="hv2-prepare"><div class="hv2-kicker">BEFORE YOU GO</div><h3>One question worth bringing</h3><p>“'+esc(d.question)+'”</p><div class="hv2-prep-list"><b>Bring along:</b> '+esc(visitPrep[age])+'</div><div class="hv2-prepare-actions"><button id="hv-saveq">'+((questions[age]||[]).includes(d.question)?"Saved ✓":"+ Save question")+'</button><button class="hv2-text-action" id="hv-ownq">My questions ›</button></div></section>'+
+'<button class="hv2-finish" id="hv-leave"><span><b>Before you leave the appointment</b><small>Three things you should have answers to</small></span><span class="hv2-arrow">›</span></button>'+
+commonBottom(next);
+}else if(scenario==="after"){
+const savedNotes=appointment["notes-"+age]||"",follow=appointment["followup-"+age]||"";
+content='<section class="hv2-afterhero"><div class="hv2-kicker">AFTER YOUR '+esc(checkupName(age).toUpperCase())+'</div><h1>Keep the answers close.</h1><p>The visit may be over, but you can keep your notes, follow-ups and next steps in one place.</p></section>'+
+'<div class="hv2-notes-card"><div class="hv2-notes-label">YOUR CHECKUP NOTES</div><h3>What did you learn?</h3><p>'+esc(savedNotes||"Save what the pediatrician said about growth, feeding, development or anything you want to remember.")+'</p><button id="hv-ownq">'+(savedNotes?"Edit visit notes":"Add visit notes")+' ›</button></div>'+
+'<div class="hv2-notes-card"><div class="hv2-notes-label">FOLLOW-UP TO REMEMBER</div><h3>Anything to revisit?</h3><p>'+esc(follow||"If your clinician recommended a weight check, a test result, a referral or another appointment, keep it here.")+'</p><button id="hv-followup">'+(follow?"Edit follow-up":"Add a follow-up")+' ›</button></div>'+
+'<button class="hv2-finish" id="hv-leave"><span><b>What the visit was meant to cover</b><small>Review the important takeaways for this age</small></span><span class="hv2-arrow">›</span></button>'+
+'<section class="hv2-nextfocus"><span>COMING UP AFTER THIS VISIT</span><h3>'+esc(next?checkupName(next):"Next year's checkups")+'</h3><p>'+esc(next?data[next].lead:"Your care team can guide the next schedule.")+'</p>'+(next?'<button id="hv-next">Explore what happens next ›</button>':'')+'</section>'+
+commonBottom(null);
+}else{
+content='<section class="hv2-betweenhero"><div class="hv2-kicker">HEALTH · ABOUT '+esc(between.label.toUpperCase())+'</div><h1>'+esc(between.title)+'</h1><p>'+esc(between.lead)+'</p></section>'+
+'<section class="hv2-spotlight"><div class="hv2-spotcopy"><small>WORTH KNOWING NOW</small><h3>'+esc(between.spotTitle)+'</h3><p>'+esc(between.spot)+'</p><button id="hv-spot">Learn more ›</button></div><svg viewBox="0 0 90 90" aria-hidden="true"><circle cx="46" cy="45" r="36" fill="#fffdf9" opacity=".58"/><path d="M38 18Q23 12 21 36q-1 15 10 31q7 10 13-1l4-11q4 10 11 11q9 0 13-24q4-28-17-26q-10 1-17 2Z" fill="#e7cad4"/><path d="M36 34q12-8 25 0" fill="none" stroke="#fff6fa" stroke-width="4" stroke-linecap="round"/><path d="M73 10l3 7 7 3-7 3-3 7-3-7-7-3 7-3Z" fill="#e8c995"/></svg></section>'+
+commonBottom(next);
+}
+root.innerHTML=top+content+'<div class="hv-overlay" id="hv-overlay"><div class="hv-sheet" role="dialog" aria-modal="true" aria-label="Health guide details"><button class="hv-close" id="hv-close" aria-label="Close">×</button><div id="hv-sheetbody"></div></div></div>';
 root.querySelectorAll("[data-age]").forEach(b=>b.onclick=()=>select(b.dataset.age));
 root.querySelectorAll("[data-topic]").forEach(b=>b.onclick=()=>open("topic",Number(b.dataset.topic)));
-root.querySelector("#hv-book").onclick=()=>open("appointment");
-root.querySelector("#hv-done").onclick=()=>{visited.has(age)?visited.delete(age):visited.add(age);render()};
-root.querySelector("#hv-vax").onclick=()=>open("vaccines");
-root.querySelector("#hv-help").onclick=()=>open("help");
-root.querySelector("#hv-ownq").onclick=()=>open("questions");
-root.querySelector("#hv-saveq").onclick=()=>{const arr=questions[age]||(questions[age]=[]);if(!arr.includes(d.question))arr.push(d.question);render()};
-if(next)root.querySelector("#hv-next").onclick=()=>select(next);
+root.querySelectorAll("[data-care]").forEach(b=>b.onclick=()=>open(b.dataset.care));
+const by=id=>root.querySelector("#"+id);
+if(by("hv-vax"))by("hv-vax").onclick=()=>open("vaccines");
+if(by("hv-book"))by("hv-book").onclick=()=>open("appointment");
+if(by("hv-done"))by("hv-done").onclick=()=>{visited.add(age);scenario="after";render()};
+if(by("hv-saveq"))by("hv-saveq").onclick=()=>{const arr=questions[age]||(questions[age]=[]);if(!arr.includes(d.question))arr.push(d.question);render()};
+if(by("hv-ownq"))by("hv-ownq").onclick=()=>open("questions");
+if(by("hv-leave"))by("hv-leave").onclick=()=>open("leave");
+if(by("hv-followup"))by("hv-followup").onclick=()=>open("followup");
+if(by("hv-spot"))by("hv-spot").onclick=()=>open(age==="0"?"cord":Number(age)<4?"cold":"teeth");
+if(by("hv-next"))by("hv-next").onclick=()=>{scenario="before";select(next)};
 root.querySelector("#hv-back").onclick=()=>nav.querySelector('[data-cat="Development"]').click();
 }
 function open(kind,index){
@@ -374,7 +522,7 @@ html+='<h2>Vaccines & protection</h2><p>What may be recommended at this age. The
 }
 if(kind==="help"){
 html+='<h2>When should you call?</h2><p>You don’t have to wait for a routine visit when something seems wrong.</p>'+
-(age==="0"||age==="1"||age==="2"?'<div class="hv-detail"><b>Under 3 months: fever is urgent</b><p>If your baby has a rectal temperature of 100.4°F (38°C) or higher, call your pediatrician immediately. This uses age since birth, not adjusted age.</p></div>':'<div class="hv-detail"><b>Fever or illness</b><p>Call about a baby who seems unusually unwell, is not drinking normally, has fewer wet diapers, or has persistent fever. Ask your pediatrician for the right fever thresholds for your baby’s age and health.</p></div>')+
+(currentChronAge()<3?'<div class="hv-detail"><b>Under 3 months: fever is urgent</b><p>If your baby has a rectal temperature of 100.4°F (38°C) or higher, call your pediatrician immediately. This uses age since birth, not adjusted age.</p></div>':'<div class="hv-detail"><b>Fever or illness</b><p>Call about a baby who seems unusually unwell, is not drinking normally, has fewer wet diapers, or has persistent fever. Ask your pediatrician for the right fever thresholds for your baby’s age and health.</p></div>')+
 '<div class="hv-detail"><b>Call urgently for concerning changes</b><p>New trouble feeding, dehydration, a lost skill or a worsening condition deserves prompt advice rather than waiting for the next checkup.</p></div>'+
 '<div class="hv-tip"><b>Call 911</b><p>If your baby struggles to breathe, turns blue, has a seizure, or is unresponsive.</p></div><p class="hv-note">This is a quick guide, not a substitute for your care team’s instructions.</p>';
 }
@@ -388,6 +536,33 @@ html+='<h2>Your questions</h2><p>Save things you want to ask, then come back to 
 if(kind==="appointment"){
 html+='<h2>Add your appointment date</h2><p>Keep your checkup date handy.</p><input id="hv-appointment-date" type="date" value="'+esc(appointment[age]||"")+'"><button id="hv-add-appointment" class="hv-action">Save date</button>';
 }
+
+if(kind==="leave"){
+html+='<h2>Leave knowing these three things</h2><p>Before you head home, make sure you know the plan for your baby.</p>'+
+leaveKnowing[age].map((x,i)=>'<div class="hv-detail"><b>'+(i+1)+'. '+esc(x)+'</b></div>').join('')+
+'<div class="hv-tip"><b>Helpful move</b><p>Ask for the plan in writing, including when to call or return if something changes.</p></div>';
+}
+if(kind==="followup"){
+html+='<h2>Follow-up after the visit</h2><p>Write down any test results, referrals, repeat weight checks or appointments your clinician recommended.</p>'+
+'<textarea id="hv-follow-text" maxlength="1000" placeholder="What needs to happen next?">'+esc(appointment["followup-"+age]||"")+'</textarea><button class="hv-action" id="hv-save-followup">Save follow-up</button>';
+}
+if(kind==="teeth"){
+html+='<h2>Teething & first teeth</h2><p>Teeth can begin appearing in the second half of the first year, but timing varies.</p>'+
+'<div class="hv-detail"><b>What can change</b><p>Drooling, chewing and tender gums can happen around teething. Teething should not be used to explain a true fever or a baby who seems ill.</p></div>'+
+'<div class="hv-detail"><b>When a tooth appears</b><p>Brush twice daily with a tiny rice-grain smear of fluoride toothpaste. Plan the first dental visit when the first tooth appears or by the first birthday.</p></div>'+
+'<div class="hv-tip"><b>Worth knowing before the first tooth</b><p>You can gently wipe the gums with a clean, damp cloth. Avoid teething necklaces and numbing gels that are unsafe for infants.</p></div>';
+}
+if(kind==="cold"){
+html+='<h2>Colds & stuffy noses</h2><p>Babies can get congested, and a small nose can make feeding more uncomfortable.</p>'+
+'<div class="hv-detail"><b>What may help</b><p>Saline drops and gentle suction, especially before feeding, may help loosen mucus. Use a cool-mist humidifier if practical and clean it regularly.</p></div>'+
+'<div class="hv-detail"><b>What to avoid</b><p>Do not use over-the-counter cough or cold medicines in infants. Keep sleep surfaces flat—do not prop up the mattress or use pillows for congestion.</p></div>'+
+'<div class="hv-tip"><b>When to ask for care</b><p>Contact your clinician if feeding is poor, wet diapers decrease, breathing seems harder or your baby seems unusually unwell. For any baby under 3 months with a rectal fever of 100.4°F (38°C) or higher, call immediately.</p></div>';
+}
+if(kind==="cord"){
+html+='<h2>Umbilical cord care</h2><p>The stump usually dries and falls off on its own.</p>'+
+'<div class="hv-detail"><b>Keep it simple</b><p>Keep the area clean and dry; fold the diaper below the stump. Use sponge baths until it has fallen off and healed.</p></div>'+
+'<div class="hv-tip"><b>When to call</b><p>Redness spreading around the base, foul-smelling drainage, pain, or active bleeding needs advice from your pediatrician.</p></div>';
+}
 sheet.innerHTML=html;
 overlay.classList.add("open");
 root.querySelector("#hv-close").onclick=()=>overlay.classList.remove("open");
@@ -398,12 +573,13 @@ sheet.querySelector("#hv-addq").onclick=()=>{const val=sheet.querySelector("#hv-
 sheet.querySelector("#hv-save-notes").onclick=()=>{appointment["notes-"+age]=sheet.querySelector("#hv-notes").value;open("questions");const note=document.createElement("div");note.className="hv-success";note.textContent="Notes saved in this preview.";sheet.prepend(note)};
 }
 if(kind==="appointment")sheet.querySelector("#hv-add-appointment").onclick=()=>{appointment[age]=sheet.querySelector("#hv-appointment-date").value;overlay.classList.remove("open");render()};
+if(kind==="followup")sheet.querySelector("#hv-save-followup").onclick=()=>{appointment["followup-"+age]=sheet.querySelector("#hv-follow-text").value;overlay.classList.remove("open");render()};
 }
-nav.addEventListener("click",event=>{const b=event.target.closest("button[data-cat]");if(b&&b.dataset.cat!=="Health"){root.style.display="none";}});
+nav.addEventListener("click",event=>{const b=event.target.closest("button[data-cat]");if(b&&b.dataset.cat!=="Health"){root.style.display="none";previewStates.style.display="none";}});
 tab.onclick=()=>{
 document.getElementById("view").style.display="none";document.getElementById("devview").style.display="none";
 document.querySelector(".top-controls").style.display="none";document.getElementById("count").style.display="none";
-root.style.display="block";nav.querySelectorAll("button").forEach(b=>b.classList.toggle("selected",b===tab));
+root.style.display="block";previewStates.style.display="block";nav.querySelectorAll("button").forEach(b=>b.classList.toggle("selected",b===tab));
 document.body.style.setProperty("--hero-bg","linear-gradient(147deg,#f2e3e5,#f7eee6)");
 render();history.replaceState(null,"","#health/"+age);
 };
