@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f8f5f0"><title>Ahead — Childcare living plan preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#fffefa;--ink:#37322f;--muted:#82796e;--line:#eee8df;--gold:#f9efd2;--goldink:#82683e;--green:#eaf2e8;--greenink:#58775c}
+*{box-sizing:border-box}body{margin:0;background:#f7f4ee;color:var(--ink);font-family:Figtree,system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}button,input{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible{outline:3px solid #bca66f;outline-offset:3px}h1,h2,h3,p{margin:0}h1,h2,h3{font-family:Nunito,system-ui,sans-serif;letter-spacing:-.035em}
+.shell{max-width:1060px;margin:0 auto;padding:38px 20px 60px;display:grid;grid-template-columns:265px minmax(345px,425px);gap:70px;justify-content:center;align-items:start}.aside{position:sticky;top:28px;padding-top:33px}.kicker{font-size:10px;letter-spacing:.11em;text-transform:uppercase;font-weight:800;color:#a0834b}.aside h1{font-size:31px;line-height:1.2;margin:12px 0}.aside>p{font-size:13px;color:#7c7269;line-height:1.72}.control{background:#fffcf8;border:1px solid #eae2d8;border-radius:17px;padding:18px;margin-top:23px}.control strong{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#847764;display:block;margin-bottom:11px}.buttons{display:flex;flex-wrap:wrap;gap:6px}.buttons button{border:0;border-radius:99px;background:#f3f0eb;color:#7f7468;font-size:11px;padding:9px 12px;font-weight:700}.buttons button.sel{background:#f0e2b9;color:#78602c}.controlsep{border-top:1px solid #eee8dd;padding-top:13px;margin-top:15px}.explain{margin-top:22px;font-size:12px;line-height:1.68;color:#867a68;border-left:3px solid #dfca99;padding-left:13px}
+.phone{background:var(--paper);border-radius:27px;border:1px solid #eae3da;box-shadow:0 15px 60px #77634c18;overflow:hidden;min-height:780px}.topbar{display:flex;align-items:center;justify-content:space-between;padding:19px 23px 14px}.logo{font:800 25px Nunito,sans-serif;letter-spacing:-.06em}.logo i{color:#bd9379;font-style:normal}.avatar{width:34px;height:34px;display:grid;place-items:center;border-radius:50%;background:#eaded2;color:#7b6553;font-size:12px;font-weight:800}
+.screen{padding:8px 23px 25px}.back{border:0;background:none;color:#887b70;padding:0;font-size:12px;margin:4px 0 14px}.title{font-size:28px;line-height:1.18;margin-bottom:16px}.rail{display:flex;gap:7px;margin:0 -23px 17px;padding:0 23px 4px;overflow-x:auto;scrollbar-width:none}.rail::-webkit-scrollbar{display:none}.rail button{border:0;border-radius:99px;background:#f4f0eb;color:#918372;padding:9px 12px;white-space:nowrap;font-size:11px;font-weight:700}.rail button.sel{background:#f2e4c2;color:#795d2f}
+.hero{background:#faefd1;border-radius:18px;padding:20px 20px 0;overflow:hidden}.micro{font-size:10px;text-transform:uppercase;letter-spacing:.08em;font-weight:800;color:#99783a}.hero h2{font-size:24px;line-height:1.2;color:#59492e;margin:10px 0 8px}.hero p{font-size:12.8px;line-height:1.58;color:#816e51}.hero-art{width:100%;max-width:300px;height:124px;display:block;margin:4px auto 0}
+.feature{display:block;width:100%;text-align:left;border:0;background:#eaf2e8;border-radius:15px;margin:18px 0 23px;padding:18px;color:#3f5844}.feature .micro{color:#5e815f}.feature h3{font-size:17px;line-height:1.35;margin:9px 0 6px}.feature p{font-size:12.5px;line-height:1.58;color:#607865}.feature span{display:block;margin-top:12px;font-size:12px;font-weight:700;color:#5a7d5c}.feature:hover{box-shadow:0 6px 16px #8b9c861e}
+.headrow{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:9px;gap:10px}.headrow h3{font-size:16px}.headrow small{font-size:11px;color:#9a9085}.twocol{display:grid;grid-template-columns:1fr 1fr;gap:9px}.tile{border:0;border-radius:14px;padding:14px;min-height:122px;display:flex;flex-direction:column;text-align:left;background:#eaf0fa;color:#486788}.tile:nth-child(2){background:#f8eaf1;color:#925e76}.tile b{font-size:14px;line-height:1.35;margin:13px 0 7px}.tile small{font-size:11.5px;line-height:1.55;margin-top:auto;opacity:.8}
+.row{border:0;background:transparent;display:flex;gap:11px;align-items:center;padding:13px 0;width:100%;border-bottom:1px solid var(--line);text-align:left;color:var(--ink)}.row:last-child{border-bottom:0}.rowic{height:43px;width:43px;flex:0 0 43px;display:grid;place-items:center;border-radius:12px;background:#e9f2ea;color:#658770}.row:nth-child(3n+2) .rowic{background:#f7ece1;color:#a18065}.row:nth-child(3n+3) .rowic{background:#efeaf4;color:#947a9a}.rowtxt{flex:1;min-width:0}.rowtxt b{font-size:13px;line-height:1.4;display:block}.rowtxt small{font-size:11.7px;line-height:1.55;color:#877e73;display:block;margin-top:4px}.chev{font-size:21px;color:#b7ab9d;font-weight:400}
+.cardlink{width:100%;border:1px solid #ebe5dc;border-radius:13px;background:#fffcf8;display:flex;align-items:center;text-align:left;color:inherit;gap:11px;padding:13px 14px;margin-top:20px}.cardlink .rowic{background:#f5edcf;color:#96794e}.cardlink b{display:block;font-size:13px}.cardlink small{display:block;font-size:11.5px;color:#8c7f71;margin-top:4px}.bottomnote{border-top:1px solid #efebe5;padding:15px 0 0;margin-top:18px}.bottomnote .micro{color:#9c9285}.bottomnote p{font-size:12px;color:#81776e;line-height:1.63;margin-top:7px}
+.bottomnav{display:flex;justify-content:space-around;border-top:1px solid #eee9e3;padding:13px 16px 16px;color:#a59a8e;font-size:10px}.bottomnav span{display:grid;justify-items:center;gap:4px}.bottomnav .sel{color:#9b7f4c;font-weight:700}
+.dhero{padding:20px;border-radius:16px;background:#f9efd6}.dhero.green{background:#eaf2e8}.dhero.blue{background:#eaf0fa}.dhero.pink{background:#f8eaf1}.dhero .micro{color:#957943}.dhero h2{font-size:23px;line-height:1.25;margin:10px 0 8px;color:#5c4b2f}.dhero p{font-size:12.8px;color:#766a55;line-height:1.7}
+.section{margin-top:23px}.section h3{font-size:15.5px;margin-bottom:10px}.section p{font-size:12.8px;line-height:1.75;color:#746b63}
+.step{display:flex;gap:10px;padding:13px 0;border-bottom:1px solid var(--line)}.step:last-child{border:0}.stepnum{display:grid;place-items:center;flex:0 0 30px;width:30px;height:30px;border-radius:10px;background:#e9f1e7;color:#618466;font-weight:800;font-size:12px}.step b{display:block;font-size:12.8px;line-height:1.45}.step small{display:block;font-size:11.8px;color:#887e73;line-height:1.6;margin-top:3px}
+.callout{border-radius:14px;background:#eaf2e8;padding:16px;margin-top:20px}.callout .micro{color:#59815f}.callout p{font-size:12.8px;line-height:1.7;margin-top:9px;color:#536f58}.primary{border:0;border-radius:11px;padding:13px;background:#78613b;color:white;width:100%;font-size:12px;font-weight:700;margin-top:22px}.secondary{border:1px solid #dfd3c2;background:transparent;border-radius:11px;padding:12px;color:#806b48;width:100%;font-size:12px;font-weight:700;margin-top:12px}
+.choicelist{display:grid;gap:9px}.choice{border:1px solid #ebe4db;border-radius:14px;background:#fff;display:flex;align-items:center;padding:12px;gap:12px;text-align:left;width:100%;color:inherit}.choice.active{border-color:#dcc18e;background:#fffdf7}.choice .rowic{background:#eaf0fa;color:#6c83a2}.choice b{font-size:13px;display:block}.choice small{display:block;font-size:11.5px;color:#898074;margin-top:4px;line-height:1.5}
+.carecard{border:1px solid #eadbc4;border-radius:16px;background:#fff9ed;padding:18px;margin-top:18px}.carecard h3{font-size:20px;color:#59482e;margin:8px 0 14px}.carecard .entry{border-top:1px solid #eadbc5;display:flex;gap:12px;padding:9px 0}.carecard .entry b{width:73px;flex:0 0 73px;font-size:11.4px;color:#91784f}.carecard .entry span{font-size:12px;color:#605443;line-height:1.5}.fieldlabel{display:block;margin:14px 0 6px;color:#716457;font-size:11.5px;font-weight:700}.field{width:100%;border:1px solid #e7dfd3;border-radius:10px;padding:11px 12px;font-size:13px;color:#4d443f;background:white}.fine{font-size:11px;color:#978b7a;line-height:1.68;margin-top:14px}
+.ico{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* Childcare category: always-visible care options and practical toolkit */
+.stage-label{font-size:10px;color:#9c8c75;text-transform:uppercase;letter-spacing:.09em;font-weight:800;margin:-2px 0 8px}
+.home-heading{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin:2px 0 11px}.home-heading h3{font-size:16px}.home-heading small{font-size:11px;color:#958a7e}
+.caregrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.caretile{min-height:126px;padding:13px;border:0;border-radius:14px;text-align:left;color:#484453;background:#eaf0fa;display:flex;flex-direction:column;align-items:flex-start}
+.caretile:nth-child(2){background:#e8f2ec;color:#4d7361}.caretile:nth-child(3){background:#f9eaf1;color:#90647c}
+.caretile:nth-child(4){background:#f9ede3;color:#956c50}.caretile:nth-child(5){background:#eeeaf8;color:#79689c}.caretile:nth-child(6){background:#faf0dd;color:#947448}
+.caretile:hover{filter:brightness(.986)}.tile-illustration{display:grid;place-items:center;height:32px;width:32px;border-radius:10px;background:#ffffff9c}
+.caretile b{font-size:12.8px;line-height:1.35;margin-top:9px}.caretile small{display:block;opacity:.83;font-size:11px;line-height:1.5;margin-top:auto;padding-top:4px}
+.inline-path{padding:14px 0 8px;border:0;background:transparent;color:#8a744b;font-size:12px;font-weight:700;text-align:left;width:100%}
+.care-share{display:flex;align-items:center;gap:13px;width:100%;margin:18px 0 23px;padding:17px 15px;border:0;border-radius:16px;background:#f8edce;text-align:left;color:#5b4824}
+.care-share-copy{flex:1}.care-share-copy .micro{color:#9a7d4b}.care-share-copy b{display:block;font-size:16px;font-family:Nunito,sans-serif;letter-spacing:-.02em;margin:6px 0}.care-share-copy small{display:block;color:#866f4a;font-size:11.7px;line-height:1.5}
+.mini-document{display:flex;flex-direction:column;gap:7px;flex:0 0 46px;width:46px;height:58px;border-radius:8px;background:#fffefa;box-shadow:0 2px 6px #b7a1723b;padding:14px 10px;transform:rotate(-5deg)}
+.mini-document span{display:block;height:4px;background:#ddc7a4;border-radius:3px}.mini-document span:nth-child(2){width:80%}.mini-document span:nth-child(3){width:95%}
+.tools-heading{margin-bottom:5px}
+.tool-row{border:0;border-bottom:1px solid var(--line);background:transparent;color:var(--ink);display:flex;align-items:center;gap:11px;padding:15px 0;text-align:left;width:100%}.tool-row:last-of-type{border-bottom:0}.tool-row .rowic{flex:0 0 42px;height:42px;width:42px}.tool-row:nth-child(2n){--unused:0}.tool-row.suggested .rowic{background:#eaf2e8;color:#64856b}
+.tool-row em{font-style:normal;display:block;font-size:10.5px;font-weight:700;color:#608367;margin-top:5px}
+.page-tail{font-size:10.7px;color:#a09285;line-height:1.65;margin:15px 0 2px}
+
+.fitpair{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:19px}.fitpair>div{background:#f8f4ee;border-radius:13px;padding:13px}.fitpair .micro{font-size:9.5px;color:#967c58}.fitpair p{font-size:12px;line-height:1.55;color:#665b50;margin-top:7px}
+.tickrow{width:100%;display:flex;gap:10px;align-items:center;border:0;border-bottom:1px solid var(--line);background:transparent;text-align:left;padding:13px 0;color:var(--ink)}.tickrow b{font-size:12.5px;display:block;line-height:1.45}.tickrow small{font-size:11.5px;line-height:1.55;display:block;color:#8c8175;margin-top:3px}
+.tickbox{flex:0 0 21px;width:21px;height:21px;border:1.6px solid #cfc1ae;border-radius:7px;display:grid;place-items:center;color:white;font-size:12px}.tickbox.yes{background:#7b9c7c;border-color:#7b9c7c}
+.guide-selector{margin-top:22px;padding:15px;border-radius:14px;background:#faf7f2}.guide-selector .micro{color:#90765a}.type-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:11px}.type-chips button,.fit-choices button{border:1px solid #e6dacb;background:white;border-radius:99px;padding:8px 11px;font-size:11px;color:#8b7b6a;font-weight:700}.type-chips button.on,.fit-choices button.on{background:#f1e3c3;color:#775e32;border-color:#e4ca98}
+.addcandidate{border:0;border-radius:10px;background:#eaf2e8;color:#56785b;font-size:12px;font-weight:700;padding:11px 14px;margin-top:9px;width:100%}
+.shortlisted{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px 0;border-bottom:1px solid var(--line)}.shortlisted b{font-size:12.5px}.shortlisted small{display:block;font-size:11px;color:#8d8074;margin-top:3px}.shortlisted button{border:0;background:transparent;font-size:11px;color:#9b775a;font-weight:700}
+.references{margin-top:20px;padding:16px;border:1px solid #eee5d7;border-radius:13px}.references b{font-size:12.5px}.references a{display:block;font-size:11.8px;line-height:1.6;color:#82684c;margin-top:10px}
+.step-time{font-size:10.3px!important;text-transform:uppercase;letter-spacing:.03em;color:#9f875e!important;margin:0 0 5px!important}
+.care-share.inpage{margin-top:22px}.fit-choices{display:flex;flex-wrap:wrap;gap:7px}.fit-results{margin-top:15px}
+
+.shortlist-name{border:0;background:transparent;flex:1;text-align:left;padding:0;color:inherit}.shortlist-name b{font-size:12.5px}.shortlist-name small{font-size:11px;display:block;color:#8a7b6a;margin-top:3px}
+.notes{width:100%;min-height:96px;resize:vertical;border:1px solid #e6dbcd;border-radius:11px;padding:12px;margin-top:12px;font-size:12.5px;color:#403833;background:white;line-height:1.6}
+.chosenline{display:flex;align-items:center;gap:9px;border:0;border-radius:10px;background:#f2f6ef;padding:10px 13px;margin-top:12px;width:100%;text-align:left;color:#638066}.chosenline svg{height:17px;width:17px}.chosenline span:nth-child(2){flex:1}.chosenline b{font-size:12px;display:block}.chosenline small{font-size:10.7px;display:block;margin-top:3px;color:#8ba18d}
+
+/* Calm category home: original information architecture with a contextual lead */
+.hero{padding:19px 19px 0;border-radius:18px}
+.hero h2{font-size:23px;line-height:1.18;margin:8px 0 7px}
+.hero p{font-size:12.5px;line-height:1.56}
+.hero-art{height:99px;max-width:290px;margin:0 auto 0}
+.hero-go{display:block;position:relative;width:calc(100% + 38px);margin:0 -19px;padding:13px 19px;border:0;border-top:1px solid #e7dbb8;text-align:left;background:#f8ebc7;color:#765d2b;font-size:12px;font-weight:800}
+.simple-title{margin:23px 0 11px}.simple-title h3{font-size:16px}
+.caregrid{gap:8px;grid-template-columns:1fr 1fr}
+.caretile{min-height:105px;padding:11px 12px;border-radius:13px}.caretile b{font-size:12.8px;line-height:1.28;margin-top:7px}.caretile small{font-size:10.9px;line-height:1.36;padding-top:3px}.tile-illustration{height:26px;width:28px;border-radius:8px}.tile-illustration .ico{height:17px;width:17px}
+.inline-path{padding:12px 0 10px;font-weight:700;font-size:12px}
+.simple-card{display:flex;align-items:center;gap:11px;border:0;background:#f0f3e9;width:100%;text-align:left;border-radius:14px;padding:15px;margin-top:10px;color:#425b4b}
+.cardicon{width:43px;height:43px;border-radius:12px;background:#fffdf5;display:grid;place-items:center;flex:0 0 43px;color:#638469}
+.simple-card-copy{flex:1}.simple-card-copy b{display:block;font-size:13px}.simple-card-copy small{font-size:11.6px;line-height:1.5;color:#728276;display:block;margin-top:4px}
+.simple-card .chev{color:#8da08e}
+.simple-row{width:100%;border:0;border-bottom:1px solid var(--line);display:flex;gap:11px;align-items:center;background:transparent;text-align:left;color:var(--ink);padding:13px 0}
+.simple-row:last-of-type{border:0}.simple-row-icon{flex:0 0 39px;width:39px;height:39px;border-radius:11px;background:#f4efe7;color:#938271;display:grid;place-items:center}.simple-row-icon .ico{width:19px;height:19px}
+.simple-row-copy{flex:1}.simple-row-copy b{display:block;font-size:13px;line-height:1.4}.simple-row-copy small{display:block;font-size:11.5px;line-height:1.55;color:#887d70;margin-top:3px}
+.page-tail{font-size:11px;text-align:center;margin:20px 0 0;color:#a2968a;line-height:1.6}
+.living-compare{margin-top:15px}
+
+.comparison-link{border:0;border-radius:11px;width:100%;padding:13px 15px;text-align:left;background:#eaf2e8;color:#53765a;font-size:12px;font-weight:700;margin:11px 0 14px}
+.comparison-selectors{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:18px 0}
+.comparison-selectors label{font-size:9.5px;color:#91816e;font-weight:800;letter-spacing:.05em}
+.comparison-selectors select{margin-top:7px;width:100%;border-radius:10px;border:1px solid #e4dacc;color:#594e46;background:white;padding:10px 6px;font-size:11.7px}
+.comparison-grid{border:1px solid #eee5d8;border-radius:12px;overflow:hidden}
+.comparison-head,.comparison-row{display:grid;grid-template-columns:81px 1fr 1fr;gap:8px;padding:11px 9px}
+.comparison-head{background:#f5f0e8;color:#786a57}.comparison-head b{font-size:9px;line-height:1.5}.comparison-head strong{font-size:11.3px;line-height:1.4;overflow-wrap:anywhere}
+.comparison-row{border-top:1px solid #eee9e1}.comparison-row b{font-size:10.6px;line-height:1.5;color:#84776b}.comparison-row p{font-size:11.3px;line-height:1.53;color:#5d5248;overflow-wrap:anywhere}
+.comparison-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:11px 0 0 90px}
+.comparison-actions button{border:1px solid #e0d5c7;background:#fffdfa;border-radius:9px;padding:9px 5px;font-size:11px;color:#806b4b;font-weight:700}
+.comp-warning{font-size:11px;color:#af735a;margin:0 0 10px}
+
+.guide-tabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:9px 0 13px}.guide-tabs::-webkit-scrollbar{display:none}.guide-tabs button{white-space:nowrap;border:0;background:#f1eee9;color:#8d7f70;border-radius:99px;padding:9px 12px;font-size:10.9px;font-weight:700}.guide-tabs button.on{background:#e9f1e8;color:#5a7d5f}
+.tab-title{margin:6px 0 4px!important;font-size:14px!important}.tab-note{font-size:11.6px!important;line-height:1.6!important;color:#94887e!important;margin-bottom:6px!important}
+
+.card-section{border:1px solid #efe9df;border-radius:14px;padding:15px;margin-top:15px}.card-section h3{font-size:15px;margin:0 0 6px}.care-chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:7px}.care-chips button{border:1px solid #e9e0d4;background:#f8f5f0;color:#7d7165;border-radius:99px;padding:8px 11px;font-size:11.2px;font-weight:700}.care-chips button.on{background:#e4eee5;border-color:#c5d8c8;color:#4f7458}
+@media(max-width:800px){.shell{display:block;max-width:425px;padding:0}.aside{position:static;padding:15px 20px 11px}.aside h1{font-size:18px;margin:5px 0}.aside>p,.aside .explain{display:none}.control{margin-top:12px;padding:12px}.buttons button{padding:8px 10px}.controlsep{padding-top:10px;margin-top:10px}.phone{border:0;border-top:1px solid #ece4da;border-radius:0;box-shadow:none;min-height:80vh}}
+</style></head><body>
+<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
+<symbol id="i-heart" viewBox="0 0 24 24"><path d="M20.7 7.4c-2-4.5-7-3.5-8.7 0-1.7-3.5-6.7-4.5-8.7 0-3 5.6 5 11.1 8.7 14 3.7-2.9 11.7-8.4 8.7-14z"/></symbol><symbol id="i-baby" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 11h.01M16 11h.01M8 15q4 3 8 0"/></symbol><symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2l9 4v6c0 5-4 9-9 10-5-1-9-5-9-10V6zM8 12l3 3 5-6"/></symbol><symbol id="i-chat" viewBox="0 0 24 24"><path d="M20 4H4v14h9l5 3v-3h2zM7 10h10M7 14h7"/></symbol><symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4m10-4v4M3 10h18"/></symbol><symbol id="i-bag" viewBox="0 0 24 24"><path d="M4 8h16v13H4zM8 8V6a4 4 0 018 0v2M4 14h16"/></symbol><symbol id="i-book" viewBox="0 0 24 24"><path d="M12 6c-3-2-6-2-10-1v14c4-1 7-1 10 1 3-2 6-2 10-1V5c-4-1-7-1-10 1zM12 6v14"/></symbol><symbol id="i-home" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v11H3zM9 21v-8h6v8"/></symbol><symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 3"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></symbol><symbol id="i-list" viewBox="0 0 24 24"><path d="M8 5h13M8 12h13M8 19h13M3 5h1M3 12h1M3 19h1"/></symbol>
+</svg>
+<div class="shell"><aside class="aside"><div class="kicker">Ahead · Design exploration</div><h1>Childcare</h1><p>One calm guide that adapts as families consider options, choose care, and get help from someone they trust.</p>
+<div class="control"><strong>Preview a family's situation</strong><div class="buttons" id="steps"></div><div class="controlsep"><strong>Who is caring for Maya?</strong><div class="buttons" id="types"></div></div><div class="controlsep"><strong>Maya's age</strong><div class="buttons" id="ages"></div></div></div>
+<div class="explain"><b>Try the real flow:</b> Add two people or places to the shortlist, compare them, choose one and mark care as started. Watch the homepage adapt without adding new sections. The buttons above also load example scenarios.</div></aside>
+<div class="phone"><div class="topbar"><span class="logo">ahead<i>.</i></span><span class="avatar">M</span></div><div id="app"></div></div></div>
+<script>
+(function(){
+"use strict";
+const stages=["Find support","Choose care","Get ready","Settle in"];
+const kinds=[
+{name:"Daycare center",brief:"Set hours, a team of teachers, other babies",watch:"Ask about staff turnover, licensed status, emergency plans and how infant feeds and naps are handled.",ready:"Plan a short introduction visit, send the feeding plan, and pack what the center requests."},
+{name:"Home daycare",brief:"A smaller group in someone's home",watch:"Ask about who is present, age mix, licensing, safe sleeping and who covers an absence.",ready:"See the infant sleep space, go over Maya's day, and arrange a practice visit."},
+{name:"Nanny or nanny share",brief:"Individualized care at home",watch:"Check references, infant experience, background screening, CPR training and working terms.",ready:"Schedule a paid trial day while you are home and go through Maya's feeding and sleep routine."},
+{name:"Family or friends",brief:"Trusted people who know Maya",watch:"Talk through today's safe sleep and car-seat practices, boundaries, timing and backup.",ready:"Spend an afternoon together practicing feeds, naps and comfort before the first solo day."},
+{name:"Babysitter",brief:"Occasional help or a few hours out",watch:"Ask about age-specific experience, references, infant CPR and emergencies.",ready:"Start with a short visit while you are home, then leave the care card and emergency numbers."},
+{name:"Extra help at home",brief:"A helper while you are home, a postpartum doula, or overnight help",watch:"Agree on which baby-care tasks they cover, how you share responsibilities, and their infant-care experience.",ready:"Talk through the hours, feeds, sleep, responsibilities and what happens when the baby needs a parent."}
+];
+const content=[
+{tag:"FINDING SUPPORT",title:"The right help should feel right for Maya",lead:"You are not just choosing a schedule. You are choosing someone who will get to know Maya and respond to her needs.",feature:"The best clue is not the nicest playroom",sub:"Watch what happens when a baby cries. A calm, responsive caregiver matters more than beautiful decor.",why:"Quality care means children receive warm, responsive attention alongside safe environments and clear communication.",doIt:"During a visit, watch a real interaction. Does the caregiver notice cues, comfort the baby and speak warmly?",next:"You can look at options without deciding what your perfect childcare arrangement looks like yet."},
+{tag:"MAKING A CHOICE",title:"A visit tells you more than a brochure",lead:"A good choice is about the people, not just the opening. Spend a few minutes observing what caring for babies actually looks like.",feature:"Ask what happens when Maya will not settle",sub:"How someone handles hard moments reveals more than the answers to easy questions.",why:"A thoughtful answer includes specific soothing strategies, safe ways to pause, and when to contact you.",doIt:"Ask for a real example of comforting a baby. Follow up on safe sleep, staff training, references and policies.",next:"After choosing, the priority shifts from finding the right person to helping them learn Maya's routine."},
+{tag:"PREPARING FOR DAY ONE",title:"Make the first day feel a little familiar",lead:"The care routine is already familiar to you. A practice handoff and a simple care card help someone else learn it.",feature:"The first day should not be the first introduction",sub:"A short visit together lets the caregiver learn Maya's signals while you are still there.",why:"A practice visit helps a caregiver understand the baby's feeding, sleep and comfort cues. It also lets parents ask questions.",doIt:"If possible, schedule a short practice visit, demonstrate a feed or soothing routine, and agree on when you would like updates.",next:"Once care starts, your best clues are how Maya is comforted, how the day goes, and whether you can ask questions."},
+{tag:"WHEN CARE IS UNDERWAY",title:"Trust builds in the little handoffs",lead:"You can learn a lot from one good question at pickup. You deserve to know what Maya's day was like.",feature:"She was fine is not the full story",sub:"The helpful update is what she ate, how she slept, what soothed her, and what made her smile.",why:"Specific, regular communication helps caregivers and parents respond consistently as baby's needs change.",doIt:"Ask how Maya settled after you left. Follow up on feeds, naps and one good moment from the day.",next:"As Maya starts solids, changes naps, or becomes more mobile, update her care card."}
+];
+let state={stage:0,type:0,age:6,page:"home",mode:"all",topic:"",resourceId:"compare",checks:{},shortlist:[],activeCandidate:0,candidate:"",fit:{},card:{feed:"Breast milk",often:"Every 3–4 hours",bottle:"",solids:"Not yet",naps:"2 naps",napTimes:"",bedtime:"",asleep:"Rocking",soothe:"Rocking and a song",allergies:"Not specified",contact:"",backup:"",pediatrician:"",other:""},copyMessage:"",careStarted:false,compareLeft:0,compareRight:1,typeTab:0,candidateTab:0};
+function syncStage(){
+state.stage=state.careStarted?3:state.shortlist.some(c=>c.chosen)?2:state.shortlist.length?1:0;
+}
+function chooseDemo(i){
+state.page="home";state.careStarted=false;state.shortlist=[];state.activeCandidate=0;
+if(i>=1)state.shortlist=[
+{name:"Little Oaks",type:"Daycare center",typeIndex:0,checks:{0:true,1:true},notes:"Friendly teachers. Need to confirm the sick-day policy.",chosen:i>=2,cost:"$2,400 / month",hours:"Weekdays, 8–5",availability:"Opening in January"},
+{name:"Sam",type:"Nanny or nanny share",typeIndex:2,checks:{0:true},notes:"Flexible hours. Need another reference.",chosen:false,cost:"$29 / hour",hours:"Mon–Thu, flexible",availability:"Available next month"}];
+state.type=0;if(i===3)state.careStarted=true;syncStage();render()
+}
+function T(){return kinds[state.type]}function C(){return content[state.stage]}
+function icon(x){return '<svg class="ico" aria-hidden="true"><use href="#i-'+x+'"></use></svg>'}
+function safe(x){return String(x||"").replace(/[&<>"]/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]))}
+function art(i){
+const base='<ellipse cx="150" cy="116" rx="112" ry="6" fill="#dfd3b9"/><rect x="21" y="107" width="255" height="12" rx="6" fill="#decda8"/>';
+const adult1='<circle cx="75" cy="48" r="20" fill="#e4b49c"/><path d="M56 42q-2-22 22-22 15 0 19 18" fill="#8c7568"/><path d="M62 74q18-14 30 0l19 39H43z" fill="#b5c9e1"/><path d="M76 54q5 5 10 0" stroke="#a76f67" stroke-width="2" fill="none"/>';
+const adult2='<circle cx="230" cy="48" r="20" fill="#bf8c74"/><path d="M211 42q0-24 23-22 17 3 17 23" fill="#665656"/><path d="M213 73q19-13 35 2l16 38h-68z" fill="#b9d5c1"/><path d="M231 54q5 5 10 0" stroke="#885b4e" stroke-width="2" fill="none"/>';
+const baby='<circle cx="156" cy="77" r="17" fill="#ecc0a6"/><path d="M145 71q6-11 15-7" stroke="#987563" stroke-width="3" fill="none"/><path d="M136 97q20-12 38 1l10 15h-58z" fill="#d7b9d5"/>';
+const scenes=[
+base+adult1+adult2+baby+'<path d="M104 85q18 0 29 8m43 0q18-8 28-8" stroke="#e2b09b" stroke-width="9" stroke-linecap="round" fill="none"/><path d="M152 21l5 10 10 3-10 4-5 9-4-9-10-4 10-3z" fill="#f1d69b"/>',
+base+adult2+'<rect x="27" y="68" width="64" height="40" rx="8" fill="#cadbe7"/><rect x="37" y="77" width="45" height="25" rx="5" fill="#fdfbf4"/><path d="M43 84h31M43 92h23" stroke="#abc5d1" stroke-width="3" stroke-linecap="round"/><circle cx="130" cy="70" r="20" fill="#ecc0a6"/><path d="M111 92q25-13 45 3l15 20h-73z" fill="#ddbdd5"/><path d="M158 94q22 5 46-8" stroke="#ecc0a6" stroke-width="11" stroke-linecap="round" fill="none"/><circle cx="208" cy="86" r="7" fill="#ecc0a6"/>',
+base+adult1+baby+'<path d="M100 82q19 0 33 13" stroke="#e4b49c" stroke-width="10" stroke-linecap="round"/><rect x="198" y="62" width="65" height="49" rx="9" fill="#b4cde1"/><rect x="193" y="57" width="76" height="10" rx="5" fill="#91b2cd"/><path d="M209 77h46" stroke="#f8fcff" stroke-width="3"/><circle cx="265" cy="35" r="11" fill="#efd29f"/><path d="M265 27v16m-8-8h16" stroke="#fff7e8" stroke-width="2"/>',
+base+adult1+adult2+baby+'<path d="M104 84q19 12 32 13m38 0q15 1 30-10" stroke="#e4b49c" stroke-width="10" stroke-linecap="round" fill="none"/><rect x="223" y="19" width="50" height="32" rx="7" fill="#fffdf4" stroke="#d9c5a9"/><path d="M232 28h32M232 35h21M232 42h29" stroke="#c3b89a" stroke-width="3" stroke-linecap="round"/>'
+];
+return '<svg class="hero-art" viewBox="0 0 300 124" role="img" aria-label="'+["Two caregivers meeting with a baby","A caregiver helping a baby in a care setting","Parent helping prepare baby care supplies","Parent and caregiver exchanging baby and day notes"][i]+'">'+scenes[i]+'</svg>'
+}
+function nav(){return '<div class="bottomnav"><span>'+icon("home")+'Home</span><span class="sel">'+icon("list")+'Guides</span><span>'+icon("heart")+'Memories</span></div>'}
+function top(){return '<div class="screen"><button class="back" data-act="home">‹ Childcare</button>'}
+function rails(){return '<div class="rail">'+stages.map((x,i)=>'<button data-act="stage" data-i="'+i+'" class="'+(i===state.stage?'sel':'')+'">'+x+'</button>').join('')+'</div>'}
+function rows(data){return data.map(x=>'<button class="row" data-act="'+x[3]+'" data-key="'+x[4]+'"><span class="rowic">'+icon(x[0])+'</span><span class="rowtxt"><b>'+x[1]+'</b><small>'+x[2]+'</small></span><span class="chev">›</span></button>').join('')}
+function home(){
+const chosen=state.shortlist.find(x=>x.chosen),n=state.shortlist.length;
+const headline=[
+["FINDING SUPPORT","Start with what you need","Your days, hours and budget are a good place to start. Then explore the kinds of care that could fit.","Find your fit","fit"],
+["CHOOSING CARE","You have "+n+" option"+(n===1?"":"s")+" to explore","Compare what matters, capture what you learn, and see which questions still need answers.","Review your shortlist","compare"],
+["GETTING READY","Getting ready for "+safe(chosen?chosen.name:"day one"),"You've chosen care. Make the handoff easier by sharing Maya's routine and practicing together.","Get ready for day one","ready"],
+["CARE HAS STARTED",chosen?"How is care with "+safe(chosen.name)+" going?":"How is Maya settling into care?","A few good questions at pickup help you see how Maya is doing and what needs attention.","See what to expect","settle"]
+][state.stage];
+let o='<div class="screen"><button class="back" data-act="home">‹ All guides</button><h1 class="title">Childcare</h1>';
+o+='<div class="hero"><div class="micro">'+headline[0]+'</div><h2>'+headline[1]+'</h2><p>'+headline[2]+'</p>'+art(state.stage)+'<button class="hero-go" data-act="'+(headline[4]==="fit"?"fit":"resource")+'"'+(headline[4]==="fit"?"":' data-id="'+headline[4]+'"')+'>'+headline[3]+' ›</button></div>';
+o+='<div class="simple-title"><h3>What kind of care?</h3></div><div class="caregrid">';
+const short=["A group setting","A smaller group","Care at home","Someone familiar","A few hours","Day or night"];
+kinds.forEach((x,i)=>{
+const count=state.shortlist.filter(p=>p.typeIndex===i).length;
+o+='<button class="caretile" data-act="type" data-i="'+i+'"><span class="tile-illustration">'+icon(["calendar","home","heart","baby","clock","bag"][i])+'</span><b>'+["Daycare center","Home daycare","Nanny","Family & friends","Babysitter","Extra help at home"][i]+'</b><small>'+(count?count+' saved · ':'')+short[i]+'</small></button>';
+});
+o+='</div><button class="inline-path" data-act="fit">Not sure which? Explore your options ›</button>';
+o+='<button class="simple-card" data-act="card"><span class="cardicon">'+icon("book")+'</span><span class="simple-card-copy"><b>Maya’s care card</b><small>Feeds, naps and who to call, ready to share</small></span><span class="chev">›</span></button>';
+o+='<div class="simple-title"><h3>Setting it up</h3></div>';
+[
+["pay","calendar","Paying for care","Help from your state, work and taxes"],
+["ready","bag","Get ready for day one","Practice, packing and the first handoff"],
+["backup","shield","When care falls through","Sick days, closures and a backup plan"],
+["settle","heart","Settle in",state.age>=8?"Harder goodbyes, daily updates and sick days":"Daily updates, sick days and when to speak up"]
+].forEach(([id,ico,title,desc])=>{
+o+='<button class="simple-row" data-act="resource" data-id="'+id+'"><span class="simple-row-icon">'+icon(ico)+'</span><span class="simple-row-copy"><b>'+title+'</b><small>'+desc+'</small></span><span class="chev">›</span></button>';
+});
+o+='<p class="page-tail">Every family’s situation is different. Choose the care that fits yours.</p></div>'+nav();return o
+}
+function dhero(eyebrow,title,lead){return top()+'<div class="dhero"><div class="micro">'+eyebrow+'</div><h2>'+title+'</h2><p>'+lead+'</p></div>'}
+function feature(){
+const c=C();let o=dhero("WHY IT MATTERS",c.feature,c.sub);
+o+='<section class="section"><h3>The bigger picture</h3><p>'+c.why+'</p></section><div class="callout"><div class="micro">WHAT TO TRY</div><p>'+c.doIt+'</p></div>';
+o+='<button class="secondary" data-act="home">Back to Childcare</button></div>'+nav();return o
+}
+function topicData(id){
+const x={
+comfort:["What happens when Maya needs comfort?","You can learn more from watching a caregiver soothe a baby than from the decor.",[["Watch first","Do they notice fussing and respond with patience?"],["Ask the hard question","What do they do if a baby cries for a long time?"],["Notice the communication","Can you ask about a difficult day and get an honest answer?"]],"The goal is warm attention, a safe environment and someone who keeps you informed."],
+sleep:["See where Maya will sleep","Safe sleep should be visible, not merely promised.",[["Back for each sleep","Babies are placed on their backs to sleep."],["A safe sleep surface","Firm, flat and empty, apart from a fitted sheet."],["Clear supervision","Ask who is responsible for monitoring sleeping babies."]],"Ask to see the actual sleep space and review safe sleep practices together."],
+updates:["Know about her day","A specific update is more helpful than just hearing that everything went fine.",[["Feeding","When and how Maya ate."],["Sleep","When she slept and what helped her settle."],["Connection","How they comforted her and what she enjoyed."]],"Agree on a simple method: a short chat, daily note or app update."],
+practice:["Try a short handoff together","Practice is a way for another caregiver to learn Maya's signals.",[["Show the routine","Walk through a feed and a calming technique."],["Give them a turn","Let the caregiver take the lead while you are available."],["Try a short goodbye","Keep it predictable; ask how she settled."]],"A practice visit is useful when feasible, not another parenting assignment."],
+supplies:["Have the essentials ready",T().ready,[["Food and milk","Share the schedule and safe handling instructions."],["Diapers and spare clothes","Label supplies or set them out at home."],["Contacts and care notes","Say when to call and who can help if you are unavailable."]],"A quick handoff beats a giant packing checklist. Ask the caregiver what they provide."],
+pickup:["Ask one good question at pickup","You deserve a real sense of what Maya experienced.",[["How did she settle?","Especially if drop-off was difficult."],["Anything different?","Look at feeding, naps and comfort."],["One happy moment","What did she smile at or enjoy?"]],"Make the update simple enough for both you and the caregiver to keep doing."],
+goodbye:["When goodbyes feel hard","Different ages and temperaments make separations feel different.",[["A consistent ritual","Use the same brief, warm goodbye."],["Find out what happens next","Ask what helps her settle and how the morning goes."],["Talk if it continues","If a routine isn't working, plan a change together."]],"Crying at the door is not the only measure of quality; responsiveness matters."],
+concerns:["When something feels off","You should feel able to speak up early.",[["Be specific","Describe what you noticed and ask what happened."],["Agree on follow-up","Be clear about what would change."],["Take safety seriously","If care is unsafe, protect your baby and consider contacting the regulator."]],"Trust means communication and accountability, not never having concerns."]
+};return x[id]||x.comfort
+}
+function topic(){
+const [title,lead,points,tip]=topicData(state.topic);let o=dhero("PRACTICAL GUIDANCE",title,lead);
+o+='<section class="section"><h3>What to do</h3>'+points.map(([a,b],i)=>'<div class="step"><span class="stepnum">'+(i+1)+'</span><div><b>'+a+'</b><small>'+b+'</small></div></div>').join('')+'</section><div class="callout"><div class="micro">TAKEAWAY</div><p>'+tip+'</p></div>';
+o+='<button class="secondary" data-act="home">Back to Childcare</button></div>'+nav();return o
+}
+function options(){
+let o=dhero("FINDING HELP",state.mode==="occasional"?"A few hours of support can go a long way":"Which kind of care fits?",state.mode==="occasional"?"Family, sitters and extra help at home can all make space for a break.":"Explore the different ways families get support. Costs, requirements and availability depend on where you live.");
+o+='<div class="section"><h3>Your options</h3><div class="choicelist">';
+kinds.forEach((x,i)=>{if(state.mode==="occasional"&&i!==3&&i!==4&&i!==5)return;o+='<button class="choice'+(i===state.type?' active':'')+'" data-act="type" data-i="'+i+'"><span class="rowic">'+icon(["calendar","home","heart","baby","clock","bag"][i])+'</span><span style="flex:1"><b>'+x.name+'</b><small>'+x.brief+'</small></span><span class="chev">›</span></button>'});
+o+='</div></div><button class="secondary" data-act="home">Back to Childcare</button></div>'+nav();return o
+}
+
+const BASELINE_TYPES = {
+    center: { icon: 'blocks', name: 'Daycare center', short: 'Set hours, built-in backup', who: 'place',
+      lead: 'A licensed center with trained teachers, where babies are cared for in a room with others their age.',
+      good: 'You want set hours, backup staff when someone’s out, and other babies around.', mind: 'Babies tend to catch more colds in their first year of group care.',
+      when: ['About 6 months ahead', 'Infant rooms often have waitlists, so join a few early. Less time than that? Your referral agency knows who has openings now.'],
+      // Steps, in the order a parent meets them: a quick call, the tour (look, then ask three), and before signing.
+      steps: [['Before you visit', 'check', 'A quick call, or a look online', [['Do you have a spot for a baby, and when?', 'Ask about the waitlist, and how often it moves.'], ['What are your hours and cost?', 'Including closed days and any extra fees.'], ['Are you licensed?', 'A licensed center is inspected by your state.']]],
+        ['On the tour: look for', 'look', 'You can see these for yourself', [['Babies sleeping on their backs, in bare cribs', 'No blankets, bumpers or toys.'], ['Enough grown-ups for the babies', 'Best is 3 babies per adult, and 6 in a room. Your state may allow a few more.'], ['Warm, unhurried caregivers', 'Talking to babies, and picking them up when they cry.'], ['A clean, calm room', 'A clean changing area, covered outlets and floor space to play.']]],
+        ['On the tour: ask', 'ask', 'The three that tell you the most', [['How long have the baby-room teachers been here?', 'A year or more. Familiar faces matter most for babies.'], ['What happens if a baby isn’t tired at nap time, or wakes up early?', 'Never forced to sleep or left crying. Quiet play, then back down when sleepy.'], ['Walk me through a baby’s day.', 'Feeds and naps on each baby’s own schedule, floor time and outside every day, and no screens.']]],
+        ['Before you sign', 'check', 'Easy to ask by email', [['Is everyone trained in infant CPR?', 'Yes, and it’s kept current.'], ['Has every staff member had a background check?', 'Yes, everyone.'], ['When does a sick child stay home?', 'A clear, written policy.'], ['How will I hear about my baby’s day?', 'A daily note on feeds, naps and diapers.'], ['Can I have it in writing?', 'Hours, fees, closed days, and how much notice either side gives.'], ['Are children and staff up to date on vaccines?', 'Yes, with a clear policy, and hand-washing before feeds and after changes.']]]] },
+    home: { icon: 'home', name: 'Home daycare', short: 'A small group, often most affordable', who: 'place',
+      lead: 'A provider cares for a small group of children in their own home, often a mix of ages.',
+      good: 'You’d like a smaller group and a homey feel, often with more flexible hours.', mind: 'With one provider, you’ll need backup care when they’re sick or away.',
+      when: ['About 3 months ahead', 'Good spots fill up, often through word of mouth.'],
+      steps: [['Before you visit', 'check', 'A quick call, or a look online', [['Do you have a spot for a baby, and when?', 'Also ask how many babies they take.'], ['What are your hours and cost?', 'Including closed days and any extra fees.'], ['Are you licensed?', 'A licensed home daycare is inspected by your state.']]],
+        ['On the tour: look for', 'look', 'You can see these for yourself', [['A safe place for babies to sleep', 'Their own crib, bare, away from older kids.'], ['Enough grown-ups for the babies', 'Best is no more than 2 babies per adult in a home daycare.'], ['A warm, unhurried caregiver', 'Talking to the children, and calm when one cries.'], ['A baby-safe home', 'Gates, covered outlets, and no smoke smell.']]],
+        ['On the tour: ask', 'ask', 'The three that tell you the most', [['Who covers when you’re sick or on vacation?', 'A backup plan they can tell you about now.'], ['What happens if a baby isn’t tired at nap time, or wakes up early?', 'Never forced to sleep or left crying. Quiet play, then back down when sleepy.'], ['Walk me through a baby’s day.', 'Feeds and naps on the baby’s own schedule, floor time, outside, and no TV.']]],
+        ['Before you sign', 'check', 'Easy to ask by email', [['Are you trained in infant CPR?', 'Yes, and it’s kept current.'], ['Has every adult in the home had a background check?', 'Yes, everyone over 18.'], ['Are there pets, a pool or guns in the home?', 'Pets kept apart, any pool fenced, any guns locked and unloaded.'], ['When does a sick child stay home?', 'A clear, written policy.'], ['Can I have it in writing?', 'Hours, fees, closed days, and how much notice either side gives.'], ['Are children and staff up to date on vaccines?', 'Yes, with a clear policy, and hand-washing before feeds and after changes.']]]] },
+    nanny: { icon: 'hand', name: 'Nanny or nanny share', short: 'One-on-one at home. Sharing costs less', who: 'person',
+      lead: 'A caregiver who looks after your baby at home. In a nanny share, two families split one nanny.',
+      good: 'You want one-on-one care at home, on a schedule that fits yours.', mind: 'You’re usually their employer, with taxes to handle. Agree on paid time off up front, and plan backup for when they’re sick or away.',
+      when: ['About 3 months ahead', 'That leaves time for interviews, references and a paid trial day.'],
+      steps: [['Before you meet', 'check', 'A short phone call. Listen for:', [['Which days and hours can you work?', 'A clear answer that matches what you need.'], ['What pay are you looking for?', 'So you both know it fits before you meet.'], ['How long have you cared for babies under 1?', 'Real experience with babies this young.']]],
+        ['At the interview: watch for', 'look', 'Have Maya there if you can', [['How they are with Maya', 'They get down to {p} level, talk and smile.'], ['Phone away, full attention', 'On Maya, and on you.']]],
+        ['At the interview: ask', 'ask', 'The three that tell you the most', [['What would a day with Maya look like?', 'Naps and feeds by {p} cues, time outside, books, and no screens.'], ['How do you put a baby down to sleep?', 'On the back, in a crib with nothing else in it.'], ['What would you do if Maya wouldn’t stop crying?', 'Calm, practical steps, and a call to you if worried. Never shaking.']]],
+        ['Before you hire', 'check', 'Worth doing every time', [['Call two families they’ve worked for', 'Ask what they loved, and anything they’d change.'], ['A background check', 'Most nanny agencies and sites can run one.'], ['Infant CPR', 'Current, or a class before they start.'], ['A paid trial day', 'While you’re home, to see how it feels.'], ['A written agreement', 'Hours, pay, paid days off, sick days, and how much notice either of you gives.']]]] },
+    family: { icon: 'heart', name: 'Family or friends', short: 'Flexible, and someone you trust', who: 'person', talk: true,
+      lead: 'A grandparent, relative or friend looks after your baby, at your home or theirs.',
+      good: 'You’d like someone who already loves Maya, with flexible timing.', mind: 'Some safety advice is new since they had babies. Talk it through early and kindly.',
+      when: ['A few weeks ahead', 'Enough time to talk through the routine and do a practice day together.'],
+      steps: [['Talk it through', 'talk', 'Kindly, before the first day', [['Back to sleep, in a bare crib, even for naps', 'No blankets, bumpers or tummy sleeping. The biggest change since they had babies.'], ['The car seat, every ride', 'Rear-facing and buckled snugly, even for short trips.'], ['The day: naps, bedtime and feeds', 'Share {p} care card, so you both follow the same routine.'], ['Crying can wear anyone down', 'Put Maya down somewhere safe and take a minute. Never shake a baby.'], ['Infant CPR', 'A short class is worth it for anyone caring for {o} regularly.']]]] },
+    sitter: { icon: 'moon', name: 'Babysitter', short: 'For a few hours', who: 'person',
+      lead: 'Someone who watches Maya for a few hours now and then, so {s} {get|gets} used to another caring adult.',
+      good: 'You need a few hours of help, not regular care.', mind: 'Keep the first night short, and stay reachable.',
+      when: ['A week or two ahead', 'Time for a short first visit while you’re at home, so everyone gets comfortable.'],
+      steps: [['Before the sitter comes', 'check', 'A quick message or call. Listen for:', [['Have you looked after babies this young?', 'Yes, more than once.'], ['Are you trained in infant CPR?', 'Yes, ideally in the last 2 years.'], ['Can I call a family you’ve sat for?', 'Yes, gladly.']]],
+        ['A first visit, while you’re home', 'look', 'An hour is enough', [['How they hold and talk to Maya', 'Calm, gentle and engaged.'], ['Show them sleep and the car seat', 'On the back in a bare crib, and buckled snugly.']]],
+        ['On the visit: ask', 'ask', 'Before the sitter’s first time alone', [['What would you do in an emergency?', 'Call 911 first, then you.'], ['What would you do if Maya wouldn’t settle?', 'Hold, rock and soothe, and text you if it lasts.']]]] },
+  };
+const typeKeys=["center","home","nanny","family","sitter",null];
+function babyify(t){return String(t||"").replace(/\{p\}/g,"Maya’s").replace(/\{o\}/g,"her").replace(/\{s\}/g,"she").replace(/\{S\}/g,"She").replace(/\{s’s\}/g,"Maya’s")}
+function fullSteps(i){const k=typeKeys[i];return k&&BASELINE_TYPES[k]?BASELINE_TYPES[k].steps:[["Before you arrange","ask","Questions worth asking",deepTypes[i].questions.map(q=>[q,"Talk through this before care begins."])]]}
+function flatQs(i){return fullSteps(i).flatMap(step=>step[3].map(pair=>pair[0]))}
+function stepItems(i,tab){const steps=fullSteps(i),idx=Math.min(tab,steps.length-1),prefix=steps.slice(0,idx).reduce((n,step)=>n+step[3].length,0);return steps[idx][3].map((pair,j)=>({q:pair[0],answer:pair[1],index:prefix+j}))}
+
+const deepTypes=[
+{fit:"A predictable schedule, a group environment and coverage if one teacher is out.",mind:"Infant places can have waitlists, and you'll need to follow the center's hours and illness policy.",when:"Start exploring early; infant waitlists vary significantly by location.",where:"Use your state's childcare licensing directory and local childcare resource and referral agency.",questions:["Can I see the infant room and the actual sleep spaces?","What is the adult-to-infant ratio throughout the day?","How do you respond when one baby is upset and another needs feeding?","How are feeds, naps and diaper changes recorded?","What happens if a teacher is out sick?"]},
+{fit:"A smaller, home-like setting with potentially mixed ages.",mind:"Care can depend on one provider, so backup matters.",when:"Ask about openings before you need care; availability varies.",where:"Check your state's licensed family childcare listings and local parent referrals.",questions:["Where do infants sleep, separate from older children?","Who else is present in the home during the day?","How do you manage safe sleep and supervision with mixed ages?","What happens when the provider is sick or away?","How do you store labeled milk and record feeds?"]},
+{fit:"Care in your own home, with flexibility around the day.",mind:"You may be a household employer, with payroll, employment and backup responsibilities. Shares need clear agreements among families.",when:"Allow time for interviews, reference checks, a paid trial and a written agreement.",where:"Ask other parents, nanny agencies and reputable caregiver platforms.",questions:["What infant ages have you cared for?","Can we speak to recent families and check references?","How would you handle difficult crying or a refused bottle?","How do you practice safe sleep and respond to emergencies?","Can we agree in writing on hours, pay, leave and duties?"]},
+{fit:"Help from a familiar person who already cares about Maya.",mind:"Shared assumptions can create tension, especially around new safety guidance or boundaries.",when:"Arrange a conversation and practice day before regular care begins.",where:"Start with a direct conversation about realistic availability and responsibilities.",questions:["Can we agree on back sleeping and a bare crib every time?","Are we comfortable talking openly about feeding and soothing?","Can you do these days and hours consistently?","What would happen if you needed to cancel?","Would you feel comfortable calling us right away with a concern?"]},
+{fit:"Occasional outings, a date night, appointments or a few hours of relief.",mind:"A sitter still needs infant experience, a safe sleep plan and clear emergency instructions.",when:"Try a short visit together before the first time alone.",where:"Ask trusted parents for referrals and confirm experience and references.",questions:["Have you cared for a baby Maya's age?","Do you know infant CPR and emergency steps?","Could we speak to a family you've sat for?","How would you soothe a baby who won't settle?","Can we agree on when to call and how to reach us?"]},
+{fit:"Support while a parent is home, help after birth or overnight coverage.",mind:"A postpartum doula, mother's helper and night nanny provide different services; clarify who is responsible for baby care.",when:"Book early for overnight or postpartum support when possible.",where:"Ask your pediatrician, hospital, local parents or specialized agencies for referrals.",questions:["Exactly what care and hours do you provide?","What training and infant experience do you have?","Who is responsible for sleep, feeds and monitoring overnight?","Can we check references?","What happens if you need to cancel?"]}
+];
+function typePage(){
+const x=T(),d=deepTypes[state.type],st=fullSteps(state.type),which=Math.min(state.typeTab,st.length-1),group=st[which];
+let o=dhero("YOUR CARE OPTIONS",x.name,x.brief);
+o+='<div class="fitpair"><div><span class="micro">A GOOD FIT IF</span><p>'+d.fit+'</p></div><div><span class="micro">KEEP IN MIND</span><p>'+d.mind+'</p></div></div>';
+o+='<div class="section"><h3>When & where to start</h3><p>'+d.when+' '+d.where+'</p></div>';
+o+='<div class="section"><h3>What to check, step by step</h3><p>Keep every question available, but focus on one part of the process at a time.</p>';
+o+='<div class="guide-tabs">'+st.map((g,i)=>'<button data-act="typetab" data-i="'+i+'" class="'+(i===which?'on':'')+'">'+babyify(g[0])+'</button>').join('')+'</div>';
+o+='<h3 class="tab-title">'+babyify(group[0])+'</h3><p class="tab-note">'+babyify(group[2])+'</p>';
+group[3].forEach((q,i)=>{o+='<div class="step"><span class="stepnum">'+(i+1)+'</span><div><b>'+babyify(q[0])+'</b><small>'+babyify(q[1])+'</small></div></div>'});
+o+='</div><div class="callout"><div class="micro">GET READY</div><p>'+x.ready+'</p></div>';
+o+='<button class="primary" data-act="resource" data-id="compare">Add an option to your shortlist →</button>';
+o+='<button class="secondary" data-act="resource" data-id="ready">Plan the first handoff</button><button class="secondary" data-act="home">Back to childcare options</button></div>'+nav();return o
+}
+function tickRow(id,title,explain){
+const yes=!!state.checks[id];return '<button class="tickrow" data-act="tick" data-id="'+id+'" aria-pressed="'+yes+'"><span class="tickbox'+(yes?' yes':'')+'">'+(yes?'✓':'')+'</span><span><b>'+title+'</b>'+(explain?'<small>'+explain+'</small>':'')+'</span></button>'
+}
+function resource(){
+const id=state.resourceId;
+if(id==="compare")return comparePage();
+if(id==="pay")return payPage();
+if(id==="ready")return readyPage();
+if(id==="settle")return settlePage();
+return backupPage();
+}
+function comparePage(){
+let o=dhero("CHOOSING SOMEONE","Know what good care looks like","A shortlist is useful, but how a caregiver responds to babies—and how safe the setting is—matters more than a polished brochure.");
+o+='<section class="section"><h3>Start with three essentials</h3>';
+for(const [id,title,explain] of [
+["comp-warm","Warm, responsive care","Notice how adults talk to babies, pick them up and respond to fussing."],
+["comp-safe","Safe sleep and supervision","Ask to see sleep spaces, staffing, emergency plans and infant CPR training."],
+["comp-clear","Clear communication","Will you hear about feeds, naps, illness, accidents and concerns?"]
+])o+=tickRow(id,title,explain);
+o+='</section><div class="guide-selector"><span class="micro">QUESTIONS FOR A SPECIFIC TYPE OF CARE</span><div class="type-chips">';
+kinds.forEach((x,i)=>{o+='<button data-act="settype" data-i="'+i+'" class="'+(state.type===i?'on':'')+'">'+["Center","Home","Nanny","Family","Sitter","Extra"][i]+'</button>'});
+o+='</div></div><div class="section"><h3>Ask when you visit or meet</h3>';
+deepTypes[state.type].questions.forEach((q,i)=>{o+=tickRow("ask-"+state.type+"-"+i,q,"Use this at an interview or tour.")});
+o+='</div><div class="callout"><div class="micro">DON’T FORGET</div><p>For licensed programs, review your state’s inspection and complaint records. For individual caregivers, check references, training and employment terms as applicable.</p></div>';
+o+='<div class="section"><h3>Your shortlist</h3><p>Keep the places or people you want to follow up with. This demo keeps the list only while the page is open.</p>';
+if(state.shortlist.length>=2)o+='<button class="comparison-link" data-act="comparison">Compare your '+state.shortlist.length+' saved options →</button>';
+o+='<label class="fieldlabel" for="candidate">Name of a person or place</label><input id="candidate" class="field" data-candidate="1" value="'+safe(state.candidate)+'" placeholder="e.g. Little Oaks or Sam" autocomplete="off"><button class="addcandidate" data-act="addcandidate">＋ Add to shortlist</button>';
+state.shortlist.forEach((p,i)=>{o+='<div class="shortlisted"><button class="shortlist-name" data-act="candidate" data-i="'+i+'"><b>'+safe(p.name)+'</b><small>'+safe(p.type)+(p.chosen?' · Chosen':'')+'</small></button><button data-act="remove" data-i="'+i+'">Remove</button></div>'});
+o+='</div><button class="secondary" data-act="home">Back to Childcare</button></div>'+nav();return o
+}
+function payPage(){
+let o=dhero("COSTS & SUPPORT","What will care really cost?","Think beyond the monthly rate. Hours, holidays, deposits and backup days can change the actual cost.");
+o+='<section class="section"><h3>What to ask each caregiver</h3>';
+for(const [a,b] of [
+["The full price","Weekly or monthly cost, registration fees, deposits and late pickup charges."],
+["Paid closures","Are holidays, vacations, sick days or days you travel still charged?"],
+["What's included","Meals, diapers, supplies, outings and additional hours."],
+["Who pays for backup","What happens—and what will you pay—when care is unavailable?"]
+])o+='<div class="step"><span class="stepnum">'+icon("check")+'</span><div><b>'+a+'</b><small>'+b+'</small></div></div>';
+o+='</section><section class="section"><h3>Places to look for financial help</h3>';
+for(const [a,b] of [
+["Your state or territory","Childcare subsidies may be available based on eligibility, including employment or school requirements."],
+["Your employer","Ask about dependent-care benefits and any childcare assistance or referrals."],
+["Federal tax benefits","Dependent-care FSAs and the Child and Dependent Care Credit can help eligible families; you cannot use the same expense for both."],
+["Hiring a nanny","Household employer taxes and wage rules may apply; clarify who handles payroll and paid time off."]
+])o+='<div class="step"><span class="stepnum">'+icon("book")+'</span><div><b>'+a+'</b><small>'+b+'</small></div></div>';
+o+='</section><div class="references"><b>Official resources</b><a target="_blank" rel="noopener noreferrer" href="https://childcare.gov/consumer-education/get-help-paying-for-child-care/child-care-financial-assistance-options">ChildCare.gov: financial assistance ↗</a><a target="_blank" rel="noopener noreferrer" href="https://www.irs.gov/credits-deductions/individuals/child-and-dependent-care-credit-information">IRS: Child and Dependent Care Credit ↗</a></div><p class="fine">Availability and tax rules depend on location, income and the year. Confirm eligibility before making decisions.</p>';
+o+='<button class="secondary" data-act="home">Back to Childcare</button></div>'+nav();return o
+}
+function readyPage(){
+const x=T();let o=dhero("GET READY FOR DAY ONE","Help someone else learn Maya’s world","The goal isn’t to write a parenting manual. It’s to share the few things they need to care for Maya confidently.");
+o+='<div class="fitpair"><div><span class="micro">CARE SETTING</span><p>'+x.name+'</p></div><div><span class="micro">BABY’S AGE</span><p>'+state.age+' months</p></div></div>';
+o+='<div class="section"><h3>A simple countdown</h3>';
+for(const [t,a,b] of [
+["A couple of weeks before","Agree on expectations",x.watch],
+["The week before","Practice together",x.ready],
+["The night before","Share the care card","Confirm feeds, naps, allergies, how to soothe Maya and who to call. Pack or prepare supplies."],
+["The first day","Make the handoff brief and warm","Share any overnight changes and confirm when you’ll get an update."]
+])o+='<div class="step"><span class="stepnum">'+icon("calendar")+'</span><div><small class="step-time">'+t+'</small><b>'+a+'</b><small>'+b+'</small></div></div>';
+o+='</div><button class="care-share inpage" data-act="card"><span class="mini-document"><span></span><span></span><span></span></span><span class="care-share-copy"><span class="micro">MOST USEFUL HANDOFF</span><b>Maya’s care card</b><small>Review her routine, then copy it for a caregiver</small></span><span class="chev">›</span></button>';
+o+='<div class="callout"><div class="micro">WHEN MAYA IS OLDER</div><p>'+(state.age>=8?'Around this age, Maya might protest separations more strongly. A familiar caregiver and consistent goodbye may help.':'A short practice visit can help a young baby and caregiver get familiar with each other. Never feel you have to force a long separation.')+'</p></div>';
+if(state.shortlist.some(x=>x.chosen)&&!state.careStarted)o+='<button class="primary" data-act="startcare">Care has started · See how to settle in →</button>';
+o+='<button class="secondary" data-act="home">Back to Childcare</button></div>'+nav();return o
+}
+function settlePage(){
+let o=dhero("WHEN CARE HAS STARTED","How do you know it’s going well?","Settling in is not a single milestone. Look at the care relationship and how your baby is supported day to day.");
+o+='<div class="section"><h3>Three useful pickup questions</h3>';
+for(const [a,b] of [
+["How did Maya settle after I left?","Especially if the goodbye felt hard."],
+["How were feeding and naps?","A simple update helps you adapt the evening."],
+["What did she enjoy today?","A little happy moment brings you into her day."]
+])o+='<div class="step"><span class="stepnum">'+icon("chat")+'</span><div><b>'+a+'</b><small>'+b+'</small></div></div>';
+o+='</div><div class="callout"><div class="micro">AT '+state.age+' MONTHS</div><p>'+(state.age>=8?'Separation anxiety often becomes more visible in the second half of the first year. You might see harder goodbyes even with a caregiver Maya knows. Ask what happens after you leave.':'New care can take some adjustment. Keep goodbyes calm, and ask for a short update on how Maya settles and responds during the day.')+'</p></div>';
+o+='<div class="section"><h3>When something changes</h3>';
+for(const [a,b] of [
+["Short naps or off-schedule feeds","Share the current routine, listen to the caregiver’s observations and adjust together."],
+["Sick days","Know the program’s written illness policy, who will care for Maya at home and how parents are notified."],
+["Something doesn’t feel right","Ask promptly about what you observed. If you encounter unsafe care, protect Maya and follow up with the licensing agency when appropriate."],
+["Caregiver changes or new rooms","Ask for introductions and a transition plan rather than a sudden switch."]
+])o+='<div class="step"><span class="stepnum">'+icon("heart")+'</span><div><b>'+a+'</b><small>'+b+'</small></div></div>';
+o+='</div><button class="secondary" data-act="resource" data-id="backup">Make a backup plan</button><button class="secondary" data-act="home">Back to Childcare</button></div>'+nav();return o
+}
+function backupPage(){
+let o=dhero("PLAN B","When childcare falls through","A few backup conversations now can spare you a frantic scramble later.");
+o+='<div class="section"><h3>Your backup essentials</h3>';
+for(const [id,a,b] of [
+["backup-person","A person who could help","Who could take Maya for a few hours if the normal plan falls through?"],
+["backup-contact","Everyone knows the contact plan","Who leaves work, handles pickup, or makes the next call?"],
+["backup-closures","Closed days are on the calendar","Check holidays, caregiver leave and the sickness policy now."]
+])o+=tickRow(id,a,b);
+o+='</div><div class="callout"><div class="micro">A PRACTICAL RULE</div><p>Have one backup for expected closures and another for a last-minute sick day. A family member, sitter or temporary arrangement can be part of the plan.</p></div>';
+o+='<button class="secondary" data-act="home">Back to Childcare</button></div>'+nav();return o
+}
+function fitPage(){
+let o=dhero("FINDING YOUR FIT","Which care could fit your family?","Four optional questions to narrow the possibilities. You can always browse all six care types without answering.");
+const q=[
+["hours","Which hours do you need?",["Regular weekdays","Part-time, some days","Evenings or weekends"]],
+["budget","How is the budget?",["Tight","Some room","Flexible"]],
+["family","Could family or friends help?",["Yes, some days","Not really","Not sure"]],
+["style","What feels right for now?",["Other babies around","One-on-one","Not sure yet"]]
+];
+q.forEach(([id,title,options])=>{o+='<div class="section"><h3>'+title+'</h3><div class="fit-choices">';options.forEach(v=>{o+='<button data-act="fitpick" data-field="'+id+'" data-value="'+v+'" class="'+(state.fit[id]===v?'on':'')+'">'+v+'</button>'});o+='</div></div>'});
+const chosen=Object.values(state.fit).filter(Boolean).length;
+if(chosen>=2){
+const points=[0,0,0,0,0,0],f=state.fit;
+if(f.hours==="Regular weekdays"){points[0]+=2;points[1]+=1}
+if(f.hours==="Part-time, some days"){points[3]+=2;points[1]+=1;points[4]+=1}
+if(f.hours==="Evenings or weekends"){points[2]+=2;points[3]+=1;points[4]+=1}
+if(f.budget==="Tight"){points[1]+=1;points[3]+=2;points[2]-=1}
+if(f.budget==="Some room"){points[0]+=1;points[1]+=1;points[2]+=1}
+if(f.budget==="Flexible"){points[2]+=2}
+if(f.family==="Yes, some days"){points[3]+=3}
+if(f.family==="Not really"){points[3]-=2}
+if(f.style==="Other babies around"){points[0]+=2;points[1]+=2}
+if(f.style==="One-on-one"){points[2]+=2;points[3]+=1}
+const possible=points.map((score,i)=>({score,i})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,3).map(x=>x.i);
+o+='<div class="callout"><div class="micro">WORTH LOOKING AT FIRST</div><p>These arrangements fit some preferences you selected. This is a starting point—not a safety, cost or quality rating.</p></div><div class="choicelist fit-results">';
+possible.forEach(i=>{o+='<button class="choice" data-act="type" data-i="'+i+'"><span class="rowic">'+icon(["calendar","home","heart","baby","clock","bag"][i])+'</span><span><b>'+kinds[i].name+'</b><small>'+kinds[i].brief+'</small></span><span class="chev">›</span></button>'});
+o+='</div>';
+}else{
+o+='<div class="callout"><div class="micro">KEEP IT EASY</div><p>Answer any two questions to see a few care types worth exploring first. Nothing here limits your options.</p></div>';
+}
+o+='<button class="secondary" data-act="home">Back to all care options</button></div>'+nav();return o
+}
+function candidatePage(){
+const item=state.shortlist[state.activeCandidate];
+if(!item){state.resourceId="compare";return comparePage()}
+const steps=fullSteps(item.typeIndex),tab=Math.min(state.candidateTab,steps.length-1),group=steps[tab];
+let o=dhero("YOUR SHORTLIST",safe(item.name),"A place to remember what you learned and what you still want to ask.");
+o+='<div class="section"><h3>Practical details (optional)</h3><p>Only add what you know, so comparing options is easier.</p>';
+for(const [key,label,placeholder] of [["cost","Cost","Hourly or monthly"],["hours","Days and hours","e.g. Weekdays, 8–5"],["availability","Availability","e.g. Starting next month"]])o+='<label class="fieldlabel">'+label+'</label><input class="field" data-candidatefield="'+key+'" value="'+safe(item[key]||"")+'" placeholder="'+placeholder+'" autocomplete="off">';
+o+='</div><div class="section"><h3>Your visit & interview notes</h3><p>Tick items you have talked through. This is not a verification or quality score.</p><div class="guide-tabs">';
+steps.forEach((g,i)=>{o+='<button data-act="candtab" data-i="'+i+'" class="'+(i===tab?'on':'')+'">'+babyify(g[0])+'</button>'});
+o+='</div><h3 class="tab-title">'+babyify(group[0])+'</h3>';
+stepItems(item.typeIndex,tab).forEach(({q,answer,index})=>{
+const yes=!!item.checks[index];
+o+='<button class="tickrow" data-act="candtick" data-i="'+index+'" aria-pressed="'+yes+'"><span class="tickbox'+(yes?' yes':'')+'">'+(yes?'✓':'')+'</span><span><b>'+babyify(q)+'</b><small>'+babyify(answer)+'</small></span></button>';
+});
+o+='</div><div class="section"><h3>Your notes</h3><p>What stood out, how you felt, and what to follow up on.</p><textarea class="notes" data-notes="1" placeholder="What stood out?">'+safe(item.notes)+'</textarea></div>';
+o+='<div class="callout"><div class="micro">BEFORE COMMITTING</div><p>Confirm availability, costs, relevant licensing or background checks, references, safe sleep, and written policies as appropriate.</p></div>';
+o+='<button class="primary" data-act="choosecandidate">'+(item.chosen?'✓ Chosen · Continue preparing':'We chose this arrangement →')+'</button>';
+o+='<button class="secondary" data-act="resource" data-id="compare">Back to your shortlist</button></div>'+nav();return o
+}
+function comparisonPage(){
+const options=state.shortlist,n=options.length;
+if(n<2)return comparePage();
+const li=Math.min(state.compareLeft,n-1),ri=Math.min(state.compareRight,n-1),a=options[li],b=options[ri];
+let o=dhero("YOUR SHORTLIST","Two options, one clearer decision","See what matters side by side. No ratings or made-up scores—just what you know, and what remains unanswered.");
+o+='<div class="comparison-selectors"><label>FIRST OPTION<select data-compareside="left">'+options.map((p,i)=>'<option value="'+i+'"'+(i===li?' selected':'')+'>'+safe(p.name)+'</option>').join('')+'</select></label>';
+o+='<label>SECOND OPTION<select data-compareside="right">'+options.map((p,i)=>'<option value="'+i+'"'+(i===ri?' selected':'')+'>'+safe(p.name)+'</option>').join('')+'</select></label></div>';
+if(li===ri)o+='<p class="comp-warning">Choose two different options to compare.</p>';
+const field=(name,key)=>'<div class="comparison-row"><b>'+name+'</b><p>'+safe(a[key]||"Not added")+'</p><p>'+safe(b[key]||"Not added")+'</p></div>';
+o+='<div class="comparison-grid"><div class="comparison-head"><b>YOUR OPTIONS</b><strong>'+safe(a.name)+'</strong><strong>'+safe(b.name)+'</strong></div>';
+o+=field("Type","type")+field("Days & hours","hours")+field("Cost","cost")+field("Available","availability");
+const checked=p=>Object.values(p.checks||{}).filter(Boolean).length;
+o+='<div class="comparison-row"><b>Talked through</b><p>'+checked(a)+' questions</p><p>'+checked(b)+' questions</p></div>';
+const next=p=>flatQs(p.typeIndex).find((q,i)=>!p.checks?.[i])||"Follow up on anything unclear";
+o+='<div class="comparison-row"><b>Still to ask</b><p>'+safe(next(a))+'</p><p>'+safe(next(b))+'</p></div></div>';
+o+='<div class="comparison-actions"><button data-act="candidate" data-i="'+li+'">View '+safe(a.name)+' →</button><button data-act="candidate" data-i="'+ri+'">View '+safe(b.name)+' →</button></div>';
+o+='<div class="callout"><div class="micro">BEFORE YOU DECIDE</div><p>These notes do not verify any provider. Confirm safe sleep, relevant licenses, references, fees and policies for each arrangement.</p></div>';
+o+='<button class="secondary" data-act="resource" data-id="compare">Back to shortlist</button></div>'+nav();return o
+}
+function cardText(){
+const c=state.card;
+return ["MAYA'S CARE CARD (REVIEW BEFORE SHARING)","Milk: "+c.feed,"Feeding frequency: "+c.often,"Per bottle: "+(c.bottle||"Not provided"),
+"Solids: "+c.solids,"Naps: "+c.naps,"Usual nap times: "+(c.napTimes||"Not provided"),"Bedtime: "+(c.bedtime||"Not provided"),
+"Falls asleep with: "+c.asleep,"What comforts her: "+c.soothe,"Allergies or medicines: "+c.allergies,
+"Parent contact: "+(c.contact||"Not provided"),"Backup: "+(c.backup||"Not provided"),
+"Pediatrician: "+(c.pediatrician||"Not provided"),"Anything else: "+(c.other||"None"),
+"Always: Place Maya on her back for sleep on a firm, flat, empty sleep surface.",
+"If she needs emergency help: contact emergency services, then her parent."].join("\n");
+}
+function cardChips(key,values){
+return '<div class="care-chips">'+values.map(v=>'<button data-act="cardchip" data-field="'+key+'" data-value="'+v+'" class="'+(state.card[key]===v?'on':'')+'">'+v+'</button>').join('')+'</div>'
+}
+function field(label,key,placeholder){
+return '<label class="fieldlabel" for="f-'+key+'">'+label+'</label><input class="field" id="f-'+key+'" data-field="'+key+'" value="'+safe(state.card[key])+'" placeholder="'+(placeholder||"")+'" autocomplete="off">';
+}
+function care(){
+const c=state.card;
+let o=dhero("READY TO HAND OVER","Maya’s care card","The information another caregiver needs, in one place. Check what is still true, update what has changed, then share.");
+o+='<div class="carecard"><div class="micro">CARE FOR MAYA · PREVIEW</div><h3>Her day, at a glance</h3>';
+const summary=[["Feeding",c.feed+" · "+c.often+(c.bottle?" · "+c.bottle:"")],["Sleep",c.naps+(c.napTimes?" · "+c.napTimes:"")],["What helps",c.soothe],["Allergies",c.allergies],["Parent contact",c.contact||"Add a contact"],["Backup",c.backup||"Add a backup"]];
+summary.forEach(([label,val])=>o+='<div class="entry"><b>'+label+'</b><span>'+safe(val)+'</span></div>');
+o+='<div class="entry"><b>Safe sleep</b><span>Always on her back, on a firm flat empty sleep surface.</span></div></div>';
+o+='<p class="fine">In the full app, known feeding and sleep details can prefill this card. Parents should only need to confirm changes.</p>';
+o+='<section class="card-section"><h3>Feeding</h3><label class="fieldlabel">Milk type</label>'+cardChips("feed",["Breast milk","Formula","Both"]);
+o+='<label class="fieldlabel">How often</label>'+cardChips("often",["Every 2–3 hours","Every 3–4 hours","When hungry"]);
+o+=field("Amount per bottle (if relevant)","bottle","e.g. 5 oz");
+if(state.age>=6)o+='<label class="fieldlabel">Solids</label>'+cardChips("solids",["Not yet","A few foods","Most foods"]);
+o+='</section>';
+o+='<section class="card-section"><h3>Sleep</h3><label class="fieldlabel">Naps a day</label>'+cardChips("naps",["1 nap","2 naps","3 naps","4 or more"]);
+o+=field("Usual nap times","napTimes","e.g. 9:30 AM and 2 PM")+field("Bedtime","bedtime","e.g. 7:30 PM");
+o+='<label class="fieldlabel">Falls asleep with</label>'+cardChips("asleep",["Rocking","Pacifier","White noise","On her own"]);
+o+='</section><section class="card-section"><h3>What helps when she is upset</h3>'+field("Comfort","soothe","e.g. Singing, holding, rocking")+'</section>';
+o+='<section class="card-section"><h3>Health & emergency contacts</h3>'+field("Allergies or medicines","allergies","Details and instructions");
+o+=field("Parent name and phone","contact","Who to call first")+field("Backup contact","backup","Another trusted adult");
+o+=field("Pediatrician","pediatrician","Name and phone")+field("Anything else","other","A favorite song or important detail")+'</section>';
+o+='<button class="primary" data-act="copy">Copy this care card</button><p class="fine" id="message">'+state.copyMessage+'</p>';
+o+='<p class="fine">This preview keeps details in this page only. Copying creates text, not a secure shared link. Review all instructions, medicines, contacts and safety details before giving it to someone else.</p>';
+o+='<button class="secondary" data-act="home">Back to Childcare</button></div>'+nav();return o
+}
+function render(){
+syncStage();document.getElementById("app").innerHTML=state.page==="home"?home():state.page==="feature"?feature():state.page==="topic"?topic():state.page==="options"?options():state.page==="type"?typePage():state.page==="resource"?resource():state.page==="fit"?fitPage():state.page==="candidate"?candidatePage():state.page==="comparison"?comparisonPage():care();
+document.getElementById("steps").innerHTML=stages.map((x,i)=>'<button class="'+(state.stage===i?'sel':'')+'" data-stage="'+i+'">'+["Start fresh","Comparing","Chosen","Care started"][i]+'</button>').join('');
+document.getElementById("types").innerHTML=kinds.map((x,i)=>'<button class="'+(state.type===i?'sel':'')+'" data-type="'+i+'">'+["Center","Home","Nanny","Family","Sitter","Extra"][i]+'</button>').join('');
+document.getElementById("ages").innerHTML=[3,6,9].map(a=>'<button class="'+(state.age===a?'sel':'')+'" data-age="'+a+'">'+a+' mo</button>').join('');
+}
+document.getElementById("steps").addEventListener("click",e=>{const b=e.target.closest("[data-stage]");if(b){chooseDemo(Number(b.dataset.stage))}});
+document.getElementById("types").addEventListener("click",e=>{const b=e.target.closest("[data-type]");if(b){state.type=Number(b.dataset.type);state.page="home";render()}});
+document.getElementById("ages").addEventListener("click",e=>{const b=e.target.closest("[data-age]");if(b){state.age=Number(b.dataset.age);state.page="home";render()}});
+document.getElementById("app").addEventListener("input",e=>{if(e.target.dataset.field!==undefined){state.card[e.target.dataset.field]=e.target.value;}if(e.target.dataset.candidate!==undefined){state.candidate=e.target.value;}if(e.target.dataset.notes!==undefined&&state.shortlist[state.activeCandidate])state.shortlist[state.activeCandidate].notes=e.target.value;if(e.target.dataset.candidatefield!==undefined&&state.shortlist[state.activeCandidate])state.shortlist[state.activeCandidate][e.target.dataset.candidatefield]=e.target.value;});
+document.getElementById("app").addEventListener("change",e=>{if(e.target.dataset.compareside){state[e.target.dataset.compareside==="left"?"compareLeft":"compareRight"]=Number(e.target.value);render()}});
+document.getElementById("app").addEventListener("click",e=>{
+const b=e.target.closest("[data-act]");if(!b)return;
+const a=b.dataset.act,i=Number(b.dataset.i||0);
+if(a==="copy"){
+const msg=document.getElementById("message");
+if(navigator.clipboard&&navigator.clipboard.writeText){
+navigator.clipboard.writeText(cardText()).then(()=>{state.copyMessage="Copied. Review the information before sharing.";if(msg)msg.textContent=state.copyMessage}).catch(()=>{state.copyMessage="Copy is unavailable in this browser.";if(msg)msg.textContent=state.copyMessage});
+}else{state.copyMessage="Copy is unavailable in this browser.";if(msg)msg.textContent=state.copyMessage}
+return;
+}
+if(a==="cardchip"){state.card[b.dataset.field]=b.dataset.value;render();return}
+if(a==="tick"){state.checks[b.dataset.id]=!state.checks[b.dataset.id];render();return}
+if(a==="candtick"){const c=state.shortlist[state.activeCandidate];if(c)c.checks[b.dataset.i]=!c.checks[b.dataset.i];render();return}
+if(a==="fitpick"){state.fit[b.dataset.field]=b.dataset.value;render();return}
+if(a==="settype"){state.type=i;state.typeTab=0;render();return}
+if(a==="typetab"){state.typeTab=i;render();return}
+if(a==="candtab"){state.candidateTab=i;render();return}
+if(a==="addcandidate"){const name=(state.candidate||"").trim();if(name){state.shortlist.push({name,type:T().name,typeIndex:state.type,checks:{},notes:"",chosen:false,cost:"",hours:"",availability:""});state.candidate="";render()}return}
+if(a==="remove"){state.shortlist.splice(i,1);render();return}
+if(a==="candidate"){state.activeCandidate=i;state.candidateTab=0;state.page="candidate";render();return}
+if(a==="choosecandidate"){const c=state.shortlist[state.activeCandidate];if(c){state.shortlist.forEach(x=>x.chosen=false);c.chosen=true;state.type=c.typeIndex;state.careStarted=false;state.resourceId="ready";state.page="resource";render()}return}
+if(a==="startcare"){state.careStarted=true;state.resourceId="settle";state.page="resource";render();return}
+if(a==="comparison"){state.page="comparison";render();return}
+if(a==="resource"){state.resourceId=b.dataset.id;state.page="resource"}
+else if(a==="stage"){state.resourceId=i===3?"settle":i===2?"ready":i===1?"compare":"ready";state.page="resource"}
+else if(a==="type"){state.type=i;state.typeTab=0;state.page="type"}
+else if(a==="occasional"){state.type=4;state.mode="occasional";state.page="options"}
+else if(a==="topic"){state.topic=b.dataset.key;state.page="topic"}
+else{if(a==="options"&&state.page!=="type")state.mode="all";state.page=a}
+render();
+if(window.matchMedia("(max-width:800px)").matches)document.querySelector(".phone").scrollIntoView({behavior:"smooth",block:"start"});
+});
+render();
+})();
+</script></body></html>
