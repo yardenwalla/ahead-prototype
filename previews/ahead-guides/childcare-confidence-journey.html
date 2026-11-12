@@ -53,6 +53,25 @@
 .shortlist-name{border:0;background:transparent;flex:1;text-align:left;padding:0;color:inherit}.shortlist-name b{font-size:12.5px}.shortlist-name small{font-size:11px;display:block;color:#8a7b6a;margin-top:3px}
 .notes{width:100%;min-height:96px;resize:vertical;border:1px solid #e6dbcd;border-radius:11px;padding:12px;margin-top:12px;font-size:12.5px;color:#403833;background:white;line-height:1.6}
 .chosenline{display:flex;align-items:center;gap:9px;border:0;border-radius:10px;background:#f2f6ef;padding:10px 13px;margin-top:12px;width:100%;text-align:left;color:#638066}.chosenline svg{height:17px;width:17px}.chosenline span:nth-child(2){flex:1}.chosenline b{font-size:12px;display:block}.chosenline small{font-size:10.7px;display:block;margin-top:3px;color:#8ba18d}
+
+/* Calm category home: original information architecture with a contextual lead */
+.hero{padding:19px 19px 0;border-radius:18px}
+.hero h2{font-size:23px;line-height:1.18;margin:8px 0 7px}
+.hero p{font-size:12.5px;line-height:1.56}
+.hero-art{height:99px;max-width:290px;margin:0 auto 0}
+.hero-go{display:block;position:relative;width:calc(100% + 38px);margin:0 -19px;padding:13px 19px;border:0;border-top:1px solid #e7dbb8;text-align:left;background:#f8ebc7;color:#765d2b;font-size:12px;font-weight:800}
+.simple-title{margin:23px 0 11px}.simple-title h3{font-size:16px}
+.caregrid{gap:8px;grid-template-columns:1fr 1fr}
+.caretile{min-height:105px;padding:11px 12px;border-radius:13px}.caretile b{font-size:12.8px;line-height:1.28;margin-top:7px}.caretile small{font-size:10.9px;line-height:1.36;padding-top:3px}.tile-illustration{height:26px;width:28px;border-radius:8px}.tile-illustration .ico{height:17px;width:17px}
+.inline-path{padding:12px 0 10px;font-weight:700;font-size:12px}
+.simple-card{display:flex;align-items:center;gap:11px;border:0;background:#f0f3e9;width:100%;text-align:left;border-radius:14px;padding:15px;margin-top:10px;color:#425b4b}
+.cardicon{width:43px;height:43px;border-radius:12px;background:#fffdf5;display:grid;place-items:center;flex:0 0 43px;color:#638469}
+.simple-card-copy{flex:1}.simple-card-copy b{display:block;font-size:13px}.simple-card-copy small{font-size:11.6px;line-height:1.5;color:#728276;display:block;margin-top:4px}
+.simple-card .chev{color:#8da08e}
+.simple-row{width:100%;border:0;border-bottom:1px solid var(--line);display:flex;gap:11px;align-items:center;background:transparent;text-align:left;color:var(--ink);padding:13px 0}
+.simple-row:last-of-type{border:0}.simple-row-icon{flex:0 0 39px;width:39px;height:39px;border-radius:11px;background:#f4efe7;color:#938271;display:grid;place-items:center}.simple-row-icon .ico{width:19px;height:19px}
+.simple-row-copy{flex:1}.simple-row-copy b{display:block;font-size:13px;line-height:1.4}.simple-row-copy small{display:block;font-size:11.5px;line-height:1.55;color:#887d70;margin-top:3px}
+.page-tail{font-size:11px;text-align:center;margin:20px 0 0;color:#a2968a;line-height:1.6}
 @media(max-width:800px){.shell{display:block;max-width:425px;padding:0}.aside{position:static;padding:15px 20px 11px}.aside h1{font-size:18px;margin:5px 0}.aside>p,.aside .explain{display:none}.control{margin-top:12px;padding:12px}.buttons button{padding:8px 10px}.controlsep{padding-top:10px;margin-top:10px}.phone{border:0;border-top:1px solid #ece4da;border-radius:0;box-shadow:none;min-height:80vh}}
 </style></head><body>
 <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
@@ -102,30 +121,39 @@ function top(){return '<div class="screen"><button class="back" data-act="home">
 function rails(){return '<div class="rail">'+stages.map((x,i)=>'<button data-act="stage" data-i="'+i+'" class="'+(i===state.stage?'sel':'')+'">'+x+'</button>').join('')+'</div>'}
 function rows(data){return data.map(x=>'<button class="row" data-act="'+x[3]+'" data-key="'+x[4]+'"><span class="rowic">'+icon(x[0])+'</span><span class="rowtxt"><b>'+x[1]+'</b><small>'+x[2]+'</small></span><span class="chev">›</span></button>').join('')}
 function home(){
-const c=C();
-let o='<div class="screen"><button class="back" data-act="home">‹ All guides</button><h1 class="title">Childcare</h1><div class="stage-label">WHERE ARE YOU WITH CHILDCARE?</div>'+rails();
-o+='<div class="hero"><div class="micro">'+c.tag+'</div><h2>'+c.title+'</h2><p>'+c.lead+'</p>'+art(state.stage)+'</div>';
-const chosen=state.shortlist.find(x=>x.chosen);if(chosen&&state.stage>=2)o+='<button class="chosenline" data-act="resource" data-id="compare">'+icon("check")+'<span><b>Care with '+safe(chosen.name)+'</b><small>Selected · View your shortlist</small></span><span class="chev">›</span></button>';
-o+='<button class="feature" data-act="feature"><div class="micro">WORTH KNOWING RIGHT NOW</div><h3>'+c.feature+'</h3><p>'+c.sub+'</p><span>Why this matters →</span></button>';
-o+='<div class="home-heading"><h3>Explore your care options</h3><small>All six options</small></div>';
-o+='<div class="caregrid">';
-kinds.forEach((x,i)=>{o+='<button class="caretile" data-act="type" data-i="'+i+'"><span class="tile-illustration">'+icon(["calendar","home","heart","baby","clock","bag"][i])+'</span><b>'+x.name+'</b><small>'+["A team and a routine","A smaller group","Care in your home","Someone familiar","A few hours of help","Doulas, nights and more"][i]+'</small></button>'});
-o+='</div>';
-o+='<button class="inline-path" data-act="fit">Not sure what fits? Three questions can help →</button>';
-o+='<button class="care-share" data-act="card"><span class="mini-document"><span></span><span></span><span></span></span><span class="care-share-copy"><span class="micro">READY FOR ANY CAREGIVER</span><b>Maya’s care card</b><small>Feeds, naps, what helps and who to call—all in one place</small></span><span class="chev">›</span></button>';
-o+='<div class="home-heading tools-heading"><h3>Plan & manage childcare</h3><small>Always available</small></div>';
-const suggested=["compare","compare","ready","settle"][state.stage];
-const tools=[
-["compare","shield","Choose with confidence","Tour questions, interviews & your shortlist"],
-["pay","calendar","Costs & paying for care","Fees, assistance, tax benefits and nanny pay"],
-["ready","bag","Get ready for day one","A practice visit, packing and the first handoff"],
-["settle","heart","Settle into care","Drop-offs, sick days and how to stay in sync"],
-["backup","home","When care falls through","Backup people, closures and unexpected sick days"]
-];
-tools.forEach(([id,ico,title,desc])=>{
-o+='<button class="tool-row'+(suggested===id?' suggested':'')+'" data-act="resource" data-id="'+id+'"><span class="rowic">'+icon(ico)+'</span><span class="rowtxt"><b>'+title+'</b><small>'+desc+'</small>'+(suggested===id?'<em>Suggested for you now</em>':'')+'</span><span class="chev">›</span></button>';
+const heroCopy=[
+["FINDING SUPPORT","Start with what you need","Your days, hours and budget are a good place to start. Then explore the kinds of care that could fit.","Find your fit","fit"],
+["CHOOSING CARE","Find someone you feel good about","The right care isn't only about hours or cost. Know what to look for, what to ask, and how to compare.","Compare your options","compare"],
+["GETTING READY","Make day one feel familiar","A short practice visit, a care card and the right supplies can make the first handoff easier.","Get ready for day one","ready"],
+["WHEN CARE STARTS","Settling into a new routine","Learn what to ask at pickup, how to handle tricky days, and when to speak up.","See what to expect","settle"]
+][state.stage];
+let o='<div class="screen"><button class="back" data-act="home">‹ All guides</button><h1 class="title">Childcare</h1>';
+o+='<div class="hero"><div class="micro">'+heroCopy[0]+'</div><h2>'+heroCopy[1]+'</h2><p>'+heroCopy[2]+'</p>'+art(state.stage)+'<button class="hero-go" data-act="'+(heroCopy[4]==="fit"?"fit":"resource")+'"'+(heroCopy[4]==="fit"?"":' data-id="'+heroCopy[4]+'"')+'>'+heroCopy[3]+' ›</button></div>';
+const chosen=state.shortlist.find(x=>x.chosen);
+if(chosen)o+='<button class="chosenline" data-act="resource" data-id="compare">'+icon("check")+'<span><b>Care with '+safe(chosen.name)+'</b><small>View your shortlist</small></span><span class="chev">›</span></button>';
+o+='<div class="simple-title"><h3>What kind of care?</h3></div><div class="caregrid">';
+kinds.forEach((x,i)=>{
+const short=[
+["A group setting","More"],
+["A smaller group","More"],
+["Care at home","More"],
+["Someone familiar","More"],
+["A few hours","More"],
+["Day or night","More"]
+][i];
+o+='<button class="caretile" data-act="type" data-i="'+i+'"><span class="tile-illustration">'+icon(["calendar","home","heart","baby","clock","bag"][i])+'</span><b>'+["Daycare center","Home daycare","Nanny","Family & friends","Babysitter","Extra help at home"][i]+'</b><small>'+short[0]+'</small></button>';
 });
-o+='<p class="page-tail">The care options and tools stay here as your situation changes. Ahead simply highlights what matters next.</p></div>'+nav();return o
+o+='</div><button class="inline-path" data-act="fit">Not sure which? Explore your options ›</button>';
+o+='<button class="simple-card" data-act="card"><span class="cardicon">'+icon("book")+'</span><span class="simple-card-copy"><b>Maya’s care card</b><small>Feeds, naps and who to call, ready to share</small></span><span class="chev">›</span></button>';
+o+='<div class="simple-title"><h3>Setting it up</h3></div>';
+const tools=[
+["pay","calendar","Paying for care","Help from your state, work and taxes"],
+["ready","bag","Get ready for day one","Practice, packing and the first handoff"],
+["backup","shield","When care falls through","Sick days, closures and a backup plan"],
+["settle","heart","Settle in",state.age>=8?"Harder goodbyes, daily updates and sick days":"Daily updates, sick days and when to speak up"]
+];
+tools.forEach(([id,ico,title,desc])=>{o+='<button class="simple-row" data-act="resource" data-id="'+id+'"><span class="simple-row-icon">'+icon(ico)+'</span><span class="simple-row-copy"><b>'+title+'</b><small>'+desc+'</small></span><span class="chev">›</span></button>'});
+o+='<p class="page-tail">Every family’s situation is different. Choose the care that fits yours.</p></div>'+nav();return o
 }
 function dhero(eyebrow,title,lead){return top()+'<div class="dhero"><div class="micro">'+eyebrow+'</div><h2>'+title+'</h2><p>'+lead+'</p></div>'}
 function feature(){
