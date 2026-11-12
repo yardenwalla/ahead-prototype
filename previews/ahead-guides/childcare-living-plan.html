@@ -88,6 +88,8 @@
 
 .guide-tabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:9px 0 13px}.guide-tabs::-webkit-scrollbar{display:none}.guide-tabs button{white-space:nowrap;border:0;background:#f1eee9;color:#8d7f70;border-radius:99px;padding:9px 12px;font-size:10.9px;font-weight:700}.guide-tabs button.on{background:#e9f1e8;color:#5a7d5f}
 .tab-title{margin:6px 0 4px!important;font-size:14px!important}.tab-note{font-size:11.6px!important;line-height:1.6!important;color:#94887e!important;margin-bottom:6px!important}
+
+.card-section{border:1px solid #efe9df;border-radius:14px;padding:15px;margin-top:15px}.card-section h3{font-size:15px;margin:0 0 6px}.care-chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:7px}.care-chips button{border:1px solid #e9e0d4;background:#f8f5f0;color:#7d7165;border-radius:99px;padding:8px 11px;font-size:11.2px;font-weight:700}.care-chips button.on{background:#e4eee5;border-color:#c5d8c8;color:#4f7458}
 @media(max-width:800px){.shell{display:block;max-width:425px;padding:0}.aside{position:static;padding:15px 20px 11px}.aside h1{font-size:18px;margin:5px 0}.aside>p,.aside .explain{display:none}.control{margin-top:12px;padding:12px}.buttons button{padding:8px 10px}.controlsep{padding-top:10px;margin-top:10px}.phone{border:0;border-top:1px solid #ece4da;border-radius:0;box-shadow:none;min-height:80vh}}
 </style></head><body>
 <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
@@ -115,7 +117,7 @@ const content=[
 {tag:"PREPARING FOR DAY ONE",title:"Make the first day feel a little familiar",lead:"The care routine is already familiar to you. A practice handoff and a simple care card help someone else learn it.",feature:"The first day should not be the first introduction",sub:"A short visit together lets the caregiver learn Maya's signals while you are still there.",why:"A practice visit helps a caregiver understand the baby's feeding, sleep and comfort cues. It also lets parents ask questions.",doIt:"If possible, schedule a short practice visit, demonstrate a feed or soothing routine, and agree on when you would like updates.",next:"Once care starts, your best clues are how Maya is comforted, how the day goes, and whether you can ask questions."},
 {tag:"WHEN CARE IS UNDERWAY",title:"Trust builds in the little handoffs",lead:"You can learn a lot from one good question at pickup. You deserve to know what Maya's day was like.",feature:"She was fine is not the full story",sub:"The helpful update is what she ate, how she slept, what soothed her, and what made her smile.",why:"Specific, regular communication helps caregivers and parents respond consistently as baby's needs change.",doIt:"Ask how Maya settled after you left. Follow up on feeds, naps and one good moment from the day.",next:"As Maya starts solids, changes naps, or becomes more mobile, update her care card."}
 ];
-let state={stage:0,type:0,age:6,page:"home",mode:"all",topic:"",resourceId:"compare",checks:{},shortlist:[],activeCandidate:0,candidate:"",fit:{},card:{feed:"Breast milk",naps:"2 naps",soothe:"Rocking and a song",allergies:"Not specified",contact:""},copyMessage:"",careStarted:false,compareLeft:0,compareRight:1,typeTab:0,candidateTab:0};
+let state={stage:0,type:0,age:6,page:"home",mode:"all",topic:"",resourceId:"compare",checks:{},shortlist:[],activeCandidate:0,candidate:"",fit:{},card:{feed:"Breast milk",often:"Every 3–4 hours",bottle:"",solids:"Not yet",naps:"2 naps",napTimes:"",bedtime:"",asleep:"Rocking",soothe:"Rocking and a song",allergies:"Not specified",contact:"",backup:"",pediatrician:"",other:""},copyMessage:"",careStarted:false,compareLeft:0,compareRight:1,typeTab:0,candidateTab:0};
 function syncStage(){
 state.stage=state.careStarted?3:state.shortlist.some(c=>c.chosen)?2:state.shortlist.length?1:0;
 }
@@ -416,17 +418,43 @@ o+='<div class="callout"><div class="micro">BEFORE YOU DECIDE</div><p>These note
 o+='<button class="secondary" data-act="resource" data-id="compare">Back to shortlist</button></div>'+nav();return o
 }
 function cardText(){
-const c=state.card;return "Maya's care card (preview)\nFeeding: "+c.feed+"\nSleep: "+c.naps+"\nWhat helps: "+c.soothe+"\nAllergies and medicines: "+c.allergies+"\nParent contact: "+(c.contact||"Please add a contact")+"\nSafe sleep: Place Maya on her back on a firm, flat, empty sleep surface.\nIn an emergency: Call emergency services first, then contact parent.";
+const c=state.card;
+return ["MAYA'S CARE CARD (REVIEW BEFORE SHARING)","Milk: "+c.feed,"Feeding frequency: "+c.often,"Per bottle: "+(c.bottle||"Not provided"),
+"Solids: "+c.solids,"Naps: "+c.naps,"Usual nap times: "+(c.napTimes||"Not provided"),"Bedtime: "+(c.bedtime||"Not provided"),
+"Falls asleep with: "+c.asleep,"What comforts her: "+c.soothe,"Allergies or medicines: "+c.allergies,
+"Parent contact: "+(c.contact||"Not provided"),"Backup: "+(c.backup||"Not provided"),
+"Pediatrician: "+(c.pediatrician||"Not provided"),"Anything else: "+(c.other||"None"),
+"Always: Place Maya on her back for sleep on a firm, flat, empty sleep surface.",
+"If she needs emergency help: contact emergency services, then her parent."].join("\n");
+}
+function cardChips(key,values){
+return '<div class="care-chips">'+values.map(v=>'<button data-act="cardchip" data-field="'+key+'" data-value="'+v+'" class="'+(state.card[key]===v?'on':'')+'">'+v+'</button>').join('')+'</div>'
+}
+function field(label,key,placeholder){
+return '<label class="fieldlabel" for="f-'+key+'">'+label+'</label><input class="field" id="f-'+key+'" data-field="'+key+'" value="'+safe(state.card[key])+'" placeholder="'+(placeholder||"")+'" autocomplete="off">';
 }
 function care(){
 const c=state.card;
-let o=dhero("A CAREGIVER HANDOFF","Maya’s care card","A few practical details for anyone looking after Maya. This preview keeps the information in this page only.");
-o+='<div class="carecard"><div class="micro">A LITTLE ABOUT MAYA</div><h3>Her day, at a glance</h3>';
-for(const [label,k] of [["Feeding","feed"],["Sleep","naps"],["What helps","soothe"],["Allergies","allergies"],["Contact","contact"]]){o+='<div class="entry"><b>'+label+'</b><span>'+safe(c[k]||"Not provided")+'</span></div>'}
-o+='<div class="entry"><b>Every sleep</b><span>Back to sleep, firm flat empty surface.</span></div></div>';
-o+='<section class="section"><h3>Make this useful</h3><p>In Ahead, information from Feeding and Sleep would prefill this. Parents would only confirm what has changed.</p></section>';
-for(const [k,label] of [["feed","Feeding"],["naps","Naps"],["soothe","Comfort"],["allergies","Allergies / medicines"],["contact","Who to call"]])o+='<label class="fieldlabel" for="f-'+k+'">'+label+'</label><input class="field" id="f-'+k+'" data-field="'+k+'" value="'+safe(c[k])+'" autocomplete="off">';
-o+='<button class="primary" data-act="copy">Copy this example card</button><p class="fine" id="message">'+state.copyMessage+'</p><p class="fine">This is a demo, not an actual encrypted care-card sharing service. Review personal information and safety instructions before sending anything.</p>';
+let o=dhero("READY TO HAND OVER","Maya’s care card","The information another caregiver needs, in one place. Check what is still true, update what has changed, then share.");
+o+='<div class="carecard"><div class="micro">CARE FOR MAYA · PREVIEW</div><h3>Her day, at a glance</h3>';
+const summary=[["Feeding",c.feed+" · "+c.often+(c.bottle?" · "+c.bottle:"")],["Sleep",c.naps+(c.napTimes?" · "+c.napTimes:"")],["What helps",c.soothe],["Allergies",c.allergies],["Parent contact",c.contact||"Add a contact"],["Backup",c.backup||"Add a backup"]];
+summary.forEach(([label,val])=>o+='<div class="entry"><b>'+label+'</b><span>'+safe(val)+'</span></div>');
+o+='<div class="entry"><b>Safe sleep</b><span>Always on her back, on a firm flat empty sleep surface.</span></div></div>';
+o+='<p class="fine">In the full app, known feeding and sleep details can prefill this card. Parents should only need to confirm changes.</p>';
+o+='<section class="card-section"><h3>Feeding</h3><label class="fieldlabel">Milk type</label>'+cardChips("feed",["Breast milk","Formula","Both"]);
+o+='<label class="fieldlabel">How often</label>'+cardChips("often",["Every 2–3 hours","Every 3–4 hours","When hungry"]);
+o+=field("Amount per bottle (if relevant)","bottle","e.g. 5 oz");
+if(state.age>=6)o+='<label class="fieldlabel">Solids</label>'+cardChips("solids",["Not yet","A few foods","Most foods"]);
+o+='</section>';
+o+='<section class="card-section"><h3>Sleep</h3><label class="fieldlabel">Naps a day</label>'+cardChips("naps",["1 nap","2 naps","3 naps","4 or more"]);
+o+=field("Usual nap times","napTimes","e.g. 9:30 AM and 2 PM")+field("Bedtime","bedtime","e.g. 7:30 PM");
+o+='<label class="fieldlabel">Falls asleep with</label>'+cardChips("asleep",["Rocking","Pacifier","White noise","On her own"]);
+o+='</section><section class="card-section"><h3>What helps when she is upset</h3>'+field("Comfort","soothe","e.g. Singing, holding, rocking")+'</section>';
+o+='<section class="card-section"><h3>Health & emergency contacts</h3>'+field("Allergies or medicines","allergies","Details and instructions");
+o+=field("Parent name and phone","contact","Who to call first")+field("Backup contact","backup","Another trusted adult");
+o+=field("Pediatrician","pediatrician","Name and phone")+field("Anything else","other","A favorite song or important detail")+'</section>';
+o+='<button class="primary" data-act="copy">Copy this care card</button><p class="fine" id="message">'+state.copyMessage+'</p>';
+o+='<p class="fine">This preview keeps details in this page only. Copying creates text, not a secure shared link. Review all instructions, medicines, contacts and safety details before giving it to someone else.</p>';
 o+='<button class="secondary" data-act="home">Back to Childcare</button></div>'+nav();return o
 }
 function render(){
@@ -450,6 +478,7 @@ navigator.clipboard.writeText(cardText()).then(()=>{state.copyMessage="Copied. R
 }else{state.copyMessage="Copy is unavailable in this browser.";if(msg)msg.textContent=state.copyMessage}
 return;
 }
+if(a==="cardchip"){state.card[b.dataset.field]=b.dataset.value;render();return}
 if(a==="tick"){state.checks[b.dataset.id]=!state.checks[b.dataset.id];render();return}
 if(a==="candtick"){const c=state.shortlist[state.activeCandidate];if(c)c.checks[b.dataset.i]=!c.checks[b.dataset.i];render();return}
 if(a==="fitpick"){state.fit[b.dataset.field]=b.dataset.value;render();return}
