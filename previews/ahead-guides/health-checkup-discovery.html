@@ -21,6 +21,14 @@
 .dt-hero{border-radius:17px;background:#e7f1e9;padding:20px}.dt-hero.blue{background:#e9edf8}.dt-hero.yellow{background:#fcf3e4}.dt-hero .eyebrow{color:#628169}.dt-hero.blue .eyebrow{color:#63769b}.dt-hero.yellow .eyebrow{color:#967a52}.dt-hero h3{font-size:23px;margin:11px 0}.dt-hero p{font-size:13px;color:#636057;line-height:1.7}.section{margin-top:24px}.section h3{font-size:16px;margin-bottom:10px}.section p{font-size:13px;line-height:1.7;color:#6b625b}.bullet{padding:13px 0;border-bottom:1px solid var(--line);display:flex;gap:11px}.bullet:last-child{border:0}.dot{width:24px;height:24px;flex:0 0 24px;border-radius:50%;background:#e2efe5;color:#52815e;display:grid;place-items:center;font-size:11px;font-weight:800}.bullet strong{font-size:13px;line-height:1.35;display:block}.bullet small{display:block;color:#847a71;font-size:12px;margin-top:5px;line-height:1.55}
 .highlight{padding:16px;border-radius:14px;background:#eef4ed;margin-top:19px}.highlight .eyebrow{color:#547b5d}.highlight p{font-size:12.8px;line-height:1.7;margin-top:9px;color:#486750}.callout{font-size:12px;color:#866f66;line-height:1.7;border-top:1px solid var(--line);margin-top:20px;padding-top:13px}.return{border:1px solid #d9d7cf;border-radius:11px;background:transparent;color:#5b655b;font-weight:700;font-size:12px;width:100%;padding:13px;margin-top:22px}
 .icon{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.icon.sm{width:16px;height:16px}.questionlist{display:grid;gap:10px}.questioncard{border:1px solid #ece7df;padding:14px;border-radius:13px;display:flex;align-items:flex-start;gap:11px}.questioncard .icon{color:#8a9d8f;flex-shrink:0}.questioncard span{font-size:13px;line-height:1.65}.smallnote{font-size:11px;line-height:1.65;color:#8d8279;margin-top:19px}
+
+/* Health is two jobs: prepare for visits and get help between visits. */
+.sick-entry{display:flex;align-items:center;gap:9px;width:100%;border:1px solid #eee6dd;border-radius:12px;background:#fcfaf6;text-align:left;color:#655b50;padding:10px 12px;margin:-1px 0 15px}
+.sick-entry .icon{width:17px;height:17px;color:#a27c63;flex:0 0 17px}
+.sick-entry b{font-size:12.4px;line-height:1.35;flex:1;font-weight:700}
+.sick-entry .hint{font-size:10.8px;color:#9a8e81;font-weight:500}
+.sick-entry .chev{font-size:18px;color:#aa9d8f}
+.vax-context{border-radius:11px;background:#faf6ef;padding:11px 13px;font-size:11.6px;color:#81705e;line-height:1.58;margin:9px 0 2px}
 @media(max-width:800px){.wrap{display:block;max-width:440px;padding:0}.sidebar{position:static;margin:0;padding:16px 20px}.sidebar .eyebrow{font-size:9px}.sidebar h1{margin:5px 0;font-size:18px}.sidebar>p,.sidebar>.tip{display:none}.democtrl{margin:12px 0 0;padding:11px 13px;display:flex;gap:15px;align-items:center;justify-content:space-between}.democtrl strong{margin:0}.toggle{margin:0}.phone{border-radius:0;border:0;border-top:1px solid #ebe5dc;box-shadow:none;min-height:80vh}.phone-head{padding-top:17px}}
 </style>
 </head>
@@ -75,20 +83,20 @@ function pills(){return '<div class="pills" aria-label="Browse well visits">'+vi
 function artwork(){return '<svg class="hero-art" viewBox="0 0 300 103" role="img" aria-label="Illustrated baby at a pediatric checkup"><ellipse cx="146" cy="90" rx="107" ry="7" fill="#d5e5d6"/><rect x="31" y="63" width="229" height="23" rx="11" fill="#bed5c1"/><circle cx="95" cy="45" r="26" fill="#e8b89f"/><path d="M78 40q7-21 29-15" fill="none" stroke="#9d735f" stroke-width="5" stroke-linecap="round"/><path d="M85 48q4 4 8 0m7 0q4 4 8 0" stroke="#916959" stroke-width="2" fill="none"/><path d="M123 65q31-27 74 0l13 13h-92z" fill="#a9c9ae"/><path d="M148 66q24-19 49-26" fill="none" stroke="#e8b89f" stroke-width="11" stroke-linecap="round"/><circle cx="202" cy="40" r="7" fill="#e8b89f"/><rect x="246" y="15" width="19" height="29" rx="4" fill="#fafdf9" stroke="#a0bda5"/><path d="M256 22v15m-7-7h14" stroke="#89b093" stroke-width="3" stroke-linecap="round"/><path d="M277 48h15M285 40v16" stroke="#9ebeaa" stroke-width="2.5" stroke-linecap="round"/></svg>'}
 function top(){return '<div class="screen"><button class="back" data-act="home">‹ All guides</button>'}
 function home(){
-var v=current();var s=top()+'<h2>Health</h2>'+pills();
+var v=current();var s=top()+'<h2>Health</h2>'+pills()+'<button class="sick-entry" data-act="sick">'+icon("thermo")+'<b>When Maya seems sick</b><span class="hint">Symptoms & when to get help</span><span class="chev">›</span></button>';
 s+='<div class="hero"><div class="eyebrow">'+v.tag+' · '+v.tab.toUpperCase()+'</div><h3>'+v.title+'</h3><p>'+v.lead+'</p>'+artwork()+'</div>';
 s+='<button class="feature" data-act="spotlight"><div class="mini"><span>WORTH KNOWING BEFORE YOU GO</span>'+icon("sparkles")+'</div><h3>'+v.featureTitle+'</h3><p>'+v.featureDesc+'</p><span class="linkish">Why this matters →</span></button>';
 s+='<h3 class="rowhead">Your visit, at a glance</h3>';
-var rows=[["steth",v.checksTitle,v.checksDesc,"checks"],["shield",v.vaxTitle,v.vaxDesc,"vaccines"],["chat","A question worth asking",pretermQuestion(),"questions"]];
+var rows=[["steth",v.checksTitle,v.checksDesc,"checks"],["shield",v.vaxTitle,v.vaxDesc+" · Confirm with her pediatrician","vaccines"],["chat","A question worth asking",pretermQuestion(),"questions"]];
 rows.forEach(function(r){s+='<button class="nav-row" data-act="'+r[3]+'"><span class="square">'+icon(r[0])+'</span><span class="row-copy"><span class="name">'+r[1]+'</span><span class="desc">'+r[2]+'</span></span><span class="chev">›</span></button>'});
 s+='<div class="question"><div class="eyebrow">BEFORE YOUR VISIT</div><p>'+ (v.age===9?'Your office may send a developmental questionnaire to complete ahead of time.':v.age===12?'Ask whether the office plans blood screening so you know what to expect.':v.age===6?'If Maya will get her first flu vaccine this season, ask whether a second appointment is needed.':v.age===0?'Bring the hospital discharge summary and any feeding or weight instructions.':'Keep one question in mind and bring Maya’s vaccine record, if your office needs it.') +'</p></div>';
 s+='<div class="next"><span>LOOKING AHEAD</span><p>'+v.next+'</p></div>';
-s+='<div class="utility"><button data-act="sick"><span class="square">'+icon("thermo")+'</span><span style="flex:1"><span class="name">When Maya seems sick</span><span class="desc">Fever, stuffy noses and when to get help</span></span><span class="chev">›</span></button></div>';
+
 s+='<p class="smallnote">Checkups follow birthday age. Your pediatrician confirms vaccine timing and any additional visits.</p></div>'+nav();return s
 }
 function header(title,lead,tone,context){return '<div class="dt-hero '+(tone||'')+'"><div class="eyebrow">'+context+'</div><h3>'+title+'</h3><p>'+lead+'</p></div>'}
 function details(){
-var v=current(),s=top().replace('All guides','Health'),type=screen,age=v.tab;
+var v=current(),s=top().replace('All guides','Health'),type=screen,age=v.tab;if(type!=="sick")s+='<button class="sick-entry" data-act="sick">'+icon("thermo")+'<b>When Maya seems sick</b><span class="chev">›</span></button>';
 if(type==="spotlight"){
 s+=header(v.featureTitle,v.featureDesc,"blue","THE BIG THING ABOUT THE "+age.toUpperCase()+" VISIT");
 s+='<div class="section"><h3>Why this matters</h3><p>'+v.featureDetail+'</p></div>';
@@ -99,7 +107,7 @@ s+='<div class="section"><h3>What the pediatrician is looking at</h3>'+v.checks.
 if(preterm)s+='<div class="highlight"><div class="eyebrow">IF MAYA WAS BORN EARLY</div><p>Routine visit timing usually follows chronological age. Developmental interpretation may use adjusted age, and her pediatrician may recommend additional follow-up.</p></div>';
 }else if(type==="vaccines"){
 s+=header(v.vaxTitle,v.vaxDesc,"blue","PROTECTION AT "+age.toUpperCase());
-s+='<div class="section"><h3>What may be due</h3>'+v.vaccines.map(function(b,i){return '<div class="bullet"><span class="dot">'+(i+1)+'</span><div><strong>'+b[0]+'</strong><small>'+b[1]+'</small></div></div>'}).join('')+'</div>';
+s+='<div class="vax-context">Example age-based list—not checked against Maya’s vaccine record. Her pediatrician will confirm the vaccines recommended for her and which doses are due.</div><div class="section"><h3>What may be due</h3>'+v.vaccines.map(function(b,i){return '<div class="bullet"><span class="dot">'+(i+1)+'</span><div><strong>'+b[0]+'</strong><small>'+b[1]+'</small></div></div>'}).join('')+'</div>';
 s+='<div class="highlight"><div class="eyebrow">IMPORTANT</div><p>Vaccines depend on the child’s record, the products used and current recommendations. Ask your pediatrician for the exact list. This preview follows the AAP 2026 guidance, not an individualized medical record.</p></div>';
 }else if(type==="questions"){
 s+=header("Good questions make a better visit","A few thoughtful questions—chosen for Maya's next visit.","yellow","QUESTIONS TO BRING");
