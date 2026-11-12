@@ -88,7 +88,7 @@
     let b = css + `<section class="dev-hero dvx-hero"><p class="dev-hero-eyebrow">${F(other ? 'Inside a baby’s world' : 'Inside Maya’s world')}</p><h1>${T(IN.t)}</h1><p class="dev-hero-lead">${T(IN.lead)}</p><div class="dvx-art" aria-hidden="true">${window.devScene ? devScene(ref) : (window.devHeroArt ? devHeroArt(ref) : '')}</div></section>`;
     // Three little things to notice, each opening its area to mark it.
     const tint = d => { const c = window.devTileColors ? devTileColors(d) : null; return c ? `--dt-bg:${c[0]};--dt-ink:${c[1]}` : ''; };
-    if (IN.n.length) b += `<div class="dvx-h"><h2 class="hub-h2" style="margin:0">${F('Three little things to notice')}</h2><small>${F('In everyday moments')}</small></div><section class="dvx-notice">${IN.n.map(([d, t, sub]) => `<button class="dvx-n" style="${tint(d)}" onclick="openPage('development-domain:${ref}:${d}')"><span class="dvx-n-ic">${h.art(DOMAIN_ICONS[d], 'Development')}</span><span class="dvx-n-copy"><b>${T(t)}</b><small>${T(sub)}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`).join('')}</section>`;
+    if (IN.n.length) b += `<div class="dvx-h"><h2 class="hub-h2" style="margin:0">${F('Three little things to notice')}</h2></div><section class="dvx-notice">${IN.n.map(([d, t, sub]) => `<button class="dvx-n" style="${tint(d)}" onclick="openPage('development-domain:${ref}:${d}')"><span class="dvx-n-ic">${h.art(DOMAIN_ICONS[d], 'Development')}</span><span class="dvx-n-copy"><b>${T(t)}</b><small>${T(sub)}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`).join('')}</section>`;
     // One thing to try together. Area pages each have their own idea, never this one.
     const all = {}; for (let mm = 0; mm <= 12; mm++) { try { const x = playStageModel(mm); [...(x.primary || []), ...(x.more || [])].forEach(a => { if (!all[a.id]) all[a.id] = a; }); } catch (e) {} }
     const A = all[IN.idea];
@@ -100,9 +100,16 @@
       const ans = ref === 6 && earlyBday() ? 'Most babies sit without support by about 9 months. Born early, Maya can get there closer to 9 months adjusted.' : Q[2];
       b += `<details class="dvx-q"><summary>${F(Q[1])}<i aria-hidden="true">＋</i></summary><div class="dvx-q-a">${W && window.hubWindowBar ? hubWindowBar({ title: '', from: W[0], to: W[1], zones: [[W[2], W[3], W[4], 'band']], ticks: W[5], now: nowMo, cat: 'Development', caption: F(ans) }) : ''}<p style="margin:8px 0 0">${F(ans)}</p></div></details>`; }
     // The four areas, with what's been marked.
-    const AREA_LINE = { Social: 'Connecting with you', Talking: 'Sounds, gestures and words', Thinking: 'Exploring and figuring things out', Movement: 'Moving {p} body' };
-    b += `<div class="dvx-h"><h2 class="hub-h2" style="margin:0">${F('Development by area')}</h2></div><section class="dvx-areas">${Object.keys(DEV_DOMAINS).map(d => { const labels = DEVELOPMENT_DOMAINS[ref][d] || [], seen = labels.filter(devSkillSeen).length;
-      return `<button class="dvx-area" style="${tint(d)}" onclick="openPage('development-domain:${ref}:${d}')"><small>${DOMAIN_TITLES[d]}</small><b>${T(AREA_LINE[d])}</b><span><span class="dev-tile-ticks" aria-hidden="true">${labels.map(devSkillSeen).sort((x, y) => y - x).map(v => `<i class="${v ? 'is-seen' : ''}"></i>`).join('')}</span>${F(`${seen} of ${labels.length}`)} ›</span></button>`; }).join('')}</section>`
+    // Each area shows one real example (not one the notice rows already mention) and how many more there are.
+    // Once a parent marks something, the card says how many they've seen.
+    const words = t => new Set((String(t).toLowerCase().match(/[a-z]{4,}/g) || []).map(w => w.replace(/(ing|es|s)$/, '')));
+    const noticed = Object.fromEntries((IN.n || []).map(([d, t, sub]) => [d, words(t + ' ' + sub)]));
+    b += `<div class="dvx-h"><h2 class="hub-h2" style="margin:0">${F('Development by area')}</h2></div><section class="dvx-areas">${Object.keys(DEV_DOMAINS).map(d => { const labels = DEVELOPMENT_DOMAINS[ref][d] || [], seen = labels.filter(devSkillSeen).length, n = labels.length;
+      const name = l => { const c = clearMilestone(l); return TILE_WORDS[c] || (c === 'Closes lips to show they don’t want more food' ? 'Shows when they’re full' : c); };
+      const fresh = l => { const w = words(name(l)), seenW = noticed[d]; return !seenW || ![...w].some(x => seenW.has(x)); };
+      const ex = labels.find(l => !devSkillSeen(l) && fresh(l)) || labels.find(l => !devSkillSeen(l)) || labels[0];
+      const foot = seen === n ? `✓ ${F(`All ${n} seen`)}` : seen ? `✓ ${F(`${seen} of ${n} seen`)}` : n > 1 ? F(`+ ${n - 1} more`) : F('Learn more');
+      return `<button class="dvx-area" style="${tint(d)}" onclick="openPage('development-domain:${ref}:${d}')"><small>${DOMAIN_TITLES[d]}</small><b>${T(name(ex))}</b><span>${foot} ›</span></button>`; }).join('')}</section>`
       + `<button class="dvx-all" onclick="openPage('chg:Development:d:all:${ref}')">${F('All milestones for this age')} →</button>`;
     // Coming into view: the next checkpoint, in a line.
     const NEXT = { 2: 'Coos, chuckles and swiping at toys', 4: 'Reaching, laughing out loud and rolling', 6: 'Sitting on {p} own, babbling and looking for dropped toys', 9: 'Waving, copying you and pulling up' };
