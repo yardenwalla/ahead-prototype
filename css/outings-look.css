@@ -76,3 +76,11 @@
 #main .oa-away-head { display: flex; align-items: baseline; justify-content: space-between }
 #main .oa-away-head .hub-link { font-size: 14px }
 #main .oa-hero-go { color: var(--year-ink) }
+/* Childcare top card and "Worth knowing" (Nov 12): art under the words, in Childcare's own yellow. */
+#main .cc-hero.cc-disc { display: flex; flex-direction: column; min-height: 447px; box-sizing: border-box }
+#main .cc-disc .cc-art { flex: 1; display: flex; align-items: flex-end; justify-content: center; margin-top: 8px }
+#main .cc-disc .cc-art svg { width: 100%; max-width: 250px; height: auto }
+#main .cc-worth { border-radius: 20px; background: #fcf7dd; padding: 14px 16px; margin: 0 0 18px; color: #4f4412 }
+#main .cc-worth small { display: block; font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: #6b5a0e; margin-bottom: 5px }
+#main .cc-worth b { display: block; font-size: 16px; line-height: 1.3; color: var(--ink, #302d3c) }
+#main .cc-worth p { margin: 5px 0 0; font-size: 14px; line-height: 1.45; color: #625a3e }

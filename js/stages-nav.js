@@ -8,14 +8,15 @@
   const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
   const nm = () => esc(typeof name === 'function' ? name() : 'your baby');
   const live = () => typeof isCurrent !== 'function' || isCurrent();
-  const TITLE = { Sleep: 'Sleep stages', Feeding: 'Feeding stages', Safety: 'Safety stages', Development: 'Development by age', 'Daily rhythm': 'Everyday care by age', Health: 'Checkups' };
+  const TITLE = { Sleep: 'Sleep stages', Feeding: 'Feeding stages', Safety: 'Safety stages', Development: 'Development by age', 'Daily rhythm': 'Everyday care by age', Health: 'Checkups', Childcare: 'Childcare stages' };
   const LEAD = {
     Sleep: 'Sleep changes in steps. Tap one to see what to expect.',
     Feeding: 'From milk to first foods to family meals. Tap one to see what to expect.',
     Safety: 'Each new skill brings a few things to change at home, before your baby can reach them.',
     Development: 'What most babies do by each age. Tap one to see what to look for.',
     'Daily rhythm': 'How everyday care changes through the first year.',
-    Health: 'Seven checkups in the first year. Tap one to see what happens.'
+    Health: 'Seven checkups in the first year. Tap one to see what happens.',
+    Childcare: 'Childcare moves with your plans, not your baby’s age.'
   };
   // One line per stage: what changes there. Kept to what each stage page already says.
   const ONE = {
@@ -26,7 +27,8 @@
     'Daily rhythm': ['The cord, diapers and first sponge baths', 'Tub baths start, and care settles into a rhythm', 'Drool, teething and more fun at bath time', 'Brushing starts with the first tooth'],
     Health: ['Feeding, weight and a jaundice check', 'Growth, feeding and how you’re doing', 'The first main round of vaccines', 'Movement, feeding and sleep questions, and vaccines', 'First foods and teeth, and vaccines', 'A short development questionnaire', 'Anemia and lead checks, milk and cups, and vaccines']
   };
-  const CHANGEABLE = ['Sleep', 'Feeding', 'Safety'];
+  ONE.Childcare = ['Kinds of care, costs and when to start looking', 'Getting ready for day one, and a backup plan', 'Settling in, each day, and when to speak up'];
+  const CHANGEABLE = ['Sleep', 'Feeding', 'Safety', 'Childcare'];
   const fill = s => String(s).replace(/Maya/g, typeof name === 'function' ? name() : 'your baby');
   const ageOf = it => it.age && !/^By |months?$|^Newborn$|^First week$/.test(it.label) ? it.age : '';
 
@@ -49,7 +51,7 @@
       if (cat === 'Health' && ci >= 0 && i < ci) { try { const r = typeof healthRecord === 'function' ? healthRecord(WELL_VISITS[i]) : null; if (r && r.status === 'attended') age = 'Done'; } catch (e) {} }
       return `<li class="st-item ${cls}"><span class="st-node" aria-hidden="true">${it.now && typeof catIcon === 'function' ? catIcon(cat) : ''}</span><button class="st-card" onclick="${it.now ? topicGo(cat) : it.onclick}">${it.now ? `<span class="st-tag">${nowTag(cat)}</span>` : ''}<b>${esc(it.label)}</b>${age ? `<small class="st-age">${esc(age)}</small>` : ''}<span class="st-one">${esc(fill((ONE[cat] || [])[i] || ''))}</span><span class="st-chev" aria-hidden="true">›</span></button></li>`;
     }).join('');
-    const foot = cat === 'Health' ? `Checkups follow ${nm()}’s birthday.` : CHANGEABLE.includes(cat) ? `Ages are typical. If another one fits ${nm()} better, open it and tap “This fits ${nm()}”.` : 'Ages are typical. Every baby moves at their own pace.';
+    const foot = cat === 'Health' ? `Checkups follow ${nm()}’s birthday.` : cat === 'Childcare' ? `Open the one that fits and tap “This fits ${nm()}”.` : CHANGEABLE.includes(cat) ? `Ages are typical. If another one fits ${nm()} better, open it and tap “This fits ${nm()}”.` : 'Ages are typical. Every baby moves at their own pace.';
     return `<div class="quiet-category hub-page hub-detail" style="${yearTheme(cat)}">${hubPageTop(TITLE[cat] || 'Stages')}<p class="st-lead">${esc(LEAD[cat] || '')}</p><ol class="st-list">${list}</ol><p class="st-foot">${foot}</p></div>`;
   }
 
