@@ -115,7 +115,6 @@ const content=[
 let state={stage:0,type:0,age:6,page:"home",mode:"all",topic:"",resourceId:"compare",checks:{},shortlist:[],activeCandidate:0,candidate:"",fit:{},card:{feed:"Breast milk",naps:"2 naps",soothe:"Rocking and a song",allergies:"Not specified",contact:""},copyMessage:"",careStarted:false,compareLeft:0,compareRight:1};
 function syncStage(){
 state.stage=state.careStarted?3:state.shortlist.some(c=>c.chosen)?2:state.shortlist.length?1:0;
-const chosen=state.shortlist.find(c=>c.chosen);if(chosen)state.type=chosen.typeIndex;
 }
 function chooseDemo(i){
 state.page="home";state.careStarted=false;state.shortlist=[];state.activeCandidate=0;
