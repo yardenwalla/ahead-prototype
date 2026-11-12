@@ -18,7 +18,7 @@
     signs: c => `<svg viewBox="0 0 90 40" aria-hidden="true"><rect x="6" y="8" width="16" height="26" rx="8" fill="${c[2]}"/><rect x="28" y="12" width="16" height="22" rx="8" fill="${c[3]}"/></svg>`
   };
   function pick(cat, text) {
-    if (cat === 'Health') return /sick|fever/i.test(text) ? ['peach', 'sick'] : /cold|stuffy/i.test(text) ? ['blue', 'cold'] : /how are you|you’re doing|your health/i.test(text) ? ['pink', 'you'] : ['green', 'visit'];
+    if (cat === 'Health') return /sick|fever|symptom|vomit|cold|stuffy/i.test(text) ? ['peach', 'sick'] : /how are you|you’re doing|your health/i.test(text) ? ['pink', 'you'] : ['green', 'visit'];
     if (cat === 'Development') return /sign/i.test(text) ? ['yellow', 'signs'] : /reach|move|cruise|roll|floor|knee/i.test(text) && !/ideas to try/i.test(text) ? ['blue', 'move'] : ['pink', 'play'];
     return null;
   }
