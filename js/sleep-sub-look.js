@@ -43,7 +43,7 @@
         // What's happening moves up into the header card when the page has no lead of its own.
         if (/^What’s happening/i.test(l)) { const lead = head.querySelector('.hub-lead'); if (!lead || !lead.textContent.trim()) { if (lead) lead.innerHTML = t; else head.insertAdjacentHTML('beforeend', `<p class="hub-lead">${t}</p>`); return ''; } return `<p class="ss-what">${t}</p>`; }
         // "How you'll know" and "How long" often hold the "when" answer, so they stay easy to read.
-        if (/^How (you’ll know|long)/i.test(l)) return `<p class="ss-know"><b>${l.replace(/\.$/, '')}</b>${t}</p>`;
+        if (/^(How (you’ll know|long)|Why it matters)/i.test(l)) return `<p class="ss-know"><b>${l.replace(/\.$/, '')}</b>${t}</p>`;
         return `<p class="ss-small">${l ? `<b>${l.replace(/\.$/, ':')}</b> ` : ''}${t}</p>`;
       });
       m.className = 'ss-moment'; m.innerHTML = out.join('');
