@@ -1,0 +1,60 @@
+/* Native Everyday Care discovery preview — uses Ahead's real hub components and palettes. */
+#main .care-discovery-native .cd-native-hero {
+  background:linear-gradient(160deg,#d3ecf6,#ecf6fa 58%,#fdeee6)!important;
+  position:relative;overflow:hidden
+}
+#main .care-discovery-native .cd-native-hero::after {
+  content:"";position:absolute;right:-40px;top:-50px;width:170px;height:170px;border-radius:50%;background:#fff;opacity:.35;pointer-events:none
+}
+#main .care-discovery-native .cd-native-hero>*{position:relative;z-index:1}
+#main .care-discovery-native .cd-native-hero .hub-eyebrow{color:#2a6078}
+#main .care-discovery-native .cd-art{height:118px;max-width:290px;margin:12px auto -4px;position:relative;display:block}
+#main .care-discovery-native .cd-art span{position:absolute;display:grid;place-items:center;background:#fffdfbbf;border-radius:22px;box-shadow:0 3px 14px #5d8aa012}
+#main .care-discovery-native .cd-art svg{width:100%;height:100%}
+#main .care-discovery-native .cd-art-main{height:100px;width:100px;top:8px;left:84px;padding:22px;background:#fefcf5!important}
+#main .care-discovery-native .cd-art-secondary{height:67px;width:67px;left:4px;top:28px;padding:16px;transform:rotate(-9deg);background:#e3f0f8!important}
+#main .care-discovery-native .cd-art-tertiary{height:60px;width:60px;right:11px;top:37px;padding:14px;transform:rotate(8deg);background:#f9eee7!important}
+#main .care-discovery-native .cd-feature{
+  display:block;width:100%;text-align:left;border:0;background:#efebf5;
+  color:var(--ink);padding:17px 18px 16px;border-radius:20px;
+  margin:0 0 17px;min-height:0;cursor:pointer;box-shadow:none
+}
+#main .care-discovery-native .cd-feature:hover{filter:brightness(.989)}
+#main .care-discovery-native .cd-feature-top{display:flex;align-items:center;justify-content:space-between;color:#7e6a9b;margin-bottom:8px}
+#main .care-discovery-native .cd-feature-top>span:first-child{font-size:11px;font-weight:700;letter-spacing:.07em}
+#main .care-discovery-native .cd-feature-picto{width:32px;height:32px;display:block}
+#main .care-discovery-native .cd-feature-picto svg{width:100%;height:100%}
+#main .care-discovery-native .cd-feature>strong{display:block;font:700 18px/1.33 var(--display-font);margin-bottom:5px;color:var(--ink)}
+#main .care-discovery-native .cd-feature>small{display:block;font-size:13.5px;line-height:1.55;color:var(--muted);font-weight:400}
+#main .care-discovery-native .cd-feature-link{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;color:#76588f;font-weight:700;margin-top:12px}
+#main .care-discovery-native .cd-feature-link>span{font-size:19px;line-height:1}
+#main .care-discovery-native .cd-updates-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+#main .care-discovery-native .cd-updates-head .hub-h2{margin:4px 0 9px}
+#main .care-discovery-native .cd-updates-head>span{font-size:12px;color:var(--muted)}
+#main .care-discovery-native .hub-list{margin-bottom:16px}
+#main .care-discovery-native .hub-row{min-height:72px;padding:12px 14px}
+#main .care-discovery-native .hub-dot{background:#e9f1f6}
+#main .care-discovery-native .hub-row:nth-child(4n+2) .hub-dot{background:#f9ebe5}
+#main .care-discovery-native .hub-row:nth-child(4n+3) .hub-dot{background:#eaeaf6}
+#main .care-discovery-native .hub-row:nth-child(4n+4) .hub-dot{background:#ecf1e9}
+#main .care-discovery-native .hub-next{margin-top:4px}
+#main .care-discovery-native .cd-basics{
+  display:flex;gap:12px;align-items:center;padding:14px 4px 12px;margin-top:6px;width:100%;min-height:68px;color:var(--ink)
+}
+#main .care-discovery-native .cd-basics-icon{flex:none;display:block;width:42px;height:42px;border-radius:13px;background:var(--year-pale);padding:5px}
+#main .care-discovery-native .cd-basics-icon svg{width:100%;height:100%}
+#main .care-discovery-native .cd-basics-copy{flex:1}
+#main .care-discovery-native .cd-basics-copy b{font-size:14px;font-weight:600;display:block}
+#main .care-discovery-native .cd-basics-copy small{display:block;font-size:12px;color:var(--muted);margin-top:2px}
+#main .hub-detail .cd-detail-p{font-size:14px;line-height:1.65;margin:0}
+#main .hub-detail .cd-now{padding:16px 17px;line-height:1.6}
+#main .hub-detail .cd-now b{display:block;margin-bottom:5px;font-size:13px;color:var(--year-ink)}
+/* Preview-only controls outside #main; the app itself retains its unmodified chrome. */
+#cd-native-preview-controls{position:sticky;top:0;z-index:12;display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap;background:#fffdf9;border-bottom:1px solid #e6e0d8;padding:10px 14px;min-height:57px;box-shadow:0 1px 9px #3a302a07}
+#cd-native-preview-controls .cd-toolbar-title{font:700 13px var(--ui-font);color:#4c4550}
+#cd-native-preview-controls .cd-toolbar-title span{font-weight:400;color:#958b8b}
+#cd-native-preview-controls .cd-age-label,#cd-native-preview-controls .cd-toggles label{display:flex;align-items:center;gap:7px;font-size:12px;color:#756c73}
+#cd-native-preview-controls select{border:1px solid #ded6d1;background:#fff;border-radius:9px;padding:7px 9px;min-height:35px;font-size:12px;max-width:128px}
+#cd-native-preview-controls .cd-toggles{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+#cd-native-preview-controls input{accent-color:#8d829d;width:16px;height:16px}
+@media(max-width:470px){#cd-native-preview-controls{gap:7px;padding:9px}#cd-native-preview-controls .cd-toolbar-title{flex:0 0 100%;text-align:center;font-size:11px}#cd-native-preview-controls .cd-age-label,#cd-native-preview-controls .cd-toggles label{font-size:11px}}
