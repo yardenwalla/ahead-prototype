@@ -1,0 +1,47 @@
+/* Only the proposal homepage and the external study toolbar differ from the live prototype. */
+#main .care-proposed .cr-hero{padding:19px 20px 17px;margin:0 0 11px}
+#main .care-proposed .cr-hero h1{font-size:24px;line-height:1.2;margin-bottom:8px;max-width:330px}
+#main .care-proposed .cr-hero .hub-eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.065em;font-weight:700;color:#28647a;margin-bottom:8px}
+#main .care-proposed .cr-hero .hub-lead{font-size:13.5px;line-height:1.56;opacity:1;color:#4c6871}
+#main .care-proposed .cr-hero-cta{display:flex;align-items:center;justify-content:space-between;width:100%;border:0;border-top:1px solid #bfd9e7;background:transparent;color:#286a83;padding:12px 0 0;margin-top:13px;font-size:13px;font-weight:700}
+#main .care-proposed .cr-normal{display:flex;align-items:center;gap:11px;width:100%;border:1px solid #f0ded6;background:#fcf1ea;border-radius:16px;color:#845c4b;text-align:left;cursor:pointer;padding:12px 14px;margin:0 0 21px}
+#main .care-proposed .cr-normal-icon{display:grid;place-items:center;flex:0 0 39px;width:39px;height:39px;border-radius:12px;background:#fffcf7}
+#main .care-proposed .cr-normal-icon svg{width:30px;height:30px;display:block}
+#main .care-proposed .cr-normal>span:nth-child(2){flex:1;min-width:0}
+#main .care-proposed .cr-normal b{display:block;font-size:14px;font-weight:700;color:#795343;line-height:1.4}
+#main .care-proposed .cr-normal small{display:block;font-size:12px;line-height:1.45;margin-top:2px;color:#907364}
+#main .care-proposed .cr-section-heading{font-size:17px;margin:0 0 9px}
+#main .care-proposed .cr-all{background:var(--white);border:1px solid var(--line);border-radius:21px;padding:3px 15px 7px;margin:0 0 16px}
+#main .care-proposed .cr-group{padding:8px 0 3px}
+#main .care-proposed .cr-group+.cr-group{border-top:1px solid #e9e4dd;padding-top:11px}
+#main .care-proposed .cr-group h3{font-size:13px;margin:3px 0 5px;font-weight:800;color:#677780}
+#main .care-proposed .cr-item{display:flex;align-items:center;gap:11px;width:100%;padding:10px 0;border:0;border-top:1px solid #f2eee9;background:transparent;text-align:left;cursor:pointer}
+#main .care-proposed .cr-group .cr-item:first-of-type{border-top:none}
+#main .care-proposed .cr-icon{display:grid;place-items:center;flex:0 0 38px;width:38px;height:38px;border-radius:11px;background:var(--cr-bg)}
+#main .care-proposed .cr-icon svg{width:25px;height:25px;stroke:var(--cr-ink)}
+#main .care-proposed .cr-copy{min-width:0;flex:1}
+#main .care-proposed .cr-copy b{display:block;font-size:14px;font-weight:650;color:var(--ink);line-height:1.35}
+#main .care-proposed .cr-copy small{display:block;font-size:12.4px;line-height:1.45;margin-top:2px;color:var(--muted)}
+#main .care-proposed .hub-next{margin-top:0;padding:13px 15px}
+#main .care-proposed .hub-note{font-size:12px;color:#95877c}
+/* The study controls live OUTSIDE the real Ahead screen; not proposed app UI. */
+#care-study-controls{position:fixed;top:36px;left:max(15px,calc(50% - 585px));width:254px;z-index:10;background:#fffefa;border:1px solid #e9e1d7;border-radius:18px;box-shadow:0 11px 36px #81715c1c;padding:17px 16px;font-family:Figtree,system-ui,sans-serif;color:#38322f}
+#care-study-controls .study-intro{display:grid;gap:5px;padding-bottom:15px}
+#care-study-controls .study-eyebrow{font-size:10px;letter-spacing:.085em;color:#a38656;text-transform:uppercase;font-weight:800}
+#care-study-controls .study-intro strong{font:800 21px Nunito,sans-serif;letter-spacing:-.04em}
+#care-study-controls .study-intro small{font-size:11.3px;color:#908478;line-height:1.45}
+#care-study-controls .study-block{border-top:1px solid #f0e8de;padding:13px 0 0;margin:0 0 11px}
+#care-study-controls .study-block label{font-size:10.5px;letter-spacing:.045em;text-transform:uppercase;font-weight:800;color:#8b7b69;display:block;margin-bottom:9px}
+#care-study-controls .study-block label small{font-size:10.2px;text-transform:none;letter-spacing:0;display:block;margin-top:2px;color:#aaa094;font-weight:500}
+#care-study-controls .study-actions{display:flex;flex-wrap:wrap;gap:6px}
+#care-study-controls button{cursor:pointer;border:0;border-radius:99px;background:#f4f0eb;color:#817467;font:700 11px Figtree,system-ui,sans-serif;padding:9px 11px}
+#care-study-controls button.on{background:#e5f0e7;color:#47765a}
+#care-study-controls button:focus-visible{outline:2px solid #82a688;outline-offset:2px}
+#care-study-controls .study-privacy{display:block;font-size:10.6px;color:#afa192;line-height:1.5;margin-top:9px}
+@media(max-width:960px){
+  #care-study-controls{position:relative;top:auto;left:auto;z-index:1;width:min(100% - 28px,520px);margin:13px auto 8px;padding:11px 14px}
+  #care-study-controls .study-intro{padding-bottom:9px}
+  #care-study-controls .study-intro strong{font-size:17px}
+  #care-study-controls .study-block{padding-top:9px;margin-bottom:7px}
+  #care-study-controls button{padding:8px 11px}
+}
