@@ -195,7 +195,7 @@ if(act==="markclue"){const cl=S().clues[state.clue],j=findSkill(cl);if(j>=0)stat
 if(act==="question"){state.qOpen=!state.qOpen;render();return}
 if(act==="stage"){state.stage=i;state.page="home";state.qOpen=false}
 else if(act==="clue"){state.clue=i;state.page="clue"}
-else if(act==="area"){state.area=i;state.page="area"}
+else if(act==="area"){if(b.dataset.i!==undefined)state.area=i;state.page="area"}
 else if(act==="skill"){state.area=d;state.skill=k;state.from=state.page;state.page="skill"}
 else{state.page=act}
 render();
