@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f8f5f0">
+<title>Ahead — Everyday Care · Design Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=Nunito:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f3ed;--paper:#fffefa;--ink:#35312f;--mute:#817871;--faint:#a59b93;--line:#ece6df;--warm:#f8eee8;--lav:#f3e9ef;--purple:#8e6685;--sage:#ecf2ea;--sageink:#54755d;--clay:#b27d64}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Figtree,system-ui,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased}
+button,select{font:inherit}button{cursor:pointer}button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid #b8a0a8;outline-offset:2px}
+h1,h2,h3,p{margin:0}h1,h2,h3{font-family:Nunito,system-ui,sans-serif;letter-spacing:-.038em}
+a{color:inherit}.whole{max-width:1090px;display:grid;grid-template-columns:minmax(230px,290px) minmax(350px,423px);gap:66px;justify-content:center;margin:0 auto;padding:39px 24px 60px}
+.controls{align-self:start;position:sticky;top:28px;padding-top:33px}.control-eyebrow{font-size:10px;letter-spacing:.105em;font-weight:800;color:#ad806e}.controls h1{font-size:32px;margin:11px 0;line-height:1.13}.controls>p{font-size:13.5px;color:#796f68;line-height:1.75;max-width:270px}.control-box{background:#fffcf9;border:1px solid #e8dfd7;border-radius:17px;padding:19px;margin-top:23px;box-shadow:0 5px 17px #5c493006}.control-box .micro{font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:#8e7a6e;margin:0 0 9px;display:block}.control-box select{border:1px solid #e6ddd3;background:white;padding:11px 12px;border-radius:9px;width:100%;font-size:13px;color:#49413d}.formline{border-top:1px solid #eee7e0;margin-top:15px;padding-top:13px}.checkline{font-size:12px;color:#5f5751;display:flex;align-items:flex-start;gap:10px;line-height:1.5;cursor:pointer;margin:10px 0}.checkline input{accent-color:#9e806f;height:17px;width:17px;margin:1px 0;flex-shrink:0}.choice{border:1px solid #e7ded7;border-radius:8px;display:flex;overflow:hidden;margin-top:8px}.choice button{padding:9px 10px;border:0;flex:1;background:white;font-size:11px;color:#73685f}.choice button.sel{background:#efdfd5;font-weight:700;color:#835d4b}.note{font-size:12px;color:#857a71;line-height:1.65;margin-top:22px;padding-left:13px;border-left:3px solid #e0c6b7}.note strong{color:#64574e}
+.phone{background:var(--paper);border-radius:27px;border:1px solid #eae3dc;overflow:hidden;box-shadow:0 18px 70px #7c61541a;min-height:750px}
+.phone-head{padding:19px 23px 12px;display:flex;justify-content:space-between;align-items:center}.brand{font:800 25px Nunito,sans-serif;letter-spacing:-.06em}.brand em{font-style:normal;color:#b78c7b}.avatar{height:34px;width:34px;border-radius:50%;background:#e7dbd1;color:#765f51;font-size:12px;display:grid;place-items:center;font-weight:700}
+.main{padding:8px 23px 28px}.back{border:none;background:none;color:#7f756d;font-size:12px;padding:0;margin:3px 0 13px;display:flex;gap:4px;align-items:center}.back:hover{text-decoration:underline}.page-title{font-size:28px;line-height:1.22;margin-bottom:15px}
+.scroller{display:flex;gap:6px;overflow-x:auto;margin:0 -23px 17px;padding:0 23px 4px;scrollbar-width:none}.scroller::-webkit-scrollbar{display:none}.chip{flex:0 0 auto;border:0;border-radius:40px;background:#f3f0ec;color:#8b817a;font-size:11px;padding:8px 11px;font-weight:700;white-space:nowrap}.chip.active{color:#815d4c;background:#efdfd4}
+.hero{padding:20px 19px;border-radius:16px;background:linear-gradient(125deg,#faeee7,#f7eae0);position:relative;overflow:hidden;min-height:160px}
+.hero:after{content:"";position:absolute;right:-51px;bottom:-74px;width:193px;height:193px;border-radius:50%;border:1px solid #e5cdbf;box-shadow:0 0 0 17px #f3dfd257,0 0 0 38px #f4d9cb33;pointer-events:none}
+.micro{font-size:10px;font-weight:800;letter-spacing:.075em;text-transform:uppercase}.hero .micro{color:#a5745e;position:relative;z-index:1}.hero h2{font-size:25px;line-height:1.2;margin:12px 0 10px;color:#4b3930;position:relative;z-index:1;max-width:285px}.hero p{font-size:12.8px;line-height:1.62;color:#745e52;position:relative;z-index:1;max-width:307px}
+.feature{display:block;width:100%;background:var(--lav);border:0;border-radius:14px;text-align:left;padding:18px 18px 17px;margin:18px 0 25px;color:#493d48}.feature:hover{box-shadow:0 6px 16px #b391ad29}.feature-top{display:flex;justify-content:space-between;align-items:center;color:var(--purple)}.feature h3{font-size:18px;line-height:1.32;margin:10px 0 6px}.feature p{font-size:12.5px;line-height:1.58;color:#6e5d69;margin-bottom:13px}.feature .learn{font-size:12px;font-weight:700;color:#8c6485;display:flex;gap:5px;align-items:center}
+.section-title{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:6px}.section-title h3{font-size:16px}.section-title span{font-size:11px;color:#918781;white-space:nowrap}
+.updates{display:grid}.update{display:flex;gap:11px;align-items:center;border:0;border-bottom:1px solid var(--line);padding:13px 0;text-align:left;background:transparent;color:var(--ink);width:100%}.update:last-child{border-bottom:0}.update:hover .utitle{color:#9e755c}.mark{height:43px;width:43px;display:grid;place-items:center;flex-shrink:0;border-radius:11px;background:#eef1ee;color:#7d9682}.update:nth-child(4n+2) .mark{background:#f7ebe4;color:#ad8872}.update:nth-child(4n+3) .mark{background:#efebf5;color:#8f7d9e}.update:nth-child(4n+4) .mark{background:#ebeff5;color:#8d93aa}
+.ucopy{flex:1}.utitle{font-size:12.8px;font-weight:700;line-height:1.42}.usub{font-size:11.8px;line-height:1.55;color:#91867d;margin-top:3px}.chev{font-size:21px;color:#c0b5ad;font-weight:400}
+.coming{background:#fbfaf7;border:1px solid #eee9e3;border-radius:12px;padding:13px 15px;margin-top:17px}.coming .micro{color:#96847a}.coming p{font-size:12px;line-height:1.62;margin-top:8px;color:#665d56}
+.basics{display:flex;width:100%;border:0;background:transparent;padding:19px 0 7px;gap:11px;align-items:center;text-align:left;color:inherit}.basics .mark{background:#f4f0ec;color:#9d9085}.basics b{display:block;font-size:13px}.basics small{display:block;color:#948980;font-size:11.5px;margin-top:4px;line-height:1.4}
+.icon{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}.icon.sm{height:15px;width:15px}
+.bottom{border-top:1px solid #eee9e4;display:flex;justify-content:space-around;padding:13px 16px 16px;color:#a99e97;font-size:10px}.bottom span{display:grid;justify-items:center;gap:5px}.bottom .active{color:#ac7f6b;font-weight:700}
+.detail-hero{padding:20px;border-radius:15px;background:#f7ede7}.detail-hero .micro{color:#ac7f6b}.detail-hero h2{font-size:24px;line-height:1.2;margin:10px 0}.detail-hero p{font-size:13px;color:#706057;line-height:1.65}
+.block{margin-top:22px}.block h3{font-size:15px;margin-bottom:9px}.block p{font-size:12.8px;line-height:1.75;color:#6e645b}
+.callout{background:#ebf1e9;border-radius:13px;padding:17px;margin-top:22px}.callout .micro{color:#587960;display:flex;align-items:center;gap:6px}.callout p{font-size:12.8px;color:#46654e;line-height:1.7;margin-top:8px}
+.deep{margin-top:25px;border-top:1px solid #eee9e3;padding-top:12px}.deep button{display:flex;width:100%;align-items:center;gap:11px;background:none;border:0;text-align:left;color:inherit;padding:7px 0}.deep b{font-size:13px}.deep small{font-size:11.5px;color:#91867d;display:block;margin-top:4px}
+.primary{background:transparent;border:1px solid #d7cbc1;border-radius:11px;padding:12px 16px;font-size:12px;font-weight:700;color:#786458;width:100%;margin-top:22px}
+.library-intro{font-size:12.8px;line-height:1.7;color:#81776e;margin:0 0 18px}
+.guides{display:grid}.guide{display:flex;align-items:center;gap:12px;border:0;border-bottom:1px solid #eee8e2;padding:14px 0;text-align:left;background:transparent;color:inherit}.guide:last-child{border-bottom:0}.guide .mark{background:#efeeeb;color:#8b8982}.guide b{font-size:13px}.guide small{display:block;font-size:11.5px;color:#8e857d;margin-top:4px;line-height:1.5}
+.topics{margin-top:16px}.topic{border-bottom:1px solid #eee8e2;padding:13px 0;display:flex;align-items:flex-start;gap:11px}.topic b{font-size:12.5px;line-height:1.4}.topic p{font-size:11.5px;line-height:1.6;color:#877b72;margin-top:5px}.topic .icon{flex-shrink:0;color:#81a088;margin-top:1px}
+.smallnote{font-size:10.7px;color:#958c83;line-height:1.65;margin-top:20px}
+@media(max-width:820px){.whole{display:block;padding:0;max-width:425px}.controls{position:static;padding:16px 20px 12px}.controls h1{font-size:19px;margin:5px 0}.controls>p,.controls>.note{display:none}.control-box{margin-top:12px;padding:12px 14px}.controls{padding-top:16px}.phone{border-radius:0;border-left:0;border-right:0;border-bottom:0;box-shadow:none}.phone-head{padding-top:18px}.formline{margin-top:9px;padding-top:8px}.control-box .micro{margin-bottom:6px}.control-box select{padding:8px} }
+</style>
+</head>
+<body>
+<svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;height:0;width:0;overflow:hidden" aria-hidden="true">
+<symbol id="i-bath" viewBox="0 0 24 24"><path d="M3 12h18v2c0 4-3 7-7 7h-4c-4 0-7-3-7-7v-2zm4 0V6c0-2 2-3 4-3s4 1 4 3m-4 0h5"/></symbol>
+<symbol id="i-diaper" viewBox="0 0 24 24"><path d="M4 5h16v8c0 5-3 8-8 8s-8-3-8-8V5zm0 3 5 3m11-3-5 3M8 16l4 2 4-2"/></symbol>
+<symbol id="i-skin" viewBox="0 0 24 24"><path d="M12 2c-3 5-7 8-7 12a7 7 0 0 0 14 0c0-4-4-7-7-12zM9 15c.5 2 2 3 4 3"/></symbol>
+<symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 2l2.5 7.5L22 12l-7.5 2.5L12 22l-2.5-7.5L2 12l7.5-2.5L12 2z"/></symbol>
+<symbol id="i-heart" viewBox="0 0 24 24"><path d="M20 8c-1-4-6-5-8-1-2-4-7-3-8 1-2 5 5 10 8 13 3-3 10-8 8-13z"/></symbol>
+<symbol id="i-hair" viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M5 11c0-6 3-9 7-9 4 0 7 3 7 9M8 8c1 2 3 3 5 2M15 7c0 3 1 4 4 5"/></symbol>
+<symbol id="i-mouth" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M7 14c2 4 8 4 10 0M8 10h.01M16 10h.01"/></symbol>
+<symbol id="i-shirt" viewBox="0 0 24 24"><path d="M7 3l5 2 5-2 5 5-3 4-2-2v11H7V10l-2 2-3-4 5-5z"/></symbol>
+<symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3M5 5l2 2m10 10 2 2M5 19l2-2M17 7l2-2"/></symbol>
+<symbol id="i-foot" viewBox="0 0 24 24"><path d="M7 20c-3-5-1-11 1-14a4 4 0 0 1 6 3l1 6c1 3 3 1 5 3 2 2 0 4-3 4H9a3 3 0 0 1-2-2zM5 3h.01M10 2h.01M15 4h.01"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24"><path d="M12 6c-3-2-6-2-10-1v14c4-1 7-1 10 1 3-2 6-2 10-1V5c-4-1-7-1-10 1zM12 6v14"/></symbol>
+<symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4m10-4v4M3 10h18M8 14h3m-3 3h7"/></symbol>
+<symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10l9-7 9 7v11H3V10zm6 11v-8h6v8"/></symbol>
+<symbol id="i-list" viewBox="0 0 24 24"><path d="M8 5h13M8 12h13M8 19h13M3 5h1M3 12h1M3 19h1"/></symbol>
+<symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+</svg>
+<div class="whole">
+<aside class="controls">
+<div class="control-eyebrow">Ahead · Design exploration</div>
+<h1>Everyday care</h1>
+<p>What changes in caring for your baby, before those changes catch you off guard. One focused discovery, smaller things worth knowing, and the full how-tos underneath.</p>
+<div class="control-box">
+<label class="micro" for="age">Preview Maya's age</label><select id="age"></select>
+<div id="milestoneControls" class="formline"></div>
+</div>
+<div class="note"><strong>Try this:</strong> Start at five weeks—the version you liked. Then try four–five months with Rolling on, eight months with First tooth on, and the quieter two-month experience.</div>
+</aside>
+<div class="phone"><div class="phone-head"><div class="brand">ahead<em>.</em></div><div class="avatar">M</div></div><div id="app"></div></div>
+</div>
+<script>
+(function(){
+"use strict";
+function story(title,sub,guide,why,doThis,icon){return {title:title,sub:sub,guide:guide,why:why,act:doThis,icon:icon};}
+var guides=[
+{title:"Diapers & diaper-area care",subtitle:"Changes, cleaning, stool patterns and diaper rashes",icon:"diaper",topics:[
+["Changing a diaper","Keep supplies within reach. Clean gently, front to back where appropriate, and change when wet or dirty."],
+["The first wet and dirty diapers","Expect stools to change during the first days. Your care team can explain expected diaper counts for your baby."],
+["Cleaning the diaper area","Use gentle cleaning appropriate to the baby's anatomy. If circumcised, follow the clinician's individual aftercare instructions; never forcibly retract a foreskin."],
+["Diaper rash","Change promptly, let skin dry gently, and use protective cream when needed. Ask about persistent or worsening rashes."],
+["Rolling and wriggly changes","Keep a hand on the baby on raised changing surfaces. Floor changes are often easier once rolling starts."],
+["Poop after solids","Stool can change in smell, consistency and color once food is introduced; feeding guidance lives in Feeding."]
+]},
+{title:"Bathing & hair",subtitle:"Cord care, the first tub bath and the growing baby",icon:"bath",topics:[
+["Umbilical cord care","Keep the cord area clean and dry; let the stump separate on its own. Ask the clinician about spreading redness, fever or discharge."],
+["Sponge baths","A few sponge baths per week are usually enough while the umbilical area heals."],
+["The first tub bath","Once the cord has fallen off and the area is healed, try a brief bath with a safe infant tub and warm water."],
+["Cradle cap and hair","Wash hair gently. Avoid picking at flakes. Typical infant hair shedding often resolves as hair grows back."],
+["Baths with a bigger baby","Use an appropriate bath setup and maintain continuous hands-on supervision. A bath seat is not a safety device."]
+]},
+{title:"Skin & rashes",subtitle:"What's normal, what's new, and what deserves attention",icon:"skin",topics:[
+["Newborn skin","Peeling, small white bumps and temporary blotches are common early changes."],
+["Baby acne","Small facial bumps often appear in early infancy. Gentle cleansing is usually sufficient."],
+["Cradle cap","Greasy scalp scales often improve with gentle care. Do not pick or scrape."],
+["Birthmarks and hemangiomas","Some birthmarks appear after birth. Ask a pediatrician early about a new or growing red or strawberry-like mark."],
+["Dry skin and eczema","Persistent rough, itchy or inflamed patches may need a more specific skin-care plan."],
+["Drool and heat rashes","Moisture and friction may irritate chin and neck skin. Pat dry rather than rubbing."]
+]},
+{title:"Clothes, sun & first shoes",subtitle:"Layers, sunscreen and changing footwear needs",icon:"shirt",topics:[
+["Dressing for the weather","Use comfortable layers and monitor for overheating, especially indoors and during sleep."],
+["Sun protection before six months","Prioritize shade and protective clothing. Limited sunscreen may be considered when other protection is unavailable."],
+["Sunscreen from six months","Shade still comes first. Use broad-spectrum SPF 30 or higher on exposed skin according to the label."],
+["Bare feet and first shoes","Bare feet help with balance on safe indoor surfaces. Use flexible shoes to protect feet when walking outside."]
+]},
+{title:"Gums & teeth",subtitle:"Drool, teething, brushing and first dental care",icon:"mouth",topics:[
+["Mouthing and drooling","Chewing and drooling can increase before any teeth erupt."],
+["Teething comfort","A chilled, not frozen, teether or gentle gum pressure can help. Avoid numbing gels and teething necklaces."],
+["The first tooth","Begin brushing twice daily when the first tooth appears, with a soft brush and rice-grain-sized smear of fluoride toothpaste."],
+["The first dental visit","Arrange a first visit after the first tooth and no later than the first birthday."]
+]},
+{title:"Nails, eyes, ears & nose",subtitle:"Small grooming routines, always available",icon:"hair",topics:[
+["Nails","A baby nail file or clippers can help prevent scratches. Try when the baby is calm."],
+["Eyes","Clean gently around the eyes using a clean, damp cloth; consult a clinician for concerning redness or swelling."],
+["Ears","Wipe the outer ear. Never insert cotton swabs into the ear canal."],
+["Nose","Gentle saline and suction can help with stuffiness when needed; avoid over-suctioning."]
+]}
+];
+var episodes=[
+{label:"First days",age:"FIRST WEEK",eyebrow:"SO MANY FIRSTS",title:"A brand-new baby, a lot of little changes",lead:"Some things that look surprising are simply part of adjusting to life outside the womb.",badge:"A FIRST-WEEK CHANGE",feature:story("The first diapers tell a story","That sticky, dark first poop changes as feeding gets established.",0,"The first stools are meconium, followed by transitional stools as milk feeding begins.","Notice the normal progression and ask your baby's care team about expected wet diapers and stool changes.","diaper"),more:[
+story("The cord is drying and healing","The stump changes appearance before it falls off.",1,"The remaining stump dries and separates naturally.","Keep it clean and dry, and let it fall off on its own.","bath"),
+story("Newborn skin can peel and spot","Tiny bumps, peeling and blotches can be normal.",2,"Newborn skin adapts to a different environment.","Clean gently and avoid picking or scrubbing.","skin"),
+story("There's a gentle way to clean down there","Care varies with anatomy and any circumcision.",0,"Newborn genital skin is delicate, and a circumcision needs specific aftercare when relevant.","Use gentle cleaning and follow any individualized aftercare instructions.","heart")],
+coming:"The stump will usually fall off in the next couple of weeks. Then tub baths can begin."},
+{label:"5 weeks",age:"5 WEEKS",eyebrow:"NEW LITTLE CHANGES",title:"The newborn routine is changing",lead:"A few new things may appear on Maya's skin, and the first tub bath could be close.",badge:"A NEW FIRST",feature:story("The first tub bath is coming","When the cord has fallen off and the area has healed, sponge baths can become tub baths.",1,"The umbilical area needs time to heal before moving from sponge baths to tub baths.","Once healed, use a safe baby tub with warm water and maintain continuous hands-on supervision.","bath"),more:[
+story("Baby acne might appear","Small facial bumps can show up in these early weeks.",2,"Baby acne is a common, often temporary skin change in early infancy.","Wash gently and avoid acne treatments unless a clinician recommends them.","skin"),
+story("Cradle cap can show up","Greasy-looking flakes on the scalp are common.",2,"Cradle cap is a common infant scalp condition.","Wash gently, soften flakes if needed and avoid picking at them.","spark"),
+story("Some birthmarks appear after birth","A new or growing strawberry mark is worth mentioning early.",2,"Some infantile hemangiomas appear in the first weeks and can grow quickly.","Ask a pediatrician about a new or growing strawberry-like mark, particularly one near an eye, mouth or another sensitive area.","heart"),
+story("Baby hair may shed and regrow","A fuller head of hair can suddenly look much thinner.",1,"Baby hair goes through natural shedding and regrowth cycles in the first months.","Typical shedding needs no special treatment.","hair")],
+coming:"Coming up: some breastfed babies begin pooping less often."},
+{label:"2–3 months",age:"2–3 MONTHS",eyebrow:"A SMALL CHANGE",title:"The everyday routine is settling in",lead:"There may be fewer big firsts this month. A couple of small changes can still be worth knowing.",badge:"YOU MIGHT NOTICE",feature:story("Some breastfed babies start pooping less often","Going days between poops can become normal for some babies after the early weeks.",0,"As feeding matures, stool frequency may decrease in some breastfed babies. Soft stool, wet diapers, feeding and growth matter more than the count alone.","If your baby is feeding and growing well and stools stay soft, this can be normal. Contact your clinician for hard stools, poor feeding or other concerns.","diaper"),more:[
+story("A bald patch may appear on the back of the head","Rubbing against the sleep surface can wear away some hair.",1,"Normal friction and hair cycling can leave temporary thinning.","No special hair treatment is usually needed. Continue safe back sleeping.","hair"),
+story("Rough, dry patches may need different care","Not every skin change is baby acne.",2,"Dry or itchy patches can be a different kind of skin irritation, including eczema.","Use fragrance-free moisturizing care and discuss persistent or inflamed patches with your pediatrician.","skin")],
+coming:"Coming up: more mouthing and drooling as Maya becomes more curious."},
+{label:"4–5 months",age:"4–5 MONTHS",eyebrow:"MORE MOVEMENT",title:"Little movements, bigger changes",lead:"Reaching, rolling and exploring with the mouth can start changing everyday care.",badge:"GET READY FOR THIS",feature:story("Diaper changes are about to get interesting","Rolling can begin unexpectedly—even on a changing table.",0,"Growing mobility makes raised changing surfaces riskier before parents necessarily expect it.","Have everything within reach, keep a hand on Maya on raised surfaces, or change her on the floor.","diaper"),more:[
+story("All that drool doesn't always mean teeth","Chewing and mouthing can start long before a tooth appears.",4,"Babies explore the world with their mouths as they develop.","Offer a safe teether and gently wipe excess drool.","mouth"),
+story("Drool rash can show up","Wet skin around the chin and neck can become irritated.",2,"Frequent moisture and friction can irritate sensitive skin.","Gently pat the area dry and use simple protective skin care if needed.","skin"),
+story("Bath time may be getting splashier","More kicking and twisting changes how baths feel.",1,"Maya is gaining more control over her movements.","Keep the bath setup suitable for her abilities and maintain hands-on supervision.","bath")],
+coming:"At six months of chronological age, sunscreen can join the sun-care routine."},
+{label:"6 months",age:"6 MONTHS",eyebrow:"A NEW OPTION",title:"A few care routines can change now",lead:"Some changes follow age. Others depend on whether Maya has started new things.",badge:"NEW AT SIX MONTHS",feature:story("Sunscreen can join the routine","Shade and protective clothing still matter—and now sunscreen can be part of the plan.",3,"General guidance for sunscreen use changes from six months of chronological age.","Apply broad-spectrum SPF 30+ sunscreen to exposed skin according to the label. Keep prioritizing shade and protective clothing.","sun"),more:[
+story("The first tooth might be close","Some babies have a tooth already; others won't for months.",4,"Teeth emerge on a widely varying timeline.","When the first tooth appears, start brushing twice daily with a soft brush and rice-grain smear of fluoride toothpaste.","mouth"),
+story("Diapers may change when solids begin","Stool color, smell and texture can look different with food.",0,"New foods affect what passes through the digestive tract.","Expect some differences once solids begin, and ask your clinician about unusual or concerning changes.","diaper"),
+story("Steadier sitting changes bath time later","A different bath setup may become practical with new balance.",1,"Improving stability can change what bathing equipment fits.","Use a setup suitable for Maya's abilities and always supervise hands-on.","bath")],
+coming:"The first tooth and steadier sitting can bring new care routines on Maya's timeline."},
+{label:"8 months",age:"8 MONTHS",eyebrow:"NEW ABILITIES",title:"Familiar routines, new little twists",lead:"Sitting, wriggling and perhaps a first tooth can change how you care for Maya.",badge:"AN UPCOMING FIRST",feature:story("The first tooth changes the routine","Brushing begins with the first tooth, whenever it arrives.",4,"Teeth need cleaning as soon as they emerge, regardless of the child's age.","Use a soft infant toothbrush and a rice-grain smear of fluoride toothpaste twice daily once the first tooth appears.","mouth"),more:[
+story("Bath time may need a different setup","A steady sitter is getting ready for more splashes.",1,"Better sitting balance changes which bathing setups can work safely.","Choose a suitable tub according to its instructions. Stay within hands-on reach, even with a bath seat.","bath"),
+story("Diaper changes can become a wrestling match","Rolling and crawling make staying still less appealing.",0,"Maya is becoming more mobile and curious.","Try floor changes, a small toy or a familiar song.","diaper")],
+coming:"By the first birthday, Maya should have a first dental visit—whether teeth arrive early or late."},
+{label:"11 months",age:"11 MONTHS",eyebrow:"LOOKING TOWARD ONE",title:"The little routines keep growing",lead:"More movement and the approach of the first birthday bring a couple of new care decisions.",badge:"BEFORE THE FIRST BIRTHDAY",feature:story("The first dental visit is coming up","Your baby's first dental visit should happen by the first birthday.",4,"A dentist can check early teeth and gums and discuss prevention and brushing.","Arrange a visit with a dentist comfortable caring for infants, even if Maya has few or no teeth.","mouth"),more:[
+story("First steps don't mean first shoes indoors","Bare feet can help babies explore balance.",3,"Feeling the ground helps babies practice movement and balance.","Try bare feet on safe indoor surfaces. Use flexible protective footwear for outdoor walking.","foot"),
+story("Diaper changes may need a new strategy","Some babies would rather stand or crawl than lie down.",0,"Mobility and curiosity make it harder to stay still.","A safe floor setup and something interesting to hold can help.","diaper"),
+story("Bath time changes with pulling up","A mobile baby may suddenly try standing in the tub.",1,"New abilities can change position quickly during routine care.","Keep a hand on Maya and a setup appropriate for her abilities. Never leave her unattended.","bath")],
+coming:"After the first birthday, toddler mobility and more teeth bring another round of care changes."}
+];
+var state={age:1,screen:"home",story:0,guide:0,feed:"breast",cord:false,roll:false,solids:false,sit:false,tooth:false,walk:false,early:false,origin:"library"};
+var icon=function(name,small){return '<svg aria-hidden="true" class="icon'+(small?' sm':'')+'"><use href="#i-'+name+'"></use></svg>'};
+function sClone(x){return {title:x.title,sub:x.sub,guide:x.guide,why:x.why,act:x.act,icon:x.icon};}
+function snapshot(){
+var e=episodes[state.age],v={label:e.label,age:e.age,eyebrow:e.eyebrow,title:e.title,lead:e.lead,badge:e.badge,feature:sClone(e.feature),more:e.more.map(sClone),coming:e.coming};
+if(state.age===1&&state.cord){
+v.feature=story("The first tub bath can begin","The cord has fallen off and the area has healed. Maya's bath routine can change now.",1,"The belly button area has finished healing.","Try a brief bath in a safe infant tub with warm water. Keep one hand supporting Maya and never step away.","bath");
+}
+if(state.age===2&&state.feed==="formula"){
+v.feature=story("Not every dry patch is baby acne","Rough, itchy patches may need different care from newborn bumps.",2,"Dry patches or eczema can appear as skin changes during infancy.","Use gentle, fragrance-free moisturizer and consult your pediatrician for persistent, spreading or uncomfortable rashes.","skin");
+v.badge="WORTH KNOWING";
+v.more=v.more.filter(function(x){return x.title!=="Rough, dry patches may need different care";});
+v.lead="Not every week needs a new first. Here's one change to understand, plus what may be coming.";
+}
+if(state.age===3&&state.roll){
+v.badge="NEW FOR MAYA";
+v.feature=story("Diaper changes just got more interesting","Now that Maya is rolling, a safe changing setup matters more than ever.",0,"A baby who rolls can move off a raised changing surface in seconds.","Use the floor when practical. On a raised surface keep one hand on Maya and never leave her alone.","diaper");
+}
+if(state.age===4){
+if(!state.solids){v.more=v.more.map(function(x){return x.title.indexOf("Diapers may change")===0?story("Diapers may change once solids begin","New foods can change stool color, texture and smell.",0,"The changes begin when Maya starts eating food.","Keep the reference handy for when solids start; until then, milk-fed stools may remain familiar.","diaper"):x;});}
+else {v.more=v.more.map(function(x){return x.title.indexOf("Diapers may change")===0?story("Maya's diapers look different with solids","Thicker, smellier or more varied stools may be part of the change.",0,"New foods change the texture and appearance of stools.","Many differences are normal; white or gray stools need prompt medical advice.","diaper"):x;});}
+}
+if(state.age===5){
+if(state.tooth){v.badge="A NEW DAILY ROUTINE";v.feature=story("Her first tooth is here!","One tiny tooth brings a brand-new twice-daily habit.",4,"Brushing protects teeth from the moment they emerge.","Brush morning and night with a soft baby toothbrush and a rice-grain smear of fluoride toothpaste. Arrange a dental visit by age one.","mouth");}
+if(state.sit){v.more[0]=story("A steadier sitter changes bath time","A different bath setup may now work for Maya.",1,"New sitting balance changes what baby can manage in the bath.","Follow the tub's instructions, keep the water shallow, and maintain continuous hands-on supervision.","bath");}
+}
+if(state.age===6){
+if(state.walk){v.badge="A NEW MILESTONE";v.feature=story("First steps don't mean first shoes indoors","Walking is new. Bare feet can still be the best choice on safe indoor floors.",3,"Bare feet allow Maya to feel the floor and practice balance.","Use bare feet indoors when safe; add soft, flexible shoes for outdoor protection.","foot");v.more[0]=story("Don't forget the first dental visit","Make an appointment by Maya's first birthday.",4,"Early dental care helps protect emerging teeth.","Book a first dental visit by age one.","mouth");}
+else{v.more[0]=story("First shoes can wait for outdoor walking","There's no need to buy walking shoes before Maya needs them.",3,"Bare feet are useful for practicing balance on safe floors.","Save flexible shoes for when she starts walking outdoors.","foot");}
+}
+return v;
+}
+function nav(){return '<div class="bottom"><span>'+icon("home")+'Home</span><span class="active">'+icon("list")+'Guides</span><span>'+icon("heart")+'Memories</span></div>'}
+function bar(){return '<div class="main"><button class="back" data-action="home">‹ Everyday care</button>'}
+function rail(){return '<div class="scroller" aria-label="Preview care changes by age">'+episodes.map(function(x,i){return '<button class="chip'+(state.age===i?' active':'')+'" data-action="age" data-index="'+i+'" aria-pressed="'+(state.age===i?'true':'false')+'">'+x.label+'</button>'}).join('')+'</div>'}
+function renderHome(){
+var p=snapshot(),o='<div class="main"><button class="back" data-action="home">‹ All guides</button><h1 class="page-title">Everyday care</h1>'+rail();
+o+='<section class="hero"><div class="micro">'+p.eyebrow+' · '+p.age+'</div><h2>'+p.title+'</h2><p>'+p.lead+'</p></section>';
+o+='<button class="feature" data-action="story" data-index="0"><div class="feature-top"><span class="micro">'+p.badge+'</span>'+icon("spark",true)+'</div><h3>'+p.feature.title+'</h3><p>'+p.feature.sub+'</p><span class="learn">See what this means '+icon("arrow",true)+'</span></button>';
+o+='<div class="section-title"><h3>Also new around now</h3><span>'+p.more.length+' update'+(p.more.length===1?'':'s')+'</span></div><div class="updates">';
+p.more.forEach(function(x,i){o+='<button class="update" data-action="story" data-index="'+(i+1)+'"><span class="mark">'+icon(x.icon)+'</span><span class="ucopy"><span class="utitle">'+x.title+'</span><span class="usub">'+x.sub+'</span></span><span class="chev">›</span></button>'});
+o+='</div><div class="coming"><div class="micro">'+icon("calendar",true)+' COMING UP</div><p>'+p.coming+'</p></div>';
+o+='<button class="basics" data-action="library"><span class="mark">'+icon("book")+'</span><span style="flex:1"><b>Everyday care basics</b><small>Step-by-step how-tos, always available</small></span><span class="chev">›</span></button>';
+if(state.early)o+='<p class="smallnote">Born early: care tied to birth (such as cord healing and sunscreen age) follows chronological age. Movement-based changes follow Maya\'s actual skills.</p>';
+o+='</div>'+nav();return o;
+}
+function focused(){var p=snapshot();return state.story===0?p.feature:p.more[state.story-1]}
+function detail(){
+var x=focused(),guide=guides[x.guide],o=bar();
+o+='<section class="detail-hero"><div class="micro">'+guide.title.toUpperCase()+' · '+episodes[state.age].label.toUpperCase()+'</div><h2>'+x.title+'</h2><p>'+x.sub+'</p></section>';
+o+='<section class="block"><h3>Why this is happening</h3><p>'+x.why+'</p></section>';
+o+='<section class="callout"><div class="micro">'+icon("check",true)+' WHAT THIS MEANS FOR MAYA</div><p>'+x.act+'</p></section>';
+o+='<div class="deep"><button data-action="related" data-index="'+x.guide+'"><span class="mark">'+icon("book")+'</span><span style="flex:1"><b>Explore '+guide.title+'</b><small>Find the full how-to, even after this is no longer new</small></span><span class="chev">›</span></button></div>';
+o+='<button class="primary" data-action="home">Back to what\'s changing</button></div>'+nav();return o;
+}
+function library(){
+var o=bar()+'<h1 class="page-title">Everyday care basics</h1><p class="library-intro">Six practical guides, available any time. What Ahead highlights on the main page changes; the underlying instructions stay here.</p><div class="guides">';
+guides.forEach(function(g,i){o+='<button class="guide" data-action="guide" data-index="'+i+'"><span class="mark">'+icon(g.icon)+'</span><span style="flex:1"><b>'+g.title+'</b><small>'+g.subtitle+'</small></span><span class="chev">›</span></button>'});
+o+='</div></div>'+nav();return o;
+}
+function guide(){
+var g=guides[state.guide],o=bar()+'<section class="detail-hero"><div class="micro">YOUR EVERYDAY CARE LIBRARY</div><h2>'+g.title+'</h2><p>'+g.subtitle+'</p></section><div class="topics">';
+g.topics.forEach(function(t){o+='<div class="topic">'+icon("check")+'<div><b>'+t[0]+'</b><p>'+t[1]+'</p></div></div>'});
+o+='</div><p class="smallnote">Prototype content illustrates the guide structure. Ahead\'s existing step-by-step illustrations, videos and detailed advice would live within these sections.</p>';
+o+='<button class="primary" data-action="'+(state.origin==="story"?"detail":"library")+'">Back</button></div>'+nav();return o;
+}
+function controls(){
+var sel=document.getElementById("age");sel.innerHTML=episodes.map(function(e,i){return '<option value="'+i+'"'+(i===state.age?' selected':'')+'>'+e.label+'</option>'}).join('');
+var h='<span class="micro">Try a real-life change</span>';
+if(state.age===1)h+='<label class="checkline"><input type="checkbox" data-toggle="cord" '+(state.cord?'checked':'')+'> Cord has fallen off and the belly button has healed</label>';
+else if(state.age===2)h+='<div class="micro" style="margin-top:6px">Feeding type</div><div class="choice"><button data-feed="breast" class="'+(state.feed==="breast"?'sel':'')+'">Breast milk</button><button data-feed="formula" class="'+(state.feed==="formula"?'sel':'')+'">Formula</button></div>';
+else if(state.age===3)h+='<label class="checkline"><input type="checkbox" data-toggle="roll" '+(state.roll?'checked':'')+'> Maya has started rolling</label>';
+else if(state.age===4)h+='<label class="checkline"><input type="checkbox" data-toggle="solids" '+(state.solids?'checked':'')+'> Maya has started solids</label>';
+else if(state.age===5)h+='<label class="checkline"><input type="checkbox" data-toggle="tooth" '+(state.tooth?'checked':'')+'> Maya\'s first tooth has appeared</label><label class="checkline"><input type="checkbox" data-toggle="sit" '+(state.sit?'checked':'')+'> Maya sits steadily</label>';
+else if(state.age===6)h+='<label class="checkline"><input type="checkbox" data-toggle="walk" '+(state.walk?'checked':'')+'> Maya has started walking</label>';
+else h+='<p style="font-size:11.5px;color:#8a8078;line-height:1.6">First-days guidance is available immediately, including important care basics.</p>';
+h+='<label class="checkline" style="margin-top:12px"><input type="checkbox" data-toggle="early" '+(state.early?'checked':'')+'> Maya was born early</label>';
+document.getElementById("milestoneControls").innerHTML=h;
+}
+function render(){
+var app=document.getElementById("app");app.innerHTML=state.screen==="home"?renderHome():state.screen==="detail"?detail():state.screen==="library"?library():guide();controls();
+}
+document.getElementById("age").addEventListener("change",function(e){state.age=Number(e.target.value);state.screen="home";render()});
+document.getElementById("milestoneControls").addEventListener("change",function(e){if(e.target.dataset.toggle){state[e.target.dataset.toggle]=e.target.checked;state.screen="home";render()}});
+document.getElementById("milestoneControls").addEventListener("click",function(e){var b=e.target.closest("[data-feed]");if(b){state.feed=b.dataset.feed;state.screen="home";render()}});
+document.getElementById("app").addEventListener("click",function(e){
+var b=e.target.closest("[data-action]");if(!b)return;
+var a=b.dataset.action,i=Number(b.dataset.index||0);
+if(a==="age"){state.age=i;state.screen="home"}
+else if(a==="home"){state.screen="home"}
+else if(a==="story"){state.story=i;state.screen="detail"}
+else if(a==="library"){state.screen="library"}
+else if(a==="related"){state.guide=i;state.origin="story";state.screen="guide"}
+else if(a==="guide"){state.guide=i;state.origin="library";state.screen="guide"}
+else if(a==="detail"){state.screen="detail"}
+render();
+if(window.matchMedia("(max-width:820px)").matches)document.querySelector(".phone").scrollIntoView({behavior:"smooth",block:"start"});
+});
+render();
+})();
+</script>
+</body>
+</html>
