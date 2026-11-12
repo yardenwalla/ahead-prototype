@@ -49,6 +49,9 @@
 .references{margin-top:20px;padding:16px;border:1px solid #eee5d7;border-radius:13px}.references b{font-size:12.5px}.references a{display:block;font-size:11.8px;line-height:1.6;color:#82684c;margin-top:10px}
 .step-time{font-size:10.3px!important;text-transform:uppercase;letter-spacing:.03em;color:#9f875e!important;margin:0 0 5px!important}
 .care-share.inpage{margin-top:22px}.fit-choices{display:flex;flex-wrap:wrap;gap:7px}.fit-results{margin-top:15px}
+
+.shortlist-name{border:0;background:transparent;flex:1;text-align:left;padding:0;color:inherit}.shortlist-name b{font-size:12.5px}.shortlist-name small{font-size:11px;display:block;color:#8a7b6a;margin-top:3px}
+.notes{width:100%;min-height:96px;resize:vertical;border:1px solid #e6dbcd;border-radius:11px;padding:12px;margin-top:12px;font-size:12.5px;color:#403833;background:white;line-height:1.6}
 @media(max-width:800px){.shell{display:block;max-width:425px;padding:0}.aside{position:static;padding:15px 20px 11px}.aside h1{font-size:18px;margin:5px 0}.aside>p,.aside .explain{display:none}.control{margin-top:12px;padding:12px}.buttons button{padding:8px 10px}.controlsep{padding-top:10px;margin-top:10px}.phone{border:0;border-top:1px solid #ece4da;border-radius:0;box-shadow:none;min-height:80vh}}
 </style></head><body>
 <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
@@ -76,7 +79,7 @@ const content=[
 {tag:"PREPARING FOR DAY ONE",title:"Make the first day feel a little familiar",lead:"The care routine is already familiar to you. A practice handoff and a simple care card help someone else learn it.",feature:"The first day should not be the first introduction",sub:"A short visit together lets the caregiver learn Maya's signals while you are still there.",why:"A practice visit helps a caregiver understand the baby's feeding, sleep and comfort cues. It also lets parents ask questions.",doIt:"If possible, schedule a short practice visit, demonstrate a feed or soothing routine, and agree on when you would like updates.",next:"Once care starts, your best clues are how Maya is comforted, how the day goes, and whether you can ask questions."},
 {tag:"WHEN CARE IS UNDERWAY",title:"Trust builds in the little handoffs",lead:"You can learn a lot from one good question at pickup. You deserve to know what Maya's day was like.",feature:"She was fine is not the full story",sub:"The helpful update is what she ate, how she slept, what soothed her, and what made her smile.",why:"Specific, regular communication helps caregivers and parents respond consistently as baby's needs change.",doIt:"Ask how Maya settled after you left. Follow up on feeds, naps and one good moment from the day.",next:"As Maya starts solids, changes naps, or becomes more mobile, update her care card."}
 ];
-let state={stage:0,type:0,age:6,page:"home",mode:"all",topic:"",resourceId:"compare",checks:{},shortlist:[],candidate:"",fit:{},card:{feed:"Breast milk",naps:"2 naps",soothe:"Rocking and a song",allergies:"Not specified",contact:""},copyMessage:""};
+let state={stage:0,type:0,age:6,page:"home",mode:"all",topic:"",resourceId:"compare",checks:{},shortlist:[],activeCandidate:0,candidate:"",fit:{},card:{feed:"Breast milk",naps:"2 naps",soothe:"Rocking and a song",allergies:"Not specified",contact:""},copyMessage:""};
 function T(){return kinds[state.type]}function C(){return content[state.stage]}
 function icon(x){return '<svg class="ico" aria-hidden="true"><use href="#i-'+x+'"></use></svg>'}
 function safe(x){return String(x||"").replace(/[&<>"]/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]))}
@@ -106,7 +109,7 @@ o+='<div class="home-heading"><h3>Explore your care options</h3><small>All six o
 o+='<div class="caregrid">';
 kinds.forEach((x,i)=>{o+='<button class="caretile" data-act="type" data-i="'+i+'"><span class="tile-illustration">'+icon(["calendar","home","heart","baby","clock","bag"][i])+'</span><b>'+x.name+'</b><small>'+["A team and a routine","A smaller group","Care in your home","Someone familiar","A few hours of help","Doulas, nights and more"][i]+'</small></button>'});
 o+='</div>';
-o+='<button class="inline-path" data-act="fit">Not sure what fits? Explore your options →</button>';
+o+='<button class="inline-path" data-act="fit">Not sure what fits? Three questions can help →</button>';
 o+='<button class="care-share" data-act="card"><span class="mini-document"><span></span><span></span><span></span></span><span class="care-share-copy"><span class="micro">READY FOR ANY CAREGIVER</span><b>Maya’s care card</b><small>Feeds, naps, what helps and who to call—all in one place</small></span><span class="chev">›</span></button>';
 o+='<div class="home-heading tools-heading"><h3>Plan & manage childcare</h3><small>Always available</small></div>';
 const suggested=["compare","compare","ready","settle"][state.stage];
@@ -196,7 +199,7 @@ deepTypes[state.type].questions.forEach((q,i)=>{o+=tickRow("ask-"+state.type+"-"
 o+='</div><div class="callout"><div class="micro">DON’T FORGET</div><p>For licensed programs, review your state’s inspection and complaint records. For individual caregivers, check references, training and employment terms as applicable.</p></div>';
 o+='<div class="section"><h3>Your shortlist</h3><p>Keep the places or people you want to follow up with. This demo keeps the list only while the page is open.</p>';
 o+='<label class="fieldlabel" for="candidate">Name of a person or place</label><input id="candidate" class="field" data-candidate="1" value="'+safe(state.candidate)+'" placeholder="e.g. Little Oaks or Sam" autocomplete="off"><button class="addcandidate" data-act="addcandidate">＋ Add to shortlist</button>';
-state.shortlist.forEach((p,i)=>{o+='<div class="shortlisted"><div><b>'+safe(p.name)+'</b><small>'+safe(p.type)+'</small></div><button data-act="remove" data-i="'+i+'">Remove</button></div>'});
+state.shortlist.forEach((p,i)=>{o+='<div class="shortlisted"><button class="shortlist-name" data-act="candidate" data-i="'+i+'"><b>'+safe(p.name)+'</b><small>'+safe(p.type)+(p.chosen?' · Chosen':'')+'</small></button><button data-act="remove" data-i="'+i+'">Remove</button></div>'});
 o+='</div><button class="secondary" data-act="home">Back to Childcare</button></div>'+nav();return o
 }
 function payPage(){
@@ -274,6 +277,17 @@ o+='<div class="callout"><div class="micro">WORTH EXPLORING</div><p>These may ma
 possible.forEach(i=>{o+='<button class="choice" data-act="type" data-i="'+i+'"><span class="rowic">'+icon(["calendar","home","heart","baby","clock","bag"][i])+'</span><span><b>'+kinds[i].name+'</b><small>'+kinds[i].brief+'</small></span><span class="chev">›</span></button>'});
 o+='</div><button class="secondary" data-act="home">Back to all care options</button></div>'+nav();return o
 }
+function candidatePage(){
+const item=state.shortlist[state.activeCandidate];
+if(!item){state.resourceId="compare";return comparePage()}
+const qs=deepTypes[item.typeIndex].questions;
+let o=dhero("YOUR SHORTLIST",safe(item.name),"Check the practical details for "+safe(item.type)+", then leave yourself a few notes. This stays in this demo session.");
+o+='<div class="section"><h3>What you have checked</h3>';
+qs.forEach((q,i)=>{const yes=!!item.checks[i];o+='<button class="tickrow" data-act="candtick" data-i="'+i+'" aria-pressed="'+yes+'"><span class="tickbox'+(yes?' yes':'')+'">'+(yes?'✓':'')+'</span><span><b>'+q+'</b></span></button>'});
+o+='</div><div class="section"><h3>Your notes</h3><p>Something you liked, a question to follow up, or how you felt after meeting.</p><textarea class="notes" data-notes="1" placeholder="What stood out?">'+safe(item.notes)+'</textarea></div>';
+o+='<div class="callout"><div class="micro">BEFORE COMMITTING</div><p>Confirm availability, costs, references, safe sleep, background checks and written policies as relevant to this care arrangement.</p></div>';
+o+='<button class="primary" data-act="choosecandidate">'+(item.chosen?'✓ Chosen · Continue preparing':'We chose this caregiver →')+'</button><button class="secondary" data-act="resource" data-id="compare">Back to your shortlist</button></div>'+nav();return o
+}
 function cardText(){
 const c=state.card;return "Maya's care card (preview)\nFeeding: "+c.feed+"\nSleep: "+c.naps+"\nWhat helps: "+c.soothe+"\nAllergies and medicines: "+c.allergies+"\nParent contact: "+(c.contact||"Please add a contact")+"\nSafe sleep: Place Maya on her back on a firm, flat, empty sleep surface.\nIn an emergency: Call emergency services first, then contact parent.";
 }
@@ -289,7 +303,7 @@ o+='<button class="primary" data-act="copy">Copy this example card</button><p cl
 o+='<button class="secondary" data-act="home">Back to Childcare</button></div>'+nav();return o
 }
 function render(){
-document.getElementById("app").innerHTML=state.page==="home"?home():state.page==="feature"?feature():state.page==="topic"?topic():state.page==="options"?options():state.page==="type"?typePage():state.page==="resource"?resource():state.page==="fit"?fitPage():care();
+document.getElementById("app").innerHTML=state.page==="home"?home():state.page==="feature"?feature():state.page==="topic"?topic():state.page==="options"?options():state.page==="type"?typePage():state.page==="resource"?resource():state.page==="fit"?fitPage():state.page==="candidate"?candidatePage():care();
 document.getElementById("steps").innerHTML=stages.map((x,i)=>'<button class="'+(state.stage===i?'sel':'')+'" data-stage="'+i+'">'+["Find","Choose","Get ready","Settle in"][i]+'</button>').join('');
 document.getElementById("types").innerHTML=kinds.map((x,i)=>'<button class="'+(state.type===i?'sel':'')+'" data-type="'+i+'">'+["Center","Home","Nanny","Family","Sitter","Extra"][i]+'</button>').join('');
 document.getElementById("ages").innerHTML=[3,6,9].map(a=>'<button class="'+(state.age===a?'sel':'')+'" data-age="'+a+'">'+a+' mo</button>').join('');
@@ -297,7 +311,7 @@ document.getElementById("ages").innerHTML=[3,6,9].map(a=>'<button class="'+(stat
 document.getElementById("steps").addEventListener("click",e=>{const b=e.target.closest("[data-stage]");if(b){state.stage=Number(b.dataset.stage);state.page="home";render()}});
 document.getElementById("types").addEventListener("click",e=>{const b=e.target.closest("[data-type]");if(b){state.type=Number(b.dataset.type);state.page="home";render()}});
 document.getElementById("ages").addEventListener("click",e=>{const b=e.target.closest("[data-age]");if(b){state.age=Number(b.dataset.age);state.page="home";render()}});
-document.getElementById("app").addEventListener("input",e=>{if(e.target.dataset.field!==undefined){state.card[e.target.dataset.field]=e.target.value;}if(e.target.dataset.candidate!==undefined){state.candidate=e.target.value;}});
+document.getElementById("app").addEventListener("input",e=>{if(e.target.dataset.field!==undefined){state.card[e.target.dataset.field]=e.target.value;}if(e.target.dataset.candidate!==undefined){state.candidate=e.target.value;}if(e.target.dataset.notes!==undefined&&state.shortlist[state.activeCandidate])state.shortlist[state.activeCandidate].notes=e.target.value;});
 document.getElementById("app").addEventListener("click",e=>{
 const b=e.target.closest("[data-act]");if(!b)return;
 const a=b.dataset.act,i=Number(b.dataset.i||0);
@@ -309,10 +323,13 @@ navigator.clipboard.writeText(cardText()).then(()=>{state.copyMessage="Copied. R
 return;
 }
 if(a==="tick"){state.checks[b.dataset.id]=!state.checks[b.dataset.id];render();return}
+if(a==="candtick"){const c=state.shortlist[state.activeCandidate];if(c)c.checks[b.dataset.i]=!c.checks[b.dataset.i];render();return}
 if(a==="fitpick"){state.fit[b.dataset.field]=b.dataset.value;render();return}
 if(a==="settype"){state.type=i;render();return}
-if(a==="addcandidate"){const name=(state.candidate||"").trim();if(name){state.shortlist.push({name,type:T().name});state.candidate="";render()}return}
+if(a==="addcandidate"){const name=(state.candidate||"").trim();if(name){state.shortlist.push({name,type:T().name,typeIndex:state.type,checks:{},notes:"",chosen:false});state.candidate="";render()}return}
 if(a==="remove"){state.shortlist.splice(i,1);render();return}
+if(a==="candidate"){state.activeCandidate=i;state.page="candidate";render();return}
+if(a==="choosecandidate"){const c=state.shortlist[state.activeCandidate];if(c){state.shortlist.forEach(x=>x.chosen=false);c.chosen=true;state.type=c.typeIndex;state.stage=2;state.resourceId="ready";state.page="resource";render()}return}
 if(a==="resource"){state.resourceId=b.dataset.id;state.page="resource"}
 else if(a==="stage"){state.stage=i;state.page="home"}
 else if(a==="type"){state.type=i;state.page="type"}
