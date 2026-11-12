@@ -308,7 +308,7 @@ o+=detailHeader(t.icon,t.title,t.desc,"CARE GUIDE · "+ageText());
 o+='<div class="takeaway"><small>For Maya right now</small><p>'+topicHint(k)+'</p></div>';
 o+='<h3 class="detail-h3">How to do it</h3><ol class="steps">';
 ((k==="bath"&&(state.age===0||(state.age===1&&!state.healed)))?["Have a soft washcloth, clean towel and fresh diaper ready before you begin.","Keep Maya wrapped and warm. Gently wipe her face first, then uncover and wash one part at a time.","Clean the diaper area last, then pat dry—including skin folds."]:t.steps).forEach(function(line,i){o+='<li><span class="number">'+(i+1)+'</span><span>'+line+'</span></li>';});o+='</ol>';
-o+='<div class="note-box"><b>What's normal</b><p>'+t.normal+'</p></div><div class="note-box" style="background:#f2f5ee"><b>Worth remembering</b><p>'+t.watch+'</p></div>';
+o+='<div class="note-box"><b>What is normal</b><p>'+t.normal+'</p></div><div class="note-box" style="background:#f2f5ee"><b>Worth remembering</b><p>'+t.watch+'</p></div>';
 o+='<div class="topic-age"><strong>This guide changes with age</strong>At '+ageText()+', this is the most relevant answer. Choose another age in the preview controls to see how it evolves.</div>';
 o+=sourceHtml(t.src);
 o+='<button class="relatedlink" data-do="back">‹ Back to Everyday care</button></div>'+nav();
