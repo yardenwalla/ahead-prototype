@@ -133,7 +133,7 @@ const iconFor=n=>({hair:'nail',skin:'drop',diaper:'diaper',spark:'star',heart:'h
 const guideIcons=['diaper','bath','drop','shirt','tooth','nail'];
 const guideColors=['#f0eafa','#e5f0f6','#fdece4','#eaf0e4','#f8efd9','#f0edf7'];
 const previewScript='cd-native';
-function openRoute(str){return 'openPage('+JSON.stringify(str)+')';}
+function openRoute(str){return "openPage('"+String(str).replace(/'/g,"\\'")+"')";}
 function eventRoute(i){return openRoute('chg:'+CAT+':preview:story:'+i);}
 function guidePath(i){let v=ageStage[state.age],x=guideRoute[i];return x?x(v):topicPath('bath',v);}
 function nativeArt(){
