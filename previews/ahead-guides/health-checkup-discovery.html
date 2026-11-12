@@ -100,7 +100,7 @@ if(preterm)s+='<div class="highlight"><div class="eyebrow">IF MAYA WAS BORN EARL
 }else if(type==="vaccines"){
 s+=header(v.vaxTitle,v.vaxDesc,"blue","PROTECTION AT "+age.toUpperCase());
 s+='<div class="section"><h3>What may be due</h3>'+v.vaccines.map(function(b,i){return '<div class="bullet"><span class="dot">'+(i+1)+'</span><div><strong>'+b[0]+'</strong><small>'+b[1]+'</small></div></div>'}).join('')+'</div>';
-s+='<div class="highlight"><div class="eyebrow">IMPORTANT</div><p>Vaccines depend on the child's record, the products used and current recommendations. Ask your pediatrician for the exact list. This preview follows the AAP 2026 guidance, not an individualized medical record.</p></div>';
+s+='<div class="highlight"><div class="eyebrow">IMPORTANT</div><p>Vaccines depend on the child’s record, the products used and current recommendations. Ask your pediatrician for the exact list. This preview follows the AAP 2026 guidance, not an individualized medical record.</p></div>';
 }else if(type==="questions"){
 s+=header("Good questions make a better visit","A few thoughtful questions—chosen for Maya's next visit.","yellow","QUESTIONS TO BRING");
 s+='<div class="section questionlist"><div class="questioncard">'+icon("chat")+'<span>'+pretermQuestion()+'</span></div><div class="questioncard">'+icon("chat")+'<span>'+v.extra+'</span></div></div>';
