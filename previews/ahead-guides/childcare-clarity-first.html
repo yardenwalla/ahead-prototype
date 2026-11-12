@@ -98,6 +98,7 @@
 .compare-kind-lead{font-size:12px;color:#7d7268;margin:10px 0 12px;line-height:1.6}.compare-facts{display:grid;grid-template-columns:1fr 1fr;gap:12px;border-top:1px solid #f0ebe5;padding-top:12px}
 .compare-facts small{font-size:9.5px;font-weight:800;letter-spacing:.04em;color:#a19588}.compare-facts p{font-size:11.7px;line-height:1.6;color:#72675b;margin:5px 0}
 .compare-kind button{border:0;background:transparent;text-align:left;font-size:11.7px;font-weight:700;color:#876e4d;padding:11px 0 0}
+.card-back{border:0;background:transparent;padding:10px 0;color:#7b7568;font-size:11.8px;font-weight:700;margin-top:10px}
 @media(max-width:800px){.shell{display:block;max-width:425px;padding:0}.aside{position:static;padding:15px 20px 11px}.aside h1{font-size:18px;margin:5px 0}.aside>p,.aside .explain{display:none}.control{margin-top:12px;padding:12px}.buttons button{padding:8px 10px}.controlsep{padding-top:10px;margin-top:10px}.phone{border:0;border-top:1px solid #ece4da;border-radius:0;box-shadow:none;min-height:80vh}}
 </style></head><body>
 <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
@@ -469,6 +470,8 @@ const summary=[["Feeding",c.feed+" · "+c.often+(c.bottle?" · "+c.bottle:"")],[
 summary.forEach(([label,val])=>o+='<div class="entry"><b>'+label+'</b><span>'+safe(val)+'</span></div>');
 o+='<div class="entry"><b>Safe sleep</b><span>Always on her back, on a firm flat empty sleep surface.</span></div></div>';
 o+='<p class="fine">In the full app, known feeding and sleep details can prefill this card. Parents should only need to confirm changes.</p>';
+if(!state.cardEditing){o+='<button class="primary" data-act="editcard">Make a care card for Maya →</button><p class="fine">This shows example details. In the real app, Feeding and Sleep information would prefill automatically. No need to enter anything just to see how the handoff works.</p><button class="secondary" data-act="home">Back to Childcare</button></div>'+nav();return o}
+o+='<button class="card-back" data-act="viewcard">‹ Back to the example</button>';
 o+='<section class="card-section"><h3>Feeding</h3><label class="fieldlabel">Milk type</label>'+cardChips("feed",["Breast milk","Formula","Both"]);
 o+='<label class="fieldlabel">How often</label>'+cardChips("often",["Every 2–3 hours","Every 3–4 hours","When hungry"]);
 o+=field("Amount per bottle (if relevant)","bottle","e.g. 5 oz");
@@ -487,13 +490,8 @@ o+='<button class="secondary" data-act="home">Back to Childcare</button></div>'+
 }
 function render(){
 syncStage();document.getElementById("app").innerHTML=state.page==="home"?home():state.page==="feature"?feature():state.page==="topic"?topic():state.page==="options"?options():state.page==="type"?typePage():state.page==="resource"?resource():state.page==="fit"?fitPage():state.page==="candidate"?candidatePage():state.page==="comparison"?comparisonPage():state.page==="typecompare"?typesCompared():care();
-document.getElementById("steps").innerHTML=stages.map((x,i)=>'<button class="'+(state.stage===i?'sel':'')+'" data-stage="'+i+'">'+["Start fresh","Comparing","Chosen","Care started"][i]+'</button>').join('');
-document.getElementById("types").innerHTML=kinds.map((x,i)=>'<button class="'+(state.type===i?'sel':'')+'" data-type="'+i+'">'+["Center","Home","Nanny","Family","Sitter","Extra"][i]+'</button>').join('');
-document.getElementById("ages").innerHTML=[3,6,9].map(a=>'<button class="'+(state.age===a?'sel':'')+'" data-age="'+a+'">'+a+' mo</button>').join('');
+
 }
-document.getElementById("steps").addEventListener("click",e=>{const b=e.target.closest("[data-stage]");if(b){chooseDemo(Number(b.dataset.stage))}});
-document.getElementById("types").addEventListener("click",e=>{const b=e.target.closest("[data-type]");if(b){state.type=Number(b.dataset.type);state.page="home";render()}});
-document.getElementById("ages").addEventListener("click",e=>{const b=e.target.closest("[data-age]");if(b){state.age=Number(b.dataset.age);state.page="home";render()}});
 document.getElementById("app").addEventListener("input",e=>{if(e.target.dataset.field!==undefined){state.card[e.target.dataset.field]=e.target.value;}if(e.target.dataset.candidate!==undefined){state.candidate=e.target.value;}if(e.target.dataset.notes!==undefined&&state.shortlist[state.activeCandidate])state.shortlist[state.activeCandidate].notes=e.target.value;if(e.target.dataset.candidatefield!==undefined&&state.shortlist[state.activeCandidate])state.shortlist[state.activeCandidate][e.target.dataset.candidatefield]=e.target.value;});
 document.getElementById("app").addEventListener("change",e=>{if(e.target.dataset.compareside){state[e.target.dataset.compareside==="left"?"compareLeft":"compareRight"]=Number(e.target.value);render()}});
 document.getElementById("app").addEventListener("click",e=>{
