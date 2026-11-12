@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f8f5f0"><title>Ahead — Childcare design preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#fffefa;--ink:#37322f;--muted:#82796e;--line:#eee8df;--gold:#f9efd2;--goldink:#82683e;--green:#eaf2e8;--greenink:#58775c}
+*{box-sizing:border-box}body{margin:0;background:#f7f4ee;color:var(--ink);font-family:Figtree,system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}button,input{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible{outline:3px solid #bca66f;outline-offset:3px}h1,h2,h3,p{margin:0}h1,h2,h3{font-family:Nunito,system-ui,sans-serif;letter-spacing:-.035em}
+.shell{max-width:1060px;margin:0 auto;padding:38px 20px 60px;display:grid;grid-template-columns:265px minmax(345px,425px);gap:70px;justify-content:center;align-items:start}.aside{position:sticky;top:28px;padding-top:33px}.kicker{font-size:10px;letter-spacing:.11em;text-transform:uppercase;font-weight:800;color:#a0834b}.aside h1{font-size:31px;line-height:1.2;margin:12px 0}.aside>p{font-size:13px;color:#7c7269;line-height:1.72}.control{background:#fffcf8;border:1px solid #eae2d8;border-radius:17px;padding:18px;margin-top:23px}.control strong{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#847764;display:block;margin-bottom:11px}.buttons{display:flex;flex-wrap:wrap;gap:6px}.buttons button{border:0;border-radius:99px;background:#f3f0eb;color:#7f7468;font-size:11px;padding:9px 12px;font-weight:700}.buttons button.sel{background:#f0e2b9;color:#78602c}.controlsep{border-top:1px solid #eee8dd;padding-top:13px;margin-top:15px}.explain{margin-top:22px;font-size:12px;line-height:1.68;color:#867a68;border-left:3px solid #dfca99;padding-left:13px}
+.phone{background:var(--paper);border-radius:27px;border:1px solid #eae3da;box-shadow:0 15px 60px #77634c18;overflow:hidden;min-height:780px}.topbar{display:flex;align-items:center;justify-content:space-between;padding:19px 23px 14px}.logo{font:800 25px Nunito,sans-serif;letter-spacing:-.06em}.logo i{color:#bd9379;font-style:normal}.avatar{width:34px;height:34px;display:grid;place-items:center;border-radius:50%;background:#eaded2;color:#7b6553;font-size:12px;font-weight:800}
+.screen{padding:8px 23px 25px}.back{border:0;background:none;color:#887b70;padding:0;font-size:12px;margin:4px 0 14px}.title{font-size:28px;line-height:1.18;margin-bottom:16px}.rail{display:flex;gap:7px;margin:0 -23px 17px;padding:0 23px 4px;overflow-x:auto;scrollbar-width:none}.rail::-webkit-scrollbar{display:none}.rail button{border:0;border-radius:99px;background:#f4f0eb;color:#918372;padding:9px 12px;white-space:nowrap;font-size:11px;font-weight:700}.rail button.sel{background:#f2e4c2;color:#795d2f}
+.hero{background:#faefd1;border-radius:18px;padding:20px 20px 0;overflow:hidden}.micro{font-size:10px;text-transform:uppercase;letter-spacing:.08em;font-weight:800;color:#99783a}.hero h2{font-size:24px;line-height:1.2;color:#59492e;margin:10px 0 8px}.hero p{font-size:12.8px;line-height:1.58;color:#816e51}.hero-art{width:100%;max-width:300px;height:124px;display:block;margin:4px auto 0}
+.feature{display:block;width:100%;text-align:left;border:0;background:#eaf2e8;border-radius:15px;margin:18px 0 23px;padding:18px;color:#3f5844}.feature .micro{color:#5e815f}.feature h3{font-size:17px;line-height:1.35;margin:9px 0 6px}.feature p{font-size:12.5px;line-height:1.58;color:#607865}.feature span{display:block;margin-top:12px;font-size:12px;font-weight:700;color:#5a7d5c}.feature:hover{box-shadow:0 6px 16px #8b9c861e}
+.headrow{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:9px;gap:10px}.headrow h3{font-size:16px}.headrow small{font-size:11px;color:#9a9085}.twocol{display:grid;grid-template-columns:1fr 1fr;gap:9px}.tile{border:0;border-radius:14px;padding:14px;min-height:122px;display:flex;flex-direction:column;text-align:left;background:#eaf0fa;color:#486788}.tile:nth-child(2){background:#f8eaf1;color:#925e76}.tile b{font-size:14px;line-height:1.35;margin:13px 0 7px}.tile small{font-size:11.5px;line-height:1.55;margin-top:auto;opacity:.8}
+.row{border:0;background:transparent;display:flex;gap:11px;align-items:center;padding:13px 0;width:100%;border-bottom:1px solid var(--line);text-align:left;color:var(--ink)}.row:last-child{border-bottom:0}.rowic{height:43px;width:43px;flex:0 0 43px;display:grid;place-items:center;border-radius:12px;background:#e9f2ea;color:#658770}.row:nth-child(3n+2) .rowic{background:#f7ece1;color:#a18065}.row:nth-child(3n+3) .rowic{background:#efeaf4;color:#947a9a}.rowtxt{flex:1;min-width:0}.rowtxt b{font-size:13px;line-height:1.4;display:block}.rowtxt small{font-size:11.7px;line-height:1.55;color:#877e73;display:block;margin-top:4px}.chev{font-size:21px;color:#b7ab9d;font-weight:400}
+.cardlink{width:100%;border:1px solid #ebe5dc;border-radius:13px;background:#fffcf8;display:flex;align-items:center;text-align:left;color:inherit;gap:11px;padding:13px 14px;margin-top:20px}.cardlink .rowic{background:#f5edcf;color:#96794e}.cardlink b{display:block;font-size:13px}.cardlink small{display:block;font-size:11.5px;color:#8c7f71;margin-top:4px}.bottomnote{border-top:1px solid #efebe5;padding:15px 0 0;margin-top:18px}.bottomnote .micro{color:#9c9285}.bottomnote p{font-size:12px;color:#81776e;line-height:1.63;margin-top:7px}
+.bottomnav{display:flex;justify-content:space-around;border-top:1px solid #eee9e3;padding:13px 16px 16px;color:#a59a8e;font-size:10px}.bottomnav span{display:grid;justify-items:center;gap:4px}.bottomnav .sel{color:#9b7f4c;font-weight:700}
+.dhero{padding:20px;border-radius:16px;background:#f9efd6}.dhero.green{background:#eaf2e8}.dhero.blue{background:#eaf0fa}.dhero.pink{background:#f8eaf1}.dhero .micro{color:#957943}.dhero h2{font-size:23px;line-height:1.25;margin:10px 0 8px;color:#5c4b2f}.dhero p{font-size:12.8px;color:#766a55;line-height:1.7}
+.section{margin-top:23px}.section h3{font-size:15.5px;margin-bottom:10px}.section p{font-size:12.8px;line-height:1.75;color:#746b63}
+.step{display:flex;gap:10px;padding:13px 0;border-bottom:1px solid var(--line)}.step:last-child{border:0}.stepnum{display:grid;place-items:center;flex:0 0 30px;width:30px;height:30px;border-radius:10px;background:#e9f1e7;color:#618466;font-weight:800;font-size:12px}.step b{display:block;font-size:12.8px;line-height:1.45}.step small{display:block;font-size:11.8px;color:#887e73;line-height:1.6;margin-top:3px}
+.callout{border-radius:14px;background:#eaf2e8;padding:16px;margin-top:20px}.callout .micro{color:#59815f}.callout p{font-size:12.8px;line-height:1.7;margin-top:9px;color:#536f58}.primary{border:0;border-radius:11px;padding:13px;background:#78613b;color:white;width:100%;font-size:12px;font-weight:700;margin-top:22px}.secondary{border:1px solid #dfd3c2;background:transparent;border-radius:11px;padding:12px;color:#806b48;width:100%;font-size:12px;font-weight:700;margin-top:12px}
+.choicelist{display:grid;gap:9px}.choice{border:1px solid #ebe4db;border-radius:14px;background:#fff;display:flex;align-items:center;padding:12px;gap:12px;text-align:left;width:100%;color:inherit}.choice.active{border-color:#dcc18e;background:#fffdf7}.choice .rowic{background:#eaf0fa;color:#6c83a2}.choice b{font-size:13px;display:block}.choice small{display:block;font-size:11.5px;color:#898074;margin-top:4px;line-height:1.5}
+.carecard{border:1px solid #eadbc4;border-radius:16px;background:#fff9ed;padding:18px;margin-top:18px}.carecard h3{font-size:20px;color:#59482e;margin:8px 0 14px}.carecard .entry{border-top:1px solid #eadbc5;display:flex;gap:12px;padding:9px 0}.carecard .entry b{width:73px;flex:0 0 73px;font-size:11.4px;color:#91784f}.carecard .entry span{font-size:12px;color:#605443;line-height:1.5}.fieldlabel{display:block;margin:14px 0 6px;color:#716457;font-size:11.5px;font-weight:700}.field{width:100%;border:1px solid #e7dfd3;border-radius:10px;padding:11px 12px;font-size:13px;color:#4d443f;background:white}.fine{font-size:11px;color:#978b7a;line-height:1.68;margin-top:14px}
+.ico{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+@media(max-width:800px){.shell{display:block;max-width:425px;padding:0}.aside{position:static;padding:15px 20px 11px}.aside h1{font-size:18px;margin:5px 0}.aside>p,.aside .explain{display:none}.control{margin-top:12px;padding:12px}.buttons button{padding:8px 10px}.controlsep{padding-top:10px;margin-top:10px}.phone{border:0;border-top:1px solid #ece4da;border-radius:0;box-shadow:none;min-height:80vh}}
+</style></head><body>
+<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
+<symbol id="i-heart" viewBox="0 0 24 24"><path d="M20.7 7.4c-2-4.5-7-3.5-8.7 0-1.7-3.5-6.7-4.5-8.7 0-3 5.6 5 11.1 8.7 14 3.7-2.9 11.7-8.4 8.7-14z"/></symbol><symbol id="i-baby" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 11h.01M16 11h.01M8 15q4 3 8 0"/></symbol><symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2l9 4v6c0 5-4 9-9 10-5-1-9-5-9-10V6zM8 12l3 3 5-6"/></symbol><symbol id="i-chat" viewBox="0 0 24 24"><path d="M20 4H4v14h9l5 3v-3h2zM7 10h10M7 14h7"/></symbol><symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4m10-4v4M3 10h18"/></symbol><symbol id="i-bag" viewBox="0 0 24 24"><path d="M4 8h16v13H4zM8 8V6a4 4 0 018 0v2M4 14h16"/></symbol><symbol id="i-book" viewBox="0 0 24 24"><path d="M12 6c-3-2-6-2-10-1v14c4-1 7-1 10 1 3-2 6-2 10-1V5c-4-1-7-1-10 1zM12 6v14"/></symbol><symbol id="i-home" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v11H3zM9 21v-8h6v8"/></symbol><symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 3"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></symbol><symbol id="i-list" viewBox="0 0 24 24"><path d="M8 5h13M8 12h13M8 19h13M3 5h1M3 12h1M3 19h1"/></symbol>
+</svg>
+<div class="shell"><aside class="aside"><div class="kicker">Ahead · Design exploration</div><h1>Childcare</h1><p>Not a directory of care options. A guide to trusting the people who care for your baby—and making every handoff easier.</p>
+<div class="control"><strong>Where are you in the journey?</strong><div class="buttons" id="steps"></div><div class="controlsep"><strong>Who is caring for Maya?</strong><div class="buttons" id="types"></div></div><div class="controlsep"><strong>Maya's age</strong><div class="buttons" id="ages"></div></div></div>
+<div class="explain"><b>Try:</b> Go from finding care to getting ready. Explore what changes when a family member is helping instead of a daycare. Then try settling in at nine months. The care card is always available.</div></aside>
+<div class="phone"><div class="topbar"><span class="logo">ahead<i>.</i></span><span class="avatar">M</span></div><div id="app"></div></div></div>
+<script>
+(function(){
+"use strict";
+const stages=["Find support","Choose care","Get ready","Settle in"];
+const kinds=[
+{name:"Daycare center",brief:"Set hours, a team of teachers, other babies",watch:"Ask about staff turnover, licensed status, emergency plans and how infant feeds and naps are handled.",ready:"Plan a short introduction visit, send the feeding plan, and pack what the center requests."},
+{name:"Home daycare",brief:"A smaller group in someone's home",watch:"Ask about who is present, age mix, licensing, safe sleeping and who covers an absence.",ready:"See the infant sleep space, go over Maya's day, and arrange a practice visit."},
+{name:"Nanny or nanny share",brief:"Individualized care at home",watch:"Check references, infant experience, background screening, CPR training and working terms.",ready:"Schedule a paid trial day while you are home and go through Maya's feeding and sleep routine."},
+{name:"Family or friends",brief:"Trusted people who know Maya",watch:"Talk through today's safe sleep and car-seat practices, boundaries, timing and backup.",ready:"Spend an afternoon together practicing feeds, naps and comfort before the first solo day."},
+{name:"Babysitter",brief:"Occasional help or a few hours out",watch:"Ask about age-specific experience, references, infant CPR and emergencies.",ready:"Start with a short visit while you are home, then leave the care card and emergency numbers."}
+];
+const content=[
+{tag:"FINDING SUPPORT",title:"The right help should feel right for Maya",lead:"You are not just choosing a schedule. You are choosing someone who will get to know Maya and respond to her needs.",feature:"The best clue is not the nicest playroom",sub:"Watch what happens when a baby cries. A calm, responsive caregiver matters more than beautiful decor.",why:"Quality care means children receive warm, responsive attention alongside safe environments and clear communication.",doIt:"During a visit, watch a real interaction. Does the caregiver notice cues, comfort the baby and speak warmly?",next:"You can look at options without deciding what your perfect childcare arrangement looks like yet."},
+{tag:"MAKING A CHOICE",title:"A visit tells you more than a brochure",lead:"A good choice is about the people, not just the opening. Spend a few minutes observing what caring for babies actually looks like.",feature:"Ask what happens when Maya will not settle",sub:"How someone handles hard moments reveals more than the answers to easy questions.",why:"A thoughtful answer includes specific soothing strategies, safe ways to pause, and when to contact you.",doIt:"Ask for a real example of comforting a baby. Follow up on safe sleep, staff training, references and policies.",next:"After choosing, the priority shifts from finding the right person to helping them learn Maya's routine."},
+{tag:"PREPARING FOR DAY ONE",title:"Make the first day feel a little familiar",lead:"The care routine is already familiar to you. A practice handoff and a simple care card help someone else learn it.",feature:"The first day should not be the first introduction",sub:"A short visit together lets the caregiver learn Maya's signals while you are still there.",why:"A practice visit helps a caregiver understand the baby's feeding, sleep and comfort cues. It also lets parents ask questions.",doIt:"If possible, schedule a short practice visit, demonstrate a feed or soothing routine, and agree on when you would like updates.",next:"Once care starts, your best clues are how Maya is comforted, how the day goes, and whether you can ask questions."},
+{tag:"WHEN CARE IS UNDERWAY",title:"Trust builds in the little handoffs",lead:"You can learn a lot from one good question at pickup. You deserve to know what Maya's day was like.",feature:"She was fine is not the full story",sub:"The helpful update is what she ate, how she slept, what soothed her, and what made her smile.",why:"Specific, regular communication helps caregivers and parents respond consistently as baby's needs change.",doIt:"Ask how Maya settled after you left. Follow up on feeds, naps and one good moment from the day.",next:"As Maya starts solids, changes naps, or becomes more mobile, update her care card."}
+];
+let state={stage:0,type:0,age:6,page:"home",topic:"",card:{feed:"Breast milk",naps:"2 naps",soothe:"Rocking and a song",allergies:"Not specified",contact:""},copyMessage:""};
+function T(){return kinds[state.type]}function C(){return content[state.stage]}
+function icon(x){return '<svg class="ico" aria-hidden="true"><use href="#i-'+x+'"></use></svg>'}
+function safe(x){return String(x||"").replace(/[&<>"]/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]))}
+function art(i){
+const base='<ellipse cx="150" cy="116" rx="112" ry="6" fill="#dfd3b9"/><rect x="21" y="107" width="255" height="12" rx="6" fill="#decda8"/>';
+const adult1='<circle cx="75" cy="48" r="20" fill="#e4b49c"/><path d="M56 42q-2-22 22-22 15 0 19 18" fill="#8c7568"/><path d="M62 74q18-14 30 0l19 39H43z" fill="#b5c9e1"/><path d="M76 54q5 5 10 0" stroke="#a76f67" stroke-width="2" fill="none"/>';
+const adult2='<circle cx="230" cy="48" r="20" fill="#bf8c74"/><path d="M211 42q0-24 23-22 17 3 17 23" fill="#665656"/><path d="M213 73q19-13 35 2l16 38h-68z" fill="#b9d5c1"/><path d="M231 54q5 5 10 0" stroke="#885b4e" stroke-width="2" fill="none"/>';
+const baby='<circle cx="156" cy="77" r="17" fill="#ecc0a6"/><path d="M145 71q6-11 15-7" stroke="#987563" stroke-width="3" fill="none"/><path d="M136 97q20-12 38 1l10 15h-58z" fill="#d7b9d5"/>';
+const scenes=[
+base+adult1+adult2+baby+'<path d="M104 85q18 0 29 8m43 0q18-8 28-8" stroke="#e2b09b" stroke-width="9" stroke-linecap="round" fill="none"/><path d="M152 21l5 10 10 3-10 4-5 9-4-9-10-4 10-3z" fill="#f1d69b"/>',
+base+adult2+'<rect x="27" y="68" width="64" height="40" rx="8" fill="#cadbe7"/><rect x="37" y="77" width="45" height="25" rx="5" fill="#fdfbf4"/><path d="M43 84h31M43 92h23" stroke="#abc5d1" stroke-width="3" stroke-linecap="round"/><circle cx="130" cy="70" r="20" fill="#ecc0a6"/><path d="M111 92q25-13 45 3l15 20h-73z" fill="#ddbdd5"/><path d="M158 94q22 5 46-8" stroke="#ecc0a6" stroke-width="11" stroke-linecap="round" fill="none"/><circle cx="208" cy="86" r="7" fill="#ecc0a6"/>',
+base+adult1+baby+'<path d="M100 82q19 0 33 13" stroke="#e4b49c" stroke-width="10" stroke-linecap="round"/><rect x="198" y="62" width="65" height="49" rx="9" fill="#b4cde1"/><rect x="193" y="57" width="76" height="10" rx="5" fill="#91b2cd"/><path d="M209 77h46" stroke="#f8fcff" stroke-width="3"/><circle cx="265" cy="35" r="11" fill="#efd29f"/><path d="M265 27v16m-8-8h16" stroke="#fff7e8" stroke-width="2"/>',
+base+adult1+adult2+baby+'<path d="M104 84q19 12 32 13m38 0q15 1 30-10" stroke="#e4b49c" stroke-width="10" stroke-linecap="round" fill="none"/><rect x="223" y="19" width="50" height="32" rx="7" fill="#fffdf4" stroke="#d9c5a9"/><path d="M232 28h32M232 35h21M232 42h29" stroke="#c3b89a" stroke-width="3" stroke-linecap="round"/>'
+];
+return '<svg class="hero-art" viewBox="0 0 300 124" role="img" aria-label="'+["Two caregivers meeting with a baby","A caregiver helping a baby in a care setting","Parent helping prepare baby care supplies","Parent and caregiver exchanging baby and day notes"][i]+'">'+scenes[i]+'</svg>'
+}
+function nav(){return '<div class="bottomnav"><span>'+icon("home")+'Home</span><span class="sel">'+icon("list")+'Guides</span><span>'+icon("heart")+'Memories</span></div>'}
+function top(){return '<div class="screen"><button class="back" data-act="home">‹ Childcare</button>'}
+function rails(){return '<div class="rail">'+stages.map((x,i)=>'<button data-act="stage" data-i="'+i+'" class="'+(i===state.stage?'sel':'')+'">'+x+'</button>').join('')+'</div>'}
+function rows(data){return data.map(x=>'<button class="row" data-act="'+x[3]+'" data-key="'+x[4]+'"><span class="rowic">'+icon(x[0])+'</span><span class="rowtxt"><b>'+x[1]+'</b><small>'+x[2]+'</small></span><span class="chev">›</span></button>').join('')}
+function home(){
+const c=C();let o='<div class="screen"><button class="back" data-act="home">‹ All guides</button><h1 class="title">Childcare</h1>'+rails();
+o+='<div class="hero"><div class="micro">'+c.tag+'</div><h2>'+c.title+'</h2><p>'+c.lead+'</p>'+art(state.stage)+'</div>';
+o+='<button class="feature" data-act="feature"><div class="micro">ONE THING WORTH KNOWING</div><h3>'+c.feature+'</h3><p>'+c.sub+'</p><span>Why this matters →</span></button>';
+if(state.stage===0){
+o+='<div class="headrow"><h3>What kind of support?</h3></div><div class="twocol"><button class="tile" data-act="options">'+icon("calendar")+'<b>Regular care</b><small>Daycare, nannies or recurring family help →</small></button><button class="tile" data-act="occasional">'+icon("heart")+'<b>Just a few hours</b><small>A sitter or loved one can help too →</small></button></div>';
+o+='<div class="bottomnote"><div class="micro">WORTH KNOWING</div><p>It is okay to start with a mix of arrangements. You do not have to know your forever solution today.</p></div>';
+}else if(state.stage===1){
+o+='<div class="headrow"><h3>Three things to check</h3><small>Before saying yes</small></div>';
+o+=rows([["heart","How they comfort a baby","Warmth and responsiveness show up in small moments","topic","comfort"],["shield","Safe sleep in their care","Back for every sleep, firm flat empty surface","topic","sleep"],["chat","How they keep you in the loop","Feeds, naps, questions and when they call","topic","updates"]]);
+o+='<button class="secondary" data-act="options">Explore care options and questions</button>';
+}else if(state.stage===2){
+o+='<div class="headrow"><h3>Prepare for day one</h3><small>For '+T().name+'</small></div>';
+o+=rows([["heart","Practice a little handoff",T().ready,"topic","practice"],["book","Share Maya's care card","Feeding, naps, comfort and who to contact","card",""],["bag","Get supplies ready",state.type===2?"Set up the home together":"Know what to pack and label","topic","supplies"]]);
+}else{
+o+='<div class="headrow"><h3>Check in on the little things</h3><small>After care begins</small></div>';
+o+=rows([["chat","What was her day really like?","Feeds, naps and one thing she enjoyed","topic","pickup"],["heart",state.age>=8?"Goodbyes are getting harder":"New routines can take time",state.age>=8?"Separation feelings can grow around this age":"Ask how she settles once you have left","topic","goodbye"],["shield","When something feels off","You should be able to ask and get an answer","topic","concerns"]]);
+}
+o+='<button class="cardlink" data-act="card"><span class="rowic">'+icon("book")+'</span><span style="flex:1"><b>Maya’s care card</b><small>A handoff you can share with any caregiver</small></span><span class="chev">›</span></button>';
+o+='<div class="bottomnote"><div class="micro">LOOKING AHEAD</div><p>'+c.next+(state.stage===3&&state.age>=8?" Separation anxiety can make a previously easy goodbye harder; familiar routines may help.":"")+'</p></div></div>'+nav();return o
+}
+function dhero(eyebrow,title,lead){return top()+'<div class="dhero"><div class="micro">'+eyebrow+'</div><h2>'+title+'</h2><p>'+lead+'</p></div>'}
+function feature(){
+const c=C();let o=dhero("WHY IT MATTERS",c.feature,c.sub);
+o+='<section class="section"><h3>The bigger picture</h3><p>'+c.why+'</p></section><div class="callout"><div class="micro">WHAT TO TRY</div><p>'+c.doIt+'</p></div>';
+o+='<button class="secondary" data-act="home">Back to Childcare</button></div>'+nav();return o
+}
+function topicData(id){
+const x={
+comfort:["What happens when Maya needs comfort?","You can learn more from watching a caregiver soothe a baby than from the decor.",[["Watch first","Do they notice fussing and respond with patience?"],["Ask the hard question","What do they do if a baby cries for a long time?"],["Notice the communication","Can you ask about a difficult day and get an honest answer?"]],"The goal is warm attention, a safe environment and someone who keeps you informed."],
+sleep:["See where Maya will sleep","Safe sleep should be visible, not merely promised.",[["Back for each sleep","Babies are placed on their backs to sleep."],["A safe sleep surface","Firm, flat and empty, apart from a fitted sheet."],["Clear supervision","Ask who is responsible for monitoring sleeping babies."]],"Ask to see the actual sleep space and review safe sleep practices together."],
+updates:["Know about her day","A specific update is more helpful than just hearing that everything went fine.",[["Feeding","When and how Maya ate."],["Sleep","When she slept and what helped her settle."],["Connection","How they comforted her and what she enjoyed."]],"Agree on a simple method: a short chat, daily note or app update."],
+practice:["Try a short handoff together","Practice is a way for another caregiver to learn Maya's signals.",[["Show the routine","Walk through a feed and a calming technique."],["Give them a turn","Let the caregiver take the lead while you are available."],["Try a short goodbye","Keep it predictable; ask how she settled."]],"A practice visit is useful when feasible, not another parenting assignment."],
+supplies:["Have the essentials ready",T().ready,[["Food and milk","Share the schedule and safe handling instructions."],["Diapers and spare clothes","Label supplies or set them out at home."],["Contacts and care notes","Say when to call and who can help if you are unavailable."]],"A quick handoff beats a giant packing checklist. Ask the caregiver what they provide."],
+pickup:["Ask one good question at pickup","You deserve a real sense of what Maya experienced.",[["How did she settle?","Especially if drop-off was difficult."],["Anything different?","Look at feeding, naps and comfort."],["One happy moment","What did she smile at or enjoy?"]],"Make the update simple enough for both you and the caregiver to keep doing."],
+goodbye:["When goodbyes feel hard","Different ages and temperaments make separations feel different.",[["A consistent ritual","Use the same brief, warm goodbye."],["Find out what happens next","Ask what helps her settle and how the morning goes."],["Talk if it continues","If a routine isn't working, plan a change together."]],"Crying at the door is not the only measure of quality; responsiveness matters."],
+concerns:["When something feels off","You should feel able to speak up early.",[["Be specific","Describe what you noticed and ask what happened."],["Agree on follow-up","Be clear about what would change."],["Take safety seriously","If care is unsafe, protect your baby and consider contacting the regulator."]],"Trust means communication and accountability, not never having concerns."]
+};return x[id]||x.comfort
+}
+function topic(){
+const [title,lead,points,tip]=topicData(state.topic);let o=dhero("PRACTICAL GUIDANCE",title,lead);
+o+='<section class="section"><h3>What to do</h3>'+points.map(([a,b],i)=>'<div class="step"><span class="stepnum">'+(i+1)+'</span><div><b>'+a+'</b><small>'+b+'</small></div></div>').join('')+'</section><div class="callout"><div class="micro">TAKEAWAY</div><p>'+tip+'</p></div>';
+o+='<button class="secondary" data-act="home">Back to Childcare</button></div>'+nav();return o
+}
+function options(){
+let o=dhero("FINDING HELP","Which kind of care fits?","Explore the different ways families get support. Costs, requirements and availability depend on where you live.");
+o+='<div class="section"><h3>Your options</h3><div class="choicelist">';
+kinds.forEach((x,i)=>{o+='<button class="choice'+(i===state.type?' active':'')+'" data-act="type" data-i="'+i+'"><span class="rowic">'+icon(["calendar","home","heart","baby","clock"][i])+'</span><span style="flex:1"><b>'+x.name+'</b><small>'+x.brief+'</small></span><span class="chev">›</span></button>'});
+o+='</div></div><button class="secondary" data-act="home">Back to Childcare</button></div>'+nav();return o
+}
+function typePage(){
+const x=T();let o=dhero("KIND OF CARE",x.name,x.brief);
+o+='<div class="section"><h3>What to look for</h3><p>'+x.watch+'</p></div>';
+o+='<div class="callout"><div class="micro">GET READY</div><p>'+x.ready+'</p></div><button class="primary" data-act="stage" data-i="2">Plan the first handoff →</button><button class="secondary" data-act="options">See other types of care</button></div>'+nav();return o
+}
+function cardText(){
+const c=state.card;return "Maya's care card (preview)\nFeeding: "+c.feed+"\nSleep: "+c.naps+"\nWhat helps: "+c.soothe+"\nAllergies and medicines: "+c.allergies+"\nParent contact: "+(c.contact||"Please add a contact")+"\nSafe sleep: Place Maya on her back on a firm, flat, empty sleep surface.\nIn an emergency: Call emergency services first, then contact parent.";
+}
+function care(){
+const c=state.card;
+let o=dhero("A CAREGIVER HANDOFF","Maya’s care card","A few practical details for anyone looking after Maya. This preview keeps the information in this page only.");
+o+='<div class="carecard"><div class="micro">A LITTLE ABOUT MAYA</div><h3>Her day, at a glance</h3>';
+for(const [label,k] of [["Feeding","feed"],["Sleep","naps"],["What helps","soothe"],["Allergies","allergies"],["Contact","contact"]]){o+='<div class="entry"><b>'+label+'</b><span>'+safe(c[k]||"Not provided")+'</span></div>'}
+o+='<div class="entry"><b>Every sleep</b><span>Back to sleep, firm flat empty surface.</span></div></div>';
+o+='<section class="section"><h3>Make this useful</h3><p>In Ahead, information from Feeding and Sleep would prefill this. Parents would only confirm what has changed.</p></section>';
+for(const [k,label] of [["feed","Feeding"],["naps","Naps"],["soothe","Comfort"],["allergies","Allergies / medicines"],["contact","Who to call"]])o+='<label class="fieldlabel" for="f-'+k+'">'+label+'</label><input class="field" id="f-'+k+'" data-field="'+k+'" value="'+safe(c[k])+'" autocomplete="off">';
+o+='<button class="primary" data-act="copy">Copy this example card</button><p class="fine" id="message">'+state.copyMessage+'</p><p class="fine">This is a demo, not an actual encrypted care-card sharing service. Review personal information and safety instructions before sending anything.</p>';
+o+='<button class="secondary" data-act="home">Back to Childcare</button></div>'+nav();return o
+}
+function render(){
+document.getElementById("app").innerHTML=state.page==="home"?home():state.page==="feature"?feature():state.page==="topic"?topic():state.page==="options"?options():state.page==="type"?typePage():care();
+document.getElementById("steps").innerHTML=stages.map((x,i)=>'<button class="'+(state.stage===i?'sel':'')+'" data-stage="'+i+'">'+["Find","Choose","Get ready","Settle in"][i]+'</button>').join('');
+document.getElementById("types").innerHTML=kinds.map((x,i)=>'<button class="'+(state.type===i?'sel':'')+'" data-type="'+i+'">'+["Center","Home","Nanny","Family","Sitter"][i]+'</button>').join('');
+document.getElementById("ages").innerHTML=[3,9].map(a=>'<button class="'+(state.age===a?'sel':'')+'" data-age="'+a+'">'+a+' mo</button>').join('');
+}
+document.getElementById("steps").addEventListener("click",e=>{const b=e.target.closest("[data-stage]");if(b){state.stage=Number(b.dataset.stage);state.page="home";render()}});
+document.getElementById("types").addEventListener("click",e=>{const b=e.target.closest("[data-type]");if(b){state.type=Number(b.dataset.type);state.page="home";render()}});
+document.getElementById("ages").addEventListener("click",e=>{const b=e.target.closest("[data-age]");if(b){state.age=Number(b.dataset.age);state.page="home";render()}});
+document.getElementById("app").addEventListener("input",e=>{if(e.target.dataset.field!==undefined){state.card[e.target.dataset.field]=e.target.value;}});
+document.getElementById("app").addEventListener("click",e=>{
+const b=e.target.closest("[data-act]");if(!b)return;const a=b.dataset.act,i=Number(b.dataset.i||0);
+if(a==="copy"){
+const msg=document.getElementById("message");
+if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(cardText()).then(()=>{state.copyMessage="Copied. Review the information before sharing.";if(msg)msg.textContent=state.copyMessage}).catch(()=>{state.copyMessage="Copy is unavailable in this browser.";if(msg)msg.textContent=state.copyMessage});}
+else{state.copyMessage="Copy is unavailable in this browser.";if(msg)msg.textContent=state.copyMessage}return;
+}
+if(a==="stage"){state.stage=i;state.page="home"}
+else if(a==="type"){state.type=i;state.page="type"}
+else if(a==="occasional"){state.type=4;state.page="type"}
+else if(a==="topic"){state.topic=b.dataset.key;state.page="topic"}
+else{state.page=a}
+render();
+if(window.matchMedia("(max-width:800px)").matches)document.querySelector(".phone").scrollIntoView({behavior:"smooth",block:"start"});
+});
+render();
+})();
+</script></body></html>
