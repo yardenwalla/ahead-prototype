@@ -113,7 +113,7 @@
       const name = l => { const c = clearMilestone(l); return TILE_WORDS[c] || (c === 'Closes lips to show they don’t want more food' ? 'Shows when they’re full' : c); };
       const fresh = l => { if (noticedL.has(l)) return false; const w = words(name(l)), seenW = noticed[d]; return !seenW || ![...w].some(x => seenW.has(x)); };
       const ex = labels.find(l => !devSkillSeen(l) && fresh(l)) || labels.find(l => !devSkillSeen(l)) || labels[0];
-      const foot = seen === n ? `✓ ${F(`All ${n} seen`)}` : seen ? `✓ ${F(`${seen} of ${n} seen`)}` : n > 1 ? F(`+ ${n - 1} more`) : F('Learn more');
+      const foot = F(n === 1 ? '1 milestone' : `${n} milestones`);   // the same line on every tile; marking happens on the area page
       return `<button class="dvx-area" style="${tint(d)}" onclick="openPage('development-domain:${ref}:${d}')"><small>${DOMAIN_TITLES[d]}</small><b>${T(name(ex))}</b><span>${foot} ›</span></button>`; }).join('')}</section>`
       + `<button class="dvx-all" onclick="openPage('chg:Development:d:all:${ref}')">${F('All milestones for this age')} →</button>`;
     // Coming into view: the next checkpoint, in a line.
@@ -455,10 +455,11 @@
     const thermo = () => {
       // Which thermometer, by age: rectal is most accurate all year; armpit works for a quick check (fever from 99°F);
       // forehead works at any age; ear readings only from 6 months.
-      const fe = u3 ? ['Forehead', 'Quick. 100.4°F+? Check rectally'] : m < 6 ? ['Forehead', 'Reliable now'] : ['Forehead or ear', 'Both reliable now'];
+      const fe = u3 ? ['Forehead', 'Less accurate'] : m < 6 ? ['Forehead', 'Accurate'] : ['Forehead or ear', 'Accurate'];
       // Three ways to take it, as three equal tiles. Rectal opens a short page on how to do it.
       const tile = (icon, t, d, go) => `<${go ? `button onclick="${go}"` : 'div'} class="hub-temp${go ? ' is-go' : ''}"><span class="hub-dot">${h.art(icon, 'Health')}</span><b>${F(t)}</b><small>${F(d)}</small>${go ? `<em>${F('How to')} ›</em>` : ''}</${go ? 'button' : 'div'}>`;
-      return `<div class="hub-temps">${tile('thermo', 'Rectal', 'Most accurate', "openPage('chg:Health:d:sick-rectal')")}${tile('hand', 'Armpit', u3 ? 'Quick. 99°F+? Check rectally' : 'Quick. Fever from 99°F')}${tile('eye', fe[0], fe[1])}</div>`;
+      return `<div class="hub-temps">${tile('thermo', 'Rectal', 'Most accurate', "openPage('chg:Health:d:sick-rectal')")}${tile('hand', 'Armpit', 'Less accurate')}${tile('eye', fe[0], fe[1])}</div>`
+        + (u3 ? h.note('Under 3 months, check any high reading rectally.') : '');
     };
     // The page answers "what's going on?": one row per thing a parent is seeing, each opening a page that covers it
     // whole (how to check, when to call, how to help). The emergency signs apply to all of them, so they sit here.
