@@ -1,0 +1,76 @@
+
+/* Design study controls: deliberately outside Ahead interface */
+#ahead-compare-controls{position:fixed;left:max(16px,calc(50% - 592px));top:36px;width:245px;z-index:30;border:1px solid #e8dfd5;background:#fffefa;border-radius:18px;padding:16px;box-shadow:0 12px 35px #7660481e;color:#3b3631;font-family:Figtree,system-ui,sans-serif}
+#ahead-compare-controls header{display:grid;gap:4px;margin:0 0 13px}
+#ahead-compare-controls header small{font-size:10px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:#987953}
+#ahead-compare-controls header b{font-size:20px;letter-spacing:-.03em;font-family:Nunito,system-ui,sans-serif;font-weight:800}
+#ahead-compare-controls header p{font-size:11px;line-height:1.45;color:#887d72;margin:0}
+#ahead-compare-controls .ux-group{border-top:1px solid #f1eae3;padding:12px 0 0;margin-top:9px}
+#ahead-compare-controls .ux-group>span{display:block;text-transform:uppercase;font-size:10px;letter-spacing:.06em;color:#93816a;font-weight:800;margin:0 0 9px}
+#ahead-compare-controls .ux-actions{display:flex;flex-wrap:wrap;gap:6px}
+#ahead-compare-controls button{border:0;background:#f4f1ec;color:#86796a;cursor:pointer;font:700 11px Figtree,system-ui,sans-serif;border-radius:999px;padding:8px 10px}
+#ahead-compare-controls button.on{background:#e6f1e9;color:#417554}
+#ahead-compare-controls .ux-foot{font-size:10px;line-height:1.5;color:#9b9186;display:block;margin-top:12px}
+#main .study-care .study-care-hero{padding:17px 19px 18px;margin-bottom:12px}
+#main .study-care .study-care-hero h1{font-size:24px;line-height:1.23}
+#main .study-care .study-care-hero .hub-lead{font-size:13.5px;line-height:1.55}
+#main .study-care .study-main-title{margin:18px 0 11px;font-size:17px}
+#main .study-care .study-essentials{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:15px}
+#main .study-care .study-essential{width:100%;border:1px solid #e8e4de;background:white;border-radius:15px;text-align:left;padding:11px 12px 12px;min-height:111px;display:flex;flex-direction:column;align-items:flex-start;cursor:pointer}
+#main .study-care .study-essential.is-on{border-color:#94bdd0;background:#f8fcfe}
+#main .study-care .study-ic{height:31px;width:34px;border-radius:10px;background:var(--tbg);color:var(--tink);display:grid;place-items:center}
+#main .study-care .study-ic svg{height:23px;width:23px;stroke:currentColor}
+#main .study-care .study-essential-name{font-size:13.6px;font-weight:700;color:#34313b;margin-top:8px;line-height:1.28}
+#main .study-care .study-essential-line{font-size:11.7px;color:#827c77;line-height:1.4;margin-top:4px}
+#main .study-care .study-answer{border-radius:18px;background:#eaf3f6;padding:16px 17px;margin:0 0 13px;color:#374f5e}
+#main .study-care .study-answer-header{display:flex;justify-content:space-between;align-items:center}
+#main .study-care .study-answer-kicker{font-size:10.3px;letter-spacing:.06em;color:#49778b;font-weight:800}
+#main .study-care .study-answer-header button{padding:0;background:none;border:0;font-size:22px;line-height:1;color:#718d98}
+#main .study-care .study-answer h3{font:800 19px Nunito,system-ui,sans-serif;margin:8px 0 5px;color:#2e5367}
+#main .study-care .study-answer p{font-size:13.5px;line-height:1.56;margin:0 0 10px}
+#main .study-care .study-answer ol{margin:0;padding:0 0 0 22px;display:grid;gap:6px}
+#main .study-care .study-answer li{font-size:12.7px;line-height:1.49;padding-left:1px}
+#main .study-care .study-go{border:0;background:none;border-top:1px solid #cbdfe7;padding:12px 0 0;margin-top:14px;font-size:12.8px;font-weight:800;color:#2d6b84;width:100%;display:flex;justify-content:space-between}
+#main .study-care .study-trouble{margin:0 0 14px;background:#fcf0e9;color:#9a5a3c;padding:14px}
+#main .study-care .study-trouble .hub-rough-copy small{line-height:1.4}
+#main .study-care .study-tiny-note{color:#827c77;font-size:11.5px;margin:0 0 13px;line-height:1.5}
+#main .study-care .hub-next{margin-top:0}
+/* Childcare: original hierarchy, much lighter hero, comparison appears only on request */
+#main .study-childcare .study-cc-hero{padding:17px 19px 13px;margin:0 0 16px}
+#main .study-childcare .study-cc-hero h1{font-size:24px;line-height:1.2}
+#main .study-childcare .study-cc-hero .hub-lead{font-size:13.6px;line-height:1.55;margin-bottom:9px}
+#main .study-childcare .study-cc-hero>button{border:0;background:transparent;border-top:1px solid #e4d99b;width:100%;padding:11px 0 0;text-align:left;color:#846d26;font-size:12.5px;font-weight:800}
+#main .study-childcare .study-section-head{display:flex;flex-direction:column;gap:4px;margin:0 0 10px}
+#main .study-childcare .study-section-head h2{margin:0;font-size:17px}
+#main .study-childcare .study-section-head small{font-size:11.5px;color:#968977}
+#main .study-childcare .study-kind-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0}
+#main .study-childcare .study-kind{min-height:101px;border:1px solid #e7e1dc;border-radius:14px;background:#fff;text-align:left;display:flex;flex-direction:column;align-items:flex-start;padding:12px 13px;cursor:pointer;color:var(--ink)}
+#main .study-childcare .study-kind.on{border-color:#a5b8a7;background:#fbfdf9}
+#main .study-childcare .study-kind-mark{display:grid;place-items:center;width:33px;height:30px;border-radius:10px;flex:none}
+#main .study-childcare .study-kind-mark svg{height:24px;width:25px;stroke:currentColor}
+#main .study-childcare .study-kind b{font-size:13.3px;font-weight:700;line-height:1.3;margin-top:7px}
+#main .study-childcare .study-kind small{font-size:11px;color:#8e8177;margin-top:4px;line-height:1.32}
+#main .study-childcare .study-compare{background:#f9f6ef;border:1px solid #ece3d2;border-radius:16px;padding:14px;margin:10px 0 0}
+#main .study-childcare .study-compare-top{display:flex;align-items:center;justify-content:space-between}
+#main .study-childcare .study-compare-top b{font-size:12px;color:#806b46}
+#main .study-childcare .study-compare-top button{border:0;background:none;font-size:11px;color:#967a51}
+#main .study-childcare .study-compare-cols{display:grid;grid-template-columns:repeat(var(--count,1),minmax(0,1fr));gap:9px;margin:10px 0 0}
+#main .study-childcare .study-compare-cols:has(>div+div){--count:2}
+#main .study-childcare .study-compare-col{min-width:0;background:#fffdf9;border-radius:12px;padding:12px}
+#main .study-childcare .study-compare-col strong{font-size:12.8px;display:block;line-height:1.4}
+#main .study-childcare .study-compare-col p{font-size:11.5px;line-height:1.45;color:#685f56;margin:11px 0 0}
+#main .study-childcare .study-compare-col p span{font-size:9.5px;line-height:1.3;display:block;font-weight:800;color:#9d876a;margin-bottom:3px}
+#main .study-childcare .study-compare-col button{border:0;border-top:1px solid #eee5da;background:transparent;color:#82693e;font-size:11px;font-weight:800;padding:11px 0 0;margin-top:10px;text-align:left;width:100%}
+#main .study-childcare .study-quiz{margin:10px 0 15px;padding:8px 0;text-align:left;display:flex;justify-content:space-between;border:0;background:none;color:#8d7437;font-size:12.5px;font-weight:700;width:100%}
+#main .study-childcare .study-carecard{margin:0 0 13px}
+#main .study-childcare .study-setup{margin:20px 0 10px}
+#main .study-childcare .study-setup-row{padding:12px 14px}
+#main .study-childcare .study-setup-row .hub-dot{width:39px;height:39px}
+#main .study-childcare .hub-foot{margin-top:13px}
+@media(max-width:1000px){
+ #ahead-compare-controls{position:relative;left:auto;top:auto;width:min(calc(100% - 26px),530px);margin:12px auto 8px;padding:12px 14px;z-index:2}
+ #ahead-compare-controls header{margin-bottom:8px}
+ #ahead-compare-controls header b{font-size:17px}
+ #ahead-compare-controls .ux-group{margin-top:6px;padding-top:9px}
+ #ahead-compare-controls button{padding:7px 10px}
+}
