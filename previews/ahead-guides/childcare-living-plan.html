@@ -73,6 +73,18 @@
 .simple-row-copy{flex:1}.simple-row-copy b{display:block;font-size:13px;line-height:1.4}.simple-row-copy small{display:block;font-size:11.5px;line-height:1.55;color:#887d70;margin-top:3px}
 .page-tail{font-size:11px;text-align:center;margin:20px 0 0;color:#a2968a;line-height:1.6}
 .living-compare{margin-top:15px}
+
+.comparison-link{border:0;border-radius:11px;width:100%;padding:13px 15px;text-align:left;background:#eaf2e8;color:#53765a;font-size:12px;font-weight:700;margin:11px 0 14px}
+.comparison-selectors{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:18px 0}
+.comparison-selectors label{font-size:9.5px;color:#91816e;font-weight:800;letter-spacing:.05em}
+.comparison-selectors select{margin-top:7px;width:100%;border-radius:10px;border:1px solid #e4dacc;color:#594e46;background:white;padding:10px 6px;font-size:11.7px}
+.comparison-grid{border:1px solid #eee5d8;border-radius:12px;overflow:hidden}
+.comparison-head,.comparison-row{display:grid;grid-template-columns:81px 1fr 1fr;gap:8px;padding:11px 9px}
+.comparison-head{background:#f5f0e8;color:#786a57}.comparison-head b{font-size:9px;line-height:1.5}.comparison-head strong{font-size:11.3px;line-height:1.4;overflow-wrap:anywhere}
+.comparison-row{border-top:1px solid #eee9e1}.comparison-row b{font-size:10.6px;line-height:1.5;color:#84776b}.comparison-row p{font-size:11.3px;line-height:1.53;color:#5d5248;overflow-wrap:anywhere}
+.comparison-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:11px 0 0 90px}
+.comparison-actions button{border:1px solid #e0d5c7;background:#fffdfa;border-radius:9px;padding:9px 5px;font-size:11px;color:#806b4b;font-weight:700}
+.comp-warning{font-size:11px;color:#af735a;margin:0 0 10px}
 @media(max-width:800px){.shell{display:block;max-width:425px;padding:0}.aside{position:static;padding:15px 20px 11px}.aside h1{font-size:18px;margin:5px 0}.aside>p,.aside .explain{display:none}.control{margin-top:12px;padding:12px}.buttons button{padding:8px 10px}.controlsep{padding-top:10px;margin-top:10px}.phone{border:0;border-top:1px solid #ece4da;border-radius:0;box-shadow:none;min-height:80vh}}
 </style></head><body>
 <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
@@ -327,6 +339,25 @@ for(const [key,label,placeholder] of [["cost","Cost","Hourly or monthly"],["hour
 o+='</div><div class="section"><h3>Your notes</h3><p>Something you liked, a question to follow up, or how you felt after meeting.</p><textarea class="notes" data-notes="1" placeholder="What stood out?">'+safe(item.notes)+'</textarea></div>';
 o+='<div class="callout"><div class="micro">BEFORE COMMITTING</div><p>Confirm availability, costs, references, safe sleep, background checks and written policies as relevant to this care arrangement.</p></div>';
 o+='<button class="primary" data-act="choosecandidate">'+(item.chosen?'✓ Chosen · Continue preparing':'We chose this caregiver →')+'</button><button class="secondary" data-act="resource" data-id="compare">Back to your shortlist</button></div>'+nav();return o
+}
+function comparisonPage(){
+const options=state.shortlist,n=options.length;
+if(n<2)return comparePage();
+const li=Math.min(state.compareLeft,n-1),ri=Math.min(state.compareRight,n-1),a=options[li],b=options[ri];
+let o=dhero("YOUR SHORTLIST","Two options, one clearer decision","See what matters side by side. No ratings or made-up scores—just what you know, and what remains unanswered.");
+o+='<div class="comparison-selectors"><label>FIRST OPTION<select data-compareside="left">'+options.map((p,i)=>'<option value="'+i+'"'+(i===li?' selected':'')+'>'+safe(p.name)+'</option>').join('')+'</select></label>';
+o+='<label>SECOND OPTION<select data-compareside="right">'+options.map((p,i)=>'<option value="'+i+'"'+(i===ri?' selected':'')+'>'+safe(p.name)+'</option>').join('')+'</select></label></div>';
+if(li===ri)o+='<p class="comp-warning">Choose two different options to compare.</p>';
+const field=(name,key)=>'<div class="comparison-row"><b>'+name+'</b><p>'+safe(a[key]||"Not added")+'</p><p>'+safe(b[key]||"Not added")+'</p></div>';
+o+='<div class="comparison-grid"><div class="comparison-head"><b>YOUR OPTIONS</b><strong>'+safe(a.name)+'</strong><strong>'+safe(b.name)+'</strong></div>';
+o+=field("Type","type")+field("Days & hours","hours")+field("Cost","cost")+field("Available","availability");
+const checked=p=>Object.values(p.checks||{}).filter(Boolean).length;
+o+='<div class="comparison-row"><b>Talked through</b><p>'+checked(a)+' questions</p><p>'+checked(b)+' questions</p></div>';
+const next=p=>deepTypes[p.typeIndex].questions.find((q,i)=>!p.checks?.[i])||"Follow up on anything unclear";
+o+='<div class="comparison-row"><b>Still to ask</b><p>'+safe(next(a))+'</p><p>'+safe(next(b))+'</p></div></div>';
+o+='<div class="comparison-actions"><button data-act="candidate" data-i="'+li+'">View '+safe(a.name)+' →</button><button data-act="candidate" data-i="'+ri+'">View '+safe(b.name)+' →</button></div>';
+o+='<div class="callout"><div class="micro">BEFORE YOU DECIDE</div><p>These notes do not verify any provider. Confirm safe sleep, relevant licenses, references, fees and policies for each arrangement.</p></div>';
+o+='<button class="secondary" data-act="resource" data-id="compare">Back to shortlist</button></div>'+nav();return o
 }
 function cardText(){
 const c=state.card;return "Maya's care card (preview)\nFeeding: "+c.feed+"\nSleep: "+c.naps+"\nWhat helps: "+c.soothe+"\nAllergies and medicines: "+c.allergies+"\nParent contact: "+(c.contact||"Please add a contact")+"\nSafe sleep: Place Maya on her back on a firm, flat, empty sleep surface.\nIn an emergency: Call emergency services first, then contact parent.";
