@@ -380,15 +380,21 @@ o+='</div><button class="secondary" data-act="home">Back to all care options</bu
 function candidatePage(){
 const item=state.shortlist[state.activeCandidate];
 if(!item){state.resourceId="compare";return comparePage()}
-const qs=deepTypes[item.typeIndex].questions;
-let o=dhero("YOUR SHORTLIST",safe(item.name),"Check the practical details for "+safe(item.type)+", then leave yourself a few notes. This stays in this demo session.");
-o+='<div class="section"><h3>What you have checked</h3>';
-qs.forEach((q,i)=>{const yes=!!item.checks[i];o+='<button class="tickrow" data-act="candtick" data-i="'+i+'" aria-pressed="'+yes+'"><span class="tickbox'+(yes?' yes':'')+'">'+(yes?'✓':'')+'</span><span><b>'+q+'</b></span></button>'});
-o+='</div><div class="section"><h3>Practical details (optional)</h3><p>Add only what you know. This will help when comparing options.</p>';
-for(const [key,label,placeholder] of [["cost","Cost","Hourly or monthly"],["hours","Days and hours","e.g. Monday–Friday 8–5"],["availability","Availability","e.g. Starting next month"]])o+='<label class="fieldlabel">'+label+'</label><input class="field" data-candidatefield="'+key+'" value="'+safe(item[key]||"")+'" placeholder="'+placeholder+'" autocomplete="off">';
-o+='</div><div class="section"><h3>Your notes</h3><p>Something you liked, a question to follow up, or how you felt after meeting.</p><textarea class="notes" data-notes="1" placeholder="What stood out?">'+safe(item.notes)+'</textarea></div>';
-o+='<div class="callout"><div class="micro">BEFORE COMMITTING</div><p>Confirm availability, costs, references, safe sleep, background checks and written policies as relevant to this care arrangement.</p></div>';
-o+='<button class="primary" data-act="choosecandidate">'+(item.chosen?'✓ Chosen · Continue preparing':'We chose this caregiver →')+'</button><button class="secondary" data-act="resource" data-id="compare">Back to your shortlist</button></div>'+nav();return o
+const steps=fullSteps(item.typeIndex),tab=Math.min(state.candidateTab,steps.length-1),group=steps[tab];
+let o=dhero("YOUR SHORTLIST",safe(item.name),"A place to remember what you learned and what you still want to ask.");
+o+='<div class="section"><h3>Practical details (optional)</h3><p>Only add what you know, so comparing options is easier.</p>';
+for(const [key,label,placeholder] of [["cost","Cost","Hourly or monthly"],["hours","Days and hours","e.g. Weekdays, 8–5"],["availability","Availability","e.g. Starting next month"]])o+='<label class="fieldlabel">'+label+'</label><input class="field" data-candidatefield="'+key+'" value="'+safe(item[key]||"")+'" placeholder="'+placeholder+'" autocomplete="off">';
+o+='</div><div class="section"><h3>Your visit & interview notes</h3><p>Tick items you have talked through. This is not a verification or quality score.</p><div class="guide-tabs">';
+steps.forEach((g,i)=>{o+='<button data-act="candtab" data-i="'+i+'" class="'+(i===tab?'on':'')+'">'+babyify(g[0])+'</button>'});
+o+='</div><h3 class="tab-title">'+babyify(group[0])+'</h3>';
+stepItems(item.typeIndex,tab).forEach(({q,answer,index})=>{
+const yes=!!item.checks[index];
+o+='<button class="tickrow" data-act="candtick" data-i="'+index+'" aria-pressed="'+yes+'"><span class="tickbox'+(yes?' yes':'')+'">'+(yes?'✓':'')+'</span><span><b>'+babyify(q)+'</b><small>'+babyify(answer)+'</small></span></button>';
+});
+o+='</div><div class="section"><h3>Your notes</h3><p>What stood out, how you felt, and what to follow up on.</p><textarea class="notes" data-notes="1" placeholder="What stood out?">'+safe(item.notes)+'</textarea></div>';
+o+='<div class="callout"><div class="micro">BEFORE COMMITTING</div><p>Confirm availability, costs, relevant licensing or background checks, references, safe sleep, and written policies as appropriate.</p></div>';
+o+='<button class="primary" data-act="choosecandidate">'+(item.chosen?'✓ Chosen · Continue preparing':'We chose this arrangement →')+'</button>';
+o+='<button class="secondary" data-act="resource" data-id="compare">Back to your shortlist</button></div>'+nav();return o
 }
 function comparisonPage(){
 const options=state.shortlist,n=options.length;
@@ -452,7 +458,7 @@ if(a==="typetab"){state.typeTab=i;render();return}
 if(a==="candtab"){state.candidateTab=i;render();return}
 if(a==="addcandidate"){const name=(state.candidate||"").trim();if(name){state.shortlist.push({name,type:T().name,typeIndex:state.type,checks:{},notes:"",chosen:false,cost:"",hours:"",availability:""});state.candidate="";render()}return}
 if(a==="remove"){state.shortlist.splice(i,1);render();return}
-if(a==="candidate"){state.activeCandidate=i;state.page="candidate";render();return}
+if(a==="candidate"){state.activeCandidate=i;state.candidateTab=0;state.page="candidate";render();return}
 if(a==="choosecandidate"){const c=state.shortlist[state.activeCandidate];if(c){state.shortlist.forEach(x=>x.chosen=false);c.chosen=true;state.type=c.typeIndex;state.careStarted=false;state.resourceId="ready";state.page="resource";render()}return}
 if(a==="startcare"){state.careStarted=true;state.resourceId="settle";state.page="resource";render();return}
 if(a==="comparison"){state.page="comparison";render();return}
