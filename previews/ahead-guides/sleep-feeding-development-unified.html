@@ -270,6 +270,9 @@ else{const cat=location.hash.startsWith('#feeding/')?'Feeding':'Sleep';nav.query
 #healthview .hv-next small{display:block;font-size:10px;font-weight:820;color:#968591;letter-spacing:.35px;margin-bottom:4px}
 #healthview .hv-next b{font-size:13px}
 #healthview .hv-next .hv-chevron{margin-left:auto}
+#healthview .hv-visitactions{display:flex;align-items:center;justify-content:space-between;gap:9px;margin:10px 1px 3px}
+#healthview .hv-visitactions button{background:transparent;color:#997485;font-size:11px;font-weight:740;padding:6px 3px;line-height:1.4;text-align:left}
+#healthview .hv-visitactions button:last-child{color:#8b7c84;text-align:right;font-weight:650}
 #healthview .hv-footnote{font-size:10.6px;line-height:1.49;color:#9a8f95;margin:12px 3px 0}
 #healthview .hv-overlay{position:fixed;inset:0;background:#392b39a0;display:none;align-items:flex-end;justify-content:center;z-index:70}
 #healthview .hv-overlay.open{display:flex}
@@ -297,7 +300,7 @@ else{const cat=location.hash.startsWith('#feeding/')?'Feeding':'Sleep';nav.query
 <script>(function healthPreview(){
 "use strict";
 const nav=document.getElementById("tri-nav"),tab=document.createElement("button");
-tab.dataset.cat="Health";tab.innerHTML="♡ Health";nav.append(tab);
+tab.dataset.cat="Health";tab.innerHTML="♡ Health";nav.append(tab);nav.querySelector('[data-cat="Development"]').textContent="✳ Development";
 const root=document.createElement("div");root.id="healthview";document.getElementById("devview").after(root);
 const ages=["0","1","2","4","6","9","12"];
 const data={
@@ -338,6 +341,7 @@ const qCount=(questions[age]||[]).length;
 root.innerHTML='<button class="back" id="hv-back">‹ All guides</button><h2 class="title">Health</h2>'+
 '<nav class="hv-rail" aria-label="Choose a well-child visit">'+rail+'</nav>'+
 '<section class="hv-hero"><div class="hv-eyebrow">'+esc(age==="0"?"FIRST-WEEK CHECKUP":age+"-MONTH CHECKUP")+' · WHAT TO EXPECT</div><h1>'+esc(d.hero)+'</h1><p class="hv-lead">'+esc(d.lead)+'</p><div class="hv-hero-art">'+illustration(age)+'</div><div class="hv-insight"><span>GOOD TO KNOW</span><b>'+esc(d.insight)+'</b><p>'+esc(d.why)+'</p></div></section>'+
+'<div class="hv-visitactions"><button id="hv-book">'+(appointment[age]?"✓ Saved for "+esc(appointment[age]):"＋ Save appointment date")+'</button><button id="hv-done">'+(visited.has(age)?"✓ Visit recorded":"Already had this visit?")+'</button></div>'+
 '<h3 class="hv-sectiontitle">At this checkup</h3><div class="hv-list">'+items+'</div>'+
 '<h3 class="hv-sectiontitle">Vaccines & protection</h3><button class="hv-featurelink" id="hv-vax"><span class="hv-icon" aria-hidden="true">✧</span><span class="hv-main"><b>What may be due</b><small>'+esc(d.vax)+'</small></span><span class="hv-chevron">›</span></button>'+
 '<section class="hv-qcard"><span class="hv-qcard-label">A QUESTION WORTH ASKING</span><div class="hv-qtitle">“'+esc(d.question)+'”</div><p>Keep it handy for the appointment, or add your own.</p><div class="hv-q-actions"><button id="hv-saveq">'+(qCount&&questions[age].includes(d.question)?"Saved ✓":"Save this question")+'</button><button class="hv-textbtn" id="hv-ownq">My questions'+(qCount?" · "+qCount:"")+' ›</button></div></section>'+
@@ -347,6 +351,8 @@ root.innerHTML='<button class="back" id="hv-back">‹ All guides</button><h2 cla
 '<div class="hv-overlay" id="hv-overlay"><div class="hv-sheet" role="dialog" aria-modal="true" aria-label="Health guide details"><button class="hv-close" id="hv-close" aria-label="Close">×</button><div id="hv-sheetbody"></div></div></div>';
 root.querySelectorAll("[data-age]").forEach(b=>b.onclick=()=>select(b.dataset.age));
 root.querySelectorAll("[data-topic]").forEach(b=>b.onclick=()=>open("topic",Number(b.dataset.topic)));
+root.querySelector("#hv-book").onclick=()=>open("appointment");
+root.querySelector("#hv-done").onclick=()=>{visited.has(age)?visited.delete(age):visited.add(age);render()};
 root.querySelector("#hv-vax").onclick=()=>open("vaccines");
 root.querySelector("#hv-help").onclick=()=>open("help");
 root.querySelector("#hv-ownq").onclick=()=>open("questions");
