@@ -234,6 +234,7 @@ o+='</div></div><div class="section"><h3>Ask when you visit or meet</h3>';
 deepTypes[state.type].questions.forEach((q,i)=>{o+=tickRow("ask-"+state.type+"-"+i,q,"Use this at an interview or tour.")});
 o+='</div><div class="callout"><div class="micro">DON’T FORGET</div><p>For licensed programs, review your state’s inspection and complaint records. For individual caregivers, check references, training and employment terms as applicable.</p></div>';
 o+='<div class="section"><h3>Your shortlist</h3><p>Keep the places or people you want to follow up with. This demo keeps the list only while the page is open.</p>';
+if(state.shortlist.length>=2)o+='<button class="comparison-link" data-act="comparison">Compare your '+state.shortlist.length+' saved options →</button>';
 o+='<label class="fieldlabel" for="candidate">Name of a person or place</label><input id="candidate" class="field" data-candidate="1" value="'+safe(state.candidate)+'" placeholder="e.g. Little Oaks or Sam" autocomplete="off"><button class="addcandidate" data-act="addcandidate">＋ Add to shortlist</button>';
 state.shortlist.forEach((p,i)=>{o+='<div class="shortlisted"><button class="shortlist-name" data-act="candidate" data-i="'+i+'"><b>'+safe(p.name)+'</b><small>'+safe(p.type)+(p.chosen?' · Chosen':'')+'</small></button><button data-act="remove" data-i="'+i+'">Remove</button></div>'});
 o+='</div><button class="secondary" data-act="home">Back to Childcare</button></div>'+nav();return o
@@ -321,6 +322,8 @@ const qs=deepTypes[item.typeIndex].questions;
 let o=dhero("YOUR SHORTLIST",safe(item.name),"Check the practical details for "+safe(item.type)+", then leave yourself a few notes. This stays in this demo session.");
 o+='<div class="section"><h3>What you have checked</h3>';
 qs.forEach((q,i)=>{const yes=!!item.checks[i];o+='<button class="tickrow" data-act="candtick" data-i="'+i+'" aria-pressed="'+yes+'"><span class="tickbox'+(yes?' yes':'')+'">'+(yes?'✓':'')+'</span><span><b>'+q+'</b></span></button>'});
+o+='</div><div class="section"><h3>Practical details (optional)</h3><p>Add only what you know. This will help when comparing options.</p>';
+for(const [key,label,placeholder] of [["cost","Cost","Hourly or monthly"],["hours","Days and hours","e.g. Monday–Friday 8–5"],["availability","Availability","e.g. Starting next month"]])o+='<label class="fieldlabel">'+label+'</label><input class="field" data-candidatefield="'+key+'" value="'+safe(item[key]||"")+'" placeholder="'+placeholder+'" autocomplete="off">';
 o+='</div><div class="section"><h3>Your notes</h3><p>Something you liked, a question to follow up, or how you felt after meeting.</p><textarea class="notes" data-notes="1" placeholder="What stood out?">'+safe(item.notes)+'</textarea></div>';
 o+='<div class="callout"><div class="micro">BEFORE COMMITTING</div><p>Confirm availability, costs, references, safe sleep, background checks and written policies as relevant to this care arrangement.</p></div>';
 o+='<button class="primary" data-act="choosecandidate">'+(item.chosen?'✓ Chosen · Continue preparing':'We chose this caregiver →')+'</button><button class="secondary" data-act="resource" data-id="compare">Back to your shortlist</button></div>'+nav();return o
@@ -340,7 +343,7 @@ o+='<button class="primary" data-act="copy">Copy this example card</button><p cl
 o+='<button class="secondary" data-act="home">Back to Childcare</button></div>'+nav();return o
 }
 function render(){
-syncStage();document.getElementById("app").innerHTML=state.page==="home"?home():state.page==="feature"?feature():state.page==="topic"?topic():state.page==="options"?options():state.page==="type"?typePage():state.page==="resource"?resource():state.page==="fit"?fitPage():state.page==="candidate"?candidatePage():care();
+syncStage();document.getElementById("app").innerHTML=state.page==="home"?home():state.page==="feature"?feature():state.page==="topic"?topic():state.page==="options"?options():state.page==="type"?typePage():state.page==="resource"?resource():state.page==="fit"?fitPage():state.page==="candidate"?candidatePage():state.page==="comparison"?comparisonPage():care();
 document.getElementById("steps").innerHTML=stages.map((x,i)=>'<button class="'+(state.stage===i?'sel':'')+'" data-stage="'+i+'">'+["Start fresh","Comparing","Chosen","Care started"][i]+'</button>').join('');
 document.getElementById("types").innerHTML=kinds.map((x,i)=>'<button class="'+(state.type===i?'sel':'')+'" data-type="'+i+'">'+["Center","Home","Nanny","Family","Sitter","Extra"][i]+'</button>').join('');
 document.getElementById("ages").innerHTML=[3,6,9].map(a=>'<button class="'+(state.age===a?'sel':'')+'" data-age="'+a+'">'+a+' mo</button>').join('');
@@ -348,7 +351,8 @@ document.getElementById("ages").innerHTML=[3,6,9].map(a=>'<button class="'+(stat
 document.getElementById("steps").addEventListener("click",e=>{const b=e.target.closest("[data-stage]");if(b){chooseDemo(Number(b.dataset.stage))}});
 document.getElementById("types").addEventListener("click",e=>{const b=e.target.closest("[data-type]");if(b){state.type=Number(b.dataset.type);state.page="home";render()}});
 document.getElementById("ages").addEventListener("click",e=>{const b=e.target.closest("[data-age]");if(b){state.age=Number(b.dataset.age);state.page="home";render()}});
-document.getElementById("app").addEventListener("input",e=>{if(e.target.dataset.field!==undefined){state.card[e.target.dataset.field]=e.target.value;}if(e.target.dataset.candidate!==undefined){state.candidate=e.target.value;}if(e.target.dataset.notes!==undefined&&state.shortlist[state.activeCandidate])state.shortlist[state.activeCandidate].notes=e.target.value;});
+document.getElementById("app").addEventListener("input",e=>{if(e.target.dataset.field!==undefined){state.card[e.target.dataset.field]=e.target.value;}if(e.target.dataset.candidate!==undefined){state.candidate=e.target.value;}if(e.target.dataset.notes!==undefined&&state.shortlist[state.activeCandidate])state.shortlist[state.activeCandidate].notes=e.target.value;if(e.target.dataset.candidatefield!==undefined&&state.shortlist[state.activeCandidate])state.shortlist[state.activeCandidate][e.target.dataset.candidatefield]=e.target.value;});
+document.getElementById("app").addEventListener("change",e=>{if(e.target.dataset.compareside){state[e.target.dataset.compareside==="left"?"compareLeft":"compareRight"]=Number(e.target.value);render()}});
 document.getElementById("app").addEventListener("click",e=>{
 const b=e.target.closest("[data-act]");if(!b)return;
 const a=b.dataset.act,i=Number(b.dataset.i||0);
