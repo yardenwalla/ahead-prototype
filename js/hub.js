@@ -705,7 +705,7 @@
   function slGuides(key, age, now) {
     const st = slStep(key, age), cat = 'Sleep';
     const G = [
-      [['moon', 'Sleep, step by step', 'Spot the yawn, soothe, then down', 'Sleepy cues, soothing, and getting {o} down', 'chg:Sleep:d:steps0'], ['sun', 'Days and nights', 'Bright days, dim nights', 'Helping {p} body clock', 'chg:Sleep:d:daynight'], ['sack', 'Swaddling', 'Snug arms, loose hips', 'How to swaddle, and when to stop', 'chg:Sleep:d:sw0']],
+      [['moon', 'Sleep, step by step', 'Spot the yawn, soothe, then down', 'Sleepy cues, soothing, and getting {o} down', 'chg:Sleep:d:steps0'], ['sun', 'Days and nights', 'Bright days, dim nights', 'Helping {p} body clock', 'chg:Sleep:d:daynight'], ['sack', 'Swaddling', 'Snug arms, loose hips', 'How to swaddle, and when to stop', 'chg:Sleep:d:swaddle']],
       [['book', 'Bedtime', 'A feed, a song, then down', 'A first bedtime routine', 'chg:Sleep:d:routine'], ['moon', 'The longer stretch', 'It grows over months, not nights', 'How long night sleep gets this year', 'chg:Sleep:d:stretch'], ['clock', 'Naps', 'Short and frequent, by {p} cues', 'Cues, not clocks', 'chg:Sleep:d:napsearly']],
       [['moon', 'Waking again', 'Wait a minute, then help', 'What helps for a few weeks', 'chg:Sleep:d:regress'], ['heart', 'Falling asleep', 'Down drowsy, some of the time', 'Falling asleep on {p} own, if you want', 'chg:Sleep:d:settle4'], ['clock', 'Naps', 'Naps settle into set times', 'And bedtime moves earlier', 'chg:Sleep:d:predictable']],
       [['crib', 'Where {s} sleeps', 'Your room until 6 months', 'Bassinet to crib, and {p} own room', 'chg:Sleep:d:where'], ['book', 'Sleep training', 'A family choice, not a must', 'When, and gentle to firmer ways', 'chg:Sleep:settle'], ['book', 'Bedtime', 'Same time, same routine', 'Your bedtime routine now', 'chg:Sleep:d:routine']],
@@ -793,7 +793,7 @@
           [[W, 'After 12 months, the risk of SIDS is much lower, and a small soft toy can become a comfort.'], [D, 'From 12 months, a small lovey or a light blanket is fine. Skip pillows, bumpers and big stuffed animals. No bottle in the crib, since milk pooling on teeth causes decay.'], [Y, 'A familiar comfort object can help {o} settle on {p} own, especially when {s} {miss|misses} you at night.']], '', 'heart'),
         // Nov 11 guides. One idea per page; numbers stay in the glance tiles.
         steps0: () => page('Sleep, step by step', 'Spot the yawn, soothe, then down', hubIconSteps([['eye', 'Sleepy cues', 'A quiet stare, a yawn, turning away'], ['heart', 'Soothe', 'Feed, rock, hold or shush. All fine'], ['crib', 'Down', 'Drowsy or asleep, on {p} back']], cat, 'Watch for sleepy cues, soothe any way that works, then lay {o} down on {p} back.', true), -1,
-          [[D, 'Start winding down at the first cue. Waiting until {s’s} crying makes it harder to settle.'], [K, 'Overtired looks like fussing, arching, or crying that’s hard to calm.'], [Y, 'You can’t spoil a newborn. Responding quickly helps {o} feel safe.']], '', 'moon'),
+          [[D, 'Start winding down at the first cue. Waiting until {s’s} crying makes it harder to settle. Still fussing? Stick with one way of soothing for a few minutes before switching.'], [K, 'Overtired looks like fussing, arching, or crying that’s hard to calm.'], [Y, 'You can’t spoil a newborn. Responding quickly helps {o} feel safe.']], '', 'moon'),
         sw0: () => page('Swaddling', 'Snug arms, loose hips', [['swaddle', 'Swaddle', 'Newborn weeks'], ['roll', 'First try to roll', 'Stop that day'], ['sack', 'Sleep sack', 'Arms free']], 0,
           [[D, 'Wrap snugly around the arms and chest, with room for two fingers. Leave the hips and legs loose, so they can bend up and out.'], [K, 'Stop at the first try to roll, often around 2–4 months. Then a sleep sack, arms free.'], [Y, 'A swaddle can calm the startle reflex. Too tight at the hips can harm them, and once rolling starts, arms need to be free.']],
           tip('Keep it cool', 'Light layers under the swaddle, and nothing on {p} head.'), 'sack'),
@@ -863,8 +863,9 @@
         + `<div class="hub-accs">`
         // In the order it happens: an age, a short title, one line. Her current step gets a filled dot.
         + (() => { const mo = m(), steps = [
-            [0, 'Newborn', 'Swaddle until the first try to roll', 'Arms in, hips loose', 'chg:Sleep:d:sw0'],
+            [0, 'Newborn', 'Swaddle until the first try to roll', 'Arms in, hips loose', 'chg:Sleep:d:swaddle'],
             [2, '2–4 months', 'Stop swaddling', 'At the first try to roll, switch to a sleep sack', 'chg:Sleep:d:swaddleoff', 'sleep-rolling'],
+            [3, 'Once {s} {roll|rolls}', 'Rolling in sleep', 'Turn {o} back until {s} can roll both ways', 'chg:Sleep:d:rolling'],
             [4, 'Once {s} {roll|rolls}', 'Bassinet to crib', 'Or at its weight limit, whichever comes first', 'chg:Sleep:d:where'],
             [5, 'Before {s} {sit|sits}', 'Lower the crib mattress', 'Then lowest before {s} {pull|pulls} up', '', 'sleep-crib-height'],
             [6, '6 months', 'Own room, if you like', 'Room-share until then', 'chg:Sleep:d:where'],
@@ -901,7 +902,7 @@
       return detail(cat, 'Sleep help', 'Rough day or night?', 'Pick what’s happening. You’ll see what’s often behind it and what to try.', body
         + (mo < 1.5 ? versus('Normal, or time to call?', ['Normal', 'Waking every 2–3 hours, grunts, squeaks, and breathing pauses of a few seconds.'], ['Call your pediatrician', 'Hard to wake for feeds, or ' + sleepFever() + '. Blue lips or a 20-second pause: call 911.'])
           : mo < 3 ? versus('Normal, or time to call?', ['Normal', 'Good nights and bad nights, and fussing in light sleep.'], ['Call your pediatrician', sleepFever().charAt(0).toUpperCase() + sleepFever().slice(1) + ' (right away), or snoring or gasping most nights. Blue lips or long breathing pauses: call 911.'])
-          : versus('Normal, or time to call?', ['Normal', (mo >= 8 ? 'Standing in the crib, protest at bedtime, ' : 'Good nights and bad nights, ') + 'and short cries that settle.'], ['Call your pediatrician', 'Poor feeding, pain, snoring or gasping, ear pulling, or ' + sleepFever() + '. Blue lips or long breathing pauses: call 911.'])), 'moon');
+          : versus('Normal, or time to call?', ['Normal', (mo >= 8 ? 'Standing in the crib, protest at bedtime, ' : 'Good nights and bad nights, ') + 'and short cries that settle.'], ['Call your pediatrician', 'Poor feeding, pain, a big change that lasts more than two weeks, snoring or gasping, ear pulling, or ' + sleepFever() + '. Blue lips or long breathing pauses: call 911.'])), 'moon');
     }
     if (id === 'crying') {
       // The crying curve: builds from 2 weeks, peaks at 6–8 weeks, eases by 3–4 months. A dot shows where Maya is now (adjusted age if born early).
