@@ -1543,3 +1543,9 @@ label:has(> .hub-photo-input:focus-visible) { outline: 2px solid #884866; outlin
 #main details.hub-how p { margin: 8px 0 0 }
 /* Development: the milestone a "thing to notice" row points to. */
 #main .dev-skill.is-focus { box-shadow: 0 0 0 2px var(--area-ink, #7a5aa6) inset; border-radius: 14px }
+#main details.hub-how-in { grid-column: 1 / -1; width: 100%; margin-top: 6px }
+#main details.hub-how-in summary { list-style: none; cursor: pointer; font-size: 13.5px; font-weight: 700; color: var(--ink, #2b2732) }
+#main details.hub-how-in summary::-webkit-details-marker { display: none }
+#main details.hub-how-in summary::after { content: ' ›' }
+#main details.hub-how-in[open] summary::after { content: ' ⌄' }
+#main details.hub-how-in p { margin: 6px 0 0; font-size: 13.5px; line-height: 1.45 }

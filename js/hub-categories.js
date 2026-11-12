@@ -59,9 +59,11 @@
   // Seen in the baby book, or reported elsewhere (rolling, crawling): the same test the area page uses.
   const devSkillSeen = l => { const key = journeySkillKey(l); return !!(journeyData().records.find(r => r.type === 'milestone' && r.skillKey === key) || skillSeen(l)); };
   window.devSkillSeen = l => devSkillSeen(l);
+  // The milestone behind each "thing to notice" on the main page; it's listed first on its area page.
+  const DEV_NOTICED = { 2: { Talking: 'Makes sounds beyond crying', Thinking: 'Watches you move', Movement: 'Lifts head during tummy time' }, 4: { Social: 'Chuckles during play', Thinking: 'Studies their hands', Movement: 'Swipes at toys' }, 6: { Social: 'Laughs', Talking: 'Takes turns making sounds with you', Movement: 'Rolls tummy to back' }, 9: { Social: 'Looks when you call their name', Talking: 'Makes repeated babbles', Movement: 'Passes objects between hands' }, 12: { Social: 'Joins games like pat-a-cake', Talking: 'Waves goodbye', Movement: 'Pulls up to stand' } };
   // A "thing to notice" opens its area page scrolled to that milestone, outlined for a moment.
   let DEV_FOCUS = null;
-  window.devFocusSkill = key => { DEV_FOCUS = key; setTimeout(() => { const el = document.getElementById('sk-' + key); if (el) el.scrollIntoView({ block: 'center' }); DEV_FOCUS = null; }, 60); };
+  window.devFocusSkill = key => { DEV_FOCUS = key; setTimeout(() => { DEV_FOCUS = null; }, 60); };
   window.developmentJourneyOverview = developmentJourneyOverview = function (selected = null) {
     const now = devNow(), ref = DEV_STAGES[selected] ? Number(selected) : now, age = ref + ' months';
     const st = DEV_STAGES[ref], h = H();
@@ -398,7 +400,8 @@
     DOMAIN_ICONS_FALLBACK = DOMAIN_ICONS[domain] || 'smile';
     // Each skill once: its name, "Seen it", and what it looks like (words, photo or video) on tap.
     const hl = (window.DEV_HEADLINE || {})[ref]?.[domain];
-    const ordered = hl ? [...labels].sort((x, y) => (hl[1].test(clearMilestone(y)) ? 1 : 0) - (hl[1].test(clearMilestone(x)) ? 1 : 0)) : labels;
+    const ordered0 = hl ? [...labels].sort((x, y) => (hl[1].test(clearMilestone(y)) ? 1 : 0) - (hl[1].test(clearMilestone(x)) ? 1 : 0)) : labels;
+    const top = DEV_NOTICED[ref]?.[domain], ordered = top && ordered0.includes(top) ? [top, ...ordered0.filter(l => l !== top)] : ordered0;
     const tc = window.devTileColors ? devTileColors(domain) : null;
     const rows = ordered.map(l => { const key = journeySkillKey(l), rec = journeyData().records.find(r => r.type === 'milestone' && r.skillKey === key) || (skillSeen(l) ? { reported: true } : null);
       const see = window.devSeeButton ? devSeeButton(key, clearMilestone(l)) : '';
@@ -453,10 +456,10 @@
       // Which thermometer, by age: rectal is most accurate all year; armpit works for a quick check (fever from 99°F);
       // forehead works at any age; ear readings only from 6 months.
       const fe = u3 ? ['Forehead', 'Quick. At 100.4°F or higher, check rectally'] : m < 6 ? ['Forehead', 'Reliable now'] : ['Forehead or ear', 'Both reliable now'];
-      const tile = (icon, t, d, good) => `<div${good ? ' class="is-good"' : ''}><span class="hub-dot">${h.art(icon, 'Health')}</span><b>${F(t)}</b><p>${F(d)}</p></div>`;
-      return `<div class="hub-card hub-thermo is-three">${tile('thermo', 'Rectal', 'The most accurate', true)}${tile('hand', 'Armpit', u3 ? 'Quick. At 99°F or higher, check rectally' : 'Quick. A fever starts at 99°F')}${tile('eye', fe[0], fe[1])}</div>`
+      const tile = (icon, t, d, good, more) => `<div${good ? ' class="is-good"' : ''}><span class="hub-dot">${h.art(icon, 'Health')}</span><b>${F(t)}</b><p>${F(d)}</p>${more || ''}</div>`;
+      return `<div class="hub-card hub-thermo is-three">${tile('thermo', 'Rectal', 'The most accurate', true, `<details class="hub-how-in"><summary>${F('How to take it')}</summary><p>${F('Put a little petroleum jelly on the tip. Lay {o} on {p} back, knees bent. Slide it in about half an inch and hold until it beeps.')}</p></details>`)}${tile('hand', 'Armpit', u3 ? 'Quick. At 99°F or higher, check rectally' : 'Quick. A fever starts at 99°F')}${tile('eye', fe[0], fe[1])}</div>`
         // How to take a rectal temperature, in the order you do it (AAP, HealthyChildren.org).
-        + `<details class="hub-card hub-how"><summary>${F('How to take it rectally')}</summary><p class="hub-card-text">${F('Put a little petroleum jelly on the tip. Lay {o} on {p} back, knees bent. Slide it in about half an inch and hold until it beeps.')}</p></details>`;
+        ;
     };
     // The page answers "what's going on?": one row per thing a parent is seeing, each opening a page that covers it
     // whole (how to check, when to call, how to help). The emergency signs apply to all of them, so they sit here.
