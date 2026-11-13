@@ -125,7 +125,7 @@
       label: 'Flight', action: 'Get ready for the flight',
       prep: [
         ['Check your airline', 'Add Maya to the booking and check the car-seat, stroller and bassinet policies.'],
-        ['Plan for security', 'Tell security about any baby milk, formula or water. These can exceed the usual 3.4 oz limit.'],
+        ['Know the security rules', 'Baby milk, formula and water can exceed the usual 3.4 oz limit. Tell officers about them at screening.'],
         ['Keep essentials with you', 'Changes, feeding supplies and a spare outfit go in your carry-on.']
       ],
       now: [
@@ -214,7 +214,7 @@
       + '<span>'+cnt.count+' of '+cnt.total+' ready · '+F('Pack and quick answers')+'</span>'
       + '<em>'+F('Open your outing card')+' ›</em></button></div>';
   }
-  const oaKitEscape = s => esc(F(s));
+  const oaKitEscape = s => F(s);
   function oaKitRows(items, checked) {
     return items.map(x => '<button class="oa-kit-check'+(checked[x.key]?' is-done':'')+'" onclick="oaKitTick(\''+x.key+'\')" aria-pressed="'+!!checked[x.key]+'">'
       + '<span class="oa-kit-checkbox" aria-hidden="true">'+(checked[x.key]?'✓':'')+'</span>'
@@ -236,8 +236,9 @@
       + '<button class="oa-kit-pin'+(s.pinned===id?' is-on':'')+'" onclick="oaKitPin()">'
       + (s.pinned===id?'✓ '+F('Saved to Outings & travel'):'＋ '+F('Keep this handy on Outings & travel'))+'</button>'
       + '<button class="oa-kit-reset" onclick="oaKitReset()">'+F('Start a fresh trip')+'</button>';
+    const quick = d.now.map(x => id==='water' && x[0]==='Too much sun?' ? [x[0], ageNow()<6 ? 'Move into shade and offer a feed. Before 6 months, use shade and clothing first; sunscreen only on small exposed areas if unavoidable.' : 'Move into shade and offer a feed. At 6 months and older, use broad-spectrum SPF 30+ as directed.'] : x);
     const during = '<p class="oa-kit-quicklead">'+F('Quick answers for the moment, without searching the full guide.')+'</p>'
-      + '<div class="oa-kit-questions">'+d.now.map(x=>'<div class="oa-kit-answer"><b>'+oaKitEscape(x[0])+'</b><p>'+oaKitEscape(x[1])+'</p></div>').join('')+'</div>'
+      + '<div class="oa-kit-questions">'+quick.map(x=>'<div class="oa-kit-answer"><b>'+oaKitEscape(x[0])+'</b><p>'+oaKitEscape(x[1])+'</p></div>').join('')+'</div>'
       + '<p class="oa-kit-explain">'+F('More scenarios and detailed guidance remain in the original guide below.')+'</p>';
     const html='<div class="oa-kit-scrim" id="oa-kit-scrim" onclick="if(event.target.id===\'oa-kit-scrim\')oaKitClose()">'
       + '<section class="oa-kit-sheet" role="dialog" aria-modal="true" aria-labelledby="oa-kit-title">'
