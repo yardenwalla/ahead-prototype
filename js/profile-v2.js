@@ -29,8 +29,8 @@
       const twoAges = profile.early && profile.due && adjustedMonth(actualMonth()) !== actualMonth();
       // Born early: say which age each one follows, since there are two.
       const fixed = (cat, title, label, basis) => `<div class="hub-where-row"><span class="hub-dot" style="${yearTheme(cat)}">${catIcon(cat)}</span><div class="hub-where-copy"><b>${title}</b><small>${esc2(label)} · ${twoAges ? (basis === 'birthday' ? `by ${nm}’s birthday age` : `by ${basis === 'dev' ? (ageMode('dev') === 'birthday' ? 'birthday' : 'adjusted') : (ageMode('care') === 'birthday' ? 'birthday' : 'adjusted')} age`) : `changes as ${nm} grows`}</small></div></div>`;
-      const careRail = ['Newborn', '1–3 months', '4–6 months', '7–12 months'];
-      const careNow = (() => { const d = (NOW - parse(profile.dob)) / 864e5, mm = hubAgeFor('care', actualMonth()); return careRail[d < 21 ? 0 : mm < 4 ? 1 : mm < 7 ? 2 : 3]; })();
+      const careRail = ['Newborn', '1–3 months', '4–6 months', '6–12 months'];
+      const careNow = (() => { const d = (NOW - parse(profile.dob)) / 864e5, mm = hubAgeFor('care', actualMonth()); return careRail[d < 21 ? 0 : mm < 4 ? 1 : mm < 6 ? 2 : 3]; })();
       const chips = (opts, on, fn) => `<div class="hub-where-chips">${opts.map(([v, l]) => `<button class="${on === v ? 'is-on' : ''}" aria-pressed="${on === v}" onclick="${fn(v)}">${esc2(l)}</button>`).join('')}</div>`;
       const safetyRow = () => {
         const stage = STAGE_TABLE.Safety.stages[safeI] ? STAGE_TABLE.Safety.stages[safeI].label : '';

@@ -4,7 +4,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 const root = path.resolve(__dirname, '../..');
-const modules = [...fs.readFileSync(path.join(root, 'index.html'), 'utf8').matchAll(/<script src="([^"]+)"/g)].map(m => m[1]);
+const modules = [...fs.readFileSync(path.join(root, 'index.html'), 'utf8').matchAll(/<script src="([^"?]+)/g)].map(m => m[1]);
 module.exports = function boot(profile, answers = {}, storage = {}, clock = '2026-10-21T12:00:00Z', options = {}) {
   storage['ahead-v2-profile'] = JSON.stringify(profile);
   storage['ahead-v2-answers'] = JSON.stringify(answers);

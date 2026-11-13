@@ -260,8 +260,8 @@
       const twoAges = profile.early && profile.due && adjustedMonth(actualMonth()) !== actualMonth();
       // Born early: say which age each one follows, since there are two.
       const fixed = (cat, title, label, basis) => `<div class="hub-where-row"><span class="hub-dot" style="${yearTheme(cat)}">${catIcon(cat)}</span><div class="hub-where-copy"><b>${title}</b><small>${esc2(label)} · ${twoAges ? (basis === 'birthday' ? `by ${nm}’s birthday age` : `by ${basis === 'dev' ? (ageMode('dev') === 'birthday' ? 'birthday' : 'adjusted') : (ageMode('care') === 'birthday' ? 'birthday' : 'adjusted')} age`) : `changes as ${nm} grows`}</small></div></div>`;
-      const careRail = ['Newborn', '1–3 months', '4–6 months', '7–12 months'];
-      const careNow = (() => { const d = (NOW - parse(profile.dob)) / 864e5, mm = hubAgeFor('care', actualMonth()); return careRail[d < 21 ? 0 : mm < 4 ? 1 : mm < 7 ? 2 : 3]; })();
+      const careRail = ['Newborn', '1–3 months', '4–6 months', '6–12 months'];
+      const careNow = (() => { const d = (NOW - parse(profile.dob)) / 864e5, mm = hubAgeFor('care', actualMonth()); return careRail[d < 21 ? 0 : mm < 4 ? 1 : mm < 6 ? 2 : 3]; })();
       const safeI = STAGE_TABLE.Safety.stages.findIndex(p => p.key === safetyGroup(safetyStageNow()));
       b += `<h2 class="hub-h2">Where ${nm} is now</h2><p class="hub-where-lead">This sets what each guide shows. Tap to change it if it’s not quite right.</p><section class="hub-card hub-where">`
         + pick('Feeding', 'Feeding', feedGroup(chgStageIndex('Feeding')), STAGE_TABLE.Feeding.stages.map(x => x.label))
@@ -521,7 +521,7 @@
       ['Childcare', 'home', 'Childcare: daycare, nannies, sitters and family', 'topic:Childcare', 'childcare child care daycare day care nanny nanny share babysitter sitter grandparents family caregiver back to work return to work'],
       ['Childcare', 'heart', 'Settle in: each day, sick days, moving up', 'chg:Childcare:d:start', 'settle settling first week drop off dropoff pickup pick up daily report notes handoff sick day sick days fever policy home toddler room moving up goodbyes separation'],
       ['Childcare', 'notepad', 'Care card for caregivers', 'chg:Childcare:d:card', 'care card caregiver babysitter instructions emergency contacts allergies routine handover'],
-      ['Health', 'drop', 'Colds and stuffy noses', 'chg:Health:d:cold', 'cold colds stuffy nose congestion congested runny nose snot saline suction aspirator nosefrida humidifier cough sneeze winter ear ears ear infection earache pulling ear'],
+      ['Health', 'drop', 'A cold or stuffy nose', 'chg:Health:d:cold', 'cold colds stuffy nose congestion congested runny nose snot saline suction aspirator nosefrida humidifier cough sneeze winter ear ears ear infection earache pulling ear'],
       ['Sleep', 'crib', 'Bassinet to crib, and moving rooms', 'chg:Sleep:d:where', 'bassinet crib switch move transition own room nursery room sharing room-sharing'],
       ['Development', 'signs', 'Baby signs: more, eat, milk, all done', 'chg:Development:d:signs', 'sign signs signing sign language baby signs asl more milk eat all done gestures'],
       ['Out and about', 'car', 'Car seats', 'chg:Out and about:d:car', 'car seat carseat rear facing forward facing harness chest clip coat pinch test straps uber taxi rideshare'],

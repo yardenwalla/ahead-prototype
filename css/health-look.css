@@ -4,7 +4,7 @@
 #main .hl-hero > * { position: relative; z-index: 1 }
 #main .hl-row .hub-dot { background: var(--hl-bg) !important }
 #main .hl-row .hub-dot svg { stroke: var(--hl-ink) }
-#main .hub-page[data-overview="Health"][data-look] .hub-next { border: 0; background: #e6f5ec }
+/* Next uses the shared dashed card (Nov 13: one Next design in every guide) */
 /* Checkup pages: the header follows Development's area pages */
 #main .hv-head { background: var(--area) }
 #main .hv-head .dev-area-head-art { display: block; height: 56px; margin: 16px 0 14px }

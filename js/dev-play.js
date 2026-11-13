@@ -101,6 +101,12 @@
   window.changesRoute = function (p) {
     const [, cat, screen, a, b, c] = p.split(':');
     if ((cat === 'Development' || cat === 'Daily rhythm') && screen === 'd' && a === 'more') return ideasPage(devRef(Number(b)));
+    // All milestones for an age, the four areas on one page (Nov 11). Each area opens its own page to mark what Maya does.
+    if (cat === 'Development' && screen === 'd' && a === 'all') { const ref = DEV_STAGES[b] ? Number(b) : devRef(Number(b)), seen = window.devSkillSeen || (() => false), hb = window.hubBabyify || (x => x);
+      const NAMES = { Social: 'Social and feelings', Talking: 'Talking and listening', Thinking: 'Thinking and learning', Movement: 'Movement' };
+      const body = Object.keys(DEV_DOMAINS).map(d => { const L = DEVELOPMENT_DOMAINS[ref][d] || [], c = window.devTileColors ? devTileColors(d) : ['#f1ecfa', '#5b4f8a'];
+        return `<h2 class="hub-h2">${F(NAMES[d] || d)}</h2><div class="hub-card" style="padding:4px 16px">${L.map(l => `<p style="display:flex;gap:10px;align-items:center;margin:0;padding:10px 0;border-bottom:1px solid var(--line,#f0ebe8);font-size:14.5px"><span style="width:20px;height:20px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:12px;${seen(l) ? `background:${c[1]};color:#fff` : `border:1.5px solid ${c[1]}`}">${seen(l) ? '✓' : ''}</span>${hb(F(l))}</p>`).join('')}<button class="hub-link" style="display:block;padding:10px 0" onclick="openPage('development-domain:${ref}:${d}')">${F('Mark what Maya does')} ›</button></div>`; }).join('');
+      return frame('All milestones', `By ${ref === 12 ? '12 months' : ref + ' months'}`, 'Notice what Maya is doing. There’s no score to complete, and every baby gets there at their own pace.', body); }
     if (cat === 'Development' && screen === 'd' && a === 'move') return movePage(DEV_STAGES[b] ? Number(b) : devRef(Number(b)));
     if (cat === 'Development' && screen === 'd' && a === 'idea') return ideaPage(DEV_STAGES[b] ? Number(b) : devRef(Number(b)), c);
     return baseRoute(p);

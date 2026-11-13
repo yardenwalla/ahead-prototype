@@ -2,7 +2,7 @@
 #main .oa-hero { background: linear-gradient(160deg, #fde3d3, #fef2ea 58%, #e7effc) !important; position: relative; overflow: hidden }
 #main .oa-hero::after { content: ""; position: absolute; right: -40px; top: -50px; width: 170px; height: 170px; border-radius: 50%; background: #fff; opacity: .35; pointer-events: none }
 #main .oa-hero > * { position: relative; z-index: 1 }
-#main .hub-page[data-overview="Out and about"] .hub-next { border: 0; background: #fef2ea }
+/* Next uses the shared dashed card (Nov 13: one Next design in every guide) */
 
 /* "Where are you headed?": one tile per situation, each in its own soft color with a small flat picture. */
 #main .oa-places { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 0 0 22px }
@@ -76,3 +76,11 @@
 #main .oa-away-head { display: flex; align-items: baseline; justify-content: space-between }
 #main .oa-away-head .hub-link { font-size: 14px }
 #main .oa-hero-go { color: var(--year-ink) }
+/* Childcare top card (Nov 12): built like Feeding's — words, a 150px scene, and the "Worth knowing" card inside. */
+#main .cc-hero.cc-disc { display: flex; flex-direction: column; box-sizing: border-box; min-height: 485px }
+#main .cc-disc .cc-art { display: grid; place-items: center; margin: 6px -8px 6px; flex: 1; align-content: center }
+#main .cc-disc .cc-art svg { height: 150px; width: auto; max-width: 290px; filter: drop-shadow(0 9px 9px #6b5a0e14) }
+#main .cc-worth { background: #fffdf7; border-radius: 16px; padding: 14px 16px; box-shadow: 0 3px 14px #a6905a24; margin-top: 2px }
+#main .cc-worth small { display: block; font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: #8a7420; margin-bottom: 5px }
+#main .cc-worth b { display: block; font-size: 17px; line-height: 1.25; color: var(--ink, #2b2732) }
+#main .cc-worth span { display: block; font-size: 14px; line-height: 1.45; color: #6d666d; margin-top: 5px }

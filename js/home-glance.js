@@ -299,7 +299,7 @@
       'By 12 months': ['Her next skills, by her first birthday', 'Waving, copying and pulling up', 'wave'] },
     'Daily rhythm': { '1–3 months': ['Care is settling into a rhythm', 'Tub baths, nails and dressing', 'tub'],
       '4–6 months': ['Drool and teething may start', 'Gums, bath time and shade', 'tooth'],
-      '7–12 months': ['Brushing starts with her first tooth', 'Teeth, bath time and getting dressed', 'tooth'] }
+      '6–12 months': ['Brushing starts with her first tooth', 'Teeth, bath time and getting dressed', 'tooth'] }
   };
   const moveCopy = (cat, key) => { const c = MOVE_COPY[cat]; return typeof c === 'function' ? c(key) : (c && c[key]) || null; };
   // Where each guide is now: the "now" stage its own page marks (Feeding: the solids step once solids start).
@@ -364,7 +364,7 @@
     Feeding: { Newborn: 'Newborn feeds', 'Milk feeds': 'Milk feeds', 'Ready for solids': 'Ready for solids', new: 'First tastes', textures: 'Thicker textures', established: 'Three meals' },
     Sleep: { 'Round-the-clock sleep': 'Newborn sleep', 'Longer nights': 'Longer nights', 'Three naps': 'Three naps', 'Two naps': 'Two naps' },
     Development: k => k.replace(/^By (\d+) months$/, '$1-month skills'),
-    'Daily rhythm': { Newborn: 'Newborn care', '1–3 months': 'Baths & routine', '4–6 months': 'Drool & teething', '7–12 months': 'First teeth' }
+    'Daily rhythm': { Newborn: 'Newborn care', '1–3 months': 'Baths & routine', '4–6 months': 'Drool & teething', '6–12 months': 'First teeth' }
   };
   // The line under each guide on the Guides tab: one plain, personal sentence about where she is (she/her; P() swaps).
   const TILE = {
@@ -373,7 +373,7 @@
     Development: { 'By 2 months': 'Her first smiles and coos', 'By 4 months': 'Her smiles, coos and first grabs', 'By 6 months': 'Her reaching, laughing and rolling', 'By 9 months': 'Her sitting, babbling and crawling', 'By 12 months': 'Her first words and steps' },
     Safety: { 'First setup': 'A safe space for her from day one', Rolling: 'Ready for her first rolls', Crawling: 'Ready for her to crawl', 'Pulling up': 'Ready for her to pull up' },
     Health: k => k === 'First week' ? 'Her first-week checkup' : `Her ${k.replace(/ months?$/, '-month')} checkup is next`,
-    'Daily rhythm': { Newborn: 'Baths, diapers and cord care', '1–3 months': 'Baths, nails and dressing her', '4–6 months': 'Drool, gums and bath time', '7–12 months': 'Her first teeth and bath time' }
+    'Daily rhythm': { Newborn: 'Baths, diapers and cord care', '1–3 months': 'Baths, nails and dressing her', '4–6 months': 'Drool, gums and bath time', '6–12 months': 'Her first teeth and bath time' }
   };
   const tileLine = (cat, key) => { const t = TILE[cat]; return !key ? '' : typeof t === 'function' ? t(key) : (t && t[key]) || ''; };
   const shortOf = (cat, key) => { const t = SHORT[cat]; return !key ? '' : typeof t === 'function' ? t(key) : (t && t[key]) || ''; };

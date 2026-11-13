@@ -54,11 +54,12 @@
   window.chgSetOverride = (cat, o) => { local.override = Object.assign({}, local.override); if (o) local.override[cat] = o; else delete local.override[cat]; save(); };
   function sleepComputed(m) {
     if (inFirstSixWeeks(m)) return 0;
-    if (m < 4) return 1;
+    // Nov 12: clear age windows, so Sleep moves on as time passes without asking: Longer nights to 5 months,
+    // Three naps 5–7 months, Two naps from 7 (Taking Cara Babies' nap guide). A baby who's different: All stages, This fits.
+    if (m < 5) return 1;
     const said = live() ? answers.twoNaps : null;
-    if (said === 'Yes') return 3;                       // the parent told us (Rule 2)
-    if (said === 'Stay' || said === 'Not yet') return 2;
-    return m >= 9 ? 3 : 2;                              // age guess: most babies take two naps by 9 months (Rule 1)
+    if (said === 'Yes') return 3;                       // told us two naps already (from Profile)
+    return m >= 7 ? 3 : 2;
   }
   function sleepStage(m) {
     return overridden('Sleep', sleepComputed(m));
@@ -70,7 +71,7 @@
     const k = profile.id || profile.dob; if (!local.autoSeen[k]) { local.autoSeen[k] = t; save(); }
     return t - local.autoSeen[k] <= 21 * 864e5;
   }
-  window.chgSleepAuto = function () { const m = ageNow(); return live() && sleepComputed(m) === 3 && answers.twoNaps !== 'Yes' && m >= 9; };
+  window.chgSleepAuto = function () { const m = ageNow(); return live() && sleepComputed(m) === 3 && answers.twoNaps !== 'Yes' && m >= 7; };
   function sleepEvents(m) { return m >= 3 && m < 6 ? [0] : m >= 8 && m <= 11 ? [1] : []; }
   // Feeding never moves into solids on age alone: a parent answer moves it.
   function feedStage(m) { return overridden('Feeding', feedComputed(m)); }
@@ -347,7 +348,7 @@
       h += feedingCheckinMarkup();
 
     if (cat === 'Sleep' && !isEv && view === cur && chgSleepAuto() && autoNoticeFresh())
-      h += headsUp('Updated for this age', 'Showing two-nap guidance', '', `<button class="textlink chg-headsup-link" onclick="setAnswer('twoNaps','Stay')">Still on three naps? Show Three naps →</button>`);
+      h += headsUp('Updated for this age', 'Showing two-nap guidance', '', `<button class="textlink chg-headsup-link" onclick="chgSetStage('Sleep',2)">Still on three naps? Show Three naps →</button>`);
     // Parents can explore any age. Only an appropriate, observable change
     // offers an update; reading a future age guide is not a stage selection.
     const canUpdate = cat === 'Feeding' ? m >= 4 && view >= 2 : m >= 5 && [2,3].includes(view);
@@ -585,8 +586,9 @@
     if (typeof stageCanChange === 'function' && !stageCanChange(cat, i, cat === 'Feeding' ? feedGroup(CFG[cat].stage(m)) : CFG[cat].stage(m))) return chgGo('chg:' + cat + ':s:' + i);
     local.override = Object.assign({}, local.override); delete local.override[cat];
     if (cat === 'Sleep') {
-      if (i >= 2 && m >= 4) { answers.twoNaps = i === 3 ? 'Yes' : 'Stay'; persist(); }
-      else local.override.Sleep = { i, g: sleepComputed(m) };
+      // Two naps early is an answer; anything else (still three naps after 7 months, say) is a pick that stays put.
+      if (i === 3 && m >= 4) { answers.twoNaps = 'Yes'; persist(); }
+      else { if (answers.twoNaps === 'Yes') { delete answers.twoNaps; persist(); } local.override.Sleep = { i, g: sleepComputed(m) }; }
     }
     if (cat === 'Feeding') {
       // i is one of the five stages parents see: Newborn, Milk feeds, Ready for solids, First foods, Meals.

@@ -160,7 +160,7 @@
     let b = `<header class="hub-hero oa-hero"><p class="hub-eyebrow">${F(m < 1 ? 'In the first weeks' : `At ${m} ${m === 1 ? 'month' : 'months'}`)}</p><h1>${F(n[1])}</h1><p class="hub-lead">${F(n[2])}</p><button class="cc-hero-go oa-hero-go" onclick="${open(n[3])}">${F(n[4] ? n[4][2] : ({ errands: 'See around town', road: 'Plan a longer trip' })[n[3]] || 'See the guide')} ›</button></header>`;
     b += places(v) + seasonCard() + gear(v);
     b += h.versus('In the car', ['Every time', 'Look in the back seat before you walk away.'], ['Never', 'Leave Maya alone in the car, even for a minute.']);
-    if (nx) b += h.next(`Coming up around ${nx[0]} months`, nx[1], open(nx[3]));
+    if (nx) b += h.next(`Next · around ${nx[0]} months`, nx[1], open(nx[3]), '', { 2: 'Plan a first long drive or flight around feeds.', 4: 'Check your carrier’s limits before facing out.', 6: 'Pack snacks, and a travel crib for overnights.', 9: 'Check the height and weight sticker on the car seat.', 12: 'Check the seat’s rear-facing limits on its label.' }[nx[0]] || '');
     // Only when neither the top card nor Coming up already talks about gear limits, so it's never said twice.
     if (!n[4] && !(nx && nx[4])) b += h.note('Car seats, carriers and strollers each have their own height and weight limits. You’ll find them in the manual and on the gear itself.');
     return `<div class="quiet-category hub-page" data-overview="${CAT}" style="${yearTheme(CAT)}">${monthlyPageHeader(CAT)}${b}</div>`;
@@ -309,6 +309,7 @@
         ['moon', 'A rough first night', 'New places can unsettle sleep. A few off nights are normal.'],
         ['heart', 'Well-meant advice', 'Share one rule kindly: on {p} back, in a bare crib.']],
         'A few off nights are normal. If you get advice, share one rule kindly: on the back, in a bare crib.')
+      + `<button class="hub-link" onclick="openPage('chg:Sleep:d:away')">${F('Sleep in a new time zone')} ›</button>`   // time zones live in Sleep
       + good([['shield', 'Which crib is safe?', 'A play yard, or a crib made after June 2011. Never an adult bed or a couch.'], ['hand', 'Pets', 'Never leave {o} alone with a pet, even a gentle one.'], eats() ? ['bowl', 'Grandparents and treats', 'Share your food rules once, kindly, before the first meal.'] : null]));
 
     if (id === 'water') return sub('water', 'Pool or beach', 'A day by the water', 'Babies get cold and overheat faster than you do, so short visits work best.',

@@ -24,7 +24,7 @@
       I(1.5, 4, 'care', 'Sleep', 'Nights start to stretch', 'One longer stretch of sleep at night is often the first sign.', 'Keep nights dark and quiet so that stretch can grow.', "openPage('chg:Sleep:s:1')", { stage: 1 }),
       I(3, 5, 'care', 'Sleep', 'The 4-month sleep regression', 'More night waking for a few weeks, as sleep cycles mature.', 'Keep your usual routine. It usually passes in a few weeks.', "openPage('chg:Sleep:e:0')"),
       I(4, 9, 'care', 'Sleep', 'Naps settle into three a day', 'With about 2–2½ hours awake in between.', 'Watch for sleepy cues about 2 hours after waking.', "openPage('chg:Sleep:s:2')", { stage: 2 }),
-      I(6, 9, 'care', 'Sleep', 'The late nap drops, leaving two', 'Usually between 6 and 9 months.', 'Move bedtime a little earlier while the catnap goes.', "openPage('chg:Sleep:s:3')", { stage: 3, skip: a.twoNaps === 'Yes' }),
+      I(6, 9, 'care', 'Sleep', 'The late nap drops, leaving two', 'Usually around 7 months.', 'Move bedtime a little earlier while the catnap goes.', "openPage('chg:Sleep:s:3')", { stage: 3, skip: a.twoNaps === 'Yes' }),
       I(8, 10, 'care', 'Sleep', 'Separation anxiety can disrupt sleep', 'Bedtime protests can come back for a while.', 'Keep goodbyes short and bedtime familiar.', "openPage('chg:Sleep:e:1')"),
       I(13, 18, 'care', 'Sleep', 'Two naps become one', 'Usually between 13 and 18 months.', 'Push the morning nap a little later every few days.', "openPage('chg:Sleep:d:after')"),
       I(0.6, 3, 'care', 'Feeding', 'Cluster feeding: lots of feeds close together', 'Often around 3 weeks, 6 weeks and 3 months.', 'Feed when Maya’s hungry. It usually settles in a few days.', "openPage('chg:Feeding:e:0')"),
