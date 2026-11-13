@@ -293,7 +293,7 @@
     try { localStorage.removeItem(BAG_KEY); } catch(e) {}
     oaKitRender();
   };
-  window.oaKitFullGuide = () => { const id=oaKitCurrent; window.oaKitClose(); if(page !== 'chg:'+CAT+':d:'+id)openPage('chg:'+CAT+':d:'+id); };
+  window.oaKitFullGuide = () => { const id=oaKitCurrent; window.oaKitClose(); if(typeof page !== 'string' || page !== 'chg:'+CAT+':d:'+id)openPage('chg:'+CAT+':d:'+id); };
   document.addEventListener('keydown',e => { if (e.key==='Escape' && oaKitCurrent) oaKitClose(); });
 
   function sub(key, context, title, lead, inner) {
