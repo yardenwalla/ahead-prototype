@@ -18,6 +18,7 @@ for (let age = 0; age <= 12; age++) for (const cat of GUIDES) {
     const top = plain((/<small>([\s\S]*?)<\/small>/.exec(c) || [])[1] || '');
     const sub = plain((/<em class="hub-next-sub">([\s\S]*?)<\/em>/.exec(c) || [])[1] || '');
     check(/^Next · /.test(top), `${cat} at ${age} months: Next starts "Next ·" (got "${top}")`);
+    check(!/\b(weeks|months) (weeks|months)\b/.test(top), `${cat} at ${age} months: the when reads right (got "${top}")`);
     check(sub.length <= 60, `${cat} at ${age} months: the line under Next is 60 characters or fewer (${sub.length}: "${sub}")`);
   }
 }

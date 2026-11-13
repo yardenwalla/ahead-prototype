@@ -327,7 +327,7 @@
       0: ['Bring the hospital discharge papers', 'They list {p} birth weight, the tests {s} had, and any first vaccines.'],
       1: ['Ask to see {p} growth curve', 'The trend over several visits matters more than any one weight.'],
       2: ['Several shots at once is normal', 'Feeding or holding {o} close during and after helps. A fussy, sleepy day afterward is common.'],
-      4: ['Shots go more easily with a feed', 'Offer the breast or a bottle during or right after. Sucking soothes.'],
+      4: ['Shots go more easily with a feed', (profile.feed === 'Formula' ? 'Offer a bottle' : profile.feed === 'Breast milk' && profile.feedHow === 'Nursing' ? 'Nurse {o}' : 'Offer the breast or a bottle') + ' during or right after. Sucking soothes.'],
       6: flu ? ['{P} first flu shot may need a second visit', 'Babies getting it for the first time need two doses, at least 4 weeks apart.'] : ['Ask about fluoride varnish', 'Many offices start painting it on once the first tooth comes in. It helps prevent cavities.'],
       9: ['The questionnaire is routine, not a test', 'Answer from what you see at home. Some offices send it ahead, so check your messages.'],
       12: ['A quick blood test is common now', 'A finger or heel prick checks for iron and, in many places, lead.']

@@ -756,7 +756,7 @@
       h += napAsk(now, age) + slHero(key, age, 'Two naps') + B + slGlance(key, age, now) + slGuides(key, age, now);
     }
     const D = C().DATA.Sleep, N = D.CH[view + 1], A = D.CH[view].after;
-    if (N) { const a = (STAGE_TABLE.Sleep.stages[view + 1]?.age || '').replace(/^(From|Starts) /, ''), w = /wks/.test(a) ? '6 weeks' : a.split('–')[0] + (/months/.test(a) && !/–\d/.test(a.split('–')[0] + '–') ? ' months' : ''); h += next(view === 2 && age >= 6 ? 'Next · once Maya is on two naps most days' : `Next · usually from ${w.replace(/^(\d+)$/, '$1 months')}${sleepAdj() ? ' adjusted age' : ''}`, N.rail, `chgGo('chg:Sleep:s:${view + 1}')`, '', ['Watch for one longer stretch, often at night.', 'Watch for longer awake time before naps.', 'Watch for the third nap getting hard to fit in.'][view] || ''); }
+    if (N) { const a = (STAGE_TABLE.Sleep.stages[view + 1]?.age || '').replace(/^(From|Starts) /, ''), w = /wks/.test(a) ? '6 weeks' : /^\d+$/.test(a.split('–')[0]) ? a.split('–')[0] + ' months' : a.split('–')[0]; h += next(view === 2 && age >= 6 ? 'Next · once Maya is on two naps most days' : `Next · usually from ${w.replace(/^(\d+)$/, '$1 months')}${sleepAdj() ? ' adjusted age' : ''}`, N.rail, `chgGo('chg:Sleep:s:${view + 1}')`, '', ['Watch for one longer stretch, often at night.', 'Watch for longer awake time before naps.', 'Watch for the third nap getting hard to fit in.'][view] || ''); }
     else if (A) h += next('Next · after the first birthday', A[1], go('chg:Sleep:d:after'), '', 'A refused nap here and there is usually a phase.');
     return frame(cat, view, cur, h);
   }
@@ -879,7 +879,7 @@
             [2, '2–4 months', 'Stop swaddling', 'At the first try to roll, switch to a sleep sack', 'chg:Sleep:d:swaddleoff', 'sleep-rolling'],
             [3, 'Once {s} {roll|rolls}', 'Rolling in sleep', 'Turn {o} back until {s} can roll both ways', 'chg:Sleep:d:rolling'],
             [4, 'Once {s} {roll|rolls}', 'Bassinet to crib', 'Or at its weight limit, whichever comes first', 'chg:Sleep:d:where'],
-            [5, 'Before {s} {sit|sits}', 'Lower the crib mattress', 'Then lowest before {s} {pull|pulls} up', '', 'sleep-crib-height'],
+            [5, 'Before {s} {sit|sits}', 'Lower the crib mattress', 'Then lowest before {s} {pull|pulls} up', 'chg:Sleep:d:mattress', 'sleep-crib-height'],
             [6, '6 months', 'Own room, if you like', 'Room-share until then', 'chg:Sleep:d:where'],
             [12, '12 months', 'A small comfort toy is fine', 'Still no pillows or heavy blankets', 'chg:Sleep:d:lovey']];
           const cur = steps.reduce((k, st, i) => (mo >= st[0] ? i : k), 0);
