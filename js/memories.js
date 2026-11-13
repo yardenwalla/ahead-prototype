@@ -130,21 +130,20 @@
       const media = !designs ? '' : photo(m)
         ? `<button class="mem-card-story" onclick="storyShare(${m})" aria-label="Share the ${L(m)} card"><img data-story-thumb="${m}" alt=""></button><button class="mem-card-share" onclick="storyShare(${m})">Share ${esc2(m === 0 ? 'her newborn card' : 'this card')}</button>`.replace('her newborn', `${P.p} newborn`)
         : `<label class="mem-card-story is-empty" aria-label="Add the ${m === 0 ? 'newborn' : m === 12 ? 'first-birthday' : m + '-month'} photo"><img data-story-thumb="${m}" alt="">${hubPhotoInput(m)}</label><label class="mem-card-share is-add">＋ Add ${esc2(P.p)} ${m === 0 ? 'newborn' : m === 12 ? 'first-birthday' : m + '-month'} photo${hubPhotoInput(m)}</label>`;
-      // What happened that month, small and light under the balloon card. Two looks, for review:
-      // 'badges': each big first as a little round badge with its drawing; 'caption': one handwritten caption line.
-      const look = window.MEM_WHAT || 'badges';
+      // What happened that month, small and light under the balloon card: each big first as a little round badge
+      // with its drawing (four at most, one row), then the smaller things named in one short line. Two are named;
+      // past that it's "and 3 more", which opens the book where they're all listed.
       const open = `openPage('chg:Timeline:firsts')`;
-      let what;
-      if (!rs.length) what = `<p class="mem-cap is-empty">${esc2(m === now ? 'Nothing saved yet this month' : 'Nothing saved for this month')}</p>`;
-      else if (look === 'badges') {
-        const bs = big.slice(0, 4);
-        const extra = small.length + (big.length - bs.length);
-        what = `<button class="mem-badges" onclick="${open}" aria-label="${esc2(`What happened at ${WORDS[m].toLowerCase()}, open the memory book`)}">${bs.length ? `<span class="mem-badge-row">${bs.map(r => `<span class="mem-badge"><span class="mem-badge-ic" style="${TONE(r)}">${hubArt(ICON(r), 'Development')}</span><span class="mem-badge-t">${esc2(keepTitle(r))}</span></span>`).join('')}</span>` : ''}${extra ? `<span class="mem-badge-more">${esc2(bs.length ? `+ ${extra} little thing${extra === 1 ? '' : 's'} noticed` : `${extra} little thing${extra === 1 ? '' : 's'} noticed`)} ›</span>` : `<span class="mem-badge-more">${esc2('In the memory book')} ›</span>`}</button>`;
-      } else {
-        const items = [...big.map(r => ({ t: keepTitle(r), star: true })), ...small.map(r => ({ t: r.title }))];
-        const showN = items.length > 5 ? 4 : items.length;
-        what = `<button class="mem-cap" onclick="${open}">${items.slice(0, showN).map(x => `<span>${x.star ? '<i aria-hidden="true">★</i>' : ''}${esc2(x.t)}</span>`).join('<em aria-hidden="true"> · </em>')}${items.length > showN ? `<em aria-hidden="true"> · </em><span class="mem-cap-more">${esc2(`+${items.length - showN} more`)}</span>` : ''}</button>`;
-      }
+      const bs = big.slice(0, 4), extraBig = big.length - bs.length;
+      const named = small.slice(0, 2).map(r => lc(r.title));
+      const rest = small.length - named.length + extraBig;
+      const lead = small.length ? (bs.length ? 'Also noticed: ' : 'Noticed: ') : '';
+      const body = named.length === 2 && !rest ? named.join(' and ') : named.join(', ');
+      const tail = rest ? `${named.length ? 'and ' : ''}${rest} more ›` : '';
+      const line = small.length || extraBig ? `${esc2(lead + body)}${tail ? ` <span class="mem-nowrap">${esc2(tail)}</span>` : ''}` : '';
+      const what = !rs.length
+        ? `<p class="mem-badge-none">${esc2(m === now ? 'Nothing saved yet this month' : 'Nothing saved for this month')}</p>`
+        : `<button class="mem-badges" onclick="${open}" aria-label="${esc2(`What happened at ${WORDS[m].toLowerCase()}, open the memory book`)}">${bs.length ? `<span class="mem-badge-row">${bs.map(r => `<span class="mem-badge"><span class="mem-badge-ic" style="${TONE(r)}">${hubArt(ICON(r), 'Development')}</span><span class="mem-badge-t">${esc2(keepTitle(r))}</span></span>`).join('')}</span>` : ''}${line ? `<span class="mem-badge-more">${line}</span>` : ''}</button>`;
       return `<section class="mem-card" data-m="${m}"${m === now ? '' : ' hidden'}><p class="mem-card-label">${esc2(m === now ? 'This month' : 'Looking back')}</p><h2 class="mem-card-title">${esc2(WORDS[m])}</h2><div class="mem-card-media">${media}</div>${what}<div class="mem-card-foot"><button class="mem-card-link" onclick="openPage('chg:Timeline:milestone')">＋ Save a first</button>${firsts.length ? `<button class="mem-card-link" onclick="openPage('chg:Timeline:firsts')">${esc2(`The memory book · all ${firsts.length}`)} ›</button>` : ''}</div></section>`;
     };
     const play = have.length >= 2 ? `<button class="mem-title-play" onclick="memPlay()" aria-label="Play the year"><span aria-hidden="true">▶</span> Play the year</button>` : '';

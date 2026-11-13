@@ -1642,7 +1642,6 @@ label:has(> .hub-photo-input:focus-visible) { outline: 2px solid #884866; outlin
 #main .mem-note-more { margin: 0; font-size: 13px; font-weight: 650; line-height: 32px; color: #7a4f6d }
 #main .mem-note.is-empty { cursor: default }
 #main .mem-note.is-empty .mem-note-also { color: #9a909c }
-/* What happened that month, light and small: little badges, or a handwritten caption. */
 #main .mem-badges { display: block; width: 100%; margin: 16px 0 0; padding: 0; border: 0; background: none; font: inherit; text-align: center; cursor: pointer }
 #main .mem-badge-row { display: flex; justify-content: center; gap: 8px }
 #main .mem-badge { display: flex; flex-direction: column; align-items: center; gap: 6px; width: 25%; max-width: 86px }
@@ -1650,14 +1649,8 @@ label:has(> .hub-photo-input:focus-visible) { outline: 2px solid #884866; outlin
 #main .mem-badge:nth-child(even) .mem-badge-ic { transform: rotate(5deg) }
 #main .mem-badge-ic svg { width: 34px; height: 34px }
 #main .mem-badge-t { font-family: AheadHand, Caveat, cursive; font-size: 18px; font-weight: 600; line-height: 1.05; color: #2b2840 }
-#main .mem-badge-more { display: inline-block; margin-top: 12px; font-size: 13.5px; font-weight: 650; color: #7a4f6d }
-#main .mem-cap { display: block; width: 100%; margin: 14px 0 0; padding: 0 6px; border: 0; background: none; font-family: AheadHand, Caveat, cursive; font-size: 21px; font-weight: 600; line-height: 1.35; color: #2b2840; text-align: center; cursor: pointer }
-#main .mem-cap i { font-style: normal; font-size: 13px; color: #d9a441; margin-right: 4px; vertical-align: 2px }
-#main .mem-cap em { font-style: normal; color: #c3b6a8 }
-#main .mem-cap-more { color: #7a4f6d }
-#main .mem-cap.is-empty { cursor: default; font-size: 19px; color: #a79ca6 }
-#main button.mem-cap, #main button.mem-cap span, #main button.mem-cap em { font-family: AheadHand, Caveat, cursive !important }
+#main .mem-badge-more { display: block; margin-top: 12px; padding: 0 8px; font-size: 14px; font-weight: 500; line-height: 1.4; color: #625f6d; text-align: center }
+#main .mem-badge-none { margin: 16px 0 0; font-size: 14px; color: #9a909c; text-align: center }
 #main button.mem-badges { display: flex; flex-direction: column; align-items: center }
 #main .mem-badges .mem-badge-row { width: 100% }
-#main button.mem-cap span, #main button.mem-cap em { font-size: 21px; font-weight: 600 }
-#main button.mem-cap i { font-size: 13px }
+#main .mem-nowrap { white-space: nowrap }
