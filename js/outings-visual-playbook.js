@@ -74,3 +74,56 @@ function home(){
  +'<button class="dest" data-view="stay" style="--bg:#f2eaf0;--tone:#90788e"><span class="dest-art">'+roomArt()+'</span><b>Staying away</b><small>Make a new room feel ready</small><span class="arr">↗</span></button>'
  +'</div><div class="home-reassurance"><b>Different places, different questions.</b><p>This concept tests three experiences: a visual flight journey, a practical shopping decision, and an interactive hotel room.</p></div></main>';
 }
+
+const flightSteps=[
+{label:'Book',eyebrow:'BEFORE YOU GO',title:'Choose the safest seat you can.',body:'When booking, add Maya to the reservation and check the airline’s car-seat policy. A separate seat with an approved child restraint is the safest way for her to fly.',take:'Check the car seat label for certification for use in aircraft.',symbol:'ticket',detail:'seat'},
+{label:'Security',eyebrow:'AT THE AIRPORT',title:'Baby milk is allowed through.',body:()=>milkTake()+' Tell the officer at the start of screening and remove feeding supplies for separate screening.'+foodTake(),take:'Keep milk, formula and cooling accessories easy to reach.',symbol:'scan',detail:'tsa'},
+{label:'On board',eyebrow:'ON THE PLANE',title:'Comfort comes before a perfect routine.',body:'A feed or pacifier during pressure changes may help if Maya wants one. During taxi, takeoff, landing and turbulence, follow crew instructions and keep her secured in the approved restraint when she has one.',take:'Ask the crew where to change a diaper. Walk only when the seat-belt sign is off.',symbol:'plane',detail:'plane'},
+{label:'Arrive',eyebrow:'WHEN YOU LAND',title:'The schedule can settle later.',body:'A travel day may mean unusual naps and feeds. For a short trip, home timing may work; across time zones, adjust gradually while following Maya’s cues.',take:'Have a firm, flat sleep space ready if you’re staying overnight.',symbol:'home',detail:'sleep'}
+];
+const flightQuestions=[
+['What if Maya cries on the plane?','Offer comfort or a feed when appropriate. A brief walk is an option only when the seat-belt sign is off. You don’t owe anyone a perfectly quiet baby.'],
+['Where can I change her diaper?','Ask the crew which restroom has a fold-down changing table. Keep wipes and a spare outfit in your carry-on.'],
+['Can I bring the stroller to the gate?','Often yes, but gate-checking and pickup rules vary by airline and airport. Confirm the policy before flying.']
+];
+const storeQuestions=[
+['Can Maya sit in the cart’s own seat?','Only if she can sit upright securely and the cart’s seat is appropriate; buckle the restraint. A stroller or carrier is often a safer, easier choice.'],
+['Where should I put the infant car seat?','Never balance or attach an infant car seat to the top of a cart. It makes the cart more likely to tip.'],
+['What if Maya gets hungry halfway through?','Pause and feed her as you normally would. Bring your usual feeding supplies and feel free to head home.']
+];
+const stayQuestions=[
+['Can she sleep in the hotel bed with us?','No. An adult bed, couch or armchair is not a safe infant sleep surface. Use a safety-approved crib, portable crib or play yard.'],
+['What if the first night is rough?','New places can make settling harder. Use familiar steps, follow Maya’s feeding needs and prioritize safe sleep over a perfect routine.'],
+['What if the provided crib looks old?','Check for damage, missing parts, recalled models, and mattress fit. Use a suitable sleep space you trust if you’re unsure.']
+];
+function faqRows(qs,prefix){
+ return '<div class="qas">'+qs.map((q,i)=>{const k=prefix+':'+i;return '<div class="qa"><button data-faq="'+k+'" aria-expanded="'+(S.faq===k)+'">'+esc(q[0])+ico('plus',16)+'</button>'+(S.faq===k?'<p class="answer">'+esc(q[1])+'</p>':'')+'</div>'}).join('')+'</div>';
+}
+function qaSection(heading,qs,prefix){
+ return '<section class="qa-block"><span class="eyebrow">IF THINGS CHANGE</span><h2>'+esc(heading)+'</h2>'+faqRows(qs,prefix)+'</section>';
+}
+function sourceLinks(kind){
+ const links={
+ flight:[['FAA · Flying with children','https://www.faa.gov/travelers/kids-corner'],['TSA · Traveling with children','https://www.tsa.gov/travel/special-procedures/traveling-children']],
+ store:[['AAP · Shopping cart safety','https://www.healthychildren.org/English/safety-prevention/on-the-go/Pages/Safe-Shopping-With-Children.aspx']],
+ stay:[['AAP · Hotel safety','https://www.healthychildren.org/English/safety-prevention/on-the-go/Pages/Hotel-Dangers-that-Put-Baby-Safety-at-Risk.aspx'],['AAP · Safe sleep','https://www.healthychildren.org/English/ages-stages/baby/sleep/Pages/a-parents-guide-to-safe-sleep.aspx']]
+ };
+ return '<div class="sources">Trusted guidance'+links[kind].map(x=>'<a href="'+x[1]+'" target="_blank" rel="noopener noreferrer">'+esc(x[0])+' ↗</a>').join('')+'</div>';
+}
+function flight(){
+ const d=flightSteps[S.step];
+ return '<main class="screen">'+head('Flying with Maya','Everything you need to feel ready—from booking to landing.','YOUR OUTING PLAYBOOK')
+ +'<section class="play-hero"><div class="play-hero-head"><div><span class="eyebrow">THE WHOLE JOURNEY</span><h2>Your flight at a glance</h2></div><small>Tap any moment</small></div>'
+ +'<div class="map-illustration">'+flightArt()+'</div><div class="map-steps" aria-label="Flight stages">'+flightSteps.map((x,i)=>'<button class="map-step'+(S.step===i?' selected':'')+'" data-step="'+i+'" aria-pressed="'+(S.step===i)+'"><span class="num">'+(i+1)+'</span><b>'+x.label+'</b></button>').join('')+'</div></section>'
+ +'<section class="play-main"><span class="eyebrow">TWO THINGS TO KNOW FIRST</span><h2 class="play-section-title">The important decisions</h2><div class="big-things">'
+ +'<button class="big-thing" data-sheet="seat"><span class="thing-ico">'+ico('shield',18)+'</span><span class="pill">SAFEST OPTION</span><b>Her own airplane seat</b><small>With an aircraft-approved child restraint.</small><span class="more">See the options ↗</span></button>'
+ +'<button class="big-thing" data-sheet="tsa"><span class="thing-ico">'+ico('milk',18)+'</span><span class="pill">GOOD TO KNOW</span><b>Baby milk over 3.4 oz? Yes.</b><small>Breast milk, formula and feeding supplies have exceptions.</small><span class="more">What TSA allows ↗</span></button>'
+ +'</div></section>'
+ +'<section class="topic" id="moment"><div class="topic-header"><div><span class="eyebrow">ZOOM IN</span><h2>At '+esc(d.label.toLowerCase())+'</h2></div><small>'+(S.step+1)+' of 4</small></div>'
+ +'<div class="scene-card"><div class="scene-card-head"><span class="scene-number">'+ico(d.symbol,22)+'</span><div><span class="eyebrow">'+esc(d.eyebrow)+'</span><h3>'+esc(d.title)+'</h3></div></div>'
+ +'<p class="scene-body">'+esc(typeof d.body==='function'?d.body():d.body)+'</p><div class="scene-focus"><b>ONE THING TO REMEMBER</b><span>'+esc(d.take)+'</span></div>'
+ +'<div class="scene-actions"><button data-sheet="'+d.detail+'">See the details '+ico('chev',15)+'</button></div></div></section>'
+ +qaSection('What if…?',flightQuestions,'flight')
+ +'<button class="subsection-link" data-sheet="pack"><div><b>What belongs in your carry-on?</b><span>Just what you’ll want within reach.</span></div>'+ico('chev',16)+'</button>'
+ +'<button class="reference-link" data-sheet="guide:flight">Read the complete flying guide ↗</button>'+sourceLinks('flight')+'</main>';
+}
