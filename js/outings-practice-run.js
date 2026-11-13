@@ -131,6 +131,17 @@ const choicePanel=()=>{
   +(selected?'<p class="real-choice-result" role="status">'+pretty(d.options.find(x=>x.id===selected).detail)+'</p>':'')+'</div>';
 };
 
+
+const SOURCES={
+flight:[['FAA · Child restraint systems','https://www.faa.gov/travelers/fly_children/about-child-restraint-systems'],['CDC · Traveling while nursing or pumping','https://www.cdc.gov/infant-toddler-nutrition/breastfeeding/travel-recommendations.html']],
+road:[['AAP · Car-seat travel with babies','https://www.healthychildren.org/English/tips-tools/ask-the-pediatrician/Pages/Is-it-safe-for-my-baby-to-travel-in-a-car-seat-a-few-hours-at-a-time.aspx']],
+grocery:[['AAP · Shopping cart safety','https://www.healthychildren.org/English/safety-prevention/on-the-go/Pages/Safe-Shopping-With-Children.aspx']],
+overnight:[['AAP · Keeping your sleeping baby safe','https://www.healthychildren.org/English/ages-stages/baby/sleep/Pages/a-parents-guide-to-safe-sleep.aspx']],
+water:[['CDC · Travel with infants and children','https://www.cdc.gov/yellow-book/hcp/family-travel/traveling-safely-with-infants-and-children.html']],
+abroad:[['CDC · International travel with infants and children','https://www.cdc.gov/yellow-book/hcp/family-travel/traveling-safely-with-infants-and-children.html'],['CDC · Travel vaccine recommendations','https://www.cdc.gov/yellow-book/hcp/family-travel/travel-vaccine-recommendations-for-infants-and-children.html']],
+restaurant:[['AAP · Choking prevention and safe feeding','https://www.healthychildren.org/English/health-issues/injuries-emergencies/Pages/Choking-Prevention.aspx']]
+};
+
 const tiny=(key)=>key==='flight'?'An airport feels less intimidating when you know the sequence.':key==='road'?'The drive can bend around Maya, not the other way around.':key==='overnight'?'The bedtime routine comes with you.':key==='water'?'The hands-on rule matters more than any gear.':'You can picture this before you go.';
 function header(){
  return '<header class="appbar"><button class="brand" data-home aria-label="Ahead, return to Outings home">ahead<em>.</em></button>'
@@ -220,7 +231,8 @@ function sheetData(){
  if(state.sheet==='answers'){
   const d=JOURNEYS[state.key],qs=d.items.map(s=>[s.ask,s.answer]).concat(d.more||[]);
   return {kicker:'WHEN REAL LIFE HAPPENS',title:'Quick answers',body:'<p>Open any of these while planning or while you’re out.</p><div class="sheet-answers">'
-    +qs.map(x=>'<div class="sheet-answer"><b>'+pretty(x[0])+'</b><p>'+pretty(value(x[1]))+'</p></div>').join('')+'</div>'};
+    +qs.map(x=>'<div class="sheet-answer"><b>'+pretty(x[0])+'</b><p>'+pretty(value(x[1]))+'</p></div>').join('')+'</div>'
+    +(SOURCES[state.key]?'<div class="sheet-group">TRUSTED SOURCES</div><div class="sources">'+SOURCES[state.key].map(x=>'<a href="'+x[1]+'" target="_blank" rel="noopener noreferrer">'+pretty(x[0])+' ↗</a>').join('')+'</div>':'')};
  }
  if(state.sheet.startsWith('gear:'))return gearSheet(state.sheet.slice(5));
  return {kicker:'OUTINGS',title:'Useful reference',body:'<p>Go at your own pace.</p>'};
@@ -271,5 +283,7 @@ root.addEventListener('change',function(e){
 });
 document.addEventListener('keydown',function(e){if(e.key==='Escape'&&state.sheet){state.sheet=null;render()}});
 window.__outingPreview={getState:()=>({...state}),goto:key=>goto(key),setAge:n=>{state.age=n;render()},getJourneys:()=>Object.keys(JOURNEYS)};
+// Deep link directly to a real-life outing rather than the category directory.
+try { const params=new URLSearchParams(window.location.search); const selected=params.get('trip'); if(JOURNEYS[selected]) {state.key=selected;state.page='journey';state.moment=0;} } catch(e) {}
 render();
 })();
