@@ -2,6 +2,9 @@
 <html lang="en"><head><base href="../">
 <style>
 body{padding-top:67px!important}
+body.oa-embed{padding-top:0!important}
+body.oa-embed .oa-preview-toolbar{display:none!important}
+body.oa-embed #shell{min-height:100dvh}
 #shell{min-height:calc(100dvh - 67px)}
 .oa-preview-toolbar{position:fixed;z-index:1600;top:0;left:0;right:0;min-height:64px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px;padding:10px 14px;background:#272c29;color:white;box-shadow:0 4px 20px #1e27251d;font:12px/1.25 Figtree,-apple-system,Arial,sans-serif}
 .oa-preview-toolbar>strong{font-size:12px;letter-spacing:-.1px;margin-right:3px;white-space:nowrap}
@@ -76,6 +79,9 @@ body{padding-top:67px!important}
 // This page deliberately renders the existing Ahead app, not a re-created mock.
 // Demo data live in memory and never write to the real baby profile.
 (function(){
+  const opts=new URLSearchParams(location.search);
+  const embed=opts.get('embed')==='1';
+  if(embed)document.body.classList.add('oa-embed');
   window.OA_COMPANION = true;
   function setDemoAge(m) {
     const n=Number(m),d=new Date(NOW.getFullYear(),NOW.getMonth()-n,Math.min(12,NOW.getDate()));
@@ -94,9 +100,17 @@ body{padding-top:67px!important}
     document.getElementById('oa-after').setAttribute('aria-pressed',String(enabled));
     render();
   };
-  setDemoAge(6);
-  window.oaCompare(true);
-  openPage('chg:Out and about:s');
+  const age=Number(opts.get('age'));
+  setDemoAge([2,6,10].includes(age)?age:6);
+  const feed=opts.get('feed');
+  if(['Breast milk','Formula','Both'].includes(feed))window.oaDemoFeed(feed);
+  const enable=opts.get('mode')!=='original';
+  window.oaCompare(enable);
+  const available=['errands','road','fly','away','abroad','water'];
+  const dest=opts.get('view');
+  const route=available.includes(dest)?'chg:Out and about:d:'+dest:'chg:Out and about:s';
+  openPage(route);
+  if(enable&&opts.get('open')==='1'&&available.includes(dest)&&dest!=='errands')window.oaKitOpen(dest);
 })();
 </script></body>
 </html>
