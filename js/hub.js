@@ -150,7 +150,7 @@
   }
   function comingUp(cat, view) {
     const D = C().DATA[cat], N = D.CH[view + 1];
-    if (!N) { const A = D.CH[view].after; return A ? next('Next · after the first birthday', cat === 'Feeding' && meth() === 'nurse' ? 'Cow’s milk, from a cup' : A[1], go(`chg:${cat}:d:after`), '', cat === 'Sleep' ? 'A refused nap here and there is usually a phase.' : 'Whole milk from a cup, and bottles start to go.') : ''; }
+    if (!N) { const A = D.CH[view].after; return A ? next('Next · after the first birthday', cat === 'Feeding' && meth() === 'nurse' ? 'Cow’s milk, from a cup' : A[1], go(`chg:${cat}:d:after`), '', cat === 'Sleep' ? 'One refused nap is usually just a phase.' : 'Whole milk from a cup, and bottles start to go.') : ''; }
     let w = N.when.replace(/^Usually /, '').replace(/^around /, '');
     if (/weeks–/.test(w)) w = w.split('–')[0];
     // Inside Milk feeds, the next step keeps the same stage name, so name what changes instead.
@@ -712,11 +712,10 @@
       [['moon', 'Waking again', 'Wait a minute, then help', 'The 4-month regression, and what helps', 'chg:Sleep:d:regress'], ['heart', 'Falling asleep', 'Down drowsy, some of the time', 'Practice once a day, if you want', 'chg:Sleep:d:settle4'], ['clock', 'Naps', 'Naps settle into set times', 'And bedtime moves earlier', 'chg:Sleep:d:predictable']],
       [['crib', 'Where {s} sleeps', 'Your room until 6 months', 'Bassinet to crib, and {p} own room', 'chg:Sleep:d:where'], ['book', 'Sleep training', 'A family choice, not a must', 'When, and gentle to firmer ways', 'chg:Sleep:settle'], ['book', 'Bedtime', 'Same time, same routine', 'Four calm steps, now at a set time', 'chg:Sleep:d:routine']],
       [answers.twoNaps === 'Yes' ? ['moon', 'The longer stretch', 'Nights keep getting longer', 'What to expect by {p} first birthday', 'chg:Sleep:d:stretch'] : ['clock', 'Two naps', 'Ready for two naps?', 'Signs, and how to switch', 'chg:Sleep:d:catnap'], ['moon', 'Night feeds', 'Fewer, as days get fuller', 'How night feeds taper', 'chg:Sleep:d:nightfeeds'], ['book', 'Bedtime', 'Add brushing once teeth come', 'The same steps, plus a toothbrush', 'chg:Sleep:d:routine']],
-      [['moon', 'Night waking', 'When waking comes back', 'New skills, teeth, and missing you', 'chg:Sleep:d:nightwake'], ['heart', 'Bedtime goodbyes', 'The same short goodbye', 'Separation, and bedtime protests', 'chg:Sleep:d:goodbye'], ['crib', 'Turning 1', 'A small comfort toy is fine after 12 months', 'Sleep after the first birthday', 'chg:Sleep:d:lovey']]][st];
+      [['moon', 'Night waking', 'When waking comes back', 'New skills, teeth, and missing you', 'chg:Sleep:d:nightwake'], ['heart', 'Bedtime goodbyes', 'The same short goodbye', 'Separation, and bedtime protests', 'chg:Sleep:d:goodbye']]][st];
     const COL = { moon: ['#e3e6f6', '#3d4a7a'], sun: ['#fff3dc', '#8a6a2a'], clock: ['#fff3dc', '#8a6a2a'], book: ['#f6e8f3', '#7a4f74'], heart: ['#f6e8f3', '#7a4f74'], sack: ['#e7effc', '#46638c'], crib: ['#e7effc', '#46638c'] };
     const r = ([icon, eb, title, sub, to]) => row({ cat, icon, title, sub, onclick: `openPage('${to}')` }).replace('<span class="hub-row-copy">', `<span class="hub-row-copy"><small class="hub-row-eyebrow">${F(eb)}</small>`).replace('class="hub-row"', `class="hub-row sm-row" style="--sm-bg:${COL[icon][0]};--sm-ink:${COL[icon][1]}"`);
-    const rough = `<button class="hub-rough-card" onclick="${go('chg:Sleep:d:rough')}"><svg class="hub-rough-stars" viewBox="0 0 120 60" aria-hidden="true"><circle cx="18" cy="14" r="1.6"/><circle cx="52" cy="8" r="1.1"/><circle cx="88" cy="18" r="1.4"/><circle cx="108" cy="6" r="1"/><circle cx="70" cy="44" r="1.1"/><circle cx="30" cy="48" r="1"/></svg><span class="hub-rough-moon" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></svg></span><span class="hub-rough-copy"><b>${F('Rough day or night?')}</b><small>${F(st <= 1 ? 'Crying a lot, up a lot, days and nights mixed up' : 'Waking a lot, short naps, up too early')}</small></span>${chev}</button>`
-      + (st >= 1 ? more('Traveling, or the clocks changing?', go('chg:Sleep:d:away')) : '');   // Nov 13: one tap, not two
+    const rough = `<button class="hub-rough-card" onclick="${go('chg:Sleep:d:rough')}"><svg class="hub-rough-stars" viewBox="0 0 120 60" aria-hidden="true"><circle cx="18" cy="14" r="1.6"/><circle cx="52" cy="8" r="1.1"/><circle cx="88" cy="18" r="1.4"/><circle cx="108" cy="6" r="1"/><circle cx="70" cy="44" r="1.1"/><circle cx="30" cy="48" r="1"/></svg><span class="hub-rough-moon" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></svg></span><span class="hub-rough-copy"><b>${F('Rough day or night?')}</b><small>${F(st <= 1 ? 'Crying a lot, up a lot, days and nights mixed up' : 'Waking, short naps, travel')}</small></span>${chev}</button>`;
     // Safe sleep: one quiet card under Rough day, like the concept. A safety step that's due now shows on it.
     const sw = now && swaddleDue(), mt = now && (mattressLowestDue() || mattressDue());
     const due = sw ? [rolled() ? 'Stop swaddling now: Maya’s ' + (answers.rollDirection === 'Trying to roll' ? 'trying to roll' : 'rolling') : 'Stop swaddling at the first try to roll', 'chg:Sleep:d:swaddleoff'] : mt ? [mattressLowestDue() ? (answers.pullUp === 'Yes' ? 'Set the crib mattress to its lowest, now that Maya pulls up' : 'Set the crib mattress to its lowest') : answers.crawl === 'Yes' ? 'Now that Maya crawls, lower the crib mattress' : answers.sit === 'Yes' ? 'Now that Maya sits, lower the crib mattress' : 'Lower the crib mattress', 'chg:Sleep:d:mattress'] : null;
@@ -758,7 +757,7 @@
     }
     const D = C().DATA.Sleep, N = D.CH[view + 1], A = D.CH[view].after;
     if (N) { const a = (STAGE_TABLE.Sleep.stages[view + 1]?.age || '').replace(/^(From|Starts) /, ''), w = /wks/.test(a) ? '6 weeks' : /^\d+$/.test(a.split('–')[0]) ? a.split('–')[0] + ' months' : a.split('–')[0]; h += next(view === 2 && age >= 6 ? 'Next · once Maya is on two naps most days' : `Next · usually from ${w.replace(/^(\d+)$/, '$1 months')}${sleepAdj() ? ' adjusted age' : ''}`, N.rail, `chgGo('chg:Sleep:s:${view + 1}')`, '', ['Watch for one longer stretch, often at night.', 'Watch for longer awake time before naps.', 'Watch for the third nap getting hard to fit in.'][view] || ''); }
-    else if (A) h += next('Next · after the first birthday', A[1], go('chg:Sleep:d:after'), '', 'A refused nap here and there is usually a phase.');
+    else if (A) h += next('Next · after the first birthday', A[1], go('chg:Sleep:d:after'), '', 'One refused nap is usually just a phase.');
     return frame(cat, view, cur, h);
   }
 
@@ -880,8 +879,8 @@
         + (() => { const mo = m(), steps = [
             [0, 'Newborn', 'Swaddle until the first try to roll', 'Arms in, hips loose', 'chg:Sleep:d:swaddle'],
             [2, '2–4 months', 'Stop swaddling', 'At the first try to roll, switch to a sleep sack', 'chg:Sleep:d:swaddleoff', 'sleep-rolling'],
-            [3, 'Once {s} {roll|rolls}', 'Keep putting {o} down on {p} back', 'Once {s} {roll|rolls} both ways, let {o} stay', 'chg:Sleep:d:rolling'],
-            [4, 'Once {s} {roll|rolls}', 'Bassinet to crib', 'Or at its weight limit, whichever comes first', 'chg:Sleep:d:where'],
+            [3, 'Once {s} {roll|rolls}', 'Bassinet to crib', 'Or at its weight limit, whichever comes first', 'chg:Sleep:d:where'],
+            [4, 'Rolls both ways', 'Let {o} stay on {p} tummy', 'Still put {o} down on {p} back each time', 'chg:Sleep:d:rolling'],
             [5, 'Before {s} {sit|sits}', 'Lower the crib mattress', 'Then lowest before {s} {pull|pulls} up', 'chg:Sleep:d:mattress', 'sleep-crib-height'],
             [6, '6 months', 'Own room, if you like', 'Room-share until then', 'chg:Sleep:d:where'],
             [12, '12 months', 'A small comfort toy is fine', 'Still no pillows or heavy blankets', 'chg:Sleep:d:lovey']];

@@ -1593,8 +1593,4 @@ label:has(> .hub-photo-input:focus-visible) { outline: 2px solid #884866; outlin
 /* Everyday care redesign (Nov 13): quiet links under the rows and tiles */
 #main .care-v2 .care-all-how { display: block; margin: 2px 0 18px; padding: 4px 2px }
 #main .hub-rough-link:not(:first-child) { border-top: 1px solid var(--line) }   /* a link row after the others keeps the divider (Nov 13) */
-/* Nov 13: "A good fit if", "Keep in mind" and "When to start looking" as three plain rows in one card, not boxes in columns */
-#main .cc-fit { grid-template-columns: 1fr; gap: 0; padding: 4px 14px }
-#main .cc-fit > div, #main .cc-fit > div + div { background: none !important; padding: 11px 0; border-radius: 0 }
-#main .cc-fit > div + div { border-top: 1px solid var(--line, #e7e1d8) }
-#main .hub-detail .cc-fit .cc-when { padding: 11px 0 }
+
