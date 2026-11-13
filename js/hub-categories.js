@@ -80,11 +80,11 @@
       4: { t: 'It’s starting to feel like a conversation', lead: '{S} isn’t just watching you anymore. {S’s} practicing how to get your attention, and what happens when {s} does.', idea: 'sound-answer', w: 'Teaches {o} that {p} sounds get an answer',
         n: [['Social', 'The first chuckles', 'A silly face or a tickle may get a little laugh.', 'Chuckles during play'], ['Thinking', '{S} studies {p} own hands', '{P} fingers can be as interesting as any toy.', 'Studies their hands'], ['Movement', 'Swiping at toys', '{S} may bat at a toy, or hold one you put in {p} hand.', 'Swipes at toys']] },
       6: { t: '{S’s} discovering {s} can make things happen', lead: '{S} {spot|spots} something interesting, {reach|reaches} for it, and {find|finds} out what it does.', idea: 'floor-drum', w: 'Lets {o} hear what {p} hands can do',
-        n: [['Social', 'A real laugh out loud', 'A game, a funny face or your voice can set it off.', 'Laughs'], ['Talking', 'A sound gets a sound back', '{S} {make|makes} a noise, {wait|waits}, and may answer you again.', 'Takes turns making sounds with you'], ['Movement', 'A roll from tummy to back', 'The world looks different from there.', 'Rolls tummy to back']] },
+        n: [['Social', 'A real laugh out loud', 'A game, a funny face or your voice can set it off.', 'Laughs'], ['Talking', '{S} {answer|answers} your sounds with {p} own', '{S} {make|makes} a noise, {wait|waits}, and may answer you again.', 'Takes turns making sounds with you'], ['Movement', 'A roll from tummy to back', 'The world looks different from there.', 'Rolls tummy to back']] },
       9: { t: 'Hidden things don’t disappear for {o} anymore', lead: 'A toy drops, and {s} looks for it. You leave the room, and {s} reacts.', idea: 'hidden-toy', w: 'Plays with {p} new idea: hidden isn’t gone',
-        n: [['Social', '{S} turns when you call {p} name', '{S} {know|knows} it’s {o}, even from across the room.', 'Looks when you call their name'], ['Talking', 'Babbling that sounds like a speech', 'Listen for strings like “mamama” or “bababa”.', 'Makes repeated babbles'], ['Movement', 'Sitting frees both hands', '{S} may sit on {p} own and pass a toy from hand to hand.', 'Passes objects between hands']] },
+        n: [['Social', '{S} turns when you call {p} name', '{S} {know|knows} it’s {o}, even from across the room.', 'Looks when you call their name'], ['Talking', 'Babbling that sounds like a speech', 'Listen for strings like “mamama” or “bababa”.', 'Makes repeated babbles'], ['Movement', 'Sitting and passing a toy hand to hand', '{S} may sit on {p} own and pass a toy from hand to hand.', 'Passes objects between hands']] },
       12: { t: '{S} {have|has} ideas, and {want|wants} to do it again', lead: 'Put a block in a cup, take it out, repeat. Ordinary moments are turning into experiments.', idea: 'put-in', w: 'An experiment {s} can repeat as often as {s} {like|likes}',
-        n: [['Social', 'Games {s} knows by heart', '{S} may join in with pat-a-cake or peekaboo.', 'Joins games like pat-a-cake'], ['Talking', 'A wave that says something', '{S} may wave bye-bye, or have a name for you.', 'Waves goodbye'], ['Movement', 'The sofa becomes a path', '{S} may pull up to stand and step along the furniture.', 'Pulls up to stand']] }
+        n: [['Social', 'Joining in with pat-a-cake', '{S} may join in with pat-a-cake or peekaboo.', 'Joins games like pat-a-cake'], ['Talking', 'Waving bye-bye', '{S} may wave bye-bye, or have a name for you.', 'Waves goodbye'], ['Movement', 'Pulling up and stepping along the sofa', '{S} may pull up to stand and step along the furniture.', 'Pulls up to stand']] }
     }[ref] || { t: st.title, lead: st.body, n: [] };
     const hb = window.hubBabyify || (x => x), T = x => hb(F(x));
     const other = live() && ref !== now;
@@ -93,7 +93,7 @@
     let b = css + `<section class="dev-hero dvx-hero"><p class="dev-hero-eyebrow">${F(STAGE_TABLE.Development.stages[devKeys.indexOf(ref)].label)}</p><h1>${T(IN.t)}</h1><p class="dev-hero-lead">${T(IN.lead)}</p><div class="dvx-art" aria-hidden="true">${window.devScene ? devScene(ref) : (window.devHeroArt ? devHeroArt(ref) : '')}</div></section>`;
     // Three little things to notice. Each opens its area at that milestone, where "Seen it" is one deliberate tap (Nov 12). The area tiles below are the one way into each area (Nov 12).
     const tint = d => { const c = window.devTileColors ? devTileColors(d) : null; return c ? `--dt-bg:${c[0]};--dt-ink:${c[1]}` : ''; };
-    if (IN.n.length) b += `<h2 class="hub-h2" style="margin:6px 2px 2px">${F('Three little things to notice')}</h2><section class="dvx-notice">${IN.n.map(([d, t, sub, l]) => `<button class="dvx-n" style="${tint(d)}" onclick="devFocusSkill('${journeySkillKey(l)}');openPage('development-domain:${ref}:${d}')"><span class="dvx-n-ic">${h.art(DOMAIN_ICONS[d], 'Development')}</span><span class="dvx-n-copy"><b>${T(t)}</b><small>${T(sub)}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`).join('')}</section>`;
+    if (IN.n.length) b += `<h2 class="hub-h2" style="margin:6px 2px 2px">${F('Three things to look for')}</h2><section class="dvx-notice">${IN.n.map(([d, t, sub, l]) => `<button class="dvx-n" style="${tint(d)}" onclick="devFocusSkill('${journeySkillKey(l)}');openPage('development-domain:${ref}:${d}')"><span class="dvx-n-ic">${h.art(DOMAIN_ICONS[d], 'Development')}</span><span class="dvx-n-copy"><b>${T(t)}</b></span><span class="hub-chev" aria-hidden="true">›</span></button>`).join('')}</section>`;
     // One thing to try together. Area pages each have their own idea, never this one.
     const all = {}; for (let mm = 0; mm <= 12; mm++) { try { const x = playStageModel(mm); [...(x.primary || []), ...(x.more || [])].forEach(a => { if (!all[a.id]) all[a.id] = a; }); } catch (e) {} }
     const A = all[IN.idea];
@@ -117,10 +117,11 @@
       return `<button class="dvx-area" style="${tint(d)}" onclick="openPage('development-domain:${ref}:${d}')"><small>${DOMAIN_TITLES[d]}</small><b>${T(name(ex))}</b><span>${foot} ›</span></button>`; }).join('')}</section>`
       + `<button class="dvx-all" onclick="openPage('chg:Development:d:all:${ref}')">${F('All milestones for this age')} →</button>`;
     // Coming into view: the next checkpoint, in a line.
-    const NEXT = { 2: 'Coos, chuckles and swiping at toys', 4: 'Reaching, laughing out loud and rolling', 6: 'Sitting on {p} own, babbling and looking for dropped toys', 9: 'Waving, copying you and pulling up' };
+    // Next (design system, Nov 13): "Next · " and when, the next stage's name, and one line on what to watch for or get ready for.
+    const NEXT_LINE = { 2: 'Watch for {o} to coo back when you pause', 4: 'Watch for {o} to grab a toy, not just bat at it', 6: 'Watch for {o} to look for a toy {s} {drop|drops}', 9: 'Wave and clap often, so {s} {have|has} something to copy' };
     const nextRef = devKeys[devKeys.indexOf(ref) + 1];
-    if (nextRef) b += h.next(`Coming into view · by ${nextRef === 12 ? '12 months' : nextRef + ' months'}`, T(NEXT[ref] || DEV_STAGES[nextRef].title), `openPage('development-stage:${nextRef}')`);
-    else b += h.next('After the first birthday', 'First steps usually come between 12 and 15 months', `openPage('development-domain:12:Movement')`);
+    if (nextRef) b += h.next(`Next · by ${nextRef} months`, DEV_STAGES[nextRef].title, `openPage('development-stage:${nextRef}')`, '', NEXT_LINE[ref] ? T(NEXT_LINE[ref]) : '');
+    else b += h.next('Next · after the first birthday', 'First steps', `openPage('development-domain:12:Movement')`);
     return frame('Development', `data-development-guide="${ref}"`, pills + ageNote, b);
   };
 
