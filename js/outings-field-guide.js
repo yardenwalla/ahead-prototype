@@ -56,7 +56,7 @@
     return '<div class="quiet-category hub-page ot-page ot-home" data-overview="'+CAT+'" style="'+yearTheme(CAT)+'">'
       +monthlyPageHeader(CAT)
       +'<section class="ot-home-hero"><div class="ot-eyebrow">'+F('OUTINGS & TRAVEL · '+(m===0?'NEWBORN':m+' MONTHS'))+'</div>'
-      +'<h1>'+F('A little more of the world.')+'</h1><p>'+F('The confidence to go somewhere with Maya—and know what matters when you do.')+'</p>'
+      +'<h1>'+F('A little more of the world.')+'</h1><p>'+F('A practical guide to leaving the house with Maya, from the first walk to a long flight.')+'</p>'
       +'<div class="ot-home-art">'+pic('errands')+'</div>'
       +'<div class="ot-discovery"><small>'+F('GOOD TO KNOW AT THIS STAGE')+'</small><b>'+F(d[0])+'</b><span>'+F(d[1])+'</span></div></section>'
       +'<section class="ot-section ot-choose"><div class="ot-sec-head"><div class="ot-kicker">'+F('CHOOSE YOUR OUTING')+'</div><h2>'+F('Where are you headed?')+'</h2></div>'
@@ -142,7 +142,7 @@
           ['What if grandparents have older gear?','Check that the crib or play yard meets current standards and has no missing parts. Bring your own if uncertain.']
         ],
         pack:[['Sleep sack','Use what Maya normally sleeps in.'],['Appropriate fitted sheet','Only a sheet designed for her crib or play yard.'],['Dim light for night feeds','Useful in an unfamiliar room.']],
-        extra:'The original guide includes a tap-to-check room safety list, useful once you arrive.',
+        extra:'There’s a room safety checklist you can use when you arrive.',
         source:['AAP · Safe sleep','https://www.healthychildren.org/English/ages-stages/baby/sleep/Pages/default.aspx']
       },
       water:{
@@ -177,7 +177,7 @@
           ['What if Maya becomes ill abroad?','Seek local medical advice for fever, dehydration or worsening illness. Trouble breathing or being hard to wake needs urgent attention.']
         ],
         pack:[['Thermometer and approved medicines','Ask your care team which medicines and dosing supplies to bring.'],['Car seat for transfers','Do not assume taxis have an appropriate infant seat.'],['Copies of essential documents','Carry important travel and medical details with you.']],
-        extra:'The full reference guide has details on food, mosquitoes, and what to do if someone can’t attend the passport appointment.',
+        extra:'There are also details about food, mosquitoes and passport consent in the complete guide.',
         source:['CDC · Travel safely with children','https://www.cdc.gov/yellow-book/hcp/family-travel/traveling-safely-with-infants-and-children.html']
       }
     };
@@ -186,7 +186,7 @@
   const fact=(d,id)=>'<section class="ot-keyfact"><div class="ot-kicker">'+F(d.label)+'</div><h2>'+F(d.focus)+'</h2>'
       +(d.compare?'<div class="ot-compare">'+d.compare.map((x,i)=>'<div class="ot-comparison'+(i===0?' best':'')+'"><small>'+F(x[0])+'</small><b>'+F(x[1])+'</b><span>'+F(x[2])+'</span></div>').join('')+'</div>':'')
       +'<p>'+F(d.why)+'</p></section>';
-  const timeline=d=>'<section class="ot-section ot-path"><div class="ot-sec-head"><div class="ot-kicker">'+F('STEP BY STEP')+'</div><h2>'+F(d.moments.length>3?'Your trip, in order':'How the outing goes')+'</h2><p>'+F('The important moments, from leaving home to arriving.')+'</p></div>'
+  const timeline=d=>'<section class="ot-section ot-path"><div class="ot-sec-head"><div class="ot-kicker">'+F('STEP BY STEP')+'</div><h2>'+F(d.moments.length>3?'Your trip, in order':'How the outing goes')+'</h2><p>'+F('Know what to do at each point, without planning every minute.')+'</p></div>'
     +'<div class="ot-steps">'+d.moments.map((x,i)=>'<details class="ot-step"'+(i===0?' open':'')+'><summary><span class="ot-step-dot">'+(i+1)+'</span><span class="ot-step-copy"><small>'+F(x[0])+'</small><b>'+F(x[1])+'</b></span><span class="ot-step-toggle" aria-hidden="true">＋</span></summary><p>'+F(x[2])+'</p></details>').join('')+'</div></section>';
   const questions=d=>'<section class="ot-section ot-questions"><div class="ot-sec-head"><div class="ot-kicker">'+F('IF THINGS CHANGE')+'</div><h2>'+F('Good to know along the way')+'</h2></div>'
     +'<div class="ot-q-list">'+d.ask.map(x=>'<details class="ot-question"><summary>'+F(x[0])+'<span aria-hidden="true">＋</span></summary><p>'+F(x[1])+'</p></details>').join('')+'</div></section>';
@@ -201,7 +201,7 @@
     +'<div class="ot-cover"><div class="ot-kicker">'+F(titles[id]+' · '+(m===0?'newborn':m+' months'))+'</div><h1>'+F(d.title)+'</h1><p>'+F(d.lead)+'</p>'
     +'<div class="ot-cover-picture">'+pic(id)+'</div></div>'
     +fact(d,id)+timeline(d)+questions(d)+packing(d)
-    +'<section class="ot-section ot-reference"><p>'+F(d.extra)+'</p><button onclick="'+original(id)+'">'+F('See every detail in the original guide')+' <span aria-hidden="true">›</span></button>'
+    +'<section class="ot-section ot-reference"><p>'+F(d.extra)+'</p><button onclick="'+original(id)+'">'+F('See the complete guide')+' <span aria-hidden="true">›</span></button>'
     +'<a href="'+esc2(d.source[1])+'" target="_blank" rel="noopener noreferrer">'+F('Source: '+d.source[0])+' ↗</a></section>'
     +'</div>';
   }
