@@ -1569,3 +1569,16 @@ label:has(> .hub-photo-input:focus-visible) { outline: 2px solid #884866; outlin
 #main .mem-grow-play span { font-size: 11px }
 @keyframes memGrowIn { from { opacity: 0; transform: translateY(14px) rotate(0deg) scale(.96) } to { opacity: 1; transform: rotate(var(--tilt)) } }
 @media (prefers-reduced-motion: reduce) { #main .mem-grow-pic { animation: none } }
+/* Memories, top to bottom: then and now, every month, the newest page of the book. Each section opens the same way. */
+#main .mem-sec { margin: 0 0 22px }
+#main .mem-sec .mem-head { align-items: flex-end; margin: 0 0 12px }
+#main .mem-sec .mem-head h2 { font-size: 17px; font-weight: 700 }
+#main .mem-hsub { margin: 2px 0 0; font-size: 13.5px; font-weight: 500; color: #7d7568 }
+#main .mem-head-link { flex: none; padding: 4px 0; border: 0; background: none; font: inherit; font-size: 14px; font-weight: 650; color: #7a4f6d; cursor: pointer }
+#main .mem-sec .mem-stories { margin-bottom: 0 }
+#main .mem-latest .bk-page { margin: 0 }
+#main .mem-save { display: block; margin: 12px auto 0; padding: 10px 20px; border: 1px solid #ddd2c4; border-radius: 999px; background: #fffdf9; color: #4d443b; font: inherit; font-size: 14.5px; font-weight: 650; cursor: pointer }
+#main .mem-sec .mem-yearcard { margin-bottom: 12px }
+#main .mem-latest .bk-photo { display: none }
+#main .mem-page .mem-latest h2.bk-month { margin: 0 0 6px; font-family: AheadHand, Caveat, cursive; font-size: 34px !important; font-weight: 600 !important; line-height: 1.05; color: #2b2840 }
+#main .mem-sec button.mem-head-link { color: #7a4f6d }

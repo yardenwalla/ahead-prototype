@@ -114,14 +114,6 @@
     const addArt = '';
     const bookCard = `<div class="mem-bookcard${addArt ? ' has-add' : ''}"><button class="mem-bookcard-open" onclick="openPage('${firsts.length ? 'chg:Timeline:firsts' : 'chg:Timeline:milestone'}')">${art}<span class="mem-bookcard-copy"><b>${esc2(`${name()}’s memory book`)}</b><small>${esc2(count)}</small>${firsts.length ? `<em>${esc2('Open the book')} ›</em>` : ''}</span></button>${addArt}<button class="mem-bookcard-save" onclick="openPage('chg:Timeline:milestone')">＋ Save a first</button></div>`;
 
-    // Nothing saved yet: a welcoming card, with the year's designs waiting underneath.
-    if (!have.length && !firsts.length) {
-      const P = typeof babyPronouns === 'function' ? babyPronouns() : { p: 'their' };
-      // The memory book leads; the months underneath say what they're for in one line, and every month has its +.
-      b += bookCard + `<div class="mem-head"><h2>Month by month</h2></div><p class="mem-sub">${esc2(`Add a photo each month. By ${P.p} first birthday, all twelve hang together on one page.`)}</p><div class="mem-stories" tabindex="0" role="region" aria-label="Month by month photos">${months.map(m => card(m)).join('')}</div>`;
-      b += `<p class="hub-foot">Photos and entries stay on this device.</p></div>`;
-      return `<div class="quiet-category hub-page hub-timeline-page" style="${yearTheme('Memories')}">${b}</div>`;
-    }
     // Look how you've grown: her first photo and her newest, taped side by side, and the year plays from here.
     // It changes every time a new month's photo goes in, so the tab has something new to see each month.
     const grow = (() => {
@@ -132,7 +124,23 @@
       const pic = (m, cls, tilt) => `<button class="mem-grow-pic ${cls}" style="--tape:${TAPE[m]};--tilt:${tilt}deg" onclick="storyShare(${m})" aria-label="Open the ${L(m)} card"><i></i><img src="${photo(m)}" alt=""><span class="mem-grow-cap">${esc2(W[m])}</span></button>`;
       return `<section class="mem-grow" aria-label="${esc2(`${name()} then and now`)}"><div class="mem-grow-pics">${pic(then, 'is-then', -6)}<svg class="mem-grow-arrow" viewBox="0 0 60 40" aria-hidden="true"><path d="M6 30 C 18 6, 38 4, 52 16" fill="none" stroke="#b7a48d" stroke-width="2.4" stroke-linecap="round"/><path d="M44 10 L53 17 L43 21" fill="none" stroke="#b7a48d" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>${pic(nowM, 'is-now', 5)}</div><p class="mem-grow-line">${esc2(`Look how you’ve grown, ${name()}`)}</p><button class="mem-grow-play" onclick="memPlay()"><span aria-hidden="true">▶</span> Play the year</button></section>`;
     })();
-    b += grow + bookCard + `${year}<div class="mem-head"><h2>Month by month</h2></div>${strip}`;
+    // One story, top to bottom: how she's grown (the first photo and the newest), then every month in between,
+    // then the words: the newest page of the memory book, exactly as it looks inside, so the tab shows the book filling itself.
+    const P = typeof babyPronouns === 'function' ? babyPronouns() : { p: 'their' };
+    const head = (h, sub, link) => `<div class="mem-head"><div><h2>${esc2(h)}</h2><p class="mem-hsub">${esc2(sub)}</p></div>${link || ''}</div>`;
+    const monthsSec = `<section class="mem-sec">${head('Month by month', have.length >= 2 ? 'Tap a month to share it' : `Add a photo each month, ready to share`)}${year}${strip}</section>`;
+    // Nothing saved yet: the same two sections, the book showing where its first page will be.
+    if (!have.length && !firsts.length) {
+      b += `<section class="mem-sec">${head('Month by month', `Add a photo each month. By ${P.p} first birthday, all twelve hang together on one page.`)}${strip}</section>`
+        + `<section class="mem-sec">${head(`${name()}’s memory book`, 'It fills in as you go')}<div class="mem-latest"><section class="bk-page"><h2 class="bk-month">${esc2('The first page')}</h2><p class="bk-noted">${esc2('Tap Seen it in Development, or save a first, and it’s written here.')}</p></section></div><button class="mem-save" onclick="openPage('chg:Timeline:milestone')">＋ Save a first</button></section>`
+        + `<p class="hub-foot">Photos and entries stay on this device.</p></div>`;
+      return `<div class="quiet-category hub-page hub-timeline-page" style="${yearTheme('Memories')}">${b}</div>`;
+    }
+    const latest = firsts.length ? (allFirsts().match(/<section class="bk-page">[\s\S]*?<\/section>/) || [''])[0] : '';
+    const bookSec = latest
+      ? `<section class="mem-sec">${head(`${name()}’s memory book`, count, `<button class="mem-head-link" onclick="openPage('chg:Timeline:firsts')">Open the book ›</button>`)}<div class="mem-latest">${latest}</div><button class="mem-save" onclick="openPage('chg:Timeline:milestone')">＋ Save a first</button></section>`
+      : `<section class="mem-sec">${bookCard}</section>`;
+    b += grow + monthsSec + bookSec;
 
     // Checkups live in Health, never in the memory book.
     b += `<p class="hub-foot">Photos and entries stay on this device.</p></div>`;

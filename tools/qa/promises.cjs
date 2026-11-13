@@ -63,7 +63,7 @@ for (const [title, skill, age] of [['Sat up', 'Sits without support', 9], ['Roll
   a.run(`hubSeen(journeySkillKey('Laughs')); hubSeen(journeySkillKey('Blows raspberries')); hubSeen(journeySkillKey('Squeals'))`);
   const t = text(open(a, 'timeline'));
   check(/3 moments so far/.test(t), 'Memories counts every saved moment, not just the big firsts');
-  check(t.indexOf('memory book') < t.indexOf('Month by month'), 'The memory book card sits above Month by month');
+  check(/memory book/.test(t) && /Month by month/.test(t), 'Memories shows the memory book and Month by month'); // Nov 13: order is then-and-now, months, then the book (was book first, Nov 8)
   check(/See it in the book/.test(toasts(a)) && !/Change date/.test(toasts(a)), 'Seen it offers See it in the book, not Change date');
 }
 
