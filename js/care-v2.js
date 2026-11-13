@@ -873,15 +873,16 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   ];
   // Every topic named as the task, like the how-tos above it.
   const TASK = { diapers: 'Change a diaper', bath: 'Give a bath', skin: 'Keep skin comfortable', clothes: 'Dress {o}', sun: 'Keep {o} sun-safe', teeth: 'Care for gums and teeth', nails: 'Trim nails, clean ears and nose' };
+  const TASK_SUB = { diapers: 'Wipe front to back, and let it dry', bath: 'About 3 a week', skin: 'Plain water, and moisturizer for dry patches', clothes: 'One layer more than you', sun: 'Shade and clothing first', teeth: 'Wipe gums twice a day', nails: 'Files, clippers and tiny fingers' };
   window.careHow = function (v) {
     v = Number.isInteger(v) && v >= 0 && v <= 3 ? v : stageNow();
     const list = HOWTO[v], GC = [['#e3f1f7', '#2a6078'], ['#e7effc', '#46638c'], ['#f8e9f0', '#8a4a67']];
     let b = head('bath', 'Everyday care · ' + STAGE[v], 'How do I…?', 'Steps for the care you do again and again.');
     b += h2('How often, at this age') + `<section class="care-often">${OFTEN[v].map(([l, n, per], i) => `<div style="--sm-bg:${GC[i][0]};--sm-ink:${GC[i][1]}"><small>${F(l)}</small><b>${F(n)}</b><span>${F(per)}</span></div>`).join('')}</section>`;
-    b += h2(`Useful at ${v === 0 ? 'this age' : STAGE[v]}`) + `<div class="hub-list">${list.map(([k, t, sub, r]) => rowK(k, t, sub, cgo(r))).join('')}</div>`;
+    // One list: this age's how-tos first, then any other topic, so there's no second heading for a card or two.
     const listed = new Set(list.map(x => ({ cord: 'skin' }[x[0]] || x[0])));
     const more = BASICS.filter(([k]) => !listed.has(k));
-    if (more.length) b += h2('More everyday care') + `<div class="hub-list">${more.map(([k]) => rowK(k, TASK[k], '', go(k, v))).join('')}</div>`;
+    b += h2(`Useful at ${v === 0 ? 'this age' : STAGE[v]}`) + `<div class="hub-list">${list.map(([k, t, sub, r]) => rowK(k, t, sub, cgo(r))).join('')}${more.map(([k]) => rowK(k, TASK[k], TASK_SUB[k], go(k, v))).join('')}</div>`;
     return page('bath', b);
   };
   window.careRoutine = v => careHow(v);   // the routine is the "How often" glance now
