@@ -86,7 +86,7 @@ body{padding-top:67px!important}
   window.oaDemoAge=m=>{window.oaKitClose();setDemoAge(m);if(page==='welcome'||page==='setup')openPage('chg:Out and about:s');else render()};
   window.oaDemoFeed=feed=>{window.oaKitClose();profile.feed=feed;profile.feedHow=feed==='Breast milk'?'Nursing':feed==='Formula'?'Formula':'Pumping';render()};
   window.oaCompare=enabled=>{
-    oaKitClose();
+    window.oaKitClose();
     window.OA_COMPANION=enabled;
     document.getElementById('oa-before').classList.toggle('is-active',!enabled);
     document.getElementById('oa-after').classList.toggle('is-active',enabled);
