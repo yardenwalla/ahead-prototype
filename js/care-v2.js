@@ -859,32 +859,31 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   // "How do I…?" (Nov 12): how-tos named as the task ("Give a tub bath"), the ones useful at this age first; then the
   // care routine one tap down; then any other topic.
   const HOWTO = [
-    [['bath', 'Give a sponge bath', 'Until the cord falls off', 'p:sponge'], ['diapers', 'Change a diaper', 'Including the first-week poops', 't:diapers:0'], ['cord', 'Care for the cord', 'Keep it clean and dry', 'cord'], ['nails', 'Trim nails', 'Files, clippers and tiny fingers', 't:nails:0'], ['clothes', 'Dress for comfort', 'One layer more than you', 't:clothes:0']],
+    [['bath', 'Give a sponge bath', 'Until the cord falls off', 'p:sponge'], ['diapers', 'Change a diaper', 'Including the first-week poops', 't:diapers:0'], ['cord', 'Care for the cord', 'Keep it clean and dry', 'cord'], ['nails', 'Trim nails', 'Files, clippers and tiny fingers', 't:nails:0'], ['clothes', 'Dress {o}', 'One layer more than you', 't:clothes:0']],
     [['bath', 'Give a tub bath', 'Warm water, a safe hold and a simple routine', 'p:tub'], ['diapers', 'Change a diaper', 'Quick, with a hand on {o}', 't:diapers:1'], ['skin', 'Keep skin comfortable', 'Plain water, and moisturizer for dry patches', 't:skin:1'], ['nails', 'Trim nails', 'Files, clippers and tiny fingers', 't:nails:1'], ['teeth', 'Clean gums', 'A soft cloth, twice a day', 'p:gums'], ['sun', 'Keep {o} sun-safe', 'Shade and clothing first', 't:sun:1']],
-    [['diapers', 'Change a wriggly baby', 'Including rolling', 't:diapers:2'], ['teeth', 'Soothe teething gums', 'What helps, and what to skip', 'p:teething'], ['bath', 'Give a bath', 'Often part of bedtime', 't:bath:2'], ['skin', 'Keep skin comfortable', 'Drool rash and dry patches', 't:skin:2'], ['nails', 'Trim nails', 'Files, clippers and tiny fingers', 't:nails:2'], ['sun', 'Keep {o} sun-safe', 'Shade, then sunscreen from 6 months', 't:sun:2']],
-    [['teeth', 'Brush tiny teeth', 'A rice-grain smear, twice a day', 'p:brush'], ['bath', 'Bath in the big tub', 'Once {s} {sit|sits} steadily', 't:bath:3'], ['diapers', 'Change a wriggler', 'A toy to hold helps', 't:diapers:3'], ['clothes', 'Bare feet, then first shoes', 'Soft shoes once walking outside', 'p:feet'], ['nails', 'Trim nails', 'Files, clippers and tiny fingers', 't:nails:3'], ['sun', 'Keep {o} sun-safe', 'SPF 30, again every 2 hours', 't:sun:3']]
+    [['diapers', 'Change a wriggler', 'Including rolling', 't:diapers:2'], ['teeth', 'Soothe teething gums', 'What helps, and what to skip', 'p:teething'], ['bath', 'Give a bath', 'Often part of bedtime', 't:bath:2'], ['skin', 'Keep skin comfortable', 'Drool rash and dry patches', 't:skin:2'], ['nails', 'Trim nails', 'Files, clippers and tiny fingers', 't:nails:2'], ['sun', 'Keep {o} sun-safe', 'Shade, then sunscreen from 6 months', 't:sun:2']],
+    [['teeth', 'Brush tiny teeth', 'A rice-grain smear, twice a day', 'p:brush'], ['bath', 'Bath in the big tub', 'Once {s} {sit|sits} steadily', 't:bath:3'], ['diapers', 'Change a busy wriggler', 'A toy to hold helps', 't:diapers:3'], ['clothes', 'Bare feet, then first shoes', 'Soft shoes once walking outside', 'p:feet'], ['nails', 'Trim nails', 'Files, clippers and tiny fingers', 't:nails:3'], ['sun', 'Keep {o} sun-safe', 'SPF 30, again every 2 hours', 't:sun:3']]
   ];
+  // How often, at a glance: three tiles in Sleep's glance style, each the same shape (what, how many, per what).
+  const OFTEN = [
+    [['Diapers', '8–12', 'A day'], ['Sponge baths', '2–3', 'A week'], ['Nail trims', '1', 'A week']],
+    [['Wet diapers', '6+', 'A day'], ['Tub baths', 'About 3', 'A week'], ['Nail trims', '1', 'A week']],
+    [['Baths', 'About 3', 'A week'], ['Gum wipes', '2', 'A day'], ['Nail trims', '1', 'A week']],
+    [['Brushing', '2', 'A day'], ['Baths', 'About 3', 'A week'], ['Nail trims', '1', 'A week']]
+  ];
+  // Every topic named as the task, like the how-tos above it.
+  const TASK = { diapers: 'Change a diaper', bath: 'Give a bath', skin: 'Keep skin comfortable', clothes: 'Dress {o}', sun: 'Keep {o} sun-safe', teeth: 'Care for gums and teeth', nails: 'Trim nails, clean ears and nose' };
   window.careHow = function (v) {
     v = Number.isInteger(v) && v >= 0 && v <= 3 ? v : stageNow();
-    const list = HOWTO[v], now = stageNow();
+    const list = HOWTO[v], GC = [['#e3f1f7', '#2a6078'], ['#e7effc', '#46638c'], ['#f8e9f0', '#8a4a67']];
     let b = head('bath', 'Everyday care · ' + STAGE[v], 'How do I…?', 'Steps for the care you do again and again.');
+    b += h2('How often, at this age') + `<section class="care-often">${OFTEN[v].map(([l, n, per], i) => `<div style="--sm-bg:${GC[i][0]};--sm-ink:${GC[i][1]}"><small>${F(l)}</small><b>${F(n)}</b><span>${F(per)}</span></div>`).join('')}</section>`;
     b += h2(`Useful at ${v === 0 ? 'this age' : STAGE[v]}`) + `<div class="hub-list">${list.map(([k, t, sub, r]) => rowK(k, t, sub, cgo(r))).join('')}</div>`;
-    ICON.routine = 'clock'; COL.routine = COL.need;
-    b += `<div class="hub-list care-link">${rowK('routine', `${live() && v === now ? name() + '’s' : 'The'} care routine`, 'Every day, each week and outside', cgo('routine:' + v))}</div>`;
     const listed = new Set(list.map(x => ({ cord: 'skin' }[x[0]] || x[0])));
-    const more = BASICS.filter(([k]) => !listed.has(k)).concat([['need', 'What you’ll need']]);
-    b += h2('More everyday care') + `<div class="hub-list">${more.map(([k, t]) => rowK(k, t, '', k === 'need' ? `openPage('chg:${CAT}:d:t:need:${v}')` : go(k, v))).join('')}</div>`;
+    const more = BASICS.filter(([k]) => !listed.has(k));
+    if (more.length) b += h2('More everyday care') + `<div class="hub-list">${more.map(([k]) => rowK(k, TASK[k], '', go(k, v))).join('')}</div>`;
     return page('bath', b);
   };
-  // The care routine, one tap down from "How do I…?": what care looks like at this age, by how often.
-  window.careRoutine = function (v) {
-    v = Number.isInteger(v) && v >= 0 && v <= 3 ? v : stageNow();
-    const st = ROUTINE()[v], now = stageNow();
-    const line = l => { const [k, label, val, sub] = l, c = COL[{ wet: 'diapers', feet: 'clothes' }[k] || k] || COL.bath;
-      return `<button class="rt-line" style="--hl-bg:${c[0]};--hl-ink:${c[1]}" onclick="${routeLine(l, v)}"><span class="rt-ic">${hubArt(ICON[k], CAT)}</span><span class="rt-copy"><small>${F(label)}</small><b>${F(val)}</b>${sub ? `<i>${F(sub)}</i>` : ''}</span><span class="hub-chev" aria-hidden="true">›</span></button>`; };
-    let b = head('need', 'Everyday care · ' + STAGE[v], `${live() && v === now ? name() + '’s' : 'The'} care routine`, 'What care looks like at this age, by how often.');
-    b += st.groups.map(([g, items]) => `<section class="rt-card rt-split"><div class="rt-head"><b>${F(g)}</b></div><div class="rt-group">${items.map(line).join('')}</div></section>`).join('');
-    return page('need', b);
-  };
+  window.careRoutine = v => careHow(v);   // the routine is the "How often" glance now
 
 })();

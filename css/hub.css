@@ -1576,3 +1576,9 @@ label:has(> .hub-photo-input:focus-visible) { outline: 2px solid #884866; outlin
 #main .care-door-ic { width: 38px; height: 38px; border-radius: 12px; background: #fffdfc; display: grid; place-items: center; margin-bottom: 4px }
 #main .care-doors b { font-size: 15.5px; font-weight: 650; color: var(--ink, #2b2732) }
 #main .care-doors small { font-size: 13px; color: #625f6d; line-height: 1.35 }
+/* "How often, at this age" (Nov 12): three equal tiles — what, how many, per day or week. */
+#main .care-often { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 0 0 16px }
+#main .care-often > div { border-radius: 16px; background: var(--sm-bg); padding: 12px 11px; display: flex; flex-direction: column; gap: 2px }
+#main .care-often small { font-size: 12.5px; font-weight: 650; color: var(--sm-ink) }
+#main .care-often b { font-family: Nunito, ui-rounded, sans-serif; font-size: 22px; font-weight: 800; line-height: 1.15; color: var(--ink, #302d3c); margin-top: 2px }
+#main .care-often span { font-size: 12.5px; color: var(--ink-2, #625f6d) }
