@@ -100,11 +100,189 @@
   // A row that opens a page in another category, so the advice lives in one place.
   const elsewhere = (icon, title, sub, go, where) => `<div class="oa-link-row">${H().list('', [H().row({ icon, cat: CAT, title, sub: sub + (where ? ' · In ' + where : ''), onclick: go })])}</div>`;
   const rowTo = (icon, title, sub, id, chip) => H().row({ icon, cat: CAT, title, sub, onclick: open(id), chipText: chip });
+
+  /* ---------- Optional outing companion ----------
+     The original guide remains the source of truth and is never replaced.
+     For more involved outings, parents can collect preparation, the existing
+     diaper bag plus trip-specific extras, and in-the-moment answers in one place.
+     No forms, location, weather lookup, or synthetic predictions. */
+  const oaKitOn = () => window.OA_COMPANION !== false;
+  const oaKitData = {
+    road: {
+      label: 'Road trip', action: 'Get ready for the drive',
+      prep: [
+        ['Check the car seat', 'Rear-facing, correct recline, snug harness.'],
+        ['Plan stops', 'Plan a break about every 2 hours, sooner if Maya needs one.'],
+        ['Leave room for delays', 'Feeds, changes and a little fresh air can shift your arrival time.']
+      ],
+      now: [
+        ['Crying while you drive?', 'Pull over somewhere safe before feeding, unbuckling or comforting Maya.'],
+        ['Time for a feed?', 'Stop, take Maya out of her seat, then feed and change her. Never feed in a moving car.'],
+        ['She fell asleep in the car?', 'A properly installed car seat is fine while traveling. At your destination, move her to a firm, flat sleep space.']
+      ]
+    },
+    fly: {
+      label: 'Flight', action: 'Get ready for the flight',
+      prep: [
+        ['Check your airline', 'Add Maya to the booking and check the car-seat, stroller and bassinet policies.'],
+        ['Plan for security', 'Tell security about any baby milk, formula or water. These can exceed the usual 3.4 oz limit.'],
+        ['Keep essentials with you', 'Changes, feeding supplies and a spare outfit go in your carry-on.']
+      ],
+      now: [
+        ['Milk at airport security?', 'Tell the officer what you have. Breast milk, formula and water for infant feeds can exceed normal carry-on liquid limits.'],
+        ['Crying on the plane?', 'Offer comfort or a feed. Walk the aisle only when the seat-belt sign is off.'],
+        ['Where is Maya safest?', 'A ticketed seat with an aircraft-approved child restraint is safest, especially during turbulence. Follow crew instructions.']
+      ]
+    },
+    away: {
+      label: 'Overnight stay', action: 'Get ready for the stay',
+      prep: [
+        ['Confirm the sleep space', 'Ask about a suitable crib or play yard, or bring your own.'],
+        ['Pack bedtime essentials', 'Bring her sleep sack and the sheet approved for the sleep space.'],
+        ['Plan your room check', 'On arrival, use the full room checklist in the guide.']
+      ],
+      now: [
+        ['A rough first night?', 'An unfamiliar place can make sleep unsettled. Keep bedtime steps familiar.'],
+        ['Where should she sleep?', 'On her back in a bare crib or play yard with a firm, flat mattress and fitted sheet.'],
+        ['Staying with family?', 'Share your sleep rules before bedtime. Keep medicines, cords and small objects out of reach.']
+      ]
+    },
+    abroad: {
+      label: 'International trip', action: 'Get ready for the trip',
+      prep: [
+        ['Check documents', 'Start the passport early and confirm entry and consent-document requirements.'],
+        ['Check travel health', 'Talk to your pediatrician 4–6 weeks before your trip about destination-specific vaccines.'],
+        ['Plan care and feeding', 'Know where you could see a doctor and how you will get safe water for feeding.']
+      ],
+      now: [
+        ['What water is safe?', 'For formula and washing bottles, use water prepared safely for the destination. See the full guide.'],
+        ['Mosquitoes where you are?', 'Use appropriate netting and age-appropriate repellent according to its label.'],
+        ['Maya is unwell abroad?', 'Know the nearest medical facility. Fever in a malaria-risk area or difficulty waking needs prompt medical attention.']
+      ]
+    },
+    water: {
+      label: 'Pool or beach', action: 'Get ready for the water',
+      prep: [
+        ['Choose shade and a short visit', 'Earlier or later in the day is usually cooler.'],
+        ['Plan for hands-on supervision', 'An adult stays in the water within arm’s reach the whole time.'],
+        ['Pack for drying off', 'Keep a dry outfit, towel and feeding supplies nearby.']
+      ],
+      now: [
+        ['Maya seems cold?', 'Take her out, dry her and warm her. Blue lips or trouble breathing needs urgent medical care.'],
+        ['Too much sun?', 'Move into shade and feed her. Babies under 6 months need shade and clothing first.'],
+        ['Are floats enough?', 'No. A flotation toy does not prevent drowning. Stay within arm’s reach.']
+      ]
+    }
+  };
+  let oaKitCurrent = null, oaKitTab = 'prep', oaKitExpanded = false, oaTripRendering = null;
+  const oaKitExtras = {};
+  const oaKitKey = () => 'ahead-outings-companion:' + ((typeof profile !== 'undefined' && profile.dob) || 'demo');
+  function oaKitGet() {
+    try {
+      const s = JSON.parse(localStorage.getItem(oaKitKey()) || '{}');
+      return s && typeof s === 'object' ? { pinned: s.pinned || null, checked: s.checked || {} } : { pinned: null, checked: {} };
+    } catch (e) { return { pinned: null, checked: {} }; }
+  }
+  function oaKitPut(s) { try { localStorage.setItem(oaKitKey(), JSON.stringify(s)); } catch (e) {} }
+  const oaKitItems = id => {
+    const d = oaKitData[id]; if (!d) return [];
+    const prep = d.prep.map((x,i) => ({ key: 'prep:'+id+':'+i, label: x[0], sub: x[1], group:'prep' }));
+    const extras = (oaKitExtras[id] || []).map((x,i) => ({ key: 'extra:'+id+':'+i, label: x[1], sub: x[2], group:'extra' }));
+    const bag = bagItems(ageNow()).map(x => ({ key:'bag:'+x[1], label:x[2], sub:x[3], group:'bag' }));
+    return prep.concat(extras,bag);
+  };
+  const oaKitDone = (id, group) => {
+    const s=oaKitGet(), v=oaKitItems(id).filter(x=>!group || x.group===group);
+    return { count:v.filter(x=>!!s.checked[x.key]).length,total:v.length };
+  };
+  function oaKitEntry(id) {
+    if (!oaKitOn() || !oaKitData[id]) return '';
+    return '<button class="oa-kit-entry" onclick="oaKitOpen(\''+id+'\')">'
+      + '<span class="oa-kit-entry-glyph" aria-hidden="true">✓</span>'
+      + '<span class="oa-kit-entry-copy"><b>'+F('Get ready for this trip')+'</b><small>'+F('Your packing list and quick answers, together')+'</small></span>'
+      + '<span class="oa-kit-arrow" aria-hidden="true">›</span></button>';
+  }
+  function oaKitPinned() {
+    if (!oaKitOn()) return '';
+    const s=oaKitGet(), id=s.pinned, d=oaKitData[id]; if (!d) return '';
+    const cnt=oaKitDone(id);
+    return '<div class="oa-kit-pinned"><div class="oa-kit-pinned-title"><small>'+F('Your outing')+'</small>'
+      + '<button onclick="oaKitUnpin()" aria-label="Remove saved outing" class="oa-kit-unpin">✕</button></div>'
+      + '<button class="oa-kit-pinned-open" onclick="oaKitOpen(\''+id+'\')">'
+      + '<b>'+F(d.label)+' with '+F(name())+'</b>'
+      + '<span>'+cnt.count+' of '+cnt.total+' ready · '+F('Pack and quick answers')+'</span>'
+      + '<em>'+F('Open your outing card')+' ›</em></button></div>';
+  }
+  const oaKitEscape = s => esc(F(s));
+  function oaKitRows(items, checked) {
+    return items.map(x => '<button class="oa-kit-check'+(checked[x.key]?' is-done':'')+'" onclick="oaKitTick(\''+x.key+'\')" aria-pressed="'+!!checked[x.key]+'">'
+      + '<span class="oa-kit-checkbox" aria-hidden="true">'+(checked[x.key]?'✓':'')+'</span>'
+      + '<span class="oa-kit-copy"><b>'+oaKitEscape(x.label)+'</b>'
+      + (x.sub?'<small>'+oaKitEscape(x.sub)+'</small>':'')+'</span></button>').join('');
+  }
+  function oaKitRender() {
+    if (!oaKitOn() || !oaKitCurrent || !oaKitData[oaKitCurrent]) return;
+    const id=oaKitCurrent,d=oaKitData[id],s=oaKitGet(), all=oaKitItems(id),pr=all.filter(x=>x.group==='prep'),
+      ex=all.filter(x=>x.group==='extra'),bag=all.filter(x=>x.group==='bag'),
+      pc=oaKitDone(id,'prep'),lc=oaKitDone(id),packed=all.filter(x=>x.group!=='prep'),bc=packed.filter(x=>s.checked[x.key]).length;
+    const before = '<div class="oa-kit-summary"><b>'+F('Your trip prep')+'</b><span>'+pc.count+' of '+pc.total+' done</span></div>'
+      + '<div class="oa-kit-list">'+oaKitRows(pr,s.checked)+'</div>'
+      + '<button class="oa-kit-expand" aria-expanded="'+oaKitExpanded+'" onclick="oaKitExpand()">'
+      + '<span><b>'+F('Pack for this trip')+'</b><small>'+bc+' of '+packed.length+' packed · '+F('Your usual bag + trip extras')+'</small></span>'
+      + '<span aria-hidden="true">'+(oaKitExpanded?'−':'+')+'</span></button>'
+      + (oaKitExpanded?'<div class="oa-kit-packing">'+(ex.length?'<div class="oa-kit-group">'+F('EXTRA FOR THIS TRIP')+'</div>'+oaKitRows(ex,s.checked):'')
+         + '<div class="oa-kit-group">'+F('YOUR EVERYDAY BAG')+'</div>'+oaKitRows(bag,s.checked)+'</div>':'')
+      + '<button class="oa-kit-pin'+(s.pinned===id?' is-on':'')+'" onclick="oaKitPin()">'
+      + (s.pinned===id?'✓ '+F('Saved to Outings & travel'):'＋ '+F('Keep this handy on Outings & travel'))+'</button>';
+    const during = '<p class="oa-kit-quicklead">'+F('Quick answers for the moment, without searching the full guide.')+'</p>'
+      + '<div class="oa-kit-questions">'+d.now.map(x=>'<div class="oa-kit-answer"><b>'+oaKitEscape(x[0])+'</b><p>'+oaKitEscape(x[1])+'</p></div>').join('')+'</div>'
+      + '<p class="oa-kit-explain">'+F('More scenarios and detailed guidance remain in the original guide below.')+'</p>';
+    const html='<div class="oa-kit-scrim" id="oa-kit-scrim" onclick="if(event.target.id===\'oa-kit-scrim\')oaKitClose()">'
+      + '<section class="oa-kit-sheet" role="dialog" aria-modal="true" aria-labelledby="oa-kit-title">'
+      + '<header class="oa-kit-head"><div><p>'+F('YOUR OUTING CARD')+'</p><h2 id="oa-kit-title">'+F(d.label)+' with '+F(name())+'</h2></div>'
+      + '<button class="oa-kit-close" onclick="oaKitClose()" aria-label="Close outing card">✕</button></header>'
+      + '<div class="oa-kit-tabs" role="tablist">'
+      + '<button role="tab" aria-selected="'+(oaKitTab==='prep')+'" class="'+(oaKitTab==='prep'?'is-active':'')+'" onclick="oaKitShow(\'prep\')">'+F('Before you go')+'</button>'
+      + '<button role="tab" aria-selected="'+(oaKitTab==='now')+'" class="'+(oaKitTab==='now'?'is-active':'')+'" onclick="oaKitShow(\'now\')">'+F('While you’re out')+'</button></div>'
+      + '<div class="oa-kit-body">'+(oaKitTab==='prep'?before:during)+'</div>'
+      + '<footer class="oa-kit-footer"><button class="oa-kit-full" onclick="oaKitClose()">'+F('Back to the full guide')+' ›</button></footer>'
+      + '</section></div>';
+    let node=document.getElementById('oa-kit-scrim');
+    if (!node) { document.body.insertAdjacentHTML('beforeend',html); }
+    else {
+      const at=node.querySelector('.oa-kit-body'), top=node.querySelector('.oa-kit-tabs'), foot=node.querySelector('.oa-kit-footer');
+      if(at) { const scroll=at.scrollTop; at.innerHTML=oaKitTab==='prep'?before:during; at.scrollTop=scroll; }
+      if(top)top.innerHTML='<button role="tab" aria-selected="'+(oaKitTab==='prep')+'" class="'+(oaKitTab==='prep'?'is-active':'')+'" onclick="oaKitShow(\'prep\')">'+F('Before you go')+'</button>'
+        + '<button role="tab" aria-selected="'+(oaKitTab==='now')+'" class="'+(oaKitTab==='now'?'is-active':'')+'" onclick="oaKitShow(\'now\')">'+F('While you’re out')+'</button>';
+    }
+  }
+  window.oaKitOpen = id => {
+    if (!oaKitOn() || !oaKitData[id]) return;
+    oaKitCurrent=id; oaKitTab='prep'; oaKitExpanded=false; oaKitRender();
+    document.querySelector('.oa-kit-close')?.focus();
+  };
+  window.oaKitClose = () => { document.getElementById('oa-kit-scrim')?.remove(); oaKitCurrent=null; };
+  window.oaKitShow = tab => {
+    if (!['prep','now'].includes(tab)) return;
+    oaKitTab=tab; oaKitRender();
+    const b=document.querySelector('.oa-kit-body'); if(b)b.scrollTop=0;
+  };
+  window.oaKitExpand = () => { oaKitExpanded=!oaKitExpanded; oaKitRender(); };
+  window.oaKitTick = key => {
+    if (!oaKitCurrent || !oaKitItems(oaKitCurrent).some(x=>x.key===key)) return;
+    const s=oaKitGet(); s.checked[key]=!s.checked[key]; oaKitPut(s); oaKitRender();
+  };
+  window.oaKitPin = () => {
+    const s=oaKitGet(); s.pinned=s.pinned===oaKitCurrent?null:oaKitCurrent; oaKitPut(s); oaKitRender();
+  };
+  window.oaKitUnpin = () => { const s=oaKitGet(); s.pinned=null; oaKitPut(s); const y=window.scrollY; render(); window.scrollTo(0,y); };
+  document.addEventListener('keydown',e => { if (e.key==='Escape' && oaKitCurrent) oaKitClose(); });
+
   function sub(key, context, title, lead, inner) {
     const c = PAL[key] || PAL.gear;
     return `<div class="quiet-category hub-page hub-detail" data-overview="${CAT}" data-ss="1" data-oa-page="${key}" style="${yearTheme(CAT)};--ss-bg:${c[0]};--ss-ink:${c[1]}">${detailPageTop(CAT)}`
       + `<div class="dev-area-head ss-head" style="--area:${c[0]};--area-ink:${c[1]}"><span class="dev-area-head-art">${(SHAPE[key] || SHAPE.gear)(c)}</span><p class="hub-context">${F(context)}</p><h1>${F(title)}</h1>${lead ? `<p class="hub-lead">${F(lead)}</p>` : ''}</div>`
-      + inner + `</div>`;
+      + oaKitEntry(key) + inner + `</div>`;
   }
 
   /* ---------- the home screen ---------- */
@@ -158,7 +336,7 @@
   function outAndAbout() {
     const m = ageNow(), v = stageFor(m), h = H(), n = nowFor(m), nx = nextFor(m);
     let b = `<header class="hub-hero oa-hero"><p class="hub-eyebrow">${F(m < 1 ? 'In the first weeks' : `At ${m} ${m === 1 ? 'month' : 'months'}`)}</p><h1>${F(n[1])}</h1><p class="hub-lead">${F(n[2])}</p><button class="cc-hero-go oa-hero-go" onclick="${open(n[3])}">${F(n[4] ? n[4][2] : ({ errands: 'See around town', road: 'Plan a longer trip' })[n[3]] || 'See the guide')} ›</button></header>`;
-    b += places(v) + seasonCard() + gear(v);
+    b += oaKitPinned() + places(v) + seasonCard() + gear(v);
     b += h.versus('In the car', ['Every time', 'Look in the back seat before you walk away.'], ['Never', 'Leave Maya alone in the car, even for a minute.']);
     if (nx) b += h.next(`Coming up around ${nx[0]} months`, nx[1], open(nx[3]));
     // Only when neither the top card nor Coming up already talks about gear limits, so it's never said twice.
@@ -232,7 +410,7 @@
        → "When things don’t go to plan" (two to four what-ifs) → "Good to know" (at most 3). Going abroad adds "When to call".
      Gear pages: header → the one picture or steps → "Good to know". Written for every family: with or without a car,
      however the baby is fed. A fact lives on one page only. */
-  const pack = items => { const it = items.filter(Boolean); return it.length ? `<section class="oa-extra"><b>${F('Pack for this')}</b><small>${F('On top of your everyday diaper bag')}</small><ul>${it.map(([icon, t, s]) => `<li><span class="oa-extra-art">${hubArt(icon, CAT)}</span><span><b>${F(t)}</b>${s ? `<small>${F(s)}</small>` : ''}</span></li>`).join('')}</ul></section>` : ''; };
+  const pack = items => { const it = items.filter(Boolean); if (oaKitData[oaTripRendering]) oaKitExtras[oaTripRendering] = it; return it.length ? `<section class="oa-extra"><b>${F('Pack for this')}</b><small>${F('On top of your everyday diaper bag')}</small><ul>${it.map(([icon, t, s]) => `<li><span class="oa-extra-art">${hubArt(icon, CAT)}</span><span><b>${F(t)}</b>${s ? `<small>${F(s)}</small>` : ''}</span></li>`).join('')}</ul></section>` : ''; };
   const ifs = (items, caption, heading = 'When things don’t go to plan') => `<h2 class="hub-h2">${F(heading)}</h2>` + steps(items, caption);
   const plan = (title, items, caption) => timeline(title, items, caption);
 
@@ -244,6 +422,7 @@
   const awayList = m => { let on = []; try { on = JSON.parse(localStorage.getItem(AWAY_KEY)) || []; } catch (e) {} return `<div class="oa-away-head"><h2 class="hub-h2">${F('Set up your stay')}</h2>${on.length ? `<button class="hub-link" onclick="oaAwayReset()">${F('Start over')}</button>` : ''}</div>` + H().ticks(awayItems(m), i => on.includes(i), i => `oaAwayTick(${i})`, CAT); };
 
   function detail(id) {
+    oaTripRendering = id;
     const m = ageNow(), bf = nursing(), fm = formula();
     const feedLine = bf && fm ? 'Nurse or give a bottle, wherever you’re comfortable.' : bf ? 'Nurse wherever you’re comfortable, or give a bottle of pumped milk.' : 'Give a bottle where you are. Formula doesn’t need warming.';
 
