@@ -1553,3 +1553,19 @@ label:has(> .hub-photo-input:focus-visible) { outline: 2px solid #884866; outlin
 .mem-flip.is-cards .mem-flip-cap { position: static; padding: 14px 4px 0; background: none; text-align: center; min-height: 22px }
 .mem-flip.is-cards .mem-flip-cap b:empty { display: none }
 .mem-flip.is-cards .mem-flip-cap span { font-size: 15px; font-weight: 600 }
+
+/* Memories: then and now. Her first photo and her newest, taped in like the memory book's polaroids. */
+#main .mem-grow { margin: 4px 0 16px; padding: 18px 16px 18px; border-radius: 24px; background: linear-gradient(170deg, #efe6da 0%, #f7f1e9 58%, #f6eef2 100%); text-align: center }
+#main .mem-grow-pics { position: relative; display: flex; justify-content: center; align-items: flex-start; gap: 0; padding: 10px 0 0 }
+#main .mem-grow-pic { position: relative; flex: none; width: 41%; padding: 8px 8px 30px; border: 0; border-radius: 3px; background: #fff; box-shadow: 0 8px 20px rgba(120,80,70,.18); transform: rotate(var(--tilt)); font: inherit; cursor: pointer; animation: memGrowIn .6s cubic-bezier(.2,.9,.3,1.2) both }
+#main .mem-grow-pic.is-then { margin-top: 18px; z-index: 1 }
+#main .mem-grow-pic.is-now { margin-left: 8%; animation-delay: .12s; z-index: 2 }
+#main .mem-grow-pic img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover }
+#main .mem-grow-pic i { position: absolute; top: -9px; left: 50%; width: 52px; height: 18px; transform: translateX(-50%) rotate(-3deg); border-radius: 2px; background: var(--tape); opacity: .92 }
+#main .mem-grow-cap { position: absolute; left: 0; right: 0; bottom: 4px; font-family: AheadHand, Caveat, cursive; font-size: 19px; font-weight: 600; line-height: 1; color: #3e3650 }
+#main .mem-grow-arrow { position: absolute; left: 50%; top: 0; width: 46px; transform: translateX(-50%); z-index: 3 }
+#main .mem-grow-line { margin: 16px 0 12px; font-family: AheadHand, Caveat, cursive; font-size: 27px; font-weight: 600; line-height: 1.1; color: #2b2840 }
+#main .mem-grow-play { display: inline-flex; align-items: center; gap: 7px; padding: 10px 20px; border: 1px solid #ddd2c4; border-radius: 999px; background: #fffdf9; color: #4d443b; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer; box-shadow: 0 2px 6px rgba(120,80,70,.08) }
+#main .mem-grow-play span { font-size: 11px }
+@keyframes memGrowIn { from { opacity: 0; transform: translateY(14px) rotate(0deg) scale(.96) } to { opacity: 1; transform: rotate(var(--tilt)) } }
+@media (prefers-reduced-motion: reduce) { #main .mem-grow-pic { animation: none } }

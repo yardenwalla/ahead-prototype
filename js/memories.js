@@ -106,7 +106,8 @@
     // The memory book: one card that opens it, styled like the book's own cover. Saving a first stays one tap.
     const stack = `<span class="bk-stack" aria-hidden="true"><span class="bk-stack-back"></span><span class="bk-stack-mid"></span><span class="bk-stack-front"><i></i><svg viewBox="0 0 40 40"><path d="M20 31s-9-5.6-9-12.2A5 5 0 0 1 20 16a5 5 0 0 1 9 2.8C29 25.4 20 31 20 31Z" fill="none" stroke="#f08b72" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>`;
     const count = firsts.length ? `${firsts.length} moment${firsts.length === 1 ? '' : 's'} so far` : 'Firsts you save are written here';
-    const newest = have.length ? have[have.length - 1] : null;
+    // The book's cover photo: one the then-and-now card above isn't already showing, when there is one.
+    const newest = have.length > 2 ? have[have.length - 2] : have.length ? have[have.length - 1] : null;
     const realStack = newest != null ? stack.replace(/<span class="bk-stack-front"><i><\/i><svg[\s\S]*?<\/svg><\/span>/, `<span class="bk-stack-front has-photo"><i></i><img src="${photo(newest)}" alt=""></span>`) : null;
     // The newest real photo when there is one; until then, the little keepsake drawing.
     const art = `<span class="mem-bookcard-art">${realStack || stack}</span>`;
@@ -121,7 +122,17 @@
       b += `<p class="hub-foot">Photos and entries stay on this device.</p></div>`;
       return `<div class="quiet-category hub-page hub-timeline-page" style="${yearTheme('Memories')}">${b}</div>`;
     }
-    b += bookCard + `${year}<div class="mem-head"><h2>Month by month</h2>${have.length >= 2 ? `<button class="mem-play-link" onclick="memPlay()"><span aria-hidden="true">▶</span> Play the year</button>` : ''}</div>${strip}`;
+    // Look how you've grown: her first photo and her newest, taped side by side, and the year plays from here.
+    // It changes every time a new month's photo goes in, so the tab has something new to see each month.
+    const grow = (() => {
+      if (have.length < 2) return '';
+      const then = have[0], nowM = have[have.length - 1];
+      const W = ['Newborn', 'One month', 'Two months', 'Three months', 'Four months', 'Five months', 'Six months', 'Seven months', 'Eight months', 'Nine months', 'Ten months', 'Eleven months', 'One year'];
+      const TAPE = ['#f3d58a', '#f2b8c6', '#bfe3cf', '#cfe3f7', '#e5d4f5', '#f6cdb5', '#d8e9b8', '#f9d9a8', '#c9d7f5', '#f4c2c2', '#b9e2dc', '#f0d1e8', '#f1cf86'];
+      const pic = (m, cls, tilt) => `<button class="mem-grow-pic ${cls}" style="--tape:${TAPE[m]};--tilt:${tilt}deg" onclick="storyShare(${m})" aria-label="Open the ${L(m)} card"><i></i><img src="${photo(m)}" alt=""><span class="mem-grow-cap">${esc2(W[m])}</span></button>`;
+      return `<section class="mem-grow" aria-label="${esc2(`${name()} then and now`)}"><div class="mem-grow-pics">${pic(then, 'is-then', -6)}<svg class="mem-grow-arrow" viewBox="0 0 60 40" aria-hidden="true"><path d="M6 30 C 18 6, 38 4, 52 16" fill="none" stroke="#b7a48d" stroke-width="2.4" stroke-linecap="round"/><path d="M44 10 L53 17 L43 21" fill="none" stroke="#b7a48d" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>${pic(nowM, 'is-now', 5)}</div><p class="mem-grow-line">${esc2(`Look how you’ve grown, ${name()}`)}</p><button class="mem-grow-play" onclick="memPlay()"><span aria-hidden="true">▶</span> Play the year</button></section>`;
+    })();
+    b += grow + bookCard + `${year}<div class="mem-head"><h2>Month by month</h2></div>${strip}`;
 
     // Checkups live in Health, never in the memory book.
     b += `<p class="hub-foot">Photos and entries stay on this device.</p></div>`;
