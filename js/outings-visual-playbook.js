@@ -6,6 +6,7 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const I={back:'<path d="m15 18-6-6 6-6"/>',chev:'<path d="m9 18 6-6-6-6"/>',plus:'<path d="M12 5v14M5 12h14"/>',
 shield:'<path d="m12 2 9 4v7c0 4-4 7-9 9-5-2-9-5-9-9V6Z"/><path d="m8 12 3 3 5-6"/>',
 ticket:'<path d="M3 7h18v4a2 2 0 000 4v3H3v-3a2 2 0 000-4V7Z"/><path d="M14 7v11" stroke-dasharray="2 3"/>',
+bag:'<path d="M5 8h14v13H5zM9 8V6a3 3 0 0 1 6 0v2"/>',
 scan:'<path d="M4 8V4h5m6 0h5v4M4 16v4h5m6 0h5v-4M7 12h10"/>',
 plane:'<path d="M3 11 21 3l-7 18-3-7-8-3 8 3L21 3l-9 10"/>',
 home:'<path d="m3 10 9-7 9 7v11H3V10M9 21v-8h6v8"/>',
@@ -137,9 +138,9 @@ function flight(){
   +head('Flying with Maya','A simple guide from booking to landing.','OUTINGS & TRAVEL')
   +'<section class="calm-journey"><div class="calm-flight-illustration">'+flightArt()+'</div>'
   +'<div class="calm-stage-tabs" role="tablist" aria-label="Your journey">'
-  +flightSteps.map((x,i)=>'<button role="tab" aria-selected="'+(S.step===i)+'" class="calm-stage-tab'+(S.step===i?' is-active':'')+'" data-step="'+i+'"><span class="calm-tab-number">'+(i+1)+'</span>'+esc(x.label)+'</button>').join('')
+  +flightSteps.map((x,i)=>'<button role="tab" aria-selected="'+(S.step===i)+'" class="calm-stage-tab'+(S.step===i?' is-active':'')+'" data-step="'+i+'" id="calm-stage-'+i+'" aria-controls="moment"><span class="calm-tab-number">'+(i+1)+'</span>'+esc(x.label)+'</button>').join('')
   +'</div></section>'
-  +'<section id="moment" class="calm-active-moment"><span class="calm-eyebrow">'+esc(d.eyebrow)+'</span>'
+  +'<section id="moment" role="tabpanel" aria-live="polite" aria-labelledby="calm-stage-'+S.step+'" class="calm-active-moment"><span class="calm-eyebrow">'+esc(d.eyebrow)+'</span>'
   +'<h2>'+esc(d.title)+'</h2><p>'+esc(typeof d.body==='function'?d.body():d.body)+'</p>'
   +'<div class="calm-keypoint">'+ico('check',17)+'<span>'+esc(d.take)+'</span></div>'
   +'<button class="calm-text-action" data-sheet="'+d.detail+'">See what to do '+ico('chev',15)+'</button>'
@@ -166,7 +167,7 @@ function stay(){
   +'<button class="hotspot bag'+(S.room===2?' selected':'')+'" data-room="2" aria-label="Medicines and bag safety">3</button>'
   +'<button class="hotspot bath'+(S.room===3?' selected':'')+'" data-room="3" aria-label="Bathroom safety">4</button></div>'
   +'<div class="calm-room-names">'+roomThings.map((x,i)=>'<button data-room="'+i+'" class="'+(S.room===i?'active':'')+'" aria-pressed="'+(S.room===i)+'">'+esc(x.n)+'</button>').join('')+'</div>'
-  +'<div class="calm-room-detail" id="room-detail"><span class="calm-eyebrow">'+(S.room+1)+' OF 4 · '+esc(d.n.toUpperCase())+'</span>'
+  +'<div class="calm-room-detail" id="room-detail" aria-live="polite"><span class="calm-eyebrow">'+(S.room+1)+' OF 4 · '+esc(d.n.toUpperCase())+'</span>'
   +'<h3>'+esc(d.title)+'</h3><p>'+esc(body)+'</p>'
   +'<button class="calm-room-more" data-sheet="guide:stay">More about staying away '+ico('chev',14)+'</button></div></section>'
   +'<aside class="calm-mini-tip">'+ico('bed',19)+'<span><b>Before you go</b> Confirm a safe crib or play yard and bring her usual sleep sack.</span></aside>'
@@ -273,8 +274,8 @@ root.addEventListener('click',e=>{
    const el=root.querySelector('#room-detail');if(el&&typeof el.scrollIntoView==='function')el.scrollIntoView({block:'nearest'});
    return;
  }
- if(b.hasAttribute('data-answers')){S.answersOpen=!S.answersOpen;S.faq=null;render();return}
- if(b.hasAttribute('data-faq')){const k=b.getAttribute('data-faq');S.faq=S.faq===k?null:k;render();return}
+ if(b.hasAttribute('data-answers')){S.answersOpen=!S.answersOpen;S.faq=null;render();const el=root.querySelector('[data-answers]');if(el&&typeof el.focus==='function')el.focus({preventScroll:true});return}
+ if(b.hasAttribute('data-faq')){const k=b.getAttribute('data-faq');S.faq=S.faq===k?null:k;render();const el=root.querySelector('[data-faq="'+k+'"]');if(el&&typeof el.focus==='function')el.focus({preventScroll:true});return}
  if(b.hasAttribute('data-sheet')){S.sheet=b.getAttribute('data-sheet');render();return}
  if(b.hasAttribute('data-close')){S.sheet=null;render();return}
 });
