@@ -1,7 +1,7 @@
 (function(){
 'use strict';
 const root=document.getElementById('app');
-const S={view:'home',age:6,feed:'both',solids:true,step:0,room:0,faq:null,sheet:null};
+const S={view:'home',age:6,feed:'both',solids:true,step:0,room:0,faq:null,answersOpen:false,sheet:null};
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const I={back:'<path d="m15 18-6-6 6-6"/>',chev:'<path d="m9 18 6-6-6-6"/>',plus:'<path d="M12 5v14M5 12h14"/>',
 shield:'<path d="m12 2 9 4v7c0 4-4 7-9 9-5-2-9-5-9-9V6Z"/><path d="m8 12 3 3 5-6"/>',
@@ -66,15 +66,23 @@ const roomArt=()=>String.raw`<svg viewBox="0 0 358 232" aria-hidden="true"><path
 function topBar(){return '<header class="top"><button class="brand" data-home aria-label="Ahead home">ahead<i>.</i></button><button class="profile" data-sheet="profile">Maya · '+S.age+' mo '+ico('chev',13)+'</button></header>'}
 function head(title,sub,cat){return '<button class="back" data-home>'+ico('back',15)+' All outings</button><div class="head-row"><div><span class="eyebrow">'+esc(cat||'OUTINGS & TRAVEL')+'</span><h1>'+esc(title)+'</h1><p class="subtitle">'+esc(sub)+'</p></div></div>'}
 function home(){
- return '<main class="screen"><div class="homehead"><span class="eyebrow">OUTINGS & TRAVEL</span><h1>See more of the world, together.</h1><p>Feel comfortable leaving home with Maya—whether it’s one quick errand or your first flight.</p></div>'
- +'<div class="home-highlight"><span class="sun-icon">'+ico('spark',21)+'</span><div><b>Good to know at '+S.age+' months</b><p>'+esc(homeNote())+'</p></div></div>'
- +'<span class="section-label">PLAN A NEW EXPERIENCE</span><button class="featured" data-view="flight"><span class="section-label">YOUR FIRST FLIGHT</span><b>Airport to arrival, made simpler.</b><span class="note">See what happens, and what matters with Maya.</span><span class="cta">Explore flying ↗</span><span class="featured-art">'+flightArt()+'</span></button>'
- +'<div class="home-section-head"><span class="section-label">OR START CLOSER TO HOME</span><h2>Where are you headed?</h2></div>'
- +'<div class="cards"><button class="dest" data-view="store" style="--bg:#e6efe6;--tone:#66826d"><span class="dest-art">'+storeArt()+'</span><b>Grocery store</b><small>How to shop with her safely</small><span class="arr">↗</span></button>'
- +'<button class="dest" data-view="stay" style="--bg:#f2eaf0;--tone:#90788e"><span class="dest-art">'+roomArt()+'</span><b>Staying away</b><small>Make a new room feel ready</small><span class="arr">↗</span></button>'
- +'</div><div class="home-reassurance"><b>Different places, different questions.</b><p>This concept tests three experiences: a visual flight journey, a practical shopping decision, and an interactive hotel room.</p></div></main>';
+ const tile=(v,title,desc,art,color)=>{
+  return '<button class="calm-destination" style="--tile-bg:'+color+'" data-view="'+v+'">'
+   +'<span class="calm-dest-visual">'+art+'</span><span class="calm-dest-copy"><b>'+title+'</b><small>'+desc+'</small></span>'
+   +'<span class="calm-dest-arrow" aria-hidden="true">↗</span></button>';
+ };
+ return '<main class="screen calm-page calm-home">'
+  +'<header class="calm-home-head"><span class="eyebrow">OUTINGS & TRAVEL</span><h1>Where to with Maya?</h1>'
+  +'<p>Everything you need to feel ready for an outing, without figuring it all out yourself.</p></header>'
+  +'<div class="calm-destination-grid">'
+  +tile('flight','Flying','From booking to landing',flightArt(),'#E7F1F0')
+  +tile('store','Grocery store','One quick, safe errand',storeArt(),'#EAF1E7')
+  +tile('stay','Staying away','Make a new room feel ready',roomArt(),'#F3EBF0')
+  +'</div>'
+  +'<aside class="calm-age-note"><span class="calm-note-glyph">'+ico('spark',17)+'</span>'
+  +'<span><b>At '+S.age+' months</b><small>'+esc(homeNote())+'</small></span></aside>'
+  +'</main>';
 }
-
 const flightSteps=[
 {label:'Book',eyebrow:'BEFORE YOU GO',title:'Choose the safest seat you can.',body:'When booking, add Maya to the reservation and check the airline’s car-seat policy. A separate seat with an approved child restraint is the safest way for her to fly.',take:'Check the car seat label for certification for use in aircraft.',symbol:'ticket',detail:'seat'},
 {label:'Security',eyebrow:'AT THE AIRPORT',title:'Baby milk is allowed through.',body:()=>milkTake()+' Tell the officer at the start of screening and remove feeding supplies for separate screening.'+foodTake(),take:'Keep milk, formula and cooling accessories easy to reach.',symbol:'scan',detail:'tsa'},
@@ -110,24 +118,36 @@ function sourceLinks(kind){
  };
  return '<div class="sources">Trusted guidance'+links[kind].map(x=>'<a href="'+x[1]+'" target="_blank" rel="noopener noreferrer">'+esc(x[0])+' ↗</a>').join('')+'</div>';
 }
+function questionsBlock(items,prefix){
+ return '<section class="calm-more"><button class="calm-question-toggle" data-answers aria-expanded="'+S.answersOpen+'">'
+  +'<span><b>Common questions</b><small>Answers for when things change</small></span>'
+  +'<span class="calm-rotate'+(S.answersOpen?' is-open':'')+'">'+ico('chev',18)+'</span></button>'
+  +(S.answersOpen?'<div class="calm-questions-inner">'+faqRows(items,prefix)+'</div>':'')
+  +'</section>';
+}
+function referenceFooter(type,packTitle){
+ return '<div class="calm-reference">'
+  +'<button class="calm-link-row" data-sheet="pack"><span>'+ico('bag',18)+'</span><b>'+esc(packTitle||'What to bring')+'</b>'+ico('chev',16)+'</button>'
+  +'<button class="calm-complete" data-sheet="guide:'+type+'">Read the complete guide '+ico('chev',14)+'</button>'
+  +'<details class="calm-sources"><summary>Sources and further reading</summary>'+sourceLinks(type)+'</details></div>';
+}
 function flight(){
  const d=flightSteps[S.step];
- return '<main class="screen">'+head('Flying with Maya','Everything you need to feel ready—from booking to landing.','YOUR OUTING PLAYBOOK')
- +'<section class="play-hero"><div class="play-hero-head"><div><span class="eyebrow">THE WHOLE JOURNEY</span><h2>Your flight at a glance</h2></div><small>Tap any moment</small></div>'
- +'<div class="map-illustration">'+flightArt()+'</div><div class="map-steps" aria-label="Flight stages">'+flightSteps.map((x,i)=>'<button class="map-step'+(S.step===i?' selected':'')+'" data-step="'+i+'" aria-pressed="'+(S.step===i)+'"><span class="num">'+(i+1)+'</span><b>'+x.label+'</b></button>').join('')+'</div></section>'
- +'<section class="play-main"><span class="eyebrow">TWO THINGS TO KNOW FIRST</span><h2 class="play-section-title">The important decisions</h2><div class="big-things">'
- +'<button class="big-thing" data-sheet="seat"><span class="thing-ico">'+ico('shield',18)+'</span><span class="pill">SAFEST OPTION</span><b>Her own airplane seat</b><small>With an aircraft-approved child restraint.</small><span class="more">See the options ↗</span></button>'
- +'<button class="big-thing" data-sheet="tsa"><span class="thing-ico">'+ico('milk',18)+'</span><span class="pill">GOOD TO KNOW</span><b>Baby milk over 3.4 oz? Yes.</b><small>Breast milk, formula and feeding supplies have exceptions.</small><span class="more">What TSA allows ↗</span></button>'
- +'</div></section>'
- +'<section class="topic" id="moment"><div class="topic-header"><div><span class="eyebrow">ZOOM IN</span><h2>At '+esc(d.label.toLowerCase())+'</h2></div><small>'+(S.step+1)+' of 4</small></div>'
- +'<div class="scene-card"><div class="scene-card-head"><span class="scene-number">'+ico(d.symbol,22)+'</span><div><span class="eyebrow">'+esc(d.eyebrow)+'</span><h3>'+esc(d.title)+'</h3></div></div>'
- +'<p class="scene-body">'+esc(typeof d.body==='function'?d.body():d.body)+'</p><div class="scene-focus"><b>ONE THING TO REMEMBER</b><span>'+esc(d.take)+'</span></div>'
- +'<div class="scene-actions"><button data-sheet="'+d.detail+'">See the details '+ico('chev',15)+'</button></div></div></section>'
- +qaSection('What if…?',flightQuestions,'flight')
- +'<button class="subsection-link" data-sheet="pack"><div><b>What belongs in your carry-on?</b><span>Just what you’ll want within reach.</span></div>'+ico('chev',16)+'</button>'
- +'<button class="reference-link" data-sheet="guide:flight">Read the complete flying guide ↗</button>'+sourceLinks('flight')+'</main>';
+ return '<main class="screen calm-page calm-flight">'
+  +head('Flying with Maya','A simple guide from booking to landing.','OUTINGS & TRAVEL')
+  +'<section class="calm-journey"><div class="calm-flight-illustration">'+flightArt()+'</div>'
+  +'<div class="calm-stage-tabs" role="tablist" aria-label="Your journey">'
+  +flightSteps.map((x,i)=>'<button role="tab" aria-selected="'+(S.step===i)+'" class="calm-stage-tab'+(S.step===i?' is-active':'')+'" data-step="'+i+'"><span class="calm-tab-number">'+(i+1)+'</span>'+esc(x.label)+'</button>').join('')
+  +'</div></section>'
+  +'<section id="moment" class="calm-active-moment"><span class="calm-eyebrow">'+esc(d.eyebrow)+'</span>'
+  +'<h2>'+esc(d.title)+'</h2><p>'+esc(typeof d.body==='function'?d.body():d.body)+'</p>'
+  +'<div class="calm-keypoint">'+ico('check',17)+'<span>'+esc(d.take)+'</span></div>'
+  +'<button class="calm-text-action" data-sheet="'+d.detail+'">See what to do '+ico('chev',15)+'</button>'
+  +'</section>'
+  +questionsBlock(flightQuestions,'flight')
+  +referenceFooter('flight','What to pack for the flight')
+  +'</main>';
 }
-
 const roomThings=[
 {n:'Crib',title:'Start with a safe sleep space.',body:'Use a crib or play yard that meets current safety standards. Maya sleeps on a firm, flat mattress with a fitted sheet only—no pillows, loose blankets or toys.',note:'Ask about the crib before you book; inspect it when you arrive.'},
 {n:'Window',title:'Move the crib away from cords.',body:'Keep the sleep space away from window-blind cords, curtains, lamps, monitors and anything that could fall or be pulled into the crib.',note:'Look for cords reachable from wherever Maya might sleep or play.'},
@@ -136,35 +156,44 @@ const roomThings=[
 ];
 function stay(){
  const d=roomThings[S.room],body=typeof d.body==='function'?d.body():d.body;
- return '<main class="screen">'+head('A night away from home','A new room is easier when you know what to look for.','YOUR STAY PLAYBOOK')
- +'<section class="room-hero"><span class="eyebrow">ON ARRIVAL</span><h2>Take a look around.</h2><p>Tap the room to see what matters for Maya.</p>'
- +'<div class="room-svg-wrap">'+roomArt()
- +'<button class="hotspot crib'+(S.room===0?' selected':'')+'" data-room="0" aria-label="Crib safety">1</button>'
- +'<button class="hotspot window'+(S.room===1?' selected':'')+'" data-room="1" aria-label="Window and cords safety">2</button>'
- +'<button class="hotspot bag'+(S.room===2?' selected':'')+'" data-room="2" aria-label="Medicines and bag safety">3</button>'
- +'<button class="hotspot bath'+(S.room===3?' selected':'')+'" data-room="3" aria-label="Bathroom safety">4</button></div>'
- +'<div class="hotspot-tabs">'+roomThings.map((x,i)=>'<button data-room="'+i+'" class="'+(S.room===i?'active':'')+'" aria-pressed="'+(S.room===i)+'">'+esc(x.n)+'</button>').join('')+'</div></section>'
- +'<div class="room-explain" id="room-detail"><span class="eyebrow">WHAT TO CHECK · '+(S.room+1)+' OF 4</span><h2>'+esc(d.title)+'</h2><p>'+esc(body)+'</p><div class="mini-note">'+esc(d.note)+'</div></div>'
- +'<section class="room-essentials"><span class="eyebrow">BEFORE YOU LEAVE HOME</span><h2>Two things worth bringing</h2>'
- +'<div class="light-row"><span class="ic">'+ico('bed',19)+'</span><div><b>Her usual sleep sack</b><p>A familiar part of her bedtime routine, used as directed.</p></div></div>'
- +'<div class="light-row"><span class="ic">'+ico('moon',19)+'</span><div><b>A safe crib or play yard plan</b><p>Confirm the hotel’s setup, or bring your own approved one.</p></div></div></section>'
- +qaSection('What if…?',stayQuestions,'stay')
- +'<button class="reference-link" data-sheet="guide:stay">Read the complete staying-away guide ↗</button>'+sourceLinks('stay')+'</main>';
+ return '<main class="screen calm-page calm-stay">'
+  +head('Staying away','Make an unfamiliar room safe for Maya.','OUTINGS & TRAVEL')
+  +'<section class="calm-room-panel"><div class="calm-room-title"><span class="calm-eyebrow">TAP TO EXPLORE</span>'
+  +'<h2>Check the room</h2></div>'
+  +'<div class="calm-room-visual">'+roomArt()
+  +'<button class="hotspot crib'+(S.room===0?' selected':'')+'" data-room="0" aria-label="Crib safety">1</button>'
+  +'<button class="hotspot window'+(S.room===1?' selected':'')+'" data-room="1" aria-label="Window and cords safety">2</button>'
+  +'<button class="hotspot bag'+(S.room===2?' selected':'')+'" data-room="2" aria-label="Medicines and bag safety">3</button>'
+  +'<button class="hotspot bath'+(S.room===3?' selected':'')+'" data-room="3" aria-label="Bathroom safety">4</button></div>'
+  +'<div class="calm-room-names">'+roomThings.map((x,i)=>'<button data-room="'+i+'" class="'+(S.room===i?'active':'')+'" aria-pressed="'+(S.room===i)+'">'+esc(x.n)+'</button>').join('')+'</div>'
+  +'<div class="calm-room-detail" id="room-detail"><span class="calm-eyebrow">'+(S.room+1)+' OF 4 · '+esc(d.n.toUpperCase())+'</span>'
+  +'<h3>'+esc(d.title)+'</h3><p>'+esc(body)+'</p>'
+  +'<button class="calm-room-more" data-sheet="guide:stay">More about staying away '+ico('chev',14)+'</button></div></section>'
+  +'<aside class="calm-mini-tip">'+ico('bed',19)+'<span><b>Before you go</b> Confirm a safe crib or play yard and bring her usual sleep sack.</span></aside>'
+  +questionsBlock(stayQuestions,'stay')
+  +'<div class="calm-reference"><button class="calm-complete" data-sheet="guide:stay">Read the complete guide '+ico('chev',14)+'</button>'
+  +'<details class="calm-sources"><summary>Sources and further reading</summary>'+sourceLinks('stay')+'</details></div>'
+  +'</main>';
 }
 function store(){
- return '<main class="screen">'+head('A quick grocery run','The biggest question isn’t what to buy—it’s where Maya rides.','YOUR ERRAND PLAYBOOK')
- +'<section class="shop-hero"><span class="eyebrow">THE BIG DECISION</span><h2>Where will she ride?</h2><p>There’s an easy, safer default.</p><div class="shop-art">'+storeArt()+'</div></section>'
- +'<div class="shop-options"><div class="shop-option"><span class="circle">'+ico('check',20)+'</span><b>Stroller or carrier</b><p>A practical option that keeps Maya secure without putting her infant seat on a cart.</p></div>'
- +'<div class="shop-option bad"><span class="circle">'+ico('x',20)+'</span><b>Not on top of the cart</b><p>Never balance an infant car seat on a cart—even if it seems to click in.</p></div></div>'
- +'<section class="shop-then"><span class="eyebrow">THE REST IS SIMPLE</span><h2>Three little moments</h2>'
- +'<div class="shop-step"><span class="n">1</span><div><b>In the parking lot</b><p>Move Maya to a stroller or carrier, or a cart seat only if she can sit securely and be buckled in.</p></div></div>'
- +'<div class="shop-step"><span class="n">2</span><div><b>In the aisles</b><p>Keep the list short. A feed, break or diaper change may happen. '+(S.age>=6&&S.solids?'A familiar safe snack can come too.':'Milk feeds are enough for now.')+'</p></div></div>'
- +'<div class="shop-step"><span class="n">3</span><div><b>Back at the car</b><p>Buckle her correctly into her rear-facing seat. When you park, always check the back seat before walking away.</p></div></div></section>'
- +qaSection('Quick answers',storeQuestions,'store')
- +'<button class="subsection-link" data-sheet="pack"><div><b>What to bring for a quick errand</b><span>Usually less than you think.</span></div>'+ico('chev',16)+'</button>'
- +'<button class="reference-link" data-sheet="guide:store">Read the complete around-town guide ↗</button>'+sourceLinks('store')+'</main>';
+ return '<main class="screen calm-page calm-store">'
+  +head('A grocery run','A few things to know before you head inside.','OUTINGS & TRAVEL')
+  +'<section class="calm-store-cover"><div class="calm-store-picture">'+storeArt()+'</div>'
+  +'<div class="calm-store-message"><span class="calm-eyebrow">WHERE SHOULD MAYA RIDE?</span>'
+  +'<h2>A stroller or carrier is your simplest option.</h2>'
+  +'<p>Never put an infant car seat on top of the shopping cart. It can tip, even if it appears secure.</p>'
+  +'</div></section>'
+  +'<button class="calm-store-exception" data-faq="store:0">'+ico('stroller',18)+'<span>Can she sit in the cart’s own seat?</span>'+ico('chev',16)+'</button>'
+  +(S.faq==='store:0'?'<p class="calm-inline-answer">'+esc(storeQuestions[0][1])+'</p>':'')
+  +'<section class="calm-store-flow"><span class="calm-eyebrow">THE REST IS EASY</span>'
+  +'<div class="calm-line-step"><span>1</span><div><b>In the store</b><p>Keep the list short. A feed, a break or a diaper change can happen whenever Maya needs it.'
+  +(S.age>=6&&S.solids?' A familiar, safe snack can come too.':'')+'</p></div></div>'
+  +'<div class="calm-line-step"><span>2</span><div><b>Back at the car</b><p>Buckle her into her rear-facing car seat. Check the back seat every time you park.</p></div></div>'
+  +'</section>'
+  +questionsBlock(storeQuestions.slice(1),'store-more')
+  +referenceFooter('store','Your everyday outing bag')
+  +'</main>';
 }
-
 function sheetContent(){
  const t=S.sheet||'';
  if(t==='profile')return {label:'DEMO BABY',title:'Made for Maya',body:'<p>Try different ages and feeding methods. In Ahead, this would use details already provided, not ask again.</p>'
@@ -226,7 +255,7 @@ function render(){
 }
 function go(v){
  if(!['home','flight','store','stay'].includes(v))return;
- S.view=v;S.step=0;S.room=0;S.faq=null;S.sheet=null;
+ S.view=v;S.step=0;S.room=0;S.faq=null;S.answersOpen=false;S.sheet=null;
  render();try{window.scrollTo({top:0,behavior:'instant'})}catch(e){}
 }
 root.addEventListener('click',e=>{
@@ -244,6 +273,7 @@ root.addEventListener('click',e=>{
    const el=root.querySelector('#room-detail');if(el&&typeof el.scrollIntoView==='function')el.scrollIntoView({block:'nearest'});
    return;
  }
+ if(b.hasAttribute('data-answers')){S.answersOpen=!S.answersOpen;S.faq=null;render();return}
  if(b.hasAttribute('data-faq')){const k=b.getAttribute('data-faq');S.faq=S.faq===k?null:k;render();return}
  if(b.hasAttribute('data-sheet')){S.sheet=b.getAttribute('data-sheet');render();return}
  if(b.hasAttribute('data-close')){S.sheet=null;render();return}
