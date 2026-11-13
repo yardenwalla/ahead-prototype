@@ -1592,3 +1592,4 @@ label:has(> .hub-photo-input:focus-visible) { outline: 2px solid #884866; outlin
 
 /* Everyday care redesign (Nov 13): quiet links under the rows and tiles */
 #main .care-v2 .care-all-how { display: block; margin: 2px 0 18px; padding: 4px 2px }
+#main .hub-rough-link:not(:first-child) { border-top: 1px solid var(--line) }   /* a link row after the others keeps the divider (Nov 13) */

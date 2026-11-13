@@ -915,7 +915,7 @@
       return detail(cat, 'Sleep help', 'Rough day or night?', 'Pick what’s happening. You’ll see what’s often behind it and what to try.', body
         + (mo < 1.5 ? versus('Normal, or time to call?', ['Normal', 'Waking every 2–3 hours, grunts, squeaks, and breathing pauses of a few seconds.'], ['Call your pediatrician', 'Hard to wake for feeds, or ' + sleepFever() + '. Blue lips or a 20-second pause: call 911.'])
           : mo < 3 ? versus('Normal, or time to call?', ['Normal', 'Good nights and bad nights, and fussing in light sleep.'], ['Call your pediatrician', sleepFever().charAt(0).toUpperCase() + sleepFever().slice(1) + ' (right away), or snoring or gasping most nights. Blue lips or long breathing pauses: call 911.'])
-          : versus('Normal, or time to call?', ['Normal', (mo >= 8 ? 'Standing in the crib, protest at bedtime, ' : 'Good nights and bad nights, ') + 'and short cries that settle.'], ['Call your pediatrician', 'Poor feeding, pain, a big change that lasts more than two weeks, snoring or gasping, ear pulling, or ' + sleepFever() + '. Blue lips or long breathing pauses: call 911.'])), 'moon');
+          : versus('Normal, or time to call?', ['Normal', (mo >= 8 ? 'Standing in the crib, protest at bedtime, ' : 'Good nights and bad nights, ') + 'and short cries that settle.'], ['Call your pediatrician', 'Poor feeding, pain, or gasping in sleep. Blue lips or long breathing pauses: call 911.'])), 'moon');
     }
     if (id === 'crying') {
       // The crying curve: builds from 2 weeks, peaks at 6–8 weeks, eases by 3–4 months. A dot shows where Maya is now (adjusted age if born early).
