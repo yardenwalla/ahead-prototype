@@ -127,3 +127,40 @@ function flight(){
  +'<button class="subsection-link" data-sheet="pack"><div><b>What belongs in your carry-on?</b><span>Just what you’ll want within reach.</span></div>'+ico('chev',16)+'</button>'
  +'<button class="reference-link" data-sheet="guide:flight">Read the complete flying guide ↗</button>'+sourceLinks('flight')+'</main>';
 }
+
+const roomThings=[
+{n:'Crib',title:'Start with a safe sleep space.',body:'Use a crib or play yard that meets current safety standards. Maya sleeps on a firm, flat mattress with a fitted sheet only—no pillows, loose blankets or toys.',note:'Ask about the crib before you book; inspect it when you arrive.'},
+{n:'Window',title:'Move the crib away from cords.',body:'Keep the sleep space away from window-blind cords, curtains, lamps, monitors and anything that could fall or be pulled into the crib.',note:'Look for cords reachable from wherever Maya might sleep or play.'},
+{n:'Bags',title:'Keep medicines and tiny objects away.',body:()=>S.age>=8?'Maya may be reaching or moving more. Store medicines, chargers, toiletries, small objects and cleaning products where she cannot get them.':'Store medications, toiletries, cords and small objects out of reach, even if Maya is not crawling yet.',note:'A quick room sweep makes a difference without trying to babyproof the whole hotel.'},
+{n:'Bathroom',title:'Treat unfamiliar water and doors with care.',body:'Keep the bathroom door closed when possible. Never leave Maya unattended in a bath or near water. Check for hot water and cleaning supplies.',note:'Set up a safe spot for Maya while you unpack.'}
+];
+function stay(){
+ const d=roomThings[S.room],body=typeof d.body==='function'?d.body():d.body;
+ return '<main class="screen">'+head('A night away from home','A new room is easier when you know what to look for.','YOUR STAY PLAYBOOK')
+ +'<section class="room-hero"><span class="eyebrow">ON ARRIVAL</span><h2>Take a look around.</h2><p>Tap the room to see what matters for Maya.</p>'
+ +'<div class="room-svg-wrap">'+roomArt()
+ +'<button class="hotspot crib'+(S.room===0?' selected':'')+'" data-room="0" aria-label="Crib safety">1</button>'
+ +'<button class="hotspot window'+(S.room===1?' selected':'')+'" data-room="1" aria-label="Window and cords safety">2</button>'
+ +'<button class="hotspot bag'+(S.room===2?' selected':'')+'" data-room="2" aria-label="Medicines and bag safety">3</button>'
+ +'<button class="hotspot bath'+(S.room===3?' selected':'')+'" data-room="3" aria-label="Bathroom safety">4</button></div>'
+ +'<div class="hotspot-tabs">'+roomThings.map((x,i)=>'<button data-room="'+i+'" class="'+(S.room===i?'active':'')+'" aria-pressed="'+(S.room===i)+'">'+esc(x.n)+'</button>').join('')+'</div></section>'
+ +'<div class="room-explain" id="room-detail"><span class="eyebrow">WHAT TO CHECK · '+(S.room+1)+' OF 4</span><h2>'+esc(d.title)+'</h2><p>'+esc(body)+'</p><div class="mini-note">'+esc(d.note)+'</div></div>'
+ +'<section class="room-essentials"><span class="eyebrow">BEFORE YOU LEAVE HOME</span><h2>Two things worth bringing</h2>'
+ +'<div class="light-row"><span class="ic">'+ico('bed',19)+'</span><div><b>Her usual sleep sack</b><p>A familiar part of her bedtime routine, used as directed.</p></div></div>'
+ +'<div class="light-row"><span class="ic">'+ico('moon',19)+'</span><div><b>A safe crib or play yard plan</b><p>Confirm the hotel’s setup, or bring your own approved one.</p></div></div></section>'
+ +qaSection('What if…?',stayQuestions,'stay')
+ +'<button class="reference-link" data-sheet="guide:stay">Read the complete staying-away guide ↗</button>'+sourceLinks('stay')+'</main>';
+}
+function store(){
+ return '<main class="screen">'+head('A quick grocery run','The biggest question isn’t what to buy—it’s where Maya rides.','YOUR ERRAND PLAYBOOK')
+ +'<section class="shop-hero"><span class="eyebrow">THE BIG DECISION</span><h2>Where will she ride?</h2><p>There’s an easy, safer default.</p><div class="shop-art">'+storeArt()+'</div></section>'
+ +'<div class="shop-options"><div class="shop-option"><span class="circle">'+ico('check',20)+'</span><b>Stroller or carrier</b><p>A practical option that keeps Maya secure without putting her infant seat on a cart.</p></div>'
+ +'<div class="shop-option bad"><span class="circle">'+ico('x',20)+'</span><b>Not on top of the cart</b><p>Never balance an infant car seat on a cart—even if it seems to click in.</p></div></div>'
+ +'<section class="shop-then"><span class="eyebrow">THE REST IS SIMPLE</span><h2>Three little moments</h2>'
+ +'<div class="shop-step"><span class="n">1</span><div><b>In the parking lot</b><p>Move Maya to a stroller or carrier, or a cart seat only if she can sit securely and be buckled in.</p></div></div>'
+ +'<div class="shop-step"><span class="n">2</span><div><b>In the aisles</b><p>Keep the list short. A feed, break or diaper change may happen. '+(S.age>=6&&S.solids?'A familiar safe snack can come too.':'Milk feeds are enough for now.')+'</p></div></div>'
+ +'<div class="shop-step"><span class="n">3</span><div><b>Back at the car</b><p>Buckle her correctly into her rear-facing seat. When you park, always check the back seat before walking away.</p></div></div></section>'
+ +qaSection('Quick answers',storeQuestions,'store')
+ +'<button class="subsection-link" data-sheet="pack"><div><b>What to bring for a quick errand</b><span>Usually less than you think.</span></div>'+ico('chev',16)+'</button>'
+ +'<button class="reference-link" data-sheet="guide:store">Read the complete around-town guide ↗</button>'+sourceLinks('store')+'</main>';
+}
