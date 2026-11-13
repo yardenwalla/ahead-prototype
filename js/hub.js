@@ -564,7 +564,8 @@
   function sleepGlance(key) {
     return {
       clock: [['Naps', 'No pattern', 'Sleep comes and goes all day'], ['Wake window', '45–60 min', 'Between sleeps'], ['Bedtime', 'Not yet', 'Day and night are mixed up'], ['Longest sleep', '2–4 hours', 'Day or night']],
-      daynight: [['Naps', '4–5 a day', 'Short and frequent'], ['Wake window', '1–1½ hours', 'Between sleeps'], ['Bedtime', 'Often late', 'Moves earlier at 3–4 months'], ['Longest sleep', '3–5 hours', '5 or more by 3–4 months']],
+      daynight: m() >= 4 ? [['Naps', '3–4 a day', 'Set times start to show'], ['Wake window', '1½–2 hours', 'Between sleeps'], ['Bedtime', 'Moving earlier', 'Toward 7–8 pm'], ['Longest sleep', '5+ hours', 'Often from bedtime']]
+        : [['Naps', '4–5 a day', 'Short and frequent'], ['Wake window', '1–1½ hours', 'Between sleeps'], ['Bedtime', 'Often late', 'Moves earlier at 3–4 months'], ['Longest sleep', '3–5 hours', '5 or more by 3–4 months']],
       rhythm: [['Naps', '3 a day', 'Last one: a short late-day catnap'], ['Wake window', '2–2½ hours', 'Between sleeps'], ['Bedtime', '7–8 pm', 'Most nights'], ['Longest sleep', m() >= 6 ? '6–8 hours' : '5+ hours', m() >= 6 ? 'At night, some longer' : '6–8 hours by 6 months']],
       two: [['Naps', '2 a day', 'Morning and afternoon'], ['Wake window', '2½–4 hours', 'Between sleeps'], ['Bedtime', '7–8 pm', 'Most nights'], ['Longest sleep', m() >= 9 ? '10–12 hours' : '6–8 hours', m() >= 9 ? 'Some still wake once' : '10–12 by 9–12 months']]
     }[key];
@@ -616,6 +617,7 @@
     return `<figure class="hub-figure hub-lengths" role="img" aria-label="${F(caption)}"><b class="hub-fig-title">${F(title)}</b>${rows.map(([label, v, text, now]) => `<div class="hub-len-row${now ? ' is-now' : ''}"><span class="hub-count-label">${F(label)}${now ? `<em>${F('Maya')}</em>` : ''}</span><span class="hub-len-track"><i style="width:${(v / max * 100).toFixed(1)}%"><b>${F(text)}</b></i></span></div>`).join('')}</figure>`;
   }
   const napAsk = (now, age) => {
+    return '';   // Nov 12: Sleep moves on by age now, so we don't ask about naps here
     if (!now || !C().live() || age < 5) return '';
     const said = answers.twoNaps, n = said === 'Yes' ? '2' : said === 'Stay' || said === 'Not yet' ? '3' : '';
     if (n && !napAskOpen) return `<p class="hub-napask-done">${F('Based on ' + n + ' naps a day')} · <button onclick="hubNapAskOpen()">${F('Change')}</button></p>`;
@@ -626,7 +628,7 @@
   window.hubNapAskOpen = () => { napAskOpen = true; const y = scrollY; render(); scrollTo(0, y); };
   window.hubNapAnswer = v => { napAskOpen = false; if (window.chgSetOverride) chgSetOverride('Sleep', null); answers.twoNaps = v; persist(); const y = scrollY; render(); scrollTo(0, y); hubToast('Updated', v === 'Yes' ? 'Showing the two-nap stage' : 'Showing the three-nap stage'); };
   // A typical age for each stage, so a stage tapped on the timeline reads the way it would for a baby in it.
-  const SLEEP_REP_AGE = { clock: 0.5, daynight: 2, rhythm: 5, two: 10 };
+  const SLEEP_REP_AGE = { clock: 0.5, daynight: 2, rhythm: 6, two: 10 };
   // Opened from a previewed stage? Then that stage's typical age; otherwise the baby's own.
   const sleepViewAge = () => { const from = (typeof historyStack !== 'undefined' && historyStack[historyStack.length - 1]) || ''; const mm = /^chg:Sleep:s:(\d)$/.exec(from); if (!mm) return null; const v = +mm[1]; return v === C().CFG.Sleep.stage(m()) ? null : SLEEP_REP_AGE[SLEEP_KEYS[v]] ?? null; };
   function sleepFour(key, now, view) {

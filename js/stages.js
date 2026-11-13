@@ -48,7 +48,7 @@
     // Sleep (Rule 1 and Rule 3): from 6 months, while the guide is on Three naps, ask about the late catnap.
     // A "not yet" (or a Change back to Three naps) is asked again a month later.
     const sa = typeof hubAgeFor === 'function' ? hubAgeFor('care', actualMonth()) : a;
-    if (sa >= 6 && typeof chgStageIndex === 'function' && chgStageIndex('Sleep') === 2 && answers.twoNaps !== 'Yes' && due(d, 'naps', ['No', 'Not yet', 'Stay'])) out.push('naps');
+    if (false && sa >= 6 && typeof chgStageIndex === 'function' && chgStageIndex('Sleep') === 2 && answers.twoNaps !== 'Yes' && due(d, 'naps', ['No', 'Not yet', 'Stay'])) out.push('naps');
     // Rule 3: a stage the parent picked that the baby's age has moved past. Asked once; "Not yet" rests for a month.
     if (typeof stageOutgrown === 'function') stageOutgrown().forEach(o => { if (due(d, 'outgrown:' + o.cat, ['Not yet'])) out.push('outgrown:' + o.cat); });
     return out;
