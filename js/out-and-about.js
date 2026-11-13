@@ -180,20 +180,21 @@
   function oaKitGet() {
     try {
       const s = JSON.parse(localStorage.getItem(oaKitKey()) || '{}');
-      return s && typeof s === 'object' ? { pinned: s.pinned || null, checked: s.checked || {} } : { pinned: null, checked: {} };
-    } catch (e) { return { pinned: null, checked: {} }; }
+      return s && typeof s === 'object' ? { pinned: s.pinned || null, checked: s.checked || {}, extras: s.extras || {} } : { pinned: null, checked: {}, extras: {} };
+    } catch (e) { return { pinned: null, checked: {}, extras: {} }; }
   }
   function oaKitPut(s) { try { localStorage.setItem(oaKitKey(), JSON.stringify(s)); } catch (e) {} }
+  const oaKitChecks = s => { const done={...s.checked}; bagGet().forEach(k => { done['bag:'+k]=true; }); return done; };
   const oaKitItems = id => {
     const d = oaKitData[id]; if (!d) return [];
     const prep = d.prep.map((x,i) => ({ key: 'prep:'+id+':'+i, label: x[0], sub: x[1], group:'prep' }));
-    const extras = (oaKitExtras[id] || []).map((x,i) => ({ key: 'extra:'+id+':'+i, label: x[1], sub: x[2], group:'extra' }));
+    const extras = (oaKitExtras[id] || oaKitGet().extras[id] || []).map((x,i) => ({ key: 'extra:'+id+':'+i, label: x[1], sub: x[2], group:'extra' }));
     const bag = bagItems(ageNow()).map(x => ({ key:'bag:'+x[1], label:x[2], sub:x[3], group:'bag' }));
     return prep.concat(extras,bag);
   };
   const oaKitDone = (id, group) => {
-    const s=oaKitGet(), v=oaKitItems(id).filter(x=>!group || x.group===group);
-    return { count:v.filter(x=>!!s.checked[x.key]).length,total:v.length };
+    const marks=oaKitChecks(oaKitGet()), v=oaKitItems(id).filter(x=>!group || x.group===group);
+    return { count:v.filter(x=>!!marks[x.key]).length,total:v.length };
   };
   function oaKitEntry(id) {
     if (!oaKitOn() || !oaKitData[id]) return '';
@@ -224,16 +225,17 @@
     if (!oaKitOn() || !oaKitCurrent || !oaKitData[oaKitCurrent]) return;
     const id=oaKitCurrent,d=oaKitData[id],s=oaKitGet(), all=oaKitItems(id),pr=all.filter(x=>x.group==='prep'),
       ex=all.filter(x=>x.group==='extra'),bag=all.filter(x=>x.group==='bag'),
-      pc=oaKitDone(id,'prep'),lc=oaKitDone(id),packed=all.filter(x=>x.group!=='prep'),bc=packed.filter(x=>s.checked[x.key]).length;
+      pc=oaKitDone(id,'prep'),lc=oaKitDone(id),packed=all.filter(x=>x.group!=='prep'),marks=oaKitChecks(s),bc=packed.filter(x=>marks[x.key]).length;
     const before = '<div class="oa-kit-summary"><b>'+F('Your trip prep')+'</b><span>'+pc.count+' of '+pc.total+' done</span></div>'
-      + '<div class="oa-kit-list">'+oaKitRows(pr,s.checked)+'</div>'
+      + '<div class="oa-kit-list">'+oaKitRows(pr,marks)+'</div>'
       + '<button class="oa-kit-expand" aria-expanded="'+oaKitExpanded+'" onclick="oaKitExpand()">'
       + '<span><b>'+F('Pack for this trip')+'</b><small>'+bc+' of '+packed.length+' packed · '+F('Your usual bag + trip extras')+'</small></span>'
       + '<span aria-hidden="true">'+(oaKitExpanded?'−':'+')+'</span></button>'
-      + (oaKitExpanded?'<div class="oa-kit-packing">'+(ex.length?'<div class="oa-kit-group">'+F('EXTRA FOR THIS TRIP')+'</div>'+oaKitRows(ex,s.checked):'')
-         + '<div class="oa-kit-group">'+F('YOUR EVERYDAY BAG')+'</div>'+oaKitRows(bag,s.checked)+'</div>':'')
+      + (oaKitExpanded?'<div class="oa-kit-packing">'+(ex.length?'<div class="oa-kit-group">'+F('EXTRA FOR THIS TRIP')+'</div>'+oaKitRows(ex,marks):'')
+         + '<div class="oa-kit-group">'+F('YOUR EVERYDAY BAG')+'</div>'+oaKitRows(bag,marks)+'</div>':'')
       + '<button class="oa-kit-pin'+(s.pinned===id?' is-on':'')+'" onclick="oaKitPin()">'
-      + (s.pinned===id?'✓ '+F('Saved to Outings & travel'):'＋ '+F('Keep this handy on Outings & travel'))+'</button>';
+      + (s.pinned===id?'✓ '+F('Saved to Outings & travel'):'＋ '+F('Keep this handy on Outings & travel'))+'</button>'
+      + '<button class="oa-kit-reset" onclick="oaKitReset()">'+F('Start a fresh trip')+'</button>';
     const during = '<p class="oa-kit-quicklead">'+F('Quick answers for the moment, without searching the full guide.')+'</p>'
       + '<div class="oa-kit-questions">'+d.now.map(x=>'<div class="oa-kit-answer"><b>'+oaKitEscape(x[0])+'</b><p>'+oaKitEscape(x[1])+'</p></div>').join('')+'</div>'
       + '<p class="oa-kit-explain">'+F('More scenarios and detailed guidance remain in the original guide below.')+'</p>';
@@ -245,7 +247,7 @@
       + '<button role="tab" aria-selected="'+(oaKitTab==='prep')+'" class="'+(oaKitTab==='prep'?'is-active':'')+'" onclick="oaKitShow(\'prep\')">'+F('Before you go')+'</button>'
       + '<button role="tab" aria-selected="'+(oaKitTab==='now')+'" class="'+(oaKitTab==='now'?'is-active':'')+'" onclick="oaKitShow(\'now\')">'+F('While you’re out')+'</button></div>'
       + '<div class="oa-kit-body">'+(oaKitTab==='prep'?before:during)+'</div>'
-      + '<footer class="oa-kit-footer"><button class="oa-kit-full" onclick="oaKitClose()">'+F('Back to the full guide')+' ›</button></footer>'
+      + '<footer class="oa-kit-footer"><button class="oa-kit-full" onclick="oaKitFullGuide()">'+F('Open the full guide')+' ›</button></footer>'
       + '</section></div>';
     let node=document.getElementById('oa-kit-scrim');
     if (!node) { document.body.insertAdjacentHTML('beforeend',html); }
@@ -270,12 +272,27 @@
   window.oaKitExpand = () => { oaKitExpanded=!oaKitExpanded; oaKitRender(); };
   window.oaKitTick = key => {
     if (!oaKitCurrent || !oaKitItems(oaKitCurrent).some(x=>x.key===key)) return;
-    const s=oaKitGet(); s.checked[key]=!s.checked[key]; oaKitPut(s); oaKitRender();
+    if (key.startsWith('bag:')) {
+      const k=key.slice(4),have=bagGet();
+      const next=have.includes(k)?have.filter(x=>x!==k):have.concat(k);
+      try { localStorage.setItem(BAG_KEY,JSON.stringify({day:today(),have:next})); } catch(e) {}
+    } else { const s=oaKitGet();s.checked[key]=!s.checked[key];oaKitPut(s); }
+    oaKitRender();
   };
   window.oaKitPin = () => {
-    const s=oaKitGet(); s.pinned=s.pinned===oaKitCurrent?null:oaKitCurrent; oaKitPut(s); oaKitRender();
+    const s=oaKitGet(); s.pinned=s.pinned===oaKitCurrent?null:oaKitCurrent;
+    s.extras[oaKitCurrent]=oaKitExtras[oaKitCurrent] || s.extras[oaKitCurrent] || [];
+    oaKitPut(s); oaKitRender();
   };
   window.oaKitUnpin = () => { const s=oaKitGet(); s.pinned=null; oaKitPut(s); const y=window.scrollY; render(); window.scrollTo(0,y); };
+  window.oaKitReset = () => {
+    const s=oaKitGet(),id=oaKitCurrent;
+    Object.keys(s.checked).forEach(k=>{ if(k.startsWith('prep:'+id+':')||k.startsWith('extra:'+id+':'))delete s.checked[k]; });
+    oaKitPut(s);
+    try { localStorage.removeItem(BAG_KEY); } catch(e) {}
+    oaKitRender();
+  };
+  window.oaKitFullGuide = () => { const id=oaKitCurrent; oaKitClose(); if(page !== 'chg:'+CAT+':d:'+id)openPage('chg:'+CAT+':d:'+id); };
   document.addEventListener('keydown',e => { if (e.key==='Escape' && oaKitCurrent) oaKitClose(); });
 
   function sub(key, context, title, lead, inner) {
