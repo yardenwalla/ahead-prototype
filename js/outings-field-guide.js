@@ -42,12 +42,21 @@
   const row=(id,label,desc)=>'<button class="ot-link" onclick="'+original(id)+'"><span><b>'+F(label)+'</b><small>'+F(desc)+'</small></span><span aria-hidden="true">›</span></button>';
   function discover(){
     const m=mNow(),ca=care();
-    if(m<2)return ['Outings can be short and simple','A breath of fresh air, one stop, then home when you’re ready. There’s no need to make a whole day of it.'];
-    if(m<5)return ['A little more room to explore','As routines become familiar, try a longer walk or visit. Leave space for feeds and naps.'];
-    if(m>=9)return ['A bigger reach changes new places','Before visiting family or staying away, look for cords, medicines and small objects within reach.'];
-    if(ca>=6&&newFood())return ['Meals can leave the house, too','Pack a familiar, safely prepared food and a cup alongside the milk feeds Maya already knows.'];
-    if(m<9)return ['New places are part of the fun','You can bring your familiar feeding and sleep routines into an unfamiliar place. They do not need to run perfectly.'];
-    return ['New places become part of the day','Your usual feeding and sleep routines can come with you. They do not need to run perfectly.'];
+    if(m<2)return ['The first outing can be tiny.',
+      'A short walk or one stop is enough. You can feed, change plans or turn around whenever you need.',
+      'Try a walk after a feed','It may give you a calmer start. There is no deadline to be home.'];
+    if(m<5)return ['A little more time out together.',
+      'As you get used to Maya’s cues, a longer walk, visit or coffee can feel easier to plan.',
+      'Add just one new stop','Keep the familiar feeding and nap cues. Leave when you both need to.'];
+    if(m>=9)return ['A new room is a new adventure.',
+      'As Maya reaches and explores more, the places you visit may need a quick safety check too.',
+      'Look around before settling in','Check for medicines, cords, small objects and reachable furniture.'];
+    if(ca>=6&&newFood())return ['Meals can leave the house, too.',
+      'If Maya has started solids, a familiar food can join the milk routine on a walk or visit.',
+      'Try a short snack outing','Bring a safely prepared food Maya already eats, along with her cup.'];
+    return ['New places. Familiar routines.',
+      'Maya can come along for a walk or visit without the whole day running on a perfect schedule.',
+      'Bring the usual feeding plan','A familiar milk feed and a flexible return time are enough for a small trip.'];
   }
   function home(){
     const m=mNow(),d=discover(),ca=care();
@@ -56,9 +65,9 @@
     return '<div class="quiet-category hub-page ot-page ot-home" data-overview="'+CAT+'" style="'+yearTheme(CAT)+'">'
       +monthlyPageHeader(CAT)
       +'<section class="ot-home-hero"><div class="ot-eyebrow">'+F('OUTINGS & TRAVEL · '+(m===0?'NEWBORN':m+' MONTHS'))+'</div>'
-      +'<h1>'+F('A little more of the world.')+'</h1><p>'+F('A practical guide to leaving the house with Maya, from the first walk to a long flight.')+'</p>'
+      +'<h1>'+F(d[0])+'</h1><p>'+F(d[1])+'</p>'
       +'<div class="ot-home-art">'+pic('errands')+'</div>'
-      +'<div class="ot-discovery"><small>'+F('GOOD TO KNOW AT THIS STAGE')+'</small><b>'+F(d[0])+'</b><span>'+F(d[1])+'</span></div></section>'
+      +'<div class="ot-discovery"><small>'+F('ONE THING TO TRY')+'</small><b>'+F(d[2])+'</b><span>'+F(d[3])+'</span></div></section>'
       +'<section class="ot-section ot-choose"><div class="ot-sec-head"><div class="ot-kicker">'+F('CHOOSE YOUR OUTING')+'</div><h2>'+F('Where are you headed?')+'</h2></div>'
       +'<div class="ot-featured">'+tile('errands',true)+'</div>'
       +'<div class="ot-tile-grid">'+tile('road')+tile('fly')+tile('away')+tile('water')+'</div>'
