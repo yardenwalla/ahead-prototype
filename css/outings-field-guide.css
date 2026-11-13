@@ -114,3 +114,7 @@
  #main .ot-cover h1{font-size:31px}
 }
 @media(prefers-reduced-motion:reduce){#main .ot-page *{transition:none!important}}
+
+#main .ot-discovery-go{display:block;text-align:left;margin:10px 0 0;padding:7px 0 0;border-top:1px solid #f1e8e0;color:#8c6250;font-size:12.5px!important;font-weight:800!important;min-height:35px}
+#main .ot-safety-foot{margin:17px 5px 0;font-size:12px;line-height:1.55;color:#718375;padding-left:17px;position:relative}
+#main .ot-safety-foot:before{content:"•";position:absolute;left:4px;color:#7d9c83}
