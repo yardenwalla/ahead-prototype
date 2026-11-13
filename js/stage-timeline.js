@@ -16,7 +16,7 @@
       { label: 'Round-the-clock sleep', age: '0–6 weeks', setUntil: 3 },   // swaddling advice: not once a baby can roll
       { label: 'Longer nights', age: '6 weeks–5 months' },
       { label: 'Three naps', age: '5–7 months' },
-      { label: 'Two naps', age: '7–12 months' }   // Nov 12: clear age windows (Taking Cara Babies' nap guide), so Sleep moves on by age
+      { label: 'Two naps', age: '6–12 months' }   // Nov 12: clear age windows (Taking Cara Babies' nap guide), so Sleep moves on by age
     ] },
     Feeding: { kind: 'pattern', stages: [
       { label: 'Newborn', age: '0–6 weeks', setUntil: 3 },
@@ -38,7 +38,7 @@
     ] },
     // Everyday care follows age, so its timeline is for reading only (no Change), like Health.
     'Daily rhythm': { kind: 'calendar', fixed: true, stages: [
-      { label: 'Newborn' }, { label: '1–3 months' }, { label: '4–6 months' }, { label: '7–12 months' }
+      { label: 'Newborn' }, { label: '1–3 months' }, { label: '4–6 months' }, { label: '6–12 months' }
     ] },
     Health: { kind: 'calendar', fixed: true, stages: [0, 1, 2, 4, 6, 9, 12].map(a => ({ key: a, label: a === 0 ? 'First week' : a + (a === 1 ? ' month' : ' months') })) }
   };

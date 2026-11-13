@@ -66,7 +66,7 @@ window.SEARCH_DEEP = [["topic:Development","Development & play","Smiles back at 
 ["chg:Out and about:d:bag","","Diaper bag","Packed for how Maya is fed",8191,1],
 ["topic:Out and about","Outings and travel","Every time","Look in the back seat before you walk away.",8191,0],
 ["chg:Out and about:d:road","","Ready for a longer trip?","Coming up around 2 months",3,1],
-["topic:Childcare","Childcare","What kind of care?","",8191,0],
+["topic:Childcare","Childcare","Compare care options","",8191,0],
 ["topic:Childcare","Childcare","Before day one","",8191,0],
 ["chg:Childcare:d:center","","Daycare center","Set hours, built-in backup",8191,1],
 ["chg:Childcare:d:home","","Home daycare","A small group, often most affordable",8191,1],

@@ -376,13 +376,14 @@
     // The top card: where the family is, with a scene of it.
     let b = `<header class="hub-hero cc-hero cc-disc"><p class="hub-eyebrow">${F(S.eyebrow)}</p><h1>${F(S.t)}</h1><p class="hub-lead">${F(S.lead)}</p><div class="cc-art" aria-hidden="true">${CC_ART[view]}</div><div class="cc-worth"><small>${F(S.worth[0])}</small><b>${F(S.worth[1])}</b><span>${F(S.worth[2])}</span></div></header>`;   // same build as Feeding's top card: words, a scene, one card inside
     if (view === 0) {
+      const kinds = [['center'], ['home'], ['nanny'], ['family'], ['sitter', 'For a night out, or a break'], ['help', am < 4 ? 'A doula or overnight help, early on' : 'A helper while you’re home, or at night', 'Extra help at home']];
+      b += `<h2 class="hub-h2">${F('Compare care options')}</h2><div class="oa-places">${kinds.map(([k, short, title]) => { const t = TYPES[k] || {}, c = PAL[k], m = (list[k] || []).length;
+        return `<button class="oa-place" style="--oa-bg:${c[0]};--oa-ink:${c[1]}" onclick="openPage('chg:${CAT}:d:${k}')"><span class="oa-place-art">${SHAPE[k](c)}</span><b>${F(title || t.name)}</b><small>${F(m ? `${m} on your shortlist` : short || t.short)}</small></button>`; }).join('')}</div>`
+        + `<button class="hub-link cc-quiz-link" onclick="openPage('chg:${CAT}:d:fit')">${F('Not sure which? Take the quick quiz')} ›</button>`;
+      // Planning and paying come after the options, so the first thing a parent sees is what care can look like.
       b += `<h2 class="hub-h2">${F('Before you choose')}</h2><div class="hub-list">`
         + homeRow('plan', 'notepad', 'Plan your care', 'When to start looking, and waitlists', 'plan')
         + homeRow('pay', 'coin', 'Paying for care', 'Help from your state, work and taxes', 'pay') + `</div>`;
-      const kinds = [['center'], ['home'], ['nanny'], ['family'], ['sitter', 'For a night out, or a break'], ['help', am < 4 ? 'A doula or overnight help, early on' : 'A helper while you’re home, or at night', 'Extra help at home']];
-      b += `<h2 class="hub-h2">${F('What kind of care?')}</h2><div class="oa-places">${kinds.map(([k, short, title]) => { const t = TYPES[k] || {}, c = PAL[k], m = (list[k] || []).length;
-        return `<button class="oa-place" style="--oa-bg:${c[0]};--oa-ink:${c[1]}" onclick="openPage('chg:${CAT}:d:${k}')"><span class="oa-place-art">${SHAPE[k](c)}</span><b>${F(title || t.name)}</b><small>${F(m ? `${m} on your shortlist` : short || t.short)}</small></button>`; }).join('')}</div>`
-        + `<button class="hub-link cc-quiz-link" onclick="openPage('chg:${CAT}:d:fit')">${F('Not sure which? Take the quick quiz')} ›</button>`;
     } else if (view === 1) {
       b += careCardButton(card);
       b += `<h2 class="hub-h2">${F('Before day one')}</h2><div class="hub-list">`

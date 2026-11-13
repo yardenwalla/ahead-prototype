@@ -10,8 +10,8 @@
   const CAT = 'Daily rhythm';
   const live = () => typeof isCurrent !== 'function' || isCurrent();
   const careAge = () => (typeof hubAgeFor === 'function' ? hubAgeFor('care', actualMonth()) : developmentMonth(actualMonth()));
-  const stageNow = () => live() ? (((NOW - parse(profile.dob)) / 864e5) < 28 ? 0 : careAge() < 4 ? 1 : careAge() < 7 ? 2 : 3) : (month < 1 ? 0 : month < 4 ? 1 : month < 7 ? 2 : 3);
-  const STAGE = ['Newborn', '1–3 months', '4–6 months', '7–12 months'];
+  const stageNow = () => live() ? (((NOW - parse(profile.dob)) / 864e5) < 28 ? 0 : careAge() < 4 ? 1 : careAge() < 6 ? 2 : 3) : (month < 1 ? 0 : month < 4 ? 1 : month < 6 ? 2 : 3);
+  const STAGE = ['Newborn', '1–3 months', '4–6 months', '6–12 months'];
   const monthsLabel = n => n === 0 ? 'Newborn' : n === 12 ? '1 year' : n === 1 ? '1 month' : n + ' months';
   const hasTooth = () => !live() || answers.hasTooth === 'Yes' || (typeof journeyData === 'function' && journeyData().records.some(r => r.type === 'milestone' && /tooth|teeth/i.test(r.title || '')));
 
@@ -163,7 +163,7 @@
      Like Sleep: each page leads with what's new at this stage, open. What never changes (how to change a
      diaper, nail trimming, bath safety) is said once and folds away below, so moving up a stage never means
      rereading. A stage with nothing new for a topic just shows the reference, open. When to call stays visible. */
-  const NEWLABEL = ['For the first weeks', 'New at 1–3 months', 'New at 4–6 months', 'New at 7–12 months'];
+  const NEWLABEL = ['For the first weeks', 'New at 1–3 months', 'New at 4–6 months', 'New at 6–12 months'];
   const topicPage = (k, v, o) => {
     const h = H(), N = ((o.news || [])[v] || []).filter(Boolean), B = (o.base || []).filter(Boolean);
     let b = head(k, ctx(v), o.title, (o.lead || [])[v] || '');
@@ -332,7 +332,7 @@
     const r = RASH[id], h = H(); if (!r) return null;
     let b = head('skin', 'Skin and rashes', r.t, r.lead);
     // Each rash gets its own picture up top, so Little bumps and Flaky scalp don't open pages that look the same.
-    const mini = { newborn: 'milia', eczema: 'peeling', yeast: 'diaper' }[id] || id;
+    const mini = { newborn: 'milia', yeast: 'diaper' }[id] || id;
     if (window.careMini) { const m = careMini(mini); if (m) b = b.replace(/<span class="dev-area-head-art">[\s\S]*?<\/svg><\/span>/, `<span class="dev-area-head-art care-rash-art">${m}</span>`); }
     b += rashMap(id) + h2('What helps') + h.steps(r.steps);
     if (r.call) b += h.tip('When to call', r.call);
@@ -419,7 +419,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     bigtub: { k: 'bath', title: 'Move to the big tub', W: 'Once {s} {sit|sits} steadily on {p} own, the big tub is fine.', tilesT: 'Make it safe', tiles: () => [['shield', 'A non-slip mat', 'In the tub'], ['drop', 'Waist-deep at most', 'When {s} {sit|sits}'], ['hand', 'Pulls up?', 'Sit {o} back down']], tips: false, D: '',
       extra: () => H().versus('Every bath', ['Always', 'Keep a hand on Maya the whole bath.'], ['Never', 'Step away, even for a second. Babies can slip under quietly. Take {o} with you.']),
       Y: 'Skip bath seats. They can tip over, and babies can slip out.', Yl: 'Good to know' },
-    feet: { k: 'clothes', ctx: () => live() && careAge() < 7 ? 'Feet and shoes · Usually from 7–12 months' : 'Feet and shoes', title: 'Bare feet, then soft shoes', W: 'Bare feet help {o} balance and feel the floor while {s} {learn|learns} to walk.', tiles: () => [['home', 'Barefoot indoors', 'Or socks'], ['stand', 'Shoes once walking', 'Outside only'], ['sizes', 'Soft and flexible', 'With non-skid soles']], D: '',
+    feet: { k: 'clothes', ctx: () => live() && careAge() < 10 ? 'Feet and shoes · Usually around the first birthday' : 'Feet and shoes', title: 'Bare feet, then soft shoes', W: 'Bare feet help {o} balance and feel the floor while {s} {learn|learns} to walk.', tiles: () => [['home', 'Barefoot indoors', 'Or socks'], ['stand', 'Shoes once walking', 'Outside only'], ['sizes', 'Soft and flexible', 'With non-skid soles']], D: '',
       K: 'About a finger’s width at the big toe. Check every month.', Kl: 'How a shoe should fit', Y: 'Skip walkers on wheels. They don’t help with walking, and can lead to falls.', Yl: 'Good to know' },
     wriggly: { i: 'toy', k: 'diapers', title: 'Make changes easier', W: 'Rolling and crawling can turn changes into a wrestle.', tiles: () => [['toy', 'Something to hold', 'A toy, or the same song each time'], ['hand', 'One hand on {o}', 'Always'], ['stand', 'Pulling up?', 'Try a standing change']], tips: false, D: '',
       K: 'Once solids start, poop gets thicker, browner and smellier, sometimes the color of the food. If it gets hard, pears, prunes and peaches help.', Kl: 'Poop changes with solids',
@@ -822,11 +822,11 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
       groups: [['Every day', [['diapers', 'Diapers', 'Fewer poops can be normal', 'Keep a hand on {o} at every change', 1], ['skin', 'Skin', 'Plain water on the face', 'Baby acne and cradle cap are common', 1, 'acne'], ['teeth', 'Gums', 'Wipe twice a day', 'With a soft, clean cloth', 0, 'gums'], ['clothes', 'Clothes', 'One layer more than you', 'No hat indoors']]],
                ['Each week', [['bath', 'Tub baths', 'About 3 a week', 'Hair at 2 or 3 of them', 1], ['nails', 'Nails', 'Trim once a week', 'Easiest while asleep']]],
                ['Outside', [['sun', 'Sun', 'Shade first', 'Long sleeves and a wide-brimmed hat']]]] },
-    { title: 'Drool and busy hands', lead: 'Teething often starts, and bath time gets more fun. ' + (live() && careAge() !== actualMonth() ? 'Once Maya is 6 months adjusted, sunscreen can join shade.' : 'At 6 months, sunscreen can join shade.'),
+    { title: 'Drool and busy hands', lead: 'Teething often starts, rolling begins, and bath time gets more fun.',
       groups: [['Every day', [hasTooth() ? ['teeth', 'Teeth and teething', 'Brush twice a day', 'A rice-grain smear of toothpaste. A chilled ring helps sore gums', 1, 'teething'] : ['teeth', 'Teething', 'Chewing and drool are normal', 'Wipe gums twice a day and pat the chin dry. A chilled ring helps', 1, 'teething'], ['diapers', 'Diapers', 'Keep a hand on {o} at every change', (answers.roll === 'Yes' || ['Tummy to back', 'Back to tummy', 'Both ways', 'Trying to roll'].includes(answers.rollDirection)) ? 'Use the strap, or change {o} on the floor' : 'Rolling can start any day']]],
                ['Each week', [['bath', 'Baths', 'About 3 a week', 'Often part of bedtime'], ['nails', 'Nails', 'Trim once a week', '']]],
                ['Outside', [['sun', 'Sun', careAge() >= 6 ? 'Shade, then SPF 30' : 'Shade first', careAge() >= 6 ? 'Sunscreen from 6 months, on skin you can’t cover' : 'Sunscreen only if there’s no shade', careAge() >= 6 ? 1 : 0]]]] },
-    { title: 'First teeth and the big tub', lead: 'Brushing starts with the first tooth, and the big tub comes once Maya sits steadily.',
+    { title: 'First teeth and the big tub', lead: 'Sunscreen can join shade, brushing starts with the first tooth, and the big tub comes once Maya sits steadily.',
       groups: [['Every day', [hasTooth() ? ['teeth', 'Teeth', 'Brush twice a day', 'A rice-grain smear of fluoride toothpaste', 1, 'brush'] : ['teeth', 'Teeth', 'Brush from the first tooth', 'Until then, wipe gums twice a day', 1, 'brush'], ['diapers', 'Diaper changes', 'Keep a hand on {o}', 'A toy to hold helps with wriggling', 1], ['feet', 'Feet and shoes', 'Bare feet indoors', 'Soft shoes once walking outside', 1, 'feet']]],
                ['Each week', [['bath', 'Baths', 'About 3 a week', 'The big tub, once sitting steadily', 1], ['nails', 'Nails', 'Trim once a week', '']]],
                ['Outside', [['sun', 'Sun', 'Shade, then SPF 30', 'Again every 2 hours and after water']]]] }
@@ -839,9 +839,9 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     { art: 'bath', t: 'The first tub bath may be close', d: 'Once the cord falls off and the spot has healed.', cta: 'See when and how', go: 'p:tub',
       see: [['acne', 'Little bumps', 'rash:acne'], ['cradle', 'Flaky scalp', 'rash:cradle'], ['diaper', 'Fewer poops', 'look:1:poop']] },
     { art: 'roll', t: 'Changes get more hands-on', d: 'Rolling and wriggling make diaper changes trickier.', cta: 'Make changes easier', go: 't:diapers:2',
-      see: [['drool', 'Lots of drool', 'rash:drool'], ['teething', 'Sore gums', 'p:teething'], ['peeling', 'Dry, rough patches', 'rash:eczema']] },
+      see: [['drool', 'Lots of drool', 'rash:drool'], ['teething', 'Sore gums', 'p:teething'], ['eczema', 'Dry, rough patches', 'rash:eczema']] },
     { art: 'tooth', t: 'A tiny tooth, a new routine', d: 'Brushing twice a day starts with the first tooth.', cta: 'How to brush', go: 'p:brush',
-      see: [['teething', 'Teething', 'p:teething'], ['acne', 'Heat rash', 'rash:heat'], ['diaper', 'Wriggly changes', 't:diapers:3']] }
+      see: [['teething', 'Teething', 'p:teething'], ['heat', 'Heat rash', 'rash:heat'], ['wriggle', 'Wriggly changes', 't:diapers:3']] }
   ];
   const cgo = r => `openPage('chg:${CAT}:d:${r}')`;
   window.careHome = function (selected = null) {
@@ -852,7 +852,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     // The top card, built like Feeding's: the stage, a scene, and what's new inside.
     let b = `<header class="hub-hero care-hero care-disc"><p class="hub-eyebrow">${STAGE[v]}</p><h1>${F(st.title)}</h1><p class="hub-lead">${F(st.lead)}</p><div class="care-art" aria-hidden="true">${window.careScene ? careScene(N.art) : ''}</div>`
       + `<div class="care-nownote" role="button" tabindex="0" onclick="${cgo(N.go)}"><small>${F('New now')}</small><b>${F(N.t)}</b><span>${F(N.d)}</span><em>${F(N.cta)} ›</em></div></header>`;   // a card like Feeding's "You might notice", not a pill button
-    b += `<h2 class="hub-h2">${F('You may be noticing')}</h2><div class="care-see">${N.see.map(([id, t, r]) => `<button onclick="${cgo(r)}"><span class="care-see-art">${window.careMini ? careMini(id) : ''}</span><b>${F(t)}</b></button>`).join('')}</div>`;
+    b += `<h2 class="hub-h2">${F('You may be noticing')}</h2><div class="care-see">${(v === 3 && (!live() || careAge() >= 9) ? [N.see[0], ['steps', 'First steps', 'p:feet'], N.see[2]] : N.see).map(([id, t, r]) => `<button onclick="${cgo(r)}"><span class="care-see-art">${window.careMini ? careMini(id) : ''}</span><b>${F(t)}</b></button>`).join('')}</div>`;
     b += `<div class="care-doors"><button onclick="${cgo('how:' + v)}"><span class="care-door-ic">${hubArt('book', CAT)}</span><b>${F('How do I…?')}</b><small>${F('Steps for everyday care')}</small></button>`
       + `<button onclick="${cgo('look:' + v)}"><span class="care-door-ic">${hubArt('eye', CAT)}</span><b>${F('Is this normal?')}</b><small>${F('Start with what you see')}</small></button></div>`;
     b += nx ? h.next(v === 0 ? 'Next, after the first few weeks' : `Next, usually from ${STAGE[v + 1].split('–')[0]} months`, nx.title, `openPage('chg:${CAT}:s:${v + 1}')`)

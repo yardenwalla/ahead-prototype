@@ -143,11 +143,11 @@
     { key: 'newborn', rail: 'Newborn', when: 'Until the cord stump falls off' },
     { key: 'early', rail: '1–3 months', when: 'Usually 1–3 months' },
     { key: 'middle', rail: '4–6 months', when: 'Usually 4–6 months' },
-    { key: 'late', rail: '7–12 months', when: 'Usually 7–12 months' }
+    { key: 'late', rail: '6–12 months', when: 'Usually 6–12 months' }
   ];
-  const careFor = (days, m) => days < 28 ? 0 : m < 4 ? 1 : m < 7 ? 2 : 3;
+  const careFor = (days, m) => days < 28 ? 0 : m < 4 ? 1 : m < 6 ? 2 : 3;
   const careAge = () => (typeof hubAgeFor === 'function' ? hubAgeFor('care', actualMonth()) : developmentMonth(actualMonth()));
-  const careStage = () => { return live() ? careFor((NOW - parse(profile.dob)) / 864e5, careAge()) : (month < 1 ? 0 : month < 4 ? 1 : month < 7 ? 2 : 3); };
+  const careStage = () => { return live() ? careFor((NOW - parse(profile.dob)) / 864e5, careAge()) : (month < 1 ? 0 : month < 4 ? 1 : month < 6 ? 2 : 3); };
   const bathSafety = () => H().versus('Bath safety', ['Always', 'Gather everything first, then keep a hand on Maya the whole bath.'], ['Never', 'Step away, even for a moment. Babies can slip under quietly in seconds.']);
   const careRow = (icon, title, sub, id) => H().row({ icon, cat: 'Daily rhythm', title, sub, onclick: id.startsWith('chg:') ? `openPage('${id}')` : `openPage('chg:Daily rhythm:d:${id}')` });
   function everydayCare(selected = null) {
@@ -175,7 +175,7 @@
       b += bathSafety();
     }
     if (v === 3) {
-      b += h.hero({ eyebrow: '7–12 months', title: 'First teeth and splashier baths', checks: ['Maya sits in the bath, so it gets splashier and more fun', 'The first tooth means brushing starts, twice a day', 'Pulling up and first steps change what {s} {need|needs} on {p} feet'] });
+      b += h.hero({ eyebrow: '6–12 months', title: 'First teeth and splashier baths', checks: ['Maya sits in the bath, so it gets splashier and more fun', 'The first tooth means brushing starts, twice a day', 'Pulling up and first steps change what {s} {need|needs} on {p} feet'] });
       b += h.glanceCard(v === now ? 'Maya’s care at a glance' : 'At this stage', [['Teeth', 'Brush twice a day', 'From the first tooth'], ['Toothpaste', 'A rice-grain smear', 'With fluoride']], `openPage('chg:Daily rhythm:d:teeth')`);
       const hasTooth = live() && (answers.hasTooth === 'Yes' || journeyData().records.some(r => r.type === 'milestone' && /tooth|teeth/i.test(r.title || '')));
       b += h.list('What helps now', [hasTooth || !live() ? careRow('tooth', 'Brush the first teeth', 'A soft brush and a tiny smear of toothpaste', 'teeth') : careRow('tooth', 'Teething, drool and gums', 'Drool, chewing and sore gums', 'gums'), careRow('bath', 'Bath seats aren’t safety seats', 'Stay within arm’s reach, every bath', 'bathseat'), careRow('sun', 'Protect {p} skin in the sun', 'Shade first, then baby sunscreen', 'sun'), (!live() || hubAgeFor('care', actualMonth()) >= 9) ? careRow('stand', 'Cruising and first steps', 'Bare feet indoors, and when shoes matter', 'steps') : null]);
