@@ -195,8 +195,18 @@
   const fact=(d,id)=>'<section class="ot-keyfact"><div class="ot-kicker">'+F(d.label)+'</div><h2>'+F(d.focus)+'</h2>'
       +(d.compare?'<div class="ot-compare">'+d.compare.map((x,i)=>'<div class="ot-comparison'+(i===0?' best':'')+'"><small>'+F(x[0])+'</small><b>'+F(x[1])+'</b><span>'+F(x[2])+'</span></div>').join('')+'</div>':'')
       +'<p>'+F(d.why)+'</p></section>';
-  const timeline=d=>'<section class="ot-section ot-path"><div class="ot-sec-head"><div class="ot-kicker">'+F('STEP BY STEP')+'</div><h2>'+F(d.moments.length>3?'Your trip, in order':'How the outing goes')+'</h2><p>'+F('Know what to do at each point, without planning every minute.')+'</p></div>'
-    +'<div class="ot-steps">'+d.moments.map((x,i)=>'<details class="ot-step"'+(i===0?' open':'')+'><summary><span class="ot-step-dot">'+(i+1)+'</span><span class="ot-step-copy"><small>'+F(x[0])+'</small><b>'+F(x[1])+'</b></span><span class="ot-step-toggle" aria-hidden="true">＋</span></summary><p>'+F(x[2])+'</p></details>').join('')+'</div></section>';
+  /* The action stays visible. Details expand only when more context helps. */
+  const MOMENT_HINTS={
+    errands:['Feed, one stop and a spare outfit','Comfort or feed wherever you are','You can head home whenever you like'],
+    road:['Rear-facing seat and soft toys','Plan breaks; feed only while parked','Move to a flat sleep space'],
+    fly:['Add Maya and check aircraft approval','Baby milk can exceed the liquid limit','Check your airline’s gate policy','Offer comfort and keep restraints secure','Ease into the new routine'],
+    away:['Ask for a safe crib or play yard','Look for cords, medicines and hazards','Bring familiar bedtime steps'],
+    water:['Choose shade and pack dry things','Stay hands-on near every body of water','Warm up, change and feed'],
+    abroad:['Start the passport and entry checks','Schedule a destination health review','Save local emergency and water info','Bring your car seat and safe feeding plan']
+  };
+
+  const timeline=(d,id)=>'<section class="ot-section ot-path"><div class="ot-sec-head"><div class="ot-kicker">'+F('STEP BY STEP')+'</div><h2>'+F(d.moments.length>3?'Your trip, in order':'How the outing goes')+'</h2><p>'+F('Know what to do at each point, without planning every minute.')+'</p></div>'
+    +'<div class="ot-steps">'+d.moments.map((x,i)=>'<details class="ot-step"'+(i===0?' open':'')+'><summary><span class="ot-step-dot">'+(i+1)+'</span><span class="ot-step-copy"><small>'+F(x[0])+'</small><b>'+F(x[1])+'</b><em>'+F(MOMENT_HINTS[id][i])+'</em></span><span class="ot-step-toggle" aria-hidden="true">＋</span></summary><p>'+F(x[2])+'</p></details>').join('')+'</div></section>';
   const questions=d=>'<section class="ot-section ot-questions"><div class="ot-sec-head"><div class="ot-kicker">'+F('IF THINGS CHANGE')+'</div><h2>'+F('Good to know along the way')+'</h2></div>'
     +'<div class="ot-q-list">'+d.ask.map(x=>'<details class="ot-question"><summary>'+F(x[0])+'<span aria-hidden="true">＋</span></summary><p>'+F(x[1])+'</p></details>').join('')+'</div></section>';
   const packing=d=>'<section class="ot-section ot-pack"><div class="ot-sec-head"><div class="ot-kicker">'+F('MAKE IT EASIER')+'</div><h2>'+F('A few things to bring')+'</h2><p>'+F('Just the extras for this kind of outing.')+'</p></div>'
@@ -209,7 +219,7 @@
     +detailPageTop(CAT)
     +'<div class="ot-cover"><div class="ot-kicker">'+F(titles[id]+' · '+(m===0?'newborn':m+' months'))+'</div><h1>'+F(d.title)+'</h1><p>'+F(d.lead)+'</p>'
     +'<div class="ot-cover-picture">'+pic(id)+'</div></div>'
-    +fact(d,id)+timeline(d)+questions(d)+packing(d)
+    +fact(d,id)+timeline(d,id)+questions(d)+packing(d)
     +'<section class="ot-section ot-reference"><p>'+F(d.extra)+'</p><button onclick="'+original(id)+'">'+F('See the complete guide')+' <span aria-hidden="true">›</span></button>'
     +'<a href="'+esc2(d.source[1])+'" target="_blank" rel="noopener noreferrer">'+F('Source: '+d.source[0])+' ↗</a></section>'
     +'</div>';
