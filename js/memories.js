@@ -112,7 +112,7 @@
     // The newest real photo when there is one; until then, the little keepsake drawing.
     const art = `<span class="mem-bookcard-art">${realStack || stack}</span>`;
     const addArt = '';
-    const bookCard = `<div class="mem-bookcard${addArt ? ' has-add' : ''}"><button class="mem-bookcard-open" onclick="openPage('${firsts.length ? 'chg:Timeline:firsts' : 'chg:Timeline:milestone'}')">${art}<span class="mem-bookcard-copy"><b>${esc2(`${name()}’s memory book`)}</b><small>${esc2(count)}</small>${firsts.length ? `<em>${esc2('Open the book')} ›</em>` : ''}</span></button>${addArt}<button class="mem-bookcard-save" onclick="openPage('chg:Timeline:milestone')">＋ Save a first</button></div>`;
+    const bookCard = `<div class="mem-bookcard${addArt ? ' has-add' : ''}"><button class="mem-bookcard-open" onclick="openPage('${firsts.length ? 'chg:Timeline:firsts' : 'chg:Timeline:milestone'}')">${art}<span class="mem-bookcard-copy"><b>${esc2(`${name()}’s memory book`)}</b><small>${esc2(count)}</small>${firsts.length ? `<em>${esc2(firsts.length === 1 ? 'The memory book · 1 moment' : `The memory book · all ${firsts.length}`)} ›</em>` : ''}</span></button>${addArt}<button class="mem-bookcard-save" onclick="openPage('chg:Timeline:milestone')">＋ Save a first</button></div>`;
 
     // Look how you've grown: her first photo and her newest, taped side by side, and the year plays from here.
     // It changes every time a new month's photo goes in, so the tab has something new to see each month.
@@ -137,7 +137,7 @@
     const shown = (() => { for (let m = now; m >= 0; m--) if (book.includes(`data-m="${m}"`)) return m; return now; })();
     const page = book ? (book.match(new RegExp(`<section class="bk-page" data-m="${shown}">[\\s\\S]*?<\\/section>`)) || [''])[0] : '';
     const inner = page ? page.replace(/^<section[^>]*>/, '').replace(/<\/section>$/, '').replace(/<(span|label) class="bk-photo[\s\S]*?<\/\1>/, '').replace(/<h2 class="bk-month">[\s\S]*?<\/h2>/, '') : '';
-    const monthBlock = `<div class="mem-month"><p class="mem-month-title">${esc2(`And this was ${WORDS[shown]}…`)}</p>${inner || `<p class="bk-noted">${esc2('When you tap Seen it or save a first, it’s written here.')}</p>`}<div class="mem-month-foot">${firsts.length ? `<button class="mem-head-link" onclick="openPage('chg:Timeline:firsts')">${esc2('Open the book')} ›</button>` : '<span></span>'}<button class="mem-save" onclick="openPage('chg:Timeline:milestone')">＋ Save a first</button></div></div>`;
+    const monthBlock = `<div class="mem-month"><p class="mem-month-title">${esc2(`And this was ${WORDS[shown]}…`)}</p>${inner || `<p class="bk-noted">${esc2('When you tap Seen it or save a first, it’s written here.')}</p>`}<div class="mem-month-foot">${firsts.length ? `<button class="mem-head-link" onclick="openPage('chg:Timeline:firsts')">${esc2(firsts.length === 1 ? 'The memory book · 1 moment' : `The memory book · all ${firsts.length}`)} ›</button>` : '<span></span>'}<button class="mem-save" onclick="openPage('chg:Timeline:milestone')">＋ Save a first</button></div></div>`;
     const bookSec = '';
     b += grow + monthsSec();
 
