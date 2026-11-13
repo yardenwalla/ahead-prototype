@@ -1,7 +1,7 @@
 /* Ahead · Memories, led by the photos.
    A grid of the year (newborn to 1 year): photos big, this month's slot inviting, the months still to come
    faint, so the year fills in as it goes. "Play the year" flips through the photos with the firsts from each
-   month. Firsts sit below as keepsake cards; checkups are a quiet record at the bottom.
+   month. Firsts open in the memory book. Checkups live in Health, not here.
    Planning (the next checkup) lives in Next and Health, not here. */
 (function () {
   const esc2 = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -48,11 +48,17 @@
     const pageOf = (m, k) => {
       const pic = typeof hubPhotoFor === 'function' ? hubPhotoFor(m) : null, tape = TAPE[m], tilt = k % 2 ? -4 : 4;
       const firstsHtml = (by[m] || []).map(r => `<button class="bk-first" onclick="openPage('event-edit:${r.id}')"><span class="bk-ic" style="${TONE(r)}">${hubArt(ICON(r), 'Development')}</span><span class="bk-copy"><b>${esc2(keepTitle(r))}</b>${r.notes ? `<q>${esc2(String(r.notes).slice(0, 140))}</q>` : ''}</span><span class="bk-go" aria-hidden="true">›</span></button>`).join('');
-      const tags = also[m] ? `<div class="bk-also"><span class="bk-also-label">${esc2(by[m] ? 'Also this month' : 'Noticed this month')}</span><div class="bk-tags">${also[m].map(r => `<button class="bk-tag" style="${TONE(r)}" onclick="openPage('event-edit:${r.id}')">${esc2(r.title)}<span class="bk-tag-go" aria-hidden="true">›</span></button>`).join('')}</div></div>` : '';
+      // The smaller things noticed that month, written as one line in the book's handwriting rather than a pile of
+      // chips: by the first birthday there can be forty of them. Each one still opens to move or remove it, and a busy
+      // month shows five, then "and 4 more", so no page grows long.
+      const lc = t => /^[A-Z][a-z]/.test(t) ? t[0].toLowerCase() + t.slice(1) : t;
+      const noted = also[m] || [], cap = noted.length > 6 ? 5 : noted.length;
+      const tags = noted.length ? `<p class="bk-noted${cap < noted.length ? '' : ' is-open'}"><span class="bk-noted-label">${esc2(by[m] ? 'Also noticed' : 'Noticed')}:</span> ${noted.map((r, i) => `<span class="bk-noted-it${i >= cap ? ' is-extra' : ''}">${i === 0 ? '' : i === noted.length - 1 ? ' and ' : ', '}<button class="bk-noted-go" style="${TONE(r)}" onclick="openPage('event-edit:${r.id}')" aria-label="${esc2(r.title + ', change or move')}">${esc2(lc(r.title))}</button></span>`).join('')}${cap < noted.length ? `<button class="bk-noted-more" onclick="this.parentNode.classList.add('is-open')"> and ${noted.length - cap} more</button>` : ''}.</p>` : '';
       // The month's photo, taped in on the right. No photo yet: an empty polaroid that adds one.
       const photo = pic ? `<span class="bk-photo" style="--tape:${tape};--tilt:${tilt}deg"><i></i><img src="${pic}" alt="${esc2(WORDS[m])} photo"><em class="bk-photo-cap">${esc2(m === 0 ? 'Newborn photo' : m === 12 ? 'Birthday photo' : m + '-month photo')}</em></span>`
         : `<label class="bk-photo is-empty" style="--tape:${tape};--tilt:${tilt}deg" aria-label="Add the ${esc2(WORDS[m].toLowerCase())} photo"><i></i><span class="bk-photo-add">＋</span>${typeof hubPhotoInput === 'function' ? hubPhotoInput(m) : ''}</label>`;
-      return `<section class="bk-page"><div class="bk-body"><h2 class="bk-month">${esc2(WORDS[m])}</h2>${firstsHtml ? `<div class="bk-firsts">${firstsHtml}</div>` : ''}${tags}</div>${photo}</section>`;
+      // The photo sits in the corner and the words wrap around it, so a month with lots noticed uses the page's full width.
+      return `<section class="bk-page">${photo}<h2 class="bk-month">${esc2(WORDS[m])}</h2>${firstsHtml ? `<div class="bk-firsts">${firstsHtml}</div>` : ''}${tags}</section>`;
     };
     const inner = `<div class="bk-book">${months.map(pageOf).join('')}</div>`;
     // A header in the same keepsake style: the title, and a little stack of taped polaroids.
@@ -73,7 +79,6 @@
     const now = monthOf(dob, today);
     const photo = m => (typeof hubPhotoFor === 'function' ? hubPhotoFor(m) : null);
     const firsts = data.records.filter(r => r.type === 'milestone' && r.status === 'attended').sort((a, b) => a.date.localeCompare(b.date));
-    const visits = data.records.filter(r => r.type === 'visit' && r.status === 'attended').sort((a, b) => b.date.localeCompare(a.date));
 
     // Month by month: each month as its finished Story (the balloon design with the photo in the polaroid).
     // Months without a photo show the same design with an empty polaroid, so parents can see what it becomes.
@@ -118,8 +123,7 @@
     }
     b += bookCard + `${year}<div class="mem-head"><h2>Month by month</h2>${have.length >= 2 ? `<button class="mem-play-link" onclick="memPlay()"><span aria-hidden="true">▶</span> Play the year</button>` : ''}</div>${strip}`;
 
-    // Checkups: a quiet record.
-    if (visits.length) b += `<details class="mem-visits"><summary><span>${esc2('Checkups')}</span><small>${visits.length ? `${visits.length} saved` : 'None saved yet'}</small></summary>${visits.map(r => `<button class="mem-visit" onclick="openPage('event-edit:${r.id}')"><b>${esc2(r.title)}</b><small>${esc2(journeyDateLabel(r.date))}</small></button>`).join('')}<button class="textlink" onclick="openPage('chg:Timeline:visit')">＋ Record a visit</button></details>`;
+    // Checkups live in Health, never in the memory book.
     b += `<p class="hub-foot">Photos and entries stay on this device.</p></div>`;
     return `<div class="quiet-category hub-page hub-timeline-page" style="${yearTheme('Memories')}">${b}</div>`;
   };
@@ -150,26 +154,35 @@
     };
   }
 
-  /* ---------- Play the year: a flipbook of the monthly photos ---------- */
+  /* ---------- Play the year: a flipbook of the month cards (the balloon design), with that month's firsts ---------- */
   let timer = null;
-  window.memPlay = function () {
+  window.memPlay = async function () {
     const dob = parse(profile.dob), data = journeyData();
     const frames = Array.from({ length: 13 }, (_, m) => m).filter(m => hubPhotoFor(m)).map(m => {
       const start = iso(addMonths(dob, m)), end = iso(addMonths(dob, m + 1));
-      const f = data.records.filter(r => r.type === 'milestone' && r.status === 'attended' && r.date >= start && r.date < end && isBig(r)).map(r => r.title);
+      const f = bigFirsts(data.records.filter(r => r.type === 'milestone' && r.status === 'attended' && r.date >= start && r.date < end)).map(keepTitle);
       return { m, src: hubPhotoFor(m), firsts: f };
     });
-    if (!frames.length) return;
+    if (!frames.length || document.querySelector('.mem-flip')) return;
+    const cards = typeof storyHydrate === 'function';
     const el = document.createElement('div');
-    el.className = 'mem-flip'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', 'The year in photos');
-    el.innerHTML = `<button class="mem-flip-close" aria-label="Close">×</button><div class="mem-flip-stage"><img alt=""><div class="mem-flip-cap"><b></b><span></span></div></div><div class="mem-flip-dots">${frames.map(() => '<i></i>').join('')}</div>`;
+    el.className = 'mem-flip' + (cards ? ' is-cards' : ''); el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', 'The year, month by month');
+    el.innerHTML = `<button class="mem-flip-close" aria-label="Close">×</button><div class="mem-flip-stage"><img alt=""><div class="mem-flip-cap"><b></b><span></span></div></div><div class="mem-flip-dots">${frames.map(() => '<i></i>').join('')}</div>`
+      + (cards ? `<div hidden>${frames.map(f => `<img data-story-thumb="${f.m}" alt="">`).join('')}</div>` : '');
     document.body.appendChild(el);
+    // The month cards are drawn once and kept, so the first play waits a moment for them (never more than 2 seconds).
+    if (cards) {
+      storyHydrate(el);
+      const t0 = Date.now();
+      while (Date.now() - t0 < 2000 && el.querySelectorAll('[data-story-thumb]:not(.is-ready)').length) await new Promise(r => setTimeout(r, 80));
+    }
     let i = 0;
     const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
     const show = () => {
-      const f = frames[i], img = el.querySelector('img');
-      img.classList.remove('is-in'); void img.offsetWidth; img.src = f.src; img.classList.add('is-in');
-      el.querySelector('.mem-flip-cap b').textContent = longLabel(f.m);
+      const f = frames[i], img = el.querySelector('.mem-flip-stage img'), card = cards && el.querySelector(`[data-story-thumb="${f.m}"].is-ready`);
+      img.classList.remove('is-in'); void img.offsetWidth; img.src = card ? card.src : f.src; img.classList.add('is-in');
+      img.alt = card ? `${name()} at ${longLabel(f.m).toLowerCase()}` : '';
+      el.querySelector('.mem-flip-cap b').textContent = card ? '' : longLabel(f.m);
       el.querySelector('.mem-flip-cap span').textContent = f.firsts.join(' · ');
       el.querySelectorAll('.mem-flip-dots i').forEach((d, k) => d.classList.toggle('is-on', k === i));
     };
@@ -178,6 +191,6 @@
     el.querySelector('.mem-flip-close').onclick = close;
     el.querySelector('.mem-flip-stage').onclick = () => { if (timer) { clearInterval(timer); timer = null; } else step(); };
     show();
-    if (!reduce) timer = setInterval(() => { if (i === frames.length - 1) { clearInterval(timer); timer = null; return; } step(); }, 1400);
+    if (!reduce) timer = setInterval(() => { if (i === frames.length - 1) { clearInterval(timer); timer = null; return; } step(); }, 1600);
   };
 })();

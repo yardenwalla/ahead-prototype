@@ -122,4 +122,16 @@ for (const [title, skill, age] of [['Sat up', 'Sits without support', 9], ['Roll
   }
 }
 
+// 10. Nov 13: Memories is a baby book. Checkups never show there, and a month with lots noticed stays short.
+{
+  const a = family(9);
+  a.run(`(() => { const d = journeyData(); d.records.push({ id: 'v4', type: 'visit', status: 'attended', date: '2026-02-23', title: '4-month checkup' }); saveJourneyData(d); })()`);
+  a.run(`(() => { const d = journeyData(); ['Copies sounds', 'Reaches for a toy', 'Brings things to mouth', 'Pushes up on arms', 'Looks at self in a mirror', 'Knows familiar people', 'Passes a toy hand to hand', 'Babbles'].forEach((t, i) => d.records.push({ id: 'n' + i, type: 'milestone', status: 'attended', date: '2026-04-25', title: t, skillKey: 'k' + i })); saveJourneyData(d); })()`);
+  check(!/checkup/i.test(text(open(a, 'timeline'))), 'Memories never lists checkups');
+  const book = open(a, 'chg:Timeline:firsts');
+  check(!/class="bk-tag/.test(book), 'The memory book writes the smaller things as one line, not a chip each');
+  check(/and \d+ more/.test(text(book)) && (book.match(/bk-noted-it is-extra/g) || []).length >= 1, 'A busy month shows five, then “and N more”');
+  check((book.match(/openPage\('event-edit:/g) || []).length >= 8, 'Every moment in the book can still be opened to move or remove it');
+}
+
 console.log(`Promise checks: ${checks} passed`);

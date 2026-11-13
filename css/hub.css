@@ -1534,3 +1534,22 @@ label:has(> .hub-photo-input:focus-visible) { outline: 2px solid #884866; outlin
 /* "Call your pediatrician" is a calm next step, not an emergency: warm and quiet. Red stays for Call 911 (Nov 10 review). */
 #main .hub-vs div.is-call { background: #f7efe6 }
 #main .hub-vs .is-call b { color: #7a4b2c }
+
+/* Memory book: the photo in the corner with the words wrapping round it; the smaller things noticed as one written line. */
+#main .bk-page { display: block; display: flow-root }
+#main .bk-page > .bk-photo { float: right; margin: 4px 0 8px 12px }
+#main .bk-page > .bk-firsts { display: flow-root }
+#main .bk-noted { clear: none; margin: 10px 0 0; font-family: AheadHand, Caveat, cursive; font-size: 20px; line-height: 1.35; color: #4c4757 }
+#main .bk-noted-label { color: #8a8494 }
+#main button.bk-noted-go, #main button.bk-noted-more { display: inline; min-height: 0; line-height: inherit; vertical-align: baseline; padding: 2px 0; border: 0; background: none; font: inherit; color: inherit; cursor: pointer;
+  text-decoration: underline; text-decoration-style: dotted; text-decoration-thickness: 2px; text-underline-offset: 4px; text-decoration-color: color-mix(in srgb, var(--mem-ink, #8a8494) 55%, transparent) }
+#main .bk-noted-more { color: #7a4f6d; text-decoration-color: rgba(122,79,109,.5) }
+#main .bk-noted .is-extra { display: none }
+#main .bk-noted.is-open .is-extra { display: inline }
+#main .bk-noted.is-open .bk-noted-more { display: none }
+/* Play the year shows each month's card, so the caption is just that month's firsts, under the card. */
+.mem-flip.is-cards .mem-flip-stage { width: min(100%, calc((100vh - 170px) * 9 / 16), 380px); aspect-ratio: 9 / 16; border-radius: 18px; overflow: visible }
+.mem-flip.is-cards .mem-flip-stage img { border-radius: 18px; box-shadow: 0 18px 40px rgba(0,0,0,.35) }
+.mem-flip.is-cards .mem-flip-cap { position: static; padding: 14px 4px 0; background: none; text-align: center; min-height: 22px }
+.mem-flip.is-cards .mem-flip-cap b:empty { display: none }
+.mem-flip.is-cards .mem-flip-cap span { font-size: 15px; font-weight: 600 }
