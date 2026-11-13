@@ -97,7 +97,7 @@
     { key: 'setup', label: 'First setup', age: 'From birth', title: 'Five things to set up once', lead: 'Before Maya can move, safety is about where {s} {ride|rides}, {sleep|sleeps} and {get|gets} changed.', ids: ['seat', 'sleep', 'cribspot', 'changing', 'gear'] },
     { key: 'reaching', label: 'Rolling', age: '3–6 months', title: 'Rolling puts the floor in reach', lead: 'At the first sign of rolling, the swaddle comes off and the floor needs clearing.', ids: ['swaddle', 'bassinet', 'small', 'bags'] },
     { key: 'rolling', label: 'Crawling', age: '6–9 months', title: 'Crawling opens up every room', lead: 'Most babies start crawling between 6 and 9 months. Do the low, reachable things first.', ids: ['gates', 'storage', 'outlets', 'mattress'] },
-    { key: 'pulling', label: 'Pulling up', age: '9 months+', title: 'Standing brings everything higher into reach', lead: 'Furniture becomes a handhold, and windows, the stove and water are suddenly within reach.', ids: ['anchor', 'windows', 'kitchen', 'pool', 'mattress2'] }
+    { key: 'pulling', label: 'Pulling up', age: '9 months+', title: 'Standing puts higher things in reach', lead: 'Furniture becomes a handhold, and windows, the stove and water are suddenly within reach.', ids: ['anchor', 'windows', 'kitchen', 'pool', 'mattress2'] }
   ];
 
   // The top card's picture and "Look from her height" card (Nov 13), so Safety opens like Feeding, Sleep and Development.

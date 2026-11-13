@@ -298,7 +298,7 @@ window.SEARCH_DEEP = [["topic:Development","Development & play","Smiles back at 
 ["chg:Safety:d:step:storage","","Lock up cabinets and drawers","Medicines, cleaners, knives and bags",8191,1],
 ["chg:Safety:d:step:outlets","","Cover outlets and move cords","Covers too big to swallow",8191,1],
 ["chg:Sleep:d:mattress","","Lower the crib mattress","Before {s} sits up, often around 6 months · In Sleep",8191,1],
-["safety-stage:pulling","","Standing brings everything higher into reach","Next: Pulling up, from about 9 months",8191,1],
+["safety-stage:pulling","","Standing puts higher things in reach","Next: Pulling up, from about 9 months",8191,1],
 ["chg:Safety:d:step:anchor","","Strap furniture and TVs to the wall","So nothing tips if {s} pulls on it",8191,1],
 ["chg:Safety:d:step:windows","","Make windows and blinds safe","Open no more than 4 inches, and no hanging cords",8191,1],
 ["chg:Safety:d:step:kitchen","","Fit stove knob covers and an oven lock","Before {s} can reach the front of the stove",8191,1],
