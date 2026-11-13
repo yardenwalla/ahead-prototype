@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en"><head><base href="../">
+<style>
+body{padding-top:67px!important}
+#shell{min-height:calc(100dvh - 67px)}
+.oa-preview-toolbar{position:fixed;z-index:1600;top:0;left:0;right:0;min-height:64px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px;padding:10px 14px;background:#272c29;color:white;box-shadow:0 4px 20px #1e27251d;font:12px/1.25 Figtree,-apple-system,Arial,sans-serif}
+.oa-preview-toolbar>strong{font-size:12px;letter-spacing:-.1px;margin-right:3px;white-space:nowrap}
+.oa-preview-switch{display:flex;gap:3px;border:1px solid #657268;border-radius:50px;padding:3px;align-items:center}
+.oa-preview-switch button{min-height:31px;padding:5px 12px;border-radius:40px;color:#e4e6dd;font-weight:700;font-size:11.5px}
+.oa-preview-switch button.is-active{background:#faf7ef;color:#31483d}
+.oa-preview-controls{display:flex;align-items:center;gap:4px}
+.oa-preview-controls label{font-size:10px;color:#d3dfd1}
+.oa-preview-controls select{min-height:31px;border-radius:9px;padding:4px 6px;background:#f3f3eb;color:#3c4d40;border:0;font-size:11.5px}
+.oa-preview-toolbar p{display:none}
+@media(min-width:700px){.oa-preview-toolbar p{display:block;color:#c0cdc1;font-size:11px}}
+@media(max-width:450px){body{padding-top:94px!important}#shell{min-height:calc(100dvh - 94px)}.oa-preview-toolbar{min-height:89px;gap:6px}.oa-preview-toolbar>strong{width:100%;text-align:center}.oa-preview-controls select{font-size:11px}.oa-preview-switch button{padding:5px 10px}}
+</style><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f7f4ee"><title>Ahead — A little clarity for your baby’s first year</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet" data-fonts>
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/experience.css">
+<link rel="stylesheet" href="css/changes.css">
+<link rel="stylesheet" href="css/timeline.css">
+<link rel="stylesheet" href="css/welcome.css">
+<link rel="stylesheet" href="css/briefing.css">
+<link rel="stylesheet" href="css/hub.css">
+<link rel="stylesheet" href="css/sleep-look.css">
+<link rel="stylesheet" href="css/sleep-sub-look.css">
+<link rel="stylesheet" href="css/health-look.css">
+<link rel="stylesheet" href="css/safety-look.css">
+<link rel="stylesheet" href="css/outings-look.css">
+<link rel="stylesheet" href="css/childcare-look.css"><link rel="stylesheet" href="css/care-card.css">
+<link rel="stylesheet" href="css/care-v2.css">
+<link rel="stylesheet" href="css/year-ahead.css"><link rel="stylesheet" href="css/subpage-color.css"><style>#main .you-avatar.has-photo{overflow:hidden;padding:0}#main .you-avatar.has-photo img{width:100%;height:100%;object-fit:cover;display:block}</style><link rel="stylesheet" href="css/stages-nav.css"><link rel="stylesheet" href="css/home-cards.css"><link rel="stylesheet" href="css/home-glance.css"><link rel="stylesheet" href="css/one-app.css"></head>
+<body><div class="oa-preview-toolbar" role="region" aria-label="Design comparison controls">
+<strong>Outings · design comparison</strong>
+<div class="oa-preview-switch"><button id="oa-before" onclick="oaCompare(false)">Original</button><button id="oa-after" class="is-active" onclick="oaCompare(true)">With companion</button></div>
+<div class="oa-preview-controls"><label for="oa-age">Baby</label><select id="oa-age" onchange="oaDemoAge(this.value)"><option value="2">2 months</option><option value="6" selected>6 months</option><option value="10">10 months</option></select></div><p>Same Ahead guides · one optional feature</p>
+</div><div id="shell"><header class="top"><button class="brand" onclick="if(profile&&profile.dob)navigate('home')" aria-label="Ahead home">ahead<span class="dot">.</span></button><button id="profileButton" class="profile" hidden onclick="navigate('profile')" aria-label="Baby profile and check-ins">M</button></header><main id="main" class="page"><div class="app-loading" role="status">Getting your guide ready…</div><noscript><style>.app-loading{display:none}</style><p>Ahead needs JavaScript to open your guide. Enable it in your browser, then reload this page.</p></noscript></main><nav id="nav" class="nav" hidden aria-label="Main navigation"><button class="active" onclick="navigate('home')" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10H6V10M9 20v-7h6v7"/></svg>Home</button><button class="" onclick="navigate('categories')" ><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m16 8-3 5-5 3 3-5Z"/></svg>Guides</button><button class="" onclick="navigate('timeline')" ><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 3"/></svg>Memories</button></nav></div>
+<script src="js/storage.js"></script>
+<script src="js/changes-data.js"></script>
+<script src="js/guides-data.js"></script>
+<script src="js/app.js"></script>
+<script src="js/baby-language.js"></script>
+<script src="js/changes.js"></script>
+<script src="js/home-rules.js"></script>
+<script src="js/timeline.js"></script>
+<script src="js/stages.js"></script>
+<script src="js/briefing.js"></script>
+<script src="js/welcome.js"></script>
+<script src="js/hub-art.js"></script>
+<script src="js/hub.js"></script>
+<script src="js/hub-categories.js"></script>
+  <script src="js/hub-pages.js"></script>
+<script src="js/stage-timeline.js"></script>
+<script src="js/out-and-about.js"></script>
+<script src="js/care-card-render.js"></script><script src="js/childcare.js"></script>
+<script src="js/dev-play-art.js"></script>
+<script src="js/dev-play.js"></script>
+<script src="js/next.js"></script>
+<script src="js/memories.js"></script>
+<script src="js/share-story.js"></script>
+<script src="js/navigation.js"></script>
+<script src="js/sleep-look.js"></script>
+<script src="js/sleep-sub-look.js"></script>
+<script src="js/health-look.js"></script>
+<script src="js/health-visit-pages.js"></script>
+<script src="js/sub-look.js"></script>
+<script src="js/safety-look.js"></script>
+<script src="js/safety-v2.js"></script>
+<script src="js/care-v2.js"></script>
+<script src="js/cat-icons.js"></script>
+<script src="js/year-ahead-art.js"></script><script src="js/year-ahead.js"></script><script src="js/profile-v2.js"></script><script src="js/stages-nav.js"></script><script src="js/feed-mock2.js"></script><script src="js/home-copy.js"></script><script src="js/home-cards.js"></script><script src="js/home-glance.js"></script>
+<script src="js/search-index.js"></script><script src="js/cohesion.js"></script><script src="js/they-grammar.js"></script><script src="js/boot.js"></script>
+
+<script>
+// This page deliberately renders the existing Ahead app, not a re-created mock.
+// Demo data live in memory and never write to the real baby profile.
+(function(){
+  window.OA_COMPANION = true;
+  function setDemoAge(m) {
+    const n=Number(m),d=new Date(NOW.getFullYear(),NOW.getMonth()-n,Math.min(12,NOW.getDate()));
+    profile={...demo, name:'Maya',pronouns:'she', dob:iso(d),due:'',early:false,feed:'Both',feedHow:'Pumping',example:true};
+    month=actualMonth();
+  }
+  window.oaDemoAge=m=>{oaKitClose();setDemoAge(m);if(page==='welcome'||page==='setup')openPage('chg:Out and about:s');else render()};
+  window.oaCompare=enabled=>{
+    oaKitClose();
+    window.OA_COMPANION=enabled;
+    document.getElementById('oa-before').classList.toggle('is-active',!enabled);
+    document.getElementById('oa-after').classList.toggle('is-active',enabled);
+    document.getElementById('oa-before').setAttribute('aria-pressed',String(!enabled));
+    document.getElementById('oa-after').setAttribute('aria-pressed',String(enabled));
+    render();
+  };
+  setDemoAge(6);
+  window.oaCompare(true);
+  openPage('chg:Out and about:s');
+})();
+</script></body>
+</html>
+
