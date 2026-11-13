@@ -34,7 +34,7 @@ body{padding-top:67px!important}
 <body><div class="oa-preview-toolbar" role="region" aria-label="Design comparison controls">
 <strong>Outings · design comparison</strong>
 <div class="oa-preview-switch"><button id="oa-before" onclick="oaCompare(false)">Original</button><button id="oa-after" class="is-active" onclick="oaCompare(true)">With companion</button></div>
-<div class="oa-preview-controls"><label for="oa-age">Baby</label><select id="oa-age" onchange="oaDemoAge(this.value)"><option value="2">2 months</option><option value="6" selected>6 months</option><option value="10">10 months</option></select></div><p>Same Ahead guides · one optional feature</p>
+<div class="oa-preview-controls"><label for="oa-age">Baby</label><select id="oa-age" onchange="oaDemoAge(this.value)"><option value="2">2 months</option><option value="6" selected>6 months</option><option value="10">10 months</option></select><label for="oa-feed">Feeds</label><select id="oa-feed" onchange="oaDemoFeed(this.value)"><option value="Breast milk">Nursing</option><option value="Formula">Formula</option><option value="Both" selected>Both</option></select></div><p>Same Ahead guides · one optional feature</p>
 </div><div id="shell"><header class="top"><button class="brand" onclick="if(profile&&profile.dob)navigate('home')" aria-label="Ahead home">ahead<span class="dot">.</span></button><button id="profileButton" class="profile" hidden onclick="navigate('profile')" aria-label="Baby profile and check-ins">M</button></header><main id="main" class="page"><div class="app-loading" role="status">Getting your guide ready…</div><noscript><style>.app-loading{display:none}</style><p>Ahead needs JavaScript to open your guide. Enable it in your browser, then reload this page.</p></noscript></main><nav id="nav" class="nav" hidden aria-label="Main navigation"><button class="active" onclick="navigate('home')" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10H6V10M9 20v-7h6v7"/></svg>Home</button><button class="" onclick="navigate('categories')" ><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m16 8-3 5-5 3 3-5Z"/></svg>Guides</button><button class="" onclick="navigate('timeline')" ><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 3"/></svg>Memories</button></nav></div>
 <script src="js/storage.js"></script>
 <script src="js/changes-data.js"></script>
@@ -79,10 +79,12 @@ body{padding-top:67px!important}
   window.OA_COMPANION = true;
   function setDemoAge(m) {
     const n=Number(m),d=new Date(NOW.getFullYear(),NOW.getMonth()-n,Math.min(12,NOW.getDate()));
-    profile={...demo, name:'Maya',pronouns:'she', dob:iso(d),due:'',early:false,feed:'Both',feedHow:'Pumping',example:true};
+    const feed=document.getElementById('oa-feed')?.value || 'Both';
+    profile={...demo, name:'Maya',pronouns:'she', dob:iso(d),due:'',early:false,feed,feedHow:feed==='Breast milk'?'Nursing':feed==='Formula'?'Formula':'Pumping',example:true};
     month=actualMonth();
   }
-  window.oaDemoAge=m=>{oaKitClose();setDemoAge(m);if(page==='welcome'||page==='setup')openPage('chg:Out and about:s');else render()};
+  window.oaDemoAge=m=>{window.oaKitClose();setDemoAge(m);if(page==='welcome'||page==='setup')openPage('chg:Out and about:s');else render()};
+  window.oaDemoFeed=feed=>{window.oaKitClose();profile.feed=feed;profile.feedHow=feed==='Breast milk'?'Nursing':feed==='Formula'?'Formula':'Pumping';render()};
   window.oaCompare=enabled=>{
     oaKitClose();
     window.OA_COMPANION=enabled;
