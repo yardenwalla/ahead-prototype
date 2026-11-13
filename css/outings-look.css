@@ -76,3 +76,62 @@
 #main .oa-away-head { display: flex; align-items: baseline; justify-content: space-between }
 #main .oa-away-head .hub-link { font-size: 14px }
 #main .oa-hero-go { color: var(--year-ink) }
+
+
+/* OUTINGS COMPANION · opt-in, without replacing the original guide */
+#main .oa-kit-entry{width:100%;display:flex;align-items:center;gap:12px;margin:11px 0 23px;padding:13px 14px;border:1px solid #eddbcd;background:#fffbf7;text-align:left;border-radius:16px;min-height:67px}
+#main .oa-kit-entry-glyph{height:33px;width:33px;flex:none;border-radius:12px;display:flex;align-items:center;justify-content:center;background:#f7e3d4;color:#97644e;font-weight:800}
+#main .oa-kit-entry-copy{flex:1;min-width:0}
+#main .oa-kit-entry-copy b{font-size:14px;font-weight:700;line-height:1.3;display:block;color:#513d36}
+#main .oa-kit-entry-copy small{display:block;font-size:12px;line-height:1.4;margin-top:2px;color:#80685d}
+#main .oa-kit-arrow{color:#986851;font-size:23px;line-height:1}
+#main .oa-kit-pinned{border:1px solid #e8d6ca;border-radius:20px;background:linear-gradient(135deg,#fff6ef,#fbe6d8);margin:0 0 22px;padding:13px 16px 16px;color:#513d36}
+#main .oa-kit-pinned-title{display:flex;align-items:center;justify-content:space-between}
+#main .oa-kit-pinned-title small{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#9c6b52;font-weight:750}
+#main .oa-kit-unpin{min-height:24px;width:26px;padding:0;font-size:12px;color:#947d70}
+#main .oa-kit-pinned-open{display:block;text-align:left;width:100%;padding:3px 0 0;min-height:unset}
+#main .oa-kit-pinned-open b{display:block;color:#513d36;font-size:16px;font-weight:700}
+#main .oa-kit-pinned-open span{display:block;color:#7b665e;font-size:12.5px;margin-top:3px}
+#main .oa-kit-pinned-open em{display:block;font-style:normal;font-size:12px;font-weight:700;color:#8a4a2c;margin-top:10px}
+.oa-kit-scrim{position:fixed;inset:0;z-index:1500;display:flex;align-items:flex-end;justify-content:center;background:#1c25234d;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
+.oa-kit-sheet{height:min(86dvh,780px);max-height:96dvh;width:min(460px,100%);display:flex;flex-direction:column;background:#faf8f3;border-radius:27px 27px 0 0;box-shadow:0 -13px 50px #2c211c32;overflow:hidden;color:#253f35;font-family:Figtree,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
+.oa-kit-head{display:flex;align-items:center;justify-content:space-between;padding:21px 21px 14px;gap:12px}
+.oa-kit-head p{font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:#94674e;font-weight:700}
+.oa-kit-head h2{font-size:23px;line-height:1.18;letter-spacing:-.6px;font-family:Nunito,Figtree,sans-serif;font-weight:800;margin-top:3px;color:#2b3a33}
+.oa-kit-close{background:#f0e7df;border-radius:50%;height:36px;width:36px;min-height:36px;display:flex;align-items:center;justify-content:center;color:#6e625a;font-size:15px}
+.oa-kit-tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin:0 20px 0;padding:4px;background:#eeeae3;border-radius:14px}
+.oa-kit-tabs button{border-radius:10px;min-height:37px;color:#726c64;font-size:12.5px;font-weight:700}
+.oa-kit-tabs button.is-active{background:#fffdf8;color:#704b3e;box-shadow:0 1px 3px #241c191b}
+.oa-kit-body{overflow-y:auto;overscroll-behavior:contain;padding:23px 21px 25px;flex:1;scrollbar-color:#cfc4ba transparent}
+.oa-kit-summary{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin:0 0 11px}
+.oa-kit-summary b{font-size:17px;font-weight:800;letter-spacing:-.3px}
+.oa-kit-summary span{font-size:12px;color:#8a6555;font-weight:700}
+.oa-kit-list,.oa-kit-packing{border:1px solid #e9e4dc;border-radius:17px;background:#fffefa;overflow:hidden}
+.oa-kit-list{margin-bottom:17px}
+.oa-kit-check{background:transparent;border:0;width:100%;min-height:55px;display:flex;align-items:center;gap:11px;text-align:left;padding:12px 13px;color:#263a32}
+.oa-kit-check+.oa-kit-check{border-top:1px solid #ede8e1}
+.oa-kit-checkbox{height:20px;width:20px;flex:none;border-radius:6px;border:1.5px solid #b9b3aa;color:white;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px}
+.oa-kit-check.is-done .oa-kit-checkbox{background:#6a8978;border-color:#6a8978}
+.oa-kit-copy{display:block;flex:1}
+.oa-kit-copy b{font-weight:650;display:block;font-size:13.5px;line-height:1.35}
+.oa-kit-copy small{display:block;color:#6e7770;font-size:12px;line-height:1.45;margin-top:3px}
+.oa-kit-check.is-done .oa-kit-copy b{color:#808a82;text-decoration:line-through;text-decoration-color:#a5aaa1}
+.oa-kit-expand{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#efe7df;border-radius:15px;width:100%;min-height:65px;padding:13px 15px;text-align:left;color:#4e3e36}
+.oa-kit-expand b{font-size:14px;font-weight:800;display:block}
+.oa-kit-expand small{display:block;font-size:11.5px;margin-top:4px;color:#79685e}
+.oa-kit-expand>span:last-child{font-size:24px;line-height:1;font-weight:400;color:#8a604e}
+.oa-kit-packing{margin-top:9px;margin-bottom:14px}
+.oa-kit-group{padding:13px 13px 7px;font-size:10px;letter-spacing:.1em;font-weight:750;color:#94694e}
+.oa-kit-group:not(:first-child){border-top:1px solid #ede8e1;margin-top:5px}
+.oa-kit-pin{width:100%;padding:11px 3px;min-height:45px;text-align:center;font-size:12.5px;font-weight:700;color:#94634e}
+.oa-kit-pin.is-on{color:#4e765f}
+.oa-kit-quicklead{font-size:13px;line-height:1.55;margin:-1px 0 16px;color:#6e746e}
+.oa-kit-questions{display:flex;flex-direction:column;gap:10px}
+.oa-kit-answer{background:#fffefa;border:1px solid #ebe6df;border-radius:16px;padding:15px 16px}
+.oa-kit-answer b{font-size:14px;display:block;color:#36443a;font-weight:700}
+.oa-kit-answer p{font-size:12.5px;line-height:1.55;margin-top:5px;color:#657168}
+.oa-kit-explain{margin-top:15px;font-size:11.5px;line-height:1.55;color:#8a827c}
+.oa-kit-footer{border-top:1px solid #ebe5dd;background:#faf8f3;padding:11px 21px max(17px,env(safe-area-inset-bottom))}
+.oa-kit-full{height:47px;min-height:47px;border-radius:13px;width:100%;background:#365749;color:#fff;font-size:13px;font-weight:700}
+@media(min-width:700px){.oa-kit-sheet{border-radius:26px 26px 0 0}}
+@media(prefers-reduced-motion:no-preference){.oa-kit-sheet{animation:oa-kit-enter .22s ease-out}@keyframes oa-kit-enter{from{transform:translateY(16px);opacity:.65}to{transform:translateY(0);opacity:1}}}
