@@ -1628,3 +1628,17 @@ label:has(> .hub-photo-input:focus-visible) { outline: 2px solid #884866; outlin
 #main .mem-card-foot { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 14px; padding-top: 12px; border-top: 1px solid #efe7df }
 #main .mem-card-link { padding: 4px 0; border: 0; background: none; font: inherit; font-size: 14px; font-weight: 650; color: #7a4f6d; cursor: pointer }
 #main .mem-year-wrap { margin: 0 0 16px }
+/* The month's moments as a taped page from the memory book: handwriting on ruled lines, short. */
+#main .mem-note { position: relative; display: block; width: 100%; margin: 18px 0 0; padding: 20px 18px 14px; border: 0; border-radius: 4px; text-align: left; font: inherit; color: #2b2840; cursor: pointer;
+  background: #fffaf2 repeating-linear-gradient(180deg, transparent 0 31px, #efe4d8 31px 32px); background-position: 0 17px; box-shadow: 0 1px 0 rgba(120,80,70,.05), 0 6px 16px rgba(120,80,70,.1); transform: rotate(-.6deg) }
+#main .mem-note > i { position: absolute; top: -9px; left: 50%; width: 64px; height: 18px; transform: translateX(-50%) rotate(-2deg); border-radius: 2px; background: var(--tape); opacity: .9 }
+#main .mem-note-head { display: block; font-family: AheadHand, Caveat, cursive; font-size: 24px; font-weight: 600; line-height: 32px; color: #7a6f63 }
+#main .mem-note ul { margin: 0; padding: 0; list-style: none }
+#main .mem-note li { font-family: AheadHand, Caveat, cursive; font-size: 22px; line-height: 32px; color: #2b2840 }
+#main .mem-note li b { font-weight: 600 }
+#main .mem-note li b::before { content: "★"; margin-right: 8px; font-size: 14px; color: #d9a441; vertical-align: 2px }
+#main .mem-note li q { font-weight: 500; color: #625a6a }
+#main .mem-note-also { margin: 0; font-family: AheadHand, Caveat, cursive; font-size: 21px; line-height: 32px; color: #4c4757 }
+#main .mem-note-more { margin: 0; font-size: 13px; font-weight: 650; line-height: 32px; color: #7a4f6d }
+#main .mem-note.is-empty { cursor: default }
+#main .mem-note.is-empty .mem-note-also { color: #9a909c }
