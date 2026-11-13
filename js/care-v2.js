@@ -372,13 +372,13 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
       W: 'The stump dries up and falls off on its own, usually in 1–3 weeks.', tilesT: 'Keep it dry', tiles: () => [['diaper', 'Fold the diaper down', 'So the stump stays in the air'], ['drop', 'Dirty? Plain water', 'Then pat dry. No alcohol'], ['heart', 'Let it fall off', 'Even if it’s hanging on']], D: '',
       extra: () => hubEmbed('qFPA-4A_8wY', 'How to care for the umbilical cord', 'Nemours KidsHealth') + lookLink('cord', 'Smell, crust or a little blood?', 'What’s normal, and when to call') },
     sponge: { k: 'bath', title: 'Sponge baths for now', vis: () => hubEmbed('uYQ_KNlcQwE', 'How to give your newborn a sponge bath', 'Nemours KidsHealth'),
-      W: () => '2–3 sponge baths a week until the cord falls off' + (anatomy() !== 'girl' ? ' (and a circumcision heals)' : '') + ', so the cord stays dry.', D: ['Warm the room. Not straight after a feed.', 'Face first with plain water, then the body one part at a time, diaper area last.', 'Keep {o} wrapped, and pat dry into the creases.'],
+      W: () => '2–3 sponge baths a week until the cord falls off' + (anatomy() !== 'girl' ? ' (and a circumcision heals)' : '') + ', so the cord stays dry.', tilesT: 'Step by step', tilesN: true, tiles: () => [['home', 'Warm the room', 'Not right after a feed'], ['drop', 'Face first', 'Plain water'], ['towel', 'Then the body', 'One part at a time, kept wrapped'], ['diaper', 'Diaper area last', 'Pat dry into the creases']], D: '',
       Y: 'More baths can dry {p} skin. In between, wipe {p} face, neck and diaper area.', Yl: 'Why not more' },
     newskin: { k: 'skin', title: 'Newborn skin', vis: () => looks('What it can look like', ['Peeling or flaky skin in the first 1–2 weeks', 'Tiny white bumps on the nose and chin', 'Red blotches with a white or yellow center, gone in 1–2 weeks', 'Pink marks on the eyelids or neck, and blue-gray patches on the back or bottom: birthmarks, not bruises', 'From about 2 weeks: baby acne on the cheeks, and flaky cradle cap on the scalp']),
       W: 'Newborn skin does a lot of surprising things in the first weeks. Almost all of it is normal.', D: 'Nothing to treat. Plain water, and no lotions or creams on bumps.',
       extra: () => urgent('Clusters of tiny blisters in the first 2 weeks. Call your pediatrician right away.') },
     nailsnose: { k: 'nails', title: 'Trim nails once a week',
-      W: 'They grow fast and are sharp enough to scratch {p} face.', D: ['Wait until {s’s} asleep.', 'Baby clippers or a soft file, pressing the fingertip pad away from the nail.', 'File to a rounded edge.'],
+      W: 'They grow fast and are sharp enough to scratch {p} face.', tilesT: 'Step by step', tilesN: true, tiles: () => [['moon', 'While {s} {sleep|sleeps}', 'The easiest time'], ['hand', 'Press the pad back', 'Away from the nail'], ['nail', 'Clip or file', 'To a rounded edge']], D: '',
       K: 'A small nick happens to everyone. Press gently with a clean cloth.', Kl: 'If you nick the skin', Y: 'Wipe the outside of the ears with a washcloth. No cotton swabs inside.', Yl: 'Ears',
       extra: () => false ? H().tip('Sticky eyes', 'Wipe from the inside corner out, a fresh damp cotton ball for each eye. Most blocked tear ducts open on their own by the first birthday.') + callTip('A red or swollen eyelid, a red lump at the inner corner of the eye, or yellow-green discharge with redness.') : '' },
     fewer: { i: 'diaper', k: 'diapers', title: 'Fewer poops can be normal', W: () => fewerLine(), D: 'Change {o} when wet or dirty, and let the skin air out before a fresh diaper.',
@@ -419,7 +419,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     bigtub: { k: 'bath', title: 'Move to the big tub', W: 'Once {s} {sit|sits} steadily on {p} own, the big tub is fine.', tilesT: 'Make it safe', tiles: () => [['shield', 'A non-slip mat', 'In the tub'], ['drop', 'Waist-deep at most', 'When {s} {sit|sits}'], ['hand', 'Pulls up?', 'Sit {o} back down']], tips: false, D: '',
       extra: () => H().versus('Every bath', ['Always', 'Keep a hand on Maya the whole bath.'], ['Never', 'Step away, even for a second. Babies can slip under quietly. Take {o} with you.']),
       Y: 'Skip bath seats. They can tip over, and babies can slip out.', Yl: 'Good to know' },
-    feet: { k: 'clothes', ctx: () => live() && careAge() < 7 ? 'Feet and shoes · Usually from 7–12 months' : 'Feet and shoes', title: 'Bare feet, then soft shoes', W: 'Bare feet help {o} balance and feel the floor while {s} {learn|learns} to walk.', D: 'Barefoot or socks indoors. Shoes only once {s’s} walking outside: soft, flexible and non-skid.',
+    feet: { k: 'clothes', ctx: () => live() && careAge() < 7 ? 'Feet and shoes · Usually from 7–12 months' : 'Feet and shoes', title: 'Bare feet, then soft shoes', W: 'Bare feet help {o} balance and feel the floor while {s} {learn|learns} to walk.', tiles: () => [['home', 'Barefoot indoors', 'Or socks'], ['stand', 'Shoes once walking', 'Outside only'], ['sizes', 'Soft and flexible', 'With non-skid soles']], D: '',
       K: 'About a finger’s width at the big toe. Check every month.', Kl: 'How a shoe should fit', Y: 'Skip walkers on wheels. They don’t help with walking, and can lead to falls.', Yl: 'Good to know' },
     wriggly: { i: 'toy', k: 'diapers', title: 'Make changes easier', W: 'Rolling and crawling can turn changes into a wrestle.', tiles: () => [['toy', 'Something to hold', 'A toy, or the same song each time'], ['hand', 'One hand on {o}', 'Always'], ['stand', 'Pulling up?', 'Try a standing change']], tips: false, D: '',
       K: 'Once solids start, poop gets thicker, browner and smellier, sometimes the color of the food. If it gets hard, pears, prunes and peaches help.', Kl: 'Poop changes with solids',
@@ -436,7 +436,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     const q = Q[id]; if (!q) return null;
     const W = val(q.W), D = val(q.D), K = val(q.K), Y = val(q.Y);
     let b = head(q.k, val(q.ctx) || LABEL[q.k], val(q.title), '') + (q.vis && !q.late ? q.vis() : '') + `<section class="ss-moment">`
-      + (W ? `<p class="ss-what">${F(W)}</p>` : '') + (q.strip ? q.strip() : '') + (q.tiles ? `<h2 class="hub-h2">${F(q.tilesT || 'What helps')}</h2>` + hubIconSteps(q.tiles(), CAT, F(q.tiles().map(t => t[1] + ': ' + t[2]).join('. ')), false) : '') + (D ? `<section class="ss-do"><b>What to do</b>${Array.isArray(D) ? (q.tips ? `<ul class="care-do care-tips">${D.map(t => `<li>${F(t)}</li>`).join('')}</ul>` : `<ol class="care-do">${D.map(t => `<li>${F(t)}</li>`).join('')}</ol>`) : `<p>${F(D)}</p>`}</section>` : '')
+      + (W ? `<p class="ss-what">${F(W)}</p>` : '') + (q.strip ? q.strip() : '') + (q.tiles ? `<h2 class="hub-h2">${F(q.tilesT || 'What helps')}</h2>` + hubIconSteps(q.tiles(), CAT, F(q.tiles().map(t => t[1] + ': ' + t[2]).join('. ')), !!q.tilesN) : '') + (D ? `<section class="ss-do"><b>What to do</b>${Array.isArray(D) ? (q.tips ? `<ul class="care-do care-tips">${D.map(t => `<li>${F(t)}</li>`).join('')}</ul>` : `<ol class="care-do">${D.map(t => `<li>${F(t)}</li>`).join('')}</ol>`) : `<p>${F(D)}</p>`}</section>` : '')
       + (K ? `<p class="ss-know"><b>${F(q.Kl || 'How you’ll know')}</b>${F(K)}</p>` : '') + (Y ? `<p class="ss-small"><b>${F((q.Yl || 'Why it matters') + ':')}</b> ${F(Y)}</p>` : '') + `</section>` + (q.vis && q.late ? q.vis() : '') + (q.extra ? q.extra() : '');
     return page(q.k, b);
   }
@@ -883,37 +883,30 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   // then a single link to what's normal. Same shape as every other how-to.
   const STEPS = {
     diapers: v => v === 2 ? ['Change a wriggler', 'Rolling can start any day, so set up first.', [
-        'Get the wipes and a fresh diaper within reach before you lay {o} down.',
-        'Keep one hand on {o} the whole time, and never step away from a changing table.',
-        'Give {o} something to hold, like a toy, or sing the same song each time.',
-        'Wipe front to back, let the skin dry for a moment, then fasten the fresh diaper.',
-        'Too wriggly? A mat on the floor is the safest spot.'], null, ['Poop or pee looks different', 'Colors, and when to call', 'look:2:poop']]
+        ['bag', 'Set up first', 'Wipes and diaper in reach'], ['hand', 'A hand on {o}', 'Never step away'],
+        ['toy', 'Something to hold', 'Or the same song each time'], ['mat', 'Too wriggly?', 'A mat on the floor']],
+        null, ['Poop or pee looks different', 'Colors, and when to call', 'look:2:poop']]
       : ['Change a diaper', v === 0 ? 'About 8–12 a day in the first weeks. Open the fresh diaper before you start.' : 'Change {o} when wet or dirty, about 6 or more a day.', [
-        'Lay {o} on a flat surface, and keep one hand on {o} the whole time.',
-        'Open the diaper and use its clean front to wipe off most of the poop.',
-        'Wipe front to back with water or unscented wipes, into the creases.',
-        'Let the skin air-dry for a moment, then slide the fresh diaper under.',
-        v === 0 ? 'Fold the front down below the cord, and fasten it snug: two fingers should fit at the waist.' : 'Fasten it snug: two fingers should fit at the waist. Leaks or red marks mean the next size.'],
-        null,
+        ['hand', 'A hand on {o}', 'On a flat surface'], ['diaper', 'Wipe front to back', 'Water or unscented wipes'],
+        ['drop', 'Let it air-dry', 'Then slide the fresh one under'], v === 0 ? ['cord', 'Fold below the cord', 'Snug: two fingers at the waist'] : ['sizes', 'Fasten it snug', 'Two fingers at the waist']],
+        v === 0 ? null : ['Time for the next size', 'Leaks, or red marks at the legs or waist.'],
         v === 0 ? ['What’s in the diaper, the first week', 'How many, and what color', 't:diapers:0'] : ['Fewer poops can be normal', 'And when to call', 't:diapers:1']],
     skin: v => ['Keep skin comfortable', 'Most baby skin needs less, not more.', [
-        'Bathe in plain warm water about 3 times a week, with a little mild, fragrance-free soap if needed.',
-        'Pat dry, especially in the creases of the neck, arms and diaper area.',
-        'Dry patches? Smooth on a thick, fragrance-free cream right after the bath.',
-        v >= 2 ? 'Drool rash? Wipe the chin dry often, and put a thin layer of petroleum jelly on before naps and bed.' : 'Wash clothes in fragrance-free detergent, and dress {o} in soft cotton.'],
+        ['bath', 'Plain warm water', 'About 3 baths a week'], ['towel', 'Pat dry', 'Into the creases'],
+        ['drop', 'Cream for dry patches', 'Thick, fragrance-free, after the bath'],
+        v >= 2 ? ['smile', 'Drool rash', 'Wipe the chin dry, then petroleum jelly'] : ['shirt', 'Soft cotton', 'Washed fragrance-free']],
         null, ['Spots, bumps or dry skin', v >= 2 ? 'Drool rash, eczema, heat rash' : 'Rashes, acne, cradle cap', 't:skin:' + v]],
     gums: v => ['Clean gums', 'Twice a day, so brushing feels familiar once teeth come.', [
-        'Wrap a clean, damp washcloth or gauze around your finger.',
-        'Gently wipe the gums, top and bottom, after a feed or before bed.',
-        'No toothpaste yet. That starts with the first tooth.'],
+        ['hand', 'A cloth on a finger', 'Clean and damp'], ['tooth', 'Wipe the gums', 'Top and bottom'], ['clock', 'No toothpaste yet', 'Until the first tooth']],
         v === 0 ? ['Good to know', 'Tiny white bumps on a newborn’s gums are normal, and go away on their own.'] : ['What’s next', 'First teeth usually come around 6 months.'], null]
   };
   window.careSteps = function (k, v) {
     v = Number.isInteger(v) && v >= 0 && v <= 3 ? v : stageNow();
     if (!STEPS[k]) return null;
     const [title, lead, steps, tip, link] = STEPS[k](v), h = H(), ic = { gums: 'teeth' }[k] || k;
-    let b = head(ic, { diapers: 'Diapers', skin: 'Skin and rashes', gums: 'Teeth' }[k], title, lead) + h2('Step by step') + h.steps(steps);
+    let b = head(ic, { diapers: 'Diapers', skin: 'Skin and rashes', gums: 'Teeth' }[k], title, lead) + h2('Step by step') + hubIconSteps(steps, CAT, F(steps.map(t => t[1] + ': ' + t[2]).join('. ')));
     if (tip) b += h.tip(tip[0], tip[1]);
+    if (k === 'diapers') b += rashBlock();   // diaper rash care and when to call, as the old diaper pages had it
     if (link) b += `<div class="hub-list care-link">${rowK(k === 'skin' ? 'skin' : 'diapers', link[0], link[1], cgo(link[2]))}</div>`;
     return page(ic, b);
   };

@@ -702,7 +702,7 @@
     // Newborn weeks and Longer nights have no set day yet, so only nap stages link to one.
     const hasDay = key === 'rhythm' || key === 'two', dayGo = go('chg:Sleep:d:day:' + SLEEP_KEYS.indexOf(key)), ex = hasDay ? `<button class="hub-card-cta" onclick="${dayGo}">${F('Example day')} ›</button>` : '';
     return `<div style="display:flex;align-items:baseline;justify-content:space-between"><h2 class="hub-h2 sl-gl-h">${F('Sleep at a glance')}</h2>${ex}</div><section class="hub-card sl-glance"${hasDay ? ` role="button" tabindex="0" style="cursor:pointer" onclick="${dayGo}" aria-label="${F('See an example day')}"` : ''}><div class="sl-gl">${T.map(([l, v, sub], i) => `<div style="--sm-bg:${C[i][0]};--sm-ink:${C[i][1]}"><small>${F(l)}</small><b>${F(v)}</b><span>${F(sub)}</span></div>`).join('')}</div>`
-      + `<span class="sl-every" onclick="event.stopPropagation()"><b>${F('Every sleep:')}</b> ${F('on {p} back, in a bare crib.')} <a class="sl-every-link" role="button" tabindex="0" onclick="${go('chg:Sleep:safe')}">${F('Safe sleep checklist')} ›</a></span></section>`;
+      + `<span class="sl-every" onclick="event.stopPropagation()"><a class="sl-every-link" role="button" tabindex="0" onclick="${go('chg:Sleep:safe')}">${F('Safe sleep checklist')} ›</a></span></section>`;
   }
   function slGuides(key, age, now) {
     const st = slStep(key, age), cat = 'Sleep';
