@@ -164,3 +164,98 @@ function store(){
  +'<button class="subsection-link" data-sheet="pack"><div><b>What to bring for a quick errand</b><span>Usually less than you think.</span></div>'+ico('chev',16)+'</button>'
  +'<button class="reference-link" data-sheet="guide:store">Read the complete around-town guide ↗</button>'+sourceLinks('store')+'</main>';
 }
+
+function sheetContent(){
+ const t=S.sheet||'';
+ if(t==='profile')return {label:'DEMO BABY',title:'Made for Maya',body:'<p>Try different ages and feeding methods. In Ahead, this would use details already provided, not ask again.</p>'
+ +'<div class="form-row"><label for="age">Age</label><select id="age" data-age><option value="2"'+(S.age===2?' selected':'')+'>2 months</option><option value="6"'+(S.age===6?' selected':'')+'>6 months</option><option value="10"'+(S.age===10?' selected':'')+'>10 months</option></select></div>'
+ +'<div class="form-row"><label for="feed">Feeding</label><select id="feed" data-feed><option value="nurse"'+(S.feed==='nurse'?' selected':'')+'>Breast milk · nursing</option><option value="pumped"'+(S.feed==='pumped'?' selected':'')+'>Pumped breast milk</option><option value="formula"'+(S.feed==='formula'?' selected':'')+'>Formula</option><option value="both"'+(S.feed==='both'?' selected':'')+'>Breast milk and formula</option></select></div>'
+ +'<div class="form-row"><label for="solids">Solids</label><select id="solids" data-solids><option value="yes"'+(S.solids?' selected':'')+'>Already started</option><option value="no"'+(!S.solids?' selected':'')+'>Not started yet</option></select></div>'
+ +'<button class="big-button" data-close>See my guide</button>'};
+ if(t==='seat')return {label:'FLYING · THE BIG DECISION',title:'Own seat or lap?',body:'<p>The safest way to fly with Maya is a separate airplane seat with an approved child restraint system used correctly.</p>'
+ +'<div class="choice reco"><b>Safest · Her own seat</b><p>Book a ticket for Maya and use an aircraft-approved car seat that fits her. Check the seat’s label and the airline’s installation rules.</p></div>'
+ +'<div class="choice"><b>Often allowed · On your lap</b><p>Many airlines permit infants under 2 on a parent’s lap, but this offers less protection during turbulence. The FAA recommends an approved child restraint in a separate seat.</p></div>'
+ +'<p class="mini-caption">Not all infant carriers are approved restraints. Follow FAA, airline and car-seat instructions.</p>'};
+ if(t==='tsa')return {label:'FLYING · AIRPORT SECURITY',title:'What TSA lets you bring',body:'<p>'+esc(milkTake()+foodTake())+'</p>'
+ +'<div class="choice reco"><b>Over 3.4 oz is allowed</b><p>Formula, breast milk, toddler drinks, baby food and cooling accessories are treated as medically necessary items.</p></div>'
+ +'<div class="choice"><b>At screening</b><p>Tell the TSA officer at the beginning of screening. Remove these items from your carry-on for separate screening; additional checks may be needed.</p></div>'
+ +'<p class="mini-caption">These are U.S. TSA rules; other countries may differ.</p>'};
+ if(t==='plane')return {label:'FLYING · ONBOARD',title:'The flight itself',body:'<p>Follow cabin-crew instructions for approved restraints. A restraint in Maya’s own seat offers the best protection in turbulence.</p>'
+ +'<div class="choice"><b>During takeoff and landing</b><p>If she wants one, a pacifier or feed may help with pressure changes. Keep her secured as directed when she has her own approved restraint.</p></div>'
+ +'<div class="choice"><b>If she cries</b><p>Comfort her as needed. Only stand or walk when the seat-belt sign is off.</p></div>'};
+ if(t==='sleep')return {label:'WHEN YOU ARRIVE',title:'A familiar place to sleep',body:'<p>Sleep schedules may be different after traveling. A safe sleep space is more important than keeping the exact timing.</p>'
+ +'<div class="choice reco"><b>A crib or play yard</b><p>Firm, flat mattress, fitted sheet, and no loose bedding or objects in the sleep space. Place Maya on her back to sleep.</p></div>'};
+ if(t==='stay')return {label:'SAFE SLEEP',title:'Her own sleep space',body:'<p>Use a crib, portable crib or play yard that meets current safety standards. Check the mattress fit, use a fitted sheet only, and keep the crib bare.</p>'
+ +'<div class="choice reco"><b>Before bedtime</b><p>Check for damage or missing parts, move the crib away from cords and windows, and use your usual bedtime routine.</p></div>'};
+ if(t==='pack')return {label:'PACK FOR THIS',title:S.view==='store'?'For a short errand':'Your carry-on',body:'<p>'+esc(bagTake())+'</p>'
+ +'<div class="sheet-item"><b>Always useful</b><p>Diapers, wipes, changing pad and a spare outfit for Maya.</p></div>'
+ +(S.view==='flight'?'<div class="sheet-item"><b>For a flight</b><p>Extra milk or formula supplies, extra diapers, a spare top for you, and documents your airline may request.</p></div>':'')
+ +(S.age>=6&&S.solids?'<div class="sheet-item"><b>If eating solids</b><p>A familiar, safely prepared food and a cup. Only offer it while seated upright and supervised.</p></div>':'')
+ +'<p class="mini-caption">A quick reference, not a checklist to maintain. Adjust for how long you’re out.</p>'};
+ if(t.startsWith('guide:')){
+ const kind=t.slice(6);
+ if(kind==='flight')return {label:'COMPLETE REFERENCE',title:'Flying with Maya',body:'<div class="full-guide">'
+ +'<h3>When you book</h3><p>Choose a separate seat with an approved restraint when possible. Check airline policies, certification on the car-seat label, stroller rules and any age-documentation requirements.</p>'
+ +'<h3>Airport security</h3><p>'+esc(milkTake()+foodTake())+' Let TSA know about medically necessary items for separate screening.</p>'
+ +'<h3>At the gate</h3><p>Ask where the stroller is checked and collected. Keep extra diapers, milk and clothing in your carry-on.</p>'
+ +'<h3>On the plane</h3><p>Follow crew instructions for restraints. Offer appropriate comfort for pressure changes. Ask about a changing table; walk only when safe.</p>'
+ +'<h3>After landing</h3><p>A travel day can disrupt naps and feeds. Arrange a safe, flat sleep space if you’re staying away.</p>'
+ +'<h3>Common surprises</h3><p>Crying and delays are normal parts of traveling with babies. Allow extra feeding supplies and flexibility.</p></div>'};
+ if(kind==='store')return {label:'COMPLETE REFERENCE',title:'Around town',body:'<div class="full-guide">'
+ +'<h3>Start small</h3><p>One short stop counts. Leaving after a feed may help but isn’t required.</p>'
+ +'<h3>How she rides</h3><p>A stroller or carrier is a practical default. Do not attach an infant car seat to the top of the cart. The cart seat is only for a baby who can sit securely, with the restraint buckled.</p>'
+ +'<h3>Food and feeding</h3><p>'+esc(bagTake())+'</p>'
+ +'<h3>When plans change</h3><p>Stop for a feed, soothe, change her in a safe spot or head home.</p>'
+ +'<h3>Car safety</h3><p>Always use a correctly installed rear-facing car seat. Never leave her alone in a vehicle.</p></div>'};
+ if(kind==='stay')return {label:'COMPLETE REFERENCE',title:'Staying away',body:'<div class="full-guide">'
+ +'<h3>Before you book</h3><p>Confirm that a safe crib or play yard is available or bring your own.</p>'
+ +'<h3>When you arrive</h3><p>Inspect the crib. Scan for window cords, medicines, toiletries, small objects, bathroom hazards, pets and items that could fall.</p>'
+ +'<h3>At bedtime</h3><p>Firm, flat sleep surface. Fitted sheet and no loose items. Keep familiar bedtime steps and a safe sleep sack.</p>'
+ +'<h3>If the first night is rough</h3><p>A new room can disrupt sleep. Be flexible while keeping safe sleep rules.</p></div>'};
+ }
+ return {label:'MORE INFORMATION',title:'Ahead',body:'<p>More guidance for outings with Maya.</p>'};
+}
+function sheet(){
+ if(!S.sheet)return '';
+ const d=sheetContent();
+ return '<div class="sheet-overlay" data-backdrop><section class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle"><div class="sheet-head"><div><span class="eyebrow">'+esc(d.label)+'</span><h2 id="sheetTitle">'+esc(d.title)+'</h2></div><button class="sheet-close" aria-label="Close" data-close>×</button></div><div class="sheet-body">'+d.body+'</div></section></div>';
+}
+function render(){
+ root.innerHTML=topBar()+(S.view==='flight'?flight():S.view==='store'?store():S.view==='stay'?stay():home())+sheet();
+ if(S.sheet){const close=root.querySelector('[data-close]');if(close&&typeof close.focus==='function')close.focus({preventScroll:true})}
+}
+function go(v){
+ if(!['home','flight','store','stay'].includes(v))return;
+ S.view=v;S.step=0;S.room=0;S.faq=null;S.sheet=null;
+ render();try{window.scrollTo({top:0,behavior:'instant'})}catch(e){}
+}
+root.addEventListener('click',e=>{
+ const b=e.target.closest('button');
+ if(!b){if(e.target.matches('[data-backdrop]')){S.sheet=null;render()}return}
+ if(b.hasAttribute('data-view')){go(b.getAttribute('data-view'));return}
+ if(b.hasAttribute('data-home')){go('home');return}
+ if(b.hasAttribute('data-step')){
+   S.step=Number(b.getAttribute('data-step'));S.faq=null;render();
+   const el=root.querySelector('#moment');if(el&&typeof el.scrollIntoView==='function')el.scrollIntoView({block:'nearest'});
+   return;
+ }
+ if(b.hasAttribute('data-room')){
+   S.room=Number(b.getAttribute('data-room'));S.faq=null;render();
+   const el=root.querySelector('#room-detail');if(el&&typeof el.scrollIntoView==='function')el.scrollIntoView({block:'nearest'});
+   return;
+ }
+ if(b.hasAttribute('data-faq')){const k=b.getAttribute('data-faq');S.faq=S.faq===k?null:k;render();return}
+ if(b.hasAttribute('data-sheet')){S.sheet=b.getAttribute('data-sheet');render();return}
+ if(b.hasAttribute('data-close')){S.sheet=null;render();return}
+});
+root.addEventListener('change',e=>{
+ const x=e.target;
+ if(x.hasAttribute('data-age'))S.age=Number(x.value);
+ else if(x.hasAttribute('data-feed'))S.feed=x.value;
+ else if(x.hasAttribute('data-solids'))S.solids=x.value==='yes';
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&S.sheet){S.sheet=null;render()}});
+try {const q=new URLSearchParams(window.location.search),v=q.get('view');if(['flight','store','stay'].includes(v))S.view=v;}catch(e){}
+window.__playbook={getState:()=>({...S}),go,flightSteps:flightSteps.map(x=>x.label)};
+render();
+})();
