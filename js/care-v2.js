@@ -793,6 +793,8 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
       if (a === 'c') { const r = topic3(b, c == null ? stageNow() : Number(c)); if (r) return r; }
       if (a === 'q') { const t = Q2T[b]; const r = t ? (t[0] === 'look' ? lookOff(t[1]) : topic3(t[0], t[1])) : (q2Page(b) || qPage(b)); if (r) return r; }
       if (a === 'look') return lookOff(b == null ? null : Number(b), c);
+      if (a === 'how') return careHow(b == null ? null : Number(b));
+      if (a === 'routine') return careRoutine(b == null ? null : Number(b));
       if (a === 'p') { if (b === 'drool') return lookOff(null, 'rash'); const r = qPage(b) || q2Page(b); if (r) return r; }
       if (a === 't') { if (b === 'skin') return lookOff(c == null ? null : Number(c), 'rash'); if (b === 'need') return careTopic('need', c == null ? null : Number(c)); const v = c == null ? stageNow() : Number(c), ids = T2Q[b]; if (ids) { const id = ids[v] === 'solids' && !(live() && answers.solids === 'Yes') ? 'diapers46' : ids[v] === 'six' && v === 2 && careAge() < 6 ? 'shade' : ids[v]; return qPage(id); } }
       if (a === 'cord') return qPage('cord');
@@ -824,22 +826,50 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
                ['Each week', [['bath', 'Baths', 'About 3 a week', 'The big tub, once sitting steadily', 1], ['nails', 'Nails', 'Trim once a week', '']]],
                ['Outside', [['sun', 'Sun', 'Shade, then SPF 30', 'Again every 2 hours and after water']]]] }
   ];
+  // Nov 12 (Yarden's "one home" concept): the main page shows one new change, a few things you may be noticing, and two
+  // doors: "How do I…?" (every how-to, plus the care routine one tap down) and "Is this normal?" (start from what you see).
+  const CARE_NEW = [
+    { art: 'bath', t: 'Sponge baths, for now', d: 'Until the cord falls off, usually in 1–3 weeks.', cta: 'See how', go: 'p:sponge',
+      see: [['peeling', 'Peeling skin', 'rash:peeling'], ['milia', 'Newborn spots', 'rash:newborn'], ['cord', 'The cord', 'cord']] },
+    { art: 'bath', t: 'The first tub bath may be close', d: 'Once the cord falls off and the spot has healed.', cta: 'See when and how', go: 'p:tub',
+      see: [['acne', 'Little bumps', 'rash:acne'], ['cradle', 'Flaky scalp', 'rash:cradle'], ['diaper', 'Fewer poops', 'look:1:poop']] },
+    { art: 'roll', t: 'Changes get more hands-on', d: 'Rolling and wriggling make diaper changes trickier.', cta: 'Make changes easier', go: 't:diapers:2',
+      see: [['drool', 'Lots of drool', 'rash:drool'], ['teething', 'Sore gums', 'p:teething'], ['peeling', 'Dry, rough patches', 'rash:eczema']] },
+    { art: 'tooth', t: 'A tiny tooth, a new routine', d: 'Brushing twice a day starts with the first tooth.', cta: 'How to brush', go: 'p:brush',
+      see: [['teething', 'Teething', 'p:teething'], ['acne', 'Heat rash', 'rash:heat'], ['diaper', 'Wriggly changes', 't:diapers:3']] }
+  ];
+  const cgo = r => `openPage('chg:${CAT}:d:${r}')`;
   window.careHome = function (selected = null) {
-    const h = H(), R = ROUTINE(), now = stageNow(), v = Number.isInteger(selected) && R[selected] ? selected : now, st = R[v], nx = R[v + 1];
+    const h = H(), R = ROUTINE(), now = stageNow(), v = Number.isInteger(selected) && R[selected] ? selected : now, st = R[v], nx = R[v + 1], N = CARE_NEW[v];
     const T = STAGE_TABLE[CAT].stages;
     const pills = h.pills('Everyday care by age', T.map((s, i) => ({ label: s.label, age: s.age, on: i === v, now: live() && i === now, onclick: `openPage('chg:${CAT}:s:${i}')` })), CAT);
     const careNote = live() && profile.early && profile.due && ageMonths(parse(profile.due), NOW) !== actualMonth() ? (() => { const adj = careAge() !== actualMonth(); return `<p class="hub-agebasis">${F(adj ? `Following Maya’s adjusted age (${monthsLabel(careAge())}), like Feeding and Sleep.` : `Following Maya’s birthday age (${monthsLabel(actualMonth())}), like Feeding and Sleep.`)} <button onclick="hubSetAgeMode('care','${adj ? 'birthday' : 'adjusted'}')">${adj ? 'Use birthday age' : 'Use adjusted age'}</button></p>`; })() : '';
-    let b = `<header class="hub-hero care-hero"><p class="hub-eyebrow">${STAGE[v]}</p><h1>${F(st.title)}</h1><p class="hub-lead">${F(st.lead)}</p></header>`;
-    const line = ([k, label, val, sub, isNew, pg]) => { const c = COL[{ wet: 'diapers', feet: 'clothes' }[k] || k] || COL.bath; if (live() && v < now) isNew = 0;
-      return `<button class="rt-line" style="--hl-bg:${c[0]};--hl-ink:${c[1]}" onclick="${pg ? `openPage('chg:${CAT}:d:p:${pg}')` : k === 'cord' ? `openPage('chg:${CAT}:d:cord')` : go(k, v)}"><span class="rt-ic">${hubArt(ICON[k], CAT)}</span><span class="rt-copy"><small>${F(label)}${isNew && v > 0 ? `<em>${F('New')}</em>` : ''}</small><b>${F(val)}</b>${sub ? `<i>${F(sub)}</i>` : ''}</span><span class="hub-chev" aria-hidden="true">›</span></button>`; };
-    // One card per rhythm (every day, each week, outside), so the routine reads in short pieces, like Sleep and Feeding.
-    b += `<h2 class="hub-h2">${F(`${live() && v === now ? name() + '’s' : 'The'} care routine`)}</h2>`
-      + st.groups.map(([g, items]) => `<section class="rt-card rt-split"><div class="rt-head"><b>${F(g)}</b></div><div class="rt-group">${items.map(line).join('')}</div></section>`).join('')
-      + '';
-    b += `<button class="hub-rough-card care-rash-card" onclick="openPage('chg:${CAT}:d:look:${v}')"><span class="hub-rough-moon" aria-hidden="true">${hubArt('eye', CAT)}</span><span class="hub-rough-copy"><b>${F('Something look off?')}</b><small>${F(['Poop, rashes, the cord, eyes and more', 'Poop, rashes, eyes and more', 'Drool, rashes, poop and more', 'Drool, rashes, poop and more'][v])}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`;
+    // The top card, built like Feeding's: the stage, a scene, and what's new inside.
+    let b = `<header class="hub-hero care-hero care-disc"><p class="hub-eyebrow">${STAGE[v]}</p><h1>${F(st.title)}</h1><p class="hub-lead">${F(st.lead)}</p><div class="care-art" aria-hidden="true">${window.careScene ? careScene(N.art) : ''}</div>`
+      + `<button class="care-new" onclick="${cgo(N.go)}"><small>${F('New now')}</small><b>${F(N.t)}</b><span>${F(N.d)}</span><em>${F(N.cta)} ›</em></button></header>`;
+    b += `<h2 class="hub-h2">${F('You may be noticing')}</h2><div class="care-see">${N.see.map(([id, t, r]) => `<button onclick="${cgo(r)}"><span class="care-see-art">${window.careMini ? careMini(id) : ''}</span><b>${F(t)}</b></button>`).join('')}</div>`;
+    b += `<div class="care-doors"><button onclick="${cgo('how:' + v)}"><span class="care-door-ic">${hubArt('book', CAT)}</span><b>${F('How do I…?')}</b><small>${F('Steps for everyday care')}</small></button>`
+      + `<button onclick="${cgo('look:' + v)}"><span class="care-door-ic">${hubArt('eye', CAT)}</span><b>${F('Is this normal?')}</b><small>${F('Start with what you see')}</small></button></div>`;
     b += nx ? h.next(v === 0 ? 'Next, after the first few weeks' : `Next, usually from ${STAGE[v + 1].split('–')[0]} months`, nx.title, `openPage('chg:${CAT}:s:${v + 1}')`)
       : h.next('After the first birthday', 'Brushing and baths after 1', `openPage('chg:${CAT}:d:after1')`);
     b += h.note('Ages are typical. Every baby moves at their own pace.');
     return `<div class="quiet-category hub-page care-v2" data-overview="${CAT}" data-care-stage="${v}" style="${yearTheme(CAT)}">${typeof monthlyPageHeader === 'function' ? monthlyPageHeader(CAT) : ''}${pills}${careNote}${b}</div>`;
   };
+  const routeLine = ([k, label, val, sub, isNew, pg], v) => pg ? cgo('p:' + pg) : k === 'cord' ? cgo('cord') : go(k, v);
+  // "How do I…?": the care routine for this age, grouped by how often, each line opening its how-to; then any other
+  // topic not already listed. One list, so nothing shows twice (Nov 12).
+  window.careHow = function (v) {
+    v = Number.isInteger(v) && v >= 0 && v <= 3 ? v : stageNow();
+    const st = ROUTINE()[v], now = stageNow(), keyOf = k => ({ wet: 'diapers', feet: 'clothes', cord: 'skin' }[k] || k);
+    const line = l => { const [k, label, val, sub] = l, c = COL[{ wet: 'diapers', feet: 'clothes' }[k] || k] || COL.bath;
+      return `<button class="rt-line" style="--hl-bg:${c[0]};--hl-ink:${c[1]}" onclick="${routeLine(l, v)}"><span class="rt-ic">${hubArt(ICON[k], CAT)}</span><span class="rt-copy"><small>${F(label)}</small><b>${F(val)}</b>${sub ? `<i>${F(sub)}</i>` : ''}</span><span class="hub-chev" aria-hidden="true">›</span></button>`; };
+    let b = head('bath', 'Everyday care · ' + STAGE[v], 'How do I…?', `${live() && v === now ? name() + '’s' : 'The'} care at this age, and how to do each part.`);
+    b += st.groups.map(([g, items]) => `<section class="rt-card rt-split"><div class="rt-head"><b>${F(g)}</b></div><div class="rt-group">${items.map(line).join('')}</div></section>`).join('');
+    const listed = new Set(st.groups.flatMap(g => g[1].map(l => keyOf(l[0]))));
+    const more = BASICS.filter(([k]) => !listed.has(k)).concat([['need', 'What you’ll need']]);
+    b += h2('More everyday care') + `<div class="hub-list">${more.map(([k, t]) => rowK(k, t, '', k === 'need' ? `openPage('chg:${CAT}:d:t:need:${v}')` : go(k, v))).join('')}</div>`;
+    return page('bath', b);
+  };
+  window.careRoutine = v => careHow(v);   // the routine lives on "How do I…?" now
+
 })();

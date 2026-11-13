@@ -1557,3 +1557,22 @@ label:has(> .hub-photo-input:focus-visible) { outline: 2px solid #884866; outlin
 #main .hub-temp small { font-size: 12.5px; line-height: 1.35; color: var(--ink-2, #6d666d) }
 #main .hub-temp.is-go { cursor: pointer }
 #main .hub-temp em { font-style: normal; font-weight: 700; font-size: 12.5px; margin-top: auto; padding-top: 4px; color: var(--ss-ink, #9a5a3c) }
+/* Everyday care main page (Nov 12, "one home"): top card built like Feeding's, three noticing tiles, two doors. */
+#main .care-hero.care-disc { display: flex; flex-direction: column; box-sizing: border-box; min-height: 470px }
+#main .care-disc .care-art { flex: 1; display: grid; place-items: center; margin: 6px -8px 6px }
+#main .care-disc .care-art svg { height: 150px; width: auto; max-width: 290px }
+#main .care-new { all: unset; box-sizing: border-box; cursor: pointer; display: block; background: #fffdfc; border-radius: 16px; padding: 14px 16px; box-shadow: 0 3px 14px #2a607820; margin-top: 2px }
+#main .care-new small { display: block; font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: #2a6078; margin-bottom: 5px }
+#main .care-new b { display: block; font-size: 17px; line-height: 1.25; color: var(--ink, #2b2732) }
+#main .care-new span { display: block; font-size: 14px; line-height: 1.45; color: #6d666d; margin-top: 5px }
+#main .care-new em { display: block; font-style: normal; font-weight: 700; font-size: 13.5px; color: #2a6078; margin-top: 8px }
+#main .care-see { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 0 0 16px }
+#main .care-see button { all: unset; box-sizing: border-box; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 14px 8px 12px; border-radius: 20px; background: var(--card, #fffdf9); border: 1px solid var(--line, #ebe6e1); text-align: center }
+#main .care-see-art svg { width: 64px; height: 58px }
+#main .care-see b { font-size: 14px; font-weight: 600; line-height: 1.25 }
+#main .care-doors { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 0 0 16px }
+#main .care-doors button { all: unset; box-sizing: border-box; cursor: pointer; display: flex; flex-direction: column; gap: 4px; padding: 14px; border-radius: 20px; background: #e3f1f7 }
+#main .care-doors button:last-child { background: #fdeee6 }
+#main .care-door-ic { width: 38px; height: 38px; border-radius: 12px; background: #fffdfc; display: grid; place-items: center; margin-bottom: 4px }
+#main .care-doors b { font-size: 15.5px; font-weight: 650; color: var(--ink, #2b2732) }
+#main .care-doors small { font-size: 13px; color: #625f6d; line-height: 1.35 }
