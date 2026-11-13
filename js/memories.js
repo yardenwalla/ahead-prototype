@@ -150,15 +150,30 @@
     const play = have.length >= 2 ? `<button class="mem-title-play" onclick="memPlay()" aria-label="Play the year"><span aria-hidden="true">▶</span> Play the year</button>` : '';
     b = `<div class="mem-page"><div class="mem-title-row"><div class="eyebrow">Memories</div>${play}</div><h1>${nm}’s first year</h1>`;
     setTimeout(() => { const r = document.querySelector('.mem-picks'); if (r) r.scrollLeft = r.scrollWidth; }, 0);
-    b += picker + Array.from({ length: now + 1 }, (_, m) => monthCard(m)).join('') + (year ? `<div class="mem-year-wrap">${year}</div>` : '');
+    // On her first birthday the whole-year card comes first, above the months.
+    b += (year ? `<div class="mem-year-wrap">${year}</div>` : '') + picker + Array.from({ length: now + 1 }, (_, m) => monthCard(m)).join('');
     // Checkups live in Health, never in the memory book.
     b += `<p class="hub-foot">Photos and entries stay on this device.</p></div>`;
     return `<div class="quiet-category hub-page hub-timeline-page" style="${yearTheme('Memories')}">${b}</div>`;
   };
 
   // Switch the month card. The row scrolls so the chosen month stays in view.
-  window.memPick = function (m) {
-    document.querySelectorAll('.mem-card').forEach(c => { c.hidden = Number(c.dataset.m) !== m; });
+  // Swipe the month card left or right to move to the next or previous month.
+  if (!window.__memSwipe) {
+    window.__memSwipe = true;
+    let x0 = null, y0 = null, card = null;
+    document.addEventListener('touchstart', e => { card = e.target.closest && e.target.closest('.mem-card'); if (!card) return; x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
+    document.addEventListener('touchend', e => {
+      if (!card || x0 == null) return;
+      const dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0;
+      const m = Number(card.dataset.m); x0 = null;
+      if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+      const next = dx < 0 ? m + 1 : m - 1;
+      if (document.querySelector(`.mem-card[data-m="${next}"]`)) memPick(next, dx < 0 ? 'left' : 'right');
+    }, { passive: true });
+  }
+  window.memPick = function (m, dir) {
+    document.querySelectorAll('.mem-card').forEach(c => { c.hidden = Number(c.dataset.m) !== m; c.classList.remove('slide-left', 'slide-right'); if (!c.hidden && dir) { void c.offsetWidth; c.classList.add('slide-' + dir); } });
     document.querySelectorAll('.mem-pick').forEach(t => { const on = Number(t.dataset.m) === m; t.classList.toggle('is-on', on); if (on) { t.setAttribute('aria-current', 'true'); t.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' }); } else t.removeAttribute('aria-current'); });
     if (window.storyHydrate) storyHydrate();
   };

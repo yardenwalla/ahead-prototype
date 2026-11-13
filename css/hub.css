@@ -1659,3 +1659,9 @@ label:has(> .hub-photo-input:focus-visible) { outline: 2px solid #884866; outlin
 #main .mem-badge-none { color: #a79ca6 }
 #main .mem-badge-lead { color: #8a8494 }
 #main .mem-badge-more .mem-nowrap { color: #7a4f6d }
+#main .mem-card.slide-left { animation: memSlideL .28s ease-out }
+#main .mem-card.slide-right { animation: memSlideR .28s ease-out }
+@keyframes memSlideL { from { opacity: .3; transform: translateX(36px) } to { opacity: 1; transform: none } }
+@keyframes memSlideR { from { opacity: .3; transform: translateX(-36px) } to { opacity: 1; transform: none } }
+@media (prefers-reduced-motion: reduce) { #main .mem-card.slide-left, #main .mem-card.slide-right { animation: none } }
+#main .mem-year-wrap { margin: 16px 0 4px }
