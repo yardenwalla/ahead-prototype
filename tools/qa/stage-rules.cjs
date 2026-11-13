@@ -103,7 +103,7 @@ for (const [cat, route, i] of [['Safety', 'safety-stage:reaching', 1], ['Sleep',
   const a = family(7); a.run("openPage('safety-stage:reaching');hubChangeStage('Safety',1);setAnswer('crawl','Yes');openPage('topic:Safety')");
   check(nowName(a) === 'Crawling', 'Telling us about a new movement replaces an older Safety pick');
   const b = family(8, { pullUp: 'Yes', movementSetByParent: true }); b.run("openPage('topic:Safety')");
-  check(nowName(b) === 'Pulling up' && /Standing brings everything higher into reach/.test(b.html()), 'Pulling up is its own stage and leads with what changes when standing');
+  check(nowName(b) === 'Pulling up' && /Standing puts higher things in reach/.test(b.html()), 'Pulling up is its own stage and leads with what changes when standing');
 }
 // Review fixes: search finds common worries; a future month on Home reads as a preview; setup never shows a sample name.
 {

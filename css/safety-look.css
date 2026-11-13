@@ -28,3 +28,11 @@
 #main .sf-tube svg { width: 130px; flex: none }
 #main .sf-tube figcaption { font-size: 14px; line-height: 1.45; color: #5c5361 }
 #main .sf-tube figcaption b { display: block; color: var(--ink); font-size: 15px; margin-bottom: 2px }
+
+/* Top card picture and "Look from her height" card (Nov 13), in the same shape as Sleep's */
+#main .sf-disc .sf-art { display: grid; place-items: center; margin: 8px -8px 6px }
+#main .sf-disc .sf-art svg { width: auto; max-width: 290px; height: 150px; filter: drop-shadow(0 9px 9px #795b2c14) }
+#main .sf-look { background: #fffdfc; border-radius: 16px; padding: 14px 16px; box-shadow: 0 3px 14px #a0804a22; margin-top: 2px }
+#main .sf-look small { display: block; font-size: 11px; font-weight: 800; letter-spacing: .08em; color: #795b2c; text-transform: uppercase; margin-bottom: 5px }
+#main .sf-look b { display: block; font-size: 17px; line-height: 1.25; color: var(--ink, #2b2732) }
+#main .sf-look span { display: block; font-size: 14px; line-height: 1.45; color: #6d666d; margin-top: 5px }
