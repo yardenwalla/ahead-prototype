@@ -45,15 +45,24 @@
     if(m<2)return ['The first outing can be tiny.',
       'A short walk or one stop is enough. You can feed, change plans or turn around whenever you need.',
       'Try a walk after a feed','It may give you a calmer start. There is no deadline to be home.'];
-    if(m<5)return ['A little more time out together.',
-      'As you get used to Maya’s cues, a longer walk, visit or coffee can feel easier to plan.',
-      'Add just one new stop','Keep the familiar feeding and nap cues. Leave when you both need to.'];
-    if(m>=9)return ['A new room is a new adventure.',
+    if(m>=12)return ['One year. Still rear-facing.',
+      'The first birthday does not mean the car seat should turn forward. Keep Maya rear-facing until she reaches its rear-facing limits.',
+      'Check the car seat label','The seat’s height and weight limits—not her birthday—tell you when it needs to change.','car'];
+    if(m>=9)return ['Is Maya outgrowing the infant seat?',
+      'Many babies reach their infant car seat’s height or weight limit during the first year. A convertible seat is still rear-facing.',
+      'Check the height and weight limits','They are printed on the seat and in its manual. No need to switch by age alone.','car'];
+    if(m>=8)return ['A new room is a new adventure.',
       'As Maya reaches and explores more, the places you visit may need a quick safety check too.',
-      'Look around before settling in','Check for medicines, cords, small objects and reachable furniture.'];
+      'Look around before settling in','Check for medicines, cords, small objects and reachable furniture.','away'];
     if(ca>=6&&newFood())return ['Meals can leave the house, too.',
       'If Maya has started solids, a familiar food can join the milk routine on a walk or visit.',
       'Try a short snack outing','Bring a safely prepared food Maya already eats, along with her cup.'];
+    if(m>=4&&m<6)return ['Facing out may be getting closer.',
+      'When Maya has steady head and neck control, some carriers allow brief forward-facing carrying. Check your model’s instructions.',
+      'Check your carrier’s limits','Facing in stays a good option, whatever her age.','carry'];
+    if(m>=2&&m<4)return ['A little more time out together.',
+      'As you get used to Maya’s cues, a longer walk, visit or coffee can feel easier to plan.',
+      'Add just one new stop','Keep the familiar feeding and nap cues. Leave when you both need to.'];
     return ['New places. Familiar routines.',
       'Maya can come along for a walk or visit without the whole day running on a perfect schedule.',
       'Bring the usual feeding plan','A familiar milk feed and a flexible return time are enough for a small trip.'];
@@ -67,7 +76,7 @@
       +'<section class="ot-home-hero"><div class="ot-eyebrow">'+F('OUTINGS & TRAVEL · '+(m===0?'NEWBORN':m+' MONTHS'))+'</div>'
       +'<h1>'+F(d[0])+'</h1><p>'+F(d[1])+'</p>'
       +'<div class="ot-home-art">'+pic('errands')+'</div>'
-      +'<div class="ot-discovery"><small>'+F('ONE THING TO TRY')+'</small><b>'+F(d[2])+'</b><span>'+F(d[3])+'</span></div></section>'
+      +'<div class="ot-discovery"><small>'+F('ONE THING TO TRY')+'</small><b>'+F(d[2])+'</b><span>'+F(d[3])+'</span>'+(d[4]?'<button class="ot-discovery-go" onclick="'+original(d[4])+'">'+F('See the relevant gear guide')+' ›</button>':'')+'</div></section>'
       +'<section class="ot-section ot-choose"><div class="ot-sec-head"><div class="ot-kicker">'+F('CHOOSE YOUR OUTING')+'</div><h2>'+F('Where are you headed?')+'</h2></div>'
       +'<div class="ot-featured">'+tile('errands',true)+'</div>'
       +'<div class="ot-tile-grid">'+tile('road')+tile('fly')+tile('away')+tile('water')+'</div>'
@@ -75,6 +84,7 @@
       +'<section class="ot-section ot-extra"><div class="ot-sec-head"><div class="ot-kicker">'+F('READY FOR THE DAY')+'</div><h2>'+F('Little things to bring along')+'</h2></div>'
       +'<div class="ot-care-links">'+row('bag','Your diaper bag','Packed for how Maya is fed')+row('car','Car seat basics','Harness, recline and moving up')+row('carry','Carrier basics','Facing in, head position and comfort')+row('stroller','Stroller basics','Harness, brakes and when to sit up')+'</div>'
       +'<button class="ot-weather" onclick="'+original('weather')+'"><span><small>'+F('THIS SEASON')+'</small><b>'+F(weather)+'</b><em>'+F(wdesc)+'</em></span><span aria-hidden="true">›</span></button>'
+      +'<div class="ot-safety-foot">'+F('Every car ride: check the back seat when you park. Never leave Maya alone in a vehicle.')+'</div>'
       +'</section></div>';
   }
   function data(id){
