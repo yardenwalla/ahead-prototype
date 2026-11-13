@@ -135,12 +135,13 @@
       // past that it's "and 3 more", which opens the book where they're all listed.
       const open = `openPage('chg:Timeline:firsts')`;
       const bs = big.slice(0, 4), extraBig = big.length - bs.length;
-      const named = small.slice(0, 2).map(r => lc(r.title));
+      // Name up to three. Past that, name two and count the rest, so "more" is never just one.
+      const named = small.slice(0, small.length <= 3 && !extraBig ? 3 : 2).map(r => lc(r.title));
       const rest = small.length - named.length + extraBig;
       const lead = small.length ? (bs.length ? 'Also noticed: ' : 'Noticed: ') : '';
-      const body = named.length === 2 && !rest ? named.join(' and ') : named.join(', ');
+      const body = !rest && named.length > 1 ? `${named.slice(0, -1).join(', ')} and ${named[named.length - 1]}` : named.join(', ');
       const tail = rest ? `${named.length ? 'and ' : ''}${rest} more ›` : '';
-      const line = small.length || extraBig ? `${esc2(lead + body)}${tail ? ` <span class="mem-nowrap">${esc2(tail)}</span>` : ''}` : '';
+      const line = small.length || extraBig ? `${lead ? `<span class="mem-badge-lead">${esc2(lead)}</span>` : ''}${esc2(body)}${tail ? ` <span class="mem-nowrap">${esc2(tail)}</span>` : ''}` : '';
       const what = !rs.length
         ? `<p class="mem-badge-none">${esc2(m === now ? 'Nothing saved yet this month' : 'Nothing saved for this month')}</p>`
         : `<button class="mem-badges" onclick="${open}" aria-label="${esc2(`What happened at ${WORDS[m].toLowerCase()}, open the memory book`)}">${bs.length ? `<span class="mem-badge-row">${bs.map(r => `<span class="mem-badge"><span class="mem-badge-ic" style="${TONE(r)}">${hubArt(ICON(r), 'Development')}</span><span class="mem-badge-t">${esc2(keepTitle(r))}</span></span>`).join('')}</span>` : ''}${line ? `<span class="mem-badge-more">${line}</span>` : ''}</button>`;
