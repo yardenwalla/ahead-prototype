@@ -171,3 +171,119 @@ h1,h2{font:400 31px/1.14 Georgia,"Times New Roman",serif;letter-spacing:-.042em}
 .full-guide p{font-size:12.5px;line-height:1.6;margin-bottom:8px}
 @media(min-width:620px){body{padding:24px}.app{border-radius:25px;min-height:880px}.top{border-radius:25px 25px 0 0}}@media(max-width:355px){.screen{padding-left:17px;padding-right:17px}.top{padding-left:17px;padding-right:17px}.play-hero{padding-left:12px;padding-right:12px}.hotspot.crib{left:37%}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+
+
+/* Visual playbook / calm redesign
+   One headline, one dominant visualization, one selected answer.
+   Everything else is progressive disclosure. */
+.app .calm-page{padding:0 24px 42px}
+.app .calm-page .head-row{display:block}
+.app .calm-page .head-row h1{font-size:33px;line-height:1.12;margin:6px 0 5px;letter-spacing:-.045em}
+.app .calm-page .head-row .subtitle{font-size:13.4px;line-height:1.5;color:#718175;max-width:352px}
+.app .calm-page .back{min-height:38px;margin:-2px 0 4px -5px;padding:5px 0;font-size:12px;color:#718575;font-weight:740}
+.app .calm-page .eyebrow,.app .calm-eyebrow{font-size:10px;font-weight:800;letter-spacing:.10em;line-height:1.35;text-transform:uppercase;color:#779382}
+.app .calm-home-head{padding:12px 0 23px}
+.app .calm-home-head h1{font-size:36px;line-height:1.08;margin:8px 0 10px;max-width:355px}
+.app .calm-home-head p{font-size:14px;color:#708073;line-height:1.55;max-width:340px}
+.app .calm-destination-grid{display:flex;flex-direction:column;gap:11px}
+.app .calm-destination{border:0;border-radius:19px;position:relative;display:grid;grid-template-columns:minmax(0,1fr) 136px;align-items:center;min-height:124px;padding:16px 12px 16px 19px;background:var(--tile-bg);overflow:hidden;width:100%;text-align:left}
+.app .calm-destination:active{transform:scale(.993)}
+.app .calm-dest-visual{grid-column:2;grid-row:1;width:146px;height:101px;overflow:hidden;align-self:center;margin:-5px -15px -5px 0}
+.app .calm-dest-visual svg{width:100%;height:100%;display:block}
+.app .calm-dest-copy{grid-column:1;grid-row:1;display:block;position:relative;z-index:1;align-self:center;padding-right:8px}
+.app .calm-dest-copy b{display:block;font:400 22px/1.15 Georgia,serif;letter-spacing:-.035em;color:#365447}
+.app .calm-dest-copy small{display:block;font-size:12.6px;line-height:1.4;color:#697f72;margin-top:7px;max-width:170px}
+.app .calm-dest-arrow{position:absolute;right:12px;bottom:10px;font-size:17px;line-height:1;color:#6f9280}
+.app .calm-age-note{display:flex;align-items:flex-start;gap:11px;padding:18px 0 0;margin:23px 0 0;border-top:1px solid #e7ebe3}
+.app .calm-note-glyph{width:31px;height:31px;border-radius:11px;display:grid;place-items:center;background:#e5eee5;color:#608468;flex:none}
+.app .calm-age-note b{display:block;font-size:12.5px;line-height:1.4;color:#456552}
+.app .calm-age-note small{display:block;margin-top:3px;font-size:12.5px;line-height:1.55;color:#718074}
+.app .calm-flight .calm-journey{margin-top:23px;background:#e8f1ef;border-radius:21px;overflow:hidden}
+.app .calm-flight-illustration{height:155px;padding:9px 11px 0;overflow:hidden}
+.app .calm-flight-illustration svg{display:block;width:100%;height:100%}
+.app .calm-stage-tabs{display:grid;grid-template-columns:repeat(4,1fr);padding:0 10px 13px;gap:4px}
+.app .calm-stage-tab{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:7px;text-align:center;color:#6e8a7d;font-size:11.8px;font-weight:740;line-height:1.25;min-height:58px;padding:3px 1px}
+.app .calm-tab-number{display:grid;place-items:center;height:30px;width:30px;border-radius:50%;background:#f8faf5;border:1.5px solid #c2d5ce;font-size:11px;font-weight:800;color:#789b8e}
+.app .calm-stage-tab.is-active{color:#335c4c}
+.app .calm-stage-tab.is-active .calm-tab-number{background:#456c5a;border-color:#456c5a;color:#fff}
+.app .calm-stage-tab:focus-visible{border-radius:9px}
+.app .calm-active-moment{margin:24px 1px 0}
+.app .calm-active-moment h2{font-size:26px;line-height:1.17;margin:6px 0 8px;color:#334f41}
+.app .calm-active-moment>p{font-size:14px;line-height:1.62;color:#647568;max-width:360px}
+.app .calm-keypoint{display:flex;align-items:flex-start;gap:9px;margin-top:15px;padding:13px 14px;border-radius:13px;background:#eaf1e8;color:#486d51}
+.app .calm-keypoint svg{width:17px;height:17px;flex:none;margin-top:2px}
+.app .calm-keypoint span{font-size:13px;line-height:1.5;font-weight:650}
+.app .calm-text-action{display:flex;align-items:center;gap:4px;color:#557d61;min-height:43px;font-size:12.6px;font-weight:770;padding:10px 0;margin-top:3px}
+.app .calm-text-action svg{height:15px;width:15px}
+.app .calm-more{border-top:1px solid #e4e9e1;margin-top:25px}
+.app .calm-question-toggle{padding:16px 0;min-height:65px;display:flex;align-items:center;justify-content:space-between;text-align:left;width:100%;gap:14px}
+.app .calm-question-toggle b{display:block;color:#405c4a;font-size:14px;line-height:1.3;font-weight:760}
+.app .calm-question-toggle small{display:block;color:#839084;font-size:12px;line-height:1.4;margin-top:4px}
+.app .calm-rotate{display:grid;place-items:center;color:#819b84;transform:rotate(90deg);transition:transform .15s}
+.app .calm-rotate.is-open{transform:rotate(-90deg)}
+.app .calm-questions-inner{padding:0 0 12px}
+.app .calm-questions-inner .qas{border:0;border-radius:0;background:transparent;padding:0}
+.app .calm-questions-inner .qa{border-top:1px solid #e9ede7}
+.app .calm-questions-inner .qa button{font-size:12.8px;font-weight:710;color:#4b6853;padding:12px 2px;min-height:49px}
+.app .calm-questions-inner .qa .answer{font-size:12.8px;line-height:1.62;padding:0 5px 15px;color:#647869}
+.app .calm-reference{padding:0;border-top:1px solid #e6eae2}
+.app .calm-link-row{width:100%;display:flex;align-items:center;gap:11px;min-height:59px;padding:12px 0;text-align:left}
+.app .calm-link-row>span{color:#7b9580;flex:none;width:29px;display:grid;place-items:center}
+.app .calm-link-row b{font-size:13.5px;font-weight:740;color:#46634d;flex:1}
+.app .calm-link-row>svg{color:#8da08f;flex:none}
+.app .calm-complete{border-top:1px solid #e6eae2;width:100%;text-align:left;padding:14px 0;min-height:52px;color:#6c846f;font-size:12.4px;font-weight:710;display:flex;gap:5px;align-items:center}
+.app .calm-complete svg{width:14px;height:14px}
+.app .calm-sources{margin:4px 0 0;color:#869488}
+.app .calm-sources summary{font-size:11.6px;line-height:1.5;cursor:pointer;min-height:42px;padding:10px 0;color:#8a998b}
+.app .calm-sources .sources{margin-top:0;padding:8px 0 0;font-size:11.2px}
+.app .calm-sources .sources a{font-size:11.2px}
+.app .calm-room-panel{background:#f1eaf0;border-radius:21px;margin-top:23px;overflow:hidden;padding:18px 15px 0}
+.app .calm-room-title h2{font-size:24px;line-height:1.22;margin:5px 0 4px;color:#5e5261}
+.app .calm-room-title .calm-eyebrow{color:#937994}
+.app .calm-room-visual{height:196px;position:relative;margin:3px -6px 0}
+.app .calm-room-visual>svg{height:100%;width:100%}
+.app .calm-room-visual .hotspot{width:39px;height:39px;font-size:12px;border:1.5px solid #b09aad;box-shadow:0 3px 9px #554c5b20}
+.app .calm-room-visual .hotspot.selected{background:#775f78;color:#fff;box-shadow:0 0 0 3px #fdf8fb}
+.app .calm-room-names{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:0 0 16px}
+.app .calm-room-names button{font-size:11.3px;line-height:1.25;font-weight:710;border-radius:10px;color:#937e90;padding:8px 2px;min-height:41px}
+.app .calm-room-names button.active{background:#fff9fc;color:#705872}
+.app .calm-room-detail{background:#fffdfa;margin:0 -15px;padding:17px 18px 15px;border-top:1px solid #ebe3e8}
+.app .calm-room-detail .calm-eyebrow{color:#9d8096}
+.app .calm-room-detail h3{font:400 22px/1.22 Georgia,serif;letter-spacing:-.03em;color:#4e4b4d;margin:5px 0 8px}
+.app .calm-room-detail p{font-size:13.5px;line-height:1.58;color:#69766d}
+.app .calm-room-more{font-size:12px;color:#7c7180;font-weight:730;display:flex;gap:4px;align-items:center;min-height:40px;margin-top:4px;padding:8px 0}
+.app .calm-room-more svg{height:14px;width:14px}
+.app .calm-mini-tip{display:flex;align-items:flex-start;gap:10px;margin:15px 1px 0;padding:12px 0;color:#5b7460}
+.app .calm-mini-tip svg{flex:none;color:#7d987e;margin-top:2px}
+.app .calm-mini-tip span{font-size:12.7px;line-height:1.5;color:#758277}
+.app .calm-mini-tip b{color:#4a6550;font-weight:780}
+.app .calm-store-cover{background:#eaf1e9;border-radius:21px;margin-top:21px;overflow:hidden}
+.app .calm-store-picture{height:145px;overflow:hidden;padding:4px 12px 0}
+.app .calm-store-picture svg{width:100%;height:100%}
+.app .calm-store-message{background:#fffefa;border:1px solid #e8ece5;border-top:0;border-radius:0 0 20px 20px;padding:18px 17px 18px}
+.app .calm-store-message h2{font-size:24px;line-height:1.2;margin:6px 0 8px;max-width:330px}
+.app .calm-store-message p{font-size:13.3px;line-height:1.6;color:#6b796e}
+.app .calm-store-exception{border:0;width:100%;display:flex;align-items:center;gap:11px;text-align:left;min-height:56px;padding:13px 3px;color:#557b60}
+.app .calm-store-exception>svg:first-child{flex:none;color:#719779}
+.app .calm-store-exception>svg:last-child{margin-left:auto;flex:none;color:#90a493}
+.app .calm-store-exception span{font-size:13.1px;font-weight:725;line-height:1.4}
+.app .calm-inline-answer{padding:0 5px 14px;margin:0;font-size:12.9px;line-height:1.6;color:#687b6d}
+.app .calm-store-flow{margin:21px 0 5px}
+.app .calm-store-flow .calm-eyebrow{display:block;margin-bottom:9px}
+.app .calm-line-step{display:flex;gap:13px;align-items:flex-start;padding:13px 0;border-top:1px solid #e8ece7}
+.app .calm-line-step>span{width:28px;height:28px;border-radius:10px;display:grid;place-items:center;background:#e8f0e7;color:#6e8b71;flex:none;font-size:12px;font-weight:800}
+.app .calm-line-step b{display:block;color:#405b49;font-size:13.6px;line-height:1.4}
+.app .calm-line-step p{font-size:12.8px;line-height:1.58;color:#728075;margin-top:4px}
+.app .sheet-head{padding-top:20px}
+.app .sheet-body{padding-top:17px}
+.app .sheet-body .choice{background:#f9faf6;border:0;border-radius:12px;margin:9px 0;padding:13px}
+.app .sheet-body .choice.reco{background:#ebf2e9}
+.app .sheet-body .choice p{font-size:13px;line-height:1.6}
+@media(max-width:360px){
+ .app .calm-page{padding-left:18px;padding-right:18px}
+ .app .calm-destination{grid-template-columns:minmax(0,1fr) 115px;padding-left:15px}
+ .app .calm-dest-visual{width:122px;height:88px}
+ .app .calm-flight-illustration{height:133px}
+ .app .calm-room-visual{height:184px}
+}
+@media(prefers-reduced-motion:reduce){.app .calm-rotate{transition:none}}
