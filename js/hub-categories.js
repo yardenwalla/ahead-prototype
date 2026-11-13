@@ -470,7 +470,20 @@
     : `${m < 6 ? 'At 3–6 months' : 'From 6 months'}: a temperature of ${feverTemp(m)} or higher, or any fever that lasts more than a day. Call sooner for a rash, unusual sleepiness or fewer wet diapers.`;
   window.feverEarlyNote = () => (typeof profile !== 'undefined' && profile.early && profile.due) ? ' Born early? Ask your pediatrician if a lower temperature should mean a call for {o}.' : '';
   // The same emergency box on every symptom page.
-  window.hubCall911 = () => `<section class="hub-card hub-callout is-urgent"><b>${F('Call 911 right away')}</b><p>${F('Struggling to breathe, blue lips, won’t wake or is floppy, or a seizure.')}</p></section>`;
+  // One emergency box, everywhere (Nov 13): the action as its label, then one line of signs. A trailing "Call 911…" or
+  // "Call your pediatrician right away." sentence in the text becomes the label, so the box never says it twice.
+  window.hubUrgent = (t, label) => {
+    let txt = String(t).trim(), lab = label;
+    if (!lab && /^Never\b/.test(txt)) lab = 'Safety first';   // a rule, not a call
+    if (!lab) {
+      txt = txt.replace(/:\s*call (your pediatrician )?right away\.?$/i, '.');
+      if (/call 911|go to the ER/i.test(txt)) { lab = 'Call 911 right away'; txt = txt.replace(/\s*(Cool \{o\} down and call 911\.|Call 911 or go to the ER\.|[^.]*call 911\.?)\s*$/i, m => /Cool/.test(m) ? ' Cool {o} down while you wait.' : ''); }
+      else { lab = 'Call your pediatrician right away'; txt = txt.replace(/\s*Call your pediatrician right away\.?\s*$/i, ''); }
+    }
+    txt = txt.charAt(0).toUpperCase() + txt.slice(1);
+    return `<section class="hub-card hub-callout is-urgent"><b>${F(lab)}</b><p>${F(txt)}</p></section>`;
+  };
+  window.hubCall911 = () => hubUrgent('Struggling to breathe, blue lips, won’t wake or is floppy, or a seizure.', 'Call 911 right away');
   window.feverBand = m => m < 3 ? 'Under 3 months' : m < 6 ? '3 to 6 months' : '6 months and up';
   function healthDetail(id) {
     const h = H(), under3 = actualMonth() < 3;
