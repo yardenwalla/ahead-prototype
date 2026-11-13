@@ -1582,3 +1582,10 @@ label:has(> .hub-photo-input:focus-visible) { outline: 2px solid #884866; outlin
 #main .mem-latest .bk-photo { display: none }
 #main .mem-page .mem-latest h2.bk-month { margin: 0 0 6px; font-family: AheadHand, Caveat, cursive; font-size: 34px !important; font-weight: 600 !important; line-height: 1.05; color: #2b2840 }
 #main .mem-sec button.mem-head-link { color: #7a4f6d }
+/* And this was the month…: this month's moments, attached under the month cards. */
+#main .mem-month { margin: 14px 0 0; padding: 16px 18px 14px; border-radius: 22px; background: #fffaf7; box-shadow: 0 1px 0 rgba(120,80,70,.05), 0 8px 22px rgba(120,80,70,.08) }
+#main .mem-month-title { margin: 0 0 4px; font-family: AheadHand, Caveat, cursive; font-size: 27px; font-weight: 600; line-height: 1.1; color: #2b2840 }
+#main .mem-month .bk-noted { margin-top: 6px }
+#main .mem-month-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 14px; padding-top: 12px; border-top: 1px solid #efe6dc }
+#main .mem-month-foot .mem-save { flex: none; margin: 0; padding: 8px 14px; font-size: 14px; white-space: nowrap }
+#main .mem-month-foot .mem-head-link { font-size: 14px; text-align: left }
