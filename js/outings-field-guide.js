@@ -44,9 +44,10 @@
     const m=mNow(),ca=care();
     if(m<2)return ['Outings can be short and simple','A breath of fresh air, one stop, then home when you’re ready. There’s no need to make a whole day of it.'];
     if(m<5)return ['A little more room to explore','As routines become familiar, try a longer walk or visit. Leave space for feeds and naps.'];
+    if(m>=9)return ['A bigger reach changes new places','Before visiting family or staying away, look for cords, medicines and small objects within reach.'];
     if(ca>=6&&newFood())return ['Meals can leave the house, too','Pack a familiar, safely prepared food and a cup alongside the milk feeds Maya already knows.'];
     if(m<9)return ['New places are part of the fun','You can bring your familiar feeding and sleep routines into an unfamiliar place. They do not need to run perfectly.'];
-    return ['A bigger reach changes new places','Before visiting family or staying away, look for cords, medicines and small objects within reach.'];
+    return ['New places become part of the day','Your usual feeding and sleep routines can come with you. They do not need to run perfectly.'];
   }
   function home(){
     const m=mNow(),d=discover(),ca=care();
