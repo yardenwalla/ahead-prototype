@@ -74,6 +74,7 @@ body{padding-top:61px!important}
   const d=new Date(now.getFullYear(),now.getMonth()-n,Math.min(now.getDate(),12));
   profile={...demo,name:'Maya',pronouns:'she',dob:iso(d),due:'',early:false,feed:document.getElementById('ot-feed').value,feedHow:'',example:true};
   month=actualMonth();
+  answers={...answers,solids:n>=6?'Yes':'Not yet'};
  }
  window.otPreviewHome=()=>{month=actualMonth();openPage('chg:Out and about:s')};
  window.otPreviewAge=n=>{setAge(n);render();window.scrollTo(0,0)};
