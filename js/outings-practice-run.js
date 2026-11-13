@@ -1,7 +1,7 @@
 
 (function(){
 'use strict';
-const state={page:'home',key:'coffee',moment:0,world:'near',sheet:null,expanded:false,age:6,feed:'both',solids:true};
+const state={page:'home',key:'coffee',moment:0,world:'near',sheet:null,expanded:false,age:6,feed:'both',solids:true,choices:{}};
 const root=document.getElementById('app');
 const pretty=s=>String(s).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','"':'&quot;',"'":'&#39;'}[ch]));
 const value=s=>typeof s==='function'?s():s;
@@ -102,6 +102,35 @@ abroad:{name:'Taking Maya abroad',nav:'International trip',short:'Passport, vacc
 {name:'There',symbol:'water',when:'AT YOUR DESTINATION',title:'Food, water and mosquitoes matter.',text:'Use safe water for preparing bottles and cleaning equipment. Take destination-specific steps to avoid insect bites and foodborne illness.',tip:'Have a backup',note:'Know a nearby medical facility and the local emergency number.',ask:'What if Maya gets sick abroad?',answer:'Seek prompt medical care for concerning fever, dehydration, trouble breathing, or a baby who is difficult to wake. Malaria-risk locations need special urgency.'}
 ],more:[['What about safe formula water?', 'Boiling or bottled-water recommendations vary by destination and health risks. Ask your travel-health clinician for the specific location.'],['What about mosquitoes?', 'Use age-appropriate insect protection, stroller netting and destination-specific clinician guidance.']]}
 };
+
+/* Optional decisions, not questions parents must answer. We show how the
+   same outing can work differently depending on their actual situation. */
+const DECISIONS={
+ 'flight:0':{question:'How might you travel?',options:[
+  {id:'seat',name:'Her own seat',help:'Most protected',detail:'Buy a separate ticket and check that Maya’s restraint is approved for aircraft use. Follow the airline’s instructions for where it can be installed.'},
+  {id:'lap',name:'On your lap',help:'Allowed on many flights',detail:'This may be allowed for children under 2, but the FAA says a properly approved child restraint in a separate seat is safer, particularly during turbulence.'}
+ ]},
+ 'restaurant:0':{question:'Where will Maya sit?',options:[
+  {id:'stroller',name:'In the stroller',help:'Works at many ages',detail:'Use her stroller’s appropriate position and harness, keep brakes on and keep hot drinks away.'},
+  {id:'chair',name:'In a high chair',help:'If she sits securely',detail:'Only if Maya can sit upright steadily in that high chair. Use its harness, supervise closely and keep her back from hot plates and table edges.'}
+ ]},
+ 'grocery:0':{question:'Where should Maya ride?',options:[
+  {id:'carrier',name:'Carrier or stroller',help:'A good default',detail:'A properly fitted carrier or stroller works without balancing an infant seat on a shopping cart.'},
+  {id:'cart',name:'Cart’s own seat',help:'If she can sit securely',detail:'Use this only if Maya sits upright steadily, the cart is suitable for her, and the cart’s built-in restraint is buckled. Never place an infant car seat on the cart.'}
+ ]},
+ 'overnight:0':{question:'What sleep space will you have?',options:[
+  {id:'provided',name:'Crib provided',help:'Check it on arrival',detail:'Confirm it meets current safety requirements, has all its parts, and has a firm flat mattress and fitted sheet. Keep it empty.'},
+  {id:'bring',name:'Bringing our own',help:'A familiar play yard',detail:'Use a safety-approved play yard with only its manufacturer-specified mattress and approved fitted sheet, following its instructions.'}
+ ]}
+};
+const choicePanel=()=>{
+ const key=state.key+':'+state.moment,d=DECISIONS[key];if(!d)return '';
+ const selected=state.choices[key]||null;
+ return '<div class="real-choice"><div class="real-choice-title">'+pretty(d.question)+'</div><div class="real-choice-options">'
+  +d.options.map(x=>'<button class="real-choice-option'+(selected===x.id?' selected':'')+'" data-choice="'+x.id+'" aria-pressed="'+(selected===x.id)+'"><b>'+pretty(x.name)+'</b><small>'+pretty(x.help)+'</small></button>').join('')+'</div>'
+  +(selected?'<p class="real-choice-result" role="status">'+pretty(d.options.find(x=>x.id===selected).detail)+'</p>':'')+'</div>';
+};
+
 const tiny=(key)=>key==='flight'?'An airport feels less intimidating when you know the sequence.':key==='road'?'The drive can bend around Maya, not the other way around.':key==='overnight'?'The bedtime routine comes with you.':key==='water'?'The hands-on rule matters more than any gear.':'You can picture this before you go.';
 function header(){
  return '<header class="appbar"><button class="brand" data-home aria-label="Ahead, return to Outings home">ahead<em>.</em></button>'
@@ -134,7 +163,7 @@ function home(){
 function journey(){
  const d=JOURNEYS[state.key],i=Math.min(state.moment,d.items.length-1),s=d.items[i],last=i===d.items.length-1;
  const sceneNote=typeof s.note==='function'?s.note():s.note;
- const compare=(state.key==='flight'&&i===0)?'<div class="mini-options"><div class="mini-option"><b>Own seat</b><span>Safest with an aircraft-approved car seat</span></div><div class="mini-option"><b>On your lap</b><span>Often allowed under 2, but less protected</span></div></div>':'';
+ const compare=choicePanel();
  const route='<div class="route-head"><b>THE REAL-LIFE ROUTE</b><span>Tap any moment</span></div><nav class="route" aria-label="Outing moments">'+d.items.map((it,n)=>'<button class="route-step'+(n===i?' active':n<i?' visited':'')+'" data-moment="'+n+'" aria-current="'+(n===i?'step':'false')+'"><span class="bubble">'+ico(it.symbol,18)+'</span><label>'+pretty(it.name)+'</label></button>').join('')+'</nav>';
  return '<main class="screen journey"><div class="backbar"><button class="back-button" data-home>'+ico('back',17)+' All outings</button><span class="badge">'+(i+1)+' of '+d.items.length+' moments</span></div>'
   +'<div class="journey-head"><div class="eyebrow">PICTURE THE OUTING</div><h1>'+pretty(d.name)+'</h1><p>'+pretty(d.intro)+'</p></div>'
@@ -210,6 +239,7 @@ function render(){
 function top(){
  try{window.scrollTo({top:0,behavior:'instant'})}catch(e){window.scrollTo(0,0)}
 }
+function momentTop(){ const el=root.querySelector('.route-head');if(el&&typeof el.scrollIntoView==='function')el.scrollIntoView({block:'start',behavior:'instant'}); }
 function goto(key){
  if(!JOURNEYS[key])return;
  state.key=key;state.moment=0;state.expanded=false;state.page='journey';state.sheet=null;render();top();
@@ -224,8 +254,9 @@ root.addEventListener('click',function(e){
  if(t.hasAttribute('data-trip')){goto(t.getAttribute('data-trip'));return}
  if(t.hasAttribute('data-world')){state.world=t.getAttribute('data-world');render();return}
  if(t.hasAttribute('data-moment')){state.moment=Number(t.getAttribute('data-moment'));state.expanded=false;render();return}
- if(t.hasAttribute('data-next')){state.moment=Math.min(JOURNEYS[state.key].items.length-1,state.moment+1);state.expanded=false;render();return}
- if(t.hasAttribute('data-prev')){state.moment=Math.max(0,state.moment-1);state.expanded=false;render();return}
+ if(t.hasAttribute('data-next')){state.moment=Math.min(JOURNEYS[state.key].items.length-1,state.moment+1);state.expanded=false;render();momentTop();return}
+ if(t.hasAttribute('data-prev')){state.moment=Math.max(0,state.moment-1);state.expanded=false;render();momentTop();return}
+ if(t.hasAttribute('data-choice')){state.choices[state.key+':'+state.moment]=t.getAttribute('data-choice');render();return}
  if(t.hasAttribute('data-whatif')){state.expanded=!state.expanded;render();return}
  if(t.hasAttribute('data-sheet')){state.sheet=t.getAttribute('data-sheet');render();return}
  if(t.hasAttribute('data-close')){state.sheet=null;render();return}
@@ -236,7 +267,7 @@ root.addEventListener('change',function(e){
  else if(t.hasAttribute('data-feed'))state.feed=t.value;
  else if(t.hasAttribute('data-solids'))state.solids=!!t.checked;
  else return;
- render();
+ // Keep this lightweight settings sheet open until the parent is done making changes.
 });
 document.addEventListener('keydown',function(e){if(e.key==='Escape'&&state.sheet){state.sheet=null;render()}});
 window.__outingPreview={getState:()=>({...state}),goto:key=>goto(key),setAge:n=>{state.age=n;render()},getJourneys:()=>Object.keys(JOURNEYS)};
