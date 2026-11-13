@@ -151,7 +151,7 @@
     b += h.versus('If something goes wrong', ['Poison Help', 'Call 1-800-222-1222 if Maya swallows something that could be harmful.'], ['Call 911', 'If {s} can’t breathe or won’t wake. A swallowed battery or magnet means the ER right away.']);
     // Choking first aid lives in Feeding; the safety net links to it.
     b += `<div class="hub-browse"><button class="hub-link" onclick="openPage('chg:Feeding:safe')">${F(typeof actualMonth === 'function' && actualMonth() >= 12 ? 'Learn choking first aid for a child' : 'Learn infant choking first aid')} ›</button></div>`;
-    if (nx) b += h.next(`Next: ${nx.label}, from about ${nx.age.replace(/\D.*$/, '')} months`, nx.title, `openPage('safety-stage:${nx.key}')`);
+    if (nx) b += h.next(`Next · from about ${nx.age.replace(/\D.*$/, '')} months`, nx.label, `openPage('safety-stage:${nx.key}')`, '', { reaching: 'Clear the floor of small things and batteries.', rolling: 'Gates and cabinet locks go in before crawling.', pulling: 'Strap furniture and TVs to the wall.' }[nx.key] || '');
     b += h.note('Ages are typical. Every baby moves at their own pace.');
     return `<div class="quiet-category hub-page" data-overview="Safety" data-safety-stage="${key}" style="${yearTheme('Safety')}">${typeof monthlyPageHeader === 'function' ? monthlyPageHeader('Safety') : ''}${pills}${b}</div>`;
   };

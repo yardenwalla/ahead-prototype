@@ -396,6 +396,7 @@
         + homeRow('start', 'heart', 'Settle in', 'Drop-off, pickup and sick days', 'start')
         + homeRow('backup', 'shield', 'When care falls through', 'Sick days, closed days, a caregiver who quits', 'backup') + `</div>`;
     }
+    if (view < 2) b += H().next(view === 0 ? 'Next · once you’ve chosen care' : 'Next · once care starts', view === 0 ? 'Getting ready for day one' : 'Settling in', `openPage('chg:${CAT}:s:${view + 1}')`, '', view === 0 ? 'Book a practice day before the first day.' : 'Expect tears at drop-off for the first weeks.');
     return frame(b);
   }
 

@@ -852,11 +852,35 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     // The top card, built like Feeding's: the stage, a scene, and what's new inside.
     let b = `<header class="hub-hero care-hero care-disc"><p class="hub-eyebrow">${STAGE[v]}</p><h1>${F(st.title)}</h1><p class="hub-lead">${F(st.lead)}</p><div class="care-art" aria-hidden="true">${window.careScene ? careScene(N.art) : ''}</div>`
       + `<div class="care-nownote" role="button" tabindex="0" onclick="${cgo(N.go)}"><small>${F('New now')}</small><b>${F(N.t)}</b><span>${F(N.d)}</span><em>${F(N.cta)} ›</em></div></header>`;   // a card like Feeding's "You might notice", not a pill button
-    b += `<h2 class="hub-h2">${F('You may be noticing')}</h2><div class="care-see">${(v === 3 && (!live() || careAge() >= 9 || now < 3) ? [N.see[0], ['steps', 'First steps', 'p:feet'], N.see[2]] : N.see).map(([id, t, r]) => `<button onclick="${cgo(r)}"><span class="care-see-art">${window.careMini ? careMini(id) : ''}</span><b>${F(t)}</b></button>`).join('')}</div>`;
-    b += `<div class="care-doors"><button onclick="${cgo('how:' + v)}"><span class="care-door-ic">${hubArt('book', CAT)}</span><b>${F('How do I…?')}</b><small>${F('Steps for everyday care')}</small></button>`
-      + `<button onclick="${cgo('look:' + v)}"><span class="care-door-ic">${hubArt('eye', CAT)}</span><b>${F('Is this normal?')}</b><small>${F('Start with what you see')}</small></button></div>`;
-    b += nx ? h.next(v === 0 ? 'Next, after the first few weeks' : `Next, usually from ${STAGE[v + 1].split('–')[0]} months`, nx.title, `openPage('chg:${CAT}:s:${v + 1}')`)
-      : h.next('After the first birthday', 'Brushing and baths after 1', `openPage('chg:${CAT}:d:after1')`);
+    // Care at a glance (Nov 13): how often, at this age, in the same three-tile card Feeding and Sleep open with.
+    { const ICON = { Diapers: 'diaper', 'Wet diapers': 'diaper', 'Sponge baths': 'bath', 'Tub baths': 'tub', Baths: 'tub', 'Nail trims': 'nail', 'Gum wipes': 'tooth', Brushing: 'tooth' };
+      const PAL = [['#e3ecf7', '#3f5f8a'], ['#f4e6ee', '#87496a'], ['#e5f0e7', '#3f7350']];
+      // Built exactly like Feeding's glance (same markup and styles): heading above, three tiles of label, number, line.
+      const CSS = `<style>#main .fd-gl-h{margin:18px 2px 10px}#main .fd-glance{padding:10px!important}#main .fd-glance .fd-gl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}#main .fd-gl>*{all:unset;box-sizing:border-box;display:block;border-radius:12px;background:var(--sm-bg);padding:10px 10px 11px;min-width:0}#main .fd-gl small{display:block;font-size:11px;font-weight:700;color:var(--sm-ink);line-height:1.25}#main .fd-gl b{display:block;font-size:17px;line-height:1.2;letter-spacing:-.2px;color:var(--ink,#2b2732);margin-top:5px;overflow-wrap:break-word}#main .fd-gl span{display:block;font-size:11.5px;line-height:1.3;color:#6d666d;margin-top:4px}</style>`;
+      b += CSS + `<h2 class="hub-h2 fd-gl-h">${F('Care at a glance')}</h2><section class="hub-card hub-glance is-static fd-glance"><div class="fd-gl">${OFTEN[v].map(([l, n, per], i) => `<div style="--sm-bg:${PAL[i][0]};--sm-ink:${PAL[i][1]}"><small>${F(l)}</small><b>${F(n)}</b><span>${F(per)}</span></div>`).join('')}</div></section>`; }
+    // Right now (Nov 13 redesign, built like Feeding's "Right now for Maya"): this stage's how-tos on the page itself, not
+    // behind a "How do I…?" door. Up to four rows; the one the New now card already opens is left out. Each row's line says how,
+    // because how often lives in Care at a glance above.
+    const SEE = (v === 3 && (!live() || careAge() >= 9 || now < 3) ? [N.see[0], ['steps', 'First steps', 'p:feet'], N.see[2]] : N.see);
+    { const NEWKEY = ['bath', 'bath', 'diapers', 'teeth'][v];
+      const HINT = { 'p:sponge': 'Face first, diaper area last', 'p:tub': 'A safe hold, and 2 inches of warm water', 'cord': 'Keep it clean, dry and in the air',
+        'h:diapers:0': 'Front to back, then let it air-dry', 'h:diapers:1': 'Front to back, then let it air-dry', 'h:diapers:2': 'Set up first, and a hand on {o}', 't:diapers:3': 'A toy to hold helps',
+        'h:skin:1': 'Plain water, and cream for dry patches', 'h:skin:2': 'Drool rash and dry patches', 'p:teething': 'What helps, and what to skip',
+        't:bath:2': 'Often part of bedtime', 't:bath:3': 'Once {s} {sit|sits} steadily', 'p:feet': 'Soft shoes once walking outside', 'h:gums:1': 'A soft cloth on your finger', 't:sun:1': 'Shade and clothing first', 't:sun:2': 'Shade first, sunscreen from 6 months', 't:sun:3': 'Sunscreen, again every 2 hours', 't:clothes:0': 'One layer more than you',
+        't:clothes:0': 'One layer more than you', 'p:brush': 'A rice-grain smear, twice a day' };
+      const nail = r => /^t:nails/.test(r) ? 'While {s} {sleep|sleeps}, with a file or clippers' : null;
+      // What matters most at each stage, in order (Nov 13: everything important shows on the page; "All how-tos" only adds the rest).
+      const ORDER = [['diapers', 'cord', 'nails', 'clothes'], ['diapers', 'skin', 'nails', 'sun'], ['bath', 'skin', 'sun', 'nails'], ['bath', 'sun', 'nails', ...(!live() || careAge() >= 9 ? ['clothes'] : [])]][v];   // shoes only once walking is near
+      const tiled = new Set(SEE.map(x => x[2])), byKey = k => HOWTO[v].find(x => x[0] === k);
+      const rows = ORDER.map(byKey).filter(x => x && x[0] !== NEWKEY && !tiled.has(x[3])).slice(0, 4);   // nothing twice: a tile that opens the same page wins
+      b += h2('Right now for Maya') + `<div class="hub-list">${rows.map(([k, t, sub, r]) => rowK(k, t, HINT[r] || nail(r) || sub, cgo(r))).join('')}</div>`
+        + `<button class="hub-link care-all-how" onclick="${cgo('how:' + v)}">${F('All how-tos')} ›</button>`; }
+    // Is this normal? The three things parents most often see at this stage, as pictures, and one way into everything else.
+    b += `<h2 class="hub-h2">${F('Is this normal?')}</h2><div class="care-see">${SEE.map(([id, t, r]) => `<button onclick="${cgo(r)}"><span class="care-see-art">${window.careMini ? careMini(id) : ''}</span><b>${F(t)}</b></button>`).join('')}</div>`;
+    b += `<button class="hub-link care-all-how" onclick="${cgo('look:' + v)}">${F('Something else look off?')} ›</button>`;
+    const NEXT_SUB = ['Tub baths start once the cord heals.', 'Drool and teething often start: keep a bib handy.', 'Get a baby sunscreen and a soft toothbrush.', 'Shoes wait until {s’s} walking outside.'][v];
+    b += nx ? h.next(v === 0 ? 'Next · after the first few weeks' : `Next · usually from ${STAGE[v + 1].split('–')[0]} months`, nx.title, `openPage('chg:${CAT}:s:${v + 1}')`, '', NEXT_SUB)
+      : h.next('Next · after the first birthday', 'Brushing and baths after 1', `openPage('chg:${CAT}:d:after1')`, '', NEXT_SUB);
     b += h.note('Ages are typical. Every baby moves at their own pace.');
     return `<div class="quiet-category hub-page care-v2" data-overview="${CAT}" data-care-stage="${v}" style="${yearTheme(CAT)}">${typeof monthlyPageHeader === 'function' ? monthlyPageHeader(CAT) : ''}${pills}${careNote}${b}</div>`;
   };

@@ -47,7 +47,7 @@
   const glanceCard = (title, ts, onclick, note = '') => `<button class="hub-card hub-glance" onclick="${onclick}"><span class="hub-card-head"><b>${F(title)}</b>${chev}</span>${tiles(ts)}${note ? `<span class="hub-card-note">${F(note)}</span>` : ''}</button>`;
   // Normal versus call: two boxes side by side, with an optional link underneath.
   const versus = (title, a, b, link) => `<section class="hub-card hub-versus">${title ? `<h3>${F(title)}</h3>` : ''}<div class="hub-vs"><div><b>${F(a[0])}</b><p>${F(a[1])}</p></div><div class="${/911/.test(b[0]) ? 'is-urgent' : 'is-call'}"><b>${F(b[0])}</b><p>${F(b[1])}</p></div></div>${link ? `<button class="hub-link" onclick="${link[1]}">${F(link[0])} ›</button>` : ''}</section>`;
-  const next = (when, title, onclick, extra = '') => `<button class="hub-next" onclick="${onclick}"><span><small>${F(when)}</small><b>${F(title)}</b></span>${chev}</button>${extra}`;
+  const next = (when, title, onclick, extra = '', sub = '') => `<button class="hub-next" onclick="${onclick}"><span><small>${F(when)}</small><b>${F(title)}</b>${sub ? `<em class="hub-next-sub">${F(sub)}</em>` : ''}</span>${chev}</button>${extra}`;
   const trainRow = `<button class="hub-pillrow" onclick="openPage('chg:Sleep:settle')"><span>${'Sleep training, if you choose it'}</span>${chev}</button>`;
   const listMore = (label, onclick) => `<button class="hub-list-more" onclick="${onclick}"><span>${F(label)}</span>${chev}</button>`;
   const more = (label, onclick) => `<button class="hub-more" onclick="${onclick}"><span>${F(label)}</span>${chev}</button>`;
@@ -150,7 +150,7 @@
   }
   function comingUp(cat, view) {
     const D = C().DATA[cat], N = D.CH[view + 1];
-    if (!N) { const A = D.CH[view].after; return A ? next(`After the first birthday, ${A[0]}`, cat === 'Feeding' && meth() === 'nurse' ? 'Cow’s milk, from a cup' : A[1], go('chg:Feeding:d:after')) : ''; }
+    if (!N) { const A = D.CH[view].after; return A ? next('Next · after the first birthday', cat === 'Feeding' && meth() === 'nurse' ? 'Cow’s milk, from a cup' : A[1], go(`chg:${cat}:d:after`), '', cat === 'Sleep' ? 'A refused nap here and there is usually a phase.' : 'Whole milk from a cup, and bottles start to go.') : ''; }
     let w = N.when.replace(/^Usually /, '').replace(/^around /, '');
     if (/weeks–/.test(w)) w = w.split('–')[0];
     // Inside Milk feeds, the next step keeps the same stage name, so name what changes instead.
@@ -191,7 +191,7 @@
     if (t < ALLERGENS.length) h += list('Along the way', [row({ icon: 'peanut', title: 'Try a new allergen', sub: !t && typeof foodWeeksIn === 'function' && foodWeeksIn() >= 4 ? 'Already tried some? Tick them' : `${ALLERGENS.find(a => !tried(a[0]))[0]} is next`, chipText: `${t} of ${ALLERGENS.length}`, onclick: go('chg:Feeding:d:allergens') })]);
     h += versus('Gagging or choking?', ['Gagging', 'Coughing and a red face. It looks scary, but it’s normal.'], ['Choking', 'Can’t breathe, a weak cough or no sound. Call 911 right away.'], ['Choking first aid, step by step', "openPage('chg:Feeding:safe')"]);
     // The guides list already shows what's next, so the only look-ahead here is past the first birthday.
-    { const A = C().DATA.Feeding.CH[5].after; if (A) h += next(`After the first birthday, ${A[0]}`, meth() === 'nurse' ? 'Cow’s milk, from a cup' : A[1], go('chg:Feeding:d:after')); }
+    { const A = C().DATA.Feeding.CH[5].after; if (A) h += next('Next · after the first birthday', meth() === 'nurse' ? 'Cow’s milk, from a cup' : A[1], go('chg:Feeding:d:after'), '', 'Whole milk from a cup, and bottles start to go.'); }
     return frame('Feeding', cur, cur, h);
   }
   function feedingSummary(view, cur, guide = false) {
@@ -756,8 +756,8 @@
       h += napAsk(now, age) + slHero(key, age, 'Two naps') + B + slGlance(key, age, now) + slGuides(key, age, now);
     }
     const D = C().DATA.Sleep, N = D.CH[view + 1], A = D.CH[view].after;
-    if (N) { const a = (STAGE_TABLE.Sleep.stages[view + 1]?.age || '').replace(/^(From|Starts) /, ''), w = /wks/.test(a) ? '6 weeks' : a.split('–')[0] + (/months/.test(a) && !/–\d/.test(a.split('–')[0] + '–') ? ' months' : ''); h += next(view === 2 && age >= 6 ? 'Next, when Maya is on two naps most days' : `Next, usually from ${w.replace(/^(\d+)$/, '$1 months')}${sleepAdj() ? ' adjusted age' : ''}`, N.rail, `chgGo('chg:Sleep:s:${view + 1}')`); }
-    else if (A) h += next(`After the first birthday, ${A[0]}`, A[1], go('chg:Sleep:d:after'));
+    if (N) { const a = (STAGE_TABLE.Sleep.stages[view + 1]?.age || '').replace(/^(From|Starts) /, ''), w = /wks/.test(a) ? '6 weeks' : a.split('–')[0] + (/months/.test(a) && !/–\d/.test(a.split('–')[0] + '–') ? ' months' : ''); h += next(view === 2 && age >= 6 ? 'Next · once Maya is on two naps most days' : `Next · usually from ${w.replace(/^(\d+)$/, '$1 months')}${sleepAdj() ? ' adjusted age' : ''}`, N.rail, `chgGo('chg:Sleep:s:${view + 1}')`, '', ['Watch for one longer stretch, often at night.', 'Watch for longer awake time before naps.', 'Watch for the third nap getting hard to fit in.'][view] || ''); }
+    else if (A) h += next('Next · after the first birthday', A[1], go('chg:Sleep:d:after'), '', 'A refused nap here and there is usually a phase.');
     return frame(cat, view, cur, h);
   }
 
@@ -789,7 +789,16 @@
           `<h2 class="hub-h2">${F('Common reasons')}</h2>` + hubIconSteps([['stand', 'New skills', 'Usually settles in a week or two'], ['heart', 'Missing you', sep ? 'See Bedtime goodbyes' : 'A quick cuddle, then back down'], ['tooth', 'Teeth or a cold', 'Comfort now, then back to your routine once {s’s} better'], ['bottle', 'Hunger or habit', 'Ask your pediatrician if night feeds are still needed']], cat, 'New skills: usually settles in a week or two. Missing you: ' + (sep ? 'see Bedtime goodbyes.' : 'a quick cuddle.') + ' Teeth or a cold: comfort now. Hunger or habit: ask about night feeds.', false)
           + more('Sleep training, if you choose it', "openPage('chg:Sleep:settle')")); },
         nightfeeds: () => page('Night sleep', 'Fewer night feeds', [['bottle', '2–3 a night', 'Around 3 months'], ['bottle', '1–2 a night', 'Around 6 months'], ['moon', '0–1 a night', 'Later in the first year']], mo < 4 ? 0 : mo < 9 ? 1 : 2,
-          [[W, 'As Maya eats more by day, {s} needs less milk at night. Many babies still feed once or twice.'], [D, 'Feed {o} when {s} {wake|wakes} hungry. Ask your pediatrician before dropping a night feed on purpose.'], [K, 'Maya is growing well, takes full feeds by day, and starts sleeping through a feed on {p} own.']], '', 'bottle'),
+          [[W, 'As Maya eats more by day, {s} needs less milk at night. Many babies still feed once or twice.'], [D, mo >= 5 ? 'Feed {o} when {s} {wake|wakes} hungry.' : 'Feed {o} when {s} {wake|wakes} hungry. Ask your pediatrician before dropping a night feed on purpose.'], [K, 'Maya is growing well, takes full feeds by day, and starts sleeping through a feed on {p} own.']],
+          // Nov 13: night weaning, gently (AAP: many babies can go without a night feed by 6–9 months if growing well; ask first).
+          mo >= 5 ? `<h2 class="hub-h2">${F('If you decide to drop one')}</h2>` + hubIconSteps([['steth', 'Ask first', 'Your pediatrician can say if {s’s} ready'], ['clock', 'Go slowly', 'A little shorter or smaller every few nights'], ['sun', 'More by day', 'Full feeds while {s’s} awake'], ['heart', 'Someone else goes in', 'Breastfed babies often settle more easily for a partner']], cat, 'Ask your pediatrician first, then go slowly: a little shorter or smaller every few nights, full feeds by day, and someone else going in.')
+            + tip('Good to know', 'The feed closest to morning is often the last to go. Skip putting {o} down with a bottle, since milk pooling on teeth causes decay.') : '', 'bottle'),
+        // Nov 13: sleep away from home, time zones and clock changes (AAP safe sleep: a firm, flat, bare surface everywhere).
+        away: () => page('Sleep help', 'Travel and clock changes', null, -1,
+          [[W, 'A new place or a new time can throw sleep off for a few days. A safe spot and familiar steps help most.'], [D, 'Bring {p} sleep sack and keep your bedtime steps, in the same order.']],
+          hubIconSteps([['crib', 'A flat, bare spot', 'A play yard or crib, nothing else in it'], ['car', 'Car seats are for the car', 'Move {o} to a flat spot once you arrive'], ['moon', 'Same steps', 'Your bedtime routine, in the same order']], cat, 'A flat, bare place to sleep, car seats only in the car, and your usual bedtime steps.', false)
+          + `<button class="hub-link" onclick="openPage('chg:Out and about:d:away')">${F('Setting up a crib away from home')} ›</button>`   // the setup checklist lives in Outings
+          + `<h2 class="hub-h2">${F('New time zones and clock changes')}</h2>` + tips(['An hour or two: shift naps and bedtime 15 minutes a day, or just switch.', 'A bigger jump: go to local time right away, with bright mornings and dim evenings.', 'Before the clocks change, you can move bedtime 15 minutes a day over a few days.']), 'sun'),
         shortnaps: () => page('Naps', 'Short naps and early mornings', `<div class="hub-card">${tiles([['Time awake between naps', '2½–4 hours', 'Longest before bedtime'], ['Up before 6 am?', 'Treat it as night', 'Quiet, brief, back to bed']])}</div>`, -1,
           [[W, 'Naps under 45 minutes and wake-ups before 6 am are common. Often the timing is a little off: too little or too much awake time.'], [D, 'Keep naps and early mornings dark and quiet, since dawn light or noise can wake {o}. Before 6 am, keep it brief and back to bed. Bedtime after 8 pm? Try 15–30 minutes earlier.'], [Y, 'Overtired babies nap shorter and wake earlier. After a short nap, an earlier bedtime helps {o} catch up.']], '', 'sun'),
         lovey: () => page('Safe sleep', 'Sleep after the first birthday', null, -1,
@@ -901,7 +910,8 @@
       const cryLink = mo < 3 ? `<button class="hub-rough-item hub-rough-link" onclick="${go('chg:Sleep:d:crying')}"><span class="hub-dot">${art('heart', cat)}</span><b>${F('Crying a lot and won’t settle')}</b><span class="hub-chev" aria-hidden="true">›</span></button>` : ''
       // From 8 months, night waking has its own guide on the stage page, so Rough day opens it instead of repeating it.
       const wakeLink = mo >= 8 ? `<button class="hub-rough-item hub-rough-link" onclick="${go('chg:Sleep:d:nightwake')}"><span class="hub-dot">${art('moon', cat)}</span><b>${F('Waking a lot at night')}</b><span class="hub-chev" aria-hidden="true">›</span></button>` : '';
-      const body = `<div class="hub-list hub-rough">${cryLink}${wakeLink}${items.filter(x => !(mo >= 8 && x[1] === 'Waking a lot at night')).map(([ic, t, why, tries], i) => `<details class="hub-rough-item"${i ? '' : ''}><summary><span class="hub-dot">${art(ic, cat)}</span><b>${F(t)}</b><span class="hub-chev" aria-hidden="true">›</span></summary><div class="hub-rough-body"><p><b>${F('Likely why.')}</b> ${F(why)}</p><p class="hub-rough-try"><b>${F('Try this')}</b></p><ul>${tries.map(x => `<li>${F(x)}</li>`).join('')}</ul></div></details>`).join('')}</div>`;
+      const awayLink = `<button class="hub-rough-item hub-rough-link" onclick="${go('chg:Sleep:d:away')}"><span class="hub-dot">${art('plane', cat)}</span><b>${F('Traveling, or the clocks change')}</b><span class="hub-chev" aria-hidden="true">›</span></button>`;
+      const body = `<div class="hub-list hub-rough">${cryLink}${wakeLink}${items.filter(x => !(mo >= 8 && x[1] === 'Waking a lot at night')).map(([ic, t, why, tries], i) => `<details class="hub-rough-item"${i ? '' : ''}><summary><span class="hub-dot">${art(ic, cat)}</span><b>${F(t)}</b><span class="hub-chev" aria-hidden="true">›</span></summary><div class="hub-rough-body"><p><b>${F('Likely why.')}</b> ${F(why)}</p><p class="hub-rough-try"><b>${F('Try this')}</b></p><ul>${tries.map(x => `<li>${F(x)}</li>`).join('')}</ul></div></details>`).join('')}${awayLink}</div>`;
       return detail(cat, 'Sleep help', 'Rough day or night?', 'Pick what’s happening. You’ll see what’s often behind it and what to try.', body
         + (mo < 1.5 ? versus('Normal, or time to call?', ['Normal', 'Waking every 2–3 hours, grunts, squeaks, and breathing pauses of a few seconds.'], ['Call your pediatrician', 'Hard to wake for feeds, or ' + sleepFever() + '. Blue lips or a 20-second pause: call 911.'])
           : mo < 3 ? versus('Normal, or time to call?', ['Normal', 'Good nights and bad nights, and fussing in light sleep.'], ['Call your pediatrician', sleepFever().charAt(0).toUpperCase() + sleepFever().slice(1) + ' (right away), or snoring or gasping most nights. Blue lips or long breathing pauses: call 911.'])

@@ -3,7 +3,7 @@
 #main .sf-hero::after { content: ""; position: absolute; right: -40px; top: -50px; width: 170px; height: 170px; border-radius: 50%; background: #fff; opacity: .35; pointer-events: none }
 #main .sf-hero > * { position: relative; z-index: 1 }
 #main .sf-head { margin-top: 4px }
-#main .hub-page[data-overview="Safety"][data-look] .hub-next { border: 0; background: #fcf3e4 }
+/* Next uses the shared dashed card (Nov 13: one Next design in every guide) */
 /* Checklists are subpages: like every other subpage, no timeline (it used older stage names). */
 #main .safety-owner-page .safety-movement-rail { display: none }
 /* Safety stage page: steps to tick */

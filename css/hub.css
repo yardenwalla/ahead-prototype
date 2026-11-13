@@ -1585,3 +1585,10 @@ label:has(> .hub-photo-input:focus-visible) { outline: 2px solid #884866; outlin
 
 /* Rash pages: the rash's own small picture in the top card */
 #main .care-rash-art svg { width: 64px; height: 58px }
+
+/* Next: one line on what changes, so the most forward-looking line on a page says something (Nov 13) */
+#main .hub-next .hub-next-sub { display: block; font-style: normal; font-weight: 400; font-size: 13.5px; line-height: 1.35; color: var(--muted, #6b6560); margin-top: 3px }
+#main .care-glance .hub-tiles { grid-template-columns: repeat(3, 1fr) !important }
+
+/* Everyday care redesign (Nov 13): quiet links under the rows and tiles */
+#main .care-v2 .care-all-how { display: block; margin: 2px 0 18px; padding: 4px 2px }

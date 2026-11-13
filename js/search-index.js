@@ -442,6 +442,7 @@ window.SEARCH_DEEP = [["topic:Development","Development & play","Smiles back at 
 ["chg:Development:d:idea:6:floor-drum","","Tap a little drum","",96,1],
 ["topic:Development","Development & play","Sitting up and finding things","Next, by 9 months",96,0],
 ["chg:Sleep:d:nightfeeds","","Fewer night feeds","Night sleep",224,1],
+["chg:Sleep:d:away","","Travel and clock changes","Sleep help · sleeping away, time zones, daylight saving",8191,1],
 ["chg:Development:d:idea:6:two-hands","","One toy, two hands","",96,1],
 ["chg:Development:d:idea:6:peek-face","","A little peekaboo","",96,1],
 ["chg:Sleep:d:catnap","","From three naps to two","Naps",448,1],
