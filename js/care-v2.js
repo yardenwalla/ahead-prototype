@@ -406,7 +406,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
       extra: () => callTip('Any sunburn before age 1, right away.') + urgent('Hot and flushed and hard to wake, floppy, or not feeding. Cool {o} down and call 911.') },
     after1: { k: 'bath', ctx: 'After 1', title: 'Brushing and baths after 1', W: 'Care stays much the same as {s} {become|becomes} a toddler.', tilesT: 'What carries on', tiles: () => [['tooth', 'Brushing', 'Twice a day, a rice-grain smear'], ['bath', 'Baths', 'A few times a week, a hand on {o}'], ['stand', 'Shoes', 'Soft and flexible, once walking outside']],
       K: 'By the first birthday, if you haven’t been yet.', Kl: 'First dental visit' },
-    bedbath: { k: 'bath', title: 'Bath time can be part of bedtime', W: 'Bath, feed, book, bed: a warm bath helps many babies wind down.', tilesT: 'Bath basics', tiles: () => [['clock', 'About 3 a week', 'Still plenty'], ['drop', '2 inches, about 100°F', 'Test with your wrist'], ['bath', 'Hair at 2 or 3 of them', 'With a mild shampoo']], tips: false, D: '',
+    bedbath: { k: 'bath', title: 'Bath time can be part of bedtime', W: 'Bath, feed, book, bed: a warm bath helps many babies wind down.', tilesT: 'Bath basics', tiles: () => [['clock', 'About 3 a week', 'Still plenty'], ['drop', '2 inches, about 100°F', 'Test with your wrist'], ['bath', 'Wash hair at 2 or 3', 'With a mild shampoo']], tips: false, D: '',
       K: 'Once {s} {sit|sits} steadily without help, often around 6–8 months. Until then, the baby tub.', Kl: 'When to move to the big tub',
       extra: () => H().versus('Every bath', ['Always', 'Keep a hand on Maya the whole bath.'], ['Never', 'Step away, even for a second. Babies can slip under quietly. Take {o} with you.']) },
     diapers46: { i: 'diaper', k: 'diapers', title: 'Diapers stay much the same', W: 'Until solids start, wet diapers and poop look much like before.', get D() { const rolls = typeof answers !== 'undefined' && (answers.roll === 'Yes' || ['Tummy to back', 'Back to tummy', 'Both ways', 'Trying to roll'].includes(answers.rollDirection)); return 'Count on at least 6 wet diapers a day. Size up when you see leaks, or red marks at the legs or waist. ' + (rolls ? 'Now that {s} {roll|rolls}, keep one hand on {o} the whole change, use the strap, and never step away. Or change {o} on the floor.' : 'Keep one hand on {o} at every change, since rolling can start any day.'); },
@@ -820,7 +820,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
                ['Each week', [['bath', 'Sponge baths', '2 or 3 a week', 'Until the cord falls off', 1], ['nails', 'Nails', 'Trim once a week', 'They grow fast, and they’re sharp']]]] },
     { title: 'Care settles into a rhythm', lead: 'Tub baths start once the cord heals, and most days look alike now.',
       groups: [['Every day', [['diapers', 'Diapers', 'Fewer poops can be normal', 'Keep a hand on {o} at every change', 1], ['skin', 'Skin', 'Plain water on the face', 'Baby acne and cradle cap are common', 1, 'acne'], ['teeth', 'Gums', 'Wipe twice a day', 'With a soft, clean cloth', 0, 'gums'], ['clothes', 'Clothes', 'One layer more than you', 'No hat indoors']]],
-               ['Each week', [['bath', 'Tub baths', 'About 3 a week', 'Hair at 2 or 3 of them', 1], ['nails', 'Nails', 'Trim once a week', 'Easiest while asleep']]],
+               ['Each week', [['bath', 'Tub baths', 'About 3 a week', 'Wash hair at 2 or 3', 1], ['nails', 'Nails', 'Trim once a week', 'Easiest while asleep']]],
                ['Outside', [['sun', 'Sun', 'Shade first', 'Long sleeves and a wide-brimmed hat']]]] },
     { title: 'Drool and busy hands', lead: 'Teething often starts, rolling begins, and bath time gets more fun.',
       groups: [['Every day', [hasTooth() ? ['teeth', 'Teeth and teething', 'Brush twice a day', 'A rice-grain smear of toothpaste. A chilled ring helps sore gums', 1, 'teething'] : ['teeth', 'Teething', 'Chewing and drool are normal', 'Wipe gums twice a day and pat the chin dry. A chilled ring helps', 1, 'teething'], ['diapers', 'Diapers', 'Keep a hand on {o} at every change', (answers.roll === 'Yes' || ['Tummy to back', 'Back to tummy', 'Both ways', 'Trying to roll'].includes(answers.rollDirection)) ? 'Use the strap, or change {o} on the floor' : 'Rolling can start any day']]],
@@ -835,13 +835,13 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   // doors: "How do I…?" (every how-to, plus the care routine one tap down) and "Is this normal?" (start from what you see).
   const CARE_NEW = [
     { art: 'bath', t: 'Sponge baths, for now', d: 'Until the cord falls off, usually in 1–3 weeks.', cta: 'See how', go: 'p:sponge',
-      see: [['peeling', 'Peeling skin', 'rash:peeling'], ['milia', 'Newborn spots', 'rash:newborn'], ['cord', 'The cord', 'cord']] },
+      see: [['peeling', 'Peeling skin', 'rash:peeling'], ['milia', 'Newborn spots', 'rash:newborn'], ['cord', 'The cord', 'look:0:cord']] },
     { art: 'bath', t: 'The first tub bath may be close', d: 'Once the cord falls off and the spot has healed.', cta: 'See when and how', go: 'p:tub',
       see: [['acne', 'Little bumps', 'rash:acne'], ['cradle', 'Flaky scalp', 'rash:cradle'], ['diaper', 'Fewer poops', 'look:1:poop']] },
-    { art: 'roll', t: 'Changes get more hands-on', d: 'Rolling and wriggling make diaper changes trickier.', cta: 'Make changes easier', go: 't:diapers:2',
-      see: [['drool', 'Lots of drool', 'rash:drool'], ['teething', 'Sore gums', 'p:teething'], ['eczema', 'Dry, rough patches', 'rash:eczema']] },
+    { art: 'roll', t: 'Changes get more hands-on', d: 'Rolling and wriggling make diaper changes trickier.', cta: 'Make changes easier', go: 'h:diapers:2',
+      see: [['drool', 'Drool rash', 'rash:drool'], ['teething', 'Sore gums', 'p:teething'], ['eczema', 'Dry, rough patches', 'rash:eczema']] },
     { art: 'tooth', t: 'A tiny tooth, a new routine', d: 'Brushing twice a day starts with the first tooth.', cta: 'How to brush', go: 'p:brush',
-      see: [['teething', 'Teething', 'p:teething'], ['heat', 'Heat rash', 'rash:heat'], ['wriggle', 'Wriggly changes', 't:diapers:3']] }
+      see: [['teething', 'Teething', 'p:teething'], ['diaper', 'Poop with solids', 'look:3:poop'], ['heat', 'Heat rash', 'rash:heat']] }
   ];
   const cgo = r => `openPage('chg:${CAT}:d:${r}')`;
   window.careHome = function (selected = null) {
@@ -850,7 +850,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     const pills = h.pills('Everyday care by age', T.map((s, i) => ({ label: s.label, age: s.age, on: i === v, now: live() && i === now, onclick: `openPage('chg:${CAT}:s:${i}')` })), CAT);
     const careNote = live() && profile.early && profile.due && ageMonths(parse(profile.due), NOW) !== actualMonth() ? (() => { const adj = careAge() !== actualMonth(); return `<p class="hub-agebasis">${F(adj ? `Following Maya’s adjusted age (${monthsLabel(careAge())}), like Feeding and Sleep.` : `Following Maya’s birthday age (${monthsLabel(actualMonth())}), like Feeding and Sleep.`)} <button onclick="hubSetAgeMode('care','${adj ? 'birthday' : 'adjusted'}')">${adj ? 'Use birthday age' : 'Use adjusted age'}</button></p>`; })() : '';
     // The top card, built like Feeding's: the stage, a scene, and what's new inside.
-    let b = `<header class="hub-hero care-hero care-disc"><p class="hub-eyebrow">${STAGE[v]}</p><h1>${F(st.title)}</h1><p class="hub-lead">${F(st.lead)}</p><div class="care-art" aria-hidden="true">${window.careScene ? careScene(N.art) : ''}</div>`
+    let b = `<header class="hub-hero care-hero care-disc"><p class="hub-eyebrow">${STAGE[v]}</p><h1>${F(st.title)}</h1><p class="hub-lead">${F(v === 3 && live() && careAge() >= 9 ? 'More teeth to brush, baths in the big tub, and pulling up makes changes a two-hands job.' : st.lead)}</p><div class="care-art" aria-hidden="true">${window.careScene ? careScene(N.art) : ''}</div>`
       + `<div class="care-nownote" role="button" tabindex="0" onclick="${cgo(N.go)}"><small>${F('New now')}</small><b>${F(N.t)}</b><span>${F(N.d)}</span><em>${F(N.cta)} ›</em></div></header>`;   // a card like Feeding's "You might notice", not a pill button
     // Care at a glance (Nov 13): how often, at this age, in the same three-tile card Feeding and Sleep open with.
     { const ICON = { Diapers: 'diaper', 'Wet diapers': 'diaper', 'Sponge baths': 'bath', 'Tub baths': 'tub', Baths: 'tub', 'Nail trims': 'nail', 'Gum wipes': 'tooth', Brushing: 'tooth' };
@@ -861,7 +861,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     // Right now (Nov 13 redesign, built like Feeding's "Right now for Maya"): this stage's how-tos on the page itself, not
     // behind a "How do I…?" door. Up to four rows; the one the New now card already opens is left out. Each row's line says how,
     // because how often lives in Care at a glance above.
-    const SEE = (v === 3 && (!live() || careAge() >= 9 || now < 3) ? [N.see[0], ['steps', 'First steps', 'p:feet'], N.see[2]] : N.see);
+    const SEE = N.see;
     { const NEWKEY = ['bath', 'bath', 'diapers', 'teeth'][v];
       const HINT = { 'p:sponge': 'Face first, diaper area last', 'p:tub': 'A safe hold, and 2 inches of warm water', 'cord': 'Keep it clean, dry and in the air',
         'h:diapers:0': 'Front to back, then let it air-dry', 'h:diapers:1': 'Front to back, then let it air-dry', 'h:diapers:2': 'Set up first, and a hand on {o}', 't:diapers:3': 'A toy to hold helps',
@@ -870,10 +870,10 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
         't:clothes:0': 'One layer more than you', 'p:brush': 'A rice-grain smear, twice a day' };
       const nail = r => /^t:nails/.test(r) ? 'While {s} {sleep|sleeps}, with a file or clippers' : null;
       // What matters most at each stage, in order (Nov 13: everything important shows on the page; "All how-tos" only adds the rest).
-      const ORDER = [['diapers', 'cord', 'nails', 'clothes'], ['diapers', 'skin', 'nails', 'sun'], ['bath', 'skin', 'sun', 'nails'], ['bath', 'sun', 'nails', ...(!live() || careAge() >= 9 ? ['clothes'] : [])]][v];   // shoes only once walking is near
+      const ORDER = [['diapers', 'cord', 'nails', 'clothes'], ['diapers', 'skin', 'nails', 'sun'], ['bath', 'skin', 'sun', 'nails'], ['bath', 'diapers', 'sun', ...(!live() || careAge() >= 9 || now < 3 ? ['clothes'] : ['nails'])]][v];   // shoes only once walking is near
       const tiled = new Set(SEE.map(x => x[2])), byKey = k => HOWTO[v].find(x => x[0] === k);
       const rows = ORDER.map(byKey).filter(x => x && x[0] !== NEWKEY && !tiled.has(x[3])).slice(0, 4);   // nothing twice: a tile that opens the same page wins
-      b += h2('Right now for Maya') + `<div class="hub-list">${rows.map(([k, t, sub, r]) => rowK(k, t, HINT[r] || nail(r) || sub, cgo(r))).join('')}</div>`
+      b += h2(v === now || !live() ? 'Right now for Maya' : 'At this stage') + `<div class="hub-list">${rows.map(([k, t, sub, r]) => rowK(k, t, HINT[r] || nail(r) || sub, cgo(r))).join('')}</div>`
         + `<button class="hub-link care-all-how" onclick="${cgo('how:' + v)}">${F('All how-tos')} ›</button>`; }
     // Is this normal? The three things parents most often see at this stage, as pictures, and one way into everything else.
     b += `<h2 class="hub-h2">${F('Is this normal?')}</h2><div class="care-see">${SEE.map(([id, t, r]) => `<button onclick="${cgo(r)}"><span class="care-see-art">${window.careMini ? careMini(id) : ''}</span><b>${F(t)}</b></button>`).join('')}</div>`;
@@ -914,7 +914,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
         ['hand', 'A hand on {o}', 'On a flat surface'], ['diaper', 'Wipe front to back', 'Water or unscented wipes'],
         ['drop', 'Let it air-dry', 'Then slide the fresh one under'], v === 0 ? ['cord', 'Fold below the cord', 'Snug: two fingers at the waist'] : ['sizes', 'Fasten it snug', 'Two fingers at the waist']],
         v === 0 ? null : ['Time for the next size', 'Leaks, or red marks at the legs or waist.'],
-        v === 0 ? ['What’s in the diaper, the first week', 'How many, and what color', 't:diapers:0'] : ['Fewer poops can be normal', 'And when to call', 't:diapers:1']],
+        v === 0 ? ['What’s in the diaper, the first weeks', 'How many, and what color', 't:diapers:0'] : ['Fewer poops can be normal', 'And when to call', 't:diapers:1']],
     skin: v => ['Keep skin comfortable', 'Most baby skin needs less, not more.', [
         ['bath', 'Plain warm water', 'About 3 baths a week'], ['towel', 'Pat dry', 'Into the creases'],
         ['drop', 'Cream for dry patches', 'Thick, fragrance-free, after the bath'],
