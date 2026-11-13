@@ -330,7 +330,11 @@
   }
   function rashPage(id) {
     const r = RASH[id], h = H(); if (!r) return null;
-    let b = head('skin', 'Skin and rashes', r.t, r.lead) + rashMap(id) + h2('What helps') + h.steps(r.steps);
+    let b = head('skin', 'Skin and rashes', r.t, r.lead);
+    // Each rash gets its own picture up top, so Little bumps and Flaky scalp don't open pages that look the same.
+    const mini = { newborn: 'milia', eczema: 'peeling', yeast: 'diaper' }[id] || id;
+    if (window.careMini) { const m = careMini(mini); if (m) b = b.replace(/<span class="dev-area-head-art">[\s\S]*?<\/svg><\/span>/, `<span class="dev-area-head-art care-rash-art">${m}</span>`); }
+    b += rashMap(id) + h2('What helps') + h.steps(r.steps);
     if (r.call) b += h.tip('When to call', r.call);
     if (id === 'diaper') b += `<div class="hub-list care-link">${rowK('diapers', 'Diapers', 'How to change one, and what’s normal', go('diapers'))}</div>`;
     if (r.alt) b += `<div class="hub-list care-link">${r.alt.map(a => `<button class="hub-row care-rash" onclick="openPage('chg:${CAT}:d:rash:${a}')"><span class="hub-row-copy"><b>${F('Not quite it? ' + RASH[a].t)}</b><small>${F(RASH[a].look)}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`).join('')}</div>`;
@@ -859,10 +863,10 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   // "How do I…?" (Nov 12): how-tos named as the task ("Give a tub bath"), the ones useful at this age first; then the
   // care routine one tap down; then any other topic.
   const HOWTO = [
-    [['bath', 'Give a sponge bath', 'Until the cord falls off', 'p:sponge'], ['diapers', 'Change a diaper', 'Including the first-week poops', 't:diapers:0'], ['cord', 'Care for the cord', 'Keep it clean and dry', 'cord'], ['nails', 'Trim nails', 'Files, clippers and tiny fingers', 't:nails:0'], ['clothes', 'Dress {o}', 'One layer more than you', 't:clothes:0']],
-    [['bath', 'Give a tub bath', 'Warm water, a safe hold and a simple routine', 'p:tub'], ['diapers', 'Change a diaper', 'Quick, with a hand on {o}', 't:diapers:1'], ['skin', 'Keep skin comfortable', 'Plain water, and moisturizer for dry patches', 't:skin:1'], ['nails', 'Trim nails', 'Files, clippers and tiny fingers', 't:nails:1'], ['teeth', 'Clean gums', 'A soft cloth, twice a day', 'p:gums'], ['sun', 'Keep {o} sun-safe', 'Shade and clothing first', 't:sun:1']],
-    [['diapers', 'Change a wriggler', 'Including rolling', 't:diapers:2'], ['teeth', 'Soothe teething gums', 'What helps, and what to skip', 'p:teething'], ['bath', 'Give a bath', 'Often part of bedtime', 't:bath:2'], ['skin', 'Keep skin comfortable', 'Drool rash and dry patches', 't:skin:2'], ['nails', 'Trim nails', 'Files, clippers and tiny fingers', 't:nails:2'], ['sun', 'Keep {o} sun-safe', 'Shade, then sunscreen from 6 months', 't:sun:2']],
-    [['teeth', 'Brush tiny teeth', 'A rice-grain smear, twice a day', 'p:brush'], ['bath', 'Bath in the big tub', 'Once {s} {sit|sits} steadily', 't:bath:3'], ['diapers', 'Change a busy wriggler', 'A toy to hold helps', 't:diapers:3'], ['clothes', 'Bare feet, then first shoes', 'Soft shoes once walking outside', 'p:feet'], ['nails', 'Trim nails', 'Files, clippers and tiny fingers', 't:nails:3'], ['sun', 'Keep {o} sun-safe', 'SPF 30, again every 2 hours', 't:sun:3']]
+    [['bath', 'Give a sponge bath', '2–3 a week, until the cord falls off', 'p:sponge'], ['diapers', 'Change a diaper', '8–12 a day, and the first-week poops', 't:diapers:0'], ['cord', 'Care for the cord', 'Keep it clean and dry', 'cord'], ['nails', 'Trim nails', 'About once a week, with a file or clippers', 't:nails:0'], ['clothes', 'Dress {o}', 'One layer more than you', 't:clothes:0']],
+    [['bath', 'Give a tub bath', 'About 3 a week, with a safe hold', 'p:tub'], ['diapers', 'Change a diaper', '6 or more wet ones a day', 't:diapers:1'], ['skin', 'Keep skin comfortable', 'Plain water, and moisturizer for dry patches', 't:skin:1'], ['nails', 'Trim nails', 'About once a week, with a file or clippers', 't:nails:1'], ['teeth', 'Clean gums', 'A soft cloth, twice a day', 'p:gums'], ['sun', 'Keep {o} sun-safe', 'Shade and clothing first', 't:sun:1']],
+    [['diapers', 'Change a wriggler', 'Including rolling', 't:diapers:2'], ['teeth', 'Soothe teething gums', 'What helps, and what to skip', 'p:teething'], ['bath', 'Give a bath', 'About 3 a week, often at bedtime', 't:bath:2'], ['skin', 'Keep skin comfortable', 'Drool rash and dry patches', 't:skin:2'], ['nails', 'Trim nails', 'About once a week, with a file or clippers', 't:nails:2'], ['sun', 'Keep {o} sun-safe', 'Shade, then sunscreen from 6 months', 't:sun:2']],
+    [['teeth', 'Brush tiny teeth', 'Twice a day, a rice-grain smear', 'p:brush'], ['bath', 'Bath in the big tub', 'About 3 a week, once {s} {sit|sits} steadily', 't:bath:3'], ['diapers', 'Change a busy wriggler', 'A toy to hold helps', 't:diapers:3'], ['clothes', 'Bare feet, then first shoes', 'Soft shoes once walking outside', 'p:feet'], ['nails', 'Trim nails', 'About once a week, with a file or clippers', 't:nails:3'], ['sun', 'Keep {o} sun-safe', 'SPF 30, again every 2 hours', 't:sun:3']]
   ];
   // How often, at a glance: three tiles in Sleep's glance style, each the same shape (what, how many, per what).
   const OFTEN = [
@@ -878,7 +882,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     v = Number.isInteger(v) && v >= 0 && v <= 3 ? v : stageNow();
     const list = HOWTO[v], GC = [['#e3f1f7', '#2a6078'], ['#e7effc', '#46638c'], ['#f8e9f0', '#8a4a67']];
     let b = head('bath', 'Everyday care · ' + STAGE[v], 'How do I…?', 'Steps for the care you do again and again.');
-    b += h2('How often, at this age') + `<section class="care-often">${OFTEN[v].map(([l, n, per], i) => `<div style="--sm-bg:${GC[i][0]};--sm-ink:${GC[i][1]}"><small>${F(l)}</small><b>${F(n)}</b><span>${F(per)}</span></div>`).join('')}</section>`;
+    // How often lives on each task's own line (one home per fact), not in a separate set of tiles.
     // One list: this age's how-tos first, then any other topic, so there's no second heading for a card or two.
     const listed = new Set(list.map(x => ({ cord: 'skin' }[x[0]] || x[0])));
     const more = BASICS.filter(([k]) => !listed.has(k));

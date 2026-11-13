@@ -1582,3 +1582,6 @@ label:has(> .hub-photo-input:focus-visible) { outline: 2px solid #884866; outlin
 #main .care-often small { font-size: 12.5px; font-weight: 650; color: var(--sm-ink) }
 #main .care-often b { font-family: Nunito, ui-rounded, sans-serif; font-size: 22px; font-weight: 800; line-height: 1.15; color: var(--ink, #302d3c); margin-top: 2px }
 #main .care-often span { font-size: 12.5px; color: var(--ink-2, #625f6d) }
+
+/* Rash pages: the rash's own small picture in the top card */
+#main .care-rash-art svg { width: 64px; height: 58px }
