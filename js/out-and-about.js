@@ -69,6 +69,17 @@
     water: ['#e0f2fb', '#2b6582', '#9fd3ec', '#fbe6bd'],
     sick: ['#fdeee6', '#9a5a3c', '#f4c3a8', '#fbe0d0']
   };
+
+  // Destination pictures (Nov 13): one recognizable object per place, in the place's own colors, so the tiles say where at a glance.
+  // They replace the earlier abstract shapes, on the tiles and on each place's page header.
+  const PLACE_ART = {
+    errands: c=>`<svg viewBox="0 0 90 40" aria-hidden="true"><path d="M10 14h26l-2 23H12Z" fill="${c[3]}"/><path d="M16 15c0-9 14-9 14 0" stroke="${c[1]}" stroke-width="2.4" fill="none" stroke-linecap="round" opacity=".7"/></svg>`,
+    road: c=>`<svg viewBox="0 0 90 40" aria-hidden="true"><path d="M6 22c2-7 6-10 14-10h16c6 0 10 4 13 10h6c3 0 5 2 5 5v4H6Z" fill="${c[2]}"/><path d="M22 14h12l6 8H18Z" fill="#fff" opacity=".8"/><circle cx="18" cy="32" r="5" fill="${c[1]}" opacity=".75"/><circle cx="48" cy="32" r="5" fill="${c[1]}" opacity=".75"/><path d="M4 38h80" stroke="${c[3]}" stroke-width="3" stroke-linecap="round"/></svg>`,
+    fly: c=>`<svg viewBox="0 0 90 40" aria-hidden="true"><path d="M8 24 54 10c6-2 10 0 10 3s-3 5-8 6L14 29Z" fill="${c[2]}"/><path d="M28 18 22 4h7l14 10Z" fill="${c[1]}" opacity=".55"/><path d="M30 26l-4 11h7l10-14Z" fill="${c[1]}" opacity=".55"/><path d="M10 25 5 16h5l7 7Z" fill="${c[1]}" opacity=".55"/></svg>`,
+    away: c=>`<svg viewBox="0 0 90 40" aria-hidden="true"><rect x="8" y="12" width="36" height="25" rx="5" fill="${c[2]}"/><path d="M19 12V7c0-2 1-3 3-3h8c2 0 3 1 3 3v5" stroke="${c[1]}" stroke-width="2.4" fill="none" opacity=".7"/><path d="M8 22h36" stroke="#fff" stroke-width="2.4"/></svg>`,
+    abroad: c=>`<svg viewBox="0 0 90 40" aria-hidden="true"><rect x="10" y="4" width="26" height="34" rx="4" fill="${c[2]}"/><circle cx="23" cy="18" r="7" fill="none" stroke="#fff" stroke-width="2"/><path d="M16 18h14M23 11c-4 4-4 10 0 14M23 11c4 4 4 10 0 14" stroke="#fff" stroke-width="1.4" fill="none"/><path d="M17 31h12" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>`,
+    water: c=>`<svg viewBox="0 0 90 40" aria-hidden="true"><path d="M8 16c4-12 34-12 38 0Z" fill="${c[3]}"/><path d="M27 15v20" stroke="${c[1]}" stroke-width="2.4" stroke-linecap="round" opacity=".6"/><path d="M4 33c5-4 9-4 14 0s9 4 14 0 9-4 14 0 9 4 14 0" stroke="${c[2]}" stroke-width="3.4" fill="none" stroke-linecap="round"/></svg>`,
+  };
   const SHAPE = {
     // A path with a stop at the end.
     errands: c => `<svg viewBox="0 0 90 40" aria-hidden="true"><path d="M6 30h50" stroke="${c[2]}" stroke-width="6" stroke-linecap="round" stroke-dasharray="1 11"/><circle cx="70" cy="22" r="10" fill="${c[3]}"/></svg>`,
@@ -88,6 +99,7 @@
     gear: c => `<svg viewBox="0 0 90 40" aria-hidden="true"><rect x="4" y="10" width="30" height="24" rx="8" fill="${c[2]}"/><circle cx="50" cy="28" r="7" fill="${c[3]}"/></svg>`,
     sick: c => `<svg viewBox="0 0 90 40" aria-hidden="true"><rect x="10" y="2" width="12" height="28" rx="6" fill="${c[2]}"/><circle cx="16" cy="31" r="8" fill="${c[2]}"/><rect x="34" y="18" width="40" height="8" rx="4" fill="${c[3]}"/></svg>`
   };
+  Object.assign(SHAPE, PLACE_ART);
 
   /* ---------- building blocks ---------- */
   const open = id => `openPage('chg:${CAT}:d:${id}')`;
