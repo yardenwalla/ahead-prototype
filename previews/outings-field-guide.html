@@ -80,7 +80,9 @@ body{padding-top:61px!important}
  window.otPreviewAge=n=>{setAge(n);render();window.scrollTo(0,0)};
  window.otPreviewFeed=f=>{profile.feed=f;render();window.scrollTo(0,0)};
  setAge(6);
- openPage('chg:Out and about:s');
+ const view=new URLSearchParams(location.search).get('view');
+ const places=['errands','road','fly','away','water','abroad'];
+ openPage(places.includes(view)?'chg:Out and about:v3:'+view:'chg:Out and about:s');
 })();
 </script></body>
 </html>
