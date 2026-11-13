@@ -114,36 +114,41 @@
     const addArt = '';
     const bookCard = `<div class="mem-bookcard${addArt ? ' has-add' : ''}"><button class="mem-bookcard-open" onclick="openPage('${firsts.length ? 'chg:Timeline:firsts' : 'chg:Timeline:milestone'}')">${art}<span class="mem-bookcard-copy"><b>${esc2(`${name()}’s memory book`)}</b><small>${esc2(count)}</small>${firsts.length ? `<em>${esc2(firsts.length === 1 ? 'The memory book · 1 moment' : `The memory book · all ${firsts.length}`)} ›</em>` : ''}</span></button>${addArt}<button class="mem-bookcard-save" onclick="openPage('chg:Timeline:milestone')">＋ Save a first</button></div>`;
 
-    // Look how you've grown: her first photo and her newest, taped side by side, and the year plays from here.
-    // It changes every time a new month's photo goes in, so the tab has something new to see each month.
-    const grow = (() => {
-      if (have.length < 2) return '';
-      const then = have[0], nowM = have[have.length - 1];
-      const W = ['Newborn', 'One month', 'Two months', 'Three months', 'Four months', 'Five months', 'Six months', 'Seven months', 'Eight months', 'Nine months', 'Ten months', 'Eleven months', 'One year'];
-      const TAPE = ['#f3d58a', '#f2b8c6', '#bfe3cf', '#cfe3f7', '#e5d4f5', '#f6cdb5', '#d8e9b8', '#f9d9a8', '#c9d7f5', '#f4c2c2', '#b9e2dc', '#f0d1e8', '#f1cf86'];
-      const pic = (m, cls, tilt) => `<button class="mem-grow-pic ${cls}" style="--tape:${TAPE[m]};--tilt:${tilt}deg" onclick="storyShare(${m})" aria-label="Open the ${L(m)} card"><i></i><img src="${photo(m)}" alt=""><span class="mem-grow-cap">${esc2(W[m])}</span></button>`;
-      return `<section class="mem-grow" aria-label="${esc2(`${name()} then and now`)}"><div class="mem-grow-pics">${pic(then, 'is-then', -6)}<svg class="mem-grow-arrow" viewBox="0 0 60 40" aria-hidden="true"><path d="M6 30 C 18 6, 38 4, 52 16" fill="none" stroke="#b7a48d" stroke-width="2.4" stroke-linecap="round"/><path d="M44 10 L53 17 L43 21" fill="none" stroke="#b7a48d" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>${pic(nowM, 'is-now', 5)}</div><p class="mem-grow-line">${esc2(`Look how you’ve grown, ${name()}`)}</p><button class="mem-grow-play" onclick="memPlay()"><span aria-hidden="true">▶</span> Play the year</button></section>`;
-    })();
-    // One story, top to bottom: how she's grown (the first photo and the newest), then every month in between,
-    // then the words: the newest page of the memory book, exactly as it looks inside, so the tab shows the book filling itself.
+    // One month at a time. A row of the months across the top (her photo, or the month's number until there is one),
+    // then that month as one card: its balloon card, ready to share, and what happened that month underneath.
+    // It opens on this month; tap any month to look back. Play the year sits by the title.
+    const WORDS = ['Newborn', 'One month', 'Two months', 'Three months', 'Four months', 'Five months', 'Six months', 'Seven months', 'Eight months', 'Nine months', 'Ten months', 'Eleven months', 'One year'];
+    const short = m => m === 0 ? 'Newborn' : m === 12 ? '1 year' : `${m} month${m === 1 ? '' : 's'}`;
     const P = typeof babyPronouns === 'function' ? babyPronouns() : { p: 'their' };
-    const head = (h, sub, link) => `<div class="mem-head"><div><h2>${esc2(h)}</h2><p class="mem-hsub">${esc2(sub)}</p></div>${link || ''}</div>`;
-    const monthsSec = () => `<section class="mem-sec">${head('Month by month', have.length >= 2 ? 'Tap a month to share it' : `Add a photo each month, ready to share`)}${year}${strip}${monthBlock}</section>`;
-    // And this was the month…: this month's moments sit right under its photo, so each month is one thing,
-    // the picture and what happened. It's this month's page of the memory book, which opens from here.
-    const WORDS = ['newborn', 'one month', 'two months', 'three months', 'four months', 'five months', 'six months', 'seven months', 'eight months', 'nine months', 'ten months', 'eleven months', 'one year'];
-    // Early in a month nothing's saved yet, so it shows the last month that has something until this one does.
-    const book = firsts.length ? allFirsts() : '';
-    const shown = (() => { for (let m = now; m >= 0; m--) if (book.includes(`data-m="${m}"`)) return m; return now; })();
-    const page = book ? (book.match(new RegExp(`<section class="bk-page" data-m="${shown}">[\\s\\S]*?<\\/section>`)) || [''])[0] : '';
-    const inner = page ? page.replace(/^<section[^>]*>/, '').replace(/<\/section>$/, '').replace(/<(span|label) class="bk-photo[\s\S]*?<\/\1>/, '').replace(/<h2 class="bk-month">[\s\S]*?<\/h2>/, '') : '';
-    const monthBlock = `<div class="mem-month"><p class="mem-month-title">${esc2(`And this was ${WORDS[shown]}…`)}</p>${inner || `<p class="bk-noted">${esc2('When you tap Seen it or save a first, it’s written here.')}</p>`}<div class="mem-month-foot">${firsts.length ? `<button class="mem-head-link" onclick="openPage('chg:Timeline:firsts')">${esc2(firsts.length === 1 ? 'The memory book · 1 moment' : `The memory book · all ${firsts.length}`)} ›</button>` : '<span></span>'}<button class="mem-save" onclick="openPage('chg:Timeline:milestone')">＋ Save a first</button></div></div>`;
-    const bookSec = '';
-    b += grow + monthsSec();
-
+    const bigSet = new Set(bigFirsts(firsts));
+    const inMonth = m => firsts.filter(r => monthOf(dob, r.date) === m);
+    const tile = m => `<button class="mem-pick${m === now ? ' is-on' : ''}" data-m="${m}" onclick="memPick(${m})" aria-label="${esc2(short(m))}"${m === now ? ' aria-current="true"' : ''}><span class="mem-pick-tile">${photo(m) ? `<img src="${photo(m)}" alt="">` : `<b>${m === 0 ? '0' : m}</b>`}</span><small>${esc2(short(m))}</small><i class="${inMonth(m).length ? 'has' : ''}"></i></button>`;
+    const picker = `<div class="mem-picks" role="tablist" aria-label="Months">${Array.from({ length: now + 1 }, (_, m) => tile(m)).join('')}</div>`;
+    const lc = t => /^[A-Z][a-z]/.test(t) ? t[0].toLowerCase() + t.slice(1) : t;
+    const monthCard = m => {
+      const rs = inMonth(m), big = rs.filter(r => bigSet.has(r)).reverse(), small = rs.filter(r => !bigSet.has(r));
+      const media = !designs ? '' : photo(m)
+        ? `<button class="mem-card-story" onclick="storyShare(${m})" aria-label="Share the ${L(m)} card"><img data-story-thumb="${m}" alt=""></button><button class="mem-card-share" onclick="storyShare(${m})">Share ${esc2(m === 0 ? 'her newborn card' : 'this card')}</button>`.replace('her newborn', `${P.p} newborn`)
+        : `<label class="mem-card-story is-empty" aria-label="Add the ${m === 0 ? 'newborn' : m === 12 ? 'first-birthday' : m + '-month'} photo"><img data-story-thumb="${m}" alt="">${hubPhotoInput(m)}</label><label class="mem-card-share is-add">＋ Add ${esc2(P.p)} ${m === 0 ? 'newborn' : m === 12 ? 'first-birthday' : m + '-month'} photo${hubPhotoInput(m)}</label>`;
+      const rows = big.map(r => `<button class="mem-mrow" onclick="openPage('event-edit:${r.id}')"><span class="mem-mrow-ic" style="${TONE(r)}">${hubArt(ICON(r), 'Development')}</span><span class="mem-mrow-copy"><b>${esc2(keepTitle(r))}</b>${r.notes ? `<small>${esc2(String(r.notes).slice(0, 120))}</small>` : ''}</span><span class="mem-row-go" aria-hidden="true">›</span></button>`).join('');
+      const noted = small.length ? `<p class="mem-noted"><span>${esc2(big.length ? 'Also noticed' : 'Noticed')}</span> ${esc2(small.map(r => lc(r.title)).join(', ').replace(/, ([^,]*)$/, ' and $1'))}</p>` : '';
+      const what = rows || noted ? rows + noted : `<p class="mem-noted is-empty">${esc2(m === now ? 'Nothing saved yet this month. Tap Seen it in Development, or save a first.' : 'Nothing saved for this month.')}</p>`;
+      return `<section class="mem-card" data-m="${m}"${m === now ? '' : ' hidden'}><p class="mem-card-label">${esc2(m === now ? 'This month' : 'Looking back')}</p><h2 class="mem-card-title">${esc2(WORDS[m])}</h2><div class="mem-card-media">${media}</div><p class="mem-card-sub">${esc2('And this was the month…')}</p>${what}<div class="mem-card-foot"><button class="mem-card-link" onclick="openPage('chg:Timeline:milestone')">＋ Save a first</button>${firsts.length ? `<button class="mem-card-link" onclick="openPage('chg:Timeline:firsts')">${esc2(`The memory book · all ${firsts.length}`)} ›</button>` : ''}</div></section>`;
+    };
+    const play = have.length >= 2 ? `<button class="mem-title-play" onclick="memPlay()" aria-label="Play the year"><span aria-hidden="true">▶</span> Play the year</button>` : '';
+    b = `<div class="mem-page"><div class="mem-title-row"><div class="eyebrow">Memories</div>${play}</div><h1>${nm}’s first year</h1>`;
+    setTimeout(() => { const r = document.querySelector('.mem-picks'); if (r) r.scrollLeft = r.scrollWidth; }, 0);
+    b += picker + Array.from({ length: now + 1 }, (_, m) => monthCard(m)).join('') + (year ? `<div class="mem-year-wrap">${year}</div>` : '');
     // Checkups live in Health, never in the memory book.
     b += `<p class="hub-foot">Photos and entries stay on this device.</p></div>`;
     return `<div class="quiet-category hub-page hub-timeline-page" style="${yearTheme('Memories')}">${b}</div>`;
+  };
+
+  // Switch the month card. The row scrolls so the chosen month stays in view.
+  window.memPick = function (m) {
+    document.querySelectorAll('.mem-card').forEach(c => { c.hidden = Number(c.dataset.m) !== m; });
+    document.querySelectorAll('.mem-pick').forEach(t => { const on = Number(t.dataset.m) === m; t.classList.toggle('is-on', on); if (on) { t.setAttribute('aria-current', 'true'); t.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' }); } else t.removeAttribute('aria-current'); });
+    if (window.storyHydrate) storyHydrate();
   };
 
   /* ---------- A note on a first: what happened, who was there ---------- */

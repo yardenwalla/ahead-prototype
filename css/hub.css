@@ -1589,3 +1589,42 @@ label:has(> .hub-photo-input:focus-visible) { outline: 2px solid #884866; outlin
 #main .mem-month-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 14px; padding-top: 12px; border-top: 1px solid #efe6dc }
 #main .mem-month-foot .mem-save { flex: none; margin: 0; padding: 8px 14px; font-size: 14px; white-space: nowrap }
 #main .mem-month-foot .mem-head-link { font-size: 14px; text-align: left }
+
+/* Memories, one month at a time (Nov 13): the months across the top, then that month as one clean card. */
+#main .mem-title-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: -6px }
+#main .mem-title-row .eyebrow { margin: 0 }
+#main .mem-title-play { flex: none; display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border: 1px solid #e3d9cd; border-radius: 999px; background: #fffdf9; color: #4d443b; font: inherit; font-size: 13.5px; font-weight: 650; cursor: pointer }
+#main .mem-title-play span { font-size: 10px }
+#main .mem-picks { display: flex; gap: 10px; overflow-x: auto; margin: 16px -16px 14px; padding: 4px 16px 4px; scrollbar-width: none }
+#main .mem-picks::-webkit-scrollbar { display: none }
+#main .mem-pick { flex: none; display: flex; flex-direction: column; align-items: center; gap: 6px; width: 60px; padding: 0; border: 0; background: none; font: inherit; cursor: pointer }
+#main .mem-pick-tile { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 14px; overflow: hidden; background: #efe8e4; box-sizing: border-box }
+#main .mem-pick-tile img { width: 100%; height: 100%; object-fit: cover; display: block }
+#main .mem-pick-tile b { font-family: Nunito, Figtree, sans-serif; font-size: 20px; font-weight: 700; color: #b9aaa6 }
+#main .mem-pick small { font-size: 11px; font-weight: 600; color: #8a8494; white-space: nowrap }
+#main .mem-pick i { width: 4px; height: 4px; border-radius: 50%; background: transparent }
+#main .mem-pick i.has { background: #c9a5b8 }
+#main .mem-pick.is-on .mem-pick-tile { outline: 2px solid #7a4f6d; outline-offset: 2px }
+#main .mem-pick.is-on small { color: #7a4f6d; font-weight: 750 }
+#main .mem-card { margin: 0 0 16px; padding: 18px 18px 14px; border-radius: 24px; background: #fffdf9; border: 1px solid #ece4dc }
+#main .mem-card-label { margin: 0; font-size: 12.5px; font-weight: 650; color: #8a7f72 }
+#main .mem-page h2.mem-card-title { margin: 2px 0 14px; font-family: Nunito, Figtree, sans-serif; font-size: 25px !important; font-weight: 800 !important; line-height: 1.15 !important; color: #302d3c }
+#main .mem-card-media { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 16px 0 16px; border-radius: 18px; background: #f7efe9 }
+#main .mem-card-story { position: relative; display: block; width: 58%; padding: 0; border: 0; aspect-ratio: 9 / 16; border-radius: 14px; overflow: hidden; background: #f5e8e2; box-shadow: 0 8px 20px rgba(43,40,64,.14); cursor: pointer }
+#main .mem-card-story img { display: block; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .25s }
+#main .mem-card-story img.is-ready { opacity: 1 }
+#main .mem-card-story .hub-photo-input, #main .mem-card-share .hub-photo-input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none }
+#main .mem-card-share { position: relative; padding: 9px 18px; border: 0; border-radius: 999px; background: #fffdf9; color: #4d443b; font: inherit; font-size: 14px; font-weight: 700; box-shadow: 0 1px 0 rgba(0,0,0,.04), 0 2px 8px rgba(120,80,70,.1); cursor: pointer }
+#main .mem-card-sub { margin: 18px 0 6px; font-size: 12.5px; font-weight: 650; color: #8a7f72 }
+#main .mem-mrow { display: flex; align-items: center; gap: 12px; width: 100%; padding: 9px 0; border: 0; background: none; text-align: left; font: inherit; color: inherit; cursor: pointer }
+#main .mem-mrow-ic { flex: none; display: grid; place-items: center; width: 42px; height: 42px; border-radius: 13px; background: var(--mem-bg) }
+#main .mem-mrow-ic svg { width: 26px; height: 26px }
+#main .mem-mrow-copy { flex: 1; min-width: 0 }
+#main .mem-mrow-copy b { display: block; font-size: 15.5px; font-weight: 600; color: #302d3c }
+#main .mem-mrow-copy small { display: block; margin-top: 2px; font-size: 14px; line-height: 1.35; color: #625f6d }
+#main .mem-noted { margin: 8px 0 0; font-size: 14px; line-height: 1.45; color: #625f6d }
+#main .mem-noted span { font-weight: 650; color: #302d3c }
+#main .mem-noted.is-empty { color: #8a8494 }
+#main .mem-card-foot { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 14px; padding-top: 12px; border-top: 1px solid #efe7df }
+#main .mem-card-link { padding: 4px 0; border: 0; background: none; font: inherit; font-size: 14px; font-weight: 650; color: #7a4f6d; cursor: pointer }
+#main .mem-year-wrap { margin: 0 0 16px }
