@@ -198,7 +198,7 @@
   // How often babies poop depends on what they drink. Mixed feeding sits in between.
   const fewerLine = () => { const f = typeof profile !== 'undefined' && live() ? profile.feed : '';
     return f === 'Formula' ? 'Formula-fed babies usually poop most days, and fewer poops than at first is normal.' : f === 'Both' ? 'From about 3–6 weeks, poops often space out. On breast milk and formula, anywhere from a few a day to one every few days can be normal.' : 'From about 3–6 weeks, many breastfed babies poop less often, some only once a week. Formula-fed babies usually go most days.'; };
-  const urgent = t => `<p class="care-urgent"><b>${F('Get help right away:')}</b> ${F(t)}</p>`;
+  const urgent = t => hubUrgent(t);   // the one emergency box (design guide)
 
   const TOPIC = {
     diapers: v => topicPage('diapers', v, {
@@ -326,7 +326,7 @@
   function rashCall() {
     const h = H();
     return h.versus('Normal, or time to call?', ['Normal', 'Spots that come and go, in a happy baby.'], ['Call your pediatrician', 'A rash with a fever, blisters or oozing, or one that spreads.'])
-      + h.tip('Get help right away', 'Tiny purple-red dots that don’t fade when you press on them, especially with a fever. Call 911 or go to the ER.');
+      + hubUrgent('Tiny purple-red dots that don’t fade when you press on them, especially with a fever. Call 911 or go to the ER.');
   }
   function rashPage(id) {
     const r = RASH[id], h = H(); if (!r) return null;
@@ -492,7 +492,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     if (q.do) b += `<section class="ss-do"><b>What to do</b><ol class="care-do">${q.do.map(t => `<li>${F(t)}</li>`).join('')}</ol></section>`;
     if (q.vis) b += q.vis();
     if (q.N) b += `<p class="ss-know"><b>What’s normal</b>${F(q.N)}</p>`;
-    if (q.urgent) b += `<p class="care-urgent">${F(q.urgent)}</p>`;
+    if (q.urgent) b += hubUrgent(q.urgent);
     if (q.call) b += `<p class="care-call"><b>${F('Call your pediatrician:')}</b> ${F(q.call)}</p>`;
     if (q.extra) b += q.extra();
     return page(q.k, b);
@@ -645,7 +645,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     if (s.doText) b += `<section class="ss-do"><b>What to do</b><p>${T(s.doText)}</p></section>`;
     if (s.normal) b += `<p class="ss-know"><b>What to look for</b>${T(s.normal)}</p>`;
     if (s.vis) b += s.vis() || '';
-    if (s.urgent) b += `<p class="care-urgent">${F(s.urgent)}</p>`;
+    if (s.urgent) b += hubUrgent(s.urgent);
     if (s.call) b += `<p class="ss-small"><b>${F('Call your pediatrician:')}</b> ${T(s.call)}</p>`;
     if (s.extra) b += s.extra();
     if (s.more) { const m = s.more(); b += `<div class="hub-card care-folds">${m.map(([t, sub, body]) => `<details class="care-fold"><summary><span><b>${F(t)}</b>${sub ? `<small>${F(sub)}</small>` : ''}</span><i aria-hidden="true">›</i></summary><div class="care-fold-body">${body}</div></details>`).join('')}</div>`; }
@@ -745,7 +745,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   function lookOff(v, openK) {
     const h = H(), now = v == null ? stageNow() : v, solidsOn = live() && answers.solids === 'Yes';
     const block = (normal, todo, call, urgentT, urgentL) => (normal ? `<p class="care-p"><b>${F('Normal:')}</b> ${F(normal)}</p>` : '') + (todo ? `<p class="care-p"><b>${F('What to do:')}</b> ${F(todo)}</p>` : '') + (call ? `<p class="care-p"><b>${F('Call your pediatrician:')}</b> ${F(call)}</p>` : '')
-      + (urgentT ? `<p class="care-urgent"><b>${F(urgentL || 'Get help right away:')}</b> ${F(urgentT)}</p>` : '');
+      + (urgentT ? hubUrgent(urgentT) : '');
     const ans = (title, tiles, call, urgentT) => `<h2 class="hub-h2">${F(title)}</h2>` + hubIconSteps(tiles, CAT, F(tiles.map(t => t[1] + ': ' + t[2]).join('. ')), false) + block('', '', call, urgentT);
     const rashLine = id => { const r = RASH[id]; return `<li><b>${F(r.t)}</b> ${F(r.look)}</li>`; };
     const rashOrder = [['newborn', 'peeling', 'acne'], ['acne', 'cradle', 'strawberry'], ['drool', 'eczema', 'heat'], ['drool', 'eczema', 'heat']][now];
