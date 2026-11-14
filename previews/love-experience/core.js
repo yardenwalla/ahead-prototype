@@ -89,15 +89,14 @@
     var top=(ageLine?ageLine.outerHTML:'')+(birthday?birthday.outerHTML:'');
     var hero='<div class="xp-story"><div class="xp-story-head"><span class="xp-eyebrow">INSIDE '+nm.toUpperCase()+'’S WORLD · '+E(formatMonth(a))+'</span><h1>'+E(D[0])+'</h1><p>'+E(D[1])+'</p></div><div class="xp-story-scene" aria-hidden="true">'+scene+'</div><button data-xp-page="topic:Development" class="xp-story-discover">Discover what he’s learning <span>→</span></button></div>';
     var notice='<section class="xp-section"><div class="xp-section-head"><h2>Little things to look for</h2></div><div class="xp-observe">'+n.map(function(s,i){return '<div class="xp-observe-item"><span class="xp-observe-index">0'+(i+1)+'</span><div><b>'+E(s[0])+'</b><small>'+E(s[1])+'</small></div></div>';}).join('')+'</div><p class="xp-hint">These are possibilities, not milestones he needs to have reached.</p></section>';
-    var now='<section class="xp-section"><div class="xp-section-head"><h2>What might change your day</h2></div><div class="xp-now-feature"><span class="xp-eyebrow">AROUND NOW</span><b>'+E(overview)+'</b><p>'+E(expl)+'</p><button data-xp-page="topic:Development" class="xp-text-link">More about this stage →</button></div>';
+    var now='<section class="xp-section"><div class="xp-section-head"><h2>Useful around now</h2></div>';
     if(first)now+='<div class="xp-rest-rows">'+first+'</div>';
-    if(more)now+='<details class="xp-details xp-now-more"><summary>More things you might notice</summary><div class="xp-rest-rows">'+more+'</div></details>';
+    if(more)now+='<details class="xp-details xp-now-more"><summary>See other changes this month</summary><div class="xp-rest-rows">'+more+'</div></details>';
     now+='</section>';
     var play='<section class="xp-section"><div class="xp-section-head"><h2>Try something together</h2></div><button class="xp-play-card" data-xp-page="chg:Development:d:idea:'+ref+':'+idea[2]+'"><span class="xp-play-art" aria-hidden="true">'+(typeof hubArt==='function'?hubArt('hand','Development'):'✦')+'</span><span><b>'+E(idea[0])+'</b><small>'+E(idea[1])+'</small><em>See how →</em></span></button></section>';
-    var upcoming='<section class="xp-section"><div class="xp-section-head"><h2>See what’s ahead</h2></div>'+(details?details.outerHTML:'<button class="xp-main-change" data-xp-nav="next"><span class="xp-copy"><b>When the next stage begins</b><em>Explore what may change, and how to prepare.</em></span><span class="xp-arrow">›</span></button>')+'</section>';
-    var mem='<section class="xp-section"><button class="xp-memory-nudge" data-xp-nav="timeline"><span class="xp-memory-visual"><img src="assets/home/balloon-'+Math.max(1,Math.min(a,11))+'.png" alt="" loading="lazy"></span><span><b>'+nm+'’s first year</b><small>Photos and little firsts, kept together as he grows.</small></span><span class="xp-arrow">›</span></button></section>';
+    var upcoming='<section class="xp-section"><button class="xp-main-change" data-xp-nav="next"><span class="xp-icon">'+(typeof hubArt==='function'?hubArt('clock','Development'):'◷')+'</span><span class="xp-copy"><small>COMING INTO VIEW</small><b>See what changes next</b><em>Big transitions, and when to prepare for them</em></span><span class="xp-arrow">›</span></button></section>';
     var bottom='<p class="xp-preview-support">Every baby develops at their own pace. The examples are for discovery, not a developmental assessment.</p>';
-    var root=document.createElement('div');root.className='xp-page xp-home';root.innerHTML=top+hero+(checkin?'<section class="xp-section">'+checkin.outerHTML+'</section>':'')+notice+now+play+upcoming+mem+bottom;
+    var root=document.createElement('div');root.className='xp-page xp-home';root.innerHTML=top+hero+(checkin?'<section class="xp-section">'+checkin.outerHTML+'</section>':'')+notice+now+play+upcoming+bottom;
     original.replaceWith(root);
   }
   var trips={
