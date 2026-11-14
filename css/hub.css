@@ -1678,3 +1678,4 @@ label:has(> .hub-photo-input:focus-visible) { outline: 2px solid #884866; outlin
 #main .bk-page > .bk-photo { width: 72px; margin: -8px -4px 6px 12px }
 #main .bk-page > .bk-photo em { font-size: 9.5px }
 #main .bk-page > .bk-firsts, #main .bk-page > .bk-noted { clear: both }
+#main .mem-card-story { width: 72% }
