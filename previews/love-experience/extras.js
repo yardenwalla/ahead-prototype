@@ -2,6 +2,13 @@
 (function(){
   'use strict';
   var prevComplete=window.completeCategory,prevYear=window.categoryYear,prevTimeline=window.journeyTimeline;
+  // Relative links from a nested preview must still point to the canonical card page.
+  var originalCardLink=window.ccCardLink;
+  if(typeof originalCardLink==='function')window.ccCardLink=function(){
+    var u=originalCardLink();
+    try{return new URL('card.html',document.baseURI).href+new URL(u).search;}
+    catch(e){return u;}
+  };
   var enabled=function(){try{return sessionStorage.getItem('xp-love-mode')!=='original';}catch(e){return true;}};
   var escape=function(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});};
   function betterChildcare(source){
