@@ -204,11 +204,17 @@
           ['The week before', 'clock', 'A short visit together, then a short day.'],
           ['The night before', 'bag', 'Pack and label everything.'],
           ['Day one', 'sun', 'A quick, warm goodbye.']];
+      // Nov 14 (QA): a nursed baby practices a bottle first, and a baby starting at 7–12 months gets a word on goodbyes.
+      const nurses0 = typeof profile !== 'undefined' && profile.feed !== 'Formula' && ['Nursing', 'Both'].includes(profile.feedHow || 'Nursing');
+      if (nurses0 && kind !== 'family') steps.unshift(['4 weeks before', 'bottle', 'Have someone else offer a bottle a few times a week, so Maya gets used to it.']);
+      const am1 = typeof actualMonth === 'function' ? actualMonth() : 0;
+      const goodbyeTip = am1 >= 7 && am1 <= 12 ? H().tip('Starting around now?', 'From about 8 months, many babies cry harder at goodbyes. It means {s} {know|knows} who {s’s} close to. A short, same goodbye each time helps.') : '';
       const lead = atHome ? 'A paid trial day, with you at home, makes the real start easier for you all.' : kind === 'family' ? 'A practice day together makes the real start easier for everyone.' : 'A visit and a short practice day first make the real start easier for you both.';
       return sub('ready', 'Care chosen', who ? `Get ready for ${who}` : 'Get ready for day one', lead,
       (just ? `<div class="hub-card cc-chosen-note"><b>${F(`You chose ${who}.`)}</b><span>${F('Here’s how to get ready for day one.')}</span></div>` : '')
       + tl('Your countdown to day one', steps,
         steps.map(x => `${x[0]}: ${x[2]}`).join(' '))
+      + goodbyeTip
       + careCardButton(load('ahead-carecard', {}))
       + packCard(atHome ? 'Set up at home' : 'Pack for care', atHome ? 'So the day runs without you' : 'Label everything with {p} name. Your caregiver may have a list too', [
         ['bottle', bm && fm ? 'Milk or formula for each feed, plus one extra' : bm ? 'Pumped milk for each feed, plus one extra' : 'Formula for each feed, plus one extra',

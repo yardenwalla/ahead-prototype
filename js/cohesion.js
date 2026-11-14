@@ -28,5 +28,22 @@
     const prevTop = window.hubPageTop;
     window.hubPageTop = title => prevTop(title).replace(/(<p>[^<]*· )([^<]*)(<\/p>)/, (all, a, b, c) => typeof monthLabel === 'function' && b === esc2v(monthLabel(actualMonth())) ? a + babyAge() + c : all);
   }
+  // Nov 14 (QA): a baby born early shows both ages the same way in every guide's header, e.g. "10 weeks · 2 weeks adjusted".
+  // Guides used to differ ("Newborn adjusted" in Safety, "10 weeks" in Outings), which confused parents.
+  if (typeof window.render === 'function') {
+    const baseRender = window.render;
+    window.render = render = function (...args) {
+      const r = baseRender.apply(this, args);
+      try {
+        if (profile && profile.early && profile.due && cur()) {
+          const nm = (typeof name === 'function' ? name() : '').replace(/&amp;/g, '&'), both = `${babyAge()} · ${adjustedAge()} adjusted`;
+          document.querySelectorAll('#main .monthly-page-header p:not(.monthly-preview)').forEach(p => {
+            if (!p.children.length && p.textContent.startsWith(nm + ' · ')) p.textContent = `${nm} · ${both}`;
+          });
+        }
+      } catch (e) {}
+      return r;
+    };
+  }
   function esc2v(s) { return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]); }
 })();

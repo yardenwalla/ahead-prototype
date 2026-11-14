@@ -8,7 +8,9 @@ Fails (exit 1) if:
   5. on a month birthday the month card names another month than the balloon (checked in two time zones),
   6. Home rows leave their guide's color,
   7. wording that read wrong for some families (pronouns, "1 months", formula poop, past-due checkups) comes back,
-     or Home breaks for a baby born early who is days old."""
+     or Home breaks for a baby born early who is days old,
+  8. a due checkup can't be marked done, a born-early header shows one age, Home says "plus N more",
+     or a nursing family's day-one plan has no bottle practice."""
 import asyncio, calendar, datetime as dt, sys, base64, tempfile, os
 from playwright.async_api import async_playwright
 
@@ -130,6 +132,31 @@ async def main():
         t = await page_text(dict(name='', pronouns='he', dob=born, due=(T + dt.timedelta(days=53)).isoformat(), early=True, feed='Breast milk', feedHow='Pumping', example=False, id='hc', joined=born), 'home')
         check(await pg.evaluate("!!document.querySelector('.hg-page')") and not errors, f'Born early, days old: Home draws its month card {errors[:1]}')
         check('ADJUSTED' in t.upper().split('THROUGH')[0], 'Born early: Home\'s month card says the age is adjusted')
+        # 8. Nov 14 fixes, round 2: mark a checkup done, both ages for babies born early, Home names its news, childcare by age.
+        dob45 = (T - dt.timedelta(days=137)).isoformat()
+        p45 = dict(name='Leo', pronouns='he', dob=dob45, due='', early=False, feed='Both', feedHow='Nursing', example=False, id='hc', joined=dob45)
+        await page_text(p45, 'home'); await pg.evaluate("openPage('topic:Health')"); await pg.wait_for_timeout(300)
+        check(await pg.evaluate("!!document.querySelector('.hl-done-link')"), '4.5 months: the due checkup offers "Mark it done"')
+        await pg.evaluate("(document.querySelector('.hl-done-link button')||{click(){}}).click()"); await pg.wait_for_timeout(300)
+        check(await pg.evaluate("healthRecord(4) && healthRecord(4).status === 'attended'"), 'Mark it done saves the checkup as done')
+        check('6‑month' in await pg.evaluate("document.querySelector('#main').innerText"), 'After Mark it done, Health moves on to the next checkup')
+        await pg.evaluate("navigate('categories')"); await pg.wait_for_timeout(300)
+        t = await pg.evaluate("document.querySelector('#main').innerText")
+        check('4-month checkup is due now' not in t, 'A checkup marked done is no longer "due now" on the Guides tab')
+        dobE = (T - dt.timedelta(days=76)).isoformat()
+        pE = dict(name='Theo', pronouns='he', dob=dobE, due=(T - dt.timedelta(days=20)).isoformat(), early=True, feed='Formula', example=False, id='hc', joined=dobE)
+        await page_text(pE, 'home')
+        for r in ['topic:Sleep', 'topic:Safety', 'topic:Out and about', 'topic:Childcare', 'chg:Sleep:d:routine']:
+            await pg.evaluate(f"openPage('{r}')"); await pg.wait_for_timeout(200)
+            hd = await pg.evaluate("(document.querySelector('#main .monthly-page-header p')||{}).textContent||''")
+            check(re.search(r'Theo · \d+ weeks · [^·]+ adjusted$', hd), f'Born early: {r} header shows both ages ({hd})')
+        for days in (137, 182, 300, 76):
+            t = await page_text(prof(days), 'home')
+            check(not re.search(r'plus \d+ more|Set to ', t), f'{days} days: Home names its guide news, no "plus N more"')
+        pN = dict(prof(275, feed='Breast milk', feedHow='Nursing'))
+        t = await page_text(pN, 'home'); await pg.evaluate("openPage('chg:Childcare:d:ready')"); await pg.wait_for_timeout(300)
+        t = await pg.evaluate("document.querySelector('#main').innerText")
+        check('offer a bottle' in t and 'goodbyes' in t, '9 months, nursing: day one has bottle practice and the goodbye tip')
         await b.close()
     print(f'Home browser checks: {passed} passed' + (f', {len(fails)} failed' if fails else ''))
     for f in fails: print('  FAIL', f)
