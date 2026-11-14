@@ -152,11 +152,11 @@
   function journey(id) {
     const h = H(), m = typeof actualMonth === 'function' ? actualMonth() : 0, fd = feedNow(), bm = fd !== 'Formula', fm = fd !== 'Breast milk';
     if (id === 'plan') return sub('plan', 'Finding care', 'Plan your care', 'Work back from the day you need care. Most families start looking sooner than they expect.',
-      packCard('Before you look', 'Two things to settle first', [['clock', 'Your days and hours', 'Early and late ones too'], ['coin', 'A monthly budget', 'And any help from work or your state']])
+      packCard('Before you look', 'Two things to settle first', [['clock', 'Know the days and hours you need', 'Count early starts and late pickups too.'], ['coin', 'Set a monthly budget', 'Count any help from work or your state.']])
       + tl('Your countdown', [
         ['6 months before', 'notepad', 'Join a few daycare waitlists.'],
         ['3 months before', 'home', 'Visit home daycares, or meet nannies.'],
-        ['6–8 weeks before', 'shield', 'Decide, call references, sign up.'],
+        ['6–8 weeks before', 'shield', 'Call references, make your choice and sign up.'],
         ['2 weeks before', 'heart', 'Get ready for day one.']],
         'Six months before, join daycare waitlists. Three months before, visit home daycares or meet nannies. Six to eight weeks before, decide and sign up. Two weeks before, get ready for day one.')
       + H().note('Less time than this? That’s common. See below.')
@@ -170,7 +170,7 @@
 
     if (id === 'pay') return sub('pay', 'Finding care', 'Paying for care', 'Care is one of a family’s biggest monthly costs. There are more ways to pay less than most parents know.',
       picSteps('Ways to pay less', [
-        ['coin', 'Help from your state', 'If you qualify. Your referral agency helps you apply.'],
+        ['coin', 'Help from your state', 'If you qualify, your local referral agency can help you apply, for free.'],
         ['notepad', 'A pre-tax care account', 'Through many jobs. A new baby lets you join mid-year.'],
         ['shield', 'A tax credit', 'Takes part of what you pay off your taxes.'],
         ['home', 'Early Head Start', 'A free federal program for babies, for families who qualify.']],
@@ -287,11 +287,11 @@
     if (id === 'help') { const early = m < 4; return sub('help', 'Kinds of care', 'Extra help at home', early ? 'Help in the early months isn’t only for when you go back to work.' : 'Help at home isn’t only for when you go back to work.',
       picSteps('Kinds of help', early ? [
         ['heart', 'A postpartum doula', 'Feeding, rest and recovery in the first weeks.'],
-        ['moon', 'Overnight help', 'A trained night nanny covers nights.'],
+        ['moon', 'Overnight help', 'A trained night nanny looks after Maya overnight, so you can get a stretch of sleep.'],
         ['home', 'Family and friends', 'Ask for one thing: a meal, laundry, an hour.'],
         ['clock', 'A sitter for a break', 'A few hours to rest or get out.', go('sitter')]] : [
         ['heart', 'A helper while you’re home', 'Someone plays with Maya while you get things done.'],
-        ['moon', 'Overnight help', 'A night nanny looks after Maya, so nights are covered.'],
+        ['moon', 'Overnight help', 'A night nanny looks after Maya overnight, so you can sleep.'],
         ['home', 'Family and friends', 'An hour or an afternoon with Maya.'],
         ['clock', 'A sitter', 'A few hours with Maya, now and then.', go('sitter')]],
         early ? 'A postpartum doula helps with feeding and recovery. Overnight help covers nights. Family and friends can help with specific tasks. A sitter gives you a break.' : 'A helper plays with Maya while you’re home. A night nanny covers nights. Family and friends can spend an hour or an afternoon with Maya. A sitter looks after Maya for a few hours.')

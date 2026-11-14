@@ -2391,7 +2391,7 @@
       + xDo('What to do', ['Follow his cues, not the ounces.', nurses() ? 'Nursing? You won’t see ounces, and that’s fine.' : 'Offer a little more only if he still seems hungry.'])
       + xKnow('How you’ll know it’s enough', 'You can’t see it in a feed, but you can in his diapers and his weight. That’s next.'));
   P.x_vitd = () => { const b = isBreast(), fm = formulaFam();
-    return xPage('growth', 'x_vitd', b ? 'Vitamin D drops, every day' : 'Vitamin D and iron are in the formula', b ? 'Breast milk is low in vitamin D, so he needs drops from the first days.' : 'He needs vitamin D drops until he drinks about 32 oz a day.',
+    return xPage('growth', 'x_vitd', b ? 'Vitamin D drops, every day' : 'Vitamin D and iron are in the formula', b ? 'Vitamin D builds strong bones, and breast milk has very little. A few drops a day fill the gap.' : 'He needs vitamin D drops until he drinks about 32 oz a day.',
       H().tiles([['Vitamin D', b ? '400 IU a day' : 'In the formula', b ? 'Drops, from the first days' : 'Drops until 32 oz a day'], ['Iron', fm && isBreast() ? 'Depends on the mix' : fm ? 'In the formula' : isEarly() ? 'From about 1 month' : (ageMo() < 4 ? 'Ask at 4 months' : 'Ask at the next checkup'), fm && isBreast() ? 'Drops if more breast milk than formula' : fm ? 'Choose one with iron' : isEarly() ? 'Drops, for babies born early' : 'Breast milk is low in iron']])
       + xDo(b ? 'How to give drops' : 'If your pediatrician suggests drops', [(nurses() ? 'Drip it on the nipple just before a feed, or slowly inside his cheek.' : 'Drip it slowly inside his cheek.'), 'Or mix it into about 1 oz of milk in a bottle, and make sure he finishes it.', 'Use the dropper that comes with them, and the dose on the label.'])
       + xKnow('No water yet', 'Milk is all he needs until about 6 months, even on hot days.')); };
@@ -2582,7 +2582,7 @@
       + xDo('What to do', ['First checkup at 3–5 days old, usually a day or two after you get home.', 'Feed on cue. No need to weigh at home.', 'Extra hungry for a few days? Often a growth spurt.'])
       + xNote('Born early or slow to gain?', 'Follow your pediatrician’s feeding plan first.') + xNote('Worth a call:', 'not back to birth weight by 2 weeks.'));
   P.x_vitd = () => { const b = isBreast(), fm = formulaFam(), early = isEarly();
-    return xPage('growth', 'x_vitd', b ? 'Vitamin D drops, every day' : 'Vitamin D and iron are in the formula', b ? 'Breast milk is low in vitamin D, so he needs drops from the first days.' : 'He needs vitamin D drops until he drinks about 32 oz a day.',
+    return xPage('growth', 'x_vitd', b ? 'Vitamin D drops, every day' : 'Vitamin D and iron are in the formula', b ? 'Vitamin D builds strong bones, and breast milk has very little. A few drops a day fill the gap.' : 'He needs vitamin D drops until he drinks about 32 oz a day.',
       xCompare([['sun', 'Vitamin D', b ? '400 IU a day, through his first year.' : 'In the formula. Drops until he drinks 32 oz a day.'], ['star', 'Iron', fm && b ? 'Drops from 4 months if he gets more breast milk than formula.' : fm ? 'In the formula. Choose one with iron.' : early ? 'Drops from about 1 month, for babies born early.' : (ageMo() < 4 ? 'Drops usually start at 4 months. Breast milk is low in iron.' : 'Drops from 4 months, until iron-rich foods are going well.')]])
       + xDo(b ? 'How to give drops' : 'If your pediatrician suggests drops', ['Use the dropper that comes with them, and the dose on the label.', (nurses() ? 'Drip it on the nipple just before a feed, or inside his cheek.' : 'Drip it slowly inside his cheek.'), 'Or mix it into about 1 oz of milk, and make sure he finishes it.'])
       + (ageMo() < 6 ? xNote('No water yet.', 'Milk is all he needs until about 6 months, even on hot days.') : '')); };
@@ -2751,7 +2751,7 @@
       xCompare([['hand', 'Pea-size', 'Soft pieces he can pinch.'], ['bowl', 'Unsalted', 'Take his out before adding salt.'], ['star', 'Iron-rich', 'Something with iron at each meal.']])
       + xDo('What to do', ['Let him feed himself, with a spoon to practice.', 'Keep cutting round foods, like grapes, lengthwise.']));
   P.z_milk12 = () => { const b = isBreast(), bot = isBottle(), fm = formulaFam();
-    return yPage(XC.d1, 'Milk', 'Cups now, and whole milk at 12 months', 'A few things change around his first birthday.',
+    return yPage(XC.d1, 'Milk', 'Cups now, and whole milk at 12 months', 'Starting a cup now makes saying goodbye to bottles easier later.',
       tl('', [['Now', 'cup', 'Practice with an open or straw cup'], ['12 months', 'drop', fm ? 'Formula to whole cow’s milk, about 16 oz a day' : 'Whole cow’s milk in a cup, if you like'], ['12–18 months', 'bottle', bot ? (nurses() ? 'Bottles phase out, bedtime last. Nursing can keep going' : 'Bottles phase out, the bedtime one last') : 'Nursing can keep going as long as you both like']])
       + xDo('What to do', ['Whole milk, not low-fat, until age 2.', 'Serve milk in a cup, with meals.', bot && 'Swap one bottle for a cup at a time, about a week apart.'])
       + xKnow('No more than 24 oz a day', (b ? 'That counts cow’s milk from a cup, not nursing. ' : '') + 'More milk crowds out iron-rich food.')
@@ -3063,7 +3063,7 @@
       + xDo('What helps', [nurse ? 'Evenings: switch sides often, and take turns so you each get a break.' : 'Evenings: smaller bottles, more often, and take turns so you each get a break.', 'Nights: lights low, voices quiet, no play.', 'Change his diaper at night only if it’s needed.', 'Until he’s back to birth weight, wake him if 3 hours pass.'])
       + xNote('Hard to wake?', 'Undress him to his diaper, or stroke his feet.') + xNote('Worth a call:', 'too sleepy to feed most times.')); };
   P.nb_vitd = () => { const b = isBreast();
-    return yPage(XC.growth, 'Every day', b ? 'Vitamin D drops, every day' : 'Vitamin D drops, until about 32 oz a day', b ? 'Breast milk is low in vitamin D, so he needs drops from the first days.' : 'Formula has iron and some vitamin D. Until he drinks about 32 oz a day, he needs drops too.',
+    return yPage(XC.growth, 'Every day', b ? 'Vitamin D drops, every day' : 'Vitamin D drops, until about 32 oz a day', b ? 'Vitamin D builds strong bones, and breast milk has very little. A few drops a day fill the gap.' : 'Formula has iron and some vitamin D. Until he drinks about 32 oz a day, he needs drops too.',
       xBody(P.x_vitd)); };
   P.m1_eve = () => { const ev = xBody(P.y_evening);
     return yPage(XC.d1, 'Evenings and nights', 'Calmer evenings, longer nights', 'Fussy evenings peak around 6 weeks and ease by 3–4 months. Many babies go one longer stretch at night by 2–3 months.',
@@ -3139,7 +3139,7 @@
   ['Distracted feeds', 'Time apart'].forEach(k => { HEADART[k] = HEADART[k] || HEADART['Feeds now'] || (() => ART.often(5)); });
   const gLink = (t, id) => `<div class="hub-browse"><button class="hub-link" onclick="${id.startsWith('open') ? id : go(id)}">${F(t)} ›</button></div>`;
   P.nb_eve = () => { const nurse = nurses();
-    return yPage(XC.routine, 'Evenings and nights', 'Busy evenings, then quick, calm nights', 'Evenings can be feed after feed. At night, keep feeds short and sleepy.',
+    return yPage(XC.routine, 'Evenings and nights', 'Busy evenings, then quick, calm nights', 'Evenings can be feed after feed. At night, keep feeds short and sleepy, so he learns that night is for sleeping.',
       xDo('What helps', [nurse ? 'Evenings: switch sides often, and take turns so you each get a break.' : 'Evenings: smaller bottles, more often, and take turns so you each get a break.', 'Nights: lights low, voices quiet, no play.', 'Change his diaper at night only if it’s needed.', 'Until he’s back to birth weight, wake him if 3 hours pass.'])
       + xNote('Hard to wake?', 'Undress him to his diaper, or stroke his feet.') + xNote('Worth a call:', 'too sleepy to feed most times.')); };
   P.nb_enough = () => { const nurse = nurses();
@@ -3191,7 +3191,7 @@
       + xDo('Make it safe', ['Smooth or mashed, or soft strips that squish between your fingers.', 'No added salt or sugar.', 'Always seated upright, and always with you.'])
       + xKnow('Before the first bite', 'A high chair with a harness, a soft spoon, and an open cup.')
       + gLink('Learn choking first aid', 'z_gag'));
-  P.z_plan = () => yPage(XC.p1, 'Allergens and foods to avoid', 'Allergens go in early. A few foods wait.', 'Plan both before the first bite.',
+  P.z_plan = () => yPage(XC.p1, 'Allergens and foods to avoid', 'Allergens go in early. A few foods wait.', 'Early, regular tastes of peanut and egg make an allergy to them less likely.',
       xTwo(['Higher risk', 'Severe eczema, or an egg allergy. Ask your pediatrician before starting peanut. It may be as early as 4–6 months.'], ['Everyone else', 'Start the common allergens with first foods, around 6 months.'])
       + h2('Wait until he’s 1') + chips(['Honey', 'Cow’s milk to drink', 'Juice'])
       + xKnow('Why honey', 'It can carry botulism, which babies can’t fight off until 12 months.')

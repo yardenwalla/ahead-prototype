@@ -75,7 +75,7 @@
     // different area from the story, each opening its area), one thing to try (never repeated on an area page),
     // the age's big question, the four areas with progress, and what's coming into view. One home for each fact.
     const IN = {
-      2: { t: '{S’s} learning that you answer {o}', lead: 'Your voice, your touch, your attention. {S’s} finding out that reaching out to you gets a response.', idea: 'close-face', w: 'Gives those first coos a face to answer',
+      2: { t: '{S’s} learning that you answer {o}', lead: 'Each time you answer a cry, a look or a little sound, {s} {learn|learns} that reaching out to you works.', idea: 'close-face', w: 'Gives those first coos a face to answer',
         n: [['Talking', 'Little sounds that aren’t crying', 'Soft coos may come in calm, awake moments.', 'Makes sounds beyond crying'], ['Thinking', 'A long look at a toy', '{S} may stop and study it, instead of glancing past.', 'Looks at a toy for a few seconds'], ['Movement', 'Looking up from tummy time', 'A small head lift gives {o} a new view.', 'Lifts head during tummy time'], ['Social', 'Calming to your voice', '', 'Settles with your voice or touch']] },
       4: { t: 'It’s starting to feel like a conversation', lead: '{S} isn’t just watching you anymore. {S’s} practicing how to get your attention, and what happens when {s} does.', idea: 'sound-answer', w: 'Teaches {o} that {p} sounds get an answer',
         n: [['Social', 'The first chuckles', 'A silly face or a tickle may get a little laugh.', 'Chuckles during play'], ['Thinking', 'Studying {p} own hands', '{P} fingers can be as interesting as any toy.', 'Studies their hands'], ['Movement', 'Swiping at toys', '{S} may bat at a toy, or hold one you put in {p} hand.', 'Swipes at toys'], ['Talking', 'Cooing when you talk', '', 'Coos']] },
@@ -499,7 +499,7 @@
     // (take a temperature, help them feel better, tummy bugs, colds), and the emergency signs last (AAP, HealthyChildren.org).
     const m = actualMonth(), u3 = m < 3;
     const call911 = hubCall911();
-    const feverCard = `<section class="hub-card hub-fever is-calm"><div class="hub-fever-bands is-one"><div><small>${F(feverBand(m))}</small><b>${feverTemp(m)}<span> or higher</span></b><p>${F(u3 ? 'Call your pediatrician right away, day or night.' : (m < 6 ? 'Call your pediatrician now, day or night.' : 'Or a fever that lasts more than a day. Call your pediatrician.'))}</p></div></div><p class="hub-fever-note">${F('Also call if Maya seems very unwell or unusually sleepy.' + feverEarlyNote())}</p></section>`;
+    const feverCard = `<section class="hub-card hub-fever is-calm"><div class="hub-fever-bands is-one"><div><small>${F(feverBand(m))}</small><b>${feverTemp(m)}<span> or higher</span></b><p>${F(u3 ? 'Call your pediatrician right away, day or night.' : (m < 6 ? 'Call your pediatrician now, day or night.' : 'Call your pediatrician. Call too if any fever lasts more than a day.'))}</p></div></div><p class="hub-fever-note">${F('Also call if Maya seems very unwell or unusually sleepy.' + feverEarlyNote())}</p></section>`;
     // One flow, in the order a parent lives it: check for a fever and know when that means calling,
     // make them comfortable, then the two common bugs, and the emergency signs last.
     const thermo = () => {
@@ -556,7 +556,7 @@
     if (cat === 'Development' && screen === 'd' && a === 'faq') { const ref = DEV_STAGES[b] ? Number(b) : devRef(); return detailFrame('Development', DEV_STAGES[ref].title, 'What other parents ask', '', devCommonQuestions(ref).replace('<h2>Common questions</h2>', '').replace('class="common-questions"', 'class="common-questions hub-faq"')); }
     // Colds and stuffy noses: saline and suction, a cool-mist humidifier, no cold medicines, and when to call (AAP).
     if (cat === 'Health' && screen === 'd' && a === 'cold') return detailFrame('Health', 'When Maya seems sick', 'A cold or stuffy nose', 'Several colds in the first year are normal. Most clear up in 7–10 days.',
-      `<h2 class="hub-h2">${F('What helps')}</h2>` + hubIconSteps([['drop', 'Saline, then suction', 'Before feeds and sleep'], ['snow', 'Cool-mist humidifier', 'In {p} room at night'], ['bottle', 'Smaller, frequent feeds', 'Easier with a stuffy nose']], 'Health', 'Saline then suction before feeds and sleep, a cool-mist humidifier, and smaller, more frequent feeds.', false)
+      `<h2 class="hub-h2">${F('What helps')}</h2>` + hubIconSteps([['drop', 'Saline, then suction', 'Babies breathe through the nose to feed'], ['snow', 'Cool-mist humidifier', 'In {p} room at night'], ['bottle', 'Smaller, frequent feeds', 'Easier with a stuffy nose']], 'Health', 'Saline then suction before feeds and sleep, a cool-mist humidifier, and smaller, more frequent feeds.', false)
       + H().tip('Skip cold medicines', 'They aren’t safe for babies. No honey before 1 year.')
       + H().tip('Could it be an ear infection?', 'Often after a cold: fussing when lying down, a new fever, or fluid from the ear.')
       + H().versus('Normal, or time to call?', ['Normal', 'Stuffy and sneezy, still feeding.'], ['Call your pediatrician', `A fever of ${feverTemp(actualMonth())}+, a cold past 10 days, or signs of an ear infection.`])

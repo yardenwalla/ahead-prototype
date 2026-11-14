@@ -754,7 +754,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     const rashCall = 'A rash with a fever, blisters or pus, or one that spreads.' + (now === 0 ? ' Call right away for tiny blisters in the first 2 weeks.' : '') + (under3 ? ' Under 3 months, a fever of 100.4°F or higher means calling right away.' : '');
     const otherRashes = `<div class="hub-list care-link">${rowK('look', 'Other rashes', rest.slice(0, 3).map((id, i) => i ? RASH[id].t.toLowerCase() : RASH[id].t).join(', ') + ' and more', `openPage('chg:${CAT}:d:look:${now}:rashmore')`)}</div>`;
     const items = {
-      poop: ['Poop or pee looks different', 'Colors, fewer poops, and when to call', poopChart()
+      poop: ['Most poop colors are normal', 'White, gray, red, or black after the first days means a call.', poopChart()
         + `<h2 class="hub-h2">${F('Also normal')}</h2>` + hubIconSteps([
           now === 0 ? ['clock', 'Black at first', 'For the first 2–3 days'] : live() && profile.feed === 'Formula' ? ['clock', 'Most days', 'Usual on formula'] : ['clock', 'Fewer poops', live() && profile.feed === 'Both' ? 'A few days apart can be normal' : 'Breastfed babies can go days between'],
           ['diaper', 'Straining, going red', 'Even when it comes out soft'],
