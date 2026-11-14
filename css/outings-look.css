@@ -95,10 +95,19 @@
 #main .oa-steps button b { font-size: 12.5px; font-weight: 600; color: var(--muted, #6d666d); line-height: 1.2 }
 #main .oa-steps button.is-on b { color: var(--oa-ink); font-weight: 700 }
 #main .oa-then { display: block; margin: 4px 2px 18px; font-weight: 650 }
-/* Readability (Nov 14): on Outings, a plan step's "when" sits above its line, so neither wraps into a narrow column. */
-#main .hub-detail[data-overview="Out and about"] .oa-timeline .hub-daymarks-list { gap: 0 }
-#main .hub-detail[data-overview="Out and about"] .oa-timeline .hub-daymarks-list li { grid-template-columns: 30px 1fr !important; column-gap: 12px; row-gap: 1px; padding: 10px 0; border-top: 1px solid rgba(0,0,0,.06) }
-#main .hub-detail[data-overview="Out and about"] .oa-timeline .hub-daymarks-list li:first-child { border-top: 0; padding-top: 2px }
-#main .hub-detail[data-overview="Out and about"] .oa-timeline .hub-daymarks-list li > i { grid-row: span 2; margin-top: 2px }
-#main .hub-detail[data-overview="Out and about"] .oa-timeline time { grid-column: 2; padding-top: 0; font-size: 13px }
-#main .hub-detail[data-overview="Out and about"] .oa-timeline span { grid-column: 2; padding-top: 0; font-size: 15px; line-height: 1.4; color: var(--text, #2b2a33) }
+/* The trip, in order (Nov 14): one card per page where each step carries its own what-ifs and tips,
+   so the help for a moment sits with that moment instead of in a list further down. Colors follow the page's header. */
+#main .oa-journey { background: var(--white, #fff); border: 1px solid var(--line, #ece8e1); border-radius: 18px; padding: 14px 14px 2px; margin: 0 0 18px }
+#main .oa-journey > b { display: block; font-size: 16px; margin-bottom: 10px }
+#main .oa-journey ol { list-style: none; margin: 0; padding: 0 }
+#main .oa-journey ol > li { position: relative; display: grid; grid-template-columns: 30px 1fr; column-gap: 11px; padding-bottom: 13px }
+#main .oa-journey ol > li:not(:last-child)::before { content: ""; position: absolute; left: 14px; top: 32px; bottom: 1px; width: 2px; border-radius: 2px; background: var(--ss-bg) }
+#main .oa-journey ol > li > i { width: 30px; height: 30px; border-radius: 50%; background: var(--ss-bg); color: var(--ss-ink); display: grid; place-items: center }
+#main .oa-journey ol > li > i svg { width: 17px; height: 17px }
+#main .oa-journey time { display: block; font-size: 11.5px; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; color: var(--ss-ink); margin: 0 0 1px }
+#main .oa-journey p { margin: 0; font-size: 14.5px; line-height: 1.38 }
+#main .oa-journey ul { list-style: none; margin: 7px 0 0; padding: 2px 11px; background: color-mix(in srgb, var(--ss-bg) 55%, white); border-radius: 12px }
+#main .oa-journey ul li { padding: 6px 0; font-size: 13.5px; line-height: 1.38; color: var(--muted) }
+#main .oa-journey ul li + li { border-top: 1px solid rgba(0,0,0,.06) }
+#main .oa-journey ul li b { color: var(--text, #2b2a33); font-weight: 650 }
+#main .oa-journey ol > li > i svg [stroke]:not([stroke="none"]) { stroke: var(--ss-ink) } #main .oa-journey ol > li > i svg [fill]:not([fill="none"]) { fill: color-mix(in srgb, var(--ss-ink) 18%, transparent) }

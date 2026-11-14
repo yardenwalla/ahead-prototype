@@ -250,6 +250,8 @@
   // What-ifs are a situation and what to do, so they read as rows (tiles squeeze the sentence into a narrow column).
   const ifs = (items, caption, heading = 'When things don’t go to plan') => rows(items, heading);
   const plan = (title, items, caption) => timeline(title, items, caption);
+  // The whole trip in one card, in order: [when, icon, what to do, [[if…, then…], …]]. The what-ifs and tips sit under the moment they happen.
+  const journey = (title, items) => `<section class="oa-journey"><b>${F(title)}</b><ol>${items.filter(Boolean).map(([when, icon, text, more]) => `<li><i aria-hidden="true">${hubArt(icon, CAT)}</i><div><time>${F(when)}</time><p>${F(text)}</p>${(more || []).filter(Boolean).length ? `<ul>${more.filter(Boolean).map(([q, a]) => `<li><b>${F(q)}</b> ${F(a)}</li>`).join('')}</ul>` : ''}</div></li>`).join('')}</ol></section>`;
 
   // Staying away: the setup is a checklist, ticked off in each new place. Ticks are kept on this phone; "Start over" clears them.
   const AWAY_KEY = 'ahead-away';
@@ -274,23 +276,19 @@
     const m = ageNow(), bf = nursing(), fm = formula();
     const feedLine = bf && fm ? 'Nurse or give a bottle, wherever you’re comfortable.' : bf ? 'Nurse wherever you’re comfortable, or give a bottle of pumped milk.' : 'Give a bottle where you are. Formula doesn’t need warming.';
 
-    if (id === 'errands') return sub('errands', 'Around town', m < 2 ? 'Your first trips out' : 'Short trips, home whenever you like', 'A walk, the store, a restaurant or a friend’s. One or two stops is plenty, and leaving early still counts.',
-      plan('Plan your outing', [
+    if (id === 'errands') return sub('errands', 'Around town', m < 2 ? 'Your first trips out' : 'Short trips, home whenever you like', 'A walk, the store, a restaurant or a friend’s. One or two stops is plenty.',
+      journey('Your outing, step by step', [
         ['Before you go', 'clock', 'Go right after a feed. It’s the calmest stretch.'],
-        ['Getting there', 'car', '{S} {ride|rides} in {p} own car seat, even in a taxi or a friend’s car.'],
-        ['While you’re out', 'carrier', 'A carrier keeps your hands free, even with the stroller.'],
-        eats() ? ['Snack time', 'highchair', 'Strap {o} into a high chair, and stay right beside {o}.'] : ['Heading home', 'home', 'Head home before the next nap, or sooner.']],
-        'Feed first. In any car, she rides in her own car seat. A carrier keeps your hands free. Head home before the next nap, or sooner.')
-      + ifs([
-        ['bottle', 'Hungry while you’re out', feedLine],
-        ['heart', 'Crying in public', 'Step outside, or walk with {o} close.'],
-        ['diaper', 'A blowout', 'A family restroom, or your changing pad on a clean flat spot.']],
-        'If the baby is hungry, feed them where you are. Crying in public happens to everyone. For a blowout, find a family restroom or use your changing pad.')
+        ['Getting there', 'car', '{S} {ride|rides} in {p} own car seat, even in a taxi or a friend’s car.',
+          [['At the store:', eats() ? 'Use the cart’s own seat with the strap on, not the infant seat on top.' : 'An infant seat can tip off the top of a cart. Use a carrier or the stroller.']]],
+        ['While you’re out', 'carrier', 'A carrier keeps your hands free, even with the stroller.',
+          [['Hungry?', feedLine], ['Crying?', 'Step outside, or walk with {o} close.'], ['A blowout?', 'A family restroom, or your changing pad on a clean flat spot.']]],
+        ['Eating out', eats() ? 'highchair' : 'bowl', eats() ? 'Strap {o} into a steady high chair, pulled back from the table. Hot food goes in the middle.' : 'The car seat stays on the floor or in the stroller, never on top of a high chair.',
+          eats() ? [['Bring {p} own food:', 'something soft from home, a bib and a spoon. A placemat keeps the tray clean.']] : []],
+        ['Heading home', 'home', 'Whenever you like, ideally before the next nap. Leaving early still counts.']])
       + good([
-        ['shield', 'Car seats and shopping carts', eats() ? 'Use the cart’s own seat with the strap on, not the infant seat on top.' : 'An infant seat can tip off the top of a cart. Use a carrier or the stroller.'],
-        eats() ? ['bowl', 'Eating out', 'A steady high chair, strapped in and pulled back from the table. Hot food to the middle.'] : ['bowl', 'Eating out', 'The car seat stays on the floor or in the stroller, never on top of a high chair.'],
         bf && pumps() ? ['fridge', 'Pumped milk', 'Fine cool or at room temperature. No need to warm it.'] : null,
-        eats() ? ['bag', 'Bring {p} own food', 'Something soft from home, a bib and a spoon. A placemat keeps the tray clean.'] : ['hand', 'Holding {o}', 'It’s fine to ask people to wash their hands first, or to say no.']]));
+        !eats() ? ['hand', 'Holding {o}', 'It’s fine to ask people to wash their hands first, or to say no.'] : null]));
 
     if (id === 'road') return sub('road', 'Road trips', 'Long drives with Maya', 'Plan a stop every 2 hours to feed, change and stretch.',
       hubDayMarkers({ title: 'Plan your drive', events: [[9 * 60, 'car', 'Leave as a nap starts'], [11 * 60, 'bottle', 'Stop to feed and change'], [13 * 60, 'mat', eats() ? 'Stop for a snack and a stretch' : 'Stop to feed and stretch'], [15 * 60, 'home', 'Arrive']], from: 8 * 60, to: 16 * 60, cat: CAT, caption: 'Leave at 9 as a nap starts, stop at 11 to feed and change, stop at 1 to feed and stretch, arrive at 3.' })
