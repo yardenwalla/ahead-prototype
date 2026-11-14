@@ -17,7 +17,7 @@
   font-size: 17px !important; font-weight: 650 !important }
 
 /* 4. Guide hero headlines all 25px (Development & play was 27). Tabs open with label + title, no paragraph. */
-#main .dev-hero h1 { font-size: 25px !important }
+#main .dev-hero h1 { font-size: 25px !important; line-height: 1.18 !important }
 #main .next-lead { display: none !important }
 
 /* 5. Three corner sizes: 24 hero cards, 20 cards and tiles, 14 small tiles inside a card. */

@@ -1679,3 +1679,63 @@ label:has(> .hub-photo-input:focus-visible) { outline: 2px solid #884866; outlin
 #main .bk-page > .bk-photo em { font-size: 9.5px }
 #main .bk-page > .bk-firsts, #main .bk-page > .bk-noted { clear: both }
 #main .mem-card-story { width: 72% }
+/* A how-to behind a tap (Nov 12): the summary reads like a card label. */
+#main details.hub-how { padding: 13px 16px }
+#main details.hub-how summary { list-style: none; cursor: pointer; font-weight: 650; display: flex; justify-content: space-between }
+#main details.hub-how summary::-webkit-details-marker { display: none }
+#main details.hub-how summary::after { content: '＋'; color: var(--ink-2, #8a8390) }
+#main details.hub-how[open] summary::after { content: '−' }
+#main details.hub-how p { margin: 8px 0 0 }
+/* Development: the milestone a "thing to notice" row points to. */
+#main .dev-skill.is-focus { box-shadow: 0 0 0 2px var(--area-ink, #7a5aa6) inset; border-radius: 14px }
+#main details.hub-how-in { grid-column: 1 / -1; width: 100%; margin-top: 6px }
+#main details.hub-how-in summary { list-style: none; cursor: pointer; font-size: 13.5px; font-weight: 700; color: var(--ink, #2b2732) }
+#main details.hub-how-in summary::-webkit-details-marker { display: none }
+#main details.hub-how-in summary::after { content: ' ›' }
+#main details.hub-how-in[open] summary::after { content: ' ⌄' }
+#main details.hub-how-in p { margin: 6px 0 0; font-size: 13.5px; line-height: 1.45 }
+/* Ways to take a temperature: three equal tiles (Nov 12). */
+#main .hub-temps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 0 0 14px }
+#main .hub-temp { all: unset; box-sizing: border-box; display: flex; flex-direction: column; gap: 4px; padding: 12px 11px; border-radius: 16px; background: var(--card, #fffdf9); border: 1px solid var(--line, #ebe6e1); min-width: 0 }
+#main .hub-temp .hub-dot { width: 38px; height: 38px; margin-bottom: 4px }
+#main .hub-temp b { font-size: 15px; line-height: 1.2 }
+#main .hub-temp small { font-size: 12.5px; line-height: 1.35; color: var(--ink-2, #6d666d) }
+#main .hub-temp.is-go { cursor: pointer }
+#main .hub-temp em { font-style: normal; font-weight: 700; font-size: 12.5px; margin-top: auto; padding-top: 4px; color: var(--ss-ink, #9a5a3c) }
+/* Everyday care main page (Nov 12, "one home"): top card built like Feeding's, three noticing tiles, two doors. */
+#main .care-hero.care-disc { display: flex; flex-direction: column; box-sizing: border-box; height: 463px }
+#main .care-disc .care-art { flex: 1 1 0; min-height: 0; display: grid; place-items: center; margin: 6px -8px 6px }
+#main .care-disc .care-art svg { height: 100%; max-height: 150px; width: auto; max-width: 290px }
+#main .care-nownote { box-sizing: border-box; cursor: pointer; display: block; background: #fffdfc; border-radius: 16px; padding: 14px 16px; box-shadow: 0 3px 14px #2a607820; margin-top: 2px; text-align: left; font-weight: 400 }
+#main .care-nownote small { display: block; font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: #2a6078; margin-bottom: 5px }
+#main .care-nownote b { display: block; font-size: 17px; line-height: 1.25; color: var(--ink, #2b2732) }
+#main .care-nownote span { display: block; font-size: 14px; font-weight: 400; line-height: 1.45; color: #6d666d; margin-top: 5px }
+#main .care-nownote em { display: block; font-style: normal; font-weight: 700; font-size: 13.5px; color: #2a6078; margin-top: 8px }
+#main .care-see { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 0 0 16px }
+#main .care-see button { all: unset; box-sizing: border-box; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 14px 8px 12px; border-radius: 20px; background: var(--card, #fffdf9); border: 1px solid var(--line, #ebe6e1); text-align: center }
+#main .care-see-art svg { width: 64px; height: 58px }
+#main .care-see b { font-size: 14px; font-weight: 600; line-height: 1.25 }
+#main .care-doors { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 0 0 16px }
+#main .care-doors button { all: unset; box-sizing: border-box; cursor: pointer; display: flex; flex-direction: column; gap: 4px; padding: 14px; border-radius: 20px; background: #e3f1f7 }
+#main .care-doors button:last-child { background: #fdeee6 }
+#main .care-door-ic { width: 38px; height: 38px; border-radius: 12px; background: #fffdfc; display: grid; place-items: center; margin-bottom: 4px }
+#main .care-doors b { font-size: 15.5px; font-weight: 650; color: var(--ink, #2b2732) }
+#main .care-doors small { font-size: 13px; color: #625f6d; line-height: 1.35 }
+/* "How often, at this age" (Nov 12): three equal tiles — what, how many, per day or week. */
+#main .care-often { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 0 0 16px }
+#main .care-often > div { border-radius: 16px; background: var(--sm-bg); padding: 12px 11px; display: flex; flex-direction: column; gap: 2px }
+#main .care-often small { font-size: 12.5px; font-weight: 650; color: var(--sm-ink) }
+#main .care-often b { font-family: Nunito, ui-rounded, sans-serif; font-size: 22px; font-weight: 800; line-height: 1.15; color: var(--ink, #302d3c); margin-top: 2px }
+#main .care-often span { font-size: 12.5px; color: var(--ink-2, #625f6d) }
+
+/* Rash pages: the rash's own small picture in the top card */
+#main .care-rash-art svg { width: 64px; height: 58px }
+
+/* Next: one line on what changes, so the most forward-looking line on a page says something (Nov 13) */
+#main .hub-next .hub-next-sub { display: block; font-style: normal; font-weight: 400; font-size: 13.5px; line-height: 1.35; color: var(--muted, #6b6560); margin-top: 3px }
+#main .care-glance .hub-tiles { grid-template-columns: repeat(3, 1fr) !important }
+
+/* Everyday care redesign (Nov 13): quiet links under the rows and tiles */
+#main .care-v2 .care-all-how { display: block; margin: 2px 0 18px; padding: 4px 2px }
+#main .hub-rough-link:not(:first-child) { border-top: 1px solid var(--line) }   /* a link row after the others keeps the divider (Nov 13) */
+

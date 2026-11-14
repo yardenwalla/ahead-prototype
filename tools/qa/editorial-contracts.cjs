@@ -94,7 +94,7 @@ for(const age of [0,1,2,3]) {
   check(!b.html().includes('onclick="chgSetStage(\'Feeding\',3)"'),'First-food reference under four months has no update action');
 }
 // The sample must contain the nap count displayed above it, with ordered times.
-for(let age=4;age<=12;age++)for(const answer of ['Stay','Yes']) {
+for(let age=5;age<=12;age++)for(const answer of ['Stay','Yes']) {   // Nov 12: Longer nights runs to 5 months, so the nap example day starts at 5
   const b=family(age,{twoNaps:answer,swaddleStopped:'Yes',mattressLowest:'Yes'});
   b.run("openPage('chg:Sleep:d:day')");const html=b.html();
   const count=Number(html.match(/Example day · (\d+) naps/)[1]);
