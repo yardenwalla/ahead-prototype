@@ -3344,7 +3344,9 @@
       if (typeof h === 'string' && /^chg:Feeding:mock:dirD(:\d)?$/.test(String(r))) { const v = stg(), br = isBreast(), only = formulaFam() && !br;
         const L = (t, id) => `<button class="hub-link" style="display:inline;padding:0;font:inherit;font-weight:650" onclick="${go(id)}">${F(t)}</button>`;
         const vd = only ? L('vitamin D drops', 'nb_vitd') + F(', under 32 oz a day') : L('vitamin D', 'nb_vitd');
-        const line = v <= 1 ? (only ? vd : L('vitamin D drops', 'nb_vitd')) : v === 2 ? (br ? `${L('vitamin D', 'nb_vitd')} ${F('and')} ${L('iron', 'z_iron')} ${F('drops')}` : vd) : `${F('iron-rich food,')} ${br ? (v === 3 ? `${L('vitamin D', 'nb_vitd')} ${F('and')} ${L('iron', 'z_iron')} ${F('drops')}` : L('vitamin D drops', 'nb_vitd')) : vd}`;
+        // Breast milk and formula: iron drops only if most of the milk is breast milk (AAP; Nov 14 QA).
+        const dI = formulaFam() && br ? `${L('vitamin D drops', 'nb_vitd')}${F(', and')} ${L('iron', 'z_iron')} ${F('if mostly breast milk')}` : `${L('vitamin D', 'nb_vitd')} ${F('and')} ${L('iron', 'z_iron')} ${F('drops')}`;
+        const line = v <= 1 ? (only ? vd : L('vitamin D drops', 'nb_vitd')) : v === 2 ? (br ? dI : vd) : `${F('iron-rich food,')} ${br ? (v === 3 ? dI : L('vitamin D drops', 'nb_vitd')) : vd}`;
         h = h.replace(/<span class="hub-card-note"><b>Every day<\/b>[\s\S]*?<\/span>(?:<button class="hub-link"[^>]*>[^<]*<\/button>)*/, `<span class="hub-card-note fd-every"><b>${F('Every day:')}</b> ${line}</span>`); }
       // Formula: making and storing bottles, one tap from the feed walkthrough.
       if (typeof h === 'string' && /^chg:Feeding:mock:xa:feed(\.\d)?$/.test(String(r)) && formulaFam()) h = h.replace('<button class="hub-next"', `<div class="hub-browse"><button class="hub-link" onclick="openPage('chg:Feeding:mock:xa:prep')">${F('Making, storing and cleaning bottles')} ›</button></div><button class="hub-next"`);

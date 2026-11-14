@@ -256,7 +256,9 @@
   const P = t => String(t).replace(/\bherself\b/g, '{r}').replace(/\b(hold|feed|keeps|to|with|for|give|let|watch|help|tell) her\b/g, '$1 {o}')
     .replace(/\bher\b/g, '{p}').replace(/\bHer\b/g, '{P}').replace(/\bShe’s\b/g, '{S’s}').replace(/\bshe’s\b/g, '{s’s}').replace(/\bShe\b/g, '{S}').replace(/\bshe\b/g, '{s}');
   function monthCard(M, lead, a, next) {
-    const m = homeMonth(), wk = Math.max(1, Math.round(a * 4.35)), when = (m < 2 ? `${wk} week${wk === 1 ? '' : 's'}` : `Month ${m}`) + (profile.early && profile.due ? ' adjusted' : '');   // born early: say which age this is
+    const m = homeMonth(), wk = Math.max(1, Math.round(a * 4.35)), early = profile.early && profile.due && typeof adjustedAge === 'function',
+      // Same words as every guide's header (cohesion.js): "1 week", or "10 weeks · 2 weeks adjusted" for a baby born early.
+      when = early ? `${babyAge()} · ${adjustedAge()} adjusted` : m < 2 && typeof babyAge === 'function' ? babyAge() : m < 2 ? `${wk} week${wk === 1 ? '' : 's'}` : `Month ${m}`;
     const art = typeof homeMonthArt === 'function' ? homeMonthArt(actualMonth()).replace('<svg ', '<svg preserveAspectRatio="xMidYMid meet" ') : '';
     // A row can carry a formula version [title, why] as its sixth item: Feeding gives formula families other numbers.
     const row = ([title, why, cat, icon, go, formula]) => {
