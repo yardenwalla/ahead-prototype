@@ -10,7 +10,7 @@
     ['smile', 1.5, 2, 'Development', 'smile', 'First smiles', 'Maya starts smiling back when you smile', "__GO__"],
     ['nights', 1.5, 4, 'Sleep', 'moon', 'Longer nights', 'One longer sleep at night, often 4–5 hours', "__GO__"],
     ['regress', 3, 5, 'Sleep', 'moon', 'The sleep regression', 'More night waking, for a few weeks', "__GO__"],
-    ['roll', 4, 6, 'Development', 'roll', 'Rolling', 'Clear the floor, and never leave {o} on a bed or sofa', "__GO__", 'Usually 4–6 months'],
+    ['roll', 4, 6, 'Development', 'roll', 'Rolling', 'Clear the floor, and never leave {o} on a bed or sofa', "__GO__", '4–6 months'],
     ['ready', 4, 6, 'Feeding', 'highchair', 'Ready for solids', 'Watching for the signs, and choosing how to start', "__GO__", '4–6 months'],
     ['solids', 6, 6.5, 'Feeding', 'bowl', 'First foods', 'Food alongside milk, a few bites at first', "__GO__", 'Around 6 months'],
     ['twonaps', 6, 9, 'Sleep', 'sun', 'Three naps become two', 'Two naps a day, and an earlier bedtime', "__GO__"],
@@ -19,7 +19,7 @@
     ['tooth', 6, 12, 'Daily rhythm', 'tooth', 'The first tooth', 'Time to start brushing', "__GO__"],
     ['finger', 7, 9, 'Feeding', 'bowl', 'Thicker textures', 'Lumpier food, and pieces to pick up', "__GO__"],
     ['meals', 9, 10, 'Feeding', 'plate', 'Three meals a day', 'Soft pieces of family food, three times a day', "__GO__", 'Around 9 months'],
-    ['carseat', 9, 12, 'Out and about', 'car', 'Outgrowing the infant car seat', 'Most outgrow the infant seat by height', "__GO__", 'When {p} head nears the top of the seat'],
+    ['carseat', 9, 12, 'Out and about', 'car', 'Outgrowing the infant car seat', 'Most outgrow the infant seat by height', "__GO__", '9–12 months'],
     ['sep', 8, 10, 'Development', 'heart', 'Separation anxiety', 'Goodbyes and bedtime can get harder', "__GO__"],
     ['pull', 9, 12, 'Development', 'stand', 'Pulling up to stand', 'Maya stands holding furniture, so anchor it', "__GO__"],
     ['words', 10, 14, 'Development', 'chat', 'First words', 'Often “mama” or “dada” for a parent', "__GO__"],
@@ -49,6 +49,9 @@
     onenap: 'One long midday nap, and a new shape to your days.'
   };
   const AREA = { Development: 'Play', Feeding: 'Feeding', Sleep: 'Sleep', Health: 'Health', Safety: 'Safety', 'Daily rhythm': 'Everyday care', 'Out and about': 'Outings', Childcare: 'Childcare' };
+  // Which guide a change belongs to, named on its Timeline row so parents know where a tap leads (Nov 14).
+  const GUIDE = { Development: 'Development', Feeding: 'Feeding', Sleep: 'Sleep', Health: 'Health', Safety: 'Safety', 'Daily rhythm': 'Everyday care', 'Out and about': 'Outings', Childcare: 'Childcare' };
+  const low = t => /^(Around|At|Usually) /.test(t) ? t[0].toLowerCase() + t.slice(1) : t;
   const touches = c => { const p = PAGES[c.id]; return p ? [...new Set(p.rows.map(r => r[1]))] : []; };
   const touchPills = c => { const t = touches(c); return t.length > 1 ? `<span class="ya-touch">${t.map(cat => `<span class="ya-touch-pill" style="${yearTheme(cat)}">${typeof catIcon === 'function' ? catIcon(cat) : ''}${F(AREA[cat] || cat)}</span>`).join('')}</span>` : ''; };
   const range = c => c.range.replace(/^(\d+(\.5)?)–/, (m, a) => `${Math.floor(+a)}–`);
@@ -90,7 +93,7 @@
     if (behind.length) h += `<li class="ya-behind">${node}<button onclick="this.parentNode.classList.toggle('is-open')" aria-expanded="false">${F(`Earlier on (${behind.length})`)} <span aria-hidden="true">›</span></button><div class="ya-behind-list">${behind.map(c => `<button style="${yearTheme(c.cat)}" onclick="${c.go}"><span>${hubArt(c.icon, c.cat)}</span>${F(c.title)}</button>`).join('')}</div></li>`;
     h += `<li class="ya-here">${node}<b>${F(`${nm} now`)}</b><small>${F(early ? ageLabel(a) + ' adjusted' : (typeof babyAge === 'function' ? babyAge() : ageLabel(a)))}</small></li>`;
     h += '%%DUENOW%%';
-    h += next.map(c => `<li class="ya-row is-next" style="${yearTheme(c.cat)}">${node}<button onclick="${c.go}"><span class="ya-row-art">${hubArt(c.icon, c.cat)}</span><span class="ya-row-copy"><small class="ya-when">${F(range(c))} · ${F(whenShort(c, a))}</small><b>${F(c.title)}</b><span class="ya-why">${F(c.id === 'crying' && a >= 2 ? 'Past the worst. Fussy evenings ease over the next few weeks' : c.why)}</span>${windowBar(c, a + shiftFor(c.cat))}</span>${chev}</button></li>`).join('');
+    h += next.map(c => `<li class="ya-row is-next" style="${yearTheme(c.cat)}">${node}<button onclick="${c.go}"><span class="ya-row-art">${hubArt(c.icon, c.cat)}</span><span class="ya-row-copy"><small class="ya-when">${F(GUIDE[c.cat] || c.cat)} · ${F(whenShort(c, a))}</small><b>${F(c.title)}</b><span class="ya-why">${F(c.id === 'crying' && a >= 2 ? 'Past the worst. Fussy evenings ease over the next few weeks' : c.why)}</span>${windowBar(c, a + shiftFor(c.cat)) ? `<span class="ya-barrow">${windowBar(c, a + shiftFor(c.cat))}<small>${F(range(c))}</small></span>` : ''}</span>${chev}</button></li>`).join('');
     const months = {}; later.forEach(c => { const m = Math.min(12, Math.max(Math.ceil(a), Math.floor(c.start))); (months[m] = months[m] || []).push(c); });
     const bm = early ? Math.min(12, Math.max(Math.ceil(a), Math.round(12 - gap))) : null; if (early && 12 > a + gap) months[bm] = months[bm] || [];
     // A checkup due now (within about 3 weeks) and not marked done stays on the path, beside "now".
@@ -101,17 +104,19 @@
       if (v - gap <= a + 0.25) { dueNow.push(v); return; }
       const m = Math.min(12, Math.max(Math.ceil(a), Math.round(v - gap))); (checks[m] = checks[m] || []).push(v); months[m] = months[m] || []; });
     const checkRow = (v, sub) => `<li class="ya-row" style="${yearTheme('Health')}">${node}<button onclick="openPage('health-visit:${v}')"><span class="ya-row-art">${hubArt('steth', 'Health')}</span><span class="ya-row-copy"><b>${F(`${v}-month checkup`)}</b><small>${F(sub)}</small></span>${chev}</button></li>`;
+    // A checkup due now is one of the "now" cards: the same card, when line and one line on what it covers.
+    const checkNow = v => `<li class="ya-row is-next" style="${yearTheme('Health')}">${node}<button onclick="openPage('health-visit:${v}')"><span class="ya-row-art">${hubArt('steth', 'Health')}</span><span class="ya-row-copy"><small class="ya-when">${F("Health · due now")}</small><b>${F(`${v}-month checkup`)}</b><span class="ya-why">${F((gap ? 'By birthday age · ' : '') + CHECK_LINE[v])}</span></span>${chev}</button></li>`;
     Object.keys(months).map(Number).sort((x, y) => x - y).forEach(m => {
       // Born early: the headings follow adjusted age, so show the month only; "4 months" over a "6-month checkup" reads as a contradiction.
       // A heading for the month we're in would just repeat "[name] now", so its rows follow on without one.
       const thisMonth = (() => { const d = new Date(born); d.setMonth(d.getMonth() + m); return d.getFullYear() === NOW.getFullYear() && d.getMonth() === NOW.getMonth(); })();
       if (!thisMonth) h += early ? `<li class="ya-pin">${node}<b>${F('Around ' + monthDate(m))}</b></li>` : `<li class="ya-pin">${node}<b>${F(label(m))}</b> · ${F('around ' + monthDate(m))}</li>`;
-      h += months[m].map(c => `<li class="ya-row" style="${yearTheme(c.cat)}">${node}<button onclick="${c.go}"><span class="ya-row-art">${hubArt(c.icon, c.cat)}</span><span class="ya-row-copy"><b>${F(c.title)}</b><small>${F(range(c))}</small></span>${chev}</button></li>`).join('');
-      h += (checks[m] || []).map(v => checkRow(v, gap ? 'By birthday age · ' + CHECK_LINE[v].charAt(0).toLowerCase() + CHECK_LINE[v].slice(1) : CHECK_LINE[v])).join('');
+      h += months[m].map(c => `<li class="ya-row" style="${yearTheme(c.cat)}">${node}<button onclick="${c.go}"><span class="ya-row-art">${hubArt(c.icon, c.cat)}</span><span class="ya-row-copy"><b>${F(c.title)}</b><small>${F(`${GUIDE[c.cat] || c.cat} · ${low(range(c))}`)}</small></span>${chev}</button></li>`).join('');
+      h += (checks[m] || []).map(v => checkRow(v, gap ? `Health · ${v} months by birthday age` : `Health · at ${v} months`)).join('');
       if (early && m === bm && 12 > a + gap) h += `<li class="ya-pin">${node}<b>${F('First birthday')}</b></li>`;
     });
     h += `<li class="ya-pin ya-end">${node}<b>${F(early ? 'A year, by adjusted age' : 'First birthday')}</b></li></ol><p class="hub-foot">${F('Ages are typical. Every baby moves at their own pace.')}</p></div>`;
-    h = h.replace('%%DUENOW%%', dueNow.map(v => checkRow(v, 'Due now · ' + (gap ? 'by birthday age · ' : '') + CHECK_LINE[v].charAt(0).toLowerCase() + CHECK_LINE[v].slice(1))).join(''));
+    h = h.replace('%%DUENOW%%', dueNow.map(checkNow).join(''));
     return h;
   };
 
