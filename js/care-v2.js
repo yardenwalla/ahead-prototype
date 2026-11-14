@@ -845,7 +845,13 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   ];
   const cgo = r => `openPage('chg:${CAT}:d:${r}')`;
   window.careHome = function (selected = null) {
-    const h = H(), R = ROUTINE(), now = stageNow(), v = Number.isInteger(selected) && R[selected] ? selected : now, st = R[v], nx = R[v + 1], N = CARE_NEW[v];
+    const h = H(), R = ROUTINE(), now = stageNow(), v = Number.isInteger(selected) && R[selected] ? selected : now, st = R[v], nx = R[v + 1];
+    // Nov 14 (Yarden, born early): cord and first baths follow the calendar, not adjusted age. Once a baby born early is a
+    // month old by birthday, the cord is long gone, so the first-weeks card becomes the tub-bath one.
+    const realDays = typeof profile !== 'undefined' && profile.dob ? Math.floor((NOW - parse(profile.dob)) / 864e5) : 0;
+    const pastCord = live() && v === now && typeof profile !== 'undefined' && profile.early && realDays >= 28 && v <= 1;
+    const N = pastCord ? { art: 'bath', t: 'Tub baths, a few a week', d: 'The cord has long since healed, so tub baths are fine now.', cta: 'See how', go: 'p:tub',
+      see: [['acne', 'Little bumps', 'rash:acne'], ['cradle', 'Flaky scalp', 'rash:cradle'], ['diaper', 'Fewer poops', 'look:1:poop']] } : CARE_NEW[v];
     const T = STAGE_TABLE[CAT].stages;
     const pills = h.pills('Everyday care by age', T.map((s, i) => ({ label: s.label, age: s.age, on: i === v, now: live() && i === now, onclick: `openPage('chg:${CAT}:s:${i}')` })), CAT);
     const careNote = live() && profile.early && profile.due && ageMonths(parse(profile.due), NOW) !== actualMonth() ? (() => { const adj = careAge() !== actualMonth(); return `<p class="hub-agebasis">${F(adj ? `Following Maya’s adjusted age (${monthsLabel(careAge())}), like Feeding and Sleep.` : `Following Maya’s birthday age (${monthsLabel(actualMonth())}), like Feeding and Sleep.`)} <button onclick="hubSetAgeMode('care','${adj ? 'birthday' : 'adjusted'}')">${adj ? 'Use birthday age' : 'Use adjusted age'}</button></p>`; })() : '';

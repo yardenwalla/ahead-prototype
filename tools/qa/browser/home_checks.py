@@ -167,6 +167,18 @@ async def main():
         check('After the first birthday' in t, '10 months: the Timeline looks past the first birthday')
         t = await page_text(prof(137), 'next')
         check('After the first birthday' not in t, '4½ months: no after-the-first-birthday card yet')
+        # 10. Nov 14 (option a): a baby born early keeps adjusted stages, but birth-weight, first-week and cord lines follow the real age.
+        pE2 = dict(name='Theo', pronouns='he', dob=(T - dt.timedelta(days=76)).isoformat(), due=(T - dt.timedelta(days=20)).isoformat(), early=True, feed='Formula', example=False, id='hc', joined=(T - dt.timedelta(days=76)).isoformat())
+        pT = dict(prof(9, feed='Breast milk', feedHow='Nursing'))
+        for who, pp, want in (('Born early, 10 weeks', pE2, False), ('Born on time, 9 days', pT, True)):
+            await page_text(pp, 'home')
+            got = []
+            for r in ['chg:Feeding:mock:nb_enough', 'chg:Feeding:mock:nb_eve', 'chg:Feeding:d:enough', 'topic:Daily rhythm']:
+                await pg.evaluate(f"openPage('{r}')"); await pg.wait_for_timeout(200)
+                got.append(await pg.evaluate("document.querySelector('#main').innerText"))
+            t = ' '.join(got)
+            shows = bool(re.search(r'back to birth weight|Some loss|Day 6|Sponge baths, for now', t))
+            check(shows == want, f'{who}: first-weeks lines {"shown" if want else "follow the real age"}')
         await b.close()
     print(f'Home browser checks: {passed} passed' + (f', {len(fails)} failed' if fails else ''))
     for f in fails: print('  FAIL', f)
