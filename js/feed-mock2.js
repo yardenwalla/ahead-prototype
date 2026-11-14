@@ -639,9 +639,9 @@
         + momCall('Pain while pumping that doesn’t ease, a red, painful area with a fever, or a sudden big drop in what you pump.')); },
 
     basics: () => { const br = isBreast(), fm = formulaFam();
-      const rows = [['On the counter', 'Up to 4 hours', 'Use within 2 hours of making it'], ['Once a feed starts', 'Within 2 hours', 'Within 1 hour, then toss the rest'], ['In the fridge', 'Up to 4 days', 'Up to 24 hours'], ['In the freezer', 'Best within 6 months, up to 12', 'Don’t freeze'], ['Thawed', 'Within 24 hours, in the fridge. Don’t refreeze', '']];
+      const rows = [['On the counter', 'Up to 4 hours', 'Use within 2 hours of making it'], ['In the fridge', 'Up to 4 days', 'Up to 24 hours'], ['In the freezer', 'Best within 6 months, up to 12', 'Don’t freeze'], ['Thawed', 'Within 24 hours, in the fridge. Don’t refreeze', ''], ['Left in his bottle', 'Within 2 hours of the feed ending', 'Within 1 hour of the feed starting, then toss the rest']];
       const cols = [br && 1, fm && 2].filter(Boolean);
-      return page(head('Bottles', 'How long milk lasts', 'And warming a bottle, and taking milk out with you.', C.blue)
+      return page(head('Bottles', 'How long Ari’s milk keeps', 'So every bottle he gets is fresh and safe.', C.blue)
         + `<div class="hub-card fm-store"><table><tr><th></th>${cols.map(c => `<th>${F(c === 1 ? 'Breast milk' : 'Formula')}</th>`).join('')}</tr>${rows.filter(r => cols.some(c => r[c])).map(r => `<tr><td>${F(r[0])}</td>${cols.map(c => `<td>${F(r[c] || '—')}</td>`).join('')}</tr>`).join('')}</table></div>`
         + (br && fm ? small('Mixed bottle:', 'like formula, within 1 hour once he starts.') : '')
         + (br ? small('Adding to stored milk:', 'cool fresh milk in the fridge first, then add it to milk that’s already cold. Freeze in 2–4 oz portions.') : '')
@@ -3347,7 +3347,9 @@
         // Breast milk and formula: iron drops only if most of the milk is breast milk (AAP; Nov 14 QA).
         const dI = formulaFam() && br ? `${L('vitamin D drops', 'nb_vitd')}${F(', and')} ${L('iron', 'z_iron')} ${F('if mostly breast milk')}` : `${L('vitamin D', 'nb_vitd')} ${F('and')} ${L('iron', 'z_iron')} ${F('drops')}`;
         const line = v <= 1 ? (only ? vd : L('vitamin D drops', 'nb_vitd')) : v === 2 ? (br ? dI : vd) : `${F('iron-rich food,')} ${br ? (v === 3 ? dI : L('vitamin D drops', 'nb_vitd')) : vd}`;
-        h = h.replace(/<span class="hub-card-note"><b>Every day<\/b>[\s\S]*?<\/span>(?:<button class="hub-link"[^>]*>[^<]*<\/button>)*/, `<span class="hub-card-note fd-every"><b>${F('Every day:')}</b> ${line}</span>`); }
+        h = h.replace(/<span class="hub-card-note"><b>Every day<\/b>[\s\S]*?<\/span>(?:<button class="hub-link"[^>]*>[^<]*<\/button>)*/, `<span class="hub-card-note fd-every"><b>${F('Every day:')}</b> ${line}</span>`);
+        // Families who pump or store breast milk: how long the baby's milk keeps, one quiet link, at every stage (Nov 14).
+        if (pumps() && !/fd-keeps/.test(h)) h = h.replace(/(<\/section>)(\s*<div class="hub-browse fd-assumed">|\s*<section class="hub-list|\s*<h2)/, `$1<div class="hub-browse fd-keeps"><button class="hub-link" onclick="${go('basics')}">${F('How long Ari’s milk keeps')} ›</button></div>$2`); }
       // Formula: making and storing bottles, one tap from the feed walkthrough.
       if (typeof h === 'string' && /^chg:Feeding:mock:xa:feed(\.\d)?$/.test(String(r)) && formulaFam()) h = h.replace('<button class="hub-next"', `<div class="hub-browse"><button class="hub-link" onclick="openPage('chg:Feeding:mock:xa:prep')">${F('Making, storing and cleaning bottles')} ›</button></div><button class="hub-next"`);
       return h; };

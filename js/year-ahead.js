@@ -110,7 +110,9 @@
       h += (checks[m] || []).map(v => checkRow(v, gap ? 'By birthday age · ' + CHECK_LINE[v].charAt(0).toLowerCase() + CHECK_LINE[v].slice(1) : CHECK_LINE[v])).join('');
       if (early && m === bm && 12 > a + gap) h += `<li class="ya-pin">${node}<b>${F('First birthday')}</b></li>`;
     });
-    h += `<li class="ya-pin ya-end">${node}<b>${F(early ? 'A year, by adjusted age' : 'First birthday')}</b></li></ol><p class="hub-foot">${F('Ages are typical. Every baby moves at their own pace.')}</p></div>`;
+    // Nov 14 (Yarden): once the first year is nearly done, a calm look past it instead of a dead end. No links: Ahead covers year one.
+    const after = a >= 8 ? `<section class="hub-card ya-after"><b class="hub-card-label">${F('After the first birthday')}</b><p class="hub-card-text">${F('Ahead covers the first year. Here’s what usually comes next.')}</p><ul class="ya-after-list">${[['One nap a day', 'Usually between 12 and 18 months'], ['More words, and pointing to show you', 'Often by 15–18 months'], ['The 15-month checkup', 'With a few more vaccines'], ['Goodbye to bottles', 'Cups only by about 18 months']].map(([t, w]) => `<li><b>${F(t)}</b><small>${F(w)}</small></li>`).join('')}</ul></section>` : '';
+    h += `<li class="ya-pin ya-end">${node}<b>${F(early ? 'A year, by adjusted age' : 'First birthday')}</b></li></ol>${after}<p class="hub-foot">${F('Ages are typical. Every baby moves at their own pace.')}</p></div>`;
     h = h.replace('%%DUENOW%%', dueNow.map(v => checkRow(v, 'Due now · ' + (gap ? 'by birthday age · ' : '') + CHECK_LINE[v].charAt(0).toLowerCase() + CHECK_LINE[v].slice(1))).join(''));
     return h;
   };

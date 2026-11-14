@@ -159,3 +159,11 @@
 /* Icons only (Nov 9): item squares match the guides' rows (.hub-dot): 42px soft square, 13px corners, drawing filling it */
 #main .ya-pathpage .ya-row-art { width: 42px !important; height: 42px !important; border-radius: 13px !important; padding: 4px; background: var(--year-pale, #f3effb) }
 #main .ya-pathpage .ya-row-art svg { width: 100% !important; height: 100% !important }
+
+/* After the first birthday (Nov 14): a calm look past year one, no links */
+#main .ya-after { margin: 14px 0 6px; padding: 16px 18px; }
+#main .ya-after .hub-card-text { margin: 4px 0 10px; }
+#main .ya-after-list { list-style: none; margin: 0; padding: 0; }
+#main .ya-after-list li { display: block; padding: 10px 0; border-top: 1px solid var(--line, #EFEAF2); }
+#main .ya-after-list li b { display: block; font-weight: 600; }
+#main .ya-after-list li small { display: block; margin-top: 2px; color: var(--ink-2, #5E5A75); }
