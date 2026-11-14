@@ -1665,16 +1665,3 @@ label:has(> .hub-photo-input:focus-visible) { outline: 2px solid #884866; outlin
 @keyframes memSlideR { from { opacity: .3; transform: translateX(-36px) } to { opacity: 1; transform: none } }
 @media (prefers-reduced-motion: reduce) { #main .mem-card.slide-left, #main .mem-card.slide-right { animation: none } }
 #main .mem-year-wrap { margin: 16px 0 4px }
-
-/* Type matches Home everywhere in Memories (Nov 13): names of moments read like Home's rows (15.5 semibold),
-   notes and the smaller things like Home's second lines (14, ink-2). Handwriting is kept for the month names only. */
-#main .bk-copy b { font-family: Figtree, system-ui, sans-serif !important; font-size: 15.5px !important; font-weight: 600 !important; line-height: 1.3 !important; color: #302d3c !important }
-#main .bk-copy q { display: block; margin-top: 2px; font-family: Figtree, system-ui, sans-serif !important; font-size: 14px !important; font-weight: 500 !important; line-height: 1.4 !important; color: #625f6d !important }
-#main .bk-noted, #main .bk-noted button.bk-noted-go, #main .bk-noted button.bk-noted-more { font-family: Figtree, system-ui, sans-serif !important; font-size: 14px !important; font-weight: 500; line-height: 1.5 !important }
-#main .bk-noted { color: #625f6d }
-#main .bk-noted-label { color: #302d3c; font-weight: 600 }
-#main .bk-noted button.bk-noted-go { text-decoration-thickness: 1px; text-underline-offset: 3px }
-#main .mem-badge-t { font-family: Figtree, system-ui, sans-serif; font-size: 13.5px; font-weight: 600; line-height: 1.25; color: #302d3c }
-#main .mem-badge-more, #main .mem-badge-none { font-family: Figtree, system-ui, sans-serif; font-size: 14px; font-weight: 500; line-height: 1.45; color: #625f6d }
-#main .mem-badge-lead { color: #302d3c; font-weight: 600 }
-#main .mem-badge-none { color: #8a8494 }
