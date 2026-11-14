@@ -48,29 +48,56 @@
   };
   function newHome(){
     var original=document.querySelector('#main .hg-page');
-    if(!original||!original.querySelector('.hg-hero'))return;
-    var oldHero=original.querySelector('.hg-hero');
-    var title=oldHero.querySelector('h1');
-    var lead=oldHero.querySelector('.hg-lead');
-    var action=oldHero.querySelector('button.hg-btn');
+    if(!original)return;
+    var source=original.querySelector('.he-hero')||original.querySelector('.hg-hero')||original.querySelector('.hs-hero');
+    if(!source)return;
+    var srcTitle=source.querySelector('h1');
+    var srcLead=source.querySelector('.he-lead')||source.querySelector('.hg-lead')||source.querySelector('.hs-lead');
+    var action=source.querySelector('button.hg-btn')||source.querySelector('button.he-see');
     currentAction=action||null;
-    var currentTitle=title?title.textContent:'A change to prepare for';
-    var currentLead=lead?lead.textContent:'See what changes for your baby.';
-    var cards=original.querySelector('.hg-cards'),next=original.querySelector('.hg-next');
-    var age=0;try{age=developmentMonth(actualMonth());}catch(e){age=actualMonth();}
+    var age=0;
+    try{age=developmentMonth(actualMonth());}catch(e){age=actualMonth();}
+    var a=0;try{a=actualMonth();}catch(e){}
     var ref=refFor(age),D=discovery[ref],nm=E(babyName()),scene='';
     try{scene=typeof devScene==='function'?devScene(ref):'';}catch(e){}
-    if(!scene){try{scene=typeof homeMonthArt==='function'?homeMonthArt(actualMonth()):'';}catch(e){}}
-    var info='<div class="xp-home-head"><p>'+nm+' · '+E(formatMonth(actualMonth()))+'</p><span class="xp-muted">Your baby’s world</span></div>';
-    var hero='<section class="xp-discovery"><div class="xp-discovery-copy"><small class="xp-eyebrow">'+E(D[2])+' · around '+ref+' months</small><h1>'+E(D[0])+'</h1><p>'+E(D[1])+'</p></div><div class="xp-discovery-art" aria-hidden="true">'+scene+'</div><button class="xp-discovery-footer" data-xp-page="topic:Development">Explore '+nm+'’s development <span>→</span></button></section>';
-    var now='<section class="xp-section"><div class="xp-section-head"><h2>Changing now</h2></div><button class="xp-main-change" data-xp-current="1"><span class="xp-icon">'+(typeof hubArt==='function'?hubArt('star','Development'):'✦')+'</span><span class="xp-copy"><small>Worth knowing</small><b>'+E(currentTitle)+'</b><em>'+E(currentLead)+'</em></span><span class="xp-arrow">›</span></button></section>';
+    if(!scene)try{scene=typeof homeMonthArt==='function'?homeMonthArt(a):'';}catch(e){}
+    var noteByStage={
+      2:[['A little conversation','Listen for a coo, then pause and respond.'],['Longer looks','Your face might keep his attention a little longer.']],
+      4:[['Sounds and smiles','A familiar voice can turn into a back-and-forth game.'],['New interest in hands','He may stop to study his own fingers.']],
+      6:[['Sounds that get a response','Notice when he makes a sound and waits for your answer.'],['Toys that do something','A tap or shake can make a new sound.']],
+      9:[['Looking for what disappears','Try briefly hiding a toy, and watch for interest.'],['New ways to communicate','A look or gesture may tell you what he wants.']],
+      12:[['Repeating on purpose','Putting things in and taking them out becomes a game.'],['Copying you','Songs and simple gestures are worth repeating.']]
+    };
+    var ideas={2:['Your face is the best toy','Move close, smile, then leave a moment for a little sound back.','close-face'],
+      4:['Make it a conversation','Copy one of his sounds, then pause as if it were his turn.','sound-answer'],
+      6:['A tiny cause-and-effect game','Tap a soft toy, then let him explore what happens when he touches it.','floor-drum'],
+      9:['Where did it go?','Hide part of a favorite toy under a cloth and let him look for it.','hidden-toy'],
+      12:['In, out, repeat','Give him a wide, safe container and a few big objects to drop in.','put-in']};
+    var n=noteByStage[ref]||[],idea=ideas[ref];
+    var p=typeof babyPronouns==='function'?babyPronouns():{s:'he',o:'him',p:'his'};
+    var changeNodes=[].slice.call(original.querySelectorAll('.hg-rows .hub-row'));
+    var dayCards=[].slice.call(original.querySelectorAll('.hg-cards .hg-card'));
+    if(!changeNodes.length)changeNodes=dayCards;
+    var overview=source.querySelector('h1')?source.querySelector('h1').textContent:'A new change is taking shape';
+    var expl=srcLead?srcLead.textContent:'See what this stage could bring.';
+    var first=changeNodes.slice(0,2).map(function(node){return node.outerHTML;}).join('');
+    var more=changeNodes.slice(2).map(function(node){return node.outerHTML;}).join('');
+    var ageLine=original.querySelector('.home-age-line');
+    var birthday=original.querySelector('.hg-banner');
     var checkin=original.querySelector('.connected-checkin');
-    var checkinHTML=checkin?'<section class="xp-section">'+checkin.outerHTML+'</section>':'';
-    var facts=cards&&cards.children.length?'<section class="xp-section"><div class="xp-section-head"><h2>Good to know this month</h2></div><div class="xp-mini-cards">'+cards.innerHTML+'</div></section>':'';
-    var upcoming=next?'<section class="xp-section"><div class="xp-section-head"><h2>On the horizon</h2></div>'+next.outerHTML+'</section>':'';
-    var mem='<section class="xp-section"><button class="xp-memory-nudge" data-xp-nav="timeline"><span class="xp-memory-visual">✿</span><span><b>'+E(nm)+'’s month in photos</b><small>Add the monthly balloon photo, and keep the firsts you’ve noticed.</small></span><span class="xp-arrow">›</span></button></section>';
-    var foot='<p class="xp-preview-support">Every baby develops at their own pace. Guides use typical ages, not a prediction of what '+nm+' can do today.</p>';
-    var root=document.createElement('div');root.className='xp-page xp-home';root.innerHTML=info+hero+now+checkinHTML+facts+upcoming+mem+foot;
+    var details=original.querySelector('.hg-next');
+    var top=(ageLine?ageLine.outerHTML:'')+(birthday?birthday.outerHTML:'');
+    var hero='<div class="xp-story"><div class="xp-story-head"><span class="xp-eyebrow">INSIDE '+nm.toUpperCase()+'’S WORLD · '+E(formatMonth(a))+'</span><h1>'+E(D[0])+'</h1><p>'+E(D[1])+'</p></div><div class="xp-story-scene" aria-hidden="true">'+scene+'</div><button data-xp-page="topic:Development" class="xp-story-discover">Discover what he’s learning <span>→</span></button></div>';
+    var notice='<section class="xp-section"><div class="xp-section-head"><h2>Little things to look for</h2></div><div class="xp-observe">'+n.map(function(s,i){return '<div class="xp-observe-item"><span class="xp-observe-index">0'+(i+1)+'</span><div><b>'+E(s[0])+'</b><small>'+E(s[1])+'</small></div></div>';}).join('')+'</div><p class="xp-hint">These are possibilities, not milestones he needs to have reached.</p></section>';
+    var now='<section class="xp-section"><div class="xp-section-head"><h2>What might change your day</h2></div><div class="xp-now-feature"><span class="xp-eyebrow">AROUND NOW</span><b>'+E(overview)+'</b><p>'+E(expl)+'</p><button data-xp-page="topic:Development" class="xp-text-link">More about this stage →</button></div>';
+    if(first)now+='<div class="xp-rest-rows">'+first+'</div>';
+    if(more)now+='<details class="xp-details xp-now-more"><summary>More things you might notice</summary><div class="xp-rest-rows">'+more+'</div></details>';
+    now+='</section>';
+    var play='<section class="xp-section"><div class="xp-section-head"><h2>Try something together</h2></div><button class="xp-play-card" data-xp-page="chg:Development:d:idea:'+ref+':'+idea[2]+'"><span class="xp-play-art" aria-hidden="true">'+(typeof hubArt==='function'?hubArt('hand','Development'):'✦')+'</span><span><b>'+E(idea[0])+'</b><small>'+E(idea[1])+'</small><em>See how →</em></span></button></section>';
+    var upcoming='<section class="xp-section"><div class="xp-section-head"><h2>See what’s ahead</h2></div>'+(details?details.outerHTML:'<button class="xp-main-change" data-xp-nav="next"><span class="xp-copy"><b>When the next stage begins</b><em>Explore what may change, and how to prepare.</em></span><span class="xp-arrow">›</span></button>')+'</section>';
+    var mem='<section class="xp-section"><button class="xp-memory-nudge" data-xp-nav="timeline"><span class="xp-memory-visual"><img src="assets/home/balloon-'+Math.max(1,Math.min(a,11))+'.png" alt="" loading="lazy"></span><span><b>'+nm+'’s first year</b><small>Photos and little firsts, kept together as he grows.</small></span><span class="xp-arrow">›</span></button></section>';
+    var bottom='<p class="xp-preview-support">Every baby develops at their own pace. The examples are for discovery, not a developmental assessment.</p>';
+    var root=document.createElement('div');root.className='xp-page xp-home';root.innerHTML=top+hero+(checkin?'<section class="xp-section">'+checkin.outerHTML+'</section>':'')+notice+now+play+upcoming+mem+bottom;
     original.replaceWith(root);
   }
   var trips={
