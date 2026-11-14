@@ -1665,3 +1665,7 @@ label:has(> .hub-photo-input:focus-visible) { outline: 2px solid #884866; outlin
 @keyframes memSlideR { from { opacity: .3; transform: translateX(-36px) } to { opacity: 1; transform: none } }
 @media (prefers-reduced-motion: reduce) { #main .mem-card.slide-left, #main .mem-card.slide-right { animation: none } }
 #main .mem-year-wrap { margin: 16px 0 4px }
+
+/* The memory book matches the Memories tab: the names of firsts in the same handwriting as the tab's badges. */
+#main .bk-copy b { font-family: AheadHand, Caveat, cursive !important; font-size: 24px !important; font-weight: 600 !important; line-height: 1.1 !important; color: #2b2840 !important }
+#main .bk-copy q { margin-top: 2px; font-size: 19px; line-height: 1.25; color: #625a6a }
