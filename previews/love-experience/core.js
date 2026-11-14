@@ -64,11 +64,13 @@
     var info='<div class="xp-home-head"><p>'+nm+' · '+E(formatMonth(actualMonth()))+'</p><span class="xp-muted">Your baby’s world</span></div>';
     var hero='<section class="xp-discovery"><div class="xp-discovery-copy"><small class="xp-eyebrow">'+E(D[2])+' · around '+ref+' months</small><h1>'+E(D[0])+'</h1><p>'+E(D[1])+'</p></div><div class="xp-discovery-art" aria-hidden="true">'+scene+'</div><button class="xp-discovery-footer" data-xp-page="topic:Development">Explore '+nm+'’s development <span>→</span></button></section>';
     var now='<section class="xp-section"><div class="xp-section-head"><h2>Changing now</h2></div><button class="xp-main-change" data-xp-current="1"><span class="xp-icon">'+(typeof hubArt==='function'?hubArt('star','Development'):'✦')+'</span><span class="xp-copy"><small>Worth knowing</small><b>'+E(currentTitle)+'</b><em>'+E(currentLead)+'</em></span><span class="xp-arrow">›</span></button></section>';
+    var checkin=original.querySelector('.connected-checkin');
+    var checkinHTML=checkin?'<section class="xp-section">'+checkin.outerHTML+'</section>':'';
     var facts=cards&&cards.children.length?'<section class="xp-section"><div class="xp-section-head"><h2>Good to know this month</h2></div><div class="xp-mini-cards">'+cards.innerHTML+'</div></section>':'';
     var upcoming=next?'<section class="xp-section"><div class="xp-section-head"><h2>On the horizon</h2></div>'+next.outerHTML+'</section>':'';
     var mem='<section class="xp-section"><button class="xp-memory-nudge" data-xp-nav="timeline"><span class="xp-memory-visual">✿</span><span><b>'+E(nm)+'’s month in photos</b><small>Add the monthly balloon photo, and keep the firsts you’ve noticed.</small></span><span class="xp-arrow">›</span></button></section>';
     var foot='<p class="xp-preview-support">Every baby develops at their own pace. Guides use typical ages, not a prediction of what '+nm+' can do today.</p>';
-    var root=document.createElement('div');root.className='xp-page xp-home';root.innerHTML=info+hero+now+facts+upcoming+mem+foot;
+    var root=document.createElement('div');root.className='xp-page xp-home';root.innerHTML=info+hero+now+checkinHTML+facts+upcoming+mem+foot;
     original.replaceWith(root);
   }
   var trips={
@@ -85,10 +87,12 @@
       '<div class="xp-intro"><span class="xp-eyebrow">Outings & travel · '+n+'</span><h1>Where are you headed?</h1><p>Pick the outing. We’ll show what matters for '+n+'’s age, plus the details worth knowing before you go.</p></div>';
     var colors={town:['#eaf3ec','#437761'],road:['#e9effa','#46638c'],fly:['#eeeafa','#6e5b98'],stay:['#fbeaf0','#a05d75'],abroad:['#f9eeda','#906d2c'],water:['#e2f3f1','#377f7b']};
     var tiles=Object.keys(trips).map(function(k){var x=trips[k],c=colors[k];return '<button class="xp-dest" style="--xp-bg:'+c[0]+';--xp-ink:'+c[1]+'" data-xp-trip="'+k+'"><span class="xp-dest-art">'+icon(k)+'</span><b>'+E(x.title)+'</b><small>'+E(x.sub)+'</small></button>';}).join('');
-    var gear='<section class="xp-section"><div class="xp-section-head"><h2>Your gear, when you need it</h2></div><div class="xp-card">'+
+    var gear='<section class="xp-section"><details class="xp-details"><summary>Gear, packing & weather guides</summary><div>'+
       '<button class="xp-line" data-xp-page="chg:Out and about:d:car"><span class="xp-icon">'+icon('road')+'</span><span class="xp-copy"><b>Car seat</b><small>Fit, installation and outgrowing it</small></span><span class="xp-arrow">›</span></button>'+
+      '<button class="xp-line" data-xp-page="chg:Out and about:d:stroller"><span class="xp-icon">'+icon('town')+'</span><span class="xp-copy"><b>Stroller</b><small>Harness, brakes and safe recline</small></span><span class="xp-arrow">›</span></button>'+
       '<button class="xp-line" data-xp-page="chg:Out and about:d:carry"><span class="xp-icon">'+icon('town')+'</span><span class="xp-copy"><b>Carrier</b><small>Safe positioning and facing out</small></span><span class="xp-arrow">›</span></button>'+
-      '<button class="xp-line" data-xp-page="chg:Out and about:d:bag"><span class="xp-icon">'+icon('stay')+'</span><span class="xp-copy"><b>Diaper bag</b><small>Packing list matched to feeding</small></span><span class="xp-arrow">›</span></button></div></section>';
+      '<button class="xp-line" data-xp-page="chg:Out and about:d:bag"><span class="xp-icon">'+icon('stay')+'</span><span class="xp-copy"><b>Diaper bag</b><small>Packing list matched to feeding</small></span><span class="xp-arrow">›</span></button>'+
+      '<button class="xp-line" data-xp-page="chg:Out and about:d:weather"><span class="xp-icon">'+icon('water')+'</span><span class="xp-copy"><b>Weather & seasons</b><small>Heat, cold, sun and layers</small></span><span class="xp-arrow">›</span></button></div></details></section>';
     return top+'<div class="xp-destinations">'+tiles+'</div>'+gear+'<p class="xp-preview-support">All existing trip, weather and gear guides remain available.</p></div>';
   }
   function packFor(x){
@@ -101,7 +105,7 @@
     var nm=E(babyName()),root='<div class="xp-page xp-trip-page">'+
       '<div class="xp-subnav"><button data-xp-page="topic:Out and about">‹ All outings</button><span> / '+E(x.cta)+'</span></div>'+
       '<section class="xp-plan-hero"><span class="xp-eyebrow">Your outing · '+nm+'</span><h1>'+E(x.hero)+'</h1><p>'+E(x.lead)+'</p>'+icon(k)+'</section>';
-    var steps='<section class="xp-section"><div class="xp-section-head"><h2>Before you go</h2></div><div class="xp-steps">'+x.steps.map(function(s,i){return '<div class="xp-step"><span class="xp-step-no">'+(i+1)+'</span><span><b>'+E(s[0])+'</b><small>'+E(s[1])+'</small></span></div>';}).join('')+'</div></section>';
+    var steps='<section class="xp-section"><div class="xp-section-head"><h2>A simple plan</h2></div><div class="xp-steps">'+x.steps.map(function(s,i){return '<div class="xp-step"><span class="xp-step-no">'+(i+1)+'</span><span><b>'+E(s[0])+'</b><small>'+E(s[1])+'</small></span></div>';}).join('')+'</div></section>';
     var items=packFor(x),key='xp-pack-'+k,selected=[];try{selected=JSON.parse(localStorage.getItem(key)||'[]');}catch(e){}
     var checks='<section class="xp-section"><div class="xp-section-head"><h2>Your packing list</h2><span class="xp-muted" data-xp-pack-count>'+selected.length+' of '+items.length+' packed</span></div><div class="xp-pack">'+items.map(function(s,i){return '<label class="xp-check"><input type="checkbox" data-xp-pack="'+k+'" data-xp-i="'+i+'" '+(selected.indexOf(i)>=0?'checked':'')+'><span>'+E(s)+'</span></label>';}).join('')+'</div><p class="xp-hint">Optional. Your checks stay in this preview.</p></section>';
     var note='<section class="xp-section"><div class="xp-whatif"><b>When plans change</b><p>'+E(x.what)+'</p></div></section>';
