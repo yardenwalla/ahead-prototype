@@ -5,7 +5,7 @@
   try { mode=sessionStorage.getItem('xp-love-mode')||'improved'; } catch(e){}
   var origComplete=window.completeCategory,origYear=window.categoryYear,origChanges=window.changesRoute,origRender=window.render;
   var currentAction=null;
-  var babyName=function(){try{return name()||'Maya';}catch(e){return 'Maya';}};
+  var babyName=function(){try{return name()||'Ari';}catch(e){return 'Ari';}};
   var E=function(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});};
   var inMode=function(){return mode==='improved';};
   var formatMonth=function(m){return m===12?'1 year':m===1?'1 month':m+' months';};
@@ -24,7 +24,7 @@
   function toolbar(){
     if(document.getElementById('xp-preview-bar'))return;
     var el=document.createElement('div');el.id='xp-preview-bar';
-    el.innerHTML='<div class="xp-bar-inner"><span class="xp-label">ahead. <span class="xp-note">· experience preview</span></span><div class="xp-controls"><div class="xp-pair" aria-label="Compare designs"><button data-xp-mode="improved" aria-pressed="true">Proposed</button><button data-xp-mode="original" aria-pressed="false">Original</button></div><div class="xp-pair" aria-label="Sample age"><button data-xp-age="2">2 mo</button><button data-xp-age="6">6 mo</button><button data-xp-age="10">10 mo</button></div></div></div>';
+    el.innerHTML='<div class="xp-bar-inner"><span class="xp-label">ahead. <span class="xp-note">· Ari demo · experience preview</span></span><div class="xp-controls"><div class="xp-pair" aria-label="Compare designs"><button data-xp-mode="improved" aria-pressed="true">Proposed</button><button data-xp-mode="original" aria-pressed="false">Original</button></div><div class="xp-pair" aria-label="Sample age"><button data-xp-age="2">2 mo</button><button data-xp-age="6">6 mo</button><button data-xp-age="10">10 mo</button></div></div></div>';
     document.body.insertBefore(el,document.body.firstChild);
   }
   function refreshBar(){
@@ -41,7 +41,7 @@
   window.xpSetAge=function(n){
     n=+n;if([2,6,10].indexOf(n)<0)return;
     var d=new Date(NOW.getFullYear(),NOW.getMonth()-n,Math.min(NOW.getDate(),28));
-    profile=Object.assign({},profile,{name:'Maya',pronouns:'she',dob:iso(d),due:'',early:false,feed:'Both',example:true,joined:iso(NOW)});
+    profile=Object.assign({},profile,{name:'Ari',pronouns:'he',dob:iso(d),due:'',early:false,feed:'Both',example:true,joined:iso(NOW)});
     answers={};if(n>=6)answers.solids='Yes';if(n===10)answers.twoNaps='Yes';
     try{persist();}catch(e){}
     page='home';month=actualMonth();render();window.scrollTo(0,0);
