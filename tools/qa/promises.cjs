@@ -63,7 +63,7 @@ for (const [title, skill, age] of [['Sat up', 'Sits without support', 9], ['Roll
   a.run(`hubSeen(journeySkillKey('Laughs')); hubSeen(journeySkillKey('Blows raspberries')); hubSeen(journeySkillKey('Squeals'))`);
   const t = text(open(a, 'timeline'));
   check(/3 moments so far/.test(t), 'Memories counts every saved moment, not just the big firsts');
-  check(t.indexOf('memory book') < t.indexOf('Month by month'), 'The memory book card sits above Month by month');
+  check(/memory book/.test(t) && /This month/.test(t), 'Memories shows this month and opens the memory book'); // Nov 13: order is then-and-now, months, then the book (was book first, Nov 8)
   check(/See it in the book/.test(toasts(a)) && !/Change date/.test(toasts(a)), 'Seen it offers See it in the book, not Change date');
 }
 
@@ -120,6 +120,18 @@ for (const [title, skill, age] of [['Sat up', 'Sits without support', 9], ['Roll
     check(text(open(a, 'home')).includes(perDay), `${feed}: the newborn month card says ${perDay} a day too`);
     if (feed === 'Formula') check(!/low milk|days between poops|breastfed/i.test(shown(0) + shown(1)), 'Formula: Home has no breastfed-only lines');
   }
+}
+
+// 10. Nov 13: Memories is a baby book. Checkups never show there, and a month with lots noticed stays short.
+{
+  const a = family(9);
+  a.run(`(() => { const d = journeyData(); d.records.push({ id: 'v4', type: 'visit', status: 'attended', date: '2026-02-23', title: '4-month checkup' }); saveJourneyData(d); })()`);
+  a.run(`(() => { const d = journeyData(); ['Copies sounds', 'Reaches for a toy', 'Brings things to mouth', 'Pushes up on arms', 'Looks at self in a mirror', 'Knows familiar people', 'Passes a toy hand to hand', 'Babbles'].forEach((t, i) => d.records.push({ id: 'n' + i, type: 'milestone', status: 'attended', date: '2026-04-25', title: t, skillKey: 'k' + i })); saveJourneyData(d); })()`);
+  check(!/checkup/i.test(text(open(a, 'timeline'))), 'Memories never lists checkups');
+  const book = open(a, 'chg:Timeline:firsts');
+  check(!/class="bk-tag/.test(book), 'The memory book writes the smaller things as one line, not a chip each');
+  check(/and \d+ more/.test(text(book)) && (book.match(/bk-noted-it is-extra/g) || []).length >= 1, 'A busy month shows five, then “and N more”');
+  check((book.match(/openPage\('event-edit:/g) || []).length >= 8, 'Every moment in the book can still be opened to move or remove it');
 }
 
 console.log(`Promise checks: ${checks} passed`);

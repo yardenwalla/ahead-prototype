@@ -103,7 +103,7 @@
 #main .ya-chip span{width:30px;height:30px;border-radius:10px;background:var(--white,#fff)}
 #main .ya-chip svg{width:19px;height:19px}
 /* The same sentence-case plum label on every tab's title: Timeline, Categories and Memories (Home's is the age on its month card). */
-#main>.eyebrow,#main .mem-page>.eyebrow,#main .ya-page>.ya-eyebrow{text-transform:none!important;letter-spacing:0!important;font-size:13px!important;line-height:1.4!important;font-weight:600!important;color:#7a4f6d!important}
+#main>.eyebrow,#main .mem-page>.eyebrow,#main .mem-title-row>.eyebrow,#main .ya-page>.ya-eyebrow{text-transform:none!important;letter-spacing:0!important;font-size:13px!important;line-height:1.4!important;font-weight:600!important;color:#7a4f6d!important}
 /* Month cards sit flat like every other card (white, hairline, no shadow). The blocks keep their color, one shade
    richer to match Sleep's tiles and the category line, and the age range takes the category's own ink. */
 #main .ya-month{background:var(--white,#fff);border:1px solid var(--line,#efeaf2);box-shadow:none}

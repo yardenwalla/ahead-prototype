@@ -44,6 +44,6 @@ html body #main .hg-page .connected-checkin, html body #main .connected-checkin.
    Memories headers): one calm, consistent opener. Labels inside lists and rows stay in normal case. (Yarden, Nov 10) */
 html body #main .he-eyebrow, html body #main .hub-hero .hub-eyebrow, html body #main .dev-hero-eyebrow, html body #main div.eyebrow, html body #main .ya-eyebrow {
   font-size: 12px !important; font-weight: 700 !important; letter-spacing: .07em !important; text-transform: uppercase !important }
-html body #main .ya-page > .ya-eyebrow, html body #main .mem-page > .eyebrow, html body #main > .eyebrow {
+html body #main .ya-page > .ya-eyebrow, html body #main .mem-page > .eyebrow, html body #main .mem-title-row > .eyebrow, html body #main > .eyebrow {
   font-size: 12px !important; font-weight: 700 !important; letter-spacing: .05em !important; text-transform: uppercase !important }
 html body #main .he-eyebrow, html body #main .hub-hero .hub-eyebrow, html body #main .dev-hero-eyebrow, html body #main div.eyebrow { letter-spacing: .05em !important }
