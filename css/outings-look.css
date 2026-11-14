@@ -84,3 +84,14 @@
 #main .cc-worth small { display: block; font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: #8a7420; margin-bottom: 5px }
 #main .cc-worth b { display: block; font-size: 17px; line-height: 1.25; color: var(--ink, #2b2732) }
 #main .cc-worth span { display: block; font-size: 14px; line-height: 1.45; color: #6d666d; margin-top: 5px }
+
+/* Steps on place pages (Nov 13): a numbered bar for the trip, one step shown at a time. */
+#main .oa-steps { display: grid; grid-template-columns: repeat(var(--n), 1fr); gap: 4px; margin: 0 0 16px; position: relative; padding: 4px 0 2px }
+#main .oa-steps::before { content: ""; position: absolute; left: calc(50% / var(--n)); right: calc(50% / var(--n)); top: 20px; height: 2px; background: var(--oa-acc); opacity: .55 }
+#main .oa-steps button { all: unset; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 6px; position: relative; text-align: center }
+#main .oa-steps button span { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; font-size: 14px; font-weight: 700; background: #fffdfb; color: var(--oa-ink); border: 2px solid var(--oa-acc); box-sizing: border-box }
+#main .oa-steps button.is-done span { background: var(--oa-bg) }
+#main .oa-steps button.is-on span { background: var(--oa-ink); border-color: var(--oa-ink); color: #fff }
+#main .oa-steps button b { font-size: 12.5px; font-weight: 600; color: var(--muted, #6d666d); line-height: 1.2 }
+#main .oa-steps button.is-on b { color: var(--oa-ink); font-weight: 700 }
+#main .oa-then { display: block; margin: 4px 2px 18px; font-weight: 650 }
