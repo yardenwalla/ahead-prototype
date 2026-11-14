@@ -11,7 +11,7 @@
   if(!localStorage.getItem('ahead-v2-profile')){
     var now=new Date(),d=new Date(now.getFullYear(),now.getMonth()-6,Math.min(now.getDate(),28));
     var iso=function(x){return [x.getFullYear(),String(x.getMonth()+1).padStart(2,'0'),String(x.getDate()).padStart(2,'0')].join('-');};
-    var sample={name:'Maya',pronouns:'she',dob:iso(d),due:'',early:false,feed:'Both',example:true,joined:iso(now)};
+    var sample={name:'Ari',pronouns:'he',dob:iso(d),due:'',early:false,feed:'Both',example:true,joined:iso(now)};
     localStorage.setItem('ahead-v2-profile',JSON.stringify(sample));
     localStorage.setItem('ahead-v2-answers',JSON.stringify({solids:'Yes'}));
   }
