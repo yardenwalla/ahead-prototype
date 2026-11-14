@@ -5,7 +5,10 @@ Fails (exit 1) if:
   2. a checkup question shows on Home at all (Health moves on by age; Nov 10),
   3. anything on Home runs off a small (320px) phone,
   4. a Home tap throws an error or does nothing,
-  5. on a month birthday the month card names another month than the balloon (checked in two time zones)."""
+  5. on a month birthday the month card names another month than the balloon (checked in two time zones),
+  6. Home rows leave their guide's color,
+  7. wording that read wrong for some families (pronouns, "1 months", formula poop, past-due checkups) comes back,
+     or Home breaks for a baby born early who is days old."""
 import asyncio, calendar, datetime as dt, sys, base64, tempfile, os
 from playwright.async_api import async_playwright
 
@@ -94,6 +97,39 @@ async def main():
                 const bg = r.style.getPropertyValue('--hl-bg').trim().toLowerCase();
                 return pal && bg !== pal.pale.toLowerCase() ? cat + ' ' + bg + ' vs ' + pal.pale : null }).filter(Boolean)""")
             check(not bad, f'{days} days: Home rows use their guide colors {bad[:2]}')
+        # 7. Nov 14 full QA: wording that read wrong for some families, and a Home that broke for one.
+        async def page_text(prof, route):
+            await pg.goto(BASE)
+            await pg.evaluate("p=>{localStorage.clear();localStorage.setItem('ahead-v2-profile',JSON.stringify(p))}", prof)
+            await pg.goto(BASE); await pg.wait_for_timeout(400)
+            await pg.evaluate(f"navigate('{route}')"); await pg.wait_for_timeout(300)
+            return await pg.evaluate("document.querySelector('#main').innerText")
+        def prof(days, **k):
+            d = (T - dt.timedelta(days=days)).isoformat()
+            return dict(dict(name='Ari', pronouns='he', dob=d, due='', early=False, feed='Formula', example=False, id='hc', joined=d), **k)
+        import re
+        for pr in ('he', 'they'):
+            for days in (60, 130, 160):   # Guides lines for Everyday care 1–3 months, Rolling, Ready for solids
+                t = await page_text(prof(days, pronouns=pr), 'categories')
+                check(not re.search(r'for (him|them) first rolls|Getting (his|their) ready|dressing (his|their)\b', t), f'{pr}, {days} days: Guides tab pronouns read right')
+            for days in (75, 100, 125):
+                t = await page_text(prof(days, pronouns=pr), 'home')
+                check('are hers' not in t, f'{pr}, {days} days: Home never says the hands "are hers"')
+        t = await page_text(prof(5), 'next')
+        check(not re.search(r'\b1 months\b', t), 'Timeline: "1 month", never "1 months"')
+        t = await page_text(prof(8), 'home')
+        check('yellow and seedy' not in t, 'Formula newborn: Home\'s poop line is not the breast-milk one')
+        # A checkup two weeks past its date isn't "coming up" or "next" (Health moves on 17 days after).
+        due2 = months_ago(2) - dt.timedelta(days=14)
+        p2 = prof((T - due2).days)
+        t = await page_text(p2, 'home') + await page_text(p2, 'categories')
+        check(not re.search(r'2-month checkup is (coming up|next)', t), 'Two weeks past its date, the 2-month checkup is "due now"')
+        # Born 8 weeks early, a few days old: Home's month card draws without an error, and says the age is adjusted.
+        errors.clear()
+        born = (T - dt.timedelta(days=3)).isoformat()
+        t = await page_text(dict(name='', pronouns='he', dob=born, due=(T + dt.timedelta(days=53)).isoformat(), early=True, feed='Breast milk', feedHow='Pumping', example=False, id='hc', joined=born), 'home')
+        check(await pg.evaluate("!!document.querySelector('.hg-page')") and not errors, f'Born early, days old: Home draws its month card {errors[:1]}')
+        check('ADJUSTED' in t.upper().split('THROUGH')[0], 'Born early: Home\'s month card says the age is adjusted')
         await b.close()
     print(f'Home browser checks: {passed} passed' + (f', {len(fails)} failed' if fails else ''))
     for f in fails: print('  FAIL', f)

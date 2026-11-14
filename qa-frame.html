@@ -1,0 +1,8 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>QA: locked-down frame</title>
+<style>html,body{margin:0;height:100%}iframe{border:0;width:100%;height:100%;display:block}</style>
+</head><body>
+<!-- QA only: mimics a locked-down file viewer. No allow-same-origin, so storage is blocked; no allow-popups/downloads. -->
+<iframe src="index.html" sandbox="allow-scripts allow-forms allow-modals"></iframe>
+</body></html>

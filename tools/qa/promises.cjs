@@ -134,4 +134,13 @@ for (const [title, skill, age] of [['Sat up', 'Sits without support', 9], ['Roll
   check((book.match(/openPage\('event-edit:/g) || []).length >= 8, 'Every moment in the book can still be opened to move or remove it');
 }
 
+// 11. Nov 14 full QA: words that read wrong for some families, and pages that broke for them.
+{
+  const fam = (o, age, extra = 0) => boot(Object.assign({ name: 'Ari', dob, feed: 'Formula', pronouns: 'he', id: 'c', joined: dob }, o), {}, {}, at(age, extra));
+  // Guides-tab lines, Home's month card, the Timeline's month labels and Home's checkup news are drawn in the
+  // browser, so they're checked in tools/qa/browser/home_checks.py (wording_checks).
+  // Breast milk and formula: one iron rule, the AAP's (drops if more than half is breast milk).
+  check(!/In the formula\. Choose one with iron\./.test(text(open(fam({ feed: 'Both', feedHow: 'Nursing' }, 5), 'chg:Feeding:mock:x_vitd'))), 'Both milks: the vitamin D page doesn’t say iron is simply in the formula');
+}
+
 console.log(`Promise checks: ${checks} passed`);

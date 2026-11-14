@@ -442,7 +442,7 @@
     if (id === 'pump') {
       // Pumping and a first bottle (AAP; CDC milk storage guidelines).
       return detail(cat, 'Milk feeds', 'Pumping and a first bottle', 'A pump gives you flexibility: a night off, time apart, or going back to work.',
-        tiles([['When to start', 'About 3–4 weeks', 'Once nursing is going well'], ['First bottle', 'From 3–4 weeks', 'Another adult can give it'], ['How much', 'About 1 oz an hour', 'For each hour you’re apart'], ['Per bottle', '2–4 oz', 'Up to about 3–5 oz by 4–6 months']])
+        tiles([['When to start', 'About 3–4 weeks', 'Once feeding is going well'], ['First bottle', 'From 3–4 weeks', 'Another adult can give it'], ['How much', 'About 1 oz an hour', 'For each hour you’re apart'], ['Per bottle', '2–4 oz', 'Up to about 3–5 oz by 4–6 months']])
         + `<h2 class="hub-h2">${F('Introducing the bottle')}</h2>`
         + steps(['Offer it when {s’s} hungry but calm, not starving.', 'Let someone else give it, since {s} may expect to nurse with you.', 'Hold the bottle level and pause every so often, so {s} {set|sets} the pace.'])
         + `<h2 class="hub-h2">${F('Storing breast milk')}</h2>`
@@ -541,7 +541,7 @@
     { t: 'Put Maya on {p} back for every sleep', s: 'Naps and nights, every time', art: 'back', habit: 'Every sleep' },
     { t: 'Only in {p} own sleep space', s: 'Not a sofa, your bed, a car seat or a swing. Sharing a bed raises the risk of SIDS', art: 'sofa', habit: 'Always' },
     { t: 'Cool and smoke-free', s: 'Sweaty neck or chest means too warm', art: 'home', habit: 'Always' },
-    { t: 'Offer a pacifier, if you like', s: 'Once feeding is going well, often 3–4 weeks. No clips or strings. It lowers SIDS risk', art: 'pacifier', habit: 'If you like' }
+    { t: 'Offer a pacifier, if you like', get s() { return (profile.feed === 'Formula' ? 'At naps and bedtime. ' : 'Once feeding is going well, often 3–4 weeks. ') + 'No clips or strings. It lowers SIDS risk'; }, art: 'pacifier', habit: 'If you like' }
   ];
   const SLEEP_TASKS = SLEEP_SETUP.filter(x => x.task != null).length;
   const sleepTaskOn = i => !!(L().safe && L().safe.Sleep && L().safe.Sleep[i]);
@@ -872,7 +872,7 @@
       const habits = [{ t: 'Nothing else in the crib', s: 'A fitted sheet only. No bumpers, pillows, loungers, inclined or weighted products', art: 'crib' }, ...SLEEP_SETUP.filter(x => x.task == null && x.art !== 'back')];
       return detail(cat, 'Safe sleep', 'A safe place to sleep', 'The same for every sleep, naps too. Skip crib bumpers (padded liners), loungers, and inclined or weighted products.',
         figure('crib', cat, 'A baby asleep on their back in a sleep sack, in a bare crib with a firm mattress and fitted sheet.').replace(/<div class="hub-fig-chips"[\s\S]*?<\/div><\/figure>/, '</figure>')
-        + `<div class="hub-ess3">${[['back', 'On {p} back', 'Every sleep, naps too'], ['crib', 'Own sleep space', 'Not a sofa, bed, car seat or swing'], ['shield', 'Firm, flat mattress', 'A fitted sheet, nothing else'], (m() >= 4 || rolled() ? ['sack', 'Sleep sack, arms free', 'No swaddle once rolling starts'] : ['sack', 'Swaddle or sleep sack', 'A sleep sack is a wearable blanket. No loose ones']), ['home', 'Cool and smoke-free', 'A too-warm room is less safe'], ['pacifier', 'Pacifier, if you like', m() >= 2 ? 'At naps and bedtime' : 'Once feeding is going well']].map(([ic, t, sub]) => `<div><span class="hub-ess3-ic">${art(ic, cat)}</span><b>${F(t)}</b><small>${F(sub)}</small></div>`).join('')}</div>`
+        + `<div class="hub-ess3">${[['back', 'On {p} back', 'Every sleep, naps too'], ['crib', 'Own sleep space', 'Not a sofa, bed, car seat or swing'], ['shield', 'Firm, flat mattress', 'A fitted sheet, nothing else'], (m() >= 4 || rolled() ? ['sack', 'Sleep sack, arms free', 'No swaddle once rolling starts'] : ['sack', 'Swaddle or sleep sack', 'A sleep sack is a wearable blanket. No loose ones']), ['home', 'Cool and smoke-free', 'A too-warm room is less safe'], ['pacifier', 'Pacifier, if you like', m() >= 2 || profile.feed === 'Formula' ? 'At naps and bedtime' : 'Once feeding is going well']].map(([ic, t, sub]) => `<div><span class="hub-ess3-ic">${art(ic, cat)}</span><b>${F(t)}</b><small>${F(sub)}</small></div>`).join('')}</div>`
         + (m() < 3 || done ? `<div class="hub-actions">${done ? `<p class="hub-done">${F('You’ve set up Maya’s sleep space')} ✓</p>` : `<button class="hub-button" onclick="hubSleepSetUp()">${F('I’ve set this up')}</button>`}</div>` : '')
         + `<div class="hub-accs">`
         // In the order it happens: an age, a short title, one line. Her current step gets a filled dot.
