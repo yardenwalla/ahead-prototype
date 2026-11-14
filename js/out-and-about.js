@@ -26,7 +26,9 @@
   window.displayTopic = displayTopic = t => t === CAT ? 'Outings and travel' : baseTopic(t);
 
   /* ---------- the baby ---------- */
-  const ageNow = () => live() ? actualMonth() : month;
+  // A trip page with a travel date is written for the baby's age on that date (Nov 13), so a flight in March fits who she'll be then.
+  let ageOverride = null;
+  const ageNow = () => ageOverride !== null ? ageOverride : live() ? actualMonth() : month;
   const stageFor = m => m < 2 ? 0 : m < 6 ? 1 : 2;
   const stageNow = () => stageFor(ageNow());
   // Food and sitting follow Feeding's age (adjusted for babies born early); gear sizes and shots keep the birthday.
@@ -172,7 +174,7 @@
   function outAndAbout() {
     const m = ageNow(), v = stageFor(m), h = H(), n = nowFor(m), nx = nextFor(m);
     let b = `<header class="hub-hero oa-hero"><p class="hub-eyebrow">${F(m < 1 ? 'In the first weeks' : `At ${m} ${m === 1 ? 'month' : 'months'}`)}</p><h1>${F(n[1])}</h1><p class="hub-lead">${F(n[2])}</p><button class="cc-hero-go oa-hero-go" onclick="${open(n[3])}">${F(n[4] ? n[4][2] : ({ errands: 'See around town', road: 'Plan a longer trip' })[n[3]] || 'See the guide')} ›</button></header>`;
-    b += places(v) + seasonCard() + gear(v);
+    b += tripNext() + places(v) + seasonCard() + gear(v);
     b += h.versus('In the car', ['Every time', 'Look in the back seat before you walk away.'], ['Never', 'Leave Maya alone in the car, even for a minute.']);
     if (nx) b += h.next(`Next · around ${nx[0]} months`, nx[1], open(nx[3]), '', { 2: 'Plan a first long drive or flight around feeds.', 4: 'Check your carrier’s limits before facing out.', 6: 'Pack snacks, and a travel crib for overnights.', 9: 'Check the height and weight sticker on the car seat.', 12: 'Check the seat’s rear-facing limits on its label.' }[nx[0]] || '');
     // Only when neither the top card nor Coming up already talks about gear limits, so it's never said twice.
@@ -269,7 +271,36 @@
   };
   const rows = (items, heading = '') => H().list(heading, items.filter(Boolean).map(([icon, title, s]) => H().row({ icon, cat: CAT, title, sub: s })));
 
+  /* Travel dates (Nov 13): optional, one per trip page (Flying, Road trips, Staying away, Going abroad). Kept on this phone.
+     A date sets the page to the baby's age on the trip, dates the steps that have a deadline, and shows on the Outings home.
+     A trip clears itself the day after it starts, so nothing goes stale. */
+  const TRIP_KEY = 'ahead-trips', TRIP_PAGES = { fly: 'Flying', road: 'Road trip', away: 'Staying away', abroad: 'Going abroad' };
+  const day0 = () => { const d = new Date(typeof NOW !== 'undefined' ? NOW : Date.now()); d.setHours(12, 0, 0, 0); return d; };
+  const trips = () => { let t = {}; try { t = JSON.parse(localStorage.getItem(TRIP_KEY)) || {}; } catch (e) {} const keep = {}; Object.entries(t).forEach(([k, v]) => { if (TRIP_PAGES[k] && v && new Date(v + 'T12:00:00') >= new Date(day0() - 864e5)) keep[k] = v; }); return keep; };
+  const tripDate = id => { const v = trips()[id]; return v ? new Date(v + 'T12:00:00') : null; };
+  const daysTo = d => Math.round((d - day0()) / 864e5);
+  const dayName = d => d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', ...(d.getFullYear() !== day0().getFullYear() ? { year: 'numeric' } : {}) });
+  const tripAge = d => { try { return Math.max(0, Math.min(12, ageMonths(parse(profile.dob), d))); } catch (e) { return ageNow(); } };
+  window.oaTrip = (id, v) => { let t = trips(); if (v) t[id] = v; else delete t[id]; try { localStorage.setItem(TRIP_KEY, JSON.stringify(t)); } catch (e) {} const y = scrollY; render(); scrollTo(0, y); };
+  const tripCard = id => {
+    const d = tripDate(id), min = day0().toISOString().slice(0, 10), c = PAL[id];
+    const input = `<input class="oa-trip-date" type="date" min="${min}" value="${d ? trips()[id] : ''}" aria-label="${F('Travel date')}" onchange="oaTrip('${id}', this.value)">`;
+    if (!d) return `<label class="oa-trip" style="--oa-ink:${c[1]};--oa-bg:${c[0]}">${`<span class="oa-trip-art">${hubArt('clock', CAT)}</span>`}<span><b>${F('Add your travel date')}</b><small>${F('This page will fit Maya’s age when you go.')}</small></span>${input}</label>`;
+    const n = daysTo(d), when = n <= 0 ? 'Today' : n === 1 ? 'Tomorrow' : `In ${n} days`, a = tripAge(d), now = live() ? actualMonth() : month;
+    const age = a === now ? `Maya will still be ${a === 1 ? '1 month' : a + ' months'}` : `set for Maya at ${a === 1 ? '1 month' : a + ' months'}`;
+    return `<div class="oa-trip is-set" style="--oa-ink:${c[1]};--oa-bg:${c[0]}">${`<span class="oa-trip-art">${hubArt('clock', CAT)}</span>`}<span><b>${F(dayName(d))}</b><small>${F(when + ' · ' + age)}</small></span><span class="oa-trip-acts"><label class="hub-link">${F('Change')}${input}</label><button class="hub-link" onclick="oaTrip('${id}','')">${F('Remove')}</button></span></div>`;
+  };
+  // The Outings home shows the next trip, so it's one tap away.
+  const tripNext = () => { const t = Object.entries(trips()).map(([k, v]) => [k, new Date(v + 'T12:00:00')]).sort((a, b) => a[1] - b[1])[0]; if (!t) return ''; const [k, d] = t, n = daysTo(d), c = PAL[k];
+    return `<button class="hub-next oa-season oa-trip-next" style="background:${c[0]}" onclick="${open(k)}"><span><small style="color:${c[1]}">${F('Your trip · ' + TRIP_PAGES[k])}</small><b>${F(dayName(d) + (n <= 0 ? ', today' : n === 1 ? ', tomorrow' : `, in ${n} days`))}</b></span><span class="hub-chev" aria-hidden="true">›</span></button>`; };
+
   function detail(id) {
+    const d = TRIP_PAGES[id] ? tripDate(id) : null;
+    ageOverride = d ? tripAge(d) : null;
+    try { return detailFor(id, d); } finally { ageOverride = null; }
+  }
+
+  function detailFor(id, tripDay) {
     const m = ageNow(), bf = nursing(), fm = formula();
     const feedLine = bf && fm ? 'Nurse or give a bottle, wherever you’re comfortable.' : bf ? 'Nurse wherever you’re comfortable, or give a bottle of pumped milk.' : 'Give a bottle where you are. Formula doesn’t need warming.';
 
@@ -293,7 +324,7 @@
             'If the baby is hungry, feed them where you are. Crying in public happens to everyone. For a blowout, find a family restroom or use your changing pad.')]]));
 
     if (id === 'road') return sub('road', 'Road trips', 'Long drives with Maya', 'Plan a stop every 2 hours to feed, change and stretch.',
-      phases('road', [
+      tripCard('road') + phases('road', [
         ['Before you go', pack([['toy', 'Soft toys only', 'Hard ones can fly in a sudden stop'], fm ? ['bag', 'One extra bottle', 'In case of traffic'] : null])
           + rows([typeof profile !== 'undefined' && profile.early ? ['steth', 'Born early?', 'Ask your pediatrician how long rides can be.'] : null])],
         ['On the road', hubDayMarkers({ title: 'Plan your drive', events: [[9 * 60, 'car', 'Leave as a nap starts'], [11 * 60, 'bottle', 'Stop to feed and change'], [13 * 60, 'mat', eats() ? 'Stop for a snack and a stretch' : 'Stop to feed and stretch'], [15 * 60, 'home', 'Arrive']], from: 8 * 60, to: 16 * 60, cat: CAT, caption: 'Leave at 9 as a nap starts, stop at 11 to feed and change, stop at 1 to feed and stretch, arrive at 3.' })
@@ -304,7 +335,7 @@
             'If the baby cries while you drive, pull over first. On your own, plan more stops and check on the baby only when parked.')]]));
 
     if (id === 'fly') return sub('fly', 'Flying', 'Flying with Maya', 'Most of the planning happens when you book.',
-      phases('fly', [
+      tripCard('fly') + phases('fly', [
         ['Book', H().versus('Where will Maya sit?', ['Own seat', 'Safest, in a car seat labeled for aircraft.'], ['On your lap', 'Often free under 2, but less safe in turbulence.'])
           + rows([['notepad', 'When you book', 'Add {o}, ask about a bassinet seat, and check the car seat says “aircraft” in red.'], m < 2 ? ['steth', 'Flying in the first weeks', 'Ask your pediatrician first.'] : null])
           + pack([fm ? ['bottle', 'One extra bottle', 'In case of delays'] : null, ['diaper', 'Diapers for the trip, plus extra', 'At least one more than you think, for delays'], ['shirt', 'A change of clothes', 'For {o}, and a top for you, in your carry-on'], eats() ? ['bowl', 'Snacks {s} already eats', 'Soft and easy, for delays'] : null, m >= 3 ? ['drop', 'Medicine you might need', 'A fever reducer your pediatrician has OK’d, with its syringe'] : ['chat', 'Your pediatrician’s number', 'Under 3 months, any fever means calling them first'], ['book', 'Proof of {p} age', 'Like {p} birth certificate, for a lap seat']])],
@@ -318,10 +349,10 @@
           + `<button class="hub-link" onclick="openPage('chg:Sleep:d:away')">${F('Sleep in a new time zone')} ›</button>`]]));
 
     if (id === 'abroad') return sub('abroad', 'Going abroad', 'Going abroad with Maya', 'Plan the flight as usual, then add these steps. The passport comes first.',
-      phases('abroad', [
+      tripCard('abroad') + phases('abroad', [
         ['Before you go', plan('Plan your trip', [
-        ['As soon as you book', 'notepad', 'Apply for {p} passport. It can take weeks.'],
-        ['4–6 weeks before', 'steth', 'Ask your pediatrician about shots, including an early measles shot from 6 months.'],
+        [tripDay ? 'Now' : 'As soon as you book', 'notepad', 'Apply for {p} passport. It can take weeks.'],
+        [tripDay ? (daysTo(tripDay) >= 28 ? 'By ' + dayName(new Date(tripDay - 28 * 864e5)) : 'This week') : '4–6 weeks before', 'steth', 'Ask your pediatrician about shots, including an early measles shot from 6 months.'],
         ['Before you leave', 'home', 'Save how you’d find a doctor there.']],
         'Apply for the passport as soon as you book. Four to six weeks before, ask the pediatrician about shots. Before you leave, save how you would find a doctor there.')
           + pack([['thermo', 'A thermometer', 'And the medicines your pediatrician okays'], ['drop', 'Rehydration salts', 'Ask your pediatrician which kind'], ['car', '{P} car seat', 'Taxis abroad may not have one']])
@@ -330,7 +361,7 @@
           + calls(['Call a doctor', 'A fever, fewer wet diapers, a dry mouth, or diarrhea that keeps going.'], ['Get care right away', m < 3 ? 'Any fever under 3 months or in a malaria area, trouble breathing, or hard to wake.' : 'Any fever in a malaria area, trouble breathing, or hard to wake.'])]]));
 
     if (id === 'away') return sub('away', 'Staying away', 'Staying with family or in a hotel', 'Most homes and hotel rooms aren’t set up for babies. Ten minutes when you arrive covers most of it.',
-      phases('away', [
+      tripCard('away') + phases('away', [
         ['Before you go', pack([['sack', '{P} sleep sack', 'It smells like home'], ['home', 'The play yard’s own sheet', 'Only the one made for it'], ['star', 'A night light', 'For feeds in a dark, new room']])
           + rows([['shield', 'Which crib is safe?', 'A play yard, or a crib made after June 2011. Never an adult bed or a couch.']])],
         ['When you arrive', awayList(m)

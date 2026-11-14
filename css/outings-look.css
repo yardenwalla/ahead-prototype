@@ -95,3 +95,16 @@
 #main .oa-steps button b { font-size: 12.5px; font-weight: 600; color: var(--muted, #6d666d); line-height: 1.2 }
 #main .oa-steps button.is-on b { color: var(--oa-ink); font-weight: 700 }
 #main .oa-then { display: block; margin: 4px 2px 18px; font-weight: 650 }
+
+/* Travel date card on trip pages (Nov 13) */
+#main .oa-trip { display: flex; align-items: center; gap: 12px; background: #fffdfb; border: 1px solid var(--line, #efeaf2); border-radius: 20px; padding: 12px 14px; margin: 0 0 14px; position: relative; cursor: pointer }
+#main .oa-trip .oa-trip-art { flex: none; width: 42px; height: 42px; border-radius: 13px; background: var(--oa-bg); display: grid; place-items: center }
+#main .oa-trip .oa-trip-art svg { width: 24px; height: 24px }
+#main .oa-trip > span:nth-child(2) { flex: 1; min-width: 0 }
+#main .oa-trip b { display: block; font-size: 15.5px; color: var(--ink, #2b2732) }
+#main .oa-trip small { display: block; font-size: 13px; color: var(--muted, #6d666d); margin-top: 2px }
+#main .oa-trip:not(.is-set) .oa-trip-date { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100% }
+#main .oa-trip.is-set { cursor: default }
+#main .oa-trip-acts { display: flex; flex-direction: column; align-items: flex-end; gap: 4px }
+#main .oa-trip-acts .hub-link { position: relative; font-size: 13px; color: var(--oa-ink); margin: 0; padding: 0; background: none; border: 0; cursor: pointer; font-weight: 650 }
+#main .oa-trip-acts .oa-trip-date { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100% }
