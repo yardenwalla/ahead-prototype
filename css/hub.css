@@ -1672,3 +1672,9 @@ label:has(> .hub-photo-input:focus-visible) { outline: 2px solid #884866; outlin
 #main .bk-copy q { margin-top: 3px }
 /* Same rule on the Memories tab: names of firsts in print, the smaller things in handwriting. */
 #main .mem-badge-t { font-family: Figtree, system-ui, sans-serif !important; font-size: 14px !important; font-weight: 650 !important; line-height: 1.25 !important; color: #302d3c !important }
+/* Audit fixes (Nov 13): no box inside the month card; the book's photo sits by the month name so the moments use the full width. */
+#main .mem-card-media { padding: 4px 0 0; background: none }
+#main .mem-card { padding-bottom: 20px }
+#main .bk-page > .bk-photo { width: 72px; margin: -8px -4px 6px 12px }
+#main .bk-page > .bk-photo em { font-size: 9.5px }
+#main .bk-page > .bk-firsts, #main .bk-page > .bk-noted { clear: both }

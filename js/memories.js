@@ -112,7 +112,7 @@
     // The newest real photo when there is one; until then, the little keepsake drawing.
     const art = `<span class="mem-bookcard-art">${realStack || stack}</span>`;
     const addArt = '';
-    const bookCard = `<div class="mem-bookcard${addArt ? ' has-add' : ''}"><button class="mem-bookcard-open" onclick="openPage('${firsts.length ? 'chg:Timeline:firsts' : 'chg:Timeline:milestone'}')">${art}<span class="mem-bookcard-copy"><b>${esc2(`${name()}’s memory book`)}</b><small>${esc2(count)}</small>${firsts.length ? `<em>${esc2(firsts.length === 1 ? 'The memory book · 1 moment' : `The memory book · all ${firsts.length}`)} ›</em>` : ''}</span></button>${addArt}<button class="mem-bookcard-save" onclick="openPage('chg:Timeline:milestone')">＋ Save a first</button></div>`;
+    const bookCard = `<div class="mem-bookcard${addArt ? ' has-add' : ''}"><button class="mem-bookcard-open" onclick="openPage('${firsts.length ? 'chg:Timeline:firsts' : 'chg:Timeline:milestone'}')">${art}<span class="mem-bookcard-copy"><b>${esc2(`${name()}’s memory book`)}</b><small>${esc2(count)}</small>${firsts.length ? `<em>Open the book ›</em>` : ''}</span></button>${addArt}<button class="mem-bookcard-save" onclick="openPage('chg:Timeline:milestone')">＋ Save a first</button></div>`;
 
     // One month at a time. A row of the months across the top (her photo, or the month's number until there is one),
     // then that month as one card: its balloon card, ready to share, and what happened that month underneath.
@@ -145,13 +145,14 @@
       const what = !rs.length
         ? `<p class="mem-badge-none">${esc2(m === now ? 'Nothing saved yet this month' : 'Nothing saved for this month')}</p>`
         : `<button class="mem-badges" onclick="${open}" aria-label="${esc2(`What happened at ${WORDS[m].toLowerCase()}, open the memory book`)}">${bs.length ? `<span class="mem-badge-row">${bs.map(r => `<span class="mem-badge"><span class="mem-badge-ic" style="${TONE(r)}">${hubArt(ICON(r), 'Development')}</span><span class="mem-badge-t">${esc2(keepTitle(r))}</span></span>`).join('')}</span>` : ''}${line ? `<span class="mem-badge-more">${line}</span>` : ''}</button>`;
-      return `<section class="mem-card" data-m="${m}"${m === now ? '' : ' hidden'}><p class="mem-card-label">${esc2(m === now ? 'This month' : 'Looking back')}</p><h2 class="mem-card-title">${esc2(WORDS[m])}</h2><div class="mem-card-media">${media}</div>${what}<div class="mem-card-foot"><button class="mem-card-link" onclick="openPage('chg:Timeline:milestone')">＋ Save a first</button>${firsts.length ? `<button class="mem-card-link" onclick="openPage('chg:Timeline:firsts')">${esc2(`The memory book · all ${firsts.length}`)} ›</button>` : ''}</div></section>`;
+      return `<section class="mem-card" data-m="${m}"${m === now ? '' : ' hidden'}><p class="mem-card-label">${esc2(m === now ? 'This month' : 'Looking back')}</p><h2 class="mem-card-title">${esc2(WORDS[m])}</h2><div class="mem-card-media">${media}</div>${what}</section>`;
     };
     const play = have.length >= 2 ? `<button class="mem-title-play" onclick="memPlay()" aria-label="Play the year"><span aria-hidden="true">▶</span> Play the year</button>` : '';
     b = `<div class="mem-page"><div class="mem-title-row"><div class="eyebrow">Memories</div>${play}</div><h1>${nm}’s first year</h1>`;
     setTimeout(() => { const r = document.querySelector('.mem-picks'); if (r) r.scrollLeft = r.scrollWidth; }, 0);
     // On her first birthday the whole-year card comes first, above the months.
-    b += (year ? `<div class="mem-year-wrap">${year}</div>` : '') + picker + Array.from({ length: now + 1 }, (_, m) => monthCard(m)).join('');
+    // The month card holds the month; the memory book (with Save a first) sits under it, as its own cover.
+    b += (year ? `<div class="mem-year-wrap">${year}</div>` : '') + picker + Array.from({ length: now + 1 }, (_, m) => monthCard(m)).join('') + bookCard;
     // Checkups live in Health, never in the memory book.
     b += `<p class="hub-foot">Photos and entries stay on this device.</p></div>`;
     return `<div class="quiet-category hub-page hub-timeline-page" style="${yearTheme('Memories')}">${b}</div>`;
