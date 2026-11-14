@@ -1666,6 +1666,9 @@ label:has(> .hub-photo-input:focus-visible) { outline: 2px solid #884866; outlin
 @media (prefers-reduced-motion: reduce) { #main .mem-card.slide-left, #main .mem-card.slide-right { animation: none } }
 #main .mem-year-wrap { margin: 16px 0 4px }
 
-/* The memory book matches the Memories tab: the names of firsts in the same handwriting as the tab's badges. */
-#main .bk-copy b { font-family: AheadHand, Caveat, cursive !important; font-size: 24px !important; font-weight: 600 !important; line-height: 1.1 !important; color: #2b2840 !important }
-#main .bk-copy q { margin-top: 2px; font-size: 19px; line-height: 1.25; color: #625a6a }
+/* Memory book type (Nov 13): the month in handwriting, each first's name in Home's row type (print, semibold),
+   and the parent's voice (notes, Also noticed) in handwriting. Three levels, three clear looks. */
+#main .bk-copy b { font-family: Figtree, system-ui, sans-serif !important; font-size: 16.5px !important; font-weight: 650 !important; line-height: 1.3 !important; color: #302d3c !important }
+#main .bk-copy q { margin-top: 3px }
+/* Same rule on the Memories tab: names of firsts in print, the smaller things in handwriting. */
+#main .mem-badge-t { font-family: Figtree, system-ui, sans-serif !important; font-size: 14px !important; font-weight: 650 !important; line-height: 1.25 !important; color: #302d3c !important }
