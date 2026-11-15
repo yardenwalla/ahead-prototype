@@ -118,6 +118,8 @@
         '<p class="st-body st-in" style="--d:1.2s">' + E(p.P) + ' eyes and hands are starting to work together. That’s how ' + E(p.s) + ' learns what things are.</p>' +
         '<div class="st-ground">' + cloud('#fff3cf') + '<div class="st-objwrap st-right st-wobble">' + teether() + burst('#e98a6b') + '</div></div>' },
 
+      screen({ t: 'topic', c: 'sage', kicker: 'Through her eyes', title: 'Now she sees depth.', body: 'Both eyes work as a team, so she can judge how far away a toy is.', vis: ['eyes', 4] }),
+
       { id: 'feed', bg: '#f2b6c8', ink: '#2B2840', dur: 5800, html:
         '<p class="st-kicker st-in" style="--d:.05s">Meanwhile, at feeds</p>' +
         '<div class="st-title st-pop" style="--d:.15s">Milk has competition.</div>' +
@@ -215,6 +217,19 @@
     peek: function () { return '<div class="st-vis st-peekaboo" data-peek><span class="st-pbun">' + bunny() + '</span><span class="st-cloth"></span><b class="st-peektag">Tap the blanket</b><b class="st-still">Still there!</b></div>'; },
     heart: function () { return '<div class="st-vis st-heartwrap"><span class="st-bye">bye-bye!</span><i class="st-heart">♥</i><span class="st-back">back soon</span></div>'; },
     puffs: function () { var s = ''; for (var i = 0; i < 5; i++) s += '<i style="--i:' + i + '"' + (i === 2 ? ' class="is-pick"' : '') + '></i>'; return '<div class="st-vis st-puffs">' + s + '</div>'; },
+    eyes: function (m) {
+      var F = { 1: 'blur(3.2px) grayscale(.75) contrast(1.3)', 2: 'blur(2.4px) saturate(.45) contrast(1.15)', 3: 'blur(1.6px) saturate(.65)', 4: 'blur(1px) saturate(.85)', 6: 'blur(.5px)' }[m] || 'none';
+      var sk = blob('#f5c3a0', '#fde3cf', '#de9d79'), r = blob('#e98a6b', '#f6b49c', '#c96f52'), y = blob('#ffd98a', '#fff1c8', '#e3b259'), l = blob('#b9a6e6', '#ddd2f7', '#8f7bc4'), g = blob('#9cc7ae', '#cfe6d9', '#76a88b');
+      var far = m === 6, fx = far ? 150 : 62, fy = far ? 62 : 74, fr = far ? 20 : 44, k = fr / 44;
+      var face = '<circle cx="' + fx + '" cy="' + fy + '" r="' + fr + '" fill="' + sk.url + '"/><path d="M' + (fx - fr) + ' ' + (fy - 4 * k) + ' q' + fr + ' -' + (fr * 1.4) + ' ' + (2 * fr) + ' 0" fill="#6b4a3a"/>' +
+        '<circle cx="' + (fx - 14 * k) + '" cy="' + (fy + 4 * k) + '" r="' + (4.5 * k) + '" fill="#2B2840"/><circle cx="' + (fx + 14 * k) + '" cy="' + (fy + 4 * k) + '" r="' + (4.5 * k) + '" fill="#2B2840"/>' +
+        '<path d="M' + (fx - 12 * k) + ' ' + (fy + 18 * k) + ' q' + (12 * k) + ' ' + (12 * k) + ' ' + (24 * k) + ' 0" fill="none" stroke="#2B2840" stroke-width="' + (3.5 * k) + '" stroke-linecap="round"/>';
+      var toys = far ? '<circle cx="48" cy="140" r="24" fill="' + r.url + '"/><rect x="82" y="124" width="36" height="36" rx="8" fill="' + y.url + '"/><ellipse cx="160" cy="150" rx="26" ry="10" fill="' + l.url + '"/><ellipse cx="160" cy="138" rx="19" ry="8" fill="' + g.url + '"/>'
+        : '<circle cx="146" cy="60" r="20" fill="' + r.url + '"/><rect x="128" y="104" width="34" height="34" rx="8" fill="' + y.url + '"/><ellipse cx="80" cy="156" rx="26" ry="10" fill="' + l.url + '"/><ellipse cx="80" cy="144" rx="19" ry="8" fill="' + g.url + '"/>';
+      var scene = function () { return svg('0 0 200 180', sk.def + r.def + y.def + l.def + g.def, '<rect width="200" height="180" fill="#fdf6ec"/>' + (far ? '<rect y="96" width="200" height="84" fill="#efe4d6"/>' : '') + face + toys, 'st-obj'); };
+      return '<div class="st-vis st-eyes"><figure><span class="st-eyepic">' + scene() + '</span><figcaption>What you see</figcaption></figure>' +
+        '<figure class="st-eyehers"><span class="st-eyepic" style="--f:' + F + '">' + scene() + '</span><figcaption>What ' + E(nm()) + ' sees</figcaption></figure></div>';
+    },
     cruise: function () { var t = ''; for (var i = 0; i < 4; i++) t += '<i style="--i:' + i + '"></i>'; return '<div class="st-vis st-cruise"><span class="st-sofa"><b></b></span>' + t + '</div>'; },
     name: function () { return '<div class="st-vis st-namewrap"><span class="st-callout">' + E(nm()) + '!</span><i class="st-ring" style="--i:0"></i><i class="st-ring" style="--i:1"></i><i class="st-ring" style="--i:2"></i></div>'; },
     bang: function () { return '<div class="st-vis st-bang">' + blocksPair() + '<i class="st-bangfx">✶</i></div>'; },
@@ -273,17 +288,19 @@
   var C = { lav: ['#cfc3ea', '#e3dbf5'], butter: ['#ffe7a6', '#fff3cf'], pink: ['#f2b6c8', '#f8cfdb'], peach: ['#f6c9a8', '#fbe0cc'], sage: ['#bfdcc7', '#e5f1e7'], night: ['#2f3a66', '#8e9fd6'] };
   var STORIES = {
     1: { cover: ['She’s tuning in to you.', 'Your face and voice are her favorite things now.'], screens: [
-          { t: 'topic', c: 'butter', kicker: 'Why she stares at you', title: 'She sees you best up close.', body: 'About 8 to 12 inches away, the distance to your face during a feed. Farther than that is still a blur.', vis: ['distance'] },
+          { t: 'topic', c: 'butter', kicker: 'Why she stares at you', title: 'She sees you best up close.', body: 'About 8 to 12 inches away, the distance to your face during a feed. Farther than that is still a blur.', vis: ['eyes', 1] },
           { t: 'topic', c: 'night', kicker: 'The hard part', title: 'Crying peaks around 6 weeks.', body: 'Then it usually eases by 3 to 4 months. It’s a phase, not something you’re doing wrong.', vis: ['peak'] },
           { t: 'reveal', c: 'lav', setup: 'Sometime in the next few weeks, she’ll give you…', payoff: 'Her first real smile!', lead: 'Not just gas this time. A smile meant for you.', vis: ['smile'] }],
         sum: ['Sees you best up close', 'Crying peaks, then eases', 'First smiles coming'] },
     2: { cover: ['She’s smiling at you on purpose.', 'And she’s starting to talk back.'], screens: [
           { t: 'beat', c: 'butter', words: ['Coo.', 'Pause.', 'Coo.'], line: 'Those little sounds are her first conversations. When you answer, she learns to take turns.', vis: ['talk', ['ooh', '…', 'ahh', '…']] },
           { t: 'reveal', c: 'lav', setup: 'On her tummy, she can now lift…', payoff: 'Her head!', lead: 'Just for a moment at first. Tummy time is how she builds the strength.', vis: ['rise'] },
+          { t: 'topic', c: 'peach', kicker: 'Through her eyes', title: 'Colors are coming in.', body: 'She’s starting to see colors, softly at first. Bold, bright things stand out most.', vis: ['eyes', 2] },
           { t: 'topic', c: 'night', kicker: 'And after dark', title: 'Nights may stretch a little.', body: 'Some babies start one longer sleep at night around now. Every baby gets there on their own timeline.', vis: ['stretch'] }],
         sum: ['Smiling on purpose', 'Cooing back', 'Lifting her head'] },
     3: { cover: ['She’s figuring out how to get your attention.', 'Smiles, coos and wiggles, all on purpose.'], screens: [
           { t: 'reveal', c: 'lav', setup: 'This month, she’s discovering…', payoff: 'Her voice!', lead: 'Gurgles, coos and little squeals. She’s testing what it can do, and watching how you react.', vis: ['voice', ['eee!', 'ooh', 'gaa', 'ahh!']] },
+          { t: 'topic', c: 'sage', kicker: 'Through her eyes', title: 'She can follow you now.', body: 'Her eyes track smoothly, so slow side-to-side games are a hit.', vis: ['eyes', 3] },
           { t: 'topic', c: 'peach', kicker: 'Look at those hands', title: 'Fists are opening up.', body: 'Her hands are relaxing, and she’s starting to swing at toys hanging over her. Aim comes later.', vis: ['fist'] },
           { t: 'topic', c: 'butter', kicker: 'Her new favorite face', title: 'Who’s that baby?', body: 'Faces are what she loves looking at most, including the one in the mirror. She won’t know it’s her until well after her first birthday.', vis: ['mirror'] },
           { t: 'topic', c: 'pink', kicker: 'Meanwhile, at feeds', title: 'Feeds get quicker.', body: 'She’s a more efficient eater now, so a full feed can take just minutes. Short feeds are normal.', vis: ['drain'] }],
@@ -298,6 +315,7 @@
           { t: 'reveal', c: 'lav', setup: 'This month, she might try…', payoff: 'Her first foods!', lead: 'It’s mostly practice. Milk is still her main food for months.', vis: ['spoon'] },
           { t: 'beat', c: 'butter', words: ['Taste.', 'Squish.', 'Smear.'], line: 'Messy is how she learns. Let her touch and explore the food.', vis: ['splats'] },
           { t: 'topic', c: 'peach', kicker: 'Any day now', title: 'Her first tooth.', body: 'Most babies get their first tooth around now, usually a bottom front one. Extra drool and chewing on everything are the clues.', vis: ['tooth'] },
+          { t: 'topic', c: 'sage', kicker: 'Through her eyes', title: 'She can spot you across the room.', body: 'Her view is almost as sharp as yours now, so she may light up before you get close.', vis: ['eyes', 6] },
           { t: 'topic', c: 'pink', kicker: 'Her people', title: 'She knows who’s who.', body: 'She may get shy with new faces. It means she knows exactly who her people are.', vis: ['faces'] }],
         sum: ['First foods', 'First tooth', 'Knows her people'] },
     7: { cover: ['She’s getting steadier sitting up.', 'And that frees her hands for exploring.'], screens: [

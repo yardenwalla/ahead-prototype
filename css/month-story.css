@@ -615,3 +615,17 @@
 #main .rd-eyebrow.rd-in{padding:16px 18px 2px;margin:0}
 #main .rd-list{margin-top:16px!important}
 #main section.rd-card{margin-bottom:14px!important}
+/* Through her eyes: the same scene, as you see it and as she does */
+.st-eyes{width:96%;display:flex;gap:10px;margin-bottom:8%;align-items:flex-start}
+.st-eyes figure{flex:1;margin:0;opacity:0}
+.is-on .st-eyes figure{animation:stUp .5s .7s ease-out forwards}
+.is-on .st-eyes .st-eyehers{animation-delay:1.2s}
+.st-eyepic{display:block;border-radius:18px;overflow:hidden;box-shadow:0 8px 18px rgba(43,40,64,.16);border:4px solid #fffaf3;background:#fdf6ec}
+.st-eyepic .st-obj{display:block;width:100%;height:auto}
+.st-eyehers .st-eyepic .st-obj{filter:none;transition:filter 1.4s ease}
+.is-on .st-eyehers .st-eyepic .st-obj{animation:stBlurIn 1.6s 1.6s ease forwards}
+@keyframes stBlurIn{to{filter:var(--f)}}
+.st-eyes figcaption{margin-top:8px;text-align:center;font:800 13px Nunito,sans-serif;letter-spacing:.02em;color:#2B2840;opacity:.8}
+/* Home, quieter: radar and notice share one white card; the guides tile marks "New" with its pill only */
+#main section.rd-card{background:var(--white,#fff)!important;border:1px solid var(--line)!important;border-radius:20px!important}
+#main .hg-pair .hg-ptile.is-new{box-shadow:none!important;border-color:var(--line)!important;background:var(--white,#fff)!important}
