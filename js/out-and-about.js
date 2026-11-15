@@ -360,7 +360,7 @@
       const cold = `<h2 class="hub-h2">${F('What to do')}</h2>` + steps([['clock', 'Warm up the car first', 'Before you buckle {o} in'], ['car', 'In the car seat', 'Thin layers, then a blanket over the buckled straps'], ['shirt', 'One more layer on walks', 'Plus a hat and mittens'], ['hand', 'Check if {s’s} warm enough', 'Feel {p} chest. Cold hands are normal']], 'Warm up the car first. In the car seat, thin layers with a blanket over the buckled straps. On walks, one more layer than you. Feel {p} chest to check {s’s} warm enough.')
         + good([['snow', 'Very cold or windy?', 'Keep walks short, or stay in.'], ['carrier', 'In a carrier', 'Your coat can go over you both, with {p} face uncovered.'], ['home', 'Once you’re somewhere warm', 'Take off {p} hat and extra layers, so {s} {don’t|doesn’t} overheat.']])
         + calls(['Call your pediatrician', 'Skin that’s pale, gray or blistered after being out in the cold.'], ['Call 911', 'Cold to the touch and floppy or hard to wake.']);
-      return sub(view, 'Hot and cold days', view === 'hot' ? 'Babies heat up faster than you do' : 'Babies lose heat faster than you do', view === 'hot' ? 'Go out early or late, and keep to the shade.' : 'Warm the car first, add a layer, and check {p} chest.',
+      return sub(view, 'Hot and cold days', view === 'hot' ? 'Babies heat up faster than you do' : 'Babies lose heat faster than you do', view === 'hot' ? 'Timing and shade do most of the work.' : 'Most of the work happens before you head out.',
         seg + (view === 'hot' ? hot : cold));
     }
 
