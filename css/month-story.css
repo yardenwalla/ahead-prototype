@@ -629,12 +629,6 @@
 /* Home, quieter: radar and notice share one white card; the guides tile marks "New" with its pill only */
 #main section.rd-card{background:var(--white,#fff)!important;border:1px solid var(--line)!important;border-radius:20px!important}
 #main .hg-pair .hg-ptile.is-new{box-shadow:none!important;border-color:var(--line)!important;background:var(--white,#fff)!important}
-/* Month-photo banner, slimmer: the action only (the story card names the month) */
-#main .hg-banner.hg-banner-slim{padding:8px 12px 8px 8px!important;margin-bottom:12px!important;border-radius:16px!important}
-#main .hg-banner-slim .hg-banner-img{width:38px!important;height:44px!important}
-#main .hg-banner-slim .hg-banner-copy b{font-size:22px!important}
-#main .hg-banner-slim .hg-banner-copy small{font-size:12.5px!important}
-#main .hg-banner-slim .hg-banner-plus{width:28px!important;height:28px!important;font-size:14px!important}
 /* Guides tile: "New" sits on the same line as the guide marks */
 #main .hg-pair .hg-ptile.is-new{position:relative}
 #main .hg-pair .hg-ptile .hg-new-pill{position:absolute!important;top:24px;right:14px;margin:0!important}
