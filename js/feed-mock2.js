@@ -2716,7 +2716,7 @@
   P.z_allergy = () => yPage(XL, 'Allergies', 'Eczema or food allergies in the family?', 'Babies at higher risk may need peanut sooner, as early as 4–6 months.',
       xTwo(['Higher risk', 'Severe eczema, or an egg allergy.'], ['What to do', 'Ask your pediatrician before starting peanut. They may test first.'])
       + xKnow('Everyone else', 'Start peanut and egg early with first foods, around 6 months. No need to wait.'));
-  P.z_iron = () => yPage(XC.g1, 'Iron', (isEarly() && isBreast()) ? 'Iron drops from about 1 month' : 'Iron drops from 4 months', (isEarly() && isBreast()) ? 'Babies born early who get breast milk need iron drops until 12 months.' : formulaFam() ? 'Breast milk is low in iron. If it’s more than half of his milk, he needs drops.' : 'Breast milk is low in iron, and his stores run low around now.',
+  P.z_iron = () => yPage(XC.g1, 'Iron', (isEarly() && isBreast()) ? 'Iron drops from about 1 month' : 'His iron from birth runs low by 4 months', (isEarly() && isBreast()) ? 'Babies born early who get breast milk need iron drops until 12 months.' : formulaFam() ? 'Breast milk is low in iron. If it’s more than half of his milk, he needs drops.' : 'Breast milk is low in iron, and his stores run low around now.',
       xNums('', (isEarly() && isBreast()) ? [['About 1 month', 'Start iron drops'], ['12 months', 'Stop']] : [['4 months', 'Start iron drops'], ['6–9 months', 'Stop once iron-rich foods are going well']])
       + xDo('What to do', [ageMo() < 4 && !(isEarly() && isBreast()) ? 'Ask your pediatrician for the dose at the 4-month checkup.' : ageMo() >= 9 && !(isEarly() && isBreast()) ? 'Ask your pediatrician for the dose at the next checkup.' : 'Not on drops yet? Ask your pediatrician for the dose now. A call is fine.', 'Give it like vitamin D: in his cheek, or in a little milk.'])
       + xNote('Good to know:', 'iron can make his poop darker. That’s normal.'));
@@ -3063,7 +3063,7 @@
       + xDo('What helps', [nurse ? 'Evenings: switch sides often, and take turns so you each get a break.' : 'Evenings: smaller bottles, more often, and take turns so you each get a break.', 'Nights: lights low, voices quiet, no play.', 'Change his diaper at night only if it’s needed.', 'Until he’s back to birth weight, wake him if 3 hours pass.'])
       + xNote('Hard to wake?', 'Undress him to his diaper, or stroke his feet.') + xNote('Worth a call:', 'too sleepy to feed most times.')); };
   P.nb_vitd = () => { const b = isBreast();
-    return yPage(XC.growth, 'Every day', b ? 'Vitamin D drops, every day' : 'Vitamin D drops, until about 32 oz a day', b ? 'Vitamin D builds strong bones, and breast milk has very little. A few drops a day fill the gap.' : 'Formula has iron and some vitamin D. Until he drinks about 32 oz a day, he needs drops too.',
+    return yPage(XC.growth, 'Every day', b ? 'Vitamin D drops, every day' : 'Vitamin D drops, until about 32 oz a day', b ? 'Vitamin D builds strong bones, and breast milk has very little. A few drops a day fill the gap.' : 'About 32 oz of formula holds a full day’s vitamin D. Until he drinks that much, he needs drops too.',
       xBody(P.x_vitd)); };
   P.m1_eve = () => { const ev = xBody(P.y_evening);
     return yPage(XC.d1, 'Evenings and nights', 'Calmer evenings, longer nights', 'Fussy evenings peak around 6 weeks and ease by 3–4 months. Many babies go one longer stretch at night by 2–3 months.',
@@ -3335,7 +3335,7 @@
       if (/mock:dirD$|mock:dirD:0$/.test(r) && stg() === 0) h = h.replace(/(<span class="hub-card-note"><b>Every day<\/b>[^<]*<\/span>)/, `$1<button class="hub-link" style="display:block;margin:8px 0 0;padding:0" onclick="${go('nb_vitd')}">${F('How to give drops')} ›</button>`);
       if (ageMo() >= 6) h = h.split(F('Fewer poops can be normal after about 6 weeks. Wet diapers and growth are what count.')).join(F('Wet diapers, and steady growth at checkups, are what count.'));
       h = h.split('<h1>' + F('Vitamin D and iron are in the formula') + '</h1>').join('<h1>' + F('Vitamin D drops, until about 32 oz a day') + '</h1>')
-        .replace(/(She|He|They) needs? vitamin D drops until (she|he|they) drinks? about 32 oz a day\./, (m, A, b) => 'Formula has iron and some vitamin D. Until ' + b + ' ' + (b === 'they' ? 'drink' : 'drinks') + ' about 32 oz a day, ' + b + ' ' + (b === 'they' ? 'need' : 'needs') + ' drops too.');
+        .replace(/(She|He|They) needs? vitamin D drops until (she|he|they) drinks? about 32 oz a day\./, (m, A, b) => 'About 32 oz of formula holds a full day’s vitamin D. Until ' + b + ' ' + (b === 'they' ? 'drink' : 'drinks') + ' that much, ' + b + ' ' + (b === 'they' ? 'need' : 'needs') + ' drops too.');
       return h; }; }
   // The old five-step "Getting ready" is now three guides. Any link to it opens the guide that covers that step.
   { const cr = window.changesRoute, R2 = ['z_ready', 'z_start', 'z_plan', 'z_start', 'z_gag'];

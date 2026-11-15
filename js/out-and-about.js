@@ -292,7 +292,7 @@
         bf && pumps() ? ['fridge', 'Pumped milk', 'Fine cool or at room temperature. No need to warm it.'] : null,
         eats() ? ['bag', 'Bring {p} own food', 'Something soft from home, a bib and a spoon. A placemat keeps the tray clean.'] : ['hand', 'Holding {o}', 'It’s fine to ask people to wash their hands first, or to say no.']]));
 
-    if (id === 'road') return sub('road', 'Road trips', 'Long drives with Maya', 'Plan a stop every 2 hours to feed, change and stretch.',
+    if (id === 'road') return sub('road', 'Road trips', 'Long drives go best in 2-hour stretches', 'Plan a stop every 2 hours to feed, change and stretch.',
       hubDayMarkers({ title: 'Plan your drive', events: [[9 * 60, 'car', 'Leave as a nap starts'], [11 * 60, 'bottle', 'Stop to feed and change'], [13 * 60, 'mat', eats() ? 'Stop for a snack and a stretch' : 'Stop to feed and stretch'], [15 * 60, 'home', 'Arrive']], from: 8 * 60, to: 16 * 60, cat: CAT, caption: 'Leave at 9 as a nap starts, stop at 11 to feed and change, stop at 1 to feed and stretch, arrive at 3.' })
       + pack([['toy', 'Soft toys only', 'Hard ones can fly in a sudden stop'], fm ? ['bag', 'One extra bottle', 'In case of traffic'] : null])
       + ifs([
@@ -325,7 +325,7 @@
       + good([['chat', 'If one parent can’t come', 'They sign a notarized consent form for the passport appointment instead.']])
       + calls(['Call a doctor', 'A fever, fewer wet diapers, a dry mouth, or diarrhea that keeps going.'], ['Get care right away', m < 3 ? 'Any fever under 3 months or in a malaria area, trouble breathing, or hard to wake.' : 'Any fever in a malaria area, trouble breathing, or hard to wake.']));
 
-    if (id === 'away') return sub('away', 'Staying away', 'Staying with family or in a hotel', 'Most homes and hotel rooms aren’t set up for babies. Ten minutes when you arrive covers most of it.',
+    if (id === 'away') return sub('away', 'Staying away', 'Ten minutes makes a new room baby-safe', 'Most homes and hotel rooms aren’t set up for babies. A quick check when you arrive covers most of it.',
       phases('away', [
         ['Before you go', pack([['sack', '{P} sleep sack', 'It smells like home'], ['home', 'The play yard’s own sheet', 'Only the one made for it'], ['star', 'A night light', 'For feeds in a dark, new room']])
           + rows([['shield', 'Which crib is safe?', 'A play yard, or a crib made after June 2011. Never an adult bed or a couch.']])],
@@ -369,7 +369,7 @@
       const install = `<h2 class="hub-h2">${F('Setting it up')}</h2>` + steps([['lock', 'Pick one way to install it', 'Lower anchors or the seat belt, not both'], ['back', 'Set the recline', 'To the angle line on the seat'], ['hand', 'Check it’s tight', 'Tug where it’s belted in: less than 1 inch of movement'], ['shield', 'Buckle {o} in snugly', 'Harness straps at or below {p} shoulders']], 'Install it with the lower anchors or the seat belt, not both. Set the recline to the angle line, then tighten it so it moves less than 1 inch where it’s belted. Buckle the straps at or below the shoulders.', true);
       // One page for the whole first year and beyond: no stages, so the seat-by-seat path shows from day one,
       // and Good to know holds what's true at any age. The home's "Coming up" card points back here when the limits matter.
-      return sub('gear', 'Your gear', 'Car seat basics', 'A quick check before every drive keeps {o} as safe as possible.',
+      return sub('gear', 'Your gear', 'If you can pinch the strap, it’s too loose', 'Run these checks before every drive. Snug straps matter most, so {s} can’t move in a sudden stop.',
         hubFigure('carseat', CAT, 'Rear-facing in the back seat, chest clip level with the armpits, straps snug with no slack to pinch, and no puffy coat underneath.')
         + install
         + timeline('Which seat, and when', [['From birth', 'car', 'An infant seat, rear-facing.'], ['At its limit', 'sit', 'A convertible seat, still rear-facing.'], ['Often age 2 or older', 'stand', 'Forward-facing, after its rear-facing limits.']], 'An infant seat rear-facing from birth, a convertible seat still rear-facing once the infant seat’s limit is reached, and forward-facing only after its rear-facing limits, often age 2 or older.')

@@ -160,7 +160,7 @@
     finger: { lead: 'Around 7–9 months, food moves past smooth purées to soft lumps, and pieces {s} can pick up. Meals get messier, and that’s how {s} learns.', bar: [5, 11, 7, 9, 'Textures'], signs: ['Moving food around {p} mouth to chew', 'Raking food toward {o} with {p} fingers', 'Reaching for the spoon'],
       rows: [['bowl', 'Feeding', 'Thicker textures, step by step', 'From mashed to soft lumps', "openPage('chg:Feeding:d:lumpy')"], ['bowl', 'Feeding', 'Safe finger food sizes', 'Soft, and cut the right shape', "openPage('chg:Feeding:d:finger')"], ['shield', 'Safety', 'Gagging versus choking', 'Know the difference before you start', "openPage('chg:Feeding:safe')"]],
       tip: ['Lots of gagging at first?', 'It’s noisy and normal while {s} learns to move food around. Choking is different: a weak cough or no sound at all.'] },
-    carseat: { lead: 'Many babies outgrow the infant car seat in the first year, usually by height before weight. The next seat still faces the back.', bar: [4, 14, 8, 12, 'Often here'], signs: ['{p} head is within an inch of the top of the seat', 'Close to the weight limit on the label', 'Feet touching the back seat is fine'],
+    carseat: { lead: 'Many babies outgrow the infant car seat in the first year, usually by height before weight. The next seat still faces the back.', bar: [4, 14, 8, 12, 'Often here'], signs: ['{p} head is within an inch of the top of the seat', 'Close to the weight limit on the label'], signsNote: 'Feet touching the back seat is fine, and not a reason to switch.',
       rows: [['car', 'Out and about', 'Which seat comes next', 'Infant seat, then a convertible seat, still rear-facing', "openPage('chg:Out and about:d:car')"]],
       tip: ['Still facing the back', 'Keep {o} rear-facing as long as the new seat allows, often until age 2 or older.'] },
     sep: { lead: 'Around 8–10 months, many babies get upset when you leave. It means {s} knows you, and knows when you’re gone.', bar: [5, 14, 8, 10, 'Often peaks'], signs: ['Crying when you leave the room', 'Clinging around new people', 'Waking at night looking for you'],
@@ -186,7 +186,7 @@
     const h = H(), c = C.find(x => x.id === id), p = PAGES[id]; if (!c || !p) return null;
     const a = ageNow(), cat = c.cat, past = c.end <= a, now = c.start <= a && c.end > a;
     const when = past ? 'Already behind ' + name() : now ? 'Any time now' : c.start - a <= 1 ? 'Could start any week now' : `In about ${Math.round(c.start - a)} month${Math.round(c.start - a) === 1 ? '' : 's'}`;
-    const look = `${p.signsTitle || 'Signs it’s close'}: ${p.signs.map(x => x.charAt(0).toLowerCase() + x.slice(1)).join(', ')}.`;
+    const look = `${c.end <= a ? 'What it looked like' : p.signsTitle || 'Signs it’s close'}: ${p.signs.map(x => x.charAt(0).toLowerCase() + x.slice(1)).join(', ')}.${p.signsNote ? ' ' + p.signsNote : ''}`;
     return h.detail(cat, `${range(c)} · ${when}`, c.title, p.lead + ' ' + look,
       ''   // Nov 14: the "What it changes" heading already says it
       + h.list('What it changes', p.rows.slice(0, 4).map(([icon, rc, title, sub, go]) => h.row({ icon, cat: rc, title, sub, onclick: go }).replace('<span class="hub-row-copy">', `<span class="hub-row-copy"><small class="hub-row-eyebrow">${F(AREA[rc] || rc)}</small>`)))
