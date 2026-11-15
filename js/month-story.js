@@ -352,7 +352,7 @@
     var done = {}; try { done = window.__ya.doneNow(); } catch (e) {}
     var k = NEXT_BY_MONTH[Math.max(1, Math.min(11, m))] || 'roll', guard = 0;
     while (SKIP[k] && done[k] && guard++ < 6) k = SKIP[k];
-    var x = NEXT[k]; return { key: k, title: x[0], why: Pp(x[1]), short: x[2], vis: x[3] };
+    var x = NEXT[k]; return { key: k, title: Pp(x[0]), why: Pp(x[1]), short: x[2], vis: x[3] };
   }
   function Pp(s) {
     var pr = (profile && profile.pronouns) || 'she'; if (pr === 'she') return s;
@@ -391,13 +391,13 @@
       '<div class="st-opts" data-a="' + sc.a + '">' + sc.opts.map(function (o, i) { return '<button class="st-opt st-in" style="--d:' + (.6 + i * .15) + 's" data-i="' + i + '">' + E(o) + '</button>'; }).join('') + '</div>' +
       '<p class="st-ans st-body">' + E(Pp(sc.ans)) + '</p>' + area(vis(sc.vis), 'st-quizvis') };
     if (sc.t === 'thennow') { var hd = sc.head || ['Last month', 'Now']; return { id: 'thennow', bg: bg, ink: ink, dur: 6400, html:
-      '<p class="st-kicker st-in" style="--d:.05s">' + E(sc.kicker) + '</p>' +
+      '<p class="st-kicker st-in" style="--d:.05s">' + E(Pp(sc.kicker)) + '</p>' +
       '<div class="st-tn"><div class="st-tn-h st-in" style="--d:.2s"><span>' + E(hd[0]) + '</span><span>' + E(hd[1]) + '</span></div>' +
       sc.rows.map(function (r, i) { return '<div class="st-tn-r" style="--i:' + i + '"><span class="st-then">' + E(Pp(r[0])) + '</span><i>→</i><span class="st-now">' + E(Pp(r[1])) + '</span></div>'; }).join('') + '</div>' +
       area('') }; }
     return { id: night ? 'sleep' : 'feed', bg: bg, ink: ink, dur: sc.tip ? 6000 : 5400, html:
       (night ? '<div class="st-sky"><i></i><i></i><i></i><i></i><i></i></div><div class="st-moonwrap">' + moon() + '</div>' : '') +
-      '<p class="st-kicker st-in" style="--d:.05s">' + E(sc.kicker) + '</p>' +
+      '<p class="st-kicker st-in" style="--d:.05s">' + E(Pp(sc.kicker)) + '</p>' +
       '<div class="st-title st-pop" style="--d:.15s">' + E(Pp(sc.title)) + '</div>' +
       (sc.chips ? '<div class="st-distract">' + sc.chips.map(function (c, i) { return '<span style="--d:' + (.6 + i * .25) + 's">✓ ' + E(Pp(c)) + '</span>'; }).join('') + '</div>' : '') +
       '<p class="st-body st-in" style="--d:' + (sc.chips ? 1.5 : .7) + 's">' + E(Pp(sc.body)) + '</p>' +
@@ -631,7 +631,7 @@
   function decorate() {
     if (!on() || page !== 'home') return;
     var mm = month(); if (mm < 1 || mm > 11) return;
-    var hero = document.querySelector('#main .he-hero'); if (!hero || hero.dataset.st || hero.classList.contains('he-story')) return;
+    var hero = document.querySelector('#main .he-hero'); if (!hero || !hero.dataset || hero.dataset.st || hero.classList.contains('he-story')) return;
     hero.dataset.st = '1';
     var copy = hero.querySelector('.he-copy'); if (!copy) return;
     var b = document.createElement('button'); b.className = 'he-see st-play';
