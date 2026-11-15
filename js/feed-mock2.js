@@ -3237,27 +3237,27 @@
     z_signs: () => P.z_ready(), z_setup: () => P.z_start(), z_tray: () => P.z_start(), z_allergy: () => P.z_plan(), z_notyet: () => P.z_plan(), z_water: () => P.z_milkfood(), z_family: () => P.z_meal(), z_appetite: () => P.z_day() });
   P.z_allergens = (() => { const prev = P.z_allergens; return () => prev().split(F('Common allergens early, then keep them going')).join(F('Try the common allergens early')).split(F('Early and often lowers the chance of a food allergy.')).join(F('Trying them early lowers the chance of a food allergy.')).split(F('Tap each one once he’s had it')).join(F('Want to keep track? Tap each one he’s had')).split(F('Once it’s in, offer it a few times a week.')).join(F('Once it’s in, keep it in his meals.')); })();
   const GUIDES = () => { const v = stg(), m = ageMo(), nurse = nurses(), bot = isBottle(), done = alGet().length;
-    if (v === 0) return [[XC.f1, 'hand', 'A feed, step by step', 'From his first cue to the last burp', nurse ? 'Cues, latch, burps, and how to tell he’s full' : 'Cues, pacing the bottle, burps, and full', 'xa:feed'],
-      [XC.routine, 'moon', 'Evenings and nights', 'Busy evenings, then quick, calm nights', 'Cluster feeding, and waking him for feeds', 'nb_eve'],
-      [XC.growth, 'leaf', 'Is he getting enough?', 'His diapers show if he’s getting enough', 'Diapers and poop, day by day', 'nb_enough']];
-    if (v === 1 && m < 3) return [[XC.f1, nurse ? 'heart' : 'bottle', 'Feeds now', 'Hungrier some days? Often a growth spurt', 'Growth spurts around 6 weeks and 3 months', 'm1_now'],
-      [XC.d1, 'moon', 'Evenings and nights', 'Night feeds are still normal', '1–3 a night, and when to stop waking him', 'm1_eve'],
-      [XC.p1, 'bag', 'Time apart', nurse && !bot ? 'A first bottle' : 'Feeding with someone else', 'When to start, who offers it, and how much', 'm1_apart']];
-    if (v === 1) return [[XC.f1, 'eye', 'Distracted feeds', 'Short daytime feeds are okay', 'Feed when he’s drowsy, somewhere quiet', 'm2_distract'],
-      [XC.d1, 'moon', 'Evenings and nights', 'Night feeds are still common', 'Feeding him back to sleep is fine', 'm2_night'],
-      [XC.p1, 'bag', 'Time apart', isBreast() ? 'How much milk to leave' : 'Bottles for daycare or a day out', 'How much per hour, and how long milk keeps', 'm2_away']];
+    if (v === 0) return [[XC.f1, 'hand', 'A feed, step by step', 'From his first cue to the last burp', nurse ? 'Latch, burps, and when he’s full' : 'Pacing, burps, and when he’s full', 'xa:feed'],
+      [XC.routine, 'moon', 'Evenings and nights', 'Busy evenings, then quick, calm nights', 'Cluster feeding, and waking to feed', 'nb_eve'],
+      [XC.growth, 'leaf', 'Is he getting enough?', 'His diapers show if he’s getting enough', 'How many wet diapers, day by day', 'nb_enough']];
+    if (v === 1 && m < 3) return [[XC.f1, nurse ? 'heart' : 'bottle', 'Feeds now', 'Hungrier some days? Often a growth spurt', 'Usually around 6 weeks and 3 months', 'm1_now'],
+      [XC.d1, 'moon', 'Evenings and nights', 'Night feeds are still normal', '1–3 a night, and when waking stops', 'm1_eve'],
+      [XC.p1, 'bag', 'Time apart', nurse && !bot ? 'A first bottle' : 'Feeding with someone else', 'When, who offers it, and how much', 'm1_apart']];
+    if (v === 1) return [[XC.f1, 'eye', 'Distracted feeds', 'Short daytime feeds are okay', 'Three ways to make feeds calmer', 'm2_distract'],
+      [XC.d1, 'moon', 'Evenings and nights', 'Night feeds are still common', 'How many, and feeding back to sleep', 'm2_night'],
+      [XC.p1, 'bag', 'Time apart', isBreast() ? 'How much milk to leave' : 'Bottles for daycare or a day out', 'Ounces per hour, and storage times', 'm2_away']];
     if (v === 2) return [[XG, 'eye', 'Is he ready?', 'Solids usually start around 6 months', 'Four signs to look for', 'z_ready'],
-      [XG, 'highchair', 'How to start', 'Spoon-feeding and finger foods both work', 'Iron-rich first foods, made safe', 'z_start'],
-      [XC.p1, 'shield', 'Allergens and foods to avoid', 'Offer peanut and egg early, honey after 1', 'Peanut and egg, honey, and choking risks', 'z_plan']];
-    if (v === 3 && m < 7.5) return [[XG, 'bowl', 'How a meal goes', 'First meals are just a few bites', 'Sit him up, offer a little, watch his cues', 'z_meal'],
+      [XG, 'highchair', 'How to start', 'Spoon-feeding and finger foods both work', 'Iron-rich foods, and safe shapes', 'z_start'],
+      [XC.p1, 'shield', 'Allergens and foods to avoid', 'Offer peanut and egg early, honey after 1', 'How to start them, and choking risks', 'z_plan']];
+    if (v === 3 && m < 7.5) return [[XG, 'bowl', 'How a meal goes', 'First meals are just a few bites', 'Setting up, what to offer, and his cues', 'z_meal'],
       [XC.d1, 'cup', 'Milk and solids together', 'No set order for milk and meals', 'Before or after milk, and water from a cup', 'z_milkfood'],
       [XC.g1, 'peanut', 'Common allergens', 'Try the common allergens early', done ? done + ' of 9 tried' : 'Nine to try, one at a time', 'z_allergens']];
     if (v === 3) return [[XG, 'avocado', 'Beyond purées', 'Move from smooth food to soft pieces', 'What to offer at 6, 7–8 and 9 months', 'z_textures'],
       [XC.p1, 'hand', 'Safe finger foods', 'Finger foods should squish when pressed', 'Strips now, small pieces from 9 months', 'z_shapes'],
-      [XC.g1, 'peanut', 'Keeping foods in rotation', 'Keep allergens in his meals once tried', 'A few times a week, and easy ways', 'z_rotate']];
-    return [[XG, 'lentils', 'Feeding himself', 'What you eat works for him, cut small', 'Ideas from your plate, without the salt', 'z_meal'],
-      [XC.g1, 'clock', 'Meals, snacks and milk', 'Some days he eats a lot, some days little', 'Why the week matters more than one meal', 'z_day'],
-      [XC.d1, 'cup', 'Turning 1', 'Cups now, whole milk at 12 months', 'Whole milk, and no more than 24 oz a day', 'z_milk12']]; };
+      [XC.g1, 'peanut', 'Keeping foods in rotation', 'Keep allergens in his meals once tried', 'How often, and easy ways to fit them in', 'z_rotate']];
+    return [[XG, 'lentils', 'Feeding himself', 'What you eat works for him, cut small', 'What to soften, and what to skip', 'z_meal'],
+      [XC.g1, 'clock', 'Meals, snacks and milk', 'Some days he eats a lot, some days little', 'Why the week matters most', 'z_day'],
+      [XC.d1, 'cup', 'Turning 1', 'Cups now, whole milk at 12 months', 'How much milk, and moving off bottles', 'z_milk12']]; };
   const gRow = ([c, icon, eb, title, sub, id]) => H().row({ cat: CAT, icon, title, sub, onclick: go(id) })
     .replace(/<span class="hub-dot">[\s\S]*?<\/span><span class="hub-row-copy">/, `<span class="hub-dot">${hubArt(icon, CAT).replace('data-art=', 'data-keep=')}</span><span class="hub-row-copy"><small class="hub-row-eyebrow">${F(eb)}</small>`)
     .replace('class="hub-row', `style="--sm-bg:${c[0]};--sm-ink:${c[1]}" class="sm-row hub-row`);

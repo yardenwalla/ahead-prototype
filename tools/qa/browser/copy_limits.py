@@ -4,7 +4,8 @@ Every detail page in the search index is opened for three families (a newborn, 4
   1. the page headline: about 40 characters (fails over 45),
   2. the lead under it: 1–2 sentences, about 140 characters (fails over 150, or over 2 sentences),
   3. the page: about 2 phone screens or less (fails over 2.2),
-  4. "Good to know": 3 rows at most.
+  4. "Good to know": 3 rows at most,
+  5. on each guide's main page, a row's grey line under the bold title fits on one line of a phone (Nov 14).
 Added Nov 14 after content batch 2 made the sore gums and car seat pages wordier than the guide allows."""
 import asyncio, json, re, sys
 from playwright.async_api import async_playwright
@@ -27,6 +28,9 @@ MEASURE = """()=>{
   let good=0; if(gk&&gk.tagName==='H2'){ const box=gk.nextElementSibling; good=box?box.querySelectorAll(':scope > *').length:0; }
   return {head:h.textContent.trim(), lead:lead?lead.textContent.trim():'', screens:+(m.scrollHeight/844).toFixed(2), words:m.innerText.split(/\\s+/).length, good};
 }"""
+
+ROWS = """()=>[...document.querySelectorAll('#main .hub-row-eyebrow')].map(e=>{const s=e.parentElement.lastElementChild;
+  const lh=parseFloat(getComputedStyle(s).lineHeight)||20;return s.getBoundingClientRect().height>lh*1.5?s.textContent.trim():null}).filter(Boolean)"""
 
 def sentences(t):
     return len([s for s in re.split(r'(?<=[.?!])\s+', t.strip()) if s])
@@ -54,6 +58,11 @@ async def main():
                 if m['screens'] > LIMITS['screens']: bad.append(f"{m['screens']} screens")
                 if m['good'] > LIMITS['good']: bad.append(f"Good to know has {m['good']} rows")
                 out[key] = dict(route=r, family=f['name'], bad=bad, **m)
+            # 5. Guide rows: the grey line under a row's bold title is one line, so the list scans.
+            for g in ('Sleep', 'Feeding', 'Development', 'Health', 'Safety', 'Daily rhythm', 'Out and about', 'Childcare'):
+                await pg.evaluate(opener('topic:' + g)); await pg.wait_for_timeout(150)
+                for t in await pg.evaluate(ROWS):
+                    out[('topic:' + g, t)] = dict(route='topic:' + g, family=f['name'], bad=[f'row line wraps: "{t}"'], head=t, lead='', screens=0, words=0, good=0)
         await b.close()
     fails = [v for v in out.values() if v['bad']]
     if '--json' in sys.argv: json.dump(list(out.values()), open(sys.argv[sys.argv.index('--json') + 1], 'w'), ensure_ascii=False, indent=1)
