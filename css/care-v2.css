@@ -266,3 +266,8 @@
 #main .care-tpl .tpl-more span { font-weight: 400; color: var(--ss-ink, #5e5a75); text-decoration: underline; text-underline-offset: 3px }
 #main .care-tpl .care-map { flex-wrap: wrap }
 #main .care-tpl .care-tpl-card .tpl-notes { border-top-color: rgba(0,0,0,.07); font-size: 14px }
+/* Nov 15: on template pages only the top card carries the guide color and only the call card is tinted. Every section card,
+   What to do included, is white, so the page reads top card, then content, then who to call. */
+#main .care-tpl .care-tpl-card { background: var(--white, #fff); border: 1px solid var(--line, #efeaf2); border-radius: 20px; padding: 14px 16px }
+#main .care-tpl .care-tpl-card > p { font-size: 15px; line-height: 1.5; color: var(--ink) }
+#main .care-tpl .care-tpl-card .tpl-notes { border-top-color: var(--line, #efeaf2) }
