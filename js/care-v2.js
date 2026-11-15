@@ -913,8 +913,9 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
                                              Not the right one? · When to call
 
      Fields (text can use {s} {o} {p}; any field can be a function):
-       type, k (color/art), title, why, picture, do, steps: [[icon, bold, line], ...] (2–4), stepsTitle,
-       rule: [label, text], gtk: [[icon, bold takeaway, line], ...] (3 at most), video: [id, title, source],
+       type, k (color/art), title (the takeaway), why (one sentence), picture + pictureTitle, do, setup (How-to: unnumbered),
+       steps: [[icon, bold, line], ...] (2–4; numbered on How-to, unnumbered elsewhere unless ordered: true), stepsTitle,
+       rule: [label, text], gtk: [[icon, bold takeaway, line], ...] (2–3; a single one joins the What to do card), video: [id, title, source],
        where (rash id for the body map), notRight: [title, line, route], calls: { ped, now, nowLabel }
      To add a page: add an entry to TPL with its route, and nothing else. QA: care_blocks.py. */
   const callsCard = c => {
@@ -926,35 +927,38 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   };
   const TB = {
     top: (q, lead) => head(q.k, LABEL[q.k] || val(q.eyebrow), val(q.title), val(lead)),
-    card: (label, text) => text ? h2(label) + `<section class="ss-do care-tpl-card"><p>${F(val(text))}</p></section>` : '',
+    card: (label, text, extra) => text ? h2(label) + `<section class="ss-do care-tpl-card"><p>${F(val(text))}</p>${extra ? `<p><b>${F(extra[1])}.</b> ${F(extra[2])}</p>` : ''}</section>` : '',
     picture: (title, fig) => fig ? h2(val(title) || 'At a glance') + fig : '',
-    steps: (title, items) => items && items.length ? h2(title) + hubIconSteps(items, CAT, F(items.map(t => t[1] + ': ' + t[2]).join('. ')), true) : '',
+    // Numbers only when the order matters (ordered: true).
+    steps: (title, items, ordered) => items && items.length ? h2(title) + hubIconSteps(items, CAT, F(items.map(t => t[1] + ': ' + t[2]).join('. ')), !!ordered) : '',
     gtk: rows => { rows = (val(rows) || []).filter(Boolean).slice(0, 3); return rows.length ? `<h2 class="hub-h2">${F('Good to know')}</h2><div class="hub-list">${rows.map(([icon, t, sub]) => H().row({ icon, cat: CAT, title: t, sub })).join('')}</div>` : ''; },
     watch: v => v ? h2('Watch how') + hubEmbed(...v) : '',
-    link: l => l ? h2('Something else?') + `<div class="hub-list care-link">${rowK('look', l[0], l[1], `openPage('chg:${CAT}:d:${val(l[2])}')`)}</div>` : ''
+    link: l => l ? `<div class="hub-list care-link">${rowK('look', l[0], l[1], `openPage('chg:${CAT}:d:${val(l[2])}')`)}</div>` : ''
   };
   const TEMPLATES = {
-    normal: q => TB.top(q, q.why) + TB.picture(q.pictureTitle, q.picture && q.picture()) + TB.card('What to do', q.do) + TB.gtk(q.gtk) + callsCard(q.calls),
-    howto: q => TB.top(q, q.why) + TB.steps(q.stepsTitle || 'Step by step', val(q.steps)) + (q.rule ? TB.card(q.rule[0], q.rule[1]) : '') + TB.gtk(q.gtk) + TB.watch(q.video),
-    check: q => { let t = TB.top(q, q.why); const m = q.where && window.careMini ? careMini({ newborn: 'milia', yeast: 'diaper' }[q.where] || q.where) : ''; if (m) t = t.replace(/<span class="dev-area-head-art">[\s\S]*?<\/svg><\/span>/, `<span class="dev-area-head-art care-rash-art">${m}</span>`); return t + TB.picture('Where it shows up', q.where && rashMap(q.where)) + TB.steps('What helps', val(q.steps)) + TB.gtk(q.gtk) + TB.link(q.notRight) + callsCard(q.calls); }
+    // Good to know needs 2–3 rows. A single fact joins the What to do card instead of standing alone.
+    normal: q => { const g = (val(q.gtk) || []).filter(Boolean), one = g.length === 1 && q.do; return TB.top(q, q.why) + TB.picture(q.pictureTitle, q.picture && q.picture()) + TB.card('What to do', q.do, one ? g[0] : null) + (one ? '' : TB.gtk(g)) + callsCard(q.calls); },
+    howto: q => TB.top(q, q.why) + TB.steps('Before you start', val(q.setup), false) + TB.steps(q.stepsTitle || 'Step by step', val(q.steps), q.ordered !== false) + (q.rule ? TB.card(q.rule[0], q.rule[1]) : '') + TB.gtk(q.gtk) + TB.watch(q.video),
+    check: q => { let t = TB.top(q, q.why); const m = q.where && window.careMini ? careMini({ newborn: 'milia', yeast: 'diaper' }[q.where] || q.where) : ''; if (m) t = t.replace(/<span class="dev-area-head-art">[\s\S]*?<\/svg><\/span>/, `<span class="dev-area-head-art care-rash-art">${m}</span>`); return t + TB.picture('Where it shows up', q.where && rashMap(q.where)) + TB.steps('What helps', val(q.steps), !!q.ordered) + TB.gtk(q.gtk) + TB.link(q.notRight) + callsCard(q.calls); }
   };
   const tplPage = q => { const c = COL[q.k]; return `<div class="quiet-category hub-page hub-detail care-v2 care-tpl is-${q.type}" data-overview="${CAT}" data-ss="1" style="${yearTheme(CAT)};--ss-bg:${c[0]};--ss-ink:${c[1]}">${detailPageTop(CAT)}${TEMPLATES[q.type](q)}</div>`; };
   const RASH_CALLS = { ped: 'a rash with a fever, blisters or oozing, or one that spreads.', now: 'tiny purple-red dots that don’t fade when you press on them, especially with a fever.', nowLabel: 'Call 911' };
   const TPL = {
     // What's normal at this age
-    't:diapers:0': { type: 'normal', k: 'diapers', title: 'What’s in the diaper, the first week',
-      why: 'Wet diapers go up each day. From about day 6, six or more a day means {s’s} getting enough.', pictureTitle: 'Wet diapers, day by day', picture: () => ramp(),
+    't:diapers:0': { type: 'normal', k: 'diapers', title: 'Wet diapers go up day by day',
+      why: 'From about day 6, six or more a day means {s’s} getting enough milk.', pictureTitle: 'What to expect each day', picture: () => ramp(),
       do: 'Feed often, 8–12 times a day, and keep a rough count of wet diapers this week.',
       gtk: [['diaper', 'A pink stain is usually just pee', 'Still there after day 4? {S} may need more feeds.']],
       calls: { ped: 'fewer wet diapers than the chart, black poop after day 3, or blood in the poop.', now: 'white, gray or chalky poop, or watery poop many times a day.' } },
-    't:diapers:2': { type: 'normal', k: 'diapers', title: 'Diapers stay much the same',
-      why: 'Until solids start, wet diapers and poop look much like before.',
-      do: 'Expect at least 6 wet diapers a day, and change {o} when wet or dirty.',
-      gtk: [['hand', 'Keep one hand on {o} at every change', 'Rolling can start any day.'], ['diaper', 'Leaks mean it’s time for the next size', 'So do red marks at the legs or waist.'], ['diaper', 'Call if a rash lasts more than 2–3 days', 'Or if it has blisters, pus or bright red folds.']] },
+    't:diapers:2': { type: 'normal', k: 'diapers', title: 'Keep a hand on {o} at every change',
+      why: 'Diapers stay much the same until solids start. What changes is rolling, which can start any day.',
+      do: 'Have everything within reach before you start, and keep one hand on {o} the whole change. Or change {o} on the floor.',
+      gtk: [['diaper', 'Leaks mean it’s time for the next size', 'So do red marks at the legs or waist.'], ['diaper', 'Solids make poop thicker and smellier', 'Sometimes the color of the food.'], ['diaper', 'Call if a rash lasts more than 2–3 days', 'Or if it has blisters, pus or bright red folds.']] },
     // How to do it
     'p:tub': { type: 'howto', k: 'bath', title: 'Tub baths can start',
-      why: () => 'Once the cord has fallen off and healed' + (anatomy() !== 'girl' ? ', and a circumcision too' : '') + '. About 3 baths a week.',
-      steps: [['drop', 'About 2 inches', 'Of warm water'], ['bath', 'About 100°F', 'Test it with your wrist'], ['hand', 'A hand behind the head', 'The whole bath']],
+      why: () => 'Once the cord' + (anatomy() !== 'girl' ? ' and any circumcision have' : ' has') + ' healed, about 3 baths a week is plenty.',
+      setup: [['drop', 'About 2 inches', 'Of warm water'], ['bath', 'About 100°F', 'Test it with your wrist'], ['towel', 'Towel within reach', 'Before {s} {go|goes} in']],
+      steps: [['drop', 'Face first', 'Plain water, no soap'], ['hand', 'Then the body', 'A hand behind the head'], ['bath', 'Hair last', 'So {s} {stay|stays} warm'], ['towel', 'Straight into a towel', 'Pat dry into the creases']],
       rule: ['Every bath', 'Keep a hand on {o} the whole time. Babies can slip under in seconds. To step away, wrap {o} in a towel and take {o} with you.'],
       gtk: [['bath', 'Wash hair at 2 or 3 baths a week', 'With a little mild baby shampoo.'], ['bath', 'Set the water heater to 120°F or lower', 'So scalds are much less likely.']],
       video: ['VsUla1M7eHQ', 'Giving a tub bath', 'Nemours KidsHealth'] },
@@ -962,7 +966,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     'rash:acne': { type: 'check', k: 'skin', title: 'Baby acne', where: 'acne',
       why: 'Very common from 2–4 weeks. It comes from pregnancy hormones and clears on its own.',
       steps: [['drop', 'Plain water once a day', 'Then pat dry'], ['shield', 'Nothing on the bumps', 'No lotions, oils or acne products']],
-      gtk: [['smile', 'Tiny white dots on the nose are normal too', 'Called milia, they fade without help.']],
+      gtk: [['clock', 'It usually clears by 4–6 months', 'Often sooner, without any treatment.'], ['smile', 'Tiny white dots on the nose are normal too', 'Called milia, they fade without help.']],
       notRight: ['Not the right rash?', 'Heat rash, eczema and more', () => `look:${Math.min(stageNow(), 1)}:rashmore`],
       calls: RASH_CALLS }
   };
