@@ -154,8 +154,9 @@
     try { if (localStorage.getItem(key)) return ''; } catch (e) {}
     // Two colors: a soft tint of the balloon's own color, fading into a contrasting soft color, so it belongs to the
     // month but never reads as the story card below it.
-    const OTHER = ['#e6f1fb', '#fdeee5', '#fdeee5', '#fbeaf1', '#efedff', '#fdf4dc', '#efedff', '#e6f1fb', '#e7f5ee', '#e6f1fb', '#fdf4dc', '#e7f5ee'];
-    const bn = `linear-gradient(100deg,${mix(BALLOON[m], .86)} 0%,${OTHER[m]} 78%)`;
+    // The balloon photos' own colors (sampled from assets/home/balloon-N.png), so the tint matches the balloon it sits behind.
+    const BLN = ['#f2a98a', '#24ace4', '#6793d1', '#3da582', '#48a084', '#199fe4', '#eca842', '#f09266', '#ec6f8b', '#f1705b', '#bd6cd7', '#6c77e5'];
+    const bn = `linear-gradient(100deg,${mix(BLN[m], .84)} 0%,#fffaf6 80%)`;  // one warm white every month; the balloon tint is the only thing that changes
     return `<label class="hg-banner" style="--bn:${bn}" role="button" onclick="try{localStorage.setItem('${key}','1')}catch(e){};setTimeout(()=>{const b=document.querySelector('#main .hg-banner');b&&b.remove()},400)"><img class="hg-banner-img" src="assets/home/balloon-${m}.png" alt=""><span class="hg-banner-copy"><b>${F(`${name()}’s ${m}-month photo`)}</b><small>${F('Snap one today for Memories.')}</small></span><span class="hg-banner-plus" aria-hidden="true">＋</span>${input ? input.outerHTML : ''}</label>`;
   }
 
