@@ -926,23 +926,24 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   };
   const TB = {
     top: (q, lead) => head(q.k, LABEL[q.k] || val(q.eyebrow), val(q.title), val(lead)),
-    card: (label, text) => text ? `<section class="ss-do"><b>${F(label)}</b><p>${F(val(text))}</p></section>` : '',
+    card: (label, text) => text ? h2(label) + `<section class="ss-do care-tpl-card"><p>${F(val(text))}</p></section>` : '',
+    picture: (title, fig) => fig ? h2(val(title) || 'At a glance') + fig : '',
     steps: (title, items) => items && items.length ? h2(title) + hubIconSteps(items, CAT, F(items.map(t => t[1] + ': ' + t[2]).join('. ')), true) : '',
     gtk: rows => { rows = (val(rows) || []).filter(Boolean).slice(0, 3); return rows.length ? `<h2 class="hub-h2">${F('Good to know')}</h2><div class="hub-list">${rows.map(([icon, t, sub]) => H().row({ icon, cat: CAT, title: t, sub })).join('')}</div>` : ''; },
     watch: v => v ? h2('Watch how') + hubEmbed(...v) : '',
-    link: l => l ? `<div class="hub-list care-link">${rowK('look', l[0], l[1], `openPage('chg:${CAT}:d:${val(l[2])}')`)}</div>` : ''
+    link: l => l ? h2('Something else?') + `<div class="hub-list care-link">${rowK('look', l[0], l[1], `openPage('chg:${CAT}:d:${val(l[2])}')`)}</div>` : ''
   };
   const TEMPLATES = {
-    normal: q => TB.top(q, q.why) + (q.picture ? q.picture() : '') + TB.card('What to do', q.do) + TB.gtk(q.gtk) + callsCard(q.calls),
+    normal: q => TB.top(q, q.why) + TB.picture(q.pictureTitle, q.picture && q.picture()) + TB.card('What to do', q.do) + TB.gtk(q.gtk) + callsCard(q.calls),
     howto: q => TB.top(q, q.why) + TB.steps(q.stepsTitle || 'Step by step', val(q.steps)) + (q.rule ? TB.card(q.rule[0], q.rule[1]) : '') + TB.gtk(q.gtk) + TB.watch(q.video),
-    check: q => { let t = TB.top(q, q.why); const m = q.where && window.careMini ? careMini({ newborn: 'milia', yeast: 'diaper' }[q.where] || q.where) : ''; if (m) t = t.replace(/<span class="dev-area-head-art">[\s\S]*?<\/svg><\/span>/, `<span class="dev-area-head-art care-rash-art">${m}</span>`); return t + (q.where ? rashMap(q.where) : '') + TB.steps('What helps', val(q.steps)) + TB.gtk(q.gtk) + TB.link(q.notRight) + callsCard(q.calls); }
+    check: q => { let t = TB.top(q, q.why); const m = q.where && window.careMini ? careMini({ newborn: 'milia', yeast: 'diaper' }[q.where] || q.where) : ''; if (m) t = t.replace(/<span class="dev-area-head-art">[\s\S]*?<\/svg><\/span>/, `<span class="dev-area-head-art care-rash-art">${m}</span>`); return t + TB.picture('Where it shows up', q.where && rashMap(q.where)) + TB.steps('What helps', val(q.steps)) + TB.gtk(q.gtk) + TB.link(q.notRight) + callsCard(q.calls); }
   };
   const tplPage = q => { const c = COL[q.k]; return `<div class="quiet-category hub-page hub-detail care-v2 care-tpl is-${q.type}" data-overview="${CAT}" data-ss="1" style="${yearTheme(CAT)};--ss-bg:${c[0]};--ss-ink:${c[1]}">${detailPageTop(CAT)}${TEMPLATES[q.type](q)}</div>`; };
   const RASH_CALLS = { ped: 'a rash with a fever, blisters or oozing, or one that spreads.', now: 'tiny purple-red dots that don’t fade when you press on them, especially with a fever.', nowLabel: 'Call 911' };
   const TPL = {
     // What's normal at this age
     't:diapers:0': { type: 'normal', k: 'diapers', title: 'What’s in the diaper, the first week',
-      why: 'Wet diapers go up each day. From about day 6, six or more a day means {s’s} getting enough.', picture: () => ramp(),
+      why: 'Wet diapers go up each day. From about day 6, six or more a day means {s’s} getting enough.', pictureTitle: 'Wet diapers, day by day', picture: () => ramp(),
       do: 'Feed often, 8–12 times a day, and keep a rough count of wet diapers this week.',
       gtk: [['diaper', 'A pink stain is usually just pee', 'Still there after day 4? {S} may need more feeds.']],
       calls: { ped: 'fewer wet diapers than the chart, black poop after day 3, or blood in the poop.', now: 'white, gray or chalky poop, or watery poop many times a day.' } },

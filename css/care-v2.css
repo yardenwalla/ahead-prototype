@@ -218,3 +218,8 @@
 #main .hub-detail.care-v2 .hub-embed:not(:has(.hub-embed-frame)) .hub-embed-play { width: 34px; height: 34px; margin: -17px 0 0 -17px }
 #main .hub-detail.care-v2 .hub-embed:not(:has(.hub-embed-frame)) .hub-embed-play svg { width: 16px; height: 16px; margin-left: 2px }
 #main .hub-detail.care-v2 .hub-embed figcaption b { font-size: 14.5px }
+
+/* Nov 15: template pages. Every section has a title above it, so a card never carries its own label. */
+#main .care-tpl .care-map figcaption > b, #main .care-tpl .care-map b:first-child { display: none }
+#main .care-tpl .care-tpl-card p { margin: 0 }
+#main .care-tpl .care-calls { margin-top: 22px }
