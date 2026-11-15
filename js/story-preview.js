@@ -106,3 +106,64 @@
     try { if (!done && location.hash === '#story' && profile && profile.dob && page !== 'story:Sleep' && !/^(welcome|setup)/.test(String(page))) { done = true; setTimeout(go, 0); } } catch (e) {} return r; }; }
   if (document.readyState === 'complete') setTimeout(go, 300); else window.addEventListener('load', () => setTimeout(go, 300));
 })();
+
+/* ---------- Option 2 (Nov 14): the whole month as swipeable cards, one idea per screen ---------- */
+(function () {
+  const F = s => (window.__hub ? window.__hub.F(s) : s);
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+  const art = n => (typeof window.hubArt === 'function' ? window.hubArt(n, 'Sleep') : '');
+  const hero = () => (typeof yearIllustration === 'function' ? yearIllustration('Sleep', 1) : '');
+  const moons = `<svg viewBox="0 0 220 70" aria-hidden="true"><g fill="#a3c2f2">${[20, 75, 130, 185].map((x, i) => `<path transform="translate(${x} ${i % 2 ? 18 : 10})" d="M22 4a16 16 0 1 0 14 24A13 13 0 0 1 22 4Z" opacity="${i === 1 || i === 2 ? 1 : .55}"/>`).join('')}</g></svg>`;
+  // Every fact here is on today's Sleep pages for "Longer nights" (about 6 weeks–4 months).
+  const CARDS = [
+    { k: 'Sleep this month', h: '{P} sleep is growing up', b: 'A few quick cards: what’s changing, what helps tonight, and what’s next.', pic: hero(), cover: 1 },
+    { k: 'What’s changing', h: 'Waking again? That’s sleep growing up', b: 'Around 4 months, {p} sleep cycles start working like yours, so {s} {wake|wakes} between them more. It lasts a few weeks.', pic: moons },
+    { k: 'Tonight', h: 'Three things that help', list: ['Keep your bedtime steps the same.', 'Pause a minute or two before going in.', 'Keep night visits brief, dark and boring.'], pic: art('moon') },
+    { k: '{P} day now', h: 'Naps land at about the same times', tiles: [['Naps', '3–4'], ['Wake window', '1½–2½ hrs'], ['Longest sleep', '5+ hrs']], b: 'Like 9 am, 12:30 and 4 pm. Short naps of 30–45 minutes are normal.' },
+    { k: 'If you want to practice', h: 'Down drowsy, once a day', b: 'It’s practice, not a test. Feeding or rocking to sleep is still fine.', pic: art('sack') },
+    { k: 'Keep {o} safe', h: 'Arms free at the first roll', b: 'Stop swaddling at the first try to roll, and use a sleep sack. Every sleep: alone, on {p} back, in a bare crib.', pic: art('crib'), link: ['Safe sleep checklist', "openPage('chg:Sleep:safe')"] },
+    { k: 'Normal, or call?', h: 'Rough nights are normal for a few weeks', vs: ['More waking, and harder to put down.', 'Poor feeding, pain, or a fever of 101°F or higher.'] },
+    { k: 'What’s next', h: 'Three naps, usually from 5 months', b: 'Watch for longer awake time before naps.', pic: art('clock'), end: 1 }
+  ];
+  function deck() {
+    const n = CARDS.length, nm = typeof name === 'function' ? name() : 'your baby';
+    const card = (c, i) => `<section class="sc-card${c.cover ? ' is-cover' : ''}" aria-label="${i + 1} of ${n}">
+        <small class="sc-k">${F(c.k)}</small>
+        ${c.pic ? `<div class="sc-pic">${c.pic}</div>` : ''}
+        <h2>${F(c.h)}</h2>
+        ${c.tiles ? `<div class="sc-tiles">${c.tiles.map(([l, v]) => `<div><small>${F(l)}</small><b>${F(v)}</b></div>`).join('')}</div>` : ''}
+        ${c.b ? `<p>${F(c.b)}</p>` : ''}
+        ${c.list ? `<ol class="sc-list">${c.list.map(x => `<li>${F(x)}</li>`).join('')}</ol>` : ''}
+        ${c.vs ? `<div class="sc-vs"><div><b>${F('Normal')}</b><span>${F(c.vs[0])}</span></div><div class="is-call"><b>${F('Call your pediatrician')}</b><span>${F(c.vs[1])}</span></div></div>` : ''}
+        ${c.link ? `<button class="sc-link" onclick="${c.link[1]}">${F(c.link[0])} ›</button>` : ''}
+        ${c.end ? `<div class="sc-end"><span>${F('Looking for something specific?')}</span><div><button onclick="openPage('chg:Sleep:d:rough')">${F('Rough night')}</button><button onclick="openPage('chg:Sleep:settle')">${F('Sleep training')}</button><button onclick="openPage('topic:Sleep')">${F('The full guide')}</button></div></div>` : ''}
+      </section>`;
+    return `<div class="sc-page">
+      <div class="monthly-page-header"><button class="monthly-back" aria-label="Back" onclick="openPage('topic:Sleep')"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></button><div><h1>${F('Sleep')}</h1><p>${esc(nm)} · ${F(`${n} cards`)}</p></div><span class="monthly-save" aria-hidden="true"></span></div>
+      <div class="sc-bars">${CARDS.map((_, i) => `<i class="${i ? '' : 'is-on'}"></i>`).join('')}</div>
+      <div class="sc-deck" id="scDeck" onscroll="scSync(this)">${CARDS.map(card).join('')}</div>
+      <div class="sc-nav"><button onclick="scGo(-1)" aria-label="Previous card">‹</button><span id="scCount">1 of ${n}</span><button onclick="scGo(1)" aria-label="Next card">›</button></div>
+      <p class="hub-foot">${F('Preview: this month’s Sleep guide as cards, to compare with today’s.')}</p>
+    </div>`;
+  }
+  window.scSync = el => { const i = Math.round(el.scrollLeft / el.clientWidth); document.querySelectorAll('.sc-bars i').forEach((x, j) => x.classList.toggle('is-on', j <= i)); const c = document.getElementById('scCount'); if (c) c.textContent = `${i + 1} of ${el.children.length}`; };
+  window.scGo = d => { const el = document.getElementById('scDeck'); if (el) el.scrollTo({ left: el.scrollLeft + d * el.clientWidth, behavior: 'smooth' }); };
+
+  if (typeof window.render === 'function') {
+    const base = window.render;
+    window.render = render = function (...a) {
+      if (typeof page === 'string' && page === 'cards:Sleep') { const m = document.getElementById('main'); if (m) { m.innerHTML = deck(); window.scrollTo(0, 0); } return; }
+      const r = base.apply(this, a);
+      try {
+        const t = document.querySelector('#main .sp-try');
+        if (t && !document.querySelector('.sp-try2')) t.insertAdjacentHTML('beforebegin', `<button class="sp-try sp-try2" onclick="openPage('cards:Sleep')"><b>${F('Preview: this month as cards')}</b><span>${F('Option 2')} ›</span></button>`);
+        if (t && !/Option 1/.test(t.textContent)) t.querySelector('span').textContent = 'Option 1 ›';
+      } catch (e) {}
+      return r;
+    };
+  }
+  // index.html#cards opens it directly.
+  const go = () => { if (location.hash !== '#cards') return; try { if (!profile || !profile.dob) return; } catch (e) { return; } if (page !== 'cards:Sleep') openPage('cards:Sleep'); };
+  window.addEventListener('hashchange', go);
+  if (document.readyState === 'complete') setTimeout(go, 300); else window.addEventListener('load', () => setTimeout(go, 300));
+})();

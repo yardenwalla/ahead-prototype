@@ -73,3 +73,41 @@
 .sp-dots { display: flex; gap: 6px; justify-content: center; margin: 10px 0 0; }
 .sp-dots i { width: 7px; height: 7px; border-radius: 50%; background: #d9e5fc; }
 .sp-dots i.is-on { background: #24508F; width: 18px; border-radius: 4px; }
+
+/* Option 2: the month as cards. One idea per screen, big type, a picture. */
+.sc-page { padding-bottom: 12px; }
+.sc-bars { display: flex; gap: 4px; margin: 0 0 12px; }
+.sc-bars i { flex: 1; height: 4px; border-radius: 2px; background: #e3eaf8; }
+.sc-bars i.is-on { background: #24508F; }
+.sc-deck { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; margin: 0 -16px; }
+.sc-deck::-webkit-scrollbar { display: none; }
+.sc-card { flex: 0 0 100%; box-sizing: border-box; scroll-snap-align: start; min-height: calc(100vh - 290px); padding: 26px 24px; margin: 0; border-radius: 0; display: flex; flex-direction: column; gap: 12px; }
+.sc-card { background: linear-gradient(170deg, #e9f1fe 0%, #f5f8ff 55%, #fff 100%); }
+.sc-card .sc-k { color: #24508F; font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.sc-card h2 { margin: 0; font-size: 28px; line-height: 1.15; color: #2B2840; }
+.sc-card p { margin: 0; font-size: 17px; line-height: 1.5; color: #3d3953; }
+.sc-pic { min-height: 120px; display: grid; place-items: center; }
+.sc-pic { border-radius: 22px; background: rgba(255,255,255,.55); padding: 16px 0; }
+.sc-pic svg { height: 120px !important; width: auto !important; max-width: 80%; }
+.sc-card.is-cover h2 { font-size: 34px; }
+.sc-card.is-cover .sc-pic svg { height: 170px !important; }
+.sc-list { margin: 0; padding: 0; list-style: none; counter-reset: s; }
+.sc-list li { counter-increment: s; position: relative; padding: 12px 14px 12px 48px; margin: 0 0 8px; border-radius: 18px; background: #fff; font-size: 17px; line-height: 1.35; color: #2B2840; }
+.sc-list li::before { content: counter(s); position: absolute; left: 14px; top: 11px; width: 24px; height: 24px; border-radius: 50%; background: #24508F; color: #fff; font-size: 13px; font-weight: 700; display: grid; place-items: center; }
+.sc-tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.sc-tiles div { padding: 14px 10px; border-radius: 18px; background: #fff; }
+.sc-tiles small { display: block; font-size: 12px; color: #24508F; font-weight: 600; }
+.sc-tiles b { display: block; margin-top: 4px; font-size: 21px; color: #2B2840; }
+.sc-vs { display: grid; gap: 10px; }
+.sc-vs div { padding: 14px 16px; border-radius: 18px; background: #eef8f1; }
+.sc-vs div.is-call { background: #fdeee6; }
+.sc-vs b { display: block; font-size: 14px; color: #2B2840; margin-bottom: 2px; }
+.sc-vs span { font-size: 16px; color: #3d3953; line-height: 1.4; }
+.sc-link { align-self: flex-start; padding: 0; border: 0; background: none; color: #24508F; font: inherit; font-weight: 650; font-size: 16px; cursor: pointer; }
+.sc-end { margin-top: auto; padding-top: 10px; }
+.sc-end span { display: block; color: #5E5A75; font-size: 14px; margin-bottom: 8px; }
+.sc-end div { display: flex; flex-wrap: wrap; gap: 8px; }
+.sc-end button { padding: 8px 14px; border-radius: 999px; border: 1px solid #a3c2f2; background: #fff; color: #24508F; font: inherit; font-size: 14px; cursor: pointer; }
+.sc-nav { display: flex; align-items: center; justify-content: space-between; margin: 12px 4px 0; color: #5E5A75; font-size: 14px; }
+.sc-nav button { width: 44px; height: 44px; border-radius: 50%; border: 1px solid #d9e5fc; background: #fff; color: #24508F; font-size: 24px; line-height: 1; cursor: pointer; }
+.sp-try2 { margin-bottom: 8px; }
