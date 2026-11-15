@@ -2777,7 +2777,7 @@
     const cr = (c, icon, title, sub, id) => h.row({ cat: CAT, icon, title, sub, onclick: go(id) }).replace(/<span class="hub-dot">[\s\S]*?<\/span><span class="hub-row-copy">/, `<span class="hub-dot">${hubArt(icon, CAT).replace('data-art=', 'data-keep=')}</span><span class="hub-row-copy">`).replace('class="hub-row', `style="--sm-bg:${c[0]};--sm-ink:${c[1]}" class="sm-row hub-row`);
     const R = v === 2 ? [[XG, 'bowl', 'Start when he shows all the signs', 'Signs, choosing, allergies, set up, gagging', 'xa:r2'], b && [XC.g1, 'drop', early ? 'Keep giving iron drops' : ageMo() >= 4 ? 'Iron drops from 4 months. Started yet?' : 'Iron drops from 4 months', early ? 'Born early with breast milk: from about 1 month' : fm ? (ageMo() >= 4 ? 'If more than half his milk is breast milk, he needs them' : 'If more than half his milk is breast milk') : 'Breast milk is low in iron', 'z_iron']]
       : v === 3 ? [[XG, 'bowl', 'First meals are just a few bites', 'Setting up, what to offer, textures', 'z_meal'], [XC.g1, 'peanut', 'Try each one early, then keep it going', alGet().length + ' of 9 tried', 'z_allergens'], [XC.p1, 'shield', 'Honey and whole nuts wait', 'And how to cut grapes and hard foods', 'z_notyet']]
-      : [[XG, 'bowl', 'What you eat works for him, cut small', 'He feeds himself, with milk after meals', 'z_meal'], [XC.g1, 'clock', 'Some days he eats a lot, some days little', 'Look at the week, not one meal', 'z_appetite'], [XC.d1, 'cup', 'Cups now, whole milk at 12 months', 'Whole milk, and no more than 24 oz a day', 'z_milk12']];
+      : [[XG, 'bowl', 'Most family food works for him now', 'He feeds himself, with milk after meals', 'z_meal'], [XC.g1, 'clock', 'Some days he eats a lot, some days little', 'Look at the week, not one meal', 'z_appetite'], [XC.d1, 'cup', 'Cups now, whole milk at 12 months', 'Whole milk, and no more than 24 oz a day', 'z_milk12']];
     const tough = v === 2 ? 'x_tough' : 'z_tough', toughSub = v === 2 ? 'Spit-up, distracted feeds, slow gain and more' : 'Gagging, refusing food, a rash, constipation';
     const rough = `<button class="hub-rough-card care-rash-card" style="background:#fbe4ec;color:#9b4766;margin-top:12px" onclick="${go(tough)}"><span class="hub-rough-moon" aria-hidden="true">${hubArt('heart', CAT)}</span><span class="hub-rough-copy"><b>${F('Feeding challenges')}</b><small>${F(toughSub)}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`;
     const vs = v === 2 ? [['Normal', 'Quick, distracted feeds, and interest in your food.'], ['Call your pediatrician', 'Refusing feeds, fewer than 6 wet diapers, or forceful vomiting.']]
@@ -3041,7 +3041,7 @@
       + hubStageStrip({ title: 'Textures, as he grows', items: [['bowl', 'Around 6 months', 'Smooth and mashed'], ['avocado', '6–8 months', 'Soft, finger-size strips'], ['lentils', '9 months on', 'Soft, pea-size pieces']], cat: CAT })
       + xNote('Gagging is normal', 'while he learns. It’s loud. Choking is silent.'));
   // From 9 months (the Meals stage), the same row opens what a meal looks like now. Not a sequence, so no numbers.
-  const zMealMeals = () => yPage(XG, 'How a meal goes', 'What you eat works for him, cut small', 'You choose what and when. He chooses how much.',
+  const zMealMeals = () => yPage(XG, 'How a meal goes', 'Most family food works for him now', 'You choose what and when. He chooses how much.',
       steps([['drop', 'Milk after meals', 'First thing in the morning, milk first is fine'], ['lentils', 'Soft, small pieces', 'Unsalted, with iron at each meal'], ['hand', 'He feeds himself', 'Fingers first, a spoon to practice']], false)
       + h2('Ideas from your plate') + chips(['Shredded chicken', 'Scrambled egg', 'Squashed beans', 'Soft pasta', 'Banana or ripe pear', 'Soft-cooked veggies'])
       + xNote('Still cut it small:', 'quarter grapes lengthwise, cook hard veg until soft, and spread nut butter thin.'));
@@ -3222,7 +3222,7 @@
       + xKnow('Variety', 'Different flavors and colors now make new foods easier later.')
       + gLink('Allergens he’s had', 'z_allergens'));
   // Meals
-  const zMealMeals2 = () => yPage(XG, 'Feeding himself', 'What you eat works for him, cut small', 'Soften it, and skip the added salt.',
+  const zMealMeals2 = () => yPage(XG, 'Feeding himself', 'Most family food works for him now', 'Soften it, and skip the added salt.',
       xCompare([['bowl', 'From your plate', 'Take out his portion before adding salt.'], ['hand', 'He feeds himself', 'Fingers first, a spoon to practice.']])
       + h2('Ideas from your plate') + chips(['Shredded chicken', 'Scrambled egg', 'Squashed beans', 'Soft pasta', 'Banana or ripe pear', 'Soft-cooked veggies'])
       + gLink('How to cut and cook foods safely', 'z_shapes'));
@@ -3238,7 +3238,7 @@
   P.z_allergens = (() => { const prev = P.z_allergens; return () => prev().split(F('Common allergens early, then keep them going')).join(F('Try the common allergens early')).split(F('Early and often lowers the chance of a food allergy.')).join(F('Trying them early lowers the chance of a food allergy.')).split(F('Tap each one once he’s had it')).join(F('Want to keep track? Tap each one he’s had')).split(F('Once it’s in, offer it a few times a week.')).join(F('Once it’s in, keep it in his meals.')); })();
   const GUIDES = () => { const v = stg(), m = ageMo(), nurse = nurses(), bot = isBottle(), done = alGet().length;
     if (v === 0) return [[XC.f1, 'hand', 'A feed, step by step', 'From his first cue to the last burp', nurse ? 'Latch, burps, and when he’s full' : 'Pacing, burps, and when he’s full', 'xa:feed'],
-      [XC.routine, 'moon', 'Evenings and nights', 'Busy evenings, then quick, calm nights', 'Cluster feeding, and waking to feed', 'nb_eve'],
+      [XC.routine, 'moon', 'Evenings and nights', 'Busy evening feeds, then quick night ones', 'Cluster feeding, and waking to feed', 'nb_eve'],
       [XC.growth, 'leaf', 'Is he getting enough?', 'His diapers show if he’s getting enough', 'How many wet diapers, day by day', 'nb_enough']];
     if (v === 1 && m < 3) return [[XC.f1, nurse ? 'heart' : 'bottle', 'Feeds now', 'Hungrier some days? Often a growth spurt', 'Usually around 6 weeks and 3 months', 'm1_now'],
       [XC.d1, 'moon', 'Evenings and nights', 'Night feeds are still normal', '1–3 a night, and when waking stops', 'm1_eve'],
@@ -3255,9 +3255,9 @@
     if (v === 3) return [[XG, 'avocado', 'Beyond purées', 'Move from smooth food to soft pieces', 'What to offer at 6, 7–8 and 9 months', 'z_textures'],
       [XC.p1, 'hand', 'Safe finger foods', 'Finger foods should squish when pressed', 'Strips now, small pieces from 9 months', 'z_shapes'],
       [XC.g1, 'peanut', 'Keeping foods in rotation', 'Keep allergens in his meals once tried', 'How often, and easy ways to fit them in', 'z_rotate']];
-    return [[XG, 'lentils', 'Feeding himself', 'What you eat works for him, cut small', 'What to soften, and what to skip', 'z_meal'],
+    return [[XG, 'lentils', 'Feeding himself', 'Most family food works for him now', 'What to soften, and what to skip', 'z_meal'],
       [XC.g1, 'clock', 'Meals, snacks and milk', 'Some days he eats a lot, some days little', 'Why the week matters most', 'z_day'],
-      [XC.d1, 'cup', 'Turning 1', 'Cups now, whole milk at 12 months', 'How much milk, and moving off bottles', 'z_milk12']]; };
+      [XC.d1, 'cup', 'Turning 1', 'Start cups now, whole milk at 12 months', 'How much milk, and moving off bottles', 'z_milk12']]; };
   const gRow = ([c, icon, eb, title, sub, id]) => H().row({ cat: CAT, icon, title, sub, onclick: go(id) })
     .replace(/<span class="hub-dot">[\s\S]*?<\/span><span class="hub-row-copy">/, `<span class="hub-dot">${hubArt(icon, CAT).replace('data-art=', 'data-keep=')}</span><span class="hub-row-copy"><small class="hub-row-eyebrow">${F(eb)}</small>`)
     .replace('class="hub-row', `style="--sm-bg:${c[0]};--sm-ink:${c[1]}" class="sm-row hub-row`);

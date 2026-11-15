@@ -366,14 +366,14 @@
 
     // Car seat: one page from birth past the first birthday. Next car seat and rear-facing after 1 live here now.
     if (id === 'car' || id === 'bigger' || id === 'after1') {
-      const install = `<h2 class="hub-h2">${F('Setting it up')}</h2>` + steps([['lock', 'Pick one way to install it', 'Lower anchors or the seat belt, not both'], ['back', 'Set the recline', 'To the angle line on the seat'], ['hand', 'Check it’s tight', 'It moves less than 1 inch where it’s belted'], ['shield', 'Buckle {o} in snugly', 'Harness straps at or below {p} shoulders']], 'Install it with the lower anchors or the seat belt, not both. Set the recline to the angle line, then tighten it so it moves less than 1 inch where it’s belted. Buckle the straps at or below the shoulders.', true);
+      const install = `<h2 class="hub-h2">${F('Setting it up')}</h2>` + steps([['lock', 'Pick one way to install it', 'Lower anchors or the seat belt, not both'], ['back', 'Set the recline', 'To the angle line on the seat'], ['hand', 'Check it’s tight', 'Tug at the belt path: under 1 inch of movement'], ['shield', 'Buckle {o} in snugly', 'Harness straps at or below {p} shoulders']], 'Install it with the lower anchors or the seat belt, not both. Set the recline to the angle line, then tighten it so it moves less than 1 inch where it’s belted. Buckle the straps at or below the shoulders.', true);
       // One page for the whole first year and beyond: no stages, so the seat-by-seat path shows from day one,
       // and Good to know holds what's true at any age. The home's "Coming up" card points back here when the limits matter.
-      return sub('gear', 'Your gear', 'If you can pinch the strap, it’s too loose', 'Run these checks before every drive.',
+      return sub('gear', 'Your gear', 'If you can pinch the strap, it’s too loose', 'Snug straps keep {o} still in a sudden stop. Check before every drive.',
         hubFigure('carseat', CAT, 'Rear-facing in the back seat, chest clip level with the armpits, and no puffy coat underneath.')
         + install
         + timeline('Which seat, and when', [['From birth', 'car', 'An infant seat, rear-facing.'], ['At its limit', 'sit', 'A convertible seat, still rear-facing.'], ['Often age 2 or older', 'stand', 'Forward-facing, after its rear-facing limits.']], 'An infant seat rear-facing from birth, a convertible seat still rear-facing once the infant seat’s limit is reached, and forward-facing only after its rear-facing limits, often age 2 or older.')
-        + good([['notepad', 'Only what came with it', 'No add-on inserts, and secondhand only if you know its history.'], ['steth', 'A free check', 'A certified car seat technician can check your install, usually for free.']]));
+        + good([['road', 'Taxis and other people’s cars', 'Bring {p} car seat. Most can be installed with just the seat belt.'], ['notepad', 'Only what came with it', 'No add-on inserts or head supports, and secondhand only if you know its history.'], ['steth', 'A free check', 'A certified car seat technician can check your install, usually for free.']]));
     }
 
     // Carrier and stroller follow Car seat: the same page at every age, with how it changes shown as a path from day one.
