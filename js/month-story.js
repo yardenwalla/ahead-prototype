@@ -568,9 +568,13 @@
         '<rect x="134" y="20" width="58" height="34" rx="14" fill="' + INK + '"/><path d="M146 52 l-6 12 l14 -12z" fill="' + INK + '"/><text x="163" y="43" text-anchor="middle" font-family="Nunito,sans-serif" font-weight="900" font-size="17" fill="#fffaf3">ooh!</text>',
       3: sit({ mouth: 'grin', eyes: 'closed', arms: el(52, 120, 11, 24, S, 40) + hand(42, 100) + el(148, 120, 11, 24, S, -40) + hand(158, 100) }) +
         '<rect x="22" y="40" width="9" height="9" rx="2" fill="#e98a6b" transform="rotate(20 26 44)"/><rect x="166" y="34" width="9" height="9" rx="2" fill="#ffd98a" transform="rotate(-15 170 38)"/><rect x="40" y="16" width="8" height="8" rx="2" fill="#7d6597"/><rect x="150" y="62" width="8" height="8" rx="2" fill="#7fae95" transform="rotate(30 154 66)"/>',
-      4: el(108, 170, 64, 26, O) + el(162, 176, 22, 12, S) + el(56, 182, 12, 16, S) + el(84, 186, 12, 14, S) +
-        head(70, 118, 40, 'wide', 'o') + '<text x="150" y="70" font-family="Nunito,sans-serif" font-weight="900" font-size="34" fill="#ffd98a">✦</text><text x="128" y="40" font-family="Nunito,sans-serif" font-weight="900" font-size="20" fill="#e98a6b">✦</text>',
-      5: sit({ legsUp: true, mouth: 'grin', arms: '', over: el(56, 156, 14, 30, S, 40) + el(144, 156, 14, 30, S, -40) + el(34, 132, 16, 11, S, 40) + el(166, 132, 16, 11, S, -40) + hand(50, 150, 10) + hand(150, 150, 10) + '<circle cx="24" cy="124" r="4" fill="#de9d79"/><circle cx="30" cy="119" r="3.5" fill="#de9d79"/><circle cx="176" cy="124" r="4" fill="#de9d79"/><circle cx="170" cy="119" r="3.5" fill="#de9d79"/><path d="M14 104 q-6 8 0 16 M186 104 q6 8 0 16" fill="none" stroke="#2B2840" stroke-width="3" stroke-linecap="round" opacity=".3"/>' }),
+      4: el(116, 168, 54, 24, O) + el(158, 146, 10, 24, S, -38) + el(170, 128, 13, 9, S, -38) + el(146, 150, 10, 22, S, -20) + el(152, 130, 12, 9, S, -20) +
+        el(62, 184, 24, 9, S) + el(96, 186, 22, 9, S) + '<g transform="rotate(-6 74 128)">' + head(74, 128, 40, 'wide', 'o') + '</g>' +
+        '<text x="140" y="66" font-family="Nunito,sans-serif" font-weight="900" font-size="34" fill="#ffd98a">✦</text><text x="118" y="38" font-family="Nunito,sans-serif" font-weight="900" font-size="20" fill="#e98a6b">✦</text>',
+      5: sit({ legsUp: true, mouth: 'grin', arms: el(50, 132, 11, 22, S, 70) + hand(32, 124, 10) + el(150, 132, 11, 22, S, -70) + hand(168, 124, 10),
+        over: el(78, 178, 12, 24, S, 60) + el(122, 178, 12, 24, S, -60) + el(56, 166, 15, 11, S, 30) + el(144, 166, 15, 11, S, -30) +
+          '<circle cx="46" cy="160" r="3.6" fill="#de9d79"/><circle cx="52" cy="156" r="3.2" fill="#de9d79"/><circle cx="154" cy="160" r="3.6" fill="#de9d79"/><circle cx="148" cy="156" r="3.2" fill="#de9d79"/>' +
+          '<path d="M30 176 q-8 10 0 20 M18 172 q-8 14 0 28 M170 176 q8 10 0 20 M182 172 q8 14 0 28" fill="none" stroke="#2B2840" stroke-width="3" stroke-linecap="round" opacity=".28"/>' }),
       6: sit({ bib: true, mouth: 'o', arms: el(58, 150, 11, 22, S, 22) + el(144, 132, 11, 22, S, -40) + '<rect x="146" y="70" width="8" height="54" rx="4" fill="#e3b259" transform="rotate(14 150 97)"/>' + el(158, 70, 13, 9, y.url, 14) + hand(150, 118) }) +
         el(116, 112, 5, 4, '#e3b259'),
       7: sit({ mouth: 'grin', arms: el(58, 150, 11, 22, S, 22) + el(146, 112, 11, 24, S, -30) + hand(156, 90) }) +
@@ -579,11 +583,15 @@
       9: el(108, 140, 54, 30, O) + el(150, 172, 10, 22, S) + el(66, 170, 10, 22, S) + el(160, 152, 16, 20, O, 20) + el(166, 178, 18, 10, S) +
         head(56, 108, 40, 'wide', 'smile') +
         '<g transform="translate(118 46) rotate(-20)"><circle cx="20" cy="20" r="18" fill="' + y.url + '"/><circle cx="20" cy="20" r="12" fill="#eaf4fb"/><rect x="34" y="16" width="26" height="9" rx="4.5" fill="' + c.url + '" transform="rotate(40 34 20)"/></g>',
-      10: el(84, 192, 12, 9, S) + el(116, 192, 12, 9, S) + '<rect x="76" y="150" width="18" height="44" rx="9" fill="' + S + '"/><rect x="106" y="150" width="18" height="44" rx="9" fill="' + S + '"/>' +
-        el(100, 140, 40, 34, O) + el(62, 108, 10, 22, S, 30) + hand(54, 88) + el(138, 108, 10, 22, S, -30) + hand(146, 88) + head(100, 74, 38, 'open', 'grin'),
-      11: el(84, 192, 12, 9, S) + el(116, 192, 12, 9, S) + '<rect x="76" y="150" width="18" height="44" rx="9" fill="' + S + '"/><rect x="106" y="150" width="18" height="44" rx="9" fill="' + S + '"/>' +
-        el(100, 140, 40, 34, O) + el(64, 146, 10, 22, S, 18) + el(140, 108, 10, 22, S, -30) + hand(148, 88) + head(100, 78, 38, 'closed', 'grin') +
-        '<path d="M80 46 L100 4 L120 46 Z" fill="' + c.url + '"/><circle cx="100" cy="6" r="6" fill="#ffd98a"/><path d="M90 26 l20 0 M86 36 l28 0" stroke="#fffaf3" stroke-width="3" opacity=".6"/>'
+      10: '<rect x="128" y="128" width="66" height="70" rx="16" fill="' + on.url + '" opacity=".55"/><rect x="122" y="118" width="78" height="22" rx="11" fill="' + TONE[2] + '"/>' +
+        el(70, 194, 12, 8, S) + el(100, 194, 12, 8, S) + '<rect x="62" y="152" width="17" height="42" rx="8.5" fill="' + S + '" transform="rotate(6 70 172)"/><rect x="92" y="152" width="17" height="42" rx="8.5" fill="' + S + '" transform="rotate(-6 100 172)"/>' +
+        el(86, 140, 38, 32, O, 6) + el(118, 128, 10, 22, S, -60) + hand(134, 120) + el(52, 110, 10, 22, S, 24) + hand(46, 90) +
+        '<g transform="rotate(8 86 76)">' + head(86, 76, 37, 'open', 'grin') + '</g>',
+      11: '<path d="M42 66 q4 50 20 84" fill="none" stroke="' + INK + '" stroke-width="2" opacity=".5"/>' + el(40, 40, 22, 26, y.url) + '<path d="M36 64 l4 6 l4 -6z" fill="#e3b259"/>' +
+        el(84, 192, 12, 8, S) + el(116, 192, 12, 8, S) + '<rect x="76" y="150" width="18" height="42" rx="9" fill="' + S + '"/><rect x="106" y="150" width="18" height="42" rx="9" fill="' + S + '"/>' +
+        el(100, 140, 40, 34, O) + el(70, 150, 10, 20, S, 40) + hand(62, 150) + el(144, 110, 10, 22, S, -36) + hand(154, 90) +
+        '<path d="M168 70 q8 8 4 18 M176 62 q12 12 6 28" fill="none" stroke="' + INK + '" stroke-width="3" stroke-linecap="round" opacity=".3"/>' +
+        '<g transform="rotate(-8 100 78)">' + head(100, 78, 38, 'closed', 'grin') + '<path d="M80 46 L100 4 L120 46 Z" fill="' + c.url + '"/><circle cx="100" cy="6" r="6" fill="#ffd98a"/><path d="M90 26 l20 0 M86 36 l28 0" stroke="#fffaf3" stroke-width="3" opacity=".6"/></g>'
     };
     return svg('0 0 200 210', sk.def + on.def + y.def + c.def, shadow(100, 202, 70) + P[m], 'st-obj ms-baby');
   }
