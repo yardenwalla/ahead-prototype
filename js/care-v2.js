@@ -304,6 +304,14 @@
     const callG = 'Bleeding that lasts more than 3–4 days, or starts after the first week.', callC = 'After a circumcision: bleeding bigger than a quarter, swelling, pus-filled blisters, a fever, no pee within 8 hours, or a plastic ring still on after 10 days.';
     return pr === 'she' ? girl + callTip(callG) : pr === 'he' ? circ + boy + callTip(callC) : girl + circ + boy + callTip(`Girls: ${callG.charAt(0).toLowerCase() + callG.slice(1)} ${callC}`);
   };
+  // Nov 15: the first week at a glance. Wet diapers rise as a little column of drops; the poop color to expect sits under each day.
+  const DROP = '<svg viewBox="0 0 12 14" aria-hidden="true"><path d="M6 1C6 1 1.5 6.2 1.5 9a4.5 4.5 0 0 0 9 0C10.5 6.2 6 1 6 1Z"/></svg>';
+  const wetChart = () => { const D = [['Days 1–2', 2, '1–2', '#2f2a26', 'Black, sticky'], ['Days 3–4', 3, '3+', '#6b6a33', 'Turning green'], ['Day 5', 5, '5+', '#d9a62a', () => live() && profile.feed === 'Formula' ? 'Tan or yellow' : 'Yellow, seedy'], ['Day 6 on', 6, '6+', '#d9a62a', 'Yellow, often after feeds']];
+    return `<figure class="hub-card wet-chart" role="img" aria-label="Wet diapers a day: 1 to 2 on days 1 and 2, 3 or more on days 3 and 4, 5 or more on day 5, 6 or more from day 6. Poop goes from black and sticky to green to yellow."><div class="wet-label">${F('Wet diapers a day')}</div><div class="wet-grid">`
+      + D.map(([d, n, w]) => `<div class="wet-col"><span class="wet-drops">${Array.from({ length: 6 }, (_, i) => `<i class="${i < n ? 'on' : ''}">${DROP}</i>`).join('')}</span><b>${F(w)}</b><small>${F(d)}</small></div>`).join('')
+      + `</div><div class="wet-label is-poop">${F('Poop')}</div><div class="wet-grid">`
+      + D.map(([, , , c, t]) => `<div class="wet-col"><span class="wet-poop" style="--c:${c}"></span><small>${F(val(t))}</small></div>`).join('')
+      + `</div></figure>`; };
   const ramp = () => `<div class="hub-card care-ramp">${[['Days 1–2', '1–2 wet', 'Black, sticky poop', '#2f2a26'], ['Days 3–4', '3 or more wet', 'Turning green, then yellow', '#5e5a2c'], ['Day 5', '5 or more wet', 'Yellow and seedy if breastfed, tan if formula', '#d9a62a'], ['From about day 6', '6 or more wet', 'Often a poop after feeds', '#d9a62a']].map(([d, w, p, c]) => `<div><i class="care-swatch" style="background:${c}"></i><b>${F(d)}</b><span>${F(w)}</span><small>${F(p)}</small></div>`).join('')}</div>`;
   const rashHow = () => H().steps(['Change often, and let the skin air out when you can.', 'A thick layer of zinc oxide or petroleum cream at every change. Fragrance-free wipes, and no antibiotic ointment.', 'Shiny, bright red in the skin folds is often yeast, which needs a different cream. Regular diaper rash usually spares the folds.']) + H().tip('Call your pediatrician', 'Not better in 2–3 days, or blisters, pus, oozing or a fever.');
   // Each rash opens right here: what it looks like, what helps, when to call. One tap, never two.
@@ -924,8 +932,8 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
        all     type, k (color and art), title, why (one sentence)
        expect  normal: a figure, or [[icon, bold, line], ...] (2–3); do (one or two sentences); doRows [[icon, bold, line]] (≤2);
                calls { ped, now, nowLabel }
-       howto   steps [[icon, bold, line], ...] (3–5, one action each); safe [sentence, ...] (≤2); video [id, title, source]
-       check   where (rash id for the body map); tell [[icon, bold, line]] (≤2); notRight [title, line, route];
+       howto   steps [[icon, bold, line], ...] (3–5, one action each); safe [[icon, bold rule, line]] (≤2); video [id, title, source]
+       check   where (rash id for the body map); tell: short notes shown inside the figure (≤2); notRight (a text link) [title, line, route];
                helps [[icon, bold, line]]; calls { ped, now, nowLabel }
      To add a page: add an entry to TPL under its route. QA: tools/qa/browser/care_blocks.py. */
   const PHONE = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h3l2 5-2.5 1.5a11 11 0 0 0 6 6L15 14l5 2v3a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>';
@@ -939,7 +947,12 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     rows: rows => { rows = (val(rows) || []).filter(Boolean).slice(0, 3); return rows.length ? `<div class="hub-list">${rows.map(([icon, t, sub]) => H().row({ icon, cat: CAT, title: t, sub })).join('')}</div>` : ''; },
     video: v => v ? hubEmbed(...v) : '',
     link: l => l ? `<div class="hub-list care-link">${rowK('look', l[0], l[1], `openPage('chg:${CAT}:d:${val(l[2])}')`)}</div>` : '',
-    section: (title, body) => body ? h2(F(title)) + body : ''
+    section: (title, body) => body ? h2(F(title)) + body : '',
+    // Short notes go inside the figure they explain, so a section is one card, not a stack of boxes.
+    noted: (fig, notes) => { notes = (val(notes) || []).filter(Boolean); if (!fig || !notes.length) return fig || '';
+      const ul = `<ul class="tpl-notes">${notes.map(([icon, t, sub]) => `<li><b>${F(t)}.</b> ${F(sub)}</li>`).join('')}</ul>`;
+      const i = fig.lastIndexOf('</figure>'); return i < 0 ? fig + ul : fig.slice(0, i) + ul + fig.slice(i); },
+    more: l => l ? `<button class="tpl-more" onclick="openPage('chg:${CAT}:d:${val(l[2])}')">${F(l[0])} <span>${F(l[1])} ›</span></button>` : ''
   };
   const TEMPLATES = {
     expect: q => { const n = val(q.normal); return TB.top(q, q.why)
@@ -948,11 +961,11 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
       + callsCard(q.calls); },
     howto: q => TB.top(q, q.why)
       + TB.section('Steps', TB.tiles(val(q.steps), true))
-      + TB.section('Keep {o} safe', q.safe ? `<section class="ss-do care-tpl-card">${val(q.safe).map(t => `<p>${F(t)}</p>`).join('')}</section>` : '')
+      + TB.section('Keep {o} safe', TB.rows(q.safe))
       + TB.section('Watch how', TB.video(q.video)),
     check: q => { let t = TB.top(q, q.why); const m = q.where && window.careMini ? careMini({ newborn: 'milia', yeast: 'diaper' }[q.where] || q.where) : '';
       if (m) t = t.replace(/<span class="dev-area-head-art">[\s\S]*?<\/svg><\/span>/, `<span class="dev-area-head-art care-rash-art">${m}</span>`);
-      return t + TB.section('How to tell', (q.where ? rashMap(q.where) : q.figure ? q.figure() : '') + TB.rows(q.tell) + TB.link(q.notRight))
+      return t + TB.section('How to tell', TB.noted(q.where ? rashMap(q.where) : q.figure ? q.figure() : '', q.tell) + TB.more(q.notRight))
         + TB.section('What helps', TB.tiles(val(q.helps), false))
         + callsCard(q.calls); }
   };
@@ -961,23 +974,23 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   const TPL = {
     't:diapers:0': { type: 'expect', k: 'diapers', title: 'Wet diapers go up day by day',
       why: 'From about day 6, six or more a day means {s’s} getting enough milk.',
-      normal: () => ramp() + TB.rows([['diaper', 'A pink stain is usually just pee', 'Still there after day 4? {S} may need more feeds.']]),
+      normal: () => TB.noted(wetChart(), [['diaper', 'A pink stain is usually just pee', 'Still there after day 4? {S} may need more feeds']]),
       do: 'Feed often, 8–12 times a day, and keep a rough count of wet diapers this week.',
       calls: { ped: 'fewer wet diapers than the chart, black poop after day 3, or blood in the poop.', now: 'white, gray or chalky poop, or watery poop many times a day.' } },
     't:diapers:2': { type: 'expect', k: 'diapers', title: 'Diapers stay the same, but rolling starts',
       why: 'Wet diapers and poop look much like before until solids. The change is at the changing table.',
-      normal: [['diaper', '6 or more wet a day', 'Same as before'], ['diaper', 'Poop much as before', 'Until solids start']],
+      normal: [['drop', '6 or more wet a day', 'Same as before'], ['diaper', 'Poop much as before', 'Until solids start']],
       do: 'Keep one hand on {o} at every change, since rolling can start any day. Have everything within reach first, or change {o} on the floor.',
       doRows: [['diaper', 'Leaks mean it’s time to size up', 'So do red marks at the legs or waist.']],
       calls: { ped: 'a diaper rash lasts more than 2–3 days, or has blisters, pus or bright red folds.' } },
     'p:tub': { type: 'howto', k: 'bath', title: 'Tub baths can start',
       why: () => 'Once the cord' + (anatomy() !== 'girl' ? ' and any circumcision have' : ' has') + ' healed, about 3 baths a week is plenty.',
       steps: [['drop', 'Get the water ready', 'About 2 inches, about 100°F'], ['drop', 'Face first', 'Plain water, no soap'], ['hand', 'Then the body', 'A hand behind the head'], ['bath', 'Hair last', 'At 2 or 3 baths a week'], ['towel', 'Straight into a towel', 'Pat dry into the creases']],
-      safe: ['Keep a hand on {o} the whole bath. Babies can slip under in seconds, so to step away, wrap {o} in a towel and take {o} with you.', 'Set your water heater to 120°F or lower, so scalds are much less likely.'],
+      safe: [['hand', 'A hand on {o} the whole bath', 'To step away, wrap {o} in a towel and take {o} with you.'], ['thermo', 'Water heater at 120°F or lower', 'So scalds are much less likely.']],
       video: ['VsUla1M7eHQ', 'Giving a tub bath', 'Nemours KidsHealth'] },
     'rash:acne': { type: 'check', k: 'skin', title: 'Baby acne', where: 'acne',
       why: 'Very common from 2–4 weeks, from pregnancy hormones. It clears on its own, usually by 4–6 months.',
-      tell: [['smile', 'Tiny white dots on the nose are milia', 'Not acne. Normal too, and they fade on their own.']],
+      tell: [['smile', 'Tiny white dots on the nose are milia', 'Not acne. Normal too, and they fade on their own']],
       notRight: ['Not the right rash?', 'Heat rash, eczema and more', () => `look:${Math.min(stageNow(), 1)}:rashmore`],
       helps: [['drop', 'Plain water once a day', 'Then pat dry'], ['shield', 'Nothing on the bumps', 'No lotions, oils or acne products']],
       calls: RASH_CALLS }
@@ -988,8 +1001,8 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     why: 'Yellow, green, tan, brown and orange are all fine. A few colors mean a call.',
     figure: () => poopChart(),
     tell: () => [
-      tplNow === 0 ? null : live() && profile.feed === 'Formula' ? ['clock', 'Most days is usual on formula', 'Some days more, some less.'] : ['clock', 'Days between poops can be normal', live() && profile.feed === 'Both' ? 'A few days apart is fine if {s’s} feeding well.' : 'Breastfed babies can go days between.'],
-      ['diaper', 'Straining and going red is normal', 'Even when the poop comes out soft.']],
+      tplNow === 0 ? null : live() && profile.feed === 'Formula' ? ['clock', 'Most days is usual on formula', 'Some days more, some less'] : ['clock', 'Days between poops can be normal', live() && profile.feed === 'Both' ? 'A few days apart is fine if {s’s} feeding well' : 'Breastfed babies can go days between'],
+      ['diaper', 'Straining and going red is normal', 'Even when the poop comes out soft']],
     helps: () => tplNow >= 2 ? [['bowl', 'Hard poop? Try pears, prunes or peaches', 'Fruits that soften it']] : null,
     calls: { ped: 'fewer than 6 wet diapers a day, hard pebble-like poop, or watery poop many times a day.', now: () => tplNow <= 1 ? 'white, gray or chalky poop, or watery poop under 3 months.' : 'white, gray or chalky poop.' } };
 
