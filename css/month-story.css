@@ -507,34 +507,42 @@
 .is-on .st-dresser{animation:stTipOver 1.2s 1s ease-in-out forwards}@keyframes stTipOver{0%{transform:none}40%{transform:rotate(-7deg)}100%{transform:none}}
 .st-strap{position:absolute;left:150px;top:18px;width:0;height:8px;border-radius:4px;background:#c4502f}
 .is-on .st-strap{animation:stStrap .5s 2.2s ease-out forwards}@keyframes stStrap{to{width:40px}}
-/* Home's month card: the entry to her month story */
-#main .he-story{cursor:pointer;display:grid;grid-template-columns:1fr 42%;grid-template-rows:auto 1fr auto;column-gap:8px;min-height:230px;padding-bottom:18px}
-#main .he-story .he-eyebrow{grid-column:1/-1}
-#main .he-story .he-copy{grid-column:1;grid-row:2;align-self:center}
-#main .he-story .he-copy h1{font-size:30px;line-height:1.05;letter-spacing:-.02em}
-#main .he-story .he-lead{margin-top:8px}
-#main .he-story .he-art{grid-column:2;grid-row:2;align-self:center;position:static;width:auto;height:auto}
-#main .he-story .he-art svg{width:100%;height:auto}
-#main .he-story .he-watch{grid-column:1/-1;grid-row:3;margin-top:14px;display:flex;align-items:center;gap:10px;padding:12px 14px 12px 12px;border-radius:999px;background:rgba(255,255,255,.82);font-weight:800;font-size:16px;color:var(--m-ink,#2B2840)}
-#main .he-story .he-watch i{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--m-ink,#2B2840);flex:0 0 30px}
-#main .he-story .he-watch svg{width:16px;height:16px;fill:#fff;margin-left:2px}
-#main .he-story .he-watch b{margin-left:auto;font-size:22px;font-weight:600;opacity:.6}
-#main .he-story:active{transform:scale(.99)}
-#main .he-hero.he-story .he-art{position:relative!important;right:auto;bottom:auto;width:100%;height:150px;margin:0 -10px 0 0!important;align-self:center}
-#main .he-hero.he-story .he-copy h1{font-size:28px}
-#main .he-hero.he-story .he-copy{position:relative;z-index:1}
-#main .he-hero.he-story .he-watch{position:relative;z-index:2}
-#main .he-hero.he-story{display:grid!important;grid-template-columns:1fr 40%!important;grid-template-rows:auto 1fr auto!important;align-items:center}
-#main .he-hero.he-story>.he-eyebrow{grid-column:1/-1!important;grid-row:1!important}
-#main .he-hero.he-story>.he-copy{grid-column:1!important;grid-row:2!important;max-width:none!important}
-#main .he-hero.he-story>.he-art{grid-column:2!important;grid-row:2!important;height:140px}
-#main .he-hero.he-story>.he-watch{grid-column:1/-1!important;grid-row:3!important}
-#main .he-hero.he-story{grid-template-columns:1fr 46%!important;grid-template-rows:auto auto 1fr auto!important;row-gap:0}
-#main .he-hero.he-story>.he-copy{display:contents!important}
-#main .he-hero.he-story h1{grid-column:1/-1;grid-row:2;margin:0;font-size:30px!important;line-height:1.05}
-#main .he-hero.he-story .he-lead{grid-column:1;grid-row:3;align-self:center;margin:10px 0 0!important}
-#main .he-hero.he-story>.he-art{grid-column:2!important;grid-row:3!important;height:120px;margin-top:6px!important}
-#main .he-hero.he-story>.he-watch{grid-row:4!important}
-#main .he-hero.he-story .he-lead{max-width:none!important;width:auto!important;padding-right:6px}
-#main .he-hero.he-story>.he-art{height:130px}
-#main .he-hero.he-story>.he-art svg{transform:scale(1.35)!important;transform-origin:60% 60%!important}
+/* Home's month card: the entry to her month story (dark card in her month's color) */
+#main .ms-card{display:flex;flex-direction:column;width:100%;text-align:left;border:0;cursor:pointer;font-family:inherit;color:#fffaf3;border-radius:28px;padding:22px 24px 20px;background:linear-gradient(140deg,var(--ms-a) 0%,var(--ms-b) 100%);box-shadow:0 10px 26px rgba(30,24,40,.16);overflow:hidden;position:relative;margin:4px 0 6px}
+#main .ms-card:active{transform:scale(.99)}
+#main .ms-top{display:flex;align-items:center;justify-content:space-between}
+#main .ms-eyebrow{font-size:12.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,250,243,.82)}
+#main .ms-dot{width:26px;height:26px;border-radius:50%;background:var(--ms-acc);display:grid;place-items:center}
+#main .ms-dot svg{width:14px;height:14px;fill:var(--ms-a);margin-left:2px}
+#main .ms-body{display:flex;align-items:center;gap:8px;margin-top:6px;min-height:140px}
+#main .ms-copy{flex:1;display:flex;flex-direction:column;min-width:0}
+#main .ms-month{font-family:var(--display-font,Nunito),sans-serif;font-weight:800;font-size:40px;line-height:1.05;letter-spacing:-.03em;color:#fffaf3}
+#main .ms-name{font-family:var(--display-font,Nunito),sans-serif;font-weight:800;font-size:28px;line-height:1.1;letter-spacing:-.02em;color:var(--ms-acc)}
+#main .ms-copy small{margin-top:10px;font-size:15px;line-height:1.35;color:rgba(255,250,243,.85)}
+#main .ms-art{position:relative;flex:0 0 42%;height:140px}
+#main .ms-c1{position:absolute;right:-6px;top:4px;width:96px;height:96px;border-radius:50%;background:var(--ms-acc);opacity:.9}
+#main .ms-c2{position:absolute;left:4px;bottom:2px;width:104px;height:104px;border-radius:50%;background:var(--ms-ring);opacity:.85}
+#main .ms-pic{position:absolute;left:0;right:0;bottom:8px;height:110px;display:block}
+#main .ms-pic .home-month-scene,#main .ms-pic svg{display:block!important;width:100%!important;height:100%!important;max-height:none!important}
+#main .ms-pic .home-month-scene svg rect:first-child{display:none}
+#main .ms-spark{position:absolute;left:-2px;top:6px;font-style:normal;font-size:26px;color:#ffd98a}
+#main .ms-foot{display:flex;align-items:center;justify-content:space-between;margin-top:14px}
+#main .ms-watch{display:inline-flex;align-items:center;gap:10px;font-size:19px;font-weight:700;color:#fffaf3}
+#main .ms-watch svg{width:24px;height:24px;fill:none;stroke:#fffaf3;stroke-width:1.8}
+#main .ms-watch svg path{fill:#fffaf3;stroke:none}
+#main .ms-go{font-size:20px;color:rgba(255,250,243,.75)}
+/* light version: the month's own soft gradient, dark ink */
+#main .ms-card{color:#2B2840;background:linear-gradient(140deg,var(--m-bg1) 0%,var(--m-bg2) 100%);box-shadow:0 1px 0 rgba(255,255,255,.8) inset;border:1px solid var(--m-line)}
+#main .ms-eyebrow{color:var(--m-ink)}
+#main .ms-dot{background:var(--m-ink)}#main .ms-dot svg{fill:#fff}
+#main .ms-month{color:#2B2840;font-size:34px;white-space:nowrap}
+#main .ms-name{color:var(--ms-acc);font-size:26px;white-space:nowrap}
+#main .ms-copy small{color:#4a4658}
+#main .ms-art{flex:0 0 38%;height:130px}
+#main .ms-c1{background:var(--ms-c1);width:84px;height:84px;opacity:.75}
+#main .ms-c2{background:var(--ms-c2);width:96px;height:96px;opacity:1}
+#main .ms-pic{height:100px}
+#main .ms-watch{color:#2B2840}
+#main .ms-watch svg{stroke:#2B2840}#main .ms-watch svg path{fill:#2B2840}
+#main .ms-go{color:var(--m-ink)}
+#main .ms-name{color:var(--m-ink)}
