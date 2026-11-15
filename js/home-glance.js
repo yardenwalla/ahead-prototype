@@ -149,7 +149,10 @@
     const photo = b.querySelector('.hub-bday-photo'); if (!photo || photo.querySelector('img')) return '';   // photo already added
     const m = +((b.querySelector('.hub-bday-num') || {}).textContent || 0); if (!m || m > 11) return '';
     const input = photo.querySelector('input'); const words = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven'];
-    return `<label class="hg-banner" role="button"><img class="hg-banner-img" src="assets/home/balloon-${m}.png" alt=""><span class="hg-banner-copy"><b>${F(`${name()} is ${words[m]} month${m === 1 ? '' : 's'}`)}</b><small>${F(`Add {p} ${m}-month photo to Memories`)}</small></span><span class="hg-banner-plus" aria-hidden="true">＋</span>${input ? input.outerHTML : ''}</label>`;
+    // Tapped once (photo added or not), it's done for this month: the story card already says which month it is.
+    const key = 'ahead-photo-banner-' + m;
+    try { if (localStorage.getItem(key)) return ''; } catch (e) {}
+    return `<label class="hg-banner hg-banner-slim" role="button" onclick="try{localStorage.setItem('${key}','1')}catch(e){};setTimeout(()=>{const b=document.querySelector('#main .hg-banner');b&&b.remove()},400)"><img class="hg-banner-img" src="assets/home/balloon-${m}.png" alt=""><span class="hg-banner-copy"><b>${F(`${name()}’s ${m}-month photo`)}</b><small>${F('Snap one today for Memories.')}</small></span><span class="hg-banner-plus" aria-hidden="true">＋</span>${input ? input.outerHTML : ''}</label>`;
   }
 
   // Home as "Through her eyes" + "You might notice…" (Nov 9 mock, 3 months written).
