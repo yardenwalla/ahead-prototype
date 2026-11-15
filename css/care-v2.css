@@ -243,3 +243,5 @@
 #main .hub-poop2 figcaption { font-size: 12.5px; color: var(--ink2, #5e5a75); padding-top: 2px }
 /* Template sections: rows and links stack with a little space after a figure. */
 #main .care-tpl .care-map + .hub-list, #main .care-tpl .hub-list + .care-link { margin-top: 10px }
+#main .care-tpl .care-tpl-card p + p { margin-top: 10px }
+#main .care-tpl .hub-card + .hub-list, #main .care-tpl .care-ramp + .hub-list { margin-top: 10px }

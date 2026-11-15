@@ -31,7 +31,7 @@ async def main():
         if d['stray']: bad.append(f"stray block: {d['stray'][0]}")
         if d['gtk']>1 or d['gtkRows']>3: bad.append(f"Good to know: {d['gtk']} lists, {d['gtkRows']} rows")
         # Template pages: a change explainer ends with When to check, Is this normal? with When to call; How-to has none.
-        worry=any(x in r for x in (':look:',':rash:',':t:skin:')) or r.endswith('t:diapers:0') or 'is-change' in d['tpl'] or 'is-check' in d['tpl']
+        worry=any(x in r for x in (':look:',':rash:',':t:skin:')) or r.endswith('t:diapers:0') or 'is-expect' in d['tpl'] or 'is-check' in d['tpl']
         if 'is-howto' in d['tpl'] and d['cards']: bad.append('call card on a How-to page')
         if d['cards'] and not worry: bad.append('call card on a page that is not about a worry')
         bad+=[f"long row ({len(x)}): {x[:60]}…" for x in d['rows'] if len(x)>130]

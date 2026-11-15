@@ -907,28 +907,26 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   const OLD = { sponge: ['bath', 0], tub: ['bath', 1], bathseat: ['bath', 3], skin: ['skin'], dress: ['clothes'], steps: ['clothes', 3], sun: ['sun'], gums: ['teeth', 2], teeth: ['teeth', 3], nails: ['nails'] };
   window.careTopic = function (k, v) { const now = stageNow(); v = Number.isInteger(v) && v >= 0 && v <= 3 ? v : now; return TOPIC[k] ? TOPIC[k](v) : null; };
   const baseRoute = window.changesRoute;
-  /* ---------- Everyday care page templates (Nov 15, structure agreed with Yarden) ----------
-     Every detail page is one of these. Each has the same sections, with the same titles, in the same order, so a parent
-     always knows where they are. A page is data: fill in its fields and the template draws it. Blocks have one design each.
+  /* ---------- Everyday care page templates (Nov 15) ----------
+     Every detail page is one of three templates. Each has the same sections, with the same plain titles, in the same
+     order, so a parent learns where things are. A page is data: fill in its fields and the template draws it.
 
-     Template          Parent's job                     Sections (titles shown on the page)
-     change            Why is this happening?           top card: what's happening · What you might notice ·
-                                                        What it means for you · When to check
-     howto             How do I do this?                top card: the direct answer · Steps · one important tip ·
-                                                        Related help
-     check             Should I be concerned?           top card: what it might be · How to recognize it · What helps ·
-                                                        When to call
-     (Stage overview, "What's changing for my baby right now?", is the guide's main page: big idea · new changes ·
-      what needs action · coming next.)
+     Template   Parent's question            Top card                    Sections
+     expect     What's normal right now?     the takeaway + why          What's normal · What to do · When to call?
+     howto      How do I do this?            the direct answer           Steps · Keep {o} safe? · Watch how?
+     check      Should I be worried?         the name + the verdict      How to tell · What helps · When to call
+     (The guide's main page is the stage overview: what's changing now, what needs action, what's coming.)
+
+     Section titles say what's in them, never an abstract label ("What it means for you"). One call card name everywhere.
+     Numbers only on Steps, where order matters. A How-to page never has a call card; its warnings are "Keep {o} safe".
 
      Fields (text can use {s} {o} {p} and {a|b}; any field can be a function):
-       all:     type, k (color and art), title (the takeaway, or the name the parent tapped on check pages), why (one sentence)
-       change:  notice: a figure, or [[icon, bold, line], ...]; means (one or two sentences); meansRows [[icon, bold, line]] (≤3);
-                check: { ped, now, nowLabel }
-       howto:   steps [[icon, bold, line], ...] (3–5, numbered); tip: [title, text]; help: { video: [id, title, source],
-                rows: [[icon, bold, line]] (≤2) }
-       check:   where (rash id for the body map); recognize [[icon, bold, line]] (≤2); notRight: [title, line, route];
-                helps [[icon, bold, line]] (unnumbered); calls: { ped, now, nowLabel }
+       all     type, k (color and art), title, why (one sentence)
+       expect  normal: a figure, or [[icon, bold, line], ...] (2–3); do (one or two sentences); doRows [[icon, bold, line]] (≤2);
+               calls { ped, now, nowLabel }
+       howto   steps [[icon, bold, line], ...] (3–5, one action each); safe [sentence, ...] (≤2); video [id, title, source]
+       check   where (rash id for the body map); tell [[icon, bold, line]] (≤2); notRight [title, line, route];
+               helps [[icon, bold, line]]; calls { ped, now, nowLabel }
      To add a page: add an entry to TPL under its route. QA: tools/qa/browser/care_blocks.py. */
   const PHONE = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h3l2 5-2.5 1.5a11 11 0 0 0 6 6L15 14l5 2v3a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>';
   const callsCard = (c, title) => !c ? '' : h2(title || 'When to call') + `<section class="care-calls is-titled"><span class="care-calls-ico">${PHONE}</span><div>`
@@ -941,56 +939,65 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     rows: rows => { rows = (val(rows) || []).filter(Boolean).slice(0, 3); return rows.length ? `<div class="hub-list">${rows.map(([icon, t, sub]) => H().row({ icon, cat: CAT, title: t, sub })).join('')}</div>` : ''; },
     video: v => v ? hubEmbed(...v) : '',
     link: l => l ? `<div class="hub-list care-link">${rowK('look', l[0], l[1], `openPage('chg:${CAT}:d:${val(l[2])}')`)}</div>` : '',
-    section: (title, body) => body ? h2(title) + body : ''
+    section: (title, body) => body ? h2(F(title)) + body : ''
   };
   const TEMPLATES = {
-    change: q => { const n = val(q.notice); return TB.top(q, q.why)
-      + TB.section('What you might notice', Array.isArray(n) ? TB.tiles(n, false) : n)
-      + TB.section('What it means for you', TB.card(q.means) + TB.rows(q.meansRows))
-      + callsCard(q.check, 'When to check'); },
+    expect: q => { const n = val(q.normal); return TB.top(q, q.why)
+      + TB.section('What’s normal', Array.isArray(n) ? TB.tiles(n, false) : n)
+      + TB.section('What to do', TB.card(q.do) + TB.rows(q.doRows))
+      + callsCard(q.calls); },
     howto: q => TB.top(q, q.why)
       + TB.section('Steps', TB.tiles(val(q.steps), true))
-      + (q.tip ? TB.section(q.tip[0], TB.card(q.tip[1])) : '')
-      + TB.section('Related help', q.help ? TB.video(q.help.video) + TB.rows(q.help.rows) : ''),
+      + TB.section('Keep {o} safe', q.safe ? `<section class="ss-do care-tpl-card">${val(q.safe).map(t => `<p>${F(t)}</p>`).join('')}</section>` : '')
+      + TB.section('Watch how', TB.video(q.video)),
     check: q => { let t = TB.top(q, q.why); const m = q.where && window.careMini ? careMini({ newborn: 'milia', yeast: 'diaper' }[q.where] || q.where) : '';
       if (m) t = t.replace(/<span class="dev-area-head-art">[\s\S]*?<\/svg><\/span>/, `<span class="dev-area-head-art care-rash-art">${m}</span>`);
-      return t + TB.section('How to recognize it', (q.where ? rashMap(q.where) : '') + TB.rows(q.recognize) + TB.link(q.notRight))
+      return t + TB.section('How to tell', (q.where ? rashMap(q.where) : q.figure ? q.figure() : '') + TB.rows(q.tell) + TB.link(q.notRight))
         + TB.section('What helps', TB.tiles(val(q.helps), false))
-        + callsCard(q.calls, 'When to call'); }
+        + callsCard(q.calls); }
   };
   const tplPage = q => { const c = COL[q.k]; return `<div class="quiet-category hub-page hub-detail care-v2 care-tpl is-${q.type}" data-overview="${CAT}" data-ss="1" style="${yearTheme(CAT)};--ss-bg:${c[0]};--ss-ink:${c[1]}">${detailPageTop(CAT)}${TEMPLATES[q.type](q)}</div>`; };
   const RASH_CALLS = { ped: 'a rash with a fever, blisters or oozing, or one that spreads.', now: 'tiny purple-red dots that don’t fade when you press on them, especially with a fever.', nowLabel: 'Call 911' };
   const TPL = {
-    't:diapers:0': { type: 'change', k: 'diapers', title: 'Wet diapers go up day by day',
-      why: 'From about day 6, six or more a day means {s’s} getting enough milk.', notice: () => ramp(),
-      means: 'Feed often, 8–12 times a day, and keep a rough count of wet diapers this week.',
-      meansRows: [['diaper', 'A pink stain is usually just pee', 'Still there after day 4? {S} may need more feeds.']],
-      check: { ped: 'fewer wet diapers than the chart, black poop after day 3, or blood in the poop.', now: 'white, gray or chalky poop, or watery poop many times a day.' } },
-    't:diapers:2': { type: 'change', k: 'diapers', title: 'Keep a hand on {o} at every change',
-      why: 'Diapers stay much the same until solids start. What changes is rolling, which can start any day.',
-      notice: [['hand', 'More wriggling', 'Twisting and kicking mid-change'], ['toy', 'A first roll', 'Often sooner than you expect']],
-      means: 'Have everything within reach before you start, and keep one hand on {o} the whole change. Or change {o} on the floor.',
-      meansRows: [['diaper', 'Leaks mean it’s time for the next size', 'So do red marks at the legs or waist.'], ['diaper', 'Solids make poop thicker and smellier', 'Sometimes the color of the food.']],
-      check: { ped: 'a diaper rash lasts more than 2–3 days, or has blisters, pus or bright red folds.' } },
+    't:diapers:0': { type: 'expect', k: 'diapers', title: 'Wet diapers go up day by day',
+      why: 'From about day 6, six or more a day means {s’s} getting enough milk.',
+      normal: () => ramp() + TB.rows([['diaper', 'A pink stain is usually just pee', 'Still there after day 4? {S} may need more feeds.']]),
+      do: 'Feed often, 8–12 times a day, and keep a rough count of wet diapers this week.',
+      calls: { ped: 'fewer wet diapers than the chart, black poop after day 3, or blood in the poop.', now: 'white, gray or chalky poop, or watery poop many times a day.' } },
+    't:diapers:2': { type: 'expect', k: 'diapers', title: 'Diapers stay the same, but rolling starts',
+      why: 'Wet diapers and poop look much like before until solids. The change is at the changing table.',
+      normal: [['diaper', '6 or more wet a day', 'Same as before'], ['diaper', 'Poop much as before', 'Until solids start']],
+      do: 'Keep one hand on {o} at every change, since rolling can start any day. Have everything within reach first, or change {o} on the floor.',
+      doRows: [['diaper', 'Leaks mean it’s time to size up', 'So do red marks at the legs or waist.']],
+      calls: { ped: 'a diaper rash lasts more than 2–3 days, or has blisters, pus or bright red folds.' } },
     'p:tub': { type: 'howto', k: 'bath', title: 'Tub baths can start',
       why: () => 'Once the cord' + (anatomy() !== 'girl' ? ' and any circumcision have' : ' has') + ' healed, about 3 baths a week is plenty.',
       steps: [['drop', 'Get the water ready', 'About 2 inches, about 100°F'], ['drop', 'Face first', 'Plain water, no soap'], ['hand', 'Then the body', 'A hand behind the head'], ['bath', 'Hair last', 'At 2 or 3 baths a week'], ['towel', 'Straight into a towel', 'Pat dry into the creases']],
-      tip: ['Every bath', 'Keep a hand on {o} the whole time. Babies can slip under in seconds. To step away, wrap {o} in a towel and take {o} with you.'],
-      help: { video: ['VsUla1M7eHQ', 'Giving a tub bath', 'Nemours KidsHealth'], rows: [['bath', 'Set the water heater to 120°F or lower', 'So scalds are much less likely.']] } },
+      safe: ['Keep a hand on {o} the whole bath. Babies can slip under in seconds, so to step away, wrap {o} in a towel and take {o} with you.', 'Set your water heater to 120°F or lower, so scalds are much less likely.'],
+      video: ['VsUla1M7eHQ', 'Giving a tub bath', 'Nemours KidsHealth'] },
     'rash:acne': { type: 'check', k: 'skin', title: 'Baby acne', where: 'acne',
       why: 'Very common from 2–4 weeks, from pregnancy hormones. It clears on its own, usually by 4–6 months.',
-      recognize: [['smile', 'Tiny white dots on the nose are something else', 'Called milia. Normal too, and they fade without help.']],
+      tell: [['smile', 'Tiny white dots on the nose are milia', 'Not acne. Normal too, and they fade on their own.']],
       notRight: ['Not the right rash?', 'Heat rash, eczema and more', () => `look:${Math.min(stageNow(), 1)}:rashmore`],
       helps: [['drop', 'Plain water once a day', 'Then pat dry'], ['shield', 'Nothing on the bumps', 'No lotions, oils or acne products']],
       calls: RASH_CALLS }
   };
   TPL['t:bath:1'] = TPL['p:tub'];
+  let tplNow = 0;   // the stage a look:<stage>:<topic> page was opened for
+  TPL.poop = { type: 'check', k: 'diapers', eyebrow: 'Is this normal?', title: 'Most poop colors are normal',
+    why: 'Yellow, green, tan, brown and orange are all fine. A few colors mean a call.',
+    figure: () => poopChart(),
+    tell: () => [
+      tplNow === 0 ? null : live() && profile.feed === 'Formula' ? ['clock', 'Most days is usual on formula', 'Some days more, some less.'] : ['clock', 'Days between poops can be normal', live() && profile.feed === 'Both' ? 'A few days apart is fine if {s’s} feeding well.' : 'Breastfed babies can go days between.'],
+      ['diaper', 'Straining and going red is normal', 'Even when the poop comes out soft.']],
+    helps: () => tplNow >= 2 ? [['bowl', 'Hard poop? Try pears, prunes or peaches', 'Fruits that soften it']] : null,
+    calls: { ped: 'fewer than 6 wet diapers a day, hard pebble-like poop, or watery poop many times a day.', now: () => tplNow <= 1 ? 'white, gray or chalky poop, or watery poop under 3 months.' : 'white, gray or chalky poop.' } };
 
   window.changesRoute = function (p) {
     const [, cat, screen, a, b, c] = p.split(':');
     careWorry = cat === CAT && screen === 'd' && (a === 'look' || a === 'rash' || (a === 't' && (b === 'skin' || (b === 'diapers' && Number(c == null ? stageNow() : c) === 0))));
     if (cat === CAT && screen === 'd') {
-      { const key = a === 't' ? `t:${b}:${c == null ? stageNow() : Number(c)}` : [a, b].filter(x => x != null).join(':'); if (TPL[key]) return tplPage(TPL[key]); }
+      { const key = a === 't' ? `t:${b}:${c == null ? stageNow() : Number(c)}` : a === 'look' ? c : [a, b].filter(x => x != null).join(':'); if (a === 'look') tplNow = Number(b) || 0; if (TPL[key]) return tplPage(TPL[key]); }
       if (a === 'c') { const r = topic3(b, c == null ? stageNow() : Number(c)); if (r) return r; }
       if (a === 'q') { const t = Q2T[b]; const r = t ? (t[0] === 'look' ? lookOff(t[1]) : topic3(t[0], t[1])) : (q2Page(b) || qPage(b)); if (r) return r; }
       if (a === 'look') return lookOff(b == null ? null : Number(b), c);
