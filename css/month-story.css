@@ -599,3 +599,6 @@
 #main .ms-feet{left:12%;right:12%;bottom:22%;transform:scale(1.15);transform-origin:50% 50%}
 #main .ms-cake{left:18%;right:18%;bottom:14%;transform:scale(1.25);transform-origin:50% 100%}
 .st-coverart .ms-cake{transform:scale(1.5);transform-origin:50% 100%}
+/* month card: the baby */
+#main .ms-babyw{left:4%;right:4%;bottom:2%;transform:none}
+.st-coverart .ms-babyw{left:0;right:0;bottom:0}

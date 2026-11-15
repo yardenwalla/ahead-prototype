@@ -526,23 +526,68 @@
     return svg('0 0 200 190', b.def + r.def, shadow(100, 180, 76) + '<rect x="30" y="74" width="140" height="100" rx="18" fill="' + b.url + '"/><rect x="22" y="54" width="156" height="34" rx="12" fill="' + b.url + '"/><rect x="88" y="54" width="24" height="120" fill="' + r.url + '"/><path d="M100 54 C 70 20, 50 40, 70 54 Z M100 54 C 130 20, 150 40, 130 54 Z" fill="' + r.url + '"/>'); }
   function mag() { var g = blob('#ffd98a', '#fff1c8', '#e3b259'), h = blob('#e98a6b', '#f6b49c', '#c96f52');
     return svg('0 0 200 200', g.def + h.def, '<rect x="118" y="112" width="30" height="78" rx="15" transform="rotate(-40 133 151)" fill="' + h.url + '"/><circle cx="84" cy="84" r="62" fill="' + g.url + '"/><circle cx="84" cy="84" r="44" fill="#eaf4fb"/><path d="M58 70 Q66 56 82 52" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round"/>'); }
-  window.stCardArt = function (m) {
-    var w = function (cls, html) { return '<span class="ms-l ' + cls + '">' + html + '</span>'; };
-    var S = {
-      1: w('ms-mid ms-face', faceSvg()) + w('ms-crownw', crown()),
-      2: '<span class="ms-bubs"><i>ooh</i><i class="is-r">ahh!</i><i>…</i></span>',
-      3: w('ms-mid ms-low', gift()) + w('ms-b1', burst('#e98a6b')) + w('ms-b2', burst('#7d6597')) + '<i class="ms-conf" style="--x:12%;--y:14%;--c:#ffd98a"></i><i class="ms-conf" style="--x:82%;--y:20%;--c:#e98a6b"></i><i class="ms-conf" style="--x:50%;--y:2%;--c:#7fae95"></i>',
-      4: w('ms-hl', hand(false)) + w('ms-hr', hand(true)),
-      5: V.feet().replace('st-vis', 'ms-l ms-feet'),
-      6: w('ms-mid ms-low', bowl()) + '<b class="ms-half">½</b>',
-      7: w('ms-ball', ball()) + '<i class="ms-fall"></i>',
-      8: w('ms-mid', bunny()) + '<i class="ms-blanket"></i>',
-      9: w('ms-mid ms-mag', mag()),
-      10: w('ms-mid ms-tall', rings()) + w('ms-up', '<svg viewBox="0 0 24 24" class="st-obj"><path d="M12 4l7 8h-4v8H9v-8H5z" fill="#7fae95"/></svg>'),
-      11: V.cake().replace('st-vis', 'ms-l ms-mid ms-cake')
+  /* The month card's baby: one clay-style baby per month, posed to match that month's teaser. */
+  function babyArt(m) {
+    var sk = blob('#f5c3a0', '#fde3cf', '#de9d79');
+    var TONE = { 1: ['#cfe3f3', '#eef6fc', '#a9c9e3'], 2: ['#b9a6e6', '#ddd2f7', '#8f7bc4'], 3: ['#9cc7ae', '#cfe6d9', '#76a88b'], 4: ['#f3a587', '#fbd0bf', '#da7f61'],
+      5: ['#a9cfe8', '#d6ebf7', '#7fb0d2'], 6: ['#ffd98a', '#fff1c8', '#e3b259'], 7: ['#f3a587', '#fbd0bf', '#da7f61'], 8: ['#f6c2cf', '#fbe0e7', '#e29bb0'],
+      9: ['#9cc7ae', '#cfe6d9', '#76a88b'], 10: ['#b9a6e6', '#ddd2f7', '#8f7bc4'], 11: ['#f6c2cf', '#fbe0e7', '#e29bb0'] }[m];
+    var on = blob(TONE[0], TONE[1], TONE[2]), y = blob('#ffd98a', '#fff1c8', '#e3b259'), c = blob('#e98a6b', '#f6b49c', '#c96f52');
+    var S = sk.url, O = on.url, INK = '#2B2840';
+    var el = function (cx, cy, rx, ry, f, rot) { return '<ellipse cx="' + cx + '" cy="' + cy + '" rx="' + rx + '" ry="' + ry + '" fill="' + f + '"' + (rot ? ' transform="rotate(' + rot + ' ' + cx + ' ' + cy + ')"' : '') + '/>'; };
+    var face = function (x, y0, eyes, mouth, k) {
+      k = k || 1; var e = 15 * k, g = '';
+      if (eyes === 'closed') g += '<path d="M' + (x - e - 6) + ' ' + y0 + ' q6 6 12 0 M' + (x + e - 6) + ' ' + y0 + ' q6 6 12 0" fill="none" stroke="' + INK + '" stroke-width="3.5" stroke-linecap="round"/>';
+      else { var r = eyes === 'wide' ? 6.5 : 5.2; g += '<circle cx="' + (x - e) + '" cy="' + y0 + '" r="' + r + '" fill="' + INK + '"/><circle cx="' + (x + e) + '" cy="' + y0 + '" r="' + r + '" fill="' + INK + '"/><circle cx="' + (x - e + 1.8) + '" cy="' + (y0 - 2) + '" r="1.8" fill="#fff"/><circle cx="' + (x + e + 1.8) + '" cy="' + (y0 - 2) + '" r="1.8" fill="#fff"/>'; }
+      g += el(x - e - 9, y0 + 14, 8, 5, '#f39aa8') + el(x + e + 9, y0 + 14, 8, 5, '#f39aa8');
+      var my = y0 + 18;
+      if (mouth === 'o') g += el(x, my + 2, 5, 6, INK);
+      else if (mouth === 'grin') g += '<path d="M' + (x - 10) + ' ' + my + ' q10 14 20 0 z" fill="' + INK + '"/><path d="M' + (x - 5) + ' ' + (my + 5) + ' q5 4 10 0" fill="#f39aa8"/>';
+      else g += '<path d="M' + (x - 7) + ' ' + my + ' q7 7 14 0" fill="none" stroke="' + INK + '" stroke-width="3.5" stroke-linecap="round"/>';
+      return g;
     };
-    return S[m] || '';
-  };
+    var head = function (x, y0, r, eyes, mouth, noHair) {
+      return el(x - r + 2, y0 + 4, 9, 10, S) + el(x + r - 2, y0 + 4, 9, 10, S) + '<circle cx="' + x + '" cy="' + y0 + '" r="' + r + '" fill="' + S + '"/>' +
+        (noHair ? '' : '<path d="M' + (x - 8) + ' ' + (y0 - r + 6) + ' q4 -16 16 -10 q-8 2 -6 10" fill="none" stroke="#9a6a50" stroke-width="5" stroke-linecap="round"/>') +
+        face(x, y0 + 2, eyes, mouth, r / 44);
+    };
+    var hand = function (x, y0, r) { return '<circle cx="' + x + '" cy="' + y0 + '" r="' + (r || 11) + '" fill="' + S + '"/>'; };
+    // a sitting baby, with arm and leg overrides
+    var sit = function (o) {
+      o = o || {};
+      return (o.legsUp ? '' : el(70, 182, 26, 14, S) + el(130, 182, 26, 14, S)) +
+        el(100, 150, 46, 40, O) + (o.bib ? '<path d="M78 124 q22 30 44 0 q-4 22 -22 26 q-18 -4 -22 -26z" fill="#fffaf3"/>' : '') +
+        (o.arms || (el(58, 150, 11, 22, S, 22) + el(142, 150, 11, 22, S, -22))) +
+        head(100, 84, 44, o.eyes || 'open', o.mouth || 'smile') + (o.over || '') + (o.top || '');
+    };
+    var P = {
+      1: el(100, 150, 50, 46, O) + '<path d="M60 136 q40 24 80 0" fill="none" stroke="' + TONE[2] + '" stroke-width="5" stroke-linecap="round"/><path d="M58 160 q42 22 84 0" fill="none" stroke="' + TONE[2] + '" stroke-width="5" stroke-linecap="round"/>' +
+        head(100, 90, 42, 'closed', 'smile', true) +
+        '<path d="M74 52 L78 26 L90 40 L100 20 L110 40 L122 26 L126 52 Z" fill="' + y.url + '"/><circle cx="100" cy="22" r="5" fill="#e98a6b"/>',
+      2: sit({ mouth: 'o', arms: el(58, 150, 11, 22, S, 22) + el(146, 128, 11, 22, S, -50) + hand(156, 112) }) +
+        '<rect x="134" y="20" width="58" height="34" rx="14" fill="' + INK + '"/><path d="M146 52 l-6 12 l14 -12z" fill="' + INK + '"/><text x="163" y="43" text-anchor="middle" font-family="Nunito,sans-serif" font-weight="900" font-size="17" fill="#fffaf3">ooh!</text>',
+      3: sit({ mouth: 'grin', eyes: 'closed', arms: el(52, 120, 11, 24, S, 40) + hand(42, 100) + el(148, 120, 11, 24, S, -40) + hand(158, 100) }) +
+        '<rect x="22" y="40" width="9" height="9" rx="2" fill="#e98a6b" transform="rotate(20 26 44)"/><rect x="166" y="34" width="9" height="9" rx="2" fill="#ffd98a" transform="rotate(-15 170 38)"/><rect x="40" y="16" width="8" height="8" rx="2" fill="#7d6597"/><rect x="150" y="62" width="8" height="8" rx="2" fill="#7fae95" transform="rotate(30 154 66)"/>',
+      4: el(108, 170, 64, 26, O) + el(162, 176, 22, 12, S) + el(56, 182, 12, 16, S) + el(84, 186, 12, 14, S) +
+        head(70, 118, 40, 'wide', 'o') + '<text x="150" y="70" font-family="Nunito,sans-serif" font-weight="900" font-size="34" fill="#ffd98a">✦</text><text x="128" y="40" font-family="Nunito,sans-serif" font-weight="900" font-size="20" fill="#e98a6b">✦</text>',
+      5: sit({ legsUp: true, mouth: 'grin', arms: '', over: el(56, 156, 14, 30, S, 40) + el(144, 156, 14, 30, S, -40) + el(34, 132, 16, 11, S, 40) + el(166, 132, 16, 11, S, -40) + hand(50, 150, 10) + hand(150, 150, 10) + '<circle cx="24" cy="124" r="4" fill="#de9d79"/><circle cx="30" cy="119" r="3.5" fill="#de9d79"/><circle cx="176" cy="124" r="4" fill="#de9d79"/><circle cx="170" cy="119" r="3.5" fill="#de9d79"/><path d="M14 104 q-6 8 0 16 M186 104 q6 8 0 16" fill="none" stroke="#2B2840" stroke-width="3" stroke-linecap="round" opacity=".3"/>' }),
+      6: sit({ bib: true, mouth: 'o', arms: el(58, 150, 11, 22, S, 22) + el(144, 132, 11, 22, S, -40) + '<rect x="146" y="70" width="8" height="54" rx="4" fill="#e3b259" transform="rotate(14 150 97)"/>' + el(158, 70, 13, 9, y.url, 14) + hand(150, 118) }) +
+        el(116, 112, 5, 4, '#e3b259'),
+      7: sit({ mouth: 'grin', arms: el(58, 150, 11, 22, S, 22) + el(146, 112, 11, 24, S, -30) + hand(156, 90) }) +
+        '<circle cx="176" cy="150" r="16" fill="' + c.url + '"/><path d="M176 100 v26 M168 108 v14 M184 108 v14" stroke="' + INK + '" stroke-width="3" stroke-linecap="round" opacity=".35"/>',
+      8: sit({ arms: '', mouth: 'grin', over: el(70, 124, 12, 30, S, -18) + el(130, 124, 12, 30, S, 18) + el(82, 86, 17, 15, S) + el(118, 86, 17, 15, S) }),
+      9: el(108, 140, 54, 30, O) + el(150, 172, 10, 22, S) + el(66, 170, 10, 22, S) + el(160, 152, 16, 20, O, 20) + el(166, 178, 18, 10, S) +
+        head(56, 108, 40, 'wide', 'smile') +
+        '<g transform="translate(118 46) rotate(-20)"><circle cx="20" cy="20" r="18" fill="' + y.url + '"/><circle cx="20" cy="20" r="12" fill="#eaf4fb"/><rect x="34" y="16" width="26" height="9" rx="4.5" fill="' + c.url + '" transform="rotate(40 34 20)"/></g>',
+      10: el(84, 192, 12, 9, S) + el(116, 192, 12, 9, S) + '<rect x="76" y="150" width="18" height="44" rx="9" fill="' + S + '"/><rect x="106" y="150" width="18" height="44" rx="9" fill="' + S + '"/>' +
+        el(100, 140, 40, 34, O) + el(62, 108, 10, 22, S, 30) + hand(54, 88) + el(138, 108, 10, 22, S, -30) + hand(146, 88) + head(100, 74, 38, 'open', 'grin'),
+      11: el(84, 192, 12, 9, S) + el(116, 192, 12, 9, S) + '<rect x="76" y="150" width="18" height="44" rx="9" fill="' + S + '"/><rect x="106" y="150" width="18" height="44" rx="9" fill="' + S + '"/>' +
+        el(100, 140, 40, 34, O) + el(64, 146, 10, 22, S, 18) + el(140, 108, 10, 22, S, -30) + hand(148, 88) + head(100, 78, 38, 'closed', 'grin') +
+        '<path d="M80 46 L100 4 L120 46 Z" fill="' + c.url + '"/><circle cx="100" cy="6" r="6" fill="#ffd98a"/><path d="M90 26 l20 0 M86 36 l28 0" stroke="#fffaf3" stroke-width="3" opacity=".6"/>'
+    };
+    return svg('0 0 200 210', sk.def + on.def + y.def + c.def, shadow(100, 202, 70) + P[m], 'st-obj ms-baby');
+  }
+  window.stCardArt = function (m) { return m >= 1 && m <= 11 ? '<span class="ms-l ms-mid ms-babyw">' + babyArt(m) + '</span>' : ''; };
   // What Home's month card shows: the story's cover and its three takeaways.
   window.stCover = function (m) {
     if (m < 1 || m > 11) return null;
