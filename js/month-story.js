@@ -518,6 +518,13 @@
     S.el.querySelector('.st-card').parentNode.appendChild(n);
   }
   window.stOpen = open;
+  // What Home's month card shows: the story's cover and its three takeaways.
+  window.stCover = function (m) {
+    if (m < 1 || m > 11) return null;
+    var st = m === 4 ? { cover: ['She’s done just watching.', 'The world is getting a lot more interesting.'], sum: ['Found her hands', 'Distracted feeds', 'Sleep is maturing'] } : STORIES[m];
+    if (!st) return null;
+    return { title: Pp(st.cover[0]), lead: Pp(st.cover[1]), sum: st.sum.map(Pp) };
+  };
 
   /* ---------- Entry: the month card is the story's cover ---------- */
   function decorate() {
