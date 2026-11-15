@@ -201,8 +201,8 @@
 #main .care-v2 .care-howto > summary::after { content: " ›" }
 #main .care-v2 .care-howto[open] > summary { margin-bottom: 12px }
 
-/* Nov 15: one "When to call" card, only on pages about a worry. It's tinted and carries a phone mark, so it reads as
-   "who to call" rather than more content, without the alarm of a red box. */
+/* Nov 15: one "When to call" card, only on pages about a worry. Tinted, with a phone mark, so it reads as "who to call"
+   rather than more content, without the alarm of a red box. On template pages the title sits above it, like every section. */
 #main .care-calls { padding: 14px 16px 15px; margin: 8px 0 16px; background: #f8efe9; border-radius: 20px }
 #main .care-calls-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px }
 #main .care-calls-ico { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: #fff; color: #9b3326; flex: none }
@@ -211,6 +211,8 @@
 #main .care-calls p:last-child { margin: 0 }
 #main .care-calls b { color: #7a4b2c; font-weight: 700 }
 #main .care-calls .is-urgent b { color: #9b3326 }
+#main .care-calls.is-titled { display: flex; gap: 12px; align-items: flex-start; margin-top: 0 }
+
 
 /* Nov 15: a video is a compact "Watch how" row near the end of a page; once played it opens full width. */
 #main .hub-detail.care-v2 .hub-embed:not(:has(.hub-embed-frame)) { display: grid; grid-template-columns: 116px 1fr; align-items: center }
@@ -223,3 +225,21 @@
 #main .care-tpl .care-map figcaption > b, #main .care-tpl .care-map b:first-child { display: none }
 #main .care-tpl .care-tpl-card p { margin: 0 }
 #main .care-tpl .care-calls { margin-top: 22px }
+
+/* Nov 15: poop colors as circles, normal and call groups. */
+#main .hub-poop2 { padding: 16px 14px 14px; display: grid; gap: 14px }
+#main .hub-poop2 .poop-group { display: grid; gap: 10px }
+#main .hub-poop2 .poop-group.is-call { padding-top: 14px; border-top: 1px solid var(--line, #efeaf2) }
+#main .hub-poop2 .poop-tag { justify-self: start; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: #e7f2ec; color: #356651 }
+#main .hub-poop2 .is-call .poop-tag { background: #f8e9e6; color: #9b3326 }
+#main .hub-poop2 .poop-row { display: grid; gap: 6px }
+#main .hub-poop2 .poop-row.is-5 { grid-template-columns: repeat(5, minmax(0, 1fr)) }
+#main .hub-poop2 .poop-row.is-3 { grid-template-columns: repeat(3, minmax(0, 1fr)) }
+#main .hub-poop2 .poop-dot { display: grid; align-content: start; grid-template-rows: 48px auto auto; justify-items: center; text-align: center; gap: 3px; min-width: 0 }
+#main .hub-poop2 .poop-dot span { width: 40px; height: 40px; border-radius: 50%; margin-bottom: 4px; background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--c) 70%, #fff), var(--c) 62%); box-shadow: inset 0 0 0 1px rgba(0,0,0,.08) }
+#main .hub-poop2 .is-call .poop-dot span { box-shadow: 0 0 0 3px #fff, 0 0 0 4.5px #e7b9b0 }
+#main .hub-poop2 .poop-dot b { font-size: 12.5px; font-weight: 600; line-height: 1.2 }
+#main .hub-poop2 .poop-dot small { font-size: 11px; line-height: 1.25; color: var(--ink2, #5e5a75) }
+#main .hub-poop2 figcaption { font-size: 12.5px; color: var(--ink2, #5e5a75); padding-top: 2px }
+/* Template sections: rows and links stack with a little space after a figure. */
+#main .care-tpl .care-map + .hub-list, #main .care-tpl .hub-list + .care-link { margin-top: 10px }
