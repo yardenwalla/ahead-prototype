@@ -143,11 +143,11 @@
     return out + gtk + links.join('') + calls;
   };
   // Nov 15: the two Everyday care templates. Whatever older builder made a page, its blocks are put back in one fixed order:
-  //   How-to:          top card · why · picture or video · how (steps or tiles) · What to do · How you'll know · a button ·
-  //                    a side topic (if a diaper rash starts) · the bath-safety rule · Good to know · related pages
+  //   How-to:          top card (headline + why) · the picture · how (steps or tiles) · What to do · How you'll know · a button ·
+  //                    a side topic (if a diaper rash starts) · the bath-safety rule · Good to know · Watch how (video) · related pages
   //   Is this normal?: top card with the verdict · what it looks like · what helps · related pages · When to call
   // Both are the same order, so every page in the guide reads the same way. QA: tools/qa/browser/care_blocks.py.
-  const SLOT = ['head', 'why', 'visual', 'how', 'do', 'know', 'action', 'side', 'rule', 'gtk', 'related', 'calls'];
+  const SLOT = ['head', 'why', 'visual', 'how', 'do', 'know', 'action', 'side', 'rule', 'gtk', 'watch', 'related', 'calls'];
   const slotOf = (el, prev) => {
     const c = el.classList, t = (el.textContent || '').trim();
     if (c.contains('guide-detail-top') || c.contains('dev-area-head') || c.contains('ss-head') || el.matches('header')) return 'head';
@@ -161,7 +161,8 @@
     if (el.matches('h2')) return /^Good to know/.test(t) ? 'gtk' : /^If a diaper rash starts/.test(t) ? 'side' : null;
     if (prev === 'side' && !c.contains('ss-do')) return 'side';   // a heading takes the slot of what follows it
     if (prev === 'gtk' && c.contains('hub-list')) return 'gtk';
-    if (c.contains('hub-embed') || c.contains('care-map') || c.contains('care-ramp') || c.contains('hub-poop') || c.contains('hub-layers') || c.contains('hub-agetiles') || c.contains('hub-strip') || c.contains('hub-paste') || c.contains('care-carousel')) return 'visual';
+    if (c.contains('hub-embed')) return 'watch';
+    if (c.contains('care-map') || c.contains('care-ramp') || c.contains('hub-poop') || c.contains('hub-layers') || c.contains('hub-agetiles') || c.contains('hub-strip') || c.contains('hub-paste') || c.contains('care-carousel')) return 'visual';
     return 'how';
   };
   const templateOrder = html => {
@@ -175,6 +176,11 @@
       if (slot === null) { const next = flat[i + 1]; slot = next ? (slotOf(next, null) || 'how') : 'how'; }
       el.__slot = slot; buckets[slot].push(el);
     }
+    // The why belongs in the top card, under the headline, not floating below it.
+    const top = buckets.head.find(e => e.classList.contains('dev-area-head') || e.classList.contains('ss-head')), why = buckets.why[0];
+    if (top && why && !top.querySelector('.hub-lead')) { const l = document.createElement('p'); l.className = 'hub-lead'; l.innerHTML = why.innerHTML; top.appendChild(l); buckets.why.shift(); }
+    // A video is a "Watch how" extra near the end, a compact row that opens full width when played.
+    if (buckets.watch.length) buckets.watch.unshift(Object.assign(document.createElement('h2'), { className: 'hub-h2', textContent: 'Watch how' }));
     return SLOT.map(k => buckets[k].map(el => el.outerHTML).join('')).join('');
   };
   const page = (k, inner) => { const c = COL[k]; return `<div class="quiet-category hub-page hub-detail care-v2" data-overview="${CAT}" data-ss="1" style="${yearTheme(CAT)};--ss-bg:${c[0]};--ss-ink:${c[1]}">${templateOrder(detailPageTop(CAT) + callCard(inner))}</div>`; };

@@ -211,3 +211,10 @@
 #main .care-calls p:last-child { margin: 0 }
 #main .care-calls b { color: #7a4b2c; font-weight: 700 }
 #main .care-calls .is-urgent b { color: #9b3326 }
+
+/* Nov 15: a video is a compact "Watch how" row near the end of a page; once played it opens full width. */
+#main .hub-detail.care-v2 .hub-embed:not(:has(.hub-embed-frame)) { display: grid; grid-template-columns: 116px 1fr; align-items: center }
+#main .hub-detail.care-v2 .hub-embed:not(:has(.hub-embed-frame)) .hub-embed-poster { aspect-ratio: 4 / 3 }
+#main .hub-detail.care-v2 .hub-embed:not(:has(.hub-embed-frame)) .hub-embed-play { width: 34px; height: 34px; margin: -17px 0 0 -17px }
+#main .hub-detail.care-v2 .hub-embed:not(:has(.hub-embed-frame)) .hub-embed-play svg { width: 16px; height: 16px; margin-left: 2px }
+#main .hub-detail.care-v2 .hub-embed figcaption b { font-size: 14.5px }
