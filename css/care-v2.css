@@ -200,3 +200,15 @@
 #main .care-v2 .care-howto > summary { cursor: pointer; font-weight: 700; color: var(--ss-ink, var(--ink)); list-style: none }
 #main .care-v2 .care-howto > summary::after { content: " ›" }
 #main .care-v2 .care-howto[open] > summary { margin-bottom: 12px }
+
+/* Nov 14: one "When to call" card at the end of every Everyday care page. */
+#main .care-calls { padding: 14px 16px 6px; margin: 4px 0 14px }
+#main .care-calls h3 { margin: 0 0 6px; font-size: 15px; font-weight: 600; color: var(--ink) }
+#main .care-call-row { padding: 9px 0 10px; border-top: 1px solid var(--line, #efeaf2) }
+#main .care-calls h3 + .care-call-row { border-top: 0; padding-top: 4px }
+#main .care-call-row b { display: block; font-size: 13px; font-weight: 700; margin-bottom: 2px; color: #7a4b2c }
+#main .care-call-row p { margin: 0; font-size: 14px; line-height: 1.45; color: var(--ink2, #5e5a75) }
+#main .care-call-row.is-ok b { color: #3f6b4f }
+#main .care-call-row.is-now b, #main .care-call-row.is-911 b { color: #9b3326 }
+#main .care-call-row.is-911 { background: #fbeae7; margin: 4px -16px 0; padding: 10px 16px 12px; border-top: 0; border-radius: 0 0 20px 20px }
+#main .care-call-row.is-911:last-child { margin-bottom: -6px }
