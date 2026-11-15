@@ -1742,3 +1742,6 @@ label:has(> .hub-photo-input:focus-visible) { outline: 2px solid #884866; outlin
 
 /* Nov 14: rows on Sleep and Feeding name their own subject, so the small label above the bold line is gone. */
 #main .sm-row .hub-row-eyebrow { display: none }
+/* Nov 14: the same three facts on every sleep training method, in one row. */
+#main .st-glance { grid-template-columns: repeat(3, 1fr); margin: 0 0 12px }
+#main .st-glance b { font-size: 15.5px }
