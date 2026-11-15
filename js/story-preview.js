@@ -91,3 +91,18 @@
     };
   }
 })();
+
+/* A direct link to the story: index.html#story opens it once the baby is set up (Nov 14). */
+(function () {
+  const go = () => {
+    if (location.hash !== '#story') return;
+    try { if (typeof profile === 'undefined' || !profile || !profile.dob) return; } catch (e) { return; }
+    if (typeof openPage === 'function' && page !== 'story:Sleep') openPage('story:Sleep');
+  };
+  window.addEventListener('hashchange', go);
+  // First visit: setup comes first, so open the story as soon as the baby exists (once).
+  let done = false;
+  if (typeof window.render === 'function') { const base = window.render; window.render = render = function (...a) { const r = base.apply(this, a);
+    try { if (!done && location.hash === '#story' && profile && profile.dob && page !== 'story:Sleep' && !/^(welcome|setup)/.test(String(page))) { done = true; setTimeout(go, 0); } } catch (e) {} return r; }; }
+  if (document.readyState === 'complete') setTimeout(go, 300); else window.addEventListener('load', () => setTimeout(go, 300));
+})();
