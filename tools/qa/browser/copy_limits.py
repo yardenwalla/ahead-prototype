@@ -5,7 +5,7 @@ Every detail page in the search index is opened for three families (a newborn, 4
   2. the lead under it: 1–2 sentences, about 140 characters (fails over 150, or over 2 sentences),
   3. the page: about 2 phone screens or less (fails over 2.2),
   4. "Good to know": 3 rows at most,
-  5. on each guide's main page, a row's grey line under the bold title fits on one line of a phone (Nov 14).
+  5. on Sleep's and Feeding's main pages, a row's grey line under the bold title fits on one line of a phone (Nov 14).
 Added Nov 14 after content batch 2 made the sore gums and car seat pages wordier than the guide allows."""
 import asyncio, json, re, sys
 from playwright.async_api import async_playwright
@@ -29,7 +29,7 @@ MEASURE = """()=>{
   return {head:h.textContent.trim(), lead:lead?lead.textContent.trim():'', screens:+(m.scrollHeight/844).toFixed(2), words:m.innerText.split(/\\s+/).length, good};
 }"""
 
-ROWS = """()=>[...document.querySelectorAll('#main .hub-row-eyebrow')].map(e=>{const s=e.parentElement.lastElementChild;
+ROWS = """()=>[...document.querySelectorAll('#main .sm-row .hub-row-copy')].map(c=>{const s=c.lastElementChild;
   const lh=parseFloat(getComputedStyle(s).lineHeight)||20;return s.getBoundingClientRect().height>lh*1.5?s.textContent.trim():null}).filter(Boolean)"""
 
 def sentences(t):

@@ -742,7 +742,7 @@ const PLAY_CONTEXT={
   },
   "easy-grip": {
     "needs": "A light, one-piece baby rattle with an easy-to-hold handle.",
-    "explain": "When baby moves and hears a rattle, they start to learn that they made it happen.",
+    "explain": "When baby moves and hears a rattle, they start to learn that their own hands made the sound.",
     "notice": "A quick grab, a shake or just watching the handle all count.",
     "extend": "Stop shaking it so baby gets a chance to make the sound."
   },

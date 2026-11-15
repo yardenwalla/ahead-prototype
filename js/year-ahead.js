@@ -186,9 +186,10 @@
     const h = H(), c = C.find(x => x.id === id), p = PAGES[id]; if (!c || !p) return null;
     const a = ageNow(), cat = c.cat, past = c.end <= a, now = c.start <= a && c.end > a;
     const when = past ? 'Already behind ' + name() : now ? 'Any time now' : c.start - a <= 1 ? 'Could start any week now' : `In about ${Math.round(c.start - a)} month${Math.round(c.start - a) === 1 ? '' : 's'}`;
-    const look = `${c.end <= a ? 'What it looked like' : p.signsTitle || 'Signs it’s close'}: ${p.signs.map(x => x.charAt(0).toLowerCase() + x.slice(1)).join(', ')}.${p.signsNote ? ' ' + p.signsNote : ''}`;
-    return h.detail(cat, `${range(c)} · ${when}`, c.title, p.lead + ' ' + look,
-      ''   // Nov 14: the "What it changes" heading already says it
+    // Nov 14: the signs used to sit at the end of the top card's paragraph. As their own short list they scan at a glance.
+    const look = `<h2 class="hub-h2">${F(c.end <= a ? 'What it looked like' : p.signsTitle || 'Signs it’s close')}</h2><ul class="ya-signs">${p.signs.map(x => `<li>${F(x)}</li>`).join('')}</ul>${p.signsNote ? `<p class="ya-signs-note">${F(p.signsNote)}</p>` : ''}`;
+    return h.detail(cat, `${range(c)} · ${when}`, c.title, p.lead,
+      look
       + h.list('What it changes', p.rows.slice(0, 4).map(([icon, rc, title, sub, go]) => h.row({ icon, cat: rc, title, sub, onclick: go }).replace('<span class="hub-row-copy">', `<span class="hub-row-copy"><small class="hub-row-eyebrow">${F(AREA[rc] || rc)}</small>`)))
       + h.tip(p.tip[0], p.tip[1]), c.icon);
   }
