@@ -106,10 +106,37 @@
       const low = t => t.charAt(0).toLowerCase() + t.slice(1);
       const line = (cls, lab, t) => `<p class="${cls}"><b>${F(lab)} if:</b> ${F(low(t))}</p>`;
       const lines = (call.length ? line('', 'Call your pediatrician', call.join(' ')) : '') + urgent.sort((a, b) => /911/.test(a[0]) - /911/.test(b[0])).map(([lab, t]) => line('is-urgent', /911/.test(lab) ? 'Call 911' : 'Call right away', t)).join('');
-      if (lines) calls = `<section class="hub-card care-calls"><h3>${F('When to call')}</h3>${lines}</section>`;
+      const phone = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h3l2 5-2.5 1.5a11 11 0 0 0 6 6L15 14l5 2v3a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>';
+      if (lines) calls = `<section class="care-calls"><div class="care-calls-head"><span class="care-calls-ico">${phone}</span><h3>${F('When to call')}</h3></div>${lines}</section>`;
     } else {
       [...call, ...urgent.map(u => u[1])].forEach(t => { const hit = CALL_ROWS.find(([re]) => re.test(t)); hit ? row(hit[1][0], hit[1][1]) : row('When to call', t); });
     }
+    // Nov 15: a Good to know title follows the bold-line rule: it names its subject and gives the takeaway, and the grey line adds the detail.
+    const REW = [
+      [/^Why only 2–3 a week/, () => ['More baths can dry {p} skin', 'In between, wipe {p} face, neck and diaper area.']],
+      [/^Water heater/, () => ['Set the water heater to 120°F or lower', 'So scalds are much less likely.']],
+      [/^Not from teething/, () => ['Fever or diarrhea isn’t teething', 'Neither is diaper rash or a runny nose. Something else is going on.']],
+      [/^Skip these/, () => ['Skip numbing gels and teething necklaces', 'And teething tablets. Ask your pediatrician before any pain medicine.']],
+      [/^No bottle in bed/, () => ['No bottle in bed once teeth come', 'Milk on teeth overnight causes cavities.']],
+      [/^First dental visit/, () => ['See a dentist by the first birthday', 'Or once the first tooth comes in, if that’s sooner.']],
+      [/^How a shoe should fit/, () => ['Leave a finger’s width at the big toe', 'Check the fit every month.']],
+      [/^Rash not better in 2–3 days/, () => ['Call if a rash lasts more than 2–3 days', 'Or if it has blisters, pus or bright red folds.']],
+      [/^Tiny white bumps on the gums/, () => ['Tiny white bumps on the gums are normal', 'They go away on their own.']],
+      [/^Ears$/, () => ['Clean only the outside of the ears', 'A washcloth works. No cotton swabs inside.']],
+      [/^If you nick the skin/, () => ['A small nick happens to everyone', 'Press gently with a clean cloth.']],
+      [/^Snaps or zips/, () => ['Snaps or zips, never strings', 'Nothing with strings near the neck.']],
+      [/^In the car seat/, () => ['No puffy coats in the car seat', 'Buckle {o} in, then lay a blanket over the straps.']],
+      [/^Hot days/, (sub) => ['On hot days, offer extra milk feeds', /no water/.test(sub) ? 'No water yet. One light layer, and the stroller canopy, not a blanket.' : 'One light layer, and the stroller canopy, not a blanket.']],
+      [/^Sunburn before age 1/, () => ['Call about any sunburn before age 1', 'Right away, even a mild one.']],
+      [/^Hot, floppy or hard to wake/, () => ['Hot, floppy or hard to wake? Call 911', 'Cool {o} down while you wait.']],
+      [/^A pink or orange stain/, () => ['A pink stain is usually just pee', 'Still there after day 4? {S} may need more feeds.']],
+      [/^Time for the next size/, () => ['Leaks mean it’s time for the next size', 'So do red marks at the legs or waist.']],
+      [/^What’s next/, () => ['First teeth usually come around 6 months', 'Keep wiping the gums until then.']],
+      [/^What changes next|^Poop changes with solids/, () => ['Solids make poop thicker and smellier', 'Sometimes the color of the food. Pears, prunes and peaches help if it’s hard.']],
+      [/^When to move to the big tub/, () => ['The big tub comes once {s} {sit|sits} steadily', 'Often around 6–8 months. Until then, the baby tub.']],
+      [/^Feed often/, () => ['Sunlight doesn’t treat jaundice', 'Feed often, and let your pediatrician check.']]
+    ];
+    rows.forEach(r => { const hit = REW.find(([re]) => re.test(r[0])); if (hit) { const [t, sub] = hit[1](r[1]); r[0] = t; r[1] = sub; } });
     const gtk = rows.length ? H().list('Good to know', rows.slice(0, 3).map(([title, sub, icon]) => H().row({ icon, cat: CAT, title, sub }))) : '';
     if (rows.length > 3 && typeof console !== 'undefined') console.warn('Good to know has more than 3 rows', rows.map(r => r[0]));
     if (!gtk && !calls && !links.length && out === inner) return inner;

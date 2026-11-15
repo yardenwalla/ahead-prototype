@@ -201,9 +201,12 @@
 #main .care-v2 .care-howto > summary::after { content: " ›" }
 #main .care-v2 .care-howto[open] > summary { margin-bottom: 12px }
 
-/* Nov 15: one quiet "When to call" card, only on pages about a worry (option 1, chosen by Yarden). */
-#main .care-calls { padding: 14px 16px; margin: 6px 0 16px; background: #fff; border: 1px solid var(--line, #efeaf2) }
-#main .care-calls h3 { margin: 0 0 8px; font-size: 15px; font-weight: 600; color: var(--ink) }
+/* Nov 15: one "When to call" card, only on pages about a worry. It's tinted and carries a phone mark, so it reads as
+   "who to call" rather than more content, without the alarm of a red box. */
+#main .care-calls { padding: 14px 16px 15px; margin: 8px 0 16px; background: #f8efe9; border-radius: 20px }
+#main .care-calls-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px }
+#main .care-calls-ico { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: #fff; color: #9b3326; flex: none }
+#main .care-calls h3 { margin: 0; font-size: 15px; font-weight: 600; color: var(--ink) }
 #main .care-calls p { margin: 0 0 6px; font-size: 14px; line-height: 1.45; color: var(--ink2, #5e5a75) }
 #main .care-calls p:last-child { margin: 0 }
 #main .care-calls b { color: #7a4b2c; font-weight: 700 }
