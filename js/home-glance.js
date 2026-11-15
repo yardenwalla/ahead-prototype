@@ -152,7 +152,11 @@
     // Tapped once (photo added or not), it's done for this month: the story card already says which month it is.
     const key = 'ahead-photo-banner-' + m;
     try { if (localStorage.getItem(key)) return ''; } catch (e) {}
-    return `<label class="hg-banner" role="button" onclick="try{localStorage.setItem('${key}','1')}catch(e){};setTimeout(()=>{const b=document.querySelector('#main .hg-banner');b&&b.remove()},400)"><img class="hg-banner-img" src="assets/home/balloon-${m}.png" alt=""><span class="hg-banner-copy"><b>${F(`${name()}’s ${m}-month photo`)}</b><small>${F('Snap one today for Memories.')}</small></span><span class="hg-banner-plus" aria-hidden="true">＋</span>${input ? input.outerHTML : ''}</label>`;
+    const BN = { a: 'linear-gradient(100deg,#fdeee5 0%,#fbeaf1 30%,#efedff 62%,#edf2fe 100%)', b: 'linear-gradient(100deg,#fbeaf1 0%,#efedff 50%,#e6f1fb 100%)',
+      c: 'linear-gradient(100deg,#e7f5ee 0%,#e6f1fb 50%,#efedff 100%)', d: 'linear-gradient(100deg,#fdeee5 0%,#fdf4dc 50%,#e7f5ee 100%)' };
+    // Story card is blue/green in months 1–5 (warm gradient), gold/orange in 6–7 (cool pink-lilac), pink/coral in 8, 9, 11 (mint-blue), lilac in 10 (peach-butter).
+    const bn = BN[{ 6: 'b', 7: 'b', 8: 'c', 9: 'c', 11: 'c', 10: 'd' }[m] || 'a'];
+    return `<label class="hg-banner" style="--bn:${bn}" role="button" onclick="try{localStorage.setItem('${key}','1')}catch(e){};setTimeout(()=>{const b=document.querySelector('#main .hg-banner');b&&b.remove()},400)"><img class="hg-banner-img" src="assets/home/balloon-${m}.png" alt=""><span class="hg-banner-copy"><b>${F(`${name()}’s ${m}-month photo`)}</b><small>${F('Snap one today for Memories.')}</small></span><span class="hg-banner-plus" aria-hidden="true">＋</span>${input ? input.outerHTML : ''}</label>`;
   }
 
   // Home as "Through her eyes" + "You might notice…" (Nov 9 mock, 3 months written).

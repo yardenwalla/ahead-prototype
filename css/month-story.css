@@ -632,5 +632,5 @@
 /* Guides tile: "New" sits on the same line as the guide marks */
 #main .hg-pair .hg-ptile.is-new{position:relative}
 #main .hg-pair .hg-ptile .hg-new-pill{position:absolute!important;top:24px;right:14px;margin:0!important}
-/* Photo banner: white, like the cards below, so the balloon carries the month's color and the story card stays the one colored card */
-#main .hg-banner{background:var(--white,#fff)!important;border:1px solid var(--line)!important}
+/* Photo banner: its own soft multi-color gradient, picked per month to stay clear of the story card's color */
+#main .hg-banner[style*="--bn"]{background:var(--bn)!important}
