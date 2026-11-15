@@ -46,6 +46,8 @@
     12: { id: 'cruise-toy', hero: 12, title: 'Cruise to a toy', why: 'Stepping along furniture comes before first steps.', steps: ['Put a toy at the far end of a sturdy sofa or low table.', 'Let Maya hold on and step sideways to reach it.', 'Clear other toys off the floor so {s} doesn’t trip.'] }
   };
   const moveArt = mv => mv.hero ? (window.devHeroArt ? devHeroArt(mv.hero) : '') : devPlayArt(mv.id);
+  // Nov 14: a play card's second line says what the game builds, the same line its page opens with.
+  window.devIdeaExplain = id => { const a = find(id); return a ? (ctxFor(a).explain || a.why || '') : ''; };
   window.devMoveIdea = ref => MOVE[ref] ? Object.assign({}, MOVE[ref], { art: moveArt(MOVE[ref]) }) : null;
 
   // A skill's photo or video, opened on the page.

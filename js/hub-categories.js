@@ -49,7 +49,7 @@
   const shortLine = t => { const f = firstSentence(t); const cut = f.length > 72 && f.includes(',') ? f.slice(0, f.indexOf(',')) : f; return cut.split(/\s+/).length < 3 ? f : cut; };
   // One thing to try, phrased as an action: the short prompt if there is one, otherwise the first line of how to do it.
   const playLine = a => (window.hubBabyify || (x => x))(playLineRaw(a));
-  const playLineRaw = a => { const s = typeof conceptPlaySuggestion === 'function' ? conceptPlaySuggestion(a) : ''; return s && !s.startsWith(a.why || '\u0000') ? firstSentence(s) : firstSentence(a.how || a.why); };
+  const playLineRaw = a => { const ex = window.devIdeaExplain ? devIdeaExplain(a.id) : ''; if (ex) return firstSentence(ex); const s = typeof conceptPlaySuggestion === 'function' ? conceptPlaySuggestion(a) : ''; return s && !s.startsWith(a.why || '\u0000') ? firstSentence(s) : firstSentence(a.how || a.why); };
 
   /* ---------- Development: "What might I see, and how can I help?" ---------- */
   const DOMAIN_TITLES = { Social: 'Social', Talking: 'Talking', Thinking: 'Thinking', Movement: 'Movement' };
