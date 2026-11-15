@@ -273,7 +273,7 @@
     const seen = (() => { try { return localStorage.getItem('ahead-story-seen-' + m) === '1'; } catch (e) { return false; } })();
     const c = BALLOON[Math.max(0, Math.min(11, m))];
     const hero = sc ? `<button class="ms-card" onclick="try{localStorage.setItem('ahead-story-seen-${m}','1')}catch(e){};stOpen()" style="${monthTheme(m)};--ms-acc:${mix(c, .1, 30)};--ms-c1:${mix(c, .5)};--ms-c2:${mix(c, .72)}">
-        <span class="ms-body"><span class="ms-copy"><span class="ms-eyebrow">${seen ? F('This month') : F('New this month')}</span><b class="ms-month">${F(`Month ${m}.`)}</b><b class="ms-name">${F(`${name()}’s story.`)}</b><small>${F(P('A one-minute look at what’s changing for her.'))}</small></span>
+        <span class="ms-body"><span class="ms-copy"><span class="ms-eyebrow">${seen ? F('This month') : F('New this month')}</span><b class="ms-month">${F(`Month ${m}.`)}</b><b class="ms-name">${F(`${name()}’s story.`)}</b><small>${F(sc.tease)}</small></span>
           <span class="ms-art" aria-hidden="true"><i class="ms-c2"></i><span class="ms-pic">${art}</span></span></span>
         <span class="ms-foot"><span class="ms-watch"><i><svg viewBox="0 0 24 24"><path d="M9 7.5v9l7.5-4.5z"/></svg></i>${F(P('Watch her month'))}</span><span class="ms-go" aria-hidden="true">→</span></span>
       </button>`

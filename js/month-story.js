@@ -523,7 +523,10 @@
     if (m < 1 || m > 11) return null;
     var st = m === 4 ? { cover: ['She’s done just watching.', 'The world is getting a lot more interesting.'], sum: ['Found her hands', 'Distracted feeds', 'Sleep is maturing'] } : STORIES[m];
     if (!st) return null;
-    return { title: Pp(st.cover[0]), lead: Pp(st.cover[1]), sum: st.sum.map(Pp) };
+    var TEASE = { 1: 'New here. Already running the show.', 2: 'She’s finding her voice. You’ll hear about it.', 3: 'A little more personality. A lot more surprises.',
+      4: 'Someone’s getting curious.', 5: 'Those little wiggles have big plans.', 6: 'Halfway to one. A whole lot of firsts.', 7: 'Gravity has a new biggest fan.',
+      8: 'Peekaboo just got a plot twist.', 9: 'Little hands. Big investigations.', 10: 'She’s moving up in the world.', 11: 'Big baby energy. First birthday loading.' };
+    return { title: Pp(st.cover[0]), lead: Pp(st.cover[1]), tease: Pp(TEASE[m]), sum: st.sum.map(Pp) };
   };
 
   /* ---------- Entry: the month card is the story's cover ---------- */
