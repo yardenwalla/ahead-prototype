@@ -974,31 +974,29 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   const TPL = {
     't:diapers:0': { type: 'expect', k: 'diapers', title: 'Wet diapers go up day by day',
       why: 'From about day 6, six or more a day means {s’s} getting enough milk.',
-      normal: () => TB.noted(wetChart(), [['diaper', 'A pink stain is usually just pee', 'Still there after day 4? {S} may need more feeds']]),
+      normal: () => TB.noted(wetChart(), [['diaper', 'A pink or orange stain is usually just pee', 'Still there after day 4? {S} may need more feeds']]),
       do: 'Feed often, 8–12 times a day, and keep a rough count of wet diapers this week.',
       calls: { ped: 'fewer wet diapers than the chart, black poop after day 3, or blood in the poop.', now: 'white, gray or chalky poop, or watery poop many times a day.' } },
     't:diapers:2': { type: 'expect', k: 'diapers', title: 'Diapers stay the same, but rolling starts',
-      why: 'Wet diapers and poop look much like before until solids. The change is at the changing table.',
-      normal: [['drop', '6 or more wet a day', 'Same as before'], ['diaper', 'Poop much as before', 'Until solids start']],
-      do: 'Keep one hand on {o} at every change, since rolling can start any day. Have everything within reach first, or change {o} on the floor.',
-      doRows: [['diaper', 'Leaks mean it’s time to size up', 'So do red marks at the legs or waist.']],
+      why: 'So changes need a free hand from now on.',
+      do: 'Keep one hand on {o} the whole change. Have everything within reach first, or change {o} on the floor.',
+      doRows: [['diaper', 'Leaks mean it’s time to size up', 'So do red marks at the legs or waist.'], ['diaper', 'For diaper rash, use thick zinc cream', 'At every change, and let the skin air out.']],
       calls: { ped: 'a diaper rash lasts more than 2–3 days, or has blisters, pus or bright red folds.' } },
     'p:tub': { type: 'howto', k: 'bath', title: 'Tub baths can start',
       why: () => 'Once the cord' + (anatomy() !== 'girl' ? ' and any circumcision have' : ' has') + ' healed, about 3 baths a week is plenty.',
-      steps: [['drop', 'Get the water ready', 'About 2 inches, about 100°F'], ['drop', 'Face first', 'Plain water, no soap'], ['hand', 'Then the body', 'A hand behind the head'], ['bath', 'Hair last', 'At 2 or 3 baths a week'], ['towel', 'Straight into a towel', 'Pat dry into the creases']],
+      steps: [['drop', 'Get the water ready', 'About 2 inches, about 100°F'], ['drop', 'Face first', 'Plain water, no soap'], ['hand', 'Then the body', 'A hand behind the head'], ['bath', 'Hair last', 'Mild shampoo, 2–3 times a week'], ['towel', 'Straight into a towel', 'Pat dry into the creases']],
       safe: [['hand', 'A hand on {o} the whole bath', 'To step away, wrap {o} in a towel and take {o} with you.'], ['thermo', 'Water heater at 120°F or lower', 'So scalds are much less likely.']],
       video: ['VsUla1M7eHQ', 'Giving a tub bath', 'Nemours KidsHealth'] },
     'rash:acne': { type: 'check', k: 'skin', title: 'Baby acne', where: 'acne',
       why: 'Very common from 2–4 weeks, from pregnancy hormones. It clears on its own, usually by 4–6 months.',
       tell: [['smile', 'Tiny white dots on the nose are milia', 'Not acne. Normal too, and they fade on their own']],
-      notRight: ['Not the right rash?', 'Heat rash, eczema and more', () => `look:${Math.min(stageNow(), 1)}:rashmore`],
       helps: [['drop', 'Plain water once a day', 'Then pat dry'], ['shield', 'Nothing on the bumps', 'No lotions, oils or acne products']],
       calls: RASH_CALLS }
   };
   TPL['t:bath:1'] = TPL['p:tub'];
   let tplNow = 0;   // the stage a look:<stage>:<topic> page was opened for
   TPL.poop = { type: 'check', k: 'diapers', eyebrow: 'Is this normal?', title: 'Most poop colors are normal',
-    why: 'Yellow, green, tan, brown and orange are all fine. A few colors mean a call.',
+    why: 'Color mostly comes down to what {s} {eat|eats} and how fast it moves through.',
     figure: () => poopChart(),
     tell: () => [
       tplNow === 0 ? null : live() && profile.feed === 'Formula' ? ['clock', 'Most days is usual on formula', 'Some days more, some less'] : ['clock', 'Days between poops can be normal', live() && profile.feed === 'Both' ? 'A few days apart is fine if {s’s} feeding well' : 'Breastfed babies can go days between'],
