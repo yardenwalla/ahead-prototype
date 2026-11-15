@@ -142,7 +142,42 @@
     if (!gtk && !calls && !links.length && out === inner) return inner;
     return out + gtk + links.join('') + calls;
   };
-  const page = (k, inner) => { const c = COL[k]; return `<div class="quiet-category hub-page hub-detail care-v2" data-overview="${CAT}" data-ss="1" style="${yearTheme(CAT)};--ss-bg:${c[0]};--ss-ink:${c[1]}">${detailPageTop(CAT)}${callCard(inner)}</div>`; };
+  // Nov 15: the two Everyday care templates. Whatever older builder made a page, its blocks are put back in one fixed order:
+  //   How-to:          top card · why · picture or video · how (steps or tiles) · What to do · How you'll know · a button ·
+  //                    a side topic (if a diaper rash starts) · the bath-safety rule · Good to know · related pages
+  //   Is this normal?: top card with the verdict · what it looks like · what helps · related pages · When to call
+  // Both are the same order, so every page in the guide reads the same way. QA: tools/qa/browser/care_blocks.py.
+  const SLOT = ['head', 'why', 'visual', 'how', 'do', 'know', 'action', 'side', 'rule', 'gtk', 'related', 'calls'];
+  const slotOf = (el, prev) => {
+    const c = el.classList, t = (el.textContent || '').trim();
+    if (c.contains('guide-detail-top') || c.contains('dev-area-head') || c.contains('ss-head') || el.matches('header')) return 'head';
+    if (c.contains('care-calls')) return 'calls';
+    if (c.contains('care-link')) return 'related';
+    if (c.contains('hub-versus') && /^Every bath/.test(t)) return 'rule';
+    if (c.contains('hub-actions') || c.contains('hub-already') || el.matches('button.hub-button')) return 'action';
+    if (c.contains('ss-do')) return 'do';
+    if (c.contains('ss-know')) return 'know';
+    if (el.matches('p.ss-what, p.care-p, p.care-lead')) return 'why';
+    if (el.matches('h2')) return /^Good to know/.test(t) ? 'gtk' : /^If a diaper rash starts/.test(t) ? 'side' : null;
+    if (prev === 'side' && !c.contains('ss-do')) return 'side';   // a heading takes the slot of what follows it
+    if (prev === 'gtk' && c.contains('hub-list')) return 'gtk';
+    if (c.contains('hub-embed') || c.contains('care-map') || c.contains('care-ramp') || c.contains('hub-poop') || c.contains('hub-layers') || c.contains('hub-agetiles') || c.contains('hub-strip') || c.contains('hub-paste') || c.contains('care-carousel')) return 'visual';
+    return 'how';
+  };
+  const templateOrder = html => {
+    if (typeof document === 'undefined' || !document.createElement) return html;
+    const box = document.createElement('div'); box.innerHTML = html;
+    const flat = [];
+    [...box.children].forEach(el => el.matches('section.ss-moment') ? flat.push(...el.children) : flat.push(el));
+    const buckets = Object.fromEntries(SLOT.map(k => [k, []]));
+    for (let i = 0; i < flat.length; i++) {
+      const el = flat[i]; let slot = slotOf(el, i ? flat[i - 1].__slot : null);
+      if (slot === null) { const next = flat[i + 1]; slot = next ? (slotOf(next, null) || 'how') : 'how'; }
+      el.__slot = slot; buckets[slot].push(el);
+    }
+    return SLOT.map(k => buckets[k].map(el => el.outerHTML).join('')).join('');
+  };
+  const page = (k, inner) => { const c = COL[k]; return `<div class="quiet-category hub-page hub-detail care-v2" data-overview="${CAT}" data-ss="1" style="${yearTheme(CAT)};--ss-bg:${c[0]};--ss-ink:${c[1]}">${templateOrder(detailPageTop(CAT) + callCard(inner))}</div>`; };
   const h2 = t => `<h2 class="hub-h2">${F(t)}</h2>`;
   // "How it changes": one line per age, the baby's own age marked, each opening that age's version of the page.
   const strip = (k, lines, v) => { const now = stageNow();
