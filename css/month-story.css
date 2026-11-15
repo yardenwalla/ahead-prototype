@@ -632,5 +632,3 @@
 /* Guides tile: "New" sits on the same line as the guide marks */
 #main .hg-pair .hg-ptile.is-new{position:relative}
 #main .hg-pair .hg-ptile .hg-new-pill{position:absolute!important;top:24px;right:14px;margin:0!important}
-/* Photo banner in the month's own color, so the top of Home is one color story */
-#main .hg-banner.hg-banner-month{background:linear-gradient(100deg,var(--m-bg1) 0%,var(--m-bg2) 100%)!important;border:1px solid var(--m-line)!important}
