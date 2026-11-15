@@ -546,6 +546,7 @@
     return svg('0 0 200 200', g.def + h.def, '<rect x="118" y="112" width="30" height="78" rx="15" transform="rotate(-40 133 151)" fill="' + h.url + '"/><circle cx="84" cy="84" r="62" fill="' + g.url + '"/><circle cx="84" cy="84" r="44" fill="#eaf4fb"/><path d="M58 70 Q66 56 82 52" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round"/>'); }
   /* The month card's baby: one clay-style baby per month, posed to match that month's teaser. */
   function babyArt(m) {
+    var newborn = m === 0; if (newborn) m = 1;
     var sk = blob('#f5c3a0', '#fde3cf', '#de9d79');
     var TONE = { 1: ['#cfe3f3', '#eef6fc', '#a9c9e3'], 2: ['#b9a6e6', '#ddd2f7', '#8f7bc4'], 3: ['#9cc7ae', '#cfe6d9', '#76a88b'], 4: ['#f3a587', '#fbd0bf', '#da7f61'],
       5: ['#a9cfe8', '#d6ebf7', '#7fb0d2'], 6: ['#ffd98a', '#fff1c8', '#e3b259'], 7: ['#f3a587', '#fbd0bf', '#da7f61'], 8: ['#f6c2cf', '#fbe0e7', '#e29bb0'],
@@ -611,9 +612,10 @@
         '<path d="M168 70 q8 8 4 18 M176 62 q12 12 6 28" fill="none" stroke="' + INK + '" stroke-width="3" stroke-linecap="round" opacity=".3"/>' +
         '<g transform="rotate(-8 100 78)">' + head(100, 78, 38, 'closed', 'grin') + '<path d="M80 46 L100 4 L120 46 Z" fill="' + c.url + '"/><circle cx="100" cy="6" r="6" fill="#ffd98a"/><path d="M90 26 l20 0 M86 36 l28 0" stroke="#fffaf3" stroke-width="3" opacity=".6"/></g>'
     };
-    return svg('0 0 200 210', sk.def + on.def + y.def + c.def, shadow(100, 202, 70) + P[m], 'st-obj ms-baby');
+    var body = newborn ? P[1].replace(/<path d="M74 52[^>]*\/><circle cx="100" cy="22"[^>]*\/>/, '') : P[m];
+    return svg('0 0 200 210', sk.def + on.def + y.def + c.def, shadow(100, 202, 70) + body, 'st-obj ms-baby');
   }
-  window.stCardArt = function (m) { return m >= 1 && m <= 11 ? '<span class="ms-l ms-mid ms-babyw">' + babyArt(m) + '</span>' : ''; };
+  window.stCardArt = function (m) { return m >= 0 && m <= 11 ? '<span class="ms-l ms-mid ms-babyw">' + babyArt(m) + '</span>' : ''; };
   // What Home's month card shows: the story's cover and its three takeaways.
   window.stCover = function (m) {
     if (m < 1 || m > 11) return null;

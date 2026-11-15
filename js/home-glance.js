@@ -167,10 +167,9 @@
   // an eyes headline of 7 words or fewer and an eyes line of 12–19 words (checked in tools/qa/home-value.cjs).
   const MONTHS = {
     0: { eyes: ['She sees you best up close', 'She focuses best about 8–12 inches away, just about the distance to your face during a feed.'],
-      notice: [['She sleeps in short bursts', 'Newborns sleep most of the day, but only 2–4 hours at a time.', 'Sleep', 'crib', 'chg:Sleep:d:stretch'],
-        ['She wants to feed constantly', 'Eight to twelve feeds a day is normal. Long evening feeds are too.', 'Feeding', 'bottle', 'chg:Feeding:d:enough',
-          ['She wants to feed often', 'Six to ten bottles a day is normal, and hungrier days come and go.']],
-        ['She startles and hiccups a lot', 'Startles, hiccups and sneezes are all normal in the first weeks.', 'Development', 'hand', ''],
+      notice: [
+        ['She wants to feed constantly', 'Eight to twelve feeds a day is typical, and long evening feeds are too.', 'Feeding', 'bottle', 'chg:Feeding:d:enough',
+          ['She wants to feed often', 'Six to ten bottles a day is typical, and hungrier days come and go.']],
         ['Her poop keeps changing color', 'Black and sticky at first, then yellow and seedy by the end of week one.', 'Daily rhythm', 'diaper', 'chg:Daily rhythm:d:look:0:poop']] },
     // Months 1–11: the month card opens her month story, so these rows are the everyday things the story doesn't
     // cover, plus one line on how she sees now (vision isn't in the stories). Nothing here repeats a story screen.
@@ -246,7 +245,18 @@
   // checkup (watched on the month birthday, it's days away); the rest name one thing to prepare. Nothing the story says.
   // Each month lists only what's time-sensitive: one row most months, two when two things really land together.
   const CHK = (n, extra) => [`The ${n}-month checkup is coming up.`, extra || 'See what to expect and what to ask.', 'Health', 'steth', `health-detail:${n}:expect`];
+  // Hide anything the parent has already told Ahead is done: a logged checkup, the swaddle off, solids started.
+  const radarRows = m => (RADAR[m] || []).filter(r => {
+    const go = r[4];
+    try {
+      const v = /^health-detail:(\d+):/.exec(go); if (v && typeof healthRecord === 'function' && (healthRecord(+v[1]) || {}).status === 'attended') return false;
+      if (go === 'chg:Sleep:d:swaddleoff' && typeof answers !== 'undefined' && answers.swaddleStopped === 'Yes') return false;
+      if (go === 'chg:Feeding:d:signs' && typeof answers !== 'undefined' && answers.solids === 'Yes') return false;
+    } catch (e) {}
+    return true;
+  });
   const RADAR = {
+    0: [['Her first checkups are coming up.', 'One in the first few days, then at 1 month. See what to expect and what to ask.', 'Health', 'steth', 'health-detail:0:expect']],
     1: [CHK(1)],
     2: [CHK(2, 'Her first big round of vaccines. See what to expect and what to ask.'),
         ['Swaddling ends soon.', 'Once she starts trying to roll, it’s time to stop. Here’s how to switch.', 'Sleep', 'swaddle', 'chg:Sleep:d:swaddleoff']],
@@ -274,16 +284,24 @@
       return go ? `<button class="hub-row hl-row" style="${st}" onclick="openPage('${go}')">${inner}${chev}</button>` : `<div class="hub-row hl-row is-static" style="${st}">${inner}</div>`;
     };
     const sc = typeof window.stCover === 'function' ? window.stCover(m) : null;
+    // The newborn weeks have no story yet: the same card, opening "See what she sees" instead.
+    const nb = !sc && m === 0 && typeof window.stCardArt === 'function';
+    const newLook = sc || nb;
     const seen = (() => { try { return localStorage.getItem('ahead-story-seen-' + m) === '1'; } catch (e) { return false; } })();
     const c = BALLOON[Math.max(0, Math.min(11, m))];
-    const hero = sc ? `<button class="ms-card" onclick="try{localStorage.setItem('ahead-story-seen-${m}','1')}catch(e){};stOpen()" style="${monthTheme(m)};--ms-acc:${mix(c, .1, 30)};--ms-c1:${mix(c, .5)};--ms-c2:${mix(c, .72)}">
+    const hero = nb ? `<button class="ms-card" onclick="homeEyes(true)" style="${monthTheme(m)};--ms-c2:${mix(BALLOON[0], .72)}">
+        <span class="ms-body"><span class="ms-copy"><span class="ms-eyebrow">${F(`Welcome, ${name()}`)}</span><b class="ms-month">${F(when + '.')}</b><b class="ms-name">${F('First weeks.')}</b><small>${F(P(M.eyes[0]) + '.')}</small></span>
+          <span class="ms-art" aria-hidden="true"><i class="ms-c2"></i><span class="ms-toys">${window.stCardArt(0)}</span></span></span>
+        <span class="ms-foot"><span class="ms-watch"><i><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6z" fill="none" stroke="#fffaf3" stroke-width="2"/></svg></i>${F(P('See what she sees'))}</span><span class="ms-go" aria-hidden="true">→</span></span>
+      </button>` : sc ? `<button class="ms-card" onclick="try{localStorage.setItem('ahead-story-seen-${m}','1')}catch(e){};stOpen()" style="${monthTheme(m)};--ms-acc:${mix(c, .1, 30)};--ms-c1:${mix(c, .5)};--ms-c2:${mix(c, .72)}">
         <span class="ms-body"><span class="ms-copy"><span class="ms-eyebrow">${seen ? F('This month') : F('New this month')}</span><b class="ms-month">${F(`Month ${m}.`)}</b><b class="ms-name">${F(`${name()}’s story.`)}</b><small>${F(sc.tease)}</small></span>
           <span class="ms-art" aria-hidden="true"><i class="ms-c2"></i><span class="ms-toys">${typeof window.stCardArt === 'function' ? window.stCardArt(m) : art}</span></span></span>
         <span class="ms-foot"><span class="ms-watch"><i><svg viewBox="0 0 24 24"><path d="M9 7.5v9l7.5-4.5z"/></svg></i>${F(P('Watch her month'))}</span><span class="ms-go" aria-hidden="true">→</span></span>
       </button>`
       : `<section class="he-hero" style="${monthTheme(m)}"><p class="he-eyebrow">${F(when)} · ${F(`Through ${name()}’s eyes`)}</p><div class="he-copy"><h1>${F(P(M.eyes[0]))}</h1><p class="he-lead">${F(P(M.eyes[1]))}</p>${m <= 4 ? `<button class="he-see" onclick="homeEyes(true)"><span aria-hidden="true">👁</span> ${F(`See what ${name()} sees`)}</button>` : ''}</div><span class="he-art" aria-hidden="true">${art}</span></section>`;
-    return hero + (sc && RADAR[m] ? `<section class="rd-card"><p class="rd-eyebrow">${F('On your radar')}</p>${RADAR[m].map(([t, why, , , go]) => `<button class="rd-item" onclick="openPage('${go}')"><span><b>${F(P(t))}</b><small>${F(P(why))}</small></span><i aria-hidden="true">›</i></button>`).join('')}</section>` : '') + `
-      ${sc ? `<div class="hub-list hg-rows rd-list"><p class="rd-eyebrow rd-in">${F('You might notice')}</p>${M.notice.map(row).join('')}</div>` : `<h2 class="hub-h2">${F('You might notice…')}</h2>
+    const rr = newLook ? radarRows(m) : [];
+    return hero + (rr.length ? `<section class="rd-card"><p class="rd-eyebrow">${F('On your radar')}</p>${rr.map(([t, why, , , go]) => `<button class="rd-item" onclick="openPage('${go}')"><span><b>${F(P(t))}</b><small>${F(P(why))}</small></span><i aria-hidden="true">›</i></button>`).join('')}</section>` : '') + `
+      ${newLook ? `<div class="hub-list hg-rows rd-list"><p class="rd-eyebrow rd-in">${F('You might notice')}</p>${M.notice.map(row).join('')}</div>` : `<h2 class="hub-h2">${F('You might notice…')}</h2>
       <div class="hub-list hg-rows">${M.notice.map(row).join('')}</div>`}
       ` + guidesCard();
   }
@@ -400,7 +418,7 @@
     // Skip guide news the radar card above already gives (one home per fact): same guide, same month.
     const m = homeMonth(), nm = name(), onRadar = (RADAR[m] || []).map(r => r[2]);
     const moved = window.guideMoves().filter(q => !(typeof window.stCover === 'function' && window.stCover(m) && onRadar.includes(q.cat)));
-    const age = m < 2 ? `${Math.max(1, Math.round(Y().ageNow() * 4.35))} weeks` : `${m} months`;
+    const wks = Math.max(1, Math.round(Y().ageNow() * 4.35)), age = m < 2 ? `${wks} week${wks === 1 ? '' : 's'}` : `${m} months`;
     const label = c => typeof displayTopic === 'function' ? displayTopic(c) : c;
     const set = ['Feeding', 'Sleep', 'Development', 'Safety', 'Health', 'Daily rhythm'];
     const isNew = c => moved.some(q => q.cat === c);
