@@ -611,3 +611,7 @@
 #main .rd-item b{font-size:16px;font-weight:700;line-height:1.3}
 #main .rd-item small{font-size:14px;line-height:1.4;color:#6b6676}
 #main .rd-item i{font-style:normal;font-size:22px;color:#b3acb9}
+#main .rd-list{margin-top:14px}
+#main .rd-eyebrow.rd-in{padding:16px 18px 2px;margin:0}
+#main .rd-list{margin-top:16px!important}
+#main section.rd-card{margin-bottom:14px!important}

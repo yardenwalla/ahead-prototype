@@ -275,8 +275,8 @@
       </button>`
       : `<section class="he-hero" style="${monthTheme(m)}"><p class="he-eyebrow">${F(when)} · ${F(`Through ${name()}’s eyes`)}</p><div class="he-copy"><h1>${F(P(M.eyes[0]))}</h1><p class="he-lead">${F(P(M.eyes[1]))}</p>${m <= 4 ? `<button class="he-see" onclick="homeEyes(true)"><span aria-hidden="true">👁</span> ${F(`See what ${name()} sees`)}</button>` : ''}</div><span class="he-art" aria-hidden="true">${art}</span></section>`;
     return hero + (sc && RADAR[m] ? `<section class="rd-card"><p class="rd-eyebrow">${F('On your radar')}</p>${RADAR[m].map(([t, why, , , go]) => `<button class="rd-item" onclick="openPage('${go}')"><span><b>${F(P(t))}</b><small>${F(P(why))}</small></span><i aria-hidden="true">›</i></button>`).join('')}</section>` : '') + `
-      <h2 class="hub-h2">${F('You might notice…')}</h2>
-      <div class="hub-list hg-rows">${M.notice.map(row).join('')}</div>
+      ${sc ? `<div class="hub-list hg-rows rd-list"><p class="rd-eyebrow rd-in">${F('You might notice')}</p>${M.notice.map(row).join('')}</div>` : `<h2 class="hub-h2">${F('You might notice…')}</h2>
+      <div class="hub-list hg-rows">${M.notice.map(row).join('')}</div>`}
       ` + guidesCard();
   }
 
