@@ -439,7 +439,7 @@
         + h2('Warming a bottle') + steps([['drop', 'Warm water', 'Or a bottle warmer'], ['hand', 'Swirl', 'To mix it'], ['heart', 'Test on your wrist', 'Warm, not hot']], true)
         + small('Never the microwave.', 'It heats unevenly. Cold or room temperature is fine too.')
         + h2('Out and about') + p((br ? 'A cooler bag with frozen ice packs keeps breast milk up to 24 hours. ' : 'Carry powder and water separately, and mix when he’s ready. ') + 'When flying, breast milk and formula can go in your carry-on, even over 3.4 oz. Tell security at the start.')); },
-    bottle: () => page(head('Bottles', 'A paced bottle lets him lead', 'Going slowly, he takes what he needs and swallows less air.', C.lilac)
+    bottle: () => page(head('Bottles', 'A paced bottle lets him lead', 'Going slowly means less air, and he stops when he’s full.', C.lilac)
       + h2('Positions') + steps([['heart', 'Cradled, sitting up', 'Head higher than his tummy'], ['smile', 'Upright on your lap', 'Facing sideways, head supported'], ['moon', 'Side-lying', 'Along your arm. Slows the flow']], false)
       + small('Never flat on his back,', 'and never prop the bottle.')
       + h2('Pacing, step by step') + steps([['bottle', 'Bottle fairly level', 'With milk filling the nipple'], ['hand', 'Let him draw it in', 'Touch the nipple to his lip'], ['clock', 'Pause every few sucks', 'Tip it down, then let him start again'], ['heart', 'Switch arms halfway', 'And burp every 2–3 oz']], true)
@@ -3145,7 +3145,7 @@
   P.nb_enough = () => { const nurse = nurses();
     return yPage(XC.growth, 'Is he getting enough?', 'Wet diapers are your everyday sign', 'You don’t need to measure feeds. Diapers every day, and weight at checkups, tell you.',
       firstCard(xBody(P.x_enough)) + weightViz()
-      + xDo('What to look for', [nurse ? 'During feeds: long sucks, and swallows you can hear.' : '', isBreast() ? 'From day 6: 3 or more poops a day, too.' : '', 'After most feeds: he’s content for a while.', 'Keep a quick note of feeds and diapers until things feel settled.', 'Go to the early weight checks. No need to weigh at home.'])
+      + xDo('What to look for', [nurse ? 'During feeds: long sucks, and swallows you can hear.' : '', isBreast() ? 'From day 6: 3 or more poops a day, too.' : '', 'After most feeds: he’s content for a while.']) + xDo('What to do', ['Keep a quick note of feeds and diapers until things feel settled.', 'Go to the early weight checks. No need to weigh at home.'])
       + xNote('Worth a call:', 'fewer wet diapers, dark urine, black poop after day 5, or not back to birth weight by 2 weeks.')); };
   // Milk feeds, to 3 months
   P.m1_now = () => { const nurse = nurses(), bot = isBottle(), fm = formulaFam();
@@ -3208,7 +3208,7 @@
       + xKnow('As meals grow', 'Milk drops a little at a time, mostly after 9 months.')
       + xNote('How you’ll know he’s getting enough:', 'wet diapers through the day, energy, and steady growth at checkups.')); };
   // First foods, later
-  P.z_textures = () => yPage(XG, 'Beyond purées', 'Move from smooth food to soft pieces', 'Move on when he handles the last texture easily.',
+  P.z_textures = () => yPage(XG, 'Beyond purées', 'Move from smooth food to soft pieces', 'Try the next texture once he handles the last one easily.',
       hubStageStrip({ title: 'Textures, as he grows', items: [['bowl', 'Around 6 months', 'Smooth and mashed'], ['avocado', '7–8 months', 'Lumpy mash, soft strips'], ['lentils', '9 months on', 'Soft, chopped family food']], cat: CAT })
       + xDo('What helps', ['Mash with a fork instead of blending.', 'Add one new texture at a time.'])
       + h2('Ideas to try') + chips(['Lumpy banana', 'Scrambled egg', 'Soft pasta', 'Flaked fish', 'Ripe pear strips', 'Mashed beans'])
@@ -3218,7 +3218,7 @@
       + xDo('Cut and cook it safe', ['Quarter grapes and cherry tomatoes lengthwise.', 'Spread nut butters thin, never in a lump.', 'Cook hard veg, like carrots, until soft.', 'Take out skins, pits and bones.']));
   P.z_rotate = () => yPage(XC.g1, 'Keeping foods in rotation', 'Keep allergens in his meals once tried', 'Offering it regularly helps keep it safe for him.',
       xNums('', [['A few times', 'A week, for each allergen he’s had']])
-      + xDo('Easy ways', ['Stir peanut powder or thinned peanut butter into oatmeal or yogurt.', 'Egg a couple of times a week: scrambled, or in pancakes.', 'Rotate iron sources: meat, beans, egg, fortified cereal.'])
+      + xDo('Easy ways', ['Stir peanut powder or thinned peanut butter into oatmeal or yogurt.', 'Egg a couple of times a week: scrambled, or in pancakes.'])
       + xKnow('Variety', 'Different flavors and colors now make new foods easier later.')
       + gLink('Allergens he’s had', 'z_allergens'));
   // Meals
