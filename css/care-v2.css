@@ -265,3 +265,4 @@
 #main .care-tpl .tpl-more { all: unset; cursor: pointer; display: block; margin: 10px 2px 0; font-size: 14px; font-weight: 600; color: var(--ink) }
 #main .care-tpl .tpl-more span { font-weight: 400; color: var(--ss-ink, #5e5a75); text-decoration: underline; text-underline-offset: 3px }
 #main .care-tpl .care-map { flex-wrap: wrap }
+#main .care-tpl .care-tpl-card .tpl-notes { border-top-color: rgba(0,0,0,.07); font-size: 14px }

@@ -930,7 +930,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
 
      Fields (text can use {s} {o} {p} and {a|b}; any field can be a function):
        all     type, k (color and art), title, why (one sentence)
-       expect  normal: a figure, or [[icon, bold, line], ...] (2–3); do (one or two sentences); doRows [[icon, bold, line]] (≤2);
+       expect  normal: a figure, or [[icon, bold, line], ...] (2–3); do (one or two sentences); doRows: up to 2 short follow-ups shown inside the What to do card;
                calls { ped, now, nowLabel }
        howto   steps [[icon, bold, line], ...] (3–5, one action each); safe [[icon, bold rule, line]] (≤2); video [id, title, source]
        check   where (rash id for the body map); tell: short notes shown inside the figure (≤2); notRight (a text link) [title, line, route];
@@ -942,7 +942,8 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
       + (c.now ? `<p class="is-urgent"><b>${F((c.nowLabel || 'Call right away') + ' if:')}</b> ${F(val(c.now))}</p>` : '') + `</div></section>`;
   const TB = {
     top: (q, lead) => head(q.k, LABEL[q.k] || val(q.eyebrow), val(q.title), val(lead)),
-    card: text => text ? `<section class="ss-do care-tpl-card"><p>${F(val(text))}</p></section>` : '',
+    // One card per section: the main action, then up to two short follow-ups inside the same card.
+    card: (text, notes) => { if (!text) return ''; notes = (val(notes) || []).filter(Boolean).slice(0, 2); return `<section class="ss-do care-tpl-card"><p>${F(val(text))}</p>${notes.length ? `<ul class="tpl-notes">${notes.map(([, t, sub]) => `<li><b>${F(t)}${/[?!.]$/.test(t) ? '' : '.'}</b> ${F(sub)}${/[?!.]$/.test(sub) ? '' : '.'}</li>`).join('')}</ul>` : ''}</section>`; },
     tiles: (items, numbered) => items && items.length ? hubIconSteps(items, CAT, F(items.map(t => t[1] + ': ' + t[2]).join('. ')), !!numbered) : '',
     rows: rows => { rows = (val(rows) || []).filter(Boolean).slice(0, 3); return rows.length ? `<div class="hub-list">${rows.map(([icon, t, sub]) => H().row({ icon, cat: CAT, title: t, sub })).join('')}</div>` : ''; },
     video: v => v ? hubEmbed(...v) : '',
@@ -950,14 +951,14 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     section: (title, body) => body ? h2(F(title)) + body : '',
     // Short notes go inside the figure they explain, so a section is one card, not a stack of boxes.
     noted: (fig, notes) => { notes = (val(notes) || []).filter(Boolean); if (!fig || !notes.length) return fig || '';
-      const ul = `<ul class="tpl-notes">${notes.map(([icon, t, sub]) => `<li><b>${F(t)}.</b> ${F(sub)}</li>`).join('')}</ul>`;
+      const ul = `<ul class="tpl-notes">${notes.map(([icon, t, sub]) => `<li><b>${F(t)}${/[?!.]$/.test(t) ? '' : '.'}</b> ${F(sub)}${/[?!.]$/.test(sub) ? '' : '.'}</li>`).join('')}</ul>`;
       const i = fig.lastIndexOf('</figure>'); return i < 0 ? fig + ul : fig.slice(0, i) + ul + fig.slice(i); },
     more: l => l ? `<button class="tpl-more" onclick="openPage('chg:${CAT}:d:${val(l[2])}')">${F(l[0])} <span>${F(l[1])} ›</span></button>` : ''
   };
   const TEMPLATES = {
     expect: q => { const n = val(q.normal); return TB.top(q, q.why)
       + TB.section('What’s normal', Array.isArray(n) ? TB.tiles(n, false) : n)
-      + TB.section('What to do', TB.card(q.do) + TB.rows(q.doRows))
+      + TB.section('What to do', TB.card(q.do, q.doRows))
       + callsCard(q.calls); },
     howto: q => TB.top(q, q.why)
       + TB.section('Steps', TB.tiles(val(q.steps), true))
@@ -978,13 +979,14 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
       do: 'Feed often, 8–12 times a day, and keep a rough count of wet diapers this week.',
       calls: { ped: 'fewer wet diapers than the chart, black poop after day 3, or blood in the poop.', now: 'white, gray or chalky poop, or watery poop many times a day.' } },
     't:diapers:2': { type: 'expect', k: 'diapers', title: 'Diapers stay the same, but rolling starts',
-      why: 'So changes need a free hand from now on.',
+      why: 'Rolling can start any day, even on a changing table.',
+      normal: [['drop', '6 or more wet a day', 'A sign {s’s} feeding well'], ['diaper', 'Poop looks the same', 'Until solids start']],
       do: 'Keep one hand on {o} the whole change. Have everything within reach first, or change {o} on the floor.',
-      doRows: [['diaper', 'Leaks mean it’s time to size up', 'So do red marks at the legs or waist.'], ['diaper', 'For diaper rash, use thick zinc cream', 'At every change, and let the skin air out.']],
+      doRows: [['diaper', 'Size up when it leaks', 'Or when it leaves red marks at the legs or waist'], ['diaper', 'Diaper rash?', 'Thick zinc cream at every change, and let the skin air out']],
       calls: { ped: 'a diaper rash lasts more than 2–3 days, or has blisters, pus or bright red folds.' } },
     'p:tub': { type: 'howto', k: 'bath', title: 'Tub baths can start',
       why: () => 'Once the cord' + (anatomy() !== 'girl' ? ' and any circumcision have' : ' has') + ' healed, about 3 baths a week is plenty.',
-      steps: [['drop', 'Get the water ready', 'About 2 inches, about 100°F'], ['drop', 'Face first', 'Plain water, no soap'], ['hand', 'Then the body', 'A hand behind the head'], ['bath', 'Hair last', 'Mild shampoo, 2–3 times a week'], ['towel', 'Straight into a towel', 'Pat dry into the creases']],
+      steps: [['drop', 'Get the water ready', 'About 2 inches, about 100°F'], ['face', 'Face first', 'Plain water, no soap'], ['hand', 'Then the body', 'A hand behind the head'], ['bath', 'Hair last', 'Mild shampoo, 2–3 times a week'], ['towel', 'Straight into a towel', 'Pat dry into the creases']],
       safe: [['hand', 'A hand on {o} the whole bath', 'To step away, wrap {o} in a towel and take {o} with you.'], ['thermo', 'Water heater at 120°F or lower', 'So scalds are much less likely.']],
       video: ['VsUla1M7eHQ', 'Giving a tub bath', 'Nemours KidsHealth'] },
     'rash:acne': { type: 'check', k: 'skin', title: 'Baby acne', where: 'acne',
