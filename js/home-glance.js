@@ -257,6 +257,21 @@
   // The copy is written for "she". Turn it into pronoun tokens so it reads right for every baby.
   const P = t => String(t).replace(/\bherself\b/g, '{r}').replace(/\b(hold|feed|keeps|to|with|for|give|let|watch|help|tell) her\b/g, '$1 {o}')
     .replace(/\bher\b/g, '{p}').replace(/\bHer\b/g, '{P}').replace(/\bShe’s\b/g, '{S’s}').replace(/\bshe’s\b/g, '{s’s}').replace(/\bShe\b/g, '{S}').replace(/\bshe\b/g, '{s}');
+  // On your radar: the one thing to get ahead of this month, opening the page that helps. Checkup months lead with the
+  // checkup (watched on the month birthday, it's days away); the rest name one thing to prepare. Nothing the story says.
+  const RADAR = {
+    1: ['The 1-month checkup is coming up.', 'See what to expect and what to ask.', 'Health', 'steth', 'health-detail:1:expect'],
+    2: ['The 2-month checkup is coming up.', 'Her first big round of vaccines. See what to expect and what to ask.', 'Health', 'steth', 'health-detail:2:expect'],
+    3: ['Swaddling ends soon.', 'Once she starts trying to roll, it’s time to stop. Here’s how to switch.', 'Sleep', 'swaddle', 'chg:Sleep:d:swaddleoff'],
+    4: ['The 4-month checkup is coming up.', 'See what to expect and what to ask.', 'Health', 'steth', 'health-detail:4:expect'],
+    5: ['First foods, around 6 months.', 'The signs she’s ready, and what you’ll need.', 'Feeding', 'highchair', 'chg:Feeding:d:signs'],
+    6: ['The 6-month checkup is coming up.', 'See what to expect and what to ask.', 'Health', 'steth', 'health-detail:6:expect'],
+    7: ['She’ll be on the move soon.', 'Babyproof before she crawls. Start with the room she’s in most.', 'Safety', 'gate', 'topic:Safety'],
+    8: ['Finger foods are next.', 'What’s safe to offer, and how to cut it.', 'Feeding', 'pieces', 'chg:Feeding:d:finger'],
+    9: ['The 9-month checkup is coming up.', 'See what to expect and what to ask.', 'Health', 'steth', 'health-detail:9:expect'],
+    10: ['She can eat what you eat.', 'Mostly. Take out her portion before you add salt.', 'Feeding', 'plate', 'chg:Feeding:d:family'],
+    11: ['Whole milk, at one.', 'How to switch, and how much she needs.', 'Feeding', 'bottle', 'chg:Feeding:d:milk12']
+  };
   function monthCard(M, lead, a, next) {
     const m = homeMonth(), wk = Math.max(1, Math.round(a * 4.35)), when = m < 2 ? `${wk} week${wk === 1 ? '' : 's'}` : `Month ${m}`;
     const art = typeof homeMonthArt === 'function' ? homeMonthArt(actualMonth()).replace('<svg ', '<svg preserveAspectRatio="xMidYMid meet" ') : '';
@@ -280,8 +295,8 @@
       : `<section class="he-hero" style="${monthTheme(m)}"><p class="he-eyebrow">${F(when)} · ${F(`Through ${name()}’s eyes`)}</p><div class="he-copy"><h1>${F(P(M.eyes[0]))}</h1><p class="he-lead">${F(P(M.eyes[1]))}</p>${m <= 4 ? `<button class="he-see" onclick="homeEyes(true)"><span aria-hidden="true">👁</span> ${F(`See what ${name()} sees`)}</button>` : ''}</div><span class="he-art" aria-hidden="true">${art}</span></section>`;
     return hero + `
       <h2 class="hub-h2">${F('You might notice…')}</h2>
-      <div class="hub-list hg-rows">${M.notice.map(row).join('')}</div>
-      ` + guidesCard();
+      <div class="hub-list hg-rows">${(sc ? M.notice.slice(0, 3) : M.notice).map(row).join('')}</div>
+      ` + (sc && RADAR[m] ? `<h2 class="hub-h2">${F('On your radar')}</h2><div class="hub-list hg-rows">${row(RADAR[m])}</div>` : guidesCard());
   }
 
   /* ---------- Guides: what moved for her ----------
