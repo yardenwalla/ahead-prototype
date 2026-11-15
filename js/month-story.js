@@ -530,7 +530,7 @@
   function decorate() {
     if (!on() || page !== 'home') return;
     var mm = month(); if (mm < 1 || mm > 11) return;
-    var hero = document.querySelector('#main .he-hero'); if (!hero || hero.dataset.st) return;
+    var hero = document.querySelector('#main .he-hero'); if (!hero || hero.dataset.st || hero.classList.contains('he-story')) return;
     hero.dataset.st = '1';
     var copy = hero.querySelector('.he-copy'); if (!copy) return;
     var b = document.createElement('button'); b.className = 'he-see st-play';

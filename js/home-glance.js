@@ -270,7 +270,7 @@
       return go ? `<button class="hub-row hl-row" style="${st}" onclick="openPage('${go}')">${inner}${chev}</button>` : `<div class="hub-row hl-row is-static" style="${st}">${inner}</div>`;
     };
     const sc = typeof window.stCover === 'function' ? window.stCover(m) : null;
-    const hero = sc ? `<section class="he-hero he-story" style="${monthTheme(m)}"><p class="he-eyebrow">${F(when)} · ${F(`${name()}’s month`)}</p><div class="he-copy"><h1>${F(sc.title)}</h1><p class="he-lead">${F(sc.lead)}</p><ul class="he-takeaways">${sc.sum.map(t => `<li>${F(t)}</li>`).join('')}</ul></div><span class="he-art" aria-hidden="true">${art}</span></section>`
+    const hero = sc ? `<section class="he-hero he-story" role="button" tabindex="0" onclick="stOpen()" style="${monthTheme(m)}"><p class="he-eyebrow">${F(when)} · ${F(`${name()}’s month`)}</p><div class="he-copy"><h1>${F(sc.title)}</h1><p class="he-lead">${F(sc.lead)}</p></div><span class="he-art" aria-hidden="true">${art}</span><span class="he-watch"><i aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 7.5v9l7.5-4.5z"/></svg></i>${F(P('Watch her month'))}<b aria-hidden="true">›</b></span></section>`
       : `<section class="he-hero" style="${monthTheme(m)}"><p class="he-eyebrow">${F(when)} · ${F(`Through ${name()}’s eyes`)}</p><div class="he-copy"><h1>${F(P(M.eyes[0]))}</h1><p class="he-lead">${F(P(M.eyes[1]))}</p>${m <= 4 ? `<button class="he-see" onclick="homeEyes(true)"><span aria-hidden="true">👁</span> ${F(`See what ${name()} sees`)}</button>` : ''}</div><span class="he-art" aria-hidden="true">${art}</span></section>`;
     return hero + `
       <h2 class="hub-h2">${F('You might notice…')}</h2>
