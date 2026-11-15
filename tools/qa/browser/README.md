@@ -11,7 +11,7 @@ Serve the app first, from the repo root: `python3 -m http.server 8765`. Then run
 | `everyone.py OUT` then `everyone_report.py OUT` | Every combination of family (age, milk set-up, pronouns, named or not, born early, answers), crawled page by page, with automatic flags for wording and display problems. `OUT/texts.json` holds every page's words for the editorial read. | ~20 min |
 | `phone_conditions.py OUT` | The key tasks at 320–430px wide, normally and inside a locked-down frame like the Claude app's file viewer. | ~3 min |
 | `copy_limits.py [--json out.json]` | Does every detail page keep the style guide's copy limits: a headline of about 40 characters, a lead of 1–2 sentences (about 140 characters), about 2 phone screens, and 3 "Good to know" rows at most? Run it after any content pass. | ~1.5 min |
-| `care_calls.py` | Does every Everyday care page end with exactly one "When to call" card, with no stray call boxes and no row over 130 characters? | ~1 min |
+| `care_blocks.py` | Everyday care uses one design per block: a "When to call" card only on pages about a worry, one "Good to know" list with 3 rows at most, and no stray tips, small print or call boxes. | ~1 min |
 | `page_text.py out.json` on the old and the new version, then `layout_guard.py old.json new.json` | Which pages changed layout? (Proves a words-only change touched no layout.) | ~3 min each |
 
 `follow_through.py` holds the list of every save a parent can make. Add one whenever the app gets a new save, answer, toggle or toast button.

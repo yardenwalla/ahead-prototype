@@ -1,4 +1,6 @@
-"""Everyday care pages end with exactly one "When to call" card: no stray call boxes, and no row over 130 characters.
+"""Everyday care pages use one design per block (Nov 15 pilot): at most one "When to call" card, and only on pages about a
+worry (Is this normal?, rashes, the first-week diapers); no stray tips, small print or call boxes; one "Good to know" list
+with 3 rows at most; no call line over 130 characters.
 Serve the app first: python3 -m http.server 8765. Added Nov 14 after two or three call boxes of different shapes were found on one page."""
 import asyncio, sys, re, json
 sys.path.insert(0, __file__.rsplit('/', 1)[0])
@@ -16,15 +18,20 @@ async def main():
       for r in routes:
         await pg.evaluate("r=>{historyStack=[];page=r;render()}",r); await pg.wait_for_timeout(40)
         d=await pg.evaluate("""()=>{const m=document.querySelector('#main');const cards=m.querySelectorAll('.care-calls').length;
-          const stray=[...m.querySelectorAll('.hub-tip,.hub-callout,.hub-versus,p.care-p,.care-urgent')].map(e=>e.innerText.replace(/\\s+/g,' ').slice(0,90)).filter(t=>/call|911|right away/i.test(t));
-          const rows=[...m.querySelectorAll('.care-call-row')].map(e=>e.querySelector('b').innerText+': '+e.querySelector('p').innerText);
-          return {cards,stray,rows}}""")
+          const stray=[...m.querySelectorAll('.hub-tip,p.ss-small,.hub-callout,p.care-p:not(.is-fold),.care-urgent,.hub-versus')].filter(e=>!e.closest('details')).map(e=>e.innerText.replace(/\\s+/g,' ').slice(0,90)).filter(t=>!/^Every bath/.test(t));
+          const gtk=[...m.querySelectorAll('h2')].filter(h=>/^Good to know/.test(h.innerText.trim()));
+          const gtkRows=gtk.length?gtk[0].nextElementSibling.querySelectorAll('.hub-row').length:0;
+          const rows=[...m.querySelectorAll('.care-calls p')].map(e=>e.innerText);
+          return {cards,stray,rows,gtk:gtk.length,gtkRows}}""")
         key=(r,json.dumps(d['rows']))
         if key in seen: continue
         seen[key]=1
         bad=[]
         if d['cards']>1: bad.append(f"{d['cards']} call cards")
-        if d['stray']: bad.append(f"stray call box: {d['stray'][0]}")
+        if d['stray']: bad.append(f"stray block: {d['stray'][0]}")
+        if d['gtk']>1 or d['gtkRows']>3: bad.append(f"Good to know: {d['gtk']} lists, {d['gtkRows']} rows")
+        worry=any(x in r for x in (':look:',':rash:',':t:skin:')) or r.endswith('t:diapers:0')
+        if d['cards'] and not worry: bad.append('call card on a page that is not about a worry')
         bad+=[f"long row ({len(x)}): {x[:60]}…" for x in d['rows'] if len(x)>130]
         if bad: fails.append((r,f['name'],bad))
         checked+=1
@@ -32,5 +39,5 @@ async def main():
 fails=[]; checked=0
 asyncio.run(main())
 for r,n,bad in fails: print('FAIL',r,f'[{n}]','; '.join(bad))
-print(f"{checked} Everyday care page versions checked, {len(fails)} with call problems")
+print(f"{checked} Everyday care page versions checked, {len(fails)} with block problems")
 sys.exit(1 if fails else 0)
