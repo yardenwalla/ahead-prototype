@@ -152,7 +152,7 @@
     // Tapped once (photo added or not), it's done for this month: the story card already says which month it is.
     const key = 'ahead-photo-banner-' + m;
     try { if (localStorage.getItem(key)) return ''; } catch (e) {}
-    return `<label class="hg-banner" role="button" onclick="try{localStorage.setItem('${key}','1')}catch(e){};setTimeout(()=>{const b=document.querySelector('#main .hg-banner');b&&b.remove()},400)"><img class="hg-banner-img" src="assets/home/balloon-${m}.png" alt=""><span class="hg-banner-copy"><b>${F(`${name()}’s ${m}-month photo`)}</b><small>${F('Snap one today for Memories.')}</small></span><span class="hg-banner-plus" aria-hidden="true">＋</span>${input ? input.outerHTML : ''}</label>`;
+    return `<label class="hg-banner hg-banner-month" style="${monthTheme(m)}" role="button" onclick="try{localStorage.setItem('${key}','1')}catch(e){};setTimeout(()=>{const b=document.querySelector('#main .hg-banner');b&&b.remove()},400)"><img class="hg-banner-img" src="assets/home/balloon-${m}.png" alt=""><span class="hg-banner-copy"><b>${F(`${name()}’s ${m}-month photo`)}</b><small>${F('Snap one today for Memories.')}</small></span><span class="hg-banner-plus" aria-hidden="true">＋</span>${input ? input.outerHTML : ''}</label>`;
   }
 
   // Home as "Through her eyes" + "You might notice…" (Nov 9 mock, 3 months written).
@@ -392,7 +392,9 @@
     // opens the Guides tab. Something new: the same block; only the changed guides' circles stay in color, a coral
     // "New", and it says what changed. One guide opens it; several open Guides with those tiles glowing.
     // Then a slim timeline card in the same style, naming what's actually next for her.
-    const moved = window.guideMoves(), m = homeMonth(), nm = name();
+    // Skip guide news the radar card above already gives (one home per fact): same guide, same month.
+    const m = homeMonth(), nm = name(), onRadar = (RADAR[m] || []).map(r => r[2]);
+    const moved = window.guideMoves().filter(q => !(typeof window.stCover === 'function' && window.stCover(m) && onRadar.includes(q.cat)));
     const age = m < 2 ? `${Math.max(1, Math.round(Y().ageNow() * 4.35))} weeks` : `${m} months`;
     const label = c => typeof displayTopic === 'function' ? displayTopic(c) : c;
     const set = ['Feeding', 'Sleep', 'Development', 'Safety', 'Health', 'Daily rhythm'];
@@ -412,7 +414,8 @@
     let next = '';
     try {
       const ya = window.__ya, a = ya.ageNow(), done = ya.doneNow();
-      const ahead = ya.C.filter(c => c.end > a && !done[c.id]).sort((x, y) => x.start - y.start || x.end - y.end);
+      // Skip a change in its last month that the parent hasn't marked: "Sitting up, any time now" at 9 months reads as a bug.
+      const ahead = ya.C.filter(c => c.end > a && !done[c.id] && !(a > c.start && a >= c.end - 1)).sort((x, y) => x.start - y.start || x.end - y.end);
       const n = ahead[0];  // the same first row the Timeline shows under "Maya now"
       if (n) next = `Next up: ${F(n.title)}, ${F(ya.whenShort(n, a))}`;
     } catch (e) {}
