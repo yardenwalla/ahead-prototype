@@ -1,0 +1,75 @@
+/* Story preview (Nov 14): one guide stage as a single read, with swipeable topic cards. Sleep colors from the style guide. */
+.sp-try { display: flex; justify-content: space-between; align-items: center; gap: 10px; width: 100%; margin: 4px 0 14px; padding: 12px 16px; border: 1px dashed #a3c2f2; border-radius: 18px; background: #f5f8ff; color: #24508F; font: inherit; text-align: left; cursor: pointer; }
+.sp-try b { font-weight: 650; }
+.sp-try span { font-size: 13px; white-space: nowrap; }
+
+.sp-page { padding-bottom: 24px; }
+.sp-progress { position: sticky; top: 0; z-index: 3; height: 3px; margin: 0 -16px 10px; background: #e9f1fe; }
+.sp-progress i { display: block; height: 100%; width: 0; background: #24508F; transition: width .1s; }
+
+.sp-hero { margin: 4px 0 8px; padding: 22px 20px; border-radius: 28px; background: linear-gradient(160deg, #e9f1fe, #f5f8ff); }
+.sp-hero small { display: block; color: #24508F; font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.sp-hero h1 { margin: 6px 0 6px; font-size: 28px; line-height: 1.12; color: #2B2840; }
+.sp-hero p { margin: 0; color: #5E5A75; font-size: 15px; line-height: 1.5; }
+
+.sp-ch { position: relative; padding: 22px 0 6px 40px; }
+
+.sp-n { position: absolute; left: 0; top: 20px; width: 28px; height: 28px; margin: 0; border-radius: 50%; background: #24508F; color: #fff !important; font-size: 13px; font-weight: 700; display: grid; place-items: center; }
+.sp-h { margin: 0 0 8px; font-size: 20px; line-height: 1.25; color: #2B2840; }
+.sp-p { margin: 0 0 10px; font-size: 15.5px; line-height: 1.55; color: #3d3953; }
+
+.sp-remember { margin: 12px 0 6px; padding: 14px 16px; border-left: 4px solid #24508F; border-radius: 0 16px 16px 0; background: #f5f8ff; font-size: 17px; line-height: 1.4; font-weight: 600; color: #2B2840; }
+.sp-remember small { display: block; margin-bottom: 4px; font-size: 11.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #24508F; }
+
+.sp-do { margin: 6px 0 10px; padding-left: 20px; color: #3d3953; font-size: 15px; line-height: 1.5; }
+.sp-do li { margin: 4px 0; }
+.sp-do-big { counter-reset: d; list-style: none; padding: 0; }
+.sp-do-big li { counter-increment: d; position: relative; padding: 10px 12px 10px 44px; margin: 0 0 8px; border-radius: 16px; background: #fff; border: 1px solid #EFEAF2; }
+.sp-do-big li::before { content: counter(d); position: absolute; left: 12px; top: 10px; width: 22px; height: 22px; border-radius: 50%; background: #e9f1fe; color: #24508F; font-size: 12.5px; font-weight: 700; display: grid; place-items: center; }
+
+.sp-tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 4px 0 12px; }
+.sp-tiles div { padding: 12px 10px; border-radius: 18px; background: #e9f1fe; }
+.sp-tiles small { display: block; font-size: 11.5px; color: #24508F; font-weight: 600; }
+.sp-tiles b { display: block; margin: 2px 0; font-size: 19px; color: #2B2840; }
+.sp-tiles span { display: block; font-size: 12px; color: #5E5A75; line-height: 1.3; }
+
+.sp-next { padding: 14px 16px; border-radius: 18px; background: #fff; border: 1px solid #EFEAF2; }
+.sp-next small { display: block; color: #24508F; font-size: 12px; font-weight: 600; }
+.sp-next b { display: block; margin: 2px 0; font-size: 17px; color: #2B2840; }
+.sp-next span { color: #5E5A75; font-size: 14px; }
+.sp-link { margin: 2px 0 8px; padding: 0; border: 0; background: none; color: #24508F; font: inherit; font-weight: 650; cursor: pointer; }
+
+.sp-end { margin: 22px 0 8px; padding: 18px; border-radius: 22px; background: #f5f8ff; text-align: center; }
+.sp-end b { display: block; font-size: 17px; color: #2B2840; }
+.sp-end span { display: block; margin: 2px 0 10px; color: #5E5A75; font-size: 14px; }
+.sp-chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+.sp-chips button { padding: 8px 14px; border-radius: 999px; border: 1px solid #a3c2f2; background: #fff; color: #24508F; font: inherit; font-size: 14px; cursor: pointer; }
+
+/* Swipeable cards: one idea per screen */
+.sp-deck-wrap { margin: 10px -16px 6px -56px; }
+.sp-deck-title { margin: 0 16px 8px 56px; font-weight: 650; color: #2B2840; font-size: 15px; }
+.sp-deck-title span { color: #5E5A75; font-weight: 500; font-size: 13px; }
+.sp-deck { scroll-padding: 0 16px; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+.sp-deck::-webkit-scrollbar { display: none; }
+.sp-card { flex: 0 0 100%; box-sizing: border-box; scroll-snap-align: start; padding: 0 16px; }
+.sp-card > * { position: relative; }
+.sp-card { display: flex; flex-direction: column; }
+.sp-card::before { content: none; }
+.sp-card .sp-k, .sp-card h2, .sp-card p, .sp-card .sp-art, .sp-card .sp-do, .sp-card .sp-vs { margin-left: 0; }
+.sp-card { background: none; }
+.sp-card > small.sp-k { display: block; margin: 0 0 6px; color: #24508F; font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.sp-card h2 { margin: 6px 0 8px; font-size: 22px; line-height: 1.2; color: #2B2840; }
+.sp-card p { margin: 0; font-size: 15.5px; line-height: 1.55; color: #3d3953; }
+.sp-art { height: 74px; border-radius: 18px; background: #f5f8ff; display: grid; place-items: center; }
+.sp-art svg { height: 64px; width: auto; }
+.sp-deck .sp-card { min-height: 300px; padding: 18px 18px 20px; margin: 0 6px; flex-basis: calc(100% - 40px); scroll-margin-left: 16px; border-radius: 26px; background: #fff; border: 1px solid #e3eaf8; box-shadow: 0 1px 0 #EFEAF2; }
+.sp-deck .sp-card:first-child { margin-left: 16px; }
+.sp-deck .sp-card:last-child { margin-right: 16px; }
+.sp-vs { display: grid; gap: 8px; margin-top: 10px; }
+.sp-vs div { padding: 10px 12px; border-radius: 14px; background: #eef8f1; }
+.sp-vs div.is-call { background: #fdeee6; }
+.sp-vs b { display: block; font-size: 13px; color: #2B2840; }
+.sp-vs span { font-size: 14px; color: #3d3953; }
+.sp-dots { display: flex; gap: 6px; justify-content: center; margin: 10px 0 0; }
+.sp-dots i { width: 7px; height: 7px; border-radius: 50%; background: #d9e5fc; }
+.sp-dots i.is-on { background: #24508F; width: 18px; border-radius: 4px; }
