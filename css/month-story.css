@@ -602,3 +602,12 @@
 /* month card: the baby */
 #main .ms-babyw{left:4%;right:4%;bottom:2%;transform:none}
 .st-coverart .ms-babyw{left:0;right:0;bottom:0}
+/* On your radar: one quiet card, Yarden's format (eyebrow, line, small line) */
+#main .rd-card{margin:18px 0 4px;padding:16px 18px 6px;border-radius:22px;background:#fffaf3;border:1px solid rgba(43,40,64,.07)}
+#main .rd-eyebrow{margin:0 0 4px;font-size:11.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#8a7f72}
+#main .rd-item{display:flex;align-items:center;gap:12px;width:100%;padding:8px 0 12px;border:0;background:none;text-align:left;font-family:inherit;cursor:pointer;color:#2B2840}
+#main .rd-item+.rd-item{border-top:1px solid rgba(43,40,64,.07);padding-top:12px}
+#main .rd-item span{flex:1;display:flex;flex-direction:column;gap:3px}
+#main .rd-item b{font-size:16px;font-weight:700;line-height:1.3}
+#main .rd-item small{font-size:14px;line-height:1.4;color:#6b6676}
+#main .rd-item i{font-style:normal;font-size:22px;color:#b3acb9}

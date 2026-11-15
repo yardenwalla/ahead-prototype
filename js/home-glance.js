@@ -179,7 +179,7 @@
         ['Busy places wear her out', 'Noise and new faces can be a lot. Looking away means she needs a break.', 'Development', 'ear', '']] },
     3: { eyes: ['Moving things are fascinating', 'She can follow a toy smoothly from side to side now, so slow, sweeping games are a hit.'],
       notice: [['She follows toys side to side', 'Her eyes track smoothly now, so slow, sweeping games are a hit.', 'Development', 'eye', ''],
-        ['She’s drooling a lot', 'Drool picks up now. It’s normal, and usually not a sign of teething yet.', 'Daily rhythm', 'drops', 'chg:Daily rhythm:d:gums'],
+        ['She’s drooling a lot', 'Drool picks up now. It’s normal, and usually not a sign of teething yet.', 'Daily rhythm', 'drop', 'chg:Daily rhythm:d:gums'],
         ['She sucks on her hands', 'It’s one of her first ways to calm herself, not always hunger.', 'Development', 'mouth', ''],
         ['She laughs out loud', 'It often starts around 3–4 months: her first way to share a joke.', 'Development', 'smile', '']] },
     4: { eyes: ['Her eyes work as a team now', 'Both eyes now move together, so she sees depth and can judge how far away a toy is.'],
@@ -297,7 +297,7 @@
         <span class="ms-foot"><span class="ms-watch"><i><svg viewBox="0 0 24 24"><path d="M9 7.5v9l7.5-4.5z"/></svg></i>${F(P('Watch her month'))}</span><span class="ms-go" aria-hidden="true">→</span></span>
       </button>`
       : `<section class="he-hero" style="${monthTheme(m)}"><p class="he-eyebrow">${F(when)} · ${F(`Through ${name()}’s eyes`)}</p><div class="he-copy"><h1>${F(P(M.eyes[0]))}</h1><p class="he-lead">${F(P(M.eyes[1]))}</p>${m <= 4 ? `<button class="he-see" onclick="homeEyes(true)"><span aria-hidden="true">👁</span> ${F(`See what ${name()} sees`)}</button>` : ''}</div><span class="he-art" aria-hidden="true">${art}</span></section>`;
-    return hero + (sc && RADAR[m] ? `<h2 class="hub-h2">${F('On your radar')}</h2><div class="hub-list hg-rows">${RADAR[m].map(row).join('')}</div>` : '') + `
+    return hero + (sc && RADAR[m] ? `<section class="rd-card"><p class="rd-eyebrow">${F('On your radar')}</p>${RADAR[m].map(([t, why, , , go]) => `<button class="rd-item" onclick="openPage('${go}')"><span><b>${F(P(t))}</b><small>${F(P(why))}</small></span><i aria-hidden="true">›</i></button>`).join('')}</section>` : '') + `
       <h2 class="hub-h2">${F('You might notice…')}</h2>
       <div class="hub-list hg-rows">${(sc ? M.notice.slice(0, 3) : M.notice).map(row).join('')}</div>
       ` + guidesCard();
