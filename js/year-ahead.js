@@ -202,11 +202,7 @@
     const listHTML = x => {
       const t = isToday(x), past = all.filter(s => st(s, x) === 'done'), rest = all.filter(s => st(s, x) !== 'done');
       const prep = (s, k) => s.v != null ? (k === 'now' ? 'Due now · book it if you haven’t' : 'Book it a few weeks ahead') : s.c.id === 'crying' && x >= 2 ? 'Past the worst now' : PREP[s.c.id] || '';
-      // On the Today cards, a small labelled window: the usual range at each end, and where she sits in it.
-      const lab = v => v < 1 ? `${Math.round(v * 4.35)} weeks` : `${Math.round(v)} months`;
-      const win = (s, k) => { if (k !== 'now' || s.v != null) return ''; const c = s.c, p = Math.max(4, Math.min(96, (x - c.start) / (c.end - c.start) * 100));
-        return `<span class="tl-win" aria-label="${F(`Usually ${lab(c.start)} to ${lab(c.end)}. ${nm} is ${ageTxt(x)}.`)}"><em>${F(lab(c.start))}</em><span class="tl-wbar"><i style="left:${p}%"><b>${F(nm)}</b></i></span><em>${F(lab(c.end))}</em></span>`; };
-      const step = s => { const k = st(s, x), pr = k === 'done' ? '' : prep(s, k); return `<li class="tl-step is-${k}" data-id="${s.v != null ? 'v' + s.v : s.c.id}"><i class="tl-dot"></i><button onclick="${go(s)}"><span class="tl-t"><b>${F(title(s))}</b>${pr ? `<small>${F(pr)}</small>` : ''}${win(s, k)}</span>${k === 'now' && s.v == null ? '' : `<span class="tl-w">${F(longWhen(s))}</span>`}</button></li>`; };
+      const step = s => { const k = st(s, x), pr = k === 'done' ? '' : prep(s, k); return `<li class="tl-step is-${k}" data-id="${s.v != null ? 'v' + s.v : s.c.id}"><i class="tl-dot"></i><button onclick="${go(s)}"><span class="tl-t"><b>${F(title(s))}</b>${pr ? `<small>${F(pr)}</small>` : ''}</span><span class="tl-w">${F(longWhen(s))}</span></button></li>`; };
       const mark = `<li class="tl-today"><i class="tl-dot"></i><span>${F(t ? 'Today' : `At ${ageTxt(x)}`)}</span></li>`;
       let h = '';
       if (past.length) h += `<li class="tl-past"><i class="tl-dot"></i><button onclick="this.closest('ol').classList.toggle('show-past');this.querySelector('span').textContent=this.closest('ol').classList.contains('show-past')?'Hide':'Show'">${F(`Earlier (${past.length})`)}<span>${F(document.querySelector('#main .tl-steps.show-past') ? 'Hide' : 'Show')}</span></button></li>` + past.map(step).join('').replace(/tl-step is-done/g, 'tl-step is-done tl-old');
