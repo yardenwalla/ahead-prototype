@@ -917,3 +917,21 @@
 #main .yt-road:not(.is-fold) .yt-hc b{font-size:14px!important;font-weight:800;color:#4a4658;margin:0!important}
 #main .yt-road:not(.is-fold) .yt-toy{display:none!important}
 #main .yt-road:not(.is-fold) .yt-caret{font-size:16px}
+/* Timeline: sticky chapter headers (one continuous list; the chapter you're in stays pinned at the top) */
+#main .yt-ch.yt-sticky{overflow:visible!important}
+#main .yt-road.yt-hide{display:none!important}
+#main .yt-sticky > .yt-head{position:sticky!important;top:0;z-index:20;display:flex;align-items:center;gap:10px;margin:0 -20px 6px!important;padding:10px 20px!important;border-radius:0!important;
+  background:color-mix(in srgb,var(--yt) 88%,#fff)!important;box-shadow:0 6px 12px -8px rgba(43,40,64,.18)!important;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);min-height:0!important;cursor:default!important}
+#main .yt-sticky > .yt-head .yt-hc{display:block!important}
+#main .yt-sticky > .yt-head .yt-hc small{font-size:10.5px!important;letter-spacing:.1em}
+#main .yt-sticky > .yt-head .yt-hc b{font-size:16px!important;color:#2B2840!important;margin-top:1px!important}
+#main .yt-sticky > .yt-head .yt-prev{display:none!important}
+#main .yt-sticky > .yt-head .yt-toy{display:block!important;width:40px!important;height:40px!important;order:-1}
+#main .yt-earlier{display:flex;align-items:center;gap:12px;width:100%;margin:6px 0 10px;padding:6px 14px;border:0;background:none;font:600 13.5px Nunito,sans-serif;color:#6b6676;cursor:pointer;text-align:left;position:relative;z-index:4}
+#main .yt-earlier .yt-dot{width:12px;height:12px;margin-left:8px;background:#cfc6bd;box-shadow:none}
+#main .yt-earlier span{flex:1}
+#main .yt-earlier b{font-weight:800;color:#2B2840;text-decoration:underline;text-underline-offset:2px}
+#main .yt-ch.yt-road{background:var(--yt)!important}
+/* sticky needs the shell to clip instead of hide (clip doesn't create a scroll box), only on Timeline */
+#shell:has(.yt-page){overflow:clip!important}
+#main .yt-sticky > .yt-head{background:var(--yt)!important;z-index:30!important}

@@ -157,8 +157,8 @@
       const SH = { crying: 'crying peak', smile: 'first smiles', nights: 'longer nights', regress: 'sleep regression', roll: 'rolling', ready: 'solids prep', solids: 'first foods', twonaps: 'two naps', crawl: 'crawling', sit: 'sitting up', tooth: 'first tooth', finger: 'textures', meals: 'three meals', carseat: 'car seat', sep: 'separation', pull: 'pulling up', words: 'first words', milk: 'whole milk', steps: 'first steps' };
       const ahead = its.filter(s => !passed(s)), nameOf = s => s.v != null ? `${s.v}-month checkup` : SH[s.c.id] || s.c.title;
       const preview = to <= a ? F(`All behind ${'{o}'} ✓`) : ahead.length ? F(`${ahead.length} ahead · ${ahead.slice(0, 3).map(nameOf).join(', ')}${ahead.length > 3 ? '…' : ''}`) : '';
-      out += `<section class="yt-ch is-open yt-road${i === here ? ' is-here' : ' is-fold'}${to <= a ? ' is-past' : ''}" style="--yt:${bg};--yti:${ink};--ytp:${(ROAD[i - 1] || ROAD[i])[5]};--ytn:${(ROAD[i + 1] || ROAD[i])[5]}">
-        <button class="yt-head" onclick="ytFold(this.parentNode)" aria-expanded="${i === here}"><i class="yt-dot yt-hdot"></i><span class="yt-hc"><small>${F(ages)} · ${mon(from)}–${mon(Math.min(to, 12) - 1)}</small><b>${F(title)}</b><span class="yt-prev">${preview}</span></span><span class="yt-toy" aria-hidden="true">${typeof window.stCardArt === 'function' ? window.stCardArt(toy) : ''}</span><i class="yt-caret" aria-hidden="true">›</i></button>
+      out += (i === here && here > 0 ? `<button class="yt-earlier" onclick="ytEarlier(this)"><i class="yt-dot"></i><span>✓ ${F(`${ROAD[0][2].split('–')[0]}–${ROAD[here - 1][2].split('–')[1]} · ${here} ${here === 1 ? 'chapter' : 'chapters'} behind {o}`)}</span><b>${F('Show')}</b></button>` : '') + `<section class="yt-ch is-open yt-road yt-sticky${i === here ? ' is-here' : ''}${to <= a ? ' is-past yt-hide' : ''}" style="--yt:${bg};--yti:${ink};--ytp:${(ROAD[i - 1] || ROAD[i])[5]};--ytn:${(ROAD[i + 1] || ROAD[i])[5]}">
+        <div class="yt-head"><span class="yt-hc"><small>${F(ages)} · ${mon(from)}–${mon(Math.min(to, 12) - 1)}</small><b>${F(title)}</b><span class="yt-prev">${preview}</span></span><span class="yt-toy" aria-hidden="true">${typeof window.stCardArt === 'function' ? window.stCardArt(toy) : ''}</span></div>
         <div class="yt-body"><ol class="yt-list">${body}</ol></div></section>`;
     });
     return `<div class="ya-page yt-page"><h1 class="yt-h1">${F(`${nm}’s first year`)}</h1><p class="yt-lead">${F('The road to one.')}</p><div class="yt-map"><svg class="yt-trail" aria-hidden="true"><path class="t1"/><path class="t2"/></svg>${out}<div class="yt-end"><i class="yt-dot"></i><span class="yt-endc"><small>${F('The destination')} · ${mon(12)}</small><b>${F('One whole year!')}</b></span><span class="yt-endcake" aria-hidden="true">${window.stToy('cake')}</span></div></div><p class="hub-foot">${F('Ages are typical. Every baby moves at their own pace.')}</p></div>` + (setTimeout(() => { window.ytTrail && window.ytTrail(); window.ytCenter && window.ytCenter(); }, 0), '');
@@ -177,19 +177,15 @@
   let ytRaf = 0;
   const ytFocus = () => {
     ytRaf = 0;
-    // Scrolling down: the next chapter opens just before you reach it (only below you, so nothing above moves).
-    // Chapters never close on their own; one the parent folded by hand stays folded.
-    const secs = [...document.querySelectorAll('#main .yt-road')], hi = secs.findIndex(x => x.classList.contains('is-here')), scr = secs[0] ? ytScroller(secs[0]).scrollTop : 0, moved = window.__ytStart != null && scr > window.__ytStart + 40;
-    secs.forEach((x, j) => { if (moved && j > hi && x.classList.contains('is-fold') && !x.dataset.user && !secs[j - 1].classList.contains('is-fold') && x.getBoundingClientRect().top < innerHeight * 0.4) {
-      x.classList.remove('is-fold'); x.querySelector('.yt-head').setAttribute('aria-expanded', 'true'); window.ytTrail(); } });
-    const items = document.querySelectorAll('#main .yt-map .yt-list > li, #main .yt-map .yt-head, #main .yt-map .yt-end'); if (!items.length) return;
+    const items = document.querySelectorAll('#main .yt-map .yt-list > li, #main .yt-map .yt-end'); if (!items.length) return;
     const mid = innerHeight * 0.45;
     items.forEach(el => { const r = el.getBoundingClientRect(), d = Math.abs(r.top + r.height / 2 - mid);
-      const floor = el.classList.contains('yt-me') || el.classList.contains('yt-head') ? .55 : .2;
-      el.style.opacity = Math.max(floor, Math.min(1, 1 - (d - 110) / 260)).toFixed(2); });
+      const floor = el.classList.contains('yt-me') ? .7 : .4;
+      el.style.opacity = Math.max(floor, Math.min(1, 1 - (d - 160) / 320)).toFixed(2); });
   };
   document.addEventListener('scroll', () => { if (!ytRaf) ytRaf = requestAnimationFrame(ytFocus); }, { passive: true, capture: true });
   window.ytFocus = ytFocus;
+  window.ytEarlier = btn => { const show = !btn.classList.contains('is-on'); btn.classList.toggle('is-on', show); btn.querySelector('b').textContent = show ? 'Hide' : 'Show'; document.querySelectorAll('#main .yt-road.is-past').forEach(x => x.classList.toggle('yt-hide', !show)); window.ytTrail(); ytFocus(); };
   window.ytFold = sec => { sec.dataset.user = '1'; const f = !sec.classList.contains('is-fold'); sec.classList.toggle('is-fold', f); sec.querySelector('.yt-head').setAttribute('aria-expanded', String(!f)); window.ytTrail(); ytFocus(); };
   window.ytOld = btn => { const sec = btn.closest('.yt-ch'), on = sec.classList.toggle('show-old'); btn.querySelector('span').textContent = on ? 'Hide' : 'Show'; window.ytTrail(); ytFocus(); };
   window.ytCenter = () => { const me = document.querySelector('#main .yt-me'); if (!me) return ytFocus(); const sc = ytScroller(me); sc.scrollTop += me.getBoundingClientRect().top - innerHeight * 0.38; window.__ytStart = sc.scrollTop; ytFocus(); };
@@ -197,7 +193,7 @@
   window.ytTrail = function () {
     const map = document.querySelector('#main .yt-map'); if (!map) return;
     const svg = map.querySelector('.yt-trail'), box = map.getBoundingClientRect();
-    const pts = [...map.querySelectorAll('.yt-dot')].filter(d => d.getBoundingClientRect().height > 0 && d.closest('li, .yt-head, .yt-end') && (d.classList.contains('yt-hdot') || d.closest('.yt-ch.is-open') || d.closest('.yt-end'))).map(d => { const r = d.getBoundingClientRect(); return [r.left + r.width / 2 - box.left, r.top + r.height / 2 - box.top]; }).filter(p => p[1] >= 0 && p[1] <= box.height);
+    const pts = [...map.querySelectorAll('.yt-list > li > .yt-dot, .yt-earlier .yt-dot, .yt-end .yt-dot')].filter(d => d.getBoundingClientRect().height > 0).map(d => { const r = d.getBoundingClientRect(); return [r.left + r.width / 2 - box.left, r.top + r.height / 2 - box.top]; }).filter(p => p[1] >= 0 && p[1] <= box.height);
     svg.setAttribute('viewBox', `0 0 ${box.width} ${box.height}`); svg.style.setProperty('width', box.width + 'px', 'important'); svg.style.setProperty('height', box.height + 'px', 'important');
     if (pts.length < 2) return;
     let d = `M${pts[0][0]} ${pts[0][1]}`;
