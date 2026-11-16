@@ -847,3 +847,16 @@
 #main .yt-ch.is-past:not(.is-open){opacity:1!important}
 #main .yt-ch.is-past:not(.is-open) .yt-hc b,#main .yt-ch.is-past:not(.is-open) .yt-hc small{color:#8a8494}
 #main .yt-ch.is-past:not(.is-open) .yt-toy{filter:saturate(.6);opacity:.8}
+/* PM/design pass: calendar hint, preview, destination, quieter color */
+#main .yt-prev{display:block;margin-top:4px;font-size:12.5px;font-weight:600;color:#6b6676;line-height:1.3}
+#main .yt-ch.is-open .yt-prev{display:none}
+#main .yt-hdot{background:#fffdf9!important;box-shadow:0 0 0 2.5px #b5aba0!important}
+#main .yt-ch.is-here .yt-hdot{background:#2B2840!important;box-shadow:0 0 0 3px #fffdf9!important}
+#main .yt-stop.is-done .yt-dot{background:#cfc6bd!important;opacity:1!important}
+#main .yt-trail .t2{stroke:#d6ccc1}
+#main .yt-ch:not(.is-open) .yt-toy{display:none}
+#main .yt-ch.is-open .yt-toy{width:78px;height:78px}
+#main .yt-ch.is-open .yt-head{min-height:96px}
+#main .yt-end{position:relative;display:flex;align-items:center;gap:12px;margin:10px 0 0;padding:0 14px}
+#main .yt-end .yt-endc{flex:1}
+#main .yt-hc small{white-space:nowrap}

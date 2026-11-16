@@ -133,6 +133,8 @@
     const attended = v => { try { const r = healthRecord(v); return r && r.status === 'attended'; } catch (e) { return false; } };
     const nextId = (CC.filter(c => !(c.end <= a || done[c.id])).sort((x, y) => x.start - y.start || x.end - y.end)[0] || {}).id;
     const here = Math.max(0, ROAD.findIndex(r => a >= r[0] && a < r[1]));
+    const born = parse(profile.early && profile.due ? profile.due : profile.dob);
+    const mon = m => { const d = new Date(born); d.setMonth(d.getMonth() + m); return d.toLocaleDateString('en-US', { month: 'short' }); };
     const chev = '<span class="hub-chev" aria-hidden="true">›</span>';
     let out = '';
     ROAD.forEach(([from, to, ages, title, toy, bg, ink], i) => {
@@ -149,12 +151,14 @@
           body += `<li class="yt-stop${pd ? ' is-done' : ''}${nx ? ' is-next' : ''}"><i class="yt-dot"></i><button onclick="${c.go}"><span class="yt-c"><small>${F(range(c))}${nx ? ` · ${F(whenShort(c, a))}` : ''}</small><b>${F(c.title)}</b>${nx ? `<span>${F(c.id === 'crying' && a >= 2 ? 'Past the worst. Fussy evenings ease over the next few weeks' : c.why)}</span>` : ''}</span>${done[c.id] ? '<i class="yt-tick">✓</i>' : chev}</button></li>`; }
       });
       if (!placed) body += `<li class="yt-me"><i class="yt-dot"></i><span>${F(`${nm} is here`)}<small>${F(typeof babyAge === 'function' ? babyAge() : '')}</small></span></li>`;
-      if (i === 3) body += `<li class="yt-end"><i class="yt-dot"></i><span class="yt-endc"><small>${F('The destination')}</small><b>${F('One whole year!')}</b></span></li>`;
+      const SH = { crying: 'crying peak', smile: 'first smiles', nights: 'longer nights', regress: 'sleep regression', roll: 'rolling', ready: 'solids prep', solids: 'first foods', twonaps: 'two naps', crawl: 'crawling', sit: 'sitting up', tooth: 'first tooth', finger: 'textures', meals: 'three meals', carseat: 'car seat', sep: 'separation', pull: 'pulling up', words: 'first words', milk: 'whole milk', steps: 'first steps' };
+      const ahead = its.filter(s => !passed(s)), nameOf = s => s.v != null ? `${s.v}-month checkup` : SH[s.c.id] || s.c.title;
+      const preview = to <= a ? F(`All behind ${'{o}'} ✓`) : ahead.length ? F(`${ahead.length} ahead · ${ahead.slice(0, 3).map(nameOf).join(', ')}${ahead.length > 3 ? '…' : ''}`) : '';
       out += `<section class="yt-ch${i === here ? ' is-open is-here' : ''}${to <= a ? ' is-past' : ''}" style="--yt:${bg};--yti:${ink}">
-        <button class="yt-head" onclick="ytOpen(this.parentNode)" aria-expanded="${i === here}"><i class="yt-dot yt-hdot"></i><span class="yt-hc"><small>${F(ages)}</small><b>${F(title)}</b></span><span class="yt-toy" aria-hidden="true">${window.stToy(toy)}</span><i class="yt-caret" aria-hidden="true">›</i></button>
+        <button class="yt-head" onclick="ytOpen(this.parentNode)" aria-expanded="${i === here}"><i class="yt-dot yt-hdot"></i><span class="yt-hc"><small>${F(ages)} · ${mon(from)}–${mon(Math.min(to, 12) - 1)}</small><b>${F(title)}</b><span class="yt-prev">${preview}</span></span><span class="yt-toy" aria-hidden="true">${window.stToy(toy)}</span><i class="yt-caret" aria-hidden="true">›</i></button>
         <div class="yt-body"><ol class="yt-list">${body}</ol></div></section>`;
     });
-    return `<div class="ya-page yt-page"><h1 class="yt-h1">${F(`${nm}’s first year`)}</h1><p class="yt-lead">${F('The road to one.')}</p><div class="yt-map"><svg class="yt-trail" aria-hidden="true"><path class="t1"/><path class="t2"/></svg>${out}</div><p class="hub-foot">${F('Ages are typical. Every baby moves at their own pace.')}</p></div>` + (setTimeout(() => window.ytTrail && window.ytTrail(), 0), '');
+    return `<div class="ya-page yt-page"><h1 class="yt-h1">${F(`${nm}’s first year`)}</h1><p class="yt-lead">${F('The road to one.')}</p><div class="yt-map"><svg class="yt-trail" aria-hidden="true"><path class="t1"/><path class="t2"/></svg>${out}<div class="yt-end"><i class="yt-dot"></i><span class="yt-endc"><small>${F('The destination')} · ${mon(12)}</small><b>${F('One whole year!')}</b></span></div></div><p class="hub-foot">${F('Ages are typical. Every baby moves at their own pace.')}</p></div>` + (setTimeout(() => window.ytTrail && window.ytTrail(), 0), '');
   };
   window.ytOpen = function (sec) {
     const open = !sec.classList.contains('is-open');
@@ -166,7 +170,7 @@
   window.ytTrail = function () {
     const map = document.querySelector('#main .yt-map'); if (!map) return;
     const svg = map.querySelector('.yt-trail'), box = map.getBoundingClientRect();
-    const pts = [...map.querySelectorAll('.yt-dot')].filter(d => d.getBoundingClientRect().height > 0 && d.closest('li, .yt-head') && (d.classList.contains('yt-hdot') || d.closest('.yt-ch.is-open'))).map(d => { const r = d.getBoundingClientRect(); return [r.left + r.width / 2 - box.left, r.top + r.height / 2 - box.top]; }).filter(p => p[1] >= 0 && p[1] <= box.height);
+    const pts = [...map.querySelectorAll('.yt-dot')].filter(d => d.getBoundingClientRect().height > 0 && d.closest('li, .yt-head, .yt-end') && (d.classList.contains('yt-hdot') || d.closest('.yt-ch.is-open') || d.closest('.yt-end'))).map(d => { const r = d.getBoundingClientRect(); return [r.left + r.width / 2 - box.left, r.top + r.height / 2 - box.top]; }).filter(p => p[1] >= 0 && p[1] <= box.height);
     svg.setAttribute('viewBox', `0 0 ${box.width} ${box.height}`); svg.style.setProperty('width', box.width + 'px', 'important'); svg.style.setProperty('height', box.height + 'px', 'important');
     if (pts.length < 2) return;
     let d = `M${pts[0][0]} ${pts[0][1]}`;
