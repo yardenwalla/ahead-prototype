@@ -179,7 +179,7 @@
       return listPage().replace('ya-page ya-pathpage', 'ya-page ya-pathpage tl-feed').replace('<div class="eyebrow', tlSwitch(m) + '<div class="eyebrow')
         .replace(/(<li class="ya-pin ya-end">[\s\S]*?<\/b>)/, `$1${cake}`);
     }
-    // Tracker
+    // Tracker. Drag Maya along the bar to see any age: the headline, colors and list follow her; "Back to today" snaps her home.
     const done = doneNow();
     const bday = g => !!(profile.early && profile.due) && typeof hubAgeFor === 'function' && hubAgeFor(g, actualMonth()) === actualMonth() && hubAgeFor('care', actualMonth()) !== actualMonth();
     const gap = profile.early && profile.due ? Math.max(0, (parse(profile.due) - parse(profile.dob)) / MONTH) : 0;
@@ -187,26 +187,67 @@
     const CC = C.filter(c => !['ready', 'finger', 'meals'].includes(c.id)).map(c => shiftFor(c.cat) ? Object.assign({}, c, { start: c.start - shiftFor(c.cat), end: c.end - shiftFor(c.cat) }) : c);
     const attended = v => { try { const r = healthRecord(v); return r && r.status === 'attended'; } catch (e) { return false; } };
     const all = CC.map(c => ({ m: c.start, c })).concat(CHECKUPS.map(v => ({ m: v - gap, v }))).sort((x, y) => x.m - y.m);
-    const st = s => s.v != null ? (attended(s.v) || s.m < a - 0.75 ? 'done' : s.m <= a + 0.25 ? 'now' : 'next') : (done[s.c.id] || s.c.end <= a ? 'done' : s.c.start <= a ? 'now' : 'next');
+    // What she's told us only counts from today on; looking back, it's by age alone.
+    const st = (s, x) => s.v != null ? ((x >= a && attended(s.v)) || s.m < x - 0.75 ? 'done' : s.m <= x + 0.25 ? 'now' : 'next') : ((x >= a && done[s.c.id]) || s.c.end <= x ? 'done' : s.c.start <= x ? 'now' : 'next');
     const title = s => s.v != null ? `${s.v}-month checkup` : s.c.title;
     const when = s => s.v != null ? `${s.v} mo` : (/month|week/.test(range(s.c)) ? range(s.c).replace(/^Usually |^Around |^At /, '').replace(' months', ' mo').replace(' month', ' mo') : `${s.c.start}–${s.c.end} mo`);
     const go = s => s.v != null ? `openPage('health-visit:${s.v}')` : s.c.go;
-    const past = all.filter(s => st(s) === 'done'), rest = all.filter(s => st(s) !== 'done');
-    const step = s => { const k = st(s); return `<li class="tl-step is-${k}"><i class="tl-dot">${k === 'done' ? '✓' : ''}</i><button onclick="${go(s)}"><span class="tl-t"><b>${F(title(s))}</b>${k === 'now' ? `<small>${F('Happening now')}</small>` : ''}</span><span class="tl-w">${F(when(s))}</span></button></li>`; };
+    const ageTxt = x => x < 1 ? `${Math.max(1, Math.round(x * 4.35))} weeks` : x >= 11.9 ? '1 year' : `${Math.floor(x)} month${Math.floor(x) === 1 ? '' : 's'}`;
+    const isToday = x => Math.abs(x - a) < 0.13;
+    const listHTML = x => {
+      const t = isToday(x), past = all.filter(s => st(s, x) === 'done'), rest = all.filter(s => st(s, x) !== 'done');
+      const step = s => { const k = st(s, x); return `<li class="tl-step is-${k}"><i class="tl-dot">${k === 'done' ? '✓' : ''}</i><button onclick="${go(s)}"><span class="tl-t"><b>${F(title(s))}</b>${k === 'now' ? `<small>${F(t ? 'Happening now' : 'Happening at this age')}</small>` : ''}</span><span class="tl-w">${F(when(s))}</span></button></li>`; };
+      const mark = `<li class="tl-today"><i class="tl-dot"></i><span>${F(t ? 'Today' : `At ${ageTxt(x)}`)}</span></li>`;
+      let h = '';
+      if (past.length) h += `<li class="tl-past"><i class="tl-dot">✓</i><button onclick="this.closest('ol').classList.toggle('show-past');this.querySelector('span').textContent=this.closest('ol').classList.contains('show-past')?'Hide':'Show'">${F(`${past.length} ${t ? 'done' : 'behind {o} by then'}`)}<span>${F(document.querySelector('#main .tl-steps.show-past') ? 'Hide' : 'Show')}</span></button></li>` + past.map(step).join('').replace(/tl-step is-done/g, 'tl-step is-done tl-old');
+      let placed = false;
+      rest.forEach(s => { if (!placed && st(s, x) === 'next') { h += mark; placed = true; } h += step(s); });
+      if (!placed) h += mark;
+      return h + `<li class="tl-step tl-goal"><i class="tl-dot"></i><span class="tl-t"><b>${F('First birthday!')}</b></span>${cake}</li>`;
+    };
+    const head = x => { const mo = Math.max(0, Math.min(11, Math.floor(x))), cov = typeof window.stCover === 'function' ? window.stCover(mo) : null; return cov ? F(cov.title) : ''; };
+    const ends = x => { const t = isToday(x), left = Math.max(0, 12 - x), eta = left < 0.5 ? 'any day now' : left < 1.5 ? 'in about a month' : `in about ${Math.round(left)} months`;
+      return `<span>${F(t ? `${nm} is ${typeof babyAge === 'function' ? babyAge() : ''}` : `At ${ageTxt(x)}`)}</span>${t ? `<span>${F(`First birthday · ${eta}`)}</span>` : `<button class="tl-home" onclick="tlScrub(null)">${F('Back to today')}</button>`}`; };
+    const theme = x => typeof window.monthTheme === 'function' ? window.monthTheme(Math.max(0, Math.min(11, Math.floor(x)))) : '';
+    const art = x => typeof window.stCardArt === 'function' ? window.stCardArt(Math.max(0, Math.min(11, Math.floor(x)))) : '';
+    window.__tl = { a, listHTML, head, ends, theme, art };
+    const hinted = (() => { try { return !!localStorage.getItem('ahead-tl-dragged'); } catch (e) { return true; } })();
     const pct = Math.max(0, Math.min(100, a / 12 * 100));
-    const mo = Math.max(0, Math.min(11, Math.floor(a))), cov = typeof window.stCover === 'function' ? window.stCover(mo) : null;
-    const left = Math.max(0, 12 - a), eta = left < 0.5 ? 'any day now' : left < 1.5 ? 'in about a month' : `in about ${Math.round(left)} months`;
-    let h = `<div class="ya-page tl-track" style="${typeof window.monthTheme === 'function' ? window.monthTheme(mo) : ''};--tlp:${pct}%">${tlSwitch(m)}<h1 class="yt-h1">${F(`${nm}’s first year`)}</h1>`;
-    if (cov) h += `<p class="tl-status">${F(cov.title)}</p>`;
-    h += `<div class="tl-prog" aria-label="${F(`${nm} is ${typeof babyAge === 'function' ? babyAge() : ''}. First birthday ${eta}.`)}"><div class="tl-ride"><span class="tl-baby" aria-hidden="true">${typeof window.stCardArt === 'function' ? window.stCardArt(mo) : ''}</span>${a < 10.5 ? `<span class="tl-flag" aria-hidden="true">${window.stToy('cake')}</span>` : ''}</div><div class="tl-bar"><i></i></div><div class="tl-ends"><span>${F(`${nm} is ${typeof babyAge === 'function' ? babyAge() : ''}`)}</span><span>${F(`First birthday · ${eta}`)}</span></div></div>`;
-    h += `<ol class="tl-steps${past.length ? ' has-past' : ''}">`;
-    if (past.length) h += `<li class="tl-past"><i class="tl-dot">✓</i><button onclick="this.closest('ol').classList.toggle('show-past');this.querySelector('span').textContent=this.closest('ol').classList.contains('show-past')?'Hide':'Show'">${F(`${past.length} done`)}<span>${F('Show')}</span></button></li>` + past.map(step).join('').replace(/tl-step is-done/g, 'tl-step is-done tl-old');
-    let today = false;
-    rest.forEach(s => { if (!today && st(s) === 'next') { h += `<li class="tl-today"><i class="tl-dot"></i><span>${F('Today')}</span></li>`; today = true; } h += step(s); });
-    if (!today) h += `<li class="tl-today"><i class="tl-dot"></i><span>${F('Today')}</span></li>`;
-    h += `<li class="tl-step tl-goal"><i class="tl-dot"></i><span class="tl-t"><b>${F('First birthday!')}</b></span>${cake}</li></ol>`;
+    let h = `<div class="ya-page tl-track" style="${theme(a)};--tlp:${pct}%">${tlSwitch(m)}<h1 class="yt-h1">${F(`${nm}’s first year`)}</h1>`;
+    h += `<p class="tl-status">${head(a)}</p>`;
+    h += `<div class="tl-prog${hinted ? '' : ' tl-hint'}"><div class="tl-ride"><span class="tl-baby" role="slider" tabindex="0" aria-label="${F(`Drag ${nm} to see another age`)}" aria-valuemin="0" aria-valuemax="12" aria-valuenow="${a.toFixed(1)}" aria-valuetext="${F(ageTxt(a))}" onkeydown="tlKey(event)">${art(a)}${hinted ? '' : `<em class="tl-tip">${F('Drag me')}</em>`}</span>${`<span class="tl-flag" aria-hidden="true">${window.stToy('cake')}</span>`}</div><div class="tl-bar"><i></i></div><div class="tl-ends">${ends(a)}</div></div>`;
+    h += `<ol class="tl-steps">${listHTML(a)}</ol>`;
     h += `<p class="hub-foot">${F('Ages are typical. Every baby moves at their own pace.')}</p></div>`;
+    setTimeout(() => window.tlBind && window.tlBind(), 0);
     return h;
+  };
+  // Scrubbing: only the parts that change are redrawn, so the drag stays under the finger.
+  window.tlScrub = function (x) {
+    const T = window.__tl, pg = document.querySelector('#main .tl-track'); if (!T || !pg) return;
+    if (x == null) x = T.a; x = Math.max(0, Math.min(12, x));
+    const q = Math.round(x * 4) / 4, prev = pg.dataset.q;
+    pg.style.setProperty('--tlp', (x / 12 * 100) + '%');
+    pg.querySelector('.tl-flag').style.opacity = x > 10.5 ? '0' : '';
+    if (String(q) === prev) return; pg.dataset.q = String(q);
+    const mo = String(Math.max(0, Math.min(11, Math.floor(q))));
+    if (pg.dataset.mo !== mo) { pg.dataset.mo = mo; T.theme(q).split(';').forEach(d => { const i = d.indexOf(':'); if (i > 0) pg.style.setProperty(d.slice(0, i).trim(), d.slice(i + 1).trim()); });
+      pg.querySelector('.tl-status').innerHTML = T.head(q); const b = pg.querySelector('.tl-baby'); [...b.children].forEach(c => { if (!c.classList.contains('tl-tip')) c.remove(); }); b.insertAdjacentHTML('afterbegin', T.art(q)); }
+    const near = Math.abs(q - T.a) < 0.13 ? T.a : q;
+    pg.querySelector('.tl-ends').innerHTML = T.ends(near);
+    pg.querySelector('.tl-steps').innerHTML = T.listHTML(near);
+    const b = pg.querySelector('.tl-baby'); b.setAttribute('aria-valuenow', near.toFixed(1)); b.setAttribute('aria-valuetext', pg.querySelector('.tl-ends span').textContent);
+  };
+  window.tlKey = e => { const T = window.__tl, pg = document.querySelector('#main .tl-track'); if (!T || !pg) return; const cur = parseFloat(pg.dataset.q || T.a); if (e.key === 'ArrowRight' || e.key === 'ArrowUp') { tlScrub(Math.floor(cur) + 1); e.preventDefault(); } if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') { tlScrub(Math.ceil(cur) - 1); e.preventDefault(); } };
+  window.tlBind = function () {
+    const pr = document.querySelector('#main .tl-prog'); if (!pr || pr.dataset.bound) return; pr.dataset.bound = '1';
+    const bar = pr.querySelector('.tl-bar'), baby = pr.querySelector('.tl-baby');
+    const xOf = e => { const r = bar.getBoundingClientRect(); return (e.clientX - r.left) / r.width * 12; };
+    let on = false;
+    const start = e => { if (e.target.closest('button')) return; on = true; pr.classList.add('is-drag'); pr.classList.remove('tl-hint'); const t = pr.querySelector('.tl-tip'); if (t) t.remove(); try { localStorage.setItem('ahead-tl-dragged', '1'); } catch (er) {} try { pr.setPointerCapture(e.pointerId); } catch (er) {} tlScrub(xOf(e)); e.preventDefault(); };
+    pr.addEventListener('pointerdown', start);
+    pr.addEventListener('pointermove', e => { if (on) tlScrub(xOf(e)); });
+    const end = () => { on = false; pr.classList.remove('is-drag'); };
+    pr.addEventListener('pointerup', end); pr.addEventListener('pointercancel', end);
   };
   // Focus as you scroll, without moving anything: every chapter ahead stays open, and the one in the middle of the
   // screen is in focus while the others soften back. Nothing opens or closes under the finger, so momentum scrolling
