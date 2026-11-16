@@ -282,3 +282,8 @@
 /* Nov 16: small group labels inside one titled section (e.g. Pick a method) */
 #main .care-tpl .tpl-group { font-size: 13px; font-weight: 600; color: #6b6878; margin: 4px 4px 8px; }
 #main .care-tpl .hub-list + .tpl-group { margin-top: 16px; }
+/* Nov 16: a card that is only notes (e.g. Before you start): no top rule, one note per line with dividers */
+#main .care-tpl .care-tpl-card.is-notes { padding-top: 4px; padding-bottom: 4px }
+#main .care-tpl .care-tpl-card.is-notes .tpl-notes { border-top: 0; margin: 0; padding: 0; gap: 0; font-size: 14.5px }
+#main .care-tpl .care-tpl-card.is-notes .tpl-notes li { padding: 12px 0 }
+#main .care-tpl .care-tpl-card.is-notes .tpl-notes li + li { border-top: 1px solid var(--line, #efeaf2) }

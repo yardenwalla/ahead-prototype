@@ -1306,7 +1306,7 @@
     const ready = [['clock', 'About 4–6 months', age < 4 ? `Maya is ${age < 1 ? 'a few weeks' : age + ' months'}${adj}: it’s early` : age <= 6 ? `Maya is ${age} months${adj}: in the window` : 'It can work at any age from here'], ['steth', 'Growing well', 'Ask your pediatrician first'], ['home', 'A calm stretch', 'Not while sick, traveling or starting daycare']];
     return detail('Sleep', age < 4 ? 'Read ahead' : 'Your choice', 'Sleep training, if you choose it', 'It helps {o} fall back asleep on {p} own. Rocking or feeding to sleep is fine too.',
       `<div class="care-tpl is-option">` + TPLB.sec('Is {s} ready?', TPLB.tiles(ready, 'Sleep'))
-      + TPLB.sec('Before you start', `<section class="care-tpl-card"><ul class="tpl-notes">${[['Pick one method', 'Give it 1–2 weeks'], ['Same plan for everyone', 'Every caregiver, every night'], ['Not easier after 2 weeks?', 'Ask your pediatrician']].map(([t, sub]) => `<li><b style="color:#302d3c">${F(t)}${/[?!.]$/.test(t) ? '' : '.'}</b> ${F(sub)}.</li>`).join('')}</ul></section>`)
+      + TPLB.sec('Before you start', `<section class="care-tpl-card is-notes"><ul class="tpl-notes">${[['Pick one method', 'Give it 1–2 weeks'], ['Same plan for everyone', 'Every caregiver, every night'], ['Not easier after 2 weeks?', 'Ask your pediatrician']].map(([t, sub]) => `<li><b style="color:#302d3c">${F(t)}${/[?!.]$/.test(t) ? '' : '.'}</b> ${F(sub)}.</li>`).join('')}</ul></section>`)
       + `<h2 class="hub-h2">${F('Pick a method')}</h2>` + methodScale(true) + `</div>`, 'book');
   }
 
