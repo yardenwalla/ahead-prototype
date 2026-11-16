@@ -685,3 +685,18 @@
 #main .hg-banner-cam{width:84px!important;height:46px!important}
 #main .hg-banner-hello{width:72px!important;height:auto!important;object-fit:contain}
 #main .hg-banner-hello{width:82px!important}
+/* Timeline: the year's big moments get the clay baby and a little more room */
+#main .ya-row.ya-big > button{background:#fffdfa;box-shadow:0 1px 0 rgba(43,40,64,.04),0 0 0 1px rgba(43,40,64,.06);border-radius:20px;padding:10px 12px 10px 10px}
+#main .ya-row.ya-big .ya-row-art.ya-clay{width:62px;height:62px;border-radius:18px;background:var(--year-pale,#f3effb);overflow:hidden}
+#main .ya-row.ya-big .ya-row-art.ya-clay svg{width:120%;height:120%;margin-top:14%}
+#main .ya-row.ya-big .ya-row-copy b{font-size:16.5px}
+/* What she's already done, above "now" */
+#main .ya-done > div{padding:2px 0 6px}
+#main .ya-done small{display:block;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#8a7f72;margin-bottom:6px}
+#main .ya-done-chips{display:flex;flex-wrap:wrap;gap:6px}
+#main .ya-done-chips span{display:inline-flex;align-items:center;gap:5px;padding:6px 11px;border-radius:99px;background:#fffdfa;box-shadow:0 0 0 1px rgba(43,40,64,.07);font-size:13.5px;font-weight:700;color:#2B2840}
+#main .ya-done-chips i{font-style:normal;color:#e3b259}
+#main .ya-done-chips em{font-style:normal;font-weight:600;color:#8a8494;margin-left:2px}
+#main .ya-row.ya-big > button{background:#fffdfa!important;box-shadow:0 0 0 1px rgba(43,40,64,.07)!important;border-radius:20px!important;padding:10px 12px 10px 10px!important}
+#main .ya-row.ya-big .ya-row-art.ya-clay,#main .ya-row .ya-row-art.ya-clay{width:64px!important;height:64px!important;border-radius:18px!important;overflow:hidden!important}
+#main .ya-row-art.ya-clay svg{width:112%!important;height:112%!important;margin-top:16%!important}

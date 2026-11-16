@@ -656,6 +656,8 @@
     var body = newborn ? P[1].replace(/<path d="M74 52[^>]*\/><circle cx="100" cy="22"[^>]*\/>/, '') : P[m];
     return svg('0 0 200 210', sk.def + on.def + y.def + c.def, shadow(100, 202, 70) + body, 'st-obj ms-baby');
   }
+  // The clay baby in a pose, for other pages (Timeline's big moments). 'walk' is the standing baby without the party things.
+  window.stBaby = function (m) { return m === 'walk' ? babyArt(11).replace(/<path d="M42 66[^>]*\/>|<ellipse cx="40" cy="40"[^>]*\/>|<path d="M36 64[^>]*\/>|<path d="M80 46 L100 4[^>]*\/>|<circle cx="100" cy="6"[^>]*\/>|<path d="M90 26[^>]*\/>|<path d="M168 70[^>]*\/>/g, '') : babyArt(m); };
   window.stCardArt = function (m) { return m >= 0 && m <= 11 ? '<span class="ms-l ms-mid ms-babyw">' + babyArt(m) + '</span>' : ''; };
   // What Home's month card shows: the story's cover and its three takeaways.
   window.stCover = function (m) {
