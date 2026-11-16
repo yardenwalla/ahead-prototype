@@ -144,17 +144,17 @@
       its.forEach(s => {
         if (!placed && !passed(s)) { body += `<li class="yt-me"><i class="yt-dot"></i><span>${F(`${nm} is here`)}<small>${F(typeof babyAge === 'function' ? babyAge() : '')}</small></span></li>`; placed = true; }
         const pd = passed(s);
-        if (s.v != null) body += `<li class="yt-stop${pd ? ' is-done' : ''}"><i class="yt-dot"></i><button onclick="openPage('health-visit:${s.v}')"><span class="yt-c"><small>${F(`${s.v} month${s.v === 1 ? '' : 's'}`)}</small><b>${F(`${s.v}-month checkup`)}</b>${pd ? '' : `<span>${F(CHECK_LINE[s.v] || '')}</span>`}</span>${pd ? '<i class="yt-tick">✓</i>' : chev}</button></li>`;
+        if (s.v != null) body += `<li class="yt-stop${pd ? ' is-done' : ''}"><i class="yt-dot"></i><button onclick="openPage('health-visit:${s.v}')"><span class="yt-c"><small>${F(`${s.v} month${s.v === 1 ? '' : 's'}`)}</small><b>${F(`${s.v}-month checkup`)}</b></span>${pd ? '<i class="yt-tick">✓</i>' : chev}</button></li>`;
         else { const c = s.c, nx = c.id === nextId;
-          body += `<li class="yt-stop${pd ? ' is-done' : ''}${nx ? ' is-next' : ''}"><i class="yt-dot"></i><button onclick="${c.go}"><span class="yt-c"><small>${F(range(c))}${nx ? ` · ${F(whenShort(c, a))}` : ''}</small><b>${F(c.title)}</b>${pd ? '' : `<span>${F(c.id === 'crying' && a >= 2 ? 'Past the worst. Fussy evenings ease over the next few weeks' : c.why)}</span>`}</span>${done[c.id] ? '<i class="yt-tick">✓</i>' : chev}</button></li>`; }
+          body += `<li class="yt-stop${pd ? ' is-done' : ''}${nx ? ' is-next' : ''}"><i class="yt-dot"></i><button onclick="${c.go}"><span class="yt-c"><small>${F(range(c))}${nx ? ` · ${F(whenShort(c, a))}` : ''}</small><b>${F(c.title)}</b>${nx ? `<span>${F(c.id === 'crying' && a >= 2 ? 'Past the worst. Fussy evenings ease over the next few weeks' : c.why)}</span>` : ''}</span>${done[c.id] ? '<i class="yt-tick">✓</i>' : chev}</button></li>`; }
       });
       if (!placed) body += `<li class="yt-me"><i class="yt-dot"></i><span>${F(`${nm} is here`)}<small>${F(typeof babyAge === 'function' ? babyAge() : '')}</small></span></li>`;
       if (i === 3) body += `<li class="yt-end"><i class="yt-dot"></i><span class="yt-endc"><small>${F('The destination')}</small><b>${F('One whole year!')}</b></span></li>`;
       out += `<section class="yt-ch${i === here ? ' is-open is-here' : ''}${to <= a ? ' is-past' : ''}" style="--yt:${bg};--yti:${ink}">
-        <button class="yt-head" onclick="ytOpen(this.parentNode)" aria-expanded="${i === here}"><span class="yt-hc"><small>${F(ages)}</small><b>${F(title)}</b></span><span class="yt-toy" aria-hidden="true">${window.stToy(toy)}</span><i class="yt-caret" aria-hidden="true">›</i></button>
-        <div class="yt-body"><ol class="yt-list"><svg class="yt-trail" aria-hidden="true"><path class="t1"/><path class="t2"/></svg>${body}</ol></div></section>`;
+        <button class="yt-head" onclick="ytOpen(this.parentNode)" aria-expanded="${i === here}"><i class="yt-dot yt-hdot"></i><span class="yt-hc"><small>${F(ages)}</small><b>${F(title)}</b></span><span class="yt-toy" aria-hidden="true">${window.stToy(toy)}</span><i class="yt-caret" aria-hidden="true">›</i></button>
+        <div class="yt-body"><ol class="yt-list">${body}</ol></div></section>`;
     });
-    return `<div class="ya-page yt-page"><h1 class="yt-h1">${F(`${nm}’s first year`)}</h1><p class="yt-lead">${F('The road to one.')}</p>${out}<p class="hub-foot">${F('Ages are typical. Every baby moves at their own pace.')}</p></div>` + (setTimeout(() => window.ytTrail && window.ytTrail(), 0), '');
+    return `<div class="ya-page yt-page"><h1 class="yt-h1">${F(`${nm}’s first year`)}</h1><p class="yt-lead">${F('The road to one.')}</p><div class="yt-map"><svg class="yt-trail" aria-hidden="true"><path class="t1"/><path class="t2"/></svg>${out}</div><p class="hub-foot">${F('Ages are typical. Every baby moves at their own pace.')}</p></div>` + (setTimeout(() => window.ytTrail && window.ytTrail(), 0), '');
   };
   window.ytOpen = function (sec) {
     const open = !sec.classList.contains('is-open');
@@ -164,15 +164,14 @@
   };
   // A gentle winding trail on the left of each open chapter, through its stops.
   window.ytTrail = function () {
-    document.querySelectorAll('#main .yt-ch.is-open .yt-list').forEach(list => {
-      const svg = list.querySelector('.yt-trail'), box = list.getBoundingClientRect();
-      const pts = [...list.querySelectorAll(':scope > li > .yt-dot')].map(d => { const r = d.getBoundingClientRect(); return [r.left + r.width / 2 - box.left, r.top + r.height / 2 - box.top]; });
-      svg.setAttribute('viewBox', `0 0 ${box.width} ${box.height}`); svg.style.setProperty('width', box.width + 'px', 'important'); svg.style.setProperty('height', box.height + 'px', 'important');
-      if (pts.length < 1) return;
-      let d = `M${pts[0][0]} 0 L${pts[0][0]} ${pts[0][1]}`;
-      for (let i = 1; i < pts.length; i++) { const [x0, y0] = pts[i - 1], [x1, y1] = pts[i], my = (y0 + y1) / 2, w = i % 2 ? 9 : -9; d += ` C${x0 + w} ${my} ${x1 + w} ${my} ${x1} ${y1}`; }
-      svg.querySelectorAll('path').forEach(p => p.setAttribute('d', d));
-    });
+    const map = document.querySelector('#main .yt-map'); if (!map) return;
+    const svg = map.querySelector('.yt-trail'), box = map.getBoundingClientRect();
+    const pts = [...map.querySelectorAll('.yt-dot')].filter(d => d.getBoundingClientRect().height > 0 && d.closest('li, .yt-head') && (d.classList.contains('yt-hdot') || d.closest('.yt-ch.is-open'))).map(d => { const r = d.getBoundingClientRect(); return [r.left + r.width / 2 - box.left, r.top + r.height / 2 - box.top]; }).filter(p => p[1] >= 0 && p[1] <= box.height);
+    svg.setAttribute('viewBox', `0 0 ${box.width} ${box.height}`); svg.style.setProperty('width', box.width + 'px', 'important'); svg.style.setProperty('height', box.height + 'px', 'important');
+    if (pts.length < 2) return;
+    let d = `M${pts[0][0]} ${pts[0][1]}`;
+    for (let i = 1; i < pts.length; i++) { const [x0, y0] = pts[i - 1], [x1, y1] = pts[i], my = (y0 + y1) / 2, w = i % 2 ? 8 : -8; d += ` C${x0 + w} ${my} ${x1 + w} ${my} ${x1} ${y1}`; }
+    svg.querySelectorAll('path').forEach(p => p.setAttribute('d', d));
   };
   window.addEventListener('resize', () => window.ytTrail && window.ytTrail());
 

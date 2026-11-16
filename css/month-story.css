@@ -827,3 +827,23 @@
 #main .yt-endc{flex:1;padding:14px 16px;border-radius:18px;background:#fdf4dc;box-shadow:0 0 0 1.5px #ecd28e;position:relative;z-index:2}
 #main .yt-endc small{display:block;font-size:11.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#a07b2c}
 #main .yt-endc b{display:block;margin-top:2px;font-size:20px;font-weight:800;color:#4a3d1c}
+/* one trail for the whole page; calm rows like the original Timeline */
+#main .yt-map{position:relative}
+#main .yt-map > .yt-trail{position:absolute;left:0;top:0;z-index:3;pointer-events:none}
+#main .yt-head{padding-left:14px!important}
+#main .yt-hdot{width:14px!important;height:14px!important;margin-left:7px!important;background:var(--yti)!important;box-shadow:0 0 0 3px #fffdf9!important;z-index:4}
+#main .yt-ch.is-here .yt-hdot{background:#2B2840!important}
+#main .yt-dot{z-index:4}
+#main .yt-me > span,#main .yt-stop button,#main .yt-endc{z-index:4}
+#main .yt-stop button{background:none!important;box-shadow:none!important;padding:8px 6px!important;border-radius:14px}
+#main .yt-stop.is-next button{background:#fff!important;box-shadow:0 0 0 1.5px var(--yti),0 6px 14px rgba(43,40,64,.08)!important;padding:12px 14px!important}
+#main .yt-list > li{margin:0 0 2px!important}
+#main .yt-stop.is-next{margin:6px 0 8px!important}
+#main .yt-c b{font-size:15.5px}
+#main .yt-c small{font-size:12px}
+#main .yt-stop:not(.is-next) .yt-c{display:flex;flex-direction:column-reverse}
+#main .yt-stop:not(.is-next) .yt-c small{margin-top:1px;font-weight:600}
+#main .yt-stop:not(.is-next) .yt-c b{margin-top:0}
+#main .yt-ch.is-past:not(.is-open){opacity:1!important}
+#main .yt-ch.is-past:not(.is-open) .yt-hc b,#main .yt-ch.is-past:not(.is-open) .yt-hc small{color:#8a8494}
+#main .yt-ch.is-past:not(.is-open) .yt-toy{filter:saturate(.6);opacity:.8}
