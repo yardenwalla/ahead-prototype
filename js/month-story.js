@@ -141,7 +141,7 @@
       null,
       { id: 'days', bg: '#f6c9a8', ink: '#2B2840', dur: firsts.length ? 6200 : 4800, html:
         '<p class="st-lead st-in" style="--d:.05s"><b>' + E(n) + ' has been here for</b></p>' +
-        '<div class="st-count st-pop" style="--d:.2s"><b data-count="' + days + '">0</b><span>days Earthside.</span></div>' +
+        '<div class="st-count st-pop" style="--d:.2s"><b data-count="' + days + '">0</b><span>' + (days === 1 ? 'day' : 'days') + ' Earthside.</span></div>' +
         (firsts.length ? '<div class="st-lastm st-in" style="--d:1.6s"><p class="st-kicker">Last month, you saw</p><div class="st-chips">' + firsts.map(function (f) { return '<span><i>★</i>' + E(f) + '</span>'; }).join('') + '</div></div>'
           : '<p class="st-hand st-in" style="--d:1.7s">' + E(daysLine(days)) + '</p>') +
         '<div class="st-ground' + (firsts.length ? ' st-ground-sm' : '') + '">' + cloud('#fbe0cc') + '<div class="st-objwrap st-right">' + rings() + burst('#fff6ec') + '</div></div>' },
@@ -150,7 +150,7 @@
         '<div class="st-card st-pop" style="--d:.05s">' +
           (pic ? '<div class="st-card-photo"><img src="' + pic + '" alt=""></div>' : '') +
           '<div class="st-card-title">' + E(n) + ' at 4 months</div>' +
-          '<p class="st-card-days">' + fmt(days) + ' days Earthside</p>' +
+          '<p class="st-card-days">' + fmt(days) + (days === 1 ? ' day' : ' days') + ' Earthside</p>' +
           '<div class="st-card-sec"><p class="st-card-k">This month</p><ol>' +
             '<li><i style="background:#cfc3ea"></i>Found ' + E(p.p) + ' hands</li><li><i style="background:#f2b6c8"></i>Distracted feeds</li><li><i style="background:#8e9fd6"></i>Sleep is maturing</li></ol></div>' +
           (firsts.length ? '<div class="st-card-sec"><p class="st-card-k">Last month’s firsts</p><div class="st-chips">' + firsts.map(function (f) { return '<span><i>★</i>' + E(f) + '</span>'; }).join('') + '</div></div>' : '') +
@@ -267,7 +267,7 @@
     steps: ['First steps.', 'Cruising along the furniture is the warm-up. Anywhere from 9 to 18 months is normal.', 'first steps', 'steps'],
     bday: ['Her first birthday!', 'One whole year. Look how far you’ve both come.', 'her first birthday', 'cake']
   };
-  var NEXT_BY_MONTH = { 1: 'track', 2: 'laugh', 3: 'grab', 4: 'roll', 5: 'babble', 6: 'sit', 7: 'crawl', 8: 'pull', 9: 'cruise', 10: 'steps', 11: 'bday' };
+  var NEXT_BY_MONTH = { 0: 'head', 1: 'track', 2: 'laugh', 3: 'grab', 4: 'roll', 5: 'babble', 6: 'sit', 7: 'crawl', 8: 'pull', 9: 'cruise', 10: 'steps', 11: 'bday' };
   var SKIP = { roll: 'sit', sit: 'crawl', crawl: 'pull', pull: 'cruise', cruise: 'steps', steps: 'bday' };
   V.typed = function (word) { return '<div class="st-vis st-typed"><span>' + word.split('').map(function (ch, i) { return '<i style="--i:' + i + '">' + E(ch) + '</i>'; }).join('') + '</span></div>'; };
   V.laugh = function () { return '<div class="st-laughing">' + V.smile() + '</div>'; };
@@ -287,6 +287,11 @@
      peek (tap to play), thennow (how far she's come). Each has a visual that acts out what it says. */
   var C = { lav: ['#cfc3ea', '#e3dbf5'], butter: ['#ffe7a6', '#fff3cf'], pink: ['#f2b6c8', '#f8cfdb'], peach: ['#f6c9a8', '#fbe0cc'], sage: ['#bfdcc7', '#e5f1e7'], night: ['#2f3a66', '#8e9fd6'] };
   var STORIES = {
+    0: { cover: ['Welcome to the world.', 'Everything is new, for both of you.'], screens: [
+          { t: 'topic', c: 'butter', kicker: 'She already knows you', title: 'She knows your voice.', body: 'She heard it for months before she was born, so it’s the sound that settles her most.', vis: ['talk', ['hi', '…', 'shh', '…']] },
+          { t: 'beat', c: 'lav', words: ['Feed.', 'Sleep.', 'Repeat.'], line: 'Most newborns feed 8 to 12 times a day and sleep in short stretches, day and night.', vis: ['cloud', ['feed', 'burp', 'sleep', 'again']] },
+          { t: 'topic', c: 'peach', kicker: 'That tiny grip', title: 'She’ll hold on tight.', body: 'Put a finger in her palm and she’ll grab it. It’s a reflex for now, and it fades over the next few months.', vis: ['fist'] }],
+        sum: ['Knows your voice', 'Feeds around the clock', 'Holds on tight'] },
     1: { cover: ['She’s tuning in to you.', 'Your face and voice are her favorite things now.'], screens: [
           { t: 'topic', c: 'butter', kicker: 'Why she stares at you', title: 'She sees you best up close.', body: 'About 8 to 12 inches away, the distance to your face during a feed. Farther than that is still a blur.', vis: ['eyes', 1] },
           { t: 'topic', c: 'night', kicker: 'The hard part', title: 'Crying peaks around 6 weeks.', body: 'Then it usually eases by 3 to 4 months. It’s a phase, not something you’re doing wrong.', vis: ['peak'] },
@@ -350,7 +355,7 @@
   };
   function nextUp(p, m) {
     var done = {}; try { done = window.__ya.doneNow(); } catch (e) {}
-    var k = NEXT_BY_MONTH[Math.max(1, Math.min(11, m))] || 'roll', guard = 0;
+    var k = NEXT_BY_MONTH[Math.max(0, Math.min(11, m))] || 'roll', guard = 0;
     while (SKIP[k] && done[k] && guard++ < 6) k = SKIP[k];
     var x = NEXT[k]; return { key: k, title: Pp(x[0]), why: Pp(x[1]), short: x[2], vis: x[3] };
   }
@@ -407,11 +412,11 @@
   function slides() {
     var n = nm(), p = PR(), days = daysOld(), pic = photoNow(), firsts = firstsThisMonth(), m = month(), nx = nextUp(p, m);
     if (m === 4) return slides4(n, p, days, pic, firsts, nextUp(p, 4));
-    var st = STORIES[Math.max(1, Math.min(11, m))] || STORIES[1];
+    var st = STORIES[Math.max(0, Math.min(11, m))] || STORIES[1], wk = Math.max(1, Math.round(days / 7));
     var list = [{ id: 'cover', bg: '#2B2840', ink: '#fffaf3', dur: 3800, html:
         '<i class="st-sun"></i><i class="st-star">★</i><i class="st-dotc"></i>' +
-        '<p class="st-kicker st-in" style="--d:.05s">' + E(n) + '’s month</p>' +
-        '<div class="st-giant st-pop" style="--d:.15s">' + (st.half ? '<span class="st-halfwrap">' + V.halfring() + '<b>' + m + '</b></span>' : m) + '</div>' +
+        '<p class="st-kicker st-in" style="--d:.05s">' + E(n) + (m === 0 ? '’s first weeks' : '’s month') + '</p>' +
+        '<div class="st-giant st-pop" style="--d:.15s">' + (m === 0 ? wk + '<small class="st-giant-u">' + (wk === 1 ? 'week' : 'weeks') + '</small>' : st.half ? '<span class="st-halfwrap">' + V.halfring() + '<b>' + m + '</b></span>' : m) + '</div>' +
         '<div class="st-title st-cover-t st-in" style="--d:.45s">' + E(Pp(st.cover[0])) + '</div>' +
         '<p class="st-lead st-in" style="--d:.75s">' + E(Pp(st.cover[1])) + '</p>' +
         '<div class="st-ground">' + cloud('#b9a6e6') + (pic ? '<div class="st-photo"><img src="' + pic + '" alt=""></div>' : '<div class="st-coverart ms-toys">' + window.stCardArt(m) + '</div>') + '</div>' }];
@@ -427,14 +432,14 @@
   // A different, true line for each month.
   function daysLine(days) {
     var m = month(), wk = Math.round(days / 7), hrs = fmt(days * 24), left = Math.max(1, 365 - days);
-    return Pp(({ 1: 'You’ve been awake for most of them.', 2: 'And she’s smiled at you for some of them.', 3: wk + ' weeks of getting to know each other.',
+    return Pp(({ 0: 'Every single one of them brand new.', 1: 'You’ve been awake for most of them.', 2: 'And she’s smiled at you for some of them.', 3: wk + ' weeks of getting to know each other.',
       4: hrs + ' hours of new things to look at.', 5: 'That’s ' + hrs + ' hours of watching you.', 6: 'Six months of firsts, and counting.',
       7: wk + ' weeks, and every one a little different.', 8: 'And she knows exactly who you are.', 9: 'Almost as long as she spent growing before she was born.',
       10: 'Longer now than she spent growing before she was born.', 11: 'Just ' + left + ' days until her first birthday.' })[m] || '');
   }
   function daysScreen(n, p, days, firsts) { return { id: 'days', bg: '#f6c9a8', ink: '#2B2840', dur: firsts.length ? 6200 : 4800, html:
     '<p class="st-lead st-in" style="--d:.05s"><b>' + E(n) + ' has been here for</b></p>' +
-    '<div class="st-count st-pop" style="--d:.2s"><b data-count="' + days + '">0</b><span>days Earthside.</span></div>' +
+    '<div class="st-count st-pop" style="--d:.2s"><b data-count="' + days + '">0</b><span>' + (days === 1 ? 'day' : 'days') + ' Earthside.</span></div>' +
     (firsts.length ? '<div class="st-lastm st-in" style="--d:1.6s"><p class="st-kicker">Last month, you saw</p><div class="st-chips">' + firsts.map(function (f) { return '<span><i>★</i>' + E(f) + '</span>'; }).join('') + '</div></div>'
       : '<p class="st-hand st-in" style="--d:1.7s">' + E(daysLine(days)) + '</p>') +
     '<div class="st-ground' + (firsts.length ? ' st-ground-sm' : '') + '">' + cloud('#fbe0cc') + '<div class="st-objwrap st-right">' + rings() + burst('#fff6ec') + '</div></div>' }; }
@@ -443,9 +448,9 @@
     return { id: 'summary', bg: '#2B2840', ink: '#fffaf3', dur: 0, html:
       '<div class="st-card st-pop" style="--d:.05s">' +
         (pic ? '<div class="st-card-photo"><img src="' + pic + '" alt=""></div>' : '') +
-        '<div class="st-card-title">' + E(n) + ' at ' + m + ' month' + (m === 1 ? '' : 's') + '</div>' +
-        '<p class="st-card-days">' + fmt(days) + ' days Earthside</p>' +
-        '<div class="st-card-sec"><p class="st-card-k">This month</p><ol>' + sum.map(function (x, i) { return '<li><i style="background:' + dots[i % 3] + '"></i>' + E(Pp(x)) + '</li>'; }).join('') + '</ol></div>' +
+        '<div class="st-card-title">' + E(n) + ' at ' + (m === 0 ? Math.max(1, Math.round(days / 7)) + ' week' + (Math.round(days / 7) > 1 ? 's' : '') : m + ' month' + (m === 1 ? '' : 's')) + '</div>' +
+        '<p class="st-card-days">' + fmt(days) + (days === 1 ? ' day' : ' days') + ' Earthside</p>' +
+        '<div class="st-card-sec"><p class="st-card-k">' + (m === 0 ? 'These first weeks' : 'This month') + '</p><ol>' + sum.map(function (x, i) { return '<li><i style="background:' + dots[i % 3] + '"></i>' + E(Pp(x)) + '</li>'; }).join('') + '</ol></div>' +
         (firsts.length ? '<div class="st-card-sec"><p class="st-card-k">Last month’s firsts</p><div class="st-chips">' + firsts.map(function (f) { return '<span><i>★</i>' + E(f) + '</span>'; }).join('') + '</div></div>' : '') +
         '<div class="st-card-sec st-card-next"><p class="st-card-k">Coming up</p><b>' + E(nx.title.replace(/[.!]$/, '')) + '</b></div>' +
       '</div>' +
@@ -618,10 +623,10 @@
   window.stCardArt = function (m) { return m >= 0 && m <= 11 ? '<span class="ms-l ms-mid ms-babyw">' + babyArt(m) + '</span>' : ''; };
   // What Home's month card shows: the story's cover and its three takeaways.
   window.stCover = function (m) {
-    if (m < 1 || m > 11) return null;
+    if (m < 0 || m > 11) return null;
     var st = m === 4 ? { cover: ['She’s done just watching.', 'The world is getting a lot more interesting.'], sum: ['Found her hands', 'Distracted feeds', 'Sleep is maturing'] } : STORIES[m];
     if (!st) return null;
-    var TEASE = { 1: 'New here. Already running the show.', 2: 'She’s finding her voice. You’ll hear about it.', 3: 'A little more personality. A lot more surprises.',
+    var TEASE = { 0: 'Tiny, brand new, and already the boss.', 1: 'New here. Already running the show.', 2: 'She’s finding her voice. You’ll hear about it.', 3: 'A little more personality. A lot more surprises.',
       4: 'Someone’s getting curious.', 5: 'Those little wiggles have big plans.', 6: 'Halfway to one. A whole lot of firsts.', 7: 'Gravity has a new biggest fan.',
       8: 'Peekaboo just got a plot twist.', 9: 'Little hands. Big investigations.', 10: 'She’s moving up in the world.', 11: 'Big baby energy. First birthday loading.' };
     return { title: Pp(st.cover[0]), lead: Pp(st.cover[1]), tease: Pp(TEASE[m]), sum: st.sum.map(Pp) };

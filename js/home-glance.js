@@ -145,7 +145,15 @@
   // On a month birthday: one slim line to add the month's photo, nothing more.
   // On a month birthday: one slim card in the Memories style, the month's balloon photo and a handwritten line.
   function banner(main) {
-    const b = main.querySelector('.hub-bday'); if (!b) return '';
+    const b = main.querySelector('.hub-bday');
+    // The newborn weeks have no month birthday yet: offer the newborn photo until it's added (or the banner is tapped).
+    if (!b) {
+      if (homeMonth() !== 0 || (typeof hubPhotoFor === 'function' && hubPhotoFor(0))) return '';
+      try { if (localStorage.getItem('ahead-photo-banner-0')) return ''; } catch (e) {}
+      const cam = `<svg class="hg-banner-img hg-banner-cam" viewBox="0 0 64 64" aria-hidden="true"><defs><radialGradient id="hgcam" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#fbd0bf"/><stop offset=".55" stop-color="#f3a587"/><stop offset="1" stop-color="#da7f61"/></radialGradient></defs><rect x="6" y="18" width="52" height="38" rx="11" fill="url(#hgcam)"/><rect x="20" y="11" width="18" height="11" rx="4" fill="url(#hgcam)"/><circle cx="32" cy="37" r="12" fill="#fffaf3"/><circle cx="32" cy="37" r="7" fill="#2B2840"/><circle cx="35" cy="34" r="2.2" fill="#fff"/><circle cx="49" cy="26" r="3" fill="#ffd98a"/></svg>`;
+      const bn0 = `linear-gradient(100deg,${mix('#f2a98a', .84)} 0%,#fffaf6 80%)`;
+      return `<label class="hg-banner" style="--bn:${bn0}" role="button" onclick="try{localStorage.setItem('ahead-photo-banner-0','1')}catch(e){};setTimeout(()=>{const b=document.querySelector('#main .hg-banner');b&&b.remove()},400)">${cam}<span class="hg-banner-copy"><b>${F(`${name()}’s newborn photo`)}</b><small>${F('Snap one for Memories.')}</small></span><span class="hg-banner-plus" aria-hidden="true">＋</span>${typeof hubPhotoInput === 'function' ? hubPhotoInput(0) : ''}</label>`;
+    }
     const photo = b.querySelector('.hub-bday-photo'); if (!photo || photo.querySelector('img')) return '';   // photo already added
     const m = +((b.querySelector('.hub-bday-num') || {}).textContent || 0); if (!m || m > 11) return '';
     const input = photo.querySelector('input'); const words = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven'];
@@ -208,7 +216,7 @@
         ['Her teeth keep their own schedule', 'Teeth come anywhere from 6 to 12 months. Some babies turn 1 with none.', 'Daily rhythm', 'tooth', 'chg:Daily rhythm:d:p:teething']] }
   };
   // Each month's card takes the color of that month's balloon in Memories, so the two tabs feel like one book.
-  const BALLOON = ['#f2a98a', '#4da9d4', '#6c91b1', '#619863', '#659056', '#4da5d0', '#e9b553', '#eb9669', '#e37889', '#e98067', '#9a6fa4', '#d9708a'];
+  const BALLOON = ['#f2a98a', '#4da9d4', '#6c91b1', '#619863', '#659056', '#4da5d0', '#e9b553', '#eb9669', '#e37889', '#e98067', '#9a6fa4', '#6c77e5'];  // 11: the balloon is periwinkle, so the month card is too
   const mix = (hex, w, to = 255) => '#' + [1, 3, 5].map(i => Math.round(parseInt(hex.slice(i, i + 2), 16) * (1 - w) + to * w).toString(16).padStart(2, '0')).join('');
   const monthTheme = m => { const c = BALLOON[Math.max(0, Math.min(11, m))];
     return `--m-bg1:${mix(c, .84)};--m-bg2:${mix(c, .92)};--m-line:${mix(c, .7)};--m-ink:${mix(c, .45, 30)};--m-chip:${mix(c, .78)}`; };
@@ -294,9 +302,9 @@
           <span class="ms-art" aria-hidden="true"><i class="ms-c2"></i><span class="ms-toys">${window.stCardArt(0)}</span></span></span>
         <span class="ms-foot"><span class="ms-watch"><i><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6z" fill="none" stroke="#fffaf3" stroke-width="2"/></svg></i>${F(P('See what she sees'))}</span><span class="ms-go" aria-hidden="true">→</span></span>
       </button>` : sc ? `<button class="ms-card" onclick="try{localStorage.setItem('ahead-story-seen-${m}','1')}catch(e){};stOpen()" style="${monthTheme(m)};--ms-acc:${mix(c, .1, 30)};--ms-c1:${mix(c, .5)};--ms-c2:${mix(c, .72)}">
-        <span class="ms-body"><span class="ms-copy"><span class="ms-eyebrow">${seen ? F('This month') : F('New this month')}</span><b class="ms-month">${F(`Month ${m}.`)}</b><b class="ms-name">${F(`${name()}’s story.`)}</b><small>${F(sc.tease)}</small></span>
+        <span class="ms-body"><span class="ms-copy"><span class="ms-eyebrow">${m === 0 ? F('Her first weeks') : seen ? F('This month') : F('New this month')}</span><b class="ms-month">${F(m === 0 ? when + '.' : `Month ${m}.`)}</b><b class="ms-name">${F(`${name()}’s story.`)}</b><small>${F(sc.tease)}</small></span>
           <span class="ms-art" aria-hidden="true"><i class="ms-c2"></i><span class="ms-toys">${typeof window.stCardArt === 'function' ? window.stCardArt(m) : art}</span></span></span>
-        <span class="ms-foot"><span class="ms-watch"><i><svg viewBox="0 0 24 24"><path d="M9 7.5v9l7.5-4.5z"/></svg></i>${F(P('Watch her month'))}</span><span class="ms-go" aria-hidden="true">→</span></span>
+        <span class="ms-foot"><span class="ms-watch"><i><svg viewBox="0 0 24 24"><path d="M9 7.5v9l7.5-4.5z"/></svg></i>${F(P(m === 0 ? 'Watch her first weeks' : 'Watch her month'))}</span><span class="ms-go" aria-hidden="true">→</span></span>
       </button>`
       : `<section class="he-hero" style="${monthTheme(m)}"><p class="he-eyebrow">${F(when)} · ${F(`Through ${name()}’s eyes`)}</p><div class="he-copy"><h1>${F(P(M.eyes[0]))}</h1><p class="he-lead">${F(P(M.eyes[1]))}</p>${m <= 4 ? `<button class="he-see" onclick="homeEyes(true)"><span aria-hidden="true">👁</span> ${F(`See what ${name()} sees`)}</button>` : ''}</div><span class="he-art" aria-hidden="true">${art}</span></section>`;
     const rr = newLook ? radarRows(m) : [];

@@ -637,3 +637,5 @@
 #main .hg-banner[style*="--bn"]{border:1px solid var(--line)!important}
 #main .hg-banner .hg-banner-copy{min-width:0}
 #main .hg-banner .hg-banner-copy b{white-space:nowrap;font-size:24px!important}
+.st-giant-u{display:block;font-size:44px;letter-spacing:-.02em;margin:6px 0 0 6px}
+#main .hg-banner-cam{width:52px!important;height:52px!important}
