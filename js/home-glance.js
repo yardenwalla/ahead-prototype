@@ -151,7 +151,7 @@
       if (homeMonth() !== 0 || (typeof hubPhotoFor === 'function' && hubPhotoFor(0))) return '';
       try { if (localStorage.getItem('ahead-photo-banner-0')) return ''; } catch (e) {}
       // The "Hello, World!" foil balloon from the newborn page in Memories (there's no number balloon for the newborn weeks).
-      const cam = `<img class="hg-banner-img hg-banner-hello" src="assets/home/hello-world.png?v=6" alt="">`;
+      const cam = `<img class="hg-banner-img hg-banner-hello" src="assets/home/hello-world.png?v=7" alt="">`;
       const bn0 = `linear-gradient(100deg,${mix('#f2a98a', .84)} 0%,#fffaf6 80%)`;
       return `<label class="hg-banner" style="--bn:${bn0}" role="button" onclick="try{localStorage.setItem('ahead-photo-banner-0','1')}catch(e){};setTimeout(()=>{const b=document.querySelector('#main .hg-banner');b&&b.remove()},400)">${cam}<span class="hg-banner-copy"><b>${F(`${name()}’s newborn photo`)}</b><small>${F('Snap one for Memories.')}</small></span><span class="hg-banner-plus" aria-hidden="true">＋</span>${typeof hubPhotoInput === 'function' ? hubPhotoInput(0) : ''}</label>`;
     }
