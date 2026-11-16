@@ -194,19 +194,27 @@
     const go = s => s.v != null ? `openPage('health-visit:${s.v}')` : s.c.go;
     const ageTxt = x => x < 1 ? `${Math.max(1, Math.round(x * 4.35))} weeks` : x >= 11.9 ? '1 year' : `${Math.floor(x)} month${Math.floor(x) === 1 ? '' : 's'}`;
     const isToday = x => Math.abs(x - a) < 0.13;
+    // Timeline schedules: each row is what, when, and (only when there's something to do) how to prepare. No line repeats its title.
+    const PREP = { nights: 'A good time to start a bedtime routine', roll: 'Keep {o} off beds and sofas', solids: 'Get a high chair', sit: 'Lower the crib mattress', crawl: 'Babyproof the floor first', tooth: 'Start brushing', pull: 'Anchor furniture to the wall', carseat: 'Check {p} height against the seat', crying: 'Past the worst now' };
+    const bornD = parse(profile.early && profile.due ? profile.due : profile.dob);
+    const calMon = mm => { const d = new Date(bornD); d.setMonth(d.getMonth() + Math.floor(mm)); return d.toLocaleDateString('en-US', { month: 'long' }); };
+    const longWhen = s => when(s).replace(/ mo$/, ' months').replace(/^(\d+) months$/, (q, n) => n === '1' ? '1 month' : q);
     const listHTML = x => {
       const t = isToday(x), past = all.filter(s => st(s, x) === 'done'), rest = all.filter(s => st(s, x) !== 'done');
-      const step = s => { const k = st(s, x); return `<li class="tl-step is-${k}" data-id="${s.v != null ? 'v' + s.v : s.c.id}"><i class="tl-dot">${k === 'done' ? '✓' : ''}</i><button onclick="${go(s)}"><span class="tl-t"><b>${F(title(s))}</b>${k === 'now' ? `<small>${F(t ? 'Happening now' : 'Happening at this age')}</small>` : ''}</span><span class="tl-w">${F(when(s))}</span></button></li>`; };
+      const prep = (s, k) => s.v != null ? (k === 'now' ? 'Due now · book it if you haven’t' : '') : s.c.id === 'crying' ? (a >= 2 && t ? PREP.crying : '') : PREP[s.c.id] || '';
+      const step = s => { const k = st(s, x), pr = k === 'done' ? '' : prep(s, k); return `<li class="tl-step is-${k}" data-id="${s.v != null ? 'v' + s.v : s.c.id}"><i class="tl-dot">${k === 'done' ? '✓' : ''}</i><button onclick="${go(s)}"><span class="tl-t"><b>${F(title(s))}</b>${pr ? `<small>${F(pr)}</small>` : ''}</span><span class="tl-w">${F(longWhen(s))}</span></button></li>`; };
       const mark = `<li class="tl-today"><i class="tl-dot"></i><span>${F(t ? 'Today' : `At ${ageTxt(x)}`)}</span></li>`;
       let h = '';
-      if (past.length) h += `<li class="tl-past"><i class="tl-dot">✓</i><button onclick="this.closest('ol').classList.toggle('show-past');this.querySelector('span').textContent=this.closest('ol').classList.contains('show-past')?'Hide':'Show'">${F(`${past.length} ${t ? 'done' : 'behind {o} by then'}`)}<span>${F(document.querySelector('#main .tl-steps.show-past') ? 'Hide' : 'Show')}</span></button></li>` + past.map(step).join('').replace(/tl-step is-done/g, 'tl-step is-done tl-old');
-      // Her age marker sits right under what's behind her, so it's always near the top; what's happening at that age follows it.
-      h += mark + rest.map(step).join('');
-      return h + `<li class="tl-step tl-goal"><i class="tl-dot"></i><span class="tl-t"><b>${F('First birthday!')}</b></span>${cake}</li>`;
+      if (past.length) h += `<li class="tl-past"><i class="tl-dot">✓</i><button onclick="this.closest('ol').classList.toggle('show-past');this.querySelector('span').textContent=this.closest('ol').classList.contains('show-past')?'Hide':'Show'">${F(`Earlier (${past.length})`)}<span>${F(document.querySelector('#main .tl-steps.show-past') ? 'Hide' : 'Show')}</span></button></li>` + past.map(step).join('').replace(/tl-step is-done/g, 'tl-step is-done tl-old');
+      h += mark + rest.filter(s => st(s, x) === 'now').map(step).join('');
+      // What's ahead, under light calendar signposts ("Around January").
+      let last = null;
+      rest.filter(s => st(s, x) === 'next').forEach(s => { const lab = calMon(Math.max(s.m, x)); if (lab !== last) { h += `<li class="tl-mon"><span>${F(`Around ${lab}`)}</span></li>`; last = lab; } h += step(s); });
+      return h + `<li class="tl-step tl-goal"><i class="tl-dot"></i><span class="tl-t"><b>${F('First birthday!')}</b><small>${F(`Around ${calMon(12)}`)}</small></span>${cake}</li>`;
     };
     const head = x => { const mo = Math.max(0, Math.min(11, Math.floor(x))), cov = typeof window.stCover === 'function' ? window.stCover(mo) : null; return cov ? F(cov.title) : ''; };
     const ends = x => { const t = isToday(x), left = Math.max(0, 12 - x), eta = left < 0.5 ? 'any day now' : left < 1.5 ? 'in about a month' : `in about ${Math.round(left)} months`, d = Math.round(Math.abs(x - a));
-      return t ? `<b>${F(`${nm} is ${typeof babyAge === 'function' ? babyAge() : ''}`)}</b><span>${F(`First birthday ${eta}`)}</span>` : `<b>${F(`At ${ageTxt(x)}`)}</b><span>${F(d < 1 ? 'about now' : x > a ? `in about ${d} month${d === 1 ? '' : 's'}` : `about ${d} month${d === 1 ? '' : 's'} ago`)}</span>`; };
+      return t ? `<b>${F(`${nm} is ${typeof babyAge === 'function' ? babyAge() : ''}`)}</b><span>${F(`First birthday ${eta}`)}</span>` : `<b>${F(`At ${ageTxt(x)}`)}</b><span>${F(d < 1 ? 'about now' : x > a ? `${d} month${d === 1 ? '' : 's'} from now` : `${d} month${d === 1 ? '' : 's'} ago`)}</span>`; };
     const theme = x => typeof window.monthTheme === 'function' ? window.monthTheme(Math.max(0, Math.min(11, Math.floor(x)))) : '';
     const art = x => typeof window.stCardArt === 'function' ? window.stCardArt(Math.max(0, Math.min(11, Math.floor(x)))) : '';
     window.__tl = { a, listHTML, head, ends, theme, art };
@@ -215,7 +223,7 @@
     const grad = (w, to) => typeof window.monthColor === 'function' ? `linear-gradient(90deg,${[...Array(12)].map((_, i) => `${window.monthColor(i, w, to)} ${Math.round((i + 0.5) / 12 * 100)}%`).join(',')})` : '';
     let h = `<div class="ya-page tl-track" style="${theme(a)};--tlp:${pct}%;--tla:${pct}%;--tlg:${grad(.86)};--tlf:${grad(.42)}">${tlSwitch(m)}<div class="tl-top"><h1 class="yt-h1">${F(`${nm}’s first year`)}</h1><button class="tl-todaybtn" onclick="tlScrub(null)" disabled>${F('Today')}</button></div>`;
     h += `<p class="tl-status">${head(a)}</p>`;
-    h += `<div class="tl-prog${hinted ? '' : ' tl-hint'}"><div class="tl-ride"><span class="tl-baby" role="slider" tabindex="0" aria-label="${F(`Drag ${nm} to see another age`)}" aria-valuemin="0" aria-valuemax="12" aria-valuenow="${a.toFixed(1)}" aria-valuetext="${F(ageTxt(a))}" onkeydown="tlKey(event)" style="${theme(a)}">${art(a)}<em class="tl-tip">${F(hinted ? ageTxt(a) : 'Drag me')}</em></span><span class="tl-flag" aria-hidden="true">${window.stToy('cake')}</span></div><div class="tl-bar"><i></i><button class="tl-nowmark" onclick="tlScrub(null)" aria-label="${F('Back to today')}"></button></div><div class="tl-ticks" aria-hidden="true">${[[0, 'Birth'], [3, '3 mo'], [6, '6 mo'], [9, '9 mo'], [12, '1 year']].map(([v, l]) => `<span style="left:${v / 12 * 100}%">${F(l)}</span>`).join('')}</div><div class="tl-ends">${ends(a)}</div></div>`;
+    h += `<div class="tl-prog${hinted ? '' : ' tl-hint'}"><div class="tl-ride"><span class="tl-baby" role="slider" tabindex="0" aria-label="${F(`Drag ${nm} to see another age`)}" aria-valuemin="0" aria-valuemax="12" aria-valuenow="${a.toFixed(1)}" aria-valuetext="${F(ageTxt(a))}" onkeydown="tlKey(event)" style="${theme(a)}">${art(a)}<em class="tl-tip">${F(hinted ? ageTxt(a) : 'Drag me')}</em></span><span class="tl-flag" aria-hidden="true">${window.stToy('cake')}</span></div><div class="tl-bar"><i></i><button class="tl-nowmark" onclick="tlScrub(null)" aria-label="${F('Back to today')}"></button></div><div class="tl-ticks" aria-hidden="true">${[[0, 'Birth'], [3, '3 months'], [6, '6 months'], [9, '9 months'], [12, '1 year']].map(([v, l]) => `<span style="left:${v / 12 * 100}%">${F(l)}</span>`).join('')}</div><div class="tl-ends">${ends(a)}</div></div>`;
     const gvars = x => typeof window.monthColor === 'function' ? `--g-bg:${window.monthColor(Math.max(0, Math.min(11, Math.floor(x))), .86)};--g-ink:${window.monthColor(Math.max(0, Math.min(11, Math.floor(x))), .45, 30)}` : '';
     window.__tl.gvars = gvars;
     h += `<ol class="tl-steps" style="${gvars(a)}">${listHTML(a)}</ol>`;
@@ -241,7 +249,7 @@
       T.theme(q).split(';').forEach(d => { const i = d.indexOf(':'); if (i > 0) b.style.setProperty(d.slice(0, i).trim(), d.slice(i + 1).trim()); });
       [...b.children].forEach(c => { if (c !== tip) c.remove(); }); b.insertAdjacentHTML('afterbegin', T.art(q));
       const hd = pg.querySelector('.tl-status'), nx = T.head(q); if (hd.innerHTML !== nx) { hd.classList.remove('is-swap'); void hd.offsetWidth; hd.innerHTML = nx; hd.classList.add('is-swap'); } }
-    tip.textContent = q >= 11.9 ? '1 year' : q < 1 ? `${Math.max(1, Math.round(q * 4.35))} wk` : `${Math.floor(q)} mo`;
+    tip.textContent = q >= 11.9 ? '1 year' : q < 1 ? `${Math.max(1, Math.round(q * 4.35))} wk` : `${Math.floor(q)} months`;
     pg.querySelector('.tl-ends').innerHTML = T.ends(q);
     const ol = pg.querySelector('.tl-steps'), was = new Set([...ol.querySelectorAll('.is-now')].map(e => e.dataset.id));
     ol.innerHTML = T.listHTML(q); ol.setAttribute('style', T.gvars(q));
