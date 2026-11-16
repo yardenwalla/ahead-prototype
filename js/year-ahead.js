@@ -176,7 +176,13 @@
   const ytScroller = el => { for (let p = el && el.parentElement; p; p = p.parentElement) { const o = getComputedStyle(p).overflowY; if ((o === 'auto' || o === 'scroll') && p.scrollHeight > p.clientHeight) return p; } return document.scrollingElement; };
   let ytRaf = 0;
   const ytFocus = () => {
-    ytRaf = 0; const items = document.querySelectorAll('#main .yt-map .yt-list > li, #main .yt-map .yt-head, #main .yt-map .yt-end'); if (!items.length) return;
+    ytRaf = 0;
+    // Scrolling down: the next chapter opens just before you reach it (only below you, so nothing above moves).
+    // Chapters never close on their own; one the parent folded by hand stays folded.
+    const secs = [...document.querySelectorAll('#main .yt-road')], hi = secs.findIndex(x => x.classList.contains('is-here')), scr = secs[0] ? ytScroller(secs[0]).scrollTop : 0, moved = window.__ytStart != null && scr > window.__ytStart + 40;
+    secs.forEach((x, j) => { if (moved && j > hi && x.classList.contains('is-fold') && !x.dataset.user && !secs[j - 1].classList.contains('is-fold') && x.getBoundingClientRect().top < innerHeight * 0.8) {
+      x.classList.remove('is-fold'); x.querySelector('.yt-head').setAttribute('aria-expanded', 'true'); window.ytTrail(); } });
+    const items = document.querySelectorAll('#main .yt-map .yt-list > li, #main .yt-map .yt-head, #main .yt-map .yt-end'); if (!items.length) return;
     const mid = innerHeight * 0.45;
     items.forEach(el => { const r = el.getBoundingClientRect(), d = Math.abs(r.top + r.height / 2 - mid);
       const floor = el.classList.contains('yt-me') || el.classList.contains('yt-head') ? .55 : .2;
@@ -184,9 +190,9 @@
   };
   document.addEventListener('scroll', () => { if (!ytRaf) ytRaf = requestAnimationFrame(ytFocus); }, { passive: true, capture: true });
   window.ytFocus = ytFocus;
-  window.ytFold = sec => { const f = !sec.classList.contains('is-fold'); sec.classList.toggle('is-fold', f); sec.querySelector('.yt-head').setAttribute('aria-expanded', String(!f)); window.ytTrail(); ytFocus(); };
+  window.ytFold = sec => { sec.dataset.user = '1'; const f = !sec.classList.contains('is-fold'); sec.classList.toggle('is-fold', f); sec.querySelector('.yt-head').setAttribute('aria-expanded', String(!f)); window.ytTrail(); ytFocus(); };
   window.ytOld = btn => { const sec = btn.closest('.yt-ch'), on = sec.classList.toggle('show-old'); btn.querySelector('span').textContent = on ? 'Hide' : 'Show'; window.ytTrail(); ytFocus(); };
-  window.ytCenter = () => { const me = document.querySelector('#main .yt-me'); if (!me) return ytFocus(); const sc = ytScroller(me); sc.scrollTop += me.getBoundingClientRect().top - innerHeight * 0.38; ytFocus(); };
+  window.ytCenter = () => { const me = document.querySelector('#main .yt-me'); if (!me) return ytFocus(); const sc = ytScroller(me); sc.scrollTop += me.getBoundingClientRect().top - innerHeight * 0.38; window.__ytStart = sc.scrollTop; ytFocus(); };
   // A gentle winding trail on the left of each open chapter, through its stops.
   window.ytTrail = function () {
     const map = document.querySelector('#main .yt-map'); if (!map) return;
