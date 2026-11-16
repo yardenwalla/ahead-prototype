@@ -1297,7 +1297,10 @@
       const CRY = { fading: 'You stay close', pickup: 'You stay close', chair: 'You stay close', ferber: 'You step out', extinction: 'You step out' };
       const pal = (typeof YEAR_PALETTES !== 'undefined' ? YEAR_PALETTES : {}).Sleep || { pale: '#eceaf8' };
       const tiles = ks => pick(ks).map(([i, x]) => `<button class="tpl-opt" onclick="${go('chg:Sleep:d:method:' + i)}"><span class="tpl-opt-art">${window.hubArt(IC[x.kind] || 'book', 'Sleep')}</span><b>${F(x.name)}</b><small>${F(x.title)}</small><em>${F(CRY[x.kind] || '')}</em></button>`).join('');
-      return `<div class="tpl-opts is-2">${tiles(['fading', 'pickup', 'chair', 'ferber', 'extinction'])}</div>`;
+      // A labeled spectrum: gentlest at the top, quickest at the bottom, so the order means something.
+      const LVL = { fading: ['Least crying', 1], pickup: ['Some crying', 2], chair: ['Some crying', 2], ferber: ['More crying', 3], extinction: ['Most crying', 4] };
+      const steps = pick(['fading', 'pickup', 'chair', 'ferber', 'extinction']).map(([i, x]) => `<button class="tpl-spec-row" onclick="${go('chg:Sleep:d:method:' + i)}"><i class="lv${LVL[x.kind][1]}"></i><span><b>${F(x.name)}</b><small>${F(x.title)}</small></span><em class="lv${LVL[x.kind][1]}">${F(LVL[x.kind][0])}</em></button>`).join('');
+      return `<div class="tpl-spec"><p class="tpl-spec-end">${F('Gentler, often slower')}</p>${steps}<p class="tpl-spec-end">${F('Quicker, more crying')}</p></div>`;
     }
     return list('You stay close, slower', rows(['fading', 'pickup', 'chair'])) + list('You step out, often quicker', rows(['ferber', 'extinction']));
   }
