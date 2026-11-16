@@ -1032,9 +1032,11 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     why: 'Rolling can start any day, so set up before {s} {go|goes} down.',
     steps: [['diaper', 'Set up first', 'Wipes and diaper in reach'], ['hand', 'A hand on {o}', 'Never step away'], ['toy', 'Something to hold', 'Or the same song each time'], ['mat', 'Too wriggly?', 'A mat on the floor']],
     tipsTitle: 'Good to know', tips: diaperRash };
-  const skinCare = { type: 'howto', k: 'skin', title: '{P} skin needs less, not more',
+  const skinCare = { type: 'expect', k: 'skin', title: '{P} skin needs less, not more',
     why: 'Too much washing and product can dry it out.',
-    steps: [['bath', 'Plain warm water', 'About 3 baths a week'], ['towel', 'Pat dry', 'Into the creases'], ['drop', 'Cream for dry patches', 'Thick, fragrance-free, after the bath'], ['shirt', 'Soft cotton', 'Washed fragrance-free']], ordered: false };
+    normal: [['drop', 'Peeling and dry patches', 'In the first weeks'], ['smile', 'Little spots and bumps', 'They come and go'], ['sun', 'Blotchy when cold', 'Then it evens out']],
+    do: [['bath', 'Plain warm water', 'About 3 baths a week'], ['towel', 'Pat dry', 'Into the creases'], ['drop', 'Cream on dry patches', 'Thick, fragrance-free'], ['shirt', 'Soft cotton', 'Washed fragrance-free']],
+    calls: RASH_CALLS };
   [0, 1, 2, 3].forEach(v => { TPL[`h:skin:${v}`] = skinCare; });
   const gums = { type: 'howto', k: 'teeth', title: 'Wipe {p} gums twice a day',
     why: 'It makes brushing feel familiar once teeth come.',
@@ -1094,10 +1096,11 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   TPL['p:teething'] = { type: 'expect', k: 'teeth', title: 'Teething makes gums sore, not feverish',
     why: 'Drool, chewing and a few fussy days are the usual signs.',
     normal: [['drop', 'Lots of drool', 'A bib helps'], ['hand', 'Chewing on everything', 'Fingers, toys, you'], ['clock', 'A few fussy days', 'Then it passes']],
-    normalNotes: [['', 'First tooth', 'Often around 6 months, anywhere from 4 to 12'], ['', 'Fever or diarrhea isn’t teething', 'Nor is a rash or runny nose. Something else is going on']],
+    normalNotes: [['', 'First tooth', 'Often around 6 months, anywhere from 4 to 12']],
     do: [['hand', 'A clean finger', 'Rub the sore gums'], ['ring', 'A teething ring', 'Firm, chilled, not frozen'], ['shirt', 'A soft bib', 'Pat the drool dry']],
     doRows: [['', 'Skip numbing gels, necklaces and tablets', 'Ask your pediatrician before any pain medicine']],
-    extra: () => toothBtn(false) };
+    extra: () => toothBtn(false),
+    calls: { ped: 'a fever, diarrhea, diaper rash or a runny nose. Teething doesn’t cause these.' } };
   const dress = { type: 'expect', k: 'clothes', title: 'Dress {o} in one more layer than you',
     why: 'Babies can’t warm or cool themselves well yet, so the neck tells you more than the hands.',
     normal: () => layers(), normalNotes: [['', 'No hats indoors', 'A hat is for going out'], ['', 'For sleep, snug pajamas and a sleep sack', 'No loose clothes, and no blankets']],
@@ -1106,7 +1109,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   TPL.after1 = { type: 'expect', k: 'teeth', eyebrow: 'After 1', title: 'Brushing and baths after 1',
     why: 'Care stays much the same as {s} {become|becomes} a toddler.',
     normal: [['tooth', 'Brushing', 'Twice a day, a rice-grain smear'], ['bath', 'Baths', 'A few times a week, a hand on {o}'], ['shirt', 'Shoes', 'Soft and flexible, once walking outside']],
-    do: 'See a dentist by the first birthday, or once the first tooth comes in, if that’s sooner.' };
+    do: [['tooth', 'First dentist visit', 'By the first birthday'], ['bottle', 'No bottle in bed', 'Milk on teeth causes cavities'], ['hand', 'Still a hand on {o}', 'In the bath, every time']] };
 
   /* ----- Is this normal? pages ----- */
   TPL['look-cord'] = { type: 'check', eyebrow: 'Is this normal?', k: 'cord', title: 'The cord',
@@ -1147,7 +1150,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
       tplNow === 0 ? null : live() && profile.feed === 'Formula' ? ['clock', 'Most days is usual on formula', 'Some days more, some less'] : ['clock', 'Days between poops can be normal', live() && profile.feed === 'Both' ? 'A few days apart is fine if {s’s} feeding well' : 'Breastfed babies can go days between'],
       ['diaper', 'Straining and going red is normal', 'Even when the poop comes out soft'],
       tplNow >= 2 ? ['bowl', 'Solids make it thicker and smellier', 'Sometimes the color of the food'] : null],
-    helps: () => tplNow >= 2 ? [['bowl', 'Hard poop? Try pears, prunes or peaches', 'Fruits that soften it']] : null,
+    helps: () => [['hand', 'Straining or gassy?', 'Bicycle {p} legs, rub {p} tummy'], tplNow >= 2 ? ['bowl', 'Hard poop?', 'Pears, prunes or peaches'] : ['bottle', 'Keep feeding as usual', 'Milk keeps it soft']],
     calls: { ped: 'fewer than 6 wet diapers a day, hard pebble-like poop, or watery poop many times a day.', now: () => tplNow <= 1 ? 'white, gray or chalky poop, or watery poop under 3 months.' : 'white, gray or chalky poop.' } };
 
   window.changesRoute = function (p) {

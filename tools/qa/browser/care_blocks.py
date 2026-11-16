@@ -22,7 +22,7 @@ async def main():
           const gtk=[...m.querySelectorAll('h2')].filter(h=>/^Good to know/.test(h.innerText.trim()));
           const gtkRows=gtk.length?gtk[0].nextElementSibling.querySelectorAll('.hub-row').length:0;
           const rows=[...m.querySelectorAll('.care-calls p')].map(e=>e.innerText);
-          return {cards,stray,rows,gtk:gtk.length,gtkRows,tpl:(m.querySelector('.care-tpl')||{className:''}).className}}""")
+          return {cards,stray,rows,gtk:gtk.length,gtkRows,tpl:(m.querySelector('.care-tpl')||{className:''}).className,secs:m.querySelectorAll('.care-tpl > h2').length}}""")
         key=(r,json.dumps(d['rows']))
         if key in seen: continue
         seen[key]=1
@@ -33,6 +33,8 @@ async def main():
         # Template pages: a change explainer ends with When to check, Is this normal? with When to call; How-to has none.
         worry=any(x in r for x in (':look:',':rash:',':t:skin:')) or r.endswith('t:diapers:0') or 'is-expect' in d['tpl'] or 'is-check' in d['tpl']
         if 'is-howto' in d['tpl'] and d['cards']: bad.append('call card on a How-to page')
+        # A template page with a single section looks empty next to the others: every page has at least two.
+        if d['tpl'] and d['secs'] < 2: bad.append(f"only {d['secs']} section")
         if d['cards'] and not worry: bad.append('call card on a page that is not about a worry')
         bad+=[f"long row ({len(x)}): {x[:60]}…" for x in d['rows'] if len(x)>130]
         if bad: fails.append((r,f['name'],bad))

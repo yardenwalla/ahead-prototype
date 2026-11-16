@@ -383,7 +383,6 @@ window.SEARCH_DEEP = [["topic:Development","Development & play","What to look fo
 ["chg:Daily rhythm:d:h:diapers:2","","Change a wriggler","Set up first, and a hand on {o}",8191,1],
 ["chg:Daily rhythm:d:p:teething","","Soothe teething gums","What helps, and what to skip",8191,1],
 ["chg:Daily rhythm:d:p:teething","Everyday care","First tooth.","",8191,0],
-["chg:Daily rhythm:d:p:teething","Everyday care","Fever or diarrhea isn’t teething.","",8191,0],
 ["chg:Daily rhythm:d:p:teething","Everyday care","Skip numbing gels, necklaces and tablets.","",8191,0],
 ["chg:Daily rhythm:d:p:teething","","Drool, sore gums or extra fussing","Could it be teething?",8191,1],
 ["chg:Daily rhythm:d:p:brush","Everyday care","How much toothpaste","",8191,0],
