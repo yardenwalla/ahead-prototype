@@ -120,8 +120,8 @@
   /* Timeline (Nov 15): the year as four chapters you open and close. Closed, a chapter is one calm header; open, its
      stops run down a trail on the left, one card each, in time order: what's behind her is quiet, "Maya is here" marks
      today, the next change is outlined. Today's chapter starts open; opening another closes it. Each card opens its page. */
-  const ROAD = [[0, 3, 'Birth–2 months', 'Getting to know each other', 'bunny', '#fbe8dc', '#c98d6f'], [3, 6, '3–5 months', 'More aware, more curious', 'rings', '#ece4f6', '#8f7bc4'],
-    [6, 9, '6–8 months', 'A little explorer emerges', 'bowl', '#e6efdd', '#5f8c55'], [9, 13, '9–12 months', 'Into everything', 'blocks', '#e3e9f5', '#5d74a6']];
+  const ROAD = [[0, 3, 'Birth–2 months', 'First smiles & settling in', 'bunny', '#fbe8dc', '#c98d6f'], [3, 6, '3–5 months', 'Rolling & changing sleep', 'rings', '#ece4f6', '#8f7bc4'],
+    [6, 9, '6–8 months', 'First foods & sitting up', 'bowl', '#e6efdd', '#5f8c55'], [9, 13, '9–12 months', 'Standing & first words', 'blocks', '#e3e9f5', '#5d74a6']];
   const listPage = window.nextPage;
   window.nextPage = function () {
     if (typeof window.stToy !== 'function') return listPage();
@@ -154,16 +154,16 @@
       const SH = { crying: 'crying peak', smile: 'first smiles', nights: 'longer nights', regress: 'sleep regression', roll: 'rolling', ready: 'solids prep', solids: 'first foods', twonaps: 'two naps', crawl: 'crawling', sit: 'sitting up', tooth: 'first tooth', finger: 'textures', meals: 'three meals', carseat: 'car seat', sep: 'separation', pull: 'pulling up', words: 'first words', milk: 'whole milk', steps: 'first steps' };
       const ahead = its.filter(s => !passed(s)), nameOf = s => s.v != null ? `${s.v}-month checkup` : SH[s.c.id] || s.c.title;
       const preview = to <= a ? F(`All behind ${'{o}'} ✓`) : ahead.length ? F(`${ahead.length} ahead · ${ahead.slice(0, 3).map(nameOf).join(', ')}${ahead.length > 3 ? '…' : ''}`) : '';
-      out += `<section class="yt-ch${i === here ? ' is-open is-here' : ''}${to <= a ? ' is-past' : ''}" style="--yt:${bg};--yti:${ink}">
-        <button class="yt-head" onclick="ytOpen(this.parentNode)" aria-expanded="${i === here}"><i class="yt-dot yt-hdot"></i><span class="yt-hc"><small>${F(ages)} · ${mon(from)}–${mon(Math.min(to, 12) - 1)}</small><b>${F(title)}</b><span class="yt-prev">${preview}</span></span><span class="yt-toy" aria-hidden="true">${window.stToy(toy)}</span><i class="yt-caret" aria-hidden="true">›</i></button>
+      out += `<section class="yt-ch${i >= here ? ' is-open' : ''}${i === here ? ' is-here' : ''}${to <= a ? ' is-past' : ''}" style="--yt:${bg};--yti:${ink}">
+        <button class="yt-head" onclick="ytOpen(this.parentNode)" aria-expanded="${i >= here}"><i class="yt-dot yt-hdot"></i><span class="yt-hc"><small>${F(ages)} · ${mon(from)}–${mon(Math.min(to, 12) - 1)}</small><b>${F(title)}</b><span class="yt-prev">${preview}</span></span><span class="yt-toy" aria-hidden="true">${window.stToy(toy)}</span><i class="yt-caret" aria-hidden="true">›</i></button>
         <div class="yt-body"><ol class="yt-list">${body}</ol></div></section>`;
     });
     return `<div class="ya-page yt-page"><h1 class="yt-h1">${F(`${nm}’s first year`)}</h1><p class="yt-lead">${F('The road to one.')}</p><div class="yt-map"><svg class="yt-trail" aria-hidden="true"><path class="t1"/><path class="t2"/></svg>${out}<div class="yt-end"><i class="yt-dot"></i><span class="yt-endc"><small>${F('The destination')} · ${mon(12)}</small><b>${F('One whole year!')}</b></span></div></div><p class="hub-foot">${F('Ages are typical. Every baby moves at their own pace.')}</p></div>` + (setTimeout(() => window.ytTrail && window.ytTrail(), 0), '');
   };
   window.ytOpen = function (sec) {
+    // Each chapter folds on its own, so the whole year can stay open to scroll.
     const open = !sec.classList.contains('is-open');
-    document.querySelectorAll('#main .yt-ch.is-open').forEach(c => { c.classList.remove('is-open'); c.querySelector('.yt-head').setAttribute('aria-expanded', 'false'); });
-    if (open) { sec.classList.add('is-open'); sec.querySelector('.yt-head').setAttribute('aria-expanded', 'true'); }
+    sec.classList.toggle('is-open', open); sec.querySelector('.yt-head').setAttribute('aria-expanded', String(open));
     const t0 = performance.now(); (function tick() { window.ytTrail(); if (performance.now() - t0 < 520) requestAnimationFrame(tick); })();
   };
   // A gentle winding trail on the left of each open chapter, through its stops.
