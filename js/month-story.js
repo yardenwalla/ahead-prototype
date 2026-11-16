@@ -205,15 +205,10 @@
     lull: function () { return '<div class="st-vis st-lull"><span class="st-lull-b">' + babyArt(0) + '</span><i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i></div>'; },
     clock: function () { var d = ''; for (var i = 0; i < 10; i++) { var a = (i / 10) * Math.PI * 2 - Math.PI / 2; d += '<circle class="st-ck" style="--i:' + i + '" cx="' + (100 + Math.cos(a) * 70).toFixed(1) + '" cy="' + (100 + Math.sin(a) * 70).toFixed(1) + '" r="9" fill="#e98a6b"/>'; }
       var c = blob('#fffaf3', '#ffffff', '#e8dccd'); return '<div class="st-vis st-clock">' + svg('0 0 200 200', c.def, shadow(100, 190, 60) + '<circle cx="100" cy="100" r="86" fill="' + c.url + '"/>' + d + '<path d="M100 100 V58 M100 100 L128 112" stroke="#2B2840" stroke-width="7" stroke-linecap="round"/><circle cx="100" cy="100" r="7" fill="#2B2840"/>') + '</div>'; },
-    // A grown-up's finger (nail and all, so it reads as a finger) with a tiny hand curled around it.
-    grip: function () { var sk = blob('#f5c3a0', '#fde3cf', '#de9d79'), pa = blob('#eab894', '#f8d9c0', '#c98d68');
-      var fing = ''; for (var i = 0; i < 4; i++) fing += '<ellipse cx="' + (92 + i * 17) + '" cy="96" rx="9.5" ry="15" fill="' + sk.url + '" stroke="#d99b77" stroke-width="1.5"/>';
-      return '<div class="st-vis st-grip">' + svg('0 0 240 170', sk.def + pa.def, shadow(130, 160, 90) +
-        '<rect x="14" y="58" width="236" height="46" rx="23" fill="' + pa.url + '"/>' +
-        '<rect x="22" y="64" width="34" height="34" rx="12" fill="#fbe3d6" stroke="#e2b499" stroke-width="2"/>' +
-        '<ellipse cx="140" cy="112" rx="52" ry="40" fill="' + sk.url + '"/>' +
-        '<ellipse cx="98" cy="104" rx="14" ry="11" fill="' + sk.url + '" stroke="#d99b77" stroke-width="1.5" transform="rotate(-25 98 104)"/>' + fing +
-        '<path d="M150 150 q-10 10 -4 18 M130 152 q0 10 8 16" fill="none" stroke="#d99b77" stroke-width="0"/>') + '</div>'; },
+    grip: function () { var sk = blob('#f5c3a0', '#fde3cf', '#de9d79'), pa = blob('#e9b48f', '#f7d3b6', '#c98d68');
+      return '<div class="st-vis st-grip">' + svg('0 0 220 140', sk.def + pa.def, shadow(110, 132, 80) +
+        '<rect x="96" y="52" width="140" height="40" rx="20" fill="' + pa.url + '"/><ellipse cx="104" cy="72" rx="12" ry="16" fill="#f3c7a8" opacity=".6"/>' +
+        '<ellipse cx="96" cy="76" rx="44" ry="38" fill="' + sk.url + '"/><path d="M70 56 q10 -10 20 0 M86 52 q10 -10 20 0 M102 54 q10 -10 18 2" fill="none" stroke="#c98a66" stroke-width="4" stroke-linecap="round"/>') + '</div>'; },
     rise: function () { return '<div class="st-vis st-rise">' + bunny() + '</div>'; },
     // Sleep as bars across a night: short ones, then one that stretches out.
     stretch: function () { return '<div class="st-vis st-bars-n"><i style="--w:14%"></i><i style="--w:12%"></i><i class="is-long" style="--w:44%"></i><i style="--w:16%"></i></div>'; },
