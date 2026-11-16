@@ -831,7 +831,7 @@
           return { type: 'option', label: 'Sleep training', art: 'moon', title: x.name, why: x.title,
             glance: g ? `<div class="hub-tiles st-glance">${[['Crying', g[0]], ['You', g[1]], ['Often takes', g[2]]].map(t => `<div><small>${F(t[0])}</small><b>${F(t[1])}</b></div>`).join('')}</div>` : '',
             how: n ? `<div class="hub-card"><dl class="hub-timeline">${n.map(r => `<div><dt>${F(r[0])}</dt><dd>${F(r[1])}</dd></div>`).join('')}</dl>${TPLB.ul([['', 'An example', x.name === 'Bedtime fading' || x.name === 'Chair method' ? 'Some babies move faster, some slower' : 'Use your own bedtime; every baby’s nights look a little different']])}</div>` : '',
-            tips: [['clock', 'Stick with it', x.name === 'Cry it out' ? 'The first nights are the hardest. Not easier after a week? Ask your pediatrician.' : 'It can take up to 2 weeks. Not easier by then? Ask your pediatrician.'], ['heart', 'Every caregiver, the same way', 'Same steps, every night, whoever does bedtime.'], NOTE[x.name]] }; },
+            tips: NOTE[x.name] ? [NOTE[x.name]] : [] }; },
         crying: () => ({ type: 'check', label: 'The early months', art: 'heart', title: 'Crying peaks around 6–8 weeks, then eases',
           why: 'It builds from about 2 weeks and eases by 3–4 months. Some evenings nothing works, and that isn’t your fault.',
           tellTitle: 'What’s normal', figure: () => cryCurve(),
@@ -1294,10 +1294,10 @@
     const rows = ks => pick(ks).map(([i, x]) => row({ icon: IC[x.kind] || 'book', cat: 'Sleep', title: x.name, sub: x.title, onclick: go('chg:Sleep:d:method:' + i) }));
     if (sub) {
       // Options as tappable tiles: icon, name, one line, and the crying level to compare at a glance.
-      const CRY = { fading: 'Least crying', pickup: 'Some crying', chair: 'Some crying', ferber: 'More crying', extinction: 'Most crying' };
+      const CRY = { fading: 'You stay close', pickup: 'You stay close', chair: 'You stay close', ferber: 'You step out', extinction: 'You step out' };
       const pal = (typeof YEAR_PALETTES !== 'undefined' ? YEAR_PALETTES : {}).Sleep || { pale: '#eceaf8' };
       const tiles = ks => pick(ks).map(([i, x]) => `<button class="tpl-opt" onclick="${go('chg:Sleep:d:method:' + i)}"><span class="tpl-opt-art">${window.hubArt(IC[x.kind] || 'book', 'Sleep')}</span><b>${F(x.name)}</b><small>${F(x.title)}</small><em>${F(CRY[x.kind] || '')}</em></button>`).join('');
-      return [['You stay close, slower', ['fading', 'pickup', 'chair']], ['You step out, often quicker', ['ferber', 'extinction']]].map(([h, ks]) => `<p class="tpl-group">${F(h)}</p><div class="tpl-opts is-${ks.length}">${tiles(ks)}</div>`).join('');
+      return `<div class="tpl-opts is-2">${tiles(['fading', 'pickup', 'chair', 'ferber', 'extinction'])}</div>`;
     }
     return list('You stay close, slower', rows(['fading', 'pickup', 'chair'])) + list('You step out, often quicker', rows(['ferber', 'extinction']));
   }
@@ -1312,7 +1312,8 @@
     const ready = [['clock', 'About 4–6 months', age < 4 ? `Maya is ${age < 1 ? 'a few weeks' : age + ' months'}${adj}: it’s early` : age <= 6 ? `Maya is ${age} months${adj}: in the window` : 'It can work at any age from here'], ['steth', 'Growing well', 'Ask your pediatrician first'], ['home', 'A calm stretch', 'Not while sick, traveling or starting daycare']];
     return detail('Sleep', age < 4 ? 'Read ahead' : 'Your choice', 'Sleep training, if you choose it', 'It helps {o} fall back asleep on {p} own. Rocking or feeding to sleep is fine too.',
       `<div class="care-tpl is-option">` + TPLB.sec('Is {s} ready?', TPLB.tiles(ready, 'Sleep'))
-      + `<h2 class="hub-h2">${F('Pick a method')}</h2>` + methodScale(true) + `</div>`, 'book');
+      + `<h2 class="hub-h2">${F('Pick a method')}</h2>` + methodScale(true)
+      + TPLB.sec('Good to know', TPLB.rows([['clock', 'Stick with one for 1–2 weeks', 'Cry it out often takes a few nights. Not easier by then? Ask your pediatrician.'], ['heart', 'Every caregiver, the same way', 'Same steps, every night, whoever does bedtime.']], 'Sleep')) + `</div>`, 'book');
   }
 
   /* ---------- actions ---------- */
