@@ -180,7 +180,7 @@
     // Scrolling down: the next chapter opens just before you reach it (only below you, so nothing above moves).
     // Chapters never close on their own; one the parent folded by hand stays folded.
     const secs = [...document.querySelectorAll('#main .yt-road')], hi = secs.findIndex(x => x.classList.contains('is-here')), scr = secs[0] ? ytScroller(secs[0]).scrollTop : 0, moved = window.__ytStart != null && scr > window.__ytStart + 40;
-    secs.forEach((x, j) => { if (moved && j > hi && x.classList.contains('is-fold') && !x.dataset.user && !secs[j - 1].classList.contains('is-fold') && x.getBoundingClientRect().top < innerHeight * 0.8) {
+    secs.forEach((x, j) => { if (moved && j > hi && x.classList.contains('is-fold') && !x.dataset.user && !secs[j - 1].classList.contains('is-fold') && x.getBoundingClientRect().top < innerHeight * 0.4) {
       x.classList.remove('is-fold'); x.querySelector('.yt-head').setAttribute('aria-expanded', 'true'); window.ytTrail(); } });
     const items = document.querySelectorAll('#main .yt-map .yt-list > li, #main .yt-map .yt-head, #main .yt-map .yt-end'); if (!items.length) return;
     const mid = innerHeight * 0.45;
