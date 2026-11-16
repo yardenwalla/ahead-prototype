@@ -639,3 +639,10 @@
 #main .hg-banner .hg-banner-copy b{white-space:nowrap;font-size:24px!important}
 .st-giant-u{display:block;font-size:44px;letter-spacing:-.02em;margin:6px 0 0 6px}
 #main .hg-banner-cam{width:52px!important;height:52px!important}
+/* Through her eyes: one picture */
+.st-eyes.st-eyes1{width:66%;justify-content:center}
+.st-eyes1 figure{flex:0 0 100%}
+.is-on .st-eyes1 .st-eyehers{animation-delay:.6s}
+.is-on .st-eyes1 .st-eyehers .st-eyepic .st-obj{animation:stBlurIn 1.6s 1.5s ease forwards}
+.st-eyes1 .st-eyepic{border-radius:24px;border-width:5px}
+.st-eyes1 figcaption{font-size:15px}

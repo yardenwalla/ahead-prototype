@@ -218,7 +218,7 @@
     heart: function () { return '<div class="st-vis st-heartwrap"><span class="st-bye">bye-bye!</span><i class="st-heart">♥</i><span class="st-back">back soon</span></div>'; },
     puffs: function () { var s = ''; for (var i = 0; i < 5; i++) s += '<i style="--i:' + i + '"' + (i === 2 ? ' class="is-pick"' : '') + '></i>'; return '<div class="st-vis st-puffs">' + s + '</div>'; },
     eyes: function (m) {
-      var F = { 1: 'blur(3.2px) grayscale(.75) contrast(1.3)', 2: 'blur(2.4px) saturate(.45) contrast(1.15)', 3: 'blur(1.6px) saturate(.65)', 4: 'blur(1px) saturate(.85)', 6: 'blur(.5px)' }[m] || 'none';
+      var F = { 0: 'blur(4px) grayscale(.9) contrast(1.3)', 1: 'blur(3.2px) grayscale(.75) contrast(1.3)', 2: 'blur(2.4px) saturate(.45) contrast(1.15)', 3: 'blur(1.6px) saturate(.65)', 4: 'blur(1px) saturate(.85)', 6: 'blur(.5px)' }[m] || 'none';
       var sk = blob('#f5c3a0', '#fde3cf', '#de9d79'), r = blob('#e98a6b', '#f6b49c', '#c96f52'), y = blob('#ffd98a', '#fff1c8', '#e3b259'), l = blob('#b9a6e6', '#ddd2f7', '#8f7bc4'), g = blob('#9cc7ae', '#cfe6d9', '#76a88b');
       var far = m === 6, fx = far ? 150 : 62, fy = far ? 62 : 74, fr = far ? 20 : 44, k = fr / 44;
       var face = '<circle cx="' + fx + '" cy="' + fy + '" r="' + fr + '" fill="' + sk.url + '"/><path d="M' + (fx - fr) + ' ' + (fy - 4 * k) + ' q' + fr + ' -' + (fr * 1.4) + ' ' + (2 * fr) + ' 0" fill="#6b4a3a"/>' +
@@ -227,8 +227,8 @@
       var toys = far ? '<circle cx="48" cy="140" r="24" fill="' + r.url + '"/><rect x="82" y="124" width="36" height="36" rx="8" fill="' + y.url + '"/><ellipse cx="160" cy="150" rx="26" ry="10" fill="' + l.url + '"/><ellipse cx="160" cy="138" rx="19" ry="8" fill="' + g.url + '"/>'
         : '<circle cx="146" cy="60" r="20" fill="' + r.url + '"/><rect x="128" y="104" width="34" height="34" rx="8" fill="' + y.url + '"/><ellipse cx="80" cy="156" rx="26" ry="10" fill="' + l.url + '"/><ellipse cx="80" cy="144" rx="19" ry="8" fill="' + g.url + '"/>';
       var scene = function () { return svg('0 0 200 180', sk.def + r.def + y.def + l.def + g.def, '<rect width="200" height="180" fill="#fdf6ec"/>' + (far ? '<rect y="96" width="200" height="84" fill="#efe4d6"/>' : '') + face + toys, 'st-obj'); };
-      return '<div class="st-vis st-eyes"><figure><span class="st-eyepic">' + scene() + '</span><figcaption>What you see</figcaption></figure>' +
-        '<figure class="st-eyehers"><span class="st-eyepic" style="--f:' + F + '">' + scene() + '</span><figcaption>What ' + E(nm()) + ' sees</figcaption></figure></div>';
+      // One picture only: it starts sharp, then softens to how she sees it, so the eye has one place to look.
+      return '<div class="st-vis st-eyes st-eyes1"><figure class="st-eyehers"><span class="st-eyepic" style="--f:' + F + '">' + scene() + '</span><figcaption>What ' + E(nm()) + ' sees</figcaption></figure></div>';
     },
     cruise: function () { var t = ''; for (var i = 0; i < 4; i++) t += '<i style="--i:' + i + '"></i>'; return '<div class="st-vis st-cruise"><span class="st-sofa"><b></b></span>' + t + '</div>'; },
     name: function () { return '<div class="st-vis st-namewrap"><span class="st-callout">' + E(nm()) + '!</span><i class="st-ring" style="--i:0"></i><i class="st-ring" style="--i:1"></i><i class="st-ring" style="--i:2"></i></div>'; },
@@ -289,11 +289,12 @@
   var STORIES = {
     0: { cover: ['Welcome to the world.', 'Everything is new, for both of you.'], screens: [
           { t: 'topic', c: 'butter', kicker: 'She already knows you', title: 'She knows your voice.', body: 'She heard it for months before she was born, so it’s the sound that settles her most.', vis: ['talk', ['hi', '…', 'shh', '…']] },
+          { t: 'topic', c: 'sage', kicker: 'Why she stares at you', title: 'She sees you best up close.', body: 'About 8 to 12 inches away, the distance to your face during a feed. Farther than that is still a blur.', vis: ['eyes', 0] },
           { t: 'beat', c: 'lav', words: ['Feed.', 'Sleep.', 'Repeat.'], line: 'Most newborns feed 8 to 12 times a day and sleep in short stretches, day and night.', vis: ['cloud', ['feed', 'burp', 'sleep', 'again']] },
           { t: 'topic', c: 'peach', kicker: 'That tiny grip', title: 'She’ll hold on tight.', body: 'Put a finger in her palm and she’ll grab it. It’s a reflex for now, and it fades over the next few months.', vis: ['fist'] }],
         sum: ['Knows your voice', 'Feeds around the clock', 'Holds on tight'] },
     1: { cover: ['She’s tuning in to you.', 'Your face and voice are her favorite things now.'], screens: [
-          { t: 'topic', c: 'butter', kicker: 'Why she stares at you', title: 'She sees you best up close.', body: 'About 8 to 12 inches away, the distance to your face during a feed. Farther than that is still a blur.', vis: ['eyes', 1] },
+          { t: 'topic', c: 'butter', kicker: 'Through her eyes', title: 'Bold things stand out.', body: 'Faces and strong black-and-white patterns catch her eye first. Soft colors are still hard to tell apart.', vis: ['eyes', 1] },
           { t: 'topic', c: 'night', kicker: 'The hard part', title: 'Crying peaks around 6 weeks.', body: 'Then it usually eases by 3 to 4 months. It’s a phase, not something you’re doing wrong.', vis: ['peak'] },
           { t: 'reveal', c: 'lav', setup: 'Sometime in the next few weeks, she’ll give you…', payoff: 'Her first real smile!', lead: 'Not just gas this time. A smile meant for you.', vis: ['smile'] }],
         sum: ['Sees you best up close', 'Crying peaks, then eases', 'First smiles coming'] },
