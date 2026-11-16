@@ -1021,3 +1021,27 @@
 #main .tl-today>span{display:inline-block;padding:3px 10px;border-radius:999px;background:#2B2840;color:#fff;font-size:12px;font-weight:600}
 #main .tl-goal{display:flex;align-items:center;padding:8px 2px}
 #main .tl-goal .tl-t b{font-size:17px}
+
+/* Nov 16 · Tracker delight: a month headline, Maya riding the bar to the cake, the bar fills on open, Home's month colors */
+#main .tl-status{margin:4px 0 6px;font-size:17px;font-weight:600;color:var(--m-ink,#2B2840)}
+#main .tl-prog{margin:4px 0 24px}
+#main .tl-ride{position:relative;height:74px}
+#main .tl-baby{position:absolute;bottom:-6px;left:min(var(--tlp),calc(100% - 32px));width:64px;height:70px;margin-left:-32px;animation:tlRide .9s cubic-bezier(.3,.7,.3,1) both}
+#main .tl-baby .ms-l{position:static!important;display:block;width:100%!important;height:100%!important;transform:none!important}
+#main .tl-baby svg,#main .tl-baby img{width:100%;height:100%;object-fit:contain}
+#main .tl-flag{position:absolute;right:-6px;bottom:-4px;width:48px;height:48px}
+#main .tl-flag .st-vis{width:100%!important;margin:0!important;opacity:1!important}
+#main .tl-flag *{animation:none!important}
+#main .tl-flag svg{width:100%;height:auto;display:block}
+#main .tl-track .tl-bar{height:10px;border-radius:5px;background:var(--m-bg1,#ebe5dc);box-shadow:inset 0 0 0 1px var(--m-line,transparent)}
+#main .tl-track .tl-bar i{width:var(--tlp);background:var(--m-ink,#2B2840);animation:tlFill .9s cubic-bezier(.3,.7,.3,1) both}
+#main .tl-track .tl-ends{font-size:13px}
+#main .tl-track .tl-ends span:first-child{font-weight:600;color:#2B2840}
+@keyframes tlFill{from{width:0}}
+@keyframes tlRide{from{left:0}}
+#main .tl-track .tl-steps>li.is-done::before,#main .tl-track .tl-steps>li.is-now::before,#main .tl-track .tl-steps>li.tl-past::before{background:var(--m-ink,#2B2840)}
+#main .tl-track .tl-steps>li.tl-today::before{background:linear-gradient(var(--m-ink,#2B2840) 50%,#e3ddd3 50%)}
+#main .tl-track .is-done>.tl-dot,#main .tl-track .tl-past>.tl-dot,#main .tl-track .tl-today>.tl-dot,#main .tl-track .tl-today>span{background:var(--m-ink,#2B2840);border-color:var(--m-ink,#2B2840)}
+#main .tl-track .is-now>.tl-dot{border-color:var(--m-ink,#2B2840)}
+#main .tl-track .tl-t small{color:var(--m-ink,#8a5a2b)}
+@media (prefers-reduced-motion:reduce){#main .tl-baby,#main .tl-track .tl-bar i{animation:none}}

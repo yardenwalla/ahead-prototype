@@ -194,8 +194,11 @@
     const past = all.filter(s => st(s) === 'done'), rest = all.filter(s => st(s) !== 'done');
     const step = s => { const k = st(s); return `<li class="tl-step is-${k}"><i class="tl-dot">${k === 'done' ? '✓' : ''}</i><button onclick="${go(s)}"><span class="tl-t"><b>${F(title(s))}</b>${k === 'now' ? `<small>${F('Happening now')}</small>` : ''}</span><span class="tl-w">${F(when(s))}</span></button></li>`; };
     const pct = Math.max(0, Math.min(100, a / 12 * 100));
-    let h = `<div class="ya-page tl-track">${tlSwitch(m)}<h1 class="yt-h1">${F(`${nm}’s first year`)}</h1>`;
-    h += `<div class="tl-prog" aria-label="${F(`${Math.floor(a)} of 12 months`)}"><div class="tl-bar"><i style="width:${pct}%"></i></div><div class="tl-ends"><span>${F('Birth')}</span><b>${F(`${nm} is ${typeof babyAge === 'function' ? babyAge() : ''}`)}</b><span>${F('1 year')}</span></div></div>`;
+    const mo = Math.max(0, Math.min(11, Math.floor(a))), cov = typeof window.stCover === 'function' ? window.stCover(mo) : null;
+    const left = Math.max(0, 12 - a), eta = left < 0.5 ? 'any day now' : left < 1.5 ? 'in about a month' : `in about ${Math.round(left)} months`;
+    let h = `<div class="ya-page tl-track" style="${typeof window.monthTheme === 'function' ? window.monthTheme(mo) : ''};--tlp:${pct}%">${tlSwitch(m)}<h1 class="yt-h1">${F(`${nm}’s first year`)}</h1>`;
+    if (cov) h += `<p class="tl-status">${F(cov.title)}</p>`;
+    h += `<div class="tl-prog" aria-label="${F(`${nm} is ${typeof babyAge === 'function' ? babyAge() : ''}. First birthday ${eta}.`)}"><div class="tl-ride"><span class="tl-baby" aria-hidden="true">${typeof window.stCardArt === 'function' ? window.stCardArt(mo) : ''}</span>${a < 10.5 ? `<span class="tl-flag" aria-hidden="true">${window.stToy('cake')}</span>` : ''}</div><div class="tl-bar"><i></i></div><div class="tl-ends"><span>${F(`${nm} is ${typeof babyAge === 'function' ? babyAge() : ''}`)}</span><span>${F(`First birthday · ${eta}`)}</span></div></div>`;
     h += `<ol class="tl-steps${past.length ? ' has-past' : ''}">`;
     if (past.length) h += `<li class="tl-past"><i class="tl-dot">✓</i><button onclick="this.closest('ol').classList.toggle('show-past');this.querySelector('span').textContent=this.closest('ol').classList.contains('show-past')?'Hide':'Show'">${F(`${past.length} done`)}<span>${F('Show')}</span></button></li>` + past.map(step).join('').replace(/tl-step is-done/g, 'tl-step is-done tl-old');
     let today = false;
