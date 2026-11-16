@@ -129,7 +129,8 @@
     const bday = g => !!(profile.early && profile.due) && typeof hubAgeFor === 'function' && hubAgeFor(g, actualMonth()) === actualMonth() && hubAgeFor('care', actualMonth()) !== actualMonth();
     const gap = profile.early && profile.due ? Math.max(0, (parse(profile.due) - parse(profile.dob)) / MONTH) : 0;
     const shiftFor = cat => (cat === 'Development' && bday('dev')) || (cat === 'Safety' && bday('safety')) ? gap : 0;
-    const CC = C.map(c => shiftFor(c.cat) ? Object.assign({}, c, { start: c.start - shiftFor(c.cat), end: c.end - shiftFor(c.cat) }) : c);
+    // Timeline keeps big moments and changes to prepare for; feeding steps (readiness, textures, meals) live in Feeding.
+    const CC = C.filter(c => !['ready', 'finger', 'meals'].includes(c.id)).map(c => shiftFor(c.cat) ? Object.assign({}, c, { start: c.start - shiftFor(c.cat), end: c.end - shiftFor(c.cat) }) : c);
     const attended = v => { try { const r = healthRecord(v); return r && r.status === 'attended'; } catch (e) { return false; } };
     const nextId = (CC.filter(c => !(c.end <= a || done[c.id])).sort((x, y) => x.start - y.start || x.end - y.end)[0] || {}).id;
     const here = Math.max(0, ROAD.findIndex(r => a >= r[0] && a < r[1]));
@@ -154,18 +155,38 @@
       const SH = { crying: 'crying peak', smile: 'first smiles', nights: 'longer nights', regress: 'sleep regression', roll: 'rolling', ready: 'solids prep', solids: 'first foods', twonaps: 'two naps', crawl: 'crawling', sit: 'sitting up', tooth: 'first tooth', finger: 'textures', meals: 'three meals', carseat: 'car seat', sep: 'separation', pull: 'pulling up', words: 'first words', milk: 'whole milk', steps: 'first steps' };
       const ahead = its.filter(s => !passed(s)), nameOf = s => s.v != null ? `${s.v}-month checkup` : SH[s.c.id] || s.c.title;
       const preview = to <= a ? F(`All behind ${'{o}'} ✓`) : ahead.length ? F(`${ahead.length} ahead · ${ahead.slice(0, 3).map(nameOf).join(', ')}${ahead.length > 3 ? '…' : ''}`) : '';
-      out += `<section class="yt-ch${i >= here ? ' is-open' : ''}${i === here ? ' is-here' : ''}${to <= a ? ' is-past' : ''}" style="--yt:${bg};--yti:${ink}">
-        <button class="yt-head" onclick="ytOpen(this.parentNode)" aria-expanded="${i >= here}"><i class="yt-dot yt-hdot"></i><span class="yt-hc"><small>${F(ages)} · ${mon(from)}–${mon(Math.min(to, 12) - 1)}</small><b>${F(title)}</b><span class="yt-prev">${preview}</span></span><span class="yt-toy" aria-hidden="true">${window.stToy(toy)}</span><i class="yt-caret" aria-hidden="true">›</i></button>
+      out += `<section class="yt-ch${i === here ? ' is-open' : ''}${i === here ? ' is-here' : ''}${to <= a ? ' is-past' : ''}" style="--yt:${bg};--yti:${ink}">
+        <button class="yt-head" onclick="ytOpen(this.parentNode)" aria-expanded="${i === here}"><i class="yt-dot yt-hdot"></i><span class="yt-hc"><small>${F(ages)} · ${mon(from)}–${mon(Math.min(to, 12) - 1)}</small><b>${F(title)}</b><span class="yt-prev">${preview}</span></span><span class="yt-toy" aria-hidden="true">${window.stToy(toy)}</span><i class="yt-caret" aria-hidden="true">›</i></button>
         <div class="yt-body"><ol class="yt-list">${body}</ol></div></section>`;
     });
-    return `<div class="ya-page yt-page"><h1 class="yt-h1">${F(`${nm}’s first year`)}</h1><p class="yt-lead">${F('The road to one.')}</p><div class="yt-map"><svg class="yt-trail" aria-hidden="true"><path class="t1"/><path class="t2"/></svg>${out}<div class="yt-end"><i class="yt-dot"></i><span class="yt-endc"><small>${F('The destination')} · ${mon(12)}</small><b>${F('One whole year!')}</b></span></div></div><p class="hub-foot">${F('Ages are typical. Every baby moves at their own pace.')}</p></div>` + (setTimeout(() => window.ytTrail && window.ytTrail(), 0), '');
+    return `<div class="ya-page yt-page"><h1 class="yt-h1">${F(`${nm}’s first year`)}</h1><p class="yt-lead">${F('The road to one.')}</p><div class="yt-map"><svg class="yt-trail" aria-hidden="true"><path class="t1"/><path class="t2"/></svg>${out}<div class="yt-end"><i class="yt-dot"></i><span class="yt-endc"><small>${F('The destination')} · ${mon(12)}</small><b>${F('One whole year!')}</b></span><span class="yt-endcake" aria-hidden="true">${window.stToy('cake')}</span></div></div><p class="hub-foot">${F('Ages are typical. Every baby moves at their own pace.')}</p></div>` + (setTimeout(() => window.ytTrail && window.ytTrail(), 0), '');
+  };
+  // Focus as you scroll: the chapter crossing the upper-middle of the screen is the open one; the rest are slim headers.
+  // While chapters grow and shrink, one header is held still so the page doesn't jump.
+  const scroller = el => { for (let p = el && el.parentElement; p; p = p.parentElement) { const o = getComputedStyle(p).overflowY; if ((o === 'auto' || o === 'scroll') && p.scrollHeight > p.clientHeight) return p; } return document.scrollingElement; };
+  let ytBusy = false;
+  const focusTo = (target, anchor) => {
+    const secs = [...document.querySelectorAll('#main .yt-ch')]; if (!target || target.classList.contains('is-open') && secs.filter(x => x.classList.contains('is-open')).length === 1) return;
+    const sc = scroller(target), y0 = anchor.getBoundingClientRect().top;
+    secs.forEach(x => { const on = x === target; x.classList.toggle('is-open', on); x.querySelector('.yt-head').setAttribute('aria-expanded', String(on)); });
+    ytBusy = true; const t0 = performance.now();
+    (function pin() { const d = anchor.getBoundingClientRect().top - y0; if (Math.abs(d) > .5) sc.scrollTop += d; window.ytTrail(); if (performance.now() - t0 < 560) requestAnimationFrame(pin); else ytBusy = false; })();
   };
   window.ytOpen = function (sec) {
-    // Each chapter folds on its own, so the whole year can stay open to scroll.
-    const open = !sec.classList.contains('is-open');
-    sec.classList.toggle('is-open', open); sec.querySelector('.yt-head').setAttribute('aria-expanded', String(open));
-    const t0 = performance.now(); (function tick() { window.ytTrail(); if (performance.now() - t0 < 520) requestAnimationFrame(tick); })();
+    if (sec.classList.contains('is-open')) { sec.classList.remove('is-open'); sec.querySelector('.yt-head').setAttribute('aria-expanded', 'false'); const t0 = performance.now(); (function t() { window.ytTrail(); if (performance.now() - t0 < 520) requestAnimationFrame(t); })(); return; }
+    focusTo(sec, sec.querySelector('.yt-head'));
   };
+  let ytLast = 0;
+  const ytScroll = () => {
+    if (ytBusy || !document.querySelector('#main .yt-map')) return;
+    const secs = [...document.querySelectorAll('#main .yt-ch')], line = innerHeight * 0.68;
+    const cur = secs.find(x => x.classList.contains('is-open')); if (!cur) return;
+    const i = secs.indexOf(cur), sc = scroller(cur), y = sc.scrollTop, down = y >= ytLast; ytLast = y;
+    const atEnd = sc.scrollTop + sc.clientHeight >= sc.scrollHeight - 6;
+    if (down && secs[i + 1] && (secs[i + 1].getBoundingClientRect().top < line || atEnd)) focusTo(secs[i + 1], secs[i + 1].querySelector('.yt-head'));
+    else if (!down && i > 0 && cur.getBoundingClientRect().top > innerHeight * 0.55) focusTo(secs[i - 1], cur.querySelector('.yt-head'));
+  };
+  document.addEventListener('scroll', ytScroll, { passive: true, capture: true });
   // A gentle winding trail on the left of each open chapter, through its stops.
   window.ytTrail = function () {
     const map = document.querySelector('#main .yt-map'); if (!map) return;

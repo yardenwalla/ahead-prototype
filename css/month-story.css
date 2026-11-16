@@ -860,3 +860,9 @@
 #main .yt-end{position:relative;display:flex;align-items:center;gap:12px;margin:10px 0 0;padding:0 14px}
 #main .yt-end .yt-endc{flex:1}
 #main .yt-hc small{white-space:nowrap}
+#main .yt-end{align-items:center}
+#main .yt-endc{position:relative;padding-right:96px!important}
+#main .yt-endcake{position:absolute;right:22px;bottom:2px;width:86px;z-index:5;pointer-events:none}
+#main .yt-endcake .st-vis{width:100%!important;margin:0!important;opacity:1!important}
+#main .yt-endcake *{animation:none!important;opacity:1!important}
+#main .yt-endcake .st-obj{width:100%;height:auto;display:block}
