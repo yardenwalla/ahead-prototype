@@ -155,38 +155,30 @@
       const SH = { crying: 'crying peak', smile: 'first smiles', nights: 'longer nights', regress: 'sleep regression', roll: 'rolling', ready: 'solids prep', solids: 'first foods', twonaps: 'two naps', crawl: 'crawling', sit: 'sitting up', tooth: 'first tooth', finger: 'textures', meals: 'three meals', carseat: 'car seat', sep: 'separation', pull: 'pulling up', words: 'first words', milk: 'whole milk', steps: 'first steps' };
       const ahead = its.filter(s => !passed(s)), nameOf = s => s.v != null ? `${s.v}-month checkup` : SH[s.c.id] || s.c.title;
       const preview = to <= a ? F(`All behind ${'{o}'} ✓`) : ahead.length ? F(`${ahead.length} ahead · ${ahead.slice(0, 3).map(nameOf).join(', ')}${ahead.length > 3 ? '…' : ''}`) : '';
-      out += `<section class="yt-ch${i === here ? ' is-open' : ''}${i === here ? ' is-here' : ''}${to <= a ? ' is-past' : ''}" style="--yt:${bg};--yti:${ink}">
-        <button class="yt-head" onclick="ytOpen(this.parentNode)" aria-expanded="${i === here}"><i class="yt-dot yt-hdot"></i><span class="yt-hc"><small>${F(ages)} · ${mon(from)}–${mon(Math.min(to, 12) - 1)}</small><b>${F(title)}</b><span class="yt-prev">${preview}</span></span><span class="yt-toy" aria-hidden="true">${window.stToy(toy)}</span><i class="yt-caret" aria-hidden="true">›</i></button>
+      out += `<section class="yt-ch${i >= here ? ' is-open' : ''}${i !== here ? ' is-dim' : ''}${i === here ? ' is-here' : ''}${to <= a ? ' is-past' : ''}" style="--yt:${bg};--yti:${ink}">
+        <button class="yt-head" onclick="ytOpen(this.parentNode)" aria-expanded="${i >= here}"><i class="yt-dot yt-hdot"></i><span class="yt-hc"><small>${F(ages)} · ${mon(from)}–${mon(Math.min(to, 12) - 1)}</small><b>${F(title)}</b><span class="yt-prev">${preview}</span></span><span class="yt-toy" aria-hidden="true">${window.stToy(toy)}</span><i class="yt-caret" aria-hidden="true">›</i></button>
         <div class="yt-body"><ol class="yt-list">${body}</ol></div></section>`;
     });
     return `<div class="ya-page yt-page"><h1 class="yt-h1">${F(`${nm}’s first year`)}</h1><p class="yt-lead">${F('The road to one.')}</p><div class="yt-map"><svg class="yt-trail" aria-hidden="true"><path class="t1"/><path class="t2"/></svg>${out}<div class="yt-end"><i class="yt-dot"></i><span class="yt-endc"><small>${F('The destination')} · ${mon(12)}</small><b>${F('One whole year!')}</b></span><span class="yt-endcake" aria-hidden="true">${window.stToy('cake')}</span></div></div><p class="hub-foot">${F('Ages are typical. Every baby moves at their own pace.')}</p></div>` + (setTimeout(() => window.ytTrail && window.ytTrail(), 0), '');
   };
-  // Focus as you scroll: the chapter crossing the upper-middle of the screen is the open one; the rest are slim headers.
-  // While chapters grow and shrink, one header is held still so the page doesn't jump.
-  const scroller = el => { for (let p = el && el.parentElement; p; p = p.parentElement) { const o = getComputedStyle(p).overflowY; if ((o === 'auto' || o === 'scroll') && p.scrollHeight > p.clientHeight) return p; } return document.scrollingElement; };
-  let ytBusy = false;
-  const focusTo = (target, anchor) => {
-    const secs = [...document.querySelectorAll('#main .yt-ch')]; if (!target || target.classList.contains('is-open') && secs.filter(x => x.classList.contains('is-open')).length === 1) return;
-    const sc = scroller(target), y0 = anchor.getBoundingClientRect().top;
-    secs.forEach(x => { const on = x === target; x.classList.toggle('is-open', on); x.querySelector('.yt-head').setAttribute('aria-expanded', String(on)); });
-    ytBusy = true; const t0 = performance.now();
-    (function pin() { const d = anchor.getBoundingClientRect().top - y0; if (Math.abs(d) > .5) sc.scrollTop += d; window.ytTrail(); if (performance.now() - t0 < 560) requestAnimationFrame(pin); else ytBusy = false; })();
-  };
+  // Focus as you scroll, without moving anything: every chapter ahead stays open, and the one in the middle of the
+  // screen is in focus while the others soften back. Nothing opens or closes under the finger, so momentum scrolling
+  // on a phone never fights the page. Tapping a header still folds or opens it.
   window.ytOpen = function (sec) {
-    if (sec.classList.contains('is-open')) { sec.classList.remove('is-open'); sec.querySelector('.yt-head').setAttribute('aria-expanded', 'false'); const t0 = performance.now(); (function t() { window.ytTrail(); if (performance.now() - t0 < 520) requestAnimationFrame(t); })(); return; }
-    focusTo(sec, sec.querySelector('.yt-head'));
+    const open = !sec.classList.contains('is-open');
+    sec.classList.toggle('is-open', open); sec.querySelector('.yt-head').setAttribute('aria-expanded', String(open));
+    const t0 = performance.now(); (function t() { window.ytTrail(); if (performance.now() - t0 < 520) requestAnimationFrame(t); })();
   };
-  let ytLast = 0;
-  const ytScroll = () => {
-    if (ytBusy || !document.querySelector('#main .yt-map')) return;
-    const secs = [...document.querySelectorAll('#main .yt-ch')], line = innerHeight * 0.68;
-    const cur = secs.find(x => x.classList.contains('is-open')); if (!cur) return;
-    const i = secs.indexOf(cur), sc = scroller(cur), y = sc.scrollTop, down = y >= ytLast; ytLast = y;
-    const atEnd = sc.scrollTop + sc.clientHeight >= sc.scrollHeight - 6;
-    if (down && secs[i + 1] && (secs[i + 1].getBoundingClientRect().top < line || atEnd)) focusTo(secs[i + 1], secs[i + 1].querySelector('.yt-head'));
-    else if (!down && i > 0 && cur.getBoundingClientRect().top > innerHeight * 0.55) focusTo(secs[i - 1], cur.querySelector('.yt-head'));
+  let ytRaf = 0;
+  const ytFocus = () => {
+    ytRaf = 0; const secs = [...document.querySelectorAll('#main .yt-ch')]; if (!secs.length) return;
+    const line = innerHeight * 0.45;
+    let f = secs.find(x => { const r = x.getBoundingClientRect(); return r.top <= line && r.bottom >= line; });
+    if (!f) f = secs.reduce((best, x) => { const r = x.getBoundingClientRect(), d = Math.min(Math.abs(r.top - line), Math.abs(r.bottom - line)); return !best || d < best[0] ? [d, x] : best; }, null)[1];
+    secs.forEach(x => x.classList.toggle('is-dim', x !== f));
   };
-  document.addEventListener('scroll', ytScroll, { passive: true, capture: true });
+  document.addEventListener('scroll', () => { if (!ytRaf) ytRaf = requestAnimationFrame(ytFocus); }, { passive: true, capture: true });
+  window.ytFocus = ytFocus;
   // A gentle winding trail on the left of each open chapter, through its stops.
   window.ytTrail = function () {
     const map = document.querySelector('#main .yt-map'); if (!map) return;

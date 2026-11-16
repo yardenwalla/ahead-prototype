@@ -866,3 +866,6 @@
 #main .yt-endcake .st-vis{width:100%!important;margin:0!important;opacity:1!important}
 #main .yt-endcake *{animation:none!important;opacity:1!important}
 #main .yt-endcake .st-obj{width:100%;height:auto;display:block}
+/* Timeline focus: the chapter in view is crisp, the rest soften (no layout change) */
+#main .yt-ch{transition:opacity .35s ease,transform .35s ease,filter .35s ease;transform-origin:50% 50%}
+#main .yt-ch.is-dim{opacity:.5;transform:scale(.975);filter:saturate(.7)}
