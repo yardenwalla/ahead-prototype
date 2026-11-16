@@ -909,3 +909,11 @@
 #main .yt-road.is-fold .yt-head{margin-bottom:22px}
 #main .yt-road.is-fold .yt-prev{margin-top:6px;font-size:13px}
 #main .yt-road .yt-hdot{margin-left:-7px!important}
+/* Open chapters: the header shrinks to a quiet label on the road, so the items read straight through.
+   Only folded chapters are cards. */
+#main .yt-road:not(.is-fold) .yt-head{margin:14px 0 4px!important;padding:6px 6px 6px 14px!important;background:none!important;box-shadow:none!important;min-height:0!important}
+#main .yt-road:not(.is-fold) .yt-hc{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+#main .yt-road:not(.is-fold) .yt-hc small{font-size:11px!important}
+#main .yt-road:not(.is-fold) .yt-hc b{font-size:14px!important;font-weight:800;color:#4a4658;margin:0!important}
+#main .yt-road:not(.is-fold) .yt-toy{display:none!important}
+#main .yt-road:not(.is-fold) .yt-caret{font-size:16px}
