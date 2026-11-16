@@ -869,3 +869,18 @@
 /* Timeline focus: the chapter in view is crisp, the rest soften (no layout change) */
 #main .yt-ch{transition:opacity .35s ease,transform .35s ease,filter .35s ease;transform-origin:50% 50%}
 #main .yt-ch.is-dim{opacity:.5;transform:scale(.975);filter:saturate(.7)}
+/* Timeline as one road: chapters blend into each other, headers are signposts */
+#main .yt-ch.yt-road{margin:0 -20px!important;padding:0 20px;border-radius:0!important;opacity:1!important;transform:none!important;filter:none!important;
+  background:linear-gradient(180deg,color-mix(in srgb,var(--ytp) 50%,var(--yt)) 0,var(--yt) 90px,var(--yt) calc(100% - 90px),color-mix(in srgb,var(--ytn) 50%,var(--yt)) 100%)}
+#main .yt-ch.yt-road:first-child{border-radius:28px 28px 0 0!important;background:linear-gradient(180deg,var(--yt) 0,var(--yt) calc(100% - 90px),color-mix(in srgb,var(--ytn) 50%,var(--yt)) 100%)}
+#main .yt-ch.yt-road:nth-last-child(2){border-radius:0 0 28px 28px!important;padding-bottom:16px}
+#main .yt-road .yt-head{cursor:default;min-height:0!important;padding:22px 6px 10px 14px!important}
+#main .yt-road .yt-caret,#main .yt-road .yt-prev{display:none!important}
+#main .yt-road .yt-hc small{font-size:11px}
+#main .yt-road .yt-hc b{font-size:17px}
+#main .yt-road .yt-toy{display:block!important;width:56px!important;height:56px!important}
+#main .yt-road.is-past .yt-hc b,#main .yt-road.is-past .yt-hc small{color:inherit}
+#main .yt-road .yt-list{padding-bottom:6px!important}
+#main .yt-map .yt-list > li,#main .yt-map .yt-head,#main .yt-map .yt-end{transition:opacity .18s linear}
+#main .yt-end{margin-top:18px!important}
+#main .yt-page{padding-bottom:40vh}
