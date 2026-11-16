@@ -145,11 +145,28 @@
   // On a month birthday: one slim line to add the month's photo, nothing more.
   // On a month birthday: one slim card in the Memories style, the month's balloon photo and a handwritten line.
   function banner(main) {
-    const b = main.querySelector('.hub-bday'); if (!b) return '';
+    const b = main.querySelector('.hub-bday');
+    // The newborn weeks have no month birthday yet: offer the newborn photo until it's added (or the banner is tapped).
+    if (!b) {
+      if (homeMonth() !== 0 || (typeof hubPhotoFor === 'function' && hubPhotoFor(0))) return '';
+      try { if (localStorage.getItem('ahead-photo-banner-0')) return ''; } catch (e) {}
+      // The "Hello, World!" foil balloon from the newborn page in Memories (there's no number balloon for the newborn weeks).
+      const cam = `<img class="hg-banner-img hg-banner-hello" src="assets/home/hello-world.png?v=7" alt="">`;
+      const bn0 = `linear-gradient(100deg,${mix('#f2a98a', .84)} 0%,#fffaf6 80%)`;
+      return `<label class="hg-banner" style="--bn:${bn0}" role="button" onclick="try{localStorage.setItem('ahead-photo-banner-0','1')}catch(e){};setTimeout(()=>{const b=document.querySelector('#main .hg-banner');b&&b.remove()},400)">${cam}<span class="hg-banner-copy"><b>${F(`${name()}’s newborn photo`)}</b><small>${F('Snap one for Memories.')}</small></span><span class="hg-banner-plus" aria-hidden="true">＋</span>${typeof hubPhotoInput === 'function' ? hubPhotoInput(0) : ''}</label>`;
+    }
     const photo = b.querySelector('.hub-bday-photo'); if (!photo || photo.querySelector('img')) return '';   // photo already added
     const m = +((b.querySelector('.hub-bday-num') || {}).textContent || 0); if (!m || m > 11) return '';
     const input = photo.querySelector('input'); const words = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven'];
-    return `<label class="hg-banner" role="button"><img class="hg-banner-img" src="assets/home/balloon-${m}.png" alt=""><span class="hg-banner-copy"><b>${F(`${name()} is ${words[m]} month${m === 1 ? '' : 's'}`)}</b><small>${F(`Add {p} ${m}-month photo to Memories`)}</small></span><span class="hg-banner-plus" aria-hidden="true">＋</span>${input ? input.outerHTML : ''}</label>`;
+    // Tapped once (photo added or not), it's done for this month: the story card already says which month it is.
+    const key = 'ahead-photo-banner-' + m;
+    try { if (localStorage.getItem(key)) return ''; } catch (e) {}
+    // Two colors: a soft tint of the balloon's own color, fading into a contrasting soft color, so it belongs to the
+    // month but never reads as the story card below it.
+    // The balloon photos' own colors (sampled from assets/home/balloon-N.png), so the tint matches the balloon it sits behind.
+    const BLN = ['#f2a98a', '#24ace4', '#6793d1', '#3da582', '#48a084', '#199fe4', '#eca842', '#f09266', '#ec6f8b', '#f1705b', '#bd6cd7', '#6c77e5'];
+    const bn = `linear-gradient(100deg,${mix(BLN[m], .84)} 0%,#fffaf6 80%)`;  // one warm white every month; the balloon tint is the only thing that changes
+    return `<label class="hg-banner" style="--bn:${bn}" role="button" onclick="try{localStorage.setItem('${key}','1')}catch(e){};setTimeout(()=>{const b=document.querySelector('#main .hg-banner');b&&b.remove()},400)"><img class="hg-banner-img" src="assets/home/balloon-${m}.png" alt=""><span class="hg-banner-copy"><b>${F(`${name()}’s ${m}-month photo`)}</b><small>${F('Snap one today for Memories.')}</small></span><span class="hg-banner-plus" aria-hidden="true">＋</span>${input ? input.outerHTML : ''}</label>`;
   }
 
   // Home as "Through her eyes" + "You might notice…" (Nov 9 mock, 3 months written).
@@ -159,70 +176,48 @@
   // an eyes headline of 7 words or fewer and an eyes line of 12–19 words (checked in tools/qa/home-value.cjs).
   const MONTHS = {
     0: { eyes: ['She sees you best up close', 'She focuses best about 8–12 inches away, just about the distance to your face during a feed.'],
-      notice: [['She sleeps in short bursts', 'Newborns sleep most of the day, but only 2–4 hours at a time.', 'Sleep', 'crib', 'chg:Sleep:d:stretch'],
-        ['She wants to feed constantly', 'Eight to twelve feeds a day is normal. Long evening feeds are too.', 'Feeding', 'bottle', 'chg:Feeding:d:enough',
-          ['She wants to feed often', 'Six to ten bottles a day is normal, and hungrier days come and go.']],
-        ['She startles and hiccups a lot', 'Startles, hiccups and sneezes are all normal in the first weeks.', 'Development', 'hand', ''],
+      notice: [
+        ['She wants to feed constantly', 'Eight to twelve feeds a day is typical, and long evening feeds are too.', 'Feeding', 'bottle', 'chg:Feeding:d:enough',
+          ['She wants to feed often', 'Six to ten bottles a day is typical, and hungrier days come and go.']],
         ['Her poop keeps changing color', 'Black and sticky at first, then yellow and seedy by the end of week one.', 'Daily rhythm', 'diaper', 'chg:Daily rhythm:d:look:0:poop', ['Her poop keeps changing color', 'Black and sticky at first, then tan to yellow by the end of week one.']]] },
+    // Months 1–11: the month card opens her month story, so these rows are the everyday things the story doesn't
+    // cover, plus one line on how she sees now (vision isn't in the stories). Nothing here repeats a story screen.
     1: { eyes: ['Faces are her favorite thing', 'She can follow your face for a few seconds as you move, and she studies it closely.'],
-      notice: [['She cries more in the evenings', 'Crying often peaks around 6–8 weeks and eases by 3–4 months.', 'Sleep', 'sunrise', 'chg:Sleep:d:crying'],
-        ['She fusses after an hour awake', 'Many babies this age can only manage about an hour awake.', 'Sleep', 'clock', 'chg:Sleep:d:cues'],
-        ['She suddenly wants to feed nonstop', 'Growth spurts around 3 and 6 weeks usually last a few days.', 'Feeding', 'bottle', 'chg:Feeding:d:enough'],
-        ['She’s pooping less often', 'After 6 weeks, breastfed babies can go a few days between poops.', 'Daily rhythm', 'diaper', 'chg:Daily rhythm:d:look:2:poop',
-          ['She’s pooping less often', 'Fewer poops is normal now. On formula, most babies still go most days.']]] },
+      notice: [['She suddenly wants to feed nonstop', 'Growth spurts around 3 and 6 weeks usually last a few days.', 'Feeding', 'bottle', 'chg:Feeding:d:enough'],
+        ['She grunts and squirms asleep', 'Newborn sleep is noisy and light. She isn’t always waking up.', 'Sleep', 'moon', 'chg:Sleep:d:stretch']] },
     2: { eyes: ['Colors are coming into focus', 'She’s starting to see colors more clearly. Her eyes may cross now and then until about 4 months.'],
-      notice: [['She stares at her hands', 'She’s discovering that those hands belong to her, and she can move them.', 'Development', 'hand', ''],
-        ['She coos when you talk', 'It’s her first conversation. She takes turns, cooing when you pause.', 'Development', 'chat', 'development-domain:2:Talking'],
-        ['She spits up a lot', 'It’s common. It peaks around 4 months and is usually gone by age 1.', 'Feeding', 'drop', 'chg:Feeding:mock:spit'],
-        ['She sleeps longer at night', 'One longer stretch often shows up around now, on her own timeline.', 'Sleep', 'moon', 'chg:Sleep:d:stretch']] },
+      notice: [['She spits up a lot', 'It’s common. It peaks around 4 months and is usually gone by age 1.', 'Feeding', 'drop', 'chg:Feeding:mock:spit'],
+        ['Busy places wear her out', 'Noise and new faces can be a lot. Looking away means she needs a break.', 'Development', 'ear', '']] },
     3: { eyes: ['Moving things are fascinating', 'She can follow a toy smoothly from side to side now, so slow, sweeping games are a hit.'],
-      notice: [['She’s drooling a lot', 'Drool picks up now. It’s normal, and usually not a sign of teething yet.', 'Daily rhythm', 'drops', 'chg:Daily rhythm:d:gums'],
-        ['She keeps pulling off mid-feed', 'There’s so much to look at now. Distracted feeding is common.', 'Feeding', 'eye', 'chg:Feeding:mock:distract'],
-        ['She sucks on her hands', 'It’s one of her first ways to calm herself, not always hunger.', 'Development', 'mouth', ''],
-        ['She laughs out loud', 'It often starts around 3–4 months: her first way to share a joke.', 'Development', 'smile', '']] },
+      notice: [['She’s drooling a lot', 'Drool picks up now, and it usually isn’t teething yet.', 'Daily rhythm', 'drop', 'chg:Daily rhythm:d:gums'],
+        ['She sucks on her hands', 'It’s one of her first ways to calm herself, not always hunger.', 'Development', 'mouth', '']] },
     4: { eyes: ['Her eyes work as a team now', 'Both eyes now move together, so she sees depth and can judge how far away a toy is.'],
-      notice: [['She’s waking more at night', 'Her sleep cycles are maturing, so she may wake more for a few weeks.', 'Sleep', 'moon', 'chg:Sleep:d:regress'],
-        ['Her naps are short', 'Short naps, even 30 minutes, are normal now. Longer ones come later.', 'Sleep', 'clock', 'chg:Sleep:d:predictable'],
-        ['She squeals and blows raspberries', 'She’s practicing the mouth moves she’ll need to talk.', 'Development', 'music', ''],
+      notice: [['Her naps are short', 'Naps of about 30 minutes are common now. Longer ones come later.', 'Sleep', 'clock', 'chg:Sleep:d:predictable'],
         ['She grabs your hair and glasses', 'Reaching is brand new. She grabs whatever is close, not on purpose.', 'Development', 'hand', '']] },
     5: { eyes: ['The world is within reach', 'She’s getting better at judging distance, so her reaching suddenly looks much more intentional.'],
-      notice: [['Everything goes in her mouth', 'Mouthing is how she learns what things feel like, taste like and do.', 'Development', 'mouth', ''],
-        ['She’s fussy after two hours awake', 'Many babies this age manage about two hours awake before the next nap.', 'Sleep', 'clock', 'chg:Sleep:d:day:2'],
-        ['She grabs her feet', 'Feet are her newest toy. She’s learning where her body ends.', 'Development', 'back', ''],
-        ['She shrieks just for fun', 'She’s finding out how loud she can be. It’s play, not upset.', 'Development', 'ear', '']] },
+      notice: [['She’s fussy after two hours awake', 'Many babies this age manage about two hours awake before the next nap.', 'Sleep', 'clock', 'chg:Sleep:d:day:2'],
+        ['Everything goes in her mouth', 'Mouthing is how she learns what things feel like, taste like and do.', 'Development', 'mouth', '']] },
     6: { eyes: ['She can spot you across the room', 'Her distance vision has sharpened, so she may light up before you even get close.'],
-      notice: [['First bites are mostly practice', 'When solids start, milk stays her main food for months.', 'Feeding', 'bowl', 'chg:Feeding:d:food'],
-        ['Her poop will change with solids', 'Once she eats food, it gets firmer, smellier, and sometimes colorful.', 'Daily rhythm', 'diaper', 'chg:Daily rhythm:d:look:3:poop'],
-        ['She babbles “ba-ba-ba”', 'It’s practice for words, one sound at a time.', 'Development', 'chat', ''],
-        ['She’s shy with new people', 'It’s a sign she knows who her people are.', 'Development', 'peek', '']] },
-    7: { eyes: ['She loves the baby in the mirror', 'She doesn’t know it’s her yet. Recognizing herself usually comes after her first birthday.'],
-      notice: [['She fights the late nap', 'She can stay up longer now, so the last nap pushes into bedtime.', 'Sleep', 'sun', 'chg:Sleep:d:catnap'],
-        ['She rocks on hands and knees', 'She’s getting arms and legs to work together. Some babies skip crawling.', 'Development', 'crawl', ''],
-        ['She bangs and drops everything', 'She’s learning cause and effect. Expect lots of repeats.', 'Development', 'blocks', ''],
-        ['She wants to do it herself', 'The spoon, the cup, your hands: she’s practicing doing it her way.', 'Development', 'hand', '']] },
-    8: { eyes: ['Peekaboo just got exciting', 'She now knows things still exist when she can’t see them, so hiding and finding is a thrill.'],
-      notice: [['She cries when you leave', 'That’s separation anxiety. It shows how attached she is, and it eases.', 'Development', 'wave', ''],
-        ['She’s waking at night again', 'New skills like crawling often bring night waking back for a while.', 'Sleep', 'moon', 'chg:Sleep:d:nightwake'],
-        ['She bounces to music', 'She feels the beat long before she can dance, and loves to move to it.', 'Development', 'music', ''],
-        ['She says “dadada”', 'It’s practice with sounds, and usually doesn’t mean “dad” yet.', 'Development', 'chat', 'development-domain:9:Talking']] },
+      notice: [['Her poop will change with solids', 'Once she eats food, it gets firmer, smellier, and sometimes colorful.', 'Daily rhythm', 'diaper', 'chg:Daily rhythm:d:look:3:poop'],
+        ['She gags on new textures', 'Gagging is loud, and it’s how she learns to move food around.', 'Feeding', 'swallow', 'chg:Feeding:d:lumpy']] },
+    7: { eyes: ['Her vision is close to yours', 'She sees nearly as well as you do now, just a little softer at a distance.'],
+      notice: [['She chews on everything hard', 'Pressure soothes sore gums. A cold teether helps more than gels.', 'Daily rhythm', 'tooth', 'chg:Daily rhythm:d:p:teething'],
+        ['There’s food in her poop', 'Some foods pass through partly whole while her gut gets used to them.', 'Daily rhythm', 'diaper', 'chg:Daily rhythm:d:look:3:poop']] },
+    8: { eyes: ['She sees nearly what you see', 'Her eyesight is close to an adult’s now, and she uses it to keep track of you.'],
+      notice: [['She’s waking at night again', 'New skills like crawling often bring night waking back for a while.', 'Sleep', 'moon', 'chg:Sleep:d:nightwake'],
+        ['She scoots backwards first', 'Lots of babies go backwards before forwards.', 'Development', 'crawl', '']] },
     9: { eyes: ['She follows where you look', 'She’s starting to follow your gaze and gestures, so naming what you’re both looking at lands now.'],
-      notice: [['She’s fascinated by crumbs', 'She’s learning to pinch tiny things between thumb and finger.', 'Development', 'pieces', ''],
-        ['She looks at you, then a toy', 'She’s sharing her attention with you. Pointing grows out of this.', 'Development', 'eye', ''],
-        ['She lifts her arms to you', 'She’s asking to be picked up, with her body before her words.', 'Development', 'heart', ''],
-        ['She turns down new foods', 'Normal. Many babies need 10–15 tries before they like a food.', 'Feeding', 'plate', 'chg:Feeding:mock:picky']] },
-    10: { eyes: ['Words are starting to mean things', 'She’s learning that the sounds you make stand for things, like her name, “bath” and “milk”.'],
+      notice: [['She turns down new foods', 'Many babies need 10–15 tries before they like a food.', 'Feeding', 'plate', 'chg:Feeding:mock:picky'],
+        ['She cries when you leave at bedtime', 'She notices you go now. The same short goodbye each night helps.', 'Sleep', 'moon', 'chg:Sleep:d:goodbye']] },
+    10: { eyes: ['She spots tiny details', 'Her eyesight is sharp now, so she notices a crumb on the rug from across the room.'],
       notice: [['She can’t get down in the crib', 'She can pull up, but sitting back down is a skill she hasn’t got yet.', 'Sleep', 'crib', 'chg:Sleep:d:nightwake'],
-        ['She cruises along the sofa', 'Stepping sideways while holding on builds balance for walking.', 'Development', 'sofa', ''],
-        ['She copies your sounds and faces', 'Imitation is how she learns, so she watches your mouth closely.', 'Development', 'mirror', ''],
         ['She throws her food', 'It’s often how she tells you she’s full, before she has words.', 'Feeding', 'toss', '']] },
     11: { eyes: ['She knows faces in photos', 'She may recognize people she knows in pictures now, so family photos make great first books.'],
-      notice: [['She pauses when you say “no”', 'She’s starting to understand it, but stopping herself is still hard.', 'Development', 'idea', ''],
-        ['She’s starting to wave', 'She learns gestures by copying you, so “bye-bye” often comes first.', 'Development', 'wave', ''],
-        ['Her teeth keep their own schedule', 'Teeth come anywhere from 6 to 12 months. Some babies turn 1 with none.', 'Daily rhythm', 'tooth', 'chg:Daily rhythm:d:p:teething'],
-        ['She’s eating a little less', 'Growth slows toward her first birthday, and so does her appetite.', 'Feeding', 'plate', '']] }
+      notice: [['She’s eating a little less', 'Growth slows toward her first birthday, and so does her appetite.', 'Feeding', 'plate', ''],
+        ['Her teeth keep their own schedule', 'Teeth come anywhere from 6 to 12 months. Some babies turn 1 with none.', 'Daily rhythm', 'tooth', 'chg:Daily rhythm:d:p:teething']] }
   };
   // Each month's card takes the color of that month's balloon in Memories, so the two tabs feel like one book.
-  const BALLOON = ['#f2a98a', '#4da9d4', '#6c91b1', '#619863', '#659056', '#4da5d0', '#e9b553', '#eb9669', '#e37889', '#e98067', '#9a6fa4', '#d9708a'];
+  const BALLOON = ['#f2a98a', '#4da9d4', '#6c91b1', '#619863', '#659056', '#4da5d0', '#e9b553', '#eb9669', '#e37889', '#e98067', '#9a6fa4', '#6c77e5'];  // 11: the balloon is periwinkle, so the month card is too
   const mix = (hex, w, to = 255) => '#' + [1, 3, 5].map(i => Math.round(parseInt(hex.slice(i, i + 2), 16) * (1 - w) + to * w).toString(16).padStart(2, '0')).join('');
   const monthTheme = m => { const c = BALLOON[Math.max(0, Math.min(11, m))];
     return `--m-bg1:${mix(c, .84)};--m-bg2:${mix(c, .92)};--m-line:${mix(c, .7)};--m-ink:${mix(c, .45, 30)};--m-chip:${mix(c, .78)}`; };
@@ -255,6 +250,41 @@
   // The copy is written for "she". Turn it into pronoun tokens so it reads right for every baby.
   const P = t => String(t).replace(/\bherself\b/g, '{r}').replace(/\b(hold|feed|keeps|to|with|for|give|let|watch|help|tell) her\b/g, '$1 {o}')
     .replace(/\bher\b/g, '{p}').replace(/\bHer\b/g, '{P}').replace(/\bShe’s\b/g, '{S’s}').replace(/\bshe’s\b/g, '{s’s}').replace(/\bShe\b/g, '{S}').replace(/\bshe\b/g, '{s}');
+  // On your radar: the one thing to get ahead of this month, opening the page that helps. Checkup months lead with the
+  // checkup (watched on the month birthday, it's days away); the rest name one thing to prepare. Nothing the story says.
+  // Each month lists only what's time-sensitive: one row most months, two when two things really land together.
+  const CHK = (n, extra) => [`The ${n}-month checkup is coming up.`, extra || 'See what to expect and what to ask.', 'Health', 'steth', `health-detail:${n}:expect`];
+  // Hide anything the parent has already told Ahead is done: a logged checkup, the swaddle off, solids started.
+  const radarRows = m => (RADAR[m] || []).filter(r => {
+    const go = r[4];
+    try {
+      const v = /^health-detail:(\d+):/.exec(go); if (v && typeof healthRecord === 'function' && (healthRecord(+v[1]) || {}).status === 'attended') return false;
+      if (go === 'chg:Sleep:d:swaddleoff' && typeof answers !== 'undefined' && answers.swaddleStopped === 'Yes') return false;
+      if (go === 'chg:Feeding:d:signs' && typeof answers !== 'undefined' && answers.solids === 'Yes') return false;
+    } catch (e) {}
+    return true;
+  }).map(r => {
+    // A checkup more than a week past its date isn't "coming up" any more: it's due now.
+    const v = /^health-detail:(\d+):/.exec(r[4]); if (!v || !+v[1]) return r;
+    try { const days = (Date.now() - new Date(profile.dob)) / 864e5; if (days > +v[1] * 30.44 + 7) return [r[0].replace('is coming up', 'is due now'), r[1], r[2], r[3], r[4]]; } catch (e) {}
+    return r;
+  });
+  const RADAR = {
+    0: [['Her first checkups are coming up.', 'One in the first few days, then at 1 month. See what to expect and what to ask.', 'Health', 'steth', 'health-detail:0:expect']],
+    1: [CHK(1)],
+    2: [CHK(2, 'Her first big round of vaccines. See what to expect and what to ask.'),
+        ['Swaddling ends soon.', 'Once she starts trying to roll, it’s time to stop. Here’s how to switch.', 'Sleep', 'swaddle', 'chg:Sleep:d:swaddleoff']],
+    3: [['Her sleep is about to change.', 'Around 4 months, sleep cycles mature. Rougher nights for a few weeks are common.', 'Sleep', 'moon', 'chg:Sleep:d:regress']],
+    4: [CHK(4, 'Including a first chat about solids. See what to expect and what to ask.')],
+    5: [['First foods, around 6 months.', 'The signs she’s ready, and what you’ll need.', 'Feeding', 'highchair', 'chg:Feeding:d:signs']],
+    6: [CHK(6), ['Common allergens, early.', 'Peanut and egg are best offered early and often, once she’s eating.', 'Feeding', 'egg', 'chg:Feeding:d:allergens']],
+    7: [['She’ll be on the move soon.', 'Babyproof before she crawls. Start with the room she’s in most.', 'Safety', 'gate', 'topic:Safety']],
+    8: [['Finger foods are next.', 'What’s safe to offer, and how to cut it.', 'Feeding', 'avocado', 'chg:Feeding:d:finger']],
+    9: [CHK(9)],
+    10: [['She can eat what you eat.', 'Mostly. Take out her portion before you add salt.', 'Feeding', 'plate', 'chg:Feeding:d:family']],
+    11: [['Whole milk, at one.', 'How to switch, and how much she needs.', 'Feeding', 'bottle', 'chg:Feeding:d:milk12'], CHK(12)]
+  };
+
   function monthCard(M, lead, a, next) {
     const m = homeMonth(), wk = Math.max(1, Math.round(a * 4.35)), early = profile.early && profile.due && typeof adjustedAge === 'function',
       // Same words as every guide's header (cohesion.js): "1 week", or "10 weeks · 2 weeks adjusted" for a baby born early.
@@ -269,9 +299,26 @@
       const st = `--hl-bg:${tone[0]};--hl-ink:${tone[1]}`, inner = `<span class="hub-dot">${hubArt(icon, cat)}</span><span class="hub-row-copy"><b>${F(P(title))}</b><small>${F(P(why))}</small></span>`;
       return go ? `<button class="hub-row hl-row" style="${st}" onclick="openPage('${go}')">${inner}${chev}</button>` : `<div class="hub-row hl-row is-static" style="${st}">${inner}</div>`;
     };
-    return `<section class="he-hero" style="${monthTheme(m)}"><p class="he-eyebrow">${F(when)} · ${F(`Through ${name()}’s eyes`)}</p><div class="he-copy"><h1>${F(P(M.eyes[0]))}</h1><p class="he-lead">${F(P(M.eyes[1]))}</p>${m <= 4 ? `<button class="he-see" onclick="homeEyes(true)"><span aria-hidden="true">👁</span> ${F(`See what ${name()} sees`)}</button>` : ''}</div><span class="he-art" aria-hidden="true">${art}</span></section>
-      <h2 class="hub-h2">${F('You might notice…')}</h2>
-      <div class="hub-list hg-rows">${M.notice.map(row).join('')}</div>
+    const sc = typeof window.stCover === 'function' ? window.stCover(m) : null;
+    // The newborn weeks have no story yet: the same card, opening "See what she sees" instead.
+    const nb = !sc && m === 0 && typeof window.stCardArt === 'function';
+    const newLook = sc || nb;
+    const seen = (() => { try { return localStorage.getItem('ahead-story-seen-' + m) === '1'; } catch (e) { return false; } })();
+    const c = BALLOON[Math.max(0, Math.min(11, m))];
+    const hero = nb ? `<button class="ms-card" onclick="homeEyes(true)" style="${monthTheme(m)};--ms-c2:${mix(BALLOON[0], .72)}">
+        <span class="ms-body"><span class="ms-copy"><span class="ms-eyebrow">${F(`Welcome, ${name()}`)}</span><b class="ms-month">${F(when + '.')}</b><b class="ms-name">${F('First weeks.')}</b><small>${F(P(M.eyes[0]) + '.')}</small></span>
+          <span class="ms-art" aria-hidden="true"><i class="ms-c2"></i><span class="ms-toys">${window.stCardArt(0)}</span></span></span>
+        <span class="ms-foot"><span class="ms-watch"><i><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6z" fill="none" stroke="#fffaf3" stroke-width="2"/></svg></i>${F(P('See what she sees'))}</span><span class="ms-go" aria-hidden="true">→</span></span>
+      </button>` : sc ? `<button class="ms-card" onclick="try{localStorage.setItem('ahead-story-seen-${m}','1')}catch(e){};stOpen()" style="${monthTheme(m)};--ms-acc:${mix(c, .1, 30)};--ms-c1:${mix(c, .5)};--ms-c2:${mix(c, .72)}">
+        <span class="ms-body"><span class="ms-copy"><span class="ms-eyebrow">${m === 0 ? F('Her first weeks') : seen ? F('This month') : F('New this month')}</span><b class="ms-month">${F(m === 0 ? when + '.' : `Month ${m}.`)}</b><b class="ms-name">${F(`${name()}’s story.`)}</b><small>${F(sc.tease)}</small></span>
+          <span class="ms-art" aria-hidden="true"><i class="ms-c2"></i><span class="ms-toys">${typeof window.stCardArt === 'function' ? window.stCardArt(m) : art}</span></span></span>
+        <span class="ms-foot"><span class="ms-watch"><i><svg viewBox="0 0 24 24"><path d="M9 7.5v9l7.5-4.5z"/></svg></i>${F(P(m === 0 ? 'Watch her first weeks' : 'Watch her month'))}</span><span class="ms-go" aria-hidden="true">→</span></span>
+      </button>`
+      : `<section class="he-hero" style="${monthTheme(m)}"><p class="he-eyebrow">${F(when)} · ${F(`Through ${name()}’s eyes`)}</p><div class="he-copy"><h1>${F(P(M.eyes[0]))}</h1><p class="he-lead">${F(P(M.eyes[1]))}</p>${m <= 4 ? `<button class="he-see" onclick="homeEyes(true)"><span aria-hidden="true">👁</span> ${F(`See what ${name()} sees`)}</button>` : ''}</div><span class="he-art" aria-hidden="true">${art}</span></section>`;
+    const rr = newLook ? radarRows(m) : [];
+    return hero + (rr.length ? `<section class="rd-card"><p class="rd-eyebrow">${F('On your radar')}</p>${rr.map(([t, why, , , go]) => `<button class="rd-item" onclick="openPage('${go}')"><span><b>${F(P(t))}</b><small>${F(P(why))}</small></span><i aria-hidden="true">›</i></button>`).join('')}</section>` : '') + `
+      ${newLook ? `<div class="hub-list hg-rows rd-list"><p class="rd-eyebrow rd-in">${F('You might notice')}</p>${M.notice.map(row).join('')}</div>` : `<h2 class="hub-h2">${F('You might notice…')}</h2>
+      <div class="hub-list hg-rows">${M.notice.map(row).join('')}</div>`}
       ` + guidesCard();
   }
 
@@ -388,8 +435,10 @@
     // opens the Guides tab. Something new: the same block; only the changed guides' circles stay in color, a coral
     // "New", and it says what changed. One guide opens it; several open Guides with those tiles glowing.
     // Then a slim timeline card in the same style, naming what's actually next for her.
-    const moved = window.guideMoves(), m = homeMonth(), nm = name();
-    const age = m < 2 ? `${Math.max(1, Math.round(Y().ageNow() * 4.35))} weeks` : `${m} months`;
+    // Skip guide news the radar card above already gives (one home per fact): same guide, same month.
+    const m = homeMonth(), nm = name(), onRadar = (RADAR[m] || []).map(r => r[2]);
+    const moved = window.guideMoves().filter(q => !(typeof window.stCover === 'function' && window.stCover(m) && onRadar.includes(q.cat)));
+    const wks = Math.max(1, Math.round(Y().ageNow() * 4.35)), age = m < 2 ? `${wks} week${wks === 1 ? '' : 's'}` : `${m} months`;
     const label = c => typeof displayTopic === 'function' ? displayTopic(c) : c;
     const set = ['Feeding', 'Sleep', 'Development', 'Safety', 'Health', 'Daily rhythm'];
     const isNew = c => moved.some(q => q.cat === c);
@@ -408,7 +457,8 @@
     let next = '';
     try {
       const ya = window.__ya, a = ya.ageNow(), done = ya.doneNow();
-      const ahead = ya.C.filter(c => c.end > a && !done[c.id]).sort((x, y) => x.start - y.start || x.end - y.end);
+      // Skip a change in its last month that the parent hasn't marked: "Sitting up, any time now" at 9 months reads as a bug.
+      const ahead = ya.C.filter(c => c.end > a && !done[c.id] && !(a > c.start && a >= c.end - 1)).sort((x, y) => x.start - y.start || x.end - y.end);
       const n = ahead[0];  // the same first row the Timeline shows under "Maya now"
       if (n) next = `Next up: ${F(n.title)}, ${F(ya.whenShort(n, a))}`;
     } catch (e) {}

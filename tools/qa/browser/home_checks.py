@@ -70,12 +70,14 @@ async def main():
             n = await pg.evaluate("document.querySelectorAll('.hg-page [onclick]').length")
             for i in range(n):
                 await load(pg, T - dt.timedelta(days=days), pr, feed)
-                before = await pg.evaluate("page + document.querySelector('#main').innerHTML.length + !!document.querySelector('.hv-sheet')")
+                before = await pg.evaluate("page + document.querySelector('#main').innerHTML.length + !!document.querySelector('.hv-sheet') + !!document.querySelector('.st-player')")
                 e0 = len(errors)
+                picker = await pg.evaluate(f"!!document.querySelectorAll('.hg-page [onclick]')[{i}]?.querySelector('input[type=file]')")
                 await pg.evaluate(f"document.querySelectorAll('.hg-page [onclick]')[{i}].click()"); await pg.wait_for_timeout(250)
-                after = await pg.evaluate("page + document.querySelector('#main').innerHTML.length + !!document.querySelector('.hv-sheet')")
+                # The story opens over the page (.st-player); the photo banner is a file picker, which a headless tap can't open.
+                after = await pg.evaluate("page + document.querySelector('#main').innerHTML.length + !!document.querySelector('.hv-sheet') + !!document.querySelector('.st-player')")
                 check(len(errors) == e0, f'{days} days: Home tap {i} throws no error {errors[e0:e0+1]}')
-                check(after != before, f'{days} days: Home tap {i} does something')
+                check(after != before or picker, f'{days} days: Home tap {i} does something')
 
         # 5. Month birthdays: the card and the balloon agree, in two time zones. Dates are made in the page's own zone.
         for tz in ('UTC', 'America/Los_Angeles'):
@@ -87,8 +89,9 @@ async def main():
                       const iso = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
                       localStorage.clear(); localStorage.setItem('ahead-v2-profile', JSON.stringify({ name: 'Maya', pronouns: 'she', dob: iso, feed: 'Both', id: 'tz', joined: iso, example: false })) }""", [m, back])
                     await tp.goto(BASE); await tp.wait_for_timeout(300); await tp.evaluate("navigate('home')"); await tp.wait_for_timeout(200)
-                    eb = await tp.evaluate("(document.querySelector('.he-eyebrow')||{}).innerText||''")
-                    check((f'MONTH {want} ' in eb.upper() + ' ') if want >= 2 else 'WEEKS' in eb.upper(), f'{tz}: {m} months{" minus a day" if back else ""} says Month {want} (got {eb!r})')
+                    # The month card is the story card now ("Month 4."); the older hero kept it in its eyebrow.
+                    eb = await tp.evaluate("((document.querySelector('#main .ms-month')||document.querySelector('.he-eyebrow')||{}).innerText||'').replace(/\\./g,' ')")
+                    check((f'MONTH {want} ' in eb.upper() + ' ') if want >= 1 else 'WEEK' in eb.upper(), f'{tz}: {m} months{" minus a day" if back else ""} says Month {want} (got {eb!r})')
             await ctx.close()
 
         # 6. One app: Home's rows use each guide's own color from the shared palette (Nov 10: Everyday care was yellow on Home, blue everywhere else).
