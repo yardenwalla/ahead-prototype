@@ -274,3 +274,7 @@
 /* Template pages: the section title names a figure, so its own inner title is hidden; notes are always ink, never a theme color. */
 #main .care-tpl .hub-fig-title { display: none }
 #main .care-tpl .tpl-notes b { color: #302d3c !important }
+/* Rash cards: every card says where (bold) and what it looks like, two lines, same size. */
+#main .care-tpl .care-map figcaption { display: grid; gap: 4px; align-content: center }
+#main .care-tpl .care-map .tpl-where { display: block !important; font-size: 15px; font-weight: 600; color: #302d3c; text-transform: none; letter-spacing: 0 }
+#main .care-tpl .care-map .tpl-look { font-size: 13.5px; line-height: 1.4; color: var(--ink2, #5e5a75) }
