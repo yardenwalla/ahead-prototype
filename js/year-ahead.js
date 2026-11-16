@@ -196,13 +196,12 @@
     const isToday = x => Math.abs(x - a) < 0.13;
     const listHTML = x => {
       const t = isToday(x), past = all.filter(s => st(s, x) === 'done'), rest = all.filter(s => st(s, x) !== 'done');
-      const step = s => { const k = st(s, x); return `<li class="tl-step is-${k}"><i class="tl-dot">${k === 'done' ? '✓' : ''}</i><button onclick="${go(s)}"><span class="tl-t"><b>${F(title(s))}</b>${k === 'now' ? `<small>${F(t ? 'Happening now' : 'Happening at this age')}</small>` : ''}</span><span class="tl-w">${F(when(s))}</span></button></li>`; };
+      const step = s => { const k = st(s, x); return `<li class="tl-step is-${k}" data-id="${s.v != null ? 'v' + s.v : s.c.id}"><i class="tl-dot">${k === 'done' ? '✓' : ''}</i><button onclick="${go(s)}"><span class="tl-t"><b>${F(title(s))}</b>${k === 'now' ? `<small>${F(t ? 'Happening now' : 'Happening at this age')}</small>` : ''}</span><span class="tl-w">${F(when(s))}</span></button></li>`; };
       const mark = `<li class="tl-today"><i class="tl-dot"></i><span>${F(t ? 'Today' : `At ${ageTxt(x)}`)}</span></li>`;
       let h = '';
       if (past.length) h += `<li class="tl-past"><i class="tl-dot">✓</i><button onclick="this.closest('ol').classList.toggle('show-past');this.querySelector('span').textContent=this.closest('ol').classList.contains('show-past')?'Hide':'Show'">${F(`${past.length} ${t ? 'done' : 'behind {o} by then'}`)}<span>${F(document.querySelector('#main .tl-steps.show-past') ? 'Hide' : 'Show')}</span></button></li>` + past.map(step).join('').replace(/tl-step is-done/g, 'tl-step is-done tl-old');
-      let placed = false;
-      rest.forEach(s => { if (!placed && st(s, x) === 'next') { h += mark; placed = true; } h += step(s); });
-      if (!placed) h += mark;
+      // Her age marker sits right under what's behind her, so it's always near the top; what's happening at that age follows it.
+      h += mark + rest.map(step).join('');
       return h + `<li class="tl-step tl-goal"><i class="tl-dot"></i><span class="tl-t"><b>${F('First birthday!')}</b></span>${cake}</li>`;
     };
     const head = x => { const mo = Math.max(0, Math.min(11, Math.floor(x))), cov = typeof window.stCover === 'function' ? window.stCover(mo) : null; return cov ? F(cov.title) : ''; };
@@ -217,7 +216,9 @@
     let h = `<div class="ya-page tl-track" style="${theme(a)};--tlp:${pct}%;--tla:${pct}%;--tlg:${grad(.86)};--tlf:${grad(.42)}">${tlSwitch(m)}<div class="tl-top"><h1 class="yt-h1">${F(`${nm}’s first year`)}</h1><button class="tl-todaybtn" onclick="tlScrub(null)" disabled>${F('Today')}</button></div>`;
     h += `<p class="tl-status">${head(a)}</p>`;
     h += `<div class="tl-prog${hinted ? '' : ' tl-hint'}"><div class="tl-ride"><span class="tl-baby" role="slider" tabindex="0" aria-label="${F(`Drag ${nm} to see another age`)}" aria-valuemin="0" aria-valuemax="12" aria-valuenow="${a.toFixed(1)}" aria-valuetext="${F(ageTxt(a))}" onkeydown="tlKey(event)" style="${theme(a)}">${art(a)}<em class="tl-tip">${F(hinted ? ageTxt(a) : 'Drag me')}</em></span><span class="tl-flag" aria-hidden="true">${window.stToy('cake')}</span></div><div class="tl-bar"><i></i><button class="tl-nowmark" onclick="tlScrub(null)" aria-label="${F('Back to today')}"></button></div><div class="tl-ticks" aria-hidden="true">${[[0, 'Birth'], [3, '3 mo'], [6, '6 mo'], [9, '9 mo'], [12, '1 year']].map(([v, l]) => `<span style="left:${v / 12 * 100}%">${F(l)}</span>`).join('')}</div><div class="tl-ends">${ends(a)}</div></div>`;
-    h += `<ol class="tl-steps">${listHTML(a)}</ol>`;
+    const gvars = x => typeof window.monthColor === 'function' ? `--g-bg:${window.monthColor(Math.max(0, Math.min(11, Math.floor(x))), .86)};--g-ink:${window.monthColor(Math.max(0, Math.min(11, Math.floor(x))), .45, 30)}` : '';
+    window.__tl.gvars = gvars;
+    h += `<ol class="tl-steps" style="${gvars(a)}">${listHTML(a)}</ol>`;
     h += `<p class="hub-foot">${F('Ages are typical. Every baby moves at their own pace.')}</p></div>`;
     setTimeout(() => window.tlBind && window.tlBind(), 0);
     return h;
@@ -242,7 +243,9 @@
       const hd = pg.querySelector('.tl-status'), nx = T.head(q); if (hd.innerHTML !== nx) { hd.classList.remove('is-swap'); void hd.offsetWidth; hd.innerHTML = nx; hd.classList.add('is-swap'); } }
     tip.textContent = q >= 11.9 ? '1 year' : q < 1 ? `${Math.max(1, Math.round(q * 4.35))} wk` : `${Math.floor(q)} mo`;
     pg.querySelector('.tl-ends').innerHTML = T.ends(q);
-    pg.querySelector('.tl-steps').innerHTML = T.listHTML(q);
+    const ol = pg.querySelector('.tl-steps'), was = new Set([...ol.querySelectorAll('.is-now')].map(e => e.dataset.id));
+    ol.innerHTML = T.listHTML(q); ol.setAttribute('style', T.gvars(q));
+    ol.querySelectorAll('.is-now').forEach(e => { if (!was.has(e.dataset.id)) e.classList.add('is-new'); });
     b.setAttribute('aria-valuenow', q.toFixed(1)); b.setAttribute('aria-valuetext', pg.querySelector('.tl-ends b').textContent);
   };
   window.tlKey = e => { const T = window.__tl, pg = document.querySelector('#main .tl-track'); if (!T || !pg) return; const cur = parseFloat(pg.dataset.q || T.a); if (e.key === 'ArrowRight' || e.key === 'ArrowUp') { tlScrub(Math.floor(cur) + 1); e.preventDefault(); } if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') { tlScrub(Math.ceil(cur) - 1); e.preventDefault(); } };

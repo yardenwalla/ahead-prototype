@@ -1091,3 +1091,14 @@
 #main .tl-nowmark{top:-3px;width:3px;height:16px;margin-left:-1.5px;background:#2B2840}
 #main .is-away .tl-nowmark{opacity:.55}
 #main .tl-nowmark{min-height:0!important;min-width:0!important;box-sizing:border-box;line-height:0}
+
+/* Nov 16 · The age marker leads the list; what's happening at that age is tinted in that month's color */
+#main .tl-track .tl-today{padding:8px 0 6px}
+#main .tl-track .tl-today>span,#main .tl-track .tl-today>.tl-dot{background:var(--g-ink,#2B2840)}
+#main .tl-track .tl-steps>li.tl-today::before{background:linear-gradient(var(--m-ink,#2B2840) 50%,var(--g-ink,#2B2840) 50%)}
+#main .tl-track .tl-step.is-now>button{background:var(--g-bg,#f3eee8);border-radius:14px;padding:11px 12px;margin:3px 0}
+#main .tl-track .tl-step.is-now .tl-t small{color:var(--g-ink,#2B2840)}
+#main .tl-track .tl-step.is-now>.tl-dot{border-color:var(--g-ink,#2B2840)}
+#main .tl-track .tl-steps>li.is-now::before{background:var(--g-ink,#2B2840)}
+#main .tl-track .tl-step.is-new>button{animation:tlNew .6s ease}
+@keyframes tlNew{from{transform:translateX(8px);opacity:.3}}
