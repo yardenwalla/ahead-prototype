@@ -279,3 +279,6 @@
 #main .care-tpl .care-map .tpl-where { display: block !important; font-size: 15px; font-weight: 600; color: #302d3c; text-transform: none; letter-spacing: 0 }
 #main .care-tpl .care-map .tpl-look { font-size: 13.5px; line-height: 1.4; color: var(--ink2, #5e5a75) }
 #main .care-tpl .hub-dayplan .chg-sample-title { display: none }
+/* Nov 16: small group labels inside one titled section (e.g. Pick a method) */
+#main .care-tpl .tpl-group { font-size: 13px; font-weight: 600; color: #6b6878; margin: 4px 4px 8px; }
+#main .care-tpl .hub-list + .tpl-group { margin-top: 16px; }
