@@ -206,36 +206,44 @@
       return h + `<li class="tl-step tl-goal"><i class="tl-dot"></i><span class="tl-t"><b>${F('First birthday!')}</b></span>${cake}</li>`;
     };
     const head = x => { const mo = Math.max(0, Math.min(11, Math.floor(x))), cov = typeof window.stCover === 'function' ? window.stCover(mo) : null; return cov ? F(cov.title) : ''; };
-    const ends = x => { const t = isToday(x), left = Math.max(0, 12 - x), eta = left < 0.5 ? 'any day now' : left < 1.5 ? 'in about a month' : `in about ${Math.round(left)} months`;
-      return `<span>${F(t ? `${nm} is ${typeof babyAge === 'function' ? babyAge() : ''}` : `At ${ageTxt(x)}`)}</span>${t ? `<span>${F(`First birthday · ${eta}`)}</span>` : `<button class="tl-home" onclick="tlScrub(null)">${F('Back to today')}</button>`}`; };
+    const ends = x => { const t = isToday(x), left = Math.max(0, 12 - x), eta = left < 0.5 ? 'any day now' : left < 1.5 ? 'in about a month' : `in about ${Math.round(left)} months`, d = Math.round(Math.abs(x - a));
+      return t ? `<b>${F(`${nm} is ${typeof babyAge === 'function' ? babyAge() : ''}`)}</b><span>${F(`First birthday ${eta}`)}</span>` : `<b>${F(`At ${ageTxt(x)}`)}</b><span>${F(d < 1 ? 'about now' : x > a ? `in about ${d} month${d === 1 ? '' : 's'}` : `about ${d} month${d === 1 ? '' : 's'} ago`)}</span>`; };
     const theme = x => typeof window.monthTheme === 'function' ? window.monthTheme(Math.max(0, Math.min(11, Math.floor(x)))) : '';
     const art = x => typeof window.stCardArt === 'function' ? window.stCardArt(Math.max(0, Math.min(11, Math.floor(x)))) : '';
     window.__tl = { a, listHTML, head, ends, theme, art };
     const hinted = (() => { try { return !!localStorage.getItem('ahead-tl-dragged'); } catch (e) { return true; } })();
     const pct = Math.max(0, Math.min(100, a / 12 * 100));
-    let h = `<div class="ya-page tl-track" style="${theme(a)};--tlp:${pct}%">${tlSwitch(m)}<h1 class="yt-h1">${F(`${nm}’s first year`)}</h1>`;
+    const grad = (w, to) => typeof window.monthColor === 'function' ? `linear-gradient(90deg,${[...Array(12)].map((_, i) => `${window.monthColor(i, w, to)} ${Math.round((i + 0.5) / 12 * 100)}%`).join(',')})` : '';
+    let h = `<div class="ya-page tl-track" style="${theme(a)};--tlp:${pct}%;--tla:${pct}%;--tlg:${grad(.86)};--tlf:${grad(.42)}">${tlSwitch(m)}<div class="tl-top"><h1 class="yt-h1">${F(`${nm}’s first year`)}</h1><button class="tl-todaybtn" onclick="tlScrub(null)" disabled>${F('Today')}</button></div>`;
     h += `<p class="tl-status">${head(a)}</p>`;
-    h += `<div class="tl-prog${hinted ? '' : ' tl-hint'}"><div class="tl-ride"><span class="tl-baby" role="slider" tabindex="0" aria-label="${F(`Drag ${nm} to see another age`)}" aria-valuemin="0" aria-valuemax="12" aria-valuenow="${a.toFixed(1)}" aria-valuetext="${F(ageTxt(a))}" onkeydown="tlKey(event)">${art(a)}${hinted ? '' : `<em class="tl-tip">${F('Drag me')}</em>`}</span>${`<span class="tl-flag" aria-hidden="true">${window.stToy('cake')}</span>`}</div><div class="tl-bar"><i></i></div><div class="tl-ends">${ends(a)}</div></div>`;
+    h += `<div class="tl-prog${hinted ? '' : ' tl-hint'}"><div class="tl-ride"><span class="tl-baby" role="slider" tabindex="0" aria-label="${F(`Drag ${nm} to see another age`)}" aria-valuemin="0" aria-valuemax="12" aria-valuenow="${a.toFixed(1)}" aria-valuetext="${F(ageTxt(a))}" onkeydown="tlKey(event)" style="${theme(a)}">${art(a)}<em class="tl-tip">${F(hinted ? ageTxt(a) : 'Drag me')}</em></span><span class="tl-flag" aria-hidden="true">${window.stToy('cake')}</span></div><div class="tl-bar"><i></i><button class="tl-nowmark" onclick="tlScrub(null)" aria-label="${F('Back to today')}"></button></div><div class="tl-ticks" aria-hidden="true">${[[0, 'Birth'], [3, '3 mo'], [6, '6 mo'], [9, '9 mo'], [12, '1 year']].map(([v, l]) => `<span style="left:${v / 12 * 100}%">${F(l)}</span>`).join('')}</div><div class="tl-ends">${ends(a)}</div></div>`;
     h += `<ol class="tl-steps">${listHTML(a)}</ol>`;
     h += `<p class="hub-foot">${F('Ages are typical. Every baby moves at their own pace.')}</p></div>`;
     setTimeout(() => window.tlBind && window.tlBind(), 0);
     return h;
   };
   // Scrubbing: only the parts that change are redrawn, so the drag stays under the finger.
-  window.tlScrub = function (x) {
+  window.tlScrub = function (x, live) {
     const T = window.__tl, pg = document.querySelector('#main .tl-track'); if (!T || !pg) return;
     if (x == null) x = T.a; x = Math.max(0, Math.min(12, x));
-    const q = Math.round(x * 4) / 4, prev = pg.dataset.q;
+    // Let go: snap to a whole month, or to today when close to it.
+    if (!live) x = Math.abs(x - T.a) < 0.5 ? T.a : Math.round(x);
+    const q = Math.abs(x - T.a) < 0.13 ? T.a : Math.round(x * 4) / 4;
     pg.style.setProperty('--tlp', (x / 12 * 100) + '%');
+    pg.classList.toggle('is-away', q !== T.a);
+    pg.querySelector('.tl-todaybtn').disabled = q === T.a;
     pg.querySelector('.tl-flag').style.opacity = x > 10.5 ? '0' : '';
-    if (String(q) === prev) return; pg.dataset.q = String(q);
+    const b = pg.querySelector('.tl-baby'), tip = b.querySelector('.tl-tip');
+    if (String(q) === pg.dataset.q) return; pg.dataset.q = String(q);
     const mo = String(Math.max(0, Math.min(11, Math.floor(q))));
-    if (pg.dataset.mo !== mo) { pg.dataset.mo = mo; T.theme(q).split(';').forEach(d => { const i = d.indexOf(':'); if (i > 0) pg.style.setProperty(d.slice(0, i).trim(), d.slice(i + 1).trim()); });
-      pg.querySelector('.tl-status').innerHTML = T.head(q); const b = pg.querySelector('.tl-baby'); [...b.children].forEach(c => { if (!c.classList.contains('tl-tip')) c.remove(); }); b.insertAdjacentHTML('afterbegin', T.art(q)); }
-    const near = Math.abs(q - T.a) < 0.13 ? T.a : q;
-    pg.querySelector('.tl-ends').innerHTML = T.ends(near);
-    pg.querySelector('.tl-steps').innerHTML = T.listHTML(near);
-    const b = pg.querySelector('.tl-baby'); b.setAttribute('aria-valuenow', near.toFixed(1)); b.setAttribute('aria-valuetext', pg.querySelector('.tl-ends span').textContent);
+    if (pg.dataset.mo !== mo) { pg.dataset.mo = mo;
+      T.theme(q).split(';').forEach(d => { const i = d.indexOf(':'); if (i > 0) b.style.setProperty(d.slice(0, i).trim(), d.slice(i + 1).trim()); });
+      [...b.children].forEach(c => { if (c !== tip) c.remove(); }); b.insertAdjacentHTML('afterbegin', T.art(q));
+      const hd = pg.querySelector('.tl-status'), nx = T.head(q); if (hd.innerHTML !== nx) { hd.classList.remove('is-swap'); void hd.offsetWidth; hd.innerHTML = nx; hd.classList.add('is-swap'); } }
+    tip.textContent = q >= 11.9 ? '1 year' : q < 1 ? `${Math.max(1, Math.round(q * 4.35))} wk` : `${Math.floor(q)} mo`;
+    pg.querySelector('.tl-ends').innerHTML = T.ends(q);
+    pg.querySelector('.tl-steps').innerHTML = T.listHTML(q);
+    b.setAttribute('aria-valuenow', q.toFixed(1)); b.setAttribute('aria-valuetext', pg.querySelector('.tl-ends b').textContent);
   };
   window.tlKey = e => { const T = window.__tl, pg = document.querySelector('#main .tl-track'); if (!T || !pg) return; const cur = parseFloat(pg.dataset.q || T.a); if (e.key === 'ArrowRight' || e.key === 'ArrowUp') { tlScrub(Math.floor(cur) + 1); e.preventDefault(); } if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') { tlScrub(Math.ceil(cur) - 1); e.preventDefault(); } };
   window.tlBind = function () {
@@ -243,10 +251,10 @@
     const bar = pr.querySelector('.tl-bar'), baby = pr.querySelector('.tl-baby');
     const xOf = e => { const r = bar.getBoundingClientRect(); return (e.clientX - r.left) / r.width * 12; };
     let on = false;
-    const start = e => { if (e.target.closest('button')) return; on = true; pr.classList.add('is-drag'); pr.classList.remove('tl-hint'); const t = pr.querySelector('.tl-tip'); if (t) t.remove(); try { localStorage.setItem('ahead-tl-dragged', '1'); } catch (er) {} try { pr.setPointerCapture(e.pointerId); } catch (er) {} tlScrub(xOf(e)); e.preventDefault(); };
+    const start = e => { if (e.target.closest('button')) return; on = true; lastX = xOf(e); pr.classList.add('is-drag'); pr.classList.remove('tl-hint'); try { localStorage.setItem('ahead-tl-dragged', '1'); } catch (er) {} try { pr.setPointerCapture(e.pointerId); } catch (er) {} tlScrub(xOf(e), true); e.preventDefault(); };
     pr.addEventListener('pointerdown', start);
-    pr.addEventListener('pointermove', e => { if (on) tlScrub(xOf(e)); });
-    const end = () => { on = false; pr.classList.remove('is-drag'); };
+    let lastX = null; pr.addEventListener('pointermove', e => { if (on) tlScrub(lastX = xOf(e), true); });
+    const end = () => { if (on && lastX != null) tlScrub(lastX); on = false; lastX = null; pr.classList.remove('is-drag'); };
     pr.addEventListener('pointerup', end); pr.addEventListener('pointercancel', end);
   };
   // Focus as you scroll, without moving anything: every chapter ahead stays open, and the one in the middle of the

@@ -1064,3 +1064,30 @@
 #main .tl-track .tl-steps{transition:none}
 #main .tl-home{padding:2px 10px;font-size:12px;line-height:20px}
 #main .tl-track .tl-ends{height:28px;min-height:0}
+
+/* Nov 16 · Scrubber polish: the year's colors live on the bar, the page stays still, Today has a fixed home */
+#main .tl-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+#main .tl-todaybtn{flex:none;border:1px solid var(--m-line,#e3ddd3);border-radius:999px;padding:6px 14px;background:#fff;font:inherit;font-size:14px;font-weight:600;color:var(--m-ink,#2B2840);cursor:pointer;transition:opacity .2s}
+#main .tl-todaybtn:disabled{opacity:.35;cursor:default}
+#main .tl-status.is-swap{animation:tlSwap .3s ease}
+@keyframes tlSwap{from{opacity:0;transform:translateY(3px)}}
+#main .tl-track .tl-bar{position:relative;height:10px;border-radius:5px;background:var(--tlg);box-shadow:none;overflow:visible}
+#main .tl-track .tl-bar i{position:absolute;inset:0;width:auto!important;border-radius:5px;background:var(--tlf);clip-path:inset(0 calc(100% - var(--tlp)) 0 0 round 5px);animation:tlClip .9s cubic-bezier(.3,.7,.3,1) both;transition:clip-path .25s ease}
+#main .tl-prog.is-drag .tl-bar i{transition:none}
+@keyframes tlClip{from{clip-path:inset(0 100% 0 0 round 5px)}}
+#main .tl-nowmark{position:absolute;left:var(--tla);top:-5px;width:4px;height:20px;margin-left:-2px;padding:0;border:0;border-radius:2px;background:#2B2840;opacity:0;cursor:pointer;transition:opacity .2s}
+#main .tl-nowmark::before{content:'';position:absolute;inset:-12px -14px}
+#main .is-away .tl-nowmark{opacity:1}
+#main .tl-ticks{position:relative;height:18px;margin:6px 14px 0}
+#main .tl-ticks span{position:absolute;transform:translateX(-50%);font-size:11px;color:#a49eab;white-space:nowrap}
+#main .tl-ticks span:first-child{transform:none;margin-left:-14px}
+#main .tl-ticks span:last-child{transform:translateX(-100%);margin-left:14px}
+#main .tl-track .tl-ends{display:flex;justify-content:space-between;align-items:baseline;height:auto;margin-top:6px;font-size:13px;color:#8a8494}
+#main .tl-track .tl-ends b{font-size:14px;color:#2B2840}
+#main .tl-tip{opacity:0;transition:opacity .15s;background:var(--m-ink,#2B2840)}
+#main .tl-tip::after{border-top-color:var(--m-ink,#2B2840)}
+#main .tl-hint .tl-tip,#main .is-drag .tl-tip{opacity:1}
+#main .tl-status{color:#2B2840}
+#main .tl-nowmark{top:-3px;width:3px;height:16px;margin-left:-1.5px;background:#2B2840}
+#main .is-away .tl-nowmark{opacity:.55}
+#main .tl-nowmark{min-height:0!important;min-width:0!important;box-sizing:border-box;line-height:0}

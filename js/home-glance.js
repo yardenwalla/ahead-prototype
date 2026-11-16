@@ -222,6 +222,7 @@
   const monthTheme = m => { const c = BALLOON[Math.max(0, Math.min(11, m))];
     return `--m-bg1:${mix(c, .84)};--m-bg2:${mix(c, .92)};--m-line:${mix(c, .7)};--m-ink:${mix(c, .45, 30)};--m-chip:${mix(c, .78)}`; };
   window.monthTheme = monthTheme;
+  window.monthColor = (m, w, to) => mix(BALLOON[Math.max(0, Math.min(11, m))], w, to);
 
   // "See what Maya sees": the month's picture twice, as you see it and as she does. Filters follow how vision
   // develops: blurry and nearly colorless at first, color filling in by 4–5 months, sharp detail by about 9 months.
