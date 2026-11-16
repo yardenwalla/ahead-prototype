@@ -650,3 +650,8 @@
 .st-eyes.st-eyes1{width:min(44vw,24vh,190px);margin-bottom:6%}
 .st-eyes1 .st-eyepic{border-radius:18px;border-width:4px}
 .st-eyes1 figcaption{font-size:13px;margin-top:6px}
+/* Through her eyes v3: one clay object on the cloud, no frame */
+.st-eyesv{width:min(52vw,30vh,230px);margin-bottom:5%}
+.st-eyesv .st-obj{display:block;width:100%;height:auto;opacity:0;transform:translateY(20px) scale(.9)}
+.is-on .st-eyesv .st-obj{animation:stEyeIn .6s .5s cubic-bezier(.25,1.3,.4,1) forwards,stBlurIn 1.6s 1.6s ease forwards}
+@keyframes stEyeIn{to{opacity:1;transform:none}}

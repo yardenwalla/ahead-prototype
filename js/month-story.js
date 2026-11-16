@@ -217,18 +217,18 @@
     peek: function () { return '<div class="st-vis st-peekaboo" data-peek><span class="st-pbun">' + bunny() + '</span><span class="st-cloth"></span><b class="st-peektag">Tap the blanket</b><b class="st-still">Still there!</b></div>'; },
     heart: function () { return '<div class="st-vis st-heartwrap"><span class="st-bye">bye-bye!</span><i class="st-heart">♥</i><span class="st-back">back soon</span></div>'; },
     puffs: function () { var s = ''; for (var i = 0; i < 5; i++) s += '<i style="--i:' + i + '"' + (i === 2 ? ' class="is-pick"' : '') + '></i>'; return '<div class="st-vis st-puffs">' + s + '</div>'; },
+    // Through her eyes: like every other screen, one clay object on the cloud (your face, with a toy beside it).
+    // It arrives sharp, then softens to how she sees it this month.
     eyes: function (m) {
-      var F = { 0: 'blur(4px) grayscale(.9) contrast(1.3)', 1: 'blur(3.2px) grayscale(.75) contrast(1.3)', 2: 'blur(2.4px) saturate(.45) contrast(1.15)', 3: 'blur(1.6px) saturate(.65)', 4: 'blur(1px) saturate(.85)', 6: 'blur(.5px)' }[m] || 'none';
-      var sk = blob('#f5c3a0', '#fde3cf', '#de9d79'), r = blob('#e98a6b', '#f6b49c', '#c96f52'), y = blob('#ffd98a', '#fff1c8', '#e3b259'), l = blob('#b9a6e6', '#ddd2f7', '#8f7bc4'), g = blob('#9cc7ae', '#cfe6d9', '#76a88b');
-      var far = m === 6, fx = far ? 150 : 62, fy = far ? 62 : 74, fr = far ? 20 : 44, k = fr / 44;
-      var face = '<circle cx="' + fx + '" cy="' + fy + '" r="' + fr + '" fill="' + sk.url + '"/><path d="M' + (fx - fr) + ' ' + (fy - 4 * k) + ' q' + fr + ' -' + (fr * 1.4) + ' ' + (2 * fr) + ' 0" fill="#6b4a3a"/>' +
-        '<circle cx="' + (fx - 14 * k) + '" cy="' + (fy + 4 * k) + '" r="' + (4.5 * k) + '" fill="#2B2840"/><circle cx="' + (fx + 14 * k) + '" cy="' + (fy + 4 * k) + '" r="' + (4.5 * k) + '" fill="#2B2840"/>' +
-        '<path d="M' + (fx - 12 * k) + ' ' + (fy + 18 * k) + ' q' + (12 * k) + ' ' + (12 * k) + ' ' + (24 * k) + ' 0" fill="none" stroke="#2B2840" stroke-width="' + (3.5 * k) + '" stroke-linecap="round"/>';
-      var toys = far ? '<circle cx="48" cy="140" r="24" fill="' + r.url + '"/><rect x="82" y="124" width="36" height="36" rx="8" fill="' + y.url + '"/><ellipse cx="160" cy="150" rx="26" ry="10" fill="' + l.url + '"/><ellipse cx="160" cy="138" rx="19" ry="8" fill="' + g.url + '"/>'
-        : '<circle cx="146" cy="60" r="20" fill="' + r.url + '"/><rect x="128" y="104" width="34" height="34" rx="8" fill="' + y.url + '"/><ellipse cx="80" cy="156" rx="26" ry="10" fill="' + l.url + '"/><ellipse cx="80" cy="144" rx="19" ry="8" fill="' + g.url + '"/>';
-      var scene = function () { return svg('0 0 200 180', sk.def + r.def + y.def + l.def + g.def, '<rect width="200" height="180" fill="#fdf6ec"/>' + (far ? '<rect y="96" width="200" height="84" fill="#efe4d6"/>' : '') + face + toys, 'st-obj'); };
-      // One picture only: it starts sharp, then softens to how she sees it, so the eye has one place to look.
-      return '<div class="st-vis st-eyes st-eyes1"><figure class="st-eyehers"><span class="st-eyepic" style="--f:' + F + '">' + scene() + '</span><figcaption>What ' + E(nm()) + ' sees</figcaption></figure></div>';
+      var F = { 0: 'blur(5px) grayscale(.9) contrast(1.2)', 1: 'blur(3.5px) grayscale(.6) contrast(1.2)', 2: 'blur(2.5px) saturate(.5)', 3: 'blur(1.6px) saturate(.7)', 4: 'blur(1px) saturate(.85)', 6: 'blur(.4px)' }[m] || 'none';
+      var sk = blob('#f5c3a0', '#fde3cf', '#de9d79'), r = blob('#e98a6b', '#f6b49c', '#c96f52');
+      var face = svg('0 0 220 200', sk.def + r.def, shadow(96, 192, 70) +
+        '<circle cx="96" cy="100" r="80" fill="' + sk.url + '"/><path d="M18 92 Q24 18 96 18 Q168 18 174 92 Q150 52 96 50 Q42 52 18 92Z" fill="#6b4a3a"/>' +
+        '<circle cx="70" cy="104" r="8" fill="#2B2840"/><circle cx="122" cy="104" r="8" fill="#2B2840"/><circle cx="73" cy="101" r="2.6" fill="#fff"/><circle cx="125" cy="101" r="2.6" fill="#fff"/>' +
+        '<ellipse cx="54" cy="128" rx="12" ry="7" fill="#f39aa8"/><ellipse cx="138" cy="128" rx="12" ry="7" fill="#f39aa8"/>' +
+        '<path d="M76 134 Q96 154 116 134" fill="none" stroke="#2B2840" stroke-width="7" stroke-linecap="round"/>' +
+        '<circle cx="194" cy="160" r="24" fill="' + r.url + '"/><path d="M180 150 Q194 140 208 152" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".6"/>');
+      return '<div class="st-vis st-eyesv" style="--f:' + F + '">' + face + '</div>';
     },
     cruise: function () { var t = ''; for (var i = 0; i < 4; i++) t += '<i style="--i:' + i + '"></i>'; return '<div class="st-vis st-cruise"><span class="st-sofa"><b></b></span>' + t + '</div>'; },
     name: function () { return '<div class="st-vis st-namewrap"><span class="st-callout">' + E(nm()) + '!</span><i class="st-ring" style="--i:0"></i><i class="st-ring" style="--i:1"></i><i class="st-ring" style="--i:2"></i></div>'; },
