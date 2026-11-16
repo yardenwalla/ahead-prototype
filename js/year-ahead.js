@@ -188,7 +188,11 @@
     const attended = v => { try { const r = healthRecord(v); return r && r.status === 'attended'; } catch (e) { return false; } };
     const all = CC.map(c => ({ m: c.start, c })).concat(CHECKUPS.map(v => ({ m: v - gap, v }))).sort((x, y) => x.m - y.m);
     // What she's told us only counts from today on; looking back, it's by age alone.
-    const st = (s, x) => s.v != null ? ((x >= a && attended(s.v)) || s.m < x - 0.75 ? 'done' : s.m <= x + 0.25 ? 'now' : 'next') : ((x >= a && done[s.c.id]) || s.c.end <= x || x - s.c.start >= 1.5 ? 'done' : s.c.start <= x + 0.25 ? 'now' : 'next');
+    // A change has two moments: while it's starting (on Today, with how to prepare) and when its window wraps up (further
+    // down, at its end age, with a reassuring line). In between it isn't repeated. Earlier holds only windows that are over.
+    const WRAP = { crying: 'Fussy evenings usually ease by then', nights: 'Most get one longer stretch by then', regress: 'Usually settles within a few weeks', roll: 'Most roll both ways by then', twonaps: 'Most are on two naps by then', crawl: 'Most are on the move by then. Some scoot or skip crawling', sit: 'Most sit without help by then', tooth: 'Some get their first tooth after their first birthday', sep: 'It often eases, then comes and goes', carseat: 'Switch when {p} head is an inch from the top', pull: 'Most pull up to stand by then' };
+    const wraps = s => s.v == null && WRAP[s.c.id] && s.c.end <= 12.5;
+    const st = (s, x) => s.v != null ? ((x >= a && attended(s.v)) || s.m < x - 0.75 ? 'done' : s.m <= x + 0.25 ? 'now' : 'next') : ((x >= a && done[s.c.id]) || s.c.end <= x ? 'done' : s.c.start <= x + 0.25 && (x - s.c.start < 1.5 || !wraps(s)) ? 'now' : s.c.start <= x + 0.25 ? 'wrap' : 'next');
     const title = s => s.v != null ? `${s.v}-month checkup` : s.c.title;
     const when = s => s.v != null ? `${s.v} mo` : (/month|week/.test(range(s.c)) ? range(s.c).replace(/^Usually |^Around |^At /, '').replace(' months', ' mo').replace(' month', ' mo') : `${s.c.start}–${s.c.end} mo`);
     const go = s => s.v != null ? `openPage('health-visit:${s.v}')` : s.c.go;
@@ -197,12 +201,12 @@
     // Timeline schedules: each row is what, when, and (only when there's something to do) how to prepare. No line repeats its title.
     const PREP = { crying: 'Plan for fussier evenings', smile: 'Face-to-face time is the best play now', nights: 'A good time to start a bedtime routine', regress: 'Line up extra night help if you can', roll: 'Keep {o} off beds and sofas', solids: 'Get a high chair', sit: 'Lower the crib mattress', twonaps: 'Bedtime may need to move earlier', crawl: 'Babyproof the floor first', tooth: 'Start brushing', sep: 'Practice short, upbeat goodbyes', pull: 'Anchor furniture to the wall', carseat: 'Check {p} height against the seat', words: 'Name things as you go about your day', milk: 'Offer it in a cup, 16–24 oz a day', steps: 'Barefoot is best indoors' };
     const bornD = parse(profile.early && profile.due ? profile.due : profile.dob);
-    const calMon = mm => { const d = new Date(bornD); d.setMonth(d.getMonth() + Math.floor(mm)); return d.toLocaleDateString('en-US', { month: 'long' }); };
+    const calMon = mm => new Date(bornD.getTime() + mm * MONTH).toLocaleDateString('en-US', { month: 'long' });
     const longWhen = s => when(s).replace(/ mo$/, ' months').replace(/^(\d+) months$/, (q, n) => n === '1' ? '1 month' : q);
     const listHTML = x => {
       const t = isToday(x), past = all.filter(s => st(s, x) === 'done'), rest = all.filter(s => st(s, x) !== 'done');
       const prep = (s, k) => s.v != null ? (k === 'now' ? 'Due now · book it if you haven’t' : 'Book it a few weeks ahead') : s.c.id === 'crying' && x >= 2 ? 'Past the worst now' : PREP[s.c.id] || '';
-      const step = s => { const k = st(s, x), pr = k === 'done' ? '' : prep(s, k); return `<li class="tl-step is-${k}" data-id="${s.v != null ? 'v' + s.v : s.c.id}"><i class="tl-dot"></i><button onclick="${go(s)}"><span class="tl-t"><b>${F(title(s))}</b>${pr ? `<small>${F(pr)}</small>` : ''}</span><span class="tl-w">${F(longWhen(s))}</span></button></li>`; };
+      const step = s => { const k0 = st(s, x), k = k0 === 'wrap' ? 'next' : k0, pr = k0 === 'done' ? '' : k0 === 'wrap' ? WRAP[s.c.id] : prep(s, k); return `<li class="tl-step is-${k}" data-id="${s.v != null ? 'v' + s.v : s.c.id}"><i class="tl-dot"></i><button onclick="${go(s)}"><span class="tl-t"><b>${F(title(s))}</b>${pr ? `<small>${F(pr)}</small>` : ''}</span><span class="tl-w">${F(k0 === 'wrap' ? `By ${Math.round(s.c.end)} months` : longWhen(s))}</span></button></li>`; };
       const mark = `<li class="tl-today"><i class="tl-dot"></i><span>${F(t ? 'Today' : `At ${ageTxt(x)}`)}</span></li>`;
       let h = '';
       if (past.length) h += `<li class="tl-past"><i class="tl-dot"></i><button onclick="this.closest('ol').classList.toggle('show-past');this.querySelector('span').textContent=this.closest('ol').classList.contains('show-past')?'Hide':'Show'">${F(`Earlier (${past.length})`)}<span>${F(document.querySelector('#main .tl-steps.show-past') ? 'Hide' : 'Show')}</span></button></li>` + past.map(step).join('').replace(/tl-step is-done/g, 'tl-step is-done tl-old');
@@ -210,7 +214,7 @@
       h += mark + (nowS.length ? nowS.map(step).join('') : `<li class="tl-quiet"><span>${F('Nothing new starting right now. Here’s what’s next.')}</span></li>`);
       // What's ahead, under light calendar signposts ("Around January").
       let last = null;
-      rest.filter(s => st(s, x) === 'next').forEach(s => { const lab = calMon(Math.max(s.m, x)); if (lab !== last) { h += `<li class="tl-mon"><span>${F(`Around ${lab}`)}</span></li>`; last = lab; } h += step(s); });
+      rest.filter(s => ['next', 'wrap'].includes(st(s, x))).map(s => ({ s, at: st(s, x) === 'wrap' ? s.c.end - 0.01 : s.m })).sort((p, q) => p.at - q.at).forEach(({ s, at }) => { const lab = calMon(Math.max(at, x)); if (lab !== last) { h += `<li class="tl-mon"><span>${F(`Around ${lab}`)}</span></li>`; last = lab; } h += step(s); });
       return h + `<li class="tl-step tl-goal"><i class="tl-dot"></i><span class="tl-t"><b>${F('First birthday!')}</b><small>${F(`Around ${calMon(12)}`)}</small></span>${cake}</li>`;
     };
     const head = x => { const mo = Math.max(0, Math.min(11, Math.floor(x))), cov = typeof window.stCover === 'function' ? window.stCover(mo) : null; return cov ? F(cov.title) : ''; };
