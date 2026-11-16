@@ -292,7 +292,7 @@
         bf && pumps() ? ['fridge', 'Pumped milk', 'Fine cool or at room temperature. No need to warm it.'] : null,
         eats() ? ['bag', 'Bring {p} own food', 'Something soft from home, a bib and a spoon. A placemat keeps the tray clean.'] : ['hand', 'Holding {o}', 'It’s fine to ask people to wash their hands first, or to say no.']]));
 
-    if (id === 'road') return sub('road', 'Road trips', 'Long drives with Maya', 'Plan a stop every 2 hours to feed, change and stretch.',
+    if (id === 'road') return sub('road', 'Road trips', 'Long drives go best in 2-hour stretches', 'Plan a stop every 2 hours to feed, change and stretch.',
       hubDayMarkers({ title: 'Plan your drive', events: [[9 * 60, 'car', 'Leave as a nap starts'], [11 * 60, 'bottle', 'Stop to feed and change'], [13 * 60, 'mat', eats() ? 'Stop for a snack and a stretch' : 'Stop to feed and stretch'], [15 * 60, 'home', 'Arrive']], from: 8 * 60, to: 16 * 60, cat: CAT, caption: 'Leave at 9 as a nap starts, stop at 11 to feed and change, stop at 1 to feed and stretch, arrive at 3.' })
       + pack([['toy', 'Soft toys only', 'Hard ones can fly in a sudden stop'], fm ? ['bag', 'One extra bottle', 'In case of traffic'] : null])
       + ifs([
@@ -302,7 +302,7 @@
         'If the baby cries while you drive, pull over first. On your own, plan more stops and check on the baby only when parked.')
       + good([typeof profile !== 'undefined' && profile.early ? ['steth', 'Born early?', 'Ask your pediatrician how long rides can be.'] : null, ['moon', 'Naps on the road', 'Naps in the car seat are fine while you drive. When you stop, move {o} to a crib or play yard.'], bf ? ['mouth', 'Nursing or pumping on the road', 'Park first. {S} {stay|stays} buckled in whenever the car is moving.'] : null]));
 
-    if (id === 'fly') return sub('fly', 'Flying', 'Flying with Maya', 'Most of the planning happens when you book.',
+    if (id === 'fly') return sub('fly', 'Flying', 'Most flight planning happens when you book', 'Then take the airport and the flight one step at a time.',
       phases('fly', [
         ['Book', H().versus('Where will Maya sit?', ['Own seat', 'Safest, in a car seat labeled for aircraft.'], ['On your lap', 'Often free under 2, but less safe in turbulence.'])
           + rows([['notepad', 'When you book', 'Add {o}, ask about a bassinet seat, and check the car seat says “aircraft” in red.'], m < 2 ? ['steth', 'Flying in the first weeks', 'Ask your pediatrician first.'] : null])
@@ -314,7 +314,7 @@
         ['Arrive', rows([['clock', 'After you land', 'Short trip? Keep naps on home time. Longer? Shift them a little each day.']])
           + `<button class="hub-link" onclick="openPage('chg:Sleep:d:away')">${F('Sleep in a new time zone')} ›</button>`]]));
 
-    if (id === 'abroad') return sub('abroad', 'Going abroad', 'Going abroad with Maya', 'Plan the flight as usual, then add these steps. The passport comes first.',
+    if (id === 'abroad') return sub('abroad', 'Going abroad', 'Going abroad? The passport comes first', 'Plan the flight as usual, then add these steps.',
       plan('Plan your trip', [
         ['As soon as you book', 'notepad', 'Apply for {p} passport. It can take weeks.'],
         ['4–6 weeks before', 'steth', 'Ask your pediatrician about shots, including an early measles shot from 6 months.'],
@@ -325,7 +325,7 @@
       + good([['chat', 'If one parent can’t come', 'They sign a notarized consent form for the passport appointment instead.']])
       + calls(['Call a doctor', 'A fever, fewer wet diapers, a dry mouth, or diarrhea that keeps going.'], ['Get care right away', m < 3 ? 'Any fever under 3 months or in a malaria area, trouble breathing, or hard to wake.' : 'Any fever in a malaria area, trouble breathing, or hard to wake.']));
 
-    if (id === 'away') return sub('away', 'Staying away', 'Staying with family or in a hotel', 'Most homes and hotel rooms aren’t set up for babies. Ten minutes when you arrive covers most of it.',
+    if (id === 'away') return sub('away', 'Staying away', 'Ten minutes makes a new room baby-safe', 'Most homes and hotel rooms aren’t set up for babies. A quick check when you arrive covers most of it.',
       phases('away', [
         ['Before you go', pack([['sack', '{P} sleep sack', 'It smells like home'], ['home', 'The play yard’s own sheet', 'Only the one made for it'], ['star', 'A night light', 'For feeds in a dark, new room']])
           + rows([['shield', 'Which crib is safe?', 'A play yard, or a crib made after June 2011. Never an adult bed or a couch.']])],
@@ -337,7 +337,7 @@
             'A few off nights are normal. If you get advice, share one rule kindly: on the back, in a bare crib.')
           + `<button class="hub-link" onclick="openPage('chg:Sleep:d:away')">${F('Sleep in a new time zone')} ›</button>`]]));   // time zones live in Sleep
 
-    if (id === 'water') return sub('water', 'Pool or beach', 'A day by the water', 'Babies get cold and overheat faster than you do, so short visits work best.',
+    if (id === 'water') return sub('water', 'Pool or beach', 'Short visits by the water work best', 'Babies get cold and overheat faster than you do.',
       todo('In the water', 'Hold {o} the whole time. Floats don’t stop drowning.')
       + plan('Plan your day by the water', [
         ['Go early', 'clock', 'Before the strongest sun.'],
@@ -360,29 +360,29 @@
       const cold = `<h2 class="hub-h2">${F('What to do')}</h2>` + steps([['clock', 'Warm up the car first', 'Before you buckle {o} in'], ['car', 'In the car seat', 'Thin layers, then a blanket over the buckled straps'], ['shirt', 'One more layer on walks', 'Plus a hat and mittens'], ['hand', 'Check if {s’s} warm enough', 'Feel {p} chest. Cold hands are normal']], 'Warm up the car first. In the car seat, thin layers with a blanket over the buckled straps. On walks, one more layer than you. Feel {p} chest to check {s’s} warm enough.')
         + good([['snow', 'Very cold or windy?', 'Keep walks short, or stay in.'], ['carrier', 'In a carrier', 'Your coat can go over you both, with {p} face uncovered.'], ['home', 'Once you’re somewhere warm', 'Take off {p} hat and extra layers, so {s} {don’t|doesn’t} overheat.']])
         + calls(['Call your pediatrician', 'Skin that’s pale, gray or blistered after being out in the cold.'], ['Call 911', 'Cold to the touch and floppy or hard to wake.']);
-      return sub(view, 'Hot and cold days', view === 'hot' ? 'Hot days out' : 'Cold days out', view === 'hot' ? 'Babies heat up faster than you do.' : 'Babies lose heat faster than you do.',
+      return sub(view, 'Hot and cold days', view === 'hot' ? 'Babies heat up faster than you do' : 'Babies lose heat faster than you do', view === 'hot' ? 'Timing and shade do most of the work.' : 'Most of the work happens before you head out.',
         seg + (view === 'hot' ? hot : cold));
     }
 
     // Car seat: one page from birth past the first birthday. Next car seat and rear-facing after 1 live here now.
     if (id === 'car' || id === 'bigger' || id === 'after1') {
-      const install = `<h2 class="hub-h2">${F('Setting it up')}</h2>` + steps([['lock', 'Pick one way to install it', 'Lower anchors or the seat belt, not both'], ['back', 'Set the recline', 'To the angle line on the seat'], ['hand', 'Check it’s tight', 'Tug where it’s belted in: less than 1 inch of movement'], ['shield', 'Buckle {o} in snugly', 'Harness straps at or below {p} shoulders']], 'Install it with the lower anchors or the seat belt, not both. Set the recline to the angle line, then tighten it so it moves less than 1 inch where it’s belted. Buckle the straps at or below the shoulders.', true);
+      const install = `<h2 class="hub-h2">${F('Setting it up')}</h2>` + steps([['lock', 'Pick one way to install it', 'Lower anchors or the seat belt, not both'], ['back', 'Set the recline', 'To the angle line on the seat'], ['hand', 'Check it’s tight', 'Tug at the belt path: under 1 inch of movement'], ['shield', 'Buckle {o} in snugly', 'Harness straps at or below {p} shoulders']], 'Install it with the lower anchors or the seat belt, not both. Set the recline to the angle line, then tighten it so it moves less than 1 inch where it’s belted. Buckle the straps at or below the shoulders.', true);
       // One page for the whole first year and beyond: no stages, so the seat-by-seat path shows from day one,
       // and Good to know holds what's true at any age. The home's "Coming up" card points back here when the limits matter.
-      return sub('gear', 'Your gear', 'Car seat basics', 'A quick check before every drive keeps {o} as safe as possible.',
-        hubFigure('carseat', CAT, 'Rear-facing in the back seat, chest clip level with the armpits, straps snug with no slack to pinch, and no puffy coat underneath.')
+      return sub('gear', 'Your gear', 'If you can pinch the strap, it’s too loose', 'Snug straps keep {o} still in a sudden stop. Check before every drive.',
+        hubFigure('carseat', CAT, 'Rear-facing in the back seat, chest clip level with the armpits, and no puffy coat underneath.')
         + install
         + timeline('Which seat, and when', [['From birth', 'car', 'An infant seat, rear-facing.'], ['At its limit', 'sit', 'A convertible seat, still rear-facing.'], ['Often age 2 or older', 'stand', 'Forward-facing, after its rear-facing limits.']], 'An infant seat rear-facing from birth, a convertible seat still rear-facing once the infant seat’s limit is reached, and forward-facing only after its rear-facing limits, often age 2 or older.')
-        + good([['road', 'Taxis and other people’s cars', 'Bring {p} car seat. Most can be installed with just the seat belt.'], ['notepad', 'Only what came with it', 'Skip add-on inserts and head supports, and use a secondhand seat only if you know its history.'], ['steth', 'A free check', 'A certified car seat technician can check your install, usually for free.']]));
+        + good([['road', 'Taxis and other people’s cars', 'Bring {p} car seat. Most can be installed with just the seat belt.'], ['notepad', 'Only what came with it', 'No add-on inserts or head supports, and secondhand only if you know its history.'], ['steth', 'A free check', 'A certified car seat technician can check your install, usually for free.']]));
     }
 
     // Carrier and stroller follow Car seat: the same page at every age, with how it changes shown as a path from day one.
-    if (id === 'carry') return sub('gear', 'Your gear', 'Carrier basics', 'A quick check every time keeps {o} breathing easy.',
+    if (id === 'carry') return sub('gear', 'Your gear', 'In a carrier, keep {p} face in view', 'A quick check every time keeps {o} breathing easy.',
       hubFigure('carrier', CAT, 'In a carrier: face visible and close enough to kiss, chin off the chest, knees up in an M shape, back supported.')
       + timeline('Ways to carry, as {s} {grow|grows}', [['From birth', 'carrier', 'Facing in, face above the fabric.'], ['Head steady', 'eye', 'Facing out, for short awake times, within the carrier’s limits.'], ['Sits steadily', 'back', 'On your back, within the carrier’s limits.']], 'Facing in from birth. Facing out once the head is steady, for short awake times, within the carrier’s limits. On your back once sitting steadily.')
       + good([['hand', 'Snug enough', 'When you lean forward, {s} {stay|stays} against you without slumping.'], ['moon', 'Asleep in the carrier', 'Move {o} to a flat bed when you can.'], ['cup', 'Away from the stove', 'And from hot drinks, while {s’s} in the carrier.']]));
 
-    if (id === 'stroller') return sub('gear', 'Your gear', 'Stroller basics', 'A quick check each outing keeps {o} snug and the stroller steady.',
+    if (id === 'stroller') return sub('gear', 'Your gear', 'Harness on and brakes set, every outing', 'A quick check each outing keeps {o} snug and the stroller steady.',
       hubFigure('stroller', CAT, 'Harness on every time, brakes on when you stop, no bags on the handles and no blanket over the top.')
       + timeline('Lying back, then sitting up', [['From birth', 'stroller', 'Lying back, or with the infant car seat clicked on.'], ['Sits steadily', 'back', 'Sitting up, if the stroller’s instructions allow it.']], 'Lying back from birth, or with the infant car seat clicked on. Sitting up once the baby sits steadily, if the stroller allows it.')
       + good([['car', 'A car seat on the frame', 'Listen for the click, then tug to check it’s locked on.'], ['hand', 'On a bus or train', 'Brakes on and a hand on the stroller while it moves.']]));

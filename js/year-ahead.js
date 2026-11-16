@@ -84,7 +84,7 @@
     // Checkups follow the birthday, so each sits at the adjusted month it falls in.
     const early = !!(profile.early && profile.due), born = parse(early ? profile.due : profile.dob), gap = early ? Math.max(0, (parse(profile.due) - parse(profile.dob)) / MONTH) : 0;
     const monthDate = m => { const d = new Date(born); d.setMonth(d.getMonth() + m); return d.toLocaleDateString('en-US', { month: 'long' }); };
-    const label = m => m >= 12 ? '1 year' : `${m} months`;
+    const label = m => m >= 12 ? '1 year' : m === 1 ? '1 month' : `${m} months`;
     const node = '<span class="ya-node" aria-hidden="true"></span>', chev = '<span class="hub-chev" aria-hidden="true">›</span>';
     let h = `<div class="ya-page ya-pathpage"><div class="eyebrow ya-eyebrow">${F(`${nm}’s year ahead`)}</div><h1>${F('Timeline')}</h1><p class="next-lead">${F(`Where ${nm} is now, and the big changes ahead. Tap any to read ahead.`)}${early ? ' ' + F(bday('dev') || bday('safety') ? `Feeding, sleep and care follow ${nm}’s adjusted age. ${bday('dev') && bday('safety') ? 'Development, safety' : bday('dev') ? 'Development' : 'Safety'} and checkups follow {p} birthday.` : `The ages follow ${nm}’s adjusted age. Checkups follow {p} birthday.`) : ''}</p><ol class="ya-path">`;
     if (behind.length) h += `<li class="ya-behind">${node}<button onclick="this.parentNode.classList.toggle('is-open')" aria-expanded="false">${F(`Earlier on (${behind.length})`)} <span aria-hidden="true">›</span></button><div class="ya-behind-list">${behind.map(c => `<button style="${yearTheme(c.cat)}" onclick="${c.go}"><span>${hubArt(c.icon, c.cat)}</span>${F(c.title)}</button>`).join('')}</div></li>`;
@@ -110,7 +110,9 @@
       h += (checks[m] || []).map(v => checkRow(v, gap ? 'By birthday age · ' + CHECK_LINE[v].charAt(0).toLowerCase() + CHECK_LINE[v].slice(1) : CHECK_LINE[v])).join('');
       if (early && m === bm && 12 > a + gap) h += `<li class="ya-pin">${node}<b>${F('First birthday')}</b></li>`;
     });
-    h += `<li class="ya-pin ya-end">${node}<b>${F(early ? 'A year, by adjusted age' : 'First birthday')}</b></li></ol><p class="hub-foot">${F('Ages are typical. Every baby moves at their own pace.')}</p></div>`;
+    // Nov 14 (Yarden): once the first year is nearly done, a calm look past it instead of a dead end. No links: Ahead covers year one.
+    const after = a >= 8 ? `<section class="hub-card ya-after"><b class="hub-card-label">${F('After the first birthday')}</b><p class="hub-card-text">${F('Ahead covers the first year. Here’s what usually comes next.')}</p><ul class="ya-after-list">${[['One nap a day', 'Usually between 12 and 18 months'], ['More words, and pointing to show you', 'Often by 15–18 months'], ['The 15-month checkup', 'With a few more vaccines'], ['Goodbye to bottles', 'Cups only by about 18 months']].map(([t, w]) => `<li><b>${F(t)}</b><small>${F(w)}</small></li>`).join('')}</ul></section>` : '';
+    h += `<li class="ya-pin ya-end">${node}<b>${F(early ? 'A year, by adjusted age' : 'First birthday')}</b></li></ol>${after}<p class="hub-foot">${F('Ages are typical. Every baby moves at their own pace.')}</p></div>`;
     h = h.replace('%%DUENOW%%', dueNow.map(v => checkRow(v, 'Due now · ' + (gap ? 'by birthday age · ' : '') + CHECK_LINE[v].charAt(0).toLowerCase() + CHECK_LINE[v].slice(1))).join(''));
     return h;
   };
@@ -154,11 +156,11 @@
       tip: ['Not crawling by 10 months?', 'Many babies skip crawling and go straight to pulling up. If Maya isn’t moving around at all, mention it at the 9-month checkup.'] },
     solids: { lead: 'Around 6 months, food joins milk. It starts with a few bites a day, and milk stays the main food for months.', bar: [4, 9, 5.4, 7, 'About 6 months'], signsTitle: 'Signs {s’s} ready', signs: ['Holds {p} head steady on {p} own', 'Sits with a little support', 'Leans in when food comes {p} way', 'Swallows food instead of pushing it out'],
       rows: [['highchair', 'Feeding', 'Get set up for the first bite', 'A high chair, a soft spoon and a bib', "openPage('chg:Feeding:d:setup')"], ['shield', 'Safety', 'Learn infant choking first aid', 'And how gagging is different', "openPage('chg:Feeding:safe')"], ['bowl', 'Feeding', 'Decide how you’d like to start', 'Spoon-feeding, finger foods or a bit of both', "openPage('chg:Feeding:d:approach')"], ['steth', 'Health', 'Ask about allergens at the checkup', 'The 6-month checkup is a good time', "openPage('health-visit:6')"]],
-      tip: ['No need to rush', 'Not before 4 months. Until then, milk gives Maya everything {s} {need|needs}.'] },
+      tip: ['No need to rush', 'Around 6 months is the usual start, never before 4. Until then, milk gives Maya everything {s} {need|needs}.'] },
     finger: { lead: 'Around 7–9 months, food moves past smooth purées to soft lumps, and pieces {s} can pick up. Meals get messier, and that’s how {s} learns.', bar: [5, 11, 7, 9, 'Textures'], signs: ['Moving food around {p} mouth to chew', 'Raking food toward {o} with {p} fingers', 'Reaching for the spoon'],
       rows: [['bowl', 'Feeding', 'Thicker textures, step by step', 'From mashed to soft lumps', "openPage('chg:Feeding:d:lumpy')"], ['bowl', 'Feeding', 'Safe finger food sizes', 'Soft, and cut the right shape', "openPage('chg:Feeding:d:finger')"], ['shield', 'Safety', 'Gagging versus choking', 'Know the difference before you start', "openPage('chg:Feeding:safe')"]],
       tip: ['Lots of gagging at first?', 'It’s noisy and normal while {s} learns to move food around. Choking is different: a weak cough or no sound at all.'] },
-    carseat: { lead: 'Many babies outgrow the infant car seat in the first year, usually by height before weight. The next seat still faces the back.', bar: [4, 14, 8, 12, 'Often here'], signs: ['{p} head is within an inch of the top of the seat', 'Close to the weight limit on the label', 'Feet touching the back seat is fine'],
+    carseat: { lead: 'Many babies outgrow the infant car seat in the first year, usually by height before weight. The next seat still faces the back.', bar: [4, 14, 8, 12, 'Often here'], signs: ['{p} head is within an inch of the top of the seat', 'Close to the weight limit on the label'], signsNote: 'Feet touching the back seat is fine, and not a reason to switch.',
       rows: [['car', 'Out and about', 'Which seat comes next', 'Infant seat, then a convertible seat, still rear-facing', "openPage('chg:Out and about:d:car')"]],
       tip: ['Still facing the back', 'Keep {o} rear-facing as long as the new seat allows, often until age 2 or older.'] },
     sep: { lead: 'Around 8–10 months, many babies get upset when you leave. It means {s} knows you, and knows when you’re gone.', bar: [5, 14, 8, 10, 'Often peaks'], signs: ['Crying when you leave the room', 'Clinging around new people', 'Waking at night looking for you'],
@@ -184,9 +186,10 @@
     const h = H(), c = C.find(x => x.id === id), p = PAGES[id]; if (!c || !p) return null;
     const a = ageNow(), cat = c.cat, past = c.end <= a, now = c.start <= a && c.end > a;
     const when = past ? 'Already behind ' + name() : now ? 'Any time now' : c.start - a <= 1 ? 'Could start any week now' : `In about ${Math.round(c.start - a)} month${Math.round(c.start - a) === 1 ? '' : 's'}`;
-    const look = `${p.signsTitle || 'Signs it’s close'}: ${p.signs.map(x => x.charAt(0).toLowerCase() + x.slice(1)).join(', ')}.`;
-    return h.detail(cat, `${range(c)} · ${when}`, c.title, p.lead + ' ' + look,
-      `<p class="ya-connect">${F(`Here’s what it changes, and how to get ready.`)}</p>`
+    // Nov 14: the signs used to sit at the end of the top card's paragraph. As their own short list they scan at a glance.
+    const look = `<h2 class="hub-h2">${F(c.end <= a ? 'What it looked like' : p.signsTitle || 'Signs it’s close')}</h2><ul class="ya-signs">${p.signs.map(x => `<li>${F(x)}</li>`).join('')}</ul>${p.signsNote ? `<p class="ya-signs-note">${F(p.signsNote)}</p>` : ''}`;
+    return h.detail(cat, `${range(c)} · ${when}`, c.title, p.lead,
+      look
       + h.list('What it changes', p.rows.slice(0, 4).map(([icon, rc, title, sub, go]) => h.row({ icon, cat: rc, title, sub, onclick: go }).replace('<span class="hub-row-copy">', `<span class="hub-row-copy"><small class="hub-row-eyebrow">${F(AREA[rc] || rc)}</small>`)))
       + h.tip(p.tip[0], p.tip[1]), c.icon);
   }

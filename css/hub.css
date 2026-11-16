@@ -1739,3 +1739,9 @@ label:has(> .hub-photo-input:focus-visible) { outline: 2px solid #884866; outlin
 #main .care-v2 .care-all-how { display: block; margin: 2px 0 18px; padding: 4px 2px }
 #main .hub-rough-link:not(:first-child) { border-top: 1px solid var(--line) }   /* a link row after the others keeps the divider (Nov 13) */
 
+
+/* Nov 14: rows on Sleep and Feeding name their own subject, so the small label above the bold line is gone. */
+#main .sm-row .hub-row-eyebrow { display: none }
+/* Nov 14: the same three facts on every sleep training method, in one row. */
+#main .st-glance { grid-template-columns: repeat(3, 1fr); margin: 0 0 12px }
+#main .st-glance b { font-size: 15.5px }

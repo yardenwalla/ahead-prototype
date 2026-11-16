@@ -205,10 +205,10 @@
   });
   const PANELS = {
     drops: { scenes: [['dropa', '1', 'A little milk', 'Drops in about 1 oz'], ['dropb', '2', 'Give that first', 'So you know it all went in'], ['dropc', '3', 'Then the usual feed', 'Breast or bottle']] },
-    carseat: { scenes: ['carseat'], chips: ['Rear-facing, in the back seat', 'Chest clip level with the armpits', 'Straps snug: no slack to pinch', 'No puffy coat underneath'] },
-    carrier: { scenes: ['carrierfit'], chips: ['Face visible, close enough to kiss', 'Chin off the chest', 'Knees up in an M shape', 'Back supported'] },
-    stroller: { scenes: ['stroller'], chips: ['Lying flat while little', 'Harness on every time', 'Brakes on when you stop', 'No bags on the handles', 'No blanket over the top'] },
-    strollerUp: { scenes: ['strollerUp'], chips: ['Sitting up once steady', 'Harness on every time', 'Brakes on when you stop', 'No bags on the handles', 'No blanket over the top'] },
+    carseat: { scenes: ['carseat'], chips: ['Rear-facing, in the back seat', 'Chest clip level with the armpits', 'No puffy coat: it leaves the straps loose'] },
+    carrier: { scenes: ['carrierfit'], chips: ['Close enough to kiss', 'Chin off the chest', 'Knees up in an M shape', 'Back supported'] },
+    stroller: { scenes: ['stroller'], chips: ['Lying flat while little', 'No bags on the handles', 'No blanket over the top'] },
+    strollerUp: { scenes: ['strollerUp'], chips: ['Sitting up once steady', 'No bags on the handles', 'No blanket over the top'] },
     outgrown: { scenes: ['outgrown'], chips: ['Head within an inch of the top', 'Or past the height or weight on the label'] },
     swaddle: { scenes: [['swad1', '1', 'Diamond, top folded', 'Shoulders below the fold'], ['swad2', '2', 'One side across', 'Arm straight, tucked under'], ['swad3', '3', 'Snug and loose', 'Snug chest, room at the hips']] },
     tub: { scenes: ['tub'], chips: ['About 2 inches of water', 'Warm, about 100°F', 'One hand behind the head and neck'] },

@@ -200,3 +200,81 @@
 #main .care-v2 .care-howto > summary { cursor: pointer; font-weight: 700; color: var(--ss-ink, var(--ink)); list-style: none }
 #main .care-v2 .care-howto > summary::after { content: " ›" }
 #main .care-v2 .care-howto[open] > summary { margin-bottom: 12px }
+
+/* Nov 15: one "When to call" card, only on pages about a worry. Tinted, with a phone mark, so it reads as "who to call"
+   rather than more content, without the alarm of a red box. On template pages the title sits above it, like every section. */
+#main .care-calls { padding: 14px 16px 15px; margin: 8px 0 16px; background: #f8efe9; border-radius: 20px }
+#main .care-calls-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px }
+#main .care-calls-ico { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: #fff; color: #9b3326; flex: none }
+#main .care-calls h3 { margin: 0; font-size: 15px; font-weight: 600; color: var(--ink) }
+#main .care-calls p { margin: 0 0 6px; font-size: 14px; line-height: 1.45; color: var(--ink2, #5e5a75) }
+#main .care-calls p:last-child { margin: 0 }
+#main .care-calls b { color: #7a4b2c; font-weight: 700 }
+#main .care-calls .is-urgent b { color: #9b3326 }
+#main .care-calls.is-titled { display: flex; gap: 12px; align-items: flex-start; margin-top: 0 }
+
+
+/* Nov 15: a video is a compact "Watch how" row near the end of a page; once played it opens full width. */
+#main .hub-detail.care-v2 .hub-embed:not(:has(.hub-embed-frame)) { display: grid; grid-template-columns: 116px 1fr; align-items: center }
+#main .hub-detail.care-v2 .hub-embed:not(:has(.hub-embed-frame)) .hub-embed-poster { aspect-ratio: 4 / 3 }
+#main .hub-detail.care-v2 .hub-embed:not(:has(.hub-embed-frame)) .hub-embed-play { width: 34px; height: 34px; margin: -17px 0 0 -17px }
+#main .hub-detail.care-v2 .hub-embed:not(:has(.hub-embed-frame)) .hub-embed-play svg { width: 16px; height: 16px; margin-left: 2px }
+#main .hub-detail.care-v2 .hub-embed figcaption b { font-size: 14.5px }
+
+/* Nov 15: template pages. Every section has a title above it, so a card never carries its own label. */
+#main .care-tpl .care-map figcaption > b:first-child { display: none }
+#main .care-tpl .care-tpl-card p { margin: 0 }
+#main .care-tpl .care-calls { margin-top: 22px }
+
+/* Nov 15: poop colors as circles, normal and call groups. */
+#main .hub-poop2 { padding: 16px 14px 14px; display: grid; gap: 14px }
+#main .hub-poop2 .poop-group { display: grid; gap: 10px }
+#main .hub-poop2 .poop-group.is-call { padding-top: 14px; border-top: 1px solid var(--line, #efeaf2) }
+#main .hub-poop2 .poop-tag { justify-self: start; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: #e7f2ec; color: #356651 }
+#main .hub-poop2 .is-call .poop-tag { background: #f8e9e6; color: #9b3326 }
+#main .hub-poop2 .poop-row { display: grid; gap: 6px }
+#main .hub-poop2 .poop-row.is-5 { grid-template-columns: repeat(5, minmax(0, 1fr)) }
+#main .hub-poop2 .poop-row.is-3 { grid-template-columns: repeat(3, minmax(0, 1fr)) }
+#main .hub-poop2 .poop-dot { display: grid; align-content: start; grid-template-rows: 48px auto auto; justify-items: center; text-align: center; gap: 3px; min-width: 0 }
+#main .hub-poop2 .poop-dot span { width: 40px; height: 40px; border-radius: 50%; margin-bottom: 4px; background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--c) 70%, #fff), var(--c) 62%); box-shadow: inset 0 0 0 1px rgba(0,0,0,.08) }
+#main .hub-poop2 .is-call .poop-dot span { box-shadow: 0 0 0 3px #fff, 0 0 0 4.5px #e7b9b0 }
+#main .hub-poop2 .poop-dot b { font-size: 12.5px; font-weight: 600; line-height: 1.2 }
+#main .hub-poop2 .poop-dot small { font-size: 11px; line-height: 1.25; color: var(--ink2, #5e5a75) }
+#main .hub-poop2 figcaption { font-size: 12.5px; color: var(--ink2, #5e5a75); padding-top: 2px }
+/* Template sections: rows and links stack with a little space after a figure. */
+#main .care-tpl .care-map + .hub-list, #main .care-tpl .hub-list + .care-link { margin-top: 10px }
+#main .care-tpl .care-tpl-card p + p { margin-top: 10px }
+#main .care-tpl .hub-card + .hub-list, #main .care-tpl .care-ramp + .hub-list { margin-top: 10px }
+
+/* Nov 15: first-week diapers chart. Drops rise day by day; poop colors underneath. */
+#main .wet-chart { padding: 16px 14px 14px; display: grid; gap: 6px }
+#main .wet-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; text-align: center }
+#main .wet-col { display: grid; justify-items: center; gap: 2px; min-width: 0 }
+#main .wet-drops { display: flex; flex-direction: column-reverse; gap: 3px; margin-bottom: 6px }
+#main .wet-drops i { display: block; width: 14px; height: 16px; color: #e6ecf7 }
+#main .wet-drops i.on { color: #5f86d4 }
+#main .wet-drops svg { width: 14px; height: 16px; fill: currentColor }
+#main .wet-col b { font-size: 17px; font-weight: 700; color: var(--ink); line-height: 1.1 }
+#main .wet-col small { font-size: 12px; line-height: 1.25; color: var(--ink2, #5e5a75) }
+#main .wet-label { font-size: 11.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: #8a86a0; padding: 0 0 8px }
+#main .wet-label.is-poop { margin-top: 10px; padding-top: 12px; border-top: 1px solid var(--line, #efeaf2) }
+#main .wet-poop { width: 26px; height: 26px; border-radius: 50%; margin-bottom: 4px; background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--c) 70%, #fff), var(--c) 62%) }
+/* Notes inside a figure, and the quiet "not the right one?" link under it. */
+#main .care-tpl .tpl-notes { list-style: none; margin: 12px 0 0; padding: 12px 0 0; border-top: 1px solid var(--line, #efeaf2); display: grid; gap: 6px; font-size: 13.5px; line-height: 1.45; color: var(--ink2, #5e5a75); text-align: left; grid-column: 1 / -1 }
+#main .care-tpl .tpl-notes b { color: var(--ink); font-weight: 600; font-size: inherit; text-transform: none; letter-spacing: 0; display: inline }
+#main .care-tpl .tpl-more { all: unset; cursor: pointer; display: block; margin: 10px 2px 0; font-size: 14px; font-weight: 600; color: var(--ink) }
+#main .care-tpl .tpl-more span { font-weight: 400; color: var(--ss-ink, #5e5a75); text-decoration: underline; text-underline-offset: 3px }
+#main .care-tpl .care-map { flex-wrap: wrap }
+#main .care-tpl .care-tpl-card .tpl-notes { border-top-color: rgba(0,0,0,.07); font-size: 14px }
+/* Nov 15: on template pages only the top card carries the guide color and only the call card is tinted. Every section card,
+   What to do included, is white, so the page reads top card, then content, then who to call. */
+#main .care-tpl .care-tpl-card { background: var(--white, #fff); border: 1px solid var(--line, #efeaf2); border-radius: 20px; padding: 14px 16px }
+#main .care-tpl .care-tpl-card > p { font-size: 15px; line-height: 1.5; color: var(--ink) }
+#main .care-tpl .care-tpl-card .tpl-notes { border-top-color: var(--line, #efeaf2) }
+/* Template pages: the section title names a figure, so its own inner title is hidden; notes are always ink, never a theme color. */
+#main .care-tpl .hub-fig-title { display: none }
+#main .care-tpl .tpl-notes b { color: #302d3c !important }
+/* Rash cards: every card says where (bold) and what it looks like, two lines, same size. */
+#main .care-tpl .care-map figcaption { display: grid; gap: 4px; align-content: center }
+#main .care-tpl .care-map .tpl-where { display: block !important; font-size: 15px; font-weight: 600; color: #302d3c; text-transform: none; letter-spacing: 0 }
+#main .care-tpl .care-map .tpl-look { font-size: 13.5px; line-height: 1.4; color: var(--ink2, #5e5a75) }

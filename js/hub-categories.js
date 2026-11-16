@@ -49,7 +49,7 @@
   const shortLine = t => { const f = firstSentence(t); const cut = f.length > 72 && f.includes(',') ? f.slice(0, f.indexOf(',')) : f; return cut.split(/\s+/).length < 3 ? f : cut; };
   // One thing to try, phrased as an action: the short prompt if there is one, otherwise the first line of how to do it.
   const playLine = a => (window.hubBabyify || (x => x))(playLineRaw(a));
-  const playLineRaw = a => { const s = typeof conceptPlaySuggestion === 'function' ? conceptPlaySuggestion(a) : ''; return s && !s.startsWith(a.why || '\u0000') ? firstSentence(s) : firstSentence(a.how || a.why); };
+  const playLineRaw = a => { const ex = window.devIdeaExplain ? devIdeaExplain(a.id) : ''; if (ex) return firstSentence(ex); const s = typeof conceptPlaySuggestion === 'function' ? conceptPlaySuggestion(a) : ''; return s && !s.startsWith(a.why || '\u0000') ? firstSentence(s) : firstSentence(a.how || a.why); };
 
   /* ---------- Development: "What might I see, and how can I help?" ---------- */
   const DOMAIN_TITLES = { Social: 'Social', Talking: 'Talking', Thinking: 'Thinking', Movement: 'Movement' };
@@ -75,7 +75,7 @@
     // different area from the story, each opening its area), one thing to try (never repeated on an area page),
     // the age's big question, the four areas with progress, and what's coming into view. One home for each fact.
     const IN = {
-      2: { t: '{S’s} learning that you answer {o}', lead: 'Your voice, your touch, your attention. {S’s} finding out that reaching out to you gets a response.', idea: 'close-face', w: 'Gives those first coos a face to answer',
+      2: { t: '{S’s} learning that you answer {o}', lead: 'Each time you answer a cry, a look or a little sound, {s} {learn|learns} that reaching out to you works.', idea: 'close-face', w: 'Gives those first coos a face to answer',
         n: [['Talking', 'Little sounds that aren’t crying', 'Soft coos may come in calm, awake moments.', 'Makes sounds beyond crying'], ['Thinking', 'A long look at a toy', '{S} may stop and study it, instead of glancing past.', 'Looks at a toy for a few seconds'], ['Movement', 'Looking up from tummy time', 'A small head lift gives {o} a new view.', 'Lifts head during tummy time'], ['Social', 'Calming to your voice', '', 'Settles with your voice or touch']] },
       4: { t: 'It’s starting to feel like a conversation', lead: '{S} isn’t just watching you anymore. {S’s} practicing how to get your attention, and what happens when {s} does.', idea: 'sound-answer', w: 'Teaches {o} that {p} sounds get an answer',
         n: [['Social', 'The first chuckles', 'A silly face or a tickle may get a little laugh.', 'Chuckles during play'], ['Thinking', 'Studying {p} own hands', '{P} fingers can be as interesting as any toy.', 'Studies their hands'], ['Movement', 'Swiping at toys', '{S} may bat at a toy, or hold one you put in {p} hand.', 'Swipes at toys'], ['Talking', 'Cooing when you talk', '', 'Coos']] },
@@ -307,7 +307,7 @@
     const pastDue = live() && !done && !planned && dueDays < -14, farAhead = !done && !planned && dueDays > 14;
     // One line on a phone (Nov 10, Yarden): a short date, "Due Oct 25", not "Was due around October 25".
     const shortDate = d => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-    const eyebrow2 = live() && age < focus && !done ? `Around ${shortDate(dueAt)}` : pastDue ? `Due ${shortDate(dueAt)}` : String(eyebrow).replace(/^Due around .+$/, () => `Due ${shortDate(dueAt)}`);
+    const eyebrow2 = live() && age < focus && !done ? `Around ${shortDate(dueAt)}` : pastDue ? `Was due ${shortDate(dueAt)}` : String(eyebrow).replace(/^Due around .+$/, () => `Due ${shortDate(dueAt)}`);
     // A past checkup that was never confirmed doesn't vanish: one quiet line on the current checkup.
     let missedLine = '';
     if (live() && age === focus) {   // a missed checkup shows here too, so it isn't missed by parents who skip Home
@@ -332,12 +332,14 @@
       9: ['The questionnaire is routine, not a test', 'Answer from what you see at home. Some offices send it ahead, so check your messages.'],
       12: ['A quick blood test is common now', 'A finger or heel prick checks for iron and, in many places, lead.']
     }[age];
-    const LEAD = a => ({ 0: 'The first visit after the hospital, usually 3 to 5 days after birth.', 1: 'A short visit, and a check on how you’re doing too.', 2: 'One of the bigger visits, with the first main round of vaccines.', 4: 'Much like the 2-month visit, with more room for your questions.', 6: 'The talk moves from milk to first foods.', 9: 'This one takes a closer look at development.', 12: 'The first birthday checkup, and one of the busier ones.' })[a] || conceptHealthSummary(a);   // the gist; the rows below hold the details
+    const LEAD = a => ({ 0: 'The first visit after the hospital, usually 3 to 5 days after birth.', 1: 'A short visit, and a check on how you’re doing too.', 2: 'One of the bigger visits, with the first main round of vaccines.', 4: 'Mostly the same shots as at 2 months, so this time you know what to expect.', 6: 'The talk moves from milk to first foods.', 9: 'This one takes a closer look at development.', 12: 'A busy one: new shots, a quick blood test, and the move to whole milk.' })[a] || conceptHealthSummary(a);   // the gist; the rows below hold the details
     const ASK = { 0: 'How will we know feeding is going well?', 1: 'Is {p} weight gain on track?', 2: 'What’s normal after {p} shots?', 4: 'When should we think about solids?', 6: 'Should we watch {p} iron now that solids are starting?', 9: 'Is {s} on track with sitting and babbling?', 12: 'How do we switch to whole milk?' }[age];
     const HEALTH_ART = "<svg viewBox=\"0 0 300 103\" aria-hidden=\"true\"><ellipse cx=\"146\" cy=\"90\" rx=\"107\" ry=\"7\" fill=\"#d5e5d6\"/><rect x=\"31\" y=\"63\" width=\"229\" height=\"23\" rx=\"11\" fill=\"#bed5c1\"/><circle cx=\"95\" cy=\"45\" r=\"26\" fill=\"#e8b89f\"/><path d=\"M78 40q7-21 29-15\" fill=\"none\" stroke=\"#9d735f\" stroke-width=\"5\" stroke-linecap=\"round\"/><path d=\"M85 48q4 4 8 0m7 0q4 4 8 0\" stroke=\"#916959\" stroke-width=\"2\" fill=\"none\"/><path d=\"M123 65q31-27 74 0l13 13h-92z\" fill=\"#a9c9ae\"/><path d=\"M148 66q24-19 49-26\" fill=\"none\" stroke=\"#e8b89f\" stroke-width=\"11\" stroke-linecap=\"round\"/><circle cx=\"202\" cy=\"40\" r=\"7\" fill=\"#e8b89f\"/><rect x=\"246\" y=\"15\" width=\"19\" height=\"29\" rx=\"4\" fill=\"#fafdf9\" stroke=\"#a0bda5\"/><path d=\"M256 22v15m-7-7h14\" stroke=\"#89b093\" stroke-width=\"3\" stroke-linecap=\"round\"/><path d=\"M277 48h15M285 40v16\" stroke=\"#9ebeaa\" stroke-width=\"2.5\" stroke-linecap=\"round\"/></svg>";
     let b = `<style>#main .hl-art{display:grid;place-items:center;margin:10px 0 2px}#main .hl-art svg{width:100%;max-width:260px;height:auto}#main .hl-worth{border-radius:20px;background:#eef0f7;padding:14px 16px;margin:0 0 14px;color:#3e4766}#main .hl-worth small{display:block;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#5e6890;margin-bottom:5px}#main .hl-worth b{display:block;font-size:16px;line-height:1.3;color:var(--ink,#302d3c)}#main .hl-worth p{margin:5px 0 0;font-size:14px;line-height:1.45;color:#5d6276}</style>`
       + h.hero({ eyebrow: eyebrow2, title, lead: LEAD(age) }).replace(/<\/header>\s*$/, `<div class="hl-art">${HEALTH_ART}</div></header>`)
-      + (WORTH && !done ? `<section class="hl-worth"><small>${F('Worth knowing before you go')}</small><b>${F(WORTH[0])}</b><p>${F(WORTH[1])}</p></section>` : '');
+      + (WORTH && !done ? `<section class="hl-worth"><small>${F('Worth knowing before you go')}</small><b>${F(WORTH[0])}</b><p>${F(WORTH[1])}</p></section>` : '')
+      // Nov 14 (Yarden): parents look for a way to tick a checkup off. One quiet link once it's close or past, never a question.
+      + (live() && !done && age <= focus && dueDays <= 3 ? `<div class="hub-browse hl-done-link"><button class="hub-link" onclick="hubVisitYes(${age})">${F('Been to this checkup? Mark it done')} ›</button></div>` : '');
     // "Booked for later? Save the date" is gone (Nov 10): Health moves on by age, so a saved date isn't needed.
     // The banner at the top already has "Back to your next checkup", so it isn't repeated here.
     b += h.list('Your visit, at a glance', [
@@ -365,7 +367,7 @@
   // The big question at each checkpoint, on the area it's about.
   const DEV_BIG = {
     2: ['Social', 'When will {s} smile at me?', 'Most babies smile back by about 6–8 weeks.'],
-    4: ['Movement', 'Should {s} be rolling yet?', 'Not yet for most babies. Rolling usually shows up between 4 and 6 months.'],
+    4: ['Movement', 'Should {s} be rolling yet?', 'Not yet is normal. Rolling usually shows up between 4 and 6 months, so it could be any time.'],
     6: ['Movement', 'When will {s} sit on {p} own?', 'Most babies sit without support by about 9 months. Sitting propped on {p} hands is right on track.'],
     9: ['Movement', 'What about crawling?', 'Many babies skip crawling. Some scoot or roll instead. What matters is that Maya finds a way to move.'],
     12: ['Movement', 'Should {s} be walking?', 'Not yet for most babies. First steps often come between 12 and 15 months.']
@@ -424,7 +426,7 @@
   };
   function developmentDomainPageSigns(ref, domain, rows, big, tc, meta, age, h) {
     const tryCard = `<section class="hub-card dev-try"><span class="hub-card-head"><b>${F('Try this together')}</b></span><button class="dev-try-row" onclick="openPage('chg:Development:d:signs')"><span class="dev-idea-art dev-signs-art">${h.art('signs', 'Development')}</span><span class="hub-row-copy"><b>${F('Teach a few simple signs')}</b><small>${F('More, eat, milk and all done, so Maya can tell you before {s} can say it')}</small></span><span class="hub-chev" aria-hidden="true">›</span></button></section>`;
-    const call = `<p class="dev-call">${F(earlyBday() ? 'Maya was born early, so it’s normal to reach these closer to {p} adjusted age. Call sooner if Maya loses a skill {s} had.' : 'Not all of these yet? Mention it at {p} next checkup. Call sooner if Maya loses a skill {s} had.')}</p>`;
+    const call = `<p class="dev-call">${F(earlyBday() ? 'Maya was born early, so it’s normal to reach these closer to {p} adjusted age. Call sooner if Maya loses a skill {s} had.' : `Not all of these by ${ref >= 12 ? 'the first birthday' : ref + ' months'}? Mention it at {p} next checkup. Call sooner if Maya loses a skill {s} had.`)}</p>`;
     const credit = rows.includes('dev-see') ? `<p class="dev-credit">${F('Photos and videos: Source CDC, free at cdc.gov. The CDC doesn’t endorse Ahead.')}</p>` : '';
     return `<div class="quiet-category hub-page hub-detail dev-area-page is-${domain}" data-overview="Development" style="${yearTheme('Development')}${tc ? `;--area:${tc[0]};--area-ink:${tc[1]}` : ''}">${detailPageTop('Development')}<div class="dev-area-head">${window.devTileArt ? `<span class="dev-area-head-art">${devTileArt(domain, ref)}</span>` : ''}${devAreaHead(ref, domain, meta, age)}</div><p class="dev-sub">${F(`Working on now, by ${age}`)}</p><div class="hub-ticks">${rows}</div>${big}${tryCard}${call}${credit}</div>`;
   }
@@ -452,7 +454,7 @@
     // From 6 months, Communication's idea is baby signs: a way to help Maya say what {s} {want|wants} before the words come.
     if (domain === 'Talking' && ref >= 6) return developmentDomainPageSigns(ref, domain, rows, big, tc, meta, age, h);
     const tryCard = move || act ? `<section class="hub-card dev-try"><span class="hub-card-head"><b>${F('Try this together')}</b></span><button class="dev-try-row" onclick="openPage('${move ? `chg:Development:d:move:${ref}` : `chg:Development:d:idea:${ref}:${act.id}`}')">${pic ? `<span class="dev-idea-art">${pic}</span>` : ''}<span class="hub-row-copy"><b>${F(move ? move.title : act.title)}</b><small>${move ? F(move.why) : playLine(act)}</small></span><span class="hub-chev" aria-hidden="true">›</span></button></section>` : '';
-    const call = `<p class="dev-call">${F(earlyBday() ? 'Maya was born early, so it’s normal to reach these closer to {p} adjusted age. Call sooner if Maya loses a skill {s} had.' : 'Not all of these yet? Mention it at {p} next checkup. Call sooner if Maya loses a skill {s} had.')}</p>`;
+    const call = `<p class="dev-call">${F(earlyBday() ? 'Maya was born early, so it’s normal to reach these closer to {p} adjusted age. Call sooner if Maya loses a skill {s} had.' : `Not all of these by ${ref >= 12 ? 'the first birthday' : ref + ' months'}? Mention it at {p} next checkup. Call sooner if Maya loses a skill {s} had.`)}</p>`;
     const credit = rows.includes('dev-see') ? `<p class="dev-credit">${F('Photos and videos: Source CDC, free at cdc.gov. The CDC doesn’t endorse Ahead.')}</p>` : '';
     return `<div class="quiet-category hub-page hub-detail dev-area-page is-${domain}" data-overview="Development" style="${yearTheme('Development')}${tc ? `;--area:${tc[0]};--area-ink:${tc[1]}` : ''}">${detailPageTop('Development')}<div class="dev-area-head">${window.devTileArt ? `<span class="dev-area-head-art">${devTileArt(domain, ref)}</span>` : ''}${devAreaHead(ref, domain, meta, age)}</div><p class="dev-sub">${F(`Working on now, by ${age}`)}</p><div class="hub-ticks">${rows}</div>${tryCard}${call}${credit}</div>`;
   };
@@ -497,7 +499,7 @@
     // (take a temperature, help them feel better, tummy bugs, colds), and the emergency signs last (AAP, HealthyChildren.org).
     const m = actualMonth(), u3 = m < 3;
     const call911 = hubCall911();
-    const feverCard = `<section class="hub-card hub-fever is-calm"><div class="hub-fever-bands is-one"><div><small>${F(feverBand(m))}</small><b>${feverTemp(m)}<span> or higher</span></b><p>${F(u3 ? 'Call your pediatrician right away, day or night.' : (m < 6 ? 'Call your pediatrician now, day or night.' : 'Or a fever that lasts more than a day. Call your pediatrician.'))}</p></div></div><p class="hub-fever-note">${F('Also call if Maya seems very unwell or unusually sleepy.' + feverEarlyNote())}</p></section>`;
+    const feverCard = `<section class="hub-card hub-fever is-calm"><div class="hub-fever-bands is-one"><div><small>${F(feverBand(m))}</small><b>${feverTemp(m)}<span> or higher</span></b><p>${F(u3 ? 'Call your pediatrician right away, day or night.' : (m < 6 ? 'Call your pediatrician now, day or night.' : 'Call your pediatrician. Call too if any fever lasts more than a day.'))}</p></div></div><p class="hub-fever-note">${F('Also call if Maya seems very unwell or unusually sleepy.' + feverEarlyNote())}</p></section>`;
     // One flow, in the order a parent lives it: check for a fever and know when that means calling,
     // make them comfortable, then the two common bugs, and the emergency signs last.
     const thermo = () => {
@@ -526,7 +528,7 @@
         `<h2 class="hub-h2">${F('Take {p} temperature')}</h2>` + thermo()
         + `<h2 class="hub-h2">${F('When to call')}</h2>` + feverCard
         + `<h2 class="hub-h2">${F('What helps')}</h2>`
-        + hubIconSteps([['bottle', 'Extra feeds', 'Little and often'], ['shirt', 'Dress lightly', 'No extra blankets'], ['moon', 'Rest', 'Naps and quiet time']], 'Health', 'Offer extra feeds, dress lightly, and let them rest.', false)
+        + hubIconSteps([['bottle', 'Extra feeds', 'Little and often'], ['shirt', 'Dress lightly', 'Extra layers keep a fever up'], ['moon', 'Rest', 'Naps and quiet time']], 'Health', 'Offer extra feeds, dress lightly, and let them rest.', false)
         + h.tip('Medicine', u3 ? 'Under 3 months, ask your pediatrician before any medicine.' : m < 6 ? 'Acetaminophen can help. Ask your pediatrician for the dose.' : 'Acetaminophen or ibuprofen can help. Ask your pediatrician for the dose.')
         + call911);
     }
@@ -554,7 +556,7 @@
     if (cat === 'Development' && screen === 'd' && a === 'faq') { const ref = DEV_STAGES[b] ? Number(b) : devRef(); return detailFrame('Development', DEV_STAGES[ref].title, 'What other parents ask', '', devCommonQuestions(ref).replace('<h2>Common questions</h2>', '').replace('class="common-questions"', 'class="common-questions hub-faq"')); }
     // Colds and stuffy noses: saline and suction, a cool-mist humidifier, no cold medicines, and when to call (AAP).
     if (cat === 'Health' && screen === 'd' && a === 'cold') return detailFrame('Health', 'When Maya seems sick', 'A cold or stuffy nose', 'Several colds in the first year are normal. Most clear up in 7–10 days.',
-      `<h2 class="hub-h2">${F('What helps')}</h2>` + hubIconSteps([['drop', 'Saline, then suction', 'Before feeds and sleep'], ['snow', 'Cool-mist humidifier', 'In {p} room at night'], ['bottle', 'Smaller, frequent feeds', 'Easier with a stuffy nose']], 'Health', 'Saline then suction before feeds and sleep, a cool-mist humidifier, and smaller, more frequent feeds.', false)
+      `<h2 class="hub-h2">${F('What helps')}</h2>` + hubIconSteps([['drop', 'Saline, then suction', 'Babies breathe through the nose to feed'], ['snow', 'Cool-mist humidifier', 'In {p} room at night'], ['bottle', 'Smaller, frequent feeds', 'Easier with a stuffy nose']], 'Health', 'Saline then suction before feeds and sleep, a cool-mist humidifier, and smaller, more frequent feeds.', false)
       + H().tip('Skip cold medicines', 'They aren’t safe for babies. No honey before 1 year.')
       + H().tip('Could it be an ear infection?', 'Often after a cold: fussing when lying down, a new fever, or fluid from the ear.')
       + H().versus('Normal, or time to call?', ['Normal', 'Stuffy and sneezy, still feeding.'], ['Call your pediatrician', `A fever of ${feverTemp(actualMonth())}+, a cold past 10 days, or signs of an ear infection.`])
@@ -602,7 +604,7 @@
     const inner = `<section class="hub-card hub-q-card"><div class="hub-card-head"><b>Questions to ask</b><span class="hub-chip">${Object.entries(asked).filter(([k, v]) => v && (!String(k).startsWith('m') || Number(String(k).slice(1)) < own.length)).length} of ${healthJourneyQuestions(age).length + own.length} asked</span></div><p class="hub-q-hint">${F('Tick them off as you go.')}</p>${ideas}</section>`
       + `<section class="hub-card hub-q-card"><div class="hub-card-head"><b>Your questions</b></div>${mine || `<p class="hub-q-hint">${F('Anything on your mind about Maya. It’ll be here at the visit.')}</p>`}<form class="hub-q-add" onsubmit="submitJourneyQuestion(event,${age})"><input id="visitQuestion" maxlength="500" required placeholder="Add a question" aria-label="Add a question"><button>Add</button></form></section>`
       + `<section class="hub-card hub-q-card" id="visit-notes"><div class="hub-card-head"><b>Notes from the visit</b>${notes ? '<span class="hub-chip is-done">Saved</span>' : ''}</div><form onsubmit="submitVisitNotes(event,${age})"><textarea id="appointmentNotes" maxlength="6000" rows="6" placeholder="What the pediatrician said, next steps, things to remember…" aria-label="Notes from the visit">${e(notes)}</textarea><button class="hub-q-save">Save notes</button></form></section>`
-      ;   // No 'Mark it as done' here: Health moves on by age (Nov 10).
+      ;   // Mark it done lives on the checkup page itself (Nov 14).
     return h.detail('Health', healthJourneyLabel(age), 'Questions and notes', F('Bring your questions, and keep what you hear with this checkup.'), inner, 'steth');
   };
   // i: a suggested question's index, or 'm0'… for your own

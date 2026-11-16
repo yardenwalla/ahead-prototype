@@ -159,3 +159,18 @@
 /* Icons only (Nov 9): item squares match the guides' rows (.hub-dot): 42px soft square, 13px corners, drawing filling it */
 #main .ya-pathpage .ya-row-art { width: 42px !important; height: 42px !important; border-radius: 13px !important; padding: 4px; background: var(--year-pale, #f3effb) }
 #main .ya-pathpage .ya-row-art svg { width: 100% !important; height: 100% !important }
+
+/* After the first birthday (Nov 14): a calm look past year one, no links */
+#main .ya-after { margin: 14px 0 6px; padding: 16px 18px; }
+#main .ya-after .hub-card-text { margin: 4px 0 10px; }
+#main .ya-after-list { list-style: none; margin: 0; padding: 0; }
+#main .ya-after-list li { display: block; padding: 10px 0; border-top: 1px solid var(--line, #EFEAF2); }
+#main .ya-after-list li b { display: block; font-weight: 600; }
+#main .ya-after-list li small { display: block; margin-top: 2px; color: var(--ink-2, #5E5A75); }
+
+/* Nov 14: "Signs it's close" as its own short list under the top card. */
+#main .ya-signs { list-style: none; margin: 0 0 18px; padding: 6px 16px; background: #fff; border: 1px solid var(--line, #efeaf2); border-radius: 20px }
+#main .ya-signs li { position: relative; padding: 10px 0 10px 18px; font-size: 14.5px; line-height: 21px; color: var(--ink, #2b2840) }
+#main .ya-signs li + li { border-top: 1px solid var(--line, #efeaf2) }
+#main .ya-signs li::before { content: ''; position: absolute; left: 2px; top: 18px; width: 6px; height: 6px; border-radius: 50%; background: var(--year-ink, #7a4f6d) }
+#main .ya-signs-note { margin: -8px 2px 18px; font-size: 13px; line-height: 19px; color: var(--ink2, #5e5a75) }

@@ -179,7 +179,7 @@
       notice: [
         ['She wants to feed constantly', 'Eight to twelve feeds a day is typical, and long evening feeds are too.', 'Feeding', 'bottle', 'chg:Feeding:d:enough',
           ['She wants to feed often', 'Six to ten bottles a day is typical, and hungrier days come and go.']],
-        ['Her poop keeps changing color', 'Black and sticky at first, then yellow and seedy by the end of week one.', 'Daily rhythm', 'diaper', 'chg:Daily rhythm:d:look:0:poop']] },
+        ['Her poop keeps changing color', 'Black and sticky at first, then yellow and seedy by the end of week one.', 'Daily rhythm', 'diaper', 'chg:Daily rhythm:d:look:0:poop', ['Her poop keeps changing color', 'Black and sticky at first, then tan to yellow by the end of week one.']]] },
     // Months 1–11: the month card opens her month story, so these rows are the everyday things the story doesn't
     // cover, plus one line on how she sees now (vision isn't in the stories). Nothing here repeats a story screen.
     1: { eyes: ['Faces are her favorite thing', 'She can follow your face for a few seconds as you move, and she studies it closely.'],
@@ -263,6 +263,11 @@
       if (go === 'chg:Feeding:d:signs' && typeof answers !== 'undefined' && answers.solids === 'Yes') return false;
     } catch (e) {}
     return true;
+  }).map(r => {
+    // A checkup more than a week past its date isn't "coming up" any more: it's due now.
+    const v = /^health-detail:(\d+):/.exec(r[4]); if (!v || !+v[1]) return r;
+    try { const days = (Date.now() - new Date(profile.dob)) / 864e5; if (days > +v[1] * 30.44 + 7) return [r[0].replace('is coming up', 'is due now'), r[1], r[2], r[3], r[4]]; } catch (e) {}
+    return r;
   });
   const RADAR = {
     0: [['Her first checkups are coming up.', 'One in the first few days, then at 1 month. See what to expect and what to ask.', 'Health', 'steth', 'health-detail:0:expect']],
@@ -281,7 +286,9 @@
   };
 
   function monthCard(M, lead, a, next) {
-    const m = homeMonth(), wk = Math.max(1, Math.round(a * 4.35)), when = m < 2 ? `${wk} week${wk === 1 ? '' : 's'}` : `Month ${m}`;
+    const m = homeMonth(), wk = Math.max(1, Math.round(a * 4.35)), early = profile.early && profile.due && typeof adjustedAge === 'function',
+      // Same words as every guide's header (cohesion.js): "1 week", or "10 weeks · 2 weeks adjusted" for a baby born early.
+      when = early ? `${babyAge()} · ${adjustedAge()} adjusted` : m < 2 && typeof babyAge === 'function' ? babyAge() : m < 2 ? `${wk} week${wk === 1 ? '' : 's'}` : `Month ${m}`;
     const art = typeof homeMonthArt === 'function' ? homeMonthArt(actualMonth()).replace('<svg ', '<svg preserveAspectRatio="xMidYMid meet" ') : '';
     // A row can carry a formula version [title, why] as its sixth item: Feeding gives formula families other numbers.
     const row = ([title, why, cat, icon, go, formula]) => {
@@ -323,7 +330,11 @@
   const MOVE_ORDER = ['Health', 'Safety', 'Feeding', 'Sleep', 'Development', 'Daily rhythm'];
   // [title, what's in the guide, icon], keyed by guide and its stage now. Written for she/her; P() swaps pronouns.
   const MOVE_COPY = {
-    Health: k => k === 'First week' ? null : [`Her ${k.replace(/ months?$/, '-month')} checkup is coming up`, 'What happens, and questions to bring', 'steth'],
+    Health: k => { if (k === 'First week') return null;
+      // Checkups follow the birthday. Once its date has passed, it isn't "coming up" any more.
+      const a = parseInt(k, 10), due = isNaN(a) ? null : addMonths(parse(profile.dob), a), past = due && due < NOW, rec = !isNaN(a) && typeof healthRecord === 'function' && healthRecord(a);
+      if (rec && rec.status === 'attended') return null;   // already marked done: no news
+      return [`Her ${k.replace(/ months?$/, '-month')} checkup ${past ? 'is due now' : 'is coming up'}`, 'What happens, and questions to bring', 'steth']; },
     Safety: { Rolling: ['She could start rolling soon', 'Stop swaddling, and get small things off the floor', 'roll'],
       Crawling: ['She’ll be on the move soon', 'Gates, locks and covers, before she crawls', 'gate'],
       'Pulling up': ['She’ll be pulling up soon', 'Anchor furniture, and keep water and the stove out of reach', 'dresser'] },
@@ -410,12 +421,12 @@
   };
   // The line under each guide on the Guides tab: one plain, personal sentence about where she is (she/her; P() swaps).
   const TILE = {
-    Feeding: { Newborn: 'Learning her hunger cues', 'Milk feeds': 'Fewer, faster feeds for her', 'Ready for solids': 'Getting her ready for solids', new: 'Her first tastes of food', textures: 'Thicker textures for her', established: 'Three meals a day for her' },
+    Feeding: { Newborn: 'Learning her hunger cues', 'Milk feeds': 'Fewer, faster feeds for her', 'Ready for solids': 'Getting {o} ready for solids', new: 'Her first tastes of food', textures: 'Thicker textures for her', established: 'Three meals a day for her' },
     Sleep: { 'Round-the-clock sleep': 'Sleep around the clock, for now', 'Longer nights': 'Her nights are getting longer', 'Three naps': 'Three naps a day, at set times', 'Two naps': 'Two naps and longer nights' },
     Development: { 'By 2 months': 'Her first smiles and coos', 'By 4 months': 'Her smiles, coos and first grabs', 'By 6 months': 'Her reaching, laughing and rolling', 'By 9 months': 'Her sitting, babbling and crawling', 'By 12 months': 'Her first words and steps' },
-    Safety: { 'First setup': 'A safe space for her from day one', Rolling: 'Ready for her first rolls', Crawling: 'Ready for her to crawl', 'Pulling up': 'Ready for her to pull up' },
-    Health: k => k === 'First week' ? 'Her first-week checkup' : `Her ${k.replace(/ months?$/, '-month')} checkup is next`,
-    'Daily rhythm': { Newborn: 'Baths, diapers and cord care', '1–3 months': 'Baths, nails and dressing her', '4–6 months': 'Drool, gums and bath time', '6–12 months': 'Her first teeth and bath time' }
+    Safety: { 'First setup': 'A safe space for her from day one', Rolling: 'Ready for {p} first rolls', Crawling: 'Ready for her to crawl', 'Pulling up': 'Ready for her to pull up' },
+    Health: k => { if (k === 'First week') return 'Her first-week checkup'; const a = parseInt(k, 10), past = !isNaN(a) && addMonths(parse(profile.dob), a) < NOW, rec = !isNaN(a) && typeof healthRecord === 'function' && healthRecord(a); return `Her ${k.replace(/ months?$/, '-month')} checkup ${rec && rec.status === 'attended' ? 'is done' : past ? 'is due now' : 'is next'}`; },
+    'Daily rhythm': { Newborn: 'Baths, diapers and cord care', '1–3 months': 'Baths, nails and dressing {o}', '4–6 months': 'Drool, gums and bath time', '6–12 months': 'Her first teeth and bath time' }
   };
   const tileLine = (cat, key) => { const t = TILE[cat]; return !key ? '' : typeof t === 'function' ? t(key) : (t && t[key]) || ''; };
   const shortOf = (cat, key) => { const t = SHORT[cat]; return !key ? '' : typeof t === 'function' ? t(key) : (t && t[key]) || ''; };
@@ -457,7 +468,9 @@
       .map(c => `<span class="hg-gtile-mark" style="${yearTheme(c)}">${typeof catIcon === 'function' ? catIcon(c) : ''}</span>`).join('');
     // Several guides changed: name the first (Health, Safety, Feeding… order), not just a count.
     const top = moved.length ? (moveCopy(moved[0].cat, moved[0].key) || [line])[0] : '';
-    const gLine = moved.length === 1 ? P(top) : moved.length ? `${P(top)}, plus ${moved.length - 1} more` : `Set to ${nm} at ${age}`;
+    // Name what changed, never "plus 1 more" (Nov 14 QA): two changes are both named; with more, the other guides are named.
+    const second = moved.length === 2 ? (moveCopy(moved[1].cat, moved[1].key) || [''])[0] : '';
+    const gLine = moved.length === 1 ? P(top) : moved.length === 2 && second ? `${P(top)} · ${P(second)}` : moved.length ? `${P(top)} · ${list(moved.slice(1).map(q => label(q.cat)))} too` : `Personalized for ${nm} at ${age}`;
     const gTitle = moved.length === 1 ? label(moved[0].cat) : moved.length ? `${nm}’s guides` : `${nm}’s guides`;
     const path = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="5.5" cy="17.5" r="2"/><circle cx="18.5" cy="6.5" r="2"/><path d="M7.4 16.6c3.2-1.4 1.6-6.2 5-8 1.7-.9 2.6-1.1 4.2-1.3"/></svg>';
     const nextT = (next || '').replace(/^Next up: /, '').replace(/^The /, 'the ');
@@ -564,7 +577,7 @@
     // until the photo is added or the birthday has passed (Yarden, Nov 9).
     const ageLine = main.querySelector('.home-age-line'), top = banner(main), question = top ? null : main.querySelector('.connected-checkin');
     if (M) {
-      main.innerHTML = '<div class="hg-page">' + top + (question ? question.outerHTML : '') + monthCard(M, lead, a, [lead, ...rest, ...later].find(c => !({1:['crying'],5:[],8:['sep']}[homeMonth()] || []).includes(c.id))) + `<p class="connected-preview-footnote">${F('Ahead isn’t medical advice and doesn’t replace your pediatrician.')}</p></div>`;
+      main.innerHTML = '<div class="hg-page">' + top + (question ? question.outerHTML : '') + monthCard(M, lead, a, [lead, ...(rest || []), ...(later || [])].filter(Boolean).find(c => !({1:['crying'],5:[],8:['sep']}[homeMonth()] || []).includes(c.id))) + `<p class="connected-preview-footnote">${F('Ahead isn’t medical advice and doesn’t replace your pediatrician.')}</p></div>`;
       return;
     }
     let h = '<div class="hg-page">' + (ageLine ? ageLine.outerHTML : '') + top;

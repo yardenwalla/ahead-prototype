@@ -152,11 +152,11 @@
   function journey(id) {
     const h = H(), m = typeof actualMonth === 'function' ? actualMonth() : 0, fd = feedNow(), bm = fd !== 'Formula', fm = fd !== 'Breast milk';
     if (id === 'plan') return sub('plan', 'Finding care', 'Plan your care', 'Work back from the day you need care. Most families start looking sooner than they expect.',
-      packCard('Before you look', 'Two things to settle first', [['clock', 'Your days and hours', 'Early and late ones too'], ['coin', 'A monthly budget', 'And any help from work or your state']])
+      packCard('Before you look', 'Two things to settle first', [['clock', 'Know the days and hours you need', 'Count early starts and late pickups too.'], ['coin', 'Set a monthly budget', 'Count any help from work or your state.']])
       + tl('Your countdown', [
         ['6 months before', 'notepad', 'Join a few daycare waitlists.'],
         ['3 months before', 'home', 'Visit home daycares, or meet nannies.'],
-        ['6–8 weeks before', 'shield', 'Decide, call references, sign up.'],
+        ['6–8 weeks before', 'shield', 'Call references, make your choice and sign up.'],
         ['2 weeks before', 'heart', 'Get ready for day one.']],
         'Six months before, join daycare waitlists. Three months before, visit home daycares or meet nannies. Six to eight weeks before, decide and sign up. Two weeks before, get ready for day one.')
       + H().note('Less time than this? That’s common. See below.')
@@ -170,7 +170,7 @@
 
     if (id === 'pay') return sub('pay', 'Finding care', 'Paying for care', 'Care is one of a family’s biggest monthly costs. There are more ways to pay less than most parents know.',
       picSteps('Ways to pay less', [
-        ['coin', 'Help from your state', 'If you qualify. Your referral agency helps you apply.'],
+        ['coin', 'Help from your state', 'If you qualify, your local referral agency can help you apply, for free.'],
         ['notepad', 'A pre-tax care account', 'Through many jobs. A new baby lets you join mid-year.'],
         ['shield', 'A tax credit', 'Takes part of what you pay off your taxes.'],
         ['home', 'Early Head Start', 'A free federal program for babies, for families who qualify.']],
@@ -204,11 +204,17 @@
           ['The week before', 'clock', 'A short visit together, then a short day.'],
           ['The night before', 'bag', 'Pack and label everything.'],
           ['Day one', 'sun', 'A quick, warm goodbye.']];
+      // Nov 14 (QA): a nursed baby practices a bottle first, and a baby starting at 7–12 months gets a word on goodbyes.
+      const nurses0 = typeof profile !== 'undefined' && profile.feed !== 'Formula' && ['Nursing', 'Both'].includes(profile.feedHow || 'Nursing');
+      if (nurses0 && kind !== 'family') steps.unshift(['4 weeks before', 'bottle', 'Have someone else offer a bottle a few times a week, so Maya gets used to it.']);
+      const am1 = typeof actualMonth === 'function' ? actualMonth() : 0;
+      const goodbyeTip = am1 >= 7 && am1 <= 12 ? H().tip('Starting around now?', 'From about 8 months, many babies cry harder at goodbyes. It means {s} {know|knows} who {s’s} close to. A short, same goodbye each time helps.') : '';
       const lead = atHome ? 'A paid trial day, with you at home, makes the real start easier for you all.' : kind === 'family' ? 'A practice day together makes the real start easier for everyone.' : 'A visit and a short practice day first make the real start easier for you both.';
       return sub('ready', 'Care chosen', who ? `Get ready for ${who}` : 'Get ready for day one', lead,
       (just ? `<div class="hub-card cc-chosen-note"><b>${F(`You chose ${who}.`)}</b><span>${F('Here’s how to get ready for day one.')}</span></div>` : '')
       + tl('Your countdown to day one', steps,
         steps.map(x => `${x[0]}: ${x[2]}`).join(' '))
+      + goodbyeTip
       + careCardButton(load('ahead-carecard', {}))
       + packCard(atHome ? 'Set up at home' : 'Pack for care', atHome ? 'So the day runs without you' : 'Label everything with {p} name. Your caregiver may have a list too', [
         ['bottle', bm && fm ? 'Milk or formula for each feed, plus one extra' : bm ? 'Pumped milk for each feed, plus one extra' : 'Formula for each feed, plus one extra',
@@ -281,11 +287,11 @@
     if (id === 'help') { const early = m < 4; return sub('help', 'Kinds of care', 'Extra help at home', early ? 'Help in the early months isn’t only for when you go back to work.' : 'Help at home isn’t only for when you go back to work.',
       picSteps('Kinds of help', early ? [
         ['heart', 'A postpartum doula', 'Feeding, rest and recovery in the first weeks.'],
-        ['moon', 'Overnight help', 'A trained night nanny covers nights.'],
+        ['moon', 'Overnight help', 'A trained night nanny looks after Maya overnight, so you can get a stretch of sleep.'],
         ['home', 'Family and friends', 'Ask for one thing: a meal, laundry, an hour.'],
         ['clock', 'A sitter for a break', 'A few hours to rest or get out.', go('sitter')]] : [
         ['heart', 'A helper while you’re home', 'Someone plays with Maya while you get things done.'],
-        ['moon', 'Overnight help', 'A night nanny looks after Maya, so nights are covered.'],
+        ['moon', 'Overnight help', 'A night nanny looks after Maya overnight, so you can sleep.'],
         ['home', 'Family and friends', 'An hour or an afternoon with Maya.'],
         ['clock', 'A sitter', 'A few hours with Maya, now and then.', go('sitter')]],
         early ? 'A postpartum doula helps with feeding and recovery. Overnight help covers nights. Family and friends can help with specific tasks. A sitter gives you a break.' : 'A helper plays with Maya while you’re home. A night nanny covers nights. Family and friends can spend an hour or an afternoon with Maya. A sitter looks after Maya for a few hours.')
@@ -358,7 +364,7 @@
   // (a pick saved on the shortlist, "Care has started"), and a parent can pick the stage from "All stages".
   const CC_ART = ["<svg viewBox=\"0 0 160 164\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\">\n <ellipse cx=\"80\" cy=\"151\" rx=\"74\" ry=\"9\" fill=\"#e2c993\" opacity=\".35\"/>\n <path d=\"M96 75 119 57l23 18v56H96Z\" fill=\"#dfb9b0\"/><path d=\"M98 76 119 60l22 16\" fill=\"none\" stroke=\"#ac8581\" stroke-width=\"3\" stroke-linejoin=\"round\"/><rect x=\"111\" y=\"93\" width=\"15\" height=\"19\" rx=\"5\" fill=\"#fff1d5\"/><rect x=\"113\" y=\"117\" width=\"17\" height=\"14\" rx=\"5\" fill=\"#fff1d5\"/>\n <circle cx=\"54\" cy=\"68\" r=\"23\" fill=\"#e4af9a\"/><path d=\"M32 61c3-19 24-29 41-13 5 4 8 10 8 15\" fill=\"#69544f\"/><path d=\"M38 50c-5 7-6 14-5 20\" fill=\"none\" stroke=\"#69544f\" stroke-width=\"8\" stroke-linecap=\"round\"/>\n <path d=\"M20 147c-2-35 10-57 34-59 26-2 42 19 43 59Z\" fill=\"#adc1c7\"/><path d=\"M72 105c9 11 14 21 15 37\" fill=\"none\" stroke=\"#829da6\" stroke-width=\"5\" stroke-linecap=\"round\"/>\n <ellipse cx=\"83\" cy=\"115\" rx=\"27\" ry=\"22\" fill=\"#e8c7ad\"/><circle cx=\"80\" cy=\"100\" r=\"16\" fill=\"#edc6ad\"/><path d=\"M67 99c3-13 22-18 28-5\" fill=\"none\" stroke=\"#ad8979\" stroke-width=\"5\" stroke-linecap=\"round\"/><path d=\"M57 130c7-12 18-15 27-11 8 4 16 14 19 26H62Z\" fill=\"#d5bada\"/>\n <path d=\"M47 114c5 8 14 10 20 12\" fill=\"none\" stroke=\"#e4af9a\" stroke-width=\"8\" stroke-linecap=\"round\"/>\n <circle cx=\"118\" cy=\"35\" r=\"5\" fill=\"#e6bc70\"/><path d=\"M139 28v10m-5-5h10\" stroke=\"#d6ad5d\" stroke-width=\"3\" stroke-linecap=\"round\"/>\n </svg>", "<svg viewBox=\"0 0 160 164\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\">\n <ellipse cx=\"80\" cy=\"153\" rx=\"72\" ry=\"8\" fill=\"#bfd8c3\" opacity=\".45\"/>\n <rect x=\"112\" y=\"41\" width=\"34\" height=\"48\" rx=\"9\" fill=\"#fffaf0\" stroke=\"#aec7ae\" stroke-width=\"2\"/><path d=\"M121 56h15m-15 8h12m-12 8h9\" stroke=\"#8ab09b\" stroke-width=\"3\" stroke-linecap=\"round\"/>\n <path d=\"M29 146c0-34 11-53 38-53s42 19 44 53Z\" fill=\"#96c5ad\"/>\n <circle cx=\"68\" cy=\"69\" r=\"23\" fill=\"#dfaa94\"/><path d=\"M46 60c3-21 31-28 44-6 2 4 3 8 2 12\" fill=\"#625249\"/><path d=\"M47 70c-4-11-3-20 2-26\" stroke=\"#625249\" stroke-width=\"8\" stroke-linecap=\"round\"/>\n <path d=\"M86 111c6 4 11 9 14 18\" fill=\"none\" stroke=\"#74ae92\" stroke-width=\"5\" stroke-linecap=\"round\"/>\n <circle cx=\"106\" cy=\"103\" r=\"17\" fill=\"#f1c5b0\"/><path d=\"M91 99c2-13 18-18 27-5\" fill=\"none\" stroke=\"#ad7f6d\" stroke-width=\"5\" stroke-linecap=\"round\"/>\n <path d=\"M83 144c2-19 13-29 28-29 14 0 25 10 28 29Z\" fill=\"#d0d7ef\"/>\n <path d=\"M52 113c8 13 22 19 37 20\" stroke=\"#dfaa94\" stroke-width=\"10\" fill=\"none\" stroke-linecap=\"round\"/>\n <path d=\"M30 40c4-6 8-6 12 0 4-6 9-6 13 0-4 8-10 13-13 15-5-3-10-8-12-15Z\" fill=\"#e9ab9b\" opacity=\".85\"/>\n </svg>", "<svg viewBox=\"0 0 160 164\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\">\n <ellipse cx=\"83\" cy=\"153\" rx=\"74\" ry=\"8\" fill=\"#ecc8c4\" opacity=\".42\"/>\n <path d=\"M26 147c2-34 18-55 43-55 28 0 42 20 43 55Z\" fill=\"#c4aecf\"/>\n <circle cx=\"66\" cy=\"69\" r=\"24\" fill=\"#dcab98\"/><path d=\"M44 62c1-20 20-30 39-16 6 4 9 10 8 18\" fill=\"#67574d\"/><path d=\"M45 64c-6-6-6-14-4-18\" stroke=\"#67574d\" stroke-width=\"8\" stroke-linecap=\"round\"/>\n <path d=\"M60 77c4 5 11 6 16 0\" fill=\"none\" stroke=\"#9d675b\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n <circle cx=\"117\" cy=\"97\" r=\"19\" fill=\"#f0c4aa\"/><path d=\"M100 92c3-13 19-19 30-8\" fill=\"none\" stroke=\"#ad8b77\" stroke-width=\"5\" stroke-linecap=\"round\"/><path d=\"M104 103c4 3 8 3 12 0\" fill=\"none\" stroke=\"#aa7766\" stroke-width=\"2\" stroke-linecap=\"round\"/>\n <path d=\"M92 146c2-16 14-29 29-29 16 0 27 14 28 29Z\" fill=\"#b7d5bd\"/>\n <path d=\"M73 120c6-13 19-19 30-14\" fill=\"none\" stroke=\"#dcab98\" stroke-width=\"10\" stroke-linecap=\"round\"/>\n <path d=\"M115 44c5-10 11-10 16-2 6-7 12-5 14 0 1 9-8 16-15 19-9-5-16-10-15-17Z\" fill=\"#d9a0a3\"/>\n <path d=\"M14 80l9-4m-2-12 7 3m110 1 8 7\" stroke=\"#d7a5aa\" stroke-width=\"3\" stroke-linecap=\"round\"/>\n </svg>"];
   const CC_STAGES = [
-    { label: 'Finding care', age: 'Months before', one: 'Kinds of care, costs and when to start looking', eyebrow: 'Finding care', t: 'Find care that fits your life', lead: 'Know your options, what matters most, and when to start looking.',
+    { label: 'Finding care', age: 'Months before', one: 'Kinds of care, costs and when to start looking', eyebrow: 'Finding care', t: 'Start looking sooner than you’d think', lead: 'Infant spots fill up early. Here are your options, and when to start looking.',
       worth: ['Worth knowing before you look', 'The best tour question isn’t about activities.', 'Ask how they handle crying and naps, and who covers when someone’s out.'] },
     { label: 'Care chosen', age: 'Weeks before', one: 'Getting ready for day one, and a backup plan', eyebrow: 'Care chosen', t: 'Make the first day feel familiar', lead: 'Help your caregiver learn Maya’s little routines before the first real goodbye.',
       worth: ['Worth knowing before day one', 'A practice day helps more than a perfect schedule.', 'Visit together first, then let the caregiver take the lead while you’re nearby.'] },
