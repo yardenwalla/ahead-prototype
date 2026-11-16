@@ -685,3 +685,48 @@
 #main .hg-banner-cam{width:84px!important;height:46px!important}
 #main .hg-banner-hello{width:72px!important;height:auto!important;object-fit:contain}
 #main .hg-banner-hello{width:82px!important}
+/* Timeline: the road to one */
+#main .yr-h1{margin:0;font-size:30px;letter-spacing:-.02em}
+#main .yr-lead{margin:2px 0 16px;font-size:16px;color:#6b6676}
+#main .yr-map{position:relative;display:flex;flex-direction:column;gap:8px}
+#main .yr-trail{position:absolute;left:0;top:0;pointer-events:none;z-index:2;overflow:visible}
+#main .yr-trail .yr-t1{fill:none;stroke:#fffdf9;stroke-width:12;stroke-linecap:round}
+#main .yr-trail .yr-t2{fill:none;stroke:#cfc3b6;stroke-width:1.6;stroke-dasharray:4 5;stroke-linecap:round}
+#main .yr-ch{position:relative;display:flex;align-items:center;min-height:116px;width:100%;padding:14px 12px 14px 18px;border:2px solid transparent;border-radius:24px;background:var(--yr);text-align:left;font-family:inherit;color:#2B2840;cursor:pointer;overflow:hidden}
+#main .yr-ch.is-here{border-color:var(--yri);box-shadow:0 6px 16px rgba(43,40,64,.08)}
+#main .yr-ch.is-sel:not(.is-here){box-shadow:0 0 0 2px rgba(43,40,64,.18)}
+#main .yr-copy{flex:0 0 44%;position:relative;z-index:3}
+#main .yr-ages{display:block;font-size:13px;color:#4a4658}
+#main .yr-title{display:block;margin-top:2px;font-size:18px;font-weight:800;line-height:1.18;letter-spacing:-.01em}
+#main .yr-here{display:inline-flex;align-items:center;gap:5px;margin-top:10px;padding:5px 11px;border-radius:99px;background:#4f7a46;color:#fff;font-size:12.5px;font-weight:800}
+#main .yr-here::before{content:'';width:7px;height:7px;border-radius:50%;background:#fff}
+#main .yr-stops{flex:1;display:flex;flex-direction:column;gap:14px;position:relative;z-index:3;padding-left:2px}
+#main .yr-stop{display:flex;align-items:center;gap:6px}
+#main .yr-stop:nth-child(2){margin-left:10px}
+#main .yr-dot{flex:none;width:12px;height:12px;border-radius:50%;background:#fffdf9;box-shadow:0 0 0 2.5px #a69c90;position:relative;z-index:3}
+#main .yr-stop.is-done .yr-dot{background:var(--yri);box-shadow:0 0 0 2.5px #fffdf9}
+#main .yr-pill{display:inline-flex;align-items:center;gap:6px;padding:4px 10px 4px 4px;border-radius:99px;background:#fffdf9;box-shadow:0 2px 6px rgba(43,40,64,.08);font-size:13px;font-weight:700;white-space:nowrap}
+#main .yr-pill em{font-style:normal;padding:2px 7px;border-radius:99px;background:var(--yr);font-size:12px;font-weight:800;color:#4a4658}
+#main .yr-toy{position:absolute;right:-6px;bottom:-10px;width:104px;z-index:1;opacity:.95}
+#main .yr-toy .st-obj,#main .yr-toy svg{width:100%;height:auto;display:block}
+#main .yr-toy *{animation:none!important;opacity:1!important}
+#main .yr-toy .st-stack{transform:none!important}
+/* This chapter */
+#main .yr-this{margin-top:18px;padding:16px 14px 8px;border-radius:24px;background:#fffdf9;box-shadow:0 0 0 1px rgba(43,40,64,.06);scroll-margin-top:70px}
+#main .yr-this-h{display:flex;align-items:baseline;justify-content:space-between;margin:0 4px 8px}
+#main .yr-this-h b{font-size:18px;font-weight:800}
+#main .yr-this-h small{font-size:13px;color:#6b6676}
+#main .yr-row{display:flex;align-items:center;gap:12px;width:100%;padding:10px 4px;border:0;border-top:1px solid rgba(43,40,64,.06);background:none;text-align:left;font-family:inherit;color:#2B2840;cursor:pointer}
+#main .yr-row:first-of-type{border-top:0}
+#main .yr-ic{flex:none;width:40px;height:40px;border-radius:13px;display:grid;place-items:center;background:var(--year-pale,#f3effb)}
+#main .yr-ic svg{width:24px;height:24px}
+#main .yr-rc{flex:1;min-width:0}
+#main .yr-rc em{display:block;font-style:normal;font-size:12px;font-weight:800;color:var(--year-ink,#7d6597)}
+#main .yr-rc b{display:block;font-size:15.5px;font-weight:800;line-height:1.25}
+#main .yr-rc small{display:block;margin-top:2px;font-size:13px;line-height:1.35;color:#6b6676}
+#main .yr-rc .ya-bar{margin-top:8px}
+#main .yr-row.is-done b{color:#8a8494;font-weight:600}
+#main .yr-tick{font-style:normal;color:#8a8494;font-size:13px}
+#main .yr-copy{flex:0 0 41%!important;padding-right:10px}
+#main .yr-title{font-size:17px!important}
+#main .yr-stops{padding-left:6px}

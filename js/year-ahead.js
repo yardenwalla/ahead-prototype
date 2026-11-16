@@ -117,6 +117,67 @@
     return h;
   };
 
+  /* Timeline as "the road to one" (Nov 15, from Yarden's second mockup): the whole year on one screen as four chapter
+     cards on a winding trail, with only the big moments as stops. Below the map, "This chapter" lists everything in the
+     chosen chapter (today's chapter unless another card was tapped): the next changes with their age windows, then the
+     rest, checkups included. Every row opens its existing read-ahead page. */
+  const ROAD = [[0, 3, 'Birth–2 months', 'Getting to know each other', 'bunny', '#fbe8dc', '#e7b79b'], [3, 6, '3–5 months', 'More aware, more curious', 'rings', '#ece4f6', '#bfaedb'],
+    [6, 9, '6–8 months', 'A little explorer emerges', 'bowl', '#e6efdd', '#8fb27f'], [9, 13, '9–12 months', 'Into everything', 'blocks', '#e3e9f5', '#a3b5d6']];
+  const PEAKS = [['smile', '1–2m', 'First smile'], ['roll', '4–6m', 'Rolling'], ['solids', '6m', 'First foods'], ['sit', '6–9m', 'Sitting up'], ['pull', '9–12m', 'Pulling up'], ['bday', '12m', 'One year']];
+  const listPage = window.nextPage;
+  window.ycPick = i => { window.__ycSel = i; render(); setTimeout(() => { const el = document.querySelector('#main .yr-this'); el && el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 30); };
+  window.nextPage = function () {
+    if (typeof window.stToy !== 'function') return listPage();
+    const a = ageNow(), nm = name(), done = doneNow();
+    const bday = g => !!(profile.early && profile.due) && typeof hubAgeFor === 'function' && hubAgeFor(g, actualMonth()) === actualMonth() && hubAgeFor('care', actualMonth()) !== actualMonth();
+    const gap = profile.early && profile.due ? Math.max(0, (parse(profile.due) - parse(profile.dob)) / MONTH) : 0;
+    const shiftFor = cat => (cat === 'Development' && bday('dev')) || (cat === 'Safety' && bday('safety')) ? gap : 0;
+    const CC = C.map(c => shiftFor(c.cat) ? Object.assign({}, c, { start: c.start - shiftFor(c.cat), end: c.end - shiftFor(c.cat) }) : c);
+    const isDone = c => c.end <= a || done[c.id];
+    const here = Math.max(0, ROAD.findIndex(r => a >= r[0] && a < r[1]));
+    const sel = window.__ycSel != null ? window.__ycSel : here;
+    const chev = '<span class="hub-chev" aria-hidden="true">›</span>';
+    // The map
+    let map = '';
+    ROAD.forEach(([from, to, ages, title, toy, bg, ink], i) => {
+      const peaks = PEAKS.filter(([id]) => { const c = CC.find(x => x.id === id); const m = c ? c.start : 12; return m >= from && m < to; });
+      const stops = peaks.map(([id, age, label]) => { const c = CC.find(x => x.id === id), dn = id === 'bday' ? false : (done[id] || (c && c.end <= a));
+        return `<span class="yr-stop${dn ? ' is-done' : ''}"><i class="yr-dot"></i><span class="yr-pill"><em>${age}</em>${F(label)}</span></span>`; }).join('');
+      map += `<button class="yr-ch${i === here ? ' is-here' : ''}${i === sel ? ' is-sel' : ''}${to <= a ? ' is-past' : ''}" style="--yr:${bg};--yri:${ink}" onclick="ycPick(${i})">
+        <span class="yr-copy"><span class="yr-ages">${F(ages)}</span><b class="yr-title">${F(title)}</b>${i === here ? `<span class="yr-here">${F('You are here')}</span>` : ''}</span>
+        <span class="yr-stops">${stops}</span><span class="yr-toy" aria-hidden="true">${window.stToy(toy)}</span></button>`;
+    });
+    // This chapter
+    const [from, to, ages] = ROAD[sel];
+    const items = CC.filter(c => c.start >= from && c.start < to).map(c => ({ m: c.start, c })).concat(CHECKUPS.filter(v => v - gap >= from && v - gap < to).map(v => ({ m: v - gap, v }))).sort((x, y) => x.m - y.m);
+    const nextIds = CC.filter(c => !isDone(c)).sort((x, y) => x.start - y.start || x.end - y.end).slice(0, 3).map(c => c.id);
+    const attended = v => { try { const r = healthRecord(v); return r && r.status === 'attended'; } catch (e) { return false; } };
+    const rows = items.map(s => {
+      if (s.v != null) { const dn = attended(s.v);
+        return `<button class="yr-row${dn ? ' is-done' : ''}" onclick="openPage('health-visit:${s.v}')"><span class="yr-ic">${hubArt('steth', 'Health')}</span><span class="yr-rc"><b>${F(`${s.v}-month checkup`)}</b><small>${F(CHECK_LINE[s.v] || '')}</small></span>${dn ? '<i class="yr-tick">✓</i>' : chev}</button>`; }
+      const c = s.c, dn = isDone(c), nx = nextIds.includes(c.id);
+      return `<button class="yr-row${dn ? ' is-done' : ''}${nx ? ' is-next' : ''}" style="${yearTheme(c.cat)}" onclick="${c.go}"><span class="yr-ic">${hubArt(c.icon, c.cat)}</span><span class="yr-rc">${nx ? `<em>${F(range(c))} · ${F(whenShort(c, a))}</em>` : ''}<b>${F(c.title)}</b><small>${F(nx ? (c.id === 'crying' && a >= 2 ? 'Past the worst. Fussy evenings ease over the next few weeks' : c.why) : range(c))}</small>${nx ? windowBar(c, a) : ''}</span>${done[c.id] ? '<i class="yr-tick">✓</i>' : chev}</button>`;
+    }).join('');
+    return `<div class="ya-page yr-page"><h1 class="yr-h1">${F(`${nm}’s first year`)}</h1><p class="yr-lead">${F('The road to one.')}</p>
+      <div class="yr-map"><svg class="yr-trail" aria-hidden="true"><path class="yr-t1"/><path class="yr-t2"/></svg>${map}</div>
+      <section class="yr-this"><div class="yr-this-h"><b>${F(sel === here ? 'This chapter' : ROAD[sel][3])}</b><small>${F(ages)}</small></div>${rows}</section>
+      <p class="hub-foot">${F('Ages are typical. Every baby moves at their own pace.')}</p></div>` + (setTimeout(() => window.yrTrail && window.yrTrail(), 0), '');
+  };
+  // One winding trail through every stop, card to card.
+  window.yrTrail = function () {
+    const map = document.querySelector('#main .yr-map'); if (!map) return;
+    const svg = map.querySelector('.yr-trail'), box = map.getBoundingClientRect();
+    const pts = [...map.querySelectorAll('.yr-dot')].map(d => { const r = d.getBoundingClientRect(); return [r.left + r.width / 2 - box.left, r.top + r.height / 2 - box.top]; });
+    svg.setAttribute('viewBox', `0 0 ${box.width} ${box.height}`);
+    svg.style.setProperty('width', box.width + 'px', 'important'); svg.style.setProperty('height', box.height + 'px', 'important');
+    if (pts.length < 2) return;
+    let d = `M${pts[0][0]} ${Math.max(4, pts[0][1] - 40)} C${pts[0][0] + 18} ${pts[0][1] - 20} ${pts[0][0]} ${pts[0][1] - 10} ${pts[0][0]} ${pts[0][1]}`;
+    for (let i = 1; i < pts.length; i++) { const [x0, y0] = pts[i - 1], [x1, y1] = pts[i], my = (y0 + y1) / 2, w = i % 2 ? 22 : -22; d += ` C${x0 + w} ${my} ${x1 + w} ${my} ${x1} ${y1}`; }
+    const L = pts[pts.length - 1]; d += ` C${L[0] - 14} ${L[1] + 14} ${L[0]} ${L[1] + 22} ${L[0] - 6} ${box.height - 6}`;
+    svg.querySelectorAll('path').forEach(p => p.setAttribute('d', d));
+  };
+  window.addEventListener('resize', () => window.yrTrail && window.yrTrail());
+
   // On a change's page: where it sits in the year, and where the baby is. Tapping it opens the whole Timeline.
   function yearStrip(c) {
     const a = ageNow(), max = 13, pct = v => Math.max(0, Math.min(100, v / max * 100));
