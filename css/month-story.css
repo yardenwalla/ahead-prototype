@@ -966,3 +966,10 @@
 #main .yt-road.yt-sticky.is-fold > .yt-head{margin-bottom:0!important}
 #main .yt-road.yt-sticky:not(.is-fold) > .yt-head .yt-hc{display:block!important}
 #main .yt-road.yt-sticky > .yt-head .yt-hc b{font-size:17px!important;color:#2B2840!important}
+/* where am I: relation tag on each bar, and a pill back to today */
+#main .yt-map .yt-list > li,#main .yt-map .yt-end{opacity:1!important}
+#main .yt-rel{display:inline-block;margin:0 0 4px;padding:2px 8px;border-radius:99px;background:rgba(255,253,249,.8);font-size:11px;font-weight:800;color:#6b6676}
+#main .yt-rel.is-now{background:#2B2840;color:#fffaf3}
+#main .yt-back{position:fixed;left:50%;bottom:96px;z-index:60;transform:translate(-50%,16px);opacity:0;pointer-events:none;display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border:0;border-radius:99px;background:#2B2840;color:#fffaf3;font:800 14px Nunito,sans-serif;box-shadow:0 8px 20px rgba(43,40,64,.25);transition:opacity .2s,transform .2s;cursor:pointer}
+#main .yt-back.is-on{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+#main .yt-back i{font-style:normal}

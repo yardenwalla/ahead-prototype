@@ -138,6 +138,7 @@
     const mon = m => { const d = new Date(born); d.setMonth(d.getMonth() + m); return d.toLocaleDateString('en-US', { month: 'short' }); };
     const chev = '<span class="hub-chev" aria-hidden="true">›</span>';
     let out = '';
+    const foldPref = (() => { try { return JSON.parse(localStorage.getItem('ahead-yt-fold') || '{}'); } catch (e) { return {}; } })();
     ROAD.forEach(([from, to, ages, title, toy, bg, ink], i) => {
       const its = CC.filter(c => c.start >= from && c.start < to).map(c => ({ m: c.start, c })).concat(CHECKUPS.filter(v => v - gap >= from && v - gap < to).map(v => ({ m: v - gap, v }))).sort((x, y) => x.m - y.m);
       const passed = s => s.v != null ? attended(s.v) || s.m < a - 0.5 : done[s.c.id] || s.c.end <= a;
@@ -157,11 +158,11 @@
       const SH = { crying: 'crying peak', smile: 'first smiles', nights: 'longer nights', regress: 'sleep regression', roll: 'rolling', ready: 'solids prep', solids: 'first foods', twonaps: 'two naps', crawl: 'crawling', sit: 'sitting up', tooth: 'first tooth', finger: 'textures', meals: 'three meals', carseat: 'car seat', sep: 'separation', pull: 'pulling up', words: 'first words', milk: 'whole milk', steps: 'first steps' };
       const ahead = its.filter(s => !passed(s)), nameOf = s => s.v != null ? `${s.v}-month checkup` : SH[s.c.id] || s.c.title;
       const preview = to <= a ? F(`All behind ${'{o}'} ✓`) : ahead.length ? F(`${ahead.length} ahead · ${ahead.slice(0, 3).map(nameOf).join(', ')}${ahead.length > 3 ? '…' : ''}`) : '';
-      out += (false ? `<button class="yt-earlier" onclick="ytEarlier(this)"><i class="yt-dot"></i><span>✓ ${F(`${ROAD[0][2].split('–')[0]}–${ROAD[here - 1][2].split('–')[1]} · ${here} ${here === 1 ? 'chapter' : 'chapters'} behind {o}`)}</span><b>${F('Show')}</b></button>` : '') + `<section class="yt-ch is-open yt-road yt-sticky${i === here ? ' is-here' : ''}${to <= a ? ' is-past is-fold' : ''}" style="${typeof window.monthTheme === 'function' ? window.monthTheme(from + 1) : ''};--yt:${bg};--yti:${ink};--ytp:${(ROAD[i - 1] || ROAD[i])[5]};--ytn:${(ROAD[i + 1] || ROAD[i])[5]}">
-        <button class="yt-head" onclick="ytTap(this.parentNode)"><span class="yt-hc"><small>${F(ages)} · ${mon(from)}–${mon(Math.min(to, 12) - 1)}</small><b>${F(title)}</b><span class="yt-prev">${preview}</span></span><i class="yt-caret" aria-hidden="true">›</i></button>
+      out += (false ? `<button class="yt-earlier" onclick="ytEarlier(this)"><i class="yt-dot"></i><span>✓ ${F(`${ROAD[0][2].split('–')[0]}–${ROAD[here - 1][2].split('–')[1]} · ${here} ${here === 1 ? 'chapter' : 'chapters'} behind {o}`)}</span><b>${F('Show')}</b></button>` : '') + `<section class="yt-ch is-open yt-road yt-sticky${i === here ? ' is-here' : ''}${to <= a ? ' is-past' : ''}${(foldPref[i] != null ? foldPref[i] : to <= a) ? ' is-fold' : ''}" data-i="${i}" style="${typeof window.monthTheme === 'function' ? window.monthTheme(from + 1) : ''};--yt:${bg};--yti:${ink};--ytp:${(ROAD[i - 1] || ROAD[i])[5]};--ytn:${(ROAD[i + 1] || ROAD[i])[5]}">
+        <button class="yt-head" onclick="ytTap(this.parentNode)" aria-expanded="${!(foldPref[i] != null ? foldPref[i] : to <= a)}"><span class="yt-hc">${to <= a ? '' : `<span class="yt-rel${i === here ? ' is-now' : ''}">${F(i === here ? 'Now' : i === here + 1 ? `Next · in about ${Math.max(1, Math.round(from - a))} month${Math.max(1, Math.round(from - a)) === 1 ? '' : 's'}` : 'Later')}</span>`}<small>${F(ages)} · ${mon(from)}–${mon(Math.min(to, 12) - 1)}</small><b>${F(title)}</b><span class="yt-prev">${preview}</span></span><i class="yt-caret" aria-hidden="true">›</i></button>
         <div class="yt-body"><ol class="yt-list">${body}</ol></div></section>`;
     });
-    return `<div class="ya-page yt-page"><h1 class="yt-h1">${F(`${nm}’s first year`)}</h1><p class="yt-lead">${F('The road to one.')}</p><div class="yt-map"><svg class="yt-trail" aria-hidden="true"><path class="t1"/><path class="t2"/></svg>${out}<div class="yt-end"><i class="yt-dot"></i><span class="yt-endc"><small>${F('The destination')} · ${mon(12)}</small><b>${F('One whole year!')}</b></span><span class="yt-endcake" aria-hidden="true">${window.stToy('cake')}</span></div></div><p class="hub-foot">${F('Ages are typical. Every baby moves at their own pace.')}</p></div>` + (setTimeout(() => { window.ytTrail && window.ytTrail(); window.ytCenter && window.ytCenter(); }, 0), '');
+    return `<div class="ya-page yt-page"><h1 class="yt-h1">${F(`${nm}’s first year`)}</h1><p class="yt-lead">${F(`${nm} is ${typeof babyAge === 'function' ? babyAge() : ''}${a < 12 ? ` · ${Math.max(1, Math.round(12 - a))} month${Math.round(12 - a) === 1 ? '' : 's'} to {p} first birthday` : ''}`)}</p><div class="yt-map"><svg class="yt-trail" aria-hidden="true"><path class="t1"/><path class="t2"/></svg>${out}<div class="yt-end"><i class="yt-dot"></i><span class="yt-endc"><small>${F('The destination')} · ${mon(12)}</small><b>${F('One whole year!')}</b></span><span class="yt-endcake" aria-hidden="true">${window.stToy('cake')}</span></div></div><p class="hub-foot">${F('Ages are typical. Every baby moves at their own pace.')}</p><button class="yt-back" onclick="ytBack()" aria-label="${F(`Back to ${nm}`)}"><i>↑</i> ${F(`Back to ${nm}`)}</button></div>` + (setTimeout(() => { window.ytTrail && window.ytTrail(); window.ytCenter && window.ytCenter(); }, 0), '');
   };
   // Focus as you scroll, without moving anything: every chapter ahead stays open, and the one in the middle of the
   // screen is in focus while the others soften back. Nothing opens or closes under the finger, so momentum scrolling
@@ -175,19 +176,23 @@
   // Nothing moves or resizes, so it stays smooth under a finger. The page opens centred on "Maya is here".
   const ytScroller = el => { for (let p = el && el.parentElement; p; p = p.parentElement) { const o = getComputedStyle(p).overflowY; if ((o === 'auto' || o === 'scroll') && p.scrollHeight > p.clientHeight) return p; } return document.scrollingElement; };
   let ytRaf = 0;
+  // Where am I: the pinned bar names the chapter and how it relates to today; when "Maya is here" is off screen,
+  // a "Back to Maya" pill points the way back.
   const ytFocus = () => {
-    ytRaf = 0;
-    const items = document.querySelectorAll('#main .yt-map .yt-list > li, #main .yt-map .yt-end'); if (!items.length) return;
-    const mid = innerHeight * 0.45;
-    items.forEach(el => { const r = el.getBoundingClientRect(), d = Math.abs(r.top + r.height / 2 - mid);
-      const floor = el.classList.contains('yt-me') ? .8 : .55;
-      el.style.opacity = Math.max(floor, Math.min(1, 1 - (d - 160) / 320)).toFixed(2); });
+    ytRaf = 0; const me = document.querySelector('#main .yt-me'), pill = document.querySelector('#main .yt-back'); if (!pill) return;
+    const r = me && me.offsetParent ? me.getBoundingClientRect() : null, off = r && (r.bottom < 60 || r.top > innerHeight - 110);
+    pill.classList.toggle('is-on', !!off); if (off) pill.querySelector('i').textContent = r.top > innerHeight - 110 ? '↓' : '↑';
   };
+  window.ytBack = () => { const me = document.querySelector('#main .yt-me'); if (!me) return; if (!me.offsetParent) { const sec = me.closest('.yt-ch'); sec && sec.classList.contains('is-fold') && window.ytTap(sec); }
+    const sc = ytScroller(me); sc.scrollTo({ top: sc.scrollTop + me.getBoundingClientRect().top - innerHeight * 0.38, behavior: 'smooth' }); };
+
   document.addEventListener('scroll', () => { if (!ytRaf) ytRaf = requestAnimationFrame(ytFocus); }, { passive: true, capture: true });
   window.ytFocus = ytFocus;
   // Tap a chapter bar (even while it's pinned) to fold or open it; the bar stays under your finger.
   window.ytTap = sec => { const head = sec.querySelector('.yt-head'), y0 = head.getBoundingClientRect().top, sc = ytScroller(sec);
-    sec.classList.toggle('is-fold'); const d = sec.getBoundingClientRect().top - y0; if (d < 0) sc.scrollTop += d; window.ytTrail(); ytFocus(); };
+    const f = sec.classList.toggle('is-fold'); head.setAttribute('aria-expanded', String(!f));
+    try { const p = JSON.parse(localStorage.getItem('ahead-yt-fold') || '{}'); p[sec.dataset.i] = f; localStorage.setItem('ahead-yt-fold', JSON.stringify(p)); } catch (e) {}
+    const d = sec.getBoundingClientRect().top - y0; if (d < 0) sc.scrollTop += d; window.ytTrail(); ytFocus(); };
   window.ytEarlier = btn => { const show = !btn.classList.contains('is-on'); btn.classList.toggle('is-on', show); btn.querySelector('b').textContent = show ? 'Hide' : 'Show'; document.querySelectorAll('#main .yt-road.is-past').forEach(x => x.classList.toggle('yt-hide', !show)); window.ytTrail(); ytFocus(); };
   window.ytFold = sec => { sec.dataset.user = '1'; const f = !sec.classList.contains('is-fold'); sec.classList.toggle('is-fold', f); sec.querySelector('.yt-head').setAttribute('aria-expanded', String(!f)); window.ytTrail(); ytFocus(); };
   window.ytOld = btn => { const sec = btn.closest('.yt-ch'), on = sec.classList.toggle('show-old'); btn.querySelector('span').textContent = on ? 'Hide' : 'Show'; window.ytTrail(); ytFocus(); };
