@@ -137,39 +137,45 @@
     const here = Math.max(0, ROAD.findIndex(r => a >= r[0] && a < r[1]));
     const sel = window.__ycSel != null ? window.__ycSel : here;
     const chev = '<span class="hub-chev" aria-hidden="true">›</span>';
-    // The map
+    // The map. Each chapter card holds all its stops on the trail; closed, only the big moments show. Tapping a card
+    // opens it in place (the trail stretches and the rest appear); opening one closes the other. Today's starts open.
+    const attended = v => { try { const r = healthRecord(v); return r && r.status === 'attended'; } catch (e) { return false; } };
+    const nextIds = CC.filter(c => !isDone(c)).sort((x, y) => x.start - y.start || x.end - y.end).slice(0, 3).map(c => c.id);
+    const SHORT = { crying: 'The crying peak', smile: 'First smile', nights: 'Longer nights', regress: 'Sleep regression', roll: 'Rolling', ready: 'Ready for solids', solids: 'First foods', twonaps: 'Two naps', crawl: 'Crawling', sit: 'Sitting up', tooth: 'First tooth', finger: 'Thicker textures', meals: 'Three meals', carseat: 'New car seat', sep: 'Separation', pull: 'Pulling up', words: 'First words', milk: 'Whole milk', steps: 'First steps' };
+    const peakIds = PEAKS.map(p => p[0]);
+    const chipOf = c => { const f = v => v < 1 ? Math.round(v * 4.35) + 'wk' : (Math.round(v * 2) / 2) + ''; return c.end - c.start <= 0.6 ? f(c.start) + (c.start < 1 ? '' : 'm') : `${f(c.start)}–${f(c.end)}m`; };
     let map = '';
     ROAD.forEach(([from, to, ages, title, toy, bg, ink], i) => {
-      const peaks = PEAKS.filter(([id]) => { const c = CC.find(x => x.id === id); const m = c ? c.start : 12; return m >= from && m < to; });
-      const stops = peaks.map(([id, age, label]) => { const c = CC.find(x => x.id === id), dn = id === 'bday' ? false : (done[id] || (c && c.end <= a));
-        return `<span class="yr-stop${dn ? ' is-done' : ''}"><i class="yr-dot"></i><span class="yr-pill"><em>${age}</em>${F(label)}</span></span>`; }).join('');
-      map += `<button class="yr-ch${i === here ? ' is-here' : ''}${i === sel ? ' is-sel' : ''}${to <= a ? ' is-past' : ''}" style="--yr:${bg};--yri:${ink}" onclick="ycPick(${i})">
-        <span class="yr-copy"><span class="yr-ages">${F(ages)}</span><b class="yr-title">${F(title)}</b>${i === here ? `<span class="yr-here">${F('You are here')}</span>` : ''}</span>
-        <span class="yr-stops">${stops}</span><span class="yr-toy" aria-hidden="true">${window.stToy(toy)}</span></button>`;
+      const its = CC.filter(c => c.start >= from && c.start < to).map(c => ({ m: c.start, c })).concat(CHECKUPS.filter(v => v - gap >= from && v - gap < to).map(v => ({ m: v - gap, v })));
+      if (i === 3) its.push({ m: 12, bday: true });
+      its.sort((x, y) => x.m - y.m);
+      const stops = its.map(s => {
+        if (s.bday) return `<span class="yr-stop is-peak"><i class="yr-dot"></i><span class="yr-pill"><em>12m</em>${F('One year')}</span></span>`;
+        if (s.v != null) { const dn = attended(s.v);
+          return `<span class="yr-stop${dn ? ' is-done' : ''}"><i class="yr-dot"></i><a class="yr-pill" onclick="event.stopPropagation();openPage('health-visit:${s.v}')"><em>${s.v}m</em>${F('Checkup')}</a></span>`; }
+        const c = s.c, dn = done[c.id] || c.end <= a, peak = peakIds.includes(c.id);
+        return `<span class="yr-stop${peak ? ' is-peak' : ''}${dn ? ' is-done' : ''}${c.id === nextIds[0] ? ' is-next' : ''}"><i class="yr-dot"></i><a class="yr-pill" onclick="event.stopPropagation();${c.go.replace(/"/g, '&quot;')}"><em>${chipOf(c)}</em>${F(SHORT[c.id] || c.title)}</a></span>`;
+      }).join('');
+      map += `<div class="yr-ch${i === here ? ' is-here is-open' : ''}${to <= a ? ' is-past' : ''}" style="--yr:${bg};--yri:${ink}" onclick="yrOpen(this)" role="button" tabindex="0" aria-expanded="${i === here}">
+        <span class="yr-copy"><span class="yr-ages">${F(ages)}</span><b class="yr-title">${F(title)}</b>${i === here ? `<span class="yr-here">${F('You are here')}</span>` : ''}<span class="yr-more">${F('See all')} <i>›</i></span></span>
+        <span class="yr-stops">${stops}</span><span class="yr-toy" aria-hidden="true">${window.stToy(toy)}</span></div>`;
     });
-    // This chapter
-    const [from, to, ages] = ROAD[sel];
-    const items = CC.filter(c => c.start >= from && c.start < to).map(c => ({ m: c.start, c })).concat(CHECKUPS.filter(v => v - gap >= from && v - gap < to).map(v => ({ m: v - gap, v }))).sort((x, y) => x.m - y.m);
-    const nextIds = CC.filter(c => !isDone(c)).sort((x, y) => x.start - y.start || x.end - y.end).slice(0, 3).map(c => c.id);
-    const attended = v => { try { const r = healthRecord(v); return r && r.status === 'attended'; } catch (e) { return false; } };
-    // Each thing in the chapter is a small tile: icon, a short name, and a status. Swipe the row; it starts on what's next.
-    const SHORT = { crying: 'Crying peak', smile: 'First smiles', nights: 'Longer nights', regress: 'Sleep regression', roll: 'Rolling', ready: 'Ready for solids', solids: 'First foods', twonaps: 'Two naps', crawl: 'Crawling', sit: 'Sitting up', tooth: 'First tooth', finger: 'Thicker textures', meals: 'Three meals', carseat: 'New car seat', sep: 'Separation', pull: 'Pulling up', words: 'First words', milk: 'Whole milk', steps: 'First steps' };
-    const rows = items.map(s => {
-      if (s.v != null) { const dn = attended(s.v);
-        return `<button class="yr-tile${dn ? ' is-done' : ''}" onclick="openPage('health-visit:${s.v}')"><span class="yr-ic">${hubArt('steth', 'Health')}</span><b>${F(`${s.v}-month checkup`)}</b><small>${dn ? '✓ Done' : F(`At ${s.v} months`)}</small></button>`; }
-      const c = s.c, dn = isDone(c), nx = nextIds.includes(c.id);
-      return `<button class="yr-tile${dn ? ' is-done' : ''}${c.id === nextIds[0] ? ' is-next' : ''}${nx ? ' is-soon' : ''}" style="${yearTheme(c.cat)}" onclick="${c.go}"><span class="yr-ic">${hubArt(c.icon, c.cat)}</span><b>${F(SHORT[c.id] || c.title)}</b><small>${done[c.id] ? '✓ Done' : dn ? F('Behind you') : nx ? F(whenShort(c, a)) : F(range(c).replace(/ months?/, ' mo'))}</small></button>`;
-    }).join('');
-    return `<div class="ya-page yr-page"><h1 class="yr-h1">${F(`${nm}’s first year`)}</h1><p class="yr-lead">${F('The road to one.')}</p>
+    return `<div class="ya-page yr-page"><h1 class="yr-h1">${F(`${nm}’s first year`)}</h1><p class="yr-lead">${F('The road to one. Tap a chapter to see everything in it.')}</p>
       <div class="yr-map"><svg class="yr-trail" aria-hidden="true"><path class="yr-t1"/><path class="yr-t2"/></svg>${map}</div>
-      <section class="yr-this"><div class="yr-this-h"><b>${F(sel === here ? 'This chapter' : ROAD[sel][3])}</b><small>${F(ages)}</small></div><div class="yr-tiles">${rows}</div></section>
-      <p class="hub-foot">${F('Ages are typical. Every baby moves at their own pace.')}</p></div>` + (setTimeout(() => { window.yrTrail && window.yrTrail(); const r = document.querySelector('#main .yr-tiles'), n = r && (r.querySelector('.is-next') || r.querySelector('.yr-tile:not(.is-done)')); if (r && n) r.scrollLeft = Math.max(0, n.offsetLeft - 12); }, 0), '');
+      <p class="hub-foot">${F('Ages are typical. Every baby moves at their own pace.')}</p></div>` + (setTimeout(() => window.yrTrail && window.yrTrail(), 0), '');
+  };
+  // Open one chapter in place; redraw the trail while it grows.
+  window.yrOpen = function (el) {
+    const open = !el.classList.contains('is-open');
+    document.querySelectorAll('#main .yr-ch.is-open').forEach(c => { c.classList.remove('is-open'); c.setAttribute('aria-expanded', 'false'); });
+    if (open) { el.classList.add('is-open'); el.setAttribute('aria-expanded', 'true'); }
+    const t0 = performance.now(); (function tick() { window.yrTrail(); if (performance.now() - t0 < 520) requestAnimationFrame(tick); })();
   };
   // One winding trail through every stop, card to card.
   window.yrTrail = function () {
     const map = document.querySelector('#main .yr-map'); if (!map) return;
     const svg = map.querySelector('.yr-trail'), box = map.getBoundingClientRect();
-    const pts = [...map.querySelectorAll('.yr-dot')].map(d => { const r = d.getBoundingClientRect(); return [r.left + r.width / 2 - box.left, r.top + r.height / 2 - box.top]; });
+    const pts = [...map.querySelectorAll('.yr-stop')].filter(st => st.getBoundingClientRect().height > 14).map(st => { const r = st.querySelector('.yr-dot').getBoundingClientRect(); return [r.left + r.width / 2 - box.left, r.top + r.height / 2 - box.top]; });
     svg.setAttribute('viewBox', `0 0 ${box.width} ${box.height}`);
     svg.style.setProperty('width', box.width + 'px', 'important'); svg.style.setProperty('height', box.height + 'px', 'important');
     if (pts.length < 2) return;

@@ -744,3 +744,21 @@
 #main .yr-tile.is-next small{color:var(--year-ink,#7d6597)}
 #main .yr-tile.is-done{opacity:.6}
 #main .yr-tile.is-soon small{color:var(--year-ink,#7d6597)}
+/* Road to one: chapters open in place */
+#main .yr-ch{cursor:pointer;align-items:flex-start!important;transition:box-shadow .3s}
+#main .yr-copy{padding-top:2px}
+#main .yr-stops{gap:0!important}
+#main .yr-stop{max-height:46px;padding:6px 0;overflow:visible;transition:max-height .45s ease,padding .45s ease,opacity .3s ease}
+#main .yr-stop:nth-child(2){margin-left:0}
+#main .yr-stop:nth-child(4n+2){margin-left:10px}#main .yr-stop:nth-child(4n+3){margin-left:4px}#main .yr-stop:nth-child(4n+4){margin-left:12px}
+#main .yr-ch:not(.is-open) .yr-stop:not(.is-peak){max-height:0;padding:0;opacity:0;overflow:hidden;pointer-events:none}
+#main .yr-pill{text-decoration:none;color:#2B2840;cursor:pointer}
+#main .yr-stop.is-done .yr-pill{color:#8a8494;font-weight:600;background:rgba(255,253,249,.7);box-shadow:none}
+#main .yr-stop.is-next .yr-pill{box-shadow:0 0 0 1.5px var(--yri),0 2px 6px rgba(43,40,64,.08)}
+#main .yr-stop.is-next .yr-dot{background:var(--yri);box-shadow:0 0 0 3px #fffdf9}
+#main .yr-more{display:inline-block;margin-top:8px;font-size:12.5px;font-weight:800;color:#6b6676}
+#main .yr-more i{font-style:normal}
+#main .yr-ch.is-open .yr-more{display:none}
+#main .yr-ch.is-open .yr-toy{width:84px;opacity:.9}
+#main .yr-ch{min-height:116px}
+#main .yr-pill{max-width:100%;overflow:hidden;text-overflow:ellipsis}
