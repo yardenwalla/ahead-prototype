@@ -152,16 +152,18 @@
     const items = CC.filter(c => c.start >= from && c.start < to).map(c => ({ m: c.start, c })).concat(CHECKUPS.filter(v => v - gap >= from && v - gap < to).map(v => ({ m: v - gap, v }))).sort((x, y) => x.m - y.m);
     const nextIds = CC.filter(c => !isDone(c)).sort((x, y) => x.start - y.start || x.end - y.end).slice(0, 3).map(c => c.id);
     const attended = v => { try { const r = healthRecord(v); return r && r.status === 'attended'; } catch (e) { return false; } };
+    // Each thing in the chapter is a small tile: icon, a short name, and a status. Swipe the row; it starts on what's next.
+    const SHORT = { crying: 'Crying peak', smile: 'First smiles', nights: 'Longer nights', regress: 'Sleep regression', roll: 'Rolling', ready: 'Ready for solids', solids: 'First foods', twonaps: 'Two naps', crawl: 'Crawling', sit: 'Sitting up', tooth: 'First tooth', finger: 'Thicker textures', meals: 'Three meals', carseat: 'New car seat', sep: 'Separation', pull: 'Pulling up', words: 'First words', milk: 'Whole milk', steps: 'First steps' };
     const rows = items.map(s => {
       if (s.v != null) { const dn = attended(s.v);
-        return `<button class="yr-row${dn ? ' is-done' : ''}" onclick="openPage('health-visit:${s.v}')"><span class="yr-ic">${hubArt('steth', 'Health')}</span><span class="yr-rc"><b>${F(`${s.v}-month checkup`)}</b><small>${F(CHECK_LINE[s.v] || '')}</small></span>${dn ? '<i class="yr-tick">✓</i>' : chev}</button>`; }
+        return `<button class="yr-tile${dn ? ' is-done' : ''}" onclick="openPage('health-visit:${s.v}')"><span class="yr-ic">${hubArt('steth', 'Health')}</span><b>${F(`${s.v}-month checkup`)}</b><small>${dn ? '✓ Done' : F(`At ${s.v} months`)}</small></button>`; }
       const c = s.c, dn = isDone(c), nx = nextIds.includes(c.id);
-      return `<button class="yr-row${dn ? ' is-done' : ''}${nx ? ' is-next' : ''}" style="${yearTheme(c.cat)}" onclick="${c.go}"><span class="yr-ic">${hubArt(c.icon, c.cat)}</span><span class="yr-rc">${nx ? `<em>${F(range(c))} · ${F(whenShort(c, a))}</em>` : ''}<b>${F(c.title)}</b><small>${F(nx ? (c.id === 'crying' && a >= 2 ? 'Past the worst. Fussy evenings ease over the next few weeks' : c.why) : range(c))}</small>${nx ? windowBar(c, a) : ''}</span>${done[c.id] ? '<i class="yr-tick">✓</i>' : chev}</button>`;
+      return `<button class="yr-tile${dn ? ' is-done' : ''}${c.id === nextIds[0] ? ' is-next' : ''}${nx ? ' is-soon' : ''}" style="${yearTheme(c.cat)}" onclick="${c.go}"><span class="yr-ic">${hubArt(c.icon, c.cat)}</span><b>${F(SHORT[c.id] || c.title)}</b><small>${done[c.id] ? '✓ Done' : dn ? F('Behind you') : nx ? F(whenShort(c, a)) : F(range(c).replace(/ months?/, ' mo'))}</small></button>`;
     }).join('');
     return `<div class="ya-page yr-page"><h1 class="yr-h1">${F(`${nm}’s first year`)}</h1><p class="yr-lead">${F('The road to one.')}</p>
       <div class="yr-map"><svg class="yr-trail" aria-hidden="true"><path class="yr-t1"/><path class="yr-t2"/></svg>${map}</div>
-      <section class="yr-this"><div class="yr-this-h"><b>${F(sel === here ? 'This chapter' : ROAD[sel][3])}</b><small>${F(ages)}</small></div>${rows}</section>
-      <p class="hub-foot">${F('Ages are typical. Every baby moves at their own pace.')}</p></div>` + (setTimeout(() => window.yrTrail && window.yrTrail(), 0), '');
+      <section class="yr-this"><div class="yr-this-h"><b>${F(sel === here ? 'This chapter' : ROAD[sel][3])}</b><small>${F(ages)}</small></div><div class="yr-tiles">${rows}</div></section>
+      <p class="hub-foot">${F('Ages are typical. Every baby moves at their own pace.')}</p></div>` + (setTimeout(() => { window.yrTrail && window.yrTrail(); const r = document.querySelector('#main .yr-tiles'), n = r && (r.querySelector('.is-next') || r.querySelector('.yr-tile:not(.is-done)')); if (r && n) r.scrollLeft = Math.max(0, n.offsetLeft - 12); }, 0), '');
   };
   // One winding trail through every stop, card to card.
   window.yrTrail = function () {

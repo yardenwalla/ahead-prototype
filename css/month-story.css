@@ -730,3 +730,17 @@
 #main .yr-copy{flex:0 0 41%!important;padding-right:10px}
 #main .yr-title{font-size:17px!important}
 #main .yr-stops{padding-left:6px}
+/* This chapter as tiles */
+#main .yr-this{padding:14px 0 14px!important}
+#main .yr-this-h{margin:0 18px 10px!important}
+#main .yr-tiles{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;padding:2px 14px 4px;scrollbar-width:none}
+#main .yr-tiles::-webkit-scrollbar{display:none}
+#main .yr-tile{flex:0 0 96px;scroll-snap-align:start;display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px 10px;border:0;border-radius:18px;background:#fbf6ef;font-family:inherit;color:#2B2840;text-align:center;cursor:pointer}
+#main .yr-tile .yr-ic{width:44px;height:44px;border-radius:14px;background:var(--year-pale,#f3effb);display:grid;place-items:center}
+#main .yr-tile .yr-ic svg{width:26px;height:26px}
+#main .yr-tile b{font-size:13px;font-weight:800;line-height:1.2}
+#main .yr-tile small{font-size:11.5px;font-weight:700;color:#8a8494}
+#main .yr-tile.is-next{background:#fff;box-shadow:0 0 0 1.5px var(--year-ink,#7d6597)}
+#main .yr-tile.is-next small{color:var(--year-ink,#7d6597)}
+#main .yr-tile.is-done{opacity:.6}
+#main .yr-tile.is-soon small{color:var(--year-ink,#7d6597)}
