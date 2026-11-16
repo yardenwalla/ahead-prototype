@@ -668,3 +668,20 @@
 .is-on .st-ev-edge{animation:stEvEdge 1.6s 1.5s cubic-bezier(.6,0,.3,1) forwards}
 @keyframes stEvWipe{to{clip-path:inset(0 0 0 0)}}
 @keyframes stEvEdge{0%{left:0;opacity:1}90%{opacity:1}100%{left:100%;opacity:0}}
+.st-pose{width:min(56vw,30vh,240px);margin-bottom:4%}
+.st-pose .st-obj{width:100%;height:auto;display:block;opacity:0;transform:translateY(24px)}
+.is-on .st-pose .st-obj{animation:stEyeIn .6s .5s cubic-bezier(.25,1.3,.4,1) forwards}
+.st-lull{width:min(56vw,30vh,240px);margin-bottom:4%;position:relative}
+.st-lull-b{display:block;width:62%;margin-left:4%}.st-lull-b .st-obj{width:100%;height:auto;display:block}
+.st-lull i{position:absolute;right:4%;top:28%;width:40px;height:40px;border:5px solid #c96f52;border-left-color:transparent;border-bottom-color:transparent;border-radius:50%;transform:rotate(-135deg) scale(.6);opacity:0}
+.is-on .st-lull i{animation:stLull 2.4s infinite;animation-delay:calc(.9s + var(--i)*.4s)}
+@keyframes stLull{0%{opacity:0;transform:rotate(-135deg) scale(.5);right:22%}30%{opacity:.9}100%{opacity:0;transform:rotate(-135deg) scale(1.4);right:20%}}
+.st-clock{width:min(46vw,26vh,200px);margin-bottom:6%}.st-clock .st-obj{width:100%;height:auto;display:block}
+.st-ck{opacity:0}.is-on .st-ck{animation:stPrint 4s infinite;animation-delay:calc(.8s + var(--i)*.22s)}
+.st-grip{width:min(62vw,30vh,260px);margin-bottom:8%}.st-grip .st-obj{width:100%;height:auto;display:block}
+.is-on .st-grip .st-obj{animation:stGrip 1.6s .8s ease-in-out infinite alternate}
+@keyframes stGrip{to{transform:translateX(-4px) rotate(-2deg)}}
+.st-lull-b{width:78%!important}
+#main .hg-banner-cam{width:84px!important;height:46px!important}
+#main .hg-banner-hello{width:72px!important;height:auto!important;object-fit:contain}
+#main .hg-banner-hello{width:82px!important}

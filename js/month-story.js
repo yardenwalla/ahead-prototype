@@ -197,6 +197,18 @@
     // Bubbles that all come from her.
     voice: function (words) { return '<div class="st-vis st-voice">' + words.map(function (w, i) { return '<span style="--i:' + i + ';--x:' + [8, 52, 24, 64, 4][i % 5] + '%;--r:' + [-8, 6, -3, 9, -6][i % 5] + 'deg">' + E(w) + '</span>'; }).join('') + '</div>'; },
     // Something rising up from below: a head lifting, a baby pulling up.
+    // Coming-up screens show the month card's clay baby in that pose, so they don't repeat the bunny.
+    pose4: function () { return '<div class="st-vis st-pose">' + babyArt(4) + '</div>'; },
+    pose7: function () { return '<div class="st-vis st-pose">' + babyArt(7) + '</div>'; },
+    pose10: function () { return '<div class="st-vis st-pose">' + babyArt(10) + '</div>'; },
+    // Newborn screens
+    lull: function () { return '<div class="st-vis st-lull"><span class="st-lull-b">' + babyArt(0) + '</span><i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i></div>'; },
+    clock: function () { var d = ''; for (var i = 0; i < 10; i++) { var a = (i / 10) * Math.PI * 2 - Math.PI / 2; d += '<circle class="st-ck" style="--i:' + i + '" cx="' + (100 + Math.cos(a) * 70).toFixed(1) + '" cy="' + (100 + Math.sin(a) * 70).toFixed(1) + '" r="9" fill="#e98a6b"/>'; }
+      var c = blob('#fffaf3', '#ffffff', '#e8dccd'); return '<div class="st-vis st-clock">' + svg('0 0 200 200', c.def, shadow(100, 190, 60) + '<circle cx="100" cy="100" r="86" fill="' + c.url + '"/>' + d + '<path d="M100 100 V58 M100 100 L128 112" stroke="#2B2840" stroke-width="7" stroke-linecap="round"/><circle cx="100" cy="100" r="7" fill="#2B2840"/>') + '</div>'; },
+    grip: function () { var sk = blob('#f5c3a0', '#fde3cf', '#de9d79'), pa = blob('#e9b48f', '#f7d3b6', '#c98d68');
+      return '<div class="st-vis st-grip">' + svg('0 0 220 140', sk.def + pa.def, shadow(110, 132, 80) +
+        '<rect x="96" y="52" width="140" height="40" rx="20" fill="' + pa.url + '"/><ellipse cx="104" cy="72" rx="12" ry="16" fill="#f3c7a8" opacity=".6"/>' +
+        '<ellipse cx="96" cy="76" rx="44" ry="38" fill="' + sk.url + '"/><path d="M70 56 q10 -10 20 0 M86 52 q10 -10 20 0 M102 54 q10 -10 18 2" fill="none" stroke="#c98a66" stroke-width="4" stroke-linecap="round"/>') + '</div>'; },
     rise: function () { return '<div class="st-vis st-rise">' + bunny() + '</div>'; },
     // Sleep as bars across a night: short ones, then one that stretches out.
     stretch: function () { return '<div class="st-vis st-bars-n"><i style="--w:14%"></i><i style="--w:12%"></i><i class="is-long" style="--w:44%"></i><i style="--w:16%"></i></div>'; },
@@ -237,6 +249,20 @@
           '<defs><clipPath id="evc"><circle cx="80" cy="104" r="70"/></clipPath></defs><circle cx="80" cy="104" r="70" fill="#fffaf3"/><g clip-path="url(#evc)">' + stripes + '</g><circle cx="80" cy="104" r="70" fill="none" stroke="#2B2840" stroke-width="5"/>' +
           '<circle cx="178" cy="150" r="34" fill="' + lv.url + '"/>');
       }
+      var B = function (cx, cy, rr, a, b2, c2) { var g = blob(a, b2, c2); return { d: g.def, h: '<circle cx="' + cx + '" cy="' + cy + '" r="' + rr + '" fill="' + g.url + '"/>' }; };
+      if (m === 2) { // colors: three bright toys, muted in her view
+        var r2 = B(52, 130, 34, '#e9584b', '#f8a39a', '#bd3a30'), y2 = B(118, 104, 40, '#ffd23f', '#fff0a8', '#e0a91a'), b2 = B(182, 136, 30, '#3f8ee9', '#9cc6f6', '#2a68b8');
+        face = svg('0 0 220 200', r2.d + y2.d + b2.d, shadow(52, 190, 34) + shadow(118, 190, 40) + shadow(182, 190, 30) + r2.h + y2.h + b2.h);
+      } else if (m === 3) { // tracking: a ball moving across, with its trail
+        var t3 = B(170, 100, 34, '#e98a6b', '#f6b49c', '#c96f52'), tr = '';
+        for (var j = 0; j < 4; j++) tr += '<circle cx="' + (40 + j * 30) + '" cy="' + (100 - Math.sin(j / 3 * Math.PI) * 18).toFixed(0) + '" r="' + (8 + j * 3) + '" fill="#e98a6b" opacity="' + (.18 + j * .14).toFixed(2) + '"/>';
+        face = svg('0 0 220 200', t3.d, shadow(170, 190, 36) + tr + t3.h);
+      } else if (m === 4) { // depth: near, middle and far toys
+        var n4 = B(64, 140, 46, '#9cc7ae', '#cfe6d9', '#76a88b'), m4 = B(140, 112, 26, '#e98a6b', '#f6b49c', '#c96f52'), f4 = B(192, 92, 13, '#b9a6e6', '#ddd2f7', '#8f7bc4');
+        face = svg('0 0 220 200', n4.d + m4.d + f4.d, shadow(64, 192, 46) + shadow(140, 150, 26) + shadow(192, 112, 14) + f4.h + m4.h + n4.h);
+      } else if (m === 6) { // across the room: you, small and far, still easy to spot
+        face = face.replace('<circle cx="96" cy="100" r="80"', '<g transform="translate(110 40) scale(.42)"><circle cx="96" cy="100" r="80"').replace('<circle cx="194" cy="160" r="24"', '</g><circle cx="60" cy="150" r="34"').replace('<path d="M180 150 Q194 140 208 152"', '<path d="M42 136 Q60 124 78 138"');
+      }
       // The sharp face sits underneath; her view sweeps across it like a lens, edge and all.
       return '<div class="st-vis st-eyesv" style="--f:' + F + '"><span class="st-ev-sharp">' + face + '</span><span class="st-ev-soft">' + face + '</span><i class="st-ev-edge"></i></div>';
     },
@@ -263,14 +289,14 @@
   var NEXT = {
     babble: ['Ba-ba-ba!', 'Babbling strings of sounds is on the way. Answer her and she’ll babble right back.', 'babbling', 'babble'],
     track: ['Following you with her eyes.', 'Move slowly side to side and watch her eyes come with you.', 'following you', 'track'],
-    head: ['Lifting her head.', 'A little tummy time a few times a day builds the strength.', 'lifting her head', 'rise'],
+    head: ['Lifting her head.', 'A little tummy time a few times a day builds the strength.', 'lifting her head', 'pose4'],
     laugh: ['Laughing out loud.', 'Silly faces and gentle tickles are about to pay off.', 'laughing out loud', 'laugh'],
     grab: ['Grabbing toys.', 'All that swatting is aim practice.', 'grabbing toys', 'grab'],
     roll: ['Rolling over.', 'All that pushing up during tummy time is the warm-up.', 'rolling over', 'roll'],
-    sit: ['Sitting up.', 'Rolling and reaching are building the strength she’ll sit with.', 'sitting up', 'rise'],
+    sit: ['Sitting up.', 'Rolling and reaching are building the strength she’ll sit with.', 'sitting up', 'pose7'],
     crawl: ['Crawling.', 'Rocking on hands and knees is the warm-up.', 'crawling', 'crawl'],
     peek: ['Peekaboo gets exciting.', 'She’s about to figure out that hidden isn’t gone.', 'peekaboo', 'peek'],
-    pull: ['Pulling up to stand.', 'Every crawl is building the strength in her legs.', 'pulling up', 'rise'],
+    pull: ['Pulling up to stand.', 'Every crawl is building the strength in her legs.', 'pulling up', 'pose10'],
     cruise: ['Cruising.', 'Once she pulls up, she’ll start shuffling along the furniture.', 'cruising', 'cruise'],
     point: ['Pointing.', 'Soon she’ll point to show you exactly what she wants.', 'pointing', 'grab'],
     words: ['First words.', 'All that babbling is practice. Keep naming things for her.', 'first words', 'words'],
@@ -298,10 +324,10 @@
   var C = { lav: ['#cfc3ea', '#e3dbf5'], butter: ['#ffe7a6', '#fff3cf'], pink: ['#f2b6c8', '#f8cfdb'], peach: ['#f6c9a8', '#fbe0cc'], sage: ['#bfdcc7', '#e5f1e7'], night: ['#2f3a66', '#8e9fd6'] };
   var STORIES = {
     0: { cover: ['Welcome to the world.', 'Everything is new, for both of you.'], screens: [
-          { t: 'topic', c: 'butter', kicker: 'She already knows you', title: 'She knows your voice.', body: 'She heard it for months before she was born, so it’s the sound that settles her most.', vis: ['talk', ['hi', '…', 'shh', '…']] },
+          { t: 'topic', c: 'butter', kicker: 'She already knows you', title: 'She knows your voice.', body: 'She heard it for months before she was born, so it’s the sound that settles her most.', vis: ['lull'] },
           { t: 'topic', c: 'sage', kicker: 'Why she stares at you', title: 'She sees you best up close.', body: 'About 8 to 12 inches away, the distance to your face during a feed. Farther than that is still a blur.', vis: ['eyes', 0] },
-          { t: 'beat', c: 'lav', words: ['Feed.', 'Sleep.', 'Repeat.'], line: 'Most newborns feed 8 to 12 times a day and sleep in short stretches, day and night.', vis: ['cloud', ['feed', 'burp', 'sleep', 'again']] },
-          { t: 'topic', c: 'peach', kicker: 'That tiny grip', title: 'She’ll hold on tight.', body: 'Put a finger in her palm and she’ll grab it. It’s a reflex for now, and it fades over the next few months.', vis: ['fist'] }],
+          { t: 'beat', c: 'lav', words: ['Feed.', 'Sleep.', 'Repeat.'], line: 'Most newborns feed 8 to 12 times a day and sleep in short stretches, day and night.', vis: ['clock'] },
+          { t: 'topic', c: 'peach', kicker: 'That tiny grip', title: 'She’ll hold on tight.', body: 'Put a finger in her palm and she’ll grab it. It’s a reflex for now, and it fades over the next few months.', vis: ['grip'] }],
         sum: ['Knows your voice', 'Feeds around the clock', 'Holds on tight'] },
     1: { cover: ['She’s tuning in to you.', 'Your face and voice are her favorite things now.'], screens: [
           { t: 'topic', c: 'butter', kicker: 'Through her eyes', title: 'Bold things stand out.', body: 'Faces and strong black-and-white patterns catch her eye first. Soft colors are still hard to tell apart.', vis: ['eyes', 1] },

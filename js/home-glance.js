@@ -150,7 +150,8 @@
     if (!b) {
       if (homeMonth() !== 0 || (typeof hubPhotoFor === 'function' && hubPhotoFor(0))) return '';
       try { if (localStorage.getItem('ahead-photo-banner-0')) return ''; } catch (e) {}
-      const cam = `<svg class="hg-banner-img hg-banner-cam" viewBox="0 0 64 64" aria-hidden="true"><defs><radialGradient id="hgcam" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#fbd0bf"/><stop offset=".55" stop-color="#f3a587"/><stop offset="1" stop-color="#da7f61"/></radialGradient></defs><rect x="6" y="18" width="52" height="38" rx="11" fill="url(#hgcam)"/><rect x="20" y="11" width="18" height="11" rx="4" fill="url(#hgcam)"/><circle cx="32" cy="37" r="12" fill="#fffaf3"/><circle cx="32" cy="37" r="7" fill="#2B2840"/><circle cx="35" cy="34" r="2.2" fill="#fff"/><circle cx="49" cy="26" r="3" fill="#ffd98a"/></svg>`;
+      // The "Hello, World!" foil balloon from the newborn page in Memories (there's no number balloon for the newborn weeks).
+      const cam = `<img class="hg-banner-img hg-banner-hello" src="assets/home/hello-world.png?v=6" alt="">`;
       const bn0 = `linear-gradient(100deg,${mix('#f2a98a', .84)} 0%,#fffaf6 80%)`;
       return `<label class="hg-banner" style="--bn:${bn0}" role="button" onclick="try{localStorage.setItem('ahead-photo-banner-0','1')}catch(e){};setTimeout(()=>{const b=document.querySelector('#main .hg-banner');b&&b.remove()},400)">${cam}<span class="hg-banner-copy"><b>${F(`${name()}’s newborn photo`)}</b><small>${F('Snap one for Memories.')}</small></span><span class="hg-banner-plus" aria-hidden="true">＋</span>${typeof hubPhotoInput === 'function' ? hubPhotoInput(0) : ''}</label>`;
     }
