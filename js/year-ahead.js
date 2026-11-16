@@ -120,8 +120,8 @@
   /* Timeline (Nov 15): the year as four chapters you open and close. Closed, a chapter is one calm header; open, its
      stops run down a trail on the left, one card each, in time order: what's behind her is quiet, "Maya is here" marks
      today, the next change is outlined. Today's chapter starts open; opening another closes it. Each card opens its page. */
-  const ROAD = [[0, 3, 'Birth–2 months', 'First smiles & settling in', 'bunny', '#fbe8dc', '#c98d6f'], [3, 6, '3–5 months', 'Rolling & changing sleep', 'rings', '#ece4f6', '#8f7bc4'],
-    [6, 9, '6–8 months', 'First foods & sitting up', 'bowl', '#e6efdd', '#5f8c55'], [9, 13, '9–12 months', 'Standing & first words', 'blocks', '#e3e9f5', '#5d74a6']];
+  const ROAD = [[0, 3, 'Birth–2 months', 'First smiles & settling in', 3, '#fbe8dc', '#c98d6f'], [3, 6, '3–5 months', 'Rolling & changing sleep', 4, '#ece4f6', '#8f7bc4'],
+    [6, 9, '6–8 months', 'First foods & sitting up', 6, '#e6efdd', '#5f8c55'], [9, 13, '9–12 months', 'Standing & first words', 10, '#e3e9f5', '#5d74a6']];
   const listPage = window.nextPage;
   window.nextPage = function () {
     if (typeof window.stToy !== 'function') return listPage();
@@ -144,19 +144,21 @@
       // In today's chapter, what's behind her comes first, then "Maya is here", then what's ahead (in time order).
       if (i === here) its.sort((x, y) => passed(y) - passed(x) || x.m - y.m);
       let body = '', placed = i !== here;
+      const nOld = i === here ? its.filter(passed).length : 0;
+      if (nOld) body += `<li class="yt-oldbtn"><i class="yt-dot"></i><button onclick="ytOld(this)">✓ ${nOld} ${F(nOld === 1 ? 'thing' : 'things')} ${F('behind {o}')}<span>${F('Show')}</span></button></li>`;
       its.forEach(s => {
         if (!placed && !passed(s)) { body += `<li class="yt-me"><i class="yt-dot"></i><span>${F(`${nm} is here`)}<small>${F(typeof babyAge === 'function' ? babyAge() : '')}</small></span></li>`; placed = true; }
         const pd = passed(s);
-        if (s.v != null) body += `<li class="yt-stop${pd ? ' is-done' : ''}"><i class="yt-dot"></i><button onclick="openPage('health-visit:${s.v}')"><span class="yt-c"><small>${F(`${s.v} month${s.v === 1 ? '' : 's'}`)}</small><b>${F(`${s.v}-month checkup`)}</b></span>${pd ? '<i class="yt-tick">✓</i>' : chev}</button></li>`;
+        if (s.v != null) body += `<li class="yt-stop${pd ? ' is-done' : ''}${i === here && pd ? ' yt-old' : ''}"><i class="yt-dot"></i><button onclick="openPage('health-visit:${s.v}')"><span class="yt-c"><small>${F(`${s.v} month${s.v === 1 ? '' : 's'}`)}</small><b>${F(`${s.v}-month checkup`)}</b></span>${pd ? '<i class="yt-tick">✓</i>' : chev}</button></li>`;
         else { const c = s.c, nx = c.id === nextId;
-          body += `<li class="yt-stop${pd ? ' is-done' : ''}${nx ? ' is-next' : ''}"><i class="yt-dot"></i><button onclick="${c.go}"><span class="yt-c"><small>${F(range(c))}${nx ? ` · ${F(whenShort(c, a))}` : ''}</small><b>${F(c.title)}</b>${nx ? `<span>${F(c.id === 'crying' && a >= 2 ? 'Past the worst. Fussy evenings ease over the next few weeks' : c.why)}</span>` : ''}</span>${done[c.id] ? '<i class="yt-tick">✓</i>' : chev}</button></li>`; }
+          body += `<li class="yt-stop${pd ? ' is-done' : ''}${i === here && pd ? ' yt-old' : ''}${nx ? ' is-next' : ''}"><i class="yt-dot"></i><button onclick="${c.go}"><span class="yt-c"><small>${F(range(c))}${nx ? ` · ${F(whenShort(c, a))}` : ''}</small><b>${F(c.title)}</b>${nx ? `<span>${F(c.id === 'crying' && a >= 2 ? 'Past the worst. Fussy evenings ease over the next few weeks' : c.why)}</span>` : ''}</span>${done[c.id] ? '<i class="yt-tick">✓</i>' : chev}</button></li>`; }
       });
       if (!placed) body += `<li class="yt-me"><i class="yt-dot"></i><span>${F(`${nm} is here`)}<small>${F(typeof babyAge === 'function' ? babyAge() : '')}</small></span></li>`;
       const SH = { crying: 'crying peak', smile: 'first smiles', nights: 'longer nights', regress: 'sleep regression', roll: 'rolling', ready: 'solids prep', solids: 'first foods', twonaps: 'two naps', crawl: 'crawling', sit: 'sitting up', tooth: 'first tooth', finger: 'textures', meals: 'three meals', carseat: 'car seat', sep: 'separation', pull: 'pulling up', words: 'first words', milk: 'whole milk', steps: 'first steps' };
       const ahead = its.filter(s => !passed(s)), nameOf = s => s.v != null ? `${s.v}-month checkup` : SH[s.c.id] || s.c.title;
       const preview = to <= a ? F(`All behind ${'{o}'} ✓`) : ahead.length ? F(`${ahead.length} ahead · ${ahead.slice(0, 3).map(nameOf).join(', ')}${ahead.length > 3 ? '…' : ''}`) : '';
-      out += `<section class="yt-ch is-open yt-road${i === here ? ' is-here' : ''}${to <= a ? ' is-past' : ''}" style="--yt:${bg};--yti:${ink};--ytp:${(ROAD[i - 1] || ROAD[i])[5]};--ytn:${(ROAD[i + 1] || ROAD[i])[5]}">
-        <button class="yt-head" tabindex="-1"><i class="yt-dot yt-hdot"></i><span class="yt-hc"><small>${F(ages)} · ${mon(from)}–${mon(Math.min(to, 12) - 1)}</small><b>${F(title)}</b><span class="yt-prev">${preview}</span></span><span class="yt-toy" aria-hidden="true">${window.stToy(toy)}</span><i class="yt-caret" aria-hidden="true">›</i></button>
+      out += `<section class="yt-ch is-open yt-road${i === here ? ' is-here' : ' is-fold'}${to <= a ? ' is-past' : ''}" style="--yt:${bg};--yti:${ink};--ytp:${(ROAD[i - 1] || ROAD[i])[5]};--ytn:${(ROAD[i + 1] || ROAD[i])[5]}">
+        <button class="yt-head" onclick="ytFold(this.parentNode)" aria-expanded="${i === here}"><i class="yt-dot yt-hdot"></i><span class="yt-hc"><small>${F(ages)} · ${mon(from)}–${mon(Math.min(to, 12) - 1)}</small><b>${F(title)}</b><span class="yt-prev">${preview}</span></span><span class="yt-toy" aria-hidden="true">${typeof window.stCardArt === 'function' ? window.stCardArt(toy) : ''}</span><i class="yt-caret" aria-hidden="true">›</i></button>
         <div class="yt-body"><ol class="yt-list">${body}</ol></div></section>`;
     });
     return `<div class="ya-page yt-page"><h1 class="yt-h1">${F(`${nm}’s first year`)}</h1><p class="yt-lead">${F('The road to one.')}</p><div class="yt-map"><svg class="yt-trail" aria-hidden="true"><path class="t1"/><path class="t2"/></svg>${out}<div class="yt-end"><i class="yt-dot"></i><span class="yt-endc"><small>${F('The destination')} · ${mon(12)}</small><b>${F('One whole year!')}</b></span><span class="yt-endcake" aria-hidden="true">${window.stToy('cake')}</span></div></div><p class="hub-foot">${F('Ages are typical. Every baby moves at their own pace.')}</p></div>` + (setTimeout(() => { window.ytTrail && window.ytTrail(); window.ytCenter && window.ytCenter(); }, 0), '');
@@ -182,6 +184,8 @@
   };
   document.addEventListener('scroll', () => { if (!ytRaf) ytRaf = requestAnimationFrame(ytFocus); }, { passive: true, capture: true });
   window.ytFocus = ytFocus;
+  window.ytFold = sec => { const f = !sec.classList.contains('is-fold'); sec.classList.toggle('is-fold', f); sec.querySelector('.yt-head').setAttribute('aria-expanded', String(!f)); window.ytTrail(); ytFocus(); };
+  window.ytOld = btn => { const sec = btn.closest('.yt-ch'), on = sec.classList.toggle('show-old'); btn.querySelector('span').textContent = on ? 'Hide' : 'Show'; window.ytTrail(); ytFocus(); };
   window.ytCenter = () => { const me = document.querySelector('#main .yt-me'); if (!me) return ytFocus(); const sc = ytScroller(me); sc.scrollTop += me.getBoundingClientRect().top - innerHeight * 0.38; ytFocus(); };
   // A gentle winding trail on the left of each open chapter, through its stops.
   window.ytTrail = function () {

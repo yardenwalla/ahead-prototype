@@ -884,3 +884,21 @@
 #main .yt-map .yt-list > li,#main .yt-map .yt-head,#main .yt-map .yt-end{transition:opacity .18s linear}
 #main .yt-end{margin-top:18px!important}
 #main .yt-page{padding-bottom:40vh}
+/* folded chapters and the "behind her" line */
+#main .yt-road .yt-head{cursor:pointer}
+#main .yt-road.is-fold .yt-body{display:none}
+#main .yt-road.is-fold .yt-prev{display:block!important}
+#main .yt-road.is-fold .yt-head{padding-bottom:20px!important}
+#main .yt-road .yt-caret{display:block!important}
+#main .yt-road:not(.is-fold) .yt-caret{transform:rotate(90deg)}
+#main .yt-road .yt-old{display:none!important}
+#main .yt-road.show-old .yt-old{display:flex!important}
+#main .yt-oldbtn .yt-dot{width:12px;height:12px;margin-left:8px;background:#cfc6bd;box-shadow:none}
+#main .yt-oldbtn button{border:0;background:none;padding:6px 4px;font:600 13.5px Nunito,sans-serif;color:#6b6676;cursor:pointer}
+#main .yt-oldbtn span{margin-left:8px;font-weight:800;color:#2B2840;text-decoration:underline;text-underline-offset:2px}
+/* the chapter's clay baby */
+#main .yt-road .yt-toy{width:64px!important;height:64px!important}
+#main .yt-road .yt-toy .ms-l{position:relative!important;display:block;left:0!important;right:0!important;bottom:0!important}
+#main .yt-road .yt-toy svg{width:100%!important;height:auto!important}
+#main .yt-road.is-fold .yt-caret{transform:none!important}
+#main .yt-page{padding-bottom:22vh}
