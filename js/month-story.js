@@ -118,6 +118,8 @@
         '<p class="st-body st-in" style="--d:1.2s">' + E(p.P) + ' eyes and hands are starting to work together. That’s how ' + E(p.s) + ' learns what things are.</p>' +
         '<div class="st-ground">' + cloud('#fff3cf') + '<div class="st-objwrap st-right st-wobble">' + teether() + burst('#e98a6b') + '</div></div>' },
 
+      screen({ t: 'topic', c: 'sage', kicker: 'Through her eyes', title: 'Now she sees depth.', body: 'Both eyes work as a team, so she can judge how far away a toy is.', vis: ['eyes', 4] }),
+
       { id: 'feed', bg: '#f2b6c8', ink: '#2B2840', dur: 5800, html:
         '<p class="st-kicker st-in" style="--d:.05s">Meanwhile, at feeds</p>' +
         '<div class="st-title st-pop" style="--d:.15s">Milk has competition.</div>' +
@@ -139,7 +141,7 @@
       null,
       { id: 'days', bg: '#f6c9a8', ink: '#2B2840', dur: firsts.length ? 6200 : 4800, html:
         '<p class="st-lead st-in" style="--d:.05s"><b>' + E(n) + ' has been here for</b></p>' +
-        '<div class="st-count st-pop" style="--d:.2s"><b data-count="' + days + '">0</b><span>days Earthside.</span></div>' +
+        '<div class="st-count st-pop" style="--d:.2s"><b data-count="' + days + '">0</b><span>' + (days === 1 ? 'day' : 'days') + ' Earthside.</span></div>' +
         (firsts.length ? '<div class="st-lastm st-in" style="--d:1.6s"><p class="st-kicker">Last month, you saw</p><div class="st-chips">' + firsts.map(function (f) { return '<span><i>★</i>' + E(f) + '</span>'; }).join('') + '</div></div>'
           : '<p class="st-hand st-in" style="--d:1.7s">' + E(daysLine(days)) + '</p>') +
         '<div class="st-ground' + (firsts.length ? ' st-ground-sm' : '') + '">' + cloud('#fbe0cc') + '<div class="st-objwrap st-right">' + rings() + burst('#fff6ec') + '</div></div>' },
@@ -148,7 +150,7 @@
         '<div class="st-card st-pop" style="--d:.05s">' +
           (pic ? '<div class="st-card-photo"><img src="' + pic + '" alt=""></div>' : '') +
           '<div class="st-card-title">' + E(n) + ' at 4 months</div>' +
-          '<p class="st-card-days">' + fmt(days) + ' days Earthside</p>' +
+          '<p class="st-card-days">' + fmt(days) + (days === 1 ? ' day' : ' days') + ' Earthside</p>' +
           '<div class="st-card-sec"><p class="st-card-k">This month</p><ol>' +
             '<li><i style="background:#cfc3ea"></i>Found ' + E(p.p) + ' hands</li><li><i style="background:#f2b6c8"></i>Distracted feeds</li><li><i style="background:#8e9fd6"></i>Sleep is maturing</li></ol></div>' +
           (firsts.length ? '<div class="st-card-sec"><p class="st-card-k">Last month’s firsts</p><div class="st-chips">' + firsts.map(function (f) { return '<span><i>★</i>' + E(f) + '</span>'; }).join('') + '</div></div>' : '') +
@@ -195,6 +197,18 @@
     // Bubbles that all come from her.
     voice: function (words) { return '<div class="st-vis st-voice">' + words.map(function (w, i) { return '<span style="--i:' + i + ';--x:' + [8, 52, 24, 64, 4][i % 5] + '%;--r:' + [-8, 6, -3, 9, -6][i % 5] + 'deg">' + E(w) + '</span>'; }).join('') + '</div>'; },
     // Something rising up from below: a head lifting, a baby pulling up.
+    // Coming-up screens show the month card's clay baby in that pose, so they don't repeat the bunny.
+    pose4: function () { return '<div class="st-vis st-pose">' + babyArt(4) + '</div>'; },
+    pose7: function () { return '<div class="st-vis st-pose">' + babyArt(7) + '</div>'; },
+    pose10: function () { return '<div class="st-vis st-pose">' + babyArt(10) + '</div>'; },
+    // Newborn screens
+    lull: function () { return '<div class="st-vis st-lull"><span class="st-lull-b">' + babyArt(0) + '</span><i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i></div>'; },
+    clock: function () { var d = ''; for (var i = 0; i < 10; i++) { var a = (i / 10) * Math.PI * 2 - Math.PI / 2; d += '<circle class="st-ck" style="--i:' + i + '" cx="' + (100 + Math.cos(a) * 70).toFixed(1) + '" cy="' + (100 + Math.sin(a) * 70).toFixed(1) + '" r="9" fill="#e98a6b"/>'; }
+      var c = blob('#fffaf3', '#ffffff', '#e8dccd'); return '<div class="st-vis st-clock">' + svg('0 0 200 200', c.def, shadow(100, 190, 60) + '<circle cx="100" cy="100" r="86" fill="' + c.url + '"/>' + d + '<path d="M100 100 V58 M100 100 L128 112" stroke="#2B2840" stroke-width="7" stroke-linecap="round"/><circle cx="100" cy="100" r="7" fill="#2B2840"/>') + '</div>'; },
+    grip: function () { var sk = blob('#f5c3a0', '#fde3cf', '#de9d79'), pa = blob('#e9b48f', '#f7d3b6', '#c98d68');
+      return '<div class="st-vis st-grip">' + svg('0 0 220 140', sk.def + pa.def, shadow(110, 132, 80) +
+        '<rect x="96" y="52" width="140" height="40" rx="20" fill="' + pa.url + '"/><ellipse cx="104" cy="72" rx="12" ry="16" fill="#f3c7a8" opacity=".6"/>' +
+        '<ellipse cx="96" cy="76" rx="44" ry="38" fill="' + sk.url + '"/><path d="M70 56 q10 -10 20 0 M86 52 q10 -10 20 0 M102 54 q10 -10 18 2" fill="none" stroke="#c98a66" stroke-width="4" stroke-linecap="round"/>') + '</div>'; },
     rise: function () { return '<div class="st-vis st-rise">' + bunny() + '</div>'; },
     // Sleep as bars across a night: short ones, then one that stretches out.
     stretch: function () { return '<div class="st-vis st-bars-n"><i style="--w:14%"></i><i style="--w:12%"></i><i class="is-long" style="--w:44%"></i><i style="--w:16%"></i></div>'; },
@@ -206,7 +220,7 @@
     feet: function () { var sk = blob('#f3b48f', '#fbd3bb', '#de946d'); var foot = function (x, fl) { return '<g class="st-foot' + (fl ? ' is-r' : '') + '" transform="translate(' + x + ' 0)' + (fl ? ' scale(-1 1) translate(-100 0)' : '') + '"><ellipse cx="50" cy="120" rx="34" ry="52" fill="' + sk.url + '"/>' + [[24, 64, 9], [38, 56, 10], [53, 54, 10], [67, 58, 9], [78, 68, 8]].map(function (t, i) { return '<circle class="st-toe" style="--i:' + i + '" cx="' + t[0] + '" cy="' + t[1] + '" r="' + t[2] + '" fill="' + sk.url + '"/>'; }).join('') + '</g>'; };
       return '<div class="st-vis st-feetwrap">' + svg('0 0 240 190', sk.def, foot(10, false) + foot(130, true)) + '</div>'; },
     steps: function () { var s = ''; for (var i = 0; i < 6; i++) s += '<i style="--i:' + i + '" class="' + (i % 2 ? 'is-r' : 'is-l') + '"></i>'; return '<div class="st-vis st-steps">' + s + '</div>'; },
-    crawl: function () { return '<div class="st-vis st-crawl"><span>' + bunny() + '</span><i></i><i></i><i></i></div>'; },
+    crawl: function () { var t = ''; for (var i = 0; i < 6; i++) t += '<i style="--i:' + i + '" class="' + (i % 2 ? 'is-b' : 'is-a') + '"></i>'; return '<div class="st-vis st-crawl2">' + t + '</div>'; },
     splats: function () { var c = ['#e98a6b', '#ffd98a', '#7fae95', '#f2b6c8']; var s = ''; for (var i = 0; i < 6; i++) s += '<i style="--i:' + i + ';--c:' + c[i % 4] + ';--x:' + [10, 46, 72, 24, 58, 82][i] + '%;--y:' + [20, 6, 30, 58, 50, 62][i] + '%;--s:' + [64, 46, 56, 40, 70, 34][i] + 'px"></i>'; return '<div class="st-vis st-splats">' + s + '</div>'; },
     faces: function () { return '<div class="st-vis st-faces">' + ['#f3b48f', '#e0a37f', '#f6c9a8'].map(function (c, i) { return '<span style="--i:' + i + ';--c:' + c + '"><i></i><i></i><b></b></span>'; }).join('') + '<em>♥</em></div>'; },
     pass: function (label) { return '<div class="st-vis st-pass"><span class="st-hl2">' + hand(false) + '</span><span class="st-ballp">' + ball() + '</span><span class="st-hr2">' + hand(true) + '</span></div>'; },
@@ -215,7 +229,45 @@
     peek: function () { return '<div class="st-vis st-peekaboo" data-peek><span class="st-pbun">' + bunny() + '</span><span class="st-cloth"></span><b class="st-peektag">Tap the blanket</b><b class="st-still">Still there!</b></div>'; },
     heart: function () { return '<div class="st-vis st-heartwrap"><span class="st-bye">bye-bye!</span><i class="st-heart">♥</i><span class="st-back">back soon</span></div>'; },
     puffs: function () { var s = ''; for (var i = 0; i < 5; i++) s += '<i style="--i:' + i + '"' + (i === 2 ? ' class="is-pick"' : '') + '></i>'; return '<div class="st-vis st-puffs">' + s + '</div>'; },
-    name: function () { return '<div class="st-vis st-namewrap"><span class="st-callout">' + E(nm()) + '!</span><span class="st-turn">' + bunny() + '</span></div>'; },
+    // Through her eyes: like every other screen, one clay object on the cloud (your face, with a toy beside it).
+    // It arrives sharp, then softens to how she sees it this month.
+    eyes: function (m) {
+      var F = { 0: 'blur(5px) grayscale(.9) contrast(1.2)', 1: 'blur(3px) grayscale(1) contrast(1.15)', 2: 'blur(2.5px) saturate(.5)', 3: 'blur(1.6px) saturate(.7)', 4: 'blur(1px) saturate(.85)', 6: 'blur(.4px)' }[m] || 'none';
+      var sk = blob('#f5c3a0', '#fde3cf', '#de9d79'), r = blob('#e98a6b', '#f6b49c', '#c96f52');
+      var face = svg('0 0 220 200', sk.def + r.def, shadow(96, 192, 70) +
+        '<circle cx="96" cy="100" r="80" fill="' + sk.url + '"/><path d="M18 92 Q24 18 96 18 Q168 18 174 92 Q150 52 96 50 Q42 52 18 92Z" fill="#6b4a3a"/>' +
+        '<circle cx="70" cy="104" r="8" fill="#2B2840"/><circle cx="122" cy="104" r="8" fill="#2B2840"/><circle cx="73" cy="101" r="2.6" fill="#fff"/><circle cx="125" cy="101" r="2.6" fill="#fff"/>' +
+        '<ellipse cx="54" cy="128" rx="12" ry="7" fill="#f39aa8"/><ellipse cx="138" cy="128" rx="12" ry="7" fill="#f39aa8"/>' +
+        '<path d="M76 134 Q96 154 116 134" fill="none" stroke="#2B2840" stroke-width="7" stroke-linecap="round"/>' +
+        '<circle cx="194" cy="160" r="24" fill="' + r.url + '"/><path d="M180 150 Q194 140 208 152" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".6"/>');
+      // Month 1 is about bold patterns, so it shows two toys: a black-and-white one that stays clear in her view,
+      // and a pastel one that melts into the background.
+      if (m === 1) {
+        var lv = blob('#d9cff3', '#efeafb', '#c3b6e6');
+        var stripes = ''; for (var i = 0; i < 6; i++) stripes += '<rect x="' + (30 + i * 20) + '" y="40" width="10" height="130" fill="#2B2840"/>';
+        face = svg('0 0 220 200', lv.def, shadow(80, 192, 66) + shadow(178, 192, 30) +
+          '<defs><clipPath id="evc"><circle cx="80" cy="104" r="70"/></clipPath></defs><circle cx="80" cy="104" r="70" fill="#fffaf3"/><g clip-path="url(#evc)">' + stripes + '</g><circle cx="80" cy="104" r="70" fill="none" stroke="#2B2840" stroke-width="5"/>' +
+          '<circle cx="178" cy="150" r="34" fill="' + lv.url + '"/>');
+      }
+      var B = function (cx, cy, rr, a, b2, c2) { var g = blob(a, b2, c2); return { d: g.def, h: '<circle cx="' + cx + '" cy="' + cy + '" r="' + rr + '" fill="' + g.url + '"/>' }; };
+      if (m === 2) { // colors: three bright toys, muted in her view
+        var r2 = B(52, 130, 34, '#e9584b', '#f8a39a', '#bd3a30'), y2 = B(118, 104, 40, '#ffd23f', '#fff0a8', '#e0a91a'), b2 = B(182, 136, 30, '#3f8ee9', '#9cc6f6', '#2a68b8');
+        face = svg('0 0 220 200', r2.d + y2.d + b2.d, shadow(52, 190, 34) + shadow(118, 190, 40) + shadow(182, 190, 30) + r2.h + y2.h + b2.h);
+      } else if (m === 3) { // tracking: a ball moving across, with its trail
+        var t3 = B(170, 100, 34, '#e98a6b', '#f6b49c', '#c96f52'), tr = '';
+        for (var j = 0; j < 4; j++) tr += '<circle cx="' + (40 + j * 30) + '" cy="' + (100 - Math.sin(j / 3 * Math.PI) * 18).toFixed(0) + '" r="' + (8 + j * 3) + '" fill="#e98a6b" opacity="' + (.18 + j * .14).toFixed(2) + '"/>';
+        face = svg('0 0 220 200', t3.d, shadow(170, 190, 36) + tr + t3.h);
+      } else if (m === 4) { // depth: near, middle and far toys
+        var n4 = B(64, 140, 46, '#9cc7ae', '#cfe6d9', '#76a88b'), m4 = B(140, 112, 26, '#e98a6b', '#f6b49c', '#c96f52'), f4 = B(192, 92, 13, '#b9a6e6', '#ddd2f7', '#8f7bc4');
+        face = svg('0 0 220 200', n4.d + m4.d + f4.d, shadow(64, 192, 46) + shadow(140, 150, 26) + shadow(192, 112, 14) + f4.h + m4.h + n4.h);
+      } else if (m === 6) { // across the room: you, small and far, still easy to spot
+        face = face.replace('<circle cx="96" cy="100" r="80"', '<g transform="translate(110 40) scale(.42)"><circle cx="96" cy="100" r="80"').replace('<circle cx="194" cy="160" r="24"', '</g><circle cx="60" cy="150" r="34"').replace('<path d="M180 150 Q194 140 208 152"', '<path d="M42 136 Q60 124 78 138"');
+      }
+      // The sharp face sits underneath; her view sweeps across it like a lens, edge and all.
+      return '<div class="st-vis st-eyesv" style="--f:' + F + '"><span class="st-ev-sharp">' + face + '</span><span class="st-ev-soft">' + face + '</span><i class="st-ev-edge"></i></div>';
+    },
+    cruise: function () { var t = ''; for (var i = 0; i < 4; i++) t += '<i style="--i:' + i + '"></i>'; return '<div class="st-vis st-cruise"><span class="st-sofa"><b></b></span>' + t + '</div>'; },
+    name: function () { return '<div class="st-vis st-namewrap"><span class="st-callout">' + E(nm()) + '!</span><i class="st-ring" style="--i:0"></i><i class="st-ring" style="--i:1"></i><i class="st-ring" style="--i:2"></i></div>'; },
     bang: function () { return '<div class="st-vis st-bang">' + blocksPair() + '<i class="st-bangfx">✶</i></div>'; },
     gate: function () { return '<div class="st-vis st-gate"><span class="st-gl"></span><span class="st-gr"></span></div>'; },
     cloud: function (words) { return '<div class="st-vis st-wcloud">' + words.map(function (w, i) { return '<span style="--i:' + i + '">' + E(w) + '</span>'; }).join('') + '</div>'; },
@@ -237,21 +289,21 @@
   var NEXT = {
     babble: ['Ba-ba-ba!', 'Babbling strings of sounds is on the way. Answer her and she’ll babble right back.', 'babbling', 'babble'],
     track: ['Following you with her eyes.', 'Move slowly side to side and watch her eyes come with you.', 'following you', 'track'],
-    head: ['Lifting her head.', 'A little tummy time a few times a day builds the strength.', 'lifting her head', 'rise'],
+    head: ['Lifting her head.', 'A little tummy time a few times a day builds the strength.', 'lifting her head', 'pose4'],
     laugh: ['Laughing out loud.', 'Silly faces and gentle tickles are about to pay off.', 'laughing out loud', 'laugh'],
     grab: ['Grabbing toys.', 'All that swatting is aim practice.', 'grabbing toys', 'grab'],
     roll: ['Rolling over.', 'All that pushing up during tummy time is the warm-up.', 'rolling over', 'roll'],
-    sit: ['Sitting up.', 'Rolling and reaching are building the strength she’ll sit with.', 'sitting up', 'rise'],
+    sit: ['Sitting up.', 'Rolling and reaching are building the strength she’ll sit with.', 'sitting up', 'pose7'],
     crawl: ['Crawling.', 'Rocking on hands and knees is the warm-up.', 'crawling', 'crawl'],
     peek: ['Peekaboo gets exciting.', 'She’s about to figure out that hidden isn’t gone.', 'peekaboo', 'peek'],
-    pull: ['Pulling up to stand.', 'Every crawl is building the strength in her legs.', 'pulling up', 'rise'],
-    cruise: ['Cruising.', 'Once she pulls up, she’ll start shuffling along the furniture.', 'cruising', 'crawl'],
+    pull: ['Pulling up to stand.', 'Every crawl is building the strength in her legs.', 'pulling up', 'pose10'],
+    cruise: ['Cruising.', 'Once she pulls up, she’ll start shuffling along the furniture.', 'cruising', 'cruise'],
     point: ['Pointing.', 'Soon she’ll point to show you exactly what she wants.', 'pointing', 'grab'],
     words: ['First words.', 'All that babbling is practice. Keep naming things for her.', 'first words', 'words'],
     steps: ['First steps.', 'Cruising along the furniture is the warm-up. Anywhere from 9 to 18 months is normal.', 'first steps', 'steps'],
     bday: ['Her first birthday!', 'One whole year. Look how far you’ve both come.', 'her first birthday', 'cake']
   };
-  var NEXT_BY_MONTH = { 1: 'track', 2: 'laugh', 3: 'grab', 4: 'roll', 5: 'babble', 6: 'sit', 7: 'crawl', 8: 'pull', 9: 'cruise', 10: 'steps', 11: 'bday' };
+  var NEXT_BY_MONTH = { 0: 'head', 1: 'track', 2: 'laugh', 3: 'grab', 4: 'roll', 5: 'babble', 6: 'sit', 7: 'crawl', 8: 'pull', 9: 'cruise', 10: 'steps', 11: 'bday' };
   var SKIP = { roll: 'sit', sit: 'crawl', crawl: 'pull', pull: 'cruise', cruise: 'steps', steps: 'bday' };
   V.typed = function (word) { return '<div class="st-vis st-typed"><span>' + word.split('').map(function (ch, i) { return '<i style="--i:' + i + '">' + E(ch) + '</i>'; }).join('') + '</span></div>'; };
   V.laugh = function () { return '<div class="st-laughing">' + V.smile() + '</div>'; };
@@ -271,14 +323,21 @@
      peek (tap to play), thennow (how far she's come). Each has a visual that acts out what it says. */
   var C = { lav: ['#cfc3ea', '#e3dbf5'], butter: ['#ffe7a6', '#fff3cf'], pink: ['#f2b6c8', '#f8cfdb'], peach: ['#f6c9a8', '#fbe0cc'], sage: ['#bfdcc7', '#e5f1e7'], night: ['#2f3a66', '#8e9fd6'] };
   var STORIES = {
+    0: { cover: ['Welcome to the world.', 'Everything is new, for both of you.'], screens: [
+          { t: 'topic', c: 'butter', kicker: 'She already knows you', title: 'She knows your voice.', body: 'She heard it for months before she was born, so it’s the sound that settles her most.', vis: ['lull'] },
+          { t: 'topic', c: 'sage', kicker: 'Why she stares at you', title: 'She sees you best up close.', body: 'About 8 to 12 inches away, the distance to your face during a feed. Farther than that is still a blur.', vis: ['eyes', 0] },
+          { t: 'beat', c: 'lav', words: ['Feed.', 'Sleep.', 'Repeat.'], line: 'Most newborns feed 8 to 12 times a day and sleep in short stretches, day and night.', vis: ['clock'] },
+          { t: 'topic', c: 'peach', kicker: 'That tiny grip', title: 'She’ll hold on tight.', body: 'Put a finger in her palm and she’ll grab it. It’s a reflex for now, and it fades over the next few months.', vis: ['grip'] }],
+        sum: ['Knows your voice', 'Feeds around the clock', 'Holds on tight'] },
     1: { cover: ['She’s tuning in to you.', 'Your face and voice are her favorite things now.'], screens: [
-          { t: 'topic', c: 'butter', kicker: 'Why she stares at you', title: 'She sees you best up close.', body: 'About 8 to 12 inches away, the distance to your face during a feed. Farther than that is still a blur.', vis: ['distance'] },
+          { t: 'topic', c: 'butter', kicker: 'Through her eyes', title: 'Bold things stand out.', body: 'Faces and strong black-and-white patterns catch her eye first. Soft colors are still hard to tell apart.', vis: ['eyes', 1] },
           { t: 'topic', c: 'night', kicker: 'The hard part', title: 'Crying peaks around 6 weeks.', body: 'Then it usually eases by 3 to 4 months. It’s a phase, not something you’re doing wrong.', vis: ['peak'] },
           { t: 'reveal', c: 'lav', setup: 'Sometime in the next few weeks, she’ll give you…', payoff: 'Her first real smile!', lead: 'Not just gas this time. A smile meant for you.', vis: ['smile'] }],
         sum: ['Sees you best up close', 'Crying peaks, then eases', 'First smiles coming'] },
     2: { cover: ['She’s smiling at you on purpose.', 'And she’s starting to talk back.'], screens: [
           { t: 'beat', c: 'butter', words: ['Coo.', 'Pause.', 'Coo.'], line: 'Those little sounds are her first conversations. When you answer, she learns to take turns.', vis: ['talk', ['ooh', '…', 'ahh', '…']] },
           { t: 'reveal', c: 'lav', setup: 'On her tummy, she can now lift…', payoff: 'Her head!', lead: 'Just for a moment at first. Tummy time is how she builds the strength.', vis: ['rise'] },
+          { t: 'topic', c: 'peach', kicker: 'Through her eyes', title: 'Colors are coming in.', body: 'She’s starting to see colors, softly at first. Bold, bright things stand out most.', vis: ['eyes', 2] },
           { t: 'topic', c: 'night', kicker: 'And after dark', title: 'Nights may stretch a little.', body: 'Some babies start one longer sleep at night around now. Every baby gets there on their own timeline.', vis: ['stretch'] }],
         sum: ['Smiling on purpose', 'Cooing back', 'Lifting her head'] },
     3: { cover: ['She’s figuring out how to get your attention.', 'Smiles, coos and wiggles, all on purpose.'], screens: [
@@ -297,6 +356,7 @@
           { t: 'reveal', c: 'lav', setup: 'This month, she might try…', payoff: 'Her first foods!', lead: 'It’s mostly practice. Milk is still her main food for months.', vis: ['spoon'] },
           { t: 'beat', c: 'butter', words: ['Taste.', 'Squish.', 'Smear.'], line: 'Messy is how she learns. Let her touch and explore the food.', vis: ['splats'] },
           { t: 'topic', c: 'peach', kicker: 'Any day now', title: 'Her first tooth.', body: 'Most babies get their first tooth around now, usually a bottom front one. Extra drool and chewing on everything are the clues.', vis: ['tooth'] },
+          { t: 'topic', c: 'sage', kicker: 'Through her eyes', title: 'She can spot you across the room.', body: 'Her view is almost as sharp as yours now, so she may light up before you get close.', vis: ['eyes', 6] },
           { t: 'topic', c: 'pink', kicker: 'Her people', title: 'She knows who’s who.', body: 'She may get shy with new faces. It means she knows exactly who her people are.', vis: ['faces'] }],
         sum: ['First foods', 'First tooth', 'Knows her people'] },
     7: { cover: ['She’s getting steadier sitting up.', 'And that frees her hands for exploring.'], screens: [
@@ -331,9 +391,9 @@
   };
   function nextUp(p, m) {
     var done = {}; try { done = window.__ya.doneNow(); } catch (e) {}
-    var k = NEXT_BY_MONTH[Math.max(1, Math.min(11, m))] || 'roll', guard = 0;
+    var k = NEXT_BY_MONTH[Math.max(0, Math.min(11, m))] || 'roll', guard = 0;
     while (SKIP[k] && done[k] && guard++ < 6) k = SKIP[k];
-    var x = NEXT[k]; return { key: k, title: x[0], why: Pp(x[1]), short: x[2], vis: x[3] };
+    var x = NEXT[k]; return { key: k, title: Pp(x[0]), why: Pp(x[1]), short: x[2], vis: x[3] };
   }
   function Pp(s) {
     var pr = (profile && profile.pronouns) || 'she'; if (pr === 'she') return s;
@@ -372,13 +432,13 @@
       '<div class="st-opts" data-a="' + sc.a + '">' + sc.opts.map(function (o, i) { return '<button class="st-opt st-in" style="--d:' + (.6 + i * .15) + 's" data-i="' + i + '">' + E(o) + '</button>'; }).join('') + '</div>' +
       '<p class="st-ans st-body">' + E(Pp(sc.ans)) + '</p>' + area(vis(sc.vis), 'st-quizvis') };
     if (sc.t === 'thennow') { var hd = sc.head || ['Last month', 'Now']; return { id: 'thennow', bg: bg, ink: ink, dur: 6400, html:
-      '<p class="st-kicker st-in" style="--d:.05s">' + E(sc.kicker) + '</p>' +
+      '<p class="st-kicker st-in" style="--d:.05s">' + E(Pp(sc.kicker)) + '</p>' +
       '<div class="st-tn"><div class="st-tn-h st-in" style="--d:.2s"><span>' + E(hd[0]) + '</span><span>' + E(hd[1]) + '</span></div>' +
       sc.rows.map(function (r, i) { return '<div class="st-tn-r" style="--i:' + i + '"><span class="st-then">' + E(Pp(r[0])) + '</span><i>→</i><span class="st-now">' + E(Pp(r[1])) + '</span></div>'; }).join('') + '</div>' +
       area('') }; }
     return { id: night ? 'sleep' : 'feed', bg: bg, ink: ink, dur: sc.tip ? 6000 : 5400, html:
       (night ? '<div class="st-sky"><i></i><i></i><i></i><i></i><i></i></div><div class="st-moonwrap">' + moon() + '</div>' : '') +
-      '<p class="st-kicker st-in" style="--d:.05s">' + E(sc.kicker) + '</p>' +
+      '<p class="st-kicker st-in" style="--d:.05s">' + E(Pp(sc.kicker)) + '</p>' +
       '<div class="st-title st-pop" style="--d:.15s">' + E(Pp(sc.title)) + '</div>' +
       (sc.chips ? '<div class="st-distract">' + sc.chips.map(function (c, i) { return '<span style="--d:' + (.6 + i * .25) + 's">✓ ' + E(Pp(c)) + '</span>'; }).join('') + '</div>' : '') +
       '<p class="st-body st-in" style="--d:' + (sc.chips ? 1.5 : .7) + 's">' + E(Pp(sc.body)) + '</p>' +
@@ -388,14 +448,14 @@
   function slides() {
     var n = nm(), p = PR(), days = daysOld(), pic = photoNow(), firsts = firstsThisMonth(), m = month(), nx = nextUp(p, m);
     if (m === 4) return slides4(n, p, days, pic, firsts, nextUp(p, 4));
-    var st = STORIES[Math.max(1, Math.min(11, m))] || STORIES[1];
+    var st = STORIES[Math.max(0, Math.min(11, m))] || STORIES[1], wk = Math.max(1, Math.round(days / 7));
     var list = [{ id: 'cover', bg: '#2B2840', ink: '#fffaf3', dur: 3800, html:
         '<i class="st-sun"></i><i class="st-star">★</i><i class="st-dotc"></i>' +
-        '<p class="st-kicker st-in" style="--d:.05s">' + E(n) + '’s month</p>' +
-        '<div class="st-giant st-pop" style="--d:.15s">' + (st.half ? '<span class="st-halfwrap">' + V.halfring() + '<b>' + m + '</b></span>' : m) + '</div>' +
+        '<p class="st-kicker st-in" style="--d:.05s">' + E(n) + (m === 0 ? '’s first weeks' : '’s month') + '</p>' +
+        '<div class="st-giant st-pop" style="--d:.15s">' + (m === 0 ? wk + '<small class="st-giant-u">' + (wk === 1 ? 'week' : 'weeks') + '</small>' : st.half ? '<span class="st-halfwrap">' + V.halfring() + '<b>' + m + '</b></span>' : m) + '</div>' +
         '<div class="st-title st-cover-t st-in" style="--d:.45s">' + E(Pp(st.cover[0])) + '</div>' +
         '<p class="st-lead st-in" style="--d:.75s">' + E(Pp(st.cover[1])) + '</p>' +
-        '<div class="st-ground">' + cloud('#b9a6e6') + (pic ? '<div class="st-photo"><img src="' + pic + '" alt=""></div>' : '<div class="st-peek">' + bunny() + '</div>') + '</div>' }];
+        '<div class="st-ground">' + cloud('#b9a6e6') + (pic ? '<div class="st-photo"><img src="' + pic + '" alt=""></div>' : '<div class="st-coverart ms-toys">' + window.stCardArt(m) + '</div>') + '</div>' }];
     st.screens.forEach(function (sc) { list.push(screen(sc)); });
     list.push(nextScreen(nx), daysScreen(n, p, days, firsts), summary(n, p, days, pic, firsts, nx, st.sum, m));
     return list;
@@ -408,14 +468,14 @@
   // A different, true line for each month.
   function daysLine(days) {
     var m = month(), wk = Math.round(days / 7), hrs = fmt(days * 24), left = Math.max(1, 365 - days);
-    return Pp(({ 1: 'You’ve been awake for most of them.', 2: 'And she’s smiled at you for some of them.', 3: wk + ' weeks of getting to know each other.',
+    return Pp(({ 0: 'Every single one of them brand new.', 1: 'You’ve been awake for most of them.', 2: 'And she’s smiled at you for some of them.', 3: wk + ' weeks of getting to know each other.',
       4: hrs + ' hours of new things to look at.', 5: 'That’s ' + hrs + ' hours of watching you.', 6: 'Six months of firsts, and counting.',
       7: wk + ' weeks, and every one a little different.', 8: 'And she knows exactly who you are.', 9: 'Almost as long as she spent growing before she was born.',
       10: 'Longer now than she spent growing before she was born.', 11: 'Just ' + left + ' days until her first birthday.' })[m] || '');
   }
   function daysScreen(n, p, days, firsts) { return { id: 'days', bg: '#f6c9a8', ink: '#2B2840', dur: firsts.length ? 6200 : 4800, html:
     '<p class="st-lead st-in" style="--d:.05s"><b>' + E(n) + ' has been here for</b></p>' +
-    '<div class="st-count st-pop" style="--d:.2s"><b data-count="' + days + '">0</b><span>days Earthside.</span></div>' +
+    '<div class="st-count st-pop" style="--d:.2s"><b data-count="' + days + '">0</b><span>' + (days === 1 ? 'day' : 'days') + ' Earthside.</span></div>' +
     (firsts.length ? '<div class="st-lastm st-in" style="--d:1.6s"><p class="st-kicker">Last month, you saw</p><div class="st-chips">' + firsts.map(function (f) { return '<span><i>★</i>' + E(f) + '</span>'; }).join('') + '</div></div>'
       : '<p class="st-hand st-in" style="--d:1.7s">' + E(daysLine(days)) + '</p>') +
     '<div class="st-ground' + (firsts.length ? ' st-ground-sm' : '') + '">' + cloud('#fbe0cc') + '<div class="st-objwrap st-right">' + rings() + burst('#fff6ec') + '</div></div>' }; }
@@ -424,9 +484,9 @@
     return { id: 'summary', bg: '#2B2840', ink: '#fffaf3', dur: 0, html:
       '<div class="st-card st-pop" style="--d:.05s">' +
         (pic ? '<div class="st-card-photo"><img src="' + pic + '" alt=""></div>' : '') +
-        '<div class="st-card-title">' + E(n) + ' at ' + m + ' month' + (m === 1 ? '' : 's') + '</div>' +
-        '<p class="st-card-days">' + fmt(days) + ' days Earthside</p>' +
-        '<div class="st-card-sec"><p class="st-card-k">This month</p><ol>' + sum.map(function (x, i) { return '<li><i style="background:' + dots[i % 3] + '"></i>' + E(Pp(x)) + '</li>'; }).join('') + '</ol></div>' +
+        '<div class="st-card-title">' + E(n) + ' at ' + (m === 0 ? Math.max(1, Math.round(days / 7)) + ' week' + (Math.round(days / 7) > 1 ? 's' : '') : m + ' month' + (m === 1 ? '' : 's')) + '</div>' +
+        '<p class="st-card-days">' + fmt(days) + (days === 1 ? ' day' : ' days') + ' Earthside</p>' +
+        '<div class="st-card-sec"><p class="st-card-k">' + (m === 0 ? 'These first weeks' : 'This month') + '</p><ol>' + sum.map(function (x, i) { return '<li><i style="background:' + dots[i % 3] + '"></i>' + E(Pp(x)) + '</li>'; }).join('') + '</ol></div>' +
         (firsts.length ? '<div class="st-card-sec"><p class="st-card-k">Last month’s firsts</p><div class="st-chips">' + firsts.map(function (f) { return '<span><i>★</i>' + E(f) + '</span>'; }).join('') + '</div></div>' : '') +
         '<div class="st-card-sec st-card-next"><p class="st-card-k">Coming up</p><b>' + E(nx.title.replace(/[.!]$/, '')) + '</b></div>' +
       '</div>' +
@@ -518,12 +578,101 @@
     S.el.querySelector('.st-card').parentNode.appendChild(n);
   }
   window.stOpen = open;
+  // The month card's picture: one small scene in the story's toy style, matching that month's teaser.
+  function crown() { var g = blob('#ffd98a', '#fff1c8', '#e3b259'); return svg('0 0 100 60', g.def, '<path d="M10 52 L16 14 L36 34 L50 6 L64 34 L84 14 L90 52 Z" fill="' + g.url + '"/><circle cx="50" cy="8" r="6" fill="#e98a6b"/>', 'st-obj ms-crown'); }
+  function faceSvg() { var w = blob('#fff3e6', '#ffffff', '#ecd6c3'); return svg('0 0 200 200', w.def, '<circle cx="100" cy="104" r="84" fill="' + w.url + '"/><circle cx="72" cy="96" r="7" fill="#2B2840"/><circle cx="128" cy="96" r="7" fill="#2B2840"/><ellipse cx="58" cy="122" rx="13" ry="8" fill="#f6c2cf"/><ellipse cx="142" cy="122" rx="13" ry="8" fill="#f6c2cf"/><path d="M76 128 Q100 150 124 128" fill="none" stroke="#2B2840" stroke-width="7" stroke-linecap="round"/>'); }
+  function gift() { var b = blob('#b9a6e6', '#ddd2f7', '#8f7bc4'), r = blob('#ffd98a', '#fff1c8', '#e3b259');
+    return svg('0 0 200 190', b.def + r.def, shadow(100, 180, 76) + '<rect x="30" y="74" width="140" height="100" rx="18" fill="' + b.url + '"/><rect x="22" y="54" width="156" height="34" rx="12" fill="' + b.url + '"/><rect x="88" y="54" width="24" height="120" fill="' + r.url + '"/><path d="M100 54 C 70 20, 50 40, 70 54 Z M100 54 C 130 20, 150 40, 130 54 Z" fill="' + r.url + '"/>'); }
+  function mag() { var g = blob('#ffd98a', '#fff1c8', '#e3b259'), h = blob('#e98a6b', '#f6b49c', '#c96f52');
+    return svg('0 0 200 200', g.def + h.def, '<rect x="118" y="112" width="30" height="78" rx="15" transform="rotate(-40 133 151)" fill="' + h.url + '"/><circle cx="84" cy="84" r="62" fill="' + g.url + '"/><circle cx="84" cy="84" r="44" fill="#eaf4fb"/><path d="M58 70 Q66 56 82 52" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round"/>'); }
+  /* The month card's baby: one clay-style baby per month, posed to match that month's teaser. */
+  function babyArt(m) {
+    var newborn = m === 0; if (newborn) m = 1;
+    var sk = blob('#f5c3a0', '#fde3cf', '#de9d79');
+    var TONE = { 1: ['#cfe3f3', '#eef6fc', '#a9c9e3'], 2: ['#b9a6e6', '#ddd2f7', '#8f7bc4'], 3: ['#9cc7ae', '#cfe6d9', '#76a88b'], 4: ['#f3a587', '#fbd0bf', '#da7f61'],
+      5: ['#a9cfe8', '#d6ebf7', '#7fb0d2'], 6: ['#ffd98a', '#fff1c8', '#e3b259'], 7: ['#f3a587', '#fbd0bf', '#da7f61'], 8: ['#f6c2cf', '#fbe0e7', '#e29bb0'],
+      9: ['#9cc7ae', '#cfe6d9', '#76a88b'], 10: ['#b9a6e6', '#ddd2f7', '#8f7bc4'], 11: ['#f6c2cf', '#fbe0e7', '#e29bb0'] }[m];
+    var on = blob(TONE[0], TONE[1], TONE[2]), y = blob('#ffd98a', '#fff1c8', '#e3b259'), c = blob('#e98a6b', '#f6b49c', '#c96f52');
+    var S = sk.url, O = on.url, INK = '#2B2840';
+    var el = function (cx, cy, rx, ry, f, rot) { return '<ellipse cx="' + cx + '" cy="' + cy + '" rx="' + rx + '" ry="' + ry + '" fill="' + f + '"' + (rot ? ' transform="rotate(' + rot + ' ' + cx + ' ' + cy + ')"' : '') + '/>'; };
+    var face = function (x, y0, eyes, mouth, k) {
+      k = k || 1; var e = 15 * k, g = '';
+      if (eyes === 'closed') g += '<path d="M' + (x - e - 6) + ' ' + y0 + ' q6 6 12 0 M' + (x + e - 6) + ' ' + y0 + ' q6 6 12 0" fill="none" stroke="' + INK + '" stroke-width="3.5" stroke-linecap="round"/>';
+      else { var r = eyes === 'wide' ? 6.5 : 5.2; g += '<circle cx="' + (x - e) + '" cy="' + y0 + '" r="' + r + '" fill="' + INK + '"/><circle cx="' + (x + e) + '" cy="' + y0 + '" r="' + r + '" fill="' + INK + '"/><circle cx="' + (x - e + 1.8) + '" cy="' + (y0 - 2) + '" r="1.8" fill="#fff"/><circle cx="' + (x + e + 1.8) + '" cy="' + (y0 - 2) + '" r="1.8" fill="#fff"/>'; }
+      g += el(x - e - 9, y0 + 14, 8, 5, '#f39aa8') + el(x + e + 9, y0 + 14, 8, 5, '#f39aa8');
+      var my = y0 + 18;
+      if (mouth === 'o') g += el(x, my + 2, 5, 6, INK);
+      else if (mouth === 'grin') g += '<path d="M' + (x - 10) + ' ' + my + ' q10 14 20 0 z" fill="' + INK + '"/><path d="M' + (x - 5) + ' ' + (my + 5) + ' q5 4 10 0" fill="#f39aa8"/>';
+      else g += '<path d="M' + (x - 7) + ' ' + my + ' q7 7 14 0" fill="none" stroke="' + INK + '" stroke-width="3.5" stroke-linecap="round"/>';
+      return g;
+    };
+    var head = function (x, y0, r, eyes, mouth, noHair) {
+      return el(x - r + 2, y0 + 4, 9, 10, S) + el(x + r - 2, y0 + 4, 9, 10, S) + '<circle cx="' + x + '" cy="' + y0 + '" r="' + r + '" fill="' + S + '"/>' +
+        (noHair ? '' : '<path d="M' + (x - 8) + ' ' + (y0 - r + 6) + ' q4 -16 16 -10 q-8 2 -6 10" fill="none" stroke="#9a6a50" stroke-width="5" stroke-linecap="round"/>') +
+        face(x, y0 + 2, eyes, mouth, r / 44);
+    };
+    var hand = function (x, y0, r) { return '<circle cx="' + x + '" cy="' + y0 + '" r="' + (r || 11) + '" fill="' + S + '"/>'; };
+    // a sitting baby, with arm and leg overrides
+    var sit = function (o) {
+      o = o || {};
+      return (o.legsUp ? '' : el(70, 182, 26, 14, S) + el(130, 182, 26, 14, S)) +
+        el(100, 150, 46, 40, O) + (o.bib ? '<path d="M78 124 q22 30 44 0 q-4 22 -22 26 q-18 -4 -22 -26z" fill="#fffaf3"/>' : '') +
+        (o.arms || (el(58, 150, 11, 22, S, 22) + el(142, 150, 11, 22, S, -22))) +
+        head(100, 84, 44, o.eyes || 'open', o.mouth || 'smile') + (o.over || '') + (o.top || '');
+    };
+    var P = {
+      1: el(100, 150, 50, 46, O) + '<path d="M60 136 q40 24 80 0" fill="none" stroke="' + TONE[2] + '" stroke-width="5" stroke-linecap="round"/><path d="M58 160 q42 22 84 0" fill="none" stroke="' + TONE[2] + '" stroke-width="5" stroke-linecap="round"/>' +
+        head(100, 90, 42, 'closed', 'smile', true) +
+        '<path d="M74 52 L78 26 L90 40 L100 20 L110 40 L122 26 L126 52 Z" fill="' + y.url + '"/><circle cx="100" cy="22" r="5" fill="#e98a6b"/>',
+      2: sit({ mouth: 'o', arms: el(58, 150, 11, 22, S, 22) + el(146, 128, 11, 22, S, -50) + hand(156, 112) }) +
+        '<rect x="134" y="20" width="58" height="34" rx="14" fill="' + INK + '"/><path d="M146 52 l-6 12 l14 -12z" fill="' + INK + '"/><text x="163" y="43" text-anchor="middle" font-family="Nunito,sans-serif" font-weight="900" font-size="17" fill="#fffaf3">ooh!</text>',
+      3: sit({ mouth: 'grin', eyes: 'closed', arms: el(52, 120, 11, 24, S, 40) + hand(42, 100) + el(148, 120, 11, 24, S, -40) + hand(158, 100) }) +
+        '<rect x="22" y="40" width="9" height="9" rx="2" fill="#e98a6b" transform="rotate(20 26 44)"/><rect x="166" y="34" width="9" height="9" rx="2" fill="#ffd98a" transform="rotate(-15 170 38)"/><rect x="40" y="16" width="8" height="8" rx="2" fill="#7d6597"/><rect x="150" y="62" width="8" height="8" rx="2" fill="#7fae95" transform="rotate(30 154 66)"/>',
+      4: el(116, 168, 54, 24, O) + el(158, 146, 10, 24, S, -38) + el(170, 128, 13, 9, S, -38) + el(146, 150, 10, 22, S, -20) + el(152, 130, 12, 9, S, -20) +
+        el(62, 184, 24, 9, S) + el(96, 186, 22, 9, S) + '<g transform="rotate(-6 74 128)">' + head(74, 128, 40, 'wide', 'o') + '</g>' +
+        '<text x="140" y="66" font-family="Nunito,sans-serif" font-weight="900" font-size="34" fill="#ffd98a">✦</text><text x="118" y="38" font-family="Nunito,sans-serif" font-weight="900" font-size="20" fill="#e98a6b">✦</text>',
+      5: sit({ legsUp: true, mouth: 'grin', arms: el(50, 132, 11, 22, S, 70) + hand(32, 124, 10) + el(150, 132, 11, 22, S, -70) + hand(168, 124, 10),
+        over: el(78, 178, 12, 24, S, 60) + el(122, 178, 12, 24, S, -60) + el(56, 166, 15, 11, S, 30) + el(144, 166, 15, 11, S, -30) +
+          '<circle cx="46" cy="160" r="3.6" fill="#de9d79"/><circle cx="52" cy="156" r="3.2" fill="#de9d79"/><circle cx="154" cy="160" r="3.6" fill="#de9d79"/><circle cx="148" cy="156" r="3.2" fill="#de9d79"/>' +
+          '<path d="M30 176 q-8 10 0 20 M18 172 q-8 14 0 28 M170 176 q8 10 0 20 M182 172 q8 14 0 28" fill="none" stroke="#2B2840" stroke-width="3" stroke-linecap="round" opacity=".28"/>' }),
+      6: sit({ bib: true, mouth: 'o', arms: el(58, 150, 11, 22, S, 22) + el(144, 132, 11, 22, S, -40) + '<rect x="146" y="70" width="8" height="54" rx="4" fill="#e3b259" transform="rotate(14 150 97)"/>' + el(158, 70, 13, 9, y.url, 14) + hand(150, 118) }) +
+        el(116, 112, 5, 4, '#e3b259'),
+      7: sit({ mouth: 'grin', arms: el(58, 150, 11, 22, S, 22) + el(146, 112, 11, 24, S, -30) + hand(156, 90) }) +
+        '<circle cx="176" cy="150" r="16" fill="' + c.url + '"/><path d="M176 100 v26 M168 108 v14 M184 108 v14" stroke="' + INK + '" stroke-width="3" stroke-linecap="round" opacity=".35"/>',
+      8: sit({ arms: '', mouth: 'grin', over: el(70, 124, 12, 30, S, -18) + el(130, 124, 12, 30, S, 18) + el(82, 86, 17, 15, S) + el(118, 86, 17, 15, S) }),
+      9: el(108, 140, 54, 30, O) + el(150, 172, 10, 22, S) + el(66, 170, 10, 22, S) + el(160, 152, 16, 20, O, 20) + el(166, 178, 18, 10, S) +
+        head(56, 108, 40, 'wide', 'smile') +
+        '<g transform="translate(118 46) rotate(-20)"><circle cx="20" cy="20" r="18" fill="' + y.url + '"/><circle cx="20" cy="20" r="12" fill="#eaf4fb"/><rect x="34" y="16" width="26" height="9" rx="4.5" fill="' + c.url + '" transform="rotate(40 34 20)"/></g>',
+      10: '<rect x="128" y="128" width="66" height="70" rx="16" fill="' + on.url + '" opacity=".55"/><rect x="122" y="118" width="78" height="22" rx="11" fill="' + TONE[2] + '"/>' +
+        el(70, 194, 12, 8, S) + el(100, 194, 12, 8, S) + '<rect x="62" y="152" width="17" height="42" rx="8.5" fill="' + S + '" transform="rotate(6 70 172)"/><rect x="92" y="152" width="17" height="42" rx="8.5" fill="' + S + '" transform="rotate(-6 100 172)"/>' +
+        el(86, 140, 38, 32, O, 6) + el(118, 128, 10, 22, S, -60) + hand(134, 120) + el(52, 110, 10, 22, S, 24) + hand(46, 90) +
+        '<g transform="rotate(8 86 76)">' + head(86, 76, 37, 'open', 'grin') + '</g>',
+      11: '<path d="M42 66 q4 50 20 84" fill="none" stroke="' + INK + '" stroke-width="2" opacity=".5"/>' + el(40, 40, 22, 26, y.url) + '<path d="M36 64 l4 6 l4 -6z" fill="#e3b259"/>' +
+        el(84, 192, 12, 8, S) + el(116, 192, 12, 8, S) + '<rect x="76" y="150" width="18" height="42" rx="9" fill="' + S + '"/><rect x="106" y="150" width="18" height="42" rx="9" fill="' + S + '"/>' +
+        el(100, 140, 40, 34, O) + el(70, 150, 10, 20, S, 40) + hand(62, 150) + el(144, 110, 10, 22, S, -36) + hand(154, 90) +
+        '<path d="M168 70 q8 8 4 18 M176 62 q12 12 6 28" fill="none" stroke="' + INK + '" stroke-width="3" stroke-linecap="round" opacity=".3"/>' +
+        '<g transform="rotate(-8 100 78)">' + head(100, 78, 38, 'closed', 'grin') + '<path d="M80 46 L100 4 L120 46 Z" fill="' + c.url + '"/><circle cx="100" cy="6" r="6" fill="#ffd98a"/><path d="M90 26 l20 0 M86 36 l28 0" stroke="#fffaf3" stroke-width="3" opacity=".6"/></g>'
+    };
+    var body = newborn ? P[1].replace(/<path d="M74 52[^>]*\/><circle cx="100" cy="22"[^>]*\/>/, '') : P[m];
+    return svg('0 0 200 210', sk.def + on.def + y.def + c.def, shadow(100, 202, 70) + body, 'st-obj ms-baby');
+  }
+  window.stCardArt = function (m) { return m >= 0 && m <= 11 ? '<span class="ms-l ms-mid ms-babyw">' + babyArt(m) + '</span>' : ''; };
+  // What Home's month card shows: the story's cover and its three takeaways.
+  window.stCover = function (m) {
+    if (m < 0 || m > 11) return null;
+    var st = m === 4 ? { cover: ['She’s done just watching.', 'The world is getting a lot more interesting.'], sum: ['Found her hands', 'Distracted feeds', 'Sleep is maturing'] } : STORIES[m];
+    if (!st) return null;
+    var TEASE = { 0: 'Tiny, brand new, and already the boss.', 1: 'New here. Already running the show.', 2: 'She’s finding her voice. You’ll hear about it.', 3: 'A little more personality. A lot more surprises.',
+      4: 'Someone’s getting curious.', 5: 'Those little wiggles have big plans.', 6: 'Halfway to one. A whole lot of firsts.', 7: 'Gravity has a new biggest fan.',
+      8: 'Peekaboo just got a plot twist.', 9: 'Little hands. Big investigations.', 10: 'She’s moving up in the world.', 11: 'Big baby energy. First birthday loading.' };
+    return { title: Pp(st.cover[0]), lead: Pp(st.cover[1]), tease: Pp(TEASE[m]), sum: st.sum.map(Pp) };
+  };
 
   /* ---------- Entry: the month card is the story's cover ---------- */
   function decorate() {
     if (!on() || page !== 'home') return;
     var mm = month(); if (mm < 1 || mm > 11) return;
-    var hero = document.querySelector('#main .he-hero'); if (!hero || hero.dataset.st) return;
+    var hero = document.querySelector('#main .he-hero'); if (!hero || !hero.dataset || hero.dataset.st || hero.classList.contains('he-story')) return;
     hero.dataset.st = '1';
     var copy = hero.querySelector('.he-copy'); if (!copy) return;
     var b = document.createElement('button'); b.className = 'he-see st-play';

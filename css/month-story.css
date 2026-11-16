@@ -367,8 +367,8 @@
 .is-on .st-puffs .is-pick{animation:stPop .3s 1.14s forwards,stPick 1.6s 1.8s ease-in-out infinite}
 @keyframes stPick{0%,20%{transform:translateY(0)}60%,80%{transform:translateY(-60px)}100%{transform:translateY(0)}}
 /* her name */
-.st-namewrap{width:70%;height:170px;margin-bottom:4%}
-.st-callout{position:absolute;left:0;top:0;padding:10px 18px;border-radius:22px 22px 22px 6px;background:#2B2840;color:#fffaf3;font:900 26px Nunito,sans-serif;opacity:0}
+.st-namewrap{width:70%;height:170px;margin-bottom:4%;display:grid;place-items:center}
+.st-callout{position:relative;z-index:2;padding:10px 18px;border-radius:22px 22px 22px 6px;background:#2B2840;color:#fffaf3;font:900 26px Nunito,sans-serif;opacity:0}
 .is-on .st-callout{animation:stPop .4s 1.3s cubic-bezier(.25,1.5,.4,1) forwards}
 .st-turn{position:absolute;right:0;bottom:0;width:52%}
 .is-on .st-turn .st-obj{animation:stTurn .6s 1.8s ease-out forwards;transform-origin:50% 90%}
@@ -507,3 +507,181 @@
 .is-on .st-dresser{animation:stTipOver 1.2s 1s ease-in-out forwards}@keyframes stTipOver{0%{transform:none}40%{transform:rotate(-7deg)}100%{transform:none}}
 .st-strap{position:absolute;left:150px;top:18px;width:0;height:8px;border-radius:4px;background:#c4502f}
 .is-on .st-strap{animation:stStrap .5s 2.2s ease-out forwards}@keyframes stStrap{to{width:40px}}
+/* Home's month card: the entry to her month story, in the month's own soft colors */
+#main .ms-card{display:flex;flex-direction:column;width:100%;text-align:left;border:1px solid var(--m-line);cursor:pointer;font-family:inherit;color:#2B2840;border-radius:28px;padding:22px 22px 18px 24px;background:linear-gradient(140deg,var(--m-bg1) 0%,var(--m-bg2) 100%);margin:4px 0 6px;transition:transform .15s}
+#main .ms-card:active{transform:scale(.985)}
+#main .ms-body{display:flex;align-items:center;gap:14px}
+#main .ms-copy{flex:1;display:flex;flex-direction:column;min-width:0}
+#main .ms-eyebrow{font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--m-ink);margin-bottom:10px}
+#main .ms-month{font-family:var(--display-font,Nunito),sans-serif;font-weight:800;font-size:34px;line-height:1.02;letter-spacing:-.03em;color:#2B2840}
+#main .ms-name{font-family:var(--display-font,Nunito),sans-serif;font-weight:800;font-size:26px;line-height:1.1;letter-spacing:-.02em;color:var(--m-ink)}
+#main .ms-copy small{margin-top:10px;font-size:14.5px;line-height:1.4;color:#4a4658;max-width:15em}
+#main .ms-art{position:relative;flex:0 0 118px;height:118px}
+#main .ms-c2{position:absolute;inset:0;border-radius:50%;background:var(--ms-c2);box-shadow:inset 0 0 0 6px rgba(255,255,255,.55)}
+#main .ms-pic{position:absolute;inset:6px;border-radius:50%;overflow:hidden;display:block;background:var(--ms-c2)}
+#main .ms-pic .home-month-scene,#main .ms-pic svg{display:block!important;width:100%!important;height:100%!important;max-height:none!important}
+#main .ms-pic svg{transform:scale(1.55) translateY(6%)!important;transform-origin:50% 55%!important}
+#main .ms-foot{display:flex;align-items:center;justify-content:space-between;margin-top:18px;padding-top:14px;border-top:1px solid var(--m-line)}
+#main .ms-watch{display:inline-flex;align-items:center;gap:10px;font-size:17px;font-weight:800;color:#2B2840}
+#main .ms-watch i{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:#2B2840}
+#main .ms-watch svg{width:15px;height:15px;fill:#fffaf3;margin-left:2px}
+#main .ms-go{font-size:20px;color:var(--m-ink)}
+/* Month card toys (same style as the story) */
+#main .ms-toys{position:absolute;inset:-10px -6px -4px -6px;display:block}
+#main .ms-toys *{animation:none!important}
+#main .ms-toys .st-stack,#main .ms-toys .st-bead,#main .ms-toys .st-burst{opacity:1!important}
+#main .ms-l{position:absolute;display:block}
+#main .ms-l .st-obj,#main .ms-l svg{width:100%;height:auto;display:block;filter:drop-shadow(0 6px 8px rgba(43,40,64,.16))}
+#main .ms-mid{left:14%;right:14%;bottom:4%}
+#main .ms-low{bottom:12%}
+#main .ms-crownw{left:33%;width:34%;top:2%;transform:rotate(-8deg)}
+#main .ms-bub{position:absolute;right:-4px;top:2px;padding:6px 10px;border-radius:14px 14px 14px 4px;background:#2B2840;color:#fffaf3;font:900 14px Nunito,sans-serif}
+#main .ms-b1{width:26%;left:0;top:4%}#main .ms-b2{width:22%;right:2%;top:10%;transform:rotate(80deg)}
+#main .ms-b1 .st-burst,#main .ms-b2 .st-burst{position:static;width:100%;height:auto}
+#main .ms-conf{position:absolute;left:var(--x);top:var(--y);width:9px;height:9px;border-radius:3px;background:var(--c);transform:rotate(20deg)}
+#main .ms-hl{width:58%;left:-4%;bottom:-8%;transform:rotate(14deg)}#main .ms-hr{width:58%;right:-4%;bottom:-8%;transform:rotate(-14deg)}
+#main .ms-feet{left:6%;right:6%;bottom:10%;margin:0;opacity:1}
+#main .ms-half{position:absolute;right:2px;top:6px;width:34px;height:34px;border-radius:50%;background:#fffaf3;display:grid;place-items:center;font:900 18px Nunito,sans-serif;color:#2B2840;box-shadow:0 3px 6px rgba(43,40,64,.12)}
+#main .ms-ball{width:48%;left:26%;top:6%}
+#main .ms-fall{position:absolute;left:34%;right:34%;bottom:10%;height:10px;border-radius:50%;background:rgba(43,40,64,.14)}
+#main .ms-blanket{position:absolute;left:4%;right:4%;bottom:0;height:46%;border-radius:30px 30px 18px 18px;background:#e98a6b;box-shadow:inset 0 -8px 0 rgba(0,0,0,.08)}
+#main .ms-tall{left:22%;right:22%;bottom:2%}
+#main .ms-up{width:22%;right:4%;top:6%}
+#main .ms-cake{margin:0;opacity:1}
+#main .ms-cake .st-obj{width:100%}
+
+/* her name: sound rings ripple out */
+.st-ring{position:absolute;left:50%;top:50%;width:90px;height:90px;margin:-45px 0 0 -45px;border-radius:50%;border:4px solid #7d6597;opacity:0}
+.is-on .st-ring{animation:stRing 2.4s ease-out infinite;animation-delay:calc(1.4s + var(--i) * .6s)}
+@keyframes stRing{0%{transform:scale(.6);opacity:.7}100%{transform:scale(2.6);opacity:0}}
+/* crawling: a trail of hand and knee prints */
+.st-crawl2{width:82%;height:130px;margin-bottom:8%}
+.st-crawl2 i{position:absolute;width:30px;height:38px;border-radius:50% 50% 45% 45%;background:#e98a6b;opacity:0;left:calc(4% + var(--i) * 15%)}
+.st-crawl2 .is-a{bottom:14%;transform:rotate(80deg)}.st-crawl2 .is-b{bottom:52%;transform:rotate(100deg);background:#7d6597}
+.is-on .st-crawl2 i{animation:stPrint 3.6s infinite;animation-delay:calc(.9s + var(--i) * .35s)}
+@keyframes stPrint{0%{opacity:0;scale:.5}8%{opacity:.9;scale:1}70%{opacity:.9}100%{opacity:0}}
+/* cover scene (same picture as the Home card) */
+.st-coverart{position:absolute;right:10%;bottom:8%;width:40%;aspect-ratio:1;opacity:0;transform:translateY(40%)}
+.is-on .st-coverart{animation:stPeek .7s .45s cubic-bezier(.25,1.3,.4,1) forwards}
+.st-coverart .ms-l{position:absolute;display:block}
+.st-coverart .ms-l .st-obj,.st-coverart .ms-l svg{width:100%;height:auto;display:block}
+.st-coverart *{animation:none}
+.st-coverart .ms-mid{left:10%;right:10%;bottom:0}.st-coverart .ms-low{bottom:6%}
+.st-coverart .ms-crownw{left:33%;width:34%;top:-6%;transform:rotate(-8deg)}
+.st-coverart .ms-b1{width:26%;left:0;top:0}.st-coverart .ms-b2{width:22%;right:0;top:6%;transform:rotate(80deg)}
+.st-coverart .st-burst{position:static;width:100%;height:auto;opacity:1}
+.st-coverart .ms-conf{position:absolute;left:var(--x);top:var(--y);width:10px;height:10px;border-radius:3px;background:var(--c);transform:rotate(20deg)}
+.st-coverart .ms-hl{width:58%;left:-4%;bottom:0;transform:rotate(14deg)}.st-coverart .ms-hr{width:58%;right:-4%;bottom:0;transform:rotate(-14deg)}
+.st-coverart .ms-feet{left:4%;right:4%;bottom:10%;margin:0;opacity:1}
+.st-coverart .ms-half{position:absolute;right:0;top:0;width:40px;height:40px;border-radius:50%;background:#fffaf3;display:grid;place-items:center;font:900 20px Nunito,sans-serif;color:#2B2840}
+.st-coverart .ms-ball{width:56%;left:22%;top:4%}.st-coverart .ms-fall{position:absolute;left:32%;right:32%;bottom:4%;height:12px;border-radius:50%;background:rgba(0,0,0,.18)}
+.st-coverart .ms-blanket{position:absolute;left:0;right:0;bottom:0;height:46%;border-radius:30px 30px 18px 18px;background:#e98a6b}
+.st-coverart .ms-tall{left:20%;right:20%;bottom:0}.st-coverart .ms-up{width:22%;right:0;top:0}
+.st-coverart .ms-cake{margin:0;opacity:1;left:0;right:0;bottom:0}
+.st-coverart .ms-bubs,#main .ms-bubs{position:absolute;inset:0;display:block}
+.ms-bubs i{position:absolute;font-style:normal;padding:6px 12px;border-radius:16px 16px 16px 4px;background:#fffaf3;color:#2B2840;font:900 16px Nunito,sans-serif;box-shadow:0 4px 8px rgba(43,40,64,.14)}
+.ms-bubs i:nth-child(1){left:2%;top:18%}.ms-bubs i:nth-child(2){right:0;top:44%;background:#2B2840;color:#fffaf3;border-radius:16px 16px 4px 16px}.ms-bubs i:nth-child(3){left:18%;bottom:10%}
+#main .ms-face{left:16%;right:16%;bottom:6%}
+#main .ms-feet{left:-4%;right:-4%;bottom:0;transform:scale(1.5);transform-origin:50% 70%}
+#main .ms-cake{left:-6%;right:-6%;bottom:2%;transform:scale(1.6);transform-origin:50% 90%}
+.st-coverart .ms-feet{transform:scale(1.5);transform-origin:50% 70%}
+.st-coverart .ms-cake{transform:scale(1.6);transform-origin:50% 90%}
+/* cruising: shuffling sideways along the sofa */
+.st-cruise{width:84%;height:150px;margin-bottom:8%}
+.st-sofa{position:absolute;left:0;right:0;bottom:30px;height:84px;border-radius:26px 26px 14px 14px;background:#7d6597;box-shadow:inset 0 -10px 0 rgba(0,0,0,.12)}
+.st-sofa b{position:absolute;left:8%;right:8%;top:-22px;height:40px;border-radius:20px;background:#9a85b5}
+.st-cruise i{position:absolute;bottom:4px;width:22px;height:30px;border-radius:50% 50% 45% 45%;background:#e98a6b;opacity:0;left:calc(8% + var(--i) * 22%)}
+.st-cruise i:nth-child(odd){bottom:12px}
+.is-on .st-cruise i{animation:stPrint 3.2s infinite;animation-delay:calc(.8s + var(--i) * .4s)}
+#main .ms-mag{left:12%;right:12%;bottom:6%}
+.st-coverart .ms-mag{left:6%;right:6%;bottom:8%}
+.st-coverart{bottom:12%}
+#main .ms-feet{left:12%;right:12%;bottom:22%;transform:scale(1.15);transform-origin:50% 50%}
+#main .ms-cake{left:18%;right:18%;bottom:14%;transform:scale(1.25);transform-origin:50% 100%}
+.st-coverart .ms-cake{transform:scale(1.5);transform-origin:50% 100%}
+/* month card: the baby */
+#main .ms-babyw{left:4%;right:4%;bottom:2%;transform:none}
+.st-coverart .ms-babyw{left:0;right:0;bottom:0}
+/* On your radar: one quiet card, Yarden's format (eyebrow, line, small line) */
+#main .rd-card{margin:18px 0 4px;padding:16px 18px 6px;border-radius:22px;background:#fffaf3;border:1px solid rgba(43,40,64,.07)}
+#main .rd-eyebrow{margin:0 0 4px;font-size:11.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#8a7f72}
+#main .rd-item{display:flex;align-items:center;gap:12px;width:100%;padding:8px 0 12px;border:0;background:none;text-align:left;font-family:inherit;cursor:pointer;color:#2B2840}
+#main .rd-item+.rd-item{border-top:1px solid rgba(43,40,64,.07);padding-top:12px}
+#main .rd-item span{flex:1;display:flex;flex-direction:column;gap:3px}
+#main .rd-item b{font-size:16px;font-weight:700;line-height:1.3}
+#main .rd-item small{font-size:14px;line-height:1.4;color:#6b6676}
+#main .rd-item i{font-style:normal;font-size:22px;color:#b3acb9}
+#main .rd-list{margin-top:14px}
+#main .rd-eyebrow.rd-in{padding:16px 18px 2px;margin:0}
+#main .rd-list{margin-top:16px!important}
+#main section.rd-card{margin-bottom:14px!important}
+/* Through her eyes: the same scene, as you see it and as she does */
+.st-eyes{width:96%;display:flex;gap:10px;margin-bottom:8%;align-items:flex-start}
+.st-eyes figure{flex:1;margin:0;opacity:0}
+.is-on .st-eyes figure{animation:stUp .5s .7s ease-out forwards}
+.is-on .st-eyes .st-eyehers{animation-delay:1.2s}
+.st-eyepic{display:block;border-radius:18px;overflow:hidden;box-shadow:0 8px 18px rgba(43,40,64,.16);border:4px solid #fffaf3;background:#fdf6ec}
+.st-eyepic .st-obj{display:block;width:100%;height:auto}
+.st-eyehers .st-eyepic .st-obj{filter:none;transition:filter 1.4s ease}
+.is-on .st-eyehers .st-eyepic .st-obj{animation:stBlurIn 1.6s 1.6s ease forwards}
+@keyframes stBlurIn{to{filter:var(--f)}}
+.st-eyes figcaption{margin-top:8px;text-align:center;font:800 13px Nunito,sans-serif;letter-spacing:.02em;color:#2B2840;opacity:.8}
+/* Home, quieter: radar and notice share one white card; the guides tile marks "New" with its pill only */
+#main section.rd-card{background:var(--white,#fff)!important;border:1px solid var(--line)!important;border-radius:20px!important}
+#main .hg-pair .hg-ptile.is-new{box-shadow:none!important;border-color:var(--line)!important;background:var(--white,#fff)!important}
+/* Guides tile: "New" sits on the same line as the guide marks */
+#main .hg-pair .hg-ptile.is-new{position:relative}
+#main .hg-pair .hg-ptile .hg-new-pill{position:absolute!important;top:24px;right:14px;margin:0!important}
+/* Photo banner: its own soft multi-color gradient, picked per month to stay clear of the story card's color */
+#main .hg-banner[style*="--bn"]{background:var(--bn)!important}
+#main .hg-banner[style*="--bn"]{border:1px solid var(--line)!important}
+#main .hg-banner .hg-banner-copy{min-width:0}
+#main .hg-banner .hg-banner-copy b{white-space:nowrap;font-size:24px!important}
+.st-giant-u{display:block;font-size:44px;letter-spacing:-.02em;margin:6px 0 0 6px}
+#main .hg-banner-cam{width:52px!important;height:52px!important}
+/* Through her eyes: one picture */
+.st-eyes.st-eyes1{width:66%;justify-content:center}
+.st-eyes1 figure{flex:0 0 100%}
+.is-on .st-eyes1 .st-eyehers{animation-delay:.6s}
+.is-on .st-eyes1 .st-eyehers .st-eyepic .st-obj{animation:stBlurIn 1.6s 1.5s ease forwards}
+.st-eyes1 .st-eyepic{border-radius:24px;border-width:5px}
+.st-eyes1 figcaption{font-size:15px}
+/* smaller, so it never reaches the words above it */
+.st-eyes.st-eyes1{width:min(44vw,24vh,190px);margin-bottom:6%}
+.st-eyes1 .st-eyepic{border-radius:18px;border-width:4px}
+.st-eyes1 figcaption{font-size:13px;margin-top:6px}
+/* Through her eyes v3: one clay object on the cloud, no frame */
+.st-eyesv{width:min(52vw,30vh,230px);margin-bottom:5%}
+.st-eyesv .st-obj{display:block;width:100%;height:auto;opacity:0;transform:translateY(20px) scale(.9)}
+.is-on .st-eyesv .st-obj{animation:stEyeIn .6s .5s cubic-bezier(.25,1.3,.4,1) forwards,stBlurIn 1.6s 1.6s ease forwards}
+@keyframes stEyeIn{to{opacity:1;transform:none}}
+/* Through her eyes: her view sweeps over the sharp face */
+.st-eyesv{position:relative}
+.st-eyesv .st-obj{animation:none!important;opacity:1!important;transform:none!important}
+.st-ev-sharp,.st-ev-soft{display:block}
+.st-ev-soft{position:absolute;inset:0;clip-path:inset(0 100% 0 0)}
+.st-ev-soft .st-obj{filter:var(--f)}
+.st-ev-edge{position:absolute;top:-4%;bottom:6%;left:0;width:4px;border-radius:4px;background:#fffaf3;box-shadow:0 0 14px 4px rgba(255,250,243,.8);opacity:0}
+.st-eyesv{opacity:0;transform:translateY(20px) scale(.92)}
+.is-on .st-eyesv{animation:stEyeIn .55s .45s cubic-bezier(.25,1.3,.4,1) forwards}
+.is-on .st-ev-soft{animation:stEvWipe 1.6s 1.5s cubic-bezier(.6,0,.3,1) forwards}
+.is-on .st-ev-edge{animation:stEvEdge 1.6s 1.5s cubic-bezier(.6,0,.3,1) forwards}
+@keyframes stEvWipe{to{clip-path:inset(0 0 0 0)}}
+@keyframes stEvEdge{0%{left:0;opacity:1}90%{opacity:1}100%{left:100%;opacity:0}}
+.st-pose{width:min(56vw,30vh,240px);margin-bottom:4%}
+.st-pose .st-obj{width:100%;height:auto;display:block;opacity:0;transform:translateY(24px)}
+.is-on .st-pose .st-obj{animation:stEyeIn .6s .5s cubic-bezier(.25,1.3,.4,1) forwards}
+.st-lull{width:min(56vw,30vh,240px);margin-bottom:4%;position:relative}
+.st-lull-b{display:block;width:62%;margin-left:4%}.st-lull-b .st-obj{width:100%;height:auto;display:block}
+.st-lull i{position:absolute;right:4%;top:28%;width:40px;height:40px;border:5px solid #c96f52;border-left-color:transparent;border-bottom-color:transparent;border-radius:50%;transform:rotate(-135deg) scale(.6);opacity:0}
+.is-on .st-lull i{animation:stLull 2.4s infinite;animation-delay:calc(.9s + var(--i)*.4s)}
+@keyframes stLull{0%{opacity:0;transform:rotate(-135deg) scale(.5);right:22%}30%{opacity:.9}100%{opacity:0;transform:rotate(-135deg) scale(1.4);right:20%}}
+.st-clock{width:min(46vw,26vh,200px);margin-bottom:6%}.st-clock .st-obj{width:100%;height:auto;display:block}
+.st-ck{opacity:0}.is-on .st-ck{animation:stPrint 4s infinite;animation-delay:calc(.8s + var(--i)*.22s)}
+.st-grip{width:min(62vw,30vh,260px);margin-bottom:8%}.st-grip .st-obj{width:100%;height:auto;display:block}
+.is-on .st-grip .st-obj{animation:stGrip 1.6s .8s ease-in-out infinite alternate}
+@keyframes stGrip{to{transform:translateX(-4px) rotate(-2deg)}}
+.st-lull-b{width:78%!important}
+#main .hg-banner-cam{width:84px!important;height:46px!important}
+#main .hg-banner-hello{width:72px!important;height:auto!important;object-fit:contain}
+#main .hg-banner-hello{width:82px!important}
