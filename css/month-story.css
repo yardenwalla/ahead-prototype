@@ -935,3 +935,34 @@
 /* sticky needs the shell to clip instead of hide (clip doesn't create a scroll box), only on Timeline */
 #shell:has(.yt-page){overflow:clip!important}
 #main .yt-sticky > .yt-head{background:var(--yt)!important;z-index:30!important}
+/* ===== Timeline, design pass (Nov 16): Home's month colors, one type scale, tap a bar to fold ===== */
+#main .yt-h1{font-size:28px!important}
+#main .yt-lead{font-size:15px!important;margin-bottom:18px!important}
+/* chapters: a soft band in a Home month color, bar a shade deeper */
+#main .yt-ch.yt-road{background:var(--m-bg1)!important;margin:0 0 10px!important;padding:0 14px 6px!important;border-radius:22px!important;border:1px solid var(--m-line)}
+#main .yt-ch.yt-road.is-fold{padding-bottom:0!important}
+#main .yt-sticky > .yt-head{display:flex;align-items:center;gap:10px;width:calc(100% + 28px);margin:0 -14px 4px!important;padding:13px 18px!important;border:0!important;border-radius:22px 22px 0 0!important;
+  background:var(--m-bg1)!important;box-shadow:0 1px 0 var(--m-line)!important;cursor:pointer!important;text-align:left;font-family:inherit;color:#2B2840;-webkit-backdrop-filter:none;backdrop-filter:none}
+#main .yt-sticky.is-fold > .yt-head{border-radius:22px!important;box-shadow:none!important;margin-bottom:0!important}
+#main .yt-sticky > .yt-head .yt-hc small{font-size:11px!important;font-weight:800;letter-spacing:.12em;color:var(--m-ink)!important}
+#main .yt-sticky > .yt-head .yt-hc b{font-size:17px!important;font-weight:800;margin-top:2px!important}
+#main .yt-sticky > .yt-head .yt-caret{display:block!important;margin-left:auto;font-style:normal;font-size:18px;color:var(--m-ink);transform:rotate(90deg);transition:transform .2s}
+#main .yt-sticky.is-fold > .yt-head .yt-caret{transform:none!important}
+#main .yt-sticky.is-fold > .yt-head .yt-prev{display:block!important;margin-top:3px;font-size:13px;color:#6b6676}
+#main .yt-road.is-fold .yt-body{display:none!important}
+/* rows: one style, the next one stands out in the chapter's color */
+#main .yt-road .yt-list{padding:4px 0 6px!important}
+#main .yt-stop button{padding:9px 6px!important}
+#main .yt-c b{font-size:15.5px!important}
+#main .yt-c small{font-size:12.5px!important;color:#6b6676}
+#main .yt-stop.is-next button{background:#fff!important;padding:12px 14px!important;box-shadow:0 0 0 1.5px var(--m-ink),0 4px 12px rgba(43,40,64,.06)!important}
+#main .yt-stop.is-next small{color:var(--m-ink)!important}
+#main .yt-stop.is-next .yt-dot{background:var(--m-ink)!important}
+#main .yt-stop.is-done b{color:#9a94a2!important;font-weight:600!important}
+#main .yt-stop.is-done .yt-dot{background:#d9d1c8!important;box-shadow:none!important}
+#main .yt-trail .t1{stroke:#fffdf9!important}
+#main .yt-end{margin-top:6px!important}
+#main .yt-road.yt-sticky:not(.is-fold) > .yt-head,#main .yt-road.yt-sticky.is-fold > .yt-head{background:var(--m-bg1)!important;padding:13px 18px!important;margin:0 -14px 4px!important;min-height:0!important}
+#main .yt-road.yt-sticky.is-fold > .yt-head{margin-bottom:0!important}
+#main .yt-road.yt-sticky:not(.is-fold) > .yt-head .yt-hc{display:block!important}
+#main .yt-road.yt-sticky > .yt-head .yt-hc b{font-size:17px!important;color:#2B2840!important}
