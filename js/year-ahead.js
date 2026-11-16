@@ -188,7 +188,7 @@
     const attended = v => { try { const r = healthRecord(v); return r && r.status === 'attended'; } catch (e) { return false; } };
     const all = CC.map(c => ({ m: c.start, c })).concat(CHECKUPS.map(v => ({ m: v - gap, v }))).sort((x, y) => x.m - y.m);
     // What she's told us only counts from today on; looking back, it's by age alone.
-    const st = (s, x) => s.v != null ? ((x >= a && attended(s.v)) || s.m < x - 0.75 ? 'done' : s.m <= x + 0.25 ? 'now' : 'next') : ((x >= a && done[s.c.id]) || s.c.end <= x ? 'done' : s.c.start <= x ? 'now' : 'next');
+    const st = (s, x) => s.v != null ? ((x >= a && attended(s.v)) || s.m < x - 0.75 ? 'done' : s.m <= x + 0.25 ? 'now' : 'next') : ((x >= a && done[s.c.id]) || s.c.end <= x || x - s.c.start >= 1.5 ? 'done' : s.c.start <= x + 0.25 ? 'now' : 'next');
     const title = s => s.v != null ? `${s.v}-month checkup` : s.c.title;
     const when = s => s.v != null ? `${s.v} mo` : (/month|week/.test(range(s.c)) ? range(s.c).replace(/^Usually |^Around |^At /, '').replace(' months', ' mo').replace(' month', ' mo') : `${s.c.start}–${s.c.end} mo`);
     const go = s => s.v != null ? `openPage('health-visit:${s.v}')` : s.c.go;
@@ -206,7 +206,8 @@
       const mark = `<li class="tl-today"><i class="tl-dot"></i><span>${F(t ? 'Today' : `At ${ageTxt(x)}`)}</span></li>`;
       let h = '';
       if (past.length) h += `<li class="tl-past"><i class="tl-dot"></i><button onclick="this.closest('ol').classList.toggle('show-past');this.querySelector('span').textContent=this.closest('ol').classList.contains('show-past')?'Hide':'Show'">${F(`Earlier (${past.length})`)}<span>${F(document.querySelector('#main .tl-steps.show-past') ? 'Hide' : 'Show')}</span></button></li>` + past.map(step).join('').replace(/tl-step is-done/g, 'tl-step is-done tl-old');
-      h += mark + rest.filter(s => st(s, x) === 'now').map(step).join('');
+      const nowS = rest.filter(s => st(s, x) === 'now');
+      h += mark + (nowS.length ? nowS.map(step).join('') : `<li class="tl-quiet"><span>${F('Nothing new starting right now. Here’s what’s next.')}</span></li>`);
       // What's ahead, under light calendar signposts ("Around January").
       let last = null;
       rest.filter(s => st(s, x) === 'next').forEach(s => { const lab = calMon(Math.max(s.m, x)); if (lab !== last) { h += `<li class="tl-mon"><span>${F(`Around ${lab}`)}</span></li>`; last = lab; } h += step(s); });
