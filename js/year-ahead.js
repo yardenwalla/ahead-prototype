@@ -164,6 +164,56 @@
     });
     return `<div class="ya-page yt-page"><h1 class="yt-h1">${F(`${nm}’s first year`)}</h1><p class="yt-lead">${F(`${nm} is ${typeof babyAge === 'function' ? babyAge() : ''}${a < 12 ? ` · ${Math.max(1, Math.round(12 - a))} month${Math.round(12 - a) === 1 ? '' : 's'} to {p} first birthday` : ''}`)}</p><div class="yt-map"><svg class="yt-trail" aria-hidden="true"><path class="t1"/><path class="t2"/></svg>${out}<div class="yt-end"><i class="yt-dot"></i><span class="yt-endc"><small>${F('The destination')} · ${mon(12)}</small><b>${F('One whole year!')}</b></span><span class="yt-endcake" aria-hidden="true">${window.stToy('cake')}</span></div></div><p class="hub-foot">${F('Ages are typical. Every baby moves at their own pace.')}</p><button class="yt-back" onclick="ytBack()" aria-label="${F(`Back to ${nm}`)}"><i>↑</i> ${F(`Back to ${nm}`)}</button></div>` + (setTimeout(() => { window.ytTrail && window.ytTrail(); window.ytCenter && window.ytCenter(); }, 0), '');
   };
+  /* Timeline (Nov 16): organised by what it means for her today, not by a line through the year. It opens at the top:
+     one quiet line for what's behind her, then what's happening now (each with its usual window and where she is in
+     it), then what's coming up, then the rest of the year as folded chapters ending at the cake. One way of saying
+     "when" throughout: her age. */
+  const chapterPage = window.nextPage;
+  window.nextPage = function () {
+    if (typeof window.stToy !== 'function') return chapterPage();
+    const a = ageNow(), nm = name(), done = doneNow();
+    const bday = g => !!(profile.early && profile.due) && typeof hubAgeFor === 'function' && hubAgeFor(g, actualMonth()) === actualMonth() && hubAgeFor('care', actualMonth()) !== actualMonth();
+    const gap = profile.early && profile.due ? Math.max(0, (parse(profile.due) - parse(profile.dob)) / MONTH) : 0;
+    const shiftFor = cat => (cat === 'Development' && bday('dev')) || (cat === 'Safety' && bday('safety')) ? gap : 0;
+    const CC = C.filter(c => !['ready', 'finger', 'meals'].includes(c.id)).map(c => shiftFor(c.cat) ? Object.assign({}, c, { start: c.start - shiftFor(c.cat), end: c.end - shiftFor(c.cat) }) : c);
+    const attended = v => { try { const r = healthRecord(v); return r && r.status === 'attended'; } catch (e) { return false; } };
+    const chev = '<span class="hub-chev" aria-hidden="true">›</span>';
+    const ckLine = v => CHECK_LINE[v];
+    // Every stop on one list, each with the age it starts at.
+    const all = CC.map(c => ({ m: c.start, c })).concat(CHECKUPS.map(v => ({ m: v - gap, v }))).sort((x, y) => x.m - y.m);
+    const isBehind = s => s.v != null ? attended(s.v) || s.m < a - 0.75 : done[s.c.id] || s.c.end <= a;
+    const isNow = s => !isBehind(s) && (s.v != null ? s.m <= a + 0.25 : s.c.start <= a);
+    const behind = all.filter(isBehind), now = all.filter(isNow), ahead = all.filter(s => !isBehind(s) && !isNow(s));
+    const soon = ahead.slice(0, 3), rest = ahead.slice(3);
+    const titleOf = s => s.v != null ? `${s.v}-month checkup` : s.c.title;
+    const goOf = s => s.v != null ? `openPage('health-visit:${s.v}')` : s.c.go;
+    const when = s => s.v != null ? `${s.v} months` : /month|week/.test(range(s.c)) ? range(s.c).replace(/^Usually /, '') : `${s.c.start}–${s.c.end} months`;
+    const bar = s => s.c ? windowBar(s.c, a + shiftFor(s.c.cat)) : '';
+
+    let h = `<div class="ya-page tn-page"><h1 class="yt-h1">${F(`${nm}’s first year`)}</h1><p class="yt-lead">${F(`${nm} is ${typeof babyAge === 'function' ? babyAge() : ''}`)}</p>`;
+    // Behind her: one quiet line, open to see them.
+    if (behind.length) h += `<div class="tn-behind"><button onclick="this.parentNode.classList.toggle('is-open');this.setAttribute('aria-expanded',this.parentNode.classList.contains('is-open'))" aria-expanded="false"><i class="tn-tick">✓</i>${F(`${behind.length} ${behind.length === 1 ? 'thing' : 'things'} behind {o}`)}<span class="yt-caret" aria-hidden="true">›</span></button><ol>${behind.map(s => `<li><button onclick="${goOf(s)}"><b>${F(titleOf(s))}</b><small>${F(when(s))}</small>${chev}</button></li>`).join('')}</ol></div>`;
+    // Happening now: the only "you are here" on the page is the marker on each window bar.
+    h += `<section class="tn-now" style="${typeof window.monthTheme === 'function' ? window.monthTheme(Math.min(11, Math.floor(a) + 1)) : ''}"><h2 class="tn-h">${F('Happening now')}</h2>`;
+    h += now.length ? now.map(s => `<button class="tn-card" style="${yearTheme(s.c ? s.c.cat : 'Health')}" onclick="${goOf(s)}"><span class="tn-art">${hubArt(s.c ? s.c.icon : 'steth', s.c ? s.c.cat : 'Health')}</span><span class="tn-copy"><small>${F(s.v != null ? 'Due now' : when(s))}</small><b>${F(titleOf(s))}</b><span>${F(s.v != null ? ckLine(s.v) : s.c.id === 'crying' && a >= 2 ? 'Past the worst. Fussy evenings ease over the next few weeks' : s.c.why)}</span>${bar(s)}</span>${chev}</button>`).join('') : `<p class="tn-quiet">${F('A quieter stretch. Here’s what’s coming next.')}</p>`;
+    h += `</section>`;
+    // Coming up, then the rest of the year, on one trail to the cake.
+    const row = s => `<li class="tn-stop"><i class="tn-dot"></i><button onclick="${goOf(s)}"><span class="tn-c"><small>${F(when(s))}</small><b>${F(titleOf(s))}</b></span>${chev}</button></li>`;
+    h += `<div class="tn-trail">`;
+    if (soon.length) h += `<h2 class="tn-h">${F('Coming up')}</h2><ol class="tn-list">${soon.map(row).join('')}</ol>`;
+    const SH = { crying: 'crying peak', smile: 'first smiles', nights: 'longer nights', regress: 'sleep regression', roll: 'rolling', solids: 'first foods', twonaps: 'two naps', crawl: 'crawling', sit: 'sitting up', tooth: 'first tooth', carseat: 'car seat', sep: 'separation', pull: 'pulling up', words: 'first words', milk: 'whole milk', steps: 'first steps' };
+    const groups = ROAD.map(r => ({ r, its: rest.filter(s => s.m >= r[0] && s.m < r[1]) })).concat([{ r: [12, 99, '12 months', 'Around the birthday'], its: rest.filter(s => s.m >= 13) }]).filter(g => g.its.length);
+    if (groups.length) {
+      h += `<h2 class="tn-h">${F('Later this year')}</h2>`;
+      groups.forEach(({ r, its }) => {
+        const sh = its.map(s => s.v != null ? `${s.v}-month checkup` : SH[s.c.id] || s.c.title);
+        h += `<section class="tn-ch" style="${typeof window.monthTheme === 'function' ? window.monthTheme(Math.min(11, r[0] + 1)) : ''}"><i class="tn-dot"></i><button class="tn-chh" aria-expanded="false" onclick="const s=this.parentNode;s.classList.toggle('is-open');this.setAttribute('aria-expanded',s.classList.contains('is-open'))"><span><small>${F(r[2])}</small><b>${F(r[3])}</b><em>${F(`${its.length} · ${sh.slice(0, 3).join(', ')}${sh.length > 3 ? '…' : ''}`)}</em></span><i class="yt-caret" aria-hidden="true">›</i></button><ol class="tn-list">${its.map(s => `<li><button onclick="${goOf(s)}"><span class="tn-c"><small>${F(when(s))}</small><b>${F(titleOf(s))}</b></span>${chev}</button></li>`).join('')}</ol></section>`;
+      });
+    }
+    h += `<div class="tn-end"><i class="tn-dot"></i><span><small>${F('12 months')}</small><b>${F('One whole year!')}</b></span><span class="tn-cake" aria-hidden="true">${window.stToy('cake')}</span></div></div>`;
+    h += `<p class="hub-foot">${F('Ages are typical. Every baby moves at their own pace.')}</p></div>`;
+    return h;
+  };
   // Focus as you scroll, without moving anything: every chapter ahead stays open, and the one in the middle of the
   // screen is in focus while the others soften back. Nothing opens or closes under the finger, so momentum scrolling
   // on a phone never fights the page. Tapping a header still folds or opens it.
