@@ -203,38 +203,35 @@
     const bornD = parse(profile.early && profile.due ? profile.due : profile.dob);
     const calMon = mm => new Date(bornD.getTime() + mm * MONTH).toLocaleDateString('en-US', { month: 'long' });
     const longWhen = s => when(s).replace(/ mo$/, ' months').replace(/^(\d+) months$/, (q, n) => n === '1' ? '1 month' : q);
-    // Chapters (Nov 16): the year in four stretches as wide as the windows themselves, so overlap stops mattering.
-    // One chapter at a time, under the bar; moving month to month doesn't reshuffle it. Checkups keep their exact timing.
-    const CH = [[0, 3, 'Birth–3 months', 'Settling in'], [3, 6, '3–6 months', 'Rolling and reaching'], [6, 9, '6–9 months', 'Sitting up and on the move'], [9, 12, '9–12 months', 'Into everything']];
-    const chOf = x => Math.min(3, Math.max(0, Math.floor((x + 0.25) / 3)));
-    const timing = s => s.v != null ? `At ${s.v} month${s.v === 1 ? '' : 's'}` : s.c.id === 'solids' ? 'Around 6 months' : s.c.id === 'milk' ? 'Around 1 year' : `Often ${longWhen(s).replace(/^Usually /, '')}`;
     const listHTML = x => {
-      const ci = chOf(x), [from, to, ages, name] = CH[ci], t = isToday(x);
-      const its = all.filter(s => s.v != null ? s.m >= from && s.m < to + (ci === 3 ? 0.5 : 0) : s.c.start < to && s.c.end > from && !(ci < 3 && s.c.start >= to)).sort((p, q) => p.m - q.m || (p.v != null ? -1 : 1));
-      const row = s => { const ck = s.v != null ? st(s, x) : '', due = ck === 'now', pr = s.v != null ? (due ? 'Book it if you haven’t' : ck === 'done' ? (attended(s.v) ? 'Done' : 'Book it if you haven’t yet') : 'Book it a few weeks ahead') : PREP[s.c.id] || '';
-        return `<li class="tl-row"><button onclick="${go(s)}"><span class="tl-t"><em class="${due ? 'is-due' : ''}">${F(due ? 'Due now' : timing(s))}</em><b>${F(title(s))}</b>${pr ? `<small>${F(pr)}</small>` : ''}</span><span class="hub-chev" aria-hidden="true">›</span></button></li>`; };
-      let h = `<li class="tl-chhead"><small>${F(ages)}${ci === chOf(a) ? ' · ' + F('Her chapter now') : ''}</small><b>${F(name)}</b><span>${F('What may begin in this stretch. Every baby’s timing is different.')}</span></li>`;
-      h += its.map(row).join('');
-      if (ci < 3) h += `<li class="tl-chnext"><button onclick="tlScrub(${CH[ci + 1][0]})"><small>${F('Next chapter · ' + CH[ci + 1][2])}</small><b>${F(CH[ci + 1][3])}</b><span class="hub-chev" aria-hidden="true">›</span></button></li>`;
-      else h += `<li class="tl-chnext is-end"><span><small>${F('Then')}</small><b>${F('First birthday!')}</b></span>${cake}</li>`;
-      if (ci > 0) h += `<li class="tl-chprev"><button onclick="tlScrub(${CH[ci - 1][0] + 1.5})">‹ ${F('Earlier chapter · ' + CH[ci - 1][2])}</button></li>`;
-      return h;
+      const t = isToday(x), past = all.filter(s => st(s, x) === 'done'), rest = all.filter(s => st(s, x) !== 'done');
+      const prep = (s, k) => s.v != null ? (k === 'now' ? 'Due now · book it if you haven’t' : 'Book it a few weeks ahead') : s.c.id === 'crying' && x >= 2 ? 'Past the worst now' : PREP[s.c.id] || '';
+      const step = s => { const k0 = st(s, x), k = k0 === 'wrap' ? 'next' : k0, pr = k0 === 'done' ? '' : k0 === 'wrap' ? WRAP[s.c.id] : prep(s, k); return `<li class="tl-step is-${k}" data-id="${s.v != null ? 'v' + s.v : s.c.id}"><i class="tl-dot"></i><button onclick="${go(s)}"><span class="tl-t"><b>${F(title(s))}</b>${pr ? `<small>${F(pr)}</small>` : ''}</span><span class="tl-w">${F(k0 === 'wrap' ? `By ${Math.round(s.c.end)} months` : longWhen(s))}</span></button></li>`; };
+      const mark = `<li class="tl-today"><i class="tl-dot"></i><span>${F(t ? 'Today' : `At ${ageTxt(x)}`)}</span></li>`;
+      let h = '';
+      if (past.length) h += `<li class="tl-past"><i class="tl-dot"></i><button onclick="this.closest('ol').classList.toggle('show-past');this.querySelector('span').textContent=this.closest('ol').classList.contains('show-past')?'Hide':'Show'">${F(`Earlier (${past.length})`)}<span>${F(document.querySelector('#main .tl-steps.show-past') ? 'Hide' : 'Show')}</span></button></li>` + past.map(step).join('').replace(/tl-step is-done/g, 'tl-step is-done tl-old');
+      const nowS = rest.filter(s => st(s, x) === 'now');
+      h += mark + (nowS.length ? nowS.map(step).join('') : `<li class="tl-quiet"><span>${F('Nothing new starting right now. Here’s what’s next.')}</span></li>`);
+      // What's ahead, under light calendar signposts ("Around January").
+      let last = null;
+      rest.filter(s => ['next', 'wrap'].includes(st(s, x))).map(s => ({ s, at: st(s, x) === 'wrap' ? s.c.end - 0.01 : s.m })).sort((p, q) => p.at - q.at).forEach(({ s, at }) => { const lab = calMon(Math.max(at, x)); if (lab !== last) { h += `<li class="tl-mon"><span>${F(`Around ${lab}`)}</span></li>`; last = lab; } h += step(s); });
+      return h + `<li class="tl-step tl-goal"><i class="tl-dot"></i><span class="tl-t"><b>${F('First birthday!')}</b><small>${F(`Around ${calMon(12)}`)}</small></span>${cake}</li>`;
     };
     const head = x => { const mo = Math.max(0, Math.min(11, Math.floor(x))), cov = typeof window.stCover === 'function' ? window.stCover(mo) : null; return cov ? F(cov.title) : ''; };
     const ends = x => { const t = isToday(x), left = Math.max(0, 12 - x), eta = left < 0.5 ? 'any day now' : left < 1.5 ? 'in about a month' : `in about ${Math.round(left)} months`, d = Math.round(Math.abs(x - a));
       return t ? `<b>${F(`${nm} is ${typeof babyAge === 'function' ? babyAge() : ''}`)}</b><span>${F(`First birthday ${eta}`)}</span>` : `<b>${F(`At ${ageTxt(x)}`)}</b><span>${F(d < 1 ? 'about now' : x > a ? `${d} month${d === 1 ? '' : 's'} from now` : `${d} month${d === 1 ? '' : 's'} ago`)}</span>`; };
     const theme = x => typeof window.monthTheme === 'function' ? window.monthTheme(Math.max(0, Math.min(11, Math.floor(x)))) : '';
     const art = x => typeof window.stCardArt === 'function' ? window.stCardArt(Math.max(0, Math.min(11, Math.floor(x)))) : '';
-    window.__tl = { a, listHTML, head, ends, theme, art, chOf };
+    window.__tl = { a, listHTML, head, ends, theme, art };
     const hinted = (() => { try { return !!localStorage.getItem('ahead-tl-dragged'); } catch (e) { return true; } })();
     const pct = Math.max(0, Math.min(100, a / 12 * 100));
     const grad = (w, to) => typeof window.monthColor === 'function' ? `linear-gradient(90deg,${[...Array(12)].map((_, i) => `${window.monthColor(i, w, to)} ${Math.round((i + 0.5) / 12 * 100)}%`).join(',')})` : '';
     let h = `<div class="ya-page tl-track" style="${theme(a)};--tlp:${pct}%;--tla:${pct}%;--tlg:${grad(.86)};--tlf:${grad(.42)}">${tlSwitch(m)}<div class="tl-top"><h1 class="yt-h1">${F(`${nm}’s first year`)}</h1><button class="tl-todaybtn" onclick="tlScrub(null)" disabled>${F('Today')}</button></div>`;
     h += `<p class="tl-status">${head(a)}</p>`;
-    h += `<div class="tl-prog${hinted ? '' : ' tl-hint'}"><div class="tl-ride"><span class="tl-baby" role="slider" tabindex="0" aria-label="${F(`Drag ${nm} to see another age`)}" aria-valuemin="0" aria-valuemax="12" aria-valuenow="${a.toFixed(1)}" aria-valuetext="${F(ageTxt(a))}" onkeydown="tlKey(event)" style="${theme(a)}">${art(a)}<em class="tl-tip">${F(hinted ? ageTxt(a) : 'Drag me')}</em></span><span class="tl-flag" aria-hidden="true">${window.stToy('cake')}</span></div><div class="tl-bar"><i></i><button class="tl-nowmark" onclick="tlScrub(null)" aria-label="${F('Back to today')}"></button></div><div class="tl-ticks" aria-hidden="true">${[[0, 'Birth'], [3, '3 months'], [6, '6 months'], [9, '9 months'], [12, '1 year']].map(([v, l]) => `<span data-v="${v}" class="${v === chOf(a) * 3 || v === chOf(a) * 3 + 3 ? 'is-ch' : ''}" style="left:${v / 12 * 100}%">${F(l)}</span>`).join('')}</div><div class="tl-ends">${ends(a)}</div></div>`;
+    h += `<div class="tl-prog${hinted ? '' : ' tl-hint'}"><div class="tl-ride"><span class="tl-baby" role="slider" tabindex="0" aria-label="${F(`Drag ${nm} to see another age`)}" aria-valuemin="0" aria-valuemax="12" aria-valuenow="${a.toFixed(1)}" aria-valuetext="${F(ageTxt(a))}" onkeydown="tlKey(event)" style="${theme(a)}">${art(a)}<em class="tl-tip">${F(hinted ? ageTxt(a) : 'Drag me')}</em></span><span class="tl-flag" aria-hidden="true">${window.stToy('cake')}</span></div><div class="tl-bar"><i></i><button class="tl-nowmark" onclick="tlScrub(null)" aria-label="${F('Back to today')}"></button></div><div class="tl-ticks" aria-hidden="true">${[[0, 'Birth'], [3, '3 months'], [6, '6 months'], [9, '9 months'], [12, '1 year']].map(([v, l]) => `<span style="left:${v / 12 * 100}%">${F(l)}</span>`).join('')}</div><div class="tl-ends">${ends(a)}</div></div>`;
     const gvars = x => typeof window.monthColor === 'function' ? `--g-bg:${window.monthColor(Math.max(0, Math.min(11, Math.floor(x))), .86)};--g-ink:${window.monthColor(Math.max(0, Math.min(11, Math.floor(x))), .45, 30)}` : '';
     window.__tl.gvars = gvars;
-    h += `<ol class="tl-steps tl-chmode" style="${gvars(a)}">${listHTML(a)}</ol>`;
+    h += `<p class="tl-pace">${F('Ages are typical. Every baby moves at {p} own pace.')}</p><ol class="tl-steps" style="${gvars(a)}">${listHTML(a)}</ol>`;
     h += `</div>`;
     setTimeout(() => window.tlBind && window.tlBind(), 0);
     return h;
@@ -261,7 +258,6 @@
     pg.querySelector('.tl-ends').innerHTML = T.ends(q);
     const ol = pg.querySelector('.tl-steps'), was = new Set([...ol.querySelectorAll('.is-now')].map(e => e.dataset.id));
     ol.innerHTML = T.listHTML(q); ol.setAttribute('style', T.gvars(q));
-    if (T.chOf) { const c3 = T.chOf(q) * 3; pg.querySelectorAll('.tl-ticks span').forEach(e => e.classList.toggle('is-ch', +e.dataset.v === c3 || +e.dataset.v === c3 + 3)); }
     ol.querySelectorAll('.is-now').forEach(e => { if (!was.has(e.dataset.id)) e.classList.add('is-new'); });
     b.setAttribute('aria-valuenow', q.toFixed(1)); b.setAttribute('aria-valuetext', pg.querySelector('.tl-ends b').textContent);
   };
