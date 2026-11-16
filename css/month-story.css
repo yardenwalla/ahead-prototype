@@ -1115,3 +1115,10 @@
 #main .tl-todaybtn:not(:disabled){visibility:visible}
 #main .tl-todaybtn:disabled{opacity:1}
 #main .tl-ticks span{font-size:10.5px}
+#main .tl-pace{margin:-6px 0 14px;font-size:13.5px;color:#6b6676}
+#main .tl-track .tl-past>.tl-dot,#main .tl-track .is-done>.tl-dot{background:#fff;border-color:var(--m-ink,#2B2840)}
+#main .tl-track .tl-w{font-size:13.5px;color:#6b6676}
+#main .tl-track .is-next .tl-t small{color:#6b6676}
+#main .tl-track .tl-t small{font-size:14px}
+#main .tl-mon span{color:#8a8494}
+#main .tl-ticks span{color:#8a8494;font-size:11.5px}
