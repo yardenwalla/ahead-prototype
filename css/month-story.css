@@ -1122,3 +1122,15 @@
 #main .tl-track .tl-t small{font-size:14px}
 #main .tl-mon span{color:#8a8494}
 #main .tl-ticks span{color:#8a8494;font-size:11.5px}
+
+/* Nov 16 · Today as a point on the line: no tinted box; the dot shows the state */
+#main .tl-track .tl-step.is-now>button{background:none!important;padding:13px 2px!important;margin:0!important;border-radius:0}
+#main .tl-track .tl-step.is-now .tl-t b{font-weight:600}
+#main .tl-track .tl-step.is-now>.tl-dot{border:2px solid var(--m-ink,#2B2840);background:linear-gradient(90deg,var(--m-ink,#2B2840) 50%,#fff 50%)}
+#main .tl-track .tl-step.is-now .tl-t small{color:#4a4553}
+#main .tl-track .tl-steps>li.is-now::before{background:var(--m-ink,#2B2840)}
+#main .tl-track .tl-steps>li.tl-today::before{background:linear-gradient(var(--m-ink,#2B2840) 50%,#e3ddd3 50%)}
+#main .tl-track .tl-today>span,#main .tl-track .tl-today>.tl-dot{background:var(--m-ink,#2B2840)}
+#main .tl-track .tl-today{padding:6px 0 10px}
+#main .tl-track .tl-today>span{position:relative;z-index:1}
+#main .tl-track .tl-today::after{content:'';position:absolute;left:-21px;right:0;top:50%;height:2px;margin-top:-1px;background:var(--m-ink,#2B2840);opacity:.25}
