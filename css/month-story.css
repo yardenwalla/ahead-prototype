@@ -973,3 +973,51 @@
 #main .yt-back{position:fixed;left:50%;bottom:96px;z-index:60;transform:translate(-50%,16px);opacity:0;pointer-events:none;display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border:0;border-radius:99px;background:#2B2840;color:#fffaf3;font:800 14px Nunito,sans-serif;box-shadow:0 8px 20px rgba(43,40,64,.25);transition:opacity .2s,transform .2s;cursor:pointer}
 #main .yt-back.is-on{opacity:1;transform:translate(-50%,0);pointer-events:auto}
 #main .yt-back i{font-style:normal}
+
+/* Nov 16 · Timeline preview switch */
+#main .tl-try{display:flex;align-items:center;gap:4px;margin:0 0 14px;padding:4px;border-radius:12px;background:#efeae3;width:max-content}
+#main .tl-try small{padding:0 8px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#8a8494}
+#main .tl-try button{border:0;border-radius:9px;padding:6px 12px;background:none;font:inherit;font-size:13px;color:#6b6676;cursor:pointer}
+#main .tl-try button.is-on{background:#fff;color:#2B2840;font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+#main .tl-cake{display:block;width:64px;height:64px;margin-left:auto}
+#main .tl-cake .st-vis{width:100%!important;margin:0!important;opacity:1!important}
+#main .tl-cake *{animation:none!important}
+#main .tl-cake svg{width:100%;height:auto;display:block}
+#shell:has(.tl-feed),#shell:has(.tl-track){overflow:clip!important}
+
+/* Feed: month headers pin to the top as you scroll */
+#main .tl-feed .ya-here,#main .tl-feed .ya-pin{position:sticky;top:0;z-index:20;background:var(--bg,#f7f3ee);padding-top:10px;padding-bottom:8px;box-shadow:0 1px 0 #ece6dd}
+#main .tl-feed .ya-pin.ya-end{position:relative;display:flex;align-items:center;box-shadow:none}
+
+/* Tracker: like an order tracker */
+#main .tl-prog{margin:6px 0 22px}
+#main .tl-bar{height:8px;border-radius:4px;background:#ebe5dc;overflow:hidden}
+#main .tl-bar i{display:block;height:100%;border-radius:4px;background:#2B2840}
+#main .tl-ends{display:flex;justify-content:space-between;align-items:baseline;margin-top:6px;font-size:12px;color:#8a8494}
+#main .tl-ends b{font-size:14px;color:#2B2840}
+#main .tl-steps{list-style:none;margin:0;padding:0 0 0 30px;position:relative}
+#main .tl-steps>li{position:relative}
+#main .tl-steps>li::before{content:'';position:absolute;left:-21px;top:0;bottom:0;width:2px;background:#e3ddd3}
+#main .tl-steps>li:first-child::before{top:50%}
+#main .tl-steps>li.tl-goal::before{bottom:50%}
+#main .tl-steps>li.is-done::before,#main .tl-steps>li.is-now::before,#main .tl-steps>li.tl-past::before{background:#2B2840}
+#main .tl-steps>li.tl-today::before{background:linear-gradient(#2B2840 50%,#e3ddd3 50%)}
+#main .tl-dot{position:absolute;left:-28px;top:50%;width:16px;height:16px;margin-top:-8px;border-radius:50%;box-sizing:border-box;background:#fff;border:2px solid #d6cfc4;z-index:1;display:grid;place-items:center;font-style:normal;font-size:10px;color:#fff;line-height:1}
+#main .is-done>.tl-dot,#main .tl-past>.tl-dot{background:#2B2840;border-color:#2B2840}
+#main .is-now>.tl-dot{border:4px solid #2B2840}
+#main .tl-step>button{display:flex;align-items:center;gap:10px;width:100%;padding:13px 2px;border:0;background:none;font:inherit;text-align:left;cursor:pointer}
+#main .tl-t{flex:1;min-width:0}
+#main .tl-t b{display:block;font-size:16px;font-weight:600;color:#2B2840}
+#main .tl-t small{display:block;margin-top:2px;font-size:12.5px;font-weight:600;color:#8a5a2b}
+#main .tl-w{font-size:13px;color:#8a8494;white-space:nowrap}
+#main .is-next .tl-t b{font-weight:500;color:#57525f}
+#main .is-done .tl-t b{font-weight:500;color:#9a94a4}
+#main .tl-old{display:none}
+#main .show-past .tl-old{display:block}
+#main .tl-past>button{display:flex;gap:8px;width:100%;padding:12px 2px;border:0;background:none;font:inherit;font-size:14px;color:#8a8494;cursor:pointer}
+#main .tl-past>button span{color:#2B2840;font-weight:600}
+#main .tl-today{padding:6px 0}
+#main .tl-today>.tl-dot{width:10px;height:10px;margin-top:-5px;left:-25px;background:#2B2840;border:0}
+#main .tl-today>span{display:inline-block;padding:3px 10px;border-radius:999px;background:#2B2840;color:#fff;font-size:12px;font-weight:600}
+#main .tl-goal{display:flex;align-items:center;padding:8px 2px}
+#main .tl-goal .tl-t b{font-size:17px}

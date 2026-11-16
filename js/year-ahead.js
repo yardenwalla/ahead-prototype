@@ -164,6 +164,47 @@
     });
     return `<div class="ya-page yt-page"><h1 class="yt-h1">${F(`${nm}’s first year`)}</h1><p class="yt-lead">${F(`${nm} is ${typeof babyAge === 'function' ? babyAge() : ''}${a < 12 ? ` · ${Math.max(1, Math.round(12 - a))} month${Math.round(12 - a) === 1 ? '' : 's'} to {p} first birthday` : ''}`)}</p><div class="yt-map"><svg class="yt-trail" aria-hidden="true"><path class="t1"/><path class="t2"/></svg>${out}<div class="yt-end"><i class="yt-dot"></i><span class="yt-endc"><small>${F('The destination')} · ${mon(12)}</small><b>${F('One whole year!')}</b></span><span class="yt-endcake" aria-hidden="true">${window.stToy('cake')}</span></div></div><p class="hub-foot">${F('Ages are typical. Every baby moves at their own pace.')}</p><button class="yt-back" onclick="ytBack()" aria-label="${F(`Back to ${nm}`)}"><i>↑</i> ${F(`Back to ${nm}`)}</button></div>` + (setTimeout(() => { window.ytTrail && window.ytTrail(); window.ytCenter && window.ytCenter(); }, 0), '');
   };
+  /* Nov 16 · two familiar patterns to compare (preview only, switch at the top):
+     Tracker: like an order tracker. One line of steps in order; ticked behind her, a filled line up to today, grey ahead.
+     Feed: the original Timeline with month headers that stay pinned at the top as you scroll (like a calendar's schedule view). */
+  const chapterTL = window.nextPage;
+  const tlMode = () => { try { return localStorage.getItem('ahead-tl-try') || 'tracker'; } catch (e) { return 'tracker'; } };
+  window.tlTry = m => { try { localStorage.setItem('ahead-tl-try', m); } catch (e) {} navigate('next'); };
+  const tlSwitch = m => `<div class="tl-try" role="group" aria-label="Preview: pick a Timeline style"><small>Preview</small>${[['tracker', 'Tracker'], ['feed', 'Feed']].map(([k, l]) => `<button class="${m === k ? 'is-on' : ''}" onclick="tlTry('${k}')" aria-pressed="${m === k}">${l}</button>`).join('')}</div>`;
+  window.nextPage = function () {
+    if (typeof window.stToy !== 'function') return chapterTL();
+    const m = tlMode(), nm = name(), a = ageNow();
+    const cake = `<span class="tl-cake" aria-hidden="true">${window.stToy('cake')}</span>`;
+    if (m === 'feed') {
+      return listPage().replace('ya-page ya-pathpage', 'ya-page ya-pathpage tl-feed').replace('<div class="eyebrow', tlSwitch(m) + '<div class="eyebrow')
+        .replace(/(<li class="ya-pin ya-end">[\s\S]*?<\/b>)/, `$1${cake}`);
+    }
+    // Tracker
+    const done = doneNow();
+    const bday = g => !!(profile.early && profile.due) && typeof hubAgeFor === 'function' && hubAgeFor(g, actualMonth()) === actualMonth() && hubAgeFor('care', actualMonth()) !== actualMonth();
+    const gap = profile.early && profile.due ? Math.max(0, (parse(profile.due) - parse(profile.dob)) / MONTH) : 0;
+    const shiftFor = cat => (cat === 'Development' && bday('dev')) || (cat === 'Safety' && bday('safety')) ? gap : 0;
+    const CC = C.filter(c => !['ready', 'finger', 'meals'].includes(c.id)).map(c => shiftFor(c.cat) ? Object.assign({}, c, { start: c.start - shiftFor(c.cat), end: c.end - shiftFor(c.cat) }) : c);
+    const attended = v => { try { const r = healthRecord(v); return r && r.status === 'attended'; } catch (e) { return false; } };
+    const all = CC.map(c => ({ m: c.start, c })).concat(CHECKUPS.map(v => ({ m: v - gap, v }))).sort((x, y) => x.m - y.m);
+    const st = s => s.v != null ? (attended(s.v) || s.m < a - 0.75 ? 'done' : s.m <= a + 0.25 ? 'now' : 'next') : (done[s.c.id] || s.c.end <= a ? 'done' : s.c.start <= a ? 'now' : 'next');
+    const title = s => s.v != null ? `${s.v}-month checkup` : s.c.title;
+    const when = s => s.v != null ? `${s.v} mo` : (/month|week/.test(range(s.c)) ? range(s.c).replace(/^Usually |^Around |^At /, '').replace(' months', ' mo').replace(' month', ' mo') : `${s.c.start}–${s.c.end} mo`);
+    const go = s => s.v != null ? `openPage('health-visit:${s.v}')` : s.c.go;
+    const past = all.filter(s => st(s) === 'done'), rest = all.filter(s => st(s) !== 'done');
+    const step = s => { const k = st(s); return `<li class="tl-step is-${k}"><i class="tl-dot">${k === 'done' ? '✓' : ''}</i><button onclick="${go(s)}"><span class="tl-t"><b>${F(title(s))}</b>${k === 'now' ? `<small>${F('Happening now')}</small>` : ''}</span><span class="tl-w">${F(when(s))}</span></button></li>`; };
+    const pct = Math.max(0, Math.min(100, a / 12 * 100));
+    let h = `<div class="ya-page tl-track">${tlSwitch(m)}<h1 class="yt-h1">${F(`${nm}’s first year`)}</h1>`;
+    h += `<div class="tl-prog" aria-label="${F(`${Math.floor(a)} of 12 months`)}"><div class="tl-bar"><i style="width:${pct}%"></i></div><div class="tl-ends"><span>${F('Birth')}</span><b>${F(`${nm} is ${typeof babyAge === 'function' ? babyAge() : ''}`)}</b><span>${F('1 year')}</span></div></div>`;
+    h += `<ol class="tl-steps${past.length ? ' has-past' : ''}">`;
+    if (past.length) h += `<li class="tl-past"><i class="tl-dot">✓</i><button onclick="this.closest('ol').classList.toggle('show-past');this.querySelector('span').textContent=this.closest('ol').classList.contains('show-past')?'Hide':'Show'">${F(`${past.length} done`)}<span>${F('Show')}</span></button></li>` + past.map(step).join('').replace(/tl-step is-done/g, 'tl-step is-done tl-old');
+    let today = false;
+    rest.forEach(s => { if (!today && st(s) === 'next') { h += `<li class="tl-today"><i class="tl-dot"></i><span>${F('Today')}</span></li>`; today = true; } h += step(s); });
+    if (!today) h += `<li class="tl-today"><i class="tl-dot"></i><span>${F('Today')}</span></li>`;
+    h += `<li class="tl-step tl-goal"><i class="tl-dot"></i><span class="tl-t"><b>${F('First birthday!')}</b></span>${cake}</li></ol>`;
+    h += `<p class="hub-foot">${F('Ages are typical. Every baby moves at their own pace.')}</p></div>`;
+    return h;
+  };
   // Focus as you scroll, without moving anything: every chapter ahead stays open, and the one in the middle of the
   // screen is in focus while the others soften back. Nothing opens or closes under the finger, so momentum scrolling
   // on a phone never fights the page. Tapping a header still folds or opens it.
