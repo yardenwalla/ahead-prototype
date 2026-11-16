@@ -646,3 +646,7 @@
 .is-on .st-eyes1 .st-eyehers .st-eyepic .st-obj{animation:stBlurIn 1.6s 1.5s ease forwards}
 .st-eyes1 .st-eyepic{border-radius:24px;border-width:5px}
 .st-eyes1 figcaption{font-size:15px}
+/* smaller, so it never reaches the words above it */
+.st-eyes.st-eyes1{width:min(44vw,24vh,190px);margin-bottom:6%}
+.st-eyes1 .st-eyepic{border-radius:18px;border-width:4px}
+.st-eyes1 figcaption{font-size:13px;margin-top:6px}
