@@ -149,15 +149,23 @@
       const its = CC.filter(c => c.start >= from && c.start < to).map(c => ({ m: c.start, c })).concat(CHECKUPS.filter(v => v - gap >= from && v - gap < to).map(v => ({ m: v - gap, v })));
       if (i === 3) its.push({ m: 12, bday: true });
       its.sort((x, y) => x.m - y.m);
-      const stops = its.map(s => {
+      // In today's chapter: what's behind her folds into one quiet line, then "Maya is here", then what's next.
+      const isHere = i === here;
+      const passed = s => s.bday ? false : s.v != null ? (attended(s.v) || s.m < a - 0.75) : (done[s.c.id] || s.c.end <= a || s.c.start <= a && s.c.id !== nextIds[0] && !nextIds.includes(s.c.id) && s.c.end <= a);
+      const behind = isHere ? its.filter(s => passed(s)) : [];
+      const hereStop = `<span class="yr-stop is-peak yr-me"><i class="yr-dot"></i><span class="yr-mepill">${F(`${nm} is here`)}<small>${F(typeof babyAge === 'function' ? babyAge() : '')}</small></span></span>`;
+      const behindStop = behind.length ? `<span class="yr-stop is-peak yr-behind"><i class="yr-dot"></i><span class="yr-behindtxt">✓ ${behind.length} ${F(behind.length === 1 ? 'thing' : 'things')} behind ${F('{o}')}</span></span>` : '';
+      const list = isHere ? its.filter(s => !passed(s)).sort((x, y) => (y.c && y.c.id === nextIds[0]) - (x.c && x.c.id === nextIds[0])) : its;
+      const stops = (isHere ? behindStop + hereStop : '') + list.map(s => {
         if (s.bday) return `<span class="yr-stop is-peak"><i class="yr-dot"></i><span class="yr-pill"><em>12m</em>${F('One year')}</span></span>`;
         if (s.v != null) { const dn = attended(s.v);
           return `<span class="yr-stop${dn ? ' is-done' : ''}"><i class="yr-dot"></i><a class="yr-pill" onclick="event.stopPropagation();openPage('health-visit:${s.v}')"><em>${s.v}m</em>${F('Checkup')}</a></span>`; }
         const c = s.c, dn = done[c.id] || c.end <= a, peak = peakIds.includes(c.id);
-        return `<span class="yr-stop${peak ? ' is-peak' : ''}${dn ? ' is-done' : ''}${c.id === nextIds[0] ? ' is-next' : ''}"><i class="yr-dot"></i><a class="yr-pill" onclick="event.stopPropagation();${c.go.replace(/"/g, '&quot;')}"><em>${chipOf(c)}</em>${F(SHORT[c.id] || c.title)}</a></span>`;
+        const nx = c.id === nextIds[0];
+        return `<span class="yr-stop${peak || (isHere && nx) ? ' is-peak' : ''}${dn ? ' is-done' : ''}${nx ? ' is-next' : ''}"><i class="yr-dot"></i><a class="yr-pill" onclick="event.stopPropagation();${c.go.replace(/"/g, '&quot;')}"><em>${chipOf(c)}</em><span>${F(SHORT[c.id] || c.title)}${nx ? `<small>${F(whenShort(c, a))}</small>` : ''}</span></a></span>`;
       }).join('');
       map += `<div class="yr-ch${i === here ? ' is-here is-open' : ''}${to <= a ? ' is-past' : ''}" style="--yr:${bg};--yri:${ink}" onclick="yrOpen(this)" role="button" tabindex="0" aria-expanded="${i === here}">
-        <span class="yr-copy"><span class="yr-ages">${F(ages)}</span><b class="yr-title">${F(title)}</b>${i === here ? `<span class="yr-here">${F('You are here')}</span>` : ''}<span class="yr-more">${F('See all')} <i>›</i></span></span>
+        <span class="yr-copy"><span class="yr-ages">${F(ages)}</span><b class="yr-title">${F(title)}</b><span class="yr-more">${F('See all')} <i>›</i></span></span>
         <span class="yr-stops">${stops}</span><span class="yr-toy" aria-hidden="true">${window.stToy(toy)}</span></div>`;
     });
     return `<div class="ya-page yr-page"><h1 class="yr-h1">${F(`${nm}’s first year`)}</h1><p class="yr-lead">${F('The road to one. Tap a chapter to see everything in it.')}</p>
