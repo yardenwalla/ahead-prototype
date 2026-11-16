@@ -220,7 +220,7 @@
     // Through her eyes: like every other screen, one clay object on the cloud (your face, with a toy beside it).
     // It arrives sharp, then softens to how she sees it this month.
     eyes: function (m) {
-      var F = { 0: 'blur(5px) grayscale(.9) contrast(1.2)', 1: 'blur(3.5px) grayscale(.6) contrast(1.2)', 2: 'blur(2.5px) saturate(.5)', 3: 'blur(1.6px) saturate(.7)', 4: 'blur(1px) saturate(.85)', 6: 'blur(.4px)' }[m] || 'none';
+      var F = { 0: 'blur(5px) grayscale(.9) contrast(1.2)', 1: 'blur(3px) grayscale(1) contrast(1.15)', 2: 'blur(2.5px) saturate(.5)', 3: 'blur(1.6px) saturate(.7)', 4: 'blur(1px) saturate(.85)', 6: 'blur(.4px)' }[m] || 'none';
       var sk = blob('#f5c3a0', '#fde3cf', '#de9d79'), r = blob('#e98a6b', '#f6b49c', '#c96f52');
       var face = svg('0 0 220 200', sk.def + r.def, shadow(96, 192, 70) +
         '<circle cx="96" cy="100" r="80" fill="' + sk.url + '"/><path d="M18 92 Q24 18 96 18 Q168 18 174 92 Q150 52 96 50 Q42 52 18 92Z" fill="#6b4a3a"/>' +
@@ -228,6 +228,15 @@
         '<ellipse cx="54" cy="128" rx="12" ry="7" fill="#f39aa8"/><ellipse cx="138" cy="128" rx="12" ry="7" fill="#f39aa8"/>' +
         '<path d="M76 134 Q96 154 116 134" fill="none" stroke="#2B2840" stroke-width="7" stroke-linecap="round"/>' +
         '<circle cx="194" cy="160" r="24" fill="' + r.url + '"/><path d="M180 150 Q194 140 208 152" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".6"/>');
+      // Month 1 is about bold patterns, so it shows two toys: a black-and-white one that stays clear in her view,
+      // and a pastel one that melts into the background.
+      if (m === 1) {
+        var lv = blob('#d9cff3', '#efeafb', '#c3b6e6');
+        var stripes = ''; for (var i = 0; i < 6; i++) stripes += '<rect x="' + (30 + i * 20) + '" y="40" width="10" height="130" fill="#2B2840"/>';
+        face = svg('0 0 220 200', lv.def, shadow(80, 192, 66) + shadow(178, 192, 30) +
+          '<defs><clipPath id="evc"><circle cx="80" cy="104" r="70"/></clipPath></defs><circle cx="80" cy="104" r="70" fill="#fffaf3"/><g clip-path="url(#evc)">' + stripes + '</g><circle cx="80" cy="104" r="70" fill="none" stroke="#2B2840" stroke-width="5"/>' +
+          '<circle cx="178" cy="150" r="34" fill="' + lv.url + '"/>');
+      }
       // The sharp face sits underneath; her view sweeps across it like a lens, edge and all.
       return '<div class="st-vis st-eyesv" style="--f:' + F + '"><span class="st-ev-sharp">' + face + '</span><span class="st-ev-soft">' + face + '</span><i class="st-ev-edge"></i></div>';
     },
