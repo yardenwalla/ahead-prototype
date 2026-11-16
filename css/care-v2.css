@@ -271,3 +271,6 @@
 #main .care-tpl .care-tpl-card { background: var(--white, #fff); border: 1px solid var(--line, #efeaf2); border-radius: 20px; padding: 14px 16px }
 #main .care-tpl .care-tpl-card > p { font-size: 15px; line-height: 1.5; color: var(--ink) }
 #main .care-tpl .care-tpl-card .tpl-notes { border-top-color: var(--line, #efeaf2) }
+/* Template pages: the section title names a figure, so its own inner title is hidden; notes are always ink, never a theme color. */
+#main .care-tpl .hub-fig-title { display: none }
+#main .care-tpl .tpl-notes b { color: #302d3c !important }
