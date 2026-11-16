@@ -117,15 +117,12 @@
     return h;
   };
 
-  /* Timeline as "the road to one" (Nov 15, from Yarden's second mockup): the whole year on one screen as four chapter
-     cards on a winding trail, with only the big moments as stops. Below the map, "This chapter" lists everything in the
-     chosen chapter (today's chapter unless another card was tapped): the next changes with their age windows, then the
-     rest, checkups included. Every row opens its existing read-ahead page. */
-  const ROAD = [[0, 3, 'Birth–2 months', 'Getting to know each other', 'bunny', '#fbe8dc', '#e7b79b'], [3, 6, '3–5 months', 'More aware, more curious', 'rings', '#ece4f6', '#bfaedb'],
-    [6, 9, '6–8 months', 'A little explorer emerges', 'bowl', '#e6efdd', '#8fb27f'], [9, 13, '9–12 months', 'Into everything', 'blocks', '#e3e9f5', '#a3b5d6']];
-  const PEAKS = [['smile', '1–2m', 'First smile'], ['roll', '4–6m', 'Rolling'], ['solids', '6m', 'First foods'], ['sit', '6–9m', 'Sitting up'], ['pull', '9–12m', 'Pulling up'], ['bday', '12m', 'One year']];
+  /* Timeline (Nov 15): the year as four chapters you open and close. Closed, a chapter is one calm header; open, its
+     stops run down a trail on the left, one card each, in time order: what's behind her is quiet, "Maya is here" marks
+     today, the next change is outlined. Today's chapter starts open; opening another closes it. Each card opens its page. */
+  const ROAD = [[0, 3, 'Birth–2 months', 'Getting to know each other', 'bunny', '#fbe8dc', '#c98d6f'], [3, 6, '3–5 months', 'More aware, more curious', 'rings', '#ece4f6', '#8f7bc4'],
+    [6, 9, '6–8 months', 'A little explorer emerges', 'bowl', '#e6efdd', '#5f8c55'], [9, 13, '9–12 months', 'Into everything', 'blocks', '#e3e9f5', '#5d74a6']];
   const listPage = window.nextPage;
-  window.ycPick = i => { window.__ycSel = i; render(); setTimeout(() => { const el = document.querySelector('#main .yr-this'); el && el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 30); };
   window.nextPage = function () {
     if (typeof window.stToy !== 'function') return listPage();
     const a = ageNow(), nm = name(), done = doneNow();
@@ -133,66 +130,51 @@
     const gap = profile.early && profile.due ? Math.max(0, (parse(profile.due) - parse(profile.dob)) / MONTH) : 0;
     const shiftFor = cat => (cat === 'Development' && bday('dev')) || (cat === 'Safety' && bday('safety')) ? gap : 0;
     const CC = C.map(c => shiftFor(c.cat) ? Object.assign({}, c, { start: c.start - shiftFor(c.cat), end: c.end - shiftFor(c.cat) }) : c);
-    const isDone = c => c.end <= a || done[c.id];
-    const here = Math.max(0, ROAD.findIndex(r => a >= r[0] && a < r[1]));
-    const sel = window.__ycSel != null ? window.__ycSel : here;
-    const chev = '<span class="hub-chev" aria-hidden="true">›</span>';
-    // The map. Each chapter card holds all its stops on the trail; closed, only the big moments show. Tapping a card
-    // opens it in place (the trail stretches and the rest appear); opening one closes the other. Today's starts open.
     const attended = v => { try { const r = healthRecord(v); return r && r.status === 'attended'; } catch (e) { return false; } };
-    const nextIds = CC.filter(c => !isDone(c)).sort((x, y) => x.start - y.start || x.end - y.end).slice(0, 3).map(c => c.id);
-    const SHORT = { crying: 'The crying peak', smile: 'First smile', nights: 'Longer nights', regress: 'Sleep regression', roll: 'Rolling', ready: 'Ready for solids', solids: 'First foods', twonaps: 'Two naps', crawl: 'Crawling', sit: 'Sitting up', tooth: 'First tooth', finger: 'Thicker textures', meals: 'Three meals', carseat: 'New car seat', sep: 'Separation', pull: 'Pulling up', words: 'First words', milk: 'Whole milk', steps: 'First steps' };
-    const peakIds = PEAKS.map(p => p[0]);
-    const chipOf = c => { const f = v => v < 1 ? Math.round(v * 4.35) + 'wk' : (Math.round(v * 2) / 2) + ''; return c.end - c.start <= 0.6 ? f(c.start) + (c.start < 1 ? '' : 'm') : `${f(c.start)}–${f(c.end)}m`; };
-    let map = '';
+    const nextId = (CC.filter(c => !(c.end <= a || done[c.id])).sort((x, y) => x.start - y.start || x.end - y.end)[0] || {}).id;
+    const here = Math.max(0, ROAD.findIndex(r => a >= r[0] && a < r[1]));
+    const chev = '<span class="hub-chev" aria-hidden="true">›</span>';
+    let out = '';
     ROAD.forEach(([from, to, ages, title, toy, bg, ink], i) => {
-      const its = CC.filter(c => c.start >= from && c.start < to).map(c => ({ m: c.start, c })).concat(CHECKUPS.filter(v => v - gap >= from && v - gap < to).map(v => ({ m: v - gap, v })));
-      if (i === 3) its.push({ m: 12, bday: true });
-      its.sort((x, y) => x.m - y.m);
-      // In today's chapter: what's behind her folds into one quiet line, then "Maya is here", then what's next.
-      const isHere = i === here;
-      const passed = s => s.bday ? false : s.v != null ? (attended(s.v) || s.m < a - 0.75) : (done[s.c.id] || s.c.end <= a || s.c.start <= a && s.c.id !== nextIds[0] && !nextIds.includes(s.c.id) && s.c.end <= a);
-      const behind = isHere ? its.filter(s => passed(s)) : [];
-      const hereStop = `<span class="yr-stop is-peak yr-me"><i class="yr-dot"></i><span class="yr-mepill">${F(`${nm} is here`)}<small>${F(typeof babyAge === 'function' ? babyAge() : '')}</small></span></span>`;
-      const behindStop = behind.length ? `<span class="yr-stop is-peak yr-behind"><i class="yr-dot"></i><span class="yr-behindtxt">✓ ${behind.length} ${F(behind.length === 1 ? 'thing' : 'things')} behind ${F('{o}')}</span></span>` : '';
-      const list = isHere ? its.filter(s => !passed(s)).sort((x, y) => (y.c && y.c.id === nextIds[0]) - (x.c && x.c.id === nextIds[0])) : its;
-      const stops = (isHere ? behindStop + hereStop : '') + list.map(s => {
-        if (s.bday) return `<span class="yr-stop is-peak"><i class="yr-dot"></i><span class="yr-pill"><em>12m</em>${F('One year')}</span></span>`;
-        if (s.v != null) { const dn = attended(s.v);
-          return `<span class="yr-stop${dn ? ' is-done' : ''}"><i class="yr-dot"></i><a class="yr-pill" onclick="event.stopPropagation();openPage('health-visit:${s.v}')"><em>${s.v}m</em>${F('Checkup')}</a></span>`; }
-        const c = s.c, dn = done[c.id] || c.end <= a, peak = peakIds.includes(c.id);
-        const nx = c.id === nextIds[0];
-        return `<span class="yr-stop${peak || (isHere && nx) ? ' is-peak' : ''}${dn ? ' is-done' : ''}${nx ? ' is-next' : ''}"><i class="yr-dot"></i><a class="yr-pill" onclick="event.stopPropagation();${c.go.replace(/"/g, '&quot;')}"><em>${chipOf(c)}</em><span>${F(SHORT[c.id] || c.title)}${nx ? `<small>${F(whenShort(c, a))}</small>` : ''}</span></a></span>`;
-      }).join('');
-      map += `<div class="yr-ch${i === here ? ' is-here is-open' : ''}${to <= a ? ' is-past' : ''}" style="--yr:${bg};--yri:${ink}" onclick="yrOpen(this)" role="button" tabindex="0" aria-expanded="${i === here}">
-        <span class="yr-copy"><span class="yr-ages">${F(ages)}</span><b class="yr-title">${F(title)}</b><span class="yr-more">${F('See all')} <i>›</i></span></span>
-        <span class="yr-stops">${stops}</span><span class="yr-toy" aria-hidden="true">${window.stToy(toy)}</span></div>`;
+      const its = CC.filter(c => c.start >= from && c.start < to).map(c => ({ m: c.start, c })).concat(CHECKUPS.filter(v => v - gap >= from && v - gap < to).map(v => ({ m: v - gap, v }))).sort((x, y) => x.m - y.m);
+      const passed = s => s.v != null ? attended(s.v) || s.m < a - 0.5 : done[s.c.id] || s.c.end <= a;
+      // In today's chapter, what's behind her comes first, then "Maya is here", then what's ahead (in time order).
+      if (i === here) its.sort((x, y) => passed(y) - passed(x) || x.m - y.m);
+      let body = '', placed = i !== here;
+      its.forEach(s => {
+        if (!placed && !passed(s)) { body += `<li class="yt-me"><i class="yt-dot"></i><span>${F(`${nm} is here`)}<small>${F(typeof babyAge === 'function' ? babyAge() : '')}</small></span></li>`; placed = true; }
+        const pd = passed(s);
+        if (s.v != null) body += `<li class="yt-stop${pd ? ' is-done' : ''}"><i class="yt-dot"></i><button onclick="openPage('health-visit:${s.v}')"><span class="yt-c"><small>${F(`${s.v} month${s.v === 1 ? '' : 's'}`)}</small><b>${F(`${s.v}-month checkup`)}</b>${pd ? '' : `<span>${F(CHECK_LINE[s.v] || '')}</span>`}</span>${pd ? '<i class="yt-tick">✓</i>' : chev}</button></li>`;
+        else { const c = s.c, nx = c.id === nextId;
+          body += `<li class="yt-stop${pd ? ' is-done' : ''}${nx ? ' is-next' : ''}"><i class="yt-dot"></i><button onclick="${c.go}"><span class="yt-c"><small>${F(range(c))}${nx ? ` · ${F(whenShort(c, a))}` : ''}</small><b>${F(c.title)}</b>${pd ? '' : `<span>${F(c.id === 'crying' && a >= 2 ? 'Past the worst. Fussy evenings ease over the next few weeks' : c.why)}</span>`}</span>${done[c.id] ? '<i class="yt-tick">✓</i>' : chev}</button></li>`; }
+      });
+      if (!placed) body += `<li class="yt-me"><i class="yt-dot"></i><span>${F(`${nm} is here`)}<small>${F(typeof babyAge === 'function' ? babyAge() : '')}</small></span></li>`;
+      if (i === 3) body += `<li class="yt-end"><i class="yt-dot"></i><span class="yt-endc"><small>${F('The destination')}</small><b>${F('One whole year!')}</b></span></li>`;
+      out += `<section class="yt-ch${i === here ? ' is-open is-here' : ''}${to <= a ? ' is-past' : ''}" style="--yt:${bg};--yti:${ink}">
+        <button class="yt-head" onclick="ytOpen(this.parentNode)" aria-expanded="${i === here}"><span class="yt-hc"><small>${F(ages)}</small><b>${F(title)}</b></span><span class="yt-toy" aria-hidden="true">${window.stToy(toy)}</span><i class="yt-caret" aria-hidden="true">›</i></button>
+        <div class="yt-body"><ol class="yt-list"><svg class="yt-trail" aria-hidden="true"><path class="t1"/><path class="t2"/></svg>${body}</ol></div></section>`;
     });
-    return `<div class="ya-page yr-page"><h1 class="yr-h1">${F(`${nm}’s first year`)}</h1><p class="yr-lead">${F('The road to one. Tap a chapter to see everything in it.')}</p>
-      <div class="yr-map"><svg class="yr-trail" aria-hidden="true"><path class="yr-t1"/><path class="yr-t2"/></svg>${map}</div>
-      <p class="hub-foot">${F('Ages are typical. Every baby moves at their own pace.')}</p></div>` + (setTimeout(() => window.yrTrail && window.yrTrail(), 0), '');
+    return `<div class="ya-page yt-page"><h1 class="yt-h1">${F(`${nm}’s first year`)}</h1><p class="yt-lead">${F('The road to one.')}</p>${out}<p class="hub-foot">${F('Ages are typical. Every baby moves at their own pace.')}</p></div>` + (setTimeout(() => window.ytTrail && window.ytTrail(), 0), '');
   };
-  // Open one chapter in place; redraw the trail while it grows.
-  window.yrOpen = function (el) {
-    const open = !el.classList.contains('is-open');
-    document.querySelectorAll('#main .yr-ch.is-open').forEach(c => { c.classList.remove('is-open'); c.setAttribute('aria-expanded', 'false'); });
-    if (open) { el.classList.add('is-open'); el.setAttribute('aria-expanded', 'true'); }
-    const t0 = performance.now(); (function tick() { window.yrTrail(); if (performance.now() - t0 < 520) requestAnimationFrame(tick); })();
+  window.ytOpen = function (sec) {
+    const open = !sec.classList.contains('is-open');
+    document.querySelectorAll('#main .yt-ch.is-open').forEach(c => { c.classList.remove('is-open'); c.querySelector('.yt-head').setAttribute('aria-expanded', 'false'); });
+    if (open) { sec.classList.add('is-open'); sec.querySelector('.yt-head').setAttribute('aria-expanded', 'true'); }
+    const t0 = performance.now(); (function tick() { window.ytTrail(); if (performance.now() - t0 < 520) requestAnimationFrame(tick); })();
   };
-  // One winding trail through every stop, card to card.
-  window.yrTrail = function () {
-    const map = document.querySelector('#main .yr-map'); if (!map) return;
-    const svg = map.querySelector('.yr-trail'), box = map.getBoundingClientRect();
-    const pts = [...map.querySelectorAll('.yr-stop')].filter(st => st.getBoundingClientRect().height > 14).map(st => { const r = st.querySelector('.yr-dot').getBoundingClientRect(); return [r.left + r.width / 2 - box.left, r.top + r.height / 2 - box.top]; });
-    svg.setAttribute('viewBox', `0 0 ${box.width} ${box.height}`);
-    svg.style.setProperty('width', box.width + 'px', 'important'); svg.style.setProperty('height', box.height + 'px', 'important');
-    if (pts.length < 2) return;
-    let d = `M${pts[0][0]} ${Math.max(4, pts[0][1] - 40)} C${pts[0][0] + 18} ${pts[0][1] - 20} ${pts[0][0]} ${pts[0][1] - 10} ${pts[0][0]} ${pts[0][1]}`;
-    for (let i = 1; i < pts.length; i++) { const [x0, y0] = pts[i - 1], [x1, y1] = pts[i], my = (y0 + y1) / 2, w = i % 2 ? 22 : -22; d += ` C${x0 + w} ${my} ${x1 + w} ${my} ${x1} ${y1}`; }
-    const L = pts[pts.length - 1]; d += ` C${L[0] - 14} ${L[1] + 14} ${L[0]} ${L[1] + 22} ${L[0] - 6} ${box.height - 6}`;
-    svg.querySelectorAll('path').forEach(p => p.setAttribute('d', d));
+  // A gentle winding trail on the left of each open chapter, through its stops.
+  window.ytTrail = function () {
+    document.querySelectorAll('#main .yt-ch.is-open .yt-list').forEach(list => {
+      const svg = list.querySelector('.yt-trail'), box = list.getBoundingClientRect();
+      const pts = [...list.querySelectorAll(':scope > li > .yt-dot')].map(d => { const r = d.getBoundingClientRect(); return [r.left + r.width / 2 - box.left, r.top + r.height / 2 - box.top]; });
+      svg.setAttribute('viewBox', `0 0 ${box.width} ${box.height}`); svg.style.setProperty('width', box.width + 'px', 'important'); svg.style.setProperty('height', box.height + 'px', 'important');
+      if (pts.length < 1) return;
+      let d = `M${pts[0][0]} 0 L${pts[0][0]} ${pts[0][1]}`;
+      for (let i = 1; i < pts.length; i++) { const [x0, y0] = pts[i - 1], [x1, y1] = pts[i], my = (y0 + y1) / 2, w = i % 2 ? 9 : -9; d += ` C${x0 + w} ${my} ${x1 + w} ${my} ${x1} ${y1}`; }
+      svg.querySelectorAll('path').forEach(p => p.setAttribute('d', d));
+    });
   };
-  window.addEventListener('resize', () => window.yrTrail && window.yrTrail());
+  window.addEventListener('resize', () => window.ytTrail && window.ytTrail());
 
   // On a change's page: where it sits in the year, and where the baby is. Tapping it opens the whole Timeline.
   function yearStrip(c) {
