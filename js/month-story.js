@@ -228,7 +228,8 @@
         '<ellipse cx="54" cy="128" rx="12" ry="7" fill="#f39aa8"/><ellipse cx="138" cy="128" rx="12" ry="7" fill="#f39aa8"/>' +
         '<path d="M76 134 Q96 154 116 134" fill="none" stroke="#2B2840" stroke-width="7" stroke-linecap="round"/>' +
         '<circle cx="194" cy="160" r="24" fill="' + r.url + '"/><path d="M180 150 Q194 140 208 152" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".6"/>');
-      return '<div class="st-vis st-eyesv" style="--f:' + F + '">' + face + '</div>';
+      // The sharp face sits underneath; her view sweeps across it like a lens, edge and all.
+      return '<div class="st-vis st-eyesv" style="--f:' + F + '"><span class="st-ev-sharp">' + face + '</span><span class="st-ev-soft">' + face + '</span><i class="st-ev-edge"></i></div>';
     },
     cruise: function () { var t = ''; for (var i = 0; i < 4; i++) t += '<i style="--i:' + i + '"></i>'; return '<div class="st-vis st-cruise"><span class="st-sofa"><b></b></span>' + t + '</div>'; },
     name: function () { return '<div class="st-vis st-namewrap"><span class="st-callout">' + E(nm()) + '!</span><i class="st-ring" style="--i:0"></i><i class="st-ring" style="--i:1"></i><i class="st-ring" style="--i:2"></i></div>'; },
