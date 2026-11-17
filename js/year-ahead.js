@@ -186,7 +186,7 @@
     const shiftFor = cat => (cat === 'Development' && bday('dev')) || (cat === 'Safety' && bday('safety')) ? gap : 0;
     const CC = C.filter(c => !['ready', 'finger', 'meals'].includes(c.id)).map(c => shiftFor(c.cat) ? Object.assign({}, c, { start: c.start - shiftFor(c.cat), end: c.end - shiftFor(c.cat) }) : c);
     const attended = v => { try { const r = healthRecord(v); return r && r.status === 'attended'; } catch (e) { return false; } };
-    const all = CC.map(c => ({ m: c.start, c })).concat(CHECKUPS.map(v => ({ m: v - gap, v }))).sort((x, y) => x.m - y.m);
+    const all = CC.map(c => ({ m: c.start, c })).concat(CHECKUPS.map(v => ({ m: v - gap, v }))).sort((x, y) => x.m - y.m || (x.c && y.c ? x.c.end - y.c.end : 0));
     // What she's told us only counts from today on; looking back, it's by age alone.
     const st = (s, x) => s.v != null ? ((x >= a && attended(s.v)) || s.m < x - 0.75 ? 'done' : s.m <= x + 0.25 ? 'now' : 'next') : ((x >= a && done[s.c.id]) || s.c.end <= x ? 'done' : s.c.start <= x + 0.25 ? 'now' : 'next');
     const title = s => s.v != null ? `${s.v}-month checkup` : s.c.title;
@@ -207,6 +207,8 @@
       let h = '';
       if (past.length) h += `<li class="tl-past"><i class="tl-dot"></i><button onclick="this.closest('ol').classList.toggle('show-past');this.querySelector('span').textContent=this.closest('ol').classList.contains('show-past')?'Hide':'Show'">${F(`Earlier in {p} year (${past.length})`)}<span>${F(document.querySelector('#main .tl-steps.show-past') ? 'Hide' : 'Show')}</span></button></li>` + past.map(step).join('').replace(/tl-step is-done/g, 'tl-step is-done tl-old');
       const nowS = rest.filter(s => st(s, x) === 'now');
+      // Newest first: a checkup that's due leads, then what started most recently; long-running ones sink lower.
+      nowS.sort((p, q) => (q.v != null) - (p.v != null) || q.m - p.m || (p.c && q.c ? p.c.end - q.c.end : 0));
       h += mark + (nowS.length ? nowS.map(step).join('') : `<li class="tl-quiet"><span>${F('Nothing new starting right now. Here’s what’s next.')}</span></li>`);
       // What's ahead, under light calendar signposts ("Around January").
       let last = null;
