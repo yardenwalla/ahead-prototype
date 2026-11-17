@@ -291,7 +291,6 @@
 
   // Care down there: we know from onboarding for she and he; for they, a switch. Boys also choose circumcised or not.
   const anatomy = () => answers.careAnatomy || (profile.pronouns === 'he' ? 'boy' : profile.pronouns === 'she' ? 'girl' : '');
-  window.careNeedTick = id => { const key = 'ahead-care-need'; let on = {}; try { on = JSON.parse(localStorage.getItem(key) || '{}'); } catch (e) {} on[id] = !on[id]; try { localStorage.setItem(key, JSON.stringify(on)); } catch (e) {} const y = scrollY; render(); scrollTo(0, y); };
   window.careSet = (key, val) => { answers[key] = val; if (typeof persist === 'function') persist(); const y = scrollY; render(); scrollTo(0, y); };
   const seg = (key, cur, opts) => `<div class="care-seg" role="group">${opts.map(([val, t]) => `<button class="${cur === val ? 'is-on' : ''}" aria-pressed="${cur === val}" onclick="careSet('${key}','${val}')">${F(t)}</button>`).join('')}</div>`;
   // Asked once, right here: pronouns don't tell us this. Until it's answered, the general rule shows.
@@ -412,24 +411,6 @@
       ]],
       base: [v > 0 && ['Nails', 'At least once a week', H().steps(['When {s’s} asleep or relaxed.', 'Baby clippers or a soft file, pressing the fingertip pad away from the nail.', 'File to a rounded edge.'])], ['Ears', 'No cotton swabs inside', p_('Wipe the outside and behind the ears with a washcloth. Earwax clears on its own.')], v > 0 && ['Eyes', 'Wipe inside corner out', p_('A fresh damp cotton ball for each eye. A watery eye that isn’t red is often a blocked tear duct, and most open by the first birthday.')], ['A stuffy nose', 'Saline and gentle suction · In Health', `<div class="hub-list care-link">${rowK('nose', 'Colds and stuffy noses', 'In Health', "openPage('chg:Health:d:cold')")}</div>`]]
     }),
-
-    need(v) {
-      const h = H(), stage = { 0: 0, 2: 1, 3: 2 }[v] ?? 0;
-      // One-time shopping, so it's a checklist you can tick, kept on this phone.
-      const L = [
-        [['Diapers', 'Newborn size, and a pack of size 1', 'diaper'], ['Wipes and diaper cream', 'Fragrance-free wipes, zinc cream', 'shield'], ['A changing pad', 'Or a towel on the floor', 'home'],
-         ['A baby tub', 'With soft washcloths and a hooded towel', 'bath'], ['A mild, fragrance-free wash', 'For hair and dirty spots', 'drop'], ['Bodysuits and sleepers', '6–8 of each, newborn and 0–3 months', 'shirt'],
-         ['A sun hat', 'Wide-brimmed', 'sun'], ['Baby nail clippers', 'Or a soft file', 'nail'], ['Saline drops and a bulb syringe', 'For a stuffy nose', 'eye']],
-        [['Soft bibs', 'For all the drool', 'shirt'], ['A firm teething ring', 'One you can chill in the fridge', 'ring'], ['Mineral sunscreen, SPF 30', 'For 6 months on', 'sun'], ['A stroller sunshade', 'Not a blanket over the stroller', 'home']],
-        [['A soft baby toothbrush', 'For the first tooth', 'tooth'], ['Fluoride toothpaste', 'A rice-grain smear', 'drop'], ['A non-slip tub mat', 'For the big tub', 'bath'], ['Soft, flexible shoes', 'Only once walking outside', 'stand']]
-      ][stage];
-      const key = 'ahead-care-need', on = (() => { try { return JSON.parse(localStorage.getItem(key) || '{}'); } catch (e) { return {}; } })();
-      const id = i => `${stage}-${i}`;
-      let b = head('need', LABEL.need, v === 0 ? 'What you’ll need' : `What you’ll need at ${STAGE[v]}`, v === 0 ? 'A short list. Most of it lasts the whole first year.' : 'Just a few additions.');
-      b += h.ticks(L, i => !!on[id(i)], i => `careNeedTick('${id(i)}')`, CAT);
-      if (v === 0) b += h.note('Most babies don’t need lotion, and your regular laundry detergent is fine unless {p} skin is sensitive. You’ll find sleep sacks in Sleep.');
-      return page('need', b);
-    }
   };
 
   /* ---------- the rash pages ---------- */
@@ -1166,7 +1147,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
       if (a === 'h') { const r = careSteps(b, c == null ? null : Number(c)); if (r) return r; }
       if (a === 'routine') return careRoutine(b == null ? null : Number(b));
       if (a === 'p') { if (b === 'drool') return lookOff(null, 'rash'); const r = qPage(b) || q2Page(b); if (r) return r; }
-      if (a === 't') { if (b === 'skin') return lookOff(c == null ? null : Number(c), 'rash'); if (b === 'need') return careTopic('need', c == null ? null : Number(c)); const v = c == null ? stageNow() : Number(c), ids = T2Q[b]; if (ids) { const id = ids[v] === 'solids' && !(live() && answers.solids === 'Yes') ? 'diapers46' : ids[v] === 'six' && v === 2 && careAge() < 6 ? 'shade' : ids[v]; return qPage(id); } }
+      if (a === 't') { if (b === 'skin') return lookOff(c == null ? null : Number(c), 'rash'); const v = c == null ? stageNow() : Number(c), ids = T2Q[b]; if (ids) { const id = ids[v] === 'solids' && !(live() && answers.solids === 'Yes') ? 'diapers46' : ids[v] === 'six' && v === 2 && careAge() < 6 ? 'shade' : ids[v]; return qPage(id); } }
       if (a === 'cord') return qPage('cord');
       if (a === 'after1') return qPage('after1');
       if (a === 'rash') { const r = rashPage(b); if (r) return r; }
