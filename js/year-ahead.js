@@ -201,8 +201,9 @@
     const longWhen = s => when(s).replace(/ mo$/, ' months').replace(/^(\d+) months$/, (q, n) => n === '1' ? '1 month' : q);
     const listHTML = x => {
       const t = isToday(x), past = all.filter(s => st(s, x) === 'done'), rest = all.filter(s => st(s, x) !== 'done');
-      const prep = (s, k) => s.v != null ? (k === 'now' ? 'Due now · book it if you haven’t' : 'Book it a few weeks ahead') : s.c.id === 'crying' && x >= 2 ? 'Past the worst now' : PREP[s.c.id] || '';
-      const step = s => { const k = st(s, x), pr = k === 'done' ? '' : prep(s, k); return `<li class="tl-step is-${k}" data-id="${s.v != null ? 'v' + s.v : s.c.id}"><i class="tl-dot"></i><button onclick="${go(s)}"><span class="tl-t"><b>${F(title(s))}</b>${pr ? `<small>${F(pr)}</small>` : ''}</span><span class="tl-w">${F(longWhen(s))}</span></button></li>`; };
+      const prep = (s, k) => s.v != null ? (k === 'now' ? 'Book it if you haven’t' : 'Book it a few weeks ahead') : s.c.id === 'crying' && x >= 2 ? 'Past the worst now' : PREP[s.c.id] || '';
+      const lab0 = v => v < 1 ? `${Math.round(v * 4.35)} weeks` : `${Math.round(v)} month${Math.round(v) === 1 ? '' : 's'}`;
+      const step = s => { const k = st(s, x), pr = k === 'done' ? '' : prep(s, k); return `<li class="tl-step is-${k}" data-id="${s.v != null ? 'v' + s.v : s.c.id}"><i class="tl-dot"></i><button onclick="${go(s)}"><span class="tl-t">${k === 'now' ? `<em class="tl-since">${F(s.v != null ? 'Due now' : x - s.c.start < 0.75 ? 'Starting now' : `Started at ${lab0(s.c.start)}`)}</em>` : ''}<b>${F(title(s))}</b>${pr ? `<small>${F(pr)}</small>` : ''}</span><span class="tl-w">${F(longWhen(s))}</span></button></li>`; };
       const mark = `<li class="tl-today"><i class="tl-dot"></i><span>${F(t ? 'Today' : `At ${ageTxt(x)}`)}</span></li>`;
       let h = '';
       if (past.length) h += `<li class="tl-past"><i class="tl-dot"></i><button onclick="this.closest('ol').classList.toggle('show-past');this.querySelector('span').textContent=this.closest('ol').classList.contains('show-past')?'Hide':'Show'">${F(`Earlier in {p} year (${past.length})`)}<span>${F(document.querySelector('#main .tl-steps.show-past') ? 'Hide' : 'Show')}</span></button></li>` + past.map(step).join('').replace(/tl-step is-done/g, 'tl-step is-done tl-old');
