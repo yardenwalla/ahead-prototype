@@ -420,7 +420,7 @@
         [['Diapers', 'Newborn size, and a pack of size 1', 'diaper'], ['Wipes and diaper cream', 'Fragrance-free wipes, zinc cream', 'shield'], ['A changing pad', 'Or a towel on the floor', 'home'],
          ['A baby tub', 'With soft washcloths and a hooded towel', 'bath'], ['A mild, fragrance-free wash', 'For hair and dirty spots', 'drop'], ['Bodysuits and sleepers', '6–8 of each, newborn and 0–3 months', 'shirt'],
          ['A sun hat', 'Wide-brimmed', 'sun'], ['Baby nail clippers', 'Or a soft file', 'nail'], ['Saline drops and a bulb syringe', 'For a stuffy nose', 'eye']],
-        [['Soft bibs', 'For all the drool', 'shirt'], ['A firm teething ring', 'One you can chill in the fridge', 'toy'], ['Mineral sunscreen, SPF 30', 'For 6 months on', 'sun'], ['A stroller sunshade', 'Not a blanket over the stroller', 'home']],
+        [['Soft bibs', 'For all the drool', 'shirt'], ['A firm teething ring', 'One you can chill in the fridge', 'ring'], ['Mineral sunscreen, SPF 30', 'For 6 months on', 'sun'], ['A stroller sunshade', 'Not a blanket over the stroller', 'home']],
         [['A soft baby toothbrush', 'For the first tooth', 'tooth'], ['Fluoride toothpaste', 'A rice-grain smear', 'drop'], ['A non-slip tub mat', 'For the big tub', 'bath'], ['Soft, flexible shoes', 'Only once walking outside', 'stand']]
       ][stage];
       const key = 'ahead-care-need', on = (() => { try { return JSON.parse(localStorage.getItem(key) || '{}'); } catch (e) { return {}; } })();
@@ -518,7 +518,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
       Y: 'Extra milk feeds, and no water yet. One light layer, and the canopy, not a blanket, over the stroller.', Yl: 'Hot days',
       extra: () => urgent('Any sunburn before age 1. Call your pediatrician right away.') + urgent('Hot and flushed and hard to wake, floppy, or not feeding. Cool {o} down and call 911.') },
     teething: { k: 'teeth', title: 'Teething makes gums sore, not feverish',
-      W: 'Drool, chewing and a few fussy days are the usual signs. The first tooth often comes around 6 months, but 4 to 12 is normal.', tiles: () => [['hand', 'A clean finger', 'Rub the sore gums'], ['toy', 'A teething ring', 'Firm, chilled, not frozen'], ['shirt', 'A soft bib', 'Pat the drool dry']], tips: false, D: '',
+      W: 'Drool, chewing and a few fussy days are the usual signs. The first tooth often comes around 6 months, but 4 to 12 is normal.', tiles: () => [['hand', 'A clean finger', 'Rub the sore gums'], ['ring', 'A teething ring', 'Firm, chilled, not frozen'], ['shirt', 'A soft bib', 'Pat the drool dry']], tips: false, D: '',
       Y: 'Fever, diarrhea, diaper rash or a runny nose means something else is going on.', Yl: 'Not from teething',
       extra: () => H().tip('Skip these', 'Numbing gels, teething tablets and amber teething necklaces. Ask your pediatrician before any pain medicine.') + toothBtn(false) },
     drool: { i: 'drop', k: 'skin', late: true, title: 'Drool rash and eczema', vis: () => rashLink(['drool', 'eczema']),
@@ -740,7 +740,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
       2: { line: 'Teething often starts', answer: 'The first tooth usually comes around 6 months. Anywhere from 4 to 12 is normal.',
         doText: 'Comfort sore gums with gentle pressure and something cool, and skip the remedies that aren’t safe.',
         normal: 'Drool, chewing on everything and extra fussing.',
-        vis: () => hubIconSteps([['hand', 'A clean finger', 'Rub the gums'], ['toy', 'A teething ring', 'Chilled, not frozen'], ['shield', 'Skip these', 'Numbing gels, necklaces']], CAT, 'Rub the gums with a clean finger, offer a chilled teething ring, and skip numbing gels and teething necklaces.', false), call: 'A fever, diarrhea or a rash: teething doesn’t cause those.', extra: () => toothBtn() },
+        vis: () => hubIconSteps([['hand', 'A clean finger', 'Rub the gums'], ['ring', 'A teething ring', 'Chilled, not frozen'], ['shield', 'Skip these', 'Numbing gels, necklaces']], CAT, 'Rub the gums with a clean finger, offer a chilled teething ring, and skip numbing gels and teething necklaces.', false), call: 'A fever, diarrhea or a rash: teething doesn’t cause those.', extra: () => toothBtn() },
       3: { line: () => hasTooth() ? 'Brushing, twice a day' : 'Brushing starts with the first tooth', answer: () => hasTooth() ? 'Twice a day keeps new teeth healthy.' : 'No tooth yet is normal. Some come close to the first birthday.',
         get doText() { return hasTooth() ? 'A soft baby toothbrush and a rice-grain smear of fluoride toothpaste, twice a day. No bottle in bed. Book a first dental visit by the first birthday.' : 'Until the first tooth, comfort sore gums with a clean finger or a chilled teething ring. Once it’s in, brush twice a day with a rice-grain smear of fluoride toothpaste. Book a first dental visit by the first birthday.'; },
         get normal() { return hasTooth() ? 'Brushed well: no white film left along the gumline.' : 'Drool, chewing on everything and extra fussing can mean a tooth is on its way.'; }, vis: () => paste(), extra: () => toothBtn() }

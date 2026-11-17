@@ -1747,8 +1747,3 @@ label:has(> .hub-photo-input:focus-visible) { outline: 2px solid #884866; outlin
 #main .st-glance { grid-template-columns: repeat(3, 1fr); margin: 0 0 12px }
 #main .st-glance b { font-size: 15.5px }
 
-/* Nov 17 (Yarden): no one-word last lines. text-wrap is inherited, so this covers every page;
-   headlines that set balance keep it. tools/qa/browser/orphans.py finds any that slip through. */
-#main { text-wrap: pretty }
-/* Short labels (tile titles, grey lines, headings) wrap to two even lines instead of leaving one word behind. */
-#main :is(h1, h2, h3, h4, b, strong, small, figcaption, button, a, span, em, label) { text-wrap: balance }

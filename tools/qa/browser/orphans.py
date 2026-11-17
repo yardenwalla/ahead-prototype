@@ -7,6 +7,7 @@ sys.path.insert(0, __file__.rsplit('/', 1)[0])
 from common import PORT as _P, profile, opener, new_page
 
 BASE = os.environ.get('AHEAD_URL', f'http://localhost:{_P}/index.html')
+ONLY = [a for a in sys.argv[1:] if not a.startswith('--')]
 FAMS = [profile(0.4, 'Breast milk', 'Nursing', 'she', 'Noor'), profile(4.5, 'Both', 'Nursing', 'he', 'Leo'), profile(10, 'Breast milk', 'Pumping', 'she', 'Mia')]
 FIND = """()=>{
   const m=document.querySelector('#main'); if(!m) return [];
@@ -31,7 +32,7 @@ FIND = """()=>{
 }"""
 
 async def main():
-    routes = sorted({m for m in re.findall(r'^(?:window\.SEARCH_DEEP = \[)?\["([^"]+)"', open('js/search-index.js', encoding='utf8').read(), re.M) if not m.startswith('topic:')})
+    routes = sorted({m for m in re.findall(r'^(?:window\.SEARCH_DEEP = \[)?\["([^"]+)"', open('js/search-index.js', encoding='utf8').read(), re.M) if not m.startswith('topic:') and (not ONLY or any(m.startswith(o) for o in ONLY))})
     seen, errs = {}, []
     async with async_playwright() as p:
         b = await p.chromium.launch(); pg = await new_page(b, errs)
