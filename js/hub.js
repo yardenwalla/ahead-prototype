@@ -89,11 +89,10 @@
       return `<h2 class="hub-h2">${F('When to call')}</h2><section class="care-calls is-titled"><span class="care-calls-ico">${PH}</span><div>` + (c.ped ? `<p><b>${F('Call your pediatrician if:')}</b> ${F(tval(c.ped))}</p>` : '') + (c.now ? `<p class="is-urgent"><b>${F((c.nowLabel || 'Call right away') + ' if:')}</b> ${F(tval(c.now))}</p>` : '') + `</div></section>`; }
   };
   const TPLS = {
-    // When it's urgent: the call card comes first, with 911 directly under it.
-    urgent: (q, cat) => TPLB.calls(q.calls)
+    // When it's urgent: how to tell, what to do, then the call card last, with 911 directly under the pediatrician line.
+    urgent: (q, cat) => TPLB.sec('How to tell', TPLB.noted(TPLB.tiles(q.signs, cat), q.tell))
       + TPLB.sec(q.doTitle || 'What to do now', !q.do ? '' : Array.isArray(tval(q.do)) ? TPLB.noted(TPLB.tiles(q.do, cat, q.doOrdered), q.doNotes) : TPLB.card(q.do, q.doNotes))
-      + TPLB.sec('How to tell', TPLB.noted(TPLB.tiles(q.signs, cat), q.tell))
-      + TPLB.sec(q.afterTitle || 'What helps after', Array.isArray(tval(q.after)) ? TPLB.rows(q.after, cat) : TPLB.card(q.after)),
+      + TPLB.calls(q.calls),
     expect: (q, cat) => { const n = tval(q.normal); return TPLB.sec('What’s normal', TPLB.noted(Array.isArray(n) ? TPLB.tiles(n, cat, q.normalOrdered) : n, q.normalNotes))
       + TPLB.sec('What to do', Array.isArray(tval(q.do)) ? TPLB.noted(TPLB.tiles(q.do, cat, q.doOrdered), q.doNotes) : TPLB.card(q.do, q.doNotes))
       + (q.action ? q.action() : '') + TPLB.sec('Watch how', q.video ? hubEmbed(...q.video) : '') + TPLB.calls(q.calls); },
@@ -1274,12 +1273,11 @@
     if (cat === 'Sleep') {
       const mo = m();
       return tplPage('Sleep', { type: 'urgent', label: 'Sleep', art: 'moon', title: 'Most sleep changes are normal',
-        why: 'Here’s when it’s worth a call, and what’s normal for {o} right now.',
+        why: 'Here’s what’s normal for {o} right now, and when it’s worth a call.',
         calls: { ped: 'snoring most nights, pauses or gasping in sleep, sleep changes with ' + (mo < 3 ? 'poor feeding' : 'a fever or poor feeding') + (mo < 1.5 ? ', {s’s} hard to wake for feeds' : '') + (mo < 3 ? ', or ' + sleepFever() + ' (right away)' : '') + '.', now: 'trouble breathing, blue or gray lips, a pause in breathing of 20 seconds or more, or {s} won’t wake up.', nowLabel: 'Call 911' },
         signs: [['moon', 'Normal', mo < 1.5 ? 'Waking every 2–3 hours, grunts, squeaks and breathing pauses of a few seconds' : mo < 3 ? 'Good nights and bad nights, and fussing in light sleep' : mo >= 8 ? 'Night waking, standing in the crib, protest at bedtime' : 'Night waking, short naps, and short cries that settle'], ['eye', 'Keep an eye on it', 'Harder settling, or more waking than usual']],
         tell: [['', 'Keeping an eye on it?', 'Jot down a few nights of bedtimes, wakes and feeds. It helps your pediatrician see the pattern']],
-        afterTitle: 'Look after yourself too',
-        after: 'Exhaustion or low mood getting hard to manage? Talk to your own doctor, or call or text the National Maternal Mental Health Hotline: 1-833-852-6262.' });
+      });
     }
     const D = C().DATA[cat], T = C().T, tone = l => /911/.test(l) ? 'is-red' : /pediatrician/i.test(l) ? 'is-red' : '';
     const TRIAGE = cat === 'Sleep' ? [
