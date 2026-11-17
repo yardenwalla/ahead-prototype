@@ -202,12 +202,12 @@
     const listHTML = x => {
       const t = isToday(x), past = all.filter(s => st(s, x) === 'done'), rest = all.filter(s => st(s, x) !== 'done');
       const prep = (s, k) => s.v != null ? (k === 'now' ? 'Due now · book it if you haven’t' : 'Book it a few weeks ahead') : s.c.id === 'crying' && x >= 2 ? 'Past the worst now' : PREP[s.c.id] || '';
-      const step = s => { const k = st(s, x), pr = k === 'done' ? '' : prep(s, k); return `<li class="tl-step is-${k}" data-id="${s.v != null ? 'v' + s.v : s.c.id}"><i class="tl-dot"></i><button onclick="${go(s)}"><span class="tl-t"><b>${F(title(s))}</b>${pr ? `<small>${F(pr)}</small>` : ''}</span><span class="tl-w">${F(longWhen(s))}</span>${k === 'now' && s.v == null && s.c.end > s.c.start ? `<i class="tl-prog-line" aria-hidden="true"><i style="width:${Math.max(6, Math.min(100, (x - s.c.start) / (s.c.end - s.c.start) * 100))}%"></i></i>` : ''}</button></li>`; };
+      const step = s => { const k = st(s, x), pr = k === 'done' ? '' : prep(s, k); return `<li class="tl-step is-${k}" data-id="${s.v != null ? 'v' + s.v : s.c.id}"><i class="tl-dot"></i><button onclick="${go(s)}"><span class="tl-t"><b>${F(title(s))}</b>${pr ? `<small>${F(pr)}</small>` : ''}</span><span class="tl-w">${F(longWhen(s))}</span></button></li>`; };
       const mark = `<li class="tl-today"><i class="tl-dot"></i><span>${F(t ? 'Today' : `At ${ageTxt(x)}`)}</span></li>`;
       let h = '';
       if (past.length) h += `<li class="tl-past"><i class="tl-dot"></i><button onclick="this.closest('ol').classList.toggle('show-past');this.querySelector('span').textContent=this.closest('ol').classList.contains('show-past')?'Hide':'Show'">${F(`Earlier in {p} year (${past.length})`)}<span>${F(document.querySelector('#main .tl-steps.show-past') ? 'Hide' : 'Show')}</span></button></li>` + past.map(step).join('').replace(/tl-step is-done/g, 'tl-step is-done tl-old');
       // Everything in her window stays a card on Today (parents want to see it). Newest first, a due checkup leading;
-      // a thin line along each card's bottom shows how far she is into its usual window.
+      // the age range on each card says how long it usually lasts.
       const nowS = rest.filter(s => st(s, x) === 'now').sort((p, q) => (q.v != null) - (p.v != null) || q.m - p.m || (p.c && q.c ? p.c.end - q.c.end : 0));
       h += mark + (nowS.length ? nowS.map(step).join('') : `<li class="tl-quiet"><span>${F('Nothing new starting right now. Here’s what’s next.')}</span></li>`);
       // What's ahead, under light calendar signposts ("Around January").
