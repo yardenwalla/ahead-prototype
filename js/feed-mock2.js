@@ -3238,17 +3238,17 @@
   P.z_allergens = (() => { const prev = P.z_allergens; return () => prev().split(F('Common allergens early, then keep them going')).join(F('Try the common allergens early')).split(F('Early and often lowers the chance of a food allergy.')).join(F('Trying them early lowers the chance of a food allergy.')).split(F('Tap each one once he’s had it')).join(F('Want to keep track? Tap each one he’s had')).split(F('Once it’s in, offer it a few times a week.')).join(F('Once it’s in, keep it in his meals.')); })();
   const GUIDES = () => { const v = stg(), m = ageMo(), nurse = nurses(), bot = isBottle(), done = alGet().length;
     if (v === 0) return [[XC.f1, 'hand', 'A feed, step by step', 'From his first cue to the last burp', nurse ? 'Latch, burps, and when he’s full' : 'Pacing, burps, and when he’s full', 'xa:feed'],
-      [XC.routine, 'moon', 'Evenings and nights', 'Busy evening feeds, then quick night ones', 'Cluster feeding, and waking to feed', 'nb_eve'],
-      [XC.growth, 'leaf', 'Is he getting enough?', 'His diapers show if he’s getting enough', 'How many wet diapers, day by day', 'nb_enough']];
+      [XC.routine, 'moon', 'Evenings and nights', 'Busy evenings, then quick, calm nights', 'Cluster feeding, and waking to feed', 'nb_eve'],
+      [XC.growth, 'leaf', 'Is he getting enough?', 'Wet diapers are your everyday sign', 'How many wet diapers, day by day', 'nb_enough']];
     if (v === 1 && m < 3) return [[XC.f1, nurse ? 'heart' : 'bottle', 'Feeds now', 'Hungrier some days? Often a growth spurt', 'Usually around 6 weeks and 3 months', 'm1_now'],
       [XC.d1, 'moon', 'Evenings and nights', 'Night feeds are still normal', '1–3 a night, and when waking stops', 'm1_eve'],
-      [XC.p1, 'bag', 'Time apart', nurse && !bot ? 'A first bottle' : 'Feeding with someone else', 'When, who offers it, and how much', 'm1_apart']];
+      [XC.p1, 'bag', 'Time apart', nurse && !bot ? 'A first bottle goes best from someone else' : 'Anyone can feed him a bottle', 'Who offers it, and how', 'm1_apart']];
     if (v === 1) return [[XC.f1, 'eye', 'Distracted feeds', 'Short daytime feeds are okay', 'Three ways to make feeds calmer', 'm2_distract'],
       [XC.d1, 'moon', 'Evenings and nights', 'Night feeds are still common', 'How many, and feeding back to sleep', 'm2_night'],
-      [XC.p1, 'bag', 'Time apart', isBreast() ? 'How much milk to leave' : 'Bottles for daycare or a day out', 'Ounces per hour, and storage times', 'm2_away']];
+      [XC.p1, 'bag', 'Time apart', nurses() && !formulaFam() ? 'Leave about 1–1½ oz for each hour apart' : 'Pack bottles labeled, cold and ready to mix', nurses() && !formulaFam() ? 'How much, labeled and cold' : 'For daycare or a day out', 'm2_away']];
     if (v === 2) return [[XG, 'eye', 'Is he ready?', 'Solids usually start around 6 months', 'Four signs to look for', 'z_ready'],
       [XG, 'highchair', 'How to start', 'Spoon-feeding and finger foods both work', 'Iron-rich foods, and safe shapes', 'z_start'],
-      [XC.p1, 'shield', 'Allergens and foods to avoid', 'Offer peanut and egg early, honey after 1', 'How to start them, and choking risks', 'z_plan']];
+      [XC.p1, 'shield', 'Allergens and foods to avoid', 'No honey before 1, no choking risks before 4', 'Foods to wait on', 'z_plan']];
     if (v === 3 && m < 7.5) return [[XG, 'bowl', 'How a meal goes', 'First meals are just a few bites', 'Setting up, what to offer, and his cues', 'z_meal'],
       [XC.d1, 'cup', 'Milk and solids together', 'No set order for milk and meals', 'Before or after milk, and water from a cup', 'z_milkfood'],
       [XC.g1, 'peanut', 'Common allergens', 'Try the common allergens early', done ? done + ' of 9 tried' : 'Nine to try, one at a time', 'z_allergens']];
@@ -3349,9 +3349,13 @@
         const line = v <= 1 ? (only ? vd : L('vitamin D drops', 'nb_vitd')) : v === 2 ? (br ? dI : vd) : `${F('iron-rich food,')} ${br ? (v === 3 ? dI : L('vitamin D drops', 'nb_vitd')) : vd}`;
         h = h.replace(/<span class="hub-card-note"><b>Every day<\/b>[\s\S]*?<\/span>(?:<button class="hub-link"[^>]*>[^<]*<\/button>)*/, `<span class="hub-card-note fd-every"><b>${F('Every day:')}</b> ${line}</span>`);
         // Families who pump or store breast milk: how long the baby's milk keeps, one quiet link, at every stage (Nov 14).
-        if (pumps() && !/fd-keeps/.test(h)) h = h.replace(/(<\/section>)(\s*<div class="hub-browse fd-assumed">|\s*<section class="hub-list|\s*<h2)/, `$1<div class="hub-browse fd-keeps"><button class="hub-link" onclick="${go('basics')}">${F('How long Ari’s milk keeps')} ›</button></div>$2`); }
+        // Bottle how-tos (Nov 16): one quiet line on the stage page, since these pages no longer link to each other at the bottom.
+        { const bt = isBottle() || pumps(), L = [bt && stg() >= 1 && ['Giving a bottle', 'bottle'], formulaFam() && ['Making formula', 'formula'], pumps() && ['Pumping', 'pump'], bt && ['How long milk keeps', 'basics']].filter(Boolean);
+          if (L.length && !/fd-keeps/.test(h)) h = h.replace(/(<\/section>)(\s*<div class="hub-browse fd-assumed">|\s*<section class="hub-list|\s*<h2)/, `$1<div class="hub-browse fd-keeps"><span class="fd-keeps-l">${F('Bottles:')}</span> ${L.map(([t, id]) => `<button class="hub-link" onclick="${go(id)}">${F(t)}</button>`).join('<span aria-hidden="true"> · </span>')}</div>$2`); } }
       // Formula: making and storing bottles, one tap from the feed walkthrough.
       if (typeof h === 'string' && /^chg:Feeding:mock:xa:feed(\.\d)?$/.test(String(r)) && formulaFam()) h = h.replace('<button class="hub-next"', `<div class="hub-browse"><button class="hub-link" onclick="openPage('chg:Feeding:mock:xa:prep')">${F('Making, storing and cleaning bottles')} ›</button></div><button class="hub-next"`);
       return h; };
     const cr1 = window.changesRoute; window.changesRoute = function (r, ...a) { const m = /^(chg:Feeding:mock:)xa:r2(?:\.(\d))?$/.exec(String(r)); if (m) r = m[1] + R2[Number(m[2] || 0)]; return cr1.call(this, r, ...a); }; }
+  // Shared with js/feed-templates.js, which draws the Feeding pages on the page templates (Nov 16).
+  window.__fdx = { oldFeeding, isBreast, nurses, pumps, formulaFam, isBottle, stored, stg, ageMo, fever, pron, weekViz, P };
 })();

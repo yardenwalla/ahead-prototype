@@ -80,6 +80,10 @@
   const tval = v => typeof v === 'function' ? v() : v;
   const TPLB = {
     sec: (t, body) => body ? `<h2 class="hub-h2">${F(t)}</h2>` + body : '',
+    // An outside source to watch or read, one quiet line under the section it belongs to.
+    link: (url, text) => `<a class="hub-more" href="${url}" target="_blank" rel="noopener"><span>${F(text)}</span><span class="hub-chev" aria-hidden="true">↗</span></a>`,
+    // A small table in a white card: head row, then rows. Used for how long milk keeps.
+    table: (head, rows) => `<section class="care-tpl-card tpl-table"><table><thead><tr>${head.map(h => `<th>${F(h)}</th>`).join('')}</tr></thead><tbody>${rows.map(r => `<tr>${r.map(c => `<td>${F(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></section>`,
     card: (text, notes) => text ? `<section class="ss-do care-tpl-card"><p>${F(tval(text))}</p>${TPLB.ul(notes)}</section>` : '',
     ul: notes => { notes = (tval(notes) || []).filter(Boolean).slice(0, 2); return notes.length ? `<ul class="tpl-notes">${notes.map(([, t, sub]) => `<li><b style="color:#302d3c">${F(t)}${/[?!.]$/.test(t) ? '' : '.'}</b> ${F(sub)}${/[?!.]$/.test(sub) ? '' : '.'}</li>`).join('')}</ul>` : ''; },
     noted: (fig, notes) => { const ul = TPLB.ul(notes); if (!fig || !ul) return fig || ''; const i = fig.lastIndexOf('</figure>'); return i < 0 ? fig + ul : fig.slice(0, i) + ul + fig.slice(i); },
@@ -92,11 +96,11 @@
     // When it's urgent: how to tell, what to do, then the call card last, with 911 directly under the pediatrician line.
     urgent: (q, cat) => TPLB.sec('How to tell', TPLB.noted(TPLB.tiles(q.signs, cat), q.tell))
       + TPLB.sec(q.doTitle || 'What to do now', !q.do ? '' : Array.isArray(tval(q.do)) ? TPLB.noted(TPLB.tiles(q.do, cat, q.doOrdered), q.doNotes) : TPLB.card(q.do, q.doNotes))
-      + TPLB.calls(q.calls),
-    expect: (q, cat) => { const n = tval(q.normal); return TPLB.sec('What’s normal', TPLB.noted(Array.isArray(n) ? TPLB.tiles(n, cat, q.normalOrdered) : n, q.normalNotes))
-      + TPLB.sec('What to do', Array.isArray(tval(q.do)) ? TPLB.noted(TPLB.tiles(q.do, cat, q.doOrdered), q.doNotes) : TPLB.card(q.do, q.doNotes))
+      + (q.link ? TPLB.link(...q.link) : '') + TPLB.calls(q.calls),
+    expect: (q, cat) => { const n = tval(q.normal); return TPLB.sec(tval(q.normalTitle) || 'What’s normal', TPLB.noted(Array.isArray(n) ? TPLB.tiles(n, cat, q.normalOrdered) : n, q.normalNotes))
+      + TPLB.sec(tval(q.doTitle) || 'What to do', Array.isArray(tval(q.do)) ? TPLB.noted(TPLB.tiles(q.do, cat, q.doOrdered), q.doNotes) : TPLB.card(q.do, q.doNotes))
       + (q.action ? q.action() : '') + TPLB.sec('Watch how', q.video ? hubEmbed(...q.video) : '') + TPLB.calls(q.calls); },
-    howto: (q, cat) => TPLB.sec(tval(q.pictureTitle) || 'At a glance', q.picture ? q.picture() : '') + TPLB.sec(q.ordered === false ? 'What to do' : 'Steps', TPLB.noted(q.stepsFig ? q.stepsFig() : TPLB.tiles(q.steps, cat, q.ordered !== false), q.stepsNotes)) + (q.action ? q.action() : '')
+    howto: (q, cat) => TPLB.sec(tval(q.pictureTitle) || 'At a glance', q.picture ? q.picture() : '') + TPLB.sec(tval(q.stepsTitle) || (q.ordered === false ? 'What to do' : 'Steps'), TPLB.noted(q.stepsFig ? q.stepsFig() : TPLB.tiles(q.steps, cat, q.ordered !== false), q.stepsNotes)) + (q.action ? q.action() : '')
       + TPLB.sec(q.tipsTitle || 'Keep {o} safe', TPLB.rows(q.tips, cat)) + TPLB.sec('Watch how', q.video ? hubEmbed(...q.video) : ''),
     check: (q, cat) => TPLB.sec(tval(q.tellTitle) || 'How to tell', TPLB.noted(q.figure ? q.figure() : TPLB.tiles(q.signs, cat), q.tell))
       + TPLB.sec('What helps', TPLB.noted(TPLB.tiles(q.helps, cat, q.ordered), q.helpsNotes)) + TPLB.calls(q.calls),
@@ -1363,7 +1367,7 @@
     return baseRoute(p);
   };
   // Building blocks shared with the other categories (js/hub-categories.js).
-  window.__hub = { F, qa, row, list, hero, tiles, glanceCard, versus, next, more, note, art, chev, chip, tip, steps, tips, video, detail, mixedList, ticks, listMore,
+  window.__hub = { tplPage, TPLB, TPLS, F, qa, row, list, hero, tiles, glanceCard, versus, next, more, note, art, chev, chip, tip, steps, tips, video, detail, mixedList, ticks, listMore,
     pills: (label, items) => `<nav class="hub-pills" id="hub-pills" aria-label="${esc(label)}">${items.map(it => `<button class="${it.on ? 'is-on' : ''} ${it.now ? 'is-now' : ''}" onclick="${it.onclick}" ${it.on ? 'aria-current="step"' : ''}>${esc(it.label)}${it.now && !it.on ? ' <span class="hub-now">Now</span>' : ''}</button>`).join('')}</nav>` };
   window.positionHubPills = function () {
     const r = document.getElementById('hub-pills'), s = r && r.querySelector('.is-on');

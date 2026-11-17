@@ -318,3 +318,19 @@
 #main .care-tpl .lv2 { background: #c9c4f0; color: #3f3a85 } #main .care-tpl i.lv2 { background: #a19ae0 }
 #main .care-tpl .lv3 { background: #b3acea; color: #2f2a70 } #main .care-tpl i.lv3 { background: #7069c2 }
 #main .care-tpl .lv4 { background: #4b4690; color: #fff } #main .care-tpl i.lv4 { background: #4b4690 }
+/* Nov 16: small tables inside a template card (Feeding: how long milk keeps) */
+#main .care-tpl .tpl-table { padding: 6px 14px }
+#main .care-tpl .tpl-table table { width: 100%; border-collapse: collapse; font-size: 14px }
+#main .care-tpl .tpl-table th { font-size: 12px; text-align: left; color: var(--ink2, #5e5a75); font-weight: 600; padding: 10px 4px 6px }
+#main .care-tpl .tpl-table td { padding: 10px 4px; border-top: 1px solid var(--line, #efeaf2); vertical-align: top; color: #302d3c }
+#main .care-tpl .tpl-table td:first-child { font-weight: 600; width: 34% }
+/* Nov 16: Feeding stage page, one quiet line of bottle how-tos */
+#main .fd-keeps { display: block; font-size: 14px; line-height: 1.7; color: var(--muted, #6d666d) }
+#main .fd-keeps .hub-link { display: inline !important; padding: 0 !important; margin: 0 !important; min-height: 0 !important; font: inherit; font-weight: 600 }
+#main .fd-keeps-l { font-weight: 600; color: #302d3c }
+/* Nov 16: Feeding, a week of meals as simple bars */
+#main .care-tpl .tpl-week { background: #fffdfb; border: 1px solid var(--line, #efeaf2); border-radius: 20px; padding: 16px 16px 10px; margin: 0 }
+#main .care-tpl .tpl-week-bars { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; height: 110px; align-items: end }
+#main .care-tpl .tpl-week-bars > div { height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 6px }
+#main .care-tpl .tpl-week-bars i { display: block; width: 100%; max-width: 26px; border-radius: 8px 8px 4px 4px; background: #e9a8bf }
+#main .care-tpl .tpl-week-bars small { font-size: 12px; color: var(--ink2, #5e5a75) }
