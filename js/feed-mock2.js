@@ -352,7 +352,7 @@
   const small = (label, t) => `<p class="ss-small"><b>${F(label)}</b> ${F(/\?$/.test(label.trim()) ? t.charAt(0).toUpperCase() + t.slice(1) : t)}</p>`;
   const two = (a, b) => `<div class="fm-two"><div style="background:${a[2] || '#e7effc'}"><small style="color:${a[3] || '#46638c'}">${F(a[0])}</small><span>${F(a[1])}</span></div><div style="background:${b[2] || '#e4f3ec'}"><small style="color:${b[3] || '#356651'}">${F(b[0])}</small><span>${F(b[1])}</span></div></div>`;
   const dayList = items => `<div class="hub-card"><ol class="fm-day">${items.map(([t, i, w, s]) => `<li><time>${F(t)}</time><span class="fm-ic" style="background:${i === 'bowl' ? '#e4f3ec' : i === 'bottle' ? '#fdeee6' : '#fbe4ec'}">${hubArt(i, CAT)}</span><span><b>${F(w)}</b>${s ? `<small>${F(s)}</small>` : ''}</span></li>`).join('')}</ol></div>`;
-  const firstAid = () => h2('If he’s choking') + steps([['hand', 'Back blows, 5 times', 'Face down along your forearm, head lower than his chest'], ['heart', 'Chest thrusts, 5 times', 'Face up, two fingers in the middle of his chest'], ['clock', 'Repeat', 'Until it comes out, or help arrives']], true)
+  const firstAid = () => h2('If he’s choking') + steps([['hand', 'Back blows, 5 times', 'Face down along your forearm, head lower than his chest'], ['heart', 'Chest thrusts, 5 times', 'Face up, the heel of one hand mid-chest'], ['clock', 'Repeat', 'Until it comes out, or help arrives']], true)
     + `<p class="care-urgent"><b>${F('Call 911:')}</b> ${F('if he can’t cough, cry or breathe, have someone call 911 right away while you start back blows. If he stops responding, start CPR.')}</p>`;
 
   Object.assign(P, {
@@ -2804,7 +2804,7 @@
   P.z_gag = () => yPage(XL, 'Feeding challenges', 'Gagging is normal. Choking is silent.', 'Gagging is how he learns to handle food. It’s loud and can look scary, but it’s safe.',
       xTwo(['Gagging: normal', 'Loud: coughing, sputtering, red face, tongue out. Let him work it out.'], ['Choking: act now', 'Silent or a high squeak, can’t cough or cry, turning blue.'], true)
       + xFix('Making it less likely', [['Sitting upright', 'Always, and always watched.'], ['Safe shapes', 'Soft and squashable, finger-size.'], ['No rushing', 'Seated for every bite, never on the move.']])
-      + h2('If he’s choking') + steps([['hand', 'Back blows, 5 times', 'Face down along your forearm, head lower than his chest'], ['heart', 'Chest thrusts, 5 times', 'Face up, two fingers in the middle of his chest'], ['clock', 'Repeat', 'Until it comes out, or help arrives']], true)
+      + h2('If he’s choking') + steps([['hand', 'Back blows, 5 times', 'Face down along your forearm, head lower than his chest'], ['heart', 'Chest thrusts, 5 times', 'Face up, the heel of one hand mid-chest'], ['clock', 'Repeat', 'Until it comes out, or help arrives']], true)
       + `<p class="ss-small"><a href="https://www.redcross.org/take-a-class/resources/learn-first-aid/infant-choking" target="_blank" rel="noopener" style="color:var(--ss-ink);font-weight:600">${F('Watch infant choking first aid')} ↗</a> ${F('American Red Cross.')}</p>`
       + xNote('Call 911', 'if he can’t cough, cry or breathe. Have someone call while you start back blows. If he stops responding, start CPR.'));
   P.z_teeth = () => yPage(XL, 'Feeding challenges', 'Teething can make feeds short and fussy', 'Sore gums can make him fussy at feeds for a few days.',
@@ -3247,7 +3247,7 @@
       [XC.d1, 'moon', 'Evenings and nights', 'Night feeds are still common', 'How many, and feeding back to sleep', 'm2_night'],
       [XC.p1, 'bag', 'Time apart', nurses() && !formulaFam() ? 'Leave about 1–1½ oz for each hour apart' : 'Pack bottles labeled, cold and ready to mix', nurses() && !formulaFam() ? 'How much, labeled and cold' : 'For daycare or a day out', 'm2_away']];
     if (v === 2) return [[XG, 'eye', 'Is he ready?', 'Solids usually start around 6 months', 'Four signs to look for', 'z_ready'],
-      [XG, 'highchair', 'How to start', 'Spoon-feeding and finger foods both work', 'Iron-rich foods, and safe shapes', 'z_start'],
+      [XG, 'highchair', 'How to start', 'Start with soft, iron-rich foods', 'By spoon, by hand, or both', 'z_start'],
       [XC.p1, 'shield', 'Allergens and foods to avoid', 'No honey before 1, no choking risks before 4', 'Foods to wait on', 'z_plan']];
     if (v === 3 && m < 7.5) return [[XG, 'bowl', 'How a meal goes', 'First meals are just a few bites', 'Setting up, what to offer, and his cues', 'z_meal'],
       [XC.d1, 'cup', 'Milk and solids together', 'No set order for milk and meals', 'Before or after milk, and water from a cup', 'z_milkfood'],
