@@ -5,6 +5,8 @@
   const H = () => window.__hub, X = () => window.__fdx, CAT = 'Feeding';
   const mo = () => X().ageMo(), nurse = () => X().nurses(), breast = () => X().isBreast(), fam = () => X().formulaFam(), pump = () => X().pumps();
   const onlyFormula = () => !breast();
+  // Real age, for babies born early: birth-weight and first-week lines follow it (adjusted age sets the stage).
+  const realMo = () => (typeof actualMonth === 'function' ? actualMonth() : mo());
   // The fever rule for the baby's age, short enough for a call line.
   const fev = () => { const m = mo(); return m < 3 ? 'a fever of 100.4°F or higher' : m < 6 ? 'a fever of 101°F or higher' : 'a fever of 103°F or higher, or over a day'; };
   const T = {
@@ -12,11 +14,11 @@
     nb_enough: () => ({ type: 'expect', label: 'Getting enough', art: 'diaper', title: 'Wet diapers are your everyday sign',
       why: 'You don’t need to measure feeds. Diapers every day, and weight at checkups, tell you.',
       normalTitle: 'Wet diapers a day',
-      normal: () => window.hubStageStrip({ title: '', cat: CAT, items: [['diaper', 'Days 1–2', '1–2'], ['diaper', 'Days 3–4', '3–4'], ['diaper', 'Day 5', 'About 5'], ['diaper', 'Day 6 on', '6 or more']], caption: 'Wet diapers a day: 1 to 2 on days 1 and 2, 3 to 4 on days 3 and 4, about 5 on day 5, then 6 or more.' }),
-      normalNotes: [['', 'Poop', onlyFormula() ? 'Black and sticky at first, tan by day 6' : 'Black and sticky at first, yellow and seedy by day 6' + (nurse() ? ', 3 or more a day' : '')]],
+      normal: () => realMo() >= 1 ? H().TPLB.tiles([['diaper', '6 or more', 'Wet diapers a day'], ['steth', 'Steady gain', 'At each weight check']], CAT) : window.hubStageStrip({ title: '', cat: CAT, items: [['diaper', 'Days 1–2', '1–2'], ['diaper', 'Days 3–4', '3–4'], ['diaper', 'Day 5', 'About 5'], ['diaper', 'Day 6 on', '6 or more']], caption: 'Wet diapers a day: 1 to 2 on days 1 and 2, 3 to 4 on days 3 and 4, about 5 on day 5, then 6 or more.' }),
+      normalNotes: realMo() >= 1 ? null : [['', 'Poop', onlyFormula() ? 'Black and sticky at first, tan by day 6' : 'Black and sticky at first, yellow and seedy by day 6' + (nurse() ? ', 3 or more a day' : '')]],
       do: [['notepad', 'Note feeds and diapers', 'Until things feel settled'], ['steth', 'Go to the weight checks', 'No need to weigh at home']],
       doNotes: [nurse() ? ['', 'During feeds', 'Long sucks, and swallows you can hear'] : null, ['', 'After most feeds', '{S’s} content for a while']],
-      calls: { ped: 'fewer wet diapers, dark urine, black poop after day 5, or not back to birth weight by 2 weeks.' } }),
+      calls: { ped: realMo() >= 1 ? 'fewer wet diapers, dark urine, or {s} {seem|seems} hungry after most feeds.' : 'fewer wet diapers, dark urine, black poop after day 5, or not back to birth weight by 2 weeks.' } }),
     enough: () => ({ type: 'expect', label: 'Getting enough', art: 'diaper', title: 'Wet diapers and growth tell you {s’s} getting enough',
       why: mo() >= 6 || onlyFormula() ? 'No need to measure feeds. Your pediatrician checks {p} weight at each visit.' : 'Fewer poops can be normal after about 6 weeks. Wet diapers and growth are what count.',
       normal: [['diaper', '6 or more', 'Wet diapers a day, still'], ['steth', 'About 2× birth weight', 'By 4–5 months']],
@@ -32,7 +34,7 @@
       do: 'Once your pediatrician says {s’s} gaining well, stop waking {o} for feeds. Still feed {o} when {s} {wake|wakes} hungry.' }),
     nb_eve: () => ({ type: 'expect', label: 'Evenings and nights', art: 'moon', title: 'Busy evenings, then quick, calm nights',
       why: 'Evenings can be feed after feed. At night, keep feeds short and sleepy, so {s} {learn|learns} that night is for sleeping.',
-      do: [['sunrise', 'Evenings', nurse() ? 'Switch sides often, and take turns' : 'Smaller bottles, more often, and take turns'], ['moon', 'Nights', 'Lights low, voices quiet, no play'], ['diaper', 'Night diapers', 'Only if needed'], ['clock', 'Until birth weight', 'Wake {o} if 3 hours pass']],
+      do: [['sunrise', 'Evenings', nurse() ? 'Switch sides often, and take turns' : 'Smaller bottles, more often, and take turns'], ['moon', 'Nights', 'Lights low, voices quiet, no play'], ['diaper', 'Night diapers', 'Only if needed']].concat(realMo() >= 1 ? [] : [['clock', 'Until birth weight', 'Wake {o} if 3 hours pass']]),
       doNotes: [['', 'Hard to wake?', 'Undress {o} to {p} diaper, or stroke {p} feet']],
       calls: { ped: '{s’s} too sleepy to feed most times.' } }),
     m2_night: () => ({ type: 'expect', label: 'Evenings and nights', art: 'moon', title: 'Night feeds are still common',

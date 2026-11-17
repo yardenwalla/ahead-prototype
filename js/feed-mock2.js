@@ -3350,7 +3350,7 @@
         h = h.replace(/<span class="hub-card-note"><b>Every day<\/b>[\s\S]*?<\/span>(?:<button class="hub-link"[^>]*>[^<]*<\/button>)*/, `<span class="hub-card-note fd-every"><b>${F('Every day:')}</b> ${line}</span>`);
         // Families who pump or store breast milk: how long the baby's milk keeps, one quiet link, at every stage (Nov 14).
         // Bottle how-tos (Nov 16): one quiet line on the stage page, since these pages no longer link to each other at the bottom.
-        { const bt = isBottle() || pumps(), L = [bt && stg() >= 1 && ['Giving a bottle', 'bottle'], formulaFam() && ['Making formula', 'formula'], pumps() && ['Pumping', 'pump'], bt && ['How long milk keeps', 'basics']].filter(Boolean);
+        { const bt = isBottle() || pumps(), L = [bt && ['How long milk keeps', 'basics'], bt && stg() >= 1 && ['Giving a bottle', 'bottle'], formulaFam() && ['Making formula', 'formula'], pumps() && ['Pumping', 'pump']].filter(Boolean);
           if (L.length && !/fd-keeps/.test(h)) h = h.replace(/(<\/section>)(\s*<div class="hub-browse fd-assumed">|\s*<section class="hub-list|\s*<h2)/, `$1<div class="hub-browse fd-keeps"><span class="fd-keeps-l">${F('Bottles:')}</span> ${L.map(([t, id]) => `<button class="hub-link" onclick="${go(id)}">${F(t)}</button>`).join('<span aria-hidden="true"> · </span>')}</div>$2`); } }
       // Formula: making and storing bottles, one tap from the feed walkthrough.
       if (typeof h === 'string' && /^chg:Feeding:mock:xa:feed(\.\d)?$/.test(String(r)) && formulaFam()) h = h.replace('<button class="hub-next"', `<div class="hub-browse"><button class="hub-link" onclick="openPage('chg:Feeding:mock:xa:prep')">${F('Making, storing and cleaning bottles')} ›</button></div><button class="hub-next"`);
