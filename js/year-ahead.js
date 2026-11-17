@@ -197,7 +197,7 @@
     // Timeline schedules: each row is what, when, and (only when there's something to do) how to prepare. No line repeats its title.
     const PREP = { crying: 'Plan for fussier evenings', smile: 'Face-to-face time is the best play now', nights: 'A good time to start a bedtime routine', regress: 'Line up extra night help if you can', roll: 'Keep {o} off beds and sofas', solids: 'Get a high chair', sit: 'Lower the crib mattress', twonaps: 'Bedtime may need to move earlier', crawl: 'Babyproof the floor first', tooth: 'Start brushing', sep: 'Practice short, upbeat goodbyes', pull: 'Anchor furniture to the wall', carseat: 'Check {p} height against the seat', words: 'Name things as you go about your day', milk: 'Offer it in a cup, 16–24 oz a day', steps: 'Barefoot is best indoors' };
     const bornD = parse(profile.early && profile.due ? profile.due : profile.dob);
-    const calMon = mm => { const d = new Date(bornD); d.setMonth(d.getMonth() + Math.floor(mm)); return d.toLocaleDateString('en-US', { month: 'long' }); };
+    const calMon = mm => new Date(bornD.getTime() + mm * MONTH).toLocaleDateString('en-US', { month: 'long' });
     const longWhen = s => when(s).replace(/ mo$/, ' months').replace(/^(\d+) months$/, (q, n) => n === '1' ? '1 month' : q);
     const listHTML = x => {
       const t = isToday(x), past = all.filter(s => st(s, x) === 'done'), rest = all.filter(s => st(s, x) !== 'done');
@@ -205,7 +205,7 @@
       const step = s => { const k = st(s, x), pr = k === 'done' ? '' : prep(s, k); return `<li class="tl-step is-${k}" data-id="${s.v != null ? 'v' + s.v : s.c.id}"><i class="tl-dot"></i><button onclick="${go(s)}"><span class="tl-t"><b>${F(title(s))}</b>${pr ? `<small>${F(pr)}</small>` : ''}</span><span class="tl-w">${F(longWhen(s))}</span></button></li>`; };
       const mark = `<li class="tl-today"><i class="tl-dot"></i><span>${F(t ? 'Today' : `At ${ageTxt(x)}`)}</span></li>`;
       let h = '';
-      if (past.length) h += `<li class="tl-past"><i class="tl-dot"></i><button onclick="this.closest('ol').classList.toggle('show-past');this.querySelector('span').textContent=this.closest('ol').classList.contains('show-past')?'Hide':'Show'">${F(`Earlier (${past.length})`)}<span>${F(document.querySelector('#main .tl-steps.show-past') ? 'Hide' : 'Show')}</span></button></li>` + past.map(step).join('').replace(/tl-step is-done/g, 'tl-step is-done tl-old');
+      if (past.length) h += `<li class="tl-past"><i class="tl-dot"></i><button onclick="this.closest('ol').classList.toggle('show-past');this.querySelector('span').textContent=this.closest('ol').classList.contains('show-past')?'Hide':'Show'">${F(`Earlier in {p} year (${past.length})`)}<span>${F(document.querySelector('#main .tl-steps.show-past') ? 'Hide' : 'Show')}</span></button></li>` + past.map(step).join('').replace(/tl-step is-done/g, 'tl-step is-done tl-old');
       const nowS = rest.filter(s => st(s, x) === 'now');
       h += mark + (nowS.length ? nowS.map(step).join('') : `<li class="tl-quiet"><span>${F('Nothing new starting right now. Here’s what’s next.')}</span></li>`);
       // What's ahead, under light calendar signposts ("Around January").
