@@ -1380,3 +1380,41 @@
     if (r && s) r.scrollLeft = s.offsetLeft - (r.clientWidth - s.offsetWidth) / 2;
   };
 })();
+
+/* Nov 17 (Yarden): no one-word last lines. CSS text-wrap handles most text; for the rest
+   (short labels in narrow tiles), the last two words of each text block are joined with a
+   non-breaking space so they wrap together. If that would overflow the box, it's undone. */
+(function () {
+  const NB = ' ';
+  const inline = e => getComputedStyle(e).display === 'inline';
+  function fix(el) {
+    if (el.dataset.nowidow) return;
+    // the block's own text nodes, skipping text inside nested blocks
+    const nodes = []; const w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+    let n; while ((n = w.nextNode())) { let p = n.parentElement, own = true;
+      while (p && p !== el) { if (!inline(p)) { own = false; break; } p = p.parentElement; }
+      if (own && n.textContent.trim()) nodes.push(n); }
+    const words = nodes.map(x => x.textContent).join(' ').trim().split(/\s+/);
+    el.dataset.nowidow = '1';
+    for (const x of nodes) if (/\d–\d/.test(x.textContent)) x.textContent = x.textContent.replace(/(\d)–(?=\d)/g, '$1–\u2060');
+    if (words.length < 3) return;
+    const last = nodes[nodes.length - 1], t = last.textContent.replace(/\s+$/, ''), i = t.lastIndexOf(' ');
+    if (i < 1) return;   // the last two words sit in different nodes: leave it
+    const before = last.textContent;
+    last.textContent = t.slice(0, i) + NB + t.slice(i + 1) + before.slice(t.length);
+    if (el.scrollWidth > el.clientWidth + 1) last.textContent = before;
+  }
+  function run(root) {
+    if (!root) return;
+    for (const el of root.querySelectorAll('*')) {
+      if (el.closest('svg') || inline(el)) continue;
+      if (![...el.childNodes].some(x => x.nodeType === 3 && x.textContent.trim())) continue;
+      if (!el.getClientRects().length) continue;
+      fix(el);
+    }
+  }
+  let queued = false;
+  const go = () => { if (queued) return; queued = true; requestAnimationFrame(() => { queued = false; run(document.getElementById('main')); }); };
+  const start = () => { const m = document.getElementById('main'); if (!m) return; new MutationObserver(go).observe(m, { childList: true, subtree: true }); go(); };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+})();

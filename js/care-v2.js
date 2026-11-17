@@ -983,7 +983,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   const TPL = {
     't:diapers:0': { type: 'expect', k: 'diapers', title: 'Wet diapers go up day by day',
       why: 'From about day 6, six or more a day means {s’s} getting enough milk.',
-      normal: () => TB.noted(wetChart(), [['heart', 'Matching the chart?', 'Then feeding is going well'], ['diaper', 'A pink or orange stain is usually just pee', 'Still there after day 4? {S} may need more feeds']]),
+      normal: () => TB.noted(wetChart(), [['diaper', 'A pink or orange stain is usually just pee', 'Still there after day 4? {S} may need more feeds']]),
       do: 'Feed often, 8–12 times a day, and keep a rough count of wet diapers this week.',
       calls: { ped: 'fewer wet diapers than the chart, black poop after day 3, or blood in the poop.', now: 'white, gray or chalky poop, or watery poop many times a day.' } },
     't:diapers:2': { type: 'expect', k: 'diapers', title: 'Diapers stay the same, but rolling starts',
