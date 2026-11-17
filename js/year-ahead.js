@@ -206,13 +206,14 @@
       const mark = `<li class="tl-today"><i class="tl-dot"></i><span>${F(t ? 'Today' : `At ${ageTxt(x)}`)}</span></li>`;
       let h = '';
       if (past.length) h += `<li class="tl-past"><i class="tl-dot"></i><button onclick="this.closest('ol').classList.toggle('show-past');this.querySelector('span').textContent=this.closest('ol').classList.contains('show-past')?'Hide':'Show'">${F(`Earlier in {p} year (${past.length})`)}<span>${F(document.querySelector('#main .tl-steps.show-past') ? 'Hide' : 'Show')}</span></button></li>` + past.map(step).join('').replace(/tl-step is-done/g, 'tl-step is-done tl-old');
-      const nowS = rest.filter(s => st(s, x) === 'now');
-      // Newest first: a checkup that's due leads, then what started most recently; long-running ones sink lower.
-      nowS.sort((p, q) => (q.v != null) - (p.v != null) || q.m - p.m || (p.c && q.c ? p.c.end - q.c.end : 0));
+      // Like the original Timeline: Today holds a due checkup plus the next three things (in the order they began);
+      // anything more flows into the list just below, under this month's signpost, as a plain row.
+      const nowAll = rest.filter(s => st(s, x) === 'now').sort((p, q) => p.m - q.m || (p.c && q.c ? p.c.end - q.c.end : 0));
+      const dueCk = nowAll.filter(s => s.v != null), nowS = dueCk.concat(nowAll.filter(s => s.v == null).slice(0, 3)), spill = nowAll.filter(s => !nowS.includes(s));
       h += mark + (nowS.length ? nowS.map(step).join('') : `<li class="tl-quiet"><span>${F('Nothing new starting right now. Here’s what’s next.')}</span></li>`);
       // What's ahead, under light calendar signposts ("Around January").
       let last = null;
-      rest.filter(s => st(s, x) === 'next').forEach(s => { const lab = calMon(Math.max(s.m, x)); if (lab !== last) { h += `<li class="tl-mon"><span>${F(`Around ${lab}`)}</span></li>`; last = lab; } h += step(s); });
+      spill.concat(rest.filter(s => st(s, x) === 'next')).forEach(s => { const lab = calMon(Math.max(s.m, x)); if (lab !== last) { h += `<li class="tl-mon"><span>${F(`Around ${lab}`)}</span></li>`; last = lab; } h += step(s).replace('tl-step is-now', 'tl-step is-next'); });
       return h + `<li class="tl-step tl-goal"><i class="tl-dot"></i><span class="tl-t"><b>${F('First birthday!')}</b><small>${F(`Around ${calMon(12)}`)}</small></span>${cake}</li>`;
     };
     const head = x => { const mo = Math.max(0, Math.min(11, Math.floor(x))), cov = typeof window.stCover === 'function' ? window.stCover(mo) : null; return cov ? F(cov.title) : ''; };
