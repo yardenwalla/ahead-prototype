@@ -367,7 +367,7 @@ window.SEARCH_DEEP = [["topic:Development","Development & play","What to look fo
 ["chg:Daily rhythm:d:rash:heat","","Heat rash","",8191,1],
 ["chg:Daily rhythm:d:after1","","Brushing and baths after 1","Next · after the first birthday",8191,1],
 ["chg:Daily rhythm:d:t:sun:0","Everyday care","Sun protection by age","",8191,0],
-["chg:Daily rhythm:d:t:sun:0","Everyday care","On hot days, offer extra milk feeds","No water yet. One light layer, and the stroller canopy, not a blanket.",8191,0],
+["chg:Daily rhythm:d:t:sun:0","Everyday care","On hot days, offer extra milk feeds","Milk is all {s} needs. No water yet.",8191,0],
 ["chg:Daily rhythm:d:t:sun:0","Everyday care","Call about any sunburn before age 1","Right away, even a mild one.",8191,0],
 ["chg:Daily rhythm:d:t:sun:0","Everyday care","Hot, floppy or hard to wake? Call 911","Or not feeding. Cool {o} down while you wait.",8191,0],
 ["chg:Daily rhythm:d:h:gums:0","Everyday care","Tiny white bumps on the gums are normal","They go away on their own.",8191,0],
