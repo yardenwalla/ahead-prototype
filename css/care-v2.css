@@ -278,3 +278,43 @@
 #main .care-tpl .care-map figcaption { display: grid; gap: 4px; align-content: center }
 #main .care-tpl .care-map .tpl-where { display: block !important; font-size: 15px; font-weight: 600; color: #302d3c; text-transform: none; letter-spacing: 0 }
 #main .care-tpl .care-map .tpl-look { font-size: 13.5px; line-height: 1.4; color: var(--ink2, #5e5a75) }
+#main .care-tpl .hub-dayplan .chg-sample-title { display: none }
+/* Nov 16: small group labels inside one titled section (e.g. Pick a method) */
+#main .care-tpl .tpl-group { font-size: 13px; font-weight: 600; color: #6b6878; margin: 4px 4px 8px; }
+#main .care-tpl .hub-list + .tpl-group { margin-top: 16px; }
+/* Nov 16: a card that is only notes (e.g. Before you start): no top rule, one note per line with dividers */
+#main .care-tpl .care-tpl-card.is-notes { padding-top: 4px; padding-bottom: 4px }
+#main .care-tpl .care-tpl-card.is-notes .tpl-notes { border-top: 0; margin: 0; padding: 0; gap: 0; font-size: 14.5px }
+#main .care-tpl .care-tpl-card.is-notes .tpl-notes li { padding: 12px 0 }
+#main .care-tpl .care-tpl-card.is-notes .tpl-notes li + li { border-top: 1px solid var(--line, #efeaf2) }
+/* Nov 16: options as tappable tiles (Sleep training: Pick a method) */
+#main .care-tpl .tpl-opts { display: grid; gap: 10px; grid-template-columns: repeat(3, 1fr) }
+#main .care-tpl .tpl-opts.is-2 { grid-template-columns: repeat(2, 1fr) }
+#main .care-tpl .tpl-opt { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 3px; text-align: left; background: #fffdfb; border: 1px solid var(--line, #efeaf2); border-radius: 18px; padding: 14px 12px 12px; font: inherit; color: inherit; cursor: pointer; box-shadow: 0 1px 2px rgba(48,45,60,.04) }
+#main .care-tpl .tpl-opt:active { transform: scale(.98) }
+#main .care-tpl .tpl-opt-art { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; margin-bottom: 6px }
+#main .care-tpl .tpl-opt-art svg { width: 24px; height: 24px }
+#main .care-tpl .tpl-opt b { font-size: 14px; line-height: 1.25; color: #302d3c; font-weight: 600 }
+#main .care-tpl .tpl-opt small { font-size: 12.5px; line-height: 1.35; color: var(--ink2, #5e5a75); flex: 1 }
+#main .care-tpl .tpl-opt em { font-style: normal; font-size: 11.5px; font-weight: 600; color: #4b4690; background: #eceaf8; border-radius: 999px; padding: 3px 8px; margin-top: 8px }
+#main .care-tpl .tpl-opt::after { content: '›'; position: absolute; top: 12px; right: 12px; font-size: 18px; line-height: 1; color: #a7a3b8 }
+#main .care-tpl .tpl-opt-art { background: #eceaf8 }
+#main .care-tpl .tpl-opt em { white-space: nowrap; padding: 3px 7px }
+#main .care-tpl .tpl-opts + .tpl-group { margin-top: 18px }
+#main .care-tpl .tpl-opts.is-3 .tpl-opt { padding: 12px 10px 10px }
+/* Nov 16: sleep training methods as a labeled spectrum (gentlest → quickest) */
+#main .care-tpl .tpl-spec { position: relative; background: #fffdfb; border: 1px solid var(--line, #efeaf2); border-radius: 20px; padding: 12px 14px }
+#main .care-tpl .tpl-spec::before { content: ''; position: absolute; left: 25px; top: 40px; bottom: 40px; width: 3px; border-radius: 2px; background: linear-gradient(#cfcbf0, #4b4690) }
+#main .care-tpl .tpl-spec-end { margin: 0 0 0 26px; font-size: 12px; font-weight: 600; color: #7a7690; text-transform: uppercase; letter-spacing: .04em; padding: 2px 0 }
+#main .care-tpl .tpl-spec-row { display: flex; align-items: center; gap: 12px; width: 100%; background: none; border: 0; border-top: 1px solid var(--line, #efeaf2); padding: 12px 0; font: inherit; color: inherit; text-align: left; cursor: pointer; position: relative }
+#main .care-tpl .tpl-spec-end + .tpl-spec-row { border-top: 0 }
+#main .care-tpl .tpl-spec-row > i { flex: none; width: 13px; height: 13px; border-radius: 50%; border: 2px solid #fffdfb; position: relative; z-index: 1; margin-left: 4px }
+#main .care-tpl .tpl-spec-row > span { flex: 1; display: flex; flex-direction: column; gap: 2px; margin-left: 6px }
+#main .care-tpl .tpl-spec-row b { font-size: 15px; font-weight: 600; color: #302d3c }
+#main .care-tpl .tpl-spec-row small { font-size: 13px; color: var(--ink2, #5e5a75) }
+#main .care-tpl .tpl-spec-row em { flex: none; font-style: normal; font-size: 11.5px; font-weight: 600; border-radius: 999px; padding: 3px 8px; white-space: nowrap }
+#main .care-tpl .tpl-spec-row::after { content: '›'; font-size: 20px; color: #a7a3b8; margin-left: 2px }
+#main .care-tpl .lv1 { background: #d9d6f5; color: #3f3a85 } #main .care-tpl i.lv1 { background: #cfcbf0 }
+#main .care-tpl .lv2 { background: #c9c4f0; color: #3f3a85 } #main .care-tpl i.lv2 { background: #a19ae0 }
+#main .care-tpl .lv3 { background: #b3acea; color: #2f2a70 } #main .care-tpl i.lv3 { background: #7069c2 }
+#main .care-tpl .lv4 { background: #4b4690; color: #fff } #main .care-tpl i.lv4 { background: #4b4690 }

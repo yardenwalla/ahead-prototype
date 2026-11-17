@@ -85,7 +85,7 @@ for (const early of [false,true]) for (let age=0; age<=12; age++) {
   a.run("openSection('Sleep','sleep-night-feeds')");check(a.html().includes('id="sleep-night-feeds"'),'Night-feeds link lands at current age reference');
   a.run("openSection('Feeding','bottle-handling')");check(a.run("page==='chg:Feeding:milk'"),'Milk handling opens its reference');
   a.run("openPage('chg:Sleep:settle')");inspect(a,'settling page');
-  check(a.html().includes('You stay close, slower')&&!a.html().includes('settling-guide'),'Sleep training shows every method, with no picker');
+  check(['Bedtime fading','Pick up, put down','Chair method','Timed check-ins','Cry it out'].every(n=>a.html().includes(n))&&!a.html().includes('settling-guide'),'Sleep training shows every method, with no picker');
   // Nov 7: Feeding follows the milk set in Baby's details (no separate picker). Old milk links open "How much".
   a.run("openPage('topic:Feeding');openPage('chg:Feeding:d:milk')");
   check(/oz/.test(clean(a.html()))&&a.run("page==='chg:Feeding:d:milk'||/Feeding/.test(page)"),'Old milk link opens the amounts page');
