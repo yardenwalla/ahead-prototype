@@ -882,18 +882,18 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
           now === 0 ? ['clock', 'Black at first', 'For the first 2–3 days'] : live() && profile.feed === 'Formula' ? ['clock', 'Most days', 'Usual on formula'] : ['clock', 'Fewer poops', live() && profile.feed === 'Both' ? 'A few days apart can be normal' : 'Breastfed babies can go days between'],
           ['diaper', 'Straining, going red', 'Even when it comes out soft'],
           solidsOn || now >= 2 ? ['bowl', 'Thicker with solids', 'Hard? Pears, prunes, peaches'] : ['drop', '6+ wet diapers', 'Every day']], CAT, 'Also normal.', false)
-        + block('', '', 'Fewer than 6 wet diapers a day, hard pebble-like poop, or watery poop many times a day.', (now <= 1 ? 'White, gray or chalky poop, or watery poop under 3 months.' : 'White, gray or chalky poop.') + ' Call your pediatrician right away.')],
+        + block('', '', 'Fewer than 6 wet diapers a day, or hard, pebble-like poop.', (now <= 1 ? 'White, gray or chalky poop, or watery poop many times a day.' : 'White, gray or chalky poop.') + ' Call your pediatrician right away.')],
       rash: ['Spots, bumps or dry skin', now >= 2 ? 'Drool rash, eczema, heat rash' : 'Rashes, acne, cradle cap', 'Most are harmless and clear on their own. Find yours below.', `<h2 class="hub-h2">${F('Common now')}</h2>` + rashLink(rashOrder) + otherRashes
         // One call line: the glass test above already holds the 911 sign.
-        + `<h2 class="hub-h2">${F('Worried? Try the glass test')}</h2>` + glassTest() + block('', '', rashCall, rashNow ? rashNow.charAt(0).toUpperCase() + rashNow.slice(1) + '.' : '')],
+        + `<h2 class="hub-h2">${F('Worried? Press a glass on the spots')}</h2>` + glassTest() + block('', '', rashCall, rashNow ? rashNow.charAt(0).toUpperCase() + rashNow.slice(1) + '.' : '')],
       // The less common rashes for this age, on their own page, each with what it looks like and what to do.
       rashmore: ['Other rashes', 'Less common at this age', rashLink(rest) + block('', '', rashCall, rashNow ? rashNow.charAt(0).toUpperCase() + rashNow.slice(1) + '.' : '')],
       cord: ['The cord', 'Smell, crust or a little blood', 'A little crust, smell or a spot of blood is normal while it heals.', ans('What’s normal', [['cord', 'Darkens and dries', 'A little crust is fine'], ['drop', 'A spot of blood', 'When it falls off'], ['clock', 'Falls off', 'Usually at 1–3 weeks']],
         'A yellow, smelly discharge, redness around it, crying at a touch, or still on after 3 weeks.')],
-      eyes: ['Sticky eyes or a noisy nose', 'Noisy breathing, sneezing, tear ducts', 'Usually normal, and most of it clears on its own.', ans('Usually normal, and what helps', [['drop', 'Snuffly breathing', 'Dried milk or mucus, not a cold'], ['eye', 'A watery eye', 'Not red: a blocked tear duct'], ['hand', 'Sticky eyes', 'Wipe from the inside corner out'], ['steth', 'A stuffy nose', 'Saline drops, gentle suction']],
+      eyes: ['Sticky eyes or a noisy nose', 'Noisy breathing, sneezing, tear ducts', 'Usually normal, and most of it clears on its own.', ans('Usually normal, and what helps', [['drop', 'Snuffly breathing', 'Dried milk or mucus, not a cold'], ['eye', 'A watery eye, not red', 'Often a blocked tear duct'], ['hand', 'Sticky eyes', 'Wipe from the inside corner out'], ['steth', 'A stuffy nose', 'Saline drops, gentle suction']],
         'A red or swollen eyelid, yellow-green discharge with redness, or a red lump at the inner corner.', 'Struggling to breathe, or blue lips. Call 911.')
         ],
-      yellow: ['Yellow skin', 'Jaundice in the first weeks', 'Jaundice, a little yellow in the first week, is common. Your pediatrician checks it at the first visit.', H().tip('Feed often', 'Sunlight doesn’t treat it, so let your pediatrician check.') + ans('What to look for', [['sun', 'Yellow on the face', 'In the first days, then fades'], ['eye', 'On darker skin', 'Look at the eyes and gums']],
+      yellow: ['Yellow skin', 'Jaundice in the first weeks', 'A little yellow in the first week is common. It’s called jaundice, and your pediatrician checks it at the first visit.', H().tip('Feed often', 'Sunlight doesn’t treat it, so let your pediatrician check.') + ans('What to look for', [['sun', 'Yellow on the face', 'In the first days, then fades'], ['eye', 'On darker skin', 'Look at the eyes and gums']],
         'Yellow spreading to the belly or legs, yellow whites of the eyes, or fewer wet diapers.', 'Any yellow in the first 24 hours, or yellow and hard to wake or not feeding well.')],
       gums: ['Drool, sore gums or extra fussing', 'Could it be teething?', ans('Usually teething', [['drop', 'Lots of drool', 'And chewing on everything'], ['tooth', 'Sore, swollen gums', 'Often the bottom front'], ['clock', 'A few fussy days', 'Then it settles']],
         'Fever, diarrhea or a runny nose. Teething doesn’t cause those, so something else is going on.') + `<div class="hub-list care-link">${rowK('teeth', 'Soothe sore gums', 'What helps, and what to skip', `openPage('chg:${CAT}:d:p:teething')`)}</div>`],
@@ -1013,7 +1013,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   TPL['t:bath:2'] = { type: 'howto', k: 'bath', title: 'Bath time can be part of bedtime',
     why: 'A warm bath helps many babies wind down, and the same order every night helps most.',
     steps: [['bath', 'Bath', 'About 100°F: test with your wrist'], ['bottle', 'Feed', 'Calm and dim'], ['book', 'Book', 'The same one is fine'], ['moon', 'Bed', 'On {p} back, in {p} own space']],
-    stepsNotes: [['', 'About 3 baths a week', 'More can dry {p} skin. Wash hair at 2 or 3, with a mild shampoo'], ['', 'The big tub comes once {s} {sit|sits} steadily', 'Often around 6–8 months. Until then, the baby tub']],
+    stepsNotes: [['', 'About 3 baths a week', 'More can dry {p} skin. Wash {p} hair in 2 or 3 of them, with a mild shampoo'], ['', 'The big tub comes once {s} {sit|sits} steadily', 'Often around 6–8 months. Until then, the baby tub']],
     safe: [['hand', 'A hand on {o} the whole bath', 'Babies can slip under in seconds. To step away, take {o} with you.']] };
   TPL['t:bath:3'] = { type: 'howto', k: 'bath', title: 'Move to the big tub',
     why: 'Once {s} {sit|sits} steadily on {p} own, the big tub is fine.',
@@ -1058,7 +1058,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   const shade = { type: 'howto', k: 'sun', title: 'Shade is the best sun protection',
     why: 'Under 6 months, skin burns fast and babies overheat easily.',
     pictureTitle: 'Sun protection by age', picture: () => sunAges(),
-    steps: [['home', 'Find shade', 'Especially midday'], ['shirt', 'Cover up', 'Light long sleeves and a wide hat'], ['sun', 'No shade?', 'Sunscreen on small spots only']], ordered: false,
+    steps: [['home', 'Find shade', 'Especially midday'], ['shirt', 'Cover up', 'Light long sleeves and a wide hat'], ['sun', 'No shade?', 'A little SPF 30 on the face and hands']], ordered: false,
     safe: sunSafe(true) };
   const six = { type: 'howto', k: 'sun', title: () => careAge() >= 7 ? 'Shade first, then sunscreen on bare skin' : 'Start sunscreen at 6 months',
     why: 'Shade and a hat still come first. Sunscreen covers the skin they don’t.',
@@ -1100,9 +1100,9 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     do: [['hand', 'A clean finger', 'Rub the sore gums'], ['ring', 'A teething ring', 'Firm, chilled, not frozen'], ['shirt', 'A soft bib', 'Pat the drool dry']],
     doRows: [['', 'Skip numbing gels, necklaces and tablets', 'Ask your pediatrician before any pain medicine']],
     extra: () => toothBtn(false),
-    calls: { ped: 'a fever, diarrhea, diaper rash or a runny nose. Teething doesn’t cause these.' } };
+    calls: { ped: 'a fever, diarrhea or a runny nose. Teething doesn’t cause these.' } };
   const dress = { type: 'expect', k: 'clothes', title: 'Dress {o} in one more layer than you',
-    why: 'Babies can’t warm or cool themselves well yet, so the neck tells you more than the hands.',
+    why: 'Babies can’t warm or cool themselves well yet, so they need a little more than you.',
     normal: () => layers(), normalNotes: [['', 'No hats indoors', 'A hat is for going out'], ['', 'For sleep, snug pajamas and a sleep sack', 'No loose clothes, and no blankets']],
     do: [['hand', 'Feel the back of the neck', 'Sweaty: too warm. Cool: add a layer'], ['shirt', 'Snaps or zips', 'Never strings near the neck'], ['car', 'No puffy coats in the car seat', 'Buckle in, then a blanket on top']] };
   [0, 1, 2].forEach(v => { TPL[`t:clothes:${v}`] = dress; });
@@ -1119,11 +1119,11 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     calls: { ped: 'a yellow, smelly discharge, redness around it, crying at a touch, or it’s still on after 3 weeks.' } };
   TPL['look-eyes'] = { type: 'check', eyebrow: 'Is this normal?', k: 'skin', title: 'Sticky eyes or a noisy nose',
     why: 'Usually normal, and most of it clears on its own.',
-    signs: [['ear', 'Snuffly breathing', 'Dried milk or mucus, not a cold'], ['eye', 'A watery eye', 'Not red: a blocked tear duct']],
+    signs: [['ear', 'Snuffly breathing', 'Dried milk or mucus, not a cold'], ['eye', 'A watery eye, not red', 'Often a blocked tear duct']],
     helps: [['towel', 'Sticky eyes', 'Wipe from the inside corner out'], ['drop', 'A stuffy nose', 'Saline drops, gentle suction']],
     calls: { ped: 'a red or swollen eyelid, yellow-green discharge with redness, or a red lump at the inner corner.', now: 'struggling to breathe, or blue lips.', nowLabel: 'Call 911' } };
   TPL['look-yellow'] = { type: 'check', eyebrow: 'Is this normal?', k: 'skin', title: 'Yellow skin',
-    why: 'Jaundice, a little yellow in the first week, is common. Your pediatrician checks it at the first visit.',
+    why: 'A little yellow in the first week is common. It’s called jaundice, and your pediatrician checks it at the first visit.',
     signs: [['sun', 'Yellow on the face', 'In the first days, then fades'], ['eye', 'On darker skin', 'Look at the eyes and gums']],
     helps: [['bottle', 'Feed often', 'It helps clear the yellow'], ['steth', 'Let your pediatrician check', 'Sunlight doesn’t treat it']],
     calls: { ped: 'yellow spreading to the belly or legs, yellow whites of the eyes, or fewer wet diapers.', now: 'any yellow in the first 24 hours, or yellow and hard to wake or not feeding well.' } };
@@ -1137,7 +1137,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   TPL['rash:eczema'] = rashCheck('eczema', [['bath', 'Short, lukewarm baths', 'Then thick cream on damp skin'], ['shirt', 'Fragrance-free everything', 'Soap, detergent, soft cotton'], ['nail', 'Short nails', 'Less scratching']],
     { calls: { ped: 'the patches crack, ooze or keep {o} up, or moisturizing doesn’t help.', now: RASH_CALLS.now, nowLabel: 'Call 911' } });
   TPL['rash:heat'] = rashCheck('heat', [['home', 'Cool {o} down', 'Somewhere cooler, a layer off'], ['shield', 'No creams on it', 'They trap heat']], { why: 'It comes from sweat, and fades within a day or two of cooling down.' });
-  TPL['rash:newborn'] = rashCheck('newborn', [['smile', 'Nothing to treat', 'They fade on their own'], ['heart', 'Birthmarks aren’t bruises', 'Common, and harmless']]);
+  TPL['rash:newborn'] = rashCheck('newborn', [['smile', 'Nothing to treat', 'They fade on their own'], ['heart', 'Blue-gray patches aren’t bruises', 'Common, and harmless']]);
   TPL['rash:strawberry'] = rashCheck('strawberry', [['eye', 'Nothing to do at home', 'Your pediatrician keeps an eye on it'], ['steth', 'Mention it at the next checkup', 'So they can see how fast it grows']],
     { where: null, why: 'A common birthmark (hemangioma), and usually harmless.', signs: [['heart', 'A raised red patch', 'Often from 2–4 weeks'], ['clock', 'Grows, then fades', 'Over months, then years']], calls: { ped: 'it’s near an eye, the nose, mouth or diaper area, bleeds, or grows very fast.', now: RASH_CALLS.now, nowLabel: 'Call 911' } });
   TPL['rash:drool'] = rashCheck('drool', [['towel', 'Pat dry through the day', 'A soft bib helps'], ['moon', 'Petroleum jelly at bedtime', 'A thin layer protects the skin']]);
@@ -1151,7 +1151,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
       ['diaper', 'Straining and going red is normal', 'Even when the poop comes out soft'],
       tplNow >= 2 ? ['bowl', 'Solids make it thicker and smellier', 'Sometimes the color of the food'] : null],
     helps: () => [['hand', 'Straining or gassy?', 'Bicycle {p} legs, rub {p} tummy'], tplNow >= 2 ? ['bowl', 'Hard poop?', 'Pears, prunes or peaches'] : ['bottle', 'Keep feeding as usual', 'Milk keeps it soft']],
-    calls: { ped: 'fewer than 6 wet diapers a day, hard pebble-like poop, or watery poop many times a day.', now: () => tplNow <= 1 ? 'white, gray or chalky poop, or watery poop under 3 months.' : 'white, gray or chalky poop.' } };
+    calls: { ped: 'fewer than 6 wet diapers a day, or hard, pebble-like poop.', now: () => tplNow <= 1 ? 'white, gray or chalky poop, or watery poop many times a day.' : 'white, gray or chalky poop.' } };
 
   window.changesRoute = function (p) {
     const [, cat, screen, a, b, c] = p.split(':');
@@ -1184,7 +1184,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
                ['Each week', [['bath', 'Sponge baths', '2 or 3 a week', 'Until the cord falls off', 1], ['nails', 'Nails', 'Trim once a week', 'They grow fast, and they’re sharp']]]] },
     { title: 'Care settles into a rhythm', lead: 'Tub baths start once the cord heals, and most days look alike now.',
       groups: [['Every day', [['diapers', 'Diapers', 'Fewer poops can be normal', 'Keep a hand on {o} at every change', 1], ['skin', 'Skin', 'Plain water on the face', 'Baby acne and cradle cap are common', 1, 'acne'], ['teeth', 'Gums', 'Wipe twice a day', 'With a soft, clean cloth', 0, 'gums'], ['clothes', 'Clothes', 'One layer more than you', 'No hat indoors']]],
-               ['Each week', [['bath', 'Tub baths', 'About 3 a week', 'Wash hair at 2 or 3', 1], ['nails', 'Nails', 'Trim once a week', 'Easiest while asleep']]],
+               ['Each week', [['bath', 'Tub baths', 'About 3 a week', 'Hair washed in 2 or 3', 1], ['nails', 'Nails', 'Trim once a week', 'Easiest while asleep']]],
                ['Outside', [['sun', 'Sun', 'Shade first', 'Long sleeves and a wide-brimmed hat']]]] },
     { title: 'Drool and busy hands', lead: 'Teething often starts, rolling begins, and bath time gets more fun.',
       groups: [['Every day', [hasTooth() ? ['teeth', 'Teeth and teething', 'Brush twice a day', 'A rice-grain smear of toothpaste. A chilled ring helps sore gums', 1, 'teething'] : ['teeth', 'Teething', 'Chewing and drool are normal', 'Wipe gums twice a day and pat the chin dry. A chilled ring helps', 1, 'teething'], ['diapers', 'Diapers', 'Keep a hand on {o} at every change', (answers.roll === 'Yes' || ['Tummy to back', 'Back to tummy', 'Both ways', 'Trying to roll'].includes(answers.rollDirection)) ? 'Use the strap, or change {o} on the floor' : 'Rolling can start any day']]],
