@@ -188,7 +188,7 @@
     const attended = v => { try { const r = healthRecord(v); return r && r.status === 'attended'; } catch (e) { return false; } };
     const all = CC.map(c => ({ m: c.start, c })).concat(CHECKUPS.map(v => ({ m: v - gap, v }))).sort((x, y) => x.m - y.m);
     // What she's told us only counts from today on; looking back, it's by age alone.
-    const st = (s, x) => s.v != null ? ((x >= a && attended(s.v)) || s.m < x - 0.75 ? 'done' : s.m <= x + 0.25 ? 'now' : 'next') : ((x >= a && done[s.c.id]) || s.c.end <= x || x - s.c.start >= 1.5 ? 'done' : s.c.start <= x + 0.25 ? 'now' : 'next');
+    const st = (s, x) => s.v != null ? ((x >= a && attended(s.v)) || s.m < x - 0.75 ? 'done' : s.m <= x + 0.25 ? 'now' : 'next') : ((x >= a && done[s.c.id]) || s.c.end <= x ? 'done' : s.c.start <= x + 0.25 ? 'now' : 'next');
     const title = s => s.v != null ? `${s.v}-month checkup` : s.c.title;
     const when = s => s.v != null ? `${s.v} mo` : (/month|week/.test(range(s.c)) ? range(s.c).replace(/^Usually |^Around |^At /, '').replace(' months', ' mo').replace(' month', ' mo') : `${s.c.start}–${s.c.end} mo`);
     const go = s => s.v != null ? `openPage('health-visit:${s.v}')` : s.c.go;
