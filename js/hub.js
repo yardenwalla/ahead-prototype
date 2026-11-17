@@ -1274,9 +1274,10 @@
       const mo = m();
       return tplPage('Sleep', { type: 'urgent', label: 'Sleep', art: 'moon', title: 'Most sleep changes are normal',
         why: 'Here’s what’s normal for {o} right now, and when it’s worth a call.',
-        calls: { ped: 'snoring most nights, pauses or gasping in sleep, sleep changes with ' + (mo < 3 ? 'poor feeding' : 'a fever or poor feeding') + (mo < 1.5 ? ', {s’s} hard to wake for feeds' : '') + (mo < 3 ? ', or ' + sleepFever() + ' (right away)' : '') + '.', now: 'trouble breathing, blue or gray lips, a pause in breathing of 20 seconds or more, or {s} won’t wake up.', nowLabel: 'Call 911' },
-        signs: [['moon', 'Normal', mo < 1.5 ? 'Waking every 2–3 hours, grunts, squeaks and breathing pauses of a few seconds' : mo < 3 ? 'Good nights and bad nights, and fussing in light sleep' : mo >= 8 ? 'Night waking, standing in the crib, protest at bedtime' : 'Night waking, short naps, and short cries that settle'], ['eye', 'Keep an eye on it', 'Harder settling, or more waking than usual']],
-        tell: [['', 'Keeping an eye on it?', 'Jot down a few nights of bedtimes, wakes and feeds. It helps your pediatrician see the pattern']],
+        calls: { ped: mo < 3 ? sleepFever() + ' (right away)' + (mo < 1.5 ? ', {s’s} hard to wake for feeds' : '') + ', or snoring or gasping in sleep.' : 'snoring or gasping in sleep most nights, or sleep changes with a fever or poor feeding.',
+          now: mo < 3 ? 'trouble breathing, blue lips, a 20-second pause in breathing, or {s} won’t wake up.' : 'trouble breathing, blue lips, or {s} won’t wake up.', nowLabel: 'Call 911' },
+        signs: [['moon', 'Normal', mo < 1.5 ? 'Grunts, squeaks, short breathing pauses' : mo < 3 ? 'Good nights and bad nights' : mo >= 8 ? 'Night waking, standing in the crib' : 'Night waking, short naps'], ['eye', 'Keep an eye on it', 'Harder settling, more waking']],
+        tell: [['', 'Keeping an eye on it?', 'Jot down a few nights to show your pediatrician']],
       });
     }
     const D = C().DATA[cat], T = C().T, tone = l => /911/.test(l) ? 'is-red' : /pediatrician/i.test(l) ? 'is-red' : '';
