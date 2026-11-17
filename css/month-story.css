@@ -1123,3 +1123,8 @@
 #main .tl-mon span{color:#8a8494}
 #main .tl-ticks span{color:#8a8494;font-size:11.5px}
 #main .tl-quiet{padding:10px 0 4px}#main .tl-quiet span{font-size:14px;color:#6b6676}
+
+/* Nov 17 · A "continue watching" line along the bottom of each Today card: how far she is into its usual window */
+#main .tl-track .tl-step.is-now>button{position:relative;overflow:hidden}
+#main .tl-prog-line{position:absolute;left:0;right:0;bottom:0;height:3px;background:color-mix(in srgb,var(--g-ink,#2B2840) 12%,transparent)}
+#main .tl-prog-line i{display:block;height:100%;background:var(--g-ink,#2B2840);opacity:.55;border-radius:0 2px 2px 0}
