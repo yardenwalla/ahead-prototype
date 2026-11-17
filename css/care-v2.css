@@ -332,5 +332,16 @@
 #main .care-tpl .tpl-week { background: #fffdfb; border: 1px solid var(--line, #efeaf2); border-radius: 20px; padding: 16px 16px 10px; margin: 0 }
 #main .care-tpl .tpl-week-bars { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; height: 110px; align-items: end }
 #main .care-tpl .tpl-week-bars > div { height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 6px }
-#main .care-tpl .tpl-week-bars i { display: block; width: 100%; max-width: 26px; border-radius: 8px 8px 4px 4px; background: #e9a8bf }
+#main .care-tpl .tpl-week-bars i { display: block; width: 100%; max-width: 26px; border-radius: 8px 8px 4px 4px; background: color-mix(in srgb, var(--ss-ink, #9b4766) 45%, white) }
 #main .care-tpl .tpl-week-bars small { font-size: 12px; color: var(--ink2, #5e5a75) }
+/* Nov 16: chips for short lists, and a calm/urgent pair for normal vs act now */
+#main .care-tpl .tpl-chips > div { display: flex; flex-wrap: wrap; gap: 8px; padding: 2px 0 }
+#main .care-tpl .tpl-chips span { background: var(--ss-bg, #f6f1ec); color: var(--ss-ink, #302d3c); border-radius: 999px; padding: 7px 12px; font-size: 14px; font-weight: 600 }
+#main .care-tpl .tpl-chips .tpl-notes { margin-top: 12px }
+#main .care-tpl .tpl-versus > div { display: grid; grid-template-columns: 1fr 1fr; gap: 10px }
+#main .care-tpl .tpl-versus > div > div { border-radius: 14px; padding: 12px }
+#main .care-tpl .tpl-versus .is-ok { background: #e6f3ec } #main .care-tpl .tpl-versus .is-ok b { color: #356651 }
+#main .care-tpl .tpl-versus .is-act { background: #fbe6e3 } #main .care-tpl .tpl-versus .is-act b { color: #a2402f }
+#main .care-tpl .tpl-versus b { display: block; font-size: 14px; font-weight: 650; margin-bottom: 4px }
+#main .care-tpl .tpl-versus p { margin: 0; font-size: 13.5px; line-height: 1.45; color: #4c4757 }
+#main .care-tpl .tpl-versus .tpl-notes { margin-top: 12px }

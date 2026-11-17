@@ -13,9 +13,10 @@
     // ---------- Milk: is it going well? ----------
     nb_enough: () => ({ type: 'expect', label: 'Getting enough', art: 'diaper', title: 'Wet diapers are your everyday sign',
       why: 'You don’t need to measure feeds. Diapers every day, and weight at checkups, tell you.',
-      normalTitle: 'Wet diapers a day',
-      normal: () => realMo() >= 1 ? H().TPLB.tiles([['diaper', '6 or more', 'Wet diapers a day'], ['steth', 'Steady gain', 'At each weight check']], CAT) : window.hubStageStrip({ title: '', cat: CAT, items: [['diaper', 'Days 1–2', '1–2'], ['diaper', 'Days 3–4', '3–4'], ['diaper', 'Day 5', 'About 5'], ['diaper', 'Day 6 on', '6 or more']], caption: 'Wet diapers a day: 1 to 2 on days 1 and 2, 3 to 4 on days 3 and 4, about 5 on day 5, then 6 or more.' }),
-      normalNotes: realMo() >= 1 ? null : [['', 'Poop', onlyFormula() ? 'Black and sticky at first, tan by day 6' : 'Black and sticky at first, yellow and seedy by day 6' + (nurse() ? ', 3 or more a day' : '')]],
+      normalTitle: 'Wet diapers and poop, day by day',
+      normal: () => realMo() < 1 ? X().pron(X().firstCard(X().xBody(X().P.x_enough))) : realMo() >= 1 ? H().TPLB.tiles([['diaper', '6 or more', 'Wet diapers a day'], ['steth', 'Steady gain', 'At each weight check']], CAT) : window.hubStageStrip({ title: '', cat: CAT, items: [['diaper', 'Days 1–2', '1–2'], ['diaper', 'Days 3–4', '3–4'], ['diaper', 'Day 5', 'About 5'], ['diaper', 'Day 6 on', '6 or more']], caption: 'Wet diapers a day: 1 to 2 on days 1 and 2, 3 to 4 on days 3 and 4, about 5 on day 5, then 6 or more.' }),
+      moreTitle: '{P} weight', more: () => realMo() < 1 ? X().pron(X().weightViz()) : '',
+      normalNotes: realMo() >= 0 ? null : [['', 'Poop', onlyFormula() ? 'Black and sticky at first, tan by day 6' : 'Black and sticky at first, yellow and seedy by day 6' + (nurse() ? ', 3 or more a day' : '')]],
       do: [['notepad', 'Note feeds and diapers', 'Until things feel settled'], ['steth', 'Go to the weight checks', 'No need to weigh at home']],
       doNotes: [nurse() ? ['', 'During feeds', 'Long sucks, and swallows you can hear'] : null, ['', 'After most feeds', '{S’s} content for a while']],
       calls: { ped: realMo() >= 1 ? 'fewer wet diapers, dark urine, or {s} {seem|seems} hungry after most feeds.' : 'fewer wet diapers, dark urine, black poop after day 5, or not back to birth weight by 2 weeks.' } }),
@@ -131,7 +132,7 @@
       calls: { ped: 'forceful or green vomit, blood, or crying and arching at most feeds.' } }),
     x_allergy: () => ({ type: 'check', label: 'Feeding challenges', art: 'steth', title: 'A milk allergy is uncommon, and treatable',
       why: 'Most gas, fussing and spit-up isn’t an allergy.',
-      signs: [['smile', 'Usually not an allergy', 'Gas, fussing or spit-up, in a baby who’s growing'], ['eye', 'Could be an allergy', 'Blood or mucus in poop, a rash, or vomiting after most feeds']],
+      figure: () => H().TPLB.versus(['Usually not an allergy', 'Gas, fussing or spit-up, in a baby who’s growing.'], ['Could be an allergy', 'Blood or mucus in poop, a rash, or vomiting after most feeds.']),
       helps: [['notepad', 'Take a photo', 'Of the diaper or the rash'], nurse() ? ['heart', 'Keep nursing', 'Your pediatrician will say if anything should change'] : ['bottle', fam() ? 'Keep {p} milk the same' : 'Keep the same formula', 'Ask your pediatrician before changing it']],
       calls: { ped: 'you see any of these, or {s’s} gaining slowly.' } }),
     x_gain: () => ({ type: 'check', label: 'Feeding challenges', art: 'steth', title: 'Slow weight gain is worth a closer look',
@@ -164,12 +165,12 @@
     z_start: () => ({ type: 'howto', label: 'How to start', art: 'bowl', title: 'Spoon-feeding and finger foods both work',
       why: 'Research doesn’t favor one. When food is soft and safely shaped, the choking risk is similar.',
       pictureTitle: 'Three ways to start', picture: () => H().TPLB.tiles([['bowl', 'Spoon-fed', 'Thicker and lumpier over time'], ['hand', 'Finger foods', 'Soft strips {s} {feed|feeds} {o}self'], ['plate', 'A mix', 'Spoon iron-rich foods, plus soft strips']], CAT),
-      stepsTitle: 'Start with iron-rich foods', ordered: false, steps: [['meat', 'Meat', 'Soft or ground'], ['lentils', 'Beans or lentils', 'Mashed'], ['oats', 'Iron-fortified oatmeal', 'Thinned with milk'], ['egg', 'Egg', 'Well cooked'], ['avocado', 'Avocado', 'Mashed or in strips'], ['potato', 'Sweet potato', 'Soft-cooked']],
+      stepsTitle: 'Start with iron-rich foods', stepsFig: () => H().TPLB.chips(['Meat, soft or ground', 'Beans or lentils', 'Iron-fortified oatmeal', 'Egg, well cooked', 'Avocado', 'Sweet potato']),
       tips: [['bowl', 'Soft and squishable', 'Smooth, mashed, or strips that squish between your fingers.'], ['highchair', 'Seated upright, with you', 'In a high chair with a harness, every time.'], ['plate', 'No added salt or sugar', 'Take {p} portion out before seasoning.']] }),
     z_meal: () => mo() >= 8.5
       ? { type: 'howto', label: 'Feeding {o}self', art: 'plate', title: 'Most family food works for {o} now',
         why: 'Soften it, and skip the added salt.',
-        pictureTitle: 'Ideas from your plate', picture: () => H().TPLB.tiles([['meat', 'Shredded chicken', ''], ['egg', 'Scrambled egg', ''], ['lentils', 'Squashed beans', ''], ['bowl', 'Soft pasta', ''], ['avocado', 'Banana or ripe pear', ''], ['potato', 'Soft-cooked veggies', '']], CAT),
+        pictureTitle: 'Ideas from your plate', picture: () => H().TPLB.chips(['Shredded chicken', 'Scrambled egg', 'Squashed beans', 'Soft pasta', 'Banana or ripe pear', 'Soft-cooked veggies']),
         ordered: false, steps: [['plate', 'From your plate', 'Take out {p} portion before adding salt'], ['hand', '{S} {feed|feeds} {o}self', 'Fingers first, a spoon to practice']] }
       : { type: 'howto', label: 'How a meal goes', art: 'highchair', title: 'First meals are just a few bites',
         why: 'Solids are practice for now. Let {o} set the pace.',
@@ -197,8 +198,7 @@
     z_plan: () => ({ type: 'expect', label: 'Foods to wait on', art: 'plate', title: 'No honey before 1, no choking risks before 4',
       why: 'A few foods aren’t safe for babies yet, even once solids are going well.',
       normalTitle: 'Wait until 1', normal: [['drop', 'Honey', 'It can carry botulism'], ['cup', 'Cow’s milk to drink', 'Fine in cooking'], ['cup', 'Juice', 'Water and milk instead']],
-      doTitle: 'Choking risks, until 4', do: [['coin', 'Whole nuts', ''], ['plate', 'Whole grapes', ''], ['bowl', 'Popcorn', ''], ['meat', 'Hot dog rounds', ''], ['leaf', 'Hard raw veg', ''], ['peanut', 'Thick nut butter', '']],
-      doNotes: [['', 'Some can be made safe', 'Cut or cooked soft, once {s’s} on finger foods']] }),
+      moreTitle: 'Choking risks, until 4', more: () => H().TPLB.chips(['Whole nuts', 'Whole grapes', 'Popcorn', 'Hot dog rounds', 'Hard raw veg', 'Thick nut butter'], [['', 'Some can be made safe', 'Cut or cooked soft, once {s’s} on finger foods']]) }),
     z_milkfood: () => ({ type: 'expect', label: 'Milk and solids', art: 'cup', title: 'No set order for milk and meals',
       why: 'A meal fits in wherever {s’s} awake and happy.',
       do: [['bottle', 'Milk before or after', 'Whatever works for {o}'], ['cup', 'Water from a cup', 'Open or straw. Hold it, and let {o} try']],
@@ -233,13 +233,12 @@
       calls: { ped: 'fewer wet diapers, refusing milk, or vomiting that keeps happening.' } }),
     z_reaction: () => ({ type: 'check', label: 'Feeding challenges', art: 'smile', title: 'Redness around the mouth is usually the food',
       why: 'Acidic foods can redden the skin they touch. A true reaction looks different.',
-      signs: [['smile', 'Usually fine', 'Redness only where food touched, that fades'], ['eye', 'A true reaction', 'Hives, vomiting, or a rash that spreads']],
+      figure: () => H().TPLB.versus(['Usually fine', 'Redness only where food touched, that fades.'], ['A true reaction', 'Hives, vomiting, or a rash that spreads.']),
       helps: [['notepad', 'Note it', 'The food, and what happened. A photo helps'], ['clock', 'Hold off on that food', 'Ask before trying it again']],
       calls: { ped: 'a few hives, vomiting, or a rash that spreads.', now: 'trouble breathing, swelling of the lips or face, hives all over, hives with vomiting, or {s’s} very sleepy or floppy.', nowLabel: 'Call 911' } }),
     z_gag: () => ({ type: 'urgent', label: 'Gagging or choking', art: 'mouth', title: 'Gagging is normal. Choking is silent.',
       why: 'Gagging is how {s} {learn|learns} to handle food. It’s loud and can look scary, but it’s safe.',
-      signs: [['mouth', 'Gagging: normal', 'Loud coughing, red face. Let {o} work it out'], ['alarm', 'Choking: act now', 'Silent or a high squeak, can’t cough or cry, turning blue']],
-      tell: [['', 'Less likely when', '{S’s} seated upright, watched, with soft finger-size food']],
+      figure: () => H().TPLB.versus(['Gagging: normal', 'Loud: coughing, sputtering, red face. Let {o} work it out.'], ['Choking: act now', 'Silent or a high squeak, can’t cough or cry, turning blue.'], [['', 'Less likely when', '{S’s} seated upright, watched, with soft finger-size food']]),
       doTitle: 'If {s’s} choking', doOrdered: true, do: [['hand', 'Back blows, 5 times', 'Face down along your forearm, head lower than {p} chest'], ['heart', 'Chest thrusts, 5 times', 'Face up, two fingers mid-chest'], ['clock', 'Repeat', 'Until it comes out, or help arrives']],
       link: ['https://www.redcross.org/take-a-class/cpr/performing-cpr/child-baby-cpr', 'Watch infant choking first aid · American Red Cross'],
       calls: { now: '{s} can’t cough, cry or breathe. Have someone call while you start back blows. If {s} {stop|stops} responding, start CPR.', nowLabel: 'Call 911' } })
@@ -258,13 +257,22 @@
   // Older Feeding pages that now open one of these.
   const ALIAS = { y_growth: 'enough', y_nurse: 'm1_now', y_bottle: 'm1_now', y_away: () => (X().stg() === 1 && mo() < 3 ? 'm1_apart' : 'm2_away'), y_night: 'm1_eve', y_evening: 'm1_eve',
     z_signs: 'z_ready', z_setup: 'z_start', z_tray: 'z_start', z_allergy: 'z_plan', z_notyet: 'z_plan', z_water: 'z_milkfood', z_family: 'z_meal', z_appetite: 'z_day' };
+  // Each page keeps Feeding's own header: the soft card in the color of what you tapped, with its small picture,
+  // taken from the page it replaces, so Feeding looks like Feeding and Sleep looks like Sleep.
+  const draw = (q, old) => { const h = H(), F = h.F, v = x => typeof x === 'function' ? x() : x;
+    const m = typeof old === 'string' ? old.match(/<div class="dev-area-head ss-head" style="--area:(#[0-9a-f]+);--area-ink:(#[0-9a-f]+)">(<span class="dev-area-head-art"[^>]*>[\s\S]*?<\/svg><\/span>)?/i) : null;
+    const bg = m ? m[1] : '#fbe4ec', ink = m ? m[2] : '#9b4766', art = m && m[3] ? m[3] : '';
+    const why = v(q.why);
+    return `<div class="quiet-category hub-page hub-detail care-v2" data-overview="${CAT}" data-ss="1" style="${typeof yearTheme === 'function' ? yearTheme(CAT) : ''};--ss-bg:${bg};--ss-ink:${ink}">${typeof detailPageTop === 'function' ? detailPageTop(CAT) : ''}`
+      + `<div class="dev-area-head ss-head" style="--area:${bg};--area-ink:${ink}">${art}<p class="hub-context">${F(v(q.label))}</p><h1>${F(v(q.title))}</h1>${why ? `<p class="hub-lead">${F(why)}</p>` : ''}</div>`
+      + `<div class="care-tpl is-${q.type}">${h.TPLS[q.type](q, CAT)}</div></div>`; };
   const base = window.changesRoute;
   window.changesRoute = function (r, ...a) {
     if (window.__fdx && X().oldFeeding) r = X().oldFeeding(r);
     const q = String(r).split(':');
     if (q[0] === 'chg' && q[1] === CAT && q[2] === 'mock' && window.__hub && window.__fdx) {
       const al = ALIAS[q[3]]; if (al) q[3] = typeof al === 'function' ? al() : al;
-      if (T[q[3]]) { const page = T[q[3]](q[4]); if (page) { window.__fdLast = r; return H().tplPage(CAT, page); } }
+      if (T[q[3]]) { const page = T[q[3]](q[4]); if (page) { window.__fdLast = r; return draw(page, base.call(this, 'chg:' + CAT + ':mock:' + q.slice(3).join(':'), ...a)); } }
       if (MENU[q[3]]) return menuTail(base.call(this, r, ...a), MENU[q[3]]());
     }
     return base.call(this, r, ...a);

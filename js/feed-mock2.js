@@ -3357,5 +3357,5 @@
       return h; };
     const cr1 = window.changesRoute; window.changesRoute = function (r, ...a) { const m = /^(chg:Feeding:mock:)xa:r2(?:\.(\d))?$/.exec(String(r)); if (m) r = m[1] + R2[Number(m[2] || 0)]; return cr1.call(this, r, ...a); }; }
   // Shared with js/feed-templates.js, which draws the Feeding pages on the page templates (Nov 16).
-  window.__fdx = { oldFeeding, isBreast, nurses, pumps, formulaFam, isBottle, stored, stg, ageMo, fever, pron, weekViz, P };
+  window.__fdx = { firstCard, xBody, weightViz, oldFeeding, isBreast, nurses, pumps, formulaFam, isBottle, stored, stg, ageMo, fever, pron, weekViz, P };
 })();

@@ -81,6 +81,10 @@
   const TPLB = {
     sec: (t, body) => body ? `<h2 class="hub-h2">${F(t)}</h2>` + body : '',
     // An outside source to watch or read, one quiet line under the section it belongs to.
+    // A plain list of short items (foods, things to skip): chips, not big tiles.
+    chips: (items, notes) => `<section class="care-tpl-card tpl-chips"><div>${tval(items).map(t => `<span>${F(t)}</span>`).join('')}</div>${TPLB.ul(notes)}</section>`,
+    // Normal vs act now, side by side in calm and urgent colors, for the comparisons that matter most.
+    versus: (a, b, notes) => `<section class="care-tpl-card tpl-versus"><div><div class="is-ok"><b>${F(a[0])}</b><p>${F(a[1])}</p></div><div class="is-act"><b>${F(b[0])}</b><p>${F(b[1])}</p></div></div>${TPLB.ul(notes)}</section>`,
     link: (url, text) => `<a class="hub-more" href="${url}" target="_blank" rel="noopener"><span>${F(text)}</span><span class="hub-chev" aria-hidden="true">↗</span></a>`,
     // A small table in a white card: head row, then rows. Used for how long milk keeps.
     table: (head, rows) => `<section class="care-tpl-card tpl-table"><table><thead><tr>${head.map(h => `<th>${F(h)}</th>`).join('')}</tr></thead><tbody>${rows.map(r => `<tr>${r.map(c => `<td>${F(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></section>`,
@@ -94,10 +98,11 @@
   };
   const TPLS = {
     // When it's urgent: how to tell, what to do, then the call card last, with 911 directly under the pediatrician line.
-    urgent: (q, cat) => TPLB.sec('How to tell', TPLB.noted(TPLB.tiles(q.signs, cat), q.tell))
+    urgent: (q, cat) => TPLB.sec('How to tell', TPLB.noted(q.figure ? q.figure() : TPLB.tiles(q.signs, cat), q.tell))
       + TPLB.sec(q.doTitle || 'What to do now', !q.do ? '' : Array.isArray(tval(q.do)) ? TPLB.noted(TPLB.tiles(q.do, cat, q.doOrdered), q.doNotes) : TPLB.card(q.do, q.doNotes))
       + (q.link ? TPLB.link(...q.link) : '') + TPLB.calls(q.calls),
     expect: (q, cat) => { const n = tval(q.normal); return TPLB.sec(tval(q.normalTitle) || 'What’s normal', TPLB.noted(Array.isArray(n) ? TPLB.tiles(n, cat, q.normalOrdered) : n, q.normalNotes))
+      + (q.more ? TPLB.sec(tval(q.moreTitle), tval(q.more)) : '')
       + TPLB.sec(tval(q.doTitle) || 'What to do', Array.isArray(tval(q.do)) ? TPLB.noted(TPLB.tiles(q.do, cat, q.doOrdered), q.doNotes) : TPLB.card(q.do, q.doNotes))
       + (q.action ? q.action() : '') + TPLB.sec('Watch how', q.video ? hubEmbed(...q.video) : '') + TPLB.calls(q.calls); },
     howto: (q, cat) => TPLB.sec(tval(q.pictureTitle) || 'At a glance', q.picture ? q.picture() : '') + TPLB.sec(tval(q.stepsTitle) || (q.ordered === false ? 'What to do' : 'Steps'), TPLB.noted(q.stepsFig ? q.stepsFig() : TPLB.tiles(q.steps, cat, q.ordered !== false), q.stepsNotes)) + (q.action ? q.action() : '')
