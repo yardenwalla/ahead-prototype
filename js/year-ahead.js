@@ -210,16 +210,21 @@
       const t = isToday(x), here = bandOf(x + 0.1);
       const over = s => s.v != null ? ((x >= a && attended(s.v)) || s.m < x - 0.75) : ((x >= a && done[s.c.id]) || s.c.end <= x);
       const items = all.filter(s => s.v == null), cks = all.filter(s => s.v != null);
-      const groups = BANDS.map((b, bi) => ({ bi, b, its: items.filter(s => bandOf(s.m) === bi) })).filter(g => g.its.length);
+      // Things she's still in the window for travel with her into her current group (after its own changes), so the page
+      // always opens on her stage; an earlier group then holds only what's over, and folds into "Earlier".
+      const home = s => { const b = bandOf(s.m); return b < here && !over(s) ? here : b; };
+      const groups = BANDS.map((b, bi) => ({ bi, b, its: items.filter(s => home(s) === bi).sort((p, q) => (bandOf(p.m) < bi) - (bandOf(q.m) < bi) || p.m - q.m || p.c.end - q.c.end) })).filter(g => g.its.length);
       // A group folds into "Earlier" only once every change in it is over; a checkup once it's past.
       const gOver = g => g.its.every(over) && g.bi < here;
-      const ents = groups.map(g => ({ at: g.b[0], g })).concat(cks.map(s => ({ at: s.m - 0.001, s }))).sort((p, q) => p.at - q.at);
+      const inG = s => groups.find(g => g.b[2] === `${s.v} months`);
+      cks.filter(inG).forEach(s => inG(s).ck = s);
+      const ents = groups.map(g => ({ at: g.b[0], g })).concat(cks.filter(s => !inG(s)).map(s => ({ at: s.m - 0.001, s }))).sort((p, q) => p.at - q.at);
       const past = ents.filter(e => e.g ? gOver(e.g) : over(e.s)), live = ents.filter(e => !past.includes(e));
       const row = (s, dim) => `<li class="tl-gr${dim ? ' is-dim' : ''}"><button onclick="${go(s)}"><span class="tl-ic">${icon(s.c.icon)}</span><span class="tl-t"><b>${F(title(s))}</b>${PREP[s.c.id] && !dim ? `<small>${F(PREP[s.c.id])}</small>` : s.c.id === 'crying' && x >= 2 && !dim ? `<small>${F('Past the worst now')}</small>` : ''}</span><span class="tl-w">${(m => m ? `<b>${F(m[1])}</b><small>${F(m[2])}</small>` : F(longWhen(s)))(longWhen(s).match(/^(.*?)\s(months?|weeks?)$/))}</span></button></li>`;
       const pill = (txt, on, tag, mon) => `<div class="tl-ghead"><span class="tl-pill${on ? ' is-on' : ''}">${F(txt)}</span>${tag ? `<span class="tl-tag">${F(tag)}</span>` : ''}${mon ? `<span class="tl-gmon">${F(mon)}</span>` : ''}</div>`;
       const ent = e => {
         if (e.g) { const on = e.g.bi === here, fut = e.g.b[0] > x + 0.1;
-          return `<li class="tl-ent${on ? ' is-on' : ''}${fut ? '' : ' is-run'}"><i class="tl-dot"></i>${pill(e.g.b[2], on, on ? (t ? 'Now' : 'Viewing') : '', fut ? `Around ${calMon(e.g.b[0])}` : '')}<ol class="tl-gcard">${e.g.its.map(s => row(s, false)).join('')}</ol></li>`; }
+          return `<li class="tl-ent${on ? ' is-on' : ''}${fut ? '' : ' is-run'}"><i class="tl-dot"></i>${pill(e.g.b[2], on, on ? (t ? 'Now' : 'Viewing') : '', fut ? `Around ${calMon(e.g.b[0])}` : '')}<ol class="tl-gcard">${e.g.ck ? `<li class="tl-gr"><button onclick="${go(e.g.ck)}"><span class="tl-ic">${icon('steth')}</span><span class="tl-t"><b>${F(title(e.g.ck))}</b><small>${F('Book it a few weeks ahead')}</small></span></button></li>` : ''}${e.g.its.map(s => row(s, false)).join('')}</ol></li>`; }
         const s = e.s, due = !over(e.s) && s.m <= x + 0.25;
         return `<li class="tl-ent tl-ck${due ? ' is-due' : ''}${s.m > x + 0.25 ? '' : ' is-run'}"><i class="tl-dot"></i>${pill(`${s.v} month${s.v === 1 ? '' : 's'}`, due, due ? 'Due now' : '', s.m > x + 0.25 ? `Around ${calMon(s.m)}` : '')}<ol class="tl-gcard">${`<li class="tl-gr"><button onclick="${go(s)}"><span class="tl-ic">${icon('steth')}</span><span class="tl-t"><b>${F(title(s))}</b><small>${F(due ? 'Book it if you haven’t' : 'Book it a few weeks ahead')}</small></span></button></li>`}</ol></li>`;
       };
