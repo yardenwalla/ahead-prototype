@@ -6,15 +6,27 @@
 (function () {
   const esc2 = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const ICON = r => {
-    // Read both the skill's key and its name, so every moment gets its area's picture (Nov 18): own firsts keep the star,
-    // and a skill that fits no other area is a thinking skill (the lightbulb), never a run of identical stars.
-    const k = `${r.skillKey || ''} ${r.title || ''}`.toLowerCase();
-    if (r.own && !/roll|sit|crawl|stand|walk|tooth|word|mama|dada|laugh|smile/.test(k)) return 'star';
-    return /smile|laugh|face|people|familiar|stranger|likes|mirror|shy|feelings/.test(k) ? 'smile' : /coo|babbl|sound|word|talk|mama|dada|parent|copies|squeal|raspberr/.test(k) ? 'chat' : /roll/.test(k) ? 'roll' : /sit/.test(k) ? 'sit' : /crawl/.test(k) ? 'crawl' : /stand|pull|step|walk|cruis/.test(k) ? 'stand' : /wave|clap|point/.test(k) ? 'wave' : /tooth/.test(k) ? 'tooth' : /lifts|pushes|head|tummy|leans/.test(k) ? 'roll' : 'idea';
+    // The picture matches the moment itself (Nov 18): avocado for "First taste of avocado", a mirror for "Looks at self in
+    // a mirror", a speech bubble for babbling. First match wins, most specific first; a star only when nothing fits.
+    const k = `${r.title || ''} ${r.skillKey || ''}`.toLowerCase();
+    const PICS = [
+      [/head/, 'head'], [/rakes?\b|picks up/, 'hand'], [/avocado/, 'avocado'], [/\begg/, 'egg'], [/peanut/, 'peanut'], [/oat|cereal/, 'oats'], [/potato/, 'potato'], [/lentil/, 'lentils'], [/meat|chicken|beef/, 'meat'],
+      [/\bcup\b|sip|drinks?\b|straw/, 'cup'], [/bottle/, 'bottle'], [/taste|food|eat|solid|bite|pur[eé]e|spoon|banana|finger food|meal/, 'bowl'],
+      [/tooth|teeth/, 'tooth'], [/sleep|night|nap/, 'moon'], [/swim|pool/, 'tub'], [/bath/, 'bath'],
+      [/mirror/, 'mirror'], [/peek/, 'peek'], [/hid|looks for/, 'hidden'], [/book|read|story/, 'book'], [/music|song|sing|danc/, 'music'], [/\bsigns?\b/, 'signs'],
+      [/ball/, 'ball'], [/block|stack|container|bangs/, 'blocks'], [/toss|throw|drops? /, 'toss'], [/toy/, 'toy'],
+      [/hand|grab|reach|rake|pick|hold|thumb|finger|pass/, 'hand'],
+      [/wave|clap|point|bye/, 'wave'], [/leave|goodbye|cries when/, 'heart'],
+      [/smile|laugh|face|people|familiar|stranger|likes|shy|feelings|express/, 'smile'],
+      [/coo|babbl|sound|word|talk|mama|dada|copies|squeal|raspberr|says/, 'chat'], [/listen|turns to|hears/, 'ear'], [/follows|looks at|watch|eyes/, 'eye'],
+      [/head/, 'head'], [/roll|tummy|pushes|lifts/, 'roll'], [/sit/, 'sit'], [/crawl/, 'crawl'], [/stand|pull|step|walk|cruis/, 'stand'],
+    ];
+    const hit = PICS.find(([re]) => re.test(k));
+    return hit ? hit[1] : r.own ? 'star' : 'idea';
   };
   // Each first takes the soft color of its area, the same colors as Development's tiles:
   // people and waving pink, talking yellow, moving blue, the rest (thinking, own firsts) green, a tooth peach.
-  const TONE = r => { const i = ICON(r), d = /smile|wave/.test(i) ? 'Social' : i === 'chat' ? 'Talking' : /roll|sit|crawl|stand/.test(i) ? 'Movement' : i === 'tooth' ? null : 'Thinking';
+  const TONE = r => { const i = ICON(r), d = /smile|wave|heart|mirror|peek/.test(i) ? 'Social' : /chat|ear|signs|music|book/.test(i) ? 'Talking' : /roll|sit|crawl|stand|head|hand/.test(i) ? 'Movement' : i === 'tooth' ? null : 'Thinking';
     const c = d && window.devTileColors ? devTileColors(d) : ['#fdeee6', '#9a5a3c']; return `--mem-bg:${c[0]};--mem-ink:${c[1]}`; };
   // The firsts parents remember. A first the parent typed in themselves always counts.
   const BIG = /smile|laugh|roll|sits? (up|without)|sitting|tooth|crawl|first word|mama|dada|name for a parent|says a word|pulls? (up|to stand)|stand|first steps|takes? (a few )?steps|walk|waves?/i;
