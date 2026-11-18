@@ -65,11 +65,11 @@
   function vaccinePage(age) {
     const v = VAX[age], s = SEASON(age);
     const names = s.map(x => x[0]), title = names.length === 3 ? `${names[0]}, ${names[1].toLowerCase()} and ${names[2]}` : names.join(' and ');
-    const shotsSub = age === 12 ? 'Usually given as separate shots' : '';
-    // Catch-up doses get their own group, so parents don't read them as due today (Nov 18).
+    // Group rows carry no subtitle. Catch-up doses sit in the Shots group under a small label, so parents don't read them as due today (Nov 18).
     const due = v.shots.filter(x => !/if not/.test(x[1])), miss = v.shots.filter(x => /if not/.test(x[1])).map(([n, d]) => [n, d.replace(/, if not.*$/, '')]);
-    const list = `<h2 class="hub-h2">At this checkup</h2><div class="hub-list">${due.length ? row('shield', 'blue', 'Shots', shotsSub) + doses(due) : ''}${miss.length ? row('clock', 'peach', 'Only if missed earlier', 'Your pediatrician checks the record') + doses(miss) : ''}${v.oral ? row('drop', 'green', 'By mouth', 'Drops, not a shot') + doses(v.oral) : ''}</div>`;
-    const season = `<h2 class="hub-h2">Depends on the season</h2><div class="hub-list">${row('snow', 'peach', title, 'Your pediatrician will say which are due')}<ul class="hv-doses">${s.map(([n, d]) => `<li><b>${n}</b><em>${F(d)}</em></li>`).join('')}</ul></div>`;
+    const cap = `<p class="hv-doses-cap${due.length ? '' : ' is-first'}">${F('Only if missed earlier')}</p>`;
+    const list = `<h2 class="hub-h2">At this checkup</h2><div class="hub-list">${row('shield', 'blue', 'Shots', '')}${due.length ? doses(due) : ''}${miss.length ? cap + doses(miss) : ''}${v.oral ? row('drop', 'green', 'By mouth', '') + doses(v.oral) : ''}</div>`;
+    const season = `<h2 class="hub-h2">Depends on the season</h2><div class="hub-list">${row('snow', 'peach', title, '')}<ul class="hv-doses">${s.map(([n, d]) => `<li><b>${n}</b><em>${F(d)}</em></li>`).join('')}</ul></div>`;
     // REVIEW: for babies under 3 months, any fever of 100.4°F or more needs a call.
     const call = age <= 2 ? 'A fever of 100.4°F+, 3 hours of crying that won’t stop, or swelling that grows.' : 'A fever of ' + (typeof feverTemp === 'function' ? feverTemp(age) : '101°F') + '+, 3 hours of crying that won’t stop, or swelling that grows.';
     const after = H().versus('After the shots', ['Normal for a day or two', 'Fussy or sleepy, a low fever, and a sore red spot where the shot went in.' + (age === 12 ? ' A fever or rash 1–2 weeks later can also be normal after MMR and chickenpox.' : '')], ['Call your pediatrician', call]);
