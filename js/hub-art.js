@@ -212,7 +212,7 @@
     stroller: { scenes: ['stroller'], chips: ['Lying flat while little', 'No bags on the handles', 'No blanket over the top'] },
     strollerUp: { scenes: ['strollerUp'], chips: ['Sitting up once steady', 'No bags on the handles', 'No blanket over the top'] },
     outgrown: { scenes: ['outgrown'], chips: ['Head within an inch of the top', 'Or past the height or weight on the label'] },
-    swaddle: { scenes: [['swad1', '1', 'Diamond, top folded', 'Shoulders below the fold'], ['swad2', '2', 'One side across', 'Arm straight, tucked under'], ['swad3', '3', 'Snug and loose', 'Snug chest, room at the hips']] },
+    swaddle: { scenes: [['swad1', '1', 'A diamond, top folded', 'Shoulders below the fold'], ['swad2', '2', 'One side across first', 'Arm straight, tucked under'], ['swad3', '3', 'Snug and loose', 'Snug chest, room at the hips']] },
     tub: { scenes: ['tub'], chips: ['About 2 inches of water', 'Warm, about 100°F', 'One hand behind the head and neck'] },
     crib: { scenes: ['crib'], chips: ['On the back', 'Swaddle or sleep sack', 'Firm, flat mattress', 'Nothing else in the crib', 'Not a sofa or your bed', 'Cool and smoke-free', 'Pacifier, if you like'] },
     pace: { scenes: [['paced', 'good', 'Paced', 'Upright, bottle level'], ['tipped', 'bad', 'Avoid', 'Lying back, bottle tipped up']] },
