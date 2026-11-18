@@ -9,3 +9,10 @@
 #main .ms-watch{font-size:15.5px!important;font-weight:700!important;gap:9px!important;padding:9px 16px 9px 9px;border-radius:999px;background:rgba(255,255,255,.7)}
 #main .ms-watch i{width:26px!important;height:26px!important}
 #main .ms-c2{box-shadow:none!important}
+/* The picture is centered on the whole card (words and button), not just the words, so it doesn't float high */
+#main .ms-card{display:grid!important;grid-template-columns:minmax(0,1fr) auto;column-gap:8px;align-items:center}
+#main .ms-card .ms-body{display:contents}
+#main .ms-card .ms-copy{grid-column:1;grid-row:1}
+#main .ms-card .ms-art{grid-column:2;grid-row:1 / span 2;align-self:center;margin-right:2px;width:112px;height:112px}
+#main .ms-card .ms-foot{grid-column:1;grid-row:2;justify-content:flex-start}
+#main .ms-card .ms-watch{white-space:nowrap;font-size:15px!important;padding:9px 14px 9px 9px}
