@@ -221,7 +221,7 @@
       const now = all.filter(s => where(s) === 'now').sort((p, q) => (q.v != null) - (p.v != null) || homeOf(q) - homeOf(p));
       const ahead = all.filter(s => where(s) === 'ahead'), earlier = all.filter(s => where(s) === 'earlier');
       let h = `<li class="tl-soon"><h2 class="tl-h2">${F('Around now')}</h2><p class="tl-intro">${F(`Little leaps around ${isToday(x) && typeof babyAge === 'function' ? babyAge() : ageTxt(x)}. Every baby moves at {p} own pace.`)}</p>`;
-      h += now.length ? `<ol class="tl-gcard">${now.map(row).join('')}</ol>` : `<p class="tl-quiet">${F('A calm stretch. Here’s what’s next.')}</p>`;
+      h += now.length ? `<ol class="tl-gcard">${now.map(row).join('')}</ol>` : `<p class="tl-quiet">${F(x < 1 ? 'Your first weeks together. Here’s what’s coming first.' : 'A calm stretch. Here’s what’s next.')}</p>`;
       h += `</li>`;
       // The months ahead: one card per month, each change at its home month.
       const months = [...new Set(ahead.map(s => Math.round(homeOf(s))))].sort((p, q) => p - q);
@@ -235,7 +235,7 @@
     };
     const head = x => { const mo = Math.max(0, Math.min(11, Math.floor(x))), cov = typeof window.stCover === 'function' ? window.stCover(mo) : null; return cov ? F(cov.title) : ''; };
     const ends = x => { const t = isToday(x), left = Math.max(0, 12 - x), eta = left < 0.5 ? 'any day now' : left < 1.5 ? 'in about a month' : `in about ${Math.round(left)} months`, d = Math.round(Math.abs(x - a));
-      return t ? `<b>${F(`${nm} is ${typeof babyAge === 'function' ? babyAge() : ''}`)}</b><span>${F(left < 0.5 ? 'Cake any day now!' : `${Math.max(1, Math.round(left))} month${Math.max(1, Math.round(left)) === 1 ? '' : 's'} until cake`)}</span>` : `<b>${F(`At ${ageTxt(x)}`)}</b><button class="tl-home" onclick="tlScrub(null)">${F('Back to today')}</button>`; };
+      return t ? `<b>${F(`${nm} is ${typeof babyAge === 'function' ? babyAge() : ''}`)}</b><span>${F(x >= 12 ? 'Happy first birthday!' : left < 0.5 ? 'Cake any day now!' : `${Math.max(1, Math.round(left))} month${Math.max(1, Math.round(left)) === 1 ? '' : 's'} until cake`)}</span>` : `<b>${F(`At ${ageTxt(x)}`)}</b><button class="tl-home" onclick="tlScrub(null)">${F('Back to today')}</button>`; };
     const theme = x => typeof window.monthTheme === 'function' ? window.monthTheme(Math.max(0, Math.min(11, Math.floor(x)))) : '';
     const art = x => typeof window.stCardArt === 'function' ? window.stCardArt(Math.max(0, Math.min(11, Math.floor(x)))) : '';
     window.__tl = { a, listHTML, head, ends, theme, art };
