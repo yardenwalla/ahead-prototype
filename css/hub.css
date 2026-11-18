@@ -1834,3 +1834,36 @@ label:has(> .hub-photo-input:focus-visible) { outline: 2px solid #884866; outlin
 /* Before the photo: the empty polaroid in the card says what to do, right where the photo will go. */
 #main .mem-card-story.is-empty { position: relative }
 #main .mem-card-add { position: absolute; left: 50%; top: 64%; transform: translate(-50%, -50%) rotate(2deg); padding: 8px 14px; border-radius: 999px; background: #fffdfb; box-shadow: 0 4px 12px rgba(60,40,60,.15); font-size: 14px; font-weight: 700; color: #4e3a5c; white-space: nowrap }
+
+/* Month row as little balloon cards (Nov 18). */
+#main .mem-picks { gap: 10px; padding-bottom: 6px }
+#main .mem-pick { width: 58px }
+#main .mem-pick-card { display: block; width: 58px; aspect-ratio: 9/16; border-radius: 9px; overflow: hidden; background: #f3e9e2; border: 2px solid #fff; box-shadow: 0 3px 8px rgba(60,40,60,.12) }
+#main .mem-pick-card img { display: block; width: 100%; height: 100%; object-fit: cover }
+#main .mem-pick.is-on .mem-pick-card { outline: 2px solid #7a4f6d; outline-offset: 2px }
+#main .mem-pick small { font-size: 11.5px }
+
+/* Firsts as tiles that look tappable: white, raised, a chevron; "+N more" opens the month's list. */
+#main .mem-fts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px }
+#main .mem-ft { position: relative; display: flex; flex-direction: column; align-items: center; gap: 8px; min-height: 112px; padding: 12px 6px 10px; border: 1px solid #ece3e5; border-radius: 16px; background: #fff; box-shadow: 0 2px 0 rgba(60,40,60,.04), 0 4px 12px rgba(60,40,60,.07); font: inherit; color: #2b2840; text-align: center; cursor: pointer; transition: transform .12s }
+#main .mem-ft:active { transform: scale(.97) }
+#main .mem-ft-ic { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 13px; background: var(--mem-bg, #f3ecf2) }
+#main .mem-ft-ic svg { width: 28px; height: 28px }
+#main .mem-ft b { font-size: 13px; font-weight: 650; line-height: 1.25; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden }
+#main .mem-ft-go { position: absolute; top: 6px; right: 9px; font-style: normal; font-size: 15px; color: #b3a9b6 }
+#main .mem-ft.is-more { justify-content: center; gap: 0; background: #f4ecf5; border-color: transparent; box-shadow: none; color: #6b3f78 }
+#main .mem-ft.is-more b { font-size: 22px; font-weight: 750 }
+#main .mem-ft.is-more small { font-size: 13px; font-weight: 600 }
+/* The month's list sheet */
+#main .mem-sheet-wrap { position: fixed; inset: 0; z-index: 60 }
+#main .mem-sheet-bg { position: absolute; inset: 0; background: rgba(30,20,35,.35) }
+#main .mem-sheet { position: absolute; left: 0; right: 0; bottom: 0; max-height: 78vh; overflow: auto; padding: 14px 18px 30px; border-radius: 24px 24px 0 0; background: #fffdfb; animation: memSheetUp .22s ease-out }
+@keyframes memSheetUp { from { transform: translateY(40px); opacity: .4 } to { transform: none; opacity: 1 } }
+#main .mem-sheet-grab { display: block; width: 40px; height: 5px; margin: 0 auto 12px; border-radius: 3px; background: #e2d8dc }
+#main .mem-sheet-x { position: absolute; top: 12px; right: 14px; width: 34px; height: 34px; border: 0; border-radius: 50%; background: #f3eef0; font-size: 20px; color: #6c6675; cursor: pointer }
+#main .mem-sheet h2 { margin: 2px 0 4px; font-size: 19px; font-weight: 750; color: #2b2840 }
+#main .mem-sheet p { margin: 0 0 12px; font-size: 14px; color: #6c6675 }
+#main .mem-sheet-row { display: flex; align-items: center; gap: 12px; width: 100%; padding: 9px 0; border: 0; border-top: 1px solid #f0e9ea; background: none; font: inherit; text-align: left; cursor: pointer }
+#main .mem-sheet-row b { flex: 1; font-size: 15.5px; font-weight: 600; color: #2b2840 }
+#main .mem-sheet-row i { font-style: normal; font-size: 20px; color: #9b93a0 }
+#main .mem-ft b { font-size: 12.5px; -webkit-line-clamp: 3; hyphens: none; overflow-wrap: normal } #main .mem-ft { min-height: 122px; padding: 12px 5px 10px }

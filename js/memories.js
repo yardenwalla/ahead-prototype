@@ -124,7 +124,9 @@
     const P = typeof babyPronouns === 'function' ? babyPronouns() : { p: 'their' };
     const bigSet = new Set(bigFirsts(firsts));
     const inMonth = m => firsts.filter(r => monthOf(dob, r.date) === m);
-    const tile = m => `<button class="mem-pick${m === now ? ' is-on' : ''}" data-m="${m}" onclick="memPick(${m})" aria-label="${esc2(short(m))}"${m === now ? ' aria-current="true"' : ''}><span class="mem-pick-tile">${photo(m) ? `<img src="${photo(m)}" alt="">` : `<b>${m === 0 ? '0' : m}</b>`}</span><small>${esc2(short(m))}</small><i class="${inMonth(m).length ? 'has' : ''}"></i></button>`;
+    // The months as a row of little balloon cards: the year reads as a collection, and a month with no photo shows its
+    // empty polaroid, which keeps asking for it.
+    const tile = m => `<button class="mem-pick${m === now ? ' is-on' : ''}" data-m="${m}" onclick="memPick(${m})" aria-label="${esc2(short(m))}"${m === now ? ' aria-current="true"' : ''}><span class="mem-pick-card">${designs ? `<img data-story-thumb="${m}" alt="">` : `<b>${m}</b>`}</span><small>${esc2(m === 0 ? 'Newborn' : m === 12 ? '1 year' : `${m} mo`)}</small></button>`;
     const picker = `<div class="mem-picks" role="tablist" aria-label="Months">${Array.from({ length: now + 1 }, (_, m) => tile(m)).join('')}</div>`;
     const lc = t => /^[A-Z][a-z]/.test(t) ? t[0].toLowerCase() + t.slice(1) : t;
     // The memory book row closes each month, and says what else was noticed that month, so nothing is said twice.
@@ -172,15 +174,17 @@
       // What happened, as one list card like Yarden's mockup: "Firsts this month" with "+ Add a first" in its header,
       // up to three big firsts as rows (the parent's note under one, never a date), then one last row that gathers the
       // smaller things noticed in Development ("Also noticed · 4" and the first two, by name). Never more than four rows.
-      const rowsBig = big.slice(0, 3), moreBig = big.length - rowsBig.length;
-      const bigRow = r => `<button class="mem-li" onclick="openPage('event-edit:${r.id}')"><span class="mem-li-ic" style="${TONE(r)}">${hubArt(ICON(r), 'Development')}</span><span class="mem-li-copy"><b>${esc2(keepTitle(r))}</b>${r.notes ? `<small>${esc2(String(r.notes).slice(0, 90))}</small>` : ''}</span><span class="mem-li-go" aria-hidden="true">›</span></button>`;
-      const smallN = small.length + moreBig;
-      const smallNames = small.slice(0, 2).map(r => lc(r.title));
-      const smallRow = smallN ? `<button class="mem-li" onclick="${open}"><span class="mem-li-ic is-also"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4.5l2.2 4.6 5 .7-3.6 3.5.9 5-4.5-2.4-4.5 2.4.9-5L4.8 9.8l5-.7z"/></svg></span><span class="mem-li-copy"><b>${esc2(`Also noticed · ${smallN}`)}</b><small>${esc2(smallNames.length ? (smallN > 1 ? `${smallNames[0]} and ${smallN - 1} more` : smallNames[0]) : 'More firsts in the book')}</small></span><span class="mem-li-go" aria-hidden="true">›</span></button>` : '';
-      const listHead = `<div class="mem-list-head"><h3>${esc2(m === now ? 'Firsts this month' : 'Firsts that month')}</h3><button class="mem-list-add" onclick="openPage('chg:Timeline:milestone')">＋ Add a first</button></div>`;
-      const what = listHead + (rs.length
-        ? `${rowsBig.length ? `<div class="mem-list">${rowsBig.map(bigRow).join('')}</div>` : ''}${bookRowFor(m, smallN, smallNames)}`
-        : bookRowFor(m, 0, []));
+      // That month's firsts as tiles: up to three, big firsts first, then "+N more", which opens the month's full list.
+      // Every tile opens its own page, where a moment can be moved to another month or removed.
+      const all = [...big, ...small];
+      const shown = all.length > 4 ? all.slice(0, 3) : all;
+      const more = all.length - shown.length;
+      const tileFor = r => `<button class="mem-ft" onclick="openPage('event-edit:${r.id}')" aria-label="${esc2(`${keepTitle(r)}, change or move`)}"><span class="mem-ft-ic" style="${TONE(r)}">${hubArt(ICON(r), 'Development')}</span><b>${esc2(bigSet.has(r) ? keepTitle(r) : r.title)}</b><i class="mem-ft-go" aria-hidden="true">›</i></button>`;
+      const listAll = `<template class="mem-month-all"><h2>${esc2(`${WORDS[m]} · ${all.length} firsts`)}</h2><p>Tap one to change it or move it to another month.</p>${all.map(r => `<button class="mem-sheet-row" onclick="memSheetClose();openPage('event-edit:${r.id}')"><span class="mem-ft-ic" style="${TONE(r)}">${hubArt(ICON(r), 'Development')}</span><b>${esc2(bigSet.has(r) ? keepTitle(r) : r.title)}</b><i aria-hidden="true">›</i></button>`).join('')}</template>`;
+      const moreTile = more ? `<button class="mem-ft is-more" onclick="memMonthList(${m})"><b>+${more}</b><small>more</small></button>` : '';
+      const what = `<div class="mem-list-head"><h3>${esc2(m === now ? 'Firsts this month' : 'Firsts that month')}</h3><button class="mem-list-add" onclick="openPage('chg:Timeline:milestone')">＋ Add a first</button></div>`
+        + (all.length ? `<div class="mem-fts">${shown.map(tileFor).join('')}${moreTile}</div>${more ? listAll : ''}`
+          : `<p class="mem-list-none">${esc2(m === now ? 'Tap Seen it in Development, or add a first, and it shows up here.' : 'Nothing saved for this month.')}</p>`);
       return `<section class="mem-card" data-m="${m}"${m === now ? '' : ' hidden'}>${media}${what}</section>`;
     };
     const play = have.length >= 2 ? `<button class="mem-title-play" onclick="memPlay()" aria-label="Play the year"><span aria-hidden="true">▶</span> Play the year</button>` : '';
@@ -209,6 +213,15 @@
       if (document.querySelector(`.mem-card[data-m="${next}"]`)) memPick(next, dx < 0 ? 'left' : 'right');
     }, { passive: true });
   }
+  // "+N more": that month's whole list in a sheet from the bottom.
+  window.memSheetClose = function () { const el = document.querySelector('.mem-sheet-wrap'); if (el) el.remove(); };
+  window.memMonthList = function (m) {
+    const t = document.querySelector(`.mem-card[data-m="${m}"] template.mem-month-all`); if (!t) return;
+    memSheetClose();
+    const w = document.createElement('div'); w.className = 'mem-sheet-wrap';
+    w.innerHTML = `<div class="mem-sheet-bg" onclick="memSheetClose()"></div><div class="mem-sheet" role="dialog" aria-modal="true"><i class="mem-sheet-grab" aria-hidden="true"></i><button class="mem-sheet-x" onclick="memSheetClose()" aria-label="Close">×</button>${t.innerHTML}</div>`;
+    (document.querySelector('#main') || document.body).appendChild(w);
+  };
   window.memPick = function (m, dir) {
     document.querySelectorAll('.mem-card').forEach(c => { c.hidden = Number(c.dataset.m) !== m; c.classList.remove('slide-left', 'slide-right'); if (!c.hidden && dir) { void c.offsetWidth; c.classList.add('slide-' + dir); } });
     document.querySelectorAll('.mem-pick').forEach(t => { const on = Number(t.dataset.m) === m; t.classList.toggle('is-on', on); if (on) { t.setAttribute('aria-current', 'true'); t.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' }); } else t.removeAttribute('aria-current'); });

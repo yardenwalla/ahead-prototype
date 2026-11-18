@@ -62,8 +62,9 @@ for (const [title, skill, age] of [['Sat up', 'Sits without support', 9], ['Roll
   const a = family(7);
   a.run(`hubSeen(journeySkillKey('Laughs')); hubSeen(journeySkillKey('Blows raspberries')); hubSeen(journeySkillKey('Squeals'))`);
   const t = text(open(a, 'timeline'));
-  check(/all 3 moments/.test(t), 'Memories counts every saved moment, not just the big firsts');
-  check(/memory book/.test(t) && /is \d+ months?!/.test(t), 'Memories shows this month and opens the memory book'); // Nov 13: order is then-and-now, months, then the book (was book first, Nov 8)
+  const h = open(a, 'timeline');
+  check((h.match(/class="mem-ft"/g) || []).length >= 3, 'Memories shows every saved moment as a tile, not just the big firsts');
+  check(/is \d+ months?!/.test(t) && !/mem-bookrow|mem-bookcard/.test(h), 'Memories leads with this month, and the separate memory book is gone (Nov 18)'); // Nov 13: order is then-and-now, months, then the book (was book first, Nov 8)
   check(/See it in the book/.test(toasts(a)) && !/Change date/.test(toasts(a)), 'Seen it offers See it in the book, not Change date');
 }
 
@@ -127,7 +128,10 @@ for (const [title, skill, age] of [['Sat up', 'Sits without support', 9], ['Roll
   const a = family(9);
   a.run(`(() => { const d = journeyData(); d.records.push({ id: 'v4', type: 'visit', status: 'attended', date: '2026-02-23', title: '4-month checkup' }); saveJourneyData(d); })()`);
   a.run(`(() => { const d = journeyData(); ['Copies sounds', 'Reaches for a toy', 'Brings things to mouth', 'Pushes up on arms', 'Looks at self in a mirror', 'Knows familiar people', 'Passes a toy hand to hand', 'Babbles'].forEach((t, i) => d.records.push({ id: 'n' + i, type: 'milestone', status: 'attended', date: '2026-04-25', title: t, skillKey: 'k' + i })); saveJourneyData(d); })()`);
-  check(!/checkup/i.test(text(open(a, 'timeline'))), 'Memories never lists checkups');
+  const tab = open(a, 'timeline');
+  check(!/checkup/i.test(text(tab)), 'Memories never lists checkups');
+  check(/class="mem-ft is-more"[^>]*><b>\+5<\/b>/.test(tab), 'A busy month shows three tiles, then “+5 more”');
+  check(((tab.match(/<template class="mem-month-all">[\s\S]*?<\/template>/) || [''])[0].match(/event-edit:/g) || []).length >= 8, 'Its “more” list holds every moment, each opening to move or remove it');
   const book = open(a, 'chg:Timeline:firsts');
   check(!/class="bk-tag/.test(book), 'The memory book writes the smaller things as one line, not a chip each');
   check(/and \d+ more/.test(text(book)) && (book.match(/bk-noted-it is-extra/g) || []).length >= 1, 'A busy month shows five, then “and N more”');
