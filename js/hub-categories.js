@@ -499,7 +499,9 @@
     // (take a temperature, help them feel better, tummy bugs, colds), and the emergency signs last (AAP, HealthyChildren.org).
     const m = actualMonth(), u3 = m < 3;
     const call911 = hubCall911();
-    const feverCard = `<section class="hub-card hub-fever is-calm"><div class="hub-fever-bands is-one"><div><small>${F(feverBand(m))}</small><b>${feverTemp(m)}<span> or higher</span></b><p>${F(u3 ? 'Call your pediatrician right away, day or night.' : (m < 6 ? 'Call your pediatrician now, day or night.' : 'Call your pediatrician. Call too if any fever lasts more than a day.'))}</p></div></div><p class="hub-fever-note">${F('Also call if Maya seems very unwell or is much sleepier than usual.' + feverEarlyNote())}</p></section>`;
+    const feverC = { '100.4°F': '38°C', '101°F': '38.3°C', '103°F': '39.4°C' }[feverTemp(m)] || '';
+    // Action first, then the number, then the context (Nov 18): a worried parent reads what to do before anything else.
+    const feverCard = `<section class="hub-card hub-fever is-calm"><div class="hub-fever-bands is-one is-act"><div><p class="hub-fever-act">${F(u3 ? 'Call your pediatrician right away' : m < 6 ? 'Call your pediatrician now' : 'Call your pediatrician')}</p><b>${feverTemp(m)}<span> or higher${feverC ? ' (' + feverC + ')' : ''}</span></b><p>${F(u3 ? 'Day or night, even if Maya seems fine.' : m < 6 ? 'Day or night. Call too for any fever lasting more than a day.' : 'Or for any fever that lasts more than a day.')}</p></div></div><p class="hub-fever-note">${F('Also call if Maya seems very unwell or is much sleepier than usual.' + feverEarlyNote())}</p></section>`;
     // One flow, in the order a parent lives it: check for a fever and know when that means calling,
     // make them comfortable, then the two common bugs, and the emergency signs last.
     const thermo = () => {
@@ -529,7 +531,7 @@
     // A fever (When it's urgent): the headline is this age's rule. The call is the answer here, so the number card and Call 911 come first (Nov 18).
     if (id === 'sick-fever' || id === 'sick-temp' || id === 'sick-care') {
       const title = u3 ? 'Under 3 months, any fever means a call' : m < 6 ? 'At this age, call for 101°F or higher' : 'How {s} {act|acts} matters more than the number';
-      const lead = u3 ? 'A fever this young can be the only sign of an infection, so call even if {s} seems fine.' : m < 6 ? 'Below that, watch how {s} {act|acts} and keep feeds going.' : 'If {s} is still playing and drinking, rest and fluids are usually enough.';
+      const lead = u3 ? 'A fever this young can be the only sign of an infection.' : m < 6 ? 'Below that, watch how {s} {act|acts} and keep feeds going.' : 'If {s} is still playing and drinking, rest and fluids are usually enough.';
       return tpl(detailFrame('Health', 'When Maya seems sick', title, lead,
         B.calls(C911).replace('</h2>', '</h2>' + feverCard)
         + sec('Take {p} temperature', thermo())

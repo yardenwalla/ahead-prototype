@@ -1747,3 +1747,9 @@ label:has(> .hub-photo-input:focus-visible) { outline: 2px solid #884866; outlin
 #main .st-glance { grid-template-columns: repeat(3, 1fr); margin: 0 0 12px }
 #main .st-glance b { font-size: 15.5px }
 
+
+/* Fever call card, action first (Nov 18) */
+#main .hub-fever-bands.is-act .hub-fever-act { font-size: 16px; font-weight: 600; line-height: 1.3; color: var(--ink, #2b2730); margin: 0 0 6px }
+#main .hub-fever-bands.is-act b { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px; margin: 0 0 6px }
+#main .hub-fever-bands.is-act b span { display: inline; font-size: 14px; font-weight: 500 }
+#main .hub-fever-bands.is-act p:last-child { font-size: 14px; line-height: 1.4 }
