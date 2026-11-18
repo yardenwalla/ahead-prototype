@@ -2413,7 +2413,7 @@
       + `<div class="hub-list">${rows.map(([id, icon, title, sub]) => H().row({ cat: CAT, icon, title, sub, onclick: id === 'x_poop' ? poopGo() : id === 'x_cry' ? "openPage('chg:Sleep:d:crying')" : go(id) }).replace(/<span class="hub-dot">[\s\S]*?<\/span><span class="hub-row-copy">/, `<span class="hub-dot">${hubArt(icon, CAT).replace('data-art=', 'data-keep=')}</span><span class="hub-row-copy">`)).join('')}</div>`
       + `<section class="ss-moment">` + xVs(['Normal', 'Spit-up, gas, fussy evenings, and feeds that change from day to day.'], ['Call your pediatrician', 'Fewer wet diapers, too sleepy to feed, green or bloody vomit, or ' + fever(false) + '.'])
       + xNote('Who can help:', 'your pediatrician' + (nurse ? ', and a lactation consultant for latching, often covered by insurance.' : '.')) + xNote('How are you doing?', 'If you feel low or overwhelmed most days, tell your doctor, or call or text 1-833-852-6262, any time.') + `</section>`); };
-  // Bottle basics (Nov 18): the bottle how-tos for this family, one list, opened from the card under Feeding challenges.
+  // Bottle basics (Nov 18): the bottle how-tos for this family, one list, opened from the card above Feeding challenges.
   P.bottles = () => { const L = bottleHowtos();
     return qaCss + page(head('Bottles', formulaFam() ? 'Make, give and store bottles safely' : 'Give and store bottles safely', 'Handy to share with anyone else who gives bottles.', XC.p1)
       + `<div class="hub-list">${L.map(([id, icon, title, sub]) => H().row({ cat: CAT, icon, title, sub, onclick: go(id) }).replace(/<span class="hub-dot">[\s\S]*?<\/span><span class="hub-row-copy">/, `<span class="hub-dot">${hubArt(icon, CAT).replace('data-art=', 'data-keep=')}</span><span class="hub-row-copy">`)).join('')}</div>`); };
@@ -3365,11 +3365,12 @@
         h = h.replace(/<span class="hub-card-note"><b>Every day<\/b>[\s\S]*?<\/span>(?:<button class="hub-link"[^>]*>[^<]*<\/button>)*/, `<span class="hub-card-note fd-every">${note}</span>`);
         // Families who pump or store breast milk: how long the baby's milk keeps, one quiet link, at every stage (Nov 14).
         // Bottle how-tos (Nov 16): one quiet line on the stage page, since these pages no longer link to each other at the bottom.
-        // Nov 18: one "Bottle basics" door under Feeding challenges, the same kind of card, instead of a loose line of links.
+        // Nov 18: one "Bottle basics" door, the same kind of card as Feeding challenges, instead of a loose line of links.
+        // It sits between the three guides and Feeding challenges: what's happening now, the how-tos you use every day, then help when something's off.
         { const L = bottleHowtos();
           if (L.length && !/fd-bottles/.test(h)) { const a = h.indexOf('<button class="hub-rough-card'), e = a < 0 ? -1 : h.indexOf('</button>', a);
             const door = `<button class="hub-rough-card care-rash-card fd-bottles" style="background:#fdeee6;color:#9a5a3c;margin-top:12px" onclick="${go('bottles')}"><span class="hub-rough-moon" aria-hidden="true">${hubArt('bottle', CAT)}</span><span class="hub-rough-copy"><b>${F('Bottle basics')}</b><small>${F(bottleSub(L))}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`;
-            if (e > 0) h = h.slice(0, e + 9) + door + h.slice(e + 9); } } }
+            if (a > 0) h = h.slice(0, a) + door.replace('margin-top:12px', 'margin-top:12px;margin-bottom:0') + h.slice(a); } } }
       // Formula: making and storing bottles, one tap from the feed walkthrough.
       if (typeof h === 'string' && /^chg:Feeding:mock:xa:feed(\.\d)?$/.test(String(r)) && formulaFam()) h = h.replace('<button class="hub-next"', `<div class="hub-browse"><button class="hub-link" onclick="openPage('chg:Feeding:mock:xa:prep')">${F('Making, storing and cleaning bottles')} ›</button></div><button class="hub-next"`);
       return h; };
