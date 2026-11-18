@@ -1762,3 +1762,29 @@ label:has(> .hub-photo-input:focus-visible) { outline: 2px solid #884866; outlin
 #main .mem-card-btn .hub-photo-input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none }
 #main .mem-card .mem-badges, #main .mem-card .mem-badge-none { margin-top: 20px }
 #main button.mem-card-btn, #main label.mem-card-btn { font-family: Figtree, system-ui, sans-serif !important; font-size: 14.5px !important; font-weight: 650 !important; color: #4e3a5c !important }
+
+/* Memories month card, from Yarden's mockup (Nov 17): a soft panel in the month's balloon color, words left,
+   her photo as a big taped polaroid right with the month's balloon beside it, two buttons under. */
+#main .mem-card { padding: 0; border: 0; background: none }
+#main .mem-card-hero { position: relative; padding: 22px 18px 18px; border-radius: 24px; background: color-mix(in srgb, var(--mc) 13%, #fdf9f6) }
+#main .mem-card-top { gap: 10px; align-items: center }
+#main .mem-card-words { position: relative; flex: 1 1 46% }
+#main .mem-page .mem-card-label { margin: 0; font-size: 12.5px; font-weight: 750; letter-spacing: .06em; text-transform: uppercase; color: color-mix(in srgb, var(--mc) 55%, #3b2a4a) }
+#main .mem-page h2.mem-card-title { margin: 8px 0 12px; font-size: 27px !important; font-weight: 800 !important; line-height: 1.12 !important; color: #2b2840 }
+#main .mem-card-line { font-size: 15px; line-height: 1.45; color: #4f4a5a }
+#main .mem-doodle { position: absolute; fill: none; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round }
+#main .mem-doodle.is-spark { top: 26px; right: -6px; width: 30px; stroke: color-mix(in srgb, var(--mc) 80%, #e09a3c) }
+#main .mem-doodle.is-heart { bottom: -34px; right: 8px; width: 34px; stroke: #c27aa9 }
+#main .mem-card-pic { flex: 0 0 52%; width: auto; padding: 14px 6px 10px 0 }
+#main .mem-pol { position: relative; display: block; width: 100%; padding: 8px 8px 22px; border: 0; border-radius: 6px; background: #fff; box-shadow: 0 12px 26px rgba(60,40,60,.16); transform: rotate(2.5deg); cursor: pointer; font: inherit }
+#main .mem-pol-img { display: block; width: 100%; aspect-ratio: 4/5; object-fit: cover; border-radius: 2px; background: #f1ebe6 }
+#main span.mem-pol-img { display: grid; place-items: center }
+#main span.mem-pol-img b { font-size: 34px; font-weight: 300; color: #b3a8ae }
+#main .mem-pol-tape { position: absolute; top: -10px; left: 50%; width: 70px; height: 20px; transform: translateX(-50%) rotate(-3deg); background: repeating-linear-gradient(90deg, color-mix(in srgb, var(--mc) 55%, #fff) 0 6px, color-mix(in srgb, var(--mc) 35%, #fff) 6px 12px); opacity: .9; z-index: 2 }
+#main .mem-pol-balloon { position: absolute; right: -14px; bottom: -6px; width: 44%; filter: drop-shadow(0 6px 10px rgba(0,0,0,.18)); transform: rotate(-4deg); z-index: 2 }
+#main .mem-pol-balloon.is-hello { width: 62% }
+#main .mem-pol .hub-photo-input { position: absolute; width: 1px; height: 1px; opacity: 0 }
+#main .mem-card-btns { margin-top: 20px }
+#main .mem-card-btn { background: #fffdfb; border-color: color-mix(in srgb, var(--mc) 22%, #e7dfe3) }
+#main .mem-card-btn.is-main { background: color-mix(in srgb, var(--mc) 26%, #f6eef6); border-color: transparent }
+#main .mem-card .mem-badges, #main .mem-card .mem-badge-none { margin-top: 18px }

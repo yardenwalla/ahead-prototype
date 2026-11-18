@@ -134,13 +134,18 @@
       const LINES = ['The very first one. The start of everything.', 'One month of getting to know each other.', 'Two months of you, and we’re finding our rhythm.', 'Three months of you. Every day a little more you.',
         'Four months of you, and so much personality.', 'Five months of you. Look how far we’ve come.', 'Half a year of you. So much growing, learning and discovering.', 'Seven months of you. The best kind of busy.',
         'Eight months of you. Our days are fuller, and louder.', 'Nine months in, nine months out. You’ve been here as long as you were on the way.', 'Ten months of you. Almost a whole year of firsts.', 'Eleven months of you. One more, and it’s a whole year.', 'One whole year of you. Happy birthday.'];
-      const pic = !designs ? '' : photo(m)
-        ? `<button class="mem-card-story" onclick="storyShare(${m})" aria-label="Share the ${L(m)} card"><img data-story-thumb="${m}" alt=""></button>`
-        : `<label class="mem-card-story is-empty" aria-label="Add the ${lab} photo"><img data-story-thumb="${m}" alt="">${hubPhotoInput(m)}</label>`;
-      const btns = !designs ? '' : photo(m)
+      // Her photo itself is the picture here, as a big taped polaroid, with the month's foil balloon tucked beside it.
+      // Share card still makes the full balloon card.
+      const MC = ['#e9b15c', '#38b5e7', '#89acde', '#65b89e', '#74b8a3', '#33abe7', '#efb661', '#f29f78', '#f192a8', '#f38978', '#cd8ce2', '#848eeb', '#eeb557'][m];
+      const balloon = `<img class="mem-pol-balloon${m ? '' : ' is-hello'}" src="assets/home/${m ? 'balloon-' + m : 'hello-world'}.png" alt="">`;
+      const pic = photo(m)
+        ? `<button class="mem-pol" onclick="storyShare(${m})" aria-label="Share the ${L(m)} card"><i class="mem-pol-tape"></i><img class="mem-pol-img" src="${photo(m)}" alt="">${balloon}</button>`
+        : `<label class="mem-pol is-empty" aria-label="Add the ${lab} photo"><i class="mem-pol-tape"></i><span class="mem-pol-img"><b>＋</b></span>${balloon}${hubPhotoInput(m)}</label>`;
+      const doodles = `<svg class="mem-doodle is-spark" viewBox="0 0 40 30" aria-hidden="true"><path d="M8 4v8M18 10l6-6M20 22h9"/></svg><svg class="mem-doodle is-heart" viewBox="0 0 40 34" aria-hidden="true"><path d="M10 28c-6-4-8-8-6-11 2-3 6-2 7 1 1-3 5-4 7-1 1 3-2 7-8 11zM27 16c-4-3-5-6-4-8 1-2 4-2 5 0 1-2 4-2 5 0 1 2-1 5-6 8z"/></svg>`;
+      const btns = photo(m)
         ? `<div class="mem-card-btns"><label class="mem-card-btn"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="3"/><circle cx="9" cy="10" r="1.8"/><path d="m4 17 5-4.5 4 3.5 3-2.5 4 3.5"/></svg>Change photo${hubPhotoInput(m)}</label><button class="mem-card-btn is-main" onclick="storyShare(${m})"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V4m0 0-4 4m4-4 4 4"/><path d="M6 11H5a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7a1 1 0 0 0-1-1h-1"/></svg>Share card</button></div>`
         : `<div class="mem-card-btns"><label class="mem-card-btn is-main is-wide">＋ Add ${esc2(P.p)} ${lab} photo${hubPhotoInput(m)}</label></div>`;
-      const media = `<div class="mem-card-top"><div class="mem-card-words"><p class="mem-card-label">${esc2(m === now ? 'This month' : 'Looking back')}</p><h2 class="mem-card-title">${esc2(title)}</h2><p class="mem-card-line">${esc2(LINES[m].replace(/\byou\b(?=[.,]|$)/, 'you') )}</p></div><div class="mem-card-pic">${pic}</div></div>${btns}`;
+      const media = `<div class="mem-card-hero" style="--mc:${MC}"><div class="mem-card-top"><div class="mem-card-words">${doodles}<p class="mem-card-label">${esc2(WORDS[m])}</p><h2 class="mem-card-title">${esc2(title).replace(/(\d+ months?!?)$/, '<span class="mem-nowrap">$1</span>')}</h2><p class="mem-card-line">${esc2(LINES[m].replace(/\byou\b(?=[.,]|$)/, 'you') )}</p></div><div class="mem-card-pic">${pic}</div></div>${btns}</div>`;
       // What happened that month, small and light under the balloon card: each big first as a little round badge
       // with its drawing (four at most, one row), then the smaller things named in one short line. Two are named;
       // past that it's "and 3 more", which opens the book where they're all listed.
