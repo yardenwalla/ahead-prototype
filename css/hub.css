@@ -1882,3 +1882,10 @@ label:has(> .hub-photo-input:focus-visible) { outline: 2px solid #884866; outlin
 #main .is-side .mem-card-btns { margin-top: 18px }
 /* Firsts tiles: names centered under their icon. */
 #main .mem-ft b { width: 100%; text-align: center }
+/* Side-by-side panel (Nov 18): the label, headline, line and hearts are one group, centered beside the card;
+   the sparkle sits after the headline's first line, the hearts under the line. */
+#main .is-side .mem-card-label { margin: 0 0 8px }
+#main .is-side .mem-card-words { display: flex; flex-direction: column; justify-content: center; align-self: stretch }
+#main .is-side .mem-doodle { position: static }
+#main .is-side h2.mem-card-title .mem-doodle.is-spark { display: inline-block; width: 24px; height: 18px; margin: 0 0 0 4px; vertical-align: top; stroke: color-mix(in srgb, var(--mc) 80%, #e09a3c) }
+#main .is-side .mem-doodle.is-heart { width: 30px; margin: 14px 0 0 2px }

@@ -152,13 +152,16 @@
       const pic = !designs ? '' : photo(m)
         ? `<button class="mem-card-story" onclick="storyShare(${m})" aria-label="Share the ${L(m)} card"><img data-story-thumb="${m}" alt=""></button>`
         : `<label class="mem-card-story is-empty" aria-label="Add the ${lab} photo"><img data-story-thumb="${m}" alt="">${hubPhotoInput(m)}</label>`;
+      // Doodles belong to the words: a sparkle at the end of the headline's first line, hearts just under the line.
+      const SPARK = `<svg class="mem-doodle is-spark" viewBox="0 0 40 30" aria-hidden="true"><path d="M8 4v8M18 10l6-6M20 22h9"/></svg>`;
+      const HEARTS = `<svg class="mem-doodle is-heart" viewBox="0 0 40 34" aria-hidden="true"><path d="M10 28c-6-4-8-8-6-11 2-3 6-2 7 1 1-3 5-4 7-1 1 3-2 7-8 11zM27 16c-4-3-5-6-4-8 1-2 4-2 5 0 1-2 4-2 5 0 1 2-1 5-6 8z"/></svg>`;
       const doodles = `<svg class="mem-doodle is-spark" viewBox="0 0 40 30" aria-hidden="true"><path d="M8 4v8M18 10l6-6M20 22h9"/></svg><svg class="mem-doodle is-heart" viewBox="0 0 40 34" aria-hidden="true"><path d="M10 28c-6-4-8-8-6-11 2-3 6-2 7 1 1-3 5-4 7-1 1 3-2 7-8 11zM27 16c-4-3-5-6-4-8 1-2 4-2 5 0 1-2 4-2 5 0 1 2-1 5-6 8z"/></svg>`;
       const btns = photo(m)
         ? `<div class="mem-card-btns"><label class="mem-card-btn"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="3"/><circle cx="9" cy="10" r="1.8"/><path d="m4 17 5-4.5 4 3.5 3-2.5 4 3.5"/></svg>Change photo${hubPhotoInput(m)}</label><button class="mem-card-btn is-main" onclick="storyShare(${m})"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V4m0 0-4 4m4-4 4 4"/><path d="M6 11H5a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7a1 1 0 0 0-1-1h-1"/></svg>Share card</button></div>`
         : `<div class="mem-card-btns"><label class="mem-card-btn is-main is-wide">＋ Add ${esc2(P.p)} ${lab} photo${hubPhotoInput(m)}</label></div>`;
       // Stacked, so the card she'll share is big (the photo inside it is about the size of a real print on screen):
       // the month and its headline on top, the balloon card centered, the month's line as its caption, then the buttons.
-      const media = `<div class="mem-card-hero is-side" style="--mc:${MC}"><p class="mem-card-label">${esc2(WORDS[m])}</p><div class="mem-card-top"><div class="mem-card-words">${doodles}<h2 class="mem-card-title">${esc2(title).replace(/(\d+ months?!?)$/, '<span class="mem-nowrap">$1</span>')}</h2><p class="mem-card-line">${esc2(LINES[m])}</p></div><div class="mem-card-pic">${pic}</div></div>${btns}</div>`;
+      const media = `<div class="mem-card-hero is-side" style="--mc:${MC}"><div class="mem-card-top"><div class="mem-card-words"><p class="mem-card-label">${esc2(WORDS[m])}</p><h2 class="mem-card-title">${esc2(title).replace(/^(.*?) (\d+ months?!?)$/, '$1 ' + SPARK + '<span class="mem-nowrap">$2</span>')}</h2><p class="mem-card-line">${esc2(LINES[m])}</p>${HEARTS}</div><div class="mem-card-pic">${pic}</div></div>${btns}</div>`;
       // What happened that month, small and light under the balloon card: each big first as a little round badge
       // with its drawing (four at most, one row), then the smaller things named in one short line. Two are named;
       // past that it's "and 3 more", which opens the book where they're all listed.
