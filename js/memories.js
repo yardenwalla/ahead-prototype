@@ -151,7 +151,11 @@
       return `<button class="mem-bookrow" onclick="openPage('${firsts.length ? 'chg:Timeline:firsts' : 'chg:Timeline:milestone'}')"><span class="mem-bookrow-pic">${newest != null ? `<img src="${photo(newest)}" alt="">` : `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 6.5c2.5-1.3 5.5-1.3 8.5.5 3-1.8 6-1.8 8.5-.5v12c-2.5-1.3-5.5-1.3-8.5.5-3-1.8-6-1.8-8.5-.5z M12 7v12"/></svg>`}</span><span class="mem-li-copy"><b>${esc2(`${name()}’s memory book`)}</b><small>${esc2(sub)}</small></span><span class="mem-li-go" aria-hidden="true">›</span></button>`;
     };
     const monthCard = m => {
-      const rs = inMonth(m), big = rs.filter(r => bigSet.has(r)).reverse(), small = rs.filter(r => !bigSet.has(r));
+      // The biggest firsts lead (first steps before first words before crawling...), then the parent's own firsts, then
+      // the smaller "Seen it" moments, which drop into "+N more" once three bigger ones fill the row (Nov 18).
+      const RANK = [/first steps|takes? (a few )?steps|walk/, /first word|mama|dada|says a word|name for a parent/, /pulls? (up|to stand)|stand/, /crawl/, /sits?|sitting/, /roll/, /tooth/, /laugh/, /smile/, /wave/];
+      const rank = r => { const t = String(r.title).toLowerCase(), i = RANK.findIndex(re => re.test(t)); return i >= 0 ? (i <= 5 ? i : i + 1) : r.own ? 6 : 12; };
+      const rs = inMonth(m), big = rs.filter(r => bigSet.has(r)).sort((a, b) => rank(a) - rank(b) || String(b.date).localeCompare(String(a.date))), small = rs.filter(r => !bigSet.has(r));
       // The month at the top of its card: words on the left (who she is this month, and one warm line written to her),
       // her balloon card on the right, then Change photo and Share card side by side. With no photo yet, one button adds it.
       const nmB = name(), lab = m === 0 ? 'newborn' : m === 12 ? 'first-birthday' : m + '-month';

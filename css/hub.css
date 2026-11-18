@@ -1915,3 +1915,10 @@ label:has(> .hub-photo-input:focus-visible) { outline: 2px solid #884866; outlin
 #main .mem-empty-plus { flex: none; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; background: #f4ecf5; font-size: 22px; color: #6b3f78 }
 #main .mem-empty-bar b { display: block; font-size: 15px; font-weight: 700; color: #6b3f78 }
 #main .mem-empty-bar small { display: block; margin-top: 2px; font-size: 13.5px; line-height: 1.4; color: #6c6675 }
+/* Firsts tiles sized to their words (Nov 18): no fixed height, so "First steps" isn't floating in an empty box.
+   Tiles in a row still share the tallest one's height. */
+#main .mem-ft { min-height: 0; gap: 7px; padding: 12px 6px 12px; justify-content: flex-start }
+#main .mem-ft-ic { width: 40px; height: 40px; border-radius: 12px }
+#main .mem-ft-ic svg { width: 26px; height: 26px }
+#main .mem-ft.is-more { padding: 12px 6px }
+#main .mem-ft { justify-content: center } #main .mem-ft b { font-size: 12.5px; line-height: 1.22 }
