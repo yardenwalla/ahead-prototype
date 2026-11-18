@@ -21,13 +21,13 @@
 
   /* ---------- What to expect ---------- */
   const EXPECT = {
-    0: { lead: 'A first check after coming home: feeding, weight and jaundice, plus your hospital test results.', checks: [['bottle', 'green', 'Feeding and weight', 'Whether {s} {are|is} getting back toward birth weight'], ['eye', 'yellow', 'Jaundice', 'Skin and eyes, with a quick blood test if needed'], ['ear', 'blue', 'Newborn screening', 'Hearing, heart and blood-spot results from the hospital'], ['heart', 'peach', 'How you’re doing', 'Recovery, sleep and support at home']] },
-    1: { lead: 'A check of how feeding and growth are going, and how you’re doing.', checks: [['steth', 'green', 'Growth and a head-to-toe exam', 'Weight, length and head size, then heart, hips, eyes and skin'], ['bottle', 'yellow', 'Feeding', 'How feeds are going, and whether anything hurts'], ['smile', 'pink', 'Early responses', 'How {s} {move|moves} and {react|reacts} to people and sounds'], ['heart', 'peach', 'How you’re doing', 'A short questionnaire about your mood']] },
-    2: { lead: 'A check of how Maya is growing and moving, and a chance to ask anything.', checks: [['steth', 'green', 'Growth and a head-to-toe exam', 'Weight, length and head size, then heart, hips, eyes and skin'], ['smile', 'pink', 'Early development', 'How {s} {respond|responds} to you and {hold|holds} {p} head'], ['bottle', 'yellow', 'Feeding', 'A good moment to ask about night feeds'], ['heart', 'peach', 'How you’re doing', 'A short questionnaire about your mood']] },
-    4: { lead: 'Growth, new movement and feeding, and a first chat about solids.', checks: [['steth', 'green', 'Growth and a head-to-toe exam', 'Weight, length and head size, then heart, hips, eyes and skin'], ['roll', 'blue', 'Movement and play', 'Head control, reaching and smiles'], ['bottle', 'yellow', 'Feeding', 'Milk, vitamin D and signs of readiness for solids'], ['moon', 'pink', 'Sleep', 'Night waking and how feeds fit in'], ['heart', 'peach', 'How you’re doing', 'A short questionnaire about your mood']] },
-    6: { lead: 'Growth, new skills, first foods and teeth.', checks: [['steth', 'green', 'Growth and a head-to-toe exam', 'Weight, length and head size, then heart, hips, eyes and skin'], ['sit', 'blue', 'New skills', 'Rolling, reaching, sitting with support, and sounds'], ['bowl', 'yellow', 'First foods', 'How solids are going, and iron'], ['tooth', 'pink', 'Teeth', 'Tooth care, and a fluoride coating once teeth appear'], ['heart', 'peach', 'How you’re doing', 'A short questionnaire about your mood']] },
-    9: { lead: 'A short development questionnaire, plus growth and feeding.', checks: [['steth', 'green', 'Growth and a head-to-toe exam', 'Weight, length and head size, then heart, hips, eyes and skin'], ['star', 'blue', 'Development questionnaire', 'You answer questions about talking, moving and playing'], ['bowl', 'yellow', 'Feeding and teeth', 'Textures, finger foods and brushing'], ['ear', 'pink', 'Hearing and vision', 'Anything you’ve noticed at home'], ['heart', 'peach', 'How you’re doing', 'A short questionnaire about your mood']] },
-    12: { lead: 'Growth, a blood test for anemia, and moving to milk and cups.', checks: [['steth', 'green', 'Growth and a head-to-toe exam', 'Weight, length and head size, then heart, hips, eyes and skin'], ['drop', 'pink', 'Anemia check', 'A quick blood test'], ['home', 'blue', 'Lead test', 'A finger-prick test, routine in many areas'], ['cup', 'yellow', 'Milk and cups', 'Moving off bottles, and how much milk'], ['wave', 'peach', 'Development', 'Gestures, sounds and first steps']] }
+    0: { title: 'Feeding, weight and jaundice come first', lead: 'Usually 3–5 days after birth. Your hospital test results get checked too.', checks: [['bottle', 'green', 'Feeding and weight', 'Whether {s} {are|is} getting back toward birth weight'], ['eye', 'yellow', 'Jaundice', 'Skin and eyes, with a quick blood test if needed'], ['ear', 'blue', 'Newborn screening', 'Hearing, heart and blood-spot results from the hospital'], ['heart', 'peach', 'How you’re doing', 'Recovery, sleep and support at home']] },
+    1: { title: 'A check on feeding, growth and you', lead: 'A short visit, and a good time for feeding questions.', checks: [['steth', 'green', 'Growth and a head-to-toe exam', 'Weight, length and head size, then heart, hips, eyes and skin'], ['bottle', 'yellow', 'Feeding', 'How feeds are going, and whether anything hurts'], ['smile', 'pink', 'Early responses', 'How {s} {move|moves} and {react|reacts} to people and sounds'], ['heart', 'peach', 'How you’re doing', 'A short questionnaire about your mood']] },
+    2: { title: 'Growth and early skills, plus your questions', lead: 'No question is too small. Write them down before you go.', checks: [['steth', 'green', 'Growth and a head-to-toe exam', 'Weight, length and head size, then heart, hips, eyes and skin'], ['smile', 'pink', 'Early development', 'How {s} {respond|responds} to you and {hold|holds} {p} head'], ['bottle', 'yellow', 'Feeding', 'A good moment to ask about night feeds'], ['heart', 'peach', 'How you’re doing', 'A short questionnaire about your mood']] },
+    4: { title: 'Movement, feeding and a first talk on solids', lead: 'Bring what you’ve noticed about rolling, reaching and feeds.', checks: [['steth', 'green', 'Growth and a head-to-toe exam', 'Weight, length and head size, then heart, hips, eyes and skin'], ['roll', 'blue', 'Movement and play', 'Head control, reaching and smiles'], ['bottle', 'yellow', 'Feeding', 'Milk, vitamin D and signs of readiness for solids'], ['moon', 'pink', 'Sleep', 'Night waking and how feeds fit in'], ['heart', 'peach', 'How you’re doing', 'A short questionnaire about your mood']] },
+    6: { title: 'Growth, new skills, first foods and teeth', lead: 'Bring notes on how first foods are going.', checks: [['steth', 'green', 'Growth and a head-to-toe exam', 'Weight, length and head size, then heart, hips, eyes and skin'], ['sit', 'blue', 'New skills', 'Rolling, reaching, sitting with support, and sounds'], ['bowl', 'yellow', 'First foods', 'How solids are going, and iron'], ['tooth', 'pink', 'Teeth', 'Tooth care, and a fluoride coating once teeth appear'], ['heart', 'peach', 'How you’re doing', 'A short questionnaire about your mood']] },
+    9: { title: 'A development check, plus growth and feeding', lead: 'It’s a routine way to catch anything early.', checks: [['steth', 'green', 'Growth and a head-to-toe exam', 'Weight, length and head size, then heart, hips, eyes and skin'], ['star', 'blue', 'Development questionnaire', 'You answer questions about talking, moving and playing'], ['bowl', 'yellow', 'Feeding and teeth', 'Textures, finger foods and brushing'], ['ear', 'pink', 'Hearing and vision', 'Anything you’ve noticed at home'], ['heart', 'peach', 'How you’re doing', 'A short questionnaire about your mood']] },
+    12: { title: 'A blood test, plus the move to milk and cups', lead: 'The blood test is a quick finger or heel prick.', checks: [['steth', 'green', 'Growth and a head-to-toe exam', 'Weight, length and head size, then heart, hips, eyes and skin'], ['drop', 'pink', 'Anemia check', 'A quick blood test'], ['home', 'blue', 'Lead test', 'A finger-prick test, routine in many areas'], ['cup', 'yellow', 'Milk and cups', 'Moving off bottles, and how much milk'], ['wave', 'peach', 'Development', 'Gestures, sounds and first steps']] }
   };
   // Before you go: the full list once, at the first checkup. Later checkups list only what's new for that visit (none if nothing is).
   const BRING = age => age === 0 ? [['shirt', 'green', 'Easy clothes', 'Something that comes off quickly'], ['pacifier', 'peach', 'A feed or a pacifier', 'It’s fine to feed during the visit']]
@@ -36,39 +36,46 @@
     const e = EXPECT[age];
     // First week: jaundice at home, since it peaks in these days (AAP, HealthyChildren.org).
     const jaundice = age === 0 ? H().versus('Yellow skin at home: normal, or time to call?', ['Normal', 'A little yellow on the face in the first week, feeding well.'], ['Call your pediatrician', 'Yellow on the belly, legs or eyes, poor feeding, or very sleepy.']) : '';
-    return frame(head(age, 'green', 'What to expect', e.lead) + H().list('What they’ll check', e.checks.map(c => row(...c))) + jaundice + H().list('Before you go', BRING(age).map(c => row(...c))));
+    // What's new at this visit leads; the growth check every visit has goes after it (Nov 18).
+    const growth = e.checks.filter(c => c[0] === 'steth' && age >= 2).map(c => [c[0], c[1], 'The usual growth check', 'Weight, length, head size and a full exam']);
+    const checks = growth.length ? [...e.checks.filter(c => c[0] !== 'steth' && c[0] !== 'heart'), ...growth, ...e.checks.filter(c => c[0] === 'heart')] : e.checks;
+    return frame(head(age, 'green', e.title, e.lead) + H().list('What they’ll check', checks.map(c => row(...c))) + jaundice + H().list('Before you go', BRING(age).map(c => row(...c))));
   }
 
   /* ---------- Vaccines ---------- */
   const WHAT = { DTaP: 'Protects against whooping cough, diphtheria and tetanus', Hib: 'Protects against a cause of meningitis', Pneumococcal: 'Protects against pneumonia and ear infections', Polio: 'Protects against polio', 'Hepatitis B': 'Protects against a liver infection', Rotavirus: 'Protects against severe diarrhea', MMR: 'Protects against measles, mumps and rubella', Chickenpox: 'Protects against chickenpox', 'Hepatitis A': 'Protects against a liver infection' };
   // REVIEW: doses follow the app's existing schedule. Hepatitis B numbering assumes a birth dose.
   const VAX = {
-    0: { lead: 'Most babies get their first hepatitis B shot in the hospital. This checkup makes sure it was given.', shots: [['Hepatitis B', '1st dose, if not given at birth']] },
-    1: { lead: 'Maybe one shot today, or none: hepatitis B’s 2nd dose can wait until 2 months.', shots: [['Hepatitis B', '2nd dose, now or at 2 months']] },
-    2: { lead: 'Many come combined, so it’s often 2 to 4 shots, plus drops by mouth.', shots: [['DTaP', '1st dose'], ['Hib', '1st dose'], ['Pneumococcal', '1st dose'], ['Polio', '1st dose'], ['Hepatitis B', '2nd dose, if not at 1 month']], oral: [['Rotavirus', '1st dose']] },
-    4: { lead: 'The same as at 2 months, minus hepatitis B. Often 2 or 3 shots, plus drops by mouth.', shots: [['DTaP', '2nd dose'], ['Hib', '2nd dose'], ['Pneumococcal', '2nd dose'], ['Polio', '2nd dose']], oral: [['Rotavirus', '2nd dose']] },
-    6: { lead: 'Third doses of most, and some depend on the brand your office uses.', shots: [['DTaP', '3rd dose'], ['Pneumococcal', '3rd dose'], ['Hib', '3rd dose with some brands'], ['Hepatitis B', '3rd dose, now or by 18 months'], ['Polio', '3rd dose, now or by 18 months']], oral: [['Rotavirus', '3rd dose with some brands']] },
-    9: { lead: 'Often no shots at all, just a catch-up if anything was missed.', shots: [['Hepatitis B', '3rd dose, if not given yet'], ['Polio', '3rd dose, if not given yet']] },
-    12: { lead: 'Mostly new vaccines this time, plus two boosters. Some may wait until 15 months.', shots: [['MMR', '1st dose'], ['Chickenpox', '1st dose'], ['Hepatitis A', '1st dose'], ['Hib', 'Booster'], ['Pneumococcal', 'Booster']] }
+    0: { title: 'Hepatitis B, if it wasn’t given at birth', lead: 'Most babies get it in the hospital. This checkup makes sure.', shots: [['Hepatitis B', '1st dose, if not given at birth']] },
+    1: { title: 'Maybe one shot today, or none', lead: 'Hepatitis B’s 2nd dose can be now or at 2 months.', shots: [['Hepatitis B', '2nd dose, now or at 2 months']] },
+    2: { title: 'Often 2 to 4 shots, plus drops by mouth', lead: 'Many vaccines come combined in one shot.', shots: [['DTaP', '1st dose'], ['Hib', '1st dose'], ['Pneumococcal', '1st dose'], ['Polio', '1st dose'], ['Hepatitis B', '2nd dose, if not at 1 month']], oral: [['Rotavirus', '1st dose']] },
+    4: { title: 'The same as at 2 months, minus hepatitis B', lead: 'Often 2 or 3 shots, plus drops by mouth.', shots: [['DTaP', '2nd dose'], ['Hib', '2nd dose'], ['Pneumococcal', '2nd dose'], ['Polio', '2nd dose']], oral: [['Rotavirus', '2nd dose']] },
+    6: { title: 'Third doses of most vaccines', lead: 'Some depend on the brand your office uses.', shots: [['DTaP', '3rd dose'], ['Pneumococcal', '3rd dose'], ['Hib', '3rd dose with some brands'], ['Hepatitis B', '3rd dose, now or by 18 months'], ['Polio', '3rd dose, now or by 18 months']], oral: [['Rotavirus', '3rd dose with some brands']] },
+    9: { title: 'Often no shots at all', lead: 'Most babies are up to date by now.', shots: [['Hepatitis B', '3rd dose, if not given yet'], ['Polio', '3rd dose, if not given yet']] },
+    12: { title: 'Mostly new vaccines, plus two boosters', lead: 'Some may wait until 15 months.', shots: [['MMR', '1st dose'], ['Chickenpox', '1st dose'], ['Hepatitis A', '1st dose'], ['Hib', 'Booster'], ['Pneumococcal', 'Booster']] }
   };
   // REVIEW: RSV, flu and COVID-19 timing.
   const SEASON = age => [
-    ...(age <= 6 ? [['RSV', 'For the first RSV season (October to March), if you didn’t get the vaccine in pregnancy']] : []),
+    age <= 6 ? ['RSV', 'Before {p} first RSV season, unless you had the vaccine 2+ weeks before birth'] : ['RSV', 'Before a second RSV season, only for some babies at higher risk'],
     ['Flu', age < 6 ? 'From 6 months, every fall' : 'Every fall. The first time takes 2 doses, 4 weeks apart'],
-    ['COVID-19', age < 6 ? 'From 6 months, if your pediatrician recommends it' : 'If your pediatrician recommends it']
+    ['COVID-19', age < 6 ? 'Recommended from 6 months to age 2' : 'Recommended from 6 months to age 2']
   ];
   // Each vaccine on one line: its name and dose, with what it protects against right underneath.
   const doses = xs => `<ul class="hv-doses">${xs.map(([n, d]) => WHAT[n] ? `<li class="hv-dose-more"><details><summary><b>${n}</b><span>${d}</span><i class="hv-plus" aria-hidden="true">＋</i></summary><em>${WHAT[n]}</em></details></li>` : `<li><b>${n}</b><span>${d}</span></li>`).join('')}</ul>`;
   function vaccinePage(age) {
     const v = VAX[age], s = SEASON(age);
     const names = s.map(x => x[0]), title = names.length === 3 ? `${names[0]}, ${names[1].toLowerCase()} and ${names[2]}` : names.join(' and ');
-    const shotsSub = age === 12 ? 'Usually given as separate shots' : '';
-    const list = `<h2 class="hub-h2">At this checkup</h2><div class="hub-list">${row('shield', 'blue', 'Shots', shotsSub)}${doses(v.shots)}${v.oral ? row('drop', 'green', 'By mouth', 'Drops, not a shot') + doses(v.oral) : ''}</div>`;
-    const season = `<h2 class="hub-h2">Depends on the season</h2><div class="hub-list">${row('snow', 'peach', title, 'Your pediatrician will say which are due')}<ul class="hv-doses">${s.map(([n, d]) => `<li><b>${n}</b><em>${d}</em></li>`).join('')}</ul></div>`;
+    // Group rows carry no subtitle. Catch-up doses sit in the Shots group under a small label, so parents don't read them as due today (Nov 18).
+    const due = v.shots.filter(x => !/if not/.test(x[1])), miss = v.shots.filter(x => /if not/.test(x[1])).map(([n, d]) => [n, d.replace(/, if not.*$/, '')]);
+    const cap = `<p class="hv-doses-cap${due.length ? '' : ' is-first'}">${F('Only if missed earlier')}</p>`;
+    const list = `<h2 class="hub-h2">At this checkup</h2><div class="hub-list">${row('shield', 'blue', 'Shots', '')}${due.length ? doses(due) : ''}${miss.length ? cap + doses(miss) : ''}${v.oral ? row('drop', 'green', 'By mouth', '') + doses(v.oral) : ''}</div>`;
+    const season = `<h2 class="hub-h2">Depends on the season</h2><div class="hub-list">${row('snow', 'peach', title, '')}<ul class="hv-doses">${s.map(([n, d]) => `<li><b>${n}</b><em>${F(d)}</em></li>`).join('')}</ul></div>`;
     // REVIEW: for babies under 3 months, any fever of 100.4°F or more needs a call.
-    const call = age <= 2 ? 'A fever of 100.4°F+, 3 hours of crying that won’t stop, or swelling that grows.' : 'A fever of ' + (typeof feverTemp === 'function' ? feverTemp(age) : '101°F') + '+, 3 hours of crying that won’t stop, or swelling that grows.';
-    const after = H().versus('After the shots', ['Normal for a day or two', 'Fussy or sleepy, a low fever, and a sore red spot where the shot went in.' + (age === 12 ? ' A fever or rash 1–2 weeks later can also be normal after MMR and chickenpox.' : '')], ['Call your pediatrician', call]);
-    return frame(head(age, 'blue', 'Vaccines', v.lead) + list + season + after + H().note('Based on the schedule pediatricians recommend. Your pediatrician confirms what’s due from Maya’s record.'));
+    const call = 'A fever of ' + (age <= 2 ? '100.4°F' : (typeof feverTemp === 'function' ? feverTemp(age) : '101°F')) + ' or higher, crying for 3+ hours, or swelling that grows.';
+    const after = H().versus('After the shots', ['Normal for a day or two', 'Fussy or sleepy, a low fever, or a sore spot where the shot went in.'], ['Call your pediatrician', call]);
+    // MMR and chickenpox can cause a late, mild reaction: its own note, so the normal box stays short (Nov 18).
+    const late = age === 12 ? H().note('After MMR and chickenpox, a mild fever or rash 1–2 weeks later can be normal too.') : '';
+    return frame(head(age, 'blue', v.title, v.lead) + list + season + after + late + H().note('Based on the AAP schedule. Your pediatrician confirms what’s due from Maya’s record.'));
   }
 
   /* ---------- Questions and notes: suggested questions in the parent's voice ---------- */
@@ -89,7 +96,7 @@
     if (part === 'expect') return expectPage(age);
     if (part === 'vaccines') return vaccinePage(age);
     if (part === 'questions' || part === 'notes') {
-      return base(age, part).replace(/<div class="hub-detail-head">[\s\S]*?<\/div>/, head(age, 'yellow', 'Questions and notes', 'Tick them off as you ask. What you hear stays with this checkup.'))
+      return base(age, part).replace(/<div class="hub-detail-head">[\s\S]*?<\/div>/, head(age, 'yellow', 'Questions worth asking at this visit', 'Tick them off as you ask. Notes you take stay with this checkup.'))
         .replace(/<p class="hub-q-hint">Tick them off as you go\.<\/p>/, '').replace(/(hub-page hub-detail)/, '$1 hv-page');
     }
     return base(age, part);

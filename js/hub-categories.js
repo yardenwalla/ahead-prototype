@@ -353,7 +353,7 @@
     // with Call 911 under it, because a fever at this age always means calling right away (AAP).
     { const u3 = live() && actualMonth() < 3 && age === focus;
       b += h.list('Between checkups', [h.row({ icon: 'thermo', cat: 'Health', title: 'Symptoms and when to get help', sub: 'Fever, colds, tummy bugs and when to call', onclick: "openPage('chg:Health:d:sick')" })])
-        + (u3 ? `<section class="hub-card hub-callout"><b>${F('A fever under 3 months')}</b><p>${F('100.4°F or higher: call your pediatrician right away, day or night.')}</p></section>` + hubCall911() : ''); }
+        + (u3 ? (H().TPLB.calls({ ped: 'any fever of 100.4°F or higher, right away, day or night.', now: 'struggling to breathe, blue lips, won’t wake or is floppy, or a seizure.', nowLabel: 'Call 911' })) : ''); }
     const nx = WELL_VISITS[WELL_VISITS.indexOf(age) + 1];
     if (nx != null) b += h.next(`Next · at ${nx} month${nx === 1 ? '' : 's'}`, healthJourneyLabel(nx), `openPage('health-visit:${nx}')`, '', { 1: 'A short visit, with a check on how you’re doing.', 2: 'The first main round of shots. Plan a quiet day after.', 4: 'Bring your questions about starting solids.', 6: 'The talk moves from milk to first foods.', 9: 'A closer look at development: jot down what you see.', 12: 'Ask about cow’s milk, and moving off bottles.' }[nx] || '');   // the concept's 'Looking ahead' line: what's different about the next one
     return frame('Health', `data-health-journey="${age}"`, pills + missedLine, b);
@@ -499,7 +499,9 @@
     // (take a temperature, help them feel better, tummy bugs, colds), and the emergency signs last (AAP, HealthyChildren.org).
     const m = actualMonth(), u3 = m < 3;
     const call911 = hubCall911();
-    const feverCard = `<section class="hub-card hub-fever is-calm"><div class="hub-fever-bands is-one"><div><small>${F(feverBand(m))}</small><b>${feverTemp(m)}<span> or higher</span></b><p>${F(u3 ? 'Call your pediatrician right away, day or night.' : (m < 6 ? 'Call your pediatrician now, day or night.' : 'Call your pediatrician. Call too if any fever lasts more than a day.'))}</p></div></div><p class="hub-fever-note">${F('Also call if Maya seems very unwell or unusually sleepy.' + feverEarlyNote())}</p></section>`;
+    const feverC = { '100.4°F': '38°C', '101°F': '38.3°C', '103°F': '39.4°C' }[feverTemp(m)] || '';
+    // Action first, then the number, then the context (Nov 18): a worried parent reads what to do before anything else.
+    const feverCard = `<section class="hub-card hub-fever is-calm"><div class="hub-fever-bands is-one is-act"><div><p class="hub-fever-act">${F(u3 ? 'Call your pediatrician right away' : m < 6 ? 'Call your pediatrician now' : 'Call your pediatrician')}</p><b>${feverTemp(m)}<span> or higher${feverC ? ' (' + feverC + ')' : ''}</span></b><p>${F(u3 ? 'Day or night, even if Maya seems fine.' : m < 6 ? 'Day or night. Call too for any fever lasting more than a day.' : 'Or for any fever that lasts more than a day.')}</p></div></div><p class="hub-fever-note">${F('Also call if Maya seems very unwell or is much sleepier than usual.' + feverEarlyNote())}</p></section>`;
     // One flow, in the order a parent lives it: check for a fever and know when that means calling,
     // make them comfortable, then the two common bugs, and the emergency signs last.
     const thermo = () => {
@@ -513,35 +515,43 @@
     };
     // The page answers "what's going on?": one row per thing a parent is seeing, each opening a page that covers it
     // whole (how to check, when to call, how to help). The emergency signs apply to all of them, so they sit here.
+    const B = H().TPLB, sec = B.sec, tpl = html => html.replace('class="quiet-category hub-page hub-detail', 'class="quiet-category hub-page hub-detail care-tpl');
+    const C911 = { now: 'struggling to breathe, blue lips, won’t wake or is floppy, or a seizure.', nowLabel: 'Call 911' };
+    // The page answers "what's going on?": one row per thing a parent is seeing. It ends with the shared call card.
     if (id === 'sick') {
       return detailFrame('Health', 'Between checkups', 'When Maya seems sick', 'Most baby illnesses are mild and pass in a few days. Start with what you’re seeing.',
         h.list('What’s going on?', [
-          h.row({ icon: 'thermo', cat: 'Health', title: 'A fever', sub: u3 ? 'Under 3 months, any fever means calling' : 'How to check, and when to call', onclick: "openPage('chg:Health:d:sick-fever')" }),
+          h.row({ icon: 'thermo', cat: 'Health', title: 'A fever', sub: u3 ? 'Under 3 months, any fever means a call' : 'How to check, and when to call', onclick: "openPage('chg:Health:d:sick-fever')" }),
           h.row({ icon: 'bottle', cat: 'Health', title: 'Vomiting or diarrhea', sub: 'Keeping feeds going, and when to call', onclick: "openPage('chg:Health:d:sick-tummy')" }),
           h.row({ icon: 'drop', cat: 'Health', title: 'A cold or stuffy nose', sub: 'Clearing the nose, and when to call', onclick: "openPage('chg:Health:d:cold')" })
         ])
         + h.note('Not sure? Your pediatrician’s office has someone to talk to day or night. Calling is never a bother.')
-        + call911);
+        + B.calls(C911).replace('When to call', 'In an emergency'));
     }
+    // A fever (When it's urgent): the headline is this age's rule. The call is the answer here, so the number card and Call 911 come first (Nov 18).
     if (id === 'sick-fever' || id === 'sick-temp' || id === 'sick-care') {
-      return detailFrame('Health', 'When Maya seems sick', 'A fever', 'What matters most is {p} age and how {s} {seem|seems}.',
-        `<h2 class="hub-h2">${F('Take {p} temperature')}</h2>` + thermo()
-        + `<h2 class="hub-h2">${F('When to call')}</h2>` + feverCard
-        + `<h2 class="hub-h2">${F('What helps')}</h2>`
-        + hubIconSteps([['bottle', 'Extra feeds', 'Little and often'], ['shirt', 'Dress lightly', 'Extra layers keep a fever up'], ['moon', 'Rest', 'Naps and quiet time']], 'Health', 'Offer extra feeds, dress lightly, and let them rest.', false)
-        + h.tip('Medicine', u3 ? 'Under 3 months, ask your pediatrician before any medicine.' : m < 6 ? 'Acetaminophen can help. Ask your pediatrician for the dose.' : 'Acetaminophen or ibuprofen can help. Ask your pediatrician for the dose.')
-        + call911);
+      const title = u3 ? 'Under 3 months, any fever means a call' : m < 6 ? 'Below 101°F, watch how {s} {act|acts}' : 'How {s} {act|acts} matters more than the number';
+      const lead = u3 ? 'Young babies can have an infection that shows only as a fever.' : m < 6 ? 'Most fevers mean the body is fighting off a bug. Keep feeds going.' : 'If {s} still {play|plays} and {feed|feeds} well, you can usually care for {o} at home.';
+      return tpl(detailFrame('Health', 'When Maya seems sick', title, lead,
+        sec('When to call', feverCard)
+        + sec('Take {p} temperature', thermo())
+        + sec('What helps', B.noted(B.tiles([['bottle', 'Extra feeds', 'Little and often'], ['shirt', 'Dress lightly', 'Extra layers keep a fever up'], ['moon', 'Rest', 'Naps, cuddles and quiet time']], 'Health'),
+            [['', 'Medicine', u3 ? 'Under 3 months, ask your pediatrician before any medicine' : m < 6 ? 'Acetaminophen can help. Ask your pediatrician for the dose' : 'Acetaminophen or ibuprofen can help. Ask your pediatrician for the dose']]))
+        // 911 sits apart, at the end, so the page doesn't read as an emergency (Yarden, Nov 18).
+        + B.calls(C911).replace('When to call', 'In an emergency')));
     }
+    // Taking a rectal temperature (How-to): numbered steps, then one note.
     if (id === 'sick-rectal') {
-      return detailFrame('Health', 'When Maya seems sick', 'Taking a rectal temperature', 'The most accurate reading for babies. Use a digital thermometer.',
-        h.steps(['Put a little petroleum jelly on the tip.', 'Lay {o} on {p} back, knees bent toward {p} chest.', 'Slide it in about half an inch.', 'Hold it there until it beeps.'])
-        + h.note('Wash the thermometer with soap and water after, and keep it just for this.'));
+      return tpl(detailFrame('Health', 'When Maya seems sick', 'Rectal is the most accurate reading', 'Use a digital thermometer, and keep it just for this.',
+        sec('Steps', B.noted(B.tiles([['drop', 'Coat the tip', 'A little petroleum jelly'], ['back', 'On {p} back', 'With {p} knees bent up'], ['thermo', 'In about half an inch', 'No farther'], ['clock', 'Hold until it beeps', 'Then read it']], 'Health', true),
+          [['', 'After', 'Wash it with soap and water']]))));
     }
+    // Vomiting or diarrhea (When it's urgent): How to tell · What helps · When to call.
     if (id === 'sick-tummy') {
-      return detailFrame('Health', 'When Maya seems sick', 'Vomiting or diarrhea', 'Usually a tummy bug that passes in a day or two. Keeping {o} drinking is what matters.',
-        `<h2 class="hub-h2">${F('What helps')}</h2>` + hubIconSteps([['bottle', 'Keep feeds going', 'A little at a time'], ['diaper', 'Watch wet diapers', 'Far fewer can mean dehydration'], ['steth', 'Ask first', 'Before any medicine']], 'Health', 'Keep feeds going a little at a time, watch the wet diapers, and ask before giving medicine.', false)
-        + h.versus('Normal, or time to call?', ['Normal', 'A few loose poops or vomits, still feeding.'], ['Call your pediatrician', 'Can’t keep feeds down, blood, green vomit or a dry mouth.'])
-        + call911);
+      return tpl(detailFrame('Health', 'When Maya seems sick', 'Most tummy bugs pass in a day or two', 'Keeping {o} hydrated is what matters most.',
+        sec('How to tell', B.versus(['Normal', 'A few loose poops or vomits, and still feeding well.'], ['Call your pediatrician', 'Blood in the poop, a dry mouth, or won’t keep feeds down.']))
+        + sec('What helps', B.tiles([['bottle', 'Keep feeding', 'A little at a time'], ['diaper', 'Watch diapers', 'Far fewer wet ones is a warning sign'], ['steth', 'Ask first', 'Before giving any medicine']], 'Health'))
+        + B.calls({ er: 'green or bloody vomit.', ...C911 }).replace('When to call', 'In an emergency')));
     }
     return null;
   }
@@ -555,12 +565,14 @@
       + `<h2 class="hub-h2">${F('What helps')}</h2>` + hubIconSteps([['star', 'Start with 2 or 3', 'Ones you’ll use every day'], ['chat', 'Say it as you sign', '“More?”'], ['heart', 'Cheer {p} version', 'Even if it looks different']], 'Development', F('Start with two or three signs, say the word as you sign it, and cheer the baby’s version.'), false));
     if (cat === 'Development' && screen === 'd' && a === 'faq') { const ref = DEV_STAGES[b] ? Number(b) : devRef(); return detailFrame('Development', DEV_STAGES[ref].title, 'What other parents ask', '', devCommonQuestions(ref).replace('<h2>Common questions</h2>', '').replace('class="common-questions"', 'class="common-questions hub-faq"')); }
     // Colds and stuffy noses: saline and suction, a cool-mist humidifier, no cold medicines, and when to call (AAP).
-    if (cat === 'Health' && screen === 'd' && a === 'cold') return detailFrame('Health', 'When Maya seems sick', 'A cold or stuffy nose', 'Several colds in the first year are normal. Most clear up in 7–10 days.',
-      `<h2 class="hub-h2">${F('What helps')}</h2>` + hubIconSteps([['drop', 'Saline, then suction', 'Babies breathe through the nose to feed'], ['snow', 'Cool-mist humidifier', 'In {p} room at night'], ['bottle', 'Smaller, frequent feeds', 'Easier with a stuffy nose']], 'Health', 'Saline then suction before feeds and sleep, a cool-mist humidifier, and smaller, more frequent feeds.', false)
-      + H().tip('Skip cold medicines', 'They aren’t safe for babies. No honey before 1 year.')
-      + H().tip('Could it be an ear infection?', 'Often after a cold: fussing when lying down, a new fever, or fluid from the ear.')
-      + H().versus('Normal, or time to call?', ['Normal', 'Stuffy and sneezy, still feeding.'], ['Call your pediatrician', `A fever of ${feverTemp(actualMonth())}+, a cold past 10 days, or signs of an ear infection.`])
-      + hubCall911());
+    // A cold (When it's urgent, Nov 17): takeaway headline · How to tell · What helps · When to call last.
+    if (cat === 'Health' && screen === 'd' && a === 'cold') { const B = H().TPLB, m = actualMonth();
+      return detailFrame('Health', 'When Maya seems sick', 'Most colds clear up in 7–10 days', 'Several in the first year are normal. A clear nose helps {o} feed and sleep.',
+        B.sec('How to tell', B.versus(['Normal', 'Stuffy and sneezy, still feeding.'], ['Call your pediatrician', 'A fever of ' + feverTemp(m) + ' or higher, a cold lasting past 10 days, or signs of an ear infection.'],
+          [['', 'Could it be an ear infection?', 'Often after a cold: fussing when lying down, a new fever, or fluid from the ear']]))
+        + B.sec('What helps', B.noted(B.tiles([['drop', 'Clear the nose', 'Saline drops, then suction, before feeds'], ['snow', 'Cool-mist humidifier', 'Run it in {p} room at night'], ['bottle', 'Smaller, frequent feeds', 'Easier with a stuffy nose']], 'Health'),
+          [['', 'Skip cold medicines', 'They aren’t safe for babies. No honey before 1']]))
+        + B.calls({ now: 'struggling to breathe, blue lips, won’t wake or is floppy, or a seizure.', nowLabel: 'Call 911' }).replace('When to call', 'In an emergency')).replace('class="quiet-category hub-page hub-detail', 'class="quiet-category hub-page hub-detail care-tpl'); }
     if (cat === 'Health' && screen === 'd') { const pg = healthDetail(a); if (pg) return pg; }
     if (cat === 'Daily rhythm' && screen === 's') return everydayCare(Number(a));
     if (cat === 'Daily rhythm' && screen === 'd' && a !== 'more') return careDetail(a);

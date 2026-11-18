@@ -42,3 +42,8 @@
 #main .hv-doses li.hv-dose-more .hv-plus { font-style: normal; font-size: 13px; color: #46638c; transition: transform .15s }
 #main .hv-doses li.hv-dose-more details[open] .hv-plus { transform: rotate(45deg) }
 #main .hv-doses li.hv-dose-more em { display: block; padding: 0 0 9px; font-style: normal; font-size: 13.5px; line-height: 1.4; color: #6b6670 }
+
+/* Catch-up doses: a small label inside the Shots group (Nov 18) */
+#main .hv-doses-cap { margin: 0 18px 0 74px; padding: 10px 0 2px; border-top: 1px solid var(--line); font-size: 12.5px; font-weight: 600; color: #6b6670 }
+#main .hv-doses-cap.is-first { margin-top: -10px; padding-top: 0; border-top: 0 }
+#main .hv-doses-cap + .hv-doses { margin-top: 0 }
