@@ -1922,3 +1922,10 @@ label:has(> .hub-photo-input:focus-visible) { outline: 2px solid #884866; outlin
 #main .mem-ft-ic svg { width: 26px; height: 26px }
 #main .mem-ft.is-more { padding: 12px 6px }
 #main .mem-ft { justify-content: center } #main .mem-ft b { font-size: 12.5px; line-height: 1.22 }
+/* Firsts tiles: one shared layout. Icons sit on one line, titles start on one line, every tile the same height. */
+#main .mem-fts { align-items: stretch }
+#main .mem-ft { justify-content: flex-start; gap: 8px; padding: 14px 5px 12px }
+#main .mem-ft b { -webkit-line-clamp: 2; min-height: calc(2 * 1.22em); display: -webkit-box }
+#main .mem-ft.is-more { justify-content: center }
+#main .mem-ft b { -webkit-line-clamp: 3 }
+#main .mem-ft.is-more b { min-height: 0 }
