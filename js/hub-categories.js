@@ -526,15 +526,15 @@
         + h.note('Not sure? Your pediatrician’s office has someone to talk to day or night. Calling is never a bother.')
         + B.calls(C911));
     }
-    // A fever (When it's urgent): the headline is this age's rule. The number card and Call 911 sit together, last.
+    // A fever (When it's urgent): the headline is this age's rule. The call is the answer here, so the number card and Call 911 come first (Nov 18).
     if (id === 'sick-fever' || id === 'sick-temp' || id === 'sick-care') {
       const title = u3 ? 'Under 3 months, any fever means a call' : m < 6 ? 'At this age, call for 101°F or higher' : 'How {s} {act|acts} matters more than the number';
       const lead = u3 ? 'A fever this young can be the only sign of an infection, so call even if {s} seems fine.' : m < 6 ? 'Below that, watch how {s} {act|acts} and keep feeds going.' : 'If {s} is still playing and drinking, rest and fluids are usually enough.';
       return tpl(detailFrame('Health', 'When Maya seems sick', title, lead,
-        sec('Take {p} temperature', thermo())
+        B.calls(C911).replace('</h2>', '</h2>' + feverCard)
+        + sec('Take {p} temperature', thermo())
         + sec('What helps', B.noted(B.tiles([['bottle', 'Extra feeds', 'Little and often'], ['shirt', 'Dress lightly', 'Extra layers keep a fever up'], ['moon', 'Rest', 'Naps, cuddles and quiet time']], 'Health'),
-            [['', 'Medicine', u3 ? 'Under 3 months, ask your pediatrician before any medicine' : m < 6 ? 'Acetaminophen can help. Ask your pediatrician for the dose' : 'Acetaminophen or ibuprofen can help. Ask your pediatrician for the dose']]))
-        + B.calls(C911).replace('</h2>', '</h2>' + feverCard)));
+            [['', 'Medicine', u3 ? 'Under 3 months, ask your pediatrician before any medicine' : m < 6 ? 'Acetaminophen can help. Ask your pediatrician for the dose' : 'Acetaminophen or ibuprofen can help. Ask your pediatrician for the dose']]))));
     }
     // Taking a rectal temperature (How-to): numbered steps, then one note.
     if (id === 'sick-rectal') {
@@ -545,9 +545,9 @@
     // Vomiting or diarrhea (When it's urgent): How to tell · What helps · When to call.
     if (id === 'sick-tummy') {
       return tpl(detailFrame('Health', 'When Maya seems sick', 'Most tummy bugs pass in a day or two', 'Keeping {o} drinking is what matters most.',
-        sec('How to tell', B.versus(['Normal', 'A few loose poops or vomits, and still feeding well.'], ['Call your pediatrician', 'Won’t keep feeds down, blood or green vomit, or a dry mouth.']))
+        sec('How to tell', B.versus(['Normal', 'A few loose poops or vomits, and still feeding well.'], ['Call your pediatrician', 'Blood in the poop, a dry mouth, or won’t keep feeds down.']))
         + sec('What helps', B.tiles([['bottle', 'Keep feeding', 'A little at a time'], ['diaper', 'Watch diapers', 'Far fewer wet ones is a warning sign'], ['steth', 'Ask first', 'Before giving any medicine']], 'Health'))
-        + B.calls(C911)));
+        + B.calls({ er: 'green or bloody vomit.', ...C911 })));
     }
     return null;
   }

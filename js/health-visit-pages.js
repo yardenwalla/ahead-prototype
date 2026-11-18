@@ -36,7 +36,10 @@
     const e = EXPECT[age];
     // First week: jaundice at home, since it peaks in these days (AAP, HealthyChildren.org).
     const jaundice = age === 0 ? H().versus('Yellow skin at home: normal, or time to call?', ['Normal', 'A little yellow on the face in the first week, feeding well.'], ['Call your pediatrician', 'Yellow on the belly, legs or eyes, poor feeding, or very sleepy.']) : '';
-    return frame(head(age, 'green', e.title, e.lead) + H().list('What they’ll check', e.checks.map(c => row(...c))) + jaundice + H().list('Before you go', BRING(age).map(c => row(...c))));
+    // What's new at this visit leads; the growth check every visit has goes after it (Nov 18).
+    const growth = e.checks.filter(c => c[0] === 'steth' && age >= 2).map(c => [c[0], c[1], 'The usual growth check', 'Weight, length, head size and a full exam']);
+    const checks = growth.length ? [...e.checks.filter(c => c[0] !== 'steth' && c[0] !== 'heart'), ...growth, ...e.checks.filter(c => c[0] === 'heart')] : e.checks;
+    return frame(head(age, 'green', e.title, e.lead) + H().list('What they’ll check', checks.map(c => row(...c))) + jaundice + H().list('Before you go', BRING(age).map(c => row(...c))));
   }
 
   /* ---------- Vaccines ---------- */
@@ -48,12 +51,12 @@
     2: { title: 'Often 2 to 4 shots, plus drops by mouth', lead: 'Many vaccines come combined in one shot.', shots: [['DTaP', '1st dose'], ['Hib', '1st dose'], ['Pneumococcal', '1st dose'], ['Polio', '1st dose'], ['Hepatitis B', '2nd dose, if not at 1 month']], oral: [['Rotavirus', '1st dose']] },
     4: { title: 'The same as at 2 months, minus hepatitis B', lead: 'Often 2 or 3 shots, plus drops by mouth.', shots: [['DTaP', '2nd dose'], ['Hib', '2nd dose'], ['Pneumococcal', '2nd dose'], ['Polio', '2nd dose']], oral: [['Rotavirus', '2nd dose']] },
     6: { title: 'Third doses of most vaccines', lead: 'Some depend on the brand your office uses.', shots: [['DTaP', '3rd dose'], ['Pneumococcal', '3rd dose'], ['Hib', '3rd dose with some brands'], ['Hepatitis B', '3rd dose, now or by 18 months'], ['Polio', '3rd dose, now or by 18 months']], oral: [['Rotavirus', '3rd dose with some brands']] },
-    9: { title: 'Often no shots at all', lead: 'Just a catch-up if anything was missed.', shots: [['Hepatitis B', '3rd dose, if not given yet'], ['Polio', '3rd dose, if not given yet']] },
+    9: { title: 'Often no shots at all', lead: 'Most babies are up to date by now.', shots: [['Hepatitis B', '3rd dose, if not given yet'], ['Polio', '3rd dose, if not given yet']] },
     12: { title: 'Mostly new vaccines, plus two boosters', lead: 'Some may wait until 15 months.', shots: [['MMR', '1st dose'], ['Chickenpox', '1st dose'], ['Hepatitis A', '1st dose'], ['Hib', 'Booster'], ['Pneumococcal', 'Booster']] }
   };
   // REVIEW: RSV, flu and COVID-19 timing.
   const SEASON = age => [
-    ...(age <= 6 ? [['RSV', 'For the first RSV season (October to March), if you didn’t get the vaccine in pregnancy']] : []),
+    age <= 6 ? ['RSV', 'Before {p} first RSV season, unless you had the vaccine 2+ weeks before birth'] : ['RSV', 'Before a second RSV season, only for some babies at higher risk'],
     ['Flu', age < 6 ? 'From 6 months, every fall' : 'Every fall. The first time takes 2 doses, 4 weeks apart'],
     ['COVID-19', age < 6 ? 'Recommended from 6 months to age 2' : 'Recommended from 6 months to age 2']
   ];
@@ -63,8 +66,10 @@
     const v = VAX[age], s = SEASON(age);
     const names = s.map(x => x[0]), title = names.length === 3 ? `${names[0]}, ${names[1].toLowerCase()} and ${names[2]}` : names.join(' and ');
     const shotsSub = age === 12 ? 'Usually given as separate shots' : '';
-    const list = `<h2 class="hub-h2">At this checkup</h2><div class="hub-list">${row('shield', 'blue', 'Shots', shotsSub)}${doses(v.shots)}${v.oral ? row('drop', 'green', 'By mouth', 'Drops, not a shot') + doses(v.oral) : ''}</div>`;
-    const season = `<h2 class="hub-h2">Depends on the season</h2><div class="hub-list">${row('snow', 'peach', title, 'Your pediatrician will say which are due')}<ul class="hv-doses">${s.map(([n, d]) => `<li><b>${n}</b><em>${d}</em></li>`).join('')}</ul></div>`;
+    // Catch-up doses get their own group, so parents don't read them as due today (Nov 18).
+    const due = v.shots.filter(x => !/if not/.test(x[1])), miss = v.shots.filter(x => /if not/.test(x[1])).map(([n, d]) => [n, d.replace(/, if not.*$/, '')]);
+    const list = `<h2 class="hub-h2">At this checkup</h2><div class="hub-list">${due.length ? row('shield', 'blue', 'Shots', shotsSub) + doses(due) : ''}${miss.length ? row('clock', 'peach', 'Only if missed earlier', 'Your pediatrician checks the record') + doses(miss) : ''}${v.oral ? row('drop', 'green', 'By mouth', 'Drops, not a shot') + doses(v.oral) : ''}</div>`;
+    const season = `<h2 class="hub-h2">Depends on the season</h2><div class="hub-list">${row('snow', 'peach', title, 'Your pediatrician will say which are due')}<ul class="hv-doses">${s.map(([n, d]) => `<li><b>${n}</b><em>${F(d)}</em></li>`).join('')}</ul></div>`;
     // REVIEW: for babies under 3 months, any fever of 100.4°F or more needs a call.
     const call = age <= 2 ? 'A fever of 100.4°F+, 3 hours of crying that won’t stop, or swelling that grows.' : 'A fever of ' + (typeof feverTemp === 'function' ? feverTemp(age) : '101°F') + '+, 3 hours of crying that won’t stop, or swelling that grows.';
     const after = H().versus('After the shots', ['Normal for a day or two', 'Fussy or sleepy, a low fever, and a sore red spot where the shot went in.' + (age === 12 ? ' A fever or rash 1–2 weeks later can also be normal after MMR and chickenpox.' : '')], ['Call your pediatrician', call]);
