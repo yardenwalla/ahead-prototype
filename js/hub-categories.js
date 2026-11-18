@@ -349,11 +349,9 @@
     ]);
     // Between checkups, calm (Nov 11, Yarden: "busier than the inspiration"): one row that opens everything about a sick baby
     // (fever, tummy bugs, colds, and Call 911), with this age's fever line right on it. Teething lives in Everyday care.
-    // On every checkup page (Nov 13: it used to show only on the current one). Under 3 months, the fever rule shows right here,
-    // with Call 911 under it, because a fever at this age always means calling right away (AAP).
+    // On every checkup page (Nov 13). Under 3 months, the row's line carries the fever rule (AAP); no call card here (Nov 18).
     { const u3 = live() && actualMonth() < 3 && age === focus;
-      b += h.list('Between checkups', [h.row({ icon: 'thermo', cat: 'Health', title: 'Symptoms and when to get help', sub: 'Fever, colds, tummy bugs and when to call', onclick: "openPage('chg:Health:d:sick')" })])
-        + (u3 ? (H().TPLB.calls({ ped: 'any fever of 100.4°F or higher, right away, day or night.', now: 'struggling to breathe, blue lips, won’t wake or is floppy, or a seizure.', nowLabel: 'Call 911' })) : ''); }
+      b += h.list('Between checkups', [h.row({ icon: 'thermo', cat: 'Health', title: 'Symptoms and when to get help', sub: u3 ? 'Under 3 months, any fever means a call' : 'Fever, colds, tummy bugs and when to call', onclick: "openPage('chg:Health:d:sick')" })]); }
     const nx = WELL_VISITS[WELL_VISITS.indexOf(age) + 1];
     if (nx != null) b += h.next(`Next · at ${nx} month${nx === 1 ? '' : 's'}`, healthJourneyLabel(nx), `openPage('health-visit:${nx}')`, '', { 1: 'A short visit, with a check on how you’re doing.', 2: 'The first main round of shots. Plan a quiet day after.', 4: 'Bring your questions about starting solids.', 6: 'The talk moves from milk to first foods.', 9: 'A closer look at development: jot down what you see.', 12: 'Ask about cow’s milk, and moving off bottles.' }[nx] || '');   // the concept's 'Looking ahead' line: what's different about the next one
     return frame('Health', `data-health-journey="${age}"`, pills + missedLine, b);
@@ -501,7 +499,9 @@
     const call911 = hubCall911();
     const feverC = { '100.4°F': '38°C', '101°F': '38.3°C', '103°F': '39.4°C' }[feverTemp(m)] || '';
     // Action first, then the number, then the context (Nov 18): a worried parent reads what to do before anything else.
-    const feverCard = `<section class="hub-card hub-fever is-calm"><div class="hub-fever-bands is-one is-act"><div><p class="hub-fever-act">${F(u3 ? 'Call your pediatrician right away' : m < 6 ? 'Call your pediatrician now' : 'Call your pediatrician')}</p><b>${feverTemp(m)}<span> or higher${feverC ? ' (' + feverC + ')' : ''}</span></b><p>${F(u3 ? 'Day or night, even if Maya seems fine.' : m < 6 ? 'Day or night. Call too for any fever lasting more than a day.' : 'Or for any fever that lasts more than a day.')}</p></div></div><p class="hub-fever-note">${F('Also call if Maya seems very unwell or is much sleepier than usual.' + feverEarlyNote())}</p></section>`;
+    const PHONE = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h3l2 5-2.5 1.5a11 11 0 0 0 6 6L15 14l5 2v3a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>';
+    // The fever call card in the shared call-card look (tinted, with the phone), so it isn't a box inside a box (Nov 18).
+    const feverCard = `<section class="care-calls is-titled is-fever"><span class="care-calls-ico">${PHONE}</span><div><p class="fev-act">${F(u3 ? 'Call your pediatrician right away' : m < 6 ? 'Call your pediatrician now' : 'Call your pediatrician')}</p><p class="fev-num"><strong>${feverTemp(m)}</strong> ${F('or higher')}${feverC ? ' (' + feverC + ')' : ''}</p><p>${F(u3 ? 'Day or night, even if Maya seems fine.' : m < 6 ? 'Day or night. Call too for any fever lasting more than a day.' : 'Or a fever that lasts more than a day.')}</p><p class="fev-also">${F('Also call if Maya seems very unwell or is much sleepier than usual.' + feverEarlyNote())}</p></div></section>`;
     // One flow, in the order a parent lives it: check for a fever and know when that means calling,
     // make them comfortable, then the two common bugs, and the emergency signs last.
     const thermo = () => {

@@ -351,3 +351,10 @@
 #main .care-v2 .care-verdict svg { width: 20px; height: 20px; flex: none; fill: #fff; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round }
 #main .care-v2 .care-verdict.is-watch { color: #9a5a12 }
 #main .care-v2 .care-verdict + .hub-lead { margin-top: 6px }
+
+/* Fever call card (Nov 18): action, then the number, then context, in the call-card look */
+#main .care-calls.is-fever { margin-top: 0 }
+#main .care-calls.is-fever .fev-act { font-size: 15px; font-weight: 600; color: #7a4b2c; margin: 4px 0 2px }
+#main .care-calls.is-fever .fev-num { font-size: 14px; margin: 0 0 4px }
+#main .care-calls.is-fever .fev-num strong { font-size: 26px; font-weight: 700; color: var(--ink); margin-right: 4px; letter-spacing: -.01em }
+#main .care-calls.is-fever .fev-also { margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(122,75,44,.15); font-size: 13px }
