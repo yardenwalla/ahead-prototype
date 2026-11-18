@@ -235,15 +235,15 @@
     };
     const head = x => { const mo = Math.max(0, Math.min(11, Math.floor(x))), cov = typeof window.stCover === 'function' ? window.stCover(mo) : null; return cov ? F(cov.title) : ''; };
     const ends = x => { const t = isToday(x), left = Math.max(0, 12 - x), eta = left < 0.5 ? 'any day now' : left < 1.5 ? 'in about a month' : `in about ${Math.round(left)} months`, d = Math.round(Math.abs(x - a));
-      return t ? `<b>${F(`${nm} is ${typeof babyAge === 'function' ? babyAge() : ''}`)}</b><span>${F(left < 0.5 ? 'Birthday any day now' : `${Math.max(1, Math.round(left))} month${Math.max(1, Math.round(left)) === 1 ? '' : 's'} to {p} birthday`)}</span>` : `<b>${F(`At ${ageTxt(x)}`)}</b><span>${F(d < 1 ? 'about now' : x > a ? `${d} month${d === 1 ? '' : 's'} from now` : `${d} month${d === 1 ? '' : 's'} ago`)}</span>`; };
+      return t ? `<b>${F(`${nm} is ${typeof babyAge === 'function' ? babyAge() : ''}`)}</b><span>${F(left < 0.5 ? 'Birthday any day now' : `${Math.max(1, Math.round(left))} month${Math.max(1, Math.round(left)) === 1 ? '' : 's'} to {p} birthday`)}</span>` : `<b>${F(`At ${ageTxt(x)}`)}</b><button class="tl-home" onclick="tlScrub(null)">${F('Back to today')}</button>`; };
     const theme = x => typeof window.monthTheme === 'function' ? window.monthTheme(Math.max(0, Math.min(11, Math.floor(x)))) : '';
     const art = x => typeof window.stCardArt === 'function' ? window.stCardArt(Math.max(0, Math.min(11, Math.floor(x)))) : '';
     window.__tl = { a, listHTML, head, ends, theme, art };
     const hinted = (() => { try { return !!localStorage.getItem('ahead-tl-dragged'); } catch (e) { return true; } })();
     const pct = Math.max(0, Math.min(100, a / 12 * 100));
     const grad = (w, to) => typeof window.monthColor === 'function' ? `linear-gradient(90deg,${[...Array(12)].map((_, i) => `${window.monthColor(i, w, to)} ${Math.round((i + 0.5) / 12 * 100)}%`).join(',')})` : '';
-    let h = `<div class="ya-page tl-track" style="${theme(a)};--tlp:${pct}%;--tla:${pct}%;--tlg:${grad(.86)};--tlf:${grad(.42)}"><div class="tl-top"><h1 class="yt-h1">${F(`${nm}’s first year`)}</h1><button class="tl-todaybtn" onclick="tlScrub(null)" disabled>${F('Today')}</button></div>`;
-    h += `<div class="tl-prog${hinted ? '' : ' tl-hint'}"><div class="tl-ride"><span class="tl-baby" role="slider" tabindex="0" aria-label="${F(`Drag ${nm} to see another age`)}" aria-valuemin="0" aria-valuemax="12" aria-valuenow="${a.toFixed(1)}" aria-valuetext="${F(ageTxt(a))}" onkeydown="tlKey(event)" style="${theme(a)}">${art(a)}<em class="tl-tip">${F(hinted ? ageTxt(a) : 'Drag me')}</em></span><span class="tl-flag" aria-hidden="true">${window.stToy('cake')}</span></div><div class="tl-bar"><i></i><button class="tl-nowmark" onclick="tlScrub(null)" aria-label="${F('Back to today')}"></button></div><div class="tl-ticks" aria-hidden="true">${[[0, 'Birth'], [12, 'First birthday']].map(([v, l]) => `<span style="left:${v / 12 * 100}%">${F(l)}</span>`).join('')}</div><div class="tl-ends">${ends(a)}</div></div>`;
+    let h = `<div class="ya-page tl-track" style="${theme(a)};--tlp:${pct}%;--tla:${pct}%;--tlg:${grad(.86)};--tlf:${grad(.42)}"><div class="tl-top"><h1 class="yt-h1">${F(`${nm}’s first year`)}</h1></div><p class="tl-sub">${F('What’s coming, and how to get ready.')}</p>`;
+    h += `<div class="tl-prog${hinted ? '' : ' tl-hint'}"><div class="tl-ride"><span class="tl-baby" role="slider" tabindex="0" aria-label="${F(`Drag ${nm} to see another age`)}" aria-valuemin="0" aria-valuemax="12" aria-valuenow="${a.toFixed(1)}" aria-valuetext="${F(ageTxt(a))}" onkeydown="tlKey(event)" style="${theme(a)}">${art(a)}<em class="tl-tip">${F(hinted ? ageTxt(a) : 'Drag me')}</em></span><span class="tl-flag" aria-hidden="true">${window.stToy('cake')}</span></div><div class="tl-bar"><i></i><button class="tl-nowmark" onclick="tlScrub(null)" aria-label="${F('Back to today')}"></button></div><div class="tl-ticks" aria-hidden="true">${[[0, 'Birth'], [12, 'First birthday']].map(([v, l]) => `<span style="left:${v / 12 * 100}%">${F(l)}</span>`).join('')}${hinted ? '' : `<em class="tl-hintline">${F(`Drag ${nm} to look ahead`)}</em>`}</div><div class="tl-ends">${ends(a)}</div></div>`;
     const gvars = x => typeof window.monthColor === 'function' ? `--g-bg:${window.monthColor(Math.max(0, Math.min(11, Math.floor(x))), .86)};--g-ink:${window.monthColor(Math.max(0, Math.min(11, Math.floor(x))), .45, 30)}` : '';
     window.__tl.gvars = gvars;
     h += `<ol class="tl-steps tl-groups tl-around" style="${gvars(a)}">${listHTML(a)}</ol>`;
@@ -260,7 +260,7 @@
     const q = Math.abs(x - T.a) < 0.13 ? T.a : Math.round(x * 4) / 4;
     pg.style.setProperty('--tlp', (x / 12 * 100) + '%');
     pg.classList.toggle('is-away', q !== T.a);
-    pg.querySelector('.tl-todaybtn').disabled = q === T.a;
+    
     pg.querySelector('.tl-flag').style.opacity = x > 10.5 ? '0' : '';
     const b = pg.querySelector('.tl-baby'), tip = b.querySelector('.tl-tip');
     if (String(q) === pg.dataset.q) return; pg.dataset.q = String(q);
