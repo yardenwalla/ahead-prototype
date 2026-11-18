@@ -656,6 +656,8 @@
     var body = newborn ? P[1].replace(/<path d="M74 52[^>]*\/><circle cx="100" cy="22"[^>]*\/>/, '') : P[m];
     return svg('0 0 200 210', sk.def + on.def + y.def + c.def, shadow(100, 202, 70) + body, 'st-obj ms-baby');
   }
+  // Clay toys for other pages (Timeline's chapters).
+  window.stToy = function (k) { return k === 'cake' ? V.cake().replace('st-vis', 'st-vis yt-cake') : ({ bunny: bunny, rings: rings, ball: ball, blocks: blocks, bowl: bowl })[k](); };
   window.stCardArt = function (m) { return m >= 0 && m <= 11 ? '<span class="ms-l ms-mid ms-babyw">' + babyArt(m) + '</span>' : ''; };
   // What Home's month card shows: the story's cover and its three takeaways.
   window.stCover = function (m) {

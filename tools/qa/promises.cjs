@@ -143,4 +143,12 @@ for (const [title, skill, age] of [['Sat up', 'Sits without support', 9], ['Roll
   check(!/In the formula\. Choose one with iron\./.test(text(open(fam({ feed: 'Both', feedHow: 'Nursing' }, 5), 'chg:Feeding:mock:x_vitd'))), 'Both milks: the vitamin D page doesn’t say iron is simply in the formula');
 }
 
+// 12. Home's newborn story card follows the baby's pronouns. (Nov 17 QA: it said "Her first weeks" for boys and "they"
+//     babies, and "Watch her first weeks" was turned into "Watch him first weeks" by the object-pronoun rule.)
+{
+  const src = require('node:fs').readFileSync(require('node:path').join(__dirname, '../../js/home-glance.js'), 'utf8');
+  check(!/F\('Her first weeks'\)/.test(src), 'The newborn story eyebrow uses the baby’s pronoun, not a fixed “Her”');
+  check(!/P\([^)]*'Watch her first weeks'/.test(src), 'The newborn story button says “Watch his/their first weeks”, not “Watch him first weeks”');
+}
+
 console.log(`Promise checks: ${checks} passed`);
