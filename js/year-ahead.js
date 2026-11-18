@@ -199,21 +199,36 @@
     const bornD = parse(profile.early && profile.due ? profile.due : profile.dob);
     const calMon = mm => new Date(bornD.getTime() + mm * MONTH).toLocaleDateString('en-US', { month: 'long' });
     const longWhen = s => when(s).replace(/ mo$/, ' months').replace(/^(\d+) months$/, (q, n) => n === '1' ? '1 month' : q);
+    // Nov 17 · "Around now", then the months ahead. Every change has one permanent home: its typical month.
+    // Before that month it waits in the timeline; from that month until its window closes (and unless recorded) it's
+    // in "Around now"; after that it's Earlier. So at any moment it appears exactly once.
+    const HOME = { crying: 1.5, smile: 1.5, nights: 3, regress: 4, roll: 5, solids: 6, twonaps: 7, sit: 7, tooth: 7, crawl: 8, sep: 9, carseat: 10, pull: 10, words: 12, milk: 12, steps: 12 };
+    const homeOf = s => s.v != null ? s.v - gap : (HOME[s.c.id] != null ? HOME[s.c.id] - shiftFor(s.c.cat) : s.c.start);
+    try { const mo0 = Math.max(0, Math.min(11, Math.floor(a))); if (typeof window.monthColor === 'function') YEAR_PALETTES.__tl = { ink: window.monthColor(mo0, .45, 30), bg: window.monthColor(mo0, .88), pale: window.monthColor(mo0, .94), accent: window.monthColor(mo0, .6) }; } catch (e) {}
+    const icon = n => hubArt(n, typeof YEAR_PALETTES !== 'undefined' && YEAR_PALETTES.__tl ? '__tl' : 'Development');
+    const shortRange = s => longWhen(s).replace(/^Usually |^Around |^At /, '');
     const listHTML = x => {
-      const t = isToday(x), past = all.filter(s => st(s, x) === 'done'), rest = all.filter(s => st(s, x) !== 'done');
-      const prep = (s, k) => s.v != null ? (k === 'now' ? 'Due now · book it if you haven’t' : 'Book it a few weeks ahead') : s.c.id === 'crying' && x >= 2 ? 'Past the worst now' : PREP[s.c.id] || '';
-      const step = s => { const k = st(s, x), pr = k === 'done' ? '' : prep(s, k); return `<li class="tl-step is-${k}" data-id="${s.v != null ? 'v' + s.v : s.c.id}"><i class="tl-dot"></i><button onclick="${go(s)}"><span class="tl-t"><b>${F(title(s))}</b>${pr ? `<small>${F(pr)}</small>` : ''}</span><span class="tl-w">${F(longWhen(s))}</span></button></li>`; };
-      const mark = `<li class="tl-today"><i class="tl-dot"></i><span>${F(t ? 'Today' : `At ${ageTxt(x)}`)}</span></li>`;
-      let h = '';
-      if (past.length) h += `<li class="tl-past"><i class="tl-dot"></i><button onclick="this.closest('ol').classList.toggle('show-past');this.querySelector('span').textContent=this.closest('ol').classList.contains('show-past')?'Hide':'Show'">${F(`Earlier in {p} year (${past.length})`)}<span>${F(document.querySelector('#main .tl-steps.show-past') ? 'Hide' : 'Show')}</span></button></li>` + past.map(step).join('').replace(/tl-step is-done/g, 'tl-step is-done tl-old');
-      // Everything in her window stays a card on Today (parents want to see it). Newest first, a due checkup leading;
-      // the age range on each card says how long it usually lasts.
-      const nowS = rest.filter(s => st(s, x) === 'now').sort((p, q) => (q.v != null) - (p.v != null) || q.m - p.m || (p.c && q.c ? p.c.end - q.c.end : 0));
-      h += mark + (nowS.length ? nowS.map(step).join('') : `<li class="tl-quiet"><span>${F('Nothing new starting right now. Here’s what’s next.')}</span></li>`);
-      // What's ahead, under light calendar signposts ("Around January").
-      let last = null;
-      rest.filter(s => st(s, x) === 'next').forEach(s => { const lab = calMon(Math.max(s.m, x)); if (lab !== last) { h += `<li class="tl-mon"><span>${F(`Around ${lab}`)}</span></li>`; last = lab; } h += step(s); });
-      return h + `<li class="tl-step tl-goal"><i class="tl-dot"></i><span class="tl-t"><b>${F('First birthday!')}</b><small>${F(`Around ${calMon(12)}`)}</small></span>${cake}</li>`;
+      const where = s => {
+        if (s.v != null) return (x >= a && attended(s.v)) || s.m < x - 0.75 ? 'earlier' : s.m <= x + 0.25 ? 'now' : 'ahead';
+        if ((x >= a && done[s.c.id]) || s.c.end <= x) return 'earlier';
+        return homeOf(s) <= x + 0.25 ? 'now' : 'ahead';
+      };
+      const line = s => s.v != null ? (where(s) === 'now' ? 'Due now · Book it if you haven’t' : 'Book it a few weeks ahead') : `Usually ${shortRange(s)}${PREP[s.c.id] ? ' · ' + PREP[s.c.id] : ''}`;
+      const row = s => `<li class="tl-gr"><button onclick="${go(s)}"><span class="tl-ic">${icon(s.v != null ? 'steth' : s.c.icon)}</span><span class="tl-t"><b>${F(title(s))}</b><small>${F(line(s))}</small></span><span class="hub-chev" aria-hidden="true">›</span></button></li>`;
+      const now = all.filter(s => where(s) === 'now').sort((p, q) => (q.v != null) - (p.v != null) || homeOf(q) - homeOf(p));
+      const ahead = all.filter(s => where(s) === 'ahead'), earlier = all.filter(s => where(s) === 'earlier');
+      let h = `<li class="tl-soon"><h2 class="tl-h2">${F('Around now')}</h2>`;
+      h += now.length ? `<ol class="tl-gcard">${now.map(row).join('')}</ol>` : `<p class="tl-quiet">${F('Nothing new right now. Here’s what’s next.')}</p>`;
+      h += `</li>`;
+      // The months ahead: one card per month, each change at its home month.
+      const months = [...new Set(ahead.map(s => Math.round(homeOf(s))))].sort((p, q) => p - q);
+      months.forEach(mm => {
+        const its = ahead.filter(s => Math.round(homeOf(s)) === mm).sort((p, q) => (p.v != null) - (q.v != null) || homeOf(p) - homeOf(q));
+        h += `<li class="tl-ent"><i class="tl-dot"></i><div class="tl-ghead"><span class="tl-pill">${F(mm >= 12 ? 'Around 1 year' : `Around ${mm} month${mm === 1 ? '' : 's'}`)}</span><span class="tl-gmon">${F(calMon(mm))}</span></div><ol class="tl-gcard">${its.map(row).join('')}</ol></li>`;
+      });
+      h += `<li class="tl-ent tl-bday"><i class="tl-dot"></i><div class="tl-gcard tl-bcard"><span class="tl-t"><b>${F('First birthday!')}</b><small>${F(calMon(12))}</small></span>${cake}</div></li>`;
+      if (earlier.length) h += `<li class="tl-earlier"><button onclick="this.parentNode.classList.toggle('is-open')">${F(`Earlier in {p} year (${earlier.length})`)}<i class="yt-caret" aria-hidden="true">›</i></button><ol class="tl-gcard">${earlier.map(s => `<li class="tl-gr"><button onclick="${go(s)}"><span class="tl-ic">${icon(s.v != null ? 'steth' : s.c.icon)}</span><span class="tl-t"><b>${F(title(s))}</b><small>${F(s.v != null ? `At ${s.v} months` : `Usually ${shortRange(s)}`)}</small></span><span class="hub-chev" aria-hidden="true">›</span></button></li>`).join('')}</ol></li>`;
+      return h;
     };
     const head = x => { const mo = Math.max(0, Math.min(11, Math.floor(x))), cov = typeof window.stCover === 'function' ? window.stCover(mo) : null; return cov ? F(cov.title) : ''; };
     const ends = x => { const t = isToday(x), left = Math.max(0, 12 - x), eta = left < 0.5 ? 'any day now' : left < 1.5 ? 'in about a month' : `in about ${Math.round(left)} months`, d = Math.round(Math.abs(x - a));
@@ -228,7 +243,7 @@
     h += `<div class="tl-prog${hinted ? '' : ' tl-hint'}"><div class="tl-ride"><span class="tl-baby" role="slider" tabindex="0" aria-label="${F(`Drag ${nm} to see another age`)}" aria-valuemin="0" aria-valuemax="12" aria-valuenow="${a.toFixed(1)}" aria-valuetext="${F(ageTxt(a))}" onkeydown="tlKey(event)" style="${theme(a)}">${art(a)}<em class="tl-tip">${F(hinted ? ageTxt(a) : 'Drag me')}</em></span><span class="tl-flag" aria-hidden="true">${window.stToy('cake')}</span></div><div class="tl-bar"><i></i><button class="tl-nowmark" onclick="tlScrub(null)" aria-label="${F('Back to today')}"></button></div><div class="tl-ticks" aria-hidden="true">${[[0, 'Birth'], [3, '3 months'], [6, '6 months'], [9, '9 months'], [12, '1 year']].map(([v, l]) => `<span style="left:${v / 12 * 100}%">${F(l)}</span>`).join('')}</div><div class="tl-ends">${ends(a)}</div></div>`;
     const gvars = x => typeof window.monthColor === 'function' ? `--g-bg:${window.monthColor(Math.max(0, Math.min(11, Math.floor(x))), .86)};--g-ink:${window.monthColor(Math.max(0, Math.min(11, Math.floor(x))), .45, 30)}` : '';
     window.__tl.gvars = gvars;
-    h += `<p class="tl-pace">${F('Ages are typical. Every baby moves at {p} own pace.')}</p><ol class="tl-steps" style="${gvars(a)}">${listHTML(a)}</ol>`;
+    h += `<p class="tl-pace">${F('Ages are typical. Every baby moves at {p} own pace.')}</p><ol class="tl-steps tl-groups tl-around" style="${gvars(a)}">${listHTML(a)}</ol>`;
     h += `</div>`;
     setTimeout(() => window.tlBind && window.tlBind(), 0);
     return h;

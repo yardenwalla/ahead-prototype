@@ -1202,3 +1202,23 @@
 #main .tl-shut.is-open>.tl-gcard{display:block}
 #main .tl-shut{padding-bottom:10px!important}
 #main .tl-pill{white-space:nowrap;flex:none}
+
+/* Nov 17 · Around now, then the months ahead */
+#main .tl-around .tl-soon{margin-left:-30px;padding:0 0 22px}
+#main .tl-around .tl-soon::before{display:none!important}
+#main .tl-around .tl-soon .tl-gcard{background:var(--m-bg1,#f6eff1);box-shadow:none}
+#main .tl-around .tl-gr .tl-t small{font-size:13px;color:#6b6676}
+#main .tl-around .tl-gr .hub-chev{color:#b5aebd;margin-left:auto}
+#main .tl-around .tl-gr .tl-ic svg{width:26px;height:26px}
+#main .tl-around .tl-quiet{margin:0;font-size:14px;color:#6b6676}
+#main .tl-around .tl-pill{background:var(--m-bg1,#f0ebe4);color:var(--m-ink,#5e5968)}
+#main .tl-around .tl-gmon{margin-left:2px}
+#main .tl-around>li.tl-ent>.tl-dot{background:#fff;border:2px solid var(--m-ink,#cfc6b9);opacity:.8}
+#main .tl-around>li.tl-ent::before{background:color-mix(in srgb,var(--m-ink,#2B2840) 30%,transparent)!important;opacity:1}
+#main .tl-around .tl-earlier{margin:18px 0 0 -30px}
+#main .tl-around .tl-earlier::before{display:none!important}
+#main .tl-around .tl-earlier>button{display:flex;align-items:center;gap:8px;width:100%;padding:12px 2px;border:0;background:none;font:inherit;font-size:14px;color:#6b6676;cursor:pointer}
+#main .tl-around .tl-earlier .yt-caret{margin-left:auto;font-style:normal;transform:rotate(90deg);transition:transform .2s}
+#main .tl-around .tl-earlier.is-open .yt-caret{transform:rotate(-90deg)}
+#main .tl-around .tl-earlier>.tl-gcard{display:none}
+#main .tl-around .tl-earlier.is-open>.tl-gcard{display:block}
