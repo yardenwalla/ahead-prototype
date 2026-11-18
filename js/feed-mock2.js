@@ -339,6 +339,8 @@
   window.__fdReal = realStage;
   const ageMo = () => { try { const pr = profile; const from = pr.early && pr.due ? new Date(pr.due + 'T12:00:00') : new Date(pr.dob + 'T12:00:00'); return (NOW - from) / 864e5 / 30.44; } catch (e) { return 12; } };
   const stg = () => (window.__fdStage == null ? realStage() : window.__fdStage);
+  // First foods opens with first tastes until about 7½ months, and for the first 4 weeks of solids for a baby who starts later (the same rule as the Solids guides list).
+  const firstTastes = m => m < 7.5 || (stg() === realStage() && typeof answers !== 'undefined' && (answers.foodExperience === 'new' || (!!answers.solidsStart && typeof foodWeeksIn === 'function' && foodWeeksIn() < 4)));
   const isEarly = () => typeof profile !== 'undefined' && !!profile.early;
   // Months born early, rounded (0 if not born early). Solids follow adjusted age, so say what that means by birthday.
   const earlyMo = () => { try { return profile.early && profile.due ? Math.max(0, Math.round((new Date(profile.due + 'T12:00:00') - new Date(profile.dob + 'T12:00:00')) / 864e5 / 30.44)) : 0; } catch (e) { return 0; } };
@@ -3093,7 +3095,7 @@
     if (v === 1) return [2, 'The world is interrupting his feeds', 'He’s noticing everything now. A voice, a light or a sound can pull him away mid-feed.', 'He stops to look around.', 'Distracted isn’t the same as full. Most babies settle back to it.', 'Feed somewhere quiet and dim, and offer again after a short pause.'];
     if (v === 2 && m >= 7) return [3, 'A good time to start', 'Iron matters more after 6 months, so it’s worth starting soon. Bring your feeding questions to the checkup.', 'He reaches for your food.', 'If he sits with support and swallows well, he’s likely ready now.', 'Offer a soft, iron-rich food at one meal a day.'];
     if (v === 2) return [3, 'Eating starts before the first bite', 'Eating takes skills he’s still building, and they come together at his own pace.', 'He watches every bite you take.', 'Interest is a great sign, but it’s only one of the skills he needs.', 'Sit him on your lap at meals, so he can watch how eating works.'];
-    if (v === 3 && m < 7.5) return [4, 'His tongue has a new job', 'Milk and food use different mouth movements. He’s learning what to do with each new bite.', 'Food comes right back out.', 'That’s practice, not dislike. It happens less as he learns.', 'Offer the same food a few days in a row, and watch him get better at it.'];
+    if (v === 3 && firstTastes(m)) return [4, 'His tongue has a new job', 'Milk and food use different mouth movements. He’s learning what to do with each new bite.', 'Food comes right back out.', 'That’s practice, not dislike. It happens less as he learns.', 'Offer the same food a few days in a row, and watch him get better at it.'];
     if (v === 3) return [5, 'Lumps are a big leap', 'He’s learning how new textures feel in his mouth. Soft lumps give him the practice.', 'He gags on a new texture.', 'Gagging moves food forward, and it happens less as he practices.', 'When he gags, stay calm and let him work it out. Your calm face helps.'];
     return [6, 'The mess is the milestone', 'Picking up food and getting it to his mouth is a skill he practices at every meal.', 'He wants to feed himself.', 'Squished food and spills are practice for his fingers and mouth.', 'Eat with him when you can, so he can copy you.']; };
   const discCss = `<style>#main .fd-hero.fd-disc{display:flex;flex-direction:column;min-height:463px;box-sizing:border-box}#main .fd-hero.fd-disc .fd-art{flex:1}#main .fd-hero .fd-art{display:grid;place-items:center;margin:6px -8px 6px}#main .fd-hero .fd-art svg{width:100%;max-width:290px;height:auto;filter:drop-shadow(0 9px 9px #754b5b18)}#main .fd-aha{background:#fffdfc;border-radius:16px;padding:14px 16px;box-shadow:0 3px 14px #a6798220;margin-top:2px}#main .fd-aha small{display:block;font-size:11px;font-weight:800;letter-spacing:.08em;color:#b87c8f;text-transform:uppercase;margin-bottom:5px}#main .fd-aha b{display:block;font-size:17px;line-height:1.25;color:var(--ink,#2b2732)}#main .fd-aha span{display:block;font-size:14px;line-height:1.45;color:#6d666d;margin-top:5px}#main .fd-try{display:flex;gap:12px;align-items:flex-start;margin:12px 0 4px;border-radius:16px;background:#e5f0e6;padding:14px 16px}#main .fd-try i{flex:none;width:32px;height:32px;border-radius:11px;background:#d0e3d2;color:#487456;display:grid;place-items:center}#main .fd-try small{display:block;font-size:11px;font-weight:800;letter-spacing:.08em;color:#5c7e67;text-transform:uppercase;margin:1px 0 4px}#main .fd-try p{margin:0;font-size:14.5px;line-height:1.45;color:#42634c;font-weight:550}</style>`;
@@ -3243,13 +3245,13 @@
     if (v === 1 && m < 3) return [[XC.f1, nurse ? 'heart' : 'bottle', 'Feeds now', 'Hungrier some days? Often a growth spurt', 'Usually around 6 weeks and 3 months', 'm1_now'],
       [XC.d1, 'moon', 'Evenings and nights', 'Night feeds are normal for now', '1–3 a night, and when waking stops', 'm1_eve'],
       [XC.p1, 'bag', 'Time apart', nurse && !bot ? 'A first bottle goes best from someone else' : 'Anyone can feed him from a bottle', 'Who offers it, and how', 'm1_apart']];
-    if (v === 1) return [[XC.f1, 'eye', 'Distracted feeds', 'Short daytime feeds are perfectly okay', 'Three ways to make feeds calmer', 'm2_distract'],
+    if (v === 1) return [[XC.f1, 'eye', 'Distracted feeds', 'Short, distracted feeds are common now', 'Three ways to make feeds calmer', 'm2_distract'],
       [XC.d1, 'moon', 'Evenings and nights', 'Night feeds are common', 'How many, and feeding back to sleep', 'm2_night'],
-      [XC.p1, 'bag', 'Time apart', nurses() && !formulaFam() ? 'Leave about 1–1½ oz for each hour apart' : 'Pack bottles labeled, cold and ready to mix', nurses() && !formulaFam() ? 'How much, labeled and cold' : 'For daycare or a day out', 'm2_away']];
+      [XC.p1, 'bag', 'Time apart', !formulaFam() ? 'Leave about 1–1½ oz for each hour apart' : 'Pack bottles labeled, cold and ready to mix', !formulaFam() ? 'How much, labeled and cold' : 'For daycare or a day out', 'm2_away']];
     if (v === 2) return [[XG, 'eye', 'Is he ready?', 'Most babies start solids around 6 months', 'Four signs to look for', 'z_ready'],
       [XG, 'highchair', 'How to start', 'Start with soft foods rich in iron', 'By spoon, by hand, or both', 'z_start'],
-      [XC.p1, 'shield', 'Allergens and foods to avoid', 'Honey waits until 1, some foods until 4', 'Foods to wait on', 'z_plan']];
-    if (v === 3 && m < 7.5) return [[XG, 'bowl', 'How a meal goes', 'First meals are just a few bites', 'Setting up, what to offer, and his cues', 'z_meal'],
+      [XC.p1, 'shield', 'Allergens and foods to avoid', 'Honey waits until 1, some foods until age 4', 'Foods to wait on', 'z_plan']];
+    if (v === 3 && firstTastes(m)) return [[XG, 'bowl', 'How a meal goes', 'First meals are just a few bites', 'Setting up, what to offer, and his cues', 'z_meal'],
       [XC.d1, 'cup', 'Milk and solids together', 'No set order for milk and meals', 'Before or after milk, with water in a cup', 'z_milkfood'],
       [XC.g1, 'peanut', 'Common allergens', 'Try the common allergens early', done ? done + ' of 9 tried' : 'Nine to try, one at a time', 'z_allergens']];
     if (v === 3) return [[XG, 'avocado', 'Beyond purées', 'Move from smooth food to soft pieces', 'What to offer at 6, 7–8 and 9 months', 'z_textures'],
@@ -3257,7 +3259,7 @@
       [XC.g1, 'peanut', 'Keeping foods in rotation', 'Keep allergens in his meals once tried', 'How often, and easy ways to fit them in', 'z_rotate']];
     return [[XG, 'lentils', 'Feeding himself', 'Most family foods are fine for him now', 'What to soften, and what to skip', 'z_meal'],
       [XC.g1, 'clock', 'Meals, snacks and milk', 'Some days he eats a lot, some days little', 'Why the week matters most', 'z_day'],
-      [XC.d1, 'cup', 'Turning 1', 'Start cups now, and whole milk at 12 months', 'How much milk, and moving off bottles', 'z_milk12']]; };
+      [XC.d1, 'cup', 'Turning 1', formulaFam() || bot ? 'Start cups now, and whole milk at 12 months' : 'Start cups now, and offer whole milk at 12 months', 'How much milk, and moving off bottles', 'z_milk12']]; };
   const gRow = ([c, icon, eb, title, sub, id]) => H().row({ cat: CAT, icon, title, sub, onclick: go(id) })
     .replace(/<span class="hub-dot">[\s\S]*?<\/span><span class="hub-row-copy">/, `<span class="hub-dot">${hubArt(icon, CAT).replace('data-art=', 'data-keep=')}</span><span class="hub-row-copy">`)
     .replace('class="hub-row', `style="--sm-bg:${c[0]};--sm-ink:${c[1]}" class="sm-row hub-row`);
