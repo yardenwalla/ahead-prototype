@@ -35,7 +35,7 @@
   function expectPage(age) {
     const e = EXPECT[age];
     // First week: jaundice at home, since it peaks in these days (AAP, HealthyChildren.org).
-    const jaundice = age === 0 ? '<h2 class="hub-h2">Yellow skin at home</h2>' + H().versus('', ['Normal', 'A little yellow on the face in the first week, feeding well.'], ['Call your pediatrician', 'Yellow belly, legs or eyes, poor feeding, or very sleepy.']) : '';
+    const jaundice = age === 0 ? '<h2 class="hub-h2">Yellow skin at home</h2>' + H().versus('', ['Normal', 'A little yellow on the face in the first week, feeding well.'], ['Time to call', 'Yellow belly, legs or eyes, poor feeding, or very sleepy.']) : '';
     // What's new at this visit leads; the growth check every visit has goes after it (Nov 18).
     const growth = e.checks.filter(c => c[0] === 'steth' && age >= 2).map(c => [c[0], c[1], 'The usual growth check', 'Weight, length, head size and a full exam']);
     const checks = growth.length ? [...e.checks.filter(c => c[0] !== 'steth' && c[0] !== 'heart'), ...growth, ...e.checks.filter(c => c[0] === 'heart')] : e.checks;
@@ -77,7 +77,7 @@
     const season = `<h2 class="hub-h2">Depends on the season</h2><div class="hub-list">${row('snow', 'peach', 'Ask which are due', '')}<ul class="hv-doses">${s.map(([n, d]) => `<li><b>${n}</b><em>${F(d)}</em></li>`).join('')}</ul></div>`;
     // REVIEW: for babies under 3 months, any fever of 100.4°F or more needs a call.
     const call = 'A fever of ' + (age <= 2 ? '100.4°F' : (typeof feverTemp === 'function' ? feverTemp(age) : '101°F')) + ' or higher, crying for 3+ hours, or swelling that grows.';
-    const after = H().versus(due.length ? 'After the shots' : 'If {s} {get|gets} a shot', ['Normal for a day or two', 'Fussy or sleepy, a low fever, or a sore spot where the shot went in.'], ['Call your pediatrician', call]);
+    const after = H().versus(due.length ? 'After the shots' : 'If {s} {get|gets} a shot', ['Normal for a day or two', 'Fussy or sleepy, a low fever, or a sore spot where the shot went in.'], ['Time to call', call]);
     // MMR and chickenpox can cause a late, mild reaction: its own note, so the normal box stays short (Nov 18).
     const late = age === 12 ? H().note('After MMR and chickenpox, a mild fever or rash 1–2 weeks later can be normal too.') : '';
     return frame(head(age, 'blue', v.title, v.lead) + list + season + after + late + H().note('Based on the AAP schedule. Your pediatrician confirms what’s due from Maya’s record.'));

@@ -337,7 +337,7 @@
         [['Wriggly changes', H().steps(['Hand {o} a toy to hold, or sing the same song each time.', 'Keep one hand on {o} on the changing table, always.', 'Once {s} {pull|pulls} up, a standing change can be easier.'])], solids() && ['Poop once solids start', p_('Thicker, browner, sometimes with bits of food. Pears, prunes and peaches help if it gets hard.')]]
       ],
       base: [v > 0 && ['How to change a diaper', 'Five steps', diaperCarousel()], ['Diaper rash', 'What helps, and yeast rash', rashHow()], v === 0 && ['Sizing up', 'When to move up', p_('Leaks, red marks at the legs or waist, or tabs that don’t reach the middle mean it’s time for the next size.')], v > 0 && ['Care down there', 'For girls and boys', downThere()], ['How many wet diapers?', '6 or more a day after the first week', p_('6 or more wet diapers a day is the sign {s’s} getting enough milk.')]],
-      call: v => H().versus('Normal, or time to call?', ['Normal', 'Yellow, green or brown. ' + (v === 0 ? 'Black and sticky only at first.' : 'Several a day, or one every few days.')], ['Call your pediatrician', 'Black after day 5, red, or white. Or fewer than 4 wet diapers a day.']) + urgent('White, gray or chalky poop. Call your pediatrician right away.')
+      call: v => H().versus('Normal, or time to call?', ['Normal', 'Yellow, green or brown. ' + (v === 0 ? 'Black and sticky only at first.' : 'Several a day, or one every few days.')], ['Time to call', 'Black after day 5, red, or white. Or fewer than 4 wet diapers a day.']) + urgent('White, gray or chalky poop. Call your pediatrician right away.')
     }),
 
     bath: v => topicPage('bath', v, {
@@ -363,7 +363,7 @@
         [['Common now', rashLink(['heat', 'eczema'])]]
       ],
       base: [['What’s this rash?', 'All the common ones', rashLink(RASH_ORDER)], ['Everyday skin care', 'Soap, lotion and laundry', H().steps(['Plain water is enough for most baths. Fragrance-free soap only on dirty spots.', 'Most babies don’t need lotion. For dry skin, a little fragrance-free moisturizer.', 'Wash new clothes before wearing. Fragrance-free detergent if {p} skin is sensitive.'])]],
-      call: v => H().versus('Normal, or time to call?', ['Normal', 'Spots that come and go, in a happy baby.'], ['Call your pediatrician', 'A rash with a fever, blisters or pus, or one that spreads.' + (v === 0 ? ' Tiny blisters in the first 2 weeks: call now.' : '')]) + urgent('Purple or red dots that don’t fade when you press a glass on them. Call 911 or go to the ER.')
+      call: v => H().versus('Normal, or time to call?', ['Normal', 'Spots that come and go, in a happy baby.'], ['Time to call', 'A rash with a fever, blisters or pus, or one that spreads.' + (v === 0 ? ' Tiny blisters in the first 2 weeks: call now.' : '')]) + urgent('Purple or red dots that don’t fade when you press a glass on them. Call 911 or go to the ER.')
     }),
 
     clothes: v => topicPage('clothes', v, {
@@ -388,7 +388,7 @@
         []
       ],
       base: [!sixPlus(v) ? ['Sun protection', 'Shade first', p_('Shade, light long sleeves and a wide-brimmed hat. A little sunscreen on the face only if there’s no shade.')] : ['Sun protection', 'Shade, a hat and SPF 30', p_('Shade and a hat first, then sunscreen on skin you can’t cover, every 2 hours and after swimming.')], ['Hot days', 'Layers, feeds and the stroller', H().steps(['One light layer, and shade or indoors at midday.', F('Extra milk feeds keep {o} hydrated.'), 'Don’t cover the stroller with a blanket. It traps heat. Use the canopy or a clip-on shade.'])], ['At the pool or beach', 'What to bring', p_('Swim diapers, a sun shirt and a hat' + (sixPlus(v) ? ', and mineral sunscreen.' : '.') + ' Keep a hand on {o} in any water, even shallow.')]],
-      call: () => H().versus('Normal, or time to call?', ['Normal', 'A little pink and sweaty, cooling off in the shade.'], ['Call your pediatrician', 'Any sunburn before age 1, or fewer wet diapers.']) + urgent('Hot and flushed and hard to wake, floppy, or not feeding. Cool {o} down and call 911. Never leave {o} in a car.')
+      call: () => H().versus('Normal, or time to call?', ['Normal', 'A little pink and sweaty, cooling off in the shade.'], ['Time to call', 'Any sunburn before age 1, or fewer wet diapers.']) + urgent('Hot and flushed and hard to wake, floppy, or not feeding. Cool {o} down and call 911. Never leave {o} in a car.')
     }),
 
     teeth: v => { const tooth = hasTooth(); return topicPage('teeth', v, {
@@ -401,7 +401,7 @@
         [live() && !tooth ? ['No tooth yet?', p_('That’s normal. Some babies don’t get one until around their first birthday.') + `<button class="hub-already" onclick="careSet('hasTooth','Yes');openPage('chg:${CAT}:d:c:teeth:3')">${F('Got a first tooth? See how to brush')}</button>`] : null, [tooth ? 'Brushing' : 'When the first tooth comes', `<figure class="hub-figure hub-paste" role="img" aria-label="Use a smear of toothpaste the size of a grain of rice, not a pea-sized amount."><div class="is-yes"><svg viewBox="0 0 160 60" aria-hidden="true"><rect x="58" y="34" width="96" height="14" rx="7" fill="#cfe3db"/><rect x="8" y="30" width="56" height="20" rx="8" fill="#a9cbbd"/>${Array.from({ length: 9 }, (_, i) => `<rect x="${12 + i * 5.6}" y="16" width="3.4" height="15" rx="1.7" fill="#cfe3db"/>`).join('')}<ellipse cx="34" cy="14" rx="4.5" ry="2.6" fill="#fff" stroke="#7fb0cc" stroke-width="1.3"/></svg><b>✓ ${F('A grain of rice')}</b><small>${F('Under 3 years')}</small></div><div class="is-no"><svg viewBox="0 0 160 60" aria-hidden="true"><rect x="58" y="34" width="96" height="14" rx="7" fill="#cfe3db"/><rect x="8" y="30" width="56" height="20" rx="8" fill="#a9cbbd"/>${Array.from({ length: 9 }, (_, i) => `<rect x="${12 + i * 5.6}" y="16" width="3.4" height="15" rx="1.7" fill="#cfe3db"/>`).join('')}<circle cx="34" cy="8" r="9" fill="#fff" stroke="#7fb0cc" stroke-width="1.3"/></svg><b>${F('Not a pea')}</b><small>${F('That’s from age 3')}</small></div></figure>` + p_('Twice a day with a soft baby toothbrush and a rice-grain smear of fluoride toothpaste, including before bed. No need to rinse.')], ['First dental visit', p_('When the first tooth comes in, and by the first birthday. Your pediatrician may also paint on fluoride varnish at checkups.')], ['No bottle in bed', p_('Milk sitting on new teeth overnight causes cavities.')]]
       ],
       base: [v > 1 && ['Wiping gums', 'Before teeth come in', p_('Twice a day with a soft, clean cloth.')], v === 3 && ['Teething', 'What helps, and what to skip', H().steps(['A clean finger on the gums, or a firm teething ring chilled in the fridge.', 'Skip numbing gels, homeopathic tablets and teething necklaces.', 'Teething doesn’t cause fever, diarrhea or diaper rash.'])]],
-      call: v => v >= 2 ? H().versus('Normal, or time to call?', ['Normal', 'Drool, chewing and sore gums.'], ['Call your pediatrician', 'A fever, diarrhea or a rash. Teething doesn’t cause them.']) : ''
+      call: v => v >= 2 ? H().versus('Normal, or time to call?', ['Normal', 'Drool, chewing and sore gums.'], ['Time to call', 'A fever, diarrhea or a rash. Teething doesn’t cause them.']) : ''
     }); },
 
     nails: v => topicPage('nails', v, {
@@ -434,7 +434,7 @@
   // Nov 14: each rash says what's normal for that rash, and its own call signs sit in the same box, not in a second one.
   function rashCall(r) {
     const h = H();
-    return h.versus('Normal, or time to call?', ['Normal', (r && r.normal) || 'Spots that come and go, in a happy baby.'], ['Call your pediatrician', (r && r.call) || 'A rash with a fever, blisters or oozing, or one that spreads.'])
+    return h.versus('Normal, or time to call?', ['Normal', (r && r.normal) || 'Spots that come and go, in a happy baby.'], ['Time to call', (r && r.call) || 'A rash with a fever, blisters or oozing, or one that spreads.'])
       + hubUrgent('Tiny purple-red dots that don’t fade when you press on them, especially with a fever. Call 911 or go to the ER.');
   }
   function rashPage(id) {
@@ -838,7 +838,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     b += `<h2 class="hub-h2">${F(live() && v !== now ? `New at ${STAGE[v].toLowerCase() === 'newborn' ? 'the newborn stage' : STAGE[v]}` : 'New for Maya now')}</h2><div class="hub-list">${NEWNOW[v].map(k => topicRow(k, v)).join('')}</div>`;
     b += `<h2 class="hub-h2">${F('All the basics')}</h2><div class="care-grid">${BASIC6.map(k => basicTile(k, v)).join('')}</div>` + shop;
     b += `<button class="hub-rough-card care-rash-card" onclick="openPage('chg:${CAT}:d:look:${v}')"><span class="hub-rough-moon" aria-hidden="true">${hubArt('eye', CAT)}</span><span class="hub-rough-copy"><b>${F('Something look off?')}</b><small>${F(['Poop, rashes, the cord, eyes and more', 'Poop, rashes, eyes and more', 'Drool, rashes, poop and more', 'Drool, rashes, poop and more'][v])}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`;
-    b += h.versus('Normal, or time to call?', ['Normal', st.call[0]], ['Call your pediatrician', st.call[1]]);
+    b += h.versus('Normal, or time to call?', ['Normal', st.call[0]], ['Time to call', st.call[1]]);
     b += nx ? h.next(v === 0 ? 'Next, after the first few weeks' : `Next, usually from ${STAGE[v + 1].split('–')[0]} months`, nx.title, `openPage('chg:${CAT}:s:${v + 1}')`)
       : h.next('After the first birthday', 'Toddler baths and first shoes', `openPage('chg:${CAT}:d:after1')`);
     b += h.note('Sleep sacks are in Sleep, and fevers and colds in Health. Ages are typical, and every baby moves at their own pace.');

@@ -142,7 +142,7 @@ async def main():
         check(await pg.evaluate("!!document.querySelector('.hl-done-link')"), '4.5 months: the due checkup offers "Mark it done"')
         await pg.evaluate("(document.querySelector('.hl-done-link button')||{click(){}}).click()"); await pg.wait_for_timeout(300)
         check(await pg.evaluate("healthRecord(4) && healthRecord(4).status === 'attended'"), 'Mark it done saves the checkup as done')
-        check('6‑month' in await pg.evaluate("document.querySelector('#main').innerText"), 'After Mark it done, Health moves on to the next checkup')
+        check(re.search(r'6[‑-]month', await pg.evaluate("document.querySelector('#main').innerText"), re.I), 'After Mark it done, Health moves on to the next checkup')   # the eyebrow is uppercase now
         await pg.evaluate("navigate('categories')"); await pg.wait_for_timeout(300)
         t = await pg.evaluate("document.querySelector('#main').innerText")
         check('4-month checkup is due now' not in t, 'A checkup marked done is no longer "due now" on the Guides tab')

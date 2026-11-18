@@ -353,7 +353,7 @@ window.SEARCH_DEEP = [["topic:Development","Development & play","What to look fo
 ["chg:Sleep:d:away","Sleep","Clocks changing?","Move bedtime 15 minutes a day over a few days before.",8191,0],
 ["chg:Sleep:help","Sleep","Keeping an eye on it?","",8191,0],
 ["chg:Health:d:sick-fever","Health","Take {p} temperature","",8191,0],
-["chg:Health:d:sick-rectal","","Rectal","Most accurate",8191,1],
+["chg:Health:d:sick-fever","Health","Under 3 months.","",7,0],
 ["chg:Health:d:sick-fever","Health","Medicine.","",8191,0],
 ["chg:Health:d:cold","Health","Could it be an ear infection?","",8191,0],
 ["chg:Health:d:cold","Health","Skip cold medicines.","",8191,0],

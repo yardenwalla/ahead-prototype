@@ -272,7 +272,7 @@
         nursing() || meth() === 'both' ? row({ icon: 'heart', title: 'How a feed goes', sub: 'How long, both sides, burping and growth spurts', onclick: go('chg:Feeding:d:nursing') }) : null,
         nursing() || meth() === 'both' ? row({ icon: 'bottle', title: 'Pumping and a first bottle', sub: 'When to start, how much, and storing milk', onclick: go('chg:Feeding:d:pump') }) : null
       ]);
-      h += versus('Normal, or time to call?', ['Normal', 'Feeding again an hour later, a little spit-up and long feeds at first.'], ['Call your pediatrician', 'Hard to wake for feeds, fewer wet diapers or looking more yellow.']);
+      h += versus('Normal, or time to call?', ['Normal', 'Feeding again an hour later, a little spit-up and long feeds at first.'], ['Time to call', 'Hard to wake for feeds, fewer wet diapers or looking more yellow.']);
     }
     if (key === 'rhythm') {
       h += hero({ eyebrow: 'Milk feeds', title: 'Feeds are getting quicker', checks: ['Feeds drop to about 6–8 a day, down from 8–12', 'Maya goes a little longer between feeds, about 2–4 hours', 'Many babies feed faster, so shorter feeds are normal'] }) + B;
@@ -285,7 +285,7 @@
         nursing() || meth() === 'both' ? row({ icon: 'bottle', title: 'Pumping and a bottle', sub: 'For time apart or going back to work', onclick: go('chg:Feeding:d:pump') }) : null,
         row({ icon: ev === 0 ? 'clock' : 'mouth', title: ev === 0 ? 'Cluster feeding is normal' : 'Distracted feeds are normal', sub: ev === 0 ? 'Lots of feeds close together, often in the evening' : 'Pulling off to look around usually passes', onclick: go(`chg:Feeding:e:${ev}`) })
       ]);
-      h += versus('Normal, or time to call?', ['Normal', 'Quicker feeds, longer gaps and a little spit-up.'], ['Call your pediatrician', 'Fewer wet diapers, refusing feeds or taking much less milk.']);
+      h += versus('Normal, or time to call?', ['Normal', 'Quicker feeds, longer gaps and a little spit-up.'], ['Time to call', 'Fewer wet diapers, refusing feeds or taking much less milk.']);
     }
     if (key === 'ready') {
       const n = signsSeen();
@@ -1188,7 +1188,7 @@
         + `<h2 class="hub-h2">${F('Common reasons')}</h2>` + hubIconSteps([['stand', 'New skills', 'Practicing standing or crawling, even half asleep'], ['heart', 'Missing you', 'Separation anxiety peaks around 8–10 months'], ['tooth', 'Teeth or a cold', 'Discomfort wakes {o} up'], ['bottle', 'Habit or hunger', 'Ask your pediatrician if night feeds are still needed']], cat, 'New skills, missing you, teeth or a cold, or habit and hunger.', false)
         + `<h2 class="hub-h2">${F('What helps')}</h2>`
         + tips(['Keep it brief: a pat, a few quiet words, then out.', 'Stuck standing? Practice sitting back down during the day.', 'Respond the same way each time, so {s} {know|knows} what to expect.'])
-        + versus('Normal, or time to call?', ['Normal', 'One or two wakings a night that settle with a little help.'], ['Call your pediatrician', 'Snoring, breathing pauses, a fever or ear pulling.']), 'moon');
+        + versus('Normal, or time to call?', ['Normal', 'One or two wakings a night that settle with a little help.'], ['Time to call', 'Snoring, breathing pauses, a fever or ear pulling.']), 'moon');
     }
     if (id === 'where') {
       return detail(cat, 'Room and crib', 'Share a room until at least 6 months', 'In {p} own sleep space, in your room. After that, where {s} {sleep|sleeps} is your family’s call.',

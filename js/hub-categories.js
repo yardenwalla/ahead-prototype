@@ -161,7 +161,7 @@
       b += h.glanceCard(v === now ? 'Maya’s care at a glance' : 'At this stage', [['Baths', '2–3 a week', 'Sponge baths for now'], ['Diapers', '8–12 a day', 'Change when wet or dirty']], `openPage('chg:Daily rhythm:d:sponge')`);
       b += h.list('In these first weeks', [careRow('towel', 'Give a sponge bath', 'A warm room, a washcloth and 5 minutes', 'sponge'), careRow('cord', 'Keep the cord stump clean and dry', 'Fold the diaper below it and let it air', 'cord'), careRow('nail', 'Trim tiny nails', 'Easiest while {s} {sleep|sleeps}', 'nails')]);
       b += h.list('Every day', [careRow('shirt', 'Dress Maya for the weather', 'One more layer than you’re wearing', 'dress'), careRow('diaper', 'Diapers and skin', 'Gentle care, and what to do about diaper rash', 'skin')]);
-      b += h.versus('Normal, or time to call?', ['Normal', 'A little crust or blood near the cord.'], ['Call your pediatrician', 'Spreading redness, pus or a bad smell, or 100.4°F or higher.']);
+      b += h.versus('Normal, or time to call?', ['Normal', 'A little crust or blood near the cord.'], ['Time to call', 'Spreading redness, pus or a bad smell, or 100.4°F or higher.']);
     }
     if (v === 1) {
       b += h.hero({ eyebrow: '1–3 months', title: 'Tub baths and everyday skin care', checks: ['Once the cord has healed, sponge baths become tub baths', 'Two or three baths a week is plenty', 'Dry skin and cradle cap are common now, and easy to care for'] });
@@ -209,7 +209,7 @@
       + hubEmbed('VsUla1M7eHQ', 'Giving a tub bath', 'Nemours KidsHealth') + h.tip('Never step away', 'Not even for a moment. If you need to leave, wrap Maya in a towel and take {o} with you.') + h.tip('Water heater', 'Set it to 120°F or lower so tap water can’t scald.'), 'bath');
     if (id === 'skin') return d(stageName, 'Skin, rashes and cradle cap', 'Most diaper rash clears up in a few days with a few simple steps.',
       hubIconSteps([['diaper', 'Change often', 'Let the skin air out when you can'], ['shield', 'Thick zinc cream', 'At every change']], 'Daily rhythm', 'Change diapers often and air the skin, and use a thick layer of zinc oxide cream at every change.', false)
-      + h.versus('Normal, or time to call?', ['Normal', 'Pink and a little sore, better in a few days.'], ['Call your pediatrician', 'Blistering, bleeding, spreading, or not better in a few days.'])
+      + h.versus('Normal, or time to call?', ['Normal', 'Pink and a little sore, better in a few days.'], ['Time to call', 'Blistering, bleeding, spreading, or not better in a few days.'])
       + h.list('Other skin care', [h.row({ icon: 'drop', cat: 'Daily rhythm', title: 'Dry skin', sub: 'Mild soap only where needed, then moisturizer on damp skin' }), h.row({ icon: 'head', cat: 'Daily rhythm', title: 'Cradle cap', sub: 'A little baby oil, then brush gently before the bath' }), h.row({ icon: 'eye', cat: 'Daily rhythm', title: 'Red, itchy patches', sub: 'Show your pediatrician, who can suggest what helps' })]), 'drop');
     if (id === 'dress') return d(stageName, 'Dress Maya for the weather', 'Babies can’t tell you they’re too hot or cold, so a simple rule helps.',
       `<figure class="hub-figure hub-layers" role="img" aria-label="Dress baby in one more layer than you’re wearing."><div><span>${hubArt('shirt', 'Daily rhythm')}${hubArt('shirt', 'Daily rhythm')}</span><b>${F('You')}</b><small>${F('Comfortable in 2 layers')}</small></div><i aria-hidden="true">+1</i><div class="is-baby"><span>${hubArt('shirt', 'Daily rhythm')}${hubArt('shirt', 'Daily rhythm')}${hubArt('shirt', 'Daily rhythm')}</span><b>${F('Maya')}</b><small>${F('Needs 3')}</small></div></figure>`
@@ -334,10 +334,20 @@
       12: ['A quick blood test is common now', 'A finger or heel prick checks for iron and, in many places, lead.']
     }[age];
     const LEAD = a => ({ 0: 'The first visit after the hospital, usually 3 to 5 days after birth.', 1: 'A short visit, and a check on how you’re doing too.', 2: 'One of the bigger visits, with the first main round of vaccines.', 4: 'Mostly the same shots as at 2 months, so this time you know what to expect.', 6: 'The talk moves from milk to first foods.', 9: 'This one takes a closer look at development.', 12: 'A busy one: new vaccines, a few checks, and the move to whole milk.' })[a] || conceptHealthSummary(a);   // the gist; the rows below hold the details
+    // The top card says what's special about the visit (Nov 18: a takeaway, not "What happens at…"); the rows hold the rest.
+    const TAKE = {
+      0: ['Your first visit after coming home', 'Usually 3 to 5 days after birth.'],
+      1: ['A short visit, and a check on you too', 'Your own recovery counts, so mention how you’re feeling.'],
+      2: ['One of the bigger visits, with vaccines', 'Plan a quiet rest of the day afterward.'],
+      4: ['Mostly the same shots as at 2 months', 'So this time, you know what to expect.'],
+      6: ['The talk moves from milk to first foods', 'Teeth and iron come up now too.'],
+      9: ['This visit takes a closer look at development', 'Plus the usual growth and feeding check.'],
+      12: ['A busy one, with the move to whole milk', 'New vaccines and a few quick checks too.']
+    };
     const ASK = { 0: 'How will we know {s’s} feeding well?', 1: 'Is {p} weight gain on track?', 2: 'What’s normal after {p} shots?', 4: 'When should we think about solids?', 6: 'Should we watch {p} iron now that solids are starting?', 9: 'Are {p} sitting and babbling on track?', 12: 'How do we switch to whole milk?' }[age];
     const HEALTH_ART = "<svg viewBox=\"0 0 300 103\" aria-hidden=\"true\"><ellipse cx=\"146\" cy=\"90\" rx=\"107\" ry=\"7\" fill=\"#d5e5d6\"/><rect x=\"31\" y=\"63\" width=\"229\" height=\"23\" rx=\"11\" fill=\"#bed5c1\"/><circle cx=\"95\" cy=\"45\" r=\"26\" fill=\"#e8b89f\"/><path d=\"M78 40q7-21 29-15\" fill=\"none\" stroke=\"#9d735f\" stroke-width=\"5\" stroke-linecap=\"round\"/><path d=\"M85 48q4 4 8 0m7 0q4 4 8 0\" stroke=\"#916959\" stroke-width=\"2\" fill=\"none\"/><path d=\"M123 65q31-27 74 0l13 13h-92z\" fill=\"#a9c9ae\"/><path d=\"M148 66q24-19 49-26\" fill=\"none\" stroke=\"#e8b89f\" stroke-width=\"11\" stroke-linecap=\"round\"/><circle cx=\"202\" cy=\"40\" r=\"7\" fill=\"#e8b89f\"/><rect x=\"246\" y=\"15\" width=\"19\" height=\"29\" rx=\"4\" fill=\"#fafdf9\" stroke=\"#a0bda5\"/><path d=\"M256 22v15m-7-7h14\" stroke=\"#89b093\" stroke-width=\"3\" stroke-linecap=\"round\"/><path d=\"M277 48h15M285 40v16\" stroke=\"#9ebeaa\" stroke-width=\"2.5\" stroke-linecap=\"round\"/></svg>";
     let b = `<style>#main .hl-art{display:grid;place-items:center;margin:10px 0 2px}#main .hl-art svg{width:100%;max-width:260px;height:auto}#main .hl-worth{border-radius:20px;background:#eef0f7;padding:14px 16px;margin:0 0 14px;color:#3e4766}#main .hl-worth small{display:block;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#5e6890;margin-bottom:5px}#main .hl-worth b{display:block;font-size:16px;line-height:1.3;color:var(--ink,#302d3c)}#main .hl-worth p{margin:5px 0 0;font-size:14px;line-height:1.45;color:#5d6276}</style>`
-      + h.hero({ eyebrow: eyebrow2, title, lead: LEAD(age) }).replace(/<\/header>\s*$/, `<div class="hl-art">${HEALTH_ART}</div></header>`)
+      + h.hero({ eyebrow: done || !TAKE[age] ? eyebrow2 : label.replace(/(\d+)-month/g, '$1\u2011month'), title: done || !TAKE[age] ? title : TAKE[age][0], lead: done || !TAKE[age] ? LEAD(age) : TAKE[age][1] }).replace(/<\/header>\s*$/, `<div class="hl-art">${HEALTH_ART}</div></header>`)
       + (WORTH && !done ? `<section class="hl-worth"><small>${F('Worth knowing before you go')}</small><b>${F(WORTH[0])}</b><p>${F(WORTH[1])}</p></section>` : '')
       // Nov 14 (Yarden): parents look for a way to tick a checkup off. One quiet link once it's close or past, never a question.
       + (live() && !done && age <= focus && dueDays <= 3 ? `<div class="hub-browse hl-done-link"><button class="hub-link" onclick="hubVisitYes(${age})">${F('Been to this checkup? Mark it done')} ›</button></div>` : '');
@@ -509,10 +519,11 @@
       // Which thermometer, by age: rectal is most accurate all year; armpit works for a quick check (fever from 99°F);
       // forehead works at any age; ear readings only from 6 months.
       const fe = u3 ? ['Forehead', 'Less accurate'] : m < 6 ? ['Forehead', 'Accurate'] : ['Forehead or ear', 'Accurate'];
-      // Three ways to take it, as three equal tiles. Rectal opens a short page on how to do it.
-      const tile = (icon, t, d, go) => `<${go ? `button onclick="${go}"` : 'div'} class="hub-temp${go ? ' is-go' : ''}"><span class="hub-dot">${h.art(icon, 'Health')}</span><b>${F(t)}</b><small>${F(d)}</small>${go ? `<em>${F('How to')} ›</em>` : ''}</${go ? 'button' : 'div'}>`;
-      return `<div class="hub-temps">${tile('thermo', 'Rectal', 'Most accurate', "openPage('chg:Health:d:sick-rectal')")}${tile('hand', 'Armpit', 'Less accurate')}${tile('eye', fe[0], fe[1])}</div>`
-        + (u3 ? h.note('Under 3 months, check any high reading rectally.') : '');
+      // The same tile look as What helps (Nov 18), with the age note and the rectal how-to inside the card.
+      const card = B.noted(B.tiles([['thermo', 'Rectal', 'Most accurate'], ['hand', 'Armpit', 'Less accurate'], ['eye', fe[0], fe[1]]], 'Health'),
+        u3 ? [['', 'Under 3 months', 'Check any high reading rectally']] : []);
+      const go = `<button class="hub-link" onclick="openPage('chg:Health:d:sick-rectal')">${F('How to take a rectal temperature')} ›</button>`;
+      return card + `<div class="hub-browse">${go}</div>`;
     };
     // The page answers "what's going on?": one row per thing a parent is seeing, each opening a page that covers it
     // whole (how to check, when to call, how to help). The emergency signs apply to all of them, so they sit here.
@@ -543,14 +554,14 @@
     }
     // Taking a rectal temperature (How-to): numbered steps, then one note.
     if (id === 'sick-rectal') {
+      // A short physical sequence reads best as a plain numbered list (Nov 18: the icon grid was slower to read).
       return tpl(detailFrame('Health', 'When Maya seems sick', 'Rectal is the most accurate reading', 'Use a digital thermometer, and keep it just for this.',
-        sec('Steps', B.noted(B.tiles([['drop', 'Coat the tip', 'A little petroleum jelly'], ['back', 'On {p} back', 'With {p} knees bent up'], ['thermo', 'In about half an inch', 'No farther'], ['clock', 'Hold until it beeps', 'Then read it']], 'Health', true),
-          [['', 'After', 'Wash it with soap and water']]))));
+        sec('Steps', h.steps(['Put a little petroleum jelly on the tip.', 'Lay {o} on {p} back, knees bent toward {p} chest.', 'Slide it in about half an inch.', 'Hold it there until it beeps.']).replace('</ol></div>', '</ol>' + B.ul([['', 'After', 'Wash it with soap and water']]) + '</div>'))));
     }
     // Vomiting or diarrhea (When it's urgent): How to tell · What helps · When to call.
     if (id === 'sick-tummy') {
       return tpl(detailFrame('Health', 'When Maya seems sick', 'Most tummy bugs pass in a day or two', 'Keeping {o} hydrated is what matters most.',
-        sec('How to tell', B.versus(['Normal', 'A few loose poops or vomits, and still feeding well.'], ['Call your pediatrician', 'Blood in the poop, a dry mouth, or won’t keep feeds down.']))
+        sec('How to tell', B.versus(['Normal', 'A few loose poops or vomits, and still feeding well.'], ['Time to call', 'Blood in the poop, a dry mouth, or won’t keep feeds down.']))
         + sec('What helps', B.tiles([['bottle', 'Keep feeding', 'A little at a time'], ['diaper', 'Watch diapers', 'Far fewer wet ones is a warning sign'], ['steth', 'Ask first', 'Before giving any medicine']], 'Health'))
         + B.calls({ er: 'green or bloody vomit.', ...C911 }).replace('When to call', 'In an emergency')));
     }
@@ -569,7 +580,7 @@
     // A cold (When it's urgent, Nov 17): takeaway headline · How to tell · What helps · When to call last.
     if (cat === 'Health' && screen === 'd' && a === 'cold') { const B = H().TPLB, m = actualMonth();
       return detailFrame('Health', 'When Maya seems sick', 'Most colds clear up in 7–10 days', 'Several in the first year are normal. A clear nose helps {o} feed and sleep.',
-        B.sec('How to tell', B.versus(['Normal', 'Stuffy and sneezy, still feeding.'], ['Call your pediatrician', 'A fever of ' + feverTemp(m) + ' or higher, or a cold that won’t clear in 10 days.'],
+        B.sec('How to tell', B.versus(['Normal', 'Stuffy, sneezy, a mild cough, and still feeding well.'], ['Time to call', 'A fever of ' + feverTemp(m) + ' or higher, or a cold that won’t clear in 10 days.'],
           [['', 'Could it be an ear infection?', 'Fussing when lying down, a new fever or fluid from the ear. Any of these is worth a call']]))
         + B.sec('What helps', B.noted(B.tiles([['drop', 'Clear the nose', 'Saline drops, then suction, before feeds'], ['snow', 'Cool-mist humidifier', 'Run it in {p} room at night'], ['bottle', 'Smaller, frequent feeds', 'Easier with a stuffy nose']], 'Health'),
           [['', 'Skip cold medicines', 'They aren’t safe for babies. No honey before 1']]))
@@ -599,7 +610,7 @@
       const routine = (html.slice(0, cut < 0 ? html.length : cut).match(/vaccine-detail/g) || []).length, seasonal = cut < 0 ? 0 : (html.slice(cut).match(/vaccine-detail/g) || []).length;
       const tiles = `<div class="hub-vax-count"><div><b>${routine}</b><span>${F('routine vaccines to expect')}</span></div>${seasonal ? `<div><b>${seasonal}</b><span>${F('seasonal ones to ask about')}</span></div>` : ''}</div>`;
       // After the shots: what's normal, and when to call (AAP).
-      const after = age === 0 ? '' : H().versus('After the shots', ['Normal for a day or two', 'Fussy or sleepy, a low fever, and a sore, red spot where the shot went in.'], ['Call your pediatrician', age <= 2 ? 'A fever of 100.4°F or higher (call right away), crying for 3 hours or more, or swelling that keeps growing.' : `A fever of ${feverTemp(age)} or higher, crying for 3 hours or more, or swelling that keeps growing.`]);
+      const after = age === 0 ? '' : H().versus('After the shots', ['Normal for a day or two', 'Fussy or sleepy, a low fever, and a sore, red spot where the shot went in.'], ['Time to call', age <= 2 ? 'A fever of 100.4°F or higher (call right away), crying for 3 hours or more, or swelling that keeps growing.' : `A fever of ${feverTemp(age)} or higher, crying for 3 hours or more, or swelling that keeps growing.`]);
       const combo = `<p class="hub-vax-combo">${F('Many of these come combined, so it’s usually fewer shots than the list suggests. Some offices give 3 or more in one.')}</p>`;
       const out = (routine >= 2 ? html.replace(/(<section class="health-vaccines"><h2>[^<]*<\/h2>)/, `$1${combo}`) : html).replace('<p class="health-small">Combination vaccines may mean fewer injections.</p>', '');
       // October to March, the seasonal ones are marked "In season now", since this is when to ask for them.
