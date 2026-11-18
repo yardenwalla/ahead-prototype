@@ -127,6 +127,11 @@
     const tile = m => `<button class="mem-pick${m === now ? ' is-on' : ''}" data-m="${m}" onclick="memPick(${m})" aria-label="${esc2(short(m))}"${m === now ? ' aria-current="true"' : ''}><span class="mem-pick-tile">${photo(m) ? `<img src="${photo(m)}" alt="">` : `<b>${m === 0 ? '0' : m}</b>`}</span><small>${esc2(short(m))}</small><i class="${inMonth(m).length ? 'has' : ''}"></i></button>`;
     const picker = `<div class="mem-picks" role="tablist" aria-label="Months">${Array.from({ length: now + 1 }, (_, m) => tile(m)).join('')}</div>`;
     const lc = t => /^[A-Z][a-z]/.test(t) ? t[0].toLowerCase() + t.slice(1) : t;
+    // The memory book row closes each month, and says what else was noticed that month, so nothing is said twice.
+    const bookRowFor = (m, n, names) => {
+      const sub = n ? `Also: ${names[0]}${n > 1 ? ` and ${n - 1} more` : ''}` : firsts.length ? `Every photo and all ${firsts.length} moments` : (m === now ? 'Fills in as you tap Seen it' : 'Nothing saved for this month');
+      return `<button class="mem-bookrow" onclick="openPage('${firsts.length ? 'chg:Timeline:firsts' : 'chg:Timeline:milestone'}')"><span class="mem-bookrow-pic">${newest != null ? `<img src="${photo(newest)}" alt="">` : `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 6.5c2.5-1.3 5.5-1.3 8.5.5 3-1.8 6-1.8 8.5-.5v12c-2.5-1.3-5.5-1.3-8.5.5-3-1.8-6-1.8-8.5-.5z M12 7v12"/></svg>`}</span><span class="mem-li-copy"><b>${esc2(`${name()}’s memory book`)}</b><small>${esc2(sub)}</small></span><span class="mem-li-go" aria-hidden="true">›</span></button>`;
+    };
     const monthCard = m => {
       const rs = inMonth(m), big = rs.filter(r => bigSet.has(r)).reverse(), small = rs.filter(r => !bigSet.has(r));
       // The month at the top of its card: words on the left (who she is this month, and one warm line written to her),
@@ -140,9 +145,11 @@
       // Share card still makes the full balloon card.
       const MC = ['#e9b15c', '#38b5e7', '#89acde', '#65b89e', '#74b8a3', '#33abe7', '#efb661', '#f29f78', '#f192a8', '#f38978', '#cd8ce2', '#848eeb', '#eeb557'][m];
       const balloon = `<img class="mem-pol-balloon${m ? '' : ' is-hello'}" src="assets/home/${m ? 'balloon-' + m : 'hello-world'}.png" alt="">`;
-      const pic = photo(m)
-        ? `<button class="mem-pol" onclick="storyShare(${m})" aria-label="Share the ${L(m)} card"><i class="mem-pol-tape"></i><img class="mem-pol-img" src="${photo(m)}" alt="">${balloon}</button>`
-        : `<label class="mem-pol is-empty" aria-label="Add the ${lab} photo"><i class="mem-pol-tape"></i><span class="mem-pol-img"><b>＋</b></span>${balloon}${hubPhotoInput(m)}</label>`;
+      // The month's balloon card is the picture: with a photo it's the card she'll share, and before one it shows the
+      // empty polaroid waiting, which is the reason to add the photo.
+      const pic = !designs ? '' : photo(m)
+        ? `<button class="mem-card-story" onclick="storyShare(${m})" aria-label="Share the ${L(m)} card"><img data-story-thumb="${m}" alt=""></button>`
+        : `<label class="mem-card-story is-empty" aria-label="Add the ${lab} photo"><img data-story-thumb="${m}" alt="">${hubPhotoInput(m)}</label>`;
       const doodles = `<svg class="mem-doodle is-spark" viewBox="0 0 40 30" aria-hidden="true"><path d="M8 4v8M18 10l6-6M20 22h9"/></svg><svg class="mem-doodle is-heart" viewBox="0 0 40 34" aria-hidden="true"><path d="M10 28c-6-4-8-8-6-11 2-3 6-2 7 1 1-3 5-4 7-1 1 3-2 7-8 11zM27 16c-4-3-5-6-4-8 1-2 4-2 5 0 1-2 4-2 5 0 1 2-1 5-6 8z"/></svg>`;
       const btns = photo(m)
         ? `<div class="mem-card-btns"><label class="mem-card-btn"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="3"/><circle cx="9" cy="10" r="1.8"/><path d="m4 17 5-4.5 4 3.5 3-2.5 4 3.5"/></svg>Change photo${hubPhotoInput(m)}</label><button class="mem-card-btn is-main" onclick="storyShare(${m})"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V4m0 0-4 4m4-4 4 4"/><path d="M6 11H5a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7a1 1 0 0 0-1-1h-1"/></svg>Share card</button></div>`
@@ -170,8 +177,8 @@
       const smallRow = smallN ? `<button class="mem-li" onclick="${open}"><span class="mem-li-ic is-also"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4.5l2.2 4.6 5 .7-3.6 3.5.9 5-4.5-2.4-4.5 2.4.9-5L4.8 9.8l5-.7z"/></svg></span><span class="mem-li-copy"><b>${esc2(`Also noticed · ${smallN}`)}</b><small>${esc2(smallNames.length ? (smallN > 1 ? `${smallNames[0]} and ${smallN - 1} more` : smallNames[0]) : 'More firsts in the book')}</small></span><span class="mem-li-go" aria-hidden="true">›</span></button>` : '';
       const listHead = `<div class="mem-list-head"><h3>${esc2(m === now ? 'Firsts this month' : 'Firsts that month')}</h3><button class="mem-list-add" onclick="openPage('chg:Timeline:milestone')">＋ Add a first</button></div>`;
       const what = listHead + (rs.length
-        ? `<div class="mem-list">${rowsBig.map(bigRow).join('')}${smallRow}</div>`
-        : `<p class="mem-list-none">${esc2(m === now ? 'Tap Seen it in Development, or add a first, and it shows up here.' : 'Nothing saved for this month.')}</p>`);
+        ? `${rowsBig.length ? `<div class="mem-list">${rowsBig.map(bigRow).join('')}</div>` : ''}${bookRowFor(m, smallN, smallNames)}`
+        : bookRowFor(m, 0, []));
       return `<section class="mem-card" data-m="${m}"${m === now ? '' : ' hidden'}>${media}${what}</section>`;
     };
     const play = have.length >= 2 ? `<button class="mem-title-play" onclick="memPlay()" aria-label="Play the year"><span aria-hidden="true">▶</span> Play the year</button>` : '';
@@ -179,7 +186,7 @@
     setTimeout(() => { const r = document.querySelector('.mem-picks'); if (r) r.scrollLeft = r.scrollWidth; }, 0);
     // On her first birthday the whole-year card comes first, above the months.
     // The month card holds the month; the memory book (with Save a first) sits under it, as its own cover.
-    b += (year ? `<div class="mem-year-wrap">${year}</div>` : '') + picker + Array.from({ length: now + 1 }, (_, m) => monthCard(m)).join('') + bookRow;
+    b += (year ? `<div class="mem-year-wrap">${year}</div>` : '') + picker + Array.from({ length: now + 1 }, (_, m) => monthCard(m)).join('');
     // Checkups live in Health, never in the memory book.
     b += `<p class="hub-foot">Photos and entries stay on this device.</p></div>`;
     return `<div class="quiet-category hub-page hub-timeline-page" style="${yearTheme('Memories')}">${b}</div>`;
