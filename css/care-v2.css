@@ -345,3 +345,9 @@
 #main .care-tpl .tpl-versus b { display: block; font-size: 14px; font-weight: 650; margin-bottom: 4px }
 #main .care-tpl .tpl-versus p { margin: 0; font-size: 13.5px; line-height: 1.45; color: #4c4757 }
 #main .care-tpl .tpl-versus .tpl-notes { margin-top: 12px }
+
+/* Nov 17: the verdict under the name on an Is this normal? page (green: usually normal; amber: get it looked at). */
+#main .care-v2 .care-verdict { display: flex; align-items: center; gap: 7px; margin: 8px 0 2px; font-size: 15px; font-weight: 650; line-height: 1.3; color: #2f6b47 }
+#main .care-v2 .care-verdict svg { width: 20px; height: 20px; flex: none; fill: #fff; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round }
+#main .care-v2 .care-verdict.is-watch { color: #9a5a12 }
+#main .care-v2 .care-verdict + .hub-lead { margin-top: 6px }
