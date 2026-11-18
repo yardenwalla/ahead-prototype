@@ -526,12 +526,12 @@
           h.row({ icon: 'drop', cat: 'Health', title: 'A cold or stuffy nose', sub: 'Clearing the nose, and when to call', onclick: "openPage('chg:Health:d:cold')" })
         ])
         + h.note('Not sure? Your pediatrician’s office has someone to talk to day or night. Calling is never a bother.')
-        + B.calls(C911));
+        + B.calls(C911).replace('When to call', 'In an emergency'));
     }
     // A fever (When it's urgent): the headline is this age's rule. The call is the answer here, so the number card and Call 911 come first (Nov 18).
     if (id === 'sick-fever' || id === 'sick-temp' || id === 'sick-care') {
-      const title = u3 ? 'Under 3 months, any fever means a call' : m < 6 ? 'At this age, call for 101°F or higher' : 'How {s} {act|acts} matters more than the number';
-      const lead = u3 ? 'Young babies can have an infection that shows only as a fever.' : m < 6 ? 'Below that, watch how {s} {act|acts} and keep feeds going.' : 'If {s} still {play|plays} and {feed|feeds} well, you can usually care for {o} at home.';
+      const title = u3 ? 'Under 3 months, any fever means a call' : m < 6 ? 'Below 101°F, watch how {s} {act|acts}' : 'How {s} {act|acts} matters more than the number';
+      const lead = u3 ? 'Young babies can have an infection that shows only as a fever.' : m < 6 ? 'Most fevers mean the body is fighting off a bug. Keep feeds going.' : 'If {s} still {play|plays} and {feed|feeds} well, you can usually care for {o} at home.';
       return tpl(detailFrame('Health', 'When Maya seems sick', title, lead,
         sec('When to call', feverCard)
         + sec('Take {p} temperature', thermo())
@@ -551,7 +551,7 @@
       return tpl(detailFrame('Health', 'When Maya seems sick', 'Most tummy bugs pass in a day or two', 'Keeping {o} hydrated is what matters most.',
         sec('How to tell', B.versus(['Normal', 'A few loose poops or vomits, and still feeding well.'], ['Call your pediatrician', 'Blood in the poop, a dry mouth, or won’t keep feeds down.']))
         + sec('What helps', B.tiles([['bottle', 'Keep feeding', 'A little at a time'], ['diaper', 'Watch diapers', 'Far fewer wet ones is a warning sign'], ['steth', 'Ask first', 'Before giving any medicine']], 'Health'))
-        + B.calls({ er: 'green or bloody vomit.', ...C911 })));
+        + B.calls({ er: 'green or bloody vomit.', ...C911 }).replace('When to call', 'In an emergency')));
     }
     return null;
   }
@@ -572,7 +572,7 @@
           [['', 'Could it be an ear infection?', 'Often after a cold: fussing when lying down, a new fever, or fluid from the ear']]))
         + B.sec('What helps', B.noted(B.tiles([['drop', 'Clear the nose', 'Saline drops, then suction, before feeds'], ['snow', 'Cool-mist humidifier', 'Run it in {p} room at night'], ['bottle', 'Smaller, frequent feeds', 'Easier with a stuffy nose']], 'Health'),
           [['', 'Skip cold medicines', 'They aren’t safe for babies. No honey before 1']]))
-        + B.calls({ now: 'struggling to breathe, blue lips, won’t wake or is floppy, or a seizure.', nowLabel: 'Call 911' })).replace('class="quiet-category hub-page hub-detail', 'class="quiet-category hub-page hub-detail care-tpl'); }
+        + B.calls({ now: 'struggling to breathe, blue lips, won’t wake or is floppy, or a seizure.', nowLabel: 'Call 911' }).replace('When to call', 'In an emergency')).replace('class="quiet-category hub-page hub-detail', 'class="quiet-category hub-page hub-detail care-tpl'); }
     if (cat === 'Health' && screen === 'd') { const pg = healthDetail(a); if (pg) return pg; }
     if (cat === 'Daily rhythm' && screen === 's') return everydayCare(Number(a));
     if (cat === 'Daily rhythm' && screen === 'd' && a !== 'more') return careDetail(a);

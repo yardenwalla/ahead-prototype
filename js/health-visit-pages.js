@@ -26,7 +26,7 @@
     2: { title: 'Growth and early skills, plus your questions', lead: 'No question is too small. Write them down before you go.', checks: [['steth', 'green', 'Growth and a head-to-toe exam', 'Weight, length and head size, then heart, hips, eyes and skin'], ['smile', 'pink', 'Early development', 'How {s} {respond|responds} to you and {hold|holds} {p} head'], ['bottle', 'yellow', 'Feeding', 'A good moment to ask about night feeds'], ['heart', 'peach', 'How you’re doing', 'A short questionnaire about your mood']] },
     4: { title: 'Movement, feeding and a first talk on solids', lead: 'Bring what you’ve noticed about rolling, reaching and feeds.', checks: [['steth', 'green', 'Growth and a head-to-toe exam', 'Weight, length and head size, then heart, hips, eyes and skin'], ['roll', 'blue', 'Movement and play', 'Head control, reaching and smiles'], ['bottle', 'yellow', 'Feeding', 'Milk, vitamin D and signs of readiness for solids'], ['moon', 'pink', 'Sleep', 'Night waking and how feeds fit in'], ['heart', 'peach', 'How you’re doing', 'A short questionnaire about your mood']] },
     6: { title: 'Growth, new skills, first foods and teeth', lead: 'Bring notes on how first foods are going.', checks: [['steth', 'green', 'Growth and a head-to-toe exam', 'Weight, length and head size, then heart, hips, eyes and skin'], ['sit', 'blue', 'New skills', 'Rolling, reaching, sitting with support, and sounds'], ['bowl', 'yellow', 'First foods', 'How solids are going, and iron'], ['tooth', 'pink', 'Teeth', 'Tooth care, and a fluoride coating once teeth appear'], ['heart', 'peach', 'How you’re doing', 'A short questionnaire about your mood']] },
-    9: { title: 'A development check, plus growth and feeding', lead: 'A short questionnaire about moving, sounds and play. Jot down what you’ve noticed.', checks: [['steth', 'green', 'Growth and a head-to-toe exam', 'Weight, length and head size, then heart, hips, eyes and skin'], ['star', 'blue', 'Development questionnaire', 'You answer questions about talking, moving and playing'], ['bowl', 'yellow', 'Feeding and teeth', 'Textures, finger foods and brushing'], ['ear', 'pink', 'Hearing and vision', 'Anything you’ve noticed at home'], ['heart', 'peach', 'How you’re doing', 'A short questionnaire about your mood']] },
+    9: { title: 'A development check, plus growth and feeding', lead: 'It’s a routine way to catch anything early.', checks: [['steth', 'green', 'Growth and a head-to-toe exam', 'Weight, length and head size, then heart, hips, eyes and skin'], ['star', 'blue', 'Development questionnaire', 'You answer questions about talking, moving and playing'], ['bowl', 'yellow', 'Feeding and teeth', 'Textures, finger foods and brushing'], ['ear', 'pink', 'Hearing and vision', 'Anything you’ve noticed at home'], ['heart', 'peach', 'How you’re doing', 'A short questionnaire about your mood']] },
     12: { title: 'A blood test, plus the move to milk and cups', lead: 'The blood test is a quick finger or heel prick.', checks: [['steth', 'green', 'Growth and a head-to-toe exam', 'Weight, length and head size, then heart, hips, eyes and skin'], ['drop', 'pink', 'Anemia check', 'A quick blood test'], ['home', 'blue', 'Lead test', 'A finger-prick test, routine in many areas'], ['cup', 'yellow', 'Milk and cups', 'Moving off bottles, and how much milk'], ['wave', 'peach', 'Development', 'Gestures, sounds and first steps']] }
   };
   // Before you go: the full list once, at the first checkup. Later checkups list only what's new for that visit (none if nothing is).
@@ -71,9 +71,11 @@
     const list = `<h2 class="hub-h2">At this checkup</h2><div class="hub-list">${row('shield', 'blue', 'Shots', '')}${due.length ? doses(due) : ''}${miss.length ? cap + doses(miss) : ''}${v.oral ? row('drop', 'green', 'By mouth', '') + doses(v.oral) : ''}</div>`;
     const season = `<h2 class="hub-h2">Depends on the season</h2><div class="hub-list">${row('snow', 'peach', title, '')}<ul class="hv-doses">${s.map(([n, d]) => `<li><b>${n}</b><em>${F(d)}</em></li>`).join('')}</ul></div>`;
     // REVIEW: for babies under 3 months, any fever of 100.4°F or more needs a call.
-    const call = age <= 2 ? 'A fever of 100.4°F+, 3 hours of crying that won’t stop, or swelling that grows.' : 'A fever of ' + (typeof feverTemp === 'function' ? feverTemp(age) : '101°F') + '+, 3 hours of crying that won’t stop, or swelling that grows.';
-    const after = H().versus('After the shots', ['Normal for a day or two', 'Fussy or sleepy, a low fever, and a sore red spot where the shot went in.' + (age === 12 ? ' A fever or rash 1–2 weeks later can also be normal after MMR and chickenpox.' : '')], ['Call your pediatrician', call]);
-    return frame(head(age, 'blue', v.title, v.lead) + list + season + after + H().note('Based on the AAP schedule. Your pediatrician confirms what’s due from Maya’s record.'));
+    const call = 'A fever of ' + (age <= 2 ? '100.4°F' : (typeof feverTemp === 'function' ? feverTemp(age) : '101°F')) + ' or higher, crying for 3+ hours, or swelling that grows.';
+    const after = H().versus('After the shots', ['Normal for a day or two', 'Fussy or sleepy, a low fever, or a sore spot where the shot went in.'], ['Call your pediatrician', call]);
+    // MMR and chickenpox can cause a late, mild reaction: its own note, so the normal box stays short (Nov 18).
+    const late = age === 12 ? H().note('After MMR and chickenpox, a mild fever or rash 1–2 weeks later can be normal too.') : '';
+    return frame(head(age, 'blue', v.title, v.lead) + list + season + after + late + H().note('Based on the AAP schedule. Your pediatrician confirms what’s due from Maya’s record.'));
   }
 
   /* ---------- Questions and notes: suggested questions in the parent's voice ---------- */
@@ -94,7 +96,7 @@
     if (part === 'expect') return expectPage(age);
     if (part === 'vaccines') return vaccinePage(age);
     if (part === 'questions' || part === 'notes') {
-      return base(age, part).replace(/<div class="hub-detail-head">[\s\S]*?<\/div>/, head(age, 'yellow', 'Questions and notes', 'Tick them off as you ask. What you hear stays with this checkup.'))
+      return base(age, part).replace(/<div class="hub-detail-head">[\s\S]*?<\/div>/, head(age, 'yellow', 'Questions worth asking at this visit', 'Tick them off as you ask. Notes you take stay with this checkup.'))
         .replace(/<p class="hub-q-hint">Tick them off as you go\.<\/p>/, '').replace(/(hub-page hub-detail)/, '$1 hv-page');
     }
     return base(age, part);
