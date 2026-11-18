@@ -1747,3 +1747,185 @@ label:has(> .hub-photo-input:focus-visible) { outline: 2px solid #884866; outlin
 #main .st-glance { grid-template-columns: repeat(3, 1fr); margin: 0 0 12px }
 #main .st-glance b { font-size: 15.5px }
 
+
+/* Memories month card (Nov 17): words left, the balloon card right, two buttons under, then what happened. */
+#main .mem-card-top { display: flex; align-items: center; gap: 14px }
+#main .mem-card-words { flex: 1; min-width: 0 }
+#main .mem-page h2.mem-card-title { margin: 4px 0 10px; font-size: 25px !important; line-height: 1.15 !important }
+#main .mem-card-line { margin: 0; font-size: 15px; line-height: 1.45; color: #625f6d }
+#main .mem-card-pic { flex: none; width: 47% }
+#main .mem-card-pic .mem-card-story { width: 100%; transform: rotate(2deg); border: 5px solid #fff; border-radius: 12px; box-shadow: 0 10px 24px rgba(43,40,64,.16) }
+#main .mem-card-btns { display: flex; gap: 10px; margin-top: 18px }
+#main .mem-card-btn { position: relative; flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 46px; padding: 0 12px; border: 1px solid #e6dde4; border-radius: 999px; background: #fffdf9; color: #4e3a5c; font: inherit; font-size: 14.5px; font-weight: 650; cursor: pointer; white-space: nowrap }
+#main .mem-card-btn.is-main { background: #efe4f1; border-color: #e3d3e8 }
+#main .mem-card-btn svg { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round }
+#main .mem-card-btn .hub-photo-input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none }
+#main .mem-card .mem-badges, #main .mem-card .mem-badge-none { margin-top: 20px }
+#main button.mem-card-btn, #main label.mem-card-btn { font-family: Figtree, system-ui, sans-serif !important; font-size: 14.5px !important; font-weight: 650 !important; color: #4e3a5c !important }
+
+/* Memories month card, from Yarden's mockup (Nov 17): a soft panel in the month's balloon color, words left,
+   her photo as a big taped polaroid right with the month's balloon beside it, two buttons under. */
+#main .mem-card { padding: 0; border: 0; background: none }
+#main .mem-card-hero { position: relative; padding: 22px 18px 18px; border-radius: 24px; background: color-mix(in srgb, var(--mc) 13%, #fdf9f6) }
+#main .mem-card-top { gap: 10px; align-items: center }
+#main .mem-card-words { position: relative; flex: 1 1 46% }
+#main .mem-page .mem-card-label { margin: 0; font-size: 12.5px; font-weight: 750; letter-spacing: .06em; text-transform: uppercase; color: color-mix(in srgb, var(--mc) 55%, #3b2a4a) }
+#main .mem-page h2.mem-card-title { margin: 8px 0 12px; font-size: 27px !important; font-weight: 800 !important; line-height: 1.12 !important; color: #2b2840 }
+#main .mem-card-line { font-size: 15px; line-height: 1.45; color: #4f4a5a }
+#main .mem-doodle { position: absolute; fill: none; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round }
+#main .mem-doodle.is-spark { top: 26px; right: -6px; width: 30px; stroke: color-mix(in srgb, var(--mc) 80%, #e09a3c) }
+#main .mem-doodle.is-heart { bottom: -34px; right: 8px; width: 34px; stroke: #c27aa9 }
+#main .mem-card-pic { flex: 0 0 52%; width: auto; padding: 14px 6px 10px 0 }
+#main .mem-pol { position: relative; display: block; width: 100%; padding: 8px 8px 22px; border: 0; border-radius: 6px; background: #fff; box-shadow: 0 12px 26px rgba(60,40,60,.16); transform: rotate(2.5deg); cursor: pointer; font: inherit }
+#main .mem-pol-img { display: block; width: 100%; aspect-ratio: 4/5; object-fit: cover; border-radius: 2px; background: #f1ebe6 }
+#main span.mem-pol-img { display: grid; place-items: center }
+#main span.mem-pol-img b { font-size: 34px; font-weight: 300; color: #b3a8ae }
+#main .mem-pol-tape { position: absolute; top: -10px; left: 50%; width: 70px; height: 20px; transform: translateX(-50%) rotate(-3deg); background: repeating-linear-gradient(90deg, color-mix(in srgb, var(--mc) 55%, #fff) 0 6px, color-mix(in srgb, var(--mc) 35%, #fff) 6px 12px); opacity: .9; z-index: 2 }
+#main .mem-pol-balloon { position: absolute; right: -14px; bottom: -6px; width: 44%; filter: drop-shadow(0 6px 10px rgba(0,0,0,.18)); transform: rotate(-4deg); z-index: 2 }
+#main .mem-pol-balloon.is-hello { width: 62% }
+#main .mem-pol .hub-photo-input { position: absolute; width: 1px; height: 1px; opacity: 0 }
+#main .mem-card-btns { margin-top: 20px }
+#main .mem-card-btn { background: #fffdfb; border-color: color-mix(in srgb, var(--mc) 22%, #e7dfe3) }
+#main .mem-card-btn.is-main { background: color-mix(in srgb, var(--mc) 26%, #f6eef6); border-color: transparent }
+#main .mem-card .mem-badges, #main .mem-card .mem-badge-none { margin-top: 18px }
+
+/* Memories under the month panel (Nov 17, from Yarden's mockup): one list card of firsts, then the book as a row. */
+#main .mem-list-head { display: flex; align-items: baseline; justify-content: space-between; margin: 22px 2px 10px }
+#main .mem-list-head h3 { margin: 0; font-size: 17px; font-weight: 700; color: #2b2840 }
+#main .mem-list-add { padding: 4px 0; border: 0; background: none; font: inherit; font-size: 14.5px; font-weight: 650; color: #6b3f78; cursor: pointer }
+#main .mem-list { border-radius: 20px; background: #fffdfb; border: 1px solid #ece4e6; overflow: hidden }
+#main .mem-li { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 64px; padding: 10px 14px; border: 0; background: none; text-align: left; font: inherit; color: inherit; cursor: pointer }
+#main .mem-list .mem-li + .mem-li { border-top: 1px solid #f0e9ea }
+#main .mem-li-ic { flex: none; display: grid; place-items: center; width: 42px; height: 42px; border-radius: 13px; background: var(--mem-bg, #f3ecf2) }
+#main .mem-li-ic svg { width: 26px; height: 26px }
+#main .mem-li-ic.is-also { background: #fbf0dc }
+#main .mem-li-ic.is-also svg { width: 22px; height: 22px; fill: none; stroke: #c48a2c; stroke-width: 1.7; stroke-linejoin: round }
+#main .mem-li-copy { flex: 1; min-width: 0 }
+#main .mem-li-copy b { display: block; font-size: 15.5px; font-weight: 650; color: #2b2840 }
+#main .mem-li-copy small { display: block; margin-top: 2px; font-size: 13.5px; color: #6c6675; overflow: hidden; text-overflow: ellipsis; white-space: nowrap }
+#main .mem-li-go { flex: none; font-size: 22px; color: #9b93a0 }
+#main .mem-list-none { margin: 0; padding: 16px; border-radius: 20px; background: #fffdfb; border: 1px dashed #e3d9dc; font-size: 14px; color: #7d7686 }
+#main .mem-bookrow { display: flex; align-items: center; gap: 12px; width: 100%; margin: 14px 0 6px; padding: 12px 14px; border: 0; border-radius: 20px; background: #f4ecf5; text-align: left; font: inherit; color: inherit; cursor: pointer }
+#main .mem-bookrow-pic { flex: none; display: grid; place-items: center; width: 46px; height: 46px; border-radius: 12px; overflow: hidden; background: #fff; box-shadow: 0 2px 6px rgba(60,40,60,.12) }
+#main .mem-bookrow-pic img { width: 100%; height: 100%; object-fit: cover }
+#main .mem-bookrow-pic svg { width: 26px; height: 26px; fill: none; stroke: #6b3f78; stroke-width: 1.6; stroke-linejoin: round }
+#main .mem-li-copy small { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical }
+/* The balloon card in the month panel (Nov 17): tilted like a print, half the panel. */
+#main .mem-card-pic .mem-card-story { display: block; width: 100%; padding: 0; aspect-ratio: 9/16; border: 5px solid #fff; border-radius: 12px; overflow: hidden; background: #f5e8e2; transform: rotate(2.5deg); box-shadow: 0 12px 26px rgba(60,40,60,.16); cursor: pointer }
+#main .mem-card-pic .mem-card-story img { width: 100%; height: 100%; object-fit: cover; display: block }
+#main .mem-card-pic .mem-card-story .hub-photo-input { position: absolute; width: 1px; height: 1px; opacity: 0 }
+#main .mem-card-pic { flex-basis: 48%; padding: 4px 4px 4px 0 }
+#main .mem-list + .mem-bookrow { margin-top: 10px }
+
+/* Month panel, stacked (Nov 17): the balloon card big and centered, so her photo inside it reads at print size. */
+#main .mem-card-hero.is-stack { padding: 22px 20px 20px; text-align: center }
+#main .is-stack .mem-card-label { margin: 0 }
+#main .mem-page .is-stack h2.mem-card-title { margin: 6px 0 16px; font-size: 28px !important }
+#main .is-stack .mem-card-pic { position: relative; width: 60%; margin: 0 auto; padding: 0 }
+#main .is-stack .mem-card-pic .mem-card-story { transform: rotate(-2deg) }
+#main .is-stack .mem-doodle.is-spark { top: -6px; right: -34px; left: auto; width: 32px }
+#main .is-stack .mem-doodle.is-heart { bottom: 18px; left: -40px; right: auto; width: 34px }
+#main .is-stack .mem-card-line { max-width: 300px; margin: 18px auto 0; font-size: 15.5px; line-height: 1.45; color: #4f4a5a; text-wrap: balance }
+#main .is-stack .mem-card-btns { margin-top: 18px }
+#main .mem-page .is-stack h2.mem-card-title { margin: 4px 0 6px }
+#main .is-stack .mem-card-line { margin: 0 auto 16px; font-size: 15px }
+#main .is-stack .mem-card-pic { width: 57% }
+#main .mem-card-hero.is-stack { padding-top: 18px }
+/* Before the photo: the empty polaroid in the card says what to do, right where the photo will go. */
+#main .mem-card-story.is-empty { position: relative }
+#main .mem-card-add { position: absolute; left: 50%; top: 64%; transform: translate(-50%, -50%) rotate(2deg); padding: 8px 14px; border-radius: 999px; background: #fffdfb; box-shadow: 0 4px 12px rgba(60,40,60,.15); font-size: 14px; font-weight: 700; color: #4e3a5c; white-space: nowrap }
+
+/* Month row as little balloon cards (Nov 18). */
+#main .mem-picks { gap: 10px; padding-bottom: 6px }
+#main .mem-pick { width: 58px }
+#main .mem-pick-card { display: block; width: 58px; aspect-ratio: 9/16; border-radius: 9px; overflow: hidden; background: #f3e9e2; border: 2px solid #fff; box-shadow: 0 3px 8px rgba(60,40,60,.12) }
+#main .mem-pick-card img { display: block; width: 100%; height: 100%; object-fit: cover }
+#main .mem-pick.is-on .mem-pick-card { outline: 2px solid #7a4f6d; outline-offset: 2px }
+#main .mem-pick small { font-size: 11.5px }
+
+/* Firsts as tiles that look tappable: white, raised, a chevron; "+N more" opens the month's list. */
+#main .mem-fts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px }
+#main .mem-ft { position: relative; display: flex; flex-direction: column; align-items: center; gap: 8px; min-height: 112px; padding: 12px 6px 10px; border: 1px solid #ece3e5; border-radius: 16px; background: #fff; box-shadow: 0 2px 0 rgba(60,40,60,.04), 0 4px 12px rgba(60,40,60,.07); font: inherit; color: #2b2840; text-align: center; cursor: pointer; transition: transform .12s }
+#main .mem-ft:active { transform: scale(.97) }
+#main .mem-ft-ic { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 13px; background: var(--mem-bg, #f3ecf2) }
+#main .mem-ft-ic svg { width: 28px; height: 28px }
+#main .mem-ft b { font-size: 13px; font-weight: 650; line-height: 1.25; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden }
+#main .mem-ft-go { position: absolute; top: 6px; right: 9px; font-style: normal; font-size: 15px; color: #b3a9b6 }
+#main .mem-ft.is-more { justify-content: center; gap: 0; background: #f4ecf5; border-color: transparent; box-shadow: none; color: #6b3f78 }
+#main .mem-ft.is-more b { font-size: 22px; font-weight: 750 }
+#main .mem-ft.is-more small { font-size: 13px; font-weight: 600 }
+/* The month's list sheet */
+#main .mem-sheet-wrap { position: fixed; inset: 0; z-index: 60 }
+#main .mem-sheet-bg { position: absolute; inset: 0; background: rgba(30,20,35,.35) }
+#main .mem-sheet { position: absolute; left: 0; right: 0; bottom: 0; max-height: 78vh; overflow: auto; padding: 14px 18px 30px; border-radius: 24px 24px 0 0; background: #fffdfb; animation: memSheetUp .22s ease-out }
+@keyframes memSheetUp { from { transform: translateY(40px); opacity: .4 } to { transform: none; opacity: 1 } }
+#main .mem-sheet-grab { display: block; width: 40px; height: 5px; margin: 0 auto 12px; border-radius: 3px; background: #e2d8dc }
+#main .mem-sheet-x { position: absolute; top: 12px; right: 14px; width: 34px; height: 34px; border: 0; border-radius: 50%; background: #f3eef0; font-size: 20px; color: #6c6675; cursor: pointer }
+#main .mem-sheet h2 { margin: 2px 0 4px; font-size: 19px; font-weight: 750; color: #2b2840 }
+#main .mem-sheet p { margin: 0 0 12px; font-size: 14px; color: #6c6675 }
+#main .mem-sheet-row { display: flex; align-items: center; gap: 12px; width: 100%; padding: 9px 0; border: 0; border-top: 1px solid #f0e9ea; background: none; font: inherit; text-align: left; cursor: pointer }
+#main .mem-sheet-row b { flex: 1; font-size: 15.5px; font-weight: 600; color: #2b2840 }
+#main .mem-sheet-row i { font-style: normal; font-size: 20px; color: #9b93a0 }
+#main .mem-ft b { font-size: 12.5px; -webkit-line-clamp: 3; hyphens: none; overflow-wrap: normal } #main .mem-ft { min-height: 122px; padding: 12px 5px 10px }
+
+/* Month panel, side by side (Nov 18): label across the top, the words left, the balloon card right, as large as fits. */
+#main .mem-card-hero.is-side { padding: 20px 16px 18px 18px; text-align: left }
+#main .is-side .mem-card-label { margin: 0 0 10px }
+#main .is-side .mem-card-top { display: flex; align-items: center; gap: 12px }
+#main .is-side .mem-card-words { position: relative; flex: 1 1 auto; min-width: 0 }
+#main .mem-page .is-side h2.mem-card-title { margin: 0 0 10px; font-size: 26px !important; line-height: 1.12 !important }
+#main .is-side .mem-card-line { margin: 0; font-size: 15px; line-height: 1.45; color: #4f4a5a }
+#main .is-side .mem-card-pic { position: relative; flex: 0 0 55%; width: auto; padding: 0 }
+#main .is-side .mem-card-pic .mem-card-story { transform: rotate(2.5deg) }
+#main .is-side .mem-doodle.is-spark { top: -26px; right: 0; left: auto; width: 28px }
+#main .is-side .mem-doodle.is-heart { bottom: -46px; left: 4px; right: auto; width: 32px }
+#main .is-side .mem-card-btns { margin-top: 18px }
+/* Firsts tiles: names centered under their icon. */
+#main .mem-ft b { width: 100%; text-align: center }
+/* Side-by-side panel (Nov 18): the label, headline, line and hearts are one group, centered beside the card;
+   the sparkle sits after the headline's first line, the hearts under the line. */
+#main .is-side .mem-card-label { margin: 0 0 8px }
+#main .is-side .mem-card-words { display: flex; flex-direction: column; justify-content: center; align-self: stretch }
+#main .is-side .mem-doodle { position: static }
+#main .is-side h2.mem-card-title .mem-doodle.is-spark { display: inline-block; width: 24px; height: 18px; margin: 0 0 0 4px; vertical-align: top; stroke: color-mix(in srgb, var(--mc) 80%, #e09a3c) }
+#main .is-side .mem-doodle.is-heart { width: 30px; margin: 14px 0 0 2px }
+
+/* Designer fixes (Nov 18) */
+/* Play the year: small, soft, on the title's line. */
+#main .mem-h1-row { display: flex; align-items: center; justify-content: space-between; gap: 10px }
+#main .mem-h1-row h1 { margin: 0; min-width: 0 }
+#main .mem-h1-row .mem-title-play { flex: none; padding: 7px 12px; border: 0; border-radius: 999px; background: #efe4f1; color: #5b3a6a; font-size: 13px; font-weight: 700 }
+/* The month row as small navigation: the balloon number over a peek of the photo, not a second copy of the card. */
+#main .mem-picks { margin-top: 14px; padding-top: 4px }
+#main .mem-pick { width: 52px }
+#main .mem-pick-card { width: 52px; aspect-ratio: 4 / 5; border-radius: 12px; border-width: 2px }
+#main .mem-pick-card img { object-position: 50% 30% }
+/* Firsts tiles without the corner arrow. */
+#main .mem-ft-go { display: none }
+#main .mem-title-row .mem-title-play { padding: 6px 12px; border: 0; border-radius: 999px; background: #efe4f1; color: #5b3a6a; font-size: 13px; font-weight: 700 }
+#main .mem-title-row { margin-bottom: -2px }
+/* Empty firsts (Nov 18): a dashed Add tile the size of a first, and one line beside it. */
+#main .mem-fts.is-empty { align-items: center }
+#main .mem-ft.is-add { border: 1.5px dashed #d9ccd4; background: transparent; box-shadow: none; color: #6b3f78 }
+#main .mem-ft.is-add .mem-ft-ic { background: #f4ecf5 }
+#main .mem-ft.is-add .mem-ft-ic b { font-size: 24px; font-weight: 400; color: #6b3f78 }
+#main .mem-fts-note { grid-column: 2 / -1; margin: 0; padding-left: 6px; font-size: 14.5px; line-height: 1.45; color: #6c6675 }
+/* Empty firsts as one dashed bar (Nov 18). */
+#main .mem-empty-bar { display: flex; align-items: center; gap: 12px; width: 100%; padding: 14px 16px; border: 1.5px dashed #d9ccd4; border-radius: 18px; background: transparent; text-align: left; font: inherit; cursor: pointer }
+#main .mem-empty-plus { flex: none; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; background: #f4ecf5; font-size: 22px; color: #6b3f78 }
+#main .mem-empty-bar b { display: block; font-size: 15px; font-weight: 700; color: #6b3f78 }
+#main .mem-empty-bar small { display: block; margin-top: 2px; font-size: 13.5px; line-height: 1.4; color: #6c6675 }
+/* Firsts tiles sized to their words (Nov 18): no fixed height, so "First steps" isn't floating in an empty box.
+   Tiles in a row still share the tallest one's height. */
+#main .mem-ft { min-height: 0; gap: 7px; padding: 12px 6px 12px; justify-content: flex-start }
+#main .mem-ft-ic { width: 40px; height: 40px; border-radius: 12px }
+#main .mem-ft-ic svg { width: 26px; height: 26px }
+#main .mem-ft.is-more { padding: 12px 6px }
+#main .mem-ft { justify-content: center } #main .mem-ft b { font-size: 12.5px; line-height: 1.22 }
+/* Firsts tiles: one shared layout. Icons sit on one line, titles start on one line, every tile the same height. */
+#main .mem-fts { align-items: stretch }
+#main .mem-ft { justify-content: flex-start; gap: 8px; padding: 14px 5px 12px }
+#main .mem-ft b { -webkit-line-clamp: 2; min-height: calc(2 * 1.22em); display: -webkit-box }
+#main .mem-ft.is-more { justify-content: center }
+#main .mem-ft b { -webkit-line-clamp: 3 }
+#main .mem-ft.is-more b { min-height: 0 }
