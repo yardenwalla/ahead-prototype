@@ -127,9 +127,20 @@
     const lc = t => /^[A-Z][a-z]/.test(t) ? t[0].toLowerCase() + t.slice(1) : t;
     const monthCard = m => {
       const rs = inMonth(m), big = rs.filter(r => bigSet.has(r)).reverse(), small = rs.filter(r => !bigSet.has(r));
-      const media = !designs ? '' : photo(m)
-        ? `<button class="mem-card-story" onclick="storyShare(${m})" aria-label="Share the ${L(m)} card"><img data-story-thumb="${m}" alt=""></button><button class="mem-card-share" onclick="storyShare(${m})">Share ${esc2(m === 0 ? 'her newborn card' : 'this card')}</button>`.replace('her newborn', `${P.p} newborn`)
-        : `<label class="mem-card-story is-empty" aria-label="Add the ${m === 0 ? 'newborn' : m === 12 ? 'first-birthday' : m + '-month'} photo"><img data-story-thumb="${m}" alt="">${hubPhotoInput(m)}</label><label class="mem-card-share is-add">＋ Add ${esc2(P.p)} ${m === 0 ? 'newborn' : m === 12 ? 'first-birthday' : m + '-month'} photo${hubPhotoInput(m)}</label>`;
+      // The month at the top of its card: words on the left (who she is this month, and one warm line written to her),
+      // her balloon card on the right, then Change photo and Share card side by side. With no photo yet, one button adds it.
+      const nmB = name(), lab = m === 0 ? 'newborn' : m === 12 ? 'first-birthday' : m + '-month';
+      const title = m === 0 ? `Hello, ${nmB}!` : m === 12 ? `${nmB} is one!` : m === now ? `${nmB} is ${m} month${m === 1 ? '' : 's'}!` : `${nmB} at ${m} month${m === 1 ? '' : 's'}`;
+      const LINES = ['The very first one. The start of everything.', 'One month of getting to know each other.', 'Two months of you, and we’re finding our rhythm.', 'Three months of you. Every day a little more you.',
+        'Four months of you, and so much personality.', 'Five months of you. Look how far we’ve come.', 'Half a year of you. So much growing, learning and discovering.', 'Seven months of you. The best kind of busy.',
+        'Eight months of you. Our days are fuller, and louder.', 'Nine months in, nine months out. You’ve been here as long as you were on the way.', 'Ten months of you. Almost a whole year of firsts.', 'Eleven months of you. One more, and it’s a whole year.', 'One whole year of you. Happy birthday.'];
+      const pic = !designs ? '' : photo(m)
+        ? `<button class="mem-card-story" onclick="storyShare(${m})" aria-label="Share the ${L(m)} card"><img data-story-thumb="${m}" alt=""></button>`
+        : `<label class="mem-card-story is-empty" aria-label="Add the ${lab} photo"><img data-story-thumb="${m}" alt="">${hubPhotoInput(m)}</label>`;
+      const btns = !designs ? '' : photo(m)
+        ? `<div class="mem-card-btns"><label class="mem-card-btn"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="3"/><circle cx="9" cy="10" r="1.8"/><path d="m4 17 5-4.5 4 3.5 3-2.5 4 3.5"/></svg>Change photo${hubPhotoInput(m)}</label><button class="mem-card-btn is-main" onclick="storyShare(${m})"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V4m0 0-4 4m4-4 4 4"/><path d="M6 11H5a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7a1 1 0 0 0-1-1h-1"/></svg>Share card</button></div>`
+        : `<div class="mem-card-btns"><label class="mem-card-btn is-main is-wide">＋ Add ${esc2(P.p)} ${lab} photo${hubPhotoInput(m)}</label></div>`;
+      const media = `<div class="mem-card-top"><div class="mem-card-words"><p class="mem-card-label">${esc2(m === now ? 'This month' : 'Looking back')}</p><h2 class="mem-card-title">${esc2(title)}</h2><p class="mem-card-line">${esc2(LINES[m].replace(/\byou\b(?=[.,]|$)/, 'you') )}</p></div><div class="mem-card-pic">${pic}</div></div>${btns}`;
       // What happened that month, small and light under the balloon card: each big first as a little round badge
       // with its drawing (four at most, one row), then the smaller things named in one short line. Two are named;
       // past that it's "and 3 more", which opens the book where they're all listed.
@@ -145,7 +156,7 @@
       const what = !rs.length
         ? `<p class="mem-badge-none">${esc2(m === now ? 'Nothing saved yet this month' : 'Nothing saved for this month')}</p>`
         : `<button class="mem-badges" onclick="${open}" aria-label="${esc2(`What happened at ${WORDS[m].toLowerCase()}, open the memory book`)}">${bs.length ? `<span class="mem-badge-row">${bs.map(r => `<span class="mem-badge"><span class="mem-badge-ic" style="${TONE(r)}">${hubArt(ICON(r), 'Development')}</span><span class="mem-badge-t">${esc2(keepTitle(r))}</span></span>`).join('')}</span>` : ''}${line ? `<span class="mem-badge-more">${line}</span>` : ''}</button>`;
-      return `<section class="mem-card" data-m="${m}"${m === now ? '' : ' hidden'}><p class="mem-card-label">${esc2(m === now ? 'This month' : 'Looking back')}</p><h2 class="mem-card-title">${esc2(WORDS[m])}</h2><div class="mem-card-media">${media}</div>${what}</section>`;
+      return `<section class="mem-card" data-m="${m}"${m === now ? '' : ' hidden'}>${media}${what}</section>`;
     };
     const play = have.length >= 2 ? `<button class="mem-title-play" onclick="memPlay()" aria-label="Play the year"><span aria-hidden="true">▶</span> Play the year</button>` : '';
     b = `<div class="mem-page"><div class="mem-title-row"><div class="eyebrow">Memories</div>${play}</div><h1>${nm}’s first year</h1>`;

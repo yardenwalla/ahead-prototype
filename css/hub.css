@@ -1747,3 +1747,18 @@ label:has(> .hub-photo-input:focus-visible) { outline: 2px solid #884866; outlin
 #main .st-glance { grid-template-columns: repeat(3, 1fr); margin: 0 0 12px }
 #main .st-glance b { font-size: 15.5px }
 
+
+/* Memories month card (Nov 17): words left, the balloon card right, two buttons under, then what happened. */
+#main .mem-card-top { display: flex; align-items: center; gap: 14px }
+#main .mem-card-words { flex: 1; min-width: 0 }
+#main .mem-page h2.mem-card-title { margin: 4px 0 10px; font-size: 25px !important; line-height: 1.15 !important }
+#main .mem-card-line { margin: 0; font-size: 15px; line-height: 1.45; color: #625f6d }
+#main .mem-card-pic { flex: none; width: 47% }
+#main .mem-card-pic .mem-card-story { width: 100%; transform: rotate(2deg); border: 5px solid #fff; border-radius: 12px; box-shadow: 0 10px 24px rgba(43,40,64,.16) }
+#main .mem-card-btns { display: flex; gap: 10px; margin-top: 18px }
+#main .mem-card-btn { position: relative; flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 46px; padding: 0 12px; border: 1px solid #e6dde4; border-radius: 999px; background: #fffdf9; color: #4e3a5c; font: inherit; font-size: 14.5px; font-weight: 650; cursor: pointer; white-space: nowrap }
+#main .mem-card-btn.is-main { background: #efe4f1; border-color: #e3d3e8 }
+#main .mem-card-btn svg { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round }
+#main .mem-card-btn .hub-photo-input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none }
+#main .mem-card .mem-badges, #main .mem-card .mem-badge-none { margin-top: 20px }
+#main button.mem-card-btn, #main label.mem-card-btn { font-family: Figtree, system-ui, sans-serif !important; font-size: 14.5px !important; font-weight: 650 !important; color: #4e3a5c !important }
