@@ -113,6 +113,8 @@
     const art = `<span class="mem-bookcard-art">${realStack || stack}</span>`;
     const addArt = '';
     const bookCard = `<div class="mem-bookcard${addArt ? ' has-add' : ''}"><button class="mem-bookcard-open" onclick="openPage('${firsts.length ? 'chg:Timeline:firsts' : 'chg:Timeline:milestone'}')">${art}<span class="mem-bookcard-copy"><b>${esc2(`${name()}’s memory book`)}</b><small>${esc2(count)}</small>${firsts.length ? `<em>Open the book ›</em>` : ''}</span></button>${addArt}<button class="mem-bookcard-save" onclick="openPage('chg:Timeline:milestone')">＋ Save a first</button></div>`;
+    // The book as one row under the month, like the mockup, with her newest photo as its picture.
+    const bookRow = `<button class="mem-bookrow" onclick="openPage('${firsts.length ? 'chg:Timeline:firsts' : 'chg:Timeline:milestone'}')"><span class="mem-bookrow-pic">${newest != null ? `<img src="${photo(newest)}" alt="">` : `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 6.5c2.5-1.3 5.5-1.3 8.5.5 3-1.8 6-1.8 8.5-.5v12c-2.5-1.3-5.5-1.3-8.5.5-3-1.8-6-1.8-8.5-.5z M12 7v12"/></svg>`}</span><span class="mem-li-copy"><b>${esc2(`${name()}’s memory book`)}</b><small>${esc2(firsts.length ? `Every photo and all ${firsts.length} moments` : 'It fills in as you go')}</small></span><span class="mem-li-go" aria-hidden="true">›</span></button>`;
 
     // One month at a time. A row of the months across the top (her photo, or the month's number until there is one),
     // then that month as one card: its balloon card, ready to share, and what happened that month underneath.
@@ -158,9 +160,18 @@
       const body = !rest && named.length > 1 ? `${named.slice(0, -1).join(', ')} and ${named[named.length - 1]}` : named.join(', ');
       const tail = rest ? `${named.length ? 'and ' : ''}${rest} more ›` : '';
       const line = small.length || extraBig ? `${lead ? `<span class="mem-badge-lead">${esc2(lead)}</span>` : ''}${esc2(body)}${tail ? ` <span class="mem-nowrap">${esc2(tail)}</span>` : ''}` : '';
-      const what = !rs.length
-        ? `<p class="mem-badge-none">${esc2(m === now ? 'Nothing saved yet this month' : 'Nothing saved for this month')}</p>`
-        : `<button class="mem-badges" onclick="${open}" aria-label="${esc2(`What happened at ${WORDS[m].toLowerCase()}, open the memory book`)}">${bs.length ? `<span class="mem-badge-row">${bs.map(r => `<span class="mem-badge"><span class="mem-badge-ic" style="${TONE(r)}">${hubArt(ICON(r), 'Development')}</span><span class="mem-badge-t">${esc2(keepTitle(r))}</span></span>`).join('')}</span>` : ''}${line ? `<span class="mem-badge-more">${line}</span>` : ''}</button>`;
+      // What happened, as one list card like Yarden's mockup: "Firsts this month" with "+ Add a first" in its header,
+      // up to three big firsts as rows (the parent's note under one, never a date), then one last row that gathers the
+      // smaller things noticed in Development ("Also noticed · 4" and the first two, by name). Never more than four rows.
+      const rowsBig = big.slice(0, 3), moreBig = big.length - rowsBig.length;
+      const bigRow = r => `<button class="mem-li" onclick="openPage('event-edit:${r.id}')"><span class="mem-li-ic" style="${TONE(r)}">${hubArt(ICON(r), 'Development')}</span><span class="mem-li-copy"><b>${esc2(keepTitle(r))}</b>${r.notes ? `<small>${esc2(String(r.notes).slice(0, 90))}</small>` : ''}</span><span class="mem-li-go" aria-hidden="true">›</span></button>`;
+      const smallN = small.length + moreBig;
+      const smallNames = small.slice(0, 2).map(r => lc(r.title));
+      const smallRow = smallN ? `<button class="mem-li" onclick="${open}"><span class="mem-li-ic is-also"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4.5l2.2 4.6 5 .7-3.6 3.5.9 5-4.5-2.4-4.5 2.4.9-5L4.8 9.8l5-.7z"/></svg></span><span class="mem-li-copy"><b>${esc2(`Also noticed · ${smallN}`)}</b><small>${esc2(smallNames.length ? (smallN > 1 ? `${smallNames[0]} and ${smallN - 1} more` : smallNames[0]) : 'More firsts in the book')}</small></span><span class="mem-li-go" aria-hidden="true">›</span></button>` : '';
+      const listHead = `<div class="mem-list-head"><h3>${esc2(m === now ? 'Firsts this month' : 'Firsts that month')}</h3><button class="mem-list-add" onclick="openPage('chg:Timeline:milestone')">＋ Add a first</button></div>`;
+      const what = listHead + (rs.length
+        ? `<div class="mem-list">${rowsBig.map(bigRow).join('')}${smallRow}</div>`
+        : `<p class="mem-list-none">${esc2(m === now ? 'Tap Seen it in Development, or add a first, and it shows up here.' : 'Nothing saved for this month.')}</p>`);
       return `<section class="mem-card" data-m="${m}"${m === now ? '' : ' hidden'}>${media}${what}</section>`;
     };
     const play = have.length >= 2 ? `<button class="mem-title-play" onclick="memPlay()" aria-label="Play the year"><span aria-hidden="true">▶</span> Play the year</button>` : '';
@@ -168,7 +179,7 @@
     setTimeout(() => { const r = document.querySelector('.mem-picks'); if (r) r.scrollLeft = r.scrollWidth; }, 0);
     // On her first birthday the whole-year card comes first, above the months.
     // The month card holds the month; the memory book (with Save a first) sits under it, as its own cover.
-    b += (year ? `<div class="mem-year-wrap">${year}</div>` : '') + picker + Array.from({ length: now + 1 }, (_, m) => monthCard(m)).join('') + bookCard;
+    b += (year ? `<div class="mem-year-wrap">${year}</div>` : '') + picker + Array.from({ length: now + 1 }, (_, m) => monthCard(m)).join('') + bookRow;
     // Checkups live in Health, never in the memory book.
     b += `<p class="hub-foot">Photos and entries stay on this device.</p></div>`;
     return `<div class="quiet-category hub-page hub-timeline-page" style="${yearTheme('Memories')}">${b}</div>`;
