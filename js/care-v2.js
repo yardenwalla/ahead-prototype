@@ -873,7 +873,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
         + `<h2 class="hub-h2">${F('Worried? Press a glass on the spots')}</h2>` + glassTest() + block('', '', rashCall, rashNow ? rashNow.charAt(0).toUpperCase() + rashNow.slice(1) + '.' : '')],
       // The less common rashes for this age, on their own page, each with what it looks like and what to do.
       rashmore: ['Other rashes', 'Less common at this age', rashLink(rest) + block('', '', rashCall, rashNow ? rashNow.charAt(0).toUpperCase() + rashNow.slice(1) + '.' : '')],
-      cord: ['The cord', 'Smell, crust or a little blood', 'A little crust, smell or a spot of blood is normal while it heals.', ans('What’s normal', [['cord', 'Darkens and dries', 'Crust is normal'], ['drop', 'A spot or two of blood', 'When it falls off'], ['clock', 'Falls off', 'Usually in the first 3 weeks']],
+      cord: ['Crust or a little blood on the cord', 'Or a little smell', 'A little crust, smell or a spot of blood is normal while it heals.', ans('What’s normal', [['cord', 'Darkens and dries', 'Crust is normal'], ['drop', 'A spot or two of blood', 'When it falls off'], ['clock', 'Falls off', 'Usually in the first 3 weeks']],
         'A yellow, smelly discharge, redness around it, crying at a touch, or still on after 3 weeks.')],
       eyes: ['Sticky eyes or a noisy nose', 'Noisy breathing, sneezing, tear ducts', 'Both are usually normal, and most clear on their own.', ans('Usually normal, and what helps', [['drop', 'Snuffly breathing', 'Usually dried milk or mucus, not a cold'], ['eye', 'A watery eye, not red', 'Often a blocked tear duct'], ['hand', 'Sticky eyes', 'Wipe from the inside corner out'], ['steth', 'A stuffy nose', 'A few saline drops, then gentle suction']],
         'A red or swollen eyelid, yellow-green discharge with redness, or a red lump near the inner corner of the eye.', 'Struggling to breathe, or blue lips. Call 911.')
@@ -1098,9 +1098,9 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     do: [['tooth', 'See a dentist', 'By age 1'], ['bottle', 'Never a bottle in bed', 'Milk on teeth causes cavities'], ['hand', 'A hand on {o}', 'In the bath, every time']] };
 
   /* ----- Is this normal? pages ----- */
-  TPL['look-cord'] = { type: 'check', eyebrow: 'Is this normal?', k: 'cord', title: 'The cord', verdict: ['ok', 'Usually normal'],
-    why: 'A little crust, smell or a spot of blood is part of healing.',
-    signs: [['cord', 'Darkens and dries', 'Crust is normal'], ['drop', 'A spot or two of blood', 'When it falls off'], ['clock', 'Falls off', 'Usually in the first 3 weeks']],
+  TPL['look-cord'] = { type: 'check', eyebrow: 'Is this normal?', k: 'cord', title: 'Crust or a little blood on the cord', verdict: ['ok', 'Usually normal'],
+    why: 'It’s part of healing, and so is a little smell.',
+    signs: [['cord', 'Darkens and dries', 'It shrinks and gets hard'], ['drop', 'A spot or two of blood', 'When it falls off'], ['clock', 'Falls off', 'Usually in the first 3 weeks']],
     helps: [['diaper', 'Fold the diaper down', 'So the stump stays dry'], ['drop', 'Clean with plain water', 'Only if dirty, then pat dry']],
     calls: { ped: 'a yellow, smelly discharge, redness around it, crying at a touch, or it’s still on after 3 weeks.' } };
   TPL['look-eyes'] = { type: 'check', eyebrow: 'Is this normal?', k: 'skin', title: 'Sticky eyes or a noisy nose', verdict: ['ok', 'Usually normal'],
@@ -1186,7 +1186,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   // doors: "How do I…?" (every how-to, plus the care routine one tap down) and "Is this normal?" (start from what you see).
   const CARE_NEW = [
     { art: 'bath', t: 'Sponge baths, for now', d: 'Until the cord falls off, which usually takes 1–3 weeks.', cta: 'See how', go: 'p:sponge',
-      see: [['peeling', 'Peeling skin', 'rash:peeling'], ['milia', 'Newborn spots', 'rash:newborn'], ['cord', 'The cord', 'look:0:cord']] },
+      see: [['peeling', 'Peeling skin', 'rash:peeling'], ['milia', 'Newborn spots', 'rash:newborn'], ['cord', 'Crust or blood on the cord', 'look:0:cord']] },
     { art: 'bath', t: 'The first tub bath may be close', d: 'Once the cord falls off and the belly button heals.', cta: 'See when and how', go: 'p:tub',
       see: [['acne', 'Little bumps', 'rash:acne'], ['cradle', 'Flaky scalp', 'rash:cradle'], ['diaper', 'Fewer poops', 'look:1:poop']] },
     { art: 'roll', t: 'Changes get more hands-on', d: 'Rolling and wriggling make diaper changes trickier.', cta: 'Make changes easier', go: 'h:diapers:2',
