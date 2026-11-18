@@ -25,7 +25,7 @@ window.SEARCH_DEEP = [["topic:Development","Development & play","What to look fo
 ["topic:Health","Health","What to expect","Growth, feeding comfort and early responses",8191,0],
 ["topic:Health","Health","Vaccines","Second hepatitis B shot (some offices give it at 2 months instead)",8191,0],
 ["topic:Health","Health","A question worth asking","Is {p} weight gain on track?",8191,0],
-["chg:Health:d:sick","","Symptoms and when to get help","Fever, colds, tummy bugs and when to call",8191,1],
+["chg:Health:d:sick","","Symptoms and when to get help","Under 3 months, any fever means a call",8191,1],
 ["topic:Safety","Safety","Do these now","",8191,0],
 ["safety-stage:rolling","Safety","If something goes wrong","",8191,0],
 ["chg:Out and about:d:car","","Install the car seat rear-facing","A trained checker can look it over, often for free · In Outings",8191,1],
