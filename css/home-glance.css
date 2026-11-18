@@ -243,7 +243,7 @@
 #main .hg-guides-stack i + i { margin-left: -12px }
 #main .hg-guides-stack i svg { width: 20px; height: 20px }
 /* "Updated": a warm coral of its own, not any guide's color */
-#main .hg-guides-chip, #main .guide-upd { background: #e8775a !important; color: #fff !important }
+#main .hg-guides-chip, #main .guide-upd { background: #C4553A !important; color: #fff !important }
 #main .hg-guides-chip { min-width: 26px; text-align: center; padding: 3px 8px }
 /* Smaller question card on Home: answers in one row, "We skipped it" as a quiet link */
 #main .hg-page .connected-checkin { padding: 12px 14px !important; border-radius: 18px }
@@ -345,7 +345,7 @@
 #main .hx-marks i + i { margin-left: -14px }
 #main .hx-marks i svg { width: 22px; height: 22px }
 #main .hx-card .guide-upd { font-size: 11px; padding: 2px 7px; vertical-align: 2px; margin-left: 4px }
-#main .hx-new { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #e8775a; margin-right: 7px; vertical-align: 2px }
+#main .hx-new { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #C4553A; margin-right: 7px; vertical-align: 2px }
 
 /* The page ends with two small matching tiles */
 #main .hf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px }
@@ -378,7 +378,7 @@
 /* No purple: the app's warm neutral (Memories' cream), warm ink, and the same coral pill as "Updated" on the Guides tab */
 #main .hg-new { background: #F5F1EA !important; border-color: #ECE6DC !important }
 #main .hg-new-ic { color: #4d443b !important }
-#main .hg-new-pill { background: #e8775a !important; color: #fff !important; border: 0 !important }
+#main .hg-new-pill { background: #C4553A !important; color: #fff !important; border: 0 !important }
 
 /* The guides row is the app's own row component; only its square takes Home's Sunrise tint so it isn't any one category */
 #main .hg-newlist { margin-top: 4px }
@@ -405,7 +405,7 @@
 #main .hg-page .hub-h2 { margin: 20px 2px 10px !important }
 
 #main .category-directory-row.is-flash { animation: guideFlash 1.8s ease-out }
-@keyframes guideFlash { 0%, 35% { box-shadow: 0 0 0 3px #e8775a, 0 6px 18px rgba(232,119,90,.25) } 100% { box-shadow: 0 0 0 0 rgba(232,119,90,0) } }
+@keyframes guideFlash { 0%, 35% { box-shadow: 0 0 0 3px #C4553A, 0 6px 18px rgba(196,85,58,.25) } 100% { box-shadow: 0 0 0 0 rgba(196,85,58,0) } }
 
 /* Small phones (320–360px): the three answers fit without the indent, and wrap if they still don't. */
 @media (max-width: 360px) {
@@ -448,10 +448,10 @@
 #main .hg-ptile b { font-size: 15.5px; line-height: 20px; font-weight: 600 }
 #main .hg-ptile small { font-size: 13.5px; line-height: 18px; color: #5E5A75 }
 #main .hg-ptile.is-new { border-color: #f3cfc2; background: #fff8f4 }
-#main .hg-dot-new { position: absolute; top: 14px; right: 14px; width: 9px; height: 9px; border-radius: 50%; background: #e8775a }
+#main .hg-dot-new { position: absolute; top: 14px; right: 14px; width: 9px; height: 9px; border-radius: 50%; background: #C4553A }
 
 /* Guides tab: a guide that moved for her keeps this until it's opened. */
-#main .category-directory-row .guide-new { display: inline-block; margin-left: 6px; vertical-align: 2px; padding: 2px 8px; border-radius: 999px; background: #e8775a; color: #fff; font-size: 11.5px; font-weight: 700; line-height: 15px; letter-spacing: .01em }
+#main .category-directory-row .guide-new { display: inline-block; margin-left: 6px; vertical-align: 2px; padding: 2px 8px; border-radius: 999px; background: #C4553A; color: #fff; font-size: 11.5px; font-weight: 700; line-height: 15px; letter-spacing: .01em }
 #main .category-directory-row small.guide-new-line { color: var(--year-ink, #5b4a8b) !important; font-weight: 600 }
 #main .category-directory-row { position: relative }
 #main .category-directory-row .guide-new { position: absolute; top: 14px; right: 14px; margin: 0 }
@@ -460,16 +460,16 @@
 #main .category-directory { grid-auto-rows: 1fr !important; margin-top: 4px !important }
 #main .category-directory-row { min-height: 128px !important; background: radial-gradient(circle at 100% 0, rgba(255,255,255,.6) 0 30%, transparent 30.5%), var(--year-pale, #f3eefb) !important }
 #main .category-directory-row[data-new] { background: radial-gradient(circle at 100% 0, rgba(255,255,255,.5) 0 30%, transparent 30.5%), var(--year-bg, #e8e2f6) !important }
-#main .category-directory-row .guide-new { position: static !important; display: inline-block; margin: 0 0 5px !important; padding: 2px 8px; border-radius: 999px; background: #e8775a; color: #fff; font-size: 11px; font-weight: 700; line-height: 15px }
+#main .category-directory-row .guide-new { position: static !important; display: inline-block; margin: 0 0 5px !important; padding: 2px 8px; border-radius: 999px; background: #C4553A; color: #fff; font-size: 11px; font-weight: 700; line-height: 15px }
 #main .category-directory-row .directory-copy small { color: #5E5A75 !important; font-weight: 500 }
 #main .category-directory-row small.guide-new-line { color: var(--year-ink, #5b4a8b) !important; font-weight: 600 }
 /* New guides: same soft color as the rest, marked by a coral outline that matches the "New" pill (Yarden, Nov 10). */
-#main .category-directory-row[data-new] { background: radial-gradient(circle at 100% 0, rgba(255,255,255,.6) 0 30%, transparent 30.5%), var(--year-pale, #f3eefb) !important; box-shadow: inset 0 0 0 2px #e8775a !important }
+#main .category-directory-row[data-new] { background: radial-gradient(circle at 100% 0, rgba(255,255,255,.6) 0 30%, transparent 30.5%), var(--year-pale, #f3eefb) !important; box-shadow: inset 0 0 0 2px #C4553A !important }
 
 /* Home's Guides tile when something's new: the same coral outline and "New" pill as the Guides tab. */
-#main .hg-ptile.is-new { background: #fffdf9 !important; border-color: transparent !important; box-shadow: inset 0 0 0 2px #e8775a }
+#main .hg-ptile.is-new { background: #fffdf9 !important; border-color: transparent !important; box-shadow: inset 0 0 0 2px #C4553A }
 #main .hg-ptile .hg-dot-new { display: none }
-#main .hg-ptile .hg-new-pill { align-self: flex-start; margin: -2px 0 4px; padding: 2px 8px; border-radius: 999px; background: #e8775a; color: #fff; font-size: 11px; font-weight: 700; line-height: 15px; font-style: normal }
+#main .hg-ptile .hg-new-pill { align-self: flex-start; margin: -2px 0 4px; padding: 2px 8px; border-radius: 999px; background: #C4553A; color: #fff; font-size: 11px; font-weight: 700; line-height: 15px; font-style: normal }
 /* Guides tab: full guide color again (Yarden picked it, Nov 10); new ones keep the coral outline and "New" pill. */
 #main .category-directory-row, #main .category-directory-row[data-new] { background: radial-gradient(circle at 100% 0, rgba(255,255,255,.5) 0 30%, transparent 30.5%), var(--year-bg, #e8e2f6) !important }
 #main .category-directory-row .directory-copy small { color: var(--year-ink, #5b4a8b) !important }
