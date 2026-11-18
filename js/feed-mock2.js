@@ -3127,12 +3127,12 @@
       if (ml && me) out.splice(1, 0, { ...ml, v: ml.v.replace(' milk feeds', ' feeds').replace(/^Fewer feeds$/, '3–4 feeds') });
       if (wa) out.push({ ...wa, v: '4–8 oz', s: /Sips/.test(wa.v) ? F('A day at most, from a cup') : wa.s });
     }
-    out.forEach(x => { const bm = /^(\d+–\d+) bottles$/.exec(x.v); if (bm) { x.v = bm[1]; x.s = F('Bottles, ') + x.s.replace(/ a day in all$/, ' a day'); } });
+    out.forEach(x => { const bm = /^(\d+–\d+) bottles$/.exec(x.v); if (bm) { x.v = bm[1]; x.s = /^\d/.test(x.s) ? F('Bottles, ') + x.s.replace(/ a day in all$/, ' a day') : F('Bottles a day'); } });
     if (out.length < 3) return h;
     const tiles = out.slice(0, 3).map(x => { const st = `style="--sm-bg:${x.bg};--sm-ink:${x.ink}"`;
       const inner = `<small>${x.l}</small><b>${x.v}</b><span>${x.s}${x.go ? ' ›' : ''}</span>`;
       return x.go ? `<button ${st} onclick="${x.go}">${inner}</button>` : `<div ${st}>${inner}</div>`; }).join('');
-    return h.slice(0, a) + glanceCss + `<div style="display:flex;align-items:baseline;justify-content:space-between"><h2 class="hub-h2 fd-gl-h">${F('Feeding at a glance')}</h2><button class="hub-card-cta" onclick="${go('fd_day')}">${F('Example day')} ›</button></div><section class="hub-card hub-glance is-static fd-glance" style="cursor:pointer" onclick="if(!event.target.closest('button'))${go('fd_day').replace(/"/g, '&quot;')}"><div class="fd-gl">${tiles}</div>` + sec.slice(sec.lastIndexOf('</div>', sec.indexOf('<span class="hub-card-note">') > 0 ? sec.indexOf('<span class="hub-card-note">') : sec.length) + 6) + h.slice(e); };
+    return h.slice(0, a) + glanceCss + `<div style="display:flex;align-items:baseline;justify-content:space-between"><h2 class="hub-h2 fd-gl-h">${F('Feeding at a glance')}</h2><button class="hub-card-cta" onclick="${go('fd_day')}">${F('Example day')} ›</button></div><section class="hub-card hub-glance is-static fd-glance"><div class="fd-gl">${tiles}</div>` + sec.slice(sec.lastIndexOf('</div>', sec.indexOf('<span class="hub-card-note">') > 0 ? sec.indexOf('<span class="hub-card-note">') : sec.length) + 6) + h.slice(e); };
   P.dirD = (() => { const prev = P.dirD; return v => lighten(prev(v)); })();
 
   // ---- Three guides per stage, changing with age (Nov 11, Yarden's table). One home for each fact: the discovery,
@@ -3250,7 +3250,7 @@
       [XC.p1, 'bag', 'Time apart', !formulaFam() ? 'Leave about 1–1½ oz for each hour apart' : 'Pack bottles labeled, cold and ready to mix', !formulaFam() ? 'How much, labeled and cold' : 'For daycare or a day out', 'm2_away']];
     if (v === 2) return [[XG, 'eye', 'Is he ready?', 'Most babies start solids around 6 months', 'Four signs to look for', 'z_ready'],
       [XG, 'highchair', 'How to start', 'Start with soft foods rich in iron', 'By spoon, by hand, or both', 'z_start'],
-      [XC.p1, 'shield', 'Allergens and foods to avoid', 'Honey waits until 1, some foods until age 4', 'Foods to wait on', 'z_plan']];
+      [XC.p1, 'shield', 'Foods to wait on', 'Honey waits until 1, some foods until age 4', 'Drinks to skip, and choking risks', 'z_plan']];
     if (v === 3 && firstTastes(m)) return [[XG, 'bowl', 'How a meal goes', 'First meals are just a few bites', 'Setting up, what to offer, and his cues', 'z_meal'],
       [XC.d1, 'cup', 'Milk and solids together', 'No set order for milk and meals', 'Before or after milk, with water in a cup', 'z_milkfood'],
       [XC.g1, 'peanut', 'Common allergens', 'Try the common allergens early', done ? done + ' of 9 tried' : 'Nine to try, one at a time', 'z_allergens']];
@@ -3266,6 +3266,7 @@
   P.dirD = (() => { const prev = P.dirD; return v => { let h = prev(v); const k = h.indexOf('<h2 class="hub-h2">' + F(`Right now for ${name()}`)); if (k < 0) return h;
     const i = h.indexOf('<div class="hub-list">', k), j = h.indexOf('</div><button class="hub-rough-card', i); if (i < 0 || j < 0) return h;
     h = h.slice(0, i) + `<div class="hub-list">${GUIDES().map(gRow).join('')}` + h.slice(j);
+    if (stg() !== realStage()) h = h.replace('<h2 class="hub-h2">' + F(`Right now for ${name()}`), '<h2 class="hub-h2">' + F('At this stage'));
     // Iron drops sit with vitamin D in the "Every day" line from 4 months, for babies on breast milk.
     if (stg() === 2 && isBreast()) h = h.replace(/(<span class="hub-card-note"><b>Every day<\/b>[^<]*)(<\/span>)/, `$1 ${F(isEarly() ? 'Iron drops too.' : formulaFam() ? 'Iron drops too, if most of his milk is breast milk.' : 'Iron drops too, from 4 months.')}$2<button class="hub-link" style="display:block;margin:8px 4px 0" onclick="${go('z_iron')}">${F('About iron drops')} ›</button>`);
     if (stg() >= 3) h = h.replace(`<div class="hub-browse"><button class="hub-link" onclick="${go('z_gag')}">`, `<div class="hub-browse"><button class="hub-link" onclick="${go('z_plan')}">${F('Foods to skip, and choking risks')} ›</button></div><div class="hub-browse"><button class="hub-link" onclick="${go('z_gag')}">`);
@@ -3345,11 +3346,14 @@
       // "Every day" in one short line (Nov 11): what to give, with the how one tap away.
       if (typeof h === 'string' && /^chg:Feeding:mock:dirD(:\d)?$/.test(String(r))) { const v = stg(), br = isBreast(), only = formulaFam() && !br;
         const L = (t, id) => `<button class="hub-link" style="display:inline;padding:0;font:inherit;font-weight:650" onclick="${go(id)}">${F(t)}</button>`;
-        const vd = only ? L('vitamin D drops', 'nb_vitd') + F(', under 32 oz a day') : L('vitamin D', 'nb_vitd');
-        // Breast milk and formula: iron drops only if most of the milk is breast milk (AAP; Nov 14 QA).
-        const dI = formulaFam() && br ? `${L('vitamin D drops', 'nb_vitd')}${F(', and')} ${L('iron', 'z_iron')} ${F('if mostly breast milk')}` : `${L('vitamin D', 'nb_vitd')} ${F('and')} ${L('iron', 'z_iron')} ${F('drops')}`;
-        const line = v <= 1 ? (only ? vd : L('vitamin D drops', 'nb_vitd')) : v === 2 ? (br ? dI : vd) : `${F('iron-rich food,')} ${br ? (v === 3 ? dI : L('vitamin D drops', 'nb_vitd')) : vd}`;
-        h = h.replace(/<span class="hub-card-note"><b>Every day<\/b>[\s\S]*?<\/span>(?:<button class="hub-link"[^>]*>[^<]*<\/button>)*/, `<span class="hub-card-note fd-every"><b>${F('Every day:')}</b> ${line}</span>`);
+        // Nov 18: one thing stays one line ("Every day: vitamin D drops"); two or more get a short line each.
+        // Breast milk and formula: iron drops only if most of the milk is breast milk (AAP; Nov 14 QA). Born early: iron from the first weeks, on the hospital's plan.
+        const early = isEarly(), items = [v >= 3 && F('An iron-rich food at a meal'),
+          L('Vitamin D drops', 'nb_vitd') + (only ? F(', until about 32 oz of formula a day') : ''),
+          br && (v === 2 || v === 3 || (early && v <= 1)) && L('Iron drops', 'z_iron') + (formulaFam() ? F(', if mostly breast milk') : ''),
+          early && v <= 2 && F('Born early? Follow the hospital’s plan')].filter(Boolean);
+        const note = items.length === 1 ? `<b>${F('Every day:')}</b> ${items[0].replace('>Vitamin D drops<', '>vitamin D drops<')}` : `<b>${F('Every day')}</b>${items.map(x => `<span style="display:block;margin-top:2px">${x}</span>`).join('')}`;
+        h = h.replace(/<span class="hub-card-note"><b>Every day<\/b>[\s\S]*?<\/span>(?:<button class="hub-link"[^>]*>[^<]*<\/button>)*/, `<span class="hub-card-note fd-every">${note}</span>`);
         // Families who pump or store breast milk: how long the baby's milk keeps, one quiet link, at every stage (Nov 14).
         // Bottle how-tos (Nov 16): one quiet line on the stage page, since these pages no longer link to each other at the bottom.
         { const bt = isBottle() || pumps(), L = [bt && ['How long milk keeps', 'basics'], bt && stg() >= 1 && ['Giving a bottle', 'bottle'], formulaFam() && ['Making formula', 'formula'], pumps() && ['Pumping', 'pump']].filter(Boolean);

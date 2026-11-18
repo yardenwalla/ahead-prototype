@@ -172,7 +172,7 @@
       why: 'Never before 4 months. Until then, milk is all {s} {need|needs}.',
       normalTitle: 'Signs {s’s} ready', normal: [['head', 'Steady head', 'Holds it up well'], ['sit', 'Sits with support', 'In a high chair'], ['hand', 'Interested', 'Reaches for food'], ['swallow', 'Swallows', 'Moves food back, not out']],
       normalNotes: [['', 'Good to know', 'Starting early won’t help {o} sleep any longer']],
-      do: mo() < 6 ? 'Ask about it at {p} 6-month checkup.' : 'Ask about it at {p} next checkup.' }),
+      do: (mo() < 6 ? 'Ask about it at {p} 6-month checkup.' : 'Ask about it at {p} next checkup.') + ' With severe eczema or an egg allergy, ask sooner.' }),
     z_start: () => ({ type: 'howto', label: 'How to start', art: 'bowl', title: 'Start with soft foods rich in iron',
       why: 'By spoon, as finger foods, or both. All work, and the choking risk is similar when food is soft and safely shaped.',
       pictureTitle: 'Iron-rich first foods', picture: () => H().TPLB.chips(['Meat, soft or ground', 'Beans or lentils', 'Iron-fortified oatmeal', 'Egg, well cooked'], [['', 'Good alongside them', 'Avocado, sweet potato, banana']]),
