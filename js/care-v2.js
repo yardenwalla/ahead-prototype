@@ -264,9 +264,9 @@
   // Poop colors, in the swatch style from the Feeding pages.
   // Nov 15: poop colors as circles. Normal colors with what usually explains them; colors that mean a call, with when.
   const POOP_OK = [['#d9a62a', 'Yellow', 'Often seedy if breastfed'], ['#7d8a3a', 'Green', 'Common, and normal'], ['#c9a273', 'Tan', 'Common on formula'], ['#7a5232', 'Brown', 'Common after solids'], ['#d9822b', 'Orange', 'Normal too']];
-  const POOP_CALL = [['#ece8e0', 'White or gray', 'Call right away'], ['#2f2a26', 'Black', 'After day 3'], ['#b3312c', 'Red', 'Or streaks of blood']];
+  const POOP_CALL = [['#ece8e0', 'White or gray', 'Call right away'], ['#2f2a26', 'Black', 'After day 5'], ['#b3312c', 'Red', 'Or streaks of blood']];
   const poopDot = ([c, t, n]) => `<div class="poop-dot"><span style="--c:${c}"></span><b>${F(t)}</b><small>${F(n)}</small></div>`;
-  const poopChart = () => `<figure class="hub-card hub-poop2" role="img" aria-label="Normal poop colors are yellow, green, tan, brown and orange. Call your pediatrician for white or gray (right away), black after the first 2 to 3 days, or red."><div class="poop-group is-ok"><b class="poop-tag">${F('Normal')}</b><div class="poop-row is-5">${POOP_OK.map(poopDot).join('')}</div></div><div class="poop-group is-call"><b class="poop-tag">${F('Call your pediatrician')}</b><div class="poop-row is-3">${POOP_CALL.map(poopDot).join('')}</div></div><figcaption>${F('Black and sticky is normal for the first 2–3 days.')}</figcaption></figure>`;
+  const poopChart = () => `<figure class="hub-card hub-poop2" role="img" aria-label="Normal poop colors are yellow, green, tan, brown and orange. Call your pediatrician for white or gray (right away), black after the first 2 to 3 days, or red."><div class="poop-group is-ok"><b class="poop-tag">${F('Normal')}</b><div class="poop-row is-5">${POOP_OK.map(poopDot).join('')}</div></div><div class="poop-group is-call"><b class="poop-tag">${F('Call your pediatrician')}</b><div class="poop-row is-3">${POOP_CALL.map(poopDot).join('')}</div></div><figcaption>${F('Black and sticky is normal for the first few days.')}</figcaption></figure>`;
   const diaperCarousel = () => carousel('diapers', [
     [DIAPER_ART[0], 'Get everything ready', 'A clean diaper, wipes and cream within reach.'],
     [DIAPER_ART[1], 'Open and fold down', 'Unfasten, and use the front to wipe the worst away.'],
@@ -333,7 +333,7 @@
         [['Wriggly changes', H().steps(['Hand {o} a toy to hold, or sing the same song each time.', 'Keep one hand on {o} on the changing table, always.', 'Once {s} {pull|pulls} up, a standing change can be easier.'])], solids() && ['Poop once solids start', p_('Thicker, browner, sometimes with bits of food. Pears, prunes and peaches help if it gets hard.')]]
       ],
       base: [v > 0 && ['How to change a diaper', 'Five steps', diaperCarousel()], ['Diaper rash', 'What helps, and yeast rash', rashHow()], v === 0 && ['Sizing up', 'When to move up', p_('Leaks, red marks at the legs or waist, or tabs that don’t reach the middle mean it’s time for the next size.')], v > 0 && ['Care down there', 'For girls and boys', downThere()], ['How many wet diapers?', '6 or more a day after the first week', p_('6 or more wet diapers a day is the sign {s’s} getting enough milk.')]],
-      call: v => H().versus('Normal, or time to call?', ['Normal', 'Yellow, green or brown. ' + (v === 0 ? 'Black and sticky only at first.' : 'Several a day, or one every few days.')], ['Call your pediatrician', 'Black after day 3, red, or white. Or fewer than 4 wet diapers a day.']) + urgent('White, gray or chalky poop. Call your pediatrician right away.')
+      call: v => H().versus('Normal, or time to call?', ['Normal', 'Yellow, green or brown. ' + (v === 0 ? 'Black and sticky only at first.' : 'Several a day, or one every few days.')], ['Call your pediatrician', 'Black after day 5, red, or white. Or fewer than 4 wet diapers a day.']) + urgent('White, gray or chalky poop. Call your pediatrician right away.')
     }),
 
     bath: v => topicPage('bath', v, {
@@ -467,7 +467,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     firstweek: { k: 'diapers', title: 'What’s in the diaper, the first week', vis: () => ramp(),
       W: '', D: 'Feed often, 8–12 times a day, and keep a rough count of wet diapers for the first week.',
       K: 'From about day 6, that pattern means {s’s} getting enough.', Y: 'It’s usually concentrated pee. Still there after day 4? {S} may need more feeds.', Yl: 'A pink or orange stain',
-      extra: () => callTip('Fewer wet diapers than the chart, black poop after day 3, or blood in the poop.') + urgent('White, gray or chalky poop, or watery poop many times a day. Call your pediatrician right away.') },
+      extra: () => callTip('Fewer wet diapers than the chart, black poop after day 5, or blood in the poop.') + urgent('White, gray or chalky poop, or watery poop many times a day. Call your pediatrician right away.') },
     change: { i: 'hand', k: 'diapers', title: 'How to change a diaper', vis: () => diaperCarousel(),
       D: () => 'Change when wet or dirty, about 8–12 times a day at first. Keep one hand on {o} on the changing table, always.' + (stageNow() === 0 ? ' Until the cord falls off, fold the top of the diaper down below it.' : ''),
       K: 'Leaks, red marks at the legs or waist, or tabs that don’t reach the middle.', Kl: 'Time for the next size',
@@ -554,11 +554,11 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     newdiapers: { k: 'diapers', title: 'Diapers in the first weeks', W: 'About 8–12 changes a day at first. Wet diapers are how you know feeding is going well.',
       // The table already shows the count and the poop colors, so neither is said again; the how-to is one tap away.
       do: ['Wipe front to back, and let the skin dry.', 'Keep one hand on {o} on the changing table, always.'], vis: () => `<h2 class="hub-h2">${F('Wet diapers, day by day')}</h2>` + ramp() + `<details class="hub-card care-howto"><summary>${F('How to change one, step by step')}</summary>${diaperCarousel()}</details>`,
-      call: 'Fewer wet diapers than this, or black poop after day 3.', urgent: 'White, gray or chalky poop: call right away.',
+      call: 'Fewer wet diapers than this, or black poop after day 5.', urgent: 'White, gray or chalky poop: call right away.',
       extra: () => `<h2 class="hub-h2">${F('Cleaning down there')}</h2>` + downThere() },
     firstweek: { k: 'diapers', title: 'Diapers in the first week', W: 'Wet diapers build up day by day as feeding gets going.',
       do: ['Feed often, 8–12 times a day.', 'Keep a rough count of wet diapers this week.', 'From about day 6, expect 6 or more a day.'], vis: () => ramp(),
-      call: 'Fewer wet diapers than this, or black poop after day 3.', urgent: 'White, gray or chalky poop: call right away.' },
+      call: 'Fewer wet diapers than this, or black poop after day 5.', urgent: 'White, gray or chalky poop: call right away.' },
     change: { k: 'diapers', title: 'How to change a diaper', W: 'About 8–12 times a day at first. It gets quick.',
       do: ['Have a clean diaper, wipes and cream within reach.', 'Wipe front to back, and let the skin dry.', 'Keep one hand on {o} on the changing table, always.'], vis: () => diaperCarousel(),
       N: 'Leaks or red marks at the legs mean it’s time for the next size.' },
@@ -860,7 +860,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     const items = {
       poop: ['Nearly every poop color is normal', 'White, gray, red, or black after the first days means a call.', poopChart()
         + `<h2 class="hub-h2">${F('Also normal')}</h2>` + hubIconSteps([
-          now === 0 ? ['clock', 'Black at first', 'For the first 2–3 days'] : live() && profile.feed === 'Formula' ? ['clock', 'Most days', 'Usual on formula'] : ['clock', 'Fewer poops', live() && profile.feed === 'Both' ? 'A few days apart can be normal' : 'Breastfed babies can go days between'],
+          now === 0 ? ['clock', 'Black at first', 'For the first few days'] : live() && profile.feed === 'Formula' ? ['clock', 'Most days', 'Usual on formula'] : ['clock', 'Fewer poops', live() && profile.feed === 'Both' ? 'A few days apart can be normal' : 'Breastfed babies can go days between'],
           ['diaper', 'Straining, going red', 'Even when it comes out soft'],
           solidsOn || now >= 2 ? ['bowl', 'Thicker with solids', 'Hard? Pears, prunes, peaches'] : ['drop', '6+ wet diapers', 'Every day']], CAT, 'Also normal.', false)
         + block('', '', 'Fewer than 6 wet diapers a day, or hard, pebble-like poop.', (now <= 1 ? 'White, gray or chalky poop, or watery poop many times a day.' : 'White, gray or chalky poop.') + ' Call your pediatrician right away.')],
@@ -924,9 +924,9 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   const TB = {
     top: (q, lead) => head(q.k, val(q.eyebrow) || LABEL[q.k], val(q.title), val(lead)),
     // One card per section: the main action, then up to two short follow-ups inside the same card.
-    card: (text, notes) => { if (!text) return ''; notes = (val(notes) || []).filter(Boolean).slice(0, 2); return `<section class="ss-do care-tpl-card"><p>${F(val(text))}</p>${notes.length ? `<ul class="tpl-notes">${notes.map(([, t, sub]) => `<li><b style="color:#302d3c">${F(t)}${/[?!.]$/.test(t) ? '' : '.'}</b> ${F(sub)}${/[?!.]$/.test(sub) ? '' : '.'}</li>`).join('')}</ul>` : ''}</section>`; },
+    card: (text, notes) => { if (!text) return ''; notes = (val(notes) || []).filter(Boolean); return `<section class="ss-do care-tpl-card"><p>${F(val(text))}</p>${notes.length ? `<ul class="tpl-notes"${notes.length > 2 ? ' data-over-limit="notes"' : ''}>${notes.map(([, t, sub]) => `<li><b style="color:#302d3c">${F(t)}${/[?!.]$/.test(t) ? '' : '.'}</b> ${F(sub)}${/[?!.]$/.test(sub) ? '' : '.'}</li>`).join('')}</ul>` : ''}</section>`; },
     tiles: (items, numbered) => items && items.length ? hubIconSteps(items, CAT, F(items.map(t => t[1] + ': ' + t[2]).join('. ')), !!numbered) : '',
-    rows: rows => { rows = (val(rows) || []).filter(Boolean).slice(0, 3); return rows.length ? `<div class="hub-list">${rows.map(([icon, t, sub]) => H().row({ icon, cat: CAT, title: t, sub })).join('')}</div>` : ''; },
+    rows: rows => { rows = (val(rows) || []).filter(Boolean); return rows.length ? `<div class="hub-list"${rows.length > 3 ? ' data-over-limit="rows"' : ''}>${rows.map(([icon, t, sub]) => H().row({ icon, cat: CAT, title: t, sub })).join('')}</div>` : ''; },
     video: v => v ? hubEmbed(...v) : '',
     link: l => l ? `<div class="hub-list care-link">${rowK('look', l[0], l[1], `openPage('chg:${CAT}:d:${val(l[2])}')`)}</div>` : '',
     section: (title, body) => body ? h2(F(title)) + body : '',
@@ -966,7 +966,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
       why: 'From about day 6, six or more a day means {s’s} getting enough milk.',
       normal: () => TB.noted(wetChart(), [['diaper', 'A pink or orange stain is usually just pee', 'Still there after day 4? {S} may need more feeds']]),
       do: 'Feed often, 8–12 times a day, and keep a rough count of wet diapers this week.',
-      calls: { ped: 'fewer wet diapers than the chart, black poop after day 3, or blood in the poop.', now: 'white, gray or chalky poop, or watery poop many times a day.' } },
+      calls: { ped: 'fewer wet diapers than the chart, black poop after day 5, or blood in the poop.', now: 'white, gray or chalky poop, or watery poop many times a day.' } },
     't:diapers:2': { type: 'expect', k: 'diapers', title: 'Diapers stay the same, but rolling starts',
       why: 'Rolling can start any day, even on a changing table.',
       normal: [['drop', '6 or more wet a day', 'A sign {s’s} feeding well'], ['diaper', 'Poop looks the same', 'Until solids start']],
@@ -988,7 +988,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   TPL['p:sponge'] = { type: 'howto', k: 'bath', title: 'Sponge baths for now',
     why: 'Two or three a week until the cord falls off, so it stays dry.',
     steps: [['home', 'Warm the room', 'Not right after a feed'], ['smile', 'Face first', 'Plain water'], ['towel', 'Then the body', 'One part at a time, the rest wrapped'], ['diaper', 'Diaper area last', 'Pat dry, into every crease']],
-    stepsNotes: [['', 'More baths can dry {p} skin', 'In between, wipe {p} face, neck and diaper area']],
+    stepsNotes: [['', 'More baths can dry {p} skin', 'In between, wipe {p} face, neck and diaper area'], ['', 'Ears too', 'Just the outside. No cotton swabs inside']],
     safe: [['hand', 'A hand on {o} the whole time', 'Never step away from {o} on a raised surface.']],
     video: ['uYQ_KNlcQwE', 'How to give your newborn a sponge bath', 'Nemours KidsHealth'] };
   TPL['t:bath:0'] = TPL['p:sponge'];
@@ -1052,7 +1052,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   const nails = { type: 'howto', k: 'nails', title: 'Trim nails once a week',
     why: 'They grow fast, and are sharp enough to scratch {p} face.',
     steps: [['moon', 'While {s} {sleep|sleeps}', 'The easiest time'], ['hand', 'Press the pad back', 'So the clippers only catch nail'], ['nail', 'Clip or file', 'To a smooth, rounded edge']],
-    tipsTitle: 'Good to know', tips: [['heart', 'A small nick happens to everyone', 'Press gently with a clean cloth.'], ['ear', 'Clean only the outside of the ears', 'A washcloth works. Never put cotton swabs inside.']] };
+    tipsTitle: 'Good to know', tips: [['heart', 'A small nick happens to everyone', 'Press gently with a clean cloth.']] };
   [0, 1, 2, 3].forEach(v => { TPL[`t:nails:${v}`] = nails; });
 
   /* ----- What to expect pages ----- */
@@ -1105,7 +1105,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     helps: [['towel', 'Sticky eyes', 'Wipe from the inside corner out'], ['drop', 'A stuffy nose', 'A few saline drops, then gentle suction']],
     calls: { ped: 'a red or swollen eyelid, yellow-green discharge with redness, or a red lump near the inner corner of the eye.', now: 'struggling to breathe, or lips turning blue.', nowLabel: 'Call 911' } };
   TPL['look-yellow'] = { type: 'check', eyebrow: 'Is this normal?', k: 'skin', title: 'Yellow skin',
-    why: 'A little yellow in the first week is common. It’s called jaundice, and your pediatrician checks it at the first visit.',
+    why: 'A little yellow (jaundice) after the first day is common. Yellow in the first 24 hours needs a call right away.',
     signs: [['sun', 'Yellow on the face', 'Shows in the first days, then fades'], ['eye', 'On darker skin', 'Check the whites of the eyes and gums']],
     helps: [['bottle', 'Feed often', 'It helps clear the yellow'], ['steth', 'Your pediatrician checks it', 'Sunlight doesn’t treat it']],
     calls: { ped: 'yellow spreading to the belly or legs, yellow whites of the eyes, or fewer wet diapers.', now: 'any yellow in the first 24 hours, or yellow and hard to wake or not feeding well.' } };

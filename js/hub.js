@@ -89,10 +89,11 @@
     // A small table in a white card: head row, then rows. Used for how long milk keeps.
     table: (head, rows) => `<section class="care-tpl-card tpl-table"><table><thead><tr>${head.map(h => `<th>${F(h)}</th>`).join('')}</tr></thead><tbody>${rows.map(r => `<tr>${r.map(c => `<td>${F(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></section>`,
     card: (text, notes) => text ? `<section class="ss-do care-tpl-card"><p>${F(tval(text))}</p>${TPLB.ul(notes)}</section>` : '',
-    ul: notes => { notes = (tval(notes) || []).filter(Boolean).slice(0, 2); return notes.length ? `<ul class="tpl-notes">${notes.map(([, t, sub]) => `<li><b style="color:#302d3c">${F(t)}${/[?!.]$/.test(t) ? '' : '.'}</b> ${F(sub)}${/[?!.]$/.test(sub) ? '' : '.'}</li>`).join('')}</ul>` : ''; },
+    // Nov 17: nothing is cut off silently. Over the limit (2 notes, 3 rows) still shows everything, and is marked for QA (tools/qa/browser/template_limits.py).
+    ul: notes => { notes = (tval(notes) || []).filter(Boolean); return notes.length ? `<ul class="tpl-notes"${notes.length > 2 ? ' data-over-limit="notes"' : ''}>${notes.map(([, t, sub]) => `<li><b style="color:#302d3c">${F(t)}${/[?!.]$/.test(t) ? '' : '.'}</b> ${F(sub)}${/[?!.]$/.test(sub) ? '' : '.'}</li>`).join('')}</ul>` : ''; },
     noted: (fig, notes) => { const ul = TPLB.ul(notes); if (!fig || !ul) return fig || ''; let i = fig.lastIndexOf('</figure>'); if (i < 0) i = fig.lastIndexOf('</section>'); return i < 0 ? fig + ul : fig.slice(0, i) + ul + fig.slice(i); },
     tiles: (items, cat, numbered) => (items = tval(items)) && items.length ? hubIconSteps(items, cat, F(items.map(t => t[1] + ': ' + t[2]).join('. ')), !!numbered) : '',
-    rows: (rows, cat) => { rows = (tval(rows) || []).filter(Boolean).slice(0, 3); return rows.length ? `<div class="hub-list">${rows.map(([icon, t, sub]) => row({ icon, cat, title: t, sub })).join('')}</div>` : ''; },
+    rows: (rows, cat) => { rows = (tval(rows) || []).filter(Boolean); return rows.length ? `<div class="hub-list"${rows.length > 3 ? ' data-over-limit="rows"' : ''}>${rows.map(([icon, t, sub]) => row({ icon, cat, title: t, sub })).join('')}</div>` : ''; },
     calls: c => { c = tval(c); if (!c) return ''; const PH = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h3l2 5-2.5 1.5a11 11 0 0 0 6 6L15 14l5 2v3a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>';
       return `<h2 class="hub-h2">${F('When to call')}</h2><section class="care-calls is-titled"><span class="care-calls-ico">${PH}</span><div>` + (c.ped ? `<p><b>${F('Call your pediatrician if:')}</b> ${F(tval(c.ped))}</p>` : '') + (c.now ? `<p class="is-urgent"><b>${F((c.nowLabel || 'Call right away') + ' if:')}</b> ${F(tval(c.now))}</p>` : '') + `</div></section>`; }
   };
@@ -105,8 +106,10 @@
       + (q.more ? TPLB.sec(tval(q.moreTitle), tval(q.more)) : '')
       + TPLB.sec(tval(q.doTitle) || 'What to do', Array.isArray(tval(q.do)) ? TPLB.noted(TPLB.tiles(q.do, cat, q.doOrdered), q.doNotes) : TPLB.card(q.do, q.doNotes))
       + (q.action ? q.action() : '') + TPLB.sec('Watch how', q.video ? hubEmbed(...q.video) : '') + TPLB.calls(q.calls); },
-    howto: (q, cat) => TPLB.sec(tval(q.pictureTitle) || 'At a glance', q.picture ? q.picture() : '') + TPLB.sec(tval(q.stepsTitle) || (q.ordered === false ? 'What to do' : 'Steps'), TPLB.noted(q.stepsFig ? q.stepsFig() : TPLB.tiles(q.steps, cat, q.ordered !== false), q.stepsNotes)) + (q.action ? q.action() : '')
-      + TPLB.sec(q.tipsTitle || 'Keep {o} safe', TPLB.rows(q.tips, cat)) + TPLB.sec('Watch how', q.video ? hubEmbed(...q.video) : ''),
+    // pictureAfter: a tool (like the allergen tracker) goes after the steps it supports.
+    howto: (q, cat) => { const pic = TPLB.sec(tval(q.pictureTitle) || 'At a glance', q.picture ? q.picture() : ''), steps = TPLB.sec(tval(q.stepsTitle) || (q.ordered === false ? 'What to do' : 'Steps'), TPLB.noted(q.stepsFig ? q.stepsFig() : TPLB.tiles(q.steps, cat, q.ordered !== false), q.stepsNotes)) + (q.action ? q.action() : '');
+      return (q.pictureAfter ? steps + pic : pic + steps)
+      + TPLB.sec(q.tipsTitle || 'Keep {o} safe', TPLB.rows(q.tips, cat)) + TPLB.sec('Watch how', q.video ? hubEmbed(...q.video) : ''); },
     check: (q, cat) => TPLB.sec(tval(q.tellTitle) || 'How to tell', TPLB.noted(q.figure ? q.figure() : TPLB.tiles(q.signs, cat), q.tell))
       + TPLB.sec('What helps', TPLB.noted(TPLB.tiles(q.helps, cat, q.ordered), q.helpsNotes)) + TPLB.calls(q.calls),
     option: (q, cat) => TPLB.sec('At a glance', tval(q.glance)) + TPLB.sec('How it works', tval(q.how)) + TPLB.sec('Good to know', TPLB.rows(q.tips, cat))
@@ -501,15 +504,15 @@
     }
     if (id === 'vitd') {
       // Vitamin D and iron, in one place. AAP: breast milk is low in both; formula has both added.
-      // Iron (AAP): breastfed babies get iron drops from 4 months until iron-rich foods are going well; breastfed babies born early, from about 1 month through 12 months.
+      // Iron (AAP): breastfed babies get iron drops from 4 months until iron-rich foods are going well; breastfed babies born early, from the first weeks (AAP, July 2026).
       // Vitamin D (AAP): 400 IU a day for breastfed and partly breastfed babies; after 1, many children still need 600 IU.
       const f = meth() === 'bottle', early = typeof profile !== 'undefined' && profile.early;
       const ts = f ? [['Vitamin D', 'Usually covered', 'Formula has it added'], ['Iron', 'Usually covered', 'Formula has it added']]
-        : [['Vitamin D', '400 IU a day', 'Drops, from the first days'], ['Iron', early ? 'From about 1 month' : 'From 4 months', early ? 'Usually until 12 months, at the dose your pediatrician gives' : 'Drops until iron-rich foods are going well']];
+        : [['Vitamin D', '400 IU a day', 'Drops, from the first days'], ['Iron', early ? 'From the first weeks' : 'From 4–6 months', early ? 'Usually until 12 months, at the dose your pediatrician gives' : 'Drops until iron-rich foods are going well']];
       return detail(cat, 'Milk feeds', 'Vitamin D and iron', f ? 'Formula has both added, so most formula-fed babies don’t need drops.' : 'Breast milk is low in vitamin D and iron, so breastfed and partly breastfed babies need a little extra.',
         `<section class="hub-card hub-glance is-static"><span class="hub-card-head"><b>${F(f ? 'For formula-fed babies' : 'For breastfed babies')}</b></span>${tiles(ts)}</section>`
         + (f ? tip('When to ask', 'If Maya drinks less than about 32 oz of formula a day, ask your pediatrician about vitamin D drops.')
-          : steps(age >= 12 ? ['Ask at the 12-month checkup whether to keep giving vitamin D. After 1, many children still need it (600 IU a day).', 'Iron now comes from food: meat, beans, eggs and iron-fortified cereal.'] : age < 4 ? ['Give 400 IU of vitamin D every day, starting now. The label says how many drops that is.', early ? 'Ask your pediatrician for Maya’s iron dose. Babies born early usually start at about 1 month.' : 'At the 4-month checkup, ask your pediatrician for Maya’s iron dose.'] : ['Keep giving 400 IU of vitamin D every day through the first year.', early ? 'Keep giving iron drops, usually until 12 months.' : 'Give iron drops until iron-rich foods are going well. Ask at the next checkup when to stop.'])
+          : steps(age >= 12 ? ['Ask at the 12-month checkup whether to keep giving vitamin D. After 1, many children still need it (600 IU a day).', 'Iron now comes from food: meat, beans, eggs and iron-fortified cereal.'] : age < 4 ? ['Give 400 IU of vitamin D every day, starting now. The label says how many drops that is.', early ? 'Ask your pediatrician for Maya’s iron dose. Babies born early usually start in the first weeks.' : 'At the 4-month checkup, ask your pediatrician for Maya’s iron dose.'] : ['Keep giving 400 IU of vitamin D every day through the first year.', early ? 'Keep giving iron drops, usually until 12 months.' : 'Give iron drops until iron-rich foods are going well. Ask at the next checkup when to stop.'])
           + (meth() === 'both' ? tip('Breast milk and formula?', 'Keep giving vitamin D until Maya drinks about 32 oz of formula a day.') : ''))
         + (!f || early ? `<h2 class="hub-h2">${F('How to give drops')}</h2>` + (window.hubFigure ? hubFigure('drops', cat, 'Mix the drops into about an ounce of milk, give that small bottle first, then the usual feed.') : '')
           + tip(meth() === 'nurse' ? 'No bottles? Easy' : 'Or straight from the dropper', (meth() === 'nurse' ? 'Put the drop on your nipple just before a feed, or squirt it slowly inside {p} cheek. ' : 'Squirt it slowly inside {p} cheek, not toward the back of the throat. ') + 'If {s} {spit|spits} up afterward, don’t give another dose.') : '')
@@ -909,7 +912,7 @@
         settle0: () => T.steps0(),
         wakefeed: () => { const days = (NOW - parse(profile.dob)) / 864e5; return { type: 'expect', label: 'Night sleep', art: 'bottle', title: 'Stop waking {o} for feeds once {s’s} back to birth weight',
           why: 'Newborns can sleep through hunger, so regular feeds come first. Most babies are back to birth weight by about 2 weeks.',
-          normal: () => hubStageStrip({ title: '', items: [['bottle', 'You wake {o}', 'Every 3–4 hours, until birth weight'], ['moon', '{S} {wake|wakes} you', 'When hungry, after that']], nowIndex: va == null ? (days < 14 ? 0 : 1) : -1, cat, caption: 'Until back to birth weight, wake baby to feed every 3 to 4 hours. After that, baby wakes you when hungry.' }),
+          normal: () => hubStageStrip({ title: '', items: [['bottle', 'You wake {o}', 'Every 3–4 hours, until birth weight'], ['moon', '{S} {wake|wakes} you', 'When hungry, after that']], nowIndex: va == null && days < 14 ? 0 : -1, cat, caption: 'Until back to birth weight, wake baby to feed every 3 to 4 hours. After that, baby wakes you when hungry.' }),
           do: 'Once your pediatrician says {s’s} back to birth weight, let {o} sleep and feed {o} when {s} {wake|wakes}.' }; },
         settle4: () => ({ type: 'howto', label: 'Falling asleep', art: 'moon', title: 'Try putting {o} down drowsy, once a day',
           why: 'From about 4 months, many babies can learn to fall asleep without being fed or rocked all the way.',

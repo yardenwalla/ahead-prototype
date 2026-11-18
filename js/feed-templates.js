@@ -6,6 +6,7 @@
   const mo = () => X().ageMo(), nurse = () => X().nurses(), breast = () => X().isBreast(), fam = () => X().formulaFam(), pump = () => X().pumps();
   const onlyFormula = () => !breast();
   // Real age, for babies born early: birth-weight and first-week lines follow it (adjusted age sets the stage).
+  const early = () => typeof profile !== 'undefined' && !!(profile && profile.early);
   const realMo = () => (typeof actualMonth === 'function' ? actualMonth() : mo());
   // The fever rule for the baby's age, short enough for a call line.
   const fev = () => { const m = mo(); return m < 3 ? 'a fever of 100.4°F or higher' : m < 6 ? 'a fever of 101°F or higher' : 'a fever of 103°F or higher, or one lasting over a day'; };
@@ -59,13 +60,21 @@
         pictureTitle: 'What {s} {need|needs}', picture: () => H().TPLB.tiles([['sun', 'Vitamin D', '400 IU a day, through {p} first year'], ['drop', 'Iron', fam() ? 'Drops from 4 months, if mostly breast milk' : mo() < 4 ? 'Drops usually start at about 4 months' : 'Drops from 4 months, until iron-rich foods are going well']], CAT),
         ordered: false, steps: [['drop', 'The label’s dose', 'Using the dropper that comes with them'], ['mouth', 'Inside {p} cheek', nurse() ? 'Or on the nipple, just before a feed' : 'Drip it in slowly'], ['bottle', 'Or mixed in 1 oz of milk', 'Make sure {s} {finish|finishes} it']],
         stepsNotes: mo() < 6 ? [['', 'No water yet', 'Milk is all {s} {need|needs} until about 6 months, even on hot days']] : null },
-    z_iron: () => ({ type: 'expect', label: 'Iron', art: 'drop', title: 'Breastfed babies need iron drops at 4 months',
-      why: 'Babies are born with iron stores that run low around 4 months, and breast milk has very little iron.' + (fam() ? ' If it’s more than half of {p} milk, {s} {need|needs} drops.' : ''),
-      normalTitle: 'Iron drops',
-      normal: () => window.hubStageStrip({ title: '', cat: CAT, items: [['drop', '4 months', 'Start iron drops'], ['bowl', '6–9 months', 'Stop once iron-rich foods are going well']], caption: 'Iron drops start at 4 months and stop once iron-rich foods are going well, around 6 to 9 months.' }),
-      do: mo() < 4.5 ? 'Ask your pediatrician for the dose at the 4-month checkup. Give it like vitamin D: in {p} cheek, or in a little milk.' : 'Not on drops yet? Ask your pediatrician for the dose now. A call is fine.',
-      doNotes: [['', 'Darker poop?', 'Iron can cause it. That’s normal']] }),
-
+    // Nov 17: AAP clinical report (Pediatrics, July 2026). Exclusively breastfed babies born at term: iron by 4 months,
+    // or wait for iron-rich foods at 6. Born early: iron starts in the first weeks, on the pediatrician's plan.
+    z_iron: () => early()
+      ? { type: 'expect', label: 'Iron', art: 'drop', title: 'Babies born early need iron sooner',
+        why: 'Most iron is stored in the last weeks of pregnancy, so babies born early start with less. It usually starts in the first weeks.',
+        normalTitle: 'Iron',
+        normal: () => window.hubStageStrip({ title: '', cat: CAT, items: [['drop', 'First weeks', 'Iron starts, from drops or formula'], ['bowl', '6 months on', 'Iron-rich foods join in']], caption: 'For babies born early, iron starts in the first weeks, from drops or formula. Iron-rich foods join in from about 6 months.' }),
+        do: 'Follow the iron plan from your pediatrician or the hospital. Not sure {s’s} on one? Call and ask.',
+        doNotes: [['', 'Darker poop?', 'Iron can cause it. That’s normal']] }
+      : { type: 'expect', label: 'Iron', art: 'drop', title: 'Breastfed babies need extra iron by 6 months',
+        why: 'Babies are born with iron stores that run low after about 4 months, and breast milk has very little iron.',
+        normalTitle: 'Two ways to get it',
+        normal: () => window.hubStageStrip({ title: '', cat: CAT, items: [['drop', '4 months', 'Iron drops'], ['bowl', 'Or 6 months', 'Iron-rich foods from the first meals']], caption: 'Either iron drops from 4 months, or iron-rich foods from the first meals at about 6 months.' }),
+        do: mo() < 4.5 ? 'Ask about iron at the 4-month checkup, and choose drops now or iron-rich foods at 6 months.' : 'Not on drops? Make iron-rich foods part of the first meals. Your pediatrician can say if drops still make sense.',
+        doNotes: [fam() ? ['', 'Mostly formula?', 'Iron-fortified formula has iron. Ask at the checkup if {s} {need|needs} more'] : null, ['', 'Darker poop?', 'Iron can cause it. That’s normal']] },
     // ---------- Bottles ----------
     basics: () => { const br = breast() && (pump() || X().stored()), fm = fam();
       const head = br && fm ? ['', 'Breast milk', 'Formula'] : ['', br ? 'Breast milk' : 'Formula'];
@@ -85,8 +94,8 @@
       tipsTitle: 'Nipples and cleaning', tips: [['bottle', 'Start with the slowest flow', 'Go up when {s} {suck|sucks} hard and {get|gets} frustrated. Gulping or coughing means it’s too fast.'], ['eye', 'Wide or narrow?', 'Neither is better. Stick with the one {s} {take|takes} calmly.'], ['drop', 'Clean after every feed', mo() < 4 ? 'Hot, soapy water, and sanitize often in the first months.' : 'Hot, soapy water, or the dishwasher.']] }),
     formula: () => ({ type: 'howto', label: 'Bottles', art: 'bottle', title: 'Mix formula exactly as the label says',
       why: 'Extra water or powder changes what {s} {get|gets} from it.',
-      steps: [['hand', 'Wash your hands', 'And use a clean bottle'], ['drop', 'Water first', 'The amount on the label'], ['bottle', 'Level scoops', 'Then shake well'], ['hand', 'Test it on your wrist', 'Warm or room temperature']],
-      stepsNotes: [mo() < 5 ? ['', 'Under 2 months, born early, or a weak immune system?', 'Boil the water and let it cool about 5 minutes first'] : ['', 'Water', 'Clean tap or bottled water is fine'], ['', 'Which formula?', 'Any standard iron-fortified formula. Ask before a special one']],
+      steps: [['hand', 'Wash your hands', 'And use a clean bottle'], realMo() < 2 || early() ? ['drop', 'Boiled water, cooled 5 minutes', 'Then the amount on the label'] : ['drop', 'Water first', 'The amount on the label'], ['bottle', 'Level scoops', 'Then shake well'], ['hand', 'Test it on your wrist', 'Warm or room temperature']],
+      stepsNotes: [realMo() < 2 || early() ? ['', 'Why boiled water?', 'Under 2 months or born early, hot water protects against a rare germ in powder'] : ['', 'Water', 'Clean tap or bottled water is fine. Boiled and cooled if {s} has a weak immune system'], ['', 'Which formula?', 'Any standard iron-fortified formula. Ask before a special one']],
       tipsTitle: 'Mixing with breast milk', tips: breast() ? [['drop', 'Make the formula with water first', 'Breast milk can’t replace the water.'], ['bottle', 'Then add breast milk', 'Or give the breast milk first, then top up with formula.']] : null }),
     pump: () => { const m = mo();
       if (m < 1.5) return { type: 'howto', label: 'Pumping', art: 'bottle', title: 'Pump 8–12 times a day at first',
@@ -108,7 +117,7 @@
       : { type: 'howto', label: 'Time apart', art: 'bottle', title: 'Anyone can feed {o} from a bottle',
         why: 'A few things keep bottles calm and safe, whoever is feeding.',
         ordered: false, stepsTitle: 'What to tell caregivers', steps: [['clock', 'Feed on cue', 'Not the clock'], ['bottle', 'Upright and level', 'So {s} can take a pause'], ['hand', 'Burp partway', 'And at the end']] },
-    m2_away: () => nurse() && !fam()
+    m2_away: () => !fam()
       ? { type: 'howto', label: 'Time apart', art: 'bag', title: 'Leave about 1–1½ oz for each hour apart',
         why: 'Small bottles, labeled and kept cold, so little goes to waste.',
         ordered: false, steps: [['bottle', '2–4 oz per bottle', 'So less is wasted'], ['notepad', 'Label each one', '{P} name and the date'], ['fridge', 'Keep it cold', 'In a cooler with ice packs']],
@@ -189,15 +198,14 @@
       pictureTitle: 'Sizes by age', picture: () => H().TPLB.tiles([['hand', 'Before 9 months', 'Finger-size strips {s} can hold in {p} fist'], ['hand', 'From about 9 months', 'Small, pea-size pieces {s} can pinch']], CAT),
       ordered: false, stepsTitle: 'Cut and cook it safe', steps: [['plate', 'Quarter grapes', 'And cherry tomatoes, lengthwise'], ['bowl', 'Spread nut butters thin', 'Never in a lump'], ['pot', 'Cook hard veg soft', 'Like carrots'], ['hand', 'Take out the hard bits', 'Skins, pits and bones']] }),
     z_allergens: () => ({ type: 'howto', label: 'Common allergens', art: 'peanut', title: 'Try the common allergens early',
-      why: 'Start them with first foods, around 6 months. Trying them early lowers the chance of a food allergy.',
-      pictureTitle: 'Keep track', picture: () => X().pron(window.__alCard()),
+      why: 'Trying them early, around 6 months, lowers the chance of an allergy. With severe eczema or an egg allergy, ask your pediatrician first.',
+      pictureAfter: true, pictureTitle: 'Keep track', picture: () => X().pron(window.__alCard()),
       ordered: false, steps: [['peanut', 'One at a time', 'At home, earlier in the day'], ['egg', 'In a safe form', 'Thinned peanut butter or powder, egg well cooked'], ['plate', 'Keep it in {p} meals often', 'Once it’s in']],
-      stepsNotes: [['', 'Severe eczema or an egg allergy?', 'Ask your pediatrician before starting peanut']],
       tipsTitle: 'If there’s a reaction', tips: [['steth', 'A few hives, or vomiting', 'Call your pediatrician.'], ['alarm', 'Trouble breathing, or swelling of the lips or face', 'Or hives all over, hives with vomiting, or very sleepy or floppy. Call 911.']] }),
-    z_plan: () => ({ type: 'expect', label: 'Foods to wait on', art: 'plate', title: 'No honey before 1, no choking risks before 4',
+    z_plan: () => ({ type: 'expect', label: 'Foods to wait on', art: 'plate', title: 'Honey waits until 1, some foods until 4',
       why: 'A few foods aren’t safe for babies yet, even once solids are going well.',
       normalTitle: 'Wait until 1', normal: [['drop', 'Honey', 'It can carry a risk of botulism'], ['cup', 'Cow’s milk as a drink', 'Fine in cooking'], ['cup', 'Juice', 'Offer water and milk instead']],
-      moreTitle: 'Choking risks, until 4', more: () => H().TPLB.chips(['Whole nuts', 'Whole grapes', 'Popcorn', 'Hot dog rounds', 'Hard raw veg', 'Thick nut butter'], [['', 'Some can be made safe', 'Cut or cooked soft, once {s’s} on finger foods']]) }),
+      moreTitle: 'Choking risks: whole, hard or round, until 4', more: () => H().TPLB.chips(['Whole nuts', 'Whole grapes', 'Popcorn', 'Hot dog rounds', 'Hard raw veg', 'Thick nut butter'], [['', 'Some can be made safe', 'Cut or cooked soft, once {s’s} on finger foods']]) }),
     z_milkfood: () => ({ type: 'expect', label: 'Milk and solids', art: 'cup', title: 'No set order for milk and meals',
       why: 'A meal fits in wherever {s’s} awake and happy.',
       do: [['bottle', 'Milk before or after', 'Whatever works for {o}'], ['cup', 'Water from a cup', 'Open or straw. Hold it for {o}, and let {o} try']],
@@ -210,12 +218,12 @@
       normalNotes: [['', 'It evens out', 'Big days and small days balance over the week']],
       do: [['plate', 'Keep offering', 'Without pressure'], ['clock', 'Look at the week', 'Not one meal']],
       doNotes: [['', 'Getting enough?', 'Wet diapers, energy, and steady growth at checkups']] }),
-    z_milk12: () => { const b = X().isBottle();
+    z_milk12: () => { const b = X().isBottle(), f = fam();
       return { type: 'expect', label: 'Turning 1', art: 'cup', title: 'Start cups now, and whole milk at 12 months',
         why: 'Starting a cup now makes saying goodbye to bottles easier later.',
-        normal: () => window.hubStageStrip({ title: '', cat: CAT, items: [['cup', 'Now', 'An open or straw cup at meals'], ['cup', '12 months', b ? 'From formula to whole milk' : 'Whole milk in a cup, if you like'], ['bottle', '12–18 months', b ? 'Bottles phase out, bedtime last' : 'Nursing can keep going']], caption: 'A cup at meals now, whole milk at 12 months, and bottles phase out between 12 and 18 months.' }),
+        normal: () => window.hubStageStrip({ title: '', cat: CAT, items: [['cup', 'Now', 'An open or straw cup at meals'], ['cup', '12 months', f ? 'From formula to whole milk' : 'Whole milk in a cup, if you like'], ['bottle', '12–18 months', b ? 'Bottles phase out, bedtime last' : 'Nursing can keep going']], caption: 'A cup at meals now, whole milk at 12 months, and bottles phase out between 12 and 18 months.' }),
         do: [['cup', 'Whole milk', 'Not low-fat, until age 2'], ['cup', 'Up to 24 oz a day', b ? 'More crowds out iron-rich food' : 'From a cup. Nursing doesn’t count'], b ? ['bottle', 'Drop one bottle at a time', 'Swap one for a cup each week'] : null].filter(Boolean),
-        doNotes: [b ? ['', 'Picky about the taste?', 'Mix half and half with formula for a week. Toddler formula isn’t needed'] : null, ['', 'Vitamin D after 1', 'Ask your pediatrician how much {s} {need|needs}']] }; },
+        doNotes: [b ? ['', 'Picky about the taste?', (f ? 'Mix half and half with formula' : 'Mix half and half with breast milk') + ' for a week. Toddler formula isn’t needed'] : null, ['', 'Vitamin D after 1', 'Ask your pediatrician how much {s} {need|needs}']] }; },
     z_refuse: () => ({ type: 'expect', label: 'Feeding challenges', art: 'plate', title: 'Refusing food is common and normal',
       why: 'Some days {s}’ll eat a lot, and some days almost nothing.',
       do: [['clock', 'Try again later', 'It can take 10 to 15 tries'], ['hand', 'Let {o} touch it first', 'Playing is learning'], ['plate', 'Eat together', '{S} {copy|copies} you']],
@@ -238,8 +246,8 @@
     z_gag: () => ({ type: 'urgent', label: 'Gagging or choking', art: 'mouth', title: 'Gagging is normal. Choking is silent.',
       why: 'Gagging is how {s} {learn|learns} to handle food. It’s loud and can look scary, but it’s safe.',
       figure: () => H().TPLB.versus(['Gagging: normal', 'Loud: coughing, sputtering, red face. Let {o} work it out.'], ['Choking: act now', 'Silent or a high squeak, can’t cough or cry, turning blue.'], [['', 'Lower the risk', 'Keep {o} seated upright and watched, and serve soft food']]),
-      doTitle: 'If {s’s} choking', doOrdered: true, do: [['hand', 'Back blows, 5 times', 'Face down along your forearm, head lower than {p} chest'], ['heart', 'Chest thrusts, 5 times', 'Face up, the heel of one hand mid-chest'], ['clock', 'Repeat', 'Until it comes out, or help arrives']],
-      calls: { now: '{s} can’t cough, cry or breathe. Have someone call while you start back blows. If {s} {stop|stops} responding, start CPR.', nowLabel: 'Call 911' } })
+      doTitle: 'If {s’s} choking', doOrdered: true, do: [['alarm', 'Shout for help', 'Someone calls 911 while you start'], ['hand', 'Back blows, 5 times', 'Face down along your forearm, head lower than {p} chest'], ['heart', 'Chest thrusts, 5 times', 'Face up, the heel of one hand mid-chest'], ['clock', 'Repeat', 'Until it comes out, or help arrives']],
+      calls: { now: '{s} can’t cough, cry or breathe. If {s} {stop|stops} responding, start CPR.', nowLabel: 'Call 911' } })
   };
 
   // The two "Does something seem not quite right?" menus keep their list, and end with the shared call card instead of the old boxes.
