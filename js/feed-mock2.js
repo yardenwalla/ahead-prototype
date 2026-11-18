@@ -343,7 +343,9 @@
   const bottleHowtos = () => { const bt = isBottle() || pumps();
     return [formulaFam() && ['formula', 'bottle', 'Making formula', 'Water first, then level scoops'], bt && stg() >= 1 && ['bottle', 'hand', 'Giving a bottle', 'Positions, pacing and burps'],
       bt && ['basics', 'fridge', 'How long milk keeps', 'Out, in the fridge, and left over'], pumps() && ['pump', 'clock', 'Pumping', 'How often, and how much']].filter(Boolean); };
-  const bottleSub = L => { const t = L.map(x => x[2].toLowerCase()); return (t.length > 1 ? t.slice(0, -1).join(', ') + ' and ' + t[t.length - 1] : t[0]).replace(/^./, c => c.toUpperCase()); };
+  // The card's line stays short, so it never runs longer than Feeding challenges beside it: "Formula, pacing and storage", one line.
+  const bottleSub = L => { const w = { formula: 'formula', bottle: 'pacing', basics: 'storage', pump: 'pumping' }, t = L.map(x => w[x[0]]);
+    return (t.length > 1 ? t.slice(0, -1).join(', ') + ' and ' + t[t.length - 1] : t[0]).replace(/^./, c => c.toUpperCase()); };
   // First foods opens with first tastes until about 7½ months, and for the first 4 weeks of solids for a baby who starts later (the same rule as the Solids guides list).
   const firstTastes = m => m < 7.5 || (stg() === realStage() && typeof answers !== 'undefined' && (answers.foodExperience === 'new' || (!!answers.solidsStart && typeof foodWeeksIn === 'function' && foodWeeksIn() < 4)));
   const isEarly = () => typeof profile !== 'undefined' && !!profile.early;
