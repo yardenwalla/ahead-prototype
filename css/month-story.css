@@ -1153,3 +1153,20 @@
 #main .tl-groups .tl-old{display:none}
 #main .tl-groups.show-past .tl-old{display:block}
 #main .tl-groups>li.tl-ent>.tl-dot{top:12px}
+
+/* Nov 17 · Compact grouped rows: icon, one-line title and tip, range on the right */
+#main .tl-gr button{gap:12px;padding:10px 0}
+#main .tl-ic{flex:none;width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:var(--soft,#f3eee8)}
+#main .tl-ic svg,#main .tl-ic img{width:24px;height:24px}
+#main .tl-gr .tl-t{min-width:0}
+#main .tl-gr .tl-t b{font-size:15px;line-height:1.25}
+#main .tl-gr .tl-t small{font-size:13px;line-height:1.3;margin-top:1px}
+#main .tl-gr .tl-w{font-size:12px;margin-left:auto;padding-left:6px;text-align:right}
+#main .tl-gcard{padding:2px 12px}
+#main .tl-groups>li.tl-ent{padding:2px 0 12px}
+#main .tl-ghead{margin:0 0 6px}
+#main .tl-pill{padding:3px 11px;font-size:13px}
+#main .tl-tag{padding:3px 9px;font-size:12px}
+#main .tl-groups>li.tl-ent>.tl-dot{width:16px;height:16px;left:-28px;top:10px}
+#main .tl-groups>li.is-run::before,#main .tl-groups>li.tl-past::before{background:var(--g-ink,#2B2840)!important;opacity:.7}
+#main .tl-groups>li.is-on::before{background:linear-gradient(var(--g-ink,#2B2840) 22px,#e3ddd3 22px)!important;opacity:.7}
