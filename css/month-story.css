@@ -1288,3 +1288,7 @@
 #main .tl-ticks span[data-v="0"]{transform:none!important}
 #main .tl-track .tl-prog .tl-ends .tl-home{min-height:0!important;height:24px;line-height:24px!important;display:inline-block}
 #main .tl-ticks>span:not(:first-child){left:auto!important;right:0!important;transform:none!important}
+#main .tl-track .tl-top{margin:0}
+#main .tl-track .tl-top .yt-h1{margin-bottom:0!important;padding-bottom:0!important}
+#main .tl-track .tl-sub{margin:4px 0 18px!important;font-size:15.5px;line-height:1.35}
+#main .tl-track .tl-prog{margin-top:0!important}
