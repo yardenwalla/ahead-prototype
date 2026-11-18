@@ -222,6 +222,12 @@
   const monthTheme = m => { const c = BALLOON[Math.max(0, Math.min(11, m))];
     return `--m-bg1:${mix(c, .84)};--m-bg2:${mix(c, .92)};--m-line:${mix(c, .7)};--m-ink:${mix(c, .45, 30)};--m-chip:${mix(c, .78)}`; };
   window.monthTheme = monthTheme;
+  // Home's story card only (Nov 17): the month's balloon color, a step more colorful so the card doesn't look washed out.
+  // Month 2's balloon is a gray slate; the card takes a clearer blue close to it. Timeline and Memories keep monthTheme.
+  const CARD_TONE = { 2: '#6a92cc' };
+  const cardBase = m => CARD_TONE[m] || BALLOON[Math.max(0, Math.min(11, m))];
+  const cardTheme = m => { const c = cardBase(m);
+    return `--m-bg1:${mix(c, .74)};--m-bg2:${mix(c, .87)};--m-line:${mix(c, .6)};--m-ink:${mix(c, .45, 30)};--m-chip:${mix(c, .68)}`; };
   window.monthColor = (m, w, to) => mix(BALLOON[Math.max(0, Math.min(11, m))], w, to);
 
   // "See what Maya sees": the month's picture twice, as you see it and as she does. Filters follow how vision
@@ -307,11 +313,11 @@
     const newLook = sc || nb;
     const seen = (() => { try { return localStorage.getItem('ahead-story-seen-' + m) === '1'; } catch (e) { return false; } })();
     const c = BALLOON[Math.max(0, Math.min(11, m))];
-    const hero = nb ? `<button class="ms-card" onclick="homeEyes(true)" style="${monthTheme(m)};--ms-c2:${mix(BALLOON[0], .72)}">
+    const hero = nb ? `<button class="ms-card" onclick="homeEyes(true)" style="${cardTheme(m)};--ms-c2:${mix(BALLOON[0], .62)}">
         <span class="ms-body"><span class="ms-copy"><span class="ms-eyebrow">${F(`Welcome, ${name()}`)}</span><b class="ms-month">${F(when + '.')}</b><b class="ms-name">${F('First weeks.')}</b><small>${F(P(M.eyes[0]) + '.')}</small></span>
           <span class="ms-art" aria-hidden="true"><i class="ms-c2"></i><span class="ms-toys">${window.stCardArt(0)}</span></span></span>
         <span class="ms-foot"><span class="ms-watch"><i><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6z" fill="none" stroke="#fffaf3" stroke-width="2"/></svg></i>${F(P('See what she sees'))}</span><span class="ms-go" aria-hidden="true">→</span></span>
-      </button>` : sc ? `<button class="ms-card" onclick="try{localStorage.setItem('ahead-story-seen-${m}','1')}catch(e){};stOpen()" style="${monthTheme(m)};--ms-acc:${mix(c, .1, 30)};--ms-c1:${mix(c, .5)};--ms-c2:${mix(c, .72)}">
+      </button>` : sc ? `<button class="ms-card" onclick="try{localStorage.setItem('ahead-story-seen-${m}','1')}catch(e){};stOpen()" style="${cardTheme(m)};--ms-acc:${mix(cardBase(m), .1, 30)};--ms-c1:${mix(cardBase(m), .42)};--ms-c2:${mix(cardBase(m), .62)}">
         <span class="ms-body"><span class="ms-copy"><span class="ms-eyebrow">${m === 0 ? F('{P} first weeks') : seen ? F('This month') : F('New this month')}</span><b class="ms-month">${F(m === 0 ? when + '.' : `Month ${m}.`)}</b><b class="ms-name">${F(`${name()}’s story.`)}</b><small>${F(sc.tease)}</small></span>
           <span class="ms-art" aria-hidden="true"><i class="ms-c2"></i><span class="ms-toys">${typeof window.stCardArt === 'function' ? window.stCardArt(m) : art}</span></span></span>
         <span class="ms-foot"><span class="ms-watch"><i><svg viewBox="0 0 24 24"><path d="M9 7.5v9l7.5-4.5z"/></svg></i>${F(m === 0 ? 'Watch {p} first weeks' : P('Watch her month'))}</span><span class="ms-go" aria-hidden="true">→</span></span>
