@@ -1816,3 +1816,21 @@ label:has(> .hub-photo-input:focus-visible) { outline: 2px solid #884866; outlin
 #main .mem-card-pic .mem-card-story .hub-photo-input { position: absolute; width: 1px; height: 1px; opacity: 0 }
 #main .mem-card-pic { flex-basis: 48%; padding: 4px 4px 4px 0 }
 #main .mem-list + .mem-bookrow { margin-top: 10px }
+
+/* Month panel, stacked (Nov 17): the balloon card big and centered, so her photo inside it reads at print size. */
+#main .mem-card-hero.is-stack { padding: 22px 20px 20px; text-align: center }
+#main .is-stack .mem-card-label { margin: 0 }
+#main .mem-page .is-stack h2.mem-card-title { margin: 6px 0 16px; font-size: 28px !important }
+#main .is-stack .mem-card-pic { position: relative; width: 60%; margin: 0 auto; padding: 0 }
+#main .is-stack .mem-card-pic .mem-card-story { transform: rotate(-2deg) }
+#main .is-stack .mem-doodle.is-spark { top: -6px; right: -34px; left: auto; width: 32px }
+#main .is-stack .mem-doodle.is-heart { bottom: 18px; left: -40px; right: auto; width: 34px }
+#main .is-stack .mem-card-line { max-width: 300px; margin: 18px auto 0; font-size: 15.5px; line-height: 1.45; color: #4f4a5a; text-wrap: balance }
+#main .is-stack .mem-card-btns { margin-top: 18px }
+#main .mem-page .is-stack h2.mem-card-title { margin: 4px 0 6px }
+#main .is-stack .mem-card-line { margin: 0 auto 16px; font-size: 15px }
+#main .is-stack .mem-card-pic { width: 57% }
+#main .mem-card-hero.is-stack { padding-top: 18px }
+/* Before the photo: the empty polaroid in the card says what to do, right where the photo will go. */
+#main .mem-card-story.is-empty { position: relative }
+#main .mem-card-add { position: absolute; left: 50%; top: 64%; transform: translate(-50%, -50%) rotate(2deg); padding: 8px 14px; border-radius: 999px; background: #fffdfb; box-shadow: 0 4px 12px rgba(60,40,60,.15); font-size: 14px; font-weight: 700; color: #4e3a5c; white-space: nowrap }
