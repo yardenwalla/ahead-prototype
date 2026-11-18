@@ -212,7 +212,7 @@
       const items = all.filter(s => s.v == null), cks = all.filter(s => s.v != null);
       // Things she's still in the window for travel with her into her current group (after its own changes), so the page
       // always opens on her stage; an earlier group then holds only what's over, and folds into "Earlier".
-      const home = s => bandOf(s.m);
+      const home = s => { const b = bandOf(s.m); return b < here && !over(s) ? here : b; };
       const groups = BANDS.map((b, bi) => ({ bi, b, its: items.filter(s => home(s) === bi).sort((p, q) => (bandOf(p.m) < bi) - (bandOf(q.m) < bi) || p.m - q.m || p.c.end - q.c.end) })).filter(g => g.its.length);
       // A group folds into "Earlier" only once every change in it is over; a checkup once it's past.
       const gOver = g => g.its.every(over) && g.bi < here;
