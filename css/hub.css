@@ -1867,3 +1867,18 @@ label:has(> .hub-photo-input:focus-visible) { outline: 2px solid #884866; outlin
 #main .mem-sheet-row b { flex: 1; font-size: 15.5px; font-weight: 600; color: #2b2840 }
 #main .mem-sheet-row i { font-style: normal; font-size: 20px; color: #9b93a0 }
 #main .mem-ft b { font-size: 12.5px; -webkit-line-clamp: 3; hyphens: none; overflow-wrap: normal } #main .mem-ft { min-height: 122px; padding: 12px 5px 10px }
+
+/* Month panel, side by side (Nov 18): label across the top, the words left, the balloon card right, as large as fits. */
+#main .mem-card-hero.is-side { padding: 20px 16px 18px 18px; text-align: left }
+#main .is-side .mem-card-label { margin: 0 0 10px }
+#main .is-side .mem-card-top { display: flex; align-items: center; gap: 12px }
+#main .is-side .mem-card-words { position: relative; flex: 1 1 auto; min-width: 0 }
+#main .mem-page .is-side h2.mem-card-title { margin: 0 0 10px; font-size: 26px !important; line-height: 1.12 !important }
+#main .is-side .mem-card-line { margin: 0; font-size: 15px; line-height: 1.45; color: #4f4a5a }
+#main .is-side .mem-card-pic { position: relative; flex: 0 0 55%; width: auto; padding: 0 }
+#main .is-side .mem-card-pic .mem-card-story { transform: rotate(2.5deg) }
+#main .is-side .mem-doodle.is-spark { top: -26px; right: 0; left: auto; width: 28px }
+#main .is-side .mem-doodle.is-heart { bottom: -46px; left: 4px; right: auto; width: 32px }
+#main .is-side .mem-card-btns { margin-top: 18px }
+/* Firsts tiles: names centered under their icon. */
+#main .mem-ft b { width: 100%; text-align: center }
