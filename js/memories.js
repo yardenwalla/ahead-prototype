@@ -205,7 +205,7 @@
       const addFirst = `window.__firstMonth=${m};openPage('chg:Timeline:milestone')`;
       // Same heading in every state. With nothing saved, one dashed bar: Add a first, and a short line under it.
       const P2 = typeof babyPronouns === 'function' ? babyPronouns() : { p: 'their' };
-      const emptyLine = m === now ? `Tap Seen it in Development, and ${P2.p} firsts land here.` : `Nothing saved for ${m === 0 ? "the newborn month" : WORDS[m].toLowerCase()}.`;
+      const emptyLine = m === now ? `Or tap Seen it in Development.` : `Nothing saved for ${m === 0 ? "the newborn month" : WORDS[m].toLowerCase()}.`;
       const what = `<div class="mem-list-head"><h3>${esc2(m === now ? 'Firsts this month' : 'Firsts that month')}</h3>${all.length ? `<button class="mem-list-add" onclick="${addFirst}">＋ Add a first</button>` : ''}</div>`
         + (all.length ? `<div class="mem-fts">${shown.map(tileFor).join('')}${moreTile}</div>${more ? listAll : ''}`
           : `<button class="mem-empty-bar" onclick="${addFirst}"><span class="mem-empty-plus" aria-hidden="true">＋</span><span><b>Add a first</b><small>${esc2(emptyLine)}</small></span></button>`);
