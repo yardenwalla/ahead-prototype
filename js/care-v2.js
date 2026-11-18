@@ -70,8 +70,12 @@
 
   /* ---------- shared pieces for topic pages ---------- */
   ART.down = ART.diapers;
-  const head = (k, ctx, title, lead) => { const c = COL[k];
-    return `<div class="dev-area-head ss-head" style="--area:${c[0]};--area-ink:${c[1]}"><span class="dev-area-head-art"><svg viewBox="0 0 90 40" aria-hidden="true">${ART[k](c)}</svg></span><p class="hub-context">${F(ctx)}</p><h1>${F(title)}</h1>${lead ? `<p class="hub-lead">${F(lead)}</p>` : ''}</div>`; };
+  // Nov 17: an Is this normal? page whose headline is just a name ("Baby acne") answers the question with a verdict
+  // right under the name, in place of the "Is this normal?" label. ok = usually normal, watch = get it looked at.
+  const VERDICT_ICON = { ok: '<path d="M8 12.5l2.6 2.6L16 9.6"/>', watch: '<path d="M12 7.5v5.5M12 16.4v.1"/>' };
+  const verdictChip = v => v ? `<p class="care-verdict is-${v[0]}"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/>${VERDICT_ICON[v[0]]}</svg>${F(v[1])}</p>` : '';
+  const head = (k, ctx, title, lead, verdict) => { const c = COL[k];
+    return `<div class="dev-area-head ss-head" style="--area:${c[0]};--area-ink:${c[1]}"><span class="dev-area-head-art"><svg viewBox="0 0 90 40" aria-hidden="true">${ART[k](c)}</svg></span>${verdict ? '' : `<p class="hub-context">${F(ctx)}</p>`}<h1>${F(title)}</h1>${verdictChip(verdict)}${lead ? `<p class="hub-lead">${F(lead)}</p>` : ''}</div>`; };
   // Nov 15: every Everyday care page uses the same few blocks, in story order: what's happening, how (steps or a
   // picture), "Good to know" (one list, three rows at most), related pages, and only on a page about a worry, one quiet
   // "When to call" card. The builders still write tips, small print and call boxes in older shapes; this gathers them.
@@ -416,14 +420,14 @@
   /* ---------- the rash pages ---------- */
   const RASH_ORDER = ['acne', 'cradle', 'peeling', 'diaper', 'yeast', 'eczema', 'heat', 'drool'];
   const RASH = {
-    acne: { normal: 'Bumps that come and go for a few weeks.', alt: ['heat', 'eczema'], t: 'Baby acne', look: 'Small red or white bumps on the cheeks, nose and forehead', lead: 'Very common in the first weeks, usually starting at 2–4 weeks. It comes from pregnancy hormones and clears on its own.', steps: ['Wash {p} face with plain water once a day and pat dry.', 'Skip lotions and oils on the bumps. Never use acne products.', 'Tiny white dots on the nose, called milia, are normal too and fade without help.'] },
-    cradle: { normal: 'Flakes that come back now and then.', t: 'Cradle cap', look: 'Yellow, greasy or crusty patches on the scalp', lead: 'Common in the first months, and harmless. It usually clears up by the first birthday.', steps: ['Wash {p} hair with water or a little mild baby shampoo.', 'For stubborn flakes, rub in a little baby oil, wait a few minutes, brush gently with a soft brush, then wash the oil out.', 'Don’t pick at the flakes.'] },
-    peeling: { normal: 'Dry, peeling patches in the first weeks.', t: 'Peeling, dry skin', look: 'Dry, flaky skin on the hands, feet and body', lead: 'Normal in the first weeks, as {p} skin gets used to the air.', steps: ['Keep baths short, and use only plain water.', 'A fragrance-free moisturizer is fine, but not needed.'] },
-    diaper: { normal: 'Redness that fades in 2–3 days with cream.', alt: ['yeast'], short: 'Change often, give it air time, and a thick layer of zinc cream at every change. Fragrance-free wipes, and no antibiotic ointment.', t: 'Diaper rash', look: 'Red skin where the diaper touches', lead: 'Most diaper rash clears up in 2–3 days with a few simple steps.', steps: ['Change often, and let the skin air out when you can.', 'A thick layer of zinc oxide cream at every change.', 'Skip wipes with alcohol or fragrance while it heals.'] },
-    yeast: { normal: 'It clears within days of the right cream.', alt: ['diaper'], t: 'Yeast diaper rash', look: 'Bright red in the skin folds, with small red spots around the edges', lead: 'A diaper rash that won’t clear with the usual cream may be yeast. It needs a different kind of cream.', steps: ['Call your pediatrician, who may suggest an antifungal cream.', 'Keep changing often and airing the skin.'] },
-    eczema: { normal: 'Patches that come and go, often in dry weather.', alt: ['acne', 'drool'], t: 'Eczema', look: 'Dry, rough, itchy patches, often on the cheeks and in the creases', lead: 'Common in babies, and it comes and goes. Moisturizing is the main care.', steps: ['Short, lukewarm baths, then a thick fragrance-free moisturizer while the skin is still damp.', 'Use fragrance-free soap and detergent, and soft cotton clothes.', 'Keep {p} nails short so {s} {scratch|scratches} less.'], call: 'The patches crack, ooze or keep {o} up, or cream doesn’t help.' },
+    acne: { normal: 'Bumps that come and go for a few weeks.', alt: ['heat', 'eczema'], t: 'Baby acne', look: 'Small red or white bumps on the cheeks, nose and forehead', lead: 'It often starts at 2–4 weeks, comes from pregnancy hormones, and clears on its own.', steps: ['Wash {p} face with plain water once a day and pat dry.', 'Skip lotions and oils on the bumps. Never use acne products.', 'Tiny white dots on the nose, called milia, are normal too and fade without help.'] },
+    cradle: { normal: 'Flakes that come back now and then.', t: 'Cradle cap', look: 'Yellow, greasy or crusty patches on the scalp', lead: 'It shows up in the first months and usually clears by the first birthday.', steps: ['Wash {p} hair with water or a little mild baby shampoo.', 'For stubborn flakes, rub in a little baby oil, wait a few minutes, brush gently with a soft brush, then wash the oil out.', 'Don’t pick at the flakes.'] },
+    peeling: { normal: 'Dry, peeling patches in the first weeks.', t: 'Peeling, dry skin', look: 'Dry, flaky skin on the hands, feet and body', lead: 'It happens in the first weeks, as {p} skin gets used to the air.', steps: ['Keep baths short, and use only plain water.', 'A fragrance-free moisturizer is fine, but not needed.'] },
+    diaper: { normal: 'Redness that fades in 2–3 days with cream.', alt: ['yeast'], short: 'Change often, give it air time, and a thick layer of zinc cream at every change. Fragrance-free wipes, and no antibiotic ointment.', t: 'Diaper rash', look: 'Red skin where the diaper touches', lead: 'It usually clears up in 2–3 days with a few simple steps.', steps: ['Change often, and let the skin air out when you can.', 'A thick layer of zinc oxide cream at every change.', 'Skip wipes with alcohol or fragrance while it heals.'] },
+    yeast: { normal: 'It clears within days of the right cream.', alt: ['diaper'], t: 'Yeast diaper rash', look: 'Bright red in the skin folds, with small red spots around the edges', lead: 'If a diaper rash isn’t better after a few days, it may be yeast.', steps: ['Call your pediatrician, who may suggest an antifungal cream.', 'Keep changing often and airing the skin.'] },
+    eczema: { normal: 'Patches that come and go, often in dry weather.', alt: ['acne', 'drool'], t: 'Eczema', look: 'Dry, rough, itchy patches, often on the cheeks and in the creases', lead: 'It comes and goes. Dry skin makes it flare.', steps: ['Short, lukewarm baths, then a thick fragrance-free moisturizer while the skin is still damp.', 'Use fragrance-free soap and detergent, and soft cotton clothes.', 'Keep {p} nails short so {s} {scratch|scratches} less.'], call: 'The patches crack, ooze or keep {o} up, or cream doesn’t help.' },
     heat: { normal: 'Bumps that fade once {s’s} cooler.', alt: ['acne', 'eczema'], t: 'Heat rash', look: 'Tiny red bumps where {s} got too warm, like the neck and chest', lead: 'It comes from sweat, and cooling down is all it takes.', steps: ['Move {o} somewhere cooler and take off a layer.', 'Skip creams and ointments on it; they trap heat.', 'It usually fades in a day or two.'] },
-    newborn: { normal: 'Marks that fade over weeks or months.', t: 'Newborn marks and skin blotches', look: 'Tiny white bumps on the nose, red blotches with a pale center, pink marks on the eyelids or neck, blue-gray patches on the back', lead: 'All common in the first weeks.', steps: ['Nothing to treat. They fade on their own, and the birthmarks aren’t bruises.'] },
+    newborn: { normal: 'Marks that fade over weeks or months.', t: 'Newborn marks and skin blotches', look: 'Tiny white bumps on the nose, red blotches with a pale center, pink marks on the eyelids or neck, blue-gray patches on the back', lead: 'Most show up in the first weeks and fade on their own.', steps: ['Nothing to treat. They fade on their own, and the birthmarks aren’t bruises.'] },
     strawberry: { normal: 'It grows for a few months, then slowly fades.', t: 'Strawberry mark', look: 'A raised red patch that grows for a while, then slowly fades', lead: 'A common birthmark (hemangioma). It often shows up at 2–4 weeks, grows for several months, then slowly fades over years.', steps: ['Nothing to do at home. Your pediatrician will keep an eye on it.', 'Mention it at the next checkup, so they can see how fast it grows.'], call: 'It’s near an eye, the nose, mouth or diaper area, bleeds, or grows very fast.' },
     drool: { normal: 'Redness that clears when the skin stays dry.', alt: ['eczema'], t: 'Drool rash', look: 'Red, chapped skin on the chin, cheeks and neck', lead: 'From all the drool that comes with teething.', steps: ['Pat the chin and neck dry through the day, and keep a soft bib on.', 'A thin layer of petroleum jelly at bedtime protects the skin.'] }
   };
@@ -922,7 +926,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
       + (c.ped ? `<p><b>${F('Call your pediatrician if:')}</b> ${F(val(c.ped))}</p>` : '')
       + (c.now ? `<p class="is-urgent"><b>${F((c.nowLabel || 'Call right away') + ' if:')}</b> ${F(val(c.now))}</p>` : '') + `</div></section>`;
   const TB = {
-    top: (q, lead) => head(q.k, val(q.eyebrow) || LABEL[q.k], val(q.title), val(lead)),
+    top: (q, lead) => head(q.k, val(q.eyebrow) || LABEL[q.k], val(q.title), val(lead), val(q.verdict)),
     // One card per section: the main action, then up to two short follow-ups inside the same card.
     card: (text, notes) => { if (!text) return ''; notes = (val(notes) || []).filter(Boolean); return `<section class="ss-do care-tpl-card"><p>${F(val(text))}</p>${notes.length ? `<ul class="tpl-notes"${notes.length > 2 ? ' data-over-limit="notes"' : ''}>${notes.map(([, t, sub]) => `<li><b style="color:#302d3c">${F(t)}${/[?!.]$/.test(t) ? '' : '.'}</b> ${F(sub)}${/[?!.]$/.test(sub) ? '' : '.'}</li>`).join('')}</ul>` : ''}</section>`; },
     tiles: (items, numbered) => items && items.length ? hubIconSteps(items, CAT, F(items.map(t => t[1] + ': ' + t[2]).join('. ')), !!numbered) : '',
@@ -950,7 +954,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     check: q => { let t = TB.top(q, q.why); const m = q.where && window.careMini ? careMini({ newborn: 'milia', yeast: 'diaper' }[q.where] || q.where) : '';
       if (m) t = t.replace(/<span class="dev-area-head-art">[\s\S]*?<\/svg><\/span>/, `<span class="dev-area-head-art care-rash-art">${m}</span>`);
       const fig = q.where ? tellMap(q.where) : q.figure ? q.figure() : q.signs ? TB.tiles(val(q.signs), false) : '';
-      return t + TB.section('How to tell', TB.noted(fig, q.tell))
+      return t + TB.section(q.tellTitle || (q.verdict ? 'What it looks like' : 'How to tell'), TB.noted(fig, q.tell))
         + TB.section('What helps', TB.noted(TB.tiles(val(q.helps), false), q.helpsNotes))
         + callsCard(q.calls); }
   };
@@ -978,8 +982,8 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
       steps: [['drop', 'Get the water ready', 'About 2 inches, about 100°F'], ['face', 'Face first', 'Plain water, without soap'], ['hand', 'Then the body', 'A hand behind the head'], ['bath', 'Hair last', 'Shampoo 2 or 3 times a week'], ['towel', 'Straight into a towel', 'Pat dry, into every crease']],
       safe: [['hand', 'A hand on {o} the whole bath', 'To step away, wrap {o} in a towel and take {o} with you.'], ['thermo', 'Water heater at 120°F or lower', 'So scalds are much less likely.']],
       video: ['VsUla1M7eHQ', 'Giving a tub bath', 'Nemours KidsHealth'] },
-    'rash:acne': { type: 'check', k: 'skin', eyebrow: 'Is this normal?', title: 'Baby acne', where: 'acne',
-      why: 'Very common from 2–4 weeks, from pregnancy hormones. It clears on its own, usually by 4–6 months.',
+    'rash:acne': { type: 'check', k: 'skin', eyebrow: 'Is this normal?', title: 'Baby acne', verdict: () => RASH_VERDICT.acne, where: 'acne',
+      why: 'It shows up around 2–4 weeks, from pregnancy hormones, and clears on its own by 4–6 months.',
       helps: [['drop', 'Plain water once a day', 'Then pat dry'], ['shield', 'Nothing on the bumps', 'No lotions, oils or acne creams on it']],
       calls: rc('a fever, bumps filled with pus, or acne that lasts beyond 6 months.').calls }
   };
@@ -1094,22 +1098,23 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     do: [['tooth', 'See a dentist', 'By age 1'], ['bottle', 'Never a bottle in bed', 'Milk on teeth causes cavities'], ['hand', 'A hand on {o}', 'In the bath, every time']] };
 
   /* ----- Is this normal? pages ----- */
-  TPL['look-cord'] = { type: 'check', eyebrow: 'Is this normal?', k: 'cord', title: 'The cord',
-    why: 'A little crust, smell or a spot of blood is normal while it heals.',
+  TPL['look-cord'] = { type: 'check', eyebrow: 'Is this normal?', k: 'cord', title: 'The cord', verdict: ['ok', 'Usually normal'],
+    why: 'A little crust, smell or a spot of blood is part of healing.',
     signs: [['cord', 'Darkens and dries', 'Crust is normal'], ['drop', 'A spot or two of blood', 'When it falls off'], ['clock', 'Falls off', 'Usually in the first 3 weeks']],
     helps: [['diaper', 'Fold the diaper down', 'So the stump stays dry'], ['drop', 'Clean with plain water', 'Only if dirty, then pat dry']],
     calls: { ped: 'a yellow, smelly discharge, redness around it, crying at a touch, or it’s still on after 3 weeks.' } };
-  TPL['look-eyes'] = { type: 'check', eyebrow: 'Is this normal?', k: 'skin', title: 'Sticky eyes or a noisy nose',
-    why: 'Both are usually normal, and most clear on their own.',
+  TPL['look-eyes'] = { type: 'check', eyebrow: 'Is this normal?', k: 'skin', title: 'Sticky eyes or a noisy nose', verdict: ['ok', 'Usually normal'],
+    why: 'Most of it clears on its own with a little care at home.',
     signs: [['ear', 'Snuffly breathing', 'Usually dried milk or mucus, not a cold'], ['eye', 'A watery eye, not red', 'Often a blocked tear duct']],
     helps: [['towel', 'Sticky eyes', 'Wipe from the inside corner out'], ['drop', 'A stuffy nose', 'A few saline drops, then gentle suction']],
     calls: { ped: 'a red or swollen eyelid, yellow-green discharge with redness, or a red lump near the inner corner of the eye.', now: 'struggling to breathe, or lips turning blue.', nowLabel: 'Call 911' } };
-  TPL['look-yellow'] = { type: 'check', eyebrow: 'Is this normal?', k: 'skin', title: 'Yellow skin',
-    why: 'A little yellow (jaundice) after the first day is common. Yellow in the first 24 hours needs a call right away.',
+  TPL['look-yellow'] = { type: 'check', eyebrow: 'Is this normal?', k: 'skin', title: 'Yellow skin', verdict: ['watch', 'Common after the first day'],
+    why: 'It’s called jaundice, and your pediatrician checks it. Yellow in the first 24 hours needs a call right away.',
     signs: [['sun', 'Yellow on the face', 'Shows in the first days, then fades'], ['eye', 'On darker skin', 'Check the whites of the eyes and gums']],
     helps: [['bottle', 'Feed often', 'It helps clear the yellow'], ['steth', 'Your pediatrician checks it', 'Sunlight doesn’t treat it']],
     calls: { ped: 'yellow spreading to the belly or legs, yellow whites of the eyes, or fewer wet diapers.', now: 'any yellow in the first 24 hours, or yellow and hard to wake or not feeding well.' } };
-  const rashCheck = (id, helps, more) => Object.assign({ type: 'check', k: 'skin', eyebrow: 'Is this normal?', title: RASH[id].t, where: id, why: RASH[id].lead, helps, calls: RASH_CALLS }, more || {});
+  const RASH_VERDICT = { acne: ['ok', 'Usually normal'], cradle: ['ok', 'Usually normal'], peeling: ['ok', 'Usually normal'], diaper: ['ok', 'Common'], yeast: ['watch', 'Needs a different cream'], eczema: ['watch', 'Common, and treatable'], heat: ['ok', 'Usually normal'], newborn: ['ok', 'Usually harmless'], strawberry: ['ok', 'Usually harmless'], drool: ['ok', 'Usually normal'] };
+  const rashCheck = (id, helps, more) => Object.assign({ type: 'check', k: 'skin', eyebrow: 'Is this normal?', title: RASH[id].t, verdict: RASH_VERDICT[id], where: id, why: RASH[id].lead, helps, calls: RASH_CALLS }, more || {});
   TPL['rash:cradle'] = rashCheck('cradle', [['drop', 'Wash with water', 'Or a little mild baby shampoo'], ['hand', 'Don’t pick the flakes', 'Let them lift on their own']],
     { calls: rc('it spreads past the scalp, looks red and weepy, or seems to itch.').calls, helpsNotes: [['', 'Stubborn flakes?', 'Rub in a little baby oil, wait a few minutes, brush gently with a soft brush, then wash the oil out']] });
   TPL['rash:peeling'] = rashCheck('peeling', [['bath', 'Short baths', 'Plain water'], ['drop', 'Moisturizer if you like', 'Fragrance-free, but not needed']], rc('the skin cracks or bleeds, or it’s still dry after a month.'));
@@ -1121,7 +1126,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   TPL['rash:heat'] = rashCheck('heat', [['home', 'Cool {o} down', 'Somewhere cooler, with a layer off'], ['shield', 'No creams on it', 'They trap heat']], Object.assign({ why: 'It comes from sweat, and fades within a day or two of cooling down.' }, rc('it isn’t gone in 3 days, the bumps fill with pus, or {s} {get|gets} a fever.')));
   TPL['rash:newborn'] = rashCheck('newborn', [['smile', 'Nothing to treat', 'They fade on their own'], ['heart', 'Blue-gray patches aren’t bruises', 'Common, and harmless']], rc('a mark that’s raised, bleeds or grows fast, or a bruise you can’t explain.'));
   TPL['rash:strawberry'] = rashCheck('strawberry', [['eye', 'Nothing to do at home', 'Your pediatrician keeps an eye on it'], ['steth', 'Mention it at the next checkup', 'So they can see how fast it grows']],
-    { where: null, why: 'A common birthmark (hemangioma), and usually harmless.', signs: [['heart', 'A raised red patch', 'Often from 2–4 weeks'], ['clock', 'Grows, then fades', 'Over months, then years']], calls: { ped: 'it’s near an eye, the nose, mouth or diaper area, bleeds, or grows very fast.', now: RASH_CALLS.now, nowLabel: 'Call 911' } });
+    { where: null, why: 'A common birthmark (hemangioma). It grows for a few months, then slowly fades.', signs: [['heart', 'A raised red patch', 'Often from 2–4 weeks'], ['clock', 'Grows, then fades', 'Over months, then years']], calls: { ped: 'it’s near an eye, the nose, mouth or diaper area, bleeds, or grows very fast.', now: RASH_CALLS.now, nowLabel: 'Call 911' } });
   TPL['rash:drool'] = rashCheck('drool', [['towel', 'Pat {p} chin dry often', 'A soft bib helps'], ['moon', 'A little petroleum jelly at bedtime', 'A thin layer protects the sore skin']], rc('the skin cracks, bleeds or oozes, or isn’t better after a week of patting dry.'));
 
   let tplNow = 0;   // the stage a look:<stage>:<topic> page was opened for
