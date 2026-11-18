@@ -1240,3 +1240,19 @@
 #main .tl-around .tl-gr .tl-t b{font-size:16px}
 #main .tl-intro{margin:-4px 0 12px;font-size:14px;color:#6b6676}
 #main .tl-around .tl-soon .tl-h2{margin-bottom:6px}
+
+/* Nov 17 · Color lives in the icon tiles (category colors); everything else is one calm lavender */
+#main .tl-around .tl-ic,#main .tl-around .tl-soon .tl-ic{background:var(--year-pale,#f3eef8)!important;border-radius:14px;width:44px;height:44px}
+#main .tl-around .tl-ic svg{width:26px!important;height:26px!important}
+#main .tl-track{--tl-lav:#efeaf7;--tl-lav2:#f6f3fb;--tl-plum:#6b4fa0}
+#main .tl-track .tl-prog{background:var(--tl-lav)!important}
+#main .tl-track .tl-bar i{background:var(--tl-plum)!important}
+#main .tl-around .tl-soon{background:var(--tl-lav2);border-radius:22px;padding:16px 12px 12px!important;margin:0 0 22px -30px!important}
+#main .tl-around .tl-soon .tl-h2,#main .tl-around .tl-soon .tl-intro{padding:0 6px}
+#main .tl-around .tl-soon .tl-gcard{background:#fff!important;box-shadow:0 1px 3px rgba(60,40,100,.06)!important}
+#main .tl-around .tl-pill{background:var(--tl-lav)!important;color:var(--tl-plum)!important}
+#main .tl-around>li.tl-ent>.tl-dot{border-color:color-mix(in srgb,var(--tl-plum) 60%,white)!important;opacity:1}
+#main .tl-around>li.tl-ent::before{background:color-mix(in srgb,var(--tl-plum) 25%,white)!important}
+#main .tl-around .tl-gcard{box-shadow:0 1px 3px rgba(60,40,100,.06),0 0 0 1px #efeaf3 inset}
+#main .tl-around .tl-gmon{color:#8a8494}
+#main .tl-around .tl-ic,#main .tl-around .tl-soon .tl-ic{background:var(--year-bg,#ece4f6)!important}

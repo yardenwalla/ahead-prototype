@@ -215,7 +215,9 @@
       };
       const TIP = { crying: x >= 2 ? 'Past the worst now' : 'Plan for fussy evenings', smile: 'Lots of face time', nights: 'Start a bedtime routine', regress: 'Line up night help', roll: 'Keep {o} off beds and sofas', solids: 'Get a high chair', twonaps: 'Move bedtime earlier', sit: 'Lower the crib mattress', crawl: 'Babyproof first', tooth: 'Start brushing', sep: 'Keep goodbyes short', pull: 'Anchor furniture', carseat: 'Check its height limit', words: 'Name things all day', milk: 'Offer it in a cup', steps: 'Barefoot indoors' };
       const line = s => s.v != null ? (where(s) === 'now' ? 'Due now · Book it if you haven’t' : 'Book it a few weeks ahead') : where(s) === 'now' ? `${shortRange(s)}${TIP[s.c.id] ? ' · ' + TIP[s.c.id] : ''}` : `Usually ${shortRange(s)}`;
-      const row = s => `<li class="tl-gr"><button onclick="${go(s)}"><span class="tl-ic">${icon(s.v != null ? 'steth' : s.c.icon)}</span><span class="tl-t"><b>${F(title(s))}</b><small>${F(line(s))}</small></span><span class="hub-chev" aria-hidden="true">›</span></button></li>`;
+      const catOf = s => s.v != null ? 'Health' : s.c.cat;
+      const tile = s => `<span class="tl-ic" style="${yearTheme(catOf(s))}">${hubArt(s.v != null ? 'steth' : s.c.icon, catOf(s))}</span>`;
+      const row = s => `<li class="tl-gr"><button onclick="${go(s)}">${tile(s)}<span class="tl-t"><b>${F(title(s))}</b><small>${F(line(s))}</small></span><span class="hub-chev" aria-hidden="true">›</span></button></li>`;
       const now = all.filter(s => where(s) === 'now').sort((p, q) => (q.v != null) - (p.v != null) || homeOf(q) - homeOf(p));
       const ahead = all.filter(s => where(s) === 'ahead'), earlier = all.filter(s => where(s) === 'earlier');
       let h = `<li class="tl-soon"><h2 class="tl-h2">${F('Around now')}</h2><p class="tl-intro">${F(`What’s happening around ${isToday(x) && typeof babyAge === 'function' ? babyAge() : ageTxt(x)}. Every baby moves at {p} own pace.`)}</p>`;
@@ -228,7 +230,7 @@
         h += `<li class="tl-ent"><i class="tl-dot"></i><div class="tl-ghead"><span class="tl-pill">${F(mm >= 12 ? 'Around 1 year' : `Around ${mm} month${mm === 1 ? '' : 's'}`)}</span><span class="tl-gmon">${F(calMon(mm))}</span></div><ol class="tl-gcard">${its.map(row).join('')}</ol></li>`;
       });
       h += `<li class="tl-ent tl-bday"><i class="tl-dot"></i><div class="tl-gcard tl-bcard"><span class="tl-t"><b>${F('First birthday!')}</b><small>${F(calMon(12))}</small></span>${cake}</div></li>`;
-      if (earlier.length) h += `<li class="tl-earlier"><button onclick="this.parentNode.classList.toggle('is-open')">${F(`Earlier in {p} year (${earlier.length})`)}<i class="yt-caret" aria-hidden="true">›</i></button><ol class="tl-gcard">${earlier.map(s => `<li class="tl-gr"><button onclick="${go(s)}"><span class="tl-ic">${icon(s.v != null ? 'steth' : s.c.icon)}</span><span class="tl-t"><b>${F(title(s))}</b><small>${F(s.v != null ? `At ${s.v} months` : `Usually ${shortRange(s)}`)}</small></span><span class="hub-chev" aria-hidden="true">›</span></button></li>`).join('')}</ol></li>`;
+      if (earlier.length) h += `<li class="tl-earlier"><button onclick="this.parentNode.classList.toggle('is-open')">${F(`Earlier in {p} year (${earlier.length})`)}<i class="yt-caret" aria-hidden="true">›</i></button><ol class="tl-gcard">${earlier.map(s => `<li class="tl-gr"><button onclick="${go(s)}">${tile(s)}<span class="tl-t"><b>${F(title(s))}</b><small>${F(s.v != null ? `At ${s.v} months` : `Usually ${shortRange(s)}`)}</small></span><span class="hub-chev" aria-hidden="true">›</span></button></li>`).join('')}</ol></li>`;
       return h;
     };
     const head = x => { const mo = Math.max(0, Math.min(11, Math.floor(x))), cov = typeof window.stCover === 'function' ? window.stCover(mo) : null; return cov ? F(cov.title) : ''; };
