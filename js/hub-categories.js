@@ -352,7 +352,7 @@
     // (fever, tummy bugs, colds, and Call 911), with this age's fever line right on it. Teething lives in Everyday care.
     // On every checkup page (Nov 13). Under 3 months, the row's line carries the fever rule (AAP); no call card here (Nov 18).
     { const u3 = live() && actualMonth() < 3 && age === focus;
-      b += h.list('Between checkups', [h.row({ icon: 'thermo', cat: 'Health', title: 'Symptoms and when to get help', sub: u3 ? 'Under 3 months, any fever means a call' : 'Fever, colds and tummy bugs, and when to call', onclick: "openPage('chg:Health:d:sick')" })]); }
+      b += h.list('Between checkups', [h.row({ icon: 'thermo', cat: 'Health', title: 'Symptoms and when to get help', sub: u3 ? 'Under 3 months, any fever means a call' : 'Fever, colds, tummy bugs and when to call', onclick: "openPage('chg:Health:d:sick')" })]); }
     const nx = WELL_VISITS[WELL_VISITS.indexOf(age) + 1];
     if (nx != null) b += h.next(`Next · at ${nx} month${nx === 1 ? '' : 's'}`, healthJourneyLabel(nx), `openPage('health-visit:${nx}')`, '', { 1: 'A short visit that checks on you, too.', 2: 'The first main round of shots. Plan a quiet day after.', 4: 'Bring your questions about starting solids.', 6: 'The talk moves from milk to first foods.', 9: 'A closer look at development: jot down what you see.', 12: 'Ask about cow’s milk, and moving off bottles.' }[nx] || '');   // the concept's 'Looking ahead' line: what's different about the next one
     return frame('Health', `data-health-journey="${age}"`, pills + missedLine, b);
