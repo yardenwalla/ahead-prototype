@@ -6,8 +6,11 @@
 (function () {
   const esc2 = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const ICON = r => {
-    const k = String(r.skillKey || r.title || '').toLowerCase();
-    return /smile|laugh|face|people/.test(k) ? 'smile' : /coo|babbl|sound|word|talk|mama|dada|parent/.test(k) ? 'chat' : /roll/.test(k) ? 'roll' : /sit/.test(k) ? 'sit' : /crawl/.test(k) ? 'crawl' : /stand|pull|step|walk/.test(k) ? 'stand' : /wave|clap|point/.test(k) ? 'wave' : /tooth/.test(k) ? 'tooth' : 'star';
+    // Read both the skill's key and its name, so every moment gets its area's picture (Nov 18): own firsts keep the star,
+    // and a skill that fits no other area is a thinking skill (the lightbulb), never a run of identical stars.
+    const k = `${r.skillKey || ''} ${r.title || ''}`.toLowerCase();
+    if (r.own && !/roll|sit|crawl|stand|walk|tooth|word|mama|dada|laugh|smile/.test(k)) return 'star';
+    return /smile|laugh|face|people|familiar|stranger|likes|mirror|shy|feelings/.test(k) ? 'smile' : /coo|babbl|sound|word|talk|mama|dada|parent|copies|squeal|raspberr/.test(k) ? 'chat' : /roll/.test(k) ? 'roll' : /sit/.test(k) ? 'sit' : /crawl/.test(k) ? 'crawl' : /stand|pull|step|walk|cruis/.test(k) ? 'stand' : /wave|clap|point/.test(k) ? 'wave' : /tooth/.test(k) ? 'tooth' : /lifts|pushes|head|tummy|leans/.test(k) ? 'roll' : 'idea';
   };
   // Each first takes the soft color of its area, the same colors as Development's tiles:
   // people and waving pink, talking yellow, moving blue, the rest (thinking, own firsts) green, a tooth peach.
@@ -182,7 +185,7 @@
       const all = [...big, ...small];
       const shown = all.length > 4 ? all.slice(0, 3) : all;
       const more = all.length - shown.length;
-      const tileFor = r => `<button class="mem-ft" onclick="openPage('event-edit:${r.id}')" aria-label="${esc2(`${keepTitle(r)}, change or move`)}"><span class="mem-ft-ic" style="${TONE(r)}">${hubArt(ICON(r), 'Development')}</span><b>${esc2(bigSet.has(r) ? keepTitle(r) : r.title)}</b><i class="mem-ft-go" aria-hidden="true">›</i></button>`;
+      const tileFor = r => `<button class="mem-ft" onclick="openPage('event-edit:${r.id}')" aria-label="${esc2(`${keepTitle(r)}, change or move`)}"><span class="mem-ft-ic" style="${TONE(r)}">${hubArt(ICON(r), 'Development')}</span><b>${esc2(bigSet.has(r) ? keepTitle(r) : r.title)}</b></button>`;
       const listAll = `<template class="mem-month-all"><h2>${esc2(`${WORDS[m]} · ${all.length} firsts`)}</h2><p>Tap one to change it or move it to another month.</p>${all.map(r => `<button class="mem-sheet-row" onclick="memSheetClose();openPage('event-edit:${r.id}')"><span class="mem-ft-ic" style="${TONE(r)}">${hubArt(ICON(r), 'Development')}</span><b>${esc2(bigSet.has(r) ? keepTitle(r) : r.title)}</b><i aria-hidden="true">›</i></button>`).join('')}</template>`;
       const moreTile = more ? `<button class="mem-ft is-more" onclick="memMonthList(${m})"><b>+${more}</b><small>more</small></button>` : '';
       const what = `<div class="mem-list-head"><h3>${esc2(m === now ? 'Firsts this month' : 'Firsts that month')}</h3><button class="mem-list-add" onclick="openPage('chg:Timeline:milestone')">＋ Add a first</button></div>`
@@ -192,7 +195,8 @@
     };
     const play = have.length >= 2 ? `<button class="mem-title-play" onclick="memPlay()" aria-label="Play the year"><span aria-hidden="true">▶</span> Play the year</button>` : '';
     b = `<div class="mem-page"><div class="mem-title-row"><div class="eyebrow">Memories</div>${play}</div><h1>${nm}’s first year</h1>`;
-    setTimeout(() => { const r = document.querySelector('.mem-picks'); if (r) r.scrollLeft = r.scrollWidth; }, 0);
+    // Open with this month at the right edge and only whole tiles showing before it.
+    setTimeout(() => { const r = document.querySelector('.mem-picks'), t = r && r.querySelector('.mem-pick.is-on'); if (!t) return; const step = t.offsetWidth + 10, fit = Math.floor((r.clientWidth - 22) / step), idx = Number(t.dataset.m); r.scrollLeft = Math.max(0, idx - fit + 1) * step; }, 0);
     // On her first birthday the whole-year card comes first, above the months.
     // The month card holds the month; the memory book (with Save a first) sits under it, as its own cover.
     b += (year ? `<div class="mem-year-wrap">${year}</div>` : '') + picker + Array.from({ length: now + 1 }, (_, m) => monthCard(m)).join('');

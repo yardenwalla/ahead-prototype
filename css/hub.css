@@ -1889,3 +1889,18 @@ label:has(> .hub-photo-input:focus-visible) { outline: 2px solid #884866; outlin
 #main .is-side .mem-doodle { position: static }
 #main .is-side h2.mem-card-title .mem-doodle.is-spark { display: inline-block; width: 24px; height: 18px; margin: 0 0 0 4px; vertical-align: top; stroke: color-mix(in srgb, var(--mc) 80%, #e09a3c) }
 #main .is-side .mem-doodle.is-heart { width: 30px; margin: 14px 0 0 2px }
+
+/* Designer fixes (Nov 18) */
+/* Play the year: small, soft, on the title's line. */
+#main .mem-h1-row { display: flex; align-items: center; justify-content: space-between; gap: 10px }
+#main .mem-h1-row h1 { margin: 0; min-width: 0 }
+#main .mem-h1-row .mem-title-play { flex: none; padding: 7px 12px; border: 0; border-radius: 999px; background: #efe4f1; color: #5b3a6a; font-size: 13px; font-weight: 700 }
+/* The month row as small navigation: the balloon number over a peek of the photo, not a second copy of the card. */
+#main .mem-picks { margin-top: 14px; padding-top: 4px }
+#main .mem-pick { width: 52px }
+#main .mem-pick-card { width: 52px; aspect-ratio: 4 / 5; border-radius: 12px; border-width: 2px }
+#main .mem-pick-card img { object-position: 50% 30% }
+/* Firsts tiles without the corner arrow. */
+#main .mem-ft-go { display: none }
+#main .mem-title-row .mem-title-play { padding: 6px 12px; border: 0; border-radius: 999px; background: #efe4f1; color: #5b3a6a; font-size: 13px; font-weight: 700 }
+#main .mem-title-row { margin-bottom: -2px }
