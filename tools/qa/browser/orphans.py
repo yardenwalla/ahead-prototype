@@ -33,6 +33,9 @@ FIND = """()=>{
 
 async def main():
     routes = sorted({m for m in re.findall(r'^(?:window\.SEARCH_DEEP = \[)?\["([^"]+)"', open('js/search-index.js', encoding='utf8').read(), re.M) if not m.startswith('topic:') and (not ONLY or any(m.startswith(o) for o in ONLY))})
+    # Checkup pages aren't in the search index (Nov 18: they hid 50+ one-word lines), so add them by hand.
+    extra = [f'health-detail:{a}:{p}' for a in (0, 1, 2, 4, 6, 9, 12) for p in ('expect', 'vaccines', 'questions')] + ['topic:Health']
+    routes = sorted(set(routes) | {r for r in extra if not ONLY or any(r.startswith(o) for o in ONLY)})
     seen, errs = {}, []
     async with async_playwright() as p:
         b = await p.chromium.launch(); pg = await new_page(b, errs)

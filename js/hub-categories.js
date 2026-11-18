@@ -292,7 +292,8 @@
   };
 
   /* ---------- Health: "What happens at this checkup?" ---------- */
-  const EXPECT = { 0: 'Feeding, jaundice and newborn test results', 1: 'Growth, feeding comfort and early responses', 2: 'Growth, responses to you and milk feeding', 4: 'Movement, interaction, feeding and sleep', 6: 'Growth, new skills, first foods and teeth', 9: 'The development questionnaire, feeding and growth', 12: 'Growth, blood tests, teeth and feeding changes' };
+  // Each line uses the key words of the page headline it opens (Nov 18).
+  const EXPECT = { 0: 'Feeding, weight and jaundice', 1: 'Feeding, growth and how you’re doing', 2: 'Growth, early skills and your questions', 4: 'Movement, feeding and talk of solids', 6: 'Growth, skills, first foods and teeth', 9: 'Development, growth and feeding', 12: 'A blood test, milk and cups' };
   window.healthJourneyOverview = healthJourneyOverview = function (selected = null) {
     const focus = healthJourneyFocus(), age = WELL_VISITS.includes(selected) ? selected : focus, h = H();
     const record = healthRecord(age), done = record?.status === 'attended', planned = record?.status === 'planned';
@@ -326,14 +327,14 @@
     const WORTH = {
       0: ['Bring the hospital discharge papers', 'They list {p} birth weight, the tests {s} had, and any first vaccines.'],
       1: ['Ask to see {p} growth curve', 'The trend over several visits matters more than any one weight.'],
-      2: ['Several shots at once is normal', 'Feeding or holding {o} close during and after helps. A fussy, sleepy day afterward is common.'],
-      4: ['Shots go more easily with a feed', (profile.feed === 'Formula' ? 'Offer a bottle' : profile.feed === 'Breast milk' && profile.feedHow === 'Nursing' ? 'Nurse {o}' : 'Offer the breast or a bottle') + ' during or right after. Sucking soothes.'],
-      6: flu ? ['{P} first flu shot may need a second visit', 'Babies getting it for the first time need two doses, at least 4 weeks apart.'] : ['Ask about fluoride varnish', 'Many offices start painting it on once the first tooth comes in. It helps prevent cavities.'],
+      2: ['Several shots at once is normal', 'Feeding or holding {o} close during and after helps. A fussy, sleepy day after is common.'],
+      4: ['Shots go more easily with a feed', (profile.feed === 'Formula' ? 'Offer a bottle' : profile.feed === 'Breast milk' && profile.feedHow === 'Nursing' ? 'Nurse {o}' : 'Offer the breast or a bottle') + ' during or right after the shots.'],
+      6: flu ? ['A first flu shot takes two visits', 'Babies getting it for the first time need two doses, at least 4 weeks apart.'] : ['Ask about fluoride varnish', 'Many offices start painting it on once the first tooth comes in. It helps prevent cavities.'],
       9: ['The questionnaire is routine, not a test', 'Answer from what you see at home. Some offices send it ahead, so check your messages.'],
       12: ['A quick blood test is common now', 'A finger or heel prick checks for iron and, in many places, lead.']
     }[age];
-    const LEAD = a => ({ 0: 'The first visit after the hospital, usually 3 to 5 days after birth.', 1: 'A short visit, and a check on how you’re doing too.', 2: 'One of the bigger visits, with the first main round of vaccines.', 4: 'Mostly the same shots as at 2 months, so this time you know what to expect.', 6: 'The talk moves from milk to first foods.', 9: 'This one takes a closer look at development.', 12: 'A busy one: new shots, a quick blood test, and the move to whole milk.' })[a] || conceptHealthSummary(a);   // the gist; the rows below hold the details
-    const ASK = { 0: 'How will we know feeding is going well?', 1: 'Is {p} weight gain on track?', 2: 'What’s normal after {p} shots?', 4: 'When should we think about solids?', 6: 'Should we watch {p} iron now that solids are starting?', 9: 'Is {s} on track with sitting and babbling?', 12: 'How do we switch to whole milk?' }[age];
+    const LEAD = a => ({ 0: 'The first visit after the hospital, usually 3 to 5 days after birth.', 1: 'A short visit, and a check on how you’re doing too.', 2: 'One of the bigger visits, with the first main round of vaccines.', 4: 'Mostly the same shots as at 2 months, so this time you know what to expect.', 6: 'The talk moves from milk to first foods.', 9: 'This one takes a closer look at development.', 12: 'A busy one: new vaccines, a few checks, and the move to whole milk.' })[a] || conceptHealthSummary(a);   // the gist; the rows below hold the details
+    const ASK = { 0: 'How will we know {s’s} feeding well?', 1: 'Is {p} weight gain on track?', 2: 'What’s normal after {p} shots?', 4: 'When should we think about solids?', 6: 'Should we watch {p} iron now that solids are starting?', 9: 'Are {p} sitting and babbling on track?', 12: 'How do we switch to whole milk?' }[age];
     const HEALTH_ART = "<svg viewBox=\"0 0 300 103\" aria-hidden=\"true\"><ellipse cx=\"146\" cy=\"90\" rx=\"107\" ry=\"7\" fill=\"#d5e5d6\"/><rect x=\"31\" y=\"63\" width=\"229\" height=\"23\" rx=\"11\" fill=\"#bed5c1\"/><circle cx=\"95\" cy=\"45\" r=\"26\" fill=\"#e8b89f\"/><path d=\"M78 40q7-21 29-15\" fill=\"none\" stroke=\"#9d735f\" stroke-width=\"5\" stroke-linecap=\"round\"/><path d=\"M85 48q4 4 8 0m7 0q4 4 8 0\" stroke=\"#916959\" stroke-width=\"2\" fill=\"none\"/><path d=\"M123 65q31-27 74 0l13 13h-92z\" fill=\"#a9c9ae\"/><path d=\"M148 66q24-19 49-26\" fill=\"none\" stroke=\"#e8b89f\" stroke-width=\"11\" stroke-linecap=\"round\"/><circle cx=\"202\" cy=\"40\" r=\"7\" fill=\"#e8b89f\"/><rect x=\"246\" y=\"15\" width=\"19\" height=\"29\" rx=\"4\" fill=\"#fafdf9\" stroke=\"#a0bda5\"/><path d=\"M256 22v15m-7-7h14\" stroke=\"#89b093\" stroke-width=\"3\" stroke-linecap=\"round\"/><path d=\"M277 48h15M285 40v16\" stroke=\"#9ebeaa\" stroke-width=\"2.5\" stroke-linecap=\"round\"/></svg>";
     let b = `<style>#main .hl-art{display:grid;place-items:center;margin:10px 0 2px}#main .hl-art svg{width:100%;max-width:260px;height:auto}#main .hl-worth{border-radius:20px;background:#eef0f7;padding:14px 16px;margin:0 0 14px;color:#3e4766}#main .hl-worth small{display:block;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#5e6890;margin-bottom:5px}#main .hl-worth b{display:block;font-size:16px;line-height:1.3;color:var(--ink,#302d3c)}#main .hl-worth p{margin:5px 0 0;font-size:14px;line-height:1.45;color:#5d6276}</style>`
       + h.hero({ eyebrow: eyebrow2, title, lead: LEAD(age) }).replace(/<\/header>\s*$/, `<div class="hl-art">${HEALTH_ART}</div></header>`)
@@ -351,9 +352,9 @@
     // (fever, tummy bugs, colds, and Call 911), with this age's fever line right on it. Teething lives in Everyday care.
     // On every checkup page (Nov 13). Under 3 months, the row's line carries the fever rule (AAP); no call card here (Nov 18).
     { const u3 = live() && actualMonth() < 3 && age === focus;
-      b += h.list('Between checkups', [h.row({ icon: 'thermo', cat: 'Health', title: 'Symptoms and when to get help', sub: u3 ? 'Under 3 months, any fever means a call' : 'Fever, colds, tummy bugs and when to call', onclick: "openPage('chg:Health:d:sick')" })]); }
+      b += h.list('Between checkups', [h.row({ icon: 'thermo', cat: 'Health', title: 'Symptoms and when to get help', sub: u3 ? 'Under 3 months, any fever means a call' : 'Fever, colds and tummy bugs, and when to call', onclick: "openPage('chg:Health:d:sick')" })]); }
     const nx = WELL_VISITS[WELL_VISITS.indexOf(age) + 1];
-    if (nx != null) b += h.next(`Next · at ${nx} month${nx === 1 ? '' : 's'}`, healthJourneyLabel(nx), `openPage('health-visit:${nx}')`, '', { 1: 'A short visit, with a check on how you’re doing.', 2: 'The first main round of shots. Plan a quiet day after.', 4: 'Bring your questions about starting solids.', 6: 'The talk moves from milk to first foods.', 9: 'A closer look at development: jot down what you see.', 12: 'Ask about cow’s milk, and moving off bottles.' }[nx] || '');   // the concept's 'Looking ahead' line: what's different about the next one
+    if (nx != null) b += h.next(`Next · at ${nx} month${nx === 1 ? '' : 's'}`, healthJourneyLabel(nx), `openPage('health-visit:${nx}')`, '', { 1: 'A short visit that checks on you, too.', 2: 'The first main round of shots. Plan a quiet day after.', 4: 'Bring your questions about starting solids.', 6: 'The talk moves from milk to first foods.', 9: 'A closer look at development: jot down what you see.', 12: 'Ask about cow’s milk, and moving off bottles.' }[nx] || '');   // the concept's 'Looking ahead' line: what's different about the next one
     return frame('Health', `data-health-journey="${age}"`, pills + missedLine, b);
   };
 
@@ -568,8 +569,8 @@
     // A cold (When it's urgent, Nov 17): takeaway headline · How to tell · What helps · When to call last.
     if (cat === 'Health' && screen === 'd' && a === 'cold') { const B = H().TPLB, m = actualMonth();
       return detailFrame('Health', 'When Maya seems sick', 'Most colds clear up in 7–10 days', 'Several in the first year are normal. A clear nose helps {o} feed and sleep.',
-        B.sec('How to tell', B.versus(['Normal', 'Stuffy and sneezy, still feeding.'], ['Call your pediatrician', 'A fever of ' + feverTemp(m) + ' or higher, a cold lasting past 10 days, or signs of an ear infection.'],
-          [['', 'Could it be an ear infection?', 'Often after a cold: fussing when lying down, a new fever, or fluid from the ear']]))
+        B.sec('How to tell', B.versus(['Normal', 'Stuffy and sneezy, still feeding.'], ['Call your pediatrician', 'A fever of ' + feverTemp(m) + ' or higher, or a cold that won’t clear in 10 days.'],
+          [['', 'Could it be an ear infection?', 'Fussing when lying down, a new fever or fluid from the ear. Any of these is worth a call']]))
         + B.sec('What helps', B.noted(B.tiles([['drop', 'Clear the nose', 'Saline drops, then suction, before feeds'], ['snow', 'Cool-mist humidifier', 'Run it in {p} room at night'], ['bottle', 'Smaller, frequent feeds', 'Easier with a stuffy nose']], 'Health'),
           [['', 'Skip cold medicines', 'They aren’t safe for babies. No honey before 1']]))
         + B.calls({ now: 'struggling to breathe, blue lips, won’t wake or is floppy, or a seizure.', nowLabel: 'Call 911' }).replace('When to call', 'In an emergency')).replace('class="quiet-category hub-page hub-detail', 'class="quiet-category hub-page hub-detail care-tpl'); }

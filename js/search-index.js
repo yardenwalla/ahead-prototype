@@ -22,7 +22,7 @@ window.SEARCH_DEEP = [["topic:Development","Development & play","What to look fo
 ["stages:Sleep","Sleep stages","Longer nights","6 weeks–5 months",8191,0],
 ["topic:Health","Health","Your visit, at a glance","",8191,0],
 ["topic:Health","Health","Between checkups","",8191,0],
-["topic:Health","Health","What to expect","Growth, feeding comfort and early responses",8191,0],
+["topic:Health","Health","What to expect","Feeding, growth and how you’re doing",8191,0],
 ["topic:Health","Health","Vaccines","Second hepatitis B shot (some offices give it at 2 months instead)",8191,0],
 ["topic:Health","Health","A question worth asking","Is {p} weight gain on track?",8191,0],
 ["chg:Health:d:sick","","Symptoms and when to get help","Under 3 months, any fever means a call",8191,1],
