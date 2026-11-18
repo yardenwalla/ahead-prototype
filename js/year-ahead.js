@@ -213,11 +213,12 @@
         if ((x >= a && done[s.c.id]) || s.c.end <= x) return 'earlier';
         return homeOf(s) <= x + 0.25 ? 'now' : 'ahead';
       };
-      const line = s => s.v != null ? (where(s) === 'now' ? 'Due now · Book it if you haven’t' : 'Book it a few weeks ahead') : `Usually ${shortRange(s)}${PREP[s.c.id] ? ' · ' + PREP[s.c.id] : ''}`;
+      const TIP = { crying: x >= 2 ? 'Past the worst now' : 'Plan for fussy evenings', smile: 'Lots of face time', nights: 'Start a bedtime routine', regress: 'Line up night help', roll: 'Keep {o} off beds and sofas', solids: 'Get a high chair', twonaps: 'Move bedtime earlier', sit: 'Lower the crib mattress', crawl: 'Babyproof first', tooth: 'Start brushing', sep: 'Keep goodbyes short', pull: 'Anchor furniture', carseat: 'Check its height limit', words: 'Name things all day', milk: 'Offer it in a cup', steps: 'Barefoot indoors' };
+      const line = s => s.v != null ? (where(s) === 'now' ? 'Due now · Book it if you haven’t' : 'Book it a few weeks ahead') : where(s) === 'now' ? `${shortRange(s)}${TIP[s.c.id] ? ' · ' + TIP[s.c.id] : ''}` : `Usually ${shortRange(s)}`;
       const row = s => `<li class="tl-gr"><button onclick="${go(s)}"><span class="tl-ic">${icon(s.v != null ? 'steth' : s.c.icon)}</span><span class="tl-t"><b>${F(title(s))}</b><small>${F(line(s))}</small></span><span class="hub-chev" aria-hidden="true">›</span></button></li>`;
       const now = all.filter(s => where(s) === 'now').sort((p, q) => (q.v != null) - (p.v != null) || homeOf(q) - homeOf(p));
       const ahead = all.filter(s => where(s) === 'ahead'), earlier = all.filter(s => where(s) === 'earlier');
-      let h = `<li class="tl-soon"><h2 class="tl-h2">${F('Around now')}</h2>`;
+      let h = `<li class="tl-soon"><h2 class="tl-h2">${F('Around now')}</h2><p class="tl-intro">${F(`What’s happening around ${isToday(x) && typeof babyAge === 'function' ? babyAge() : ageTxt(x)}. Every baby moves at {p} own pace.`)}</p>`;
       h += now.length ? `<ol class="tl-gcard">${now.map(row).join('')}</ol>` : `<p class="tl-quiet">${F('Nothing new right now. Here’s what’s next.')}</p>`;
       h += `</li>`;
       // The months ahead: one card per month, each change at its home month.
@@ -240,10 +241,10 @@
     const pct = Math.max(0, Math.min(100, a / 12 * 100));
     const grad = (w, to) => typeof window.monthColor === 'function' ? `linear-gradient(90deg,${[...Array(12)].map((_, i) => `${window.monthColor(i, w, to)} ${Math.round((i + 0.5) / 12 * 100)}%`).join(',')})` : '';
     let h = `<div class="ya-page tl-track" style="${theme(a)};--tlp:${pct}%;--tla:${pct}%;--tlg:${grad(.86)};--tlf:${grad(.42)}"><div class="tl-top"><h1 class="yt-h1">${F(`${nm}’s first year`)}</h1><button class="tl-todaybtn" onclick="tlScrub(null)" disabled>${F('Today')}</button></div>`;
-    h += `<div class="tl-prog${hinted ? '' : ' tl-hint'}"><div class="tl-ride"><span class="tl-baby" role="slider" tabindex="0" aria-label="${F(`Drag ${nm} to see another age`)}" aria-valuemin="0" aria-valuemax="12" aria-valuenow="${a.toFixed(1)}" aria-valuetext="${F(ageTxt(a))}" onkeydown="tlKey(event)" style="${theme(a)}">${art(a)}<em class="tl-tip">${F(hinted ? ageTxt(a) : 'Drag me')}</em></span><span class="tl-flag" aria-hidden="true">${window.stToy('cake')}</span></div><div class="tl-bar"><i></i><button class="tl-nowmark" onclick="tlScrub(null)" aria-label="${F('Back to today')}"></button></div><div class="tl-ticks" aria-hidden="true">${[[0, 'Birth'], [3, '3 months'], [6, '6 months'], [9, '9 months'], [12, '1 year']].map(([v, l]) => `<span style="left:${v / 12 * 100}%">${F(l)}</span>`).join('')}</div><div class="tl-ends">${ends(a)}</div></div>`;
+    h += `<div class="tl-prog${hinted ? '' : ' tl-hint'}"><div class="tl-ride"><span class="tl-baby" role="slider" tabindex="0" aria-label="${F(`Drag ${nm} to see another age`)}" aria-valuemin="0" aria-valuemax="12" aria-valuenow="${a.toFixed(1)}" aria-valuetext="${F(ageTxt(a))}" onkeydown="tlKey(event)" style="${theme(a)}">${art(a)}<em class="tl-tip">${F(hinted ? ageTxt(a) : 'Drag me')}</em></span><span class="tl-flag" aria-hidden="true">${window.stToy('cake')}</span></div><div class="tl-bar"><i></i><button class="tl-nowmark" onclick="tlScrub(null)" aria-label="${F('Back to today')}"></button></div><div class="tl-ticks" aria-hidden="true">${[[0, 'Birth'], [12, 'First birthday']].map(([v, l]) => `<span style="left:${v / 12 * 100}%">${F(l)}</span>`).join('')}</div><div class="tl-ends">${ends(a)}</div></div>`;
     const gvars = x => typeof window.monthColor === 'function' ? `--g-bg:${window.monthColor(Math.max(0, Math.min(11, Math.floor(x))), .86)};--g-ink:${window.monthColor(Math.max(0, Math.min(11, Math.floor(x))), .45, 30)}` : '';
     window.__tl.gvars = gvars;
-    h += `<p class="tl-pace">${F('Ages are typical. Every baby moves at {p} own pace.')}</p><ol class="tl-steps tl-groups tl-around" style="${gvars(a)}">${listHTML(a)}</ol>`;
+    h += `<ol class="tl-steps tl-groups tl-around" style="${gvars(a)}">${listHTML(a)}</ol>`;
     h += `</div>`;
     setTimeout(() => window.tlBind && window.tlBind(), 0);
     return h;
