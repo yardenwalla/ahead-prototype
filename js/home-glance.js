@@ -145,6 +145,7 @@
   // On a month birthday: one slim line to add the month's photo, nothing more.
   // On a month birthday: one slim card in the Memories style, the month's balloon photo and a handwritten line.
   function banner(main) {
+    return '';   // Nov 18 preview: the month's photo lives on the story card, not a banner above it.
     const b = main.querySelector('.hub-bday');
     // The newborn weeks have no month birthday yet: offer the newborn photo until it's added (or the banner is tapped).
     if (!b) {
@@ -307,15 +308,21 @@
     const newLook = sc || nb;
     const seen = (() => { try { return localStorage.getItem('ahead-story-seen-' + m) === '1'; } catch (e) { return false; } })();
     const c = BALLOON[Math.max(0, Math.min(11, m))];
-    const hero = nb ? `<button class="ms-card" onclick="homeEyes(true)" style="${monthTheme(m)};--ms-c2:${mix(BALLOON[0], .72)}">
-        <span class="ms-body"><span class="ms-copy"><span class="ms-eyebrow">${F(`Welcome, ${name()}`)}</span><b class="ms-month">${F(when + '.')}</b><b class="ms-name">${F('First weeks.')}</b><small>${F(P(M.eyes[0]) + '.')}</small></span>
-          <span class="ms-art" aria-hidden="true"><i class="ms-c2"></i><span class="ms-toys">${window.stCardArt(0)}</span></span></span>
-        <span class="ms-foot"><span class="ms-watch"><i><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6z" fill="none" stroke="#fffaf3" stroke-width="2"/></svg></i>${F(P('See what she sees'))}</span><span class="ms-go" aria-hidden="true">→</span></span>
-      </button>` : sc ? `<button class="ms-card" onclick="try{localStorage.setItem('ahead-story-seen-${m}','1')}catch(e){};stOpen()" style="${monthTheme(m)};--ms-acc:${mix(c, .1, 30)};--ms-c1:${mix(c, .5)};--ms-c2:${mix(c, .72)}">
-        <span class="ms-body"><span class="ms-copy"><span class="ms-eyebrow">${m === 0 ? F('{P} first weeks') : seen ? F('This month') : F('New this month')}</span><b class="ms-month">${F(m === 0 ? when + '.' : `Month ${m}.`)}</b><b class="ms-name">${F(`${name()}’s story.`)}</b><small>${F(sc.tease)}</small></span>
-          <span class="ms-art" aria-hidden="true"><i class="ms-c2"></i><span class="ms-toys">${typeof window.stCardArt === 'function' ? window.stCardArt(m) : art}</span></span></span>
-        <span class="ms-foot"><span class="ms-watch"><i><svg viewBox="0 0 24 24"><path d="M9 7.5v9l7.5-4.5z"/></svg></i>${F(m === 0 ? 'Watch {p} first weeks' : P('Watch her month'))}</span><span class="ms-go" aria-hidden="true">→</span></span>
-      </button>`
+    // Nov 18 preview: the month's balloon (the Memories photo prop) replaces the baby picture, and the card carries
+    // two actions: watch the month (primary) and add the month's photo (secondary, gone once the photo is in).
+    const pic = typeof hubPhotoFor === 'function' ? hubPhotoFor(m) : null;
+    const bsrc = m === 0 ? 'assets/home/hello-world.png?v=7' : `assets/home/balloon-${m}.png`;
+    const artB = pic ? `<span class="mb-art has-pic"><span class="mb-pol"><img src="${pic}" alt=""></span><img class="mb-bal-sm" src="${bsrc}" alt=""></span>`
+      : `<span class="ms-art" aria-hidden="true"><i class="ms-c2"></i><span class="ms-toys">${typeof window.stCardArt === 'function' ? window.stCardArt(m) : art}</span></span>`;
+    const addPhoto = pic ? '' : `<label class="mb-add" role="button" onclick="event.stopPropagation()"><span aria-hidden="true">＋</span>${F('Add photo')}${typeof hubPhotoInput === 'function' ? hubPhotoInput(m) : ''}</label>`;
+    const open = nb ? 'homeEyes(true)' : `try{localStorage.setItem('ahead-story-seen-${m}','1')}catch(e){};stOpen()`;
+    const playIc = nb ? `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6z" fill="none" stroke="#fffaf3" stroke-width="2"/></svg>` : `<svg viewBox="0 0 24 24"><path d="M9 7.5v9l7.5-4.5z"/></svg>`;
+    const watchTxt = nb ? P('See what she sees') : m === 0 ? P('Watch her story') : P('Watch her month');
+    const hero = newLook ? `<div class="ms-card mb-card" role="button" tabindex="0" onclick="${open}" style="${monthTheme(m)};--ms-acc:${mix(c, .1, 30)};--ms-c1:${mix(nb ? BALLOON[0] : c, .5)};--ms-c2:${mix(nb ? BALLOON[0] : c, .72)}">
+        <span class="ms-body"><span class="ms-copy"><span class="ms-eyebrow">${nb ? F(`Welcome, ${name()}`) : m === 0 ? F('{P} first weeks') : seen ? F('This month') : F('New this month')}</span><b class="ms-month">${F(nb ? when + '.' : m === 0 ? when + '.' : `Month ${m}.`)}</b><b class="ms-name">${F(nb ? 'First weeks.' : `${name()}’s story.`)}</b><small>${F(nb ? P(M.eyes[0]) + '.' : sc.tease)}</small></span>
+          ${artB}</span>
+        <span class="ms-foot mb-foot"><span class="ms-watch"><i>${playIc}</i>${F(watchTxt)}</span>${addPhoto || '<span class="ms-go" aria-hidden="true">→</span>'}</span>
+      </div>`
       : `<section class="he-hero" style="${monthTheme(m)}"><p class="he-eyebrow">${F(when)} · ${F(`Through ${name()}’s eyes`)}</p><div class="he-copy"><h1>${F(P(M.eyes[0]))}</h1><p class="he-lead">${F(P(M.eyes[1]))}</p>${m <= 4 ? `<button class="he-see" onclick="homeEyes(true)"><span aria-hidden="true">👁</span> ${F(`See what ${name()} sees`)}</button>` : ''}</div><span class="he-art" aria-hidden="true">${art}</span></section>`;
     const rr = newLook ? radarRows(m) : [];
     return hero + (rr.length ? `<section class="rd-card"><p class="rd-eyebrow">${F('On your radar')}</p>${rr.map(([t, why, , , go]) => `<button class="rd-item" onclick="openPage('${go}')"><span><b>${F(P(t))}</b><small>${F(P(why))}</small></span><i aria-hidden="true">›</i></button>`).join('')}</section>` : '') + `

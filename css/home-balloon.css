@@ -1,0 +1,13 @@
+/* Nov 18 preview: balloon on the story card, with "Add photo" as a second, quieter action */
+#main .mb-art{position:relative;flex:0 0 112px;height:132px;display:block}
+#main .mb-bal{position:absolute;left:50%;top:50%;height:132px;width:auto;transform:translate(-50%,-50%) rotate(4deg);filter:drop-shadow(0 8px 10px rgba(43,40,64,.14))}
+#main .mb-bal.is-hello{height:112px}
+#main .mb-pol{position:absolute;left:8px;top:10px;width:88px;padding:6px 6px 18px;background:#fff;border-radius:4px;transform:rotate(-4deg);box-shadow:0 6px 14px rgba(43,40,64,.16)}
+#main .mb-pol img{display:block;width:100%;aspect-ratio:1;object-fit:cover;border-radius:2px}
+#main .mb-bal-sm{position:absolute;right:-6px;top:-8px;height:58px;transform:rotate(8deg);filter:drop-shadow(0 4px 6px rgba(43,40,64,.14))}
+#main .mb-foot{gap:10px}
+#main .mb-add{position:relative;display:inline-flex;align-items:center;gap:6px;flex:none;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.72);border:1px solid var(--m-line);font-size:14.5px;font-weight:700;color:#2B2840;cursor:pointer;overflow:hidden}
+#main .mb-add span{font-size:16px;line-height:1;color:var(--m-ink)}
+#main .mb-add .hub-photo-input{position:absolute;inset:0;opacity:0;cursor:pointer}
+#main .mb-foot .ms-watch{white-space:nowrap;gap:9px}
+#main .mb-add{white-space:nowrap;padding:7px 12px 7px 11px;font-size:14px;gap:5px}
