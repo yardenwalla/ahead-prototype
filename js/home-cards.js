@@ -537,7 +537,7 @@
     const s = state(), a = answers, mf = memoryFirsts(), n = esc(s.n), rows = [];
     const row = (label, sub, btn) => rows.push(`<div class="home2-know-row"><div><b>${esc(label)}</b><small>${esc(sub)}</small></div>${btn || ''}</div>`);
     const fix = key => `<button class="home2-know-fix" onclick="home2Forget('${key}')">Not right</button>`;
-    const mem = `<button class="home2-know-fix" onclick="openPage('chg:Timeline:firsts')">In Memories</button>`;
+    const mem = `<button class="home2-know-fix" onclick="navigate('timeline')">In Memories</button>`;
     const mv = { pulling: 'Pulling up', crawling: 'Crawling', sitting: 'Sitting on ' + s.p.p + ' own', rolling: 'Rolling' }[s.move];
     if (mv) { const d = (a.stageDates || {}).movement; row(mv, (d ? 'Since ' + dayLabel(d) + ' · ' : '') + (mf[s.move] ? 'From Memories' : 'Change it under “How ' + s.n + ' moves”'), mf[s.move] ? mem : ''); }
     if (s.solidsDays != null && a.solidsStart) row('Started solids', 'Since ' + dayLabel(a.solidsStart), fix('solids'));

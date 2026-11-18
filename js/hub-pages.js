@@ -139,7 +139,7 @@
       const row = document.querySelectorAll('#main .hub-tick')[idx];
       if (row) { row.classList.add('is-celebrate'); row.insertAdjacentHTML('beforeend', '<span class="hub-burst" aria-hidden="true"><i>✦</i><i>✧</i><i>✦</i><i>✧</i></span>'); }
       const rec = journeyData().records.find(r => r.type === 'milestone' && r.skillKey === key);
-      if (rec) hubToast(typeof memIsBig !== 'function' || memIsBig(rec) ? 'A first, saved' : 'Saved', `“${rec.title}” is in Memories`, ['See it in the book', `document.querySelectorAll('.hub-toast').forEach(t=>t.remove());openPage('chg:Timeline:firsts')`]);
+      if (rec) hubToast(typeof memIsBig !== 'function' || memIsBig(rec) ? 'A first, saved' : 'Saved', `“${rec.title}” is in Memories`, ['See it in Memories', `document.querySelectorAll('.hub-toast').forEach(t=>t.remove());memShowMonth(memMonthOf('${rec.date}'))`]);
     };
   }
 
@@ -417,7 +417,7 @@
   function saveFirstPage() {
     const a = developmentMonth(actualMonth()), ideas = a < 2 ? ['First smile', 'First bath', 'First outing', 'Lifted head on tummy'] : a < 5 ? ['First laugh', 'Held head up', 'Rolled over', 'Grabbed a toy'] : a < 8 ? ['Sat up', 'First taste of food', 'First tooth', 'Rolled over'] : a < 11 ? ['Crawled', 'Pulled up', 'First tooth', 'Waved bye-bye'] : ['First word', 'First steps', 'Waved bye-bye', 'Clapped'];
     return detailPage('Development', 'Firsts', 'Save a first', 'What did Maya do? It goes in Memories.',
-      `<section class="hub-card hub-own-first"><label for="firstTitle">${F('What happened')}</label><input id="firstTitle" class="search" maxlength="80" placeholder="${F('For example, ' + ideas[0].charAt(0).toLowerCase() + ideas[0].slice(1))}"><p class="hub-own-ideas">${F('Ideas')}</p><div class="hub-choice-chips">${ideas.map(t => `<button onclick="hubFirstFill('${t}')">${t}</button>`).join('')}</div><p class="hub-own-ideas">${F('Which month?')}</p>${memMonthChips(actualMonth(), 'hubFirstMonth')}<button class="hub-button" onclick="hubSaveFirst()">${F('Save to Memories')}</button></section>`, 'star');
+      `<section class="hub-card hub-own-first"><label for="firstTitle">${F('What happened')}</label><input id="firstTitle" class="search" maxlength="80" placeholder="${F('For example, ' + ideas[0].charAt(0).toLowerCase() + ideas[0].slice(1))}"><p class="hub-own-ideas">${F('Ideas')}</p><div class="hub-choice-chips">${ideas.map(t => `<button onclick="hubFirstFill('${t}')">${t}</button>`).join('')}</div><p class="hub-own-ideas">${F('Which month?')}</p>${memMonthChips(window.__firstMonth != null ? window.__firstMonth : actualMonth(), 'hubFirstMonth')}<button class="hub-button" onclick="hubSaveFirst()">${F('Save to Memories')}</button></section>`, 'star');
   }
   function detailPage(cat, context, title, lead, inner, artName) { return H().detail(cat, context, title, lead, inner, artName); }
 
@@ -782,7 +782,7 @@
     data.records.push({ id: 'milestone-own-' + Date.now(), type: 'milestone', title: t.trim().slice(0, 80), date: d, notes: '', status: 'attended', own: true });
     if (!saveJourneyData(data)) return hubToast('Couldn’t save that', 'This viewer can’t store entries.');
     const rec = data.records[data.records.length - 1];
-    window.__firstMonth = null; navigate('timeline'); hubToast('A first, saved', `“${t.trim()}” is in Memories`, ['See it in the book', `document.querySelectorAll('.hub-toast').forEach(t=>t.remove());openPage('chg:Timeline:firsts')`]);
+    window.__firstMonth = null; memShowMonth(memMonthOf(d)); hubToast('A first, saved', `“${t.trim()}” is in Memories`, ['See it in Memories', `document.querySelectorAll('.hub-toast').forEach(t=>t.remove());memShowMonth(memMonthOf('${d}'))`]);
   };
   window.hubFirstFill = t => { const el = document.getElementById('firstTitle'); if (el) { el.value = t; el.focus(); } };
 
@@ -933,11 +933,13 @@ window.hubCenterStages = function () {
   window.memMonthDate = m => { const now = actualMonth(); if (m >= now) return iso(NOW); const d = addMonths(parse(profile.dob), m); d.setDate(d.getDate() + 14); return iso(d > NOW ? NOW : d); };
   window.memMonthChips = (on, fn, id) => `<div class="mem-month-chips" role="radiogroup">${WORDS.slice(0, Math.min(12, actualMonth()) + 1).map((w, m) => `<button type="button" role="radio" aria-checked="${m === on}" class="${m === on ? 'is-on' : ''}" onclick="${fn}(${m}${id ? `,'${id}'` : ''}, this)">${w}</button>`).join('')}</div>`;
   window.hubFirstMonth = (m, el) => { window.__firstMonth = m; el.parentNode.querySelectorAll('button').forEach(b => { b.classList.toggle('is-on', b === el); b.setAttribute('aria-checked', b === el); }); };
+  // Open Memories on a given month (where a moment lives now that there's no separate book).
+  window.memShowMonth = function (m) { navigate('timeline'); setTimeout(() => { if (typeof memPick === 'function' && document.querySelector(`.mem-card[data-m="${m}"]`)) memPick(m); }, 0); };
   window.memMoveTo = function (m, id) {
     const data = journeyData(), r = data.records.find(x => x.id === id); if (!r) return;
     const before = r.date; r.date = memMonthDate(m);
     if (!saveJourneyData(data)) return hubToast('Couldn’t save that', 'This viewer can’t store entries.');
-    openPage('chg:Timeline:firsts');
+    memShowMonth(m);
     hubToast('Moved', `“${r.title}” is now in ${m === 0 ? 'the newborn month' : WORDS[m]}.`, ['Undo', `document.querySelectorAll('.hub-toast').forEach(t=>t.remove());memUndoMove('${id}','${before}')`]);
   };
   window.memUndoMove = (id, d) => { const data = journeyData(), r = data.records.find(x => x.id === id); if (r) { r.date = d; saveJourneyData(data); render(); } };
@@ -947,6 +949,6 @@ window.hubCenterStages = function () {
     const r = journeyData().records.find(x => x.id === id);
     if (!r || r.type !== 'milestone') return base(id);
     const m = memMonthOf(r.date);
-    return `<div class="quiet-category hub-page hub-detail mem-move" style="${yearTheme('Memories')}">${typeof detailPageTop === 'function' ? detailPageTop('Memories') : ''}<div class="hub-detail-head"><p class="hub-context">In ${esc(name())}’s memory book</p><h1>${esc(r.title)}</h1><p class="hub-lead">${esc('In the wrong month? Tap the right one and it moves.')}</p></div><section class="hub-card mem-move-card">${memMonthChips(m, 'memMoveTo', id)}</section><button class="journey-remove mem-move-remove" type="button" onclick="if(removeJourneyRecord('${id}'))openPage('chg:Timeline:firsts')">Remove from Memories</button></div>`;
+    return `<div class="quiet-category hub-page hub-detail mem-move" style="${yearTheme('Memories')}">${typeof detailPageTop === 'function' ? detailPageTop('Memories') : ''}<div class="hub-detail-head"><p class="hub-context">In ${esc(name())}’s memory book</p><h1>${esc(r.title)}</h1><p class="hub-lead">${esc('In the wrong month? Tap the right one and it moves.')}</p></div><section class="hub-card mem-move-card">${memMonthChips(m, 'memMoveTo', id)}</section><button class="journey-remove mem-move-remove" type="button" onclick="if(removeJourneyRecord('${id}'))memShowMonth(${m})">Remove from Memories</button></div>`;
   };
 })();

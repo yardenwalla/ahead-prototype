@@ -46,8 +46,8 @@ for (const [title, skill, age] of [['Sat up', 'Sits without support', 9], ['Roll
   const a = family(age);
   open(a, 'chg:Timeline:milestone');
   a.run(`document.getElementById = id => ({ firstTitle: { value: ${JSON.stringify(title)} }, firstDate: { value: '${at(age).slice(0, 10)}' } })[id]; hubSaveFirst()`);
-  check(new RegExp(title).test(text(open(a, 'chg:Timeline:firsts'))), `“${title}” shows in the memory book`);
-  check(/in Memories/.test(toasts(a)) && /See it in the book/.test(toasts(a)), `“${title}”: the confirmation says Memories and offers See it in the book`);
+  check(new RegExp(title).test(text(open(a, 'timeline'))), `“${title}” shows in Memories`);
+  check(/in Memories/.test(toasts(a)) && /See it in Memories/.test(toasts(a)), `“${title}”: the confirmation says Memories and offers See it in Memories`);
   check(a.run(`skillSeen(${JSON.stringify(skill)})`), `“${title}” counts as seen for “${skill}” in Development`);
 }
 
@@ -65,7 +65,7 @@ for (const [title, skill, age] of [['Sat up', 'Sits without support', 9], ['Roll
   const h = open(a, 'timeline');
   check((h.match(/class="mem-ft"/g) || []).length >= 3, 'Memories shows every saved moment as a tile, not just the big firsts');
   check(/is \d+ months?!/.test(t) && !/mem-bookrow|mem-bookcard/.test(h), 'Memories leads with this month, and the separate memory book is gone (Nov 18)'); // Nov 13: order is then-and-now, months, then the book (was book first, Nov 8)
-  check(/See it in the book/.test(toasts(a)) && !/Change date/.test(toasts(a)), 'Seen it offers See it in the book, not Change date');
+  check(/See it in Memories/.test(toasts(a)) && !/Change date/.test(toasts(a)), 'Seen it offers See it in Memories, the same as Save a first');
 }
 
 // 6. Everyday care: no shopping list, and the sun page is about sun, not water.

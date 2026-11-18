@@ -23,14 +23,14 @@ FLOWS = [
  ('First picked: Sat up', P(6), [M] + first('Sat up', True)),
  ('First picked: Crawled', P(9), [M] + first('Crawled', True)),
  ('First typed: First tooth', P(7), [M] + first('First tooth')),
- ('First: See it in the book from toast', P(6), [M] + first('Sat up') + ['TOAST:See it in the book']),
+ ('First: See it in Memories from toast', P(6), [M] + first('Sat up') + ['TOAST:See it in Memories']),
  # Memories: photos
  ('Month photo', P(5), ["navigate('timeline')", "FILE:#main input[type=file]"]),
  ('Photo, remove, Undo', P(5), ["navigate('timeline')", "FILE:#main input[type=file]", "CLICK:×", "TOAST:Undo"]),
  ('Photo then Home', P(5), ["navigate('timeline')", "FILE:#main input[type=file]", "navigate('home')"]),
  # Development
  ('Seen it: small skill', P(6), ["openPage('development-domain:6:Thinking')", "CLICK:Seen it"]),
- ('Seen it: big first, See it in the book', P(6), ["openPage('development-domain:6:Movement')", "CLICK:Seen it", "TOAST:See it in the book"]),
+ ('Seen it: big first, See it in Memories', P(6), ["openPage('development-domain:6:Movement')", "CLICK:Seen it", "TOAST:See it in Memories"]),
  # Checkups: these live in Health, never Memories
  ('Checkup past due: Mark it as done', P(5), ["openPage('health-visit:2')", "CLICK:Mark it done", "CLICK:Mark it done"]),
  ('Checkup date saved, 4 days out', P(5.85), ["openPage('visit-form:plan-6')", f"document.querySelector('#main input[type=date]').value='{day(4)}'", "CLICK:Save the date"]),

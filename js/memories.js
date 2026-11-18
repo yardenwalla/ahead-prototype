@@ -90,6 +90,7 @@
   }
 
   window.journeyTimeline = journeyTimeline = function () {
+    window.__firstMonth = null; // a month picked from a card only lasts until Memories is shown again
     const data = journeyData(), dob = parse(profile.dob), today = iso(NOW), nm = esc2(name());
     const now = monthOf(dob, today);
     const photo = m => (typeof hubPhotoFor === 'function' ? hubPhotoFor(m) : null);
@@ -176,7 +177,7 @@
         : `<div class="mem-card-btns"><label class="mem-card-btn is-main is-wide">＋ Add ${esc2(P.p)} ${lab} photo${hubPhotoInput(m)}</label></div>`;
       // Stacked, so the card she'll share is big (the photo inside it is about the size of a real print on screen):
       // the month and its headline on top, the balloon card centered, the month's line as its caption, then the buttons.
-      const media = `<div class="mem-card-hero is-side" style="--mc:${MC}"><div class="mem-card-top"><div class="mem-card-words"><p class="mem-card-label">${esc2(WORDS[m])}</p><h2 class="mem-card-title">${esc2(title).replace(/^(.*?) (\d+ months?!?)$/, '$1 ' + SPARK + '<span class="mem-nowrap">$2</span>')}</h2><p class="mem-card-line">${esc2(LINES[m])}</p>${HEARTS}</div><div class="mem-card-pic">${pic}</div></div>${btns}</div>`;
+      const media = `<div class="mem-card-hero is-side" style="--mc:${MC}"><div class="mem-card-top"><div class="mem-card-words"><p class="mem-card-label">${esc2(WORDS[m])}</p><h2 class="mem-card-title">${(/ \d+ months?!?$/.test(title) ? esc2(title).replace(/^(.*?) (\d+ months?!?)$/, '$1 ' + SPARK + '<span class="mem-nowrap">$2</span>') : esc2(title).replace(/^(.*) (\S+)$/, '$1 ' + SPARK + '<span class="mem-nowrap">$2</span>'))}</h2><p class="mem-card-line">${esc2(LINES[m])}</p>${HEARTS}</div><div class="mem-card-pic">${pic}</div></div>${btns}</div>`;
       // What happened that month, small and light under the balloon card: each big first as a little round badge
       // with its drawing (four at most, one row), then the smaller things named in one short line. Two are named;
       // past that it's "and 3 more", which opens the book where they're all listed.
@@ -200,9 +201,14 @@
       const tileFor = r => `<button class="mem-ft" onclick="openPage('event-edit:${r.id}')" aria-label="${esc2(`${keepTitle(r)}, change or move`)}"><span class="mem-ft-ic" style="${TONE(r)}">${hubArt(ICON(r), 'Development')}</span><b>${esc2(bigSet.has(r) ? keepTitle(r) : r.title)}</b></button>`;
       const listAll = `<template class="mem-month-all"><h2>${esc2(`${WORDS[m]} · ${all.length} firsts`)}</h2><p>Tap one to change it or move it to another month.</p>${all.map(r => `<button class="mem-sheet-row" onclick="memSheetClose();openPage('event-edit:${r.id}')"><span class="mem-ft-ic" style="${TONE(r)}">${hubArt(ICON(r), 'Development')}</span><b>${esc2(bigSet.has(r) ? keepTitle(r) : r.title)}</b><i aria-hidden="true">›</i></button>`).join('')}</template>`;
       const moreTile = more ? `<button class="mem-ft is-more" onclick="memMonthList(${m})"><b>+${more}</b><small>more</small></button>` : '';
-      const what = `<div class="mem-list-head"><h3>${esc2(m === now ? 'Firsts this month' : 'Firsts that month')}</h3><button class="mem-list-add" onclick="openPage('chg:Timeline:milestone')">＋ Add a first</button></div>`
+      // Adding a first from a month's card saves it to that month.
+      const addFirst = `window.__firstMonth=${m};openPage('chg:Timeline:milestone')`;
+      // Same heading in every state. With nothing saved, one dashed bar: Add a first, and a short line under it.
+      const P2 = typeof babyPronouns === 'function' ? babyPronouns() : { p: 'their' };
+      const emptyLine = m === now ? `Tap Seen it in Development, and ${P2.p} firsts land here.` : `Nothing saved for ${m === 0 ? "the newborn month" : WORDS[m].toLowerCase()}.`;
+      const what = `<div class="mem-list-head"><h3>${esc2(m === now ? 'Firsts this month' : 'Firsts that month')}</h3>${all.length ? `<button class="mem-list-add" onclick="${addFirst}">＋ Add a first</button>` : ''}</div>`
         + (all.length ? `<div class="mem-fts">${shown.map(tileFor).join('')}${moreTile}</div>${more ? listAll : ''}`
-          : `<p class="mem-list-none">${esc2(m === now ? 'Tap Seen it in Development, or add a first, and it shows up here.' : 'Nothing saved for this month.')}</p>`);
+          : `<button class="mem-empty-bar" onclick="${addFirst}"><span class="mem-empty-plus" aria-hidden="true">＋</span><span><b>Add a first</b><small>${esc2(emptyLine)}</small></span></button>`);
       return `<section class="mem-card" data-m="${m}"${m === now ? '' : ' hidden'}>${media}${what}</section>`;
     };
     const play = have.length >= 2 ? `<button class="mem-title-play" onclick="memPlay()" aria-label="Play the year"><span aria-hidden="true">▶</span> Play the year</button>` : '';

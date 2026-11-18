@@ -1904,3 +1904,14 @@ label:has(> .hub-photo-input:focus-visible) { outline: 2px solid #884866; outlin
 #main .mem-ft-go { display: none }
 #main .mem-title-row .mem-title-play { padding: 6px 12px; border: 0; border-radius: 999px; background: #efe4f1; color: #5b3a6a; font-size: 13px; font-weight: 700 }
 #main .mem-title-row { margin-bottom: -2px }
+/* Empty firsts (Nov 18): a dashed Add tile the size of a first, and one line beside it. */
+#main .mem-fts.is-empty { align-items: center }
+#main .mem-ft.is-add { border: 1.5px dashed #d9ccd4; background: transparent; box-shadow: none; color: #6b3f78 }
+#main .mem-ft.is-add .mem-ft-ic { background: #f4ecf5 }
+#main .mem-ft.is-add .mem-ft-ic b { font-size: 24px; font-weight: 400; color: #6b3f78 }
+#main .mem-fts-note { grid-column: 2 / -1; margin: 0; padding-left: 6px; font-size: 14.5px; line-height: 1.45; color: #6c6675 }
+/* Empty firsts as one dashed bar (Nov 18). */
+#main .mem-empty-bar { display: flex; align-items: center; gap: 12px; width: 100%; padding: 14px 16px; border: 1.5px dashed #d9ccd4; border-radius: 18px; background: transparent; text-align: left; font: inherit; cursor: pointer }
+#main .mem-empty-plus { flex: none; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; background: #f4ecf5; font-size: 22px; color: #6b3f78 }
+#main .mem-empty-bar b { display: block; font-size: 15px; font-weight: 700; color: #6b3f78 }
+#main .mem-empty-bar small { display: block; margin-top: 2px; font-size: 13.5px; line-height: 1.4; color: #6c6675 }
