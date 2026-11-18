@@ -203,6 +203,9 @@
     // its range says how long it can run. The group she's in is highlighted. Checkups keep their own exact row.
     const BANDS = [[0, 3, 'Birth–2 months'], [3, 6, '3–5 months'], [6, 9, '6–8 months'], [9, 12, '9–11 months'], [12, 99, '12 months']];
     const bandOf = m => BANDS.findIndex(b => m >= b[0] - 0.01 && m < b[1]);
+    // One accent for the whole page: every icon is drawn in this month's ink, no category colors.
+    try { const mo0 = Math.max(0, Math.min(11, Math.floor(a))); if (typeof window.monthColor === 'function') YEAR_PALETTES.__tl = { ink: window.monthColor(mo0, .45, 30), bg: window.monthColor(mo0, .88), pale: window.monthColor(mo0, .94), accent: window.monthColor(mo0, .6) }; } catch (e) {}
+    const icon = n => hubArt(n, typeof YEAR_PALETTES !== 'undefined' && YEAR_PALETTES.__tl ? '__tl' : 'Development');
     const listHTML = x => {
       const t = isToday(x), here = bandOf(x + 0.1);
       const over = s => s.v != null ? ((x >= a && attended(s.v)) || s.m < x - 0.75) : ((x >= a && done[s.c.id]) || s.c.end <= x);
@@ -212,13 +215,13 @@
       const gOver = g => g.its.every(over) && g.bi < here;
       const ents = groups.map(g => ({ at: g.b[0], g })).concat(cks.map(s => ({ at: s.m - 0.001, s }))).sort((p, q) => p.at - q.at);
       const past = ents.filter(e => e.g ? gOver(e.g) : over(e.s)), live = ents.filter(e => !past.includes(e));
-      const row = (s, dim) => `<li class="tl-gr${dim ? ' is-dim' : ''}"><button onclick="${go(s)}"><span class="tl-ic" style="${yearTheme(s.c.cat)}">${hubArt(s.c.icon, s.c.cat)}</span><span class="tl-t"><b>${F(title(s))}</b>${PREP[s.c.id] && !dim ? `<small>${F(PREP[s.c.id])}</small>` : s.c.id === 'crying' && x >= 2 && !dim ? `<small>${F('Past the worst now')}</small>` : ''}</span><span class="tl-w">${F(longWhen(s))}</span></button></li>`;
+      const row = (s, dim) => `<li class="tl-gr${dim ? ' is-dim' : ''}"><button onclick="${go(s)}"><span class="tl-ic">${icon(s.c.icon)}</span><span class="tl-t"><b>${F(title(s))}</b>${PREP[s.c.id] && !dim ? `<small>${F(PREP[s.c.id])}</small>` : s.c.id === 'crying' && x >= 2 && !dim ? `<small>${F('Past the worst now')}</small>` : ''}</span><span class="tl-w">${(m => m ? `<b>${F(m[1])}</b><small>${F(m[2])}</small>` : F(longWhen(s)))(longWhen(s).match(/^(.*?)\s(months?|weeks?)$/))}</span></button></li>`;
       const pill = (txt, on, tag, mon) => `<div class="tl-ghead"><span class="tl-pill${on ? ' is-on' : ''}">${F(txt)}</span>${tag ? `<span class="tl-tag">${F(tag)}</span>` : ''}${mon ? `<span class="tl-gmon">${F(mon)}</span>` : ''}</div>`;
       const ent = e => {
         if (e.g) { const on = e.g.bi === here, fut = e.g.b[0] > x + 0.1;
-          return `<li class="tl-ent${on ? ' is-on' : ''}${fut ? '' : ' is-run'}"><i class="tl-dot"></i>${pill(e.g.b[2], on, on ? (t ? 'Now' : 'Viewing') : '', fut ? `Around ${calMon(e.g.b[0])}` : '')}<ol class="tl-gcard">${e.g.its.map(s => row(s, x >= a && !!done[s.c.id])).join('')}</ol></li>`; }
+          return `<li class="tl-ent${on ? ' is-on' : ''}${fut ? '' : ' is-run'}"><i class="tl-dot"></i>${pill(e.g.b[2], on, on ? (t ? 'Now' : 'Viewing') : '', fut ? `Around ${calMon(e.g.b[0])}` : '')}<ol class="tl-gcard">${e.g.its.map(s => row(s, false)).join('')}</ol></li>`; }
         const s = e.s, due = !over(e.s) && s.m <= x + 0.25;
-        return `<li class="tl-ent tl-ck${due ? ' is-due' : ''}${s.m > x + 0.25 ? '' : ' is-run'}"><i class="tl-dot"></i>${pill(`${s.v} month${s.v === 1 ? '' : 's'}`, due, due ? 'Due now' : '', s.m > x + 0.25 ? `Around ${calMon(s.m)}` : '')}<ol class="tl-gcard">${`<li class="tl-gr"><button onclick="${go(s)}"><span class="tl-ic" style="${yearTheme('Health')}">${hubArt('steth', 'Health')}</span><span class="tl-t"><b>${F(title(s))}</b><small>${F(due ? 'Book it if you haven’t' : 'Book it a few weeks ahead')}</small></span></button></li>`}</ol></li>`;
+        return `<li class="tl-ent tl-ck${due ? ' is-due' : ''}${s.m > x + 0.25 ? '' : ' is-run'}"><i class="tl-dot"></i>${pill(`${s.v} month${s.v === 1 ? '' : 's'}`, due, due ? 'Due now' : '', s.m > x + 0.25 ? `Around ${calMon(s.m)}` : '')}<ol class="tl-gcard">${`<li class="tl-gr"><button onclick="${go(s)}"><span class="tl-ic">${icon('steth')}</span><span class="tl-t"><b>${F(title(s))}</b><small>${F(due ? 'Book it if you haven’t' : 'Book it a few weeks ahead')}</small></span></button></li>`}</ol></li>`;
       };
       let h = '';
       if (past.length) h += `<li class="tl-past"><i class="tl-dot"></i><button onclick="this.closest('ol').classList.toggle('show-past');this.querySelector('span').textContent=this.closest('ol').classList.contains('show-past')?'Hide':'Show'">${F(`Earlier in {p} year (${past.length})`)}<span>${F(document.querySelector('#main .tl-steps.show-past') ? 'Hide' : 'Show')}</span></button></li>` + past.map(e => ent(e).replace('class="tl-ent', 'class="tl-old tl-ent')).join('');
@@ -234,8 +237,7 @@
     const hinted = (() => { try { return !!localStorage.getItem('ahead-tl-dragged'); } catch (e) { return true; } })();
     const pct = Math.max(0, Math.min(100, a / 12 * 100));
     const grad = (w, to) => typeof window.monthColor === 'function' ? `linear-gradient(90deg,${[...Array(12)].map((_, i) => `${window.monthColor(i, w, to)} ${Math.round((i + 0.5) / 12 * 100)}%`).join(',')})` : '';
-    let h = `<div class="ya-page tl-track" style="${theme(a)};--tlp:${pct}%;--tla:${pct}%;--tlg:${grad(.86)};--tlf:${grad(.42)}">${tlSwitch(m)}<div class="tl-top"><h1 class="yt-h1">${F(`${nm}’s first year`)}</h1><button class="tl-todaybtn" onclick="tlScrub(null)" disabled>${F('Today')}</button></div>`;
-    h += `<p class="tl-status">${head(a)}</p>`;
+    let h = `<div class="ya-page tl-track" style="${theme(a)};--tlp:${pct}%;--tla:${pct}%;--tlg:${grad(.86)};--tlf:${grad(.42)}"><div class="tl-top"><h1 class="yt-h1">${F(`${nm}’s first year`)}</h1><button class="tl-todaybtn" onclick="tlScrub(null)" disabled>${F('Today')}</button></div>`;
     h += `<div class="tl-prog${hinted ? '' : ' tl-hint'}"><div class="tl-ride"><span class="tl-baby" role="slider" tabindex="0" aria-label="${F(`Drag ${nm} to see another age`)}" aria-valuemin="0" aria-valuemax="12" aria-valuenow="${a.toFixed(1)}" aria-valuetext="${F(ageTxt(a))}" onkeydown="tlKey(event)" style="${theme(a)}">${art(a)}<em class="tl-tip">${F(hinted ? ageTxt(a) : 'Drag me')}</em></span><span class="tl-flag" aria-hidden="true">${window.stToy('cake')}</span></div><div class="tl-bar"><i></i><button class="tl-nowmark" onclick="tlScrub(null)" aria-label="${F('Back to today')}"></button></div><div class="tl-ticks" aria-hidden="true">${[[0, 'Birth'], [3, '3 months'], [6, '6 months'], [9, '9 months'], [12, '1 year']].map(([v, l]) => `<span style="left:${v / 12 * 100}%">${F(l)}</span>`).join('')}</div><div class="tl-ends">${ends(a)}</div></div>`;
     const gvars = x => typeof window.monthColor === 'function' ? `--g-bg:${window.monthColor(Math.max(0, Math.min(11, Math.floor(x))), .86)};--g-ink:${window.monthColor(Math.max(0, Math.min(11, Math.floor(x))), .45, 30)}` : '';
     window.__tl.gvars = gvars;
