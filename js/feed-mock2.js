@@ -339,6 +339,11 @@
   window.__fdReal = realStage;
   const ageMo = () => { try { const pr = profile; const from = pr.early && pr.due ? new Date(pr.due + 'T12:00:00') : new Date(pr.dob + 'T12:00:00'); return (NOW - from) / 864e5 / 30.44; } catch (e) { return 12; } };
   const stg = () => (window.__fdStage == null ? realStage() : window.__fdStage);
+  // Bottle how-tos for this family (Nov 18): what the Bottle basics card lists and opens.
+  const bottleHowtos = () => { const bt = isBottle() || pumps();
+    return [formulaFam() && ['formula', 'bottle', 'Making formula', 'Water first, then level scoops'], bt && stg() >= 1 && ['bottle', 'hand', 'Giving a bottle', 'Positions, pacing and burps'],
+      bt && ['basics', 'fridge', 'How long milk keeps', 'Out, in the fridge, and left over'], pumps() && ['pump', 'clock', 'Pumping', 'How often, and how much']].filter(Boolean); };
+  const bottleSub = L => { const t = L.map(x => x[2].toLowerCase()); return (t.length > 1 ? t.slice(0, -1).join(', ') + ' and ' + t[t.length - 1] : t[0]).replace(/^./, c => c.toUpperCase()); };
   // First foods opens with first tastes until about 7½ months, and for the first 4 weeks of solids for a baby who starts later (the same rule as the Solids guides list).
   const firstTastes = m => m < 7.5 || (stg() === realStage() && typeof answers !== 'undefined' && (answers.foodExperience === 'new' || (!!answers.solidsStart && typeof foodWeeksIn === 'function' && foodWeeksIn() < 4)));
   const isEarly = () => typeof profile !== 'undefined' && !!profile.early;
@@ -2408,6 +2413,10 @@
       + `<div class="hub-list">${rows.map(([id, icon, title, sub]) => H().row({ cat: CAT, icon, title, sub, onclick: id === 'x_poop' ? poopGo() : id === 'x_cry' ? "openPage('chg:Sleep:d:crying')" : go(id) }).replace(/<span class="hub-dot">[\s\S]*?<\/span><span class="hub-row-copy">/, `<span class="hub-dot">${hubArt(icon, CAT).replace('data-art=', 'data-keep=')}</span><span class="hub-row-copy">`)).join('')}</div>`
       + `<section class="ss-moment">` + xVs(['Normal', 'Spit-up, gas, fussy evenings, and feeds that change from day to day.'], ['Call your pediatrician', 'Fewer wet diapers, too sleepy to feed, green or bloody vomit, or ' + fever(false) + '.'])
       + xNote('Who can help:', 'your pediatrician' + (nurse ? ', and a lactation consultant for latching, often covered by insurance.' : '.')) + xNote('How are you doing?', 'If you feel low or overwhelmed most days, tell your doctor, or call or text 1-833-852-6262, any time.') + `</section>`); };
+  // Bottle basics (Nov 18): the bottle how-tos for this family, one list, opened from the card under Feeding challenges.
+  P.bottles = () => { const L = bottleHowtos();
+    return qaCss + page(head('Bottles', formulaFam() ? 'Make, give and store bottles safely' : 'Give and store bottles safely', 'Handy to share with anyone else who gives bottles.', XC.p1)
+      + `<div class="hub-list">${L.map(([id, icon, title, sub]) => H().row({ cat: CAT, icon, title, sub, onclick: go(id) }).replace(/<span class="hub-dot">[\s\S]*?<\/span><span class="hub-row-copy">/, `<span class="hub-dot">${hubArt(icon, CAT).replace('data-art=', 'data-keep=')}</span><span class="hub-row-copy">`)).join('')}</div>`); };
   const xTough = (id, title, lead, body) => qaCss + page(head('Feeding challenges', title, lead, XC.tough) + `<section class="ss-moment">${body}</section>`);
   P.x_hurt = () => xTough('x_hurt', 'Feeds shouldn’t hurt after the first minute', 'A little tenderness in the first week is common. Pain all feed long usually means a shallow latch.',
       steps([['hand', 'Re-latch', 'Break the seal with a clean finger, then try again'], ['heart', 'Try another hold', 'Football or laid-back often helps'], ['steth', 'Get it checked', 'A lactation consultant can check the latch, and for tongue-tie']], false)
@@ -3356,8 +3365,11 @@
         h = h.replace(/<span class="hub-card-note"><b>Every day<\/b>[\s\S]*?<\/span>(?:<button class="hub-link"[^>]*>[^<]*<\/button>)*/, `<span class="hub-card-note fd-every">${note}</span>`);
         // Families who pump or store breast milk: how long the baby's milk keeps, one quiet link, at every stage (Nov 14).
         // Bottle how-tos (Nov 16): one quiet line on the stage page, since these pages no longer link to each other at the bottom.
-        { const bt = isBottle() || pumps(), L = [bt && ['How long milk keeps', 'basics'], bt && stg() >= 1 && ['Giving a bottle', 'bottle'], formulaFam() && ['Making formula', 'formula'], pumps() && ['Pumping', 'pump']].filter(Boolean);
-          if (L.length && !/fd-keeps/.test(h)) h = h.replace(/(<\/section>)(\s*<div class="hub-browse fd-assumed">|\s*<section class="hub-list|\s*<h2)/, `$1<div class="hub-browse fd-keeps"><span class="fd-keeps-l">${F('Bottles:')}</span> ${L.map(([t, id]) => `<button class="hub-link" onclick="${go(id)}">${F(t)}</button>`).join('<span aria-hidden="true"> · </span>')}</div>$2`); } }
+        // Nov 18: one "Bottle basics" door under Feeding challenges, the same kind of card, instead of a loose line of links.
+        { const L = bottleHowtos();
+          if (L.length && !/fd-bottles/.test(h)) { const a = h.indexOf('<button class="hub-rough-card'), e = a < 0 ? -1 : h.indexOf('</button>', a);
+            const door = `<button class="hub-rough-card care-rash-card fd-bottles" style="background:#fdeee6;color:#9a5a3c;margin-top:12px" onclick="${go('bottles')}"><span class="hub-rough-moon" aria-hidden="true">${hubArt('bottle', CAT)}</span><span class="hub-rough-copy"><b>${F('Bottle basics')}</b><small>${F(bottleSub(L))}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`;
+            if (e > 0) h = h.slice(0, e + 9) + door + h.slice(e + 9); } } }
       // Formula: making and storing bottles, one tap from the feed walkthrough.
       if (typeof h === 'string' && /^chg:Feeding:mock:xa:feed(\.\d)?$/.test(String(r)) && formulaFam()) h = h.replace('<button class="hub-next"', `<div class="hub-browse"><button class="hub-link" onclick="openPage('chg:Feeding:mock:xa:prep')">${F('Making, storing and cleaning bottles')} ›</button></div><button class="hub-next"`);
       return h; };
