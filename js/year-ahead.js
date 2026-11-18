@@ -212,7 +212,7 @@
       const items = all.filter(s => s.v == null), cks = all.filter(s => s.v != null);
       // Things she's still in the window for travel with her into her current group (after its own changes), so the page
       // always opens on her stage; an earlier group then holds only what's over, and folds into "Earlier".
-      const home = s => { const b = bandOf(s.m); return b < here && !over(s) ? here : b; };
+      const home = s => bandOf(s.m);
       const groups = BANDS.map((b, bi) => ({ bi, b, its: items.filter(s => home(s) === bi).sort((p, q) => (bandOf(p.m) < bi) - (bandOf(q.m) < bi) || p.m - q.m || p.c.end - q.c.end) })).filter(g => g.its.length);
       // A group folds into "Earlier" only once every change in it is over; a checkup once it's past.
       const gOver = g => g.its.every(over) && g.bi < here;
@@ -223,12 +223,20 @@
       const row = (s, dim) => `<li class="tl-gr${dim ? ' is-dim' : ''}"><button onclick="${go(s)}"><span class="tl-ic">${icon(s.c.icon)}</span><span class="tl-t"><b>${F(title(s))}</b>${PREP[s.c.id] && !dim ? `<small>${F(PREP[s.c.id])}</small>` : s.c.id === 'crying' && x >= 2 && !dim ? `<small>${F('Past the worst now')}</small>` : ''}</span><span class="tl-w">${(m => m ? `<b>${F(m[1])}</b><small>${F(m[2])}</small>` : F(longWhen(s)))(longWhen(s).match(/^(.*?)\s(months?|weeks?)$/))}</span></button></li>`;
       const pill = (txt, on, tag, mon) => `<div class="tl-ghead"><span class="tl-pill${on ? ' is-on' : ''}">${F(txt)}</span>${tag ? `<span class="tl-tag">${F(tag)}</span>` : ''}${mon ? `<span class="tl-gmon">${F(mon)}</span>` : ''}</div>`;
       const ent = e => {
-        if (e.g) { const on = e.g.bi === here, fut = e.g.b[0] > x + 0.1;
+        if (e.g) { const on = e.g.bi === here, fut = e.g.b[0] > x + 0.1, shut = e.g.bi < here;
+          if (shut) return `<li class="tl-ent is-run tl-shut"><i class="tl-dot"></i><button class="tl-shutbtn" onclick="this.parentNode.classList.toggle('is-open')" aria-expanded="false"><span class="tl-pill">${F(e.g.b[2])}</span><span class="tl-gmon">${F(`${e.g.its.length} change${e.g.its.length === 1 ? '' : 's'}, some still in {p} window`)}</span><i class="yt-caret" aria-hidden="true">›</i></button><ol class="tl-gcard">${e.g.its.map(s => row(s, false)).join('')}</ol></li>`;
           return `<li class="tl-ent${on ? ' is-on' : ''}${fut ? '' : ' is-run'}"><i class="tl-dot"></i>${pill(e.g.b[2], on, on ? (t ? 'Now' : 'Viewing') : '', fut ? `Around ${calMon(e.g.b[0])}` : '')}<ol class="tl-gcard">${e.g.ck ? `<li class="tl-gr"><button onclick="${go(e.g.ck)}"><span class="tl-ic">${icon('steth')}</span><span class="tl-t"><b>${F(title(e.g.ck))}</b><small>${F('Book it a few weeks ahead')}</small></span></button></li>` : ''}${e.g.its.map(s => row(s, false)).join('')}</ol></li>`; }
         const s = e.s, due = !over(e.s) && s.m <= x + 0.25;
         return `<li class="tl-ent tl-ck${due ? ' is-due' : ''}${s.m > x + 0.25 ? '' : ' is-run'}"><i class="tl-dot"></i>${pill(`${s.v} month${s.v === 1 ? '' : 's'}`, due, due ? 'Due now' : '', s.m > x + 0.25 ? `Around ${calMon(s.m)}` : '')}<ol class="tl-gcard">${`<li class="tl-gr"><button onclick="${go(s)}"><span class="tl-ic">${icon('steth')}</span><span class="tl-t"><b>${F(title(s))}</b><small>${F(due ? 'Book it if you haven’t' : 'Book it a few weeks ahead')}</small></span></button></li>`}</ol></li>`;
       };
+      // Coming up for her: the next few changes about to begin, with what to do now. This is what changes visit to visit.
+      const soon = items.filter(s => s.m >= x - 0.25 && !over(s)).sort((p, q) => p.m - q.m).slice(0, 3);
+      const ckNext = cks.find(s => !over(s) && s.m <= x + 1.5);
+      const mon = m => new Date(bornD.getTime() + m * MONTH).toLocaleDateString('en-US', { month: 'short' });
+      const sRow = s => `<li class="tl-gr"><button onclick="${go(s)}"><span class="tl-ic">${icon(s.c.icon)}</span><span class="tl-t"><b>${F(title(s))}</b>${PREP[s.c.id] ? `<small>${F(PREP[s.c.id])}</small>` : ''}</span><span class="tl-w">${s.m <= x + 0.25 ? `<b>${F('Now')}</b><small>${F('starting')}</small>` : `<small>${F('around')}</small><b>${F(mon(s.m))}</b>`}</span></button></li>`;
+      const cRow = s => { const due = s.m <= x + 0.25; return `<li class="tl-gr"><button onclick="${go(s)}"><span class="tl-ic">${icon('steth')}</span><span class="tl-t"><b>${F(title(s))}</b><small>${F(due ? 'Book it if you haven’t' : 'Book it a few weeks ahead')}</small></span><span class="tl-w">${due ? `<b>${F('Due')}</b><small>${F('now')}</small>` : `<small>${F('around')}</small><b>${F(mon(s.m))}</b>`}</span></button></li>`; };
       let h = '';
+      if (soon.length || ckNext) h += `<li class="tl-soon"><h2 class="tl-h2">${F(t ? `Coming up for ${nm}` : `Coming up at ${ageTxt(x)}`)}</h2><ol class="tl-gcard">${ckNext ? cRow(ckNext) : ''}${soon.map(sRow).join('')}</ol></li><li class="tl-mapsec"><h2 class="tl-h2">${F(`${nm}’s year`)}</h2></li>`;
       if (past.length) h += `<li class="tl-past"><i class="tl-dot"></i><button onclick="this.closest('ol').classList.toggle('show-past');this.querySelector('span').textContent=this.closest('ol').classList.contains('show-past')?'Hide':'Show'">${F(`Earlier in {p} year (${past.length})`)}<span>${F(document.querySelector('#main .tl-steps.show-past') ? 'Hide' : 'Show')}</span></button></li>` + past.map(e => ent(e).replace('class="tl-ent', 'class="tl-old tl-ent')).join('');
       h += live.map(ent).join('');
       return h + `<li class="tl-ent tl-bday"><i class="tl-dot"></i><div class="tl-gcard tl-bcard"><span class="tl-t"><b>${F('First birthday!')}</b><small>${F(`Around ${calMon(12)}`)}</small></span>${cake}</div></li>`;

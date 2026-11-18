@@ -1187,3 +1187,18 @@
 #main .tl-gr .tl-w{display:flex;flex-direction:column;align-items:flex-end;line-height:1.15;min-width:44px}
 #main .tl-gr .tl-w b{font-size:14px;font-weight:600;color:#5e5968}
 #main .tl-gr .tl-w small{font-size:11px;color:#8a8494}
+
+/* Nov 17 · Coming up first, then the year as a map */
+#main .tl-groups>li.tl-soon,#main .tl-groups>li.tl-mapsec{margin-left:-30px;padding:0 0 18px}
+#main .tl-groups>li.tl-soon::before,#main .tl-groups>li.tl-mapsec::before{display:none!important}
+#main .tl-mapsec{padding-bottom:10px!important}
+#main .tl-h2{margin:0 0 10px;font-size:19px;font-weight:700;color:#2B2840;letter-spacing:-.01em}
+#main .tl-soon .tl-gcard{background:var(--m-bg1,#f8eff1);box-shadow:none}
+#main .tl-gr .tl-w small+b{margin-top:1px}
+#main .tl-shutbtn{display:flex;align-items:center;gap:8px;width:100%;padding:0;border:0;background:none;font:inherit;text-align:left;cursor:pointer;margin-bottom:6px}
+#main .tl-shutbtn .yt-caret{margin-left:auto;font-style:normal;color:#9a94a4;transform:rotate(90deg);transition:transform .2s}
+#main .tl-shut.is-open .tl-shutbtn .yt-caret{transform:rotate(-90deg)}
+#main .tl-shut>.tl-gcard{display:none}
+#main .tl-shut.is-open>.tl-gcard{display:block}
+#main .tl-shut{padding-bottom:10px!important}
+#main .tl-pill{white-space:nowrap;flex:none}
