@@ -268,7 +268,7 @@
     if (pg.dataset.mo !== mo) { pg.dataset.mo = mo;
       T.theme(q).split(';').forEach(d => { const i = d.indexOf(':'); if (i > 0) b.style.setProperty(d.slice(0, i).trim(), d.slice(i + 1).trim()); });
       [...b.children].forEach(c => { if (c !== tip) c.remove(); }); b.insertAdjacentHTML('afterbegin', T.art(q));
-      const hd = pg.querySelector('.tl-status'), nx = T.head(q); if (hd.innerHTML !== nx) { hd.classList.remove('is-swap'); void hd.offsetWidth; hd.innerHTML = nx; hd.classList.add('is-swap'); } }
+      const hd = pg.querySelector('.tl-status'), nx = T.head(q); if (hd && hd.innerHTML !== nx) { hd.classList.remove('is-swap'); void hd.offsetWidth; hd.innerHTML = nx; hd.classList.add('is-swap'); } }
     tip.textContent = q >= 11.9 ? '1 year' : q < 1 ? `${Math.max(1, Math.round(q * 4.35))} wk` : `${Math.floor(q)} months`;
     pg.querySelector('.tl-ends').innerHTML = T.ends(q);
     const ol = pg.querySelector('.tl-steps'), was = new Set([...ol.querySelectorAll('.is-now')].map(e => e.dataset.id));
