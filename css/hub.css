@@ -619,6 +619,7 @@
 /* Stage strip */
 #main .hub-strip-row { display: grid; grid-template-columns: repeat(var(--n, 3), 1fr); gap: 6px }
 #main .hub-strip-row.is-3 { --n: 3 } #main .hub-strip-row.is-4 { --n: 4 }
+#main .hub-strip-row.is-2 { --n: 2 } #main .hub-strip-row.is-5 { --n: 5 }
 #main .hub-strip-step { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 3px; padding: 14px 4px 10px; border-radius: 14px }
 #main .hub-strip-step:not(:last-child)::after { content: '›'; position: absolute; right: -6px; top: 26px; font-size: 16px; color: var(--muted, #6b6670) }
 #main .hub-strip-step.is-now { background: var(--pale) }
@@ -1745,3 +1746,4 @@ label:has(> .hub-photo-input:focus-visible) { outline: 2px solid #884866; outlin
 /* Nov 14: the same three facts on every sleep training method, in one row. */
 #main .st-glance { grid-template-columns: repeat(3, 1fr); margin: 0 0 12px }
 #main .st-glance b { font-size: 15.5px }
+

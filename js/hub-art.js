@@ -63,6 +63,8 @@
     book: (c) => `<path d="M3.5 5.5c2.8-1 5.8-1 8.5.6 2.7-1.6 5.7-1.6 8.5-.6V19c-2.8-1-5.8-1-8.5.6-2.7-1.6-5.7-1.6-8.5-.6Z" fill="${c.bg}"/><path d="M12 6.1v13.5"/>`,
     music: (c) => `<path d="M9 17V6l10-2v11"/><circle cx="6.5" cy="17" r="2.5" fill="${c.bg}"/><circle cx="16.5" cy="15" r="2.5" fill="${c.bg}"/>`,
     mirror: (c) => `<ellipse cx="12" cy="10" rx="6" ry="7" fill="${c.bg}"/><path d="M12 17v4M9 21h6M9.5 8l2.5-2.5"/>`,
+    // A teething ring: a ring with a hole and a few soft bumps (Nov 17: 'ring' had no icon and fell back to the bath).
+    ring: (c) => `<path fill-rule="evenodd" d="M12 3.5a8.5 8.5 0 1 1 0 17 8.5 8.5 0 0 1 0-17Zm0 5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z" fill="${c.bg}"/><path d="M12 5.8h.01M18.2 12h.01M12 18.2h.01M5.8 12h.01M16.4 7.6h.01M16.4 16.4h.01M7.6 16.4h.01M7.6 7.6h.01" stroke-width="2.2"/>`,
     toy: (c) => `<circle cx="6.8" cy="6.8" r="2.3" fill="${c.bg}"/><circle cx="17.2" cy="6.8" r="2.3" fill="${c.bg}"/><circle cx="12" cy="12.5" r="6.5" fill="${c.bg}"/><path d="M9.8 11.5h.01M14.2 11.5h.01M10.5 14.8q1.5 1 3 0"/>`,
     mat: (c) => `<path d="M3 15.5 8 11h13l-5 4.5Z" fill="${c.bg}"/><path d="M3 15.5v2.5h13v-2.5M16 18l5-4.5V11M9.5 13.2h6"/>`,
     roll: (c) => `<circle cx="12" cy="13" r="6.5" fill="${c.bg}"/><path d="M5 8.5A8 8 0 0 1 17.5 5M17.5 5l-.4 3.3M17.5 5l-3.2-.6"/>`,
@@ -210,7 +212,7 @@
     stroller: { scenes: ['stroller'], chips: ['Lying flat while little', 'No bags on the handles', 'No blanket over the top'] },
     strollerUp: { scenes: ['strollerUp'], chips: ['Sitting up once steady', 'No bags on the handles', 'No blanket over the top'] },
     outgrown: { scenes: ['outgrown'], chips: ['Head within an inch of the top', 'Or past the height or weight on the label'] },
-    swaddle: { scenes: [['swad1', '1', 'Diamond, top folded', 'Shoulders below the fold'], ['swad2', '2', 'One side across', 'Arm straight, tucked under'], ['swad3', '3', 'Snug and loose', 'Snug chest, room at the hips']] },
+    swaddle: { scenes: [['swad1', '1', 'A diamond, top folded', 'Shoulders below the fold'], ['swad2', '2', 'One side across first', 'Arm straight, tucked under'], ['swad3', '3', 'Snug and loose', 'Snug chest, room at the hips']] },
     tub: { scenes: ['tub'], chips: ['About 2 inches of water', 'Warm, about 100°F', 'One hand behind the head and neck'] },
     crib: { scenes: ['crib'], chips: ['On the back', 'Swaddle or sleep sack', 'Firm, flat mattress', 'Nothing else in the crib', 'Not a sofa or your bed', 'Cool and smoke-free', 'Pacifier, if you like'] },
     pace: { scenes: [['paced', 'good', 'Paced', 'Upright, bottle level'], ['tipped', 'bad', 'Avoid', 'Lying back, bottle tipped up']] },

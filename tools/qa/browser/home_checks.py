@@ -151,7 +151,7 @@ async def main():
         await page_text(pE, 'home')
         for r in ['topic:Sleep', 'topic:Safety', 'topic:Out and about', 'topic:Childcare', 'chg:Sleep:d:routine']:
             await pg.evaluate(f"openPage('{r}')"); await pg.wait_for_timeout(200)
-            hd = await pg.evaluate("(document.querySelector('#main .monthly-page-header p')||{}).textContent||''")
+            hd = await pg.evaluate("((document.querySelector('#main .monthly-page-header p')||{}).textContent||'').replace(/\\u00a0/g,' ').replace(/\\u2060/g,'')")
             check(re.search(r'Theo · \d+ weeks · [^·]+ adjusted$', hd), f'Born early: {r} header shows both ages ({hd})')
         for days in (137, 182, 300, 76):
             t = await page_text(prof(days), 'home')

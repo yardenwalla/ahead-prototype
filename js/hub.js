@@ -70,6 +70,52 @@
   // Each card is [question, short answer, one line of detail]. One shared block, so pages stay consistent.
   const qa = items => `<section class="hub-qa">${items.filter(Boolean).map(([q, a, d]) => `<div><small>${F(q)}</small><b>${F(a)}</b>${d ? `<p>${F(d)}</p>` : ''}</div>`).join('')}</section>`;
   const tip = (label, text) => `<div class="hub-tip"><b>${F(label)}</b>${F(text)}</div>`;
+  /* ---------- Page templates (Nov 16; see claude/ahead-page-templates.md) ----------
+     The same templates Everyday care uses, for every guide. A page is data: { type, label, art, title, why, ...fields }.
+       expect  What's normal right now?   What's normal · What to do · Watch how? · When to call?
+       howto   How do I do this?          Steps · Keep {o} safe / Good to know · Watch how?
+       check   Should I be worried?       How to tell · What helps · When to call
+       option  Is this right for us?      At a glance · How it works · Good to know
+     One card per section; short notes go inside the card they explain; numbers only on real sequences. */
+  const tval = v => typeof v === 'function' ? v() : v;
+  const TPLB = {
+    sec: (t, body) => body ? `<h2 class="hub-h2">${F(t)}</h2>` + body : '',
+    // An outside source to watch or read, one quiet line under the section it belongs to.
+    // A plain list of short items (foods, things to skip): chips, not big tiles.
+    chips: (items, notes) => `<section class="care-tpl-card tpl-chips"><div>${tval(items).map(t => `<span>${F(t)}</span>`).join('')}</div>${TPLB.ul(notes)}</section>`,
+    // Normal vs act now, side by side in calm and urgent colors, for the comparisons that matter most.
+    versus: (a, b, notes) => `<section class="care-tpl-card tpl-versus"><div><div class="is-ok"><b>${F(a[0])}</b><p>${F(a[1])}</p></div><div class="is-act"><b>${F(b[0])}</b><p>${F(b[1])}</p></div></div>${TPLB.ul(notes)}</section>`,
+    link: (url, text) => `<a class="hub-more" href="${url}" target="_blank" rel="noopener"><span>${F(text)}</span><span class="hub-chev" aria-hidden="true">↗</span></a>`,
+    // A small table in a white card: head row, then rows. Used for how long milk keeps.
+    table: (head, rows) => `<section class="care-tpl-card tpl-table"><table><thead><tr>${head.map(h => `<th>${F(h)}</th>`).join('')}</tr></thead><tbody>${rows.map(r => `<tr>${r.map(c => `<td>${F(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></section>`,
+    card: (text, notes) => text ? `<section class="ss-do care-tpl-card"><p>${F(tval(text))}</p>${TPLB.ul(notes)}</section>` : '',
+    // Nov 17: nothing is cut off silently. Over the limit (2 notes, 3 rows) still shows everything, and is marked for QA (tools/qa/browser/template_limits.py).
+    ul: notes => { notes = (tval(notes) || []).filter(Boolean); return notes.length ? `<ul class="tpl-notes"${notes.length > 2 ? ' data-over-limit="notes"' : ''}>${notes.map(([, t, sub]) => `<li><b style="color:#302d3c">${F(t)}${/[?!.]$/.test(t) ? '' : '.'}</b> ${F(sub)}${/[?!.]$/.test(sub) ? '' : '.'}</li>`).join('')}</ul>` : ''; },
+    noted: (fig, notes) => { const ul = TPLB.ul(notes); if (!fig || !ul) return fig || ''; let i = fig.lastIndexOf('</figure>'); if (i < 0) i = fig.lastIndexOf('</section>'); return i < 0 ? fig + ul : fig.slice(0, i) + ul + fig.slice(i); },
+    tiles: (items, cat, numbered) => (items = tval(items)) && items.length ? hubIconSteps(items, cat, F(items.map(t => t[1] + ': ' + t[2]).join('. ')), !!numbered) : '',
+    rows: (rows, cat) => { rows = (tval(rows) || []).filter(Boolean); return rows.length ? `<div class="hub-list"${rows.length > 3 ? ' data-over-limit="rows"' : ''}>${rows.map(([icon, t, sub]) => row({ icon, cat, title: t, sub })).join('')}</div>` : ''; },
+    calls: c => { c = tval(c); if (!c) return ''; const PH = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h3l2 5-2.5 1.5a11 11 0 0 0 6 6L15 14l5 2v3a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>';
+      return `<h2 class="hub-h2">${F('When to call')}</h2><section class="care-calls is-titled"><span class="care-calls-ico">${PH}</span><div>` + (c.ped ? `<p><b>${F('Call your pediatrician if:')}</b> ${F(tval(c.ped))}</p>` : '') + (c.now ? `<p class="is-urgent"><b>${F((c.nowLabel || 'Call right away') + ' if:')}</b> ${F(tval(c.now))}</p>` : '') + `</div></section>`; }
+  };
+  const TPLS = {
+    // When it's urgent: how to tell, what to do, then the call card last, with 911 directly under the pediatrician line.
+    urgent: (q, cat) => TPLB.sec('How to tell', TPLB.noted(q.figure ? q.figure() : TPLB.tiles(q.signs, cat), q.tell))
+      + TPLB.sec(q.doTitle || 'What to do now', !q.do ? '' : Array.isArray(tval(q.do)) ? TPLB.noted(TPLB.tiles(q.do, cat, q.doOrdered), q.doNotes) : TPLB.card(q.do, q.doNotes))
+      + (q.link ? TPLB.link(...q.link) : '') + TPLB.calls(q.calls),
+    expect: (q, cat) => { const n = tval(q.normal); return TPLB.sec(tval(q.normalTitle) || 'What’s normal', TPLB.noted(Array.isArray(n) ? TPLB.tiles(n, cat, q.normalOrdered) : n, q.normalNotes))
+      + (q.more ? TPLB.sec(tval(q.moreTitle), tval(q.more)) : '')
+      + TPLB.sec(tval(q.doTitle) || 'What to do', Array.isArray(tval(q.do)) ? TPLB.noted(TPLB.tiles(q.do, cat, q.doOrdered), q.doNotes) : TPLB.card(q.do, q.doNotes))
+      + (q.action ? q.action() : '') + TPLB.sec('Watch how', q.video ? hubEmbed(...q.video) : '') + TPLB.calls(q.calls); },
+    // pictureAfter: a tool (like the allergen tracker) goes after the steps it supports.
+    howto: (q, cat) => { const pic = TPLB.sec(tval(q.pictureTitle) || 'At a glance', q.picture ? q.picture() : ''), steps = TPLB.sec(tval(q.stepsTitle) || (q.ordered === false ? 'What to do' : 'Steps'), TPLB.noted(q.stepsFig ? q.stepsFig() : TPLB.tiles(q.steps, cat, q.ordered !== false), q.stepsNotes)) + (q.action ? q.action() : '');
+      return (q.pictureAfter ? steps + pic : pic + steps)
+      + TPLB.sec(q.tipsTitle || 'Keep {o} safe', TPLB.rows(q.tips, cat)) + TPLB.sec('Watch how', q.video ? hubEmbed(...q.video) : ''); },
+    check: (q, cat) => TPLB.sec(tval(q.tellTitle) || 'How to tell', TPLB.noted(q.figure ? q.figure() : TPLB.tiles(q.signs, cat), q.tell))
+      + TPLB.sec('What helps', TPLB.noted(TPLB.tiles(q.helps, cat, q.ordered), q.helpsNotes)) + TPLB.calls(q.calls),
+    option: (q, cat) => TPLB.sec('At a glance', tval(q.glance)) + TPLB.sec('How it works', tval(q.how)) + TPLB.sec('Good to know', TPLB.rows(q.tips, cat))
+  };
+  const tplPage = (cat, q) => detail(cat, tval(q.label), tval(q.title), tval(q.why) || '', `<div class="care-tpl is-${q.type}">${TPLS[q.type](q, cat)}</div>`, q.art);
+
   const table = rows => `<div class="hub-card"><dl class="hub-table">${rows.map(r => `<div><dt>${F(r[0])}</dt><dd>${F(r[1])}</dd></div>`).join('')}</dl></div>`;
   const options = (items, chosen, onclick, cat = 'Feeding') => `<div class="hub-options">${items.map(([k, t, b, icon]) => `<button class="hub-option ${chosen === k ? 'is-on' : ''}${icon ? ' has-art' : ''}" aria-pressed="${chosen === k}" onclick="${onclick(k)}">${icon ? `<span class="hub-option-art">${art(icon, cat)}</span>` : ''}<span><b>${F(t)}</b><span>${F(b)}</span></span></button>`).join('')}</div>`;
   const segmented = (items, chosen, onclick) => `<div class="hub-seg" role="tablist">${items.map(([k, t]) => `<button role="tab" aria-selected="${chosen === k}" class="${chosen === k ? 'is-on' : ''}" onclick="${onclick(k)}">${F(t)}</button>`).join('')}</div>`;
@@ -458,15 +504,15 @@
     }
     if (id === 'vitd') {
       // Vitamin D and iron, in one place. AAP: breast milk is low in both; formula has both added.
-      // Iron (AAP): breastfed babies get iron drops from 4 months until iron-rich foods are going well; breastfed babies born early, from about 1 month through 12 months.
+      // Iron (AAP): breastfed babies get iron drops from 4 months until iron-rich foods are going well; breastfed babies born early, from the first weeks (AAP, July 2026).
       // Vitamin D (AAP): 400 IU a day for breastfed and partly breastfed babies; after 1, many children still need 600 IU.
       const f = meth() === 'bottle', early = typeof profile !== 'undefined' && profile.early;
       const ts = f ? [['Vitamin D', 'Usually covered', 'Formula has it added'], ['Iron', 'Usually covered', 'Formula has it added']]
-        : [['Vitamin D', '400 IU a day', 'Drops, from the first days'], ['Iron', early ? 'From about 1 month' : 'From 4 months', early ? 'Usually until 12 months, at the dose your pediatrician gives' : 'Drops until iron-rich foods are going well']];
+        : [['Vitamin D', '400 IU a day', 'Drops, from the first days'], ['Iron', early ? 'From the first weeks' : 'From 4–6 months', early ? 'Usually until 12 months, at the dose your pediatrician gives' : 'Drops until iron-rich foods are going well']];
       return detail(cat, 'Milk feeds', 'Vitamin D and iron', f ? 'Formula has both added, so most formula-fed babies don’t need drops.' : 'Breast milk is low in vitamin D and iron, so breastfed and partly breastfed babies need a little extra.',
         `<section class="hub-card hub-glance is-static"><span class="hub-card-head"><b>${F(f ? 'For formula-fed babies' : 'For breastfed babies')}</b></span>${tiles(ts)}</section>`
         + (f ? tip('When to ask', 'If Maya drinks less than about 32 oz of formula a day, ask your pediatrician about vitamin D drops.')
-          : steps(age >= 12 ? ['Ask at the 12-month checkup whether to keep giving vitamin D. After 1, many children still need it (600 IU a day).', 'Iron now comes from food: meat, beans, eggs and iron-fortified cereal.'] : age < 4 ? ['Give 400 IU of vitamin D every day, starting now. The label says how many drops that is.', early ? 'Ask your pediatrician for Maya’s iron dose. Babies born early usually start at about 1 month.' : 'At the 4-month checkup, ask your pediatrician for Maya’s iron dose.'] : ['Keep giving 400 IU of vitamin D every day through the first year.', early ? 'Keep giving iron drops, usually until 12 months.' : 'Give iron drops until iron-rich foods are going well. Ask at the next checkup when to stop.'])
+          : steps(age >= 12 ? ['Ask at the 12-month checkup whether to keep giving vitamin D. After 1, many children still need it (600 IU a day).', 'Iron now comes from food: meat, beans, eggs and iron-fortified cereal.'] : age < 4 ? ['Give 400 IU of vitamin D every day, starting now. The label says how many drops that is.', early ? 'Ask your pediatrician for Maya’s iron dose. Babies born early usually start in the first weeks.' : 'At the 4-month checkup, ask your pediatrician for Maya’s iron dose.'] : ['Keep giving 400 IU of vitamin D every day through the first year.', early ? 'Keep giving iron drops, usually until 12 months.' : 'Give iron drops until iron-rich foods are going well. Ask at the next checkup when to stop.'])
           + (meth() === 'both' ? tip('Breast milk and formula?', 'Keep giving vitamin D until Maya drinks about 32 oz of formula a day.') : ''))
         + (!f || early ? `<h2 class="hub-h2">${F('How to give drops')}</h2>` + (window.hubFigure ? hubFigure('drops', cat, 'Mix the drops into about an ounce of milk, give that small bottle first, then the usual feed.') : '')
           + tip(meth() === 'nurse' ? 'No bottles? Easy' : 'Or straight from the dropper', (meth() === 'nurse' ? 'Put the drop on your nipple just before a feed, or squirt it slowly inside {p} cheek. ' : 'Squirt it slowly inside {p} cheek, not toward the back of the throat. ') + 'If {s} {spit|spits} up afterward, don’t give another dose.') : '')
@@ -642,16 +688,16 @@
       clock: [
         ['Night sleep', days < 14 ? { icon: 'bottle', title: 'Wake {o} for feeds until {s’s} back to birth weight', sub: 'About 3 hours after a feed starts by day, or 4 at night', onclick: go('chg:Sleep:d:wakefeed') } : { icon: 'bottle', title: 'Back to birth weight? Let {o} wake you', sub: 'Babies regain birth weight by about 2 weeks. Ask your pediatrician', onclick: go('chg:Sleep:d:wakefeed') }],
         ['Naps', { icon: 'clock', title: 'Watch for sleepy cues, not the clock', sub: 'Wind down at the first yawn', onclick: go('chg:Sleep:d:cues') }],
-        ['Routine', { icon: 'heart', title: 'Help {o} fall asleep any way that works', sub: 'Feeding, rocking or holding are all fine', onclick: go('chg:Sleep:d:settle0') }],
+        ['Routine', { icon: 'heart', title: 'Spot the yawn, soothe, then down', sub: 'Feeding, rocking or holding are all fine', onclick: go('chg:Sleep:d:steps0') }],
         ['Safe sleep', safe || { icon: 'crib', title: 'On {p} back, in {p} own space in your room', sub: n === all ? 'Safe sleep setup is done' : 'Firm, flat and empty, every sleep', chipText: n === all ? 'Done' : 'Safety step', chipTone: n === all ? 'is-done' : '', onclick: go('chg:Sleep:safe') }]],
       daynight: [
         ['Night sleep', age >= 3 ? { icon: 'moon', title: 'Waking more soon? The 4-month regression', sub: 'Often between 3 and 5 months, and it passes', onclick: go('chg:Sleep:d:regress') } : age < 2 ? { icon: 'sun', title: 'Days and nights mixed up?', sub: 'Bright days and dim nights sort it out, often by 6–8 weeks', onclick: go('chg:Sleep:d:daynight') } : { icon: 'moon', title: 'Let {o} sleep {p} longer stretch', sub: 'No need to wake {o} once your pediatrician says so', onclick: go('chg:Sleep:d:stretch') }],
-        ['Naps', { icon: 'clock', title: 'Naps stay short and frequent', sub: age >= 3 ? 'Set times start to show up around now' : 'Set times come around 3–4 months', onclick: go('chg:Sleep:d:napsearly') }],
-        ['Routine', { icon: 'book', title: age >= 3 ? 'Your bedtime routine' : 'Start a short bedtime routine', sub: age >= 3 ? 'And move bedtime a little earlier' : 'From about 6–8 weeks: a feed, a song, then down', onclick: go('chg:Sleep:d:routine') }],
+        ['Naps', { icon: 'clock', title: 'Short, frequent naps are normal now', sub: age >= 3 ? 'Set times start to show up around now' : 'Set times come around 3–4 months', onclick: go('chg:Sleep:d:napsearly') }],
+        ['Routine', { icon: 'book', title: 'A short bedtime routine, the same every night', sub: age >= 3 ? 'Four calm steps, 15–20 minutes' : 'From about 6–8 weeks: a feed, a song, then down', onclick: go('chg:Sleep:d:routine') }],
         ['Safe sleep', safe || { icon: 'sack', title: 'Stop swaddling at the first try to roll', sub: 'Then a sleep sack, arms free', onclick: go('chg:Sleep:d:swaddleoff') }]],
       rhythm: age < 6 ? [
         ['Night sleep', age < 5 || !now ? { icon: 'moon', title: 'The 4-month sleep regression', sub: 'Waking more for a few weeks. It passes', onclick: go('chg:Sleep:d:regress') } : { icon: 'bottle', title: 'Fewer night feeds', sub: 'How they taper, and how to drop one', onclick: go('chg:Sleep:d:nightfeeds') }],
-        ['Naps', { icon: 'clock', title: 'Naps settle into set times', sub: 'Jot down when {s} {get|gets} sleepy for a few days', onclick: go('chg:Sleep:d:predictable') }],
+        ['Naps', { icon: 'clock', title: 'Naps start to settle into set times', sub: 'Jot down when {s} {get|gets} sleepy for a few days', onclick: go('chg:Sleep:d:predictable') }],
         ['Routine', { icon: 'book', title: 'Your bedtime routine', sub: 'Now with a set bedtime, around 7–8 pm', onclick: go('chg:Sleep:d:routine') }],
         ['Safe sleep', safe || { icon: 'roll', title: 'Rolling onto {p} tummy?', sub: 'What to do before and after {s} can roll back', onclick: go('chg:Sleep:d:rolling') }]] : [
         ['Night sleep', age >= 8 ? { icon: 'moon', title: 'When night waking comes back', sub: 'New skills and missing you. A short cry often settles on its own', onclick: go('chg:Sleep:d:nightwake') } : { icon: 'bottle', title: 'Fewer night feeds', sub: 'How they taper, and how to drop one', onclick: go('chg:Sleep:d:nightfeeds') }],
@@ -708,10 +754,10 @@
     const st = slStep(key, age), cat = 'Sleep';
     const G = [
       [['moon', 'Sleep, step by step', 'Spot the yawn, soothe, then down', 'Sleepy cues, and how to soothe', 'chg:Sleep:d:steps0'], ['sun', 'Days and nights', 'Bright days and dim nights set {p} clock', 'Helping {o} tell day from night', 'chg:Sleep:d:daynight'], ['sack', 'Swaddling', 'Swaddle snug at the arms, loose at the hips', 'How to swaddle, and when to stop', 'chg:Sleep:d:swaddle']],
-      [['book', 'Bedtime', 'Bedtime can be a feed, a song, then down', 'Four calm steps, 15–20 minutes', 'chg:Sleep:d:routine'], ['moon', 'The longer stretch', 'The long stretch grows over months', 'From 2–4 hours to 10–12 by a year', 'chg:Sleep:d:stretch'], ['clock', 'Naps', 'Short, frequent naps are normal now', 'Arms, carrier and stroller naps all count', 'chg:Sleep:d:napsearly']],
-      [['moon', 'Waking again', 'Waking more is the 4-month sleep regression', 'Why it happens, and how to respond', 'chg:Sleep:d:regress'], ['heart', 'Falling asleep', 'Try putting {o} down drowsy, once a day', 'How to practice, if you want to', 'chg:Sleep:d:settle4'], ['clock', 'Naps', 'Naps settle into set times', 'Nap times, and an earlier bedtime', 'chg:Sleep:d:predictable']],
-      [['crib', 'Where {s} sleeps', 'Share a room until at least 6 months', 'Bassinet to crib, and {p} own room', 'chg:Sleep:d:where'], ['book', 'Sleep training', 'Sleep training is a choice, not a must', 'When to start, and the methods', 'chg:Sleep:settle'], ['book', 'Bedtime', 'Keep bedtime at the same time each night', 'Four calm steps in the same order', 'chg:Sleep:d:routine']],
-      [answers.twoNaps === 'Yes' ? ['moon', 'The longer stretch', 'Nights keep getting longer', 'What to expect by {p} first birthday', 'chg:Sleep:d:stretch'] : ['clock', 'Two naps', 'Ready for two naps?', 'Signs, and how to switch', 'chg:Sleep:d:catnap'], ['moon', 'Night feeds', 'Night feeds drop as days get fuller', 'When to drop one, and how', 'chg:Sleep:d:nightfeeds'], ['book', 'Bedtime', 'Add brushing once teeth come', 'Where it fits in the routine', 'chg:Sleep:d:routine']],
+      [['book', 'Bedtime', 'A short bedtime routine, the same every night', 'Four calm steps, 15–20 minutes', 'chg:Sleep:d:routine'], ['moon', 'The longer stretch', '{P} longest night sleep grows over months', 'From 2–4 hours to 10–12 by a year', 'chg:Sleep:d:stretch'], ['clock', 'Naps', 'Short, frequent naps are normal now', 'Arms, carrier and stroller naps all count', 'chg:Sleep:d:napsearly']],
+      [['moon', 'Waking again', 'Waking more is the 4-month sleep regression', 'Why it happens, and how to respond', 'chg:Sleep:d:regress'], ['heart', 'Falling asleep', 'Try putting {o} down drowsy, once a day', 'How to practice, if you want to', 'chg:Sleep:d:settle4'], ['clock', 'Naps', 'Naps start to settle into set times', 'How to find {p} nap times', 'chg:Sleep:d:predictable']],
+      [['crib', 'Where {s} sleeps', 'Share a room until at least 6 months', 'And setting up the room', 'chg:Sleep:d:where'], ['book', 'Sleep training', 'Sleep training is a choice, not a must', 'When to start, and the methods', 'chg:Sleep:settle'], ['book', 'Bedtime', 'A short bedtime routine, the same every night', 'Four calm steps in the same order', 'chg:Sleep:d:routine']],
+      [answers.twoNaps === 'Yes' ? ['moon', 'The longer stretch', '{P} longest night sleep grows over months', 'What to expect by {p} first birthday', 'chg:Sleep:d:stretch'] : ['clock', 'Two naps', 'Three naps become two', 'Signs, and how to switch', 'chg:Sleep:d:catnap'], ['moon', 'Night feeds', 'Night feeds drop as days get fuller', 'When to drop one, and how', 'chg:Sleep:d:nightfeeds'], ['book', 'Bedtime', 'Move bedtime earlier, to 7–8 pm', 'Once naps settle', 'chg:Sleep:d:earlybed']],
       [['moon', 'Night waking', 'Night waking often comes back for a while', 'New skills, teeth, and missing you', 'chg:Sleep:d:nightwake'], ['heart', 'Bedtime goodbyes', 'Keep bedtime goodbyes short and the same', 'Separation, and bedtime protests', 'chg:Sleep:d:goodbye']]][st];
     const COL = { moon: ['#e3e6f6', '#3d4a7a'], sun: ['#fff3dc', '#8a6a2a'], clock: ['#fff3dc', '#8a6a2a'], book: ['#f6e8f3', '#7a4f74'], heart: ['#f6e8f3', '#7a4f74'], sack: ['#e7effc', '#46638c'], crib: ['#e7effc', '#46638c'] };
     const r = ([icon, eb, title, sub, to]) => row({ cat, icon, title, sub, onclick: `openPage('${to}')` }).replace('class="hub-row"', `class="hub-row sm-row" style="--sm-bg:${COL[icon][0]};--sm-ink:${COL[icon][1]}"`);
@@ -724,7 +770,7 @@
     return `<h2 class="hub-h2">${F(now && C().live() ? 'Right now for Maya' : 'At this stage')}</h2><div class="hub-list" id="sleep-night-feeds">${G.map(r).join('')}</div>` + rough + safe;
   }
   function settleRow() {
-    const t = m() >= 4 ? ['Sleep training, if you choose it', 'Optional. Compare the methods'] : ['Sleep training, for later', 'A choice, not a must. Some families start at 4–6 months'];
+    const t = m() >= 4 ? ['Sleep training is a choice, not a must', 'Optional. Compare the methods'] : ['Sleep training, for later', 'A choice, not a must. Some families start at 4–6 months'];
     return row({ icon: 'book', cat: 'Sleep', title: t[0], sub: t[1], onclick: "openPage('chg:Sleep:settle')" });
   }
   function eventRow(cat) {
@@ -765,6 +811,163 @@
   function sleepDetail(id, arg) {
     if (id === 'soothe') return soothePage();
     const va = sleepViewAge(), cat = 'Sleep', age = va ?? m(), stage = (id === 'day' || id === 'naps') && /^[0-3]$/.test(String(arg ?? '')) ? +arg : C().CFG.Sleep.stage(age), C0 = C().DATA.Sleep.CH[stage], key = SLEEP_KEYS[stage];
+    // Nov 16 pilot: these Sleep pages are data on the shared templates (expect, howto, check, option).
+    {
+      const mo = age, sep = key === 'two' || mo >= 8 || answers.twoNaps === 'Yes';
+      const unmarkT = h => va == null ? h : h.split(`<em>${F('Maya')}</em>`).join('');
+      const METH = (typeof sleepTrainingMethods === 'function' ? sleepTrainingMethods() : []);
+      const NIGHTS = {
+        'Timed check-ins': [['7:00 pm', 'Bedtime routine, then down sleepy but awake. Say goodnight and leave.'], ['If {s} {cry|cries}', 'Wait 3 minutes, then check in for a minute or two. Talk softly or pat, without picking {o} up.'], ['Still crying', 'Leave again and wait a little longer each time: 5 minutes, then 10.'], ['Night wakes', 'Feed if it’s time for a feed. If not, do the same check-ins.'], ['Next nights', 'Start the waits a few minutes longer than the night before.']],
+        'Chair method': [['Nights 1–3', 'A chair right by the crib. Comfort with your voice or a hand until {s} {fall|falls} asleep.'], ['Nights 4–6', 'The chair halfway to the door. More voice, less touch.'], ['Nights 7–9', 'The chair in the doorway.'], ['After that', 'Say goodnight from outside the door.'], ['Night wakes', 'Go back to wherever the chair is that night.']],
+        'Pick up, put down': [['7:00 pm', 'Bedtime routine, then down sleepy but awake.'], ['If {s} {cry|cries}', 'Pick {o} up and hold {o} until {s’s} calm, but not asleep.'], ['Then', 'Put {o} back down. Repeat as many times as it takes.'], ['Night wakes', 'Feed if it’s time for a feed, then the same pick up, put down.']],
+        'Cry it out': [['7:00 pm', 'Your bedtime routine, then down awake. Say goodnight and leave.'], ['If {s} {cry|cries}', 'Don’t go back in until morning, unless it’s a planned feed or {s} {seem|seems} unwell.'], ['First nights', 'Crying can last a while.'], ['By night 3 or 4', 'Most babies cry much less and fall asleep faster.']],
+        'Bedtime fading': [['First', 'Notice when {s} naturally {fall|falls} asleep, say 8:30 pm.'], ['Nights 1–2', 'Have {o} in the crib at that time, when {s’s} truly sleepy.'], ['Once {s} {settle|settles} quickly', 'Then move bedtime 15 minutes earlier.'], ['Repeat', 'Keep stepping earlier every couple of nights until you reach the bedtime you want.']]
+      };
+      const GLANCE = { 'Bedtime fading': ['Least', 'As usual', '1–2 weeks'], 'Pick up, put down': ['Some', 'In the room', '1–2 weeks'], 'Chair method': ['Some', 'In the room', '1–2 weeks'], 'Timed check-ins': ['More', 'In and out', '1–2 weeks'], 'Cry it out': ['Most', 'Outside', 'A few nights'] };
+      const NOTE = { 'Timed check-ins': ['heart', 'Check-ins calm some babies and wind others up', 'If they wind {o} up, longer gaps can help.'], 'Pick up, put down': ['clock', 'The first nights can take many repeats', 'It gets quicker.'] };
+      const T = {
+        stretch: () => ({ type: 'expect', label: 'Night sleep', art: 'moon', title: '{P} longest night sleep grows over months',
+          why: 'As {s} {need|needs} fewer night feeds, one stretch of sleep gets longer.',
+          normal: () => unmarkT(sleepLengths({ title: '', rows: [['Newborn weeks', 3, '2–4 hours', mo < 2], ['By 3–4 months', 5, '5 hours or more', mo >= 2 && mo < 5], ['Around 6 months', 7, '6–8 hours', mo >= 5 && mo < 9], ['By 9–12 months', 10.5, '10–12 hours, some wake once', mo >= 9]], caption: 'The longest stretch at night: 2 to 4 hours as a newborn, 5 hours or more by 3 to 4 months, 6 to 8 hours around 6 months, and 10 to 12 hours by 9 to 12 months, though some still wake once.' })),
+          normalNotes: [['', 'A few rough nights are normal', 'New skills, teething or a cold, then the stretch comes back']],
+          do: mo < 1 ? 'Once {s’s} back to birth weight, let {o} sleep as long as {s} {want|wants}.' : 'Let {o} sleep as long as {s} {want|wants}.' + (mo < 3 ? '' : ' An early bedtime and a dark room help the stretch grow.') }),
+        regress: () => ({ type: 'expect', label: '4-month sleep regression', art: 'moon', title: 'Waking more is the 4-month sleep regression',
+          why: 'Between 3 and 5 months, sleep cycles mature, so {s} {wake|wakes} more between them for a few weeks.',
+          normal: () => unmarkT(sleepCounts({ title: '', icon: 'moon', rows: [['Before', 1, 'A long first stretch', mo < 3], ['During', 4, 'Waking more often, between sleep cycles', false], ['A few weeks later', 1, 'Longer stretches again', mo >= 6]], caption: 'Before the regression, about one wake-up a night. During it, often 3 or 4. A few weeks later, back to about one.' })),
+          normalNotes: [['', 'Also common', '{S} can be harder to get to sleep']],
+          do: [['clock', 'Wait a minute or two', 'Many cries settle on their own'], ['moon', 'Dark and quiet', 'Keep visits brief'], ['bottle', 'A feed if hungry', 'Comfort the way you always do']],
+          doNotes: [['', 'No need to sleep train', 'Keep doing what works, and it passes']],
+          calls: { ped: 'poor feeding, pain, or ' + sleepFever() + '.', now: m() < 3 ? 'a temperature of 100.4°F or higher' : '' } }),
+        nightwake: () => ({ type: 'expect', label: 'Night sleep', art: 'moon', title: 'Night waking often comes back for a while',
+          why: 'Babies who were sleeping well start waking again, and it usually settles in a week or two.',
+          normal: [['stand', 'A new skill', 'Like rolling or sitting up'], ['heart', 'Missing you', sep ? 'Crying when you leave the room' : 'Wanting you close at night'], ['tooth', 'Teeth or a cold', 'For a few nights']],
+          do: [['clock', 'Wait or go in', 'Whatever feels right to you'], ['moon', 'Brief, dark and boring', 'Then back down'], ['heart', 'Comfort {o} when sick', 'Back to your usual routine once better']],
+          doNotes: [['', 'Waking from hunger or habit?', 'Ask your pediatrician if night feeds are still needed']] }),
+        method: a => { const x = METH[Number(a)]; if (!x) return null; const g = GLANCE[x.name], n = NIGHTS[x.name];
+          return { type: 'option', label: 'Sleep training', art: 'moon', title: x.name, why: x.title,
+            glance: g ? `<div class="hub-tiles st-glance">${[['Crying', g[0]], ['You', g[1]], ['Often takes', g[2]]].map(t => `<div><small>${F(t[0])}</small><b>${F(t[1])}</b></div>`).join('')}</div>` : '',
+            how: n ? `<div class="hub-card"><dl class="hub-timeline">${n.map(r => `<div><dt>${F(r[0])}</dt><dd>${F(r[1])}</dd></div>`).join('')}</dl>${TPLB.ul([['', 'An example', x.name === 'Bedtime fading' || x.name === 'Chair method' ? 'Some babies move faster, and some slower' : 'Use your own bedtime; every baby’s nights look a little different']])}</div>` : '',
+            tips: NOTE[x.name] ? [NOTE[x.name]] : [] }; },
+        crying: () => ({ type: 'check', label: 'The early months', art: 'heart', title: 'Crying peaks around 6–8 weeks, then eases',
+          why: 'It builds from about 2 weeks and eases by 3–4 months. Some evenings nothing works, and that isn’t your fault.',
+          tellTitle: 'What’s normal', figure: () => cryCurve(),
+          helps: [['diaper', 'Check the basics', 'Hungry, wet, too warm or cold, or overtired'], ['heart', 'Hold {o} close', 'Skin to skin, a slow walk or gentle rocking'], ['music', 'A steady sound', 'Shushing, white noise or a soft song'], ['pacifier', 'Something calming', rolled() || m() >= 3 || answers.swaddleStopped === 'Yes' ? 'A pacifier, or a calm, dim room' : 'A pacifier, or a swaddle if {s} {is}n’t rolling yet']], ordered: true,
+          helpsNotes: [['', 'Feeling overwhelmed?', 'Put {o} down in the crib and step away for a few minutes, or call someone you trust. Never shake a baby']],
+          calls: { ped: 'the crying comes with poor feeding or vomiting, a weak or high-pitched cry, or sounds like {s’s} in pain.', now: m() < 3 ? 'a temperature of 100.4°F or higher.' : '' } }),
+        steps0: () => ({ type: 'howto', label: 'Sleep, step by step', art: 'moon', title: 'Spot the yawn, soothe, then down',
+          why: 'Winding down at the first sleepy cue makes settling easier than waiting for tears.',
+          steps: [['eye', 'Sleepy cues', 'A quiet stare, yawning, rubbing eyes'], ['heart', 'Soothe', 'Feed, rock, hold or shush. All fine'], ['crib', 'Down', 'Drowsy or asleep, always on {p} back']],
+          stepsNotes: [['', 'Still fussing?', 'Stick with one way of soothing for a few minutes before switching'], ['', 'Once a day', 'Try putting {o} down sleepy but awake, as practice']],
+          tipsTitle: 'Good to know', tips: [['clock', 'Overtired looks like fussing and back arching', 'And crying that’s hard to calm.'], ['heart', 'You can’t spoil a newborn', 'Responding quickly helps {o} feel safe.']] }),
+        daynight: () => ({ type: 'expect', label: 'Days and nights', art: 'moon', title: 'Bright days and dim nights set {p} clock',
+          why: 'Babies aren’t born knowing the difference. Light, sound and your routine help set {p} body clock.',
+          normal: [['sun', 'More awake by day', 'Once it clicks'], ['moon', 'Longest sleep at night', 'Often about 4–5 hours after bedtime']],
+          normalNotes: [['', 'Give it time', 'It often clicks around 6–8 weeks']],
+          do: [['sun', 'By day', 'Curtains open, chat and play, even around naps'], ['moon', 'At night', 'Low lights and quiet feeds']],
+          doNotes: [['', 'Still waking {o} for feeds?', 'Keep going until {s’s} back to birth weight']] }),
+        routine: () => ({ type: 'howto', label: 'Routine', art: 'moon', title: 'A short bedtime routine, the same every night',
+          why: 'From about 6–8 weeks, a few calm steps in the same order start to tell {o} it’s bedtime.',
+          steps: [['bath', 'Bath', 'Optional, a few nights a week'], ['bottle', 'Feed', m() >= 7 || answers.hasTooth === 'Yes' ? 'Then brush {p} teeth' : 'Then pajamas'], ['book', 'A song or book', 'The same one most nights'], ['crib', 'Down sleepy but awake', 'On {p} back']],
+          stepsNotes: [['', '15–20 minutes', 'In the same order each night']],
+          tipsTitle: 'Good to know', tips: [['clock', 'Nights start to stretch', 'And {s} {get|gets} sleepy around the same time each evening.'], ['moon', 'An earlier bedtime comes later', 'Around 7–8 pm, once naps settle.']] }),
+        napsearly: () => ({ type: 'expect', label: 'Naps', art: 'clock', title: 'Short, frequent naps are normal now',
+          why: 'They come at different times each day, from 30 minutes to 2 hours.',
+          normalOrdered: true,
+          normal: [['bottle', 'Feed', 'When hungry'], ['eye', 'Awake a little', 'Until the very first yawn'], ['moon', 'Sleep', 'Then the cycle starts again']],
+          normalNotes: [['', 'Coming up', 'Around 3–4 months, naps get longer and come at about the same times']],
+          do: [['clock', 'Go by time awake', 'Not the clock'], ['eye', 'Start winding down early', 'At the first yawn or quiet stare'], ['heart', 'Any nap counts', 'In arms, a carrier or a stroller']] }),
+        swaddleoff: () => ({ type: 'expect', label: 'Safe sleep', art: 'sack', title: answers.swaddleStopped === 'Yes' || (rolled() && !swaddleDue()) ? 'Rolling over in sleep' : 'Stop swaddling at the first try to roll',
+          why: 'Some babies try to roll at 2 months, most by 3–4. Rolling needs arms free to push up.',
+          normalTitle: 'How it changes', normal: () => hubStageStrip({ title: '', items: [['swaddle', 'Swaddle', 'Newborn weeks'], ['roll', 'First try to roll', 'Switch that day'], ['sack', 'Sleep sack', 'Arms free']], nowIndex: answers.swaddleStopped === 'Yes' ? 2 : rolled() ? 1 : m() < 3 ? 0 : -1, cat, caption: 'Swaddle in the newborn weeks; at the first try to roll, switch that day to a sleep sack with arms free.' }),
+          do: 'At {p} first try to roll, switch to a sleep sack with {p} arms free.',
+          doNotes: [['', 'How you’ll know', '{S} {rock|rocks} onto {p} side, or {try|tries} to flip'], ['', 'Skip weighted sleep sacks', 'Any sleep sack should be light']],
+          action: () => `<div class="hub-actions">${answers.swaddleStopped === 'Yes' ? `<p class="hub-done">${F('Maya is in a sleep sack')} ✓</p>` : `<button class="hub-button" onclick="setAnswer('swaddleStopped','Yes')">${F('Done: Maya’s in a sleep sack')}</button>`}</div>` }),
+        rolling: () => ({ type: 'expect', label: 'Safe sleep', art: 'roll', title: 'Always down on {p} back, even once {s} {roll|rolls}',
+          why: 'Most babies roll one way first, often onto the tummy, and get stuck for a while.',
+          normal: () => hubStageStrip({ title: '', items: [['roll', 'Rolls one way', 'Often onto the tummy first'], ['hand', 'Turn {o} back', 'Until {s} can roll back'], ['star', 'Rolls both ways', 'Let {o} stay']], nowIndex: va == null ? (answers.rollDirection === 'Both ways' ? 2 : rolled() ? 1 : 0) : -1, cat, caption: 'Rolls one way, often onto the tummy first; turn baby back until they can roll back; once they roll both ways, let them stay.' }),
+          do: [['back', 'Down on {p} back', 'Every sleep'], ['hand', 'Stuck? Turn {o} over', 'Until {s} can roll back'], ['star', 'Tummy time by day', 'To practice'], ['crib', 'A bare crib', 'No positioners or wedges']] }),
+        where: () => ({ type: 'expect', label: 'Room and crib', art: 'crib', title: 'Share a room until at least 6 months',
+          why: 'In {p} own sleep space, in your room. After that, it’s your family’s call.',
+          normal: () => unmarkT(hubWindowBar({ title: '', from: 0, to: 12, zones: [[0, 6, 'Share a room', 'band'], [6, 12, 'Your call', 'calm']], ticks: [[0, 'Birth'], [6, '6 mo'], [12, '1 year']], now: (NOW - parse(sleepAdj() ? profile.due : profile.dob)) / 2629746e3, cat, caption: 'Keep baby in your room, in their own crib or bassinet, for the first 6 months. After that, moving to their own room is a family choice.' })),
+          normalNotes: [['', 'No rush after 6 months', 'Plenty of families room-share longer']],
+          do: [['thermo', 'About 68–72°F', 'Comfortable for you in a light T-shirt'], ['sack', 'One layer more', 'A sleep sack over pajamas'], ['ear', 'White noise, low', 'Across the room, not by the crib'], ['moon', 'Dark for night', 'A dim light for feeds']],
+          doNotes: [['', 'Moving to {p} own room?', 'Try naps there first, and keep the same bedtime steps and a bare crib']] }),
+        crib: () => ({ type: 'howto', label: 'Room and crib', art: 'crib', title: 'Move to the crib at the first roll',
+          why: 'Or at the bassinet’s weight limit, if that comes first. Rolling or pushing up can tip a bassinet, even under its limit.',
+          pictureTitle: 'When to move', picture: () => TPLB.tiles([['clock', 'At the weight limit', 'Usually 15–20 lb: check the bassinet’s label'], ['roll', 'At the first roll', 'Or when {s} {push|pushes} up on hands and knees']], 'Sleep'),
+          steps: [['crib', 'Set up the crib bare', 'Firm and flat, with just a fitted sheet'], ['moon', 'Keep your usual bedtime steps', 'Same bedtime, just a new place to sleep']],
+          action: () => `<div class="hub-actions">${answers.inCrib === 'Yes' ? `<p class="hub-done">${F('Maya sleeps in the crib now')} ✓</p>` : `<button class="hub-button" onclick="setAnswer('inCrib','Yes')">${F('Done: Maya’s in the crib')}</button>`}</div>` }),
+        mattress: () => { const low = mattressLowestDue() || answers.mattressLowest === 'Yes', nowI = low ? 2 : mattressDue() || answers.mattressLowered === 'Yes' ? 1 : 0;
+          const crib = y => `<svg viewBox="0 0 80 60" width="84" height="63" aria-hidden="true" fill="none" stroke="#46638c" stroke-width="2" stroke-linecap="round"><path d="M6 6v50M74 6v50M6 10h68"/>${[16, 26, 36, 46, 56, 64].map(x => `<path d="M${x} 10v${y - 10}"/>`).join('')}<rect x="8" y="${y}" width="64" height="7" rx="2" fill="#d9e5fc"/></svg>`;
+          return { type: 'howto', label: 'Safe sleep', art: 'shield', title: low ? 'Set the crib mattress to its lowest' : 'Lower the crib mattress',
+            why: 'Once babies sit and pull up, a high mattress lets them lean or climb over the rail.',
+            pictureTitle: 'When to lower it', picture: () => `<figure class="hub-figure" role="img" aria-label="${F('The crib mattress at three heights: highest for a newborn, lower before baby can sit, lowest before baby can pull up.')}"><div class="hub-crib">${[[22, 'Highest', 'Newborn weeks'], [34, 'Lower', 'Before {s} can sit up'], [46, 'Lowest', 'Before {s} can pull up']].map(([y, t, w], i) => `<div class="${i === nowI && va == null ? 'is-now' : ''}">${crib(y)}<b>${F(t)}</b><small>${F(w)}</small></div>`).join('')}</div></figure>`,
+            steps: [['book', 'Check the manual', 'For your crib’s height settings'], ['crib', low ? 'All the way down' : 'One step down', 'Then check it sits firmly'], ['toy', 'Clear the rail', 'Mobiles down, and nothing to climb on']],
+            action: () => `<div class="hub-actions">${(low ? answers.mattressLowest : answers.mattressLowered) === 'Yes' ? `<p class="hub-done">${F(low ? 'The mattress is at its lowest' : 'The mattress is lowered')} ✓</p>` : `<button class="hub-button" onclick="setAnswer('${low ? 'mattressLowest' : 'mattressLowered'}','Yes')">${F(low ? 'Done: it’s at the lowest' : 'Done: it’s lowered')}</button>`}</div>` }; },
+        day: a => key === 'clock' || key === 'daynight' ? T.napsearly() : ({ type: 'expect', label: C0.rail, art: 'clock', title: key === 'two' ? 'An example day with two naps' : 'An example day with three naps',
+          why: 'Use it as a guide. {P} day can shift by about half an hour.',
+          normal: () => `<div class="hub-card hub-dayplan">${C().sampleDay(C0)}</div>`,
+          do: [['eye', 'Cues over the clock', 'Watch for {p} sleepy signs'], ['clock', 'Short nap?', 'Offer the next sleep sooner'], ['moon', 'Longer awake before bed', 'The last stretch is the longest']] }),
+        cues: () => T.steps0(),
+        settle0: () => T.steps0(),
+        wakefeed: () => { const days = (NOW - parse(profile.dob)) / 864e5; return { type: 'expect', label: 'Night sleep', art: 'bottle', title: 'Stop waking {o} for feeds once {s’s} back to birth weight',
+          why: 'Newborns can sleep through hunger, so regular feeds come first. Most babies are back to birth weight by about 2 weeks.',
+          normal: () => hubStageStrip({ title: '', items: [['bottle', 'You wake {o}', 'Every 3–4 hours, until birth weight'], ['moon', '{S} {wake|wakes} you', 'When hungry, after that']], nowIndex: va == null && days < 14 ? 0 : -1, cat, caption: 'Until back to birth weight, wake baby to feed every 3 to 4 hours. After that, baby wakes you when hungry.' }),
+          do: 'Once your pediatrician says {s’s} back to birth weight, let {o} sleep and feed {o} when {s} {wake|wakes}.' }; },
+        settle4: () => ({ type: 'howto', label: 'Falling asleep', art: 'moon', title: 'Try putting {o} down drowsy, once a day',
+          why: 'From about 4 months, many babies can learn to fall asleep without being fed or rocked all the way.',
+          steps: [['moon', 'Your usual steps', 'Often at bedtime'], ['crib', 'Down drowsy but awake', 'On {p} back'], ['clock', 'Fussing? Wait a minute first', 'Before going in'], ['heart', 'Still upset? Help {o}', 'And try again another day']],
+          stepsNotes: [['', 'It’s practice, not a test', 'Feeding or rocking to sleep is still fine']] }),
+        predictable: () => ({ type: 'howto', label: 'Naps', art: 'clock', title: 'Naps start to settle into set times',
+          why: 'Around 3–4 months, {s} {start|starts} getting sleepy at about the same times each day.',
+          steps: [['eye', 'Watch for a few days', 'Jot down when {s} {get|gets} sleepy'], ['moon', 'Wind down first', 'A few calm, quiet minutes'], ['crib', 'Down at those times', 'Like 9 am, 12:30 and 4 pm']],
+          tipsTitle: 'Won’t settle for a nap?', tips: [['sun', 'Awake less than usual?', 'Try quiet play first. {S} {aren’t|isn’t} tired yet.'], ['moon', 'Awake longer than usual?', '{S’s} probably overtired. Try a darker room and more help, and start winding down sooner next time.']] }),
+        catnap: () => ({ type: 'expect', label: 'Naps', art: 'sun', title: 'Three naps become two',
+          why: 'Often between 6 and 9 months. The switch takes a week or two.',
+          normal: () => unmarkT(sleepCounts({ title: '', icon: 'sun', rows: [['Before', 3, 'Morning, midday and a short late catnap', (key === 'rhythm' || key === 'two') && !(answers.twoNaps === 'Yes' || mo >= 10)], ['After', 2, 'Morning and afternoon', answers.twoNaps === 'Yes' || mo >= 10]], caption: 'Three naps, including a short late catnap, become two: one in the morning and one in the afternoon.' })),
+          normalNotes: [['', 'Signs {s’s} ready', 'Most days {s} {skip|skips} the late catnap, or it pushes bedtime late']],
+          doOrdered: true, do: [['sun', 'Let the catnap go', 'On days {s} {skip|skips} it'], ['moon', 'Bedtime a bit earlier', 'About 30 minutes, during the switch']],
+          doNotes: [['', 'Melting down without it?', 'Offer a short catnap that day. Going back and forth for a week or two is completely normal']] }),
+        earlybed: () => ({ type: 'howto', label: 'Routine', art: 'moon', title: 'Move bedtime earlier, to 7–8 pm',
+          why: 'Overtired babies have a harder time falling asleep and wake more at night. Earlier often means a better night.',
+          pictureTitle: 'Over 2–3 weeks', picture: () => sleepBars({ title: '', ticks: [[18, '6 pm'], [20, '8 pm'], [22, '10 pm']], from: 18, to: 22, rows: [['Now', [[20.75, 22, 'night', '8:45 pm']]], ['A week later', [[20.25, 22, 'night', '8:15 pm']]], ['In 2–3 weeks', [[19.5, 22, 'night', '7:30 pm']]]], key: [['night', 'Asleep'], ['awake', 'Awake']], caption: 'Bedtime moves from about 8:45 pm to about 7:30 pm over 2 to 3 weeks, 15 minutes every few nights.' }),
+          steps: [['clock', 'Shift it a little', 'Every few nights, 15 minutes earlier'], ['moon', 'The same routine', 'Just a little sooner'], ['crib', 'Stop around 7–8 pm', 'When {s} {fall|falls} asleep easily']] }),
+        nightfeeds: () => ({ type: 'expect', label: 'Night sleep', art: 'bottle', title: 'Night feeds drop as days get fuller',
+          why: 'Many babies still feed once or twice a night, and that’s fine.',
+          normal: () => hubStageStrip({ title: '', items: [['bottle', '2–3 a night', 'Around 3 months'], ['bottle', '1–2 a night', 'Around 6 months'], ['moon', '0–1 a night', 'Later in the first year']], nowIndex: va == null ? (mo < 4 ? 0 : mo < 9 ? 1 : 2) : -1, cat, caption: 'About 2 to 3 night feeds around 3 months, 1 to 2 around 6 months, 0 to 1 later in the first year.' }),
+          normalNotes: [['', 'Ready to drop one?', 'Often when {s’s} growing well and {start|starts} sleeping through a feed on {p} own'], ['', 'Last to go', 'Usually the feed closest to morning']],
+          doOrdered: true,
+          do: mo >= 5 ? [['steth', 'Ask first', 'Your pediatrician can say if {s’s} ready'], ['clock', 'Go slowly', 'A little shorter or smaller every few nights'], ['sun', 'More by day', 'Full feeds while {s’s} awake'], ['heart', 'Someone else goes in', 'Breastfed babies often settle more easily for a partner']] : 'Feed {o} when {s} {wake|wakes} hungry. Check with your pediatrician before dropping a night feed on purpose.',
+          doNotes: [['', 'No bottle in bed', 'Milk pooling on the teeth causes decay']] }),
+        goodbye: () => ({ type: 'expect', label: 'Bedtime goodbyes', art: 'heart', title: 'Keep bedtime goodbyes short and the same',
+          why: 'Around 8–10 months, many babies protest when you leave. It shows how attached {s} is to you.',
+          normal: [['heart', 'Crying when you leave', 'Right as you walk out'], ['heart', 'Only you will do', 'At bedtime'], ['stand', 'Standing up and calling', 'Wanting you to come back']],
+          doOrdered: true,
+          do: [['moon', 'Your usual steps', 'Always in the same order'], ['heart', 'The same goodnight words', 'Then leave, even if {s} {protest|protests}'], ['clock', 'Back briefly if needed', 'Calm and boring']],
+          doNotes: [['', 'Predictable beats sneaking out', 'Sneaking out can make {o} watch you more closely']] }),
+        after: () => ({ type: 'expect', label: 'Naps', art: 'sun', title: 'Two naps become one',
+          why: 'Usually between 13 and 18 months. Most babies still need two at their first birthday.',
+          normal: () => unmarkT(sleepCounts({ title: '', icon: 'sun', rows: [['Before', 2, 'Morning and afternoon', key === 'two' && (answers.twoNaps === 'Yes' || mo >= 10)], ['After', 1, 'One longer nap around midday']], caption: 'Two naps, morning and afternoon, become one longer nap around midday, usually between 13 and 18 months.' })),
+          normalNotes: [['', 'Signs {s’s} ready', '{S} {fight|fights} the morning nap most days, but {hold|holds} up fine until the afternoon']],
+          doOrdered: true, do: [['clock', 'Push the first nap later', 'A little later every few days'], ['sun', 'Until it lands around lunch', 'Now it’s one longer nap'], ['moon', 'Bedtime a bit earlier', 'While {s} {get|gets} used to it']] }),
+        lovey: () => ({ type: 'expect', label: 'Safe sleep', art: 'toy', title: 'After 1, a small lovey can join the crib',
+          why: 'After 12 months, the risk of SIDS is much lower, and a familiar toy can help {o} settle.',
+          normal: [['toy', 'A small lovey', 'Small and soft, no loose parts'], ['sack', 'Or a light blanket', 'Thin, not heavy']],
+          do: 'Keep the rest of the crib bare: no pillows, bumpers or big stuffed animals.' }),
+        away: () => ({ type: 'howto', label: 'Sleep help', art: 'sun', title: 'New places throw sleep off for a few days',
+          why: 'A new time zone can too. A safe spot and your usual steps help most.',
+          steps: [['sack', 'Pack the sleep sack', 'And something from home'], ['crib', 'Set up a bare spot first', 'A play yard or crib, nothing in it'], ['moon', 'Same bedtime steps', 'Always in the same order']],
+          stepsNotes: [['', 'Car seats are for the car', 'Move {o} to a flat spot once you arrive']],
+          tipsTitle: 'New time zones', tips: [['clock', 'An hour or two', 'Shift naps and bedtime 15 minutes a day, or just switch.'], ['sun', 'A bigger jump', 'Switch to local time right away, with bright mornings and dim evenings.'], ['moon', 'Clocks changing?', 'Move bedtime 15 minutes a day over a few days before.']] }),
+        swaddle: () => rolled() || m() >= 3 ? null : ({ type: 'howto', label: 'Safe sleep', art: 'sack', title: 'Swaddle snug at the arms, loose at the hips',
+          why: 'A swaddle can help a newborn settle, until {s} {try|tries} to roll.',
+          stepsFig: () => figure('swaddle', 'Sleep', 'Three steps: lay the blanket as a diamond with the top folded down, bring one side across and tuck it under, then fold up the bottom and wrap the last side, snug at the chest and loose at the hips.'),
+          stepsNotes: [['', 'Room for two fingers at the chest', 'Legs free to bend up and out, like a frog']],
+          tips: [['back', 'Always on {p} back', 'Never on {p} tummy or side.'], ['roll', 'Stop at the first try to roll', 'Some try at 2 months, most by 3–4. Switch to a sleep sack, arms free.']],
+          video: ['pJCQf2Xxlrk', 'How to swaddle a newborn', 'Mount Sinai Parenting Center'] })
+      };
+      if (T[id]) { const q = T[id](arg); if (q) return tplPage(cat, q); }
+    }
     // Change pages (the rows under "What's different now"): one shape for all of them.
     // A "How it changes" strip (when → the change → after, the baby's step marked), then What's happening,
     // What to do and How you'll know / Why it matters, then one visual or link only when it earns its place. (AAP; Mayo Clinic.)
@@ -780,18 +983,18 @@
           [[W, 'Newborns can sleep through hunger, so regular feeds come first until {s’s} back to birth weight.'], [D, days < 14 ? 'Wake {o} about 3 hours after the last feed started by day, or 4 at night. Aim for 8–12 feeds in 24 hours.' : 'Once your pediatrician says {s’s} back to birth weight, stop waking {o}. Feed {o} when {s} {wake|wakes}.'], [K, profile.early ? 'Born early, Maya follows {p} own plan from the hospital or your pediatrician. They’ll tell you when {s} can wake you.' : days < 14 ? 'Your pediatrician will tell you at a weight check, often around 2 weeks. Then {s} can wake you.' : 'Most babies are back to birth weight by about 2 weeks.' + (days <= 31 ? ' Not sure? Ask at {p} next check.' : '')]], '', 'bottle'),
         stretch: () => page('Night sleep', 'The long stretch grows over months', sleepLengths({ title: 'The longest sleep at night', rows: [['Newborn weeks', 3, '2–4 hours', mo < 2], ['By 3–4 months', 5, '5 hours or more', mo >= 2 && mo < 5], ['Around 6 months', 7, '6–8 hours', mo >= 5 && mo < 9], ['By 9–12 months', 10.5, '10–12 hours, some wake once', mo >= 9]], caption: 'The longest stretch at night: 2 to 4 hours as a newborn, 5 hours or more by 3 to 4 months, 6 to 8 hours around 6 months, and 10 to 12 hours by 9 to 12 months, though some still wake once.' }), -1,
           [[W, 'As Maya grows, {s} can go longer between night feeds, so {p} longest stretch gets longer.'], [D, mo < 1 ? 'Once your pediatrician says you can stop waking {o}, let {o} sleep. Bright days and dim, quiet nights help {p} body clock put that stretch at night.' : 'Let {o} sleep as long as {s} {want|wants}. ' + (mo < 3 ? '' : 'An early bedtime and a dark room help the stretch grow.')], [K, 'New skills, teething or a cold can bring a few rough nights, then it comes back.']]),
-        regress: () => page('4-month sleep regression', 'Waking more means {p} sleep is growing up', qa([['How long does it last?', 'A few weeks', 'It usually starts between 3 and 5 months, as {p} sleep cycles mature.']]) + sleepCounts({ title: 'Wake-ups in a night', icon: 'moon', rows: [['Before', 1, 'A long first stretch', mo < 3], ['During', 4, 'Up more often, between sleep cycles', false], ['A few weeks later', 1, 'Longer stretches again', mo >= 6]], caption: 'Before the regression, about one wake-up a night. During it, often 3 or 4. A few weeks later, back to about one.' }), -1,
+        regress: () => page('4-month sleep regression', 'Waking more means {p} sleep is growing up', qa([['How long does it last?', 'A few weeks', 'It usually starts between 3 and 5 months, as {p} sleep cycles mature.']]) + sleepCounts({ title: 'Wake-ups in a night', icon: 'moon', rows: [['Before', 1, 'A long first stretch', mo < 3], ['During', 4, 'Waking more often, between sleep cycles', false], ['A few weeks later', 1, 'Longer stretches again', mo >= 6]], caption: 'Before the regression, about one wake-up a night. During it, often 3 or 4. A few weeks later, back to about one.' }), -1,
           [[D, 'Keep doing what works. You don’t need to sleep train to get through it.']],
           // Nov 13 QA: what it looks like first, then what helps, then when to call (in the shared tip, not small grey text)
           `<div class="hub-card hub-looks"><b class="hub-fig-title">${F('What it can look like')}</b><ul>${['More night waking than a few weeks ago', 'Harder to put down asleep'].map(t => `<li>${F(t)}</li>`).join('')}</ul></div>`
-          + hubIconSteps([['clock', 'Wait a minute or two', 'Many cries settle on their own'], ['moon', 'Dark and quiet', 'Keep visits brief'], ['bottle', 'A feed if hungry', 'And comfort the way you always do']], cat, 'Wait a minute or two, keep your usual routine, and feed if hungry.', false)
+          + hubIconSteps([['clock', 'Wait a minute or two', 'Many cries settle on their own'], ['moon', 'Dark and quiet', 'Keep visits brief'], ['bottle', 'A feed if hungry', 'Comfort the way you always do']], cat, 'Wait a minute or two, keep your usual routine, and feed if hungry.', false)
           + tip('Call your pediatrician', 'Poor feeding, pain, or ' + sleepFever() + (m() < 3 ? ' (right away).' : '.'))),
         nightwake: () => { const sep = key === 'two' || mo >= 8 || answers.twoNaps === 'Yes'; return page('Night sleep', 'Night waking often comes back for a while', null, -1,
           [[W, 'New skills and missing you can wake babies who were sleeping well.'], [D, 'Wait a few minutes or go straight in, whichever feels right. Keep it brief, dark and boring.'], [K, sep ? 'It starts around a new skill, or {s} {cry|cries} when you leave the room.' : 'It starts around a new skill, like rolling or sitting.']],
           `<h2 class="hub-h2">${F('Common reasons')}</h2>` + hubIconSteps([['stand', 'New skills', 'Usually settles in a week or two'], ['heart', 'Missing you', sep ? 'See Bedtime goodbyes' : 'A quick cuddle, then back down'], ['tooth', 'Teeth or a cold', 'Comfort now, then back to your routine once {s’s} better'], ['bottle', 'Hunger or habit', 'Ask your pediatrician if night feeds are still needed']], cat, 'New skills: usually settles in a week or two. Missing you: ' + (sep ? 'see Bedtime goodbyes.' : 'a quick cuddle.') + ' Teeth or a cold: comfort now. Hunger or habit: ask about night feeds.', false)
           + more('Ready to drop a night feed?', "openPage('chg:Sleep:d:nightfeeds')") + more('Sleep training, if you choose it', "openPage('chg:Sleep:settle')")); },
         nightfeeds: () => page('Night sleep', 'Night feeds drop as days get fuller', [['bottle', '2–3 a night', 'Around 3 months'], ['bottle', '1–2 a night', 'Around 6 months'], ['moon', '0–1 a night', 'Later in the first year']], mo < 4 ? 0 : mo < 9 ? 1 : 2,
-          [[W, 'Many babies still feed once or twice a night, and that’s fine.'], [D, mo >= 5 ? 'Feed {o} when {s} {wake|wakes} hungry.' : 'Feed {o} when {s} {wake|wakes} hungry. Ask your pediatrician before dropping a night feed on purpose.'], [K, 'Maya is growing well, takes full feeds by day, and starts sleeping through a feed on {p} own.']],
+          [[W, 'Many babies still feed once or twice a night, and that’s fine.'], [D, mo >= 5 ? 'Feed {o} when {s} {wake|wakes} hungry.' : 'Feed {o} when {s} {wake|wakes} hungry. Check with your pediatrician before dropping a night feed on purpose.'], [K, 'Maya is growing well, takes full feeds by day, and starts sleeping through a feed on {p} own.']],
           // Nov 13: night weaning, gently (AAP: many babies can go without a night feed by 6–9 months if growing well; ask first).
           mo >= 5 ? `<h2 class="hub-h2">${F('If you decide to drop one')}</h2>` + hubIconSteps([['steth', 'Ask first', 'Your pediatrician can say if {s’s} ready'], ['clock', 'Go slowly', 'A little shorter or smaller every few nights'], ['sun', 'More by day', 'Full feeds while {s’s} awake'], ['heart', 'Someone else goes in', 'Breastfed babies often settle more easily for a partner']], cat, 'Ask your pediatrician first, then go slowly: a little shorter or smaller every few nights, full feeds by day, and someone else going in.')
             + tip('Good to know', 'The feed closest to morning is often the last to go. Skip putting {o} down with a bottle, since milk pooling on teeth causes decay.') : '', 'bottle'),
@@ -806,7 +1009,7 @@
         lovey: () => page('Safe sleep', 'After 1, a small lovey can join the crib', null, -1,
           [[W, 'After 12 months, the risk of SIDS is much lower, and a small soft toy can become a comfort.'], [D, 'From 12 months, a small lovey or a light blanket is fine. Skip pillows, bumpers and big stuffed animals. No bottle in the crib, since milk pooling on teeth causes decay.'], [Y, 'A familiar comfort object can help {o} settle on {p} own, especially when {s} {miss|misses} you at night.']], '', 'heart'),
         // Nov 11 guides. One idea per page; numbers stay in the glance tiles.
-        steps0: () => page('Sleep, step by step', 'Spot the yawn, soothe, then down', hubIconSteps([['eye', 'Sleepy cues', 'A quiet stare, a yawn, turning away'], ['heart', 'Soothe', 'Feed, rock, hold or shush. All fine'], ['crib', 'Down', 'Drowsy or asleep, on {p} back']], cat, 'Watch for sleepy cues, soothe any way that works, then lay {o} down on {p} back.', true), -1,
+        steps0: () => page('Sleep, step by step', 'Spot the yawn, soothe, then down', hubIconSteps([['eye', 'Sleepy cues', 'A quiet stare, yawning, rubbing eyes'], ['heart', 'Soothe', 'Feed, rock, hold or shush. All fine'], ['crib', 'Down', 'Drowsy or asleep, always on {p} back']], cat, 'Watch for sleepy cues, soothe any way that works, then lay {o} down on {p} back.', true), -1,
           [[D, 'Start winding down at the first cue. Waiting until {s’s} crying makes it harder to settle. Still fussing? Stick with one way of soothing for a few minutes before switching.'], [K, 'Overtired looks like fussing, arching, or crying that’s hard to calm.'], [Y, 'You can’t spoil a newborn. Responding quickly helps {o} feel safe.']], '', 'moon'),
         sw0: () => page('Swaddling', 'Swaddle snug at the arms, loose at the hips', [['swaddle', 'Swaddle', 'Newborn weeks'], ['roll', 'First try to roll', 'Stop that day'], ['sack', 'Sleep sack', 'Arms free']], 0,
           [[D, 'Wrap snugly around the arms and chest, with room for two fingers. Leave the hips and legs loose, so they can bend up and out.'], [K, 'Stop at the first try to roll, often around 2–4 months. Then a sleep sack, arms free.'], [Y, 'A swaddle can calm the startle reflex. Too tight at the hips can harm them, and once rolling starts, arms need to be free.']],
@@ -820,11 +1023,11 @@
         cues: () => page('Naps', 'Watch for sleepy cues, not the clock', `<div class="hub-card hub-two"><div><b>${F('Getting tired')}</b><p>${F('A quiet stare, yawning, rubbing eyes or turning away.')}</p></div><div><b>${F('Overtired')}</b><p>${F('Fussing, arching or crying that’s hard to settle.')}</p></div></div>`, -1,
           [[W, 'Newborns can only stay awake a short while, and there’s no nap schedule yet.'], [D, 'At the first yawn, stare or eye rub, start winding down: dim light, a feed or a cuddle, then sleep.'], [Y, 'Catching the first cue makes sleep easier for you both.']], '', 'clock'),
         daynight: () => page('Days and nights', 'Help {o} tell day from night', null, -1,
-          [[W, 'Babies aren’t born knowing day from night. Light, sound and your routine teach {p} body clock.'], [D, 'By day, open the curtains, chat and play, even around naps. At night, keep lights low and feeds quiet.'], [K, 'Maya is more awake during the day, and {p} longest sleep shifts to the night. Often that first long stretch is 4–5 hours, starting at bedtime.']],
+          [[W, 'Babies aren’t born knowing day from night. Light, sound and your routine help set {p} body clock.'], [D, 'By day, open the curtains, chat and play, even around naps. At night, keep lights low and feeds quiet.'], [K, 'Maya is more awake during the day, and {p} longest sleep shifts to the night. Often that first long stretch is 4–5 hours, starting at bedtime.']],
           (mo < 1.5 ? more('Until {s’s} back to birth weight, wake {o} for feeds', "openPage('chg:Feeding:mock:nb_eve')") : ''), 'sun'),
-        predictable: () => page('Naps', 'Naps settle into set times', `<div class="hub-two hub-card hub-sched"><div><b>${F('Newborn weeks')}</b><p>${F('Naps any time, whenever {s} {get|gets} sleepy')}</p></div><div class="is-now"><b>${F('Around 3–4 months')}</b><p>${F('About the same times each day, like 9 am, 12:30 and 4 pm')}</p></div></div>`, -1,
-          [[W, 'Most days, Maya gets sleepy at about the same times. That’s {p} nap rhythm showing up.'], [D, 'For a few days, jot down when {s} {get|gets} sleepy. Then put {o} down at those times, after a short wind-down.'], [K, 'Maya yawns or fusses at similar times each day, and naps start to land in the same spots.']], tip('Won’t settle for a nap?', 'Awake less than usual? Try quiet play first, since {s} {is}n’t tired yet. Awake longer? {S’s} overtired, so try a darker room, more help, and wind down sooner next time.') + more('Moving bedtime earlier', "openPage('chg:Sleep:d:earlybed')"), 'clock'),
-        catnap: () => page('Naps', 'From three naps to two', sleepCounts({ title: 'Naps a day', icon: 'sun', rows: [['Before', 3, 'Morning, midday and a late catnap', (key === 'rhythm' || key === 'two') && !(answers.twoNaps === 'Yes' || mo >= 10)], ['After', 2, 'Morning and afternoon, bedtime a bit earlier', answers.twoNaps === 'Yes' || mo >= 10]], caption: 'Three naps, including a short late catnap, become two: one in the morning and one in the afternoon.' }), -1,
+        predictable: () => page('Naps', 'Naps start to settle into set times', `<div class="hub-two hub-card hub-sched"><div><b>${F('Newborn weeks')}</b><p>${F('Naps any time, whenever {s} {get|gets} sleepy')}</p></div><div class="is-now"><b>${F('Around 3–4 months')}</b><p>${F('About the same times each day, like 9 am, 12:30 and 4 pm')}</p></div></div>`, -1,
+          [[W, 'Most days, Maya gets sleepy at about the same times. That’s {p} nap rhythm showing up.'], [D, 'For a few days, jot down when {s} {get|gets} sleepy. Then put {o} down at those times, after a short wind-down.'], [K, 'Maya yawns or fusses at similar times each day, and naps start to land in the same spots.']], tip('Won’t settle for a nap?', 'Awake less than usual? Try quiet play first, since {s} {is}n’t tired yet. Awake longer? {S’s} overtired, so try a darker room, more help, and start winding down sooner next time.') + more('Moving bedtime earlier', "openPage('chg:Sleep:d:earlybed')"), 'clock'),
+        catnap: () => page('Naps', 'From three naps to two', sleepCounts({ title: 'Naps a day', icon: 'sun', rows: [['Before', 3, 'Morning, midday and a short late catnap', (key === 'rhythm' || key === 'two') && !(answers.twoNaps === 'Yes' || mo >= 10)], ['After', 2, 'Morning and afternoon, bedtime a bit earlier', answers.twoNaps === 'Yes' || mo >= 10]], caption: 'Three naps, including a short late catnap, become two: one in the morning and one in the afternoon.' }), -1,
           [[W, 'Often between 6 and 9 months, three naps become two. The switch takes a week or two.'], [D, 'Let the catnap go. Move bedtime about 30 minutes earlier during the switch.'], [K, 'Most days, {s} {skip|skips} the late-afternoon catnap or it pushes bedtime late.']],
           tip('Melting down without it?', 'Offer a short catnap that day, and try again tomorrow. Going back and forth for a week or two is normal.'), 'clock'),
         settle0: () => page('Routine', 'Help {o} fall asleep any way that works', null, -1,
@@ -852,9 +1055,9 @@
           + tip('Skip weighted sleep sacks', 'Any sleep sack should be light and unweighted.'), 'sack'),
         rolling: () => page('Safe sleep', 'Always down on {p} back, even once {s} {roll|rolls}', [['roll', 'Rolls one way', 'Often onto the tummy first'], ['hand', 'Turn {o} back', 'Until {s} can roll back'], ['star', 'Rolls both ways', 'Let {o} stay']], answers.rollDirection === 'Both ways' ? 2 : rolled() ? 1 : 0,
           [[W, 'Most babies roll one way before the other, often from back to tummy first. For a while, {s} may roll over and get stuck.'], [D, 'Always put {o} down on {p} back. Rolled over but can’t roll back yet? Gently turn {o} over. Give {o} lots of tummy time by day to practice. Keep the crib bare, with no positioners or wedges.']], '', 'roll'),
-        napsearly: () => page('Naps', 'Naps stay short and frequent', hubIconSteps([['bottle', 'Feed', 'When hungry'], ['eye', 'Awake a little', 'Until the first yawn'], ['moon', 'Sleep', 'Then it starts again']], 'Sleep', 'Days follow a loop: a feed, a little awake time, then sleep.', true), -1,
+        napsearly: () => page('Naps', 'Naps stay short and frequent', hubIconSteps([['bottle', 'Feed', 'When hungry'], ['eye', 'Awake a little', 'Until the very first yawn'], ['moon', 'Sleep', 'Then the cycle starts again']], 'Sleep', 'Days follow a loop: a feed, a little awake time, then sleep.', true), -1,
           [[W, 'Naps come at different times each day, from 30 minutes to 2 hours.'], [D, 'Go by how long {s} {have|has} been awake, not the clock. Wind down at the first yawn or quiet stare. Naps in your arms, the carrier or the stroller all count.'], [K, 'Around 3–4 months, {s} {start|starts} getting sleepy at about the same times each day, and naps get longer. That’s when set nap times start to work.']], '', 'clock'),
-        mattress: () => page('Safe sleep', mattressLowestDue() || answers.mattressLowest === 'Yes' ? 'Set the crib mattress to its lowest' : 'Lower the crib mattress', (() => { const crib = y => `<svg viewBox="0 0 80 60" width="84" height="63" aria-hidden="true" fill="none" stroke="#46638c" stroke-width="2" stroke-linecap="round"><path d="M6 6v50M74 6v50M6 10h68"/>${[16, 26, 36, 46, 56, 64].map(x => `<path d="M${x} 10v${y - 10}"/>`).join('')}<rect x="8" y="${y}" width="64" height="7" rx="2" fill="#d9e5fc"/></svg>`; const nowI = mattressLowestDue() || answers.mattressLowest === 'Yes' ? 2 : mattressDue() || answers.mattressLowered === 'Yes' ? 1 : 0; return `<figure class="hub-figure" role="img" aria-label="${F('The crib mattress at three heights: highest for a newborn, lower before baby can sit, lowest before baby can pull up.')}"><b class="hub-fig-title">${F('Mattress height')}</b><div class="hub-crib">${[[22, 'Highest', 'Newborn weeks'], [34, 'Lower', 'Before {s} can sit'], [46, 'Lowest', 'Before {s} can pull up']].map(([y, t, w], i) => `<div class="${i === nowI ? 'is-now' : ''}">${crib(y)}<b>${F(t)}</b><small>${F(w)}</small></div>`).join('')}</div></figure>`; })(), -1,
+        mattress: () => page('Safe sleep', mattressLowestDue() || answers.mattressLowest === 'Yes' ? 'Set the crib mattress to its lowest' : 'Lower the crib mattress', (() => { const crib = y => `<svg viewBox="0 0 80 60" width="84" height="63" aria-hidden="true" fill="none" stroke="#46638c" stroke-width="2" stroke-linecap="round"><path d="M6 6v50M74 6v50M6 10h68"/>${[16, 26, 36, 46, 56, 64].map(x => `<path d="M${x} 10v${y - 10}"/>`).join('')}<rect x="8" y="${y}" width="64" height="7" rx="2" fill="#d9e5fc"/></svg>`; const nowI = mattressLowestDue() || answers.mattressLowest === 'Yes' ? 2 : mattressDue() || answers.mattressLowered === 'Yes' ? 1 : 0; return `<figure class="hub-figure" role="img" aria-label="${F('The crib mattress at three heights: highest for a newborn, lower before baby can sit, lowest before baby can pull up.')}"><b class="hub-fig-title">${F('Mattress height')}</b><div class="hub-crib">${[[22, 'Highest', 'Newborn weeks'], [34, 'Lower', 'Before {s} can sit up'], [46, 'Lowest', 'Before {s} can pull up']].map(([y, t, w], i) => `<div class="${i === nowI ? 'is-now' : ''}">${crib(y)}<b>${F(t)}</b><small>${F(w)}</small></div>`).join('')}</div></figure>`; })(), -1,
           [[W, 'Once babies can sit and pull up, a high mattress lets them lean or climb over the rail.'], [D, 'Lower it in two steps, each one before a new skill arrives, and keep the crib bare.'], [K, mattressLowestDue() || answers.mattressLowest === 'Yes' ? 'Maya pulls up on furniture, or gets up on {p} knees in the crib. Go all the way down before {s} stands.' : 'Maya pushes up on {p} hands and knees, or almost sits on {p} own.']],
           steps(['Check your crib manual for the settings.', mattressLowestDue() ? 'Move the mattress to its lowest setting and check it sits firmly in place.' : 'Lower the mattress and check it sits firmly in place.', 'Take down mobiles, and move anything {s} could use as a step.'])
           + `<div class="hub-actions">${(mattressLowestDue() ? answers.mattressLowest : answers.mattressLowered) === 'Yes' ? `<p class="hub-done">${F(mattressLowestDue() ? 'The mattress is at its lowest' : 'The mattress is lowered')} ✓</p>` : `<button class="hub-button" onclick="setAnswer('${mattressLowestDue() ? 'mattressLowest' : 'mattressLowered'}','Yes')">${F('Done')}</button>`}</div>`, 'shield')
@@ -879,7 +1082,7 @@
         + (() => { const mo = m(), steps = [
             [0, 'Newborn', 'Swaddle until the first try to roll', 'Arms in, hips loose', 'chg:Sleep:d:swaddle'],
             [2, '2–4 months', 'Stop swaddling', 'At the first try to roll, switch to a sleep sack', 'chg:Sleep:d:swaddleoff', 'sleep-rolling'],
-            [3, 'Once {s} {roll|rolls}', 'Bassinet to crib', 'Or at its weight limit, whichever comes first', 'chg:Sleep:d:where'],
+            [3, 'Once {s} {roll|rolls}', 'Bassinet to crib', 'Or at its weight limit, whichever comes first', 'chg:Sleep:d:crib'],
             [4, 'Rolls both ways', 'Let {o} stay on {p} tummy', 'Still put {o} down on {p} back each time', 'chg:Sleep:d:rolling'],
             [5, 'Before {s} {sit|sits}', 'Lower the crib mattress', 'Then lowest before {s} {pull|pulls} up', 'chg:Sleep:d:mattress', 'sleep-crib-height'],
             [6, '6 months', 'Own room, if you like', 'Room-share until then', 'chg:Sleep:d:where'],
@@ -892,8 +1095,8 @@
       const day = C().sampleDay(C0).replace('<h3 class="chg-sample-title">', '<h3 class="chg-sample-title hub-h2">');
       const Q = key === 'two' ? null : [['When do naps become predictable?', 'Around 3–4 months', key === 'rhythm' ? 'That’s about now, so it’s a good time to set a rhythm.' : 'Before that, sleep follows feeds, not the clock.'],
         ['How do I know {s’s} ready?', 'Sleepy at the same times', 'Most days, {s} {get|gets} tired around the same times, and naps last longer.']];
-      return detail(cat, C0.rail, key === 'clock' || key === 'daynight' ? 'Naps for now' : key === 'two' ? 'Two naps: an example day' : 'Three naps: an example day', key === 'clock' || key === 'daynight' ? '' : 'Use it as a guide. Maya’s day can shift by half an hour.',
-        (key === 'clock' || key === 'daynight' ? hubIconSteps([['bottle', 'Feed', 'When hungry'], ['eye', 'Awake a little', key === 'clock' ? '45–60 minutes' : '1–1½ hours'], ['moon', 'Sleep', 'Then it starts again']], cat, 'Days follow a loop: a feed, a little awake time, then sleep.', true) : `<div class="hub-card hub-dayplan">${day}</div>` + steps(['Follow {p} sleepy cues more than the clock.', 'After a short nap, offer the next sleep a little sooner.', 'The awake time before bed is usually the longest.']) + more('Night feeds, and how they taper', "openPage('chg:Sleep:d:nightfeeds')")), 'clock');
+      return detail(cat, C0.rail, key === 'clock' || key === 'daynight' ? 'Naps for now' : key === 'two' ? 'An example day with two naps' : 'An example day with three naps', key === 'clock' || key === 'daynight' ? '' : 'Use it as a guide. Maya’s day can shift by half an hour.',
+        (key === 'clock' || key === 'daynight' ? hubIconSteps([['bottle', 'Feed', 'When hungry'], ['eye', 'Awake a little', key === 'clock' ? '45–60 minutes' : '1–1½ hours'], ['moon', 'Sleep', 'Then the cycle starts again']], cat, 'Days follow a loop: a feed, a little awake time, then sleep.', true) : `<div class="hub-card hub-dayplan">${day}</div>` + steps(['Follow {p} sleepy cues more than the clock.', 'After a short nap, offer the next sleep a little sooner.', 'The awake time before bed is usually the longest.']) + more('Night feeds, and how they taper', "openPage('chg:Sleep:d:nightfeeds')")), 'clock');
     }
     if (id === 'cues') {
       return detail(cat, 'Sleep', 'Spotting sleepy cues', 'Starting to wind down at the first signs of tiredness makes it easier for Maya to settle.',
@@ -904,7 +1107,7 @@
       // Problem-first: the parent picks what's happening and gets the likely cause and tonight's fix for this age. AAP / Mayo Clinic sleep guidance.
       const mo = m(), ww = mo < 3 ? '1–1½ hours' : mo < 6 ? '1½–2½ hours' : mo < 9 ? '2–3 hours' : '2½–4 hours';
       const items = [
-        ['moon', 'Waking a lot at night', mo < 3 ? 'At this age, waking to feed is normal and healthy. Hunger is the usual reason.' : mo < 6 ? 'Often the 4-month sleep regression, or being overtired.' : 'The usual reasons: overtired from short naps or a late bedtime, a new skill, teething or a cold, or needing the same help to fall back asleep each time.', mo < 3 ? ['Pause a minute first. {S} may still be asleep', 'Feed if it’s been 2–3 hours or more'] : ['Pause a minute or two first. A cry between sleep cycles often settles', 'Try bedtime 30 minutes earlier for a few nights', 'Keep visits brief, dark and boring', mo >= 6 ? 'Still waking every hour or two? Ask your pediatrician about night feeds, or look at sleep training if you want to' : '']].map(x => Array.isArray(x) ? x.filter(Boolean) : x),
+        ['moon', 'Waking a lot at night', mo < 3 ? 'At this age, waking to feed is normal and healthy. Hunger is the usual reason.' : mo < 6 ? 'Often the 4-month sleep regression, or being overtired.' : 'The usual reasons: overtired from short naps or a late bedtime, a new skill, teething or a cold, or needing the same help to fall back asleep each time.', mo < 3 ? ['Pause a minute first, since {s} may still be asleep', 'Feed if it’s been 2–3 hours or more'] : ['Pause a minute or two first. A cry between sleep cycles often settles', 'Try bedtime 30 minutes earlier for a few nights', 'Keep visits brief, dark and boring', mo >= 6 ? 'Still waking every hour or two? Ask your pediatrician about night feeds, or look at sleep training if you want to' : '']].map(x => Array.isArray(x) ? x.filter(Boolean) : x),
         mo >= 2 && ['clock', 'Fighting bedtime', 'Usually the timing: overtired, or not quite tired enough.', ['Rubbing eyes, arching, crying that’s hard to settle? That’s overtired, so start bedtime earlier', 'Not tired yet? Give {o} a little more awake time before bed', 'Dim the lights and keep the same steps 20–30 minutes before bed']],
         mo >= 3 && ['sun', 'Short naps', mo < 6 ? 'Naps of 30–45 minutes are very common at 3–5 months. They get longer with time.' : 'Usually the timing is a little off, or the room is too bright. Teething, a cold or a new skill can shorten naps for a week or two.' + (mo < 10 ? ' Fighting the last nap most days can mean it’s time for two naps.' : ''), ['Give it a few minutes before going in. {S} may resettle', 'Try moving the nap 15 minutes earlier or later', 'A dark room and white noise help']],
         mo >= 4 && ['sunrise', 'Up too early', 'Often a bedtime that’s too late, a room that gets light early, or a last nap that runs late.', ['Before 6 am, treat it as night: dark, quiet, brief', 'Blackout curtains help', 'Try bedtime 15–30 minutes earlier for a week']]
@@ -915,11 +1118,9 @@
       const awayLink = `<button class="hub-rough-item hub-rough-link" onclick="${go('chg:Sleep:d:away')}"><span class="hub-dot">${art('plane', cat)}</span><b>${F('Traveling, or the clocks change')}</b><span class="hub-chev" aria-hidden="true">›</span></button>`;
       const body = `<div class="hub-list hub-rough">${cryLink}${wakeLink}${items.filter(x => !(mo >= 8 && x[1] === 'Waking a lot at night')).map(([ic, t, why, tries], i) => `<details class="hub-rough-item"${i ? '' : ''}><summary><span class="hub-dot">${art(ic, cat)}</span><b>${F(t)}</b><span class="hub-chev" aria-hidden="true">›</span></summary><div class="hub-rough-body"><p><b>${F('Likely why.')}</b> ${F(why)}</p><p class="hub-rough-try"><b>${F('Try this')}</b></p><ul>${tries.map(x => `<li>${F(x)}</li>`).join('')}</ul></div></details>`).join('')}${awayLink}</div>`;
       return detail(cat, 'Sleep help', 'Rough day or night?', 'Pick what’s happening. You’ll see what’s often behind it and what to try.', body
-        + (mo < 1.5 ? versus('Normal, or time to call?', ['Normal', 'Waking every 2–3 hours, grunts, squeaks, and breathing pauses of a few seconds.'], ['Call your pediatrician', 'Hard to wake for feeds, or ' + sleepFever() + '.']) + hubUrgent('Blue lips, or a pause in breathing of 20 seconds or more.', 'Call 911 right away')
-          : mo < 3 ? versus('Normal, or time to call?', ['Normal', 'Good nights and bad nights, and fussing in light sleep.'], ['Call your pediatrician', sleepFever().charAt(0).toUpperCase() + sleepFever().slice(1) + ' (right away), or snoring or gasping most nights.']) + hubUrgent('Blue lips, or long pauses in breathing.', 'Call 911 right away')
-          : versus('Normal, or time to call?', ['Normal', (mo >= 8 ? 'Standing in the crib, protest at bedtime, ' : 'Good nights and bad nights, ') + 'and short cries that settle.'], ['Call your pediatrician', 'Poor feeding, pain, or gasping in sleep.']) + hubUrgent('Blue lips, or long pauses in breathing.', 'Call 911 right away')), 'moon');
+        + `<h2 class="hub-h2">${F('Worried?')}</h2><div class="hub-list">${row({ icon: 'steth', cat, title: 'Normal, or time to call?', sub: 'What’s normal now, and when to call', onclick: go('chg:Sleep:help') })}</div>`, 'moon');
     }
-    if (id === 'crying') {
+    function cryCurve() {
       // The crying curve: builds from 2 weeks, peaks at 6–8 weeks, eases by 3–4 months. A dot shows where Maya is now (adjusted age if born early).
       const wk = (() => { try { const from = parse(profile.early && profile.due ? profile.due : profile.dob); return (NOW - from) / 6048e5; } catch (e) { return -1; } })();
       const X = w => 24 + w / 16 * 272, Y = w => 108 - 80 * (0.22 + 0.78 * Math.exp(-Math.pow((w - 7) / (w < 7 ? 3 : 3.8), 2)));
@@ -933,11 +1134,14 @@
         ${wk >= 4.5 && wk <= 9.5 ? '' : `<text x="${X(7)}" y="${Y(7) - 9}" text-anchor="middle" font-size="11.5" font-weight="700" fill="${pal.ink}" font-family="inherit">The peak</text>`}
         ${wk >= 0 && wk <= 16 ? `<circle cx="${X(wk)}" cy="${Y(wk)}" r="6" fill="#fff" stroke="${pal.ink}" stroke-width="3"/><text x="${Math.min(268, Math.max(52, X(wk) + (wk < 7 ? 18 : -18)))}" y="${Y(wk) + 26}" text-anchor="middle" font-size="11.5" font-weight="700" fill="${pal.ink}" font-family="inherit">${F('Maya now')}</text>` : ''}
       </svg></figure>`;
+      return curve; }
+    if (id === 'crying') {
+      const curve = cryCurve();
       return detail(cat, 'The early months', 'When the crying won’t stop', 'Crying usually builds from about 2 weeks, peaks around 6–8 weeks and eases by 3–4 months. Some evenings nothing works, and that isn’t your fault.',
         curve +
         hubIconSteps([['diaper', 'Check the basics', 'Hungry, wet, too warm or cold, or overtired'], ['heart', 'Hold {o} close', 'Skin to skin, a slow walk or gentle rocking'], ['music', 'A steady sound', 'Shushing, white noise or a soft song'], ['pacifier', 'Something calming', (rolled() || m() >= 3 || answers.swaddleStopped === 'Yes' ? 'A pacifier, or a calm, dim room' : 'A pacifier, or a swaddle if {s} {is}n’t rolling yet')]], cat, 'Check the basics, hold baby close, try a steady sound, then offer a pacifier or a calm, dim room.')
         + `<section class="hub-card hub-callout"><b>${F('If you feel overwhelmed')}</b><p>${F('Put Maya down on {p} back in the crib, close the door and take a few minutes. Call someone you trust. Crying won’t hurt Maya. Shaking can, so never shake a baby.')}</p></section>`
-        + tip('When it’s more than crying', (m() < 3 ? 'Any fever of 100.4°F or higher: call right away. ' : '') + 'Call your pediatrician if the crying comes with poor feeding or vomiting, a weak or high-pitched cry, or sounds like pain.'), 'heart');
+        + tip('When it’s more than crying', (m() < 3 ? 'Any fever of 100.4°F or higher: call right away. ' : '') + 'Call your pediatrician if the crying comes with poor feeding or vomiting, a weak or high-pitched cry, or sounds like {s’s} in pain.'), 'heart');
     }
     if (id === 'daynight') {
       return detail(cat, 'Longer nights', 'Helping Maya tell day from night', 'Babies aren’t born knowing the difference. Light, sound and your routine teach {o}.',
@@ -996,7 +1200,7 @@
         + `<h2 class="hub-h2">${F('Moving to {p} own room')}</h2>`
         + tips(['Keep the same bedtime steps, so the new room feels familiar.', 'Try naps in the new room for a few days first.', 'Set it up the same way: firm, flat and empty, on {p} back.'])
         + tip('No rush', 'Plenty of families room-share longer. Either way is fine after 6 months.')
-      + `<h2 class="hub-h2">${F('Setting up the room')}</h2>` + tiles([['Temperature', 'About 68–72°F', 'Comfortable for you in a T-shirt'], ['Clothes', 'One layer more', 'A sleep sack over pajamas'], ['White noise', 'Low and steady', 'Across the room, not by the crib'], ['Light', 'Dark for night', 'A dim night light for feeds']]), 'crib');
+      + `<h2 class="hub-h2">${F('Setting up the room')}</h2>` + tiles([['Temperature', 'About 68–72°F', 'Comfortable for you in a light T-shirt'], ['Clothes', 'One layer more', 'A sleep sack over pajamas'], ['White noise', 'Low and steady', 'Across the room, not by the crib'], ['Light', 'Dark for night', 'A dim night light for feeds']]), 'crib');
     }
     if (id === 'catnap') {
       return detail(cat, 'Two naps', answers.twoNaps === 'Yes' || age >= 10 ? 'When a nap runs short' : 'Moving to two naps', '',
@@ -1021,7 +1225,7 @@
         'Chair method': [['Nights 1–3', 'Sit in a chair right by the crib. Comfort with your voice or a hand until Maya falls asleep.'], ['Nights 4–6', 'Move the chair halfway to the door. Comfort with your voice more than touch.'], ['Nights 7–9', 'Move the chair to the doorway.'], ['After that', 'Say goodnight from outside the door.'], ['Night wakes', 'Go back to wherever the chair is that night.']],
         'Pick up, put down': [['7:00 pm', 'Bedtime routine, then put Maya down sleepy but still awake.'], ['If {s} {cry|cries}', 'Pick {o} up and hold {o} until {s’s} calm, but not asleep.'], ['Then', 'Put {o} back down. Repeat as many times as it takes.'], ['Night wakes', 'Feed if it’s time for a feed, then the same pick up and put down.'], ['Good to know', 'The first nights can take many repeats. It gets quicker.']],
         'Cry it out': [['7:00 pm', 'Bedtime routine, then put Maya down awake. Say goodnight and leave.'], ['If {s} {cry|cries}', 'Don’t go back in until morning, unless it’s a planned feed or {s} {seem|seems} unwell.'], ['First nights', 'Crying can last a while at first.'], ['By night 3 or 4', 'Most babies cry much less and fall asleep faster.']],
-        'Bedtime fading': [['First', 'Notice when Maya naturally falls asleep, say 8:30 pm.'], ['Nights 1–2', 'Start the bedtime routine so {s’s} in the crib at 8:30, when {s’s} truly sleepy.'], ['Once {s} {settle|settles} quickly', 'Move bedtime 15 minutes earlier.'], ['Repeat', 'Keep stepping earlier every couple of nights until you reach the bedtime you want.']]
+        'Bedtime fading': [['First', 'Notice when Maya naturally falls asleep, say 8:30 pm.'], ['Nights 1–2', 'Start the bedtime routine so {s’s} in the crib at 8:30, when {s’s} truly sleepy.'], ['Once {s} {settle|settles} quickly', 'Then move bedtime 15 minutes earlier.'], ['Repeat', 'Keep stepping earlier every couple of nights until you reach the bedtime you want.']]
       };
       const night = NIGHTS[x.name];
       const ORDER = {
@@ -1071,7 +1275,7 @@
       + `<h2 class="hub-h2">${F('What to do if {s} {is} choking')}</h2>`
       // From the first birthday, first aid for a child (abdominal thrusts) replaces the infant method (AAP, American Red Cross).
       + (over1 ? steps(['Shout for help and have someone call 911.', 'Kneel or stand behind Maya and wrap your arms around {p} waist.', 'Make a fist just above {p} belly button, thumb side in. Grab it with your other hand.', 'Give quick, firm thrusts inward and upward until the food comes out. If {s} {stop|stops} responding, call 911 and start CPR.'])
-        : steps(['Shout for help and have someone call 911.', 'Lay Maya face down along your forearm, head lower than {p} chest, supporting {p} jaw. Give up to 5 firm back blows between the shoulder blades.', 'Turn {o} face up on your other arm. With 2 fingers just below the nipple line, give up to 5 quick chest thrusts.', 'Keep switching between back blows and chest thrusts until the food comes out. If {s} {stop|stops} responding, call 911 and start infant CPR.'])
+        : steps(['Shout for help and have someone call 911.', 'Lay Maya face down along your forearm, head lower than {p} chest, supporting {p} jaw. Give up to 5 firm back blows between the shoulder blades.', 'Turn {o} face up on your other arm. With the heel of one hand on the middle of {p} chest, give up to 5 quick chest thrusts.', 'Keep switching between back blows and chest thrusts until the food comes out. If {s} {stop|stops} responding, call 911 and start infant CPR.'])
           + hubEmbed('ShaNuST_58A', 'What to do when a baby is choking', 'American Red Cross'))
       + tip('Don’t sweep blindly', 'Only reach into {p} mouth if you can see the object and easily pick it out.')
       + tip('Take a class', over1 ? 'A short child first aid and CPR class lets you practice on a doll. It’s the best way to feel ready.' : 'A short infant first aid class lets you practice these steps on a doll. It’s the best way to feel ready.')
@@ -1079,6 +1283,16 @@
       + `<a class="hub-more" href="https://www.healthychildren.org/English/health-issues/injuries-emergencies/Pages/Choking-Prevention.aspx" target="_blank" rel="noopener"><span>${F('Preventing choking, and what to do · HealthyChildren.org')}</span><span class="hub-chev" aria-hidden="true">↗</span></a>`, 'shield');
   }
   function helpPage(cat) {
+    if (cat === 'Sleep') {
+      const mo = m();
+      return tplPage('Sleep', { type: 'urgent', label: 'Sleep', art: 'moon', title: 'Most changes in sleep are normal',
+        why: 'Here’s what’s normal for {o} right now, and when it’s worth a call.',
+        calls: { ped: mo < 3 ? sleepFever() + ' (right away)' + (mo < 1.5 ? ', {s’s} hard to wake for feeds' : '') + ', or snoring or gasping in sleep.' : 'snoring or gasping in sleep most nights, or sleep changes with a fever or poor feeding.',
+          now: mo < 3 ? 'trouble breathing, blue lips, a 20-second pause in breathing, or {s} won’t wake up.' : 'trouble breathing, blue lips, or {s} won’t wake up.', nowLabel: 'Call 911' },
+        signs: [['moon', 'Normal', mo < 1.5 ? 'Grunts, squeaks, short breathing pauses' : mo < 3 ? 'Good nights and bad nights' : mo >= 8 ? 'Night waking, standing in the crib' : 'Night waking, short naps'], ['eye', 'Keep an eye on it', 'Harder to settle, and waking more']],
+        tell: [['', 'Keeping an eye on it?', 'Jot down a few nights to show your pediatrician']],
+      });
+    }
     const D = C().DATA[cat], T = C().T, tone = l => /911/.test(l) ? 'is-red' : /pediatrician/i.test(l) ? 'is-red' : '';
     const TRIAGE = cat === 'Sleep' ? [
       ['Normal', 'Waking at night through the first year, and short naps while sleep patterns are still developing.'],
@@ -1097,36 +1311,37 @@
       + note(cat === 'Sleep' ? 'Before a visit, jot down a few nights of bedtimes, wakes and feeds. It helps your pediatrician see the pattern.' : 'Before a visit, jot down a day of feeds and wet diapers. It helps your pediatrician see the pattern.'), cat === 'Sleep' ? 'moon' : 'bowl');
   }
   // Sleep-training methods on one scale, from the most hands-on to the least.
-  function methodScale() {
+  function methodScale(sub) {
     // The five approaches as rows in two groups, gentlest first. No carousel: every option is visible.
     const methods = typeof sleepTrainingMethods === 'function' ? sleepTrainingMethods() : [];
     const pick = ks => ks.map(k => [methods.findIndex(x => x.kind === k), methods.find(x => x.kind === k)]).filter(x => x[1]);
     const IC = { fading: 'moon', pickup: 'hand', chair: 'sofa', ferber: 'clock', extinction: 'crib' };
     const rows = ks => pick(ks).map(([i, x]) => row({ icon: IC[x.kind] || 'book', cat: 'Sleep', title: x.name, sub: x.title, onclick: go('chg:Sleep:d:method:' + i) }));
+    if (sub) {
+      // Options as tappable tiles: icon, name, one line, and the crying level to compare at a glance.
+      const CRY = { fading: 'You stay close', pickup: 'You stay close', chair: 'You stay close', ferber: 'You step out', extinction: 'You step out' };
+      const pal = (typeof YEAR_PALETTES !== 'undefined' ? YEAR_PALETTES : {}).Sleep || { pale: '#eceaf8' };
+      const tiles = ks => pick(ks).map(([i, x]) => `<button class="tpl-opt" onclick="${go('chg:Sleep:d:method:' + i)}"><span class="tpl-opt-art">${window.hubArt(IC[x.kind] || 'book', 'Sleep')}</span><b>${F(x.name)}</b><small>${F(x.title)}</small><em>${F(CRY[x.kind] || '')}</em></button>`).join('');
+      // A labeled spectrum: gentlest at the top, quickest at the bottom, so the order means something.
+      const LVL = { fading: ['Least crying', 1], pickup: ['Some crying', 2], chair: ['Some crying', 2], ferber: ['More crying', 3], extinction: ['Most crying', 4] };
+      const steps = pick(['fading', 'pickup', 'chair', 'ferber', 'extinction']).map(([i, x]) => `<button class="tpl-spec-row" onclick="${go('chg:Sleep:d:method:' + i)}"><i class="lv${LVL[x.kind][1]}"></i><span><b>${F(x.name)}</b><small>${F(x.title)}</small></span><em class="lv${LVL[x.kind][1]}">${F(LVL[x.kind][0])}</em></button>`).join('');
+      return `<div class="tpl-spec"><p class="tpl-spec-end">${F('Gentler, often slower')}</p>${steps}<p class="tpl-spec-end">${F('Quicker, more crying')}</p></div>`;
+    }
     return list('You stay close, slower', rows(['fading', 'pickup', 'chair'])) + list('You step out, often quicker', rows(['ferber', 'extinction']));
   }
-  function settlePage() {
-    const age = m(), choice = C().settlingGuide();
-    if (age < 4) {
-      // Read ahead: the parent can learn about sleep training before it's time, without being told to start.
-      const methods = typeof sleepTrainingMethods === 'function' ? sleepTrainingMethods() : [];
-      return detail('Sleep', 'Read ahead', 'Sleep training, for later', 'Sleep training is a choice, not a must. Families who choose it start from about 4–6 months.',
-        methodScale() + tip('For now', 'Feeding, rocking or holding Maya to sleep is fine. You can’t spoil a young baby.'), 'book');
-    }
-    return settleChoices(age);
-  }
+  function settlePage() { return settleChoices(m()); }
   function soothePage() {
     return detail('Sleep', 'The early months', 'Helping Maya settle', 'Feeding, rocking or holding Maya to sleep is fine while sleep patterns are still developing. You can’t spoil a young baby.',
       steps(['Start winding down at the first sleepy cues, like a quiet stare or a yawn.', 'Keep a few familiar steps: a feed, a diaper and a quiet song.', 'Put {o} down on {p} back in {p} own sleep space.']) + tip('Sleep training comes later, if at all', 'It’s an optional choice, usually considered from around 4–6 months.'), 'moon');
   }
   function settleChoices(age) {
-    // One page about one choice: is it time, the approaches side by side, what to expect, and that skipping it is fine. (AAP: optional, from about 4–6 months.)
-    return detail('Sleep', 'Your choice', 'Sleep training, if you choose it', 'It teaches Maya to fall back asleep on {p} own, so nights get longer. Rocking or feeding to sleep is fine too.',
-      tip('Is Maya old enough?', (profile.early ? 'Go by adjusted age. ' : '') + (age >= 7 ? 'It can work at any age from here, once your pediatrician says weight and feeding are on track.' : 'Most families who try it start between 4 and 6 months, once your pediatrician says weight and feeding are on track.' + (age < 4 ? ' Maya isn’t 4 months' + (sleepAdj() ? ' adjusted' : '') + ' yet, so it’s early.' : ' Maya is ' + age + ' months' + (sleepAdj() ? ' adjusted' : '') + (age === 4 ? ', so {s’s} at the start of that window.' : ', right in that window.'))) + ' Wait if {s’s} sick, or during travel or the first weeks of daycare.')
-      + methodScale()
-      + tip('Before you start', 'Most methods take 1–2 weeks. Keep the night feeds {s} still {need|needs}, have every caregiver respond the same way, and stick with one method, since switching makes it harder.')
-      + tip('If a night goes badly', 'Meet hunger, discomfort or illness first, then go back to your plan. Not easier after two weeks? Pause and talk to your pediatrician.')
-      + note('Skipping it? Keep a short bedtime routine that every caregiver repeats.'), 'book');
+    // Nov 16: the sleep training overview, on the option-list pattern: is it time, the ways side by side, then good to know.
+    const adj = profile.early || sleepAdj() ? ' adjusted' : '';
+    const ready = [['clock', 'About 4–6 months', age < 4 ? `Maya is ${age < 1 ? 'a few weeks' : age + ' months'}${adj}: it’s early` : age <= 6 ? `Maya is ${age} months${adj}: in the window` : 'It can work at any age from here'], ['steth', 'Growing well', 'Ask your pediatrician first'], ['home', 'A calm stretch', 'Not while sick, traveling or starting daycare']];
+    return detail('Sleep', age < 4 ? 'Read ahead' : 'Your choice', 'Sleep training is a choice, not a must', 'It helps {o} fall back asleep on {p} own. Rocking or feeding to sleep is fine too.',
+      `<div class="care-tpl is-option">` + TPLB.sec('Is {s} ready?', TPLB.tiles(ready, 'Sleep'))
+      + `<h2 class="hub-h2">${F('Pick a method')}</h2>` + methodScale(true)
+      + TPLB.sec('Good to know', TPLB.rows([['clock', 'Stick with one for 1–2 weeks', 'Cry it out often takes a few nights. Not easier by then? Ask your pediatrician.'], ['heart', 'Every caregiver, the same way', 'Same steps, every night, whoever does bedtime.']], 'Sleep')) + `</div>`, 'book');
   }
 
   /* ---------- actions ---------- */
@@ -1161,10 +1376,11 @@
     return baseRoute(p);
   };
   // Building blocks shared with the other categories (js/hub-categories.js).
-  window.__hub = { F, qa, row, list, hero, tiles, glanceCard, versus, next, more, note, art, chev, chip, tip, steps, tips, video, detail, mixedList, ticks, listMore,
+  window.__hub = { tplPage, TPLB, TPLS, F, qa, row, list, hero, tiles, glanceCard, versus, next, more, note, art, chev, chip, tip, steps, tips, video, detail, mixedList, ticks, listMore,
     pills: (label, items) => `<nav class="hub-pills" id="hub-pills" aria-label="${esc(label)}">${items.map(it => `<button class="${it.on ? 'is-on' : ''} ${it.now ? 'is-now' : ''}" onclick="${it.onclick}" ${it.on ? 'aria-current="step"' : ''}>${esc(it.label)}${it.now && !it.on ? ' <span class="hub-now">Now</span>' : ''}</button>`).join('')}</nav>` };
   window.positionHubPills = function () {
     const r = document.getElementById('hub-pills'), s = r && r.querySelector('.is-on');
     if (r && s) r.scrollLeft = s.offsetLeft - (r.clientWidth - s.offsetWidth) / 2;
   };
 })();
+
