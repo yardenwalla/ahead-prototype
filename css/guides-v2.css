@@ -1,0 +1,17 @@
+/* Guides tab, Nov 17 preview: compact tiles sized to their content, so all eight guides fit on one screen.
+   Every tile has the same build: mark top left, title, two lines at most. "New" sits in the top-right corner,
+   so a changed guide doesn't grow or move. Coral deepened so white text on it is readable. */
+html body #main .category-directory { gap: 10px !important; grid-auto-rows: auto !important; margin-top: 0 !important }
+html body #main .category-directory-row,
+html body #main .category-directory-row[data-new] { min-height: 0 !important; padding: 12px 14px 12px !important; gap: 8px !important; border-radius: 18px !important;
+  background: radial-gradient(circle at 100% 0, rgba(255,255,255,.5) 0 24%, transparent 24.5%), var(--year-bg, #e8e2f6) !important; justify-content: flex-start }
+html body #main .category-directory-row .directory-art { width: 32px !important; height: 32px !important; flex: none }
+html body #main .category-directory-row .directory-art svg { width: 21px !important; height: 21px !important }
+html body #main .category-directory-row .directory-copy b { font-size: 15.5px !important; line-height: 1.22 !important; letter-spacing: -.005em }
+html body #main .category-directory-row .directory-copy small { font-size: 13px !important; line-height: 1.32 !important; margin-top: 3px !important;
+  display: -webkit-box !important; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden }
+html body #main .category-directory-row small.guide-new-line { font-weight: 600 !important }
+html body #main .category-directory-row[data-new] { box-shadow: inset 0 0 0 2.5px #C4553A !important }
+html body #main .category-directory-row .guide-new { position: absolute !important; top: 11px !important; right: 11px !important; margin: 0 !important;
+  background: #C4553A !important; color: #fff !important; font-size: 11px !important; font-weight: 700 !important; line-height: 15px !important; padding: 3px 9px !important; border-radius: 999px !important }
+html body #main .hub-cat-search { margin-bottom: 14px !important }

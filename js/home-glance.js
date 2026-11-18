@@ -422,14 +422,26 @@
     'Daily rhythm': { Newborn: 'Newborn care', '1–3 months': 'Baths & routine', '4–6 months': 'Drool & teething', '6–12 months': 'First teeth' }
   };
   // The line under each guide on the Guides tab: one plain, personal sentence about where she is (she/her; P() swaps).
+  // Guides tab lines (Nov 17): say what's inside the guide right now, as topics, never as something she's already doing.
   const TILE = {
-    Feeding: { Newborn: 'Learning her hunger cues', 'Milk feeds': 'Fewer, faster feeds for her', 'Ready for solids': 'Getting {o} ready for solids', new: 'Her first tastes of food', textures: 'Thicker textures for her', established: 'Three meals a day for her' },
-    Sleep: { 'Round-the-clock sleep': 'Sleep around the clock, for now', 'Longer nights': 'Her nights are getting longer', 'Three naps': 'Three naps a day, at set times', 'Two naps': 'Two naps and longer nights' },
-    Development: { 'By 2 months': 'Her first smiles and coos', 'By 4 months': 'Her smiles, coos and first grabs', 'By 6 months': 'Her reaching, laughing and rolling', 'By 9 months': 'Her sitting, babbling and crawling', 'By 12 months': 'Her first words and steps' },
-    Safety: { 'First setup': 'A safe space for her from day one', Rolling: 'Ready for {p} first rolls', Crawling: 'Ready for her to crawl', 'Pulling up': 'Ready for her to pull up' },
-    Health: k => { if (k === 'First week') return 'Her first-week checkup'; const a = parseInt(k, 10), past = !isNaN(a) && addMonths(parse(profile.dob), a) < NOW, rec = !isNaN(a) && typeof healthRecord === 'function' && healthRecord(a); return `Her ${k.replace(/ months?$/, '-month')} checkup ${rec && rec.status === 'attended' ? 'is done' : past ? 'is due now' : 'is next'}`; },
-    'Daily rhythm': { Newborn: 'Baths, diapers and cord care', '1–3 months': 'Baths, nails and dressing {o}', '4–6 months': 'Drool, gums and bath time', '6–12 months': 'Her first teeth and bath time' }
+    Feeding: { Newborn: 'Hunger cues, feeds and diapers', 'Milk feeds': 'Feeds, spit-up and growth', 'Ready for solids': 'Signs of readiness, and what you need', new: 'First tastes and allergens', textures: 'Lumps, finger foods and cups', established: 'Meals, finger foods and milk' },
+    Sleep: { 'Round-the-clock sleep': 'Safe sleep and newborn rhythms', 'Longer nights': 'Day vs. night, and a first bedtime', 'Three naps': 'Naps, bedtime and night waking', 'Two naps': 'Nap changes, bedtime and nights' },
+    Development: { 'By 2 months': 'Smiles, sounds and tummy time', 'By 4 months': 'Grabbing, cooing and play ideas', 'By 6 months': 'Reaching, rolling and games to try', 'By 9 months': 'Sitting, babbling and peekaboo', 'By 12 months': 'First words, standing and games' },
+    Safety: { 'First setup': 'Car seat, crib and home setup', Rolling: 'Swaddle, floor and changing table', Crawling: 'Gates, locks and covers', 'Pulling up': 'Furniture, the stove and water' },
+    Health: k => { if (k === 'First week') return 'The first-week checkup'; const a = parseInt(k, 10), past = !isNaN(a) && addMonths(parse(profile.dob), a) < NOW, rec = !isNaN(a) && typeof healthRecord === 'function' && healthRecord(a); return `The ${k.replace(/ months?$/, '-month')} checkup ${rec && rec.status === 'attended' ? 'is done' : past ? 'is due now' : 'is next'}`; },
+    'Daily rhythm': { Newborn: 'Baths, diapers and cord care', '1–3 months': 'Baths, nails and dressing', '4–6 months': 'Drool, gums and bath time', '6–12 months': 'Teeth, baths and dressing' }
   };
+  // A guide's line while it's marked New on the Guides tab, where Home's wording would leave a one-word last line.
+  // What changed, said as what's new in the guide, never as something she's already doing (Nov 17).
+  const NEW_TILE = {
+    Safety: { Rolling: 'Get ready before rolling starts', Crawling: 'Get the house ready for crawling', 'Pulling up': 'Anchor furniture before standing' },
+    Feeding: { 'Milk feeds': 'Why feeds often get quicker now', 'Ready for solids': 'Solids are coming up', new: 'Starting solids, step by step', textures: 'Moving on to thicker textures', established: 'Growing toward three meals a day' },
+    Sleep: { 'Longer nights': 'Days and nights start to sort out', 'Three naps': 'Naps often settle into a pattern', 'Two naps': 'Moving to two naps, when ready' },
+    Development: { 'By 4 months': 'New skills to look for by 4 months', 'By 6 months': 'New skills to look for by 6 months', 'By 9 months': 'New skills to look for by 9 months', 'By 12 months': 'New skills to look for by 12 months' },
+    'Daily rhythm': { '1–3 months': 'Care settles into a rhythm', '4–6 months': 'Drool and teething may start', '6–12 months': 'Brushing starts with the first tooth' }
+  };
+  const newLine = q => (NEW_TILE[q.cat] && NEW_TILE[q.cat][q.key]) || (q.cat === 'Health' && moveCopy(q.cat, q.key) ? tileLine('Health', q.key) : (moveCopy(q.cat, q.key) || [''])[0]);
+  const FIXED_TILE = { 'Out and about': 'Walks, car rides and first trips', Childcare: 'Daycare, nannies, sitters and family' };
   const tileLine = (cat, key) => { const t = TILE[cat]; return !key ? '' : typeof t === 'function' ? t(key) : (t && t[key]) || ''; };
   const shortOf = (cat, key) => { const t = SHORT[cat]; return !key ? '' : typeof t === 'function' ? t(key) : (t && t[key]) || ''; };
   function guidesCard() {
@@ -469,9 +481,9 @@
     const circles = (moved.length ? moved.map(q => q.cat) : set.slice(0, 4)).slice(0, 4)
       .map(c => `<span class="hg-gtile-mark" style="${yearTheme(c)}">${typeof catIcon === 'function' ? catIcon(c) : ''}</span>`).join('');
     // Several guides changed: name the first (Health, Safety, Feeding… order), not just a count.
-    const top = moved.length ? (moveCopy(moved[0].cat, moved[0].key) || [line])[0] : '';
+    const top = moved.length ? (newLine(moved[0]) || line) : '';
     // Name what changed, never "plus 1 more" (Nov 14 QA): two changes are both named; with more, the other guides are named.
-    const second = moved.length === 2 ? (moveCopy(moved[1].cat, moved[1].key) || [''])[0] : '';
+    const second = moved.length === 2 ? newLine(moved[1]) : '';
     const gLine = moved.length === 1 ? P(top) : moved.length === 2 && second ? `${P(top)} · ${P(second)}` : moved.length ? `${P(top)} · ${list(moved.slice(1).map(q => label(q.cat)))} too` : `Personalized for ${nm} at ${age}`;
     const gTitle = moved.length === 1 ? label(moved[0].cat) : moved.length ? `${nm}’s guides` : `${nm}’s guides`;
     const path = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="5.5" cy="17.5" r="2"/><circle cx="18.5" cy="6.5" r="2"/><path d="M7.4 16.6c3.2-1.4 1.6-6.2 5-8 1.7-.9 2.6-1.1 4.2-1.3"/></svg>';
@@ -498,22 +510,17 @@
       const heads = typeof window.home2PageHeadlines === 'function' && (typeof isCurrent !== 'function' || isCurrent()) ? home2PageHeadlines() : {};
       html = html.replace(/(data-cat="([^"]+)"[\s\S]*?)<small>([\s\S]*?)<\/small>/g, (all, pre, cat, small) => {
         const status = small.replace(/<[^>]+>/g, '').trim(), head = (heads[cat] || '').trim(), lo = x => x.toLowerCase().replace(/[‐‑–]/g, '-').replace(/\s+/g, ' ');
-        if (!head) return all;
+        if (!head && !FIXED_TILE[cat] && !moved.some(q => q.cat === cat) && !tileLine(cat, nowAt[cat])) return all;
         const same = lo(head).includes(lo(status)) || lo(status).includes(lo(head)), short = status.split(/\s+/).length <= 4;
         // One line per tile, no stage pills: "stage" is our word, not a parent's (Yarden, Nov 9).
         // A guide that moved for her keeps a coral "New" and says what changed, until it's opened (or two weeks after
         // it was first shown): no blink to miss, and it's still there when she comes back.
-        const mv = moved.find(q => q.cat === cat), c = mv && moveCopy(mv.cat, mv.key);
+        const mv = moved.find(q => q.cat === cat), c = mv && ((NEW_TILE[mv.cat] && NEW_TILE[mv.cat][mv.key] && [NEW_TILE[mv.cat][mv.key]]) || (mv.cat === 'Health' && moveCopy(mv.cat, mv.key) && [tileLine('Health', mv.key)]) || moveCopy(mv.cat, mv.key));
         if (c) return `${pre.replace(/^data-cat="([^"]+)"/, 'data-cat="$1" data-new="1"').replace(/(<span class="directory-copy">)/, '$1<span class="guide-new">New</span>')}<small class="guide-new-line">${F(P(c[0]))}</small>`;
-        const mine = tileLine(cat, nowAt[cat]);
+        const mine = FIXED_TILE[cat] || tileLine(cat, nowAt[cat]);
         return `${pre}<small>${mine ? F(P(mine)) : esc(same || short ? head : status)}</small>`;
       });
-      // What's new for her comes first.
-      if (moved.length) html = html.replace(/(<section class="category-directory"[^>]*>)([\s\S]*?)(<\/section>)/, (all, open, rows, close) => {
-        const list = rows.split(/(?=<button class="category-directory-row)/).filter(r => r.trim());
-        const isNew = r => /data-new="1"/.test(r);
-        return open + list.filter(isNew).concat(list.filter(r => !isNew(r))).join('') + close;
-      });
+      // Nov 17: every guide keeps its place. A guide that changed is marked, never moved.
       return html;
     };
   }
