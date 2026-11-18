@@ -1256,3 +1256,15 @@
 #main .tl-around .tl-gcard{box-shadow:0 1px 3px rgba(60,40,100,.06),0 0 0 1px #efeaf3 inset}
 #main .tl-around .tl-gmon{color:#8a8494}
 #main .tl-around .tl-ic,#main .tl-around .tl-soon .tl-ic{background:var(--year-bg,#ece4f6)!important}
+
+/* Nov 17 · Compact status card: one line of text, a thin bar with Maya as its handle, the cake at the end */
+#main .tl-track .tl-prog{padding:16px 18px 12px!important;margin:6px 0 24px!important}
+#main .tl-track .tl-prog .tl-ends{flex-direction:row!important;justify-content:space-between;align-items:baseline!important;margin:0 0 10px!important}
+#main .tl-track .tl-prog .tl-ends b{font-size:17px!important}
+#main .tl-track .tl-prog .tl-ends span{font-size:13px;color:#6b6676}
+#main .tl-track .tl-ride{height:0!important;position:relative;z-index:2}
+#main .tl-track .tl-baby{width:44px!important;height:48px!important;margin-left:-22px!important;bottom:-34px!important}
+#main .tl-track .tl-flag{width:34px!important;height:34px!important;right:-8px!important;bottom:-24px!important}
+#main .tl-track .tl-bar{height:8px!important;margin:24px 0 0}
+#main .tl-tip{top:-18px!important}
+#main .tl-track .tl-prog .tl-ends b,#main .tl-track .tl-prog .tl-ends span{white-space:nowrap}

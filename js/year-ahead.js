@@ -235,7 +235,7 @@
     };
     const head = x => { const mo = Math.max(0, Math.min(11, Math.floor(x))), cov = typeof window.stCover === 'function' ? window.stCover(mo) : null; return cov ? F(cov.title) : ''; };
     const ends = x => { const t = isToday(x), left = Math.max(0, 12 - x), eta = left < 0.5 ? 'any day now' : left < 1.5 ? 'in about a month' : `in about ${Math.round(left)} months`, d = Math.round(Math.abs(x - a));
-      return t ? `<b>${F(`${nm} is ${typeof babyAge === 'function' ? babyAge() : ''}`)}</b><span>${F(`First birthday ${eta}`)}</span>` : `<b>${F(`At ${ageTxt(x)}`)}</b><span>${F(d < 1 ? 'about now' : x > a ? `${d} month${d === 1 ? '' : 's'} from now` : `${d} month${d === 1 ? '' : 's'} ago`)}</span>`; };
+      return t ? `<b>${F(`${nm} is ${typeof babyAge === 'function' ? babyAge() : ''}`)}</b><span>${F(left < 0.5 ? 'Birthday any day now' : `${Math.max(1, Math.round(left))} month${Math.max(1, Math.round(left)) === 1 ? '' : 's'} to {p} birthday`)}</span>` : `<b>${F(`At ${ageTxt(x)}`)}</b><span>${F(d < 1 ? 'about now' : x > a ? `${d} month${d === 1 ? '' : 's'} from now` : `${d} month${d === 1 ? '' : 's'} ago`)}</span>`; };
     const theme = x => typeof window.monthTheme === 'function' ? window.monthTheme(Math.max(0, Math.min(11, Math.floor(x)))) : '';
     const art = x => typeof window.stCardArt === 'function' ? window.stCardArt(Math.max(0, Math.min(11, Math.floor(x)))) : '';
     window.__tl = { a, listHTML, head, ends, theme, art };
