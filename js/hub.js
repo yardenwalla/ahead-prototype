@@ -124,7 +124,7 @@
     // Calm vs act-now as two photo cards: [src, 'ok'|'stop', title, [signs]].
     photoVs: items => `<div class="ph-vs">${tval(items).map(([src, tone, t, xs]) => `<div class="ph-vs-card is-${tone}"><span class="ph-tile">${TPLB.pimg(src, t)}</span><b>${F(t)}</b><ul>${xs.map(x => `<li>${F(x)}</li>`).join('')}</ul></div>`).join('')}</div>`,
     // Rows of the same foods across ages, this baby's column marked. cols [[title, age]], rows [[name, [src, src, src]]].
-    photoTable: (cols, rows, now) => `<section class="ph-tex"><div class="ph-tex-row ph-tex-head"><span></span>${cols.map(([t, d], i) => `<span class="${i === now ? 'is-now' : ''}">${i === now ? `<em class="ph-now">${F('Maya now')}</em>` : ''}<b>${F(t)}</b>${F(d)}</span>`).join('')}</div>`
+    photoTable: (cols, rows, now) => `<section class="ph-tex"><div class="ph-tex-row ph-tex-head"><span></span>${cols.map(([t, d], i) => `<span class="${i === now ? 'is-now' : ''}">${i === now ? `<em class="ph-now">${F('Maya’s age')}</em>` : ''}<b>${F(t)}</b>${F(d)}</span>`).join('')}</div>`
       + rows.map(([n, srcs]) => `<div class="ph-tex-row"><b class="ph-tex-food">${F(n)}</b>${srcs.map((src, i) => `<span class="ph-tile${i === now ? ' is-now' : ''}">${TPLB.pimg(src, n + ', ' + cols[i][0].toLowerCase())}</span>`).join('')}</div>`).join('') + `</section>`,
     // What to do, side by side in calm and urgent colors: [[title, text], [title, text]].
     doPair: (a, b) => `<section class="ph-do"><div class="is-ok"><b>${F(a[0])}</b><span>${F(a[1])}</span></div><div class="is-stop"><b>${F(b[0])}</b><span>${F(b[1])}</span></div></section>`,
