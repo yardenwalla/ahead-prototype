@@ -109,7 +109,7 @@
         away: [['crib', 'The crib mobile', 'Take it down now, before {s} can grab it']] },
       9: { now: [['toy-cups', 'Stacking cups'], ['toy-ball', 'Soft ball'], ['toy-flap', 'Lift-the-flap books']],
         away: [['mat', 'The play gym', '{S’s} sitting up and on the move now']] },
-      12: { now: [['toy-push', 'Sturdy push toy'], ['toy-sorter', 'Shape sorter'], ['toy-pretend', 'Cup, spoon and teddy']],
+      12: { now: [['toy-push', 'Push toy'], ['toy-sorter', 'Shape sorter'], ['toy-pretend', 'Cup, spoon and teddy']],
         away: [['stand', 'The activity center', 'Cruising the furniture is better practice now']] } }[ref];
     const toys = TOYS ? `<section class="dev-toys"><h2 class="hub-h2">${F('Toys that fit now')}</h2><p class="dev-toys-lead">${F('Simple toys work best, and you don’t need many.')}</p>`
       + `<div class="dev-toy-grid">${TOYS.now.map(([img, t]) => `<div class="dev-toy"><img src="assets/dev/${img}.jpg?v=2" alt=""><b>${F(t)}</b></div>`).join('')}</div>`
