@@ -64,7 +64,7 @@ window.SEARCH_DEEP = [["topic:Development","Development & play","What to look fo
 ["topic:Childcare","Childcare","Compare care options","",8191,0],
 ["topic:Childcare","Childcare","Before you choose","",8191,0],
 ["chg:Childcare:d:center","","Daycare center","Set hours, built-in backup",8191,1],
-["chg:Childcare:d:home","","Home daycare","A small group, often most affordable",8191,1],
+["chg:Childcare:d:home","","Home daycare","A small group, often more flexible",8191,1],
 ["chg:Childcare:d:nanny","","Nanny or nanny share","One-on-one at home. Sharing costs less",8191,1],
 ["chg:Childcare:d:family","","Family or friends","Flexible, and someone you trust",8191,1],
 ["chg:Childcare:d:sitter","","Babysitter","For a night out, or a break",8191,1],

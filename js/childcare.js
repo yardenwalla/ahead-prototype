@@ -69,14 +69,17 @@
     help: c => `<svg viewBox="0 0 90 40" aria-hidden="true"><path d="M22 36 6 20a9 9 0 0 1 16-10 9 9 0 0 1 16 10Z" fill="${c[2]}"/><circle cx="52" cy="28" r="7" fill="${c[3]}"/></svg>`
   };
   // A subpage: the colored header the newer tabs use, in the color of the tile or row that opened it.
-  function sub(key, context, title, lead, inner) {
-    const c = PAL[key] || PAL.plan;
+  // Nov 19: every page and row in Childcare's own yellow (no rainbow), with the outline icon the page passes in.
+  const CC = ['#fcf7dd', '#6b5a0e', '#f0d872', '#f8e3a0'];
+  const ICON_OF = { center: 'blocks', home: 'home', nanny: 'hand', family: 'heart', sitter: 'moon', plan: 'notepad', pay: 'coin', ready: 'bag', card: 'notepad', backup: 'shield', help: 'heart', fit: 'eye', start: 'heart' };
+  function sub(key, context, title, lead, inner, icon) {
+    const c = CC;
     return `<div class="quiet-category hub-page hub-detail" data-overview="${CAT}" data-ss="1" data-cc-page="${key}" style="${yearTheme(CAT)};--ss-bg:${c[0]};--ss-ink:${c[1]};--year-bg:${c[0]};--year-pale:${c[0]};--year-ink:${c[1]}">${detailPageTop(CAT)}`
-      + `<div class="dev-area-head ss-head" style="--area:${c[0]};--area-ink:${c[1]}"><span class="dev-area-head-art">${(SHAPE[key] || SHAPE.plan)(c)}</span><p class="hub-context">${F(context)}</p><h1>${F(title)}</h1>${lead ? `<p class="hub-lead">${F(lead)}</p>` : ''}</div>`
+      + `<div class="dev-area-head ss-head" style="--area:${c[0]};--area-ink:${c[1]}"><span class="dev-area-head-art sf-head-art">${hubArt(icon || ICON_OF[key] || 'notepad', CAT)}</span><p class="hub-context">${F(context)}</p><h1>${F(title)}</h1>${lead ? `<p class="hub-lead">${F(lead)}</p>` : ''}</div>`
       + inner + `</div>`;
   }
   // A row on the tab's home: a soft colored icon square, like Outings' gear rows.
-  const homeRow = (key, icon, title, sub2, id) => { const c = PAL[key]; return `<button class="hub-row oa-row" style="--hl-bg:${c[0]};--hl-ink:${c[1]}" onclick="openPage('chg:${CAT}:d:${id}')"><span class="oa-dot">${hubArt(icon, CAT)}</span><span class="hub-row-copy"><b>${F(title)}</b><small>${F(sub2)}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`; };
+  const homeRow = (key, icon, title, sub2, id) => { const c = CC; return `<button class="hub-row oa-row" style="--hl-bg:${c[0]};--hl-ink:${c[1]}" onclick="openPage('chg:${CAT}:d:${id}')"><span class="oa-dot">${hubArt(icon, CAT)}</span><span class="hub-row-copy"><b>${F(title)}</b><small>${F(sub2)}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`; };
 
   /* ---------- storage on this device ---------- */
   const load = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) || d; } catch (e) { return d; } };
@@ -90,16 +93,16 @@
     center: { icon: 'blocks', name: 'Daycare center', short: 'Set hours, built-in backup', who: 'place',
       lead: 'A licensed center with trained teachers, where babies are cared for in a room with others their age.',
       good: 'You want set hours, backup staff when someone’s out, and other babies around.', mind: 'Babies tend to catch more colds in their first year of group care.',
-      when: ['About 6 months ahead', 'Infant rooms often have waitlists, so join a few early.'],
+      when: ['As early as you can', 'Infant rooms have the longest waitlists. Join a few now, even before you’re sure.'],
       // Steps, in the order a parent meets them: a quick call, the tour (look, then ask three), and before signing.
       steps: [['Before you visit', 'check', 'A quick call, or a look online', [['Do you have a spot for a baby, and when?', 'Ask about the waitlist, and how often it moves.'], ['What are your hours and cost?', 'Including closed days and any extra fees.'], ['Are you licensed?', 'A licensed center is inspected by your state.']]],
         ['On the tour: look for', 'look', 'You can see these for yourself', [['Babies sleeping on their backs, in bare cribs', 'No blankets, bumpers or toys.'], ['Enough grown-ups for the babies', 'Best is 3 babies per adult, and 6 in a room. Your state may allow a few more.'], ['Warm, unhurried caregivers', 'Talking to babies, and picking them up when they cry.'], ['A clean, calm room', 'A clean changing area, covered outlets and floor space to play.']]],
         ['On the tour: ask', 'ask', 'The three that tell you the most', [['How long have the baby-room teachers been here?', 'A year or more. Familiar faces matter most for babies.'], ['What happens if a baby isn’t tired at nap time, or wakes up early?', 'Never forced to sleep or left crying. Quiet play, then back down when sleepy.'], ['Walk me through a baby’s day.', 'Feeds and naps on each baby’s own schedule, floor time and outside every day, and no screens.']]],
         ['Before you sign', 'check', 'Easy to ask by email', [['Is everyone trained in infant CPR?', 'Yes, and it’s kept current.'], ['Has every staff member had a background check?', 'Yes, everyone.'], ['When does a sick child stay home?', 'A clear, written policy.'], ['How will I hear about my baby’s day?', 'A daily note on feeds, naps and diapers.'], ['Can I have it in writing?', 'Hours, fees, closed days, and how much notice either side gives.'], ['Are children and staff up to date on vaccines?', 'Yes, with a clear policy, and hand-washing before feeds and after changes.']]]] },
-    home: { icon: 'home', name: 'Home daycare', short: 'A small group, often most affordable', who: 'place',
+    home: { icon: 'home', name: 'Home daycare', short: 'A small group, often more flexible', who: 'place',
       lead: 'A provider cares for a small group of children in their own home, often a mix of ages.',
       good: 'You’d like a smaller group and a homey feel, often with more flexible hours.', mind: 'With one provider, you’ll need backup care when they’re sick or away.',
-      when: ['About 3 months ahead', 'Good spots fill up, often through word of mouth.'],
+      when: ['At least 3 months ahead', 'Openings come up more often than at centers, but good spots fill by word of mouth.'],
       steps: [['Before you visit', 'check', 'A quick call, or a look online', [['Do you have a spot for a baby, and when?', 'Also ask how many babies they take.'], ['What are your hours and cost?', 'Including closed days and any extra fees.'], ['Are you licensed?', 'A licensed home daycare is inspected by your state.']]],
         ['On the tour: look for', 'look', 'You can see these for yourself', [['A safe place for babies to sleep', 'Their own crib, bare, away from older kids.'], ['Enough grown-ups for the babies', 'Best is no more than 2 babies per adult in a home daycare.'], ['A warm, unhurried caregiver', 'Talking to the children, and calm when one cries.'], ['A baby-safe home', 'Gates, covered outlets, and no smoke smell.']]],
         ['On the tour: ask', 'ask', 'The three that tell you the most', [['Who covers when you’re sick or on vacation?', 'A backup plan they can tell you about now.'], ['What happens if a baby isn’t tired at nap time, or wakes up early?', 'Never forced to sleep or left crying. Quiet play, then back down when sleepy.'], ['Walk me through a baby’s day.', 'Feeds and naps on the baby’s own schedule, floor time, outside, and no TV.']]],
@@ -138,7 +141,7 @@
      A plan in order ("Plan your …" timeline), what to send ("Pack for care"), "When things don't go to plan", "Good to know" (≤3). */
   const tl = (title, items, caption) => { const c = YEAR_PALETTES[CAT]; return `<figure class="hub-figure hub-daymarks oa-timeline" role="img" aria-label="${F(caption)}" style="--ink:${c.ink};--bg:${c.bg};--pale:${c.pale}"><b class="hub-fig-title">${F(title)}</b><ol class="hub-daymarks-list">${items.filter(Boolean).map(([when, icon, text]) => `<li><i>${hubArt(icon, CAT)}</i><time>${F(when)}</time><span>${F(text)}</span></li>`).join('')}</ol></figure>`; };
   const packCard = (title, sub, items) => `<section class="oa-extra cc-extra"><b>${F(title)}</b><small>${F(sub)}</small><ul>${items.filter(Boolean).map(([icon, t, x]) => `<li><span class="oa-extra-art">${hubArt(icon, CAT)}</span><span><b>${F(t)}</b>${x ? `<small>${F(x)}</small>` : ''}</span></li>`).join('')}</ul></section>`;
-  const picSteps = (heading, items, caption) => `<h2 class="hub-h2">${F(heading)}</h2>` + hubIconSteps(items.filter(Boolean), CAT, F(caption), false);
+  const picSteps = (heading, items, caption) => heading === 'When things don’t go to plan' ? rows(heading, items.filter(Boolean).map(([icon, t, s2]) => [icon, t, s2])) : `<h2 class="hub-h2">${F(heading)}</h2>` + hubIconSteps(items.filter(Boolean), CAT, F(caption), false);
   const rows = (heading, items) => H().list(heading, items.filter(Boolean).map(([icon, title, sub, go]) => H().row({ icon, cat: CAT, title, sub, onclick: go })));
   const good = items => rows('Good to know', items.filter(Boolean).slice(0, 3));
   const go = id => `openPage('chg:${CAT}:d:${id}')`;
@@ -154,11 +157,11 @@
     if (id === 'plan') return sub('plan', 'Finding care', 'Plan your care', 'Work back from the day you need care. Most families start looking sooner than they expect.',
       packCard('Before you look', 'Two things to settle first', [['clock', 'Know the days and hours you need', 'Count early starts and late pickups too.'], ['coin', 'Set a monthly budget', 'Count any help from work or your state.']])
       + tl('Your countdown', [
-        ['6 months before', 'notepad', 'Join a few daycare waitlists.'],
+        ['As soon as you can', 'notepad', 'Join a few daycare waitlists. Infant spots are the hardest to find.'],
         ['3 months before', 'home', 'Visit home daycares, or meet nannies.'],
         ['6–8 weeks before', 'shield', 'Call references, make your choice and sign up.'],
         ['2 weeks before', 'heart', 'Get ready for day one.']],
-        'Six months before, join daycare waitlists. Three months before, visit home daycares or meet nannies. Six to eight weeks before, decide and sign up. Two weeks before, get ready for day one.')
+        'As soon as you can, join daycare waitlists. Three months before, visit home daycares or meet nannies. Six to eight weeks before, decide and sign up. Two weeks before, get ready for day one.')
       + H().note('Less time than this? That’s common. See below.')
       + picSteps('When things don’t go to plan', [
         ['chat', 'Short on time?', 'Your local child care referral agency is free and knows who has openings.'],
@@ -171,12 +174,12 @@
     if (id === 'pay') return sub('pay', 'Finding care', 'Paying for care', 'Care is one of a family’s biggest monthly costs. There are more ways to pay less than most parents know.',
       picSteps('Ways to pay less', [
         ['coin', 'Help from your state', 'If you qualify, your local referral agency can help you apply, for free.'],
-        ['notepad', 'A pre-tax care account', 'Through many jobs. A new baby lets you join mid-year.'],
-        ['shield', 'A tax credit', 'Takes part of what you pay off your taxes.'],
+        ['notepad', 'A pre-tax care account', 'Up to $7,500 a year (2026), through many jobs. A new baby lets you join mid-year.'],
+        ['shield', 'A tax credit', '20–50% of up to $3,000 in care costs for one child (2026).'],
         ['home', 'Early Head Start', 'A free federal program for babies, for families who qualify.']],
         'Help from your state, a pre-tax care account through work, a federal tax credit, and Early Head Start.')
-      + rows('', [['hand', 'If you hire a nanny', 'You’re usually their employer, with taxes to pay. A nanny payroll service can handle them.']])
-      + good([['eye', 'Prices vary a lot', 'A nanny usually costs most, then a daycare center, then a home daycare. Ask each place for the full cost, fees included.'], ['lock', 'Deposits', 'Many daycares ask for a deposit or a fee to hold a spot.'], ['heart', 'Paying family', 'Paying a relative may still count toward the tax credit. Ask a tax professional.']]), 'coin');
+      + rows('', [['hand', 'If you hire a nanny', 'Pay $3,000 or more in a year (2026) and you’re their employer, with taxes to pay. A nanny payroll service can handle them.']])
+      + good([['eye', 'Prices vary a lot', 'A nanny usually costs the most. Centers and home daycares often cost about the same. Ask for the full cost, fees included.'], ['lock', 'Deposits', 'Many daycares ask for a deposit or a fee to hold a spot.'], ['heart', 'Paying family', 'Paying a relative may still count toward the tax credit. Ask a tax professional.']]), 'coin');
 
     if (id === 'ready') {
       // Personal to the care they chose: a place (daycare, home daycare), someone at your home (a nanny), or family.
@@ -355,7 +358,7 @@
     const ranked = Object.entries(sc).sort((a, b) => b[1] - a[1]), fits = ranked.filter(([, v]) => v > 0);
     return (fits.length ? fits : ranked.slice(0, 1)).slice(0, f.family === 'Yes, some days' ? 3 : 2).map(([k]) => k);
   }
-  const WHY = { center: 'Set hours, other babies, and built-in backup.', home: 'A smaller group, often the most affordable.', nanny: 'One-on-one, on your schedule.', share: 'Close to one-on-one, with the cost split.', family: 'Someone you trust, with flexible days.' };
+  const WHY = { center: 'Set hours, other babies, and built-in backup.', home: 'A smaller group, often with more flexible hours.', nanny: 'One-on-one, on your schedule.', share: 'Close to one-on-one, with the cost split.', family: 'Someone you trust, with flexible days.' };
 
   function careCardButton(card) {
     return `<button class="hub-rough-card cc-card-button" onclick="openPage('chg:${CAT}:d:card')"><span class="hub-rough-moon" aria-hidden="true">${hubArt('notepad', CAT)}</span><span class="hub-rough-copy"><b>${F(`${name()}’s care card`)}</b><small>${F(card.saved ? (ccCur() === 2 ? 'Keep it current as routines change' : 'Ready to send to any caregiver') : 'Feeds, naps and who to call, ready to share')}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`;
@@ -364,7 +367,7 @@
   // (a pick saved on the shortlist, "Care has started"), and a parent can pick the stage from "All stages".
   const CC_ART = ["<svg viewBox=\"0 0 160 164\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\">\n <ellipse cx=\"80\" cy=\"151\" rx=\"74\" ry=\"9\" fill=\"#e2c993\" opacity=\".35\"/>\n <path d=\"M96 75 119 57l23 18v56H96Z\" fill=\"#dfb9b0\"/><path d=\"M98 76 119 60l22 16\" fill=\"none\" stroke=\"#ac8581\" stroke-width=\"3\" stroke-linejoin=\"round\"/><rect x=\"111\" y=\"93\" width=\"15\" height=\"19\" rx=\"5\" fill=\"#fff1d5\"/><rect x=\"113\" y=\"117\" width=\"17\" height=\"14\" rx=\"5\" fill=\"#fff1d5\"/>\n <circle cx=\"54\" cy=\"68\" r=\"23\" fill=\"#e4af9a\"/><path d=\"M32 61c3-19 24-29 41-13 5 4 8 10 8 15\" fill=\"#69544f\"/><path d=\"M38 50c-5 7-6 14-5 20\" fill=\"none\" stroke=\"#69544f\" stroke-width=\"8\" stroke-linecap=\"round\"/>\n <path d=\"M20 147c-2-35 10-57 34-59 26-2 42 19 43 59Z\" fill=\"#adc1c7\"/><path d=\"M72 105c9 11 14 21 15 37\" fill=\"none\" stroke=\"#829da6\" stroke-width=\"5\" stroke-linecap=\"round\"/>\n <ellipse cx=\"83\" cy=\"115\" rx=\"27\" ry=\"22\" fill=\"#e8c7ad\"/><circle cx=\"80\" cy=\"100\" r=\"16\" fill=\"#edc6ad\"/><path d=\"M67 99c3-13 22-18 28-5\" fill=\"none\" stroke=\"#ad8979\" stroke-width=\"5\" stroke-linecap=\"round\"/><path d=\"M57 130c7-12 18-15 27-11 8 4 16 14 19 26H62Z\" fill=\"#d5bada\"/>\n <path d=\"M47 114c5 8 14 10 20 12\" fill=\"none\" stroke=\"#e4af9a\" stroke-width=\"8\" stroke-linecap=\"round\"/>\n <circle cx=\"118\" cy=\"35\" r=\"5\" fill=\"#e6bc70\"/><path d=\"M139 28v10m-5-5h10\" stroke=\"#d6ad5d\" stroke-width=\"3\" stroke-linecap=\"round\"/>\n </svg>", "<svg viewBox=\"0 0 160 164\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\">\n <ellipse cx=\"80\" cy=\"153\" rx=\"72\" ry=\"8\" fill=\"#bfd8c3\" opacity=\".45\"/>\n <rect x=\"112\" y=\"41\" width=\"34\" height=\"48\" rx=\"9\" fill=\"#fffaf0\" stroke=\"#aec7ae\" stroke-width=\"2\"/><path d=\"M121 56h15m-15 8h12m-12 8h9\" stroke=\"#8ab09b\" stroke-width=\"3\" stroke-linecap=\"round\"/>\n <path d=\"M29 146c0-34 11-53 38-53s42 19 44 53Z\" fill=\"#96c5ad\"/>\n <circle cx=\"68\" cy=\"69\" r=\"23\" fill=\"#dfaa94\"/><path d=\"M46 60c3-21 31-28 44-6 2 4 3 8 2 12\" fill=\"#625249\"/><path d=\"M47 70c-4-11-3-20 2-26\" stroke=\"#625249\" stroke-width=\"8\" stroke-linecap=\"round\"/>\n <path d=\"M86 111c6 4 11 9 14 18\" fill=\"none\" stroke=\"#74ae92\" stroke-width=\"5\" stroke-linecap=\"round\"/>\n <circle cx=\"106\" cy=\"103\" r=\"17\" fill=\"#f1c5b0\"/><path d=\"M91 99c2-13 18-18 27-5\" fill=\"none\" stroke=\"#ad7f6d\" stroke-width=\"5\" stroke-linecap=\"round\"/>\n <path d=\"M83 144c2-19 13-29 28-29 14 0 25 10 28 29Z\" fill=\"#d0d7ef\"/>\n <path d=\"M52 113c8 13 22 19 37 20\" stroke=\"#dfaa94\" stroke-width=\"10\" fill=\"none\" stroke-linecap=\"round\"/>\n <path d=\"M30 40c4-6 8-6 12 0 4-6 9-6 13 0-4 8-10 13-13 15-5-3-10-8-12-15Z\" fill=\"#e9ab9b\" opacity=\".85\"/>\n </svg>", "<svg viewBox=\"0 0 160 164\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\">\n <ellipse cx=\"83\" cy=\"153\" rx=\"74\" ry=\"8\" fill=\"#ecc8c4\" opacity=\".42\"/>\n <path d=\"M26 147c2-34 18-55 43-55 28 0 42 20 43 55Z\" fill=\"#c4aecf\"/>\n <circle cx=\"66\" cy=\"69\" r=\"24\" fill=\"#dcab98\"/><path d=\"M44 62c1-20 20-30 39-16 6 4 9 10 8 18\" fill=\"#67574d\"/><path d=\"M45 64c-6-6-6-14-4-18\" stroke=\"#67574d\" stroke-width=\"8\" stroke-linecap=\"round\"/>\n <path d=\"M60 77c4 5 11 6 16 0\" fill=\"none\" stroke=\"#9d675b\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n <circle cx=\"117\" cy=\"97\" r=\"19\" fill=\"#f0c4aa\"/><path d=\"M100 92c3-13 19-19 30-8\" fill=\"none\" stroke=\"#ad8b77\" stroke-width=\"5\" stroke-linecap=\"round\"/><path d=\"M104 103c4 3 8 3 12 0\" fill=\"none\" stroke=\"#aa7766\" stroke-width=\"2\" stroke-linecap=\"round\"/>\n <path d=\"M92 146c2-16 14-29 29-29 16 0 27 14 28 29Z\" fill=\"#b7d5bd\"/>\n <path d=\"M73 120c6-13 19-19 30-14\" fill=\"none\" stroke=\"#dcab98\" stroke-width=\"10\" stroke-linecap=\"round\"/>\n <path d=\"M115 44c5-10 11-10 16-2 6-7 12-5 14 0 1 9-8 16-15 19-9-5-16-10-15-17Z\" fill=\"#d9a0a3\"/>\n <path d=\"M14 80l9-4m-2-12 7 3m110 1 8 7\" stroke=\"#d7a5aa\" stroke-width=\"3\" stroke-linecap=\"round\"/>\n </svg>"];
   const CC_STAGES = [
-    { label: 'Finding care', age: 'Months before', one: 'Kinds of care, costs and when to start looking', eyebrow: 'Finding care', t: 'Start looking sooner than you’d think', lead: 'Infant spots fill up early. Here are your options, and when to start looking.',
+    { label: 'Finding care', age: 'Months before', one: 'Kinds of care, costs and when to start looking', eyebrow: 'Finding care', t: 'Start looking for care now', lead: 'Infant spots are the hardest to find. Here’s how the options differ.',
       worth: ['Worth knowing before you look', 'The best tour question isn’t about activities.', 'Ask how they handle crying and naps, and who covers when someone’s out.'] },
     { label: 'Care chosen', age: 'Weeks before', one: 'Getting ready for day one, and a backup plan', eyebrow: 'Care chosen', t: 'Make the first day feel familiar', lead: 'Help your caregiver learn Maya’s little routines before the first real goodbye.',
       worth: ['Worth knowing before day one', 'A practice day helps more than a perfect schedule.', 'Visit together first, then let the caregiver take the lead while you’re nearby.'] },
@@ -375,6 +378,24 @@
   const ccCur = () => { const o = load('ahead-childcare-stage', null); return typeof o === 'number' ? o : ccAuto(); };
   window.ccCurStage = ccCur;
   window.ccSetStage = i => { save('ahead-childcare-stage', i); page = `topic:${CAT}`; render(); scrollTo(0, 0); if (typeof hubToast === 'function') hubToast(F(`Childcare: ${CC_STAGES[i].label}`), F('This is now Maya’s stage.')); };
+  const COLS = [['center', 'Daycare center'], ['home', 'Home daycare'], ['nanny', 'Nanny'], ['family', 'Family']];
+  const CMP = [
+    ['hours', 'clock', 'Hours', { center: 'Set hours', home: 'Set, often more flexible', nanny: 'Your schedule', family: 'Agreed together' }, ['nanny']],
+    ['group', 'blocks', 'Who else is there', { center: 'Babies the same age', home: 'A small group, mixed ages', nanny: 'One-on-one', family: 'One-on-one' }, []],
+    ['sick', 'thermo', 'If {s’s} sick', { center: 'Stays home', home: 'Stays home', nanny: 'Care goes on', family: 'Usually goes on' }, ['nanny', 'family']],
+    ['backup', 'shield', 'If the caregiver’s out', { center: 'Other staff cover', home: 'You find backup', nanny: 'You find backup', family: 'You find backup' }, ['center']],
+    ['cost', 'coin', 'What you pay for', { center: 'Tuition', home: 'Tuition', nanny: 'A salary and taxes. Often costs most', family: 'What you agree' }, []]
+  ];
+  const MATTERS = [['hours', 'Hours'], ['group', 'Group size'], ['sick', 'Sick days'], ['cost', 'Cost']];
+  window.ccMatter = k => { save('ahead-childcare-matters', load('ahead-childcare-matters', '') === k ? '' : k); rerender(); };
+  function compareTable() {
+    const on = load('ahead-childcare-matters', ''), rowsOn = on === 'sick' ? ['sick', 'backup'] : [on];
+    const head = `<div class="cc-cmp-head">${COLS.map(([k, n]) => `<button class="cc-cmp-col" onclick="openPage('chg:${CAT}:d:${k}')"><img src="assets/childcare/col-${k}.jpg" alt="" loading="lazy"><b>${F(n)}&nbsp;›</b></button>`).join('')}</div>`;
+    const body = CMP.map(([id, icon, label, cells, best]) => { const lit = rowsOn.includes(id);
+      return `<div class="cc-cmp-row${lit ? ' is-lit' : ''}"><p class="cc-cmp-label">${hubArt(icon, CAT)}<span>${F(label)}</span></p><div class="cc-cmp-cells">${COLS.map(([k]) => `<span class="${lit && best.includes(k) ? 'is-best' : ''}">${lit && best.includes(k) ? '<i aria-hidden="true">✓</i>' : ''}${F(cells[k])}</span>`).join('')}</div></div>`; }).join('');
+    const chips = `<p class="cc-cmp-ask">${F('What matters most to you?')}</p><div class="cc-chips cc-cmp-chips">${MATTERS.map(([k, n]) => `<button class="cc-chip${on === k ? ' is-on' : ''}" aria-pressed="${on === k}" onclick="ccMatter('${k}')">${F(n)}</button>`).join('')}</div>`;
+    return `<h2 class="hub-h2">${F('Compare your options')}</h2><section class="hub-card cc-cmp">${head}${body}<p class="cc-cmp-note">${F('Sharing a nanny: two families split one, for less. See Nanny.')}</p>${chips}</section>`;
+  }
   function childcare() {
     const card = load('ahead-carecard', {}), list = shortlist(), am = typeof actualMonth === 'function' ? actualMonth() : 0, fd0 = feedNow(), bm0 = fd0 !== 'Formula', fm0 = fd0 !== 'Breast milk';
     const cur = ccCur(), mm = typeof page === 'string' && /^chg:Childcare:s:(\d)/.exec(page), view = mm ? +mm[1] : cur, S = CC_STAGES[view];
@@ -382,14 +403,17 @@
     // The top card: where the family is, with a scene of it.
     let b = `<header class="hub-hero cc-hero cc-disc"><p class="hub-eyebrow">${F(S.eyebrow)}</p><h1>${F(S.t)}</h1><p class="hub-lead">${F(S.lead)}</p><div class="cc-art" aria-hidden="true">${CC_ART[view]}</div><div class="cc-worth"><small>${F(S.worth[0])}</small><b>${F(S.worth[1])}</b><span>${F(S.worth[2])}</span></div></header>`;   // same build as Feeding's top card: words, a scene, one card inside
     if (view === 0) {
-      const kinds = [['center'], ['home'], ['nanny'], ['family'], ['sitter', 'For a night out, or a break'], ['help', am < 4 ? 'A doula or overnight help, early on' : 'A helper while you’re home, or at night', 'Extra help at home']];
-      b += `<h2 class="hub-h2">${F('Compare care options')}</h2><div class="oa-places">${kinds.map(([k, short, title]) => { const t = TYPES[k] || {}, c = PAL[k], m = (list[k] || []).length;
-        return `<button class="oa-place" style="--oa-bg:${c[0]};--oa-ink:${c[1]}" onclick="openPage('chg:${CAT}:d:${k}')"><span class="oa-place-art">${SHAPE[k](c)}</span><b>${F(title || t.name)}</b><small>${F(m ? `${m} on your shortlist` : short || t.short)}</small></button>`; }).join('')}</div>`
-        + `<button class="hub-link cc-quiz-link" onclick="openPage('chg:${CAT}:d:fit')">${F('Not sure which? Take the quick quiz')} ›</button>`;
+      // Nov 19: the signature visual. Four kinds of regular care side by side, facts not scores; a chip highlights a row
+      // and ticks the cell that's strongest on it, but nothing picks a winner for the family (design guide).
+      b += compareTable();
+      b += `<h2 class="hub-h2">${F('Help now and then')}</h2><div class="hub-list">`
+        + homeRow('sitter', 'moon', 'Babysitter', 'For a night out, or a break', 'sitter')
+        + homeRow('help', 'heart', 'Extra help at home', am < 4 ? 'A doula or overnight help, early on' : 'A helper while you’re home, or at night', 'help') + `</div>`;
       // Planning and paying come after the options, so the first thing a parent sees is what care can look like.
       b += `<h2 class="hub-h2">${F('Before you choose')}</h2><div class="hub-list">`
-        + homeRow('plan', 'notepad', 'Plan your care', 'When to start looking, and waitlists', 'plan')
-        + homeRow('pay', 'coin', 'Paying for care', 'Help from your state, work and taxes', 'pay') + `</div>`;
+        + homeRow('plan', 'notepad', 'Plan your care', 'Your countdown, and waitlists', 'plan')
+        + homeRow('pay', 'coin', 'Paying for care', 'A pre-tax account, a tax credit and more', 'pay')
+        + homeRow('fit', 'eye', 'Not sure? Take the quick quiz', 'Four taps, and where to look first', 'fit') + `</div>`;
     } else if (view === 1) {
       b += careCardButton(card);
       b += `<h2 class="hub-h2">${F('Before day one')}</h2><div class="hub-list">`
@@ -435,6 +459,13 @@
   const stepView = {};
   window.ccStep = (k, i) => { stepView[k] = i; rerender(); };
   window.ccFlip = el => el.classList.toggle('is-open');
+  // Nov 19: what a good place looks like, as a labeled photo at a baby's eye level (the tiles below say why).
+  // Labels name the thing, sit beside it, and never cover a child.
+  const ROOM = {
+    center: ['assets/childcare/room-center.jpg', 'A calm daycare infant room: bare cribs along one wall, two caregivers on the floor with three babies, and a changing area with a sink', [['Bare cribs', 24, 13, 'r'], ['2 adults, 3 babies', 38, 93, 'r']]],
+    home: ['assets/childcare/room-home.jpg', 'A home daycare living room: one caregiver on a play mat with a baby and two toddlers, a bare portable crib and a baby gate', [['Bare crib', 12, 10, 'r'], ['Baby gate', 80, 16, 'l']]]
+  };
+  const roomPhoto = k => { const r = ROOM[k]; if (!r) return ''; return `<figure class="sf-photo cc-room"><img src="${r[0]}" alt="${F(r[1])}" loading="lazy">${r[2].map(([l, x, y, side]) => `<span class="cc-pin cc-pin-${side}" style="left:${x}%;top:${y}%"><i></i><span>${F(l)}</span></span>`).join('')}</figure>`; };
   function stepsBlock(k, Q, t) {
     const groups = []; Q.forEach(x => { let g = groups.find(y => y.name === x.g); if (!g) groups.push(g = { name: x.g, kind: x.kind, sub: x.gs, items: [] }); g.items.push(x); });
     // Your own questions join the "ask" step.
@@ -445,7 +476,7 @@
     // One step only (Family or friends): the page heading already names it, so just the short line under it.
     const head = groups.length > 1 ? `<div class="cc-stephead"><b>${F(g.name)}</b>${g.sub ? `<small>${F(g.sub)}</small>` : ''}</div>` : g.sub ? `<div class="cc-stephead"><small>${F(g.sub)}</small></div>` : '';
     let body = '';
-    if (g.kind === 'look') body = `<div class="cc-look">${g.items.map(x => `<div class="cc-look-tile"><span>${hubArt(iconFor(x.q), CAT)}</span><b>${F(x.q)}</b><small>${F(x.a)}</small></div>`).join('')}</div>`;
+    if (g.kind === 'look') body = roomPhoto(k) + `<div class="cc-look">${g.items.map(x => `<div class="cc-look-tile"><span>${hubArt(iconFor(x.q), CAT)}</span><b>${F(x.q)}</b><small>${F(x.a)}</small></div>`).join('')}</div>`;
     else if (g.kind === 'ask') body = `<div class="cc-asks">${g.items.map((x, i) => `<button class="cc-ask" onclick="ccFlip(this)"><em>${i + 1}</em><b>${x.own ? esc3(x.q) : F(x.q)}</b>${x.own ? `<small class="cc-own">${F('Your question')}</small>` : `<span class="cc-listen"><small>${F('Listen for')}</small>${F(x.a)}</span><small class="cc-tap">${F('What to listen for')} ›</small>`}</button>`).join('')}</div>`;
     else body = `<div class="cc-quick">${g.items.map(x => `<div class="cc-quick-row"><span>${hubArt(iconFor(x.q), CAT)}</span><div><b>${x.own ? esc3(x.q) : F(x.q)}</b>${x.a ? `<small>${F(x.a)}</small>` : ''}</div></div>`).join('')}</div>`;
     const nav = groups.length > 1 && cur < groups.length - 1 ? `<button class="cc-next" onclick="ccStep('${k}',${cur + 1})">${F('Then: ' + (TAB[groups[cur + 1].name] || groups[cur + 1].name))} ›</button>` : '';
