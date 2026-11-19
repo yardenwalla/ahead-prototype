@@ -69,7 +69,7 @@
       why: 'Outlets and cords sit right at crawling height.',
       steps: ['Use plug-in outlet covers {s} can’t pull out and that are too big to swallow.', 'Move lamp and charger cords out of reach, or tuck them behind furniture.', 'If you’re replacing outlets, tamper-resistant ones have built-in shutters.'],
       links: [['Childproofing your home · CPSC', cpsc]] },
-    mattress: { t: 'Lower the crib mattress', s: 'Before {s} can sit up', i: 'crib', c: 'sleep' },
+    mattress: { t: 'Lower the crib mattress one step', rt: 'Lower the crib mattress', s: 'Before {s} can sit up', i: 'sit', c: 'sleep' },
     anchor: { hi: 'stand', t: 'Strap furniture and TVs to the wall', s: 'So nothing tips if {s} {pull|pulls} on it', i: 'dresser', c: 'body',
       tiles: [['dresser', 'Anti-tip straps', 'On dressers, bookcases and tall furniture'], ['blocks', 'TVs too', 'On the wall, or strapped to their stand'], ['clock', 'When', 'Now, before {s} {pull|pulls} on them']],
       why: 'Babies use furniture as a handhold to pull up, and dressers, bookcases and TVs can tip over onto them.',
@@ -91,12 +91,12 @@
       steps: ['Fit a toilet-lid lock, and keep the bathroom door closed.', 'Empty buckets, tubs and wading pools right after use.', 'If you have a pool or spa, fence it on all sides with a self-closing, self-latching gate. Keep doors to it locked, and close the gate every time.'],
       tip: ['Barriers don’t replace watching', 'Stay within arm’s reach whenever {s’s} near water.'],
       links: [['Pool Safely · CPSC', 'https://www.poolsafely.gov/parents/safety-tips/']] },
-    mattress2: { t: 'Lower the crib mattress', get s() { return 'All the way down'; }, i: 'crib', c: 'sleep' }
+    mattress2: { t: 'Lower the crib mattress all the way', rt: 'Lower the mattress all the way', get s() { return 'Before {s} can pull up'; }, i: 'stand', c: 'sleep' }
   };
   const STAGES = [
     { key: 'setup', label: 'First setup', age: 'From birth', title: 'Five things to set up once', lead: 'Before Maya can move, safety is about where {s} {ride|rides}, {sleep|sleeps} and {get|gets} changed.', ids: ['seat', 'sleep', 'cribspot', 'changing', 'gear'] },
-    { key: 'reaching', label: 'Rolling', age: '3–6 months', title: 'Rolling puts the floor in reach', lead: 'At the first sign of rolling, the swaddle comes off and the floor needs clearing.', ids: ['swaddle', 'bassinet', 'small', 'bags'] },
-    { key: 'rolling', label: 'Crawling', age: '6–9 months', title: 'Crawling opens up every room', lead: 'Most babies start crawling between 6 and 9 months. Do the low, reachable things first.', ids: ['gates', 'storage', 'outlets', 'mattress'] },
+    { key: 'reaching', label: 'Rolling', age: '3–6 months', title: 'Rolling puts the floor in reach', lead: 'At the first sign of rolling, the swaddle comes off and the floor needs clearing.', ids: ['swaddle', 'bassinet', 'mattress', 'small', 'bags'] },
+    { key: 'rolling', label: 'Crawling', age: '6–9 months', title: 'Crawling opens up every room', lead: 'Most babies start crawling between 6 and 9 months. Do the low, reachable things first.', ids: ['gates', 'storage', 'outlets'] },
     { key: 'pulling', label: 'Pulling up', age: '9 months+', title: 'Standing puts higher things in reach', lead: 'Furniture becomes a handhold, and windows, the stove and water are suddenly within reach.', ids: ['anchor', 'windows', 'kitchen', 'pool', 'mattress2'] }
   ];
 
@@ -205,9 +205,9 @@
   const FIX = {
     seat: {
       ba: [[PH('seat-before'), 'A baby in a rear-facing car seat with loose straps and the chest clip down on the belly', null], [PH('seat-after'), 'The same baby with snug straps and the chest clip at armpit level', null]],
-      baFix: [['hand', 'No slack you can pinch', 'At {p} collarbone'], ['shield', 'Chest clip at the armpits', 'Not down on the belly'], ['back', 'Straps at or below {p} shoulders', 'While {s} {face|faces} the back'], ['lock', 'Installed tight, at the right recline', 'Check the angle line on the seat']],
+      baFix: [['hand', 'No slack you can pinch', 'At {p} collarbone'], ['shield', 'Chest clip at the armpits', 'Not down on the belly'], ['back', 'Straps at or below {p} shoulders', 'While {s} {face|faces} the back'], ['lock', 'Installed tight, at the right recline', 'Check the seat’s recline indicator']],
       notes: [['', 'No puffy coats under the straps', 'Buckle {o} in, then add a blanket on top']],
-      checkTitle: 'Check the fit', checks: ['Pinch the strap at {p} collarbone. You shouldn’t be able to grab any slack.', 'Tug the seat where it’s belted in. It should move less than 1 inch.'],
+      checkTitle: 'Check the fit', checks: ['Pinch the strap at {p} collarbone. You shouldn’t be able to grab any slack.', 'Tug the seat where it’s attached to the car. It should move less than 1 inch.'],
       more: ['Which seat, and when', 'car', 'Car seats as {s} {grow|grows}', 'And on trips, in Outings', "openPage('chg:Out and about:d:car')"] },
     sleep: {
       ba: [[PH('sleep-before'), 'A crib with a bumper, a quilt, a pillow and stuffed toys', null], [PH('sleep-after'), 'The same crib, bare, with just a fitted sheet', null]],
@@ -217,24 +217,24 @@
       more: ['The rest of safe sleep', 'moon', 'Safe sleep', 'On {p} back, every sleep, in Sleep', "openPage('chg:Sleep:safe')"] },
     swaddle: {
       ba: [[PH('swaddle-before'), 'A baby asleep on their back in a crib, swaddled with arms in', null], [PH('swaddle-after'), 'The same baby on their back in a sleep sack, arms free', null]],
-      baFix: [['sack', 'A sleep sack, arms free', 'So {s} can push up if {s} {roll|rolls}'], ['back', 'Still down on {p} back', 'Every sleep, naps too'], ['shield', 'Light and unweighted', 'No weighted sacks or swaddles']],
+      baFix: [['sack', 'A sleep sack, arms free', 'So {s} can push up if {s} {roll|rolls}'], ['shield', 'Light and unweighted', 'No weighted sacks or swaddles']],
       checks: ['Zip it up and lift gently at the shoulders. The neck opening shouldn’t ride up past {p} chin.'],
-      more: ['When to switch', 'roll', 'Signs {s’s} starting to roll', 'And the first few nights, in Sleep', "openPage('chg:Sleep:d:swaddleoff')"] },
+      more: ['When to do it', 'roll', 'Signs it’s time', 'And the first few nights, in Sleep', "openPage('chg:Sleep:d:swaddleoff')"] },
     bassinet: {
       ba: [[PH('bassinet-before'), 'A bassinet beside a bed', null], [PH('bassinet-after'), 'The same bedroom with a bare crib in place of the bassinet', null]],
-      baFix: [['crib', 'Set up the crib bare', 'A firm mattress and a fitted sheet'], ['home', 'Still in your room', 'Until at least 6 months']],
+      baFix: [['crib', 'Set it up bare', 'Like the bassinet: a fitted sheet, nothing else'], ['home', 'Still in your room', 'Until at least 6 months']],
       checks: ['Shake the crib gently. It shouldn’t wobble, and every side should stay locked in place.', 'Check the label. Skip drop-side cribs, and any crib made before June 2011.'],
-      more: ['When to move', 'clock', 'When to move to the crib', 'At the first roll or the weight limit, in Sleep', "openPage('chg:Sleep:d:crib')"] },
+      more: ['When to do it', 'clock', 'Signs it’s time', 'In Sleep',  "openPage('chg:Sleep:d:crib')"] },
     mattress: {
       ba: [[PH('mattress-before'), 'A crib with the mattress on its highest setting, near the top of the rail', null], [PH('mattress-after'), 'The same crib with the mattress lowered one step', null]],
       baFix: [['notepad', 'Check the manual', 'For your crib’s height settings'], ['crib', 'One step down', 'Then check it sits firmly'], ['toy', 'Mobile down', 'Nothing hanging over the crib']],
       checks: ['Push down on each corner. The mattress shouldn’t shift or tilt.'],
-      more: ['When to do it', 'clock', 'When to lower it', 'Before {s} can sit, in Sleep', "openPage('chg:Sleep:d:mattress')"] },
+      more: ['When to do it', 'clock', 'Signs it’s time', 'Before {s} can sit up, in Sleep', "openPage('chg:Sleep:d:mattress')"] },
     mattress2: {
       ba: [[PH('mattress-after'), 'A crib with the mattress one step down', null], [PH('mattress2-after'), 'The same crib with the mattress on its lowest setting', null]],
-      baFix: [['crib', 'All the way down', 'To the lowest setting'], ['toy', 'Nothing to climb on', 'Big toys out, and furniture away from the rail']],
+      baFix: [['crib', 'All the way down', 'To the lowest setting'], ['toy', 'Nothing to climb on', 'No toys in the crib, and furniture away from the rail']],
       checks: ['Push down on each corner. The mattress shouldn’t shift or tilt.'],
-      more: ['When to do it', 'clock', 'When to go all the way down', 'Before {s} can pull up, in Sleep', "openPage('chg:Sleep:d:mattress')"] },
+      more: ['When to do it', 'clock', 'Signs it’s time', 'Before {s} can pull up, in Sleep', "openPage('chg:Sleep:d:mattress')"] },
     cribspot: {
       ba: [[PH('cribspot-before'), 'A crib under a window with a corded blind, its cord hanging beside the crib', ['Blind cord', 43, 60, 'r']], [PH('cribspot-after'), 'The same crib with a cordless shade on the window', ['Cordless shade', 32, 9, 'b']]],
       spotTiles: [['window', 'A window', 'Under or right beside the crib'], ['cord', 'Corded blinds', 'Loops can reach into the crib'], ['plug', 'Monitor cords', 'Often plugged in right beside it']],
@@ -315,7 +315,7 @@
     seat: 'Snug straps keep {o} still in a sudden stop. Check them before every drive.',
     sleep: 'A bare crib or bassinet is the safest place for {o} to sleep, from the first night.',
     swaddle: 'Once {s} {try|tries} to roll, {s} {need|needs} {p} arms free to push up.',
-    bassinet: 'Set up the crib before {s} {outgrow|outgrows} the bassinet.',
+    bassinet: 'Have the crib ready before {s} {need|needs} it.',
     mattress: 'Before {s} can sit, lower it so {s} can’t lean over the rail.',
     mattress2: 'Before {s} can pull up, go all the way down so {s} can’t climb out.',
     cribspot: 'A cord in reach can wrap around a baby’s neck, even in the first weeks.',
@@ -346,7 +346,7 @@
       const ba = `<section class="care-tpl-card sf-card"><div class="sf-ba">${q.ba.map(shot).join('')}</div>${fixRows(q.baFix || q.fix)}${B.ul(q.notes)}</section>`;
       const tests2 = `<section class="care-tpl-card sf-card sf-checks"><ul>${q.checks.map(t => `<li><i aria-hidden="true"></i><span>${F(t)}</span></li>`).join('')}</ul></section>`;
       const acts = s === 'done' ? `<p class="hub-done">${F('Done')} ✓</p><button class="hub-link" onclick="sfSet('${id}','')">${F('Undo')}</button>`
-        : `<button class="hub-button" onclick="sfSet('${id}','done');back()">${F('Mark as done')}</button><button class="hub-link sf-na" onclick="sfSet('${id}','${s === 'na' ? '' : 'na'}');back()">${F(s === 'na' ? 'It applies after all' : 'Doesn’t apply to our home')}</button>`;
+        : `<button class="hub-button" onclick="sfSet('${id}','done');back()">${F('Mark as done')}</button><button class="hub-link sf-na" onclick="sfSet('${id}','${s === 'na' ? '' : 'na'}');back()">${F(s === 'na' ? 'It applies after all' : id === 'seat' ? 'Doesn’t apply to us' : 'Doesn’t apply to our home')}</button>`;
       return `<div class="quiet-category hub-page hub-detail sf-step" data-overview="Safety" data-ss="1" data-sf-step="${id}" style="${yearTheme('Safety')};--ss-bg:${c[0]};--ss-ink:${c[1]}">${detailPageTop('Safety')}${head}`
         + `<div class="care-tpl is-getready">` + B.sec('Before and after', ba) + (q.checks.length ? B.sec(q.checkTitle || 'Check your home', tests2) : '') + (q.more ? B.sec(q.more[0], h.list('', [h.row({ icon: q.more[1], cat: 'Safety', title: q.more[2], sub: q.more[3], onclick: q.more[4] })])) : '') + `</div><div class="hub-actions sf-actions">${acts}</div></div>`;
     }
