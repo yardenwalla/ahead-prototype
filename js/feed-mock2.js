@@ -2524,8 +2524,10 @@
     const days = (() => { try { return Math.floor((new Date(NOW) - new Date(profile.dob)) / 864e5); } catch (e) { return 20; } })();
     const amt = days < 2 ? ['1–2 tsp', 'Every 2–3 hours'] : days < 4 ? ['About 1 oz', 'Every 2–3 hours'] : days < 14 ? ['1½–2 oz', 'Every 2–3 hours'] : days < 56 ? ['2–4 oz', 'Every 3–4 hours'] : ['4–5 oz', 'Every 3–4 hours'];
     // Nov 19: three illustrated panels from Canva, same parent and baby: upright with the bottle level, a pause, and done.
-    const T = [['feeding/pace-1', 'Sit him up, bottle level', 'Head higher than his tummy'], ['feeding/pace-2', 'Pause often', 'Every few sucks, ease it out'], ['feeding/pace-3', 'Stop when he’s done', 'Even if milk is left']];
-    const steps = `<h2 class="hub-h2">${F('How to pace it')}</h2><section class="hub-card ph-pace">${T.map(([src, t, d], n) => `<figure><span class="ph-tile"><img src="assets/${src}.jpg" alt="${F(t)}" loading="lazy"></span><figcaption><b><em>${n + 1}</em>${F(t)}</b><span>${F(d)}</span></figcaption></figure>`).join('')}<p class="ph-pace-note"><b>${F('Never prop a bottle.')}</b> ${F('Always hold him and the bottle.')}</p></section>`;
+    // Nov 19 v3: one illustration that shows the hold and the angle, labels drawn by the app; then three short steps; never-prop as the one note.
+    const TB = window.__hub && window.__hub.TPLB;
+    const steps = TB ? TB.photoPins('feeding/pace-hero', 'A parent holding a baby upright with the bottle level', [['Bottle about level', 55, 33, 'tr'], ['Baby upright', 63, 46, 'r']], 'is-pace')
+      + `<h2 class="hub-h2">${F('How to do it')}</h2>` + TB.noted(TB.tiles([['mouth', 'Let him draw it in', 'Touch his lip with the nipple'], ['clock', 'Pause often', 'Every few sucks, tip it down'], ['eye', 'Stop when he’s done', 'Even if milk is left']], 'Feeding', true), [['', 'Never prop a bottle', 'Always hold him and the bottle']]) : '';
     const video = typeof hubEmbed === 'function' ? `<div class="ph-video">${hubEmbed('OGPm5SpLxXY', 'Watch how to pace a bottle', 'Lactation educators (IABLE)')}</div>` : '';
     const amount = `<h2 class="hub-h2">${F('About how much')}</h2><section class="hub-card ph-amount"><b style="font-size:24px;line-height:1.2">${F(amt[0])}</b><span>${F(amt[1] + ', or when he shows hunger cues')}</span></section>`;
     const rest = h.slice(k).replace(/<p class="ss-small"><b>Never prop a bottle\.<\/b>[^<]*<\/p>/, '');

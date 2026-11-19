@@ -169,10 +169,10 @@
     z_ready: () => { const h = H(), n = h.signsSeen(), m = mo();
       return { type: 'expect', label: 'Is {s} ready?', art: 'highchair', title: 'Most babies start solids around 6 months',
         why: 'All four signs usually show up around then. Milk is all {s} {need|needs} until they do.',
-        normalTitle: 'Signs {s’s} ready', normal: () => h.TPLB.photoRows(h.READY.map((r, i) => [['feeding/sign-head', 'feeding/sign-sits', 'feeding/sign-interest', 'feeding/sign-spoon'][i], r[3], ['Holds it up on {p} own', 'In a high chair, or on your lap', 'Opens up when food comes near', 'Doesn’t push food back out'][i]]), { title: 'Tap each one once you’ve seen it', isOn: h.signsOn, onclick: i => `hubToggleReady(${i})` }),
+        normalTitle: 'Signs {s’s} ready', normal: () => h.TPLB.photoRows(h.READY.map((r, i) => [['feeding/sign-head', 'feeding/sign-sits', 'feeding/sign-interest', 'feeding/sign-spoon'][i], r[3], ['Holds it up on {p} own', 'In a high chair, or on your lap', 'Opens up when food comes near', 'Doesn’t push food back out'][i]]), { title: 'Tap each one once you’ve seen it', isOn: h.signsOn, onclick: i => `hubToggleReady(${i})` }) + (n === 4 ? (m >= 6 ? h.TPLB.result('{S’s} ready to start!', 'All four signs, right on time.') : h.TPLB.result('All four signs!', 'Most babies still start around 6 months.', 'next')) : ''),
         doTitle: n === 4 ? 'Next step' : 'What to do',
-        do: n === 4 && m < 6 ? 'All four signs. Most babies start around 6 months, so ask {p} pediatrician before starting sooner.'
-          : n === 4 ? 'All four signs, so {s’s} ready for a first taste. Pick a calm morning when {s’s} not too hungry.'
+        do: n === 4 && m < 6 ? 'Ask {p} pediatrician whether to start now or at 6 months.'
+          : n === 4 ? 'Pick a calm morning when {s’s} not too hungry, and offer a few soft tastes.'
           : m < 6 ? 'Once you’ve seen all four, ask about starting solids at {p} 6-month checkup.'
           : 'Not all four yet? Some babies take a few more weeks. Mention it at {p} next checkup.',
         doNotes: [['', 'Good to know', 'Starting early won’t help {o} sleep any longer']],
@@ -195,8 +195,8 @@
     z_textures: () => { const m = mo(), now = m < 7 ? 0 : m < 9 ? 1 : 2, T = H().TPLB;
       return { type: 'expect', label: 'Beyond purées', art: 'avocado', title: 'Move from smooth food to soft pieces',
         why: 'Lumps help {o} learn to chew. Go one step at a time.',
-        heroTitle: 'The same foods, by age', hero: () => T.photoTable([['Smooth', 'Around 6 months'], ['Lumpy', '7–8 months'], ['Soft pieces', '9 months on']],
-          [['Avocado', ['feeding/tx-avo-1', 'feeding/tx-avo-2', 'feeding/tx-avo-3']], ['Sweet potato', ['feeding/tx-sp-1', 'feeding/tx-sp-2', 'feeding/tx-sp-3']], ['Banana', ['feeding/tx-ban-1', 'feeding/tx-ban-2', 'feeding/tx-ban-3']]], now),
+        heroTitle: 'One food, three textures', hero: () => T.photoSwitch([['Smooth', 'Around 6 months'], ['Lumpy', '7–8 months'], ['Soft pieces', '9 months on']],
+          [['Avocado', ['feeding/tx-avo-1', 'feeding/tx-avo-2', 'feeding/tx-avo-3']], ['Banana', ['feeding/tx-ban-1', 'feeding/tx-ban-2', 'feeding/tx-ban-3']], ['Sweet potato', ['feeding/tx-sp-1', 'feeding/tx-sp-2', 'feeding/tx-sp-3']]], now),
         // Nov 19 (fresh read vs the Safety steps): one section of short rows instead of two blocks of three-line tiles.
         doTitle: 'Moving up a texture', doFig: () => '<section class="ph-rowcard">' + T.rows([['bowl', 'Mash with a fork', 'Instead of blending'], ['clock', 'Move on once this one is easy', 'Usually after a week or two'], ['hand', 'Pieces should squish', 'Between your finger and thumb']], 'Feeding') + '</section>',
         doNotes: [['', 'Why not wait', 'Babies still on smooth purées past about 9 months can find lumps harder later']] }; },
@@ -208,9 +208,9 @@
     z_shapes: () => { const T = H().TPLB, nine = mo() >= 9;
       return { type: 'howto', label: 'Safe finger foods', art: 'hand', title: 'Finger foods should squish when pressed',
         why: 'Press it between your finger and thumb. If it squashes, {p} gums can manage it.',
-        heroTitle: 'The squish test', hero: () => T.photoPair([['feeding/ff-hard', false, 'Too hard', 'Raw carrot'], ['feeding/ff-spear', true, 'Soft enough', 'Steamed carrot']]),
+        heroTitle: 'The squish test', hero: () => `<section class="care-tpl-card ph-squish">${T.photoPins('feeding/squish', 'A finger pressing a soft steamed carrot flat', [['Press gently', 52, 52, 'r'], ['It should give way', 42, 66, 'b']], 'is-wide')}${T.photoPair([['feeding/ff-hard', false, 'Too hard', 'Raw carrot'], ['feeding/ff-spear', true, 'Soft enough', 'Steamed carrot']])}</section>`,
         // Nov 19: like the inspiration, three blocks only: the squish test, what to try, and how to keep it safe (icons, not more photos).
-        stepsTitle: 'Good first foods', stepsFig: () => T.photoGrid([['feeding/opt-avocado', 'Avocado', 'Ripe strips'], ['feeding/opt-banana', 'Banana', 'Strips, not rounds'], ['feeding/opt-egg', 'Egg', 'Omelet strips'], ['feeding/nutbutter', 'Toast', 'Nut butter spread thin'], ['feeding/opt-broccoli', 'Broccoli', 'Well cooked, stem to hold'], ['feeding/opt-pasta', 'Pasta', 'Soft, well cooked']]),
+        stepsTitle: 'A few foods to try', stepsFig: () => T.photoGridMore([['feeding/opt-avocado', 'Avocado', 'Ripe strips'], ['feeding/opt-banana', 'Banana', 'Strips, not rounds'], ['feeding/opt-egg', 'Egg', 'Omelet strips'], ['feeding/nutbutter', 'Toast', 'Nut butter spread thin'], ['feeding/opt-broccoli', 'Broccoli', 'Well cooked, stem to hold'], ['feeding/opt-pasta', 'Pasta', 'Soft, well cooked']], 'See more foods'),
         tips: [nine ? ['hand', 'Small, soft pieces', 'About pea-size, to pinch'] : ['hand', 'Finger-size strips', 'Easy to grip. Small pieces come later'], ['bowl', 'Quarter grapes, no whole nuts', 'Cherry tomatoes too'], ['highchair', 'Seated upright, with you', 'Every bite, never on the move']] }; },
     z_allergens: () => ({ type: 'howto', label: 'Common allergens', art: 'peanut', title: 'Try the common allergens early',
       why: 'Trying them early, around 6 months, lowers the chance of an allergy. With severe eczema or an egg allergy, ask your pediatrician first.',

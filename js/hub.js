@@ -104,6 +104,19 @@
 
     /* ---------- Photo blocks (Nov 19, show don't tell). Images are assets/<path>.jpg; every label is drawn by the app, never baked in. ---------- */
     pimg: (src, alt) => `<img src="assets/${src}.jpg" alt="${F(alt).replace(/"/g, '&quot;')}" loading="lazy">`,
+    // One photo that teaches the page's main idea, with labels the app draws on top: pins [label, x%, y%, side r|l|b|bl].
+    photoPins: (src, alt, pins, cls = '') => `<figure class="ph-photo ph-hero ${cls}">${TPLB.pimg(src, alt)}${pins.map(([l, x, y, side]) => `<span class="ph-pin ph-pin-${side}" style="left:${x}%;top:${y}%"><i></i><span>${F(l)}</span></span>`).join('')}</figure>`,
+    // Photo tiles, three shown and the rest one tap away: [src, title, line].
+    photoGridMore: (items, moreLabel) => { items = tval(items); const more = items.length > 3;
+      return `<section class="ph-grid${more ? ' ph-has-more' : ''}">${items.map(([src, t, sub], i) => `<figure class="${i > 2 ? 'ph-more' : ''}"><span class="ph-tile">${TPLB.pimg(src, t)}</span><figcaption><b>${F(t)}</b><span>${F(sub)}</span></figcaption></figure>`).join('')}`
+        + (more ? `<button class="ph-more-btn" onclick="this.parentNode.classList.add('is-open')">${F(moreLabel || 'See more')} <span aria-hidden="true">›</span></button>` : '') + `</section>`; },
+    // The same steps for one food at a time, with chips to switch foods and this baby's step marked.
+    // cols [[title, age]], foods [[name, [src, src, src]]], now = column index.
+    photoSwitch: (cols, foods, now) => `<section class="care-tpl-card ph-switch" data-food="0">${foods.map(([n, srcs], f) => `<div class="ph-switch-row" data-f="${f}">${srcs.map((src, i) => `<figure class="${i === now ? 'is-now' : ''}"><span class="ph-tile">${TPLB.pimg(src, n + ', ' + cols[i][0].toLowerCase())}</span></figure>`).join('')}</div>`).join('')}`
+      + `<div class="ph-switch-cols">${cols.map(([t, d], i) => `<span class="${i === now ? 'is-now' : ''}">${i === now ? `<em class="ph-now">${F('Maya’s age')}</em>` : ''}<b>${F(t)}</b>${F(d)}</span>`).join('')}</div>`
+      + `<div class="ph-chips" role="tablist">${foods.map(([n], f) => `<button role="tab" aria-selected="${f === 0}" class="${f === 0 ? 'is-on' : ''}" onclick="const s=this.closest('.ph-switch');s.dataset.food='${f}';s.querySelectorAll('.ph-chips button').forEach((b,i)=>{b.classList.toggle('is-on',i===${f});b.setAttribute('aria-selected',i===${f})})">${F(n)}</button>`).join('')}</div></section>`,
+    // A result line when the parent has reached a decision: tone 'ok' (green) or 'next' (neutral).
+    result: (title, line, tone = 'ok') => `<section class="ph-result is-${tone}"><i aria-hidden="true"></i><div><b>${F(title)}</b>${line ? `<span>${F(line)}</span>` : ''}</div></section>`,
     // Photo tiles to tick, two across, headed like the allergen tracker ("Tap each one… · 0 of 9"): [src, label].
     photoTicks: (items, o) => { items = tval(items); const n = items.filter((_, i) => o.isOn(i)).length;
       return `<section class="care-tpl-card ph-ticks"><div class="ph-ticks-top"><span>${F(o.title)}</span><b>${n} ${F('of')} ${items.length}</b></div><div class="ph-ticks-grid">`
