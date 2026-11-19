@@ -36,3 +36,29 @@
 #main .sf-look small { display: block; font-size: 11px; font-weight: 800; letter-spacing: .08em; color: #795b2c; text-transform: uppercase; margin-bottom: 5px }
 #main .sf-look b { display: block; font-size: 17px; line-height: 1.25; color: var(--ink, #2b2732) }
 #main .sf-look span { display: block; font-size: 14px; line-height: 1.45; color: #6d666d; margin-top: 5px }
+
+/* Nov 18 preview: Safety's eye-level photo with labeled risks */
+#main .sf-photo { position: relative; margin: 12px 0; border-radius: 18px; overflow: hidden; box-shadow: 0 6px 18px #795b2c22; aspect-ratio: 4 / 3 }
+#main .sf-photo img { display: block; width: 100%; height: 100%; object-fit: cover }
+#main .sf-photo button.sf-pin { position: absolute !important; transform: translate(-50%, -50%); border: 0; background: none; padding: 0 !important; margin: 0 !important; min-height: 0 !important; width: auto !important; cursor: pointer; display: flex; align-items: center; gap: 6px }
+#main .sf-pin i { flex: none; width: 14px; height: 14px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 4px #ffffff66, 0 1px 4px #0003 }
+#main .sf-pin span { background: #fffdfaee; color: #4a3a1f; font-size: 12.5px; font-weight: 700; line-height: 1; padding: 7px 10px; border-radius: 999px; white-space: nowrap; box-shadow: 0 2px 8px #0002 }
+#main .sf-photo button.sf-pin-r { transform: translate(-7px, -50%) }
+#main .sf-photo button.sf-pin-l { flex-direction: row-reverse; transform: translate(calc(-100% + 7px), -50%) }
+#main .sf-photo button.sf-pin-b { flex-direction: column; transform: translate(-50%, -7px) }
+#main .sf-pin.is-done span { background: #e6f5ec; color: #356651 }
+#main .sf-pin.is-done i { background: #356651 }
+#main .sf-look-after { margin: 14px 0 4px }
+#main .sf-hero .sf-photo:last-child { margin-bottom: 0 }
+#main .sf-hero:has(.sf-photo) + .sf-head { margin-top: 0 }
+#main .sf-hero:has(.sf-photo) + .sf-head h2 { margin-top: 12px }
+#main .sf-look-after { margin: 14px 0 16px !important }
+#main .sf-help h3 { margin-bottom: 4px }
+#main .sf-help-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 11px 0; border-top: 1px solid #efe7da }
+#main .sf-help-row:first-of-type { border-top: 0 }
+#main .sf-help-row span { font-size: 14.5px; color: #4a4450; line-height: 1.3 }
+#main .sf-help-row b { flex: none; text-align: right; font-size: 14.5px; font-weight: 700; color: #795b2c; line-height: 1.25 }
+#main .sf-help-row b small { display: block; font-size: 12.5px; font-weight: 500; color: #8a7d70 }
+#main .sf-help-row.is-er b { color: #b4532a }
+#main .sf-help-row.is-911 b { color: #b3261e }
+#main .sf-photo button.sf-pin-bl { flex-direction: column; align-items: flex-end; transform: translate(calc(-100% + 7px), -7px) }
