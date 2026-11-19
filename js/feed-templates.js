@@ -291,7 +291,9 @@
     const bg = m ? m[1] : '#fbe4ec', ink = m ? m[2] : '#9b4766', art = m && m[3] ? m[3] : '';
     const why = v(q.why);
     return `<div class="quiet-category hub-page hub-detail care-v2" data-overview="${CAT}" data-ss="1" style="${typeof yearTheme === 'function' ? yearTheme(CAT) : ''};--ss-bg:${bg};--ss-ink:${ink}">${typeof detailPageTop === 'function' ? detailPageTop(CAT) : ''}`
-      + `<div class="dev-area-head ss-head${q.hero ? ' ph-head' : ''}" style="--area:${bg};--area-ink:${ink}">${q.hero ? '' : art}<p class="hub-context">${F(v(q.label))}</p><h1>${F(v(q.title))}</h1>${why ? `<p class="hub-lead">${F(why)}</p>` : ''}${q.hero ? v(q.hero) : ''}</div>`
+      + `<div class="dev-area-head ss-head" style="--area:${bg};--area-ink:${ink}">${art}<p class="hub-context">${F(v(q.label))}</p><h1>${F(v(q.title))}</h1>${why ? `<p class="hub-lead">${F(why)}</p>` : ''}</div>`
+      // Nov 19: a page's main visual comes first, right under the standard top card (never inside it), so every top card looks the same.
+      + (q.hero ? `<div class="ph-first">${v(q.hero)}</div>` : '')
       + `<div class="care-tpl is-${q.type}">${h.TPLS[q.type](q, CAT)}</div></div>`; };
   const base = window.changesRoute;
   window.changesRoute = function (r, ...a) {

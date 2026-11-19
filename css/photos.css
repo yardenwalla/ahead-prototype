@@ -133,3 +133,8 @@
 #main .ph-amount b { display: block; font-size: 22px; margin: 2px 0 }
 #main .ph-amount span { display: block; font-size: 14px; color: #5d5764 }
 #main .ph-rows .ph-signs-top { padding-top: 10px }
+/* Nov 19: the main visual sits first, under the top card */
+#main .ph-first { margin: 14px 0 6px }
+#main .ph-first .ph-pair { background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: 10px }
+#main .ph-first .ph-signs, #main .ph-first .ph-tex { margin: 0 }
+#main .ph-first .ph-vs-card { border: 1px solid var(--line) }
