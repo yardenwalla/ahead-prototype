@@ -94,8 +94,7 @@
     // Nov 18 (Safety's pattern: show, don't tell): a photo set in the card, with pins on what she's doing. Each pin opens its milestone.
     const PHOTO = { 6: { src: 'assets/dev/reaching-6.jpg?v=2', alt: 'A baby on her tummy reaching for a soft ball', lead: 'Every reach is a little experiment.', pins: [
       { t: 'Spots the ball', x: 53, y: 32, side: 'r', go: "openPage('development-domain:6:Thinking')" },
-      { t: 'Reaches out', x: 63, y: 66, side: 'r', go: "devFocusSkill('reaches-to-grab-a-toy');openPage('development-domain:6:Thinking')" },
-      { t: 'Finds out what it does', x: 64, y: 85, side: 'l', go: "devFocusSkill('puts-things-in-mouth-to-explore');openPage('development-domain:6:Thinking')" } ] } }[ref];
+      { t: 'Reaches out', x: 63, y: 66, side: 'r', go: "devFocusSkill('reaches-to-grab-a-toy');openPage('development-domain:6:Thinking')" }, ] } }[ref];
     const photoHtml = PHOTO ? `<div class="dvx-photo sf-photo"><img src="${PHOTO.src}" alt="${PHOTO.alt}">${PHOTO.pins.map(q => `<button class="sf-pin sf-pin-${q.side}" style="left:${q.x}%;top:${q.y}%" onclick="${q.go}"><i></i><span>${T(q.t)}</span></button>`).join('')}</div>` : '';
     let b = css + (PHOTO ? `<section class="dev-hero dvx-hero has-photo"><p class="dev-hero-eyebrow">${F(STAGE_TABLE.Development.stages[devKeys.indexOf(ref)].label)}</p><h1>${T(IN.t)}</h1><p class="dev-hero-lead">${T(PHOTO.lead)}</p>${photoHtml}</section>`
       : `<section class="dev-hero dvx-hero"><p class="dev-hero-eyebrow">${F(STAGE_TABLE.Development.stages[devKeys.indexOf(ref)].label)}</p><h1>${T(IN.t)}</h1><p class="dev-hero-lead">${T(IN.lead)}</p><div class="dvx-art" aria-hidden="true">${window.devScene ? devScene(ref) : (window.devHeroArt ? devHeroArt(ref) : '')}</div></section>`);
@@ -433,12 +432,12 @@
   };
   // Nov 18 (Safety's pattern: show, don't tell): each area page opens with a photo set in its top card, pins on what she's doing. Each pin opens its milestone.
   const AREA_PHOTO = { 6: {
-    Social: { src: 'area-6-social', alt: 'A mom playing peekaboo with her laughing baby', pins: [{ t: 'Knows you', x: 39, y: 22, side: 'r', k: 'knows-familiar-people' }, { t: 'Laughs out loud', x: 30, y: 80, side: 'r', k: 'laughs' }] },
+    Social: { src: 'area-6-social', alt: 'A mom tickling her laughing baby', pins: [{ t: 'Lights up at you', x: 73, y: 51, side: 'l', k: 'knows-familiar-people' }, { t: 'Laughs out loud', x: 68, y: 66, side: 'l', k: 'laughs' }] },
     Talking: { src: 'area-6-talking', alt: 'A mom and baby face to face, the baby cooing back', pins: [{ t: 'Answers your sounds', x: 76, y: 62, side: 'l', k: 'takes-turns-making-sounds-with-you' }] },
     Thinking: { src: 'area-6-thinking', alt: 'A baby turning a cup over in her hands', pins: [{ t: 'Explores the cup', x: 56, y: 58, side: 'r', k: 'puts-things-in-mouth-to-explore' }] },
     Movement: { src: 'area-6-movement', alt: 'A baby rolling from tummy onto his side', pins: [{ t: 'Rolls tummy to back', x: 46, y: 50, side: 'r', k: 'rolls-tummy-to-back' }] } } };
   const areaPhoto = (ref, domain) => { const ph = AREA_PHOTO[ref] && AREA_PHOTO[ref][domain]; if (!ph) return ''; const hb = window.hubBabyify || (x => x);
-    return `<div class="sf-photo dev-area-photo"><img src="assets/dev/${ph.src}.jpg?v=1" alt="${ph.alt}">${ph.pins.map(q => `<button class="sf-pin sf-pin-${q.side}" style="left:${q.x}%;top:${q.y}%" onclick="devFocusSkill('${q.k}');openPage('development-domain:${ref}:${domain}')"><i></i><span>${hb(F(q.t))}</span></button>`).join('')}</div>`; };
+    return `<div class="sf-photo dev-area-photo"><img src="assets/dev/${ph.src}.jpg?v=2" alt="${ph.alt}">${ph.pins.map(q => `<button class="sf-pin sf-pin-${q.side}" style="left:${q.x}%;top:${q.y}%" onclick="devFocusSkill('${q.k}');openPage('development-domain:${ref}:${domain}')"><i></i><span>${hb(F(q.t))}</span></button>`).join('')}</div>`; };
   const devAreaHead = (ref, domain, meta, age) => {
     const hb = window.hubBabyify || (x => x), T = x => hb(F(x)), hd = AREA_HEAD[ref] && AREA_HEAD[ref][domain], when = age === '1 year' ? '12 months' : age;
     if (!hd) return `<p class="hub-context">${esc(`By ${age}`)}</p><h1>${esc(meta.title)}</h1><p class="hub-lead">${esc(DEV_STAGES[ref].summaries[domain])}</p>`;

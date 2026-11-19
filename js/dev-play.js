@@ -52,7 +52,7 @@
 
   // A skill's photo or video, opened on the page.
   // Nov 18: Ahead's own photos, in one style, for milestones a still photo shows well. Motion and sound milestones keep the CDC video.
-  const OWN_PHOTO = { 'pushes-onto-elbows-during-tummy-time': 'm4-elbows', 'pushes-up-with-straight-arms-on-tummy': 'm6-straight-arms', 'reaches-to-grab-a-toy': 'm6-reaches', 'leans-on-hands-when-sitting': 'm6-leans-on-hands', 'knows-familiar-people': 'm6-familiar-people', 'closes-lips-to-show-they-don-t-want-more-food': 'm6-closes-lips' };
+  const OWN_PHOTO = { 'pushes-onto-elbows-during-tummy-time': 'm4-elbows', 'pushes-up-with-straight-arms-on-tummy': 'm6-straight-arms', 'reaches-to-grab-a-toy': 'm6-reaches', 'leans-on-hands-when-sitting': 'm6-leans-on-hands', 'knows-familiar-people': 'm6-familiar-people', 'closes-lips-to-show-they-don-t-want-more-food': 'm6-closes-lips', 'likes-looking-at-self-in-a-mirror': 'm6-mirror', 'puts-things-in-mouth-to-explore': 'm6-mouthing' };
   // Where each photo sits in its square frame (vertical %), so faces and the skill both stay in view.
   const OWN_POS = { 'm6-reaches': 0, 'm6-closes-lips': 30, 'm6-leans-on-hands': 40, 'm6-familiar-people': 0, 'm4-elbows': 55, 'm6-straight-arms': 50 };
   window.devSeeIt = function (btn, key) {
@@ -72,7 +72,7 @@
     btn.textContent = open ? 'See what it looks like' : 'Hide';
   };
   // Skills that are obvious from words alone don't get a photo or video; the one-line description is enough.
-  const NO_MEDIA = new Set(['laughs', 'squeals', 'chuckles-during-play', 'smiles-back-at-you', 'makes-sounds-beyond-crying', 'responds-to-loud-sounds', 'moves-both-arms-and-legs', 'looks-at-your-face', 'seems-glad-to-see-you', 'likes-looking-at-self-in-a-mirror', 'waves-goodbye', 'raises-arms-to-be-picked-up', 'enjoys-peekaboo', 'coos', 'brings-hands-to-mouth', 'puts-things-in-mouth-to-explore']);
+  const NO_MEDIA = new Set([]);   // Nov 18: every milestone shows something (sound milestones play the CDC clip, with audio)
   window.devSeeButton = (key, title) => (typeof DEV_EXAMPLE_LINKS !== 'undefined' && DEV_EXAMPLE_LINKS[key] && !NO_MEDIA.has(key)) ? `<button class="dev-see" aria-expanded="false" data-title="${title}" onclick="devSeeIt(this,'${key}')">See what it looks like</button>` : '';
 
   // An idea from a later stage than the baby's says so in its kicker, so it doesn't read as one for today.
