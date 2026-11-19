@@ -150,3 +150,26 @@
 #main .cc-opts .cc-opt img { width: 56px; height: 56px; flex: none }
 #main .cc-opts .cc-opt b { font-size: 14px; display: block }
 #main .cc-opts .cc-opt small { font-size: 12px; display: block; margin-top: 2px }
+/* Round 4. Compare: the chips and the care types stay pinned at the top; the chosen question moves up under them. */
+#main .cc-q-sticky { position: sticky; top: 0; z-index: 5; background: var(--bg, #f6f2ea); margin: 0 -16px; padding: 8px 16px 10px; box-shadow: 0 8px 12px -12px #6b5a0e55 }
+#main .cc-q-sticky .cc-cmp-ask { margin: 0 2px 6px }
+#main .cc-q-sticky .cc-cmp-chips { margin-bottom: 10px }
+#main .cc-q-sticky .cc-opt.is-small img { width: 54px; height: 54px; aspect-ratio: auto }
+/* Main page: the top card holds the four options and the compare button. */
+#main .cc-hero-opts .cc-opts { margin-top: 14px }
+#main .cc-hero-opts .cc-opt { background: #fffdf8; border-color: #fff; box-shadow: 0 2px 10px #a6905a1f }
+#main .cc-hero-cmp { margin-top: 10px; width: 100%; display: flex; align-items: center; gap: 10px; background: #fff; border: 0; border-radius: 16px; padding: 10px 12px; font: inherit; cursor: pointer; color: #2f2b1c; box-shadow: 0 2px 10px #a6905a1f }
+#main .cc-hero-cmp span { width: 36px; height: 36px; border-radius: 11px; background: #fcf7dd; display: grid; place-items: center }
+#main .cc-hero-cmp span svg { width: 22px; height: 22px }
+#main .cc-hero-cmp b { flex: 1; text-align: left; font-size: 15px; font-weight: 650 }
+#main .cc-hero-cmp i { font-style: normal; color: #8a7420; font-size: 18px }
+#main .cc-help { background: #fffdf8 }
+#main .cc-help-art { width: 56px; height: 56px; flex: none; border-radius: 11px; background: #fcf7dd; display: grid; place-items: center }
+#main .cc-help-art svg { width: 28px; height: 28px }
+/* The app shell hides overflow, which stops sticky; clip does the same job without breaking it (this page only). */
+#shell:has(.cc-q-sticky) { overflow: clip }
+#main .cc-opts .cc-opt { gap: 9px; padding: 7px }
+#main .cc-opts .cc-opt img, #main .cc-help-art { width: 46px; height: 46px; border-radius: 10px }
+#main .cc-help-art svg { width: 24px; height: 24px }
+#main .cc-opts + .hub-h2 { margin-top: 22px }
+#main .hub-h2 + .cc-opts { margin-bottom: 22px }

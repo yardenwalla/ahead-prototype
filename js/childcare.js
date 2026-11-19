@@ -381,7 +381,7 @@
   // page, one card per question, with small pictures for the answers. Facts, not scores (AAP: 3 babies per adult in
   // an infant room; Caring for Our Children: at most 2 under-2s per adult in a home daycare).
   const COLS = [['center', 'Daycare'], ['home', 'Home daycare'], ['nanny', 'Nanny'], ['family', 'Family']];
-  const ONE = { center: 'Set hours, staff who cover', home: 'A small group in a home', nanny: 'One-on-one at home', family: 'Someone who knows them' };
+  const ONE = { center: 'Set hours, backup staff', home: 'Small group, in a home', nanny: 'One-on-one at home', family: 'Someone they know' };
   const dots = n => `<span class="cc-dots" aria-hidden="true">${[1, 2, 3].map(i => `<i class="${i <= n ? 'on' : ''}"></i>`).join('')}</span>`;
   const ppl = n => `<span class="cc-ppl" aria-hidden="true">${Array.from({ length: n }, () => '<svg viewBox="0 0 12 14"><circle cx="6" cy="4" r="3"/><path d="M1 14a5 5 0 0 1 10 0Z"/></svg>').join('')}</span>`;
   const ok = '<span class="cc-ok" aria-hidden="true">✓</span>', no = '<span class="cc-no" aria-hidden="true">–</span>';
@@ -393,13 +393,14 @@
     ['cost', 'coin', 'What you pay for', { center: ['', 'Tuition'], home: ['', 'Tuition'], nanny: ['', 'Salary + payroll taxes'], family: ['', 'Whatever you agree'] }, []]
   ];
   const MATTERS = [['hours', 'Hours'], ['group', 'Group size'], ['sick', 'Sick days'], ['cost', 'Cost']];
-  window.ccMatter = k => { save('ahead-childcare-matters', load('ahead-childcare-matters', '') === k ? '' : k); rerender(); };
+  window.ccMatter = k => { save('ahead-childcare-matters', load('ahead-childcare-matters', '') === k ? '' : k); render(); const h = document.querySelector('.cc-q-anchor'); if (h) scrollTo(0, Math.max(0, h.getBoundingClientRect().top + scrollY - 8)); };
   function comparePage() {
     const on = load('ahead-childcare-matters', ''), lit = id => on === id || (on === 'sick' && id === 'backup');
     const chips = `<p class="cc-cmp-ask">${F('What matters most to you?')}</p><div class="cc-chips cc-cmp-chips">${MATTERS.map(([k, n]) => `<button class="cc-chip${on === k ? ' is-on' : ''}" aria-pressed="${on === k}" onclick="ccMatter('${k}')">${F(n)}</button>`).join('')}</div>`;
-    const head = `<div class="cc-q-cols">${COLS.map(([k, n]) => `<button class="cc-opt is-small" onclick="openPage('chg:${CAT}:d:${k}')"><img src="assets/childcare/col-${k}.jpg" alt="" loading="lazy"><b>${F(n)}&nbsp;›</b></button>`).join('')}</div>`;
-    const cards = QS.map(([id, icon, label, cells, best]) => `<section class="hub-card cc-q${lit(id) ? ' is-lit' : ''}"><p class="cc-q-title">${hubArt(icon, CAT)}${F(label)}</p><div class="cc-q-cols">${COLS.map(([k]) => `<div class="cc-q-cell${lit(id) && best.includes(k) ? ' is-best' : ''}">${cells[k][0]}<span>${F(cells[k][1])}</span></div>`).join('')}</div></section>`).join('');
-    return sub('fit', 'Kinds of care', 'Compare your options', 'Many families end up with a mix.', chips + head + cards
+    const head = `<div class="cc-q-cols cc-q-pin">${COLS.map(([k, n]) => `<button class="cc-opt is-small" onclick="openPage('chg:${CAT}:d:${k}')"><img src="assets/childcare/col-${k}.jpg" alt="" loading="lazy"><b>${F(n)}&nbsp;›</b></button>`).join('')}</div>`;
+    const order = [...QS].sort((a, b) => lit(b[0]) - lit(a[0]));
+    const cards = order.map(([id, icon, label, cells, best]) => `<section class="hub-card cc-q${lit(id) ? ' is-lit' : ''}"><p class="cc-q-title">${hubArt(icon, CAT)}${F(label)}</p><div class="cc-q-cols">${COLS.map(([k]) => `<div class="cc-q-cell${lit(id) && best.includes(k) ? ' is-best' : ''}">${cells[k][0]}<span>${F(cells[k][1])}</span></div>`).join('')}</div></section>`).join('');
+    return sub('fit', 'Kinds of care', 'Compare your options', 'Many families end up with a mix.', `<span class="cc-q-anchor"></span><div class="cc-q-sticky">${chips}${head}</div>` + cards
       , 'blocks');
   }
   function childcare() {
@@ -407,20 +408,21 @@
     const cur = ccCur(), mm = typeof page === 'string' && /^chg:Childcare:s:(\d)/.exec(page), view = mm ? +mm[1] : cur, S = CC_STAGES[view];
     if (typeof stageTimeline === 'function') stageTimeline(CAT, CC_STAGES.map((st, i) => ({ label: st.label, age: st.age, on: i === view, now: i === cur, onclick: `openPage('chg:${CAT}:s:${i}')`, change: `ccSetStage(${i})` })));
     // The top card: where the family is, with a scene of it.
-    let b = `<header class="hub-hero cc-hero cc-disc"><p class="hub-eyebrow">${F(S.eyebrow)}</p><h1>${F(S.t)}</h1><p class="hub-lead">${F(S.lead)}</p><div class="cc-art" aria-hidden="true">${CC_ART[view]}</div><div class="cc-worth"><small>${F(S.worth[0])}</small><b>${F(S.worth[1])}</b><span>${F(S.worth[2])}</span></div></header>`;   // same build as Feeding's top card: words, a scene, one card inside
+    // Nov 19, round 4: on Finding care the top card *is* the options: headline, then the four kinds of care as photo
+    // tiles and the side-by-side compare, so the page opens on one designed card instead of art plus a tip.
+    const optTile = k => { const m = (list[k] || []).length, n = COLS.find(c => c[0] === k)[1]; return `<button class="cc-opt" onclick="openPage('chg:${CAT}:d:${k}')"><img src="assets/childcare/col-${k}.jpg" alt="" loading="lazy"><span><b>${F(n)}</b><small>${F(m ? `${m} on your shortlist` : ONE[k])}</small></span></button>`; };
+    let b = view === 0
+      ? `<header class="hub-hero cc-hero cc-hero-opts"><p class="hub-eyebrow">${F(S.eyebrow)}</p><h1>${F(S.t)}</h1><p class="hub-lead">${F(S.lead)}</p><div class="cc-opts">${COLS.map(([k]) => optTile(k)).join('')}</div><button class="cc-hero-cmp" onclick="openPage('chg:${CAT}:d:compare')"><span>${hubArt('blocks', CAT)}</span><b>${F('Compare them side by side')}</b><i aria-hidden="true">›</i></button></header>`
+      : `<header class="hub-hero cc-hero cc-disc"><p class="hub-eyebrow">${F(S.eyebrow)}</p><h1>${F(S.t)}</h1><p class="hub-lead">${F(S.lead)}</p><div class="cc-art" aria-hidden="true">${CC_ART[view]}</div><div class="cc-worth"><small>${F(S.worth[0])}</small><b>${F(S.worth[1])}</b><span>${F(S.worth[2])}</span></div></header>`;   // same build as Feeding's top card: words, a scene, one card inside
     if (view === 0) {
       // Nov 19: the signature visual. Four kinds of regular care side by side, facts not scores; a chip highlights a row
       // and ticks the cell that's strongest on it, but nothing picks a winner for the family (design guide).
-      b += `<h2 class="hub-h2">${F('Your options')}</h2><div class="cc-opts">${COLS.map(([k, n]) => { const m = (list[k] || []).length; return `<button class="cc-opt" onclick="openPage('chg:${CAT}:d:${k}')"><img src="assets/childcare/col-${k}.jpg" alt="" loading="lazy"><span><b>${F(n)}</b><small>${F(m ? `${m} on your shortlist` : ONE[k])}</small></span></button>`; }).join('')}</div>`
-        + `<div class="hub-list cc-cmp-link">` + homeRow('fit', 'blocks', 'Compare them side by side', 'Hours, group size, sick days and cost', 'compare') + `</div>`;
-      b += `<h2 class="hub-h2">${F('Help now and then')}</h2><div class="hub-list">`
-        + homeRow('sitter', 'moon', 'Babysitter', 'For a night out, or a break', 'sitter')
-        + homeRow('help', 'star', 'Extra help at home', am < 4 ? 'A doula or overnight help, early on' : 'A helper while you’re home, or at night', 'help') + `</div>`;
+      const helpTile = (k, icon, t, sub2) => `<button class="cc-opt cc-help" onclick="openPage('chg:${CAT}:d:${k}')"><span class="cc-help-art">${hubArt(icon, CAT)}</span><span><b>${F(t)}</b><small>${F(sub2)}</small></span></button>`;
+      b += `<h2 class="hub-h2">${F('Help now and then')}</h2><div class="cc-opts">` + helpTile('sitter', 'moon', 'Babysitter', 'A night out, or a break') + helpTile('help', 'star', 'Extra help', am < 4 ? 'A doula or night help' : 'At home, or at night') + `</div>`;
       // Planning and paying come after the options, so the first thing a parent sees is what care can look like.
       b += `<h2 class="hub-h2">${F('Before you choose')}</h2><div class="hub-list">`
         + homeRow('plan', 'notepad', 'Plan your care', 'Your countdown, and waitlists', 'plan')
-        + homeRow('pay', 'coin', 'Paying for care', 'A pre-tax account, a tax credit and more', 'pay')
-        + homeRow('fit', 'eye', 'Not sure? Take the quick quiz', 'Four taps, and where to look first', 'fit') + `</div>`;
+        + homeRow('pay', 'coin', 'Paying for care', 'A pre-tax account, a tax credit and more', 'pay') + `</div>`;
     } else if (view === 1) {
       b += careCardButton(card);
       b += `<h2 class="hub-h2">${F('Before day one')}</h2><div class="hub-list">`
