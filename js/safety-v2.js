@@ -252,7 +252,7 @@
       fix: [['plug', 'Sliding outlet covers', 'They snap shut when you unplug'], ['shield', 'Best: tamper-resistant outlets', 'Built-in shutters, nothing to pull out'], ['cord', 'Cords out of reach', 'Lamps and chargers behind furniture']],
       checks: ['Try to open a cover with your fingertips. It should stay shut.', 'Crawl past lamps and chargers. No cord should hang within reach.'] },
     anchor: {
-      ba: [[PH('anchor-before'), 'A baby pulling up on a tall dresser that isn’t fixed to the wall', null], [PH('anchor-after'), 'The same dresser with an anti-tip strap to the wall', ['Anti-tip strap', 84, 14, 'bl']]],
+      ba: [[PH('anchor-before'), 'A baby pulling up on a tall dresser that isn’t fixed to the wall', null], [PH('anchor-after'), 'The same dresser with an anti-tip strap to the wall', ['Anti-tip strap', 86, 22, 'bl']]],
       spotPhoto: [PH('anchor-risk'), 'A baby pulling up on a tall dresser, with a TV on a low stand behind her', [['TV can tip', 17, 40, 'b'], ['Dresser can tip', 90, 74, 'bl']]],
       spotLine: 'Bookcases, and anything tall {s} could pull on, count too.',
       fixPhoto: [PH('anchor-fix'), 'A dresser held to the wall by an anti-tip strap, shown close up', [['Anti-tip strap', 60, 66, 'b']], 'tall'],
