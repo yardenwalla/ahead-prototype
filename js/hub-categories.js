@@ -127,13 +127,15 @@
       const foot = F(n === 1 ? '1 milestone' : `${n} milestones`);   // the same line on every tile; marking happens on the area page
       const tp = TILE_PHOTO[ref] && TILE_PHOTO[ref][d];
       return `<button class="dvx-area${tp ? ' has-photo' : ''}" style="${tint(d)}" onclick="${look ? `devFocusSkill('${journeySkillKey(look[3])}');` : ''}openPage('development-domain:${ref}:${d}')">${tp ? `<span class="dvx-area-pic"><img src="assets/dev/tile-${ref}-${d.toLowerCase()}.jpg?v=5" alt="">${tp === 'sound' ? '<i class="dvx-badge" aria-label="Has a sound clip"><svg viewBox="0 0 24 24"><path d="M4 10v4M8 7v10M12 4v16M16 8v8M20 11v2"/></svg></i>' : tp === 'video' ? '<i class="dvx-badge" aria-label="Has a video"><svg viewBox="0 0 24 24"><path d="M9 7v10l8-5z" fill="currentColor" stroke="none"/></svg></i>' : ''}</span>` : ''}<small>${tp ? `<i class="dvx-area-ico" aria-hidden="true">${H().art(DOMAIN_ICONS[d], 'Development')}</i>` : ''}${DOMAIN_TITLES[d]}${tp ? '<em class="dvx-area-go" aria-hidden="true">›</em>' : ''}</small><b>${T(look ? look[1] : name(ex))}</b><span>${foot} ›</span></button>`; }).join('')}</div>`
-      + `<button class="dvx-lookall" onclick="openPage('chg:Development:d:all:${ref}')">${F(TILE_PHOTO[ref] ? `See all ${Object.values(DEVELOPMENT_DOMAINS[ref]).flat().length} milestones in one list` : 'All milestones for this age')}<span aria-hidden="true">›</span></button></section>` + tryHtml + qHtml;
+      + `<button class="dvx-lookall" onclick="openPage('chg:Development:d:all:${ref}')">${F(TILE_PHOTO[ref] ? `See all ${Object.values(DEVELOPMENT_DOMAINS[ref]).flat().length} milestones in one list` : 'All milestones for this age')}<span aria-hidden="true">›</span></button></section>` + tryHtml;
     // Coming into view: the next checkpoint, in a line.
     // Next (design system, Nov 13): "Next · " and when, the next stage's name, and one line on what to watch for or get ready for.
     const NEXT_LINE = { 2: 'Watch for {o} to coo back when you pause', 4: 'Watch for {o} to grab a toy, not just bat at it', 6: 'Watch for {o} to look for a toy {s} {drop|drops}', 9: 'Wave and clap often, so {s} {have|has} something to copy' };
     const nextRef = devKeys[devKeys.indexOf(ref) + 1];
-    if (nextRef) b += h.next(`Next · by ${nextRef} months`, DEV_STAGES[nextRef].title, `openPage('development-stage:${nextRef}')`, '', NEXT_LINE[ref] ? T(NEXT_LINE[ref]) : '');
-    else b += h.next('Next · after the first birthday', 'First steps', `openPage('development-domain:12:Movement')`);
+    // Nov 19: the big question is about what's coming, so it lives inside the Next card instead of beside it (one topic, one card).
+    const nextCard = nextRef ? h.next(`Next · by ${nextRef} months`, DEV_STAGES[nextRef].title, `openPage('development-stage:${nextRef}')`, '', NEXT_LINE[ref] ? T(NEXT_LINE[ref]) : '')
+      : h.next('Next · after the first birthday', 'First steps', `openPage('development-domain:12:Movement')`);
+    b += qHtml ? `<div class="dvx-nextq">${nextCard}${qHtml}</div>` : nextCard;
     // Nov 18: Development follows age, so its ages show as chips at the top (in place of "All stages").
     const chips = `<nav class="dvx-ages" aria-label="Development by age">${devKeys.map(k => `<button class="${k === ref ? 'is-on' : ''}${live() && k === now ? ' is-now' : ''}" onclick="openPage('development-stage:${k}')"${k === ref ? ' aria-current="page"' : ''}>${k} mo</button>`).join('')}</nav>`;
     return frame('Development', `data-development-guide="${ref}"`, chips + ageNote, b);
