@@ -104,3 +104,19 @@
 #main .cc-cmp-col b { min-height: 2.4em }
 #main .cc-cmp .cc-cmp-ask { margin-top: 2px }
 #main .cc-cmp-chips { margin-bottom: 12px }
+/* Round 2: a calmer table. Label column, then four columns of one or two words. */
+#main .cc-t { padding: 12px 8px 6px }
+#main .cc-t-row { display: grid; grid-template-columns: 70px repeat(4, minmax(0, 1fr)); gap: 4px; align-items: center; padding: 10px 2px; border-top: 1px solid rgba(60, 50, 20, .08); border-radius: 12px }
+#main .cc-t-head { border-top: 0; padding-top: 0; align-items: start }
+#main .cc-t-row.is-lit { background: #fcf7dd; border-top-color: transparent }
+#main .cc-t-label { display: flex; align-items: center; gap: 5px; font-size: 12.5px; font-weight: 600; color: #6b5a0e }
+#main .cc-t-label svg { width: 17px; height: 17px; flex: none }
+#main .cc-t-cell { font-size: 13px; line-height: 1.25; text-align: center; color: #3c3828 }
+#main .cc-t-cell.is-best { font-weight: 700; color: #4a3f0a; background: #fff; border-radius: 10px; padding: 4px 2px; box-shadow: 0 0 0 1.5px #e0c862 }
+#main .cc-t .cc-cmp-col b { min-height: 0; font-size: 12.5px }
+#main .cc-t + .cc-cmp-ask { margin: 14px 2px 8px }
+#main .cc-t-row { grid-template-columns: 74px repeat(4, minmax(0, 1fr)); gap: 2px }
+#main .cc-t-label { white-space: nowrap; font-size: 12px; gap: 4px }
+#main .cc-t-cell { font-size: 12.5px }
+#main .cc-t-row { border-radius: 0 }
+#main .cc-t-row.is-lit { border-radius: 12px }

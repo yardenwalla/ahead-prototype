@@ -376,23 +376,24 @@
   const ccCur = () => { const o = load('ahead-childcare-stage', null); return typeof o === 'number' ? o : ccAuto(); };
   window.ccCurStage = ccCur;
   window.ccSetStage = i => { save('ahead-childcare-stage', i); page = `topic:${CAT}`; render(); scrollTo(0, 0); if (typeof hubToast === 'function') hubToast(F(`Childcare: ${CC_STAGES[i].label}`), F('This is now Maya’s stage.')); };
-  const COLS = [['center', 'Daycare center'], ['home', 'Home daycare'], ['nanny', 'Nanny'], ['family', 'Family']];
+  // Nov 19, round 2 (Yarden: "why did the inspiration look calmer?"): four rows, one or two words a cell, labels in
+  // their own column, chips under the table. Detail lives on each care page, not in the table.
+  const COLS = [['center', 'Daycare'], ['home', 'Home daycare'], ['nanny', 'Nanny'], ['family', 'Family']];
   const CMP = [
-    ['hours', 'clock', 'Hours', { center: 'Set hours', home: 'Set, often more flexible', nanny: 'Your schedule', family: 'Agreed together' }, ['nanny']],
-    ['group', 'blocks', 'Who else is there', { center: 'Babies the same age', home: 'A small group, mixed ages', nanny: 'One-on-one', family: 'One-on-one' }, []],
-    ['sick', 'thermo', 'If {s’s} sick', { center: 'Stays home', home: 'Stays home', nanny: 'Care goes on', family: 'Usually goes on' }, ['nanny', 'family']],
-    ['backup', 'shield', 'If the caregiver’s out', { center: 'Other staff cover', home: 'You find backup', nanny: 'You find backup', family: 'You find backup' }, ['center']],
-    ['cost', 'coin', 'What you pay for', { center: 'Tuition', home: 'Tuition', nanny: 'A salary and taxes. Often costs most', family: 'What you agree' }, []]
+    ['hours', 'clock', 'Hours', { center: 'Fixed', home: 'Some flex', nanny: 'Flexible', family: 'Flexible' }, ['nanny', 'family']],
+    ['group', 'blocks', 'Group', { center: 'By age', home: 'Small, mixed', nanny: '1\u2011on\u20111', family: '1\u2011on\u20111' }, []],
+    ['sick', 'thermo', 'Sick days', { center: 'Stay home', home: 'Stay home', nanny: 'Care goes on', family: 'Care goes on' }, ['nanny', 'family']],
+    ['cost', 'coin', 'You pay', { center: 'Tuition', home: 'Tuition', nanny: 'Salary + taxes', family: 'Varies' }, []]
   ];
   const MATTERS = [['hours', 'Hours'], ['group', 'Group size'], ['sick', 'Sick days'], ['cost', 'Cost']];
   window.ccMatter = k => { save('ahead-childcare-matters', load('ahead-childcare-matters', '') === k ? '' : k); rerender(); };
   function compareTable() {
-    const on = load('ahead-childcare-matters', ''), rowsOn = on === 'sick' ? ['sick', 'backup'] : [on];
-    const head = `<div class="cc-cmp-head">${COLS.map(([k, n]) => `<button class="cc-cmp-col" onclick="openPage('chg:${CAT}:d:${k}')"><img src="assets/childcare/col-${k}.jpg" alt="" loading="lazy"><b>${F(n)}&nbsp;›</b></button>`).join('')}</div>`;
-    const body = CMP.map(([id, icon, label, cells, best]) => { const lit = rowsOn.includes(id);
-      return `<div class="cc-cmp-row${lit ? ' is-lit' : ''}"><p class="cc-cmp-label">${hubArt(icon, CAT)}<span>${F(label)}</span></p><div class="cc-cmp-cells">${COLS.map(([k]) => `<span class="${lit && best.includes(k) ? 'is-best' : ''}">${lit && best.includes(k) ? '<i aria-hidden="true">✓</i>' : ''}${F(cells[k])}</span>`).join('')}</div></div>`; }).join('');
+    const on = load('ahead-childcare-matters', '');
+    const head = `<div class="cc-t-row cc-t-head"><span></span>${COLS.map(([k, n]) => `<button class="cc-cmp-col" onclick="openPage('chg:${CAT}:d:${k}')"><img src="assets/childcare/col-${k}.jpg" alt="" loading="lazy"><b>${F(n)}</b></button>`).join('')}</div>`;
+    const body = CMP.map(([id, icon, label, cells, best]) => { const lit = on === id;
+      return `<div class="cc-t-row${lit ? ' is-lit' : ''}"><span class="cc-t-label">${hubArt(icon, CAT)}${F(label)}</span>${COLS.map(([k]) => `<span class="cc-t-cell${lit && best.includes(k) ? ' is-best' : ''}">${F(cells[k])}</span>`).join('')}</div>`; }).join('');
     const chips = `<p class="cc-cmp-ask">${F('What matters most to you?')}</p><div class="cc-chips cc-cmp-chips">${MATTERS.map(([k, n]) => `<button class="cc-chip${on === k ? ' is-on' : ''}" aria-pressed="${on === k}" onclick="ccMatter('${k}')">${F(n)}</button>`).join('')}</div>`;
-    return `<h2 class="hub-h2">${F('Compare your options')}</h2><section class="hub-card cc-cmp">${chips}${head}${body}<p class="cc-cmp-note">${F('Sharing a nanny: two families split one, for less. See Nanny.')}</p></section>`;
+    return `<h2 class="hub-h2">${F('Compare your options')}</h2><section class="hub-card cc-cmp cc-t">${head}${body}</section>` + chips;
   }
   function childcare() {
     const card = load('ahead-carecard', {}), list = shortlist(), am = typeof actualMonth === 'function' ? actualMonth() : 0, fd0 = feedNow(), bm0 = fd0 !== 'Formula', fm0 = fd0 !== 'Breast milk';
