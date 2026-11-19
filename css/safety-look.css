@@ -66,7 +66,7 @@
 /* Nov 18: Safety step pages, Spot the risk → See the fix → Check your home.
    Photos sit inside the section's white card, full bleed at the top; labels are drawn by the app, not baked in. */
 #main .sf-step .care-tpl .sf-card { padding: 0 !important; overflow: hidden }
-#main .sf-step .care-tpl .sf-card > :not(figure):not(.sf-pair) { margin-left: 16px !important; margin-right: 16px !important }
+#main .sf-step .care-tpl .sf-card > :not(figure):not(.sf-pair):not(.sf-ba) { margin-left: 16px !important; margin-right: 16px !important }
 #main .sf-step .sf-step-photo { margin: 0; border-radius: 0; box-shadow: none; aspect-ratio: 4 / 3 }
 #main .sf-step .sf-step-photo.is-tall { aspect-ratio: 1 / 1 }
 #main .sf-step .sf-step-photo.is-tall img { object-position: 50% 0 }
@@ -103,3 +103,15 @@
 #main .sf-step .sf-fixrows b { display: block; font-size: 15px; line-height: 1.3; color: #2b2732 }
 #main .sf-step .sf-fixrows small { display: block; font-size: 13.5px; line-height: 1.38; color: #6b6670; margin-top: 2px }
 #main .sf-step .sf-fixrows + .tpl-notes { border-top: 1px solid #f1eadf; padding-top: 12px !important; margin-top: 0 !important }
+/* Round 2: one same-scene before and after, side by side */
+#main .sf-step .sf-ba { display: grid; grid-template-columns: 1fr 1fr; gap: 3px }
+#main .sf-step .sf-ba figure { margin: 0; position: relative; overflow: hidden }
+#main .sf-step .sf-ba img { display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover }
+#main .sf-step .sf-ba figcaption { position: absolute; left: 50%; bottom: 10px; transform: translateX(-50%); padding: 5px 14px; border-radius: 999px; font-size: 13px; font-weight: 700; background: #fffdfaee; color: #4a3a1f; box-shadow: 0 2px 8px #0002 }
+#main .sf-step .sf-ba figcaption.is-after { background: #e6f5ec; color: #356651 }
+#main .sf-step .sf-ba .sf-pin { position: absolute; display: flex; align-items: center; gap: 5px; pointer-events: none; flex-direction: column; transform: translate(-50%, -7px) }
+#main .sf-step .sf-ba .sf-pin-bl { align-items: flex-end; transform: translate(calc(-100% + 7px), -7px) }
+#main .sf-step .sf-ba .sf-pin span { font-size: 12px; padding: 6px 9px }
+#main .sf-step .sf-ba figure + figure .sf-pin span { background: #e6f5ec; color: #356651 }
+#main .sf-step .sf-ba figure + figure .sf-pin i { background: #356651 }
+#main .sf-step .sf-ba + .sf-fixrows { padding-top: 6px }

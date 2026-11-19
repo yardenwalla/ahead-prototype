@@ -228,6 +228,8 @@
       notes: [['', 'Child-resistant isn’t childproof', 'Caps slow children down but don’t stop them']],
       checks: ['Look by the door and the sofa. Every bag, yours too, should be up high.'] },
     gates: {
+      ba: [[PH('gates-before'), 'A baby crawling toward an open staircase', ['Open stairs', 52, 42, 'b']], [PH('gates-after'), 'The same stairs with a baby gate screwed into the wall', ['Gate screwed in', 56, 46, 'b']]],
+      baFix: [['gate', 'Screwed in at the top', 'A pressure gate can give way there'], ['home', 'Either kind at the bottom', 'Pressure-fit or screwed in']],
       spotPhoto: [PH('gates-risk'), 'A baby crawling toward an open staircase with no gate', [['Open stairs', 52, 26, 'r']]],
       spotLine: 'Crawlers climb stairs early, and can fall from any step.',
       fixPair: [[PH('gates-ok'), 'A gate screwed into the wall at the top of the stairs', 'Screwed in at the top'], [PH('gates-no'), 'A pressure gate wedged between walls', 'Pressure gate: bottom only']],
@@ -239,10 +241,12 @@
       fix: [['lock', 'Latch it', 'Child latches on doors and drawers'], ['shield', 'Up high too', 'Medicines and cleaners, as well as latched'], ['home', 'Close off rooms', 'Bathroom, laundry and garage, with knob covers or a gate']],
       checks: ['Tug each latched door. It should only open a crack.', 'Close it again and pull. The latch should catch every time.'] },
     outlets: {
+      ba: [[PH('outlets-before'), 'A wall outlet with a cord plugged in, at a crawling baby’s eye level', ['Outlet and cord', 43, 25, 'b']], [PH('outlets-after'), 'The same outlet with safety covers and no cord', ['Covered', 41, 34, 'b']]],
       spotPhoto: [PH('outlets-risk'), 'A wall outlet with a cord, at a crawling baby’s eye level', [['Outlet', 33, 31, 'r'], ['Cord to pull on', 21, 72, 'r']]],
       fix: [['plug', 'Outlet covers', 'Too big to swallow, and hard to pull out'], ['cord', 'Cords out of reach', 'Lamps and chargers behind furniture'], ['shield', 'Replacing outlets?', 'Tamper-resistant ones have shutters']],
       checks: ['Pull on a cover with your fingertips. It should stay put.', 'Crawl past lamps and chargers. No cord should hang within reach.'] },
     anchor: {
+      ba: [[PH('anchor-before'), 'A baby pulling up on a tall dresser that isn’t fixed to the wall', ['Can tip', 72, 40, 'b']], [PH('anchor-after'), 'The same dresser with an anti-tip strap to the wall', ['Strapped', 72, 6, 'bl']]],
       spotPhoto: [PH('anchor-risk'), 'A baby pulling up on a tall dresser, with a TV on a low stand behind her', [['TV can tip', 17, 40, 'b'], ['Dresser can tip', 90, 74, 'bl']]],
       spotLine: 'Bookcases, and anything tall {s} could pull on, count too.',
       fixPhoto: [PH('anchor-fix'), 'A dresser held to the wall by an anti-tip strap, shown close up', [['Anti-tip strap', 60, 66, 'b']], 'tall'],
@@ -275,6 +279,16 @@
     if (!q) return stepPageOld(id);
     const st = stageOf(id), s = status(id), c = C[x.c];
     const head = `<div class="dev-area-head ss-head" style="--area:${c[0]};--area-ink:${c[1]}"><span class="dev-area-head-art sf-head-art">${hubArt(x.hi || x.i, 'Safety')}</span><p class="hub-context">${F(st ? st.label : 'Safety')}</p><h1>${F(x.t)}</h1><p class="hub-lead">${F(LEAD2[id] || x.why)}</p></div>`;
+    if (q.ba && !window.__sfNoBA) {
+      // Nov 18, round 2: Spot the risk and See the fix as one same-scene before and after, then the fix rows.
+      const shot = ([src, alt, pin], k) => `<figure><img src="${src}" alt="${F(alt)}" loading="lazy">${pins([pin])}<figcaption class="${k ? 'is-after' : 'is-before'}">${k ? F('After') : F('Before')}</figcaption></figure>`;
+      const ba = `<section class="care-tpl-card sf-card"><div class="sf-ba">${q.ba.map(shot).join('')}</div>${fixRows(q.baFix || q.fix)}${B.ul(q.notes)}</section>`;
+      const tests2 = `<section class="care-tpl-card sf-card sf-checks"><ul>${q.checks.map(t => `<li><i aria-hidden="true"></i><span>${F(t)}</span></li>`).join('')}</ul></section>`;
+      const acts = s === 'done' ? `<p class="hub-done">${F('Done')} ✓</p><button class="hub-link" onclick="sfSet('${id}','')">${F('Undo')}</button>`
+        : `<button class="hub-button" onclick="sfSet('${id}','done');back()">${F('Mark as done')}</button><button class="hub-link sf-na" onclick="sfSet('${id}','${s === 'na' ? '' : 'na'}');back()">${F(s === 'na' ? 'It applies after all' : 'Doesn’t apply to our home')}</button>`;
+      return `<div class="quiet-category hub-page hub-detail sf-step" data-overview="Safety" data-ss="1" data-sf-step="${id}" style="${yearTheme('Safety')};--ss-bg:${c[0]};--ss-ink:${c[1]}">${detailPageTop('Safety')}${head}`
+        + `<div class="care-tpl is-getready">` + B.sec('Before and after', ba) + B.sec('Check your home', tests2) + `</div><div class="hub-actions sf-actions">${acts}</div></div>`;
+    }
     // 1. Spot the risk
     const spot = q.spotPhoto ? `<section class="care-tpl-card sf-card">${photo(q.spotPhoto)}${q.spotLine ? `<p class="sf-cap">${F(q.spotLine)}</p>` : ''}</section>` : B.tiles(q.spotTiles, 'Safety');
     // 2. See the fix: the fixed version, then how to do it, in one card when there's a photo
