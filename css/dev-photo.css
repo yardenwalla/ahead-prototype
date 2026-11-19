@@ -1,11 +1,4 @@
 /* Nov 18 preview: Development with photos */
-#main .dvx-hero.has-photo{min-height:0;padding:20px 0 0;overflow:hidden}
-#main .dvx-hero.has-photo .dev-hero-eyebrow,#main .dvx-hero.has-photo h1{padding:0 20px}
-#main .dvx-hero.has-photo h1{margin-bottom:14px}
-#main .dvx-photo{position:relative;margin:0;line-height:0}
-#main .dvx-photo img{display:block;width:100%;height:auto}
-#main .dvx-steps{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);display:flex;align-items:center;gap:10px;white-space:nowrap;padding:9px 16px;border-radius:999px;background:rgba(255,253,249,.94);box-shadow:0 4px 14px rgba(43,40,64,.14);font-size:14.5px;line-height:1.2;font-weight:700;color:#3d3352}
-#main .dvx-steps span{color:#7a5aa6;font-weight:600}
 /* Age chips (Development only) */
 #main [data-overview="Development"] .st-chip{display:none!important}
 #main .dvx-ages{display:flex;gap:8px;margin:2px 0 14px}
@@ -15,7 +8,11 @@
 /* Ahead's own milestone photos: no CDC caption */
 #main .dev-photo.is-own img{border-radius:16px;width:100%;height:auto;display:block}
 #main .dev-photo.is-own img{aspect-ratio:1/1;object-fit:cover}
-/* Hero photo a little shorter, so "What to look for" starts on the first screen */
-#main .dvx-photo img{aspect-ratio:5/4;object-fit:cover;object-position:50% 90%}
 #main .dvx-try-art.is-photo{background:none}
 #main .dvx-try-art.is-photo img{width:100%;height:100%;object-fit:cover;object-position:50% 60%;display:block}
+/* Development's top card in Safety's pattern: photo set in the card, pins on what she's doing */
+#main .dvx-hero.has-photo{min-height:0;padding-bottom:16px}
+#main .dvx-hero.has-photo .dev-hero-lead{margin-bottom:0}
+#main .dvx-photo.sf-photo{box-shadow:0 6px 18px #5b4e8f22}
+#main .dvx-photo.sf-photo img{object-position:50% 70%}
+#main .dvx-photo .sf-pin span{color:#3d3352}
