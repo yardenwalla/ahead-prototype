@@ -1,0 +1,5 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ahead preview</title></head><body><script>
+// Preview entry: starts an example 9-month-old (Maya) if this browser has no baby yet, then opens the app.
+try{if(!localStorage.getItem('ahead-v2-profile')){var d=new Date(Date.now()-274*864e5).toISOString().slice(0,10);
+localStorage.setItem('ahead-v2-profile',JSON.stringify({name:'Maya',dob:d,pronouns:'she',id:'c',example:false,joined:d,feed:'Formula',feedHow:''}))}}catch(e){}
+location.replace('index.html');</script></body></html>
