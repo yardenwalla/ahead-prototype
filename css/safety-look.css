@@ -116,3 +116,5 @@
 #main .sf-step .sf-ba figure + figure .sf-pin span { background: #e6f5ec; color: #356651 }
 #main .sf-step .sf-ba figure + figure .sf-pin i { background: #356651 }
 #main .sf-step .sf-ba + .sf-fixrows { padding-top: 6px }
+#main .sf-step .sf-ba .sf-pin-r { flex-direction: row; transform: translate(-7px, -50%) }
+#main .sf-step .sf-ba .sf-pin-l { flex-direction: row-reverse; transform: translate(calc(-100% + 7px), -50%) }

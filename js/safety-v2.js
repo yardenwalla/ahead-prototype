@@ -23,7 +23,7 @@
       tip: ['Get it checked', 'Trained car-seat checkers can look over the installation and show you the harness fit. Many fire stations and hospitals offer it, often for free.'],
       links: [['Find a car-seat check near you · NHTSA', 'https://www.nhtsa.gov/campaign/right-seat']] },
     sleep: { t: 'Set up a bare crib', s: 'Firm, flat and empty', i: 'moon', c: 'sleep', go: "openPage('chg:Sleep:safe')", sleep: true },
-    cribspot: { t: 'Keep the crib or bassinet away from windows', s: 'And from blind and monitor cords', i: 'window', c: 'sleep',
+    cribspot: { t: 'Keep the crib away from cords', s: 'Blind, shade and monitor cords', i: 'window', c: 'sleep',
       tiles: [['crib', 'Away from windows', 'Not under or right beside one'], ['cord', 'Cordless blinds', 'Tying up the cord isn’t enough'], ['home', 'Monitor cords', 'At least 3 feet from the crib']],
       why: 'Cords from blinds, shades and monitors can wrap around {p} neck. It can happen from birth, so this comes first.',
       steps: ['Put the crib or bassinet away from windows.', 'Swap corded blinds and shades near it for cordless ones. Tying up the pull cord isn’t enough.', 'Keep monitor cords at least 3 feet from the crib or bassinet.'],
@@ -52,7 +52,7 @@
       why: 'Purses and backpacks often hold medicines, gum or batteries, and they usually end up on the floor.',
       steps: ['Pick a spot up high, like a hook or a closet shelf, for bags and coats.', 'Ask visitors to put their bags there when they arrive.'],
       tip: ['Child-resistant isn’t childproof', 'Caps slow children down but don’t stop them. Medicines still need to be up high and locked.'] },
-    gates: { t: 'Fit stair gates', s: 'Screwed in at the top, so it can’t give way', i: 'gate', c: 'car',
+    gates: { t: 'Gate the stairs', s: 'Screwed in at the top, so it can’t give way', i: 'gate', c: 'car',
       vs: ['Which gate where', ['Top of the stairs', 'A gate that screws into the wall. One that presses against the walls can give way.'], ['Bottom of the stairs', 'Either kind is fine.']], tiles: null, note: 'Use a gate made for babies, and fit it the way its instructions say.',
       why: 'Once {s} {crawl|crawls}, stairs are the biggest fall risk at home.',
       steps: ['At the top of the stairs, use a gate that screws into the wall. A gate that only presses against the walls can give way.', 'At the bottom, either kind is fine.', 'Use a gate made for babies, and fit it the way its instructions say.'],
@@ -75,18 +75,18 @@
       why: 'Babies use furniture as a handhold to pull up, and dressers, bookcases and TVs can tip over onto them.',
       steps: ['Fit anti-tip straps to dressers, bookcases and other tall furniture {s} could pull on.', 'Mount TVs on the wall, or strap them to the furniture they stand on.', 'Do it any time before {s} {pull|pulls} up. Many families do it while babyproofing for crawling.'],
       links: [['Anchor it · CPSC', cpsc]] },
-    windows: { hi: 'stand', t: 'Make windows safe', s: 'Window stops and cordless blinds', i: 'window', c: 'car',
+    windows: { hi: 'stand', t: 'Add window stops', s: 'Window stops and cordless blinds', i: 'window', c: 'car',
       tiles: [['window', 'Window stops', 'Open 4 inches at most'], ['home', 'One way out', 'One window per room an adult can open fully, for a fire'], ['cord', 'Cordless blinds', 'Tied-up cords can still be reached'], ['dresser', 'Furniture away', 'Nothing to climb near a window']],
       why: 'Standing puts windows and blind cords within reach. A screen keeps bugs out, not babies in.',
       steps: ['Fit window stops, small locks that keep windows from opening more than 4 inches. Screens don’t stop falls.', 'Keep at least one window in each room that an adult can open fully in a fire.', 'Swap corded blinds and shades for cordless ones. Tying up the pull cord isn’t enough: inner cords and loops can still be reached, from the floor or from furniture.', 'Move furniture {s} could climb away from windows.'],
       links: [['Window safety · CPSC', cpsc]] },
-    kitchen: { hi: 'stand', t: 'Fit stove knob covers and an oven lock', s: 'Before {s} can reach the front of the stove', i: 'stove', c: 'high',
+    kitchen: { hi: 'stand', t: 'Lock the stove and oven', s: 'Knob covers and an oven lock', i: 'stove', c: 'high',
       tiles: [['stove', 'Knob covers', 'So the burners can’t be turned on'], ['lock', 'An oven lock', 'So the door stays shut'], ['pot', 'Back burners', 'With pot handles turned in']],
       why: 'Standing brings stove knobs and the oven door within reach, and to {o} a knob is just a toy that turns.',
       steps: ['Fit knob covers so {s} can’t turn the burners on.', 'Add an oven lock so the door stays shut.', 'Cook on the back burners when you can, with pot handles turned in.'],
       links: [['Childproofing your home · CPSC', cpsc]] },
     pool: { hi: 'stand', t: 'Keep water out of reach', s: 'A toilet lock, a shut bathroom, and a fenced pool', i: 'bath', c: 'home',
-      tiles: [['bath', 'Bathroom shut', 'A toilet-lid lock, and the door closed'], ['drop', 'Empty it', 'Buckets, tubs and wading pools, right after use'], ['shield', 'Fence the pool', 'All sides, with a self-closing, self-latching gate']],
+      tiles: [['bath', 'Bathroom shut', 'A toilet-lid lock, and the door closed'], ['drop', 'Empty it', 'Buckets, tubs and wading pools, right after use'], ['shield', 'Fence the pool', 'At least 4 feet high, on all four sides, with a self-latching gate']],
       why: 'Babies can drown in an inch or two of water, quickly and quietly.',
       steps: ['Fit a toilet-lid lock, and keep the bathroom door closed.', 'Empty buckets, tubs and wading pools right after use.', 'If you have a pool or spa, fence it on all sides with a self-closing, self-latching gate. Keep doors to it locked, and close the gate every time.'],
       tip: ['Barriers don’t replace watching', 'Stay within arm’s reach whenever {s’s} near water.'],
@@ -202,31 +202,36 @@
   const PH = n => `assets/safety/steps/${n}.jpg`;
   const FIX = {
     cribspot: {
+      ba: [[PH('cribspot-before'), 'A crib under a window with a corded blind, its cord hanging beside the crib', ['Blind cord', 43, 60, 'r']], [PH('cribspot-after'), 'The same crib with a cordless shade on the window', ['Cordless shade', 32, 9, 'b']]],
       spotTiles: [['window', 'A window', 'Under or right beside the crib'], ['cord', 'Corded blinds', 'Loops can reach into the crib'], ['plug', 'Monitor cords', 'Often plugged in right beside it']],
       fixPhoto: [PH('cribspot-fix'), 'A crib against an inside wall, away from a window with a cordless shade', [['Cordless shade', 20, 12, 'r']]],
-      fix: [['crib', 'Crib away from windows', 'Not under or right beside one'], ['sun', 'Cordless blinds and shades', 'Tying up the cord isn’t enough'], ['home', 'Monitor cords 3 feet away', 'From the crib or bassinet']],
+      fix: [['window', 'Cordless blinds and shades', 'Tying up the cord isn’t enough'], ['plug', 'Monitor cords 3 feet away', 'From the crib or bassinet'], ['crib', 'Crib away from windows', 'Not under or right beside one']],
       checks: ['Stand beside the crib and stretch out an arm. You shouldn’t reach any cord.'] },
     changing: {
+      ba: [[PH('changing-before'), 'A changing table with nothing within reach', null], [PH('changing-after'), 'The same changing table with wipes beside the pad', ['Wipes', 11, 40, 'r']]],
       spotTiles: [['eye', 'Supplies out of reach', 'So you turn away for a second'], ['roll', 'A raised table', 'Babies roll sooner than you expect'], ['sofa', 'Beds and sofas', 'No edge to stop a roll']],
       fixPhoto: [PH('changing-fix'), 'A changing table with wipes and a changing pad within arm’s reach', [['Wipes within reach', 10, 64, 'r']]],
-      fix: [['diaper', 'Supplies within reach', 'Diapers, wipes and a change of clothes'], ['shield', 'Strap on, one hand on {o}', 'On a raised table, every time'], ['mat', 'Or use the floor', 'A mat on the floor, never a bed or sofa']],
+      fix: [['diaper', 'Supplies within reach', 'Diapers, wipes and a change of clothes'], ['hand', 'One hand on {o}, always', 'Even with the strap on'], ['mat', 'Or use the floor', 'A mat on the floor, never a bed or sofa']],
       checks: ['Put one hand on the pad. You should reach diapers, wipes and clothes with the other.'] },
     gear: {
+      ba: [[PH('gear-before'), 'A baby bouncer sitting on a kitchen counter', null], [PH('gear-after'), 'The same bouncer on a rug on the floor', null]],
       spotTiles: [['sofa', 'Up on a surface', 'A table, counter, bed or sofa'], ['moon', 'Asleep in it', '{P} head can slump and block breathing'], ['shield', 'Straps left off', 'Babies wriggle and tip out']],
-      fix: [['notepad', 'Check the limits', 'Weight and age, on the label'], ['hand', 'Straps on', 'Every time, even for a minute'], ['home', 'On the floor', 'Never up on a surface'], ['crib', 'Not for sleep', 'Asleep? Move {o} to {p} crib, on {p} back']],
-      notes: [['', 'When to stop', 'Once {s} can sit up on {p} own or {try|tries} to climb out, even under the weight limit']],
-      checks: ['Read each label. {P} weight is under the limit.', 'Buckle the straps and tug. They should hold.'] },
+      fix: [['notepad', 'Check the limits', 'Weight and age, on the label'], ['hand', 'Straps on', 'Every time, even for a minute'], ['mat', 'On the floor', 'Never on a table, counter or bed'], ['crib', 'Not for sleep', 'Asleep? Move {o} to {p} crib']],
+      notes: [['', 'Trying to climb out?', 'Time to stop, even under the weight limit']],
+      checks: ['Buckle the straps and tug. They should stay shut.'] },
     small: {
+      ba: [[PH('small-before'), 'Coins and a TV remote on the floor next to a play mat', ['Coins', 23, 64, 'r']], [PH('small-after'), 'The same floor, cleared', null]],
       spotPhoto: [PH('small-risk'), 'Coins and a TV remote on the floor next to a baby’s play mat', [['Coins', 46, 76, 'l'], ['Remote batteries', 82, 62, 't']]],
       spotLine: 'If it fits through an empty toilet-paper tube, it’s small enough to choke on.',
-      fix: [['mat', 'A firm play mat', 'On the floor, away from edges and cords'], ['coin', 'Small things up high', 'Coins, magnets and older kids’ toys'], ['battery', 'Battery covers screwed shut', 'On remotes, key fobs and musical toys']],
-      notes: [['', 'Swallowed a button battery or magnet?', 'Go to the ER right away']],
-      checks: ['Lie on the floor where {s} {play|plays} and look around. Anything in reach and smaller than the tube goes up high.', 'Try a remote’s battery cover. It shouldn’t open without a screwdriver.'] },
+      fix: [['coin', 'The tube test', 'If it fits through a toilet-paper tube, it goes up high'], ['mat', 'A firm play mat', 'On the floor, away from edges and cords'], ['battery', 'Battery covers screwed shut', 'On remotes, key fobs and musical toys']],
+      notes: [['', 'Swallowed a button battery or magnet?', 'Call 911 or go to the ER right away']],
+      checks: ['Lie on the floor where {s} {play|plays}. Nothing in reach should fit through the tube.', 'Try a remote’s battery cover. It shouldn’t open without a screwdriver.'] },
     bags: {
+      ba: [[PH('bags-before'), 'An open handbag on the floor next to a play mat', null], [PH('bags-after'), 'The same floor with no bag on it', null]],
       spotPhoto: [PH('bags-risk'), 'An open handbag on the floor next to a baby’s play mat', [['Bag on the floor', 64, 40, 'l']]],
       fix: [['bag', 'A spot up high', 'A hook or closet shelf for bags and coats'], ['chat', 'Ask visitors to use it', 'As soon as they arrive']],
-      notes: [['', 'Child-resistant isn’t childproof', 'Caps slow children down but don’t stop them']],
-      checks: ['Look by the door and the sofa. Every bag, yours too, should be up high.'] },
+      notes: [['', 'Medicine caps aren’t childproof', 'They slow kids down but don’t stop them']],
+      checks: [] },
     gates: {
       ba: [[PH('gates-before'), 'A baby crawling toward an open staircase', null], [PH('gates-after'), 'The same stairs with a baby gate screwed into the wall', ['Screwed to the wall', 92, 5, 'bl']]],
       baFix: [['gate', 'Screwed in at the top', 'A pressure gate can give way there'], ['home', 'Either kind at the bottom', 'Pressure-fit or screwed in']],
@@ -236,39 +241,55 @@
       notes: [['', 'Skip seated walkers', 'They roll babies toward the stairs, and don’t help with walking']],
       checks: ['Push and pull the top gate hard. It shouldn’t shift.', 'Open it. It should swing away from the stairs, never out over them.'] },
     storage: {
+      ba: [[PH('storage-before'), 'A low wooden cabinet with plain doors', null], [PH('storage-after'), 'The same cabinet with a child latch across the doors', ['Child latch', 29, 31, 'b']]],
       spotPhoto: [PH('storage-risk'), 'A low wooden cabinet at a crawling baby’s height', [['Doors that open easily', 32, 46, 'r']]],
       spotLine: 'Medicines, cleaners, detergent pods, knives and plastic bags are the ones to lock up.',
-      fix: [['lock', 'Latch it', 'Child latches on doors and drawers'], ['shield', 'Up high too', 'Medicines and cleaners, as well as latched'], ['home', 'Close off rooms', 'Bathroom, laundry and garage, with knob covers or a gate']],
-      checks: ['Tug each latched door. It should only open a crack.', 'Close it again and pull. The latch should catch every time.'] },
+      fix: [['lock', 'Latch low doors and drawers', 'Medicines, cleaners, pods, knives and bags'], ['shield', 'Medicines and cleaners up high', 'Not just latched'], ['home', 'Close off rooms', 'Bathroom, laundry and garage, with knob covers or a gate']],
+      checks: ['Tug each latched door and drawer a few times. It should catch after a crack, every time.'] },
     outlets: {
-      ba: [[PH('outlets-before'), 'A low wall outlet with a charger cord hanging to the floor, seen from a baby’s height', null], [PH('outlets-after'), 'The same outlet with safety covers and the cord gone', ['Covers in', 43, 22, 'b']]],
+      ba: [[PH('outlets-before'), 'A low wall outlet with a charger cord hanging to the floor, seen from a baby’s height', null], [PH('outlets-after'), 'The same outlet with safety covers and the cord gone', ['Outlet cover', 43, 32, 'b']]],
       spotPhoto: [PH('outlets-risk'), 'A wall outlet with a cord, at a crawling baby’s eye level', [['Outlet', 33, 31, 'r'], ['Cord to pull on', 21, 72, 'r']]],
-      fix: [['plug', 'Outlet covers', 'Too big to swallow, and hard to pull out'], ['cord', 'Cords out of reach', 'Lamps and chargers behind furniture'], ['shield', 'Replacing outlets?', 'Tamper-resistant ones have shutters']],
-      checks: ['Pull on a cover with your fingertips. It should stay put.', 'Crawl past lamps and chargers. No cord should hang within reach.'] },
+      fix: [['plug', 'Sliding outlet covers', 'They close by themselves when unplugged'], ['shield', 'Best: tamper-resistant outlets', 'Built-in shutters, nothing to pull out'], ['cord', 'Cords out of reach', 'Lamps and chargers behind furniture']],
+      checks: ['Try to open a cover with your fingertips. It should stay shut.', 'Crawl past lamps and chargers. No cord should hang within reach.'] },
     anchor: {
-      ba: [[PH('anchor-before'), 'A baby pulling up on a tall dresser that isn’t fixed to the wall', null], [PH('anchor-after'), 'The same dresser with an anti-tip strap to the wall', ['Wall strap', 84, 11, 'bl']]],
+      ba: [[PH('anchor-before'), 'A baby pulling up on a tall dresser that isn’t fixed to the wall', null], [PH('anchor-after'), 'The same dresser with an anti-tip strap to the wall', ['Anti-tip strap', 84, 14, 'bl']]],
       spotPhoto: [PH('anchor-risk'), 'A baby pulling up on a tall dresser, with a TV on a low stand behind her', [['TV can tip', 17, 40, 'b'], ['Dresser can tip', 90, 74, 'bl']]],
       spotLine: 'Bookcases, and anything tall {s} could pull on, count too.',
       fixPhoto: [PH('anchor-fix'), 'A dresser held to the wall by an anti-tip strap, shown close up', [['Anti-tip strap', 60, 66, 'b']], 'tall'],
       fix: [['dresser', 'Anti-tip straps', 'On dressers, bookcases and tall furniture'], ['blocks', 'The TV too', 'On the wall, or strapped to its stand']],
       checks: ['Pull gently on the top of the dresser. It shouldn’t lean.', 'Rock the TV. It shouldn’t move.'] },
     windows: {
+      ba: [[PH('windows-before'), 'A window with a hanging blind cord', ['Blind cord', 73, 70, 'l']], [PH('windows-after'), 'The same window with no cord', null]],
       spotPhoto: [PH('windows-risk'), 'A window with a hanging blind cord, near a low TV stand', [['Opens all the way', 14, 38, 'r'], ['Blind cord', 40, 80, 'r']]],
       spotLine: 'A screen keeps bugs out, not babies in.',
-      fix: [['window', 'Window stops', 'Open 4 inches at most'], ['home', 'One way out', 'One window per room an adult can open fully, for a fire'], ['cord', 'Cordless blinds', 'Tied-up cords can still be reached'], ['dresser', 'Furniture away', 'Nothing to climb near a window']],
+      fix: [['window', 'Window stops', 'So windows open 4 inches at most'], ['home', 'One window you can open fully', 'In each room, for a way out in a fire'], ['cord', 'Cordless blinds', 'No cords or loops to reach'], ['dresser', 'Furniture away', 'Nothing to climb near a window']],
       checks: ['Open each window with a stop. It should stop at 4 inches.', 'Kneel by each blind. No cord or loop should be within reach.'] },
     kitchen: {
+      ba: [[PH('kitchen-before'), 'A stove with bare knobs and a pot handle sticking out', null], [PH('kitchen-after'), 'The same stove with knob covers, an oven lock and the pot handle turned in', ['Oven lock', 18, 57, 'r']]],
       spotTiles: [['stove', 'Stove knobs', 'Right at standing height'], ['thermo', 'The oven door', 'Hot glass, and a handle to pull'], ['hand', 'Pot handles', 'Sticking out over the edge']],
-      fix: [['shield', 'Knob covers', 'So the burners can’t be turned on'], ['lock', 'An oven lock', 'So the door stays shut'], ['pot', 'Back burners', 'With pot handles turned in']],
-      checks: ['Try to turn a covered knob. It shouldn’t move.', 'Pull the oven door. The lock should hold it shut.'] },
+      fix: [['stove', 'Knob covers', 'So the burners can’t be turned on'], ['lock', 'An oven lock', 'So the door stays shut'], ['tipped', 'An anti-tip bracket', 'So the stove can’t tip if {s} {climb|climbs} the door'], ['pot', 'Back burners', 'With pot handles turned in']],
+      checks: ['Try a covered knob. It shouldn’t turn.', 'Pull the oven door. The lock should hold it shut.'] },
     pool: {
+      ba: [[PH('pool-before'), 'A bathroom with the toilet lid up and a bucket of water on the floor', null], [PH('pool-after'), 'The same bathroom with the toilet lid locked and no bucket', ['Lid lock', 40, 66, 'r']]],
       spotTiles: [['bath', 'The toilet', 'A lid up and a door left open'], ['drop', 'Buckets and tubs', 'An inch or two of water is enough'], ['sun', 'A pool or spa', 'A gap in the fence, or an open gate']],
-      fix: [['lock', 'A toilet-lid lock', 'And keep the bathroom door closed'], ['cup', 'Empty it', 'Buckets, tubs and wading pools, right after use'], ['shield', 'Fence the pool', 'All sides, with a self-closing, self-latching gate']],
+      fix: [['lock', 'A toilet-lid lock', 'And keep the bathroom door closed'], ['cup', 'Empty standing water', 'Buckets, tubs and wading pools, right after use'], ['shield', 'Fence the pool', 'At least 4 feet high, on all four sides, with a self-latching gate']],
       notes: [['', 'Barriers don’t replace watching', 'Stay within arm’s reach whenever {s’s} near water']],
       checks: ['Pull the toilet lid. The lock should hold.', 'Have a pool? Let the gate go. It should close and latch by itself.'] }
   };
   // Leads say why now, in one line (the photo's caption carries any extra line).
-  const LEAD2 = { windows: 'Standing puts windows and blind cords within reach.' };
+  const LEAD2 = {
+    cribspot: 'A cord in reach can wrap around a baby’s neck, even in the first weeks.',
+    changing: 'Falls from changing tables are among the most common early injuries.',
+    gear: 'Keep them on the floor, and stop once {s} can sit up on {p} own.',
+    small: 'Rolling brings the floor in reach, and everything goes in {p} mouth.',
+    bags: 'Bags often hold medicines, gum or batteries, and end up on the floor.',
+    gates: 'Once {s} {crawl|crawls}, stairs are the biggest fall risk at home.',
+    storage: 'Crawling babies open every low door and drawer they can reach.',
+    outlets: 'Outlets and cords sit right at crawling height.',
+    anchor: 'Dressers, bookcases and TVs can tip when {s} {pull|pulls} on them.',
+    windows: 'Screens keep bugs out, not babies in.',
+    kitchen: 'To {o}, a stove knob is just a toy that turns.',
+    pool: 'Babies can drown in an inch or two of water, quickly and quietly.' };
   const pins = list => (list || []).map(([label, x, y, side]) => `<span class="sf-pin sf-pin-${side}" style="left:${x}%;top:${y}%"><i></i><span>${F(label)}</span></span>`).join('');
   const photo = (p, cls = '') => p ? `<figure class="sf-photo sf-step-photo${p[3] === 'tall' ? ' is-tall' : ''}${cls}"><img src="${p[0]}" alt="${F(p[1])}" loading="lazy">${pins(p[2])}</figure>` : '';
   const pair = pr => `<div class="sf-pair">${pr.map(([src, alt, label], k) => `<figure><img src="${src}" alt="${F(alt)}" loading="lazy"><figcaption class="${k ? 'is-no' : 'is-ok'}"><i aria-hidden="true">${k ? '✕' : '✓'}</i>${F(label)}</figcaption></figure>`).join('')}</div>`;
@@ -278,7 +299,7 @@
     const x = STEP[id], q = FIX[id], h = H(), B = h.TPLB; if (!x || x.go) return safetyMovementGuide();
     if (!q) return stepPageOld(id);
     const st = stageOf(id), s = status(id), c = C[x.c];
-    const head = `<div class="dev-area-head ss-head" style="--area:${c[0]};--area-ink:${c[1]}"><span class="dev-area-head-art sf-head-art">${hubArt(x.hi || x.i, 'Safety')}</span><p class="hub-context">${F(st ? st.label : 'Safety')}</p><h1>${F(x.t)}</h1><p class="hub-lead">${F(LEAD2[id] || x.why)}</p></div>`;
+    const head = `<div class="dev-area-head ss-head" style="--area:${c[0]};--area-ink:${c[1]}"><span class="dev-area-head-art sf-head-art">${hubArt(x.i, 'Safety')}</span><p class="hub-context">${F(st ? st.label : 'Safety')}</p><h1>${F(x.t)}</h1><p class="hub-lead">${F(LEAD2[id] || x.why)}</p></div>`;
     if (q.ba && !window.__sfNoBA) {
       // Nov 18, round 2: Spot the risk and See the fix as one same-scene before and after, then the fix rows.
       const shot = ([src, alt, pin], k) => `<figure><figcaption class="${k ? 'is-after' : 'is-before'}">${k ? F('After') : F('Before')}</figcaption><div class="sf-ba-img"><img src="${src}" alt="${F(alt)}" loading="lazy">${pin ? pins([pin]) : ''}</div></figure>`;
@@ -287,7 +308,7 @@
       const acts = s === 'done' ? `<p class="hub-done">${F('Done')} ✓</p><button class="hub-link" onclick="sfSet('${id}','')">${F('Undo')}</button>`
         : `<button class="hub-button" onclick="sfSet('${id}','done');back()">${F('Mark as done')}</button><button class="hub-link sf-na" onclick="sfSet('${id}','${s === 'na' ? '' : 'na'}');back()">${F(s === 'na' ? 'It applies after all' : 'Doesn’t apply to our home')}</button>`;
       return `<div class="quiet-category hub-page hub-detail sf-step" data-overview="Safety" data-ss="1" data-sf-step="${id}" style="${yearTheme('Safety')};--ss-bg:${c[0]};--ss-ink:${c[1]}">${detailPageTop('Safety')}${head}`
-        + `<div class="care-tpl is-getready">` + B.sec('Before and after', ba) + B.sec('Check your home', tests2) + `</div><div class="hub-actions sf-actions">${acts}</div></div>`;
+        + `<div class="care-tpl is-getready">` + B.sec('Before and after', ba) + (q.checks.length ? B.sec('Check your home', tests2) : '') + `</div><div class="hub-actions sf-actions">${acts}</div></div>`;
     }
     // 1. Spot the risk
     const spot = q.spotPhoto ? `<section class="care-tpl-card sf-card">${photo(q.spotPhoto)}${q.spotLine ? `<p class="sf-cap">${F(q.spotLine)}</p>` : ''}</section>` : B.tiles(q.spotTiles, 'Safety');
