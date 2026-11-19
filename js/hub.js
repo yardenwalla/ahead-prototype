@@ -104,6 +104,12 @@
 
     /* ---------- Photo blocks (Nov 19, show don't tell). Images are assets/<path>.jpg; every label is drawn by the app, never baked in. ---------- */
     pimg: (src, alt) => `<img src="assets/${src}.jpg" alt="${F(alt).replace(/"/g, '&quot;')}" loading="lazy">`,
+    // Photo tiles to tick, two across, headed like the allergen tracker ("Tap each one… · 0 of 9"): [src, label].
+    photoTicks: (items, o) => { items = tval(items); const n = items.filter((_, i) => o.isOn(i)).length;
+      return `<section class="care-tpl-card ph-ticks"><div class="ph-ticks-top"><span>${F(o.title)}</span><b>${n} ${F('of')} ${items.length}</b></div><div class="ph-ticks-grid">`
+        + items.map(([src, t], i) => { const on = o.isOn(i); return `<button class="ph-tick-tile${on ? ' is-on' : ''}" role="checkbox" aria-checked="${on}" onclick="${o.onclick(i)}"><span class="ph-tile">${TPLB.pimg(src, t)}<i class="ph-tick" aria-hidden="true"></i></span><b>${F(t)}</b></button>`; }).join('') + `</div></section>`; },
+    // Normal vs act-now, the house versus card with a photo on top of each side: [src, title, text].
+    photoVersus: (a, b, notes) => `<section class="care-tpl-card tpl-versus ph-versus"><div>${[[a, 'is-ok'], [b, 'is-act']].map(([[src, t, x], c]) => `<div class="${c}"><span class="ph-tile">${TPLB.pimg(src, t)}</span><b>${F(t)}</b><p>${F(x)}</p></div>`).join('')}</div>${TPLB.ul(notes)}</section>`,
     // Photo rows: thumbnail, title, one line. With o.isOn/o.onclick each row is a checkbox; o.title and o.count head the card.
     photoRows: (items, o = {}) => { items = tval(items).filter(Boolean); const tick = !!o.onclick, n = tick ? items.filter((_, i) => o.isOn(i)).length : 0;
       return `<section class="ph-rows${tick ? ' ph-signs' : ''}">${o.title ? `<div class="ph-signs-top"><b>${F(o.title)}</b>${tick ? `<span class="ph-count">${n} ${F('of')} ${items.length}</span>` : ''}</div>` : ''}`
@@ -168,10 +174,10 @@
   const aidDone = () => !!(L().safe && L().safe.Feeding && L().safe.Feeding[1]);
 
   const READY = [
-    ['{S} {hold|holds} {p} head up on {p} own', 'Steady, without you supporting it', 'head'],
-    ['{S} {sit|sits} up with a little support', 'In a high chair or propped on your lap', 'sit'],
-    ['{S} {lean|leans} in when food comes {p} way', 'And {open|opens} {p} mouth for the spoon', 'mouth'],
-    ['{S} {swallow|swallows} instead of pushing food out', 'That tongue push fades as {s} {get|gets} ready', 'swallow']
+    ['{S} {hold|holds} {p} head up on {p} own', 'Steady, without you supporting it', 'head', 'Steady head'],
+    ['{S} {sit|sits} up with a little support', 'In a high chair or propped on your lap', 'sit', 'Sits with support'],
+    ['{S} {lean|leans} in when food comes {p} way', 'And {open|opens} {p} mouth for the spoon', 'mouth', 'Leans in for food'],
+    ['{S} {swallow|swallows} instead of pushing food out', 'That tongue push fades as {s} {get|gets} ready', 'swallow', 'Swallows, no tongue push']
   ];
   const ALLERGENS = [['Peanut', 'thinned peanut butter'], ['Egg', 'well-cooked egg'], ['Dairy', 'a spoonful of yogurt'], ['Wheat', 'soft pasta'], ['Soy', 'soft tofu'], ['Sesame', 'a little tahini'], ['Tree nuts', 'thinned almond butter'], ['Fish', 'flaked salmon'], ['Shellfish', 'chopped shrimp']];
 

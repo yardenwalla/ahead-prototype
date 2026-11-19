@@ -168,13 +168,13 @@
     // Nov 19: the four signs sit in the top card as photo rows to tick (the same ticks as the Feeding stage page), and the advice under them follows the ticks.
     z_ready: () => { const h = H(), n = h.signsSeen(), m = mo();
       return { type: 'expect', label: 'Is {s} ready?', art: 'highchair', title: 'Most babies start solids around 6 months',
-        why: 'Tap each sign once you’ve seen it. Most babies show all four around 6 months.',
-        hero: () => h.TPLB.photoRows(h.READY.map((r, i) => [['feeding/sign-head', 'feeding/sign-sits', 'feeding/sign-interest', 'feeding/sign-spoon'][i], r[0], r[1]]), { title: 'Signs {s’s} ready', isOn: h.signsOn, onclick: i => `hubToggleReady(${i})` }),
+        why: 'Most babies show all four signs around then. Milk is all {s} {need|needs} until {s} {do|does}.',
+        normalTitle: 'Signs {s’s} ready', normal: () => h.TPLB.photoTicks(h.READY.map((r, i) => [['feeding/sign-head', 'feeding/sign-sits', 'feeding/sign-interest', 'feeding/sign-spoon'][i], r[3]]), { title: 'Tap each one once you’ve seen it', isOn: h.signsOn, onclick: i => `hubToggleReady(${i})` }),
         doTitle: n === 4 ? 'Next step' : 'What to do',
         do: n === 4 && m < 6 ? 'All four signs. Most babies start around 6 months, so ask {p} pediatrician before starting sooner.'
           : n === 4 ? 'All four signs, so {s’s} ready for a first taste. Pick a calm morning when {s’s} not too hungry.'
-          : m < 6 ? 'Keep watching. Milk is all {s} {need|needs} for now. Ask about solids at {p} 6-month checkup.'
-          : 'Not all four yet? That’s common. Milk is still all {s} {need|needs}. Mention it at {p} next checkup.',
+          : m < 6 ? 'Keep watching, and ask about solids at {p} 6-month checkup.'
+          : 'Not all four yet? That’s common. Mention it at {p} next checkup.',
         doNotes: [['', 'Good to know', 'Starting early won’t help {o} sleep any longer']],
         action: n === 4 && m >= 6 && answers.solids !== 'Yes' ? () => `<div class="hub-actions"><button class="hub-button" onclick="setFeedingStage('starting');hubToast('Got it','Feeding now shows first tastes.');openPage('topic:Feeding')">${H().F('We’re starting today')}</button></div>` : null }; },
     z_start: () => ({ type: 'howto', label: 'How to start', art: 'bowl', title: 'Start with soft foods rich in iron',
@@ -195,11 +195,11 @@
     z_textures: () => { const m = mo(), now = m < 7 ? 0 : m < 9 ? 1 : 2, T = H().TPLB;
       return { type: 'expect', label: 'Beyond purées', art: 'avocado', title: 'Move from smooth food to soft pieces',
         why: 'The same foods get thicker as {s} {grow|grows}.',
-        hero: () => T.photoTable([['Smooth', 'Around 6 months'], ['Lumpy', '7–8 months'], ['Soft pieces', '9 months on']],
+        heroTitle: 'The same foods, by age', hero: () => T.photoTable([['Smooth', 'Around 6 months'], ['Lumpy', '7–8 months'], ['Soft pieces', '9 months on']],
           [['Avocado', ['feeding/tx-avo-1', 'feeding/tx-avo-2', 'feeding/tx-avo-3']], ['Sweet potato', ['feeding/tx-sp-1', 'feeding/tx-sp-2', 'feeding/tx-sp-3']], ['Banana', ['feeding/tx-ban-1', 'feeding/tx-ban-2', 'feeding/tx-ban-3']]], now),
-        normalTitle: 'Ready for the next texture when', normal: () => T.plain([['{S} {swallow|swallows} it easily', 'Some gagging is normal with anything new'], ['{S} {open|opens} up for more', 'And seems to enjoy it'], ['It’s been a week or two', 'Then try the next one']]),
+        normalTitle: 'Ready for the next texture when', normal: () => T.tiles([['mouth', '{S} {swallow|swallows} it easily', 'A little gagging is normal'], ['eye', '{S} {open|opens} up for more', 'And seems to enjoy it'], ['clock', 'A week or two in', 'Then try the next one']], 'Feeding'),
         normalNotes: [['', 'Why not wait', 'Babies still on smooth purées past about 9 months can find lumps harder later']],
-        doTitle: 'What helps', doFig: () => T.plain([['Mash with a fork', 'Instead of blending'], ['One new texture at a time', 'Like lumpy banana, or mashed beans'], ['Pieces that squish', 'Between your finger and thumb']]) }; },
+        doTitle: 'What helps', doFig: () => T.tiles([['bowl', 'Mash with a fork', 'Instead of blending'], ['plate', 'One change at a time', 'A new texture, then wait'], ['hand', 'Pieces that squish', 'Between finger and thumb']], 'Feeding') }; },
     z_rotate: () => ({ type: 'expect', label: 'Keeping foods in rotation', art: 'peanut', title: 'Keep allergens in {p} meals once tried',
       why: 'A few times a week, for each one {s’s} had. Regular tastes help keep them safe for {o}.',
       do: [['peanut', 'Peanut', 'Peanut powder or thinned peanut butter, in oatmeal or yogurt'], ['egg', 'Egg', 'A couple of times a week: scrambled, or in pancakes']],
@@ -208,11 +208,11 @@
     z_shapes: () => { const T = H().TPLB, nine = mo() >= 9;
       return { type: 'howto', label: 'Safe finger foods', art: 'hand', title: 'Finger foods should squish when pressed',
         why: 'Press it between your finger and thumb. If it squashes, {p} gums can manage it.',
-        hero: () => T.photoPair([['feeding/ff-hard', false, 'Too hard', 'Raw carrot'], ['feeding/ff-spear', true, 'Soft enough', 'Steamed carrot']]),
+        heroTitle: 'The squish test', hero: () => T.photoPair([['feeding/ff-hard', false, 'Too hard', 'Raw carrot'], ['feeding/ff-spear', true, 'Soft enough', 'Steamed carrot']]),
         pictureTitle: 'The right size for {p} age', picture: () => T.photoAges([['feeding/opt-avocado', '6–8 months', 'Strips', 'Finger-size, to hold in {p} fist', !nine], ['feeding/ff-pieces', 'From 9 months', 'Small pieces', 'Soft and pea-size, to pinch', nine]])
           + T.sec('Good first foods', T.photoGrid([['feeding/opt-avocado', 'Avocado', 'Ripe strips'], ['feeding/opt-banana', 'Banana', 'Strips, not rounds'], ['feeding/opt-egg', 'Egg', 'Omelet strips'], ['feeding/nutbutter', 'Toast', 'Strips, nut butter spread thin'], ['feeding/opt-broccoli', 'Broccoli', 'Well cooked, stem to hold'], ['feeding/opt-pasta', 'Pasta', 'Soft, well cooked']])),
         stepsTitle: 'Make these safe', stepsFig: () => T.photoRows([['feeding/grape-q', 'Quarter grapes lengthwise', 'And cherry tomatoes'], ['feeding/ff-spear', 'Cook hard foods soft', 'Carrots, apple, broccoli'], ['feeding/peach', 'Take out the hard bits', 'Skins, pits, and fish bones']]),
-        tipsTitle: 'While {s} {eat|eats}', tips: [['highchair', 'Seated upright, with you', 'Every bite, never on the move'], ['mouth', 'Gagging is normal', 'Loud and red-faced. Choking is silent']] }; },
+        tips: [['highchair', 'Seated upright, with you', 'Every bite, never on the move'], ['mouth', 'Gagging is normal', 'It’s loud. Choking is silent']] }; },
     z_allergens: () => ({ type: 'howto', label: 'Common allergens', art: 'peanut', title: 'Try the common allergens early',
       why: 'Trying them early, around 6 months, lowers the chance of an allergy. With severe eczema or an egg allergy, ask your pediatrician first.',
       pictureAfter: true, pictureTitle: 'Keep track', picture: () => X().pron(window.__alCard()),
@@ -263,9 +263,8 @@
     z_gag: () => { const T = H().TPLB;
       return { type: 'urgent', label: 'Gagging or choking', art: 'mouth', title: 'Gagging is normal. Choking is silent.',
         why: 'Gagging is how {s} {learn|learns} to eat. It’s loud, and it’s safe.',
-        hero: () => T.photoVs([['feeding/gag', 'ok', 'Gagging', ['Loud coughing', 'Red face, tongue out', 'Clears it on {p} own']], ['feeding/choke', 'stop', 'Choking', ['Silent, or a squeak', 'Can’t cough, cry or breathe', 'Lips turning blue']]]),
-        tellTitle: 'What to do', figure: () => T.doPair(['If {s’s} gagging', 'Stay close and calm. Let {o} cough it out.'], ['If {s’s} choking', 'Act fast. Start the steps below.']),
-        doTitle: 'If {s’s} choking', doFig: () => T.numbered([['Shout for help', 'Someone calls 911 while you start. Alone? Call on speaker.'], ['5 back blows', 'Face down along your forearm, head lower than {p} chest. Firm blows between the shoulder blades with the heel of your hand.'], ['5 chest thrusts', 'Turn {o} face up. Press the heel of one hand on the middle of {p} chest.'], ['Repeat', 'Until it comes out, or help arrives.']], 'stop'),
+        figure: () => T.photoVersus(['feeding/gag', 'Normal gagging', 'Coughing, red face, tongue out. Stay close and let {o} work it out.'], ['feeding/choke', 'Choking: act now', 'Silent. Can’t cough, cry or breathe. Start the steps below.']),
+        doTitle: 'If {s’s} choking', doFig: () => T.numbered([['Shout for help', 'Someone calls 911 while you start'], ['5 back blows', 'Face down on your forearm, between the shoulder blades'], ['5 chest thrusts', 'Face up, heel of one hand mid-chest'], ['Repeat', 'Until it’s out, or help arrives']], 'stop'),
         doNotes: [['', 'Never sweep {p} mouth with a finger', 'It can push food further in']],
         video: ['ShaNuST_58A', 'Choking first aid for babies under 1', 'American Red Cross'],
         calls: { now: '{s} {stop|stops} responding. Start CPR while you wait.', nowLabel: 'Call 911' } }; },
@@ -293,7 +292,7 @@
     return `<div class="quiet-category hub-page hub-detail care-v2" data-overview="${CAT}" data-ss="1" style="${typeof yearTheme === 'function' ? yearTheme(CAT) : ''};--ss-bg:${bg};--ss-ink:${ink}">${typeof detailPageTop === 'function' ? detailPageTop(CAT) : ''}`
       + `<div class="dev-area-head ss-head" style="--area:${bg};--area-ink:${ink}">${art}<p class="hub-context">${F(v(q.label))}</p><h1>${F(v(q.title))}</h1>${why ? `<p class="hub-lead">${F(why)}</p>` : ''}</div>`
       // Nov 19: a page's main visual comes first, right under the standard top card (never inside it), so every top card looks the same.
-      + (q.hero ? `<div class="ph-first">${v(q.hero)}</div>` : '')
+      + (q.hero ? `<div class="ph-first">${q.heroTitle ? `<h2 class="hub-h2">${F(v(q.heroTitle))}</h2>` : ''}${v(q.hero)}</div>` : '')
       + `<div class="care-tpl is-${q.type}">${h.TPLS[q.type](q, CAT)}</div></div>`; };
   const base = window.changesRoute;
   window.changesRoute = function (r, ...a) {
