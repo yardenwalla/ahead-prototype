@@ -60,3 +60,10 @@
 #main [data-development-guide] .dvx-look{margin-top:20px!important}
 #main .dvx-photo.sf-photo{aspect-ratio:16/10}
 #main .dvx-hero.has-photo{padding-bottom:14px}
+/* Make photo tiles read as tappable: a chevron on the name row, and a press state */
+#main .dvx-area.has-photo>small{width:100%;box-sizing:border-box}
+#main .dvx-area-go{margin-left:auto;font-style:normal;font-size:20px;line-height:1;font-weight:500;color:var(--dt-ink);opacity:.75}
+#main .dvx-area.has-photo{transition:transform .12s ease, box-shadow .12s ease;box-shadow:0 1px 2px rgba(43,40,64,.06),0 4px 12px rgba(43,40,64,.06)}
+#main .dvx-area.has-photo:active{transform:scale(.97)}
+/* All milestones as a quiet link under the grid, not another card */
+#main [data-development-guide] .dvx-lookall{background:none!important;border:0!important;padding:12px 4px 4px!important;font-weight:600;color:#5b4e8f;justify-content:flex-start;gap:4px}
