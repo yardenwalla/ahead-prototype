@@ -92,19 +92,49 @@
     // Nov 17: nothing is cut off silently. Over the limit (2 notes, 3 rows) still shows everything, and is marked for QA (tools/qa/browser/template_limits.py).
     ul: notes => { notes = (tval(notes) || []).filter(Boolean); return notes.length ? `<ul class="tpl-notes"${notes.length > 2 ? ' data-over-limit="notes"' : ''}>${notes.map(([, t, sub]) => `<li><b style="color:#302d3c">${F(t)}${/[?!.]$/.test(t) ? '' : '.'}</b> ${F(sub)}${/[?!.]$/.test(sub) ? '' : '.'}</li>`).join('')}</ul>` : ''; },
     noted: (fig, notes) => { const ul = TPLB.ul(notes); if (!fig || !ul) return fig || ''; let i = fig.lastIndexOf('</figure>'); if (i < 0) i = fig.lastIndexOf('</section>'); return i < 0 ? fig + ul : fig.slice(0, i) + ul + fig.slice(i); },
-    tiles: (items, cat, numbered) => (items = tval(items)) && items.length ? hubIconSteps(items, cat, F(items.map(t => t[1] + ': ' + t[2]).join('. ')), !!numbered) : '',
+    // A tile whose art is 'photo:<path>' shows that photo in place of the icon (Nov 19).
+    tiles: (items, cat, numbered) => { items = tval(items); if (!items || !items.length) return '';
+      let h = hubIconSteps(items.map(t => /^photo:/.test(t[0]) ? ['bowl', ...t.slice(1)] : t), cat, F(items.map(t => t[1] + ': ' + t[2]).join('. ')), !!numbered);
+      if (!items.some(t => /^photo:/.test(t[0]))) return h; let i = 0;
+      h = h.replace(/<span class="hub-iconstep-art"[^>]*>[\s\S]*?<\/svg><\/span>/g, m => { const t = items[i++]; return t && /^photo:/.test(t[0]) ? `<span class="ph-tile">${TPLB.pimg(t[0].slice(6), t[1])}</span>` : m; });
+      return h.replace('class="hub-figure hub-iconsteps', 'class="hub-figure hub-iconsteps ph-tiles'); },
     rows: (rows, cat) => { rows = (tval(rows) || []).filter(Boolean); return rows.length ? `<div class="hub-list"${rows.length > 3 ? ' data-over-limit="rows"' : ''}>${rows.map(([icon, t, sub]) => row({ icon, cat, title: t, sub })).join('')}</div>` : ''; },
     calls: c => { c = tval(c); if (!c) return ''; const PH = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h3l2 5-2.5 1.5a11 11 0 0 0 6 6L15 14l5 2v3a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>';
-      return `<h2 class="hub-h2">${F('When to call')}</h2><section class="care-calls is-titled"><span class="care-calls-ico">${PH}</span><div>` + (c.ped ? `<p><b>${F('Call your pediatrician if:')}</b> ${F(tval(c.ped))}</p>` : '') + (c.now ? `<p class="is-urgent"><b>${F((c.nowLabel || 'Call right away') + ' if:')}</b> ${F(tval(c.now))}</p>` : '') + `</div></section>`; }
+      return `<h2 class="hub-h2">${F('When to call')}</h2><section class="care-calls is-titled"><span class="care-calls-ico">${PH}</span><div>` + (c.ped ? `<p><b>${F('Call your pediatrician if:')}</b> ${F(tval(c.ped))}</p>` : '') + (c.now ? `<p class="is-urgent"><b>${F((c.nowLabel || 'Call right away') + ' if:')}</b> ${F(tval(c.now))}</p>` : '') + `</div></section>`; },
+
+    /* ---------- Photo blocks (Nov 19, show don't tell). Images are assets/<path>.jpg; every label is drawn by the app, never baked in. ---------- */
+    pimg: (src, alt) => `<img src="assets/${src}.jpg" alt="${F(alt).replace(/"/g, '&quot;')}" loading="lazy">`,
+    // Photo rows: thumbnail, title, one line. With o.isOn/o.onclick each row is a checkbox; o.title and o.count head the card.
+    photoRows: (items, o = {}) => { items = tval(items).filter(Boolean); const tick = !!o.onclick, n = tick ? items.filter((_, i) => o.isOn(i)).length : 0;
+      return `<section class="ph-rows${tick ? ' ph-signs' : ''}">${o.title ? `<div class="ph-signs-top"><b>${F(o.title)}</b>${tick ? `<span class="ph-count">${n} ${F('of')} ${items.length}</span>` : ''}</div>` : ''}`
+        + items.map(([src, t, sub], i) => { const on = tick && o.isOn(i), inner = `<span class="ph-thumb">${TPLB.pimg(src, t)}</span><span class="ph-sign-txt"><b>${F(t)}</b><span>${F(sub)}</span></span>`;
+          return tick ? `<button class="ph-sign${on ? ' is-on' : ''}" role="checkbox" aria-checked="${on}" onclick="${o.onclick(i)}">${inner}<i class="ph-tick" aria-hidden="true"></i></button>` : `<div class="ph-row">${inner}</div>`; }).join('') + `</section>`; },
+    // A grid of photo tiles, three across: [src, title, line].
+    photoGrid: items => `<section class="ph-grid">${tval(items).map(([src, t, sub]) => `<figure><span class="ph-tile">${TPLB.pimg(src, t)}</span><figcaption><b>${F(t)}</b><span>${F(sub)}</span></figcaption></figure>`).join('')}</section>`,
+    // Two photos, wrong and right: [src, ok, title, line].
+    photoPair: items => `<section class="ph-pair">${tval(items).map(([src, ok, t, sub]) => `<figure><span class="ph-tile">${TPLB.pimg(src, t + ': ' + sub)}</span><figcaption><b class="ph-mark is-${ok ? 'yes' : 'no'}">${F(t)}</b><span>${F(sub)}</span></figcaption></figure>`).join('')}</section>`,
+    // The same thing at each age, with this baby's age marked: [src, age, title, line, isNow].
+    photoAges: items => `<section class="ph-ages">${tval(items).map(([src, age, t, sub, now]) => `<figure class="${now ? 'is-now' : ''}"><span class="ph-tile">${TPLB.pimg(src, t)}${now ? `<em class="ph-now">${F('Maya now')}</em>` : ''}</span><figcaption><small>${F(age)}</small><b>${F(t)}</b><span>${F(sub)}</span></figcaption></figure>`).join('')}</section>`,
+    // Calm vs act-now as two photo cards: [src, 'ok'|'stop', title, [signs]].
+    photoVs: items => `<div class="ph-vs">${tval(items).map(([src, tone, t, xs]) => `<div class="ph-vs-card is-${tone}"><span class="ph-tile">${TPLB.pimg(src, t)}</span><b>${F(t)}</b><ul>${xs.map(x => `<li>${F(x)}</li>`).join('')}</ul></div>`).join('')}</div>`,
+    // Rows of the same foods across ages, this baby's column marked. cols [[title, age]], rows [[name, [src, src, src]]].
+    photoTable: (cols, rows, now) => `<section class="ph-tex"><div class="ph-tex-row ph-tex-head"><span></span>${cols.map(([t, d], i) => `<span class="${i === now ? 'is-now' : ''}">${i === now ? `<em class="ph-now">${F('Maya now')}</em>` : ''}<b>${F(t)}</b>${F(d)}</span>`).join('')}</div>`
+      + rows.map(([n, srcs]) => `<div class="ph-tex-row"><b class="ph-tex-food">${F(n)}</b>${srcs.map((src, i) => `<span class="ph-tile${i === now ? ' is-now' : ''}">${TPLB.pimg(src, n + ', ' + cols[i][0].toLowerCase())}</span>`).join('')}</div>`).join('') + `</section>`,
+    // What to do, side by side in calm and urgent colors: [[title, text], [title, text]].
+    doPair: (a, b) => `<section class="ph-do"><div class="is-ok"><b>${F(a[0])}</b><span>${F(a[1])}</span></div><div class="is-stop"><b>${F(b[0])}</b><span>${F(b[1])}</span></div></section>`,
+    // A plain list in a white card, title and one line each, no icons: facts or signs with no order.
+    plain: items => `<section class="ph-list">${tval(items).filter(Boolean).map(([t, sub]) => `<div><b>${F(t)}</b>${sub ? `<span>${F(sub)}</span>` : ''}</div>`).join('')}</section>`,
+    // Numbered steps, one per line, for a real sequence where each step needs a sentence (first aid).
+    numbered: (items, tone) => `<section class="ph-steps-list${tone ? ' is-' + tone : ''}">${tval(items).map(([t, sub], i) => `<div><em>${i + 1}</em><b>${F(t)}</b>${sub ? `<span>${F(sub)}</span>` : ''}</div>`).join('')}</section>`,
   };
   const TPLS = {
     // When it's urgent: how to tell, what to do, then the call card last, with 911 directly under the pediatrician line.
-    urgent: (q, cat) => TPLB.sec('How to tell', TPLB.noted(q.figure ? q.figure() : TPLB.tiles(q.signs, cat), q.tell))
-      + TPLB.sec(q.doTitle || 'What to do now', !q.do ? '' : Array.isArray(tval(q.do)) ? TPLB.noted(TPLB.tiles(q.do, cat, q.doOrdered), q.doNotes) : TPLB.card(q.do, q.doNotes))
-      + (q.link ? TPLB.link(...q.link) : '') + TPLB.calls(q.calls),
+    urgent: (q, cat) => TPLB.sec(tval(q.tellTitle) || 'How to tell', TPLB.noted(q.figure ? q.figure() : TPLB.tiles(q.signs, cat), q.tell))
+      + TPLB.sec(tval(q.doTitle) || 'What to do now', q.doFig ? TPLB.noted(q.doFig(), q.doNotes) : !q.do ? '' : Array.isArray(tval(q.do)) ? TPLB.noted(TPLB.tiles(q.do, cat, q.doOrdered), q.doNotes) : TPLB.card(q.do, q.doNotes))
+      + (q.video ? `<div class="ph-video">${hubEmbed(...q.video)}</div>` : '') + (q.link ? TPLB.link(...q.link) : '') + TPLB.calls(q.calls),
     expect: (q, cat) => { const n = tval(q.normal); return TPLB.sec(tval(q.normalTitle) || 'What’s normal', TPLB.noted(Array.isArray(n) ? TPLB.tiles(n, cat, q.normalOrdered) : n, q.normalNotes))
       + (q.more ? TPLB.sec(tval(q.moreTitle), tval(q.more)) : '')
-      + TPLB.sec(tval(q.doTitle) || 'What to do', Array.isArray(tval(q.do)) ? TPLB.noted(TPLB.tiles(q.do, cat, q.doOrdered), q.doNotes) : TPLB.card(q.do, q.doNotes))
+      + TPLB.sec(tval(q.doTitle) || 'What to do', q.doFig ? TPLB.noted(q.doFig(), q.doNotes) : Array.isArray(tval(q.do)) ? TPLB.noted(TPLB.tiles(q.do, cat, q.doOrdered), q.doNotes) : TPLB.card(q.do, q.doNotes))
       + (q.action ? q.action() : '') + TPLB.sec('Watch how', q.video ? hubEmbed(...q.video) : '') + TPLB.calls(q.calls); },
     // pictureAfter: a tool (like the allergen tracker) goes after the steps it supports.
     howto: (q, cat) => { const pic = TPLB.sec(tval(q.pictureTitle) || 'At a glance', q.picture ? q.picture() : ''), steps = TPLB.sec(tval(q.stepsTitle) || (q.ordered === false ? 'What to do' : 'Steps'), TPLB.noted(q.stepsFig ? q.stepsFig() : TPLB.tiles(q.steps, cat, q.ordered !== false), q.stepsNotes)) + (q.action ? q.action() : '');
@@ -1376,7 +1406,7 @@
     return baseRoute(p);
   };
   // Building blocks shared with the other categories (js/hub-categories.js).
-  window.__hub = { tplPage, TPLB, TPLS, F, qa, row, list, hero, tiles, glanceCard, versus, next, more, note, art, chev, chip, tip, steps, tips, video, detail, mixedList, ticks, listMore,
+  window.__hub = { READY, signsOn, signsSeen, tplPage, TPLB, TPLS, F, qa, row, list, hero, tiles, glanceCard, versus, next, more, note, art, chev, chip, tip, steps, tips, video, detail, mixedList, ticks, listMore,
     pills: (label, items) => `<nav class="hub-pills" id="hub-pills" aria-label="${esc(label)}">${items.map(it => `<button class="${it.on ? 'is-on' : ''} ${it.now ? 'is-now' : ''}" onclick="${it.onclick}" ${it.on ? 'aria-current="step"' : ''}>${esc(it.label)}${it.now && !it.on ? ' <span class="hub-now">Now</span>' : ''}</button>`).join('')}</nav>` };
   window.positionHubPills = function () {
     const r = document.getElementById('hub-pills'), s = r && r.querySelector('.is-on');

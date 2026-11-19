@@ -2518,9 +2518,15 @@
       stomachViz('His stomach, and about how much a feed holds')
       + xDo('What to do', ['Follow his cues, not the ounces.', nurses() ? 'Nursing? You won’t see ounces, and that’s fine.' : 'Offer a little more only if he still seems hungry.'])
       + xKnow('How you’ll know it’s enough', nurses() ? 'Wet diapers and steady weight, not ounces.' : 'You can’t see it in a feed, but you can in his diapers and weight. That’s next.'));
+  // Nov 19 (fresh-eyes read): how to pace comes first, with the video right under it; then only this baby's amount, not the whole first-month chart (that lives on the amounts page).
   P.x_bottle = (() => { const prev = P.x_bottle; return () => { const nurse = nurses(), fm = formulaFam(); if (nurse && fm) return prev();
-    const h = prev(), i = h.indexOf('<div class="hub-tiles'); if (i < 0) return h; const j = h.indexOf('<section class="ss-do">', i);
-    return h.slice(0, i) + stomachViz('About how much, per bottle') + h.slice(j); }; })();
+    const h = prev(), i = h.indexOf('<div class="hub-tiles'); if (i < 0) return h; const j = h.indexOf('<section class="ss-do">', i), k = h.indexOf('</section>', j) + 10;
+    const days = (() => { try { return Math.floor((new Date(NOW) - new Date(profile.dob)) / 864e5); } catch (e) { return 20; } })();
+    const amt = days < 2 ? ['1–2 tsp', 'Every 2–3 hours'] : days < 4 ? ['About 1 oz', 'Every 2–3 hours'] : days < 14 ? ['1½–2 oz', 'Every 2–3 hours'] : days < 56 ? ['2–4 oz', 'Every 3–4 hours'] : ['4–5 oz', 'Every 3–4 hours'];
+    const steps = xDo('Step by step', ['Hold him semi-upright, and touch his lip so he draws the nipple in.', 'Keep the bottle fairly level, with milk just filling the tip.', 'Every few swallows, tip the bottle down for a short pause. Let him pull it back in.', 'Stop when he’s done, even if milk is left.'], true).replace('<section class="ss-do">', '<section class="ss-do ph-steps">');
+    const video = typeof hubEmbed === 'function' ? `<div class="ph-video">${hubEmbed('OGPm5SpLxXY', 'How to pace a bottle', 'Lactation educators (IABLE)')}</div>` : '';
+    const amount = `<section class="hub-card ph-amount"><small>${F('About how much, right now')}</small><b>${F(amt[0])}</b><span>${F(amt[1] + ', or when he shows hunger cues')}</span></section>`;
+    return h.slice(0, i) + steps + video + amount + h.slice(k); }; })();
   P.x_kind = (() => { const prev = P.x_kind; return () => { const b = isBreast(), fm = formulaFam(); let h = prev();
     if (b && fm) h = h.replace(two(['Breast milk', 'Changes as he grows, and helps protect him from some illnesses.'], ['Formula', 'Gives him everything he needs to grow, with vitamin D and iron.']), xTwo(['Breast milk', 'Changes as he grows, and helps protect him from some illnesses.'], ['Formula', 'Gives him everything he needs to grow, with vitamin D and iron.']));
     else if (b) h = h.replace(two(['Breast milk', 'Changes as he grows, and helps protect him from some illnesses.'], ['Vitamin D', 'Drops every day, from the first days.']), xTwo(['Breast milk', 'Changes as he grows, and helps protect him from some illnesses.'], ['Vitamin D', 'Drops every day, from the first days.']));
