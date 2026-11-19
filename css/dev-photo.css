@@ -39,12 +39,15 @@
 #main [data-development-guide] .dvx-try .hub-chev{align-self:center}
 #main [data-development-guide] .dvx-trymore{padding:12px 14px;margin:0}
 /* Photo tiles, after the inspiration: inset square photo with soft corners, then a short label block */
-#main .dvx-area.has-photo{border:0;border-radius:20px;padding:8px 8px 12px;min-height:0;display:flex;flex-direction:column;background:var(--dt-bg)}
-#main .dvx-area.has-photo .dvx-area-pic{position:relative;display:block!important;margin:0 0 10px!important;padding:0!important;aspect-ratio:1/1;border-radius:14px;overflow:hidden}
+#main .dvx-area.has-photo{border:0;border-radius:18px;padding:0 0 12px;overflow:hidden;min-height:0;display:flex;flex-direction:column;background:var(--dt-bg)}
+#main .dvx-area.has-photo .dvx-area-pic{position:relative;display:block!important;margin:0 0 10px!important;padding:0!important;aspect-ratio:4/3;border-radius:0;overflow:hidden}
 #main .dvx-area.has-photo .dvx-area-pic img{display:block;width:100%;height:100%;object-fit:cover}
-#main .dvx-area.has-photo>small{padding:0 6px;font-size:14px;font-weight:700;margin:0}
-#main .dvx-area.has-photo>b{padding:0 6px;font-size:13.5px;font-weight:500;line-height:1.3;margin:2px 0 6px;color:var(--ink-2,#4a4450)!important;flex:none}
-#main .dvx-area.has-photo>span{padding:0 6px;font-size:12px;margin-top:auto}
+#main .dvx-area.has-photo>small{padding:0 12px;font-size:14.5px;font-weight:700;margin:0;display:flex;align-items:center;gap:7px}
+#main .dvx-area-ico{display:inline-grid;width:22px;height:22px;flex:none;color:var(--dt-ink)}
+#main .dvx-area-ico svg{width:22px;height:22px}
+#main .dvx-area.has-photo>b{padding:0 12px;font-size:13.5px;font-weight:500;line-height:1.3;margin:2px 0 6px;color:var(--ink-2,#4a4450)!important;flex:none}
+#main .dvx-area.has-photo>span{padding:0 12px;font-size:12px;margin-top:auto}
 #main .dvx-badge{right:8px;top:8px}
 #main .dvx-badge{position:absolute;right:8px;top:8px;width:28px;height:28px;border-radius:50%;background:rgba(255,253,249,.92);display:grid;place-items:center;color:var(--dt-ink);box-shadow:0 2px 6px rgba(43,40,64,.15)}
 #main .dvx-badge svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round}
+#main .dvx-area-ico svg *{stroke:var(--dt-ink)!important}
