@@ -224,3 +224,10 @@
 #main .ph-pin-tr { flex-direction: column-reverse; align-items: flex-start; transform: translate(-7px, calc(-100% + 7px)) }
 #main .hub-iconsteps .tpl-notes, #main .ph-pace-note { list-style: none; padding-left: 0 }
 #main .hub-iconsteps .tpl-notes li::before { content: none !important; display: none !important }
+#main .ph-fold { margin: 0 0 12px; border: 1px solid var(--line); border-radius: 18px; background: #fff; overflow: hidden }
+#main .ph-fold > summary { list-style: none; cursor: pointer; padding: 14px 16px; font-size: 15px; font-weight: 700; color: var(--ink); display: flex; justify-content: space-between; align-items: center }
+#main .ph-fold > summary::-webkit-details-marker { display: none }
+#main .ph-fold > summary::after { content: '›'; font-size: 20px; color: #8a8290; transition: transform .2s }
+#main .ph-fold[open] > summary::after { transform: rotate(90deg) }
+#main .ph-fold .xfix { margin: 0; border: 0; border-top: 1px solid var(--line); border-radius: 0 }
+#main .ph-hero.is-pace { aspect-ratio: 4 / 3 }

@@ -2526,12 +2526,15 @@
     // Nov 19: three illustrated panels from Canva, same parent and baby: upright with the bottle level, a pause, and done.
     // Nov 19 v3: one illustration that shows the hold and the angle, labels drawn by the app; then three short steps; never-prop as the one note.
     const TB = window.__hub && window.__hub.TPLB;
-    const steps = TB ? TB.photoPins('feeding/pace-hero', 'A parent holding a baby upright with the bottle level', [['Bottle about level', 55, 33, 'tr'], ['Baby upright', 63, 46, 'r']], 'is-pace')
+    const steps = TB ? TB.photoPins('feeding/pace-photo', 'A parent holding a baby upright with the bottle about level', [['Bottle about level', 55, 44, 'l'], ['Baby upright', 77, 62, 'b']], 'is-pace')
       + `<h2 class="hub-h2">${F('How to do it')}</h2>` + TB.noted(TB.tiles([['mouth', 'Let him draw it in', 'Touch his lip with the nipple'], ['clock', 'Pause often', 'Every few sucks, tip it down'], ['eye', 'Stop when he’s done', 'Even if milk is left']], 'Feeding', true), [['', 'Never prop a bottle', 'Always hold him and the bottle']]) : '';
     const video = typeof hubEmbed === 'function' ? `<div class="ph-video">${hubEmbed('OGPm5SpLxXY', 'Watch how to pace a bottle', 'Lactation educators (IABLE)')}</div>` : '';
     const amount = `<h2 class="hub-h2">${F('About how much')}</h2><section class="hub-card ph-amount"><b style="font-size:24px;line-height:1.2">${F(amt[0])}</b><span>${F(amt[1] + ', or when he shows hunger cues')}</span></section>`;
     const rest = h.slice(k).replace(/<p class="ss-small"><b>Never prop a bottle\.<\/b>[^<]*<\/p>/, '');
-    return h.slice(0, i) + steps + video + amount + rest; }; })();
+    // Nov 19: her amount moves into the top card's lead, and troubleshooting folds behind one row, so the page is the picture, three steps and a video.
+    const head = h.slice(0, i).replace(/(<p class="hub-lead">)[^<]*(<\/p>)/, `$1${F('About ' + amt[0] + ', ' + amt[1].toLowerCase() + '. Let him set the pace.')}$2`);
+    const fold = rest.replace(/<section class="xfix">([\s\S]*?)<\/section>/, (m, inner) => `<details class="ph-fold"><summary>${F('Not going smoothly?')}</summary><section class="xfix">${inner.replace(/<p class="xfix-h">[^<]*<\/p>|<b class="xfix-h">[^<]*<\/b>/, '')}</section></details>`);
+    return head + steps + video + fold; }; })();
   P.x_kind = (() => { const prev = P.x_kind; return () => { const b = isBreast(), fm = formulaFam(); let h = prev();
     if (b && fm) h = h.replace(two(['Breast milk', 'Changes as he grows, and helps protect him from some illnesses.'], ['Formula', 'Gives him everything he needs to grow, with vitamin D and iron.']), xTwo(['Breast milk', 'Changes as he grows, and helps protect him from some illnesses.'], ['Formula', 'Gives him everything he needs to grow, with vitamin D and iron.']));
     else if (b) h = h.replace(two(['Breast milk', 'Changes as he grows, and helps protect him from some illnesses.'], ['Vitamin D', 'Drops every day, from the first days.']), xTwo(['Breast milk', 'Changes as he grows, and helps protect him from some illnesses.'], ['Vitamin D', 'Drops every day, from the first days.']));
