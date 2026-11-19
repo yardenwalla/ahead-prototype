@@ -3092,6 +3092,9 @@
     2: ['distracted', 'A baby turning away mid-feed to look around the room'], 3: ['ready-hero', 'A baby on a parent\u2019s lap at the table, watching the parent take a bite'],
     4: ['first-foods', 'A baby in a high chair with a little purée pushed back out onto her chin'], 5: ['textures', 'A baby in a high chair making a funny face at a lumpy new food'],
     6: ['meals', 'A baby in a high chair picking up soft pieces of food herself'] };
+  // Milk-feeding stages show the family's own way of feeding: a bottle when nobody nurses (Nov 18).
+  const FD_BOTTLE = { 0: ['newborn-bottle', 'A newborn being bottle-fed in a parent\u2019s arms in the evening'], 1: ['milk-bottle', 'A content baby finishing a bottle in a parent\u2019s arms'],
+    2: ['distracted-bottle', 'A baby turning away from the bottle mid-feed to look around'] };
   const DISC = () => { const v = stg(), m = ageMo(), bot = isBottle() && !nurses();
     if (v === 0) return [0, 'Why he wants to feed again already', 'His stomach is tiny and he’s growing fast, so feeds come close together, day and night.', 'Feeds bunch up in the evening.', 'That’s cluster feeding. It’s common, and it eases by about 6–8 weeks.', 'Feed him as often as he asks in the evening, even when the feeds come close together.'];
     if (v === 1 && m < 3) return [1, 'He’s getting good at this', 'All that practice pays off. From about 6 weeks, many babies get quicker at feeds.', 'A feed took half as long.', 'Shorter doesn’t mean less milk. He’s just better at it now.', bot ? 'Let him end the feed, even if milk is left in the bottle.' : 'Let him end the feed, even if it’s sooner than usual.'];
@@ -3105,7 +3108,7 @@
   P.dirD = (() => { const prev = P.dirD; return (v) => { const h = prev(v); const a = h.indexOf('<header class="hub-hero fd-hero">'), e = h.indexOf('</header>', a); if (a < 0 || e < 0) return h;
     const head = h.slice(a, e), m = head.match(/<p class="hub-eyebrow">([^<]*)<\/p>/); if (!m) return h;
     const [n, title, lead, notice, why, tryT] = DISC();
-    const hero = `<header class="hub-hero fd-hero fd-disc"><p class="hub-eyebrow">${m[1]}</p><h1>${F(title)}</h1><p class="hub-lead">${F(lead)}</p>${FD_PHOTO[n] && !window.__fdPhotoOff ? `<figure class="ph-photo fd-photo"><img src="assets/feeding/${FD_PHOTO[n][0]}.jpg" alt="${FD_PHOTO[n][1]}"></figure>` : `<div class="fd-art" aria-hidden="true"><svg viewBox="0 0 320 165" fill="none">${DISC_BASE}${DISC_ART[n]}</svg></div>`}`
+    const hero = `<header class="hub-hero fd-hero fd-disc"><p class="hub-eyebrow">${m[1]}</p><h1>${F(title)}</h1><p class="hub-lead">${F(lead)}</p>${FD_PHOTO[n] && !window.__fdPhotoOff ? (ph => `<figure class="ph-photo fd-photo"><img src="assets/feeding/${ph[0]}.jpg" alt="${ph[1]}"></figure>`)(FD_BOTTLE[n] && !nurses() ? FD_BOTTLE[n] : FD_PHOTO[n]) : `<div class="fd-art" aria-hidden="true"><svg viewBox="0 0 320 165" fill="none">${DISC_BASE}${DISC_ART[n]}</svg></div>`}`
       + `<div class="fd-aha"><small>${F('You might notice')}</small><b>${F(notice)}</b><span>${F(why)}</span></div>`;
     const tryCard = `<div class="fd-try"><i aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 6"/></svg></i><div><small>${F('One thing to try')}</small><p>${F(tryT)}</p></div></div>`;
     return h.slice(0, a) + discCss + hero + '</header>' + tryCard + h.slice(e + 9); }; })();
