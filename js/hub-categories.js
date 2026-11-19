@@ -432,7 +432,7 @@
   };
   // Nov 18 (Safety's pattern: show, don't tell): each area page opens with a photo set in its top card, pins on what she's doing. Each pin opens its milestone.
   const AREA_PHOTO = { 6: {
-    Social: { src: 'area-6-social', alt: 'A mom tickling her laughing baby', pins: [{ t: 'Lights up at you', x: 73, y: 51, side: 'l', k: 'knows-familiar-people' }, { t: 'Laughs out loud', x: 68, y: 66, side: 'l', k: 'laughs' }] },
+    Social: { src: 'area-6-social', alt: 'A mom tickling her laughing baby', pins: [{ t: 'Laughs out loud', x: 80, y: 72, side: 'b', k: 'laughs' }] },
     Talking: { src: 'area-6-talking', alt: 'A mom and baby face to face, the baby cooing back', pins: [{ t: 'Answers your sounds', x: 76, y: 62, side: 'l', k: 'takes-turns-making-sounds-with-you' }] },
     Thinking: { src: 'area-6-thinking', alt: 'A baby turning a cup over in her hands', pins: [{ t: 'Explores the cup', x: 56, y: 58, side: 'r', k: 'puts-things-in-mouth-to-explore' }] },
     Movement: { src: 'area-6-movement', alt: 'A baby rolling from tummy onto his side', pins: [{ t: 'Rolls tummy to back', x: 46, y: 50, side: 'r', k: 'rolls-tummy-to-back' }] } } };
