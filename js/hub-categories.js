@@ -93,8 +93,8 @@
     // Nov 18 preview: a real photo of the age's story, labeled with the story's own steps (the labels replace the lead line, so it lives in one place).
     // Nov 18 (Safety's pattern: show, don't tell): a photo set in the card, with pins on what she's doing. Each pin opens its milestone.
     const PHOTO = {
-      2: { src: 'assets/dev/hero-2.jpg?v=2', alt: 'A baby gazing up at her mom' },
-      4: { src: 'assets/dev/hero-4.jpg?v=2', alt: 'A baby cooing up at his dad' },
+      2: { src: 'assets/dev/hero-2.jpg?v=3', alt: 'A baby gazing up at her mom' },
+      4: { src: 'assets/dev/hero-4.jpg?v=3', alt: 'A baby cooing up at his dad' },
       6: { src: 'assets/dev/reaching-6h.jpg?v=2', alt: 'A baby on her tummy reaching for a soft ball' },
       9: { src: 'assets/dev/hero-9.jpg?v=4', alt: 'A baby crawling happily to her mom as she comes back into the room' },
       12: { src: 'assets/dev/hero-12.jpg?v=1', alt: 'A toddler putting a block in a cup' } }[ref];
@@ -109,7 +109,7 @@
     const PLAY_PHOTO = { 'close-face': 'play-close-face', 'sound-answer': 'play-sound-answer', 'floor-drum': 'play-floor-drum', 'hidden-toy': 'play-hidden-toy', 'put-in': 'play-put-in' };
     const A = all[IN.idea];
     let tryHtml = '', qHtml = '';
-    if (A) tryHtml = `<section class="dvx-trycard"><button class="dvx-try" onclick="openPage('chg:Development:d:idea:${ref}:${A.id}')"><span class="dvx-try-art${PLAY_PHOTO[A.id] ? ' is-photo' : ''}" aria-hidden="true">${PLAY_PHOTO[A.id] ? `<img src="assets/dev/${PLAY_PHOTO[A.id]}.jpg?v=2" alt="">` : (window.devPlayArt ? devPlayArt(A.id) : '')}</span><span><small>${F('Try this together')}</small><b>${T(A.title)}</b><span class="dvx-sub">${IN.w ? T(IN.w) : playLine(A)}</span></span><span class="hub-chev" aria-hidden="true">›</span></button>`
+    if (A) tryHtml = `<section class="dvx-trycard"><button class="dvx-try" onclick="openPage('chg:Development:d:idea:${ref}:${A.id}')"><span class="dvx-try-art${PLAY_PHOTO[A.id] ? ' is-photo' : ''}" aria-hidden="true">${PLAY_PHOTO[A.id] ? `<img src="assets/dev/${PLAY_PHOTO[A.id]}.jpg?v=3" alt="">` : (window.devPlayArt ? devPlayArt(A.id) : '')}</span><span><small>${F('Try this together')}</small><b>${T(A.title)}</b><span class="dvx-sub">${IN.w ? T(IN.w) : playLine(A)}</span></span><span class="hub-chev" aria-hidden="true">›</span></button>`
       + `<button class="dvx-trymore" onclick="openPage('chg:Development:d:more:${ref}')">${F('More ways to play')}<span aria-hidden="true">›</span></button></section>`;
     // The big question of the age, answered once, here.
     const Q = DEV_BIG[ref], W = DEV_BIG_BAR[ref];
@@ -483,7 +483,7 @@
     // Nov 18: Ahead's own photo for each area's play idea where one exists (keyed by idea id).
     const IDEA_PHOTO = { 'supported-reach': 'play-toy-beside-knee', 'peek-face': 'play-peekaboo', 'two-hands': 'play-two-hands', };
     const ideaId = move ? move.id : act ? act.id : '';
-    const pic = IDEA_PHOTO[ideaId] ? `<img class="dev-idea-photo" src="assets/dev/${IDEA_PHOTO[ideaId]}.jpg?v=2" alt="">` : move ? move.art : act && window.devPlayArt ? devPlayArt(act.id) : '';
+    const pic = IDEA_PHOTO[ideaId] ? `<img class="dev-idea-photo" src="assets/dev/${IDEA_PHOTO[ideaId]}.jpg?v=3" alt="">` : move ? move.art : act && window.devPlayArt ? devPlayArt(act.id) : '';
     // From 6 months, Communication's idea is baby signs: a way to help Maya say what {s} {want|wants} before the words come.
     if (domain === 'Talking' && ref >= 6) return developmentDomainPageSigns(ref, domain, rows, big, tc, meta, age, h);
     const tryCard = move || act ? `<section class="hub-card dev-try"><span class="hub-card-head"><b>${F('Try this together')}</b></span><button class="dev-try-row" onclick="openPage('${move ? `chg:Development:d:move:${ref}` : `chg:Development:d:idea:${ref}:${act.id}`}')">${pic ? `<span class="dev-idea-art">${pic}</span>` : ''}<span class="hub-row-copy"><b>${F(move ? move.title : act.title)}</b><small>${move ? F(move.why) : playLine(act)}</small></span><span class="hub-chev" aria-hidden="true">›</span></button></section>` : '';
