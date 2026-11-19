@@ -115,13 +115,13 @@
       spots: [['cribspot', 'Cordless shade', 30, 14, 'r'], ['changing', 'Supplies in reach', 9, 64, 'r'], ['sleep', 'Bare crib', 86, 50, 'l']] },
     reaching: { src: 'assets/safety/rolling.jpg', alt: 'A baby on her tummy on a play mat, with coins, a TV remote and an open handbag on the floor beside it',
       get title() { return answers.roll === 'Yes' ? 'Now {s’s} rolling' : 'Get ahead of rolling'; }, lead: 'Rolling often starts without warning.', lookLine: 'Whatever you can reach, {s} soon can.',
-      spots: [['bags', 'Visitor’s bag', 80, 44, 'l'], ['small', 'Loose coins', 70, 80, 'b'], ['small', 'Remote batteries', 84, 70, 'l']] },
+      spots: [['bags', 'Visitor’s bag', 88, 40, 'l'], ['small', 'Loose coins', 75, 82, 'l'], ['small', 'Remote batteries', 88, 71, 'l']] },
     rolling: { src: 'assets/safety/crawling.jpg', alt: 'A baby crawling across a living room toward open stairs, a low cabinet and a wall outlet',
       get title() { return answers.crawl === 'Yes' ? 'Now {s’s} on the move' : 'Get ahead of crawling'; }, look: 'Crawl the rooms {s’ll} explore', lookLine: 'Open low doors and look under the sofa.', lead: 'Do the low, reachable things first.',
-      spots: [['storage', 'Low cabinets', 9, 27, 'r'], ['outlets', 'Bare outlet', 24.3, 37, 'b'], ['gates', 'Open stairs', 63, 11, 'l']] },
+      spots: [['storage', 'Low cabinets', 8, 27, 'r'], ['outlets', 'Outlet', 23, 40, 'l'], ['gates', 'Open stairs', 63, 11, 'l']] },
     pulling: { src: 'assets/safety/pulling.jpg', alt: 'A baby pulling up to stand on a tall dresser, with a TV on a low stand and a hanging blind cord by the window',
       get title() { return answers.pullUp === 'Yes' ? 'Now {s’s} pulling up' : 'Get ahead of standing'; }, lead: 'Furniture becomes something to grab.',
-      spots: [['windows', 'Blind cord', 19, 44, 'b'], ['anchor', 'TV can tip', 42, 31, 'l'], ['anchor', 'Dresser can tip', 90, 70, 'bl']] } };
+      spots: [['windows', 'Blind cord', 19.6, 47, 'b'], ['anchor', 'TV can tip', 33, 30, 'l'], ['anchor', 'Dresser can tip', 96, 80, 'bl']] } };
   const sfPhotoOn = key => SF_PHOTO[key] && !window.__sfPhotoOff;
   function sfPhoto(key) {
     if (!sfPhotoOn(key)) return '';
