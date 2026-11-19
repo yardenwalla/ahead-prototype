@@ -85,7 +85,7 @@
   window.devSeeButton = (key, title) => (typeof DEV_EXAMPLE_LINKS !== 'undefined' && DEV_EXAMPLE_LINKS[key] && !NO_MEDIA.has(key)) ? `<button class="dev-see" aria-expanded="false" data-title="${title}" onclick="devSeeIt(this,'${key}')">See what it looks like</button>` : '';
 
   // An idea from a later stage than the baby's says so in its kicker, so it doesn't read as one for today.
-  const ahead = ref => (typeof isCurrent !== 'function' || isCurrent()) && ref > devRef(developmentMonth(actualMonth())) ? ` · by ${ref === 12 ? '1 year' : ref + ' months'}` : '';
+  const ahead = ref => (typeof isCurrent !== 'function' || isCurrent()) && ref > devRef(developmentMonth(actualMonth())) ? ` · by ${ref} months` : '';
   function frame(title, context, lead, inner) {
     return `<div class="quiet-category hub-page hub-detail" data-overview="Development" style="${yearTheme('Development')}">${detailPageTop('Development')}<div class="hub-detail-head"><p class="hub-context">${F(context)}</p><h1>${F(title)}</h1>${lead ? `<p class="hub-lead">${F(lead)}</p>` : ''}</div>${inner}</div>`;
   }
@@ -110,11 +110,11 @@
       9: { now: [['toy-cups', 'Stacking cups'], ['toy-ball', 'A soft ball'], ['toy-flap', 'Lift-the-flap books']],
         away: [['mat', 'The play gym', '{S’s} sitting up and on the move now']] },
       12: { now: [['toy-push', 'A sturdy push toy'], ['toy-sorter', 'A shape sorter'], ['toy-pretend', 'A cup, spoon and teddy']],
-        away: [['stand', 'A stationary activity center', 'Cruising the furniture is better practice now']] } }[ref];
-    const toys = TOYS ? `<section class="dev-toys"><h2 class="hub-h2">${F('Toys that fit now')}</h2><p class="dev-toys-lead">${F('Simple things you may already have.')}</p>`
+        away: [['stand', 'The activity center', 'Cruising the furniture is better practice now']] } }[ref];
+    const toys = TOYS ? `<section class="dev-toys"><h2 class="hub-h2">${F('Toys that fit now')}</h2><p class="dev-toys-lead">${F('Simple toys work best, and you don’t need many.')}</p>`
       + `<div class="dev-toy-grid">${TOYS.now.map(([img, t]) => `<div class="dev-toy"><img src="assets/dev/${img}.jpg?v=2" alt=""><b>${F(t)}</b></div>`).join('')}</div>`
       + (TOYS.away.length ? `<div class="dev-putaway"><h3>${F('Ready to put away')}</h3>${TOYS.away.map(([ic, t, sub]) => `<div class="dev-putaway-row"><span class="dev-putaway-ic" aria-hidden="true">${H().art(ic, 'Development')}</span><span><b>${F(t)}</b><small>${F(sub)}</small></span></div>`).join('')}</div>` : '') + '</section>' : '';
-    return frame('Ideas to try together', `Play ideas · by ${ref === 12 ? '1 year' : ref + ' months'}`, lead, `<div class="dev-ideas is-grid">${pics.map(a => tile(a, ref)).join('')}</div>${more}${toys}`);
+    return frame('Ideas to try together', `Play ideas · by ${ref} months`, lead, `<div class="dev-ideas is-grid">${pics.map(a => tile(a, ref)).join('')}</div>${more}${toys}`);
   }
   function movePage(ref) {
     const mv = window.devMoveIdea(ref), h = H();
