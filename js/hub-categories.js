@@ -76,15 +76,15 @@
     // the age's big question, the four areas with progress, and what's coming into view. One home for each fact.
     const IN = {
       2: { t: '{S’s} learning that you answer {o}', lead: 'Each time you answer a cry, a look or a little sound, {s} {learn|learns} that reaching out to you works.', idea: 'close-face', w: 'Gives those first coos a face to answer',
-        n: [['Talking', 'Little sounds that aren’t crying', 'Soft coos may come in calm, awake moments.', 'Makes sounds beyond crying'], ['Thinking', 'A long look at a toy', '{S} may stop and study it, instead of glancing past.', 'Looks at a toy for a few seconds'], ['Movement', 'Looking up from tummy time', 'A small head lift gives {o} a new view.', 'Lifts head during tummy time'], ['Social', 'Calming to your voice', '', 'Settles with your voice or touch']] },
+        n: [['Talking', 'Little coos', 'Soft coos may come in calm, awake moments.', 'Makes sounds beyond crying'], ['Thinking', 'A long look at a toy', '{S} may stop and study it, instead of glancing past.', 'Looks at a toy for a few seconds'], ['Movement', 'Lifting {p} head', 'A small head lift gives {o} a new view.', 'Lifts head during tummy time'], ['Social', 'Calming to your voice', '', 'Settles with your voice or touch']] },
       4: { t: 'It’s starting to feel like a conversation', lead: '{S} isn’t just watching you anymore. {S’s} practicing how to get your attention, and what happens when {s} does.', idea: 'sound-answer', w: 'Teaches {o} that {p} sounds get an answer',
-        n: [['Social', 'The first chuckles', 'A silly face or a tickle may get a little laugh.', 'Chuckles during play'], ['Thinking', 'Studying {p} own hands', '{P} fingers can be as interesting as any toy.', 'Studies their hands'], ['Movement', 'Swiping at toys', '{S} may bat at a toy, or hold one you put in {p} hand.', 'Swipes at toys'], ['Talking', 'Cooing when you talk', '', 'Coos']] },
+        n: [['Social', 'The first chuckles', 'A silly face or a tickle may get a little laugh.', 'Chuckles during play'], ['Thinking', 'Studying {p} hands', '{P} fingers can be as interesting as any toy.', 'Studies their hands'], ['Movement', 'Swiping at toys', '{S} may bat at a toy, or hold one you put in {p} hand.', 'Swipes at toys'], ['Talking', 'Cooing when you talk', '', 'Coos']] },
       6: { t: '{S’s} discovering {s} can make things happen', lead: '{S} {spot|spots} something interesting, {reach|reaches} for it, and {find|finds} out what it does.', idea: 'floor-drum', w: 'Lets {o} hear what {p} hands can do',
         n: [['Social', 'A real laugh out loud', 'A game, a funny face or your voice can set it off.', 'Laughs'], ['Talking', 'Talking back to you', '{S} {make|makes} a noise, {wait|waits}, and may answer you again.', 'Takes turns making sounds with you'], ['Movement', 'Rolling tummy to back', 'The world looks different from there.', 'Rolls tummy to back'], ['Thinking', 'Exploring by mouth', '', 'Puts things in mouth to explore']] },
       9: { t: 'Hidden things don’t disappear for {o} anymore', lead: 'A toy drops, and {s} looks for it. You leave the room, and {s} reacts.', idea: 'hidden-toy', w: 'Plays with {p} new idea: hidden isn’t gone',
-        n: [['Social', 'Turning when you call {p} name', '{S} {know|knows} it’s {o}, even from across the room.', 'Looks when you call their name'], ['Talking', 'Babbling that sounds like a speech', 'Listen for strings like “mamama” or “bababa”.', 'Makes repeated babbles'], ['Movement', 'Sitting and passing a toy hand to hand', '{S} may sit on {p} own and pass a toy from hand to hand.', 'Passes objects between hands'], ['Thinking', 'Banging two toys together', '', 'Bangs objects together']] },
+        n: [['Social', 'Turning to {p} name', '{S} {know|knows} it’s {o}, even from across the room.', 'Looks when you call their name'], ['Talking', 'Babbling “mamama”', 'Listen for strings like “mamama” or “bababa”.', 'Makes repeated babbles'], ['Movement', 'Passing hand to hand', '{S} may sit on {p} own and pass a toy from hand to hand.', 'Passes objects between hands'], ['Thinking', 'Banging toys together', '', 'Bangs objects together']] },
       12: { t: '{S} {have|has} ideas, and {want|wants} to do it again', lead: 'Put a block in a cup, take it out, repeat. Ordinary moments are turning into experiments.', idea: 'put-in', w: 'An experiment {s} can repeat as often as {s} {like|likes}',
-        n: [['Social', 'Joining in with pat-a-cake', '{S} may join in with pat-a-cake or peekaboo.', 'Joins games like pat-a-cake'], ['Talking', 'Waving bye-bye', '{S} may wave bye-bye, or have a name for you.', 'Waves goodbye'], ['Movement', 'Pulling up and stepping along the sofa', '{S} may pull up to stand and step along the furniture.', 'Pulls up to stand'], ['Thinking', 'Finding a toy you hide', '', 'Looks for something you hide']] }
+        n: [['Social', 'Joining in pat-a-cake', '{S} may join in with pat-a-cake or peekaboo.', 'Joins games like pat-a-cake'], ['Talking', 'Waving bye-bye', '{S} may wave bye-bye, or have a name for you.', 'Waves goodbye'], ['Movement', 'Cruising the sofa', '{S} may pull up to stand and step along the furniture.', 'Pulls up to stand'], ['Thinking', 'Finding hidden toys', '', 'Looks for something you hide']] }
     }[ref] || { t: st.title, lead: st.body, n: [] };
     const hb = window.hubBabyify || (x => x), T = x => hb(F(x));
     const other = live() && ref !== now;
@@ -92,9 +92,12 @@
     // The story, with a scene of this age.
     // Nov 18 preview: a real photo of the age's story, labeled with the story's own steps (the labels replace the lead line, so it lives in one place).
     // Nov 18 (Safety's pattern: show, don't tell): a photo set in the card, with pins on what she's doing. Each pin opens its milestone.
-    const PHOTO = { 6: { src: 'assets/dev/reaching-6h.jpg?v=2', alt: 'A baby on her tummy reaching for a soft ball', lead: 'Every reach is a little experiment.', pins: [
-      { t: 'Spots the ball', x: 53, y: 32, side: 'r', go: "openPage('development-domain:6:Thinking')" },
-      { t: 'Reaches out', x: 63, y: 66, side: 'r', go: "devFocusSkill('reaches-to-grab-a-toy');openPage('development-domain:6:Thinking')" }, ] } }[ref];
+    const PHOTO = {
+      2: { src: 'assets/dev/hero-2.jpg?v=1', alt: 'A baby gazing up at her mom' },
+      4: { src: 'assets/dev/hero-4.jpg?v=1', alt: 'A baby cooing up at his dad' },
+      6: { src: 'assets/dev/reaching-6h.jpg?v=2', alt: 'A baby on her tummy reaching for a soft ball' },
+      9: { src: 'assets/dev/hero-9.jpg?v=2', alt: 'A baby crawling happily to her mom as she comes back into the room' },
+      12: { src: 'assets/dev/hero-12.jpg?v=1', alt: 'A toddler putting a block in a cup' } }[ref];
     const photoHtml = PHOTO ? `<div class="dvx-photo sf-photo"><img src="${PHOTO.src}" alt="${PHOTO.alt}"></div>` : '';
     let b = css + (PHOTO ? `<section class="dev-hero dvx-hero has-photo"><p class="dev-hero-eyebrow">${F(STAGE_TABLE.Development.stages[devKeys.indexOf(ref)].label)}</p><h1>${T(IN.t)}</h1><p class="dev-hero-lead">${T(IN.lead)}</p>${photoHtml}</section>`
       : `<section class="dev-hero dvx-hero"><p class="dev-hero-eyebrow">${F(STAGE_TABLE.Development.stages[devKeys.indexOf(ref)].label)}</p><h1>${T(IN.t)}</h1><p class="dev-hero-lead">${T(IN.lead)}</p><div class="dvx-art" aria-hidden="true">${window.devScene ? devScene(ref) : (window.devHeroArt ? devHeroArt(ref) : '')}</div></section>`);
@@ -103,7 +106,7 @@
     // One thing to try together. Area pages each have their own idea, never this one.
     const all = {}; for (let mm = 0; mm <= 12; mm++) { try { const x = playStageModel(mm); [...(x.primary || []), ...(x.more || [])].forEach(a => { if (!all[a.id]) all[a.id] = a; }); } catch (e) {} }
     // Nov 18: play ideas with Ahead's own photo.
-    const PLAY_PHOTO = { 'floor-drum': 'play-floor-drum' };
+    const PLAY_PHOTO = { 'close-face': 'play-close-face', 'sound-answer': 'play-sound-answer', 'floor-drum': 'play-floor-drum', 'hidden-toy': 'play-hidden-toy', 'put-in': 'play-put-in' };
     const A = all[IN.idea];
     let tryHtml = '', qHtml = '';
     if (A) tryHtml = `<section class="dvx-trycard"><button class="dvx-try" onclick="openPage('chg:Development:d:idea:${ref}:${A.id}')"><span class="dvx-try-art${PLAY_PHOTO[A.id] ? ' is-photo' : ''}" aria-hidden="true">${PLAY_PHOTO[A.id] ? `<img src="assets/dev/${PLAY_PHOTO[A.id]}.jpg?v=1" alt="">` : (window.devPlayArt ? devPlayArt(A.id) : '')}</span><span><small>${F('Try this together')}</small><b>${T(A.title)}</b><span class="dvx-sub">${IN.w ? T(IN.w) : playLine(A)}</span></span><span class="hub-chev" aria-hidden="true">›</span></button>`
@@ -118,7 +121,7 @@
     // Once a parent marks something, the card says how many they've seen.
     const words = t => new Set((String(t).toLowerCase().match(/[a-z]{4,}/g) || []).map(w => w.replace(/(ing|es|s)$/, '')));
     // Nov 18: each area tile shows a photo of its skill; a badge marks a sound clip or a video inside.
-    const TILE_PHOTO = { 6: { Social: 'photo', Talking: 'photo', Thinking: 'photo', Movement: 'photo' } };   // no sound/video badges: a tile opens its area page, not a clip
+    const TILE_PHOTO = { 2: { Social: 'photo', Talking: 'photo', Thinking: 'photo', Movement: 'photo' }, 4: { Social: 'photo', Talking: 'photo', Thinking: 'photo', Movement: 'photo' }, 6: { Social: 'photo', Talking: 'photo', Thinking: 'photo', Movement: 'photo' }, 9: { Social: 'photo', Talking: 'photo', Thinking: 'photo', Movement: 'photo' }, 12: { Social: 'photo', Talking: 'photo', Thinking: 'photo', Movement: 'photo' } };   // no sound/video badges: a tile opens its area page, not a clip
     const noticed = Object.fromEntries((IN.n || []).map(([d, t, sub]) => [d, words(t + ' ' + sub)])), noticedL = new Set((IN.n || []).map(x => x[3]));
     b += `<section class="dvx-look"><h2 class="hub-h2">${F('What to look for')}</h2><div class="dvx-areas">${Object.keys(DEV_DOMAINS).map(d => { const labels = DEVELOPMENT_DOMAINS[ref][d] || [], seen = labels.filter(devSkillSeen).length, n = labels.length;
       const name = l => { const c = clearMilestone(l); return TILE_WORDS[c] || (c === 'Closes lips to show they don’t want more food' ? 'Shows when they’re full' : c); };
