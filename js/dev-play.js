@@ -31,7 +31,7 @@
     'put-in': 'play-put-in', 'pretend-cup': 'play-pretend-cup', 'stack-pair': 'play-stack-pair', 'action-book': 'play-action-book', 'two-baskets': 'play-two-baskets',
     // Nov 19: the six more ideas for each age.
     'smile-pause': 'play-smile-pause', 'change-chat': 'play-change-chat', 'book-voices': 'play-book-voices', 'outside-pause': 'play-outside-pause', 'slow-song': 'play-slow-song', 'floor-company': 'play-floor-company', 'sock-puppet': 'play-sock-puppet', 'page-pat': 'play-page-pat', 'barefoot-kicks': 'play-barefoot-kicks', 'lap-sway': 'play-lap-sway', 'follow-toy': 'play-follow-toy', 'touch-rhyme': 'play-touch-rhyme', 'mirror-faces': 'play-mirror-faces', 'roll-interest': 'play-roll-interest', 'rhyming-page': 'play-rhyming-page', 'leaf-watch': 'play-leaf-watch', 'sound-side': 'play-sound-side', 'feet-discovery': 'play-feet-discovery', 'lift-flap': 'play-lift-flap', 'knock-stack': 'play-knock-stack', 'peek-corner': 'play-peek-corner', 'roll-ball': 'play-roll-ball', 'song-pause': 'play-song-pause', 'spoon-bowl': 'play-spoon-bowl', 'feed-teddy': 'play-feed-teddy', 'open-close': 'play-open-close', 'body-song': 'play-body-song', 'follow-point': 'play-follow-point', 'stir-bowl': 'play-stir-bowl' };
-  const photo = id => PHOTO[id] ? `<img class="dev-idea-photo" src="assets/dev/${PHOTO[id]}.jpg?v=2" alt="">` : '';
+  const photo = id => PHOTO[id] ? `<img class="dev-idea-photo" src="assets/dev/${PHOTO[id]}.jpg?v=4" alt="">` : '';
   const tile = (a, ref) => `<button class="dev-idea" onclick="openPage('chg:Development:d:idea:${ref}:${a.id}')"><span class="dev-idea-art">${photo(a.id) || devPlayArt(a.id)}</span><b>${F(B(a.title))}</b></button>`;
 
   // Try today, on the summary: two of the stage's ideas, a different pair each day, and the rest one tap away.
@@ -112,7 +112,7 @@
       12: { now: [['toy-push', 'A sturdy push toy'], ['toy-sorter', 'A shape sorter'], ['toy-pretend', 'A cup, spoon and teddy']],
         away: [['stand', 'A stationary activity center', 'Cruising the furniture is better practice now']] } }[ref];
     const toys = TOYS ? `<section class="dev-toys"><h2 class="hub-h2">${F('Toys that fit now')}</h2><p class="dev-toys-lead">${F('Simple things you may already have.')}</p>`
-      + `<div class="dev-toy-grid">${TOYS.now.map(([img, t]) => `<div class="dev-toy"><img src="assets/dev/${img}.jpg?v=1" alt=""><b>${F(t)}</b></div>`).join('')}</div>`
+      + `<div class="dev-toy-grid">${TOYS.now.map(([img, t]) => `<div class="dev-toy"><img src="assets/dev/${img}.jpg?v=2" alt=""><b>${F(t)}</b></div>`).join('')}</div>`
       + (TOYS.away.length ? `<div class="dev-putaway"><h3>${F('Ready to put away')}</h3>${TOYS.away.map(([ic, t, sub]) => `<div class="dev-putaway-row"><span class="dev-putaway-ic" aria-hidden="true">${H().art(ic, 'Development')}</span><span><b>${F(t)}</b><small>${F(sub)}</small></span></div>`).join('')}</div>` : '') + '</section>' : '';
     return frame('Ideas to try together', `Play ideas · by ${ref === 12 ? '1 year' : ref + ' months'}`, lead, `<div class="dev-ideas is-grid">${pics.map(a => tile(a, ref)).join('')}</div>${more}${toys}`);
   }

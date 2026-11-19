@@ -83,9 +83,11 @@
 #main [data-development-guide] .dvx-trymore{color:#5b4e8f!important;font-weight:600!important;font-size:15px;justify-content:flex-start!important;gap:4px;padding:12px 16px!important}
 #main [data-development-guide] .dvx-trymore span{color:#5b4e8f!important;margin-left:0!important}
 /* Nov 19: play ideas use Ahead's own photos. */
-#main .dev-idea-art img.dev-idea-photo{width:100%;height:100%;object-fit:cover;object-position:50% 35%;display:block}
+/* Nov 19: photos are square and shown whole, so no head or toy is ever cropped off. */
+#main .dev-idea-art:has(img.dev-idea-photo){aspect-ratio:1/1}
+#main .dev-idea-art img.dev-idea-photo{width:100%;height:100%;object-fit:cover;object-position:50% 50%;display:block}
 #main .dev-idea-hero.is-photo{background:none}
-#main .dev-idea-hero.is-photo img{width:100%;aspect-ratio:4/3;object-fit:cover;object-position:50% 30%;display:block}
+#main .dev-idea-hero.is-photo img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block}
 /* Nov 19: toys that fit now, as photo tiles, plus what's ready to put away. */
 #main .dev-toys{margin:26px 0 8px;padding-top:20px;border-top:1px solid var(--line,#eee8e3)}
 #main .dev-toys .hub-h2{margin-bottom:4px}
