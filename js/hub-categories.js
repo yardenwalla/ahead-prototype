@@ -135,7 +135,8 @@
     // Nov 19: the big question is about what's coming, so it lives inside the Next card instead of beside it (one topic, one card).
     const nextCard = nextRef ? h.next(`Next · by ${nextRef} months`, DEV_STAGES[nextRef].title, `openPage('development-stage:${nextRef}')`, '', NEXT_LINE[ref] ? T(NEXT_LINE[ref]) : '')
       : h.next('Next · after the first birthday', 'First steps', `openPage('development-domain:12:Movement')`);
-    b += qHtml ? `<div class="dvx-nextq">${nextCard}${qHtml}</div>` : nextCard;
+    // Nov 19: the big question already lives on its area page, and "by N months" is in the Next card, so the main page keeps only Next.
+    b += nextCard;
     // Nov 18: Development follows age, so its ages show as chips at the top (in place of "All stages").
     const chips = `<nav class="dvx-ages" aria-label="Development by age">${devKeys.map(k => `<button class="${k === ref ? 'is-on' : ''}${live() && k === now ? ' is-now' : ''}" onclick="openPage('development-stage:${k}')"${k === ref ? ' aria-current="page"' : ''}>${k} mo</button>`).join('')}</nav>`;
     return frame('Development', `data-development-guide="${ref}"`, chips + ageNote, b);
