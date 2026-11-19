@@ -100,12 +100,20 @@
     const signs = false && ref >= 6 ? h.list('', [h.row({ icon: 'signs', cat: 'Development', title: 'Try a few baby signs', sub: 'More, eat, milk and all done', onclick: `openPage('chg:Development:d:signs')` })]) : '';
     // Nov 19 preview: toys that fit this age, what she's outgrown, and what isn't needed (AAP 2018 toys report;
     // Sosa 2016 on electronic toys; CPSC on crib toys at 5 months). Things Safety owns point to Safety.
-    const TOYS = { 6: {
-      now: [['toy-rattle', 'A ball rattle'], ['toy-bowl', 'A pot and a spoon'], ['toy-books', 'Board books']],
-      away: [['eye', 'High-contrast cards', '{S} {see|sees} colors well now'], ['crib', 'The crib mobile', 'Take it down now, before {s} can grab it']] } }[ref];
+    // Nov 19: toys that fit each age, and what's ready to put away (AAP toys report; vision milestones; CPSC on crib toys).
+    const TOYS = {
+      2: { now: [['toy-cards', 'High-contrast cards'], ['toy-mat', 'A play mat'], ['toy-soft-rattle', 'A soft rattle']], away: [] },
+      4: { now: [['toy-ring-rattle', 'A ring rattle'], ['toy-crinkle', 'A crinkle book'], ['toy-gym', 'A play gym']],
+        away: [['eye', 'High-contrast cards', '{S} {see|sees} colors well now']] },
+      6: { now: [['toy-rattle', 'A ball rattle'], ['toy-bowl', 'A pot and a spoon'], ['toy-books', 'Board books']],
+        away: [['crib', 'The crib mobile', 'Take it down now, before {s} can grab it']] },
+      9: { now: [['toy-cups', 'Stacking cups'], ['toy-ball', 'A soft ball'], ['toy-flap', 'Lift-the-flap books']],
+        away: [['mat', 'The play gym', '{S’s} sitting up and on the move now']] },
+      12: { now: [['toy-push', 'A sturdy push toy'], ['toy-sorter', 'A shape sorter'], ['toy-pretend', 'A cup, spoon and teddy']],
+        away: [['stand', 'A stationary activity center', 'Cruising the furniture is better practice now']] } }[ref];
     const toys = TOYS ? `<section class="dev-toys"><h2 class="hub-h2">${F('Toys that fit now')}</h2><p class="dev-toys-lead">${F('Simple things you may already have.')}</p>`
       + `<div class="dev-toy-grid">${TOYS.now.map(([img, t]) => `<div class="dev-toy"><img src="assets/dev/${img}.jpg?v=1" alt=""><b>${F(t)}</b></div>`).join('')}</div>`
-      + `<div class="dev-putaway"><h3>${F('Ready to put away')}</h3>${TOYS.away.map(([ic, t, sub]) => `<div class="dev-putaway-row"><span class="dev-putaway-ic" aria-hidden="true">${H().art(ic, 'Development')}</span><span><b>${F(t)}</b><small>${F(sub)}</small></span></div>`).join('')}</div></section>` : '';
+      + (TOYS.away.length ? `<div class="dev-putaway"><h3>${F('Ready to put away')}</h3>${TOYS.away.map(([ic, t, sub]) => `<div class="dev-putaway-row"><span class="dev-putaway-ic" aria-hidden="true">${H().art(ic, 'Development')}</span><span><b>${F(t)}</b><small>${F(sub)}</small></span></div>`).join('')}</div>` : '') + '</section>' : '';
     return frame('Ideas to try together', `Play ideas · by ${ref === 12 ? '1 year' : ref + ' months'}`, lead, `<div class="dev-ideas is-grid">${pics.map(a => tile(a, ref)).join('')}</div>${more}${toys}`);
   }
   function movePage(ref) {
