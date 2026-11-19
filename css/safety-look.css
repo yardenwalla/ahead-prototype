@@ -62,3 +62,44 @@
 #main .sf-help-row.is-er b { color: #b4532a }
 #main .sf-help-row.is-911 b { color: #b3261e }
 #main .sf-photo button.sf-pin-bl { flex-direction: column; align-items: flex-end; transform: translate(calc(-100% + 7px), -7px) }
+
+/* Nov 18: Safety step pages, Spot the risk → See the fix → Check your home.
+   Photos sit inside the section's white card, full bleed at the top; labels are drawn by the app, not baked in. */
+#main .sf-step .care-tpl .sf-card { padding: 0 !important; overflow: hidden }
+#main .sf-step .care-tpl .sf-card > :not(figure):not(.sf-pair) { margin-left: 16px !important; margin-right: 16px !important }
+#main .sf-step .sf-step-photo { margin: 0; border-radius: 0; box-shadow: none; aspect-ratio: 4 / 3 }
+#main .sf-step .sf-step-photo.is-tall { aspect-ratio: 1 / 1 }
+#main .sf-step .sf-step-photo.is-tall img { object-position: 50% 0 }
+#main .sf-step .sf-photo .sf-pin { position: absolute; transform: translate(-50%, -50%); display: flex; align-items: center; gap: 6px; pointer-events: none }
+#main .sf-step .sf-photo .sf-pin-r { transform: translate(-7px, -50%) }
+#main .sf-step .sf-photo .sf-pin-l { flex-direction: row-reverse; transform: translate(calc(-100% + 7px), -50%) }
+#main .sf-step .sf-photo .sf-pin-b { flex-direction: column; transform: translate(-50%, -7px) }
+#main .sf-step .sf-photo .sf-pin-t { flex-direction: column-reverse; transform: translate(-50%, calc(-100% + 7px)) }
+#main .sf-step .sf-photo .sf-pin-bl { flex-direction: column; align-items: flex-end; transform: translate(calc(-100% + 7px), -7px) }
+#main .sf-step .sf-cap { font-size: 15px; line-height: 1.45; color: #4a4450; padding: 13px 0 15px; margin-top: 0; margin-bottom: 0 }
+#main .sf-step .sf-steps { list-style: none; counter-reset: sf; padding: 6px 0 4px; margin-top: 0; margin-bottom: 0 }
+#main .sf-step .sf-steps li { counter-increment: sf; position: relative; padding: 10px 0 10px 36px; font-size: 15px; line-height: 1.42; color: #35303c; border-top: 1px solid #f1eadf }
+#main .sf-step .sf-steps li:first-child { border-top: 0 }
+#main .sf-step .sf-steps li::before { content: counter(sf); position: absolute; left: 0; top: 9px; width: 24px; height: 24px; border-radius: 50%; background: var(--ss-bg, #f7e6c4); color: var(--ss-ink, #795b2c); font-size: 13px; font-weight: 700; display: grid; place-items: center }
+#main .sf-step .sf-card > .tpl-notes { padding-bottom: 14px; margin-top: 0 }
+#main .sf-step .sf-card > .sf-steps + .tpl-notes, #main .sf-step .sf-pair + .tpl-notes { border-top: 1px solid #f1eadf; padding-top: 12px }
+#main .sf-step .sf-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 4px }
+#main .sf-step .sf-pair figure { margin: 0; position: relative }
+#main .sf-step .sf-pair img { display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover }
+#main .sf-step .sf-pair figcaption { position: absolute; left: 8px; right: 8px; top: 8px; display: flex; gap: 6px; align-items: flex-start; background: #fffdfaee; border-radius: 12px; padding: 7px 9px; font-size: 12.5px; font-weight: 700; line-height: 1.25; color: #3b3542; box-shadow: 0 2px 8px #0002 }
+#main .sf-step .sf-pair figcaption i { flex: none; width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center; font-style: normal; font-size: 11px; color: #fff }
+#main .sf-step .sf-pair .is-ok i { background: #4f7a5e }
+#main .sf-step .sf-pair .is-no i { background: #b4532a }
+#main .sf-step .sf-checks ul { list-style: none; margin: 0; padding: 4px 0 }
+#main .sf-step .sf-checks li { display: flex; gap: 12px; align-items: flex-start; padding: 12px 0; border-top: 1px solid #f1eadf; font-size: 15px; line-height: 1.42; color: #35303c }
+#main .sf-step .sf-checks li:first-child { border-top: 0 }
+#main .sf-step .sf-checks li i { flex: none; width: 22px; height: 22px; margin-top: 0; border-radius: 50%; border: 1.6px solid var(--ss-ink, #795b2c); opacity: .55; position: relative }
+#main .sf-step .sf-checks li i::after { content: ""; position: absolute; left: 6px; top: 3px; width: 5px; height: 10px; border: solid var(--ss-ink, #795b2c); border-width: 0 1.8px 1.8px 0; transform: rotate(40deg) }
+#main .sf-step .sf-fixrows { list-style: none; padding: 4px 0; margin-top: 0; margin-bottom: 0 }
+#main .sf-step .sf-fixrows li { display: flex; gap: 12px; align-items: center; padding: 11px 0; border-top: 1px solid #f1eadf }
+#main .sf-step .sf-fixrows li:first-child { border-top: 0 }
+#main .sf-step .sf-fixdot { flex: none; width: 40px; height: 40px; border-radius: 12px; background: var(--ss-bg, #f7e6c4); display: grid; place-items: center }
+#main .sf-step .sf-fixdot svg { width: 22px; height: 22px }
+#main .sf-step .sf-fixrows b { display: block; font-size: 15px; line-height: 1.3; color: #2b2732 }
+#main .sf-step .sf-fixrows small { display: block; font-size: 13.5px; line-height: 1.38; color: #6b6670; margin-top: 2px }
+#main .sf-step .sf-fixrows + .tpl-notes { border-top: 1px solid #f1eadf; padding-top: 12px !important; margin-top: 0 !important }
