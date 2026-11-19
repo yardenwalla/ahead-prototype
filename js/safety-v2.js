@@ -17,12 +17,12 @@
   const item = id => (typeof safetyHomeItems === 'function' ? safetyHomeItems()[id] : null) || {};
   // Every step: title, the one line under it, its icon and color, and either a how-to here or a page elsewhere (Sleep).
   const STEP = {
-    seat: { t: 'Install the car seat', s: 'Rear-facing', i: 'car', c: 'car', go: "openPage('chg:Out and about:d:car')", out: true,
+    seat: { t: 'Install the car seat', s: 'Rear-facing', i: 'car', c: 'car',
       why: 'The car seat is the one piece of gear every baby uses from the first ride home.',
       steps: ['Install it rear-facing in the back seat, following the seat and car manuals.', 'Check the harness: straps at or below {p} shoulders, no slack you can pinch, chest clip at armpit level.', 'Keep {o} rear-facing for as long as the seat allows.'],
       tip: ['Get it checked', 'Trained car-seat checkers can look over the installation and show you the harness fit. Many fire stations and hospitals offer it, often for free.'],
       links: [['Find a car-seat check near you · NHTSA', 'https://www.nhtsa.gov/campaign/right-seat']] },
-    sleep: { t: 'Set up a bare crib', s: 'Firm, flat and empty', i: 'moon', c: 'sleep', go: "openPage('chg:Sleep:safe')", sleep: true },
+    sleep: { t: 'Set up a bare crib', s: 'Firm, flat and empty', i: 'moon', c: 'sleep' },
     cribspot: { rt: 'Clear cords from the crib', t: 'Keep cords away from the crib', s: 'Blind, shade and monitor cords', i: 'window', c: 'sleep',
       tiles: [['crib', 'Away from windows', 'Not under or right beside one'], ['cord', 'Cordless blinds', 'Tying up the cord isn’t enough'], ['home', 'Monitor cords', 'At least 3 feet from the crib']],
       why: 'Cords from blinds, shades and monitors can wrap around {p} neck. It can happen from birth, so this comes first.',
@@ -40,8 +40,8 @@
       steps: ['Check the label for weight and age limits, and stop once {s} {reach|reaches} them.', 'Use the straps every time, even for a minute.', 'Keep them on the floor, never on a table, counter, bed or sofa.', 'They’re not for sleep. If {s} {fall|falls} asleep, move {o} to {p} crib, on {p} back.'],
       tip: ['When to stop using a bouncer', 'Once {s} can sit up on {p} own or {try|tries} to climb out, even under the weight limit.'],
       tip2: ['Stay close', 'Keep {o} within sight, and keep older kids and pets from rocking or pushing it.'] },
-    swaddle: { t: 'Stop swaddling at the first try to roll', get s() { return sleepAge() >= 4 ? 'Then a sleep sack' : 'Some babies try at 2 months'; }, i: 'sack', c: 'sleep', go: "openPage('chg:Sleep:d:swaddleoff')", sleep: true },
-    bassinet: { t: 'Move from the bassinet to the crib', s: 'Once {s} {try|tries} to roll or push up, or at its weight limit', i: 'crib', c: 'sleep', go: "openPage('chg:Sleep:d:where')", sleep: true },
+    swaddle: { t: 'Stop swaddling at the first try to roll', get s() { return sleepAge() >= 4 ? 'Then a sleep sack' : 'Some babies try at 2 months'; }, i: 'sack', c: 'sleep' },
+    bassinet: { rt: 'Move to the crib', t: 'Move from the bassinet to the crib', s: 'Once {s} {try|tries} to roll or push up, or at its weight limit', i: 'crib', c: 'sleep' },
     small: { t: 'Clear {p} play space', s: 'Coins, batteries and small parts', i: 'coin', c: 'floor',
       fig: 'tube', tiles: [['mat', 'A firm play mat', 'On the floor, away from edges and cords'], ['eye', 'Floor check', 'Coins, magnets, older kids’ toys'], ['battery', 'Battery covers screwed shut', 'On remotes, key fobs and musical toys']],
       why: 'Rolling brings the floor within reach, and everything {s} {find|finds} goes in {p} mouth.',
@@ -69,7 +69,7 @@
       why: 'Outlets and cords sit right at crawling height.',
       steps: ['Use plug-in outlet covers {s} can’t pull out and that are too big to swallow.', 'Move lamp and charger cords out of reach, or tuck them behind furniture.', 'If you’re replacing outlets, tamper-resistant ones have built-in shutters.'],
       links: [['Childproofing your home · CPSC', cpsc]] },
-    mattress: { t: 'Lower the crib mattress', s: 'Before {s} can sit up', i: 'crib', c: 'sleep', go: "openPage('chg:Sleep:d:mattress')", sleep: true },
+    mattress: { t: 'Lower the crib mattress one step', rt: 'Lower the crib mattress', s: 'Before {s} can sit up', i: 'sit', c: 'sleep' },
     anchor: { hi: 'stand', t: 'Strap furniture and TVs to the wall', s: 'So nothing tips if {s} {pull|pulls} on it', i: 'dresser', c: 'body',
       tiles: [['dresser', 'Anti-tip straps', 'On dressers, bookcases and tall furniture'], ['blocks', 'TVs too', 'On the wall, or strapped to their stand'], ['clock', 'When', 'Now, before {s} {pull|pulls} on them']],
       why: 'Babies use furniture as a handhold to pull up, and dressers, bookcases and TVs can tip over onto them.',
@@ -91,13 +91,13 @@
       steps: ['Fit a toilet-lid lock, and keep the bathroom door closed.', 'Empty buckets, tubs and wading pools right after use.', 'If you have a pool or spa, fence it on all sides with a self-closing, self-latching gate. Keep doors to it locked, and close the gate every time.'],
       tip: ['Barriers don’t replace watching', 'Stay within arm’s reach whenever {s’s} near water.'],
       links: [['Pool Safely · CPSC', 'https://www.poolsafely.gov/parents/safety-tips/']] },
-    mattress2: { t: 'Lower the crib mattress', get s() { return 'All the way down'; }, i: 'crib', c: 'sleep', go: "openPage('chg:Sleep:d:mattress')", sleep: true }
+    mattress2: { t: 'Lower the crib mattress all the way', rt: 'Lower the mattress all the way', get s() { return 'Before {s} can pull up'; }, i: 'stand', c: 'sleep' }
   };
   const STAGES = [
     { key: 'setup', label: 'First setup', age: 'From birth', title: 'Five things to set up once', lead: 'Before Maya can move, safety is about where {s} {ride|rides}, {sleep|sleeps} and {get|gets} changed.', ids: ['seat', 'sleep', 'cribspot', 'changing', 'gear'] },
-    { key: 'reaching', label: 'Rolling', age: '3–6 months', title: 'Rolling puts the floor in reach', lead: 'At the first sign of rolling, the swaddle comes off and the floor needs clearing.', ids: ['swaddle', 'bassinet', 'small', 'bags'] },
-    { key: 'rolling', label: 'Crawling', age: '6–9 months', title: 'Crawling opens up every room', lead: 'Most babies start crawling between 6 and 9 months. Do the low, reachable things first.', ids: ['gates', 'storage', 'outlets', 'mattress'] },
-    { key: 'pulling', label: 'Pulling up', age: '9 months+', title: 'Standing puts higher things in reach', lead: 'Furniture becomes a handhold, and windows, the stove and water are suddenly within reach.', ids: ['anchor', 'windows', 'kitchen', 'pool', 'mattress2'] }
+    { key: 'reaching', label: 'Rolling', age: '3–6 months', title: 'Rolling puts the floor in reach', lead: 'At the first sign of rolling, the swaddle comes off and the floor needs clearing.', ids: ['swaddle', 'bassinet', 'mattress', 'small', 'bags'] },
+    { key: 'rolling', label: 'Crawling', age: '6–9 months', title: 'Crawling opens up every room', lead: 'Most babies start crawling between 6 and 9 months. Do the low, reachable things first.', ids: ['gates', 'anchor', 'storage', 'outlets', 'pool'] },
+    { key: 'pulling', label: 'Pulling up', age: '9 months+', title: 'Standing puts higher things in reach', lead: 'Furniture becomes a handhold, and windows and the stove are suddenly within reach.', ids: ['windows', 'kitchen', 'mattress2'] }
   ];
 
   // The top card's picture and "Look from her height" card (Nov 13), so Safety opens like Feeding, Sleep and Development.
@@ -142,7 +142,7 @@
     if (id === 'mattress') return answers.mattressLowered === 'Yes' || answers.mattressLowest === 'Yes' ? 'done' : stored(id);
     if (id === 'bassinet' && answers.inCrib === 'Yes') return 'done';
     if (id === 'mattress2') return answers.mattressLowest === 'Yes' ? 'done' : stored(id);
-    if (id === 'sleep' && typeof safeDone === 'function' && typeof SLEEP_TASKS !== 'undefined' && safeDone() === SLEEP_TASKS) return 'done';
+    if (id === 'sleep' && H().sleepTaskOn && H().sleepTaskOn(0)) return 'done';
     if (id === 'small') { const a = stored('small'), b = stored('batteries'); return a === 'done' || b === 'done' ? 'done' : a || b; }
     return stored(id);
   }
@@ -150,10 +150,11 @@
     const d = data(); d.checks.safetyHome = Object.assign({}, d.checks.safetyHome);
     const ids = id === 'small' ? ['small', 'batteries'] : id === 'storage' ? ['storage', 'doors'] : id === 'windows' ? ['windows', 'cords'] : [id];
     ids.forEach(x => { if (v) d.checks.safetyHome[x] = v; else delete d.checks.safetyHome[x]; });
-    if (id === 'swaddle' && v === 'done') answers.swaddleStopped = 'Yes';
-    if (id === 'bassinet' && v === 'done') answers.inCrib = 'Yes';
-    if (id === 'mattress' && v === 'done') answers.mattressLowered = 'Yes';
-    if (id === 'mattress2' && v === 'done') answers.mattressLowest = 'Yes';
+    // One task, two guides: the answer behind it is shared, so done (or Undo) here shows in Sleep too.
+    const ans = { swaddle: 'swaddleStopped', bassinet: 'inCrib', mattress: 'mattressLowered', mattress2: 'mattressLowest' }[id];
+    if (ans && v === 'done') answers[ans] = 'Yes';
+    if (ans && !v) { delete answers[ans]; if (id === 'swaddle') delete answers.neverSwaddled; if (id === 'mattress' && stored('mattress2') !== 'done') delete answers.mattressLowest; }
+    if (id === 'sleep' && H().setSleepTask) H().setSleepTask(0, v === 'done');
     if (typeof persist === 'function') persist();
     saveJourneyData(d); const y = scrollY; render(); scrollTo(0, y);
   };
@@ -167,8 +168,8 @@
     const nowI = STAGES.findIndex(s => s.key === now);
     const pills = h.pills('Safety by movement', STAGES.map((s, j) => ({ label: s.label, age: s.age, on: j === i, now: live && j === nowI, onclick: `openPage('safety-stage:${s.key}')`, change: typeof stageCanChange === 'function' && stageCanChange('Safety', j, nowI) ? `hubChangeStage('Safety',${j})` : '' })), 'Safety');
     const sts = st.ids.map(status), done = sts.filter(x => x === 'done').length, na = sts.filter(x => x === 'na').length, of = st.ids.length - na;
-    const rows = st.ids.map((id, k) => { const x = STEP[id], c = (x.sleep || x.out) ? C[x.c] : SAND, s = sts[k];
-      return `<button class="hub-row hl-row sf-row${s ? ' is-' + s : ''}" style="--hl-bg:${c[0]};--hl-ink:${c[1]}" onclick="${open(id)}"><span class="hub-dot">${hubArt(x.i, 'Safety')}</span><span class="hub-row-copy"><b>${F(x.rt || x.t)}</b><small>${s === 'na' ? 'Doesn’t apply to your home' : F(x.s) + (x.sleep ? ' · In Sleep' : x.out ? ' · In Outings' : '')}</small></span><span class="sf-tick" role="checkbox" aria-checked="${s === 'done'}" aria-label="Mark done: ${x.t.replace(/"/g, '')}" onclick="event.stopPropagation();sfSet('${id}','${s === 'done' ? '' : 'done'}')">${s === 'done' ? '✓' : s === 'na' ? '–' : ''}</span></button>`; }).join('');
+    const rows = st.ids.map((id, k) => { const x = STEP[id], c = SAND, s = sts[k];
+      return `<button class="hub-row hl-row sf-row${s ? ' is-' + s : ''}" style="--hl-bg:${c[0]};--hl-ink:${c[1]}" onclick="${open(id)}"><span class="hub-dot">${hubArt(x.i, 'Safety')}</span><span class="hub-row-copy"><b>${F(x.rt || x.t)}</b><small>${s === 'na' ? 'Doesn’t apply to your home' : F(x.s)}</small></span><span class="sf-tick" role="checkbox" aria-checked="${s === 'done'}" aria-label="Mark done: ${x.t.replace(/"/g, '')}" onclick="event.stopPropagation();sfSet('${id}','${s === 'done' ? '' : 'done'}')">${s === 'done' ? '✓' : s === 'na' ? '–' : ''}</span></button>`; }).join('');
     const look = LOOK[st.key];
     let b = `<header class="hub-hero sf-hero sf-disc"><p class="hub-eyebrow">${st.label} · ${st.age}</p><h1>${F(sfPhotoOn(st.key) ? SF_PHOTO[st.key].title : st.title)}</h1><p class="hub-lead">${F(sfPhotoOn(st.key) ? SF_PHOTO[st.key].lead : st.lead)}</p>${sfPhoto(st.key) || `<div class="sf-art">${SF_ART[st.key] || ""}</div>`}${look && !sfPhotoOn(st.key) ? `<div class="sf-look"><small>${F("Look from {p} height")}</small><b>${F(sfPhotoOn(st.key) && SF_PHOTO[st.key].look ? SF_PHOTO[st.key].look : look[0])}</b><span>${F(look[1])}</span></div>` : ""}</header>`;
     b += `<div class="sf-head"><h2 class="hub-h2">${F(!window.__sfPhotoOff ? 'Your safety checklist' : i < nowI && live ? 'Done these yet?' : i > nowI && live ? 'Get ready for this' : 'Do these now')}</h2><span class="sf-count">${of ? `${done} of ${of} done` : 'None apply'}</span></div><div class="hub-list sf-list">${rows}</div>`;
@@ -186,7 +187,7 @@
     else b += h.versus('If something goes wrong', ['Poison Help', 'Call 1-800-222-1222 if Maya swallows something that could be harmful.'], ['Call 911', 'If {s} can’t breathe or won’t wake. A swallowed battery or magnet means the ER right away.']);
     // Choking first aid lives in Feeding; the safety net links to it.
     if (window.__sfPhotoOff) b += `<div class="hub-browse"><button class="hub-link" onclick="${chokeLink[1]}">${F(chokeLink[0])} ›</button></div>`;
-    if (nx) b += h.next(`Next · from about ${nx.age.replace(/\D.*$/, '')} months`, nx.label, `openPage('safety-stage:${nx.key}')`, '', { reaching: 'Clear the floor of small things and batteries.', rolling: 'Put in gates and cabinet latches first.', pulling: 'Strap furniture and TVs to the wall.' }[nx.key] || '');
+    if (nx) b += h.next(`Next · from about ${nx.age.replace(/\D.*$/, '')} months`, nx.label, `openPage('safety-stage:${nx.key}')`, '', { reaching: 'Clear the floor of small things and batteries.', rolling: 'Gates, latches, furniture straps and water.', pulling: 'Window stops and the stove.' }[nx.key] || '');
     b += h.note('Ages are typical. Every baby moves at their own pace.');
     return `<div class="quiet-category hub-page" data-overview="Safety" data-safety-stage="${key}" style="${yearTheme('Safety')}">${typeof monthlyPageHeader === 'function' ? monthlyPageHeader('Safety') : ''}${pills}${b}</div>`;
   };
@@ -202,6 +203,38 @@
      The old version stays behind window.__sfStepOld, in case the new one doesn't work out. */
   const PH = n => `assets/safety/steps/${n}.jpg`;
   const FIX = {
+    seat: {
+      ba: [[PH('seat-before'), 'A baby in a rear-facing car seat with loose straps and the chest clip down on the belly', null], [PH('seat-after'), 'The same baby with snug straps and the chest clip at armpit level', null]],
+      baFix: [['hand', 'No slack you can pinch', 'At {p} collarbone'], ['shield', 'Chest clip at the armpits', 'Not down on the belly'], ['back', 'Straps at or below {p} shoulders', 'While {s} {face|faces} the back'], ['lock', 'Installed tight, at the right recline', 'Check the seat’s recline indicator']],
+      notes: [['', 'No puffy coats under the straps', 'Buckle {o} in, then add a blanket on top']],
+      checkTitle: 'Check the fit', checks: ['Pinch the strap at {p} collarbone. You shouldn’t be able to grab any slack.', 'Tug the seat where it’s attached to the car. It should move less than 1 inch.'],
+      more: ['Which seat, and when', 'car', 'Car seats as {s} {grow|grows}', 'And on trips, in Outings', "openPage('chg:Out and about:d:car')"] },
+    sleep: {
+      ba: [[PH('sleep-before'), 'A crib with a bumper, a quilt, a pillow and stuffed toys', null], [PH('sleep-after'), 'The same crib, bare, with just a fitted sheet', null]],
+      baFix: [['crib', 'A fitted sheet, nothing else', 'No bumpers, pillows, blankets or toys'], ['shield', 'A firm, flat mattress', 'That fits with no gaps at the sides'], ['sack', 'A sleep sack for warmth', 'In place of a blanket']],
+      notes: [['', 'Skip loungers and wedges', 'And anything inclined or weighted']],
+      checks: ['Press the middle of the mattress. It should spring right back, not hold your handprint.', 'Push the mattress to one side. The gap shouldn’t fit two fingers.'],
+      more: ['The rest of safe sleep', 'moon', 'Safe sleep', 'On {p} back, every sleep, in Sleep', "openPage('chg:Sleep:safe')"] },
+    swaddle: {
+      ba: [[PH('swaddle-before'), 'A baby asleep on their back in a crib, swaddled with arms in', null], [PH('swaddle-after'), 'The same baby on their back in a sleep sack, arms free', null]],
+      baFix: [['sack', 'A sleep sack, arms free', 'So {s} can push up if {s} {roll|rolls}'], ['shield', 'Light and unweighted', 'No weighted sacks or swaddles']],
+      checks: ['Zip it up and lift gently at the shoulders. The neck opening shouldn’t ride up past {p} chin.'],
+      more: ['When to do it', 'roll', 'Signs it’s time', 'And the first few nights, in Sleep', "openPage('chg:Sleep:d:swaddleoff')"] },
+    bassinet: {
+      ba: [[PH('bassinet-before'), 'A bassinet beside a bed', null], [PH('bassinet-after'), 'The same bedroom with a bare crib in place of the bassinet', null]],
+      baFix: [['crib', 'Set it up bare', 'Like the bassinet: a fitted sheet, nothing else'], ['home', 'Still in your room', 'Until at least 6 months']],
+      checks: ['Shake the crib gently. It shouldn’t wobble, and every side should stay locked in place.', 'Check the label. Skip drop-side cribs, and any crib made before June 2011.'],
+      more: ['When to do it', 'clock', 'Signs it’s time', 'In Sleep',  "openPage('chg:Sleep:d:crib')"] },
+    mattress: {
+      ba: [[PH('mattress-before'), 'A crib with the mattress on its highest setting, near the top of the rail', null], [PH('mattress-after'), 'The same crib with the mattress lowered one step', null]],
+      baFix: [['notepad', 'Check the manual', 'For your crib’s height settings'], ['crib', 'One step down', 'Then check it sits firmly'], ['toy', 'Mobile down', 'Nothing hanging over the crib']],
+      checks: ['Push down on each corner. The mattress shouldn’t shift or tilt.'],
+      more: ['When to do it', 'clock', 'Signs it’s time', 'Before {s} can sit up, in Sleep', "openPage('chg:Sleep:d:mattress')"] },
+    mattress2: {
+      ba: [[PH('mattress-after'), 'A crib with the mattress one step down', null], [PH('mattress2-after'), 'The same crib with the mattress on its lowest setting', null]],
+      baFix: [['crib', 'All the way down', 'To the lowest setting'], ['toy', 'Nothing to climb on', 'No toys in the crib, and furniture away from the rail']],
+      checks: ['Push down on each corner. The mattress shouldn’t shift or tilt.'],
+      more: ['When to do it', 'clock', 'Signs it’s time', 'Before {s} can pull up, in Sleep', "openPage('chg:Sleep:d:mattress')"] },
     cribspot: {
       ba: [[PH('cribspot-before'), 'A crib under a window with a corded blind, its cord hanging beside the crib', ['Blind cord', 43, 60, 'r']], [PH('cribspot-after'), 'The same crib with a cordless shade on the window', ['Cordless shade', 32, 9, 'b']]],
       spotTiles: [['window', 'A window', 'Under or right beside the crib'], ['cord', 'Corded blinds', 'Loops can reach into the crib'], ['plug', 'Monitor cords', 'Often plugged in right beside it']],
@@ -279,6 +312,12 @@
   };
   // Leads say why now, in one line (the photo's caption carries any extra line).
   const LEAD2 = {
+    seat: 'Snug straps keep {o} still in a sudden stop. Check them before every drive.',
+    sleep: 'A bare crib or bassinet is the safest place for {o} to sleep, from the first night.',
+    swaddle: 'Once {s} {try|tries} to roll, {s} {need|needs} {p} arms free to push up.',
+    bassinet: 'Have the crib ready before {s} {need|needs} it.',
+    mattress: 'Before {s} can sit, lower it so {s} can’t lean over the rail.',
+    mattress2: 'Before {s} can pull up, go all the way down so {s} can’t climb out.',
     cribspot: 'A cord in reach can wrap around a baby’s neck, even in the first weeks.',
     changing: 'Falls from changing tables are among the most common early injuries.',
     gear: 'Keep them on the floor, and stop once {s} can sit up on {p} own.',
@@ -287,7 +326,7 @@
     gates: 'Once {s} {crawl|crawls}, stairs are the biggest fall risk at home.',
     storage: 'Crawling babies open every low door and drawer they can reach.',
     outlets: 'Outlets and cords sit right at crawling height.',
-    anchor: 'Dressers, bookcases and TVs can tip when {s} {pull|pulls} on them.',
+    anchor: 'Do it before {s} {crawl|crawls}. Dressers and TVs can tip when babies climb or pull on them.',
     windows: 'Screens keep bugs out, not babies in.',
     kitchen: 'To {o}, a stove knob is just a toy that turns.',
     pool: 'Babies can drown in an inch or two of water, quickly and quietly.' };
@@ -307,9 +346,9 @@
       const ba = `<section class="care-tpl-card sf-card"><div class="sf-ba">${q.ba.map(shot).join('')}</div>${fixRows(q.baFix || q.fix)}${B.ul(q.notes)}</section>`;
       const tests2 = `<section class="care-tpl-card sf-card sf-checks"><ul>${q.checks.map(t => `<li><i aria-hidden="true"></i><span>${F(t)}</span></li>`).join('')}</ul></section>`;
       const acts = s === 'done' ? `<p class="hub-done">${F('Done')} ✓</p><button class="hub-link" onclick="sfSet('${id}','')">${F('Undo')}</button>`
-        : `<button class="hub-button" onclick="sfSet('${id}','done');back()">${F('Mark as done')}</button><button class="hub-link sf-na" onclick="sfSet('${id}','${s === 'na' ? '' : 'na'}');back()">${F(s === 'na' ? 'It applies after all' : 'Doesn’t apply to our home')}</button>`;
+        : `<button class="hub-button" onclick="sfSet('${id}','done');back()">${F('Mark as done')}</button><button class="hub-link sf-na" onclick="sfSet('${id}','${s === 'na' ? '' : 'na'}');back()">${F(s === 'na' ? 'It applies after all' : id === 'seat' ? 'Doesn’t apply to us' : 'Doesn’t apply to our home')}</button>`;
       return `<div class="quiet-category hub-page hub-detail sf-step" data-overview="Safety" data-ss="1" data-sf-step="${id}" style="${yearTheme('Safety')};--ss-bg:${c[0]};--ss-ink:${c[1]}">${detailPageTop('Safety')}${head}`
-        + `<div class="care-tpl is-getready">` + B.sec('Before and after', ba) + (q.checks.length ? B.sec('Check your home', tests2) : '') + `</div><div class="hub-actions sf-actions">${acts}</div></div>`;
+        + `<div class="care-tpl is-getready">` + B.sec('Before and after', ba) + (q.checks.length ? B.sec(q.checkTitle || 'Check your home', tests2) : '') + (q.more ? B.sec(q.more[0], h.list('', [h.row({ icon: q.more[1], cat: 'Safety', title: q.more[2], sub: q.more[3], onclick: q.more[4] })])) : '') + `</div><div class="hub-actions sf-actions">${acts}</div></div>`;
     }
     // 1. Spot the risk
     const spot = q.spotPhoto ? `<section class="care-tpl-card sf-card">${photo(q.spotPhoto)}${q.spotLine ? `<p class="sf-cap">${F(q.spotLine)}</p>` : ''}</section>` : B.tiles(q.spotTiles, 'Safety');
