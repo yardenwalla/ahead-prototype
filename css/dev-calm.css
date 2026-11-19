@@ -1,0 +1,14 @@
+/* Nov 18 concept: a calm Development page. The photo carries the color and the wonder;
+   everything below it speaks one quiet language: white cards, one radius, one border, color only in small labels. */
+#main [data-development-guide] .dvx-look{background:none;border:0;padding:0;margin:22px 0 18px}
+#main [data-development-guide] .dvx-look .hub-h2{margin:0 2px 10px}
+#main [data-development-guide] .dvx-area{background:var(--card,#fffdf9);border:1px solid var(--line,#ebe6e1);box-shadow:none}
+#main [data-development-guide] .dvx-area b{color:var(--ink,#2b2732)}
+#main [data-development-guide] .dvx-lookall{border-top:0;margin-top:2px;padding:10px 2px}
+#main [data-development-guide] .dvx-trycard{background:var(--card,#fffdf9);border:1px solid var(--line,#ebe6e1);margin:10px 0 14px}
+#main [data-development-guide] .dvx-try small{color:var(--ink-2,#857d86)}
+#main [data-development-guide] .dvx-try b{color:var(--ink,#2b2732)}
+#main [data-development-guide] .dvx-try span.dvx-sub{color:var(--ink-2,#625f6d)}
+#main [data-development-guide] .dvx-trymore{color:#5b4e8f;border-top:1px solid var(--line,#eee8e3)}
+#main [data-development-guide] .hub-next{border:1px solid var(--line,#ebe6e1);background:var(--card,#fffdf9)}
+#main [data-development-guide] .dvx-q{margin:0 0 14px}
