@@ -36,7 +36,15 @@
     const e = EXPECT[age];
     // First week: jaundice at home, since it peaks in these days (AAP, HealthyChildren.org).
     const jaundice = age === 0 ? H().versus('Yellow skin at home: normal, or time to call?', ['Normal', 'A little yellow on the face in the first week, feeding well.'], ['Call your pediatrician', 'Yellow on the belly, legs or eyes, poor feeding, or very sleepy.']) : '';
-    return frame(head(age, 'green', 'What to expect', e.lead) + H().list('What they’ll check', e.checks.map(c => row(...c))) + jaundice + H().list('Before you go', BRING(age).map(c => row(...c))));
+    if (window.__hlOld) return frame(head(age, 'green', 'What to expect', e.lead) + H().list('What they’ll check', e.checks.map(c => row(...c))) + jaundice + H().list('Before you go', BRING(age).map(c => row(...c))));
+    // Nov 19 (show, don't tell): what's new at this visit first, then the growth check every visit has, as three photos.
+    const fresh = e.checks.filter(c => !/^Growth and a head-to-toe/.test(c[2]));
+    const grow = `<h2 class="hub-h2">${F('The usual growth check')}</h2><section class="hub-card hl-grow"><div class="hl-grow-tiles">${[
+      ['grow-weight', 'Weight', 'On a baby scale', 'A baby lying on a baby scale'],
+      ['grow-length', 'Length', 'Lying on a measuring board', 'A baby lying on a measuring board, feet against the footboard'],
+      ['grow-head', 'Head size', 'A soft tape around the head', 'A pediatrician wrapping a soft tape around a baby’s head']
+    ].map(([src, t, d, alt]) => `<figure><img src="assets/health/${src}.jpg" alt="${alt}" loading="lazy"><figcaption><b>${F(t)}</b><span>${F(d)}</span></figcaption></figure>`).join('')}</div><p class="hl-grow-note">${F('Then a head-to-toe exam: heart, hips, eyes and skin.')}</p></section>`;
+    return frame(head(age, 'green', 'What to expect', e.lead) + H().list(age === 0 ? 'What they’ll check' : 'What’s new at this visit', fresh.map(c => row(...c))) + grow + jaundice + H().list('Before you go', BRING(age).map(c => row(...c))));
   }
 
   /* ---------- Vaccines ---------- */
@@ -68,7 +76,11 @@
     // REVIEW: for babies under 3 months, any fever of 100.4°F or more needs a call.
     const call = age <= 2 ? 'A fever of 100.4°F+, 3 hours of crying that won’t stop, or swelling that grows.' : 'A fever of ' + (typeof feverTemp === 'function' ? feverTemp(age) : '101°F') + '+, 3 hours of crying that won’t stop, or swelling that grows.';
     const after = H().versus('After the shots', ['Normal for a day or two', 'Fussy or sleepy, a low fever, and a sore red spot where the shot went in.' + (age === 12 ? ' A fever or rash 1–2 weeks later can also be normal after MMR and chickenpox.' : '')], ['Call your pediatrician', call]);
-    return frame(head(age, 'blue', 'Vaccines', v.lead) + list + season + after + H().note('Based on the schedule pediatricians recommend. Your pediatrician confirms what’s due from Maya’s record.'));
+    // Nov 19 (show, don't tell): how to help during the shots, as a photo, on the visits with several shots (AAP, CDC).
+    const nurse = profile.feed === 'Breast milk' && profile.feedHow === 'Nursing', bottle = profile.feed === 'Formula';
+    const during = window.__hlOld || ![2, 4, 6, 12].includes(age) ? '' : `<h2 class="hub-h2">${F('Help {o} through the shots')}</h2><section class="hub-card hl-during"><figure class="hl-photo"><img src="assets/health/shots.jpg" alt="A mom holding her baby close on her lap while a nurse gets ready"><span class="hl-tag" style="left:41%;top:74%"><i></i><span>${F('Thighs free')}</span></span></figure>`
+      + H().list('', [row('heart', 'pink', 'Hold {o} on your lap', 'Close and upright, not lying on the table'), row('bottle', 'yellow', nurse ? 'Nurse during or right after' : bottle ? 'A bottle right after' : 'A feed during or right after', 'Sucking soothes'), row('shirt', 'green', 'Easy-off clothes', age === 12 ? 'Shots go in the thigh or the arm' : 'Shots go in the thigh this year')]) + `</section>`;
+    return frame(head(age, 'blue', 'Vaccines', v.lead) + list + season + during + after + H().note('Based on the schedule pediatricians recommend. Your pediatrician confirms what’s due from Maya’s record.'));
   }
 
   /* ---------- Questions and notes: suggested questions in the parent's voice ---------- */
@@ -89,6 +101,9 @@
     if (part === 'expect') return expectPage(age);
     if (part === 'vaccines') return vaccinePage(age);
     if (part === 'questions' || part === 'notes') {
+      // Nov 19: the suggested questions now sit on the checkup page itself, so this page keeps your own questions and notes.
+      if (!window.__hlOld) return base(age, part).replace(/<section class="hub-card hub-q-card"><div class="hub-card-head"><b>Questions to ask<\/b>[\s\S]*?<\/section>/, '')
+        .replace(/<div class="hub-detail-head">[\s\S]*?<\/div>/, head(age, 'yellow', 'Questions and notes', 'Add your own questions, and keep what you hear with this checkup.')).replace(/(hub-page hub-detail)/, '$1 hv-page');
       return base(age, part).replace(/<div class="hub-detail-head">[\s\S]*?<\/div>/, head(age, 'yellow', 'Questions and notes', 'Tick them off as you ask. What you hear stays with this checkup.'))
         .replace(/<p class="hub-q-hint">Tick them off as you go\.<\/p>/, '').replace(/(hub-page hub-detail)/, '$1 hv-page');
     }
