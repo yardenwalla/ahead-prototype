@@ -67,3 +67,11 @@
 #main .dvx-area.has-photo:active{transform:scale(.97)}
 /* All milestones as a quiet link under the grid, not another card */
 #main [data-development-guide] .dvx-lookall{background:none!important;border:0!important;padding:12px 4px 4px!important;font-weight:600;color:#5b4e8f;justify-content:flex-start;gap:4px}
+/* Try card: its own quiet look, so it doesn't read as part of the green Thinking tile above */
+#main [data-development-guide] .dvx-trycard{background:var(--card,#fffdf9)!important;border:1px solid var(--line,#ebe6e1)!important;box-shadow:0 1px 2px rgba(43,40,64,.05),0 4px 12px rgba(43,40,64,.05)}
+#main [data-development-guide] .dvx-trycard small{color:#5b4e8f!important}
+#main [data-development-guide] .dvx-trycard b{color:var(--ink,#2b2732)!important}
+#main [data-development-guide] .dvx-trymore{border-top:1px solid var(--line,#eee8e3)!important}
+#main [data-development-guide] .dvx-trycard .dvx-try span,#main [data-development-guide] .dvx-trycard .dvx-try em{color:var(--ink-2,#625f6d)!important}
+#main [data-development-guide] .dvx-trycard .dvx-try small{color:#5b4e8f!important}
+#main [data-development-guide] .dvx-trycard .dvx-try b{color:var(--ink,#2b2732)!important}
