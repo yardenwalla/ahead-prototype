@@ -14,4 +14,6 @@
 #main .dvx-ages button.is-now:not(.is-on)::after{content:"";position:absolute;top:5px;right:9px;width:6px;height:6px;border-radius:50%;background:#7a5aa6}
 /* Ahead's own milestone photos: no CDC caption */
 #main .dev-photo.is-own img{border-radius:16px;width:100%;height:auto;display:block}
-#main .dev-photo.is-own img{aspect-ratio:1/1;object-fit:cover;object-position:50% 45%}
+#main .dev-photo.is-own img{aspect-ratio:1/1;object-fit:cover}
+/* Hero photo a little shorter, so "What to look for" starts on the first screen */
+#main .dvx-photo img{aspect-ratio:5/4;object-fit:cover;object-position:50% 90%}
