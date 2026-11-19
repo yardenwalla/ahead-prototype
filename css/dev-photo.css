@@ -51,3 +51,12 @@
 #main .dvx-badge{position:absolute;right:8px;top:8px;width:28px;height:28px;border-radius:50%;background:rgba(255,253,249,.92);display:grid;place-items:center;color:var(--dt-ink);box-shadow:0 2px 6px rgba(43,40,64,.15)}
 #main .dvx-badge svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round}
 #main .dvx-area-ico svg *{stroke:var(--dt-ink)!important}
+/* Compact photo tiles (Nov 19): tiles are navigation, so they stay quick to scan.
+   Shorter 3:2 photo, icon + name, one line; the count lives in "All milestones" below. */
+#main .dvx-area.has-photo{padding-bottom:11px}
+#main .dvx-area.has-photo .dvx-area-pic{aspect-ratio:3/2;margin-bottom:9px!important}
+#main .dvx-area.has-photo>b{margin:1px 0 0;font-size:13px}
+#main .dvx-area.has-photo>span{display:none}
+#main [data-development-guide] .dvx-look{margin-top:20px!important}
+#main .dvx-photo.sf-photo{aspect-ratio:16/10}
+#main .dvx-hero.has-photo{padding-bottom:14px}

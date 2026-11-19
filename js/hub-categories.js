@@ -92,7 +92,7 @@
     // The story, with a scene of this age.
     // Nov 18 preview: a real photo of the age's story, labeled with the story's own steps (the labels replace the lead line, so it lives in one place).
     // Nov 18 (Safety's pattern: show, don't tell): a photo set in the card, with pins on what she's doing. Each pin opens its milestone.
-    const PHOTO = { 6: { src: 'assets/dev/reaching-6w.jpg?v=1', alt: 'A baby on her tummy reaching for a soft ball', lead: 'Every reach is a little experiment.', pins: [
+    const PHOTO = { 6: { src: 'assets/dev/reaching-6h.jpg?v=2', alt: 'A baby on her tummy reaching for a soft ball', lead: 'Every reach is a little experiment.', pins: [
       { t: 'Spots the ball', x: 53, y: 32, side: 'r', go: "openPage('development-domain:6:Thinking')" },
       { t: 'Reaches out', x: 63, y: 66, side: 'r', go: "devFocusSkill('reaches-to-grab-a-toy');openPage('development-domain:6:Thinking')" }, ] } }[ref];
     const photoHtml = PHOTO ? `<div class="dvx-photo sf-photo"><img src="${PHOTO.src}" alt="${PHOTO.alt}"></div>` : '';
@@ -126,7 +126,7 @@
       const ex = labels.find(l => !devSkillSeen(l) && fresh(l)) || labels.find(l => !devSkillSeen(l)) || labels[0], look = (IN.n || []).find(x => x[0] === d);
       const foot = F(n === 1 ? '1 milestone' : `${n} milestones`);   // the same line on every tile; marking happens on the area page
       const tp = TILE_PHOTO[ref] && TILE_PHOTO[ref][d];
-      return `<button class="dvx-area${tp ? ' has-photo' : ''}" style="${tint(d)}" onclick="${look ? `devFocusSkill('${journeySkillKey(look[3])}');` : ''}openPage('development-domain:${ref}:${d}')">${tp ? `<span class="dvx-area-pic"><img src="assets/dev/tile-${ref}-${d.toLowerCase()}.jpg?v=4" alt="">${tp === 'sound' ? '<i class="dvx-badge" aria-label="Has a sound clip"><svg viewBox="0 0 24 24"><path d="M4 10v4M8 7v10M12 4v16M16 8v8M20 11v2"/></svg></i>' : tp === 'video' ? '<i class="dvx-badge" aria-label="Has a video"><svg viewBox="0 0 24 24"><path d="M9 7v10l8-5z" fill="currentColor" stroke="none"/></svg></i>' : ''}</span>` : ''}<small>${tp ? `<i class="dvx-area-ico" aria-hidden="true">${H().art(DOMAIN_ICONS[d], 'Development')}</i>` : ''}${DOMAIN_TITLES[d]}</small><b>${T(look ? look[1] : name(ex))}</b><span>${foot} ›</span></button>`; }).join('')}</div>`
+      return `<button class="dvx-area${tp ? ' has-photo' : ''}" style="${tint(d)}" onclick="${look ? `devFocusSkill('${journeySkillKey(look[3])}');` : ''}openPage('development-domain:${ref}:${d}')">${tp ? `<span class="dvx-area-pic"><img src="assets/dev/tile-${ref}-${d.toLowerCase()}.jpg?v=5" alt="">${tp === 'sound' ? '<i class="dvx-badge" aria-label="Has a sound clip"><svg viewBox="0 0 24 24"><path d="M4 10v4M8 7v10M12 4v16M16 8v8M20 11v2"/></svg></i>' : tp === 'video' ? '<i class="dvx-badge" aria-label="Has a video"><svg viewBox="0 0 24 24"><path d="M9 7v10l8-5z" fill="currentColor" stroke="none"/></svg></i>' : ''}</span>` : ''}<small>${tp ? `<i class="dvx-area-ico" aria-hidden="true">${H().art(DOMAIN_ICONS[d], 'Development')}</i>` : ''}${DOMAIN_TITLES[d]}</small><b>${T(look ? look[1] : name(ex))}</b><span>${foot} ›</span></button>`; }).join('')}</div>`
       + `<button class="dvx-lookall" onclick="openPage('chg:Development:d:all:${ref}')">${F('All milestones for this age')}<span aria-hidden="true">›</span></button></section>` + tryHtml + qHtml;
     // Coming into view: the next checkpoint, in a line.
     // Next (design system, Nov 13): "Next · " and when, the next stage's name, and one line on what to watch for or get ready for.
