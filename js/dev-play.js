@@ -51,13 +51,18 @@
   window.devMoveIdea = ref => MOVE[ref] ? Object.assign({}, MOVE[ref], { art: moveArt(MOVE[ref]) }) : null;
 
   // A skill's photo or video, opened on the page.
+  // Nov 18: Ahead's own photos, in one style, for milestones a still photo shows well. Motion and sound milestones keep the CDC video.
+  const OWN_PHOTO = { 'pushes-onto-elbows-during-tummy-time': 'm4-elbows', 'pushes-up-with-straight-arms-on-tummy': 'm6-straight-arms', 'reaches-to-grab-a-toy': 'm6-reaches', 'leans-on-hands-when-sitting': 'm6-leans-on-hands', 'knows-familiar-people': 'm6-familiar-people', 'closes-lips-to-show-they-don-t-want-more-food': 'm6-closes-lips', 'likes-looking-at-self-in-a-mirror': 'm6-mirror', 'puts-things-in-mouth-to-explore': 'm6-mouthing' };
+  // Where each photo sits in its square frame (vertical %), so faces and the skill both stay in view.
+  const OWN_POS = { 'm6-reaches': 0, 'm6-closes-lips': 30, 'm6-leans-on-hands': 40, 'm6-familiar-people': 0, 'm4-elbows': 55, 'm6-straight-arms': 50 };
   window.devSeeIt = function (btn, key) {
     const box = btn.closest('.dev-skill').querySelector('.dev-media');
     if (!box) return;
     const open = !box.hidden;
     if (!open && !box.innerHTML) {
       const m = (typeof DEV_EXAMPLE_LINKS !== 'undefined' ? DEV_EXAMPLE_LINKS : {})[key];
-      if (m && m.type === 'video') { const id = (m.href.match(/[?&]v=([\w-]{11})/) || [])[1]; box.innerHTML = id ? hubEmbed(id, btn.dataset.title || 'What it looks like', 'CDC') : ''; }
+      if (OWN_PHOTO[key]) box.innerHTML = `<figure class="dev-photo is-own"><img src="assets/dev/${OWN_PHOTO[key]}.jpg?v=2" alt=""${btn.dataset.title || ''}" loading="lazy"></figure>`;
+      else if (m && m.type === 'video') { const id = (m.href.match(/[?&]v=([\w-]{11})/) || [])[1]; box.innerHTML = id ? hubEmbed(id, btn.dataset.title || 'What it looks like', 'CDC') : ''; }
       else if (m) box.innerHTML = `<figure class="dev-photo"><img src="${m.href}" alt="${btn.dataset.title || ''}" loading="lazy"><figcaption>Photo · CDC</figcaption></figure>`;
     }
     if (!open && box.dataset.desc && !box.querySelector('.dev-desc')) box.insertAdjacentHTML('afterbegin', `<p class="dev-desc">${box.dataset.desc}</p>`);
@@ -67,7 +72,7 @@
     btn.textContent = open ? 'See what it looks like' : 'Hide';
   };
   // Skills that are obvious from words alone don't get a photo or video; the one-line description is enough.
-  const NO_MEDIA = new Set(['laughs', 'squeals', 'chuckles-during-play', 'smiles-back-at-you', 'makes-sounds-beyond-crying', 'responds-to-loud-sounds', 'moves-both-arms-and-legs', 'looks-at-your-face', 'seems-glad-to-see-you', 'likes-looking-at-self-in-a-mirror', 'waves-goodbye', 'raises-arms-to-be-picked-up', 'enjoys-peekaboo', 'coos', 'brings-hands-to-mouth', 'puts-things-in-mouth-to-explore']);
+  const NO_MEDIA = new Set([]);   // Nov 18: every milestone shows something (sound milestones play the CDC clip, with audio)
   window.devSeeButton = (key, title) => (typeof DEV_EXAMPLE_LINKS !== 'undefined' && DEV_EXAMPLE_LINKS[key] && !NO_MEDIA.has(key)) ? `<button class="dev-see" aria-expanded="false" data-title="${title}" onclick="devSeeIt(this,'${key}')">See what it looks like</button>` : '';
 
   // An idea from a later stage than the baby's says so in its kicker, so it doesn't read as one for today.
