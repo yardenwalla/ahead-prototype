@@ -61,7 +61,7 @@
     const open = !box.hidden;
     if (!open && !box.innerHTML) {
       const m = (typeof DEV_EXAMPLE_LINKS !== 'undefined' ? DEV_EXAMPLE_LINKS : {})[key];
-      if (OWN_PHOTO[key]) box.innerHTML = `<figure class="dev-photo is-own"><img src="assets/dev/${OWN_PHOTO[key]}.jpg?v=1" style="object-position:50% ${OWN_POS[OWN_PHOTO[key]] || 45}%" alt=""${btn.dataset.title || ''}" loading="lazy"></figure>`;
+      if (OWN_PHOTO[key]) box.innerHTML = `<figure class="dev-photo is-own"><img src="assets/dev/${OWN_PHOTO[key]}.jpg?v=1" alt=""${btn.dataset.title || ''}" loading="lazy"></figure>`;
       else if (m && m.type === 'video') { const id = (m.href.match(/[?&]v=([\w-]{11})/) || [])[1]; box.innerHTML = id ? hubEmbed(id, btn.dataset.title || 'What it looks like', 'CDC') : ''; }
       else if (m) box.innerHTML = `<figure class="dev-photo"><img src="${m.href}" alt="${btn.dataset.title || ''}" loading="lazy"><figcaption>Photo · CDC</figcaption></figure>`;
     }

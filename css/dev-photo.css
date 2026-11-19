@@ -7,15 +7,19 @@
 #main .dvx-ages button.is-now:not(.is-on)::after{content:"";position:absolute;top:5px;right:9px;width:6px;height:6px;border-radius:50%;background:#7a5aa6}
 /* Ahead's own milestone photos: no CDC caption */
 #main .dev-photo.is-own img{border-radius:16px;width:100%;height:auto;display:block}
-#main .dev-photo.is-own img{aspect-ratio:1/1;object-fit:cover}
+#main .dev-photo.is-own{text-align:center}
+#main .dev-photo.is-own img{width:auto!important;max-width:100%;max-height:340px;margin:0 auto}
 #main .dvx-try-art.is-photo{background:none}
 #main .dvx-try-art.is-photo img{width:100%;height:100%;object-fit:cover;object-position:50% 60%;display:block}
 /* Development's top card in Safety's pattern: photo set in the card, pins on what she's doing */
 #main .dvx-hero.has-photo{min-height:0;padding-bottom:16px}
 #main .dvx-hero.has-photo .dev-hero-lead{margin-bottom:0}
 #main .dvx-photo.sf-photo{box-shadow:0 6px 18px #5b4e8f22}
-#main .dvx-photo.sf-photo img{object-position:50% 70%}
+#main .dvx-photo.sf-photo{aspect-ratio:1/1}
+#main .dvx-photo.sf-photo img{object-position:50% 50%}
 #main .dvx-photo .sf-pin span{color:#3d3352}
 /* Area pages: photo set in the top card, like Safety */
 #main .dev-area-head.has-photo .dev-area-photo{margin:14px 0 0}
 #main .dev-area-photo .sf-pin span{color:#3d3352}
+#main .dev-idea-art:has(.dev-idea-photo){background:none!important;overflow:hidden}
+#main .dev-idea-photo{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit}

@@ -92,10 +92,10 @@
     // The story, with a scene of this age.
     // Nov 18 preview: a real photo of the age's story, labeled with the story's own steps (the labels replace the lead line, so it lives in one place).
     // Nov 18 (Safety's pattern: show, don't tell): a photo set in the card, with pins on what she's doing. Each pin opens its milestone.
-    const PHOTO = { 6: { src: 'assets/dev/reaching-6.jpg?v=1', alt: 'A baby on her tummy reaching for a soft ball', lead: 'Every reach is a little experiment.', pins: [
-      { t: 'Spots the ball', x: 53, y: 21, side: 'r', go: "openPage('development-domain:6:Thinking')" },
-      { t: 'Reaches out', x: 66, y: 61, side: 'r', go: "devFocusSkill('reaches-to-grab-a-toy');openPage('development-domain:6:Thinking')" },
-      { t: 'Finds out what it does', x: 74, y: 86, side: 'l', go: "devFocusSkill('puts-things-in-mouth-to-explore');openPage('development-domain:6:Thinking')" } ] } }[ref];
+    const PHOTO = { 6: { src: 'assets/dev/reaching-6.jpg?v=2', alt: 'A baby on her tummy reaching for a soft ball', lead: 'Every reach is a little experiment.', pins: [
+      { t: 'Spots the ball', x: 53, y: 32, side: 'r', go: "openPage('development-domain:6:Thinking')" },
+      { t: 'Reaches out', x: 63, y: 66, side: 'r', go: "devFocusSkill('reaches-to-grab-a-toy');openPage('development-domain:6:Thinking')" },
+      { t: 'Finds out what it does', x: 64, y: 85, side: 'l', go: "devFocusSkill('puts-things-in-mouth-to-explore');openPage('development-domain:6:Thinking')" } ] } }[ref];
     const photoHtml = PHOTO ? `<div class="dvx-photo sf-photo"><img src="${PHOTO.src}" alt="${PHOTO.alt}">${PHOTO.pins.map(q => `<button class="sf-pin sf-pin-${q.side}" style="left:${q.x}%;top:${q.y}%" onclick="${q.go}"><i></i><span>${T(q.t)}</span></button>`).join('')}</div>` : '';
     let b = css + (PHOTO ? `<section class="dev-hero dvx-hero has-photo"><p class="dev-hero-eyebrow">${F(STAGE_TABLE.Development.stages[devKeys.indexOf(ref)].label)}</p><h1>${T(IN.t)}</h1><p class="dev-hero-lead">${T(PHOTO.lead)}</p>${photoHtml}</section>`
       : `<section class="dev-hero dvx-hero"><p class="dev-hero-eyebrow">${F(STAGE_TABLE.Development.stages[devKeys.indexOf(ref)].label)}</p><h1>${T(IN.t)}</h1><p class="dev-hero-lead">${T(IN.lead)}</p><div class="dvx-art" aria-hidden="true">${window.devScene ? devScene(ref) : (window.devHeroArt ? devHeroArt(ref) : '')}</div></section>`);
@@ -445,7 +445,7 @@
     return `<p class="hub-context">${esc(`${meta.title} · by ${when}`)}</p><h1>${T(hd[0])}</h1><p class="hub-lead">${T(hd[1])}</p>`;
   };
   function developmentDomainPageSigns(ref, domain, rows, big, tc, meta, age, h) {
-    const tryCard = `<section class="hub-card dev-try"><span class="hub-card-head"><b>${F('Try this together')}</b></span><button class="dev-try-row" onclick="openPage('chg:Development:d:signs')"><span class="dev-idea-art dev-signs-art">${h.art('signs', 'Development')}</span><span class="hub-row-copy"><b>${F('Teach a few simple signs')}</b><small>${F('More, eat, milk and all done, so Maya can tell you before {s} can say it')}</small></span><span class="hub-chev" aria-hidden="true">›</span></button></section>`;
+    const tryCard = `<section class="hub-card dev-try"><span class="hub-card-head"><b>${F('Try this together')}</b></span><button class="dev-try-row" onclick="openPage('chg:Development:d:signs')"><span class="dev-idea-art dev-signs-art"><img class="dev-idea-photo" src="assets/dev/play-signs.jpg?v=1" alt=""></span><span class="hub-row-copy"><b>${F('Teach a few simple signs')}</b><small>${F('More, eat, milk and all done, so Maya can tell you before {s} can say it')}</small></span><span class="hub-chev" aria-hidden="true">›</span></button></section>`;
     const call = `<p class="dev-call">${F(earlyBday() ? 'Maya was born early, so it’s normal to reach these closer to {p} adjusted age. Call sooner if Maya loses a skill {s} had.' : `Not all of these by ${ref >= 12 ? 'the first birthday' : ref + ' months'}? Mention it at {p} next checkup. Call sooner if Maya loses a skill {s} had.`)}</p>`;
     const credit = rows.includes('dev-see') ? `<p class="dev-credit">${F('Photos and videos: Source CDC, free at cdc.gov. The CDC doesn’t endorse Ahead.')}</p>` : '';
     return `<div class="quiet-category hub-page hub-detail dev-area-page is-${domain}" data-overview="Development" style="${yearTheme('Development')}${tc ? `;--area:${tc[0]};--area-ink:${tc[1]}` : ''}">${detailPageTop('Development')}<div class="dev-area-head${areaPhoto(ref, domain) ? ' has-photo' : ''}">${!areaPhoto(ref, domain) && window.devTileArt ? `<span class="dev-area-head-art">${devTileArt(domain, ref)}</span>` : ''}${devAreaHead(ref, domain, meta, age)}${areaPhoto(ref, domain)}</div><p class="dev-sub">${F(`Working on now, by ${age}`)}</p><div class="hub-ticks">${rows}</div>${big}${tryCard}${call}${credit}</div>`;
@@ -470,7 +470,10 @@
     // Try this together: on Movement, the idea that helps with the big question; elsewhere, an idea for one of these skills.
     const move = domain === 'Movement' && window.devMoveIdea ? devMoveIdea(ref) : null;
     const act = !move && devAreaIdea(ref, domain);
-    const pic = move ? move.art : act && window.devPlayArt ? devPlayArt(act.id) : '';
+    // Nov 18: Ahead's own photo for each area's play idea where one exists (keyed by idea id).
+    const IDEA_PHOTO = { 'supported-reach': 'play-toy-beside-knee', 'peek-face': 'play-peekaboo', 'two-hands': 'play-two-hands', };
+    const ideaId = move ? move.id : act ? act.id : '';
+    const pic = IDEA_PHOTO[ideaId] ? `<img class="dev-idea-photo" src="assets/dev/${IDEA_PHOTO[ideaId]}.jpg?v=1" alt="">` : move ? move.art : act && window.devPlayArt ? devPlayArt(act.id) : '';
     // From 6 months, Communication's idea is baby signs: a way to help Maya say what {s} {want|wants} before the words come.
     if (domain === 'Talking' && ref >= 6) return developmentDomainPageSigns(ref, domain, rows, big, tc, meta, age, h);
     const tryCard = move || act ? `<section class="hub-card dev-try"><span class="hub-card-head"><b>${F('Try this together')}</b></span><button class="dev-try-row" onclick="openPage('${move ? `chg:Development:d:move:${ref}` : `chg:Development:d:idea:${ref}:${act.id}`}')">${pic ? `<span class="dev-idea-art">${pic}</span>` : ''}<span class="hub-row-copy"><b>${F(move ? move.title : act.title)}</b><small>${move ? F(move.why) : playLine(act)}</small></span><span class="hub-chev" aria-hidden="true">›</span></button></section>` : '';
