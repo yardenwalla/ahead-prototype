@@ -118,7 +118,7 @@
     // Once a parent marks something, the card says how many they've seen.
     const words = t => new Set((String(t).toLowerCase().match(/[a-z]{4,}/g) || []).map(w => w.replace(/(ing|es|s)$/, '')));
     // Nov 18: each area tile shows a photo of its skill; a badge marks a sound clip or a video inside.
-    const TILE_PHOTO = { 6: { Social: 'photo', Talking: 'sound', Thinking: 'photo', Movement: 'video' } };
+    const TILE_PHOTO = { 6: { Social: 'photo', Talking: 'photo', Thinking: 'photo', Movement: 'photo' } };   // no sound/video badges: a tile opens its area page, not a clip
     const noticed = Object.fromEntries((IN.n || []).map(([d, t, sub]) => [d, words(t + ' ' + sub)])), noticedL = new Set((IN.n || []).map(x => x[3]));
     b += `<section class="dvx-look"><h2 class="hub-h2">${F('What to look for')}</h2><div class="dvx-areas">${Object.keys(DEV_DOMAINS).map(d => { const labels = DEVELOPMENT_DOMAINS[ref][d] || [], seen = labels.filter(devSkillSeen).length, n = labels.length;
       const name = l => { const c = clearMilestone(l); return TILE_WORDS[c] || (c === 'Closes lips to show they don’t want more food' ? 'Shows when they’re full' : c); };
