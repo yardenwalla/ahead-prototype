@@ -89,7 +89,16 @@
     const extra = (MORE[ref] || []).filter(id => !shown.has(id)).map(find).filter(Boolean);
     const more = extra.filter(Boolean).length ? `<details class="dev-more-ideas"><summary><span>${F(`${extra.length} more ideas`)}</span><span class="faq-plus" aria-hidden="true">＋</span></summary><ul class="dev-more-list">${extra.filter(Boolean).map(a => `<li><button onclick="openPage('chg:Development:d:idea:${ref}:${a.id}')"><span>${F(B(a.title))}</span><span class="hub-chev" aria-hidden="true">›</span></button></li>`).join('')}</ul></details>` : '';
     const signs = false && ref >= 6 ? h.list('', [h.row({ icon: 'signs', cat: 'Development', title: 'Try a few baby signs', sub: 'More, eat, milk and all done', onclick: `openPage('chg:Development:d:signs')` })]) : '';
-    return frame('Ideas to try together', `Play ideas · by ${ref === 12 ? '1 year' : ref + ' months'}`, lead, `<div class="dev-ideas is-grid">${pics.map(a => tile(a, ref)).join('')}</div>${more}`);
+    // Nov 19 preview: toys that fit this age, what she's outgrown, and what isn't needed (AAP 2018 toys report;
+    // Sosa 2016 on electronic toys; CPSC on crib toys at 5 months). Things Safety owns point to Safety.
+    const TOYS = { 6: {
+      now: [['toy', 'Rattles {s} can pass hand to hand', '{S’s} learning to swap hands'], ['bowl', 'A pot and a wooden spoon', '{S} {learn|learns} {p} hands can make noise'], ['book', 'Board books and cloth books', 'Chewing on them counts as reading'], ['mirror', 'An unbreakable mirror', 'Faces are still {p} favorite thing to watch']],
+      retire: [['eye', 'High-contrast cards', '{S} {see|sees} colors well now'], ['crib', 'The crib mobile', 'Take it down now, before {s} can grab it']],
+      skip: [['battery', 'Light-up, talking toys', 'Parents talk less while those are playing'], ['plug', 'Videos and apps for babies', 'Save screens for video chats with family'], ['shield', 'Seated walkers on wheels', 'They don’t help with walking', "openPage('chg:Safety:d:step:gates')"]] } }[ref];
+    const toyRows = rows => rows.map(([icon, t, sub, go]) => h.row({ icon, cat: 'Development', title: F(t), sub: F(sub), onclick: go || '' }));
+    const toys = TOYS ? `<section class="dev-toys"><h2 class="hub-h2">${F('Toys that fit now')}</h2><p class="dev-toys-lead">${F('You don’t need much. You, plus a few simple things, are what Maya plays with best.')}</p>`
+      + h.list('', toyRows(TOYS.now)) + h.list('Ready to put away', toyRows(TOYS.retire)) + h.list('Not needed', toyRows(TOYS.skip)) + '</section>' : '';
+    return frame('Ideas to try together', `Play ideas · by ${ref === 12 ? '1 year' : ref + ' months'}`, lead, `<div class="dev-ideas is-grid">${pics.map(a => tile(a, ref)).join('')}</div>${more}${toys}`);
   }
   function movePage(ref) {
     const mv = window.devMoveIdea(ref), h = H();
