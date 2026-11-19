@@ -17,3 +17,5 @@
 #main .dev-photo.is-own img{aspect-ratio:1/1;object-fit:cover}
 /* Hero photo a little shorter, so "What to look for" starts on the first screen */
 #main .dvx-photo img{aspect-ratio:5/4;object-fit:cover;object-position:50% 90%}
+#main .dvx-try-art.is-photo{background:none}
+#main .dvx-try-art.is-photo img{width:100%;height:100%;object-fit:cover;object-position:50% 60%;display:block}

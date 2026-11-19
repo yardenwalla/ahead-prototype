@@ -99,9 +99,11 @@
     const tint = d => { const c = window.devTileColors ? devTileColors(d) : null; return c ? `--dt-bg:${c[0]};--dt-ink:${c[1]}` : ''; };
     // One thing to try together. Area pages each have their own idea, never this one.
     const all = {}; for (let mm = 0; mm <= 12; mm++) { try { const x = playStageModel(mm); [...(x.primary || []), ...(x.more || [])].forEach(a => { if (!all[a.id]) all[a.id] = a; }); } catch (e) {} }
+    // Nov 18: play ideas with Ahead's own photo.
+    const PLAY_PHOTO = { 'floor-drum': 'play-floor-drum' };
     const A = all[IN.idea];
     let tryHtml = '', qHtml = '';
-    if (A) tryHtml = `<section class="dvx-trycard"><button class="dvx-try" onclick="openPage('chg:Development:d:idea:${ref}:${A.id}')"><span class="dvx-try-art" aria-hidden="true">${window.devPlayArt ? devPlayArt(A.id) : ''}</span><span><small>${F('Try this together')}</small><b>${T(A.title)}</b><span class="dvx-sub">${IN.w ? T(IN.w) : playLine(A)}</span></span><span class="hub-chev" aria-hidden="true">›</span></button>`
+    if (A) tryHtml = `<section class="dvx-trycard"><button class="dvx-try" onclick="openPage('chg:Development:d:idea:${ref}:${A.id}')"><span class="dvx-try-art${PLAY_PHOTO[A.id] ? ' is-photo' : ''}" aria-hidden="true">${PLAY_PHOTO[A.id] ? `<img src="assets/dev/${PLAY_PHOTO[A.id]}.jpg?v=1" alt="">` : (window.devPlayArt ? devPlayArt(A.id) : '')}</span><span><small>${F('Try this together')}</small><b>${T(A.title)}</b><span class="dvx-sub">${IN.w ? T(IN.w) : playLine(A)}</span></span><span class="hub-chev" aria-hidden="true">›</span></button>`
       + `<button class="dvx-trymore" onclick="openPage('chg:Development:d:more:${ref}')">${F('More ways to play')}<span aria-hidden="true">›</span></button></section>`;
     // The big question of the age, answered once, here.
     const Q = DEV_BIG[ref], W = DEV_BIG_BAR[ref];
