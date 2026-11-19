@@ -16,3 +16,6 @@
 #main .dvx-photo.sf-photo{box-shadow:0 6px 18px #5b4e8f22}
 #main .dvx-photo.sf-photo img{object-position:50% 70%}
 #main .dvx-photo .sf-pin span{color:#3d3352}
+/* Area pages: photo set in the top card, like Safety */
+#main .dev-area-head.has-photo .dev-area-photo{margin:14px 0 0}
+#main .dev-area-photo .sf-pin span{color:#3d3352}

@@ -52,9 +52,9 @@
 
   // A skill's photo or video, opened on the page.
   // Nov 18: Ahead's own photos, in one style, for milestones a still photo shows well. Motion and sound milestones keep the CDC video.
-  const OWN_PHOTO = { 'pushes-onto-elbows-during-tummy-time': 'm4-elbows', 'reaches-to-grab-a-toy': 'm6-reaches', 'leans-on-hands-when-sitting': 'm6-leans-on-hands', 'knows-familiar-people': 'm6-familiar-people', 'closes-lips-to-show-they-don-t-want-more-food': 'm6-closes-lips' };
+  const OWN_PHOTO = { 'pushes-onto-elbows-during-tummy-time': 'm4-elbows', 'pushes-up-with-straight-arms-on-tummy': 'm6-straight-arms', 'reaches-to-grab-a-toy': 'm6-reaches', 'leans-on-hands-when-sitting': 'm6-leans-on-hands', 'knows-familiar-people': 'm6-familiar-people', 'closes-lips-to-show-they-don-t-want-more-food': 'm6-closes-lips' };
   // Where each photo sits in its square frame (vertical %), so faces and the skill both stay in view.
-  const OWN_POS = { 'm6-reaches': 0, 'm6-closes-lips': 30, 'm6-leans-on-hands': 40, 'm6-familiar-people': 0, 'm4-elbows': 55 };
+  const OWN_POS = { 'm6-reaches': 0, 'm6-closes-lips': 30, 'm6-leans-on-hands': 40, 'm6-familiar-people': 0, 'm4-elbows': 55, 'm6-straight-arms': 50 };
   window.devSeeIt = function (btn, key) {
     const box = btn.closest('.dev-skill').querySelector('.dev-media');
     if (!box) return;
