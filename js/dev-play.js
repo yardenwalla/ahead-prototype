@@ -31,7 +31,7 @@
     'put-in': 'play-put-in', 'pretend-cup': 'play-pretend-cup', 'stack-pair': 'play-stack-pair', 'action-book': 'play-action-book', 'two-baskets': 'play-two-baskets',
     // Nov 19: the six more ideas for each age.
     'smile-pause': 'play-smile-pause', 'change-chat': 'play-change-chat', 'book-voices': 'play-book-voices', 'outside-pause': 'play-outside-pause', 'slow-song': 'play-slow-song', 'floor-company': 'play-floor-company', 'sock-puppet': 'play-sock-puppet', 'page-pat': 'play-page-pat', 'barefoot-kicks': 'play-barefoot-kicks', 'lap-sway': 'play-lap-sway', 'follow-toy': 'play-follow-toy', 'touch-rhyme': 'play-touch-rhyme', 'mirror-faces': 'play-mirror-faces', 'roll-interest': 'play-roll-interest', 'rhyming-page': 'play-rhyming-page', 'leaf-watch': 'play-leaf-watch', 'sound-side': 'play-sound-side', 'feet-discovery': 'play-feet-discovery', 'lift-flap': 'play-lift-flap', 'knock-stack': 'play-knock-stack', 'peek-corner': 'play-peek-corner', 'roll-ball': 'play-roll-ball', 'song-pause': 'play-song-pause', 'spoon-bowl': 'play-spoon-bowl', 'feed-teddy': 'play-feed-teddy', 'open-close': 'play-open-close', 'body-song': 'play-body-song', 'follow-point': 'play-follow-point', 'stir-bowl': 'play-stir-bowl' };
-  const photo = id => PHOTO[id] ? `<img class="dev-idea-photo" src="assets/dev/${PHOTO[id]}.jpg?v=5" alt="">` : '';
+  const photo = id => PHOTO[id] ? `<img class="dev-idea-photo" src="assets/dev/${PHOTO[id]}.jpg?v=6" alt="">` : '';
   const tile = (a, ref) => `<button class="dev-idea" onclick="openPage('chg:Development:d:idea:${ref}:${a.id}')"><span class="dev-idea-art">${photo(a.id) || devPlayArt(a.id)}</span><b>${F(B(a.title))}</b></button>`;
 
   // Try today, on the summary: two of the stage's ideas, a different pair each day, and the rest one tap away.
@@ -102,14 +102,14 @@
     // Sosa 2016 on electronic toys; CPSC on crib toys at 5 months). Things Safety owns point to Safety.
     // Nov 19: toys that fit each age, and what's ready to put away (AAP toys report; vision milestones; CPSC on crib toys).
     const TOYS = {
-      2: { now: [['toy-cards', 'High-contrast cards'], ['toy-mat', 'A play mat'], ['toy-soft-rattle', 'A soft rattle']], away: [] },
-      4: { now: [['toy-ring-rattle', 'A ring rattle'], ['toy-crinkle', 'A crinkle book'], ['toy-gym', 'A play gym']],
+      2: { now: [['toy-cards', 'High-contrast cards'], ['toy-mat', 'Play mat'], ['toy-soft-rattle', 'Soft rattle']], away: [] },
+      4: { now: [['toy-ring-rattle', 'Ring rattle'], ['toy-crinkle', 'Crinkle book'], ['toy-gym', 'Play gym']],
         away: [['eye', 'High-contrast cards', '{S} {see|sees} colors well now']] },
-      6: { now: [['toy-rattle', 'A ball rattle'], ['toy-bowl', 'A pot and a spoon'], ['toy-books', 'Board books']],
+      6: { now: [['toy-rattle', 'Ball rattle'], ['toy-bowl', 'Pot and spoon'], ['toy-books', 'Board books']],
         away: [['crib', 'The crib mobile', 'Take it down now, before {s} can grab it']] },
-      9: { now: [['toy-cups', 'Stacking cups'], ['toy-ball', 'A soft ball'], ['toy-flap', 'Lift-the-flap books']],
+      9: { now: [['toy-cups', 'Stacking cups'], ['toy-ball', 'Soft ball'], ['toy-flap', 'Lift-the-flap books']],
         away: [['mat', 'The play gym', '{S’s} sitting up and on the move now']] },
-      12: { now: [['toy-push', 'A sturdy push toy'], ['toy-sorter', 'A shape sorter'], ['toy-pretend', 'A cup, spoon and teddy']],
+      12: { now: [['toy-push', 'Sturdy push toy'], ['toy-sorter', 'Shape sorter'], ['toy-pretend', 'Cup, spoon and teddy']],
         away: [['stand', 'The activity center', 'Cruising the furniture is better practice now']] } }[ref];
     const toys = TOYS ? `<section class="dev-toys"><h2 class="hub-h2">${F('Toys that fit now')}</h2><p class="dev-toys-lead">${F('Simple toys work best, and you don’t need many.')}</p>`
       + `<div class="dev-toy-grid">${TOYS.now.map(([img, t]) => `<div class="dev-toy"><img src="assets/dev/${img}.jpg?v=2" alt=""><b>${F(t)}</b></div>`).join('')}</div>`
