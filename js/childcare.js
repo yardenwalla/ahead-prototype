@@ -133,7 +133,7 @@
   const WHERE = {
     center: [['book', 'Your state’s child care website', 'Licensed centers, with inspection reports'], ['chat', 'Your local child care referral agency', 'Free, and knows who has openings'], ['heart', 'Other parents nearby', 'Neighborhood groups and friends']],
     home: [['book', 'Your state’s child care website', 'Licensed home daycares, with inspection reports'], ['chat', 'Your local child care referral agency', 'Free, and knows who has openings'], ['heart', 'Other parents nearby', 'Ask who they used']],
-    nanny: [['heart', 'Local parent groups', 'The most common way to find one'], ['notepad', 'A nanny agency', 'They screen candidates, for a fee'], ['eye', 'Caregiver websites', 'Lots of choice; you do the checking']],
+    nanny: [['heart', 'Local parent groups', 'Often a good place to start'], ['notepad', 'A nanny agency', 'They screen candidates, for a fee'], ['eye', 'Caregiver websites', 'Lots of choice; you do the checking']],
     sitter: [['heart', 'Friends and other parents', 'Ask who they trust'], ['eye', 'Caregiver websites', 'Many list sitters near you'], ['blocks', 'Daycare teachers', 'Some babysit evenings. Check the center’s policy']]
   };
 
@@ -366,7 +366,7 @@
   // (a pick saved on the shortlist, "Care has started"), and a parent can pick the stage from "All stages".
   const CC_ART = ["<svg viewBox=\"0 0 160 164\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\">\n <ellipse cx=\"80\" cy=\"151\" rx=\"74\" ry=\"9\" fill=\"#e2c993\" opacity=\".35\"/>\n <path d=\"M96 75 119 57l23 18v56H96Z\" fill=\"#dfb9b0\"/><path d=\"M98 76 119 60l22 16\" fill=\"none\" stroke=\"#ac8581\" stroke-width=\"3\" stroke-linejoin=\"round\"/><rect x=\"111\" y=\"93\" width=\"15\" height=\"19\" rx=\"5\" fill=\"#fff1d5\"/><rect x=\"113\" y=\"117\" width=\"17\" height=\"14\" rx=\"5\" fill=\"#fff1d5\"/>\n <circle cx=\"54\" cy=\"68\" r=\"23\" fill=\"#e4af9a\"/><path d=\"M32 61c3-19 24-29 41-13 5 4 8 10 8 15\" fill=\"#69544f\"/><path d=\"M38 50c-5 7-6 14-5 20\" fill=\"none\" stroke=\"#69544f\" stroke-width=\"8\" stroke-linecap=\"round\"/>\n <path d=\"M20 147c-2-35 10-57 34-59 26-2 42 19 43 59Z\" fill=\"#adc1c7\"/><path d=\"M72 105c9 11 14 21 15 37\" fill=\"none\" stroke=\"#829da6\" stroke-width=\"5\" stroke-linecap=\"round\"/>\n <ellipse cx=\"83\" cy=\"115\" rx=\"27\" ry=\"22\" fill=\"#e8c7ad\"/><circle cx=\"80\" cy=\"100\" r=\"16\" fill=\"#edc6ad\"/><path d=\"M67 99c3-13 22-18 28-5\" fill=\"none\" stroke=\"#ad8979\" stroke-width=\"5\" stroke-linecap=\"round\"/><path d=\"M57 130c7-12 18-15 27-11 8 4 16 14 19 26H62Z\" fill=\"#d5bada\"/>\n <path d=\"M47 114c5 8 14 10 20 12\" fill=\"none\" stroke=\"#e4af9a\" stroke-width=\"8\" stroke-linecap=\"round\"/>\n <circle cx=\"118\" cy=\"35\" r=\"5\" fill=\"#e6bc70\"/><path d=\"M139 28v10m-5-5h10\" stroke=\"#d6ad5d\" stroke-width=\"3\" stroke-linecap=\"round\"/>\n </svg>", "<svg viewBox=\"0 0 160 164\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\">\n <ellipse cx=\"80\" cy=\"153\" rx=\"72\" ry=\"8\" fill=\"#bfd8c3\" opacity=\".45\"/>\n <rect x=\"112\" y=\"41\" width=\"34\" height=\"48\" rx=\"9\" fill=\"#fffaf0\" stroke=\"#aec7ae\" stroke-width=\"2\"/><path d=\"M121 56h15m-15 8h12m-12 8h9\" stroke=\"#8ab09b\" stroke-width=\"3\" stroke-linecap=\"round\"/>\n <path d=\"M29 146c0-34 11-53 38-53s42 19 44 53Z\" fill=\"#96c5ad\"/>\n <circle cx=\"68\" cy=\"69\" r=\"23\" fill=\"#dfaa94\"/><path d=\"M46 60c3-21 31-28 44-6 2 4 3 8 2 12\" fill=\"#625249\"/><path d=\"M47 70c-4-11-3-20 2-26\" stroke=\"#625249\" stroke-width=\"8\" stroke-linecap=\"round\"/>\n <path d=\"M86 111c6 4 11 9 14 18\" fill=\"none\" stroke=\"#74ae92\" stroke-width=\"5\" stroke-linecap=\"round\"/>\n <circle cx=\"106\" cy=\"103\" r=\"17\" fill=\"#f1c5b0\"/><path d=\"M91 99c2-13 18-18 27-5\" fill=\"none\" stroke=\"#ad7f6d\" stroke-width=\"5\" stroke-linecap=\"round\"/>\n <path d=\"M83 144c2-19 13-29 28-29 14 0 25 10 28 29Z\" fill=\"#d0d7ef\"/>\n <path d=\"M52 113c8 13 22 19 37 20\" stroke=\"#dfaa94\" stroke-width=\"10\" fill=\"none\" stroke-linecap=\"round\"/>\n <path d=\"M30 40c4-6 8-6 12 0 4-6 9-6 13 0-4 8-10 13-13 15-5-3-10-8-12-15Z\" fill=\"#e9ab9b\" opacity=\".85\"/>\n </svg>", "<svg viewBox=\"0 0 160 164\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\">\n <ellipse cx=\"83\" cy=\"153\" rx=\"74\" ry=\"8\" fill=\"#ecc8c4\" opacity=\".42\"/>\n <path d=\"M26 147c2-34 18-55 43-55 28 0 42 20 43 55Z\" fill=\"#c4aecf\"/>\n <circle cx=\"66\" cy=\"69\" r=\"24\" fill=\"#dcab98\"/><path d=\"M44 62c1-20 20-30 39-16 6 4 9 10 8 18\" fill=\"#67574d\"/><path d=\"M45 64c-6-6-6-14-4-18\" stroke=\"#67574d\" stroke-width=\"8\" stroke-linecap=\"round\"/>\n <path d=\"M60 77c4 5 11 6 16 0\" fill=\"none\" stroke=\"#9d675b\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n <circle cx=\"117\" cy=\"97\" r=\"19\" fill=\"#f0c4aa\"/><path d=\"M100 92c3-13 19-19 30-8\" fill=\"none\" stroke=\"#ad8b77\" stroke-width=\"5\" stroke-linecap=\"round\"/><path d=\"M104 103c4 3 8 3 12 0\" fill=\"none\" stroke=\"#aa7766\" stroke-width=\"2\" stroke-linecap=\"round\"/>\n <path d=\"M92 146c2-16 14-29 29-29 16 0 27 14 28 29Z\" fill=\"#b7d5bd\"/>\n <path d=\"M73 120c6-13 19-19 30-14\" fill=\"none\" stroke=\"#dcab98\" stroke-width=\"10\" stroke-linecap=\"round\"/>\n <path d=\"M115 44c5-10 11-10 16-2 6-7 12-5 14 0 1 9-8 16-15 19-9-5-16-10-15-17Z\" fill=\"#d9a0a3\"/>\n <path d=\"M14 80l9-4m-2-12 7 3m110 1 8 7\" stroke=\"#d7a5aa\" stroke-width=\"3\" stroke-linecap=\"round\"/>\n </svg>"];
   const CC_STAGES = [
-    { label: 'Finding care', age: 'Months before', one: 'Kinds of care, costs and when to start looking', eyebrow: 'Finding care', t: 'Start looking early', lead: 'Infant waitlists are long, so it helps to join a few early. Here are your options.',
+    { label: 'Finding care', age: 'Months before', one: 'Kinds of care, costs and when to start looking', eyebrow: 'Finding care', t: 'Explore your options', lead: 'Infant spots go fast, so it helps to start early. Here’s what each kind of care looks like.',
       worth: ['Worth knowing before you look', 'The best tour question isn’t about activities.', 'Ask how they handle crying and naps, and who covers when someone’s out.'] },
     { label: 'Care chosen', age: 'Weeks before', one: 'Getting ready for day one, and a backup plan', eyebrow: 'Care chosen', t: 'Make day one familiar', lead: 'Help your caregiver learn Maya’s little routines before the first real goodbye.',
       worth: ['Worth knowing before day one', 'A practice day helps more than a perfect schedule.', 'Visit together first, then let the caregiver take the lead while you’re nearby.'] },
@@ -381,7 +381,7 @@
   // page, one card per question, with small pictures for the answers. Facts, not scores (AAP: 3 babies per adult in
   // an infant room; Caring for Our Children: at most 2 under-2s per adult in a home daycare).
   const COLS = [['center', 'Daycare'], ['home', 'Home daycare'], ['nanny', 'Nanny'], ['family', 'Family']];
-  const ONE = { center: 'Set hours, backup staff', home: 'Small group, in a home', nanny: 'One-on-one at home', family: 'Someone they know' };
+  const ONE = { center: 'A licensed center with trained teachers', home: 'A small group in a provider’s home', nanny: 'One-on-one care in your home', family: 'Someone who already knows {o}' };
   const dots = n => `<span class="cc-dots" aria-hidden="true">${[1, 2, 3].map(i => `<i class="${i <= n ? 'on' : ''}"></i>`).join('')}</span>`;
   const ppl = n => `<span class="cc-ppl" aria-hidden="true">${Array.from({ length: n }, () => '<svg viewBox="0 0 12 14"><circle cx="6" cy="4" r="3"/><path d="M1 14a5 5 0 0 1 10 0Z"/></svg>').join('')}</span>`;
   const ok = '<span class="cc-ok" aria-hidden="true">✓</span>', no = '<span class="cc-no" aria-hidden="true">–</span>';
@@ -392,23 +392,36 @@
     ['backup', 'shield', 'If the caregiver’s out', { center: [ok, 'Other staff cover'], home: [no, 'You find backup'], nanny: [no, 'You find backup'], family: [no, 'You find backup'] }, ['center']],
     ['cost', 'coin', 'What you pay for', { center: ['', 'Tuition'], home: ['', 'Tuition'], nanny: ['', 'Salary + payroll taxes'], family: ['', 'Whatever you agree'] }, []]
   ];
-  const TOPICS_CMP = [['hours', 'Hours'], ['group', 'Group size'], ['sick', 'Sick days'], ['cost', 'Cost']];
-  // A tab jumps to its card, just under the pinned header; the tab for the card you're reading stays filled.
-  window.ccJump = id => { const el = document.getElementById('ccq-' + id), bar = document.querySelector('.cc-q-sticky'); if (!el) return;
-    scrollTo(0, el.getBoundingClientRect().top + scrollY - (bar ? bar.offsetHeight : 0) - 10); ccSpy(id); };
-  window.ccSpy = force => { const bar = document.querySelector('.cc-q-sticky'); if (!bar) return; let cur = force;
-    if (!cur) { const line = bar.getBoundingClientRect().bottom + 24; document.querySelectorAll('.cc-q[data-topic]').forEach(c => { if (c.getBoundingClientRect().top <= line) cur = c.dataset.topic; }); cur = cur === 'backup' ? 'sick' : cur || 'hours'; }
-    bar.querySelectorAll('.cc-tab').forEach(t => t.classList.toggle('is-on', t.dataset.topic === cur)); };
-  if (!window.__ccSpy) { window.__ccSpy = 1; addEventListener('scroll', () => { if (document.querySelector('.cc-q-sticky')) ccSpy(); }, { passive: true }); }
-  // Tapping a care type picks out its column everywhere; tap again to see all four.
-  window.ccPickCol = k => { save('ahead-childcare-col', load('ahead-childcare-col', '') === k ? '' : k); rerender(); ccSpy(); };
+  // Round 6: one question at a time. Tabs (or a swipe) switch the question; each kind of care answers it in a full
+  // sentence and opens its own page; "What to ask" turns the answer into a tour question. Sources: AAP (ratios, sick
+  // days), Caring for Our Children (home daycare), IRS (nanny payroll taxes).
+  const TOPICS_CMP = [
+    ['hours', 'Hours', 'clock', 'Which hours does each one cover?', 'Early starts, late pickups and weekends narrow your options.', {
+      center: 'Set opening hours. Ask about early drop-off and late pickup.', home: 'Set hours, often a little more flexible. Closed when the provider is away.',
+      nanny: 'Works the schedule you agree on, early or late.', family: 'Whatever you agree. Check it still works week after week.' }, 'What are your hours, and what happens if I’m running late?'],
+    ['group', 'Group size', 'blocks', 'How many babies per grown-up?', 'Fewer babies per adult means more attention. The AAP’s guide: 3 babies per adult, 6 in a room.', {
+      center: 'Babies grouped by age. Best is 3 per adult, and at most 6 in a room. Your state may allow a few more.', home: 'A small, mixed-age group. Best is no more than 2 babies per adult.',
+      nanny: 'Just your baby. In a nanny share, 2 babies.', family: 'Usually just your baby.' }, 'How many babies does each caregiver look after?'],
+    ['sick', 'Sick days', 'thermo', 'What happens when Maya is sick?', 'The answer depends on where {s’s} cared for, and the provider’s policy.', {
+      center: 'Stays home with a fever or anything on the center’s list. A mild cold is often fine. When a teacher is out, other staff cover.', home: 'The same kind of policy as a center, sometimes stricter. When the provider is sick, the daycare may close.',
+      nanny: 'May keep caring through a mild illness, if you agreed ahead of time. When the nanny is sick, you need backup.', family: 'Depends on what your family is comfortable with. When they’re sick, you need backup.' }, 'Which illnesses mean Maya needs to stay home, and when can {s} come back?'],
+    ['cost', 'Cost', 'coin', 'What do you pay for?', 'Costs vary a lot by city. Ask each place for the full cost, fees included.', {
+      center: 'Monthly tuition, often with a deposit to hold a spot.', home: 'Monthly tuition. Often about the same as a center.',
+      nanny: 'A salary plus payroll taxes. Usually the highest cost; a share splits it.', family: 'Whatever you agree, from nothing to a regular wage.' }, 'What’s the total cost, including fees, closed days and deposits?']
+  ];
+  let cmpAt = 0;
+  window.ccTopic = i => { cmpAt = (i + TOPICS_CMP.length) % TOPICS_CMP.length; rerender(); };
+  window.ccSwipe = (el) => { let x0 = null; el.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, { passive: true });
+    el.addEventListener('touchend', e => { if (x0 == null) return; const dx = e.changedTouches[0].clientX - x0; x0 = null; if (Math.abs(dx) > 50) ccTopic(cmpAt + (dx < 0 ? 1 : -1)); }, { passive: true }); };
   function comparePage() {
-    const pick = load('ahead-childcare-col', ''), nm = (COLS.find(c => c[0] === pick) || [])[1];
-    const tabs = `<div class="cc-tabs-row" role="tablist">${TOPICS_CMP.map(([k, n], i) => `<button class="cc-tab${i ? '' : ' is-on'}" data-topic="${k}" onclick="ccJump('${k}')">${F(n)}</button>`).join('')}</div>`;
-    const head = `<div class="cc-q-cols cc-q-pin${pick ? ' has-pick' : ''}">${COLS.map(([k, n]) => `<button class="cc-pick${pick === k ? ' is-on' : ''}" aria-pressed="${pick === k}" onclick="ccPickCol('${k}')"><span class="cc-pick-img"><img src="assets/childcare/col-${k}.jpg" alt="" loading="lazy">${pick === k ? '<i aria-hidden="true">✓</i>' : ''}</span><b>${F(n)}</b></button>`).join('')}</div>`;
-    const hint = pick ? `<button class="cc-pick-go" onclick="openPage('chg:${CAT}:d:${pick}')">${F(`More about ${nm === 'Daycare' ? 'daycare centers' : nm === 'Family' ? 'family or friends' : nm === 'Nanny' ? 'nannies' : 'home daycares'}`)} ›</button>` : `<p class="cc-pick-hint">${F('Tap one to pick it out')}</p>`;
-    const cards = QS.map(([id, icon, label, cells]) => `<section class="hub-card cc-q${pick ? ' has-pick' : ''}" id="ccq-${id}" data-topic="${id}"><p class="cc-q-title">${hubArt(icon, CAT)}${F(label)}</p><div class="cc-q-cols">${COLS.map(([k]) => `<div class="cc-q-cell${pick === k ? ' is-pick' : ''}">${cells[k][0]}<span>${F(cells[k][1])}</span></div>`).join('')}</div></section>`).join('');
-    return sub('fit', 'Kinds of care', 'Compare your options', 'Many families end up with a mix.', `<div class="cc-q-sticky">${tabs}${head}${hint}</div>` + cards + '<div class="cc-q-tail" aria-hidden="true"></div>', 'blocks');
+    const [id, , icon, q, why, ans, ask] = TOPICS_CMP[cmpAt];
+    const tabs = `<div class="cc-tabs-row" role="tablist">${TOPICS_CMP.map(([k, n], i) => `<button class="cc-tab${i === cmpAt ? ' is-on' : ''}" role="tab" aria-selected="${i === cmpAt}" onclick="ccTopic(${i})">${F(n)}</button>`).join('')}</div>`;
+    const top = `<section class="cc-topic"><p class="cc-topic-eyebrow">${F(TOPICS_CMP[cmpAt][1])}</p><h2>${F(q)}</h2><p>${F(why)}</p><span class="cc-topic-art">${hubArt(icon, CAT)}</span></section>`;
+    const rows = H().list('', COLS.map(([k]) => H().row({ icon: TYPES[k].icon, cat: CAT, title: TYPES[k].name.replace(' or nanny share', '').replace(' or friends', ''), sub: ans[k], onclick: `openPage('chg:${CAT}:d:${k}')` })));
+    const askCard = `<section class="cc-ask-card"><span>${hubArt('chat', CAT)}</span><div><b>${F('What to ask')}</b><p>${F('“' + ask + '”')}</p></div></section>`;
+    const dots = `<div class="cc-dots-nav" aria-hidden="true">${TOPICS_CMP.map((_, i) => `<i class="${i === cmpAt ? 'on' : ''}"></i>`).join('')}</div>`;
+    setTimeout(() => { const el = document.querySelector('.cc-swipe'); if (el && !el.__sw) { el.__sw = 1; ccSwipe(el); } }, 0);
+    return sub('compare', 'Kinds of care', 'Compare your options', '', tabs + `<div class="cc-swipe" data-topic="${id}">${top}${rows}${askCard}${dots}</div>`, 'blocks');
   }
   function childcare() {
     const card = load('ahead-carecard', {}), list = shortlist(), am = typeof actualMonth === 'function' ? actualMonth() : 0, fd0 = feedNow(), bm0 = fd0 !== 'Formula', fm0 = fd0 !== 'Breast milk';
@@ -422,8 +435,9 @@
     if (view === 0) {
       // Nov 19: the signature visual. Four kinds of regular care side by side, facts not scores; a chip highlights a row
       // and ticks the cell that's strongest on it, but nothing picks a winner for the family (design guide).
-      b += `<h2 class="hub-h2">${F('Compare your options')}</h2><div class="cc-row4">${COLS.map(([k, n]) => { const m = (list[k] || []).length; return `<button class="cc-opt cc-opt-v" onclick="openPage('chg:${CAT}:d:${k}')"><img src="assets/childcare/col-${k}.jpg" alt="" loading="lazy"><b>${F(n)}&nbsp;›</b><small>${F(m ? `${m} on your shortlist` : ONE[k])}</small></button>`; }).join('')}</div>`
-        + `<div class="hub-list cc-cmp-link">` + homeRow('fit', 'blocks', 'See them side by side', 'Hours, group size, sick days and cost', 'compare') + `</div>`;
+      // Round 6: four big photo cards, one line each, then the comparison one tap away.
+      b += `<div class="cc-grid2">${COLS.map(([k]) => { const m = (list[k] || []).length; return `<button class="cc-card2" onclick="openPage('chg:${CAT}:d:${k}')"><img src="assets/childcare/card-${k}.jpg" alt="" loading="lazy"><b>${F(TYPES[k].name)}&nbsp;›</b><small>${F(m ? `${m} on your shortlist` : ONE[k])}</small></button>`; }).join('')}</div>`
+        + `<div class="hub-list cc-cmp-link">` + homeRow('fit', 'blocks', 'Compare your options', 'Hours, group size, sick days and cost', 'compare') + `</div>`;
       b += `<h2 class="hub-h2">${F('Help now and then')}</h2><div class="hub-list">`
         + homeRow('sitter', 'moon', 'Babysitter', 'For a night out, or a break', 'sitter')
         + homeRow('help', 'star', 'Extra help at home', am < 4 ? 'A doula or overnight help, early on' : 'A helper while you’re home, or at night', 'help') + `</div>`;
@@ -508,17 +522,33 @@
     const qs = !ed ? stepsBlock(k, Q, t) : `<div class="cc-qs is-editing">${grouped(Q, x => `<div class="cc-q"><div><b>${x.own ? esc3(x.q) : F(x.q)}</b><small>${F(hint(x))}</small></div>${ed ? `<button class="cc-q-x" aria-label="Remove this question" onclick="ccQHide('${k}','${x.key}')">×</button>` : ''}</div>`)}`
       + (ed ? `<div class="cc-q-add"><input id="ccNewQ" placeholder="${esc3('Add your own question')}" autocomplete="off" onkeydown="if(event.key==='Enter')ccQAdd('${k}')"><button onclick="ccQAdd('${k}')">${F('Add')}</button></div>${changed ? `<button class="cc-q-reset" onclick="ccQReset('${k}')">${F('Bring back our questions')}</button>` : ''}` : '') + `</div>`;
     const shortRows = mine.map(c => h.row({ icon: t.icon, cat: CAT, title: esc3(c.name || 'Unnamed'), sub: c.chosen ? F(t.talk ? 'Helping' : 'Chosen') : `${(c.checks || []).filter(x => Q.some(y => y.key === x)).length} of ${Q.length} ${t.talk ? 'talked through' : 'checked'}${c.notes ? ' · has notes' : ''}`, onclick: `openPage('chg:${CAT}:d:cand-${k}-${c.id}')` }));
-    return sub(k, 'Kinds of care', t.name, t.lead,
-      `<section class="hub-card cc-fit"><div><b>${F('A good fit if')}</b><p>${F(t.good)}</p></div><div><b>${F('Keep in mind')}</b><p>${F(t.mind)}</p></div><div class="cc-when"><span class="cc-when-art">${hubArt('idea', CAT)}</span><div><small>${F(t.talk ? 'When to ask' : 'When to start looking')}</small><b>${F(t.when[0])}</b><p>${F(t.when[1])}</p></div></div></section>`
+    const fit = FIT[k];
+    const top = fit ? `<h2 class="hub-h2">${F('Good fit if you…')}</h2><div class="cc-fit3">${fit.good.map(([i, txt]) => `<div><span>${hubArt(i, CAT)}</span><b>${F(txt)}</b></div>`).join('')}</div>`
+        + rows('Keep in mind', fit.mind.concat([['idea', (t.talk ? 'Ask ' : 'Start looking ') + t.when[0].charAt(0).toLowerCase() + t.when[0].slice(1), t.when[1]]]))
+      : `<section class="hub-card cc-fit"><div><b>${F('A good fit if')}</b><p>${F(t.good)}</p></div><div><b>${F('Keep in mind')}</b><p>${F(t.mind)}</p></div><div class="cc-when"><span class="cc-when-art">${hubArt('idea', CAT)}</span><div><small>${F(t.talk ? 'When to ask' : 'When to start looking')}</small><b>${F(t.when[0])}</b><p>${F(t.when[1])}</p></div></div></section>`;
+    const page0 = sub(k, 'Kinds of care', t.name, t.lead,
+      top
       + (k === 'center' && typeof profile !== 'undefined' && profile.early ? h.tip('Born early?', 'Ask your pediatrician when group care makes sense for {o}.') : '')
       + (WHERE[k] ? rows('Where to look', WHERE[k]) : '')
       + (k === 'sitter' || k === 'family' ? careCardButton(load('ahead-carecard', {})) : '')
-      + (k === 'nanny' ? rows('', [['hand', 'Sharing a nanny', 'Finding a family, and what to agree', go('share')], ['coin', 'Paying a nanny', 'Taxes and payroll', go('pay')]]) : '')
+      + (k === 'nanny' ? rows('', [['home', 'Sharing a nanny', 'Finding a family, and what to agree', go('share')], ['coin', 'Paying a nanny', 'Taxes and payroll', go('pay')]]) : '')
       + `<div class="cc-qhead"><h2 class="hub-h2">${F(t.talk ? 'Things to talk through' : t.who === 'place' ? 'Checking a place' : 'Finding the right person')}</h2></div>` + qs
       + `<h2 class="hub-h2">${F(t.talk ? 'Who’s helping' : 'Your shortlist')}</h2>`
       + (mine.length ? h.list('', shortRows) + (mine.some(c => c.chosen) ? rows('', [['bag', 'Get ready for day one', 'Easing in, and what to send', go('ready')]]) : '') : `<p class="cc-lead">${F(t.talk ? `Add each person who’ll help, and tick off what you’ve talked through.` : `Add each ${noun} you’re considering, and tick off each step.`)}</p>`)
       + `<button class="hub-button is-secondary cc-add" onclick="openPage('chg:${CAT}:d:cand-${k}-new')">＋ ${F(`Add a ${noun}`)}</button>`, t.icon);
+    // A real photo above the top card, for the four regular kinds of care.
+    return fit ? page0.replace('<div class="dev-area-head', `<figure class="cc-type-photo"><img src="assets/childcare/card-${k}.jpg" alt="" loading="lazy"></figure><div class="cc-photo-head dev-area-head`) : page0;
   }
+  const FIT = {
+    center: { good: [['clock', 'Want set hours'], ['blocks', 'Like other babies around'], ['shield', 'Want staff to cover sick days']],
+      mind: [['notepad', 'Infant rooms fill first', 'Join a few waitlists now, even before you’re sure'], ['thermo', 'More colds in the first year', 'Sick days at home mean backup care']] },
+    home: { good: [['home', 'Want a homey setting'], ['blocks', 'Like a small, mixed group'], ['clock', 'Need a little flexibility']],
+      mind: [['hand', 'One provider', 'You’ll need backup when they’re sick or away'], ['shield', 'Check the license', 'Your state’s website lists inspections']] },
+    nanny: { good: [['clock', 'Want a flexible schedule'], ['smile', 'Prefer one\u2011on\u2011one care'], ['home', 'Want care in your home']],
+      mind: [['notepad', 'You become an employer', 'Payroll taxes and a W-2 apply'], ['coin', 'Usually the highest cost', 'A nanny share splits it'], ['shield', 'Plan backup', 'For when they’re sick or on vacation'], ['chat', 'Put it in writing', 'Hours, pay, paid days off and duties']] },
+    family: { good: [['heart', 'Want someone who loves {o}'], ['clock', 'Need flexible timing'], ['coin', 'Need to keep costs down']],
+      mind: [['chat', 'Agree on the hours', 'And that either of you can say if it isn’t working']] }
+  };
 
   /* ---------- one place or person: tick the good answers, add notes, Save ---------- */
   function candidatePage(k, id) {

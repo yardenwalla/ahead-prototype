@@ -198,3 +198,39 @@
 #main .cc-q.has-pick .cc-q-cell:not(.is-pick) { opacity: .6 }
 #main .cc-q { scroll-margin-top: 200px }
 #main .cc-q-tail { height: 52vh }
+/* Round 6. Main page: four big photo cards. */
+#main .cc-grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 4px }
+#main .cc-card2 { display: flex; flex-direction: column; background: #fffdf8; border: 1px solid rgba(60, 50, 20, .08); border-radius: 18px; padding: 0 0 12px; overflow: hidden; font: inherit; text-align: left; cursor: pointer; box-shadow: 0 2px 10px #a6905a14 }
+#main .cc-card2 img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; margin-bottom: 9px }
+#main .cc-card2 b { font-size: 15px; font-weight: 650; color: #2f2b1c; padding: 0 12px }
+#main .cc-card2 small { font-size: 12.5px; line-height: 1.35; color: #6d6650; padding: 2px 12px 0 }
+/* Compare: one question at a time. */
+#main .cc-topic { position: relative; background: #fcf7dd; border-radius: 22px; padding: 16px 92px 16px 18px; margin: 4px 0 12px }
+#main .cc-topic-eyebrow { margin: 0 0 4px; font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: #8a7420 }
+#main .cc-topic h2 { margin: 0 0 6px; font-size: 21px; line-height: 1.2; color: #2b2732 }
+#main .cc-topic p:last-of-type { margin: 0; font-size: 13.5px; line-height: 1.45; color: #5c5636 }
+#main .cc-topic-art { position: absolute; right: 16px; top: 18px; width: 58px; height: 58px; border-radius: 18px; background: #fff; display: grid; place-items: center }
+#main .cc-topic-art svg { width: 32px; height: 32px }
+#main .cc-ask-card { display: flex; gap: 12px; align-items: flex-start; background: #fcf7dd; border-radius: 18px; padding: 14px 16px; margin-top: 12px }
+#main .cc-ask-card > span { width: 38px; height: 38px; flex: none; border-radius: 12px; background: #fff; display: grid; place-items: center }
+#main .cc-ask-card > span svg { width: 22px; height: 22px }
+#main .cc-ask-card b { display: block; font-size: 15px; color: #2b2732; margin-bottom: 2px }
+#main .cc-ask-card p { margin: 0; font-size: 14px; line-height: 1.45; color: #4a432c }
+#main .cc-dots-nav { display: flex; justify-content: center; gap: 7px; margin: 16px 0 4px }
+#main .cc-dots-nav i { width: 7px; height: 7px; border-radius: 50%; background: #e3d9b8 }
+#main .cc-dots-nav i.on { background: #6b5a0e }
+/* Care type pages: a photo, then good fit as three tiles. */
+#main .cc-type-photo { margin: 0 0 12px; border-radius: 20px; overflow: hidden; aspect-ratio: 16 / 9 }
+#main .cc-type-photo img { width: 100%; height: 100%; object-fit: cover; display: block }
+#main .cc-fit3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px }
+#main .cc-fit3 > div { background: #fffdf8; border: 1px solid rgba(60, 50, 20, .08); border-radius: 16px; padding: 12px 8px; display: flex; flex-direction: column; align-items: center; gap: 7px; text-align: center }
+#main .cc-fit3 span { width: 36px; height: 36px; border-radius: 11px; background: #fcf7dd; display: grid; place-items: center }
+#main .cc-fit3 span svg { width: 22px; height: 22px }
+#main .cc-fit3 b { font-size: 13px; font-weight: 600; line-height: 1.3; color: #2f2b1c }
+#main .cc-photo-head .dev-area-head-art { display: none }
+#main .cc-photo-head { padding-top: 16px }
+#main .cc-fit3 { margin-bottom: 18px }
+/* Compare: one header card only (the question's), so the page title is a plain line above the tabs. */
+#main [data-cc-page="compare"] .dev-area-head { background: none !important; padding: 4px 2px 10px; box-shadow: none }
+#main [data-cc-page="compare"] .dev-area-head-art, #main [data-cc-page="compare"] .dev-area-head .hub-context { display: none }
+#main [data-cc-page="compare"] .dev-area-head h1 { font-size: 24px }
