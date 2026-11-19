@@ -115,6 +115,8 @@
     photoSwitch: (cols, foods, now) => `<section class="care-tpl-card ph-switch" data-food="0">${foods.map(([n, srcs], f) => `<div class="ph-switch-row" data-f="${f}">${srcs.map((src, i) => `<figure class="${i === now ? 'is-now' : ''}"><span class="ph-tile">${TPLB.pimg(src, n + ', ' + cols[i][0].toLowerCase())}</span></figure>`).join('')}</div>`).join('')}`
       + `<div class="ph-switch-cols">${cols.map(([t, d], i) => `<span class="${i === now ? 'is-now' : ''}">${i === now ? `<em class="ph-now">${F('Maya’s age')}</em>` : ''}<b>${F(t)}</b>${F(d)}</span>`).join('')}</div>`
       + `<div class="ph-chips" role="tablist">${foods.map(([n], f) => `<button role="tab" aria-selected="${f === 0}" class="${f === 0 ? 'is-on' : ''}" onclick="const s=this.closest('.ph-switch');s.dataset.food='${f}';s.querySelectorAll('.ph-chips button').forEach((b,i)=>{b.classList.toggle('is-on',i===${f});b.setAttribute('aria-selected',i===${f})})">${F(n)}</button>`).join('')}</div></section>`,
+    // Secondary detail behind one tappable row.
+    fold: (title, html) => html ? `<details class="ph-fold"><summary>${F(title)}</summary>${html}</details>` : '',
     // A result line when the parent has reached a decision: tone 'ok' (green) or 'next' (neutral).
     result: (title, line, tone = 'ok') => `<section class="ph-result is-${tone}"><i aria-hidden="true"></i><div><b>${F(title)}</b>${line ? `<span>${F(line)}</span>` : ''}</div></section>`,
     // Photo tiles to tick, two across, headed like the allergen tracker ("Tap each one… · 0 of 9"): [src, label].
@@ -158,7 +160,8 @@
     // pictureAfter: a tool (like the allergen tracker) goes after the steps it supports.
     howto: (q, cat) => { const pic = TPLB.sec(tval(q.pictureTitle) || 'At a glance', q.picture ? q.picture() : ''), steps = TPLB.sec(tval(q.stepsTitle) || (q.ordered === false ? 'What to do' : 'Steps'), TPLB.noted(q.stepsFig ? q.stepsFig() : TPLB.tiles(q.steps, cat, q.ordered !== false), q.stepsNotes)) + (q.action ? q.action() : '');
       return (q.pictureAfter ? steps + pic : pic + steps)
-      + TPLB.sec(q.tipsTitle || 'Keep {o} safe', TPLB.rows(q.tips, cat)) + TPLB.sec('Watch how', q.video ? hubEmbed(...q.video) : ''); },
+      // Nov 19: secondary detail (q.tipsFold) folds behind one row, so the page is the picture and the steps.
+      + (q.tipsFold && tval(q.tips) ? TPLB.fold(tval(q.tipsTitle), TPLB.rows(q.tips, cat)) : TPLB.sec(q.tipsTitle || 'Keep {o} safe', TPLB.rows(q.tips, cat))) + TPLB.sec('Watch how', q.video ? hubEmbed(...q.video) : ''); },
     check: (q, cat) => TPLB.sec(tval(q.tellTitle) || 'How to tell', TPLB.noted(q.figure ? q.figure() : TPLB.tiles(q.signs, cat), q.tell))
       + TPLB.sec('What helps', TPLB.noted(TPLB.tiles(q.helps, cat, q.ordered), q.helpsNotes)) + TPLB.calls(q.calls),
     option: (q, cat) => TPLB.sec('At a glance', tval(q.glance)) + TPLB.sec('How it works', tval(q.how)) + TPLB.sec('Good to know', TPLB.rows(q.tips, cat))
