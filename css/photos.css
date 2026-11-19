@@ -153,3 +153,6 @@
 #main .ph-tick-tile:focus-visible .ph-tile { outline-color: var(--ss-ink) }
 #main .ph-versus .ph-tile { display: block; aspect-ratio: 1; border-radius: 12px; overflow: hidden; margin-bottom: 10px; background: #fff }
 #main .ph-first > .hub-h2 { margin-top: 18px }
+#main .ph-steps-list .tpl-notes { margin: 0; padding: 12px 0 14px; border-top: 1px solid var(--line); list-style: none }
+#main .ph-signs .ph-signs-top span { font-size: 14px; color: #5d5764 }
+#main .ph-signs .ph-signs-top { margin-bottom: 2px }

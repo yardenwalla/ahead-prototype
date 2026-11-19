@@ -169,7 +169,7 @@
     z_ready: () => { const h = H(), n = h.signsSeen(), m = mo();
       return { type: 'expect', label: 'Is {s} ready?', art: 'highchair', title: 'Most babies start solids around 6 months',
         why: 'Most babies show all four signs around then. Milk is all {s} {need|needs} until {s} {do|does}.',
-        normalTitle: 'Signs {s’s} ready', normal: () => h.TPLB.photoTicks(h.READY.map((r, i) => [['feeding/sign-head', 'feeding/sign-sits', 'feeding/sign-interest', 'feeding/sign-spoon'][i], r[3]]), { title: 'Tap each one once you’ve seen it', isOn: h.signsOn, onclick: i => `hubToggleReady(${i})` }),
+        normalTitle: 'Signs {s’s} ready', normal: () => h.TPLB.photoRows(h.READY.map((r, i) => [['feeding/sign-head', 'feeding/sign-sits', 'feeding/sign-interest', 'feeding/sign-spoon'][i], r[3], ['Holds it up, steady', 'In a high chair, or on your lap', 'Opens up when food comes near', 'Doesn’t push food back out'][i]]), { title: 'Tap each one once you’ve seen it', isOn: h.signsOn, onclick: i => `hubToggleReady(${i})` }),
         doTitle: n === 4 ? 'Next step' : 'What to do',
         do: n === 4 && m < 6 ? 'All four signs. Most babies start around 6 months, so ask {p} pediatrician before starting sooner.'
           : n === 4 ? 'All four signs, so {s’s} ready for a first taste. Pick a calm morning when {s’s} not too hungry.'
@@ -209,10 +209,9 @@
       return { type: 'howto', label: 'Safe finger foods', art: 'hand', title: 'Finger foods should squish when pressed',
         why: 'Press it between your finger and thumb. If it squashes, {p} gums can manage it.',
         heroTitle: 'The squish test', hero: () => T.photoPair([['feeding/ff-hard', false, 'Too hard', 'Raw carrot'], ['feeding/ff-spear', true, 'Soft enough', 'Steamed carrot']]),
-        pictureTitle: 'The right size for {p} age', picture: () => T.photoAges([['feeding/opt-avocado', '6–8 months', 'Strips', 'Finger-size, to hold in {p} fist', !nine], ['feeding/ff-pieces', 'From 9 months', 'Small pieces', 'Soft and pea-size, to pinch', nine]])
-          + T.sec('Good first foods', T.photoGrid([['feeding/opt-avocado', 'Avocado', 'Ripe strips'], ['feeding/opt-banana', 'Banana', 'Strips, not rounds'], ['feeding/opt-egg', 'Egg', 'Omelet strips'], ['feeding/nutbutter', 'Toast', 'Strips, nut butter spread thin'], ['feeding/opt-broccoli', 'Broccoli', 'Well cooked, stem to hold'], ['feeding/opt-pasta', 'Pasta', 'Soft, well cooked']])),
-        stepsTitle: 'Make these safe', stepsFig: () => T.photoRows([['feeding/grape-q', 'Quarter grapes lengthwise', 'And cherry tomatoes'], ['feeding/ff-spear', 'Cook hard foods soft', 'Carrots, apple, broccoli'], ['feeding/peach', 'Take out the hard bits', 'Skins, pits, and fish bones']]),
-        tips: [['highchair', 'Seated upright, with you', 'Every bite, never on the move'], ['mouth', 'Gagging is normal', 'It’s loud. Choking is silent']] }; },
+        // Nov 19: like the inspiration, three blocks only: the squish test, what to try, and how to keep it safe (icons, not more photos).
+        stepsTitle: 'Good first foods', stepsFig: () => T.photoGrid([['feeding/opt-avocado', 'Avocado', 'Ripe strips'], ['feeding/opt-banana', 'Banana', 'Strips, not rounds'], ['feeding/opt-egg', 'Egg', 'Omelet strips'], ['feeding/nutbutter', 'Toast', 'Nut butter spread thin'], ['feeding/opt-broccoli', 'Broccoli', 'Well cooked, stem to hold'], ['feeding/opt-pasta', 'Pasta', 'Soft, well cooked']]),
+        tips: [nine ? ['hand', 'Small, soft pieces', 'About pea-size, to pinch'] : ['hand', 'Finger-size strips', 'Small, soft pieces from 9 months'], ['peanut', 'Quarter grapes, no whole nuts', 'And cherry tomatoes lengthwise'], ['highchair', 'Seated upright, with you', 'Every bite, never on the move']] }; },
     z_allergens: () => ({ type: 'howto', label: 'Common allergens', art: 'peanut', title: 'Try the common allergens early',
       why: 'Trying them early, around 6 months, lowers the chance of an allergy. With severe eczema or an egg allergy, ask your pediatrician first.',
       pictureAfter: true, pictureTitle: 'Keep track', picture: () => X().pron(window.__alCard()),
