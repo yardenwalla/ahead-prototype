@@ -77,11 +77,11 @@
     const IN = {
       2: { t: '{S’s} learning that you answer {o}', lead: 'Each time you answer a cry, a look or a little sound, {s} {learn|learns} that reaching out to you works.', idea: 'close-face', w: 'Hold {o} close, smile, then pause for {o}',
         n: [['Talking', 'Cooing softly', 'Soft coos may come in calm, awake moments.', 'Makes sounds beyond crying'], ['Thinking', 'Gazing at a toy', '{S} may stop and study it, instead of glancing past.', 'Looks at a toy for a few seconds'], ['Movement', 'Lifting {p} head', 'A small head lift gives {o} a new view.', 'Lifts head during tummy time'], ['Social', 'Calming to your voice', '', 'Settles with your voice or touch']] },
-      4: { t: 'It’s starting to feel like a conversation', lead: '{S} isn’t just watching you anymore. {S} {coo|coos}, {wait|waits}, and {watch|watches} what you do next.', idea: 'sound-answer', w: 'Coo back, then wait for {p} reply',
+      4: { t: 'Now it feels like a conversation', lead: '{S} isn’t just watching you anymore. {S} {coo|coos}, {wait|waits}, and {watch|watches} what you do next.', idea: 'sound-answer', w: 'Coo back, then wait for {p} reply',
         n: [['Social', 'Chuckling at you', 'A silly face or a tickle may get a little laugh.', 'Chuckles during play'], ['Thinking', 'Studying {p} hands', '{P} fingers can be as interesting as any toy.', 'Studies their hands'], ['Movement', 'Swiping at toys', '{S} may bat at a toy, or hold one you put in {p} hand.', 'Swipes at toys'], ['Talking', 'Cooing when you talk', '', 'Coos']] },
-      6: { t: '{S’s} discovering {s} can make things happen', lead: '{S} {spot|spots} something interesting, {reach|reaches} for it, and {find|finds} out what it does.', idea: 'floor-drum', w: 'Tap a bowl, then let {o} have a turn',
+      6: { t: '{S’s} finding out what {p} hands can do', lead: '{S} {spot|spots} something interesting, {reach|reaches} for it, and {find|finds} out what it does.', idea: 'floor-drum', w: 'Tap a bowl, then let {o} have a turn',
         n: [['Social', 'Laughing out loud', 'A game, a funny face or your voice can set it off.', 'Laughs'], ['Talking', 'Talking back to you', '{S} {make|makes} a noise, {wait|waits}, and may answer you again.', 'Takes turns making sounds with you'], ['Movement', 'Rolling tummy to back', 'The world looks different from there.', 'Rolls tummy to back'], ['Thinking', 'Mouthing everything', '', 'Puts things in mouth to explore']] },
-      9: { t: 'Hidden things don’t disappear for {o} anymore', lead: 'A toy drops, and {s} looks for it. You leave the room, and {s} {want|wants} you back, because {s} {know|knows} you’re still out there.', idea: 'hidden-toy', w: 'Hide a toy under a cloth while {s} {watch|watches}',
+      9: { t: '{S} {know|knows} hidden things still exist', lead: 'A toy drops, and {s} looks for it. You step out, and {s} {call|calls} for you. To {o}, gone now means somewhere else.', idea: 'hidden-toy', w: 'Hide a toy under a cloth while {s} {watch|watches}',
         n: [['Social', 'Turning to {p} name', '{S} {know|knows} it’s {o}, even from across the room.', 'Looks when you call their name'], ['Talking', 'Babbling “mamama”', 'Listen for strings like “mamama” or “bababa”.', 'Makes repeated babbles'], ['Movement', 'Passing hand to hand', '{S} may sit on {p} own and pass a toy from hand to hand.', 'Passes objects between hands'], ['Thinking', 'Banging toys together', '', 'Bangs objects together']] },
       12: { t: '{S’s} running {p} own little experiments', lead: 'A block goes in the cup, comes out, and goes in again. {S’s} checking what happens, every time.', idea: 'put-in', w: 'Drop a block in a bowl, then hand {o} one',
         n: [['Social', 'Joining in pat-a-cake', '{S} may join in with pat-a-cake or peekaboo.', 'Joins games like pat-a-cake'], ['Talking', 'Waving bye-bye', '{S} may wave bye-bye, or have a name for you.', 'Waves goodbye'], ['Movement', 'Cruising along the sofa', '{S} may pull up to stand and step along the furniture.', 'Steps while holding furniture'], ['Thinking', 'Finding hidden toys', '', 'Looks for something you hide']] }
@@ -101,14 +101,6 @@
     const photoHtml = PHOTO ? `<div class="dvx-photo sf-photo"><img src="${PHOTO.src}" alt="${PHOTO.alt}"></div>` : '';
     let b = css + (PHOTO ? `<section class="dev-hero dvx-hero has-photo"><p class="dev-hero-eyebrow">${F(STAGE_TABLE.Development.stages[devKeys.indexOf(ref)].label)}</p><h1>${T(IN.t)}</h1><p class="dev-hero-lead">${T(IN.lead)}</p>${photoHtml}</section>`
       : `<section class="dev-hero dvx-hero"><p class="dev-hero-eyebrow">${F(STAGE_TABLE.Development.stages[devKeys.indexOf(ref)].label)}</p><h1>${T(IN.t)}</h1><p class="dev-hero-lead">${T(IN.lead)}</p><div class="dvx-art" aria-hidden="true">${window.devScene ? devScene(ref) : (window.devHeroArt ? devHeroArt(ref) : '')}</div></section>`);
-    // Nov 19: one wonder per age: what's going on inside, that you can't see. A language thread runs through the year.
-    const WONDER = {
-      2: ['smile', '{S} {notice|notices} when you go quiet', 'If your face goes still mid-chat, {s}’ll often try to win you back with a look or a sound.'],
-      4: ['ear', '{S} can hear every language', 'Right now {s} can tell apart speech sounds from any language, even ones you can’t.'],
-      6: ['chat', '{S} {know|knows} some words already', 'Many babies this age already know a few everyday words, like “milk” or “hands”.'],
-      9: ['ear', '{P} ears are tuning in to you', '{S’s} getting sharper at the sounds {s} {hear|hears} every day, and letting the rest go.'],
-      12: ['chat', '{S} {know|knows} more than {s} can say', 'The names of the people and toys {s} {love|loves}, even if {s} only {say|says} a word or two.'] }[ref];
-    if (WONDER) b += `<section class="dvx-wonder"><span class="dvx-wonder-ic" aria-hidden="true">${H().art(WONDER[0], 'Development')}</span><span><small>${F(other || !live() ? 'Inside a baby’s world' : 'Inside Maya’s world')}</small><b>${T(WONDER[1])}</b><span>${T(WONDER[2])}</span></span></section>`;
     // Three little things to notice. Each opens its area at that milestone, where "Seen it" is one deliberate tap (Nov 12). The area tiles below are the one way into each area (Nov 12).
     const tint = d => { const c = window.devTileColors ? devTileColors(d) : null; return c ? `--dt-bg:${c[0]};--dt-ink:${c[1]}` : ''; };
     // One thing to try together. Area pages each have their own idea, never this one.
@@ -142,12 +134,12 @@
     // Coming into view: the next checkpoint, in a line.
     // Next (design system, Nov 13): "Next · " and when, the next stage's name, and one line on what to watch for or get ready for.
     // Nov 19: Next shows the next page's own headline, so the tap lands on the same words.
-    const HEAD = { 2: '{S’s} learning that you answer {o}', 4: 'It’s starting to feel like a conversation', 6: '{S’s} discovering {s} can make things happen', 9: 'Hidden things don’t disappear for {o} anymore', 12: '{S’s} running {p} own little experiments' };
-    const NEXT_LINE = { 2: 'Watch for {o} to coo back when you pause', 4: 'Watch for {o} to grab a toy, not just bat at it', 6: 'Watch for {o} to look for a toy {s} {drop|drops}', 9: 'Watch for {o} to copy your waves and claps' };
+    const HEAD = { 2: '{S’s} learning that you answer {o}', 4: 'Now it feels like a conversation', 6: '{S’s} finding out what {p} hands can do', 9: '{S} {know|knows} hidden things still exist', 12: '{S’s} running {p} own little experiments' };
+    const NEXT_LINE = { 2: 'Watch for {o} to coo back when you pause', 4: 'Watch for {o} to grab a toy, not just bat it', 6: 'Watch for {o} to look for a toy {s} {drop|drops}', 9: 'Watch for {o} to copy your waves and claps' };
     const nextRef = devKeys[devKeys.indexOf(ref) + 1];
     // Nov 19: the big question is about what's coming, so it lives inside the Next card instead of beside it (one topic, one card).
     const nextCard = nextRef ? h.next(`Next · by ${nextRef} months`, T(HEAD[nextRef]), `openPage('development-stage:${nextRef}')`, '', NEXT_LINE[ref] ? T(NEXT_LINE[ref]) : '')
-      : h.next('Next · after the first birthday', T('First steps'), `openPage('development-domain:12:Movement')`, '', T('Watch for {o} to stand, then take a few steps on {p} own'));
+      : h.next('Next · after the first birthday', T('First steps'), `openPage('development-domain:12:Movement')`, '', T('Watch for {p} first few steps on {p} own'));
     // Nov 19: the big question already lives on its area page, and "by N months" is in the Next card, so the main page keeps only Next.
     b += nextCard;
     // Nov 18: Development follows age, so its ages show as chips at the top (in place of "All stages").
