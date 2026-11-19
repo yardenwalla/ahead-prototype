@@ -20,3 +20,53 @@
 #main .ph-photo.is-wide img { height: auto; aspect-ratio: 16 / 9 }
 #main .ph-four figcaption { display: grid; grid-template-columns: repeat(4, 1fr); text-align: center; padding: 8px 4px 10px; background: #fffdfa; font-size: 12.5px; font-weight: 700; color: #4a3a1f }
 #main .ph-video { margin: 12px 0 4px }
+/* Subpage redesigns (Nov 19): photo rows, a before-and-after trio, an options grid, a texture grid, side-by-side cards */
+#main .ph-tile img { display: block; width: 100%; height: 100%; object-fit: cover }
+#main .ph-count { float: right; font-size: 13px; font-weight: 700; color: var(--ss-ink, #5d5764); background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px; margin-top: 2px }
+#main .ph-signs, #main .ph-rows { background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: 4px 12px; margin: 0 0 12px }
+#main .ph-sign, #main .ph-row { all: unset; box-sizing: border-box; display: grid; grid-template-columns: 64px 1fr auto; gap: 12px; align-items: center; width: 100%; padding: 10px 0; border-top: 1px solid var(--line); cursor: pointer; -webkit-tap-highlight-color: transparent }
+#main .ph-row { grid-template-columns: 64px 1fr; cursor: default }
+#main .ph-sign:first-child, #main .ph-row:first-child { border-top: 0 }
+#main .ph-thumb { width: 64px; height: 64px; border-radius: 14px; overflow: hidden; background: #f3ece4 }
+#main .ph-thumb img { display: block; width: 100%; height: 100%; object-fit: cover }
+#main .ph-sign-txt b { display: block; font-size: 15px; font-weight: 700; color: var(--ink); line-height: 1.3 }
+#main .ph-sign-txt span { display: block; margin-top: 2px; font-size: 13.5px; line-height: 1.35; color: #5d5764 }
+#main .ph-tick { width: 26px; height: 26px; border-radius: 50%; border: 2px solid #cfc8c2; box-sizing: border-box; position: relative }
+#main .ph-sign.is-on .ph-tick { background: #4f7a63; border-color: #4f7a63 }
+#main .ph-sign.is-on .ph-tick::after { content: ''; position: absolute; left: 8px; top: 4px; width: 6px; height: 11px; border: solid #fff; border-width: 0 2.5px 2.5px 0; transform: rotate(45deg) }
+#main .ph-sign:focus-visible { outline: 2px solid var(--ss-ink, #4f7a63); outline-offset: 2px; border-radius: 12px }
+#main .ph-all { color: #356651; font-weight: 600 }
+#main .ph-trio, #main .ph-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: 10px; margin: 0 0 10px }
+#main .ph-trio figure, #main .ph-grid figure { margin: 0 }
+#main .ph-trio .ph-tile, #main .ph-grid .ph-tile, #main .ph-tex .ph-tile, #main .ph-vs .ph-tile { display: block; aspect-ratio: 1; border-radius: 12px; overflow: hidden; background: #f3ece4 }
+#main .ph-trio figcaption, #main .ph-grid figcaption { padding: 7px 2px 2px; font-size: 12.5px; line-height: 1.3; color: #5d5764 }
+#main .ph-trio figcaption b, #main .ph-grid figcaption b { display: block; font-size: 13.5px; color: var(--ink) }
+#main .ph-mark { display: flex !important; align-items: center; gap: 5px }
+#main .ph-mark::before { content: ''; flex: none; width: 16px; height: 16px; border-radius: 50%; background: #4f7a63 no-repeat center / 10px url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M1.5 5.2l2.2 2.2 4.8-4.8' fill='none' stroke='%23fff' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") }
+#main .ph-mark.is-no::before { background-color: #b5524a; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M2.5 2.5l5 5M7.5 2.5l-5 5' fill='none' stroke='%23fff' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E") }
+#main .ph-tex { background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: 10px; margin: 0 0 12px }
+#main .ph-tex-row { display: grid; grid-template-columns: 58px repeat(3, 1fr); gap: 6px; align-items: center; margin-top: 6px }
+#main .ph-tex-head { margin: 0 0 2px; align-items: end }
+#main .ph-tex-head span { font-size: 11.5px; line-height: 1.25; color: #5d5764; text-align: center }
+#main .ph-tex-head b { display: block; font-size: 13px; color: var(--ink) }
+#main .ph-tex-food { font-size: 12.5px; line-height: 1.25; color: var(--ink) }
+#main .ph-vs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 0 0 6px }
+#main .ph-vs-card { border-radius: 16px; padding: 8px 10px 12px; background: #e4f3ec }
+#main .ph-vs-card.is-stop { background: #fbe9e9 }
+#main .ph-vs-card > b { display: block; margin-top: 8px; font-size: 15px; color: #356651 }
+#main .ph-vs-card.is-stop > b { color: #a33a3a }
+#main .ph-vs-card small { display: block; font-size: 12.5px; color: #4c4757 }
+#main .ph-vs-card ul { margin: 8px 0 0; padding-left: 16px; font-size: 13px; line-height: 1.35; color: #4c4757 }
+#main .ph-vs-card li + li { margin-top: 3px }
+#main .ph-vs-card p { margin: 8px 0 0; font-size: 13px; line-height: 1.35; font-weight: 700; color: #356651 }
+#main .ph-vs-card.is-stop p { color: #a33a3a }
+#main .ph-numbered .hub-iconstep-art { display: none }
+#main .ph-video + .ph-steps { margin-top: 12px }
+#main .ph-steps ol { list-style: none; padding-left: 0 !important; counter-reset: s }
+#main .ph-steps ol li { counter-increment: s; position: relative; padding: 6px 0 6px 38px }
+#main .ph-steps ol li::before { content: counter(s); position: absolute; left: 0; top: 4px; width: 26px; height: 26px; border-radius: 50%; background: #fff; color: var(--ss-ink, #8a3b5a); font-weight: 700; font-size: 14px; display: grid; place-items: center }
+#main .tpl-versus:has(.ph-vs) { padding: 8px }
+#main .tpl-versus:has(.ph-vs) .tpl-notes { padding: 4px 8px 6px }
+#main .care-tpl .ph-vs-card p, #main .ph-vs-card p { color: #356651; font-size: 13px; font-weight: 700 }
+#main .care-tpl .ph-vs-card.is-stop p, #main .ph-vs-card.is-stop p { color: #a33a3a }
+@media (max-width: 350px) { #main .ph-vs-card { padding: 6px 8px 10px } #main .ph-vs-card ul { padding-left: 14px; font-size: 12.5px } }
