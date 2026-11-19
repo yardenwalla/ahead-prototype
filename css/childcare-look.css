@@ -173,3 +173,28 @@
 #main .cc-help-art svg { width: 24px; height: 24px }
 #main .cc-opts + .hub-h2 { margin-top: 22px }
 #main .hub-h2 + .cc-opts { margin-bottom: 22px }
+/* Round 5. Main: light top card with its picture, then the four options as one row of photo cards. */
+#main .cc-hero-lite .cc-art { display: flex; justify-content: flex-end; margin: -6px -6px -10px 0 }
+#main .cc-hero-lite .cc-art svg { height: 112px; width: auto }
+#main .cc-row4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 7px }
+#main .cc-opt-v { flex-direction: column; align-items: stretch; gap: 5px; padding: 5px 5px 9px; text-align: left }
+#main .cc-opt-v img { width: 100%; height: auto; aspect-ratio: 1; border-radius: 11px }
+#main .cc-opt-v b { font-size: 12.5px; padding: 0 3px }
+#main .cc-opt-v small { font-size: 11.5px; padding: 0 3px }
+/* Compare: topic tabs (jump, and show where you are) and care types you can pick out. */
+#main .cc-tabs-row { display: flex; gap: 6px; margin: 0 0 10px; overflow-x: auto }
+#main .cc-tab { flex: 1; min-height: 36px; border-radius: 999px; border: 1px solid var(--line, #e7e0d2); background: #fffdf8; font: inherit; font-size: 13.5px; font-weight: 600; color: #4a432c; cursor: pointer; white-space: nowrap; padding: 0 10px }
+#main .cc-tab.is-on { background: #6b5a0e; border-color: #6b5a0e; color: #fff }
+#main .cc-pick { display: flex; flex-direction: column; align-items: center; gap: 4px; background: none; border: 0; padding: 0; font: inherit; cursor: pointer }
+#main .cc-pick-img { position: relative; display: block; width: 58px; height: 58px; border-radius: 14px; overflow: hidden; box-shadow: 0 0 0 2px transparent; transition: box-shadow .15s, opacity .15s }
+#main .cc-pick-img img { width: 100%; height: 100%; object-fit: cover; display: block }
+#main .cc-pick b { font-size: 12.5px; font-weight: 650; color: #2f2b1c; line-height: 1.2; text-align: center }
+#main .has-pick .cc-pick:not(.is-on) .cc-pick-img { opacity: .55 }
+#main .cc-pick.is-on .cc-pick-img { box-shadow: 0 0 0 2.5px #6b5a0e }
+#main .cc-pick-img i { position: absolute; right: 3px; top: 3px; width: 18px; height: 18px; border-radius: 50%; background: #6b5a0e; color: #fff; font-style: normal; font-size: 11px; font-weight: 800; display: grid; place-items: center }
+#main .cc-pick-hint { margin: 8px 0 0; text-align: center; font-size: 12px; color: #8a8270 }
+#main .cc-pick-go { display: block; margin: 8px auto 0; background: none; border: 0; font: inherit; font-size: 13.5px; font-weight: 650; color: #6b5a0e; cursor: pointer }
+#main .cc-q-cell.is-pick { background: #fcf7dd; box-shadow: 0 0 0 1.5px #e0c862; font-weight: 650; color: #3a3110 }
+#main .cc-q.has-pick .cc-q-cell:not(.is-pick) { opacity: .6 }
+#main .cc-q { scroll-margin-top: 200px }
+#main .cc-q-tail { height: 52vh }

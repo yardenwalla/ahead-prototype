@@ -392,16 +392,23 @@
     ['backup', 'shield', 'If the caregiver’s out', { center: [ok, 'Other staff cover'], home: [no, 'You find backup'], nanny: [no, 'You find backup'], family: [no, 'You find backup'] }, ['center']],
     ['cost', 'coin', 'What you pay for', { center: ['', 'Tuition'], home: ['', 'Tuition'], nanny: ['', 'Salary + payroll taxes'], family: ['', 'Whatever you agree'] }, []]
   ];
-  const MATTERS = [['hours', 'Hours'], ['group', 'Group size'], ['sick', 'Sick days'], ['cost', 'Cost']];
-  window.ccMatter = k => { save('ahead-childcare-matters', load('ahead-childcare-matters', '') === k ? '' : k); render(); const h = document.querySelector('.cc-q-anchor'); if (h) scrollTo(0, Math.max(0, h.getBoundingClientRect().top + scrollY - 8)); };
+  const TOPICS_CMP = [['hours', 'Hours'], ['group', 'Group size'], ['sick', 'Sick days'], ['cost', 'Cost']];
+  // A tab jumps to its card, just under the pinned header; the tab for the card you're reading stays filled.
+  window.ccJump = id => { const el = document.getElementById('ccq-' + id), bar = document.querySelector('.cc-q-sticky'); if (!el) return;
+    scrollTo(0, el.getBoundingClientRect().top + scrollY - (bar ? bar.offsetHeight : 0) - 10); ccSpy(id); };
+  window.ccSpy = force => { const bar = document.querySelector('.cc-q-sticky'); if (!bar) return; let cur = force;
+    if (!cur) { const line = bar.getBoundingClientRect().bottom + 24; document.querySelectorAll('.cc-q[data-topic]').forEach(c => { if (c.getBoundingClientRect().top <= line) cur = c.dataset.topic; }); cur = cur === 'backup' ? 'sick' : cur || 'hours'; }
+    bar.querySelectorAll('.cc-tab').forEach(t => t.classList.toggle('is-on', t.dataset.topic === cur)); };
+  if (!window.__ccSpy) { window.__ccSpy = 1; addEventListener('scroll', () => { if (document.querySelector('.cc-q-sticky')) ccSpy(); }, { passive: true }); }
+  // Tapping a care type picks out its column everywhere; tap again to see all four.
+  window.ccPickCol = k => { save('ahead-childcare-col', load('ahead-childcare-col', '') === k ? '' : k); rerender(); ccSpy(); };
   function comparePage() {
-    const on = load('ahead-childcare-matters', ''), lit = id => on === id || (on === 'sick' && id === 'backup');
-    const chips = `<p class="cc-cmp-ask">${F('What matters most to you?')}</p><div class="cc-chips cc-cmp-chips">${MATTERS.map(([k, n]) => `<button class="cc-chip${on === k ? ' is-on' : ''}" aria-pressed="${on === k}" onclick="ccMatter('${k}')">${F(n)}</button>`).join('')}</div>`;
-    const head = `<div class="cc-q-cols cc-q-pin">${COLS.map(([k, n]) => `<button class="cc-opt is-small" onclick="openPage('chg:${CAT}:d:${k}')"><img src="assets/childcare/col-${k}.jpg" alt="" loading="lazy"><b>${F(n)}&nbsp;›</b></button>`).join('')}</div>`;
-    const order = [...QS].sort((a, b) => lit(b[0]) - lit(a[0]));
-    const cards = order.map(([id, icon, label, cells, best]) => `<section class="hub-card cc-q${lit(id) ? ' is-lit' : ''}"><p class="cc-q-title">${hubArt(icon, CAT)}${F(label)}</p><div class="cc-q-cols">${COLS.map(([k]) => `<div class="cc-q-cell${lit(id) && best.includes(k) ? ' is-best' : ''}">${cells[k][0]}<span>${F(cells[k][1])}</span></div>`).join('')}</div></section>`).join('');
-    return sub('fit', 'Kinds of care', 'Compare your options', 'Many families end up with a mix.', `<span class="cc-q-anchor"></span><div class="cc-q-sticky">${chips}${head}</div>` + cards
-      , 'blocks');
+    const pick = load('ahead-childcare-col', ''), nm = (COLS.find(c => c[0] === pick) || [])[1];
+    const tabs = `<div class="cc-tabs-row" role="tablist">${TOPICS_CMP.map(([k, n], i) => `<button class="cc-tab${i ? '' : ' is-on'}" data-topic="${k}" onclick="ccJump('${k}')">${F(n)}</button>`).join('')}</div>`;
+    const head = `<div class="cc-q-cols cc-q-pin${pick ? ' has-pick' : ''}">${COLS.map(([k, n]) => `<button class="cc-pick${pick === k ? ' is-on' : ''}" aria-pressed="${pick === k}" onclick="ccPickCol('${k}')"><span class="cc-pick-img"><img src="assets/childcare/col-${k}.jpg" alt="" loading="lazy">${pick === k ? '<i aria-hidden="true">✓</i>' : ''}</span><b>${F(n)}</b></button>`).join('')}</div>`;
+    const hint = pick ? `<button class="cc-pick-go" onclick="openPage('chg:${CAT}:d:${pick}')">${F(`More about ${nm === 'Daycare' ? 'daycare centers' : nm === 'Family' ? 'family or friends' : nm === 'Nanny' ? 'nannies' : 'home daycares'}`)} ›</button>` : `<p class="cc-pick-hint">${F('Tap one to pick it out')}</p>`;
+    const cards = QS.map(([id, icon, label, cells]) => `<section class="hub-card cc-q${pick ? ' has-pick' : ''}" id="ccq-${id}" data-topic="${id}"><p class="cc-q-title">${hubArt(icon, CAT)}${F(label)}</p><div class="cc-q-cols">${COLS.map(([k]) => `<div class="cc-q-cell${pick === k ? ' is-pick' : ''}">${cells[k][0]}<span>${F(cells[k][1])}</span></div>`).join('')}</div></section>`).join('');
+    return sub('fit', 'Kinds of care', 'Compare your options', 'Many families end up with a mix.', `<div class="cc-q-sticky">${tabs}${head}${hint}</div>` + cards + '<div class="cc-q-tail" aria-hidden="true"></div>', 'blocks');
   }
   function childcare() {
     const card = load('ahead-carecard', {}), list = shortlist(), am = typeof actualMonth === 'function' ? actualMonth() : 0, fd0 = feedNow(), bm0 = fd0 !== 'Formula', fm0 = fd0 !== 'Breast milk';
@@ -410,19 +417,21 @@
     // The top card: where the family is, with a scene of it.
     // Nov 19, round 4: on Finding care the top card *is* the options: headline, then the four kinds of care as photo
     // tiles and the side-by-side compare, so the page opens on one designed card instead of art plus a tip.
-    const optTile = k => { const m = (list[k] || []).length, n = COLS.find(c => c[0] === k)[1]; return `<button class="cc-opt" onclick="openPage('chg:${CAT}:d:${k}')"><img src="assets/childcare/col-${k}.jpg" alt="" loading="lazy"><span><b>${F(n)}</b><small>${F(m ? `${m} on your shortlist` : ONE[k])}</small></span></button>`; };
-    let b = view === 0
-      ? `<header class="hub-hero cc-hero cc-hero-opts"><p class="hub-eyebrow">${F(S.eyebrow)}</p><h1>${F(S.t)}</h1><p class="hub-lead">${F(S.lead)}</p><div class="cc-opts">${COLS.map(([k]) => optTile(k)).join('')}</div><button class="cc-hero-cmp" onclick="openPage('chg:${CAT}:d:compare')"><span>${hubArt('blocks', CAT)}</span><b>${F('Compare them side by side')}</b><i aria-hidden="true">›</i></button></header>`
-      : `<header class="hub-hero cc-hero cc-disc"><p class="hub-eyebrow">${F(S.eyebrow)}</p><h1>${F(S.t)}</h1><p class="hub-lead">${F(S.lead)}</p><div class="cc-art" aria-hidden="true">${CC_ART[view]}</div><div class="cc-worth"><small>${F(S.worth[0])}</small><b>${F(S.worth[1])}</b><span>${F(S.worth[2])}</span></div></header>`;   // same build as Feeding's top card: words, a scene, one card inside
+    // Round 5 (Yarden: the inspiration does it better): a light top card with its picture, then the options below it.
+    let b = `<header class="hub-hero cc-hero ${view === 0 ? 'cc-hero-lite' : 'cc-disc'}"><p class="hub-eyebrow">${F(S.eyebrow)}</p><h1>${F(S.t)}</h1><p class="hub-lead">${F(S.lead)}</p><div class="cc-art" aria-hidden="true">${CC_ART[view]}</div>${view === 0 ? '' : `<div class="cc-worth"><small>${F(S.worth[0])}</small><b>${F(S.worth[1])}</b><span>${F(S.worth[2])}</span></div>`}</header>`;
     if (view === 0) {
       // Nov 19: the signature visual. Four kinds of regular care side by side, facts not scores; a chip highlights a row
       // and ticks the cell that's strongest on it, but nothing picks a winner for the family (design guide).
-      const helpTile = (k, icon, t, sub2) => `<button class="cc-opt cc-help" onclick="openPage('chg:${CAT}:d:${k}')"><span class="cc-help-art">${hubArt(icon, CAT)}</span><span><b>${F(t)}</b><small>${F(sub2)}</small></span></button>`;
-      b += `<h2 class="hub-h2">${F('Help now and then')}</h2><div class="cc-opts">` + helpTile('sitter', 'moon', 'Babysitter', 'A night out, or a break') + helpTile('help', 'star', 'Extra help', am < 4 ? 'A doula or night help' : 'At home, or at night') + `</div>`;
+      b += `<h2 class="hub-h2">${F('Compare your options')}</h2><div class="cc-row4">${COLS.map(([k, n]) => { const m = (list[k] || []).length; return `<button class="cc-opt cc-opt-v" onclick="openPage('chg:${CAT}:d:${k}')"><img src="assets/childcare/col-${k}.jpg" alt="" loading="lazy"><b>${F(n)}&nbsp;›</b><small>${F(m ? `${m} on your shortlist` : ONE[k])}</small></button>`; }).join('')}</div>`
+        + `<div class="hub-list cc-cmp-link">` + homeRow('fit', 'blocks', 'See them side by side', 'Hours, group size, sick days and cost', 'compare') + `</div>`;
+      b += `<h2 class="hub-h2">${F('Help now and then')}</h2><div class="hub-list">`
+        + homeRow('sitter', 'moon', 'Babysitter', 'For a night out, or a break', 'sitter')
+        + homeRow('help', 'star', 'Extra help at home', am < 4 ? 'A doula or overnight help, early on' : 'A helper while you’re home, or at night', 'help') + `</div>`;
       // Planning and paying come after the options, so the first thing a parent sees is what care can look like.
       b += `<h2 class="hub-h2">${F('Before you choose')}</h2><div class="hub-list">`
         + homeRow('plan', 'notepad', 'Plan your care', 'Your countdown, and waitlists', 'plan')
-        + homeRow('pay', 'coin', 'Paying for care', 'A pre-tax account, a tax credit and more', 'pay') + `</div>`;
+        + homeRow('pay', 'coin', 'Paying for care', 'A pre-tax account, a tax credit and more', 'pay')
+        + homeRow('fit', 'eye', 'Not sure? Take the quick quiz', 'Four taps, and where to look first', 'fit') + `</div>`;
     } else if (view === 1) {
       b += careCardButton(card);
       b += `<h2 class="hub-h2">${F('Before day one')}</h2><div class="hub-list">`
