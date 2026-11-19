@@ -96,8 +96,8 @@
   const STAGES = [
     { key: 'setup', label: 'First setup', age: 'From birth', title: 'Five things to set up once', lead: 'Before Maya can move, safety is about where {s} {ride|rides}, {sleep|sleeps} and {get|gets} changed.', ids: ['seat', 'sleep', 'cribspot', 'changing', 'gear'] },
     { key: 'reaching', label: 'Rolling', age: '3–6 months', title: 'Rolling puts the floor in reach', lead: 'At the first sign of rolling, the swaddle comes off and the floor needs clearing.', ids: ['swaddle', 'bassinet', 'mattress', 'small', 'bags'] },
-    { key: 'rolling', label: 'Crawling', age: '6–9 months', title: 'Crawling opens up every room', lead: 'Most babies start crawling between 6 and 9 months. Do the low, reachable things first.', ids: ['gates', 'anchor', 'storage', 'outlets'] },
-    { key: 'pulling', label: 'Pulling up', age: '9 months+', title: 'Standing puts higher things in reach', lead: 'Furniture becomes a handhold, and windows, the stove and water are suddenly within reach.', ids: ['windows', 'kitchen', 'pool', 'mattress2'] }
+    { key: 'rolling', label: 'Crawling', age: '6–9 months', title: 'Crawling opens up every room', lead: 'Most babies start crawling between 6 and 9 months. Do the low, reachable things first.', ids: ['gates', 'anchor', 'storage', 'outlets', 'pool'] },
+    { key: 'pulling', label: 'Pulling up', age: '9 months+', title: 'Standing puts higher things in reach', lead: 'Furniture becomes a handhold, and windows and the stove are suddenly within reach.', ids: ['windows', 'kitchen', 'mattress2'] }
   ];
 
   // The top card's picture and "Look from her height" card (Nov 13), so Safety opens like Feeding, Sleep and Development.
@@ -187,7 +187,7 @@
     else b += h.versus('If something goes wrong', ['Poison Help', 'Call 1-800-222-1222 if Maya swallows something that could be harmful.'], ['Call 911', 'If {s} can’t breathe or won’t wake. A swallowed battery or magnet means the ER right away.']);
     // Choking first aid lives in Feeding; the safety net links to it.
     if (window.__sfPhotoOff) b += `<div class="hub-browse"><button class="hub-link" onclick="${chokeLink[1]}">${F(chokeLink[0])} ›</button></div>`;
-    if (nx) b += h.next(`Next · from about ${nx.age.replace(/\D.*$/, '')} months`, nx.label, `openPage('safety-stage:${nx.key}')`, '', { reaching: 'Clear the floor of small things and batteries.', rolling: 'Gates, latches, and furniture strapped to the wall.', pulling: 'Window stops, the stove and water.' }[nx.key] || '');
+    if (nx) b += h.next(`Next · from about ${nx.age.replace(/\D.*$/, '')} months`, nx.label, `openPage('safety-stage:${nx.key}')`, '', { reaching: 'Clear the floor of small things and batteries.', rolling: 'Gates, latches, furniture straps and water.', pulling: 'Window stops and the stove.' }[nx.key] || '');
     b += h.note('Ages are typical. Every baby moves at their own pace.');
     return `<div class="quiet-category hub-page" data-overview="Safety" data-safety-stage="${key}" style="${yearTheme('Safety')}">${typeof monthlyPageHeader === 'function' ? monthlyPageHeader('Safety') : ''}${pills}${b}</div>`;
   };
