@@ -23,7 +23,14 @@
   const ctxFor = a => Object.assign({}, (typeof PLAY_CONTEXT !== 'undefined' && PLAY_CONTEXT[a.id]) || {}, FIX[a.id] || {});
   const find = id => { const a = all()[id]; return a ? Object.assign({}, a, FIX[id] || {}) : null; };
   const stageIdeas = ref => (window.DEV_STAGE_IDEAS[ref] || []).map(find).filter(Boolean);
-  const tile = (a, ref) => `<button class="dev-idea" onclick="openPage('chg:Development:d:idea:${ref}:${a.id}')"><span class="dev-idea-art">${devPlayArt(a.id)}</span><b>${F(B(a.title))}</b></button>`;
+  // Nov 19: Ahead's own photos for play ideas (Canva), so tiles and idea pages match the rest of Development.
+  const PHOTO = { 'close-face': 'play-close-face', 'chest-chat': 'play-chest-chat', 'bold-picture': 'play-bold-picture', 'song-listen': 'play-song-listen',
+    'sound-answer': 'play-sound-answer', 'mirror-company': 'play-mirror-company', 'easy-grip': 'play-easy-grip', 'tummy-picture': 'play-tummy-picture', 'crinkle-book': 'play-crinkle-book',
+    'two-hands': 'play-two-hands', 'peek-face': 'play-peekaboo', 'supported-reach': 'play-toy-beside-knee', 'floor-drum': 'play-floor-drum',
+    'hidden-toy': 'play-hidden-toy', 'empty-basket': 'play-empty-basket', 'ball-turns': 'play-ball-turns', 'hello-wave': 'play-hello-wave',
+    'put-in': 'play-put-in', 'pretend-cup': 'play-pretend-cup', 'stack-pair': 'play-stack-pair', 'action-book': 'play-action-book', 'two-baskets': 'play-two-baskets' };
+  const photo = id => PHOTO[id] ? `<img class="dev-idea-photo" src="assets/dev/${PHOTO[id]}.jpg?v=2" alt="">` : '';
+  const tile = (a, ref) => `<button class="dev-idea" onclick="openPage('chg:Development:d:idea:${ref}:${a.id}')"><span class="dev-idea-art">${photo(a.id) || devPlayArt(a.id)}</span><b>${F(B(a.title))}</b></button>`;
 
   // Try today, on the summary: two of the stage's ideas, a different pair each day, and the rest one tap away.
   window.devTodayCard = ref => {
@@ -92,12 +99,11 @@
     // Nov 19 preview: toys that fit this age, what she's outgrown, and what isn't needed (AAP 2018 toys report;
     // Sosa 2016 on electronic toys; CPSC on crib toys at 5 months). Things Safety owns point to Safety.
     const TOYS = { 6: {
-      now: [['toy', 'Rattles {s} can pass hand to hand', '{S’s} learning to swap hands'], ['bowl', 'A pot and a wooden spoon', '{S} {learn|learns} {p} hands can make noise'], ['book', 'Board books and cloth books', 'Chewing on them counts as reading'], ['mirror', 'An unbreakable mirror', 'Faces are still {p} favorite thing to watch']],
-      retire: [['eye', 'High-contrast cards', '{S} {see|sees} colors well now'], ['crib', 'The crib mobile', 'Take it down now, before {s} can grab it']],
-      skip: [['battery', 'Light-up, talking toys', 'Parents talk less while those are playing'], ['plug', 'Videos and apps for babies', 'Save screens for video chats with family'], ['shield', 'Seated walkers on wheels', 'They don’t help with walking', "openPage('chg:Safety:d:step:gates')"]] } }[ref];
-    const toyRows = rows => rows.map(([icon, t, sub, go]) => h.row({ icon, cat: 'Development', title: F(t), sub: F(sub), onclick: go || '' }));
-    const toys = TOYS ? `<section class="dev-toys"><h2 class="hub-h2">${F('Toys that fit now')}</h2><p class="dev-toys-lead">${F('You don’t need much. You, plus a few simple things, are what Maya plays with best.')}</p>`
-      + h.list('', toyRows(TOYS.now)) + h.list('Ready to put away', toyRows(TOYS.retire)) + h.list('Not needed', toyRows(TOYS.skip)) + '</section>' : '';
+      now: [['toy-rattle', 'A ball rattle'], ['toy-bowl', 'A pot and a spoon'], ['toy-books', 'Board books']],
+      away: [['eye', 'High-contrast cards', '{S} {see|sees} colors well now'], ['crib', 'The crib mobile', 'Take it down now, before {s} can grab it']] } }[ref];
+    const toys = TOYS ? `<section class="dev-toys"><h2 class="hub-h2">${F('Toys that fit now')}</h2><p class="dev-toys-lead">${F('Simple things you may already have.')}</p>`
+      + `<div class="dev-toy-grid">${TOYS.now.map(([img, t]) => `<div class="dev-toy"><img src="assets/dev/${img}.jpg?v=1" alt=""><b>${F(t)}</b></div>`).join('')}</div>`
+      + `<div class="dev-putaway"><h3>${F('Ready to put away')}</h3>${TOYS.away.map(([ic, t, sub]) => `<div class="dev-putaway-row"><span class="dev-putaway-ic" aria-hidden="true">${H().art(ic, 'Development')}</span><span><b>${F(t)}</b><small>${F(sub)}</small></span></div>`).join('')}</div></section>` : '';
     return frame('Ideas to try together', `Play ideas · by ${ref === 12 ? '1 year' : ref + ' months'}`, lead, `<div class="dev-ideas is-grid">${pics.map(a => tile(a, ref)).join('')}</div>${more}${toys}`);
   }
   function movePage(ref) {
@@ -110,7 +116,7 @@
     if (!a) return ideasPage(ref);
     const ctx = ctxFor(a), steps = (typeof playInstructionSteps === 'function' ? playInstructionSteps(a.how) : [a.how]).map(s => B(s));
     return frame(B(a.title), 'Ideas to try together' + ahead(ref), B(ctx.explain || a.why || ''),
-      (devPlayArt(a.id) ? `<figure class="dev-idea-hero">${devPlayArt(a.id)}</figure>` : '') + h.steps(steps) + (ctx.notice ? h.tip('What to notice', B(ctx.notice)) : '')
+      (photo(a.id) ? `<figure class="dev-idea-hero is-photo">${photo(a.id)}</figure>` : devPlayArt(a.id) ? `<figure class="dev-idea-hero">${devPlayArt(a.id)}</figure>` : '') + h.steps(steps) + (ctx.notice ? h.tip('What to notice', B(ctx.notice)) : '')
       + h.note('Stay close, and stop when Maya looks away or fusses. That’s {p} way of saying “enough for now.”'));
   }
   const baseRoute = window.changesRoute;
