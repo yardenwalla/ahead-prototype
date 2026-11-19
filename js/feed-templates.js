@@ -173,8 +173,8 @@
         doTitle: n === 4 ? 'Next step' : 'What to do',
         do: n === 4 && m < 6 ? 'All four signs. Most babies start around 6 months, so ask {p} pediatrician before starting sooner.'
           : n === 4 ? 'All four signs, so {s’s} ready for a first taste. Pick a calm morning when {s’s} not too hungry.'
-          : m < 6 ? 'Not yet. Keep watching for these signs, and ask about solids at {p} 6-month checkup.'
-          : 'Not all four yet? That’s common. Mention it at {p} next checkup.',
+          : m < 6 ? 'Once you’ve seen all four, ask about starting solids at {p} 6-month checkup.'
+          : 'Not all four yet? Some babies take a few more weeks. Mention it at {p} next checkup.',
         doNotes: [['', 'Good to know', 'Starting early won’t help {o} sleep any longer']],
         action: n === 4 && m >= 6 && answers.solids !== 'Yes' ? () => `<div class="hub-actions"><button class="hub-button" onclick="setFeedingStage('starting');hubToast('Got it','Feeding now shows first tastes.');openPage('topic:Feeding')">${H().F('We’re starting today')}</button></div>` : null }; },
     z_start: () => ({ type: 'howto', label: 'How to start', art: 'bowl', title: 'Start with soft foods rich in iron',
@@ -286,7 +286,9 @@
   // taken from the page it replaces, so Feeding looks like Feeding and Sleep looks like Sleep.
   const draw = (q, old) => { const h = H(), F = h.F, v = x => typeof x === 'function' ? x() : x;
     const m = typeof old === 'string' ? old.match(/<div class="dev-area-head ss-head" style="--area:(#[0-9a-f]+);--area-ink:(#[0-9a-f]+)">(<span class="dev-area-head-art"[^>]*>[\s\S]*?<\/svg><\/span>)?/i) : null;
-    const bg = m ? m[1] : '#fbe4ec', ink = m ? m[2] : '#9b4766', art = m && m[3] ? m[3] : '';
+    const bg = m ? m[1] : '#fbe4ec', ink = m ? m[2] : '#9b4766';
+    // Nov 19: the topic's own icon on a white tile, as on the Safety step pages, in place of the abstract shapes readers found meaningless.
+    const art = q.art && typeof hubArt === 'function' ? `<span class="dev-area-head-art sf-head-art">${hubArt(q.art, CAT)}</span>` : (m && m[3] ? m[3] : '');
     const why = v(q.why);
     return `<div class="quiet-category hub-page hub-detail care-v2" data-overview="${CAT}" data-ss="1" style="${typeof yearTheme === 'function' ? yearTheme(CAT) : ''};--ss-bg:${bg};--ss-ink:${ink}">${typeof detailPageTop === 'function' ? detailPageTop(CAT) : ''}`
       + `<div class="dev-area-head ss-head" style="--area:${bg};--area-ink:${ink}">${art}<p class="hub-context">${F(v(q.label))}</p><h1>${F(v(q.title))}</h1>${why ? `<p class="hub-lead">${F(why)}</p>` : ''}</div>`
