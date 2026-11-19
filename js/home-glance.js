@@ -275,7 +275,7 @@
     0: [['Her first checkups are coming up.', 'One in the first few days, then at 1 month. See what to expect and what to ask.', 'Health', 'steth', 'health-detail:0:expect']],
     1: [CHK(1)],
     2: [CHK(2, 'Her first big round of vaccines. See what to expect and what to ask.'),
-        ['Swaddling ends soon.', 'Once she starts trying to roll, it’s time to stop. Here’s how to switch.', 'Sleep', 'swaddle', 'chg:Sleep:d:swaddleoff']],
+        ['Swaddling ends soon.', 'Once she starts trying to roll, it’s time to stop. Here’s what to look for.', 'Sleep', 'swaddle', 'chg:Sleep:d:swaddleoff']],
     3: [['Her sleep is about to change.', 'Around 4 months, sleep cycles mature. Rougher nights for a few weeks are common.', 'Sleep', 'moon', 'chg:Sleep:d:regress']],
     4: [CHK(4, 'Including a first chat about solids. See what to expect and what to ask.')],
     5: [['First foods, around 6 months.', 'The signs she’s ready, and what you’ll need.', 'Feeding', 'highchair', 'chg:Feeding:d:signs']],

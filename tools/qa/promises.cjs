@@ -155,4 +155,21 @@ for (const [title, skill, age] of [['Sat up', 'Sits without support', 9], ['Roll
   check(!/P\([^)]*'Watch her first weeks'/.test(src), 'The newborn story button says “Watch his/their first weeks”, not “Watch him first weeks”');
 }
 
+// 13. Nov 19: one task, two guides. Safety holds the fix, Sleep and Outings hold the when. Done in either place
+//     shows in both, Undo takes back the shared answer, and each checklist row opens its own Safety page.
+{
+  const a = family(6);
+  const page = r => open(a, r);
+  check(/data-sf-step="bassinet"/.test(page('chg:Safety:d:step:bassinet')), 'Move to the crib opens its Safety page, not the room-sharing page');
+  for (const id of ['seat', 'sleep', 'swaddle', 'mattress', 'mattress2']) check(new RegExp(`data-sf-step="${id}"`).test(page(`chg:Safety:d:step:${id}`)), `${id}: opens its own Safety page`);
+  check(!/In Sleep|In Outings/.test(text(page('safety-stage:setup')) + text(page('safety-stage:rolling'))), 'Safety rows no longer say “In Sleep” or “In Outings”');
+  a.run(`sfSet('mattress','done')`);
+  check(/The mattress is lowered/.test(text(page('chg:Sleep:d:mattress'))), 'Done in Safety shows as done in Sleep');
+  a.run(`sfSet('mattress','')`);
+  check(/Done: it’s lowered/.test(text(page('chg:Sleep:d:mattress'))), 'Undo in Safety takes it back in Sleep too');
+  a.run(`setAnswer('swaddleStopped','Yes')`);
+  check(/Undo/.test(text(page('chg:Safety:d:step:swaddle'))), 'Done in Sleep shows as done in Safety');
+  check(/chg:Safety:d:step:seat/.test(page('chg:Out and about:d:car')) && !/Setting it up/.test(text(page('chg:Out and about:d:car'))), 'The car seat fit lives in Safety, and Outings links to it');
+}
+
 console.log(`Promise checks: ${checks} passed`);
