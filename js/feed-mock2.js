@@ -2523,10 +2523,24 @@
     const h = prev(), i = h.indexOf('<div class="hub-tiles'); if (i < 0) return h; const j = h.indexOf('<section class="ss-do">', i), k = h.indexOf('</section>', j) + 10;
     const days = (() => { try { return Math.floor((new Date(NOW) - new Date(profile.dob)) / 864e5); } catch (e) { return 20; } })();
     const amt = days < 2 ? ['1–2 tsp', 'Every 2–3 hours'] : days < 4 ? ['About 1 oz', 'Every 2–3 hours'] : days < 14 ? ['1½–2 oz', 'Every 2–3 hours'] : days < 56 ? ['2–4 oz', 'Every 3–4 hours'] : ['4–5 oz', 'Every 3–4 hours'];
-    const steps = xDo('Step by step', ['Hold him semi-upright, and touch his lip so he draws the nipple in.', 'Keep the bottle fairly level, with milk just filling the tip.', 'Every few swallows, tip the bottle down for a short pause. Let him pull it back in.', 'Stop when he’s done, even if milk is left.'], true).replace('<section class="ss-do">', '<section class="ss-do ph-steps">');
-    const video = typeof hubEmbed === 'function' ? `<div class="ph-video">${hubEmbed('OGPm5SpLxXY', 'How to pace a bottle', 'Lactation educators (IABLE)')}</div>` : '';
-    const amount = `<section class="hub-card ph-amount"><small>${F('About how much, right now')}</small><b>${F(amt[0])}</b><span>${F(amt[1] + ', or when he shows hunger cues')}</span></section>`;
-    return h.slice(0, i) + steps + video + amount + h.slice(k); }; })();
+    // Nov 19: four drawn panels, drawn to the right angles (photos kept getting the angle wrong), each with a few words.
+    const ink = 'var(--ss-ink,#8a3b5a)', milk = '#fff6e6', st = `fill="none" stroke="${ink}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"`;
+    const bottle = (x, y, rot, fill) => `<g transform="translate(${x} ${y}) rotate(${rot}) scale(.8)"><path d="M0 -8 h44 a6 6 0 0 1 6 6 v20 a6 6 0 0 1 -6 6 h-44 z" fill="#fff" ${st}/>${fill}<path d="M0 -6 l-8 3 v14 l8 3" fill="${milk}" ${st}/><path d="M-8 -1 q-9 1 -9 6 q0 5 9 6" fill="${milk}" ${st}/></g>`;
+    const P = [
+      // 1 Sit him up: a baby propped upright in an arm, head higher than tummy, the bottle coming in nearly level
+      `<path d="M10 84 q30 4 46 -18" ${st} opacity=".55"/><path d="M30 82 q-4 -22 10 -34 q10 -6 18 2 q6 10 2 30 z" fill="${milk}" ${st}/><circle cx="54" cy="30" r="12" fill="${milk}" ${st}/><path d="M60 34 q3 2 6 0" ${st}/>${bottle(78, 30, 6, `<path d="M2 4 h44 v14 h-44 z" fill="${milk}" stroke="none"/>`)}`,
+      // 2 Keep it level: the bottle flat, milk lying along the bottom, the tip just full
+      `<circle cx="22" cy="46" r="13" fill="${milk}" ${st}/><path d="M26 50 q3 2 6 0" ${st}/>${bottle(46, 46, 0, `<path d="M2 4 h44 v14 h-44 z" fill="${milk}" stroke="none"/>`)}<path d="M40 74 h52" ${st} opacity=".35"/>`,
+      // 3 Pause often: the bottle tipped down so the tip empties
+      `<circle cx="22" cy="40" r="13" fill="${milk}" ${st}/><path d="M26 44 q3 2 6 0" ${st}/>${bottle(46, 38, 24, `<path d="M28 6 l18 0 v12 h-30 z" fill="${milk}" stroke="none"/>`)}<path d="M96 14 v12 M103 14 v12" ${st}/>`,
+      // 4 Stop when he's done: head turned away, bottle down with milk left
+      `<circle cx="34" cy="38" r="13" fill="${milk}" ${st}/><path d="M26 42 q-3 2 -6 0" ${st}/><path d="M24 30 q-4 -3 -2 -7" ${st} opacity=".6"/>${bottle(58, 62, -8, `<path d="M20 4 h26 v14 h-26 z" fill="${milk}" stroke="none"/>`)}<path d="M84 22 l6 6 l12 -12" ${st}/>`];
+    const T = [['Sit him up', 'Head higher than his tummy'], ['Keep it level', 'Milk just fills the tip'], ['Pause often', 'Tip it down every few sucks'], ['Stop when done', 'Even if milk is left']];
+    const steps = `<h2 class="hub-h2">${F('How to pace it')}</h2><section class="hub-card ph-pace">${T.map(([t, d], n) => `<figure><svg viewBox="0 0 120 90" aria-hidden="true">${P[n]}</svg><figcaption><b><em>${n + 1}</em>${F(t)}</b><span>${F(d)}</span></figcaption></figure>`).join('')}<p class="ph-pace-note"><b>${F('Never prop a bottle.')}</b> ${F('Always hold him and the bottle.')}</p></section>`;
+    const video = typeof hubEmbed === 'function' ? `<div class="ph-video">${hubEmbed('OGPm5SpLxXY', 'Watch how to pace a bottle', 'Lactation educators (IABLE)')}</div>` : '';
+    const amount = `<h2 class="hub-h2">${F('About how much')}</h2><section class="hub-card ph-amount"><b style="font-size:24px;line-height:1.2">${F(amt[0])}</b><span>${F(amt[1] + ', or when he shows hunger cues')}</span></section>`;
+    const rest = h.slice(k).replace(/<p class="ss-small"><b>Never prop a bottle\.<\/b>[^<]*<\/p>/, '');
+    return h.slice(0, i) + steps + video + amount + rest; }; })();
   P.x_kind = (() => { const prev = P.x_kind; return () => { const b = isBreast(), fm = formulaFam(); let h = prev();
     if (b && fm) h = h.replace(two(['Breast milk', 'Changes as he grows, and helps protect him from some illnesses.'], ['Formula', 'Gives him everything he needs to grow, with vitamin D and iron.']), xTwo(['Breast milk', 'Changes as he grows, and helps protect him from some illnesses.'], ['Formula', 'Gives him everything he needs to grow, with vitamin D and iron.']));
     else if (b) h = h.replace(two(['Breast milk', 'Changes as he grows, and helps protect him from some illnesses.'], ['Vitamin D', 'Drops every day, from the first days.']), xTwo(['Breast milk', 'Changes as he grows, and helps protect him from some illnesses.'], ['Vitamin D', 'Drops every day, from the first days.']));

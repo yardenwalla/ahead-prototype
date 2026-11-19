@@ -197,9 +197,9 @@
         why: 'The same foods get thicker as {s} {grow|grows}.',
         heroTitle: 'The same foods, by age', hero: () => T.photoTable([['Smooth', 'Around 6 months'], ['Lumpy', '7–8 months'], ['Soft pieces', '9 months on']],
           [['Avocado', ['feeding/tx-avo-1', 'feeding/tx-avo-2', 'feeding/tx-avo-3']], ['Sweet potato', ['feeding/tx-sp-1', 'feeding/tx-sp-2', 'feeding/tx-sp-3']], ['Banana', ['feeding/tx-ban-1', 'feeding/tx-ban-2', 'feeding/tx-ban-3']]], now),
-        normalTitle: 'Ready for the next texture when', normal: () => T.tiles([['mouth', '{S} {swallow|swallows} it easily', 'A little gagging is normal'], ['eye', '{S} {open|opens} up for more', 'And seems to enjoy it'], ['clock', 'A week or two in', 'Then try the next one']], 'Feeding'),
-        normalNotes: [['', 'Why not wait', 'Babies still on smooth purées past about 9 months can find lumps harder later']],
-        doTitle: 'What helps', doFig: () => T.tiles([['bowl', 'Mash with a fork', 'Instead of blending'], ['plate', 'One change at a time', 'A new texture, then wait'], ['hand', 'Pieces that squish', 'Between finger and thumb']], 'Feeding') }; },
+        // Nov 19 (fresh read vs the Safety steps): one section of short rows instead of two blocks of three-line tiles.
+        doTitle: 'Moving up a texture', doFig: () => '<section class="ph-rowcard">' + T.rows([['bowl', 'Mash with a fork', 'Instead of blending'], ['clock', 'Move up when {s} {swallow|swallows} it easily', 'Usually after a week or two'], ['hand', 'Pieces should squish', 'Between your finger and thumb']], 'Feeding') + '</section>',
+        doNotes: [['', 'Why not wait', 'Babies still on smooth purées past about 9 months can find lumps harder later']] }; },
     z_rotate: () => ({ type: 'expect', label: 'Keeping foods in rotation', art: 'peanut', title: 'Keep allergens in {p} meals once tried',
       why: 'A few times a week, for each one {s’s} had. Regular tastes help keep them safe for {o}.',
       do: [['peanut', 'Peanut', 'Peanut powder or thinned peanut butter, in oatmeal or yogurt'], ['egg', 'Egg', 'A couple of times a week: scrambled, or in pancakes']],
@@ -262,7 +262,7 @@
     z_gag: () => { const T = H().TPLB;
       return { type: 'urgent', label: 'Gagging or choking', art: 'mouth', title: 'Gagging is normal. Choking is silent.',
         why: 'Gagging is how {s} {learn|learns} to eat. It’s loud, and it’s safe.',
-        figure: () => T.photoVersus(['feeding/gag', 'Normal gagging', 'Coughing, red face, tongue out. Stay close and let {o} work it out.'], ['feeding/choke', 'Choking: act now', 'Silent. Can’t cough, cry or breathe. Start the steps below.']),
+        figure: () => T.photoVersus(['feeding/gag', 'Normal gagging', 'Loud and red-faced. Let {o} work it out.'], ['feeding/choke', 'Choking: act now', 'Silent, can’t breathe. Start the steps below.']),
         doTitle: 'If {s’s} choking', doFig: () => T.numbered([['Shout for help', 'Someone calls 911 while you start'], ['5 back blows', 'Face down on your forearm, between the shoulder blades'], ['5 chest thrusts', 'Face up, heel of one hand mid-chest'], ['Repeat', 'Until it’s out, or help arrives']], 'stop'),
         doNotes: [['', 'Never sweep {p} mouth with a finger', 'It can push food further in']],
         video: ['ShaNuST_58A', 'Choking first aid for babies under 1', 'American Red Cross'],
