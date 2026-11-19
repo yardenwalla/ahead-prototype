@@ -208,7 +208,7 @@
       fix: [['window', 'Cordless blinds and shades', 'Tying up the cord isn’t enough'], ['plug', 'Monitor cords 3 feet away', 'From the crib or bassinet'], ['crib', 'Crib away from windows', 'Not under or right beside one']],
       checks: ['Stand beside the crib and stretch out an arm. You shouldn’t reach any cord.'] },
     changing: {
-      ba: [[PH('changing-before'), 'A changing table with a bare pad and nothing within reach', null], [PH('changing-after'), 'The same table with a strapped pad and a caddy of diapers and wipes beside it', ['Strap', 36, 52, 'r']]],
+      ba: [[PH('changing-before'), 'A changing table with a bare pad and nothing within reach', null], [PH('changing-after'), 'The same table with a strapped pad and a caddy of diapers and wipes beside it', ['Strap', 36, 53, 'b']]],
       spotTiles: [['eye', 'Supplies out of reach', 'So you turn away for a second'], ['roll', 'A raised table', 'Babies roll sooner than you expect'], ['sofa', 'Beds and sofas', 'No edge to stop a roll']],
       fixPhoto: [PH('changing-fix'), 'A changing table with wipes and a changing pad within arm’s reach', [['Wipes within reach', 10, 64, 'r']]],
       fix: [['diaper', 'Supplies within reach', 'Diapers, wipes and a change of clothes'], ['hand', 'One hand on {o}, always', 'Even with the strap on'], ['mat', 'Or use the floor', 'A mat on the floor, never a bed or sofa']],
