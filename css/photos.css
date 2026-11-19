@@ -1,0 +1,14 @@
+/* Real photos with labels drawn by the app (Nov 18). Safety's labeled photos use the same look (safety-look.css). */
+#main .ph-photo { position: relative; margin: 12px 0; border-radius: 18px; overflow: hidden; box-shadow: 0 6px 18px #754b5b1f; aspect-ratio: 4 / 3; background: #f3ece4 }
+#main .ph-photo.is-square { aspect-ratio: 4 / 3 }
+#main .ph-photo img { display: block; width: 100%; height: 100%; object-fit: cover }
+#main .fd-hero .ph-photo { margin: 12px 0 12px }
+#main .ph-pin { position: absolute; transform: translate(-50%, -50%); display: flex; align-items: center; gap: 6px; pointer-events: none }
+#main .ph-pin i { flex: none; width: 14px; height: 14px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 4px #ffffff66, 0 1px 4px #0003 }
+#main .ph-pin span { background: #fffdfaee; color: #4a3a1f; font-size: 12.5px; font-weight: 700; line-height: 1; padding: 7px 10px; border-radius: 999px; white-space: nowrap; box-shadow: 0 2px 8px #0002 }
+#main .ph-pin-r { transform: translate(-7px, -50%) }
+#main .ph-pin-l { flex-direction: row-reverse; transform: translate(calc(-100% + 7px), -50%) }
+#main .ph-pin-b { flex-direction: column; transform: translate(-50%, -7px) }
+#main .ph-pin-bl { flex-direction: column; align-items: flex-end; transform: translate(calc(-100% + 7px), -7px) }
+#main .ph-block { margin-bottom: 4px }
+#main .ph-cap { margin: 0 2px 10px; font-size: 14px; line-height: 1.45; color: #5d5764 }
