@@ -296,7 +296,7 @@
      so the page stays short. Shorter pages (under about two screens) stay one page: a tap there costs more than the scroll it saves. The numbered bar is the overview of the whole trip; "Then: …" at the end of a step opens the next one.
      Every line from the one-page version is kept, in the step where it's needed. */
   window.oaPhase = (id, i, jump) => { phaseView[id] = i; render(); const bar = document.querySelector('#main .oa-steps'); if (jump && bar) scrollTo(0, bar.getBoundingClientRect().top + scrollY - 70); };
-  const PHASE_ICON = { Book: 'notepad', Airport: 'bag', 'On board': 'plane', Arrive: 'home', 'Before you go': 'bag', Pack: 'shirt', 'While you’re there': 'sun', 'When you arrive': 'home', 'Settling in': 'moon' };
+  const PHASE_ICON = { Book: 'notepad', Airport: 'bag', 'On board': 'plane', Arrive: 'home', 'Before you go': 'bag', 'While you’re there': 'sun', 'When you arrive': 'home', 'Settling in': 'moon' };
   const phases = (id, list) => {
     const ps = list.filter(Boolean), i = Math.min(phaseView[id] || 0, ps.length - 1), c = PAL[id];
     const bar = `<div class="oa-steps${SHOW() ? ' oa-tabs' : ''}" role="tablist" style="--oa-ink:${c[1]};--oa-bg:${c[0]};--oa-acc:${c[2]};--n:${ps.length}">${ps.map(([label], k, _a, icon = PHASE_ICON[label]) => `<button role="tab" aria-selected="${k === i}" class="${k === i ? 'is-on' : ''}${k < i ? ' is-done' : ''}" onclick="oaPhase('${id}',${k})"><span>${SHOW() && icon ? hubArt(icon, CAT) : k + 1}</span><b>${F(label)}</b></button>`).join('')}</div>`;
@@ -576,10 +576,11 @@
             ['As soon as you book', 'notepad', 'Apply for {p} passport. It can take weeks.'],
             ['4–6 weeks before', 'steth', 'Ask your pediatrician about shots, including an early measles shot from 6 months.'],
             ['Before you leave', 'home', 'Save how you’d find a doctor there.']], 'Apply for the passport as soon as you book. Four to six weeks before, ask the pediatrician about shots. Before you leave, save how you would find a doctor there.')
-          + plainRows([['chat', 'If one parent can’t come', 'They sign a notarized consent form for the passport appointment instead.']])],
-        ['Pack', one3('In a car abroad, bring {p} own car seat. Taxis may not have one.')
-          + plainRows([['thermo', 'A thermometer', 'And the medicines your pediatrician okays'], ['drop', 'Rehydration salts', 'Ask your pediatrician which kind']])],
-        ['While you’re there', plainRows([['drop', 'Water', fm ? 'Sealed bottled, or boiled, for formula, your drinks and washing bottles' : 'Sealed bottled, or boiled, for your drinks and washing bottles'], ['cup', 'Drinks', 'No ice. It’s often made with tap water'], eats() ? ['bowl', 'Food', 'Cooked, or fruit you peel'] : null, ['leaf', 'Mosquitoes', 'Netting over the crib and stroller']])
+          + plainRows([['chat', 'If one parent can’t come', 'They sign a notarized consent form for the passport appointment instead.']])
+          + fold3('bag', 'What to pack', plainRows([['car', '{P} own car seat', 'Taxis and rental cars may not have one'], ['thermo', 'A thermometer', 'And the medicines your pediatrician okays'], ['drop', 'Rehydration salts', 'Ask your pediatrician which kind']]))],
+        ['When you arrive', one3('In any car or taxi, {s} {ride|rides} in {p} own car seat.')
+          + plainRows([['drop', 'Water for ' + (fm ? 'formula and ' : '') + 'bottles', fm ? 'Sealed bottled, or boiled, for formula, your drinks and washing bottles' : 'Sealed bottled, or boiled, for your drinks and washing bottles'], ['leaf', 'Mosquito netting', 'Over the crib and stroller, if there’s no air conditioning or screens']])],
+        ['While you’re there', plainRows([['cup', 'Drinks', 'No ice. It’s often made with tap water'], eats() ? ['bowl', 'Food', 'Cooked, or fruit you peel'] : null, ['bottle', 'A tummy bug', 'Keep feeding. Babies dry out faster than adults do.']])
           + calls(['Call a doctor', 'A fever, fewer wet diapers, a dry mouth, or diarrhea that keeps going.'], ['Get care right away', m < 3 ? 'Any fever under 3 months or in a malaria area, trouble breathing, or hard to wake.' : 'Any fever in a malaria area, trouble breathing, or hard to wake.'])]]));
 
     if (id === 'weather') {
