@@ -8,12 +8,12 @@
   // Real age, for babies born early: birth-weight and first-week lines follow it (adjusted age sets the stage).
   const early = () => typeof profile !== 'undefined' && !!(profile && profile.early);
   const realMo = () => (typeof actualMonth === 'function' ? actualMonth() : mo());
-  // The fever rule for the baby's age, short enough for a call line.
-  const fev = () => { const m = mo(); return m < 3 ? 'a fever of 100.4°F or higher' : m < 6 ? 'a fever of 101°F or higher' : 'a fever of 103°F or higher, or one lasting over a day'; };
+  // The fever rule for the baby's age, short enough for a call line. Real age, the same rule Health uses.
+  const fev = () => { const m = realMo(); return m < 3 ? 'a fever of 100.4°F or higher' : m < 6 ? 'a fever of 101°F or higher' : 'a fever of 103°F or higher, or one lasting over a day'; };
   const T = {
     // ---------- Milk: is it going well? ----------
     nb_enough: () => ({ type: 'expect', label: 'Getting enough', art: 'diaper', title: 'Wet diapers are the best everyday sign',
-      why: 'You don’t need to measure feeds. Diapers every day, and weight at checkups, tell you.',
+      why: early() ? 'Diapers every day, and weight at checkups, tell you. Follow any feeding plan from the hospital.' : 'You don’t need to measure feeds. Diapers every day, and weight at checkups, tell you.',
       normalTitle: 'Wet diapers and poop, day by day',
       normal: () => realMo() < 1 ? X().pron(X().firstCard(X().xBody(X().P.x_enough))) : realMo() >= 1 ? H().TPLB.tiles([['diaper', '6 or more', 'Wet diapers a day'], ['steth', 'Steady gain', 'At each weight check']], CAT) : window.hubStageStrip({ title: '', cat: CAT, items: [['diaper', 'Days 1–2', '1–2'], ['diaper', 'Days 3–4', '3–4'], ['diaper', 'Day 5', 'About 5'], ['diaper', 'Day 6 on', '6 or more']], caption: 'Wet diapers a day: 1 to 2 on days 1 and 2, 3 to 4 on days 3 and 4, about 5 on day 5, then 6 or more.' }),
       moreTitle: '{P} weight', more: () => realMo() < 1 ? X().pron(X().weightViz()) : '',
@@ -22,7 +22,7 @@
       calls: { ped: realMo() >= 1 ? 'fewer wet diapers, dark urine, or {s} {seem|seems} hungry after most feeds.' : 'fewer wet diapers, dark urine, black poop after day 5, or not back to birth weight by 2 weeks.' } }),
     enough: () => ({ type: 'expect', label: 'Getting enough', art: 'diaper', title: 'Wet diapers and growth tell you {s’s} getting enough',
       why: mo() >= 6 || onlyFormula() ? 'No need to measure feeds. Your pediatrician checks {p} weight at each visit.' : 'Fewer poops can be normal after about 6 weeks. Wet diapers and growth are what count.',
-      normal: [['diaper', '6 or more', 'Wet diapers a day, still'], ['steth', 'About 2× birth weight', 'By 4–5 months']],
+      normal: [['diaper', '6 or more', 'Wet diapers a day, still'], early() ? ['steth', 'Steady gain', 'Along {p} own curve'] : ['steth', 'About 2× birth weight', 'By 4–5 months']],
       calls: { ped: 'fewer than 6 wet diapers a day, or {s’s} feeding much less.' } }),
     m1_now: () => ({ type: 'expect', label: 'Feeds now', art: 'clock', title: 'Hungrier some days? Often a growth spurt',
       why: 'Feeds change from week to week. Most of it is growth, not something going wrong.',
@@ -35,15 +35,15 @@
       do: 'Once your pediatrician says {s’s} gaining well, stop waking {o} for feeds. Still feed {o} when {s} {wake|wakes} hungry.' }),
     nb_eve: () => ({ type: 'expect', label: 'Evenings and nights', art: 'moon', title: 'Busy evenings, then quick and calm nights',
       why: 'Evenings can be feed after feed. At night, keep feeds short and sleepy, so {s} {learn|learns} that night is for sleeping.',
-      do: [['sunrise', 'Evenings', nurse() ? 'Switch sides often. A partner can soothe between feeds' : 'Smaller bottles, more often, and take turns'], ['moon', 'Nights', 'Lights low, voices quiet, no play'], ['diaper', 'Night diapers', 'Only if needed']].concat(realMo() >= 1 ? [] : [['clock', 'Until birth weight', 'Wake {o} if 3 hours pass']]),
+      do: [['sunrise', 'Evenings', nurse() ? 'Switch sides often. A partner can soothe between feeds' : 'Smaller bottles, more often, and take turns'], ['moon', 'Nights', 'Lights low, voices quiet, no play'], ['diaper', 'Night diapers', 'Only if needed']].concat(realMo() >= 1 ? [] : [early() ? ['clock', 'Waking for feeds', 'As the hospital advised'] : ['clock', 'Until birth weight', 'Wake {o} if 3 hours pass']]),
       doNotes: [['', 'Hard to wake?', 'Undress {o} to {p} diaper, or stroke {p} feet']],
       calls: { ped: '{s’s} too sleepy to feed most times.' } }),
     m2_night: () => ({ type: 'expect', label: 'Evenings and nights', art: 'moon', title: 'Night feeds are common for a while',
       why: 'Many babies still feed once or twice a night around 4 months. Feeding {o} back to sleep is fine.',
       normal: [['moon', '1–2 night feeds', 'Still common'], ['sun', 'Distracted by day?', '{S} may make up for it with night feeds']],
       do: 'Dropping night feeds is a choice to make with your pediatrician.' }),
-    m2_distract: () => ({ type: 'expect', label: 'Distracted feeds', art: 'eye', title: 'Short daytime feeds are perfectly okay',
-      why: '{S} may take a few gulps, then pop off to look around. Over the whole day, {s} still {get|gets} what {s} {need|needs}.',
+    m2_distract: () => ({ type: 'expect', label: 'Distracted feeds', art: 'eye', title: 'Short, distracted feeds are common now',
+      why: '{S} may take a few gulps, then pop off to look around. Wet diapers tell you {s’s} still getting enough.',
       do: [['moon', 'Feed when drowsy', 'Just waking, or before sleep'], ['hand', 'Something to hold', 'Your finger, or a soft toy'], ['chat', 'Talk less', 'Save the chatting for after']],
       doNotes: [['', 'Pops off?', 'End the feed, and try again a little later. No need to force it']],
       calls: { ped: 'fewer wet diapers than usual, or feeding much less for more than a few days.' } }),
@@ -94,7 +94,7 @@
       tipsTitle: 'Nipples and cleaning', tips: [['bottle', 'Start with the slowest flow', 'Go up when {s} {suck|sucks} hard and {get|gets} frustrated. Gulping or coughing means it’s too fast.'], ['eye', 'Wide or narrow?', 'Neither is better. Stick with the one {s} {take|takes} calmly.'], ['drop', 'Clean after every feed', mo() < 4 ? 'Hot, soapy water, and sanitize often in the first months.' : 'Hot, soapy water, or the dishwasher.']] }),
     formula: () => ({ type: 'howto', label: 'Bottles', art: 'bottle', title: 'Mix formula exactly as the label says',
       why: 'Extra water or powder changes what {s} {get|gets} from it.',
-      steps: [['hand', 'Wash your hands', 'And use a clean bottle'], realMo() < 2 || early() ? ['drop', 'Boiled water, cooled 5 minutes', 'Then the amount on the label'] : ['drop', 'Water first', 'The amount on the label'], ['bottle', 'Level scoops', 'Then shake well'], ['hand', 'Test it on your wrist', 'Warm or room temperature']],
+      steps: [['hand', 'Wash your hands', 'And use a clean bottle'], realMo() < 2 || early() ? ['drop', 'Boiled water, cooled 5 minutes', 'Then the amount on the label'] : ['drop', 'Water first', 'The amount on the label'], ['bottle', 'Level scoops', 'Then shake well'], realMo() < 2 || early() ? ['hand', 'Cool it, then test it', 'Under cold water, until it’s warm on your wrist'] : ['hand', 'Test it on your wrist', 'Warm or room temperature']],
       stepsNotes: [realMo() < 2 || early() ? ['', 'Why boiled water?', 'Under 2 months or born early, hot water protects against a rare germ in powder'] : ['', 'Water', 'Clean tap or bottled water is fine. Boiled and cooled if {s} has a weak immune system'], ['', 'Which formula?', 'Any standard iron-fortified formula. Ask before a special one']],
       tipsTitle: 'Mixing with breast milk', tips: breast() ? [['drop', 'Make the formula with water first', 'Breast milk can’t replace the water.'], ['bottle', 'Then add breast milk', 'Or give the breast milk first, then top up with formula.']] : null }),
     pump: () => { const m = mo();
@@ -109,7 +109,7 @@
       return { type: 'howto', label: 'Pumping', art: 'bottle', title: 'Pump a little less as meals grow',
         why: 'As solids grow, {s} {need|needs} a little less milk, and you can pump a little less.',
         ordered: false, steps: [['clock', 'Drop one session at a time', 'One every few days, so you stay comfortable'], ['bottle', 'Less milk over time', 'About 3–4 milk bottles a day by 9–12 months'], ['heart', 'Keep going, or wind down', 'Both are fine']] }; },
-    m1_apart: () => nurse()
+    m1_apart: () => nurse() && !X().isBottle()
       ? { type: 'howto', label: 'Time apart', art: 'bottle', title: 'A first bottle goes best from someone else',
         why: 'A bottle lets a partner, a sitter or a caregiver feed {o}.',
         ordered: false, steps: [['heart', 'Someone else offers it', '{S} may wait for you otherwise'], ['moon', 'A calm moment', 'Not too hungry, not too tired'], ['bottle', 'Slow and level', 'Let {o} pause, like at the breast']],
@@ -117,14 +117,17 @@
       : { type: 'howto', label: 'Time apart', art: 'bottle', title: 'Anyone can feed {o} from a bottle',
         why: 'A few things keep bottles calm and safe, whoever is feeding.',
         ordered: false, stepsTitle: 'What to tell caregivers', steps: [['clock', 'Feed on cue', 'Not the clock'], ['bottle', 'Upright and level', 'So {s} can take a pause'], ['hand', 'Burp partway', 'And at the end']] },
-    m2_away: () => !fam()
+    // Time apart, by what goes in the bottles: breast milk, formula, or both. "Nurse as usual" only for families who nurse.
+    m2_away: () => { const br = breast(), back = nurse() ? ['', 'Back together?', 'Nurse as usual. Many babies nurse more in the evening after a day apart'] : null;
+      return !fam()
       ? { type: 'howto', label: 'Time apart', art: 'bag', title: 'Leave about 1–1½ oz for each hour apart',
         why: 'Small bottles, labeled and kept cold, so little goes to waste.',
         ordered: false, steps: [['bottle', '2–4 oz per bottle', 'So less is wasted'], ['notepad', 'Label each one', '{P} name and the date'], ['fridge', 'Keep it cold', 'In a cooler with ice packs']],
-        stepsNotes: [['', 'How long it keeps', '4 hours out, 4 days in the fridge. Thawed: 24 hours, never refreeze'], ['', 'Back together?', 'Nurse as usual. Many babies nurse more in the evening after a day apart']] }
+        stepsNotes: [['', 'How long it keeps', '4 hours out, 4 days in the fridge. Thawed: 24 hours, never refreeze'], back] }
       : { type: 'howto', label: 'Time apart', art: 'bag', title: 'Pack bottles labeled, cold and ready to mix',
         why: 'The same safe bottles, packed to travel.',
-        ordered: false, steps: [['notepad', 'Label', '{P} name and the date on each bottle'], ['fridge', 'Keep cold', 'A cooler and ice packs: 24 hours'], ['bottle', 'Pack to mix', 'Powder and water kept apart']] },
+        ordered: false, steps: [['notepad', 'Label', '{P} name and the date on each bottle'], ['fridge', 'Keep cold', 'A cooler and ice packs: 24 hours'], ['bottle', 'Pack to mix', 'Powder and water kept apart']],
+        stepsNotes: br ? [['', 'Breast milk too?', 'Small 2–4 oz bottles. It keeps 4 hours out, 4 days in the fridge'], back] : null }; },
 
     // ---------- Feeding challenges ----------
     x_gas: () => ({ type: 'expect', label: 'Feeding challenges', art: 'bottle', title: 'Some gassy fussing every day is normal',
@@ -144,7 +147,7 @@
       helps: [['notepad', 'Take a photo', 'Of the diaper or the rash'], nurse() ? ['heart', 'Keep nursing', 'Your pediatrician will say if anything should change'] : ['bottle', fam() ? 'Keep {p} milk the same' : 'Keep the same formula', 'Ask your pediatrician before changing it']],
       calls: { ped: 'you see any of these, or {s’s} gaining slowly.' } }),
     x_gain: () => ({ type: 'check', label: 'Feeding challenges', art: 'steth', title: 'Slow weight gain is worth a closer look',
-      why: 'Some babies are just smaller. Your pediatrician watches {p} growth curve, not one number.',
+      why: 'One weight matters less than {p} curve over time. Your pediatrician tracks it at each visit.',
       tellTitle: 'What to watch', signs: [['eye', 'Swallows', 'Long sucks and swallows, not just dozing'], ['diaper', 'Wet diapers', '6 or more a day after the first week']],
       helps: [['clock', 'Feed often', mo() < 1 ? '8–12 times a day in the first weeks' : 'On cue, and more often if your pediatrician says'], ['steth', 'Follow the plan', 'Top-ups or set times, if they’re suggested']],
       calls: { ped: 'fewer wet diapers, or {s’s} hard to wake for feeds' + (realMo() < 1 ? ', or not back to birth weight by 2 weeks.' : '.') } }),
@@ -158,8 +161,8 @@
       do: [['heart', 'Someone else offers', 'Ideally with you out of the room'], ['moon', 'Before {s’s} very hungry', 'Calm and a little sleepy is easiest'], ['bottle', 'Slow flow, warm milk', 'Try another nipple shape if {s} {fight|fights} it']],
       doNotes: [['', 'Keep it low-pressure', 'A few minutes once a day. Upset? Stop, and try again tomorrow']],
       calls: { ped: '{s} {refuse|refuses} all feeds, or has fewer wet diapers.' } }),
-    x_refuse: () => ({ type: 'expect', label: 'Feeding challenges', art: 'bottle', title: 'Fussing at feeds is usually a small fix',
-      why: 'It’s often air, a fast flow, or a stuffy nose.',
+    x_refuse: () => ({ type: 'expect', label: 'Feeding challenges', art: 'bottle', title: 'Fussy at feeds? Start with air, flow and a stuffy nose',
+      why: 'These cause most fussy feeds, and each has something to try.',
       do: [['clock', 'Feed early', 'Before crying starts'], ['bottle', 'Burp, then retry', 'Trapped air can feel like being full'], nurse() ? ['heart', 'Lean back', 'If milk comes fast'] : ['bottle', 'Check the nipple', 'Too fast or too slow?'], ['drop', 'Clear {p} nose', 'Saline and gentle suction']],
       doNotes: mo() >= 3 ? [['', 'Distracted?', 'From 3–4 months, feed somewhere quiet and dim']] : null,
       calls: { ped: 'too sleepy to feed, refusing several feeds in a row, or ' + fev() + '.' } }),
@@ -169,13 +172,13 @@
       why: 'Never before 4 months. Until then, milk is all {s} {need|needs}.',
       normalTitle: 'Signs {s’s} ready', normal: [['head', 'Steady head', 'Holds it up well'], ['sit', 'Sits with support', 'In a high chair'], ['hand', 'Interested', 'Reaches for food'], ['swallow', 'Swallows', 'Moves food back, not out']],
       normalNotes: [['', 'Good to know', 'Starting early won’t help {o} sleep any longer']],
-      do: mo() < 6 ? 'Ask about it at {p} 6-month checkup.' : 'Ask about it at {p} next checkup.' }),
+      do: (mo() < 6 ? 'Ask about it at {p} 6-month checkup.' : 'Ask about it at {p} next checkup.') + ' With severe eczema or an egg allergy, ask sooner.' }),
     z_start: () => ({ type: 'howto', label: 'How to start', art: 'bowl', title: 'Start with soft foods rich in iron',
       why: 'By spoon, as finger foods, or both. All work, and the choking risk is similar when food is soft and safely shaped.',
-      pictureTitle: 'Iron-rich first foods', picture: () => H().TPLB.chips(['Meat, soft or ground', 'Beans or lentils', 'Iron-fortified oatmeal', 'Egg, well cooked', 'Avocado', 'Sweet potato']),
+      pictureTitle: 'Iron-rich first foods', picture: () => H().TPLB.chips(['Meat, soft or ground', 'Beans or lentils', 'Iron-fortified oatmeal', 'Egg, well cooked'], [['', 'Good alongside them', 'Avocado, sweet potato, banana']]),
       stepsTitle: 'Three ways to start', stepsFig: () => H().TPLB.tiles([['bowl', 'Spoon-fed', 'Thicker and lumpier over time'], ['hand', 'Finger foods', 'Soft strips {s} {feed|feeds} {o}self'], ['plate', 'A mix', 'Iron-rich foods by spoon, plus soft strips']], CAT),
       tips: [['bowl', 'Soft and squishable', 'Smooth, mashed, or strips that squish between your fingers.'], ['highchair', 'Seated upright, with you', 'In a high chair with a harness, every time.'], ['plate', 'No added salt or sugar', 'Take {p} portion out before seasoning.']] }),
-    z_meal: () => mo() >= 8.5
+    z_meal: () => X().stg() >= 4
       ? { type: 'howto', label: 'Feeding {o}self', art: 'plate', title: 'Most family foods are fine for {o} now',
         why: 'Soften it, and skip the added salt.',
         pictureTitle: 'Ideas from your plate', picture: () => H().TPLB.chips(['Shredded chicken', 'Scrambled egg', 'Squashed beans', 'Soft pasta', 'Banana or ripe pear', 'Soft-cooked veggies']),
@@ -202,29 +205,29 @@
       pictureAfter: true, pictureTitle: 'Keep track', picture: () => X().pron(window.__alCard()),
       ordered: false, steps: [['peanut', 'One at a time', 'At home, earlier in the day'], ['egg', 'In a safe form', 'Thinned peanut butter or powder, egg well cooked'], ['plate', 'Keep it in {p} meals often', 'Once it’s in']],
       tipsTitle: 'If there’s a reaction', tips: [['steth', 'A few hives, or vomiting', 'Call your pediatrician.'], ['alarm', 'Trouble breathing, or swelling of the lips or face', 'Or hives all over, hives with vomiting, or very sleepy or floppy. Call 911.']] }),
-    z_plan: () => ({ type: 'expect', label: 'Foods to wait on', art: 'plate', title: 'Honey waits until 1, some foods until 4',
+    z_plan: () => ({ type: 'expect', label: 'Foods to wait on', art: 'plate', title: 'Honey waits until 1, some foods until age 4',
       why: 'A few foods aren’t safe for babies yet, even once solids are going well.',
       normalTitle: 'Wait until 1', normal: [['drop', 'Honey', 'It can carry a risk of botulism'], ['cup', 'Cow’s milk as a drink', 'Fine in cooking'], ['cup', 'Juice', 'Offer water and milk instead']],
-      moreTitle: 'Choking risks: whole, hard or round, until 4', more: () => H().TPLB.chips(['Whole nuts', 'Whole grapes', 'Popcorn', 'Hot dog rounds', 'Hard raw veg', 'Thick nut butter'], [['', 'Some can be made safe', 'Cut or cooked soft, once {s’s} on finger foods']]) }),
+      moreTitle: 'Choking risks: whole, hard or round, until age 4', more: () => H().TPLB.chips(['Whole nuts', 'Whole grapes', 'Popcorn', 'Hot dog rounds', 'Hard raw veg', 'Thick nut butter'], [['', 'Some can be made safe', 'Cut or cooked soft, once {s’s} on finger foods']]) }),
     z_milkfood: () => ({ type: 'expect', label: 'Milk and solids', art: 'cup', title: 'No set order for milk and meals',
       why: 'A meal fits in wherever {s’s} awake and happy.',
       do: [['bottle', 'Milk before or after', 'Whatever works for {o}'], ['cup', 'Water from a cup', 'Open or straw. Hold it for {o}, and let {o} try']],
       doNotes: [['', 'As meals grow', 'Milk drops a little at a time, mostly after 9 months']] }),
     z_day: () => ({ type: 'expect', label: 'Meals and milk', art: 'plate', title: 'Some days {s} {eat|eats} a lot, some days little',
       why: 'You choose what and when. {S} {choose|chooses} how much.',
-      normalTitle: 'A typical week of meals',
+      normalTitle: 'How appetite can swing over a week',
       normal: () => { const v = [70, 35, 50, 90, 40, 60, 80], d = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
         return `<figure class="hub-figure tpl-week" role="img" aria-label="${H().F('How much a baby eats over a week: some days a lot, some days little. It evens out.')}"><div class="tpl-week-bars">${v.map((x, i) => `<div><i style="height:${x}%"></i><small>${d[i]}</small></div>`).join('')}</div></figure>`; },
       normalNotes: [['', 'It evens out', 'Big days and small days balance over the week']],
       do: [['plate', 'Keep offering', 'Without pressure'], ['clock', 'Look at the week', 'Not one meal']],
       doNotes: [['', 'Getting enough?', 'Wet diapers, energy, and steady growth at checkups']] }),
     z_milk12: () => { const b = X().isBottle(), f = fam();
-      return { type: 'expect', label: 'Turning 1', art: 'cup', title: 'Start cups now, and whole milk at 12 months',
+      return { type: 'expect', label: 'Turning 1', art: 'cup', title: f || b ? 'Start cups now, and whole milk at 12 months' : 'Start cups now, and offer whole milk at 12 months',
         why: 'Starting a cup now makes saying goodbye to bottles easier later.',
         normal: () => window.hubStageStrip({ title: '', cat: CAT, items: [['cup', 'Now', 'An open or straw cup at meals'], ['cup', '12 months', f ? 'From formula to whole milk' : 'Whole milk in a cup, if you like'], ['bottle', '12–18 months', b ? 'Bottles phase out, bedtime last' : 'Nursing can keep going']], caption: 'A cup at meals now, whole milk at 12 months, and bottles phase out between 12 and 18 months.' }),
         do: [['cup', 'Whole milk', 'Not low-fat, until age 2'], ['cup', 'Up to 24 oz a day', b ? 'More crowds out iron-rich food' : 'From a cup. Nursing doesn’t count'], b ? ['bottle', 'Drop one bottle at a time', 'Swap one for a cup each week'] : null].filter(Boolean),
         doNotes: [b ? ['', 'Picky about the taste?', (f ? 'Mix half and half with formula' : 'Mix half and half with breast milk') + ' for a week. Toddler formula isn’t needed'] : null, ['', 'Vitamin D after 1', 'Ask your pediatrician how much {s} {need|needs}']] }; },
-    z_refuse: () => ({ type: 'expect', label: 'Feeding challenges', art: 'plate', title: 'Refusing food is common and normal',
+    z_refuse: () => ({ type: 'expect', label: 'Feeding challenges', art: 'plate', title: 'Refusing new foods is common',
       why: 'Some days {s}’ll eat a lot, and some days almost nothing.',
       do: [['clock', 'Try again later', 'It can take 10 to 15 tries'], ['hand', 'Let {o} touch it first', 'Playing is learning'], ['plate', 'Eat together', '{S} {copy|copies} you']],
       doNotes: [['', 'You decide, {s} {decide|decides}', 'You choose what to offer. {S} {choose|chooses} whether and how much']],

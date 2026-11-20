@@ -339,6 +339,15 @@
   window.__fdReal = realStage;
   const ageMo = () => { try { const pr = profile; const from = pr.early && pr.due ? new Date(pr.due + 'T12:00:00') : new Date(pr.dob + 'T12:00:00'); return (NOW - from) / 864e5 / 30.44; } catch (e) { return 12; } };
   const stg = () => (window.__fdStage == null ? realStage() : window.__fdStage);
+  // Bottle how-tos for this family (Nov 18): what the Bottle basics card lists and opens.
+  const bottleHowtos = () => { const bt = isBottle() || pumps();
+    return [formulaFam() && ['formula', 'bottle', 'Making formula', 'Water first, then level scoops'], bt && stg() >= 1 && ['bottle', 'hand', 'Giving a bottle', 'Positions, pacing and burps'],
+      bt && ['basics', 'fridge', 'How long milk keeps', 'Out, in the fridge, and left over'], pumps() && ['pump', 'clock', 'Pumping', 'How often, and how much']].filter(Boolean); };
+  // The card's line stays short, so it never runs longer than Feeding challenges beside it: "Formula, pacing and storage", one line.
+  const bottleSub = L => { const w = { formula: 'formula', bottle: 'pacing', basics: 'storage', pump: 'pumping' }, t = L.map(x => w[x[0]]);
+    return (t.length > 1 ? t.slice(0, -1).join(', ') + ' and ' + t[t.length - 1] : t[0]).replace(/^./, c => c.toUpperCase()); };
+  // First foods opens with first tastes until about 7½ months, and for the first 4 weeks of solids for a baby who starts later (the same rule as the Solids guides list).
+  const firstTastes = m => m < 7.5 || (stg() === realStage() && typeof answers !== 'undefined' && (answers.foodExperience === 'new' || (!!answers.solidsStart && typeof foodWeeksIn === 'function' && foodWeeksIn() < 4)));
   const isEarly = () => typeof profile !== 'undefined' && !!profile.early;
   // Months born early, rounded (0 if not born early). Solids follow adjusted age, so say what that means by birthday.
   const earlyMo = () => { try { return profile.early && profile.due ? Math.max(0, Math.round((new Date(profile.due + 'T12:00:00') - new Date(profile.dob + 'T12:00:00')) / 864e5 / 30.44)) : 0; } catch (e) { return 0; } };
@@ -2406,6 +2415,10 @@
       + `<div class="hub-list">${rows.map(([id, icon, title, sub]) => H().row({ cat: CAT, icon, title, sub, onclick: id === 'x_poop' ? poopGo() : id === 'x_cry' ? "openPage('chg:Sleep:d:crying')" : go(id) }).replace(/<span class="hub-dot">[\s\S]*?<\/span><span class="hub-row-copy">/, `<span class="hub-dot">${hubArt(icon, CAT).replace('data-art=', 'data-keep=')}</span><span class="hub-row-copy">`)).join('')}</div>`
       + `<section class="ss-moment">` + xVs(['Normal', 'Spit-up, gas, fussy evenings, and feeds that change from day to day.'], ['Call your pediatrician', 'Fewer wet diapers, too sleepy to feed, green or bloody vomit, or ' + fever(false) + '.'])
       + xNote('Who can help:', 'your pediatrician' + (nurse ? ', and a lactation consultant for latching, often covered by insurance.' : '.')) + xNote('How are you doing?', 'If you feel low or overwhelmed most days, tell your doctor, or call or text 1-833-852-6262, any time.') + `</section>`); };
+  // Bottle basics (Nov 18): the bottle how-tos for this family, one list, opened from the card above Feeding challenges.
+  P.bottles = () => { const L = bottleHowtos();
+    return qaCss + page(head('Bottles', formulaFam() ? 'Make, give and store bottles safely' : 'Give and store bottles safely', 'Handy to share with anyone else who gives bottles.', XC.p1)
+      + `<div class="hub-list">${L.map(([id, icon, title, sub]) => H().row({ cat: CAT, icon, title, sub, onclick: go(id) }).replace(/<span class="hub-dot">[\s\S]*?<\/span><span class="hub-row-copy">/, `<span class="hub-dot">${hubArt(icon, CAT).replace('data-art=', 'data-keep=')}</span><span class="hub-row-copy">`)).join('')}</div>`); };
   const xTough = (id, title, lead, body) => qaCss + page(head('Feeding challenges', title, lead, XC.tough) + `<section class="ss-moment">${body}</section>`);
   P.x_hurt = () => xTough('x_hurt', 'Feeds shouldn’t hurt after the first minute', 'A little tenderness in the first week is common. Pain all feed long usually means a shallow latch.',
       steps([['hand', 'Re-latch', 'Break the seal with a clean finger, then try again'], ['heart', 'Try another hold', 'Football or laid-back often helps'], ['steth', 'Get it checked', 'A lactation consultant can check the latch, and for tongue-tie']], false)
@@ -3093,7 +3106,7 @@
     if (v === 1) return [2, 'The world is interrupting his feeds', 'He’s noticing everything now. A voice, a light or a sound can pull him away mid-feed.', 'He stops to look around.', 'Distracted isn’t the same as full. Most babies settle back to it.', 'Feed somewhere quiet and dim, and offer again after a short pause.'];
     if (v === 2 && m >= 7) return [3, 'A good time to start', 'Iron matters more after 6 months, so it’s worth starting soon. Bring your feeding questions to the checkup.', 'He reaches for your food.', 'If he sits with support and swallows well, he’s likely ready now.', 'Offer a soft, iron-rich food at one meal a day.'];
     if (v === 2) return [3, 'Eating starts before the first bite', 'Eating takes skills he’s still building, and they come together at his own pace.', 'He watches every bite you take.', 'Interest is a great sign, but it’s only one of the skills he needs.', 'Sit him on your lap at meals, so he can watch how eating works.'];
-    if (v === 3 && m < 7.5) return [4, 'His tongue has a new job', 'Milk and food use different mouth movements. He’s learning what to do with each new bite.', 'Food comes right back out.', 'That’s practice, not dislike. It happens less as he learns.', 'Offer the same food a few days in a row, and watch him get better at it.'];
+    if (v === 3 && firstTastes(m)) return [4, 'His tongue has a new job', 'Milk and food use different mouth movements. He’s learning what to do with each new bite.', 'Food comes right back out.', 'That’s practice, not dislike. It happens less as he learns.', 'Offer the same food a few days in a row, and watch him get better at it.'];
     if (v === 3) return [5, 'Lumps are a big leap', 'He’s learning how new textures feel in his mouth. Soft lumps give him the practice.', 'He gags on a new texture.', 'Gagging moves food forward, and it happens less as he practices.', 'When he gags, stay calm and let him work it out. Your calm face helps.'];
     return [6, 'The mess is the milestone', 'Picking up food and getting it to his mouth is a skill he practices at every meal.', 'He wants to feed himself.', 'Squished food and spills are practice for his fingers and mouth.', 'Eat with him when you can, so he can copy you.']; };
   const discCss = `<style>#main .fd-hero.fd-disc{display:flex;flex-direction:column;min-height:463px;box-sizing:border-box}#main .fd-hero.fd-disc .fd-art{flex:1}#main .fd-hero .fd-art{display:grid;place-items:center;margin:6px -8px 6px}#main .fd-hero .fd-art svg{width:100%;max-width:290px;height:auto;filter:drop-shadow(0 9px 9px #754b5b18)}#main .fd-aha{background:#fffdfc;border-radius:16px;padding:14px 16px;box-shadow:0 3px 14px #a6798220;margin-top:2px}#main .fd-aha small{display:block;font-size:11px;font-weight:800;letter-spacing:.08em;color:#b87c8f;text-transform:uppercase;margin-bottom:5px}#main .fd-aha b{display:block;font-size:17px;line-height:1.25;color:var(--ink,#2b2732)}#main .fd-aha span{display:block;font-size:14px;line-height:1.45;color:#6d666d;margin-top:5px}#main .fd-try{display:flex;gap:12px;align-items:flex-start;margin:12px 0 4px;border-radius:16px;background:#e5f0e6;padding:14px 16px}#main .fd-try i{flex:none;width:32px;height:32px;border-radius:11px;background:#d0e3d2;color:#487456;display:grid;place-items:center}#main .fd-try small{display:block;font-size:11px;font-weight:800;letter-spacing:.08em;color:#5c7e67;text-transform:uppercase;margin:1px 0 4px}#main .fd-try p{margin:0;font-size:14.5px;line-height:1.45;color:#42634c;font-weight:550}</style>`;
@@ -3125,12 +3138,12 @@
       if (ml && me) out.splice(1, 0, { ...ml, v: ml.v.replace(' milk feeds', ' feeds').replace(/^Fewer feeds$/, '3–4 feeds') });
       if (wa) out.push({ ...wa, v: '4–8 oz', s: /Sips/.test(wa.v) ? F('A day at most, from a cup') : wa.s });
     }
-    out.forEach(x => { const bm = /^(\d+–\d+) bottles$/.exec(x.v); if (bm) { x.v = bm[1]; x.s = F('Bottles, ') + x.s.replace(/ a day in all$/, ' a day'); } });
+    out.forEach(x => { const bm = /^(\d+–\d+) bottles$/.exec(x.v); if (bm) { x.v = bm[1]; x.s = /^\d/.test(x.s) ? F('Bottles, ') + x.s.replace(/ a day in all$/, ' a day') : F('Bottles a day'); } });
     if (out.length < 3) return h;
     const tiles = out.slice(0, 3).map(x => { const st = `style="--sm-bg:${x.bg};--sm-ink:${x.ink}"`;
       const inner = `<small>${x.l}</small><b>${x.v}</b><span>${x.s}${x.go ? ' ›' : ''}</span>`;
       return x.go ? `<button ${st} onclick="${x.go}">${inner}</button>` : `<div ${st}>${inner}</div>`; }).join('');
-    return h.slice(0, a) + glanceCss + `<div style="display:flex;align-items:baseline;justify-content:space-between"><h2 class="hub-h2 fd-gl-h">${F('Feeding at a glance')}</h2><button class="hub-card-cta" onclick="${go('fd_day')}">${F('Example day')} ›</button></div><section class="hub-card hub-glance is-static fd-glance" style="cursor:pointer" onclick="if(!event.target.closest('button'))${go('fd_day').replace(/"/g, '&quot;')}"><div class="fd-gl">${tiles}</div>` + sec.slice(sec.lastIndexOf('</div>', sec.indexOf('<span class="hub-card-note">') > 0 ? sec.indexOf('<span class="hub-card-note">') : sec.length) + 6) + h.slice(e); };
+    return h.slice(0, a) + glanceCss + `<div style="display:flex;align-items:baseline;justify-content:space-between"><h2 class="hub-h2 fd-gl-h">${F('Feeding at a glance')}</h2><button class="hub-card-cta" onclick="${go('fd_day')}">${F('Example day')} ›</button></div><section class="hub-card hub-glance is-static fd-glance"><div class="fd-gl">${tiles}</div>` + sec.slice(sec.lastIndexOf('</div>', sec.indexOf('<span class="hub-card-note">') > 0 ? sec.indexOf('<span class="hub-card-note">') : sec.length) + 6) + h.slice(e); };
   P.dirD = (() => { const prev = P.dirD; return v => lighten(prev(v)); })();
 
   // ---- Three guides per stage, changing with age (Nov 11, Yarden's table). One home for each fact: the discovery,
@@ -3243,13 +3256,13 @@
     if (v === 1 && m < 3) return [[XC.f1, nurse ? 'heart' : 'bottle', 'Feeds now', 'Hungrier some days? Often a growth spurt', 'Usually around 6 weeks and 3 months', 'm1_now'],
       [XC.d1, 'moon', 'Evenings and nights', 'Night feeds are normal for now', '1–3 a night, and when waking stops', 'm1_eve'],
       [XC.p1, 'bag', 'Time apart', nurse && !bot ? 'A first bottle goes best from someone else' : 'Anyone can feed him from a bottle', 'Who offers it, and how', 'm1_apart']];
-    if (v === 1) return [[XC.f1, 'eye', 'Distracted feeds', 'Short daytime feeds are perfectly okay', 'Three ways to make feeds calmer', 'm2_distract'],
+    if (v === 1) return [[XC.f1, 'eye', 'Distracted feeds', 'Short, distracted feeds are common now', 'Three ways to make feeds calmer', 'm2_distract'],
       [XC.d1, 'moon', 'Evenings and nights', 'Night feeds are common', 'How many, and feeding back to sleep', 'm2_night'],
-      [XC.p1, 'bag', 'Time apart', nurses() && !formulaFam() ? 'Leave about 1–1½ oz for each hour apart' : 'Pack bottles labeled, cold and ready to mix', nurses() && !formulaFam() ? 'How much, labeled and cold' : 'For daycare or a day out', 'm2_away']];
+      [XC.p1, 'bag', 'Time apart', !formulaFam() ? 'Leave about 1–1½ oz for each hour apart' : 'Pack bottles labeled, cold and ready to mix', !formulaFam() ? 'How much, labeled and cold' : 'For daycare or a day out', 'm2_away']];
     if (v === 2) return [[XG, 'eye', 'Is he ready?', 'Most babies start solids around 6 months', 'Four signs to look for', 'z_ready'],
       [XG, 'highchair', 'How to start', 'Start with soft foods rich in iron', 'By spoon, by hand, or both', 'z_start'],
-      [XC.p1, 'shield', 'Allergens and foods to avoid', 'Honey waits until 1, some foods until 4', 'Foods to wait on', 'z_plan']];
-    if (v === 3 && m < 7.5) return [[XG, 'bowl', 'How a meal goes', 'First meals are just a few bites', 'Setting up, what to offer, and his cues', 'z_meal'],
+      [XC.p1, 'shield', 'Foods to wait on', 'Honey waits until 1, some foods until age 4', 'Drinks to skip, and choking risks', 'z_plan']];
+    if (v === 3 && firstTastes(m)) return [[XG, 'bowl', 'How a meal goes', 'First meals are just a few bites', 'Setting up, what to offer, and his cues', 'z_meal'],
       [XC.d1, 'cup', 'Milk and solids together', 'No set order for milk and meals', 'Before or after milk, with water in a cup', 'z_milkfood'],
       [XC.g1, 'peanut', 'Common allergens', 'Try the common allergens early', done ? done + ' of 9 tried' : 'Nine to try, one at a time', 'z_allergens']];
     if (v === 3) return [[XG, 'avocado', 'Beyond purées', 'Move from smooth food to soft pieces', 'What to offer at 6, 7–8 and 9 months', 'z_textures'],
@@ -3257,13 +3270,14 @@
       [XC.g1, 'peanut', 'Keeping foods in rotation', 'Keep allergens in his meals once tried', 'How often, and easy ways to fit them in', 'z_rotate']];
     return [[XG, 'lentils', 'Feeding himself', 'Most family foods are fine for him now', 'What to soften, and what to skip', 'z_meal'],
       [XC.g1, 'clock', 'Meals, snacks and milk', 'Some days he eats a lot, some days little', 'Why the week matters most', 'z_day'],
-      [XC.d1, 'cup', 'Turning 1', 'Start cups now, and whole milk at 12 months', 'How much milk, and moving off bottles', 'z_milk12']]; };
+      [XC.d1, 'cup', 'Turning 1', formulaFam() || bot ? 'Start cups now, and whole milk at 12 months' : 'Start cups now, and offer whole milk at 12 months', 'How much milk, and moving off bottles', 'z_milk12']]; };
   const gRow = ([c, icon, eb, title, sub, id]) => H().row({ cat: CAT, icon, title, sub, onclick: go(id) })
     .replace(/<span class="hub-dot">[\s\S]*?<\/span><span class="hub-row-copy">/, `<span class="hub-dot">${hubArt(icon, CAT).replace('data-art=', 'data-keep=')}</span><span class="hub-row-copy">`)
     .replace('class="hub-row', `style="--sm-bg:${c[0]};--sm-ink:${c[1]}" class="sm-row hub-row`);
   P.dirD = (() => { const prev = P.dirD; return v => { let h = prev(v); const k = h.indexOf('<h2 class="hub-h2">' + F(`Right now for ${name()}`)); if (k < 0) return h;
     const i = h.indexOf('<div class="hub-list">', k), j = h.indexOf('</div><button class="hub-rough-card', i); if (i < 0 || j < 0) return h;
     h = h.slice(0, i) + `<div class="hub-list">${GUIDES().map(gRow).join('')}` + h.slice(j);
+    if (stg() !== realStage()) h = h.replace('<h2 class="hub-h2">' + F(`Right now for ${name()}`), '<h2 class="hub-h2">' + F('At this stage'));
     // Iron drops sit with vitamin D in the "Every day" line from 4 months, for babies on breast milk.
     if (stg() === 2 && isBreast()) h = h.replace(/(<span class="hub-card-note"><b>Every day<\/b>[^<]*)(<\/span>)/, `$1 ${F(isEarly() ? 'Iron drops too.' : formulaFam() ? 'Iron drops too, if most of his milk is breast milk.' : 'Iron drops too, from 4 months.')}$2<button class="hub-link" style="display:block;margin:8px 4px 0" onclick="${go('z_iron')}">${F('About iron drops')} ›</button>`);
     if (stg() >= 3) h = h.replace(`<div class="hub-browse"><button class="hub-link" onclick="${go('z_gag')}">`, `<div class="hub-browse"><button class="hub-link" onclick="${go('z_plan')}">${F('Foods to skip, and choking risks')} ›</button></div><div class="hub-browse"><button class="hub-link" onclick="${go('z_gag')}">`);
@@ -3343,15 +3357,22 @@
       // "Every day" in one short line (Nov 11): what to give, with the how one tap away.
       if (typeof h === 'string' && /^chg:Feeding:mock:dirD(:\d)?$/.test(String(r))) { const v = stg(), br = isBreast(), only = formulaFam() && !br;
         const L = (t, id) => `<button class="hub-link" style="display:inline;padding:0;font:inherit;font-weight:650" onclick="${go(id)}">${F(t)}</button>`;
-        const vd = only ? L('vitamin D drops', 'nb_vitd') + F(', under 32 oz a day') : L('vitamin D', 'nb_vitd');
-        // Breast milk and formula: iron drops only if most of the milk is breast milk (AAP; Nov 14 QA).
-        const dI = formulaFam() && br ? `${L('vitamin D drops', 'nb_vitd')}${F(', and')} ${L('iron', 'z_iron')} ${F('if mostly breast milk')}` : `${L('vitamin D', 'nb_vitd')} ${F('and')} ${L('iron', 'z_iron')} ${F('drops')}`;
-        const line = v <= 1 ? (only ? vd : L('vitamin D drops', 'nb_vitd')) : v === 2 ? (br ? dI : vd) : `${F('iron-rich food,')} ${br ? (v === 3 ? dI : L('vitamin D drops', 'nb_vitd')) : vd}`;
-        h = h.replace(/<span class="hub-card-note"><b>Every day<\/b>[\s\S]*?<\/span>(?:<button class="hub-link"[^>]*>[^<]*<\/button>)*/, `<span class="hub-card-note fd-every"><b>${F('Every day:')}</b> ${line}</span>`);
+        // Nov 18: one thing stays one line ("Every day: vitamin D drops"); two or more get a short line each.
+        // Breast milk and formula: iron drops only if most of the milk is breast milk (AAP; Nov 14 QA). Born early: iron from the first weeks, on the hospital's plan.
+        const early = isEarly(), items = [v >= 3 && F('An iron-rich food at a meal'),
+          L('Vitamin D drops', 'nb_vitd') + (only ? F(', until about 32 oz of formula a day') : ''),
+          br && (v === 2 || v === 3 || (early && v <= 1)) && L('Iron drops', 'z_iron') + (formulaFam() ? F(', if mostly breast milk') : ''),
+          early && v <= 2 && F('Born early? Follow the hospital’s plan')].filter(Boolean);
+        const note = items.length === 1 ? `<b>${F('Every day:')}</b> ${items[0].replace('>Vitamin D drops<', '>vitamin D drops<')}` : `<b>${F('Every day')}</b>${items.map(x => `<span style="display:block;margin-top:2px">${x}</span>`).join('')}`;
+        h = h.replace(/<span class="hub-card-note"><b>Every day<\/b>[\s\S]*?<\/span>(?:<button class="hub-link"[^>]*>[^<]*<\/button>)*/, `<span class="hub-card-note fd-every">${note}</span>`);
         // Families who pump or store breast milk: how long the baby's milk keeps, one quiet link, at every stage (Nov 14).
         // Bottle how-tos (Nov 16): one quiet line on the stage page, since these pages no longer link to each other at the bottom.
-        { const bt = isBottle() || pumps(), L = [bt && ['How long milk keeps', 'basics'], bt && stg() >= 1 && ['Giving a bottle', 'bottle'], formulaFam() && ['Making formula', 'formula'], pumps() && ['Pumping', 'pump']].filter(Boolean);
-          if (L.length && !/fd-keeps/.test(h)) h = h.replace(/(<\/section>)(\s*<div class="hub-browse fd-assumed">|\s*<section class="hub-list|\s*<h2)/, `$1<div class="hub-browse fd-keeps"><span class="fd-keeps-l">${F('Bottles:')}</span> ${L.map(([t, id]) => `<button class="hub-link" onclick="${go(id)}">${F(t)}</button>`).join('<span aria-hidden="true"> · </span>')}</div>$2`); } }
+        // Nov 18: one "Bottle basics" door, the same kind of card as Feeding challenges, instead of a loose line of links.
+        // It sits between the three guides and Feeding challenges: what's happening now, the how-tos you use every day, then help when something's off.
+        { const L = bottleHowtos();
+          if (L.length && !/fd-bottles/.test(h)) { const a = h.indexOf('<button class="hub-rough-card'), e = a < 0 ? -1 : h.indexOf('</button>', a);
+            const door = `<button class="hub-rough-card care-rash-card fd-bottles" style="background:#fdeee6;color:#9a5a3c;margin-top:12px" onclick="${go('bottles')}"><span class="hub-rough-moon" aria-hidden="true">${hubArt('bottle', CAT)}</span><span class="hub-rough-copy"><b>${F('Bottle basics')}</b><small>${F(bottleSub(L))}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`;
+            if (a > 0) h = h.slice(0, a) + door.replace('margin-top:12px', 'margin-top:12px;margin-bottom:0') + h.slice(a); } } }
       // Formula: making and storing bottles, one tap from the feed walkthrough.
       if (typeof h === 'string' && /^chg:Feeding:mock:xa:feed(\.\d)?$/.test(String(r)) && formulaFam()) h = h.replace('<button class="hub-next"', `<div class="hub-browse"><button class="hub-link" onclick="openPage('chg:Feeding:mock:xa:prep')">${F('Making, storing and cleaning bottles')} ›</button></div><button class="hub-next"`);
       return h; };
