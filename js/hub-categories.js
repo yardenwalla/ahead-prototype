@@ -350,41 +350,45 @@
     }
     // Nov 11 (Yarden's concept, kept calm): a picture in the top card, no buttons (Health moves on by age), and one
     // "Worth knowing before you go" heads-up per checkup, a thing a parent wouldn't think to look up. (AAP; CDC.)
+    const SHOW = !window.__hlOld;   // Nov 19: show, don't tell (window.__hlOld = true brings back the drawn version)
     const flu = [8, 9, 10, 11, 0, 1, 2].includes(NOW.getMonth());
     const WORTH = {
       0: ['Bring the hospital discharge papers', 'They list {p} birth weight, the tests {s} had, and any first vaccines.'],
       1: ['Ask to see {p} growth curve', 'The trend over several visits matters more than any one weight.'],
-      2: ['Several shots at once is normal', 'Feeding or holding {o} close during and after helps. A fussy, sleepy day afterward is common.'],
-      4: ['Shots go more easily with a feed', (profile.feed === 'Formula' ? 'Offer a bottle' : profile.feed === 'Breast milk' && profile.feedHow === 'Nursing' ? 'Nurse {o}' : 'Offer the breast or a bottle') + ' during or right after. Sucking soothes.'],
-      6: flu ? ['{P} first flu shot may need a second visit', 'Babies getting it for the first time need two doses, at least 4 weeks apart.'] : ['Ask about fluoride varnish', 'Many offices start painting it on once the first tooth comes in. It helps prevent cavities.'],
+      2: SHOW ? ['Several shots in one visit is safe', 'Spacing them out leaves {o} unprotected for longer, and means more visits.'] : ['Several shots at once is normal', 'Feeding or holding {o} close during and after helps. A fussy, sleepy day afterward is common.'],
+      // Nov 19 (show, don't tell): how to help with shots is now a photo on the Vaccines page, so 4 months has no heads-up here.
+      4: SHOW ? null : ['Shots go more easily with a feed', (profile.feed === 'Formula' ? 'Offer a bottle' : profile.feed === 'Breast milk' && profile.feedHow === 'Nursing' ? 'Nurse {o}' : 'Offer the breast or a bottle') + ' during or right after. Sucking soothes.'],
+      6: flu ? ['Flu shots start with two doses', 'Babies getting it for the first time need two doses, at least 4 weeks apart.'] : ['Ask about fluoride varnish', 'Many offices start painting it on once the first tooth comes in. It helps prevent cavities.'],
       9: ['The questionnaire is routine, not a test', 'Answer from what you see at home. Some offices send it ahead, so check your messages.'],
-      12: ['A quick blood test is common now', 'A finger or heel prick checks for iron and, in many places, lead.']
+      12: SHOW ? null : ['A quick blood test is common now', 'A finger or heel prick checks for iron and, in many places, lead.']   // Nov 19: What to expect now explains the blood test, and the lead names it
     }[age];
     const LEAD = a => ({ 0: 'The first visit after the hospital, usually 3 to 5 days after birth.', 1: 'A short visit, and a check on how you’re doing too.', 2: 'One of the bigger visits, with the first main round of vaccines.', 4: 'Mostly the same shots as at 2 months, so this time you know what to expect.', 6: 'The talk moves from milk to first foods.', 9: 'This one takes a closer look at development.', 12: 'A busy one: new shots, a quick blood test, and the move to whole milk.' })[a] || conceptHealthSummary(a);   // the gist; the rows below hold the details
     const ASK = { 0: 'How will we know feeding is going well?', 1: 'Is {p} weight gain on track?', 2: 'What’s normal after {p} shots?', 4: 'When should we think about solids?', 6: 'Should we watch {p} iron now that solids are starting?', 9: 'Is {s} on track with sitting and babbling?', 12: 'How do we switch to whole milk?' }[age];
     const HEALTH_ART = "<svg viewBox=\"0 0 300 103\" aria-hidden=\"true\"><ellipse cx=\"146\" cy=\"90\" rx=\"107\" ry=\"7\" fill=\"#d5e5d6\"/><rect x=\"31\" y=\"63\" width=\"229\" height=\"23\" rx=\"11\" fill=\"#bed5c1\"/><circle cx=\"95\" cy=\"45\" r=\"26\" fill=\"#e8b89f\"/><path d=\"M78 40q7-21 29-15\" fill=\"none\" stroke=\"#9d735f\" stroke-width=\"5\" stroke-linecap=\"round\"/><path d=\"M85 48q4 4 8 0m7 0q4 4 8 0\" stroke=\"#916959\" stroke-width=\"2\" fill=\"none\"/><path d=\"M123 65q31-27 74 0l13 13h-92z\" fill=\"#a9c9ae\"/><path d=\"M148 66q24-19 49-26\" fill=\"none\" stroke=\"#e8b89f\" stroke-width=\"11\" stroke-linecap=\"round\"/><circle cx=\"202\" cy=\"40\" r=\"7\" fill=\"#e8b89f\"/><rect x=\"246\" y=\"15\" width=\"19\" height=\"29\" rx=\"4\" fill=\"#fafdf9\" stroke=\"#a0bda5\"/><path d=\"M256 22v15m-7-7h14\" stroke=\"#89b093\" stroke-width=\"3\" stroke-linecap=\"round\"/><path d=\"M277 48h15M285 40v16\" stroke=\"#9ebeaa\" stroke-width=\"2.5\" stroke-linecap=\"round\"/></svg>";
     let b = `<style>#main .hl-art{display:grid;place-items:center;margin:10px 0 2px}#main .hl-art svg{width:100%;max-width:260px;height:auto}#main .hl-worth{border-radius:20px;background:#eef0f7;padding:14px 16px;margin:0 0 14px;color:#3e4766}#main .hl-worth small{display:block;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#5e6890;margin-bottom:5px}#main .hl-worth b{display:block;font-size:16px;line-height:1.3;color:var(--ink,#302d3c)}#main .hl-worth p{margin:5px 0 0;font-size:14px;line-height:1.45;color:#5d6276}</style>`
-      + h.hero({ eyebrow: eyebrow2, title, lead: LEAD(age) }).replace(/<\/header>\s*$/, `<div class="hl-art">${HEALTH_ART}</div></header>`)
+      + h.hero({ eyebrow: eyebrow2, title, lead: LEAD(age) }).replace(/<\/header>\s*$/, SHOW && window.healthMainPhoto ? `${window.healthMainPhoto(age)}</header>` : `<div class="hl-art">${HEALTH_ART}</div></header>`)
       + (WORTH && !done ? `<section class="hl-worth"><small>${F('Worth knowing before you go')}</small><b>${F(WORTH[0])}</b><p>${F(WORTH[1])}</p></section>` : '')
       // Nov 14 (Yarden): parents look for a way to tick a checkup off. One quiet link once it's close or past, never a question.
       + (live() && !done && age <= focus && dueDays <= 3 ? `<div class="hub-browse hl-done-link"><button class="hub-link" onclick="hubVisitYes(${age})">${F('Been to this checkup? Mark it done')} ›</button></div>` : '');
     // "Booked for later? Save the date" is gone (Nov 10): Health moves on by age, so a saved date isn't needed.
     // The banner at the top already has "Back to your next checkup", so it isn't repeated here.
-    b += h.list('Your visit, at a glance', [
+    if (SHOW && window.healthGlance) b += window.healthGlance(age) + window.healthTracker(age, focus);
+    else b += h.list('Your visit, at a glance', [
       h.row({ icon: 'clock', cat: 'Health', title: 'What to expect', sub: EXPECT[age], onclick: `openHealthDetail(${age},'expect')` }),
       `<span id="health-vaccines"></span>` + h.row({ icon: 'shield', cat: 'Health', title: 'Vaccines', sub: age === 0 ? 'Hepatitis B, and protection against RSV, a common winter virus' : ({ 1: 'Second hepatitis B shot (some offices give it at 2 months instead)', 2: 'The first main round: whooping cough, polio and more', 4: 'Second doses of the 2-month shots', 6: 'More doses of the same shots' + ([8, 9, 10, 11, 0, 1, 2].includes(NOW.getMonth()) ? ', plus {p} first flu shot' : ''), 9: 'Usually catch-up only' + ([8, 9, 10, 11, 0, 1, 2].includes(NOW.getMonth()) ? ', plus a flu shot' : ''), 12: 'Measles, mumps and rubella (MMR), chickenpox, hepatitis A and boosters' })[age] || 'What’s due at this checkup', onclick: `openHealthDetail(${age},'vaccines')` }),
       h.row({ icon: 'notepad', cat: 'Health', title: visitNotesFor(age) || !ASK ? 'Questions and notes' : 'A question worth asking', sub: visitNotesFor(age) ? 'Your questions, and notes from this checkup' : (ASK || 'Bring your questions, and jot down the answers'), onclick: `openHealthDetail(${age},'questions')` })
-    ]);
+    ].filter(Boolean));
     // Between checkups, calm (Nov 11, Yarden: "busier than the inspiration"): one row that opens everything about a sick baby
     // (fever, tummy bugs, colds, and Call 911), with this age's fever line right on it. Teething lives in Everyday care.
     // On every checkup page (Nov 13: it used to show only on the current one). Under 3 months, the fever rule shows right here,
     // with Call 911 under it, because a fever at this age always means calling right away (AAP).
     { const u3 = live() && actualMonth() < 3 && age === focus;
-      b += h.list('Between checkups', [h.row({ icon: 'thermo', cat: 'Health', title: 'Symptoms and when to get help', sub: 'Fever, colds, tummy bugs and when to call', onclick: "openPage('chg:Health:d:sick')" })])
+      b += h.list('Between checkups', [h.row({ icon: 'thermo', cat: 'Health', title: 'Symptoms and when to get help', sub: 'Fever, colds and tummy bugs', onclick: "openPage('chg:Health:d:sick')" })])
         + (u3 ? `<section class="hub-card hub-callout"><b>${F('A fever under 3 months')}</b><p>${F('100.4°F or higher: call your pediatrician right away, day or night.')}</p></section>` + hubCall911() : ''); }
     const nx = WELL_VISITS[WELL_VISITS.indexOf(age) + 1];
-    if (nx != null) b += h.next(`Next · at ${nx} month${nx === 1 ? '' : 's'}`, healthJourneyLabel(nx), `openPage('health-visit:${nx}')`, '', { 1: 'A short visit, with a check on how you’re doing.', 2: 'The first main round of shots. Plan a quiet day after.', 4: 'Bring your questions about starting solids.', 6: 'The talk moves from milk to first foods.', 9: 'A closer look at development: jot down what you see.', 12: 'Ask about cow’s milk, and moving off bottles.' }[nx] || '');   // the concept's 'Looking ahead' line: what's different about the next one
-    return frame('Health', `data-health-journey="${age}"`, pills + missedLine, b);
+    if (nx != null) b += h.next(`Next · at ${nx} month${nx === 1 ? '' : 's'}`, healthJourneyLabel(nx), `openPage('health-visit:${nx}')`, '', { 1: 'A short visit, with a check-in on you.', 2: 'The first main round of shots. Plan a quiet day after.', 4: 'Bring your questions about starting solids.', 6: 'The talk moves from milk to first foods.', 9: 'A closer look at development: jot down what you see.', 12: 'Ask about cow’s milk, and moving off bottles.' }[nx] || '');   // the concept's 'Looking ahead' line: what's different about the next one
+    const path = SHOW && !window.healthTracker && window.healthCheckupPath ? window.healthCheckupPath(age, focus) : '';
+    return frame('Health', `data-health-journey="${age}"`, path + pills + missedLine, b);
   };
 
   window.hubSeen = function (key) {
@@ -599,7 +603,10 @@
     if (cat === 'Development' && screen === 'd' && a === 'faq') { const ref = DEV_STAGES[b] ? Number(b) : devRef(); return detailFrame('Development', DEV_STAGES[ref].title, 'What other parents ask', '', devCommonQuestions(ref).replace('<h2>Common questions</h2>', '').replace('class="common-questions"', 'class="common-questions hub-faq"')); }
     // Colds and stuffy noses: saline and suction, a cool-mist humidifier, no cold medicines, and when to call (AAP).
     if (cat === 'Health' && screen === 'd' && a === 'cold') return detailFrame('Health', 'When Maya seems sick', 'A cold or stuffy nose', 'Several colds in the first year are normal. Most clear up in 7–10 days.',
-      `<h2 class="hub-h2">${F('What helps')}</h2>` + hubIconSteps([['drop', 'Saline, then suction', 'Babies breathe through the nose to feed'], ['snow', 'Cool-mist humidifier', 'In {p} room at night'], ['bottle', 'Smaller, frequent feeds', 'Easier with a stuffy nose']], 'Health', 'Saline then suction before feeds and sleep, a cool-mist humidifier, and smaller, more frequent feeds.', false)
+      (window.__hlOld ? `<h2 class="hub-h2">${F('What helps')}</h2>` + hubIconSteps([['drop', 'Saline, then suction', 'Babies breathe through the nose to feed'], ['snow', 'Cool-mist humidifier', 'In {p} room at night'], ['bottle', 'Smaller, frequent feeds', 'Easier with a stuffy nose']], 'Health', 'Saline then suction before feeds and sleep, a cool-mist humidifier, and smaller, more frequent feeds.', false)
+        // Nov 19 (show, don't tell): the three things that help, in one photo, so parents know what to buy (AAP).
+        : `<h2 class="hub-h2">${F('What helps')}</h2><section class="hub-card hl-during"><figure class="hl-photo"><img src="assets/health/cold-kit.jpg" alt="Saline nose drops, a nasal bulb and a cool-mist humidifier on a nursery dresser"><span class="hl-tag hl-tag-t" style="left:24%;top:60%"><i></i><span>Saline drops</span></span><span class="hl-tag" style="left:37%;top:85%"><i></i><span>Nasal bulb</span></span><span class="hl-tag hl-tag-t" style="left:73%;top:48%"><i></i><span>Cool-mist humidifier</span></span></figure>`
+          + H().list('', [H().row({ icon: 'drop', cat: 'Health', title: 'Saline, then suction', sub: 'Before feeds and sleep, since babies breathe through the nose to feed' }), H().row({ icon: 'snow', cat: 'Health', title: 'A cool-mist humidifier', sub: 'In {p} room at night' }), H().row({ icon: 'bottle', cat: 'Health', title: 'Smaller, more frequent feeds', sub: 'Easier with a stuffy nose' })]) + `</section>`)
       + H().tip('Skip cold medicines', 'They aren’t safe for babies. No honey before 1 year.')
       + H().tip('Could it be an ear infection?', 'Often after a cold: fussing when lying down, a new fever, or fluid from the ear.')
       + H().versus('Normal, or time to call?', ['Normal', 'Stuffy and sneezy, still feeding.'], ['Call your pediatrician', `A fever of ${feverTemp(actualMonth())}+, a cold past 10 days, or signs of an ear infection.`])

@@ -1,0 +1,34 @@
+/* Health, show don't tell (Nov 19): see js/health-show.js */
+#main .hl-path{display:flex;gap:6px;margin:2px 0 14px}
+#main .hl-path button{all:unset;cursor:pointer;flex:1;min-width:0;display:flex;align-items:center;justify-content:center;gap:2px;text-align:center;padding:8px 0;border-radius:999px;background:var(--card,#fffdf9);border:1px solid var(--line,#ebe6e1);font-size:12.5px;font-weight:600;color:#356651;position:relative;white-space:nowrap}
+#main .hl-path button svg{width:11px;height:11px;flex:none}
+#main .hl-path button.is-on{background:#356651;border-color:#356651;color:#fff}
+#main .hl-path button.is-now:not(.is-on)::after{content:"";position:absolute;top:3px;right:4px;width:5px;height:5px;border-radius:50%;background:#4f8a6c}
+#main .hl-photo{position:relative;margin:14px 0 2px;border-radius:18px;overflow:hidden;aspect-ratio:4/3;box-shadow:0 6px 18px #2f5a4522}
+#main .hl-photo img{display:block;width:100%;height:100%;object-fit:cover}
+#main .hl-tag{pointer-events:none}
+/* A photo with rows under it, in one card */
+#main .hl-during{padding:10px 10px 2px}
+#main .hl-during .hl-photo{margin:0 0 4px;box-shadow:none;border-radius:13px}
+#main .hl-during .hub-list{border:0!important;box-shadow:none!important;background:none!important;margin:0!important}
+/* The checkup row already shows which checkup you are reading and marks the next one, so the preview banner is not needed (as in Development) */
+#main .hub-page:has(.hl-path) .st-banner{display:none}
+
+/* What to expect: the visit in order. Each stop has its own soft icon, joined by a line, with tags for this age */
+#main .hl-flow{padding:18px 16px 12px}
+#main .hl-flow ol{list-style:none;margin:0;padding:0}
+#main .hl-flow li{position:relative;display:grid;grid-template-columns:44px 1fr;gap:14px;padding-bottom:20px}
+#main .hl-flow li:not(:last-child)::after{content:"";position:absolute;left:21px;top:48px;bottom:4px;border-left:2px dotted #cfd9d3}
+#main .hl-flow-ic{width:44px;height:44px;border-radius:14px;background:var(--hl-bg);color:var(--hl-ink);display:grid;place-items:center;font-style:normal}
+#main .hl-flow-ic svg{width:24px;height:24px}
+#main .hl-flow li b{display:block;font-size:16px;color:var(--ink,#302d3c);line-height:1.25;margin-top:2px}
+#main .hl-flow li span{display:block;font-size:14px;line-height:1.4;color:#6a6f80;margin-top:3px}
+#main .hl-flow .hl-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+#main .hl-flow .hl-tags em{font-style:normal;font-size:13px;font-weight:600;line-height:1;padding:7px 10px;border-radius:999px;background:var(--hl-bg);color:var(--hl-ink)}
+#main .hl-flow li:last-child{padding-bottom:6px}
+#main .hl-flow-note{margin:8px 0 0;padding-top:10px;border-top:1px solid var(--line,#ebe6e1);font-size:12.5px;color:var(--ink-2,#857d86)}
+/* Tags naming an object in a photo */
+#main .hl-tag{position:absolute;display:flex;flex-direction:column;align-items:center;gap:6px;transform:translate(-50%,-7px)}
+#main .hl-tag-t{flex-direction:column-reverse;transform:translate(-50%,calc(-100% + 7px))}
+#main .hl-tag i{flex:none;width:14px;height:14px;border-radius:50%;background:#fff;box-shadow:0 0 0 4px #ffffff66,0 1px 4px #0003}
+#main .hl-tag span{background:#fffdfaee;color:#2f4f3f;font-size:12.5px;font-weight:700;line-height:1;padding:7px 10px;border-radius:999px;white-space:nowrap;box-shadow:0 2px 8px #0002}
