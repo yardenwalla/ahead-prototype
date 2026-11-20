@@ -47,6 +47,16 @@
       <rect x="2" y="24" width="316" height="50" rx="25" fill="url(#${id})"/>${ghost}${pills}${wave}${icons}</svg><div class="ssw-caps${two ? ' is-two' : ''}">${caps}</div></figure>`;
   }
 
+  // Worth knowing, per stage: what parents may notice, then the one thing to try. Two short lines.
+  const WORTH = [
+    [/tiny stretches/i, '{S} {grunt|grunts} and {wriggle|wriggles} while asleep.', 'That’s active sleep, not waking. Pause a moment before you pick {o} up.'],
+    [/body clock/i, 'One night is longer. The next isn’t.', 'Body clocks develop slowly. Morning daylight together helps.'],
+    [/growing up/i, '{S} was sleeping longer. Now {s}’s waking again.', 'That’s common for a few weeks. Keep your bedtime steps the same.'],
+    [/rhythm/i, 'The third nap gets harder to fit in.', 'It’s fine if it’s short. After short naps, an earlier bedtime helps.'],
+    [/running out of room/i, 'The catnap keeps pushing bedtime later.', 'If it keeps happening for a week, {s}’s nearly ready for two naps.'],
+    [/brain is busy/i, '{S} {stand|stands} up in the crib instead of lying down.', 'New skills show up at night. Practice sitting back down during the day.']
+  ];
+
   /* ---------- top card: what's changing, drawn ---------- */
   const HERO = [
     [/tiny stretches/i, () => band({ label: 'Short sleeps spread across day and night.', start: 0, end: 24, dark: [[0, 6.5], [19, 24]],
@@ -247,10 +257,18 @@
       hero.classList.add('ssw-hero');
       const t = (hero.querySelector('h1') || {}).textContent || '', art = hero.querySelector('.sl-art'), aha = hero.querySelector('.sl-aha');
       const hit = HERO.find(([re]) => re.test(t)); if (art && hit) art.outerHTML = hit[1]();
-      if (aha) { hero.after(aha); aha.classList.add('ssw-aha'); }
+      // Worth knowing: what she might notice plus the one thing to try, in one card inside the top card (Yarden's mockup).
+      if (aha) {
+        aha.classList.add('ssw-aha'); const lbl = aha.querySelector('small'); if (lbl) lbl.textContent = F('Worth knowing');
+        const tryEl = (hero.nextElementSibling && hero.nextElementSibling.classList.contains('sl-try')) ? hero.nextElementSibling : main.querySelector('.sl-try');
+        const tip = tryEl && tryEl.querySelector('p'), sp = aha.querySelector('span');
+        const own = WORTH.find(([re]) => re.test(t)), bEl = aha.querySelector('b');
+        if (own && bEl && sp) { bEl.textContent = F(own[1]); sp.textContent = F(own[2]); }
+        else if (tip && sp) sp.textContent = sp.textContent.trim().replace(/\s*$/, ' ') + tip.textContent.trim();
+        if (tryEl) tryEl.remove();
+      }
       const eb = hero.querySelector('.hub-eyebrow'), ebt = eb ? eb.firstChild.textContent : '', view = STAGES.findIndex(([, re]) => re.test(ebt));
       if (view >= 0) {
-        const h1 = hero.querySelector('h1'); if (h1) h1.insertAdjacentHTML('beforebegin', `<span class="ssw-headph"><img src="${IMG + STAGES[view][2]}" alt=""></span>`);
         hero.dataset.sswView = view; // tabs are added by ensureTabs, after every other script has drawn
       }
     }
@@ -287,9 +305,6 @@
         caps: [[7, '7 am'], [12, 'Noon'], [bed, 'Bedtime'], [31, '7 am']] })
         + `<div class="ssw-key"><span><i class="k-awake"></i>${F('Awake')}</span><span><i class="k-nap"></i>${F('Nap')}</span><span><i class="k-night"></i>${F('Night sleep')}</span></div>`;
     }
-    // Sleep training: where you are in each method.
-    main.querySelectorAll('.tpl-spec-row').forEach(r => { const b = r.querySelector('b'); if (b && ROOM[b.textContent.trim()] && !r.querySelector('.ssw-roomfig')) b.parentElement.insertAdjacentHTML('beforeend', roomFig(b.textContent.trim())); });
-    if (main.querySelector('.tpl-spec-row .ssw-roomfig')) { const spec = main.querySelector('.tpl-spec'); if (spec && !spec.querySelector('.ssw-roomkey')) spec.insertAdjacentHTML('afterbegin', `<p class="ssw-roomkey"><span><i class="k-you"></i>${F('Where you are')}</span><span><i class="k-move"></i>${F('Moving out, night by night')}</span><span><i class="k-path"></i>${F('Brief visits')}</span><span><i class="k-crib"></i>${F('Crib')}</span></p>`); }
   }
   // Stage tabs sit above the top card. Other scripts redraw the page after this one, so keep them in place on every change.
   function ensureTabs() {
