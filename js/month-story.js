@@ -658,7 +658,10 @@
   }
   // Clay toys for other pages (Timeline's chapters).
   window.stToy = function (k) { return k === 'cake' ? V.cake().replace('st-vis', 'st-vis yt-cake') : ({ bunny: bunny, rings: rings, ball: ball, blocks: blocks, bowl: bowl })[k](); };
-  window.stCardArt = function (m) { return m >= 0 && m <= 11 ? '<span class="ms-l ms-mid ms-babyw">' + babyArt(m) + '</span>' : ''; };
+  // The month's baby: a soft illustrated picture, a different baby each month (Home card, story cover, Timeline handle).
+  window.stCardArt = function (m) { return m >= 0 && m <= 11 ? '<span class="ms-l ms-mid ms-babyw ms-babyimg"><img src="assets/home/babies/baby-' + m + '.webp" alt="" decoding="async"></span>' : ''; };
+  // The older drawn clay baby, kept in case it is needed again.
+  window.stCardArtClay = function (m) { return m >= 0 && m <= 11 ? '<span class="ms-l ms-mid ms-babyw">' + babyArt(m) + '</span>' : ''; };
   // What Home's month card shows: the story's cover and its three takeaways.
   window.stCover = function (m) {
     if (m < 0 || m > 11) return null;
