@@ -314,8 +314,7 @@
         const GEN = { night: 'What nights look like now', naps: 'An example day', bed: 'Four calm steps', safe: 'The quick crib check' };
         return { ic, name, to: r ? route(r) : FALL[k], sub: r ? (r.querySelector('b') || {}).textContent : F(GEN[k]) };
       });
-      const PIC = { 'Night sleep': 'feed-nurse.jpg', Naps: 'nap.jpg', 'Bedtime routine': 'book.jpg', 'Safe sleep': 'crib.jpg' };
-      glanceEl.insertAdjacentHTML('afterend', `<div class="ssw-guides is-photo">${T.map(t => `<button onclick="${go(t.to)}"><span class="ssw-tile-pic"><img src="${IMG + PIC[t.name]}" alt="" loading="lazy"></span><span class="ssw-tile-name"><i class="ssw-gi" aria-hidden="true">${H().art(t.ic, 'Sleep')}</i>${F(t.name)}<em aria-hidden="true">›</em></span><b>${t.sub}</b></button>`).join('')}</div>`);
+      glanceEl.insertAdjacentHTML('afterend', `<div class="ssw-guides">${T.map(t => `<button onclick="${go(t.to)}"><span class="ssw-gi">${H().art(t.ic, 'Sleep')}</span><span class="ssw-gt"><b>${F(t.name)} <i aria-hidden="true">›</i></b>${t.sub ? `<small>${t.sub}</small>` : ''}</span></button>`).join('')}</div>`);
       rows.forEach(r => { if (r.dataset.sswUsed) r.remove(); });
       if (rl && !rl.querySelector('.hub-row')) { rn.remove(); rl.remove(); }
       if (sl && !sl.querySelector('.hub-row')) sl.remove();
