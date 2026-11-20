@@ -3021,7 +3021,7 @@
 
   // Late starters: past about 7 months and not started yet, the stage lead says so and points to the checkup.
   P.dirD = (() => { const prev = P.dirD; return (v) => { const h = prev(v); if (window.__fdStage !== 2 || ageMo() < 7) return h;
-    return h.replace(F(solidsLead()), F('Iron matters more after 6 months, so it’s worth starting soon. Bring your feeding questions to the checkup.')); }; })();
+    return h.replace(F(solidsLead()), F('Iron matters more after 6 months. Bring your feeding questions to the checkup.')); }; })();
 
 
   // One Feeding stage everywhere: the page, the stage timeline, Baby's details and Home all read the app's stage,
@@ -3114,29 +3114,33 @@
   // Nov 19 (Yarden): one top card. The photo carries what you might notice as labels on the picture; the lead says why;
   // one thing to try closes the card. [photo, title, lead, try]
   const DISC = () => { const v = stg(), m = ageMo(), bot = isBottle() && !nurses();
-    if (v === 0) return [0, 'Feeds come close together', 'His stomach is tiny and he’s growing fast. Evenings bunch up most, and that eases by about 6–8 weeks.', 'Feed him when you see early cues, before he cries.'];
+    if (v === 0) return [0, 'Feeds come close together', 'His stomach is tiny, so feeds bunch up, most of all in the evening. It eases by 6–8 weeks.', 'Feed him when you see early cues, before he cries.'];
     if (v === 1 && m < 3) return [1, 'He’s getting good at this', 'From about 6 weeks, feeds often get quicker. Shorter doesn’t mean less milk.', bot ? 'Let him end the feed, even if milk is left in the bottle.' : 'Let him end the feed, even if it’s sooner than usual.'];
-    if (v === 1) return [2, 'The world is interrupting his feeds', 'He’s noticing everything now. Distracted isn’t the same as full, and most babies settle back to it.', 'Feed somewhere quiet and dim, and offer again after a short pause.'];
-    if (v === 2 && m >= 7) return [3, 'A good time to start', 'Iron matters more after 6 months, so it’s worth starting soon. Bring your feeding questions to the checkup.', 'If he sits with support and swallows well, offer a soft, iron-rich food once a day.'];
+    if (v === 1) return [2, 'The world is interrupting his feeds', 'He notices everything now. Distracted isn’t the same as full.', 'Feed somewhere quiet and dim, and offer again after a short pause.'];
+    if (v === 2 && m >= 7) return [3, 'A good time to start', 'Iron matters more after 6 months. Bring your feeding questions to the checkup.', 'If he sits with support and swallows well, offer a soft, iron-rich food once a day.'];
     if (v === 2) return [3, 'Eating starts before the first bite', 'He’s watching, reaching, and learning what food is for.', 'Let him join you at meals and watch you eat.'];
     if (v === 3 && m < 7.5) return [4, 'His tongue has a new job', 'Food coming back out is practice, not dislike. It happens less as he learns.', 'Offer the same food a few days in a row, and watch him get better at it.'];
-    if (v === 3) return [5, 'Lumps are a big leap', 'Gagging on a new texture is normal. It moves food forward, and happens less with practice.', 'When he gags, stay calm and let him work it out.'];
-    return [6, 'The mess is the milestone', 'Squishing, dropping and picking up food is practice for his fingers and mouth.', 'Eat with him when you can, so he can copy you.']; };
-  // Labels on each photo, in image coordinates (% of the square photo); drawn by the app, never baked in.
-  const DISC_PINS = { newborn: [['Mouth open', 41, 40, 'r'], ['Hands to mouth', 30, 47, 'b']], 'newborn-bottle': [['Steady sucks', 52, 38, 'b']],
-    milk: [['Eyes heavy', 50, 28, 'r'], ['Hands open, relaxed', 63, 66, 'b']], 'milk-bottle': [['Lets go when full', 60, 40, 'b']],
-    distracted: [['Turns to look', 72, 26, 'b']], 'distracted-bottle': [['Pops off to look', 44, 26, 'r']],
-    'ready-hero': [['Watches your food', 56, 24, 'l'], ['Sits with support', 53, 58, 'b']],
-    'first-foods': [['Pushes food back out', 58, 40, 'r']], textures: [['Smooth', 13, 30, 'b'], ['Lumpy', 60, 30, 'b'], ['Soft pieces', 87, 30, 'b']],
-    meals: [['Picks up pieces', 24, 58, 'r']] };
+    if (v === 3) return [5, 'Lumps are a big leap', 'Gagging on new textures is normal. It happens less with practice.', 'When he gags, stay calm and let him work it out.'];
+    return [6, 'The mess is the milestone', 'Squishing and dropping food is practice for his fingers and mouth.', 'Eat with him when you can, so he can copy you.']; };
+  // Nov 19 (Yarden: labels covered the picture). Each dot sits beside the thing it names, never on it, and its label runs
+  // away from the baby into empty background (the design system's rule: close labels, no leader lines).
+  // [label, x, y, side] in % of a 5:3 crop at focus fy; heroPhoto moves them into the shorter 2.2:1 frame.
+  const DISC_PINS = { newborn: [0.3, ['Mouth open', 34, 40, 'l'], ['Hands to mouth', 30, 56, 'b']], 'newborn-bottle': [0.3, ['Steady sucks', 80, 70, 'b']],
+    milk: [0.2, ['Sleepy and relaxed', 40, 30, 'l']], 'milk-bottle': [0.3, ['Lets go when full', 48, 28, 'l']],
+    distracted: [0.2, ['Looks away', 67, 45, 'r']], 'distracted-bottle': [0.2, ['Looks away', 84, 54, 'b']],
+    'ready-hero': [0.15, ['Eyes on food', 36, 32, 'l']], 'first-foods': [0.3, ['Tongue out', 39, 48, 'l']], meals: [0.6, ['Picks it up', 31, 56, 'l']],
+    textures: [0, ['Smooth', 13, 88, 'c'], ['Mashed', 37, 88, 'c'], ['Lumpy', 61, 88, 'c'], ['Soft pieces', 86, 88, 'c']] };
+  const FY2 = { newborn: 0.3, 'newborn-bottle': 0.25, milk: 0.08, 'milk-bottle': 0.25, distracted: 0.12, 'distracted-bottle': 0.12, 'ready-hero': 0.12, 'first-foods': 0.2, meals: 0.45 };
+  const heroPhoto = (src, alt, spec0, wide) => { const [fy0, ...pins] = spec0 || [0.5], fy = wide ? 0 : (FY2[src] ?? fy0), A = 1 / 2.2;
+    const ty = y => wide ? y : Math.max(10, Math.min(90, Math.round(((1 - 0.6) * fy0 * 100 + y * 0.6 - (1 - A) * fy * 100) / A)));
+    const tags = pins.map(([l, x, y, sd]) => sd === 'c' ? `<span class="fd-tag fd-tag-c" style="left:${x}%;top:${y}%">${F(l)}</span>` : `<span class="ph-pin ph-pin-${sd}" style="left:${x}%;top:${ty(y)}%"><i></i><span>${F(l)}</span></span>`).join('');
+    return `<figure class="ph-photo fd-photo${wide ? ' is-wide' : ''}"><img src="assets/feeding/${src}.jpg" alt="${F(alt)}" style="object-position:50% ${fy * 100}%">${tags}</figure>`; };
   const discCss = `<style>#main .fd-hero.fd-disc{display:flex;flex-direction:column;min-height:463px;box-sizing:border-box}#main .fd-hero.fd-disc .fd-art{flex:1}#main .fd-hero .fd-art{display:grid;place-items:center;margin:6px -8px 6px}#main .fd-hero .fd-art svg{width:100%;max-width:290px;height:auto;filter:drop-shadow(0 9px 9px #754b5b18)}#main .fd-aha{background:#fffdfc;border-radius:16px;padding:14px 16px;box-shadow:0 3px 14px #a6798220;margin-top:2px}#main .fd-aha small{display:block;font-size:11px;font-weight:800;letter-spacing:.08em;color:#b87c8f;text-transform:uppercase;margin-bottom:5px}#main .fd-aha b{display:block;font-size:17px;line-height:1.25;color:var(--ink,#2b2732)}#main .fd-aha span{display:block;font-size:14px;line-height:1.45;color:#6d666d;margin-top:5px}#main .fd-try{display:flex;gap:12px;align-items:flex-start;margin:12px 0 4px;border-radius:16px;background:#e5f0e6;padding:14px 16px}#main .fd-try i{flex:none;width:32px;height:32px;border-radius:11px;background:#d0e3d2;color:#487456;display:grid;place-items:center}#main .fd-try small{display:block;font-size:11px;font-weight:800;letter-spacing:.08em;color:#5c7e67;text-transform:uppercase;margin:1px 0 4px}#main .fd-try p{margin:0;font-size:14.5px;line-height:1.45;color:#42634c;font-weight:550}</style>`;
   P.dirD = (() => { const prev = P.dirD; return (v) => { const h = prev(v); const a = h.indexOf('<header class="hub-hero fd-hero">'), e = h.indexOf('</header>', a); if (a < 0 || e < 0) return h;
     const head = h.slice(a, e), m = head.match(/<p class="hub-eyebrow">([^<]*)<\/p>/); if (!m) return h;
     const [n, title, lead, tryT] = DISC(), ph = FD_BOTTLE[n] && !nurses() ? FD_BOTTLE[n] : FD_PHOTO[n], wide = ph && ph[0] === 'textures';
-    // Square photos show in a 4:3 frame, so the top and bottom eighth are cropped; move the labels to match.
-    const pins = ph ? (DISC_PINS[ph[0]] || []).map(([l, x, y, sd]) => [l, x, wide ? y : Math.round((y - 12.5) / 0.75), sd]) : [];
-    const pic = ph && !window.__fdPhotoOff ? H().TPLB.photoPins('feeding/' + ph[0], ph[1], pins, 'fd-photo' + (wide ? ' is-wide' : '')) : `<div class="fd-art" aria-hidden="true"><svg viewBox="0 0 320 165" fill="none">${DISC_BASE}${DISC_ART[n]}</svg></div>`;
-    const tryIn = `<div class="fd-try fd-try-in"><i aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.6.5 1 1.2 1 2V16h5.2v-.2c0-.8.4-1.5 1-2A6 6 0 0 0 12 3Z"/></svg></i><div><small>${F('One thing to try')}</small><p>${F(tryT)}</p></div></div>`;
+    const pic = ph && !window.__fdPhotoOff ? heroPhoto(ph[0], ph[1], DISC_PINS[ph[0]], wide) : `<div class="fd-art" aria-hidden="true"><svg viewBox="0 0 320 165" fill="none">${DISC_BASE}${DISC_ART[n]}</svg></div>`;
+    const tryIn = `<div class="fd-try fd-try-in"><i aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.6.5 1 1.2 1 2V16h5.2v-.2c0-.8.4-1.5 1-2A6 6 0 0 0 12 3Z"/></svg></i><p><b>${F('Try this:')}</b> ${F(tryT)}</p></div>`;
     const hero = `<header class="hub-hero fd-hero fd-disc fd-one"><p class="hub-eyebrow">${m[1]}</p><h1>${F(title)}</h1><p class="hub-lead">${F(lead)}</p>${pic}${tryIn}`;
     const tryCard = '';
     return h.slice(0, a) + discCss + hero + '</header>' + tryCard + h.slice(e + 9); }; })();
