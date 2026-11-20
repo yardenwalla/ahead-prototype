@@ -85,7 +85,7 @@ window.HOME_COPY = {
 "sitting-gear": "Once {he} {sits|sit} alone, {he} can ride in the stroller’s upright seat instead of the bassinet.",
 "first-bite:t": "Before solids: gagging vs choking",
 "first-bite:t-after": "Gagging or choking? How to tell",
-"first-bite": "Gagging is loud and normal while {he} {learns|learn}. Choking is silent. A short first aid video helps.",
+"first-bite": "Gagging is loud and normal while {he} {learns|learn}. Choking is quiet or weak, and needs you now. A short first aid video helps.",
 "solids-maybe:t": "Starting solids? Lead with iron",
 "solids-maybe": "{N} needs more iron from 6 months, so meat, beans, lentils or iron-fortified oatmeal make great first foods.",
 "solids-2:t": "Try peanut and egg early",
