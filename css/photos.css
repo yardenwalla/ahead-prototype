@@ -261,3 +261,10 @@
 #main .fd-plist .hub-row-copy b { font-size: 16px }
 #main .fd-plist .hub-row-copy { padding: 10px 0 }
 #main .fd-plist .hub-row-copy small { font-size: 13px; line-height: 1.3 }
+/* Nov 19: small icon tiles under a chart (Everyday care "How to tell") */
+#main .tpl-minis { display: grid; grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); gap: 8px; margin: 14px 0 2px; padding-top: 14px; border-top: 1px solid var(--line, #ebe6e1) }
+#main .tpl-minis > div { text-align: center; min-width: 0 }
+#main .tpl-minis .tpl-mini-ic { display: grid; place-items: center; width: 36px; height: 36px; margin: 0 auto 6px; border-radius: 50%; background: var(--year-pale, #eef3fc); color: var(--year-ink, #46638c) }
+#main .tpl-minis .tpl-mini-ic svg { width: 20px; height: 20px }
+#main .tpl-minis b { display: block; font-size: 13.5px; line-height: 1.25; color: var(--ink, #2b2732) }
+#main .tpl-minis small { display: block; font-size: 12px; line-height: 1.3; color: #6d666d; margin-top: 2px }

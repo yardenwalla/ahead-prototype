@@ -91,6 +91,8 @@
     card: (text, notes) => text ? `<section class="ss-do care-tpl-card"><p>${F(tval(text))}</p>${TPLB.ul(notes)}</section>` : '',
     // Nov 17: nothing is cut off silently. Over the limit (2 notes, 3 rows) still shows everything, and is marked for QA (tools/qa/browser/template_limits.py).
     ul: notes => { notes = (tval(notes) || []).filter(Boolean); return notes.length ? `<ul class="tpl-notes"${notes.length > 2 ? ' data-over-limit="notes"' : ''}>${notes.map(([, t, sub]) => `<li><b style="color:#302d3c">${F(t)}${/[?!.]$/.test(t) ? '' : '.'}</b> ${F(sub)}${/[?!.]$/.test(sub) ? '' : '.'}</li>`).join('')}</ul>` : ''; },
+    minis: (fig, items, cat) => { const its = (tval(items) || []).filter(Boolean); if (!its.length) return fig; const html = `<div class="tpl-minis">${its.map(([icon, t, sub]) => `<div><span class="tpl-mini-ic">${art(icon, cat)}</span><b>${F(t)}</b><small>${F(sub)}</small></div>`).join('')}</div>`;
+      let i = fig.lastIndexOf('</figure>'); if (i < 0) i = fig.lastIndexOf('</section>'); return i < 0 ? fig + html : fig.slice(0, i) + html + fig.slice(i); },
     noted: (fig, notes) => { const ul = TPLB.ul(notes); if (!fig || !ul) return fig || ''; let i = fig.lastIndexOf('</figure>'); if (i < 0) i = fig.lastIndexOf('</section>'); return i < 0 ? fig + ul : fig.slice(0, i) + ul + fig.slice(i); },
     // A tile whose art is 'photo:<path>' shows that photo in place of the icon (Nov 19).
     tiles: (items, cat, numbered) => { items = tval(items); if (!items || !items.length) return '';
@@ -163,7 +165,8 @@
       return (q.pictureAfter ? steps + pic : pic + steps)
       // Nov 19: secondary detail (q.tipsFold) folds behind one row, so the page is the picture and the steps.
       + (q.tipsFold && tval(q.tips) ? TPLB.fold(tval(q.tipsTitle), TPLB.rows(q.tips, cat)) : TPLB.sec(q.tipsTitle || 'Keep {o} safe', TPLB.rows(q.tips, cat))) + TPLB.sec('Watch how', q.video ? hubEmbed(...q.video) : ''); },
-    check: (q, cat) => TPLB.sec(tval(q.tellTitle) || 'How to tell', TPLB.noted(q.figure ? q.figure() : TPLB.tiles(q.signs, cat), q.tell))
+    // Nov 19 (Yarden: "this part feels dense"): under a chart, the tell lines are small icon tiles side by side, not sentences.
+    check: (q, cat) => TPLB.sec(tval(q.tellTitle) || 'How to tell', q.figure && q.tellTiles ? TPLB.minis(q.figure(), q.tell, cat) : TPLB.noted(q.figure ? q.figure() : TPLB.tiles(q.signs, cat), q.tell))
       + TPLB.sec('What helps', TPLB.noted(TPLB.tiles(q.helps, cat, q.ordered), q.helpsNotes)) + TPLB.calls(q.calls),
     option: (q, cat) => TPLB.sec('At a glance', tval(q.glance)) + TPLB.sec('How it works', tval(q.how)) + TPLB.sec('Good to know', TPLB.rows(q.tips, cat))
   };

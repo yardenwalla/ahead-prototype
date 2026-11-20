@@ -3125,7 +3125,7 @@
   // Nov 19 (Yarden: labels covered the picture). Each dot sits beside the thing it names, never on it, and its label runs
   // away from the baby into empty background (the design system's rule: close labels, no leader lines).
   // [label, x, y, side] in % of a 5:3 crop at focus fy; heroPhoto moves them into the shorter 2.2:1 frame.
-  const DISC_PINS = { 'fh-newborn': [0, ['Hands to mouth', 61, 68, 'l']], 'fh-milk': [0, ['Sets his own pace', 47, 60, 'l']], 'fh-distracted': [0, ['Looks away', 57, 42, 'l']], newborn: [0.3, ['Mouth open', 34, 40, 'l'], ['Hands to mouth', 30, 56, 'b']], 'newborn-bottle': [0.3, ['Steady sucks', 80, 70, 'b']],
+  const DISC_PINS = { 'fh-newborn': [0, ['Hands to mouth', 61, 68, 'l']], 'fh-milk': [0, ['Sets the pace', 43, 34, 'l']], 'fh-distracted': [0, ['Looks away', 57, 42, 'l']], newborn: [0.3, ['Mouth open', 34, 40, 'l'], ['Hands to mouth', 30, 56, 'b']], 'newborn-bottle': [0.3, ['Steady sucks', 80, 70, 'b']],
     milk: [0.2, ['Sleepy and relaxed', 40, 30, 'l']], 'milk-bottle': [0.3, ['Lets go when full', 48, 28, 'l']],
     distracted: [0.2, ['Looks away', 67, 45, 'r']], 'distracted-bottle': [0.2, ['Looks away', 84, 54, 'b']],
     'ready-hero': [0.15, ['Eyes on food', 36, 32, 'l']], 'first-foods': [0.3, ['Tongue out', 39, 48, 'l']], meals: [0.6, ['Picks it up', 31, 56, 'l']],
