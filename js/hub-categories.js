@@ -64,6 +64,12 @@
   // A "thing to notice" opens its area page scrolled to that milestone, outlined for a moment.
   let DEV_FOCUS = null;
   window.devFocusSkill = key => { DEV_FOCUS = key; setTimeout(() => { DEV_FOCUS = null; }, 60); };
+  // A photo label: scroll to its milestone on this page and open what it looks like.
+  window.devPinOpen = key => { const row = document.getElementById('sk-' + key); if (!row) return;
+    document.querySelectorAll('#main .dev-skill.is-focus').forEach(r => r.classList.remove('is-focus')); row.classList.add('is-focus');
+    const btn = row.querySelector('.dev-see'), box = row.querySelector('.dev-media');
+    if (btn && box && box.hidden && window.devSeeIt) devSeeIt(btn, key);
+    row.scrollIntoView({ behavior: 'smooth', block: 'center' }); };
   window.developmentJourneyOverview = developmentJourneyOverview = function (selected = null) {
     const now = devNow(), ref = DEV_STAGES[selected] ? Number(selected) : now, age = ref + ' months';
     const st = DEV_STAGES[ref], h = H();
@@ -96,7 +102,7 @@
       2: { src: 'assets/dev/hero-2.jpg?v=3', alt: 'A baby gazing up at her mom' },
       4: { src: 'assets/dev/hero-4.jpg?v=3', alt: 'A baby cooing up at his dad' },
       6: { src: 'assets/dev/reaching-6h.jpg?v=2', alt: 'A baby on her tummy reaching for a soft ball' },
-      9: { src: 'assets/dev/hero-9.jpg?v=4', alt: 'A baby crawling happily to her mom as she comes back into the room' },
+      9: { src: 'assets/dev/hero-9.jpg?v=5', alt: 'A baby lifting a cloth to find her hidden bunny, her mom smiling beside her' },
       12: { src: 'assets/dev/hero-12.jpg?v=2', alt: 'A toddler putting a block in a cup' } }[ref];
     const photoHtml = PHOTO ? `<div class="dvx-photo sf-photo"><img src="${PHOTO.src}" alt="${PHOTO.alt}"></div>` : '';
     let b = css + (PHOTO ? `<section class="dev-hero dvx-hero has-photo"><p class="dev-hero-eyebrow">${F(STAGE_TABLE.Development.stages[devKeys.indexOf(ref)].label)}</p><h1>${T(IN.t)}</h1><p class="dev-hero-lead">${T(IN.lead)}</p>${photoHtml}</section>`
@@ -129,7 +135,7 @@
       const ex = labels.find(l => !devSkillSeen(l) && fresh(l)) || labels.find(l => !devSkillSeen(l)) || labels[0], look = (IN.n || []).find(x => x[0] === d);
       const foot = F(n === 1 ? '1 milestone' : `${n} milestones`);   // the same line on every tile; marking happens on the area page
       const tp = TILE_PHOTO[ref] && TILE_PHOTO[ref][d];
-      return `<button class="dvx-area${tp ? ' has-photo' : ''}" style="${tint(d)}" onclick="${look ? `devFocusSkill('${journeySkillKey(look[3])}');` : ''}openPage('development-domain:${ref}:${d}')">${tp ? `<span class="dvx-area-pic"><img src="assets/dev/tile-${ref}-${d.toLowerCase()}.jpg?v=9" alt="">${tp === 'sound' ? '<i class="dvx-badge" aria-label="Has a sound clip"><svg viewBox="0 0 24 24"><path d="M4 10v4M8 7v10M12 4v16M16 8v8M20 11v2"/></svg></i>' : tp === 'video' ? '<i class="dvx-badge" aria-label="Has a video"><svg viewBox="0 0 24 24"><path d="M9 7v10l8-5z" fill="currentColor" stroke="none"/></svg></i>' : ''}</span>` : ''}<small>${tp ? `<i class="dvx-area-ico" aria-hidden="true">${H().art(DOMAIN_ICONS[d], 'Development')}</i>` : ''}${DOMAIN_TITLES[d]}${tp ? '<em class="dvx-area-go" aria-hidden="true">›</em>' : ''}</small><b>${T(look ? look[1] : name(ex))}</b><span>${foot} ›</span></button>`; }).join('')}</div>`
+      return `<button class="dvx-area${tp ? ' has-photo' : ''}" style="${tint(d)}" onclick="${look ? `devFocusSkill('${journeySkillKey(look[3])}');` : ''}openPage('development-domain:${ref}:${d}')">${tp ? `<span class="dvx-area-pic"><img src="assets/dev/tile-${ref}-${d.toLowerCase()}.jpg?v=10" alt="">${tp === 'sound' ? '<i class="dvx-badge" aria-label="Has a sound clip"><svg viewBox="0 0 24 24"><path d="M4 10v4M8 7v10M12 4v16M16 8v8M20 11v2"/></svg></i>' : tp === 'video' ? '<i class="dvx-badge" aria-label="Has a video"><svg viewBox="0 0 24 24"><path d="M9 7v10l8-5z" fill="currentColor" stroke="none"/></svg></i>' : ''}</span>` : ''}<small>${tp ? `<i class="dvx-area-ico" aria-hidden="true">${H().art(DOMAIN_ICONS[d], 'Development')}</i>` : ''}${DOMAIN_TITLES[d]}${tp ? '<em class="dvx-area-go" aria-hidden="true">›</em>' : ''}</small><b>${T(look ? look[1] : name(ex))}</b><span>${foot} ›</span></button>`; }).join('')}</div>`
       + `<button class="dvx-lookall" onclick="openPage('chg:Development:d:all:${ref}')">${F(TILE_PHOTO[ref] ? `See all ${Object.values(DEVELOPMENT_DOMAINS[ref]).flat().length} milestones in one list` : 'All milestones for this age')}<span aria-hidden="true">›</span></button></section>` + tryHtml;
     // Coming into view: the next checkpoint, in a line.
     // Next (design system, Nov 13): "Next · " and when, the next stage's name, and one line on what to watch for or get ready for.
@@ -449,10 +455,10 @@
   const AREA_PHOTO = { 6: {
     Social: { src: 'area-6-social', alt: 'A mom tickling her laughing baby', pins: [{ t: 'Laughs out loud', x: 80, y: 72, side: 'b', k: 'laughs' }] },
     Talking: { src: 'area-6-talking', alt: 'A mom and baby face to face, the baby cooing back', pins: [{ t: 'Answers your sounds', x: 70, y: 87, side: 'l', k: 'takes-turns-making-sounds-with-you' }] },
-    Thinking: { src: 'area-6-thinking', alt: 'A baby turning a cup over in her hands', pins: [{ t: 'Explores the cup', x: 56, y: 58, side: 'r', k: 'puts-things-in-mouth-to-explore' }] },
+    Thinking: { src: 'area-6-thinking', alt: 'A baby mouthing a wooden teething ring', pins: [{ t: 'Mouths to explore', x: 53, y: 44, side: 'r', k: 'puts-things-in-mouth-to-explore' }] },
     Movement: { src: 'area-6-movement', alt: 'A baby rolling from tummy onto his side', pins: [{ t: 'Rolls tummy to back', x: 46, y: 50, side: 'r', k: 'rolls-tummy-to-back' }] } } };
   const areaPhoto = (ref, domain) => { const ph = AREA_PHOTO[ref] && AREA_PHOTO[ref][domain]; if (!ph) return ''; const hb = window.hubBabyify || (x => x);
-    return `<div class="sf-photo dev-area-photo"><img src="assets/dev/${ph.src}.jpg?v=2" alt="${ph.alt}">${ph.pins.map(q => `<button class="sf-pin sf-pin-${q.side}" style="left:${q.x}%;top:${q.y}%" onclick="devFocusSkill('${q.k}');openPage('development-domain:${ref}:${domain}')"><i></i><span>${hb(F(q.t))}</span></button>`).join('')}</div>`; };
+    return `<div class="sf-photo dev-area-photo"><img src="assets/dev/${ph.src}.jpg?v=3" alt="${ph.alt}">${ph.pins.map(q => `<button class="sf-pin sf-pin-${q.side}" style="left:${q.x}%;top:${q.y}%" onclick="devPinOpen('${q.k}')"><i></i><span>${hb(F(q.t))}</span></button>`).join('')}</div>`; };
   const devAreaHead = (ref, domain, meta, age) => {
     const hb = window.hubBabyify || (x => x), T = x => hb(F(x)), hd = AREA_HEAD[ref] && AREA_HEAD[ref][domain], when = age === '1 year' ? '12 months' : age;
     if (!hd) return `<p class="hub-context">${esc(`By ${age}`)}</p><h1>${esc(meta.title)}</h1><p class="hub-lead">${esc(DEV_STAGES[ref].summaries[domain])}</p>`;
@@ -474,10 +480,13 @@
     const ordered0 = hl ? [...labels].sort((x, y) => (hl[1].test(clearMilestone(y)) ? 1 : 0) - (hl[1].test(clearMilestone(x)) ? 1 : 0)) : labels;
     const top = DEV_NOTICED[ref]?.[domain], ordered = top && ordered0.includes(top) ? [top, ...ordered0.filter(l => l !== top)] : ordered0;
     const tc = window.devTileColors ? devTileColors(domain) : null;
-    const rows = ordered.map(l => { const key = journeySkillKey(l), rec = journeyData().records.find(r => r.type === 'milestone' && r.skillKey === key) || (skillSeen(l) ? { reported: true } : null);
-      const see = window.devSeeButton ? devSeeButton(key, clearMilestone(l)) : '';
+    const firstOpen = !(AREA_PHOTO[ref] && AREA_PHOTO[ref][domain]);
+    const rows = ordered.map((l, i) => { const key = journeySkillKey(l), rec = journeyData().records.find(r => r.type === 'milestone' && r.skillKey === key) || (skillSeen(l) ? { reported: true } : null);
+      let see = window.devSeeButton ? devSeeButton(key, clearMilestone(l)) : '';
+      const media = see && firstOpen && i === 0 && window.devMediaHTML ? devMediaHTML(key, clearMilestone(l)) : '';
+      if (media) see = see.replace('aria-expanded="false"', 'aria-expanded="true"').replace('>See what it looks like<', '>Hide<');
       const desc = (window.hubBabyify || (x => x))(F(DEV_EXAMPLES[l] || ''));
-      return `<div class="hub-tick is-habit dev-skill${DEV_FOCUS === key ? ' is-focus' : ''}" id="sk-${key}"><span class="hub-tick-art">${h.art(SKILL_ICON(l), 'Development')}</span><span class="hub-row-copy"><b>${(window.hubBabyify || (x => x))(F(clearMilestone(l) === 'Closes lips to show they don’t want more food' ? 'Shows when they’re full' : clearMilestone(l)))}</b>${desc ? `<small>${desc}</small>` : ''}${see}</span>${rec ? `<span class="hub-chip is-done">${F('Seen')} ✓</span>` : `<button class="hub-seen" onclick="hubSeen('${key}')">${F('Seen it')}</button>`}${see ? `<div class="dev-media" hidden></div>` : ''}</div>`; }).join('');
+      return `<div class="hub-tick is-habit dev-skill${DEV_FOCUS === key ? ' is-focus' : ''}" id="sk-${key}"><span class="hub-tick-art">${h.art(SKILL_ICON(l), 'Development')}</span><span class="hub-row-copy"><b>${(window.hubBabyify || (x => x))(F(clearMilestone(l) === 'Closes lips to show they don’t want more food' ? 'Shows when they’re full' : clearMilestone(l)))}</b>${desc ? `<small>${desc}</small>` : ''}${see}</span>${rec ? (rec.reported ? `<span class="hub-chip is-done">${F('Seen')} ✓</span>` : `<button class="hub-chip is-done hub-unseen" onclick="hubUnseen('${key}')" aria-label="${F('Seen')}. ${F('Tap to undo')}">${F('Seen')} ✓</button>`) : `<button class="hub-seen" onclick="hubSeen('${key}')">${F('Seen it')}</button>`}${see ? (media ? `<div class="dev-media">${media}</div>` : `<div class="dev-media" hidden></div>`) : ''}</div>`; }).join('');
     // The big question, only on the area it's about.
     const W = DEV_BIG_BAR[ref], nowMo = live() ? (NOW - parse(profile.early && profile.due && developmentMonth(actualMonth()) !== actualMonth() ? profile.due : profile.dob)) / 2629746e3 : null;
     const big = DEV_BIG[ref] && DEV_BIG[ref][0] === domain ? `<section class="hub-card dev-bigq"><span class="hub-card-head"><b>${F(DEV_BIG[ref][1])}</b></span>${W && window.hubWindowBar ? hubWindowBar({ title: '', from: W[0], to: W[1], zones: [[W[2], W[3], W[4], 'band']], ticks: W[5], now: nowMo, cat: 'Development', caption: F(DEV_BIG[ref][2]) }) : ''}<p class="dev-bigq-a">${F(ref === 6 && earlyBday() ? 'Most babies sit without support by about 9 months. Born early, Maya can get there closer to 9 months adjusted.' : DEV_BIG[ref][2])}</p></section>` : '';
@@ -487,7 +496,8 @@
     // Nov 18: Ahead's own photo for each area's play idea where one exists (keyed by idea id).
     const IDEA_PHOTO = { 'supported-reach': 'play-toy-beside-knee', 'peek-face': 'play-peekaboo', 'two-hands': 'play-two-hands', };
     const ideaId = move ? move.id : act ? act.id : '';
-    const pic = IDEA_PHOTO[ideaId] ? `<img class="dev-idea-photo" src="assets/dev/${IDEA_PHOTO[ideaId]}.jpg?v=3" alt="">` : move ? move.art : act && window.devPlayArt ? devPlayArt(act.id) : '';
+    const ideaSrc = (window.devPlayPhoto && devPlayPhoto(ideaId)) || IDEA_PHOTO[ideaId];
+    const pic = ideaSrc ? `<img class="dev-idea-photo" src="assets/dev/${ideaSrc}.jpg?v=4" alt="">` : move ? move.art : act && window.devPlayArt ? devPlayArt(act.id) : '';
     // From 6 months, Communication's idea is baby signs: a way to help Maya say what {s} {want|wants} before the words come.
     if (domain === 'Talking' && ref >= 6) return developmentDomainPageSigns(ref, domain, rows, big, tc, meta, age, h);
     const tryCard = move || act ? `<section class="hub-card dev-try"><span class="hub-card-head"><b>${F('Try this together')}</b></span><button class="dev-try-row" onclick="openPage('${move ? `chg:Development:d:move:${ref}` : `chg:Development:d:idea:${ref}:${act.id}`}')">${pic ? `<span class="dev-idea-art">${pic}</span>` : ''}<span class="hub-row-copy"><b>${F(move ? move.title : act.title)}</b><small>${move ? F(move.why) : playLine(act)}</small></span><span class="hub-chev" aria-hidden="true">›</span></button></section>` : '';
