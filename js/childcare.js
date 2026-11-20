@@ -155,12 +155,15 @@
   const BACKUP = [['Name two backup people', 'Family, friends or a sitter you could call at short notice.', 'heart'], ['Ask work about backup care', 'Some jobs offer backup care days.', 'notepad'], ['Save their numbers', 'In your phone, and on Maya’s care card under “Who to call”.', 'moon']];
   window.ccBackupTick = i => { const on = load('ahead-childcare-backup', []); save('ahead-childcare-backup', on.includes(i) ? on.filter(x => x !== i) : on.concat(i)); rerender(); };
   // Review feedback: name the backup people here, and they're saved straight to the care card.
+  // Fresh eyes (Yarden): the page explains what backup is for first; naming people comes after, folded until you
+  // choose to add them. Names go straight onto the care card.
   const backupPeople = () => { const c = load('ahead-carecard', {}), f = (k, label, type) => `<label class="cc-field"><span>${F(label)}</span><input ${type === 'tel' ? 'type="tel" inputmode="tel"' : ''} value="${esc3(c[k])}" oninput="ccText('${k}', this.value)" autocomplete="off"></label>`;
-    const n = [c.c1Name, c.c2Name].filter(Boolean).length, asked = load('ahead-childcare-backup', []).includes(1);
-    return `<h2 class="hub-h2">${F('Your backup people')}</h2><p class="cc-h2sub">${F('Family, friends or a sitter you could call at short notice. They’re added to {p} care card.')}</p>`
-      + `<section class="hub-card cc-form cc-backup"><div class="cc-two-f">${f('c1Name', 'First person')}${f('c1Phone', 'Phone', 'tel')}</div><div class="cc-two-f">${f('c2Name', 'Second person')}${f('c2Phone', 'Phone', 'tel')}</div></section>`
+    const named = [[c.c1Name, c.c1Phone], [c.c2Name, c.c2Phone]].filter(([n]) => n), asked = load('ahead-childcare-backup', []).includes(1);
+    return `<h2 class="hub-h2">${F('Set up your backup')}</h2>`
+      + `<details class="hub-card cc-more cc-backup"${named.length ? '' : ''}><summary><span>${hubArt('heart', CAT)}</span><div><b>${F(named.length ? named.map(([n]) => n).join(' and ') : 'Name two backup people')}</b><small>${F(named.length ? 'Your backup people. Tap to change' : 'Family, friends or a sitter you could call at short notice')}</small></div></summary>`
+      + `<div class="cc-backup-f"><p class="cc-h2sub">${F('They’re added to {p} care card, so your caregiver has them too.')}</p><div class="cc-two-f">${f('c1Name', 'First person')}${f('c1Phone', 'Phone', 'tel')}</div><div class="cc-two-f">${f('c2Name', 'Second person')}${f('c2Phone', 'Phone', 'tel')}</div><button class="hub-button cc-next2" onclick="rerender()">${F('Done')}</button></div></details>`
       + H().ticks([BACKUP[1]], () => asked, () => 'ccBackupTick(1)', CAT)
-      + (n >= 1 && asked ? H().note('Your backup plan is set. Check it again whenever your care changes.') : ''); };
+      + (named.length && asked ? H().note('Your backup plan is set. Check it again whenever your care changes.') : ''); };
   const backupList = () => { const on = load('ahead-childcare-backup', []); return `<h2 class="hub-h2">${F('Set up your backup')}</h2>` + H().ticks(BACKUP, i => on.includes(i), i => `ccBackupTick(${i})`, CAT) + (BACKUP.every((_, i) => on.includes(i)) ? H().note('Your backup plan is set. Check it again whenever your care changes.') : ''); };
 
   function journey(id) {
@@ -245,13 +248,13 @@
     }
 
     if (id === 'backup') return sub('backup', 'Backup care', 'When care falls through', 'Every family has days when care doesn’t happen. A plan made now makes them easier.',
-      backupPeople()
-      + picSteps('When things don’t go to plan', [
+      picSteps('Days you’ll need it', [
         ['thermo', '{S’s} sick', 'Keep {o} home, with you or a backup person.'],
         ['home', 'The caregiver is sick', 'Call your backup, or a sitter you know.'],
         ['hand', 'Your caregiver leaves', 'Family or a sitter for now, while you find new care.'],
         ['sun', 'Closed days', 'Plan holidays early: family, a sitter or time off.']],
         'When the baby is sick, take turns or call your backup. When the caregiver is sick, call a sitter. If your caregiver leaves, cover with family or a sitter while you find new care. Plan daycare holidays early.')
+      + backupPeople()
       + good([['blocks', 'Changing care', 'Overlap the old and new care for a few days if you can.']]), 'shield');
 
     if (id === 'share') return sub('nanny', 'Nanny share', 'Sharing a nanny', 'Two families split one nanny, for close to one-on-one care at a lower cost.',
@@ -762,7 +765,7 @@
         `<div class="acc cc-preview">${window.aheadCareCard ? aheadCareCard(cardData(), true) : ''}</div>`
         + `<button class="hub-button cc-next2" onclick="ccShare()">${F('Send the card')}</button><p class="cc-done" id="ccDone" hidden></p>`
         + `<button class="hub-link cc-quizlink" onclick="ccCardMode('edit')">${F('Back to editing')}</button>`
-        + `<p class="cc-privacy">${F('It sends as a message. Anyone who has the message can read it, so send it only to people caring for {o}.')}</p>`, 'notepad');
+        + `<p class="cc-privacy">${F('It sends as a link that opens this card. Anyone with the link can open it, so send it only to people caring for {o}.')}</p>`, 'notepad');
     }
     const secs = CARD_SECS.map(([k, icon, t, d]) => { const sum = secSummary(k, c), open = cardEdit === k;
       return `<section class="hub-card cc-csec${open ? ' is-open' : ''}"><button class="cc-csec-head" onclick="ccCardEdit('${k}')" aria-expanded="${open}"><span>${hubArt(icon, CAT)}</span><div><b>${F(t)}</b><small class="${sum ? 'is-set' : ''}">${sum ? esc3(sum) : F(d)}</small></div><em>${F(open ? 'Done' : sum ? 'Edit' : 'Add')}</em></button>${open ? `<div class="cc-csec-body">${secEdit(k, c)}</div>` : ''}</section>`; }).join('');
@@ -807,18 +810,19 @@
     if (calls.length) L.push(`Backup: ${calls.join(' · ')}`);
     if (d.doc && (d.doc[0] || d.doc[1])) L.push(`Pediatrician: ${d.doc.filter(Boolean).join(' ')}`);
     if (d.a) L.push(d.a);
+    L.push('', `Full card: ${ccCardLink()}`);
     return L.join('\n');
   };
-  // Round 10 (review feedback): a link with the details packed inside it isn't private, so the card goes as a plain
-  // message the parent sends themselves. Nothing is stored anywhere else.
+  // Yarden prefers the link that opens the designed card. The page now says plainly who can open it.
   window.ccShare = async function () {
-    const text = ccCardText(), done = document.getElementById('ccDone');
-    const data = { title: `${name()}’s care card`, text };
+    const url = ccCardLink(), done = document.getElementById('ccDone');
+    // If the phone's share sheet or the clipboard says no, show the link with its own Copy button, so there's always a way to send it.
+    const fallback = () => { if (!done) return; done.hidden = false; done.innerHTML = `${F('Copy this link and paste it into a text or email.')}<span class="cc-link"><input readonly value="${esc3(url)}" onclick="this.select()" aria-label="Care card link"><button onclick="ccCopy(this)">${F('Copy')}</button></span>`; };
+    const data = { title: `${name()}’s care card`, url };
     if (navigator.share && (!navigator.canShare || navigator.canShare(data))) {
       try { await navigator.share(data); return; } catch (e) { if (e && e.name === 'AbortError') return; }
     }
-    try { await navigator.clipboard.writeText(text); if (done) { done.textContent = F('Copied. Paste it into a text or email.'); done.hidden = false; } if (typeof hubToast === 'function') hubToast('Card copied', 'Paste it into a text or email.'); }
-    catch (e) { if (done) { done.hidden = false; done.innerHTML = `${F('Copy this and paste it into a text or email.')}<textarea class="cc-notes" readonly rows="8" onclick="this.select()">${esc3(text)}</textarea>`; } }
+    try { await navigator.clipboard.writeText(url); if (done) { done.textContent = F('Link copied. Paste it into a text or email.'); done.hidden = false; } if (typeof hubToast === 'function') hubToast('Link copied', 'Paste it into a text or email.'); } catch (e) { fallback(); }
   };
   window.ccCopy = async function (btn) {
     const input = btn.previousElementSibling; input.select(); input.setSelectionRange(0, 99999);

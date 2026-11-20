@@ -355,3 +355,4 @@
 #main .cc-update dt { display: flex; gap: 6px; align-items: center; font-size: 13px; font-weight: 650; color: #6b5a0e }
 #main .cc-update dt svg { width: 18px; height: 18px }
 #main .cc-update dd { margin: 0; font-size: 14px; line-height: 1.4; color: #2f2b1c }
+#main .cc-backup-f { padding: 0 14px 14px }

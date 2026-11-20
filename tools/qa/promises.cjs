@@ -172,14 +172,14 @@ for (const [title, skill, age] of [['Sat up', 'Sits without support', 9], ['Roll
   check(/chg:Safety:d:step:seat/.test(page('chg:Out and about:d:car')) && !/Setting it up/.test(text(page('chg:Out and about:d:car'))), 'The car seat fit lives in Safety, and Outings links to it');
 }
 
-// 14. Nov 19 (review): the care card was shared as a link with the baby's details packed inside it, and the page
-//     said only people you send it to could see it. Sharing now sends the card as a message, with no such link or claim.
+// 14. Nov 19 (review): the care card is shared as a link with the details inside it, and the page used to say only
+//     people you send it to could see it. Anyone with the link can open it, so the page must say so, not promise privacy.
 {
   const a = family(4);
-  a.run(`localStorage.setItem('ahead-carecard', JSON.stringify({ milk: 'Formula', c1Name: 'Ruth', c1Phone: '555 123 4567', saved: true }))`);
-  const t = String(a.run('ccCardText()'));
-  check(/Ruth/.test(t) && !/https?:|card\.html|\?c=/.test(t), 'The shared care card is plain text, with no link carrying the details');
-  check(!/Only people you send it to/.test(text(open(a, 'chg:Childcare:d:card'))), 'The care card makes no privacy promise it can’t keep');
+  a.run(`localStorage.setItem('ahead-carecard', JSON.stringify({ milk: 'Formula', saved: true }))`);
+  const t = text(open(a, 'chg:Childcare:d:card'));
+  check(!/Only people you send it to/.test(t), 'The care card makes no privacy promise it can’t keep');
+  check(/Anyone with the link can open it/.test(t), 'The care card says plainly who can open the link');
 }
 
 console.log(`Promise checks: ${checks} passed`);
