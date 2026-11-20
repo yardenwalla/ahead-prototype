@@ -234,3 +234,5 @@
 #main .ph-grid .ph-tile { position: relative }
 #main .ph-x { position: absolute; right: 6px; top: 6px; width: 20px; height: 20px; border-radius: 50%; background: #b5524a no-repeat center / 10px url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M2.5 2.5l5 5M7.5 2.5l-5 5' fill='none' stroke='%23fff' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E"); box-shadow: 0 1px 3px #0003 }
 #main .ph-grid > .tpl-notes { grid-column: 1 / -1; margin: 4px 2px 2px; padding: 10px 0 2px; border-top: 1px solid var(--line); list-style: none }
+/* Nov 19: two-up grid (holds on the latch page) */
+#main .ph-grid:has(> figure:nth-child(2):last-child) { grid-template-columns: repeat(2, 1fr) }
