@@ -238,20 +238,20 @@
 #main .ph-grid:has(> figure:nth-child(2):last-child) { grid-template-columns: repeat(2, 1fr) }
 /* Nov 19: Feeding stage top card, one piece: headline, labeled photo, one thing to try.
    Sized like Development's top card: the photo is a short 5:3 crop and the try line is one compact strip. */
-#main .fd-hero.fd-one { min-height: 0 !important; padding-bottom: 0 !important; overflow: hidden }
-#main .fd-hero.fd-one .ph-photo { margin: 10px -2px 0; border-radius: 16px 16px 0 0; box-shadow: none; aspect-ratio: 2.2 / 1 }
+#main .fd-hero.fd-one { min-height: 0 !important; overflow: hidden }
+/* Nov 19 (Yarden: "the main card looks funny"): the photo sits inside the card like Development's, all corners round,
+   and Try this is a plain line under it, no strip or border. */
+#main .fd-hero.fd-one .ph-photo { margin: 12px 0 0; border-radius: 16px; box-shadow: 0 6px 16px #754b5b1a; aspect-ratio: 2.2 / 1 }
 #main .fd-hero.fd-one .ph-photo.is-wide { aspect-ratio: 2.2 / 1 }
 #main .fd-photo .fd-lines { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none }
 #main .fd-photo .fd-lines line { stroke: #fff; stroke-width: 1.5; vector-effect: non-scaling-stroke; opacity: .9 }
 #main .fd-photo .fd-dot2 { position: absolute; width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 3px #ffffff59, 0 1px 3px #0003 }
 #main .fd-photo .fd-tag { position: absolute; transform: translateY(-50%); background: #fffdfaf0; color: #3b2f38; font-size: 12px; font-weight: 700; line-height: 1; padding: 6px 9px; border-radius: 999px; white-space: nowrap; box-shadow: 0 2px 6px #0002 }
 #main .fd-photo .fd-tag-c { transform: translate(-50%, -50%) }
-#main .fd-hero .fd-try.fd-try-in { margin: 0 -20px; border-radius: 0; background: #fff6f8; padding: 9px 20px 10px; align-items: center; gap: 10px; border-top: 1px solid #f0d9e0 }
-#main .fd-try.fd-try-in i { background: none; color: #9b4766; width: 22px; height: 22px; border-right: 1px solid #ecd2da; border-radius: 0; padding-right: 10px; box-sizing: content-box }
-#main .fd-try.fd-try-in small { color: #9b4766; margin: 0 0 2px; font-size: 10.5px }
-#main .fd-try.fd-try-in p { margin: 0; color: #3b2f38; font-weight: 500; font-size: 14px; line-height: 1.35 }
+#main .fd-hero .fd-try.fd-try-in { margin: 12px 0 0; border-radius: 0; background: none; padding: 0; align-items: flex-start; gap: 8px; border: 0 }
+#main .fd-try.fd-try-in i { background: none; color: var(--area-ink, #9b4766); width: 20px; height: 20px; padding: 0; border: 0; margin-top: 1px }
+#main .fd-try.fd-try-in p { margin: 0; color: #3b2f38; font-weight: 500; font-size: 14.5px; line-height: 1.4 }
 #main .fd-try.fd-try-in p b { color: #9b4766; font-weight: 750 }
-#main .fd-try.fd-try-in i { width: 20px; height: 20px; padding-right: 9px }
 
 /* Nov 19: guide rows on the Feeding stage page preview their page with a small photo */
 #main .fd-plist { background: none; border: 0; box-shadow: none; display: grid; gap: 8px }
