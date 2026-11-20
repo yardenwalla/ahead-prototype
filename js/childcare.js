@@ -396,18 +396,18 @@
   // sentence and opens its own page; "What to ask" turns the answer into a tour question. Sources: AAP (ratios, sick
   // days), Caring for Our Children (home daycare), IRS (nanny payroll taxes).
   const TOPICS_CMP = [
-    ['hours', 'Hours', 'clock', 'Which hours does each one cover?', 'Early starts, late pickups and weekends narrow your options.', {
-      center: 'Set opening hours. Ask about early drop-off and late pickup.', home: 'Set hours, often a little more flexible. Closed when the provider is away.',
-      nanny: 'Works the schedule you agree on, early or late.', family: 'Whatever you agree. Check it still works week after week.' }, 'What are your hours, and what happens if I’m running late?'],
-    ['group', 'Group size', 'blocks', 'How many babies per grown-up?', 'Fewer babies per adult means more attention. The AAP’s guide: 3 babies per adult, 6 in a room.', {
-      center: 'Babies grouped by age. Best is 3 per adult, and at most 6 in a room. Your state may allow a few more.', home: 'A small, mixed-age group. Best is no more than 2 babies per adult.',
-      nanny: 'Just your baby. In a nanny share, 2 babies.', family: 'Usually just your baby.' }, 'How many babies does each caregiver look after?'],
-    ['sick', 'Sick days', 'thermo', 'What happens when Maya is sick?', 'The answer depends on where {s’s} cared for, and the provider’s policy.', {
-      center: 'Stays home with a fever or anything on the center’s list. A mild cold is often fine. When a teacher is out, other staff cover.', home: 'The same kind of policy as a center, sometimes stricter. When the provider is sick, the daycare may close.',
-      nanny: 'May keep caring through a mild illness, if you agreed ahead of time. When the nanny is sick, you need backup.', family: 'Depends on what your family is comfortable with. When they’re sick, you need backup.' }, 'Which illnesses mean Maya needs to stay home, and when can {s} come back?'],
-    ['cost', 'Cost', 'coin', 'What do you pay for?', 'Costs vary a lot by city. Ask each place for the full cost, fees included.', {
-      center: 'Monthly tuition, often with a deposit to hold a spot.', home: 'Monthly tuition. Often about the same as a center.',
-      nanny: 'A salary plus payroll taxes. Usually the highest cost; a share splits it.', family: 'Whatever you agree, from nothing to a regular wage.' }, 'What’s the total cost, including fees, closed days and deposits?']
+    ['hours', 'Hours', 'clock', 'Nannies and family flex the most', 'Early starts, late pickups and weekends narrow your options.', {
+      center: ['Daycare has set hours', 'Ask about early drop-off and late pickup'], home: ['Home daycare has set hours', 'Often a bit more flexible'],
+      nanny: ['A nanny works your schedule', 'Early or late, as you agree'], family: ['Family hours are up to you', 'Check they work week after week'] }, 'What are your hours, and what happens if I’m running late?'],
+    ['group', 'Group size', 'blocks', 'Best is 3 babies per adult, 6 in a room', 'Fewer babies per adult means more attention for each one.', {
+      center: ['Up to 3 per adult at a daycare', 'And at most 6 babies in a room'], home: ['Up to 2 per adult at a home daycare', 'Plus a few older children'],
+      nanny: ['A nanny cares for just your baby', 'Or 2 babies in a nanny share'], family: ['Family usually cares for just yours', ''] }, 'How many babies does each caregiver look after?'],
+    ['sick', 'Sick days', 'thermo', 'Group care sends sick babies home', 'At home with a nanny or family, care can usually go on.', {
+      center: ['At daycare, sick babies stay home', 'A mild cold is often fine'], home: ['Home daycare is the same', 'And it may close when the provider’s sick'],
+      nanny: ['A nanny can keep caring', 'Through a mild illness, if you agreed ahead'], family: ['Family can keep caring', 'If they’re comfortable with it'] }, 'Which illnesses mean Maya needs to stay home, and when can {s} come back?'],
+    ['cost', 'Cost', 'coin', 'A nanny usually costs the most', 'Prices vary a lot by city, so ask each place for the full cost.', {
+      center: ['Daycare charges tuition', 'Often with a deposit to hold a spot'], home: ['Home daycare charges tuition', 'Often about the same as a center'],
+      nanny: ['A nanny is paid a salary, plus taxes', 'A nanny share splits the cost'], family: ['Family gets whatever you agree', 'From nothing to a regular wage'] }, 'What’s the total cost, including fees, closed days and deposits?']
   ];
   let cmpAt = 0;
   window.ccTopic = i => { cmpAt = (i + TOPICS_CMP.length) % TOPICS_CMP.length; rerender(); };
@@ -416,8 +416,8 @@
   function comparePage() {
     const [id, , icon, q, why, ans, ask] = TOPICS_CMP[cmpAt];
     const tabs = `<div class="cc-tabs-row" role="tablist">${TOPICS_CMP.map(([k, n], i) => `<button class="cc-tab${i === cmpAt ? ' is-on' : ''}" role="tab" aria-selected="${i === cmpAt}" onclick="ccTopic(${i})">${F(n)}</button>`).join('')}</div>`;
-    const top = `<section class="cc-topic"><p class="cc-topic-eyebrow">${F(TOPICS_CMP[cmpAt][1])}</p><h2>${F(q)}</h2><p>${F(why)}</p><span class="cc-topic-art">${hubArt(icon, CAT)}</span></section>`;
-    const rows = H().list('', COLS.map(([k]) => H().row({ icon: TYPES[k].icon, cat: CAT, title: TYPES[k].name.replace(' or nanny share', '').replace(' or friends', ''), sub: ans[k], onclick: `openPage('chg:${CAT}:d:${k}')` })));
+    const top = `<section class="cc-topic"><h2>${F(q)}</h2><p>${F(why)}</p><span class="cc-topic-art">${hubArt(icon, CAT)}</span></section>`;
+    const rows = H().list('', COLS.map(([k]) => H().row({ icon: TYPES[k].icon, cat: CAT, title: ans[k][0], sub: ans[k][1], onclick: `openPage('chg:${CAT}:d:${k}')` })));
     const askCard = `<section class="cc-ask-card"><span>${hubArt('chat', CAT)}</span><div><b>${F('What to ask')}</b><p>${F('“' + ask + '”')}</p></div></section>`;
     const dots = `<div class="cc-dots-nav" aria-hidden="true">${TOPICS_CMP.map((_, i) => `<i class="${i === cmpAt ? 'on' : ''}"></i>`).join('')}</div>`;
     setTimeout(() => { const el = document.querySelector('.cc-swipe'); if (el && !el.__sw) { el.__sw = 1; ccSwipe(el); } }, 0);
@@ -508,11 +508,12 @@
     // One step only (Family or friends): the page heading already names it, so just the short line under it.
     const head = groups.length > 1 ? `<div class="cc-stephead"><b>${F(g.name)}</b>${g.sub ? `<small>${F(g.sub)}</small>` : ''}</div>` : g.sub ? `<div class="cc-stephead"><small>${F(g.sub)}</small></div>` : '';
     let body = '';
-    if (g.kind === 'look') body = roomPhoto(k) + `<div class="cc-look">${g.items.map(x => `<div class="cc-look-tile"><span>${hubArt(iconFor(x.q), CAT)}</span><b>${F(x.q)}</b><small class="cc-ticked"><i aria-hidden="true">✓</i>${F(x.a)}</small></div>`).join('')}</div>`;
-    else if (g.kind === 'ask') body = `<div class="cc-asks">${g.items.map((x, i) => `<button class="cc-ask" onclick="ccFlip(this)"><em>${i + 1}</em><b>${x.own ? esc3(x.q) : F(x.q)}</b>${x.own ? `<small class="cc-own">${F('Your question')}</small>` : `<span class="cc-listen"><small>${F('Listen for')}</small>${F(x.a)}</span><small class="cc-tap">${F('What to listen for')} ›</small>`}</button>`).join('')}</div>`;
-    else body = `<div class="cc-quick">${g.items.map(x => `<div class="cc-quick-row"><span>${hubArt(iconFor(x.q), CAT)}</span><div><b>${x.own ? esc3(x.q) : F(x.q)}</b>${x.a ? `<small>${F(x.a)}</small>` : ''}</div></div>`).join('')}</div>`;
+    if (g.kind === 'look') body += roomPhoto(k) + `<div class="cc-look">${g.items.map(x => `<div class="cc-look-tile"><span>${hubArt(iconFor(x.q), CAT)}</span><b>${F(x.q)}</b><small class="cc-ticked"><i aria-hidden="true">✓</i>${F(x.a)}</small></div>`).join('')}</div>`;
+    else if (g.kind === 'ask') body += `<div class="cc-asks">${g.items.map((x, i) => `<button class="cc-ask" onclick="ccFlip(this)"><em>${i + 1}</em><b>${x.own ? esc3(x.q) : F(x.q)}</b>${x.own ? `<small class="cc-own">${F('Your question')}</small>` : `<span class="cc-listen"><small>${F('Listen for')}</small>${F(x.a)}</span><small class="cc-tap">${F('What to listen for')} ›</small>`}</button>`).join('')}</div>`;
+    else body += `<div class="cc-quick">${g.items.map(x => `<div class="cc-quick-row"><span>${hubArt(iconFor(x.q), CAT)}</span><div><b>${x.own ? esc3(x.q) : F(x.q)}</b>${x.a ? `<small>${F(x.a)}</small>` : ''}</div></div>`).join('')}</div>`;
     const nav = groups.length > 1 && cur < groups.length - 1 ? `<button class="cc-next" onclick="ccStep('${k}',${cur + 1})">${F('Then: ' + (TAB[groups[cur + 1].name] || groups[cur + 1].name))} ›</button>` : '';
-    return `<section class="cc-steps">${tabs}${head}${body}${nav}</section>`;
+    const where = cur === 0 && FIND[k] ? `<p class="cc-find">${hubArt('eye', CAT)}<span>${F(FIND[k])}</span></p>` : '';
+    return `<section class="cc-steps">${tabs}${where}${head}${body}${nav}</section>`;
   }
 
   /* ---------- one page per type, always in the same order ---------- */
@@ -524,14 +525,13 @@
     const shortRows = mine.map(c => h.row({ icon: t.icon, cat: CAT, title: esc3(c.name || 'Unnamed'), sub: c.chosen ? F(t.talk ? 'Helping' : 'Chosen') : `${(c.checks || []).filter(x => Q.some(y => y.key === x)).length} of ${Q.length} ${t.talk ? 'talked through' : 'checked'}${c.notes ? ' · has notes' : ''}`, onclick: `openPage('chg:${CAT}:d:cand-${k}-${c.id}')` }));
     const fit = FIT[k];
     const top = fit ? `<h2 class="hub-h2">${F('Good fit if you…')}</h2><div class="cc-fit3">${fit.good.map(([i, txt]) => `<div><span>${hubArt(i, CAT)}</span><b>${F(txt)}</b></div>`).join('')}</div>`
-        + rows('Keep in mind', fit.mind.concat([['idea', (t.talk ? 'Ask ' : 'Start looking ') + t.when[0].charAt(0).toLowerCase() + t.when[0].slice(1), t.when[1]]]))
+        + rows('Keep in mind', fit.mind)
       : `<section class="hub-card cc-fit"><div><b>${F('A good fit if')}</b><p>${F(t.good)}</p></div><div><b>${F('Keep in mind')}</b><p>${F(t.mind)}</p></div><div class="cc-when"><span class="cc-when-art">${hubArt('idea', CAT)}</span><div><small>${F(t.talk ? 'When to ask' : 'When to start looking')}</small><b>${F(t.when[0])}</b><p>${F(t.when[1])}</p></div></div></section>`;
-    const page0 = sub(k, 'Kinds of care', t.name, t.lead,
+    const page0 = sub(k, 'Kinds of care', t.name, fit ? fit.lead : t.lead,
       top
       + (k === 'center' && typeof profile !== 'undefined' && profile.early ? h.tip('Born early?', 'Ask your pediatrician when group care makes sense for {o}.') : '')
-      + (WHERE[k] ? rows('Where to look', WHERE[k]) : '')
+      + (WHERE[k] && !fit ? rows('Where to look', WHERE[k]) : '')
       + (k === 'sitter' || k === 'family' ? careCardButton(load('ahead-carecard', {})) : '')
-      + (k === 'nanny' ? rows('', [['home', 'Sharing a nanny', 'Finding a family, and what to agree', go('share')], ['coin', 'Paying a nanny', 'Taxes and payroll', go('pay')]]) : '')
       + `<div class="cc-qhead"><h2 class="hub-h2">${F(t.talk ? 'Things to talk through' : t.who === 'place' ? 'Checking a place' : 'Finding the right person')}</h2></div>` + qs
       + `<h2 class="hub-h2">${F(t.talk ? 'Who’s helping' : 'Your shortlist')}</h2>`
       + (mine.length ? h.list('', shortRows) + (mine.some(c => c.chosen) ? rows('', [['bag', 'Get ready for day one', 'Easing in, and what to send', go('ready')]]) : '') : `<p class="cc-lead">${F(t.talk ? `Add each person who’ll help, and tick off what you’ve talked through.` : `Add each ${noun} you’re considering, and tick off each step.`)}</p>`)
@@ -539,16 +539,26 @@
     // A real photo above the top card, for the four regular kinds of care.
     return fit ? page0.replace('<div class="dev-area-head', `<figure class="cc-type-photo"><img src="assets/childcare/card-${k}.jpg" alt="" loading="lazy"></figure><div class="cc-photo-head dev-area-head`) : page0;
   }
+  const FIND = {
+    center: 'Find places on your state’s child care website, through a local referral agency, or from parents nearby.',
+    home: 'Find providers on your state’s child care website, through a local referral agency, or from parents nearby.',
+    nanny: 'Find people through local parent groups, a nanny agency, or caregiver websites.'
+  };
   const FIT = {
-    center: { good: [['clock', 'Want set hours'], ['blocks', 'Like other babies around'], ['shield', 'Want staff to cover sick days']],
-      mind: [['notepad', 'Infant rooms fill first', 'Join a few waitlists now, even before you’re sure'], ['thermo', 'More colds in the first year', 'Sick days at home mean backup care']] },
-    home: { good: [['home', 'Want a homey setting'], ['blocks', 'Like a small, mixed group'], ['clock', 'Need a little flexibility']],
-      mind: [['hand', 'One provider', 'You’ll need backup when they’re sick or away'], ['shield', 'Check the license', 'Your state’s website lists inspections']] },
-    nanny: { good: [['clock', 'Want a flexible schedule'], ['smile', 'Prefer one\u2011on\u2011one care'], ['home', 'Want care in your home']],
-      mind: [['notepad', 'You become an employer', 'Payroll taxes and a W-2 apply'], ['coin', 'Usually the highest cost', 'A nanny share splits it'], ['shield', 'Plan backup', 'For when they’re sick or on vacation'], ['chat', 'Put it in writing', 'Hours, pay, paid days off and duties']] },
-    family: { good: [['heart', 'Want someone who loves {o}'], ['clock', 'Need flexible timing'], ['coin', 'Need to keep costs down']],
+    center: { lead: 'Trained teachers and set hours. Infant rooms fill first, so join a few waitlists now.',
+      good: [['clock', 'Want set hours'], ['blocks', 'Like other babies around'], ['shield', 'Want staff to cover sick days']],
+      mind: [['thermo', 'More colds in the first year', 'Plan backup for sick days at home', go('backup')], ['shield', 'Check the license', 'Your state’s website lists inspections']] },
+    home: { lead: 'A small group in a provider’s home. Start looking at least 3 months ahead.',
+      good: [['home', 'Want a homey setting'], ['blocks', 'Like a small, mixed group'], ['clock', 'Need a little flexibility']],
+      mind: [['hand', 'One provider', 'Plan backup for when they’re sick or away', go('backup')], ['shield', 'Check the license', 'Your state’s website lists inspections']] },
+    nanny: { lead: 'One caregiver, in your home. Start looking about 3 months ahead.',
+      good: [['clock', 'Want a flexible schedule'], ['smile', 'Prefer one\u2011on\u2011one care'], ['home', 'Want care in your home']],
+      mind: [['notepad', 'You become an employer', 'Payroll taxes, and how to pay', go('pay')], ['coin', 'Usually the highest cost', 'Sharing a nanny splits it', go('share')], ['shield', 'Plan backup', 'For when they’re sick or away', go('backup')]] },
+    family: { lead: 'Someone who already knows Maya. Talk it through a few weeks before you start.',
+      good: [['heart', 'Want someone who loves {o}'], ['clock', 'Need flexible timing'], ['coin', 'Need to keep costs down']],
       mind: [['chat', 'Agree on the hours', 'And that either of you can say if it isn’t working']] }
   };
+
 
   /* ---------- one place or person: tick the good answers, add notes, Save ---------- */
   function candidatePage(k, id) {

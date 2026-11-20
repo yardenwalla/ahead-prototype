@@ -234,3 +234,6 @@
 #main [data-cc-page="compare"] .dev-area-head { background: none !important; padding: 4px 2px 10px; box-shadow: none }
 #main [data-cc-page="compare"] .dev-area-head-art, #main [data-cc-page="compare"] .dev-area-head .hub-context { display: none }
 #main [data-cc-page="compare"] .dev-area-head h1 { font-size: 24px }
+#main .cc-find { display: flex; gap: 10px; align-items: flex-start; margin: 12px 2px 4px; font-size: 13.5px; line-height: 1.45; color: #4a432c }
+#main .cc-find svg { width: 20px; height: 20px; flex: none; margin-top: 1px }
+#main .cc-find { margin-bottom: 14px }
