@@ -356,3 +356,11 @@
 #main .cc-update dt svg { width: 18px; height: 18px }
 #main .cc-update dd { margin: 0; font-size: 14px; line-height: 1.4; color: #2f2b1c }
 #main .cc-backup-f { padding: 0 14px 14px }
+#main .cc-two > p { margin: -6px 4px 10px; font-size: 13px; color: #6d6650 }
+#main .cc-plan-row + .hub-list, #main .cc-plan-row + h2 { margin-top: 18px }
+#main .cc-plan-row { margin-bottom: 18px }
+#main .cc-chosen small { display: block; font-size: 13px; color: #6d6650; font-weight: 400; margin-top: 2px }
+#main .cc-nudge { all: unset; box-sizing: border-box; display: block; width: 100%; background: #fdeee0; border-radius: 14px; padding: 12px 14px; margin: 14px 0 0; cursor: pointer }
+#main .cc-nudge b { display: block; font-size: 15px; color: #7a4b16 }
+#main .cc-nudge span { font-size: 13.5px; color: #7a5a35 }
+#main .cc-photo-hero h1 { font-family: inherit; font-size: 24px; font-weight: 700; letter-spacing: -.3px }
