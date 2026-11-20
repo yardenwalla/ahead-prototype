@@ -238,7 +238,7 @@
       return t ? `<b>${F(`${nm} is ${typeof babyAge === 'function' ? babyAge() : ''}`)}</b><span>${F(x >= 12 ? 'Happy first birthday!' : left < 0.5 ? 'Cake any day now!' : `${Math.max(1, Math.round(left))} month${Math.max(1, Math.round(left)) === 1 ? '' : 's'} until cake`)}</span>` : `<b>${F(`At ${ageTxt(x)}`)}</b><button class="tl-home" onclick="tlScrub(null)">${F('Back to today')}</button>`; };
     const theme = x => typeof window.monthTheme === 'function' ? window.monthTheme(Math.max(0, Math.min(11, Math.floor(x)))) : '';
     const knob = (() => { try { return localStorage.getItem('ahead-tl-knob') === '1'; } catch (e) { return false; } })();
-    const art = x => { const mo = Math.max(0, Math.min(11, Math.floor(x))); return knob ? `<img class="tl-face" src="assets/home/babies/face-${mo}.webp" alt="">` : typeof window.stCardArt === 'function' ? window.stCardArt(mo) : ''; };
+    const art = x => { const mo = Math.max(0, Math.min(11, Math.floor(x))); return knob ? `<img class="tl-face" src="assets/home/babies/face-${mo}.webp" alt="">` : `<img class="tl-hb" src="assets/home/babies/handle-${mo}.webp" alt="">`; };
     window.__tl = { a, listHTML, head, ends, theme, art };
     const hinted = (() => { try { return !!localStorage.getItem('ahead-tl-dragged'); } catch (e) { return true; } })();
     const pct = Math.max(0, Math.min(100, a / 12 * 100));

@@ -1377,3 +1377,9 @@
 #main .tl-track:not(.tl-knob) .tl-baby::after{display:none}
 #main .tl-track:not(.tl-knob) .tl-ticks{margin-top:18px!important}
 #main .tl-track:not(.tl-knob) .tl-flag{bottom:-28px!important}
+/* Handle: centered baby, and a line that ends before the cake */
+#main .tl-track:not(.tl-knob) .tl-ride,#main .tl-track:not(.tl-knob) .tl-bar{margin-right:44px!important}
+#main .tl-track:not(.tl-knob) .tl-baby{left:var(--tlp)!important;width:48px!important;height:48px!important;margin-left:-24px!important;bottom:-56px!important}
+#main .tl-track:not(.tl-knob) .tl-baby .tl-hb{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 2px 3px rgba(43,40,64,.18))}
+#main .tl-track:not(.tl-knob) .tl-flag{right:-44px!important;bottom:-34px!important}
+#main .tl-track:not(.tl-knob) .tl-ticks{margin-right:0!important}
