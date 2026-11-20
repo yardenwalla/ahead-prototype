@@ -18,5 +18,5 @@
 #main .ms-card .ms-watch{white-space:nowrap;font-size:15px!important;padding:9px 14px 9px 9px}
 
 /* Test only: Canva baby art on the Home card */
-#main .ms-toys .ms-babyimg{position:absolute;left:0;right:0;top:-6px;bottom:2px;display:flex;align-items:flex-end;justify-content:center}
+#main .ms-toys .ms-babyimg{position:absolute;left:8%;right:8%;top:12px;bottom:6px;display:flex;align-items:flex-end;justify-content:center}
 #main .ms-toys .ms-babyimg img{max-width:100%;max-height:100%;object-fit:contain;filter:drop-shadow(0 3px 4px rgba(80,50,40,.12))}

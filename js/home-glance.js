@@ -304,7 +304,7 @@
     // Test only: ?babyart=e or ?babyart=soft swaps the Home baby for the Canva art (months 0, 6, 11).
     const babyArtTest = (mm) => {
       let v = null; try { v = new URLSearchParams(location.search).get('babyart') || localStorage.getItem('ahead-babyart'); } catch (e) {}
-      const have = { e: [0, 6, 11], soft: [6] };
+      const have = { e: [0, 6, 11], soft: [0, 6, 11] };
       return v && have[v] && have[v].includes(mm) ? `<span class="ms-l ms-mid ms-babyw ms-babyimg"><img src="assets/home/baby-test/${v}-${mm}.png" alt=""></span>` : window.stCardArt(mm);
     };
     const sc = typeof window.stCover === 'function' ? window.stCover(m) : null;
