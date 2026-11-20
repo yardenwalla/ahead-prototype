@@ -1,0 +1,5 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ahead preview · Health</title></head><body><script>
+// Preview entry for the Health redesign: starts an example 5-month-old (Maya, nursing) if this browser has no baby yet, then opens the app.
+try{if(!localStorage.getItem('ahead-v2-profile')){var d=new Date(Date.now()-176*864e5).toISOString().slice(0,10);
+localStorage.setItem('ahead-v2-profile',JSON.stringify({name:'Maya',dob:d,pronouns:'she',id:'c',example:false,joined:d,feed:'Breast milk',feedHow:'Nursing'}))}}catch(e){}
+location.replace('index.html');</script></body></html>
