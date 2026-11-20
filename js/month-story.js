@@ -401,7 +401,9 @@
     var map = he ? { she: 'he', She: 'He', Her: 'His', herself: 'himself', 'she’s': 'he’s', 'She’s': 'He’s', 'she’ll': 'he’ll', 'She’ll': 'He’ll' } : { she: 'they', She: 'They', Her: 'Their', herself: 'themself', 'she’s': 'they’re', 'She’s': 'They’re', 'she’ll': 'they’ll', 'She’ll': 'They’ll' };
     return s.replace(/\b(She’s|she’s|She’ll|she’ll|herself|She|she|Her|her)\b/g, function (w) { if (w === 'her') return he ? 'his' : 'their'; return map[w] || w; });
   }
-  function vis(v) { if (!v) return ''; var f = V[v[0]]; return f ? f(v[1]) : ''; }
+  // Illustrated story pictures, by month and visual (falls back to the drawn visual).
+  var STORY_PICS = { 6: { spoon: 'm6-spoon', splats: 'm6-messy', tooth: 'm6-tooth', faces: 'm6-shy' } };
+  function vis(v) { if (!v) return ''; var pk = (STORY_PICS[month()] || {})[v[0]]; if (pk) return '<div class="st-vis st-pic"><img src="assets/stories/' + pk + '.webp" alt=""></div>'; var f = V[v[0]]; return f ? f(v[1]) : ''; }
 
   var FOLLOW = {
     roll: { c: 'peach', yes: 'She rolled over!', kick: 'Rolling, or about to?', no: 'She can end up anywhere.', body: 'Once babies roll, a second is all it takes. Keep a hand on her on the changing table.', tip: 'Stop swaddling once she tries to roll.', vis: 'roll' },

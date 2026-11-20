@@ -1305,3 +1305,6 @@
 /* Timeline handle: a little bigger for the baby pictures, sitting on the bar */
 #main .tl-track .tl-baby{width:56px!important;height:58px!important;margin-left:-28px!important;bottom:-36px!important}
 #main .tl-track .tl-baby img{object-position:50% 100%;filter:drop-shadow(0 2px 3px rgba(43,40,64,.18))}
+/* Illustrated story pictures */
+.st-pic{height:min(27vh,230px);margin-bottom:4%}
+.st-pic img{height:100%;width:auto;max-width:72vw;object-fit:contain;display:block;filter:drop-shadow(0 8px 10px rgba(43,40,64,.18))}
