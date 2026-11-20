@@ -1,0 +1,18 @@
+/* Nov 18 preview: Home's story card in the same language as the other tabs' top cards
+   (no outline, 24px corners, even padding, one weight for the title, one way to tap). */
+#main .ms-card{border:0!important;border-radius:24px!important;padding:20px 20px 18px!important}
+#main .ms-month{font-size:31px!important;font-weight:800!important}
+#main .ms-name{font-size:24px!important;font-weight:700!important;margin-top:1px}
+#main .ms-copy small{margin-top:8px!important}
+#main .ms-foot{border-top:0!important;margin-top:14px!important;padding-top:0!important}
+#main .ms-go{display:none!important}
+#main .ms-watch{font-size:15.5px!important;font-weight:700!important;gap:9px!important;padding:9px 16px 9px 9px;border-radius:999px;background:rgba(255,255,255,.7)}
+#main .ms-watch i{width:26px!important;height:26px!important}
+#main .ms-c2{box-shadow:none!important}
+/* The picture is centered on the whole card (words and button), not just the words, so it doesn't float high */
+#main .ms-card{display:grid!important;grid-template-columns:minmax(0,1fr) auto;column-gap:8px;align-items:center}
+#main .ms-card .ms-body{display:contents}
+#main .ms-card .ms-copy{grid-column:1;grid-row:1}
+#main .ms-card .ms-art{grid-column:2;grid-row:1 / span 2;align-self:center;margin-right:2px;width:112px;height:112px}
+#main .ms-card .ms-foot{grid-column:1;grid-row:2;justify-content:flex-start}
+#main .ms-card .ms-watch{white-space:nowrap;font-size:15px!important;padding:9px 14px 9px 9px}
