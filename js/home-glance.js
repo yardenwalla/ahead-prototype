@@ -301,6 +301,12 @@
       const st = `--hl-bg:${tone[0]};--hl-ink:${tone[1]}`, inner = `<span class="hub-dot">${hubArt(icon, cat)}</span><span class="hub-row-copy"><b>${F(P(title))}</b><small>${F(P(why))}</small></span>`;
       return go ? `<button class="hub-row hl-row" style="${st}" onclick="openPage('${go}')">${inner}${chev}</button>` : `<div class="hub-row hl-row is-static" style="${st}">${inner}</div>`;
     };
+    // Test only: ?babyart=e or ?babyart=soft swaps the Home baby for the Canva art (months 0, 6, 11).
+    const babyArtTest = (mm) => {
+      let v = null; try { v = new URLSearchParams(location.search).get('babyart') || localStorage.getItem('ahead-babyart'); } catch (e) {}
+      const have = { e: [0, 6, 11], soft: [6] };
+      return v && have[v] && have[v].includes(mm) ? `<span class="ms-l ms-mid ms-babyw ms-babyimg"><img src="assets/home/baby-test/${v}-${mm}.png" alt=""></span>` : window.stCardArt(mm);
+    };
     const sc = typeof window.stCover === 'function' ? window.stCover(m) : null;
     // The newborn weeks have no story yet: the same card, opening "See what she sees" instead.
     const nb = !sc && m === 0 && typeof window.stCardArt === 'function';
@@ -309,11 +315,11 @@
     const c = BALLOON[Math.max(0, Math.min(11, m))];
     const hero = nb ? `<button class="ms-card" onclick="homeEyes(true)" style="${monthTheme(m)};--ms-c2:${mix(BALLOON[0], .72)}">
         <span class="ms-body"><span class="ms-copy"><span class="ms-eyebrow">${F(`Welcome, ${name()}`)}</span><b class="ms-month">${F(when + '.')}</b><b class="ms-name">${F('First weeks.')}</b><small>${F(P(M.eyes[0]) + '.')}</small></span>
-          <span class="ms-art" aria-hidden="true"><i class="ms-c2"></i><span class="ms-toys">${window.stCardArt(0)}</span></span></span>
+          <span class="ms-art" aria-hidden="true"><i class="ms-c2"></i><span class="ms-toys">${babyArtTest(0)}</span></span></span>
         <span class="ms-foot"><span class="ms-watch"><i><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6z" fill="none" stroke="#fffaf3" stroke-width="2"/></svg></i>${F(P('See what she sees'))}</span><span class="ms-go" aria-hidden="true">→</span></span>
       </button>` : sc ? `<button class="ms-card" onclick="try{localStorage.setItem('ahead-story-seen-${m}','1')}catch(e){};stOpen()" style="${monthTheme(m)};--ms-acc:${mix(c, .1, 30)};--ms-c1:${mix(c, .5)};--ms-c2:${mix(c, .72)}">
         <span class="ms-body"><span class="ms-copy"><span class="ms-eyebrow">${m === 0 ? F('{P} first weeks') : seen ? F('This month') : F('New this month')}</span><b class="ms-month">${F(m === 0 ? when + '.' : `Month ${m}.`)}</b><b class="ms-name">${F(`${name()}’s story.`)}</b><small>${F(sc.tease)}</small></span>
-          <span class="ms-art" aria-hidden="true"><i class="ms-c2"></i><span class="ms-toys">${typeof window.stCardArt === 'function' ? window.stCardArt(m) : art}</span></span></span>
+          <span class="ms-art" aria-hidden="true"><i class="ms-c2"></i><span class="ms-toys">${typeof window.stCardArt === 'function' ? babyArtTest(m) : art}</span></span></span>
         <span class="ms-foot"><span class="ms-watch"><i><svg viewBox="0 0 24 24"><path d="M9 7.5v9l7.5-4.5z"/></svg></i>${F(m === 0 ? 'Watch {p} story' : P('Watch her month'))}</span><span class="ms-go" aria-hidden="true">→</span></span>
       </button>`
       : `<section class="he-hero" style="${monthTheme(m)}"><p class="he-eyebrow">${F(when)} · ${F(`Through ${name()}’s eyes`)}</p><div class="he-copy"><h1>${F(P(M.eyes[0]))}</h1><p class="he-lead">${F(P(M.eyes[1]))}</p>${m <= 4 ? `<button class="he-see" onclick="homeEyes(true)"><span aria-hidden="true">👁</span> ${F(`See what ${name()} sees`)}</button>` : ''}</div><span class="he-art" aria-hidden="true">${art}</span></section>`;
