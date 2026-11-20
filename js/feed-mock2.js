@@ -3116,14 +3116,14 @@
   // Nov 19 (Yarden): one top card. The photo carries what you might notice as labels on the picture; the lead says why;
   // one thing to try closes the card. [photo, title, lead, try]
   const DISC = () => { const v = stg(), m = ageMo(), bot = isBottle() && !nurses();
-    if (v === 0) return [0, 'Feeds come close together', 'His stomach is tiny, so feeds bunch up, most of all in the evening. It eases by 6–8 weeks.', 'Feed him when you see early cues, before he cries.'];
-    if (v === 1 && m < 3) return [1, 'He’s getting good at this', 'From about 6 weeks, feeds get quicker. Shorter doesn’t mean less milk.', bot ? 'Let him end the feed, even if milk is left in the bottle.' : 'Let him end the feed, even if it’s sooner than usual.'];
-    if (v === 1) return [2, 'The world is interrupting his feeds', 'He notices everything now. Distracted isn’t the same as full.', 'Feed somewhere quiet and dim, and offer again after a short pause.'];
+    if (v === 0) return [0, 'Feeds come often', 'His stomach is tiny. Evenings are busiest, and it eases by 6–8 weeks.', 'Feed him when you see early cues, before he cries.'];
+    if (v === 1 && m < 3) return [1, 'He’s getting good at this', 'Feeds get quicker from about 6 weeks. That’s not less milk.', bot ? 'Let him end the feed, even if milk is left in the bottle.' : 'Let him end the feed, even if it’s sooner than usual.'];
+    if (v === 1) return [2, 'The world is interrupting his feeds', 'He notices everything. Distracted isn’t the same as full.', 'Feed somewhere quiet and dim, and offer again after a short pause.'];
     if (v === 2 && m >= 7) return [3, 'A good time to start', 'Iron matters more after 6 months. Bring your feeding questions to the checkup.', 'If he sits with support and swallows well, offer a soft, iron-rich food once a day.'];
     if (v === 2) return [3, 'Eating starts before the first bite', 'He’s watching, reaching, and learning what food is for.', 'Let him join you at meals and watch you eat.'];
-    if (v === 3 && m < 7.5) return [4, 'His tongue has a new job', 'Food coming back out is practice, not dislike. It happens less as he learns.', 'Offer the same food a few days in a row, and watch him get better at it.'];
+    if (v === 3 && m < 7.5) return [4, 'His tongue has a new job', 'Food coming back out is practice, not dislike.', 'Offer the same food a few days in a row, and watch him get better at it.'];
     if (v === 3) return [5, 'Lumps are a big leap', 'Gagging on new textures is normal. It happens less with practice.', 'When he gags, stay calm and let him work it out.'];
-    return [6, 'The mess is the milestone', 'Squishing and dropping food is practice for his fingers and mouth.', 'Eat with him when you can, so he can copy you.']; };
+    return [6, 'The mess is the milestone', 'Squishing and dropping food is how he practices.', 'Eat with him when you can, so he can copy you.']; };
   // Nov 19 (Yarden: labels covered the picture). Each dot sits beside the thing it names, never on it, and its label runs
   // away from the baby into empty background (the design system's rule: close labels, no leader lines).
   // [label, x, y, side] in % of a 5:3 crop at focus fy; heroPhoto moves them into the shorter 2.2:1 frame.
