@@ -176,3 +176,48 @@
 #main .oa-photo-head h1 { font-size: 26px; line-height: 1.15 }
 #main .oa-hero.has-photo { padding-right: 20px }
 #main .oa-hero.has-photo > .hub-eyebrow, #main .oa-hero.has-photo > h1, #main .oa-hero.has-photo > .hub-lead { margin-right: 124px }
+
+/* Outings v3 (Nov 20): plain headers, situation chips, one thing to know, quiet home. */
+#main .oa3-head { display: flex; gap: 14px; align-items: center; background: var(--ss-bg); border-radius: 22px; padding: 16px 18px; margin: 0 0 14px }
+#main .oa3-head-ic { flex: none; width: 48px; height: 48px; border-radius: 14px; background: rgba(255,255,255,.7); display: grid; place-items: center }
+#main .oa3-head-ic svg { width: 26px; height: 26px }
+#main .oa3-head-ic svg, #main .oa3-head-ic svg [stroke]:not([stroke="none"]) { stroke: var(--ss-ink) }
+#main .oa3-head h1 { font-size: 26px; line-height: 1.12; margin: 0; color: var(--ink) }
+#main .oa3-head p { font-size: 14.5px; line-height: 1.38; color: #5c5361; margin: 4px 0 0 }
+#main .oa3-chips { margin: 0 0 16px }
+#main .oa3-chips button.is-on { background: var(--ss-bg); color: var(--ss-ink); font-weight: 700 }
+#main .oa3-fig { margin-bottom: 12px }
+#main .oa3-one { display: flex; gap: 12px; align-items: flex-start; background: var(--ss-bg); border-radius: 18px; padding: 14px 16px; margin: 0 0 22px }
+#main .oa3-one-ic { flex: none; width: 28px; height: 28px; display: grid; place-items: center }
+#main .oa3-one-ic svg { width: 24px; height: 24px }
+#main .oa3-one-ic svg, #main .oa3-one-ic svg [stroke]:not([stroke="none"]) { stroke: var(--ss-ink) }
+#main .oa3-one small { display: block; font-size: 11.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ss-ink); margin-bottom: 3px }
+#main .oa3-one b { display: block; font-size: 16px; line-height: 1.35; font-weight: 650; color: var(--ink) }
+#main .oa3-fold { background: var(--white, #fffefb); border: 1px solid var(--line, #e1e5d9); border-radius: 18px; margin: 0 0 12px; overflow: hidden }
+#main .oa3-fold summary { list-style: none; display: flex; align-items: center; gap: 12px; padding: 14px 16px; cursor: pointer }
+#main .oa3-fold summary::-webkit-details-marker { display: none }
+#main .oa3-fold-ic { flex: none; width: 36px; height: 36px; border-radius: 11px; background: var(--ss-bg); display: grid; place-items: center }
+#main .oa3-fold-ic svg { width: 20px; height: 20px }
+#main .oa3-fold-ic svg, #main .oa3-fold-ic svg [stroke]:not([stroke="none"]) { stroke: var(--ss-ink) }
+#main .oa3-fold summary b { flex: 1; font-size: 15.5px; font-weight: 650; color: var(--ink) }
+#main .oa3-fold summary i { font-style: normal; font-size: 18px; color: #8b8590; transition: transform .2s }
+#main .oa3-fold[open] summary i { transform: rotate(180deg) }
+#main .oa3-fold-body { padding: 0 6px 6px }
+#main .oa3-fold-body .hub-list { border: 0; box-shadow: none; margin: 0 }
+#main .oa3-hero { padding-bottom: 18px }
+#main .oa3-places { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 0 0 18px }
+#main .oa3-place { all: unset; cursor: pointer; background: var(--white, #fffefb); border: 1px solid var(--line, #e1e5d9); border-radius: 18px; overflow: hidden; display: block }
+#main .oa3-place img { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover }
+#main .oa3-place span { display: flex; align-items: center; justify-content: space-between; padding: 11px 14px 12px }
+#main .oa3-place b { font-size: 15.5px; font-weight: 650; color: var(--ink) }
+#main .oa3-place i { font-style: normal; font-size: 20px; color: #8b8590; line-height: 1 }
+#main .oa3-more { margin-bottom: 18px }
+#main .oa3-thumbs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 0 0 8px }
+#main .oa3-thumbs figure { margin: 0 }
+#main .oa3-thumbs img { display: block; width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 14px }
+#main .oa3-thumbs figcaption { padding: 6px 2px 0 }
+#main .oa3-thumbs b { display: block; font-size: 12px; font-weight: 700; color: var(--ss-ink) }
+#main .oa3-thumbs small { display: block; font-size: 12.5px; line-height: 1.3; color: var(--ink) }
+#main .oa3-group { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ss-ink); margin: 14px 2px 8px }
+#main .oa3-group:first-of-type { margin-top: 4px }
+#main .oa3 .oa-steps { margin-top: 2px }

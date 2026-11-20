@@ -196,6 +196,7 @@
   const nowFor = m => NOWS.filter(n => due(n, m)).pop();
   const nextFor = m => NOWS.find(n => n[0] > m && !due(n, m));
   function outAndAbout() {
+    if (SHOW()) return home3();
     const m = ageNow(), v = stageFor(m), h = H(), n = nowFor(m), nx = nextFor(m);
     const HERO_PH = { 0: 'town', 2: 'road', 4: 'carry-out', 6: 'highchair', 9: 'seat-infant', 12: 'seat-convertible' };
     let b = `<header class="hub-hero oa-hero${SHOW() ? ' has-photo' : ''}">${SHOW() ? `<img class="oa-hero-img" src="${PH(HERO_PH[n[0]])}" alt="">` : ''}<p class="hub-eyebrow">${F(m < 1 ? 'In the first weeks' : `At ${m} ${m === 1 ? 'month' : 'months'}`)}</p><h1>${F(n[1])}</h1><p class="hub-lead">${F(n[2])}</p><button class="cc-hero-go oa-hero-go" onclick="${open(n[3])}">${F(n[4] ? n[4][2] : ({ errands: 'See around town', road: 'Plan a longer trip' })[n[3]] || 'See the guide')} ›</button></header>`;
@@ -299,6 +300,7 @@
   const rows = (items, heading = '') => H().list(heading, items.filter(Boolean).map(([icon, title, s]) => H().row({ icon, cat: CAT, title, sub: s })));
 
   function detail(id) {
+    if (SHOW()) { const p3 = detail3(id); if (p3) return p3; }
     headPhoto = PAGE_PHOTO[id === 'weather' ? (weatherView || season()) : id] || null;
     const m = ageNow(), bf = nursing(), fm = formula();
     const feedLine = bf && fm ? 'Nurse or give a bottle, wherever you’re comfortable.' : bf ? 'Nurse wherever you’re comfortable, or give a bottle of pumped milk.' : 'Give a bottle where you are. Formula doesn’t need warming.';
@@ -447,6 +449,189 @@
     if (id === 'snacks') return detail('errands');
     return null;
   }
+
+  /* ---------- Outings v3 (Nov 20): pick the situation, then see only what applies ----------
+     Her review: keep the six photo destinations, quiet everything under them; situation chips inside a page
+     (Around town: Walk / Store / Restaurant; Pool or beach: Pool / Beach); one labeled photo as the main thing;
+     "One thing to know" said once; plain headers (icon + name + one helpful line, no second photo);
+     only low-priority extras (packing) fold away; rows say the fix, they don't open more pages.
+     window.__oaOld = true still shows the earlier version. */
+  const view3 = {};
+  window.oaView = (id, k) => { view3[id] = k; const y = scrollY; render(); scrollTo(0, y); };
+  const TILE3 = { errands: 'town', road: 'car-head', fly: 'fly-tile', away: 'away-tile', abroad: 'abroad', water: 'beach-tile' };
+  function page3(key, icon, title, lead, inner) {
+    const c = PAL[key] || PAL.gear;
+    return `<div class="quiet-category hub-page hub-detail oa3" data-overview="${CAT}" data-ss="1" data-oa-page="${key}" style="${yearTheme(CAT)};--ss-bg:${c[0]};--ss-ink:${c[1]}">${detailPageTop(CAT)}`
+      + `<header class="oa3-head"><span class="oa3-head-ic">${hubArt(icon, CAT)}</span><div><h1>${F(title)}</h1>${lead ? `<p>${F(lead)}</p>` : ''}</div></header>` + inner + `</div>`;
+  }
+  const chips3 = (id, opts, view) => `<div class="hub-seg oa-seg oa3-chips" role="tablist">${opts.map(([k, t]) => `<button role="tab" aria-selected="${view === k}" class="${view === k ? 'is-on' : ''}" onclick="oaView('${id}','${k}')">${F(t)}</button>`).join('')}</div>`;
+  const one3 = text => `<section class="oa3-one"><span class="oa3-one-ic">${hubArt('idea', CAT)}</span><div><small>${F('One thing to know')}</small><b>${F(text)}</b></div></section>`;
+  const fold3 = (icon, title, inner) => inner ? `<details class="oa3-fold"><summary><span class="oa3-fold-ic">${hubArt(icon, CAT)}</span><b>${F(title)}</b><i aria-hidden="true">⌄</i></summary><div class="oa3-fold-body">${inner}</div></details>` : '';
+  const plainRows = items => { const it = items.filter(Boolean); return it.length ? `<div class="hub-list">${it.map(([icon, title, s]) => H().row({ icon, cat: CAT, title, sub: s })).join('')}</div>` : ''; };
+  const fig3 = (src, alt, pins) => `<section class="oa-photo-card oa3-fig"><figure class="oa-photo"><img src="${PH(src)}" alt="${F(alt)}" loading="lazy">${pinsHtml(pins)}</figure></section>`;
+
+  function home3() {
+    const m = ageNow(), h = H(), n = nowFor(m), nx = nextFor(m);
+    Object.keys(phaseView).forEach(k => delete phaseView[k]); Object.keys(view3).forEach(k => delete view3[k]);
+    let b = `<header class="hub-hero oa-hero oa3-hero"><p class="hub-eyebrow">${F(m < 1 ? 'In the first weeks' : `At ${m} ${m === 1 ? 'month' : 'months'}`)}</p><h1>${F(n[1])}</h1><p class="hub-lead">${F(n[2])}</p><button class="cc-hero-go oa-hero-go" onclick="${open(n[3])}">${F(n[4] ? n[4][2] : ({ errands: 'See around town', road: 'Plan a longer trip' })[n[3]] || 'See the guide')} ›</button></header>`;
+    b += `<h2 class="hub-h2">${F('Where are you headed?')}</h2><div class="oa3-places">${PLACES.map(([id, label]) => `<button class="oa3-place" onclick="${open(id)}"><img src="${PH(TILE3[id])}" alt="" loading="lazy"><span><b>${F(label)}</b><i aria-hidden="true">›</i></span></button>`).join('')}</div>`;
+    const k = season();
+    b += `<div class="hub-list oa3-more">`
+      + h.row({ icon: 'bag', cat: CAT, title: 'Your gear', sub: 'Car seat, stroller, carrier and diaper bag', onclick: open('gear') })
+      + h.row({ icon: k === 'hot' ? 'sun' : 'snow', cat: CAT, title: k === 'hot' ? 'Hot days' : 'Cold days', sub: k === 'hot' ? 'Shade, drinks and the car' : 'Layers and the car seat', onclick: open('weather') })
+      + `</div>`;
+    if (nx) b += h.next(`Next · around ${nx[0]} months`, nx[1], open(nx[3]), '', { 2: 'Plan a first long drive or flight around feeds.', 4: 'Check your carrier’s limits before facing out.', 6: 'Pack snacks, and a travel crib for overnights.', 9: 'Check the height and weight sticker on the car seat.', 12: 'Check the seat’s rear-facing limits on its label.' }[nx[0]] || '');
+    return `<div class="quiet-category hub-page" data-overview="${CAT}" style="${yearTheme(CAT)}">${monthlyPageHeader(CAT)}${b}</div>`;
+  }
+
+  function bagList3(m) {
+    const items = bagItems(m), have = bagGet(), on = items.filter(i => have.includes(i[1])).length;
+    const G = [['Essentials', ['diapers', 'wipes', 'clothes', 'sanitizer']], ['Feeding', ['pump', 'pumped', 'cover', 'formula', 'bottles', 'burp', 'snacks', 'cup']], ['Extras', ['pacifier', 'hat', 'layer']]];
+    const tile = ([icon, k, t, s]) => `<button class="oa-pack${have.includes(k) ? ' is-on' : ''}" data-k="${k}" aria-pressed="${have.includes(k)}" onclick="oaBagToggle('${k}')"><span class="oa-pack-art">${hubArt(icon, CAT)}</span><span><b>${F(t)}</b>${s ? `<small>${F(s)}</small>` : ''}</span><i aria-hidden="true">✓</i></button>`;
+    return `<section class="hub-card oa-bag"><div class="oa-bag-head"><b class="oa-pack-count">${on} of ${items.length} packed</b><button class="hub-link" onclick="oaBagReset()">Clear ticks</button></div>`
+      + G.map(([label, keys]) => { const g = items.filter(i => keys.includes(i[1])); return g.length ? `<p class="oa3-group">${F(label)}</p><div class="oa-packs">${g.map(tile).join('')}</div>` : ''; }).join('') + `</section>`;
+  }
+
+  function detail3(id) {
+    const m = ageNow(), bf = nursing(), fm = formula();
+    const feedLine = bf && fm ? 'Nurse or give a bottle, wherever you’re comfortable.' : bf ? 'Nurse wherever you’re comfortable, or give a bottle of pumped milk.' : 'Give a bottle where you are. Formula doesn’t need warming.';
+
+    if (id === 'gear') return page3('gear', 'bag', 'Your gear', 'A quick check on each, every outing.',
+      gear(ageNow()).replace(`<h2 class="hub-h2">${F('Your gear')}</h2>`, '')
+      + h3note('Car seats, carriers and strollers each have their own height and weight limits. You’ll find them in the manual and on the gear itself.'));
+
+    if (id === 'errands') {
+      const v = view3.errands || 'walk';
+      const walk = fig3('town', 'A parent pushing a stroller along a sunny street past a café')
+        + one3('Head out right after a feed. It’s the calmest stretch.')
+        + plan('Plan your outing', [
+          ['Getting there', 'car', 'In any car, even a taxi or a friend’s, {s} {ride|rides} in {p} own car seat.'],
+          ['While you’re out', 'carrier', 'A carrier keeps your hands free, even with the stroller.'],
+          ['Heading home', 'home', 'Before the next nap, or sooner.']], 'In any car, she rides in her own car seat. A carrier keeps your hands free. Head home before the next nap, or sooner.')
+        + rows([['bottle', 'Hungry while you’re out', feedLine], ['heart', 'Crying in public', 'Step outside, or walk with {o} close.'], ['diaper', 'A blowout', 'A family restroom, or your changing pad on a clean flat spot.']], 'When things don’t go to plan')
+        + (m < 6 ? good([['hand', 'Holding {o}', 'It’s fine to ask people to wash their hands first, or to say no.']]) : '');
+      const store = beforeAfter(
+          [PH('cart-before'), 'An infant car seat balanced on top of a shopping cart', 'Seat on the cart', null],
+          [PH('cart-after'), 'A parent pushing a cart with the baby in a carrier on their chest', 'In a carrier', null],
+          [eats() ? ['shield', 'Or the cart’s own seat', 'With the strap on, once {s} {sit|sits} steadily'] : ['stroller', 'Or bring the stroller', 'And put the shopping underneath']])
+        + one3('Never balance an infant car seat on top of a shopping cart. It can tip, or fall off.');
+      const rest = (eats() ? fig3('highchair', 'A baby strapped into a café high chair with a bowl of soft food', [['Strapped in', 70, 72, 'l']])
+          : fig3('restaurant-young', 'An infant car seat clicked onto a stroller beside a café table', [['Clicked onto the stroller', 40, 78, 'r']]))
+        + one3(eats() ? 'Strap {o} in, and pull the high chair back from the table.' : 'The car seat stays on the floor or clicked onto the stroller, never on top of a high chair.')
+        + plainRows([eats() ? ['bowl', 'Hot food to the middle', 'Out of reach of grabbing hands'] : null, eats() ? ['bag', 'Bring {p} own food', 'Something soft from home, a bib and a spoon'] : null, ['bottle', 'Feeding at the table', feedLine], bf && pumps() ? ['fridge', 'Pumped milk', 'Fine cool or at room temperature. No need to warm it.'] : null]);
+      return page3('errands', 'home', 'Around town', 'One or two stops is plenty, and leaving early still counts.',
+        chips3('errands', [['walk', 'Walk'], ['store', 'Store'], ['rest', 'Restaurant']], v) + (v === 'store' ? store : v === 'rest' ? rest : walk));
+    }
+
+    if (id === 'road') return page3('road', 'car', 'Road trips', 'Long drives go best in 2-hour stretches.',
+      timeline('Plan your drive', [['Leave', 'car', 'As a nap starts.'], ['After 2 hours', 'bottle', 'Stop to feed and change.'], ['After 4 hours', 'mat', eats() ? 'Stop for a snack and a stretch.' : 'Stop to feed and stretch.'], ['Then', 'home', 'A stop every 2 hours until you arrive.']], 'Leave as a nap starts, then stop every 2 hours to feed, change and stretch until you arrive.')
+      + one3('Only soft toys in the car. Hard ones can fly in a sudden stop.')
+      + rows([['heart', 'Crying while you drive', 'Pull over somewhere safe, then take {o} out to soothe or feed.'], ['clock', 'Driving on your own', 'Plan a few more stops. Check on {o} only when you’re parked.']], 'When things don’t go to plan')
+      + good([typeof profile !== 'undefined' && profile.early ? ['steth', 'Born early?', 'Ask your pediatrician how long rides can be.'] : null, ['moon', 'Naps on the road', 'Fine in the car seat while you drive. When you stop, move {o} to a crib or play yard.'], bf ? ['mouth', 'Nursing or pumping on the road', 'Park first. {S} {stay|stays} buckled in whenever the car is moving.'] : null])
+      + fold3('bag', 'Packing extras', fm ? plainRows([['bottle', 'One extra bottle', 'In case of traffic']]) : ''));
+
+    if (id === 'fly') return page3('fly', 'plane', 'Flying', 'Most flight planning happens when you book.',
+      phases('fly', [
+        ['Book', `<h2 class="hub-h2">${F('Where will Maya sit?')}</h2>` + choicePair([[PH('seat-own'), 'A rear-facing infant car seat installed in a plane window seat with the lap belt', 'Own seat', 'Safest, in a car seat labeled for aircraft', 1], [PH('seat-lap'), 'A parent holding a baby on their lap in a plane seat', 'On your lap', 'Often free under 2, but less safe in turbulence', 0]])
+          + aircraftLabel()
+          + plainRows([['notepad', 'When you book', 'Add {o}, and ask about a bassinet seat.'], m < 2 ? ['steth', 'Flying in the first weeks', 'Ask your pediatrician first.'] : null])
+          + fold3('bag', 'Flight packing extras', plainRows([fm ? ['bottle', 'One extra bottle', 'In case of delays'] : null, ['diaper', 'Diapers for the trip, plus extra', 'At least one more than you think'], ['shirt', 'A change of clothes', 'For {o}, and a top for you, in your carry-on'], eats() ? ['bowl', 'Snacks {s} already eats', 'Soft and easy, for delays'] : null, m >= 3 ? ['drop', 'Medicine you might need', 'A fever reducer your pediatrician has OK’d, with its syringe'] : ['chat', 'Your pediatrician’s number', 'Under 3 months, any fever means calling them first'], ['book', 'Proof of {p} age', 'Like {p} birth certificate, for a lap seat']]))],
+        ['Airport', plainRows([['bag', 'At security', bf && !fm && !pumps() ? 'Nothing extra for nursing. If you bring pumped milk, tell the officer.' : bf && !fm && !pumping() ? 'Breast milk can go through, even more than 3.4 oz. Tell the officer.' : bf && !fm ? 'Pumped milk and your pump can go through. Tell the officer.' : !bf ? 'Formula and water can go through. Tell the officer.' : pumping() ? 'Milk, formula and your pump can go through. Tell the officer.' : 'Breast milk and formula can go through. Tell the officer.'], ['stroller', 'At the gate', 'Gate-check the stroller. It waits at the plane door.']])],
+        ['On board', one3('For takeoff and landing, take {o} out of the carrier, then ' + (bf && !fm && how() === 'Nursing' ? 'nurse or offer a pacifier for {p} ears.' : 'offer a feed or a pacifier for {p} ears.'))
+          + plainRows([['heart', 'Crying on board', 'Walk the aisle or offer a feed. Most people understand.'], ['hand', 'A diaper change', 'Ask the crew which restroom has the fold-down table.']])],
+        ['Arrive', plainRows([['clock', 'After you land', 'Short trip? Keep naps on home time. Longer? Shift them a little each day.']])
+          + `<button class="hub-link" onclick="openPage('chg:Sleep:d:away')">${F('Sleep in a new time zone')} ›</button>`]]));
+
+    if (id === 'away') return page3('away', 'crib', 'Staying away', 'Ten minutes makes a new room baby-safe.',
+      phases('away', [
+        ['Before you go', `<h2 class="hub-h2">${F('Where {s} will sleep')}</h2>` + beforeAfter(
+            [PH('hotel-before'), 'A hotel room with a big adult bed, pillows and a thick duvet', 'Adult bed', null],
+            [PH('hotel-after'), 'The same hotel room with a bare play yard beside the bed', 'Bare play yard', null],
+            [['crib', 'A play yard, or a crib made after June 2011', 'Ask the hotel for one, or bring your own'], ['sofa', 'Never an adult bed or a couch', 'Even for a nap, even with you right there']], ['28%', '88%'])
+          + fold3('bag', 'What to pack', plainRows([['sack', '{P} sleep sack', 'It smells like home'], ['home', 'The play yard’s own sheet', 'Only the one made for it'], ['star', 'A night light', 'For feeds in a dark, new room']]))],
+        ['When you arrive', `<h2 class="hub-h2">${F('A room that’s safe for Maya')}</h2>` + fig3('away-room', 'A hotel room with a bare play yard, the blind cord tied up high and the bags up on a rack', AWAY_PINS)
+          + awayList(m)
+          + plainRows([['hand', 'Pets', 'Never leave {o} alone with a pet, even a gentle one.'], eats() ? ['bowl', 'Grandparents and treats', 'Share your food rules once, kindly, before the first meal.'] : null])],
+        ['Settling in', plainRows([['moon', 'A rough first night', 'New places can unsettle sleep. A few off nights are common.'], ['heart', 'Well-meant advice', 'Share one rule kindly: on {p} back, in a bare crib.']])
+          + `<button class="hub-link" onclick="openPage('chg:Sleep:d:away')">${F('Sleep in a new time zone')} ›</button>`]]));
+
+    if (id === 'water') {
+      const v = view3.water || 'pool';
+      const pool = fig3('pool', 'A shaded poolside lounge chair with a hooded baby towel, a sun hat and swim diapers', [['Shade to come back to', 40, 22, 'r'], ['Hooded towel', 50, 64, 'r']])
+        + one3('Hold {o} the whole time in the water. Floats don’t stop drowning.')
+        + rows([['snow', 'Shivering or blue lips', 'Out of the water. Dry and wrap {o} up.'], ['thermo', 'Flushed and fussy', 'Move to the shade and offer a feed.']], 'When things don’t go to plan')
+        + fold3('bag', 'Packing extras', plainRows([['diaper', 'Swim diapers', 'Most pools ask for one'], ['towel', 'A hooded towel', 'For warming up after a dip']]));
+      const beach = fig3('beach-setup', 'A parent and baby in a sun hat sitting in the deep shade of a beach umbrella', [['Deep shade', 30, 22, 'r'], ['Sun hat', 56, 46, 'r']])
+        + one3(m < 6 ? 'Set up in the shade of an umbrella or canopy, with a hat on {o}.' : 'Set up in the shade, with a hat and sunscreen on {o}.')
+        + plainRows([['clock', 'Go early', 'Before the strongest sun, and head home before the nap'], ['hand', 'Hot sand', 'It can burn little feet. Keep shoes or a blanket handy.'], ['drop', 'In the water', 'Hold {o} the whole time. Floats don’t stop drowning.']])
+        + rows([['thermo', 'Flushed and fussy', 'Move to the shade and offer a feed.'], ['snow', 'Shivering or blue lips', 'Out of the water. Dry and wrap {o} up.']], 'When things don’t go to plan')
+        + fold3('bag', 'Packing extras', plainRows([['diaper', 'Swim diapers', 'For any dips'], ['towel', 'A hooded towel', 'For warming up after'], m >= 6 ? ['shield', 'Sunscreen', 'SPF 30 or more, every 2 hours'] : null]));
+      return page3('water', 'sun', 'Pool or beach', 'Short visits work best. Babies get cold, and overheat, faster than you do.',
+        chips3('water', [['pool', 'Pool'], ['beach', 'Beach']], v) + (v === 'beach' ? beach : pool));
+    }
+
+    if (id === 'abroad') return page3('abroad', 'notepad', 'Going abroad', 'The passport comes first. Apply as soon as you book.',
+      plan('Plan your trip', [
+        ['As soon as you book', 'notepad', 'Apply for {p} passport. It can take weeks.'],
+        ['4–6 weeks before', 'steth', 'Ask your pediatrician about shots, including an early measles shot from 6 months.'],
+        ['Before you leave', 'home', 'Save how you’d find a doctor there.']], 'Apply for the passport as soon as you book. Four to six weeks before, ask the pediatrician about shots. Before you leave, save how you would find a doctor there.')
+      + one3('In a car abroad, bring {p} own car seat. Taxis may not have one.')
+      + fold3('drop', 'Water, food and bugs there', plainRows([['drop', 'Water', fm ? 'Sealed bottled, or boiled, for formula, your drinks and washing bottles' : 'Sealed bottled, or boiled, for your drinks and washing bottles'], ['cup', 'Drinks', 'No ice. It’s often made with tap water'], eats() ? ['bowl', 'Food', 'Cooked, or fruit you peel'] : null, ['leaf', 'Mosquitoes', 'Netting over the crib and stroller']]))
+      + fold3('bag', 'What to pack', plainRows([['thermo', 'A thermometer', 'And the medicines your pediatrician okays'], ['drop', 'Rehydration salts', 'Ask your pediatrician which kind']]))
+      + good([['chat', 'If one parent can’t come', 'They sign a notarized consent form for the passport appointment instead.']])
+      + calls(['Call a doctor', 'A fever, fewer wet diapers, a dry mouth, or diarrhea that keeps going.'], ['Get care right away', m < 3 ? 'Any fever under 3 months or in a malaria area, trouble breathing, or hard to wake.' : 'Any fever in a malaria area, trouble breathing, or hard to wake.']));
+
+    if (id === 'weather') {
+      const view = weatherView || season();
+      const seg = `<div class="hub-seg oa-seg" role="tablist">${[['hot', 'Hot days'], ['cold', 'Cold days']].map(([k, t]) => `<button role="tab" aria-selected="${view === k}" class="${view === k ? 'is-on' : ''}" onclick="oaWeather('${k}')">${t}</button>`).join('')}</div>`;
+      const hot = beforeAfter(
+          [PH('shade-before'), 'A stroller on a sunny path with a blanket draped over the front', 'Blanket over it', null],
+          [PH('shade-after'), 'The same stroller in the shade of a tree, canopy forward, baby in a sun hat', 'Canopy and shade', null],
+          [['towel', 'Never a blanket over the stroller', 'Even a thin one makes it hot inside']])
+        + plainRows([['clock', 'Go out early or late', 'When it’s cooler out'], m < 6 ? ['sun', 'Shade, not sunscreen', 'If there’s no shade, a little on {p} face is OK'] : ['sun', 'Sunscreen', 'SPF 30 or more, every 2 hours'], ['bottle', 'Keep {o} hydrated', !eats() ? 'With extra milk feeds' : 'With extra milk feeds and sips of water'], ['car', 'Cool the car first', 'Then touch the buckles: they can burn']])
+        + good([['thermo', 'How hot is too hot?', 'When the heat index is 90°F or more, keep outings short or stay in.'], m >= 2 ? ['leaf', 'Bug spray, from 2 months', 'Up to 30% DEET, or picaridin. Spray your hands, then rub it on {p} skin, not {p} hands.'] : ['leaf', 'Bug spray, from 2 months', 'Not yet. Until then, use netting over the stroller.'], ['fridge', 'Milk on hot days', 'In a cooler with ice packs, never in a hot car.']])
+        + calls(['Call your pediatrician', 'Any sunburn, or fewer wet diapers than usual.'], ['Call 911', 'Hot to the touch and floppy or hard to wake.']);
+      const cold = beforeAfter(
+          [PH('cold-before'), 'A baby in a rear-facing car seat wearing a puffy snowsuit, the straps loose on top of it', 'Puffy coat', ['Straps loose', 34, 56, 'r']],
+          [PH('cold-after'), 'The same baby in thin fleece, straps snug, with a blanket tucked over the buckled straps', 'Blanket on top', null],
+          [['shirt', 'Coat off before you buckle', 'A puffy coat squashes in a crash, leaving the straps too loose']])
+        + plainRows([['clock', 'Warm up the car first', 'Before you buckle {o} in'], ['shirt', 'One more layer on walks', 'Plus a hat and mittens'], ['hand', 'Check if {s’s} warm enough', 'Feel {p} chest. Cold hands are common']])
+        + good([['snow', 'Very cold or windy?', 'Keep walks short, or stay in.'], ['carrier', 'In a carrier', 'Your coat can go over you both, with {p} face uncovered.'], ['home', 'Once you’re somewhere warm', 'Take off {p} hat and extra layers, so {s} {don’t|doesn’t} overheat.']])
+        + calls(['Call your pediatrician', 'Skin that’s pale, gray or blistered after being out in the cold.'], ['Call 911', 'Cold to the touch and floppy or hard to wake.']);
+      return page3(view, view === 'hot' ? 'sun' : 'snow', 'Hot and cold days', view === 'hot' ? 'Babies heat up faster than you do.' : 'Babies lose heat faster than you do.', seg + (view === 'hot' ? hot : cold));
+    }
+
+    if (id === 'car' || id === 'bigger' || id === 'after1') return page3('gear', 'car', 'Car seat', 'Rear-facing, for as long as the seat allows. It protects {p} head and neck best.',
+      photoSteps('Which seat, and when', [[PH('seat-infant'), 'An infant car seat with a carry handle', 'From birth', 'Infant seat, rear-facing'], [PH('seat-convertible'), 'A bigger convertible car seat', 'Outgrows it', 'Convertible, still rear-facing'], [PH('seat-forward'), 'A convertible car seat set up forward-facing', 'Much later', 'Forward-facing, often past age 2']])
+      + `<p class="oa-psteps-note">${F('Move up when the label says, not by age. The limits are on a sticker on the seat.')}</p>`
+      + one3('Every time you park, look in the back seat before you walk away.')
+      + good([['road', 'Taxis and other people’s cars', 'Bring {p} car seat. Most can be installed with just the seat belt.'], ['notepad', 'Only what came with it', 'No add-on inserts or head supports, and secondhand only if you know its history.'], ['steth', 'A free check', 'A certified car seat technician can check your install, usually for free.']])
+      + `<h2 class="hub-h2">${F('Installing it')}</h2><div class="hub-list"><button class="hub-row oa-row" style="--hl-bg:${GEAR_C.car[0]};--hl-ink:${GEAR_C.car[1]}" onclick="openPage('chg:Safety:d:step:seat')"><span class="oa-dot">${hubArt('car', CAT)}</span><span class="hub-row-copy"><b>${F('Install it and check the fit')}</b><small>${F('Step by step, in Safety')}</small></span><span class="hub-chev" aria-hidden="true">›</span></button></div>`);
+
+    if (id === 'carry') return page3('gear', 'carrier', 'Carrier', 'Keep {p} face in view. A quick check every time keeps {o} breathing easy.',
+      `<h2 class="hub-h2">${F('The quick check')}</h2>` + fig3('carrier', 'A baby facing in on a parent’s chest in a soft carrier, face fully visible, chin up, knees bent in an M shape', CARRY_PINS)
+      + `<h2 class="hub-h2">${F('Ways to carry, as {s} {grow|grows}')}</h2><div class="oa3-thumbs">${[['carry-newborn', 'From birth', 'Facing in'], ['carry-out', 'Head steady', 'Facing out, for short awake times'], ['carry-back', 'Sits steadily', 'On your back']].map(([p, w, t]) => `<figure><img src="${PH(p)}" alt="" loading="lazy"><figcaption><b>${F(w)}</b><small>${F(t)}</small></figcaption></figure>`).join('')}</div>`
+      + `<p class="oa-psteps-note">${F('Each within your carrier’s own limits. Its instructions say when.')}</p>`
+      + good([['moon', 'Asleep in the carrier', 'Move {o} to a flat bed when you can.'], ['cup', 'Away from the stove', 'And from hot drinks, while {s’s} in the carrier.']]));
+
+    if (id === 'stroller') return page3('gear', 'stroller', 'Stroller', 'Harness on and brakes set, every outing.',
+      `<h2 class="hub-h2">${F('The quick check')}</h2>` + fig3('stroller', 'A baby reclined in a stroller in a park, harness buckled, canopy open for shade', [['Harness buckled', 60, 64, 'r'], ['Canopy for shade', 50, 12, 'b']])
+      + one3('Brakes on whenever you stop, and no bags on the handles. They can tip it back.')
+      + timeline('Lying back, then sitting up', [['From birth', 'stroller', 'Lying back, or with the infant car seat clicked on.'], ['Sits steadily', 'back', 'Sitting up, if the stroller’s instructions allow it.']], 'Lying back from birth, or with the infant car seat clicked on. Sitting up once the baby sits steadily, if the stroller allows it.')
+      + good([['car', 'A car seat on the frame', 'Listen for the click, then tug to check it’s locked on.'], ['hand', 'On a bus or train', 'Brakes on and a hand on the stroller while it moves.']]));
+
+    if (id === 'bag') return page3('gear', 'bag', 'Diaper bag', 'Everything for a few hours out, packed for how {s} {is} fed.',
+      `<figure class="oa-flatlay"><img src="${PH('bag-flatlay')}" alt="The everyday diaper bag laid out: diapers, wipes, a changing pad, a spare outfit, burp cloths, a pacifier, a hat and a layer" loading="lazy"></figure>`
+      + bagList3(m) + good([fm && ['clock', 'Formula you’ve made up', 'Use it within 2 hours of mixing, or within 1 hour once the feed starts.'], bf && pumps() && ['snow', 'Pumped milk', 'Keeps 4 hours at room temperature, or a day in a cooler with ice packs. Once a feed starts, use it within 2 hours.']]));
+
+    if (id === 'sick') return detail3('abroad');
+    if (id === 'snacks') return detail3('errands');
+    return null;
+  }
+  const AWAY_PINS = [['Bare play yard', 50, 52, 'b'], ['Bags up high', 84, 40, 'l']];
+  const CARRY_PINS = [['Face in view', 63, 30, 'r'], ['Chin off the chest', 52, 45, 'r'], ['Back supported', 34, 62, 'r'], ['Knees up in an M', 70, 78, 'l']];
+  const h3note = t => `<p class="oa-psteps-note">${F(t)}</p>`;
+
   window.oaWeather = function (k) { weatherView = k; const y = scrollY; render(); scrollTo(0, y); };
 
   /* ---------- routes ---------- */
