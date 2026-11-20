@@ -169,24 +169,28 @@
     const pills = h.pills('Safety by movement', STAGES.map((s, j) => ({ label: s.label, age: s.age, on: j === i, now: live && j === nowI, onclick: `openPage('safety-stage:${s.key}')`, change: typeof stageCanChange === 'function' && stageCanChange('Safety', j, nowI) ? `hubChangeStage('Safety',${j})` : '' })), 'Safety');
     const sts = st.ids.map(status), done = sts.filter(x => x === 'done').length, na = sts.filter(x => x === 'na').length, of = st.ids.length - na;
     const rows = st.ids.map((id, k) => { const x = STEP[id], c = SAND, s = sts[k];
-      return `<button class="hub-row hl-row sf-row${s ? ' is-' + s : ''}" style="--hl-bg:${c[0]};--hl-ink:${c[1]}" onclick="${open(id)}"><span class="hub-dot">${hubArt(x.i, 'Safety')}</span><span class="hub-row-copy"><b>${F(x.rt || x.t)}</b><small>${s === 'na' ? 'Doesn’t apply to your home' : F(x.s)}</small></span><span class="sf-tick" role="checkbox" aria-checked="${s === 'done'}" aria-label="Mark done: ${x.t.replace(/"/g, '')}" onclick="event.stopPropagation();sfSet('${id}','${s === 'done' ? '' : 'done'}')">${s === 'done' ? '✓' : s === 'na' ? '–' : ''}</span></button>`; }).join('');
+      return `<button class="hub-row hl-row sf-row${s ? ' is-' + s : ''}" style="--hl-bg:${c[0]};--hl-ink:${c[1]}" onclick="${open(id)}"><span class="hub-dot">${hubArt(x.i, 'Safety')}</span><span class="hub-row-copy"><b>${F(x.rt || x.t)}</b><small>${s === 'na' ? 'Doesn’t apply to your home' : HABIT.has(id) ? `<em class="sf-each">${F('Each time')}</em> ` + F(x.s) : F(x.s)}</small></span><span class="sf-tick" role="checkbox" aria-checked="${s === 'done'}" aria-label="Mark done: ${x.t.replace(/"/g, '')}" onclick="event.stopPropagation();sfSet('${id}','${s === 'done' ? '' : 'done'}')">${s === 'done' ? '✓' : s === 'na' ? '–' : ''}</span></button>`; }).join('');
     const look = LOOK[st.key];
     let b = `<header class="hub-hero sf-hero sf-disc"><p class="hub-eyebrow">${st.label} · ${st.age}</p><h1>${F(sfPhotoOn(st.key) ? SF_PHOTO[st.key].title : st.title)}</h1><p class="hub-lead">${F(sfPhotoOn(st.key) ? SF_PHOTO[st.key].lead : st.lead)}</p>${sfPhoto(st.key) || `<div class="sf-art">${SF_ART[st.key] || ""}</div>`}${look && !sfPhotoOn(st.key) ? `<div class="sf-look"><small>${F("Look from {p} height")}</small><b>${F(sfPhotoOn(st.key) && SF_PHOTO[st.key].look ? SF_PHOTO[st.key].look : look[0])}</b><span>${F(look[1])}</span></div>` : ""}</header>`;
     b += `<div class="sf-head"><h2 class="hub-h2">${F(!window.__sfPhotoOff ? 'Your safety checklist' : i < nowI && live ? 'Done these yet?' : i > nowI && live ? 'Get ready for this' : 'Do these now')}</h2><span class="sf-count">${of ? `${done} of ${of} done` : 'None apply'}</span></div><div class="hub-list sf-list">${rows}</div>`;
     if (look && sfPhotoOn(st.key)) b += `<div class="sf-look sf-look-after"><small>${F("Look from {p} height")}</small><b>${F(SF_PHOTO[st.key].look || look[0])}</b><span>${F(SF_PHOTO[st.key].lookLine || look[1])}</span></div>`;
     // Joined later, or skipped a stage? One quiet line back to the earliest stage with steps still open.
+    // Nov 19: a parent who joined later isn't assumed to have done the earlier steps. With safety, not knowing isn't done.
     if (live && i === nowI) {
-      // Only stages that started while the parent was using Ahead: a parent who joins later has done the earlier steps.
-      const START = { setup: 0, reaching: 3, rolling: 6, pulling: 9 };
-      let joinMo = 0; try { if (profile.joined && profile.dob) joinMo = (parse(profile.joined) - parse(profile.dob)) / 864e5 / 30.44; } catch (e) {}
-      const left = STAGES.slice(0, i).filter(s2 => (START[s2.key] ?? 0) >= joinMo - 0.5).map(s2 => [s2, s2.ids.filter(x => !status(x)).length]).filter(x => x[1]);
-      if (left.length) b += `<button class="sf-earlier" onclick="openPage('safety-stage:${left[0][0].key}')">${F(`${left.reduce((t, x) => t + x[1], 0)} ${left.reduce((t, x) => t + x[1], 0) === 1 ? 'earlier step is' : 'earlier steps are'} still open`)} ›</button>`;
+      const left = STAGES.slice(0, i).map(s2 => [s2, s2.ids.filter(x => !status(x)).length]).filter(x => x[1]);
+      const n = left.reduce((t, x) => t + x[1], 0);
+      if (left.length) b += `<button class="sf-earlier" onclick="openPage('safety-stage:${left[0][0].key}')">${F(`Check ${n} earlier ${n === 1 ? 'essential' : 'essentials'}`)} ›</button>`;
     }
     const chokeLink = [typeof actualMonth === 'function' && actualMonth() >= 12 ? 'Learn choking first aid for a child' : 'Learn infant choking first aid', "openPage('chg:Feeding:safe')"];
-    if (!window.__sfPhotoOff) b += h.versus('If something goes wrong', ['Poison Help', 'If {s} swallows something, call 1‑800‑222‑1222.'], ['Call 911', 'Can’t breathe, won’t wake, or swallowed a battery or magnet.'], chokeLink);
-    else b += h.versus('If something goes wrong', ['Poison Help', 'Call 1-800-222-1222 if Maya swallows something that could be harmful.'], ['Call 911', 'If {s} can’t breathe or won’t wake. A swallowed battery or magnet means the ER right away.']);
+    // Nov 19: three levels, like Health. A swallowed button battery or magnet means the ER now, even if {s} seems fine;
+    // the National Battery Ingestion Hotline helps on the way (National Capital Poison Center). 911 is for breathing.
+    const PHONE = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h3l2 5-2.5 1.5a11 11 0 0 0 6 6L15 14l5 2v3a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>';
+    b += `<h2 class="hub-h2">${F('If something goes wrong')}</h2><div class="care-tpl sf-calls"><section class="care-calls is-titled"><span class="care-calls-ico">${PHONE}</span><div>`
+      + `<p><b>${F('Call Poison Help if:')}</b> ${F('{s} swallows something that could be harmful. 1‑800‑222‑1222.')}</p>`
+      + `<p class="is-urgent"><b>${F('Go to the ER now if:')}</b> ${F('{s} swallowed a button battery or magnet, even if {s} seems fine. On the way, call 1‑800‑498‑8666.')}</p>`
+      + `<p class="is-urgent"><b>${F('Call 911 if:')}</b> ${F('{s} can’t breathe or won’t wake.')}</p>`
+      + `<button class="hub-link sf-calls-link" onclick="${chokeLink[1]}">${F(chokeLink[0])} ›</button></div></section></div>`;
     // Choking first aid lives in Feeding; the safety net links to it.
-    if (window.__sfPhotoOff) b += `<div class="hub-browse"><button class="hub-link" onclick="${chokeLink[1]}">${F(chokeLink[0])} ›</button></div>`;
     if (nx) b += h.next(`Next · from about ${nx.age.replace(/\D.*$/, '')} months`, nx.label, `openPage('safety-stage:${nx.key}')`, '', { reaching: 'Clear the floor of small things and batteries.', rolling: 'Gates, latches, furniture straps and water.', pulling: 'Window stops and the stove.' }[nx.key] || '');
     b += h.note('Ages are typical. Every baby moves at their own pace.');
     return `<div class="quiet-category hub-page" data-overview="Safety" data-safety-stage="${key}" style="${yearTheme('Safety')}">${typeof monthlyPageHeader === 'function' ? monthlyPageHeader('Safety') : ''}${pills}${b}</div>`;
@@ -202,6 +206,8 @@
      Check your home: one to three hands-on tests that show the fix is done right, then Mark as done.
      The old version stays behind window.__sfStepOld, in case the new one doesn't work out. */
   const PH = n => `assets/safety/steps/${n}.jpg`;
+  // Things to do every time, not once (Nov 19): they say "Remember each time" and "Got it" instead of "Mark as done".
+  const HABIT = new Set(['changing', 'gear', 'bags']);
   const FIX = {
     seat: {
       ba: [[PH('seat-before'), 'A baby in a rear-facing car seat with loose straps and the chest clip down on the belly', null], [PH('seat-after'), 'The same baby with snug straps and the chest clip at armpit level', null]],
@@ -217,11 +223,13 @@
       more: ['The rest of safe sleep', 'moon', 'Safe sleep', 'On {p} back, every sleep, in Sleep', "openPage('chg:Sleep:safe')"] },
     swaddle: {
       ba: [[PH('swaddle-before'), 'A baby asleep on their back in a crib, swaddled with arms in', null], [PH('swaddle-after'), 'The same baby on their back in a sleep sack, arms free', null]],
+      baLabels: ['Before rolling', 'Once rolling starts'],
       baFix: [['sack', 'A sleep sack, arms free', 'So {s} can push up if {s} {roll|rolls}'], ['shield', 'Light and unweighted', 'No weighted sacks or swaddles']],
       checks: ['Zip it up and lift gently at the shoulders. The neck opening shouldn’t ride up past {p} chin.'],
       more: ['When to do it', 'roll', 'Signs it’s time', 'And the first few nights, in Sleep', "openPage('chg:Sleep:d:swaddleoff')"] },
     bassinet: {
       ba: [[PH('bassinet-before'), 'A bassinet beside a bed', null], [PH('bassinet-after'), 'The same bedroom with a bare crib in place of the bassinet', null]],
+      baLabels: ['First months', 'Once rolling starts'],
       baFix: [['crib', 'Set it up bare', 'Like the bassinet: a fitted sheet, nothing else'], ['home', 'Still in your room', 'Until at least 6 months']],
       checks: ['Shake the crib gently. It shouldn’t wobble, and every side should stay locked in place.', 'Check the label. Skip drop-side cribs, and any crib made before June 2011.'],
       more: ['When to do it', 'clock', 'Signs it’s time', 'In Sleep',  "openPage('chg:Sleep:d:crib')"] },
@@ -237,6 +245,8 @@
       more: ['When to do it', 'clock', 'Signs it’s time', 'Before {s} can pull up, in Sleep', "openPage('chg:Sleep:d:mattress')"] },
     cribspot: {
       ba: [[PH('cribspot-before'), 'A crib under a window with a corded blind, its cord hanging beside the crib', ['Blind cord', 43, 60, 'r']], [PH('cribspot-after'), 'The same crib with a cordless shade on the window', ['Cordless shade', 32, 9, 'b']]],
+      // Nov 19: the after photo still had the crib by the window. A floor plan shows the whole safe setup.
+      vis: ['Where things go', 'assets/safety/steps/cribspot-plan.svg', 'A room seen from above: the crib against a wall away from the window, a cordless shade on the window, and the baby monitor and its cord on a dresser at least 3 feet from the crib'],
       spotTiles: [['window', 'A window', 'Under or right beside the crib'], ['cord', 'Corded blinds', 'Loops can reach into the crib'], ['plug', 'Monitor cords', 'Often plugged in right beside it']],
       fixPhoto: [PH('cribspot-fix'), 'A crib against an inside wall, away from a window with a cordless shade', [['Cordless shade', 20, 12, 'r']]],
       fix: [['window', 'Cordless blinds and shades', 'Tying up the cord isn’t enough'], ['plug', 'Monitor cords 3 feet away', 'From the crib or bassinet'], ['crib', 'Crib away from windows', 'Not under or right beside one']],
@@ -245,7 +255,7 @@
       ba: [[PH('changing-before'), 'A changing table with a bare pad and nothing within reach', null], [PH('changing-after'), 'The same table with a strapped pad and a caddy of diapers and wipes beside it', ['Strap', 36, 53, 'b']]],
       spotTiles: [['eye', 'Supplies out of reach', 'So you turn away for a second'], ['roll', 'A raised table', 'Babies roll sooner than you expect'], ['sofa', 'Beds and sofas', 'No edge to stop a roll']],
       fixPhoto: [PH('changing-fix'), 'A changing table with wipes and a changing pad within arm’s reach', [['Wipes within reach', 10, 64, 'r']]],
-      fix: [['diaper', 'Supplies within reach', 'Diapers, wipes and a change of clothes'], ['hand', 'One hand on {o}, always', 'Even with the strap on'], ['mat', 'Or use the floor', 'A mat on the floor, never a bed or sofa']],
+      fix: [['hand', 'One hand on {o}, always', 'Even with the strap on'], ['diaper', 'Supplies within reach', 'Diapers, wipes and a change of clothes'], ['mat', 'Or use the floor', 'A mat on the floor, never a bed or sofa']],
       checks: ['Put one hand on the pad. You should reach diapers, wipes and clothes with the other.'] },
     gear: {
       ba: [[PH('gear-before'), 'A baby bouncer sitting on a kitchen counter', null], [PH('gear-after'), 'The same bouncer on a rug on the floor', null]],
@@ -257,8 +267,9 @@
       ba: [[PH('small-before'), 'Coins and a TV remote on the floor next to a play mat', ['Coins', 23, 64, 'r']], [PH('small-after'), 'The same floor, cleared', null]],
       spotPhoto: [PH('small-risk'), 'Coins and a TV remote on the floor next to a baby’s play mat', [['Coins', 46, 76, 'l'], ['Remote batteries', 82, 62, 't']]],
       spotLine: 'If it fits through an empty toilet-paper tube, it’s small enough to choke on.',
-      fix: [['coin', 'The tube test', 'If it fits through a toilet-paper tube, it goes up high'], ['mat', 'A firm play mat', 'On the floor, away from edges and cords'], ['battery', 'Battery covers screwed shut', 'On remotes, key fobs and musical toys']],
-      notes: [['', 'Swallowed a button battery or magnet?', 'Call 911 or go to the ER right away']],
+      fix: [['mat', 'A firm play mat', 'On the floor, away from edges and cords'], ['battery', 'Battery covers screwed shut', 'On remotes, key fobs and musical toys']],
+      tube: true,
+      notes: [['', 'Swallowed a button battery or magnet?', 'Go to the ER right away, even if {s} seems fine']],
       checks: ['Lie on the floor where {s} {play|plays}. Nothing within reach should fit through the tube.', 'Try a remote’s battery cover. It shouldn’t open without a screwdriver.'] },
     bags: {
       ba: [[PH('bags-before'), 'An open handbag on the entryway floor', null], [PH('bags-after'), 'The same entryway with the bag hanging on a wall hook', null]],
@@ -267,11 +278,12 @@
       notes: [['', 'Medicine caps aren’t childproof', 'They slow kids down but don’t stop them']],
       checks: [] },
     gates: {
-      ba: [[PH('gates-before'), 'The top of a staircase seen from a baby’s height, with no gate', null], [PH('gates-after'), 'The same stairs with a gate screwed into the wall at the top', ['Screwed in', 21, 25, 'r']]],
+      // Nov 19: the generated photos showed pressure gates at the top of the stairs, the opposite of the advice.
+      // A drawing of the right and wrong gate at the top is accurate by design; the photos stay out until verified ones exist.
+      vis: ['Which gate at the top', [['assets/safety/steps/gates-top-ok.svg', 'A gate at the top of the stairs, fixed to the wall with screwed-in brackets', 'Screwed into the wall'], ['assets/safety/steps/gates-top-no.svg', 'A pressure gate at the top of the stairs, held by pads pushing on the walls, with a bar across the floor', 'Pressure gate: can give way']]],
       baFix: [['stairs', 'Screwed in at the top', 'A pressure gate can give way there'], ['gate', 'Either kind at the bottom', 'Pressure-fit or screwed in']],
       spotPhoto: [PH('gates-risk'), 'A baby crawling toward an open staircase with no gate', [['Open stairs', 52, 26, 'r']]],
       spotLine: 'Crawlers climb stairs early, and can fall from any step.',
-      fixPair: [[PH('gates-ok'), 'A gate screwed into the wall at the top of the stairs', 'Screwed in at the top'], [PH('gates-no'), 'A pressure gate wedged between walls', 'Pressure gate: bottom only']],
       notes: [['', 'Skip seated walkers', 'They roll babies toward the stairs, and don’t help with walking']],
       checks: ['Push and pull the top gate hard. It shouldn’t shift.', 'Open it. It should swing away from the stairs, never out over them.'] },
     storage: {
@@ -286,7 +298,7 @@
       fix: [['shield', 'Sliding outlet covers', 'They snap shut when you unplug'], ['lock', 'Best: tamper-resistant outlets', 'Built-in shutters, nothing to pull out'], ['plug', 'Cords out of reach', 'Lamps and chargers behind furniture']],
       checks: ['Try to open a cover with your fingertips. It should stay shut.', 'Crawl past lamps and chargers. No cord should hang within reach.'] },
     anchor: {
-      ba: [[PH('anchor-before'), 'A baby pulling up on a tall dresser that isn’t fixed to the wall', null], [PH('anchor-after'), 'The same dresser with an anti-tip strap to the wall', ['Anti-tip strap', 86, 22, 'bl']]],
+      ba: [[PH('anchor-before'), 'A baby pulling up on a tall dresser that isn’t fixed to the wall', null], [PH('anchor-fix'), 'Close up: an anti-tip strap from the top of the dresser to a bracket screwed into the wall', null]],
       spotPhoto: [PH('anchor-risk'), 'A baby pulling up on a tall dresser, with a TV on a low stand behind her', [['TV can tip', 17, 40, 'b'], ['Dresser can tip', 90, 74, 'bl']]],
       spotLine: 'Bookcases, and anything tall {s} could pull on, count too.',
       fixPhoto: [PH('anchor-fix'), 'A dresser held to the wall by an anti-tip strap, shown close up', [['Anti-tip strap', 60, 66, 'b']], 'tall'],
@@ -338,17 +350,22 @@
     if (window.__sfStepOld) return stepPageOld(id);
     const x = STEP[id], q = FIX[id], h = H(), B = h.TPLB; if (!x || x.go) return safetyMovementGuide();
     if (!q) return stepPageOld(id);
-    const st = stageOf(id), s = status(id), c = SAND;
+    const st = stageOf(id), s = status(id), c = SAND, habit = HABIT.has(id);
     const head = `<div class="dev-area-head ss-head" style="--area:${c[0]};--area-ink:${c[1]}"><span class="dev-area-head-art sf-head-art">${hubArt(x.i, 'Safety')}</span><p class="hub-context">${F(st ? st.label : 'Safety')}</p><h1>${F(x.t)}</h1><p class="hub-lead">${F(LEAD2[id] || x.why)}</p></div>`;
-    if (q.ba && !window.__sfNoBA) {
+    if ((q.ba || q.vis) && !window.__sfNoBA) {
       // Nov 18, round 2: Spot the risk and See the fix as one same-scene before and after, then the fix rows.
-      const shot = ([src, alt, pin], k) => `<figure><figcaption class="${k ? 'is-after' : 'is-before'}">${k ? F('After') : F('Before')}</figcaption><div class="sf-ba-img"><img src="${src}" alt="${F(alt)}" loading="lazy">${pin ? pins([pin]) : ''}</div></figure>`;
-      const ba = `<section class="care-tpl-card sf-card"><div class="sf-ba">${q.ba.map(shot).join('')}</div>${fixRows(q.baFix || q.fix)}${B.ul(q.notes)}</section>`;
+      // Nov 19: a stage change (swaddle, bassinet) gets stage labels, not Before / After, since the first picture isn't wrong.
+      const lab = q.baLabels || ['Before', 'After'];
+      const shot = ([src, alt, pin], k) => `<figure><figcaption class="${q.baLabels ? 'is-stage' : k ? 'is-after' : 'is-before'}">${F(lab[k])}</figcaption><div class="sf-ba-img"><img src="${src}" alt="${F(alt)}" loading="lazy">${pin ? pins([pin]) : ''}</div></figure>`;
+      // A drawing in place of the photos where it teaches better: right vs wrong (gates), or where things go (crib).
+      const vis = q.vis ? (Array.isArray(q.vis[1]) ? pair(q.vis[1]) : `<figure class="sf-plan"><img src="${q.vis[1]}" alt="${F(q.vis[2])}" loading="lazy"></figure>`) : `<div class="sf-ba">${q.ba.map(shot).join('')}</div>`;
+      const ba = `<section class="care-tpl-card sf-card">${vis}${fixRows(q.baFix || q.fix)}${B.ul(q.notes)}</section>` + (q.tube ? tubeFigure() : '');
       const tests2 = `<section class="care-tpl-card sf-card sf-checks"><ul>${q.checks.map(t => `<li><i aria-hidden="true"></i><span>${F(t)}</span></li>`).join('')}</ul></section>`;
-      const acts = s === 'done' ? `<p class="hub-done">${F('Done')} ✓</p><button class="hub-link" onclick="sfSet('${id}','')">${F('Undo')}</button>`
-        : `<button class="hub-button" onclick="sfSet('${id}','done');back()">${F('Mark as done')}</button><button class="hub-link sf-na" onclick="sfSet('${id}','${s === 'na' ? '' : 'na'}');back()">${F(s === 'na' ? 'It applies after all' : id === 'seat' ? 'Doesn’t apply to us' : 'Doesn’t apply to our home')}</button>`;
+      // A habit isn't done once: it's something to remember every time, so it says so (Nov 19).
+      const acts = (habit ? `<p class="sf-habit-note"><b>${F('Remember each time')}</b>${F('This one is a habit, not a one-time job.')}</p>` : '') + (s === 'done' ? `<p class="hub-done">${F(habit ? 'Got it' : 'Done')} ✓</p><button class="hub-link" onclick="sfSet('${id}','')">${F('Undo')}</button>`
+        : `<button class="hub-button" onclick="sfSet('${id}','done');back()">${F(habit ? 'Got it' : 'Mark as done')}</button><button class="hub-link sf-na" onclick="sfSet('${id}','${s === 'na' ? '' : 'na'}');back()">${F(s === 'na' ? 'It applies after all' : id === 'seat' ? 'Doesn’t apply to us' : 'Doesn’t apply to our home')}</button>`);
       return `<div class="quiet-category hub-page hub-detail sf-step" data-overview="Safety" data-ss="1" data-sf-step="${id}" style="${yearTheme('Safety')};--ss-bg:${c[0]};--ss-ink:${c[1]}">${detailPageTop('Safety')}${head}`
-        + `<div class="care-tpl is-getready">` + B.sec('Before and after', ba) + (q.checks.length ? B.sec(q.checkTitle || 'Check your home', tests2) : '') + (q.more ? B.sec(q.more[0], h.list('', [h.row({ icon: q.more[1], cat: 'Safety', title: q.more[2], sub: q.more[3], onclick: q.more[4] })])) : '') + `</div><div class="hub-actions sf-actions">${acts}</div></div>`;
+        + `<div class="care-tpl is-getready">` + B.sec(q.vis ? q.vis[0] : q.baLabels ? 'When to change' : 'Before and after', ba) + (q.checks.length ? B.sec(q.checkTitle || 'Check your home', tests2) : '') + (q.more ? B.sec(q.more[0], h.list('', [h.row({ icon: q.more[1], cat: 'Safety', title: q.more[2], sub: q.more[3], onclick: q.more[4] })])) : '') + `</div><div class="hub-actions sf-actions">${acts}</div></div>`;
     }
     // 1. Spot the risk
     const spot = q.spotPhoto ? `<section class="care-tpl-card sf-card">${photo(q.spotPhoto)}${q.spotLine ? `<p class="sf-cap">${F(q.spotLine)}</p>` : ''}</section>` : B.tiles(q.spotTiles, 'Safety');
@@ -366,7 +383,7 @@
   /* ---------- the earlier step page (kept, behind window.__sfStepOld) ---------- */
   function stepPageOld(id) {
     const x = STEP[id], h = H(); if (!x || x.go) return safetyMovementGuide();
-    const st = stageOf(id), s = status(id), c = SAND;
+    const st = stageOf(id), s = status(id), c = SAND, habit = HABIT.has(id);
     const head = `<div class="dev-area-head ss-head" style="--area:${c[0]};--area-ink:${c[1]}"><span class="dev-area-head-art sf-head-art">${hubArt(x.hi || x.i, 'Safety')}</span><p class="hub-context">${F(st ? st.label : 'Safety')}</p><h1>${F(x.t)}</h1>${x.why ? `<p class="hub-lead">${F(x.why)}</p>` : ''}</div>`;
     const actions = s === 'done' ? `<p class="hub-done">${F('Done')} ✓</p><button class="hub-link" onclick="sfSet('${id}','')">${F('Undo')}</button>`
       : `<button class="hub-button" onclick="sfSet('${id}','done');back()">${F('Mark as done')}</button><button class="hub-link sf-na" onclick="sfSet('${id}','${s === 'na' ? '' : 'na'}');back()">${F(s === 'na' ? 'It applies after all' : 'Doesn’t apply to our home')}</button>`;
