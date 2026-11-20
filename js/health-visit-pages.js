@@ -29,6 +29,16 @@
     9: { lead: 'A short development questionnaire, plus growth and feeding.', checks: [['steth', 'green', 'Growth and a head-to-toe exam', 'Weight, length and head size, then heart, hips, eyes and skin'], ['star', 'blue', 'Development questionnaire', 'You answer questions about talking, moving and playing'], ['bowl', 'yellow', 'Feeding and teeth', 'Textures, finger foods and brushing'], ['ear', 'pink', 'Hearing and vision', 'Anything you’ve noticed at home'], ['heart', 'peach', 'How you’re doing', 'A short questionnaire about your mood']] },
     12: { lead: 'Growth, a blood test for anemia, and moving to milk and cups.', checks: [['steth', 'green', 'Growth and a head-to-toe exam', 'Weight, length and head size, then heart, hips, eyes and skin'], ['drop', 'pink', 'Anemia check', 'A quick blood test'], ['home', 'blue', 'Lead test', 'A finger-prick test, routine in many areas'], ['cup', 'yellow', 'Milk and cups', 'Moving off bottles, and how much milk'], ['wave', 'peach', 'Development', 'Gestures, sounds and first steps']] }
   };
+  // What's new at each age, step by step (AAP Bright Futures; mood screening at 1, 2, 4 and 6 months; fluoride varnish once teeth appear).
+  const VISIT = {
+    0: { ask: 'Feeding, diapers and sleep, and how your recovery is going.', exam: 'plus jaundice in the skin and eyes.', test: 'Results of the hearing, heart and blood-spot tests from the hospital.', shots: 'Hepatitis B, only if {s} didn’t get it in the hospital.' },
+    1: { ask: 'How feeds are going, and a short form about how you’re feeling.', exam: 'plus how {s} {move|moves} and {react|reacts} to sounds.', shots: 'Maybe one: hepatitis B, if it’s not left for 2 months.' },
+    2: { ask: 'Feeding and sleep, and a short form about how you’re feeling.', exam: 'plus how {s} {hold|holds} {p} head and {respond|responds} to you.', shots: 'Usually at the end of the visit.' },
+    4: { ask: 'Feeding, vitamin D and signs {s’s} getting ready for solids, plus a short form about how you’re feeling.', exam: 'plus head control and reaching.', shots: 'Usually last. Mostly the same ones as at 2 months.' },
+    6: { ask: 'How solids are going, iron and sleep, plus a short form about how you’re feeling.', exam: 'plus sitting, and a fluoride coating if teeth are in.', shots: 'Usually last, with a flu shot if it’s the season.' },
+    9: { ask: 'A short questionnaire about how {s} {talk|talks}, {move|moves} and {play|plays}.', exam: 'plus hearing, vision and teeth.', shots: 'Often none, unless one was missed.' },
+    12: { ask: 'Moving off bottles, how much milk, and first words.', exam: 'plus standing, first steps and teeth.', test: 'A finger or heel prick for iron, and for lead where it’s routine.', shots: 'Usually last. Mostly new vaccines this time.' }
+  };
   // Before you go: the full list once, at the first checkup. Later checkups list only what's new for that visit (none if nothing is).
   const BRING = age => age === 0 ? [['shirt', 'green', 'Easy clothes', 'Something that comes off quickly'], ['pacifier', 'peach', 'A feed or a pacifier', 'It’s fine to feed during the visit']]
     : age === 12 ? [['pacifier', 'peach', 'A snack and a cup', 'A longer visit, with a blood test']] : (EXPECT[age].bring || []);
@@ -37,14 +47,18 @@
     // First week: jaundice at home, since it peaks in these days (AAP, HealthyChildren.org).
     const jaundice = age === 0 ? H().versus('Yellow skin at home: normal, or time to call?', ['Normal', 'A little yellow on the face in the first week, feeding well.'], ['Call your pediatrician', 'Yellow on the belly, legs or eyes, poor feeding, or very sleepy.']) : '';
     if (window.__hlOld) return frame(head(age, 'green', 'What to expect', e.lead) + H().list('What they’ll check', e.checks.map(c => row(...c))) + jaundice + H().list('Before you go', BRING(age).map(c => row(...c))));
-    // Nov 19 (show, don't tell): what's new at this visit first, then the growth check every visit has, as three photos.
-    const fresh = e.checks.filter(c => !/^Growth and a head-to-toe/.test(c[2]));
-    const grow = `<h2 class="hub-h2">${F('The usual growth check')}</h2><section class="hub-card hl-grow"><div class="hl-grow-tiles">${[
-      ['grow-weight', 'Weight', 'On a baby scale', 'A baby lying on a baby scale'],
-      ['grow-length', 'Length', 'Lying on a measuring board', 'A baby lying on a measuring board, feet against the footboard'],
-      ['grow-head', 'Head size', 'A soft tape around the head', 'A pediatrician wrapping a soft tape around a baby’s head']
-    ].map(([src, t, d, alt]) => `<figure><img src="assets/health/${src}.jpg" alt="${alt}" loading="lazy"><figcaption><b>${F(t)}</b><span>${F(d)}</span></figcaption></figure>`).join('')}</div><p class="hl-grow-note">${F('Then a head-to-toe exam: heart, hips, eyes and skin.')}</p></section>`;
-    return frame(head(age, 'green', 'What to expect', e.lead) + H().list(age === 0 ? 'What they’ll check' : 'What’s new at this visit', fresh.map(c => row(...c))) + grow + jaundice + H().list('Before you go', BRING(age).map(c => row(...c))));
+    // Nov 19, round 2: the visit in the order it happens, as numbered steps, with what's new at this age folded into each step.
+    // Order: measuring first, then questions, the pediatrician's exam, tests, and shots last (AAP Bright Futures visit flow).
+    const V = VISIT[age];
+    const steps = [
+      ['Weigh and measure', age === 0 ? 'Undressed to the diaper. Weight shows whether {s} {are|is} getting back to birth weight.' : 'Undressed to the diaper: weight, length and head size, added to {p} growth chart.'],
+      ['Questions for you', V.ask],
+      ['The exam', 'Head to toe: heart, hips, eyes and skin, ' + V.exam],
+      V.test && ['A quick test', V.test],
+      ['Shots', V.shots]
+    ].filter(Boolean);
+    const flow = `<h2 class="hub-h2">${F('How the visit goes')}</h2><section class="hub-card hl-flow"><ol>${steps.map(([t, d]) => `<li><b>${F(t)}</b><span>${F(d)}</span></li>`).join('')}</ol><p class="hl-flow-note">${F('Some offices do these in a different order.')}</p></section>`;
+    return frame(head(age, 'green', 'What to expect', e.lead) + flow + jaundice + H().list('Before you go', BRING(age).map(c => row(...c))));
   }
 
   /* ---------- Vaccines ---------- */
@@ -101,9 +115,6 @@
     if (part === 'expect') return expectPage(age);
     if (part === 'vaccines') return vaccinePage(age);
     if (part === 'questions' || part === 'notes') {
-      // Nov 19: the suggested questions now sit on the checkup page itself, so this page keeps your own questions and notes.
-      if (!window.__hlOld) return base(age, part).replace(/<section class="hub-card hub-q-card"><div class="hub-card-head"><b>Questions to ask<\/b>[\s\S]*?<\/section>/, '')
-        .replace(/<div class="hub-detail-head">[\s\S]*?<\/div>/, head(age, 'yellow', 'Questions and notes', 'Add your own questions, and keep what you hear with this checkup.')).replace(/(hub-page hub-detail)/, '$1 hv-page');
       return base(age, part).replace(/<div class="hub-detail-head">[\s\S]*?<\/div>/, head(age, 'yellow', 'Questions and notes', 'Tick them off as you ask. What you hear stays with this checkup.'))
         .replace(/<p class="hub-q-hint">Tick them off as you go\.<\/p>/, '').replace(/(hub-page hub-detail)/, '$1 hv-page');
     }

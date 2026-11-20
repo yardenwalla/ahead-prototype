@@ -6,34 +6,26 @@
 #main .hl-path button.is-now:not(.is-on)::after{content:"";position:absolute;top:3px;right:4px;width:5px;height:5px;border-radius:50%;background:#4f8a6c}
 #main .hl-photo{position:relative;margin:14px 0 2px;border-radius:18px;overflow:hidden;aspect-ratio:4/3;box-shadow:0 6px 18px #2f5a4522}
 #main .hl-photo img{display:block;width:100%;height:100%;object-fit:cover}
-#main .hl-pin,#main .hl-tag{position:absolute;display:flex;align-items:center;gap:6px;transform:translate(-50%,-50%)}
-#main button.hl-pin{border:0;background:none;padding:0!important;margin:0!important;min-height:0!important;width:auto!important;cursor:pointer}
-#main .hl-pin i,#main .hl-tag i{flex:none;width:14px;height:14px;border-radius:50%;background:#fff;box-shadow:0 0 0 4px #ffffff66,0 1px 4px #0003}
-#main .hl-pin span,#main .hl-tag span{background:#fffdfaee;color:#2f4f3f;font-size:12.5px;font-weight:700;line-height:1;padding:7px 10px;border-radius:999px;white-space:nowrap;box-shadow:0 2px 8px #0002}
-#main .hl-pin-r,#main .hl-tag-r{transform:translate(-7px,-50%)}
-#main .hl-pin-l,#main .hl-tag-l{flex-direction:row-reverse;transform:translate(calc(-100% + 7px),-50%)}
-#main .hl-pin-b,#main .hl-tag{flex-direction:column;transform:translate(-50%,-7px)}
-#main .hl-pin-t,#main .hl-tag-t{flex-direction:column-reverse;transform:translate(-50%,calc(-100% + 7px))}
 #main .hl-tag{pointer-events:none}
-#main .hl-hero .hl-hero-photo{margin-bottom:4px}
-/* The growth check: three photos across */
-#main .hl-grow{padding:14px}
-#main .hl-grow-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-#main .hl-grow figure{margin:0}
-#main .hl-grow img{display:block;width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:12px}
-#main .hl-grow img[src*="grow-head"]{object-position:72% 50%}
-#main .hl-grow figcaption{margin-top:7px}
-#main .hl-grow figcaption b{display:block;font-size:14px;color:var(--ink,#302d3c)}
-#main .hl-grow figcaption span{display:block;font-size:12.5px;line-height:1.35;color:var(--ink-2,#857d86);margin-top:2px}
-#main .hl-grow-note{margin:12px 0 0;padding-top:11px;border-top:1px solid var(--line,#ebe6e1);font-size:13.5px;line-height:1.45;color:#5d6276}
 /* A photo with rows under it, in one card */
 #main .hl-during{padding:10px 10px 2px}
 #main .hl-during .hl-photo{margin:0 0 4px;box-shadow:none;border-radius:13px}
 #main .hl-during .hub-list{border:0!important;box-shadow:none!important;background:none!important;margin:0!important}
-/* Questions to ask, on the checkup page */
-#main .hl-q-h{display:flex;justify-content:space-between;align-items:baseline}
-#main .hl-q-h small{font-size:12.5px;font-weight:600;color:var(--ink-2,#857d86)}
-#main .hl-q-card .hl-q-more{display:block;margin:10px 0 2px;font-size:14px}
 /* The checkup row already shows which checkup you are reading and marks the next one, so the preview banner is not needed (as in Development) */
 #main .hub-page:has(.hl-path) .st-banner{display:none}
-#main .hl-q-card{padding-top:6px!important}
+
+/* What to expect: the visit in order, as a numbered line */
+#main .hl-flow{padding:16px 16px 12px}
+#main .hl-flow ol{list-style:none;margin:0;padding:0;counter-reset:s}
+#main .hl-flow li{position:relative;padding:0 0 16px 40px;counter-increment:s}
+#main .hl-flow li::before{content:counter(s);position:absolute;left:0;top:-1px;width:26px;height:26px;border-radius:50%;background:#e6f5ec;color:#356651;font-weight:700;font-size:13.5px;display:grid;place-items:center}
+#main .hl-flow li:not(:last-child)::after{content:"";position:absolute;left:12.5px;top:29px;bottom:3px;width:1.5px;background:#cfe6d9}
+#main .hl-flow li b{display:block;font-size:15.5px;color:var(--ink,#302d3c);line-height:1.3}
+#main .hl-flow li span{display:block;font-size:14px;line-height:1.45;color:#5d6276;margin-top:3px}
+#main .hl-flow li:last-child{padding-bottom:4px}
+#main .hl-flow-note{margin:10px 0 0;padding-top:10px;border-top:1px solid var(--line,#ebe6e1);font-size:12.5px;color:var(--ink-2,#857d86)}
+/* Tags naming an object in a photo */
+#main .hl-tag{position:absolute;display:flex;flex-direction:column;align-items:center;gap:6px;transform:translate(-50%,-7px)}
+#main .hl-tag-t{flex-direction:column-reverse;transform:translate(-50%,calc(-100% + 7px))}
+#main .hl-tag i{flex:none;width:14px;height:14px;border-radius:50%;background:#fff;box-shadow:0 0 0 4px #ffffff66,0 1px 4px #0003}
+#main .hl-tag span{background:#fffdfaee;color:#2f4f3f;font-size:12.5px;font-weight:700;line-height:1;padding:7px 10px;border-radius:999px;white-space:nowrap;box-shadow:0 2px 8px #0002}
