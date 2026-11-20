@@ -23,7 +23,16 @@
   const ctxFor = a => Object.assign({}, (typeof PLAY_CONTEXT !== 'undefined' && PLAY_CONTEXT[a.id]) || {}, FIX[a.id] || {});
   const find = id => { const a = all()[id]; return a ? Object.assign({}, a, FIX[id] || {}) : null; };
   const stageIdeas = ref => (window.DEV_STAGE_IDEAS[ref] || []).map(find).filter(Boolean);
-  const tile = (a, ref) => `<button class="dev-idea" onclick="openPage('chg:Development:d:idea:${ref}:${a.id}')"><span class="dev-idea-art">${devPlayArt(a.id)}</span><b>${F(B(a.title))}</b></button>`;
+  // Nov 19: Ahead's own photos for play ideas (Canva), so tiles and idea pages match the rest of Development.
+  const PHOTO = { 'close-face': 'play-close-face', 'chest-chat': 'play-chest-chat', 'bold-picture': 'play-bold-picture', 'song-listen': 'play-song-listen',
+    'sound-answer': 'play-sound-answer', 'mirror-company': 'play-mirror-company', 'easy-grip': 'play-easy-grip', 'tummy-picture': 'play-tummy-picture', 'crinkle-book': 'play-crinkle-book',
+    'two-hands': 'play-two-hands', 'peek-face': 'play-peekaboo', 'supported-reach': 'play-toy-beside-knee', 'floor-drum': 'play-floor-drum',
+    'hidden-toy': 'play-hidden-toy', 'empty-basket': 'play-empty-basket', 'ball-turns': 'play-ball-turns', 'hello-wave': 'play-hello-wave',
+    'put-in': 'play-put-in', 'pretend-cup': 'play-pretend-cup', 'stack-pair': 'play-stack-pair', 'action-book': 'play-action-book', 'two-baskets': 'play-two-baskets',
+    // Nov 19: the six more ideas for each age.
+    'smile-pause': 'play-smile-pause', 'change-chat': 'play-change-chat', 'book-voices': 'play-book-voices', 'outside-pause': 'play-outside-pause', 'slow-song': 'play-slow-song', 'floor-company': 'play-floor-company', 'sock-puppet': 'play-sock-puppet', 'page-pat': 'play-page-pat', 'barefoot-kicks': 'play-barefoot-kicks', 'lap-sway': 'play-lap-sway', 'follow-toy': 'play-follow-toy', 'touch-rhyme': 'play-touch-rhyme', 'mirror-faces': 'play-mirror-faces', 'roll-interest': 'play-roll-interest', 'rhyming-page': 'play-rhyming-page', 'leaf-watch': 'play-leaf-watch', 'sound-side': 'play-sound-side', 'feet-discovery': 'play-feet-discovery', 'lift-flap': 'play-lift-flap', 'knock-stack': 'play-knock-stack', 'peek-corner': 'play-peek-corner', 'roll-ball': 'play-roll-ball', 'song-pause': 'play-song-pause', 'spoon-bowl': 'play-spoon-bowl', 'feed-teddy': 'play-feed-teddy', 'open-close': 'play-open-close', 'body-song': 'play-body-song', 'follow-point': 'play-follow-point', 'stir-bowl': 'play-stir-bowl' };
+  const photo = id => PHOTO[id] ? `<img class="dev-idea-photo" src="assets/dev/${PHOTO[id]}.jpg?v=6" alt="">` : '';
+  const tile = (a, ref) => `<button class="dev-idea" onclick="openPage('chg:Development:d:idea:${ref}:${a.id}')"><span class="dev-idea-art">${photo(a.id) || devPlayArt(a.id)}</span><b>${F(B(a.title))}</b></button>`;
 
   // Try today, on the summary: two of the stage's ideas, a different pair each day, and the rest one tap away.
   window.devTodayCard = ref => {
@@ -51,13 +60,18 @@
   window.devMoveIdea = ref => MOVE[ref] ? Object.assign({}, MOVE[ref], { art: moveArt(MOVE[ref]) }) : null;
 
   // A skill's photo or video, opened on the page.
+  // Nov 18: Ahead's own photos, in one style, for milestones a still photo shows well. Motion and sound milestones keep the CDC video.
+  const OWN_PHOTO = { 'pushes-onto-elbows-during-tummy-time': 'm4-elbows', 'pushes-up-with-straight-arms-on-tummy': 'm6-straight-arms', 'reaches-to-grab-a-toy': 'm6-reaches', 'leans-on-hands-when-sitting': 'm6-leans-on-hands', 'knows-familiar-people': 'm6-familiar-people', 'closes-lips-to-show-they-don-t-want-more-food': 'm6-closes-lips', 'likes-looking-at-self-in-a-mirror': 'm6-mirror', 'puts-things-in-mouth-to-explore': 'm6-mouthing' };
+  // Where each photo sits in its square frame (vertical %), so faces and the skill both stay in view.
+  const OWN_POS = { 'm6-reaches': 0, 'm6-closes-lips': 30, 'm6-leans-on-hands': 40, 'm6-familiar-people': 0, 'm4-elbows': 55, 'm6-straight-arms': 50 };
   window.devSeeIt = function (btn, key) {
     const box = btn.closest('.dev-skill').querySelector('.dev-media');
     if (!box) return;
     const open = !box.hidden;
     if (!open && !box.innerHTML) {
       const m = (typeof DEV_EXAMPLE_LINKS !== 'undefined' ? DEV_EXAMPLE_LINKS : {})[key];
-      if (m && m.type === 'video') { const id = (m.href.match(/[?&]v=([\w-]{11})/) || [])[1]; box.innerHTML = id ? hubEmbed(id, btn.dataset.title || 'What it looks like', 'CDC') : ''; }
+      if (OWN_PHOTO[key]) box.innerHTML = `<figure class="dev-photo is-own"><img src="assets/dev/${OWN_PHOTO[key]}.jpg?v=2" alt=""${btn.dataset.title || ''}" loading="lazy"></figure>`;
+      else if (m && m.type === 'video') { const id = (m.href.match(/[?&]v=([\w-]{11})/) || [])[1]; box.innerHTML = id ? hubEmbed(id, btn.dataset.title || 'What it looks like', 'CDC') : ''; }
       else if (m) box.innerHTML = `<figure class="dev-photo"><img src="${m.href}" alt="${btn.dataset.title || ''}" loading="lazy"><figcaption>Photo · CDC</figcaption></figure>`;
     }
     if (!open && box.dataset.desc && !box.querySelector('.dev-desc')) box.insertAdjacentHTML('afterbegin', `<p class="dev-desc">${box.dataset.desc}</p>`);
@@ -67,11 +81,11 @@
     btn.textContent = open ? 'See what it looks like' : 'Hide';
   };
   // Skills that are obvious from words alone don't get a photo or video; the one-line description is enough.
-  const NO_MEDIA = new Set(['laughs', 'squeals', 'chuckles-during-play', 'smiles-back-at-you', 'makes-sounds-beyond-crying', 'responds-to-loud-sounds', 'moves-both-arms-and-legs', 'looks-at-your-face', 'seems-glad-to-see-you', 'likes-looking-at-self-in-a-mirror', 'waves-goodbye', 'raises-arms-to-be-picked-up', 'enjoys-peekaboo', 'coos', 'brings-hands-to-mouth', 'puts-things-in-mouth-to-explore']);
+  const NO_MEDIA = new Set([]);   // Nov 18: every milestone shows something (sound milestones play the CDC clip, with audio)
   window.devSeeButton = (key, title) => (typeof DEV_EXAMPLE_LINKS !== 'undefined' && DEV_EXAMPLE_LINKS[key] && !NO_MEDIA.has(key)) ? `<button class="dev-see" aria-expanded="false" data-title="${title}" onclick="devSeeIt(this,'${key}')">See what it looks like</button>` : '';
 
   // An idea from a later stage than the baby's says so in its kicker, so it doesn't read as one for today.
-  const ahead = ref => (typeof isCurrent !== 'function' || isCurrent()) && ref > devRef(developmentMonth(actualMonth())) ? ` · by ${ref === 12 ? '1 year' : ref + ' months'}` : '';
+  const ahead = ref => (typeof isCurrent !== 'function' || isCurrent()) && ref > devRef(developmentMonth(actualMonth())) ? ` · by ${ref} months` : '';
   function frame(title, context, lead, inner) {
     return `<div class="quiet-category hub-page hub-detail" data-overview="Development" style="${yearTheme('Development')}">${detailPageTop('Development')}<div class="hub-detail-head"><p class="hub-context">${F(context)}</p><h1>${F(title)}</h1>${lead ? `<p class="hub-lead">${F(lead)}</p>` : ''}</div>${inner}</div>`;
   }
@@ -84,7 +98,23 @@
     const extra = (MORE[ref] || []).filter(id => !shown.has(id)).map(find).filter(Boolean);
     const more = extra.filter(Boolean).length ? `<details class="dev-more-ideas"><summary><span>${F(`${extra.length} more ideas`)}</span><span class="faq-plus" aria-hidden="true">＋</span></summary><ul class="dev-more-list">${extra.filter(Boolean).map(a => `<li><button onclick="openPage('chg:Development:d:idea:${ref}:${a.id}')"><span>${F(B(a.title))}</span><span class="hub-chev" aria-hidden="true">›</span></button></li>`).join('')}</ul></details>` : '';
     const signs = false && ref >= 6 ? h.list('', [h.row({ icon: 'signs', cat: 'Development', title: 'Try a few baby signs', sub: 'More, eat, milk and all done', onclick: `openPage('chg:Development:d:signs')` })]) : '';
-    return frame('Ideas to try together', `Play ideas · by ${ref === 12 ? '1 year' : ref + ' months'}`, lead, `<div class="dev-ideas is-grid">${pics.map(a => tile(a, ref)).join('')}</div>${more}`);
+    // Nov 19 preview: toys that fit this age, what she's outgrown, and what isn't needed (AAP 2018 toys report;
+    // Sosa 2016 on electronic toys; CPSC on crib toys at 5 months). Things Safety owns point to Safety.
+    // Nov 19: toys that fit each age, and what's ready to put away (AAP toys report; vision milestones; CPSC on crib toys).
+    const TOYS = {
+      2: { now: [['toy-cards', 'High-contrast cards'], ['toy-mat', 'Play mat'], ['toy-soft-rattle', 'Soft rattle']], away: [] },
+      4: { now: [['toy-ring-rattle', 'Ring rattle'], ['toy-crinkle', 'Crinkle book'], ['toy-gym', 'Play gym']],
+        away: [['eye', 'High-contrast cards', '{S} {see|sees} colors well now']] },
+      6: { now: [['toy-rattle', 'Ball rattle'], ['toy-bowl', 'Pot and spoon'], ['toy-books', 'Board books']],
+        away: [['crib', 'The crib mobile', 'Take it down now, before {s} can grab it']] },
+      9: { now: [['toy-cups', 'Stacking cups'], ['toy-ball', 'Soft ball'], ['toy-flap', 'Lift-the-flap books']],
+        away: [['mat', 'The play gym', '{S’s} sitting up and on the move now']] },
+      12: { now: [['toy-push', 'Push toy'], ['toy-sorter', 'Shape sorter'], ['toy-pretend', 'Cup, spoon and teddy']],
+        away: [['stand', 'The activity center', 'Cruising the furniture is better practice now']] } }[ref];
+    const toys = TOYS ? `<section class="dev-toys"><h2 class="hub-h2">${F('Toys that fit now')}</h2><p class="dev-toys-lead">${F('Simple toys work best, and you don’t need many.')}</p>`
+      + `<div class="dev-toy-grid">${TOYS.now.map(([img, t]) => `<div class="dev-toy"><img src="assets/dev/${img}.jpg?v=2" alt=""><b>${F(t)}</b></div>`).join('')}</div>`
+      + (TOYS.away.length ? `<div class="dev-putaway"><h3>${F('Ready to put away')}</h3>${TOYS.away.map(([ic, t, sub]) => `<div class="dev-putaway-row"><span class="dev-putaway-ic" aria-hidden="true">${H().art(ic, 'Development')}</span><span><b>${F(t)}</b><small>${F(sub)}</small></span></div>`).join('')}</div>` : '') + '</section>' : '';
+    return frame('Ideas to try together', `Play ideas · by ${ref} months`, lead, `<div class="dev-ideas is-grid">${pics.map(a => tile(a, ref)).join('')}</div>${more}${toys}`);
   }
   function movePage(ref) {
     const mv = window.devMoveIdea(ref), h = H();
@@ -96,7 +126,7 @@
     if (!a) return ideasPage(ref);
     const ctx = ctxFor(a), steps = (typeof playInstructionSteps === 'function' ? playInstructionSteps(a.how) : [a.how]).map(s => B(s));
     return frame(B(a.title), 'Ideas to try together' + ahead(ref), B(ctx.explain || a.why || ''),
-      (devPlayArt(a.id) ? `<figure class="dev-idea-hero">${devPlayArt(a.id)}</figure>` : '') + h.steps(steps) + (ctx.notice ? h.tip('What to notice', B(ctx.notice)) : '')
+      (photo(a.id) ? `<figure class="dev-idea-hero is-photo">${photo(a.id)}</figure>` : devPlayArt(a.id) ? `<figure class="dev-idea-hero">${devPlayArt(a.id)}</figure>` : '') + h.steps(steps) + (ctx.notice ? h.tip('What to notice', B(ctx.notice)) : '')
       + h.note('Stay close, and stop when Maya looks away or fusses. That’s {p} way of saying “enough for now.”'));
   }
   const baseRoute = window.changesRoute;
