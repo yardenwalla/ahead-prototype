@@ -293,12 +293,6 @@
       const eb = hero.querySelector('.hub-eyebrow'), ebt = eb ? eb.firstChild.textContent : '', view = STAGES.findIndex(([, re]) => re.test(ebt));
       if (view >= 0) {
         hero.dataset.sswView = view; // tabs are added by ensureTabs, after every other script has drawn
-        // One real-life photo per stage in the same frame as Health, Development, Safety and Feeding.
-        // The day's drawing moves into Sleep at a glance, next to the numbers it shows.
-        const band = hero.querySelector('.ssw-band'), lead = hero.querySelector('.hub-lead');
-        const PH = [['hero-0.jpg', 'A newborn asleep, swaddled in a parent’s arms'], ['night.jpg', 'A baby asleep on their back in a bassinet beside the bed at night'], ['sleepy.jpg', 'A sleepy baby rubbing an eye on a parent’s shoulder in the daytime'], ['standing.jpg', 'A baby standing up in the crib at bedtime, holding the rail']][view];
-        if (lead && PH) lead.insertAdjacentHTML('afterend', `<div class="sf-photo ssw-hero-ph"><img src="${IMG + PH[0]}" alt="${F(PH[1])}"></div>`);
-        if (band) { band.classList.add('ssw-glance-band'); hero.__sswBand = band; band.remove(); }
       }
     }
     // Four topic tiles (Yarden's inspiration): Night sleep, Naps, Bedtime routine, Safe sleep. Each opens this stage's own
