@@ -117,3 +117,26 @@
 #main .h2-after form{grid-column:1/-1}
 #main .h2-after .h2-save{margin-top:10px}
 #main .h2-cap{margin:10px 2px 2px;font-size:14px;line-height:1.45;color:#3f5a4b}
+/* The checkup page: photo in the top card, tiles at a glance, the year as a path */
+#main .h2-main-photo{margin:14px 0 4px;aspect-ratio:16/10}
+#main .h2-tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0 0 22px}
+#main .h2-tile{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;align-items:flex-start;gap:3px;padding:14px 12px 13px;border-radius:18px;background:var(--card,#fffdf9);border:1px solid var(--h2-line,#ece7e1);min-height:118px}
+#main .h2-tile .h2-ic{width:38px;height:38px;border-radius:12px;margin-bottom:8px}
+#main .h2-tile .h2-ic svg{width:21px;height:21px}
+#main .h2-tile b{font-size:14.5px;line-height:1.25;color:var(--h2-ink,#2f3a35)}
+#main .h2-tile small{font-size:12.5px;line-height:1.35;color:var(--h2-sub,#6a6f80)}
+#main .h2-track{padding:16px 8px 12px}
+#main .h2-track-line{position:relative;display:grid;grid-template-columns:repeat(7,minmax(0,1fr))}
+#main .h2-track-line::before{content:"";position:absolute;left:7%;right:7%;top:12px;border-top:2px solid #dfe9e2}
+#main .h2-node{all:unset;box-sizing:border-box;cursor:pointer;position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px}
+#main .h2-node i{width:24px;height:24px;border-radius:50%;background:#fff;border:2px solid #cfdcd3;display:grid;place-items:center;color:#fff}
+#main .h2-node i svg{width:15px;height:15px}
+#main .h2-node.is-past i{background:#dfe9e2;border-color:#dfe9e2}
+#main .h2-node.is-done i{background:#6fa585;border-color:#6fa585}
+#main .h2-node.is-next i{border-color:#356651;box-shadow:0 0 0 4px #e3f1e8}
+#main .h2-node.is-on i{background:#356651;border-color:#356651;box-shadow:0 0 0 4px #e3f1e8}
+#main .h2-node b{font-size:12.5px;line-height:1.1;color:var(--h2-ink,#2f3a35);white-space:nowrap}
+#main .h2-node.is-on b{color:#356651}
+#main .h2-node small{font-size:10.5px;line-height:1.25;color:var(--h2-sub,#6a6f80);min-height:13px}
+#main .h2-node.is-next small{color:#356651;font-weight:700}
+#main .hub-page:has(.h2-track) .st-banner{display:none}

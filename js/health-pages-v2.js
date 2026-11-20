@@ -46,11 +46,43 @@
   function expectPage(age) {
     const hv = window.__hv, V = VISIT[age];
     const jaundice = age === 0 ? h2('Yellow skin at home') + pair(['Common', 'A little yellow on the face in the first week, feeding well.'], ['Time to call', 'Yellow on the belly, legs or eyes, poor feeding, or very sleepy.']) : '';
-    return page(top(hv.label(age), 'What to expect', V.lead, `checkup-${age}.jpg`, PHOTO_ALT[age])
+    return page(top(hv.label(age), 'What to expect', V.lead)
       + h2('The visit, step by step') + steps(V.steps, (V.shotsLast ? 'Shots usually come last. ' : '') + 'Some offices do things in a different order.')
       + jaundice
       + (V.before ? `<section class="h2-before">${ic('notepad', 'yellow')}<div><b>${F('Before you go')}</b><p>${F(V.before)}</p></div></section>` : ''));
   }
+
+  /* ---------- The checkup page (Health's main page) ---------- */
+  // A real photo of this visit in the top card, with no labels: it sets the scene, the page says the rest.
+  window.healthMainPhoto = age => `<figure class="h2-photo h2-main-photo"><img src="assets/health/checkup-${age}.jpg" alt="${e(PHOTO_ALT[age] || '')}"></figure>`;
+  // Your visit, at a glance: the three pages as tiles, each with a line you'd want before opening it.
+  window.healthGlance = function (age) {
+    const v = window.__hv.VAX[age], d = journeyData(), asked = d.checks['q' + age] || {}, own = d.questions[age] || [];
+    const total = healthJourneyQuestions(age).length + own.length, n = Object.keys(asked).filter(k => asked[k] && (!String(k).startsWith('m') || Number(String(k).slice(1)) < own.length)).length;
+    const shots = age === 0 ? 'Hepatitis B, if needed' : age === 1 ? 'Maybe one' : age === 9 ? 'Catch-up only' : { 2: 'The first big round', 4: 'Second doses', 6: 'Third doses', 12: 'New ones, plus boosters' }[age];
+    const tile = (icon, tone, t, d2, go, mark) => `<button class="h2-tile" onclick="${go}">${ic(icon, tone)}<b>${F(t)}</b><small>${F(d2)}</small>${mark || ''}</button>`;
+    return h2('Your visit, at a glance') + `<div class="h2-tiles">`
+      + tile('clock', 'green', 'What to expect', `${VISIT[age].steps.length} steps`, `openHealthDetail(${age},'expect')`)
+      + tile('shield', 'blue', 'Vaccines', shots, `openHealthDetail(${age},'vaccines')`)
+      + tile('notepad', 'yellow', 'Questions', `${n} of ${total} asked`, `openHealthDetail(${age},'questions')`)
+      + `</div>`;
+  };
+  // The year of checkups as a path: done ones ticked, the next one marked, the one you're reading filled in.
+  window.healthTracker = function (age, focus) {
+    const isLive = typeof isCurrent !== 'function' || isCurrent();
+    const SHORT = { 0: '1st wk', 1: '1 mo', 2: '2 mo', 4: '4 mo', 6: '6 mo', 9: '9 mo', 12: '12 mo' };
+    const SHOTS = { 2: 1, 4: 1, 6: 1, 12: 1 };
+    const done = a => { try { const r = healthRecord(a); return r && r.status === 'attended'; } catch (x) { return false; } };
+    const due = a => a === 0 ? new Date(parse(profile.dob).getTime() + 5 * 864e5) : addMonths(parse(profile.dob), a);
+    const days = Math.round((due(focus) - NOW) / 864e5);
+    const when = days > 1 ? `in ${days < 14 ? days + ' days' : Math.round(days / 7) + ' weeks'}` : days >= -14 ? 'now' : '';
+    const nodes = WELL_VISITS.map(a => {
+      const cls = [a === age ? 'is-on' : '', done(a) ? 'is-done' : '', isLive && a === focus ? 'is-next' : '', isLive && a < focus && !done(a) ? 'is-past' : ''].filter(Boolean).join(' ');
+      const sub = isLive && a === focus ? (when ? `Next ${when === 'now' ? 'up' : ''}`.trim() : 'Next') : SHOTS[a] ? 'Shots' : '';
+      return `<button class="h2-node ${cls}" onclick="openPage('health-visit:${a}')"${a === age ? ' aria-current="page"' : ''}><i>${done(a) ? CHECK : ''}</i><b>${SHORT[a]}</b><small>${sub}${isLive && a === focus && when && when !== 'now' ? `<br>${when}` : ''}</small></button>`;
+    }).join('');
+    return h2('Your checkups this year') + `<section class="hub-card h2-track"><div class="h2-track-line">${nodes}</div><i class="st-chip" hidden></i></section>`;
+  };
 
   /* ---------- Vaccines ---------- */
   const listNames = xs => { const n = xs.map((x, i) => /^(DTaP|Hib|MMR)$/.test(x[0]) || i === 0 ? x[0] : x[0].replace(/^[A-Z][a-z]/, c => c.toLowerCase())); return n.length < 3 ? n.join(' and ') : n.slice(0, -1).join(', ') + ' and ' + n[n.length - 1]; };
