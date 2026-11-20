@@ -248,7 +248,7 @@
   }
   function bagList(m) {
     const items = bagItems(m), have = bagGet(), on = items.filter(i => have.includes(i[1])).length;
-    return `<section class="hub-card oa-bag"><div class="oa-bag-head"><b class="oa-pack-count">${on} of ${items.length} packed</b><button class="hub-link" onclick="oaBagReset()">Clear ticks</button></div><div class="oa-packs">${items.map(([icon, k, t, s]) => `<button class="oa-pack${have.includes(k) ? ' is-on' : ''}" data-k="${k}" aria-pressed="${have.includes(k)}" onclick="oaBagToggle('${k}')"><span class="oa-pack-art">${hubArt(icon, CAT)}</span><span><b>${F(t)}</b>${s ? `<small>${F(s)}</small>` : ''}</span><i aria-hidden="true">✓</i></button>`).join('')}</div></section>`;
+    return `<section class="hub-card oa-bag"><div class="oa-bag-head"><b class="oa-pack-count">${on} of ${items.length} packed</b><button class="hub-link" onclick="oaBagReset()">Clear checks</button></div><div class="oa-packs">${items.map(([icon, k, t, s]) => `<button class="oa-pack${have.includes(k) ? ' is-on' : ''}" data-k="${k}" aria-pressed="${have.includes(k)}" onclick="oaBagToggle('${k}')"><span class="oa-pack-art">${hubArt(icon, CAT)}</span><span><b>${F(t)}</b>${s ? `<small>${F(s)}</small>` : ''}</span><i aria-hidden="true">✓</i></button>`).join('')}</div></section>`;
   }
   // Keeping milk safe on the go, for the family's own feeding method.
   const milkOnTheGo = () => lines([
@@ -486,7 +486,7 @@
       + h.row({ icon: 'bag', cat: CAT, title: 'Your gear', sub: 'Car seat, stroller, carrier and diaper bag', onclick: open('gear') })
       + h.row({ icon: k === 'hot' ? 'sun' : 'snow', cat: CAT, title: 'Hot and cold days', sub: k === 'hot' ? 'Shade, sunscreen and the car on hot days' : 'Layers and the car seat on cold days', onclick: open('weather') })
       + `</div>`;
-    if (nx) b += h.next(`Next · around ${nx[0]} months`, nx[1], open(nx[3]), '', { 2: 'Plan a first long drive or flight around feeds.', 4: 'Check your carrier’s limits before facing out.', 6: 'A seat in the cart, once {s} {sit|sits} steadily.', 9: 'Check the height and weight sticker on the car seat.', 12: 'Check the seat’s rear-facing limits on its label.' }[nx[0]] || '');
+    if (nx) b += h.next(`Next · around ${nx[0]} months`, nx[1], open(nx[3]), '', { 2: 'Plan a first long drive or flight around feeds.', 4: 'Check your carrier’s limits before facing out.', 6: 'Once {s} {sit|sits} steadily, strapped into the cart’s own seat.', 9: 'Check the height and weight sticker on the car seat.', 12: 'Check the seat’s rear-facing limits on its label.' }[nx[0]] || '');
     return `<div class="quiet-category hub-page" data-overview="${CAT}" style="${yearTheme(CAT)}">${monthlyPageHeader(CAT)}${b}</div>`;
   }
 
@@ -494,7 +494,7 @@
     const items = bagItems(m), have = bagGet(), on = items.filter(i => have.includes(i[1])).length;
     const G = [['Essentials', ['diapers', 'wipes', 'clothes', 'sanitizer']], ['Feeding', ['pump', 'pumped', 'cover', 'formula', 'bottles', 'burp', 'snacks', 'cup']], ['Extras', ['pacifier', 'hat', 'layer']]];
     const tile = ([icon, k, t, s]) => `<button class="oa-pack${have.includes(k) ? ' is-on' : ''}" data-k="${k}" aria-pressed="${have.includes(k)}" onclick="oaBagToggle('${k}')"><span class="oa-pack-art">${hubArt(icon, CAT)}</span><span><b>${F(t)}</b>${s ? `<small>${F(s)}</small>` : ''}</span><i aria-hidden="true">✓</i></button>`;
-    return `<section class="hub-card oa-bag"><div class="oa-bag-head"><b class="oa-pack-count">${on} of ${items.length} packed</b><button class="hub-link" onclick="oaBagReset()">Clear ticks</button></div>`
+    return `<section class="hub-card oa-bag"><div class="oa-bag-head"><b class="oa-pack-count">${on} of ${items.length} packed</b><button class="hub-link" onclick="oaBagReset()">Clear checks</button></div>`
       + G.map(([label, keys]) => { const g = items.filter(i => keys.includes(i[1])); return g.length ? `<p class="oa3-group">${F(label)}</p><div class="oa-packs">${g.map(tile).join('')}</div>` : ''; }).join('') + `</section>`;
   }
 
@@ -535,7 +535,7 @@
         ['Book', `<h2 class="hub-h2">${F('Where will Maya sit?')}</h2>` + choicePair([[PH('seat-own'), 'A rear-facing infant car seat installed in a plane window seat with the lap belt', 'Own seat', 'Safest, in a car seat labeled for aircraft', 1], [PH('seat-lap'), 'A parent holding a baby on their lap in a plane seat', 'On your lap', 'Often free under 2, but less safe in turbulence', 0]])
           + plainRows([['notepad', 'When you book', 'Add {o}. Flying with {o} on your lap? Ask about a bassinet seat.'], m < 2 ? ['steth', 'Flying in the first weeks', 'Ask your pediatrician first.'] : null])
           + fold3('shield', 'Check the car seat label', aircraftLabel())
-          + fold3('bag', 'Flight packing extras', plainRows([fm ? ['bottle', 'One extra bottle', 'In case of delays'] : null, ['diaper', 'Diapers for the trip, plus extra', 'At least one more than you think'], ['shirt', 'A change of clothes', 'For {o}, in your carry-on'], eats() ? ['bowl', 'Snacks {s} already eats', 'Soft and easy, for delays'] : null, m >= 3 ? ['drop', 'Medicine you might need', 'A fever reducer your pediatrician has OK’d, with its syringe'] : ['chat', 'Your pediatrician’s number', 'Under 3 months, any fever means calling them first'], ['book', 'Proof of {p} age', 'Like {p} birth certificate, for a lap seat']]))],
+          + fold3('bag', 'Flight packing extras', plainRows([fm || (bf && pumps()) ? ['bottle', 'One extra bottle', 'In case of delays'] : null, ['diaper', 'Diapers for the trip, plus extra', 'At least one more than you think'], ['shirt', 'A change of clothes', 'For {o}, in your carry-on'], eats() ? ['bowl', 'Snacks {s} already eats', 'Soft and easy, for delays'] : null, m >= 3 ? ['drop', 'Medicine you might need', 'A fever reducer your pediatrician has OK’d, with its syringe'] : ['chat', 'Your pediatrician’s number', 'In case of a fever. Under 3 months, call right away.'], ['book', 'Proof of {p} age', 'Like {p} birth certificate, for a lap seat']]))],
         ['Airport', plainRows([['bag', 'At security', bf && !fm && !pumps() ? 'Nothing extra for nursing. If you bring pumped milk, tell the officer.' : bf && !fm && !pumping() ? 'Breast milk can go through, even more than 3.4 oz. Tell the officer.' : bf && !fm ? 'Pumped milk and your pump can go through. Tell the officer.' : !bf ? 'Formula and water can go through. Tell the officer.' : pumping() ? 'Breast milk, formula and your pump can go through. Tell the officer.' : 'Breast milk and formula can go through. Tell the officer.'], ['stroller', 'At the gate', 'Gate-check the stroller. It waits at the plane door.'], ['car', 'If the car seat can’t go on', 'Not labeled for aircraft, or doesn’t fit? Check it at the gate.']])],
         ['On board', one3('In {p} own seat, keep {o} buckled in the car seat the whole flight. On your lap, take {o} out of the carrier for taxi, takeoff and landing.')
           + plainRows([['mouth', 'Ears on the way up and down', bf && !fm && how() === 'Nursing' ? 'Nursing or a pacifier helps.' : 'A feed or a pacifier helps.'], ['heart', 'Crying on board', 'Walk the aisle or offer a feed. Most people understand.'], ['hand', 'A diaper change', 'Ask the crew which restroom has the fold-down table.']])],
@@ -574,14 +574,14 @@
       phases('abroad', [
         ['Before you go', plan('Plan your trip', [
             ['As soon as you book', 'notepad', 'Apply for {p} passport. It can take weeks.'],
-            ['4–6 weeks before', 'steth', m >= 6 ? 'Ask your pediatrician about shots, including an early measles shot.' : 'Ask your pediatrician about shots and timing. The early measles shot starts at 6 months.'],
+            ['4–6 weeks before', 'steth', m >= 6 ? 'Ask your pediatrician about shots, including an early measles shot.' : 'Ask your pediatrician about shots. {S} {are|is} too young for the measles shot, so ask about measles where you’re going.'],
             ['Before you leave', 'home', 'Save the local emergency number, and how you’d find a doctor there.']], 'Apply for the passport as soon as you book. Four to six weeks before, ask the pediatrician about shots. Before you leave, save the local emergency number and how you would find a doctor there.')
           + plainRows([['chat', 'Only one parent at the passport appointment?', 'Bring the other parent’s notarized consent form.']])
-          + fold3('bag', 'What to pack', plainRows([['car', '{P} own car seat', 'Taxis and rental cars may not have one'], ['thermo', 'A thermometer', 'And the medicines your pediatrician okays'], ['drop', 'Rehydration salts', 'Ask your pediatrician which kind']]))],
-        ['When you arrive', one3('Use sealed bottled or boiled water for ' + (fm ? 'formula, ' : '') + (eats() ? '{p} cup, ' : '') + (bf && pumping() ? 'washing bottles and pump parts.' : 'washing bottles.'))
+          + fold3('bag', 'What to pack', plainRows([['car', '{P} own car seat', 'Taxis and rental cars may not have one'], ['thermo', 'A thermometer', 'And the medicines your pediatrician has OK’d'], ['drop', 'Rehydration salts', 'Ask your pediatrician which kind']]))],
+        ['When you arrive', one3('Use sealed bottled or boiled water ' + [fm ? 'to make formula' : '', eats() ? 'for {p} cup' : '', bf && pumping() ? 'to wash bottles and pump parts' : 'to wash bottles'].filter(Boolean).join(', ').replace(/, ([^,]*)$/, ' and $1') + '.')
           + plainRows([['leaf', 'Mosquito netting', 'Over the crib and stroller, if there’s no air conditioning or screens']])],
-        ['While you’re there', plainRows([['cup', 'Your drinks', 'No ice. It’s often made with tap water'], eats() ? ['bowl', 'Food', 'Cooked, or fruit you peel'] : null, ['bottle', 'A tummy bug', 'Keep feeding. Babies dry out faster than adults do.']])
-          + calls(['Call a doctor', 'A fever, fewer wet diapers, a dry mouth, or diarrhea that keeps going.'], ['Get care right away', m < 3 ? 'Any fever under 3 months or in a malaria area, trouble breathing, or hard to wake.' : 'Any fever in a malaria area, trouble breathing, or hard to wake.'])]]));
+        ['While you’re there', plainRows([['cup', 'Your drinks', 'No ice. It’s often made with tap water.'], eats() ? ['bowl', 'Food', 'Cooked, or fruit you peel'] : null, ['bottle', 'A tummy bug', 'Keep feeding. Babies dry out faster than adults do.']])
+          + calls(['Call a doctor', (m < 3 ? 'Fewer' : 'A fever, fewer') + ' wet diapers, a dry mouth, or diarrhea that keeps going.'], ['Get care right away', m < 3 ? 'Any fever under 3 months or in a malaria area, trouble breathing, or hard to wake.' : 'Any fever in a malaria area, trouble breathing, or hard to wake.'])]]));
 
     if (id === 'weather') {
       const view = weatherView || season();
@@ -625,7 +625,7 @@
       + fold3('back', 'Lying back, then sitting up', plainRows([['stroller', 'From birth', 'Lying back, or with the infant car seat clicked on'], ['back', 'Sits steadily', 'Sitting up, if the stroller’s instructions allow it']]))
       + good([['car', 'A car seat on the frame', 'Listen for the click, then tug to check it’s locked on.'], ['hand', 'On a bus or train', 'Brakes on and a hand on the stroller while it moves.']]));
 
-    if (id === 'bag') return page3('gear', 'bag', 'Diaper bag', 'Everything for a few hours out, packed for how {s} {is} fed.',
+    if (id === 'bag') return page3('gear', 'bag', 'Diaper bag', 'Everything for a few hours out, packed for how {s} {are|is} fed.',
       `<figure class="oa-flatlay"><img src="${PH('bag-flatlay')}" alt="The everyday diaper bag laid out: diapers, wipes, a changing pad, a spare outfit, burp cloths, a pacifier, a hat and a layer" loading="lazy"></figure>`
       + bagList3(m) + good([fm && ['clock', 'Formula you’ve made up', 'Use it within 2 hours of mixing, or within 1 hour once the feed starts.'], bf && pumps() && ['snow', 'Pumped milk', 'Keeps 4 hours at room temperature, or a day in a cooler with ice packs. Once a feed starts, use it within 2 hours.']]));
 
@@ -641,10 +641,10 @@
   window.oaCheck3Reset = () => { try { localStorage.removeItem(CHECKS_KEY); } catch (e) {} const y = scrollY; render(); scrollTo(0, y); };
   const checks3 = m => {
     let on = []; try { on = JSON.parse(localStorage.getItem(CHECKS_KEY)) || []; } catch (e) {}
-    const items = [['crib', 'Sleep space is clear and ready', 'A play yard or crib with only its own mattress and sheet'], ['lock', 'Cords, medicines and bags out of reach', 'Up high: yours and everyone else’s'], m >= 6 ? ['hand', 'Floors and furniture checked', 'Small things off the floor, outlets covered, stairs blocked'] : ['home', 'Play yard in a good spot', 'Away from the window, the heater and the lamp']];
+    const items = [['crib', 'Sleep space is clear and ready', 'A play yard or crib with only its own mattress and sheet'], ['lock', 'Cords, medicines and bags out of reach', 'Up high: yours and everyone else’s'], ['home', 'Play yard in a good spot', 'Away from the window, the heater and the lamp'], m >= 6 ? ['hand', 'Floors and furniture checked', 'Small things off the floor, outlets covered, stairs blocked'] : null].filter(Boolean);
     return `<div class="oa-away-head"><h2 class="hub-h2">${F('Check the room')}</h2>${on.length ? `<button class="hub-link" onclick="oaCheck3Reset()">${F('Start over')}</button>` : ''}</div>`
       + `<div class="hub-list oa3-checks">${items.map(([icon, t, sub], i) => `<button class="hub-row${on.includes(i) ? ' is-on' : ''}" aria-pressed="${on.includes(i)}" onclick="oaCheck3(${i})"><span class="hub-dot">${hubArt(icon, CAT)}</span><span class="hub-row-copy"><b>${F(t)}</b><small>${F(sub)}</small></span><i class="oa3-tick" aria-hidden="true">✓</i></button>`).join('')}</div>`
-      + `<p class="oa-psteps-note">${F(`${on.length} of 3 checked`)}</p>`;
+      + `<p class="oa-psteps-note">${F(`${on.length} of ${items.length} checked`)}</p>`;
   };
   const REST_PINS = [];
   const h3note = t => `<p class="oa-psteps-note">${F(t)}</p>`;
