@@ -268,3 +268,5 @@
 #main .tpl-minis .tpl-mini-ic svg { width: 20px; height: 20px }
 #main .tpl-minis b { display: block; font-size: 13.5px; line-height: 1.25; color: var(--ink, #2b2732) }
 #main .tpl-minis small { display: block; font-size: 12px; line-height: 1.3; color: #6d666d; margin-top: 2px }
+/* Nov 19: every guide's first heading sits 20px under its top card, like Development */
+#main .sf-hero + .sf-head > h2.hub-h2 { margin-top: 6px !important }
