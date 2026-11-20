@@ -26,7 +26,7 @@
     const h1s = [...main.querySelectorAll('.dev-area-head h1')], has = re => h1s.find(h => re.test(h.textContent));
     const h2 = re => [...main.querySelectorAll('h2.hub-h2')].find(h => re.test(h.textContent));
     // Making formula: the four steps, photographed.
-    if (has(/Make every bottle safely/)) tiles(main.querySelector('.hub-iconsteps'), [['formula-1', 'Washing hands at the sink'], ['formula-2', 'A kettle just boiled'], ['formula-3', 'Levelling a scoop of formula'], ['formula-4', 'Testing drops of milk on the wrist']]);
+    if (has(/Make every bottle safely/)) tiles(main.querySelector('.hub-iconsteps'), [['formula-1', 'Washing hands at the sink'], ['formula-water', 'Pouring water into the bottle up to the line'], ['formula-scoop', 'A scoop of formula leveled flat with a knife'], ['formula-4', 'Testing drops of milk on the wrist']]);
     // A feed, step by step: hunger cues, the paced bottle, burping and full, photographed.
     main.querySelectorAll('.xa-p').forEach(p => {
       const h1 = p.querySelector('.dev-area-head h1'); if (!h1) return;

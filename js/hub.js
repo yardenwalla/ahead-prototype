@@ -157,7 +157,7 @@
       + TPLB.sec(tval(q.doTitle) || 'What to do now', q.doFig ? TPLB.noted(q.doFig(), q.doNotes) : !q.do ? '' : Array.isArray(tval(q.do)) ? TPLB.noted(TPLB.tiles(q.do, cat, q.doOrdered), q.doNotes) : TPLB.card(q.do, q.doNotes))
       + (q.video ? `<div class="ph-video">${hubEmbed(...q.video)}</div>` : '') + (q.link ? TPLB.link(...q.link) : '') + TPLB.calls(q.calls),
     expect: (q, cat) => { const n = tval(q.normal); return TPLB.sec(tval(q.normalTitle) || 'What’s normal', TPLB.noted(Array.isArray(n) ? TPLB.tiles(n, cat, q.normalOrdered) : n, q.normalNotes))
-      + (q.more ? TPLB.sec(tval(q.moreTitle), tval(q.more)) : '')
+      + (q.more ? TPLB.sec(tval(q.moreTitle), q.moreNotes ? TPLB.noted(tval(q.more), q.moreNotes) : tval(q.more)) : '')
       + TPLB.sec(tval(q.doTitle) || 'What to do', q.doFig ? TPLB.noted(q.doFig(), q.doNotes) : Array.isArray(tval(q.do)) ? TPLB.noted(TPLB.tiles(q.do, cat, q.doOrdered), q.doNotes) : TPLB.card(q.do, q.doNotes))
       + (q.action ? q.action() : '') + TPLB.sec('Watch how', q.video ? hubEmbed(...q.video) : '') + TPLB.calls(q.calls); },
     // pictureAfter: a tool (like the allergen tracker) goes after the steps it supports.
@@ -444,7 +444,7 @@
         + (n === 4 && age >= 6 && C().live() && answers.solids !== 'Yes' ? `<div class="hub-actions"><button class="hub-button" onclick="setFeedingStage('starting');hubToast('Got it','Feeding now shows first tastes.');openPage('topic:Feeding')">${F('We’re starting today')}</button></div>` : ''));
     }
     if (id === 'setup') {
-      const SETUP = [['Get a high chair with a harness', 'One that keeps {o} upright, with {p} feet supported', 'highchair'], ['Learn infant choking first aid', 'A short class or video, so you know what to do', 'shield'], ['Know gagging from choking', 'Gagging is noisy and normal. Choking is silent.', 'mouth'], ['Have a soft spoon and an open cup', 'Small soft-tipped spoons, and a cup for sips of water', 'cup']];
+      const SETUP = [['Get a high chair with a harness', 'One that keeps {o} upright, with {p} feet supported', 'highchair'], ['Learn infant choking first aid', 'A short class or video, so you know what to do', 'shield'], ['Know gagging from choking', 'Gagging is noisy and normal. Choking is quiet or weak.', 'mouth'], ['Have a soft spoon and an open cup', 'Small soft-tipped spoons, and a cup for sips of water', 'cup']];
       const on = i => !!(L().safe && L().safe.Feeding && L().safe.Feeding[i]), done = SETUP.filter((_, i) => on(i)).length;
       return detail(cat, 'Preparing for solids', 'Get set up for the first bite', 'A few things to sort out before the first meal. Tick them off as you go.',
         `<p class="hub-group">${done} of 4 done</p>` + ticks(SETUP, on, i => `chgToggleSafe('Feeding',${i})`, 'Feeding') + hubEmbed('ShaNuST_58A', 'What to do when a baby is choking', 'American Red Cross') + tip('Good to know', 'You don’t need special gadgets. A spoon, a bowl and a safe seat are plenty.'), 'highchair');

@@ -784,7 +784,7 @@
       [nurse ? ['heart', 'Nursing', 'Get help early if nursing hurts', 'Pain past the first minute is worth fixing', 'sore'] : ['bottle', 'Spit-up', 'Expect some spit-up', 'It’s usually less than it looks', 'spit'], ['moon', 'Evenings', 'Get through nonstop evenings', 'Cluster feeding is normal, and it passes', 'cluster'], ['clock', 'Sleepy feeds', 'Keep a sleepy newborn feeding', 'Until he’s back to birth weight', 'sleepy']],
       [['drop', 'Crying', 'Ease gas and evening crying', 'Fussy spells often peak around 6 weeks', 'gas'], ['bottle', 'Spit-up', 'Handle spit-up and reflux', 'It peaks around 4 months, then eases', 'spit'], ['clock', 'Snacking', 'Make sense of snacking', 'Small feeds, every hour or so', 'snack']],
       [['eye', 'Distraction', 'Work with distracted feeds', 'A quiet, dim spot helps', 'distract'], ['moon', 'Nights', 'Shift feeds back to the day', 'If he eats more at night', 'nights'], nurse && ['heart', 'Nursing strike', 'Ride out a nursing strike', 'Sudden refusal usually passes', 'nstrike']],
-      [['shield', 'Gagging', 'Stay calm through gagging', 'Loud and normal. Choking is silent', 'gag'], ['bowl', 'Light days', 'Handle food refusal', 'A light day is fine at this age', 'refusefood'], ['diaper', 'Constipation', 'Ease harder poop', 'Common as solids start', 'constipation']],
+      [['shield', 'Gagging', 'Stay calm through gagging', 'Loud and normal. Choking is quiet or weak', 'gag'], ['bowl', 'Light days', 'Handle food refusal', 'A light day is fine at this age', 'refusefood'], ['diaper', 'Constipation', 'Ease harder poop', 'Common as solids start', 'constipation']],
       [['heart', 'Picky days', 'Keep offering through picky days', 'New foods can take 10–15 tries', 'picky'], ['bowl', 'Light days', 'Ride out light eating days', 'Appetite swings day to day', 'refusefood'], nurse && ['hand', 'Biting', 'Handle biting while nursing', 'Once teeth come', 'biting']]
     ][v].filter(Boolean).filter(x => P[x[4]]); };
   const OFF = (v) => { const nurse = nurses(), fm = formulaFam(), br = isBreast();
@@ -854,7 +854,7 @@
       [['bottle', 'Spit-up', 'A little after feeds, often less than it looks'], ['heart', 'Hiccups', 'Common, and they rarely bother him'], ['diaper', 'Grunting and straining', 'He’s learning to poop'], ['moon', 'Nonstop evenings', 'Lots of feeds close together'], ['clock', 'Dozing off mid-feed', 'Common in the first weeks'], ['eye', 'Sneezing', 'It clears his nose. Not a cold']],
       [['bottle', 'More spit-up', 'It peaks around 4 months'], ['moon', 'Fussy evenings', 'Often worst around 6 weeks'], ['clock', 'Quicker feeds', 'He’s getting better at it'], br ? ['heart', 'Softer breasts', 'Your supply is settling, not dropping'] : ['bottle', 'Bigger bottles', 'Then about the same until solids'], br && fd() === 'Breast milk' ? ['diaper', 'Fewer poops', 'Some go days without one'] : ['diaper', 'Poop changes', 'Soft is what matters'], ['heart', 'Hiccups', 'Still common, still harmless']],
       [['eye', 'Short, distracted feeds', 'The world is more interesting'], ['drop', 'Lots of drool', 'Not always teething'], ['moon', 'Longer night stretches', 'For some babies, not all'], ['bottle', 'Spit-up', 'Still common, and easing'], ['hand', 'Grabbing at your food', 'Curiosity, not a sign on its own'], ['clock', 'Hungrier some days', 'Growth spurts come and go']],
-      [['bowl', 'Most food ends up elsewhere', 'Squishing and dropping is learning'], ['shield', 'Gagging', 'Loud and normal. Choking is silent'], ['smile', 'Funny faces', 'New tastes, not dislike'], ['diaper', 'Poop changes', 'Color and smell follow what he eats'], ['heart', 'Eating very little', 'Milk is still the main food'], ['clock', 'Some days more, some less', 'His appetite leads']],
+      [['bowl', 'Most food ends up elsewhere', 'Squishing and dropping is learning'], ['shield', 'Gagging', 'Loud and normal. Choking is quiet or weak'], ['smile', 'Funny faces', 'New tastes, not dislike'], ['diaper', 'Poop changes', 'Color and smell follow what he eats'], ['heart', 'Eating very little', 'Milk is still the main food'], ['clock', 'Some days more, some less', 'His appetite leads']],
       [['heart', 'Picky days', 'New foods can take 10–15 tries'], ['bowl', 'Throwing food', 'Testing what happens'], ['hand', 'Wanting to feed himself', 'Let him, even if it’s messy'], ['clock', 'Appetite swings', 'Big one day, small the next'], ['drop', 'Fewer milk feeds', 'As meals grow'], ['smile', 'Copying you', 'He learns by watching you eat']]
     ][v]; };
   P.normal = () => { const v = stg(), N = NORMAL_ITEMS(v);
@@ -2529,7 +2529,7 @@
     // Nov 19 v3: one illustration that shows the hold and the angle, labels drawn by the app; then three short steps; never-prop as the one note.
     const TB = window.__hub && window.__hub.TPLB;
     const steps = TB ? TB.photoPins('feeding/pace-photo', 'A parent holding a baby upright with the bottle about level', [['Bottle about level', 55, 44, 'l'], ['Baby upright', 77, 62, 'b']], 'is-pace')
-      + `<h2 class="hub-h2">${F('How to do it')}</h2>` + TB.noted(TB.tiles([['mouth', 'Let him draw it in', 'Touch his lip with the nipple'], ['clock', 'Pause often', 'Every few sucks, tip it down'], ['eye', 'Stop when he’s done', 'Even if milk is left']], 'Feeding', true), [['', 'Never prop a bottle', 'Always hold him and the bottle']]) : '';
+      + `<h2 class="hub-h2">${F('How to do it')}</h2>` + TB.noted(TB.tiles([['mouth', 'Let him draw it in', 'Touch the nipple to his lip'], ['clock', 'Pause every few sucks', 'Tip it down, then let him start again'], ['eye', 'Stop when he’s done', 'Even if milk is left. Burp every 2–3 oz']], 'Feeding', true), [['', 'Never prop a bottle', 'Always hold him and the bottle']]) : '';
     const video = typeof hubEmbed === 'function' ? `<div class="ph-video">${hubEmbed('OGPm5SpLxXY', 'Watch how to pace a bottle', 'Lactation educators (IABLE)')}</div>` : '';
     const amount = `<h2 class="hub-h2">${F('About how much')}</h2><section class="hub-card ph-amount"><b style="font-size:24px;line-height:1.2">${F(amt[0])}</b><span>${F(amt[1] + ', or when he shows hunger cues')}</span></section>`;
     const rest = h.slice(k).replace(/<p class="ss-small"><b>Never prop a bottle\.<\/b>[^<]*<\/p>/, '');
@@ -2544,7 +2544,7 @@
   P.x_spit = (() => { const prev = P.x_spit; return () => prev().replace(two(['Usually fine', 'Comfortable, growing, and plenty of wet diapers.'], ['Worth a call', 'Forceful or green vomit, blood, or crying and arching at most feeds.', '#fdeee6', '#9a5a3c']), xTwo(['Usually fine', 'Comfortable, growing, and plenty of wet diapers.'], ['Worth a call', 'Forceful or green vomit, blood, or crying and arching at most feeds.'], true)); })();
   // Pages that had no picture get their steps as one: the same numbered icon row the rest of the app uses.
   P.x_formula = () => xPage('prep', 'x_formula', 'Make every bottle safely, the same way', 'Powder isn’t sterile, and young babies are most at risk, so these steps matter.',
-      steps([['hand', 'Wash', 'Hands, counter and bottle'], ['drop', 'Boil the water', 'Then let it sit 5 minutes'], ['bowl', 'Water, then powder', 'Level scoops, as the label says'], ['heart', 'Cool and test', 'Warm, not hot, on your wrist']], true)
+      steps([['hand', 'Wash', 'Hands, counter and bottle'], ['drop', 'Water first', 'Boiled, cooled 5 minutes, to the line the label says'], ['bowl', 'Then level scoops', 'Flat, never heaped. Then shake'], ['heart', 'Test on your wrist', 'Warm, never hot']], true)
       + xKnow('How long it keeps', 'Use within 2 hours, or fridge for up to 24. Once he starts, finish within 1 hour.')
       + xNote('Easier at 3 am:', 'ready-to-feed is sterile and needs no mixing. Ask your pediatrician if your tap water is safe.'));
   P.x_bm = () => xPage('prep', 'x_bm', 'Getting breast milk ready', 'Oldest first, gently mixed, and fed within 2 hours.',
@@ -2642,7 +2642,7 @@
       + xKnow('More on nights', 'Sleep has the rest: routines, naps and the 4-month changes.'));
   P.y_make = () => { const fm = formulaFam(), pump = pumps();
     return fm ? xPage('p1', 'y_make', 'Make every bottle safely, the same way', 'Same steps as before. After 2–3 months, ask whether tap water is fine without boiling.',
-      steps([['hand', 'Wash', 'Hands, counter and bottle'], ['drop', 'Water first', 'Boiled and cooled, or as your pediatrician says'], ['bowl', 'Then powder', 'Level scoops, as the label says'], ['heart', 'Test', 'Warm, not hot, on your wrist']], true)
+      steps([['hand', 'Wash', 'Hands, counter and bottle'], ['drop', 'Water first', 'To the line the label says. Boiled and cooled if your pediatrician says'], ['bowl', 'Then level scoops', 'Flat, never heaped. Then shake'], ['heart', 'Test on your wrist', 'Warm, never hot']], true)
       + xKnow('How long it keeps', 'Use within 2 hours, or fridge for up to 24. Once he starts, finish within 1 hour.'))
       : P.x_bm(); };
   P.y_away = () => { const b = isBreast(), fm = formulaFam();
@@ -2745,7 +2745,7 @@
       chips(['Peanut', 'Egg', 'Dairy', 'Wheat', 'Soy', 'Fish', 'Shellfish', 'Sesame', 'Tree nuts'])
       + xDo('What to do', ['One new allergen at a time, at home, earlier in the day.', 'Peanut as thinned peanut butter or powder. Egg well cooked.', 'Once it’s in, offer it a few times a week.'])
       + xNote('Call 911:', 'trouble breathing, swelling of the face or lips, hives all over, hives with vomiting, or he’s very sleepy or floppy. Call your pediatrician for a few hives or vomiting on its own.'));
-  P.z_gag = () => yPage(XL, 'Feeding challenges', 'Gagging is normal. Choking is silent.', 'Gagging is how he learns to handle food. It’s loud and can look scary, but it’s safe.',
+  P.z_gag = () => yPage(XL, 'Feeding challenges', 'Gagging is noisy and normal. Choking needs you now.', 'Gagging is how he learns to handle food. It’s loud and can look scary, but it’s safe.',
       xTwo(['Gagging', 'Loud: coughing, sputtering, eyes watering. Let him work it out.'], ['Choking', 'Silent: can’t cry or cough, turning blue. Start first aid and call 911.'], true)
       + xDo('What to do', ['Always seated upright, and always with you.', 'Soft pieces that squish between your fingers.'])
       + xKnow('Choking first aid', 'Face down on your forearm, 5 back blows. Then face up, 5 chest thrusts. Repeat until it’s out.'));
@@ -2817,7 +2817,7 @@
       + xDo('What to do', ['First: iron-rich foods like meat, beans, eggs or iron-fortified cereal.', 'Then vegetables, fruit and soft family food, in any order.', 'Once a day at first, then 2–3 times a day by 8–9 months.', 'Let him lead: wait for an open mouth, stop when he turns away.'])
       + xKnow('Milk still comes first', nurses() ? (fm ? 'Keep nursing, plus his usual formula bottles. Solids add to milk, they don’t replace it yet.' : 'Keep nursing on demand. Solids add to milk, they don’t replace it yet.') : 'About 24–32 oz of ' + (b && fm ? 'milk' : b ? 'breast milk' : 'formula') + ' a day. Solids add to it, they don’t replace it yet.')
       + xNote('Safe shapes:', 'soft enough to squash between finger and thumb.')); };
-  P.z_gag = () => yPage(XL, 'Feeding challenges', 'Gagging is normal. Choking is silent.', 'Gagging is how he learns to handle food. It’s loud and can look scary, but it’s safe.',
+  P.z_gag = () => yPage(XL, 'Feeding challenges', 'Gagging is noisy and normal. Choking needs you now.', 'Gagging is how he learns to handle food. It’s loud and can look scary, but it’s safe.',
       xTwo(['Gagging: normal', 'Loud: coughing, sputtering, red face, tongue out. Let him work it out.'], ['Choking: act now', 'Silent or a high squeak, can’t cough or cry, turning blue.'], true)
       + xFix('Making it less likely', [['Sitting upright', 'Always, and always watched.'], ['Safe shapes', 'Soft and squashable, finger-size.'], ['No rushing', 'Seated for every bite, never on the move.']])
       + h2('If he’s choking') + steps([['hand', 'Back blows, 5 times', 'Face down along your forearm, head lower than his chest'], ['heart', 'Chest thrusts, 5 times', 'Face up, the heel of one hand mid-chest'], ['clock', 'Repeat', 'Until it comes out, or help arrives']], true)
@@ -3055,7 +3055,7 @@
       steps([['highchair', 'Sit him up', 'Strapped in, facing you'], ['meat', 'Offer iron first', 'A spoonful of mash, or a soft strip'], ['eye', 'Let him lead', 'Open mouth, more. Turns away, done'], ['clock', 'Build slowly', 'Once a day, then 2–3 meals by 8–9 months']], true)
       + h2('Ideas to try') + chips(['Meat', 'Beans or lentils', 'Iron-fortified oatmeal', 'Egg, well cooked', 'Avocado', 'Sweet potato'])
       + hubStageStrip({ title: 'Textures, as he grows', items: [['bowl', 'Around 6 months', 'Smooth and mashed'], ['avocado', '6–8 months', 'Soft, finger-size strips'], ['lentils', '9 months on', 'Soft, pea-size pieces']], cat: CAT })
-      + xNote('Gagging is normal', 'while he learns. It’s loud. Choking is silent.'));
+      + xNote('Gagging is normal', 'while he learns. It’s loud. Choking is quiet or weak.'));
   // From 9 months (the Meals stage), the same row opens what a meal looks like now. Not a sequence, so no numbers.
   const zMealMeals = () => yPage(XG, 'How a meal goes', 'Most family foods are fine for him now', 'You choose what and when. He chooses how much.',
       steps([['drop', 'Milk after meals', 'First thing in the morning, milk first is fine'], ['lentils', 'Soft, small pieces', 'Unsalted, with iron at each meal'], ['hand', 'He feeds himself', 'Fingers first, a spoon to practice']], false)
@@ -3125,7 +3125,7 @@
   // Nov 19 (Yarden: labels covered the picture). Each dot sits beside the thing it names, never on it, and its label runs
   // away from the baby into empty background (the design system's rule: close labels, no leader lines).
   // [label, x, y, side] in % of a 5:3 crop at focus fy; heroPhoto moves them into the shorter 2.2:1 frame.
-  const DISC_PINS = { 'fh-newborn': [0, ['Hands to mouth', 61, 68, 'l']], 'fh-milk': [0, ['Sets the pace', 43, 34, 'l']], 'fh-distracted': [0, ['Looks away', 57, 42, 'l']], newborn: [0.3, ['Mouth open', 34, 40, 'l'], ['Hands to mouth', 30, 56, 'b']], 'newborn-bottle': [0.3, ['Steady sucks', 80, 70, 'b']],
+  const DISC_PINS = { 'fh-newborn': [0, ['Hands to mouth', 61, 68, 'l']], 'fh-milk': [0, ['Sets the pace', 43, 34, 'l']], 'fh-distracted': [0, ['Looks away', 55, 20, 'l']], newborn: [0.3, ['Mouth open', 34, 40, 'l'], ['Hands to mouth', 30, 56, 'b']], 'newborn-bottle': [0.3, ['Steady sucks', 80, 70, 'b']],
     milk: [0.2, ['Sleepy and relaxed', 40, 30, 'l']], 'milk-bottle': [0.3, ['Lets go when full', 48, 28, 'l']],
     distracted: [0.2, ['Looks away', 67, 45, 'r']], 'distracted-bottle': [0.2, ['Looks away', 84, 54, 'b']],
     'ready-hero': [0.15, ['Eyes on food', 36, 32, 'l']], 'first-foods': [0.3, ['Tongue out', 39, 48, 'l']], meals: [0.6, ['Picks it up', 31, 56, 'l']],

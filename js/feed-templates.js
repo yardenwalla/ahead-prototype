@@ -89,12 +89,14 @@
       why: 'Going slowly means less air, and {s} {stop|stops} when {s’s} full.',
       hero: () => H().TPLB.photoPins('feeding/pace-photo', 'A parent holding a baby upright with the bottle about level', [['Bottle about level', 55, 44, 'l'], ['Baby upright', 77, 62, 'b']], 'is-pace'),
       pictureTitle: 'Positions', picture: () => H().TPLB.tiles([['heart', 'Cradled, sitting up', 'Head higher than {p} tummy'], ['sofa', 'Upright on your lap', 'Facing sideways, head well supported'], ['bottle', 'Side-lying', 'Along your arm. Slows the flow']], CAT),
-      steps: [['mouth', 'Let {o} draw it in', 'Touch the nipple to {p} lip'], ['clock', 'Pause after every few sucks', 'Tip it down, then let {o} start again'], ['hand', 'Burp every 2–3 oz', 'And switch arms halfway']],
-      stepsNotes: [['', 'Hold the bottle for every feed', 'Never prop it']],
+      // Nov 19: the same three steps and note as the walkthrough's Bottle step, word for word.
+      steps: [['mouth', 'Let {o} draw it in', 'Touch the nipple to {p} lip'], ['clock', 'Pause every few sucks', 'Tip it down, then let {o} start again'], ['eye', 'Stop when {s’s} done', 'Even if milk is left. Burp every 2–3 oz']],
+      stepsNotes: [['', 'Never prop a bottle', 'Always hold {o} and the bottle']],
       tipsTitle: 'Nipples and cleaning', tipsFold: true, tips: [['bottle', 'Start with the slowest flow', 'Go up when {s} {suck|sucks} hard and {get|gets} frustrated. Gulping or coughing means it’s too fast.'], ['eye', 'Wide or narrow?', 'Neither is better. Stick with the one {s} {take|takes} calmly.'], ['drop', 'Clean after every feed', mo() < 4 ? 'Hot, soapy water, and sanitize often in the first months.' : 'Hot, soapy water, or the dishwasher.']] }),
     formula: () => ({ type: 'howto', label: 'Bottles', art: 'bottle', title: 'Mix formula exactly as the label says',
       why: 'Extra water or powder changes what {s} {get|gets} from it.',
-      steps: [['photo:feeding/formula-1', 'Wash your hands', 'And use a clean bottle'], realMo() < 2 || early() ? ['photo:feeding/formula-2', 'Boiled water, cooled 5 minutes', 'Then the amount on the label'] : ['photo:feeding/formula-2', 'Water first', 'The amount on the label'], ['photo:feeding/formula-3', 'Level scoops', 'Then shake well'], ['photo:feeding/formula-4', 'Test it on your wrist', 'Warm or room temperature']],
+      // Nov 19 (review): the water and scoop photos show the measuring itself; the steps match the walkthrough's.
+      steps: [['photo:feeding/formula-1', 'Wash', 'Hands, counter and bottle'], ['photo:feeding/formula-water', 'Water first', realMo() < 2 || early() ? 'Boiled, cooled 5 minutes, to the line the label says' : 'To the line the label says'], ['photo:feeding/formula-scoop', 'Then level scoops', 'Flat, never heaped. Then shake'], ['photo:feeding/formula-4', 'Test on your wrist', 'Warm, never hot']],
       stepsNotes: [realMo() < 2 || early() ? ['', 'Why hot water?', 'It kills a rare germ in powder. It matters most under 2 months, or if born early'] : ['', 'Water', 'Clean tap or bottled water is fine. Boiled and cooled if {s} has a weak immune system'], ['', 'Which formula?', 'Any standard iron-fortified formula. Ask before a special one']],
       tipsTitle: 'Mixing with breast milk', tips: breast() ? [['drop', 'Make the formula with water first', 'Breast milk can’t replace the water.'], ['bottle', 'Then add breast milk', 'Or give the breast milk first, then top up with formula.']] : null }),
     pump: () => { const m = mo();
@@ -169,20 +171,24 @@
 
     // ---------- Solids ----------
     // Nov 19: the four signs sit in the top card as photo rows to tick (the same ticks as the Feeding stage page), and the advice under them follows the ticks.
-    z_ready: () => { const h = H(), n = h.signsSeen(), m = mo();
+    // Nov 19 (review): swallowing can only be seen once food is offered, so it moves to "In the first tastes".
+    // Three signs before starting, each tappable; the result counts those three.
+    z_ready: () => { const h = H(), m = mo(), n = [0, 1, 2].filter(i => h.signsOn(i)).length;
       return { type: 'expect', label: 'Is {s} ready?', art: 'highchair', title: 'Most babies start solids around 6 months',
-        why: 'All four signs usually show up around then. Milk is all {s} {need|needs} until they do.',
-        normalTitle: 'Signs {s’s} ready', normal: () => h.TPLB.photoRows(h.READY.map((r, i) => [['feeding/sign-head', 'feeding/sign-sits', 'feeding/sign-interest', 'feeding/sign-spoon'][i], r[3], ['Holds it up on {p} own', 'In a high chair, or on your lap', 'Opens up when food comes near', 'Doesn’t push food back out'][i]]), { title: 'Tap each one once you’ve seen it', isOn: h.signsOn, onclick: i => `hubToggleReady(${i})` }) + (n === 4 ? (m >= 6 ? h.TPLB.result('{S’s} ready to start!', 'All four signs, right on time.') : h.TPLB.result('All four signs!', 'Most babies still start around 6 months.', 'next')) : ''),
-        doTitle: n === 4 ? 'Next step' : 'What to do',
-        do: n === 4 && m < 6 ? 'Ask {p} pediatrician whether to start now or at 6 months.'
-          : n === 4 ? 'Pick a calm morning when {s’s} not too hungry, and offer a few soft tastes.'
-          : m < 6 ? 'Once you’ve seen all four, ask about starting solids at {p} 6-month checkup.'
-          : 'Not all four yet? Some babies take a few more weeks. Mention it at {p} next checkup.',
+        why: 'Three signs usually show up around then. Milk is all {s} {need|needs} until they do.',
+        normalTitle: 'Signs to look for first', normal: () => h.TPLB.photoRows([0, 1, 2].map(i => [['feeding/sign-head', 'feeding/sign-sits', 'feeding/sign-interest2'][i], h.READY[i][3], ['Holds it up on {p} own', 'In a high chair, or on your lap', 'Watches you eat, leans in'][i]]), { title: 'Tap each one once you’ve seen it', isOn: h.signsOn, onclick: i => `hubToggleReady(${i})` }) + (n === 3 ? (m >= 6 ? h.TPLB.result('{S’s} ready to start!', 'All three signs, right on time.') : h.TPLB.result('All three signs!', 'Most babies still start around 6 months.', 'next')) : ''),
+        moreTitle: 'In the first tastes', more: () => '<section class="ph-rowcard">' + h.TPLB.rows([['mouth', 'Swallows more than {s} {push|pushes} out', 'Pushing food out with the tongue is common at first. It fades with practice'], ['eye', 'Opens up as the spoon comes', 'And turns away when {s’s} had enough']], 'Feeding') + '</section>',
+        doTitle: n === 3 ? 'Next step' : 'What to do',
+        do: n === 3 && m < 6 ? 'Ask {p} pediatrician whether to start now or at 6 months.'
+          : n === 3 ? 'Pick a calm morning when {s’s} not too hungry, and offer a few soft tastes.'
+          : m < 6 ? 'Once you’ve seen all three, ask about starting solids at {p} 6-month checkup.'
+          : 'Not all three yet? Some babies take a few more weeks. Mention it at {p} next checkup.',
         doNotes: [['', 'Good to know', 'Starting early won’t help {o} sleep any longer']],
-        action: n === 4 && m >= 6 && answers.solids !== 'Yes' ? () => `<div class="hub-actions"><button class="hub-button" onclick="setFeedingStage('starting');hubToast('Got it','Feeding now shows first tastes.');openPage('topic:Feeding')">${H().F('We’re starting today')}</button></div>` : null }; },
+        action: n === 3 && m >= 6 && answers.solids !== 'Yes' ? () => `<div class="hub-actions"><button class="hub-button" onclick="setFeedingStage('starting');hubToast('Got it','Feeding now shows first tastes.');openPage('topic:Feeding')">${H().F('We’re starting today')}</button></div>` : null }; },
     z_start: () => ({ type: 'howto', label: 'How to start', art: 'bowl', title: 'Start with soft foods rich in iron',
       why: 'By spoon, as finger foods, or both. All are fine when it’s soft.',
-      pictureTitle: 'Iron-rich first foods', picture: () => H().TPLB.photoGridMore([['feeding/opt-egg', 'Egg', 'Well cooked'], ['feeding/iron-lentils', 'Beans or lentils', 'Mashed'], ['feeding/iron-oats', 'Oatmeal', 'Iron-fortified'], ['feeding/iron-meat', 'Meat', 'Finely ground, cooked soft'], ['feeding/opt-avocado', 'Avocado', 'Ripe and soft'], ['feeding/tx-sp-1', 'Sweet potato', 'Mashed']], 'See more foods'),
+      // Nov 19 (review): every food here is iron-rich (avocado and sweet potato live on Finger foods and Beyond purées).
+      pictureTitle: 'Iron-rich first foods', picture: () => H().TPLB.photoGridMore([['feeding/iron-meat', 'Meat', 'Finely ground, cooked soft'], ['feeding/iron-lentils', 'Lentils', 'Cooked soft, mashed'], ['feeding/iron-oats', 'Baby cereal', 'Iron-fortified'], ['feeding/opt-egg', 'Egg', 'Well cooked'], ['feeding/iron-beans', 'Beans', 'Mashed'], ['feeding/iron-tofu', 'Tofu', 'Soft strips']], 'See more foods'),
       stepsTitle: 'Three ways to start', stepsFig: () => H().TPLB.tiles([['bowl', 'Spoon-fed', 'Thicker and lumpier over time'], ['hand', 'Finger foods', 'Soft strips {s} {feed|feeds} {o}self'], ['plate', 'A mix', 'Iron-rich foods by spoon, plus soft strips']], CAT),
       tips: [['bowl', 'Soft enough to squash', 'Between your finger and thumb.'], ['highchair', 'Seated upright, with you', 'In a high chair with a harness, every time.'], ['plate', 'No added salt or sugar', 'Take {p} portion out before seasoning.']] }),
     z_meal: () => mo() >= 8.5
@@ -202,7 +208,7 @@
           [['Avocado', ['feeding/tx-avo-1', 'feeding/tx-avo-2', 'feeding/tx-avo-3']], ['Banana', ['feeding/tx-ban-1', 'feeding/tx-ban-2', 'feeding/tx-ban-3']], ['Sweet potato', ['feeding/tx-sp-1', 'feeding/tx-sp-2', 'feeding/tx-sp-3']]], now),
         // Nov 19 (fresh read vs the Safety steps): one section of short rows instead of two blocks of three-line tiles.
         doTitle: 'Moving up a texture', doFig: () => '<section class="ph-rowcard">' + T.rows([['bowl', 'Mash with a fork', 'Instead of blending'], ['clock', 'Move on once this one is easy', 'Usually after a week or two'], ['hand', 'Pieces should squish', 'Between your finger and thumb']], 'Feeding') + '</section>',
-        doNotes: [['', 'Why not wait', 'Babies still on smooth purées past about 9 months can find lumps harder later']] }; },
+        doNotes: [['', 'Go by skills, not the month', 'Move on once {s} {handle|handles} this texture easily. The ages are only examples'], ['', 'Why not wait', 'Babies still on smooth purées past about 9 months can find lumps harder later']] }; },
     z_rotate: () => ({ type: 'expect', label: 'Keeping foods in rotation', art: 'peanut', title: 'Once {s’s} had peanut or egg, keep it coming',
       why: 'A few times a week. Stopping can raise the chance of an allergy.',
       do: [['peanut', 'Peanut', 'Peanut powder or thinned peanut butter, in oatmeal or yogurt'], ['egg', 'Egg', 'A couple of times a week: scrambled, or in pancakes']],
@@ -211,7 +217,7 @@
     z_shapes: () => { const T = H().TPLB, nine = mo() >= 9;
       return { type: 'howto', label: 'Safe finger foods', art: 'hand', title: 'Finger foods should squish when pressed',
         why: 'Press it between your finger and thumb. If it squashes, {p} gums can manage it.',
-        heroTitle: 'The squish test', hero: () => `<section class="care-tpl-card ph-squish">${T.photoPins('feeding/squish', 'A finger pressing a soft steamed carrot flat', [['Press gently', 52, 52, 'r'], ['It should give way', 42, 66, 'b']], 'is-wide')}${T.photoPair([['feeding/ff-hard', false, 'Too hard', 'Raw carrot'], ['feeding/ff-spear', true, 'Soft enough', 'Steamed carrot']])}</section>`,
+        heroTitle: 'The squish test', hero: () => `<section class="care-tpl-card ph-squish">${T.photoPins('feeding/squish', 'A finger pressing a soft steamed carrot flat', [['Press gently', 52, 52, 'r'], ['It should give way', 42, 66, 'b']], 'is-wide')}</section>`,
         // Nov 19: like the inspiration, three blocks only: the squish test, what to try, and how to keep it safe (icons, not more photos).
         stepsTitle: 'A few foods to try', stepsFig: () => T.photoGridMore([['feeding/opt-avocado', 'Avocado', 'Ripe strips'], ['feeding/opt-banana', 'Banana', 'Strips, not rounds'], ['feeding/opt-egg', 'Egg', 'Omelet strips'], ['feeding/nutbutter', 'Toast', 'Nut butter spread thin'], ['feeding/opt-broccoli', 'Broccoli', 'Well cooked, stem to hold'], ['feeding/opt-pasta', 'Pasta', 'Soft, well cooked']], 'See more foods'),
         tips: [nine ? ['hand', 'Small, soft pieces', 'About pea-size, to pinch'] : ['hand', 'Finger-size strips', 'Easy to grip. Small pieces come later'], ['bowl', 'Quarter grapes, no whole nuts', 'Cherry tomatoes too'], ['highchair', 'Seated upright, with you', 'Every bite, never on the move']] }; },
@@ -223,8 +229,9 @@
     z_plan: () => ({ type: 'expect', label: 'Foods to wait on', art: 'plate', title: 'Honey waits until age 1, some foods until 4',
       why: 'A few foods aren’t safe for babies yet, even once solids are going well.',
       // Nov 19: photos, so a parent recognizes the food at a glance; a red cross marks each one.
+      // Nov 19 (review): what simply waits, apart from what's fine once it's served differently (with the grape shown both ways).
       normalTitle: 'Wait until age 1', normal: () => H().TPLB.photoGridMore([['feeding/no-honey', 'Honey', 'Risk of botulism'], ['feeding/no-milk', 'Cow’s milk to drink', 'Fine in cooking'], ['feeding/no-juice', 'Juice', 'Water and milk instead']], '', 'no'),
-      moreTitle: 'Choking risks until age 4', more: () => H().TPLB.noted(H().TPLB.photoGridMore([['feeding/no-grapes', 'Whole grapes', 'Quarter them lengthwise'], ['feeding/no-nuts', 'Whole nuts', 'Thin nut butter instead'], ['feeding/no-hotdog', 'Hot dog rounds', 'Cut into thin strips'], ['feeding/no-popcorn', 'Popcorn', 'Wait until 4'], ['feeding/ff-hard', 'Hard raw veg', 'Cook until soft']], 'See more', 'no'), [['', 'Thick nut butter too', 'Spread it thin, never in a lump']]) }),
+      moreTitle: 'Serve these differently until age 4', more: () => H().TPLB.photoPins('feeding/grape', 'A whole grape beside one cut into quarters lengthwise', [['Whole: choking risk', 27, 64, 'b'], ['Quartered: fine', 70, 64, 'b']]) + '<section class="ph-rowcard">' + H().TPLB.rows([['bowl', 'Grapes and cherry tomatoes', 'Quarter them lengthwise'], ['plate', 'Hot dogs and sausages', 'Thin strips, never rounds'], ['peanut', 'Nuts and nut butter', 'No whole nuts. Spread nut butter thin'], ['hand', 'Hard raw fruit and veg', 'Cook or grate until soft']], 'Feeding') + '</section>', moreNotes: [['', 'Popcorn waits until 4', 'There’s no safe way to serve it']] }),
     z_milkfood: () => ({ type: 'expect', label: 'Milk and solids', art: 'cup', title: 'No set order for milk and meals',
       why: 'A meal fits in wherever {s’s} awake and happy.',
       do: [['bottle', 'Milk before or after', 'Whatever works for {o}'], ['cup', 'Water from a cup', 'Open or straw. Hold it for {o}, and let {o} try']],
@@ -263,9 +270,11 @@
       calls: { ped: 'a few hives, vomiting, or a rash that spreads.', now: 'trouble breathing, swollen lips or face, or {s’s} very sleepy or floppy.', nowLabel: 'Call 911' } }),
     // Nov 19: the two photo cards in the top card; what to do side by side; the first-aid steps in order, the video right after them, the call card last.
     z_gag: () => { const T = H().TPLB;
-      return { type: 'urgent', label: 'Gagging or choking', art: 'mouth', title: 'Gagging is normal. Choking is silent.',
-        why: 'Gagging is how {s} {learn|learns} to eat. It’s loud, and it’s safe.',
-        figure: () => T.photoVersus(['feeding/gag', 'Normal gagging', 'Loud and red-faced. Let {o} work it out.'], ['feeding/choke', 'Choking: act now', 'Silent, can’t breathe. Start the steps below.']),
+      // Nov 19 (review): no photo of choking (a baby clutching the neck isn't how babies show it), and no "silent":
+      // a choking baby may make no sound, or only a weak cough or high-pitched noise (MedlinePlus, Nationwide Children's).
+      return { type: 'urgent', label: 'Gagging or choking', art: 'mouth', title: 'Gagging is normal. Choking isn’t.',
+        why: 'Gagging is how {s} {learn|learns} to eat. Loud coughing means air is getting through.',
+        tellTitle: 'How to tell them apart', figure: () => T.versus(['Gagging: stay close', 'Loud coughing or gagging, red face, watery eyes. Let {o} work it out.'], ['Choking: act now', 'Can’t cry or cough, or only a weak cough or high-pitched sound. Lips may turn blue.']),
         doTitle: 'If {s’s} choking', doFig: () => T.numbered([['Call 911', 'Or have someone call while you start'], ['5 back blows', 'Face down on your forearm, jaw supported. Firm, between the shoulder blades'], ['5 chest thrusts', 'Face up, heel of one hand mid-chest'], ['Repeat', 'Until it’s out, or help arrives']], 'stop'),
         doNotes: [['', 'Never sweep {p} mouth with a finger', 'It can push food further in']],
         video: ['ShaNuST_58A', 'Choking first aid for babies under 1', 'American Red Cross'],

@@ -187,7 +187,7 @@
   // Solids
   card('first-bite', 'Feeding', 3, s => (s.d >= 150 && s.d <= 200 && s.solids !== 'started') || (s.solidsDays != null && s.solidsDays <= 45 && s.solidsTold != null && s.solidsTold <= 28 && opened(s, 'solids-1')),
     s => s.solidsDays == null ? 'Before the first bite: gagging vs choking' : 'Gagging vs choking: how to tell',
-    'Gagging is loud, red-faced and normal: it’s how {he} {learns|learn}. Choking is silent. A short infant first aid video before you start helps.', { must: 1, topic: 'food', go: "openPage('chg:Feeding:d:setup')" });
+    'Gagging is loud, red-faced and normal: it’s how {he} {learns|learn}. Choking is quiet or weak, and needs you now. A short infant first aid video before you start helps.', { must: 1, topic: 'food', go: "openPage('chg:Feeding:d:setup')" });
   card('solids-maybe', 'Feeding', 3, s => s.d >= 176 && s.d <= 240 && s.solids !== 'started', 'Starting solids? Lead with iron', 'Iron runs low around 6 months, so meat, beans, lentils or iron-fortified oatmeal make the best first foods.',
     Object.assign({ must: 1, topic: 'food', go: "openPage('chg:Feeding:d:food')" }, ask([['Started already', "home2Solids(true)"], ['Not yet', "home2Solids(false)"]])));
   card('solids-2', 'Feeding', 2, s => s.solidsDays != null && s.solidsDays >= 0 && s.solidsDays <= 120, 'Offer peanut and egg early', 'Giving common allergens early, then keeping them in {his} week, lowers the chance of a food allergy. Severe eczema? Ask your pediatrician first.', { fromAnswer: 1, must: 1, go: "openPage('chg:Feeding:d:allergens')" });
