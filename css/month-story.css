@@ -1383,3 +1383,20 @@
 #main .tl-track:not(.tl-knob) .tl-baby .tl-hb{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 2px 3px rgba(43,40,64,.18))}
 #main .tl-track:not(.tl-knob) .tl-flag{right:-44px!important;bottom:-34px!important}
 #main .tl-track:not(.tl-knob) .tl-ticks{margin-right:0!important}
+/* Two-frame moving parts (newborn story): frame 2 replaces frame 1, then back */
+.st-frames{position:relative}
+.st-frames > img{display:block;width:100%;height:auto}
+.st-frames > .st-f2{position:absolute;left:0;top:0;opacity:0}
+.is-on .st-grip2 .st-obj{animation:none!important}
+.is-on .st-grip2 .st-f1{animation:stF1 3.4s 1s ease-in-out infinite}
+.is-on .st-grip2 .st-f2{animation:stGripIn 3.4s 1s ease-in-out infinite}
+@keyframes stF1{0%,8%{opacity:1}22%,78%{opacity:0}92%,100%{opacity:1}}
+@keyframes stGripIn{0%,8%{opacity:0;transform:translateX(10%)}22%{opacity:1;transform:none}30%{transform:scale(1.03)}38%,78%{opacity:1;transform:none}92%,100%{opacity:0}}
+.st-headlift > .st-frames{width:auto!important;height:min(24vh,190px);aspect-ratio:var(--ar,1.2);margin:0 auto}
+.st-headlift > .st-frames > img{height:100%;width:auto;margin:0 auto}
+.is-on .st-headlift .st-obj{animation:stEyeIn .6s .5s cubic-bezier(.25,1.3,.4,1) forwards}
+.st-headlift .st-obj{opacity:0;transform:translateY(24px)}
+.is-on .st-headlift .st-f1{animation:stF1 3.6s 1.2s ease-in-out infinite}
+.is-on .st-headlift .st-f2{animation:stHeadUp 3.6s 1.2s ease-in-out infinite}
+@keyframes stHeadUp{0%,8%{opacity:0}24%,76%{opacity:1}92%,100%{opacity:0}}
+.st-headlift > .st-frames{--ar:1}
