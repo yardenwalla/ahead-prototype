@@ -295,19 +295,6 @@
         hero.dataset.sswView = view; // tabs are added by ensureTabs, after every other script has drawn
       }
     }
-    // Four guide destinations under Sleep at a glance (Yarden's list): night sleep, naps, bedtime routine, safe sleep.
-    const glance = main.querySelector('.sl-glance, .hub-glance');
-    if (hero && glance && !main.querySelector('.ssw-guides')) {
-      const mo = m(), st = stageNow();
-      const night = mo < 3 ? 'chg:Sleep:d:stretch' : mo < 8 ? 'chg:Sleep:d:wakes' : 'chg:Sleep:d:nightwake';
-      const naps = st === 2 ? 'chg:Sleep:d:day:2' : st === 3 ? 'chg:Sleep:d:day:3' : mo < 3 ? 'chg:Sleep:d:napsearly' : 'chg:Sleep:d:predictable';
-      const G = [['moon', 'Night sleep', mo < 3 ? 'The longest stretch' : 'When {s} {wake|wakes}', night], ['sun', 'Naps', st >= 2 ? 'An example day' : 'How naps work now', naps], ['book', 'Bedtime routine', 'Four calm steps', 'chg:Sleep:d:routine'], ['crib', 'Safe sleep', 'The quick crib check', 'chg:Sleep:safe']];
-      glance.insertAdjacentHTML('afterend', `<h2 class="hub-h2">${F('Sleep guides')}</h2><div class="ssw-guides">${G.map(([ic, t, sub, to]) => `<button onclick="${go(to)}"><span class="ssw-gi">${H().art(ic, 'Sleep')}</span><b>${F(t)}</b><small>${F(sub)}</small></button>`).join('')}</div>`);
-      const ev = glance.querySelector('.sl-every'); if (ev) ev.remove();
-      // A "Right now" row that opens the same page as a guide tile isn't repeated.
-      const routes = G.map(g => g[3]);
-      main.querySelectorAll('.hub-list .hub-row[onclick]').forEach(r => { const o = r.getAttribute('onclick') || ''; if (routes.some(x => o.includes(`'${x}'`)) && !r.closest('.hub-rough')) { const list = r.parentElement; r.remove(); if (list && !list.querySelector('.hub-row')) { const hd = list.previousElementSibling; if (hd && /^H2$/.test(hd.tagName)) hd.remove(); list.remove(); } } });
-    }
     // Rough day: short naps and night waking open their own pages.
     const rough = main.querySelector('.hub-rough');
     if (once(rough, 'r')) {
