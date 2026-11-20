@@ -241,8 +241,9 @@
 #main .fd-hero.fd-one { min-height: 0 !important; overflow: hidden }
 /* Nov 19 (Yarden: "the main card looks funny"): the photo sits inside the card like Development's, all corners round,
    and Try this is a plain line under it, no strip or border. */
-#main .fd-hero.fd-one .ph-photo { margin: 12px 0 0; border-radius: 16px; box-shadow: 0 6px 16px #754b5b1a; aspect-ratio: 2.2 / 1 }
-#main .fd-hero.fd-one .ph-photo.is-wide { aspect-ratio: 2.2 / 1 }
+#main .fd-hero.fd-one .ph-photo { margin: 12px 0 0; border-radius: 18px; box-shadow: 0 6px 18px #754b5b22; aspect-ratio: 1.6 / 1 }
+#main .fd-hero.fd-one .ph-photo.is-wide { aspect-ratio: 1.6 / 1 }
+#main .fd-hero.fd-one .ph-photo.is-wide img { height: 100%; object-fit: cover }
 #main .fd-photo .fd-lines { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none }
 #main .fd-photo .fd-lines line { stroke: #fff; stroke-width: 1.5; vector-effect: non-scaling-stroke; opacity: .9 }
 #main .fd-photo .fd-dot2 { position: absolute; width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 3px #ffffff59, 0 1px 3px #0003 }
