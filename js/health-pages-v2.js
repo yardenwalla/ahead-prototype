@@ -42,12 +42,15 @@
     9: { lead: 'A short questionnaire about development, plus growth and teeth.', steps: [MEASURE, ['star', 'blue', 'A development questionnaire', 'You answer questions about how {s} {talk|talks}, {move|moves} and {play|plays}'], ['bowl', 'yellow', 'Feeding and teeth', 'Textures, finger foods and brushing'], ['ear', 'peach', 'Hearing and vision', 'Anything you’ve noticed at home']] },
     12: { lead: 'New shots, a quick blood test and a talk about milk.', steps: [MEASURE, ['wave', 'blue', 'Talk about new skills', 'Gestures, first words and first steps'], ['cup', 'yellow', 'Milk and cups', 'Moving off bottles, and how much milk'], ['drop', 'peach', 'A quick blood test', 'A finger or heel prick for anemia, and lead where it’s routine']], before: 'Bring a snack and a cup. It’s a longer visit.', shotsLast: true }
   };
+  // Shots are the last step of every visit (Nov 19 review), not a footnote.
+  const SHOTS_STEP = { 0: 'Hepatitis B, only if {s} didn’t get it in the hospital', 1: 'Maybe one: hepatitis B, if it’s not left for 2 months', 2: 'Usually last. The first big round', 4: 'Usually last. Second doses of the same ones', 6: 'Usually last. Third doses, plus flu in season', 9: 'Often none, unless one was missed', 12: 'Usually last. New ones, plus boosters' };
+  Object.keys(VISIT).forEach(a => VISIT[a].steps.push(['shield', 'blue', 'Shots', SHOTS_STEP[a]]));
   const PHOTO_ALT = { 0: 'A pediatrician checking a newborn on a baby scale', 1: 'A pediatrician listening to a baby’s chest', 2: 'A baby on the exam table lifting her head, the pediatrician smiling back', 4: 'A baby reaching for a rattle the pediatrician holds', 6: 'A smiling baby sitting on the exam table beside the pediatrician', 9: 'A dad filling in a questionnaire with his baby on his lap', 12: 'A toddler standing at a bench as the pediatrician holds out her hands' };
   function expectPage(age) {
     const hv = window.__hv, V = VISIT[age];
     const jaundice = age === 0 ? h2('Yellow skin at home') + pair(['Common', 'A little yellow on the face in the first week, feeding well.'], ['Time to call', 'Yellow on the belly, legs or eyes, poor feeding, or very sleepy.']) : '';
     return page(top(hv.label(age), 'What to expect', V.lead)
-      + h2('The visit, step by step') + steps(V.steps, (V.shotsLast ? 'Shots usually come last. ' : '') + 'Some offices do things in a different order.')
+      + h2('The visit, step by step') + steps(V.steps, 'Some offices do things in a different order.')
       + jaundice
       + (V.before ? `<section class="h2-before">${ic('notepad', 'yellow')}<div><b>${F('Before you go')}</b><p>${F(V.before)}</p></div></section>` : ''));
   }
@@ -93,17 +96,20 @@
     const nurse = profile.feed === 'Breast milk' && profile.feedHow === 'Nursing', bottle = profile.feed === 'Formula';
     const tip = nurse ? 'Hold {o} on your lap and nurse during or right after. It soothes.' : bottle ? 'Hold {o} on your lap, and offer a bottle right after. It soothes.' : 'Hold {o} on your lap, and offer a feed during or right after. It soothes.';
     const doses = xs => xs.map(([n, d]) => [n, d + (WHAT[n] ? '. ' + WHAT[n] : '')]);
-    const atVisit = `<section class="hub-card h2-rows">`
+    // Three groups (Nov 19 review): what's due at this visit, what depends on the season, and what comes later.
+    const atVisit = h2('Due at this visit') + `<section class="hub-card h2-rows">`
       + openRow('shield', 'blue', age === 9 ? 'Catch-up shots' : v.shots.length === 1 ? 'One shot, maybe' : 'Routine shots', age === 9 ? 'Only if one was missed' : listNames(v.shots) + (age === 12 ? '. Usually given as separate shots' : ''), doses(v.shots))
       + (v.oral ? openRow('drop', 'green', 'Drops by mouth', 'Rotavirus. No needle', doses(v.oral)) : '')
-      + openRow('snow', 'peach', 'Seasonal protection', listNames(s) + '. Your pediatrician says which are due', s.map(([n, d]) => [n, d]))
-      + `</section>`;
+      + `</section>`
+      + h2('Depends on the season') + `<section class="hub-card h2-rows">`
+      + s.map(([n, d]) => `<div class="h2-row">${ic(n === 'Flu' ? 'snow' : n === 'COVID-19' ? 'shield' : 'drop', n === 'Flu' ? 'blue' : n === 'COVID-19' ? 'green' : 'peach')}<span><b>${F(n)}</b><small>${F(d)}</small></span></div>`).join('')
+      + `</section>` + (hv.LATER(age) ? `<p class="h2-small">${F(hv.LATER(age))}</p>` : '');
     const callLine = age <= 2 ? 'A fever of 100.4°F or more, 3 hours of crying, or swelling that grows.' : `A fever of ${feverTemp(age)} or more, 3 hours of crying, or swelling that grows.`;
     const after = h2('After the shots') + pair(['Common for a day or two', 'A little fussy or sleepy, a low fever, or a sore, red spot where the shot went in.' + (age === 12 ? ' After MMR and chickenpox, a fever or rash 1–2 weeks later is common too.' : '')], ['Time to call', callLine]);
     // Leads that already explain the shots (0, 1, 9) keep the page's small picture; visits with several shots show how to hold the baby.
     const photo = [2, 4, 6, 12].includes(age);
     return page(top(hv.label(age), 'Vaccines', v.lead, photo ? 'shots.jpg' : '', 'A mom holding her baby close on her lap at the pediatrician’s office', photo ? tip : '')
-      + h2('At the visit') + atVisit + after
+      + atVisit + after
       + `<p class="h2-small">${F('Based on the schedule pediatricians recommend. Your pediatrician confirms what’s due from {p} record.')}</p>`);
   }
 
@@ -126,14 +132,14 @@
     const item = ([k, q, mine], i) => {
       const a = said[k] || '', open = window.__h2open === String(k);
       return `<details class="h2-q${asked[k] ? ' is-on' : ''}"${open ? ' open' : ''}><summary><button class="h2-q-tick" aria-label="${asked[k] ? 'Mark as not asked' : 'Mark as asked'}" onclick="h2Toggle(${age},${typeof k === 'number' ? k : `'${k}'`},event)">${CHECK}</button><span>${q}</span>${CHEV}</summary>`
-        + `<div class="h2-q-body">${a ? `<p class="h2-said"><small>${F('Your pediatrician said')}</small>${e(a)}</p>` : ''}<form onsubmit="h2Answer(${age},${typeof k === 'number' ? k : `'${k}'`},event)"><textarea rows="2" maxlength="1000" placeholder="${F('What did your pediatrician say?')}" aria-label="What your pediatrician said">${e(a)}</textarea><div><button class="h2-save">${a ? 'Update' : 'Save'}</button>${mine ? `<button type="button" class="h2-remove" onclick="removeJourneyQuestion(${age},${String(k).slice(1)})">Remove question</button>` : ''}</div></form></div></details>`;
+        + `<div class="h2-q-body${a ? '' : ' is-editing'}">${a ? `<div class="h2-said"><small>${F('Your pediatrician said')}</small>${e(a)}<button type="button" class="h2-edit" onclick="this.closest('.h2-q-body').classList.add('is-editing')">Edit</button></div>` : ''}<form onsubmit="h2Answer(${age},${typeof k === 'number' ? k : `'${k}'`},event)"><textarea rows="2" maxlength="1000" placeholder="${F('What did your pediatrician say?')}" aria-label="What your pediatrician said">${e(a)}</textarea><div><button class="h2-save">${a ? 'Update' : 'Save'}</button>${mine ? `<button type="button" class="h2-remove" onclick="removeJourneyQuestion(${age},${String(k).slice(1)})">Remove question</button>` : ''}</div></form></div></details>`;
     };
     const notes = visitNotesFor(age);
     window.__h2open = null;
     return page(top(hv.label(age), 'Questions and notes', 'Tick each one off as you ask, and keep the answer with it.', '', '')
       + bar + `<div class="h2-qs">${all.map(item).join('')}</div>`
       + `<details class="h2-add"><summary>＋ ${F('Add a question')}</summary><form class="hub-q-add" onsubmit="submitJourneyQuestion(event,${age})"><input id="visitQuestion" maxlength="500" required placeholder="${F('Anything on your mind about {o}')}" aria-label="Add a question"><button>Add</button></form></details>`
-      + `<section class="h2-after" id="visit-notes">${ic('notepad', 'green')}<b class="h2-after-t">${F('After the visit')}</b><form onsubmit="submitVisitNotes(event,${age})"><textarea id="appointmentNotes" maxlength="6000" rows="5" placeholder="${F('What you learned, and next steps')}" aria-label="Notes from the visit">${e(notes)}</textarea><button class="h2-save">${notes ? 'Update notes' : 'Save notes'}</button></form></section>`);
+      + `<section class="h2-after" id="visit-notes">${ic('notepad', 'green')}<b class="h2-after-t">${F('Follow-ups and next steps')}</b><form onsubmit="submitVisitNotes(event,${age})"><textarea id="appointmentNotes" maxlength="6000" rows="3" placeholder="${F('A recheck, a referral, something to watch')}" aria-label="Notes from the visit">${e(notes)}</textarea><button class="h2-save">${notes ? 'Update notes' : 'Save notes'}</button></form></section>`);
   }
 
   const baseJD = window.healthJourneyDetail;
@@ -142,6 +148,10 @@
       if (part === 'expect') return expectPage(age);
       if (part === 'vaccines') return vaccinePage(age);
       if (part === 'questions' || part === 'notes') return questionsPage(age);
+      if (part === 'help') return page(top('Between checkups', 'When to get help', 'From most urgent to least. When you’re not sure, call: your pediatrician’s office has someone day or night.')
+        + sos()
+        + alert('Call your pediatrician now', feverRule(actualMonth()) + ' Also for a lost skill, trouble feeding, or a baby who seems unusually unwell.')
+        + `<section class="h2-before">${ic('notepad', 'green')}<div><b>${F('Bring it to the checkup')}</b><p>${F('Questions about growth, everyday patterns or decisions coming up.')}</p></div></section>`);
     }
     return baseJD(age, part);
   };
@@ -166,9 +176,9 @@
     const temp = feverTemp(mo), c = { '100.4°F': '38°C', '101°F': '38.3°C', '103°F': '39.4°C' }[temp];
     const title = u3 ? 'A fever at this age needs a call' : 'Most fevers mean the body is fighting a bug';
     const lead = u3 ? 'Even if {s} seems well otherwise, a fever under 3 months needs to be checked.' : 'How {s} {seem|seems} matters more than the number. Here’s when to call.';
-    const big = `<section class="h2-big"><div><b>${temp.replace('°F', '')}<span>°F</span></b><small>${c} or higher</small></div><p>${F(u3 ? 'Call your pediatrician right away, day or night.' : mo < 6 ? 'Call your pediatrician, day or night. Call too if a fever lasts more than a day.' : 'Call your pediatrician. Call too if any fever lasts more than a day.')}</p></section>`
-      + `<p class="h2-small">${F('Also call if {s} seems very unwell or unusually sleepy.' + feverEarlyNote())}</p>`;
-    const check = h2('Take {p} temperature') + `<section class="hub-card h2-thermo"><img src="assets/health/thermometer.jpg" alt="A digital thermometer on a folded cloth"><div><b>${F('Use a digital thermometer')}</b><p>${F(u3 ? 'Rectal is the most accurate. At this age, check any high reading rectally. Armpit and forehead are less accurate.' : mo < 6 ? 'Rectal is most accurate, and forehead works well too. Armpit is less accurate.' : 'Rectal is most accurate, and forehead or ear work well too. Armpit is less accurate.')}</p></div></section>`
+    const big = `<section class="h2-big"><div class="h2-big-top"><div><b>${temp.replace('°F', '')}<span>°F</span></b><small>${c} or higher</small></div><p>${F(u3 ? 'Call your pediatrician right away, day or night.' : mo < 6 ? 'Call your pediatrician, day or night. Call too if a fever lasts more than a day.' : 'Call your pediatrician. Call too if any fever lasts more than a day.')}</p></div><p class="h2-big-any"><b>${F('At any temperature')}</b>${F(', call if {s} seems very unwell or unusually sleepy, has a rash, or has fewer wet diapers.' + feverEarlyNote())}</p></section>`
+
+    const check = h2('Take {p} temperature') + `<section class="hub-card h2-thermo">${ic('thermo', 'blue')}<div><b>${F('Use a digital thermometer')}</b><p>${F(u3 ? 'Rectal is the most accurate. At this age, check any high reading rectally. Armpit and forehead are less accurate.' : mo < 6 ? 'Rectal is most accurate, and forehead works well too. Armpit is less accurate.' : 'Rectal is most accurate, and forehead or ear work well too. Armpit is less accurate.')}</p></div></section>`
       + rows([['thermo', 'blue', 'How to take a rectal temperature', 'Four quick steps', "openPage('chg:Health:d:sick-rectal')"]]);
     const help = h2('What helps') + rows([['bottle', 'yellow', 'Offer extra feeds', 'Little and often keeps {o} hydrated'], ['shirt', 'green', 'Dress {o} lightly', 'Extra layers keep a fever up'], ['moon', 'pink', 'Let {o} rest', 'Naps and quiet time']])
       + alert('Before any medicine', u3 ? 'Under 3 months, ask your pediatrician first.' : mo < 6 ? 'Acetaminophen can help. Ask your pediatrician for the dose.' : 'Acetaminophen or ibuprofen can help. Ask your pediatrician for the dose.', 'blue');
@@ -176,19 +186,21 @@
   }
   function coldPage() {
     const mo = m();
-    const seq = `<section class="hub-card h2-seq">${[['cold-saline.jpg', 'Saline drops', 'A few in each nostril'], ['cold-bulb.jpg', 'Gentle suction', 'With a bulb or aspirator'], ['cold-feed.jpg', 'Then feed', 'Breathing is easier now']].map(([src, t, d], i) => `${i ? '<span class="h2-arrow" aria-hidden="true">›</span>' : ''}<figure><img src="assets/health/${src}" alt=""><figcaption><b>${F(t)}</b><small>${F(d)}</small></figcaption></figure>`).join('')}</section>`;
+    const seq = `<section class="hub-card h2-seq">${[['cold-saline.jpg', 'Saline drops', '2 in each nostril, then wait a minute'], ['cold-bulb.jpg', 'Gentle suction', 'Squeeze the bulb first, then just the tip in'], ['cold-feed.jpg', 'Then feed', 'Right away, while it’s clear']].map(([src, t, d], i) => `${i ? '<span class="h2-arrow" aria-hidden="true">›</span>' : ''}<figure><img src="assets/health/${src}" alt=""><figcaption><b>${F(t)}</b><small>${F(d)}</small></figcaption></figure>`).join('')}</section>`;
     return page(top('When Maya seems sick', 'Clear {p} nose before a feed', 'Babies breathe through the nose to feed. Several colds in the first year are common, and most clear in 7–10 days.')
       + h2('Before feeds and sleep') + seq
+      + `<p class="h2-small">${F('Up to 3 times a day, so {p} nose doesn’t get sore. Not after a feed: it can bring the milk up.')}</p>`
       + h2('Also helps') + rows([['snow', 'blue', 'A cool-mist humidifier', 'In {p} room at night'], ['bottle', 'yellow', 'Smaller, more frequent feeds', 'Easier with a stuffy nose'], ['shield', 'pink', 'Skip cold medicines', 'They aren’t safe for babies. No honey before 1']])
       + alert('When to call', `A fever of ${feverTemp(mo)} or more, a cold past 10 days, or signs of an ear infection: fussing lying down, a new fever, or fluid from the ear.`)
       + sos());
   }
   function tummyPage() {
-    return page(top('When Maya seems sick', 'Keep {p} feeds going', 'Usually a tummy bug that passes in a day or two. Small, frequent feeds keep {o} hydrated.')
-      + `<section class="h2-watch">${ic('diaper', 'green')}<div><b>${F('Watch wet diapers')}</b><p>${F('Far fewer than usual, or none in 6 hours, can be a sign of dehydration.')}</p></div></section>`
+    // Nov 19 review: check how sick the baby is before any reassurance, so the warning signs come first.
+    return page(top('When Maya seems sick', 'Keep {p} feeds going', 'First, check for the signs below. Most tummy bugs then pass in a day or two.')
       + h2('What to look for') + pair(['Common', 'A few loose poops or vomits, still feeding and waking as usual.'], ['Time to call', 'Can’t keep feeds down, fewer wet diapers, a dry mouth or blood in poop.'])
-      + h2('What helps') + rows([['bottle', 'yellow', 'Keep offering milk', 'Smaller feeds, more often'], ['hand', 'green', 'Wash hands after changes', 'Tummy bugs spread easily'], ['steth', 'pink', 'Ask before any medicine', 'Including anti-diarrhea medicine']])
       + alert('Go to the ER', 'Green or bloody vomit.', 'peach')
+      + `<section class="h2-watch">${ic('diaper', 'green')}<div><b>${F('Watch wet diapers')}</b><p>${F('Far fewer than usual, or none in 6 hours, can be a sign of dehydration.')}</p></div></section>`
+      + h2('What helps') + rows([['bottle', 'yellow', 'Keep offering milk', 'Smaller feeds, more often'], ['hand', 'green', 'Wash hands after changes', 'Tummy bugs spread easily'], ['steth', 'pink', 'Ask before any medicine', 'Including anti-diarrhea medicine']])
       + sos());
   }
   const baseRoute = window.changesRoute;
@@ -199,6 +211,9 @@
         if (a === 'sick') return sickHub();
         if (a === 'sick-fever' || a === 'sick-temp' || a === 'sick-care') return feverPage();
         if (a === 'cold') return coldPage();
+        if (a === 'sick-rectal') return page(top('A fever', 'Take a rectal temperature', 'The most accurate reading for babies. It’s quick, and safe done gently.')
+          + h2('Step by step') + steps([['hand', 'green', 'Get it ready', 'Wash the tip with soap and water, then add a little petroleum jelly'], ['moon', 'blue', 'Position {o}', 'On {p} back, knees bent toward {p} chest, or belly-down across your lap'], ['thermo', 'yellow', 'Slide it in gently', 'About ½ to 1 inch. Stop if you feel resistance'], ['heart', 'pink', 'Hold until it beeps', 'Steady it between two fingers, your hand cupping {p} bottom']])
+          + alert('Keep it just for this', 'Wash it after each use, and label it so it’s never used in a mouth.', 'blue'));
         if (a === 'sick-tummy') return tummyPage();
       }
     }

@@ -76,11 +76,16 @@
     12: { lead: 'Mostly new vaccines this time, plus two boosters. Some may wait until 15 months.', shots: [['MMR', '1st dose'], ['Chickenpox', '1st dose'], ['Hepatitis A', '1st dose'], ['Hib', 'Booster'], ['Pneumococcal', 'Booster']] }
   };
   // REVIEW: RSV, flu and COVID-19 timing.
+  // Seasonal protection, by what a baby can get at this age (AAP 2026–27): RSV is an antibody shot, not a vaccine,
+  // for babies under 8 months in their first RSV season unless the mother had the RSV vaccine at least 14 days before
+  // birth; a second-season dose only for some higher-risk babies 8–19 months. Flu every fall from 6 months.
+  // COVID-19 recommended for all babies 6–23 months. Under 6 months, flu and COVID-19 are "coming later".
   const SEASON = age => [
-    ...(age <= 6 ? [['RSV', 'For the first RSV season (October to March), if you didn’t get the vaccine in pregnancy']] : []),
-    ['Flu', age < 6 ? 'From 6 months, every fall' : 'Every fall. The first time takes 2 doses, 4 weeks apart'],
-    ['COVID-19', age < 6 ? 'From 6 months, if your pediatrician recommends it' : 'If your pediatrician recommends it']
+    age < 8 ? ['RSV antibody', 'One shot before {p} first RSV season (October to March), unless you had the RSV vaccine in pregnancy at least 2 weeks before birth']
+      : ['RSV antibody', 'A second-season dose, only for some babies at higher risk'],
+    ...(age >= 6 ? [['Flu', 'Every fall. The first time takes 2 doses, 4 weeks apart'], ['COVID-19', 'Recommended for all babies 6 to 23 months. Ask how many doses']] : [])
   ];
+  const LATER = age => age < 6 ? 'Flu and COVID-19 shots start at 6 months.' : '';
   // Each vaccine on one line: its name and dose, with what it protects against right underneath.
   const doses = xs => `<ul class="hv-doses">${xs.map(([n, d]) => WHAT[n] ? `<li class="hv-dose-more"><details><summary><b>${n}</b><span>${d}</span><i class="hv-plus" aria-hidden="true">＋</i></summary><em>${WHAT[n]}</em></details></li>` : `<li><b>${n}</b><span>${d}</span></li>`).join('')}</ul>`;
   function vaccinePage(age) {
@@ -112,7 +117,7 @@
   window.healthJourneyQuestions = healthJourneyQuestions = age => (QUESTIONS[age] || []).map(F);
 
   // Shared with js/health-pages-v2.js (Nov 19 redesign of the checkup pages).
-  window.__hv = { EXPECT, VISIT, VAX, SEASON, WHAT, label, T, P };
+  window.__hv = { EXPECT, VISIT, VAX, SEASON, LATER, WHAT, label, T, P };
   const base = window.healthJourneyDetail;
   window.healthJourneyDetail = healthJourneyDetail = function (age, part) {
     if (!EXPECT[age]) return base(age, part);

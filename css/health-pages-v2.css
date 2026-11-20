@@ -65,7 +65,7 @@
 #main .h2-before b,#main .h2-watch b{display:block;font-size:15px;color:var(--h2-ink)}
 #main .h2-before p,#main .h2-watch p{margin:2px 0 0;font-size:13.5px;line-height:1.45;color:var(--h2-sub)}
 /* Fever: the number, big */
-#main .h2-big{display:flex;gap:16px;align-items:center;border-radius:20px;padding:16px 18px;margin:0 0 10px;background:#fff6e2;border:1px solid #f3e2b9}
+#main .h2-big{display:block;border-radius:20px;padding:16px 18px;margin:0 0 10px;background:#fff6e2;border:1px solid #f3e2b9}
 #main .h2-big>div{flex:none}
 #main .h2-big b{display:block;font-size:40px;line-height:1;font-weight:800;color:#8a5a12;letter-spacing:-.02em}
 #main .h2-big b span{font-size:22px;font-weight:700}
@@ -140,3 +140,13 @@
 #main .h2-node small{font-size:10.5px;line-height:1.25;color:var(--h2-sub,#6a6f80);min-height:13px}
 #main .h2-node.is-next small{color:#356651;font-weight:700}
 #main .hub-page:has(.h2-track) .st-banner{display:none}
+#main .h2-big-top{display:flex;gap:16px;align-items:center}
+#main .h2-big-any{margin:12px 0 0!important;padding-top:11px;border-top:1px solid #f0dfb6;font-size:13.5px!important;line-height:1.45;color:#4a3a17}
+#main .h2-big-any b{font-weight:700}
+#main .h2-thermo{align-items:flex-start}
+#main .h2-q-body form{display:none}
+#main .h2-q-body.is-editing form{display:block}
+#main .h2-q-body.is-editing .h2-said{display:none}
+#main .h2-said{position:relative;padding-right:56px}
+#main .h2-edit{all:unset;cursor:pointer;position:absolute;right:10px;top:9px;font-size:13px;font-weight:600;color:#356651}
+#main .h2-big .h2-big-any b{display:inline;font-size:inherit;line-height:inherit;color:inherit;letter-spacing:0;font-weight:700}
