@@ -1302,11 +1302,12 @@
 /* Month baby pictures (story cover) */
 .st-coverart .ms-babyimg{top:0;display:flex;align-items:flex-end;justify-content:center}
 .st-coverart .ms-babyimg img{max-width:100%;max-height:100%;object-fit:contain;display:block;filter:drop-shadow(0 6px 8px rgba(43,40,64,.16))}
-/* Timeline handle: the month's baby sits on top of the bar at today's spot */
-#main .tl-track .tl-bar{margin-top:42px!important}
-#main .tl-track .tl-baby{width:52px!important;height:50px!important;margin-left:-26px!important;bottom:-44px!important}
-#main .tl-track .tl-baby img{object-position:50% 100%;filter:drop-shadow(0 2px 2px rgba(43,40,64,.16))}
-#main .tl-track .tl-flag{bottom:-42px!important}
+/* Timeline handle: the month's baby stands on the line at today's spot, with a soft shadow on the bar */
+#main .tl-track .tl-bar{margin-top:34px!important}
+#main .tl-track .tl-baby{width:52px!important;height:50px!important;margin-left:-26px!important;bottom:-40px!important}
+#main .tl-track .tl-baby img{position:relative;z-index:1;object-position:50% 100%;filter:drop-shadow(0 1px 1px rgba(43,40,64,.12))}
+#main .tl-track .tl-baby::after{content:'';position:absolute;left:14%;right:14%;bottom:-3px;height:8px;border-radius:50%;background:rgba(43,40,64,.16);filter:blur(1.5px)}
+#main .tl-track .tl-flag{bottom:-34px!important}
 /* Soft illustrated look for story objects (matches the month babies). Animations unchanged. */
 .st-splats i{background:radial-gradient(circle at 34% 30%,color-mix(in srgb,var(--c) 45%,#fff) 0 18%,var(--c) 55%,color-mix(in srgb,var(--c) 80%,#6b3b2a) 100%);box-shadow:0 6px 10px rgba(43,40,64,.12),inset -3px -5px 8px rgba(80,40,30,.10)}
 .st-faces span{background:radial-gradient(circle at 38% 32%,color-mix(in srgb,var(--c) 55%,#fff) 0 22%,var(--c) 62%,color-mix(in srgb,var(--c) 85%,#8a4b33) 100%);box-shadow:0 8px 12px rgba(43,40,64,.14),inset -4px -6px 10px rgba(120,60,40,.10)}
@@ -1322,3 +1323,23 @@
 .st-spoonpic .st-sp{position:absolute;left:56%;top:-14%;height:92%;transform:rotate(24deg);transform-origin:50% 100%;filter:drop-shadow(0 4px 6px rgba(43,40,64,.14))}
 .is-on .st-spoonpic .st-sp{animation:stDipPic 1.4s 1.3s ease-in-out infinite}
 @keyframes stDipPic{50%{transform:translateY(16px) rotate(24deg)}}
+/* Painted story objects */
+.st-picw{display:block;position:relative}
+.st-picw > img{display:block;width:100%;height:auto;max-height:100%;object-fit:contain;-webkit-user-drag:none}
+.st-picw .st-bob{transform-origin:50% 92%}
+.st-handobj.is-flip > img{transform:scaleX(-1)}
+.st-blocks{aspect-ratio:240/230}
+.st-blocks > img{position:absolute;width:42%;height:auto}
+.st-blocks .st-bka{left:6%;bottom:0}.st-blocks .st-bkb{right:6%;bottom:0}.st-blocks .st-bkc{left:29%;bottom:40%}
+.st-cakepic .st-flame{position:absolute;left:50%;top:-7%;width:6%;aspect-ratio:.62;margin-left:-4.5%;border-radius:50% 50% 50% 50% / 62% 62% 38% 38%;background:radial-gradient(circle at 50% 70%,#fff4c4 0 30%,#ffd98a 55%,#f4a65a 100%);box-shadow:0 0 10px 3px rgba(255,217,138,.55);transform-origin:50% 100%}
+/* Painted objects: match the old drawings' size inside their spots */
+.st-picw > img{margin:0 auto}
+.st-p-bunny > img{width:62%}.st-p-rings > img{width:64%}.st-p-ball > img{width:78%}.st-p-hand > img{width:52%}
+.st-p-teether > img{width:80%}.st-p-moon > img{width:80%}.st-p-bottle > img{width:50%}.st-p-bowl > img{width:76%}
+.st-p-cup > img{width:76%}.st-cakepic > img{width:70%}
+.st-lull-b > img{width:58%!important;margin-left:12%}
+.st-pose{width:auto!important}
+.st-pose > img.st-obj{width:auto!important;height:min(24vh,190px)!important;margin:0 auto}
+.st-spoonpic{width:min(40vw,160px)!important}
+#main .tl-flag .st-cakepic > img{width:100%}
+#main .tl-flag .st-cakepic .st-flame{display:none}

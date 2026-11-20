@@ -24,61 +24,22 @@
   function svg(vb, defs, body, cls) { return '<svg class="' + (cls || 'st-obj') + '" viewBox="' + vb + '" aria-hidden="true"><defs>' + defs + '</defs>' + body + '</svg>'; }
   var shadow = function (cx, cy, rx) { return '<ellipse cx="' + cx + '" cy="' + cy + '" rx="' + rx + '" ry="' + (rx * .16) + '" fill="#2B2840" opacity=".12"/>'; };
 
-  function bunny() {
-    var w = blob('#fff3e6', '#ffffff', '#ecd6c3'), p = blob('#f6c2cf', '#fbdbe3', '#e9a2b5');
-    return svg('0 0 200 200', w.def + p.def,
-      '<g class="st-bob"><ellipse cx="72" cy="58" rx="20" ry="52" transform="rotate(-14 72 58)" fill="' + w.url + '"/><ellipse cx="73" cy="62" rx="8" ry="34" transform="rotate(-14 73 62)" fill="' + p.url + '"/>' +
-      '<ellipse cx="128" cy="58" rx="20" ry="52" transform="rotate(14 128 58)" fill="' + w.url + '"/><ellipse cx="127" cy="62" rx="8" ry="34" transform="rotate(14 127 62)" fill="' + p.url + '"/>' +
-      '<ellipse cx="100" cy="140" rx="62" ry="56" fill="' + w.url + '"/>' +
-      '<circle cx="80" cy="134" r="5" fill="#2B2840"/><circle cx="120" cy="134" r="5" fill="#2B2840"/><path d="M95 150l10 8M105 150l-10 8" stroke="#2B2840" stroke-width="3.5" stroke-linecap="round"/>' +
-      '<ellipse cx="70" cy="152" rx="9" ry="5" fill="#f6c2cf" opacity=".7"/><ellipse cx="130" cy="152" rx="9" ry="5" fill="#f6c2cf" opacity=".7"/></g>');
-  }
-  function rings() {
-    var c = blob('#e98a6b', '#f6b39a', '#c96a4e'), l = blob('#b9a6e6', '#d9cdf5', '#9682c9'), y = blob('#ffd98a', '#fff0c4', '#e9b85a'), b = blob('#f3a587', '#fbd0bf', '#da7f61'), pole = blob('#fff3e6', '#fff', '#e8d4c0');
-    return svg('0 0 200 220', c.def + l.def + y.def + b.def + pole.def,
-      shadow(100, 206, 74) +
-      '<rect x="92" y="40" width="16" height="150" rx="8" fill="' + pole.url + '"/>' +
-      '<g class="st-stack" style="--i:0"><ellipse cx="100" cy="182" rx="70" ry="24" fill="' + c.url + '"/></g>' +
-      '<g class="st-stack" style="--i:1"><ellipse cx="100" cy="148" rx="56" ry="20" fill="' + l.url + '"/></g>' +
-      '<g class="st-stack" style="--i:2"><ellipse cx="100" cy="118" rx="44" ry="17" fill="' + y.url + '"/></g>' +
-      '<g class="st-stack" style="--i:3"><circle cx="100" cy="80" r="26" fill="' + b.url + '"/></g>');
-  }
-  function hand(flip) {
-    var sk = blob('#f3b48f', '#fbd3bb', '#de946d'), cuff = blob('#fff3e6', '#ffffff', '#e8d6c4');
-    var g = '<g' + (flip ? ' transform="translate(200 0) scale(-1 1)"' : '') + '>' +
-      '<rect x="62" y="96" width="22" height="58" rx="11" transform="rotate(-22 73 125)" fill="' + sk.url + '"/>' + // thumb
-      '<rect x="80" y="40" width="20" height="80" rx="10" transform="rotate(-8 90 80)" fill="' + sk.url + '"/>' +
-      '<rect x="100" y="30" width="20" height="88" rx="10" fill="' + sk.url + '"/>' +
-      '<rect x="120" y="36" width="20" height="84" rx="10" transform="rotate(7 130 78)" fill="' + sk.url + '"/>' +
-      '<rect x="138" y="52" width="18" height="70" rx="9" transform="rotate(16 147 87)" fill="' + sk.url + '"/>' +
-      '<rect x="74" y="92" width="84" height="88" rx="40" fill="' + sk.url + '"/>' +
-      '<rect x="66" y="166" width="100" height="60" rx="22" fill="' + cuff.url + '"/>' +
-      '<path d="M84 176v40M100 176v40M116 176v40M132 176v40M148 176v40" stroke="#e6d3c0" stroke-width="5" stroke-linecap="round"/></g>';
-    return svg('0 0 200 230', sk.def + cuff.def, g, 'st-obj st-handobj');
-  }
-  function teether() {
-    var wood = blob('#e9c9a2', '#f6e3c9', '#cfa77a'), bead = blob('#b9a6e6', '#ddd2f7', '#8f7bc4');
-    var beads = ''; [[150, 62], [172, 92], [168, 128], [144, 152]].forEach(function (b, i) { beads += '<circle class="st-bead" style="--i:' + i + '" cx="' + b[0] + '" cy="' + b[1] + '" r="22" fill="' + bead.url + '"/>'; });
-    return svg('0 0 220 210', wood.def + bead.def,
-      shadow(110, 196, 80) + '<circle cx="104" cy="112" r="64" fill="none" stroke="' + wood.url + '" stroke-width="30"/>' + beads);
-  }
-  function moon() {
-    var m = blob('#ffe08f', '#fff4cc', '#e9bf5b');
-    return svg('0 0 120 120', m.def, '<path d="M78 14a46 46 0 1 0 28 72A38 38 0 1 1 78 14Z" fill="' + m.url + '"/>', 'st-obj st-moon');
-  }
-  function ball() {
-    var a = blob('#7fae95', '#a9d0bb', '#5b8c73'), y = blob('#ffe08f', '#fff4cc', '#e9bf5b');
-    return svg('0 0 160 160', a.def + y.def, '<clipPath id="bc"><circle cx="80" cy="80" r="62"/></clipPath>' +
-      '<g class="st-ball"><circle cx="80" cy="80" r="62" fill="' + a.url + '"/><path clip-path="url(#bc)" d="M18 30 Q70 60 60 150 L-10 150 Z" fill="' + y.url + '"/></g>');
-  }
-  function bottle() {
-    var milk = blob('#fffaf0', '#ffffff', '#ead9c4'), cap = blob('#b9a6e6', '#ddd2f7', '#8f7bc4'), tip = blob('#f3c9a6', '#fbe3cf', '#dca47c');
-    return svg('0 0 140 230', milk.def + cap.def + tip.def,
-      shadow(70, 220, 46) + '<path d="M58 22q12-24 24 0v26H58Z" fill="' + tip.url + '"/>' +
-      '<rect x="34" y="44" width="72" height="34" rx="14" fill="' + cap.url + '"/>' +
-      '<rect x="28" y="72" width="84" height="142" rx="34" fill="' + milk.url + '"/>' +
-      '<path d="M44 120h20M44 146h28M44 172h20" stroke="#cdbba6" stroke-width="5" stroke-linecap="round"/>', 'st-obj st-bottle');
-  }
+  // Soft painted story objects (same style as the month babies). Wrappers keep the old animation hooks.
+  function pic(n, wrap, img) { return '<picture class="st-obj st-picw st-p-' + n + (wrap ? ' ' + wrap : '') + '"><img class="' + (img || '') + '" src="assets/stories/' + n + '.webp" alt="" draggable="false"></picture>'; }
+  function bunny() { return pic('bunny', '', 'st-bob'); }
+
+  function rings() { return pic('rings', '', 'st-stack'); }
+
+  function hand(flip) { return pic('hand', 'st-handobj' + (flip ? ' is-flip' : '')); }
+
+  function teether() { return pic('teether'); }
+
+  function moon() { return pic('moon', 'st-moon'); }
+
+  function ball() { return pic('ball', '', 'st-ball'); }
+
+  function bottle() { return pic('bottle', 'st-bottle'); }
+
   function cloud(fill, cls) { return '<svg class="' + (cls || 'st-cloud') + '" viewBox="0 0 400 120" preserveAspectRatio="none" aria-hidden="true"><path d="M0 120V70q40-50 100-30 30-40 90-20 50-40 110 0 60-20 100 30v70Z" fill="' + fill + '"/></svg>'; }
   function burst(color) { return '<svg class="st-burst" viewBox="0 0 40 40" aria-hidden="true"><g stroke="' + color + '" stroke-width="4.5" stroke-linecap="round"><path d="M8 26l-6 3M14 14L9 7M26 10l2-8"/></g></svg>'; }
 
@@ -165,27 +126,12 @@
   }
 
   /* ---------- More soft toys for the other months ---------- */
-  function bowl() {
-    var b = blob('#f6c2cf', '#fbdbe3', '#df9cb0'), sp = blob('#ffd98a', '#fff1c8', '#e3b259'), food = blob('#ffe7a6', '#fff6d8', '#efc96d');
-    return svg('0 0 220 200', b.def + sp.def + food.def, shadow(110, 186, 82) +
-      '<rect x="128" y="10" width="18" height="96" rx="9" transform="rotate(24 137 58)" fill="' + sp.url + '"/>' +
-      '<ellipse cx="110" cy="104" rx="84" ry="22" fill="' + food.url + '"/>' +
-      '<path d="M26 104h168q0 76-84 76T26 104Z" fill="' + b.url + '"/>');
-  }
-  function cup() {
-    var c = blob('#b9a6e6', '#ddd2f7', '#8f7bc4'), lid = blob('#fff3e6', '#ffffff', '#e8d6c4'), sp = blob('#ffd98a', '#fff1c8', '#e3b259');
-    return svg('0 0 220 230', c.def + lid.def + sp.def, shadow(110, 216, 62) +
-      '<path d="M96 20q14-14 28 0l6 26H90Z" fill="' + sp.url + '"/>' +
-      '<rect x="56" y="42" width="108" height="34" rx="16" fill="' + lid.url + '"/>' +
-      '<rect x="62" y="70" width="96" height="140" rx="30" fill="' + c.url + '"/>' +
-      '<path d="M62 104q-38 4-38 36t38 34" fill="none" stroke="' + lid.url + '" stroke-width="16" stroke-linecap="round"/>' +
-      '<path d="M158 104q38 4 38 36t-38 34" fill="none" stroke="' + lid.url + '" stroke-width="16" stroke-linecap="round"/>');
-  }
-  function blocks() {
-    var a = blob('#e98a6b', '#f6b39a', '#c96a4e'), b = blob('#7fae95', '#a9d0bb', '#5b8c73'), c = blob('#ffd98a', '#fff0c4', '#e9b85a');
-    var face = function (x, y, s, f, t, col) { return '<g class="st-stack" style="--i:' + t + '"><rect x="' + x + '" y="' + y + '" width="' + s + '" height="' + s + '" rx="18" fill="' + f + '"/><text x="' + (x + s / 2) + '" y="' + (y + s * .68) + '" text-anchor="middle" font-family="Nunito,sans-serif" font-weight="900" font-size="' + (s * .52) + '" fill="' + col + '">' + ['A', 'B', 'C'][t] + '</text></g>'; };
-    return svg('0 0 240 230', a.def + b.def + c.def, shadow(120, 220, 100) + face(24, 120, 96, a.url, 0, '#fffaf3') + face(122, 120, 96, b.url, 1, '#fffaf3') + face(72, 24, 96, c.url, 2, '#c4502f'));
-  }
+  function bowl() { return pic('bowl'); }
+
+  function cup() { return pic('cup'); }
+
+  function blocks() { return '<picture class="st-obj st-picw st-blocks"><img class="st-stack st-bka" style="--i:0" src="assets/stories/block-a.webp" alt=""><img class="st-stack st-bkb" style="--i:1" src="assets/stories/block-b.webp" alt=""><img class="st-stack st-bkc" style="--i:2" src="assets/stories/block-c.webp" alt=""></picture>'; }
+
   var OBJ = { bunny: bunny, rings: rings, teether: teether, bottle: bottle, ball: ball, bowl: bowl, cup: cup, blocks: blocks };
 
   /* ---------- Visuals that act out each screen ---------- */
@@ -198,11 +144,11 @@
     voice: function (words) { return '<div class="st-vis st-voice">' + words.map(function (w, i) { return '<span style="--i:' + i + ';--x:' + [8, 52, 24, 64, 4][i % 5] + '%;--r:' + [-8, 6, -3, 9, -6][i % 5] + 'deg">' + E(w) + '</span>'; }).join('') + '</div>'; },
     // Something rising up from below: a head lifting, a baby pulling up.
     // Coming-up screens show the month card's clay baby in that pose, so they don't repeat the bunny.
-    pose4: function () { return '<div class="st-vis st-pose">' + babyArt(4) + '</div>'; },
-    pose7: function () { return '<div class="st-vis st-pose">' + babyArt(7) + '</div>'; },
-    pose10: function () { return '<div class="st-vis st-pose">' + babyArt(10) + '</div>'; },
+    pose4: function () { return '<div class="st-vis st-pose"><img class="st-obj" src="assets/home/babies/baby-3.webp" alt=""></div>'; },
+    pose7: function () { return '<div class="st-vis st-pose"><img class="st-obj" src="assets/home/babies/baby-7.webp" alt=""></div>'; },
+    pose10: function () { return '<div class="st-vis st-pose"><img class="st-obj" src="assets/home/babies/baby-10.webp" alt=""></div>'; },
     // Newborn screens
-    lull: function () { return '<div class="st-vis st-lull"><span class="st-lull-b">' + babyArt(0) + '</span><i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i></div>'; },
+    lull: function () { return '<div class="st-vis st-lull"><span class="st-lull-b"><img class="st-obj" src="assets/home/babies/baby-0.webp" alt=""></span><i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i></div>'; },
     clock: function () { var d = ''; for (var i = 0; i < 10; i++) { var a = (i / 10) * Math.PI * 2 - Math.PI / 2; d += '<circle class="st-ck" style="--i:' + i + '" cx="' + (100 + Math.cos(a) * 70).toFixed(1) + '" cy="' + (100 + Math.sin(a) * 70).toFixed(1) + '" r="9" fill="#e98a6b"/>'; }
       var c = blob('#fffaf3', '#ffffff', '#e8dccd'); return '<div class="st-vis st-clock">' + svg('0 0 200 200', c.def, shadow(100, 190, 60) + '<circle cx="100" cy="100" r="86" fill="' + c.url + '"/>' + d + '<path d="M100 100 V58 M100 100 L128 112" stroke="#2B2840" stroke-width="7" stroke-linecap="round"/><circle cx="100" cy="100" r="7" fill="#2B2840"/>') + '</div>'; },
     grip: function () { var sk = blob('#f5c3a0', '#fde3cf', '#de9d79'), pa = blob('#e9b48f', '#f7d3b6', '#c98d68');
@@ -274,8 +220,7 @@
     wave: function () { return '<div class="st-vis st-wavehand">' + hand(false) + '</div>'; },
     spoon: function () { return '<div class="st-vis st-spoonwrap st-spoonpic"><img class="st-sp" src="assets/stories/spoon.webp" alt=""><img class="st-bw" src="assets/stories/bowl.webp" alt=""></div>'; },
     tilt: function () { return '<div class="st-vis st-tiltcup">' + cup() + '</div>'; },
-    cake: function () { var c = blob('#f6c2cf', '#fbdbe3', '#df9cb0'), f = blob('#fffaf3', '#ffffff', '#ead9c4');
-      return '<div class="st-vis st-cake">' + svg('0 0 200 200', c.def + f.def, shadow(100, 188, 80) + '<rect x="30" y="100" width="140" height="80" rx="22" fill="' + c.url + '"/><path d="M30 118q20 16 35 0t35 0 35 0 35 0v-6q0-12-22-12H52q-22 0-22 12Z" fill="' + f.url + '"/><rect x="94" y="52" width="12" height="44" rx="6" fill="#b9a6e6"/><path class="st-flame" d="M100 22q14 16 0 28q-14-12 0-28Z" fill="#ffd98a"/>') + '</div>'; },
+    cake: function () { return '<div class="st-vis st-cake"><picture class="st-obj st-picw st-cakepic"><img src="assets/stories/cake.webp" alt="" draggable="false"><i class="st-flame"></i></picture></div>'; },
     halfring: function () { return '<svg class="st-halfring" viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,250,243,.18)" stroke-width="12"/><circle class="st-hr-fill" cx="60" cy="60" r="50" fill="none" stroke="#ffd98a" stroke-width="12" stroke-linecap="round" pathLength="100" transform="rotate(-90 60 60)"/></svg>'; },
     distance: function () { return '<div class="st-vis st-dist"><span class="st-d1">' + bunny() + '</span><i class="st-dline"></i><span class="st-d2"><i></i><i></i><b></b></span></div>'; },
     raspberry: function () { return '<div class="st-vis st-rasp"><b>pbbbt!</b><i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i><i style="--i:3"></i><i style="--i:4"></i></div>'; },
@@ -283,8 +228,7 @@
     roll: function () { return '<div class="st-rollwrap">' + ball() + burst('#fffaf3') + '</div>'; },
     smile: function () { var w = blob('#fff3e6', '#ffffff', '#ecd6c3'); return '<div class="st-vis st-smile">' + svg('0 0 200 200', w.def, '<circle cx="100" cy="104" r="84" fill="' + w.url + '"/><circle cx="72" cy="92" r="7" fill="#2B2840"/><circle cx="128" cy="92" r="7" fill="#2B2840"/><ellipse cx="58" cy="120" rx="13" ry="8" fill="#f6c2cf"/><ellipse cx="142" cy="120" rx="13" ry="8" fill="#f6c2cf"/><path class="st-smilepath" d="M70 128 Q100 128 130 128" fill="none" stroke="#2B2840" stroke-width="7" stroke-linecap="round"/>') + '</div>'; }
   };
-  function blocksPair() { var a = blob('#e98a6b', '#f6b39a', '#c96a4e'), b = blob('#7fae95', '#a9d0bb', '#5b8c73');
-    return '<span class="st-bl">' + svg('0 0 100 100', a.def, '<rect x="4" y="4" width="92" height="92" rx="18" fill="' + a.url + '"/><text x="50" y="68" text-anchor="middle" font-family="Nunito,sans-serif" font-weight="900" font-size="50" fill="#fffaf3">A</text>') + '</span><span class="st-br">' + svg('0 0 100 100', b.def, '<rect x="4" y="4" width="92" height="92" rx="18" fill="' + b.url + '"/><text x="50" y="68" text-anchor="middle" font-family="Nunito,sans-serif" font-weight="900" font-size="50" fill="#fffaf3">B</text>') + '</span>'; }
+  function blocksPair() { return '<span class="st-bl">' + pic('block-a') + '</span><span class="st-br">' + pic('block-b') + '</span>'; }
   // Each "coming up next" gets its own little scene.
   var NEXT = {
     babble: ['Ba-ba-ba!', 'Babbling strings of sounds is on the way. Answer her and she’ll babble right back.', 'babbling', 'babble'],
