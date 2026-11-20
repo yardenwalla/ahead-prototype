@@ -156,22 +156,18 @@
 
   function journey(id) {
     const h = H(), m = typeof actualMonth === 'function' ? actualMonth() : 0, fd = feedNow(), bm = fd !== 'Formula', fm = fd !== 'Breast milk';
-    if (id === 'plan') return sub('plan', 'Finding care', 'Plan your care', 'Work back from the day you need care. Most families start looking sooner than they expect.',
-      packCard('Before you look', 'Two things to settle first', [['clock', 'Know the days and hours you need', 'Count early starts and late pickups too.'], ['coin', 'Set a monthly budget', 'Count any help from work or your state.']])
-      + tl('Your countdown', [
-        ['As soon as you can', 'notepad', 'Join a few daycare waitlists. Infant spots are the hardest to find.'],
-        ['3 months before', 'home', 'Visit home daycares, or meet nannies.'],
-        ['6–8 weeks before', 'shield', 'Call references, make your choice and sign up.'],
-        ['2 weeks before', 'heart', 'Get ready for day one.']],
-        'As soon as you can, join daycare waitlists. Three months before, visit home daycares or meet nannies. Six to eight weeks before, decide and sign up. Two weeks before, get ready for day one.')
-      + picSteps('When things don’t go to plan', [
-        ['chat', 'Short on time?', 'Your local child care referral agency is free and knows who has openings.'],
-        ['moon', 'Hours outside 9 to 5', 'Ask centers about early drop-off and late pickup. Home daycares and nannies often stretch further.'],
-        ['smile', 'Nothing feels right', 'Keep looking. Family or a sitter can fill the gap.']],
-        'Short on time: a referral agency knows who has openings. Odd hours: ask home daycares and nannies. Nothing right yet: family or a sitter can fill the gap.')
-      + good([typeof profile !== 'undefined' && profile.early ? ['steth', 'Born early?', 'Ask your pediatrician when, and what kind of care, makes sense for {o}.'] : null, ['eye', 'Waitlists move', 'Check in every month or so. Spots open up.'], ['blocks', 'A mix is common', 'Family two days and daycare three is a plan too.']])
-      + `<div class="hub-list cc-plan-row">` + homeRow('fit', 'blocks', 'Compare your options', 'Hours, group size, sick days and cost', 'compare') + `</div>`
-      + `<button class="hub-button is-secondary cc-add" onclick="openPage('chg:${CAT}:d:fit')">${F('Take the quiz: Which care fits us?')} ›</button>`, 'notepad');
+    // Round 9 (Yarden's inspiration): two things to settle, a numbered path with the first step highlighted, the rest
+    // tucked away, one tip, and one button on to the options.
+    if (id === 'plan') return sub('plan', 'Finding care', 'Plan your care', 'A simple path to finding the right fit.',
+      `<section class="cc-two"><h2>${F('Start with two things')}</h2><div>${[['clock', 'Your schedule', 'Days and hours you need'], ['coin', 'Your budget', 'What works each month']].map(([i, t, d]) => `<div><span>${hubArt(i, CAT)}</span><b>${F(t)}</b><small>${F(d)}</small></div>`).join('')}</div></section>`
+      + `<h2 class="hub-h2">${F('Your path to care')}</h2><p class="cc-h2sub">${F('Suggested timing. It varies by kind of care and where you live.')}</p>`
+      + `<ol class="cc-route">${[['Start early', 'Join a few daycare waitlists.', 'Infant spots fill first.'], ['About 3 months before', 'Visit home daycares, or meet nannies.'], ['6–8 weeks before', 'Check references, and choose.'], ['2 weeks before', 'Get ready for day one.']].map(([t, d, x], i) => `<li class="${i ? '' : 'is-first'}"><i>${i + 1}</i><div><b>${F(t)}</b><span>${F(d)}</span>${x ? `<small>${F(x)}</small>` : ''}</div></li>`).join('')}</ol>`
+      + `<details class="hub-card cc-more"><summary><span>${hubArt('chat', CAT)}</span><div><b>${F('If plans change')}</b><small>${F('Short on time, odd hours, or nothing fits yet')}</small></div></summary>`
+      + `<ul>${[['Short on time?', 'Your local child care referral agency is free and knows who has openings.'], ['Hours outside 9 to 5', 'Home daycares and nannies often stretch further than centers.'], ['Nothing feels right', 'Keep looking. Family or a sitter can fill the gap, and a mix is common.']].map(([t, d]) => `<li><b>${F(t)}</b><small>${F(d)}</small></li>`).join('')}</ul></details>`
+      + (typeof profile !== 'undefined' && profile.early ? h.tip('Born early?', 'Ask your pediatrician when, and what kind of care, makes sense for {o}.') : '')
+      + `<p class="cc-worth-tip">${hubArt('idea', CAT)}<span><b>${F('Worth knowing:')}</b> ${F('Waitlists move. Checking in every month can help.')}</span></p>`
+      + `<button class="hub-button cc-next2" onclick="openPage('chg:${CAT}:d:compare')">${F('Compare care options')} →</button>`
+      + `<button class="hub-link cc-quizlink" onclick="openPage('chg:${CAT}:d:fit')">${F('Not sure? Take the quick quiz')}</button>`, 'notepad');
 
     if (id === 'pay') return sub('pay', 'Finding care', 'Paying for care', 'Care is one of a family’s biggest monthly costs. There are more ways to pay less than most parents know.',
       picSteps('Ways to pay less', [
@@ -336,7 +332,7 @@
   };
   window.ccStarted = () => { save('ahead-childcare-started', true); save('ahead-childcare-stage', 2); openPage(`chg:${CAT}:d:start`); };
   // The journey as one path: four steps, the current one picked out, so the home never has to list everything.
-  const journeyStrip = () => { const now = stepNow(); return `<nav class="cc-path" aria-label="Your childcare plan">${STEPS.map(([id, label, hint], i) => `<button class="cc-path-step${id === now ? ' is-now' : ''}" onclick="openPage('chg:${CAT}:d:${id}')"${id === now ? ' aria-current="step"' : ''}>${id === now ? `<em>${F('You’re here')}</em>` : ''}<i>${i + 1}</i><b>${F(label)}</b><small>${F(hint)}</small></button>`).join('')}</nav>`; };
+  const journeyStrip = () => { const now = stepNow(); return `<nav class="cc-route" aria-label="Your childcare plan">${STEPS.map(([id, label, hint], i) => `<button class="cc-route-step${id === now ? ' is-now' : ''}" onclick="openPage('chg:${CAT}:d:${id}')"${id === now ? ' aria-current="step"' : ''}>${id === now ? `<em>${F('You’re here')}</em>` : ''}<i>${i + 1}</i><b>${F(label)}</b><small>${F(hint)}</small></button>`).join('')}</nav>`; };
 
   /* ---------- Which care fits us? Three taps, then the types worth looking at first ---------- */
   const FIT_Q = [
@@ -438,7 +434,8 @@
     // Nov 19, round 4: on Finding care the top card *is* the options: headline, then the four kinds of care as photo
     // tiles and the side-by-side compare, so the page opens on one designed card instead of art plus a tip.
     // Round 5 (Yarden: the inspiration does it better): a light top card with its picture, then the options below it.
-    let b = `<header class="hub-hero cc-hero ${view === 0 ? 'cc-hero-lite' : 'cc-disc'}"><p class="hub-eyebrow">${F(S.eyebrow)}</p><h1>${F(S.t)}</h1><p class="hub-lead">${F(S.lead)}</p><div class="cc-art" aria-hidden="true">${CC_ART[view]}</div>${view === 0 ? '' : `<div class="cc-worth"><small>${F(S.worth[0])}</small><b>${F(S.worth[1])}</b><span>${F(S.worth[2])}</span></div>`}</header>`;
+    // Round 9 (Yarden): a real photo for each stage, with the headline under it.
+    let b = `<header class="hub-hero cc-hero cc-stage-hero"><img class="cc-stage-photo" src="assets/childcare/stage${view}.jpg" alt="" loading="lazy"><div class="cc-stage-copy"><p class="hub-eyebrow">${F(S.eyebrow)}</p><h1>${F(S.t)}</h1><p class="hub-lead">${F(S.lead)}</p></div>${view === 0 ? '' : `<div class="cc-worth"><small>${F(S.worth[0])}</small><b>${F(S.worth[1])}</b><span>${F(S.worth[2])}</span></div>`}</header>`;
     if (view === 0) {
       // Nov 19: the signature visual. Four kinds of regular care side by side, facts not scores; a chip highlights a row
       // and ticks the cell that's strongest on it, but nothing picks a winner for the family (design guide).
@@ -527,7 +524,7 @@
     else body += `<div class="cc-quick">${g.items.map(x => `<div class="cc-quick-row"><span>${hubArt(iconFor(x.q), CAT)}</span><div><b>${x.own ? esc3(x.q) : F(x.q)}</b>${x.a ? `<small>${F(x.a)}</small>` : ''}</div></div>`).join('')}</div>`;
     const nx = groups[cur + 1], noun = t.who === 'place' ? 'place' : 'person';
     const nav = nx ? `<button class="hub-button cc-next2" onclick="ccStep('${k}',${cur + 1});scrollTo(0,0)">${F('Next: ' + (MERGED_T[nx.name] || nx.name))} →</button>`
-      : !PLAN_T[k] ? '' : `<button class="hub-button cc-next2" onclick="openPage('chg:${CAT}:d:cand-${k}-new')">＋ ${F(t.talk ? 'Add who’s helping' : `Add a ${noun} to your shortlist`)}</button>`;
+      : '';
     const where = cur === 0 && FIND[k] && !t.summary ? `<p class="cc-find">${hubArt('eye', CAT)}<span>${F(FIND[k])}</span></p>` : '';
     return `<section class="cc-steps">${tabs}${where}${head}${body}${nav}</section>`;
   }
@@ -562,7 +559,7 @@
       + (k === 'center' && typeof profile !== 'undefined' && profile.early ? h.tip('Born early?', 'Ask your pediatrician when group care makes sense for {o}.') : '')
       + rows('What to know', S.know)
       + `<div class="hub-list cc-plan-row">` + homeRow('plan', t.talk ? 'chat' : 'notepad', S.plan[0], S.plan[1], S.to || 'hire-' + k) + `</div>`
-      + (mine.length ? h.list(t.talk ? 'Who’s helping' : 'Your shortlist', shortRows) + (mine.some(c => c.chosen) ? rows('', [['bag', 'Get ready for day one', 'Easing in, and what to send', go('ready')]]) : '') : '')
+      + (t.talk ? '' : h.list('Your shortlist', shortRows.concat(h.row({ icon: 'notepad', cat: CAT, title: F(`Add a ${t.who === 'place' ? 'place' : 'person'} you’re considering`), sub: F(mine.length ? 'Tick off each step as you go' : 'Keep notes and tick off each step'), onclick: `openPage('chg:${CAT}:d:cand-${k}-new')` }))) + (mine.some(c => c.chosen) ? rows('', [['bag', 'Get ready for day one', 'Easing in, and what to send', go('ready')]]) : ''))
       + (others ? `<h2 class="hub-h2">${F('Explore other options')}</h2><div class="cc-minis">${others}</div>` : ''), t.icon);
     return S.noPhoto ? page : page.replace('<div class="dev-area-head', '<div class="cc-head-hidden dev-area-head');
   }
