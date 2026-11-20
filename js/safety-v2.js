@@ -280,7 +280,7 @@
     gates: {
       // Nov 19: the generated photos showed pressure gates at the top of the stairs, the opposite of the advice.
       // A drawing of the right and wrong gate at the top is accurate by design; the photos stay out until verified ones exist.
-      vis: ['Which gate at the top', [['assets/safety/steps/gates-top-ok.svg', 'A gate at the top of the stairs, fixed to the wall with screwed-in brackets', 'Screwed into the wall'], ['assets/safety/steps/gates-top-no.svg', 'A pressure gate at the top of the stairs, held by pads pushing on the walls, with a bar across the floor', 'Pressure gate: can give way']]],
+      vis: ['Which gate at the top', [PH('gates-top-ok'), 'A white gate at the top of the stairs, held by metal brackets screwed into the wall on both sides', [['Screwed into the wall', 16, 12, 'r']]]],
       baFix: [['stairs', 'Screwed in at the top', 'A pressure gate can give way there'], ['gate', 'Either kind at the bottom', 'Pressure-fit or screwed in']],
       spotPhoto: [PH('gates-risk'), 'A baby crawling toward an open staircase with no gate', [['Open stairs', 52, 26, 'r']]],
       spotLine: 'Crawlers climb stairs early, and can fall from any step.',
@@ -358,7 +358,7 @@
       const lab = q.baLabels || ['Before', 'After'];
       const shot = ([src, alt, pin], k) => `<figure><figcaption class="${q.baLabels ? 'is-stage' : k ? 'is-after' : 'is-before'}">${F(lab[k])}</figcaption><div class="sf-ba-img"><img src="${src}" alt="${F(alt)}" loading="lazy">${pin ? pins([pin]) : ''}</div></figure>`;
       // A drawing in place of the photos where it teaches better: right vs wrong (gates), or where things go (crib).
-      const vis = q.vis ? (Array.isArray(q.vis[1]) ? pair(q.vis[1]) : `<figure class="sf-plan"><img src="${q.vis[1]}" alt="${F(q.vis[2])}" loading="lazy"></figure>`) : `<div class="sf-ba">${q.ba.map(shot).join('')}</div>`;
+      const vis = q.vis ? (Array.isArray(q.vis[1]) && Array.isArray(q.vis[1][0]) ? pair(q.vis[1]) : Array.isArray(q.vis[1]) ? photo(q.vis[1], ' is-square') : `<figure class="sf-plan"><img src="${q.vis[1]}" alt="${F(q.vis[2])}" loading="lazy"></figure>`) : `<div class="sf-ba">${q.ba.map(shot).join('')}</div>`;
       const ba = `<section class="care-tpl-card sf-card">${vis}${fixRows(q.baFix || q.fix)}${B.ul(q.notes)}</section>` + (q.tube ? tubeFigure() : '');
       const tests2 = `<section class="care-tpl-card sf-card sf-checks"><ul>${q.checks.map(t => `<li><i aria-hidden="true"></i><span>${F(t)}</span></li>`).join('')}</ul></section>`;
       // A habit isn't done once: it's something to remember every time, so it says so (Nov 19).
