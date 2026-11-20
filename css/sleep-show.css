@@ -7,7 +7,7 @@
 #main .ssw-hero-photo { margin: 14px 0 0; border-radius: 18px; overflow: hidden; aspect-ratio: 16 / 10; box-shadow: 0 6px 18px #4b4f8a22 }
 #main .ssw-hero-photo img { display: block; width: 100%; height: 100%; object-fit: cover }
 /* You might notice: its own card under the top card, like Health's "Worth knowing" */
-#main .sl-aha.ssw-aha { margin: 10px 0 0; padding: 12px 14px }
+#main .sl-aha.ssw-aha { background: #eef0f7; box-shadow: none; border-radius: 20px; margin: 14px 0 0; padding: 14px 16px }
 #main .sl-aha.ssw-aha b { font-size: 15.5px }
 #main .sl-aha.ssw-aha span { font-size: 14px; margin-top: 3px }
 #main .sl-aha.ssw-aha small { color: #5e6890 }
@@ -174,3 +174,21 @@
 #main .ssw-guides small { font-size: 12.5px; line-height: 1.3; color: #6b6670 }
 
 #main .hub-hero.ssw-hero { margin-bottom: 2px }
+
+/* The drawing in a photo-sized slot (310 x 194, like Health, Safety and Development) */
+#main .ssw-scene { position: relative; margin: 14px 0 0; aspect-ratio: 310 / 194; border-radius: 18px; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; padding: 0 14px 14px; box-shadow: 0 6px 18px #4b4f8a1c }
+#main .ssw-scene.is-day { background: linear-gradient(90deg, #fff4d6 0%, #fdf0dc 55%, #e9e4f6 88%, #d9d8f1 100%) }
+#main .ssw-scene.is-daynight { background: linear-gradient(90deg, #fff4d6 0%, #fbefdc 45%, #dcdcf3 55%, #cfd2ef 100%) }
+#main .ssw-scene.is-night { background: linear-gradient(180deg, #d9dcf3 0%, #e7e8f8 100%) }
+#main .ssw-scene.is-clock { background: linear-gradient(90deg, #d9dcf3 0%, #fff4d6 30%, #fff4d6 70%, #d9dcf3 100%) }
+#main .ssw-scene .ssw-band { margin: 0 !important; padding: 0 !important; background: none !important; border: 0 !important }
+#main .ssw-scene .ssw-caps span { color: #3f3b5c }
+#main .ssw-scene i { position: absolute; top: 22px; width: 34px; height: 34px; border-radius: 50% }
+#main .ssw-scene .ssw-sc-a { left: 22px }
+#main .ssw-scene .ssw-sc-b { right: 22px }
+/* sun */
+#main .ssw-scene.is-day .ssw-sc-a, #main .ssw-scene.is-daynight .ssw-sc-a, #main .ssw-scene.is-clock .ssw-sc-b { background: #f3c45a; box-shadow: 0 0 0 8px #f3c45a2e, 0 0 0 16px #f3c45a17 }
+#main .ssw-scene.is-clock .ssw-sc-b { left: 50%; right: auto; transform: translateX(-50%) }
+/* moon */
+#main .ssw-scene.is-day .ssw-sc-b, #main .ssw-scene.is-daynight .ssw-sc-b, #main .ssw-scene.is-night .ssw-sc-b, #main .ssw-scene.is-clock .ssw-sc-a { background: transparent; box-shadow: 10px -6px 0 0 #8f84dd }
+#main .ssw-scene.is-night .ssw-sc-a { background: transparent; box-shadow: none; left: 50%; width: 4px; height: 4px; border-radius: 50%; top: 30px; box-shadow: -60px 10px 0 #fff, 40px -6px 0 #fff, 90px 14px 0 #fff, -110px -4px 0 #fff }

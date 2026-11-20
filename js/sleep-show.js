@@ -42,7 +42,7 @@
       return `<path d="${d}" fill="none" stroke="${COL.deep}" stroke-width="2.6" stroke-linecap="round"/>${peaks}`;
     })() : '';
     let prev = -99, row = 0, two = false; // a label too close to the one before it drops to a second line
-    const caps = (o.caps || []).map(([h, t, cls]) => { const p = pc(h), al = p < 6 ? 'is-start' : p > 96 ? 'is-end' : ''; row = p - prev < (o.gap || 30) ? 1 - row : 0; prev = p; if (row) two = true; return `<span class="${al} ${cls || ''} ${row ? 'is-low' : ''}" style="left:${p.toFixed(1)}%">${F(t)}</span>`; }).join('');
+    const caps = (o.caps || []).map(([h, t, cls]) => { const p = pc(h), al = p < 8 ? 'is-start' : p > 92 ? 'is-end' : ''; row = p - prev < (o.gap || 30) ? 1 - row : 0; prev = p; if (row) two = true; return `<span class="${al} ${cls || ''} ${row ? 'is-low' : ''}" style="left:${p.toFixed(1)}%">${F(t)}</span>`; }).join('');
     return `<figure class="ssw-band ${o.cls || ''}" role="img" aria-label="${F(o.label)}">${o.title ? `<b class="ssw-band-title">${F(o.title)}</b>` : ''}<svg viewBox="${o.flat ? '0 20 320 56' : '0 0 320 78'}" aria-hidden="true">
       <defs><linearGradient id="${id}">${stops.join('')}</linearGradient><marker id="a${id}" viewBox="0 0 8 8" refX="6" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L8 4L0 8Z" fill="${COL.deep}"/></marker></defs>
       <rect x="2" y="24" width="316" height="50" rx="25" fill="url(#${id})"/>${ghost}${pills}${wave}${icons}</svg><div class="ssw-caps${two ? ' is-two' : ''}">${caps}</div></figure>`;
@@ -279,6 +279,9 @@
       hero.classList.add('ssw-hero');
       const t = (hero.querySelector('h1') || {}).textContent || '', art = hero.querySelector('.sl-art'), aha = hero.querySelector('.sl-aha');
       const hit = HERO.find(([re]) => re.test(t)); if (art && hit) art.outerHTML = hit[1]();
+      // The drawing sits in the same photo-sized slot as Health, Safety and Development, as a soft day-to-night scene.
+      const fig = hero.querySelector('.ssw-band'); if (fig) { const kind = /tiny stretches/i.test(t) ? 'clock' : /body clock/i.test(t) ? 'daynight' : /growing up/i.test(t) ? 'night' : 'day';
+        const sc = document.createElement('div'); sc.className = 'ssw-scene is-' + kind; sc.innerHTML = '<i class="ssw-sc-a" aria-hidden="true"></i><i class="ssw-sc-b" aria-hidden="true"></i>'; fig.before(sc); sc.append(fig); }
       // Worth knowing: what she might notice plus the one thing to try, in one card inside the top card (Yarden's mockup).
       if (aha) {
         aha.classList.add('ssw-aha'); const lbl = aha.querySelector('small'); if (lbl) lbl.textContent = F('Worth knowing');
@@ -289,6 +292,7 @@
         if (own && bEl && sp) { bEl.textContent = F(own[1]); sp.textContent = F(own[2]); }
         else if (tip && sp) sp.textContent = sp.textContent.trim().replace(/\s*$/, ' ') + tip.textContent.trim();
         if (tryEl) tryEl.remove();
+        hero.after(aha); // under the top card, like Health's "Worth knowing"
       }
       const eb = hero.querySelector('.hub-eyebrow'), ebt = eb ? eb.firstChild.textContent : '', view = STAGES.findIndex(([, re]) => re.test(ebt));
       if (view >= 0) {
