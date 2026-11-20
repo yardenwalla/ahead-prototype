@@ -1,0 +1,25 @@
+/* Sleep, show and tell (preview): see js/sleep-show.js */
+/* Pictures with their labels underneath, in a white card like other sections */
+#main .ssw-fig { margin: 0; background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: 16px 14px 14px }
+#main .ssw-fig svg { display: block; width: 100%; height: auto }
+#main .ssw-fig figcaption { display: grid; gap: 6px; margin-top: 6px; text-align: center; font-size: 13.5px; line-height: 1.3; font-weight: 600; color: #4c4757 }
+#main .care-tpl-card .tpl-notes, #main .ssw-fig + .tpl-notes { margin-top: 12px }
+
+/* The shape of the day, in Sleep's top card */
+#main .ssw-day { margin: 18px 0 16px; padding: 12px 10px 10px; background: rgba(255, 255, 255, .55); border-radius: 18px }
+#main .ssw-day svg { display: block; width: 100%; height: auto }
+#main .ssw-day figcaption { display: flex; justify-content: space-between; gap: 4px; margin-top: 2px; font-size: 12px; line-height: 1.25; font-weight: 600; color: #4d4a66; text-align: center }
+#main .ssw-day figcaption span { flex: 1 }
+#main .ssw-day figcaption span:first-child, #main .ssw-day figcaption span:last-child { flex: .8 }
+
+/* Bedtime routine: one photo row per step */
+#main .ssw-photosteps { background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: 10px }
+#main .ssw-photosteps ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px }
+#main .ssw-photosteps li { display: grid; grid-template-columns: 128px 1fr; gap: 14px; align-items: center }
+#main .ssw-ph { display: block; aspect-ratio: 4 / 3; border-radius: 14px; overflow: hidden; background: #f6e8f3 }
+#main .ssw-ph img { width: 100%; height: 100%; object-fit: cover; display: block }
+#main .ssw-copy { display: block }
+#main .ssw-copy i { font-style: normal; display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--ss-bg, #f6e8f3); color: var(--ss-ink, #7a4f74); font-size: 12px; font-weight: 700; margin-bottom: 4px }
+#main .ssw-copy b { display: block; font-size: 16px; line-height: 1.25; color: var(--ink) }
+#main .ssw-copy small { display: block; margin-top: 2px; font-size: 14px; line-height: 1.4; color: #6b6670 }
+#main .ssw-photosteps .tpl-notes { margin: 12px 6px 4px }
