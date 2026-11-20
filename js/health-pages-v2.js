@@ -27,20 +27,20 @@
   // Two tiles side by side: what's common, and when to call.
   const pair = (a, b) => `<div class="h2-pair"><div class="is-calm">${ic('', 'blue', SMILE)}<b>${F(a[0])}</b><p>${F(a[1])}</p></div><div class="is-call">${ic('', 'yellow', PHONE)}<b>${F(b[0])}</b><p>${F(b[1])}</p></div></div>`;
   // The top card: the guide's soft green card, with a photo when the page is about a moment you'll see.
-  const top = (eyebrow, title, lead, photo, alt) => `<div class="hub-detail-head h2-head${photo ? ' has-photo' : ''}"><p class="hub-context">${F(eyebrow)}</p><h1>${F(title)}</h1>${lead ? `<p class="hub-lead">${F(lead)}</p>` : ''}${photo ? `<figure class="h2-photo"><img src="assets/health/${photo}" alt="${e(alt)}"></figure>` : ''}</div>`;
+  const top = (eyebrow, title, lead, photo, alt, cap) => `<div class="hub-detail-head h2-head${photo ? ' has-photo' : ''}"><p class="hub-context">${F(eyebrow)}</p><h1>${F(title)}</h1>${lead ? `<p class="hub-lead">${F(lead)}</p>` : ''}${photo ? `<figure class="h2-photo"><img src="assets/health/${photo}" alt="${e(alt)}"></figure>${cap ? `<p class="h2-cap">${F(cap)}</p>` : ''}` : ''}</div>`;
   const page = inner => `<div class="quiet-category hub-page hub-detail h2-page" data-overview="Health" style="${yearTheme('Health')}">${detailPageTop('Health')}${inner}</div>`;
 
   /* ---------- What to expect ---------- */
   // The visit, in order. Each step says what happens at this age (AAP Bright Futures; mood checks at 1, 2, 4 and 6 months).
-  const MEASURE = ['steth', 'green', 'Measure and examine', 'Weight, length and head size, then a head-to-toe exam'];
+  const MEASURE = ['steth', 'green', 'Measure and examine', 'Weight, length and head size, then heart, hips, eyes and skin'];
   const VISIT = {
-    0: { lead: 'A first check on feeding, weight and jaundice.', steps: [['steth', 'green', 'Weigh and examine', 'Weight, then a head-to-toe exam and a jaundice check'], ['bottle', 'yellow', 'Talk about feeding', 'Feeds, diapers and sleep, and how you’re recovering'], ['ear', 'peach', 'Go over the hospital tests', 'Hearing, heart and blood-spot results']], before: 'Bring the hospital papers, and feed {o} whenever {s} needs it.' },
-    1: { lead: 'A short visit about feeding and growth.', steps: [MEASURE, ['bottle', 'yellow', 'Talk about feeding', 'How feeds are going, and whether anything hurts'], ['heart', 'pink', 'Check in on you', 'A short form about how you’re feeling']], before: 'Dress {o} in something that comes off quickly.' },
-    2: { lead: 'A full checkup, and the first big round of shots.', steps: [MEASURE, ['smile', 'pink', 'Talk about new skills', 'How {s} {hold|holds} {p} head and {smile|smiles} at you'], ['bottle', 'yellow', 'Feeding, sleep and you', 'Plus a short form about how you’re feeling']], before: 'Dress {o} in something that comes off quickly, for weighing and shots.', shotsLast: true },
-    4: { lead: 'Much like 2 months, plus a first talk about solids.', steps: [MEASURE, ['roll', 'blue', 'Talk about new skills', 'Head control, reaching and rolling'], ['bowl', 'yellow', 'Feeding and you', 'Vitamin D, signs {s’s} ready for solids, and how you’re feeling']], before: 'Bring your questions about starting solids.', shotsLast: true },
-    6: { lead: 'Growth, sitting and teeth, and how first foods are going.', steps: [MEASURE, ['sit', 'blue', 'Talk about new skills', 'Sitting, rolling, reaching and babbling'], ['tooth', 'yellow', 'Feeding and teeth', 'How solids are going, iron, and fluoride once teeth are in']], before: 'Bring your questions about first foods.', shotsLast: true },
-    9: { lead: 'A short questionnaire about development, plus growth and teeth.', steps: [MEASURE, ['star', 'blue', 'A development questionnaire', 'How {s} {talk|talks}, {move|moves} and {play|plays}'], ['bowl', 'yellow', 'Feeding and teeth', 'Textures, finger foods and brushing']] },
-    12: { lead: 'New shots, a quick blood test and a talk about milk.', steps: [MEASURE, ['wave', 'blue', 'Talk about new skills', 'Gestures, first words and first steps'], ['cup', 'yellow', 'Milk and cups', 'Moving off bottles, and how much milk'], ['drop', 'peach', 'A quick blood test', 'Usually a finger or heel prick']], before: 'Bring a snack and a cup. It’s a longer visit.', shotsLast: true }
+    0: { lead: 'A first check on feeding, weight and jaundice.', steps: [['steth', 'green', 'Weigh and examine', 'Weight, to see if {s’s} back to birth weight, then a jaundice check, with a quick blood test if needed'], ['bottle', 'yellow', 'Talk about feeding', 'Feeds, diapers and sleep, and how you’re recovering'], ['ear', 'peach', 'Go over the hospital tests', 'Hearing, heart and blood-spot results']], before: 'Dress {o} in something that comes off quickly. It’s fine to feed during the visit.' },
+    1: { lead: 'A short visit about feeding and growth.', steps: [MEASURE, ['bottle', 'yellow', 'Talk about feeding', 'How feeds are going, and whether anything hurts'], ['smile', 'blue', 'Early responses', 'How {s} {move|moves} and {react|reacts} to people and sounds'], ['heart', 'pink', 'Check in on you', 'A short form about how you’re feeling']], before: 'Dress {o} in something that comes off quickly.' },
+    2: { lead: 'A full checkup, and the first big round of shots.', steps: [MEASURE, ['smile', 'pink', 'Talk about new skills', 'How {s} {hold|holds} {p} head and {smile|smiles} at you'], ['bottle', 'yellow', 'Feeding, sleep and you', 'Night feeds, plus a short form about how you’re feeling']], before: 'Dress {o} in something that comes off quickly, for weighing and shots.', shotsLast: true },
+    4: { lead: 'Much like 2 months, plus a first talk about solids.', steps: [MEASURE, ['roll', 'blue', 'Talk about new skills', 'Head control, reaching and smiles'], ['bowl', 'yellow', 'Feeding and sleep', 'Vitamin D, signs {s’s} ready for solids, and night waking'], ['heart', 'pink', 'Check in on you', 'A short form about how you’re feeling']], before: 'Bring your questions about starting solids.', shotsLast: true },
+    6: { lead: 'Growth, sitting and teeth, and how first foods are going.', steps: [MEASURE, ['sit', 'blue', 'Talk about new skills', 'Sitting, rolling, reaching and babbling'], ['tooth', 'yellow', 'Feeding and teeth', 'How solids are going, iron, and fluoride once teeth are in'], ['heart', 'pink', 'Check in on you', 'A short form about how you’re feeling']], before: 'Bring your questions about first foods.', shotsLast: true },
+    9: { lead: 'A short questionnaire about development, plus growth and teeth.', steps: [MEASURE, ['star', 'blue', 'A development questionnaire', 'You answer questions about how {s} {talk|talks}, {move|moves} and {play|plays}'], ['bowl', 'yellow', 'Feeding and teeth', 'Textures, finger foods and brushing'], ['ear', 'peach', 'Hearing and vision', 'Anything you’ve noticed at home']] },
+    12: { lead: 'New shots, a quick blood test and a talk about milk.', steps: [MEASURE, ['wave', 'blue', 'Talk about new skills', 'Gestures, first words and first steps'], ['cup', 'yellow', 'Milk and cups', 'Moving off bottles, and how much milk'], ['drop', 'peach', 'A quick blood test', 'A finger or heel prick for anemia, and lead where it’s routine']], before: 'Bring a snack and a cup. It’s a longer visit.', shotsLast: true }
   };
   const PHOTO_ALT = { 0: 'A pediatrician checking a newborn on a baby scale', 1: 'A pediatrician listening to a baby’s chest', 2: 'A baby on the exam table lifting her head, the pediatrician smiling back', 4: 'A baby reaching for a rattle the pediatrician holds', 6: 'A smiling baby sitting on the exam table beside the pediatrician', 9: 'A dad filling in a questionnaire with his baby on his lap', 12: 'A toddler standing at a bench as the pediatrician holds out her hands' };
   function expectPage(age) {
@@ -59,20 +59,20 @@
   function vaccinePage(age) {
     const hv = window.__hv, v = hv.VAX[age], s = hv.SEASON(age), WHAT = hv.WHAT;
     const nurse = profile.feed === 'Breast milk' && profile.feedHow === 'Nursing', bottle = profile.feed === 'Formula';
-    const lead = [2, 4, 6, 12].includes(age) ? (nurse ? 'Hold {o} on your lap and nurse during or right after. It soothes.' : bottle ? 'Hold {o} on your lap, and offer a bottle right after. It soothes.' : 'Hold {o} on your lap, and offer a feed during or right after. It soothes.') : v.lead;
+    const tip = nurse ? 'Hold {o} on your lap and nurse during or right after. It soothes.' : bottle ? 'Hold {o} on your lap, and offer a bottle right after. It soothes.' : 'Hold {o} on your lap, and offer a feed during or right after. It soothes.';
     const doses = xs => xs.map(([n, d]) => [n, d + (WHAT[n] ? '. ' + WHAT[n] : '')]);
     const atVisit = `<section class="hub-card h2-rows">`
-      + openRow('shield', 'blue', age === 9 ? 'Catch-up shots' : v.shots.length === 1 ? 'One shot, maybe' : 'Routine shots', age === 9 ? 'Only if one was missed' : listNames(v.shots), doses(v.shots))
+      + openRow('shield', 'blue', age === 9 ? 'Catch-up shots' : v.shots.length === 1 ? 'One shot, maybe' : 'Routine shots', age === 9 ? 'Only if one was missed' : listNames(v.shots) + (age === 12 ? '. Usually given as separate shots' : ''), doses(v.shots))
       + (v.oral ? openRow('drop', 'green', 'Drops by mouth', 'Rotavirus. No needle', doses(v.oral)) : '')
-      + openRow('snow', 'peach', 'Seasonal protection', 'Your pediatrician says which are due', s.map(([n, d]) => [n, d]))
+      + openRow('snow', 'peach', 'Seasonal protection', listNames(s) + '. Your pediatrician says which are due', s.map(([n, d]) => [n, d]))
       + `</section>`;
     const callLine = age <= 2 ? 'A fever of 100.4°F or more, 3 hours of crying, or swelling that grows.' : `A fever of ${feverTemp(age)} or more, 3 hours of crying, or swelling that grows.`;
-    const after = age === 0 ? '' : h2('After the shots') + pair(['Common for a day or two', 'A little fussy or sleepy, a low fever, or a sore spot.' + (age === 12 ? ' A rash 1–2 weeks later can happen too.' : '')], ['Time to call', callLine]);
+    const after = h2('After the shots') + pair(['Common for a day or two', 'A little fussy or sleepy, a low fever, or a sore, red spot where the shot went in.' + (age === 12 ? ' After MMR and chickenpox, a fever or rash 1–2 weeks later is common too.' : '')], ['Time to call', callLine]);
     // Leads that already explain the shots (0, 1, 9) keep the page's small picture; visits with several shots show how to hold the baby.
     const photo = [2, 4, 6, 12].includes(age);
-    return page(top(hv.label(age), 'Vaccines', lead, photo ? 'shots.jpg' : '', 'A mom holding her baby close on her lap at the pediatrician’s office')
+    return page(top(hv.label(age), 'Vaccines', v.lead, photo ? 'shots.jpg' : '', 'A mom holding her baby close on her lap at the pediatrician’s office', photo ? tip : '')
       + h2('At the visit') + atVisit + after
-      + `<p class="h2-small">${F('Your pediatrician confirms what’s due from {p} record.')}</p>`);
+      + `<p class="h2-small">${F('Based on the schedule pediatricians recommend. Your pediatrician confirms what’s due from {p} record.')}</p>`);
   }
 
   /* ---------- Questions and notes ---------- */
@@ -127,7 +127,7 @@
       + rows([['thermo', 'yellow', 'A fever', mo < 3 ? 'Take a temperature, and when to call' : 'How to check, and what helps', "openPage('chg:Health:d:sick-fever')"],
         ['drop', 'blue', 'A cold or stuffy nose', 'Clear the nose so feeds go easier', "openPage('chg:Health:d:cold')"],
         ['bottle', 'pink', 'Vomiting or diarrhea', 'Keep feeds going, and watch diapers', "openPage('chg:Health:d:sick-tummy')"]])
-      + sos() + `<p class="h2-small is-center">${F('Not sure? Your pediatrician’s office has someone to talk to, day or night.')}</p>`);
+      + sos() + `<p class="h2-small is-center">${F('Not sure? Your pediatrician’s office has someone to talk to, day or night. Calling is never a bother.')}</p>`);
   }
   function feverPage() {
     const mo = m(), u3 = mo < 3;
@@ -136,19 +136,19 @@
     const lead = u3 ? 'Even if {s} seems well otherwise, a fever under 3 months needs to be checked.' : 'How {s} {seem|seems} matters more than the number. Here’s when to call.';
     const big = `<section class="h2-big"><div><b>${temp.replace('°F', '')}<span>°F</span></b><small>${c} or higher</small></div><p>${F(u3 ? 'Call your pediatrician right away, day or night.' : mo < 6 ? 'Call your pediatrician, day or night. Call too if a fever lasts more than a day.' : 'Call your pediatrician. Call too if any fever lasts more than a day.')}</p></section>`
       + `<p class="h2-small">${F('Also call if {s} seems very unwell or unusually sleepy.' + feverEarlyNote())}</p>`;
-    const check = h2('Take {p} temperature') + `<section class="hub-card h2-thermo"><img src="assets/health/thermometer.jpg" alt="A digital thermometer on a folded cloth"><div><b>${F('Use a digital thermometer')}</b><p>${F(u3 ? 'Rectal is the most accurate for babies, and the one to trust at this age.' : 'Rectal is most accurate. Armpit or forehead work for a quick check' + (mo >= 6 ? ', and ear from 6 months.' : '.'))}</p></div></section>`
+    const check = h2('Take {p} temperature') + `<section class="hub-card h2-thermo"><img src="assets/health/thermometer.jpg" alt="A digital thermometer on a folded cloth"><div><b>${F('Use a digital thermometer')}</b><p>${F(u3 ? 'Rectal is the most accurate. At this age, check any high reading rectally. Armpit and forehead are less accurate.' : mo < 6 ? 'Rectal is most accurate, and forehead works well too. Armpit is less accurate.' : 'Rectal is most accurate, and forehead or ear work well too. Armpit is less accurate.')}</p></div></section>`
       + rows([['thermo', 'blue', 'How to take a rectal temperature', 'Four quick steps', "openPage('chg:Health:d:sick-rectal')"]]);
-    const help = h2('What helps') + rows([['bottle', 'yellow', 'Offer feeds as usual', 'Little and often keeps {o} hydrated'], ['shirt', 'green', 'Dress {o} lightly', 'Extra layers keep a fever up'], ['moon', 'pink', 'Let {o} rest', 'Naps and quiet time']])
+    const help = h2('What helps') + rows([['bottle', 'yellow', 'Offer extra feeds', 'Little and often keeps {o} hydrated'], ['shirt', 'green', 'Dress {o} lightly', 'Extra layers keep a fever up'], ['moon', 'pink', 'Let {o} rest', 'Naps and quiet time']])
       + alert('Before any medicine', u3 ? 'Under 3 months, ask your pediatrician first.' : mo < 6 ? 'Acetaminophen can help. Ask your pediatrician for the dose.' : 'Acetaminophen or ibuprofen can help. Ask your pediatrician for the dose.', 'blue');
     return page(top('When Maya seems sick', title, lead) + big + check + help + sos());
   }
   function coldPage() {
     const mo = m();
     const seq = `<section class="hub-card h2-seq">${[['cold-saline.jpg', 'Saline drops', 'A few in each nostril'], ['cold-bulb.jpg', 'Gentle suction', 'With a bulb or aspirator'], ['cold-feed.jpg', 'Then feed', 'Breathing is easier now']].map(([src, t, d], i) => `${i ? '<span class="h2-arrow" aria-hidden="true">›</span>' : ''}<figure><img src="assets/health/${src}" alt=""><figcaption><b>${F(t)}</b><small>${F(d)}</small></figcaption></figure>`).join('')}</section>`;
-    return page(top('When Maya seems sick', 'Clear {p} nose before a feed', 'Babies breathe through the nose to feed, so a stuffy nose is often the hardest part. Most colds clear in 7–10 days.')
+    return page(top('When Maya seems sick', 'Clear {p} nose before a feed', 'Babies breathe through the nose to feed. Several colds in the first year are common, and most clear in 7–10 days.')
       + h2('Before feeds and sleep') + seq
       + h2('Also helps') + rows([['snow', 'blue', 'A cool-mist humidifier', 'In {p} room at night'], ['bottle', 'yellow', 'Smaller, more frequent feeds', 'Easier with a stuffy nose'], ['shield', 'pink', 'Skip cold medicines', 'They aren’t safe for babies. No honey before 1']])
-      + alert('When to call', `A fever of ${feverTemp(mo)} or more, a cold past 10 days, or signs of an ear infection: fussing lying down, or fluid from the ear.`)
+      + alert('When to call', `A fever of ${feverTemp(mo)} or more, a cold past 10 days, or signs of an ear infection: fussing lying down, a new fever, or fluid from the ear.`)
       + sos());
   }
   function tummyPage() {
