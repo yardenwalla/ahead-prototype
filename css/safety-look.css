@@ -122,3 +122,37 @@
 
 #main .sf-step .sf-actions { text-align: center }
 #main .sf-step .sf-actions .hub-link { display: block; margin: 6px auto 0 }
+/* Nov 19: drawings (the gate at the top, the crib floor plan) show whole, never cropped */
+#main .sf-step .sf-pair img[src$=".svg"] { aspect-ratio: auto; object-fit: contain; background: #f3ebe0 }
+#main .sf-step .sf-pair figure:has(img[src$=".svg"]) { display: flex; flex-direction: column-reverse }
+#main .sf-step .sf-pair figure:has(img[src$=".svg"]) figcaption { position: static; margin: 8px 8px 10px; background: none; padding: 0 }
+#main .sf-step .sf-pair figcaption { font-size: 12.5px }
+#main .sf-step .sf-plan { margin: 0 }
+#main .sf-step .sf-plan img { display: block; width: 100%; height: auto }
+#main .sf-step .sf-plan + .sf-fixrows, #main .sf-step .sf-pair + .sf-fixrows { padding-top: 6px }
+/* a stage change, not wrong vs right: both labels neutral */
+#main .sf-step .sf-ba figcaption.is-stage { color: #6b5a3e; font-weight: 600 }
+/* habits: said once, plainly, above the button */
+#main .sf-habit-note { margin: 0 0 12px; padding: 12px 14px; border-radius: 16px; background: #fbf4e8; font-size: 14px; line-height: 1.45; color: #5c5361; text-align: left }
+#main .sf-habit-note b { display: block; color: var(--ink); font-size: 15px; margin-bottom: 2px }
+#main .sf-each { font-style: normal; font-weight: 600; color: #8a6a2e }
+/* the three-level emergency card on the stage page */
+#main .sf-calls { margin: 0 0 16px }
+#main .sf-calls .care-calls p + p { margin-top: 8px }
+#main .sf-calls .hub-browse { margin-top: 10px }
+/* drawings stack, one per row, big enough to see the brackets and pads */
+#main .sf-step .sf-pair:has(img[src$=".svg"]) { grid-template-columns: 1fr; gap: 2px }
+#main .sf-step .sf-pair figure:has(img[src$=".svg"]) figcaption { margin: 10px 16px 8px; font-size: 14px }
+#main .sf-calls .sf-calls-link { display: block; margin-top: 12px; padding: 10px 0 0; border-top: 1px solid rgba(122,75,44,.15); width: 100%; text-align: left }
+/* Nov 19, round 2: the emergency card as three short rows */
+#main .sf-sos { padding: 6px 16px 12px }
+#main .sf-sos-row { display: flex; flex-direction: column; gap: 2px; padding: 11px 0 11px 14px; border-bottom: 1px solid #f1eadf; position: relative }
+#main .sf-sos-row::before { content: ''; position: absolute; left: 0; top: 13px; bottom: 13px; width: 4px; border-radius: 4px; background: #d9c7a6 }
+#main .sf-sos-row.is-er::before { background: #d98a5c }
+#main .sf-sos-row.is-911::before { background: #b4442f }
+#main .sf-sos-row b { font-size: 15px; color: var(--ink); font-weight: 600 }
+#main .sf-sos-row span { font-size: 14px; color: #6b6370 }
+#main .sf-sos-row.is-911 span { color: #b4442f; font-weight: 600 }
+#main .sf-sos .sf-tel { color: inherit; text-decoration: underline; text-underline-offset: 2px }
+#main .sf-sos .hub-link { margin-top: 10px; padding: 0 }
+#main .sf-step .sf-step-photo.is-square { aspect-ratio: 1 / 1 }
