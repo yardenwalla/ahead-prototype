@@ -465,6 +465,7 @@ window.SEARCH_DEEP = [["topic:Development","Development & play","What to look fo
 ["chg:Childcare:d:backup","Childcare","Set up your backup","",8191,0],
 ["chg:Childcare:d:backup","Childcare","Overlap old and new care","",8191,0],
 ["chg:Childcare:d:backup","Childcare","Ask work about backup care","Some jobs offer backup care days.",8191,0],
+["chg:Childcare:d:start","Childcare","Check-ins","",8191,0],
 ["chg:Childcare:d:start","Childcare","Sick day: home or care?","",8191,0],
 ["chg:Childcare:d:start","Childcare","If something doesn’t feel right","",8191,0],
 ["chg:Childcare:d:start","Childcare","Bring up something small","",8191,0],
