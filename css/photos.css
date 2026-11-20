@@ -286,3 +286,9 @@
 /* Nov 20 (Yarden: "should try this be in a container?"): yes, a soft panel like Sleep's tip, so the action reads apart from the explanation. */
 #main .fd-hero .fd-try.fd-try-in { background: rgba(255,255,255,.66); border-radius: 16px; padding: 12px 14px; align-items: flex-start; box-shadow: 0 2px 10px #a6798214 }
 #main .fd-split .fd-try.fd-try-in { margin-top: 2px; padding-top: 12px }
+/* Nov 20 (Yarden: Feeding as polished as Development and Safety): Development's card, Feeding's colors. Words full width,
+   one real-life photo in Development's frame, then Try this. */
+#main .fd-hero.fd-life { min-height: 0 }
+#main .fd-life .sf-photo.fd-life-photo { aspect-ratio: 16 / 10; margin: 14px 0 0; box-shadow: 0 6px 18px #a6798226 }
+#main .fd-life .fd-try.fd-try-in { margin-top: 14px }
+#main .fd-life h1, #main .fd-life .hub-lead { text-wrap: balance }
