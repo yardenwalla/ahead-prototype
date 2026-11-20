@@ -109,6 +109,7 @@
      window.__oaOld = true shows the earlier version. */
   const SHOW = () => !window.__oaOld;
   const PH = k => `assets/outings/${k}.jpg`;
+  const TILE_PHOTO_ALL = { errands: 'town', road: 'road', fly: 'fly', away: 'away', abroad: 'abroad', water: 'beach' };
   const TILE_PHOTO = { errands: 'town', road: 'road', fly: 'fly', away: 'away', abroad: 'abroad', water: 'beach' };
   const pinsHtml = list => (list || []).map(([label, x, y, side]) => `<span class="sf-pin oa-pin oa-pin-${side}" style="left:${x}%;top:${y}%"><i></i><span>${F(label)}</span></span>`).join('');
   // One photo with its tags, then the rows that say what to check.
@@ -458,7 +459,7 @@
      window.__oaOld = true still shows the earlier version. */
   const view3 = {};
   window.oaView = (id, k) => { view3[id] = k; const y = scrollY; render(); scrollTo(0, y); };
-  const TILE3 = { errands: 'town', road: 'car-head', fly: 'fly-tile', away: 'away-tile', abroad: 'abroad', water: 'beach-tile' };
+  const TILE3 = TILE_PHOTO_ALL;
   function page3(key, icon, title, lead, inner) {
     const c = PAL[key] || PAL.gear;
     return `<div class="quiet-category hub-page hub-detail oa3" data-overview="${CAT}" data-ss="1" data-oa-page="${key}" style="${yearTheme(CAT)};--ss-bg:${c[0]};--ss-ink:${c[1]}">${detailPageTop(CAT)}`
@@ -524,11 +525,10 @@
     }
 
     if (id === 'road') return page3('road', 'car', 'Road trips', 'Long drives go best in 2-hour stretches.',
-      timeline('Plan your drive', [['Leave', 'car', 'As a nap starts.'], ['After 2 hours', 'bottle', 'Stop to feed and change.'], ['After 4 hours', 'mat', eats() ? 'Stop for a snack and a stretch.' : 'Stop to feed and stretch.'], ['Then', 'home', 'A stop every 2 hours until you arrive.']], 'Leave as a nap starts, then stop every 2 hours to feed, change and stretch until you arrive.')
+      `<h2 class="hub-h2">${F('Plan your drive')}</h2><div class="oa3-stops">${[['car', 'Leave', 'As a nap starts'], ['bottle', '+2 hrs', 'Feed and change'], ['mat', '+4 hrs', eats() ? 'Snack and stretch' : 'Feed and stretch'], ['home', 'Arrive', 'Same rhythm']].map(([i, t, l]) => `<div><span>${hubArt(i, CAT)}</span><b>${F(t)}</b><small>${F(l)}</small></div>`).join('')}</div>`
       + one3('Only soft toys in the car. Hard ones can fly in a sudden stop.')
-      + rows([['heart', 'Crying while you drive', 'Pull over somewhere safe, then take {o} out to soothe or feed.'], ['clock', 'Driving on your own', 'Plan a few more stops. Check on {o} only when you’re parked.']], 'When things don’t go to plan')
-      + good([typeof profile !== 'undefined' && profile.early ? ['steth', 'Born early?', 'Ask your pediatrician how long rides can be.'] : null, ['moon', 'Naps on the road', 'Fine in the car seat while you drive. When you stop, move {o} to a crib or play yard.'], bf ? ['mouth', 'Nursing or pumping on the road', 'Park first. {S} {stay|stays} buckled in whenever the car is moving.'] : null])
-      + fold3('bag', 'Packing extras', fm ? plainRows([['bottle', 'One extra bottle', 'In case of traffic']]) : ''));
+      + plainRows([['heart', 'Crying while you drive', 'Pull over somewhere safe, then take {o} out.'], ['moon', 'Naps on the road', 'Fine in the car seat. Once you stop, move {o} to a crib or play yard.']])
+      + fold3('notepad', 'More for the road', plainRows([['clock', 'Driving on your own', 'Plan a few more stops. Check on {o} only when you’re parked.'], bf ? ['mouth', 'Nursing or pumping', 'Park first. {S} {stay|stays} buckled in whenever the car is moving.'] : null, typeof profile !== 'undefined' && profile.early ? ['steth', 'Born early?', 'Ask your pediatrician how long rides can be.'] : null, fm ? ['bottle', 'One extra bottle', 'In case of traffic'] : null])));
 
     if (id === 'fly') return page3('fly', 'plane', 'Flying', 'Most flight planning happens when you book.',
       phases('fly', [
@@ -550,8 +550,7 @@
             [['crib', 'A play yard, or a crib made after June 2011', 'Ask the hotel for one, or bring your own'], ['sofa', 'Never an adult bed or a couch', 'Even for a nap, even with you right there']], ['28%', '88%'])
           + fold3('bag', 'What to pack', plainRows([['sack', '{P} sleep sack', 'It smells like home'], ['home', 'The play yard’s own sheet', 'Only the one made for it'], ['star', 'A night light', 'For feeds in a dark, new room']]))],
         ['When you arrive', `<h2 class="hub-h2">${F('A room that’s safe for Maya')}</h2>` + fig3('away-room', 'A hotel room with a bare play yard, the blind cord tied up high and the bags up on a rack', AWAY_PINS)
-          + awayList(m)
-          + plainRows([['hand', 'Pets', 'Never leave {o} alone with a pet, even a gentle one.'], eats() ? ['bowl', 'Grandparents and treats', 'Share your food rules once, kindly, before the first meal.'] : null])],
+          + `<h2 class="hub-h2">${F('Set up your stay')}</h2>` + plainRows(awayItems(m).map(([t, sub, icon]) => [icon, t, sub]).concat([['hand', 'Pets', 'Never leave {o} alone with a pet, even a gentle one.'], eats() ? ['bowl', 'Grandparents and treats', 'Share your food rules once, kindly, before the first meal.'] : null]))],
         ['Settling in', plainRows([['moon', 'A rough first night', 'New places can unsettle sleep. A few off nights are common.'], ['heart', 'Well-meant advice', 'Share one rule kindly: on {p} back, in a bare crib.']])
           + `<button class="hub-link" onclick="openPage('chg:Sleep:d:away')">${F('Sleep in a new time zone')} ›</button>`]]));
 
@@ -588,15 +587,17 @@
           [PH('shade-before'), 'A stroller on a sunny path with a blanket draped over the front', 'Blanket over it', null],
           [PH('shade-after'), 'The same stroller in the shade of a tree, canopy forward, baby in a sun hat', 'Canopy and shade', null],
           [['towel', 'Never a blanket over the stroller', 'Even a thin one makes it hot inside']])
-        + plainRows([['clock', 'Go out early or late', 'When it’s cooler out'], m < 6 ? ['sun', 'Shade, not sunscreen', 'If there’s no shade, a little on {p} face is OK'] : ['sun', 'Sunscreen', 'SPF 30 or more, every 2 hours'], ['bottle', 'Keep {o} hydrated', !eats() ? 'With extra milk feeds' : 'With extra milk feeds and sips of water'], ['car', 'Cool the car first', 'Then touch the buckles: they can burn']])
-        + good([['thermo', 'How hot is too hot?', 'When the heat index is 90°F or more, keep outings short or stay in.'], m >= 2 ? ['leaf', 'Bug spray, from 2 months', 'Up to 30% DEET, or picaridin. Spray your hands, then rub it on {p} skin, not {p} hands.'] : ['leaf', 'Bug spray, from 2 months', 'Not yet. Until then, use netting over the stroller.'], ['fridge', 'Milk on hot days', 'In a cooler with ice packs, never in a hot car.']])
+        + one3('Go out early or late, when it’s cooler, and keep {o} in the shade.')
+        + plainRows([m < 6 ? ['sun', 'Shade, not sunscreen', 'If there’s no shade, a little on {p} face is OK'] : ['sun', 'Sunscreen', 'SPF 30 or more, every 2 hours'], ['bottle', 'Keep {o} hydrated', !eats() ? 'With extra milk feeds' : 'With extra milk feeds and sips of water'], ['car', 'Cool the car first', 'Then touch the buckles: they can burn']])
+        + fold3('notepad', 'More for hot days', plainRows([['thermo', 'How hot is too hot?', 'When the heat index is 90°F or more, keep outings short or stay in.'], m >= 2 ? ['leaf', 'Bug spray, from 2 months', 'Up to 30% DEET, or picaridin. Spray your hands, then rub it on {p} skin, not {p} hands.'] : ['leaf', 'Bug spray, from 2 months', 'Not yet. Until then, use netting over the stroller.'], ['fridge', 'Milk on hot days', 'In a cooler with ice packs, never in a hot car.']]))
         + calls(['Call your pediatrician', 'Any sunburn, or fewer wet diapers than usual.'], ['Call 911', 'Hot to the touch and floppy or hard to wake.']);
       const cold = beforeAfter(
           [PH('cold-before'), 'A baby in a rear-facing car seat wearing a puffy snowsuit, the straps loose on top of it', 'Puffy coat', ['Straps loose', 34, 56, 'r']],
           [PH('cold-after'), 'The same baby in thin fleece, straps snug, with a blanket tucked over the buckled straps', 'Blanket on top', null],
           [['shirt', 'Coat off before you buckle', 'A puffy coat squashes in a crash, leaving the straps too loose']])
-        + plainRows([['clock', 'Warm up the car first', 'Before you buckle {o} in'], ['shirt', 'One more layer on walks', 'Plus a hat and mittens'], ['hand', 'Check if {s’s} warm enough', 'Feel {p} chest. Cold hands are common']])
-        + good([['snow', 'Very cold or windy?', 'Keep walks short, or stay in.'], ['carrier', 'In a carrier', 'Your coat can go over you both, with {p} face uncovered.'], ['home', 'Once you’re somewhere warm', 'Take off {p} hat and extra layers, so {s} {don’t|doesn’t} overheat.']])
+        + one3('Warm up the car first, and feel {p} chest to check {s’s} warm enough. Cold hands are common.')
+        + plainRows([['shirt', 'One more layer on walks', 'Plus a hat and mittens'], ['carrier', 'In a carrier', 'Your coat can go over you both, with {p} face uncovered.']])
+        + fold3('notepad', 'More for cold days', plainRows([['snow', 'Very cold or windy?', 'Keep walks short, or stay in.'], ['home', 'Once you’re somewhere warm', 'Take off {p} hat and extra layers, so {s} {don’t|doesn’t} overheat.']]))
         + calls(['Call your pediatrician', 'Skin that’s pale, gray or blistered after being out in the cold.'], ['Call 911', 'Cold to the touch and floppy or hard to wake.']);
       return page3(view, view === 'hot' ? 'sun' : 'snow', 'Hot and cold days', view === 'hot' ? 'Babies heat up faster than you do.' : 'Babies lose heat faster than you do.', seg + (view === 'hot' ? hot : cold));
     }
@@ -629,7 +630,7 @@
     return null;
   }
   const AWAY_PINS = [['Bare play yard', 50, 52, 'b'], ['Bags up high', 84, 40, 'l']];
-  const CARRY_PINS = [['Face in view', 63, 30, 'r'], ['Chin off the chest', 52, 45, 'r'], ['Back supported', 34, 62, 'r'], ['Knees up in an M', 70, 78, 'l']];
+  const CARRY_PINS = [['Face in view', 64, 26, 'r'], ['Chin off the chest', 42, 40, 'l'], ['Back supported', 62, 60, 'r'], ['Knees up in an M', 72, 82, 'l']];
   const h3note = t => `<p class="oa-psteps-note">${F(t)}</p>`;
 
   window.oaWeather = function (k) { weatherView = k; const y = scrollY; render(); scrollTo(0, y); };

@@ -221,3 +221,17 @@
 #main .oa3-group { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ss-ink); margin: 14px 2px 8px }
 #main .oa3-group:first-of-type { margin-top: 4px }
 #main .oa3 .oa-steps { margin-top: 2px }
+/* Nov 20 fixes: lighter One thing to know, smaller situation photos, road trip stops. */
+#main .oa3-one b { font-weight: 500 }
+#main .oa3 .oa3-fig .oa-photo { aspect-ratio: 16 / 9 }
+#main .oa3 .oa-ba img { aspect-ratio: 1 / 1 }
+#main .oa3-stops { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; background: var(--white, #fffefb); border: 1px solid var(--line, #e1e5d9); border-radius: 18px; padding: 14px 8px 12px; margin: 0 0 16px; position: relative }
+#main .oa3-stops::before { content: ""; position: absolute; left: 12.5%; right: 12.5%; top: 33px; height: 2px; background: var(--ss-bg) }
+#main .oa3-stops div { text-align: center; position: relative }
+#main .oa3-stops span { width: 40px; height: 40px; border-radius: 50%; background: var(--ss-bg); display: grid; place-items: center; margin: 0 auto 6px }
+#main .oa3-stops span svg { width: 22px; height: 22px }
+#main .oa3-stops span svg, #main .oa3-stops span svg [stroke]:not([stroke="none"]) { stroke: var(--ss-ink) }
+#main .oa3-stops b { display: block; font-size: 13.5px; font-weight: 700; color: var(--ss-ink) }
+#main .oa3-stops small { display: block; font-size: 12px; line-height: 1.3; color: #5c5361; margin-top: 2px }
+#main .oa3[data-oa-page="gear"] .oa3-fig .oa-photo { aspect-ratio: 4 / 3 }
+#main .oa3 .oa-flatlay img { aspect-ratio: auto }
