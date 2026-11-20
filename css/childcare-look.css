@@ -264,3 +264,10 @@
 #main .cc-seg button { text-align: center }
 #main .hub-detail .hub-button.cc-next2 { background: #6b5a0e !important; color: #fff !important; border: 0 }
 #main .cc-talk .cc-look-tile small { color: #6d6650 }
+/* Steps in order: numbered circles joined by a line */
+#main .cc-seq { list-style: none; margin: 0 0 16px; padding: 16px 16px 4px }
+#main .cc-seq li { position: relative; display: grid; grid-template-columns: 30px 1fr; gap: 12px; padding-bottom: 16px }
+#main .cc-seq li:not(:last-child)::before { content: ''; position: absolute; left: 14px; top: 32px; bottom: 2px; width: 2px; background: #f0d872 }
+#main .cc-seq i { width: 30px; height: 30px; border-radius: 50%; background: #6b5a0e; color: #fff; font-style: normal; font-weight: 700; font-size: 14px; display: grid; place-items: center }
+#main .cc-seq b { display: block; font-size: 15.5px; line-height: 1.3; padding-top: 4px; color: #2f2b1c }
+#main .cc-seq small { display: block; font-size: 14px; line-height: 1.45; color: #6d6650; margin-top: 3px }

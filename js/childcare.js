@@ -141,6 +141,8 @@
      A plan in order ("Plan your …" timeline), what to send ("Pack for care"), "When things don't go to plan", "Good to know" (≤3). */
   const tl = (title, items, caption) => { const c = YEAR_PALETTES[CAT]; return `<figure class="hub-figure hub-daymarks oa-timeline" role="img" aria-label="${F(caption)}" style="--ink:${c.ink};--bg:${c.bg};--pale:${c.pale}"><b class="hub-fig-title">${F(title)}</b><ol class="hub-daymarks-list">${items.filter(Boolean).map(([when, icon, text]) => `<li><i>${hubArt(icon, CAT)}</i><time>${F(when)}</time><span>${F(text)}</span></li>`).join('')}</ol></figure>`; };
   const packCard = (title, sub, items) => `<section class="oa-extra cc-extra"><b>${F(title)}</b><small>${F(sub)}</small><ul>${items.filter(Boolean).map(([icon, t, x]) => `<li><span class="oa-extra-art">${hubArt(icon, CAT)}</span><span><b>${F(t)}</b>${x ? `<small>${F(x)}</small>` : ''}</span></li>`).join('')}</ul></section>`;
+  // Steps that happen in order: numbered, top to bottom, joined by a line.
+  const seq = (heading, items) => `<h2 class="hub-h2">${F(heading)}</h2><ol class="hub-card cc-seq">${items.map(([t, d], i) => `<li><i>${i + 1}</i><div><b>${F(t)}</b><small>${F(d)}</small></div></li>`).join('')}</ol>`;
   const picSteps = (heading, items, caption) => heading === 'When things don’t go to plan' ? rows(heading, items.filter(Boolean).map(([icon, t, s2]) => [icon, t, s2])) : `<h2 class="hub-h2">${F(heading)}</h2>` + hubIconSteps(items.filter(Boolean), CAT, F(caption), false);
   const rows = (heading, items) => H().list(heading, items.filter(Boolean).map(([icon, title, sub, go]) => H().row({ icon, cat: CAT, title, sub, onclick: go })));
   const good = items => rows('Good to know', items.filter(Boolean).slice(0, 3));
@@ -244,10 +246,10 @@
       + good([['blocks', 'Changing care', 'Overlap the old and new care for a few days if you can.']]), 'shield');
 
     if (id === 'share') return sub('nanny', 'Nanny share', 'Sharing a nanny', 'Two families split one nanny, for close to one-on-one care at a lower cost.',
-      `<h2 class="hub-h2">${F('How to set it up')}</h2>` + hubIconSteps([
-        ['heart', 'Find a family', 'Through local parent groups'],
-        ['home', 'Agree the basics', 'Whose home, the hours and the split'],
-        ['notepad', 'Hire together', 'Meet the nanny, and write it down']], CAT, F('Find a family through parent groups, agree whose home, the hours and the split, then meet the nanny together and write it down.'), true)
+      seq('How to set it up', [
+        ['Find a family', 'Ask in local parent groups. A baby close in age is easiest.'],
+        ['Agree the basics', 'Whose home, the hours, and how you split the pay.'],
+        ['Hire the nanny together', 'Meet them as a group, then put it all in writing.']])
       + picSteps('When things don’t go to plan', [
         ['thermo', 'One child is sick', 'Agree up front whether the share goes ahead, and at whose home.'],
         ['hand', 'A family leaves', 'Agree how much notice each family gives, so the nanny isn’t left short.']],
