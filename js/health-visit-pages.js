@@ -30,14 +30,16 @@
     12: { lead: 'Growth, a blood test for anemia, and moving to milk and cups.', checks: [['steth', 'green', 'Growth and a head-to-toe exam', 'Weight, length and head size, then heart, hips, eyes and skin'], ['drop', 'pink', 'Anemia check', 'A quick blood test'], ['home', 'blue', 'Lead test', 'A finger-prick test, routine in many areas'], ['cup', 'yellow', 'Milk and cups', 'Moving off bottles, and how much milk'], ['wave', 'peach', 'Development', 'Gestures, sounds and first steps']] }
   };
   // What's new at each age, step by step (AAP Bright Futures; mood screening at 1, 2, 4 and 6 months; fluoride varnish once teeth appear).
+  // Each step: the line every visit shares, then tags for what's covered at this age.
+  const FEEL = 'How you’re feeling';
   const VISIT = {
-    0: { ask: 'Feeding, diapers and sleep, and how your recovery is going.', exam: 'plus jaundice in the skin and eyes.', test: 'Results of the hearing, heart and blood-spot tests from the hospital.', shots: 'Hepatitis B, only if {s} didn’t get it in the hospital.' },
-    1: { ask: 'How feeds are going, and a short form about how you’re feeling.', exam: 'plus how {s} {move|moves} and {react|reacts} to sounds.', shots: 'Maybe one: hepatitis B, if it’s not left for 2 months.' },
-    2: { ask: 'Feeding and sleep, and a short form about how you’re feeling.', exam: 'plus how {s} {hold|holds} {p} head and {respond|responds} to you.', shots: 'Usually at the end of the visit.' },
-    4: { ask: 'Feeding, vitamin D and signs {s’s} getting ready for solids, plus a short form about how you’re feeling.', exam: 'plus head control and reaching.', shots: 'Usually last. Mostly the same ones as at 2 months.' },
-    6: { ask: 'How solids are going, iron and sleep, plus a short form about how you’re feeling.', exam: 'plus sitting, and a fluoride coating if teeth are in.', shots: 'Usually last, with a flu shot if it’s the season.' },
-    9: { ask: 'A short questionnaire about how {s} {talk|talks}, {move|moves} and {play|plays}.', exam: 'plus hearing, vision and teeth.', shots: 'Often none, unless one was missed.' },
-    12: { ask: 'Moving off bottles, how much milk, and first words.', exam: 'plus standing, first steps and teeth.', test: 'A finger or heel prick for iron, and for lead where it’s routine.', shots: 'Usually last. Mostly new vaccines this time.' }
+    0: { measure: ['Weight', 'Back to birth weight?'], ask: ['Feeding', 'Diapers', 'Sleep', 'Your recovery'], exam: ['Jaundice'], test: ['Results from the hospital', ['Hearing', 'Heart', 'Blood spot']], shots: 'Hepatitis B, only if {s} didn’t get it in the hospital.' },
+    1: { ask: ['Feeding', FEEL], exam: ['Moving', 'Reacting to sounds'], shots: 'Maybe one: hepatitis B, if it’s not left for 2 months.' },
+    2: { ask: ['Feeding', 'Sleep', FEEL], exam: ['Head control', 'Smiling at you'], shots: 'The first full round. Usually at the end of the visit.' },
+    4: { ask: ['Feeding', 'Vitamin D', 'Ready for solids?', FEEL], exam: ['Head control', 'Reaching'], shots: 'Mostly the same ones as at 2 months.' },
+    6: { ask: ['First foods', 'Iron', 'Sleep', FEEL], exam: ['Sitting', 'Fluoride, if teeth are in'], shots: 'Third doses, plus flu in season.' },
+    9: { askLine: 'A short questionnaire about development.', ask: ['Talking', 'Moving', 'Playing'], exam: ['Hearing', 'Vision', 'Teeth'], shots: 'Often none, unless one was missed.' },
+    12: { ask: ['Bottles to cups', 'How much milk', 'First words'], exam: ['Standing', 'First steps', 'Teeth'], test: ['A finger or heel prick', ['Iron', 'Lead, where routine']], shots: 'Mostly new vaccines this time.' }
   };
   // Before you go: the full list once, at the first checkup. Later checkups list only what's new for that visit (none if nothing is).
   const BRING = age => age === 0 ? [['shirt', 'green', 'Easy clothes', 'Something that comes off quickly'], ['pacifier', 'peach', 'A feed or a pacifier', 'It’s fine to feed during the visit']]
@@ -47,17 +49,17 @@
     // First week: jaundice at home, since it peaks in these days (AAP, HealthyChildren.org).
     const jaundice = age === 0 ? H().versus('Yellow skin at home: normal, or time to call?', ['Normal', 'A little yellow on the face in the first week, feeding well.'], ['Call your pediatrician', 'Yellow on the belly, legs or eyes, poor feeding, or very sleepy.']) : '';
     if (window.__hlOld) return frame(head(age, 'green', 'What to expect', e.lead) + H().list('What they’ll check', e.checks.map(c => row(...c))) + jaundice + H().list('Before you go', BRING(age).map(c => row(...c))));
-    // Nov 19, round 2: the visit in the order it happens, as numbered steps, with what's new at this age folded into each step.
+    // Nov 19, round 2: the visit in the order it happens, one step per stop, with tags for what's covered at this age.
     // Order: measuring first, then questions, the pediatrician's exam, tests, and shots last (AAP Bright Futures visit flow).
-    const V = VISIT[age];
+    const V = VISIT[age], tags = xs => `<span class="hl-tags">${xs.map(x => `<em>${F(x)}</em>`).join('')}</span>`;
     const steps = [
-      ['Weigh and measure', age === 0 ? 'Undressed to the diaper. Weight shows whether {s} {are|is} getting back to birth weight.' : 'Undressed to the diaper: weight, length and head size, added to {p} growth chart.'],
-      ['Questions for you', V.ask],
-      ['The exam', 'Head to toe: heart, hips, eyes and skin, ' + V.exam],
-      V.test && ['A quick test', V.test],
-      ['Shots', V.shots]
+      ['stand', 'green', 'Weigh and measure', 'Undressed down to the diaper.', V.measure || ['Weight', 'Length', 'Head size']],
+      ['chat', 'yellow', 'Questions for you', V.askLine || 'Your pediatrician asks about', V.ask],
+      ['steth', 'pink', 'The exam', 'Heart, hips, eyes and skin, plus', V.exam],
+      V.test && ['drop', 'peach', 'A quick test', V.test[0], V.test[1]],
+      ['shield', 'blue', 'Shots', V.shots]
     ].filter(Boolean);
-    const flow = `<h2 class="hub-h2">${F('How the visit goes')}</h2><section class="hub-card hl-flow"><ol>${steps.map(([t, d]) => `<li><b>${F(t)}</b><span>${F(d)}</span></li>`).join('')}</ol><p class="hl-flow-note">${F('Some offices do these in a different order.')}</p></section>`;
+    const flow = `<h2 class="hub-h2">${F('How the visit goes')}</h2><section class="hub-card hl-flow"><ol>${steps.map(([icon, tone, t, d, xs]) => `<li style="--hl-bg:${T[tone][0]};--hl-ink:${T[tone][1]}"><i class="hl-flow-ic">${hubArt(icon, 'Health')}</i><div><b>${F(t)}</b><span>${F(d)}</span>${xs ? tags(xs) : ''}</div></li>`).join('')}</ol><p class="hl-flow-note">${F('Some offices do these in a different order.')}</p></section>`;
     return frame(head(age, 'green', 'What to expect', e.lead) + flow + jaundice + H().list('Before you go', BRING(age).map(c => row(...c))));
   }
 

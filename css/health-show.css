@@ -14,16 +14,19 @@
 /* The checkup row already shows which checkup you are reading and marks the next one, so the preview banner is not needed (as in Development) */
 #main .hub-page:has(.hl-path) .st-banner{display:none}
 
-/* What to expect: the visit in order, as a numbered line */
-#main .hl-flow{padding:16px 16px 12px}
-#main .hl-flow ol{list-style:none;margin:0;padding:0;counter-reset:s}
-#main .hl-flow li{position:relative;padding:0 0 16px 40px;counter-increment:s}
-#main .hl-flow li::before{content:counter(s);position:absolute;left:0;top:-1px;width:26px;height:26px;border-radius:50%;background:#e6f5ec;color:#356651;font-weight:700;font-size:13.5px;display:grid;place-items:center}
-#main .hl-flow li:not(:last-child)::after{content:"";position:absolute;left:12.5px;top:29px;bottom:3px;width:1.5px;background:#cfe6d9}
-#main .hl-flow li b{display:block;font-size:15.5px;color:var(--ink,#302d3c);line-height:1.3}
-#main .hl-flow li span{display:block;font-size:14px;line-height:1.45;color:#5d6276;margin-top:3px}
-#main .hl-flow li:last-child{padding-bottom:4px}
-#main .hl-flow-note{margin:10px 0 0;padding-top:10px;border-top:1px solid var(--line,#ebe6e1);font-size:12.5px;color:var(--ink-2,#857d86)}
+/* What to expect: the visit in order. Each stop has its own soft icon, joined by a line, with tags for this age */
+#main .hl-flow{padding:18px 16px 12px}
+#main .hl-flow ol{list-style:none;margin:0;padding:0}
+#main .hl-flow li{position:relative;display:grid;grid-template-columns:44px 1fr;gap:14px;padding-bottom:20px}
+#main .hl-flow li:not(:last-child)::after{content:"";position:absolute;left:21px;top:48px;bottom:4px;border-left:2px dotted #cfd9d3}
+#main .hl-flow-ic{width:44px;height:44px;border-radius:14px;background:var(--hl-bg);color:var(--hl-ink);display:grid;place-items:center;font-style:normal}
+#main .hl-flow-ic svg{width:24px;height:24px}
+#main .hl-flow li b{display:block;font-size:16px;color:var(--ink,#302d3c);line-height:1.25;margin-top:2px}
+#main .hl-flow li span{display:block;font-size:14px;line-height:1.4;color:#6a6f80;margin-top:3px}
+#main .hl-flow .hl-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+#main .hl-flow .hl-tags em{font-style:normal;font-size:13px;font-weight:600;line-height:1;padding:7px 10px;border-radius:999px;background:var(--hl-bg);color:var(--hl-ink)}
+#main .hl-flow li:last-child{padding-bottom:6px}
+#main .hl-flow-note{margin:8px 0 0;padding-top:10px;border-top:1px solid var(--line,#ebe6e1);font-size:12.5px;color:var(--ink-2,#857d86)}
 /* Tags naming an object in a photo */
 #main .hl-tag{position:absolute;display:flex;flex-direction:column;align-items:center;gap:6px;transform:translate(-50%,-7px)}
 #main .hl-tag-t{flex-direction:column-reverse;transform:translate(-50%,calc(-100% + 7px))}
