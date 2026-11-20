@@ -954,7 +954,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     check: q => { let t = TB.top(q, q.why); const m = q.where && window.careMini ? careMini({ newborn: 'milia', yeast: 'diaper' }[q.where] || q.where) : '';
       if (m) t = t.replace(/<span class="dev-area-head-art">[\s\S]*?<\/svg><\/span>/, `<span class="dev-area-head-art care-rash-art">${m}</span>`);
       const fig = q.where ? tellMap(q.where) : q.figure ? q.figure() : q.signs ? TB.tiles(val(q.signs), false) : '';
-      return t + TB.section(q.tellTitle || (q.verdict ? 'What it looks like' : 'How to tell'), TB.noted(fig, q.tell))
+      return t + TB.section(q.tellTitle || (q.verdict ? 'What it looks like' : 'How to tell'), q.tellTiles && fig && window.__hub && window.__hub.TPLB.minis ? window.__hub.TPLB.minis(fig, val(q.tell), CAT) : TB.noted(fig, q.tell))
         + TB.section('What helps', TB.noted(TB.tiles(val(q.helps), false), q.helpsNotes))
         + callsCard(q.calls); }
   };
@@ -1133,10 +1133,11 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   TPL.poop = { type: 'check', k: 'diapers', eyebrow: 'Is this normal?', title: 'Nearly every poop color is normal',
     why: 'Color mostly comes down to what {s} {eat|eats} and how fast it moves through.',
     figure: () => poopChart(),
+    tellTiles: true,
     tell: () => [
-      tplNow === 0 ? null : live() && profile.feed === 'Formula' ? ['clock', 'Most days is usual on formula', 'Some days more, some less'] : ['clock', 'Days between poops can be normal', live() && profile.feed === 'Both' ? 'A few days apart is fine if {s’s} feeding well' : 'Breastfed babies can go days between'],
-      ['diaper', 'Straining and going red is normal', 'Even when the poop comes out soft'],
-      tplNow >= 2 ? ['bowl', 'Solids make it thicker and smellier', 'Sometimes the color of the food'] : null],
+      tplNow === 0 ? null : live() && profile.feed === 'Formula' ? ['clock', 'Most days', 'Usual on formula'] : ['clock', 'Days apart', live() && profile.feed === 'Both' ? 'Fine if feeding well' : 'Normal if breastfed'],
+      ['diaper', 'Straining', 'Normal if poop is soft'],
+      tplNow >= 2 ? ['bowl', 'After solids', 'Thicker and smellier'] : null],
     helps: () => [['hand', 'Straining or gassy?', 'Bicycle {p} legs and rub {p} tummy'], tplNow >= 2 ? ['bowl', 'Hard poop?', 'Pears, prunes or peaches'] : ['bottle', 'Keep feeding as usual', 'Milk keeps it soft']],
     calls: { ped: 'fewer than 6 wet diapers a day, or poop that’s hard and pebble-like.', now: () => tplNow <= 1 ? 'white, gray or chalky poop, or watery poop many times a day.' : 'poop that’s white, gray or chalky.' } };
 

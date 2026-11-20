@@ -91,26 +91,82 @@
     card: (text, notes) => text ? `<section class="ss-do care-tpl-card"><p>${F(tval(text))}</p>${TPLB.ul(notes)}</section>` : '',
     // Nov 17: nothing is cut off silently. Over the limit (2 notes, 3 rows) still shows everything, and is marked for QA (tools/qa/browser/template_limits.py).
     ul: notes => { notes = (tval(notes) || []).filter(Boolean); return notes.length ? `<ul class="tpl-notes"${notes.length > 2 ? ' data-over-limit="notes"' : ''}>${notes.map(([, t, sub]) => `<li><b style="color:#302d3c">${F(t)}${/[?!.]$/.test(t) ? '' : '.'}</b> ${F(sub)}${/[?!.]$/.test(sub) ? '' : '.'}</li>`).join('')}</ul>` : ''; },
+    minis: (fig, items, cat) => { const its = (tval(items) || []).filter(Boolean); if (!its.length) return fig; const html = `<div class="tpl-minis">${its.map(([icon, t, sub]) => `<div><span class="tpl-mini-ic">${art(icon, cat)}</span><b>${F(t)}</b><small>${F(sub)}</small></div>`).join('')}</div>`;
+      let i = fig.lastIndexOf('</figure>'); if (i < 0) i = fig.lastIndexOf('</section>'); return i < 0 ? fig + html : fig.slice(0, i) + html + fig.slice(i); },
     noted: (fig, notes) => { const ul = TPLB.ul(notes); if (!fig || !ul) return fig || ''; let i = fig.lastIndexOf('</figure>'); if (i < 0) i = fig.lastIndexOf('</section>'); return i < 0 ? fig + ul : fig.slice(0, i) + ul + fig.slice(i); },
-    tiles: (items, cat, numbered) => (items = tval(items)) && items.length ? hubIconSteps(items, cat, F(items.map(t => t[1] + ': ' + t[2]).join('. ')), !!numbered) : '',
+    // A tile whose art is 'photo:<path>' shows that photo in place of the icon (Nov 19).
+    tiles: (items, cat, numbered) => { items = tval(items); if (!items || !items.length) return '';
+      let h = hubIconSteps(items.map(t => /^photo:/.test(t[0]) ? ['bowl', ...t.slice(1)] : t), cat, F(items.map(t => t[1] + ': ' + t[2]).join('. ')), !!numbered);
+      if (!items.some(t => /^photo:/.test(t[0]))) return h; let i = 0;
+      h = h.replace(/<span class="hub-iconstep-art"[^>]*>[\s\S]*?<\/svg><\/span>/g, m => { const t = items[i++]; return t && /^photo:/.test(t[0]) ? `<span class="ph-tile">${TPLB.pimg(t[0].slice(6), t[1])}</span>` : m; });
+      return h.replace('class="hub-figure hub-iconsteps', 'class="hub-figure hub-iconsteps ph-tiles'); },
     rows: (rows, cat) => { rows = (tval(rows) || []).filter(Boolean); return rows.length ? `<div class="hub-list"${rows.length > 3 ? ' data-over-limit="rows"' : ''}>${rows.map(([icon, t, sub]) => row({ icon, cat, title: t, sub })).join('')}</div>` : ''; },
     calls: c => { c = tval(c); if (!c) return ''; const PH = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h3l2 5-2.5 1.5a11 11 0 0 0 6 6L15 14l5 2v3a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>';
-      return `<h2 class="hub-h2">${F('When to call')}</h2><section class="care-calls is-titled"><span class="care-calls-ico">${PH}</span><div>` + (c.ped ? `<p><b>${F('Call your pediatrician if:')}</b> ${F(tval(c.ped))}</p>` : '') + (c.now ? `<p class="is-urgent"><b>${F((c.nowLabel || 'Call right away') + ' if:')}</b> ${F(tval(c.now))}</p>` : '') + `</div></section>`; }
+      return `<h2 class="hub-h2">${F('When to call')}</h2><section class="care-calls is-titled"><span class="care-calls-ico">${PH}</span><div>` + (c.ped ? `<p><b>${F('Call your pediatrician if:')}</b> ${F(tval(c.ped))}</p>` : '') + (c.now ? `<p class="is-urgent"><b>${F((c.nowLabel || 'Call right away') + ' if:')}</b> ${F(tval(c.now))}</p>` : '') + `</div></section>`; },
+
+    /* ---------- Photo blocks (Nov 19, show don't tell). Images are assets/<path>.jpg; every label is drawn by the app, never baked in. ---------- */
+    pimg: (src, alt) => `<img src="assets/${src}.jpg" alt="${F(alt).replace(/"/g, '&quot;')}" loading="lazy">`,
+    // One photo that teaches the page's main idea, with labels the app draws on top: pins [label, x%, y%, side r|l|b|bl].
+    photoPins: (src, alt, pins, cls = '') => `<figure class="ph-photo ph-hero ${cls}">${TPLB.pimg(src, alt)}${pins.map(([l, x, y, side]) => `<span class="ph-pin ph-pin-${side}" style="left:${x}%;top:${y}%"><i></i><span>${F(l)}</span></span>`).join('')}</figure>`,
+    // Photo tiles, three shown and the rest one tap away: [src, title, line].
+    // mark 'no' puts a small red cross on each photo, for foods to wait on.
+    photoGridMore: (items, moreLabel, mark) => { items = tval(items); const more = items.length > 3;
+      return `<section class="ph-grid${more ? ' ph-has-more' : ''}${mark ? ' is-' + mark : ''}">${items.map(([src, t, sub], i) => `<figure class="${i > 2 ? 'ph-more' : ''}"><span class="ph-tile">${TPLB.pimg(src, t)}${mark === 'no' ? '<i class="ph-x" aria-hidden="true"></i>' : ''}</span><figcaption><b>${F(t)}</b><span>${F(sub)}</span></figcaption></figure>`).join('')}`
+        + (more ? `<button class="ph-more-btn" onclick="this.parentNode.classList.add('is-open')">${F(moreLabel || 'See more')} <span aria-hidden="true">›</span></button>` : '') + `</section>`; },
+    // The same steps for one food at a time, with chips to switch foods and this baby's step marked.
+    // cols [[title, age]], foods [[name, [src, src, src]]], now = column index.
+    photoSwitch: (cols, foods, now) => `<section class="care-tpl-card ph-switch" data-food="0">${foods.map(([n, srcs], f) => `<div class="ph-switch-row" data-f="${f}">${srcs.map((src, i) => `<figure class="${i === now ? 'is-now' : ''}"><span class="ph-tile">${TPLB.pimg(src, n + ', ' + cols[i][0].toLowerCase())}</span></figure>`).join('')}</div>`).join('')}`
+      + `<div class="ph-switch-cols">${cols.map(([t, d], i) => `<span class="${i === now ? 'is-now' : ''}">${i === now ? `<em class="ph-now">${F('Maya’s age')}</em>` : ''}<b>${F(t)}</b>${F(d)}</span>`).join('')}</div>`
+      + `<div class="ph-chips" role="tablist">${foods.map(([n], f) => `<button role="tab" aria-selected="${f === 0}" class="${f === 0 ? 'is-on' : ''}" onclick="const s=this.closest('.ph-switch');s.dataset.food='${f}';s.querySelectorAll('.ph-chips button').forEach((b,i)=>{b.classList.toggle('is-on',i===${f});b.setAttribute('aria-selected',i===${f})})">${F(n)}</button>`).join('')}</div></section>`,
+    // Secondary detail behind one tappable row.
+    fold: (title, html) => html ? `<details class="ph-fold"><summary>${F(title)}</summary>${html}</details>` : '',
+    // A result line when the parent has reached a decision: tone 'ok' (green) or 'next' (neutral).
+    result: (title, line, tone = 'ok') => `<section class="ph-result is-${tone}"><i aria-hidden="true"></i><div><b>${F(title)}</b>${line ? `<span>${F(line)}</span>` : ''}</div></section>`,
+    // Photo tiles to tick, two across, headed like the allergen tracker ("Tap each one… · 0 of 9"): [src, label].
+    photoTicks: (items, o) => { items = tval(items); const n = items.filter((_, i) => o.isOn(i)).length;
+      return `<section class="care-tpl-card ph-ticks"><div class="ph-ticks-top"><span>${F(o.title)}</span><b>${n} ${F('of')} ${items.length}</b></div><div class="ph-ticks-grid">`
+        + items.map(([src, t], i) => { const on = o.isOn(i); return `<button class="ph-tick-tile${on ? ' is-on' : ''}" role="checkbox" aria-checked="${on}" onclick="${o.onclick(i)}"><span class="ph-tile">${TPLB.pimg(src, t)}<i class="ph-tick" aria-hidden="true"></i></span><b>${F(t)}</b></button>`; }).join('') + `</div></section>`; },
+    // Normal vs act-now, the house versus card with a photo on top of each side: [src, title, text].
+    photoVersus: (a, b, notes) => `<section class="care-tpl-card tpl-versus ph-versus"><div>${[[a, 'is-ok'], [b, 'is-act']].map(([[src, t, x], c]) => `<div class="${c}"><span class="ph-tile">${TPLB.pimg(src, t)}</span><b>${F(t)}</b><p>${F(x)}</p></div>`).join('')}</div>${TPLB.ul(notes)}</section>`,
+    // Photo rows: thumbnail, title, one line. With o.isOn/o.onclick each row is a checkbox; o.title and o.count head the card.
+    photoRows: (items, o = {}) => { items = tval(items).filter(Boolean); const tick = !!o.onclick, n = tick ? items.filter((_, i) => o.isOn(i)).length : 0;
+      return `<section class="ph-rows${tick ? ' ph-signs' : ''}">${o.title ? `<div class="ph-signs-top"><b>${F(o.title)}</b>${tick ? `<span class="ph-count">${n} ${F('of')} ${items.length}</span>` : ''}</div>` : ''}`
+        + items.map(([src, t, sub], i) => { const on = tick && o.isOn(i), inner = `<span class="ph-thumb">${TPLB.pimg(src, t)}</span><span class="ph-sign-txt"><b>${F(t)}</b><span>${F(sub)}</span></span>`;
+          return tick ? `<button class="ph-sign${on ? ' is-on' : ''}" role="checkbox" aria-checked="${on}" onclick="${o.onclick(i)}">${inner}<i class="ph-tick" aria-hidden="true"></i></button>` : `<div class="ph-row">${inner}</div>`; }).join('') + `</section>`; },
+    // A grid of photo tiles, three across: [src, title, line].
+    photoGrid: items => `<section class="ph-grid">${tval(items).map(([src, t, sub]) => `<figure><span class="ph-tile">${TPLB.pimg(src, t)}</span><figcaption><b>${F(t)}</b><span>${F(sub)}</span></figcaption></figure>`).join('')}</section>`,
+    // Two photos, wrong and right: [src, ok, title, line].
+    photoPair: items => `<section class="ph-pair">${tval(items).map(([src, ok, t, sub]) => `<figure><span class="ph-tile">${TPLB.pimg(src, t + ': ' + sub)}</span><figcaption><b class="ph-mark is-${ok ? 'yes' : 'no'}">${F(t)}</b><span>${F(sub)}</span></figcaption></figure>`).join('')}</section>`,
+    // The same thing at each age, with this baby's age marked: [src, age, title, line, isNow].
+    photoAges: items => `<section class="ph-ages">${tval(items).map(([src, age, t, sub, now]) => `<figure class="${now ? 'is-now' : ''}"><span class="ph-tile">${TPLB.pimg(src, t)}${now ? `<em class="ph-now">${F('Maya now')}</em>` : ''}</span><figcaption><small>${F(age)}</small><b>${F(t)}</b><span>${F(sub)}</span></figcaption></figure>`).join('')}</section>`,
+    // Calm vs act-now as two photo cards: [src, 'ok'|'stop', title, [signs]].
+    photoVs: items => `<div class="ph-vs">${tval(items).map(([src, tone, t, xs]) => `<div class="ph-vs-card is-${tone}"><span class="ph-tile">${TPLB.pimg(src, t)}</span><b>${F(t)}</b><ul>${xs.map(x => `<li>${F(x)}</li>`).join('')}</ul></div>`).join('')}</div>`,
+    // Rows of the same foods across ages, this baby's column marked. cols [[title, age]], rows [[name, [src, src, src]]].
+    photoTable: (cols, rows, now) => `<section class="ph-tex"><div class="ph-tex-row ph-tex-head"><span></span>${cols.map(([t, d], i) => `<span class="${i === now ? 'is-now' : ''}">${i === now ? `<em class="ph-now">${F('Maya’s age')}</em>` : ''}<b>${F(t)}</b>${F(d)}</span>`).join('')}</div>`
+      + rows.map(([n, srcs]) => `<div class="ph-tex-row"><b class="ph-tex-food">${F(n)}</b>${srcs.map((src, i) => `<span class="ph-tile${i === now ? ' is-now' : ''}">${TPLB.pimg(src, n + ', ' + cols[i][0].toLowerCase())}</span>`).join('')}</div>`).join('') + `</section>`,
+    // What to do, side by side in calm and urgent colors: [[title, text], [title, text]].
+    doPair: (a, b) => `<section class="ph-do"><div class="is-ok"><b>${F(a[0])}</b><span>${F(a[1])}</span></div><div class="is-stop"><b>${F(b[0])}</b><span>${F(b[1])}</span></div></section>`,
+    // A plain list in a white card, title and one line each, no icons: facts or signs with no order.
+    plain: items => `<section class="ph-list">${tval(items).filter(Boolean).map(([t, sub]) => `<div><b>${F(t)}</b>${sub ? `<span>${F(sub)}</span>` : ''}</div>`).join('')}</section>`,
+    // Numbered steps, one per line, for a real sequence where each step needs a sentence (first aid).
+    numbered: (items, tone) => `<section class="ph-steps-list${tone ? ' is-' + tone : ''}">${tval(items).map(([t, sub], i) => `<div><em>${i + 1}</em><b>${F(t)}</b>${sub ? `<span>${F(sub)}</span>` : ''}</div>`).join('')}</section>`,
   };
   const TPLS = {
     // When it's urgent: how to tell, what to do, then the call card last, with 911 directly under the pediatrician line.
-    urgent: (q, cat) => TPLB.sec('How to tell', TPLB.noted(q.figure ? q.figure() : TPLB.tiles(q.signs, cat), q.tell))
-      + TPLB.sec(q.doTitle || 'What to do now', !q.do ? '' : Array.isArray(tval(q.do)) ? TPLB.noted(TPLB.tiles(q.do, cat, q.doOrdered), q.doNotes) : TPLB.card(q.do, q.doNotes))
-      + (q.link ? TPLB.link(...q.link) : '') + TPLB.calls(q.calls),
+    urgent: (q, cat) => TPLB.sec(tval(q.tellTitle) || 'How to tell', TPLB.noted(q.figure ? q.figure() : TPLB.tiles(q.signs, cat), q.tell))
+      + TPLB.sec(tval(q.doTitle) || 'What to do now', q.doFig ? TPLB.noted(q.doFig(), q.doNotes) : !q.do ? '' : Array.isArray(tval(q.do)) ? TPLB.noted(TPLB.tiles(q.do, cat, q.doOrdered), q.doNotes) : TPLB.card(q.do, q.doNotes))
+      + (q.video ? `<div class="ph-video">${hubEmbed(...q.video)}</div>` : '') + (q.link ? TPLB.link(...q.link) : '') + TPLB.calls(q.calls),
     expect: (q, cat) => { const n = tval(q.normal); return TPLB.sec(tval(q.normalTitle) || 'What’s normal', TPLB.noted(Array.isArray(n) ? TPLB.tiles(n, cat, q.normalOrdered) : n, q.normalNotes))
-      + (q.more ? TPLB.sec(tval(q.moreTitle), tval(q.more)) : '')
-      + TPLB.sec(tval(q.doTitle) || 'What to do', Array.isArray(tval(q.do)) ? TPLB.noted(TPLB.tiles(q.do, cat, q.doOrdered), q.doNotes) : TPLB.card(q.do, q.doNotes))
+      + (q.more ? TPLB.sec(tval(q.moreTitle), q.moreNotes ? TPLB.noted(tval(q.more), q.moreNotes) : tval(q.more)) : '')
+      + TPLB.sec(tval(q.doTitle) || 'What to do', q.doFig ? TPLB.noted(q.doFig(), q.doNotes) : Array.isArray(tval(q.do)) ? TPLB.noted(TPLB.tiles(q.do, cat, q.doOrdered), q.doNotes) : TPLB.card(q.do, q.doNotes))
       + (q.action ? q.action() : '') + TPLB.sec('Watch how', q.video ? hubEmbed(...q.video) : '') + TPLB.calls(q.calls); },
     // pictureAfter: a tool (like the allergen tracker) goes after the steps it supports.
     howto: (q, cat) => { const pic = TPLB.sec(tval(q.pictureTitle) || 'At a glance', q.picture ? q.picture() : ''), steps = TPLB.sec(tval(q.stepsTitle) || (q.ordered === false ? 'What to do' : 'Steps'), TPLB.noted(q.stepsFig ? q.stepsFig() : TPLB.tiles(q.steps, cat, q.ordered !== false), q.stepsNotes)) + (q.action ? q.action() : '');
       return (q.pictureAfter ? steps + pic : pic + steps)
-      + TPLB.sec(q.tipsTitle || 'Keep {o} safe', TPLB.rows(q.tips, cat)) + TPLB.sec('Watch how', q.video ? hubEmbed(...q.video) : ''); },
-    check: (q, cat) => TPLB.sec(tval(q.tellTitle) || 'How to tell', TPLB.noted(q.figure ? q.figure() : TPLB.tiles(q.signs, cat), q.tell))
+      // Nov 19: secondary detail (q.tipsFold) folds behind one row, so the page is the picture and the steps.
+      + (q.tipsFold && tval(q.tips) ? TPLB.fold(tval(q.tipsTitle), TPLB.rows(q.tips, cat)) : TPLB.sec(q.tipsTitle || 'Keep {o} safe', TPLB.rows(q.tips, cat))) + TPLB.sec('Watch how', q.video ? hubEmbed(...q.video) : ''); },
+    // Nov 19 (Yarden: "this part feels dense"): under a chart, the tell lines are small icon tiles side by side, not sentences.
+    check: (q, cat) => TPLB.sec(tval(q.tellTitle) || 'How to tell', q.figure && q.tellTiles ? TPLB.minis(q.figure(), q.tell, cat) : TPLB.noted(q.figure ? q.figure() : TPLB.tiles(q.signs, cat), q.tell))
       + TPLB.sec('What helps', TPLB.noted(TPLB.tiles(q.helps, cat, q.ordered), q.helpsNotes)) + TPLB.calls(q.calls),
     option: (q, cat) => TPLB.sec('At a glance', tval(q.glance)) + TPLB.sec('How it works', tval(q.how)) + TPLB.sec('Good to know', TPLB.rows(q.tips, cat))
   };
@@ -138,10 +194,10 @@
   const aidDone = () => !!(L().safe && L().safe.Feeding && L().safe.Feeding[1]);
 
   const READY = [
-    ['{S} {hold|holds} {p} head up on {p} own', 'Steady, without you supporting it', 'head'],
-    ['{S} {sit|sits} up with a little support', 'In a high chair or propped on your lap', 'sit'],
-    ['{S} {lean|leans} in when food comes {p} way', 'And {open|opens} {p} mouth for the spoon', 'mouth'],
-    ['{S} {swallow|swallows} instead of pushing food out', 'That tongue push fades as {s} {get|gets} ready', 'swallow']
+    ['{S} {hold|holds} {p} head up on {p} own', 'Steady, without you supporting it', 'head', 'Steady head'],
+    ['{S} {sit|sits} up with a little support', 'In a high chair or propped on your lap', 'sit', 'Sits with support'],
+    ['{S} {lean|leans} in when food comes {p} way', 'And {open|opens} {p} mouth for the spoon', 'mouth', 'Leans in for food'],
+    ['{S} {swallow|swallows} instead of pushing food out', 'That tongue push fades as {s} {get|gets} ready', 'swallow', 'Swallows, no tongue push']
   ];
   const ALLERGENS = [['Peanut', 'thinned peanut butter'], ['Egg', 'well-cooked egg'], ['Dairy', 'a spoonful of yogurt'], ['Wheat', 'soft pasta'], ['Soy', 'soft tofu'], ['Sesame', 'a little tahini'], ['Tree nuts', 'thinned almond butter'], ['Fish', 'flaked salmon'], ['Shellfish', 'chopped shrimp']];
 
@@ -388,7 +444,7 @@
         + (n === 4 && age >= 6 && C().live() && answers.solids !== 'Yes' ? `<div class="hub-actions"><button class="hub-button" onclick="setFeedingStage('starting');hubToast('Got it','Feeding now shows first tastes.');openPage('topic:Feeding')">${F('We’re starting today')}</button></div>` : ''));
     }
     if (id === 'setup') {
-      const SETUP = [['Get a high chair with a harness', 'One that keeps {o} upright, with {p} feet supported', 'highchair'], ['Learn infant choking first aid', 'A short class or video, so you know what to do', 'shield'], ['Know gagging from choking', 'Gagging is noisy and normal. Choking is silent.', 'mouth'], ['Have a soft spoon and an open cup', 'Small soft-tipped spoons, and a cup for sips of water', 'cup']];
+      const SETUP = [['Get a high chair with a harness', 'One that keeps {o} upright, with {p} feet supported', 'highchair'], ['Learn infant choking first aid', 'A short class or video, so you know what to do', 'shield'], ['Know gagging from choking', 'Gagging is noisy and normal. Choking is quiet or weak.', 'mouth'], ['Have a soft spoon and an open cup', 'Small soft-tipped spoons, and a cup for sips of water', 'cup']];
       const on = i => !!(L().safe && L().safe.Feeding && L().safe.Feeding[i]), done = SETUP.filter((_, i) => on(i)).length;
       return detail(cat, 'Preparing for solids', 'Get set up for the first bite', 'A few things to sort out before the first meal. Tick them off as you go.',
         `<p class="hub-group">${done} of 4 done</p>` + ticks(SETUP, on, i => `chgToggleSafe('Feeding',${i})`, 'Feeding') + hubEmbed('ShaNuST_58A', 'What to do when a baby is choking', 'American Red Cross') + tip('Good to know', 'You don’t need special gadgets. A spoon, a bowl and a safe seat are plenty.'), 'highchair');
@@ -1375,7 +1431,7 @@
     return baseRoute(p);
   };
   // Building blocks shared with the other categories (js/hub-categories.js).
-  window.__hub = { sleepTaskOn, setSleepTask: (i, on) => { const st = L().safe || (L().safe = { Sleep: {}, Feeding: {} }); st.Sleep = Object.assign({}, st.Sleep, { [i]: on }); if (!on) delete st.Sleep[i]; C().save(); }, tplPage, TPLB, TPLS, F, qa, row, list, hero, tiles, glanceCard, versus, next, more, note, art, chev, chip, tip, steps, tips, video, detail, mixedList, ticks, listMore,
+  window.__hub = { READY, signsOn, signsSeen, sleepTaskOn, setSleepTask: (i, on) => { const st = L().safe || (L().safe = { Sleep: {}, Feeding: {} }); st.Sleep = Object.assign({}, st.Sleep, { [i]: on }); if (!on) delete st.Sleep[i]; C().save(); }, tplPage, TPLB, TPLS, F, qa, row, list, hero, tiles, glanceCard, versus, next, more, note, art, chev, chip, tip, steps, tips, video, detail, mixedList, ticks, listMore,
     pills: (label, items) => `<nav class="hub-pills" id="hub-pills" aria-label="${esc(label)}">${items.map(it => `<button class="${it.on ? 'is-on' : ''} ${it.now ? 'is-now' : ''}" onclick="${it.onclick}" ${it.on ? 'aria-current="step"' : ''}>${esc(it.label)}${it.now && !it.on ? ' <span class="hub-now">Now</span>' : ''}</button>`).join('')}</nav>` };
   window.positionHubPills = function () {
     const r = document.getElementById('hub-pills'), s = r && r.querySelector('.is-on');
