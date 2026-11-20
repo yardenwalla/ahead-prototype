@@ -235,3 +235,13 @@
 #main .oa3-stops small { display: block; font-size: 12px; line-height: 1.3; color: #5c5361; margin-top: 2px }
 #main .oa3[data-oa-page="gear"] .oa3-fig .oa-photo { aspect-ratio: 4 / 3 }
 #main .oa3 .oa-flatlay img { aspect-ratio: auto }
+/* Nov 20 round 3: three-stop road strip, room checks sized like rows, carrier line under the photo. */
+#main .oa3-stops[style*="--n:3"] { grid-template-columns: repeat(3, 1fr) }
+#main .oa3-stops[style*="--n:3"]::before { left: 16.6%; right: 16.6% }
+#main .oa3-checks .hub-row { width: 100%; text-align: left }
+#main .oa3-tick { flex: none; width: 26px; height: 26px; border-radius: 50%; border: 2px solid #d6cfc6; display: grid; place-items: center; font-style: normal; font-size: 14px; font-weight: 800; color: transparent; margin-left: 8px }
+#main .oa3-checks .hub-row.is-on .oa3-tick { background: var(--ss-ink); border-color: var(--ss-ink); color: #fff }
+#main .oa3-checks .hub-row.is-on b { color: #6b6670 }
+#main .oa3-checks + .oa-psteps-note { margin: -4px 4px 18px }
+#main .oa3-under { margin: -4px 4px 22px }
+#main .oa3-fold .oa-label-card { border: 0; margin: 0; padding: 4px 10px 8px }
