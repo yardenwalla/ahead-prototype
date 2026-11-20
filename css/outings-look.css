@@ -245,3 +245,5 @@
 #main .oa3-checks + .oa-psteps-note { margin: -4px 4px 18px }
 #main .oa3-under { margin: -4px 4px 22px }
 #main .oa3-fold .oa-label-card { border: 0; margin: 0; padding: 4px 10px 8px }
+@media (max-width:370px){ #main .oa-ba .oa-pin span{font-size:11px;padding:5px 7px} }
+#main .oa-ba figure { display:flex; flex-direction:column } #main .oa-ba .oa-ba-img { margin-top:auto }
