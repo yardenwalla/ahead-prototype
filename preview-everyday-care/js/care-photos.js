@@ -42,9 +42,30 @@
     [/^t:sun/, ['How it looks', 'sun', 'A baby in a sun hat and long sleeves, in the stroller’s shade', [['Wide-brimmed hat', 42, 28, 'l'], ['Long, light sleeves', 24, 76, 'r']]], 'sun'],
     [/^p:teething/, ['What to do', 'teethers', 'A teething ring and a firm rubber teether', [['Chilled, not frozen', 44, 62, 'b'], ['Firm rubber', 80, 47, 'b']], '', 'What to do'], 'teeth'],
     [/^h:gums/, ['How it looks', 'gums', 'Wiping a baby’s gums with a cloth on a finger', [['A soft, damp cloth', 40, 72, 'r']]], 'teeth'],
-    [/^p:feet/, ['How it looks', 'feet', 'A barefoot baby standing at the sofa', [['Bare feet grip the floor', 48, 90, 'r']]], 'clothes'],
-    [/^t:nails/, ['How it looks', 'nails', 'Trimming a baby’s nails with small clippers', [['Small, rounded clippers', 47, 60, 'b']]], 'nails']
+    [/^p:feet/, ['How it looks', 'feet', 'A barefoot baby standing at the sofa', [['Bare feet grip the floor', 48, 90, 'r']]], 'clothes']
   ];
+
+  // How it changes: the gear as a path, the same block as Outings' "Which seat, and when". Each step is named by the cue
+  // to move on, not an age, and the step this page is about is outlined.
+  const STEPS = {
+    bath: ['Which tub, and when', [['sponge', 'A sponge bath on a towel', 'Cord still on', 'Sponge baths'], ['tubbath', 'A baby tub with a sling', 'Cord healed', 'A baby tub'],
+      ['tubinbig', 'A baby tub set inside the big tub', 'Too big, can’t sit yet', 'Baby tub in the big tub'], ['bigtub', 'The big tub with shallow water', 'Sits steadily', 'The big tub']],
+      'Move on by what {s} can do, not the age on the box.'],
+    nails: ['File, then clippers', [['nailfile', 'Filing a newborn’s nails with a soft emery board', 'First weeks', 'A soft file, maybe twice a week'], ['nails', 'Trimming nails with small baby clippers', 'Once you’re ready', 'Baby clippers, about once a week']],
+      'Either is fine at any age. A file can’t nick the skin.']
+  };
+  const STEP_ON = { 'p:sponge': ['bath', 0], 'p:tub': ['bath', 1], 't:bath:0': ['bath', 0], 't:bath:1': ['bath', 1], 't:bath:2': ['bath', 2], 't:bath:3': ['bath', 3], 't:nails:0': ['nails', 0], 't:nails:1': ['nails', 1], 't:nails:2': ['nails', 1], 't:nails:3': ['nails', 1] };
+  const gearPath = (k, on) => { const [title, items, note] = STEPS[k];
+    return `<h2 class="hub-h2">${F(title)}</h2><div class="care-psteps" style="--n:${items.length}">${items.map(([n, alt, when, line], i) => `<figure class="${i === on ? 'is-on' : ''}">${img(n, alt)}<figcaption><b>${F(when)}</b><small>${F(line)}</small></figcaption></figure>`).join('')}</div><p class="care-psteps-note">${F(note)}</p>`; };
+  function addPath(main, r) {
+    const hit = STEP_ON[r]; if (!hit || main.querySelector('.care-psteps')) return;
+    // After the how-to and its safety rows, before Good to know and the video.
+    // Nails: the two tools are the page's picture, so the path is the first section (like Outings' car seat page).
+    if (hit[0] === 'nails') { const head = main.querySelector('.dev-area-head'); if (head) { head.insertAdjacentHTML('afterend', gearPath(hit[0], hit[1])); return; } }
+    const hs = [...main.querySelectorAll('h2.hub-h2')], before = hs.find(h => /^(Good to know|Watch how|When to call)$/.test(h.textContent.trim()));
+    const html = gearPath(hit[0], hit[1]);
+    if (before) before.insertAdjacentHTML('beforebegin', html); else (main.querySelector('.hub-page') || main).insertAdjacentHTML('beforeend', html);
+  }
 
   const route = () => (typeof page === 'string' && page.startsWith('chg:' + CAT + ':d:')) ? page.slice(('chg:' + CAT + ':d:').length) : null;
   const onCare = () => typeof page === 'string' && (page === 'topic:' + CAT || page.startsWith('chg:' + CAT));
@@ -88,6 +109,7 @@
     if (rm && RASH[rm[1]]) { const fig = main.querySelector('.care-map'); const svg = fig && fig.querySelector('svg');
       if (svg) { const s = document.createElement('span'); s.className = 'care-map-ph ph-tile'; s.innerHTML = img(RASH[rm[1]], (head.querySelector('h1') || {}).textContent || ''); svg.replaceWith(s); fig.classList.add('has-photo'); }
       return; }
+    addPath(main, r);
     const hit = PAGE.find(([re]) => re.test(r)); if (!hit || main.querySelector('.care-ph')) return;
     const [title, n, alt, pins, cls, into] = hit[1];
     // Most pages: the photo is the first section. A photo of what helps sits at the top of that page's own section instead.
