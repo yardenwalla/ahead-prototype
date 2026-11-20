@@ -3115,13 +3115,16 @@
     2: ['distracted-bottle', 'A baby turning away from the bottle mid-feed to look around'] };
   // Nov 19 (Yarden): one top card. The photo carries what you might notice as labels on the picture; the lead says why;
   // one thing to try closes the card. [photo, title, lead, try]
+  // Nov 20 (reviewer: the two "Milk feeds" cards read as the same stage). Every label carries its age range, like Safety's
+  // "Rolling · 3–6 months".
+  const EYE = (n, base) => (base || '') + '<span class="fd-age">' + ['0–6 weeks', '6 weeks–3 months', '3 months+', ageMo() >= 7 ? '6 months+' : 'Around 6 months', 'First few weeks', '7 months+', '9 months+'][n] + '</span>';
   const DISC = () => { const v = stg(), m = ageMo(), bot = isBottle() && !nurses();
     if (v === 0) return [0, 'Feeds come often', 'His stomach is tiny. Evenings are busiest, and it eases by 6–8 weeks.', 'Feed him when you see early cues, before he cries.'];
-    if (v === 1 && m < 3) return [1, 'He’s getting good at this', 'Feeds get quicker from about 6 weeks. That’s not less milk.', bot ? 'Let him end the feed, even if milk is left in the bottle.' : 'Let him end the feed, even if it’s sooner than usual.'];
+    if (v === 1 && m < 3) return [1, 'He’s getting good at this', 'Over the first few months, feeds get quicker. That’s not less milk.', 'Let him stop when he shows he’s full: slowing down, turning away, relaxed hands.'];
     if (v === 1) return [2, 'The world is interrupting his feeds', 'He notices everything. Distracted isn’t the same as full.', 'Feed somewhere quiet and dim, and offer again after a short pause.'];
     if (v === 2 && m >= 7) return [3, 'A good time to start', 'Iron matters more after 6 months. Bring your feeding questions to the checkup.', 'If he sits with support and swallows well, offer a soft, iron-rich food once a day.'];
     if (v === 2) return [3, 'Eating starts before the first bite', 'He’s watching, reaching, and learning what food is for.', 'Let him join you at meals and watch you eat.'];
-    if (v === 3 && m < 7.5) return [4, 'His tongue has a new job', 'Food coming back out is practice, not dislike.', 'Offer the same food a few days in a row, and watch him get better at it.'];
+    if (v === 3 && m < 7.5) return [4, 'His tongue has a new job', 'Food coming back out is practice, not dislike.', 'Offer small tastes, no pressure, and try the same food again over a few days.'];
     if (v === 3) return [5, 'Lumps are a big leap', 'Gagging on new textures is normal. It happens less with practice.', 'When he gags, stay calm and let him work it out.'];
     return [6, 'The mess is the milestone', 'Squishing and dropping food is how he practices.', 'Eat with him when you can, so he can copy you.']; };
   // Nov 19 (Yarden: labels covered the picture). Each dot sits beside the thing it names, never on it, and its label runs
@@ -3144,15 +3147,15 @@
   const discCss = `<style>#main .fd-hero.fd-disc{display:flex;flex-direction:column;min-height:463px;box-sizing:border-box}#main .fd-hero.fd-disc .fd-art{flex:1}#main .fd-hero .fd-art{display:grid;place-items:center;margin:6px -8px 6px}#main .fd-hero .fd-art svg{width:100%;max-width:290px;height:auto;filter:drop-shadow(0 9px 9px #754b5b18)}#main .fd-aha{background:#fffdfc;border-radius:16px;padding:14px 16px;box-shadow:0 3px 14px #a6798220;margin-top:2px}#main .fd-aha small{display:block;font-size:11px;font-weight:800;letter-spacing:.08em;color:#b87c8f;text-transform:uppercase;margin-bottom:5px}#main .fd-aha b{display:block;font-size:17px;line-height:1.25;color:var(--ink,#2b2732)}#main .fd-aha span{display:block;font-size:14px;line-height:1.45;color:#6d666d;margin-top:5px}#main .fd-try{display:flex;gap:12px;align-items:flex-start;margin:12px 0 4px;border-radius:16px;background:#e5f0e6;padding:14px 16px}#main .fd-try i{flex:none;width:32px;height:32px;border-radius:11px;background:#d0e3d2;color:#487456;display:grid;place-items:center}#main .fd-try small{display:block;font-size:11px;font-weight:800;letter-spacing:.08em;color:#5c7e67;text-transform:uppercase;margin:1px 0 4px}#main .fd-try p{margin:0;font-size:14.5px;line-height:1.45;color:#42634c;font-weight:550}</style>`;
   P.dirD = (() => { const prev = P.dirD; return (v) => { const h = prev(v); const a = h.indexOf('<header class="hub-hero fd-hero">'), e = h.indexOf('</header>', a); if (a < 0 || e < 0) return h;
     const head = h.slice(a, e), m = head.match(/<p class="hub-eyebrow">([^<]*)<\/p>/); if (!m) return h;
-    const [n, title, lead, tryT] = DISC(), ph = FD_PHOTO[n], wide = ph && /^(textures|fh)/.test(ph[0]);
+    const [n, title, lead, tryT] = DISC(), eye = EYE(n, m[1]), ph = FD_PHOTO[n], wide = ph && /^(textures|fh)/.test(ph[0]);
     const pic = ph && !window.__fdPhotoOff ? heroPhoto(ph[0], ph[1], DISC_PINS[ph[0]], wide) : `<div class="fd-art" aria-hidden="true"><svg viewBox="0 0 320 165" fill="none">${DISC_BASE}${DISC_ART[n]}</svg></div>`;
     const tryIn = `<div class="fd-try fd-try-in"><i aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.6.5 1 1.2 1 2V16h5.2v-.2c0-.8.4-1.5 1-2A6 6 0 0 0 12 3Z"/></svg></i><p><b>${F('Try this:')}</b> ${F(tryT)}</p></div>`;
     // Nov 20 (Yarden): the photo's empty cream side holds the words, like the inspiration's tiles. The baby sits on the
     // right; the photo is multiplied onto the card's color so its cream becomes the card. No labels on these.
     const split = ph && FD_SPLIT[n] && !window.__fdPhotoOff;
     const hero = split
-      ? `<header class="hub-hero fd-hero fd-disc fd-one fd-split"><div class="fd-split-top"><img class="fd-split-img" src="assets/feeding/${FD_SPLIT[n]}.jpg" alt="${F(ph[1])}"><div class="fd-split-copy"><p class="hub-eyebrow">${m[1]}</p><h1>${F(title)}</h1><p class="hub-lead">${F(lead)}</p></div></div>${tryIn}`
-      : `<header class="hub-hero fd-hero fd-disc fd-one"><p class="hub-eyebrow">${m[1]}</p><h1>${F(title)}</h1><p class="hub-lead">${F(lead)}</p>${pic}${tryIn}`;
+      ? `<header class="hub-hero fd-hero fd-disc fd-one fd-split"><div class="fd-split-top"><img class="fd-split-img" src="assets/feeding/${FD_SPLIT[n]}.jpg?v=1120p" alt="${F(ph[1])}"><div class="fd-split-copy"><p class="hub-eyebrow">${eye}</p><h1>${F(title)}</h1><p class="hub-lead">${F(lead)}</p></div></div>${tryIn}`
+      : `<header class="hub-hero fd-hero fd-disc fd-one"><p class="hub-eyebrow">${eye}</p><h1>${F(title)}</h1><p class="hub-lead">${F(lead)}</p>${pic}${tryIn}`;
     const tryCard = '';
     return h.slice(0, a) + discCss + hero + '</header>' + tryCard + h.slice(e + 9); }; })();
 
