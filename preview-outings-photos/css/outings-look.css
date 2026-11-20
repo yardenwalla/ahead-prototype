@@ -140,3 +140,39 @@
 #main .oa-ba figure:first-child .oa-pin span { background: #fdecea; color: #b23b2e }
 #main .oa-ba figure:first-child .oa-pin i { background: #b23b2e }
 #main .oa-ba figure:first-child img { filter: saturate(.85) }
+
+/* Show and tell, round 2 (Nov 20): photo beside every headline, gear photos, photo steps, icon tabs, the aircraft label. */
+#main .oa-photo-head { display: flex; gap: 14px; align-items: center; padding: 18px 16px 18px 20px }
+#main .oa-photo-head .oa-head-copy { flex: 1; min-width: 0 }
+#main .oa-photo-head .hub-context { margin-top: 0 }
+#main .oa-head-img { flex: none; width: 112px; height: 132px; object-fit: cover; border-radius: 18px; box-shadow: 0 6px 18px rgba(60, 40, 30, .12) }
+#main .oa-hero.has-photo { padding-right: 140px; min-height: 170px }
+#main .oa-hero-img { position: absolute !important; right: 16px; top: 18px; width: 112px; height: 136px; object-fit: cover; border-radius: 18px; box-shadow: 0 6px 18px rgba(60, 40, 30, .14); z-index: 1 }
+#main .oa-hero.has-photo::after { display: none }
+#main .oa-row.has-photo { align-items: center }
+#main .oa-gear-img { flex: none; width: 56px; height: 56px; border-radius: 14px; overflow: hidden; background: var(--hl-bg) }
+#main .oa-gear-img img { width: 100%; height: 100%; object-fit: cover; display: block }
+#main .oa-psteps { display: grid; grid-template-columns: repeat(var(--n), 1fr); gap: 8px; margin: 0 0 8px }
+#main .oa-psteps figure { margin: 0; background: var(--white, #fffefb); border: 1px solid var(--line, #e1e5d9); border-radius: 16px; overflow: hidden; position: relative }
+#main .oa-psteps img { display: block; width: 100%; aspect-ratio: 1 / 1; object-fit: cover }
+#main .oa-psteps figcaption { padding: 8px 10px 11px }
+#main .oa-psteps b { display: block; font-size: 12px; font-weight: 700; letter-spacing: .02em; color: var(--ss-ink, #8a4a2c) }
+#main .oa-psteps small { display: block; font-size: 13px; line-height: 1.32; color: var(--ink); margin-top: 2px }
+#main .oa-psteps figure + figure::before { content: "›"; position: absolute; left: -9px; top: 32%; width: 14px; height: 14px; z-index: 2; color: var(--ss-ink, #8a4a2c); font-weight: 800; font-size: 16px; line-height: 14px; text-align: center }
+#main .oa-psteps-note { font-size: 13.5px; line-height: 1.4; color: #6b6670; margin: 0 2px 22px }
+#main .oa-flatlay { margin: 0 0 14px; border-radius: 20px; overflow: hidden }
+#main .oa-flatlay img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover }
+#main .oa-tabs::before { top: 23px }
+#main .oa-tabs button span { width: 46px; height: 46px; border-radius: 14px; border: 0; background: var(--oa-bg) }
+#main .oa-tabs button span svg { width: 24px; height: 24px }
+#main .oa-tabs button.is-on span { background: var(--oa-ink) }
+#main .oa-tabs button.is-on span svg, #main .oa-tabs button.is-on span svg [stroke]:not([stroke="none"]) { stroke: #fff }
+#main .oa-tabs::before { display: none }
+#main .oa-label-card { background: var(--white, #fffefb); border: 1px solid var(--line, #e1e5d9); border-radius: 20px; padding: 14px 16px 12px; margin: 0 0 22px }
+#main .oa-label-k { font-size: 13px; font-weight: 700; color: var(--ss-ink); margin: 0 0 10px }
+#main .oa-label-k.is-sub { font-weight: 500; color: #6b6670; margin: 10px 0 0 }
+#main .oa-label { background: #f4f1ea; border: 1.5px solid #c9c2b4; border-radius: 6px; padding: 12px 14px; font-family: ui-monospace, Menlo, monospace; font-size: 12.5px; line-height: 1.45; color: #2d2a26; text-transform: uppercase; letter-spacing: .02em }
+#main .oa-label em { font-style: normal; font-weight: 800; color: #c62b1e }
+#main .oa-photo-head h1 { font-size: 26px; line-height: 1.15 }
+#main .oa-hero.has-photo { padding-right: 20px }
+#main .oa-hero.has-photo > .hub-eyebrow, #main .oa-hero.has-photo > h1, #main .oa-hero.has-photo > .hub-lead { margin-right: 124px }
