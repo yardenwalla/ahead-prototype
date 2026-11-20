@@ -451,7 +451,7 @@
   const AREA_PHOTO = { 6: {
     Social: { src: 'area-6-social', alt: 'A mom tickling her laughing baby', pins: [{ t: 'Laughs out loud', x: 80, y: 72, side: 'b', k: 'laughs' }] },
     Talking: { src: 'area-6-talking', alt: 'A mom and baby face to face, the baby cooing back', pins: [{ t: 'Answers your sounds', x: 70, y: 87, side: 'l', k: 'takes-turns-making-sounds-with-you' }] },
-    Thinking: { src: 'area-6-thinking', alt: 'A baby mouthing a wooden teething ring', pins: [{ t: 'Mouths to explore', x: 56, y: 44, side: 'r', k: 'puts-things-in-mouth-to-explore' }] },
+    Thinking: { src: 'area-6-thinking', alt: 'A baby mouthing a wooden teething ring', pins: [{ t: 'Mouths to explore', x: 53, y: 44, side: 'r', k: 'puts-things-in-mouth-to-explore' }] },
     Movement: { src: 'area-6-movement', alt: 'A baby rolling from tummy onto his side', pins: [{ t: 'Rolls tummy to back', x: 46, y: 50, side: 'r', k: 'rolls-tummy-to-back' }] } } };
   const areaPhoto = (ref, domain) => { const ph = AREA_PHOTO[ref] && AREA_PHOTO[ref][domain]; if (!ph) return ''; const hb = window.hubBabyify || (x => x);
     return `<div class="sf-photo dev-area-photo"><img src="assets/dev/${ph.src}.jpg?v=3" alt="${ph.alt}">${ph.pins.map(q => `<button class="sf-pin sf-pin-${q.side}" style="left:${q.x}%;top:${q.y}%" onclick="devPinOpen('${q.k}')"><i></i><span>${hb(F(q.t))}</span></button>`).join('')}</div>`; };
