@@ -150,11 +150,8 @@
     // Newborn screens
     lull: function () { return '<div class="st-vis st-lull"><span class="st-lull-b"><img class="st-obj" src="assets/home/babies/baby-0.webp" alt=""></span><i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i></div>'; },
     clock: function () { var d = ''; for (var i = 0; i < 10; i++) { var a = (i / 10) * Math.PI * 2 - Math.PI / 2; d += '<circle class="st-ck" style="--i:' + i + '" cx="' + (100 + Math.cos(a) * 70).toFixed(1) + '" cy="' + (100 + Math.sin(a) * 70).toFixed(1) + '" r="9" fill="#e98a6b"/>'; }
-      var c = blob('#fffaf3', '#ffffff', '#e8dccd'); return '<div class="st-vis st-clock">' + svg('0 0 200 200', c.def, shadow(100, 190, 60) + '<circle cx="100" cy="100" r="86" fill="' + c.url + '"/>' + d + '<path d="M100 100 V58 M100 100 L128 112" stroke="#2B2840" stroke-width="7" stroke-linecap="round"/><circle cx="100" cy="100" r="7" fill="#2B2840"/>') + '</div>'; },
-    grip: function () { var sk = blob('#f5c3a0', '#fde3cf', '#de9d79'), pa = blob('#e9b48f', '#f7d3b6', '#c98d68');
-      return '<div class="st-vis st-grip">' + svg('0 0 220 140', sk.def + pa.def, shadow(110, 132, 80) +
-        '<rect x="96" y="52" width="140" height="40" rx="20" fill="' + pa.url + '"/><ellipse cx="104" cy="72" rx="12" ry="16" fill="#f3c7a8" opacity=".6"/>' +
-        '<ellipse cx="96" cy="76" rx="44" ry="38" fill="' + sk.url + '"/><path d="M70 56 q10 -10 20 0 M86 52 q10 -10 20 0 M102 54 q10 -10 18 2" fill="none" stroke="#c98a66" stroke-width="4" stroke-linecap="round"/>') + '</div>'; },
+      var c = blob('#fffaf3', '#ffffff', '#efe3d3'); return '<div class="st-vis st-clock">' + svg('0 0 200 200', c.def, shadow(100, 190, 60) + '<circle cx="100" cy="100" r="84" fill="' + c.url + '"/><image href="assets/stories/clock.webp" x="8" y="8" width="184" height="184"/>' + d + '<path d="M100 100 V58 M100 100 L128 112" stroke="#2B2840" stroke-width="7" stroke-linecap="round"/><circle cx="100" cy="100" r="7" fill="#2B2840"/>') + '</div>'; },
+    grip: function () { return '<div class="st-vis st-grip">' + pic('grip') + '</div>'; },
     rise: function () { return '<div class="st-vis st-rise">' + bunny() + '</div>'; },
     // Sleep as bars across a night: short ones, then one that stretches out.
     stretch: function () { return '<div class="st-vis st-bars-n"><i style="--w:14%"></i><i style="--w:12%"></i><i class="is-long" style="--w:44%"></i><i style="--w:16%"></i></div>'; },
@@ -163,8 +160,7 @@
     // A bottle that empties fast.
     drain: function () { var m = blob('#fffaf0', '#ffffff', '#ead9c4'), cap = blob('#b9a6e6', '#ddd2f7', '#8f7bc4'), tip = blob('#f3c9a6', '#fbe3cf', '#dca47c');
       return '<div class="st-vis st-drainwrap">' + svg('0 0 140 230', m.def + cap.def + tip.def + '<clipPath id="bdc"><rect x="28" y="72" width="84" height="142" rx="34"/></clipPath>', shadow(70, 220, 46) + '<path d="M58 22q12-24 24 0v26H58Z" fill="' + tip.url + '"/><rect x="34" y="44" width="72" height="34" rx="14" fill="' + cap.url + '"/><rect x="28" y="72" width="84" height="142" rx="34" fill="#ffffff" opacity=".55"/><g clip-path="url(#bdc)"><rect class="st-milk" x="28" y="90" width="84" height="130" fill="' + m.url + '"/></g><rect x="28" y="72" width="84" height="142" rx="34" fill="none" stroke="#e8d6c4" stroke-width="3"/>', 'st-obj') + '<b class="st-timer">2 min</b></div>'; },
-    feet: function () { var sk = blob('#f3b48f', '#fbd3bb', '#de946d'); var foot = function (x, fl) { return '<g class="st-foot' + (fl ? ' is-r' : '') + '" transform="translate(' + x + ' 0)' + (fl ? ' scale(-1 1) translate(-100 0)' : '') + '"><ellipse cx="50" cy="120" rx="34" ry="52" fill="' + sk.url + '"/>' + [[24, 64, 9], [38, 56, 10], [53, 54, 10], [67, 58, 9], [78, 68, 8]].map(function (t, i) { return '<circle class="st-toe" style="--i:' + i + '" cx="' + t[0] + '" cy="' + t[1] + '" r="' + t[2] + '" fill="' + sk.url + '"/>'; }).join('') + '</g>'; };
-      return '<div class="st-vis st-feetwrap">' + svg('0 0 240 190', sk.def, foot(10, false) + foot(130, true)) + '</div>'; },
+    feet: function () { return '<div class="st-vis st-feetwrap">' + pic('feet', 'st-feetpic') + '</div>'; },
     steps: function () { var s = ''; for (var i = 0; i < 6; i++) s += '<i style="--i:' + i + '" class="' + (i % 2 ? 'is-r' : 'is-l') + '"></i>'; return '<div class="st-vis st-steps">' + s + '</div>'; },
     crawl: function () { var t = ''; for (var i = 0; i < 6; i++) t += '<i style="--i:' + i + '" class="' + (i % 2 ? 'is-b' : 'is-a') + '"></i>'; return '<div class="st-vis st-crawl2">' + t + '</div>'; },
     splats: function () { var c = ['#e98a6b', '#ffd98a', '#7fae95', '#f2b6c8']; var s = ''; for (var i = 0; i < 6; i++) s += '<i style="--i:' + i + ';--c:' + c[i % 4] + ';--x:' + [10, 46, 72, 24, 58, 82][i] + '%;--y:' + [20, 6, 30, 58, 50, 62][i] + '%;--s:' + [64, 46, 56, 40, 70, 34][i] + 'px"></i>'; return '<div class="st-vis st-splats">' + s + '</div>'; },
@@ -173,19 +169,14 @@
     drop: function () { return '<div class="st-vis st-drop"><span class="st-dropball">' + ball() + '</span><i class="st-dropshadow"></i></div>'; },
     mirror: function () { return '<div class="st-vis st-mirror"><span class="st-mframe"><span class="st-mbunny">' + bunny() + '</span><i class="st-shine"></i></span></div>'; },
     peek: function () { return '<div class="st-vis st-peekaboo" data-peek><span class="st-pbun">' + bunny() + '</span><span class="st-cloth"></span><b class="st-peektag">Tap the blanket</b><b class="st-still">Still there!</b></div>'; },
-    heart: function () { return '<div class="st-vis st-heartwrap"><span class="st-bye">bye-bye!</span><i class="st-heart">♥</i><span class="st-back">back soon</span></div>'; },
+    heart: function () { return '<div class="st-vis st-heartwrap"><span class="st-bye">bye-bye!</span><i class="st-heart"><img src="assets/stories/heart.webp" alt=""></i><span class="st-back">back soon</span></div>'; },
     puffs: function () { var s = ''; for (var i = 0; i < 5; i++) s += '<i style="--i:' + i + '"' + (i === 2 ? ' class="is-pick"' : '') + '></i>'; return '<div class="st-vis st-puffs">' + s + '</div>'; },
     // Through her eyes: like every other screen, one clay object on the cloud (your face, with a toy beside it).
     // It arrives sharp, then softens to how she sees it this month.
     eyes: function (m) {
       var F = { 0: 'blur(5px) grayscale(.9) contrast(1.2)', 1: 'blur(3px) grayscale(1) contrast(1.15)', 2: 'blur(2.5px) saturate(.5)', 3: 'blur(1.6px) saturate(.7)', 4: 'blur(1px) saturate(.85)', 6: 'blur(.4px)' }[m] || 'none';
-      var sk = blob('#f5c3a0', '#fde3cf', '#de9d79'), r = blob('#e98a6b', '#f6b49c', '#c96f52');
-      var face = svg('0 0 220 200', sk.def + r.def, shadow(96, 192, 70) +
-        '<circle cx="96" cy="100" r="80" fill="' + sk.url + '"/><path d="M18 92 Q24 18 96 18 Q168 18 174 92 Q150 52 96 50 Q42 52 18 92Z" fill="#6b4a3a"/>' +
-        '<circle cx="70" cy="104" r="8" fill="#2B2840"/><circle cx="122" cy="104" r="8" fill="#2B2840"/><circle cx="73" cy="101" r="2.6" fill="#fff"/><circle cx="125" cy="101" r="2.6" fill="#fff"/>' +
-        '<ellipse cx="54" cy="128" rx="12" ry="7" fill="#f39aa8"/><ellipse cx="138" cy="128" rx="12" ry="7" fill="#f39aa8"/>' +
-        '<path d="M76 134 Q96 154 116 134" fill="none" stroke="#2B2840" stroke-width="7" stroke-linecap="round"/>' +
-        '<circle cx="194" cy="160" r="24" fill="' + r.url + '"/><path d="M180 150 Q194 140 208 152" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".6"/>');
+      var BALL = function (x, y, d, hue) { return '<image href="assets/stories/ball.webp" x="' + (x - d / 2) + '" y="' + (y - d / 2) + '" width="' + d + '" height="' + d + '"' + (hue ? ' style="filter:hue-rotate(' + hue + 'deg) saturate(1.2)"' : '') + '/>'; };
+      var face = svg('0 0 220 200', '', shadow(96, 192, 70) + '<image href="assets/stories/parent.webp" x="10" y="14" width="172" height="172"/>' + BALL(194, 160, 50, 200));
       // Month 1 is about bold patterns, so it shows two toys: a black-and-white one that stays clear in her view,
       // and a pastel one that melts into the background.
       if (m === 1) {
@@ -197,22 +188,20 @@
       }
       var B = function (cx, cy, rr, a, b2, c2) { var g = blob(a, b2, c2); return { d: g.def, h: '<circle cx="' + cx + '" cy="' + cy + '" r="' + rr + '" fill="' + g.url + '"/>' }; };
       if (m === 2) { // colors: three bright toys, muted in her view
-        var r2 = B(52, 130, 34, '#e9584b', '#f8a39a', '#bd3a30'), y2 = B(118, 104, 40, '#ffd23f', '#fff0a8', '#e0a91a'), b2 = B(182, 136, 30, '#3f8ee9', '#9cc6f6', '#2a68b8');
-        face = svg('0 0 220 200', r2.d + y2.d + b2.d, shadow(52, 190, 34) + shadow(118, 190, 40) + shadow(182, 190, 30) + r2.h + y2.h + b2.h);
+        face = svg('0 0 220 200', '', shadow(52, 190, 34) + shadow(118, 190, 40) + shadow(182, 190, 30) + BALL(52, 130, 70, 200) + BALL(118, 104, 82, 300) + BALL(182, 136, 62, 90));
       } else if (m === 3) { // tracking: a ball moving across, with its trail
-        var t3 = B(170, 100, 34, '#e98a6b', '#f6b49c', '#c96f52'), tr = '';
+        var tr = '';
         for (var j = 0; j < 4; j++) tr += '<circle cx="' + (40 + j * 30) + '" cy="' + (100 - Math.sin(j / 3 * Math.PI) * 18).toFixed(0) + '" r="' + (8 + j * 3) + '" fill="#e98a6b" opacity="' + (.18 + j * .14).toFixed(2) + '"/>';
-        face = svg('0 0 220 200', t3.d, shadow(170, 190, 36) + tr + t3.h);
+        face = svg('0 0 220 200', '', shadow(170, 190, 36) + tr + BALL(170, 100, 70, 200));
       } else if (m === 4) { // depth: near, middle and far toys
-        var n4 = B(64, 140, 46, '#9cc7ae', '#cfe6d9', '#76a88b'), m4 = B(140, 112, 26, '#e98a6b', '#f6b49c', '#c96f52'), f4 = B(192, 92, 13, '#b9a6e6', '#ddd2f7', '#8f7bc4');
-        face = svg('0 0 220 200', n4.d + m4.d + f4.d, shadow(64, 192, 46) + shadow(140, 150, 26) + shadow(192, 112, 14) + f4.h + m4.h + n4.h);
+        face = svg('0 0 220 200', '', shadow(64, 192, 46) + shadow(140, 150, 26) + shadow(192, 112, 14) + BALL(192, 92, 28, 60) + BALL(140, 112, 54, 200) + BALL(64, 140, 94, 0));
       } else if (m === 6) { // across the room: you, small and far, still easy to spot
-        face = face.replace('<circle cx="96" cy="100" r="80"', '<g transform="translate(110 40) scale(.42)"><circle cx="96" cy="100" r="80"').replace('<circle cx="194" cy="160" r="24"', '</g><circle cx="60" cy="150" r="34"').replace('<path d="M180 150 Q194 140 208 152"', '<path d="M42 136 Q60 124 78 138"');
+        face = svg('0 0 220 200', '', shadow(60, 190, 34) + '<image href="assets/stories/parent.webp" x="118" y="40" width="74" height="74"/>' + BALL(60, 150, 68, 200));
       }
       // The sharp face sits underneath; her view sweeps across it like a lens, edge and all.
       return '<div class="st-vis st-eyesv" style="--f:' + F + '"><span class="st-ev-sharp">' + face + '</span><span class="st-ev-soft">' + face + '</span><i class="st-ev-edge"></i></div>';
     },
-    cruise: function () { var t = ''; for (var i = 0; i < 4; i++) t += '<i style="--i:' + i + '"></i>'; return '<div class="st-vis st-cruise"><span class="st-sofa"><b></b></span>' + t + '</div>'; },
+    cruise: function () { var t = ''; for (var i = 0; i < 4; i++) t += '<i style="--i:' + i + '"></i>'; return '<div class="st-vis st-cruise"><span class="st-sofa st-sofapic"><img src="assets/stories/sofa.webp" alt=""></span>' + t + '</div>'; },
     name: function () { return '<div class="st-vis st-namewrap"><span class="st-callout">' + E(nm()) + '!</span><i class="st-ring" style="--i:0"></i><i class="st-ring" style="--i:1"></i><i class="st-ring" style="--i:2"></i></div>'; },
     bang: function () { return '<div class="st-vis st-bang">' + blocksPair() + '<i class="st-bangfx">✶</i></div>'; },
     gate: function () { return '<div class="st-vis st-gate"><span class="st-gl"></span><span class="st-gr"></span></div>'; },
@@ -226,7 +215,7 @@
     raspberry: function () { return '<div class="st-vis st-rasp"><b>pbbbt!</b><i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i><i style="--i:3"></i><i style="--i:4"></i></div>'; },
     grab: function () { return '<div class="st-vis st-grab"><span class="st-gh">' + hand(false) + '</span><span class="st-gb">' + ball() + '</span></div>'; },
     roll: function () { return '<div class="st-rollwrap">' + ball() + burst('#fffaf3') + '</div>'; },
-    smile: function () { var w = blob('#fff3e6', '#ffffff', '#ecd6c3'); return '<div class="st-vis st-smile">' + svg('0 0 200 200', w.def, '<circle cx="100" cy="104" r="84" fill="' + w.url + '"/><circle cx="72" cy="92" r="7" fill="#2B2840"/><circle cx="128" cy="92" r="7" fill="#2B2840"/><ellipse cx="58" cy="120" rx="13" ry="8" fill="#f6c2cf"/><ellipse cx="142" cy="120" rx="13" ry="8" fill="#f6c2cf"/><path class="st-smilepath" d="M70 128 Q100 128 130 128" fill="none" stroke="#2B2840" stroke-width="7" stroke-linecap="round"/>') + '</div>'; }
+    smile: function () { return '<div class="st-vis st-smile">' + pic('smile') + '</div>'; },
   };
   function blocksPair() { return '<span class="st-bl">' + pic('block-a') + '</span><span class="st-br">' + pic('block-b') + '</span>'; }
   // Each "coming up next" gets its own little scene.
@@ -254,7 +243,7 @@
   V.track = function () { return '<div class="st-vis st-track"><i></i><span>' + ball() + '</span></div>'; };
   V.tooth = function () { return '<div class="st-vis st-tooth"><span class="st-tt"></span><span class="st-gum"></span><i class="st-drool"></i></div>'; };
   V.crib = function () { return '<div class="st-vis st-crib"><span class="st-cribbars"></span><span class="st-mattress"></span></div>'; };
-  V.anchor = function () { return '<div class="st-vis st-anchor"><span class="st-dresser"><i></i><i></i><i></i></span><b class="st-strap"></b><span class="st-wall"></span></div>'; };
+  V.anchor = function () { return '<div class="st-vis st-anchor"><span class="st-dresser st-dresserpic"><img src="assets/stories/dresser.webp" alt=""></span><b class="st-strap"></b><span class="st-wall"></span></div>'; };
   V.babble = function () { return V.voice(['ba', 'ba-ba', 'da!', 'ba-ba-ba']); };
   V.fist = function () { return '<div class="st-vis st-fistwrap">' + hand(false) + '</div>'; };
   V.fill = function () { return '<div class="st-vis st-fill"><i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i><span>' + bowl() + '</span></div>'; };

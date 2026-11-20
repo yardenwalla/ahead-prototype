@@ -1343,3 +1343,30 @@
 .st-spoonpic{width:min(40vw,160px)!important}
 #main .tl-flag .st-cakepic > img{width:100%}
 #main .tl-flag .st-cakepic .st-flame{display:none}
+/* Timeline knob test: round baby face centered on the bar, like a slider knob */
+#main .tl-knob .tl-baby{width:42px!important;height:42px!important;margin-left:-21px!important;bottom:-59px!important}
+#main .tl-knob .tl-baby::after{display:none}
+#main .tl-knob .tl-baby .tl-face{display:block;width:100%;height:100%;object-fit:cover;border-radius:50%;background:#fff;box-shadow:0 0 0 3px #fff,0 3px 8px rgba(43,40,64,.22)}
+#main .tl-knob .tl-bar{margin-top:20px!important}
+#main .tl-knob .tl-baby{width:34px!important;height:34px!important;margin-left:-17px!important;bottom:-41px!important}
+#main .tl-knob .tl-flag{bottom:-20px!important}
+#main .tl-knob .tl-ticks{margin-top:14px!important}
+#main .tl-knob .tl-baby .tl-face{box-shadow:0 0 0 2.5px #fff,0 2px 6px rgba(43,40,64,.22)}
+/* Soft painted look for the CSS-drawn story shapes (animations unchanged) */
+.st-steps i{background:radial-gradient(ellipse at 40% 35%,#c9b8ec 0 25%,#9d87d1 70%,#7e68b6 100%);box-shadow:0 3px 6px rgba(43,40,64,.12),inset -2px -3px 5px rgba(60,40,100,.15)}
+.st-crawl2 i,.st-cruise i{background:radial-gradient(ellipse at 40% 35%,#f7c0ab 0 25%,#e98a6b 70%,#cf6f52 100%);box-shadow:0 3px 6px rgba(43,40,64,.12),inset -2px -3px 5px rgba(120,50,30,.14)}
+.st-puffs i{background:radial-gradient(circle at 36% 32%,#fff3cf 0 22%,#ffd98a 60%,#e6b15a 100%);box-shadow:0 3px 6px rgba(43,40,64,.12),inset -3px -4px 6px rgba(150,100,30,.15)}
+.st-cloth{background:linear-gradient(180deg,#f2a68d 0%,#e98a6b 55%,#d6745a 100%);box-shadow:0 10px 16px rgba(43,40,64,.14),inset 0 -14px 18px rgba(120,40,20,.12),inset 0 10px 14px rgba(255,255,255,.18)}
+.st-cloth::before{content:'';position:absolute;left:18%;right:18%;top:22%;height:46%;border-radius:40%;background:repeating-linear-gradient(90deg,rgba(255,255,255,.0) 0 22px,rgba(255,255,255,.12) 22px 26px);filter:blur(1px)}
+.st-gl,.st-gr{background:repeating-linear-gradient(90deg,#fdf6ec 0 12px,transparent 12px 30px);border-color:#fdf6ec;filter:drop-shadow(0 6px 8px rgba(43,40,64,.14))}
+.st-cribbars{border-color:#f3e2c9;background:repeating-linear-gradient(90deg,transparent 0 16px,#f3e2c9 16px 24px);filter:drop-shadow(0 8px 10px rgba(43,40,64,.14))}
+.st-mattress{background:linear-gradient(180deg,#d4c8f1,#b9a6e6 60%,#a08dd2);box-shadow:inset 0 -3px 5px rgba(60,40,100,.15)}
+.st-strap{background:linear-gradient(180deg,#e98a6b,#c4502f)}
+.st-wall{background:#fdf6ec;box-shadow:0 4px 8px rgba(43,40,64,.1)}
+.st-p-grip > img{width:92%}.st-p-feet > img{width:84%}.st-p-smile > img{width:100%}
+.is-on .st-feetpic > img{animation:stFeetWig .5s 1.4s ease-in-out infinite alternate}@keyframes stFeetWig{from{transform:rotate(-3deg)}to{transform:rotate(3deg)}}
+.st-heart img{width:64px;height:auto;display:block;filter:drop-shadow(0 6px 8px rgba(43,40,64,.16))}
+.st-sofapic{background:none!important;box-shadow:none!important;height:auto!important;bottom:18px!important}
+.st-sofapic img{width:100%;height:auto;display:block;filter:drop-shadow(0 8px 10px rgba(43,40,64,.14))}
+.st-dresserpic{background:none!important;padding:0!important;height:auto!important;display:block!important}
+.st-dresserpic img{width:100%;height:auto;display:block;filter:drop-shadow(0 8px 10px rgba(43,40,64,.14))}
