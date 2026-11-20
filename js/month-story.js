@@ -24,22 +24,61 @@
   function svg(vb, defs, body, cls) { return '<svg class="' + (cls || 'st-obj') + '" viewBox="' + vb + '" aria-hidden="true"><defs>' + defs + '</defs>' + body + '</svg>'; }
   var shadow = function (cx, cy, rx) { return '<ellipse cx="' + cx + '" cy="' + cy + '" rx="' + rx + '" ry="' + (rx * .16) + '" fill="#2B2840" opacity=".12"/>'; };
 
-  // Soft painted story objects (same style as the month babies). Wrappers keep the old animation hooks.
-  function pic(n, wrap, img) { return '<picture class="st-obj st-picw st-p-' + n + (wrap ? ' ' + wrap : '') + '"><img class="' + (img || '') + '" src="assets/stories/' + n + '.webp" alt="" draggable="false"></picture>'; }
-  function bunny() { return pic('bunny', '', 'st-bob'); }
-
-  function rings() { return pic('rings', '', 'st-stack'); }
-
-  function hand(flip) { return pic('hand', 'st-handobj' + (flip ? ' is-flip' : '')); }
-
-  function teether() { return pic('teether'); }
-
-  function moon() { return pic('moon', 'st-moon'); }
-
-  function ball() { return pic('ball', '', 'st-ball'); }
-
-  function bottle() { return pic('bottle', 'st-bottle'); }
-
+  function bunny() {
+    var w = blob('#fff3e6', '#ffffff', '#ecd6c3'), p = blob('#f6c2cf', '#fbdbe3', '#e9a2b5');
+    return svg('0 0 200 200', w.def + p.def,
+      '<g class="st-bob"><ellipse cx="72" cy="58" rx="20" ry="52" transform="rotate(-14 72 58)" fill="' + w.url + '"/><ellipse cx="73" cy="62" rx="8" ry="34" transform="rotate(-14 73 62)" fill="' + p.url + '"/>' +
+      '<ellipse cx="128" cy="58" rx="20" ry="52" transform="rotate(14 128 58)" fill="' + w.url + '"/><ellipse cx="127" cy="62" rx="8" ry="34" transform="rotate(14 127 62)" fill="' + p.url + '"/>' +
+      '<ellipse cx="100" cy="140" rx="62" ry="56" fill="' + w.url + '"/>' +
+      '<circle cx="80" cy="134" r="5" fill="#2B2840"/><circle cx="120" cy="134" r="5" fill="#2B2840"/><path d="M95 150l10 8M105 150l-10 8" stroke="#2B2840" stroke-width="3.5" stroke-linecap="round"/>' +
+      '<ellipse cx="70" cy="152" rx="9" ry="5" fill="#f6c2cf" opacity=".7"/><ellipse cx="130" cy="152" rx="9" ry="5" fill="#f6c2cf" opacity=".7"/></g>');
+  }
+  function rings() {
+    var c = blob('#e98a6b', '#f6b39a', '#c96a4e'), l = blob('#b9a6e6', '#d9cdf5', '#9682c9'), y = blob('#ffd98a', '#fff0c4', '#e9b85a'), b = blob('#f3a587', '#fbd0bf', '#da7f61'), pole = blob('#fff3e6', '#fff', '#e8d4c0');
+    return svg('0 0 200 220', c.def + l.def + y.def + b.def + pole.def,
+      shadow(100, 206, 74) +
+      '<rect x="92" y="40" width="16" height="150" rx="8" fill="' + pole.url + '"/>' +
+      '<g class="st-stack" style="--i:0"><ellipse cx="100" cy="182" rx="70" ry="24" fill="' + c.url + '"/></g>' +
+      '<g class="st-stack" style="--i:1"><ellipse cx="100" cy="148" rx="56" ry="20" fill="' + l.url + '"/></g>' +
+      '<g class="st-stack" style="--i:2"><ellipse cx="100" cy="118" rx="44" ry="17" fill="' + y.url + '"/></g>' +
+      '<g class="st-stack" style="--i:3"><circle cx="100" cy="80" r="26" fill="' + b.url + '"/></g>');
+  }
+  function hand(flip) {
+    var sk = blob('#f3b48f', '#fbd3bb', '#de946d'), cuff = blob('#fff3e6', '#ffffff', '#e8d6c4');
+    var g = '<g' + (flip ? ' transform="translate(200 0) scale(-1 1)"' : '') + '>' +
+      '<rect x="62" y="96" width="22" height="58" rx="11" transform="rotate(-22 73 125)" fill="' + sk.url + '"/>' + // thumb
+      '<rect x="80" y="40" width="20" height="80" rx="10" transform="rotate(-8 90 80)" fill="' + sk.url + '"/>' +
+      '<rect x="100" y="30" width="20" height="88" rx="10" fill="' + sk.url + '"/>' +
+      '<rect x="120" y="36" width="20" height="84" rx="10" transform="rotate(7 130 78)" fill="' + sk.url + '"/>' +
+      '<rect x="138" y="52" width="18" height="70" rx="9" transform="rotate(16 147 87)" fill="' + sk.url + '"/>' +
+      '<rect x="74" y="92" width="84" height="88" rx="40" fill="' + sk.url + '"/>' +
+      '<rect x="66" y="166" width="100" height="60" rx="22" fill="' + cuff.url + '"/>' +
+      '<path d="M84 176v40M100 176v40M116 176v40M132 176v40M148 176v40" stroke="#e6d3c0" stroke-width="5" stroke-linecap="round"/></g>';
+    return svg('0 0 200 230', sk.def + cuff.def, g, 'st-obj st-handobj');
+  }
+  function teether() {
+    var wood = blob('#e9c9a2', '#f6e3c9', '#cfa77a'), bead = blob('#b9a6e6', '#ddd2f7', '#8f7bc4');
+    var beads = ''; [[150, 62], [172, 92], [168, 128], [144, 152]].forEach(function (b, i) { beads += '<circle class="st-bead" style="--i:' + i + '" cx="' + b[0] + '" cy="' + b[1] + '" r="22" fill="' + bead.url + '"/>'; });
+    return svg('0 0 220 210', wood.def + bead.def,
+      shadow(110, 196, 80) + '<circle cx="104" cy="112" r="64" fill="none" stroke="' + wood.url + '" stroke-width="30"/>' + beads);
+  }
+  function moon() {
+    var m = blob('#ffe08f', '#fff4cc', '#e9bf5b');
+    return svg('0 0 120 120', m.def, '<path d="M78 14a46 46 0 1 0 28 72A38 38 0 1 1 78 14Z" fill="' + m.url + '"/>', 'st-obj st-moon');
+  }
+  function ball() {
+    var a = blob('#7fae95', '#a9d0bb', '#5b8c73'), y = blob('#ffe08f', '#fff4cc', '#e9bf5b');
+    return svg('0 0 160 160', a.def + y.def, '<clipPath id="bc"><circle cx="80" cy="80" r="62"/></clipPath>' +
+      '<g class="st-ball"><circle cx="80" cy="80" r="62" fill="' + a.url + '"/><path clip-path="url(#bc)" d="M18 30 Q70 60 60 150 L-10 150 Z" fill="' + y.url + '"/></g>');
+  }
+  function bottle() {
+    var milk = blob('#fffaf0', '#ffffff', '#ead9c4'), cap = blob('#b9a6e6', '#ddd2f7', '#8f7bc4'), tip = blob('#f3c9a6', '#fbe3cf', '#dca47c');
+    return svg('0 0 140 230', milk.def + cap.def + tip.def,
+      shadow(70, 220, 46) + '<path d="M58 22q12-24 24 0v26H58Z" fill="' + tip.url + '"/>' +
+      '<rect x="34" y="44" width="72" height="34" rx="14" fill="' + cap.url + '"/>' +
+      '<rect x="28" y="72" width="84" height="142" rx="34" fill="' + milk.url + '"/>' +
+      '<path d="M44 120h20M44 146h28M44 172h20" stroke="#cdbba6" stroke-width="5" stroke-linecap="round"/>', 'st-obj st-bottle');
+  }
   function cloud(fill, cls) { return '<svg class="' + (cls || 'st-cloud') + '" viewBox="0 0 400 120" preserveAspectRatio="none" aria-hidden="true"><path d="M0 120V70q40-50 100-30 30-40 90-20 50-40 110 0 60-20 100 30v70Z" fill="' + fill + '"/></svg>'; }
   function burst(color) { return '<svg class="st-burst" viewBox="0 0 40 40" aria-hidden="true"><g stroke="' + color + '" stroke-width="4.5" stroke-linecap="round"><path d="M8 26l-6 3M14 14L9 7M26 10l2-8"/></g></svg>'; }
 
@@ -126,12 +165,27 @@
   }
 
   /* ---------- More soft toys for the other months ---------- */
-  function bowl() { return pic('bowl'); }
-
-  function cup() { return pic('cup'); }
-
-  function blocks() { return '<picture class="st-obj st-picw st-blocks"><img class="st-stack st-bka" style="--i:0" src="assets/stories/block-a.webp" alt=""><img class="st-stack st-bkb" style="--i:1" src="assets/stories/block-b.webp" alt=""><img class="st-stack st-bkc" style="--i:2" src="assets/stories/block-c.webp" alt=""></picture>'; }
-
+  function bowl() {
+    var b = blob('#f6c2cf', '#fbdbe3', '#df9cb0'), sp = blob('#ffd98a', '#fff1c8', '#e3b259'), food = blob('#ffe7a6', '#fff6d8', '#efc96d');
+    return svg('0 0 220 200', b.def + sp.def + food.def, shadow(110, 186, 82) +
+      '<rect x="128" y="10" width="18" height="96" rx="9" transform="rotate(24 137 58)" fill="' + sp.url + '"/>' +
+      '<ellipse cx="110" cy="104" rx="84" ry="22" fill="' + food.url + '"/>' +
+      '<path d="M26 104h168q0 76-84 76T26 104Z" fill="' + b.url + '"/>');
+  }
+  function cup() {
+    var c = blob('#b9a6e6', '#ddd2f7', '#8f7bc4'), lid = blob('#fff3e6', '#ffffff', '#e8d6c4'), sp = blob('#ffd98a', '#fff1c8', '#e3b259');
+    return svg('0 0 220 230', c.def + lid.def + sp.def, shadow(110, 216, 62) +
+      '<path d="M96 20q14-14 28 0l6 26H90Z" fill="' + sp.url + '"/>' +
+      '<rect x="56" y="42" width="108" height="34" rx="16" fill="' + lid.url + '"/>' +
+      '<rect x="62" y="70" width="96" height="140" rx="30" fill="' + c.url + '"/>' +
+      '<path d="M62 104q-38 4-38 36t38 34" fill="none" stroke="' + lid.url + '" stroke-width="16" stroke-linecap="round"/>' +
+      '<path d="M158 104q38 4 38 36t-38 34" fill="none" stroke="' + lid.url + '" stroke-width="16" stroke-linecap="round"/>');
+  }
+  function blocks() {
+    var a = blob('#e98a6b', '#f6b39a', '#c96a4e'), b = blob('#7fae95', '#a9d0bb', '#5b8c73'), c = blob('#ffd98a', '#fff0c4', '#e9b85a');
+    var face = function (x, y, s, f, t, col) { return '<g class="st-stack" style="--i:' + t + '"><rect x="' + x + '" y="' + y + '" width="' + s + '" height="' + s + '" rx="18" fill="' + f + '"/><text x="' + (x + s / 2) + '" y="' + (y + s * .68) + '" text-anchor="middle" font-family="Nunito,sans-serif" font-weight="900" font-size="' + (s * .52) + '" fill="' + col + '">' + ['A', 'B', 'C'][t] + '</text></g>'; };
+    return svg('0 0 240 230', a.def + b.def + c.def, shadow(120, 220, 100) + face(24, 120, 96, a.url, 0, '#fffaf3') + face(122, 120, 96, b.url, 1, '#fffaf3') + face(72, 24, 96, c.url, 2, '#c4502f'));
+  }
   var OBJ = { bunny: bunny, rings: rings, teether: teether, bottle: bottle, ball: ball, bowl: bowl, cup: cup, blocks: blocks };
 
   /* ---------- Visuals that act out each screen ---------- */
@@ -144,14 +198,17 @@
     voice: function (words) { return '<div class="st-vis st-voice">' + words.map(function (w, i) { return '<span style="--i:' + i + ';--x:' + [8, 52, 24, 64, 4][i % 5] + '%;--r:' + [-8, 6, -3, 9, -6][i % 5] + 'deg">' + E(w) + '</span>'; }).join('') + '</div>'; },
     // Something rising up from below: a head lifting, a baby pulling up.
     // Coming-up screens show the month card's clay baby in that pose, so they don't repeat the bunny.
-    pose4: function () { return '<div class="st-vis st-pose st-headlift"><picture class="st-obj st-picw st-frames"><img class="st-f1" src="assets/stories/head-down.webp" alt=""><img class="st-f2" src="assets/stories/head-up.webp" alt=""></picture></div>'; },
-    pose7: function () { return '<div class="st-vis st-pose"><img class="st-obj" src="assets/home/babies/baby-7.webp" alt=""></div>'; },
-    pose10: function () { return '<div class="st-vis st-pose"><img class="st-obj" src="assets/home/babies/baby-10.webp" alt=""></div>'; },
+    pose4: function () { return '<div class="st-vis st-pose">' + babyArt(4) + '</div>'; },
+    pose7: function () { return '<div class="st-vis st-pose">' + babyArt(7) + '</div>'; },
+    pose10: function () { return '<div class="st-vis st-pose">' + babyArt(10) + '</div>'; },
     // Newborn screens
-    lull: function () { return '<div class="st-vis st-lull"><span class="st-lull-b"><img class="st-obj" src="assets/home/babies/baby-0.webp" alt=""></span><i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i></div>'; },
-    clock: function () { var d = ''; for (var i = 0; i < 10; i++) { var a = (i / 10) * Math.PI * 2 - Math.PI / 2; d += '<circle class="st-ck" style="--i:' + i + '" cx="' + (100 + Math.cos(a) * 66).toFixed(1) + '" cy="' + (100 + Math.sin(a) * 66).toFixed(1) + '" r="8.5" fill="url(#ckdot)"/>'; }
-      var c = blob('#fffaf3', '#ffffff', '#efe3d3'); return '<div class="st-vis st-clock">' + svg('0 0 200 200', c.def, shadow(100, 190, 60) + '<circle cx="100" cy="100" r="84" fill="' + c.url + '"/><image href="assets/stories/clock.webp" x="8" y="8" width="184" height="184"/>' + '<defs><radialGradient id="ckdot" cx="38%" cy="32%" r="70%"><stop offset="0" stop-color="#ffd2c1"/><stop offset=".55" stop-color="#ee9a7c"/><stop offset="1" stop-color="#d97b5e"/></radialGradient><filter id="cksh" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="1.5" stdDeviation="1.5" flood-color="#5a4a5a" flood-opacity=".25"/></filter></defs><g filter="url(#cksh)">' + d + '<path d="M100 100 V60" stroke="#6e6080" stroke-width="8" stroke-linecap="round"/><path d="M100 100 L126 111" stroke="#8a7c9c" stroke-width="7" stroke-linecap="round"/><circle cx="100" cy="100" r="7.5" fill="#f3a587"/><circle cx="98" cy="98" r="2.5" fill="#fff" opacity=".6"/></g>') + '</div>'; },
-    grip: function () { return '<div class="st-vis st-grip st-grip2"><picture class="st-obj st-picw st-p-grip st-frames"><img class="st-f1" src="assets/stories/grip-open.webp" alt=""><img class="st-f2" src="assets/stories/grip.webp" alt=""></picture></div>'; },
+    lull: function () { return '<div class="st-vis st-lull"><span class="st-lull-b">' + babyArt(0) + '</span><i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i></div>'; },
+    clock: function () { var d = ''; for (var i = 0; i < 10; i++) { var a = (i / 10) * Math.PI * 2 - Math.PI / 2; d += '<circle class="st-ck" style="--i:' + i + '" cx="' + (100 + Math.cos(a) * 70).toFixed(1) + '" cy="' + (100 + Math.sin(a) * 70).toFixed(1) + '" r="9" fill="#e98a6b"/>'; }
+      var c = blob('#fffaf3', '#ffffff', '#e8dccd'); return '<div class="st-vis st-clock">' + svg('0 0 200 200', c.def, shadow(100, 190, 60) + '<circle cx="100" cy="100" r="86" fill="' + c.url + '"/>' + d + '<path d="M100 100 V58 M100 100 L128 112" stroke="#2B2840" stroke-width="7" stroke-linecap="round"/><circle cx="100" cy="100" r="7" fill="#2B2840"/>') + '</div>'; },
+    grip: function () { var sk = blob('#f5c3a0', '#fde3cf', '#de9d79'), pa = blob('#e9b48f', '#f7d3b6', '#c98d68');
+      return '<div class="st-vis st-grip">' + svg('0 0 220 140', sk.def + pa.def, shadow(110, 132, 80) +
+        '<rect x="96" y="52" width="140" height="40" rx="20" fill="' + pa.url + '"/><ellipse cx="104" cy="72" rx="12" ry="16" fill="#f3c7a8" opacity=".6"/>' +
+        '<ellipse cx="96" cy="76" rx="44" ry="38" fill="' + sk.url + '"/><path d="M70 56 q10 -10 20 0 M86 52 q10 -10 20 0 M102 54 q10 -10 18 2" fill="none" stroke="#c98a66" stroke-width="4" stroke-linecap="round"/>') + '</div>'; },
     rise: function () { return '<div class="st-vis st-rise">' + bunny() + '</div>'; },
     // Sleep as bars across a night: short ones, then one that stretches out.
     stretch: function () { return '<div class="st-vis st-bars-n"><i style="--w:14%"></i><i style="--w:12%"></i><i class="is-long" style="--w:44%"></i><i style="--w:16%"></i></div>'; },
@@ -160,7 +217,8 @@
     // A bottle that empties fast.
     drain: function () { var m = blob('#fffaf0', '#ffffff', '#ead9c4'), cap = blob('#b9a6e6', '#ddd2f7', '#8f7bc4'), tip = blob('#f3c9a6', '#fbe3cf', '#dca47c');
       return '<div class="st-vis st-drainwrap">' + svg('0 0 140 230', m.def + cap.def + tip.def + '<clipPath id="bdc"><rect x="28" y="72" width="84" height="142" rx="34"/></clipPath>', shadow(70, 220, 46) + '<path d="M58 22q12-24 24 0v26H58Z" fill="' + tip.url + '"/><rect x="34" y="44" width="72" height="34" rx="14" fill="' + cap.url + '"/><rect x="28" y="72" width="84" height="142" rx="34" fill="#ffffff" opacity=".55"/><g clip-path="url(#bdc)"><rect class="st-milk" x="28" y="90" width="84" height="130" fill="' + m.url + '"/></g><rect x="28" y="72" width="84" height="142" rx="34" fill="none" stroke="#e8d6c4" stroke-width="3"/>', 'st-obj') + '<b class="st-timer">2 min</b></div>'; },
-    feet: function () { return '<div class="st-vis st-feetwrap">' + pic('feet', 'st-feetpic') + '</div>'; },
+    feet: function () { var sk = blob('#f3b48f', '#fbd3bb', '#de946d'); var foot = function (x, fl) { return '<g class="st-foot' + (fl ? ' is-r' : '') + '" transform="translate(' + x + ' 0)' + (fl ? ' scale(-1 1) translate(-100 0)' : '') + '"><ellipse cx="50" cy="120" rx="34" ry="52" fill="' + sk.url + '"/>' + [[24, 64, 9], [38, 56, 10], [53, 54, 10], [67, 58, 9], [78, 68, 8]].map(function (t, i) { return '<circle class="st-toe" style="--i:' + i + '" cx="' + t[0] + '" cy="' + t[1] + '" r="' + t[2] + '" fill="' + sk.url + '"/>'; }).join('') + '</g>'; };
+      return '<div class="st-vis st-feetwrap">' + svg('0 0 240 190', sk.def, foot(10, false) + foot(130, true)) + '</div>'; },
     steps: function () { var s = ''; for (var i = 0; i < 6; i++) s += '<i style="--i:' + i + '" class="' + (i % 2 ? 'is-r' : 'is-l') + '"></i>'; return '<div class="st-vis st-steps">' + s + '</div>'; },
     crawl: function () { var t = ''; for (var i = 0; i < 6; i++) t += '<i style="--i:' + i + '" class="' + (i % 2 ? 'is-b' : 'is-a') + '"></i>'; return '<div class="st-vis st-crawl2">' + t + '</div>'; },
     splats: function () { var c = ['#e98a6b', '#ffd98a', '#7fae95', '#f2b6c8']; var s = ''; for (var i = 0; i < 6; i++) s += '<i style="--i:' + i + ';--c:' + c[i % 4] + ';--x:' + [10, 46, 72, 24, 58, 82][i] + '%;--y:' + [20, 6, 30, 58, 50, 62][i] + '%;--s:' + [64, 46, 56, 40, 70, 34][i] + 'px"></i>'; return '<div class="st-vis st-splats">' + s + '</div>'; },
@@ -169,14 +227,19 @@
     drop: function () { return '<div class="st-vis st-drop"><span class="st-dropball">' + ball() + '</span><i class="st-dropshadow"></i></div>'; },
     mirror: function () { return '<div class="st-vis st-mirror"><span class="st-mframe"><span class="st-mbunny">' + bunny() + '</span><i class="st-shine"></i></span></div>'; },
     peek: function () { return '<div class="st-vis st-peekaboo" data-peek><span class="st-pbun">' + bunny() + '</span><span class="st-cloth"></span><b class="st-peektag">Tap the blanket</b><b class="st-still">Still there!</b></div>'; },
-    heart: function () { return '<div class="st-vis st-heartwrap"><span class="st-bye">bye-bye!</span><i class="st-heart"><img src="assets/stories/heart.webp" alt=""></i><span class="st-back">back soon</span></div>'; },
+    heart: function () { return '<div class="st-vis st-heartwrap"><span class="st-bye">bye-bye!</span><i class="st-heart">♥</i><span class="st-back">back soon</span></div>'; },
     puffs: function () { var s = ''; for (var i = 0; i < 5; i++) s += '<i style="--i:' + i + '"' + (i === 2 ? ' class="is-pick"' : '') + '></i>'; return '<div class="st-vis st-puffs">' + s + '</div>'; },
     // Through her eyes: like every other screen, one clay object on the cloud (your face, with a toy beside it).
     // It arrives sharp, then softens to how she sees it this month.
     eyes: function (m) {
       var F = { 0: 'blur(5px) grayscale(.9) contrast(1.2)', 1: 'blur(3px) grayscale(1) contrast(1.15)', 2: 'blur(2.5px) saturate(.5)', 3: 'blur(1.6px) saturate(.7)', 4: 'blur(1px) saturate(.85)', 6: 'blur(.4px)' }[m] || 'none';
-      var BALL = function (x, y, d, hue) { return '<image href="assets/stories/ball.webp" x="' + (x - d / 2) + '" y="' + (y - d / 2) + '" width="' + d + '" height="' + d + '"' + (hue ? ' style="filter:hue-rotate(' + hue + 'deg) saturate(1.2)"' : '') + '/>'; };
-      var face = svg('0 0 220 200', '', shadow(96, 192, 70) + '<image href="assets/stories/parent.webp" x="10" y="14" width="172" height="172"/>' + BALL(194, 160, 50, 200));
+      var sk = blob('#f5c3a0', '#fde3cf', '#de9d79'), r = blob('#e98a6b', '#f6b49c', '#c96f52');
+      var face = svg('0 0 220 200', sk.def + r.def, shadow(96, 192, 70) +
+        '<circle cx="96" cy="100" r="80" fill="' + sk.url + '"/><path d="M18 92 Q24 18 96 18 Q168 18 174 92 Q150 52 96 50 Q42 52 18 92Z" fill="#6b4a3a"/>' +
+        '<circle cx="70" cy="104" r="8" fill="#2B2840"/><circle cx="122" cy="104" r="8" fill="#2B2840"/><circle cx="73" cy="101" r="2.6" fill="#fff"/><circle cx="125" cy="101" r="2.6" fill="#fff"/>' +
+        '<ellipse cx="54" cy="128" rx="12" ry="7" fill="#f39aa8"/><ellipse cx="138" cy="128" rx="12" ry="7" fill="#f39aa8"/>' +
+        '<path d="M76 134 Q96 154 116 134" fill="none" stroke="#2B2840" stroke-width="7" stroke-linecap="round"/>' +
+        '<circle cx="194" cy="160" r="24" fill="' + r.url + '"/><path d="M180 150 Q194 140 208 152" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".6"/>');
       // Month 1 is about bold patterns, so it shows two toys: a black-and-white one that stays clear in her view,
       // and a pastel one that melts into the background.
       if (m === 1) {
@@ -188,36 +251,40 @@
       }
       var B = function (cx, cy, rr, a, b2, c2) { var g = blob(a, b2, c2); return { d: g.def, h: '<circle cx="' + cx + '" cy="' + cy + '" r="' + rr + '" fill="' + g.url + '"/>' }; };
       if (m === 2) { // colors: three bright toys, muted in her view
-        face = svg('0 0 220 200', '', shadow(52, 190, 34) + shadow(118, 190, 40) + shadow(182, 190, 30) + BALL(52, 130, 70, 200) + BALL(118, 104, 82, 300) + BALL(182, 136, 62, 90));
+        var r2 = B(52, 130, 34, '#e9584b', '#f8a39a', '#bd3a30'), y2 = B(118, 104, 40, '#ffd23f', '#fff0a8', '#e0a91a'), b2 = B(182, 136, 30, '#3f8ee9', '#9cc6f6', '#2a68b8');
+        face = svg('0 0 220 200', r2.d + y2.d + b2.d, shadow(52, 190, 34) + shadow(118, 190, 40) + shadow(182, 190, 30) + r2.h + y2.h + b2.h);
       } else if (m === 3) { // tracking: a ball moving across, with its trail
-        var tr = '';
+        var t3 = B(170, 100, 34, '#e98a6b', '#f6b49c', '#c96f52'), tr = '';
         for (var j = 0; j < 4; j++) tr += '<circle cx="' + (40 + j * 30) + '" cy="' + (100 - Math.sin(j / 3 * Math.PI) * 18).toFixed(0) + '" r="' + (8 + j * 3) + '" fill="#e98a6b" opacity="' + (.18 + j * .14).toFixed(2) + '"/>';
-        face = svg('0 0 220 200', '', shadow(170, 190, 36) + tr + BALL(170, 100, 70, 200));
+        face = svg('0 0 220 200', t3.d, shadow(170, 190, 36) + tr + t3.h);
       } else if (m === 4) { // depth: near, middle and far toys
-        face = svg('0 0 220 200', '', shadow(64, 192, 46) + shadow(140, 150, 26) + shadow(192, 112, 14) + BALL(192, 92, 28, 60) + BALL(140, 112, 54, 200) + BALL(64, 140, 94, 0));
+        var n4 = B(64, 140, 46, '#9cc7ae', '#cfe6d9', '#76a88b'), m4 = B(140, 112, 26, '#e98a6b', '#f6b49c', '#c96f52'), f4 = B(192, 92, 13, '#b9a6e6', '#ddd2f7', '#8f7bc4');
+        face = svg('0 0 220 200', n4.d + m4.d + f4.d, shadow(64, 192, 46) + shadow(140, 150, 26) + shadow(192, 112, 14) + f4.h + m4.h + n4.h);
       } else if (m === 6) { // across the room: you, small and far, still easy to spot
-        face = svg('0 0 220 200', '', shadow(60, 190, 34) + '<image href="assets/stories/parent.webp" x="118" y="40" width="74" height="74"/>' + BALL(60, 150, 68, 200));
+        face = face.replace('<circle cx="96" cy="100" r="80"', '<g transform="translate(110 40) scale(.42)"><circle cx="96" cy="100" r="80"').replace('<circle cx="194" cy="160" r="24"', '</g><circle cx="60" cy="150" r="34"').replace('<path d="M180 150 Q194 140 208 152"', '<path d="M42 136 Q60 124 78 138"');
       }
       // The sharp face sits underneath; her view sweeps across it like a lens, edge and all.
       return '<div class="st-vis st-eyesv" style="--f:' + F + '"><span class="st-ev-sharp">' + face + '</span><span class="st-ev-soft">' + face + '</span><i class="st-ev-edge"></i></div>';
     },
-    cruise: function () { var t = ''; for (var i = 0; i < 4; i++) t += '<i style="--i:' + i + '"></i>'; return '<div class="st-vis st-cruise"><span class="st-sofa st-sofapic"><img src="assets/stories/sofa.webp" alt=""></span>' + t + '</div>'; },
+    cruise: function () { var t = ''; for (var i = 0; i < 4; i++) t += '<i style="--i:' + i + '"></i>'; return '<div class="st-vis st-cruise"><span class="st-sofa"><b></b></span>' + t + '</div>'; },
     name: function () { return '<div class="st-vis st-namewrap"><span class="st-callout">' + E(nm()) + '!</span><i class="st-ring" style="--i:0"></i><i class="st-ring" style="--i:1"></i><i class="st-ring" style="--i:2"></i></div>'; },
     bang: function () { return '<div class="st-vis st-bang">' + blocksPair() + '<i class="st-bangfx">✶</i></div>'; },
     gate: function () { return '<div class="st-vis st-gate"><span class="st-gl"></span><span class="st-gr"></span></div>'; },
     cloud: function (words) { return '<div class="st-vis st-wcloud">' + words.map(function (w, i) { return '<span style="--i:' + i + '">' + E(w) + '</span>'; }).join('') + '</div>'; },
     wave: function () { return '<div class="st-vis st-wavehand">' + hand(false) + '</div>'; },
-    spoon: function () { return '<div class="st-vis st-spoonwrap st-spoonpic"><img class="st-sp" src="assets/stories/spoon.webp" alt=""><img class="st-bw" src="assets/stories/bowl.webp" alt=""></div>'; },
+    spoon: function () { return '<div class="st-vis st-spoonwrap">' + bowl() + '</div>'; },
     tilt: function () { return '<div class="st-vis st-tiltcup">' + cup() + '</div>'; },
-    cake: function () { return '<div class="st-vis st-cake"><picture class="st-obj st-picw st-cakepic"><img src="assets/stories/cake.webp" alt="" draggable="false"><i class="st-flame"></i></picture></div>'; },
+    cake: function () { var c = blob('#f6c2cf', '#fbdbe3', '#df9cb0'), f = blob('#fffaf3', '#ffffff', '#ead9c4');
+      return '<div class="st-vis st-cake">' + svg('0 0 200 200', c.def + f.def, shadow(100, 188, 80) + '<rect x="30" y="100" width="140" height="80" rx="22" fill="' + c.url + '"/><path d="M30 118q20 16 35 0t35 0 35 0 35 0v-6q0-12-22-12H52q-22 0-22 12Z" fill="' + f.url + '"/><rect x="94" y="52" width="12" height="44" rx="6" fill="#b9a6e6"/><path class="st-flame" d="M100 22q14 16 0 28q-14-12 0-28Z" fill="#ffd98a"/>') + '</div>'; },
     halfring: function () { return '<svg class="st-halfring" viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,250,243,.18)" stroke-width="12"/><circle class="st-hr-fill" cx="60" cy="60" r="50" fill="none" stroke="#ffd98a" stroke-width="12" stroke-linecap="round" pathLength="100" transform="rotate(-90 60 60)"/></svg>'; },
     distance: function () { return '<div class="st-vis st-dist"><span class="st-d1">' + bunny() + '</span><i class="st-dline"></i><span class="st-d2"><i></i><i></i><b></b></span></div>'; },
     raspberry: function () { return '<div class="st-vis st-rasp"><b>pbbbt!</b><i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i><i style="--i:3"></i><i style="--i:4"></i></div>'; },
     grab: function () { return '<div class="st-vis st-grab"><span class="st-gh">' + hand(false) + '</span><span class="st-gb">' + ball() + '</span></div>'; },
     roll: function () { return '<div class="st-rollwrap">' + ball() + burst('#fffaf3') + '</div>'; },
-    smile: function () { return '<div class="st-vis st-smile">' + pic('smile') + '</div>'; },
+    smile: function () { var w = blob('#fff3e6', '#ffffff', '#ecd6c3'); return '<div class="st-vis st-smile">' + svg('0 0 200 200', w.def, '<circle cx="100" cy="104" r="84" fill="' + w.url + '"/><circle cx="72" cy="92" r="7" fill="#2B2840"/><circle cx="128" cy="92" r="7" fill="#2B2840"/><ellipse cx="58" cy="120" rx="13" ry="8" fill="#f6c2cf"/><ellipse cx="142" cy="120" rx="13" ry="8" fill="#f6c2cf"/><path class="st-smilepath" d="M70 128 Q100 128 130 128" fill="none" stroke="#2B2840" stroke-width="7" stroke-linecap="round"/>') + '</div>'; }
   };
-  function blocksPair() { return '<span class="st-bl">' + pic('block-a') + '</span><span class="st-br">' + pic('block-b') + '</span>'; }
+  function blocksPair() { var a = blob('#e98a6b', '#f6b39a', '#c96a4e'), b = blob('#7fae95', '#a9d0bb', '#5b8c73');
+    return '<span class="st-bl">' + svg('0 0 100 100', a.def, '<rect x="4" y="4" width="92" height="92" rx="18" fill="' + a.url + '"/><text x="50" y="68" text-anchor="middle" font-family="Nunito,sans-serif" font-weight="900" font-size="50" fill="#fffaf3">A</text>') + '</span><span class="st-br">' + svg('0 0 100 100', b.def, '<rect x="4" y="4" width="92" height="92" rx="18" fill="' + b.url + '"/><text x="50" y="68" text-anchor="middle" font-family="Nunito,sans-serif" font-weight="900" font-size="50" fill="#fffaf3">B</text>') + '</span>'; }
   // Each "coming up next" gets its own little scene.
   var NEXT = {
     babble: ['Ba-ba-ba!', 'Babbling strings of sounds is on the way. Answer her and she’ll babble right back.', 'babbling', 'babble'],
@@ -243,7 +310,7 @@
   V.track = function () { return '<div class="st-vis st-track"><i></i><span>' + ball() + '</span></div>'; };
   V.tooth = function () { return '<div class="st-vis st-tooth"><span class="st-tt"></span><span class="st-gum"></span><i class="st-drool"></i></div>'; };
   V.crib = function () { return '<div class="st-vis st-crib"><span class="st-cribbars"></span><span class="st-mattress"></span></div>'; };
-  V.anchor = function () { return '<div class="st-vis st-anchor"><span class="st-dresser st-dresserpic"><img src="assets/stories/dresser.webp" alt=""></span><b class="st-strap"></b><span class="st-wall"></span></div>'; };
+  V.anchor = function () { return '<div class="st-vis st-anchor"><span class="st-dresser"><i></i><i></i><i></i></span><b class="st-strap"></b><span class="st-wall"></span></div>'; };
   V.babble = function () { return V.voice(['ba', 'ba-ba', 'da!', 'ba-ba-ba']); };
   V.fist = function () { return '<div class="st-vis st-fistwrap">' + hand(false) + '</div>'; };
   V.fill = function () { return '<div class="st-vis st-fill"><i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i><span>' + bowl() + '</span></div>'; };
@@ -388,7 +455,7 @@
         '<div class="st-giant st-pop" style="--d:.15s">' + (m === 0 ? wk + '<small class="st-giant-u">' + (wk === 1 ? 'week' : 'weeks') + '</small>' : st.half ? '<span class="st-halfwrap">' + V.halfring() + '<b>' + m + '</b></span>' : m) + '</div>' +
         '<div class="st-title st-cover-t st-in" style="--d:.45s">' + E(Pp(st.cover[0])) + '</div>' +
         '<p class="st-lead st-in" style="--d:.75s">' + E(Pp(st.cover[1])) + '</p>' +
-        '<div class="st-ground">' + cloud('#b9a6e6') + (pic ? '<div class="st-photo"><img src="' + pic + '" alt=""></div>' : '<div class="st-coverart ms-toys">' + window.stCardArt(m) + '</div>') + '</div>' }];
+        '<div class="st-ground">' + cloud('#b9a6e6') + (pic ? '<div class="st-photo"><img src="' + pic + '" alt=""></div>' : '<div class="st-coverart ms-toys">' + window.stCardArtClay(m) + '</div>') + '</div>' }];
     st.screens.forEach(function (sc) { list.push(screen(sc)); });
     list.push(nextScreen(nx), daysScreen(n, p, days, firsts), summary(n, p, days, pic, firsts, nx, st.sum, m));
     return list;
@@ -591,9 +658,9 @@
   }
   // Clay toys for other pages (Timeline's chapters).
   window.stToy = function (k) { return k === 'cake' ? V.cake().replace('st-vis', 'st-vis yt-cake') : ({ bunny: bunny, rings: rings, ball: ball, blocks: blocks, bowl: bowl })[k](); };
-  // The month's baby: a soft illustrated picture, a different baby each month (Home card, story cover, Timeline handle).
+  // The month's baby on Home: a soft illustrated picture, a different baby each month.
   window.stCardArt = function (m) { return m >= 0 && m <= 11 ? '<span class="ms-l ms-mid ms-babyw ms-babyimg"><img src="assets/home/babies/baby-' + m + '.webp" alt="" decoding="async"></span>' : ''; };
-  // The older drawn clay baby, kept in case it is needed again.
+  // The original drawn baby, used inside the animated stories so each story stays in one style.
   window.stCardArtClay = function (m) { return m >= 0 && m <= 11 ? '<span class="ms-l ms-mid ms-babyw">' + babyArt(m) + '</span>' : ''; };
   // What Home's month card shows: the story's cover and its three takeaways.
   window.stCover = function (m) {
