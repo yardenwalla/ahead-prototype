@@ -1,0 +1,175 @@
+/* Ahead · Health pages, round 3 (Nov 19), from Yarden's mockups: the checkup pages (What to expect, Vaccines,
+   Questions and notes) and the "When Maya seems sick" pages (the hub, a fever, a cold, vomiting or diarrhea).
+   One shared look: the soft top card (a real photo where the page is about a moment at the visit), white cards,
+   rows with soft colored icon tiles, numbered steps for real sequences, soft yellow cards for "when to call",
+   and one calm 911 card at the very end. Content follows the AAP (HealthyChildren.org) and the CDC.
+   window.__hlOld = true brings back the earlier pages. */
+(function () {
+  const H = () => window.__hub, F = s => H().F(s);
+  const e = v => String(v).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+  const TONE = { green: ['#e6f5ec', '#356651'], blue: ['#e7effc', '#46638c'], yellow: ['#fff3dc', '#8a6a2a'], peach: ['#fdeee6', '#9a5a3c'], pink: ['#fdeef2', '#a24d6a'] };
+  const PHONE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 3.5h2.6l1.4 4-2 1.3a11 11 0 0 0 6.6 6.6l1.3-2 4 1.4v2.6a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 4.6 5.7a2 2 0 0 1 2-2.2Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>';
+  const SMILE = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M8.5 13.5a4.2 4.2 0 0 0 7 0" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><circle cx="9.3" cy="10" r="1" fill="currentColor"/><circle cx="14.7" cy="10" r="1" fill="currentColor"/></svg>';
+  const CHECK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 12.5l3.2 3.2L17 9" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const CHEV = '<svg class="h2-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const ART = (icon) => (window.hubArt ? hubArt(icon, 'Health') : '');
+  const ic = (icon, tone, raw) => `<i class="h2-ic" style="--t-bg:${TONE[tone][0]};--t-ink:${TONE[tone][1]}">${raw || ART(icon)}</i>`;
+
+  /* ---------- Shared blocks ---------- */
+  const h2 = t => `<h2 class="hub-h2">${F(t)}</h2>`;
+  // Rows: an icon tile, a title and one line. Rows that don't open anything get no chevron.
+  const rows = items => `<section class="hub-card h2-rows">${items.map(([icon, tone, t, d, go]) => `<${go ? `button onclick="${go}"` : 'div'} class="h2-row${go ? ' is-go' : ''}">${ic(icon, tone)}<span><b>${F(t)}</b>${d ? `<small>${F(d)}</small>` : ''}</span>${go ? CHEV : ''}</${go ? 'button' : 'div'}>`).join('')}</section>`;
+  // Numbered steps, for things that really happen in order.
+  const steps = (items, note) => `<section class="hub-card h2-steps"><ol>${items.map(([icon, tone, t, d]) => `<li>${ic(icon, tone)}<span><b>${F(t)}</b>${d ? `<small>${F(d)}</small>` : ''}</span></li>`).join('')}</ol>${note ? `<p class="h2-foot">${F(note)}</p>` : ''}</section>`;
+  // "When to call" and other heads-ups: soft yellow, never red.
+  const alert = (t, d, tone = 'yellow') => `<section class="h2-alert is-${tone}"><i aria-hidden="true">!</i><div><b>${F(t)}</b><p>${F(d)}</p></div></section>`;
+  const sos = () => `<section class="h2-sos"><b>${F('Call 911 for emergency signs')}</b><p>${F('Struggling to breathe, blue lips, won’t wake or is floppy, or a seizure.')}</p></section>`;
+  // Two tiles side by side: what's common, and when to call.
+  const pair = (a, b) => `<div class="h2-pair"><div class="is-calm">${ic('', 'blue', SMILE)}<b>${F(a[0])}</b><p>${F(a[1])}</p></div><div class="is-call">${ic('', 'yellow', PHONE)}<b>${F(b[0])}</b><p>${F(b[1])}</p></div></div>`;
+  // The top card: the guide's soft green card, with a photo when the page is about a moment you'll see.
+  const top = (eyebrow, title, lead, photo, alt) => `<div class="hub-detail-head h2-head${photo ? ' has-photo' : ''}"><p class="hub-context">${F(eyebrow)}</p><h1>${F(title)}</h1>${lead ? `<p class="hub-lead">${F(lead)}</p>` : ''}${photo ? `<figure class="h2-photo"><img src="assets/health/${photo}" alt="${e(alt)}"></figure>` : ''}</div>`;
+  const page = inner => `<div class="quiet-category hub-page hub-detail h2-page" data-overview="Health" style="${yearTheme('Health')}">${detailPageTop('Health')}${inner}</div>`;
+
+  /* ---------- What to expect ---------- */
+  // The visit, in order. Each step says what happens at this age (AAP Bright Futures; mood checks at 1, 2, 4 and 6 months).
+  const MEASURE = ['steth', 'green', 'Measure and examine', 'Weight, length and head size, then a head-to-toe exam'];
+  const VISIT = {
+    0: { lead: 'A first check on feeding, weight and jaundice.', steps: [['steth', 'green', 'Weigh and examine', 'Weight, then a head-to-toe exam and a jaundice check'], ['bottle', 'yellow', 'Talk about feeding', 'Feeds, diapers and sleep, and how you’re recovering'], ['ear', 'peach', 'Go over the hospital tests', 'Hearing, heart and blood-spot results']], before: 'Bring the hospital papers, and feed {o} whenever {s} needs it.' },
+    1: { lead: 'A short visit about feeding and growth.', steps: [MEASURE, ['bottle', 'yellow', 'Talk about feeding', 'How feeds are going, and whether anything hurts'], ['heart', 'pink', 'Check in on you', 'A short form about how you’re feeling']], before: 'Dress {o} in something that comes off quickly.' },
+    2: { lead: 'A full checkup, and the first big round of shots.', steps: [MEASURE, ['smile', 'pink', 'Talk about new skills', 'How {s} {hold|holds} {p} head and {smile|smiles} at you'], ['bottle', 'yellow', 'Feeding, sleep and you', 'Plus a short form about how you’re feeling']], before: 'Dress {o} in something that comes off quickly, for weighing and shots.', shotsLast: true },
+    4: { lead: 'Much like 2 months, plus a first talk about solids.', steps: [MEASURE, ['roll', 'blue', 'Talk about new skills', 'Head control, reaching and rolling'], ['bowl', 'yellow', 'Feeding and you', 'Vitamin D, signs {s’s} ready for solids, and how you’re feeling']], before: 'Bring your questions about starting solids.', shotsLast: true },
+    6: { lead: 'Growth, sitting and teeth, and how first foods are going.', steps: [MEASURE, ['sit', 'blue', 'Talk about new skills', 'Sitting, rolling, reaching and babbling'], ['tooth', 'yellow', 'Feeding and teeth', 'How solids are going, iron, and fluoride once teeth are in']], before: 'Bring your questions about first foods.', shotsLast: true },
+    9: { lead: 'A short questionnaire about development, plus growth and teeth.', steps: [MEASURE, ['star', 'blue', 'A development questionnaire', 'How {s} {talk|talks}, {move|moves} and {play|plays}'], ['bowl', 'yellow', 'Feeding and teeth', 'Textures, finger foods and brushing']] },
+    12: { lead: 'New shots, a quick blood test and a talk about milk.', steps: [MEASURE, ['wave', 'blue', 'Talk about new skills', 'Gestures, first words and first steps'], ['cup', 'yellow', 'Milk and cups', 'Moving off bottles, and how much milk'], ['drop', 'peach', 'A quick blood test', 'Usually a finger or heel prick']], before: 'Bring a snack and a cup. It’s a longer visit.', shotsLast: true }
+  };
+  const PHOTO_ALT = { 0: 'A pediatrician checking a newborn on a baby scale', 1: 'A pediatrician listening to a baby’s chest', 2: 'A baby on the exam table lifting her head, the pediatrician smiling back', 4: 'A baby reaching for a rattle the pediatrician holds', 6: 'A smiling baby sitting on the exam table beside the pediatrician', 9: 'A dad filling in a questionnaire with his baby on his lap', 12: 'A toddler standing at a bench as the pediatrician holds out her hands' };
+  function expectPage(age) {
+    const hv = window.__hv, V = VISIT[age];
+    const jaundice = age === 0 ? h2('Yellow skin at home') + pair(['Common', 'A little yellow on the face in the first week, feeding well.'], ['Time to call', 'Yellow on the belly, legs or eyes, poor feeding, or very sleepy.']) : '';
+    return page(top(hv.label(age), 'What to expect', V.lead, `checkup-${age}.jpg`, PHOTO_ALT[age])
+      + h2('The visit, step by step') + steps(V.steps, (V.shotsLast ? 'Shots usually come last. ' : '') + 'Some offices do things in a different order.')
+      + jaundice
+      + (V.before ? `<section class="h2-before">${ic('notepad', 'yellow')}<div><b>${F('Before you go')}</b><p>${F(V.before)}</p></div></section>` : ''));
+  }
+
+  /* ---------- Vaccines ---------- */
+  const listNames = xs => { const n = xs.map((x, i) => /^(DTaP|Hib|MMR)$/.test(x[0]) || i === 0 ? x[0] : x[0].replace(/^[A-Z][a-z]/, c => c.toLowerCase())); return n.length < 3 ? n.join(' and ') : n.slice(0, -1).join(', ') + ' and ' + n[n.length - 1]; };
+  // A row that opens in place to show each dose and what it protects against.
+  const openRow = (icon, tone, t, d, items) => `<details class="h2-row is-open-row">${'<summary>'}${ic(icon, tone)}<span><b>${F(t)}</b><small>${F(d)}</small></span>${CHEV}</summary><ul class="h2-doses">${items.map(([n, w]) => `<li><b>${e(n)}</b><span>${F(w)}</span></li>`).join('')}</ul></details>`;
+  function vaccinePage(age) {
+    const hv = window.__hv, v = hv.VAX[age], s = hv.SEASON(age), WHAT = hv.WHAT;
+    const nurse = profile.feed === 'Breast milk' && profile.feedHow === 'Nursing', bottle = profile.feed === 'Formula';
+    const lead = [2, 4, 6, 12].includes(age) ? (nurse ? 'Hold {o} on your lap and nurse during or right after. It soothes.' : bottle ? 'Hold {o} on your lap, and offer a bottle right after. It soothes.' : 'Hold {o} on your lap, and offer a feed during or right after. It soothes.') : v.lead;
+    const doses = xs => xs.map(([n, d]) => [n, d + (WHAT[n] ? '. ' + WHAT[n] : '')]);
+    const atVisit = `<section class="hub-card h2-rows">`
+      + openRow('shield', 'blue', age === 9 ? 'Catch-up shots' : v.shots.length === 1 ? 'One shot, maybe' : 'Routine shots', age === 9 ? 'Only if one was missed' : listNames(v.shots), doses(v.shots))
+      + (v.oral ? openRow('drop', 'green', 'Drops by mouth', 'Rotavirus. No needle', doses(v.oral)) : '')
+      + openRow('snow', 'peach', 'Seasonal protection', 'Your pediatrician says which are due', s.map(([n, d]) => [n, d]))
+      + `</section>`;
+    const callLine = age <= 2 ? 'A fever of 100.4°F or more, 3 hours of crying, or swelling that grows.' : `A fever of ${feverTemp(age)} or more, 3 hours of crying, or swelling that grows.`;
+    const after = age === 0 ? '' : h2('After the shots') + pair(['Common for a day or two', 'A little fussy or sleepy, a low fever, or a sore spot.' + (age === 12 ? ' A rash 1–2 weeks later can happen too.' : '')], ['Time to call', callLine]);
+    // Leads that already explain the shots (0, 1, 9) keep the page's small picture; visits with several shots show how to hold the baby.
+    const photo = [2, 4, 6, 12].includes(age);
+    return page(top(hv.label(age), 'Vaccines', lead, photo ? 'shots.jpg' : '', 'A mom holding her baby close on her lap at the pediatrician’s office')
+      + h2('At the visit') + atVisit + after
+      + `<p class="h2-small">${F('Your pediatrician confirms what’s due from {p} record.')}</p>`);
+  }
+
+  /* ---------- Questions and notes ---------- */
+  // Each question ticks off, and opens to keep what the pediatrician said right under it.
+  window.h2Answer = function (age, key, ev) {
+    ev.preventDefault();
+    const d = journeyData(), v = ev.target.querySelector('textarea').value.trim();
+    d.answers = d.answers || {}; d.answers['q' + age] = Object.assign({}, d.answers['q' + age], { [key]: v });
+    if (v) d.checks['q' + age] = Object.assign({}, d.checks['q' + age], { [key]: true });
+    saveJourneyData(d); window.__h2open = String(key); const y = scrollY; render(); scrollTo(0, y);
+  };
+  window.h2Toggle = function (age, key, ev) { ev.preventDefault(); ev.stopPropagation(); hubAskedQuestion(age, key, !((journeyData().checks['q' + age] || {})[key])); };
+  function questionsPage(age) {
+    const hv = window.__hv, d = journeyData(), asked = d.checks['q' + age] || {}, said = (d.answers || {})['q' + age] || {};
+    const own = d.questions[age] || [], qs = healthJourneyQuestions(age);
+    const all = [...qs.map((q, i) => [i, q, false]), ...own.map((q, i) => ['m' + i, e(q), true])];
+    const n = all.filter(([k]) => asked[k]).length;
+    const bar = `<div class="h2-progress"><b>${n} of ${all.length} asked</b><span>${all.map(([k]) => `<i class="${asked[k] ? 'is-on' : ''}"></i>`).join('')}</span></div>`;
+    const item = ([k, q, mine], i) => {
+      const a = said[k] || '', open = window.__h2open === String(k);
+      return `<details class="h2-q${asked[k] ? ' is-on' : ''}"${open ? ' open' : ''}><summary><button class="h2-q-tick" aria-label="${asked[k] ? 'Mark as not asked' : 'Mark as asked'}" onclick="h2Toggle(${age},${typeof k === 'number' ? k : `'${k}'`},event)">${CHECK}</button><span>${q}</span>${CHEV}</summary>`
+        + `<div class="h2-q-body">${a ? `<p class="h2-said"><small>${F('Your pediatrician said')}</small>${e(a)}</p>` : ''}<form onsubmit="h2Answer(${age},${typeof k === 'number' ? k : `'${k}'`},event)"><textarea rows="2" maxlength="1000" placeholder="${F('What did your pediatrician say?')}" aria-label="What your pediatrician said">${e(a)}</textarea><div><button class="h2-save">${a ? 'Update' : 'Save'}</button>${mine ? `<button type="button" class="h2-remove" onclick="removeJourneyQuestion(${age},${String(k).slice(1)})">Remove question</button>` : ''}</div></form></div></details>`;
+    };
+    const notes = visitNotesFor(age);
+    window.__h2open = null;
+    return page(top(hv.label(age), 'Questions and notes', 'Tick each one off as you ask, and keep the answer with it.', '', '')
+      + bar + `<div class="h2-qs">${all.map(item).join('')}</div>`
+      + `<details class="h2-add"><summary>＋ ${F('Add a question')}</summary><form class="hub-q-add" onsubmit="submitJourneyQuestion(event,${age})"><input id="visitQuestion" maxlength="500" required placeholder="${F('Anything on your mind about {o}')}" aria-label="Add a question"><button>Add</button></form></details>`
+      + `<section class="h2-after" id="visit-notes">${ic('notepad', 'green')}<b class="h2-after-t">${F('After the visit')}</b><form onsubmit="submitVisitNotes(event,${age})"><textarea id="appointmentNotes" maxlength="6000" rows="5" placeholder="${F('What you learned, and next steps')}" aria-label="Notes from the visit">${e(notes)}</textarea><button class="h2-save">${notes ? 'Update notes' : 'Save notes'}</button></form></section>`);
+  }
+
+  const baseJD = window.healthJourneyDetail;
+  window.healthJourneyDetail = healthJourneyDetail = function (age, part) {
+    if (!window.__hlOld && window.__hv && window.__hv.EXPECT[age]) {
+      if (part === 'expect') return expectPage(age);
+      if (part === 'vaccines') return vaccinePage(age);
+      if (part === 'questions' || part === 'notes') return questionsPage(age);
+    }
+    return baseJD(age, part);
+  };
+
+  /* ---------- When Maya seems sick ---------- */
+  const m = () => actualMonth();
+  const feverLine = mo => mo < 3 ? ['At this age, any fever needs a call', 'Under 3 months: 100.4°F (38°C) or higher? Call your pediatrician right away, day or night.']
+    : mo < 6 ? ['At this age, call about a fever', '3 to 6 months: 101°F (38.3°C) or higher, or any fever lasting more than a day.']
+    : ['When a fever needs a call', 'From 6 months: 103°F (39.4°C) or higher, or any fever lasting more than a day.'];
+  function sickHub() {
+    const mo = m(), f = feverLine(mo);
+    return page(top('Between checkups', 'When Maya seems sick', 'Most baby illnesses are mild and pass in a few days. Start with what you’re seeing.')
+      + alert(f[0], f[1])
+      + h2('What are you seeing?')
+      + rows([['thermo', 'yellow', 'A fever', mo < 3 ? 'Take a temperature, and when to call' : 'How to check, and what helps', "openPage('chg:Health:d:sick-fever')"],
+        ['drop', 'blue', 'A cold or stuffy nose', 'Clear the nose so feeds go easier', "openPage('chg:Health:d:cold')"],
+        ['bottle', 'pink', 'Vomiting or diarrhea', 'Keep feeds going, and watch diapers', "openPage('chg:Health:d:sick-tummy')"]])
+      + sos() + `<p class="h2-small is-center">${F('Not sure? Your pediatrician’s office has someone to talk to, day or night.')}</p>`);
+  }
+  function feverPage() {
+    const mo = m(), u3 = mo < 3;
+    const temp = feverTemp(mo), c = { '100.4°F': '38°C', '101°F': '38.3°C', '103°F': '39.4°C' }[temp];
+    const title = u3 ? 'A fever at this age needs a call' : 'Most fevers mean the body is fighting a bug';
+    const lead = u3 ? 'Even if {s} seems well otherwise, a fever under 3 months needs to be checked.' : 'How {s} {seem|seems} matters more than the number. Here’s when to call.';
+    const big = `<section class="h2-big"><div><b>${temp.replace('°F', '')}<span>°F</span></b><small>${c} or higher</small></div><p>${F(u3 ? 'Call your pediatrician right away, day or night.' : mo < 6 ? 'Call your pediatrician, day or night. Call too if a fever lasts more than a day.' : 'Call your pediatrician. Call too if any fever lasts more than a day.')}</p></section>`
+      + `<p class="h2-small">${F('Also call if {s} seems very unwell or unusually sleepy.' + feverEarlyNote())}</p>`;
+    const check = h2('Take {p} temperature') + `<section class="hub-card h2-thermo"><img src="assets/health/thermometer.jpg" alt="A digital thermometer on a folded cloth"><div><b>${F('Use a digital thermometer')}</b><p>${F(u3 ? 'Rectal is the most accurate for babies, and the one to trust at this age.' : 'Rectal is most accurate. Armpit or forehead work for a quick check' + (mo >= 6 ? ', and ear from 6 months.' : '.'))}</p></div></section>`
+      + rows([['thermo', 'blue', 'How to take a rectal temperature', 'Four quick steps', "openPage('chg:Health:d:sick-rectal')"]]);
+    const help = h2('What helps') + rows([['bottle', 'yellow', 'Offer feeds as usual', 'Little and often keeps {o} hydrated'], ['shirt', 'green', 'Dress {o} lightly', 'Extra layers keep a fever up'], ['moon', 'pink', 'Let {o} rest', 'Naps and quiet time']])
+      + alert('Before any medicine', u3 ? 'Under 3 months, ask your pediatrician first.' : mo < 6 ? 'Acetaminophen can help. Ask your pediatrician for the dose.' : 'Acetaminophen or ibuprofen can help. Ask your pediatrician for the dose.', 'blue');
+    return page(top('When Maya seems sick', title, lead) + big + check + help + sos());
+  }
+  function coldPage() {
+    const mo = m();
+    const seq = `<section class="hub-card h2-seq">${[['cold-saline.jpg', 'Saline drops', 'A few in each nostril'], ['cold-bulb.jpg', 'Gentle suction', 'With a bulb or aspirator'], ['cold-feed.jpg', 'Then feed', 'Breathing is easier now']].map(([src, t, d], i) => `${i ? '<span class="h2-arrow" aria-hidden="true">›</span>' : ''}<figure><img src="assets/health/${src}" alt=""><figcaption><b>${F(t)}</b><small>${F(d)}</small></figcaption></figure>`).join('')}</section>`;
+    return page(top('When Maya seems sick', 'Clear {p} nose before a feed', 'Babies breathe through the nose to feed, so a stuffy nose is often the hardest part. Most colds clear in 7–10 days.')
+      + h2('Before feeds and sleep') + seq
+      + h2('Also helps') + rows([['snow', 'blue', 'A cool-mist humidifier', 'In {p} room at night'], ['bottle', 'yellow', 'Smaller, more frequent feeds', 'Easier with a stuffy nose'], ['shield', 'pink', 'Skip cold medicines', 'They aren’t safe for babies. No honey before 1']])
+      + alert('When to call', `A fever of ${feverTemp(mo)} or more, a cold past 10 days, or signs of an ear infection: fussing lying down, or fluid from the ear.`)
+      + sos());
+  }
+  function tummyPage() {
+    return page(top('When Maya seems sick', 'Keep {p} feeds going', 'Usually a tummy bug that passes in a day or two. Small, frequent feeds keep {o} hydrated.')
+      + `<section class="h2-watch">${ic('diaper', 'green')}<div><b>${F('Watch wet diapers')}</b><p>${F('Far fewer than usual, or none in 6 hours, can be a sign of dehydration.')}</p></div></section>`
+      + h2('What to look for') + pair(['Common', 'A few loose poops or vomits, still feeding and waking as usual.'], ['Time to call', 'Can’t keep feeds down, fewer wet diapers, a dry mouth or blood in poop.'])
+      + h2('What helps') + rows([['bottle', 'yellow', 'Keep offering milk', 'Smaller feeds, more often'], ['hand', 'green', 'Wash hands after changes', 'Tummy bugs spread easily'], ['steth', 'pink', 'Ask before any medicine', 'Including anti-diarrhea medicine']])
+      + alert('Go to the ER', 'Green or bloody vomit.', 'peach')
+      + sos());
+  }
+  const baseRoute = window.changesRoute;
+  window.changesRoute = function (p) {
+    if (!window.__hlOld) {
+      const [, cat, screen, a] = p.split(':');
+      if (cat === 'Health' && screen === 'd') {
+        if (a === 'sick') return sickHub();
+        if (a === 'sick-fever' || a === 'sick-temp' || a === 'sick-care') return feverPage();
+        if (a === 'cold') return coldPage();
+        if (a === 'sick-tummy') return tummyPage();
+      }
+    }
+    return baseRoute(p);
+  };
+})();

@@ -111,6 +111,8 @@
   };
   window.healthJourneyQuestions = healthJourneyQuestions = age => (QUESTIONS[age] || []).map(F);
 
+  // Shared with js/health-pages-v2.js (Nov 19 redesign of the checkup pages).
+  window.__hv = { EXPECT, VISIT, VAX, SEASON, WHAT, label, T, P };
   const base = window.healthJourneyDetail;
   window.healthJourneyDetail = healthJourneyDetail = function (age, part) {
     if (!EXPECT[age]) return base(age, part);
