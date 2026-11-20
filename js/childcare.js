@@ -119,7 +119,7 @@
       lead: 'A grandparent, relative or friend looks after your baby, at your home or theirs.',
       good: 'You’d like someone who already loves Maya, with flexible timing.', mind: 'Some safety advice has changed since they had babies.',
       when: ['A few weeks ahead', 'Enough time to talk through the routine together.'],
-      steps: [['Talk it through', 'talk', 'Kindly, before the first day', [['Back to sleep, in a bare crib', 'Even for naps. This advice has changed.'], ['The hours, week after week', 'Either of you can say if it isn’t working.'], ['The car seat, every ride', 'Rear-facing, and buckled snugly.'], ['Naps, bedtime and feeds', 'Share {p} care card, so you match.'], ['Crying can wear anyone down', 'Put Maya down safely and take a minute. Never shake a baby.'], ['Infant CPR', 'A short class is worth it.']]]] },
+      steps: [['Talk it through', 'talk', 'Kindly, before the first day', [['Back to sleep, in a bare crib', 'Even for naps. This advice has changed.'], ['How you’ll stay in touch', 'The hours week to week, and that either of you can say if it isn’t working.'], ['The car seat, every ride', 'Rear-facing, and buckled snugly.'], ['Naps, bedtime and feeds', 'Share {p} care card, so you match.'], ['Crying can wear anyone down', 'Put Maya down safely and take a minute. Never shake a baby.'], ['Infant CPR', 'A short class is worth it.']]]] },
     sitter: { icon: 'moon', name: 'Babysitter', short: 'For a few hours', who: 'person',
       lead: 'Someone who watches Maya for a few hours, so you can rest or go out.',
       good: 'You need a few hours of help, not regular care.', mind: 'Keep the first night short, and stay reachable.',
@@ -241,10 +241,10 @@
         steps.map(x => `${x[0]}: ${x[2]}`).join(' '))
       + `<h2 class="hub-h2">${F('Before day one')}</h2>`      + careCardButton(load('ahead-carecard', {}))
       + packCard(atHome ? 'Set up at home' : 'Pack for care', atHome ? 'So the day runs without you' : 'Label everything with {p} name', [
-        ['bottle', bm && fm ? 'Milk or formula, plus one extra feed' : bm ? 'Pumped milk, plus one extra feed' : 'Formula, plus one extra feed',
-          (bm ? 'Labeled with the date, in a cooler bag' : 'And clean bottles, labeled with the date') + (m >= 6 ? '. Food too, if needed' : '')],
+        ['bottle', bm && fm ? 'Milk or formula, plus one extra' : bm ? 'Pumped milk, plus one extra' : 'Formula, plus one extra', bm ? 'Labeled with the date, in a cooler bag' : 'And clean bottles, labeled with the date'],
         ['shirt', 'A spare outfit or two', 'For spills and blowouts'],
-        ['diaper', 'Diapers, wipes and cream', atHome ? 'Where your nanny can find them' : 'If asked']])
+        ['diaper', 'Diapers and wipes', atHome ? 'Where your nanny can find them' : 'If asked'],
+        m >= 6 ? ['bowl', 'Food, if the caregiver doesn’t provide it'] : null])
       + fold('If things don’t go to plan', 'Bottles, tears at drop-off, and more', [
         m < 9 ? ['cup', 'Won’t take a bottle', 'Let the caregiver try, with you out of the room.'] : null,
         ['smile', 'Tears at drop-off', 'Keep goodbyes short. Ask for a text once {s’s} settled.'],
@@ -292,9 +292,6 @@
         ['chat', 'After a month', 'A proper check-in about what’s working.'],
         ['notepad', 'Every few months', 'Update Maya’s care card.'],
         m >= 9 ? ['home', 'Around 12–18 months', 'Many centers move babies up a room. Ask for short visits first.'] : null])
-      + `<h2 class="hub-h2">${F('What a good daily update looks like')}</h2><section class="hub-card cc-update"><dl>`
-      + [['bottle', 'Feeds', m >= 7 ? 'Bottle, lunch, bottle' : '3 times (9:00, 12:15, 3:30)'], ['moon', 'Naps', m >= 9 ? '1 or 2 naps' : m >= 5 ? '2 naps, about 2 hours' : '3 short naps'], ['diaper', 'Diapers', '5 wet, 1 dirty'], ['smile', 'Settled', 'Fussy at drop-off, then happy.']]
-          .map(([i, t, d]) => `<div><dt>${hubArt(i, CAT)}${F(t)}</dt><dd>${F(d)}</dd></div>`).join('') + `</dl></section>`
       + H().versus('Sick day: home or care?', ['Usually fine to go', 'A runny nose, if {s} {are|is} eating and playing as usual.'],
         ['Usually home instead', 'A fever, vomiting or diarrhea. Each place has its own policy, so ask for it.'])
       + peek('If something doesn’t feel right', [
@@ -387,13 +384,16 @@
       worth: ['Worth knowing before you look', 'The best tour question isn’t about activities.', 'Ask how they handle crying and naps, and who covers when someone’s out.'] },
     { label: 'Care chosen', age: 'Weeks before', one: 'Getting ready for day one, and a backup plan', eyebrow: 'Care chosen', t: 'Make day one familiar', lead: 'Help your caregiver learn Maya’s little routines before the first real goodbye.',
       worth: ['Worth knowing before day one', 'A practice day helps more than a perfect schedule.', 'Visit together first, then let the caregiver take the lead while you’re nearby.'] },
-    { label: 'Care started', age: 'Once care starts', one: 'Settling in, each day, and when to speak up', eyebrow: 'Care started', t: 'Is care going well?', lead: 'Look beyond the goodbye. What matters is how Maya is cared for all day.',
+    { label: 'Care started', age: 'Once care starts', one: 'Settling in, each day, and when to speak up', eyebrow: 'Care started', t: 'How is care going?', lead: 'What happens after goodbye matters more than the goodbye itself.',
       worth: ['Worth knowing now', 'Tears at drop-off don’t tell the whole story.', 'Many babies protest the goodbye, then settle. Ask how {s} did after you left.'] }
   ];
   const ccAuto = () => ({ plan: 0, ready: 1, start: 2 })[stepNow()];
   const ccCur = () => { const o = load('ahead-childcare-stage', null); return typeof o === 'number' ? o : ccAuto(); };
   window.ccCurStage = ccCur;
-  window.ccSetStage = i => { save('ahead-childcare-stage', i); page = `topic:${CAT}`; render(); scrollTo(0, 0); if (typeof hubToast === 'function') hubToast(F(`Childcare: ${CC_STAGES[i].label}`), F('This is now Maya’s stage.')); };
+  // Moving stage says it in the family's words, with Undo (like every stage change in the app).
+  window.ccSetStage = i => { const before = load('ahead-childcare-stage', null); save('ahead-childcare-stage', i); page = `topic:${CAT}`; render(); scrollTo(0, 0);
+    if (typeof hubToast === 'function') hubToast(F(['Back to finding care', 'Care chosen', 'Care started'][i]), F('Childcare now shows this stage.'), ['Undo', `document.querySelectorAll('.hub-toast').forEach(t=>t.remove());ccStageUndo(${JSON.stringify(before)})`]); };
+  window.ccStageUndo = b => { if (b === null) { try { localStorage.removeItem('ahead-childcare-stage'); } catch (e) {} } else save('ahead-childcare-stage', b); page = `topic:${CAT}`; render(); scrollTo(0, 0); };
   // Nov 19, round 3: the main page shows the four options as photo cards (one line each); the comparison is its own
   // page, one card per question, with small pictures for the answers. Facts, not scores (AAP: 3 babies per adult in
   // an infant room; Caring for Our Children: at most 2 under-2s per adult in a home daycare).
@@ -452,28 +452,36 @@
     // tiles and the side-by-side compare, so the page opens on one designed card instead of art plus a tip.
     // Round 5 (Yarden: the inspiration does it better): a light top card with its picture, then the options below it.
     // Round 9 (Yarden): a real photo for each stage, with the headline under it.
-    let b = `<header class="hub-hero cc-hero cc-stage-hero"><img class="cc-stage-photo" src="assets/childcare/stage${view}.jpg" alt="" loading="lazy"><div class="cc-stage-copy"><p class="hub-eyebrow">${F(S.eyebrow)}</p><h1>${F(S.t)}</h1><p class="hub-lead">${F(S.lead)}</p></div>${view === 0 ? '' : `<div class="cc-worth"><small>${F(S.worth[0])}</small><b>${F(S.worth[1])}</b><span>${F(S.worth[2])}</span></div>`}</header>`;
+    // Nov 20 (Yarden): three pills at the top instead of "All stages" and the Previewing banner. A dot marks where the
+    // family is; tapping another pill previews it, with one button in the family's own words to move there.
+    const PILL = ['Find care', 'Get ready', 'Settle in'], MOVE = ['Back to finding care', 'We’ve chosen care', 'Care has started'];
+    let b = `<nav class="cc-pills" aria-label="${F('Childcare stages')}">${PILL.map((n, i) => `<button class="${i === view ? 'is-on' : ''}${i === cur ? ' is-now' : ''}" aria-current="${i === view ? 'page' : 'false'}" onclick="openPage('chg:${CAT}:s:${i}')">${i === cur ? '<i aria-hidden="true"></i>' : ''}${F(n)}${i === cur ? `<span class="cc-sr">${F(', where you are now')}</span>` : ''}</button>`).join('')}</nav>`
+      + (view !== cur ? `<div class="cc-pill-note"><span>${F(view > cur ? 'A look ahead.' : 'A look back.')}</span><button onclick="ccSetStage(${view})">${F(MOVE[view])} →</button></div>` : '');
+    b += `<header class="hub-hero cc-hero cc-stage-hero"><div class="cc-stage-media"><img class="cc-stage-photo" src="assets/childcare/stage${view}.jpg" alt=""><svg class="cc-wave" viewBox="0 0 400 40" preserveAspectRatio="none" aria-hidden="true"><path d="M0 22 C 70 4, 140 4, 210 18 S 340 38, 400 14 L 400 40 L 0 40 Z"/></svg></div><div class="cc-stage-copy"><h1>${F(S.t)}</h1><p class="hub-lead">${F(S.lead)}</p></div></header>`
+      + (view !== 1 ? '' : callout('idea', `<b>${F(S.worth[1])}</b>`));
     if (view === 0) {
       // Nov 19: the signature visual. Four kinds of regular care side by side, facts not scores; a chip highlights a row
       // and ticks the cell that's strongest on it, but nothing picks a winner for the family (design guide).
       // Round 6: four big photo cards, one line each, then the comparison one tap away.
       b += `<div class="cc-grid2">${COLS.map(([k]) => { const m = (list[k] || []).length; return `<button class="cc-card2" onclick="openPage('chg:${CAT}:d:${k}')"><img src="assets/childcare/card-${k}.jpg" alt="" loading="lazy"><b>${F(CMP_NAME[k])}&nbsp;›</b><small>${F(m ? `${m} on your shortlist` : ONE[k])}</small></button>`; }).join('')}</div>`
-        + `<div class="hub-list cc-cmp-link">` + homeRow('fit', 'blocks', 'Compare your options', 'Hours, group size, sick days and cost', 'compare') + `</div>`;
-      b += `<h2 class="hub-h2">${F('Help now and then')}</h2><div class="hub-list">`
+        + `<div class="hub-list cc-cmp-link">` + homeRow('fit', 'blocks', 'Compare your options', 'Hours, group size, sick days and cost', 'compare')
+        + homeRow('plan', 'notepad', 'Plan your care', 'When to start, and what comes next', 'plan') + `</div>`;
+      // Round 12 (Yarden): the rest is one tap away, so the page is the four options and two next steps.
+      b += `<details class="hub-card cc-more cc-more-links"><summary><span>${hubArt('star', CAT)}</span><div><b>${F('More help and planning')}</b><small>${F('Babysitters, extra help, paying, a quick quiz')}</small></div></summary><div class="hub-list">`
         + homeRow('sitter', 'moon', 'Babysitter', 'For a night out, or a break', 'sitter')
-        + homeRow('help', 'star', 'Extra help at home', am < 4 ? 'A doula or overnight help, early on' : 'A helper while you’re home, or at night', 'help') + `</div>`;
-      // Planning and paying come after the options, so the first thing a parent sees is what care can look like.
-      b += `<h2 class="hub-h2">${F('Before you choose')}</h2><div class="hub-list">`
-        + homeRow('plan', 'notepad', 'Plan your care', 'When to start, and what comes next', 'plan')
+        + homeRow('help', 'heart', 'Extra help at home', am < 4 ? 'A doula or a night nanny, early on' : 'A helper while you’re home, or at night', 'help')
         + homeRow('pay', 'coin', 'Paying for care', 'A pre-tax account, a tax credit and more', 'pay')
-        + homeRow('fit', 'eye', 'Not sure? Take the quick quiz', 'Four taps, and where to look first', 'fit') + `</div>`;
+        + homeRow('quiz', 'eye', 'Not sure? Take the quick quiz', 'Four taps, and where to look first', 'fit') + `</div></details>`;
     } else if (view === 1) {
       b += careCardButton(card);
       b += `<h2 class="hub-h2">${F('Before day one')}</h2><div class="hub-list">`
         + homeRow('ready', 'bag', 'Get ready for day one', `Easing in, and packing ${bm0 && fm0 ? 'milk and formula' : bm0 ? 'pumped milk' : 'formula'}`, 'ready')
         + homeRow('backup', 'shield', 'When care falls through', 'Set up your backup now', 'backup') + `</div>`;
     } else {
-      b += H().versus('How it’s going', ['Going well', '{S} settles after you leave, and you hear about small problems too.'], ['Speak up that day', 'Unsafe sleep, an injury no one explains, or worries brushed off. An injury? Call your pediatrician.']);
+      // Review (Nov 20): the useful question is how the baby is doing while you're away, so the page shows a good daily
+      // update, then what to watch for. Replaces the two big Going well / Speak up panels.
+      b += dailyUpdate(am);
+      b += `<h2 class="hub-h2">${F('What to watch for')}</h2><div class="hub-card cc-watch"><p class="is-good"><i aria-hidden="true"></i><span><b>${F('Going well')}</b>${F('{S} settles with support, and is cared for warmly all day.')}</span></p><p class="is-act"><i aria-hidden="true"></i><span><b>${F('Speak up that day')}</b>${F('An injury no one explains, unsafe sleep, or worries brushed off. An injury? Call your pediatrician.')}</span></p></div>`;
       b += careCardButton(card);
       b += `<h2 class="hub-h2">${F('Day to day')}</h2><div class="hub-list">`
         + homeRow('start', 'sun', 'Settling in', 'Drop-off, pickup and sick days', 'start')
@@ -515,12 +523,15 @@
   // Nov 19: what a good place looks like, as a labeled photo at a baby's eye level (the tiles below say why).
   // Labels name the thing, sit beside it, and never cover a child.
   const ROOM = {
-    center: ['assets/childcare/room-center.jpg', 'A calm daycare infant room: bare cribs along one wall, two caregivers on the floor with three babies, and a changing area with a sink', [['Bare cribs', 14, 17, 't'], ['2 adults, 3 babies', 38, 93, 'r']]],
+    center: ['assets/childcare/room-center.jpg', 'A calm daycare infant room: bare cribs along one wall, two caregivers on the floor with three babies, and a changing area with a sink', [['Bare cribs', 14, 17, 't', 'bare cribs'], ['2 adults, 3 babies', 38, 93, 'r', 'grown-ups']]],
     // Review feedback: the nanny interview shows what to notice too.
-    nanny: ['assets/childcare/room-nanny.jpg', 'A caregiver lying on a play mat face to face with a baby doing tummy time, smiling and talking, while the baby’s mother watches from the sofa', [['Down at {p} level', 22, 76, 't'], ['Smiling, talking to {o}', 47, 52, 't'], ['You, nearby', 85, 34, 'l']]],
-    home: ['assets/childcare/room-home.jpg', 'A home daycare living room: one caregiver on a play mat with a baby and two toddlers, a bare portable crib and a baby gate', [['Bare crib', 27, 18, 't'], ['Baby gate', 80, 16, 'l']]]
+    nanny: ['assets/childcare/room-nanny.jpg', 'A caregiver lying on a play mat face to face with a baby doing tummy time, smiling and talking, while the baby’s mother watches from the sofa', [['Down at {p} level', 22, 76, 't', 'how they are'], ['Smiling, talking to {o}', 47, 52, 't', 'how they are'], ['You, nearby', 85, 34, 'l']]],
+    home: ['assets/childcare/room-home.jpg', 'A home daycare living room: one caregiver on a play mat with a baby and two toddlers, a bare portable crib and a baby gate', [['Bare crib', 27, 18, 't', 'to sleep'], ['Baby gate', 80, 16, 'l']]]
   };
-  const roomPhoto = k => { const r = ROOM[k]; if (!r) return ''; return `<figure class="sf-photo cc-room"><img src="${r[0]}" alt="${F(r[1])}" loading="lazy">${r[2].map(([l, x, y, side]) => `<span class="cc-pin cc-pin-${side}" style="left:${x}%;top:${y}%"><i></i><span>${F(l)}</span></span>`).join('')}</figure>`; };
+  const roomPhoto = k => { const r = ROOM[k]; if (!r) return ''; return `<figure class="sf-photo cc-room"><img src="${r[0]}" alt="${F(r[1])}" loading="lazy">${r[2].map(([l, x, y, side, to]) => to ? `<button class="cc-pin cc-pin-${side}" style="left:${x}%;top:${y}%" onclick="ccPin(this,'${to}')"><i></i><span>${F(l)}</span></button>` : `<span class="cc-pin cc-pin-${side}" style="left:${x}%;top:${y}%"><i></i><span>${F(l)}</span></span>`).join('')}</figure>`; };
+  // A photo label opens the row that explains it.
+  window.ccPin = (el, to) => { const box = el.closest('.cc-steps') || document; const d = [...box.querySelectorAll('.cc-peek details')].find(x => x.querySelector('summary').textContent.toLowerCase().includes(to));
+    if (!d) return; d.open = true; d.scrollIntoView({ behavior: 'smooth', block: 'center' }); d.classList.add('is-flash'); setTimeout(() => d.classList.remove('is-flash'), 1200); };
   const MERGED = { 'On the tour: look for': 'Tour', 'At the interview: watch for': 'Meet', 'A first visit, while you’re home': 'Visit' };
   // (titles for merged steps below)
   const MERGED_T = { 'Before you visit': 'Call ahead', 'On the tour: look for': 'On the tour', 'Before you sign': 'Before you sign', 'Before you meet': 'Call first', 'At the interview: watch for': 'Meet them', 'Before you hire': 'Check references', 'Before the sitter comes': 'A quick message', 'A first visit, while you’re home': 'A first visit' };
@@ -536,10 +547,19 @@
     // One step only (Family or friends): the page heading already names it, so just the short line under it.
     const head = groups.length > 1 ? `<div class="cc-stephead"><b>${F(MERGED_T[g.name] || g.name)}</b>${g.sub ? `<small>${F(g.sub)}</small>` : ''}</div>` : g.sub && !t.plan ? `<div class="cc-stephead"><small>${F(g.sub)}</small></div>` : '';
     let body = '';
+    // Questions: the question in bold, what to listen for one tap away.
+    const askRows = items => peek('', items.map(x => ['chat', x.own ? esc3(x.q) : x.q, x.own ? 'Your own question' : 'Listen for: ' + x.a]));
     const askCards = items => `<div class="cc-asks">${items.map((x, i) => `<button class="cc-ask" onclick="ccFlip(this)"><em>${i + 1}</em><b>${x.own ? esc3(x.q) : F(x.q)}</b>${x.own ? `<small class="cc-own">${F('Your question')}</small>` : `<span class="cc-listen"><small>${F('Listen for')}</small>${F(x.a)}</span><small class="cc-tap">${F('What to listen for')} ›</small>`}</button>`).join('')}</div>`;
-    if (g.kind === 'look') body += roomPhoto(k) + `<p class="cc-sublabel">${F(t.who === 'place' ? 'Look for' : 'Notice')}</p><div class="cc-look">${g.items.map(x => `<div class="cc-look-tile"><span>${hubArt(iconFor(x.q), CAT)}</span><b>${F(x.q)}</b><small class="cc-ticked"><i aria-hidden="true">✓</i>${F(x.a)}</small></div>`).join('')}</div>` + (g.asks ? `<p class="cc-sublabel">${F(g.asks.length === 3 ? 'Three questions to ask' : 'Questions to ask')}</p>` + askCards(g.asks) : '');
+    if (g.kind === 'look') body += roomPhoto(k) + `<p class="cc-sublabel">${F(t.who === 'place' ? 'Look for' : 'Notice')}</p>` + peek('', g.items.map(x => [iconFor(x.q), x.q, x.a])) + (g.asks ? `<p class="cc-sublabel">${F(g.asks.length === 3 ? 'Three questions to ask' : 'Questions to ask')}</p>` + askRows(g.asks) : '');
     else if (g.kind === 'ask') body += askCards(g.items);
-    else if (g.kind === 'talk') body += `<div class="cc-look cc-talk">${g.items.map(x => `<div class="cc-look-tile"><span>${hubArt(iconFor(x.q), CAT)}</span><b>${x.own ? esc3(x.q) : F(x.q)}</b>${x.a ? `<small>${F(x.a)}</small>` : ''}</div>`).join('')}</div>`;
+    else if (g.kind === 'talk') {
+      // Review (Nov 20): two groups, and the crib photo sits inside safe sleep, where it teaches something.
+      const row = x => { const sleep = /sleep|crib/i.test(x.q) && !x.own;
+        return `<details><summary><span>${hubArt(iconFor(x.q), CAT)}</span><b>${x.own ? esc3(x.q) : F(x.q)}</b></summary><p>${F(x.a || 'Your own topic')}</p>${sleep ? `<figure class="cc-peek-photo"><img src="assets/childcare/sleep-sack.jpg" alt="A baby asleep on her back in a sleep sack, arms out, in a bare crib" loading="lazy"><figcaption>${F('On the back, in a sleep sack, in a bare crib. No blankets, bumpers or pillows.')}</figcaption></figure>` : ''}</details>`; };
+      const safe = g.items.filter(x => !x.own && /sleep|crib|car seat|crying|cpr/i.test(x.q)), rest = g.items.filter(x => !safe.includes(x));
+      body += `<h2 class="hub-h2">${F('Agree on safety')}</h2><div class="hub-card cc-peek">${safe.map(row).join('')}</div>`
+        + `<h2 class="hub-h2">${F('Share Maya’s routine')}</h2><div class="hub-card cc-peek">${rest.map(row).join('')}</div>`;
+    }
     else body += `<div class="cc-quick">${g.items.map(x => `<div class="cc-quick-row"><span>${hubArt(iconFor(x.q), CAT)}</span><div><b>${x.own ? esc3(x.q) : F(x.q)}</b>${x.a ? `<small>${F(x.a)}</small>` : ''}</div></div>`).join('')}</div>`;
     const nx = groups[cur + 1], noun = t.who === 'place' ? 'place' : 'person';
     const nav = nx ? `<button class="hub-button cc-next2" onclick="ccStep('${k}',${cur + 1});scrollTo(0,0)">${F('Next: ' + (MERGED_T[nx.name] || nx.name))} →</button>`
@@ -588,7 +608,7 @@
   const PLAN_T = { center: 'Choose a daycare', home: 'Choose a home daycare', nanny: 'Hire a nanny', family: 'Talk it through', sitter: 'Find a babysitter' };
   function planPage(k) {
     const t = TYPES[k];
-    const sleepNow = k === 'family' ? `<figure class="cc-type-photo cc-sleep-now"><img src="assets/childcare/sleep-sack.jpg" alt="A baby asleep on her back in a sleep sack, arms out, in a bare crib" loading="lazy"><figcaption><b>${F('Today’s advice, in one picture')}</b>${F('On the back, in a sleep sack, in a bare crib. No blankets, bumpers or pillows.')}</figcaption></figure>` : '';
+    const sleepNow = k === 'family' ? `<figure class="cc-type-photo cc-family-photo"><img src="assets/childcare/family-talk.jpg" alt="A grandmother holding a smiling baby on her lap, talking to him, with the baby’s parent beside them"></figure>` : '';
     return sub(k, t.name, PLAN_T[k], t.talk ? 'Have this talk a few weeks before the first day.' : 'A simple plan to find the right fit.', sleepNow + stepsBlock(k, questions(k), Object.assign({ plan: 1 }, t)), t.icon);
   }
   function typePage(k) {
@@ -736,6 +756,11 @@
     ['calm', 'heart', 'What comforts {o}', 'How to help when {s’s} upset'],
     ['who', 'steth', 'Contacts and health', 'Who to call, and allergies']
   ];
+  // A good daily update, as an example (Care started).
+  const dailyUpdate = m => `<h2 class="hub-h2">${F('A good daily update')}</h2><p class="cc-h2sub">${F('Ask your caregiver what Maya’s day actually looked like.')}</p>`
+    + `<section class="hub-card cc-update"><header><span>${hubArt('chat', CAT)}</span><div><b>${F('Today with Maya')}</b><small>${F('Example update')}</small></div></header><dl>`
+    + [['bottle', 'Feeds', m >= 7 ? 'Two bottles and lunch, ate well' : 'Three bottles, fed comfortably'], ['moon', 'Naps', m >= 9 ? 'One long nap after lunch' : 'Two naps, one shorter than usual'], ['smile', 'How {s} settled', 'Upset at drop-off, then enjoyed floor play']]
+        .map(([i, t, d]) => `<div><dt>${hubArt(i, CAT)}${F(t)}</dt><dd>${F(d)}</dd></div>`).join('') + `</dl></section>`;
   function secSummary(k, c) {
     const P = babyPronouns();
     if (k === 'feed') return [c.milk, c.often && c.often.toLowerCase(), c.milk && c.milk !== 'Breast milk' || c.oz ? c.oz && `about ${c.oz} a bottle` : null, c.solids && c.solids !== 'Not yet' && `solids: ${c.solids.toLowerCase()}`].filter(Boolean).join(', ');

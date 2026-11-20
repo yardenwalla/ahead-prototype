@@ -394,3 +394,38 @@
 #main .cc-update { padding: 4px 14px }
 #main .cc-update dl > div:first-child { border-top: 0 }
 #main .cc-update dl > div { grid-template-columns: 100px 1fr; align-items: center }
+/* Round 12 */
+#main .cc-more-links .hub-list { padding: 0 8px 8px }
+#main .cc-stage-hero + .cc-callout { margin-top: 12px }
+#main .cc-steps .cc-peek { margin-bottom: 8px }
+/* Round 13 */
+#main .cc-watch { padding: 4px 16px }
+#main .cc-watch p { display: grid; grid-template-columns: 14px 1fr; gap: 12px; margin: 0; padding: 12px 0; font-size: 14px; line-height: 1.45; color: #6d6650 }
+#main .cc-watch p + p { border-top: 1px solid rgba(60, 50, 20, .08) }
+#main .cc-watch i { width: 10px; height: 10px; border-radius: 50%; margin-top: 5px; background: #7fa45b }
+#main .cc-watch .is-act i { background: #c9623c }
+#main .cc-watch b { display: block; font-size: 15px; color: #2f2b1c }
+#main .cc-peek-photo { margin: 0 0 12px 50px; border-radius: 12px; overflow: hidden; background: #fbf6ea }
+#main .cc-peek-photo img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover }
+#main .cc-peek-photo figcaption { font-size: 13px; line-height: 1.4; color: #6d6650; padding: 8px 10px }
+#main .cc-family-photo img { aspect-ratio: 4 / 3 }
+#main button.cc-pin { border: 0; background: none; padding: 0; font: inherit; cursor: pointer }
+#main .cc-peek details.is-flash { background: #fcf3cf; transition: background .4s }
+#main .cc-more-links[open] summary small { display: none }
+#main .cc-more-links[open] summary b::after { content: ''; }
+#main .cc-room { position: relative } #main .cc-room button.cc-pin { z-index: 3; pointer-events: auto } #main .cc-room button.cc-pin span { pointer-events: auto }
+/* The soft wave where the photo meets the card (Yarden's inspiration) */
+#main .cc-stage-media { position: relative; line-height: 0 }
+#main .cc-stage-media .cc-wave { position: absolute; left: 0; right: 0; bottom: -1px; width: 100%; height: 30px; display: block }
+#main .cc-stage-media .cc-wave path { fill: #fcf3cf }
+#main .cc-stage-hero .cc-stage-copy { padding-top: 6px }
+#main .cc-stage-hero > .cc-stage-media { padding: 0 !important; margin: 0 !important; width: 100% !important; max-width: none !important }
+/* Stage pills (Nov 20) */
+#main .cc-pills { display: flex; gap: 4px; background: #fffdf8; border: 1px solid rgba(60, 50, 20, .1); border-radius: 999px; padding: 4px; margin: 2px 0 12px }
+#main .cc-pills button { flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; border: 0; background: none; font: inherit; font-size: 14px; font-weight: 600; color: #6d6650; padding: 9px 4px; border-radius: 999px; cursor: pointer }
+#main .cc-pills button.is-on { background: #6b5a0e; color: #fff }
+#main .cc-pills button i { width: 7px; height: 7px; border-radius: 50%; background: #c9a227; flex: none }
+#main .cc-pills button.is-on i { background: #f6e3a1 }
+#main .cc-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0) }
+#main .cc-pill-note { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: #fcf3cf; border-radius: 14px; padding: 8px 8px 8px 14px; margin: -4px 0 12px; font-size: 14px; color: #6d6650 }
+#main .cc-pill-note button { border: 0; background: #6b5a0e; color: #fff; font: inherit; font-size: 14px; font-weight: 650; padding: 8px 14px; border-radius: 999px; cursor: pointer; white-space: nowrap }
