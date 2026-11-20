@@ -95,3 +95,156 @@
 #main .oa-steps button b { font-size: 12.5px; font-weight: 600; color: var(--muted, #6d666d); line-height: 1.2 }
 #main .oa-steps button.is-on b { color: var(--oa-ink); font-weight: 700 }
 #main .oa-then { display: block; margin: 4px 2px 18px; font-weight: 650 }
+
+/* Show, don't tell (Nov 19): photos where a parent needs to recognize something. Same tag look as Safety. */
+#main .oa-place.has-photo { padding: 0; overflow: hidden; min-height: 0; gap: 0 }
+#main .oa-place-photo { display: block; width: 100%; aspect-ratio: 16 / 10; overflow: hidden; background: var(--oa-bg) }
+#main .oa-place-photo img { display: block; width: 100%; height: 100%; object-fit: cover }
+#main .oa-place.has-photo b { padding: 10px 14px 0 }
+#main .oa-place.has-photo small { padding: 1px 14px 13px }
+#main .oa-photo-card { background: var(--white, #fffefb); border: 1px solid var(--line, #e1e5d9); border-radius: 20px; overflow: hidden; margin: 0 0 22px }
+#main .oa-photo { position: relative; margin: 0; aspect-ratio: 4 / 3; overflow: hidden }
+#main .oa-photo img { display: block; width: 100%; height: 100%; object-fit: cover }
+#main .oa-pin { position: absolute; display: flex; align-items: center; gap: 6px; pointer-events: none }
+#main .oa-pin-r { transform: translate(-7px, -50%) }
+#main .oa-pin-l { flex-direction: row-reverse; transform: translate(calc(-100% + 7px), -50%) }
+#main .oa-pin-b { flex-direction: column; transform: translate(-50%, -7px) }
+#main .oa-pin span { font-size: 12px; padding: 6px 9px }
+#main .oa-checkrows { list-style: none; margin: 0; padding: 4px 16px }
+#main .oa-checkrows li { display: flex; gap: 12px; align-items: center; padding: 11px 0; border-top: 1px solid var(--line, #efe7da) }
+#main .oa-checkrows li:first-child { border-top: 0 }
+#main .oa-checkdot { flex: none; width: 40px; height: 40px; border-radius: 12px; background: var(--ss-bg, #fde3d3); display: grid; place-items: center }
+#main .oa-checkdot svg { width: 22px; height: 22px }
+#main .oa-checkdot svg, #main .oa-checkdot svg [stroke]:not([stroke="none"]) { stroke: var(--ss-ink) }
+#main .oa-checkrows b { display: block; font-size: 15px; line-height: 1.3; font-weight: 600; color: var(--ink) }
+#main .oa-checkrows small { display: block; font-size: 13.5px; line-height: 1.38; color: #6b6670; margin-top: 2px }
+#main .oa-ba { display: grid; grid-template-columns: 1fr 1fr; gap: 3px }
+#main .oa-ba figure { margin: 0 }
+#main .oa-ba figcaption { padding: 10px 12px 8px; font-size: 13px; font-weight: 700; letter-spacing: .02em; color: #9a5a3c }
+#main .oa-ba figcaption.is-after { color: #356651 }
+#main .oa-ba-img { position: relative; overflow: hidden }
+#main .oa-ba img { display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover }
+#main .oa-ba figure + figure .oa-pin span { background: #e6f5ec; color: #356651 }
+#main .oa-ba figure + figure .oa-pin i { background: #356651 }
+#main .oa-ba + .oa-checkrows { padding-top: 6px }
+#main .oa-choice { display: grid; grid-template-columns: 1fr 1fr; gap: 3px }
+#main .oa-choice figure { margin: 0 }
+#main .oa-choice img { display: block; width: 100%; aspect-ratio: 1 / 1; object-fit: cover }
+#main .oa-choice figcaption { padding: 10px 12px 14px }
+#main .oa-choice b { display: block; font-size: 15px; font-weight: 650; color: var(--ss-ink) }
+#main .oa-choice .is-meh b { color: #9a5a3c }
+#main .oa-choice small { display: block; font-size: 13px; line-height: 1.38; color: #5c5361; margin-top: 2px }
+#main .oa-ba figcaption { display: flex; align-items: center; gap: 6px; font-size: 13.5px; letter-spacing: 0; color: #b23b2e }
+#main .oa-mark { display: inline-grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; background: #b23b2e; color: #fff; font-size: 11px; font-weight: 800; flex: none }
+#main .oa-ba figcaption.is-after .oa-mark { background: #356651 }
+#main .oa-ba figure:first-child .oa-pin span { background: #fdecea; color: #b23b2e }
+#main .oa-ba figure:first-child .oa-pin i { background: #b23b2e }
+#main .oa-ba figure:first-child img { filter: saturate(.85) }
+
+/* Show and tell, round 2 (Nov 20): photo beside every headline, gear photos, photo steps, icon tabs, the aircraft label. */
+#main .oa-photo-head { display: flex; gap: 14px; align-items: center; padding: 18px 16px 18px 20px }
+#main .oa-photo-head .oa-head-copy { flex: 1; min-width: 0 }
+#main .oa-photo-head .hub-context { margin-top: 0 }
+#main .oa-head-img { flex: none; width: 112px; height: 132px; object-fit: cover; border-radius: 18px; box-shadow: 0 6px 18px rgba(60, 40, 30, .12) }
+#main .oa-hero.has-photo { padding-right: 140px; min-height: 170px }
+#main .oa-hero-img { position: absolute !important; right: 16px; top: 18px; width: 112px; height: 136px; object-fit: cover; border-radius: 18px; box-shadow: 0 6px 18px rgba(60, 40, 30, .14); z-index: 1 }
+#main .oa-hero.has-photo::after { display: none }
+#main .oa-row.has-photo { align-items: center }
+#main .oa-gear-img { flex: none; width: 56px; height: 56px; border-radius: 14px; overflow: hidden; background: var(--hl-bg) }
+#main .oa-gear-img img { width: 100%; height: 100%; object-fit: cover; display: block }
+#main .oa-psteps { display: grid; grid-template-columns: repeat(var(--n), 1fr); gap: 8px; margin: 0 0 8px }
+#main .oa-psteps figure { margin: 0; background: var(--white, #fffefb); border: 1px solid var(--line, #e1e5d9); border-radius: 16px; overflow: hidden; position: relative }
+#main .oa-psteps img { display: block; width: 100%; aspect-ratio: 1 / 1; object-fit: cover }
+#main .oa-psteps figcaption { padding: 8px 10px 11px }
+#main .oa-psteps b { display: block; font-size: 12px; font-weight: 700; letter-spacing: .02em; color: var(--ss-ink, #8a4a2c) }
+#main .oa-psteps small { display: block; font-size: 13px; line-height: 1.32; color: var(--ink); margin-top: 2px }
+#main .oa-psteps figure + figure::before { content: "›"; position: absolute; left: -9px; top: 32%; width: 14px; height: 14px; z-index: 2; color: var(--ss-ink, #8a4a2c); font-weight: 800; font-size: 16px; line-height: 14px; text-align: center }
+#main .oa-psteps-note { font-size: 13.5px; line-height: 1.4; color: #6b6670; margin: 0 2px 22px }
+#main .oa-flatlay { margin: 0 0 14px; border-radius: 20px; overflow: hidden }
+#main .oa-flatlay img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover }
+#main .oa-tabs::before { top: 23px }
+#main .oa-tabs button span { width: 46px; height: 46px; border-radius: 14px; border: 0; background: var(--oa-bg) }
+#main .oa-tabs button span svg { width: 24px; height: 24px }
+#main .oa-tabs button.is-on span { background: var(--oa-ink) }
+#main .oa-tabs button.is-on span svg, #main .oa-tabs button.is-on span svg [stroke]:not([stroke="none"]) { stroke: #fff }
+#main .oa-tabs::before { display: none }
+#main .oa-label-card { background: var(--white, #fffefb); border: 1px solid var(--line, #e1e5d9); border-radius: 20px; padding: 14px 16px 12px; margin: 0 0 22px }
+#main .oa-label-k { font-size: 13px; font-weight: 700; color: var(--ss-ink); margin: 0 0 10px }
+#main .oa-label-k.is-sub { font-weight: 500; color: #6b6670; margin: 10px 0 0 }
+#main .oa-label { background: #f4f1ea; border: 1.5px solid #c9c2b4; border-radius: 6px; padding: 12px 14px; font-family: ui-monospace, Menlo, monospace; font-size: 12.5px; line-height: 1.45; color: #2d2a26; text-transform: uppercase; letter-spacing: .02em }
+#main .oa-label em { font-style: normal; font-weight: 800; color: #c62b1e }
+#main .oa-photo-head h1 { font-size: 26px; line-height: 1.15 }
+#main .oa-hero.has-photo { padding-right: 20px }
+#main .oa-hero.has-photo > .hub-eyebrow, #main .oa-hero.has-photo > h1, #main .oa-hero.has-photo > .hub-lead { margin-right: 124px }
+
+/* Outings v3 (Nov 20): plain headers, situation chips, one thing to know, quiet home. */
+#main .oa3-head { display: flex; gap: 14px; align-items: center; background: var(--ss-bg); border-radius: 22px; padding: 16px 18px; margin: 0 0 14px }
+#main .oa3-head-ic { flex: none; width: 48px; height: 48px; border-radius: 14px; background: rgba(255,255,255,.7); display: grid; place-items: center }
+#main .oa3-head-ic svg { width: 26px; height: 26px }
+#main .oa3-head-ic svg, #main .oa3-head-ic svg [stroke]:not([stroke="none"]) { stroke: var(--ss-ink) }
+#main .oa3-head h1 { font-size: 26px; line-height: 1.12; margin: 0; color: var(--ink) }
+#main .oa3-head p { font-size: 14.5px; line-height: 1.38; color: #5c5361; margin: 4px 0 0 }
+#main .oa3-chips { margin: 0 0 16px }
+#main .oa3-chips button.is-on { background: var(--ss-bg); color: var(--ss-ink); font-weight: 700 }
+#main .oa3-fig { margin-bottom: 12px }
+#main .oa3-one { display: flex; gap: 12px; align-items: flex-start; background: var(--ss-bg); border-radius: 18px; padding: 14px 16px; margin: 0 0 22px }
+#main .oa3-one-ic { flex: none; width: 28px; height: 28px; display: grid; place-items: center }
+#main .oa3-one-ic svg { width: 24px; height: 24px }
+#main .oa3-one-ic svg, #main .oa3-one-ic svg [stroke]:not([stroke="none"]) { stroke: var(--ss-ink) }
+#main .oa3-one small { display: block; font-size: 11.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ss-ink); margin-bottom: 3px }
+#main .oa3-one b { display: block; font-size: 16px; line-height: 1.35; font-weight: 650; color: var(--ink) }
+#main .oa3-fold { background: var(--white, #fffefb); border: 1px solid var(--line, #e1e5d9); border-radius: 18px; margin: 0 0 12px; overflow: hidden }
+#main .oa3-fold summary { list-style: none; display: flex; align-items: center; gap: 12px; padding: 14px 16px; cursor: pointer }
+#main .oa3-fold summary::-webkit-details-marker { display: none }
+#main .oa3-fold-ic { flex: none; width: 36px; height: 36px; border-radius: 11px; background: var(--ss-bg); display: grid; place-items: center }
+#main .oa3-fold-ic svg { width: 20px; height: 20px }
+#main .oa3-fold-ic svg, #main .oa3-fold-ic svg [stroke]:not([stroke="none"]) { stroke: var(--ss-ink) }
+#main .oa3-fold summary b { flex: 1; font-size: 15.5px; font-weight: 650; color: var(--ink) }
+#main .oa3-fold summary i { font-style: normal; font-size: 18px; color: #8b8590; transition: transform .2s }
+#main .oa3-fold[open] summary i { transform: rotate(180deg) }
+#main .oa3-fold-body { padding: 0 6px 6px }
+#main .oa3-fold-body .hub-list { border: 0; box-shadow: none; margin: 0 }
+#main .oa3-hero { padding-bottom: 18px }
+#main .oa3-places { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 0 0 18px }
+#main .oa3-place { all: unset; cursor: pointer; background: var(--white, #fffefb); border: 1px solid var(--line, #e1e5d9); border-radius: 18px; overflow: hidden; display: block }
+#main .oa3-place img { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover }
+#main .oa3-place span { display: flex; align-items: center; justify-content: space-between; padding: 11px 14px 12px }
+#main .oa3-place b { font-size: 15.5px; font-weight: 650; color: var(--ink) }
+#main .oa3-place i { font-style: normal; font-size: 20px; color: #8b8590; line-height: 1 }
+#main .oa3-more { margin-bottom: 18px }
+#main .oa3-thumbs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 0 0 8px }
+#main .oa3-thumbs figure { margin: 0 }
+#main .oa3-thumbs img { display: block; width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 14px }
+#main .oa3-thumbs figcaption { padding: 6px 2px 0 }
+#main .oa3-thumbs b { display: block; font-size: 12px; font-weight: 700; color: var(--ss-ink) }
+#main .oa3-thumbs small { display: block; font-size: 12.5px; line-height: 1.3; color: var(--ink) }
+#main .oa3-group { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ss-ink); margin: 14px 2px 8px }
+#main .oa3-group:first-of-type { margin-top: 4px }
+#main .oa3 .oa-steps { margin-top: 2px }
+/* Nov 20 fixes: lighter One thing to know, smaller situation photos, road trip stops. */
+#main .oa3-one b { font-weight: 500 }
+#main .oa3 .oa3-fig .oa-photo { aspect-ratio: 16 / 9 }
+#main .oa3 .oa-ba img { aspect-ratio: 1 / 1 }
+#main .oa3-stops { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; background: var(--white, #fffefb); border: 1px solid var(--line, #e1e5d9); border-radius: 18px; padding: 14px 8px 12px; margin: 0 0 16px; position: relative }
+#main .oa3-stops::before { content: ""; position: absolute; left: 12.5%; right: 12.5%; top: 33px; height: 2px; background: var(--ss-bg) }
+#main .oa3-stops div { text-align: center; position: relative }
+#main .oa3-stops span { width: 40px; height: 40px; border-radius: 50%; background: var(--ss-bg); display: grid; place-items: center; margin: 0 auto 6px }
+#main .oa3-stops span svg { width: 22px; height: 22px }
+#main .oa3-stops span svg, #main .oa3-stops span svg [stroke]:not([stroke="none"]) { stroke: var(--ss-ink) }
+#main .oa3-stops b { display: block; font-size: 13.5px; font-weight: 700; color: var(--ss-ink) }
+#main .oa3-stops small { display: block; font-size: 12px; line-height: 1.3; color: #5c5361; margin-top: 2px }
+#main .oa3[data-oa-page="gear"] .oa3-fig .oa-photo { aspect-ratio: 4 / 3 }
+#main .oa3 .oa-flatlay img { aspect-ratio: auto }
+/* Nov 20 round 3: three-stop road strip, room checks sized like rows, carrier line under the photo. */
+#main .oa3-stops[style*="--n:3"] { grid-template-columns: repeat(3, 1fr) }
+#main .oa3-stops[style*="--n:3"]::before { left: 16.6%; right: 16.6% }
+#main .oa3-checks .hub-row { width: 100%; text-align: left }
+#main .oa3-tick { flex: none; width: 26px; height: 26px; border-radius: 50%; border: 2px solid #d6cfc6; display: grid; place-items: center; font-style: normal; font-size: 14px; font-weight: 800; color: transparent; margin-left: 8px }
+#main .oa3-checks .hub-row.is-on .oa3-tick { background: var(--ss-ink); border-color: var(--ss-ink); color: #fff }
+#main .oa3-checks .hub-row.is-on b { color: #6b6670 }
+#main .oa3-checks + .oa-psteps-note { margin: -4px 4px 18px }
+#main .oa3-under { margin: -4px 4px 22px }
+#main .oa3-fold .oa-label-card { border: 0; margin: 0; padding: 4px 10px 8px }
+@media (max-width:370px){ #main .oa-ba .oa-pin span{font-size:11px;padding:5px 7px} }
+#main .oa-ba figure { display:flex; flex-direction:column } #main .oa-ba .oa-ba-img { margin-top:auto }
+#main .oa3 .oa3-fig .oa-photo:has(img[src*="away-room"]) { aspect-ratio: 4 / 3 }
