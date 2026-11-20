@@ -9,7 +9,7 @@
   const early = () => typeof profile !== 'undefined' && !!(profile && profile.early);
   const realMo = () => (typeof actualMonth === 'function' ? actualMonth() : mo());
   // The fever rule for the baby's age, short enough for a call line.
-  const fev = () => { const m = mo(); return m < 3 ? 'a fever of 100.4°F or higher' : m < 6 ? 'a fever of 101°F or higher' : 'a fever of 103°F or higher, or one lasting over a day'; };
+  const fev = () => { const m = mo(); return m < 3 ? 'a fever of 100.4°F or higher, day or night' : m < 6 ? 'a fever of 101°F or higher' : 'a fever of 103°F or higher, or one lasting over a day'; };
   const T = {
     // ---------- Milk: is it going well? ----------
     nb_enough: () => ({ type: 'expect', label: 'Getting enough', art: 'diaper', title: 'Wet diapers are the best everyday sign',
@@ -90,7 +90,7 @@
       hero: () => H().TPLB.photoPins('feeding/pace-photo', 'A parent holding a baby upright with the bottle about level', [['Bottle about level', 55, 44, 'l'], ['Baby upright', 77, 62, 'b']], 'is-pace'),
       pictureTitle: 'Positions', picture: () => H().TPLB.tiles([['heart', 'Cradled, sitting up', 'Head higher than {p} tummy'], ['sofa', 'Upright on your lap', 'Facing sideways, head well supported'], ['bottle', 'Side-lying', 'Along your arm. Slows the flow']], CAT),
       // Nov 19: the same three steps and note as the walkthrough's Bottle step, word for word.
-      steps: [['mouth', 'Let {o} draw it in', 'Touch the nipple to {p} lip'], ['clock', 'Pause every few sucks', 'Tip it down, then let {o} start again'], ['eye', 'Stop when {s’s} done', 'Even if milk is left. Burp every 2–3 oz']],
+      steps: [['mouth', 'Let {o} draw it in', 'Touch the nipple to {p} lip'], ['clock', 'Pause every few sucks', 'Tip it down, then let {o} start again'], ['hand', 'Stop when {s’s} done', 'Even if milk is left. Burp every 2–3 oz']],
       stepsNotes: [['', 'Never prop a bottle', 'Always hold {o} and the bottle']],
       tipsTitle: 'Nipples and cleaning', tipsFold: true, tips: [['bottle', 'Start with the slowest flow', 'Go up when {s} {suck|sucks} hard and {get|gets} frustrated. Gulping or coughing means it’s too fast.'], ['eye', 'Wide or narrow?', 'Neither is better. Stick with the one {s} {take|takes} calmly.'], ['drop', 'Clean after every feed', mo() < 4 ? 'Hot, soapy water, and sanitize often in the first months.' : 'Hot, soapy water, or the dishwasher.']] }),
     formula: () => ({ type: 'howto', label: 'Bottles', art: 'bottle', title: 'Mix formula exactly as the label says',
@@ -217,7 +217,7 @@
     z_shapes: () => { const T = H().TPLB, nine = mo() >= 9;
       return { type: 'howto', label: 'Safe finger foods', art: 'hand', title: 'Finger foods should squish when pressed',
         why: 'Press it between your finger and thumb. If it squashes, {p} gums can manage it.',
-        heroTitle: 'The squish test', hero: () => `<section class="care-tpl-card ph-squish">${T.photoPins('feeding/squish', 'A finger pressing a soft steamed carrot flat', [['Press gently', 52, 52, 'r'], ['It should give way', 42, 66, 'b']], 'is-wide')}</section>`,
+        heroTitle: 'The squish test', hero: () => `<section class="care-tpl-card ph-squish">${T.photoPins('feeding/squish2', 'A finger pressing a soft steamed carrot flat', [['Press gently', 38, 42, 'l'], ['It should give way', 47, 68, 'b']], 'is-wide')}</section>`,
         // Nov 19: like the inspiration, three blocks only: the squish test, what to try, and how to keep it safe (icons, not more photos).
         stepsTitle: 'A few foods to try', stepsFig: () => T.photoGridMore([['feeding/opt-avocado', 'Avocado', 'Ripe strips'], ['feeding/opt-banana', 'Banana', 'Strips, not rounds'], ['feeding/opt-egg', 'Egg', 'Omelet strips'], ['feeding/nutbutter', 'Toast', 'Nut butter spread thin'], ['feeding/opt-broccoli', 'Broccoli', 'Well cooked, stem to hold'], ['feeding/opt-pasta', 'Pasta', 'Soft, well cooked']], 'See more foods'),
         tips: [nine ? ['hand', 'Small, soft pieces', 'About pea-size, to pinch'] : ['hand', 'Finger-size strips', 'Easy to grip. Small pieces come later'], ['bowl', 'Quarter grapes, no whole nuts', 'Cherry tomatoes too'], ['highchair', 'Seated upright, with you', 'Every bite, never on the move']] }; },
@@ -230,7 +230,7 @@
       why: 'A few foods aren’t safe for babies yet, even once solids are going well.',
       // Nov 19: photos, so a parent recognizes the food at a glance; a red cross marks each one.
       // Nov 19 (review): what simply waits, apart from what's fine once it's served differently (with the grape shown both ways).
-      normalTitle: 'Wait until age 1', normal: () => H().TPLB.photoGridMore([['feeding/no-honey', 'Honey', 'Risk of botulism'], ['feeding/no-milk', 'Cow’s milk to drink', 'Fine in cooking'], ['feeding/no-juice', 'Juice', 'Water and milk instead']], '', 'no'),
+      normalTitle: 'Wait until age 1', normal: () => H().TPLB.photoGridMore([['feeding/no-honey', 'Honey', 'Risk of botulism'], ['feeding/no-milk', 'Cow’s milk to drink', 'Fine in cooking'], ['feeding/no-juice', 'Juice', 'Breast milk or formula']], '', 'no'),
       moreTitle: 'Serve these differently until age 4', more: () => H().TPLB.photoPins('feeding/grape', 'A whole grape beside one cut into quarters lengthwise', [['Whole: choking risk', 27, 64, 'b'], ['Quartered: fine', 70, 64, 'b']]) + '<section class="ph-rowcard">' + H().TPLB.rows([['bowl', 'Grapes and cherry tomatoes', 'Quarter them lengthwise'], ['plate', 'Hot dogs and sausages', 'Thin strips, never rounds'], ['peanut', 'Nuts and nut butter', 'No whole nuts. Spread nut butter thin'], ['hand', 'Hard raw fruit and veg', 'Cook or grate until soft']], 'Feeding') + '</section>', moreNotes: [['', 'Popcorn waits until 4', 'There’s no safe way to serve it']] }),
     z_milkfood: () => ({ type: 'expect', label: 'Milk and solids', art: 'cup', title: 'No set order for milk and meals',
       why: 'A meal fits in wherever {s’s} awake and happy.',
@@ -275,7 +275,7 @@
       return { type: 'urgent', label: 'Gagging or choking', art: 'mouth', title: 'Gagging is normal. Choking isn’t.',
         why: 'Gagging is how {s} {learn|learns} to eat. Loud coughing means air is getting through.',
         tellTitle: 'How to tell them apart', figure: () => T.versus(['Gagging: stay close', 'Loud coughing or gagging, red face, watery eyes. Let {o} work it out.'], ['Choking: act now', 'Can’t cry or cough, or only a weak cough or high-pitched sound. Lips may turn blue.']),
-        doTitle: 'If {s’s} choking', doFig: () => T.numbered([['Call 911', 'Or have someone call while you start'], ['5 back blows', 'Face down on your forearm, jaw supported. Firm, between the shoulder blades'], ['5 chest thrusts', 'Face up, heel of one hand mid-chest'], ['Repeat', 'Until it’s out, or help arrives']], 'stop'),
+        doTitle: 'If {s’s} choking', doFig: () => T.numbered([['Get help', 'Have someone call 911, or call on speaker'], ['5 back blows', 'Face down on your forearm, jaw supported. Firm, between the shoulder blades'], ['5 chest thrusts', 'Face up, heel of one hand mid-chest'], ['Repeat', 'Until it’s out. If {s} {stop|stops} responding, start CPR']], 'stop'),
         doNotes: [['', 'Never sweep {p} mouth with a finger', 'It can push food further in']],
         video: ['ShaNuST_58A', 'Choking first aid for babies under 1', 'American Red Cross'],
         calls: { now: '{s} {stop|stops} responding. Start CPR while you wait.', nowLabel: 'Call 911' } }; },

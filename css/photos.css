@@ -292,3 +292,11 @@
 #main .fd-life .sf-photo.fd-life-photo { aspect-ratio: 16 / 10; margin: 14px 0 0; box-shadow: 0 6px 18px #a6798226 }
 #main .fd-life .fd-try.fd-try-in { margin-top: 14px }
 #main .fd-life h1, #main .fd-life .hub-lead { text-wrap: balance }
+
+/* Nov 20 design review: row subtitles never end on one word; the two solids safety links sit in one card. */
+#main .fd-prow small { text-wrap: balance }
+#main .fd-safe-card { margin: 14px 0 4px; border-radius: 20px; border: 1px solid var(--line, #ebe6e1); background: #fff; overflow: hidden }
+#main .fd-safe-card button { all: unset; box-sizing: border-box; display: flex; align-items: center; gap: 10px; width: 100%; padding: 15px 16px; cursor: pointer; font-size: 15px; color: var(--ink, #2b2732) }
+#main .fd-safe-card button + button { border-top: 1px solid var(--line, #f0ebe8) }
+#main .fd-safe-card b { flex: 1; font-weight: 650 }
+#main .fd-safe-card span { color: #9b4766; font-size: 18px }
