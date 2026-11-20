@@ -296,7 +296,7 @@
      so the page stays short. Shorter pages (under about two screens) stay one page: a tap there costs more than the scroll it saves. The numbered bar is the overview of the whole trip; "Then: …" at the end of a step opens the next one.
      Every line from the one-page version is kept, in the step where it's needed. */
   window.oaPhase = (id, i, jump) => { phaseView[id] = i; render(); const bar = document.querySelector('#main .oa-steps'); if (jump && bar) scrollTo(0, bar.getBoundingClientRect().top + scrollY - 70); };
-  const PHASE_ICON = { Book: 'notepad', Airport: 'bag', 'On board': 'plane', Arrive: 'home', 'Before you go': 'bag', 'When you arrive': 'home', 'Settling in': 'moon' };
+  const PHASE_ICON = { Book: 'notepad', Airport: 'bag', 'On board': 'plane', Arrive: 'home', 'Before you go': 'bag', Pack: 'shirt', 'While you’re there': 'sun', 'When you arrive': 'home', 'Settling in': 'moon' };
   const phases = (id, list) => {
     const ps = list.filter(Boolean), i = Math.min(phaseView[id] || 0, ps.length - 1), c = PAL[id];
     const bar = `<div class="oa-steps${SHOW() ? ' oa-tabs' : ''}" role="tablist" style="--oa-ink:${c[1]};--oa-bg:${c[0]};--oa-acc:${c[2]};--n:${ps.length}">${ps.map(([label], k, _a, icon = PHASE_ICON[label]) => `<button role="tab" aria-selected="${k === i}" class="${k === i ? 'is-on' : ''}${k < i ? ' is-done' : ''}" onclick="oaPhase('${id}',${k})"><span>${SHOW() && icon ? hubArt(icon, CAT) : k + 1}</span><b>${F(label)}</b></button>`).join('')}</div>`;
@@ -472,7 +472,7 @@
   }
   const chips3 = (id, opts, view) => `<div class="hub-seg oa-seg oa3-chips" role="tablist">${opts.map(([k, t]) => `<button role="tab" aria-selected="${view === k}" class="${view === k ? 'is-on' : ''}" onclick="oaView('${id}','${k}')">${F(t)}</button>`).join('')}</div>`;
   const one3 = text => `<section class="oa3-one"><span class="oa3-one-ic">${hubArt('idea', CAT)}</span><div><small>${F('One thing to know')}</small><b>${F(text)}</b></div></section>`;
-  const fold3 = (icon, title, inner) => inner ? `<details class="oa3-fold"><summary><span class="oa3-fold-ic">${hubArt(icon, CAT)}</span><b>${F(title)}</b><i aria-hidden="true">⌄</i></summary><div class="oa3-fold-body">${inner}</div></details>` : '';
+  const fold3 = (icon, title, inner) => inner ? `<details class="oa3-fold"><summary><span class="hub-dot">${hubArt(icon, CAT)}</span><b>${F(title)}</b><i aria-hidden="true">⌄</i></summary><div class="oa3-fold-body">${inner}</div></details>` : '';
   const plainRows = items => { const it = items.filter(Boolean); return it.length ? `<div class="hub-list">${it.map(([icon, title, s]) => H().row({ icon, cat: CAT, title, sub: s })).join('')}</div>` : ''; };
   const fig3 = (src, alt, pins) => `<section class="oa-photo-card oa3-fig"><figure class="oa-photo"><img src="${PH(src)}" alt="${F(alt)}" loading="lazy">${pinsHtml(pins)}</figure></section>`;
 
@@ -527,8 +527,8 @@
     if (id === 'road') return page3('road', 'car', 'Road trips', 'Long drives go best in 2-hour stretches.',
       `<h2 class="hub-h2">${F('Plan your drive')}</h2><div class="oa3-stops" style="--n:3">${[['car', 'Leave', 'As a nap starts'], ['bottle', 'Every 2 hours', eats() ? 'Stop to feed, change and snack' : 'Stop to feed and change'], ['home', 'Arrive', 'Sleep moves to a crib or play yard']].map(([i, t, l]) => `<div><span>${hubArt(i, CAT)}</span><b>${F(t)}</b><small>${F(l)}</small></div>`).join('')}</div>`
       + one3('Only soft toys in the car. Hard ones can fly in a sudden stop.')
-      + plainRows([['heart', 'Crying while you drive', 'Pull over somewhere safe, then take {o} out.'], ['moon', 'Naps on the road', 'Fine in the car seat while you drive.']])
-      + fold3('notepad', 'More for the road', plainRows([['clock', 'Driving on your own', 'Plan a few more stops. Check on {o} only when you’re parked.'], bf ? ['mouth', 'Nursing or pumping', 'Park first. {S} {stay|stays} buckled in whenever the car is moving.'] : null, typeof profile !== 'undefined' && profile.early ? ['steth', 'Born early?', 'Ask your pediatrician how long rides can be.'] : null, fm ? ['bottle', 'One extra bottle', 'In case of traffic'] : null])));
+      + plainRows([['heart', 'Crying while you drive', 'Pull over somewhere safe, then take {o} out.'], ['moon', 'Naps on the road', 'Fine in the car seat while you drive.'], ['clock', 'Driving on your own', 'Plan a few more stops. Check on {o} only when you’re parked.'], bf ? ['mouth', 'Nursing or pumping', 'Park first. {S} {stay|stays} buckled in whenever the car is moving.'] : null, typeof profile !== 'undefined' && profile.early ? ['steth', 'Born early?', 'Ask your pediatrician how long rides can be.'] : null])
+      + fold3('bag', 'Packing extras', fm ? plainRows([['bottle', 'One extra bottle', 'In case of traffic']]) : ''));
 
     if (id === 'fly') return page3('fly', 'plane', 'Flying', 'Most flight planning happens when you book.',
       phases('fly', [
@@ -548,7 +548,7 @@
             [PH('hotel-before'), 'A hotel room with a big adult bed, pillows and a thick duvet', 'Adult bed', null],
             [PH('hotel-after'), 'The same hotel room with a bare play yard beside the bed', 'Bare play yard', null],
             [['crib', 'A play yard, or a crib made after June 2011', 'Ask the hotel for one, or bring your own'], ['sofa', 'Never an adult bed or a couch', 'Even for a nap, even with you right there']], ['28%', '88%'])
-          + fold3('bag', 'What to pack', plainRows([['sack', '{P} sleep sack', 'It smells like home'], ['home', 'The play yard’s own sheet', 'Only the one made for it'], ['star', 'A night light', 'For feeds in a dark, new room']]))],
+          + fold3('bag', 'What to pack', plainRows([['sack', '{P} sleep sack', 'It smells like home'], ['home', 'Bringing your own play yard?', 'Pack only the sheet made for it'], ['star', 'A night light', 'For feeds in a dark, new room']]))],
         ['When you arrive', `<h2 class="hub-h2">${F('A room that’s safe for Maya')}</h2>` + fig3('away-room', 'A hotel room with a bare play yard against the wall and a travel bag up on a high closet shelf', AWAY_PINS)
           + checks3(m)
           + plainRows([['hand', 'Pets', 'Never leave {o} alone with a pet, even a gentle one.'], eats() ? ['bowl', 'Grandparents and treats', 'Share your food rules once, kindly, before the first meal.'] : null])],
@@ -571,15 +571,16 @@
     }
 
     if (id === 'abroad') return page3('abroad', 'notepad', 'Going abroad', 'The passport comes first. Apply as soon as you book.',
-      plan('Plan your trip', [
-        ['As soon as you book', 'notepad', 'Apply for {p} passport. It can take weeks.'],
-        ['4–6 weeks before', 'steth', 'Ask your pediatrician about shots, including an early measles shot from 6 months.'],
-        ['Before you leave', 'home', 'Save how you’d find a doctor there.']], 'Apply for the passport as soon as you book. Four to six weeks before, ask the pediatrician about shots. Before you leave, save how you would find a doctor there.')
-      + one3('In a car abroad, bring {p} own car seat. Taxis may not have one.')
-      + fold3('drop', 'Water, food and bugs there', plainRows([['drop', 'Water', fm ? 'Sealed bottled, or boiled, for formula, your drinks and washing bottles' : 'Sealed bottled, or boiled, for your drinks and washing bottles'], ['cup', 'Drinks', 'No ice. It’s often made with tap water'], eats() ? ['bowl', 'Food', 'Cooked, or fruit you peel'] : null, ['leaf', 'Mosquitoes', 'Netting over the crib and stroller']]))
-      + fold3('bag', 'What to pack', plainRows([['thermo', 'A thermometer', 'And the medicines your pediatrician okays'], ['drop', 'Rehydration salts', 'Ask your pediatrician which kind']]))
-      + good([['chat', 'If one parent can’t come', 'They sign a notarized consent form for the passport appointment instead.']])
-      + calls(['Call a doctor', 'A fever, fewer wet diapers, a dry mouth, or diarrhea that keeps going.'], ['Get care right away', m < 3 ? 'Any fever under 3 months or in a malaria area, trouble breathing, or hard to wake.' : 'Any fever in a malaria area, trouble breathing, or hard to wake.']));
+      phases('abroad', [
+        ['Before you go', plan('Plan your trip', [
+            ['As soon as you book', 'notepad', 'Apply for {p} passport. It can take weeks.'],
+            ['4–6 weeks before', 'steth', 'Ask your pediatrician about shots, including an early measles shot from 6 months.'],
+            ['Before you leave', 'home', 'Save how you’d find a doctor there.']], 'Apply for the passport as soon as you book. Four to six weeks before, ask the pediatrician about shots. Before you leave, save how you would find a doctor there.')
+          + plainRows([['chat', 'If one parent can’t come', 'They sign a notarized consent form for the passport appointment instead.']])],
+        ['Pack', one3('In a car abroad, bring {p} own car seat. Taxis may not have one.')
+          + plainRows([['thermo', 'A thermometer', 'And the medicines your pediatrician okays'], ['drop', 'Rehydration salts', 'Ask your pediatrician which kind']])],
+        ['While you’re there', plainRows([['drop', 'Water', fm ? 'Sealed bottled, or boiled, for formula, your drinks and washing bottles' : 'Sealed bottled, or boiled, for your drinks and washing bottles'], ['cup', 'Drinks', 'No ice. It’s often made with tap water'], eats() ? ['bowl', 'Food', 'Cooked, or fruit you peel'] : null, ['leaf', 'Mosquitoes', 'Netting over the crib and stroller']])
+          + calls(['Call a doctor', 'A fever, fewer wet diapers, a dry mouth, or diarrhea that keeps going.'], ['Get care right away', m < 3 ? 'Any fever under 3 months or in a malaria area, trouble breathing, or hard to wake.' : 'Any fever in a malaria area, trouble breathing, or hard to wake.'])]]));
 
     if (id === 'weather') {
       const view = weatherView || season();
