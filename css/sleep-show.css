@@ -7,7 +7,7 @@
 #main .ssw-hero-photo { margin: 14px 0 0; border-radius: 18px; overflow: hidden; aspect-ratio: 16 / 10; box-shadow: 0 6px 18px #4b4f8a22 }
 #main .ssw-hero-photo img { display: block; width: 100%; height: 100%; object-fit: cover }
 /* You might notice: its own card under the top card, like Health's "Worth knowing" */
-#main .sl-aha.ssw-aha { margin: 10px 0 0; padding: 12px 14px }
+#main .sl-aha.ssw-aha { background: #eef0fa; box-shadow: none; border-radius: 20px; margin: 14px 0 0; padding: 14px 16px }
 #main .sl-aha.ssw-aha b { font-size: 15.5px }
 #main .sl-aha.ssw-aha span { font-size: 14px; margin-top: 3px }
 #main .sl-aha.ssw-aha small { color: #5e6890 }
@@ -173,4 +173,5 @@
 #main .ssw-guides b { font-size: 15px; line-height: 1.2; color: var(--ink) }
 #main .ssw-guides small { font-size: 12.5px; line-height: 1.3; color: #6b6670 }
 
-#main .hub-hero.ssw-hero { margin-bottom: 2px }
+#main .hub-hero.ssw-hero { margin-bottom: 0 }
+#main .sl-aha.ssw-aha .ssw-try { display: block; margin-top: 8px; padding-top: 8px; border-top: 1px solid #dfe2f2; font-size: 14px; line-height: 1.4; color: #3f4a5e; font-weight: 600 }

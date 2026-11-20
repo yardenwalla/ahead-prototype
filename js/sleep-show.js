@@ -32,8 +32,9 @@
     const sun = h => `<g transform="translate(${X(h)} 10)"><circle r="6.5" fill="#f2c14e"/><g stroke="#f2c14e" stroke-width="1.8" stroke-linecap="round"><path d="M-11 0h-2.5M11 0h2.5M-8 -6.5l-1.8-1.6M8 -6.5l1.8-1.6"/></g></g>`;
     const moon = (h, faint) => `<g transform="translate(${X(h)} 10)" opacity="${faint ? .35 : 1}"><path d="M2-6a6.5 6.5 0 1 0 5 10A5.5 5.5 0 0 1 2-6Z" fill="${COL.deep}"/></g>`;
     const spk = h => `<g stroke="#e0a73c" stroke-width="2" stroke-linecap="round"><path d="M${X(h)} 7v6"/><path d="M${X(h) - 7} 10l3.5 3.5"/><path d="M${X(h) + 7} 10l-3.5 3.5"/></g><circle cx="${X(h)}" cy="49" r="4" fill="#e0a73c"/>`;
-    const icons = o.flat ? '' : (o.sparks || []).map(spk).join('') + (o.sun || []).map(sun).join('') + (o.moon || []).map(h => moon(h)).join('') + (o.moonFaint || []).map(h => moon(h, 1)).join('')
-      + (o.arrow ? `<path d="M${X(o.arrow[0]) + 8} 10H${X(o.arrow[1]) - 10}" stroke="${COL.deep}" stroke-width="1.6" stroke-linecap="round" marker-end="url(#a${id})"/>` : '');
+    const dots = (o.dots || []).map(h => `<circle cx="${X(h)}" cy="49" r="4.5" fill="#e0a73c"/>`).join('');
+    const icons = dots + (o.flat ? '' : (o.sparks || []).map(spk).join('') + (o.sun || []).map(sun).join('') + (o.moon || []).map(h => moon(h)).join('') + (o.moonFaint || []).map(h => moon(h, 1)).join('')
+      + (o.arrow ? `<path d="M${X(o.arrow[0]) + 8} 10H${X(o.arrow[1]) - 10}" stroke="${COL.deep}" stroke-width="1.6" stroke-linecap="round" marker-end="url(#a${id})"/>` : ''));
     const wave = o.wave ? (() => { // sleep cycles: light at the top, deep at the bottom, a brief waking at each peak
       const n = o.wave, a = X(S + .15), b = X(E - .15), w = (b - a) / n; let d = `M${a} 34`;
       for (let i = 0; i < n; i++) { const x = a + i * w; d += ` C${x + w * .3} 34 ${x + w * .25} 66 ${x + w * .5} 66 S${x + w * .7} 34 ${x + w} 34`; }
@@ -47,19 +48,6 @@
       <rect x="2" y="24" width="316" height="50" rx="25" fill="url(#${id})"/>${ghost}${pills}${wave}${icons}</svg><div class="ssw-caps${two ? ' is-two' : ''}">${caps}</div></figure>`;
   }
 
-  // One-line leads for the top card (the drawing and Worth knowing carry the rest).
-  const LEADS = [[/tiny stretches/i, 'The body clock isn’t running yet.'], [/body clock/i, 'Light and dark start to mean something.'], [/growing up/i, 'Sleep cycles start to work like yours.'],
-    [/rhythm/i, '{S} {get|gets} sleepy at about the same times.'], [/running out of room/i, '{S} can stay awake longer now.'], [/brain is busy/i, 'New skills and missing you show up at night.']];
-  // Worth knowing, per stage: what parents may notice, then the one thing to try. Two short lines.
-  const WORTH = [
-    [/tiny stretches/i, '{S}’s a noisy sleeper.', 'Grunts and wriggles are active sleep, not waking. Pause before you pick {o} up.'],
-    [/body clock/i, 'One night is longer. The next isn’t.', 'Body clocks develop slowly. Morning daylight together helps.'],
-    [/growing up/i, '{S} was sleeping longer. Now {s}’s waking again.', 'That’s common for a few weeks. Keep your bedtime steps the same.'],
-    [/rhythm/i, 'The third nap gets harder to fit in.', 'It’s fine if it’s short. After short naps, an earlier bedtime helps.'],
-    [/running out of room/i, 'The catnap pushes bedtime later.', 'If it keeps happening for a week, {s}’s nearly ready for two naps.'],
-    [/brain is busy/i, '{S} {stand|stands} up in the crib at bedtime.', 'New skills show up at night. Practice sitting back down during the day.']
-  ];
-
   // The newborn loop: feed, a little awake time, sleep, then again. Not a schedule.
   const loopFig = (cls = '') => `<figure class="ssw-loop ${cls}" role="img" aria-label="${F('Feed, a little awake time, then sleep. The loop repeats around the clock.')}">
       <div class="ssw-loop-row"><span class="is-feed"><b>${F('Feed')}</b><small>${F('When hungry')}</small></span><i aria-hidden="true">›</i><span class="is-awake"><b>${F('Awake')}</b><small>${F('Until the first yawn')}</small></span><i aria-hidden="true">›</i><span class="is-sleep"><b>${F('Sleep')}</b><small>${F('Then it starts again')}</small></span></div>
@@ -68,18 +56,21 @@
 
   /* ---------- top card: what's changing, drawn ---------- */
   const HERO = [
-    [/tiny stretches/i, () => loopFig('ssw-band')],
+    [/tiny stretches/i, () => band({ flat: true, label: 'Short sleeps spread across day and night, between feeds.', start: 0, end: 24, dark: [[0, 6.5], [19, 24]],
+      segs: [[.6, 2.4], [3.4, 5.4], [6.6, 8.2], [9.3, 11], [12.2, 13.6], [14.8, 16.6], [17.6, 19.1], [20.4, 22.4]].map(s => [...s, 'nap']),
+      caps: [[3, 'Night'], [12, 'Day'], [21, 'Night']] })],
     [/body clock/i, () => band({ flat: true, label: 'Short naps by day, and the longest sleep moving to the night.', start: 7, end: 31, dark: [[19.2, 31]],
       segs: [[8.6, 9.5, 'nap'], [10.9, 12.1, 'nap'], [13.6, 14.4, 'nap'], [16, 16.8, 'nap'], [19.4, 24.6, 'night'], [25.1, 27.6, 'night'], [28, 30.8, 'night']],
       sun: [12.5], moon: [22], nightLabel: 'Longest', caps: [[12.5, 'Short naps by day'], [24, 'Longest sleep at night']] })],
-    [/growing up/i, () => band({ label: 'A night of sleep cycles, with a brief waking between each one.', start: 19, end: 31, dark: [[19, 31]], wave: 6,
-      caps: [[19.5, 'Bedtime'], [25, 'Wakes between cycles'], [30.5, 'Morning']] })],
+    [/growing up/i, () => band({ flat: true, label: 'A night of sleep cycles, with a brief waking between each one.', start: 19, end: 31, dark: [[19, 31]],
+      segs: [[19.3, 21.4, 'night'], [21.8, 23.7, 'night'], [24.1, 26, 'night'], [26.4, 28.3, 'night'], [28.7, 30.7, 'night']], dots: [21.6, 23.9, 26.2, 28.5],
+      caps: [[19.5, 'Bedtime'], [25, 'Brief wakings between cycles'], [30.5, 'Morning']] })],
     [/rhythm/i, () => band({ flat: true, label: 'A day with a morning nap, a midday nap, a short catnap, then bedtime.', start: 7, end: 20, dark: [[19.3, 20]],
       segs: [[9, 10.3, 'nap'], [12.5, 13.8, 'nap'], [16.3, 16.8, 'nap']], moon: [19.4],
       caps: [[9.65, 'Morning nap'], [13.15, 'Midday nap'], [16.55, 'Catnap'], [19.4, 'Bedtime']] })],
-    [/running out of room/i, () => band({ label: 'A late catnap pushes bedtime later.', start: 7, end: 21, dark: [[20.3, 21]],
-      segs: [[9.2, 10.6, 'nap'], [13.1, 14.5, 'nap'], [17.3, 17.8, 'nap']], moonFaint: [19.3], moon: [20.4], arrow: [19.3, 20.4],
-      caps: [[9.9, 'Nap'], [13.8, 'Nap'], [17.55, 'Catnap'], [20.3, 'Later bedtime']] })],
+    [/running out of room/i, () => band({ flat: true, label: 'A late catnap pushes bedtime later.', start: 7, end: 21, dark: [[20.3, 21]],
+      segs: [[9.2, 10.6, 'nap'], [13.1, 14.5, 'nap'], [17.3, 17.8, 'nap']],
+      caps: [[9.9, 'Nap'], [13.8, 'Nap'], [17.55, 'Catnap'], [20.4, 'Later bedtime']] })],
     [/brain is busy/i, () => band({ flat: true, label: 'A day with a morning nap and an afternoon nap, then bedtime.', start: 7, end: 20.5, dark: [[19.2, 20.5]],
       segs: [[9.5, 11, 'nap'], [14, 15.5, 'nap']], moon: [19.3], caps: [[10.25, 'Morning nap'], [14.75, 'Afternoon nap'], [19.3, 'Bedtime']] })]
   ];
@@ -280,29 +271,15 @@
         aha.classList.add('ssw-aha'); const lbl = aha.querySelector('small'); if (lbl) lbl.textContent = F('Worth knowing');
         const tryEl = (hero.nextElementSibling && hero.nextElementSibling.classList.contains('sl-try')) ? hero.nextElementSibling : main.querySelector('.sl-try');
         const tip = tryEl && tryEl.querySelector('p'), sp = aha.querySelector('span');
-        const ld = LEADS.find(([re]) => re.test(t)), leadEl = hero.querySelector('.hub-lead'); if (ld && leadEl) leadEl.textContent = F(ld[1]);
-        const own = WORTH.find(([re]) => re.test(t)), bEl = aha.querySelector('b');
-        if (own && bEl && sp) { bEl.textContent = F(own[1]); sp.textContent = F(own[2]); }
-        else if (tip && sp) sp.textContent = sp.textContent.trim().replace(/\s*$/, ' ') + tip.textContent.trim();
+        // The original words stay: what she might notice, then the one thing to try, each on its own line.
+        if (tip && sp) sp.insertAdjacentHTML('afterend', `<span class="ssw-try">${tip.innerHTML}</span>`);
         if (tryEl) tryEl.remove();
+        hero.after(aha); // its own card right under the top card, like Health's "Worth knowing"
       }
       const eb = hero.querySelector('.hub-eyebrow'), ebt = eb ? eb.firstChild.textContent : '', view = STAGES.findIndex(([, re]) => re.test(ebt));
       if (view >= 0) {
         hero.dataset.sswView = view; // tabs are added by ensureTabs, after every other script has drawn
       }
-    }
-    // Four guide destinations under Sleep at a glance (Yarden's list): night sleep, naps, bedtime routine, safe sleep.
-    const glance = main.querySelector('.sl-glance, .hub-glance');
-    if (hero && glance && !main.querySelector('.ssw-guides')) {
-      const mo = m(), st = stageNow();
-      const night = mo < 3 ? 'chg:Sleep:d:stretch' : mo < 8 ? 'chg:Sleep:d:wakes' : 'chg:Sleep:d:nightwake';
-      const naps = st === 2 ? 'chg:Sleep:d:day:2' : st === 3 ? 'chg:Sleep:d:day:3' : mo < 3 ? 'chg:Sleep:d:napsearly' : 'chg:Sleep:d:predictable';
-      const G = [['moon', 'Night sleep', mo < 3 ? 'The longest stretch' : 'When {s} {wake|wakes}', night], ['sun', 'Naps', st >= 2 ? 'An example day' : 'How naps work now', naps], ['book', 'Bedtime routine', 'Four calm steps', 'chg:Sleep:d:routine'], ['crib', 'Safe sleep', 'The quick crib check', 'chg:Sleep:safe']];
-      glance.insertAdjacentHTML('afterend', `<h2 class="hub-h2">${F('Sleep guides')}</h2><div class="ssw-guides">${G.map(([ic, t, sub, to]) => `<button onclick="${go(to)}"><span class="ssw-gi">${H().art(ic, 'Sleep')}</span><b>${F(t)}</b><small>${F(sub)}</small></button>`).join('')}</div>`);
-      const ev = glance.querySelector('.sl-every'); if (ev) ev.remove();
-      // A "Right now" row that opens the same page as a guide tile isn't repeated.
-      const routes = G.map(g => g[3]);
-      main.querySelectorAll('.hub-list .hub-row[onclick]').forEach(r => { const o = r.getAttribute('onclick') || ''; if (routes.some(x => o.includes(`'${x}'`)) && !r.closest('.hub-rough')) { const list = r.parentElement; r.remove(); if (list && !list.querySelector('.hub-row')) { const hd = list.previousElementSibling; if (hd && /^H2$/.test(hd.tagName)) hd.remove(); list.remove(); } } });
     }
     // Rough day: short naps and night waking open their own pages.
     const rough = main.querySelector('.hub-rough');
