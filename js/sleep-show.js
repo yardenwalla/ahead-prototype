@@ -295,9 +295,29 @@
         hero.dataset.sswView = view; // tabs are added by ensureTabs, after every other script has drawn
       }
     }
-    // This stage's own articles as tiles (the "Right now" list), so the guides read as places to go, not a long list.
-    const rn = [...main.querySelectorAll('h2')].find(h => /^Right now|^At this stage|^In this stage/i.test(h.textContent.trim()));
-    const rl = rn && rn.nextElementSibling; if (rl && rl.classList.contains('hub-list') && !rl.classList.contains('ssw-tiles')) rl.classList.add('ssw-tiles');
+    // Four topic tiles (Yarden's inspiration): Night sleep, Naps, Bedtime routine, Safe sleep. Each opens this stage's own
+    // article on that topic, with its title under the tile name. Stage articles that don't fit a tile stay in the list.
+    const glanceEl = main.querySelector('.sl-glance');
+    if (hero && glanceEl && !main.querySelector('.ssw-guides')) {
+      const view = +(hero.dataset.sswView || 0);
+      const rn = [...main.querySelectorAll('h2')].find(h => /^Right now|^At this stage|^In this stage/i.test(h.textContent.trim()));
+      const rl = rn && rn.nextElementSibling && rn.nextElementSibling.classList.contains('hub-list') ? rn.nextElementSibling : null;
+      const sl = main.querySelector('.sl-safe-list');
+      const rows = (rl ? [...rl.querySelectorAll('.hub-row[onclick]')] : []).concat(sl ? [...sl.querySelectorAll('.hub-row[onclick]')] : []);
+      const route = r => ((r.getAttribute('onclick') || '').match(/'([^']+)'/) || [])[1] || '';
+      const TOPIC = { night: /:(daynight|stretch|regress|nightfeeds|nightwake|wakes)$|Sleep:settle$/, naps: /:(steps0|napsearly|predictable|catnap|day:\d)$/, bed: /:(routine|earlybed|goodbye|settle4)$/, safe: /:(swaddle|swaddleoff|where|mattress|crib|rolling)$|Sleep:safe$/ };
+      const FALL = { night: ['chg:Sleep:d:daynight', 'chg:Sleep:d:stretch', 'chg:Sleep:d:wakes', 'chg:Sleep:d:nightwake'][view], naps: ['chg:Sleep:d:steps0', 'chg:Sleep:d:napsearly', 'chg:Sleep:d:day:2', 'chg:Sleep:d:day:3'][view], bed: 'chg:Sleep:d:routine', safe: 'chg:Sleep:safe' };
+      const T = [['night', 'moon', 'Night sleep'], ['naps', 'sun', 'Naps'], ['bed', 'book', 'Bedtime routine'], ['safe', 'crib', 'Safe sleep']].map(([k, ic, name]) => {
+        const r = rows.find(x => !x.dataset.sswUsed && TOPIC[k].test(route(x)));
+        if (r) r.dataset.sswUsed = '1';
+        const GEN = { night: 'What nights look like now', naps: 'An example day', bed: 'Four calm steps', safe: 'The quick crib check' };
+        return { ic, name, to: r ? route(r) : FALL[k], sub: r ? (r.querySelector('b') || {}).textContent : F(GEN[k]) };
+      });
+      glanceEl.insertAdjacentHTML('afterend', `<div class="ssw-guides">${T.map(t => `<button onclick="${go(t.to)}"><span class="ssw-gi">${H().art(t.ic, 'Sleep')}</span><span class="ssw-gt"><b>${F(t.name)} <i aria-hidden="true">›</i></b>${t.sub ? `<small>${t.sub}</small>` : ''}</span></button>`).join('')}</div>`);
+      rows.forEach(r => { if (r.dataset.sswUsed) r.remove(); });
+      if (rl && !rl.querySelector('.hub-row')) { rn.remove(); rl.remove(); }
+      if (sl && !sl.querySelector('.hub-row')) sl.remove();
+    }
     // Rough day: short naps and night waking open their own pages.
     const rough = main.querySelector('.hub-rough');
     if (once(rough, 'r')) {
