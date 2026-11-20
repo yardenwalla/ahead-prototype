@@ -352,7 +352,7 @@
       2: SHOW ? ['Several shots in one visit is safe', 'Spacing them out leaves {o} unprotected for longer, and means more visits.'] : ['Several shots at once is normal', 'Feeding or holding {o} close during and after helps. A fussy, sleepy day afterward is common.'],
       // Nov 19 (show, don't tell): how to help with shots is now a photo on the Vaccines page, so 4 months has no heads-up here.
       4: SHOW ? null : ['Shots go more easily with a feed', (profile.feed === 'Formula' ? 'Offer a bottle' : profile.feed === 'Breast milk' && profile.feedHow === 'Nursing' ? 'Nurse {o}' : 'Offer the breast or a bottle') + ' during or right after. Sucking soothes.'],
-      6: flu ? ['{P} first flu shot may need a second visit', 'Babies getting it for the first time need two doses, at least 4 weeks apart.'] : ['Ask about fluoride varnish', 'Many offices start painting it on once the first tooth comes in. It helps prevent cavities.'],
+      6: flu ? ['Flu shots start with two doses', 'Babies getting it for the first time need two doses, at least 4 weeks apart.'] : ['Ask about fluoride varnish', 'Many offices start painting it on once the first tooth comes in. It helps prevent cavities.'],
       9: ['The questionnaire is routine, not a test', 'Answer from what you see at home. Some offices send it ahead, so check your messages.'],
       12: SHOW ? null : ['A quick blood test is common now', 'A finger or heel prick checks for iron and, in many places, lead.']   // Nov 19: What to expect now explains the blood test, and the lead names it
     }[age];
@@ -377,10 +377,10 @@
     // On every checkup page (Nov 13: it used to show only on the current one). Under 3 months, the fever rule shows right here,
     // with Call 911 under it, because a fever at this age always means calling right away (AAP).
     { const u3 = live() && actualMonth() < 3 && age === focus;
-      b += h.list('Between checkups', [h.row({ icon: 'thermo', cat: 'Health', title: 'Symptoms and when to get help', sub: 'Fever, colds, tummy bugs and when to call', onclick: "openPage('chg:Health:d:sick')" })])
+      b += h.list('Between checkups', [h.row({ icon: 'thermo', cat: 'Health', title: 'Symptoms and when to get help', sub: 'Fever, colds and tummy bugs', onclick: "openPage('chg:Health:d:sick')" })])
         + (u3 ? `<section class="hub-card hub-callout"><b>${F('A fever under 3 months')}</b><p>${F('100.4°F or higher: call your pediatrician right away, day or night.')}</p></section>` + hubCall911() : ''); }
     const nx = WELL_VISITS[WELL_VISITS.indexOf(age) + 1];
-    if (nx != null) b += h.next(`Next · at ${nx} month${nx === 1 ? '' : 's'}`, healthJourneyLabel(nx), `openPage('health-visit:${nx}')`, '', { 1: 'A short visit, with a check on how you’re doing.', 2: 'The first main round of shots. Plan a quiet day after.', 4: 'Bring your questions about starting solids.', 6: 'The talk moves from milk to first foods.', 9: 'A closer look at development: jot down what you see.', 12: 'Ask about cow’s milk, and moving off bottles.' }[nx] || '');   // the concept's 'Looking ahead' line: what's different about the next one
+    if (nx != null) b += h.next(`Next · at ${nx} month${nx === 1 ? '' : 's'}`, healthJourneyLabel(nx), `openPage('health-visit:${nx}')`, '', { 1: 'A short visit, with a check-in on you.', 2: 'The first main round of shots. Plan a quiet day after.', 4: 'Bring your questions about starting solids.', 6: 'The talk moves from milk to first foods.', 9: 'A closer look at development: jot down what you see.', 12: 'Ask about cow’s milk, and moving off bottles.' }[nx] || '');   // the concept's 'Looking ahead' line: what's different about the next one
     const path = SHOW && !window.healthTracker && window.healthCheckupPath ? window.healthCheckupPath(age, focus) : '';
     return frame('Health', `data-health-journey="${age}"`, path + pills + missedLine, b);
   };

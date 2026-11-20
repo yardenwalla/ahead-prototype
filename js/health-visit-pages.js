@@ -67,13 +67,13 @@
   const WHAT = { DTaP: 'Protects against whooping cough, diphtheria and tetanus', Hib: 'Protects against a cause of meningitis', Pneumococcal: 'Protects against pneumonia and ear infections', Polio: 'Protects against polio', 'Hepatitis B': 'Protects against a liver infection', Rotavirus: 'Protects against severe diarrhea', MMR: 'Protects against measles, mumps and rubella', Chickenpox: 'Protects against chickenpox', 'Hepatitis A': 'Protects against a liver infection' };
   // REVIEW: doses follow the app's existing schedule. Hepatitis B numbering assumes a birth dose.
   const VAX = {
-    0: { lead: 'Most babies get their first hepatitis B shot in the hospital. This checkup makes sure it was given.', shots: [['Hepatitis B', '1st dose, if not given at birth']] },
+    0: { lead: 'Hepatitis B is usually given at birth. This visit checks it was.', shots: [['Hepatitis B', '1st dose, if not given at birth']] },
     1: { lead: 'Maybe one shot today, or none: hepatitis B’s 2nd dose can wait until 2 months.', shots: [['Hepatitis B', '2nd dose, now or at 2 months']] },
     2: { lead: 'Many come combined, so it’s often 2 to 4 shots, plus drops by mouth.', shots: [['DTaP', '1st dose'], ['Hib', '1st dose'], ['Pneumococcal', '1st dose'], ['Polio', '1st dose'], ['Hepatitis B', '2nd dose, if not at 1 month']], oral: [['Rotavirus', '1st dose']] },
     4: { lead: 'The same as at 2 months, minus hepatitis B. Often 2 or 3 shots, plus drops by mouth.', shots: [['DTaP', '2nd dose'], ['Hib', '2nd dose'], ['Pneumococcal', '2nd dose'], ['Polio', '2nd dose']], oral: [['Rotavirus', '2nd dose']] },
     6: { lead: 'Third doses of most, and some depend on the brand your office uses.', shots: [['DTaP', '3rd dose'], ['Pneumococcal', '3rd dose'], ['Hib', '3rd dose with some brands'], ['Hepatitis B', '3rd dose, now or by 18 months'], ['Polio', '3rd dose, now or by 18 months']], oral: [['Rotavirus', '3rd dose with some brands']] },
     9: { lead: 'Often no shots at all, just a catch-up if anything was missed.', shots: [['Hepatitis B', '3rd dose, if not given yet'], ['Polio', '3rd dose, if not given yet']] },
-    12: { lead: 'Mostly new vaccines this time, plus two boosters. Some may wait until 15 months.', shots: [['MMR', '1st dose'], ['Chickenpox', '1st dose'], ['Hepatitis A', '1st dose'], ['Hib', 'Booster'], ['Pneumococcal', 'Booster']] }
+    12: { lead: 'Mostly new vaccines, as separate shots. Some may wait until 15 months.', shots: [['MMR', '1st dose'], ['Chickenpox', '1st dose'], ['Hepatitis A', '1st dose'], ['Hib', 'Booster'], ['Pneumococcal', 'Booster']] }
   };
   // REVIEW: RSV, flu and COVID-19 timing.
   // Seasonal protection, by what a baby can get at this age (AAP 2026–27): RSV is an antibody shot, not a vaccine,
@@ -81,10 +81,9 @@
   // birth; a second-season dose only for some higher-risk babies 8–19 months. Flu every fall from 6 months.
   // COVID-19 recommended for all babies 6–23 months. Under 6 months, flu and COVID-19 are "coming later".
   const SEASON = age => [
-    age === 0 ? ['RSV antibody', 'One shot for {p} first RSV season (October to March), unless the RSV vaccine was given in pregnancy at least 2 weeks before birth']
-      : age < 8 ? ['RSV antibody', 'One shot for {p} first RSV season, if {s} hasn’t had it and the vaccine wasn’t given in pregnancy']
-      : ['RSV antibody', 'A second-season dose, only for some babies at higher risk'],
-    ...(age >= 6 ? [['Flu', 'Every fall. The first time takes 2 doses, 4 weeks apart'], ['COVID-19', 'Recommended for all babies 6 to 23 months. Ask how many doses']] : [])
+    age < 8 ? ['RSV antibody', 'One shot for {p} first RSV season', [['RSV season', 'Usually October to March'], ['Already had it?', 'Many babies get it at birth. One shot covers the season'], ['Not needed if', 'The RSV vaccine was given in pregnancy, at least 2 weeks before birth']]]
+      : ['RSV antibody', 'Only for some higher-risk babies'],
+    ...(age >= 6 ? [['Flu', 'Every fall. 2 doses the first time', [['The first time', '2 doses, at least 4 weeks apart']]], ['COVID-19', 'For all babies 6 to 23 months', [['How many doses', 'Your pediatrician will say']]]] : [])
   ];
   const LATER = age => age < 6 ? 'Flu and COVID-19 shots start at 6 months.' : '';
   // Each vaccine on one line: its name and dose, with what it protects against right underneath.
@@ -107,13 +106,13 @@
 
   /* ---------- Questions and notes: suggested questions in the parent's voice ---------- */
   const QUESTIONS = {
-    0: ['Is {s} feeding enough?', 'When should {p} weight be checked again?', 'Does the jaundice need a follow-up?', 'Who do we call after hours?'],
-    1: ['Is {s} growing well?', 'Feeding hurts or is hard. Can someone help?', 'Where can I get support if I’m struggling?', 'Is hepatitis B due now or at 2 months?'],
-    2: ['Is {s} growing well?', 'Can we stop waking {o} to feed at night?', 'Can I give {o} fever medicine after the shots?', 'Anything to watch before the 4-month checkup?'],
-    4: ['Are head control and reaching on track?', 'How will I know {s’s} ready for solids?', 'Does {s} need vitamin D or iron?', 'Should {s} still feed at night?'],
-    6: ['How should milk feeds change as solids begin?', 'Allergies run in our family. Should we start allergens differently?', 'Is it time for a flu shot?', 'How do we care for {p} first teeth?'],
-    9: ['What did the questionnaire show?', 'Is {s} ready for lumpier foods?', 'Are any vaccines still due?', 'What should we watch before 12 months?'],
-    12: ['When will we get the blood test results?', 'How should we switch to milk and cups?', 'Do {p} gestures and sounds look on track?', 'When should {s} see a dentist?']
+    0: ['Is {s} feeding enough?', 'When should {p} weight be checked again?', 'Do we need a jaundice follow-up?', 'Who do we call after hours?'],
+    1: ['Is {s} growing well?', 'Feeding hurts or is hard. Can someone help?', 'Who can I talk to if I’m struggling?', 'Is the hepatitis B shot due now?'],
+    2: ['Is {s} growing well?', 'Can we stop waking {o} up to feed at night?', 'Can I give {o} fever medicine after the shots?', 'Anything to watch before the 4-month checkup?'],
+    4: ['Are {p} head control and reaching on track?', 'How will I know when {s’s} ready for solids?', 'Does {s} need vitamin D or iron?', 'Should {s} still feed at night?'],
+    6: ['How should milk feeds change as solids begin?', 'Allergies run in our family. Should we start allergens differently?', 'Is it time for a flu shot?', 'How do we care for {p} teeth?'],
+    9: ['What did the questionnaire show?', 'Is {s} ready for lumpier foods?', 'Are any vaccines still due?', 'Anything to watch before the 12-month checkup?'],
+    12: ['When will the blood test results come back?', 'How do we switch to whole milk and cups?', 'Do {p} gestures and sounds look on track?', 'When should {s} see a dentist?']
   };
   window.healthJourneyQuestions = healthJourneyQuestions = age => (QUESTIONS[age] || []).map(F);
 
