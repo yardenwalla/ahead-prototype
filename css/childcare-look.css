@@ -237,3 +237,29 @@
 #main .cc-find { display: flex; gap: 10px; align-items: flex-start; margin: 12px 2px 4px; font-size: 13.5px; line-height: 1.45; color: #4a432c }
 #main .cc-find svg { width: 20px; height: 20px; flex: none; margin-top: 1px }
 #main .cc-find { margin-bottom: 14px }
+/* Round 8: summary pages (Yarden's mockup) */
+#main .cc-head-hidden { display: none }
+#main .cc-photo-hero { position: relative; border-radius: 22px; overflow: hidden; background: #fbf1d8; margin: 4px 0 14px; box-shadow: 0 2px 12px #a6905a1a }
+#main .cc-photo-hero img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; -webkit-mask-image: linear-gradient(#000 62%, transparent 100%); mask-image: linear-gradient(#000 62%, transparent 100%) }
+#main .cc-photo-hero > div { position: relative; margin-top: -64px; padding: 0 18px 18px }
+#main .cc-photo-hero .hub-eyebrow { display: inline-block; background: #fffdf8; color: #6b5a0e; border-radius: 999px; padding: 3px 10px; font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; font-weight: 700; margin: 0 0 6px }
+#main .cc-photo-hero h1 { font-family: var(--serif, Georgia, serif); font-size: 26px; line-height: 1.15; color: #2f2b1c; margin: 0 }
+#main .cc-seg { display: flex; background: #fffdf8; border: 1px solid rgba(60, 50, 20, .1); border-radius: 999px; padding: 3px; margin: 0 0 16px }
+#main .cc-seg button { flex: 1; border: 0; background: none; font: inherit; font-size: 14.5px; padding: 9px 6px; border-radius: 999px; color: #2f2b1c; cursor: pointer }
+#main .cc-seg button.is-on { background: #6b5a0e; color: #fff; font-weight: 600 }
+#main .cc-plan-row { margin: 14px 0 6px }
+#main .cc-plan-row .hub-row { background: #fcf3cf; border: 1px solid #f0d872 }
+#main .cc-minis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px }
+#main .cc-mini { display: flex; flex-direction: column; background: #fffdf8; border: 1px solid rgba(60, 50, 20, .08); border-radius: 14px; padding: 0 0 9px; overflow: hidden; font: inherit; text-align: left; cursor: pointer }
+#main .cc-mini img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; display: block; margin-bottom: 7px }
+#main .cc-mini b { font-size: 13px; font-weight: 650; line-height: 1.25; color: #2f2b1c; padding: 0 9px }
+#main .cc-sublabel { font-size: 13px; font-weight: 700; color: #6b5a0e; margin: 16px 2px 8px; letter-spacing: .02em }
+#main .cc-tabs { align-items: center }
+#main .cc-tab-sep { color: #b3a679; font-size: 16px; padding: 0 1px }
+#main .cc-next2 { width: 100%; margin-top: 18px }
+#main .cc-steps .cc-tabs { display: flex; gap: 2px }
+#main .cc-steps .cc-tabs button { flex: 1; flex-direction: row; justify-content: center; gap: 6px; font-size: 14px; padding: 9px 4px }
+#main .cc-steps .cc-tabs button.is-on { background: #f6e3a1; color: #2f2b1c }
+#main .cc-steps .cc-tab-sep { flex: 0 0 auto }
+#main .cc-seg button { text-align: center }
+#main .hub-detail .hub-button.cc-next2 { background: #6b5a0e !important; color: #fff !important; border: 0 }

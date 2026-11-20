@@ -395,19 +395,22 @@
   // Round 6: one question at a time. Tabs (or a swipe) switch the question; each kind of care answers it in a full
   // sentence and opens its own page; "What to ask" turns the answer into a tour question. Sources: AAP (ratios, sick
   // days), Caring for Our Children (home daycare), IRS (nanny payroll taxes).
+  // Round 8 (Yarden's mockup): the question as the headline, the care type as the bold line (same spot on every
+  // tab, so it's easy to compare), and the answer as one grey line.
+  const CMP_NAME = { center: 'Daycare center', home: 'Home daycare', nanny: 'Nanny', family: 'Family care' };
   const TOPICS_CMP = [
-    ['hours', 'Hours', 'clock', 'Nannies and family flex the most', 'Early starts, late pickups and weekends narrow your options.', {
-      center: ['Daycare has set hours', 'Ask about early drop-off and late pickup'], home: ['Home daycare has set hours', 'Often a bit more flexible'],
-      nanny: ['A nanny works your schedule', 'Early or late, as you agree'], family: ['Family hours are up to you', 'Check they work week after week'] }, 'What are your hours, and what happens if I’m running late?'],
-    ['group', 'Group size', 'blocks', 'Best is 3 babies per adult, 6 in a room', 'Fewer babies per adult means more attention for each one.', {
-      center: ['Up to 3 per adult at a daycare', 'And at most 6 babies in a room'], home: ['Up to 2 per adult at a home daycare', 'Plus a few older children'],
-      nanny: ['A nanny cares for just your baby', 'Or 2 babies in a nanny share'], family: ['Family usually cares for just yours', ''] }, 'How many babies does each caregiver look after?'],
-    ['sick', 'Sick days', 'thermo', 'Group care sends sick babies home', 'At home with a nanny or family, care can usually go on.', {
-      center: ['At daycare, sick babies stay home', 'A mild cold is often fine'], home: ['Home daycare is the same', 'And it may close when the provider’s sick'],
-      nanny: ['A nanny can keep caring', 'Through a mild illness, if you agreed ahead'], family: ['Family can keep caring', 'If they’re comfortable with it'] }, 'Which illnesses mean Maya needs to stay home, and when can {s} come back?'],
-    ['cost', 'Cost', 'coin', 'A nanny usually costs the most', 'Prices vary a lot by city, so ask each place for the full cost.', {
-      center: ['Daycare charges tuition', 'Often with a deposit to hold a spot'], home: ['Home daycare charges tuition', 'Often about the same as a center'],
-      nanny: ['A nanny is paid a salary, plus taxes', 'A nanny share splits the cost'], family: ['Family gets whatever you agree', 'From nothing to a regular wage'] }, 'What’s the total cost, including fees, closed days and deposits?']
+    ['hours', 'Hours', 'clock', 'Which hours do you need?', 'Early starts, late pickups and weekends narrow your options.', {
+      center: 'Set hours. Ask about early drop-off.', home: 'Set hours, often a bit more flexible',
+      nanny: 'Works your schedule, as you agree', family: 'Up to you both, week to week' }, 'What are your hours, and what happens if I’m running late?'],
+    ['group', 'Group size', 'blocks', 'How many babies per adult?', 'Fewer babies per adult means more attention for each one.', {
+      center: 'Best is 3 per adult, and 6 in a room', home: 'Best is 2 per adult, plus older kids',
+      nanny: 'Just your baby, or 2 in a nanny share', family: 'Usually just your baby' }, 'How many babies does each caregiver look after?'],
+    ['sick', 'Sick days', 'thermo', 'What happens when Maya is sick?', 'It depends on the kind of care, and each provider’s policy.', {
+      center: 'Sick babies stay home until they’re well', home: 'The same, and it may close if the provider’s sick',
+      nanny: 'Can keep caring through a mild illness', family: 'Can keep caring, if they’re comfortable' }, 'Which illnesses mean Maya needs to stay home, and when can {s} come back?'],
+    ['cost', 'Cost', 'coin', 'What will care cost?', 'Prices vary a lot by city, so ask each place for the full cost.', {
+      center: 'Monthly tuition, often with a deposit', home: 'Tuition, often about the same as a center',
+      nanny: 'Usually the most: a salary, plus taxes', family: 'Whatever you agree, from nothing to a wage' }, 'What’s the total cost, including fees, closed days and deposits?']
   ];
   let cmpAt = 0;
   window.ccTopic = i => { cmpAt = (i + TOPICS_CMP.length) % TOPICS_CMP.length; rerender(); };
@@ -417,7 +420,7 @@
     const [id, , icon, q, why, ans, ask] = TOPICS_CMP[cmpAt];
     const tabs = `<div class="cc-tabs-row" role="tablist">${TOPICS_CMP.map(([k, n], i) => `<button class="cc-tab${i === cmpAt ? ' is-on' : ''}" role="tab" aria-selected="${i === cmpAt}" onclick="ccTopic(${i})">${F(n)}</button>`).join('')}</div>`;
     const top = `<section class="cc-topic"><h2>${F(q)}</h2><p>${F(why)}</p><span class="cc-topic-art">${hubArt(icon, CAT)}</span></section>`;
-    const rows = H().list('', COLS.map(([k]) => H().row({ icon: TYPES[k].icon, cat: CAT, title: ans[k][0], sub: ans[k][1], onclick: `openPage('chg:${CAT}:d:${k}')` })));
+    const rows = H().list('', COLS.map(([k]) => H().row({ icon: TYPES[k].icon, cat: CAT, title: CMP_NAME[k], sub: ans[k], onclick: `openPage('chg:${CAT}:d:${k}')` })));
     const askCard = `<section class="cc-ask-card"><span>${hubArt('chat', CAT)}</span><div><b>${F('What to ask')}</b><p>${F('“' + ask + '”')}</p></div></section>`;
     const dots = `<div class="cc-dots-nav" aria-hidden="true">${TOPICS_CMP.map((_, i) => `<i class="${i === cmpAt ? 'on' : ''}"></i>`).join('')}</div>`;
     setTimeout(() => { const el = document.querySelector('.cc-swipe'); if (el && !el.__sw) { el.__sw = 1; ccSwipe(el); } }, 0);
@@ -498,26 +501,70 @@
     home: ['assets/childcare/room-home.jpg', 'A home daycare living room: one caregiver on a play mat with a baby and two toddlers, a bare portable crib and a baby gate', [['Bare crib', 27, 18, 't'], ['Baby gate', 80, 16, 'l']]]
   };
   const roomPhoto = k => { const r = ROOM[k]; if (!r) return ''; return `<figure class="sf-photo cc-room"><img src="${r[0]}" alt="${F(r[1])}" loading="lazy">${r[2].map(([l, x, y, side]) => `<span class="cc-pin cc-pin-${side}" style="left:${x}%;top:${y}%"><i></i><span>${F(l)}</span></span>`).join('')}</figure>`; };
+  const MERGED = { 'On the tour: look for': 'Tour', 'At the interview: watch for': 'Meet', 'A first visit, while you’re home': 'Visit' };
+  const MERGED_T = { 'Before you visit': 'Call ahead', 'On the tour: look for': 'On the tour', 'Before you sign': 'Before you sign', 'Before you meet': 'Call first', 'At the interview: watch for': 'Meet them', 'Before you hire': 'Check references', 'Before the sitter comes': 'A quick message' };
   function stepsBlock(k, Q, t) {
     const groups = []; Q.forEach(x => { let g = groups.find(y => y.name === x.g); if (!g) groups.push(g = { name: x.g, kind: x.kind, sub: x.gs, items: [] }); g.items.push(x); });
     // Your own questions join the "ask" step.
     const yours = groups.find(g => g.name === 'Your questions'), askG = groups.find(g => g.kind === 'ask' && g !== yours);
     if (yours && askG) { askG.items.push(...yours.items); groups.splice(groups.indexOf(yours), 1); }
+    // Round 8: what to look for and what to ask happen at the same visit, so they're one step.
+    for (let i = groups.length - 1; i > 0; i--) if (groups[i].kind === 'ask' && groups[i - 1].kind === 'look') { groups[i - 1].asks = groups[i].items; if (t.who === 'place') groups[i - 1].sub = 'Look around, then ask three questions'; groups.splice(i, 1); }
     const cur = Math.min(stepView[k] || 0, groups.length - 1), g = groups[cur];
-    const tabs = groups.length > 1 ? `<div class="cc-tabs" role="tablist">${groups.map((x, i) => `<button role="tab" aria-selected="${i === cur}" class="${i === cur ? 'is-on' : ''}" onclick="ccStep('${k}',${i})"><i>${i + 1}</i>${F(TAB[x.name] || x.name)}</button>`).join('')}</div>` : '';
+    const tabs = groups.length > 1 ? `<div class="cc-tabs" role="tablist">${groups.map((x, i) => `<button role="tab" aria-selected="${i === cur}" class="${i === cur ? 'is-on' : ''}" onclick="ccStep('${k}',${i})"><i>${i + 1}</i>${F(MERGED[x.name] || TAB[x.name] || x.name)}</button>`).join('<span class="cc-tab-sep" aria-hidden="true">›</span>')}</div>` : '';
     // One step only (Family or friends): the page heading already names it, so just the short line under it.
-    const head = groups.length > 1 ? `<div class="cc-stephead"><b>${F(g.name)}</b>${g.sub ? `<small>${F(g.sub)}</small>` : ''}</div>` : g.sub ? `<div class="cc-stephead"><small>${F(g.sub)}</small></div>` : '';
+    const head = groups.length > 1 ? `<div class="cc-stephead"><b>${F(MERGED_T[g.name] || g.name)}</b>${g.sub ? `<small>${F(g.sub)}</small>` : ''}</div>` : g.sub ? `<div class="cc-stephead"><small>${F(g.sub)}</small></div>` : '';
     let body = '';
-    if (g.kind === 'look') body += roomPhoto(k) + `<div class="cc-look">${g.items.map(x => `<div class="cc-look-tile"><span>${hubArt(iconFor(x.q), CAT)}</span><b>${F(x.q)}</b><small class="cc-ticked"><i aria-hidden="true">✓</i>${F(x.a)}</small></div>`).join('')}</div>`;
-    else if (g.kind === 'ask') body += `<div class="cc-asks">${g.items.map((x, i) => `<button class="cc-ask" onclick="ccFlip(this)"><em>${i + 1}</em><b>${x.own ? esc3(x.q) : F(x.q)}</b>${x.own ? `<small class="cc-own">${F('Your question')}</small>` : `<span class="cc-listen"><small>${F('Listen for')}</small>${F(x.a)}</span><small class="cc-tap">${F('What to listen for')} ›</small>`}</button>`).join('')}</div>`;
+    const askCards = items => `<div class="cc-asks">${items.map((x, i) => `<button class="cc-ask" onclick="ccFlip(this)"><em>${i + 1}</em><b>${x.own ? esc3(x.q) : F(x.q)}</b>${x.own ? `<small class="cc-own">${F('Your question')}</small>` : `<span class="cc-listen"><small>${F('Listen for')}</small>${F(x.a)}</span><small class="cc-tap">${F('What to listen for')} ›</small>`}</button>`).join('')}</div>`;
+    if (g.kind === 'look') body += roomPhoto(k) + `<p class="cc-sublabel">${F(t.who === 'place' ? 'Look for' : 'Notice')}</p><div class="cc-look">${g.items.map(x => `<div class="cc-look-tile"><span>${hubArt(iconFor(x.q), CAT)}</span><b>${F(x.q)}</b><small class="cc-ticked"><i aria-hidden="true">✓</i>${F(x.a)}</small></div>`).join('')}</div>` + (g.asks ? `<p class="cc-sublabel">${F(g.asks.length === 3 ? 'Three questions to ask' : 'Questions to ask')}</p>` + askCards(g.asks) : '');
+    else if (g.kind === 'ask') body += askCards(g.items);
     else body += `<div class="cc-quick">${g.items.map(x => `<div class="cc-quick-row"><span>${hubArt(iconFor(x.q), CAT)}</span><div><b>${x.own ? esc3(x.q) : F(x.q)}</b>${x.a ? `<small>${F(x.a)}</small>` : ''}</div></div>`).join('')}</div>`;
-    const nav = groups.length > 1 && cur < groups.length - 1 ? `<button class="cc-next" onclick="ccStep('${k}',${cur + 1})">${F('Then: ' + (TAB[groups[cur + 1].name] || groups[cur + 1].name))} ›</button>` : '';
-    const where = cur === 0 && FIND[k] ? `<p class="cc-find">${hubArt('eye', CAT)}<span>${F(FIND[k])}</span></p>` : '';
+    const nx = groups[cur + 1], noun = t.who === 'place' ? 'place' : 'person';
+    const nav = nx ? `<button class="hub-button cc-next2" onclick="ccStep('${k}',${cur + 1});scrollTo(0,0)">${F('Next: ' + (MERGED_T[nx.name] || nx.name))} →</button>`
+      : !FIT[k] ? '' : `<button class="hub-button cc-next2" onclick="openPage('chg:${CAT}:d:cand-${k}-new')">＋ ${F(t.talk ? 'Add who’s helping' : `Add a ${noun} to your shortlist`)}</button>`;
+    const where = cur === 0 && FIND[k] && !t.summary ? `<p class="cc-find">${hubArt('eye', CAT)}<span>${F(FIND[k])}</span></p>` : '';
     return `<section class="cc-steps">${tabs}${where}${head}${body}${nav}</section>`;
   }
 
   /* ---------- one page per type, always in the same order ---------- */
+  // Round 8 (Yarden's mockup): each kind of care is a short summary: a photo card with one plain headline, three
+  // things to know, one row into the step-by-step plan (its own page), and the other options as photos.
+  let nannyMode = 0;
+  window.ccNanny = i => { nannyMode = i; rerender(); };
+  const SUMMARY = {
+    center: { head: 'Trained teachers, and babies to watch', plan: ['Choose a daycare', '3 steps: call, tour, sign'],
+      know: [['notepad', 'Infant rooms fill first', 'Join a few waitlists now', go('plan')], ['thermo', 'Expect more colds the first year', 'Plan backup for sick days at home', go('backup')], ['shield', 'Check the license', 'Your state’s website lists inspections']] },
+    home: { head: 'A small group, in a home', plan: ['Choose a home daycare', '3 steps: call, tour, sign'],
+      know: [['clock', 'Start about 3 months ahead', 'Good spots fill by word of mouth', go('plan')], ['hand', 'One provider means backup', 'For when they’re sick or away', go('backup')], ['shield', 'Check the license', 'Your state’s website lists inspections']] },
+    nanny: { head: 'One caregiver, just for Maya', plan: ['How to hire a nanny', '3 steps. Start about 3 months ahead'],
+      know: [['coin', 'Usually the highest cost', 'A nanny share splits it', 'ccNanny(1);scrollTo(0,0)'], ['shield', 'You’ll need backup care', 'For sick days or time off', go('backup')], ['notepad', 'You’ll be the employer', 'Payroll, taxes and how to pay', go('pay')]] },
+    share: { head: 'One nanny, shared by two families', plan: ['How to set up a share', 'Find a family, agree, hire together'], to: 'share',
+      know: [['coin', 'Costs less than a nanny alone', 'Two families split the pay'], ['thermo', 'Agree on sick days up front', 'And whose home, and the hours', go('share')], ['notepad', 'Both families are employers', 'Each pays its share, and its taxes', go('pay')]] },
+    family: { head: 'Care from someone who loves Maya', plan: ['Talk it through', 'Sleep, car seats, the hours, and more'],
+      know: [['clock', 'Agree on the hours', 'And that either of you can say if it isn’t working'], ['crib', 'Some advice has changed', 'Go over sleep and car seats together']] }
+  };
+  function summaryPage(k) {
+    const t = TYPES[k], h = H(), mine = shortlist()[k] || [], Q = questions(k), S = SUMMARY[k === 'nanny' && nannyMode ? 'share' : k];
+    const toggle = k === 'nanny' ? `<div class="cc-seg" role="tablist">${['Nanny', 'Nanny share'].map((n, i) => `<button role="tab" aria-selected="${i === nannyMode}" class="${i === nannyMode ? 'is-on' : ''}" onclick="ccNanny(${i})">${F(n)}</button>`).join('')}</div>` : '';
+    const hero = `<header class="cc-photo-hero"><img src="assets/childcare/card-${k}.jpg" alt="" loading="lazy"><div><p class="hub-eyebrow">${F(k === 'nanny' && nannyMode ? 'Nanny share' : CMP_NAME[k])}</p><h1>${F(S.head)}</h1></div></header>`;
+    const shortRows = mine.map(c => h.row({ icon: t.icon, cat: CAT, title: esc3(c.name || 'Unnamed'), sub: c.chosen ? F(t.talk ? 'Helping' : 'Chosen') : `${(c.checks || []).filter(x => Q.some(y => y.key === x)).length} of ${Q.length} ${t.talk ? 'talked through' : 'checked'}${c.notes ? ' · has notes' : ''}`, onclick: `openPage('chg:${CAT}:d:cand-${k}-${c.id}')` }));
+    const others = COLS.filter(([x]) => x !== k).map(([x]) => `<button class="cc-mini" onclick="openPage('chg:${CAT}:d:${x}')"><img src="assets/childcare/card-${x}.jpg" alt="" loading="lazy"><b>${F(CMP_NAME[x])}&nbsp;›</b></button>`).join('');
+    const page = sub(k, 'Kinds of care', t.name, '',
+      hero + toggle
+      + (k === 'center' && typeof profile !== 'undefined' && profile.early ? h.tip('Born early?', 'Ask your pediatrician when group care makes sense for {o}.') : '')
+      + rows('What to know', S.know)
+      + `<div class="hub-list cc-plan-row">` + homeRow('plan', t.talk ? 'chat' : 'notepad', S.plan[0], S.plan[1], S.to || 'hire-' + k) + `</div>`
+      + (mine.length ? h.list(t.talk ? 'Who’s helping' : 'Your shortlist', shortRows) + (mine.some(c => c.chosen) ? rows('', [['bag', 'Get ready for day one', 'Easing in, and what to send', go('ready')]]) : '') : '')
+      + `<h2 class="hub-h2">${F('Explore other options')}</h2><div class="cc-minis">${others}</div>`, t.icon);
+    return page.replace('<div class="dev-area-head', '<div class="cc-head-hidden dev-area-head');
+  }
+  const PLAN_T = { center: 'Choose a daycare', home: 'Choose a home daycare', nanny: 'Hire a nanny', family: 'Talk it through' };
+  function planPage(k) {
+    const t = TYPES[k];
+    return sub(k, t.name, PLAN_T[k], t.talk ? 'Kindly, a few weeks before the first day.' : 'A simple plan to find the right fit.', stepsBlock(k, questions(k), Object.assign({ summary: 0 }, t)), t.icon);
+  }
   function typePage(k) {
+    if (SUMMARY[k]) return summaryPage(k);
     const t = TYPES[k], h = H(), mine = shortlist()[k] || [], noun = t.who === 'place' ? 'place' : 'person', Q = questions(k);
     const ed = false, changed = false;
     const qs = !ed ? stepsBlock(k, Q, t) : `<div class="cc-qs is-editing">${grouped(Q, x => `<div class="cc-q"><div><b>${x.own ? esc3(x.q) : F(x.q)}</b><small>${F(hint(x))}</small></div>${ed ? `<button class="cc-q-x" aria-label="Remove this question" onclick="ccQHide('${k}','${x.key}')">×</button>` : ''}</div>`)}`
@@ -731,6 +778,7 @@
       if (a === 'card') return cardPage();
       const j = journey(a); if (j) return j;
       if (TYPES[a]) return typePage(a);
+      const hp = /^hire-(\w+)$/.exec(a || ''); if (hp && PLAN_T[hp[1]]) return planPage(hp[1]);
       const m = /^cand-(\w+)-(\w+)$/.exec(a || ''); if (m && TYPES[m[1]]) return candidatePage(m[1], m[2]);
     }
     return baseRoute(p);
