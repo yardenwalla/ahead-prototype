@@ -1,7 +1,8 @@
 /* Sleep, show and tell (preview): see js/sleep-show.js */
 
 /* Top card sizes to its content, like Development, Health and Safety */
-#main .hub-hero.sl-disc.ssw-hero { height: auto !important; padding-bottom: 20px }
+#main .hub-hero.sl-disc.ssw-hero { height: auto !important; padding-bottom: 20px; display: block !important }
+#main .ssw-hero h1 { margin-top: 6px }
 #main .ssw-hero .ssw-band { margin: 20px 0 0; padding: 24px 14px 16px; border-radius: 20px }
 #main .ssw-hero-photo { margin: 14px 0 0; border-radius: 18px; overflow: hidden; aspect-ratio: 16 / 10; box-shadow: 0 6px 18px #4b4f8a22 }
 #main .ssw-hero-photo img { display: block; width: 100%; height: 100%; object-fit: cover }
@@ -123,3 +124,25 @@
 #main .ssw-roomkey .k-move { background: #5a529666 }
 #main .ssw-roomkey .k-crib { border-radius: 2px; border: 1.4px solid #8f84dd; background: #fff }
 #main .ssw-roomkey .k-path { width: 14px; height: 0; border-radius: 0; border-top: 2px dashed #5a5296; vertical-align: 3px }
+
+/* Stage tabs and the photo beside the headline (Yarden's mockup) */
+#main .ssw-tabs { padding-top: 2px }
+#main .ssw-tabs { gap: 6px }
+#main .ssw-tabs button { flex: 1 1 auto; padding: 8px 7px; font-size: 12.5px }
+#main .ssw-headph { float: right; width: 96px; aspect-ratio: 4 / 5; border-radius: 18px; overflow: hidden; box-shadow: 0 6px 16px #4b4f8a22; margin: 4px 0 6px 12px }
+#main .ssw-hero .ssw-band { clear: both }
+#main .ssw-headph img { width: 100%; height: 100%; object-fit: cover; display: block }
+#main .ssw-photosteps.is-square .ssw-ph { aspect-ratio: 1 }
+
+/* A video as one quiet row that opens */
+#main details.ssw-video { background: #fff; border: 1px solid var(--line); border-radius: 18px; margin: 14px 0 0; overflow: hidden }
+#main details.ssw-video summary { list-style: none; display: grid; grid-template-columns: 40px 1fr auto; gap: 12px; align-items: center; padding: 12px 14px; cursor: pointer }
+#main details.ssw-video summary::-webkit-details-marker { display: none }
+#main details.ssw-video summary b { display: block; font-size: 15.5px; color: var(--ink) }
+#main details.ssw-video summary small { display: block; font-size: 13px; color: #6b6670 }
+#main .ssw-play { width: 40px; height: 40px; border-radius: 50%; background: #ece9fa; position: relative }
+#main .ssw-play::after { content: ""; position: absolute; left: 16px; top: 13px; border-left: 11px solid #5a5296; border-top: 7px solid transparent; border-bottom: 7px solid transparent }
+#main details.ssw-video[open] .hub-chev { transform: rotate(90deg) }
+#main details.ssw-video > figure { margin: 0 12px 12px }
+#main .ssw-rowcard { padding: 0; overflow: hidden }
+#main .ssw-rowcard .hub-row { width: 100%; border: 0; background: none }

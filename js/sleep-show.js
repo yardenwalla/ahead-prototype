@@ -63,8 +63,15 @@
     [/running out of room/i, () => band({ label: 'A late catnap pushes bedtime later.', start: 7, end: 21, dark: [[20.3, 21]],
       segs: [[9.2, 10.6, 'nap'], [13.1, 14.5, 'nap'], [17.3, 17.8, 'nap']], moonFaint: [19.3], moon: [20.4], arrow: [19.3, 20.4],
       caps: [[9.9, 'Morning nap'], [13.8, 'Afternoon nap'], [17.55, 'Catnap'], [20.1, 'Later bedtime']] })],
-    [/brain is busy/i, () => `<figure class="ssw-hero-photo"><img src="${IMG}standing.jpg" alt="${F('A baby standing up in the crib at bedtime, holding the rail')}"></figure>`]
+    [/brain is busy/i, () => band({ label: 'A day with a morning nap and an afternoon nap, then bedtime.', start: 7, end: 20.5, dark: [[19.2, 20.5]],
+      segs: [[9.5, 11, 'nap'], [14, 15.5, 'nap']], moon: [19.3], caps: [[10.25, 'Morning nap'], [14.75, 'Afternoon nap'], [19.3, 'Bedtime']] })]
   ];
+
+  // Stage tabs (like Development's month tabs) and a photo of a baby that age beside the headline.
+  const STAGES = [['Newborn', /round-the-clock/i, 'hero-0.jpg'], ['Longer nights', /longer nights/i, 'hero-1.jpg'], ['Three naps', /three naps/i, 'hero-2.jpg'], ['Two naps', /two naps/i, 'standing.jpg']];
+  const stageNow = () => { try { return C().CFG.Sleep.stage(m()); } catch (e) { return -1; } };
+  const tabs = view => { const cur = stageNow(), live = (() => { try { return C().live(); } catch (e) { return true; } })();
+    return `<nav class="hub-pills ssw-tabs" aria-label="${F('Sleep stages')}">${STAGES.map(([l], i) => `<button class="${i === view ? 'is-on' : ''} ${live && i === cur ? 'is-now' : ''}" onclick="${i === cur && live ? `openPage('topic:Sleep')` : `chgGo('chg:Sleep:s:${i}')`}" ${i === view ? 'aria-current="step"' : ''}>${F(l)}</button>`).join('')}</nav>`; };
 
   /* ---------- photo blocks ---------- */
   const photoRows = rows => `<ol class="ssw-photorows">${rows.map(([img, alt, t, s, tag, tone]) => `<li><span class="ssw-ph"><img src="${IMG + img}" alt="${F(alt)}" loading="lazy"></span><span class="ssw-copy">${tag ? `<em class="ssw-tag ${tone || ''}">${F(tag)}</em>` : ''}<b>${F(t)}</b><small>${F(s)}</small></span></li>`).join('')}</ol>`;
@@ -138,7 +145,19 @@
       calls: { ped: 'night waking comes with a fever, poor feeding, or {s} {seem|seems} to be in pain.' } });
   }
 
-  const routes = { 'chg:Sleep:d:routine': routinePage, 'chg:Sleep:d:shortnap': shortNapPage, 'chg:Sleep:d:wakes': wakesPage };
+  const nm = () => (typeof name === 'function' ? name() : 'your baby');
+  // Safe sleep as the baby grows: the timeline that sat at the bottom of Safe sleep, on its own page.
+  function safeGrowPage() {
+    const html = baseRoute('chg:Sleep:safe'), d = document.createElement('div'); d.innerHTML = html;
+    const head = d.querySelector('.hub-detail-head'), acc = d.querySelector('.hub-accs'), page = head && head.parentElement;
+    if (!head || !acc || !page) return html;
+    head.querySelector('h1').textContent = F('Safe sleep changes as {s} {grow|grows}');
+    const lead = head.querySelector('.hub-lead'); if (lead) lead.textContent = F('The same few rules stay. These are the steps that change, and when.');
+    const h2 = acc.querySelector('h2'); if (h2) h2.textContent = F('Step by step');
+    [...page.children].forEach(c => { if (c !== head && c !== acc && !c.matches('.guide-detail-top, .monthly-page-header, style, .hub-detail-head')) c.remove(); });
+    return d.innerHTML;
+  }
+  const routes = { 'chg:Sleep:d:routine': routinePage, 'chg:Sleep:d:shortnap': shortNapPage, 'chg:Sleep:d:wakes': wakesPage, 'chg:Sleep:d:safegrow': safeGrowPage };
   const baseRoute = window.changesRoute;
   window.changesRoute = function (p) { return routes[p] ? routes[p]() : baseRoute.apply(this, arguments); };
 
@@ -173,8 +192,18 @@
     'chg:Sleep:safe': () => {
       const fig = $('.hub-detail > figure.hub-figure.is-wide, figure.hub-figure.is-wide'), tiles = $('.hub-ess3'); if (!fig) return;
       fig.outerHTML = pinPhoto('crib.jpg', 'A baby asleep on their back in a sleep sack, arms out, in a bare crib with a fitted sheet', [['On {p} back', 56, 31, 'r'], ['Sleep sack, arms free', 24, 40, 'b'], ['Firm, flat mattress', 82, 68, 'l'], ['Fitted sheet only', 18, 88, 'r']], 'ssw-crib');
+      const [sh, sb] = sec('Setting up the crib'); if (sh) { sb.remove(); sh.remove(); }
+      const acc = $('.hub-accs'); if (acc) acc.outerHTML = card('As ' + nm() + ' grows', `<button class="hub-row" onclick="${go('chg:Sleep:d:safegrow')}"><span class="hub-row-copy"><b>${F('What changes, and when')}</b><small>${F('Swaddle, crib, mattress and more, by age')}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`, 'ssw-rowcard');
       if (tiles) tiles.outerHTML = card('Quick crib check', `<div class="ssw-yesno"><div class="is-yes"><b>${F('Yes')}</b><ul>${['Back to sleep', 'Own crib or bassinet', 'Sleep sack', 'A cool, smoke-free room', 'Pacifier, if you like'].map(t => `<li>${F(t)}</li>`).join('')}</ul></div><div class="is-no"><b>${F('Skip')}</b><ul>${['Loose blankets', 'Pillows', 'Bumpers', 'Stuffed toys', 'Sofas, beds, swings'].map(t => `<li>${F(t)}</li>`).join('')}</ul></div></div>`);
     }
+  };
+  // How to swaddle: a photo for each step.
+  PAGES['chg:Sleep:d:swaddle'] = () => {
+    const panels = $('.hub-fig-panels'); if (!panels) return;
+    const S = [['swaddle-1.jpg', 'A swaddle blanket laid as a diamond with the top corner folded down'], ['swaddle-2.jpg', 'A newborn with one arm straight and one side of the blanket wrapped across and tucked under'], ['swaddle-3.jpg', 'A newborn fully swaddled, snug at the chest and loose at the hips']];
+    const rows = [...panels.querySelectorAll('.hub-fig-panel')].map((p, i) => { const t = (p.querySelector('b') || {}).textContent || '', sub = (p.querySelector('small') || {}).textContent || ''; return `<li><span class="ssw-ph"><img src="${IMG + S[i][0]}" alt="${F(S[i][1])}" loading="lazy"></span><span class="ssw-copy"><i>${i + 1}</i><b>${F(t.replace(/^\d\.\s*/, ''))}</b><small>${F(sub)}</small></span></li>`; }).join('');
+    const fig = panels.closest('figure'); const notesEl = fig.querySelector('.tpl-notes');
+    fig.outerHTML = `<section class="care-tpl-card ssw-photosteps is-square"><ol>${rows}</ol>${notesEl ? notesEl.outerHTML : ''}</section>`;
   };
   // Rolling: you place, she rolls.
   PAGES['chg:Sleep:d:rolling'] = () => {
@@ -219,6 +248,11 @@
       const t = (hero.querySelector('h1') || {}).textContent || '', art = hero.querySelector('.sl-art'), aha = hero.querySelector('.sl-aha');
       const hit = HERO.find(([re]) => re.test(t)); if (art && hit) art.outerHTML = hit[1]();
       if (aha) { hero.after(aha); aha.classList.add('ssw-aha'); }
+      const eb = hero.querySelector('.hub-eyebrow'), ebt = eb ? eb.firstChild.textContent : '', view = STAGES.findIndex(([, re]) => re.test(ebt));
+      if (view >= 0) {
+        const h1 = hero.querySelector('h1'); if (h1) h1.insertAdjacentHTML('beforebegin', `<span class="ssw-headph"><img src="${IMG + STAGES[view][2]}" alt=""></span>`);
+        hero.dataset.sswView = view; // tabs are added by ensureTabs, after every other script has drawn
+      }
     }
     // Rough day: short naps and night waking open their own pages.
     const rough = main.querySelector('.hub-rough');
@@ -235,6 +269,11 @@
     const head = main.querySelector('.hub-detail-head');
     if (!once(head, 'p')) return;
     if (PAGES[pg]) PAGES[pg]();
+    // Videos fold into one quiet row, so they don't read like an ad.
+    main.querySelectorAll('figure.hub-embed').forEach(fig => {
+      const h = fig.previousElementSibling, t = (fig.querySelector('figcaption b') || {}).textContent || F('Watch how');
+      fig.outerHTML = `<details class="ssw-video"><summary><span class="ssw-play" aria-hidden="true"></span><span><b>${F(t)}</b><small>${F('Video')}</small></span><span class="hub-chev" aria-hidden="true">›</span></summary>${fig.outerHTML}</details>`;
+    });
     // Sample days for nap changes.
     if (DAYS[pg]) { const [h, body] = sec('What’s normal'); if (h && body) { h.textContent = F('Two sample days'); const keep = body.querySelector('.tpl-notes'); body.innerHTML = DAYS[pg]() + (keep ? keep.outerHTML : ''); body.classList.add('care-tpl-card', 'ssw-card'); } }
     // Example day: the whole 24 hours, night included.
@@ -252,6 +291,14 @@
     main.querySelectorAll('.tpl-spec-row').forEach(r => { const b = r.querySelector('b'); if (b && ROOM[b.textContent.trim()] && !r.querySelector('.ssw-roomfig')) b.parentElement.insertAdjacentHTML('beforeend', roomFig(b.textContent.trim())); });
     if (main.querySelector('.tpl-spec-row .ssw-roomfig')) { const spec = main.querySelector('.tpl-spec'); if (spec && !spec.querySelector('.ssw-roomkey')) spec.insertAdjacentHTML('afterbegin', `<p class="ssw-roomkey"><span><i class="k-you"></i>${F('Where you are')}</span><span><i class="k-move"></i>${F('Moving out, night by night')}</span><span><i class="k-path"></i>${F('Brief visits')}</span><span><i class="k-crib"></i>${F('Crib')}</span></p>`); }
   }
+  // Stage tabs sit above the top card. Other scripts redraw the page after this one, so keep them in place on every change.
+  function ensureTabs() {
+    const hr = document.querySelector('#main .ssw-hero'); if (!hr || hr.dataset.sswView == null) return;
+    const chip = hr.querySelector('.st-chip'); if (chip) chip.remove();
+    if (!document.querySelector('#main .ssw-tabs')) hr.insertAdjacentHTML('beforebegin', tabs(+hr.dataset.sswView));
+  }
+  let queued = false;
+  const watch = () => { const mn = document.querySelector('#main'); if (!mn || mn.__sswObs) return; mn.__sswObs = new MutationObserver(() => { if (queued) return; queued = true; Promise.resolve().then(() => { queued = false; try { ensureTabs(); } catch (e) { console.error(e); } }); }); mn.__sswObs.observe(mn, { childList: true, subtree: true }); };
   const base = window.render;
-  window.render = render = function (...a) { const r = base.apply(this, a); try { dress(); } catch (e) { console.error(e); } return r; };
+  window.render = render = function (...a) { const r = base.apply(this, a); try { dress(); watch(); ensureTabs(); } catch (e) { console.error(e); } return r; };
 })();
