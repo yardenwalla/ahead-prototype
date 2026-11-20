@@ -364,3 +364,33 @@
 #main .cc-nudge b { display: block; font-size: 15px; color: #7a4b16 }
 #main .cc-nudge span { font-size: 13.5px; color: #7a5a35 }
 #main .cc-photo-hero h1 { font-family: inherit; font-size: 24px; font-weight: 700; letter-spacing: -.3px }
+/* Round 11: calmer pages (Yarden's inspiration) */
+#main .hub-detail[data-cc-page]:not([data-cc-page="plan"]):not([data-cc-page="compare"]) .ss-head { display: grid; grid-template-columns: 60px 1fr; column-gap: 14px; align-items: center; padding: 16px 16px 16px 14px }
+#main .hub-detail[data-cc-page]:not([data-cc-page="plan"]):not([data-cc-page="compare"]) .ss-head .dev-area-head-art { grid-row: 1 / span 2; width: 60px; height: 60px; margin: 0 }
+#main .hub-detail[data-cc-page]:not([data-cc-page="plan"]):not([data-cc-page="compare"]) .ss-head .hub-context { display: none }
+#main .hub-detail[data-cc-page]:not([data-cc-page="plan"]):not([data-cc-page="compare"]) .ss-head h1 { font-size: 24px; line-height: 1.15; margin: 0; align-self: end }
+#main .hub-detail[data-cc-page]:not([data-cc-page="plan"]):not([data-cc-page="compare"]) .ss-head .hub-lead { font-size: 14.5px; line-height: 1.4; margin: 3px 0 0; align-self: start }
+#main .cc-peek { padding: 0 14px; margin: 0 0 16px }
+#main .cc-peek details { border-top: 1px solid rgba(60, 50, 20, .08) }
+#main .cc-peek details:first-child { border-top: 0 }
+#main .cc-peek summary { list-style: none; display: grid; grid-template-columns: 38px 1fr 14px; gap: 12px; align-items: center; padding: 11px 0; cursor: pointer }
+#main .cc-peek summary::-webkit-details-marker { display: none }
+#main .cc-peek summary::after { content: '›'; color: #8a8060; font-size: 20px; line-height: 1; transition: transform .15s }
+#main .cc-peek details[open] summary::after { transform: rotate(90deg) }
+#main .cc-peek summary > span { width: 38px; height: 38px; border-radius: 50%; background: #fcf3cf; display: grid; place-items: center }
+#main .cc-peek summary > span svg { width: 21px; height: 21px }
+#main .cc-peek b { font-size: 15.5px; color: #2f2b1c; font-weight: 600 }
+#main .cc-peek p { margin: -4px 0 12px 50px; font-size: 14px; line-height: 1.45; color: #6d6650 }
+#main .cc-line { list-style: none; padding: 14px 16px 2px; margin: 0 0 16px }
+#main .cc-line li { position: relative; display: grid; grid-template-columns: 38px 1fr; gap: 14px; padding-bottom: 14px }
+#main .cc-line li:not(:last-child)::before { content: ''; position: absolute; left: 18px; top: 40px; bottom: 2px; width: 2px; background: #f0d872 }
+#main .cc-line li > span { width: 38px; height: 38px; border-radius: 50%; background: #fcf3cf; display: grid; place-items: center }
+#main .cc-line li > span svg { width: 21px; height: 21px }
+#main .cc-line b { display: block; font-size: 15.5px; color: #2f2b1c; padding-top: 1px }
+#main .cc-line small { display: block; font-size: 14px; color: #6d6650; line-height: 1.4 }
+#main .cc-callout { display: grid; grid-template-columns: 34px 1fr; gap: 14px; align-items: center; background: #fcf3cf; border-radius: 16px; padding: 14px 16px; margin: 4px 0 8px; font-size: 14.5px; line-height: 1.45; color: #2f2b1c }
+#main .cc-callout > span:first-child { border-right: 1px solid #e9d690; padding-right: 12px; display: grid; place-items: center }
+#main .cc-callout > span:first-child svg { width: 26px; height: 26px }
+#main .cc-update { padding: 4px 14px }
+#main .cc-update dl > div:first-child { border-top: 0 }
+#main .cc-update dl > div { grid-template-columns: 100px 1fr; align-items: center }
