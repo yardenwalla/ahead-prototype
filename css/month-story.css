@@ -1370,3 +1370,10 @@
 .st-sofapic img{width:100%;height:auto;display:block;filter:drop-shadow(0 8px 10px rgba(43,40,64,.14))}
 .st-dresserpic{background:none!important;padding:0!important;height:auto!important;display:block!important}
 .st-dresserpic img{width:100%;height:auto;display:block;filter:drop-shadow(0 8px 10px rgba(43,40,64,.14))}
+/* Timeline handle: the baby's middle sits right on the line */
+#main .tl-track:not(.tl-knob) .tl-bar{margin-top:28px!important}
+#main .tl-track:not(.tl-knob) .tl-baby{width:50px!important;height:50px!important;margin-left:-25px!important;bottom:-57px!important}
+#main .tl-track:not(.tl-knob) .tl-baby img{object-position:50% 50%}
+#main .tl-track:not(.tl-knob) .tl-baby::after{display:none}
+#main .tl-track:not(.tl-knob) .tl-ticks{margin-top:18px!important}
+#main .tl-track:not(.tl-knob) .tl-flag{bottom:-28px!important}
