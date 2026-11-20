@@ -349,12 +349,12 @@
     const WORTH = {
       0: ['Bring the hospital discharge papers', 'They list {p} birth weight, the tests {s} had, and any first vaccines.'],
       1: ['Ask to see {p} growth curve', 'The trend over several visits matters more than any one weight.'],
-      2: SHOW ? ['Several shots in one visit is safe', 'Many come combined, so there are fewer pokes than vaccines.'] : ['Several shots at once is normal', 'Feeding or holding {o} close during and after helps. A fussy, sleepy day afterward is common.'],
+      2: SHOW ? ['Several shots in one visit is safe', 'Spacing them out leaves {o} unprotected for longer, and means more visits.'] : ['Several shots at once is normal', 'Feeding or holding {o} close during and after helps. A fussy, sleepy day afterward is common.'],
       // Nov 19 (show, don't tell): how to help with shots is now a photo on the Vaccines page, so 4 months has no heads-up here.
       4: SHOW ? null : ['Shots go more easily with a feed', (profile.feed === 'Formula' ? 'Offer a bottle' : profile.feed === 'Breast milk' && profile.feedHow === 'Nursing' ? 'Nurse {o}' : 'Offer the breast or a bottle') + ' during or right after. Sucking soothes.'],
       6: flu ? ['{P} first flu shot may need a second visit', 'Babies getting it for the first time need two doses, at least 4 weeks apart.'] : ['Ask about fluoride varnish', 'Many offices start painting it on once the first tooth comes in. It helps prevent cavities.'],
       9: ['The questionnaire is routine, not a test', 'Answer from what you see at home. Some offices send it ahead, so check your messages.'],
-      12: ['A quick blood test is common now', 'A finger or heel prick checks for iron and, in many places, lead.']
+      12: SHOW ? null : ['A quick blood test is common now', 'A finger or heel prick checks for iron and, in many places, lead.']   // Nov 19: What to expect now explains the blood test, and the lead names it
     }[age];
     const LEAD = a => ({ 0: 'The first visit after the hospital, usually 3 to 5 days after birth.', 1: 'A short visit, and a check on how you’re doing too.', 2: 'One of the bigger visits, with the first main round of vaccines.', 4: 'Mostly the same shots as at 2 months, so this time you know what to expect.', 6: 'The talk moves from milk to first foods.', 9: 'This one takes a closer look at development.', 12: 'A busy one: new shots, a quick blood test, and the move to whole milk.' })[a] || conceptHealthSummary(a);   // the gist; the rows below hold the details
     const ASK = { 0: 'How will we know feeding is going well?', 1: 'Is {p} weight gain on track?', 2: 'What’s normal after {p} shots?', 4: 'When should we think about solids?', 6: 'Should we watch {p} iron now that solids are starting?', 9: 'Is {s} on track with sitting and babbling?', 12: 'How do we switch to whole milk?' }[age];

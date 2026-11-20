@@ -150,3 +150,6 @@
 #main .h2-said{position:relative;padding-right:56px}
 #main .h2-edit{all:unset;cursor:pointer;position:absolute;right:10px;top:9px;font-size:13px;font-weight:600;color:#356651}
 #main .h2-big .h2-big-any b{display:inline;font-size:inherit;line-height:inherit;color:inherit;letter-spacing:0;font-weight:700}
+#main .h2-line{align-items:flex-start}
+#main .h2-line .h2-save{display:inline-block;margin-top:10px;text-decoration:none}
+#main .h2-sos-btn{display:inline-block;margin-top:10px;padding:8px 16px;border-radius:999px;background:#a0414f;color:#fff!important;font-size:14px;font-weight:600;text-decoration:none}
