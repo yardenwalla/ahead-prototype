@@ -3154,7 +3154,7 @@
     // right; the photo is multiplied onto the card's color so its cream becomes the card. No labels on these.
     const split = ph && FD_SPLIT[n] && !window.__fdPhotoOff;
     const hero = split
-      ? `<header class="hub-hero fd-hero fd-disc fd-one fd-split"><div class="fd-split-top"><img class="fd-split-img" src="assets/feeding/${FD_SPLIT[n]}.jpg?v=1120p" alt="${F(ph[1])}"><div class="fd-split-copy"><p class="hub-eyebrow">${eye}</p><h1>${F(title)}</h1></div></div><p class="hub-lead fd-split-lead">${F(lead)}</p>${tryIn}`
+      ? `<header class="hub-hero fd-hero fd-disc fd-one fd-split"><div class="fd-split-top"><img class="fd-split-img" src="assets/feeding/${FD_SPLIT[n]}.jpg?v=1120p" alt="${F(ph[1])}"><div class="fd-split-copy"><p class="hub-eyebrow">${eye}</p><h1>${F(title)}</h1><p class="hub-lead">${F(lead)}</p></div></div>${tryIn}`
       : `<header class="hub-hero fd-hero fd-disc fd-one"><p class="hub-eyebrow">${eye}</p><h1>${F(title)}</h1><p class="hub-lead">${F(lead)}</p>${pic}${tryIn}`;
     const tryCard = '';
     return h.slice(0, a) + discCss + hero + '</header>' + tryCard + h.slice(e + 9); }; })();
