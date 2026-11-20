@@ -127,6 +127,19 @@
     requestAnimationFrame(() => t.classList.add('is-in'));
     setTimeout(() => { t.classList.remove('is-in'); setTimeout(() => t.remove(), 300); }, action ? 6000 : 3600);
   };
+  // "Seen ✓" is tappable: take it back (an accidental tap shouldn't stick), with Undo.
+  window.hubUnseen = function (key) {
+    const rec = journeyData().records.find(r => r.type === 'milestone' && r.skillKey === key);
+    if (!rec || typeof removeJourneyRecord !== 'function') return;
+    removeJourneyRecord(rec.id);
+    const y = scrollY; render(); scrollTo(0, y);
+    hubToast('Removed', `“${(window.hubBabyify || (x => x))(rec.title)}” is no longer in Memories`, ['Undo', `hubReseen('${key}','${rec.date}')`]);
+  };
+  window.hubReseen = function (key, date) {
+    document.querySelectorAll('.hub-toast').forEach(t => t.remove());
+    if (typeof saveJourneySkill === 'function') saveJourneySkill(key, { date });
+    const y = scrollY; render(); scrollTo(0, y);
+  };
   // "Seen it": save, then celebrate the row and say where it went.
   if (typeof window.hubSeen === 'function') {
     const baseSeen = window.hubSeen;
@@ -139,7 +152,7 @@
       const row = document.querySelectorAll('#main .hub-tick')[idx];
       if (row) { row.classList.add('is-celebrate'); row.insertAdjacentHTML('beforeend', '<span class="hub-burst" aria-hidden="true"><i>✦</i><i>✧</i><i>✦</i><i>✧</i></span>'); }
       const rec = journeyData().records.find(r => r.type === 'milestone' && r.skillKey === key);
-      if (rec) hubToast(typeof memIsBig !== 'function' || memIsBig(rec) ? 'A first, saved' : 'Saved', `“${rec.title}” is in Memories`, ['See it in Memories', `document.querySelectorAll('.hub-toast').forEach(t=>t.remove());memShowMonth(memMonthOf('${rec.date}'))`]);
+      if (rec) hubToast(typeof memIsBig !== 'function' || memIsBig(rec) ? 'A first, saved' : 'Saved', `“${(window.hubBabyify || (x => x))(rec.title)}” is in Memories`, ['See it in Memories', `document.querySelectorAll('.hub-toast').forEach(t=>t.remove());memShowMonth(memMonthOf('${rec.date}'))`]);
     };
   }
 

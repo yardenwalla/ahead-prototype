@@ -55,6 +55,7 @@ FLOWS = [
  ('Stage Undo: Safety', P(5), ["openPage('safety-stage:rolling')", "CLICK:This fits", "TOAST:Undo", "SAME"]),
  ('Stage Undo: Sleep', P(5), ["openPage('chg:Sleep:s:1')", "CLICK:This fits", "TOAST:Undo", "SAME"]),
  ('Stage Undo: Feeding', P(5), ["openPage('chg:Feeding:mock:dirD:3')", "CLICK:This fits", "TOAST:Undo", "SAME"]),
+ ('Stage Undo: Childcare', P(5), ["openPage('chg:Childcare:s:1')", "CLICK:We’ve chosen care", "TOAST:Undo", "SAME"]),
  # Born early: each category can follow its own stage. Changing one must leave the others alone.
  ('Born 10 weeks early: Sleep to a later stage', E, ["openPage('chg:Sleep:s:3')", "CLICK:This fits"]),
  ('Born 10 weeks early: Feeding to a later stage', E, ["openPage('chg:Feeding:mock:dirD:2')", "CLICK:This fits"]),

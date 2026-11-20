@@ -70,6 +70,7 @@
     baseRender.apply(this, arguments);
     if (!last || !m) return;
     const { cat, items } = last;
+    if (cat === 'Childcare') return;   // Childcare shows its own stage pills (Nov 20)
     const pg = m.querySelector('.hub-page') || m;
     const kids = [...pg.children].filter(e => !e.matches('.monthly-page-header, .hub-preview, nav, .hub-agebasis'));
     const hero = kids.find(e => e.matches('.hub-hero, .dev-hero, header')) || kids[0];   // the top card (skip the born-early age switch)
