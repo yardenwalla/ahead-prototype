@@ -185,11 +185,13 @@
     // Nov 19: three levels, like Health. A swallowed button battery or magnet means the ER now, even if {s} seems fine;
     // the National Battery Ingestion Hotline helps on the way (National Capital Poison Center). 911 is for breathing.
     const PHONE = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h3l2 5-2.5 1.5a11 11 0 0 0 6 6L15 14l5 2v3a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>';
-    b += `<h2 class="hub-h2">${F('If something goes wrong')}</h2><div class="care-tpl sf-calls"><section class="care-calls is-titled"><span class="care-calls-ico">${PHONE}</span><div>`
-      + `<p><b>${F('Call Poison Help if:')}</b> ${F('{s} swallows something that could be harmful. 1‑800‑222‑1222.')}</p>`
-      + `<p class="is-urgent"><b>${F('Go to the ER now if:')}</b> ${F('{s} swallowed a button battery or magnet, even if {s} seems fine. On the way, call 1‑800‑498‑8666.')}</p>`
-      + `<p class="is-urgent"><b>${F('Call 911 if:')}</b> ${F('{s} can’t breathe or won’t wake.')}</p>`
-      + `<button class="hub-link sf-calls-link" onclick="${chokeLink[1]}">${F(chokeLink[0])} ›</button></div></section></div>`;
+    // Nov 19, round 2: three short rows that scan in a second, not sentences. Who to call, and when.
+    const tel = n => `<a class="sf-tel" href="tel:${n.replace(/\D/g, '')}">${n}</a>`;
+    b += `<h2 class="hub-h2">${F('If something goes wrong')}</h2><section class="hub-card sf-sos">`
+      + `<div class="sf-sos-row"><b>${F('Swallowed something harmful')}</b><span>${F('Poison Help')} ${tel('1‑800‑222‑1222')}</span></div>`
+      + `<div class="sf-sos-row is-er"><b>${F('Swallowed a battery or magnet')}</b><span>${F('Go to the ER now, even if {s} seems fine')}</span></div>`
+      + `<div class="sf-sos-row is-911"><b>${F('Can’t breathe or won’t wake')}</b><span>${F('Call 911')}</span></div>`
+      + `<button class="hub-link" onclick="${chokeLink[1]}">${F(chokeLink[0])} ›</button></section>`;
     // Choking first aid lives in Feeding; the safety net links to it.
     if (nx) b += h.next(`Next · from about ${nx.age.replace(/\D.*$/, '')} months`, nx.label, `openPage('safety-stage:${nx.key}')`, '', { reaching: 'Clear the floor of small things and batteries.', rolling: 'Gates, latches, furniture straps and water.', pulling: 'Window stops and the stove.' }[nx.key] || '');
     b += h.note('Ages are typical. Every baby moves at their own pace.');
@@ -245,8 +247,6 @@
       more: ['When to do it', 'clock', 'Signs it’s time', 'Before {s} can pull up, in Sleep', "openPage('chg:Sleep:d:mattress')"] },
     cribspot: {
       ba: [[PH('cribspot-before'), 'A crib under a window with a corded blind, its cord hanging beside the crib', ['Blind cord', 43, 60, 'r']], [PH('cribspot-after'), 'The same crib with a cordless shade on the window', ['Cordless shade', 32, 9, 'b']]],
-      // Nov 19: the after photo still had the crib by the window. A floor plan shows the whole safe setup.
-      vis: ['Where things go', 'assets/safety/steps/cribspot-plan.svg', 'A room seen from above: the crib against a wall away from the window, a cordless shade on the window, and the baby monitor and its cord on a dresser at least 3 feet from the crib'],
       spotTiles: [['window', 'A window', 'Under or right beside the crib'], ['cord', 'Corded blinds', 'Loops can reach into the crib'], ['plug', 'Monitor cords', 'Often plugged in right beside it']],
       fixPhoto: [PH('cribspot-fix'), 'A crib against an inside wall, away from a window with a cordless shade', [['Cordless shade', 20, 12, 'r']]],
       fix: [['window', 'Cordless blinds and shades', 'Tying up the cord isn’t enough'], ['plug', 'Monitor cords 3 feet away', 'From the crib or bassinet'], ['crib', 'Crib away from windows', 'Not under or right beside one']],

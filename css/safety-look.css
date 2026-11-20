@@ -144,3 +144,14 @@
 #main .sf-step .sf-pair:has(img[src$=".svg"]) { grid-template-columns: 1fr; gap: 2px }
 #main .sf-step .sf-pair figure:has(img[src$=".svg"]) figcaption { margin: 10px 16px 8px; font-size: 14px }
 #main .sf-calls .sf-calls-link { display: block; margin-top: 12px; padding: 10px 0 0; border-top: 1px solid rgba(122,75,44,.15); width: 100%; text-align: left }
+/* Nov 19, round 2: the emergency card as three short rows */
+#main .sf-sos { padding: 6px 16px 12px }
+#main .sf-sos-row { display: flex; flex-direction: column; gap: 2px; padding: 11px 0 11px 14px; border-bottom: 1px solid #f1eadf; position: relative }
+#main .sf-sos-row::before { content: ''; position: absolute; left: 0; top: 13px; bottom: 13px; width: 4px; border-radius: 4px; background: #d9c7a6 }
+#main .sf-sos-row.is-er::before { background: #d98a5c }
+#main .sf-sos-row.is-911::before { background: #b4442f }
+#main .sf-sos-row b { font-size: 15px; color: var(--ink); font-weight: 600 }
+#main .sf-sos-row span { font-size: 14px; color: #6b6370 }
+#main .sf-sos-row.is-911 span { color: #b4442f; font-weight: 600 }
+#main .sf-sos .sf-tel { color: inherit; text-decoration: underline; text-underline-offset: 2px }
+#main .sf-sos .hub-link { margin-top: 10px; padding: 0 }
