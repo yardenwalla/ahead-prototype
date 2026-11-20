@@ -324,3 +324,34 @@
 #main .cc-stage-hero::before, #main .cc-stage-hero::after { display: none !important }
 #main .cc-stage-hero { display: block !important; min-height: 0 !important; height: auto !important }
 #main .cc-stage-hero .cc-stage-photo { padding: 0 !important }
+/* Round 10: care card in four sections, preview first */
+#main .cc-csec { padding: 0; margin: 0 0 10px; overflow: hidden }
+#main .cc-csec-head { all: unset; box-sizing: border-box; width: 100%; display: grid; grid-template-columns: 42px 1fr auto; gap: 12px; align-items: center; padding: 14px; cursor: pointer }
+#main .cc-csec-head > span { width: 42px; height: 42px; border-radius: 13px; background: #fcf3cf; display: grid; place-items: center }
+#main .cc-csec-head b { display: block; font-size: 16px; color: #2f2b1c }
+#main .cc-csec-head small { display: block; font-size: 13.5px; line-height: 1.4; color: #8a8060; margin-top: 2px }
+#main .cc-csec-head small.is-set { color: #2f2b1c }
+#main .cc-csec-head em { font-style: normal; font-size: 14px; font-weight: 650; color: #6b5a0e; background: #fcf3cf; border-radius: 999px; padding: 5px 12px }
+#main .cc-csec.is-open { border-color: #f0d872 }
+#main .cc-csec-body { padding: 0 14px 14px; border-top: 1px solid rgba(60, 50, 20, .08) }
+#main .cc-opt { margin-top: 12px }
+#main .cc-opt summary { cursor: pointer; font-size: 14px; font-weight: 650; color: #6b5a0e }
+#main .cc-center { text-align: center; margin-top: 8px }
+#main .cc-privacy { font-size: 13px; line-height: 1.45; color: #6d6650; margin: 14px 4px 0; text-align: center }
+#main .cc-fullcheck { margin-top: 4px } #main .cc-fullcheck .cc-checkwrap { padding: 0 14px 12px } #main .cc-chosen.hub-card { display: flex; padding: 14px; margin: 10px 0 }
+#main .cc-csec-body { padding-top: 12px }
+#main .cc-sleep-now { aspect-ratio: auto; position: relative; background: #fffdf8; border: 1px solid rgba(60, 50, 20, .08) }
+#main .cc-sleep-now img { aspect-ratio: 16 / 9; height: auto }
+#main .cc-sleep-now figcaption { padding: 12px 14px; font-size: 13.5px; line-height: 1.45; color: #6d6650 }
+#main .cc-sleep-now figcaption b { display: block; font-size: 15px; color: #2f2b1c; margin-bottom: 2px }
+#main .cc-two-f { display: grid; grid-template-columns: 1.2fr 1fr; gap: 8px }
+#main .cc-update { padding: 14px }
+#main .cc-update header { display: flex; gap: 10px; align-items: center; margin-bottom: 10px }
+#main .cc-update header span { width: 36px; height: 36px; border-radius: 50%; background: #fcf3cf; display: grid; place-items: center }
+#main .cc-update header b { display: block; font-size: 15.5px; color: #2f2b1c }
+#main .cc-update header small { font-size: 12.5px; color: #8a8060 }
+#main .cc-update dl { margin: 0 }
+#main .cc-update dl > div { display: grid; grid-template-columns: 112px 1fr; gap: 8px; padding: 9px 0; border-top: 1px solid rgba(60, 50, 20, .08) }
+#main .cc-update dt { display: flex; gap: 6px; align-items: center; font-size: 13px; font-weight: 650; color: #6b5a0e }
+#main .cc-update dt svg { width: 18px; height: 18px }
+#main .cc-update dd { margin: 0; font-size: 14px; line-height: 1.4; color: #2f2b1c }
