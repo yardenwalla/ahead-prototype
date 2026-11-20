@@ -67,6 +67,23 @@
       <svg class="ssw-loop-back" viewBox="0 0 300 22" preserveAspectRatio="none" aria-hidden="true"><path d="M262 2v8a8 8 0 0 1-8 8H46a8 8 0 0 1-8-8V6" fill="none" stroke="#8f84dd" stroke-width="1.8" stroke-dasharray="3 4" vector-effect="non-scaling-stroke"/><path d="M33 9l5-6 5 6" fill="none" stroke="#8f84dd" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/></svg>
       <figcaption>${F('Around the clock, often every 2–3 hours')}</figcaption></figure>`;
 
+  /* ---------- top card timeline: evenly spaced steps, not to scale ---------- */
+  // [kind, label, detail]: kind is wake, nap, cat (short nap), sleep (newborn), more (naps keep going), bed.
+  const RHYTHM = [
+    [/tiny stretches/i, [['sleep', 'Sleep', '2–4h'], ['wake', 'Awake', '45–60m'], ['sleep', 'Sleep', '2–4h'], ['wake', 'Awake', '45–60m'], ['sleep', 'Sleep', '2–4h']], 'Day and night alike'],
+    [/body clock/i, [['wake', 'Awake', '1–1½h'], ['nap', 'Nap', ''], ['wake', 'Awake', '1–1½h'], ['nap', 'Nap', ''], ['more', '4–5 naps', ''], ['bed', 'Night', '3–5h']]],
+    [/growing up/i, [['wake', 'Awake', '1½–2½h'], ['nap', 'Nap 1', ''], ['wake', 'Awake', ''], ['nap', 'Nap 2', ''], ['wake', 'Awake', ''], ['nap', 'Nap 3', ''], ['bed', 'Night', '5h+']]],
+    [/rhythm/i, [['wake', 'Wake', '2–2½h'], ['nap', 'Nap 1', ''], ['wake', 'Wake', '2–2½h'], ['nap', 'Nap 2', ''], ['wake', 'Wake', '2–2½h'], ['cat', 'Catnap', 'short'], ['bed', 'Bed', '7–8 pm']]],
+    [/running out of room/i, [['wake', 'Wake', '2½–3h'], ['nap', 'Nap 1', ''], ['wake', 'Wake', '2½–3h'], ['nap', 'Nap 2', ''], ['wake', 'Wake', ''], ['cat', 'Catnap', 'fading'], ['bed', 'Bed', 'later']]],
+    [/brain is busy/i, [['wake', 'Wake', '2½–4h'], ['nap', 'Nap 1', ''], ['wake', 'Wake', '2½–4h'], ['nap', 'Nap 2', ''], ['wake', 'Wake', '2½–4h'], ['bed', 'Bed', '7–8 pm']]]
+  ];
+  const ICO = {
+    sun: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>',
+    moon: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></svg>',
+    z: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h5l-5 6h5M13 12h6l-6 6h6"/></svg>' };
+  const rhythm = ([, steps, note]) => `<div class="ssw-rhythm" role="img" aria-label="${F(steps.map(x => (x[1] + ' ' + x[2]).trim()).join(', '))}"><ol style="grid-template-columns:repeat(${steps.length},1fr)">${steps.map(([k, l, d], i) =>
+      `<li class="is-${k}"><span class="ssw-rh-bar">${k === 'bed' ? ICO.moon : (k === 'nap' || k === 'cat' || k === 'sleep') ? ICO.z : k === 'more' ? '···' : i === 0 ? ICO.sun : ''}</span><b>${F(l)}</b>${d ? `<small>${F(d)}</small>` : ''}</li>`).join('')}</ol>${note ? `<p>${F(note)}</p>` : ''}</div>`;
+
   /* ---------- top card: what's changing, drawn ---------- */
   const HERO = [
     [/tiny stretches/i, () => band({ flat: true, label: 'Short sleeps spread across day and night, between feeds.', start: 0, end: 24, dark: [[0, 6.5], [19, 24]],
@@ -221,8 +238,14 @@
       if (tiles) tiles.outerHTML = card('Check every sleep', `<ul class="ssw-checks">${check('On {p} back', 'For naps and night sleep')}${check('Own sleep space', 'Crib, bassinet or play yard. Not a sofa, bed, swing or car seat')}${check('Nothing else in the crib', 'A fitted sheet only. No pillows, blankets, bumpers or toys')}</ul>`
         + notes([['', 'A cool, smoke-free room', 'A sleep sack instead of a blanket. A pacifier is fine, if you like']]), 'ssw-check');
       const mo = m();
-      const G = [[mo < 6, 'First try to roll: stop swaddling'], [mo < 8, 'Bassinet limit: move to the crib'], [true, 'Rolls both ways: {s} can stay that way'], [mo < 9, 'Sitting: lower the mattress. Pulling up: lowest'], [mo < 9, 'After 6 months, {p} own room is your call']].filter(g => g[0]);
-      const acc = $('.hub-accs'); if (acc) acc.outerHTML = card('As ' + nm() + ' grows', `<ol class="ssw-grow">${G.map(g => `<li>${F(g[1])}</li>`).join('')}</ol><button class="ssw-more" onclick="${go('chg:Sleep:d:safegrow')}">${F('See every change, by age')} <span aria-hidden="true">›</span></button>`, 'ssw-growcard');
+      const G = [
+        [mo < 6, 'When {s} first {try|tries} to roll', 'Stop swaddling. Switch to a sleep sack with {p} arms out.'],
+        [mo < 8, 'When {s} {outgrow|outgrows} the bassinet', 'Move {o} to a crib. The label lists its weight limit.'],
+        [true, 'Once {s} can roll both ways', 'Still lay {o} down on {p} back. If {s} {roll|rolls} over after that, you can leave {o}.'],
+        [mo < 9, 'When {s} can sit up', 'Lower the crib mattress.'],
+        [mo < 11, 'When {s} {pull|pulls} up to stand', 'Move the mattress to its lowest setting.'],
+        [mo < 7, 'From 6 months', 'Moving {o} to {p} own room is up to you.']].filter(g => g[0]);
+      const acc = $('.hub-accs'); if (acc) acc.outerHTML = card('As ' + nm() + ' grows', `<ol class="ssw-grow">${G.map(g => `<li><small>${F(g[1])}</small><b>${F(g[2])}</b></li>`).join('')}</ol><button class="ssw-more" onclick="${go('chg:Sleep:d:safegrow')}">${F('See every change, by age')} <span aria-hidden="true">›</span></button>`, 'ssw-growcard');
     }
   };
   // How to swaddle: a photo for each step.
@@ -276,7 +299,7 @@
     if (once(hero, 'h')) {
       hero.classList.add('ssw-hero');
       const t = (hero.querySelector('h1') || {}).textContent || '', art = hero.querySelector('.sl-art'), aha = hero.querySelector('.sl-aha');
-      const hit = HERO.find(([re]) => re.test(t)); if (art && hit) art.outerHTML = hit[1]();
+      const rh = RHYTHM.find(([re]) => re.test(t)); if (art && rh) art.outerHTML = rhythm(rh);
       // Worth knowing: what she might notice plus the one thing to try, in one card inside the top card (Yarden's mockup).
       if (aha) {
         aha.classList.add('ssw-aha'); const lbl = aha.querySelector('small'); if (lbl) lbl.textContent = F('Worth knowing');
@@ -292,12 +315,12 @@
       if (view >= 0) {
         hero.dataset.sswView = view; // tabs are added by ensureTabs, after every other script has drawn
         // Yarden's mockup: words on the left, a photo of a baby this age on the right, the stage's timeline underneath.
-        const PH = ['hero-0.jpg', 'hero-1.jpg', 'sleepy.jpg', 'standing.jpg'][view];
+        const PH = ['hero-0.jpg', 'hero-1.jpg', 'sleepy.jpg', 'standing.jpg'][view], POS = ['50% 30%', '55% 30%', '45% 35%', '50% 25%'][view];
         const eyeb = hero.querySelector('.hub-eyebrow'), hh = hero.querySelector('h1'), ld = hero.querySelector('.hub-lead');
         if (PH && hh && !hero.querySelector('.ssw-hero-top')) {
           const top = document.createElement('div'); top.className = 'ssw-hero-top';
           (eyeb || hh).before(top); [eyeb, hh, ld].forEach(e => e && top.append(e));
-          top.insertAdjacentHTML('beforeend', `<span class="ssw-hero-pic" aria-hidden="true"><img src="${IMG + PH}" alt=""></span>`);
+          top.insertAdjacentHTML('beforeend', `<span class="ssw-hero-pic" aria-hidden="true"><img src="${IMG + PH}" alt="" style="object-position:${POS}"></span>`);
           hero.classList.add('ssw-has-pic');
         }
         const ah = hero.querySelector('.ssw-aha'); if (ah) { hero.after(ah); ah.insertAdjacentHTML('afterbegin', `<i class="ssw-bulb" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.6.5 1 1.2 1 2V16h5.2v-.2c0-.8.4-1.5 1-2A6 6 0 0 0 12 3Z"/></svg></i>`); }
@@ -325,9 +348,10 @@
         naps: ['Sleepy cues, and settling', 'How naps work now', 'An example day', DEST.naps.endsWith('catnap') ? 'Three naps become two' : 'An example day'][view],
         bed: 'A simple routine you can follow', safe: 'The sleep space, and how it changes' };
       const PIC = { night: 'night.jpg', naps: 'nap.jpg', bed: 'book.jpg', safe: 'crib.jpg' };
+      const POSN = { night: '50% 32%', naps: '60% 28%', bed: '50% 40%', safe: '50% 22%' };
       const T = [['night', 'moon', 'Night sleep'], ['naps', 'sun', 'Naps'], ['bed', 'book', 'Bedtime routine'], ['safe', 'crib', 'Safe sleep']].map(([k, ic, name]) => ({ k, ic, name, to: DEST[k], sub: F(SUB[k]) }));
       rows.forEach(r => { if (T.some(t => t.to === route(r))) r.dataset.sswUsed = '1'; });
-      glanceEl.insertAdjacentHTML('afterend', `<div class="ssw-guides is-photo">${T.map(t => `<button onclick="${go(t.to)}"><span class="ssw-tile-pic"><img src="${IMG + PIC[t.k]}" alt="" loading="lazy"><i class="ssw-gi" aria-hidden="true">${H().art(t.ic, 'Sleep')}</i></span><span class="ssw-gt"><b>${F(t.name)}</b><small>${t.sub}</small></span><em class="ssw-go" aria-hidden="true">›</em></button>`).join('')}</div>`);
+      glanceEl.insertAdjacentHTML('afterend', `<div class="ssw-guides is-photo">${T.map(t => `<button onclick="${go(t.to)}"><span class="ssw-tile-pic"><img src="${IMG + PIC[t.k]}" alt="" loading="lazy" style="object-position:${POSN[t.k]}"><i class="ssw-gi" aria-hidden="true">${H().art(t.ic, 'Sleep')}</i></span><span class="ssw-gt"><b>${F(t.name)}</b><small>${t.sub}</small></span><em class="ssw-go" aria-hidden="true">›</em></button>`).join('')}</div>`);
       rows.forEach(r => { if (r.dataset.sswUsed) r.remove(); });
       if (rl && !rl.querySelector('.hub-row')) { rn.remove(); rl.remove(); }
       if (sl && !sl.querySelector('.hub-row')) sl.remove();
