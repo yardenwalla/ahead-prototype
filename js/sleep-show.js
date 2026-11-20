@@ -138,8 +138,8 @@
       !early && ['sun', 'Short naps most days?', 'Try the nap 15 minutes earlier or later. A dark room and white noise help.'],
       mo >= 6 && mo < 10 && ['clock', 'Fighting the last nap most days?', 'It may be time for two naps.']
     ].filter(Boolean);
-    const fig = () => `<section class="care-tpl-card ssw-card"><p class="ssw-ask">${F('How long was the nap?')}</p><div class="ssw-chips" role="group">${NAPS.map(([, l], i) => `<button aria-pressed="${i === start}" onclick="__sswShort(${i})">${F(l)}</button>`).join('')}</div><div id="ssw-short">${shortFig(start)}</div>`
-      + notes([['', 'The last nap of the day?', 'Bedtime moves earlier the same way']]) + `</section>`;
+    const fig = () => `<section class="care-tpl-card ssw-card"><p class="ssw-ask">${F('Say a nap starts at 9 am. How long did it last?')}</p><div class="ssw-chips" role="group">${NAPS.map(([, l], i) => `<button aria-pressed="${i === start}" onclick="__sswShort(${i})">${F(l)}</button>`).join('')}</div><div id="ssw-short">${shortFig(start)}</div>`
+      + notes([['', 'Go by {p} cues', 'The times are a guide, not a schedule'], ['', 'The last nap of the day?', 'Bedtime moves earlier the same way']]) + `</section>`;
     return H().tplPage('Sleep', { type: 'expect', label: 'Naps', art: 'sun', title: 'A short nap moves the next one up',
       why: early ? 'Naps of 30–45 minutes are very common now. They get longer with time.' : 'Timing, light, teething or a new skill can shorten naps for a while.',
       normalTitle: 'See how the day shifts', normal: fig,
@@ -188,9 +188,9 @@
     'chg:Sleep:d:steps0': () => {
       top(card('Alert, sleepy or overtired?', photoRows([
         ['alert.jpg', 'A wide-awake newborn with bright, open eyes', 'Alert', 'Bright eyes, looking around. Time to feed and play', 'Awake', 'is-day'],
-        ['yawn.jpg', 'A newborn yawning', 'Getting sleepy', 'Yawning, rubbing eyes, a faraway stare. Start winding down now', 'Aim for this', 'is-go'],
-        ['overtired.jpg', 'A newborn crying hard in a parent’s arms', 'Overtired', 'Fussing, arching, hard to calm. Soothe first, then down', 'Past the window', 'is-late']
-      ]), 'ssw-cues'));
+        ['yawn.jpg', 'A newborn yawning', 'Getting sleepy', 'A faraway stare, slower moves, rubbing eyes, yawning. Start winding down now', 'Aim for this', 'is-go'],
+        ['overtired.jpg', 'A newborn crying hard in a parent’s arms', 'Overtired?', 'Fussing, arching and hard to calm, after a long time awake. Soothe first, then down', 'May be overtired', 'is-late']
+      ]) + notes([['', 'Look for a few signs together', 'One yawn or one cry on its own can mean lots of things']]), 'ssw-cues'));
       const s1 = $$('.hub-iconstep small')[0]; if (s1) s1.textContent = F('At the first one you see');
       $$('.hub-row b').forEach(b => { if (/^Overtired looks like/.test(b.textContent)) b.closest('.hub-row').remove(); });
     },
@@ -198,7 +198,7 @@
     'chg:Sleep:d:swaddleoff': () => {
       const [h, body] = sec('How it changes'); if (!h) return;
       const fig = body.querySelector('.hub-strip-row'); if (fig) fig.outerHTML = pair(
-        ['swaddle-before.jpg', 'A newborn asleep on their back, swaddled with arms in', 'Newborn', 'Swaddled, arms in, hips loose', 'is-before'],
+        ['swaddle-before.jpg', 'A newborn asleep on their back, swaddled with arms in', 'Before rolling', 'Swaddled, arms in, hips loose', 'is-before'],
         ['swaddle-after.jpg', 'The same baby in a sleeveless sleep sack, arms out', 'First try to roll', 'Sleep sack, arms free to push up', 'is-after']);
       h.textContent = F('Swaddle, then sleep sack');
     },
@@ -215,7 +215,7 @@
       fig.outerHTML = pinPhoto('crib.jpg', 'A baby asleep on their back in a sleep sack, arms out, in a bare crib with a fitted sheet', [['On {p} back', 56, 31, 'r'], ['Sleep sack, arms free', 24, 40, 'b'], ['Firm, flat mattress', 82, 68, 'l'], ['Fitted sheet only', 18, 88, 'r']], 'ssw-crib');
       const [sh, sb] = sec('Setting up the crib'); if (sh) { sb.remove(); sh.remove(); }
       const acc = $('.hub-accs'); if (acc) acc.outerHTML = card('As ' + nm() + ' grows', `<button class="hub-row" onclick="${go('chg:Sleep:d:safegrow')}"><span class="hub-row-copy"><b>${F('What changes, and when')}</b><small>${F('Swaddle, crib, mattress and more, by age')}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`, 'ssw-rowcard');
-      if (tiles) tiles.outerHTML = card('Quick crib check', `<div class="ssw-yesno"><div class="is-yes"><b>${F('Yes')}</b><ul>${['Back to sleep', 'Own crib or bassinet', 'Sleep sack', 'A cool, smoke-free room', 'Pacifier, if you like'].map(t => `<li>${F(t)}</li>`).join('')}</ul></div><div class="is-no"><b>${F('Skip')}</b><ul>${['Loose blankets', 'Pillows', 'Bumpers', 'Stuffed toys', 'Sofas, beds, swings'].map(t => `<li>${F(t)}</li>`).join('')}</ul></div></div>`);
+      if (tiles) tiles.outerHTML = card('Also check', notes([['', 'Nothing else in the crib', 'No blankets, pillows, bumpers or toys'], ['', 'Only a crib or bassinet', 'Not a sofa, bed, car seat or swing'], ['', 'A cool, smoke-free room', 'A pacifier at sleep is fine, if you like']]), 'ssw-check');
     }
   };
   // How to swaddle: a photo for each step.
@@ -242,8 +242,8 @@
     const [h, body] = sec('What’s normal'); if (!h) return;
     h.textContent = F('You place, {s} {roll|rolls}');
     const keep = body.querySelector('.tpl-notes'); body.innerHTML = pair(
-      ['back.jpg', 'A baby asleep on their back in a sleep sack in a bare crib', 'You place {o}', 'On {p} back, every sleep', 'is-before'],
-      ['tummy.jpg', 'A baby asleep on their tummy in a sleep sack in a bare crib', '{S} {roll|rolls} over', 'Rolls both ways? Let {o} stay', 'is-after'])
+      ['back.jpg', 'A baby asleep on their back in a sleep sack in a bare crib', 'You place {o}', 'Always on {p} back, every sleep', 'is-before'],
+      ['tummy.jpg', 'A baby asleep on their tummy in a sleep sack in a bare crib', 'Then {s} {roll|rolls} on {p} own', 'Only if {s} can roll both ways: let {o} stay', 'is-after']).replace('<div class="ssw-pair">', '<div class="ssw-pair has-arrow">')
       + notes([['', 'Rolls one way and gets stuck?', 'Turn {o} onto {p} back until {s} can roll back too']]) + (keep ? keep.outerHTML : '');
     body.classList.add('care-tpl-card', 'ssw-card');
   };
@@ -252,11 +252,11 @@
   const days = (a, b) => `<div class="ssw-days">${band(a)}${band(b)}</div>`;
   const DAYS = {
     'chg:Sleep:d:catnap': () => days(
-      { title: 'Three naps', label: 'Three naps: morning, midday and a catnap, bedtime around 7:15 pm.', start: 7, end: 20.5, dark: [[19.25, 20.5]], segs: [[9, 10.3, 'nap'], [12.5, 13.8, 'nap'], [16.3, 16.8, 'nap']], moon: [19.25], caps: [[9.65, 'Nap'], [13.15, 'Nap'], [16.55, 'Catnap'], [19.25, 'Bed 7:15']] },
-      { title: 'Two naps', label: 'Two naps: morning and afternoon, bedtime about 30 minutes earlier.', start: 7, end: 20.5, dark: [[18.75, 20.5]], segs: [[9.5, 11, 'nap'], [14, 15.5, 'nap']], ghost: [[16.3, 16.8]], moon: [18.75], caps: [[10.25, 'Morning nap'], [14.75, 'Afternoon nap'], [18.75, 'Bed 6:45']] }),
+      { title: 'Example: three naps', label: 'An example day with three naps.', start: 7, end: 20.5, dark: [[19.25, 20.5]], segs: [[9, 10.3, 'nap'], [12.5, 13.8, 'nap'], [16.3, 16.8, 'nap']], moon: [19.25], caps: [[9.65, 'Nap'], [13.15, 'Nap'], [16.55, 'Catnap'], [19.25, 'Bedtime']] },
+      { title: 'Example: two naps', label: 'An example day with two naps and an earlier bedtime.', start: 7, end: 20.5, dark: [[18.75, 20.5]], segs: [[9.5, 11, 'nap'], [14, 15.5, 'nap']], ghost: [[16.3, 16.8]], moon: [18.75], caps: [[10.25, 'Morning nap'], [14.75, 'Afternoon nap'], [18.75, 'Earlier bedtime']] }),
     'chg:Sleep:d:after': () => days(
-      { title: 'Two naps', label: 'Two naps, morning and afternoon, bedtime around 7:15 pm.', start: 7, end: 20.5, dark: [[19.25, 20.5]], segs: [[9.5, 11, 'nap'], [14, 15.5, 'nap']], moon: [19.25], caps: [[10.25, 'Morning nap'], [14.75, 'Afternoon nap'], [19.25, 'Bed 7:15']] },
-      { title: 'One nap', label: 'One longer nap around midday, bedtime a little earlier.', start: 7, end: 20.5, dark: [[18.75, 20.5]], segs: [[12, 14.5, 'nap']], moon: [18.75], caps: [[13.25, 'One longer nap'], [18.75, 'Bed 6:45']] })
+      { title: 'Example: two naps', label: 'An example day with two naps.', start: 7, end: 20.5, dark: [[19.25, 20.5]], segs: [[9.5, 11, 'nap'], [14, 15.5, 'nap']], moon: [19.25], caps: [[10.25, 'Morning nap'], [14.75, 'Afternoon nap'], [19.25, 'Bedtime']] },
+      { title: 'Example: one nap', label: 'An example day with one longer nap and an earlier bedtime.', start: 7, end: 20.5, dark: [[18.75, 20.5]], segs: [[12, 14.5, 'nap']], moon: [18.75], caps: [[13.25, 'One longer nap'], [18.75, 'Earlier bedtime']] })
   };
   // Sleep training: where you are, in each method.
   const ROOM = { // crib on the left, door on the right; dots are you, faint ones are where you move to over the nights
@@ -308,7 +308,7 @@
       const TOPIC = { night: /:(daynight|stretch|regress|nightfeeds|nightwake|wakes)$|Sleep:settle$/, naps: /:(steps0|napsearly|predictable|catnap|day:\d)$/, bed: /:(routine|earlybed|goodbye|settle4)$/, safe: /:(swaddle|swaddleoff|where|mattress|crib|rolling)$|Sleep:safe$/ };
       const FALL = { night: ['chg:Sleep:d:daynight', 'chg:Sleep:d:stretch', 'chg:Sleep:d:wakes', 'chg:Sleep:d:nightwake'][view], naps: ['chg:Sleep:d:steps0', 'chg:Sleep:d:napsearly', 'chg:Sleep:d:day:2', 'chg:Sleep:d:day:3'][view], bed: 'chg:Sleep:d:routine', safe: 'chg:Sleep:safe' };
       const T = [['night', 'moon', 'Night sleep'], ['naps', 'sun', 'Naps'], ['bed', 'book', 'Bedtime routine'], ['safe', 'crib', 'Safe sleep']].map(([k, ic, name]) => {
-        const r = rows.find(x => !x.dataset.sswUsed && TOPIC[k].test(route(x)));
+        const r = k === 'safe' ? null : rows.find(x => !x.dataset.sswUsed && TOPIC[k].test(route(x)));
         if (r) r.dataset.sswUsed = '1';
         const GEN = { night: 'What nights look like now', naps: 'An example day', bed: 'Four calm steps', safe: 'The quick crib check' };
         return { ic, name, to: r ? route(r) : FALL[k], sub: r ? (r.querySelector('b') || {}).textContent : F(GEN[k]) };
@@ -317,6 +317,8 @@
       rows.forEach(r => { if (r.dataset.sswUsed) r.remove(); });
       if (rl && !rl.querySelector('.hub-row')) { rn.remove(); rl.remove(); }
       if (sl && !sl.querySelector('.hub-row')) sl.remove();
+      const ev = glanceEl.querySelector('.sl-every'); if (ev) ev.remove(); // the Safe sleep tile opens the checklist
+      const ex = [...main.querySelectorAll('.hub-card-cta')].find(x => /Example day/.test(x.textContent)); if (ex && T.some(t => /:day:\d$/.test(t.to))) ex.remove(); // Naps tile already opens the example day
     }
     // Rough day: short naps and night waking open their own pages.
     const rough = main.querySelector('.hub-rough');

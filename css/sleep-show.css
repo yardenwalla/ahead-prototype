@@ -183,3 +183,9 @@
 #main .ssw-gt b { display: block; font-size: 15.5px; line-height: 1.2; color: var(--ink) }
 #main .ssw-gt b i { font-style: normal; color: #8a95ad; font-weight: 600 }
 #main .ssw-gt small { display: block; font-size: 13px; line-height: 1.35; color: #6b6670; margin-top: 4px }
+
+#main .ssw-pair.has-arrow { position: relative }
+#main .ssw-pair.has-arrow::after { content: "›"; position: absolute; left: 50%; top: 46%; transform: translate(-50%, -50%); width: 30px; height: 30px; border-radius: 50%; background: #fff; box-shadow: 0 2px 8px #0002; display: grid; place-items: center; font-size: 20px; font-weight: 800; color: #5a5296; line-height: 30px; text-align: center }
+#main .ssw-check .tpl-notes { list-style: none; padding: 0; margin: 2px 4px }
+#main .ssw-check .tpl-notes li { padding-left: 0 }
+#main .ssw-check .tpl-notes li::before, #main .ssw-check .tpl-notes li::marker { content: none }
