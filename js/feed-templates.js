@@ -130,7 +130,7 @@
     // ---------- Feeding challenges ----------
     x_gas: () => ({ type: 'expect', label: 'Feeding challenges', art: 'bottle', title: 'Some gassy fussing every day is normal',
       why: 'It’s often worst in the evening, and a few things help.',
-      do: [['bottle', 'Burp mid-feed', 'Not just at the end'], ['roll', 'Bicycle {p} legs', 'Gently, with {o} on {p} back'], ['mat', 'Tummy time', 'Awake and watched']],
+      do: [['photo:feeding/gas-burp', 'Burp mid-feed', 'Not just at the end'], ['photo:feeding/gas-legs', 'Bicycle {p} legs', 'Gently, with {o} on {p} back'], ['photo:feeding/gas-tummy', 'Tummy time', 'Awake and watched']],
       doNotes: [['', 'Gas drops and gripe water', 'Gas drops are safe, but often don’t help. Ask before gripe water']],
       calls: { ped: 'crying 3 or more hours a day, or grunting every time {s} {breathe|breathes}.' } }),
     x_spit: () => ({ type: 'check', label: 'Feeding challenges', art: 'drop', title: 'Spit-up is common, and usually fine',
@@ -153,6 +153,8 @@
       why: 'A little tenderness in the first week is common. Pain all feed long usually means a shallow latch.',
       do: [['hand', 'Re-latch', 'Break the seal with a clean finger, then try again'], ['heart', 'Try another hold', 'Football or laid-back often helps'], ['steth', 'Get it checked', 'A lactation consultant can check the latch']],
       doNotes: [['', 'Signs of tongue-tie', 'Clicking, a heart-shaped tongue tip, or long feeds with slow gain']],
+      // Nov 19: a latch has to be seen, and AI tools won't draw breastfeeding, so a trusted video shows it.
+      video: ['wjt-Ashodw8', 'How a deep latch looks', 'Global Health Media'],
       calls: { ped: 'pain at most feeds after the first week, or {s} {seem|seems} hungry after most feeds.' } }),
     x_nobottle: () => ({ type: 'expect', label: 'Feeding challenges', art: 'bottle', title: 'Won’t take a bottle? It often takes practice',
       why: 'Many babies who nurse refuse a bottle at first, especially from the parent who nurses.',
@@ -220,8 +222,9 @@
       tipsTitle: 'If there’s a reaction', tips: [['steth', 'A few hives, or vomiting', 'Call your pediatrician.'], ['alarm', 'Trouble breathing, or swelling of the lips or face', 'Or hives all over, hives with vomiting, or very sleepy or floppy. Call 911.']] }),
     z_plan: () => ({ type: 'expect', label: 'Foods to wait on', art: 'plate', title: 'Honey waits until 1, some foods until 4',
       why: 'A few foods aren’t safe for babies yet, even once solids are going well.',
-      normalTitle: 'Wait until 1', normal: [['drop', 'Honey', 'It can carry a risk of botulism'], ['cup', 'Cow’s milk as a drink', 'Fine in cooking'], ['cup', 'Juice', 'Offer water and milk instead']],
-      moreTitle: 'Choking risks: whole, hard or round, until 4', more: () => H().TPLB.chips(['Whole nuts', 'Whole grapes', 'Popcorn', 'Hot dog rounds', 'Hard raw veg', 'Thick nut butter'], [['', 'Some can be made safe', 'Cut or cooked soft, once {s’s} on finger foods']]) }),
+      // Nov 19: photos, so a parent recognizes the food at a glance; a red cross marks each one.
+      normalTitle: 'Wait until 1', normal: () => H().TPLB.photoGridMore([['feeding/no-honey', 'Honey', 'Risk of botulism'], ['feeding/no-milk', 'Cow’s milk to drink', 'Fine in cooking'], ['feeding/no-juice', 'Juice', 'Water and milk instead']], '', 'no'),
+      moreTitle: 'Choking risks until 4', more: () => H().TPLB.noted(H().TPLB.photoGridMore([['feeding/no-grapes', 'Whole grapes', 'Quarter them lengthwise'], ['feeding/no-nuts', 'Whole nuts', 'Thin nut butter instead'], ['feeding/no-hotdog', 'Hot dog rounds', 'Cut into thin strips'], ['feeding/no-popcorn', 'Popcorn', 'Wait until 4'], ['feeding/ff-hard', 'Hard raw veg', 'Cook until soft']], 'See more', 'no'), [['', 'Thick nut butter too', 'Spread it thin, never in a lump']]) }),
     z_milkfood: () => ({ type: 'expect', label: 'Milk and solids', art: 'cup', title: 'No set order for milk and meals',
       why: 'A meal fits in wherever {s’s} awake and happy.',
       do: [['bottle', 'Milk before or after', 'Whatever works for {o}'], ['cup', 'Water from a cup', 'Open or straw. Hold it for {o}, and let {o} try']],

@@ -107,8 +107,9 @@
     // One photo that teaches the page's main idea, with labels the app draws on top: pins [label, x%, y%, side r|l|b|bl].
     photoPins: (src, alt, pins, cls = '') => `<figure class="ph-photo ph-hero ${cls}">${TPLB.pimg(src, alt)}${pins.map(([l, x, y, side]) => `<span class="ph-pin ph-pin-${side}" style="left:${x}%;top:${y}%"><i></i><span>${F(l)}</span></span>`).join('')}</figure>`,
     // Photo tiles, three shown and the rest one tap away: [src, title, line].
-    photoGridMore: (items, moreLabel) => { items = tval(items); const more = items.length > 3;
-      return `<section class="ph-grid${more ? ' ph-has-more' : ''}">${items.map(([src, t, sub], i) => `<figure class="${i > 2 ? 'ph-more' : ''}"><span class="ph-tile">${TPLB.pimg(src, t)}</span><figcaption><b>${F(t)}</b><span>${F(sub)}</span></figcaption></figure>`).join('')}`
+    // mark 'no' puts a small red cross on each photo, for foods to wait on.
+    photoGridMore: (items, moreLabel, mark) => { items = tval(items); const more = items.length > 3;
+      return `<section class="ph-grid${more ? ' ph-has-more' : ''}${mark ? ' is-' + mark : ''}">${items.map(([src, t, sub], i) => `<figure class="${i > 2 ? 'ph-more' : ''}"><span class="ph-tile">${TPLB.pimg(src, t)}${mark === 'no' ? '<i class="ph-x" aria-hidden="true"></i>' : ''}</span><figcaption><b>${F(t)}</b><span>${F(sub)}</span></figcaption></figure>`).join('')}`
         + (more ? `<button class="ph-more-btn" onclick="this.parentNode.classList.add('is-open')">${F(moreLabel || 'See more')} <span aria-hidden="true">›</span></button>` : '') + `</section>`; },
     // The same steps for one food at a time, with chips to switch foods and this baby's step marked.
     // cols [[title, age]], foods [[name, [src, src, src]]], now = column index.
