@@ -246,7 +246,9 @@
       checks: ['Push down on each corner. The mattress shouldn’t shift or tilt.'],
       more: ['When to do it', 'clock', 'Signs it’s time', 'Before {s} can pull up, in Sleep', "openPage('chg:Sleep:d:mattress')"] },
     cribspot: {
-      ba: [[PH('cribspot-before'), 'A crib under a window with a corded blind, its cord hanging beside the crib', ['Blind cord', 43, 60, 'r']], [PH('cribspot-after2'), 'A bare crib against a wall away from the window, a cordless shade on the window, and the baby monitor on a dresser across the room', null]],
+      ba: [[PH('cribspot-before'), 'A crib under a window with a corded blind, its cord hanging beside the crib', ['Blind cord', 43, 60, 'r']], [PH('cribspot-after2'), 'A bare crib away from the window', null]],
+      // Nov 19: the before and after were two different rooms, which reads as nonsense. One photo of the safe setup, labeled.
+      vis: ['How it should look', [PH('cribspot-after2'), 'A bare crib against a wall away from the window, a cordless shade on the window, and the baby monitor on a dresser across the room', [['Cordless shade', 78, 24, 'l'], ['Away from the window', 14, 52, 'r']]]],
       spotTiles: [['window', 'A window', 'Under or right beside the crib'], ['cord', 'Corded blinds', 'Loops can reach into the crib'], ['plug', 'Monitor cords', 'Often plugged in right beside it']],
       fixPhoto: [PH('cribspot-fix'), 'A crib against an inside wall, away from a window with a cordless shade', [['Cordless shade', 20, 12, 'r']]],
       fix: [['window', 'Cordless blinds and shades', 'Tying up the cord isn’t enough'], ['plug', 'Monitor cords 3 feet away', 'From the crib or bassinet'], ['crib', 'Crib away from windows', 'Not under or right beside one']],
