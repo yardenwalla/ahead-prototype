@@ -246,7 +246,7 @@
       checks: ['Push down on each corner. The mattress shouldn’t shift or tilt.'],
       more: ['When to do it', 'clock', 'Signs it’s time', 'Before {s} can pull up, in Sleep', "openPage('chg:Sleep:d:mattress')"] },
     cribspot: {
-      ba: [[PH('cribspot-before'), 'A crib under a window with a corded blind, its cord hanging beside the crib', ['Blind cord', 43, 60, 'r']], [PH('cribspot-after'), 'The same crib with a cordless shade on the window', ['Cordless shade', 32, 9, 'b']]],
+      ba: [[PH('cribspot-before'), 'A crib under a window with a corded blind, its cord hanging beside the crib', ['Blind cord', 43, 60, 'r']], [PH('cribspot-after2'), 'A bare crib against a wall away from the window, a cordless shade on the window, and the baby monitor on a dresser across the room', null]],
       spotTiles: [['window', 'A window', 'Under or right beside the crib'], ['cord', 'Corded blinds', 'Loops can reach into the crib'], ['plug', 'Monitor cords', 'Often plugged in right beside it']],
       fixPhoto: [PH('cribspot-fix'), 'A crib against an inside wall, away from a window with a cordless shade', [['Cordless shade', 20, 12, 'r']]],
       fix: [['window', 'Cordless blinds and shades', 'Tying up the cord isn’t enough'], ['plug', 'Monitor cords 3 feet away', 'From the crib or bassinet'], ['crib', 'Crib away from windows', 'Not under or right beside one']],
@@ -280,7 +280,7 @@
     gates: {
       // Nov 19: the generated photos showed pressure gates at the top of the stairs, the opposite of the advice.
       // A drawing of the right and wrong gate at the top is accurate by design; the photos stay out until verified ones exist.
-      vis: ['Which gate at the top', [PH('gates-top-ok'), 'A white gate at the top of the stairs, held by metal brackets screwed into the wall on both sides', [['Screwed into the wall', 16, 12, 'r']]]],
+      vis: ['Which gate at the top', [PH('gates-top-ok'), 'A white gate at the top of the stairs, held by metal brackets screwed into the wall on both sides', [['Screwed into the wall', 17, 21, 'r']]]],
       baFix: [['stairs', 'Screwed in at the top', 'A pressure gate can give way there'], ['gate', 'Either kind at the bottom', 'Pressure-fit or screwed in']],
       spotPhoto: [PH('gates-risk'), 'A baby crawling toward an open staircase with no gate', [['Open stairs', 52, 26, 'r']]],
       spotLine: 'Crawlers climb stairs early, and can fall from any step.',
