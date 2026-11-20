@@ -29,6 +29,8 @@
   };
   ONE.Childcare = ['Kinds of care, costs and when to start looking', 'Getting ready for day one, and a backup plan', 'Settling in, each day, and when to speak up'];
   const CHANGEABLE = ['Sleep', 'Feeding', 'Safety', 'Childcare'];
+  const PILLS = ['Feeding', 'Safety'];
+  const PILL_LABEL = {};
   const fill = s => String(s).replace(/Maya/g, typeof name === 'function' ? name() : 'your baby');
   const ageOf = it => it.age && !/^By |months?$|^Newborn$|^First week$/.test(it.label) ? it.age : '';
 
@@ -68,11 +70,19 @@
     baseRender.apply(this, arguments);
     if (!last || !m) return;
     const { cat, items } = last;
+    if (cat === 'Childcare') return;   // Childcare shows its own stage pills (Nov 20)
     const pg = m.querySelector('.hub-page') || m;
     const kids = [...pg.children].filter(e => !e.matches('.monthly-page-header, .hub-preview, nav, .hub-agebasis'));
     const hero = kids.find(e => e.matches('.hub-hero, .dev-hero, header')) || kids[0];   // the top card (skip the born-early age switch)
     // The chip: on the top card's first line when it has one, otherwise in its top corner.
-    if (hero && !m.querySelector('.st-chip')) {
+    // Nov 19 (Yarden): Feeding and Safety switch stages with a row of pills at the top, like Development's ages,
+    // in place of the "All stages" chip. The stage you're reading is filled; a dot marks the baby's own stage.
+    if (PILLS.includes(cat) && hero && !m.querySelector('.st-pills')) {
+      const pills = `<nav class="st-pills" aria-label="${esc(TITLE[cat] || 'Stages')}" style="${typeof yearTheme === 'function' ? yearTheme(cat) : ''}">${items.map(it => `<button class="${it.on ? 'is-on' : ''}${it.now && live() ? ' is-now' : ''}" onclick="${it.now ? topicGo(cat) : it.onclick}"${it.on ? ' aria-current="page"' : ''}>${esc(PILL_LABEL[it.label] || it.label)}</button>`).join('')}</nav>`;
+      hero.insertAdjacentHTML('beforebegin', pills);
+      const nav = m.querySelector('.st-pills'), onb = nav && nav.querySelector('.is-on');
+      if (nav && onb) nav.scrollLeft = Math.max(0, onb.offsetLeft - (nav.clientWidth - onb.offsetWidth) / 2);
+    } else if (hero && !m.querySelector('.st-chip')) {
       const chip = `<button class="st-chip" onclick="openPage('stages:${cat}')">${cat === 'Health' ? 'All checkups' : 'All stages'} <span aria-hidden="true">›</span></button>`;
       const eb = hero.querySelector('.hub-eyebrow');
       if (eb && hero.firstElementChild === eb) { eb.classList.add('st-eyebrow'); eb.insertAdjacentHTML('beforeend', chip); }

@@ -1,0 +1,51 @@
+/* The care card as a caregiver receives it, generated from card.html’s styles and scoped to .acc so the app can show the same card once it’s saved. */
+#main .acc { --bg: #f7f3ec; --ink: #2f2a33; --muted: #6b6670; --line: #ece5da; --card: #fffdf9;
+  --feed: #fdeef2; --feed-ink: #a24d6a; --nap: #fff3dc; --nap-ink: #8a6a2a; --dusk: #f6e8f3; --dusk-ink: #7a4f74; --night: #e3e6f6; --night-ink: #3d4a7a;
+  --green: #e6f5ec; --green-ink: #356651; --peach: #fdeee6; --peach-ink: #9a5a3c; --blue: #e7effc; --blue-ink: #46638c }
+#main .acc { font-family: Figtree, system-ui, -apple-system, sans-serif; color: var(--ink); font-size: 16px; line-height: 1.5 }
+#main .acc .acc-h1 { font-family: Nunito, Figtree, sans-serif }
+#main .acc .brand {font: 800 24px/1 Nunito, Figtree, sans-serif; letter-spacing: -.02em; margin: 4px 4px 16px }
+#main .acc .brand span {color: #b7a48d }
+#main .acc .hero {position: relative; overflow: hidden; border-radius: 28px; padding: 22px 22px 24px; background: linear-gradient(160deg, #fbe2e9, #f6eef6 55%, #e7ecfb) }
+#main .acc .hero::after {content: ""; position: absolute; right: -46px; top: -56px; width: 180px; height: 180px; border-radius: 50%; background: #fff; opacity: .4 }
+#main .acc .hero > * {position: relative; z-index: 1 }
+#main .acc .hero-art {display: block; height: 44px; margin: 4px 0 14px }
+#main .acc .hero-art svg {height: 100%; width: auto }
+#main .acc .hello {margin: 0; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--feed-ink) }
+#main .acc .acc-h1 {margin: 4px 0 6px; font: 800 36px/1.05 Nunito, Figtree, sans-serif; letter-spacing: -.02em }
+#main .acc .intro {margin: 0; color: #5c5361; font-size: 15.5px }
+#main .acc .updated {display: inline-block; margin-top: 12px; padding: 3px 11px; border-radius: 999px; background: rgba(255, 255, 255, .75); font-size: 12.5px; font-weight: 600; color: var(--muted) }
+#main .acc .acc-h2 {margin: 24px 4px 10px; font: 700 17px/1.2 Figtree, sans-serif }
+#main .acc .tiles {display: grid; grid-template-columns: 1fr 1fr; gap: 10px }
+#main .acc .tile {padding: 14px 14px 16px; border-radius: 20px; min-width: 0; background: var(--t); color: var(--ti) }
+#main .acc .tile.wide {grid-column: 1 / -1 }
+#main .acc .tile-art {display: block; height: 26px; margin-bottom: 10px }
+#main .acc .tile-art svg {height: 100%; width: auto; display: block }
+#main .acc .tile small {display: block; font-size: 13px; font-weight: 600 }
+#main .acc .tile b {display: block; font-size: 18px; font-weight: 700; line-height: 1.25; margin-top: 2px; color: var(--ink) }
+#main .acc .tile span {display: block; font-size: 13.5px; color: #5c5361; margin-top: 2px }
+#main .acc .times {display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px }
+#main .acc .times em {font-style: normal; font-size: 13.5px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: rgba(255, 255, 255, .75); color: var(--ink) }
+#main .acc .list {background: var(--card); border: 1px solid var(--line); border-radius: 22px; overflow: hidden }
+#main .acc .row {display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-top: 1px solid var(--line); color: var(--ink); text-decoration: none }
+#main .acc .row:first-child {border-top: 0 }
+#main .acc .ic {flex: none; width: 42px; height: 42px; border-radius: 13px; display: grid; place-items: center; background: var(--t); color: var(--ti) }
+#main .acc .ic svg {width: 22px; height: 22px }
+#main .acc .row-copy {flex: 1; min-width: 0 }
+#main .acc .row-copy small {display: block; font-size: 13px; color: var(--muted) }
+#main .acc .row-copy b {display: block; font-size: 15.5px; font-weight: 600; line-height: 1.35 }
+#main .acc .call-btn {flex: none; font-weight: 700; font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--green); color: var(--green-ink) }
+#main .acc .note {margin: 10px 6px 0; color: var(--muted); font-size: 13.5px }
+#main .acc .night {margin-top: 24px; padding: 20px; border-radius: 24px; background: var(--night) }
+#main .acc .night-art {display: block; height: 30px; margin-bottom: 10px }
+#main .acc .night-art svg {height: 100%; width: auto }
+#main .acc .night small {display: block; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--night-ink) }
+#main .acc .night p {margin: 4px 0 0; font-size: 16px; font-weight: 600; line-height: 1.45 }
+#main .acc .night span {display: block; margin-top: 8px; font-size: 14px; color: #4c4757 }
+#main .acc .thanks {text-align: center; margin: 22px 8px 0; color: var(--muted); font-size: 15px }
+#main .acc .ahead {margin-top: 20px; padding: 20px; border-radius: 24px; background: var(--card); border: 1px solid var(--line) }
+#main .acc .ahead .brand {font-size: 20px; margin: 0 }
+#main .acc .ahead p {margin: 8px 0 14px; font-size: 15px; line-height: 1.45; color: #4c4757 }
+#main .acc .ahead a {display: inline-block; padding: 11px 18px; border-radius: 14px; background: var(--green); color: var(--green-ink); text-decoration: none; font-weight: 700 }
+#main .acc .empty {margin-top: 10px; padding: 24px; border-radius: 22px; background: var(--card); border: 1px solid var(--line); text-align: center; color: var(--muted) }
+#main .acc .note { background: none; padding: 0; border-radius: 0 }

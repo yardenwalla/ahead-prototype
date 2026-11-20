@@ -76,3 +76,370 @@
 #main .hub-detail .cc-quiz-next { margin-top: 16px }
 #main .hub-detail .cc-back-plan { display: block; margin: 12px auto 0 }
 #main .cc-field-warn { display: block; margin-top: 4px; font-size: 13px; color: #a14a3c }
+/* Nov 19: the comparison table on Childcare's main page. Facts, not scores; a chip lights a row and ticks its strongest cell. */
+#main .cc-cmp { padding: 12px 10px 14px }
+#main .cc-cmp-head, #main .cc-cmp-cells { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px }
+#main .cc-cmp-col { display: flex; flex-direction: column; align-items: center; gap: 5px; background: none; border: 0; padding: 0; font: inherit; color: var(--year-ink, #6b5a0e); cursor: pointer; text-align: center }
+#main .cc-cmp-col img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 14px; display: block }
+#main .cc-cmp-col b { font-size: 12.5px; font-weight: 650; line-height: 1.2; color: #2f2b1c }
+#main .cc-cmp-col span { font-size: 13px; line-height: 1; margin-top: -2px }
+#main .cc-cmp-row { border-top: 1px solid rgba(60, 50, 20, .09); padding: 9px 4px 10px; margin-top: 8px; border-radius: 12px }
+#main .cc-cmp-row.is-lit { background: #fcf7dd; border-top-color: transparent }
+#main .cc-cmp-label { display: flex; align-items: center; gap: 6px; margin: 0 0 6px; font-size: 12.5px; font-weight: 600; color: #6b5a0e }
+#main .cc-cmp-label svg { width: 18px; height: 18px }
+#main .cc-cmp-cells span { font-size: 12.5px; line-height: 1.3; color: #3c3828; text-align: center }
+#main .cc-cmp-cells span.is-best { font-weight: 650; color: #4a3f0a }
+#main .cc-cmp-cells span i { display: block; font-style: normal; color: #4f7a3a; font-size: 13px; line-height: 1.1 }
+#main .cc-cmp-note { font-size: 12.5px; color: #6d6650; margin: 10px 4px 0 }
+#main .cc-cmp-ask { font-size: 14px; font-weight: 600; color: #2f2b1c; margin: 14px 4px 8px }
+#main .cc-cmp-chips { margin: 0 2px }
+#main .cc-room { margin: 4px 0 12px }
+#main .cc-pin { position: absolute; display: flex; align-items: center; gap: 6px; transform: translate(-7px, -50%); pointer-events: none }
+#main .cc-pin-l { flex-direction: row-reverse; transform: translate(calc(-100% + 7px), -50%) }
+#main .cc-pin > i { flex: none; width: 14px; height: 14px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 4px #ffffff66, 0 1px 4px #0003 }
+#main .cc-pin > span { background: #fffdfaee; color: #4a3a1f; font-size: 12.5px; font-weight: 700; line-height: 1; padding: 7px 10px; border-radius: 999px; white-space: nowrap; box-shadow: 0 2px 8px #0002 }
+#main .cc-cmp-chips .cc-chip { min-height: 34px; padding: 6px 12px; font-size: 13.5px }
+#main .cc-cmp-chips { gap: 6px }
+#main .cc-pin-t { flex-direction: column-reverse; transform: translate(-50%, calc(-100% + 7px)) }
+#main .cc-cmp-col b { min-height: 2.4em }
+#main .cc-cmp .cc-cmp-ask { margin-top: 2px }
+#main .cc-cmp-chips { margin-bottom: 12px }
+/* Round 2: a calmer table. Label column, then four columns of one or two words. */
+#main .cc-t { padding: 12px 8px 6px }
+#main .cc-t-row { display: grid; grid-template-columns: 70px repeat(4, minmax(0, 1fr)); gap: 4px; align-items: center; padding: 10px 2px; border-top: 1px solid rgba(60, 50, 20, .08); border-radius: 12px }
+#main .cc-t-head { border-top: 0; padding-top: 0; align-items: start }
+#main .cc-t-row.is-lit { background: #fcf7dd; border-top-color: transparent }
+#main .cc-t-label { display: flex; align-items: center; gap: 5px; font-size: 12.5px; font-weight: 600; color: #6b5a0e }
+#main .cc-t-label svg { width: 17px; height: 17px; flex: none }
+#main .cc-t-cell { font-size: 13px; line-height: 1.25; text-align: center; color: #3c3828 }
+#main .cc-t-cell.is-best { font-weight: 700; color: #4a3f0a; background: #fff; border-radius: 10px; padding: 4px 2px; box-shadow: 0 0 0 1.5px #e0c862 }
+#main .cc-t .cc-cmp-col b { min-height: 0; font-size: 12.5px }
+#main .cc-t + .cc-cmp-ask { margin: 14px 2px 8px }
+#main .cc-t-row { grid-template-columns: 74px repeat(4, minmax(0, 1fr)); gap: 2px }
+#main .cc-t-label { white-space: nowrap; font-size: 12px; gap: 4px }
+#main .cc-t-cell { font-size: 12.5px }
+#main .cc-t-row { border-radius: 0 }
+#main .cc-t-row.is-lit { border-radius: 12px }
+/* Round 3: four option cards on the main page, and a compare page with one card per question. */
+#main .cc-opts, #main .cc-q-cols { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px }
+#main .cc-opt { display: flex; flex-direction: column; gap: 5px; background: #fffdf8; border: 1px solid rgba(60, 50, 20, .08); border-radius: 16px; padding: 6px 6px 9px; font: inherit; text-align: left; cursor: pointer; color: #2f2b1c }
+#main .cc-opt img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 11px; display: block }
+#main .cc-opt b { font-size: 12.5px; font-weight: 650; line-height: 1.2; color: #2f2b1c }
+#main .cc-opt small { font-size: 11.5px; line-height: 1.3; color: #6d6650 }
+#main .cc-opt.is-small { background: none; border: 0; padding: 0; text-align: center; align-items: center }
+#main .cc-cmp-link { margin-top: 10px }
+#main .cc-q { padding: 12px 10px 12px; margin-top: 10px }
+#main .cc-q.is-lit { box-shadow: 0 0 0 2px #e0c862; background: #fffbea }
+#main .cc-q-title { display: flex; align-items: center; gap: 7px; margin: 0 2px 10px; font-size: 14px; font-weight: 650; color: #2f2b1c }
+#main .cc-q-title svg { width: 20px; height: 20px }
+#main .cc-q-cell { display: flex; flex-direction: column; align-items: center; gap: 5px; text-align: center; font-size: 12.5px; line-height: 1.25; color: #3c3828; padding: 6px 2px; border-radius: 12px }
+#main .cc-q-cell.is-best { background: #fff; box-shadow: 0 0 0 1.5px #e0c862; font-weight: 650; color: #4a3f0a }
+#main .cc-dots { display: flex; gap: 4px }
+#main .cc-dots i { width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid #c9b25a; display: block }
+#main .cc-dots i.on { background: #8a7420; border-color: #8a7420 }
+#main .cc-ppl { display: flex; gap: 1px; height: 16px }
+#main .cc-ppl svg { width: 12px; height: 15px; fill: #8a7420 }
+#main .cc-ok, #main .cc-no { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800 }
+#main .cc-ok { background: #e3efd8; color: #3f6b2a }
+#main .cc-no { background: #f1ece0; color: #9a8f74 }
+#main .cc-ticked i { color: #3f6b2a; font-style: normal; font-weight: 800; margin-right: 4px }
+#main .cc-q { display: block !important }
+#main .cc-q .cc-q-cols { width: 100% }
+#main .cc-opts { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px }
+#main .cc-opts .cc-opt { flex-direction: row; align-items: center; gap: 10px; padding: 8px }
+#main .cc-opts .cc-opt img { width: 56px; height: 56px; flex: none }
+#main .cc-opts .cc-opt b { font-size: 14px; display: block }
+#main .cc-opts .cc-opt small { font-size: 12px; display: block; margin-top: 2px }
+/* Round 4. Compare: the chips and the care types stay pinned at the top; the chosen question moves up under them. */
+#main .cc-q-sticky { position: sticky; top: 0; z-index: 5; background: var(--bg, #f6f2ea); margin: 0 -16px; padding: 8px 16px 10px; box-shadow: 0 8px 12px -12px #6b5a0e55 }
+#main .cc-q-sticky .cc-cmp-ask { margin: 0 2px 6px }
+#main .cc-q-sticky .cc-cmp-chips { margin-bottom: 10px }
+#main .cc-q-sticky .cc-opt.is-small img { width: 54px; height: 54px; aspect-ratio: auto }
+/* Main page: the top card holds the four options and the compare button. */
+#main .cc-hero-opts .cc-opts { margin-top: 14px }
+#main .cc-hero-opts .cc-opt { background: #fffdf8; border-color: #fff; box-shadow: 0 2px 10px #a6905a1f }
+#main .cc-hero-cmp { margin-top: 10px; width: 100%; display: flex; align-items: center; gap: 10px; background: #fff; border: 0; border-radius: 16px; padding: 10px 12px; font: inherit; cursor: pointer; color: #2f2b1c; box-shadow: 0 2px 10px #a6905a1f }
+#main .cc-hero-cmp span { width: 36px; height: 36px; border-radius: 11px; background: #fcf7dd; display: grid; place-items: center }
+#main .cc-hero-cmp span svg { width: 22px; height: 22px }
+#main .cc-hero-cmp b { flex: 1; text-align: left; font-size: 15px; font-weight: 650 }
+#main .cc-hero-cmp i { font-style: normal; color: #8a7420; font-size: 18px }
+#main .cc-help { background: #fffdf8 }
+#main .cc-help-art { width: 56px; height: 56px; flex: none; border-radius: 11px; background: #fcf7dd; display: grid; place-items: center }
+#main .cc-help-art svg { width: 28px; height: 28px }
+/* The app shell hides overflow, which stops sticky; clip does the same job without breaking it (this page only). */
+#shell:has(.cc-q-sticky) { overflow: clip }
+#main .cc-opts .cc-opt { gap: 9px; padding: 7px }
+#main .cc-opts .cc-opt img, #main .cc-help-art { width: 46px; height: 46px; border-radius: 10px }
+#main .cc-help-art svg { width: 24px; height: 24px }
+#main .cc-opts + .hub-h2 { margin-top: 22px }
+#main .hub-h2 + .cc-opts { margin-bottom: 22px }
+/* Round 5. Main: light top card with its picture, then the four options as one row of photo cards. */
+#main .cc-hero-lite .cc-art { display: flex; justify-content: flex-end; margin: -6px -6px -10px 0 }
+#main .cc-hero-lite .cc-art svg { height: 112px; width: auto }
+#main .cc-row4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 7px }
+#main .cc-opt-v { flex-direction: column; align-items: stretch; gap: 5px; padding: 5px 5px 9px; text-align: left }
+#main .cc-opt-v img { width: 100%; height: auto; aspect-ratio: 1; border-radius: 11px }
+#main .cc-opt-v b { font-size: 12.5px; padding: 0 3px }
+#main .cc-opt-v small { font-size: 11.5px; padding: 0 3px }
+/* Compare: topic tabs (jump, and show where you are) and care types you can pick out. */
+#main .cc-tabs-row { display: flex; gap: 6px; margin: 0 0 10px; overflow-x: auto }
+#main .cc-tab { flex: 1; min-height: 36px; border-radius: 999px; border: 1px solid var(--line, #e7e0d2); background: #fffdf8; font: inherit; font-size: 13.5px; font-weight: 600; color: #4a432c; cursor: pointer; white-space: nowrap; padding: 0 10px }
+#main .cc-tab.is-on { background: #6b5a0e; border-color: #6b5a0e; color: #fff }
+#main .cc-pick { display: flex; flex-direction: column; align-items: center; gap: 4px; background: none; border: 0; padding: 0; font: inherit; cursor: pointer }
+#main .cc-pick-img { position: relative; display: block; width: 58px; height: 58px; border-radius: 14px; overflow: hidden; box-shadow: 0 0 0 2px transparent; transition: box-shadow .15s, opacity .15s }
+#main .cc-pick-img img { width: 100%; height: 100%; object-fit: cover; display: block }
+#main .cc-pick b { font-size: 12.5px; font-weight: 650; color: #2f2b1c; line-height: 1.2; text-align: center }
+#main .has-pick .cc-pick:not(.is-on) .cc-pick-img { opacity: .55 }
+#main .cc-pick.is-on .cc-pick-img { box-shadow: 0 0 0 2.5px #6b5a0e }
+#main .cc-pick-img i { position: absolute; right: 3px; top: 3px; width: 18px; height: 18px; border-radius: 50%; background: #6b5a0e; color: #fff; font-style: normal; font-size: 11px; font-weight: 800; display: grid; place-items: center }
+#main .cc-pick-hint { margin: 8px 0 0; text-align: center; font-size: 12px; color: #8a8270 }
+#main .cc-pick-go { display: block; margin: 8px auto 0; background: none; border: 0; font: inherit; font-size: 13.5px; font-weight: 650; color: #6b5a0e; cursor: pointer }
+#main .cc-q-cell.is-pick { background: #fcf7dd; box-shadow: 0 0 0 1.5px #e0c862; font-weight: 650; color: #3a3110 }
+#main .cc-q.has-pick .cc-q-cell:not(.is-pick) { opacity: .6 }
+#main .cc-q { scroll-margin-top: 200px }
+#main .cc-q-tail { height: 52vh }
+/* Round 6. Main page: four big photo cards. */
+#main .cc-grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 4px }
+#main .cc-card2 { display: flex; flex-direction: column; background: #fffdf8; border: 1px solid rgba(60, 50, 20, .08); border-radius: 18px; padding: 0 0 12px; overflow: hidden; font: inherit; text-align: left; cursor: pointer; box-shadow: 0 2px 10px #a6905a14 }
+#main .cc-card2 img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; margin-bottom: 9px }
+#main .cc-card2 b { font-size: 15px; font-weight: 650; color: #2f2b1c; padding: 0 12px }
+#main .cc-card2 small { font-size: 12.5px; line-height: 1.35; color: #6d6650; padding: 2px 12px 0 }
+/* Compare: one question at a time. */
+#main .cc-topic { position: relative; background: #fcf7dd; border-radius: 22px; padding: 16px 92px 16px 18px; margin: 4px 0 12px }
+#main .cc-topic-eyebrow { margin: 0 0 4px; font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: #8a7420 }
+#main .cc-topic h2 { margin: 0 0 6px; font-size: 21px; line-height: 1.2; color: #2b2732 }
+#main .cc-topic p:last-of-type { margin: 0; font-size: 13.5px; line-height: 1.45; color: #5c5636 }
+#main .cc-topic-art { position: absolute; right: 16px; top: 18px; width: 58px; height: 58px; border-radius: 18px; background: #fff; display: grid; place-items: center }
+#main .cc-topic-art svg { width: 32px; height: 32px }
+#main .cc-ask-card { display: flex; gap: 12px; align-items: flex-start; background: #fcf7dd; border-radius: 18px; padding: 14px 16px; margin-top: 12px }
+#main .cc-ask-card > span { width: 38px; height: 38px; flex: none; border-radius: 12px; background: #fff; display: grid; place-items: center }
+#main .cc-ask-card > span svg { width: 22px; height: 22px }
+#main .cc-ask-card b { display: block; font-size: 15px; color: #2b2732; margin-bottom: 2px }
+#main .cc-ask-card p { margin: 0; font-size: 14px; line-height: 1.45; color: #4a432c }
+#main .cc-dots-nav { display: flex; justify-content: center; gap: 7px; margin: 16px 0 4px }
+#main .cc-dots-nav i { width: 7px; height: 7px; border-radius: 50%; background: #e3d9b8 }
+#main .cc-dots-nav i.on { background: #6b5a0e }
+/* Care type pages: a photo, then good fit as three tiles. */
+#main .cc-type-photo { margin: 0 0 12px; border-radius: 20px; overflow: hidden; aspect-ratio: 16 / 9 }
+#main .cc-type-photo img { width: 100%; height: 100%; object-fit: cover; display: block }
+#main .cc-fit3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px }
+#main .cc-fit3 > div { background: #fffdf8; border: 1px solid rgba(60, 50, 20, .08); border-radius: 16px; padding: 12px 8px; display: flex; flex-direction: column; align-items: center; gap: 7px; text-align: center }
+#main .cc-fit3 span { width: 36px; height: 36px; border-radius: 11px; background: #fcf7dd; display: grid; place-items: center }
+#main .cc-fit3 span svg { width: 22px; height: 22px }
+#main .cc-fit3 b { font-size: 13px; font-weight: 600; line-height: 1.3; color: #2f2b1c }
+#main .cc-photo-head .dev-area-head-art { display: none }
+#main .cc-photo-head { padding-top: 16px }
+#main .cc-fit3 { margin-bottom: 18px }
+/* Compare: one header card only (the question's), so the page title is a plain line above the tabs. */
+#main [data-cc-page="compare"] .dev-area-head { background: none !important; padding: 4px 2px 10px; box-shadow: none }
+#main [data-cc-page="compare"] .dev-area-head-art, #main [data-cc-page="compare"] .dev-area-head .hub-context { display: none }
+#main [data-cc-page="compare"] .dev-area-head h1 { font-size: 24px }
+#main .cc-find { display: flex; gap: 10px; align-items: flex-start; margin: 12px 2px 4px; font-size: 13.5px; line-height: 1.45; color: #4a432c }
+#main .cc-find svg { width: 20px; height: 20px; flex: none; margin-top: 1px }
+#main .cc-find { margin-bottom: 14px }
+/* Round 8: summary pages (Yarden's mockup) */
+#main .cc-head-hidden { display: none }
+#main .cc-photo-hero { position: relative; border-radius: 22px; overflow: hidden; background: #fbf1d8; margin: 4px 0 14px; box-shadow: 0 2px 12px #a6905a1a }
+#main .cc-photo-hero img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; -webkit-mask-image: linear-gradient(#000 62%, transparent 100%); mask-image: linear-gradient(#000 62%, transparent 100%) }
+#main .cc-photo-hero > div { position: relative; margin-top: -64px; padding: 0 18px 18px }
+#main .cc-photo-hero .hub-eyebrow { display: inline-block; background: #fffdf8; color: #6b5a0e; border-radius: 999px; padding: 3px 10px; font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; font-weight: 700; margin: 0 0 6px }
+#main .cc-photo-hero h1 { font-family: var(--serif, Georgia, serif); font-size: 26px; line-height: 1.15; color: #2f2b1c; margin: 0 }
+#main .cc-seg { display: flex; background: #fffdf8; border: 1px solid rgba(60, 50, 20, .1); border-radius: 999px; padding: 3px; margin: 0 0 16px }
+#main .cc-seg button { flex: 1; border: 0; background: none; font: inherit; font-size: 14.5px; padding: 9px 6px; border-radius: 999px; color: #2f2b1c; cursor: pointer }
+#main .cc-seg button.is-on { background: #6b5a0e; color: #fff; font-weight: 600 }
+#main .cc-plan-row { margin: 14px 0 6px }
+#main .cc-plan-row .hub-row { background: #fcf3cf; border: 1px solid #f0d872 }
+#main .cc-minis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px }
+#main .cc-mini { display: flex; flex-direction: column; background: #fffdf8; border: 1px solid rgba(60, 50, 20, .08); border-radius: 14px; padding: 0 0 9px; overflow: hidden; font: inherit; text-align: left; cursor: pointer }
+#main .cc-mini img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; display: block; margin-bottom: 7px }
+#main .cc-mini b { font-size: 13px; font-weight: 650; line-height: 1.25; color: #2f2b1c; padding: 0 9px }
+#main .cc-sublabel { font-size: 13px; font-weight: 700; color: #6b5a0e; margin: 16px 2px 8px; letter-spacing: .02em }
+#main .cc-tabs { align-items: center }
+#main .cc-tab-sep { color: #b3a679; font-size: 16px; padding: 0 1px }
+#main .cc-next2 { width: 100%; margin-top: 18px }
+#main .cc-steps .cc-tabs { display: flex; gap: 2px }
+#main .cc-steps .cc-tabs button { flex: 1; flex-direction: row; justify-content: center; gap: 6px; font-size: 14px; padding: 9px 4px }
+#main .cc-steps .cc-tabs button.is-on { background: #f6e3a1; color: #2f2b1c }
+#main .cc-steps .cc-tab-sep { flex: 0 0 auto }
+#main .cc-seg button { text-align: center }
+#main .hub-detail .hub-button.cc-next2 { background: #6b5a0e !important; color: #fff !important; border: 0 }
+#main .cc-talk .cc-look-tile small { color: #6d6650 }
+/* Steps in order: numbered circles joined by a line */
+#main .cc-seq { list-style: none; margin: 0 0 16px; padding: 16px 16px 4px }
+#main .cc-seq li { position: relative; display: grid; grid-template-columns: 30px 1fr; gap: 12px; padding-bottom: 16px }
+#main .cc-seq li:not(:last-child)::before { content: ''; position: absolute; left: 14px; top: 32px; bottom: 2px; width: 2px; background: #f0d872 }
+#main .cc-seq i { width: 30px; height: 30px; border-radius: 50%; background: #6b5a0e; color: #fff; font-style: normal; font-weight: 700; font-size: 14px; display: grid; place-items: center }
+#main .cc-seq b { display: block; font-size: 15.5px; line-height: 1.3; padding-top: 4px; color: #2f2b1c }
+#main .cc-seq small { display: block; font-size: 14px; line-height: 1.45; color: #6d6650; margin-top: 3px }
+/* Round 9: Plan your care (Yarden's inspiration) */
+#main [data-cc-page="plan"] .dev-area-head { background: none !important; padding: 4px 2px 8px; box-shadow: none }
+#main [data-cc-page="plan"] .dev-area-head-art, #main [data-cc-page="plan"] .dev-area-head .hub-context { display: none }
+#main [data-cc-page="plan"] .dev-area-head h1 { font-size: 28px }
+#main .cc-two { background: #fcf3cf; border-radius: 20px; padding: 14px 12px 12px; margin: 4px 0 20px }
+#main .cc-two h2 { font-size: 17px; margin: 0 4px 10px; color: #2f2b1c }
+#main .cc-two > div { display: grid; grid-template-columns: 1fr 1fr; gap: 8px }
+#main .cc-two > div > div { background: #fffdf8; border-radius: 14px; padding: 10px; display: grid; grid-template-columns: 34px 1fr; column-gap: 8px; align-items: center }
+#main .cc-two span { grid-row: span 2; width: 34px; height: 34px; border-radius: 50%; background: #fcf3cf; display: grid; place-items: center }
+#main .cc-two span svg { width: 20px; height: 20px }
+#main .cc-two b { font-size: 14.5px; line-height: 1.2; color: #2f2b1c }
+#main .cc-two small { font-size: 12.5px; line-height: 1.3; color: #6d6650 }
+#main .cc-h2sub { margin: -4px 2px 12px; font-size: 13.5px; color: #6d6650 }
+#main .cc-route { list-style: none; margin: 0 0 16px; padding: 0 }
+#main .cc-route li { position: relative; display: grid; grid-template-columns: 34px 1fr; gap: 12px; align-items: center; padding-bottom: 10px }
+#main .cc-route li:not(:last-child)::before { content: ''; position: absolute; left: 16px; top: 50%; bottom: -50%; width: 2px; background: #f0d872; z-index: 0 }
+#main .cc-route i { position: relative; z-index: 1; width: 34px; height: 34px; border-radius: 50%; background: #fbeec0; color: #6b5a0e; font-style: normal; font-weight: 700; font-size: 15px; display: grid; place-items: center }
+#main .cc-route li.is-first i { background: #c9a227; color: #fff }
+#main .cc-route li > div { background: #fffdf8; border: 1px solid rgba(60, 50, 20, .09); border-radius: 16px; padding: 12px 14px }
+#main .cc-route li.is-first > div { background: #fcf3cf; border-color: #f0d872 }
+#main .cc-route b { display: block; font-size: 16px; color: #2f2b1c }
+#main .cc-route span { display: block; font-size: 14.5px; color: #2f2b1c; margin-top: 2px }
+#main .cc-route small { display: block; font-size: 13px; color: #6d6650; margin-top: 2px }
+#main .cc-more { padding: 0; margin: 4px 0 12px; overflow: hidden }
+#main .cc-more summary { list-style: none; display: grid; grid-template-columns: 40px 1fr 16px; gap: 12px; align-items: center; padding: 12px 14px; cursor: pointer }
+#main .cc-more summary::-webkit-details-marker { display: none }
+#main .cc-more summary::after { content: '⌄'; color: #8a8060; font-size: 18px; line-height: 1 }
+#main .cc-more[open] summary::after { transform: rotate(180deg) }
+#main .cc-more summary > span { width: 40px; height: 40px; border-radius: 12px; background: #fcf3cf; display: grid; place-items: center }
+#main .cc-more summary b { display: block; font-size: 15.5px; color: #2f2b1c }
+#main .cc-more summary small, #main .cc-more li small { display: block; font-size: 13.5px; color: #6d6650; line-height: 1.4 }
+#main .cc-more ul { list-style: none; margin: 0; padding: 0 14px 6px 66px }
+#main .cc-more li { padding: 9px 0; border-top: 1px solid rgba(60, 50, 20, .08) }
+#main .cc-more li b { display: block; font-size: 14.5px; color: #2f2b1c }
+#main .cc-worth-tip { display: flex; gap: 10px; align-items: flex-start; background: #eef1e2; border-radius: 14px; padding: 12px 14px; margin: 0 0 4px; font-size: 14px; line-height: 1.45; color: #3e4430 }
+#main .cc-worth-tip svg { flex: none; width: 22px; height: 22px }
+#main .cc-quizlink { display: block; margin: 12px auto 0; text-decoration: underline; color: #2f2b1c; font-size: 14.5px }
+#main .cc-route { display: block }
+#main .cc-two > div > div { grid-template-columns: 30px 1fr; padding: 10px 8px }
+#main .cc-two span { width: 30px; height: 30px }
+#main .cc-two span svg { width: 18px; height: 18px }
+#main .cc-two b { font-size: 14px; white-space: nowrap }
+/* Round 9: stage cards with a real photo */
+#main .cc-stage-hero { padding: 0 !important; overflow: hidden; background: #fcf3cf !important; border-radius: 22px; position: relative }
+#main .cc-stage-hero .cc-stage-photo { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover }
+#main .cc-stage-hero .cc-stage-copy { padding: 14px 18px 18px }
+#main .cc-stage-hero h1 { margin: 2px 0 6px }
+#main .cc-stage-hero .hub-lead { margin: 0 }
+#main .cc-stage-hero .cc-worth { margin: 0 14px 14px }
+#main .cc-stage-hero .cc-stage-photo { width: 100% !important; max-width: none !important; height: auto; margin: 0 !important; position: static !important; border-radius: 0 !important }
+#main .cc-stage-hero::before, #main .cc-stage-hero::after { display: none !important }
+#main .cc-stage-hero { display: block !important; min-height: 0 !important; height: auto !important }
+#main .cc-stage-hero .cc-stage-photo { padding: 0 !important }
+/* Round 10: care card in four sections, preview first */
+#main .cc-csec { padding: 0; margin: 0 0 10px; overflow: hidden }
+#main .cc-csec-head { all: unset; box-sizing: border-box; width: 100%; display: grid; grid-template-columns: 42px 1fr auto; gap: 12px; align-items: center; padding: 14px; cursor: pointer }
+#main .cc-csec-head > span { width: 42px; height: 42px; border-radius: 13px; background: #fcf3cf; display: grid; place-items: center }
+#main .cc-csec-head b { display: block; font-size: 16px; color: #2f2b1c }
+#main .cc-csec-head small { display: block; font-size: 13.5px; line-height: 1.4; color: #8a8060; margin-top: 2px }
+#main .cc-csec-head small.is-set { color: #2f2b1c }
+#main .cc-csec-head em { font-style: normal; font-size: 14px; font-weight: 650; color: #6b5a0e; background: #fcf3cf; border-radius: 999px; padding: 5px 12px }
+#main .cc-csec.is-open { border-color: #f0d872 }
+#main .cc-csec-body { padding: 0 14px 14px; border-top: 1px solid rgba(60, 50, 20, .08) }
+#main .cc-opt { margin-top: 12px }
+#main .cc-opt summary { cursor: pointer; font-size: 14px; font-weight: 650; color: #6b5a0e }
+#main .cc-center { text-align: center; margin-top: 8px }
+#main .cc-privacy { font-size: 13px; line-height: 1.45; color: #6d6650; margin: 14px 4px 0; text-align: center }
+#main .cc-fullcheck { margin-top: 4px } #main .cc-fullcheck .cc-checkwrap { padding: 0 14px 12px } #main .cc-chosen.hub-card { display: flex; padding: 14px; margin: 10px 0 }
+#main .cc-csec-body { padding-top: 12px }
+#main .cc-sleep-now { aspect-ratio: auto; position: relative; background: #fffdf8; border: 1px solid rgba(60, 50, 20, .08) }
+#main .cc-sleep-now img { aspect-ratio: 16 / 9; height: auto }
+#main .cc-sleep-now figcaption { padding: 12px 14px; font-size: 13.5px; line-height: 1.45; color: #6d6650 }
+#main .cc-sleep-now figcaption b { display: block; font-size: 15px; color: #2f2b1c; margin-bottom: 2px }
+#main .cc-two-f { display: grid; grid-template-columns: 1.2fr 1fr; gap: 8px }
+#main .cc-update { padding: 14px }
+#main .cc-update header { display: flex; gap: 10px; align-items: center; margin-bottom: 10px }
+#main .cc-update header span { width: 36px; height: 36px; border-radius: 50%; background: #fcf3cf; display: grid; place-items: center }
+#main .cc-update header b { display: block; font-size: 15.5px; color: #2f2b1c }
+#main .cc-update header small { font-size: 12.5px; color: #8a8060 }
+#main .cc-update dl { margin: 0 }
+#main .cc-update dl > div { display: grid; grid-template-columns: 112px 1fr; gap: 8px; padding: 9px 0; border-top: 1px solid rgba(60, 50, 20, .08) }
+#main .cc-update dt { display: flex; gap: 6px; align-items: center; font-size: 13px; font-weight: 650; color: #6b5a0e }
+#main .cc-update dt svg { width: 18px; height: 18px }
+#main .cc-update dd { margin: 0; font-size: 14px; line-height: 1.4; color: #2f2b1c }
+#main .cc-backup-f { padding: 0 14px 14px }
+#main .cc-two > p { margin: -6px 4px 10px; font-size: 13px; color: #6d6650 }
+#main .cc-plan-row + .hub-list, #main .cc-plan-row + h2 { margin-top: 18px }
+#main .cc-plan-row { margin-bottom: 18px }
+#main .cc-chosen small { display: block; font-size: 13px; color: #6d6650; font-weight: 400; margin-top: 2px }
+#main .cc-nudge { all: unset; box-sizing: border-box; display: block; width: 100%; background: #fdeee0; border-radius: 14px; padding: 12px 14px; margin: 14px 0 0; cursor: pointer }
+#main .cc-nudge b { display: block; font-size: 15px; color: #7a4b16 }
+#main .cc-nudge span { font-size: 13.5px; color: #7a5a35 }
+#main .cc-photo-hero h1 { font-family: inherit; font-size: 24px; font-weight: 700; letter-spacing: -.3px }
+/* Round 11: calmer pages (Yarden's inspiration) */
+#main .hub-detail[data-cc-page]:not([data-cc-page="plan"]):not([data-cc-page="compare"]) .ss-head { display: grid; grid-template-columns: 60px 1fr; column-gap: 14px; align-items: center; padding: 16px 16px 16px 14px }
+#main .hub-detail[data-cc-page]:not([data-cc-page="plan"]):not([data-cc-page="compare"]) .ss-head .dev-area-head-art { grid-row: 1 / span 2; width: 60px; height: 60px; margin: 0 }
+#main .hub-detail[data-cc-page]:not([data-cc-page="plan"]):not([data-cc-page="compare"]) .ss-head .hub-context { display: none }
+#main .hub-detail[data-cc-page]:not([data-cc-page="plan"]):not([data-cc-page="compare"]) .ss-head h1 { font-size: 24px; line-height: 1.15; margin: 0; align-self: end }
+#main .hub-detail[data-cc-page]:not([data-cc-page="plan"]):not([data-cc-page="compare"]) .ss-head .hub-lead { font-size: 14.5px; line-height: 1.4; margin: 3px 0 0; align-self: start }
+#main .cc-peek { padding: 0 14px; margin: 0 0 16px }
+#main .cc-peek details { border-top: 1px solid rgba(60, 50, 20, .08) }
+#main .cc-peek details:first-child { border-top: 0 }
+#main .cc-peek summary { list-style: none; display: grid; grid-template-columns: 38px 1fr 14px; gap: 12px; align-items: center; padding: 11px 0; cursor: pointer }
+#main .cc-peek summary::-webkit-details-marker { display: none }
+#main .cc-peek summary::after { content: '›'; color: #8a8060; font-size: 20px; line-height: 1; transition: transform .15s }
+#main .cc-peek details[open] summary::after { transform: rotate(90deg) }
+#main .cc-peek summary > span { width: 38px; height: 38px; border-radius: 50%; background: #fcf3cf; display: grid; place-items: center }
+#main .cc-peek summary > span svg { width: 21px; height: 21px }
+#main .cc-peek b { font-size: 15.5px; color: #2f2b1c; font-weight: 600 }
+#main .cc-peek p { margin: -4px 0 12px 50px; font-size: 14px; line-height: 1.45; color: #6d6650 }
+#main .cc-line { list-style: none; padding: 14px 16px 2px; margin: 0 0 16px }
+#main .cc-line li { position: relative; display: grid; grid-template-columns: 38px 1fr; gap: 14px; padding-bottom: 14px }
+#main .cc-line li:not(:last-child)::before { content: ''; position: absolute; left: 18px; top: 40px; bottom: 2px; width: 2px; background: #f0d872 }
+#main .cc-line li > span { width: 38px; height: 38px; border-radius: 50%; background: #fcf3cf; display: grid; place-items: center }
+#main .cc-line li > span svg { width: 21px; height: 21px }
+#main .cc-line b { display: block; font-size: 15.5px; color: #2f2b1c; padding-top: 1px }
+#main .cc-line small { display: block; font-size: 14px; color: #6d6650; line-height: 1.4 }
+#main .cc-callout { display: grid; grid-template-columns: 34px 1fr; gap: 14px; align-items: center; background: #fcf3cf; border-radius: 16px; padding: 14px 16px; margin: 4px 0 8px; font-size: 14.5px; line-height: 1.45; color: #2f2b1c }
+#main .cc-callout > span:first-child { border-right: 1px solid #e9d690; padding-right: 12px; display: grid; place-items: center }
+#main .cc-callout > span:first-child svg { width: 26px; height: 26px }
+#main .cc-update { padding: 4px 14px }
+#main .cc-update dl > div:first-child { border-top: 0 }
+#main .cc-update dl > div { grid-template-columns: 100px 1fr; align-items: center }
+/* Round 12 */
+#main .cc-more-links .hub-list { padding: 0 8px 8px }
+#main .cc-stage-hero + .cc-callout { margin-top: 12px }
+#main .cc-steps .cc-peek { margin-bottom: 8px }
+/* Round 13 */
+#main .cc-watch { padding: 4px 16px }
+#main .cc-watch p { display: grid; grid-template-columns: 14px 1fr; gap: 12px; margin: 0; padding: 12px 0; font-size: 14px; line-height: 1.45; color: #6d6650 }
+#main .cc-watch p + p { border-top: 1px solid rgba(60, 50, 20, .08) }
+#main .cc-watch i { width: 10px; height: 10px; border-radius: 50%; margin-top: 5px; background: #7fa45b }
+#main .cc-watch .is-act i { background: #c9623c }
+#main .cc-watch b { display: block; font-size: 15px; color: #2f2b1c }
+#main .cc-peek-photo { margin: 0 0 12px 50px; border-radius: 12px; overflow: hidden; background: #fbf6ea }
+#main .cc-peek-photo img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover }
+#main .cc-peek-photo figcaption { font-size: 13px; line-height: 1.4; color: #6d6650; padding: 8px 10px }
+#main .cc-family-photo img { aspect-ratio: 4 / 3 }
+#main button.cc-pin { border: 0; background: none; padding: 0; font: inherit; cursor: pointer }
+#main .cc-peek details.is-flash { background: #fcf3cf; transition: background .4s }
+#main .cc-more-links[open] summary small { display: none }
+#main .cc-more-links[open] summary b::after { content: ''; }
+#main .cc-room { position: relative } #main .cc-room button.cc-pin { z-index: 3; pointer-events: auto } #main .cc-room button.cc-pin span { pointer-events: auto }
+/* The soft wave where the photo meets the card (Yarden's inspiration) */
+#main .cc-stage-media { position: relative; line-height: 0 }
+#main .cc-stage-media .cc-wave { position: absolute; left: 0; right: 0; bottom: -1px; width: 100%; height: 30px; display: block }
+#main .cc-stage-media .cc-wave path { fill: #fcf3cf }
+#main .cc-stage-hero .cc-stage-copy { padding-top: 6px }
+#main .cc-stage-hero > .cc-stage-media { padding: 0 !important; margin: 0 !important; width: 100% !important; max-width: none !important }
+/* Stage pills (Nov 20) */
+#main .cc-pills { display: flex; gap: 4px; background: #fffdf8; border: 1px solid rgba(60, 50, 20, .1); border-radius: 999px; padding: 4px; margin: 2px 0 12px }
+#main .cc-pills button { flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; border: 0; background: none; font: inherit; font-size: 14px; font-weight: 600; color: #6d6650; padding: 9px 4px; border-radius: 999px; cursor: pointer }
+#main .cc-pills button.is-on { background: #6b5a0e; color: #fff }
+#main .cc-pills button i { width: 7px; height: 7px; border-radius: 50%; background: #c9a227; flex: none }
+#main .cc-pills button.is-on i { background: #f6e3a1 }
+#main .cc-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0) }
+#main .cc-pill-note { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: #fcf3cf; border-radius: 14px; padding: 8px 8px 8px 14px; margin: -4px 0 12px; font-size: 14px; color: #6d6650 }
+#main .cc-pill-note button { border: 0; background: #6b5a0e; color: #fff; font: inherit; font-size: 14px; font-weight: 650; padding: 8px 14px; border-radius: 999px; cursor: pointer; white-space: nowrap }
+/* Must-know safety rows: the line stays in view */
+#main .cc-peek .cc-must { display: grid; grid-template-columns: 38px 1fr; gap: 12px; padding: 11px 0; border-top: 1px solid rgba(60, 50, 20, .08) }
+#main .cc-peek > :first-child { border-top: 0 }
+#main .cc-peek .cc-must > span { width: 38px; height: 38px; border-radius: 50%; background: #fcf3cf; display: grid; place-items: center }
+#main .cc-peek .cc-must > span svg { width: 21px; height: 21px }
+#main .cc-peek .cc-must b { display: block; font-size: 15.5px; font-weight: 600; color: #2f2b1c; padding-top: 1px }
+#main .cc-peek .cc-must small { display: block; font-size: 14px; line-height: 1.4; color: #6d6650; margin-top: 2px }
+#main .cc-photo-peek { border: 0 !important; margin-top: 6px }
+#main .cc-photo-peek > summary { display: inline-block; padding: 0; font-size: 14px; font-weight: 650; color: #6b5a0e; cursor: pointer; list-style: none }
+#main .cc-photo-peek > summary::after { content: ' ›'; }
+#main .cc-photo-peek[open] > summary::after { content: ' ⌄'; }
+#main .cc-photo-peek .cc-peek-photo { margin: 8px 0 0 }
+#main .cc-911 { background: #fbe4dc; color: #6e2f1c; border-radius: 14px; padding: 12px 16px; margin: 0 0 8px; font-size: 14.5px; line-height: 1.45 }
+#main .cc-911 b { color: #a3341b }
