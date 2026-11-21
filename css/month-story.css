@@ -1308,3 +1308,12 @@
 #main .tl-track .tl-baby .tl-hb{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 2px 3px rgba(43,40,64,.18))}
 #main .tl-track .tl-flag{right:-62px!important;bottom:-53px!important;width:36px!important;height:40px!important;opacity:1!important}
 #main .tl-track .tl-flag .tl-cakeimg{display:block;width:100%;height:auto;filter:drop-shadow(0 3px 4px rgba(43,40,64,.16))}
+/* Home: month-birthday keepsake card (quiet cream; the tilted keepsake preview is the only color) */
+#main .hg-banner.hg-keep{background:#fffaf6!important;border:1px solid var(--line,#ece5da)!important;padding:8px 14px!important;gap:16px!important;overflow:visible;cursor:pointer}
+#main .hg-keep-card{position:relative;flex:none;width:44px;aspect-ratio:941/1672;transform:rotate(-6deg);margin:-6px 0 -6px 4px;border-radius:5px;overflow:hidden;box-shadow:0 0 0 2.5px #fff,0 4px 10px rgba(43,40,64,.16)}
+#main .hg-keep-card img{display:block;width:100%;height:100%;object-fit:cover}
+#main .hg-keep-card i{position:absolute;left:50%;top:66%;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;background:rgba(255,255,255,.9);color:#8a8494;font:600 12px/16px system-ui,sans-serif;font-style:normal;text-align:center}
+#main .hg-keep .hg-keep-copy{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+#main .hg-keep .hg-keep-copy b{font-family:inherit!important;font-weight:700!important;font-size:17px!important;line-height:1.25;color:#2b2840;white-space:normal!important}
+#main .hg-keep-go{font-size:15px;font-weight:700;color:var(--kp)}
+#main .hg-keep-go i{font-style:normal;margin-left:2px}

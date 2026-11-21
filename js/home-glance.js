@@ -153,7 +153,7 @@
       // The "Hello, World!" foil balloon from the newborn page in Memories (there's no number balloon for the newborn weeks).
       const cam = `<img class="hg-banner-img hg-banner-hello" src="assets/home/hello-world.png?v=7" alt="">`;
       const bn0 = `linear-gradient(100deg,${mix('#f2a98a', .84)} 0%,#fffaf6 80%)`;
-      return `<label class="hg-banner" style="--bn:${bn0}" role="button" onclick="try{localStorage.setItem('ahead-photo-banner-0','1')}catch(e){};setTimeout(()=>{const b=document.querySelector('#main .hg-banner');b&&b.remove()},400)">${cam}<span class="hg-banner-copy"><b>${F(`${name()}’s newborn photo`)}</b><small>${F('Snap one for Memories.')}</small></span><span class="hg-banner-plus" aria-hidden="true">＋</span>${typeof hubPhotoInput === 'function' ? hubPhotoInput(0) : ''}</label>`;
+      return `<label class="hg-banner hg-keep" role="button" style="--kp:color-mix(in srgb, #f2a98a 55%, #2b2840)" onclick="try{localStorage.setItem('ahead-photo-banner-0','1')}catch(e){};setTimeout(()=>{const b=document.querySelector('#main .hg-banner');b&&b.remove()},400)"><span class="hg-keep-card" aria-hidden="true"><img src="assets/share/month-0.jpg" alt=""><i>+</i></span><span class="hg-keep-copy"><b>${F(`${name()}’s newborn keepsake`)}</b><span class="hg-keep-go">${F('Add a photo')} <i aria-hidden="true">→</i></span></span>${typeof hubPhotoInput === 'function' ? hubPhotoInput(0) : ''}</label>`;
     }
     const photo = b.querySelector('.hub-bday-photo'); if (!photo || photo.querySelector('img')) return '';   // photo already added
     const m = +((b.querySelector('.hub-bday-num') || {}).textContent || 0); if (!m || m > 11) return '';
@@ -166,7 +166,10 @@
     // The balloon photos' own colors (sampled from assets/home/balloon-N.png), so the tint matches the balloon it sits behind.
     const BLN = ['#f2a98a', '#24ace4', '#6793d1', '#3da582', '#48a084', '#199fe4', '#eca842', '#f09266', '#ec6f8b', '#f1705b', '#bd6cd7', '#6c77e5'];
     const bn = `linear-gradient(100deg,${mix(BLN[m], .84)} 0%,#fffaf6 80%)`;  // one warm white every month; the balloon tint is the only thing that changes
-    return `<label class="hg-banner" style="--bn:${bn}" role="button" onclick="try{localStorage.setItem('${key}','1')}catch(e){};setTimeout(()=>{const b=document.querySelector('#main .hg-banner');b&&b.remove()},400)"><img class="hg-banner-img" src="assets/home/balloon-${m}.png" alt=""><span class="hg-banner-copy"><b>${F(`${name()}’s ${m}-month photo`)}</b><small>${F('Snap one today for Memories.')}</small></span><span class="hg-banner-plus" aria-hidden="true">＋</span>${input ? input.outerHTML : ''}</label>`;
+    // The keepsake card: a tilted preview of the month's keepsake (the same artwork the share card uses) with an empty
+    // frame, so parents see what they'll get. Quiet cream card; the whole card opens the photo picker.
+    const ink = `color-mix(in srgb, ${BLN[m]} 55%, #2b2840)`;
+    return `<label class="hg-banner hg-keep" role="button" style="--kp:${ink}" onclick="try{localStorage.setItem('${key}','1')}catch(e){};setTimeout(()=>{const b=document.querySelector('#main .hg-banner');b&&b.remove()},400)"><span class="hg-keep-card" aria-hidden="true"><img src="assets/share/month-${m}.jpg" alt=""><i>+</i></span><span class="hg-keep-copy"><b>${F(`${name()}’s ${m}-month keepsake`)}</b><span class="hg-keep-go">${F('Add a photo')} <i aria-hidden="true">→</i></span></span>${input ? input.outerHTML : ''}</label>`;
   }
 
   // Home as "Through her eyes" + "You might notice…" (Nov 9 mock, 3 months written).
