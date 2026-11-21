@@ -122,3 +122,13 @@
 #main .care-news-card i { font-style: normal; align-self: center; color: #a3a0a8; font-size: 22px; padding: 0 14px 0 4px }
 #main .care-news-card b, #main .care-news-card small, #main .care-newline p, #main .care-newline small, #main .care-v2 .dev-area-head h1, #main .care-v2 .dev-area-head .hub-lead { text-wrap: pretty }
 #main .care-hero.care-life .hub-lead, #main .care-hero.care-life h1 { max-width: none !important; width: auto !important; margin-right: 0 !important; padding-right: 0 !important }
+
+/* Stage tabs, like Development's */
+#main .care-tabs { display: flex; gap: 6px; margin: 4px 0 14px }
+#main .care-tabs::-webkit-scrollbar { display: none }
+#main .care-tabs button { all: unset; flex: 1; text-align: center; position: relative; cursor: pointer; font-size: 14.5px; font-weight: 600; color: #2a6078; background: #fffefb; border: 1px solid var(--line, #e1e5d9); border-radius: 999px; padding: 9px 4px; line-height: 1.2 }
+#main .care-tabs button.is-on { background: #2a6078; border-color: #2a6078; color: #fff }
+#main .care-see .care-see-art.ph-tile { overflow: hidden }
+#main .care-v2 .care-hero .st-chip { display: none }
+#main .care-tabs button.is-now::after { content: ""; position: absolute; top: 4px; right: 8px; width: 7px; height: 7px; border-radius: 50%; background: #e08a6b }
+#main:has(.care-tabs) .st-banner { display: none }

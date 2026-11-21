@@ -9,7 +9,7 @@
 (function () {
   const F = s => (window.__hub ? window.__hub.F(s) : s);
   const CAT = 'Daily rhythm';
-  const src = n => `assets/care/${n}.jpg?v=1120a`;
+  const src = n => `assets/care/${n}.jpg?v=1120b`;
   const img = (n, alt) => `<img src="${src(n)}" alt="${F(alt).replace(/"/g, '&quot;')}" loading="lazy">`;
   const pin = ([label, x, y, side]) => `<span class="ph-pin ph-pin-${side}" style="left:${x}%;top:${y}%"><i></i><span>${F(label)}</span></span>`;
   const photo = (n, alt, pins, cls = '') => `<figure class="ph-photo ph-hero care-ph ${cls}">${img(n, alt)}${(pins || []).map(pin).join('')}</figure>`;
@@ -27,6 +27,7 @@
   const SEE = { 'rash:peeling': 'peeling', 'rash:newborn': 'milia', 'look:0:cord': 'cord', 'rash:acne': 'acne', 'rash:cradle': 'cradle', 'look:1:poop': 'cleandiaper',
     'rash:drool': 'drool', 'p:teething': 'soregums', 'rash:eczema': 'eczema', 'look:3:poop': 'solids', 'rash:heat': 'heat' };
   // Is this normal? pages: the photo for "What it looks like".
+  const TILE_CROP = { milia: [55, 55, 1.9], cradle: [52, 22, 1.8], heat: [50, 48, 1.5], peeling: [22, 45, 1.3], cord: [50, 50, 1.25], acne: [30, 55, 1.3] };
   const RASH = { peeling: 'peeling', newborn: 'milia', acne: 'acne', cradle: 'cradle', drool: 'drool', eczema: 'eczema', heat: 'heat' };
 
   // How-to pages: [section title, photo, alt, pins]. Pins name the thing they sit next to, and say why it matters.
@@ -35,7 +36,7 @@
     [/^p:tub/, ['A safe tub bath', 'tubbath', 'A baby in a baby tub, a hand behind the head', [['A hand behind the head', 18, 21, 'r'], ['About 2 inches of water', 58, 84, 'l']]], 'bath'],
     [/^t:bath:2/, ['Bath, then bed', 'bedtime', 'A baby wrapped in a towel after a bath, pajamas and a sleep sack laid out', [['Straight into a towel', 30, 30, 'r'], ['Pajamas laid out first', 74, 52, 'l']]], 'bath'],
     [/^t:bath:3/, ['The big tub, set up', 'bigtub', 'A family tub with shallow water, a towel ready on the edge', [['Shallow water', 62, 66, 'l']]], 'bath'],
-    [/^cord/, ['Let the cord air out', 'cord', 'A newborn belly, the cord stump open to the air', [['Left open to the air', 50, 52, 'r']]], 'cord'],
+    [/^cord/, ['Let the cord air out', 'cord', 'A newborn belly, the cord stump open to the air', [['Diaper folded below it', 50, 74, 'r']]], 'cord'],
     [/^(h|t):diapers:[01]/, ['A diaper that fits', 'diaper', 'Fastening a clean diaper at the waist', [['Two fingers fit at the waist', 54, 40, 'l']]], 'diapers'],
     [/^(h:diapers:2|t:diapers:[23])/, ['A floor-mat change', 'wriggle', 'Changing a baby on a floor mat, a toy in hand and a hand on the tummy', [['Something to hold', 40, 42, 'l'], ['A hand on {o}', 32, 74, 'r'], ['All in reach', 90, 54, 'l']]], 'diapers'],
     [/^h:skin/, ['Cream on dry patches', 'cream', 'Smoothing thick cream onto a baby’s leg after a bath', [['A thick, fragrance-free cream', 50, 46, 'b']]], 'skin'],
@@ -171,9 +172,23 @@
     if (h2) { const list = h2.nextElementSibling; if (list && list.nextElementSibling && list.nextElementSibling.classList.contains('care-same')) list.nextElementSibling.remove(); if (list) list.remove(); h2.remove(); }
   }
 
+  // Stage tabs at the top, like Development and Feeding (in place of "All stages ›").
+  const TABS = ['Newborn', '1–3 mo', '4–6 mo', '6–12 mo'];
+  function stageTabs(main, v) {
+    if (main.querySelector('.care-tabs')) return;
+    // The app adds a "Looking back / Previewing" banner on stages that aren't the baby's; the tabs replace it.
+    setTimeout(() => { const bn = main.querySelector('.st-banner'); if (bn) bn.remove(); else window.__careNow = v;
+      main.querySelectorAll('.care-tabs button').forEach((b, i) => b.classList.toggle('is-now', i === window.__careNow)); }, 0);
+    const now = window.__careNow;
+    const chip = main.querySelector('.care-hero .st-chip'); if (chip) chip.remove();
+    const nav = `<nav class="care-tabs" aria-label="Everyday care by age">${TABS.map((t, i) => `<button class="${i === v ? 'is-on' : ''}${i === now ? ' is-now' : ''}" onclick="openPage('chg:${CAT}:s:${i}')"${i === v ? ' aria-current="page"' : ''}>${F(t)}</button>`).join('')}</nav>`;
+    const head = main.querySelector('.monthly-page-header'); if (head) head.insertAdjacentHTML('afterend', nav);
+  }
+
   function dressHome(main) {
     const v = Number((main.querySelector('[data-care-stage]') || {}).dataset?.careStage);
     const hero = main.querySelector('.care-hero.care-disc');
+    stageTabs(main, v);
     if (hero && !hero.classList.contains('care-life')) {
       const art = hero.querySelector('.care-art'), h = HERO[v] || HERO[0];
       if (art) art.outerHTML = `<div class="sf-photo care-life-photo">${img(h[0], h[1])}</div>`;
@@ -185,9 +200,12 @@
       hero.classList.add('care-life');
     }
     if (hero) newCards(main, hero, v);
+    main.querySelectorAll('a, button').forEach(a => { if (a.childNodes.length && /^All how-tos/.test(a.textContent.trim())) a.firstChild.textContent = a.firstChild.textContent.replace('All how-tos', 'All care how-tos'); });
     main.querySelectorAll('.care-see > button').forEach(b => {
-      const n = SEE[routeOf(b)], art = b.querySelector('.care-see-art'); if (!n || !art || art.classList.contains('ph-tile')) return;
+      const r = routeOf(b), n = v === 3 && r === 'p:teething' ? 'hero-2' : SEE[r], art = b.querySelector('.care-see-art'); if (!n || !art || art.classList.contains('ph-tile')) return;
       art.className = 'care-see-art ph-tile'; art.innerHTML = img(n, b.textContent.trim()); b.classList.add('care-see-ph');
+      // Small tiles zoom in on the thing itself, so it reads at this size.
+      const c = TILE_CROP[n], im = art.querySelector('img'); if (c && im) { im.style.objectPosition = `${c[0]}% ${c[1]}%`; im.style.transformOrigin = `${c[0]}% ${c[1]}%`; im.style.transform = `scale(${c[2]})`; }
     });
   }
 
