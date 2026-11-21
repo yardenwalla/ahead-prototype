@@ -31,19 +31,19 @@
 
   // How-to pages: [section title, photo, alt, pins]. Pins name the thing they sit next to, and say why it matters.
   const PAGE = [
-    [/^p:sponge/, ['How it looks', 'sponge', 'A sponge bath on a towel: one arm washed at a time, the rest wrapped', [['The rest stays wrapped', 30, 74, 'r'], ['A bowl of warm water', 86, 60, 'l']]], 'bath'],
-    [/^p:tub/, ['How it looks', 'tubbath', 'A baby in a baby tub, a hand behind the head', [['A hand behind the head', 18, 21, 'r'], ['About 2 inches of water', 58, 84, 'l']]], 'bath'],
-    [/^t:bath:2/, ['How it looks', 'bedtime', 'A baby wrapped in a towel after a bath, pajamas and a sleep sack laid out', [['Straight into a towel', 30, 30, 'r'], ['Pajamas laid out first', 74, 52, 'l']]], 'bath'],
-    [/^t:bath:3/, ['How it looks', 'bigtub', 'A family tub with shallow water, a towel ready on the edge', [['Shallow water', 62, 66, 'l']]], 'bath'],
-    [/^cord/, ['How it looks', 'cord', 'A newborn belly, the cord stump open to the air', [['Left open to the air', 50, 52, 'r']]], 'cord'],
-    [/^(h|t):diapers:[01]/, ['How it looks', 'diaper', 'Fastening a clean diaper at the waist', [['Two fingers fit at the waist', 54, 40, 'l']]], 'diapers'],
-    [/^(h:diapers:2|t:diapers:[23])/, ['How it looks', 'wriggle', 'Changing a baby on a floor mat, a toy in hand and a hand on the tummy', [['Something to hold', 40, 42, 'l'], ['A hand on {o}', 32, 74, 'r'], ['All in reach', 90, 54, 'l']]], 'diapers'],
-    [/^h:skin/, ['How it looks', 'cream', 'Smoothing thick cream onto a baby’s leg after a bath', [['A thick, fragrance-free cream', 50, 46, 'b']]], 'skin'],
+    [/^p:sponge/, ['A sponge bath, set up', 'sponge', 'A sponge bath on a towel: one arm washed at a time, the rest wrapped', [['The rest stays wrapped', 30, 74, 'r'], ['A bowl of warm water', 86, 60, 'l']]], 'bath'],
+    [/^p:tub/, ['A safe tub bath', 'tubbath', 'A baby in a baby tub, a hand behind the head', [['A hand behind the head', 18, 21, 'r'], ['About 2 inches of water', 58, 84, 'l']]], 'bath'],
+    [/^t:bath:2/, ['Bath, then bed', 'bedtime', 'A baby wrapped in a towel after a bath, pajamas and a sleep sack laid out', [['Straight into a towel', 30, 30, 'r'], ['Pajamas laid out first', 74, 52, 'l']]], 'bath'],
+    [/^t:bath:3/, ['The big tub, set up', 'bigtub', 'A family tub with shallow water, a towel ready on the edge', [['Shallow water', 62, 66, 'l']]], 'bath'],
+    [/^cord/, ['Let the cord air out', 'cord', 'A newborn belly, the cord stump open to the air', [['Left open to the air', 50, 52, 'r']]], 'cord'],
+    [/^(h|t):diapers:[01]/, ['A diaper that fits', 'diaper', 'Fastening a clean diaper at the waist', [['Two fingers fit at the waist', 54, 40, 'l']]], 'diapers'],
+    [/^(h:diapers:2|t:diapers:[23])/, ['A floor-mat change', 'wriggle', 'Changing a baby on a floor mat, a toy in hand and a hand on the tummy', [['Something to hold', 40, 42, 'l'], ['A hand on {o}', 32, 74, 'r'], ['All in reach', 90, 54, 'l']]], 'diapers'],
+    [/^h:skin/, ['Cream on dry patches', 'cream', 'Smoothing thick cream onto a baby’s leg after a bath', [['A thick, fragrance-free cream', 50, 46, 'b']]], 'skin'],
     [/^t:clothes/, ['Three layers, for example', 'clothes', 'A bodysuit, pajamas and a sleep sack laid out', [['Bodysuit', 30, 26, 'r'], ['Pajamas', 62, 40, 'r'], ['Sleep sack', 25, 66, 'r']]], 'clothes'],
-    [/^t:sun/, ['How it looks', 'sun', 'A baby in a sun hat and long sleeves, in the stroller’s shade', [['Wide-brimmed hat', 42, 28, 'l'], ['Long, light sleeves', 24, 76, 'r']]], 'sun'],
+    [/^t:sun/, ['A sun-safe outfit', 'sun', 'A baby in a sun hat and long sleeves, in the stroller’s shade', [['Wide-brimmed hat', 42, 28, 'l'], ['Long, light sleeves', 24, 76, 'r']]], 'sun'],
     [/^p:teething/, ['What to do', 'teethers', 'A teething ring and a firm rubber teether', [['Chilled, not frozen', 44, 62, 'b'], ['Firm rubber', 80, 47, 'b']], '', 'What to do'], 'teeth'],
-    [/^h:gums/, ['How it looks', 'gums', 'Wiping a baby’s gums with a cloth on a finger', [['A soft, damp cloth', 40, 72, 'r']]], 'teeth'],
-    [/^p:feet/, ['How it looks', 'feet', 'A barefoot baby standing at the sofa', [['Bare feet grip the floor', 48, 90, 'r']]], 'clothes']
+    [/^h:gums/, ['Wiping the gums', 'gums', 'Wiping a baby’s gums with a cloth on a finger', [['A soft, damp cloth', 40, 72, 'r']]], 'teeth'],
+    [/^p:feet/, ['Barefoot indoors', 'feet', 'A barefoot baby standing at the sofa', [['Bare feet grip the floor', 48, 90, 'r']]], 'clothes']
   ];
 
   // How it changes: the gear as a path, the same block as Outings' "Which seat, and when". Each step is named by the cue
@@ -164,7 +164,8 @@
     if (!NEWS[v] || main.querySelector('.care-news')) return;
     const go = r => `openPage('chg:${CAT}:d:${r}')`;
     const cards = NEWS[v].slice(1).map(([r, t, l, n]) => `<button class="care-news-card" onclick="${go(r)}">${img(n, '')}<span><b>${F(t)}</b><small>${F(l)}</small></span><i aria-hidden="true">›</i></button>`).join('');
-    if (cards) hero.insertAdjacentHTML('afterend', `<div class="care-news">${cards}</div>`);
+    const who = ((main.querySelector('h2.hub-h2') && [...main.querySelectorAll('h2.hub-h2')].map(h => h.textContent).find(t => /^Right now for /.test(t))) || '').replace(/^Right now for /, '');
+    if (cards) hero.insertAdjacentHTML('afterend', `<h2 class="hub-h2 care-news-h">${who ? F('Also new for ') + who : F('Also new now')}</h2><div class="care-news">${cards}</div>`);
     // The old "Right now" list and its "Same as before" line go: every new thing is now a card.
     const h2 = [...main.querySelectorAll('h2.hub-h2')].find(h => /^(Right now for|At this stage)/.test(h.textContent));
     if (h2) { const list = h2.nextElementSibling; if (list && list.nextElementSibling && list.nextElementSibling.classList.contains('care-same')) list.nextElementSibling.remove(); if (list) list.remove(); h2.remove(); }

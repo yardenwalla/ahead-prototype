@@ -2,7 +2,8 @@
 
 /* Top card: sized by its content like Feeding's and Health's, a real photo in place of the drawn scene */
 #main .care-hero.care-disc.care-life { height: auto; min-height: 0 }
-#main .care-life h1, #main .care-life .hub-lead { text-wrap: balance }
+#main .care-life h1 { text-wrap: balance }
+#main .care-life .hub-lead { text-wrap: pretty }
 #main .care-life .care-life-photo { aspect-ratio: 16 / 10; margin: 14px 0 0; box-shadow: 0 6px 18px #2a607824 }
 #main .care-life .care-life-photo img { object-position: 50% 40% }
 /* New now: one quiet line, like Feeding's Try this */
@@ -111,11 +112,13 @@
 /* Stage main page (Nov 20, her mockup): the main change in the top card, every other new thing as a card under it */
 #main .care-life .care-newline p { font-size: 16px; font-weight: 700; color: #2a6078; line-height: 1.3 }
 #main .care-life .hub-lead { max-width: none !important; padding-right: 0 !important }
-#main .care-news { display: grid; gap: 10px; margin: 14px 0 6px }
+#main .care-news-h { margin: 22px 2px 10px }
+#main .care-news { display: grid; gap: 10px; margin: 0 0 6px }
 #main .care-news-card { all: unset; box-sizing: border-box; display: flex; align-items: stretch; background: #fffefb; border: 1px solid var(--line, #e1e5d9); border-radius: 18px; overflow: hidden; cursor: pointer; min-height: 84px }
-#main .care-news-card img { width: 104px; flex: none; object-fit: cover; display: block }
+#main .care-news-card img { width: 88px; flex: none; object-fit: cover; display: block }
 #main .care-news-card > span { flex: 1; padding: 13px 8px 13px 14px; display: flex; flex-direction: column; justify-content: center }
 #main .care-news-card b { font-size: 16px; font-weight: 700; color: var(--ink); line-height: 1.28 }
 #main .care-news-card small { font-size: 13.5px; line-height: 1.35; color: #6b6670; margin-top: 3px }
 #main .care-news-card i { font-style: normal; align-self: center; color: #a3a0a8; font-size: 22px; padding: 0 14px 0 4px }
-#main .fd-glance .fd-gl > div { --sm-bg: #e3f1f7 !important; --sm-ink: #2a6078 !important }
+#main .care-news-card b, #main .care-news-card small, #main .care-newline p, #main .care-newline small, #main .care-v2 .dev-area-head h1, #main .care-v2 .dev-area-head .hub-lead { text-wrap: pretty }
+#main .care-hero.care-life .hub-lead, #main .care-hero.care-life h1 { max-width: none !important; width: auto !important; margin-right: 0 !important; padding-right: 0 !important }
