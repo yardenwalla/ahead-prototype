@@ -270,3 +270,15 @@
 #main .ssw-always .hub-row { background: #f6f4fb }
 #main .ssw-topic-head .dev-area-head-art { display: none }
 #main .ssw-topic-head { padding-top: 18px !important; padding-bottom: 18px !important }
+/* Bedtime: how the evening fits together */
+#main .ssw-evening { list-style: none; margin: 4px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); position: relative }
+#main .ssw-evening::before { content: ""; position: absolute; left: 16.6%; right: 16.6%; top: 25px; height: 2px; background: #dcdcf0 }
+#main .ssw-evening li { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 2px }
+#main .ssw-evening i { width: 50px; height: 50px; border-radius: 50%; display: grid; place-items: center; background: #eeeef9; color: #5a5296; box-shadow: 0 0 0 4px #fff, 0 0 0 5px #e4e2f2; margin-bottom: 8px }
+#main .ssw-evening i svg { width: 26px; height: 26px }
+#main .ssw-evening .is-sun i { background: #fff1cc; color: #b0812a }
+#main .ssw-evening .is-moon i { background: #e3e4f6 }
+#main .ssw-evening b { font-size: 15.5px; color: var(--ink) }
+#main .ssw-evening span { font-size: 13px; color: #6b6670 }
+#main .ssw-evetip { position: relative; margin: 14px 0 0; padding: 11px 12px 11px 36px; background: #f1f0fa; border-radius: 14px; font-size: 13.5px; line-height: 1.45; color: #4d4a5e }
+#main .ssw-evetip i { position: absolute; left: 13px; top: 10px; font-style: normal; color: #5a5296 }
