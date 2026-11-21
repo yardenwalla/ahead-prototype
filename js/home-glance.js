@@ -153,7 +153,7 @@
       // The "Hello, World!" foil balloon from the newborn page in Memories (there's no number balloon for the newborn weeks).
       const cam = `<img class="hg-banner-img hg-banner-hello" src="assets/home/hello-world.png?v=7" alt="">`;
       const bn0 = `linear-gradient(100deg,${mix('#f2a98a', .84)} 0%,#fffaf6 80%)`;
-      return `<label class="hg-banner hg-keep" role="button" style="--kp:color-mix(in srgb, #f2a98a 55%, #2b2840)" onclick="try{localStorage.setItem('ahead-photo-banner-0','1')}catch(e){};setTimeout(()=>{const b=document.querySelector('#main .hg-banner');b&&b.remove()},400)"><span class="hg-keep-card" aria-hidden="true"><img src="assets/share/month-0.jpg" alt=""><i>+</i></span><span class="hg-keep-copy"><b>${F(`${name()}’s newborn keepsake`)}</b><span class="hg-keep-go">${F('Add a photo')}</span></span><span class="hub-chev" aria-hidden="true">›</span>${typeof hubPhotoInput === 'function' ? hubPhotoInput(0) : ''}</label>`;
+      return `<label class="hg-banner hg-keep" role="button" style="--kp:color-mix(in srgb, #f2a98a 55%, #2b2840)" onclick="try{localStorage.setItem('ahead-photo-banner-0','1')}catch(e){};setTimeout(()=>{const b=document.querySelector('#main .hg-banner');b&&b.remove()},400)"><span class="hg-keep-card" aria-hidden="true"><img src="assets/share/month-0.jpg" alt=""><i>+</i></span><span class="hg-keep-copy"><b>${F(`${name()}’s newborn keepsake`)}</b><span class="hg-keep-go">${F('Add a photo')} <i aria-hidden="true">→</i></span></span>${typeof hubPhotoInput === 'function' ? hubPhotoInput(0) : ''}</label>`;
     }
     const photo = b.querySelector('.hub-bday-photo'); if (!photo || photo.querySelector('img')) return '';   // photo already added
     const m = +((b.querySelector('.hub-bday-num') || {}).textContent || 0); if (!m || m > 11) return '';
@@ -169,7 +169,7 @@
     // The keepsake card: a tilted preview of the month's keepsake (the same artwork the share card uses) with an empty
     // frame, so parents see what they'll get. Quiet cream card; the whole card opens the photo picker.
     const ink = `color-mix(in srgb, ${BLN[m]} 55%, #2b2840)`;
-    return `<label class="hg-banner hg-keep" role="button" style="--kp:${ink}" onclick="try{localStorage.setItem('${key}','1')}catch(e){};setTimeout(()=>{const b=document.querySelector('#main .hg-banner');b&&b.remove()},400)"><span class="hg-keep-card" aria-hidden="true"><img src="assets/share/month-${m}.jpg" alt=""><i>+</i></span><span class="hg-keep-copy"><b>${F(`${name()}’s ${m}-month keepsake`)}</b><span class="hg-keep-go">${F('Add a photo')}</span></span><span class="hub-chev" aria-hidden="true">›</span>${input ? input.outerHTML : ''}</label>`;
+    return `<label class="hg-banner hg-keep" role="button" style="--kp:${ink}" onclick="try{localStorage.setItem('${key}','1')}catch(e){};setTimeout(()=>{const b=document.querySelector('#main .hg-banner');b&&b.remove()},400)"><span class="hg-keep-card" aria-hidden="true"><img src="assets/share/month-${m}.jpg" alt=""><i>+</i></span><span class="hg-keep-copy"><b>${F(`${name()}’s ${m}-month keepsake`)}</b><span class="hg-keep-go">${F('Add a photo')} <i aria-hidden="true">→</i></span></span>${input ? input.outerHTML : ''}</label>`;
   }
 
   // Home as "Through her eyes" + "You might notice…" (Nov 9 mock, 3 months written).
@@ -589,7 +589,10 @@
     // until the photo is added or the birthday has passed (Yarden, Nov 9).
     const ageLine = main.querySelector('.home-age-line'), top = banner(main), question = top ? null : main.querySelector('.connected-checkin');
     if (M) {
-      main.innerHTML = '<div class="hg-page">' + top + (question ? question.outerHTML : '') + monthCard(M, lead, a, [lead, ...(rest || []), ...(later || [])].filter(Boolean).find(c => !({1:['crying'],5:[],8:['sep']}[homeMonth()] || []).includes(c.id))) + `<p class="connected-preview-footnote">${F('Ahead isn’t medical advice and doesn’t replace your pediatrician.')}</p></div>`;
+      // The keepsake card sits under the month card (Yarden's Nov 20 mock): the month leads, the keepsake follows.
+      const keep = top && top.includes('hg-keep');
+      main.innerHTML = '<div class="hg-page">' + (keep ? '' : top) + (question ? question.outerHTML : '') + monthCard(M, lead, a, [lead, ...(rest || []), ...(later || [])].filter(Boolean).find(c => !({1:['crying'],5:[],8:['sep']}[homeMonth()] || []).includes(c.id))) + `<p class="connected-preview-footnote">${F('Ahead isn’t medical advice and doesn’t replace your pediatrician.')}</p></div>`;
+      if (keep) { const card = main.querySelector('.hg-page .ms-card'); let host = card; while (host && host.parentNode && !host.parentNode.classList.contains('hg-page')) host = host.parentNode; if (host) host.insertAdjacentHTML('afterend', top); else main.querySelector('.hg-page').insertAdjacentHTML('afterbegin', top); }
       return;
     }
     let h = '<div class="hg-page">' + (ageLine ? ageLine.outerHTML : '') + top;
