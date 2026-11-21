@@ -12,9 +12,8 @@
   const IMG = (src, cls) => `<img class="${cls || ''}" src="${src}" alt="" decoding="async">`;
   function welcomeHtml() {
     return `<section class="welcome aw ob-welcome">
-      <div class="eyebrow">Your baby’s first year</div>
       <h1><span>Less searching.</span><span>More confidence</span><span>in what’s next.</span></h1>
-      <p class="aw-lead">Understand your baby, care for them with confidence, and enjoy every stage.</p>
+      <p class="aw-lead">A little clarity for every stage of the first year.</p>
       <div class="ob-collage" aria-hidden="true">
         <div class="ob-mini ob-mini-tl"><b>Timeline</b><small>What’s coming up</small><div class="ob-tl"><i></i><span></span><i></i><span></span><i></i><span></span></div></div>
         <div class="ob-mini ob-mini-guides"><b>Guides</b><small>Answers by stage</small><div class="ob-mini-pic">${IMG('assets/feeding/first-foods.jpg')}</div><span class="ob-bar"></span><span class="ob-bar short"></span></div>
@@ -99,6 +98,8 @@
     const main = document.querySelector('#main');
     if (main) {
       main.classList.toggle('is-onboarding', page === 'welcome' || page === 'setup');
+      // Setup steps drop the app header (logo) so each step fits on one screen, like the inspiration board.
+      document.body.classList.toggle('ob-steps', page === 'setup');
       if (page === 'welcome') main.innerHTML = welcomeHtml();
       if (page === 'setup') {
         main.innerHTML = main.innerHTML.replace(/<div class="progress">[\s\S]*?(?=<form class="form")/, setupHeader());
