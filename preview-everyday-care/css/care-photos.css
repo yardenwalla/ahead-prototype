@@ -17,7 +17,7 @@
 
 /* Is this normal? tiles: the photo on top, the label under it */
 #main .care-see button.care-see-ph { padding: 0 0 11px; overflow: hidden; gap: 9px; justify-content: flex-start }
-#main .care-see .care-see-art.ph-tile { display: block; width: 100%; aspect-ratio: 1; border-radius: 0; margin: 0; background: #f3ece4 }
+#main .care-see .care-see-art.ph-tile { display: block; width: 100%; aspect-ratio: 4 / 3; border-radius: 0; margin: 0; background: #f3ece4 }
 #main .care-see .care-see-art.ph-tile img { display: block; width: 100%; height: 100%; object-fit: cover }
 #main .care-see .care-see-ph b { padding: 0 8px }
 
@@ -62,14 +62,15 @@
 #main .care-need figcaption { font-size: 12.5px; line-height: 1.3; color: var(--ink); margin-top: 6px; font-weight: 550 }
 
 /* Steps: numbered rows */
-#main .care-nsteps { background: #fffefb; border: 1px solid var(--line, #e1e5d9); border-radius: 18px; padding: 4px 14px; margin: 0 0 18px }
+#main .care-v2 figure.care-nsteps { display: block; background: #fffefb; border: 1px solid var(--line, #e1e5d9); border-radius: 18px; padding: 4px 14px; margin: 0 0 18px }
 #main .care-nsteps ol { list-style: none; margin: 0; padding: 0 }
 #main .care-nsteps li { display: flex; gap: 12px; align-items: flex-start; padding: 12px 0; border-top: 1px solid #eef0ea }
 #main .care-nsteps li:first-child { border-top: 0 }
 #main .care-nsteps .care-n { flex: none; width: 26px; height: 26px; border-radius: 50%; background: #e3f1f7; color: #2a6078; font-weight: 750; font-size: 13.5px; display: grid; place-items: center; margin-top: 1px }
-#main .care-nsteps b { display: block; font-size: 15px; font-weight: 650; color: var(--ink); line-height: 1.3 }
+#main .care-nsteps li b { display: block; font-size: 15px; font-weight: 650; color: #2f3a40 !important; line-height: 1.3 }
 #main .care-nsteps small { display: block; font-size: 13.5px; line-height: 1.35; color: #6b6670; margin-top: 2px }
-#main .care-nsteps .tpl-notes { margin: 0; padding: 10px 0 12px; border-top: 1px solid #eef0ea }
+#main .care-nsteps .tpl-notes { margin: 0; padding: 10px 0 12px; border-top: 1px solid #eef0ea; list-style: none }
+#main .care-nsteps .tpl-notes li { font-size: 14px; line-height: 1.42; margin: 0 0 6px }
 
 /* Skin pages: big photo with a close-up circle */
 #main .care-v2 .care-skin img { object-position: 50% var(--py, 50%) }
@@ -84,10 +85,25 @@
 #main .care-tell-ic { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: #e3f1f7; flex: none }
 #main .care-tell .is-call .care-tell-ic { background: #fffefb }
 #main .care-tell-ic svg { width: 15px; height: 15px }
-#main .care-tell b { display: flex; align-items: center; gap: 8px; font-size: 14.5px; font-weight: 700; color: #2a6078; margin-bottom: 4px }
-#main .care-tell .is-call b { color: #9b3326 }
+#main .care-tell b.care-tell-k { display: flex; align-items: center; gap: 8px; font-size: 14.5px; font-weight: 700; color: #2a6078; margin-bottom: 4px }
+#main .care-tell .is-call b.care-tell-k { color: #9b3326 }
+#main .care-tell p b { font-weight: 650; color: var(--ink) }
 #main .care-tell p { margin: 3px 0 0; font-size: 13.5px; line-height: 1.38; color: var(--ink) }
 #main .care-tell-911 { font-size: 13.5px; line-height: 1.4; color: #6b6670; margin: 2px 2px 22px }
 #main .care-tell-911 b { color: #9b3326 }
 #main .care-skin-where { font-size: 14px; line-height: 1.4; color: var(--ink); margin: -8px 2px 18px }
 #main .care-skin-where b { color: #2a6078 }
+
+/* Icons sit centered in their circles */
+#main .care-v2 .hub-iconstep-art, #main .care-v2 .hub-dot { display: grid !important; place-items: center; padding: 0 }
+#main .care-v2 .hub-iconstep-art svg, #main .care-v2 .hub-dot svg { display: block; margin: 0 }
+/* Skin pages: a shorter photo */
+#main .care-v2 .ph-photo.care-skin { aspect-ratio: 16 / 9 }
+#main .care-skin .care-zoom { width: 30% }
+#main .care-newline > div { flex: 1 }
+#main .care-newline small { display: block; font-size: 13.5px; line-height: 1.38; color: #6b6670; margin-top: 2px }
+#main .care-same { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: -6px 2px 16px }
+#main .care-same > span { font-size: 13.5px; color: #6b6670; margin-right: 2px }
+#main .care-same-chip { font: inherit; font-size: 13.5px; font-weight: 600; color: #2a6078; background: #e3f1f7; border: 0; border-radius: 999px; padding: 6px 12px; cursor: pointer }
+#main .care-v2 .care-nsteps .tpl-notes li { display: block !important }
+#main .care-v2 .care-nsteps .tpl-notes li b { display: inline !important; font-size: 14px }

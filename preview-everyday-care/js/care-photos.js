@@ -33,6 +33,7 @@
   const PAGE = [
     [/^p:sponge/, ['How it looks', 'sponge', 'A sponge bath on a towel: one arm washed at a time, the rest wrapped', [['The rest stays wrapped', 30, 74, 'r'], ['A bowl of warm water', 86, 60, 'l']]], 'bath'],
     [/^p:tub/, ['How it looks', 'tubbath', 'A baby in a baby tub, a hand behind the head', [['A hand behind the head', 18, 21, 'r'], ['About 2 inches of water', 58, 84, 'l']]], 'bath'],
+    [/^t:bath:2/, ['How it looks', 'bedtime', 'A baby wrapped in a towel after a bath, pajamas and a sleep sack laid out', [['Straight into a towel', 30, 30, 'r'], ['Pajamas laid out first', 74, 52, 'l']]], 'bath'],
     [/^t:bath:3/, ['How it looks', 'bigtub', 'A family tub with shallow water, a towel ready on the edge', [['Shallow water', 62, 66, 'l']]], 'bath'],
     [/^cord/, ['How it looks', 'cord', 'A newborn belly, the cord stump open to the air', [['Left open to the air', 50, 52, 'r']]], 'cord'],
     [/^(h|t):diapers:[01]/, ['How it looks', 'diaper', 'Fastening a clean diaper at the waist', [['Two fingers fit at the waist', 54, 40, 'l']]], 'diapers'],
@@ -70,18 +71,21 @@
 
   // What you need, before the steps (the inspiration's order): object photos with a plain label.
   const NEED = { 'p:sponge': [['towel', 'Towel'], ['washcloth', 'Washcloth'], ['cleandiaper', 'Clean diaper'], ['soap', 'Mild soap']],
-    'p:tub': [['tub', 'Baby tub'], ['towel', 'Towel'], ['washcloth', 'Washcloth'], ['cleandiaper', 'Clean diaper']] };
+    'p:tub': [['tub', 'Baby tub'], ['towel', 'Towel'], ['washcloth', 'Washcloth'], ['cleandiaper', 'Clean diaper']],
+    't:bath:2': [['tub', 'Baby tub'], ['towel', 'Towel'], ['washcloth', 'Washcloth'], ['cleandiaper', 'Clean diaper']],
+    't:bath:3': [['bigtub', 'Non-slip mat'], ['towel', 'Towel'], ['washcloth', 'Washcloth'], ['cleandiaper', 'Clean diaper']] };
   const needBlock = items => `<h2 class="hub-h2">${F('What you need')}</h2><div class="care-need">${items.map(([n, l]) => `<figure>${img(n, l)}<figcaption>${F(l)}</figcaption></figure>`).join('')}</div>`;
 
   // Steps are a real sequence, so they read as numbered rows (no pictures), the same on every page.
   function numberSteps(main) {
     const h = [...main.querySelectorAll('h2.hub-h2')].find(x => x.textContent.trim() === 'Steps'); if (!h) return;
-    const fig = h.nextElementSibling; if (!fig || !fig.classList.contains('hub-iconsteps')) return;
-    const rows = [...fig.querySelectorAll('.hub-iconstep')].map((st, i) => { const b = st.querySelector('b'), sm = st.querySelector('small'); const t = b ? b.cloneNode(true) : null; if (t) t.querySelectorAll('em').forEach(e => e.remove());
+    const fig = h.nextElementSibling; if (!fig || !fig.classList.contains('hub-iconsteps') || fig.classList.contains('care-nsteps')) return;
+    const row = fig.querySelector('.hub-iconsteps-row'); if (!row) return;
+    const items = [...row.querySelectorAll('.hub-iconstep')].map((st, i) => { const b = st.querySelector('b'), sm = st.querySelector('small'); const t = b ? b.cloneNode(true) : null; if (t) t.querySelectorAll('em').forEach(e => e.remove());
       return `<li><span class="care-n">${i + 1}</span><div><b>${t ? t.innerHTML : ''}</b>${sm ? `<small>${sm.innerHTML}</small>` : ''}</div></li>`; }).join('');
-    const rest = [...fig.children].filter(c => !c.classList.contains('hub-iconsteps-row')).map(c => c.outerHTML).join('');
-    fig.outerHTML = `<section class="care-nsteps"><ol>${rows}</ol>${rest}</section>`;
+    const ol = document.createElement('ol'); ol.innerHTML = items; row.replaceWith(ol); fig.classList.add('care-nsteps');
   }
+
 
   // Any drawn picture left in an icon spot becomes the plain line icon, so every icon looks the same.
   const TUB = '<svg viewBox="0 0 24 24" fill="none" stroke="#2a6078" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11h18v2a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5Z"/><path d="M6 11V6.5A2.5 2.5 0 0 1 10.5 5"/><path d="m7 18-1 2m11-2 1 2"/></svg>';
@@ -89,6 +93,15 @@
 
   // Skin pages, like the inspiration: a big photo with a close-up circle, then what helps, then how to tell normal from time to call.
   const ZOOM = { cradle: [52, 24, 'br'], acne: [27, 57, 'br'], newborn: [57, 57, 'bl'], peeling: [17, 52, 'br'], drool: [55, 60, 'tr'], eczema: [43, 54, 'br'], heat: [50, 48, 'tr'] };
+  function sizeUp(main, r) {
+    if (!/^(h:diapers|t:diapers)/.test(r) || /size up/i.test(main.textContent) || !window.__hub) return;
+    const row = window.__hub.row({ icon: 'diaper', cat: CAT, title: 'Leaks mean it’s time to size up', sub: 'So do red marks at the legs or waist, or tabs that don’t reach the middle.' });
+    const h = [...main.querySelectorAll('h2.hub-h2')].find(x => x.textContent.trim() === 'Good to know');
+    const list = h && h.nextElementSibling;
+    if (list && list.querySelectorAll('.hub-row').length < 3) list.insertAdjacentHTML('beforeend', row);
+    else if (!h) (main.querySelector('.hub-page') || main).insertAdjacentHTML('beforeend', window.__hub.list('Good to know', [row]));
+  }
+
   function skinPage(main, id) {
     const fig = main.querySelector('.care-map'); if (!fig || main.querySelector('.care-skin')) return;
     const where = (fig.querySelector('.tpl-where') || {}).textContent || '', look = (fig.querySelector('.tpl-look') || {}).innerHTML || '';
@@ -102,10 +115,10 @@
     const callH = [...main.querySelectorAll('h2.hub-h2')].find(h => h.textContent.trim() === 'When to call'), calls = main.querySelector('.care-calls');
     if (!callH || !calls) return;
     const ps = [...calls.querySelectorAll('p')], ped = ps.find(p => /pediatrician/i.test(p.textContent)), urgent = ps.find(p => /911|ER\b/.test(p.textContent));
-    const clean = p => { const c = p.cloneNode(true); c.querySelectorAll('b').forEach(b => b.remove()); const t = c.innerHTML.trim(); return t.charAt(0).toUpperCase() + t.slice(1); };
+    const clean = p => p.innerHTML.trim();
     callH.textContent = F('How to tell');
-    calls.outerHTML = `<div class="care-tell"><div class="is-ok"><b><span class="care-tell-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#2a6078" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span>${F('Normal')}</b><p>${look}</p></div>`
-      + `<div class="is-call"><b><span class="care-tell-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#9b3326" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg></span>${F('Time to call')}</b><p>${ped ? clean(ped) : ''}</p></div></div>`
+    calls.outerHTML = `<div class="care-tell"><div class="is-ok"><b class="care-tell-k"><span class="care-tell-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#2a6078" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span>${F('Normal')}</b><p>${look}</p></div>`
+      + `<div class="is-call"><b class="care-tell-k"><span class="care-tell-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#9b3326" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg></span>${F('Time to call')}</b><p>${ped ? clean(ped) : ''}</p></div></div>`
       + (urgent ? `<p class="care-tell-911">${urgent.innerHTML}</p>` : '');
   }
 
@@ -122,6 +135,19 @@
     list.classList.add('fd-plist', 'care-plist');
   }
 
+  // Rows whose page didn't change since the stage before become one quiet line of links, so a parent who checks in
+  // each stage sees what's new up top, and the routine is still one tap away.
+  const SAME = { 1: [/^h:diapers/, /^t:nails/], 2: [/^h:skin/, /^t:sun/, /^t:nails/] };
+  const SHORT = { 'h:diapers': 'Diapers', 't:nails': 'Nails', 'h:skin': 'Skin care', 't:sun': 'Sun' };
+  function sameAsBefore(list, v) {
+    if (!list || !SAME[v] || list.parentElement.querySelector('.care-same')) return;
+    const same = [...list.querySelectorAll(':scope > .hub-row')].filter(r => SAME[v].some(re => re.test(routeOf(r) || '')));
+    if (!same.length) return;
+    const chips = same.map(r => { const k = Object.keys(SHORT).find(k => (routeOf(r) || '').startsWith(k)); return `<button class="care-same-chip" onclick="${r.getAttribute('onclick')}">${F(SHORT[k] || r.querySelector('b').textContent)}</button>`; }).join('');
+    same.forEach(r => r.remove());
+    list.insertAdjacentHTML('afterend', `<div class="care-same"><span>${F('Same as before')}</span>${chips}</div>`);
+  }
+
   function dressHome(main) {
     const v = Number((main.querySelector('[data-care-stage]') || {}).dataset?.careStage);
     const hero = main.querySelector('.care-hero.care-disc');
@@ -130,12 +156,12 @@
       if (art) art.outerHTML = `<div class="sf-photo care-life-photo">${img(h[0], h[1])}</div>`;
       // "New now" as one quiet line under the photo, like Feeding's Try this. The page it opens says the rest.
       const note = hero.querySelector('.care-nownote');
-      if (note) { const t = note.querySelector('b'); const line = document.createElement('div'); line.className = 'care-newline'; line.setAttribute('role', 'button'); line.tabIndex = 0;
-        line.setAttribute('onclick', note.getAttribute('onclick')); line.innerHTML = `<p><b>${F('New:')}</b> ${t ? t.innerHTML : ''}</p><span aria-hidden="true">›</span>`; note.replaceWith(line); }
+      if (note) { const t = note.querySelector('b'), d = [...note.querySelectorAll('p,span,small')].find(e => e.textContent.trim().length > 20 && !e.querySelector('b') && !/›/.test(e.textContent)); const line = document.createElement('div'); line.className = 'care-newline'; line.setAttribute('role', 'button'); line.tabIndex = 0;
+        line.setAttribute('onclick', note.getAttribute('onclick')); line.innerHTML = `<div><p><b>${F('New:')}</b> ${t ? t.innerHTML : ''}</p>${d ? `<small>${d.innerHTML}</small>` : ''}</div><span aria-hidden="true">›</span>`; note.replaceWith(line); }
       hero.classList.add('care-life');
     }
     const h2 = [...main.querySelectorAll('h2.hub-h2')].find(h => /^(Right now for|At this stage)/.test(h.textContent));
-    if (h2) photoRows(h2.nextElementSibling);
+    if (h2) { photoRows(h2.nextElementSibling); sameAsBefore(h2.nextElementSibling, v); }
     main.querySelectorAll('.care-see > button').forEach(b => {
       const n = SEE[routeOf(b)], art = b.querySelector('.care-see-art'); if (!n || !art || art.classList.contains('ph-tile')) return;
       art.className = 'care-see-art ph-tile'; art.innerHTML = img(n, b.textContent.trim()); b.classList.add('care-see-ph');
@@ -147,10 +173,11 @@
     // All how-tos: the same photo rows.
     if (/^how/.test(r)) { main.querySelectorAll('.hub-list').forEach(photoRows); return; }
     // Is this normal? pages: a real photo in place of the body outline.
-    numberSteps(main); lineIcons(main);
+    numberSteps(main); lineIcons(main); sizeUp(main, r);
     const rm = r.match(/^rash:(\w+)/);
     if (rm && RASH[rm[1]]) { skinPage(main, rm[1]); return; }
     addPath(main, r);
+    if (main.querySelector('.care-psteps')) main.querySelectorAll('.tpl-notes li').forEach(li => { if (/big tub comes once/i.test(li.textContent)) li.remove(); });
     const hit = PAGE.find(([re]) => re.test(r)); if (!hit || main.querySelector('.care-ph')) return;
     const [title, n, alt, pins, cls, into] = hit[1];
     // Most pages: the photo is the first section. A photo of what helps sits at the top of that page's own section instead.
