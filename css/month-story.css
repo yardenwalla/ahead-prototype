@@ -1317,3 +1317,4 @@
 #main .hg-keep .hg-keep-copy b{font-family:inherit!important;font-weight:700!important;font-size:17px!important;line-height:1.25;color:#2b2840;white-space:normal!important}
 #main .hg-keep-go{font-size:15px;font-weight:700;color:var(--kp)}
 #main .hg-keep-go i{font-style:normal;margin-left:2px}
+#main .hg-keep .hub-chev{flex:none;align-self:center;margin-left:auto}
