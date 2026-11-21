@@ -1310,7 +1310,7 @@
 #main .tl-track .tl-flag .tl-cakeimg{display:block;width:100%;height:auto;filter:drop-shadow(0 3px 4px rgba(43,40,64,.16))}
 /* Home: month-birthday keepsake card, under the month card (Yarden's Nov 20 mock). Big tilted keepsake preview that
    spills over the card's top-left corner; soft blush card; roomy. */
-#main .hg-banner.hg-keep{margin:16px 0 12px!important;min-height:108px;background:linear-gradient(100deg,#fbefea 0%,#fdf6f1 55%,#fffaf6 100%)!important;border:1px solid #efe4dc!important;border-radius:22px!important;padding:14px 12px 14px 18px!important;gap:16px!important;overflow:visible;cursor:pointer}
+#main .hg-banner.hg-keep{margin:35px 0 6px!important;min-height:108px;background:linear-gradient(100deg,#fbefea 0%,#fdf6f1 55%,#fffaf6 100%)!important;border:1px solid #efe4dc!important;border-radius:22px!important;padding:14px 12px 14px 18px!important;gap:16px!important;overflow:visible;cursor:pointer}
 #main .hg-keep-card{position:relative;flex:none;width:72px;aspect-ratio:941/1672;transform:rotate(-7deg);margin:-28px 0 -14px -6px;border-radius:6px;overflow:hidden;box-shadow:0 0 0 3px #fff,0 6px 14px rgba(43,40,64,.16)}
 #main .hg-keep-card img{display:block;width:100%;height:100%;object-fit:cover}
 #main .hg-keep-card i{position:absolute;left:50%;top:66%;width:20px;height:20px;margin:-10px 0 0 -10px;border-radius:50%;background:rgba(255,255,255,.9);color:#8a8494;font:600 14px/20px system-ui,sans-serif;font-style:normal;text-align:center}
