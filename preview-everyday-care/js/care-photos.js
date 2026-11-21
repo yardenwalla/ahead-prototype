@@ -212,12 +212,23 @@
     ['Sun protection', 'Shade first, then sunscreen from 6 months.', 'sun', ['t:sun:0', 't:sun:1', 't:sun:2', 't:sun:3']]
   ];
   const ROUTINE_CORD = ['The cord', 'Clean, dry and in the air until it falls off.', 'cord', ['cord']];
+  const LOOK_PH = { 'p:teething': 'soregums', rash: 'eczema', poop: 'cleandiaper', cord: 'cord', yellow: 'milia', eyes: 'eyes' };
+  function lookPage(main) {
+    const box = main.querySelector('.care-lookoff'); if (!box || box.classList.contains('care-news')) return;
+    box.querySelectorAll('.care-pick').forEach(b => {
+      const r = (b.getAttribute('onclick') || '').replace(/.*d:/, '').replace(/'.*/, ''), k = r === 'p:teething' ? r : r.split(':').pop();
+      const ic = b.querySelector('.care-ico'); if (ic && LOOK_PH[k]) ic.outerHTML = img(LOOK_PH[k], '');
+      b.className = 'care-news-card';
+    });
+    box.className = 'care-news care-lookoff';
+  }
+
   function routinesPage(main, v) {
     if (main.querySelector('.care-routines')) return;
     const page = main.querySelector('.hub-page') || main, head = main.querySelector('.monthly-page-header');
     const keep = head ? head.outerHTML : '';
     const list = (v === 0 ? [ROUTINE_CORD, ...ROUTINES] : ROUTINES).map(([t, l, n, rs]) => `<button class="care-news-card" onclick="openPage('chg:${CAT}:d:${rs[Math.min(v, rs.length - 1)]}')">${img(n, '')}<span><b>${F(t)}</b><small>${F(l)}</small></span><i aria-hidden="true">›</i></button>`).join('');
-    page.innerHTML = keep + `<header class="hub-hero care-routines-hero"><h1>${F('Care routines')}</h1><p class="hub-lead">${F('Everyday care, sized to {o} right now.')}</p></header><div class="care-news care-routines">${list}</div>`;
+    page.innerHTML = keep + `<div class="dev-area-head ss-head" style="--area:#e3f1f7;--area-ink:#2a6078"><p class="hub-context">${F('Care routines')}</p><h1>${F('The basics, for {o} now')}</h1><p class="hub-lead">${F('Each one opens the version for {p} age.')}</p></div><div class="care-news care-routines">${list}</div>`;
   }
 
   function dressHome(main) {
@@ -251,6 +262,7 @@
     const head = main.querySelector('.dev-area-head'); if (!head) return;
     // All how-tos: the same photo rows.
     const hm = r.match(/^how:(\d)/); if (hm) { routinesPage(main, +hm[1]); return; }
+    if (/^look:\d$/.test(r)) { lookPage(main); return; }
     // Is this normal? pages: a real photo in place of the body outline.
     const seq = photoSteps(main, r); if (!seq) numberSteps(main); lineIcons(main); sizeUp(main, r);
     const rm = r.match(/^rash:(\w+)/);
