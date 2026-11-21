@@ -174,3 +174,21 @@
 #main .care-v2 .care-see-ph b { padding: 0 8px !important; font-size: 13.5px; line-height: 1.25 }
 #main .care-v2 .care-see-line { padding: 2px 8px 0; font-size: 12px; line-height: 1.3 }
 #main .care-v2 .care-see-go { display: none }
+
+/* Photo steps like Yarden's inspiration: photo on top, number + title, one line (Nov 21) */
+#main .care-psteq { grid-template-columns: 1fr 1fr; gap: 10px }
+#main .care-pstep { display: flex; flex-direction: column; grid-template-columns: none }
+#main .care-pstep img { width: 100%; height: auto; min-height: 0; aspect-ratio: 4 / 3 }
+#main .care-pstep figcaption { padding: 10px 10px 12px; gap: 8px }
+#main .care-pstep b { font-size: 14.5px }
+#main .care-pstep small { font-size: 13px }
+#main .care-psteq > .care-pstep:last-child:nth-child(odd) { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr }
+#main .care-psteq > .care-pstep:last-child:nth-child(odd) img { height: 100%; aspect-ratio: auto; min-height: 110px }
+/* Side-by-side compare (fit, room temperature) */
+#main .care-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 0 0 18px }
+#main .care-pair figure { margin: 0; background: #fffefb; border: 1px solid var(--line, #e1e5d9); border-radius: 18px; overflow: hidden }
+#main .care-pair img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover }
+#main .care-pair figcaption { padding: 10px 12px 12px }
+#main .care-pair b { display: flex; align-items: center; gap: 6px; font-size: 14.5px; font-weight: 700; color: #2a6078 }
+#main .care-pair .is-no b { color: #9b3326 }
+#main .care-pair small { display: block; font-size: 13px; line-height: 1.35; color: #6b6670; margin-top: 3px }

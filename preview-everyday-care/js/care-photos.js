@@ -9,7 +9,7 @@
 (function () {
   const F = s => (window.__hub ? window.__hub.F(s) : s);
   const CAT = 'Daily rhythm';
-  const src = n => `assets/care/${n}.jpg?v=1120c`;
+  const src = n => `assets/care/${n}.jpg?v=1121a`;
   const img = (n, alt) => `<img src="${src(n)}" alt="${F(alt).replace(/"/g, '&quot;')}" loading="lazy">`;
   const pin = ([label, x, y, side]) => `<span class="ph-pin ph-pin-${side}" style="left:${x}%;top:${y}%"><i></i><span>${F(label)}</span></span>`;
   const photo = (n, alt, pins, cls = '') => `<figure class="ph-photo ph-hero care-ph ${cls}">${img(n, alt)}${(pins || []).map(pin).join('')}</figure>`;
@@ -82,7 +82,11 @@
   const needBlock = items => `<h2 class="hub-h2">${F('What you need')}</h2><div class="care-need">${items.map(([n, l]) => `<figure>${img(n, l)}<figcaption>${F(l)}</figcaption></figure>`).join('')}</div>`;
 
   // Steps are a real sequence, so they read as numbered rows (no pictures), the same on every page.
-  const SEQ = { 'p:tub': ['tub', 'bathface', 'tubbath', 'bathhair', 'hero-1'] };
+  const SEQ = { 'p:tub': ['tub', 'bathface', 'tubbath', 'bathhair', 'hero-1'],
+    'h:diapers:0': ['hero-0', 'dwipe', 'dslide', 'cord'], 'h:diapers:1': ['hero-0', 'dwipe', 'dslide', 'diaper'],
+    'p:brush': ['brushrice', 'hero-3', 'teeth2'],
+    'h:diapers:2': ['dsetup', 'diaper', 'dtoy', 'wriggle'], 't:diapers:3': ['dsetup', 'diaper', 'dtoy', 'dstand'] };
+  const SEQ_TITLE = { 'p:tub': 'How to give a tub bath', 'p:brush': 'How to brush', 'h:diapers:0': 'How to change a diaper', 'h:diapers:1': 'How to change a diaper', 'h:diapers:2': 'How to change a wriggler', 't:diapers:3': 'How to change a wriggler' };
   function photoSteps(main, r) {
     const pics = SEQ[r]; if (!pics) return false;
     const h = [...main.querySelectorAll('h2.hub-h2')].find(x => x.textContent.trim() === 'Steps'); const fig = h && h.nextElementSibling;
@@ -90,9 +94,24 @@
     const notes = fig.querySelector('.tpl-notes');
     const cards = steps.map((st, i) => { const b = st.querySelector('b').cloneNode(true); b.querySelectorAll('em').forEach(e => e.remove()); const sm = st.querySelector('small');
       return `<figure class="care-pstep">${img(pics[i], b.textContent)}<figcaption><span class="care-n">${i + 1}</span><div><b>${b.innerHTML}</b>${sm ? `<small>${sm.innerHTML}</small>` : ''}</div></figcaption></figure>`; }).join('');
-    h.textContent = F('How to give a tub bath');
+    h.textContent = F(SEQ_TITLE[r] || 'Steps');
     fig.outerHTML = `<div class="care-psteq">${cards}</div>${notes ? `<ul class="tpl-notes care-psteq-notes">${notes.innerHTML}</ul>` : ''}`;
     return true;
+  }
+
+  const PAIRS = {
+    diapers: ['Does it still fit?', [['dfit', 'Fits well', 'Two fingers at the waist, no marks.', 'ok'], ['dtight', 'Time to size up', 'Tabs don’t reach the middle, red marks or leaks.', 'no']]],
+    clothes: ['Dress for the room', [['coolroom', 'Cool room', 'Long sleeves and feet, then a sleep sack.', 'ok'], ['warmroom', 'Warm room', 'One light layer is enough.', 'ok']]]
+  };
+  function pairBlock(k) { const [t, items] = PAIRS[k];
+    return `<h2 class="hub-h2">${F(t)}</h2><div class="care-pair">${items.map(([n, b, l, c]) => `<figure class="is-${c}">${img(n, b)}<figcaption><b>${F(b)}</b><small>${F(l)}</small></figcaption></figure>`).join('')}</div>`; }
+  function addPair(main, r) {
+    if (main.querySelector('.care-pair')) return;
+    const k = /^(h|t):diapers/.test(r) ? 'diapers' : /^t:clothes/.test(r) ? 'clothes' : null; if (!k) return;
+    const hs = [...main.querySelectorAll('h2.hub-h2')], at = hs.find(h => /^(Good to know|What’s normal)$/.test(h.textContent.trim()));
+    if (at) at.insertAdjacentHTML('beforebegin', pairBlock(k));
+    // the pair shows the size-up signs, so the text row saying the same goes
+    if (k === 'diapers') main.querySelectorAll('.hub-row').forEach(row => { if (/size up/i.test(row.textContent)) row.remove(); });
   }
 
   function numberSteps(main) {
@@ -264,12 +283,12 @@
     const hm = r.match(/^how:(\d)/); if (hm) { routinesPage(main, +hm[1]); return; }
     if (/^look:\d$/.test(r)) { lookPage(main); return; }
     // Is this normal? pages: a real photo in place of the body outline.
-    const seq = photoSteps(main, r); if (!seq) numberSteps(main); lineIcons(main); sizeUp(main, r);
+    const seq = photoSteps(main, r); if (!seq) numberSteps(main); lineIcons(main); sizeUp(main, r); addPair(main, r);
     const rm = r.match(/^rash:(\w+)/);
     if (rm && RASH[rm[1]]) { skinPage(main, rm[1]); return; }
     addPath(main, r);
     if (main.querySelector('.care-psteps')) main.querySelectorAll('.tpl-notes li').forEach(li => { if (/big tub comes once/i.test(li.textContent)) li.remove(); });
-    if (main.querySelector('.care-psteq')) { const hd = main.querySelector('.dev-area-head'); if (NEED[r] && hd && !main.querySelector('.care-need')) hd.insertAdjacentHTML('afterend', needBlock(NEED[r])); return; }
+    if (main.querySelector('.care-psteq')) { main.querySelectorAll('.care-ph').forEach(e => { const h = e.previousElementSibling; if (h && h.tagName === 'H2') h.remove(); e.remove(); }); const hd = main.querySelector('.dev-area-head'); if (NEED[r] && hd && !main.querySelector('.care-need')) hd.insertAdjacentHTML('afterend', needBlock(NEED[r])); return; }
     const hit = PAGE.find(([re]) => re.test(r)); if (!hit || main.querySelector('.care-ph')) return;
     const [title, n, alt, pins, cls, into] = hit[1];
     // Most pages: the photo is the first section. A photo of what helps sits at the top of that page's own section instead.
