@@ -245,3 +245,28 @@
 #main .ssw-guides.is-photo { margin-top: 0 }
 #main .ssw-guides.is-photo .ssw-new { position: absolute; right: 8px; top: 8px; font-style: normal; font-size: 11px; font-weight: 750; letter-spacing: .02em; color: #fff; background: #46638c; border-radius: 999px; padding: 3px 8px; box-shadow: 0 2px 6px #0003 }
 #main .ssw-topic .ssw-none { margin: 0 2px 6px; font-size: 14.5px; line-height: 1.45; color: #6b6670 }
+/* v3 (Yarden's Nov 20 mockup): Right now with photos, four small topic doors, topic pages */
+#main .ssw-now .hub-row { align-items: center }
+#main .ssw-thumb { flex: none; width: 72px; height: 58px; border-radius: 12px; overflow: hidden; background: #eef1f8 }
+#main .ssw-thumb img { width: 100%; height: 100%; object-fit: cover; display: block }
+#main .ssw-topics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin: 0 0 14px }
+#main .ssw-topics button { all: unset; box-sizing: border-box; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; min-height: 92px; padding: 12px 4px; border-radius: 18px; text-align: center }
+#main .ssw-topics i { width: 30px; height: 30px; display: grid; place-items: center }
+#main .ssw-topics i svg { width: 28px; height: 28px }
+#main .ssw-topics b { font-size: 13.5px; line-height: 1.2; font-weight: 700; color: var(--ink) }
+#main .ssw-topics .is-night { background: #ecebf8 } #main .ssw-topics .is-night i { color: #5a5296 }
+#main .ssw-topics .is-naps { background: #fff3dc } #main .ssw-topics .is-naps i { color: #b0812a }
+#main .ssw-topics .is-bed { background: #e7effc } #main .ssw-topics .is-bed i { color: #46638c }
+#main .ssw-topics .is-safe { background: #e5f0e7 } #main .ssw-topics .is-safe i { color: #3f7350 }
+#main .ssw-topic-head .hub-big { display: none }
+#main .ssw-topic .ssw-at { position: relative; display: block; background: #eef0f8; border-radius: 20px; margin: 4px 0 6px; padding: 14px 16px 14px 56px }
+#main .ssw-topic .ssw-at .ssw-bulb { left: 14px; top: 14px; width: 30px; height: 30px }
+#main .ssw-topic .ssw-at .ssw-bulb svg { width: 28px; height: 28px }
+#main .ssw-topic .ssw-at small { display: block; font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: #5e6890; margin-bottom: 4px }
+#main .ssw-topic .ssw-at b { display: block; font-size: 16px; line-height: 1.3; color: var(--ink) }
+#main .ssw-topic .ssw-at span { display: block; font-size: 14px; line-height: 1.45; color: #6d666d; margin-top: 3px }
+#main .ssw-figtip { margin: 8px 2px 0; font-size: 13px; line-height: 1.45; color: #6b6670 }
+#main .ssw-figlink { display: inline-block; margin: 8px 2px 0 }
+#main .ssw-always .hub-row { background: #f6f4fb }
+#main .ssw-topic-head .dev-area-head-art { display: none }
+#main .ssw-topic-head { padding-top: 18px !important; padding-bottom: 18px !important }
