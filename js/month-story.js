@@ -455,7 +455,7 @@
         '<div class="st-giant st-pop" style="--d:.15s">' + (m === 0 ? wk + '<small class="st-giant-u">' + (wk === 1 ? 'week' : 'weeks') + '</small>' : st.half ? '<span class="st-halfwrap">' + V.halfring() + '<b>' + m + '</b></span>' : m) + '</div>' +
         '<div class="st-title st-cover-t st-in" style="--d:.45s">' + E(Pp(st.cover[0])) + '</div>' +
         '<p class="st-lead st-in" style="--d:.75s">' + E(Pp(st.cover[1])) + '</p>' +
-        '<div class="st-ground">' + cloud('#b9a6e6') + (pic ? '<div class="st-photo"><img src="' + pic + '" alt=""></div>' : '<div class="st-coverart ms-toys">' + window.stCardArt(m) + '</div>') + '</div>' }];
+        '<div class="st-ground">' + cloud('#b9a6e6') + (pic ? '<div class="st-photo"><img src="' + pic + '" alt=""></div>' : '<div class="st-coverart ms-toys">' + window.stCardArtClay(m) + '</div>') + '</div>' }];
     st.screens.forEach(function (sc) { list.push(screen(sc)); });
     list.push(nextScreen(nx), daysScreen(n, p, days, firsts), summary(n, p, days, pic, firsts, nx, st.sum, m));
     return list;
@@ -658,7 +658,10 @@
   }
   // Clay toys for other pages (Timeline's chapters).
   window.stToy = function (k) { return k === 'cake' ? V.cake().replace('st-vis', 'st-vis yt-cake') : ({ bunny: bunny, rings: rings, ball: ball, blocks: blocks, bowl: bowl })[k](); };
-  window.stCardArt = function (m) { return m >= 0 && m <= 11 ? '<span class="ms-l ms-mid ms-babyw">' + babyArt(m) + '</span>' : ''; };
+  // The month's baby on Home: a soft illustrated picture, a different baby each month.
+  window.stCardArt = function (m) { return m >= 0 && m <= 11 ? '<span class="ms-l ms-mid ms-babyw ms-babyimg"><img src="assets/home/babies/baby-' + m + '.webp" alt="" decoding="async"></span>' : ''; };
+  // The original drawn baby, used inside the animated stories so each story stays in one style.
+  window.stCardArtClay = function (m) { return m >= 0 && m <= 11 ? '<span class="ms-l ms-mid ms-babyw">' + babyArt(m) + '</span>' : ''; };
   // What Home's month card shows: the story's cover and its three takeaways.
   window.stCover = function (m) {
     if (m < 0 || m > 11) return null;

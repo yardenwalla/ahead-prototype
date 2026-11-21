@@ -1298,3 +1298,13 @@
 #main .tl-track .tl-prog .tl-ends{flex-wrap:wrap;column-gap:10px;row-gap:2px}
 @media (max-width:360px){#main .tl-track .tl-prog .tl-ends{flex-direction:column!important;align-items:flex-start!important}#main .tl-track .tl-sub{font-size:14.5px}}
 #main .tl-around .tl-soon .tl-quiet{padding:4px 6px 2px}
+/* Timeline handle. The baby and the cake both sit centered on the line. The line ends with a short runway
+   before the cake, so at one year the baby arrives right beside the cake and never covers it.
+   The line + cake together are centered in the card (24px on each side). */
+#main .tl-track .tl-ride,#main .tl-track .tl-bar{margin-left:24px!important;margin-right:60px!important}
+#main .tl-track .tl-bar{margin-top:30px!important}
+#main .tl-track .tl-ticks{margin:30px 0 0 24px!important}
+#main .tl-track .tl-baby{left:var(--tlp)!important;width:48px!important;height:48px!important;margin-left:-24px!important;bottom:-58px!important}
+#main .tl-track .tl-baby .tl-hb{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 2px 3px rgba(43,40,64,.18))}
+#main .tl-track .tl-flag{right:-62px!important;bottom:-53px!important;width:36px!important;height:40px!important;opacity:1!important}
+#main .tl-track .tl-flag .tl-cakeimg{display:block;width:100%;height:auto;filter:drop-shadow(0 3px 4px rgba(43,40,64,.16))}

@@ -237,13 +237,13 @@
     const ends = x => { const t = isToday(x), left = Math.max(0, 12 - x), eta = left < 0.5 ? 'any day now' : left < 1.5 ? 'in about a month' : `in about ${Math.round(left)} months`, d = Math.round(Math.abs(x - a));
       return t ? `<b>${F(`${nm} is ${typeof babyAge === 'function' ? babyAge() : ''}`)}</b><span>${F(x >= 12 ? 'Happy first birthday!' : left < 0.5 ? 'Cake any day now!' : `${Math.max(1, Math.round(left))} month${Math.max(1, Math.round(left)) === 1 ? '' : 's'} until cake`)}</span>` : `<b>${F(`At ${ageTxt(x)}`)}</b><button class="tl-home" onclick="tlScrub(null)">${F('Back to today')}</button>`; };
     const theme = x => typeof window.monthTheme === 'function' ? window.monthTheme(Math.max(0, Math.min(11, Math.floor(x)))) : '';
-    const art = x => typeof window.stCardArt === 'function' ? window.stCardArt(Math.max(0, Math.min(11, Math.floor(x)))) : '';
+    const art = x => `<img class="tl-hb" src="assets/home/babies/handle-${Math.max(0, Math.min(11, Math.floor(x)))}.webp" alt="">`;
     window.__tl = { a, listHTML, head, ends, theme, art };
     const hinted = (() => { try { return !!localStorage.getItem('ahead-tl-dragged'); } catch (e) { return true; } })();
     const pct = Math.max(0, Math.min(100, a / 12 * 100));
     const grad = (w, to) => typeof window.monthColor === 'function' ? `linear-gradient(90deg,${[...Array(12)].map((_, i) => `${window.monthColor(i, w, to)} ${Math.round((i + 0.5) / 12 * 100)}%`).join(',')})` : '';
     let h = `<div class="ya-page tl-track" style="${theme(a)};--tlp:${pct}%;--tla:${pct}%;--tlg:${grad(.86)};--tlf:${grad(.42)}"><div class="tl-top"><h1 class="yt-h1">${F(`${nm}’s first year`)}</h1></div><p class="tl-sub">${F('What’s coming, one little leap at a time.')}</p>`;
-    h += `<div class="tl-prog${hinted ? '' : ' tl-hint'}"><div class="tl-ride"><span class="tl-baby" role="slider" tabindex="0" aria-label="${F(`Drag ${nm} to see another age`)}" aria-valuemin="0" aria-valuemax="12" aria-valuenow="${a.toFixed(1)}" aria-valuetext="${F(ageTxt(a))}" onkeydown="tlKey(event)" style="${theme(a)}">${art(a)}<em class="tl-tip">${F(hinted ? ageTxt(a) : 'Drag me')}</em></span><span class="tl-flag" aria-hidden="true">${window.stToy('cake')}</span></div><div class="tl-bar"><i></i><button class="tl-nowmark" onclick="tlScrub(null)" aria-label="${F('Back to today')}"></button></div><div class="tl-ticks" aria-hidden="true">${[[0, 'Birth'], [12, 'First birthday']].map(([v, l]) => `<span style="left:${v / 12 * 100}%">${F(l)}</span>`).join('')}${hinted ? '' : `<em class="tl-hintline">${F(`Drag ${nm} to peek ahead`)}</em>`}</div><div class="tl-ends">${ends(a)}</div></div>`;
+    h += `<div class="tl-prog${hinted ? '' : ' tl-hint'}"><div class="tl-ride"><span class="tl-baby" role="slider" tabindex="0" aria-label="${F(`Drag ${nm} to see another age`)}" aria-valuemin="0" aria-valuemax="12" aria-valuenow="${a.toFixed(1)}" aria-valuetext="${F(ageTxt(a))}" onkeydown="tlKey(event)" style="${theme(a)}">${art(a)}<em class="tl-tip">${F(hinted ? ageTxt(a) : 'Drag me')}</em></span><span class="tl-flag" aria-hidden="true"><img class="tl-cakeimg" src="assets/home/babies/cake.webp" alt=""></span></div><div class="tl-bar"><i></i><button class="tl-nowmark" onclick="tlScrub(null)" aria-label="${F('Back to today')}"></button></div><div class="tl-ticks" aria-hidden="true">${[[0, 'Birth'], [12, 'First birthday']].map(([v, l]) => `<span style="left:${v / 12 * 100}%">${F(l)}</span>`).join('')}${hinted ? '' : `<em class="tl-hintline">${F(`Drag ${nm} to peek ahead`)}</em>`}</div><div class="tl-ends">${ends(a)}</div></div>`;
     const gvars = x => typeof window.monthColor === 'function' ? `--g-bg:${window.monthColor(Math.max(0, Math.min(11, Math.floor(x))), .86)};--g-ink:${window.monthColor(Math.max(0, Math.min(11, Math.floor(x))), .45, 30)}` : '';
     window.__tl.gvars = gvars;
     h += `<ol class="tl-steps tl-groups tl-around" style="${gvars(a)}">${listHTML(a)}</ol>`;
@@ -261,7 +261,7 @@
     pg.style.setProperty('--tlp', (x / 12 * 100) + '%');
     pg.classList.toggle('is-away', q !== T.a);
     
-    pg.querySelector('.tl-flag').style.opacity = x > 10.5 ? '0' : '';
+    // The cake stays put: the line ends before it, so the baby never covers it.
     const b = pg.querySelector('.tl-baby'), tip = b.querySelector('.tl-tip');
     if (String(q) === pg.dataset.q) return; pg.dataset.q = String(q);
     const mo = String(Math.max(0, Math.min(11, Math.floor(q))));
