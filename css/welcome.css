@@ -213,3 +213,6 @@ body.ob-steps #main.is-onboarding { padding-top: 10px !important }
   #main .ob-welcome h1 { font-size: 30px !important }
 }
 body.ob-steps #main.is-onboarding { padding-top: calc(10px + env(safe-area-inset-top, 0px)) !important }
+#main .ob-help { margin: 6px 0 0; font-size: 13px; color: var(--muted) }
+#main .ob-how { grid-auto-flow: row; grid-template-columns: 1fr 1fr }
+#main .ob-how button { font-size: 14px }

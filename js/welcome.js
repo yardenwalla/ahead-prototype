@@ -12,8 +12,8 @@
   const IMG = (src, cls) => `<img class="${cls || ''}" src="${src}" alt="" decoding="async">`;
   function welcomeHtml() {
     return `<section class="welcome aw ob-welcome">
-      <h1><span>Less searching.</span><span>More confidence</span><span>in what’s next.</span></h1>
-      <p class="aw-lead">A little clarity for every stage of the first year.</p>
+      <h1><span>What matters now.</span><span>What’s coming next.</span></h1>
+      <p class="aw-lead">Guidance matched to your baby’s exact age, all through the first year.</p>
       <div class="ob-collage" aria-hidden="true">
         <div class="ob-mini ob-mini-tl"><b>Timeline</b><small>What’s coming up</small><div class="ob-tl"><i></i><span></span><i></i><span></span><i></i><span></span></div></div>
         <div class="ob-mini ob-mini-guides"><b>Guides</b><small>Answers by stage</small><div class="ob-mini-pic">${IMG('assets/feeding/first-foods.jpg')}</div><span class="ob-bar"></span><span class="ob-bar short"></span></div>
@@ -38,7 +38,7 @@
     bottle: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2.8h4M10.5 2.8v2.4h3V2.8M9 5.2h6l.8 2.3v12a1.8 1.8 0 0 1-1.8 1.8h-4a1.8 1.8 0 0 1-1.8-1.8v-12zM8.4 11h3M8.4 14h3"/></svg>',
     both: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 6c2.2 2.6 4 5 4 7.3a4 4 0 0 1-8 0C4.5 11 6.3 8.6 8.5 6zM15.5 6c2.2 2.6 4 5 4 7.3a4 4 0 0 1-8 0"/></svg>'
   };
-  const HOW = [['Nursing', 'Nursing'], ['Pumping', 'Pumped'], ['Both', 'Both'], ['Stored', 'Stored milk']];
+  const HOW = [['Nursing', 'Nursing'], ['Pumping', 'Pumped'], ['Both', 'Nursing + pumped'], ['Stored', 'Freezer stash']];
 
   function seg(cls, items, value, label) {
     return `<div class="ob-seg ${cls}" role="radiogroup" aria-label="${label}">${items.map(([v, t]) => `<button type="button" role="radio" data-v="${v}" aria-checked="${v === value}">${t}</button>`).join('')}</div>`;
@@ -77,18 +77,26 @@
     const early = form.querySelector('#early');
     if (early) { const l = early.closest('label'); [...l.childNodes].forEach(n => n.nodeType === 3 && n.remove());
       l.insertAdjacentHTML('beforeend', '<span class="ob-early"><b>Born before 37 weeks?</b><small>We’ll use the original due date where adjusted age matters.</small></span>'); }
+    // Name: no "Optional" tag; one line says why we ask.
+    const nm = form.querySelector('#babyName');
+    if (nm) { const l = form.querySelector('label[for="babyName"]'); if (l) { const h = l.querySelector('.hint'); h && h.remove(); }
+      nm.insertAdjacentHTML('afterend', '<p class="ob-help">We’ll use it throughout the app.</p>'); }
     // Step 2: milk as three cards, then how breast milk is given as buttons, right under them.
     const feed = form.querySelector('#feed');
     if (feed) {
       feed.required = false; feed.classList.add('ob-hidden'); feed.tabIndex = -1; feed.setAttribute('aria-hidden', 'true');
-      const intro = form.querySelector('.hint'); if (intro && /fits your day/.test(intro.textContent)) { intro.className = 'ob-sub'; intro.removeAttribute('style'); intro.textContent = 'We’ll tailor feeding guidance. You can change this anytime.'; }
+      const intro = form.querySelector('.hint'); if (intro && /fits your day/.test(intro.textContent)) { intro.className = 'ob-sub'; intro.removeAttribute('style'); intro.textContent = 'So feeding tips fit how you actually feed. Change it anytime.'; }
       form.querySelectorAll('p.hint').forEach(h => /update this anytime/.test(h.textContent) && h.remove());
       const fl = form.querySelector('label[for="feed"]'); if (fl) fl.remove();
       feed.insertAdjacentHTML('afterend', `<div class="ob-milk" role="radiogroup" aria-label="How is your baby fed?">${MILK.map(([v, t, sub, ic]) => `<button type="button" role="radio" data-v="${v}" aria-checked="${feed.value === v}"><span class="ob-milk-ic ob-ic-${ic}">${MILK_ICON[ic]}</span><span class="ob-milk-t"><b>${t}</b>${sub ? `<small>${sub}</small>` : ''}</span><i aria-hidden="true"></i></button>`).join('')}</div>`);
       const how = form.querySelector('#feedHow');
       if (how) { how.classList.add('ob-hidden'); how.tabIndex = -1; how.setAttribute('aria-hidden', 'true');
         const hl = form.querySelector('label[for="feedHow"]'); if (hl) { hl.removeAttribute('for'); hl.textContent = 'How is breast milk given?'; }
-        how.insertAdjacentHTML('afterend', seg('ob-how', HOW, how.value, 'How is breast milk given?')); }
+        how.insertAdjacentHTML('afterend', seg('ob-how', HOW, how.value, 'How is breast milk given?'));
+      }
+      // The payoff button says the baby's name when we have it.
+      const nameNow = (typeof draft !== 'undefined' && draft && draft.name || '').trim(), go = form.querySelector('button.primary');
+      if (go && nameNow && /See what matters now/.test(go.textContent)) go.textContent = `See what matters for ${nameNow} →`;
     }
   }
 
