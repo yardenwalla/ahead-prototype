@@ -216,3 +216,10 @@ body.ob-steps #main.is-onboarding { padding-top: calc(10px + env(safe-area-inset
 #main .ob-help { margin: 6px 0 0; font-size: 13px; color: var(--muted) }
 #main .ob-how { grid-auto-flow: row; grid-template-columns: 1fr 1fr }
 #main .ob-how button { font-size: 14px }
+/* Date fields: "Select a date" + calendar icon; the real input sits on top, invisible, so the phone's picker opens */
+#main .ob-date { position: relative; margin-top: 8px }
+#main .ob-date input[type=date] { position: absolute !important; inset: 0; width: 100% !important; height: 100% !important; min-height: 0 !important; margin: 0 !important; opacity: 0; cursor: pointer; z-index: 2; -webkit-appearance: none; appearance: none }
+#main .ob-date .ob-date-text { display: flex; align-items: center; min-height: 48px; padding: 0 48px 0 16px; border: 1px solid var(--line); border-radius: 14px; background: var(--white, #fffefb); font-size: 16px; color: #9a94a3 }
+#main .ob-date.has-value .ob-date-text { color: var(--ink) }
+#main .ob-date .ob-date-ic { position: absolute; right: 15px; top: 50%; width: 20px; height: 20px; margin-top: -10px; color: #5d5670; pointer-events: none }
+#main .ob-date:focus-within .ob-date-text { border-color: #6b5aa8; box-shadow: 0 0 0 3px rgba(107,90,168,.15) }

@@ -65,6 +65,19 @@
     return baseSubmit.apply(this, arguments);
   };
 
+  function paintDates(root) {
+    (root || document).querySelectorAll('.ob-date').forEach(w => {
+      const inp = w.querySelector('input'), t = w.querySelector('.ob-date-text'); if (!inp || !t) return;
+      const v = inp.value, d = v ? new Date(v + 'T12:00:00') : null;
+      t.textContent = d && !isNaN(d) ? d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'Select a date';
+      w.classList.toggle('has-value', !!v);
+    });
+  }
+  ['input', 'change'].forEach(ev => document.addEventListener(ev, e => { if (e.target && e.target.closest && e.target.closest('.ob-date')) paintDates(); }, true));
+  // On a computer, clicking anywhere on the field opens the calendar (phones already do this).
+  document.addEventListener('click', e => { const inp = e.target && e.target.closest && e.target.closest('.ob-date input');
+    if (inp && typeof inp.showPicker === 'function') { try { inp.showPicker(); } catch (err) {} } }, true);
+
   function enhanceSetup(main) {
     const back = main.querySelector(':scope > button.back, .back'), top = main.querySelector('.ob-top');
     if (back && top) { top.prepend(back); back.classList.add('ob-back'); }
@@ -81,6 +94,15 @@
     const nm = form.querySelector('#babyName');
     if (nm) { const l = form.querySelector('label[for="babyName"]'); if (l) { const h = l.querySelector('.hint'); h && h.remove(); }
       nm.insertAdjacentHTML('afterend', '<p class="ob-help">We’ll use it throughout the app.</p>'); }
+    // Dates: a calm "Select a date" field with a calendar icon that shows the date in words; the phone's own picker
+    // still opens underneath (the real date input sits on top, invisible, so taps reach it).
+    form.querySelectorAll('input[type=date]').forEach(inp => {
+      if (inp.closest('.ob-date')) return;
+      const wrap = document.createElement('div'); wrap.className = 'ob-date';
+      inp.parentNode.insertBefore(wrap, inp); wrap.appendChild(inp);
+      inp.insertAdjacentHTML('beforebegin', '<span class="ob-date-text" aria-hidden="true"></span><svg class="ob-date-ic" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>');
+    });
+    paintDates(form);
     // Step 2: milk as three cards, then how breast milk is given as buttons, right under them.
     const feed = form.querySelector('#feed');
     if (feed) {
