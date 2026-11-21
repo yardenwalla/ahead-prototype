@@ -20,3 +20,36 @@
 /* The month baby picture on the Home card */
 #main .ms-toys .ms-babyimg{position:absolute;left:8%;right:8%;top:12px;bottom:6px;display:flex;align-items:flex-end;justify-content:center}
 #main .ms-toys .ms-babyimg img{max-width:100%;max-height:100%;object-fit:contain;filter:drop-shadow(0 3px 4px rgba(80,50,40,.12))}
+
+/* Nov 21: big painted baby that bleeds off the card's right and bottom edges over a soft wash of the month's color (from Yarden's inspiration). */
+#main .ms-card{position:relative!important;display:block!important;overflow:hidden!important;min-height:232px!important;padding:22px 20px 20px!important;isolation:isolate}
+#main .ms-card::before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(70% 60% at 82% 72%,var(--ms-c2) 0%,rgba(255,255,255,0) 70%),radial-gradient(45% 35% at 60% 95%,var(--ms-c1) 0%,rgba(255,255,255,0) 70%);opacity:.75}
+#main .ms-card .ms-body{display:block!important}
+#main .ms-card .ms-copy{position:relative;z-index:2;max-width:54%}
+#main .ms-card .ms-foot{position:relative;z-index:2;margin-top:18px!important}
+#main .ms-c2{display:none!important}
+#main .ms-card .ms-art{position:absolute!important;z-index:1;right:2px!important;bottom:-16px!important;width:58%!important;height:90%!important;margin:0!important}
+#main .ms-toys{inset:0!important}
+#main .ms-toys .ms-babyimg{inset:0!important;display:flex!important;align-items:flex-end!important;justify-content:flex-end!important}
+#main .ms-toys .ms-babyimg img{max-width:none!important;max-height:none!important;height:100%!important;width:auto!important;filter:none!important}
+#main .ms-copy small{text-wrap:pretty}
+#main .ms-toys{clip-path:none!important}
+#main .ms-card .ms-art::before{display:none!important}
+#main .ms-card .ms-art{-webkit-mask-image:linear-gradient(to right,transparent 0,#000 22%);mask-image:linear-gradient(to right,transparent 0,#000 22%)}
+/* Keep the words whole on narrow phones: the text keeps at least 198px, the baby shrinks to fit the space beside it. */
+#main .ms-card .ms-copy{max-width:none!important;width:max(54%,198px)}
+#main .ms-copy .ms-month{white-space:nowrap}
+#main .ms-copy small{max-width:none!important}
+#main .ms-card .ms-art{width:min(58%,calc(100% - 158px))!important}
+#main .ms-toys .ms-babyimg img{height:auto!important;width:auto!important;max-height:100%!important;max-width:100%!important}
+#main .ms-copy small{max-width:186px!important;text-wrap:balance}
+#main .ms-card .ms-art{width:min(55%,calc(100% - 170px))!important}
+/* Safari: the card is a <button>, and Safari doesn't lay out block content inside buttons like other browsers.
+   Use a one-column grid (as the original card did) and pin everything to the left. */
+#main .ms-card{display:grid!important;grid-template-columns:minmax(0,1fr)!important;grid-template-rows:auto 1fr!important;justify-items:start!important;align-items:start!important;text-align:left!important}
+#main .ms-card .ms-body{display:contents!important}
+#main .ms-card .ms-copy{grid-column:1!important;grid-row:1!important;justify-self:start!important;margin:0!important}
+#main .ms-card .ms-foot{grid-column:1!important;grid-row:2!important;align-self:end!important;justify-self:start!important}
+#main .ms-card .ms-art{grid-column:auto!important;grid-row:auto!important}
+/* Copy option 1: the picture sits beside the month, the name moves to the button. */
+#main .ms-card .ms-copy small{font-size:16px!important;line-height:1.4!important;color:#3d3a4d!important;margin-top:10px!important;max-width:196px!important}

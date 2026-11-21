@@ -3,7 +3,7 @@
 (function () {
   // One age format: days in the first week, weeks until 3 months, then months, then "1 year".
   const fromDays = (days, m) => {
-    if (days < 7) return `${Math.max(1, days)} day${days === 1 ? '' : 's'}`;
+    if (days < 7) { const d = Math.max(1, days); return `${d} day${d === 1 ? '' : 's'}`; }
     if (days < 91) { const w = Math.floor(days / 7); return `${w} week${w === 1 ? '' : 's'}`; }
     return m >= 12 ? '1 year' : `${m} months`;
   };

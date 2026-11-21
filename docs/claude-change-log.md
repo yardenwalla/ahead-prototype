@@ -221,3 +221,10 @@ Files: `js/home-cards.js`, `js/home-copy.js` (v10), `js/stages.js`.
 - "Poop changes with solids" stays on Home (Yarden, Nov 7).
 - Results (840 simulated families): weekly visits with something new 86% (was 84%); month 10 82% (73%), month 11 71% (68%); first teeth known for 54% of families (was 0%); weekly visits with a question 19% (18%).
 - Home's cards are set once a day. Opening or dismissing a card removes it without pulling in the next one, so "That's everything for today" stays true (and reads "You're all caught up for today" once they're all cleared). Before, Home re-picked on every redraw, so a × swapped in a new card. A card unlocked by answering Home's question still shows on the same visit.
+
+## Home: painted month babies and story card (2026-11-21, preview)
+Files: `assets/home/babies/baby-0..11.webp`, `handle-0..11.webp`, `css/home-card-clean.css`, `js/home-glance.js`, `js/cohesion.js`. Decision notes: project doc "Home month babies — art decision".
+- New painted babies for every month (soft editorial picture-book style, one pose and one prop per month, the month's outfit color, a different baby each month), on the Home story card and the Timeline handle.
+- Story card layout from Yarden's inspiration: a big baby anchored bottom-right and cropped by the card's edge, over a soft wash of the month's color; the old circle behind the baby is gone. The card is a one-column grid so Safari (a button) lays it out like Chrome; the text keeps at least 198px and the baby shrinks on narrow phones.
+- Copy: the title is just the month ("Month 6."); the "[name]'s story." line is gone so the picture sits beside the month, not the name. Each teaser sentence starts its own line. The button reads "▶ [name]'s month" ("▶ [name]'s story" for the newborn card).
+- Fix: the birth day said "1 days"; it now says "1 day".
