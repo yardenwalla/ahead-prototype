@@ -48,13 +48,13 @@
   // How it changes: the gear as a path, the same block as Outings' "Which seat, and when". Each step is named by the cue
   // to move on, not an age, and the step this page is about is outlined.
   const STEPS = {
-    bath: ['Which tub, and when', [['sponge', 'A sponge bath on a towel', 'Cord still on', 'Sponge baths'], ['tubbath', 'A baby tub with a sling', 'Cord healed', 'A baby tub'],
+    bath: ['Which tub, and when', [['tubbath', 'A baby tub with a newborn sling', 'Cord healed', 'Baby tub, with the sling'],
       ['tubinbig', 'A baby tub set inside the big tub', 'Too big, can’t sit yet', 'Baby tub in the big tub'], ['bigtub', 'The big tub with shallow water', 'Sits steadily', 'The big tub']],
       'Move on by what {s} can do, not the age on the box.'],
     nails: ['File, then clippers', [['nailfile', 'Filing a newborn’s nails with a soft emery board', 'First weeks', 'A soft file, maybe twice a week'], ['nails', 'Trimming nails with small baby clippers', 'Once you’re ready', 'Baby clippers, about once a week']],
       'Either is fine at any age. A file can’t nick the skin.']
   };
-  const STEP_ON = { 'p:sponge': ['bath', 0], 'p:tub': ['bath', 1], 't:bath:0': ['bath', 0], 't:bath:1': ['bath', 1], 't:bath:2': ['bath', 2], 't:bath:3': ['bath', 3], 't:nails:0': ['nails', 0], 't:nails:1': ['nails', 1], 't:nails:2': ['nails', 1], 't:nails:3': ['nails', 1] };
+  const STEP_ON = { 'p:tub': ['bath', 0], 't:bath:1': ['bath', 0], 't:bath:2': ['bath', 1], 't:bath:3': ['bath', 2], 't:nails:0': ['nails', 0], 't:nails:1': ['nails', 1], 't:nails:2': ['nails', 1], 't:nails:3': ['nails', 1] };
   const gearPath = (k, on) => { const [title, items, note] = STEPS[k];
     return `<h2 class="hub-h2">${F(title)}</h2><div class="care-psteps" style="--n:${items.length}">${items.map(([n, alt, when, line], i) => `<figure class="${i === on ? 'is-on' : ''}">${img(n, alt)}<figcaption><b>${F(when)}</b><small>${F(line)}</small></figcaption></figure>`).join('')}</div><p class="care-psteps-note">${F(note)}</p>`; };
   function addPath(main, r) {
@@ -65,6 +65,48 @@
     const hs = [...main.querySelectorAll('h2.hub-h2')], before = hs.find(h => /^(Good to know|Watch how|When to call)$/.test(h.textContent.trim()));
     const html = gearPath(hit[0], hit[1]);
     if (before) before.insertAdjacentHTML('beforebegin', html); else (main.querySelector('.hub-page') || main).insertAdjacentHTML('beforeend', html);
+  }
+
+
+  // What you need, before the steps (the inspiration's order): object photos with a plain label.
+  const NEED = { 'p:sponge': [['towel', 'Towel'], ['washcloth', 'Washcloth'], ['cleandiaper', 'Clean diaper'], ['soap', 'Mild soap']],
+    'p:tub': [['tub', 'Baby tub'], ['towel', 'Towel'], ['washcloth', 'Washcloth'], ['cleandiaper', 'Clean diaper']] };
+  const needBlock = items => `<h2 class="hub-h2">${F('What you need')}</h2><div class="care-need">${items.map(([n, l]) => `<figure>${img(n, l)}<figcaption>${F(l)}</figcaption></figure>`).join('')}</div>`;
+
+  // Steps are a real sequence, so they read as numbered rows (no pictures), the same on every page.
+  function numberSteps(main) {
+    const h = [...main.querySelectorAll('h2.hub-h2')].find(x => x.textContent.trim() === 'Steps'); if (!h) return;
+    const fig = h.nextElementSibling; if (!fig || !fig.classList.contains('hub-iconsteps')) return;
+    const rows = [...fig.querySelectorAll('.hub-iconstep')].map((st, i) => { const b = st.querySelector('b'), sm = st.querySelector('small'); const t = b ? b.cloneNode(true) : null; if (t) t.querySelectorAll('em').forEach(e => e.remove());
+      return `<li><span class="care-n">${i + 1}</span><div><b>${t ? t.innerHTML : ''}</b>${sm ? `<small>${sm.innerHTML}</small>` : ''}</div></li>`; }).join('');
+    const rest = [...fig.children].filter(c => !c.classList.contains('hub-iconsteps-row')).map(c => c.outerHTML).join('');
+    fig.outerHTML = `<section class="care-nsteps"><ol>${rows}</ol>${rest}</section>`;
+  }
+
+  // Any drawn picture left in an icon spot becomes the plain line icon, so every icon looks the same.
+  const TUB = '<svg viewBox="0 0 24 24" fill="none" stroke="#2a6078" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11h18v2a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5Z"/><path d="M6 11V6.5A2.5 2.5 0 0 1 10.5 5"/><path d="m7 18-1 2m11-2 1 2"/></svg>';
+  const lineIcons = main => main.querySelectorAll('.hub-dot svg[viewBox="0 0 100 100"], .hub-iconstep-art svg[viewBox="0 0 100 100"]').forEach(s => { s.outerHTML = TUB; });
+
+  // Skin pages, like the inspiration: a big photo with a close-up circle, then what helps, then how to tell normal from time to call.
+  const ZOOM = { cradle: [52, 24, 'br'], acne: [27, 57, 'br'], newborn: [57, 57, 'bl'], peeling: [17, 52, 'br'], drool: [55, 60, 'tr'], eczema: [43, 54, 'br'], heat: [50, 48, 'tr'] };
+  function skinPage(main, id) {
+    const fig = main.querySelector('.care-map'); if (!fig || main.querySelector('.care-skin')) return;
+    const where = (fig.querySelector('.tpl-where') || {}).textContent || '', look = (fig.querySelector('.tpl-look') || {}).innerHTML || '';
+    const [x, y, corner] = ZOOM[id] || [50, 50, 'tr'], n = RASH[id], S = 3;
+    const pos = Math.max(0, Math.min(1, (y / 100 - 0.375) / 0.25)), top = pos * 0.25, py = ((y / 100 - top) / 0.75) * 100;   // 4:3 window on a square photo
+    const bp = c => ((c / 100 * S - 0.5) / (S - 1) * 100).toFixed(1) + '%';
+    const name = (main.querySelector('.dev-area-head h1') || {}).textContent || '';
+    fig.outerHTML = `<figure class="ph-photo ph-hero care-ph care-skin" style="--py:${(pos * 100).toFixed(0)}%">${img(n, name)}
+      <span class="care-zoom is-${corner}" style="background-image:url('${src(n)}');background-position:${bp(x)} ${bp(y)}"></span>
+</figure>${where ? `<p class="care-skin-where"><b>${F('Where:')}</b> ${F(where)}</p>` : ''}`;
+    const callH = [...main.querySelectorAll('h2.hub-h2')].find(h => h.textContent.trim() === 'When to call'), calls = main.querySelector('.care-calls');
+    if (!callH || !calls) return;
+    const ps = [...calls.querySelectorAll('p')], ped = ps.find(p => /pediatrician/i.test(p.textContent)), urgent = ps.find(p => /911|ER\b/.test(p.textContent));
+    const clean = p => { const c = p.cloneNode(true); c.querySelectorAll('b').forEach(b => b.remove()); const t = c.innerHTML.trim(); return t.charAt(0).toUpperCase() + t.slice(1); };
+    callH.textContent = F('How to tell');
+    calls.outerHTML = `<div class="care-tell"><div class="is-ok"><b><span class="care-tell-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#2a6078" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span>${F('Normal')}</b><p>${look}</p></div>`
+      + `<div class="is-call"><b><span class="care-tell-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#9b3326" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg></span>${F('Time to call')}</b><p>${ped ? clean(ped) : ''}</p></div></div>`
+      + (urgent ? `<p class="care-tell-911">${urgent.innerHTML}</p>` : '');
   }
 
   const route = () => (typeof page === 'string' && page.startsWith('chg:' + CAT + ':d:')) ? page.slice(('chg:' + CAT + ':d:').length) : null;
@@ -105,17 +147,16 @@
     // All how-tos: the same photo rows.
     if (/^how/.test(r)) { main.querySelectorAll('.hub-list').forEach(photoRows); return; }
     // Is this normal? pages: a real photo in place of the body outline.
+    numberSteps(main); lineIcons(main);
     const rm = r.match(/^rash:(\w+)/);
-    if (rm && RASH[rm[1]]) { const fig = main.querySelector('.care-map'); const svg = fig && fig.querySelector('svg');
-      if (svg) { const s = document.createElement('span'); s.className = 'care-map-ph ph-tile'; s.innerHTML = img(RASH[rm[1]], (head.querySelector('h1') || {}).textContent || ''); svg.replaceWith(s); fig.classList.add('has-photo'); }
-      return; }
+    if (rm && RASH[rm[1]]) { skinPage(main, rm[1]); return; }
     addPath(main, r);
     const hit = PAGE.find(([re]) => re.test(r)); if (!hit || main.querySelector('.care-ph')) return;
     const [title, n, alt, pins, cls, into] = hit[1];
     // Most pages: the photo is the first section. A photo of what helps sits at the top of that page's own section instead.
     const own = into && [...main.querySelectorAll('h2.hub-h2')].find(h => h.textContent.trim() === into);
     if (own) own.insertAdjacentHTML('afterend', photo(n, alt, pins, (cls || '') + ' is-in'));
-    else head.insertAdjacentHTML('afterend', `<h2 class="hub-h2">${F(title)}</h2>` + photo(n, alt, pins, cls || ''));
+    else head.insertAdjacentHTML('afterend', `<h2 class="hub-h2">${F(title)}</h2>` + photo(n, alt, pins, cls || '') + (NEED[r] ? needBlock(NEED[r]) : ''));
   }
 
   function dress() {

@@ -44,3 +44,50 @@
 #main .care-psteps[style*="--n:4"] figcaption { padding: 7px 7px 9px }
 #main .care-psteps[style*="--n:4"] small { font-size: 12px }
 #main .care-psteps-note { font-size: 13.5px; line-height: 1.4; color: #6b6670; margin: 0 2px 22px }
+
+/* One icon style across Everyday care: the same size, shape and color everywhere (Nov 20) */
+#main .care-v2 .dev-area-head-art { display: none }
+#main .care-v2 .dev-area-head { padding-top: 22px }
+#main .care-v2 .hub-iconstep-art { width: 44px; height: 44px; margin-bottom: 8px; background: #e3f1f7 !important }
+#main .care-v2 .hub-iconstep-art svg { width: 24px; height: 24px }
+#main .care-v2 .hub-dot { width: 44px; height: 44px; border-radius: 50%; background: #e3f1f7 !important; flex: none }
+#main .care-v2 .hub-dot svg { width: 24px; height: 24px }
+#main .care-v2 .hub-iconstep-art svg [stroke]:not([stroke="none"]), #main .care-v2 .hub-dot svg [stroke]:not([stroke="none"]), #main .care-v2 .hub-iconstep-art svg, #main .care-v2 .hub-dot svg { stroke: #2a6078 }
+#main .care-v2 .hub-iconstep-art svg [fill]:not([fill="none"]), #main .care-v2 .hub-dot svg [fill]:not([fill="none"]) { fill: #cfe9f4 }
+
+/* What you need: object photos, four across */
+#main .care-need { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 0 0 18px }
+#main .care-need figure { margin: 0; text-align: center }
+#main .care-need img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 14px; background: #f3ece4 }
+#main .care-need figcaption { font-size: 12.5px; line-height: 1.3; color: var(--ink); margin-top: 6px; font-weight: 550 }
+
+/* Steps: numbered rows */
+#main .care-nsteps { background: #fffefb; border: 1px solid var(--line, #e1e5d9); border-radius: 18px; padding: 4px 14px; margin: 0 0 18px }
+#main .care-nsteps ol { list-style: none; margin: 0; padding: 0 }
+#main .care-nsteps li { display: flex; gap: 12px; align-items: flex-start; padding: 12px 0; border-top: 1px solid #eef0ea }
+#main .care-nsteps li:first-child { border-top: 0 }
+#main .care-nsteps .care-n { flex: none; width: 26px; height: 26px; border-radius: 50%; background: #e3f1f7; color: #2a6078; font-weight: 750; font-size: 13.5px; display: grid; place-items: center; margin-top: 1px }
+#main .care-nsteps b { display: block; font-size: 15px; font-weight: 650; color: var(--ink); line-height: 1.3 }
+#main .care-nsteps small { display: block; font-size: 13.5px; line-height: 1.35; color: #6b6670; margin-top: 2px }
+#main .care-nsteps .tpl-notes { margin: 0; padding: 10px 0 12px; border-top: 1px solid #eef0ea }
+
+/* Skin pages: big photo with a close-up circle */
+#main .care-v2 .care-skin img { object-position: 50% var(--py, 50%) }
+#main .care-skin .care-ring { position: absolute; width: 18%; aspect-ratio: 1; transform: translate(-50%, -50%); border: 2px solid #fffefb; border-radius: 50%; box-shadow: 0 0 0 1px #00000014; pointer-events: none }
+#main .care-skin .care-zoom { position: absolute; right: 12px; top: 12px; width: 34%; aspect-ratio: 1; border-radius: 50%; border: 3px solid #fffefb; background-size: 300%; box-shadow: 0 6px 18px #00000030 }
+#main .care-skin .care-zoom.is-tl, #main .care-skin .care-zoom.is-bl { right: auto; left: 12px }
+#main .care-skin .care-zoom.is-br, #main .care-skin .care-zoom.is-bl { top: auto; bottom: 12px }
+/* How to tell: normal next to time to call */
+#main .care-tell { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 0 0 8px }
+#main .care-tell > div { border-radius: 18px; padding: 12px 12px 14px; border: 1px solid var(--line, #e1e5d9); background: #fffefb }
+#main .care-tell > .is-call { background: #f8efe9; border-color: #f1ddd2 }
+#main .care-tell-ic { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: #e3f1f7; flex: none }
+#main .care-tell .is-call .care-tell-ic { background: #fffefb }
+#main .care-tell-ic svg { width: 15px; height: 15px }
+#main .care-tell b { display: flex; align-items: center; gap: 8px; font-size: 14.5px; font-weight: 700; color: #2a6078; margin-bottom: 4px }
+#main .care-tell .is-call b { color: #9b3326 }
+#main .care-tell p { margin: 3px 0 0; font-size: 13.5px; line-height: 1.38; color: var(--ink) }
+#main .care-tell-911 { font-size: 13.5px; line-height: 1.4; color: #6b6670; margin: 2px 2px 22px }
+#main .care-tell-911 b { color: #9b3326 }
+#main .care-skin-where { font-size: 14px; line-height: 1.4; color: var(--ink); margin: -8px 2px 18px }
+#main .care-skin-where b { color: #2a6078 }
