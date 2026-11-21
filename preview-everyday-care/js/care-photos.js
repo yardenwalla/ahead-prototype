@@ -9,7 +9,7 @@
 (function () {
   const F = s => (window.__hub ? window.__hub.F(s) : s);
   const CAT = 'Daily rhythm';
-  const src = n => `assets/care/${n}.jpg?v=1120b`;
+  const src = n => `assets/care/${n}.jpg?v=1120c`;
   const img = (n, alt) => `<img src="${src(n)}" alt="${F(alt).replace(/"/g, '&quot;')}" loading="lazy">`;
   const pin = ([label, x, y, side]) => `<span class="ph-pin ph-pin-${side}" style="left:${x}%;top:${y}%"><i></i><span>${F(label)}</span></span>`;
   const photo = (n, alt, pins, cls = '') => `<figure class="ph-photo ph-hero care-ph ${cls}">${img(n, alt)}${(pins || []).map(pin).join('')}</figure>`;
@@ -27,7 +27,11 @@
   const SEE = { 'rash:peeling': 'peeling', 'rash:newborn': 'milia', 'look:0:cord': 'cord', 'rash:acne': 'acne', 'rash:cradle': 'cradle', 'look:1:poop': 'cleandiaper',
     'rash:drool': 'drool', 'p:teething': 'soregums', 'rash:eczema': 'eczema', 'look:3:poop': 'solids', 'rash:heat': 'heat' };
   // Is this normal? pages: the photo for "What it looks like".
-  const TILE_CROP = { milia: [55, 55, 1.9], cradle: [52, 22, 1.8], heat: [50, 48, 1.5], peeling: [22, 45, 1.3], cord: [50, 50, 1.25], acne: [30, 55, 1.3] };
+  const TILE_CROP = { milia: [45, 45, 1.6], cradle: [45, 35, 1.5], heat: [50, 48, 1.5], peeling: [35, 45, 1.3], cord: [50, 50, 1.25], acne: [40, 45, 1.3], eczema: [38, 62, 1.3] };
+  const SEE_LINE = { 'rash:peeling': 'Common in the first weeks.', 'rash:newborn': 'Tiny bumps that fade on their own.', 'look:0:cord': 'A little is normal as it heals.',
+    'rash:acne': 'Baby acne, gone by 4–6 months.', 'rash:cradle': 'Cradle cap, usually gone by age 1.', 'look:1:poop': 'Can be fine if feeds go well.',
+    'rash:drool': 'Comes with drool. Easy to soothe.', 'p:teething': 'Teething can start around now.', 'rash:eczema': 'Often eczema. Thick cream helps.',
+    'look:3:poop': 'Thicker, browner and smellier.', 'rash:heat': 'Cool down and dress lighter.' };
   const RASH = { peeling: 'peeling', newborn: 'milia', acne: 'acne', cradle: 'cradle', drool: 'drool', eczema: 'eczema', heat: 'heat' };
 
   // How-to pages: [section title, photo, alt, pins]. Pins name the thing they sit next to, and say why it matters.
@@ -78,6 +82,19 @@
   const needBlock = items => `<h2 class="hub-h2">${F('What you need')}</h2><div class="care-need">${items.map(([n, l]) => `<figure>${img(n, l)}<figcaption>${F(l)}</figcaption></figure>`).join('')}</div>`;
 
   // Steps are a real sequence, so they read as numbered rows (no pictures), the same on every page.
+  const SEQ = { 'p:tub': ['tub', 'bathface', 'tubbath', 'bathhair', 'hero-1'] };
+  function photoSteps(main, r) {
+    const pics = SEQ[r]; if (!pics) return false;
+    const h = [...main.querySelectorAll('h2.hub-h2')].find(x => x.textContent.trim() === 'Steps'); const fig = h && h.nextElementSibling;
+    const steps = fig ? [...fig.querySelectorAll('.hub-iconstep')] : []; if (steps.length !== pics.length) return false;
+    const notes = fig.querySelector('.tpl-notes');
+    const cards = steps.map((st, i) => { const b = st.querySelector('b').cloneNode(true); b.querySelectorAll('em').forEach(e => e.remove()); const sm = st.querySelector('small');
+      return `<figure class="care-pstep">${img(pics[i], b.textContent)}<figcaption><span class="care-n">${i + 1}</span><div><b>${b.innerHTML}</b>${sm ? `<small>${sm.innerHTML}</small>` : ''}</div></figcaption></figure>`; }).join('');
+    h.textContent = F('How to give a tub bath');
+    fig.outerHTML = `<div class="care-psteq">${cards}</div>${notes ? `<ul class="tpl-notes care-psteq-notes">${notes.innerHTML}</ul>` : ''}`;
+    return true;
+  }
+
   function numberSteps(main) {
     const h = [...main.querySelectorAll('h2.hub-h2')].find(x => x.textContent.trim() === 'Steps'); if (!h) return;
     const fig = h.nextElementSibling; if (!fig || !fig.classList.contains('hub-iconsteps') || fig.classList.contains('care-nsteps')) return;
@@ -93,7 +110,7 @@
   const lineIcons = main => main.querySelectorAll('.hub-dot svg[viewBox="0 0 100 100"], .hub-iconstep-art svg[viewBox="0 0 100 100"]').forEach(s => { s.outerHTML = TUB; });
 
   // Skin pages, like the inspiration: a big photo with a close-up circle, then what helps, then how to tell normal from time to call.
-  const ZOOM = { cradle: [52, 24, 'br'], acne: [27, 57, 'br'], newborn: [57, 57, 'bl'], peeling: [17, 52, 'br'], drool: [55, 60, 'tr'], eczema: [43, 54, 'br'], heat: [50, 48, 'tr'] };
+  const ZOOM = { cradle: [45, 35, 'br'], acne: [38, 50, 'br'], newborn: [45, 45, 'br'], peeling: [35, 45, 'br'], drool: [55, 60, 'tr'], eczema: [40, 48, 'br'], heat: [50, 48, 'tr'] };
   function sizeUp(main, r) {
     if (!/^(h:diapers|t:diapers)/.test(r) || /size up/i.test(main.textContent) || !window.__hub) return;
     const row = window.__hub.row({ icon: 'diaper', cat: CAT, title: 'Leaks mean it’s time to size up', sub: 'So do red marks at the legs or waist, or tabs that don’t reach the middle.' });
@@ -185,6 +202,24 @@
     const head = main.querySelector('.monthly-page-header'); if (head) head.insertAdjacentHTML('afterend', nav);
   }
 
+  const ROUTINES = [
+    ['Bathing', 'From sponge baths to the big tub.', 'tubbath', ['p:sponge', 'p:tub', 't:bath:2', 't:bath:3']],
+    ['Teeth and gums', 'Gum wipes now, brushing from the first tooth.', 'gums', ['h:gums:0', 'h:gums:1', 'p:teething', 'p:brush']],
+    ['Diapering', 'Changes, sizes and diaper rash.', 'diaper', ['h:diapers:0', 'h:diapers:1', 'h:diapers:2', 't:diapers:3']],
+    ['Nail care', 'Short and smooth, about once a week.', 'nails', ['t:nails:0', 't:nails:1', 't:nails:2', 't:nails:3']],
+    ['Skin care', 'Plain water, and cream for dry patches.', 'cream', ['h:skin:1', 'h:skin:1', 'h:skin:2', 'h:skin:3']],
+    ['Dressing', 'Layers, sleepwear and the car seat.', 'clothes', ['t:clothes:0', 't:clothes:1', 't:clothes:2', 't:clothes:2']],
+    ['Sun protection', 'Shade first, then sunscreen from 6 months.', 'sun', ['t:sun:0', 't:sun:1', 't:sun:2', 't:sun:3']]
+  ];
+  const ROUTINE_CORD = ['The cord', 'Clean, dry and in the air until it falls off.', 'cord', ['cord']];
+  function routinesPage(main, v) {
+    if (main.querySelector('.care-routines')) return;
+    const page = main.querySelector('.hub-page') || main, head = main.querySelector('.monthly-page-header');
+    const keep = head ? head.outerHTML : '';
+    const list = (v === 0 ? [ROUTINE_CORD, ...ROUTINES] : ROUTINES).map(([t, l, n, rs]) => `<button class="care-news-card" onclick="openPage('chg:${CAT}:d:${rs[Math.min(v, rs.length - 1)]}')">${img(n, '')}<span><b>${F(t)}</b><small>${F(l)}</small></span><i aria-hidden="true">›</i></button>`).join('');
+    page.innerHTML = keep + `<header class="hub-hero care-routines-hero"><h1>${F('Care routines')}</h1><p class="hub-lead">${F('Everyday care, sized to {o} right now.')}</p></header><div class="care-news care-routines">${list}</div>`;
+  }
+
   function dressHome(main) {
     const v = Number((main.querySelector('[data-care-stage]') || {}).dataset?.careStage);
     const hero = main.querySelector('.care-hero.care-disc');
@@ -200,10 +235,13 @@
       hero.classList.add('care-life');
     }
     if (hero) newCards(main, hero, v);
-    main.querySelectorAll('a, button').forEach(a => { if (a.childNodes.length && /^All how-tos/.test(a.textContent.trim())) a.firstChild.textContent = a.firstChild.textContent.replace('All how-tos', 'All care how-tos'); });
+    const all = [...main.querySelectorAll('.care-all-how')].find(a => /:how:/.test(a.getAttribute('onclick') || ''));
+    if (all && !all.classList.contains('care-routine-row')) { all.className = 'care-routine-row'; all.innerHTML = `<span class="care-routine-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#2a6078" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6h12M8 12h12M8 18h12"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/></svg></span><span><b>${F('Care routines')}</b><small>${F('Bathing, teeth, nails and more, for {o} now.')}</small></span><i aria-hidden="true">›</i>`; }
     main.querySelectorAll('.care-see > button').forEach(b => {
       const r = routeOf(b), n = v === 3 && r === 'p:teething' ? 'hero-2' : SEE[r], art = b.querySelector('.care-see-art'); if (!n || !art || art.classList.contains('ph-tile')) return;
       art.className = 'care-see-art ph-tile'; art.innerHTML = img(n, b.textContent.trim()); b.classList.add('care-see-ph');
+      const line = v === 3 && r === 'p:teething' ? 'Drool and chewing are common.' : SEE_LINE[r], name = b.querySelector('b');
+      if (line && name && !b.querySelector('.care-see-line')) name.insertAdjacentHTML('afterend', `<small class="care-see-line">${F(line)}</small><i class="care-see-go" aria-hidden="true">›</i>`);
       // Small tiles zoom in on the thing itself, so it reads at this size.
       const c = TILE_CROP[n], im = art.querySelector('img'); if (c && im) { im.style.objectPosition = `${c[0]}% ${c[1]}%`; im.style.transformOrigin = `${c[0]}% ${c[1]}%`; im.style.transform = `scale(${c[2]})`; }
     });
@@ -212,13 +250,14 @@
   function dressPage(main, r) {
     const head = main.querySelector('.dev-area-head'); if (!head) return;
     // All how-tos: the same photo rows.
-    if (/^how/.test(r)) { main.querySelectorAll('.hub-list').forEach(photoRows); return; }
+    const hm = r.match(/^how:(\d)/); if (hm) { routinesPage(main, +hm[1]); return; }
     // Is this normal? pages: a real photo in place of the body outline.
-    numberSteps(main); lineIcons(main); sizeUp(main, r);
+    const seq = photoSteps(main, r); if (!seq) numberSteps(main); lineIcons(main); sizeUp(main, r);
     const rm = r.match(/^rash:(\w+)/);
     if (rm && RASH[rm[1]]) { skinPage(main, rm[1]); return; }
     addPath(main, r);
     if (main.querySelector('.care-psteps')) main.querySelectorAll('.tpl-notes li').forEach(li => { if (/big tub comes once/i.test(li.textContent)) li.remove(); });
+    if (main.querySelector('.care-psteq')) { const hd = main.querySelector('.dev-area-head'); if (NEED[r] && hd && !main.querySelector('.care-need')) hd.insertAdjacentHTML('afterend', needBlock(NEED[r])); return; }
     const hit = PAGE.find(([re]) => re.test(r)); if (!hit || main.querySelector('.care-ph')) return;
     const [title, n, alt, pins, cls, into] = hit[1];
     // Most pages: the photo is the first section. A photo of what helps sits at the top of that page's own section instead.

@@ -132,3 +132,36 @@
 #main .care-v2 .care-hero .st-chip { display: none }
 #main .care-tabs button.is-now::after { content: ""; position: absolute; top: 4px; right: 8px; width: 7px; height: 7px; border-radius: 50%; background: #e08a6b }
 #main:has(.care-tabs) .st-banner { display: none }
+
+/* Is this normal?: 2 across, name and a calm line (Nov 20, from her inspiration) */
+#main .care-v2 .care-see { display: grid !important; grid-template-columns: 1fr 1fr; gap: 10px }
+#main .care-v2 .care-see > button.care-see-ph { display: grid; grid-template-columns: 1fr auto; grid-template-rows: auto auto 1fr; text-align: left; align-items: start; padding: 0 0 12px; gap: 0 }
+#main .care-v2 .care-see > button.care-see-ph:last-child:nth-child(odd) { grid-column: 1 / -1 }
+#main .care-v2 .care-see > button:last-child:nth-child(odd) .care-see-art.ph-tile { aspect-ratio: 2.4 / 1 }
+#main .care-v2 .care-see .care-see-art.ph-tile { grid-column: 1 / -1; aspect-ratio: 16 / 10; margin-bottom: 9px }
+#main .care-v2 .care-see-ph b { padding: 0 0 0 12px !important; text-align: left; font-size: 15px }
+#main .care-v2 .care-see-line { grid-column: 1; padding: 2px 0 0 12px; font-size: 13px; line-height: 1.35; color: #6b6670; font-weight: 450 }
+#main .care-v2 .care-see-go { grid-column: 2; grid-row: 2 / 4; align-self: center; font-style: normal; color: #a3a0a8; font-size: 20px; padding: 0 12px 0 4px }
+
+/* Tub bath as a photo sequence */
+#main .care-psteq { display: grid; gap: 10px; margin: 0 0 10px }
+#main .care-pstep { margin: 0; background: #fffefb; border: 1px solid var(--line, #e1e5d9); border-radius: 18px; overflow: hidden; display: grid; grid-template-columns: 132px 1fr }
+#main .care-pstep img { width: 132px; height: 100%; min-height: 96px; object-fit: cover; display: block }
+#main .care-pstep figcaption { display: flex; gap: 10px; align-items: flex-start; padding: 13px 12px }
+#main .care-pstep b { display: block; font-size: 15px; font-weight: 650; color: #2f3a40; line-height: 1.3 }
+#main .care-pstep small { display: block; font-size: 13.5px; line-height: 1.35; color: #6b6670; margin-top: 2px }
+#main .care-psteq-notes { list-style: none; margin: 0 2px 18px; padding: 0 }
+#main .care-psteq-notes li { font-size: 14px; line-height: 1.42; margin: 0 0 6px; display: block !important }
+
+/* Care routines row and page */
+#main .care-routine-row { all: unset; box-sizing: border-box; display: flex; align-items: center; gap: 12px; width: 100%; background: #e9f4f8; border-radius: 18px; padding: 14px; margin: 4px 0 18px; cursor: pointer }
+#main .care-routine-ic { width: 40px; height: 40px; border-radius: 50%; background: #fffefb; display: grid; place-items: center; flex: none }
+#main .care-routine-ic svg { width: 22px; height: 22px }
+#main .care-routine-row > span:nth-child(2) { flex: 1 }
+#main .care-routine-row b { display: block; font-size: 16px; font-weight: 700; color: #2f3a40 }
+#main .care-routine-row small { display: block; font-size: 13.5px; color: #6b6670; margin-top: 2px }
+#main .care-routine-row > i { font-style: normal; color: #2a6078; font-size: 22px }
+#main .care-routines-hero { background: linear-gradient(160deg, #e3f1f7, #ecf6fa); border-radius: 24px; padding: 20px; margin: 0 0 14px }
+#main .care-routines-hero h1 { margin: 0 0 6px }
+#main .care-pstep figcaption b { color: #2f3a40 !important } #main .care-pstep figcaption small { color: #6b6670 !important }
+#main .care-pstep .care-n { flex: none; width: 24px; height: 24px; border-radius: 50%; background: #e3f1f7; color: #2a6078; font-weight: 750; font-size: 13px; display: grid; place-items: center }
