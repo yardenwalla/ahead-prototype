@@ -15,8 +15,8 @@
   const photo = (n, alt, pins, cls = '') => `<figure class="ph-photo ph-hero care-ph ${cls}">${img(n, alt)}${(pins || []).map(pin).join('')}</figure>`;
 
   // Top card photos, one per stage (Newborn, 1–3, 4–6, 6–12 months).
-  const HERO = [['hero-0', 'A newborn on a changing pad, a hand resting on the tummy'], ['hero-1', 'A baby wrapped in a hooded towel after a bath'],
-    ['hero-2', 'A baby with a bib, chewing a teething ring'], ['hero-3', 'A parent brushing a baby’s first teeth']];
+  const HERO = [['sponge', 'A sponge bath on a towel'], ['hero-1', 'A baby wrapped in a hooded towel after a bath'],
+    ['wriggle', 'Changing a baby on a floor mat, a toy in hand'], ['hero-3', 'A parent brushing a baby’s first teeth']];
 
   // Which photo goes with which page, by the page's route (after "chg:Daily rhythm:d:").
   const ROW = [[/^p:sponge/, 'sponge'], [/^p:tub/, 'tubbath'], [/^cord/, 'cord'], [/^(h|t):diapers:[01]/, 'diaper'], [/^(h:diapers:2|t:diapers:[23])/, 'wriggle'],
@@ -148,6 +148,28 @@
     list.insertAdjacentHTML('afterend', `<div class="care-same"><span>${F('Same as before')}</span>${chips}</div>`);
   }
 
+  const NEWS = [
+    [['p:sponge', 'Sponge baths for now', 'Until the cord falls off, usually 1–3 weeks.'], ['h:diapers:0', 'Change a diaper', 'Front to back, then let it air-dry.', 'diaper'],
+      ['cord', 'Care for the cord', 'Keep it clean, dry and in the air.', 'cord'], ['t:nails:0', 'Trim tiny nails', 'While {s} {sleep|sleeps}, with a file or clippers.', 'nails'],
+      ['t:clothes:0', 'Dress {o} in layers', 'One layer more than you.', 'clothes']],
+    [['p:tub', 'The first tub bath may be close', 'Once the cord falls off and the belly button heals.'], ['h:skin:1', 'Keep skin comfortable', 'Plain water, and cream for dry patches.', 'cream'],
+      ['t:sun:1', 'Keep {o} sun-safe', 'Shade and clothing first, no sunscreen yet.', 'sun']],
+    [['h:diapers:2', 'When {s} {wriggle|wriggles} through changes', 'Set up a mat on the floor, with everything in reach.'], ['t:bath:2', 'Make the bath part of bedtime', 'A warm bath helps many babies wind down.', 'bedtime']],
+    [['p:brush', 'When the first tooth peeks through', 'Start brushing morning and night.'], ['t:bath:3', 'Ready for the big tub?', 'Once {s} {sit|sits} steadily on {p} own.', 'bigtub'],
+      ['t:sun:3', 'Sunscreen can start now', 'On skin that shade and clothes don’t cover.', 'sun'], ['t:diapers:3', 'Changes on the move', 'A toy to hold, and stand-up changes once {s} {pull|pulls} up.', 'wriggle'],
+      ['p:feet', 'Bare feet, then first shoes', 'Soft shoes once {s’s} walking outside.', 'feet']]
+  ];
+  // Everything else new at this stage, as cards under the top card. Routine that didn't change lives in Care at a glance and All how-tos.
+  function newCards(main, hero, v) {
+    if (!NEWS[v] || main.querySelector('.care-news')) return;
+    const go = r => `openPage('chg:${CAT}:d:${r}')`;
+    const cards = NEWS[v].slice(1).map(([r, t, l, n]) => `<button class="care-news-card" onclick="${go(r)}">${img(n, '')}<span><b>${F(t)}</b><small>${F(l)}</small></span><i aria-hidden="true">›</i></button>`).join('');
+    if (cards) hero.insertAdjacentHTML('afterend', `<div class="care-news">${cards}</div>`);
+    // The old "Right now" list and its "Same as before" line go: every new thing is now a card.
+    const h2 = [...main.querySelectorAll('h2.hub-h2')].find(h => /^(Right now for|At this stage)/.test(h.textContent));
+    if (h2) { const list = h2.nextElementSibling; if (list && list.nextElementSibling && list.nextElementSibling.classList.contains('care-same')) list.nextElementSibling.remove(); if (list) list.remove(); h2.remove(); }
+  }
+
   function dressHome(main) {
     const v = Number((main.querySelector('[data-care-stage]') || {}).dataset?.careStage);
     const hero = main.querySelector('.care-hero.care-disc');
@@ -157,11 +179,11 @@
       // "New now" as one quiet line under the photo, like Feeding's Try this. The page it opens says the rest.
       const note = hero.querySelector('.care-nownote');
       if (note) { const t = note.querySelector('b'), d = [...note.querySelectorAll('p,span,small')].find(e => e.textContent.trim().length > 20 && !e.querySelector('b') && !/›/.test(e.textContent)); const line = document.createElement('div'); line.className = 'care-newline'; line.setAttribute('role', 'button'); line.tabIndex = 0;
-        line.setAttribute('onclick', note.getAttribute('onclick')); line.innerHTML = `<div><p><b>${F('New:')}</b> ${t ? t.innerHTML : ''}</p>${d ? `<small>${d.innerHTML}</small>` : ''}</div><span aria-hidden="true">›</span>`; note.replaceWith(line); }
+        line.setAttribute('onclick', note.getAttribute('onclick')); const top = NEWS[v] && NEWS[v][0] && !/cord has long since healed/.test(note.textContent) ? NEWS[v][0] : null;
+        line.innerHTML = `<div><p>${top ? F(top[1]) : (t ? t.innerHTML : '')}</p><small>${top ? F(top[2]) : (d ? d.innerHTML : '')}</small></div><span aria-hidden="true">›</span>`; note.replaceWith(line); }
       hero.classList.add('care-life');
     }
-    const h2 = [...main.querySelectorAll('h2.hub-h2')].find(h => /^(Right now for|At this stage)/.test(h.textContent));
-    if (h2) { photoRows(h2.nextElementSibling); sameAsBefore(h2.nextElementSibling, v); }
+    if (hero) newCards(main, hero, v);
     main.querySelectorAll('.care-see > button').forEach(b => {
       const n = SEE[routeOf(b)], art = b.querySelector('.care-see-art'); if (!n || !art || art.classList.contains('ph-tile')) return;
       art.className = 'care-see-art ph-tile'; art.innerHTML = img(n, b.textContent.trim()); b.classList.add('care-see-ph');
