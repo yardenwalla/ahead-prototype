@@ -60,7 +60,7 @@
   const baseSubmit = window.submitSetup;
   window.submitSetup = submitSetup = function (e) {
     const feed = document.querySelector('#setupForm #feed');
-    if (feed && !feed.value) { e && e.preventDefault(); const form = feed.closest('form'), err = form.querySelector('#formError');
+    if (feed && !feed.value && typeof feed.closest === 'function' && document.querySelector('#setupForm .ob-milk')) { e && e.preventDefault(); const form = feed.closest('form'), err = form.querySelector('#formError');
       if (err) { err.textContent = 'Pick the closest one. You can change it anytime.'; err.hidden = false; }
       form.classList.add('ob-need'); const f = form.querySelector('.ob-milk button'); f && f.focus(); return; }
     return baseSubmit.apply(this, arguments);
