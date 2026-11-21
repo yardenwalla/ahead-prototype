@@ -99,7 +99,7 @@
     if (main) {
       main.classList.toggle('is-onboarding', page === 'welcome' || page === 'setup');
       // Setup steps drop the app header (logo) so each step fits on one screen, like the inspiration board.
-      document.body.classList.toggle('ob-steps', page === 'setup');
+      if (document.body && document.body.classList) document.body.classList.toggle('ob-steps', page === 'setup');
       if (page === 'welcome') main.innerHTML = welcomeHtml();
       if (page === 'setup') {
         main.innerHTML = main.innerHTML.replace(/<div class="progress">[\s\S]*?(?=<form class="form")/, setupHeader());
