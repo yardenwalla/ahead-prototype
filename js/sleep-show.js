@@ -204,55 +204,55 @@
   // [route, step (0–5 by age, null = any age), age label, title, line]
   const TOPICS = {
     night: { name: 'Night sleep', art: 'moon', lead: 'How nights change, from tiny stretches to sleeping through.', items: [
-      ['d:daynight', 0, 'First weeks', 'Bright days and dim nights set {p} clock', 'Helping {o} tell day from night'],
-      ['d:stretch', 1, '6 weeks–3 months', '{P} longest night sleep grows over months', 'From 2–4 hours to 10–12 by a year'],
-      ['d:regress', 2, 'Around 4 months', 'Waking more is the 4-month sleep regression', 'Why it happens, and how to respond'],
-      ['d:wakes', null, 'Any age', 'Brief wakings happen between sleep cycles', 'What to do when {s} {wake|wakes}'],
-      ['d:nightfeeds', 4, '7–8 months', 'Night feeds drop as days get fuller', 'When to drop one, and how'],
-      ['d:nightwake', 5, '8–12 months', 'Night waking often comes back for a while', 'New skills, teeth, and missing you']] },
+      ['d:daynight', 0, 'First weeks', 'Bright days and dim nights set {p} clock', 'Helping {o} tell day from night', 'sunrise'],
+      ['d:stretch', 1, '6 weeks–3 months', '{P} longest night sleep grows over months', 'From 2–4 hours to 10–12 by a year', 'moon'],
+      ['d:regress', 2, 'Around 4 months', 'Waking more is the 4-month sleep regression', 'Why it happens, and how to respond', 'wave'],
+      ['d:wakes', null, 'Any age', 'Brief wakings happen between sleep cycles', 'What to do when {s} {wake|wakes}', 'eye'],
+      ['d:nightfeeds', 4, '7–8 months', 'Night feeds drop as days get fuller', 'When to drop one, and how', 'bottle'],
+      ['d:nightwake', 5, '8–12 months', 'Night waking often comes back for a while', 'New skills, teeth, and missing you', 'stand']] },
     naps: { name: 'Naps', art: 'sun', lead: 'How naps change, from any time at all to two a day.', items: [
-      ['d:steps0', 0, 'First weeks', 'Spot the yawn, soothe, then down', 'Sleepy cues, and how to soothe'],
-      ['d:napsearly', 1, '6 weeks–3 months', 'Short, frequent naps are normal now', 'Arms, carrier and stroller naps all count'],
-      ['d:predictable', 2, '3–5 months', 'Naps start to settle into set times', 'How to find {p} nap times'],
-      ['d:shortnap', null, 'From 3 months', 'A short nap moves the next one up', 'See how the rest of the day shifts'],
-      ['d:day:2', 3, '5–7 months', 'An example day with three naps', 'Naps, awake time and bedtime'],
-      ['d:catnap', 4, '7–8 months', 'Three naps become two', 'Signs, and how to switch'],
-      ['d:day:3', 5, '8–12 months', 'An example day with two naps', 'Naps, awake time and bedtime']] },
+      ['d:steps0', 0, 'First weeks', 'Spot the yawn, soothe, then down', 'Sleepy cues, and how to soothe', 'heart'],
+      ['d:napsearly', 1, '6 weeks–3 months', 'Short, frequent naps are normal now', 'Arms, carrier and stroller naps all count', 'carrier'],
+      ['d:predictable', 2, '3–5 months', 'Naps start to settle into set times', 'How to find {p} nap times', 'sunrise'],
+      ['d:shortnap', null, 'From 3 months', 'A short nap moves the next one up', 'See how the rest of the day shifts', 'clock'],
+      ['d:day:2', 3, '5–7 months', 'An example day with three naps', 'Naps, awake time and bedtime', 'notepad'],
+      ['d:catnap', 4, '7–8 months', 'Three naps become two', 'Signs, and how to switch', 'sun'],
+      ['d:day:3', 5, '8–12 months', 'An example day with two naps', 'Naps, awake time and bedtime', 'notepad']] },
     bed: { name: 'Bedtime', art: 'book', lead: 'The routine, falling asleep, and bedtime as {s} {grow|grows}.', items: [
-      ['d:routine', 1, 'From 6 weeks', 'A short bedtime routine, the same every night', 'Four calm steps, 15–20 minutes'],
-      ['d:settle4', 2, '3–5 months', 'Try putting {o} down drowsy, once a day', 'How to practice, if you want to'],
-      ['settle', 3, 'From 4–6 months', 'Sleep training is a choice, not a must', 'When to start, and the methods'],
-      ['d:earlybed', 4, '7–8 months', 'Move bedtime earlier, to 7–8 pm', 'Once naps settle'],
-      ['d:goodbye', 5, '8–12 months', 'Keep bedtime goodbyes short and the same', 'Separation, and bedtime protests']] },
+      ['d:routine', 1, 'From 6 weeks', 'A short bedtime routine, the same every night', 'Four calm steps, 15–20 minutes', 'book'],
+      ['d:settle4', 2, '3–5 months', 'Try putting {o} down drowsy, once a day', 'How to practice, if you want to', 'moon'],
+      ['settle', 3, 'From 4–6 months', 'Sleep training is a choice, not a must', 'When to start, and the methods', 'idea'],
+      ['d:earlybed', 4, '7–8 months', 'Move bedtime earlier, to 7–8 pm', 'Once naps settle', 'clock'],
+      ['d:goodbye', 5, '8–12 months', 'Keep bedtime goodbyes short and the same', 'Separation, and bedtime protests', 'heart']] },
     safe: { name: 'Safe sleep', art: 'crib', lead: 'The rules that stay the same, and the steps that change.', items: [
-      ['safe', null, 'Every sleep', 'Safe sleep checklist', 'On {p} back, in {p} own bare sleep space'],
-      ['d:safegrow', null, 'All ages', 'What changes, and when', 'Swaddle, crib, mattress and more, by age'],
-      ['d:swaddle', 0, 'First weeks', 'Swaddle snug at the arms, loose at the hips', 'How to swaddle, and when to stop'],
-      ['d:rolling', 2, 'Once {s} {roll|rolls}', 'Rolling onto {p} tummy?', 'What to do before and after {s} can roll back'],
-      ['d:swaddleoff', 2, 'Before rolling', 'Stop swaddling at the first try to roll', 'Arms out, in a sleep sack'],
-      ['d:where', 3, 'First 6 months', 'Share a room until at least 6 months', 'And moving to the crib'],
-      ['d:mattress', 4, 'Before {s} can sit', 'Lower the crib mattress', 'Lowest before {s} {stand|stands}']] } };
+      ['safe', null, 'Every sleep', 'Safe sleep checklist', 'On {p} back, in {p} own bare sleep space', 'shield'],
+      ['d:safegrow', null, 'All ages', 'What changes, and when', 'Swaddle, crib, mattress and more, by age', 'stand'],
+      ['d:swaddle', 0, 'First weeks', 'Swaddle snug at the arms, loose at the hips', 'How to swaddle, and when to stop', 'swaddle'],
+      ['d:rolling', 2, 'Once {s} {roll|rolls}', 'Rolling onto {p} tummy?', 'What to do before and after {s} can roll back', 'roll'],
+      ['d:swaddleoff', 2, 'Before rolling', 'Stop swaddling at the first try to roll', 'Arms out, in a sleep sack', 'swaddle'],
+      ['d:where', 3, 'First 6 months', 'Share a room until at least 6 months', 'And moving to the crib', 'home'],
+      ['d:mattress', 4, 'Before {s} can sit', 'Lower the crib mattress', 'Lowest before {s} {stand|stands}', 'crib']] } };
   // Topic pages, v3 (Yarden's Nov 20 mockup): stage tabs, the stage and topic up top, "At this stage" in two lines, one
   // picture that shows it, this stage's cards on the topic, then the pages that are always useful. Every line comes from
   // what the guide already says (glance numbers, cards, Worth knowing). [bold, line] per stage: newborn, longer nights,
   // three naps, two naps.
   const AT = {
-    night: [['Day and night look alike', 'Sleep comes in 2–4 hour pieces, day or night. Feeds overnight are expected.'],
-      () => m() < 3 ? ['The longest sleep moves to the night', 'Often 3–5 hours at first. One night is longer, the next isn’t.'] : ['Longer stretches, then waking again', 'Around 4 months, sleep cycles change and waking can come back for a few weeks.'],
-      ['Longer stretches from bedtime', 'Often 5–8 hours after a 7–8 pm bedtime. Waking at night is still common.'],
-      ['Long nights, with wake-ups now and then', 'Often 6–8 hours, growing to 10–12 by a year. New skills can bring wake-ups back.']],
-    naps: [['Naps happen any time', 'No pattern yet. Watch for sleepy cues after 45–60 minutes awake.'],
-      () => m() < 3 ? ['Short, frequent naps', 'Usually 4–5 a day, after 1–1½ hours awake. Arms, carrier and stroller naps all count.'] : ['Naps start to find set times', 'Usually 3–4 a day, after 1½–2½ hours awake.'],
-      ['Three naps, the last one short', 'About 2–2½ hours awake between sleeps. The last nap is a bridge to bedtime.'],
-      ['Two naps, morning and afternoon', 'About 2½–3½ hours awake between sleeps, a little longer by a year.']],
+    night: [['Day and night look alike', 'Sleep comes in short pieces around the clock, with feeds in between.'],
+      () => m() < 3 ? ['The longest sleep moves to the night', 'Daylight, and dim, quiet nights, help it settle there.'] : ['Waking can come back around 4 months', 'It’s a sign sleep is maturing, not a step backwards.'],
+      ['Longer stretches from bedtime', 'Waking at night is still common, and some babies still need a feed.'],
+      ['Long nights, with wake-ups now and then', 'A wake-up doesn’t mean the whole night is off track.']],
+    naps: [['Naps happen any time', 'There’s no pattern yet. Sleepy cues are your best guide.'],
+      () => m() < 3 ? ['Short, frequent naps', 'They’re often short, and that’s fine for now.'] : ['Naps start to find set times', '{S} {get|gets} sleepy at about the same times each day.'],
+      ['Three naps, the last one short', 'The late catnap is a bridge to bedtime. It doesn’t need to be a full nap.'],
+      ['Two naps, morning and afternoon', 'Most of the day’s sleep now comes in two longer naps.']],
     bed: [['No set bedtime yet', 'Days and nights are still mixed. Dim, quiet nights help set {p} clock.'],
-      ['A short routine can start', 'From about 6–8 weeks, a few calm steps in the same order start to signal bedtime.'],
-      ['Bedtime follows the last nap', 'Keep the same steps. After a short or early catnap, bedtime can move earlier.'],
-      ['The same routine, a different evening', 'Only the timing shifts as naps change. Missing you can make goodbyes harder.']],
+      ['A short routine can start', 'A few calm steps in the same order start to signal bedtime.'],
+      ['Bedtime follows the last nap', 'The routine stays the same. The time can move with the day.'],
+      ['The same routine, a different evening', 'Missing you can make bedtime goodbyes harder.']],
     safe: [['On {p} back, in a bare sleep space', 'Every sleep, naps too. A swaddle is fine until the first signs of rolling.'],
-      ['Arms free at the first try to roll', 'Stop swaddling then and use a sleep sack. The rules for every sleep stay the same.'],
-      ['Share a room until at least 6 months', 'In your room, in {p} own crib or bassinet. Lower the crib mattress before {s} can sit.'],
-      ['Lowest mattress before {s} {stand|stands}', 'Keep the crib bare: no pillows, bumpers, toys or blankets until 12 months.']] };
+      ['{S} may start trying to roll', 'That’s when the swaddle comes off. The rest of the rules stay the same.'],
+      ['Moving more, same safe space', 'As {s} {roll|rolls} and {sit|sits}, the crib setup changes. The rules don’t.'],
+      ['Standing soon, the crib stays bare', 'No pillows, bumpers, toys or blankets until 12 months.']] };
   const ALWAYS = { night: ['d:wakes', 'd:daynight'], naps: ['d:steps0', 'd:shortnap'], bed: ['d:routine'], safe: ['safe', 'd:safegrow', 'd:where'] };
   // Helpful right now: chosen by stage and age, not copied from the main page (Nov 21 review). A = the baby's age on
   // "Right now", or a typical age for another stage's tab. Stages: newborn to 6 weeks, longer nights to 5 months,
@@ -279,7 +279,7 @@
     { segs: [[9, 10.3, 'nap'], [12.5, 13.8, 'nap'], [16.3, 16.8, 'nap']], dark: [[19.25, 20.5]], moon: [19.25], caps: [[9.65, 'Nap'], [13.15, 'Nap'], [16.55, 'Catnap'], [19.25, 'Bedtime']] },
     { segs: [[9.5, 11, 'nap'], [14, 15.5, 'nap']], dark: [[19.25, 20.5]], moon: [19.25], caps: [[10.25, 'Morning nap'], [14.75, 'Afternoon nap'], [19.25, 'Bedtime']] }];
   function topicFig(k, v, A) {
-    if (k === 'night') { const o = v === 1 && m() >= 3 ? { segs: [[19.5, 23, 'night'], [23.4, 26, 'night'], [26.4, 28.6, 'night'], [29, 30.8, 'night']], dots: [23.2, 26.2, 28.8], caps: [[21.2, 'Sleep'], [26.2, 'Waking more often'], [31, 'Morning']] } : NIGHT[v]; return `<h2 class="hub-h2">${F('What a night can look like')}</h2><section class="care-tpl-card ssw-card">${band(Object.assign({ label: 'An example night, from bedtime to morning.', start: 19, end: 31, dark: [[19, 31]], gap: 28 }, o))}<p class="ssw-figtip">${F(v === 3 ? 'An example. A wake-up doesn’t mean the whole night is off track.' : 'An example. Every baby’s night looks a little different.')}</p></section>`; }
+    if (k === 'night') { const o = v === 1 && m() >= 3 ? { segs: [[19.5, 23, 'night'], [23.4, 26, 'night'], [26.4, 28.6, 'night'], [29, 30.8, 'night']], dots: [23.2, 26.2, 28.8], caps: [[21.2, 'Sleep'], [26.2, 'Waking more often'], [31, 'Morning']] } : NIGHT[v]; return `<h2 class="hub-h2">${F('What a night can look like')}</h2><section class="care-tpl-card ssw-card">${band(Object.assign({ label: 'An example night, from bedtime to morning.', start: 19, end: 31, dark: [[19, 31]], gap: 28 }, o))}<p class="ssw-figtip">${F('An example. Every baby’s night looks a little different.')}</p></section>`; }
     if (k === 'naps' && v === 0) return `<h2 class="hub-h2">${F('How a day fits together')}</h2><section class="care-tpl-card ssw-card">${loopFig()}<p class="ssw-figtip">${F('No clock yet. Go by {p} sleepy cues.')}</p></section>`;
     if (k === 'naps') { const o = v === 1 && A >= 3 ? { segs: [[8.6, 9.7, 'nap'], [11.4, 12.6, 'nap'], [14.3, 15.3, 'nap'], [16.9, 17.4, 'nap']], dark: [[19.5, 20.5]], moon: [19.5], caps: [[9.15, 'Naps find set times'], [14.8, '3–4 a day'], [19.5, 'Bedtime']] } : NAPDAY[v], day = v === 2 ? `<button class="hub-card-cta ssw-figlink" onclick="${go('chg:Sleep:d:day:' + v)}">${F('Full example day')} ›</button>` : '';
       return `<h2 class="hub-h2">${F('How a day fits together')}</h2><section class="care-tpl-card ssw-card">${band(Object.assign({ label: 'An example day of naps.', start: 7, end: 20.5, gap: 26 }, o))}<p class="ssw-figtip">${F('An example, not a schedule. Go by {p} sleepy cues.')}</p>${day}</section>`; }
@@ -288,12 +288,24 @@
     if (k === 'safe') return `<h2 class="hub-h2">${F('A safe sleep space')}</h2>` + pinPhoto('crib.jpg', 'A baby asleep on their back in a sleep sack, arms out, in a bare crib with a fitted sheet', [['On {p} back', 56, 31, 'r'], ['Sleep sack, no blanket', 24, 40, 'b'], ['Bare crib, firm mattress', 80, 76, 'l']], 'ssw-crib');
     return '';
   }
+  // What "Right now" lists on the main page for this view, so a topic page doesn't list the same guide again.
+  // Mirrors dress(): routine → bedtime topic at three naps, two-naps example day added, room sharing until 6 months.
+  function mainRoutes(src, v) {
+    try {
+      const d = document.createElement('div'); d.innerHTML = src === 'now' ? window.changesPage('Sleep') : baseRoute('chg:Sleep:s:' + src.replace(/^s/, ''));
+      let rs = [...d.querySelectorAll('#sleep-night-feeds .hub-row[onclick], .sl-safe-list .hub-row[onclick]')].map(r => (((r.getAttribute('onclick') || '').match(/'chg:Sleep:([^']+)'/) || [])[1] || ''));
+      if (v === 2) rs = rs.filter(r => r !== 'd:routine');
+      if (v === 3) rs.push('d:day:3');
+      if (src === 'now' && m() >= 6) rs = rs.filter(r => r !== 'd:where');
+      return rs;
+    } catch (e) { return []; }
+  }
   function topicPage(p) {
     const [, , , k, src = 'now'] = p.split(':'), T = TOPICS[k]; if (!T) return baseRoute(p);
     const now = src === 'now', cur = stageNow(), v = now ? Math.max(cur, 0) : +src.replace(/^s/, '') || 0, live = (() => { try { return C().live(); } catch (e) { return true; } })();
     const R = H().row, all = Object.values(TOPICS).flatMap(t => t.items), find = r => all.find(x => x[0] === r);
-    const row = ([r, , , t, sub], icon) => R({ cat: 'Sleep', icon: icon || T.art, title: t, sub, onclick: go('chg:Sleep:' + r) });
-    const A = now ? m() : REP_AGE[v], help = HELP[k][v](A), helpful = help.map(find).filter(Boolean), always = ALWAYS[k].filter(r => !help.includes(r) && !(r === 'd:daynight' && v >= 3) && !(r === 'd:routine' && v === 0) && !(r === 'd:steps0' && v >= 3) && !(r === 'd:shortnap' && v === 0)).map(find).filter(Boolean);
+    const row = ([r, , , t, sub, icon]) => R({ cat: 'Sleep', icon: icon || T.art, title: t, sub, onclick: go('chg:Sleep:' + r) });
+    const A = now ? m() : REP_AGE[v], onMain = mainRoutes(src, v), help = HELP[k][v](A).filter(r => !onMain.includes(r)), helpful = help.map(find).filter(Boolean), always = ALWAYS[k].filter(r => !help.includes(r) && !(r === 'd:daynight' && v >= 3) && !(r === 'd:routine' && v === 0) && !(r === 'd:steps0' && v >= 3) && !(r === 'd:shortnap' && v === 0)).map(find).filter(Boolean);
     const at = typeof AT[k][v] === 'function' ? AT[k][v]() : AT[k][v];
     const stage = STAGES[v] ? STAGES[v][0] : '';
     const nowCard = `<section class="ssw-aha ssw-at"><i class="ssw-bulb" aria-hidden="true">${H().art(T.art, 'Sleep')}</i><small>${F('At this stage')}</small><b>${F(at[0])}</b><span>${F(at[1])}</span></section>`;
@@ -347,11 +359,16 @@
   };
   // How to swaddle: a photo for each step.
   PAGES['chg:Sleep:d:swaddle'] = () => {
+    // Nov 21: the whole story, in the AAP's order (healthychildren.org, Swaddling: Is it Safe?). Five steps; the last is the check.
     const panels = $('.hub-fig-panels'); if (!panels) return;
-    const S = [['swaddle-1.jpg', 'A swaddle blanket laid as a diamond with the top corner folded down'], ['swaddle-2.jpg', 'A newborn with one arm straight and one side of the blanket wrapped across and tucked under'], ['swaddle-3.jpg', 'A newborn fully swaddled, snug at the chest and loose at the hips']];
-    const rows = [...panels.querySelectorAll('.hub-fig-panel')].map((p, i) => { const t = (p.querySelector('b') || {}).textContent || '', sub = (p.querySelector('small') || {}).textContent || ''; return `<li><span class="ssw-ph"><img src="${IMG + S[i][0]}" alt="${F(S[i][1])}" loading="lazy"></span><span class="ssw-copy"><i>${i + 1}</i><b>${F(t.replace(/^\d\.\s*/, ''))}</b><small>${F(sub)}</small></span></li>`; }).join('');
-    const fig = panels.closest('figure'); const notesEl = fig.querySelector('.tpl-notes');
-    fig.outerHTML = `<section class="care-tpl-card ssw-photosteps is-square"><ol>${rows}</ol>${notesEl ? notesEl.outerHTML : ''}</section>`;
+    const S = [['swaddle-1.jpg', 'A swaddle blanket laid flat as a diamond with the top corner folded down', 'Lay the blanket as a diamond', 'Fold the top corner down'],
+      ['swaddle-lay.jpg', 'A newborn on their back on the blanket, shoulders just below the fold', 'Baby on {p} back', 'Shoulders just below the fold'],
+      ['swaddle-side.jpg', 'A newborn with one side of the blanket wrapped across the chest and tucked under', 'One side across first', 'Arm straight, tucked under {p} other side'],
+      ['swaddle-3.jpg', 'A newborn fully swaddled, snug at the chest and loose at the hips', 'Other side across, bottom loose', 'Arm down, wrap and tuck. Fold the bottom up loosely']];
+    const rows = S.map(([img, alt, t, sub], i) => `<li><span class="ssw-ph"><img src="${IMG + img}" alt="${F(alt)}" loading="lazy"></span><span class="ssw-copy"><i>${i + 1}</i><b>${F(t)}</b><small>${F(sub)}</small></span></li>`).join('')
+      + `<li class="is-check"><span class="ssw-ph ssw-ph-check" aria-hidden="true">✓</span><span class="ssw-copy"><i>5</i><b>${F('Check the fit')}</b><small>${F('Room for two fingers at the chest. Legs free to bend up and out, like a frog.')}</small></span></li>`;
+    const fig = panels.closest('figure');
+    fig.outerHTML = `<section class="care-tpl-card ssw-photosteps is-square"><ol>${rows}</ol></section>`;
   };
   // Newborn and early naps: the loop instead of three separate tiles.
   PAGES['chg:Sleep:d:napsearly'] = () => {
@@ -396,7 +413,8 @@
     if (once(hero, 'h')) {
       hero.classList.add('ssw-hero');
       const t = (hero.querySelector('h1') || {}).textContent || '', art = hero.querySelector('.sl-art'), aha = hero.querySelector('.sl-aha');
-      const rh = RHYTHM.find(([re]) => re.test(t)); if (art && rh) art.outerHTML = rhythm(rh);
+      // Nov 21: no timeline up top. The glance has the numbers and the Naps page has the day picture (one home each).
+      if (art) art.remove();
       // Worth knowing: what she might notice plus the one thing to try, in one card inside the top card (Yarden's mockup).
       if (aha) {
         aha.classList.add('ssw-aha'); const lbl = aha.querySelector('small'); if (lbl) lbl.textContent = F('Worth knowing');
@@ -420,7 +438,7 @@
           top.insertAdjacentHTML('beforeend', `<span class="ssw-hero-pic" aria-hidden="true"><img src="${IMG + PH}" alt="" style="object-position:${POS}"></span>`);
           hero.classList.add('ssw-has-pic');
         }
-        const ah = hero.querySelector('.ssw-aha'); if (ah) { hero.after(ah); ah.insertAdjacentHTML('afterbegin', `<i class="ssw-bulb" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.6.5 1 1.2 1 2V16h5.2v-.2c0-.8.4-1.5 1-2A6 6 0 0 0 12 3Z"/></svg></i>`); }
+        const ah = hero.querySelector('.ssw-aha'); if (ah) { ah.classList.add('ssw-tip'); hero.append(ah); ah.insertAdjacentHTML('afterbegin', `<i class="ssw-bulb" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.6.5 1 1.2 1 2V16h5.2v-.2c0-.8.4-1.5 1-2A6 6 0 0 0 12 3Z"/></svg></i>`); }
       }
     }
     // Four topic tiles (Yarden's inspiration, Nov 20 rework): steady doors to Night sleep, Naps, Bedtime and Safe sleep that
@@ -444,6 +462,7 @@
         if (r) r.outerHTML = H().row({ cat: 'Sleep', icon: 'book', title: 'Bedtime follows the last nap', sub: 'When a short catnap changes your evening', onclick: go('chg:Sleep:t:bed:' + src) }); }
       if (view === 3 && !rl.querySelector(`.hub-row[onclick*="'chg:Sleep:d:day:3'"]`))
         { const due = rl.querySelector('.ssw-due'), html = H().row({ cat: 'Sleep', icon: 'sun', title: 'An example day with two naps', sub: 'Naps, awake time and bedtime', onclick: go('chg:Sleep:d:day:3') }); due ? due.insertAdjacentHTML('beforebegin', html) : rl.insertAdjacentHTML('beforeend', html); }
+      if (view === 3) main.querySelectorAll(`.sl-glance [onclick*="'chg:Sleep:d:day:3'"]`).forEach(e => e.remove());
       if (src === 'now' && m() >= 6) { const r = rl.querySelector(`.hub-row[onclick*="'chg:Sleep:d:where'"]`); if (r) r.remove(); }
       rl.querySelectorAll('.hub-row[onclick]').forEach(r => { const k = (((r.getAttribute('onclick') || '').match(/'chg:Sleep:(?:d:)?([^']+)'/) || [])[1] || ''), pic = /^t:bed/.test(k) ? 'book.jpg' : THUMB[k], dot = r.querySelector('.hub-dot');
         if (pic && dot) dot.outerHTML = `<span class="ssw-thumb"><img src="${IMG + pic}" alt="" loading="lazy"></span>`; });

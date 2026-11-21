@@ -282,3 +282,10 @@
 #main .ssw-evening span { font-size: 13px; color: #6b6670 }
 #main .ssw-evetip { position: relative; margin: 14px 0 0; padding: 11px 12px 11px 36px; background: #f1f0fa; border-radius: 14px; font-size: 13.5px; line-height: 1.45; color: #4d4a5e }
 #main .ssw-evetip i { position: absolute; left: 13px; top: 10px; font-style: normal; color: #5a5296 }
+/* Nov 21: Worth knowing sits inside the top card as one tip (Yarden's inspiration); no timeline up top */
+#main .ssw-hero .sl-aha.ssw-aha.ssw-tip { position: relative; z-index: 2; margin: 16px 0 0 !important; padding: 11px 14px 11px 46px !important; background: rgba(255,255,255,.88); border-radius: 16px; box-shadow: 0 2px 10px rgba(40,40,80,.08); backdrop-filter: blur(4px) }
+#main .ssw-hero .ssw-tip small { display: none }
+#main .ssw-hero .ssw-tip .ssw-bulb { left: 13px; top: 12px; width: 22px; height: 22px }
+#main .ssw-hero .ssw-tip b { display: block; font-size: 14.5px !important; line-height: 1.3 }
+#main .ssw-hero .ssw-tip span { display: block; font-size: 13.5px !important; line-height: 1.4; margin-top: 2px !important }
+#main .ssw-photosteps .ssw-ph-check { display: grid; place-items: center; background: #e5f0e7; color: #3f7350; font-size: 34px; font-weight: 700 }
