@@ -78,3 +78,157 @@
 #main .aw-point { padding: 14px 0 }
 #main .aw-point-icon { width: 40px; height: 40px; border-radius: 14px }
 #main .aw-point-icon svg { width: 22px !important; height: 22px !important }
+
+/* Nov 20 refresh (inspiration board): welcome shows the app; setup has a back arrow beside two dots, painted art that
+   melts into the page, pronoun buttons, and milk cards. */
+#main .ob-hidden { position: absolute !important; width: 1px !important; height: 1px !important; min-height: 0 !important; padding: 0 !important; margin: 0 !important; opacity: 0; pointer-events: none; overflow: hidden }
+
+/* Welcome */
+#main .ob-welcome h1 { max-width: none !important; font-size: 32px !important; margin-top: 10px !important }
+#main .ob-welcome .aw-lead { margin-top: 12px }
+#main .ob-collage { position: relative; height: 262px; margin: 18px -20px 4px; background: radial-gradient(ellipse 62% 56% at 50% 56%, #f3ebfb 0%, #fbeff0 52%, rgba(251,239,240,0) 78%) }
+#main .ob-mini { position: absolute; top: 34px; width: 112px; padding: 12px 12px 14px; border-radius: 18px; background: #fffdfb; box-shadow: 0 8px 22px rgba(43,40,64,.10), 0 0 0 1px rgba(43,40,64,.04) }
+#main .ob-mini b { display: block; font: 700 14px/1.2 var(--ui-font); color: var(--ink) }
+#main .ob-mini small { display: block; margin-top: 2px; font-size: 10.5px; line-height: 1.3; color: var(--muted) }
+#main .ob-mini-tl { left: calc(50% - 158px); transform: rotate(-7deg); height: 178px }
+#main .ob-mini-guides { right: calc(50% - 158px); left: auto; transform: rotate(7deg); height: 178px }
+#main .ob-mini-home { left: 50%; top: 10px; width: 150px; margin-left: -75px; z-index: 2; padding: 14px 13px 14px; box-shadow: 0 14px 30px rgba(43,40,64,.14), 0 0 0 1px rgba(43,40,64,.04) }
+#main .ob-mini-month { height: 104px; margin: 10px 0 10px; border-radius: 14px; overflow: hidden }
+#main .ob-mini-month img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 40% }
+#main .ob-mini-row { display: flex; align-items: center; gap: 8px; margin-top: 7px }
+#main .ob-dot { flex: none; width: 26px; height: 26px; border-radius: 8px; overflow: hidden }
+#main .ob-dot img { display: block; width: 100%; height: 100%; object-fit: cover }
+#main .ob-bar { display: block; flex: 1; height: 6px; border-radius: 4px; background: #ece6e0 }
+#main .ob-bar.short { flex: .6; max-width: 60% }
+#main .ob-mini-guides .ob-bar { margin-top: 8px }
+#main .ob-mini-pic { height: 74px; margin: 10px 0 2px; border-radius: 12px; overflow: hidden }
+#main .ob-mini-pic img { display: block; width: 100%; height: 100%; object-fit: cover }
+#main .ob-tl { position: relative; display: grid; grid-template-columns: 12px 1fr; align-items: center; row-gap: 22px; column-gap: 9px; margin-top: 16px; padding-left: 2px }
+#main .ob-tl::before { content: ""; position: absolute; left: 7px; top: 6px; bottom: 6px; width: 2px; border-radius: 2px; background: #e3dcf3 }
+#main .ob-tl i { position: relative; width: 12px; height: 12px; border-radius: 50%; background: #b9a8e3; box-shadow: 0 0 0 3px #fffdfb }
+#main .ob-tl span { height: 6px; border-radius: 4px; background: #ece6e0 }
+#main .ob-tl span:nth-of-type(2) { width: 70% }
+#main .ob-welcome .aw-start { margin-top: 18px }
+#main .ob-time { margin-top: 10px; text-align: center; font-size: 13px; color: var(--muted) }
+
+/* Setup: back arrow + progress on one row */
+#main .ob-top { position: relative; display: flex; align-items: center; justify-content: center; min-height: 44px; margin: -4px 0 0 }
+#main .ob-top .ob-back { position: absolute; left: -6px; top: 50%; transform: translateY(-50%); margin: 0 !important; width: 40px; height: 40px; padding: 0; font-size: 0 !important; color: var(--ink); display: grid; place-items: center; border-radius: 50%; background: transparent }
+#main .ob-top .ob-back svg { width: 22px; height: 22px }
+#main .ob-top .ob-back > *:not(svg) { display: none }
+#main .ob-top .ob-back::before { content: ""; width: 10px; height: 10px; border-left: 2.2px solid currentColor; border-bottom: 2.2px solid currentColor; transform: translateX(2px) rotate(45deg); border-radius: 1px }
+#main .ob-top .ob-back:has(svg)::before { display: none }
+#main .ob-progress { display: grid; grid-template-columns: auto 92px auto; align-items: end; column-gap: 12px }
+#main .ob-step { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 12.5px; color: var(--muted) }
+#main .ob-step b { font-weight: 500 }
+#main .ob-step.on b, #main .ob-step.done b { color: var(--ink); font-weight: 700 }
+#main .ob-step i { width: 14px; height: 14px; border-radius: 50%; border: 1.6px solid #c9c2d6; background: #fffdfb; font-style: normal; font-size: 8px; line-height: 11px; text-align: center; color: #fff }
+#main .ob-step.on i { border: 0; background: #2f2a52; box-shadow: inset 0 0 0 3.5px #2f2a52, inset 0 0 0 5px #fff }
+#main .ob-step.done i { border: 0; background: #2f2a52; line-height: 14px; font-weight: 800 }
+#main .ob-line { height: 2px; margin-bottom: 6px; border-radius: 2px; background: linear-gradient(90deg, #2f2a52 50%, #e2dde8 50%) }
+#main .ob-line.full { background: #2f2a52 }
+
+/* A Guides-style photo that melts into the page */
+#main .ob-hero { position: relative; height: 178px; margin: 8px -20px 0; overflow: hidden; border-radius: 0 0 46% 54% / 0 0 26% 22%;
+  -webkit-mask-image: linear-gradient(to bottom, #000 72%, rgba(0,0,0,0)); mask-image: linear-gradient(to bottom, #000 72%, rgba(0,0,0,0)) }
+#main .ob-hero img { display: block; width: 100%; height: 100%; object-fit: cover }
+#main .ob-hero-baby img { object-position: 30% 50% }
+#main .ob-hero-milk img { object-position: 30% 50% }
+#main.is-onboarding h1.ob-q { font-size: 30px !important; margin-top: 8px !important }
+
+/* Setup fields */
+#main .ob-seg { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 4px; margin-top: 8px; padding: 4px; border: 1px solid var(--line); border-radius: 14px; background: var(--white, #fffefb) }
+#main .ob-seg button { min-height: 40px; padding: 0 6px; border: 0; border-radius: 10px; background: transparent; color: var(--ink); font: 500 14.5px/1 var(--ui-font); cursor: pointer }
+#main .ob-seg button[aria-checked="true"] { background: #f0ebfa; color: #3f2f6e; font-weight: 700 }
+#main .ob-early { display: flex; flex-direction: column; gap: 3px }
+#main .ob-early b { font-weight: 650; color: var(--ink) }
+#main .ob-early small { font-size: 12.5px; line-height: 1.4; color: var(--muted); font-weight: 400 }
+#main.is-onboarding .form .checkbox:has(.ob-early) { align-items: flex-start }
+#main.is-onboarding .form .checkbox:has(.ob-early) input { margin-top: 2px }
+#main .ob-sub { margin: 8px 0 4px; font-size: 15px; line-height: 1.5; color: var(--muted) }
+#main .ob-milk { display: flex; flex-direction: column; gap: 10px; margin-top: 16px }
+#main .ob-milk button { display: flex; align-items: center; gap: 14px; width: 100%; min-height: 64px; padding: 10px 16px 10px 12px; border: 1px solid var(--line); border-radius: 18px; background: var(--white, #fffefb); text-align: left; cursor: pointer; color: var(--ink) }
+#main .ob-milk button[aria-checked="true"] { border: 1.6px solid #6b5aa8; background: #f8f5ff; padding: 9.4px 15.4px 9.4px 11.4px }
+#main .ob-milk-ic { flex: none; width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center }
+#main .ob-milk-ic svg { width: 22px; height: 22px }
+#main .ob-ic-drop { background: #f3ecfb; color: #7c5fb4 }
+#main .ob-ic-bottle { background: #eaf1fb; color: #4c6b99 }
+#main .ob-ic-both { background: #e8f5ef; color: #3f7a5f }
+#main .ob-milk-t { flex: 1; display: flex; flex-direction: column; gap: 2px }
+#main .ob-milk-t b { font: 650 16px/1.25 var(--ui-font) }
+#main .ob-milk-t small { font-size: 12.5px; color: var(--muted) }
+#main .ob-milk i { flex: none; width: 20px; height: 20px; border-radius: 50%; border: 1.6px solid #c9c2d6 }
+#main .ob-milk button[aria-checked="true"] i { border: 0; background: #6b5aa8; box-shadow: inset 0 0 0 4.5px #6b5aa8, inset 0 0 0 6px #fff }
+#main .ob-need .ob-milk button { border-color: #d9a3a3 }
+#main #howBox[style*="hidden"] { display: none }
+#main #howBox label { margin-top: 20px }
+@media (max-width: 360px) {
+  #main .ob-mini-tl { left: calc(50% - 150px) } #main .ob-mini-guides { right: calc(50% - 150px) }
+  #main .ob-mini { width: 100px } #main .ob-mini-home { width: 138px; margin-left: -69px }
+  #main .ob-welcome h1 { font-size: 29px !important }
+}
+/* Collage: side cards peek out further so their titles read; text left-aligned like the real cards */
+#main .ob-mini { text-align: left }
+#main .ob-mini-tl, #main .ob-mini-guides { width: 122px }
+#main .ob-mini-tl { left: calc(50% - 178px) } #main .ob-mini-guides { right: calc(50% - 178px) }
+#main .ob-mini-home { width: 144px; margin-left: -72px }
+#main .ob-mini-guides { padding-left: 34px } #main .ob-mini-tl { padding-right: 30px }
+#main .ob-how button { font-size: 13.5px; white-space: nowrap; padding: 0 2px }
+@media (max-width: 360px) {
+  #main .ob-mini-tl, #main .ob-mini-guides { width: 112px }
+  #main .ob-mini-tl { left: calc(50% - 158px) } #main .ob-mini-guides { right: calc(50% - 158px) }
+  #main .ob-mini-home { width: 132px; margin-left: -66px }
+  #main .ob-how button { font-size: 12.5px }
+}
+#main .ob-mini b, #main .ob-mini small { text-align: left !important }
+
+/* Nov 21 tighten (closer to the inspiration): each setup step fits on one phone screen; welcome leads with the collage */
+body.ob-steps #shell > header.top { display: none !important }
+body.ob-steps #main.is-onboarding { padding-top: 10px !important }
+#main .ob-hero { height: 136px; margin-top: 4px }
+#main.is-onboarding h1.ob-q { font-size: 27px !important; line-height: 1.12 !important; margin: 6px 0 2px !important }
+#main.is-onboarding #setupForm label:not(.checkbox) { margin-top: 12px !important }
+#main.is-onboarding #setupForm input:not([type=checkbox]) { min-height: 48px !important; height: 48px }
+#main .ob-seg { margin-top: 6px } #main .ob-seg button { min-height: 38px }
+#main.is-onboarding #setupForm .checkbox { margin-top: 14px !important; padding-top: 12px !important; padding-bottom: 12px !important }
+#main.is-onboarding #setupForm button.primary { margin-top: 16px !important }
+#main .ob-sub { margin: 4px 0 2px; font-size: 14.5px }
+#main .ob-milk { gap: 8px; margin-top: 12px }
+#main .ob-milk button { min-height: 56px; padding-top: 7px; padding-bottom: 7px }
+#main .ob-milk button[aria-checked="true"] { padding-top: 6.4px; padding-bottom: 6.4px }
+#main .ob-milk-ic { width: 38px; height: 38px } #main .ob-milk-ic svg { width: 20px; height: 20px }
+#main #howBox label { margin-top: 14px !important }
+/* Welcome: headline, one line, then a bigger collage */
+#main .ob-welcome h1 { margin-top: 18px !important; font-size: 34px !important }
+#main .ob-collage { height: 300px; margin-top: 14px }
+#main .ob-mini-home { width: 164px; margin-left: -82px; top: 8px }
+#main .ob-mini-month { height: 128px }
+#main .ob-mini-tl, #main .ob-mini-guides { width: 132px; top: 40px; height: 196px }
+#main .ob-mini-tl { left: calc(50% - 186px) } #main .ob-mini-guides { right: calc(50% - 186px) }
+#main .ob-mini-pic { height: 88px }
+@media (max-width: 360px) {
+  #main .ob-mini-home { width: 140px; margin-left: -70px } #main .ob-mini-month { height: 108px }
+  #main .ob-mini-tl, #main .ob-mini-guides { width: 116px; height: 180px }
+  #main .ob-mini-tl { left: calc(50% - 160px) } #main .ob-mini-guides { right: calc(50% - 160px) }
+  #main .ob-welcome h1 { font-size: 30px !important }
+}
+body.ob-steps #main.is-onboarding { padding-top: calc(10px + env(safe-area-inset-top, 0px)) !important }
+#main .ob-help { margin: 6px 0 0; font-size: 13px; color: var(--muted) }
+#main .ob-how { grid-auto-flow: row; grid-template-columns: 1fr 1fr }
+#main .ob-how button { font-size: 14px }
+/* Date fields: "Select a date" + calendar icon; the real input sits on top, invisible, so the phone's picker opens */
+#main .ob-date { position: relative; margin-top: 8px }
+#main .ob-date input[type=date] { position: absolute !important; inset: 0; width: 100% !important; height: 100% !important; min-height: 0 !important; margin: 0 !important; opacity: 0; cursor: pointer; z-index: 2; -webkit-appearance: none; appearance: none }
+#main .ob-date .ob-date-text { display: flex; align-items: center; min-height: 48px; padding: 0 48px 0 16px; border: 1px solid var(--line); border-radius: 14px; background: var(--white, #fffefb); font-size: 16px; color: #9a94a3 }
+#main .ob-date.has-value .ob-date-text { color: var(--ink) }
+#main .ob-date .ob-date-ic { position: absolute; right: 15px; top: 50%; width: 20px; height: 20px; margin-top: -10px; color: #5d5670; pointer-events: none }
+#main .ob-date:focus-within .ob-date-text { border-color: #6b5aa8; box-shadow: 0 0 0 3px rgba(107,90,168,.15) }
+/* Born-early card holds the due date too */
+#main.is-onboarding .ob-early-card { margin-top: 14px; border: 1px solid var(--line); border-radius: 16px; background: var(--white, #fffefb); padding: 12px 14px }
+#main.is-onboarding #setupForm .ob-early-card > label.checkbox { margin: 0 !important; padding: 0 !important; border: 0 !important; background: none !important; box-shadow: none !important }
+#main.is-onboarding .ob-early-card #dueBox { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line) }
+#main.is-onboarding .ob-early-card #dueBox > label { margin-top: 0 !important }
+#main.is-onboarding .ob-early-card #dueBox .hint { margin: 8px 0 0; font-size: 12.5px }
+/* Click anywhere on a date field to open the calendar (works inside the preview frame too): the browser's own
+   calendar button is stretched invisibly over the whole field. */
+#main .ob-date input[type=date]::-webkit-calendar-picker-indicator { position: absolute; inset: 0; width: auto; height: auto; margin: 0; padding: 0; opacity: 0; cursor: pointer }
