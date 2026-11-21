@@ -1318,3 +1318,7 @@
 #main .hg-keep .hg-keep-copy b{font-family:inherit!important;font-weight:700!important;font-size:17px!important;line-height:1.25;letter-spacing:-.005em;color:#2b2840;white-space:normal!important}
 #main .hg-keep-go{font-size:15px;font-weight:700;color:var(--kp)}
 #main .hg-keep-go i{font-style:normal;margin-left:3px}
+/* A quiet × to hide the keepsake card for this month */
+#main .hg-banner.hg-keep{position:relative}
+#main .hg-keep-x{position:absolute;top:6px;right:6px;width:32px;height:32px;border:0;border-radius:50%;background:transparent;color:#a39d97;font:400 20px/32px system-ui,sans-serif;cursor:pointer;padding:0}
+#main .hg-keep-x:hover{background:rgba(43,40,64,.06)}
