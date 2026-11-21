@@ -89,7 +89,11 @@
       const l = form.querySelector('label[for="babyPronouns"]'); if (l) l.removeAttribute('for'); }
     const early = form.querySelector('#early');
     if (early) { const l = early.closest('label'); [...l.childNodes].forEach(n => n.nodeType === 3 && n.remove());
-      l.insertAdjacentHTML('beforeend', '<span class="ob-early"><b>Born before 37 weeks?</b><small>We’ll use the original due date where adjusted age matters.</small></span>'); }
+      l.insertAdjacentHTML('beforeend', '<span class="ob-early"><b>Born before 37 weeks?</b><small>We’ll use the original due date where adjusted age matters.</small></span>');
+      // The due date opens inside the same card, so the two read as one question.
+      const due = form.querySelector('#dueBox'), card = document.createElement('div'); card.className = 'ob-early-card';
+      l.parentNode.insertBefore(card, l); card.appendChild(l); if (due) { card.appendChild(due);
+        const h = due.querySelector('.hint'); if (h) h.textContent = 'Guidance follows the due date; checkups follow the birthday.'; } }
     // Name: no "Optional" tag; one line says why we ask.
     const nm = form.querySelector('#babyName');
     if (nm) { const l = form.querySelector('label[for="babyName"]'); if (l) { const h = l.querySelector('.hint'); h && h.remove(); }
