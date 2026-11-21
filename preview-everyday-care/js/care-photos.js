@@ -27,7 +27,7 @@
   const SEE = { 'rash:peeling': 'peeling', 'rash:newborn': 'milia', 'look:0:cord': 'cord', 'rash:acne': 'acne', 'rash:cradle': 'cradle', 'look:1:poop': 'cleandiaper',
     'rash:drool': 'drool', 'p:teething': 'soregums', 'rash:eczema': 'eczema', 'look:3:poop': 'solids', 'rash:heat': 'heat' };
   // Is this normal? pages: the photo for "What it looks like".
-  const TILE_CROP = { milia: [45, 45, 1.6], cradle: [45, 35, 1.5], heat: [50, 48, 1.5], peeling: [35, 45, 1.3], cord: [50, 50, 1.25], acne: [40, 45, 1.3], eczema: [38, 62, 1.3] };
+  const TILE_CROP = { milia: [45, 45, 1.3], cradle: [45, 35, 1.3], heat: [50, 48, 1.2], peeling: [50, 45, 1.1], cord: [50, 48, 1.4], acne: [40, 45, 1.2], eczema: [40, 50, 1.2] };
   const SEE_LINE = { 'rash:peeling': 'Common in the first weeks.', 'rash:newborn': 'Tiny bumps that fade on their own.', 'look:0:cord': 'A little is normal as it heals.',
     'rash:acne': 'Baby acne, gone by 4–6 months.', 'rash:cradle': 'Cradle cap, usually gone by age 1.', 'look:1:poop': 'Can be fine if feeds go well.',
     'rash:drool': 'Comes with drool. Easy to soothe.', 'p:teething': 'Teething can start around now.', 'rash:eczema': 'Often eczema. Thick cream helps.',
@@ -238,7 +238,7 @@
     const all = [...main.querySelectorAll('.care-all-how')].find(a => /:how:/.test(a.getAttribute('onclick') || ''));
     if (all && !all.classList.contains('care-routine-row')) { all.className = 'care-routine-row'; all.innerHTML = `<span class="care-routine-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#2a6078" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6h12M8 12h12M8 18h12"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/></svg></span><span><b>${F('Care routines')}</b><small>${F('Bathing, teeth, nails and more, for {o} now.')}</small></span><i aria-hidden="true">›</i>`; }
     main.querySelectorAll('.care-see > button').forEach(b => {
-      const r = routeOf(b), n = v === 3 && r === 'p:teething' ? 'hero-2' : SEE[r], art = b.querySelector('.care-see-art'); if (!n || !art || art.classList.contains('ph-tile')) return;
+      const r = routeOf(b), n = v === 3 && r === 'p:teething' ? 'soregums' : SEE[r], art = b.querySelector('.care-see-art'); if (!n || !art || art.classList.contains('ph-tile')) return;
       art.className = 'care-see-art ph-tile'; art.innerHTML = img(n, b.textContent.trim()); b.classList.add('care-see-ph');
       const line = v === 3 && r === 'p:teething' ? 'Drool and chewing are common.' : SEE_LINE[r], name = b.querySelector('b');
       if (line && name && !b.querySelector('.care-see-line')) name.insertAdjacentHTML('afterend', `<small class="care-see-line">${F(line)}</small><i class="care-see-go" aria-hidden="true">›</i>`);

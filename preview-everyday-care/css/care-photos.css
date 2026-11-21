@@ -165,3 +165,12 @@
 #main .care-routines-hero h1 { margin: 0 0 6px }
 #main .care-pstep figcaption b { color: #2f3a40 !important } #main .care-pstep figcaption small { color: #6b6670 !important }
 #main .care-pstep .care-n { flex: none; width: 24px; height: 24px; border-radius: 50%; background: #e3f1f7; color: #2a6078; font-weight: 750; font-size: 13px; display: grid; place-items: center }
+
+/* Is this normal?: three small tiles in a row (Nov 21) */
+#main .care-v2 .care-see { grid-template-columns: repeat(3, 1fr) !important; gap: 8px }
+#main .care-v2 .care-see > button.care-see-ph { display: flex; flex-direction: column; align-items: stretch; padding: 0 0 10px }
+#main .care-v2 .care-see > button.care-see-ph:last-child:nth-child(odd) { grid-column: auto }
+#main .care-v2 .care-see > button:last-child:nth-child(odd) .care-see-art.ph-tile, #main .care-v2 .care-see .care-see-art.ph-tile { aspect-ratio: 4 / 3; margin-bottom: 7px }
+#main .care-v2 .care-see-ph b { padding: 0 8px !important; font-size: 13.5px; line-height: 1.25 }
+#main .care-v2 .care-see-line { padding: 2px 8px 0; font-size: 12px; line-height: 1.3 }
+#main .care-v2 .care-see-go { display: none }
