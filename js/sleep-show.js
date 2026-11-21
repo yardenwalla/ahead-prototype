@@ -198,9 +198,64 @@
     [...page.children].forEach(c => { if (c !== head && c !== acc && !c.matches('.guide-detail-top, .monthly-page-header, style, .hub-detail-head')) c.remove(); });
     return d.innerHTML;
   }
+  // Topic pages (Nov 20): each tile on the main page is a steady door that means the same thing at every age. Behind it,
+  // one page per topic: what's new for the baby now, then anytime pages, then what comes next and what came before.
+  // The "now" cards are read from the page the tile was tapped on, so they always match the main page.
+  // [route, step (0–5 by age, null = any age), age label, title, line]
+  const TOPICS = {
+    night: { name: 'Night sleep', art: 'moon', lead: 'How nights change, from tiny stretches to sleeping through.', items: [
+      ['d:daynight', 0, 'First weeks', 'Bright days and dim nights set {p} clock', 'Helping {o} tell day from night'],
+      ['d:stretch', 1, '6 weeks–3 months', '{P} longest night sleep grows over months', 'From 2–4 hours to 10–12 by a year'],
+      ['d:regress', 2, 'Around 4 months', 'Waking more is the 4-month sleep regression', 'Why it happens, and how to respond'],
+      ['d:wakes', null, 'Any age', 'Brief wakings happen between sleep cycles', 'What to do when {s} {wake|wakes}'],
+      ['d:nightfeeds', 4, '7–8 months', 'Night feeds drop as days get fuller', 'When to drop one, and how'],
+      ['d:nightwake', 5, '8–12 months', 'Night waking often comes back for a while', 'New skills, teeth, and missing you']] },
+    naps: { name: 'Naps', art: 'sun', lead: 'How naps change, from any time at all to two a day.', items: [
+      ['d:steps0', 0, 'First weeks', 'Spot the yawn, soothe, then down', 'Sleepy cues, and how to soothe'],
+      ['d:napsearly', 1, '6 weeks–3 months', 'Short, frequent naps are normal now', 'Arms, carrier and stroller naps all count'],
+      ['d:predictable', 2, '3–5 months', 'Naps start to settle into set times', 'How to find {p} nap times'],
+      ['d:shortnap', null, 'From 3 months', 'A short nap moves the next one up', 'See how the rest of the day shifts'],
+      ['d:day:2', 3, '5–7 months', 'An example day with three naps', 'Naps, awake time and bedtime'],
+      ['d:catnap', 4, '7–8 months', 'Three naps become two', 'Signs, and how to switch'],
+      ['d:day:3', 5, '8–12 months', 'An example day with two naps', 'Naps, awake time and bedtime']] },
+    bed: { name: 'Bedtime', art: 'book', lead: 'The routine, falling asleep, and bedtime as {s} {grow|grows}.', items: [
+      ['d:routine', 1, 'From 6 weeks', 'A short bedtime routine, the same every night', 'Four calm steps, 15–20 minutes'],
+      ['d:settle4', 2, '3–5 months', 'Try putting {o} down drowsy, once a day', 'How to practice, if you want to'],
+      ['settle', 3, 'From 4–6 months', 'Sleep training is a choice, not a must', 'When to start, and the methods'],
+      ['d:earlybed', 4, '7–8 months', 'Move bedtime earlier, to 7–8 pm', 'Once naps settle'],
+      ['d:goodbye', 5, '8–12 months', 'Keep bedtime goodbyes short and the same', 'Separation, and bedtime protests']] },
+    safe: { name: 'Safe sleep', art: 'crib', lead: 'The rules that stay the same, and the steps that change.', items: [
+      ['safe', null, 'Every sleep', 'Safe sleep checklist', 'On {p} back, in {p} own bare sleep space'],
+      ['d:safegrow', null, 'All ages', 'What changes, and when', 'Swaddle, crib, mattress and more, by age'],
+      ['d:swaddle', 0, 'First weeks', 'Swaddle snug at the arms, loose at the hips', 'How to swaddle, and when to stop'],
+      ['d:swaddleoff', 2, 'Before rolling', 'Stop swaddling at the first try to roll', 'Arms out, in a sleep sack'],
+      ['d:where', 3, 'First 6 months', 'Share a room until at least 6 months', 'And moving to the crib'],
+      ['d:mattress', 4, 'Once {s} {sit|sits}', 'Lower the crib mattress', 'Lowest before {s} {stand|stands}']] } };
+  // The cards on the page the tile was tapped on (the main page now, or another stage's tab).
+  function sourceRoutes(src) {
+    const html = src === 'now' ? window.changesPage('Sleep') : baseRoute('chg:Sleep:s:' + src.replace(/^s/, ''));
+    const d = document.createElement('div'); d.innerHTML = html;
+    return [...d.querySelectorAll('#sleep-night-feeds .hub-row[onclick], .sl-safe-list .hub-row[onclick]')].map(r => (((r.getAttribute('onclick') || '').match(/'chg:Sleep:([^']+)'/) || [])[1] || ''));
+  }
+  function topicPage(p) {
+    const [, , , k, src = 'now'] = p.split(':'), T = TOPICS[k]; if (!T) return baseRoute(p);
+    const now = src === 'now', have = sourceRoutes(src), R = H().row;
+    const cur = T.items.filter(x => have.includes(x[0]));
+    // Where this stage sits in the topic: from the cards it has (any topic), so "next" and "earlier" line up with the tabs.
+    const all = Object.values(TOPICS).flatMap(t => t.items), steps = have.map(r => (all.find(x => x[0] === r && x[1] != null && !/swaddleoff|mattress/.test(r)) || [])[1]).filter(x => x != null);
+    const step = steps.length ? Math.max(...steps) : 0;
+    const rest = T.items.filter(x => !cur.includes(x));
+    const row = ([r, , age, t, sub], showAge) => R({ cat: 'Sleep', icon: T.art, title: t, sub: showAge ? age : sub, onclick: go('chg:Sleep:' + r) });
+    const sec = (h, xs, showAge) => xs.length ? `<h2 class="hub-h2">${F(h)}</h2><div class="hub-list">${xs.map(x => row(x, showAge)).join('')}</div>` : '';
+    const nowH = now && C().live() ? 'Right now for ' + nm() : 'At this stage';
+    const any = rest.filter(x => x[1] == null), next = rest.filter(x => x[1] != null && x[1] > step), before = rest.filter(x => x[1] != null && x[1] <= step);
+    const inner = (cur.length ? sec(nowH, cur) : `<h2 class="hub-h2">${F(nowH)}</h2><p class="ssw-none">${F('Nothing new on this right now. Here’s what comes next.')}</p>`)
+      + sec(k === 'safe' ? 'Every sleep' : 'Any time', any) + sec('Coming up', next, true) + sec('Earlier', before, true);
+    return H().detail('Sleep', 'Sleep', T.name, T.lead, `<div class="ssw-topic">${inner}</div>`, T.art);
+  }
   const routes = { 'chg:Sleep:d:routine': routinePage, 'chg:Sleep:d:shortnap': shortNapPage, 'chg:Sleep:d:wakes': wakesPage, 'chg:Sleep:d:safegrow': safeGrowPage };
   const baseRoute = window.changesRoute;
-  window.changesRoute = function (p) { return routes[p] ? routes[p]() : baseRoute.apply(this, arguments); };
+  window.changesRoute = function (p) { return routes[p] ? routes[p]() : /^chg:Sleep:t:/.test(p) ? topicPage(p) : baseRoute.apply(this, arguments); };
 
   /* ---------- pages dressed after they draw ---------- */
   const PAGES = {
@@ -318,46 +373,21 @@
         const ah = hero.querySelector('.ssw-aha'); if (ah) { hero.after(ah); ah.insertAdjacentHTML('afterbegin', `<i class="ssw-bulb" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.6.5 1 1.2 1 2V16h5.2v-.2c0-.8.4-1.5 1-2A6 6 0 0 0 12 3Z"/></svg></i>`); }
       }
     }
-    // Four topic tiles (Yarden's inspiration): Night sleep, Naps, Bedtime routine, Safe sleep. Each opens this stage's own
-    // article on that topic, with its title under the tile name. Stage articles that don't fit a tile stay in the list.
+    // Four topic tiles (Yarden's inspiration, Nov 20 rework): steady doors to Night sleep, Naps, Bedtime and Safe sleep that
+    // mean the same thing at every age. This stage's own cards stay in plain words in "Right now" above them, so what's new is
+    // visible without tapping.
     const glanceEl = main.querySelector('.sl-glance');
     if (hero && hero.__sswBand && glanceEl && !glanceEl.querySelector('.ssw-glance-band')) glanceEl.insertAdjacentElement('afterbegin', hero.__sswBand);
-    if (hero && glanceEl && !main.querySelector('.ssw-guides')) {
-      const view = +(hero.dataset.sswView || 0);
-      const rn = [...main.querySelectorAll('h2')].find(h => /^Right now|^At this stage|^In this stage/i.test(h.textContent.trim()));
-      const rl = rn && rn.nextElementSibling && rn.nextElementSibling.classList.contains('hub-list') ? rn.nextElementSibling : null;
-      const sl = main.querySelector('.sl-safe-list');
-      const rows = (rl ? [...rl.querySelectorAll('.hub-row[onclick]')] : []).concat(sl ? [...sl.querySelectorAll('.hub-row[onclick]')] : []);
-      const route = r => ((r.getAttribute('onclick') || '').match(/'([^']+)'/) || [])[1] || '';
-      // The tiles are this stage's own cards, sorted into four topics (chosen on purpose, so each lands where a parent
-      // expects). A stage with no card for a topic falls back to that topic's main page. Cards that fit no tile stay below.
-      const mo = m(), PICK = {
-        night: ['daynight', 'stretch', 'regress', 'nightfeeds', 'nightwake'],
-        naps: ['steps0', 'napsearly', 'predictable', 'catnap', 'day:2', 'day:3'],
-        bed: ['earlybed', 'goodbye', 'routine'],
-        safe: ['swaddle', 'swaddleoff', 'mattress', 'where'] };
-      const FALL = { night: ['daynight', 'stretch', 'wakes', 'nightwake'][view], naps: ['steps0', 'napsearly', 'day:2', 'day:3'][view], bed: 'routine' };
-      const T = [['night', 'moon', 'Night sleep'], ['naps', 'sun', 'Naps'], ['bed', 'book', 'Bedtime routine'], ['safe', 'crib', 'Safe sleep']].map(([k, ic, name]) => {
-        let r = null; for (const id of PICK[k]) { r = rows.find(x => !x.dataset.sswUsed && route(x) === 'chg:Sleep:d:' + id); if (r) break; }
-        if (r) r.dataset.sswUsed = '1';
-        const to = r ? route(r) : (k === 'safe' ? 'chg:Sleep:safe' : 'chg:Sleep:d:' + FALL[k]);
-        const sub = r ? (r.querySelector('b') || {}).textContent : F({ night: 'Wake-ups and what helps', naps: 'An example day', bed: 'A simple routine you can follow', safe: 'The sleep space, and how it changes' }[k]);
-        return { k, ic, name, to, sub };
-      });
-      // A photo that matches the card and the baby's age (never the same as this stage's top-card photo).
-      const PHOTO = { daynight: 'nightfeed.jpg', stretch: 'night.jpg', regress: 'night.jpg', wakes: 'back.jpg', nightfeeds: nursing() ? 'feed-nurse.jpg' : 'feed.jpg', nightwake: 'nightwake.jpg',
-        steps0: 'yawn.jpg', napsearly: 'bassinetnap.jpg', predictable: 'bassinetnap.jpg', 'day:2': 'nap.jpg', catnap: 'nap.jpg', 'day:3': 'nap10.jpg',
-        routine: ['swaddle-3.jpg', 'pajamas.jpg', 'book.jpg', 'book.jpg'][view], earlybed: 'down.jpg', goodbye: 'goodbye.jpg',
-        swaddle: 'swaddle-before.jpg', swaddleoff: 'swaddle-after.jpg', mattress: 'mattress.jpg', where: 'room.jpg', safe: 'crib.jpg' };
-      const key = to => to === 'chg:Sleep:safe' ? 'safe' : to.replace('chg:Sleep:d:', '');
-      const POSN = { 'nightfeed.jpg': '50% 40%', 'night.jpg': '50% 32%', 'back.jpg': '50% 30%', 'feed.jpg': '50% 40%', 'feed-nurse.jpg': '50% 35%', 'nightwake.jpg': '50% 35%', 'yawn.jpg': '50% 30%', 'bassinetnap.jpg': '50% 35%', 'nap.jpg': '60% 28%', 'nap10.jpg': '50% 40%', 'swaddle-3.jpg': '50% 25%', 'pajamas.jpg': '50% 40%', 'book.jpg': '50% 40%', 'down.jpg': '50% 40%', 'goodbye.jpg': '50% 45%', 'swaddle-before.jpg': '50% 30%', 'swaddle-after.jpg': '50% 30%', 'mattress.jpg': '50% 45%', 'room.jpg': '50% 55%', 'crib.jpg': '50% 22%' };
-      T.forEach(t => { t.pic = PHOTO[key(t.to)] || 'crib.jpg'; t.pos = POSN[t.pic] || '50% 40%'; });
-      glanceEl.insertAdjacentHTML('afterend', `<div class="ssw-guides is-photo">${T.map(t => `<button onclick="${go(t.to)}"><span class="ssw-tile-pic"><img src="${IMG + t.pic}" alt="" loading="lazy" style="object-position:${t.pos}"><i class="ssw-gi" aria-hidden="true">${H().art(t.ic, 'Sleep')}</i></span><span class="ssw-gt"><b>${F(t.name)}</b><small>${t.sub}</small></span><em class="ssw-go" aria-hidden="true">›</em></button>`).join('')}</div>`);
-      rows.forEach(r => { if (r.dataset.sswUsed) r.remove(); });
-      if (rl && !rl.querySelector('.hub-row')) { rn.remove(); rl.remove(); }
-      if (sl && !sl.querySelector('.hub-row')) sl.remove();
-      const ev = glanceEl.querySelector('.sl-every'); if (ev && T[3].to === 'chg:Sleep:safe') ev.remove(); // only when the Safe sleep tile already opens the checklist
-      const ex = [...main.querySelectorAll('.hub-card-cta')].find(x => /Example day/.test(x.textContent)); if (ex && T.some(t => /:day:\d$/.test(t.to))) ex.remove(); // Naps tile already opens the example day
+    const rl = main.querySelector('#sleep-night-feeds');
+    if (hero && rl && !main.querySelector('.ssw-guides')) {
+      const view = +(hero.dataset.sswView || 0), src = /^topic:Sleep|^chg:Sleep$/.test(pg) ? 'now' : 's' + view;
+      const PIC = { night: ['nightfeed.jpg', 'night.jpg', 'back.jpg', 'nightwake.jpg'], naps: ['yawn.jpg', 'bassinetnap.jpg', 'nap.jpg', 'nap10.jpg'],
+        bed: ['swaddle-3.jpg', 'pajamas.jpg', 'book.jpg', 'goodbye.jpg'], safe: ['swaddle-before.jpg', 'crib.jpg', 'swaddle-after.jpg', 'mattress.jpg'] };
+      const POSN = { 'nightfeed.jpg': '50% 40%', 'night.jpg': '50% 32%', 'back.jpg': '50% 30%', 'nightwake.jpg': '50% 35%', 'yawn.jpg': '50% 30%', 'bassinetnap.jpg': '50% 35%', 'nap.jpg': '60% 28%', 'nap10.jpg': '50% 40%', 'swaddle-3.jpg': '50% 25%', 'pajamas.jpg': '50% 40%', 'book.jpg': '50% 40%', 'goodbye.jpg': '50% 45%', 'swaddle-before.jpg': '50% 30%', 'crib.jpg': '50% 22%', 'swaddle-after.jpg': '50% 30%', 'mattress.jpg': '50% 45%' };
+      const SUB = { night: 'Wake-ups, feeds and longer stretches', naps: 'Cues, nap times and example days', bed: 'The routine, settling and goodbyes', safe: 'The checklist, and what changes' };
+      const tiles = Object.entries(TOPICS).map(([k, t]) => { const pic = PIC[k][view] || PIC[k][0];
+        return `<button onclick="${go('chg:Sleep:t:' + k + ':' + src)}"><span class="ssw-tile-pic"><img src="${IMG + pic}" alt="" loading="lazy" style="object-position:${POSN[pic] || '50% 40%'}"><i class="ssw-gi" aria-hidden="true">${H().art(t.art, 'Sleep')}</i></span><span class="ssw-gt"><b>${F(t.name)}</b><small>${F(SUB[k])}</small></span><em class="ssw-go" aria-hidden="true">›</em></button>`; }).join('');
+      rl.insertAdjacentHTML('afterend', `<h2 class="hub-h2 ssw-guides-h">${F('Sleep by topic')}</h2><div class="ssw-guides is-photo">${tiles}</div>`);
     }
     // Rough day: short naps and night waking open their own pages.
     const rough = main.querySelector('.hub-rough');

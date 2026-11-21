@@ -240,3 +240,8 @@
 #main .ssw-grow li::before { top: 12px }
 #main .ssw-hero .ssw-rhythm { padding: 12px 8px 10px !important; width: auto !important; max-width: none !important }
 #main .ssw-hero .ssw-rhythm ol { width: 100% }
+/* Nov 20: tiles are steady topic doors under "Right now"; a tag shows which topics have something new now */
+#main .ssw-guides-h { margin-top: 22px }
+#main .ssw-guides.is-photo { margin-top: 0 }
+#main .ssw-guides.is-photo .ssw-new { position: absolute; right: 8px; top: 8px; font-style: normal; font-size: 11px; font-weight: 750; letter-spacing: .02em; color: #fff; background: #46638c; border-radius: 999px; padding: 3px 8px; box-shadow: 0 2px 6px #0003 }
+#main .ssw-topic .ssw-none { margin: 0 2px 6px; font-size: 14.5px; line-height: 1.45; color: #6b6670 }
