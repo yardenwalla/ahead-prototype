@@ -389,3 +389,6 @@
 #main .care-poopcard b { display: block; font-size: 15.5px; font-weight: 650; color: #2b2732 }
 #main .care-poopcard small { display: block; font-size: 13.5px; color: #6d666d; margin-top: 2px }
 #main .care-poopcard .care-chev { margin-left: auto; font-style: normal; color: #9a929a; font-size: 18px }
+/* Nov 22: call card as a short list of signs */
+#main .care-calls.is-list ul { margin: 6px 0 0; padding-left: 18px }
+#main .care-calls.is-list li { font-size: 14.5px; line-height: 1.45; margin: 3px 0 }
