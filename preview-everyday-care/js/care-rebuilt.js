@@ -4,11 +4,11 @@
 (function () {
   const CAT = 'Daily rhythm', H = () => window.__hub;
   const tub = () => ({ type: 'howto', label: 'Baths', art: 'bath', title: 'Tub baths can start',
-    why: 'Once the cord has healed, 2–3 a week. Keep a hand on {o} the whole time.',
+    why: 'Once the cord heals, 2 or 3 baths a week is plenty. Keep a hand on {o} the whole time.',
     // Feeding's rhythm: tile titles of 1–3 words, one short line under each, specifics kept. Detail goes in 2 short notes.
-    steps: [['photo:care/tw1', 'Check the water', '2–3 inches, about 100°F'], ['photo:care/tw2', 'Eyes first', 'Inner corner out'],
-      ['photo:care/tw3', 'Then top to bottom', 'Diaper area last'], ['photo:care/tw4', 'Towel and pat dry', 'Into every crease']],
-    stepsNotes: [['', 'No thermometer?', 'Your elbow should feel warm, never hot'], ['', 'Each eye', 'Plain water, a clean corner of the cloth']],
+    steps: [['photo:care/tw1', 'Check the water', 'Fill it 2–3 inches deep, about 100°F.'], ['photo:care/tw2', 'Start with {p} eyes', 'Wipe from the inner corner out.'],
+      ['photo:care/tw3', 'Then work down', 'The diaper area goes last.'], ['photo:care/tw4', 'Wrap {o} in a towel', 'Pat {o} dry, into every crease.']],
+    stepsNotes: [['', 'No thermometer?', 'Dip your elbow in. It should feel warm, never hot.'], ['', 'Plain water on {p} face', 'With a clean corner of the cloth for each eye.']],
     // The one safety rule sits in the lead; the water heater lives in Safety's first setup.
     video: ['VsUla1M7eHQ', 'Giving a tub bath', 'Nemours KidsHealth'] });
   const acne = () => ({ type: 'check', label: 'Is this normal?', art: 'smile', title: 'Baby acne is common, and clears on its own',
