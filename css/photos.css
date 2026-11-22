@@ -323,3 +323,29 @@
 #main .care-rash-art .care-see-photo { width: 76px; height: 76px; border-radius: 18px }
 #main .care-v2 .care-map:has(.care-map-photo) { grid-template-columns: 120px 1fr }
 #main .care-map .care-map-photo { display: block; width: 120px; height: 120px; flex: none; object-fit: cover; border-radius: 16px }
+/* Nov 22: steps with one key photo, then a numbered list with room for the words */
+#main .care-keysteps { padding: 14px 16px 6px }
+#main .care-keyphoto { margin: 0 0 6px; }
+#main .care-keyphoto img { display: block; width: 100%; aspect-ratio: 16/10; object-fit: cover; border-radius: 16px }
+#main .care-keyphoto figcaption { font-size: 13.5px; color: var(--muted, #6d666d); margin: 8px 2px 4px }
+#main .care-keysteps ol { list-style: none; counter-reset: ks; margin: 0; padding: 0 }
+#main .care-keysteps li { counter-increment: ks; position: relative; padding: 12px 0 12px 40px; border-top: 1px solid #0000000f }
+#main .care-keysteps li:first-child { border-top: 0 }
+#main .care-keysteps li::before { content: counter(ks); position: absolute; left: 0; top: 11px; width: 26px; height: 26px; border-radius: 50%; background: var(--area, #e3f1f7); color: var(--area-ink, #2a6078); font: 700 13.5px/26px Figtree, sans-serif; text-align: center }
+#main .care-keysteps li b { display: block; font-size: 15.5px; font-weight: 600; line-height: 1.3 }
+#main .care-keysteps li span { display: block; font-size: 13.5px; color: var(--muted, #6d666d); margin-top: 2px; line-height: 1.35 }
+#main .care-keysteps ol.is-say li { font-size: 15.5px; line-height: 1.45; color: var(--ink, #2b2732); padding-top: 11px; padding-bottom: 11px }
+#main .care-keysteps ol.is-say li::before { top: 10px }
+#main .care-keyphoto figcaption { font-size: 14px; color: var(--ink, #2b2732); font-weight: 600 }
+#main .care-keysteps .care-keyphoto { margin-bottom: 4px }
+#main .care-keynote { margin: 0; padding: 12px 0 10px; border-top: 1px solid #0000000f; font-size: 14.5px; line-height: 1.45; color: var(--ink2, #4a4550) }
+#main .care-keynote b { color: var(--ink, #2b2732); font-weight: 600 }
+/* Nov 22: show and tell per step: the step's photo on the left, the full sentence on the right */
+#main .care-keysteps ol.is-photo li { display: flex; gap: 14px; align-items: center; padding: 10px 0 10px 0 }
+#main .care-keysteps ol.is-photo li::before { left: 6px; top: 16px; z-index: 1; width: 22px; height: 22px; font-size: 12px; line-height: 22px; box-shadow: 0 1px 3px #0002; background: #fff }
+#main .care-stepph { flex: none; width: 92px; height: 92px; border-radius: 14px; overflow: hidden; background: #eee }
+#main .care-stepph img { width: 100%; height: 100%; object-fit: cover; display: block }
+#main .care-steptx { font-size: 15.5px; line-height: 1.42; color: var(--ink, #2b2732) }
+#main .care-keysteps .care-steptx { color: #2b2732; font-weight: 500 }
+#main .care-stepph { width: 100px; height: 100px }
+#main .care-keysteps ol.no-num li::before { display: none }
