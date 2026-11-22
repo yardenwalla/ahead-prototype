@@ -41,3 +41,61 @@
 #main .ms-card .ms-art::before{display:none!important}
 #main .ms-card .ms-toys,#main .ms-card .ms-toys .ms-babyimg{position:absolute!important;top:0!important;right:0!important;bottom:0!important;left:0!important;clip-path:none!important;display:block!important}
 #main .ms-card .ms-toys .ms-babyimg img{position:absolute!important;right:0!important;bottom:0!important;width:auto!important;height:auto!important;max-width:100%!important;max-height:100%!important;filter:none!important}
+
+
+/* Nov 22 · Home month-card positioning preview.
+   Scope: the month-story card only. Artwork, copy, CTA, surrounding Home, and
+   shared category styling are unchanged. Lift the illustration into the card's
+   usable space and tune visual weight without shifting the text/CTA hierarchy. */
+#main .ms-card{
+  min-height:222px!important;
+  padding:21px 20px 18px!important;
+  grid-template-rows:minmax(0,1fr) auto!important;
+}
+#main .ms-card .ms-copy{
+  width:204px!important;
+  max-width:100%!important;
+}
+#main .ms-card .ms-eyebrow{margin-bottom:8px!important}
+#main .ms-card .ms-copy small{
+  margin-top:9px!important;
+  max-width:194px!important;
+  line-height:1.35!important;
+}
+#main .ms-card .ms-foot{
+  margin-top:12px!important;
+  align-self:end!important;
+}
+#main .ms-card .ms-art{
+  top:-6px!important;
+  right:-5px!important;
+  bottom:-2px!important;
+  width:calc(100% - 156px)!important;
+  max-width:215px!important;
+  height:auto!important;
+  -webkit-mask-image:linear-gradient(to right,transparent 0%,#000 16%)!important;
+  mask-image:linear-gradient(to right,transparent 0%,#000 16%)!important;
+}
+#main .ms-card .ms-toys .ms-babyimg img{
+  right:-2px!important;
+  bottom:0!important;
+  transform:translateY(-3px) scale(1.10)!important;
+  transform-origin:right bottom!important;
+}
+/* Individual composition adjustments: only position/scale; no illustration changes. */
+#main .ms-card .ms-babyimg img[src*="baby-0.webp"]{transform:translateY(-9px) scale(1.13)!important}
+#main .ms-card .ms-babyimg img[src*="baby-1.webp"]{transform:translateY(-2px) scale(1.03)!important}
+#main .ms-card .ms-babyimg img[src*="baby-2.webp"]{transform:translateY(-8px) scale(1.15)!important}
+#main .ms-card .ms-babyimg img[src*="baby-3.webp"]{transform:translateY(-4px) scale(1.05)!important}
+#main .ms-card .ms-babyimg img[src*="baby-4.webp"]{transform:translateY(-7px) scale(1.09)!important}
+#main .ms-card .ms-babyimg img[src*="baby-5.webp"]{transform:translateY(-6px) scale(1.08)!important}
+#main .ms-card .ms-babyimg img[src*="baby-6.webp"]{transform:translateY(-7px) scale(1.10)!important}
+#main .ms-card .ms-babyimg img[src*="baby-7.webp"]{transform:translateY(-3px) scale(1.05)!important}
+#main .ms-card .ms-babyimg img[src*="baby-8.webp"]{transform:translateY(-4px) scale(1.08)!important}
+#main .ms-card .ms-babyimg img[src*="baby-9.webp"]{transform:translateY(-6px) scale(1.10)!important}
+#main .ms-card .ms-babyimg img[src*="baby-10.webp"]{transform:translateY(-3px) scale(1.04)!important}
+#main .ms-card .ms-babyimg img[src*="baby-11.webp"]{transform:translateY(-5px) scale(1.07)!important}
+@media(max-width:355px){
+  #main .ms-card .ms-art{right:-8px!important;width:calc(100% - 144px)!important}
+  #main .ms-card .ms-copy{width:194px!important}
+}
