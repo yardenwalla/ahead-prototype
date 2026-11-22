@@ -221,3 +221,13 @@ Files: `js/home-cards.js`, `js/home-copy.js` (v10), `js/stages.js`.
 - "Poop changes with solids" stays on Home (Yarden, Nov 7).
 - Results (840 simulated families): weekly visits with something new 86% (was 84%); month 10 82% (73%), month 11 71% (68%); first teeth known for 54% of families (was 0%); weekly visits with a question 19% (18%).
 - Home's cards are set once a day. Opening or dismissing a card removes it without pulling in the next one, so "That's everything for today" stays true (and reads "You're all caught up for today" once they're all cleared). Before, Home re-picked on every redraw, so a × swapped in a new card. A card unlocked by answering Home's question still shows on the same visit.
+
+## Home: month moments and story card (2026-11-21/22)
+Files: `assets/home/babies/baby-0..11.webp`, `css/home-card-clean.css`, `js/home-glance.js`, `js/month-story.js`, `js/year-ahead.js`, `js/home-copy.js`, `js/cohesion.js`. Decision notes: project doc "Home month babies — art decision".
+- Art: each month's card shows a small "moment" in a soft matte 3D pastel style: a baby's hands or feet with a toy or a parent, never a face. Every month got one picture that shows its moment (feet in a swaddle; legs kicking at the mobile; holding a parent's finger; reaching for the play gym; reaching for a bunny; kicking a ball; a first taste of purée; dropping a bowl from the high chair; peekaboo; stacking rings; pulling up on an ottoman; clapping). The images are sized per month so none crowds the text or looks much bigger than the others.
+- Story card layout from Yarden's inspiration: the art anchored bottom-right over a soft wash of the month's color, with no circle behind it. The card is a one-column grid so Safari (a button) lays it out like Chrome.
+- Copy: the title is just the month ("Month 6."). The card line is now one connected sentence with the baby's name that describes the picture ("Everything catches Maya's eye, even during feeds."), replacing the playful fragments. The button reads "▶ [name]'s month" ("▶ [name]'s story" for the newborn card).
+- The Timeline handle keeps the earlier clay baby for now. A new matching baby is next.
+- Fix: the birth day said "1 days"; it now says "1 day".
+- Fix: from 8 months, Home's timeline teaser no longer offers "Next: the first tooth" (most babies have one by then, and Home asks).
+- Wording: "whole milk at one" is now "whole cow's milk at 12 months" (AAP and CDC wording) on the 11-month card and the milk change.
