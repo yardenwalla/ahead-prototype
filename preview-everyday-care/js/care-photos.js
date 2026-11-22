@@ -9,7 +9,7 @@
 (function () {
   const F = s => (window.__hub ? window.__hub.F(s) : s);
   const CAT = 'Daily rhythm';
-  const src = n => `assets/care/${n}.jpg?v=1122s`;
+  const src = n => `assets/care/${n}.jpg?v=1122t`;
   const img = (n, alt) => `<img src="${src(n)}" alt="${F(alt).replace(/"/g, '&quot;')}" loading="lazy">`;
   const pin = ([label, x, y, side]) => `<span class="ph-pin ph-pin-${side}" style="left:${x}%;top:${y}%"><i></i><span>${F(label)}</span></span>`;
   const photo = (n, alt, pins, cls = '') => `<figure class="ph-photo ph-hero care-ph ${cls}">${img(n, alt)}${(pins || []).map(pin).join('')}</figure>`;
@@ -408,7 +408,7 @@
     addCue(main, r);
     const hit = PAGE.find(([re]) => re.test(r)); if (!hit || main.querySelector('.care-ph')) return;
     // One prominent picture, then the strip: never the same photo twice, and the fit pair already shows the diaper.
-    if (STEP_PH[r] || NOHERO.has(r) || (SEQ[r] || []).includes(hit[1][1]) || (hit[1][1] === 'diaper' && main.querySelector('.care-pair'))) return;
+    if ((seq && STEP_PH[r]) || NOHERO.has(r) || (SEQ[r] || []).includes(hit[1][1]) || (hit[1][1] === 'diaper' && main.querySelector('.care-pair'))) return;
     const [title, n, alt, pins, cls, into] = hit[1];
     // Most pages: the photo is the first section. A photo of what helps sits at the top of that page's own section instead.
     const own = into && [...main.querySelectorAll('h2.hub-h2')].find(h => h.textContent.trim() === into);
