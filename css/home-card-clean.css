@@ -87,9 +87,13 @@
    Zoom is restrained so the actual action (toy, face-free gesture, motion) stays
    visible; an edge crop is used only when the pose makes sense there. */
 #main .ms-card .ms-babyimg img{transform-origin:right bottom!important}
-/* Newborn — preserve the full feet-and-blanket bundle. */
+/* Newborn — soften the left edge of the blanket while keeping the feet crisp. */
 #main .ms-card .ms-babyimg img[src*="baby-0.webp"]{
   right:0!important;bottom:0!important;transform:translateY(-2px) scale(1.04)!important;
+}
+#main .ms-card .ms-art:has(img[src*="baby-0.webp"]){
+  -webkit-mask-image:linear-gradient(to right,transparent 0%,rgba(0,0,0,.35) 22%,#000 55%)!important;
+  mask-image:linear-gradient(to right,transparent 0%,rgba(0,0,0,.35) 22%,#000 55%)!important;
 }
 /* Month 1 — two feet come up from the bottom; keep the whole mobile. */
 #main .ms-card .ms-babyimg img[src*="baby-1.webp"]{
@@ -99,9 +103,9 @@
 #main .ms-card .ms-babyimg img[src*="baby-2.webp"]{
   right:0!important;bottom:0!important;transform:none!important;
 }
-/* Month 3 — both hands and the play arch need to read as one scene. */
+/* Month 3 — bring the sleeve ends below the card edge; keep the entire play arch. */
 #main .ms-card .ms-babyimg img[src*="baby-3.webp"]{
-  right:0!important;bottom:-4px!important;transform:scale(1.03)!important;
+  right:0!important;bottom:-20px!important;transform:translateY(8px) scale(1.03)!important;
 }
 /* Month 4 — bunny stays separated from the reaching hand; sleeve enters from right. */
 #main .ms-card .ms-babyimg img[src*="baby-4.webp"]{
@@ -115,17 +119,35 @@
 #main .ms-card .ms-babyimg img[src*="baby-6.webp"]{
   right:-4px!important;bottom:0!important;transform:scale(1.03)!important;
 }
-/* Month 7 — the falling bowl, spoon, reaching hand, and chair must all be visible. */
+/* Month 7 — preserve the established placement but show more of the falling motion. */
 #main .ms-card .ms-babyimg img[src*="baby-7.webp"]{
-  right:-4px!important;bottom:0!important;transform:scale(1.02)!important;
+  right:-4px!important;bottom:0!important;transform:scale(.94)!important;
 }
-/* Month 8 — hide only the lower sleeves at the bottom; keep the peekaboo bunny. */
+/* Month 8 — pull the full blanket and bunny into view; retain the hands at the base. */
 #main .ms-card .ms-babyimg img[src*="baby-8.webp"]{
-  right:-2px!important;bottom:-6px!important;transform:scale(1.05)!important;
+  right:8px!important;bottom:-3px!important;transform:scale(.92)!important;
 }
-/* Month 9 — let the stacking arm enter from the right but keep the loose rings. */
+/* Month 9 — restore the original main-branch artwork size and placement. */
 #main .ms-card .ms-babyimg img[src*="baby-9.webp"]{
-  right:-5px!important;bottom:0!important;transform:scale(1.03)!important;
+  right:0!important;bottom:0!important;transform:none!important;
+}
+#main .ms-card:has(img[src*="baby-9.webp"]){
+  min-height:232px!important;
+  padding:22px 20px 20px!important;
+  grid-template-rows:auto 1fr!important;
+}
+#main .ms-card:has(img[src*="baby-9.webp"]) .ms-copy{width:200px!important}
+#main .ms-card:has(img[src*="baby-9.webp"]) .ms-eyebrow{margin-bottom:10px!important}
+#main .ms-card:has(img[src*="baby-9.webp"]) .ms-copy small{
+  margin-top:10px!important;line-height:1.4!important;max-width:200px!important;
+}
+#main .ms-card:has(img[src*="baby-9.webp"]) .ms-foot{margin-top:18px!important}
+#main .ms-card .ms-art:has(img[src*="baby-9.webp"]){
+  top:14px!important;right:0!important;bottom:-16px!important;
+  width:calc(100% - 168px)!important;max-width:230px!important;
+  height:calc(100% + 2px)!important;
+  -webkit-mask-image:linear-gradient(to right,transparent 0%,#000 22%)!important;
+  mask-image:linear-gradient(to right,transparent 0%,#000 22%)!important;
 }
 /* Month 10 — preserve the full pulling-up action, furniture, and planted feet. */
 #main .ms-card .ms-babyimg img[src*="baby-10.webp"]{
