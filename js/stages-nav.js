@@ -29,7 +29,7 @@
   };
   ONE.Childcare = ['Kinds of care, costs and when to start looking', 'Getting ready for day one, and a backup plan', 'Settling in, each day, and when to speak up'];
   const CHANGEABLE = ['Sleep', 'Feeding', 'Safety', 'Childcare'];
-  const PILLS = ['Feeding', 'Safety'];
+  const PILLS = ['Feeding', 'Safety', 'Daily rhythm'];
   const PILL_LABEL = {};
   const fill = s => String(s).replace(/Maya/g, typeof name === 'function' ? name() : 'your baby');
   const ageOf = it => it.age && !/^By |months?$|^Newborn$|^First week$/.test(it.label) ? it.age : '';

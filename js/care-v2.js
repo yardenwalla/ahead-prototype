@@ -442,8 +442,10 @@
     let b = head('skin', 'Skin and rashes', r.t, r.lead);
     // Each rash gets its own picture up top, so Little bumps and Flaky scalp don't open pages that look the same.
     const mini = { newborn: 'milia', yeast: 'diaper' }[id] || id;
-    if (window.careMini) { const m = careMini(mini); if (m) b = b.replace(/<span class="dev-area-head-art">[\s\S]*?<\/svg><\/span>/, `<span class="dev-area-head-art care-rash-art">${m}</span>`); }
-    b += rashMap(id) + h2('What helps') + h.steps(r.steps);
+    // Nov 21: the header keeps its small drawing; the real photo goes in "What it looks like", where the parent compares.
+    let photo = '';
+    if (window.careMini) { window.__carePhotoOff = true; const m = careMini(mini); window.__carePhotoOff = false; if (m) b = b.replace(/<span class="dev-area-head-art">[\s\S]*?<\/svg><\/span>/, `<span class="dev-area-head-art care-rash-art">${m}</span>`); photo = careMini(mini); if (!/<img/.test(photo)) photo = ''; }
+    b += (photo ? rashMap(id).replace(/<svg viewBox="0 0 160 190"[\s\S]*?<\/svg>/, photo.replace('care-see-photo', 'care-map-photo')) : rashMap(id)) + h2('What helps') + h.steps(r.steps);
     if (id === 'diaper') b += `<div class="hub-list care-link">${rowK('diapers', 'Diapers', 'How to change one, and what’s normal', go('diapers'))}</div>`;
     if (r.alt) b += `<div class="hub-list care-link">${r.alt.map(a => `<button class="hub-row care-rash" onclick="openPage('chg:${CAT}:d:rash:${a}')"><span class="hub-row-copy"><b>${F('Not quite it? ' + RASH[a].t)}</b><small>${F(RASH[a].look)}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`).join('')}</div>`;
     b += rashCall(r);
@@ -477,16 +479,16 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
       K: 'Leaks, red marks at the legs or waist, or tabs that don’t reach the middle.', Kl: 'Time for the next size',
       extra: () => rashBlock() },
     cord: { k: 'cord', title: 'Keep the cord stump clean and dry', vis: () => hubStageStrip({ title: 'The cord stump', items: [['cord', 'Birth', 'Clamped, then dries out'], ['clock', '1–3 weeks', 'Falls off by itself'], ['smile', 'Once it’s off', 'A small belly button scab']], nowIndex: -1, cat: CAT, caption: 'The cord stump dries and falls off on its own, usually in 1 to 3 weeks.' }),
-      W: 'The stump dries up and falls off on its own, usually in 1–3 weeks.', tilesT: 'Keep it dry', tiles: () => [['diaper', 'Fold the diaper down', 'So the stump stays in the air'], ['drop', 'Clean with plain water', 'Only if dirty, then pat dry'], ['heart', 'Let it fall off', 'Even if it’s hanging on']], D: '',
+      W: 'The stump dries up and falls off on its own, usually in 1–3 weeks.', tilesT: 'Keep it dry', tiles: () => [['photo:care/cd-1', 'Fold the diaper down', 'So the stump stays in the air'], ['photo:care/cd-2', 'Clean with plain water', 'Only if dirty, then pat dry'], ['photo:care/cd-3', 'Let it fall off', 'Even if it’s hanging on']], D: '',
       extra: () => hubEmbed('qFPA-4A_8wY', 'Caring for the umbilical cord', 'Nemours KidsHealth') + lookLink('cord', 'Smell, crust or a little blood?', 'What’s normal, and when to call') },
     sponge: { k: 'bath', title: 'Sponge baths for now', vis: () => hubEmbed('uYQ_KNlcQwE', 'How to give your newborn a sponge bath', 'Nemours KidsHealth'),
-      W: () => '2–3 sponge baths a week until the cord falls off' + (anatomy() !== 'girl' ? ' (and a circumcision heals)' : '') + ', so the cord stays dry.', tilesT: 'Step by step', tilesN: true, tiles: () => [['home', 'Warm the room', 'Not right after a feed'], ['drop', 'Face first', 'Plain water'], ['towel', 'Then the body', 'One part at a time, the rest wrapped'], ['diaper', 'Diaper area last', 'Pat dry, into every crease']], D: '',
+      W: () => '2–3 sponge baths a week until the cord falls off' + (anatomy() !== 'girl' ? ' (and a circumcision heals)' : '') + ', so the cord stays dry.', tilesT: 'Step by step', tilesN: true, tiles: () => [['photo:care/sp-1', 'Warm the room', 'Not right after a feed'], ['photo:care/sp-2', 'Face first', 'Plain water'], ['photo:care/sp-3', 'Then the body', 'One part at a time, the rest wrapped'], ['photo:care/sp-4', 'Diaper area last', 'Pat dry, into every crease']], D: '',
       Y: 'More baths can dry {p} skin. In between, wipe {p} face, neck and diaper area.', Yl: 'Why only 2–3 a week' },
     newskin: { k: 'skin', title: 'Newborn skin', vis: () => looks('What it can look like', ['Peeling or flaky skin in the first 1–2 weeks', 'Tiny white bumps on the nose and chin', 'Red blotches with a white or yellow center, gone in 1–2 weeks', 'Pink marks on the eyelids or neck, and blue-gray patches on the back or bottom: birthmarks, not bruises', 'From about 2 weeks: baby acne on the cheeks, and flaky cradle cap on the scalp']),
       W: 'Newborn skin does a lot of surprising things in the first weeks. Almost all of it is normal.', D: 'Nothing to treat. Plain water, and no lotions or creams on bumps.',
       extra: () => urgent('Clusters of tiny blisters in the first 2 weeks. Call your pediatrician right away.') },
     nailsnose: { k: 'nails', title: 'Trim nails once a week',
-      W: 'They grow fast and are sharp enough to scratch {p} face.', tilesT: 'Step by step', tilesN: true, tiles: () => [['moon', 'While {s} {sleep|sleeps}', 'The easiest time'], ['hand', 'Press the pad back', 'So the clippers only catch nail'], ['nail', 'Clip or file', 'To a smooth, rounded edge']], D: '',
+      W: 'They grow fast and are sharp enough to scratch {p} face.', tilesT: 'Step by step', tilesN: true, tiles: () => [['photo:care/nl-1', 'While {s} {sleep|sleeps}', 'The easiest time'], ['photo:care/nl-2', 'Press the pad back', 'So the clippers only catch nail'], ['photo:care/nl-3', 'Clip or file', 'To a smooth, rounded edge']], D: '',
       K: 'A small nick happens to everyone. Press gently with a clean cloth.', Kl: 'If you nick the skin', Y: 'Wipe the outside with a washcloth. No cotton swabs inside.', Yl: 'Ears',
       extra: () => false ? H().tip('Sticky eyes', 'Wipe from the inside corner out, a fresh damp cotton ball for each eye. Most blocked tear ducts open on their own by the first birthday.') + callTip('A red or swollen eyelid, a red lump at the inner corner of the eye, or yellow-green discharge with redness.') : '' },
     fewer: { i: 'diaper', k: 'diapers', title: 'Fewer poops can be normal', W: () => fewerLine(), D: 'Change {o} when wet or dirty, and let the skin air out before a fresh diaper.',
@@ -544,7 +546,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     const q = Q[id]; if (!q) return null;
     const W = val(q.W), D = val(q.D), K = val(q.K), Y = val(q.Y);
     let b = head(q.k, val(q.ctx) || LABEL[q.k], val(q.title), '') + (q.vis && !q.late ? q.vis() : '') + `<section class="ss-moment">`
-      + (W ? `<p class="ss-what">${F(W)}</p>` : '') + (q.strip ? q.strip() : '') + (q.tiles ? `<h2 class="hub-h2">${F(q.tilesT || 'What helps')}</h2>` + hubIconSteps(q.tiles(), CAT, F(q.tiles().map(t => t[1] + ': ' + t[2]).join('. ')), !!q.tilesN) : '') + (D ? `<section class="ss-do"><b>What to do</b>${Array.isArray(D) ? (q.tips ? `<ul class="care-do care-tips">${D.map(t => `<li>${F(t)}</li>`).join('')}</ul>` : `<ol class="care-do">${D.map(t => `<li>${F(t)}</li>`).join('')}</ol>`) : `<p>${F(D)}</p>`}</section>` : '')
+      + (W ? `<p class="ss-what">${F(W)}</p>` : '') + (q.strip ? q.strip() : '') + (q.tiles ? `<h2 class="hub-h2">${F(q.tilesT || 'What helps')}</h2>` + H().TPLB.tiles(q.tiles(), CAT, !!q.tilesN) : '') + (D ? `<section class="ss-do"><b>What to do</b>${Array.isArray(D) ? (q.tips ? `<ul class="care-do care-tips">${D.map(t => `<li>${F(t)}</li>`).join('')}</ul>` : `<ol class="care-do">${D.map(t => `<li>${F(t)}</li>`).join('')}</ol>`) : `<p>${F(D)}</p>`}</section>` : '')
       + (K ? `<p class="ss-know"><b>${F(q.Kl || 'How you’ll know')}</b>${F(K)}</p>` : '') + (Y ? `<p class="ss-small"><b>${F((q.Yl || 'Why it matters') + ':')}</b> ${F(Y)}</p>` : '') + `</section>` + (q.vis && q.late ? q.vis() : '') + (q.extra ? q.extra() : '');
     return page(q.k, b);
   }
@@ -929,7 +931,8 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     top: (q, lead) => head(q.k, val(q.eyebrow) || LABEL[q.k], val(q.title), val(lead), val(q.verdict)),
     // One card per section: the main action, then up to two short follow-ups inside the same card.
     card: (text, notes) => { if (!text) return ''; notes = (val(notes) || []).filter(Boolean); return `<section class="ss-do care-tpl-card"><p>${F(val(text))}</p>${notes.length ? `<ul class="tpl-notes"${notes.length > 2 ? ' data-over-limit="notes"' : ''}>${notes.map(([, t, sub]) => `<li><b style="color:#302d3c">${F(t)}${/[?!.]$/.test(t) ? '' : '.'}</b> ${F(sub)}${/[?!.]$/.test(sub) ? '' : '.'}</li>`).join('')}</ul>` : ''}</section>`; },
-    tiles: (items, numbered) => items && items.length ? hubIconSteps(items, CAT, F(items.map(t => t[1] + ': ' + t[2]).join('. ')), !!numbered) : '',
+    // Nov 21: a tile whose art is 'photo:<path>' shows that photo (the shared builder Feeding uses).
+    tiles: (items, numbered) => items && items.length ? H().TPLB.tiles(items, CAT, numbered) : '',
     rows: rows => { rows = (val(rows) || []).filter(Boolean); return rows.length ? `<div class="hub-list"${rows.length > 3 ? ' data-over-limit="rows"' : ''}>${rows.map(([icon, t, sub]) => H().row({ icon, cat: CAT, title: t, sub })).join('')}</div>` : ''; },
     video: v => v ? hubEmbed(...v) : '',
     link: l => l ? `<div class="hub-list care-link">${rowK('look', l[0], l[1], `openPage('chg:${CAT}:d:${val(l[2])}')`)}</div>` : '',
@@ -951,9 +954,13 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
       + TB.section(ordered ? 'Steps' : 'What to do', TB.noted(TB.tiles(st, ordered), q.stepsNotes)) + (q.extra ? q.extra() : '')
       + TB.section(q.tipsTitle || 'Keep {o} safe', TB.rows(q.tips || q.safe))
       + TB.section('Watch how', TB.video(q.video)); },
-    check: q => { let t = TB.top(q, q.why); const m = q.where && window.careMini ? careMini({ newborn: 'milia', yeast: 'diaper' }[q.where] || q.where) : '';
+    // Nov 21: the header keeps its small drawing; the real photo goes in "What it looks like", where the parent compares.
+    check: q => { let t = TB.top(q, q.why); const mid = q.where ? ({ newborn: 'milia', yeast: 'diaper' }[q.where] || q.where) : '';
+      window.__carePhotoOff = true; const m = mid && window.careMini ? careMini(mid) : ''; window.__carePhotoOff = false;
       if (m) t = t.replace(/<span class="dev-area-head-art">[\s\S]*?<\/svg><\/span>/, `<span class="dev-area-head-art care-rash-art">${m}</span>`);
-      const fig = q.where ? tellMap(q.where) : q.figure ? q.figure() : q.signs ? TB.tiles(val(q.signs), false) : '';
+      const ph = mid && window.careMini ? careMini(mid) : '', photo = /<img/.test(ph) ? ph.replace('care-see-photo', 'care-map-photo') : '';
+      let fig = q.where ? tellMap(q.where) : q.figure ? q.figure() : q.signs ? TB.tiles(val(q.signs), false) : '';
+      if (photo && q.where) fig = fig.replace(/<svg viewBox="0 0 160 190"[\s\S]*?<\/svg>/, photo);
       return t + TB.section(q.tellTitle || (q.verdict ? 'What it looks like' : 'How to tell'), q.tellTiles && fig && window.__hub && window.__hub.TPLB.minis ? window.__hub.TPLB.minis(fig, val(q.tell), CAT) : TB.noted(fig, q.tell))
         + TB.section('What helps', TB.noted(TB.tiles(val(q.helps), false), q.helpsNotes))
         + callsCard(q.calls); }
@@ -991,7 +998,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   /* ----- How-to pages ----- */
   TPL['p:sponge'] = { type: 'howto', k: 'bath', title: 'Sponge baths for now',
     why: 'Two or three a week until the cord falls off, so it stays dry.',
-    steps: [['home', 'Warm the room', 'Not right after a feed'], ['smile', 'Face first', 'Plain water'], ['towel', 'Then the body', 'One part at a time, the rest wrapped'], ['diaper', 'Diaper area last', 'Pat dry, into every crease']],
+    steps: [['photo:care/sp-1', 'Warm the room', 'Not right after a feed'], ['photo:care/sp-2', 'Face first', 'Plain water'], ['photo:care/sp-3', 'Then the body', 'One part at a time, the rest wrapped'], ['photo:care/sp-4', 'Diaper area last', 'Pat dry, into every crease']],
     stepsNotes: [['', 'More baths can dry {p} skin', 'In between, wipe {p} face, neck and diaper area'], ['', 'Ears too', 'Just the outside. No cotton swabs inside']],
     safe: [['hand', 'A hand on {o} the whole time', 'Never step away from {o} on a raised surface.']],
     video: ['uYQ_KNlcQwE', 'How to give your newborn a sponge bath', 'Nemours KidsHealth'] };
@@ -1055,7 +1062,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   TPL['t:sun:0'] = shade; TPL['t:sun:1'] = shade; TPL['t:sun:3'] = six; TPL['t:sun:2'] = () => careAge() < 6 ? shade : six;
   const nails = { type: 'howto', k: 'nails', title: 'Trim nails once a week',
     why: 'They grow fast, and are sharp enough to scratch {p} face.',
-    steps: [['moon', 'While {s} {sleep|sleeps}', 'The easiest time'], ['hand', 'Press the pad back', 'So the clippers only catch nail'], ['nail', 'Clip or file', 'To a smooth, rounded edge']],
+    steps: [['photo:care/nl-1', 'While {s} {sleep|sleeps}', 'The easiest time'], ['photo:care/nl-2', 'Press the pad back', 'So the clippers only catch nail'], ['photo:care/nl-3', 'Clip or file', 'To a smooth, rounded edge']],
     tipsTitle: 'Good to know', tips: [['heart', 'A small nick happens to everyone', 'Press gently with a clean cloth.']] };
   [0, 1, 2, 3].forEach(v => { TPL[`t:nails:${v}`] = nails; });
 
@@ -1064,7 +1071,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     why: 'The stump dries up and falls off on its own, usually in 1–3 weeks.',
     normal: () => hubStageStrip({ title: 'The cord stump', items: [['cord', 'Birth', 'Clamped, then dries out'], ['clock', '1–3 weeks', 'Falls off by itself'], ['smile', 'Once it’s off', 'A small belly button scab']], nowIndex: -1, cat: CAT, caption: 'The cord stump dries and falls off on its own, usually in 1 to 3 weeks.' }),
     normalNotes: [['', 'A little crust, smell or a spot of blood is normal', 'Especially as it falls off']],
-    do: [['diaper', 'Fold the diaper down', 'So the stump stays in the air'], ['drop', 'Clean with plain water', 'Only if dirty, then pat dry'], ['heart', 'Let it fall off', 'Even if it’s hanging on']],
+    do: [['photo:care/cd-1', 'Fold the diaper down', 'So the stump stays in the air'], ['photo:care/cd-2', 'Clean with plain water', 'Only if dirty, then pat dry'], ['photo:care/cd-3', 'Let it fall off', 'Even if it’s hanging on']],
     video: ['qFPA-4A_8wY', 'Caring for the umbilical cord', 'Nemours KidsHealth'],
     calls: { ped: 'a yellow, smelly discharge, redness around it, crying at a touch, or it’s still on after 3 weeks.' } };
   TPL['t:diapers:1'] = { type: 'expect', k: 'diapers', title: 'Fewer poops can be normal',
@@ -1208,8 +1215,14 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     const pills = h.pills('Everyday care by age', T.map((s, i) => ({ label: s.label, age: s.age, on: i === v, now: live() && i === now, onclick: `openPage('chg:${CAT}:s:${i}')` })), CAT);
     const careNote = live() && profile.early && profile.due && ageMonths(parse(profile.due), NOW) !== actualMonth() ? (() => { const adj = careAge() !== actualMonth(); return `<p class="hub-agebasis">${F(adj ? `Following Maya’s adjusted age (${monthsLabel(careAge())}), like Feeding and Sleep.` : `Following Maya’s birthday age (${monthsLabel(actualMonth())}), like Feeding and Sleep.`)} <button onclick="hubSetAgeMode('care','${adj ? 'birthday' : 'adjusted'}')">${adj ? 'Use birthday age' : 'Use adjusted age'}</button></p>`; })() : '';
     // The top card, built like Feeding's: the stage, a scene, and what's new inside.
-    let b = `<header class="hub-hero care-hero care-disc"><p class="hub-eyebrow">${STAGE[v]}</p><h1>${F(st.title)}</h1><p class="hub-lead">${F(v === 3 && live() && careAge() >= 9 ? 'More teeth to brush, baths in the big tub, and pulling up makes changes a two-hands job.' : st.lead)}</p><div class="care-art" aria-hidden="true">${window.careScene ? careScene(N.art) : ''}</div>`
-      + `<div class="care-nownote" role="button" tabindex="0" onclick="${cgo(N.go)}"><small>${F('New now')}</small><b>${F(N.t)}</b><span>${F(N.d)}</span><em>${F(N.cta)} ›</em></div></header>`;   // a card like Feeding's "You might notice", not a pill button
+    // Nov 21 (Yarden: rework Everyday care the way Feeding was done): Development's top card. Stage and age, headline and
+    // lead full width, one real-life photo of the stage's moment in Development's frame, then what's new in its own box.
+    const LIFE = [['cl-newborn', 'A dad giving his newborn a sponge bath on a towel, a hand on the baby'], ['cl-tub', 'A mom giving her baby a first tub bath, a hand under the head'],
+      ['cl-drool', 'A mom patting her teething baby’s drooly chin dry'], ['cl-brush', 'A dad brushing his baby’s first teeth']][v];
+    const EYE = ['Newborn · first 4 weeks', '1–3 months', '4–6 months', '6–12 months'][v];
+    let b = `<header class="hub-hero care-hero care-disc fd-life"><p class="hub-eyebrow">${F(EYE)}</p><h1>${F(st.title)}</h1><p class="hub-lead">${F(v === 3 && live() && careAge() >= 9 ? 'More teeth to brush, baths in the big tub, and pulling up makes changes a two-hands job.' : st.lead)}</p>`
+      + `<div class="sf-photo fd-life-photo"><img src="assets/care/${LIFE[0]}.jpg?v=1" alt="${F(LIFE[1])}"></div>`
+      + `<button class="care-newbox" onclick="${cgo(N.go)}"><small>${F('New now')}</small><b>${F(N.t)}</b><span>${F(N.d)}</span><em>${F(N.cta)} ›</em></button></header>`;
     // Care at a glance (Nov 13): how often, at this age, in the same three-tile card Feeding and Sleep open with.
     { const ICON = { Diapers: 'diaper', 'Wet diapers': 'diaper', 'Sponge baths': 'bath', 'Tub baths': 'tub', Baths: 'tub', 'Nail trims': 'nail', 'Gum wipes': 'tooth', Brushing: 'tooth' };
       const PAL = [['#e3ecf7', '#3f5f8a'], ['#f4e6ee', '#87496a'], ['#e5f0e7', '#3f7350']];
@@ -1231,7 +1244,10 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
       const ORDER = [['diapers', 'cord', 'nails', 'clothes'], ['diapers', 'skin', 'nails', 'sun'], ['bath', 'skin', 'sun', 'nails'], ['bath', 'diapers', 'sun', ...(!live() || careAge() >= 9 || now < 3 ? ['clothes'] : ['nails'])]][v];   // shoes only once walking is near
       const tiled = new Set(SEE.map(x => x[2])), byKey = k => HOWTO[v].find(x => x[0] === k);
       const rows = ORDER.map(byKey).filter(x => x && x[0] !== NEWKEY && !tiled.has(x[3])).slice(0, 4);   // nothing twice: a tile that opens the same page wins
-      b += h2(v === now || !live() ? 'Right now for Maya' : 'At this stage') + `<div class="hub-list">${rows.map(([k, t, sub, r]) => rowK(k, t, HINT[r] || nail(r) || sub, cgo(r))).join('')}</div>`
+      // Nov 21: each row previews its page with a small real-life photo, like Feeding's guide rows (92px, full row height).
+      const THUMB = { diapers: 'th-diaper', cord: 'th-cord', nails: 'th-nails', clothes: 'th-dress', skin: 'th-skin', sun: 'th-sun', bath: v >= 3 ? 'th-bigtub' : 'th-tub', feet: 'th-feet', teeth: 'th-brush' };
+      const prow = (k, t, sub, on) => THUMB[k] ? `<button class="hub-row fd-prow" onclick="${on}"><span class="fd-thumb"><img src="assets/care/${THUMB[k]}.jpg?v=2" alt="" loading="lazy"></span><span class="hub-row-copy"><b>${F(t)}</b><small>${F(sub)}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>` : rowK(k, t, sub, on);
+      b += h2(v === now || !live() ? 'Right now for Maya' : 'At this stage') + `<div class="hub-list fd-plist">${rows.map(([k, t, sub, r]) => prow(r === 'p:feet' ? 'feet' : k, t, HINT[r] || nail(r) || sub, cgo(r))).join('')}</div>`
         + `<button class="hub-link care-all-how" onclick="${cgo('how:' + v)}">${F('All how-tos')} ›</button>`; }
     // Is this normal? The three things parents most often see at this stage, as pictures, and one way into everything else.
     b += `<h2 class="hub-h2">${F('Is this normal?')}</h2><div class="care-see">${SEE.map(([id, t, r]) => `<button onclick="${cgo(r)}"><span class="care-see-art">${window.careMini ? careMini(id) : ''}</span><b>${F(t)}</b></button>`).join('')}</div>`;
