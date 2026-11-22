@@ -392,3 +392,8 @@
 /* Nov 22: call card as a short list of signs */
 #main .care-calls.is-list ul { margin: 6px 0 0; padding-left: 18px }
 #main .care-calls.is-list li { font-size: 14.5px; line-height: 1.45; margin: 3px 0 }
+/* Nov 22: rash picker tiles; a drawing stands in where there's no photo, in the same 4:3 box */
+#main .care-pickgrid .care-pick-map { display: flex; align-items: center; justify-content: center; width: 100%; aspect-ratio: 4 / 3; background: #f7efe9 }
+#main .care-pickgrid .care-pick-map svg { width: 78%; height: 78%; padding: 0 }
+#main .care-pickgrid .care-common-tile > span:not(.care-pick-map) { padding: 10px 26px 12px 12px }
+#main .care-calls-note { margin: 6px 0 0; font-size: 13.5px; color: #6d666d }
