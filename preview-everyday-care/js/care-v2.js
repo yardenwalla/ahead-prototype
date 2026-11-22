@@ -1021,7 +1021,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     tipsTitle: 'Good to know', tips: [['diaper', 'Leaks mean it’s time to size up', 'So do red marks, or tabs that don’t reach the middle.'], ...diaperRash] };
   TPL['h:diapers:2'] = { type: 'howto', k: 'diapers', title: 'Change a wriggler',
     why: 'Rolling can start any day, so changes need a little more planning.',
-    steps: [['diaper', 'Set out wipes and a diaper', 'Before you lay {o} down'], ['toy', 'Keep a hand on {o}', 'And give {o} a toy to hold'], ['mat', 'Use a mat on the floor', 'When {s’s} too wriggly for the table']],
+    steps: [['diaper', 'Set out wipes and a diaper', 'Before you lay {o} down'], ['toy', 'Keep a hand on {o}', 'Never step away. A toy helps {o} lie still'], ['mat', 'Use a mat on the floor', 'When {s’s} too wriggly for the table']],
     stepsNotes: [['', 'Save one toy for changes', 'Something new holds {p} attention longer']],
     tipsTitle: 'Good to know', tips: diaperRash };
   const skinCare = { type: 'expect', k: 'skin', title: '{P} skin needs less care, not more',
@@ -1088,7 +1088,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   // One idea per page: from 6 months, the diaper page is about changing a wriggler. Solids poop lives on the poop page.
   TPL['h:diapers:3'] = { type: 'howto', k: 'diapers', title: 'Change a wriggler',
     why: 'Rolling, crawling and pulling up make changes a two-handed job.',
-    steps: [['diaper', 'Set out wipes and a diaper', 'Before you lay {o} down'], ['toy', 'Keep a hand on {o}', 'And give {o} a toy to hold'], ['stand', 'Change {o} standing up', 'Once {s} {pull|pulls} up and won’t lie still']],
+    steps: [['diaper', 'Set out wipes and a diaper', 'Before you lay {o} down'], ['toy', 'Keep a hand on {o}', 'Never step away. A toy helps {o} lie still'], ['stand', 'Change {o} standing up', 'Once {s} {pull|pulls} up and won’t lie still']],
     stepsNotes: [['', 'Save one toy for changes', 'Something new holds {p} attention longer']],
     tipsTitle: 'Good to know', tips: diaperRash };
   TPL['t:diapers:3'] = TPL['h:diapers:3'];
