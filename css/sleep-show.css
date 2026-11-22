@@ -1,0 +1,315 @@
+/* Sleep, show and tell (preview): see js/sleep-show.js */
+
+/* Top card sizes to its content, like Development, Health and Safety */
+#main .hub-hero.sl-disc.ssw-hero { height: auto !important; padding-bottom: 16px; display: block !important }
+#main .ssw-hero h1 { margin-top: 6px }
+#main .ssw-hero .ssw-band { margin: 14px 0 0; padding: 10px 12px 6px; border-radius: 18px }
+/* You might notice: its own card under the top card, like Health's "Worth knowing" */
+#main .sl-aha.ssw-aha { margin: 10px 0 0; padding: 12px 14px }
+#main .sl-aha.ssw-aha b { font-size: 15.5px }
+#main .sl-aha.ssw-aha span { font-size: 14px; margin-top: 3px }
+#main .sl-aha.ssw-aha small { color: #5e6890 }
+#main .sl-aha.ssw-aha b { font-size: 16px; line-height: 1.3 }
+
+/* A band of time: sky, naps, night, labels under */
+#main .ssw-band { margin: 0; padding: 12px 10px 8px; background: rgba(255, 255, 255, .62); border-radius: 18px }
+#main .ssw-card .ssw-band, #main .care-tpl-card .ssw-band { background: #fbfaf8; border: 1px solid var(--line) }
+#main .ssw-band svg { display: block; width: 100%; height: auto; overflow: visible }
+#main .ssw-band-title { display: block; font-size: 13px; font-weight: 800; color: #4d4a66; margin: 0 4px 2px }
+#main .ssw-caps { position: relative; height: 34px; margin: 4px 1.5% 0 }
+#main .ssw-caps.is-two { height: 50px }
+#main .ssw-caps span.is-low { top: 18px }
+#main .ssw-caps span { position: absolute; top: 0; transform: translateX(-50%); width: max-content; max-width: 34%; text-align: center; font-size: 12.5px; line-height: 1.25; font-weight: 650; color: #4d4a66 }
+#main .ssw-caps span.is-start { transform: none; text-align: left }
+#main .ssw-caps span.is-end { transform: translateX(-100%); text-align: right }
+#main .ssw-days { display: grid; gap: 10px }
+#main .ssw-24 .ssw-caps span { font-weight: 600; color: #6b6782 }
+#main .ssw-key { display: flex; gap: 14px; margin: 8px 4px 0; font-size: 12.5px; color: #6b6782 }
+#main .ssw-key i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px }
+#main .ssw-key .k-awake { background: #fff1cc; border: 1px solid #ecd9a2 }
+#main .ssw-key .k-nap { background: #8f84dd }
+#main .ssw-key .k-night { background: #5a5296 }
+
+/* Section cards */
+#main .ssw-card { background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: 12px }
+#main .ssw-card .tpl-notes { margin: 12px 4px 2px }
+
+/* Photo rows (sleepy cues) and photo steps (bedtime routine) */
+#main .ssw-photorows, #main .ssw-photosteps ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px }
+#main .ssw-photorows li, #main .ssw-photosteps li { display: grid; grid-template-columns: 116px 1fr; gap: 14px; align-items: center }
+#main .ssw-ph { display: block; aspect-ratio: 1; border-radius: 14px; overflow: hidden; background: #f3eef6 }
+#main .ssw-photosteps .ssw-ph { aspect-ratio: 4 / 3 }
+#main .ssw-ph img { width: 100%; height: 100%; object-fit: cover; display: block }
+#main .ssw-copy { display: block }
+#main .ssw-copy b { display: block; font-size: 16px; line-height: 1.25; color: var(--ink) }
+#main .ssw-copy small { display: block; margin-top: 3px; font-size: 14px; line-height: 1.4; color: #6b6670 }
+#main .ssw-copy i { font-style: normal; display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: #ece9fa; color: #5a5296; font-size: 12px; font-weight: 700; margin-bottom: 4px }
+#main .ssw-tag { display: inline-block; font-style: normal; font-size: 11px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; padding: 3px 8px; border-radius: 999px; margin-bottom: 5px; background: #f1eef9; color: #5e5a86 }
+#main .ssw-tag.is-day { background: #fdf2d3; color: #7a5b16 }
+#main .ssw-tag.is-go { background: #e3f3e8; color: #2f6a47 }
+#main .ssw-tag.is-late { background: #fbe7e3; color: #93412f }
+#main .ssw-photosteps { background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: 10px }
+#main .ssw-photosteps .tpl-notes { margin: 12px 6px 4px }
+
+/* Two frames side by side (before and after, you place / she rolls) */
+#main .ssw-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px }
+#main .ssw-pair figure { margin: 0 }
+#main .ssw-pair figcaption { font-size: 11.5px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: #6b6782; margin: 0 2px 6px }
+#main .ssw-pair figcaption.is-after { color: #2f6a47 }
+#main .ssw-pair .ssw-ph { aspect-ratio: 4 / 5 }
+#main .ssw-pair small { display: block; margin: 7px 2px 0; font-size: 14px; line-height: 1.35; color: #3f3b48; font-weight: 600 }
+
+/* A photo with labels on it, each label right beside its spot */
+#main .ssw-pinphoto { position: relative; margin: 0; border-radius: 16px; overflow: hidden; aspect-ratio: 4 / 3 }
+#main .ssw-pinphoto img { display: block; width: 100%; height: 100%; object-fit: cover }
+#main .ssw-pin { position: absolute; display: flex; align-items: center; gap: 5px; pointer-events: none; transform: translate(-7px, -50%) }
+#main .ssw-pin.is-l { flex-direction: row-reverse; transform: translate(calc(-100% + 7px), -50%) }
+#main .ssw-pin.is-b { flex-direction: column; transform: translate(-50%, -7px) }
+#main .ssw-pin.is-t { flex-direction: column-reverse; transform: translate(-50%, calc(-100% + 7px)) }
+#main .ssw-pin i { flex: none; width: 13px; height: 13px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 4px #ffffff66, 0 1px 4px #0003 }
+#main .ssw-pin span { background: #fffdfcee; color: #3f3a62; font-size: 12.5px; font-weight: 700; line-height: 1; padding: 7px 10px; border-radius: 999px; white-space: nowrap; box-shadow: 0 2px 8px #0002 }
+#main .ssw-crib { aspect-ratio: 1; margin: 0 0 14px; box-shadow: 0 6px 18px #4b4f8a22; border-radius: 20px }
+
+
+
+/* Short naps: pick how long it was */
+#main .ssw-ask { margin: 2px 4px 8px; font-size: 14px; font-weight: 700; color: #4d4a66 }
+#main .ssw-chips { display: flex; gap: 6px; flex-wrap: wrap; margin: 0 0 10px }
+#main .ssw-chips button { border: 1px solid #dcd8ef; background: #fff; color: #4d4a66; font: inherit; font-size: 13.5px; font-weight: 700; padding: 7px 12px; border-radius: 999px; min-height: 0 }
+#main .ssw-chips button[aria-pressed="true"] { background: #5a5296; border-color: #5a5296; color: #fff }
+
+
+
+/* Stage tabs and the photo beside the headline (Yarden's mockup) */
+#main .ssw-tabs { padding-top: 2px }
+#main .ssw-tabs { display: flex; gap: 6px; margin: 2px 0 14px }
+#main .ssw-tabs button { all: unset; cursor: pointer; flex: 1 1 auto; text-align: center; padding: 8px 8px; border-radius: 999px; background: var(--card, #fffdf9); border: 1px solid var(--line, #ebe6e1); font-size: 13px; font-weight: 600; color: #46638c; white-space: nowrap; position: relative }
+#main .ssw-tabs button.is-on { background: #46638c; border-color: #46638c; color: #fff }
+#main .ssw-tabs button.is-now:not(.is-on)::after { content: ""; position: absolute; top: 4px; right: 7px; width: 6px; height: 6px; border-radius: 50%; background: #46638c }
+#main .ssw-hero .ssw-band { clear: both }
+#main .ssw-photosteps.is-square .ssw-ph { aspect-ratio: 1 }
+
+/* A video as one quiet row that opens */
+#main details.ssw-video { background: #fff; border: 1px solid var(--line); border-radius: 18px; margin: 14px 0 0; overflow: hidden }
+#main details.ssw-video summary { list-style: none; display: grid; grid-template-columns: 40px 1fr auto; gap: 12px; align-items: center; padding: 12px 14px; cursor: pointer }
+#main details.ssw-video summary::-webkit-details-marker { display: none }
+#main details.ssw-video summary b { display: block; font-size: 15.5px; color: var(--ink) }
+#main details.ssw-video summary small { display: block; font-size: 13px; color: #6b6670 }
+#main .ssw-play { width: 40px; height: 40px; border-radius: 50%; background: #ece9fa; position: relative }
+#main .ssw-play::after { content: ""; position: absolute; left: 16px; top: 13px; border-left: 11px solid #5a5296; border-top: 7px solid transparent; border-bottom: 7px solid transparent }
+#main details.ssw-video[open] .hub-chev { transform: rotate(90deg) }
+#main details.ssw-video > figure { margin: 0 12px 12px }
+#main .ssw-rowcard { padding: 0; overflow: hidden }
+#main .ssw-rowcard .hub-row { width: 100%; border: 0; background: none }
+
+/* The newborn loop */
+#main .ssw-loop { margin: 0; padding: 14px 12px 10px; background: #fbfaf8; border: 1px solid var(--line); border-radius: 18px }
+#main .ssw-hero .ssw-loop { background: rgba(255,255,255,.62); border: 0 }
+#main .ssw-loop-row { display: grid; grid-template-columns: 1fr 14px 1fr 14px 1fr; align-items: center; gap: 4px }
+#main .ssw-loop-row span { text-align: center; border-radius: 14px; padding: 9px 4px }
+#main .ssw-loop-row .is-feed { background: #fdf0c8 }
+#main .ssw-loop-row .is-awake { background: #fff6df }
+#main .ssw-loop-row .is-sleep { background: #e3e0f7 }
+#main .ssw-loop-row b { display: block; font-size: 14.5px; color: var(--ink) }
+#main .ssw-loop-row small { display: block; font-size: 11.5px; line-height: 1.25; color: #6b6782; margin-top: 2px }
+#main .ssw-loop-row i { font-style: normal; color: #8f84dd; font-weight: 800; text-align: center }
+#main .ssw-loop-back { display: block; width: 100%; height: 18px; margin-top: 2px }
+#main .ssw-loop figcaption { text-align: center; font-size: 12.5px; font-weight: 650; color: #4d4a66; margin-top: 2px }
+
+/* Sleep guides: four places to go */
+#main .ssw-guides { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px }
+#main .ssw-guides button { all: unset; cursor: pointer; display: grid; grid-template-columns: 40px 1fr; grid-template-rows: auto auto; column-gap: 10px; align-items: center; background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 12px }
+#main .ssw-gi { grid-row: span 2; width: 40px; height: 40px; border-radius: 12px; background: #e8edf7; display: grid; place-items: center }
+#main .ssw-gi svg { width: 22px; height: 22px }
+#main .ssw-guides b { font-size: 15px; line-height: 1.2; color: var(--ink) }
+#main .ssw-guides small { font-size: 12.5px; line-height: 1.3; color: #6b6670 }
+
+#main .hub-hero.ssw-hero { margin-bottom: 2px }
+
+/* Four topic tiles: each opens this stage's article on that topic */
+#main .ssw-guides { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0 4px }
+#main .ssw-guides button { all: unset; cursor: pointer; display: flex; flex-direction: column; gap: 8px; background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 13px }
+#main .ssw-gi { width: 38px; height: 38px; border-radius: 12px; background: #e7effc; display: grid; place-items: center }
+#main .ssw-gi svg { width: 22px; height: 22px }
+#main .ssw-gt b { display: block; font-size: 15.5px; line-height: 1.2; color: var(--ink) }
+#main .ssw-gt b i { font-style: normal; color: #8a95ad; font-weight: 600 }
+#main .ssw-gt small { display: block; font-size: 13px; line-height: 1.35; color: #6b6670; margin-top: 4px }
+
+#main .ssw-pair.has-arrow { position: relative }
+#main .ssw-pair.has-arrow::after { content: "›"; position: absolute; left: 50%; top: 46%; transform: translate(-50%, -50%); width: 30px; height: 30px; border-radius: 50%; background: #fff; box-shadow: 0 2px 8px #0002; display: grid; place-items: center; font-size: 20px; font-weight: 800; color: #5a5296; line-height: 30px; text-align: center }
+#main .ssw-check .tpl-notes { list-style: none; padding: 0; margin: 2px 4px }
+#main .ssw-check .tpl-notes li { padding-left: 0 }
+#main .ssw-check .tpl-notes li::before, #main .ssw-check .tpl-notes li::marker { content: none }
+
+
+/* The day's drawing heads Sleep at a glance */
+#main .sl-glance .ssw-glance-band { margin: 2px 0 10px; padding: 8px 6px 2px; background: #f6f7fb; border: 0 }
+/* Photo tiles, like Development's areas and Childcare's options */
+#main .ssw-guides.is-photo button { padding: 0; gap: 0; overflow: hidden }
+#main .ssw-tile-pic { display: block; height: 108px; overflow: hidden; background: #eef1f8 }
+#main .ssw-tile-pic img { width: 100%; height: 100%; object-fit: cover; display: block }
+
+/* Top card (Yarden's mockup): words left, a photo of a baby this age on the right, the stage's timeline underneath */
+#main .ssw-hero.ssw-has-pic { overflow: hidden }
+#main .ssw-hero-top { position: relative; min-height: 150px; padding-right: 40% }
+#main .ssw-hero-top h1 { font-size: 25px }
+#main .ssw-hero-pic { position: absolute; top: -22px; right: -22px; bottom: -6px; width: 48%; overflow: hidden; -webkit-mask-image: linear-gradient(to right, transparent 0, #000 30%); mask-image: linear-gradient(to right, transparent 0, #000 30%) }
+#main .ssw-hero-pic img { width: 100%; height: 100%; object-fit: cover; display: block }
+#main .ssw-hero.ssw-has-pic .ssw-band { position: relative; background: #fff; box-shadow: 0 2px 10px #46638c14 }
+/* Worth knowing under the top card, with a bulb */
+#main .sl-aha.ssw-aha { position: relative; display: block; background: #eef0f8; box-shadow: none; border-radius: 20px; margin: 14px 0 0; padding: 14px 16px 14px 52px }
+#main .ssw-bulb { position: absolute; left: 16px; top: 15px; width: 24px; height: 24px; color: #5a5296 }
+#main .ssw-bulb svg { width: 24px; height: 24px }
+
+/* Topic tiles: photo, icon on the photo, name, what it opens */
+#main .ssw-guides.is-photo button { position: relative; padding: 0; gap: 0; overflow: hidden; display: flex; flex-direction: column }
+#main .ssw-guides.is-photo .ssw-tile-pic { position: relative; display: block; height: 96px; overflow: hidden; background: #eef1f8 }
+#main .ssw-guides.is-photo .ssw-tile-pic img { width: 100%; height: 100%; object-fit: cover; display: block }
+#main .ssw-guides.is-photo .ssw-gi { position: absolute; left: 10px; bottom: 8px; width: 36px; height: 36px; border-radius: 12px; background: #fff; box-shadow: 0 2px 8px #0002; display: grid; place-items: center }
+#main .ssw-guides.is-photo .ssw-gt { padding: 10px 26px 12px 12px }
+#main .ssw-guides.is-photo .ssw-gt b { font-size: 15.5px }
+#main .ssw-guides.is-photo .ssw-gt small { margin-top: 3px }
+#main .ssw-guides.is-photo .ssw-go { position: absolute; right: 12px; bottom: 14px; font-style: normal; font-size: 18px; color: #8a95ad }
+
+/* Night waking: a moment first, then two branches */
+#main .ssw-flow { background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: 14px }
+#main .ssw-flow-first { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: start; background: #eef0f8; border-radius: 16px; padding: 12px 14px }
+#main .ssw-flow-first b, #main .ssw-flow-two b { display: block; font-size: 15.5px; line-height: 1.3; color: var(--ink) }
+#main .ssw-flow-first small, #main .ssw-flow-two small { display: block; font-size: 14px; line-height: 1.4; color: #5f5b68; margin-top: 3px }
+#main .ssw-flow-first em { font-style: normal; font-size: 12.5px; font-weight: 700; color: #5a5296; background: #fff; border-radius: 999px; padding: 4px 9px; white-space: nowrap }
+#main .ssw-flow-split { display: block; width: 100%; height: 22px }
+#main .ssw-flow-two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px }
+#main .ssw-flow-two > div { border-radius: 16px; padding: 12px }
+#main .ssw-flow-two .is-feed { background: #fdf3d8 }
+#main .ssw-flow-two .is-comfort { background: #fbe9e3 }
+#main .ssw-flow-end { margin: 12px 4px 2px; font-size: 14px; line-height: 1.4; color: #3f3b48; font-weight: 600 }
+
+/* Where she sleeps */
+#main .ssw-photo-only { margin: 14px 0 0 }
+#main .ssw-photo-only .ssw-pinphoto { border-radius: 20px; box-shadow: 0 6px 18px #4b4f8a1c }
+#main .ssw-move { display: grid; grid-template-columns: 44px 1fr; gap: 12px; align-items: center; background: #fdf3d8; border-radius: 20px; padding: 14px }
+#main .ssw-move-ic { width: 44px; height: 44px; border-radius: 14px; background: #fff; display: grid; place-items: center }
+#main .ssw-move-ic svg { width: 26px; height: 26px }
+#main .ssw-move b { display: block; font-size: 15.5px; line-height: 1.3; color: var(--ink) }
+#main .ssw-move small { display: block; font-size: 14px; line-height: 1.4; color: #5f5b68; margin-top: 3px }
+
+/* Safe sleep */
+#main .ssw-checks { list-style: none; margin: 0; padding: 0 }
+#main .ssw-checks li { display: grid; grid-template-columns: 34px 1fr; gap: 12px; align-items: center; padding: 10px 4px }
+#main .ssw-checks li + li { border-top: 1px solid var(--line) }
+#main .ssw-checks i { width: 32px; height: 32px; border-radius: 50%; background: #e4f1e7; color: #3e8a5c; display: grid; place-items: center; font-style: normal; font-weight: 800 }
+#main .ssw-checks b { display: block; font-size: 15.5px; color: var(--ink) }
+#main .ssw-checks small { display: block; font-size: 13.5px; line-height: 1.35; color: #6b6670; margin-top: 2px }
+#main .ssw-grow { list-style: none; margin: 4px 4px 6px; padding: 0 0 0 18px; position: relative }
+#main .ssw-grow::before { content: ""; position: absolute; left: 4px; top: 8px; bottom: 8px; width: 2px; background: #d9d5ee }
+#main .ssw-grow li { position: relative; padding: 6px 0; font-size: 14.5px; line-height: 1.35; color: #3f3b48 }
+#main .ssw-grow li::before { content: ""; position: absolute; left: -18px; top: 11px; width: 10px; height: 10px; border-radius: 50%; background: #a99de3 }
+#main .ssw-more { all: unset; cursor: pointer; display: block; margin: 6px 4px 2px; font-size: 14.5px; font-weight: 700; color: #46638c }
+#main .ssw-guides.is-photo .ssw-gt b { display: block; padding: 0; font-weight: 700; color: var(--ink); line-height: 1.25 }
+#main .ssw-guides.is-photo .ssw-gt small { display: block; font-size: 13px; line-height: 1.35; color: #6b6670 }
+#main .ssw-hero .ssw-band, #main .ssw-hero .ssw-band svg, #main .ssw-hero .ssw-caps { width: auto !important; max-width: none !important }
+#main .ssw-hero .ssw-band svg { width: 100% !important; height: auto !important }
+#main .ssw-hero .ssw-band { padding: 12px 12px 6px !important }
+#main .ssw-flow .ssw-flow-split { width: 100% !important; height: 22px !important; max-width: none !important }
+#main .ssw-flow .ssw-flow-end { margin-top: 14px !important }
+
+/* Top card, second pass: photo fades into the card on the left and bottom; a clean step timeline */
+#main .ssw-hero-pic { top: -22px; right: -22px; bottom: -30px; width: 50%; -webkit-mask-image: linear-gradient(to right, transparent 0, #000 34%), linear-gradient(to top, transparent 0, #000 30%); -webkit-mask-composite: source-in; mask-image: linear-gradient(to right, transparent 0, #000 34%), linear-gradient(to top, transparent 0, #000 30%); mask-composite: intersect }
+#main .ssw-hero-top { padding-right: 42%; min-height: 160px }
+#main .ssw-hero-top h1 { font-size: 24px; line-height: 1.15 }
+#main .ssw-rhythm { position: relative; margin: 14px 0 0; background: #fff; border-radius: 18px; padding: 12px 8px 10px; box-shadow: 0 4px 14px #46638c14 }
+#main .ssw-rhythm ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px }
+#main .ssw-rhythm li { display: flex; flex-direction: column; align-items: center; text-align: center; min-width: 0 }
+#main .ssw-rh-bar { width: 100%; height: 24px; border-radius: 12px; display: grid; place-items: center; font-size: 13px; font-weight: 800; letter-spacing: 1px }
+#main .ssw-rh-bar svg { width: 15px; height: 15px }
+#main .ssw-rhythm .is-wake .ssw-rh-bar { background: #fbeec8; color: #d9a531 }
+#main .ssw-rhythm .is-nap .ssw-rh-bar, #main .ssw-rhythm .is-sleep .ssw-rh-bar { background: #d9d4f4; color: #fff }
+#main .ssw-rhythm .is-cat .ssw-rh-bar { background: #e6e2f8; color: #fff; width: 70% }
+#main .ssw-rhythm .is-more .ssw-rh-bar { background: none; color: #8f84dd }
+#main .ssw-rhythm .is-bed .ssw-rh-bar { width: 24px; background: #5a5296; color: #fff }
+#main .ssw-rhythm .is-bed .ssw-rh-bar svg { width: 13px; height: 13px }
+#main .ssw-rhythm b { display: block; margin-top: 6px; font-size: 11.5px; line-height: 1.2; font-weight: 700; color: #3f3b5c; white-space: nowrap }
+#main .ssw-rhythm small { display: block; font-size: 11px; line-height: 1.2; color: #6b6782; white-space: nowrap }
+#main .ssw-rhythm p { margin: 8px 0 0; text-align: center; font-size: 12px; color: #6b6782 }
+/* Tiles: a little taller photo */
+#main .ssw-guides.is-photo .ssw-tile-pic { height: 104px }
+/* As she grows: when, then what */
+#main .ssw-grow li { padding: 7px 0 }
+#main .ssw-grow li small { display: block; font-size: 12.5px; font-weight: 700; color: #5a5296; line-height: 1.3 }
+#main .ssw-grow li b { display: block; font-size: 14.5px; font-weight: 500; color: #3f3b48; line-height: 1.4; margin-top: 1px }
+#main .ssw-grow li::before { top: 12px }
+#main .ssw-hero .ssw-rhythm { padding: 12px 8px 10px !important; width: auto !important; max-width: none !important }
+#main .ssw-hero .ssw-rhythm ol { width: 100% }
+/* Nov 20: tiles are steady topic doors under "Right now"; a tag shows which topics have something new now */
+#main .ssw-guides-h { margin-top: 22px }
+#main .ssw-guides.is-photo { margin-top: 0 }
+#main .ssw-guides.is-photo .ssw-new { position: absolute; right: 8px; top: 8px; font-style: normal; font-size: 11px; font-weight: 750; letter-spacing: .02em; color: #fff; background: #46638c; border-radius: 999px; padding: 3px 8px; box-shadow: 0 2px 6px #0003 }
+#main .ssw-topic .ssw-none { margin: 0 2px 6px; font-size: 14.5px; line-height: 1.45; color: #6b6670 }
+/* v3 (Yarden's Nov 20 mockup): Right now with photos, four small topic doors, topic pages */
+#main .ssw-now .hub-row { align-items: center }
+#main .ssw-thumb { flex: none; width: 72px; height: 58px; border-radius: 12px; overflow: hidden; background: #eef1f8 }
+#main .ssw-thumb img { width: 100%; height: 100%; object-fit: cover; display: block }
+#main .ssw-topics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin: 0 0 14px }
+#main .ssw-topics button { all: unset; box-sizing: border-box; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; min-height: 92px; padding: 12px 4px; border-radius: 18px; text-align: center }
+#main .ssw-topics i { width: 30px; height: 30px; display: grid; place-items: center }
+#main .ssw-topics i svg { width: 28px; height: 28px }
+#main .ssw-topics b { font-size: 13.5px; line-height: 1.2; font-weight: 700; color: var(--ink) }
+#main .ssw-topics .is-night { background: #ecebf8 } #main .ssw-topics .is-night i { color: #5a5296 }
+#main .ssw-topics .is-naps { background: #fff3dc } #main .ssw-topics .is-naps i { color: #b0812a }
+#main .ssw-topics .is-bed { background: #e7effc } #main .ssw-topics .is-bed i { color: #46638c }
+#main .ssw-topics .is-safe { background: #e5f0e7 } #main .ssw-topics .is-safe i { color: #3f7350 }
+#main .ssw-topic-head .hub-big { display: none }
+#main .ssw-topic .ssw-at { position: relative; display: block; background: #eef0f8; border-radius: 20px; margin: 4px 0 6px; padding: 14px 16px 14px 56px }
+#main .ssw-topic .ssw-at .ssw-bulb { left: 14px; top: 14px; width: 30px; height: 30px }
+#main .ssw-topic .ssw-at .ssw-bulb svg { width: 28px; height: 28px }
+#main .ssw-topic .ssw-at small { display: block; font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: #5e6890; margin-bottom: 4px }
+#main .ssw-topic .ssw-at b { display: block; font-size: 16px; line-height: 1.3; color: var(--ink) }
+#main .ssw-topic .ssw-at span { display: block; font-size: 14px; line-height: 1.45; color: #6d666d; margin-top: 3px }
+#main .ssw-figtip { margin: 8px 2px 0; font-size: 13px; line-height: 1.45; color: #6b6670 }
+#main .ssw-figlink { display: inline-block; margin: 8px 2px 0 }
+#main .ssw-always .hub-row { background: #f6f4fb }
+#main .ssw-topic-head .dev-area-head-art { display: none }
+#main .ssw-topic-head { padding-top: 18px !important; padding-bottom: 18px !important }
+/* Bedtime: how the evening fits together */
+#main .ssw-evening { list-style: none; margin: 4px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); position: relative }
+#main .ssw-evening::before { content: ""; position: absolute; left: 16.6%; right: 16.6%; top: 25px; height: 2px; background: #dcdcf0 }
+#main .ssw-evening li { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 2px }
+#main .ssw-evening i { width: 50px; height: 50px; border-radius: 50%; display: grid; place-items: center; background: #eeeef9; color: #5a5296; box-shadow: 0 0 0 4px #fff, 0 0 0 5px #e4e2f2; margin-bottom: 8px }
+#main .ssw-evening i svg { width: 26px; height: 26px }
+#main .ssw-evening .is-sun i { background: #fff1cc; color: #b0812a }
+#main .ssw-evening .is-moon i { background: #e3e4f6 }
+#main .ssw-evening b { font-size: 15.5px; color: var(--ink) }
+#main .ssw-evening span { font-size: 13px; color: #6b6670 }
+#main .ssw-evetip { position: relative; margin: 14px 0 0; padding: 11px 12px 11px 36px; background: #f1f0fa; border-radius: 14px; font-size: 13.5px; line-height: 1.45; color: #4d4a5e }
+#main .ssw-evetip i { position: absolute; left: 13px; top: 10px; font-style: normal; color: #5a5296 }
+/* Nov 21: Worth knowing sits inside the top card as one tip (Yarden's inspiration); no timeline up top */
+#main .ssw-hero .sl-aha.ssw-aha.ssw-tip { position: relative; z-index: 2; margin: 16px 0 0 !important; padding: 11px 14px 11px 46px !important; background: rgba(255,255,255,.88); border-radius: 16px; box-shadow: 0 2px 10px rgba(40,40,80,.08); backdrop-filter: blur(4px) }
+#main .ssw-hero .ssw-tip small { display: none }
+#main .ssw-hero .ssw-tip .ssw-bulb { left: 13px; top: 12px; width: 22px; height: 22px }
+#main .ssw-hero .ssw-tip b { display: block; font-size: 14.5px !important; line-height: 1.3 }
+#main .ssw-hero .ssw-tip span { display: block; font-size: 13.5px !important; line-height: 1.4; margin-top: 2px !important }
+#main .ssw-photosteps .ssw-ph-check { display: grid; place-items: center; background: #e5f0e7; color: #3f7350; font-size: 34px; font-weight: 700 }
+/* v4: header photo under the words (Feeding/Safety), four photo tiles (Development) */
+#main .ssw-hero.ssw-v4 .ssw-hero-photo { position: relative; margin: 14px 0 0; border-radius: 18px; overflow: hidden; aspect-ratio: 4 / 3; box-shadow: 0 6px 18px rgba(60,60,100,.12) }
+#main .ssw-hero.ssw-v4 .ssw-hero-photo > img { width: 100%; height: 100%; object-fit: cover; display: block }
+#main .ssw-hero.ssw-v4 > * { padding-right: 0 !important }
+#main .ssw-hero.ssw-v4 .ssw-tip { margin-top: 12px !important }
+#main .ssw-hero .ssw-tip small { display: inline !important; font-size: 14px !important; font-weight: 700; letter-spacing: 0 !important; text-transform: none !important; color: #46638c !important }
+#main .ssw-hero .ssw-tip small::after { content: ": " }
+#main .ssw-hero .ssw-tip b { display: inline; font-weight: 600 }
+#main .ssw-hero .ssw-tip span { display: block }
+#main .ssw-now-tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 0 0 12px }
+#main .ssw-nt { all: unset; box-sizing: border-box; cursor: pointer; position: relative; display: flex; flex-direction: column; border-radius: 18px; overflow: hidden; background: #fff; box-shadow: 0 1px 0 #ece8f2, 0 4px 14px rgba(60,60,100,.07) }
+#main .ssw-nt-pic { display: block; height: 112px; background: #eef1f8 }
+#main .ssw-nt-pic img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 35%; display: block }
+#main .ssw-nt-copy { display: flex; flex-direction: column; gap: 3px; padding: 9px 26px 12px 12px }
+#main .ssw-nt-copy em { font-style: normal; display: flex; align-items: center; gap: 5px; font-size: 14px; font-weight: 700 }
+#main .ssw-nt-copy em i { width: 18px; height: 18px; display: inline-grid; place-items: center } #main .ssw-nt-copy em i svg { width: 17px; height: 17px }
+#main .ssw-nt-copy b { font-size: 13px; line-height: 1.35; font-weight: 500; color: #5d5866 }
+#main .ssw-nt-go { position: absolute; right: 10px; bottom: 12px; color: #9a94a3; font-size: 18px }
+#main .ssw-nt.is-night { background: #f1effb } #main .ssw-nt.is-night em { color: #5a5296 }
+#main .ssw-nt.is-naps { background: #fff7e6 } #main .ssw-nt.is-naps em { color: #9a6d1c }
+#main .ssw-nt.is-bed { background: #edf3fc } #main .ssw-nt.is-bed em { color: #3f5f8c }
+#main .ssw-nt.is-safe { background: #ecf5ee } #main .ssw-nt.is-safe em { color: #3f7350 }
+#main .ssw-now-extra { margin-top: 0 }
+#main .ssw-alllink { display: inline-block; margin: 4px 2px 18px }
