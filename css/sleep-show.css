@@ -341,3 +341,13 @@
 #main .ssw-sw-tabs button { padding: 7px 12px; font-size: 13.5px }
 #main .ssw-card .tpl-notes { list-style: none; padding: 10px 0 0; margin: 12px 0 0; border-top: 1px solid #eeeaf2; display: grid; gap: 6px; font-size: 13.5px; line-height: 1.45 }
 #main .ssw-card .tpl-notes li { margin: 0 }
+#main .ssw-ladder { list-style: none; margin: 0; padding: 0; position: relative; display: grid; gap: 10px }
+#main .ssw-ladder::before { content: ""; position: absolute; left: 13px; top: 14px; bottom: 14px; width: 2px; background: #dfe4f1 }
+#main .ssw-ladder li { position: relative; display: flex; gap: 12px; align-items: flex-start }
+#main .ssw-ladder i { flex: none; width: 28px; height: 28px; border-radius: 50%; background: #46638c; color: #fff; font-style: normal; font-weight: 700; font-size: 13px; display: grid; place-items: center; z-index: 1 }
+#main .ssw-ladder li:nth-child(n+2) i { background: #8ea0c4 } #main .ssw-ladder li:last-child i { background: #3f7350 }
+#main .ssw-ladder b { display: block; font-size: 15px; color: var(--ink) } #main .ssw-ladder small { display: block; font-size: 13.5px; color: #6b6670; margin-top: 2px }
+#main .ssw-call.ssw-calm { background: #f1f0fa; color: #4d4a5e } #main .ssw-call.ssw-calm b { color: #46638c }
+#main .ssw-rough-groups .hub-h2:first-child { margin-top: 4px }
+#main .ssw-topic > .tpl-notes { list-style: none; margin: 12px 0 0; padding: 12px 16px; background: #fff; border-radius: 18px; display: grid; gap: 8px; font-size: 14px; line-height: 1.45; box-shadow: 0 1px 0 #ece8f2 }
+#main .ssw-topic > .tpl-notes li { margin: 0 }
