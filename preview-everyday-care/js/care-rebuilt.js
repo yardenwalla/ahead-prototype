@@ -4,11 +4,12 @@
 (function () {
   const CAT = 'Daily rhythm', H = () => window.__hub;
   const tub = () => ({ type: 'howto', label: 'Baths', art: 'bath', title: 'Tub baths can start',
-    why: 'Once the cord has healed. About 3 baths a week is plenty.',
-    steps: [['photo:care/tw1', 'Test the water', 'About 2 inches, warm on your wrist'], ['photo:care/tw2', 'Wipe {p} face', 'A damp cloth, no soap'],
-      ['photo:care/tw3', 'Wash {p} body, then hair', 'Your arm behind {p} head'], ['photo:care/tw4', 'Lift {o} into a towel', 'Pat dry, into the creases']],
-    stepsNotes: [['', 'Keep {o} warm', 'Pour cupfuls of bath water over {p} tummy as you go'], ['', 'Shampoo 2 or 3 times a week', 'A mild one. Plain water the rest of the time']],
-    tipsTitle: 'Keep {o} safe', tips: [['hand', 'A hand on {o} the whole bath', 'To step away, wrap {o} in a towel and take {o} with you.'], ['thermo', 'Water heater at 120°F or lower', 'So scalds are much less likely.']],
+    why: 'Once the cord has healed, 2–3 a week. Keep a hand on {o} the whole time.',
+    // Feeding's rhythm: tile titles of 1–3 words, one short line under each, specifics kept. Detail goes in 2 short notes.
+    steps: [['photo:care/tw1', 'Check the water', '2–3 inches, about 100°F'], ['photo:care/tw2', 'Eyes first', 'Inner corner out'],
+      ['photo:care/tw3', 'Then top to bottom', 'Diaper area last'], ['photo:care/tw4', 'Towel and pat dry', 'Into every crease']],
+    stepsNotes: [['', 'No thermometer?', 'Your elbow should feel warm, never hot'], ['', 'Each eye', 'Plain water, a clean corner of the cloth']],
+    // The one safety rule sits in the lead; the water heater lives in Safety's first setup.
     video: ['VsUla1M7eHQ', 'Giving a tub bath', 'Nemours KidsHealth'] });
   const acne = () => ({ type: 'check', label: 'Is this normal?', art: 'smile', title: 'Baby acne is common, and clears on its own',
     why: 'It shows up around 2–4 weeks and is usually gone by 4–6 months.',
