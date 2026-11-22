@@ -156,94 +156,104 @@
       caps: [[s0 + len / 2, `Ends ${clock(end)}`], [end + aw / 2, `Wake window ~${awL}`], [Math.min(next + .6, 13), `Next nap ${clock(next)}`]] });
   }
   window.__sswShort = i => { const f = $('#ssw-short'); if (!f) return; f.innerHTML = shortFig(i); $$('.ssw-chips button').forEach((b, k) => b.setAttribute('aria-pressed', k === i)); };
-  // A switch at the top of a page (Outings' Walk / Store / Restaurant pattern): one panel at a time.
-  window.__sswSw = (btn, i) => { const w = btn.closest('.ssw-sw'); if (!w) return; w.querySelectorAll('.ssw-sw-tabs button').forEach((b, k) => b.setAttribute('aria-selected', k === i)); w.querySelectorAll('.ssw-sw-panel').forEach((p, k) => p.classList.toggle('is-on', k === i)); };
-  const sw = (tabs, on = 0) => `<div class="ssw-sw"><div class="ssw-sw-tabs" role="tablist">${tabs.map(([l], i) => `<button role="tab" aria-selected="${i === on}" onclick="__sswSw(this,${i})">${F(l)}</button>`).join('')}</div>${tabs.map(([, html], i) => `<div class="ssw-sw-panel${i === on ? ' is-on' : ''}" role="tabpanel">${html}</div>`).join('')}</div>`;
-  const steps = list => `<ol class="ssw-steps">${list.map((t, i) => `<li><i>${i + 1}</i><span>${F(t)}</span></li>`).join('')}</ol>`;
-  const seeDo = (see, doList, extra = '') => `<section class="care-tpl-card ssw-card"><p class="ssw-see"><b>${F('What you might see')}</b> ${F(see)}</p>${steps(doList)}${extra}</section>`;
-  // Wake windows by age, the same ranges as Sleep at a glance: [min hours, max hours, label]
+  // ---- Sleep challenges (Nov 21), built like Feeding challenges: a question, four tiles for this age, "Other concerns" folded,
+  // and short pages in the shared check template (How to tell · What helps · When to call), photos where they teach.
+  // Sources: AAP (HealthyChildren.org) "Getting your baby to sleep", "Sleeping like a baby", "Safe sleep tips for sleep-deprived
+  // parents"; Nationwide Children's; Royal Children's Hospital Melbourne; KidsHealth (Nemours) "Naps"; Harvard Health. Needs pediatric review.
   const WW = mo => mo < 1.5 ? [.75, 1, '45–60 min'] : mo < 3 ? [1, 1.5, '1–1½ hrs'] : mo < 5 ? [1.5, 2.5, '1½–2½ hrs'] : mo < 7 ? [2, 2.5, '2–2½ hrs'] : mo < 9 ? [2.5, 3.5, '2½–3½ hrs'] : [2.5, 4, '2½–4 hrs'];
   const ENDS = [[15.5, '3:30'], [16.5, '4:30'], [17.25, '5:15'], [18, '6:00']];
   function lateFig(i) {
-    const [end] = ENDS[i], [lo, hi, wl] = WW(m()), b0 = end + lo, b1 = end + hi, late = b0 > 20.5;
-    return band({ label: `The last nap ends at ${clock(end)}. With a ${wl} wake window, bedtime lands between ${clock(b0)} and ${clock(b1)}.`, start: 13, end: 22.5, dark: [[Math.min(b0, 22.4), 22.5]], moon: [Math.min(b0, 22.3)],
+    const [end] = ENDS[i], [lo, hi] = WW(m()), b0 = end + lo, b1 = end + hi, late = b0 > 20.5;
+    return band({ label: `The last nap ends at ${clock(end)}, so bedtime lands between ${clock(b0)} and ${clock(b1)}.`, start: 13, end: 22.5, dark: [[Math.min(b0, 22.4), 22.5]], moon: [Math.min(b0, 22.3)],
       segs: [[end - 1, end, 'nap']], gap: 36, caps: [[end - .5, `Ends ${clock(end)}`], [Math.min(b0, 21.6), `Bedtime ~${clock(b0)}`]] })
-      + `<p class="ssw-verdict ${late ? 'is-late' : ''}">${F(late ? `Bedtime would land around ${clock(b0)}, late for most families. Next time, wake {o} gently after 30–45 minutes, or skip that nap and move bedtime earlier.` : `That works. Aim for bedtime between ${clock(b0)} and ${clock(b1)}.`)}</p>`;
+      + `<p class="ssw-verdict ${late ? 'is-late' : ''}">${F(late ? 'That’s late for most families. Next time, wake {o} gently after 30–45 minutes.' : `Aim for bedtime between ${clock(b0)} and ${clock(b1)}.`)}</p>`;
   }
   window.__sswLate = i => { const f = $('#ssw-late'); if (!f) return; f.innerHTML = lateFig(i); $$('.ssw-late-chips button').forEach((b, k) => b.setAttribute('aria-pressed', k === i)); };
-  // When a nap doesn't go to plan: one page for the four things that go wrong with naps (Yarden, Nov 21).
-  // Sources: KidsHealth (Nemours) "Naps"; Mayo Clinic "Baby naps"; Harvard Health "Naps"; AAP on sleeping in sitting devices. Needs pediatric review.
-  function napHelpPage(tab) {
-    const mo = m(), [, , wl] = WW(mo), TABS = ['fight', 'skip', 'late', 'short'], on = Math.max(0, TABS.indexOf(tab));
-    const fight = seeDo('Crying, chatting or playing instead of sleeping, even though it’s nap time.', [
-      'Give it about 20–30 minutes in a dark, calm room. You can’t make a baby sleep, so aim for rest.',
-      'Still awake? Get {o} up for a short break, then try again in 20–30 minutes, or wait for the next nap.',
-      'Next time, look at the timing. Rubbing eyes and crying that’s hard to settle mean start earlier. Happy and chatty means a little later.'],
-      notes([['', 'A nap on the go still counts', 'A stroller or carrier nap is fine. If {s} falls asleep in a car seat or swing, move {o} to a flat, safe space when you can'], ['', 'Fighting the last nap most days?', 'Around 7–9 months, that often means three naps are becoming two']]));
-    const skip = seeDo('A nap that never happened, or ended almost as soon as it started.', [
-      'One missed nap won’t undo anything. Let it go.',
-      'Offer the next sleep a little earlier than usual, so {s} isn’t awake for two wake windows in a row.',
-      'If it was the last nap of the day, move bedtime earlier, by about 30 minutes.'],
-      band({ label: 'The afternoon nap was skipped, so bedtime moves about 30 minutes earlier.', start: 12, end: 21, dark: [[18.5, 21]], moon: [18.5], moonFaint: [19], ghost: [[13, 14.3]], segs: [], gap: 32, caps: [[13.65, 'Skipped nap'], [18.5, 'Bedtime 30 min earlier']] }));
-    const late = `<section class="care-tpl-card ssw-card"><p class="ssw-ask">${F('When did the last nap end?')}</p><div class="ssw-chips ssw-late-chips" role="group">${ENDS.map(([, l], i) => `<button aria-pressed="${i === 1}" onclick="__sswLate(${i})">${F(l + ' pm')}</button>`).join('')}</div><div id="ssw-late">${lateFig(1)}</div>`
-      + notes([['', 'The rule of thumb', `Bedtime comes about one wake window after the last nap ends. Right now that’s ${wl}`], ['', 'Let {o} sleep, or wake {o}?', 'Let {o} sleep, unless it makes bedtime very late. Then wake {o} gently and keep bedtime close to usual']]) + `</section>`;
-    const short = `<section class="care-tpl-card ssw-card"><p class="ssw-ask">${F('Say a nap starts at 9 am. How long did it last?')}</p><div class="ssw-chips" role="group">${NAPS.map(([, l], i) => `<button aria-pressed="${i === 1}" onclick="__sswShort(${i})">${F(l)}</button>`).join('')}</div><div id="ssw-short">${shortFig(1)}</div>`
-      + notes([['', mo < 6 ? 'Very common now' : 'Short naps most days?', mo < 6 ? 'Naps of 30–45 minutes are normal at 3–5 months. They get longer with time' : 'Try the nap 15 minutes earlier or later. A dark room and white noise help']]) + `</section>`;
-    return H().detail('Sleep', 'Naps', 'When a nap doesn’t go to plan', 'Some days naps just don’t happen. Here’s what to do with the rest of the day.',
-      `<div class="ssw-topic">${sw([['Fighting it', fight], ['Skipped it', skip], ['Too late', late], ['Too short', short]], on)}</div>`, 'sun');
-  }
-  // Woke up at night: what she might need. Sources: AAP (HealthyChildren.org) on night waking, overheating and fever by age;
-  // Children's Hospital Colorado; CHOP. Needs pediatric review.
-  function nightHelpPage() {
-    const mo = m(), on = mo < 3 ? 1 : 0;
-    const fever = mo < 3 ? 'Under 3 months, 100.4°F or higher means calling your pediatrician right away, day or night.' : mo < 6 ? 'At {p} age, call your pediatrician for 101°F or higher.' : 'At {p} age, call your pediatrician for 103°F or higher, or a fever that lasts more than a day.';
-    const tabs = [
-      ['Stirring', seeDo('Grunts, wriggles, whimpers or a short cry. {P} eyes may stay closed.', ['Wait and watch for a minute or two. This is often a move between sleep cycles.', 'If {s} settles, you’re done. Going in can wake {o} fully.'], notes([['', mo < 3 ? 'Newborns are noisy sleepers' : 'Normal at every age', mo < 3 ? 'They spend lots of time in active sleep. Noises don’t mean {s}’s awake' : 'Everyone wakes briefly between cycles. Most babies settle back on their own']]))],
-      ['Hungry', seeDo(mo < 6 ? 'Rooting, sucking on hands, crying that builds. Often 2–3 hours or more since a full feed.' : 'Crying that builds, and a full, steady feed once {s} starts.', ['Feed {o} in dim light, without much talking.', 'Burp, then put {o} back down on {p} back, drowsy or asleep.'], notes([['', mo < 6 ? 'Night feeds are normal now' : 'Hungry, or comfort?', mo < 6 ? 'Waking to feed in the first months is expected and healthy' : 'A few sucks and asleep again usually means comfort. Ask your pediatrician if night feeds are still needed']]))],
-      ['Uncomfortable', seeDo('A sudden cry, squirming or arching, with no sign of hunger.', ['Check one thing at a time: a wet or dirty diaper, too hot or cold, a burp.', 'Fix it quietly and put {o} back down.'], mo >= 4 ? notes([['', 'Sore gums?', 'Teething can wake babies for a few nights. Ask your pediatrician before giving any medicine']]) : '')],
-      ['Unwell', seeDo('Warm to the touch, stuffy, coughing, vomiting, or a cry that sounds like pain.', ['Comfort {o} as much as {s} needs tonight.', 'Take {p} temperature. Go back to your usual routine once {s}’s better.'], notes([['', 'Fever', fever]]))]];
-    const check = `<section class="ssw-checkbox"><b>${F('How to check without waking {o} fully')}</b><ul>${['Keep the lights dim. No overhead light or phone screen in {p} face.', 'Don’t talk or play. Quiet and boring helps {o} drift back.', 'Feel the back of {p} neck or chest. Sweaty means too warm. Cool hands are normal.', 'Change the diaper only if it’s dirty or leaking.'].map(t => `<li>${F(t)}</li>`).join('')}</ul></section>`;
-    return H().detail('Sleep', 'Night sleep', 'Woke up? What {s} might need', 'Give it a minute or two first. Many wakings settle on their own, and the pause tells you more.',
-      `<div class="ssw-topic">${check}<h2 class="hub-h2">${F('What do you see?')}</h2>${sw(tabs, on)}<h2 class="hub-h2">${F('When to call')}</h2><section class="ssw-call"><p><b>${F('Call your pediatrician if')}</b> ${F('night waking comes with a fever, poor feeding, or {s} {seem|seems} to be in pain.')}</p><p><b>${F('Call 911 if')}</b> ${F('{s} struggles to breathe or turns blue, won’t wake, or is floppy.')}</p></section></div>`, 'moon');
-  }
-  // ---- Sleep hiccups (Yarden, Nov 21: "parents care about maximizing sleep") ----
-  // Sources: AAP (HealthyChildren.org) "Getting your baby to sleep", "Sleeping like a baby", "Safe sleep tips for sleep-deprived
-  // parents"; Nationwide Children's and Royal Children's Hospital Melbourne on night waking and sleep associations; CHOP. Needs pediatric review.
-  const callBox = extra => `<h2 class="hub-h2">${F('When to call')}</h2><section class="ssw-call"><p><b>${F('Ask your pediatrician if')}</b> ${F(extra)}</p></section>`;
-  function frequentPage() {
+  const T = () => H().TPLB, ph = n => 'photo:sleep/' + n;
+  const fever = () => { const mo = m(); return mo < 3 ? 'a temperature of 100.4°F or higher (call right away, day or night)' : mo < 6 ? 'a temperature of 101°F or higher' : 'a temperature of 103°F or higher, or a fever lasting more than a day'; };
+  const CALL911 = { now: '{s} struggles to breathe or turns blue, won’t wake, or is floppy.', nowLabel: 'Call 911' };
+  // Waking at night (one page for "Woke up?" and "Waking often").
+  function nightPage() {
     const mo = m(), young = mo < 6;
-    const why = [
-      ['Needs help to resettle', seeDo('{S} wakes every 1–3 hours and settles fast with the same thing each time: a few sucks, rocking or bouncing.', ['Keep the help, but move it earlier: feed or rock until drowsy, then into the crib before {s}’s fully asleep.', 'At night, wait a few minutes before going in. {S} may drift back on {p} own.', 'Want a plan? Sleep training is an option from about 4–6 months, if you want it.'], `<button class="hub-card-cta" onclick="${go('chg:Sleep:d:props')}">${F('Step back from bouncing, rocking or feeding')} ›</button>`)],
-      ['Hungry', seeDo(young ? 'A full, steady feed, then a longer stretch. Growth spurts can bring extra feeds for a few days.' : 'A full, steady feed every time, not a few sucks and back to sleep.', ['Feed calmly in dim light, then back down on {p} back.', 'Make the last feed before bed a full one.', young ? 'Night feeds are normal now. They drop on their own as {s} grows.' : 'Ask your pediatrician whether night feeds are still needed.'])],
-      ['Overtired', seeDo('Hard to settle at bedtime, a wake-up 30–60 minutes after bedtime, short naps.', ['Move bedtime 15–30 minutes earlier for a week.', 'Protect naps, even on the go.', 'Start the wind-down at the first sleepy cue.'])],
-      ['Something new', seeDo('{S} was sleeping better, then suddenly wasn’t. A new skill, teeth, a cold' + (mo >= 7 ? ', or missing you.' : (mo >= 3 && mo < 6 ? ', or the 4-month sleep regression.' : '.')), ['Keep the same routine and offer extra comfort.', 'Practice new skills during the day.', 'Give it 1–2 weeks before changing anything big.'], mo >= 8 ? `<button class="hub-card-cta" onclick="${go('chg:Sleep:d:nightwake')}">${F('Night waking often comes back for a while')} ›</button>` : '')]];
-    const pic = pair([nursing() ? 'feed-nurse.jpg' : 'feed.jpg', 'A parent feeding a baby to sleep in a dim room', 'Falls asleep feeding', 'At 2 am, {s} looks for the feed again', 'is-red'], ['down.jpg', 'A parent laying a drowsy baby down in a crib', 'Goes down drowsy', 'At 2 am, {s} wakes in the same place and drifts back', 'is-green']);
-    return H().detail('Sleep', 'Night sleep', 'Waking often at night', young ? 'Waking a few times a night is normal under 6 months. Here’s how to make each waking shorter.' : 'Everyone wakes between sleep cycles. The question is whether {s} can drift back.',
-      `<div class="ssw-topic"><h2 class="hub-h2">${F('How {s} falls asleep matters at 2 am')}</h2><section class="care-tpl-card ssw-card">${pic}<p class="ssw-figtip">${F('Babies wake between sleep cycles all night. If {s} falls asleep with help at bedtime, {s} often needs the same help each time {s} wakes.')}</p></section>`
-      + `<h2 class="hub-h2">${F('What’s behind it?')}</h2>${sw(why, mo < 4 ? 1 : 0)}`
-      + notes([['', 'One change at a time', 'Give it about a week before you judge it'], ['', 'Some babies just need more help', 'If what you do now works for your family, nothing has to change']])
-      + callBox('{s} snores loudly or pauses in breathing, isn’t gaining weight, or waking comes with a fever or pain.') + `</div>`, 'moon');
+    return H().tplPage('Sleep', { type: 'check', label: 'Sleep challenges', art: 'moon', title: young ? 'Waking at night is normal now' : 'Waking at night? Pause, then look',
+      why: young ? 'Most babies under 6 months wake to feed. Here’s how to keep each waking short.' : 'Everyone wakes between sleep cycles. Many babies settle back in a minute or two.',
+      tellTitle: 'What {s} might need',
+      figure: () => T().tiles([['bottle', 'Hungry', 'A full, steady feed, then a long stretch'], ['heart', 'Help to resettle', 'A few sucks or a bounce, asleep in minutes'], ['diaper', 'Comfort', 'Wet, too warm, or a sudden cry']], 'Sleep')
+        + `<section class="care-tpl-card ssw-card ssw-why2am"><p class="ssw-ask">${F('Why bedtime matters at 2 am')}</p>${pair([nursing() ? 'feed-nurse.jpg' : 'feed.jpg', 'A baby falling asleep while feeding', 'Asleep on the feed', 'Wakes looking for it again', 'is-red'], ['down.jpg', 'A drowsy baby laid down in a crib', 'Down drowsy', 'Wakes and drifts back', 'is-green'])}</section>`,
+      tell: [young && ['', 'Night feeds are normal now', 'They drop on their own as {s} grows'], mo >= 7 && ['', 'Something new?', 'Teeth, a new skill or missing you can bring wakings back for 1–2 weeks']].filter(Boolean),
+      helps: [[ph('back'), 'Pause first', '1–2 minutes'], [ph('nightfeed'), 'Dim and quiet', 'Feel {p} neck: sweaty is too warm'], [ph('down'), 'Down drowsy', 'At bedtime first']],
+      helpsNotes: [['', 'Needs a bounce or a feed every time?', 'Step back slowly. See “Only sleeps with your help”']],
+      calls: Object.assign({ ped: 'night waking comes with ' + fever() + ', poor feeding or pain, or {s} snores loudly or pauses in breathing.' }, CALL911) });
   }
-  // Only sleeps with your help: bouncing, rocking, feeding, or only in your arms. A ladder to step back slowly.
+  // Naps gone wrong: fighting, skipped, late or short.
+  function napPage() {
+    const mo = m();
+    return H().tplPage('Sleep', { type: 'check', label: 'Sleep challenges', art: 'sun', title: 'A rough nap? The next sleep fixes it',
+      why: 'Fighting it, skipped, short or late, the fix is in the timing.',
+      tellTitle: 'How to tell',
+      figure: () => T().tiles([['sun', 'Not tired yet', 'Happy and chatty in the crib'], ['eye', 'Overtired', 'Eye rubs, arching, hard to settle']], 'Sleep')
+        + `<section class="care-tpl-card ssw-card"><p class="ssw-ask">${F('When did the last nap end?')}</p><div class="ssw-chips ssw-late-chips" role="group">${ENDS.map(([, l], i) => `<button aria-pressed="${i === 1}" onclick="__sswLate(${i})">${F(l + ' pm')}</button>`).join('')}</div><div id="ssw-late">${lateFig(1)}</div></section>`,
+      tell: mo < 6 ? [['', 'Short naps are normal now', 'Naps of 30–45 minutes are common at 3–5 months']] : [],
+      helps: [[ph('nap'), 'Fighting it?', '20–30 minutes, then a break'], [ph('sleepy'), 'Skipped it?', 'Next sleep earlier'], [ph('book'), 'Last nap late?', 'Wake {o} gently']],
+      helpsNotes: [['', 'A nap on the go counts', 'If {s} falls asleep in a car seat or swing, move {o} to a flat, safe space'], mo >= 6 && mo < 10 && ['', 'Fighting the last nap most days?', 'Three naps may be becoming two']].filter(Boolean),
+      calls: { ped: '{s}’s unusually sleepy or hard to wake, or has ' + fever() + '.' } });
+  }
+  // Only sleeps with your help: bouncing, rocking, feeding, or only in your arms.
   function propsPage() {
     const mo = m();
-    const ladder = (rungs) => `<ol class="ssw-ladder">${rungs.map(([t, sub], i) => `<li><i>${i + 1}</i><span><b>${F(t)}</b><small>${F(sub)}</small></span></li>`).join('')}</ol>`;
-    const tabs = [
-      ['Bouncing or rocking', `<section class="care-tpl-card ssw-card"><p class="ssw-see">${F('Step down one rung every few nights. Stay on a rung until it feels easy.')}</p>${ladder([['Bounce or rock until drowsy', 'Not until fully asleep'], ['Hold {o} still until drowsy', 'Swaying gently is fine'], ['Into the crib drowsy', 'A hand on {p} chest, a little shushing'], ['Into the crib, you sit nearby', 'Move the chair farther each few nights'], ['Into the crib, and you leave', 'Come back for a quick check if {s} needs it']])}</section>`],
-      ['Feeding to sleep', `<section class="care-tpl-card ssw-card"><p class="ssw-see">${F('Feeding to sleep doesn’t have to change if it works for you. If it’s getting hard, move the feed earlier.')}</p>${ladder([['Feed at the start of the routine', 'Then pajamas, a book, and down'], ['Keep {o} awake while feeding', 'A gentle nudge or stroking {p} cheek helps'], ['Into the crib drowsy', 'Pat or shush if {s} fusses'], ['Do the same at night', 'Feed, then down before {s}’s fully asleep']])}</section>`],
-      ['Only in your arms', seeDo('Sleeps well on you, then wakes the moment you set {o} down. Very common in the first months.', ['Wait until {s}’s deeply asleep: limp arms, slow breathing, often 10–20 minutes in.', 'Lay {o} down on {p} back, feet first, and keep a hand on {p} chest for a moment.', 'Practice one crib nap a day. The first nap of the morning is often the easiest.'], notes([['', 'Getting sleepy while holding {o}?', 'Put {o} down on {p} back in the crib. Never sleep with {o} on a sofa or armchair']]))]];
-    return H().detail('Sleep', 'Falling asleep', 'Only sleeps with your help', mo < 4 ? 'At this age, that’s normal and fine. If it’s wearing you out, you can start stepping back slowly.' : 'Bouncing, rocking or feeding to sleep works, until it doesn’t. Step back slowly, one rung at a time.',
-      `<div class="ssw-topic"><h2 class="hub-h2">${F('What does {s} need to fall asleep?')}</h2>${sw(tabs, 0)}</div>`, 'heart');
+    return H().tplPage('Sleep', { type: 'check', label: 'Sleep challenges', art: 'heart', title: mo < 4 ? 'Only sleeps on you? Normal now' : 'Bouncing to sleep works, until it doesn’t',
+      why: mo < 4 ? 'If it’s wearing you out, you can start stepping back slowly.' : 'You can step back slowly, a few nights at a time.',
+      tellTitle: 'Step back, a few nights each',
+      figure: () => T().tiles([['heart', 'Bounce till drowsy', 'Not fully asleep'], ['hand', 'Hold still', 'Gentle swaying is fine'], ['crib', 'Into the crib', 'A hand on {p} chest'], ['sofa', 'Sit nearby', 'Then a little farther']], 'Sleep', true),
+      tell: [['', 'Feeding to sleep?', 'It doesn’t have to change if it works for you']],
+      helps: [[ph(nursing() ? 'feed-nurse' : 'feed'), 'Feed earlier', 'Then pajamas and a book'], [ph('bassinetnap'), 'One crib nap a day', 'Morning is easiest'], [ph('down'), 'Deep asleep first', 'Limp arms, slow breathing']],
+      helpsNotes: [['', 'Getting sleepy holding {o}?', 'Put {o} in the crib, on {p} back. Never sleep with {o} on a sofa or armchair']] });
   }
-  // Getting more sleep yourself. AAP: feeding when very tired, in a bed cleared of pillows and blankets, never a sofa or armchair.
+  // Getting more sleep yourself.
   function yourSleepPage() {
-    const shift = band({ label: 'One night split into two shifts, so each adult gets one longer stretch of sleep.', start: 21, end: 31, segs: [[21.2, 26, 'night'], [26.1, 30.8, 'nap']], gap: 30, flat: 1,
-      caps: [[23.6, 'You’re on'], [28.4, 'They’re on']] });
-    return H().detail('Sleep', 'For you', 'Getting more sleep yourself', 'You can’t fix {p} sleep in one night, but you can protect your own.',
-      `<div class="ssw-topic"><h2 class="hub-h2">${F('Take shifts, if you can')}</h2><section class="care-tpl-card ssw-card">${shift}<p class="ssw-figtip">${F('With a partner or a helper, one of you covers the first half of the night and the other the second, so each gets one stretch of 4–5 hours.')}</p></section>`
-      + `<h2 class="hub-h2">${F('What helps')}</h2><section class="care-tpl-card ssw-card">${steps(['Go to bed soon after {p} bedtime a few nights a week. The first stretch is often the longest.', 'Sleep when you can, and let chores wait.', 'If it fits your plan, pumped milk or formula lets someone else do a night feed.', 'Keep your own room dark and your phone away during night feeds.'])}</section>`
-      + `<h2 class="hub-h2">${F('When you’re very tired')}</h2><section class="ssw-checkbox"><b>${F('Feeding in the night and fighting sleep?')}</b><ul>${['Feed in your bed, cleared of pillows and blankets, not on a sofa or armchair.', 'If you fall asleep, move {o} back to {p} own sleep space as soon as you wake.'].map(t => `<li>${F(t)}</li>`).join('')}</ul></section>`
-      + `<h2 class="hub-h2">${F('How are you doing?')}</h2><section class="ssw-call ssw-calm"><p>${F('Exhaustion can make low mood and worry feel heavier. If it lasts more than two weeks, or you have thoughts that scare you, talk to your doctor.')}</p><p><b>${F('National Maternal Mental Health Hotline')}</b> ${F('1-833-852-6262, call or text, any time. In a crisis, call or text 988.')}</p></section></div>`, 'heart');
+    return H().tplPage('Sleep', { type: 'check', label: 'Sleep challenges', art: 'heart', title: 'Protect your own sleep too',
+      why: 'A few changes help, even while {s} still wakes.',
+      tellTitle: 'Take shifts, if you can',
+      figure: () => `<section class="care-tpl-card ssw-card">${band({ label: 'One night split into two shifts, so each adult gets one longer stretch of sleep.', start: 21, end: 31, segs: [[21.2, 26, 'night'], [26.1, 30.8, 'nap']], gap: 30, flat: 1, caps: [[23.6, 'You’re on'], [28.4, 'They’re on']] })}</section>`,
+      tell: [['', 'With a partner or a helper', 'Each of you gets one stretch of 4–5 hours']],
+      helps: [['moon', 'Bed early', 'Soon after {p} bedtime'], ['home', 'Let chores wait', 'Sleep when you can'], ['bottle', 'Share a feed', 'Pumped milk or formula, if it fits your plan']],
+      helpsNotes: [['', 'Feeding and fighting sleep?', 'Feed in your bed, cleared of pillows and blankets, never on a sofa or armchair. If you doze off, move {o} back to {p} own space when you wake'],
+        ['', 'Feeling low for more than two weeks?', 'Talk to your doctor, or call or text 1-833-852-6262, any time. In a crisis, call or text 988']] });
+  }
+  // The smaller hiccups, same template.
+  const HICCUP = {
+    soon: () => ({ title: 'Up soon after bedtime? Try earlier', why: 'A wake-up 30–60 minutes after bedtime often means {s} was overtired.', signs: [['eye', 'Overtired', 'Eye rubs, arching at bedtime'], ['sun', 'Late last nap', 'Not tired enough yet']],
+      helps: [['clock', 'Bedtime earlier', '15–30 minutes, for a week'], ['bottle', 'Feed earlier', 'Not right at the end'], ['moon', 'Dark from the start', 'Lights low for the routine']] }),
+    split: () => ({ title: 'Up for an hour at night? Look at the day', why: 'Sometimes {s} has had enough sleep already, from long naps or an early bedtime.', signs: [['sun', 'Long naps', 'More day sleep than usual'], ['moon', 'Happy, not upset', 'Chatting or playing in the crib']],
+      helps: [['clock', 'Cap the last nap', 'Wake {o} gently'], ['sunrise', 'Same wake-up', 'Even after a rough night'], ['moon', 'Keep it boring', 'Dark, quiet and brief']] }),
+    bedtime: () => ({ title: 'Fighting bedtime? It’s usually timing', why: 'Overtired and not tired enough look surprisingly alike.', signs: [['eye', 'Overtired', 'Eye rubs, arching, hard to settle'], ['sun', 'Not tired yet', 'Happy, chatty, wriggly']],
+      helps: [['clock', 'Start earlier', 'If {s}’s overtired'], ['sun', 'A little later', 'If {s}’s not tired'], ['book', 'Same steps', '20–30 minutes, lights low']] }),
+    early: () => ({ title: 'Up before 6? Treat it as night', why: 'It’s often a late bedtime, an early sunrise, or a long last nap.', signs: [['sunrise', 'Early light', 'The room gets bright'], ['moon', 'Late bedtime', 'Overtired babies wake early']],
+      helps: [['moon', 'Before 6 am', 'Dark, quiet and brief'], ['home', 'Blackout curtains', 'Light wakes babies early'], ['clock', 'Earlier bedtime', '15–30 minutes, for a week']] }) };
+  function hiccupPage(k) { const h = HICCUP[k] ? HICCUP[k]() : HICCUP.bedtime(); return H().tplPage('Sleep', Object.assign({ type: 'check', label: 'Sleep challenges', art: 'moon', calls: { ped: 'sleep changes come with ' + fever() + ', poor feeding or pain.' } }, h)); }
+  // The hub: what's keeping her up? Four tiles for this age, one row, everything else folded.
+  function roughPage() {
+    const mo = m();
+    const tile = (to, ic, t, sub, tone) => `<button class="ssw-ch-tile is-${tone}" onclick="${go(to)}"><span class="ssw-ch-ic">${H().art(ic, 'Sleep')}</span><b>${F(t)}</b><small>${F(sub)}</small></button>`;
+    const W = ['chg:Sleep:d:wakes', 'moon', mo < 3 ? 'Waking at night' : 'Waking often', mo < 3 ? 'To feed, or something else' : 'Every hour or two', 'night'],
+      N = ['chg:Sleep:d:naphelp', 'sun', 'Nap trouble', 'Fighting, skipped or late', 'naps'],
+      P = ['chg:Sleep:d:props', 'heart', mo < 4 ? 'Only sleeps on you' : 'Needs bouncing to sleep', mo < 4 ? 'Wakes when set down' : 'Or rocking, or a feed', 'bed'],
+      C = ['chg:Sleep:d:crying', 'heart', 'Crying a lot', 'Hard to settle in the evening', 'safe'],
+      E = ['chg:Sleep:d:hiccup:early', 'sunrise', 'Up too early', 'Before 6 am', 'safe'],
+      R = ['chg:Sleep:d:regress', 'moon', 'Was sleeping better', 'The 4-month sleep regression', 'safe'],
+      S = ['chg:Sleep:d:nightwake', 'moon', 'Standing in the crib', 'Or missing you at night', 'safe'];
+    const four = mo < 3 ? [W, P, C, ['chg:Sleep:d:daynight', 'sunrise', 'Days and nights mixed', 'Awake when you’re not', 'naps']] : mo < 6 ? [W, N, P, R] : mo < 8 ? [W, N, P, E] : [W, N, P, S];
+    const used = four.map(x => x[0]);
+    const row = (to, ic, t, sub) => H().row({ cat: 'Sleep', icon: ic, title: t, sub, onclick: go(to) });
+    const other = [mo >= 3 && ['chg:Sleep:d:hiccup:soon', 'clock', 'Up soon after bedtime', 'Often overtired'], mo >= 6 && ['chg:Sleep:d:hiccup:split', 'sunrise', 'Awake for an hour at night', 'Look at the day'],
+      mo >= 2 && ['chg:Sleep:d:hiccup:bedtime', 'book', 'Fighting bedtime', 'Usually the timing'], mo >= 4 && ['chg:Sleep:d:hiccup:early', 'sunrise', 'Up too early', 'Before 6 am'],
+      mo < 3 && ['chg:Sleep:d:crying', 'heart', 'Crying a lot', 'What helps, and when it eases'], mo >= 8 && ['chg:Sleep:d:nightwake', 'moon', 'Night waking comes back', 'New skills, missing you'],
+      ['chg:Sleep:d:away', 'plane', 'Traveling, or the clocks change', 'Keeping sleep on track']].filter(x => x && !used.includes(x[0]));
+    const body = `<div class="ssw-ch-grid">${four.map(x => tile(...x)).join('')}</div>`
+      + row('chg:Sleep:d:yoursleep', 'heart', 'Getting more sleep yourself', 'Shifts, safe night feeds, and you')
+      + `<details class="ssw-ch-more"><summary><span><b>${F('Other sleep hiccups')}</b><small>${F(mo < 3 ? 'Bedtime, travel and more' : 'Bedtime, early mornings, travel and more')}</small></span><i aria-hidden="true">›</i></summary><div class="hub-list">${other.map(x => row(...x)).join('')}</div></details>`
+      + T().calls(Object.assign({ ped: 'sleep changes come with ' + fever() + ', poor feeding or pain, or {s} snores loudly or pauses in breathing.' }, CALL911));
+    return H().detail('Sleep', 'Sleep challenges', 'What’s keeping {o} up?', 'Pick what you’re noticing. Most of it is common, and fixable.', body, 'moon');
   }
   function shortNapPage() {
     const mo = m(), early = mo < 6, three = mo >= 4 && mo < 9 && answers.twoNaps !== 'Yes', start = 1;
@@ -412,9 +422,9 @@
     const html = H().detail('Sleep', stage + (now && live ? ' · Right now' : ''), T.name, '', `<div class="ssw-topic">${inner}</div>`, T.art);
     return html.replace('<div class="hub-detail-head">', tabsHtml + '<div class="hub-detail-head ssw-topic-head">');
   }
-  const routes = { 'chg:Sleep:d:routine': routinePage, 'chg:Sleep:d:shortnap': () => napHelpPage('short'), 'chg:Sleep:d:wakes': nightHelpPage, 'chg:Sleep:d:frequent': frequentPage, 'chg:Sleep:d:props': propsPage, 'chg:Sleep:d:yoursleep': yourSleepPage, 'chg:Sleep:d:safegrow': safeGrowPage };
+  const routes = { 'chg:Sleep:d:routine': routinePage, 'chg:Sleep:d:shortnap': napPage, 'chg:Sleep:d:wakes': nightPage, 'chg:Sleep:d:frequent': nightPage, 'chg:Sleep:d:props': propsPage, 'chg:Sleep:d:yoursleep': yourSleepPage, 'chg:Sleep:d:rough': roughPage, 'chg:Sleep:d:safegrow': safeGrowPage };
   const baseRoute = window.changesRoute;
-  window.changesRoute = function (p) { const nh = /^chg:Sleep:d:naphelp(?::(\w+))?$/.exec(p || ''); if (nh) return napHelpPage(nh[1]); return routes[p] ? routes[p]() : /^chg:Sleep:t:/.test(p) ? topicPage(p) : baseRoute.apply(this, arguments); };
+  window.changesRoute = function (p) { if (/^chg:Sleep:d:naphelp/.test(p || '')) return napPage(); const hk = /^chg:Sleep:d:hiccup:(\w+)$/.exec(p || ''); if (hk) return hiccupPage(hk[1]); return routes[p] ? routes[p]() : /^chg:Sleep:t:/.test(p) ? topicPage(p) : baseRoute.apply(this, arguments); };
 
   /* ---------- pages dressed after they draw ---------- */
   const PAGES = {
@@ -456,22 +466,6 @@
     }
   };
   // Rough day or night: the two helpers lead, because they answer what parents ask most (Yarden, Nov 21).
-  PAGES['chg:Sleep:d:rough'] = () => {
-    const list = $('.hub-list.hub-rough'); if (!list || $('.ssw-rough-groups')) return;
-    const mo = m(), byT = t => [...list.children].find(e => ((e.querySelector('b') || {}).textContent || '').trim() === t);
-    const link = (ic, t, to) => `<button class="hub-rough-item hub-rough-link" onclick="${go(to)}"><span class="hub-dot">${H().art(ic, 'Sleep')}</span><b>${F(t)}</b><span class="hub-chev" aria-hidden="true">›</span></button>`;
-    const det = (ic, t, why, tries) => `<details class="hub-rough-item"><summary><span class="hub-dot">${H().art(ic, 'Sleep')}</span><b>${F(t)}</b><span class="hub-chev" aria-hidden="true">›</span></summary><div class="hub-rough-body"><p><b>${F('Likely why.')}</b> ${F(why)}</p><p class="hub-rough-try"><b>${F('Try this')}</b></p><ul>${tries.map(x => `<li>${F(x)}</li>`).join('')}</ul></div></details>`;
-    const keep = t => { const e = byT(t); return e ? e.outerHTML : ''; };
-    const groups = [
-      ['At night', link('eye', 'Woke up? What {s} might need', 'chg:Sleep:d:wakes') + link('moon', 'Waking often at night', 'chg:Sleep:d:frequent')
-        + (mo >= 3 ? det('clock', 'Wakes soon after bedtime', 'Often overtired, a last nap that ran late, or falling asleep on the last feed.', ['Move bedtime 15–30 minutes earlier for a week', 'Finish the feed earlier in the routine', 'Keep the room dark and quiet from the start']) : '')
-        + (mo >= 6 ? det('sunrise', 'Awake for an hour in the night', 'Sometimes too much day sleep, or a bedtime earlier than {s} needs.', ['Keep the last nap from running long', 'Check the wake window before bed is long enough', 'Keep the night dark, quiet and boring']) : '')],
-      ['Falling asleep', link('heart', mo < 4 ? 'Only sleeps in your arms' : 'Only sleeps with bouncing, rocking or feeding', 'chg:Sleep:d:props') + keep('Fighting bedtime') + keep('Crying a lot and won’t settle')],
-      ['Naps', (mo >= 3 ? link('sun', 'Fighting a nap, or skipped one', 'chg:Sleep:d:naphelp:fight') + link('clock', 'A nap running close to bedtime', 'chg:Sleep:d:naphelp:late') : '') + keep('Short naps')],
-      ['Mornings and trips', keep('Up too early') + keep('Traveling, or the clocks change')],
-      ['For you', link('heart', 'Getting more sleep yourself', 'chg:Sleep:d:yoursleep')]];
-    list.outerHTML = `<div class="ssw-rough-groups">${groups.filter(([, h]) => h).map(([t, h]) => `<h2 class="hub-h2">${F(t)}</h2><div class="hub-list hub-rough">${h}</div>`).join('')}</div>`;
-  };
   // How to swaddle: a photo for each step.
   PAGES['chg:Sleep:d:swaddle'] = () => {
     // Nov 21: the whole story, in the AAP's order (healthychildren.org, Swaddling: Is it Safe?). Five steps; the last is the check.

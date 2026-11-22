@@ -351,3 +351,15 @@
 #main .ssw-rough-groups .hub-h2:first-child { margin-top: 4px }
 #main .ssw-topic > .tpl-notes { list-style: none; margin: 12px 0 0; padding: 12px 16px; background: #fff; border-radius: 18px; display: grid; gap: 8px; font-size: 14px; line-height: 1.45; box-shadow: 0 1px 0 #ece8f2 }
 #main .ssw-topic > .tpl-notes li { margin: 0 }
+/* Sleep challenges hub, like Feeding challenges */
+#main .ssw-ch-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 4px 0 10px }
+#main .ssw-ch-tile { all: unset; box-sizing: border-box; cursor: pointer; display: flex; flex-direction: column; gap: 3px; min-height: 118px; padding: 14px; border-radius: 20px }
+#main .ssw-ch-tile.is-night { background: #ecebf8 } #main .ssw-ch-tile.is-naps { background: #fff3dc } #main .ssw-ch-tile.is-bed { background: #e7effc } #main .ssw-ch-tile.is-safe { background: #e5f0e7 }
+#main .ssw-ch-ic { width: 36px; height: 36px; border-radius: 50%; background: #ffffffa6; display: grid; place-items: center; margin-bottom: 8px } #main .ssw-ch-ic svg { width: 22px; height: 22px }
+#main .ssw-ch-tile b { font-size: 15.5px; line-height: 1.2; color: var(--ink) } #main .ssw-ch-tile small { font-size: 13px; line-height: 1.35; color: #6b6670 }
+#main .ssw-ch-more { margin: 10px 0 14px; background: #ecebf8; border-radius: 18px }
+#main .ssw-ch-more summary { list-style: none; display: flex; align-items: center; gap: 10px; padding: 14px 16px; cursor: pointer } #main .ssw-ch-more summary::-webkit-details-marker { display: none }
+#main .ssw-ch-more summary span { flex: 1 } #main .ssw-ch-more summary b { display: block; font-size: 15.5px } #main .ssw-ch-more summary small { display: block; font-size: 13px; color: #6b6670; margin-top: 2px }
+#main .ssw-ch-more summary i { font-style: normal; color: #8a84a0; transform: rotate(90deg); transition: transform .2s } #main .ssw-ch-more[open] summary i { transform: rotate(-90deg) }
+#main .ssw-ch-more > .hub-list { margin: 0 10px 10px }
+#main .ssw-why2am { margin-top: 10px }
