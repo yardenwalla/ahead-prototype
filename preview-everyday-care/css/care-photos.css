@@ -236,3 +236,4 @@
 #main .care-skin .care-zoom { width: 28% }
 #main .care-skin .care-zoom { display: none }
 #main .care-skin .care-ring { width: 22% }
+#main .care-tiles .care-tiles-lead.is-last { margin: 12px 0 0 }

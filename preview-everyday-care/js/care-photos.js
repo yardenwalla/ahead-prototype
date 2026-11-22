@@ -9,7 +9,7 @@
 (function () {
   const F = s => (window.__hub ? window.__hub.F(s) : s);
   const CAT = 'Daily rhythm';
-  const src = n => `assets/care/${n}.jpg?v=1122k`;
+  const src = n => `assets/care/${n}.jpg?v=1122n`;
   const img = (n, alt) => `<img src="${src(n)}" alt="${F(alt).replace(/"/g, '&quot;')}" loading="lazy">`;
   const pin = ([label, x, y, side]) => `<span class="ph-pin ph-pin-${side}" style="left:${x}%;top:${y}%"><i></i><span>${F(label)}</span></span>`;
   const photo = (n, alt, pins, cls = '') => `<figure class="ph-photo ph-hero care-ph ${cls}">${img(n, alt)}${(pins || []).map(pin).join('')}</figure>`;
@@ -88,24 +88,27 @@
   // null = that step has no photo of its own; it moves to the top of the card's notes, so the row stays at 3–4.
   const SEQ = { 'p:sponge': [null, 'spface', 'spbody', 'spdry'],
     'p:tub': [null, 'bathface', 'tubbath', 'hero-1'],
-    'p:brush': ['brushrice', 'brushpos', 'teeth2'],
-    'h:diapers:2': ['dsetup', null, 'dtoy', 'wriggle'], 'h:diapers:3': ['dsetup', null, 'dtoy', 'dstand'], 't:diapers:3': ['dsetup', null, 'dtoy', 'dstand'],
-    'h:diapers:0': [null, 'dwipe', 'dfresh', 'cord'], 'h:diapers:1': [null, 'dwipe', 'dfresh', 'diaper'],
+    'p:brush': [null, 'brushrice', 'brushpos', 'teeth2'],
+    'h:diapers:2': ['dsetup', 'dtoy', 'wriggle'], 'h:diapers:3': ['dsetup', 'dtoy', 'dstand'], 't:diapers:3': ['dsetup', 'dtoy', 'dstand'],
+    'h:diapers:0': [null, 'dwipe', 'dfresh', 'cord', null], 'h:diapers:1': [null, 'dwipe', 'dfresh', 'diaper', null],
     't:nails:0': ['nsleep', 'npress', 'nailfile'], 't:nails:1': ['nsleep', 'npress', 'nails'], 't:nails:2': ['nsleep', 'npress', 'nails'], 't:nails:3': ['nsleep', 'npress', 'nails'] };
   function photoSteps(main, r) {
     const pics = SEQ[r]; if (!pics) return false;
     const h = [...main.querySelectorAll('h2.hub-h2')].find(x => x.textContent.trim() === 'Steps'); const fig = h && h.nextElementSibling;
     if (!fig) return false; if (fig.classList.contains('ph-tiles')) return true;
     const steps = [...fig.querySelectorAll('.hub-iconstep')]; if (steps.length !== pics.length) return false;
-    let notes = fig.querySelector('.tpl-notes'); const moved = []; let lead = '';
+    let notes = fig.querySelector('.tpl-notes'); const moved = []; let lead = '', trail = '';
     steps.forEach((st, i) => { const art = st.querySelector('.hub-iconstep-art');
       if (!pics[i]) { const b = st.querySelector('b').cloneNode(true); b.querySelectorAll('em').forEach(e => e.remove()); const sm = st.querySelector('small');
-        if (i === 0) { lead = `<b>${b.innerHTML}.</b> ${sm ? sm.innerHTML : ''}${sm && /[.?!]$/.test(sm.textContent.trim()) ? '' : '.'}`; st.remove(); return; }
+        const line = `<b>${b.innerHTML}.</b> ${sm ? sm.innerHTML : ''}${sm && /[.?!]$/.test(sm.textContent.trim()) ? '' : '.'}`;
+        if (i === 0) { lead = line; st.remove(); return; }
+        if (i === steps.length - 1) { trail = line; st.remove(); return; }
         moved.push(`<li><b style="color:#302d3c">${b.innerHTML}.</b> ${sm ? sm.innerHTML : ''}${sm && /[.?!]$/.test(sm.textContent.trim()) ? '' : '.'}</li>`); st.remove(); return; }
       if (art) art.outerHTML = `<span class="ph-tile">${img(pics[i], st.querySelector('b').textContent)}</span>`; });
     fig.querySelectorAll('.hub-iconstep b em').forEach((e, i) => { e.textContent = i + 1; });
     const n = pics.filter(Boolean).length; fig.className = fig.className.replace(/\bis-\d\b/, 'is-' + n) + ' ph-tiles care-tiles';
     if (lead) fig.insertAdjacentHTML('afterbegin', `<p class="care-tiles-lead"><span>First</span>${lead}</p>`);
+    if (trail) { const row = fig.querySelector('.hub-iconsteps-row'); if (row) row.insertAdjacentHTML('afterend', `<p class="care-tiles-lead is-last"><span>Last</span>${trail}</p>`); }
     if (moved.length) { if (!notes) { notes = document.createElement('ul'); notes.className = 'tpl-notes'; fig.appendChild(notes); } notes.insertAdjacentHTML('afterbegin', moved.join('')); }
     return true;
   }
