@@ -47,7 +47,7 @@
 #main .care-psteps-note { font-size: 13.5px; line-height: 1.4; color: #6b6670; margin: 0 2px 22px }
 
 /* One icon style across Everyday care: the same size, shape and color everywhere (Nov 20) */
-#main .care-v2 .dev-area-head-art { display: none }
+#main .care-v2 .dev-area-head-art:not(.sf-head-art) { display: none }
 #main .care-v2 .dev-area-head { padding-top: 22px }
 #main .care-v2 .hub-iconstep-art { width: 44px; height: 44px; margin-bottom: 8px; background: #e3f1f7 !important }
 #main .care-v2 .hub-iconstep-art svg { width: 24px; height: 24px }

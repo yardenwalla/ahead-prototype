@@ -394,6 +394,7 @@
   }
 
   function dressPage(main, r) {
+    if (window.__careRebuilt && window.__careRebuilt(r)) return;
     const head = main.querySelector('.dev-area-head'); if (!head) return;
     // All how-tos: the same photo rows.
     const hm = r.match(/^how:(\d)/); if (hm) { routinesPage(main, +hm[1]); return; }
