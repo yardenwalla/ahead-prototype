@@ -172,7 +172,8 @@
       const pic = !designs ? '' : photo(m)
         ? `<button class="mem-card-story" onclick="storyShare(${m})" aria-label="Share the ${L(m)} card"><img data-story-thumb="${m}" alt=""></button>`
         : `<label class="mem-card-story is-empty" aria-label="Add the ${lab} photo"><img data-story-thumb="${m}" alt="">${hubPhotoInput(m)}</label>`;
-      // Doodles belong to the words: a sparkle after the headline's last word (never in the middle of it), hearts just under the line.
+      // Doodles belong to the words: a sparkle at the end of the headline's top line (placed after it's drawn, so it follows
+      // wherever the line wraps), hearts just under the line.
       const SPARK = `<svg class="mem-doodle is-spark" viewBox="0 0 40 30" aria-hidden="true"><path d="M8 4v8M18 10l6-6M20 22h9"/></svg>`;
       const HEARTS = `<svg class="mem-doodle is-heart" viewBox="0 0 40 34" aria-hidden="true"><path d="M10 28c-6-4-8-8-6-11 2-3 6-2 7 1 1-3 5-4 7-1 1 3-2 7-8 11zM27 16c-4-3-5-6-4-8 1-2 4-2 5 0 1-2 4-2 5 0 1 2-1 5-6 8z"/></svg>`;
       const doodles = `<svg class="mem-doodle is-spark" viewBox="0 0 40 30" aria-hidden="true"><path d="M8 4v8M18 10l6-6M20 22h9"/></svg><svg class="mem-doodle is-heart" viewBox="0 0 40 34" aria-hidden="true"><path d="M10 28c-6-4-8-8-6-11 2-3 6-2 7 1 1-3 5-4 7-1 1 3-2 7-8 11zM27 16c-4-3-5-6-4-8 1-2 4-2 5 0 1-2 4-2 5 0 1 2-1 5-6 8z"/></svg>`;
@@ -181,7 +182,7 @@
         : `<div class="mem-card-btns"><label class="mem-card-btn is-main is-wide">＋ Add ${esc2(P.p)} ${lab} photo${hubPhotoInput(m)}</label></div>`;
       // Stacked, so the card she'll share is big (the photo inside it is about the size of a real print on screen):
       // the month and its headline on top, the balloon card centered, the month's line as its caption, then the buttons.
-      const media = `<div class="mem-card-hero is-side" style="--mc:${MC}"><div class="mem-card-top"><div class="mem-card-words"><p class="mem-card-label">${esc2(WORDS[m])}</p><h2 class="mem-card-title">${(/ \d+ months?!?$/.test(title) ? esc2(title).replace(/^(.*?) (\d+ months?!?)$/, '$1 <span class="mem-nowrap">$2' + SPARK + '</span>') : esc2(title).replace(/^(.*) (\S+)$/, '$1 <span class="mem-nowrap">$2' + SPARK + '</span>'))}</h2><p class="mem-card-line">${esc2(LINES[m])}</p>${HEARTS}</div><div class="mem-card-pic">${pic}</div></div>${btns}</div>`;
+      const media = `<div class="mem-card-hero is-side" style="--mc:${MC}"><div class="mem-card-top"><div class="mem-card-words"><p class="mem-card-label">${esc2(WORDS[m])}</p><h2 class="mem-card-title">${(/ \d+ months?!?$/.test(title) ? esc2(title).replace(/^(.*?) (\d+ months?!?)$/, '$1 <span class="mem-nowrap">$2</span>') : esc2(title)).split(/ (?![^<]*<\/span>)/).map(w => `<span class="mem-w">${w}</span>`).join(' ') + SPARK}</h2><p class="mem-card-line">${esc2(LINES[m])}</p>${HEARTS}</div><div class="mem-card-pic">${pic}</div></div>${btns}</div>`;
       // What happened that month, small and light under the balloon card: each big first as a little round badge
       // with its drawing (four at most, one row), then the smaller things named in one short line. Two are named;
       // past that it's "and 3 more", which opens the book where they're all listed.
@@ -322,4 +323,34 @@
     show();
     if (!reduce) timer = setInterval(() => { if (i === frames.length - 1) { clearInterval(timer); timer = null; return; } step(); }, 1600);
   };
+})();
+
+// The month headline's sparkle sits at the end of its top line: after the page is drawn, find the last word on the
+// first line and tuck the sparkle in after it (it travels with that word, so it never starts a line on its own).
+(function () {
+  function place(h) {
+    const sp = h.querySelector('.mem-doodle.is-spark'), words = [...h.querySelectorAll('.mem-w')];
+    if (!sp || !words.length) return;
+    h.appendChild(sp); words.forEach(w => w.classList.remove('has-spark'));
+    for (let tries = 0; tries < 4; tries++) {
+      const top = words[0].offsetTop, first = words.filter(w => Math.abs(w.offsetTop - top) < 8), last = first[first.length - 1];
+      last.classList.add('has-spark'); last.appendChild(sp);
+      // Same line still? (compare against the first word again: the sparkle can nudge the whole line a few pixels)
+      const lh = parseFloat(getComputedStyle(h).lineHeight) || 30;
+      if (Math.abs(last.offsetTop - words[0].offsetTop) < lh / 2 || first.length < 2) return;
+      // The sparkle pushed that word down a line: try the word before it.
+      last.classList.remove('has-spark'); h.appendChild(sp); words.splice(words.indexOf(last), 1);
+    }
+  }
+  function all() { document.querySelectorAll('#main .mem-card-title').forEach(place); }
+  let t; const soon = muts => {
+    // Ignore our own moves inside a headline, so placing the sparkle doesn't set off another round.
+    if (Array.isArray(muts) && muts.length && muts.every(x => x.target && x.target.closest && x.target.closest('.mem-card-title'))) return;
+    clearTimeout(t); t = setTimeout(all, 30); };
+  if (typeof MutationObserver === 'function' && typeof document !== 'undefined' && document.getElementById) {
+    const go = () => { const m = document.getElementById('main'); if (m) new MutationObserver(soon).observe(m, { childList: true, subtree: true }); };
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
+    window.addEventListener('resize', soon);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(soon);
+  }
 })();
