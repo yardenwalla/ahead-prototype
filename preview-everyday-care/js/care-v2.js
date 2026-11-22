@@ -1006,8 +1006,8 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     safe: [['hand', 'A hand on {o} the whole bath', 'Babies can slip under in seconds. To step away, take {o} with you.']] };
   TPL['t:bath:3'] = { type: 'howto', k: 'bath', title: 'Move to the big tub',
     why: 'Once {s} {sit|sits} steadily on {p} own, the big tub is fine.',
-    steps: [['mat', 'Lay a non-slip mat in the tub', 'And set a towel, washcloth and soap in reach'], ['drop', 'Fill it no higher than {p} waist', 'When {s} {sit|sits}. Test it with your wrist'], ['tub', 'Sit {o} back down if {s} {stand|stands}', 'Gently, every time'], ['towel', 'Lift {o} out, then drain the tub', 'Even a little water is a risk once {s} can climb']],
-    safe: [['hand', 'A hand on {o} the whole bath', 'Babies can slip under in seconds. To step away, take {o} with you.'], ['tub', 'Skip bath seats', 'They can tip over, and babies can slip out.']] };
+    steps: [['mat', 'Lay a non-slip mat in the tub', 'And set a towel, washcloth and soap in reach'], ['drop', 'Fill it no higher than {p} waist', 'When {s} {sit|sits}. Test it with your wrist'], ['towel', 'Lift {o} out, then drain the tub', 'Even a little water is a risk once {s} can climb']],
+    safe: [['hand', 'A hand on {o} the whole bath', 'Babies can slip under in seconds. To step away, take {o} with you.'], ['stand', 'Sit {o} back down if {s} {stand|stands}', 'Gently, every time. Standing is how most slips happen.'], ['tub', 'Skip bath seats', 'They can tip over, and babies can slip out.']] };
   const diaperRash = [['diaper', 'Diaper rash? Thick zinc cream', 'At every change, and let the skin air out.'], ['diaper', 'Call if a rash isn’t better in 2–3 days', 'Or if it has blisters, pus or bright red folds.']];
   TPL['h:diapers:0'] = { type: 'howto', k: 'diapers', title: 'Change a diaper',
     why: 'About 8–12 a day in the first weeks.',

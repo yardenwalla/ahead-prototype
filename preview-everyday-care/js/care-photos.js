@@ -9,7 +9,7 @@
 (function () {
   const F = s => (window.__hub ? window.__hub.F(s) : s);
   const CAT = 'Daily rhythm';
-  const src = n => `assets/care/${n}.jpg?v=1122n`;
+  const src = n => `assets/care/${n}.jpg?v=1122s`;
   const img = (n, alt) => `<img src="${src(n)}" alt="${F(alt).replace(/"/g, '&quot;')}" loading="lazy">`;
   const pin = ([label, x, y, side]) => `<span class="ph-pin ph-pin-${side}" style="left:${x}%;top:${y}%"><i></i><span>${F(label)}</span></span>`;
   const photo = (n, alt, pins, cls = '') => `<figure class="ph-photo ph-hero care-ph ${cls}">${img(n, alt)}${(pins || []).map(pin).join('')}</figure>`;
@@ -27,7 +27,7 @@
   const SEE = { 'rash:peeling': 'peeling', 'rash:newborn': 'milia', 'look:0:cord': 'cord', 'rash:acne': 'acne', 'rash:cradle': 'cradle', 'look:1:poop': 'cleandiaper',
     'rash:drool': 'drool', 'p:teething': 'soregums', 'rash:eczema': 'eczema', 'look:3:poop': 'solids', 'rash:heat': 'heat' };
   // Is this normal? pages: the photo for "What it looks like".
-  const TILE_CROP = { milia: [50, 55, 1.4], cradle: [45, 32, 1.4], heat: [50, 42, 1.3], peeling: [28, 70, 1.4], cord: [50, 48, 1.4], acne: [35, 60, 1.5], eczema: [40, 47, 1.3], drool: [50, 52, 1.4] };
+  const TILE_CROP = { milia: [30, 58, 1.5], cradle: [45, 32, 1.4], heat: [50, 42, 1.3], peeling: [28, 70, 1.4], cord: [50, 48, 1.4], acne: [35, 60, 1.5], eczema: [40, 47, 1.3], drool: [50, 52, 1.4] };
   const SEE_LINE = { 'rash:peeling': 'Common in the first weeks.', 'rash:newborn': 'Tiny bumps that fade on their own.', 'look:0:cord': 'A little is normal as it heals.',
     'rash:acne': 'Baby acne, gone by 4–6 months.', 'rash:cradle': 'Cradle cap, usually gone by age 1.', 'look:1:poop': 'Can be fine if feeds go well.',
     'rash:drool': 'Comes with drool. Easy to soothe.', 'p:teething': 'Teething can start around now.', 'rash:eczema': 'Often eczema. Thick cream helps.',
@@ -160,7 +160,7 @@
 
   // Skin pages, like the inspiration: a big photo with a close-up circle, then what helps, then how to tell normal from time to call.
   // The spot on each square photo (x%, y%), checked on a grid. The ring sits on it; the magnified circle sits in the far corner.
-  const ZOOM = { cradle: [45, 32], acne: [35, 60], newborn: [50, 55], peeling: [28, 70], drool: [50, 52], eczema: [40, 47], heat: [50, 42] };
+  const ZOOM = { cradle: [45, 32], acne: [35, 60], newborn: [30, 58], peeling: [28, 70], drool: [50, 52], eczema: [40, 47], heat: [50, 42] };
   function sizeUp(main, r) {
     if (!/^(h:diapers|t:diapers)/.test(r) || /size up/i.test(main.textContent) || !window.__hub) return;
     const row = window.__hub.row({ icon: 'diaper', cat: CAT, title: 'Leaks mean it’s time to size up', sub: 'So do red marks at the legs or waist, or tabs that don’t reach the middle.' });
@@ -170,8 +170,91 @@
     else if (!h) (main.querySelector('.hub-page') || main).insertAdjacentHTML('beforeend', window.__hub.list('Good to know', [row]));
   }
 
+
+  /* ===== One system for every Everyday care page (Nov 22) =====
+     1. Numbered steps: every step has its own photo, as a row (photo left, number, action, one line).
+     2. Lists with no order ("What to do", "What helps"): icons, unchanged.
+     3. No loose notes under the steps: tips join "Good to know", always after the steps.
+     4. Every "Is this normal?" page: photo with a ring on the spot, Where, What helps, How to tell. */
+  const STEP_PH = {
+    'p:sponge': ['towel', 'spface', 'spbody', 'spdry'], 't:bath:0': ['towel', 'spface', 'spbody', 'spdry'],
+    'p:tub': ['tub', 'bathface', 'tubbath', 'hero-1'], 't:bath:1': ['tub', 'bathface', 'tubbath', 'hero-1'],
+    't:bath:2': ['bedtime', 'bfeed', 'bbook', 'blay'], 't:bath:3': ['bathmat', 'bigtub', 'bdrain'],
+    'h:diapers:0': ['dsetup', 'dwipe', 'dfresh', 'cord', 'handwash'], 'h:diapers:1': ['dsetup', 'dwipe', 'dfresh', 'diaper', 'handwash'],
+    'h:diapers:2': ['dsetup', 'dtoy', 'wriggle'], 'h:diapers:3': ['dsetup', 'dtoy', 'dstand'], 't:diapers:3': ['dsetup', 'dtoy', 'dstand'],
+    't:nails:0': ['nsleep', 'npress', 'nailfile'], 't:nails:1': ['nsleep', 'npress', 'nails'], 't:nails:2': ['nsleep', 'npress', 'nails'], 't:nails:3': ['nsleep', 'npress', 'nails'],
+    'p:brush': ['brushlap', 'brushrice', 'brushpos', 'teeth2'],
+    'h:gums:0': ['gumcloth', 'gums'], 'h:gums:1': ['gumcloth', 'gums'], 'h:gums:2': ['gumcloth', 'gums'], 'h:gums:3': ['gumcloth', 'gums'],
+    't:sun:2': ['sunapply', 'sunneck', 'sunagain'], 't:sun:3': ['sunapply', 'sunneck', 'sunagain']
+  };
+  const TIP_ICON = [[/boys|girls|front to back/i, 'diaper'], [/ear/i, 'smile'], [/shampoo|bath/i, 'bath'], [/toenail|one hand/i, 'hand'],
+    [/twice a day/i, 'moon'], [/toy/i, 'toy'], [/toothpaste/i, 'tooth'], [/sunscreen/i, 'sun']];
+  function stepRows(main, r) {
+    const pics = STEP_PH[r]; if (!pics) return false;
+    const h = [...main.querySelectorAll('h2.hub-h2')].find(x => x.textContent.trim() === 'Steps'); const fig = h && h.nextElementSibling;
+    if (!fig || fig.classList.contains('care-steps')) return !!fig;
+    const steps = [...fig.querySelectorAll('.hub-iconstep, .care-nsteps li')].filter(s => s.querySelector('b'));
+    if (steps.length !== pics.length) { console.warn('[care] step photos', r, steps.length, pics.length); return false; }
+    const rows = steps.map((st, i) => { const b = st.querySelector('b').cloneNode(true); b.querySelectorAll('em,.care-n').forEach(e => e.remove()); const sm = st.querySelector('small');
+      return `<li><span class="care-step-ph">${img(pics[i], b.textContent)}</span><div><b><span class="care-n">${i + 1}</span>${b.innerHTML}</b>${sm ? `<small>${sm.innerHTML}</small>` : ''}</div></li>`; }).join('');
+    // Tips that sat under the steps move to "Good to know".
+    const tips = [...fig.querySelectorAll('.tpl-notes li')].map(li => { const b = li.querySelector('b'); const title = b ? b.textContent.replace(/\.$/, '') : ''; const sub = b ? li.textContent.slice(b.textContent.length).trim() : li.textContent.trim();
+      const icon = (TIP_ICON.find(([re]) => re.test(title)) || [0, 'heart'])[1]; return window.__hub.row({ icon, cat: CAT, title, sub }); });
+    fig.outerHTML = `<ol class="care-steps">${rows}</ol>`;
+    if (tips.length && window.__hub) {
+      const gh = [...main.querySelectorAll('h2.hub-h2')].find(x => x.textContent.trim() === 'Good to know'), list = gh && gh.nextElementSibling;
+      if (list) list.insertAdjacentHTML('afterbegin', tips.join(''));
+      else { const after = main.querySelector('ol.care-steps'); const next = after.nextElementSibling;
+        const pair = main.querySelector('.care-pair'); const anchor = (pair && pair.compareDocumentPosition(after) & 2) ? pair : after;
+        anchor.insertAdjacentHTML('afterend', window.__hub.list('Good to know', tips)); }
+    }
+    return true;
+  }
+
+  // "Is this normal?" pages that aren't skin: the same layout as the skin pages.
+  const LOOKS = {
+    'look:0:cord': { n: 'cord', at: [50, 48], where: 'The belly button', normal: 'It darkens, dries and shrinks. A spot or two of blood as it falls off, usually by 3 weeks.' },
+    'p:teething': { n: 'soregums', at: [45, 45], where: 'The gums, often the bottom front first', normal: 'Lots of drool, chewing on everything, and a few fussy days.', status: 'Usually normal' },
+    'look:1:poop': { chart: true, normal: 'Yellow, green, tan, brown or orange. Days apart can be normal if breastfed.', status: 'Usually normal' },
+    'look:3:poop': { chart: true, normal: 'Yellow, green, tan, brown or orange. Thicker and smellier once solids start.', status: 'Usually normal' }
+  };
+  const CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8.5 12.3 2.4 2.4 4.6-5"/></svg>';
+  function ringPhoto(n, x, y, alt) {
+    const H = 9 / 16, pos = Math.max(0, Math.min(1, (y / 100 - H / 2) / (1 - H))), top = pos * (1 - H), ry = ((y / 100 - top) / H) * 100;
+    return `<figure class="ph-photo ph-hero care-ph care-skin" style="--py:${(pos * 100).toFixed(0)}%">${img(n, alt)}<span class="care-ring" style="left:${x}%;top:${ry.toFixed(1)}%"></span></figure>`;
+  }
+  function tellBoxes(main, normal) {
+    const callH = [...main.querySelectorAll('h2.hub-h2')].find(h => h.textContent.trim() === 'When to call'), calls = main.querySelector('.care-calls');
+    if (!callH || !calls) return;
+    const ps = [...calls.querySelectorAll('p')], ped = ps.find(p => /pediatrician/i.test(p.textContent)), urgent = ps.find(p => /911|right away/i.test(p.textContent));
+    callH.textContent = F('How to tell');
+    calls.outerHTML = `<div class="care-tell"><div class="is-ok"><b class="care-tell-k"><span class="care-tell-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#2a6078" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span>${F('Normal')}</b><p>${normal}</p></div>`
+      + `<div class="is-call"><b class="care-tell-k"><span class="care-tell-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#9b3326" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg></span>${F('Time to call')}</b><p>${ped ? ped.innerHTML.trim() : ''}</p></div></div>`
+      + (urgent ? `<p class="care-tell-911">${urgent.innerHTML}</p>` : '');
+  }
+  function normalHead(main, status) {
+    const head = main.querySelector('.dev-area-head'); if (!head) return;
+    let ctx = head.querySelector('.hub-context'); const h1 = head.querySelector('h1');
+    if (!ctx && h1) { h1.insertAdjacentHTML('beforebegin', '<p class="hub-context"></p>'); ctx = head.querySelector('.hub-context'); }
+    if (ctx) ctx.textContent = F('Is this normal?');
+    if (status && !head.querySelector('.care-verdict') && h1) h1.insertAdjacentHTML('afterend', `<p class="care-verdict is-ok">${CHECK}${F(status)}</p>`);
+  }
+  function lookDetail(main, r) {
+    const L = LOOKS[r]; if (!L || main.querySelector('.care-tell')) return;
+    normalHead(main, L.status);
+    const hs = [...main.querySelectorAll('h2.hub-h2')], first = hs[0];
+    if (L.chart) { const ch = hs.find(h => h.textContent.trim() === 'How to tell'); if (ch) ch.textContent = F('What it looks like'); }
+    else if (first) { const fig = first.nextElementSibling; first.textContent = F('What it looks like');
+      if (fig) fig.outerHTML = ringPhoto(L.n, L.at[0], L.at[1], (main.querySelector('.dev-area-head h1') || {}).textContent || '') + `<p class="care-skin-where"><b>${F('Where:')}</b> ${F(L.where)}</p>`; }
+    // Teething: "What to do" is what helps; its teether photo goes (one photo per page).
+    const todo = [...main.querySelectorAll('h2.hub-h2')].find(h => h.textContent.trim() === 'What to do');
+    if (todo && r === 'p:teething') { todo.textContent = F('What helps'); const ph = todo.nextElementSibling; if (ph && ph.classList.contains('ph-photo')) ph.remove(); }
+    tellBoxes(main, F(L.normal));
+  }
+
   function skinPage(main, id) {
     const fig = main.querySelector('.care-map'); if (!fig || main.querySelector('.care-skin')) return;
+    normalHead(main);
     const where = (fig.querySelector('.tpl-where') || {}).textContent || '', look = (fig.querySelector('.tpl-look') || {}).innerHTML || '';
     const [x, y] = ZOOM[id] || [50, 50], n = RASH[id], S = 3;
     // The frame is 16:9, so it shows 56% of the square photo's height: slide the photo so the spot is in view, then place the ring.
@@ -316,7 +399,8 @@
     const hm = r.match(/^how:(\d)/); if (hm) { routinesPage(main, +hm[1]); return; }
     if (/^look:\d$/.test(r)) { lookPage(main); return; }
     // Is this normal? pages: a real photo in place of the body outline.
-    const seq = photoSteps(main, r); if (!seq) numberSteps(main); lineIcons(main); sizeUp(main, r); addPair(main, r);
+    if (LOOKS[r]) { lineIcons(main); lookDetail(main, r); return; }
+    const seq = stepRows(main, r); if (!seq) numberSteps(main); lineIcons(main); sizeUp(main, r); addPair(main, r);
     const rm = r.match(/^rash:(\w+)/);
     if (rm && RASH[rm[1]]) { skinPage(main, rm[1]); return; }
     addPath(main, r);
@@ -324,7 +408,7 @@
     addCue(main, r);
     const hit = PAGE.find(([re]) => re.test(r)); if (!hit || main.querySelector('.care-ph')) return;
     // One prominent picture, then the strip: never the same photo twice, and the fit pair already shows the diaper.
-    if (NOHERO.has(r) || (SEQ[r] || []).includes(hit[1][1]) || (hit[1][1] === 'diaper' && main.querySelector('.care-pair'))) return;
+    if (STEP_PH[r] || NOHERO.has(r) || (SEQ[r] || []).includes(hit[1][1]) || (hit[1][1] === 'diaper' && main.querySelector('.care-pair'))) return;
     const [title, n, alt, pins, cls, into] = hit[1];
     // Most pages: the photo is the first section. A photo of what helps sits at the top of that page's own section instead.
     const own = into && [...main.querySelectorAll('h2.hub-h2')].find(h => h.textContent.trim() === into);

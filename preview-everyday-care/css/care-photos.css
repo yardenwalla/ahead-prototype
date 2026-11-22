@@ -237,3 +237,14 @@
 #main .care-skin .care-zoom { display: none }
 #main .care-skin .care-ring { width: 22% }
 #main .care-tiles .care-tiles-lead.is-last { margin: 12px 0 0 }
+
+/* ===== Nov 22 system ===== */
+/* Steps: one row per step, its photo on the left. Same on every page. */
+#main ol.care-steps { list-style: none; margin: 0 0 22px; padding: 4px 14px; background: #fffefb; border: 1px solid var(--line, #e1e5d9); border-radius: 18px }
+#main ol.care-steps li { display: grid; grid-template-columns: 76px 1fr; gap: 14px; align-items: center; padding: 10px 0 }
+#main ol.care-steps li + li { border-top: 1px solid #efece6 }
+#main .care-step-ph { display: block; width: 76px; aspect-ratio: 1; border-radius: 12px; overflow: hidden; background: #f3ece4 }
+#main .care-step-ph img { display: block; width: 100%; height: 100%; object-fit: cover }
+#main ol.care-steps b { display: flex; gap: 8px; align-items: baseline; font-size: 15.5px; line-height: 1.3; font-weight: 650; color: #2f2c35 }
+#main ol.care-steps .care-n { flex: none; width: 22px; height: 22px; border-radius: 50%; background: #e3f1f7; color: #2a6078; font-size: 12.5px; font-weight: 750; display: inline-grid; place-items: center; transform: translateY(-1px) }
+#main ol.care-steps small { display: block; margin: 3px 0 0 30px; font-size: 13.5px; line-height: 1.4; color: #6b6670 }
