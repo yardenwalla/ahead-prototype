@@ -9,7 +9,7 @@
 (function () {
   const F = s => (window.__hub ? window.__hub.F(s) : s);
   const CAT = 'Daily rhythm';
-  const src = n => `assets/care/${n}.jpg?v=1122g`;
+  const src = n => `assets/care/${n}.jpg?v=1122k`;
   const img = (n, alt) => `<img src="${src(n)}" alt="${F(alt).replace(/"/g, '&quot;')}" loading="lazy">`;
   const pin = ([label, x, y, side]) => `<span class="ph-pin ph-pin-${side}" style="left:${x}%;top:${y}%"><i></i><span>${F(label)}</span></span>`;
   const photo = (n, alt, pins, cls = '') => `<figure class="ph-photo ph-hero care-ph ${cls}">${img(n, alt)}${(pins || []).map(pin).join('')}</figure>`;
@@ -27,7 +27,7 @@
   const SEE = { 'rash:peeling': 'peeling', 'rash:newborn': 'milia', 'look:0:cord': 'cord', 'rash:acne': 'acne', 'rash:cradle': 'cradle', 'look:1:poop': 'cleandiaper',
     'rash:drool': 'drool', 'p:teething': 'soregums', 'rash:eczema': 'eczema', 'look:3:poop': 'solids', 'rash:heat': 'heat' };
   // Is this normal? pages: the photo for "What it looks like".
-  const TILE_CROP = { milia: [45, 45, 1.3], cradle: [45, 35, 1.3], heat: [50, 48, 1.2], peeling: [50, 45, 1.1], cord: [50, 48, 1.4], acne: [36, 60, 1.5], eczema: [40, 50, 1.2] };
+  const TILE_CROP = { milia: [50, 55, 1.4], cradle: [45, 32, 1.4], heat: [50, 42, 1.3], peeling: [28, 70, 1.4], cord: [50, 48, 1.4], acne: [35, 60, 1.5], eczema: [40, 47, 1.3], drool: [50, 52, 1.4] };
   const SEE_LINE = { 'rash:peeling': 'Common in the first weeks.', 'rash:newborn': 'Tiny bumps that fade on their own.', 'look:0:cord': 'A little is normal as it heals.',
     'rash:acne': 'Baby acne, gone by 4–6 months.', 'rash:cradle': 'Cradle cap, usually gone by age 1.', 'look:1:poop': 'Can be fine if feeds go well.',
     'rash:drool': 'Comes with drool. Easy to soothe.', 'p:teething': 'Teething can start around now.', 'rash:eczema': 'Often eczema. Thick cream helps.',
@@ -73,7 +73,7 @@
     // After the how-to and its safety rows, before Good to know and the video.
     // Nails: the two tools are the page's picture, so the path is the first section (like Outings' car seat page).
     const hs = [...main.querySelectorAll('h2.hub-h2')], before = hs.find(h => /^(Good to know|Watch how|When to call)$/.test(h.textContent.trim()));
-    const html = gearPath(hit[0], hit[1]);
+    const html = `<h2 class="hub-h2">${F(STEPS[hit[0]][0])}</h2>` + gearPath(hit[0], hit[1]);
     if (before) before.insertAdjacentHTML('beforebegin', html); else (main.querySelector('.hub-page') || main).insertAdjacentHTML('beforeend', html);
   }
 
@@ -87,10 +87,10 @@
   // Steps that teach a physical technique: Feeding's photo tiles (one row of small photos, numbered, notes in the card).
   // null = that step has no photo of its own; it moves to the top of the card's notes, so the row stays at 3–4.
   const SEQ = { 'p:sponge': [null, 'spface', 'spbody', 'spdry'],
-    'p:tub': [null, 'bathface', 'tubbath', null, 'hero-1'],
+    'p:tub': [null, 'bathface', 'tubbath', 'hero-1'],
     'p:brush': ['brushrice', 'brushpos', 'teeth2'],
     'h:diapers:2': ['dsetup', null, 'dtoy', 'wriggle'], 'h:diapers:3': ['dsetup', null, 'dtoy', 'dstand'], 't:diapers:3': ['dsetup', null, 'dtoy', 'dstand'],
-    'h:diapers:0': [null, 'dwipe', 'dslide', 'cord'], 'h:diapers:1': [null, 'dwipe', 'dslide', 'diaper'],
+    'h:diapers:0': [null, 'dwipe', 'dfresh', 'cord'], 'h:diapers:1': [null, 'dwipe', 'dfresh', 'diaper'],
     't:nails:0': ['nsleep', 'npress', 'nailfile'], 't:nails:1': ['nsleep', 'npress', 'nails'], 't:nails:2': ['nsleep', 'npress', 'nails'], 't:nails:3': ['nsleep', 'npress', 'nails'] };
   function photoSteps(main, r) {
     const pics = SEQ[r]; if (!pics) return false;
@@ -136,6 +136,8 @@
     const hs = [...main.querySelectorAll('h2.hub-h2')], at = hs.find(h => /^(Good to know|What’s normal)$/.test(h.textContent.trim()));
     if (at) at.insertAdjacentHTML('beforebegin', pairBlock(k));
     // the pair shows the size-up signs, so the text row saying the same goes
+    // On the clothes page, the layer count isn't a "what's normal" list.
+    if (k === 'clothes') hs.forEach(h => { if (h.textContent.trim() === 'What’s normal') h.textContent = F('How many layers'); });
     if (k === 'diapers') main.querySelectorAll('.hub-row').forEach(row => { if (/size up/i.test(row.textContent)) row.remove(); });
   }
 
@@ -154,7 +156,8 @@
   const lineIcons = main => main.querySelectorAll('.hub-dot svg[viewBox="0 0 100 100"], .hub-iconstep-art svg[viewBox="0 0 100 100"]').forEach(s => { s.outerHTML = TUB; });
 
   // Skin pages, like the inspiration: a big photo with a close-up circle, then what helps, then how to tell normal from time to call.
-  const ZOOM = { cradle: [45, 35, 'br'], acne: [36, 60, 'tl'], newborn: [45, 45, 'br'], peeling: [35, 45, 'br'], drool: [55, 60, 'tr'], eczema: [40, 48, 'br'], heat: [50, 48, 'tr'] };
+  // The spot on each square photo (x%, y%), checked on a grid. The ring sits on it; the magnified circle sits in the far corner.
+  const ZOOM = { cradle: [45, 32], acne: [35, 60], newborn: [50, 55], peeling: [28, 70], drool: [50, 52], eczema: [40, 47], heat: [50, 42] };
   function sizeUp(main, r) {
     if (!/^(h:diapers|t:diapers)/.test(r) || /size up/i.test(main.textContent) || !window.__hub) return;
     const row = window.__hub.row({ icon: 'diaper', cat: CAT, title: 'Leaks mean it’s time to size up', sub: 'So do red marks at the legs or waist, or tabs that don’t reach the middle.' });
@@ -167,12 +170,14 @@
   function skinPage(main, id) {
     const fig = main.querySelector('.care-map'); if (!fig || main.querySelector('.care-skin')) return;
     const where = (fig.querySelector('.tpl-where') || {}).textContent || '', look = (fig.querySelector('.tpl-look') || {}).innerHTML || '';
-    const [x, y, corner] = ZOOM[id] || [50, 50, 'tr'], n = RASH[id], S = 3;
-    const pos = Math.max(0, Math.min(1, (y / 100 - 0.375) / 0.25)), top = pos * 0.25, py = ((y / 100 - top) / 0.75) * 100;   // 4:3 window on a square photo
+    const [x, y] = ZOOM[id] || [50, 50], n = RASH[id], S = 3;
+    // The frame is 16:9, so it shows 56% of the square photo's height: slide the photo so the spot is in view, then place the ring.
+    const H = 9 / 16, pos = Math.max(0, Math.min(1, (y / 100 - H / 2) / (1 - H))), top = pos * (1 - H), ry = ((y / 100 - top) / H) * 100;
+    const corner = (ry < 50 ? 'b' : 't') + (x < 50 ? 'r' : 'l');
     const bp = c => ((c / 100 * S - 0.5) / (S - 1) * 100).toFixed(1) + '%';
     const name = (main.querySelector('.dev-area-head h1') || {}).textContent || '';
     fig.outerHTML = `<figure class="ph-photo ph-hero care-ph care-skin" style="--py:${(pos * 100).toFixed(0)}%">${img(n, name)}
-      <span class="care-zoom is-${corner}" style="background-image:url('${src(n)}');background-position:${bp(x)} ${bp(y)}"></span>
+      <span class="care-ring" style="left:${x}%;top:${ry.toFixed(1)}%"></span><span class="care-zoom is-${corner}" style="background-image:url('${src(n)}');background-position:${bp(x)} ${bp(y)}"></span>
 </figure>${where ? `<p class="care-skin-where"><b>${F('Where:')}</b> ${F(where)}</p>` : ''}`;
     const callH = [...main.querySelectorAll('h2.hub-h2')].find(h => h.textContent.trim() === 'When to call'), calls = main.querySelector('.care-calls');
     if (!callH || !calls) return;
@@ -272,7 +277,7 @@
     const page = main.querySelector('.hub-page') || main, head = main.querySelector('.monthly-page-header');
     const keep = head ? head.outerHTML : '';
     const list = (v === 0 ? [ROUTINE_CORD, ...ROUTINES] : ROUTINES).map(([t, l, n, rs]) => `<button class="care-news-card" onclick="openPage('chg:${CAT}:d:${rs[Math.min(v, rs.length - 1)]}')">${img(n, '')}<span><b>${F(t)}</b><small>${F(l)}</small></span><i aria-hidden="true">›</i></button>`).join('');
-    page.innerHTML = keep + `<div class="dev-area-head ss-head" style="--area:#e3f1f7;--area-ink:#2a6078"><p class="hub-context">${F('Care routines')}</p><h1>${F('The basics, for {o} now')}</h1><p class="hub-lead">${F('Each one opens the version for {p} age.')}</p></div><div class="care-news care-routines">${list}</div>`;
+    page.innerHTML = keep + `<div class="dev-area-head ss-head" style="--area:#e3f1f7;--area-ink:#2a6078"><p class="hub-context">${F('Care routines')}</p><h1>${F('The basics, for {o} now')}</h1><p class="hub-lead">${F('Tap one to see how it’s done at {p} age.')}</p></div><div class="care-news care-routines">${list}</div>`;
   }
 
   function dressHome(main) {
