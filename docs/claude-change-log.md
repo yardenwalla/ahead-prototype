@@ -2,6 +2,12 @@
 
 The original changes below were merged in pull request #1. The new pre-beta QA changes are documented in **`docs/beta-readiness-2026-10-22.md`**, with concrete findings, resulting behavior, verification and limits. Review the new PR diff against main rather than reimplementing either list from an older HTML export. Claude's main-branch copy updates through `6b02109a4fba5bdf8829db29f59c14057537ec85` are preserved.
 
+## Timeline baby grows up (2026-11-22)
+
+- **Dragger baby (`assets/home/babies/handle-0..11.webp`):** the clay baby is replaced by one sage-onesie baby with a new pose every month, each matching that month's Home moment: swaddled, kicking at a star, wiggling, tummy time, hugging a bunny, holding her feet, sitting with a spoon, dropping a bowl, peekaboo, crawling to the stacker, pulling up, and a big party hat at 11 months.
+- **`js/year-ahead.js`:** the pose index rounds up when the age is just under a whole month (`Math.floor(x + 0.15)`), so preview ages like 8.97 months show the 9-month pose and every month gets its own.
+- Art pipeline and media ids are in the project doc "home-baby-art".
+
 ## Onboarding restyle and welcome copy (Nov 5, 2026)
 
 Merged from the onboarding-v1 preview (`js/welcome.js`, `css/welcome.css`).
