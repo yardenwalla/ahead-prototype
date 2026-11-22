@@ -9,7 +9,7 @@
 (function () {
   const F = s => (window.__hub ? window.__hub.F(s) : s);
   const CAT = 'Daily rhythm';
-  const src = n => `assets/care/${n}.jpg?v=1121d`;
+  const src = n => `assets/care/${n}.jpg?v=1121f`;
   const img = (n, alt) => `<img src="${src(n)}" alt="${F(alt).replace(/"/g, '&quot;')}" loading="lazy">`;
   const pin = ([label, x, y, side]) => `<span class="ph-pin ph-pin-${side}" style="left:${x}%;top:${y}%"><i></i><span>${F(label)}</span></span>`;
   const photo = (n, alt, pins, cls = '') => `<figure class="ph-photo ph-hero care-ph ${cls}">${img(n, alt)}${(pins || []).map(pin).join('')}</figure>`;
@@ -61,7 +61,8 @@
       'Either is fine at any age. A file can’t nick the skin.']
   };
   // Only where the path's photos aren't already on the page (no photo twice on one page).
-  const STEP_ON = { 't:bath:1': ['bath', 0], 't:bath:2': ['bath', 1] };
+  const STEP_ON = { 't:bath:1': ['bath', 0] };
+  const NOHERO = new Set(['p:sponge']); // the strip already shows the setup
   // Compact cues in place of a path, where the page's own photos already show the gear.
   const CUE = { 't:bath:3': ['Not sitting steadily yet?', 'Keep using the baby tub. It can sit inside the big one.'],
     't:nails': ['File or clippers?', 'A soft file in the first weeks, baby clippers once you’re ready. Either is fine at any age. A file can’t nick the skin.'] };
@@ -94,10 +95,9 @@
   // A swipeable strip, one photo per step that teaches something. null = no photo of its own: the line joins the card
   // before it (or leads the strip, if first), so each frame shows something distinct.
   const SEQ = { 'p:sponge': [null, 'spface', 'spbody', 'spdry'],
-    'p:tub': ['tub', 'bathface', null, 'bathhair', 'hero-1'],
-    'h:diapers:0': ['hero-0', 'dwipe', 'dslide', 'cord'], 'h:diapers:1': ['hero-0', 'dwipe', 'dslide', 'diaper'],
+    // Budget: about 3 photos a page. Diaper pages keep the fit comparison and the setup photo; their steps stay text.
+    'p:tub': [null, 'bathface', null, null, 'hero-1'],
     'p:brush': ['brushrice', 'brushpos', 'teeth2'],
-    'h:diapers:2': ['dsetup', null, 'dtoy', null], 't:diapers:3': ['dsetup', null, 'dtoy', 'dstand'],
     't:nails:0': ['nsleep', 'npress', 'nailfile'], 't:nails:1': ['nsleep', 'npress', 'nails'], 't:nails:2': ['nsleep', 'npress', 'nails'], 't:nails:3': ['nsleep', 'npress', 'nails'] };
   const SEQ_TITLE = { 'p:sponge': 'How to give a sponge bath', 't:nails': 'How to trim', 'p:tub': 'How to give a tub bath', 'p:brush': 'How to brush', 'h:diapers:0': 'How to change a diaper', 'h:diapers:1': 'How to change a diaper', 'h:diapers:2': 'How to change a wriggler', 't:diapers:3': 'How to change a wriggler' };
   function photoSteps(main, r) {
@@ -310,7 +310,7 @@
     addCue(main, r);
     const hit = PAGE.find(([re]) => re.test(r)); if (!hit || main.querySelector('.care-ph')) return;
     // One prominent picture, then the strip: never the same photo twice, and the fit pair already shows the diaper.
-    if ((SEQ[r] || []).includes(hit[1][1]) || (hit[1][1] === 'diaper' && main.querySelector('.care-pair'))) return;
+    if (NOHERO.has(r) || (SEQ[r] || []).includes(hit[1][1]) || (hit[1][1] === 'diaper' && main.querySelector('.care-pair'))) return;
     const [title, n, alt, pins, cls, into] = hit[1];
     // Most pages: the photo is the first section. A photo of what helps sits at the top of that page's own section instead.
     const own = into && [...main.querySelectorAll('h2.hub-h2')].find(h => h.textContent.trim() === into);
