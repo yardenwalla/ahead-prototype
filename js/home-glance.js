@@ -17,7 +17,7 @@
     solids: 'First foods could start any week', twonaps: 'Three naps are becoming two', crawl: 'Crawling could start any week',
     sit: 'Sitting on {p} own is close', tooth: 'A first tooth could come any week', finger: 'Time for lumpier food and finger foods',
     meals: 'Meals are becoming three a day', carseat: '{P} infant car seat is getting small', sep: 'Goodbyes are about to get harder',
-    pull: 'Pulling up to stand could start any week', words: 'First words are coming', milk: 'Whole milk starts at 12 months', steps: 'First steps could come any week'
+    pull: 'Pulling up to stand could start any week', words: 'First words are coming', milk: 'Whole cow’s milk can start at 12 months', steps: 'First steps could come any week'
   };
   // Changes you live through get "What helps"; changes you can get ahead of get "Before it starts".
   const HELPS = ['crying', 'regress', 'sep', 'tooth', 'nights', 'smile', 'twonaps'];
@@ -287,7 +287,7 @@
     8: [['Finger foods are next.', 'What’s safe to offer, and how to cut it.', 'Feeding', 'avocado', 'chg:Feeding:d:finger']],
     9: [CHK(9)],
     10: [['She can eat what you eat.', 'Mostly. Take out her portion before you add salt.', 'Feeding', 'plate', 'chg:Feeding:d:family']],
-    11: [['Whole milk, at one.', 'How to switch, and how much she needs.', 'Feeding', 'bottle', 'chg:Feeding:d:milk12'], CHK(12)]
+    11: [['Whole cow’s milk, at 12 months.', 'How to start it, and how much {s} needs.', 'Feeding', 'bottle', 'chg:Feeding:d:milk12'], CHK(12)]
   };
 
   function monthCard(M, lead, a, next) {
@@ -475,7 +475,7 @@
     try {
       const ya = window.__ya, a = ya.ageNow(), done = ya.doneNow();
       // Skip a change in its last month that the parent hasn't marked: "Sitting up, any time now" at 9 months reads as a bug.
-      const ahead = ya.C.filter(c => c.end > a && !done[c.id] && !(a > c.start && a >= c.end - 1)).sort((x, y) => x.start - y.start || x.end - y.end);
+      const ahead = ya.C.filter(c => c.end > a && !done[c.id] && !(a > c.start && a >= c.end - 1) && !(c.id === 'tooth' && a >= 8)).sort((x, y) => x.start - y.start || x.end - y.end);
       const n = ahead[0];  // the same first row the Timeline shows under "Maya now"
       if (n) next = `Next up: ${F(n.title)}, ${F(ya.whenShort(n, a))}`;
     } catch (e) {}

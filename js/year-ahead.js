@@ -132,7 +132,7 @@
     // Timeline keeps big moments and changes to prepare for; feeding steps (readiness, textures, meals) live in Feeding.
     const CC = C.filter(c => !['ready', 'finger', 'meals'].includes(c.id)).map(c => shiftFor(c.cat) ? Object.assign({}, c, { start: c.start - shiftFor(c.cat), end: c.end - shiftFor(c.cat) }) : c);
     const attended = v => { try { const r = healthRecord(v); return r && r.status === 'attended'; } catch (e) { return false; } };
-    const nextId = (CC.filter(c => !(c.end <= a || done[c.id])).sort((x, y) => x.start - y.start || x.end - y.end)[0] || {}).id;
+    const nextId = (CC.filter(c => !(c.end <= a || done[c.id] || (c.id === 'tooth' && a >= 8))).sort((x, y) => x.start - y.start || x.end - y.end)[0] || {}).id;
     const here = Math.max(0, ROAD.findIndex(r => a >= r[0] && a < r[1]));
     const born = parse(profile.early && profile.due ? profile.due : profile.dob);
     const mon = m => { const d = new Date(born); d.setMonth(d.getMonth() + m); return d.toLocaleDateString('en-US', { month: 'short' }); };
@@ -237,7 +237,7 @@
     const ends = x => { const t = isToday(x), left = Math.max(0, 12 - x), eta = left < 0.5 ? 'any day now' : left < 1.5 ? 'in about a month' : `in about ${Math.round(left)} months`, d = Math.round(Math.abs(x - a));
       return t ? `<b>${F(`${nm} is ${typeof babyAge === 'function' ? babyAge() : ''}`)}</b><span>${F(x >= 12 ? 'Happy first birthday!' : left < 0.5 ? 'Cake any day now!' : `${Math.max(1, Math.round(left))} month${Math.max(1, Math.round(left)) === 1 ? '' : 's'} until cake`)}</span>` : `<b>${F(`At ${ageTxt(x)}`)}</b><button class="tl-home" onclick="tlScrub(null)">${F('Back to today')}</button>`; };
     const theme = x => typeof window.monthTheme === 'function' ? window.monthTheme(Math.max(0, Math.min(11, Math.floor(x)))) : '';
-    const art = x => `<img class="tl-hb" src="assets/home/babies/handle-${Math.max(0, Math.min(11, Math.floor(x)))}.webp" alt="">`;
+    const art = x => `<img class="tl-hb" src="assets/home/babies/handle-${Math.max(0, Math.min(11, Math.floor(x)))}.webp?v=1122a" alt="">`;
     window.__tl = { a, listHTML, head, ends, theme, art };
     const hinted = (() => { try { return !!localStorage.getItem('ahead-tl-dragged'); } catch (e) { return true; } })();
     const pct = Math.max(0, Math.min(100, a / 12 * 100));
