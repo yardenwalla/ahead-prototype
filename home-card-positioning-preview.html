@@ -115,7 +115,7 @@
     document.querySelectorAll('.cell').forEach((item, i) => { if (i === n) item.classList.add('is-selected'); });
   } else {
     const select = document.getElementById('monthPick');
-    select.value = '5';
+    select.value = '0';
     const show = () => {
       const n = select.value;
       document.getElementById('oldFrame').src = location.pathname + '?frame=before&month=' + n;
