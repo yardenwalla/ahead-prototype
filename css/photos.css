@@ -349,3 +349,15 @@
 #main .care-keysteps .care-steptx { color: #2b2732; font-weight: 500 }
 #main .care-stepph { width: 100px; height: 100px }
 #main .care-keysteps ol.no-num li::before { display: none }
+/* Nov 22: show-me how-tos: one big labeled teaching photo, a caption, then short steps */
+#main .care-show { padding: 0; overflow: hidden }
+#main .care-show-photo { position: relative; margin: 0; aspect-ratio: 4 / 3 }
+#main .care-show-photo > img { display: block; width: 100%; height: 100%; object-fit: cover }
+#main .care-show-photo .sf-pin { position: absolute; display: flex; align-items: center; gap: 6px; transform: translate(-50%, -50%) }
+#main .care-show-photo .sf-pin-r { transform: translate(-7px, -50%) }
+#main .care-show-photo .sf-pin-l { flex-direction: row-reverse; transform: translate(calc(-100% + 7px), -50%) }
+#main .care-show-photo .sf-pin-b { flex-direction: column; transform: translate(-50%, -7px) }
+#main .care-show-photo .sf-pin > span { color: #2b2732 }
+#main .care-show-cap { margin: 0; padding: 13px 16px 14px; font-size: 14.5px; line-height: 1.45; color: #4a4550 }
+#main .care-show-cap b { color: #2b2732; font-weight: 650 }
+#main .care-show-cap.is-note { border-top: 1px solid #0000000f; padding-top: 12px }
