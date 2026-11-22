@@ -110,9 +110,9 @@
 }
 
 
-/* Month 8 — keep the left placement and scale; lower the full scene so both sleeves emerge naturally from the bottom. */
+/* Month 8 — restore a larger, fuller peekaboo illustration; keep it left and have sleeves emerge from the bottom. */
 #main .ms-card .ms-babyimg img[src*="baby-8.webp"]{
-  right:26px!important;bottom:-3px!important;transform:translateY(22px) scale(.92)!important;
+  right:26px!important;bottom:-3px!important;transform:translateY(22px) scale(1.07)!important;
 }
 /* Months 3, 4, 6, 7 — keep the original main-branch card composition, not just image size. */
 #main .ms-card .ms-babyimg img:is([src*="baby-3.webp"],[src*="baby-4.webp"],[src*="baby-6.webp"],[src*="baby-7.webp"]){
