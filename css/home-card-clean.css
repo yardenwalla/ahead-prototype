@@ -82,89 +82,60 @@
   transform:translateY(-3px) scale(1.10)!important;
   transform-origin:right bottom!important;
 }
-/* Home-story artwork edge crops.
-   Let limbs enter from the same edge as the implied scene rather than floating
-   inside the card. Each image keeps its own crop and the card masks overflow.
-   No image, copy, CTA, or other component changes. */
-#main .ms-card .ms-babyimg img{
-  transform-origin:right bottom!important;
-}
-/* Newborn: swaddle and tiny feet are a self-contained scene. Keep the bundle intact. */
+/* Individually reviewed Home-month compositions.
+   Source: the twelve current art assets, not a shared "crop every limb" rule.
+   Zoom is restrained so the actual action (toy, face-free gesture, motion) stays
+   visible; an edge crop is used only when the pose makes sense there. */
+#main .ms-card .ms-babyimg img{transform-origin:right bottom!important}
+/* Newborn — preserve the full feet-and-blanket bundle. */
 #main .ms-card .ms-babyimg img[src*="baby-0.webp"]{
-  right:-3px!important;
-  bottom:-1px!important;
-  transform:translateY(-8px) scale(1.13)!important;
+  right:0!important;bottom:0!important;transform:translateY(-2px) scale(1.04)!important;
 }
-/* Month 1: the two kicking legs grow out of the bottom edge. */
+/* Month 1 — two feet come up from the bottom; keep the whole mobile. */
 #main .ms-card .ms-babyimg img[src*="baby-1.webp"]{
-  right:-5px!important;
-  bottom:-34px!important;
-  transform:scale(1.13)!important;
+  right:-3px!important;bottom:-6px!important;transform:scale(1.04)!important;
 }
-/* Month 2: baby's sleeve enters from the right; keep the fingertip meeting visible. */
+/* Month 2 — touching fingertips must remain fully visible; sleeve comes from the right already. */
 #main .ms-card .ms-babyimg img[src*="baby-2.webp"]{
-  right:-25px!important;
-  bottom:-2px!important;
-  transform:translateY(-5px) scale(1.20)!important;
+  right:0!important;bottom:0!important;transform:none!important;
 }
-/* Month 3: both reaching arms grow out of the bottom. */
+/* Month 3 — both hands and the play arch need to read as one scene. */
 #main .ms-card .ms-babyimg img[src*="baby-3.webp"]{
-  right:-5px!important;
-  bottom:-33px!important;
-  transform:scale(1.18)!important;
+  right:0!important;bottom:-4px!important;transform:scale(1.03)!important;
 }
-/* Month 4: the reaching arm enters from the right. */
+/* Month 4 — bunny stays separated from the reaching hand; sleeve enters from right. */
 #main .ms-card .ms-babyimg img[src*="baby-4.webp"]{
-  right:-25px!important;
-  bottom:-4px!important;
-  transform:translateY(-5px) scale(1.20)!important;
+  right:-6px!important;bottom:0!important;transform:scale(1.05)!important;
 }
-/* Month 5: the kicking legs extend off the right edge (not a floating cutout). */
+/* Month 5 — deliberate right-edge leg crop, with both feet and ball still readable. */
 #main .ms-card .ms-babyimg img[src*="baby-5.webp"]{
-  right:-30px!important;
-  bottom:-6px!important;
-  transform:translateY(-7px) scale(1.24)!important;
+  right:-17px!important;bottom:-3px!important;transform:translateY(-4px) scale(1.16)!important;
 }
-/* Month 6: the exploring arm enters from beyond the right edge. */
+/* Month 6 — preserve the hand-and-bowl interaction; don't push the food away. */
 #main .ms-card .ms-babyimg img[src*="baby-6.webp"]{
-  right:-27px!important;
-  bottom:-6px!important;
-  transform:translateY(-5px) scale(1.20)!important;
+  right:-4px!important;bottom:0!important;transform:scale(1.03)!important;
 }
-/* Month 7: the reaching hand and high-chair edge remain connected to the right. */
+/* Month 7 — the falling bowl, spoon, reaching hand, and chair must all be visible. */
 #main .ms-card .ms-babyimg img[src*="baby-7.webp"]{
-  right:-24px!important;
-  bottom:-5px!important;
-  transform:translateY(-5px) scale(1.18)!important;
+  right:-4px!important;bottom:0!important;transform:scale(1.02)!important;
 }
-/* Month 8: peekaboo arms emerge from below, bunny stays in the frame. */
+/* Month 8 — hide only the lower sleeves at the bottom; keep the peekaboo bunny. */
 #main .ms-card .ms-babyimg img[src*="baby-8.webp"]{
-  right:-7px!important;
-  bottom:-34px!important;
-  transform:scale(1.18)!important;
+  right:-2px!important;bottom:-6px!important;transform:scale(1.05)!important;
 }
-/* Month 9: ring-stacking arm enters naturally from the right. */
+/* Month 9 — let the stacking arm enter from the right but keep the loose rings. */
 #main .ms-card .ms-babyimg img[src*="baby-9.webp"]{
-  right:-27px!important;
-  bottom:-5px!important;
-  transform:translateY(-6px) scale(1.20)!important;
+  right:-5px!important;bottom:0!important;transform:scale(1.03)!important;
 }
-/* Month 10: crop the supporting body against the right and the feet at the base. */
+/* Month 10 — preserve the full pulling-up action, furniture, and planted feet. */
 #main .ms-card .ms-babyimg img[src*="baby-10.webp"]{
-  right:-22px!important;
-  bottom:-26px!important;
-  transform:translateY(-15px) scale(1.28)!important;
+  right:-2px!important;bottom:0!important;transform:none!important;
 }
-/* Month 11: the clapping forearms come from beneath the card. */
+/* Month 11 — both hands and confetti visible; only wrists meet the lower edge. */
 #main .ms-card .ms-babyimg img[src*="baby-11.webp"]{
-  right:-9px!important;
-  bottom:-36px!important;
-  transform:scale(1.19)!important;
+  right:-2px!important;bottom:-5px!important;transform:scale(1.04)!important;
 }
 @media(max-width:355px){
-  #main .ms-card .ms-art{
-    right:-8px!important;
-    width:calc(100% - 144px)!important;
-  }
+  #main .ms-card .ms-art{right:-8px!important;width:calc(100% - 144px)!important}
   #main .ms-card .ms-copy{width:194px!important}
 }
