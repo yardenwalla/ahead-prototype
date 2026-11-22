@@ -213,3 +213,11 @@
 #main .care-psteq-lead b::before { content: none }
 #main .care-psteq-lead b { display: block; font-size: 14.5px } #main .care-psteq-lead small { display: block; font-size: 13px }
 #main .care-psteq-lead .care-n { flex: none; width: 24px; height: 24px; border-radius: 50%; background: #e3f1f7; color: #2a6078; font-weight: 750; font-size: 13px; display: grid; place-items: center }
+
+/* Nov 22: Everyday care uses the shared components. Progressions = Outings' timeline; the current row is marked. */
+#main .care-timeline { margin-bottom: 22px }
+#main .care-timeline li.is-on time { color: var(--ink); font-weight: 700 }
+#main .care-timeline li:not(.is-on) { opacity: .62 }
+#main .care-timeline li.is-on time::after { content: "Now"; display: block; width: max-content; margin-top: 4px; padding: 1px 7px; border-radius: 99px; background: var(--bg); color: var(--ink); font-size: 11px; font-weight: 700 }
+/* Photo steps = Feeding's photo tiles (one row, small, numbered). */
+#main .care-tiles .ph-tile { aspect-ratio: 1 }

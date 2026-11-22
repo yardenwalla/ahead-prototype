@@ -9,7 +9,7 @@
 (function () {
   const F = s => (window.__hub ? window.__hub.F(s) : s);
   const CAT = 'Daily rhythm';
-  const src = n => `assets/care/${n}.jpg?v=1121f`;
+  const src = n => `assets/care/${n}.jpg?v=1122b`;
   const img = (n, alt) => `<img src="${src(n)}" alt="${F(alt).replace(/"/g, '&quot;')}" loading="lazy">`;
   const pin = ([label, x, y, side]) => `<span class="ph-pin ph-pin-${side}" style="left:${x}%;top:${y}%"><i></i><span>${F(label)}</span></span>`;
   const photo = (n, alt, pins, cls = '') => `<figure class="ph-photo ph-hero care-ph ${cls}">${img(n, alt)}${(pins || []).map(pin).join('')}</figure>`;
@@ -53,33 +53,25 @@
 
   // How it changes: the gear as a path, the same block as Outings' "Which seat, and when". Each step is named by the cue
   // to move on, not an age, and the step this page is about is outlined.
+  // How it changes: the same text timeline as Outings' "Which seat, and when" (icons, no photos), current row marked.
   const STEPS = {
-    bath: ['Which tub, and when', [['tubbath', 'A baby tub with a newborn sling', 'Cord healed', 'Baby tub, with the sling'],
-      ['tubinbig', 'A baby tub set inside the big tub', 'Too big, can’t sit yet', 'Baby tub in the big tub'], ['bigtub', 'The big tub with shallow water', 'Sits steadily', 'The big tub']],
-      'Move on by what {s} can do, not the age on the box.'],
-    nails: ['File, then clippers', [['nailfile', 'Filing a newborn’s nails with a soft emery board', 'First weeks', 'A soft file, maybe twice a week'], ['nails', 'Trimming nails with small baby clippers', 'Once you’re ready', 'Baby clippers, about once a week']],
-      'Either is fine at any age. A file can’t nick the skin.']
+    bath: ['Which tub, and when', [['Cord healed', 'bath', 'A baby tub, with the newborn sling.'], ['Too big, can’t sit yet', 'bath', 'The baby tub, set inside the big tub.'], ['Sits steadily', 'sit', 'The big tub, often around 6–8 months. A non-slip mat and shallow water.']]],
+    nails: ['File, then clippers', [['First weeks', 'hand', 'A soft file, maybe twice a week. It can’t nick the skin.'], ['Once you’re ready', 'hand', 'Baby clippers, about once a week. Either is fine at any age.']]]
   };
-  // Only where the path's photos aren't already on the page (no photo twice on one page).
-  const STEP_ON = { 't:bath:1': ['bath', 0] };
-  const NOHERO = new Set(['p:sponge']); // the strip already shows the setup
-  // Compact cues in place of a path, where the page's own photos already show the gear.
-  const CUE = { 't:bath:3': ['Not sitting steadily yet?', 'Keep using the baby tub. It can sit inside the big one.'],
-    't:nails': ['File or clippers?', 'A soft file in the first weeks, baby clippers once you’re ready. Either is fine at any age. A file can’t nick the skin.'] };
-  const cueFor = r => CUE[r] || CUE[r.replace(/:\d$/, '')];
-  const gearPath = (k, on) => { const [title, items, note] = STEPS[k];
-    return `<h2 class="hub-h2">${F(title)}</h2><div class="care-psteps" style="--n:${items.length}">${items.map(([n, alt, when, line], i) => `<figure class="${i === on ? 'is-on' : ''}">${img(n, alt)}<figcaption><b>${F(when)}</b><small>${F(line)}</small></figcaption></figure>`).join('')}</div><p class="care-psteps-note">${F(note)}</p>`; };
+  const STEP_ON = { 't:bath:1': ['bath', 0], 't:bath:2': ['bath', 1], 't:bath:3': ['bath', 2], 't:nails:0': ['nails', 0], 't:nails:1': ['nails', 1], 't:nails:2': ['nails', 1], 't:nails:3': ['nails', 1] };
+  const NOHERO = new Set(['p:sponge', 'p:tub']); // their step photos already show it
+  const gearPath = (k, on) => { const [title, items] = STEPS[k], c = (window.YEAR_PALETTES || {})['Daily rhythm'] || { ink: '#2a6078', bg: '#cfe9f4', pale: '#ecf6fa' };
+    return `<figure class="hub-figure hub-daymarks oa-timeline care-timeline" style="--ink:${c.ink};--bg:${c.bg};--pale:${c.pale}"><b class="hub-fig-title">${F(title)}</b><ol class="hub-daymarks-list">${items.map(([when, icon, text], i) => `<li class="${i === on ? 'is-on' : ''}"><i>${window.hubArt ? hubArt(icon, 'Daily rhythm') : ''}</i><time>${F(when)}</time><span>${F(text)}</span></li>`).join('')}</ol></figure>`; };
   function addCue(main, r) {
-    const c = cueFor(r); if (!c || main.querySelector('.care-cue')) return;
+    return;
     const at = main.querySelector('.care-psteq-notes') || main.querySelector('.care-psteq');
     const html = `<p class="care-cue"><b>${F(c[0])}</b> ${F(c[1])}</p>`;
     if (at) at.insertAdjacentHTML('afterend', html); else { const hd = main.querySelector('.dev-area-head'); if (hd) hd.insertAdjacentHTML('afterend', html); }
   }
   function addPath(main, r) {
-    const hit = STEP_ON[r]; if (!hit || main.querySelector('.care-psteps')) return;
+    const hit = STEP_ON[r]; if (!hit || main.querySelector('.care-timeline')) return;
     // After the how-to and its safety rows, before Good to know and the video.
     // Nails: the two tools are the page's picture, so the path is the first section (like Outings' car seat page).
-    if (hit[0] === 'nails') { const head = main.querySelector('.dev-area-head'); if (head) { head.insertAdjacentHTML('afterend', gearPath(hit[0], hit[1])); return; } }
     const hs = [...main.querySelectorAll('h2.hub-h2')], before = hs.find(h => /^(Good to know|Watch how|When to call)$/.test(h.textContent.trim()));
     const html = gearPath(hit[0], hit[1]);
     if (before) before.insertAdjacentHTML('beforebegin', html); else (main.querySelector('.hub-page') || main).insertAdjacentHTML('beforeend', html);
@@ -92,29 +84,26 @@
   const needBlock = items => `<h2 class="hub-h2">${F('What you need')}</h2><div class="care-need">${items.map(([n, l]) => `<figure>${img(n, l)}<figcaption>${F(l)}</figcaption></figure>`).join('')}</div>`;
 
   // Steps are a real sequence, so they read as numbered rows (no pictures), the same on every page.
-  // A swipeable strip, one photo per step that teaches something. null = no photo of its own: the line joins the card
-  // before it (or leads the strip, if first), so each frame shows something distinct.
+  // Steps that teach a physical technique: Feeding's photo tiles (one row of small photos, numbered, notes in the card).
+  // null = that step has no photo of its own; it moves to the top of the card's notes, so the row stays at 3–4.
   const SEQ = { 'p:sponge': [null, 'spface', 'spbody', 'spdry'],
-    // Budget: about 3 photos a page. Diaper pages keep the fit comparison and the setup photo; their steps stay text.
-    'p:tub': [null, 'bathface', null, null, 'hero-1'],
+    'p:tub': [null, 'bathface', 'tubbath', null, 'hero-1'],
     'p:brush': ['brushrice', 'brushpos', 'teeth2'],
+    'h:diapers:0': [null, 'dwipe', 'dslide', 'cord'], 'h:diapers:1': [null, 'dwipe', 'dslide', 'diaper'],
     't:nails:0': ['nsleep', 'npress', 'nailfile'], 't:nails:1': ['nsleep', 'npress', 'nails'], 't:nails:2': ['nsleep', 'npress', 'nails'], 't:nails:3': ['nsleep', 'npress', 'nails'] };
-  const SEQ_TITLE = { 'p:sponge': 'How to give a sponge bath', 't:nails': 'How to trim', 'p:tub': 'How to give a tub bath', 'p:brush': 'How to brush', 'h:diapers:0': 'How to change a diaper', 'h:diapers:1': 'How to change a diaper', 'h:diapers:2': 'How to change a wriggler', 't:diapers:3': 'How to change a wriggler' };
   function photoSteps(main, r) {
     const pics = SEQ[r]; if (!pics) return false;
     const h = [...main.querySelectorAll('h2.hub-h2')].find(x => x.textContent.trim() === 'Steps'); const fig = h && h.nextElementSibling;
-    const steps = fig ? [...fig.querySelectorAll('.hub-iconstep')] : []; if (steps.length !== pics.length) return false;
-    const notes = fig.querySelector('.tpl-notes');
-    let lead = '', cards = [];
-    steps.forEach((st, i) => { const b = st.querySelector('b').cloneNode(true); b.querySelectorAll('em').forEach(e => e.remove()); const sm = st.querySelector('small');
-      // Each line keeps its own step number, even when two steps share one photo.
-      const line = `<div class="care-pl"><span class="care-n">${i + 1}</span><div><b>${b.innerHTML}</b>${sm ? `<small>${sm.innerHTML}</small>` : ''}</div></div>`;
-      if (!pics[i] && !cards.length) { lead += `<div class="care-psteq-lead">${line}</div>`; return; }
-      if (!pics[i]) { cards[cards.length - 1].lines.push(line); return; }
-      cards.push({ n: pics[i], alt: b.textContent, lines: [line] }); });
-    const html = cards.map((c, i) => `<figure class="care-pstep">${img(c.n, c.alt)}<figcaption>${c.lines.join('')}</figcaption></figure>`).join('');
-    h.textContent = F(SEQ_TITLE[r] || SEQ_TITLE[r.replace(/:\d$/, '')] || 'Steps');
-    fig.outerHTML = `${lead}<div class="care-psteq" style="--n:${cards.length}">${html}</div>${notes ? `<ul class="tpl-notes care-psteq-notes">${notes.innerHTML}</ul>` : ''}`;
+    if (!fig) return false; if (fig.classList.contains('ph-tiles')) return true;
+    const steps = [...fig.querySelectorAll('.hub-iconstep')]; if (steps.length !== pics.length) return false;
+    let notes = fig.querySelector('.tpl-notes'); const moved = [];
+    steps.forEach((st, i) => { const art = st.querySelector('.hub-iconstep-art');
+      if (!pics[i]) { const b = st.querySelector('b').cloneNode(true); b.querySelectorAll('em').forEach(e => e.remove()); const sm = st.querySelector('small');
+        moved.push(`<li><b style="color:#302d3c">${b.innerHTML}.</b> ${sm ? sm.innerHTML : ''}${sm && /[.?!]$/.test(sm.textContent.trim()) ? '' : '.'}</li>`); st.remove(); return; }
+      if (art) art.outerHTML = `<span class="ph-tile">${img(pics[i], st.querySelector('b').textContent)}</span>`; });
+    fig.querySelectorAll('.hub-iconstep b em').forEach((e, i) => { e.textContent = i + 1; });
+    const n = pics.filter(Boolean).length; fig.className = fig.className.replace(/\bis-\d\b/, 'is-' + n) + ' ph-tiles care-tiles';
+    if (moved.length) { if (!notes) { notes = document.createElement('ul'); notes.className = 'tpl-notes'; fig.appendChild(notes); } notes.insertAdjacentHTML('afterbegin', moved.join('')); }
     return true;
   }
 
@@ -306,7 +295,7 @@
     const rm = r.match(/^rash:(\w+)/);
     if (rm && RASH[rm[1]]) { skinPage(main, rm[1]); return; }
     addPath(main, r);
-    if (main.querySelector('.care-psteps')) main.querySelectorAll('.tpl-notes li').forEach(li => { if (/big tub comes once/i.test(li.textContent)) li.remove(); });
+    if (main.querySelector('.care-timeline')) main.querySelectorAll('.tpl-notes li').forEach(li => { if (/big tub comes once/i.test(li.textContent)) li.remove(); });
     addCue(main, r);
     const hit = PAGE.find(([re]) => re.test(r)); if (!hit || main.querySelector('.care-ph')) return;
     // One prominent picture, then the strip: never the same photo twice, and the fit pair already shows the diaper.
