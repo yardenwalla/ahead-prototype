@@ -9,7 +9,7 @@
 (function () {
   const F = s => (window.__hub ? window.__hub.F(s) : s);
   const CAT = 'Daily rhythm';
-  const src = n => `assets/care/${n}.jpg?v=1122b`;
+  const src = n => `assets/care/${n}.jpg?v=1122e`;
   const img = (n, alt) => `<img src="${src(n)}" alt="${F(alt).replace(/"/g, '&quot;')}" loading="lazy">`;
   const pin = ([label, x, y, side]) => `<span class="ph-pin ph-pin-${side}" style="left:${x}%;top:${y}%"><i></i><span>${F(label)}</span></span>`;
   const photo = (n, alt, pins, cls = '') => `<figure class="ph-photo ph-hero care-ph ${cls}">${img(n, alt)}${(pins || []).map(pin).join('')}</figure>`;
@@ -59,7 +59,7 @@
     nails: ['File, then clippers', [['First weeks', 'hand', 'A soft file, maybe twice a week. It can’t nick the skin.'], ['Once you’re ready', 'hand', 'Baby clippers, about once a week. Either is fine at any age.']]]
   };
   const STEP_ON = { 't:bath:1': ['bath', 0], 't:bath:2': ['bath', 1], 't:bath:3': ['bath', 2], 't:nails:0': ['nails', 0], 't:nails:1': ['nails', 1], 't:nails:2': ['nails', 1], 't:nails:3': ['nails', 1] };
-  const NOHERO = new Set(['p:sponge', 'p:tub']); // their step photos already show it
+  const NOHERO = new Set(['p:sponge', 'p:tub', 'h:diapers:2', 'h:diapers:3', 't:diapers:3']); // their step photos already show it
   const gearPath = (k, on) => { const [title, items] = STEPS[k], c = (window.YEAR_PALETTES || {})['Daily rhythm'] || { ink: '#2a6078', bg: '#cfe9f4', pale: '#ecf6fa' };
     return `<figure class="hub-figure hub-daymarks oa-timeline care-timeline" style="--ink:${c.ink};--bg:${c.bg};--pale:${c.pale}"><b class="hub-fig-title">${F(title)}</b><ol class="hub-daymarks-list">${items.map(([when, icon, text], i) => `<li class="${i === on ? 'is-on' : ''}"><i>${window.hubArt ? hubArt(icon, 'Daily rhythm') : ''}</i><time>${F(when)}</time><span>${F(text)}</span></li>`).join('')}</ol></figure>`; };
   function addCue(main, r) {
@@ -89,6 +89,7 @@
   const SEQ = { 'p:sponge': [null, 'spface', 'spbody', 'spdry'],
     'p:tub': [null, 'bathface', 'tubbath', null, 'hero-1'],
     'p:brush': ['brushrice', 'brushpos', 'teeth2'],
+    'h:diapers:2': ['dsetup', null, 'dtoy', 'wriggle'], 'h:diapers:3': ['dsetup', null, 'dtoy', 'dstand'], 't:diapers:3': ['dsetup', null, 'dtoy', 'dstand'],
     'h:diapers:0': [null, 'dwipe', 'dslide', 'cord'], 'h:diapers:1': [null, 'dwipe', 'dslide', 'diaper'],
     't:nails:0': ['nsleep', 'npress', 'nailfile'], 't:nails:1': ['nsleep', 'npress', 'nails'], 't:nails:2': ['nsleep', 'npress', 'nails'], 't:nails:3': ['nsleep', 'npress', 'nails'] };
   function photoSteps(main, r) {
@@ -96,19 +97,21 @@
     const h = [...main.querySelectorAll('h2.hub-h2')].find(x => x.textContent.trim() === 'Steps'); const fig = h && h.nextElementSibling;
     if (!fig) return false; if (fig.classList.contains('ph-tiles')) return true;
     const steps = [...fig.querySelectorAll('.hub-iconstep')]; if (steps.length !== pics.length) return false;
-    let notes = fig.querySelector('.tpl-notes'); const moved = [];
+    let notes = fig.querySelector('.tpl-notes'); const moved = []; let lead = '';
     steps.forEach((st, i) => { const art = st.querySelector('.hub-iconstep-art');
       if (!pics[i]) { const b = st.querySelector('b').cloneNode(true); b.querySelectorAll('em').forEach(e => e.remove()); const sm = st.querySelector('small');
+        if (i === 0) { lead = `<b>${b.innerHTML}.</b> ${sm ? sm.innerHTML : ''}${sm && /[.?!]$/.test(sm.textContent.trim()) ? '' : '.'}`; st.remove(); return; }
         moved.push(`<li><b style="color:#302d3c">${b.innerHTML}.</b> ${sm ? sm.innerHTML : ''}${sm && /[.?!]$/.test(sm.textContent.trim()) ? '' : '.'}</li>`); st.remove(); return; }
       if (art) art.outerHTML = `<span class="ph-tile">${img(pics[i], st.querySelector('b').textContent)}</span>`; });
     fig.querySelectorAll('.hub-iconstep b em').forEach((e, i) => { e.textContent = i + 1; });
     const n = pics.filter(Boolean).length; fig.className = fig.className.replace(/\bis-\d\b/, 'is-' + n) + ' ph-tiles care-tiles';
+    if (lead) fig.insertAdjacentHTML('afterbegin', `<p class="care-tiles-lead"><span>First</span>${lead}</p>`);
     if (moved.length) { if (!notes) { notes = document.createElement('ul'); notes.className = 'tpl-notes'; fig.appendChild(notes); } notes.insertAdjacentHTML('afterbegin', moved.join('')); }
     return true;
   }
 
   const PAIRS = {
-    diapers: ['Does it still fit?', [['dfit', 'Fits well', 'Two fingers at the waist, no marks.', 'ok'], ['dtight', 'Time to size up', 'Tabs don’t reach the middle, red marks or leaks.', 'no']]],
+    diapers: ['Does it still fit?', [['dfit', 'Fits well', 'It reaches the belly button, with room for two fingers.', 'ok'], ['dtight', 'Time to size up', 'It sits low and tight, leaves red marks, or leaks.', 'no']]],
     clothes: ['Dress for the room', [['coolroom', 'Cool room', 'Long sleeves and feet, then a sleep sack.', 'ok'], ['warmroom', 'Warm room', 'One light layer is enough.', 'ok']]]
   };
   function pairBlock(k) { const [t, items] = PAIRS[k];
@@ -195,7 +198,7 @@
 
   const NEWS = [
     [['p:sponge', 'Sponge baths for now', 'Until the cord falls off, usually 1–3 weeks.'], ['h:diapers:0', 'Change a diaper', 'Front to back, then let it air-dry.', 'diaper'],
-      ['cord', 'Care for the cord', 'Keep it clean, dry and in the air.', 'cord'], ['t:nails:0', 'Trim tiny nails', 'While {s} {sleep|sleeps}, with a file or clippers.', 'nails'],
+      ['cord', 'Care for the cord', 'Keep it clean, dry and in the air.', 'cord'], ['t:nails:0', 'Trim tiny nails', 'A file at first, then clippers.', 'nails'],
       ['t:clothes:0', 'Dress {o} in layers', 'One layer more than you.', 'clothes']],
     [['p:tub', 'The first tub bath may be close', 'Once the cord falls off and the belly button heals.'], ['h:skin:1', 'Keep skin comfortable', 'Plain water, and cream for dry patches.', 'cream'],
       ['t:sun:1', 'Keep {o} sun-safe', 'Shade and clothing first, no sunscreen yet.', 'sun']],

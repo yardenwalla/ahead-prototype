@@ -221,3 +221,7 @@
 #main .care-timeline li.is-on time::after { content: "Now"; display: block; width: max-content; margin-top: 4px; padding: 1px 7px; border-radius: 99px; background: var(--bg); color: var(--ink); font-size: 11px; font-weight: 700 }
 /* Photo steps = Feeding's photo tiles (one row, small, numbered). */
 #main .care-tiles .ph-tile { aspect-ratio: 1 }
+/* A step with no photo of its own that comes first leads the card, before the photos. */
+#main .care-tiles .care-tiles-lead { margin: 0 0 12px; font-size: 14px; line-height: 1.4; color: #4a4650 }
+#main .care-tiles .care-tiles-lead span { display: inline-block; margin-right: 6px; padding: 1px 8px; border-radius: 99px; background: #e3f1f7; color: #2a6078; font-size: 11.5px; font-weight: 700; vertical-align: 1px }
+#main .care-tiles .care-tiles-lead b { color: #302d3c }
