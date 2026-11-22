@@ -313,3 +313,9 @@
 #main .ssw-nt.is-safe { background: #ecf5ee } #main .ssw-nt.is-safe em { color: #3f7350 }
 #main .ssw-now-extra { margin-top: 0 }
 #main .ssw-alllink { display: inline-block; margin: 4px 2px 18px }
+#main .ssw-now-tiles.is-odd .ssw-nt:last-child { grid-column: 1 / -1; flex-direction: row } 
+#main .ssw-now-tiles.is-odd .ssw-nt:last-child .ssw-nt-pic { width: 44%; height: auto; min-height: 112px; flex: none }
+#main .ssw-now-tiles.is-odd .ssw-nt:last-child .ssw-nt-copy { justify-content: center }
+#main .ssw-hero .ssw-tip .ssw-try-line { margin: 8px 0 0; font-size: 13.5px; line-height: 1.45; color: #4d4a5e }
+#main .ssw-hero .ssw-tip .ssw-try-line strong { color: #46638c; font-weight: 700 }
+#main .ssw-rough-more { display: inline-block; margin: 6px 0 4px }
