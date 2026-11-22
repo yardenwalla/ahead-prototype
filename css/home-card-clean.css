@@ -103,10 +103,7 @@
 #main .ms-card .ms-babyimg img[src*="baby-2.webp"]{
   right:0!important;bottom:0!important;transform:none!important;
 }
-/* Month 3 — bring the sleeve ends below the card edge; keep the entire play arch. */
-#main .ms-card .ms-babyimg img[src*="baby-3.webp"]{
-  right:0!important;bottom:-20px!important;transform:translateY(8px) scale(1.03)!important;
-}
+
 /* Month 4 — bunny stays separated from the reaching hand; sleeve enters from right. */
 #main .ms-card .ms-babyimg img[src*="baby-4.webp"]{
   right:-6px!important;bottom:0!important;transform:scale(1.05)!important;
@@ -115,18 +112,41 @@
 #main .ms-card .ms-babyimg img[src*="baby-5.webp"]{
   right:-17px!important;bottom:-3px!important;transform:translateY(-4px) scale(1.16)!important;
 }
-/* Month 6 — preserve the hand-and-bowl interaction; don't push the food away. */
-#main .ms-card .ms-babyimg img[src*="baby-6.webp"]{
-  right:-4px!important;bottom:0!important;transform:scale(1.03)!important;
-}
-/* Month 7 — preserve the established placement but show more of the falling motion. */
-#main .ms-card .ms-babyimg img[src*="baby-7.webp"]{
-  right:-4px!important;bottom:0!important;transform:scale(.94)!important;
-}
-/* Month 8 — pull the full blanket and bunny into view; retain the hands at the base. */
+
+
+/* Month 8 — shift the existing peekaboo composition farther left, with no scale change. */
 #main .ms-card .ms-babyimg img[src*="baby-8.webp"]{
-  right:8px!important;bottom:-3px!important;transform:scale(.92)!important;
+  right:26px!important;bottom:-3px!important;transform:scale(.92)!important;
 }
+/* Months 3, 6, 7 — restore main's entire month-card composition, not just image size. */
+#main .ms-card .ms-babyimg img:is([src*="baby-3.webp"],[src*="baby-6.webp"],[src*="baby-7.webp"]){
+  right:0!important;bottom:0!important;transform:none!important;
+}
+#main .ms-card:has(img:is([src*="baby-3.webp"],[src*="baby-6.webp"],[src*="baby-7.webp"])){
+  min-height:232px!important;
+  padding:22px 20px 20px!important;
+  grid-template-rows:auto 1fr!important;
+}
+#main .ms-card:has(img:is([src*="baby-3.webp"],[src*="baby-6.webp"],[src*="baby-7.webp"])) .ms-copy{
+  width:200px!important;
+}
+#main .ms-card:has(img:is([src*="baby-3.webp"],[src*="baby-6.webp"],[src*="baby-7.webp"])) .ms-eyebrow{
+  margin-bottom:10px!important;
+}
+#main .ms-card:has(img:is([src*="baby-3.webp"],[src*="baby-6.webp"],[src*="baby-7.webp"])) .ms-copy small{
+  margin-top:10px!important;line-height:1.4!important;max-width:200px!important;
+}
+#main .ms-card:has(img:is([src*="baby-3.webp"],[src*="baby-6.webp"],[src*="baby-7.webp"])) .ms-foot{
+  margin-top:18px!important;
+}
+#main .ms-card .ms-art:has(img:is([src*="baby-3.webp"],[src*="baby-6.webp"],[src*="baby-7.webp"])){
+  top:14px!important;right:0!important;bottom:-16px!important;
+  width:calc(100% - 168px)!important;max-width:230px!important;
+  height:calc(100% + 2px)!important;
+  -webkit-mask-image:linear-gradient(to right,transparent 0%,#000 22%)!important;
+  mask-image:linear-gradient(to right,transparent 0%,#000 22%)!important;
+}
+
 /* Month 9 — restore the original main-branch artwork size and placement. */
 #main .ms-card .ms-babyimg img[src*="baby-9.webp"]{
   right:0!important;bottom:0!important;transform:none!important;
