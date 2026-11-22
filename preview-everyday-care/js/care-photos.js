@@ -9,7 +9,7 @@
 (function () {
   const F = s => (window.__hub ? window.__hub.F(s) : s);
   const CAT = 'Daily rhythm';
-  const src = n => `assets/care/${n}.jpg?v=1122e`;
+  const src = n => `assets/care/${n}.jpg?v=1122g`;
   const img = (n, alt) => `<img src="${src(n)}" alt="${F(alt).replace(/"/g, '&quot;')}" loading="lazy">`;
   const pin = ([label, x, y, side]) => `<span class="ph-pin ph-pin-${side}" style="left:${x}%;top:${y}%"><i></i><span>${F(label)}</span></span>`;
   const photo = (n, alt, pins, cls = '') => `<figure class="ph-photo ph-hero care-ph ${cls}">${img(n, alt)}${(pins || []).map(pin).join('')}</figure>`;
@@ -110,12 +110,26 @@
     return true;
   }
 
+  const DIAPER_SVG = (() => {
+    const body = '<path d="M30 38h100v8c0 10-6 16-16 22l-14 8c-6 4-8 10-8 18v8H68v-8c0-8-2-14-8-18l-14-8c-10-6-16-12-16-22Z" fill="#fff" stroke="#c9dde6" stroke-width="2"/>'
+      + '<rect x="52" y="41" width="56" height="14" rx="4" fill="#e3f1f7"/>';
+    const wrap = (inner, bg) => `<svg viewBox="10 14 140 105" role="img" aria-hidden="true" style="display:block;width:100%;aspect-ratio:1;background:${bg}">${inner}</svg>`;
+    const fit = body
+      + '<path d="M16 40c10-4 30-4 44 0l4 12c-14 3-32 3-44-1Z" fill="#8cc1d6"/><rect x="54" y="42" width="12" height="11" rx="3" fill="#2a6078" opacity=".85"/>'
+      + '<path d="M144 40c-10-4-30-4-44 0l-4 12c14 3 32 3 44-1Z" fill="#8cc1d6"/><rect x="94" y="42" width="12" height="11" rx="3" fill="#2a6078" opacity=".85"/>'
+      + '<path d="M58 30v-8m44 8v-8" stroke="#2a6078" stroke-width="2" stroke-linecap="round"/><path d="M62 22h36" stroke="#2a6078" stroke-width="2" stroke-dasharray="3 4" stroke-linecap="round"/>';
+    const small = body
+      + '<path d="M8 43c6-3 16-3 24-1l2 6c-8 2-18 2-24 0Z" fill="#e9b4a8"/><rect x="28" y="41" width="8" height="10" rx="3" fill="#9b3326" opacity=".85"/>'
+      + '<path d="M152 43c-6-3-16-3-24-1l-2 6c8 2 18 2 24 0Z" fill="#e9b4a8"/><rect x="124" y="41" width="8" height="10" rx="3" fill="#9b3326" opacity=".85"/>'
+      + '<path d="M40 64l-4 6m-4-10l-5 4M120 64l4 6m4-10l5 4" stroke="#d9785f" stroke-width="2" stroke-linecap="round"/>';
+    return { fit: wrap(fit, '#ecf6fa'), small: wrap(small, '#fbefec') };
+  })();
   const PAIRS = {
-    diapers: ['Does it still fit?', [['dfit', 'Fits well', 'It reaches the belly button, with room for two fingers.', 'ok'], ['dtight', 'Time to size up', 'It sits low and tight, leaves red marks, or leaks.', 'no']]],
+    diapers: ['Does it still fit?', [['svg:fit', 'Fits well', 'The tabs close near the middle, with two fingers’ room.', 'ok'], ['svg:small', 'Time to size up', 'The tabs barely reach the front. Or red marks, or leaks.', 'no']]],
     clothes: ['Dress for the room', [['coolroom', 'Cool room', 'Long sleeves and feet, then a sleep sack.', 'ok'], ['warmroom', 'Warm room', 'One light layer is enough.', 'ok']]]
   };
   function pairBlock(k) { const [t, items] = PAIRS[k];
-    return `<h2 class="hub-h2">${F(t)}</h2><div class="care-pair">${items.map(([n, b, l, c]) => `<figure class="is-${c}">${img(n, b)}<figcaption><b>${F(b)}</b><small>${F(l)}</small></figcaption></figure>`).join('')}</div>`; }
+    return `<h2 class="hub-h2">${F(t)}</h2><div class="care-pair">${items.map(([n, b, l, c]) => `<figure class="is-${c}">${/^svg:/.test(n) ? DIAPER_SVG[n.slice(4)] : img(n, b)}<figcaption><b>${F(b)}</b><small>${F(l)}</small></figcaption></figure>`).join('')}</div>`; }
   function addPair(main, r) {
     if (main.querySelector('.care-pair')) return;
     const k = /^(h|t):diapers/.test(r) ? 'diapers' : /^t:clothes/.test(r) ? 'clothes' : null; if (!k) return;
