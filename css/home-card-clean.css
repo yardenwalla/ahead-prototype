@@ -99,3 +99,11 @@
   #main .ms-card .ms-art{right:-8px!important;width:calc(100% - 144px)!important}
   #main .ms-card .ms-copy{width:194px!important}
 }
+
+/* Month 5: let the kicking legs enter from beyond the right card edge, instead of appearing as a floating cut-out. */
+#main .ms-card .ms-babyimg img[src*="baby-5.webp"]{
+  right:-18px!important;
+  bottom:-6px!important;
+  transform:translateY(-7px) scale(1.24)!important;
+  transform-origin:right bottom!important;
+}
