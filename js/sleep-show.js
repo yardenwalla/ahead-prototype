@@ -156,6 +156,56 @@
       caps: [[s0 + len / 2, `Ends ${clock(end)}`], [end + aw / 2, `Wake window ~${awL}`], [Math.min(next + .6, 13), `Next nap ${clock(next)}`]] });
   }
   window.__sswShort = i => { const f = $('#ssw-short'); if (!f) return; f.innerHTML = shortFig(i); $$('.ssw-chips button').forEach((b, k) => b.setAttribute('aria-pressed', k === i)); };
+  // A switch at the top of a page (Outings' Walk / Store / Restaurant pattern): one panel at a time.
+  window.__sswSw = (btn, i) => { const w = btn.closest('.ssw-sw'); if (!w) return; w.querySelectorAll('.ssw-sw-tabs button').forEach((b, k) => b.setAttribute('aria-selected', k === i)); w.querySelectorAll('.ssw-sw-panel').forEach((p, k) => p.classList.toggle('is-on', k === i)); };
+  const sw = (tabs, on = 0) => `<div class="ssw-sw"><div class="ssw-sw-tabs" role="tablist">${tabs.map(([l], i) => `<button role="tab" aria-selected="${i === on}" onclick="__sswSw(this,${i})">${F(l)}</button>`).join('')}</div>${tabs.map(([, html], i) => `<div class="ssw-sw-panel${i === on ? ' is-on' : ''}" role="tabpanel">${html}</div>`).join('')}</div>`;
+  const steps = list => `<ol class="ssw-steps">${list.map((t, i) => `<li><i>${i + 1}</i><span>${F(t)}</span></li>`).join('')}</ol>`;
+  const seeDo = (see, doList, extra = '') => `<section class="care-tpl-card ssw-card"><p class="ssw-see"><b>${F('What you might see')}</b> ${F(see)}</p>${steps(doList)}${extra}</section>`;
+  // Wake windows by age, the same ranges as Sleep at a glance: [min hours, max hours, label]
+  const WW = mo => mo < 1.5 ? [.75, 1, '45–60 min'] : mo < 3 ? [1, 1.5, '1–1½ hrs'] : mo < 5 ? [1.5, 2.5, '1½–2½ hrs'] : mo < 7 ? [2, 2.5, '2–2½ hrs'] : mo < 9 ? [2.5, 3.5, '2½–3½ hrs'] : [2.5, 4, '2½–4 hrs'];
+  const ENDS = [[15.5, '3:30'], [16.5, '4:30'], [17.25, '5:15'], [18, '6:00']];
+  function lateFig(i) {
+    const [end] = ENDS[i], [lo, hi, wl] = WW(m()), b0 = end + lo, b1 = end + hi, late = b0 > 20.5;
+    return band({ label: `The last nap ends at ${clock(end)}. With a ${wl} wake window, bedtime lands between ${clock(b0)} and ${clock(b1)}.`, start: 13, end: 22.5, dark: [[Math.min(b0, 22.4), 22.5]], moon: [Math.min(b0, 22.3)],
+      segs: [[end - 1, end, 'nap']], gap: 36, caps: [[end - .5, `Ends ${clock(end)}`], [Math.min(b0, 21.6), `Bedtime ~${clock(b0)}`]] })
+      + `<p class="ssw-verdict ${late ? 'is-late' : ''}">${F(late ? `Bedtime would land around ${clock(b0)}, late for most families. Next time, wake {o} gently after 30–45 minutes, or skip that nap and move bedtime earlier.` : `That works. Aim for bedtime between ${clock(b0)} and ${clock(b1)}.`)}</p>`;
+  }
+  window.__sswLate = i => { const f = $('#ssw-late'); if (!f) return; f.innerHTML = lateFig(i); $$('.ssw-late-chips button').forEach((b, k) => b.setAttribute('aria-pressed', k === i)); };
+  // When a nap doesn't go to plan: one page for the four things that go wrong with naps (Yarden, Nov 21).
+  // Sources: KidsHealth (Nemours) "Naps"; Mayo Clinic "Baby naps"; Harvard Health "Naps"; AAP on sleeping in sitting devices. Needs pediatric review.
+  function napHelpPage(tab) {
+    const mo = m(), [, , wl] = WW(mo), TABS = ['fight', 'skip', 'late', 'short'], on = Math.max(0, TABS.indexOf(tab));
+    const fight = seeDo('Crying, chatting or playing instead of sleeping, even though it’s nap time.', [
+      'Give it about 20–30 minutes in a dark, calm room. You can’t make a baby sleep, so aim for rest.',
+      'Still awake? Get {o} up for a short break, then try again in 20–30 minutes, or wait for the next nap.',
+      'Next time, look at the timing. Rubbing eyes and crying that’s hard to settle mean start earlier. Happy and chatty means a little later.'],
+      notes([['', 'A nap on the go still counts', 'A stroller or carrier nap is fine. If {s} falls asleep in a car seat or swing, move {o} to a flat, safe space when you can'], ['', 'Fighting the last nap most days?', 'Around 7–9 months, that often means three naps are becoming two']]));
+    const skip = seeDo('A nap that never happened, or ended almost as soon as it started.', [
+      'One missed nap won’t undo anything. Let it go.',
+      'Offer the next sleep a little earlier than usual, so {s} isn’t awake for two wake windows in a row.',
+      'If it was the last nap of the day, move bedtime earlier, by about 30 minutes.'],
+      band({ label: 'The afternoon nap was skipped, so bedtime moves about 30 minutes earlier.', start: 12, end: 21, dark: [[18.5, 21]], moon: [18.5], moonFaint: [19], ghost: [[13, 14.3]], segs: [], gap: 32, caps: [[13.65, 'Skipped nap'], [18.5, 'Bedtime 30 min earlier']] }));
+    const late = `<section class="care-tpl-card ssw-card"><p class="ssw-ask">${F('When did the last nap end?')}</p><div class="ssw-chips ssw-late-chips" role="group">${ENDS.map(([, l], i) => `<button aria-pressed="${i === 1}" onclick="__sswLate(${i})">${F(l + ' pm')}</button>`).join('')}</div><div id="ssw-late">${lateFig(1)}</div>`
+      + notes([['', 'The rule of thumb', `Bedtime comes about one wake window after the last nap ends. Right now that’s ${wl}`], ['', 'Let {o} sleep, or wake {o}?', 'Let {o} sleep, unless it makes bedtime very late. Then wake {o} gently and keep bedtime close to usual']]) + `</section>`;
+    const short = `<section class="care-tpl-card ssw-card"><p class="ssw-ask">${F('Say a nap starts at 9 am. How long did it last?')}</p><div class="ssw-chips" role="group">${NAPS.map(([, l], i) => `<button aria-pressed="${i === 1}" onclick="__sswShort(${i})">${F(l)}</button>`).join('')}</div><div id="ssw-short">${shortFig(1)}</div>`
+      + notes([['', mo < 6 ? 'Very common now' : 'Short naps most days?', mo < 6 ? 'Naps of 30–45 minutes are normal at 3–5 months. They get longer with time' : 'Try the nap 15 minutes earlier or later. A dark room and white noise help']]) + `</section>`;
+    return H().detail('Sleep', 'Naps', 'When a nap doesn’t go to plan', 'Some days naps just don’t happen. Here’s what to do with the rest of the day.',
+      `<div class="ssw-topic">${sw([['Fighting it', fight], ['Skipped it', skip], ['Too late', late], ['Too short', short]], on)}</div>`, 'sun');
+  }
+  // Woke up at night: what she might need. Sources: AAP (HealthyChildren.org) on night waking, overheating and fever by age;
+  // Children's Hospital Colorado; CHOP. Needs pediatric review.
+  function nightHelpPage() {
+    const mo = m(), on = mo < 3 ? 1 : 0;
+    const fever = mo < 3 ? 'Under 3 months, 100.4°F or higher means calling your pediatrician right away, day or night.' : mo < 6 ? 'At {p} age, call your pediatrician for 101°F or higher.' : 'At {p} age, call your pediatrician for 103°F or higher, or a fever that lasts more than a day.';
+    const tabs = [
+      ['Stirring', seeDo('Grunts, wriggles, whimpers or a short cry. {P} eyes may stay closed.', ['Wait and watch for a minute or two. This is often a move between sleep cycles.', 'If {s} settles, you’re done. Going in can wake {o} fully.'], notes([['', mo < 3 ? 'Newborns are noisy sleepers' : 'Normal at every age', mo < 3 ? 'They spend lots of time in active sleep. Noises don’t mean {s}’s awake' : 'Everyone wakes briefly between cycles. Most babies settle back on their own']]))],
+      ['Hungry', seeDo(mo < 6 ? 'Rooting, sucking on hands, crying that builds. Often 2–3 hours or more since a full feed.' : 'Crying that builds, and a full, steady feed once {s} starts.', ['Feed {o} in dim light, without much talking.', 'Burp, then put {o} back down on {p} back, drowsy or asleep.'], notes([['', mo < 6 ? 'Night feeds are normal now' : 'Hungry, or comfort?', mo < 6 ? 'Waking to feed in the first months is expected and healthy' : 'A few sucks and asleep again usually means comfort. Ask your pediatrician if night feeds are still needed']]))],
+      ['Uncomfortable', seeDo('A sudden cry, squirming or arching, with no sign of hunger.', ['Check one thing at a time: a wet or dirty diaper, too hot or cold, a burp.', 'Fix it quietly and put {o} back down.'], mo >= 4 ? notes([['', 'Sore gums?', 'Teething can wake babies for a few nights. Ask your pediatrician before giving any medicine']]) : '')],
+      ['Unwell', seeDo('Warm to the touch, stuffy, coughing, vomiting, or a cry that sounds like pain.', ['Comfort {o} as much as {s} needs tonight.', 'Take {p} temperature. Go back to your usual routine once {s}’s better.'], notes([['', 'Fever', fever]]))]];
+    const check = `<section class="ssw-checkbox"><b>${F('How to check without waking {o} fully')}</b><ul>${['Keep the lights dim. No overhead light or phone screen in {p} face.', 'Don’t talk or play. Quiet and boring helps {o} drift back.', 'Feel the back of {p} neck or chest. Sweaty means too warm. Cool hands are normal.', 'Change the diaper only if it’s dirty or leaking.'].map(t => `<li>${F(t)}</li>`).join('')}</ul></section>`;
+    return H().detail('Sleep', 'Night sleep', 'Woke up? What {s} might need', 'Give it a minute or two first. Many wakings settle on their own, and the pause tells you more.',
+      `<div class="ssw-topic">${check}<h2 class="hub-h2">${F('What do you see?')}</h2>${sw(tabs, on)}<h2 class="hub-h2">${F('When to call')}</h2><section class="ssw-call"><p><b>${F('Call your pediatrician if')}</b> ${F('night waking comes with a fever, poor feeding, or {s} {seem|seems} to be in pain.')}</p><p><b>${F('Call 911 if')}</b> ${F('{s} struggles to breathe or turns blue, won’t wake, or is floppy.')}</p></section></div>`, 'moon');
+  }
   function shortNapPage() {
     const mo = m(), early = mo < 6, three = mo >= 4 && mo < 9 && answers.twoNaps !== 'Yes', start = 1;
     const ifs = [
@@ -215,14 +265,14 @@
       ['d:daynight', 0, 'First weeks', 'Bright days and dim nights set {p} clock', 'Helping {o} tell day from night', 'sunrise'],
       ['d:stretch', 1, '6 weeks–3 months', '{P} longest night sleep grows over months', 'From 2–4 hours to 10–12 by a year', 'moon'],
       ['d:regress', 2, 'Around 4 months', 'Waking more is the 4-month sleep regression', 'Why it happens, and how to respond', 'wave'],
-      ['d:wakes', null, 'Any age', 'Brief wakings happen between sleep cycles', 'What to do when {s} {wake|wakes}', 'eye'],
+      ['d:wakes', null, 'Any age', 'Woke up? What {s} might need', 'Stirring, hungry, uncomfortable or unwell', 'eye'],
       ['d:nightfeeds', 4, '7–8 months', 'Night feeds drop as days get fuller', 'When to drop one, and how', 'bottle'],
       ['d:nightwake', 5, '8–12 months', 'Night waking often comes back for a while', 'New skills, teeth, and missing you', 'stand']] },
     naps: { name: 'Naps', art: 'sun', lead: 'How naps change, from any time at all to two a day.', items: [
       ['d:steps0', 0, 'First weeks', 'Spot the yawn, soothe, then down', 'Sleepy cues, and how to soothe', 'heart'],
       ['d:napsearly', 1, '6 weeks–3 months', 'Short, frequent naps are normal now', 'Arms, carrier and stroller naps all count', 'carrier'],
       ['d:predictable', 2, '3–5 months', 'Naps start to settle into set times', 'How to find {p} nap times', 'sunrise'],
-      ['d:shortnap', null, 'From 3 months', 'A short nap moves the next one up', 'See how the rest of the day shifts', 'clock'],
+      ['d:shortnap', null, 'From 3 months', 'When a nap doesn’t go to plan', 'Fighting it, skipped, too late or too short', 'clock'],
       ['d:day:2', 3, '5–7 months', 'An example day with three naps', 'Naps, awake time and bedtime', 'notepad'],
       ['d:catnap', 4, '7–8 months', 'Three naps become two', 'Signs, and how to switch', 'sun'],
       ['d:day:3', 5, '8–12 months', 'An example day with two naps', 'Naps, awake time and bedtime', 'notepad']] },
@@ -323,9 +373,9 @@
     const html = H().detail('Sleep', stage + (now && live ? ' · Right now' : ''), T.name, '', `<div class="ssw-topic">${inner}</div>`, T.art);
     return html.replace('<div class="hub-detail-head">', tabsHtml + '<div class="hub-detail-head ssw-topic-head">');
   }
-  const routes = { 'chg:Sleep:d:routine': routinePage, 'chg:Sleep:d:shortnap': shortNapPage, 'chg:Sleep:d:wakes': wakesPage, 'chg:Sleep:d:safegrow': safeGrowPage };
+  const routes = { 'chg:Sleep:d:routine': routinePage, 'chg:Sleep:d:shortnap': () => napHelpPage('short'), 'chg:Sleep:d:wakes': nightHelpPage, 'chg:Sleep:d:safegrow': safeGrowPage };
   const baseRoute = window.changesRoute;
-  window.changesRoute = function (p) { return routes[p] ? routes[p]() : /^chg:Sleep:t:/.test(p) ? topicPage(p) : baseRoute.apply(this, arguments); };
+  window.changesRoute = function (p) { const nh = /^chg:Sleep:d:naphelp(?::(\w+))?$/.exec(p || ''); if (nh) return napHelpPage(nh[1]); return routes[p] ? routes[p]() : /^chg:Sleep:t:/.test(p) ? topicPage(p) : baseRoute.apply(this, arguments); };
 
   /* ---------- pages dressed after they draw ---------- */
   const PAGES = {
@@ -365,6 +415,13 @@
         + notes([['', 'A cool, smoke-free room', 'A too-warm room is less safe. Use a sleep sack, not a blanket'], ['', 'A swaddle or a sleep sack', 'No swaddle once rolling starts'], ['', 'A pacifier, if you like', 'Once feeding is going well']]), 'ssw-check');
       const acc = $('.hub-accs'); if (acc) acc.outerHTML = card('As ' + nm() + ' grows', `<button class="hub-row" onclick="${go('chg:Sleep:d:safegrow')}"><span class="hub-row-copy"><b>${F('What changes, and when')}</b><small>${F('Swaddle, crib, mattress and more, by age')}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`, 'ssw-rowcard');
     }
+  };
+  // Rough day or night: the two helpers lead, because they answer what parents ask most (Yarden, Nov 21).
+  PAGES['chg:Sleep:d:rough'] = () => {
+    const list = $('.hub-list.hub-rough'); if (!list || list.querySelector('.ssw-help-row')) return;
+    const mo = m(), item = (ic, t, to) => `<button class="hub-rough-item hub-rough-link ssw-help-row" onclick="${go(to)}"><span class="hub-dot">${H().art(ic, 'Sleep')}</span><b>${F(t)}</b><span class="hub-chev" aria-hidden="true">›</span></button>`;
+    list.insertAdjacentHTML('afterbegin', item('eye', 'Woke up? What {s} might need', 'chg:Sleep:d:wakes')
+      + (mo >= 3 ? item('sun', 'Fighting a nap, or skipped one', 'chg:Sleep:d:naphelp:fight') + item('clock', 'A nap running close to bedtime', 'chg:Sleep:d:naphelp:late') : ''));
   };
   // How to swaddle: a photo for each step.
   PAGES['chg:Sleep:d:swaddle'] = () => {
@@ -425,7 +482,7 @@
         const tryEl = (hero.nextElementSibling && hero.nextElementSibling.classList.contains('sl-try')) ? hero.nextElementSibling : main.querySelector('.sl-try');
         const tip = tryEl && tryEl.querySelector('p'), sp = aha.querySelector('span');
         // Nov 21: the main app's own stage copy (newer than ours), with its one thing to try as a "Try this" line.
-        if (tip) aha.insertAdjacentHTML('beforeend', `<p class="ssw-try-line"><strong>${F('Try this:')}</strong> ${tip.innerHTML}</p>`);
+        if (tip) { aha.querySelectorAll('b, span').forEach(e => e.remove()); aha.insertAdjacentHTML('beforeend', `<p class="ssw-try-line"><strong>${F('Try this:')}</strong> ${tip.innerHTML}</p>`); aha.classList.add('ssw-try-only'); }
         if (tryEl) tryEl.remove();
       }
       const eb = hero.querySelector('.hub-eyebrow'), ebt = eb ? eb.firstChild.textContent : '', view = STAGES.findIndex(([, re]) => re.test(ebt));
@@ -458,11 +515,15 @@
       const sl = main.querySelector('.sl-safe-list'), due = sl ? [...sl.querySelectorAll('.hub-row[onclick]')].map(routeOf)[0] : null;
       // Introduce, build, retire (content standard): each guide is featured once, in the stage where it's new. A topic
       // with nothing new at a stage has no tile there, so no stage repeats another.
-      const PICK = {
-        night: [() => 'd:daynight', () => A < 3 ? 'd:stretch' : 'd:regress', () => 'd:wakes', () => A < 8 ? 'd:nightfeeds' : 'd:nightwake'],
-        naps: [() => 'd:napsearly', () => A < 3 ? null : 'd:predictable', () => 'd:shortnap', () => A < 8 ? 'd:catnap' : 'd:day:3'],
-        bed: [() => 'd:steps0', () => A < 3 ? 'd:routine' : 'd:settle4', () => 'settle', () => A < 8 ? 'd:earlybed' : 'd:goodbye'],
-        safe: [() => 'd:swaddle', () => A < 3 ? 'd:where' : 'd:swaddleoff', () => 'd:rolling', () => 'd:mattress'] };
+      const PLAN = [
+        () => [['night', 'd:daynight'], ['naps', 'd:steps0'], ['safe', 'd:swaddle'], ['safe', 'd:where']],
+        () => A < 3 ? [['night', 'd:stretch'], ['naps', 'd:napsearly'], ['bed', 'd:routine']] : [['night', 'd:regress'], ['naps', 'd:predictable'], ['bed', 'd:settle4'], ['safe', 'd:swaddleoff']],
+        () => [['night', 'd:wakes'], ['naps', 'd:shortnap'], ['bed', 'settle'], ['safe', A < 6 ? 'd:rolling' : 'd:mattress']],
+        () => A < 8 ? [['night', 'd:nightfeeds'], ['naps', 'd:catnap'], ['bed', 'd:earlybed']] : [['night', 'd:nightwake'], ['naps', 'd:day:3'], ['bed', 'd:goodbye']]];
+      const SHORT = { 'd:daynight': 'Days and nights', 'd:stretch': 'Longer stretches at night', 'd:regress': 'The 4-month sleep regression', 'd:wakes': 'Woke up? What {s} needs', 'd:nightfeeds': 'Dropping night feeds', 'd:nightwake': 'Night waking comes back',
+        'd:steps0': 'Spot the yawn, then soothe', 'd:napsearly': 'Short naps are normal', 'd:predictable': 'Finding nap times', 'd:shortnap': 'When naps go off plan', 'd:catnap': 'Three naps to two', 'd:day:3': 'A day with two naps',
+        'd:routine': 'A short bedtime routine', 'd:settle4': 'Down drowsy, once a day', 'settle': 'Sleep training, if you want', 'd:earlybed': 'An earlier bedtime', 'd:goodbye': 'Short, steady goodbyes',
+        'd:swaddle': 'How to swaddle', 'd:where': 'Share a room', 'd:swaddleoff': 'Stop swaddling', 'd:rolling': 'Rolling in {p} sleep', 'd:mattress': 'Lower the mattress' };
       const PIC = { 'd:daynight': 'alert.jpg', 'd:stretch': 'night.jpg', 'd:regress': 'back.jpg', 'd:wakes': 'back.jpg', 'd:nightfeeds': nursing() ? 'feed-nurse.jpg' : 'feed.jpg', 'd:nightwake': 'nightwake.jpg',
         'd:napsearly': 'bassinetnap.jpg', 'd:predictable': 'bassinetnap.jpg', 'd:shortnap': 'nap.jpg', 'd:catnap': 'nap10.jpg',
         'd:steps0': 'yawn.jpg', 'd:routine': 'pajamas.jpg', 'd:settle4': 'down.jpg', 'settle': 'goodbye.jpg', 'd:earlybed': 'book.jpg', 'd:goodbye': 'goodbye.jpg',
@@ -470,22 +531,24 @@
       const all = Object.values(TOPICS).flatMap(t => t.items), find = r => all.find(x => x[0] === r);
       const hpEl = hero.querySelector('.ssw-hero-photo img'), heroPic = hpEl ? hpEl.getAttribute('src') : '';
       const used = [];
-      const tiles = Object.entries(TOPICS).map(([k, T]) => {
-        const r = PICK[k][view](); if (!r) return ''; used.push(r);
+      const tiles = PLAN[view]().map(([k, r]) => { const T = TOPICS[k]; used.push(r);
         const it = find(r) || [r, null, '', ((sl && sl.querySelector('.hub-row b')) || {}).textContent || '', ''];
         let pic = PIC[r] || 'crib.jpg'; if (heroPic.endsWith(pic)) pic = { 'room.jpg': 'crib.jpg', 'night.jpg': 'back.jpg', 'nightfeed.jpg': 'feed.jpg' }[pic] || 'crib.jpg';
-        return `<button class="ssw-nt is-${k}" onclick="${go('chg:Sleep:' + r)}"><span class="ssw-nt-pic"><img src="${IMG + pic}" alt="" loading="lazy"></span><span class="ssw-nt-copy"><em><i aria-hidden="true">${H().art(T.art, 'Sleep')}</i>${F(T.name)}</em><b>${F(it[3])}</b></span><span class="ssw-nt-go" aria-hidden="true">›</span></button>`;
+        return `<button class="ssw-nt is-${k}" onclick="${go('chg:Sleep:' + r)}"><span class="ssw-nt-pic"><img src="${IMG + pic}" alt="" loading="lazy"></span><span class="ssw-nt-copy"><em><i aria-hidden="true">${H().art(T.art, 'Sleep')}</i>${F(T.name)}</em><b>${F(SHORT[r] || it[3])}</b></span><span class="ssw-nt-go" aria-hidden="true">›</span></button>`;
       }).join('');
       // Rows left over: guides for this stage that no tile opens. The routine is a reference from three naps on, and room
       // sharing shows until 6 months (Nov 21 review); both stay in All sleep guides.
       // The only carry-over: a safety step from an earlier stage that isn't done yet, as one catch-up row (Safety's pattern).
       // It leaves once the parent marks it, and never takes a tile.
       rl.querySelectorAll('.hub-row').forEach(r => r.remove());
-      if (sl) { const dr = sl.querySelector('.hub-row'); if (due && !used.includes(due) && dr) { const b = dr.querySelector('.hub-row-copy b'), sm = dr.querySelector('.hub-row-copy small'); if (sm) sm.textContent = F('Still to do from an earlier stage'); else if (b) b.insertAdjacentHTML('afterend', `<small>${F('Still to do from an earlier stage')}</small>`); rl.append(dr); } sl.remove(); }
+      if (sl) { const dr = sl.querySelector('.hub-row'); if (due && !used.includes(due) && dr) { const b = dr.querySelector('.hub-row-copy b'), sm = dr.querySelector('.hub-row-copy small'); rl.append(dr); } sl.remove(); }
+      if (used.some(r => /^d:day:/.test(r))) main.querySelectorAll('.sl-glance [onclick*="chg:Sleep:d:day:"], .sl-gl-h [onclick*="chg:Sleep:d:day:"]').forEach(e => e.remove());
       const n = (tiles.match(/class="ssw-nt /g) || []).length;
       rl.insertAdjacentHTML('beforebegin', `<div class="ssw-now-tiles${n % 2 ? ' is-odd' : ''}">${tiles}</div>`);
       if (!rl.querySelector('.hub-row')) rl.remove(); else rl.classList.add('ssw-now-extra');
     }
+    const rc = main.querySelector('.hub-rough-card small, [onclick*="chg:Sleep:d:rough"] small');
+    if (rc && m() >= 3) rc.textContent = F('Fighting naps, a nap too late, waking at night');
     // Rough day: short naps and night waking open their own pages.
     const rough = main.querySelector('.hub-rough');
     if (once(rough, 'r')) {

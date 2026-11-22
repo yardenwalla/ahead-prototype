@@ -319,3 +319,25 @@
 #main .ssw-hero .ssw-tip .ssw-try-line { margin: 8px 0 0; font-size: 13.5px; line-height: 1.45; color: #4d4a5e }
 #main .ssw-hero .ssw-tip .ssw-try-line strong { color: #46638c; font-weight: 700 }
 #main .ssw-rough-more { display: inline-block; margin: 6px 0 4px }
+/* Nov 21: helpers — a switch at the top (Outings), see-then-do steps, a check box, call box */
+#main .ssw-sw-tabs { display: flex; gap: 6px; overflow-x: auto; margin: 2px 0 10px; padding-bottom: 2px }
+#main .ssw-sw-tabs button { all: unset; cursor: pointer; flex: none; padding: 8px 14px; border-radius: 999px; background: #fff; border: 1px solid #e4e0ea; font-size: 14px; font-weight: 650; color: #4d4a5e }
+#main .ssw-sw-tabs button[aria-selected="true"] { background: #46638c; border-color: #46638c; color: #fff }
+#main .ssw-sw-panel { display: none } #main .ssw-sw-panel.is-on { display: block }
+#main .ssw-see { margin: 0 0 12px; font-size: 14.5px; line-height: 1.5; color: #4d4a5e }
+#main .ssw-see b { display: block; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: #6b6fa3; margin-bottom: 3px }
+#main .ssw-steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px }
+#main .ssw-steps li { display: flex; gap: 10px; align-items: flex-start; font-size: 14.5px; line-height: 1.45; color: var(--ink) }
+#main .ssw-steps i { flex: none; width: 24px; height: 24px; border-radius: 50%; background: #e8ecf6; color: #46638c; font-style: normal; font-weight: 700; font-size: 13px; display: grid; place-items: center }
+#main .ssw-checkbox { background: #eef3ec; border-radius: 18px; padding: 14px 16px; margin: 4px 0 6px }
+#main .ssw-checkbox b { display: block; font-size: 15px; color: #35573f; margin-bottom: 6px }
+#main .ssw-checkbox ul { margin: 0; padding-left: 18px; display: grid; gap: 5px; font-size: 14px; line-height: 1.45; color: #3f5a46 }
+#main .ssw-call { background: #fdf0ec; border-radius: 18px; padding: 14px 16px; font-size: 14px; line-height: 1.5; color: #6d3a30 }
+#main .ssw-call p { margin: 0 } #main .ssw-call p + p { margin-top: 8px } #main .ssw-call b { color: #a0402f }
+#main .ssw-verdict { margin: 10px 2px 0; font-size: 14px; line-height: 1.45; color: #35573f; background: #eef3ec; border-radius: 12px; padding: 9px 12px }
+#main .ssw-verdict.is-late { color: #7a4b16; background: #fdf3e2 }
+#main .ssw-hero .ssw-tip.ssw-try-only .ssw-try-line { margin: 0; font-size: 14.5px; color: var(--ink) }
+#main .ssw-sw-tabs { flex-wrap: wrap; overflow: visible }
+#main .ssw-sw-tabs button { padding: 7px 12px; font-size: 13.5px }
+#main .ssw-card .tpl-notes { list-style: none; padding: 10px 0 0; margin: 12px 0 0; border-top: 1px solid #eeeaf2; display: grid; gap: 6px; font-size: 13.5px; line-height: 1.45 }
+#main .ssw-card .tpl-notes li { margin: 0 }
