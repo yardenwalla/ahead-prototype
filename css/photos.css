@@ -361,3 +361,31 @@
 #main .care-show-cap { margin: 0; padding: 13px 16px 14px; font-size: 14.5px; line-height: 1.45; color: #4a4550 }
 #main .care-show-cap b { color: #2b2732; font-weight: 650 }
 #main .care-show-cap.is-note { border-top: 1px solid #0000000f; padding-top: 12px }
+/* Nov 22: Is this normal? pages: diaper rash vs yeast side by side, help notes, the look-alike link */
+#main .care-vs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px }
+#main .care-vs-card { margin: 0; background: #fffdfa; border: 1px solid #0000000d; border-radius: 20px; padding: 12px; display: flex; flex-direction: column; gap: 8px }
+#main .care-vs-card svg { width: 100%; height: auto; max-height: 150px; background: #f7efe9; border-radius: 14px }
+#main .care-vs-card figcaption b { display: block; font-size: 15px; font-weight: 650; color: #2b2732 }
+#main .care-vs-card figcaption span { display: block; font-size: 13px; line-height: 1.4; color: #6d666d; margin-top: 3px }
+#main .care-vs-card em { display: inline-block; margin-top: 8px; font-style: normal; font-size: 12px; font-weight: 700; padding: 5px 8px; border-radius: 8px; line-height: 1.25 }
+#main .care-vs-card em.is-ok { background: #e6f5ec; color: #356651 }
+#main .care-vs-card em.is-ask { background: #fbe7dc; color: #9a4a23 }
+#main .care-help-note { margin-top: 10px; padding: 12px 16px }
+#main .care-help-note p { margin: 0; font-size: 14.5px; line-height: 1.45; color: #4a4550 }
+#main .care-help-note b { color: #2b2732 }
+#main .care-notquite { margin-top: 18px }
+#main .care-nq-ic { display: grid; place-items: center; width: 100%; height: 100%; background: #f1ecf7 }
+/* Nov 22: Is this normal? hub: what's common at this age as photo tiles, then a poop color card */
+#main .care-common { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px }
+#main .care-common-tile { position: relative; display: flex; flex-direction: column; text-align: left; padding: 0; border: 1px solid #0000000d; border-radius: 20px; overflow: hidden; background: #fffdfa; cursor: pointer; font: inherit }
+#main .care-common-tile img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover }
+#main .care-common-tile span { display: block; padding: 10px 28px 12px 12px }
+#main .care-common-tile b { display: block; font-size: 15px; font-weight: 650; color: #2b2732; line-height: 1.25 }
+#main .care-common-tile small { display: block; font-size: 13px; color: #6d666d; margin-top: 3px }
+#main .care-common-tile > i { position: absolute; right: 12px; bottom: 14px; font-style: normal; color: #9a929a; font-size: 18px }
+#main .care-poopcard { display: flex; align-items: center; gap: 14px; width: 100%; text-align: left; padding: 14px 16px; border: 1px solid #0000000d; cursor: pointer; font: inherit; margin-bottom: 4px }
+#main .care-poopdots { display: flex; gap: 6px; flex: none; padding: 14px 12px; background: #eef1fa; border-radius: 14px }
+#main .care-poopdots i { width: 18px; height: 18px; border-radius: 50% }
+#main .care-poopcard b { display: block; font-size: 15.5px; font-weight: 650; color: #2b2732 }
+#main .care-poopcard small { display: block; font-size: 13.5px; color: #6d666d; margin-top: 2px }
+#main .care-poopcard .care-chev { margin-left: auto; font-style: normal; color: #9a929a; font-size: 18px }
