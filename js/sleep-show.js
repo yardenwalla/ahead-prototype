@@ -765,7 +765,8 @@
       [['Night sleep', 'd:wakes', 'Waking often at night', 'night.jpg'], ['Bedtime', 'settle', 'Sleep training, if you want', 'book.jpg'], ['Safe sleep', 'd:mattress', 'Lower the mattress', 'mattress.jpg', 1]],
       A < 8 ? [['Night sleep', 'd:nightfeeds', 'Dropping night feeds', nurse ? 'feed-nurse.jpg' : 'feed.jpg'], ['Bedtime', 'd:earlybed', 'An earlier bedtime', 'book.jpg'], ['Safe sleep', 'd:mattress', 'Lower the mattress', 'mattress.jpg', 1]]
         : [['Night sleep', 'd:nightwake', 'Night waking comes back', 'nightwake.jpg'], ['Bedtime', 'd:goodbye', 'Short, steady goodbyes', 'goodbye.jpg'], ['Safe sleep', 'd:mattress', 'Lower the mattress', 'mattress.jpg', 1]]][v];
-    const rows = ROWS.map(([t, r, g, img, safety]) => `<button class="hub-row fd-prow" onclick="${go('chg:Sleep:' + r)}"><span class="fd-thumb"><img src="${IMG + img}" alt="" loading="lazy"></span><span class="hub-row-copy"><b>${F(t)}</b><small>${F(g)}</small>${safety ? `<span class="hub-chip is-red">${F('Safety step')}</span>` : ''}</span><span class="hub-chev" aria-hidden="true">›</span></button>`).join('');
+    // Nov 23 cohesion pass: no red "Safety step" tag on one row of the set (rows in a set share one shape, and Ahead tags no guide on a row).
+    const rows = ROWS.map(([t, r, g, img]) => `<button class="hub-row fd-prow" onclick="${go('chg:Sleep:' + r)}"><span class="fd-thumb"><img src="${IMG + img}" alt="" loading="lazy"></span><span class="hub-row-copy"><b>${F(t)}</b><small>${F(g)}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`).join('');
     const grid = main.querySelector('.ssw-now-tiles');
     if (grid) grid.outerHTML = `<div class="hub-list fd-plist ssv-rows">${rows}</div>`;
     main.querySelectorAll('.ssw-simple-rows, .ssw-now-extra').forEach(e => e.remove());
