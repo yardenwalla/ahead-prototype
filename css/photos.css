@@ -502,3 +502,38 @@
 #main .ct-call p { margin: 4px 0 0; font-size: 13.5px; line-height: 1.45; color: #6b4a33 }
 #main .ct-call em { font-style: normal; font-weight: 700; color: #8a4b1f }
 #main .ct-page .ct-alt.is-call { margin: 8px 0 0; font-size: 13px; color: #8a4b1f }
+/* ===== Nov 22: how-to, second pass from Yarden's mockup: pointing labels, icon "Have nearby", photo steps ===== */
+#main .ct-hero { position: relative; margin: 0 0 6px; border-radius: 20px; overflow: hidden; aspect-ratio: 4 / 3; background: #efe9e3 }
+#main .ct-hero img { display: block; width: 100%; height: 100%; object-fit: cover }
+#main .ct-arrows { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none }
+#main .ct-callout { position: absolute; max-width: 44%; padding: 7px 12px; border-radius: 14px; background: rgba(255,255,255,.96); box-shadow: 0 2px 10px rgba(0,0,0,.14); font-size: 12.5px; line-height: 1.25; font-weight: 700; color: var(--ct-ink) }
+#main .ct-callout.is-tl { left: 12px; top: 12px } #main .ct-callout.is-tr { right: 12px; top: 12px; text-align: right }
+#main .ct-callout.is-bl { left: 12px; bottom: 12px } #main .ct-callout.is-br { right: 12px; bottom: 12px; text-align: right }
+#main .ct-near { display: flex; gap: 6px; padding: 12px 8px; background: #fffdf9; border: 1px solid var(--ct-line); border-radius: 18px }
+#main .ct-near > span { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center }
+#main .ct-near i { display: grid; place-items: center; width: 40px; height: 40px }
+#main .ct-near i svg { width: 30px; height: 30px }
+#main .ct-near small { font-size: 11.5px; line-height: 1.25; color: var(--ct-ink) }
+#main .ct-steps2 { list-style: none; margin: 0; padding: 4px 12px; background: #fffdf9; border: 1px solid var(--ct-line); border-radius: 18px }
+#main .ct-steps2 li { display: grid; grid-template-columns: 76px 1fr; gap: 12px; align-items: center; padding: 10px 0; border-top: 1px solid var(--ct-line) }
+#main .ct-steps2 li:first-child { border-top: 0 }
+#main .ct-th { width: 76px; height: 58px; border-radius: 12px; overflow: hidden; background: var(--ct-lav); display: grid; place-items: center }
+#main .ct-th img { width: 100%; height: 100%; object-fit: cover; display: block }
+#main .ct-th i svg { width: 30px; height: 30px }
+#main .ct-tx b { display: flex; align-items: center; gap: 8px; font-size: 15px; line-height: 1.25; color: var(--ct-ink) }
+#main .ct-tx b em { flex: none; font-style: normal; width: 22px; height: 22px; border-radius: 50%; background: var(--ct-lav); color: var(--ct-purple); font-size: 12px; font-weight: 700; display: grid; place-items: center }
+#main .ct-tx small { display: block; margin: 3px 0 0 30px; font-size: 13px; line-height: 1.35; color: var(--ct-soft) }
+#main .ct-goodcard { display: flex; gap: 12px; align-items: flex-start; margin: 16px 0 0; padding: 14px 16px; border-radius: 16px; background: var(--ct-lav) }
+#main .ct-goodcard > i { flex: none; color: var(--ct-purple); margin-top: 1px }
+#main .ct-goodcard b { display: block; font-size: 14px; color: var(--ct-ink) }
+#main .ct-goodcard p { margin: 3px 0 0; font-size: 13px; line-height: 1.4; color: #4f4a5c }
+#main .ct-routine { margin: 0 0 4px; padding: 14px 14px 12px; border-radius: 18px; background: var(--ct-lav) }
+#main .ct-routine > b { display: flex; align-items: center; gap: 8px; font-size: 15px; color: var(--ct-ink); margin-bottom: 12px }
+#main .ct-routine > b svg { color: var(--ct-purple) }
+#main .ct-routine > div { display: flex; align-items: flex-start; justify-content: space-between }
+#main .ct-routine > div > span:not(.ct-arr) { display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 52px }
+#main .ct-routine i { width: 44px; height: 44px; border-radius: 50%; background: #fff; display: grid; place-items: center }
+#main .ct-routine i svg { width: 26px; height: 26px }
+#main .ct-routine small { font-size: 12px; color: var(--ct-ink) }
+#main .ct-routine .ct-arr { margin-top: 12px; color: var(--ct-purple); font-size: 15px }
+#main .ct-near i svg, #main .ct-th i svg, #main .ct-routine i svg { stroke: #5b4fa3; color: #5b4fa3 }

@@ -1067,11 +1067,29 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   const ctSafe = rows => { rows = (val(rows) || []).filter(Boolean); return rows.length ? `<section class="ct-safe"><i>${CT_CHECK}</i><div><b>${F('Keep {o} safe')}</b>${rows.map(r => `<p>${ctSent(r[1])} ${ctSent(r[2])}</p>`).join('')}</div></section>` : ''; };
   const ctH2 = t => `<h2 class="ct-h2">${F(t)}</h2>`;
   const ctFull = `<button class="ct-alt" onclick="openPage('chg:${CAT}:d:h:diapers:1')">${F('See the full diaper change')} <span aria-hidden="true">›</span></button>`;
+  /* Nov 22 (Yarden's how-to mockup): labels that point. Each label sits in a corner and a soft white arrow curves to the
+     spot it names, so it teaches without covering a face. sh.call = [[text, corner, x%, y%], ...]. */
+  const CT_START = { tl: [80, 56], tr: [320, 56], bl: [80, 244], br: [320, 244] };
+  const ctArrows = calls => `<svg class="ct-arrows" viewBox="0 0 400 300" preserveAspectRatio="none" aria-hidden="true"><defs><marker id="ctah" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#fff"/></marker></defs>${calls.map(([, at, x, y]) => {
+      const [sx, sy] = CT_START[at], ex = x * 4, ey = y * 3, mx = (sx + ex) / 2, my = (sy + ey) / 2, dx = ex - sx, dy = ey - sy, bend = at === 'tl' || at === 'br' ? 0.25 : -0.25;
+      return `<path d="M${sx} ${sy} Q${(mx - dy * bend).toFixed(0)} ${(my + dx * bend).toFixed(0)} ${ex} ${ey}" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" marker-end="url(#ctah)" filter="drop-shadow(0 1px 2px rgba(0,0,0,.35))"/>`; }).join('')}</svg>`;
+  const ctPhoto2 = sh => { const calls = val(sh.call) || []; return `<figure class="ct-hero">${ctImg(sh.img, sh.alt)}${calls.length ? ctArrows(calls) : ''}${calls.map(([l, at]) => `<span class="ct-callout is-${at}">${F(l)}</span>`).join('')}</figure>`; };
+  // "Have nearby" as small icons, the way the mockup shows it.
+  const NEAR_ICON = { 'Towel': 'towel', 'Washcloth': 'folded', 'Warm water': 'basin', 'Bowl of warm water': 'basin', 'Clean diaper': 'diaper', 'Diaper': 'diaper', 'Little tub': 'tub', 'Mild soap': 'soap', 'Clean clothes': 'shirt',
+    'Non-slip mat': 'mat', 'Unscented wipes': 'folded', 'Wipes': 'folded', 'Zinc diaper cream': 'soap', 'Small toy': 'toy', 'Toy': 'toy', 'Bath toys': 'duck', 'Pull-on diaper': 'diaper', 'Nail clippers or a file': 'nail',
+    'Good light': 'idea', 'Soft cloth': 'folded', 'Water': 'drop', 'Soft toothbrush': 'tooth', 'Fluoride toothpaste': 'soap', 'Stroller canopy': 'stroller', 'Light layers': 'shirt', 'Wide-brim hat': 'sun', 'Sunscreen, SPF 30+': 'soap', 'Changing pad': 'mat' };
+  const ctNear = items => `<div class="ct-near">${items.map(t => `<span><i>${hubArt(NEAR_ICON[t] || 'heart', CAT)}</i><small>${F(t)}</small></span>`).join('')}</div>`;
+  // Steps: a small photo of the move where one exists (each shows something the big photo doesn't), else an icon.
+  const ctSteps2 = mv => `<ol class="ct-steps2">${mv.map(([th, t, sub], i) => `<li><span class="ct-th">${/^photo:/.test(th) ? `<img src="assets/${th.slice(6)}.jpg?v=3" alt="" loading="lazy">` : `<i>${hubArt(th, CAT)}</i>`}</span><span class="ct-tx"><b><em>${i + 1}</em>${F(t)}</b>${sub ? `<small>${ctSent(sub)}</small>` : ''}</span></li>`).join('')}</ol>`;
+  const ctRoutine = r => `<section class="ct-routine"><b>${CT_MOON}${F(r.t)}</b><div>${r.items.map(([ic, l], i) => `${i ? '<span class="ct-arr" aria-hidden="true">→</span>' : ''}<span><i>${hubArt(ic, CAT)}</i><small>${F(l)}</small></span>`).join('')}</div></section>`;
+  const CT_MOON = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5Z"/></svg>';
+  const CT_BULB = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3Z"/></svg>';
+  const ctGood2 = g => g ? `<section class="ct-goodcard"><i>${CT_BULB}</i><div><b>${F('Good to know')}</b><p>${ctSent(g)}</p></div></section>` : '';
   const howtoPage = q => { const sh = val(q.show), mv = val(q.moves) || [], near = val(q.nearby) || [];
-    return `<div class="ct-page is-howto">` + ctHead(q, 'How to') + (sh ? ctPhoto(sh) : '')
-      + (near.length ? `<p class="ct-label">${F('Have nearby')}</p><div class="ct-chips">${near.map(t => `<span>${F(t)}</span>`).join('')}</div>` : '')
-      + (mv.length ? ctH2(q.movesT || 'Do it in a few steps') + ctSteps(mv) : '')
-      + ctGood(q.good) + (q.full ? ctFull : '') + (q.link ? `<button class="ct-alt" onclick="openPage('chg:${CAT}:d:${val(q.link)[2]}')">${F('Red skin? See diaper rash or yeast')} <span aria-hidden="true">›</span></button>` : '')
+    return `<div class="ct-page is-howto">` + ctHead(q, 'How to') + (sh ? ctPhoto2(sh) : '') + (q.routine ? ctRoutine(val(q.routine)) : '')
+      + (near.length ? ctH2('Have nearby') + ctNear(near) : '')
+      + (mv.length ? ctH2(q.movesT || 'Do it in a few steps') + ctSteps2(mv) : '')
+      + ctGood2(val(q.good)) + (q.full ? ctFull : '') + (q.link ? `<button class="ct-alt" onclick="openPage('chg:${CAT}:d:${val(q.link)[2]}')">${F('Red skin? See diaper rash or yeast')} <span aria-hidden="true">›</span></button>` : '')
       + ctSafe(q.safe) + (q.urgent ? hubUrgent(F(val(q.urgent)), 'Call 911 right away') : '')
       + (q.video ? ctH2('Watch how') + TB.video(q.video) : '') + `</div>`; };
   const ctLook = (img, cap, alt) => `<figure class="ct-look" id="ct-look">${ctImg(img, alt || cap)}<figcaption>${ctSent(cap)}</figcaption></figure>`;
@@ -1524,6 +1542,56 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   asHowto(TPL['h:diapers:0'], CT_PAGES.diaper(true)); asHowto(TPL['h:diapers:1'], CT_PAGES.diaper(false)); asHowto(TPL['h:diapers:2'], CT_PAGES.wriggle(false)); asHowto(TPL['h:diapers:3'], CT_PAGES.wriggle(true));
   asHowto(nails, CT_PAGES.nails); asHowto(gums, CT_PAGES.gums); asHowto(TPL['p:brush'], CT_PAGES.brush); asHowto(shade, CT_PAGES.shade); asHowto(six, CT_PAGES.six);
   asHowto(dress, CT_PAGES.dress); asHowto(TPL['p:feet'], CT_PAGES.feet);
+  // Nov 22 (Yarden's how-to mockup, second pass): pointing labels on the big photo, icon "Have nearby", and a small photo
+  // per step where one exists. Every step photo shows a different moment from the big photo.
+  const PH = n => 'photo:care/' + n;
+  const showAs = (q, call) => Object.assign(val(q.show), { call });
+  [[TPL['p:sponge'], [['Keep {o} wrapped', 'br', 72, 72], ['Wash one part at a time', 'bl', 34, 52]],
+    ['Towel', 'Washcloth', 'Bowl of warm water', 'Mild soap'],
+    [[PH('sp-1'), 'Prepare', 'Everything in reach. Water warm, not hot, on your wrist'], [PH('sp-2'), 'Eyes, then face', 'Plain water, a clean corner of the cloth for each eye'], [PH('sp-3b'), 'Wash, cover, repeat', 'Mild soap, one part at a time. Diaper area last']]],
+   [TPL['p:tub'], [['Hand behind the head', 'bl', 42, 56], ['Warm washcloth', 'br', 56, 84]],
+    ['Little tub', 'Towel', 'Washcloth', 'Mild soap'],
+    [[PH('tb-1'), 'Prepare', 'About 2 inches of water, warm on your wrist'], [PH('tb-lower'), 'Lower in gently', 'Feet first, your arm behind {p} shoulders'], [PH('tb-5'), 'Wash and wrap', 'Face, body, hair last. Then straight into the towel']]],
+   [TPL['t:bath:3'], [['A non-slip mat', 'tl', 24, 84], ['Shallow water', 'br', 62, 66]],
+    ['Non-slip mat', 'Towel', 'Bath toys'],
+    [[PH('bg-1'), 'Mat down first', 'Before {s} {get|gets} in. Sit {o} away from the spout'], [PH('bg-2'), 'Check the water', 'Warm, not hot, no higher than {p} waist'], ['hand', 'A hand on {o} the whole bath', 'Wash with your free hand. Drain the tub right after']]],
+   [nails, [['Pad pressed back', 'bl', 30, 30], ['Just the white tip', 'tr', 52, 46]],
+    ['Nail clippers or a file', 'Good light'],
+    [[PH('nl-1'), 'Choose a sleepy moment', 'Still hands make it easier'], ['hand', 'Press the fingertip back', 'Make space between the nail and the skin'], [PH('nl-3'), 'Clip, then smooth', 'Follow the curve. Toenails straight across']]],
+   [gums, [['Damp cloth on a finger', 'tr', 44, 50]],
+    ['Soft cloth', 'Water'],
+    [[PH('gm-1'), 'Wet the cloth', 'Plain water, no toothpaste yet'], ['hand', 'Wrap it on a finger', 'A soft edge against the gums'], ['smile', 'Wipe top and bottom', 'Gently, morning and night']]],
+   [TPL['p:brush'], [['Soft brush', 'bl', 46, 52]],
+    ['Soft toothbrush', 'Fluoride toothpaste'],
+    [[PH('br-1'), 'Add a tiny smear', 'The size of a grain of rice'], ['tooth', 'Brush every tooth', 'Front and back, twice a day. Last thing at night'], [PH('br-3'), 'Skip the rinse', 'Swallowing this tiny amount is fine']]],
+   [six, [['Wide-brim hat', 'tr', 74, 30], ['Sunscreen on bare skin', 'bl', 50, 56]],
+    ['Sunscreen, SPF 30+', 'Wide-brim hat'],
+    [[PH('ss-1'), 'Put it on early', '15–30 minutes before you go out'], ['hand', 'Cover bare skin', 'Cheeks, ears, feet and the back of the neck'], ['clock', 'Put more on', 'Every 2 hours, and after water']]],
+   [shade, [['Canopy up', 'tr', 40, 24]],
+    ['Stroller canopy', 'Light layers', 'Wide-brim hat'],
+    [['clock', 'Plan cooler hours', 'Go out early or later in the day'], ['shirt', 'Cover gently', 'Loose long sleeves and a wide-brim hat'], ['stroller', 'Canopy, never a blanket', 'A blanket over the stroller traps heat']]],
+   [dress, [['Feel the neck', 'tr', 86, 56], ['Light layers', 'bl', 46, 70]],
+    [],
+    [['shirt', 'One more layer than you', 'Comfy in a T-shirt? Add a light layer for {o}'], ['hand', 'Check {p} neck', 'Sweaty: take a layer off. Feels cool: add one'], ['moon', 'At bedtime', 'Sleepwear or a sleep sack, no loose blankets']]],
+   [TPL['p:feet'], [['Room at the toe', 'tl', 22, 30], ['Flexible sole', 'bl', 30, 62]],
+    [],
+    [['stand', 'Barefoot indoors', 'Or non-slip socks when needed'], ['road', 'Shoes for outdoors', 'Once {s’s} walking outside'], ['hand', 'Check the fit', 'While {s} {stand|stands}, press the toe: a finger’s width of room']]]
+  ].forEach(([q, call, nearby, moves]) => { showAs(q, call); Object.assign(q, { nearby, moves }); });
+  // Diapers: the clean-under trick, and rolling to the side (never lifting by the ankles).
+  [[TPL['h:diapers:0'], true], [TPL['h:diapers:1'], false]].forEach(([q, cord]) => { showAs(q, [['One hand on {o}', 'bl', 40, 46], ['Fresh diaper ready', 'tr', 82, 84]]);
+    Object.assign(q, { nearby: ['Diaper', 'Wipes', 'Zinc diaper cream', 'Changing pad'],
+      moves: [[PH('dn-under'), 'Fresh one under', 'Roll {o} gently to one side and slide it under the dirty one'], [PH('dn-2'), 'Open and wipe', 'Wipe the worst with the dirty front, then wipes front to back'], [PH('dn-fasten'), 'Old one out, fasten', cord ? 'Bring the front up below the stump. Snug, not tight' : 'Bring the front up and fasten. Snug, not tight']] }); });
+  showAs(TPL['h:diapers:2'], [['Something to hold', 'tr', 34, 56], ['One hand on {p} tummy', 'br', 62, 46]]);
+  Object.assign(TPL['h:diapers:2'], { nearby: ['Diaper', 'Wipes', 'Small toy'],
+    moves: [[PH('wg-1'), 'Get ready', 'A clean diaper and wipes within reach'], ['toy', 'Keep {o} busy', 'A toy to hold, or a song'], [PH('wg-4'), 'Too wriggly? Use the floor', 'On a mat there’s nowhere to fall']] });
+  showAs(TPL['h:diapers:3'], [['Holding the sofa', 'bl', 22, 60], ['Pull-on ready', 'br', 66, 52]]);
+  Object.assign(TPL['h:diapers:3'], { nearby: ['Pull-on diaper', 'Wipes', 'Toy'],
+    moves: [[PH('wg-1'), 'Get ready', 'If {s’s} wobbly, change {o} lying on the floor'], [PH('wg-5'), 'Let {o} hold on', 'To the sofa edge, with you close'], ['diaper', 'Off, wipe, on', 'Tear the sides of the dirty one, wipe front to back, step {o} in']] });
+  // Bedtime: the routine as a strip under the photo, then the steps.
+  showAs(TPL['t:bath:2'], [['On {p} back', 'tl', 76, 74], ['A bare crib', 'bl', 30, 84]]);
+  Object.assign(TPL['t:bath:2'], { routine: { t: 'A simple bedtime routine', items: [['bath', 'Bath'], ['shirt', 'PJs'], ['book', 'Book'], ['moon', 'Sleep']] }, nearby: [],
+    moves: [['thermo', 'Keep it warm', 'A short bath, warm on your wrist. Not needed every night'], ['moon', 'Keep it calm', 'Dim lights and a quiet voice. Feed, then brush any teeth'], ['crib', 'Follow the routine', 'Into the crib drowsy but awake, on {p} back']] });
+
   // What to know: one photo with the caption on it.
   Object.assign(TPL.cord, { eyebrow: 'Cord', normalNotes: undefined, lookImg: 'show-cord', lookCap: 'Stump in the air, diaper folded down', show: undefined, normal: [['cord', 'A dry, dark stump as it heals'], ['drop', 'A small crust or spot of blood as it comes off']],
     moves: [['diaper', 'Fold the diaper below it'], ['drop', 'If it’s dirty, plain water and pat dry'], ['hand', 'Let it fall off. Don’t pull']] });
