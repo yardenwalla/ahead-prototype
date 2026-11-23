@@ -8,9 +8,9 @@
 #main .sm-art svg { height: 100%; width: auto; display: block }
 #main .sm-row .hub-dot { background: var(--sm-bg) !important }
 #main .sm-row .hub-dot svg [stroke] , #main .sm-row .hub-dot svg { stroke: var(--sm-ink) }
-#main .hub-page[data-look] .hub-rough-card { background: #efecfc; color: #4b3fb0 }
+#main .hub-page[data-look] .hub-rough-card { background: #edf2fe; color: #4e678e }
 #main .hub-page[data-look] .hub-rough-stars { display: none }
-#main .hub-page[data-look] .hub-rough-moon { background: #fff; color: #a79cf0 }
+#main .hub-page[data-look] .hub-rough-moon { background: #fff; color: #9fb8df }
 #main .hub-page[data-look] .hub-rough-copy b { color: #2f3a63 }
 #main .hub-page[data-look] .hub-rough-copy small { color: #4d5785 }
-#main .hub-page[data-look] .hub-rough-card .hub-chev { color: #4b3fb0 }
+#main .hub-page[data-look] .hub-rough-card .hub-chev { color: #4e678e }

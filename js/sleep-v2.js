@@ -9,6 +9,7 @@
   const go = r => `openPage('chg:Sleep:${r}')`;
   const fever = () => { try { const mo = window.__chg.ageNow(); return mo < 3 ? 'a temperature of 100.4°F or higher' : mo < 6 ? 'a temperature of 101°F or higher' : 'a fever of 103°F or higher, or one lasting more than a day'; } catch (e) { return 'a fever'; } };
 
+  const nursing = () => { try { return /breast|nurs|both/i.test((JSON.parse(localStorage.getItem('ahead-v2-profile') || '{}').feed) || ''); } catch (e) { return false; } };
   const page = (eyebrow, title, lead, body) => H().detail('Sleep', eyebrow, title, lead, `<div class="sv2">${body}</div>`, 'moon').replace('<div class="hub-detail-head', '<div class="hub-detail-head sv2-head');
   const vis = (label, tag, inner) => `<section class="sv2-vis"><header><em>${F(label)}</em>${tag ? `<span>${F(tag)}</span>` : ''}</header>${inner}</section>`;
   const glance = list => `<div class="sv2-glance">${list.map(([b, s]) => `<div><b>${F(b)}</b><small>${F(s)}</small></div>`).join('')}</div>`;
@@ -35,9 +36,19 @@
   const legend = list => `<div class="sv2-legend">${list.map(([k, t]) => `<span><s class="is-${k}"></s>${F(t)}</span>`).join('')}</div>`;
   const lab = (t, s) => `<b>${F(t)}</b><small>${F(s)}</small>`;
 
+
+  // Photo steps (2–4), numbered, optionally one marked as the one to aim for.
+  const photos = (list, aim) => `<div class="sv2-loop is-${list.length}">${list.map(([img, t, sub], i) => `<div class="${aim === i ? 'is-aim' : ''}">${aim === i ? `<em>${F('Aim for this')}</em>` : ''}<img src="${IMG + img}" alt=""><i>${i + 1}</i>${lab(t, sub)}</div>`).join('')}</div>`;
+  // Two cards side by side; a photo when it helps, an icon otherwise.
+  const two = (a, b) => `<div class="sv2-two">${[a, b].map(([tone, img, tag, t, sub, tryT, tryS]) => `<div class="is-${tone}${img ? '' : ' no-img'}">${img ? `<img src="${IMG + img}" alt="">` : ''}<em>${F(tag)}</em>${lab(t, sub)}${tryT ? `<p><b>${F(tryT)}</b>${F(tryS)}</p>` : ''}</div>`).join('')}</div>`;
+  // Nights drawn to scale, 7 pm to 7 am: sleep in blue, each waking a gap.
+  const N0 = 19, N1 = 31, np = h => ((h - N0) / (N1 - N0) * 100).toFixed(2) + '%';
+  const night = (label, wakes, note, on) => `<div class="sv2-night${on ? ' is-on' : ''}"><b>${F(label)}${on ? ` <span>${F('Now')}</span>` : ''}</b><div class="sv2-nbar">${wakes.map(([h, w = .35, kind]) => `<s class="is-${kind || 'wake'}" style="left:${np(h)};width:${(w / (N1 - N0) * 100).toFixed(2)}%"></s>`).join('')}</div>${note ? `<small>${F(note)}</small>` : ''}</div>`;
+  const nightScale = () => `<div class="sv2-nscale"><span>7 pm</span><span>11 pm</span><span>3 am</span><span>7 am</span></div>`;
+
   const clock = (h, mnt) => { const a = (mnt / 60) * 360, hA = ((h % 12) + mnt / 60) * 30, p = (deg, r) => [50 + r * Math.sin(deg * Math.PI / 180), 50 - r * Math.cos(deg * Math.PI / 180)].map(n => n.toFixed(1));
     const [hx, hy] = p(hA, 22), [mx, my] = p(a, 32);
-    return `<svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="44" fill="#fff" stroke="#d9d3f6" stroke-width="4"/><line x1="50" y1="50" x2="${hx}" y2="${hy}" stroke="#5b4fc4" stroke-width="6" stroke-linecap="round"/><line x1="50" y1="50" x2="${mx}" y2="${my}" stroke="#a79cf0" stroke-width="4" stroke-linecap="round"/><circle cx="50" cy="50" r="5" fill="#5b4fc4"/></svg>`; };
+    return `<svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="44" fill="#fff" stroke="#d3e1f6" stroke-width="4"/><line x1="50" y1="50" x2="${hx}" y2="${hy}" stroke="#46638c" stroke-width="6" stroke-linecap="round"/><line x1="50" y1="50" x2="${mx}" y2="${my}" stroke="#9fb8df" stroke-width="4" stroke-linecap="round"/><circle cx="50" cy="50" r="5" fill="#46638c"/></svg>`; };
 
   const P = {
     // Fighting bedtime: the same protest, two reasons, shown side by side.
@@ -48,6 +59,98 @@
       + rows('What stays the same', [['eye', 'Follow {p} sleepy cues', 'Yawning, looking away, going quiet'], ['book', 'Keep the bedtime steps the same', 'Same calm routine, even if the start time moves']])
       + note('One change at a time.', 'Try earlier or later for a few nights before changing anything else.')
       + calls('sleep changes come with ' + fever() + ', poor feeding or pain.') + foot('Every baby moves at {p} own pace.')),
+
+
+    // ---- Newborn and early months ----
+    'd:steps0': () => page('Naps', 'Spot the yawn, soothe, then down', 'Winding down at the first sleepy cue makes settling easier than waiting for tears.',
+      vis('Alert, sleepy or overtired?', '', photos([['alert.jpg', 'Alert', 'Bright eyes. Time to feed and play'], ['yawn.jpg', 'Getting sleepy', 'Yawns, a faraway stare. Wind down now'], ['overtired.jpg', 'Overtired', 'Fussing, arching. Soothe first']], 1))
+      + rows('Then three steps', [['', 'Sleepy cues', 'Start at the first one you see.'], ['', 'Soothe', 'Feed, rock, hold or shush. All fine.'], ['', 'Down', 'Drowsy or asleep, always on {p} back.']], true)
+      + note('You can’t spoil a newborn.', 'Responding quickly helps {o} feel safe.', 'heart') + foot('Look for a few signs together. One yawn on its own can mean lots of things.')),
+    'd:napsearly': () => page('Naps', 'Short, frequent naps are normal now', 'They come at different times each day, from 30 minutes to 2 hours.',
+      vis('Feed, awake, sleep, repeat', 'Around the clock', photos([[nursing() ? 'feed-nurse.jpg' : 'feed.jpg', 'Feed', 'When hungry'], ['alert.jpg', 'Awake', 'Until the first yawn'], ['bassinetnap.jpg', 'Sleep', '30 min to 2 hrs']]) + `<p class="sv2-cap is-loop">↻ ${F('Then again, often every 2–3 hours')}</p>`)
+      + rows('What helps', [['clock', 'Go by time awake, not the clock', 'Often about 45–60 minutes awake.'], ['eye', 'Start winding down early', 'At the first yawn or quiet stare.'], ['heart', 'Any nap counts', 'In arms, a carrier or a stroller. Move {o} to {p} own flat space if {s} falls asleep in a car seat or swing.']])
+      + note('Coming up:', 'around 3–4 months, naps get longer and come at about the same times.') + foot('Every baby moves at {p} own pace.')),
+    'd:wakes': () => page('Night sleep', 'Waking at night is normal now', 'Most babies under 6 months wake to feed. Keep each waking short, dim and quiet.',
+      vis('A newborn night', 'Normal now', night('Often 2–4 wakes', [[21.5, .5, 'feed'], [24.5, .5, 'feed'], [27.5, .5, 'feed']]) + nightScale() + legend([['night', 'Asleep'], ['feed', 'Awake to feed']]))
+      + rows('When {s} stirs', [['', 'Pause first', 'Grunts and whimpers are normal. Give it 1–2 minutes.'], ['', 'Then help if needed', 'Feed, change or settle, in low light.'], ['', 'Check {s}’s not too warm', 'A sweaty neck means too warm.']], true)
+      + note('Night feeds are normal now.', 'They drop on their own as {s} grows.') + calls('night waking comes with ' + fever() + ', poor feeding or pain, or {s} snores loudly or pauses in breathing.') + foot('Every baby moves at {p} own pace.')),
+    'd:props': () => page('Night sleep', 'Only sleeps on you?', 'At this age that’s normal. You can step back slowly, a few nights at a time.',
+      vis('Step back, a few nights each', 'Go slowly', photos([['sleepy.jpg', 'Hold until drowsy', 'Not fully asleep'], ['down.jpg', 'Into the crib', 'Hand on {p} chest'], ['goodbye.jpg', 'Sit nearby', 'Then farther away']]))
+      + rows('Two ways to lay {o} down', [['moon', 'Drowsy, then down', 'Easier over time: {s} learns to finish falling asleep.'], ['heart', 'Deep asleep, then down', 'Wait for limp arms and slow breathing.']])
+      + note('Getting sleepy holding {o}?', 'Put {o} in {p} crib, on {p} back. Never sleep with {o} on a sofa or armchair.', 'crib', 'is-safe') + foot('Feeding to sleep doesn’t have to change if it works for you.')),
+    'd:daynight': () => page('Night sleep', 'Bright days and dim nights set {p} clock', 'Babies aren’t born knowing the difference. Light, sound and your routine help.',
+      vis('Day and night, side by side', '', two(['sun', 'alert.jpg', 'By day', 'Bright and chatty', 'Curtains open, talk and play, even around naps.'], ['lav', 'nightfeed.jpg', 'At night', 'Dim and quiet', 'Low lights, few words, then straight back down.']))
+      + rows('What to expect', [['sun', 'More awake by day', 'Once it clicks, often around 6–8 weeks.'], ['moon', 'Longest sleep at night', 'Often about 4–5 hours after bedtime.']])
+      + note('Still waking {o} for feeds?', 'Keep going until {s}’s back to birth weight, or as your pediatrician says.') + foot('Every baby moves at {p} own pace.')),
+    'd:stretch': () => page('Night sleep', '{P} longest night sleep grows over months', 'As {s} needs fewer night feeds, one stretch of sleep gets longer.',
+      vis('The longest stretch', 'Typical', [['Newborn weeks', [[21, .4], [24, .4], [27, .4]], '2–4 hours', 0], ['3–4 months', [[24.5, .4], [27.5, .4]], '5 hours or more', 2], ['Around 6 months', [[26, .4]], '6–8 hours', 5], ['9–12 months', [], '10–12 hours, some wake once', 9]].map(([l, w, n, a], i, arr) => night(l, w, n, (() => { const age = window.__chg.ageNow(); const nx = arr[i + 1]; return age >= a && (!nx || age < nx[3]); })())).join('') + nightScale())
+      + rows('What helps', [['moon', 'Let {o} sleep as long as {s} wants', 'Once your pediatrician says night feeds can wait.'], ['clock', 'Keep the same bedtime steps', 'They tell {o} the long sleep is coming.', 'd:routine']])
+      + note('A few rough nights are normal.', 'New skills, teething or a cold, then the stretch comes back.') + foot('Ages are typical. Every baby moves at {p} own pace.')),
+    'd:routine': () => page('Bedtime', 'A short bedtime routine, the same every night', 'From about 6–8 weeks, a few calm steps in the same order tell {o} it’s bedtime.',
+      vis('Four steps, same order', '15–20 minutes', photos([['pajamas.jpg', 'Change', 'Pajamas. A bath is optional'], [nursing() ? 'feed-nurse.jpg' : 'feed.jpg', 'Feed', 'A calm last feed'], ['book.jpg', 'Book or song', 'The same most nights'], ['down.jpg', 'Down to sleep', 'Sleepy, on {p} back']]))
+      + rows('Good to know', [['clock', 'Same order, not a perfect clock', 'The order is what tells {o} sleep is coming.'], ['moon', 'Nights start to stretch', '{S} gets sleepy around the same time each evening.'], ['sun', 'An earlier bedtime comes later', 'Around 7–8 pm, once naps settle.']])
+      + foot('Every baby moves at {p} own pace.')),
+    'd:predictable': () => page('Naps', 'Naps start to settle into set times', 'Around 3–4 months, {s} gets sleepy at about the same times each day.',
+      vis('Sleepy at about the same times', 'Example', ends('Wake up 7:00 am', 'Bedtime 7:30 pm') + dayBar([[9, 10.25, '9 am'], [12.5, 13.75, '12:30'], [16, 16.75, '4 pm', 'cat']], 19.5) + legend([['awake', 'Awake'], ['nap', 'Nap']]))
+      + rows('How to find {p} times', [['', 'Watch for a few days', 'Jot down when {s} gets sleepy.'], ['', 'Wind down first', 'A few calm, quiet minutes.'], ['', 'Down at those times', 'Most days, give or take.']], true)
+      + rows('Won’t settle for a nap?', [['sun', 'Awake less than usual?', 'Try quiet play first. {S} isn’t tired yet.'], ['moon', 'Awake longer than usual?', 'Probably overtired: a darker room, more help, and wind down sooner next time.']])
+      + foot('Times are an example. Every baby moves at {p} own pace.')),
+    'd:shortnap': () => page('Naps', 'A short nap changes the day', 'When a nap runs short, the next sleep usually needs to come sooner.',
+      vis('How the day shifts', 'Example', `<div class="sv2-ba"><b>${F('Planned day')}</b>${dayBar([[9, 10.25, 'Nap'], [12.5, 13.75, 'Nap'], [16.25, 16.75, 'Catnap', 'cat']])}</div><div class="sv2-ba-arrow" aria-hidden="true">↓</div>
+        <div class="sv2-ba is-after"><b>${F('After a short first nap')}</b>${dayBar([[9, 9.5, 'Short'], [11.75, 13, 'Earlier'], [15.5, 16, 'Earlier', 'cat']], 18.75)}</div>
+        ${legend([['awake', 'Awake'], ['nap', 'Nap'], ['night', 'Bedtime']])}<p class="sv2-cap">${F('The next nap comes 15–30 minutes earlier, and bedtime may too.')}</p>`)
+      + rows('', [['eye', 'Follow {p} cues', 'Bring the next sleep forward a little.'], ['moon', 'Earlier is better than overtired', 'An early bedtime is fine on short-nap days.', 'd:earlybed']])
+      + note('Very common now.', 'Naps of 30–45 minutes are normal at 3–5 months. They get longer with time.') + foot('Every baby moves at {p} own pace.')),
+    'd:regress': () => page('Night sleep', 'Waking more is the 4‑month sleep regression', 'Between 3 and 5 months, sleep cycles mature, so {s} wakes more between them for a few weeks.',
+      vis('A few weeks, then longer again', '', night('Before', [[25, .4], [28.5, .4]], 'A long first stretch') + night('During', [[21, .35], [22.5, .35], [24, .35], [25.5, .4], [27, .35], [28.5, .35]], 'Waking between sleep cycles', (a => a >= 3 && a < 6)(window.__chg.ageNow())) + night('A few weeks later', [[25.5, .4]], 'Longer stretches again') + nightScale())
+      + rows('What helps', [['clock', 'Wait a minute or two', 'Many cries settle on their own.'], ['moon', 'Dark and quiet', 'Keep visits brief.'], ['heart', 'A feed if hungry', 'Comfort the way you always do.']])
+      + note('No need to sleep train.', 'Keep doing what works, and it passes.') + calls('waking comes with ' + fever() + ', poor feeding or pain.') + foot('Ages are typical. Every baby moves at {p} own pace.')),
+    'd:settle4': () => page('Bedtime', 'Try putting {o} down drowsy, once a day', 'From about 4 months, many babies can learn to fall asleep without being fed or rocked all the way.',
+      vis('Practice, once a day', 'Often at bedtime', photos([['book.jpg', 'Your usual steps', 'Same order as always'], ['down.jpg', 'Down drowsy', 'Awake, on {p} back'], ['crib.jpg', 'Wait a minute', 'Before going in']]) + `<p class="sv2-cap is-loop">${F('Still upset? Help {o}, and try again another day.')}</p>`)
+      + note('It’s practice, not a test.', 'Feeding or rocking to sleep is still fine.') + foot('Every baby moves at {p} own pace.')),
+    'd:naphelp:fight': () => page('Naps', 'Fighting a nap?', 'You can’t make a baby sleep. Aim for rest: a fair try, a short break, then try again.',
+      vis('A fair try, then a break', '', photos([['nap.jpg', 'Try 20–30 min', 'Dark and calm'], ['sleepy.jpg', 'A short break', 'Up and cuddles'], ['down.jpg', 'Try again', 'Or wait for the next nap']]))
+      + `<h2 class="hub-h2">${F('Next time, look at the timing')}</h2>` + two(['sun', 'hero-1.jpg', 'Not tired yet', 'Happy and chatty', '', 'Try a little later', ''], ['lav', 'overtired.jpg', 'Overtired', 'Eye rubs, arching', '', 'Start earlier', ''])
+      + note('A nap on the go counts.', 'If {s} falls asleep in a car seat or swing, move {o} to a flat, safe space.', 'crib', 'is-safe') + foot('Every baby moves at {p} own pace.')),
+    'd:naphelp:skip': () => page('Naps', 'What if a nap doesn’t happen?', 'It happens, and that’s okay. An earlier bedtime keeps {o} from getting overtired.',
+      vis('Two possible evenings', '', two(['lav', 'nap.jpg', 'Usually better', 'Earlier bedtime', 'Helps {o} catch up, often a calmer night'], ['sun', 'overtired.jpg', 'Often harder', 'Usual bedtime', 'Often overtired by then']))
+      + rows('What to do', [['', 'Move bedtime earlier', 'About 30 minutes earlier than usual.'], ['', 'Keep the usual routine', 'The same steps, just a bit earlier.'], ['', 'Watch for sleepy cues', '{S} may be ready sooner than usual.']], true)
+      + foot('Every baby moves at {p} own pace.')),
+
+    // ---- Older babies ----
+    'd:hiccup:soon': () => page('Night sleep', 'Up soon after bedtime? Try earlier', 'A wake-up 30–60 minutes after bedtime often means {s} was overtired.',
+      vis('What it looks like', '', `<div class="sv2-split"><s class="is-night" style="flex:.8"></s><s class="is-up">${F('Up')}</s><s class="is-night" style="flex:4"></s></div><div class="sv2-split-l"><span>${F('Bedtime')}</span><span>${F('30–60 min later')}</span><span>${F('Rest of the night')}</span></div>`
+        + two(['lav', '', 'Overtired', 'Eye rubs, arching', 'At bedtime', 'Try earlier', '15–30 minutes, for a week'], ['sun', '', 'Late last nap', 'Not tired enough', 'Bright at bedtime', 'Cap the last nap', 'Or wake {o} gently']))
+      + rows('What helps', [['', 'Feed earlier in the routine', 'Not right at the end, so {s} goes down awake.'], ['', 'Dark from the start', 'Lights low for the whole routine.']], true)
+      + calls('sleep changes come with ' + fever() + ', poor feeding or pain.') + foot('Every baby moves at {p} own pace.')),
+    'd:hiccup:early': () => page('Night sleep', 'Up before 6? Treat it as night', 'It’s often a late bedtime, early light, or a long last nap.',
+      vis('Treat it as night', '', night('Up at 5 am', [[29, 2, 'up']], '', false) + `<div class="sv2-nscale"><span>7 pm</span><span>11 pm</span><span>3 am</span><span>7 am</span></div>`
+        + `<div class="sv2-inner"><i>${art('moon')}</i><p><b>${F('Before 6 am:')}</b> ${F('dark, quiet and brief, as you would at 2 am.')}</p></div>`)
+      + rows('Look for the cause', [['sun', 'Early light', 'Blackout curtains keep the room dark.'], ['moon', 'A late bedtime', 'Overtired babies wake early. Try 15–30 minutes earlier, for a week.'], ['clock', 'A long last nap', 'Cap it, so {s}’s tired enough for a full night.']])
+      + calls('sleep changes come with ' + fever() + ', poor feeding or pain.') + foot('Every baby moves at {p} own pace.')),
+    'd:nightfeeds': () => page('Night sleep', 'Night feeds drop as days get fuller', 'Many babies still feed once or twice a night, and that’s fine.',
+      vis('Night feeds over the first year', 'Typical', [['Around 3 months', [[22, .5, 'feed'], [25.5, .5, 'feed'], [28.5, .5, 'feed']], '2–3 a night', 0], ['Around 6 months', [[25, .5, 'feed'], [28.5, .5, 'feed']], '1–2 a night', 5], ['Later in the first year', [[28.5, .5, 'feed']], '0–1 a night', 8]].map(([l, w, n, a], i, arr) => night(l, w, n, (() => { const age = window.__chg.ageNow(); const nx = arr[i + 1]; return age >= a && (!nx || age < nx[3]); })())).join('') + nightScale() + legend([['night', 'Asleep'], ['feed', 'Night feed']])
+        + `<div class="sv2-inner"><i>${art('sunrise')}</i><p><b>${F('Last to go:')}</b> ${F('usually the feed closest to morning.')}</p></div>`)
+      + rows('Ready to drop one?', [['', 'Ask your pediatrician first', 'They can say if {s}’s growing well enough.'], ['', 'Go slowly', 'A little shorter or smaller every few nights.'], ['', 'More by day', 'Full feeds while {s}’s awake.'], ['', 'Someone else goes in', 'Breastfed babies often settle more easily for a partner.']], true)
+      + note('No bottle in bed.', 'Milk pooling on the teeth causes decay.', 'tooth', 'is-safe') + foot('Every baby moves at {p} own pace.')),
+    'd:nightwake': () => page('Night sleep', 'Night waking often comes back for a while', 'Babies who were sleeping well start waking again. It usually settles in a week or two.',
+      vis('Over a week or two', 'Typical', `<div class="sv2-week">${[3, 3, 2, 2, 1, 1, 0].map((n, i) => `<div><span>${Array.from({ length: n }, () => '<s></s>').join('')}</span><small>${i + 1}</small></div>`).join('')}</div><p class="sv2-cap">${F('Wakes per night, night by night')}</p>`)
+      + rows('Why it comes back', [['crawl', 'A new skill', 'Like rolling, sitting or pulling up.'], ['heart', 'Missing you', 'Crying when you leave the room.'], ['tooth', 'Teeth or a cold', 'For a few nights.']])
+      + rows('What to do', [['', 'Wait or go in', 'Whatever feels right to you.'], ['', 'Brief, dark and boring', 'Then back down.'], ['', 'Comfort {o} when sick', 'Back to your usual routine once better.']], true)
+      + note('Waking from hunger or habit?', 'Ask your pediatrician if night feeds are still needed.') + foot('Every baby moves at {p} own pace.')),
+    'd:goodbye': () => page('Bedtime', 'Keep bedtime goodbyes short and the same', 'Around 8–10 months, many babies protest when you leave. It shows how attached {s} is to you.',
+      vis('The same goodbye, every night', '', photos([['book.jpg', 'Your usual steps', 'Same order'], ['goodbye.jpg', 'Same goodnight words', 'Every time'], ['crib.jpg', 'Then leave', 'Even if {s} protests']]) + `<p class="sv2-cap is-loop">↻ ${F('Back briefly if needed: calm and boring')}</p>`)
+      + rows('What’s normal now', [['heart', 'Crying as you leave', 'Right as you walk out.'], ['star', 'Only you will do', 'Especially at bedtime.'], ['stand', 'Standing up and calling', 'Wanting you to come back.']])
+      + note('Predictable beats sneaking out.', 'Sneaking out can make {o} watch you more closely.') + foot('Every baby moves at {p} own pace.')),
+    'd:yoursleep': () => page('Your sleep', 'Protect your own sleep too', 'A few changes help, even while {s} still wakes.',
+      vis('Take shifts, if you can', 'Example', `<div class="sv2-shift"><div><b>${F('You’re on')}</b><small>9 pm – 2 am</small></div><div class="is-2"><b>${F('They’re on')}</b><small>2 am – 7 am</small></div></div><p class="sv2-cap">${F('With a partner or a helper, each of you gets one 4–5 hour stretch.')}</p>`)
+      + rows('What helps', [['moon', 'Go to bed early', 'Soon after {p} bedtime.'], ['home', 'Let chores wait', 'Sleep when you can.'], ['bottle', 'Share a feed', 'Pumped milk or formula, if it fits your plan.']])
+      + note('Feeding and fighting sleep?', 'Feed in your bed, cleared of pillows and blankets, never on a sofa or armchair. If you doze off, move {o} back to {p} own space when you wake.', 'crib', 'is-safe')
+      + rows('', [['heart', 'Feeling low for more than two weeks?', 'Talk to your doctor, or call or text 1‑833‑852‑6262, any time. In a crisis, call or text 988.']])),
+    'd:away': () => page('Travel', 'New places throw sleep off for a few days', 'A new time zone can too. A safe spot and your usual steps help most.',
+      vis('Shifting bedtime by an hour', 'Example', `<div class="sv2-clocks is-4">${[[7, 0, 'Day 1'], [7, 15, 'Day 2'], [7, 30, 'Day 3'], [7, 45, 'Day 4']].map(([h, mn, d], i) => `<div class="${i === 3 ? 'is-on' : ''}">${clock(h, mn)}<b>${h}:${String(mn).padStart(2, '0')}</b><small>${F(d)}</small></div>`).join('')}</div><p class="sv2-cap">${F('Shift naps and bedtime 15 minutes a day, or just switch. For a bigger jump, switch right away, with bright mornings and dim evenings.')}</p>`)
+      + rows('Before the first night', [['', 'Pack the sleep sack', 'And something that smells like home.'], ['', 'Set up a bare spot first', 'A play yard or crib, nothing in it.'], ['', 'Same bedtime steps', 'Always in the same order.']], true)
+      + note('Car seats are for the car.', 'Move {o} to a flat spot once you arrive.', 'car', 'is-safe') + foot('Clocks changing? Move bedtime 15 minutes a day over a few days before.')),
 
     // Example days, drawn to scale.
     'd:day:2': () => page('Three naps', 'An example day with three naps', 'Two longer naps and a short catnap, and how they fit together.',
