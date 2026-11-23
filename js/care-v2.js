@@ -1099,7 +1099,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   // The photo caption says where and what; these two tiles add when and how it behaves, so nothing repeats.
   const NOTICE = { acne: [['Red or white bumps, no itch'], ['Worse when {s’s} warm or fussy']], cradle: [['Sometimes on the brows and behind the ears'], ['No itch, and no fuss']],
     peeling: [['In the first weeks'], ['No cracks or pain']], diaper: [['Red where the diaper rubs'], ['The skin folds stay clear']], yeast: [['Bright red, deep in the folds'], ['Small spots around the edges']],
-    eczema: [['Itchy, and comes and goes'], ['Also on the arms and legs']], heat: [['After getting hot or sweaty'], ['Fades once {s’s} cool']], newborn: [['White, not red'], ['Blue-gray patches since birth, often on the back']],
+    eczema: [['Itchy, and comes and goes'], ['Also on the arms and legs']], heat: [['After getting hot or sweaty'], ['Fades once {s’s} cool']], newborn: [['White, not red'], ['Pink patches on the eyelids or the back of the neck']],
     strawberry: [['A raised red patch'], ['Grows for a few months, then fades']], drool: [['Also on the neck and cheeks'], ['Worse on drooly days']] };
   // Nov 22 (Yarden: "why do these look less pretty"): the mockup's pages are light because every block is short:
   // one-line tiles, one-line helps, and the call card is one or two lines, not a list.
@@ -1640,7 +1640,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     call: [['A hand on {o}', 'bl', 40, 46], ['Clean diaper ready', 'tr', 82, 84]],
     nearby: ['Clean diaper', 'Wipes', 'Diaper cream', 'Changing pad'],
     moves: [[PH('dn-under'), 'Slide the clean one under', 'Roll {o} gently to one side and tuck it under the dirty diaper'],
-      [PH('dn-2'), 'Open and wipe', 'Use the front of the dirty diaper to wipe the worst, then wipe front to back'],
+      [PH('dn-2'), 'Open and wipe', 'Wipe front to back. Lots of poop? Wipe most of it off with the dirty diaper first'],
       [PH('dn-fasten'), 'Pull out the old one and fasten', cord ? 'Fold the front down below the cord stump. Leave room for two fingers at the waist' : 'Snug, with room for two fingers at the waist']],
     good: () => anatomy() === 'boy' ? (cord ? 'Point his penis down before you fasten, so the diaper doesn’t leak. If he’s circumcised, put a dab of petroleum jelly on the tip at each change until it heals.' : 'Point his penis down before you fasten, so the diaper doesn’t leak.')
       : anatomy() === 'girl' && cord ? 'A little white discharge or a spot of blood in her diaper is normal in the first weeks. It comes from pregnancy hormones.' : 'Let the skin air-dry for a moment before the clean diaper goes on.',
@@ -1664,7 +1664,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   HT(nails, { why: 'Little nails grow fast and are sharp enough to scratch {p} face. Check them twice a week.',
     call: [['Pad pressed back', 'bl', 30, 30], ['Just the white tip', 'tr', 52, 46]],
     nearby: ['Small nail clippers or a file', 'Good light'],
-    moves: [[PH('nl-1'), 'Wait for a sleepy moment', 'Asleep, or drowsy after a feed, {p} hands stay still'],
+    moves: [[PH('nl-1'), 'Wait for a sleepy moment', '{P} hands stay still when {s’s} asleep or drowsy after a feed'],
       ['hand', 'Press the fingertip pad back', 'That makes room, so you only catch the nail'],
       [PH('nl-3'), 'Clip, then file smooth', 'Follow the curve on fingers. Cut toenails straight across']],
     good: 'A soft nail file works well too, if clippers make you nervous.',
@@ -1704,7 +1704,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     call: [['Feel the neck', 'tr', 86, 56], ['Light layers', 'bl', 46, 70]],
     moves: [['shirt', 'Add one more layer than you', 'Comfy in a T-shirt? Dress {o} in a T-shirt and a light layer'],
       ['hand', 'Feel the back of {p} neck', 'Sweaty means take a layer off. Cool means add one'],
-      ['moon', 'Use a sleep sack at night', 'No loose blankets in the crib']],
+      ['moon', 'Use a sleep sack at night', 'A wearable blanket, so nothing loose goes in the crib']],
     good: 'Skip hats indoors. In the car seat, skip puffy coats: buckle {o} in, then lay a blanket over the straps.',
     safe: [['shirt', 'Choose snaps or zips', 'Nothing with strings or cords near the neck']] });
   HT(TPL['p:feet'], { why: 'Bare feet help {o} feel the floor and find {p} balance while learning to walk.',
@@ -1730,9 +1730,9 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   NOTES(nails, [['A small nick?', 'It happens to everyone. Press a clean cloth on it'], ['Clippers make you nervous?', 'A soft nail file works too']]);
   NOTES(gums, [['White patches that don’t wipe off?', 'It may be thrush. Call your pediatrician']]);
   NOTES(TPL['p:brush'], [['No bottle in bed', 'Milk on teeth overnight causes cavities'], ['First dentist visit', 'After the first tooth, and by {p} first birthday']]);
-  NOTES(six, [['Hot, floppy or hard to wake? Call 911', 'Then move {o} to shade and cool {p} skin'], ['Any sunburn before age 1?', 'Call your pediatrician']]);
-  six.moves[0] = [PH('ss-1'), 'Put it on before you go out', 'Broad-spectrum, SPF 30 or more, 15 to 30 minutes ahead. Mineral is gentlest'];
-  NOTES(shade, [['Hot, floppy or hard to wake? Call 911', 'Then move {o} to shade and cool {p} skin'], ['Any sunburn before age 1?', 'Call your pediatrician']]);
+  NOTES(six, [['Hot, floppy or hard to wake? Call 911', 'Then move {o} to shade and cool {p} skin with water'], ['Any sunburn before age 1?', 'Call your pediatrician']]);
+  six.moves[0] = [PH('ss-1'), 'Put it on before you go out', 'Broad-spectrum, SPF 30 or more, 15 to 30 minutes ahead. Mineral (zinc oxide) is gentlest'];
+  NOTES(shade, [['Hot, floppy or hard to wake? Call 911', 'Then move {o} to shade and cool {p} skin with water'], ['Any sunburn before age 1?', 'Call your pediatrician']]);
   shade.moves[1] = ['shirt', 'Cover {p} arms and legs', 'Light, loose long sleeves and a wide-brim hat. No shade? A little sunscreen on small spots'];
   NOTES(dress, [['Snaps or zips only', 'Nothing with strings near the neck'], ['No puffy coats in the car seat', 'Buckle {o} in, then lay a blanket over the straps']]);
   [[TPL['p:sponge'], 1], [TPL['p:tub'], 2], [TPL['t:bath:3'], 2], [TPL['t:bath:2'], 1], [TPL['h:diapers:0'], 1], [TPL['h:diapers:1'], 1], [TPL['h:diapers:2'], 1], [TPL['h:diapers:3'], 1],
@@ -1766,7 +1766,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   Object.assign(TPL['look-yellow'], { lookCap: 'Yellow can be hard to see. Only a quick test shows how high it is', notice: ['It starts on the face, then moves down', 'On darker skin, check the eyes and gums'], helpsShort: ['See yellow? Your pediatrician can check it with a quick test', 'Feed often. It helps clear the yellow', 'Go to every newborn visit, even if {s} looks fine'],
     calls: { ped: ['Yellow on the belly, legs or eyes', 'Fewer than 6 wet diapers a day', 'Still yellow after 2 weeks', 'Any yellow in the first 24 hours. Call right away', 'Very sleepy, poor feeding or pale poop. Call right away'] } });
   Object.assign(TPL['p:teething'], { notice: ['More drooling and chewing', 'A few fussy days'], helpsShort: ['Rub sore gums with a clean finger', 'A chilled, not frozen, teething ring', 'Skip numbing gels and teething necklaces'],
-    calls: { ped: ['FEVER', 'Diarrhea', 'Seeming unwell'], note: 'Teething doesn’t cause these.' } });
+    calls: { ped: ['FEVER', 'Diarrhea', 'Seeming unwell'], note: 'Teething doesn’t cause fever or diarrhea.' } });
   Object.assign(skinCare, { notice: () => stageNow() === 0 ? ['Peeling in the first weeks', 'Spots and blotches that come and go'] : ['Dry patches after baths or in cold weather', 'Redness on the chin from drool'], helpsShort: ['Short baths in plain warm water', 'Pat dry, into the creases', 'Thick, fragrance-free cream on dry patches'],
     calls: { ped: ['A rash that cracks, oozes or spreads', 'FEVER'] } });
   Object.assign(TPL['t:diapers:1'], { notice: ['Soft poop, even days apart', 'Still 6 or more wet diapers a day'], helpsShort: ['Change when wet or dirty', 'Let the skin air out before a fresh one', 'Size up when it leaks'] });
