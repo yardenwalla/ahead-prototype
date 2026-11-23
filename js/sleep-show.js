@@ -500,7 +500,7 @@
       const [nh, nb] = sec('What’s normal'); if (nh && nb && nb.querySelector('.hub-windowbar, .hub-window, [class*=window]')) { nh.remove(); nb.remove(); }
       const keepNote = mo >= 4 ? notes([['', 'No rush after 6 months', 'Plenty of families room-share longer']]) : '';
       top(`<section class="ssw-photo-only">${pinPhoto('room.jpg', 'A parents’ bedroom at night with a bare crib right beside the bed and a dim lamp', [['Own crib, nothing in it', 80, 45, 'l'], ['Right by your bed', 53, 72, 'l']])}</section>`
-        + (mo < 9 ? `<h2 class="hub-h2">${F('When to move from bassinet to crib')}</h2><section class="ssw-move"><span class="ssw-move-ic">${H().art('crib', 'Sleep')}</span><span><b>${F('At the first try to roll, or the bassinet’s limit')}</b><small>${F('Whichever comes first. Limits differ by model, so check the label.')}</small></span></section>` : '') + keepNote);
+        + (mo < 9 ? `<h2 class="hub-h2">${F('Moving to the crib')}</h2><section class="ssw-move"><span class="ssw-move-ic">${H().art('crib', 'Sleep')}</span><span><b>${F('At the first try to roll, or the bassinet’s limit')}</b><small>${F('Whichever comes first. Limits differ by model, so check the label.')}</small></span></section>` : '') + keepNote);
     },
     // Safe sleep: a labeled crib, then a quick yes/skip check (Yarden's mockup).
     'chg:Sleep:safe': () => {
@@ -627,7 +627,7 @@
       glanceEl.insertAdjacentHTML('afterbegin', `<div class="ssw-dc"><div class="ssw-dc-sky${DAY.loop ? ' is-loop' : ''}"><i class="ssw-dc-sun" aria-hidden="true">${H().art('sun', 'Sleep')}</i><div class="ssw-dc-row">${tiles}</div><i class="ssw-dc-moon" aria-hidden="true">${H().art('moon', 'Sleep')}</i></div><div class="ssw-dc-stats">${stats}</div></div>`);
       glanceEl.classList.add('ssw-dc-card');
       // See how it all works together (nap stages): one short nap shifts the rest of the day.
-      if (v >= 2 && !main.querySelector('.ssw-works')) glanceEl.insertAdjacentHTML('afterend', `<h2 class="hub-h2">${F('See how it all works together')}</h2><button class="ssw-works" onclick="${go('chg:Sleep:d:shortnap')}"><span class="ssw-works-pic"><img src="${IMG + (v === 2 ? 'mattress.jpg' : 'standing.jpg')}" alt="" loading="lazy"><em>${F('If a nap is shorter')}</em></span><span class="ssw-works-r"><em>${F('Then the rest of the day shifts')}</em><span class="ssw-works-strip"><i></i><b></b><i></i><b></b><i class="is-short"></i><b class="is-moved"></b><i></i></span><small>${F('Move the next nap earlier, or plan for an earlier bedtime.')}</small></span></button>`);
+      if (v >= 2 && !main.querySelector('.ssw-works')) glanceEl.insertAdjacentHTML('afterend', `<h2 class="hub-h2">${F('How it fits together')}</h2><button class="ssw-works" onclick="${go('chg:Sleep:d:shortnap')}"><span class="ssw-works-pic"><img src="${IMG + (v === 2 ? 'mattress.jpg' : 'standing.jpg')}" alt="" loading="lazy"><em>${F('If a nap is shorter')}</em></span><span class="ssw-works-r"><em>${F('Then the rest of the day shifts')}</em><span class="ssw-works-strip"><i></i><b></b><i></i><b></b><i class="is-short"></i><b class="is-moved"></b><i></i></span><small>${F('Move the next nap earlier, or plan for an earlier bedtime.')}</small></span></button>`);
     }
     if (hero && hero.__sswBand && glanceEl && !glanceEl.querySelector('.ssw-glance-band')) glanceEl.insertAdjacentElement('afterbegin', hero.__sswBand);
     // v4 "Right now for <name>" (Development's pattern): four photo tiles, each a topic plus this stage's guide, opening the
