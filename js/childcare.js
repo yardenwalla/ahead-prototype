@@ -86,6 +86,7 @@
   const save = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
   const esc3 = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const rerender = () => { const y = scrollY; render(); scrollTo(0, y); };
+  window.ccRerender = rerender;   // Nov 23 audit: the backup people "Done" button called rerender(), which isn't global, so the tap threw and did nothing
 
   /* ---------- the five types of care ---------- */
   // Each item comes with what good looks like, because that's the part parents don't know. Sources: Child Care Aware of America checklists; HHS parent's guide; AAP.
@@ -171,7 +172,7 @@
     const named = [[c.c1Name, c.c1Phone], [c.c2Name, c.c2Phone]].filter(([n]) => n), asked = load('ahead-childcare-backup', []).includes(1);
     return `<h2 class="hub-h2">${F('Set up your backup')}</h2>`
       + `<details class="hub-card cc-more cc-backup"${named.length ? '' : ''}><summary><span>${hubArt('heart', CAT)}</span><div><b>${F(named.length ? named.map(([n]) => n).join(' and ') : 'Name two backup people')}</b><small>${F(named.length ? 'Your backup people. Tap to change' : 'Family, friends or a sitter you could call at short notice')}</small></div></summary>`
-      + `<div class="cc-backup-f"><p class="cc-h2sub">${F('They’re added to {p} care card, so your caregiver has them too.')}</p><div class="cc-two-f">${f('c1Name', 'First person')}${f('c1Phone', 'Phone', 'tel')}</div><div class="cc-two-f">${f('c2Name', 'Second person')}${f('c2Phone', 'Phone', 'tel')}</div><button class="hub-button cc-next2" onclick="rerender()">${F('Done')}</button></div></details>`
+      + `<div class="cc-backup-f"><p class="cc-h2sub">${F('They’re added to {p} care card, so your caregiver has them too.')}</p><div class="cc-two-f">${f('c1Name', 'First person')}${f('c1Phone', 'Phone', 'tel')}</div><div class="cc-two-f">${f('c2Name', 'Second person')}${f('c2Phone', 'Phone', 'tel')}</div><button class="hub-button cc-next2" onclick="ccRerender()">${F('Done')}</button></div></details>`
       + H().ticks([BACKUP[1]], () => asked, () => 'ccBackupTick(1)', CAT)
       + (named.length && asked ? H().note('Your backup plan is set. Check it again whenever your care changes.') : ''); };
   const backupList = () => { const on = load('ahead-childcare-backup', []); return `<h2 class="hub-h2">${F('Set up your backup')}</h2>` + H().ticks(BACKUP, i => on.includes(i), i => `ccBackupTick(${i})`, CAT) + (BACKUP.every((_, i) => on.includes(i)) ? H().note('Your backup plan is set. Check it again whenever your care changes.') : ''); };
