@@ -199,7 +199,7 @@
   function outAndAbout() {
     if (SHOW()) return home3();
     const m = ageNow(), v = stageFor(m), h = H(), n = nowFor(m), nx = nextFor(m);
-    const HERO_PH = { 0: 'town', 2: 'road', 4: 'carry-out', 6: 'highchair', 9: 'seat-infant', 12: 'seat-convertible' };
+  const HERO_PH = { 0: 'town', 2: 'road', 4: 'carry-out', 6: 'highchair', 9: 'seat-infant', 12: 'seat-convertible' };
     let b = `<header class="hub-hero oa-hero${SHOW() ? ' has-photo' : ''}">${SHOW() ? `<img class="oa-hero-img" src="${PH(HERO_PH[n[0]])}" alt="">` : ''}<p class="hub-eyebrow">${F(m < 1 ? 'In the first weeks' : `At ${m} ${m === 1 ? 'month' : 'months'}`)}</p><h1>${F(n[1])}</h1><p class="hub-lead">${F(n[2])}</p><button class="cc-hero-go oa-hero-go" onclick="${open(n[3])}">${F(n[4] ? n[4][2] : ({ errands: 'See around town', road: 'Plan a longer trip' })[n[3]] || 'See the guide')} ›</button></header>`;
     b += places(v) + seasonCard() + gear(v);
     b += h.versus('In the car', ['Every time', 'Look in the back seat before you walk away.'], ['Never', 'Leave Maya alone in the car, even for a minute.']);
@@ -477,11 +477,13 @@
   const fig3 = (src, alt, pins) => `<section class="oa-photo-card oa3-fig"><figure class="oa-photo"><img src="${PH(src)}" alt="${F(alt)}" loading="lazy">${pinsHtml(pins)}</figure></section>`;
 
   // Nov 22 (Yarden's inspiration): a real photo of this month's change in the top card, like the other guides.
+    // The button names what the photo shows (Yarden's inspiration: "See cart & store tips").
+  const HERO_CTA = { 0: 'Plan a first walk', 2: 'Plan a longer trip', 4: 'See the carrier guide', 6: 'See cart and store tips', 9: 'See which seat comes next', 12: 'See why it matters' };
   const HERO_PH = { 0: 'town', 2: 'road', 4: 'carry-out', 6: 'hero-cart', 9: 'car-head', 12: 'car-head' };
   function home3() {
     const m = ageNow(), h = H(), n = nowFor(m), nx = nextFor(m);
     Object.keys(phaseView).forEach(k => delete phaseView[k]); Object.keys(view3).forEach(k => delete view3[k]);
-    let b = `<header class="hub-hero oa-hero oa3-hero"><p class="hub-eyebrow">${F(m < 1 ? 'In the first weeks' : `At ${m} ${m === 1 ? 'month' : 'months'}`)}</p><h1>${F(n[1])}</h1><p class="hub-lead">${F(n[2])}</p>${PLACES.some(([pid]) => pid === n[3]) ? '' : `<button class="cc-hero-go oa-hero-go" onclick="${open(n[3])}">${F(n[4] ? n[4][2] : 'See the guide')} ›</button>`}${HERO_PH[n[0]] ? `<figure class="oa3-hero-photo"><img src="${PH(HERO_PH[n[0]])}" alt=""></figure>` : ''}</header>`;
+    let b = `<header class="hub-hero oa-hero oa3-hero"><p class="hub-eyebrow">${F(m < 1 ? 'In the first weeks' : `At ${m} ${m === 1 ? 'month' : 'months'}`)}</p><h1>${F(n[1])}</h1><p class="hub-lead">${F(n[2])}</p>${HERO_PH[n[0]] ? `<figure class="oa3-hero-photo"><img src="${PH(HERO_PH[n[0]])}" alt=""></figure>` : ''}<button class="cc-hero-go oa-hero-go oa3-hero-cta" onclick="${open(n[3])}">${F(HERO_CTA[n[0]] || 'See the guide')} →</button></header>`;
     // Nov 22 (Yarden's inspiration): with a photo in the top card, the places are icon tiles, so the page has one photo.
     const GLOBE = '<svg viewBox="-2 -2 28 28" aria-hidden="true"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M3.5 12h17M12 3.5c2.6 2.4 3.6 5.3 3.6 8.5s-1 6.1-3.6 8.5c-2.6-2.4-3.6-5.3-3.6-8.5s1-6.1 3.6-8.5Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>';
     const WAVES = '<svg viewBox="-2 -2 28 28" aria-hidden="true"><path d="M3 10c1.5 0 1.5-1.5 3-1.5S7.5 10 9 10s1.5-1.5 3-1.5S13.5 10 15 10s1.5-1.5 3-1.5S19.5 10 21 10M3 15c1.5 0 1.5-1.5 3-1.5S7.5 15 9 15s1.5-1.5 3-1.5S13.5 15 15 15s1.5-1.5 3-1.5S19.5 15 21 15" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>';

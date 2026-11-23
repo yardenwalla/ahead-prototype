@@ -172,3 +172,8 @@
 #main .h2-talk-row>div{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px}
 #main .h2-talk-row b{font-size:13px;line-height:1.25;color:var(--h2-ink)}
 #main .h2-talk-row small{font-size:12px;line-height:1.3;color:var(--h2-sub);margin-top:-3px}
+/* Nov 22: up top, the path sits on the page with no container, like Yarden's inspiration */
+#main .h2-track.is-top{background:none;border:0;box-shadow:none;padding:6px 2px 4px;margin:0 0 18px}
+#main .h2-track.is-top .h2-node i{color:#cfe3d6}
+#main .h2-track.is-top .h2-node.is-done i{color:#fff}
+#main .h2-track.is-top .h2-node:not(.is-done):not(.is-on) i svg{opacity:.9}

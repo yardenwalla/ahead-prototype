@@ -87,9 +87,11 @@
     const days = Math.round((due(focus) - NOW) / 864e5);
     const when = days > 1 ? `in ${days < 14 ? days + ' days' : Math.round(days / 7) + ' weeks'}` : days >= -14 ? 'now' : '';
     const nodes = WELL_VISITS.map(a => {
-      const cls = [a === age ? 'is-on' : '', done(a) ? 'is-done' : '', isLive && a === focus ? 'is-next' : '', isLive && a < focus && !done(a) ? 'is-past' : ''].filter(Boolean).join(' ');
+      // Nov 22 (Yarden: "a checklist of where you are"): checkups behind her by age are ticked, the one you're reading is ringed.
+      const behind = done(a) || (isLive && a < focus);
+      const cls = [a === age ? 'is-on' : '', behind ? 'is-done' : '', isLive && a === focus ? 'is-next' : ''].filter(Boolean).join(' ');
       const sub = '';   // Nov 22: the inspiration's path: no sublabels, the top card gives the date
-      return `<button class="h2-node ${cls}" onclick="openPage('health-visit:${a}')"${a === age ? ' aria-current="page"' : ''}><i>${done(a) ? CHECK : a === age ? '<span></span>' : ''}</i><b>${SHORT[a]}</b></button>`;
+      return `<button class="h2-node ${cls}" onclick="openPage('health-visit:${a}')"${a === age ? ' aria-current="page"' : ''}><i>${(done(a) || (isLive && a < focus)) && a !== age ? CHECK : a === age ? '<span></span>' : CHECK}</i><b>${SHORT[a]}</b></button>`;
     }).join('');
     return h2('Your checkups this year') + `<section class="hub-card h2-track"><div class="h2-track-line">${nodes}</div><i class="st-chip" hidden></i></section>`;
   };
