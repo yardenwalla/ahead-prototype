@@ -1,10 +1,5 @@
 /* Sleep guide pages (Nov 23): show, don't tell. Lavender, white cards, one picture card per page. */
-#main .sv2-head { background: none !important; box-shadow: none !important; padding: 4px 2px 0 !important; margin: 0 0 18px !important; min-height: 0 !important }
-#main .sv2-head::before, #main .sv2-head::after { display: none !important }
-#main .sv2-head .hub-big, #main .sv2-head .dev-area-head-art { display: none !important }
-#main .sv2-head .hub-context { color: #5677a6 !important; font-size: 13px; font-weight: 750; letter-spacing: .12em; text-transform: uppercase; margin: 0 0 8px }
-#main .sv2-head h1 { color: #1f2f47; font-size: 31px; line-height: 1.1; letter-spacing: -.015em; margin: 0 0 10px }
-#main .sv2-head .hub-lead { color: #5b6478; font-size: 16.5px; line-height: 1.45; margin: 0 }
+/* Cohesion pass (Nov 23): Sleep's guide pages open with the same colored header card as every other guide (its own soft shapes, Sleep blue). */
 #main .sv2 { display: flex; flex-direction: column; gap: 14px }
 #main .sv2 > .hub-h2 { margin: 12px 0 -2px; color: #1f2f47 }
 #main .sv2-vis { background: linear-gradient(160deg, #eef3fe 0%, #f5f9fe 70%, #fdf6ef 100%); border: 1px solid #e2e9f6; border-radius: 26px; padding: 16px 14px 16px }
@@ -84,7 +79,6 @@
 #main .sv2-waits b { font-size: 26px; color: inherit } #main .sv2-waits .is-0 b, #main .sv2-waits .is-1 b { color: #405574 } #main .sv2-waits small { font-size: 12.5px; opacity: .85 }
 #main .sv2-waits > span { flex: none; display: flex; flex-direction: column; align-items: center; color: #c08a2c; font-size: 18px; line-height: 1 } #main .sv2-waits > span small { font-size: 11px; margin-top: 2px }
 #main .hub-detail[data-overview="Sleep"] .sv2 .care-calls { margin: 0 }
-#main .hub-detail-head.sv2-head { padding: 4px 0 0 !important; overflow: visible !important }
 #main .sv2-row .sv2-chip { display: inline-block; margin-top: 6px }
 #main .sv2-bar { height: 20px }
 /* The older guide pages, in the same look until each gets its own picture */

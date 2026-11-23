@@ -86,6 +86,7 @@
   const save = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
   const esc3 = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const rerender = () => { const y = scrollY; render(); scrollTo(0, y); };
+  window.ccRerender = rerender;   // Nov 23 audit: the backup people "Done" button called rerender(), which isn't global, so the tap threw and did nothing
 
   /* ---------- the five types of care ---------- */
   // Each item comes with what good looks like, because that's the part parents don't know. Sources: Child Care Aware of America checklists; HHS parent's guide; AAP.
@@ -171,7 +172,7 @@
     const named = [[c.c1Name, c.c1Phone], [c.c2Name, c.c2Phone]].filter(([n]) => n), asked = load('ahead-childcare-backup', []).includes(1);
     return `<h2 class="hub-h2">${F('Set up your backup')}</h2>`
       + `<details class="hub-card cc-more cc-backup"${named.length ? '' : ''}><summary><span>${hubArt('heart', CAT)}</span><div><b>${F(named.length ? named.map(([n]) => n).join(' and ') : 'Name two backup people')}</b><small>${F(named.length ? 'Your backup people. Tap to change' : 'Family, friends or a sitter you could call at short notice')}</small></div></summary>`
-      + `<div class="cc-backup-f"><p class="cc-h2sub">${F('They’re added to {p} care card, so your caregiver has them too.')}</p><div class="cc-two-f">${f('c1Name', 'First person')}${f('c1Phone', 'Phone', 'tel')}</div><div class="cc-two-f">${f('c2Name', 'Second person')}${f('c2Phone', 'Phone', 'tel')}</div><button class="hub-button cc-next2" onclick="rerender()">${F('Done')}</button></div></details>`
+      + `<div class="cc-backup-f"><p class="cc-h2sub">${F('They’re added to {p} care card, so your caregiver has them too.')}</p><div class="cc-two-f">${f('c1Name', 'First person')}${f('c1Phone', 'Phone', 'tel')}</div><div class="cc-two-f">${f('c2Name', 'Second person')}${f('c2Phone', 'Phone', 'tel')}</div><button class="hub-button cc-next2" onclick="ccRerender()">${F('Done')}</button></div></details>`
       + H().ticks([BACKUP[1]], () => asked, () => 'ccBackupTick(1)', CAT)
       + (named.length && asked ? H().note('Your backup plan is set. Check it again whenever your care changes.') : ''); };
   const backupList = () => { const on = load('ahead-childcare-backup', []); return `<h2 class="hub-h2">${F('Set up your backup')}</h2>` + H().ticks(BACKUP, i => on.includes(i), i => `ccBackupTick(${i})`, CAT) + (BACKUP.every((_, i) => on.includes(i)) ? H().note('Your backup plan is set. Check it again whenever your care changes.') : ''); };
@@ -302,8 +303,8 @@
         ['smile', 'Bring up something small', 'A quick, kind word early goes a long way.'],
         ['heart', 'Harder drop-offs', 'Common from about 8 months. Keep goodbyes short and warm.'],
         ['shield', 'Speak up about a real worry', 'Keep {o} home and speak up. At licensed care, you can also report it to your state.']])
-      + callout('steth', `<b>${F('Call your pediatrician')}</b> ${F(m < 3 ? 'right away for a fever of 100.4°F or higher, day or night.' : m < 6 ? 'for a fever of 101°F or higher, or one that lasts more than a day.' : 'for a fever of 103°F or higher, or one that lasts more than a day.')}`)
-      + `<p class="cc-911"><b>${F('Call 911')}</b> ${F('if {s} struggles to breathe, turns blue, won’t wake, or has a seizure.')}</p>`, 'sun');
+      // Nov 23 cohesion pass: the app's one When to call card, in place of a yellow callout and a separate 911 line.
+      + H().TPLB.calls({ ped: m < 3 ? 'a fever of 100.4°F or higher, right away, day or night.' : m < 6 ? 'a fever of 101°F or higher, or one that lasts more than a day.' : 'a fever of 103°F or higher, or one that lasts more than a day.', nowLabel: 'Call 911', now: '{s} struggles to breathe, turns blue, won’t wake, or has a seizure.' }), 'sun');
     // Doulas and help with recovery belong to the first weeks. From 4 months, the same page is about care for the baby.
     if (id === 'help') { const early = m < 4; return sub('help', 'Help now and then', 'Extra help at home', early ? 'Help in the early months isn’t only for when you go back to work.' : 'Help at home isn’t only for when you go back to work.',
       picSteps('Kinds of help', early ? [
@@ -385,7 +386,7 @@
   // (a pick saved on the shortlist, "Care has started"), and a parent can pick the stage from "All stages".
   const CC_ART = ["<svg viewBox=\"0 0 160 164\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\">\n <ellipse cx=\"80\" cy=\"151\" rx=\"74\" ry=\"9\" fill=\"#e2c993\" opacity=\".35\"/>\n <path d=\"M96 75 119 57l23 18v56H96Z\" fill=\"#dfb9b0\"/><path d=\"M98 76 119 60l22 16\" fill=\"none\" stroke=\"#ac8581\" stroke-width=\"3\" stroke-linejoin=\"round\"/><rect x=\"111\" y=\"93\" width=\"15\" height=\"19\" rx=\"5\" fill=\"#fff1d5\"/><rect x=\"113\" y=\"117\" width=\"17\" height=\"14\" rx=\"5\" fill=\"#fff1d5\"/>\n <circle cx=\"54\" cy=\"68\" r=\"23\" fill=\"#e4af9a\"/><path d=\"M32 61c3-19 24-29 41-13 5 4 8 10 8 15\" fill=\"#69544f\"/><path d=\"M38 50c-5 7-6 14-5 20\" fill=\"none\" stroke=\"#69544f\" stroke-width=\"8\" stroke-linecap=\"round\"/>\n <path d=\"M20 147c-2-35 10-57 34-59 26-2 42 19 43 59Z\" fill=\"#adc1c7\"/><path d=\"M72 105c9 11 14 21 15 37\" fill=\"none\" stroke=\"#829da6\" stroke-width=\"5\" stroke-linecap=\"round\"/>\n <ellipse cx=\"83\" cy=\"115\" rx=\"27\" ry=\"22\" fill=\"#e8c7ad\"/><circle cx=\"80\" cy=\"100\" r=\"16\" fill=\"#edc6ad\"/><path d=\"M67 99c3-13 22-18 28-5\" fill=\"none\" stroke=\"#ad8979\" stroke-width=\"5\" stroke-linecap=\"round\"/><path d=\"M57 130c7-12 18-15 27-11 8 4 16 14 19 26H62Z\" fill=\"#d5bada\"/>\n <path d=\"M47 114c5 8 14 10 20 12\" fill=\"none\" stroke=\"#e4af9a\" stroke-width=\"8\" stroke-linecap=\"round\"/>\n <circle cx=\"118\" cy=\"35\" r=\"5\" fill=\"#e6bc70\"/><path d=\"M139 28v10m-5-5h10\" stroke=\"#d6ad5d\" stroke-width=\"3\" stroke-linecap=\"round\"/>\n </svg>", "<svg viewBox=\"0 0 160 164\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\">\n <ellipse cx=\"80\" cy=\"153\" rx=\"72\" ry=\"8\" fill=\"#bfd8c3\" opacity=\".45\"/>\n <rect x=\"112\" y=\"41\" width=\"34\" height=\"48\" rx=\"9\" fill=\"#fffaf0\" stroke=\"#aec7ae\" stroke-width=\"2\"/><path d=\"M121 56h15m-15 8h12m-12 8h9\" stroke=\"#8ab09b\" stroke-width=\"3\" stroke-linecap=\"round\"/>\n <path d=\"M29 146c0-34 11-53 38-53s42 19 44 53Z\" fill=\"#96c5ad\"/>\n <circle cx=\"68\" cy=\"69\" r=\"23\" fill=\"#dfaa94\"/><path d=\"M46 60c3-21 31-28 44-6 2 4 3 8 2 12\" fill=\"#625249\"/><path d=\"M47 70c-4-11-3-20 2-26\" stroke=\"#625249\" stroke-width=\"8\" stroke-linecap=\"round\"/>\n <path d=\"M86 111c6 4 11 9 14 18\" fill=\"none\" stroke=\"#74ae92\" stroke-width=\"5\" stroke-linecap=\"round\"/>\n <circle cx=\"106\" cy=\"103\" r=\"17\" fill=\"#f1c5b0\"/><path d=\"M91 99c2-13 18-18 27-5\" fill=\"none\" stroke=\"#ad7f6d\" stroke-width=\"5\" stroke-linecap=\"round\"/>\n <path d=\"M83 144c2-19 13-29 28-29 14 0 25 10 28 29Z\" fill=\"#d0d7ef\"/>\n <path d=\"M52 113c8 13 22 19 37 20\" stroke=\"#dfaa94\" stroke-width=\"10\" fill=\"none\" stroke-linecap=\"round\"/>\n <path d=\"M30 40c4-6 8-6 12 0 4-6 9-6 13 0-4 8-10 13-13 15-5-3-10-8-12-15Z\" fill=\"#e9ab9b\" opacity=\".85\"/>\n </svg>", "<svg viewBox=\"0 0 160 164\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\">\n <ellipse cx=\"83\" cy=\"153\" rx=\"74\" ry=\"8\" fill=\"#ecc8c4\" opacity=\".42\"/>\n <path d=\"M26 147c2-34 18-55 43-55 28 0 42 20 43 55Z\" fill=\"#c4aecf\"/>\n <circle cx=\"66\" cy=\"69\" r=\"24\" fill=\"#dcab98\"/><path d=\"M44 62c1-20 20-30 39-16 6 4 9 10 8 18\" fill=\"#67574d\"/><path d=\"M45 64c-6-6-6-14-4-18\" stroke=\"#67574d\" stroke-width=\"8\" stroke-linecap=\"round\"/>\n <path d=\"M60 77c4 5 11 6 16 0\" fill=\"none\" stroke=\"#9d675b\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n <circle cx=\"117\" cy=\"97\" r=\"19\" fill=\"#f0c4aa\"/><path d=\"M100 92c3-13 19-19 30-8\" fill=\"none\" stroke=\"#ad8b77\" stroke-width=\"5\" stroke-linecap=\"round\"/><path d=\"M104 103c4 3 8 3 12 0\" fill=\"none\" stroke=\"#aa7766\" stroke-width=\"2\" stroke-linecap=\"round\"/>\n <path d=\"M92 146c2-16 14-29 29-29 16 0 27 14 28 29Z\" fill=\"#b7d5bd\"/>\n <path d=\"M73 120c6-13 19-19 30-14\" fill=\"none\" stroke=\"#dcab98\" stroke-width=\"10\" stroke-linecap=\"round\"/>\n <path d=\"M115 44c5-10 11-10 16-2 6-7 12-5 14 0 1 9-8 16-15 19-9-5-16-10-15-17Z\" fill=\"#d9a0a3\"/>\n <path d=\"M14 80l9-4m-2-12 7 3m110 1 8 7\" stroke=\"#d7a5aa\" stroke-width=\"3\" stroke-linecap=\"round\"/>\n </svg>"];
   const CC_STAGES = [
-    { label: 'Finding care', age: 'Months before', one: 'Kinds of care, costs and when to start looking', eyebrow: 'Finding care', t: 'Explore your options', lead: 'Infant spots go fast, so it helps to start early. Here’s what each kind of care looks like.',
+    { label: 'Finding care', age: 'Months before', one: 'Kinds of care, costs and when to start looking', eyebrow: 'Finding care', t: 'Start looking early', lead: 'Infant spots go fast. Here’s what each kind of care looks like.',
       worth: ['Worth knowing before you look', 'The best tour question isn’t about activities.', 'Ask how they handle crying and naps, and who covers when someone’s out.'] },
     { label: 'Care chosen', age: 'Weeks before', one: 'Getting ready for day one, and a backup plan', eyebrow: 'Care chosen', t: 'Make day one familiar', lead: 'Ease in over a week or two, so the first real goodbye isn’t the first time.',
       worth: ['Worth knowing before day one', 'A practice day helps more than a perfect schedule.', 'Visit together first, then let the caregiver take the lead while you’re nearby.'] },
@@ -438,15 +439,22 @@
   window.ccTopic = i => { cmpAt = (i + TOPICS_CMP.length) % TOPICS_CMP.length; rerender(); };
   window.ccSwipe = (el) => { let x0 = null; el.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, { passive: true });
     el.addEventListener('touchend', e => { if (x0 == null) return; const dx = e.changedTouches[0].clientX - x0; x0 = null; if (Math.abs(dx) > 50) ccTopic(cmpAt + (dx < 0 ? 1 : -1)); }, { passive: true }); };
+  // Nov 23 (Yarden's inspiration): every kind of care side by side, so comparing is looking across a row, not tapping
+  // four tabs and remembering. Facts, not scores (design guide); each column opens that kind of care.
+  // Nov 23 (Yarden's mockup): calendar / people / heart / coins on the rows; building / house / person / people on top.
+  const GRID_ROWS = [
+    ['calendar', 'Hours', { center: 'Set hours', home: 'Set, often flexible', nanny: 'Your schedule', family: 'Flexible' }],
+    ['people', 'Babies per adult', { center: '3 babies', home: '2 babies', nanny: '1', family: '1 usually' }, 'Recommended limits. Your state’s rules may allow more, so ask.'],
+    ['heart', 'When {s’s} sick', { center: 'Stays home', home: 'Stays home; may close', nanny: 'Usually still on', family: 'Usually still on' }],
+    ['coins', 'What you pay', { center: 'Monthly tuition', home: 'Tuition, often similar', nanny: 'Salary + taxes', family: 'What you agree' }]
+  ];
+  const GRID_ICON = { center: 'school', home: 'home', nanny: 'person', family: 'people' };
+  const GRID_COL = { center: 'Daycare', home: 'Home daycare', nanny: 'Nanny', family: 'Family' };
   function comparePage() {
-    const [id, , icon, q, why, ans, ask] = TOPICS_CMP[cmpAt];
-    const tabs = `<div class="cc-tabs-row" role="tablist">${TOPICS_CMP.map(([k, n], i) => `<button class="cc-tab${i === cmpAt ? ' is-on' : ''}" role="tab" aria-selected="${i === cmpAt}" onclick="ccTopic(${i})">${F(n)}</button>`).join('')}</div>`;
-    const top = `<section class="cc-topic"><h2>${F(q)}</h2><p>${F(why)}</p><span class="cc-topic-art">${hubArt(icon, CAT)}</span></section>`;
-    const rows = H().list('', COLS.map(([k]) => H().row({ icon: TYPES[k].icon, cat: CAT, title: CMP_NAME[k], sub: ans[k], onclick: `openPage('chg:${CAT}:d:${k}')` })));
-    const askCard = `<section class="cc-ask-card"><span>${hubArt('chat', CAT)}</span><div><b>${F('What to ask')}</b><p>${F('“' + ask + '”')}</p></div></section>`;
-    const dots = `<div class="cc-dots-nav" aria-hidden="true">${TOPICS_CMP.map((_, i) => `<i class="${i === cmpAt ? 'on' : ''}"></i>`).join('')}</div>`;
-    setTimeout(() => { const el = document.querySelector('.cc-swipe'); if (el && !el.__sw) { el.__sw = 1; ccSwipe(el); } }, 0);
-    return sub('compare', 'Kinds of care', 'Compare your options', '', tabs + `<div class="cc-swipe" data-topic="${id}">${top}${rows}${askCard}</div>`, 'blocks');
+    const head = `<div class="cc-grid-head"><span></span>${COLS.map(([k]) => `<button onclick="openPage('chg:${CAT}:d:${k}')" aria-label="${F(CMP_NAME[k])}"><span>${hubArt(GRID_ICON[k], CAT)}</span>${F(GRID_COL[k])}</button>`).join('')}</div>`;
+    const rows = GRID_ROWS.map(([ic, label, cells, note]) => `<div class="cc-grid-row"><div class="cc-grid-label">${hubArt(ic, CAT)}<b>${F(label)}</b></div>${COLS.map(([k]) => `<div>${F(cells[k])}</div>`).join('')}${note ? `<p class="cc-grid-note">${F(note)}</p>` : ''}</div>`).join('');
+    const foot = `<p class="cc-grid-foot">${hubArt('info', CAT)}<span>${F('Prices vary a lot by city, so ask each place for the full cost, including fees and closed days.')}</span></p>`;
+    return sub('compare', 'Kinds of care', 'Compare your options', 'The same four questions, across each kind of care.', `<section class="cc-grid">${head}${rows}</section>${foot}`, 'blocks');
   }
   function childcare() {
     const card = load('ahead-carecard', {}), list = shortlist(), am = typeof actualMonth === 'function' ? actualMonth() : 0, fd0 = feedNow(), bm0 = fd0 !== 'Formula', fm0 = fd0 !== 'Breast milk';
@@ -462,7 +470,8 @@
     const PILL = ['Find care', 'Get ready', 'Settle in'], MOVE = ['Back to finding care', 'We’ve chosen care', 'Care has started'];
     let b = `<nav class="cc-pills" aria-label="${F('Childcare stages')}">${PILL.map((n, i) => `<button class="${i === view ? 'is-on' : ''}${i === cur ? ' is-now' : ''}" aria-current="${i === view ? 'page' : 'false'}" onclick="openPage('chg:${CAT}:s:${i}')">${i === cur ? '<i aria-hidden="true"></i>' : ''}${F(n)}${i === cur ? `<span class="cc-sr">${F(', where you are now')}</span>` : ''}</button>`).join('')}</nav>`
       + (view !== cur ? `<div class="cc-pill-note"><span>${F(view > cur ? 'Just a preview.' : 'A look back.')}</span><button onclick="ccSetStage(${view})">${F(MOVE[view])} →</button></div>` : '');
-    b += `<header class="hub-hero cc-hero cc-stage-hero"><div class="cc-stage-media"><img class="cc-stage-photo" src="assets/childcare/stage${view}.jpg" alt=""><svg class="cc-wave" viewBox="0 0 400 40" preserveAspectRatio="none" aria-hidden="true"><path d="M0 22 C 70 4, 140 4, 210 18 S 340 38, 400 14 L 400 40 L 0 40 Z"/></svg></div><div class="cc-stage-copy"><h1>${F(S.t)}</h1><p class="hub-lead">${F(S.lead)}</p></div></header>`
+    // Nov 23 cohesion pass: the same top card as every other guide (label, headline, lead, then the photo in the 16:10 frame).
+    b += `<header class="hub-hero cc-hero cc-std-hero"><p class="cc-std-eyebrow">${F(S.eyebrow)}</p><h1>${F(S.t)}</h1><p class="hub-lead">${F(S.lead)}</p><div class="cc-std-photo"><img src="assets/childcare/stage${view}.jpg" alt=""></div></header>`
       ;   // Nov 22: Get ready's tip now lives in the easing-in steps below
     if (view === 0) {
       // Nov 19: the signature visual. Four kinds of regular care side by side, facts not scores; a chip highlights a row
