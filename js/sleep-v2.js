@@ -149,7 +149,7 @@
       + note('Sleepy during night feeds?', 'Use your bed, cleared of pillows, never a sofa. Then move {o} back to {p} crib.', 'crib', 'is-safe')
       + rows('', [['heart', 'Feeling low for more than 2 weeks?', 'Talk to your doctor, or call or text 1‑833‑852‑6262. In a crisis, call 988.']])),
     'd:away': () => page('Travel', 'Travel throws sleep off for a few days', 'A new time zone can too. A safe spot and your usual steps help most.',
-      vis('Shifting bedtime by an hour', 'Example', `<div class="sv2-clocks is-4">${[[7, 0, 'Day 1'], [7, 15, 'Day 2'], [7, 30, 'Day 3'], [7, 45, 'Day 4']].map(([h, mn, d], i) => `<div class="${i === 3 ? 'is-on' : ''}">${clock(h, mn)}<b>${h}:${String(mn).padStart(2, '0')}</b><small>${F(d)}</small></div>`).join('')}</div><p class="sv2-cap">${F('For an hour or two, shift 15 minutes a day. For a bigger jump, switch to local time right away.')}</p>`)
+      vis('A new time zone', '', two(['lav', '', 'An hour or two', 'Shift slowly', '', 'Move 15 minutes a day', 'Or just switch, if it’s easier'], ['sun', '', 'A bigger jump', 'Switch right away', '', 'Use local time from day 1', 'Bright mornings, dim evenings']))
       + rows('Before the first night', [['', 'Pack the sleep sack', 'And something that smells like home.'], ['', 'Set up a bare spot first', 'A play yard or crib, nothing in it.'], ['', 'Same bedtime steps', 'Always in the same order.']], true)
       + note('Car seats are for the car.', 'Move {o} to a flat spot once you arrive.', 'car', 'is-safe') + foot('The same works when the clocks change.')),
 
@@ -170,22 +170,21 @@
     // Nap transitions: before and after, on the same clock.
     'd:catnap': () => page('Naps', 'Three naps become two', 'Usually between 6 and 9 months, the third nap stops fitting as awake time grows.',
       vis('The day changes shape', 'Before → After', `<div class="sv2-ba"><b>${F('Three-nap day')}</b>${dayBar([[9, 10.25, 'Nap 1'], [12.5, 13.75, 'Nap 2'], [16.25, 16.75, 'Catnap', 'cat']])}</div><div class="sv2-ba-arrow" aria-hidden="true">↓</div>
-        <div class="sv2-ba is-after"><b>${F('Two-nap day')}</b>${dayBar([[9.5, 11, 'Morning nap'], [14, 15.5, 'Afternoon nap']], 18.75, { ghost: [[16.25, 16.75]] })}</div>
+        <div class="sv2-ba is-after"><b>${F('Two-nap day')}</b>${dayBar([[9.5, 11, 'Morning nap'], [14, 15.5, 'Afternoon nap']], 18.75)}</div>
         <p class="sv2-cap">${F('The catnap’s spot fills with awake time, and bedtime moves a little earlier.')}</p>`)
       + rows('Signs {s} may be ready', [['moon', 'The third nap is hard to fit', '{S} refuses it, or it pushes bedtime late.'], ['clock', '{S} stays happy awake longer', 'The gaps between naps start to stretch.'], ['sun', 'The first two naps get longer', '{S} may not need the short bridge anymore.']])
       + note('Try this:', 'On days {s} skips the catnap, move bedtime about 30 minutes earlier.') + foot('Ages are typical. Every baby moves at {p} own pace.')),
     'd:after': () => page('Naps', 'Two naps become one', 'This usually happens between 13 and 18 months, not at the first birthday.',
       vis('The day changes shape', 'Before → After', `<div class="sv2-ba"><b>${F('Two-nap day')}</b>${dayBar([[9.5, 11, 'Morning nap'], [14, 15.5, 'Afternoon nap']])}</div><div class="sv2-ba-arrow" aria-hidden="true">↓</div>
-        <div class="sv2-ba is-after"><b>${F('One-nap day')}</b>${dayBar([[12, 14.5, 'One longer nap']], 18.75, { ghost: [[9.5, 11]] })}</div>
+        <div class="sv2-ba is-after"><b>${F('One-nap day')}</b>${dayBar([[12, 14.5, 'One longer nap']], 18.75)}</div>
         <p class="sv2-cap">${F('The morning nap slides later until it becomes one nap around lunch.')}</p>`)
       + rows('Signs {s} may be ready', [['sun', 'Fights the morning nap most days', '{S} plays through it, or it takes ages to fall asleep.'], ['clock', 'The afternoon nap shrinks', 'Or bedtime drifts late.'], ['heart', 'Holds up fine until lunch', 'One longer midday nap starts to fit.']])
       + note('Try this:', 'Push the morning nap a bit later every few days, until it lands around lunch.') + foot('Ages are typical. Every baby moves at {p} own pace.')),
 
     // Up for an hour at night: the split night, then where to look.
     'd:hiccup:split': () => page('Night sleep', 'Up for an hour at night?', 'If {s}’s awake and happy for a long stretch, look at the whole day, not just bedtime.',
-      vis('What a split night can look like', '', `<div class="sv2-split"><s class="is-night"></s><s class="is-up">${F('Awake')}</s><s class="is-night"></s></div><div class="sv2-split-l"><span>${F('Asleep')}</span><span>${F('Happy, alert, playing')}</span><span>${F('Asleep again')}</span></div>
-        <div class="sv2-inner"><i>${art('sun')}</i><p><b>${F('Look at the day first.')}</b> ${F('Long naps or an early bedtime leave {o} less sleepy.')}</p></div>`)
-      + rows('Three things to try', [['', 'Look at daytime sleep', 'Cap the last nap, or wake {o} gently if naps run long.'], ['', 'Keep wake-up time steady', 'The same morning time anchors the day.'], ['', 'Keep the night boring', 'Dark, quiet and brief. No play.']], true)
+      vis('Usually, the day is the reason', '', two(['sun', 'nap10.jpg', 'By day', 'Long naps', 'Or an early bedtime', 'Cap the last nap', 'Or wake {o} gently'], ['lav', 'nightwake.jpg', 'So at night', 'Up and happy', 'For an hour or more', 'Keep it boring', 'Dark, quiet and brief']))
+      + note('Keep wake-up time steady.', 'The same morning time anchors the whole day.')
       + calls('waking is new and keeps going, or comes with ' + fever() + ', poor feeding or pain.') + foot('Every baby moves at {p} own pace.')),
 
     // Sleep training: a choice, then each method as a picture of what you do.

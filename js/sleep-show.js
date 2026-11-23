@@ -754,7 +754,9 @@
     main.querySelectorAll('.ssw-dc-sub, .sl-glance, .ssw-dc-card').forEach(e => e.remove());
     // See how it all works together: a short nap at three naps; three naps becoming two at two naps.
     const works = main.querySelector('.ssw-works');
-    if (works && v === 3) works.outerHTML = `<button class="ssw-works ssv-shift" onclick="${go('chg:Sleep:d:catnap')}"><span class="ssv-shift-l"><em>${F('From three naps')}</em><em>${F('to two naps')}</em></span><span class="ssv-shift-r"><span class="ssv-shift-row"><b></b><b></b><b class="is-gone"></b></span><span class="ssv-shift-arrow" aria-hidden="true">↓</span><span class="ssv-shift-row"><b></b><b class="is-long"></b></span><small>${F('The afternoon nap gets longer as the third one fades.')}</small></span></button>`;
+    // After the first birthday the Next row already points to two naps becoming one, so the three-to-two card goes.
+    if (works && v === 3 && A >= 12) works.previousElementSibling && works.previousElementSibling.matches('.hub-h2') && works.previousElementSibling.remove(), works.remove();
+    else if (works && v === 3) works.outerHTML = `<button class="ssw-works ssv-shift" onclick="${go('chg:Sleep:d:catnap')}"><span class="ssv-shift-l"><em>${F('From three naps')}</em><em>${F('to two naps')}</em></span><span class="ssv-shift-r"><span class="ssv-shift-row"><b></b><b></b><b class="is-gone"></b></span><span class="ssv-shift-arrow" aria-hidden="true">↓</span><span class="ssv-shift-row"><b></b><b class="is-long"></b></span><small>${F('The afternoon nap gets longer as the third one fades.')}</small></span></button>`;
     // Right now: three rows, the topic first, then the guide (Feeding's photo rows).
     const ROWS = [
       [['Naps', 'd:steps0', 'Spot the yawn, then soothe', 'yawn.jpg'], ['Safe sleep', 'd:swaddle', 'How to swaddle', 'swaddle-3.jpg'], ['Sleep space', 'd:where', 'Set up a safe, cozy spot', 'room.jpg']],
