@@ -573,3 +573,8 @@
 #main .ct-th:has(i) { background: none }
 #main .ct-th i { width: 48px; height: 48px; background: var(--ct-lav); display: grid; place-items: center }
 #main .care-calls .ct-alt.is-call { margin: 8px 0 0; color: #7a4b2c }
+
+/* Nov 23: Keep her safe is its own section again (template rule), as a plain white card of notes. */
+#main .ct-safecard { padding: 2px 14px; background: #fffdf9; border: 1px solid var(--ct-line); border-radius: 18px }
+#main .ct-safecard .ct-notes { border-top: 0; padding: 12px 2px }
+#main .ct-stepcard .ct-notes:empty { display: none }

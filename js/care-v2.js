@@ -1091,8 +1091,9 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   const howtoPage = q => { const sh = val(q.show), mv = val(q.moves) || [], near = val(q.nearby) || [];
     return `<div class="ct-page is-howto">` + ctTop(q.k, (val(q.topic) || LABEL[q.k]) + ' · How to', val(q.title), val(q.why)) + (sh ? ctPhoto2(sh) : '') + (q.routine ? ctRoutine(val(q.routine)) : '')
       + (near.length ? ctH2('Have nearby') + ctNear(near) : '')
-      + (mv.length ? ctH2(q.movesT || 'Do it in a few steps') + `<div class="ct-stepcard">${ctSteps2(mv)}${ctNotes2(val(q.notes))}</div>` : '')
+      + (mv.length ? ctH2(q.movesT || 'Do it in a few steps') + `<div class="ct-stepcard">${ctSteps2(mv)}${ctNotes2((val(q.notes) || []).slice(q.safeN || 0))}</div>` : '')
       + (q.full ? ctFull : '') + (q.link ? `<button class="ct-alt" onclick="openPage('chg:${CAT}:d:${val(q.link)[2]}')">${F('Red skin? See diaper rash or yeast')} <span aria-hidden="true">›</span></button>` : '')
+      + ((val(q.notes) || []).slice(0, q.safeN || 0).length ? ctH2('Keep {o} safe') + `<div class="ct-safecard">${ctNotes2(val(q.notes).slice(0, q.safeN))}</div>` : '')
       + (q.video ? ctH2('Watch how') + TB.video(q.video) : '') + `</div>`; };
   const ctLook = (img, cap, alt) => `<figure class="ct-look" id="ct-look">${ctImg(img, alt || cap)}<figcaption>${ctSent(cap)}</figcaption></figure>`;
   // The photo caption says where and what; these two tiles add when and how it behaves, so nothing repeats.
@@ -1732,6 +1733,8 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   NOTES(shade, [['Hot, floppy or hard to wake? Call 911', 'Then move {o} to shade and cool {p} skin'], ['Any sunburn before age 1?', 'Call your pediatrician']]);
   shade.moves[1] = ['shirt', 'Cover {p} arms and legs', 'Light, loose long sleeves and a wide-brim hat. No shade? A little sunscreen on small spots'];
   NOTES(dress, [['Snaps or zips only', 'Nothing with strings near the neck'], ['No puffy coats in the car seat', 'Buckle {o} in, then lay a blanket over the straps']]);
+  [[TPL['p:sponge'], 1], [TPL['p:tub'], 2], [TPL['t:bath:3'], 2], [TPL['t:bath:2'], 1], [TPL['h:diapers:0'], 1], [TPL['h:diapers:1'], 1], [TPL['h:diapers:2'], 1], [TPL['h:diapers:3'], 1],
+    [nails, 0], [gums, 0], [TPL['p:brush'], 1], [six, 2], [shade, 2], [dress, 2], [TPL['p:feet'], 1]].forEach(([q, n]) => { q.safeN = n; });
   NOTES(TPL['p:feet'], [['Skip walkers on wheels', 'They don’t help with walking, and they lead to falls'], ['Little feet grow fast', 'Check the fit every month or two']]);
 
   // What to know: one photo with the caption on it.
