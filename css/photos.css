@@ -410,3 +410,58 @@
 #main .care-near span { padding: 7px 12px; border-radius: 999px; background: #fff; border: 1px solid var(--line); font-size: 13.5px; color: #3c3744 }
 #main .care-good { margin: 10px 4px 0; font-size: 14px; line-height: 1.45; color: #5b5566 }
 #main .care-good b { color: #302d3c }
+/* ===== Nov 22: Everyday care templates, from Yarden's mockups (How to / What to know) ===== */
+#main .ct-page { --ct-ink: #2b2733; --ct-soft: #6b6573; --ct-purple: #5b4fa3; --ct-lav: #eeebfb; --ct-line: #ece7e2; padding-bottom: 8px }
+#main .ct-eyebrow { margin: 6px 0 6px; font-size: 11.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--ct-purple) }
+#main .ct-head h1 { margin: 0 0 8px; font-size: 29px; line-height: 1.12; letter-spacing: -.02em; font-weight: 800; color: var(--ct-ink) }
+#main .ct-head p:not(.ct-eyebrow) { margin: 0 0 18px; font-size: 15.5px; line-height: 1.45; color: var(--ct-soft) }
+#main .ct-photo-card { border-radius: 20px; overflow: hidden; background: var(--ct-lav); margin: 0 0 18px }
+#main .ct-photo { position: relative; margin: 0; aspect-ratio: 4 / 3; background: #efe9e3 }
+#main .ct-photo img { display: block; width: 100%; height: 100%; object-fit: cover }
+#main .ct-tag { position: absolute; display: inline-flex; align-items: center; gap: 6px; padding: 6px 11px; border-radius: 999px; background: rgba(255,255,255,.94); box-shadow: 0 2px 8px rgba(0,0,0,.12); font-size: 12.5px; font-weight: 600; color: var(--ct-ink); max-width: 46%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
+#main .ct-tag i { flex: none; width: 7px; height: 7px; border-radius: 50%; background: var(--ct-ink) }
+#main .ct-tag.is-bl { left: 12px; bottom: 12px } #main .ct-tag.is-br { right: 12px; bottom: 12px }
+#main .ct-tag.is-tl { left: 12px; top: 12px } #main .ct-tag.is-tr { right: 12px; top: 12px }
+#main .ct-strip { display: grid; grid-template-columns: 34% 1fr; gap: 12px; align-items: start; padding: 13px 16px 15px }
+#main .ct-strip b { font-size: 12px; line-height: 1.35; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--ct-purple) }
+#main .ct-strip span { font-size: 14.5px; line-height: 1.4; color: var(--ct-ink) }
+#main .ct-label { margin: 4px 2px 9px; font-size: 11.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--ct-purple) }
+#main .ct-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 6px }
+#main .ct-chips span { padding: 8px 14px; border-radius: 999px; background: #fff; border: 1px solid var(--ct-line); font-size: 13.5px; color: var(--ct-ink) }
+#main .ct-h2 { margin: 24px 2px 12px; font-size: 20px; font-weight: 800; letter-spacing: -.01em; color: var(--ct-ink) }
+#main .ct-steps { list-style: none; counter-reset: ct; margin: 0; padding: 4px 16px; background: #fffdf9; border: 1px solid var(--ct-line); border-radius: 20px }
+#main .ct-steps li { counter-increment: ct; position: relative; padding: 15px 0 15px 44px; border-top: 1px solid var(--ct-line) }
+#main .ct-steps li:first-child { border-top: 0 }
+#main .ct-steps li::before { content: counter(ct); position: absolute; left: 0; top: 14px; width: 30px; height: 30px; border-radius: 50%; background: var(--ct-lav); color: var(--ct-purple); font-size: 14px; font-weight: 700; display: grid; place-items: center }
+#main .ct-steps b { display: block; font-size: 16px; line-height: 1.3; color: var(--ct-ink) }
+#main .ct-steps span { display: block; margin-top: 3px; font-size: 14px; line-height: 1.4; color: var(--ct-soft) }
+#main .ct-good { margin: 12px 4px 0; font-size: 14px; line-height: 1.45; color: var(--ct-soft) }
+#main .ct-good b { color: var(--ct-ink) }
+#main .ct-safe { display: flex; gap: 14px; align-items: flex-start; margin: 18px 0 0; padding: 16px; border-radius: 18px; background: #e7f4ee; border: 1px solid #d3eadf }
+#main .ct-safe > i { flex: none; width: 32px; height: 32px; border-radius: 10px; background: #cfe9dc; color: #2f7a57; display: grid; place-items: center }
+#main .ct-safe b { display: block; font-size: 15px; color: var(--ct-ink) }
+#main .ct-safe p { margin: 4px 0 0; font-size: 14px; line-height: 1.4; color: #4b5a52 }
+#main .ct-link { margin-top: 16px }
+#main .ct-page .hub-urgent, #main .ct-page .care-calls { margin-top: 16px }
+/* What to know */
+#main .ct-eyebrow.is-out { margin-top: 10px }
+#main .ct-card { padding: 20px 18px 18px; border-radius: 20px; background: #f7ebe7; margin: 0 0 6px }
+#main .ct-card h1 { margin: 0 0 8px; font-size: 27px; line-height: 1.15; letter-spacing: -.02em; font-weight: 800; color: var(--ct-ink) }
+#main .ct-card p { margin: 0; font-size: 15px; line-height: 1.45; color: var(--ct-soft) }
+#main .ct-chip { all: unset; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; margin-top: 14px; padding: 6px 12px; border-radius: 999px; background: #e2f2e9; color: #2f7a57; font-size: 13px; font-weight: 700 }
+#main .ct-look { position: relative; margin: 0; border-radius: 20px; overflow: hidden; aspect-ratio: 4 / 3; background: #efe9e3 }
+#main .ct-look img { display: block; width: 100%; height: 100%; object-fit: cover }
+#main .ct-look figcaption { position: absolute; left: 0; right: 0; bottom: 0; padding: 40px 16px 14px; background: linear-gradient(to top, rgba(30,24,34,.82), rgba(30,24,34,0)); color: #fff; font-size: 14.5px; font-weight: 600; line-height: 1.35 }
+#main .ct-notice { display: grid; grid-template-columns: 1fr 1fr; gap: 10px }
+#main .ct-notice > div { padding: 14px; border-radius: 16px; background: var(--ct-lav) }
+#main .ct-notice b { display: block; font-size: 14.5px; line-height: 1.35; color: var(--ct-ink) }
+#main .ct-notice span { display: block; margin-top: 3px; font-size: 13px; line-height: 1.35; color: var(--ct-soft) }
+#main .ct-helps { list-style: none; margin: 0; padding: 4px 16px; background: #fffdf9; border: 1px solid var(--ct-line); border-radius: 20px }
+#main .ct-helps li { display: flex; gap: 14px; align-items: center; padding: 13px 0; border-top: 1px solid var(--ct-line) }
+#main .ct-helps li:first-child { border-top: 0 }
+#main .ct-helps li > i { flex: none; width: 34px; height: 34px; border-radius: 10px; background: #e7f4ee; display: grid; place-items: center }
+#main .ct-helps li > i svg { width: 20px; height: 20px }
+#main .ct-helps b { display: block; font-size: 15px; line-height: 1.3; color: var(--ct-ink) }
+#main .ct-helps span { display: block; margin-top: 2px; font-size: 13.5px; line-height: 1.35; color: var(--ct-soft) }
+#main .ct-page .care-calls { background: #fdf2e8; border: 1px solid #f6dfc8 }
+@media (max-width: 360px) { #main .ct-tag { font-size: 11.5px; padding: 5px 9px; gap: 5px; max-width: 48% } #main .ct-tag.is-bl, #main .ct-tag.is-tl { left: 8px } #main .ct-tag.is-br, #main .ct-tag.is-tr { right: 8px } #main .ct-tag.is-bl, #main .ct-tag.is-br { bottom: 8px } #main .ct-tag.is-tl, #main .ct-tag.is-tr { top: 8px } }

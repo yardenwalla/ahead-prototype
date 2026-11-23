@@ -1045,6 +1045,55 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
         + (nq ? `<div class="hub-list fd-plist care-notquite"><button class="hub-row fd-prow" onclick="${cgo('rash:' + nq[0])}"><span class="fd-thumb">${RASH_IMG[nq[0]] ? `<img src="assets/care/rash-${nq[0]}.jpg?v=1" alt="" loading="lazy">` : `<span class="care-nq-ic">${hubArt('diaper', CAT)}</span>`}</span><span class="hub-row-copy"><b>${F('Not quite it? ' + nq[1])}</b><small>${F(nq[2])}</small></span><span class="hub-chev" aria-hidden="true">›</span></button></div>` : '')
         + callsCard(q.calls); }
   };
+  /* ---------- Nov 22 (Yarden's mockups): two templates for every Everyday care page ----------
+     How to:        header, ONE large photo (corner tags that never cover a face) with a "what to look at" strip,
+                    Have nearby, Do it in a few steps, Good to know, Keep {o} safe.
+     What to know:  header card, See what it looks like (one photo, caption on it), What you may notice,
+                    What helps, When to call.
+     The same order on every page, so a parent learns it once. */
+  const CT_CHECK = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+  const ctSent = t => { t = F(val(t) || ''); return !t ? '' : /[.?!]$/.test(t) ? t : t + '.'; };
+  const ctImg = (img, alt) => `<img src="assets/care/${img}.jpg?v=2" alt="${F(alt || '').replace(/"/g, '&quot;')}" loading="lazy">`;
+  const ctHead = (q, kind) => `<header class="ct-head"><p class="ct-eyebrow">${F((val(q.topic) || LABEL[q.k]) + ' · ' + kind)}</p><h1>${F(val(q.title))}</h1>${val(q.why) ? `<p>${F(val(q.why))}</p>` : ''}</header>`;
+  const ctPhoto = sh => `<section class="ct-photo-card"><figure class="ct-photo">${ctImg(sh.img, sh.alt)}${(val(sh.tags) || []).map(([l, at]) => `<span class="ct-tag is-${at}"><i></i>${F(l)}</span>`).join('')}</figure>`
+    + `<div class="ct-strip"><b>${F('✦ ' + sh.t)}</b><span>${F(val(sh.line))}</span></div></section>`;
+  const ctSteps = mv => `<ol class="ct-steps">${mv.map(m => { const [t, sub] = m.length === 3 ? [m[1], m[2]] : m; return `<li><b>${F(t)}</b>${sub ? `<span>${ctSent(sub)}</span>` : ''}</li>`; }).join('')}</ol>`;
+  const ctGood = g => g ? `<p class="ct-good"><b>${F('Good to know:')}</b> ${ctSent(g)}</p>` : '';
+  const ctSafe = rows => { rows = (val(rows) || []).filter(Boolean); return rows.length ? `<section class="ct-safe"><i>${CT_CHECK}</i><div><b>${F('Keep {o} safe')}</b>${rows.map(r => `<p>${ctSent(r[1])} ${ctSent(r[2])}</p>`).join('')}</div></section>` : ''; };
+  const ctH2 = t => `<h2 class="ct-h2">${F(t)}</h2>`;
+  const ctFull = `<div class="hub-list care-link ct-link">${rowK('diapers', 'The full change, step by step', 'Fresh one under, wipe, fasten', `openPage('chg:${CAT}:d:h:diapers:1')`)}</div>`;
+  const howtoPage = q => { const sh = val(q.show), mv = val(q.moves) || [], near = val(q.nearby) || [];
+    return `<div class="ct-page is-howto">` + ctHead(q, 'How to') + (sh ? ctPhoto(sh) : '')
+      + (near.length ? `<p class="ct-label">${F('Have nearby')}</p><div class="ct-chips">${near.map(t => `<span>${F(t)}</span>`).join('')}</div>` : '')
+      + (mv.length ? ctH2(q.movesT || 'Do it in a few steps') + ctSteps(mv) : '')
+      + ctGood(q.good) + (q.full ? ctFull : '') + (q.link ? `<div class="ct-link">${TB.link(val(q.link))}</div>` : '')
+      + ctSafe(q.safe) + (q.urgent ? hubUrgent(F(val(q.urgent)), 'Call 911 right away') : '')
+      + (q.video ? ctH2('Watch how') + TB.video(q.video) : '') + `</div>`; };
+  const ctLook = (img, cap, alt) => `<figure class="ct-look" id="ct-look">${ctImg(img, alt || cap)}<figcaption>${ctSent(cap)}</figcaption></figure>`;
+  const NOTICE = { acne: [['On the cheeks and nose'], ['Starts at 2–4 weeks, gone by about 4 months']], cradle: [['Flakes on the scalp, sometimes the brows'], ['No itch, no fuss']],
+    peeling: [['Dry, flaky hands and feet'], ['In the first weeks']], diaper: [['Red where the diaper rubs'], ['The skin folds stay clear']], yeast: [['Bright red, deep in the folds'], ['Small spots around the edges']],
+    eczema: [['Dry, rough patches that itch'], ['Cheeks, arms and legs']], heat: [['Tiny bumps after getting warm'], ['Fades once {s’s} cool']], newborn: [['White dots on the nose'], ['Blotches that come and go']],
+    strawberry: [['A raised red patch'], ['Grows for a few months, then fades']], drool: [['Red, chapped chin and neck'], ['Worse on drooly days']] };
+  const knowPage = (q, o) => `<div class="ct-page is-know">` + `<p class="ct-eyebrow is-out">${F((val(q.eyebrow) || LABEL[q.k]) + ' · What to know')}</p>`
+    + `<header class="ct-card"><h1>${F(val(q.title))}</h1>${val(q.why) ? `<p>${F(val(q.why))}</p>` : ''}${o.photo ? `<button class="ct-chip" onclick="document.getElementById('ct-look')&&document.getElementById('ct-look').scrollIntoView({behavior:'smooth',block:'center'})">${CT_CHECK}${F('What to look for')}</button>` : ''}</header>`
+    + (o.photo ? ctH2(o.photoTitle || 'See what it looks like') + o.photo : '')
+    + (o.notice && o.notice.length ? ctH2('What you may notice') + `<div class="ct-notice">${o.notice.map(([t, sub]) => `<div><b>${F(t)}</b>${sub ? `<span>${F(sub)}</span>` : ''}</div>`).join('')}</div>` : '')
+    + (o.mid || '')
+    + (o.helps && o.helps.length ? ctH2(o.helpsTitle || 'What helps') + `<ul class="ct-helps">${o.helps.map(([ic, t, sub]) => `<li><i>${hubArt(ic || 'heart', CAT)}</i><div><b>${F(t)}</b>${sub ? `<span>${ctSent(sub)}</span>` : ''}</div></li>`).join('')}</ul>` : '')
+    + ctGood(o.good) + (o.after || '') + callsCard(q.calls) + `</div>`;
+  const ctNotes = n => (val(n) || []).filter(Boolean).map(x => x.length === 3 ? ctSent(x[1]) + ' ' + ctSent(x[2]) : ctSent(x[0]) + ' ' + ctSent(x[1])).join(' ');
+  TEMPLATES.howto = q => howtoPage(q);
+  const oldCheck = TEMPLATES.check;
+  TEMPLATES.check = q => { const w = q.where, nq = w && NOT_QUITE[w];
+    const photo = w && RASH_IMG[w] ? ctLook('rash-' + w, LOOKS[w] + '. ' + ZONE_WORDS[w], RASH[w] && RASH[w].t)
+      : (w === 'diaper' || w === 'yeast') ? diaperVs() : q.lookImg ? ctLook(q.lookImg, val(q.lookCap)) : q.figure ? q.figure() : '';
+    const notice = (NOTICE[w] || val(q.notice) || (val(q.signs) || val(q.tell) || []).filter(Boolean).map(x => [x[1], x[2]])).map(x => [x[0], x[1]]);
+    const after = nq ? `<div class="hub-list care-link ct-link">${rowK(RASH_IMG[nq[0]] ? 'look' : 'diapers', 'Not quite it? ' + nq[1], nq[2], cgo('rash:' + nq[0]))}</div>` : '';
+    return knowPage(q, { photo, photoTitle: (w === 'diaper' || w === 'yeast') ? 'Spot the difference' : q.lookTitle, notice, helps: val(q.helps), good: ctNotes(q.helpsNotes), after }); };
+  TEMPLATES.expect = q => { const n = val(q.normal);
+    return knowPage(q, { photo: q.lookImg ? ctLook(q.lookImg, val(q.lookCap)) : typeof n === 'string' ? n : '',
+      notice: Array.isArray(n) ? n.map(x => [x[1], x[2]]) : [], helps: val(q.moves) && val(q.moves).length ? val(q.moves) : Array.isArray(q.do) ? q.do : [],
+      helpsTitle: q.helpsTitle, good: ctNotes(q.normalNotes) + (q.doRows ? ' ' + ctNotes(q.doRows) : ''), after: q.extra ? q.extra() : '' }); };
   const tplPage = q => { const c = COL[q.k]; return `<div class="quiet-category hub-page hub-detail care-v2 care-tpl is-${q.type}" data-overview="${CAT}" data-ss="1" style="${yearTheme(CAT)};--ss-bg:${c[0]};--ss-ink:${c[1]}">${detailPageTop(CAT)}${TEMPLATES[q.type](q)}</div>`; };
   const LOOKS = { acne: 'Small red or white bumps. On darker skin, darker bumps', cradle: 'Yellow patches that look greasy or crusty', peeling: 'Dry, flaky skin that peels off',
     diaper: 'Red, sore skin. On darker skin, darker or purple', yeast: 'Bright red, with small spots around the edges', eczema: 'Dry, rough, itchy patches. On darker skin, darker or gray',
@@ -1369,6 +1418,100 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
       tplNow >= 2 ? ['bowl', 'After solids', 'Thicker and smellier'] : null],
     helps: () => [['hand', 'Straining or gassy?', 'Bicycle {p} legs and rub {p} tummy'], tplNow >= 2 ? ['bowl', 'Hard poop?', 'Pears, prunes or peaches'] : ['bottle', 'Keep feeding as usual', 'Milk keeps it soft']],
     calls: { ped: () => ['Fewer than 6 wet diapers a day', 'Hard, pebble-like poop', 'White, gray or chalky poop. Call right away', tplNow <= 1 ? 'Watery poop many times a day. Call right away' : null] } };
+
+  /* ----- Nov 22: every page's content in the two templates (Yarden's mockups). One large photo per page; its corner
+     tags (bl/br/tl/tr) sit where they don't cover a face or the thing being shown. ----- */
+  const CT_PAGES = {
+    sponge: { topic: 'Baths', title: 'Give a sponge bath', why: 'Until the cord falls off, keep {o} warm and wash one part at a time.',
+      show: { img: 'show-sponge', alt: 'A parent washes one arm of a newborn who is wrapped in a towel', tags: [['Wrapped up', 'bl'], ['Wash one part', 'br']], t: 'The move to see', line: 'Keep the rest of {o} wrapped while you wash one area.' },
+      nearby: ['Towel', 'Washcloth', 'Warm water', 'Clean diaper'],
+      moves: [['Test the water', 'Warm, not hot, about 100°F'], ['Eyes and face first', 'Plain water. Wipe from the inner corner out'], ['Wash, cover, repeat', 'Uncover one area, then wrap it back up. Diaper area last']],
+      good: 'Pat dry, into every crease. Two or three baths a week is plenty, and a wet cord stump just gets patted dry.',
+      safe: [['hand', 'A hand on {o} the whole time', 'Never step away on a raised surface']], video: TPL['p:sponge'].video },
+    tub: { topic: 'Baths', title: 'Give a tub bath', why: 'After the cord heals, the little tub is ready. The key is a steady hold.',
+      show: { img: 'show-tub', alt: 'A parent cradles her baby’s head in one hand in a small tub, a washcloth over the tummy', tags: [['Head supported', 'bl'], ['Warm washcloth', 'br']], t: 'First, see the hold', line: 'One hand supports {p} head and neck for the whole bath.' },
+      nearby: ['Baby tub', 'Washcloth', 'Towel', 'Clean clothes'],
+      moves: [['Prepare the water', 'About 2 inches deep, warm on your wrist (about 100°F)'], ['Lower {o} in feet first', 'Keep {p} head and neck supported'], ['Wash, then wrap', 'Face first, body next, hair last. Pat the creases dry']],
+      good: 'Five to 10 minutes is plenty. It’s normal for the first baths to feel awkward, and for {o} to cry.',
+      safe: [['hand', 'A hand on {o} the whole time', 'If you need to step away, take {o} with you'], ['thermo', 'Water heater at 120°F or lower', 'So the tap can’t scald']], video: TPL['p:tub'].video },
+    bedtime: { topic: 'Baths', title: 'A bath before bedtime', why: 'The familiar order matters more than bathing every night.',
+      show: { img: 'show-crib', alt: 'A parent lays his drowsy baby on her back in a bare crib, in a sleep sack', tags: [['On {p} back', 'tl'], ['Bare crib', 'bl']], t: 'The little routine', line: 'Bath, feed, book, then into {p} own safe sleep space.' },
+      moves: [['A short warm bath', 'About 100°F. Not needed every night'], ['Feed and wind down', 'Dim lights and a quiet voice'], ['Read, then sleep', 'Drowsy, on {p} back, in a bare crib']],
+      good: 'About two or three baths a week is enough. On other nights, skip straight to the feed.',
+      safe: [['hand', 'A hand on {o} in the bath', 'Never leave {o} alone in water']] },
+    bigtub: { topic: 'Baths', title: 'Move to the big tub', why: 'Once {s} {sit|sits} steadily without support, the family tub can work.',
+      show: { img: 'show-bigtub', alt: 'A parent checks a few inches of water over a non-slip mat in a bathtub', tags: [['Non-slip mat', 'bl'], ['Shallow water', 'br']], t: 'Check the setup', line: 'A non-slip mat and just a few inches of water.' },
+      nearby: ['Non-slip mat', 'Towel', 'Washcloth'],
+      moves: [['Mat down first', 'Before {s} {get|gets} in. Sit {o} away from the spout'], ['Check the water', 'Warm, not hot, about 100°F'], ['Stay close the whole bath', 'A hand on {o} at all times. Drain the tub right after']],
+      good: 'Bath seats don’t make baths safer, and they can tip. They don’t replace a hand on {o}.',
+      safe: [['hand', 'A hand on {o}', 'Never leave {o} alone, even for a moment'], ['stand', 'Sit {o} back down if {s} {stand|stands}', 'Standing in the tub leads to falls']] },
+    diaper: cord => ({ topic: 'Diapers', title: 'Change a diaper, start to finish', why: 'You’ll do this a lot, and the order quickly becomes automatic. Start with everything in reach.',
+      show: { img: 'show-diaper', alt: 'A parent keeps one hand on his newborn’s tummy, a fresh diaper open beside them', tags: [['Hand on tummy', 'bl'], ['Fresh one ready', 'br']], t: 'See the setup', line: 'Open the clean diaper before you unfasten the dirty one.' },
+      nearby: ['Clean diaper', 'Unscented wipes', 'Zinc cream if needed'],
+      moves: [['Fresh one under', 'Slide the open clean diaper under the dirty one'], ['Clean front to back', 'Use the dirty diaper’s front first, then water or gentle wipes'], ['Pull out and fasten', cord ? 'Let the skin air-dry. Fold it below the stump, two fingers of room at the waist' : 'Let the skin air-dry. Snug, with two fingers of room at the waist']],
+      good: () => anatomy() === 'boy' ? (cord ? 'Point the penis down before you fasten. If he’s circumcised, a dab of petroleum jelly on the tip each change until it heals.' : 'Point the penis down before you fasten, so the diaper doesn’t leak.')
+        : anatomy() === 'girl' && cord ? 'A little white discharge, or a spot of blood, in the first weeks is normal. It comes from pregnancy hormones.' : 'Red skin under the diaper? A thick layer of zinc cream at every change usually clears it.',
+      link: rashLinkRow, safe: [['hand', 'A hand on {o} the whole time', 'Never step away on a raised surface']] }),
+    wriggle: stand => ({ topic: 'Diapers', title: stand ? 'Diaper changes on the move' : 'Change a wriggler', why: stand ? 'Once {s} {pull|pulls} to stand, pull-on diapers can be easier.' : 'Rolling changes how you set up, not the whole diaper routine.',
+      show: { img: 'show-wriggle', alt: 'A parent keeps a hand on her baby’s tummy while he holds a soft toy', tags: [['Toy to hold', 'bl'], ['Hand on tummy', 'br']], t: stand ? 'A new option' : 'The trick to see', line: stand ? 'If {s} can stand steadily, change {o} standing, in pull-ons.' : 'Give {o} something to focus on, with everything already in reach.' },
+      nearby: stand ? ['Pull-on diaper', 'Wipes', 'Toy'] : ['Diaper', 'Wipes', 'Small toy'],
+      moves: stand ? [['Get everything ready', 'On the floor if standing is wobbly'], ['Give {o} something to hold', 'A toy, or a familiar song'], ['Wipe and replace', 'Stay beside {o}, steadying as needed']]
+        : [['Hand {o} a toy', 'Or sing the same song each time'], ['A hand on {p} tummy', 'Before {s} {roll|rolls} away'], ['Too wriggly? Use the floor', 'A mat on the floor avoids a fall']],
+      good: 'The full steps stay on the main diaper page. Leaks or red marks on the legs mean it’s time for the next size.', full: true,
+      safe: [['hand', 'A hand on {o} on any raised surface', 'The whole time']] }),
+    nails: { topic: 'Nails', title: 'Trim tiny nails without a nick', why: 'The trick is moving the fingertip away from the nail.',
+      show: { img: 'show-nails', alt: 'A parent presses a baby’s finger pad back while clipping the nail', tags: [['Pad pushed back', 'bl'], ['Just the nail', 'tr']], t: 'See the grip', line: 'Gently press the finger pad away from the nail before clipping.' },
+      nearby: ['Clippers or a file', 'Good light'],
+      moves: [['Choose a sleepy moment', 'Still hands make it easier'], ['Press the fingertip back', 'Make space between the nail and the skin'], ['Clip, then smooth', 'Follow the curve of fingernails. Toenails straight across']],
+      good: 'If clippers feel intimidating, a soft nail file works too. Sharp again in a few days is normal.',
+      safe: [['heart', 'If you nick the skin', 'Press gently with a clean cloth. It happens to everyone']] },
+    gums: { topic: 'Teeth', title: 'Wipe {p} gums', why: 'A soft, damp cloth is all you need before teeth arrive.',
+      show: { img: 'show-gums', alt: 'A parent wipes her baby’s gums with a damp cloth wrapped on her finger', tags: [['Damp cloth', 'tr'], ['Gentle wipe', 'bl']], t: 'See the motion', line: 'Wrap a damp cloth around one finger and wipe gently.' },
+      nearby: ['Clean soft cloth', 'Water'],
+      moves: [['Wet the cloth', 'Plain water'], ['Wrap it around your finger', 'A soft edge against the gums'], ['Wipe top and bottom', 'Morning and night. No toothpaste yet']],
+      good: 'This gets the routine familiar before the first tooth. Tiny white bumps on the gums are normal.' },
+    brush: { topic: 'Teeth', title: 'Brush that first tiny tooth', why: 'As soon as it appears, brush twice a day with fluoride toothpaste.',
+      show: { img: 'show-brush', alt: 'A dad gently brushes his baby’s front teeth with a soft brush, the baby on his lap', tags: [['Soft brush', 'bl'], ['On your lap', 'br']], t: 'How much toothpaste?', line: 'Just a smear the size of one grain of rice.' },
+      nearby: ['Soft toothbrush', 'Fluoride toothpaste'],
+      moves: [['Add a tiny smear', 'The size of a grain of rice'], ['Brush every tooth', 'Front and back, twice a day'], ['Skip the rinse', 'And always brush right before bed']],
+      good: 'First dentist visit after that first tooth, and by the first birthday.',
+      safe: [['bottle', 'No bottle in bed', 'Milk on teeth overnight causes cavities']] },
+    shade: { topic: 'Sun', title: 'Shade first', why: 'Under 6 months, skin burns fast and babies overheat easily.',
+      show: { img: 'show-shade', alt: 'A stroller with its canopy up, parked in the shade of a tree', tags: [['Canopy up', 'bl'], ['Air still flows', 'br']], t: 'See a cool setup', line: 'Use the canopy, never a blanket draped across the stroller.' },
+      nearby: ['Shade', 'Light layers', 'Wide-brim hat'],
+      moves: [['Plan cooler hours', 'Go out early or later in the day'], ['Cover gently', 'Loose long sleeves and a wide-brim hat'], ['Keep air moving', 'Use the canopy, not a blanket over the stroller']],
+      good: 'At this age, shade and clothing are the main protection. Sunscreen only on small spots, if there’s no shade.',
+      safe: sunSafe(true), urgent: SUN_911 },
+    six: { topic: 'Sun', title: 'Sunscreen joins shade', why: 'Shade and a hat still come first. Sunscreen covers the skin they don’t.',
+      show: { img: 'show-sun', alt: 'A parent rubs sunscreen on her baby’s cheek; the baby wears a wide-brim hat', tags: [['Wide-brim hat', 'tr'], ['SPF 30+', 'br']], t: 'What to cover', line: 'Remember the ears, feet and the back of the neck.' },
+      nearby: ['Broad-spectrum SPF 30+', 'Hat'],
+      moves: [['Apply before going out', 'About 15–30 minutes beforehand'], ['Cover bare skin', 'Cheeks, ears, feet and back of neck'], ['Reapply', 'Every 2 hours, and after water']],
+      good: 'Mineral sunscreen is gentlest on young skin. Skip sprays.',
+      safe: sunSafe(false), urgent: SUN_911 },
+    dress: { topic: 'Clothes', title: 'Dress {o} for the temperature', why: 'Use {p} neck or chest, not cold hands, as your clue.',
+      show: { img: 'show-dress', alt: 'A parent feels the back of a sleeping baby’s neck', tags: [['Light layers', 'bl'], ['Easy to remove', 'br']], t: 'The simple check', line: 'Feel the back of the neck: sweaty means too warm.' },
+      moves: [['Start with one more layer than you', 'About one more than you’re comfortable in'], ['Check {p} neck', 'Sweaty: take a layer off. Cool: add one'], ['At bedtime', 'Sleepwear or a sleep sack, no loose blankets']],
+      good: 'No hats indoors. In the car seat, skip puffy coats under the straps: buckle in, then a blanket on top.',
+      safe: [['shirt', 'Snaps or zips', 'Never strings or cords near the neck']] },
+    feet: { topic: 'Clothes', title: 'Bare feet first, shoes later', why: 'Bare feet help {o} sense the floor as {s} {learn|learns} to walk.',
+      show: { img: 'show-shoes', alt: 'Soft first-walker shoes beside non-slip socks on a rug', tags: [['Flexible sole', 'bl'], ['Room at the toe', 'br']], t: 'Look for this', line: 'A soft sole that bends easily and has grip.' },
+      moves: [['Barefoot indoors', 'Or non-slip socks when needed'], ['Shoes for outdoors', 'Once {s’s} walking outside'], ['Check the fit', 'A finger’s width at the big toe. Recheck every month']],
+      good: 'Skip walkers on wheels. They don’t help with walking, and they lead to falls.' }
+  };
+  const asHowto = (key, o) => Object.assign(key, { type: 'howto', eyebrow: undefined, picture: undefined, pictureTitle: undefined, steps: undefined, need: undefined, say: undefined, tips: undefined, tipsTitle: undefined, movesT: undefined, movesNotes: undefined, stepsNotes: undefined }, o);
+  asHowto(TPL['p:sponge'], CT_PAGES.sponge); asHowto(TPL['p:tub'], CT_PAGES.tub); asHowto(TPL['t:bath:2'], CT_PAGES.bedtime); asHowto(TPL['t:bath:3'], CT_PAGES.bigtub);
+  asHowto(TPL['h:diapers:0'], CT_PAGES.diaper(true)); asHowto(TPL['h:diapers:1'], CT_PAGES.diaper(false)); asHowto(TPL['h:diapers:2'], CT_PAGES.wriggle(false)); asHowto(TPL['h:diapers:3'], CT_PAGES.wriggle(true));
+  asHowto(nails, CT_PAGES.nails); asHowto(gums, CT_PAGES.gums); asHowto(TPL['p:brush'], CT_PAGES.brush); asHowto(shade, CT_PAGES.shade); asHowto(six, CT_PAGES.six);
+  asHowto(dress, CT_PAGES.dress); asHowto(TPL['p:feet'], CT_PAGES.feet);
+  // What to know: one photo with the caption on it.
+  Object.assign(TPL.cord, { eyebrow: 'Cord', normalNotes: undefined, lookImg: 'show-cord', lookCap: 'Stump stays in the air, top of the diaper folded down', show: undefined, normal: [['cord', 'A dry, dark stump as it heals'], ['drop', 'A small crust or spot of blood as it comes off']],
+    moves: [['diaper', 'Fold the diaper below it'], ['drop', 'If it’s dirty, plain water and pat dry'], ['hand', 'Let it fall off. Don’t pull']] });
+  Object.assign(TPL['look-cord'], { lookImg: 'rash-cord', lookCap: 'Dark, dry and a little crusty. Usually off in 1–3 weeks', figure: undefined });
+  Object.assign(TPL['look-eyes'], { lookImg: 'look-eyes', lookCap: 'A watery eye without redness, wiped from the inner corner out' });
+  Object.assign(TPL['look-yellow'], { lookImg: 'look-yellow', lookCap: 'A yellow tint on the skin, gums or whites of the eyes. Check in daylight' });
+  Object.assign(TPL['p:teething'], { eyebrow: 'Teeth', lookImg: 'look-teething', lookCap: 'Drool, chewing and a firm teething ring' });
+  Object.assign(skinCare, { eyebrow: 'Skin', lookImg: 'look-skin', lookCap: 'A thick, fragrance-free cream on dry patches' });
+  TPL.poop.lookTitle = 'Colors at a glance';
 
   window.changesRoute = function (p) {
     const [, cat, screen, a, b, c] = p.split(':');
