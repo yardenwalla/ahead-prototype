@@ -20,7 +20,7 @@
 
   /* ---------- a day (or a night) as a band of time ---------- */
   // segs: [from, to, 'nap'|'night'] in hours; night: [from, to] hours that are dark; caps: [hour, text]; moon/sun: hours.
-  const COL = { day: '#fff1cc', dusk: '#f3dfe6', night: '#dbe4f6', nap: '#8f84dd', deep: '#46638c' };
+  const COL = { day: '#fff1cc', dusk: '#f3dfe6', night: '#e3e0f6', nap: '#8f84dd', deep: '#5b4fc4' };
   function band(o) {
     const S = o.start, E = o.end, X = h => 8 + (h - S) / (E - S) * 304, pc = h => ((h - S) / (E - S) * 100);
     const dark = o.dark || [];
@@ -565,8 +565,8 @@
     const ic = (HEAD_ICON.slice(0, -1).find(([re]) => re.test(t1)) || HEAD_ICON.find(([re]) => re.test(t2)))[1];
     let art = head.querySelector('.dev-area-head-art'); if (!art) { head.insertAdjacentHTML('afterbegin', '<span class="dev-area-head-art"></span>'); art = head.querySelector('.dev-area-head-art'); }
     art.className = 'dev-area-head-art sf-head-art'; art.setAttribute('aria-hidden', 'true'); art.innerHTML = H().art(ic, 'Sleep');
-    head.style.setProperty('--area', '#e7effc'); head.style.setProperty('--area-ink', '#46638c');
-    const pageEl = head.closest('.hub-detail'); if (pageEl) { pageEl.style.setProperty('--ss-bg', '#edf2fe'); pageEl.style.setProperty('--ss-ink', '#46638c'); }
+    head.style.setProperty('--area', '#efedfb'); head.style.setProperty('--area-ink', '#5b4fc4');
+    const pageEl = head.closest('.hub-detail'); if (pageEl) { pageEl.style.setProperty('--ss-bg', '#f3f1fd'); pageEl.style.setProperty('--ss-ink', '#5b4fc4'); }
     head.classList.remove('ssw-plainhead'); head.dataset.sswIcon = '1';
   }
   function dress() {
@@ -723,21 +723,54 @@
   // Nov 22 (Yarden): the stage page as simple as the mockup, read top to bottom. Stage pills; the day as the headline;
   // one card for the day; one card for how it fits together; then at most three quiet rows (what's new now, a safety step
   // if one is due, and rough days). No header photo, no tip, no photo list, no Next card.
+  // Nov 22 (Yarden's direction 2): each stage's top card shows what changes at that stage, as a picture; then three
+  // photo rows (topic, then the guide), rough days, and what's next.
   function simplify() {
     const main = document.querySelector('#main'); if (!main) return;
     const hero = main.querySelector('.ssw-hero'); if (!hero || hero.dataset.simple) return;
-    const gh = main.querySelector('.sl-gl-h'), sub = main.querySelector('.ssw-dc-sub'), dc = main.querySelector('.ssw-dc'), card = main.querySelector('.ssw-dc-card');
-    if (!gh || !dc) return;
-    hero.dataset.simple = '1'; hero.classList.add('ssw-simple-head');
-    // The top card says what the day looks like, and shows it: the naps are the card's picture, like Feeding's and Development's photos.
+    if (!main.querySelector('.ssw-dc') && !main.querySelector('.ssw-now-tiles')) return;
+    const v = +(hero.dataset.sswView || 0), pg = (() => { try { return (0, eval)('page'); } catch (e) { return ''; } })();
+    const A = /^topic:Sleep|^chg:Sleep$/.test(pg) ? m() : REP_AGE[v];
+    hero.dataset.simple = '1'; hero.classList.add('ssv-hero');
+    const art = n => H().art(n, 'Sleep');
+    const nurse = nursing();
+    const S = [
+      { h: '{P} day, around the clock', lead: 'Feed, a little awake time, then sleep. Day and night look similar for now.', pic: nurse ? 'feed-nurse.jpg' : 'feed.jpg' },
+      { h: '{P} sleep is growing more steady', lead: 'Around 4 months, sleep starts to come in longer stretches.', pic: 'back.jpg' },
+      { h: '{P} day in three naps', lead: 'Two longer naps, and a short catnap to get {o} to bedtime.', pic: 'nap.jpg', day: 'd:day:2' },
+      { h: '{P} day in two naps', lead: 'A morning and an afternoon nap, with longer awake time before bed.', pic: 'standing.jpg', day: 'd:day:3' }][v];
     const h1 = hero.querySelector('h1'), lead = hero.querySelector('.hub-lead');
-    if (h1) h1.textContent = gh.textContent; if (lead) lead.textContent = sub ? sub.textContent : '';
-    hero.querySelectorAll('.ssw-hero-photo, .ssw-tip, .sl-aha, figure').forEach(e => e.remove());
-    hero.insertAdjacentElement('beforeend', dc); dc.classList.add('ssw-dc-in-hero');
-    const toDay = card && card.getAttribute('onclick'); if (toDay) dc.setAttribute('onclick', toDay);
-    (gh.parentElement && gh.parentElement !== main ? gh.parentElement : gh).remove(); if (sub) sub.remove();
-    if (card) card.remove();
+    if (h1) h1.textContent = F(S.h); if (lead) lead.textContent = F(S.lead);
+    hero.querySelectorAll('.ssw-hero-photo, .ssw-tip, .sl-aha, figure, .ssw-dc').forEach(e => e.remove());
+    const chips = (names, durs) => `<div class="ssv-naps is-${names.length}">${names.map((n, i) => `<div><em>${F(n)}</em><span>${F(durs[i])}</span></div>`).join('')}</div>`;
+    const stats = list => `<div class="ssv-stats">${list.map(([ic, b, sm]) => `<div><i aria-hidden="true">${art(ic)}</i><b>${F(b)}</b><small>${F(sm)}</small></div>`).join('')}</div>`;
+    const arc = `<svg class="ssv-arc" viewBox="0 0 300 70" aria-hidden="true"><path d="M30 58 Q150 -10 270 58" fill="none" stroke="#e7a93a" stroke-width="2" stroke-dasharray="6 7" opacity=".7"/></svg><i class="ssv-sun" aria-hidden="true">${art('sun')}</i><i class="ssv-moon" aria-hidden="true">${art('moon')}</i>`;
+    const VIS = [
+      () => `<figure class="ssv-photo is-loop"><img src="${IMG + S.pic}" alt=""><div class="ssv-loop">${[['drop', 'Feed', 'Every', '2–3 hrs'], ['eye', 'Awake', '', '45–60 min'], ['crib', 'Sleep', 'About', '2–4 hrs']].map(([ic, t, a, b]) => `<span><i aria-hidden="true">${art(ic)}</i><b>${F(t)}</b><small>${a ? F(a) + '<br>' : ''}<span class="nw">${F(b)}</span></small></span>`).join('<u aria-hidden="true">→</u>')}</div></figure>`,
+      () => `<figure class="ssv-photo is-compare"><img src="${IMG + S.pic}" alt=""><div class="ssv-compare"><div><i aria-hidden="true">${art('moon')}</i><span><b>${F('Earlier')}</b><small>${F('Up every 2–3 hrs')}</small></span><span class="ssv-bars"><s></s><s></s><s></s></span></div><div class="is-now"><i aria-hidden="true">${art('moon')}</i><span><b>${F('Now')}</b><small>${F('A longer first stretch, often 4–6 hrs')}</small></span><span class="ssv-bars"><s></s></span></div></div></figure>`,
+      () => `<figure class="ssv-photo is-naps"><img src="${IMG + S.pic}" alt=""></figure>${chips(['Nap 1', 'Nap 2', 'Catnap'], ['About 1–1½ h', 'About 1–1½ h', 'About 30–45 min'])}${stats([['crib', '3', 'naps'], ['clock', '2–2½ hrs', 'awake window'], ['moon', '6–8 hrs', 'longest sleep']])}`,
+      () => `<figure class="ssv-photo is-naps is-arc"><img src="${IMG + S.pic}" alt="">${arc}</figure>${chips(['Morning nap', 'Afternoon nap'], ['About 1–1½ h', 'About 1–1½ h'])}${stats([['crib', '2', 'naps'], ['clock', '2½–4 hrs', 'awake window'], ['moon', '10–12 hrs', 'longest sleep']])}`][v];
+    hero.insertAdjacentHTML('beforeend', `<div class="ssv-vis"${S.day ? ` role="button" onclick="${go('chg:Sleep:' + S.day)}"` : ''}>${VIS()}</div>`);
+    // Her day card and its heading now live in the top card.
+    const gh = main.querySelector('.sl-gl-h'); if (gh) (gh.parentElement && gh.parentElement !== main ? gh.parentElement : gh).remove();
+    main.querySelectorAll('.ssw-dc-sub, .sl-glance, .ssw-dc-card').forEach(e => e.remove());
+    // See how it all works together: a short nap at three naps; three naps becoming two at two naps.
+    const works = main.querySelector('.ssw-works');
+    if (works && v === 3) works.outerHTML = `<button class="ssw-works ssv-shift" onclick="${go('chg:Sleep:d:catnap')}"><span class="ssv-shift-l"><em>${F('From three naps')}</em><em>${F('to two naps')}</em></span><span class="ssv-shift-r"><span class="ssv-shift-row"><b></b><b></b><b class="is-gone"></b></span><span class="ssv-shift-arrow" aria-hidden="true">↓</span><span class="ssv-shift-row"><b></b><b class="is-long"></b></span><small>${F('The afternoon nap gets longer as the third one fades.')}</small></span></button>`;
+    // Right now: three rows, the topic first, then the guide (Feeding's photo rows).
+    const ROWS = [
+      [['Naps', 'd:steps0', 'Spot the yawn, then soothe', 'yawn.jpg'], ['Safe sleep', 'd:swaddle', 'How to swaddle', 'swaddle-3.jpg'], ['Sleep space', 'd:where', 'Set up a safe, cozy spot', 'room.jpg']],
+      A < 3 ? [['Night sleep', 'd:stretch', 'Longer stretches at night', 'night.jpg'], ['Naps', 'd:napsearly', 'Short naps are normal', 'bassinetnap.jpg'], ['Bedtime', 'd:routine', 'A short bedtime routine', 'pajamas.jpg']]
+        : [['Night sleep', 'd:regress', 'The 4-month sleep regression', 'night.jpg'], ['Bedtime', 'd:settle4', 'Down drowsy, once a day', 'down.jpg'], ['Safe sleep', 'd:swaddleoff', 'Stop swaddling', 'swaddle-after.jpg']],
+      [['Night sleep', 'd:wakes', 'Waking often at night', 'night.jpg'], ['Bedtime', 'settle', 'Sleep training, if you want', 'book.jpg'], ['Safe sleep', 'd:mattress', 'Lower the mattress', 'mattress.jpg', 1]],
+      A < 8 ? [['Night sleep', 'd:nightfeeds', 'Dropping night feeds', nurse ? 'feed-nurse.jpg' : 'feed.jpg'], ['Bedtime', 'd:earlybed', 'An earlier bedtime', 'book.jpg'], ['Safe sleep', 'd:mattress', 'Lower the mattress', 'mattress.jpg', 1]]
+        : [['Night sleep', 'd:nightwake', 'Night waking comes back', 'nightwake.jpg'], ['Bedtime', 'd:goodbye', 'Short, steady goodbyes', 'goodbye.jpg'], ['Safe sleep', 'd:mattress', 'Lower the mattress', 'mattress.jpg', 1]]][v];
+    const rows = ROWS.map(([t, r, g, img, safety]) => `<button class="hub-row fd-prow" onclick="${go('chg:Sleep:' + r)}"><span class="fd-thumb"><img src="${IMG + img}" alt="" loading="lazy"></span><span class="hub-row-copy"><b>${F(t)}</b><small>${F(g)}</small>${safety ? `<span class="hub-chip is-red">${F('Safety step')}</span>` : ''}</span><span class="hub-chev" aria-hidden="true">›</span></button>`).join('');
+    const grid = main.querySelector('.ssw-now-tiles');
+    if (grid) grid.outerHTML = `<div class="hub-list fd-plist ssv-rows">${rows}</div>`;
+    main.querySelectorAll('.ssw-simple-rows, .ssw-now-extra').forEach(e => e.remove());
   }
+
 
   // Stage tabs sit above the top card. Other scripts redraw the page after this one, so keep them in place on every change.
   function ensureTabs() {
