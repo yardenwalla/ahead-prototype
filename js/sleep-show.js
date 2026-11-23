@@ -656,8 +656,8 @@
         'd:predictable': 'Naps start to settle', 'd:settle4': 'Practice falling asleep', 'd:swaddleoff': 'At the first try to roll', 'd:wakes': 'What to do when {s} stirs',
         'settle': 'Five ways, side by side', 'd:rolling': 'When to let {o} be', 'd:mattress': 'Before {s} sits or pulls up', 'd:nightfeeds': 'When and how',
         'd:catnap': 'Signs {s}’s ready', 'd:earlybed': 'Why it often helps', 'd:nightwake': 'New skills, a short phase', 'd:goodbye': 'Easier at bedtime too' };
-      const PIC = { 'd:daynight': 'alert.jpg', 'd:stretch': 'night.jpg', 'd:regress': 'back.jpg', 'd:wakes': 'night.jpg', 'd:nightfeeds': nursing() ? 'feed-nurse.jpg' : 'feed.jpg', 'd:nightwake': 'nightwake.jpg',
-        'd:napsearly': 'bassinetnap.jpg', 'd:predictable': 'bassinetnap.jpg', 'd:shortnap': 'nap.jpg', 'd:catnap': 'nap10.jpg',
+      const PIC = { 'd:daynight': 'nightfeed.jpg', 'd:stretch': 'night.jpg', 'd:regress': 'tummy.jpg', 'd:wakes': 'night.jpg', 'd:nightfeeds': nursing() ? 'feed-nurse.jpg' : 'feed.jpg', 'd:nightwake': 'nightwake.jpg',
+        'd:napsearly': 'bassinetnap.jpg', 'd:predictable': 'nap.jpg', 'd:shortnap': 'nap.jpg', 'd:catnap': 'nap10.jpg',
         'd:steps0': 'yawn.jpg', 'd:routine': 'pajamas.jpg', 'd:settle4': 'down.jpg', 'settle': 'goodbye.jpg', 'd:earlybed': 'book.jpg', 'd:goodbye': 'goodbye.jpg',
         'd:swaddle': 'swaddle-3.jpg', 'd:swaddleoff': 'swaddle-after.jpg', 'd:where': 'room.jpg', 'd:mattress': 'mattress.jpg', 'd:rolling': 'tummy.jpg' };
       const all = Object.values(TOPICS).flatMap(t => t.items), find = r => all.find(x => x[0] === r);
@@ -666,7 +666,7 @@
       const tiles = PLAN[view]().map(([k, r]) => { const T = TOPICS[k]; used.push(r);
         const it = find(r) || [r, null, '', ((sl && sl.querySelector('.hub-row b')) || {}).textContent || '', ''];
         let pic = PIC[r] || 'crib.jpg'; if (heroPic.endsWith(pic)) pic = { 'room.jpg': 'crib.jpg', 'night.jpg': 'back.jpg', 'nightfeed.jpg': 'feed.jpg' }[pic] || 'crib.jpg';
-        return `<button class="hub-row fd-prow" onclick="${go('chg:Sleep:' + r)}"><span class="fd-thumb"><img src="${IMG + pic}" alt="" loading="lazy"></span><span class="hub-row-copy"><b>${F(SHORT[r] || it[3])}</b><small>${F(SUB[r] || T.name)}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`;
+        return `<button class="ssw-nt is-${k}" onclick="${go('chg:Sleep:' + r)}"><span class="ssw-nt-pic"><img src="${IMG + pic}" alt="" loading="lazy"></span><span class="ssw-nt-copy"><em><i aria-hidden="true">${H().art(T.art, 'Sleep')}</i>${F(T.name)}</em><b>${F(SHORT[r] || it[3])}</b></span><span class="ssw-nt-go" aria-hidden="true">›</span></button>`;
       }).join('');
       // Rows left over: guides for this stage that no tile opens. The routine is a reference from three naps on, and room
       // sharing shows until 6 months (Nov 21 review); both stay in All sleep guides.
@@ -676,10 +676,12 @@
       if (sl) { const dr = sl.querySelector('.hub-row'); if (due && !used.includes(due) && dr) { const b = dr.querySelector('.hub-row-copy b'), sm = dr.querySelector('.hub-row-copy small'); rl.append(dr); } sl.remove(); }
       if (used.some(r => /^d:day:/.test(r))) main.querySelectorAll('.sl-glance [onclick*="chg:Sleep:d:day:"], .sl-gl-h [onclick*="chg:Sleep:d:day:"]').forEach(e => e.remove());
       const n = (tiles.match(/class="ssw-nt /g) || []).length;
-      rl.insertAdjacentHTML('beforebegin', `<div class="hub-list fd-plist ssw-now-tiles">${tiles}</div>`);
-      const plist = main.querySelector('.ssw-now-tiles');
+      rl.insertAdjacentHTML('beforebegin', `<div class="ssw-now-tiles${n % 2 ? ' is-odd' : ''}">${tiles}</div>`);
+      // A safety step still to do is one more tile, with its tag, so Right now stays one grid.
+      const grid = main.querySelector('.ssw-now-tiles');
       rl.querySelectorAll('.hub-row').forEach(row => { const r = routeOf(row), b = row.querySelector('.hub-row-copy b'), chip = row.querySelector('.hub-chip');
-        plist.insertAdjacentHTML('beforeend', `<button class="hub-row fd-prow" onclick="${go('chg:Sleep:' + r)}"><span class="fd-thumb"><img src="${IMG + (PIC[r] || 'crib.jpg')}" alt="" loading="lazy"></span><span class="hub-row-copy"><b>${b ? b.innerHTML : ''}</b>${chip ? chip.outerHTML : ''}</span><span class="hub-chev" aria-hidden="true">›</span></button>`); });
+        grid.insertAdjacentHTML('beforeend', `<button class="ssw-nt is-safe" onclick="${go('chg:Sleep:' + r)}"><span class="ssw-nt-pic"><img src="${IMG + (PIC[r] || 'crib.jpg')}" alt="" loading="lazy"></span><span class="ssw-nt-copy"><em><i aria-hidden="true">${H().art(TOPICS.safe.art, 'Sleep')}</i>${F(TOPICS.safe.name)}</em><b>${F(SHORT[r] || (b ? b.textContent : ''))}</b>${chip ? chip.outerHTML : ''}</span><span class="ssw-nt-go" aria-hidden="true">›</span></button>`); });
+      grid.classList.toggle('is-odd', grid.querySelectorAll('.ssw-nt').length % 2 === 1);
       rl.remove();
     }
     const rc = main.querySelector('.hub-rough-card small, [onclick*="chg:Sleep:d:rough"] small');
@@ -724,29 +726,19 @@
   function simplify() {
     const main = document.querySelector('#main'); if (!main) return;
     const hero = main.querySelector('.ssw-hero'); if (!hero || hero.dataset.simple) return;
-    const gh = main.querySelector('.sl-gl-h'), sub = main.querySelector('.ssw-dc-sub'), rows = main.querySelector('.ssw-now-tiles');
-    if (!gh || !rows) return;
+    const gh = main.querySelector('.sl-gl-h'), sub = main.querySelector('.ssw-dc-sub'), dc = main.querySelector('.ssw-dc'), card = main.querySelector('.ssw-dc-card');
+    if (!gh || !dc) return;
     hero.dataset.simple = '1'; hero.classList.add('ssw-simple-head');
+    // The top card says what the day looks like, and shows it: the naps are the card's picture, like Feeding's and Development's photos.
     const h1 = hero.querySelector('h1'), lead = hero.querySelector('.hub-lead');
     if (h1) h1.textContent = gh.textContent; if (lead) lead.textContent = sub ? sub.textContent : '';
     hero.querySelectorAll('.ssw-hero-photo, .ssw-tip, .sl-aha, figure').forEach(e => e.remove());
+    hero.insertAdjacentElement('beforeend', dc); dc.classList.add('ssw-dc-in-hero');
+    const toDay = card && card.getAttribute('onclick'); if (toDay) dc.setAttribute('onclick', toDay);
     (gh.parentElement && gh.parentElement !== main ? gh.parentElement : gh).remove(); if (sub) sub.remove();
-    main.querySelectorAll('.ssw-dc-card .sl-every').forEach(e => e.remove());
-    const pick = [...rows.querySelectorAll('.fd-prow')];
-    const safety = pick.find(r => r.querySelector('.hub-chip')), guides = pick.filter(r => r !== safety);
-    const chosen = guides.slice(0, 2);
-    const rough = main.querySelector('.hub-rough-card');
-    const ICONS = [[/swaddl/i, 'swaddle'], [/mattress|crib|room/i, 'crib'], [/training|drowsy|settle|routine|bedtime|goodbye/i, 'moon'], [/nap|yawn/i, 'clock'], [/night|regression|day/i, 'moon'], [/./, 'moon']];
-    const row = (on, t, sm, chip, ic) => `<button class="ssw-simple-row" onclick="${on}"><i aria-hidden="true">${H().art(ic, 'Sleep')}</i><span><b>${t}</b>${sm ? `<small>${sm}</small>` : ''}${chip || ''}</span><span class="hub-chev" aria-hidden="true">›</span></button>`;
-    const html = chosen.map(r => { const t = (r.querySelector('b') || {}).innerHTML || '', sm = (r.querySelector('.hub-row-copy small') || {}).innerHTML || '', chip = r.querySelector('.hub-chip');
-      return row(r.getAttribute('onclick'), t, sm, chip ? chip.outerHTML : '', ICONS.find(([re]) => re.test(t))[1]); }).join('')
-      + (safety ? (() => { const t = (safety.querySelector('b') || {}).innerHTML || '', chip = safety.querySelector('.hub-chip'); return row(safety.getAttribute('onclick'), t, '', chip ? chip.outerHTML : '', ICONS.find(([re]) => re.test(t))[1]); })()
-        : row("openPage('chg:Sleep:safe')", F('Safe sleep, every sleep'), F('On {p} back, in {p} own bare crib'), '', 'crib'))
-      + (rough ? row(rough.getAttribute('onclick'), (rough.querySelector('b') || {}).innerHTML || '', (rough.querySelector('small') || {}).innerHTML || '', '', 'heart') : '');
-    const rh = [...main.querySelectorAll('h2.hub-h2')].find(h => /^Right now/.test(h.textContent.trim()));
-    rows.insertAdjacentHTML('beforebegin', `<div class="ssw-simple-rows">${html}</div>`);
-    [rh, rows, rough, main.querySelector('.hub-next'), main.querySelector('.hub-foot')].forEach(e => e && e.remove());
+    if (card) card.remove();
   }
+
   // Stage tabs sit above the top card. Other scripts redraw the page after this one, so keep them in place on every change.
   function ensureTabs() {
     const hr = document.querySelector('#main .ssw-hero'); if (!hr || hr.dataset.sswView == null) return;

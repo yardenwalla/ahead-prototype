@@ -552,3 +552,15 @@
 #main .ssw-vs em { box-shadow: none; color: #46638c } #main .ssw-vs em.is-blank { display: none }
 #main .ssw-todo li > i { background: #e7effc; color: #46638c }
 #main .ssw-rule { background: #f3f6fd; color: var(--ink) }
+/* Nov 22: the day is the top card's picture (like Feeding's and Development's photos) */
+#main .ssw-hero .ssw-dc-in-hero { display: block; margin: 16px 0 0; background: #fff; border-radius: 20px; overflow: hidden; cursor: pointer; position: relative; z-index: 1 }
+#main .ssw-hero .ssw-dc-in-hero .ssw-dc-sky { padding: 14px 8px 4px; background: #fff !important }
+#main .ssw-hero .ssw-dc-in-hero .ssw-dc-stats { padding: 10px 6px 12px }
+#main .ssw-hero .ssw-dc-in-hero .ssw-dc-stats > div { padding: 0 4px; min-width: 0 } #main .ssw-hero .ssw-dc-in-hero .ssw-dc-stats b { font-size: 14px; white-space: nowrap }
+#main .ssw-hero .ssw-dc-in-hero .ssw-dc-stats i { width: 30px; height: 30px } 
+#main .ssw-nt .hub-chip { align-self: flex-start; margin-top: 6px }
+/* stats inside the top card: number over label, centred, no icons (room for "1½–2½ hrs") */
+#main .ssw-hero .ssw-dc-in-hero .ssw-dc-stats > div { flex-direction: column; justify-content: center; text-align: center; gap: 0; padding: 0 4px }
+#main .ssw-hero .ssw-dc-in-hero .ssw-dc-stats i { display: none }
+#main .ssw-hero .ssw-dc-in-hero .ssw-dc-stats b { font-size: 15px; white-space: nowrap }
+#main .ssw-hero .ssw-dc-in-hero .ssw-dc-stats small { font-size: 12px; white-space: normal }
