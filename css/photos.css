@@ -583,3 +583,8 @@
 #main .care-disc.fd-life .care-newbox.is-two { display: block; padding: 4px 14px }
 #main .care-newbox.is-two > button { all: unset; box-sizing: border-box; cursor: pointer; display: flex; gap: 10px; align-items: flex-start; width: 100%; padding: 10px 0 }
 #main .care-newbox.is-two > button + button { border-top: 1px solid rgba(42,96,120,.14) }
+
+/* Nov 23: Feeding's pages in the same layout use the same white helps card with a note under the list. */
+#main .ct-helpcard { background: #fffdf9; border: 1px solid var(--ct-line, #ece7e2); border-radius: 18px }
+#main .ct-helpcard .ct-helps { border: 0; background: none; margin: 0 }
+#main .ct-helpcard .ct-notes { margin: 0 14px }
