@@ -411,7 +411,7 @@
 #main .care-good { margin: 10px 4px 0; font-size: 14px; line-height: 1.45; color: #5b5566 }
 #main .care-good b { color: #302d3c }
 /* ===== Nov 22: Everyday care templates, from Yarden's mockups (How to / What to know) ===== */
-#main .ct-page { --ct-ink: #2b2733; --ct-soft: #6b6573; --ct-purple: #5b4fa3; --ct-lav: #eeebfb; --ct-line: #ece7e2; padding-bottom: 8px }
+#main .ct-page { --ct-ink: #2b2733; --ct-soft: #6b6573; --ct-purple: var(--ss-ink, #46638c); --ct-lav: var(--ss-bg, #e7effc); --ct-line: #ece7e2; padding-bottom: 8px }
 #main .ct-eyebrow { margin: 6px 0 6px; font-size: 11.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--ct-purple) }
 #main .ct-head h1 { margin: 0 0 8px; font-size: 29px; line-height: 1.12; letter-spacing: -.02em; font-weight: 800; color: var(--ct-ink) }
 #main .ct-head p:not(.ct-eyebrow) { margin: 0 0 18px; font-size: 15.5px; line-height: 1.45; color: var(--ct-soft) }
@@ -496,7 +496,7 @@
 #main .ct-helps li > i { width: 26px; height: 26px; border-radius: 8px; color: #2f7a57; background: #e7f4ee }
 #main .ct-helps li > i svg { width: 14px; height: 14px }
 #main .ct-helps li > span { font-size: 14px; font-weight: 600; line-height: 1.35; color: var(--ct-ink) }
-#main .ct-page .ct-alt { all: unset; cursor: pointer; display: block; margin: 12px 4px 0; font-size: 13.5px; font-weight: 600; color: #5b4fa3 }
+#main .ct-page .ct-alt { all: unset; cursor: pointer; display: block; margin: 12px 4px 0; font-size: 13.5px; font-weight: 600; color: var(--ct-purple) }
 #main .ct-call { padding: 14px 16px; border-radius: 16px; background: #fdf2e8; border: 1px solid #f6dfc8 }
 #main .ct-call b { display: block; font-size: 13.5px; color: #8a4b1f }
 #main .ct-call p { margin: 4px 0 0; font-size: 13.5px; line-height: 1.45; color: #6b4a33 }
@@ -536,4 +536,17 @@
 #main .ct-routine i svg { width: 26px; height: 26px }
 #main .ct-routine small { font-size: 12px; color: var(--ct-ink) }
 #main .ct-routine .ct-arr { margin-top: 12px; color: var(--ct-purple); font-size: 15px }
-#main .ct-near i svg, #main .ct-th i svg, #main .ct-routine i svg { stroke: #5b4fa3; color: #5b4fa3 }
+#main .ct-near i svg, #main .ct-th i svg, #main .ct-routine i svg { stroke: var(--ct-purple); color: var(--ct-purple) }
+
+/* Nov 23: in Ahead's own look. Each page opens with the shared header card in its topic's color; icons sit in soft
+   tiles like Outings' packing list; Good to know is a white card with a tinted icon tile, like every other category. */
+#main .ct-page .dev-area-head { margin-bottom: 14px }
+#main .ct-page.is-howto .ct-hero { margin-top: 2px }
+#main .ct-near { padding: 14px 8px 12px }
+#main .ct-near i { width: 44px; height: 44px; border-radius: 13px; background: var(--ct-lav) }
+#main .ct-near i svg { width: 26px; height: 26px }
+#main .ct-th { background: var(--ct-lav) }
+#main .ct-goodcard { background: #fffdf9; border: 1px solid var(--ct-line) }
+#main .ct-goodcard > i { width: 32px; height: 32px; border-radius: 10px; background: var(--ct-lav); display: grid; place-items: center; margin-top: 0 }
+#main .ct-goodcard > i svg { width: 18px; height: 18px }
+#main .ct-goodcard p { color: var(--ct-soft) }
