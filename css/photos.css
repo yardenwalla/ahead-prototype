@@ -397,17 +397,3 @@
 #main .care-pickgrid .care-pick-map svg { width: 78%; height: 78%; padding: 0 }
 #main .care-pickgrid .care-common-tile > span:not(.care-pick-map) { padding: 10px 26px 12px 12px }
 #main .care-calls-note { margin: 6px 0 0; font-size: 13.5px; color: #6d666d }
-/* Nov 22: explainer diagrams that replace sentences (wash order, water, the diaper trick, how often) */
-#main .care-order { display: grid; grid-template-columns: 128px 1fr; gap: 6px 14px; align-items: center; padding: 14px 16px; margin: 0 }
-#main .care-order svg { width: 128px; height: auto; display: block }
-#main .care-order ol { list-style: none; margin: 0; padding: 0; counter-reset: wo; display: grid; gap: 10px }
-#main .care-order li { counter-increment: wo; position: relative; padding-left: 30px }
-#main .care-order li::before { content: counter(wo); position: absolute; left: 0; top: 1px; width: 22px; height: 22px; border-radius: 50%; background: #2a6078; color: #fff; font-size: 12px; font-weight: 700; display: grid; place-items: center }
-#main .care-order li b { display: block; font-size: 15px; line-height: 1.25 }
-#main .care-order li small { display: block; font-size: 13px; color: #6d666d; line-height: 1.3 }
-#main .care-order figcaption { grid-column: 1 / -1; border-top: 1px solid rgba(0,0,0,.07); padding-top: 10px; margin-top: 4px; font-size: 14px; color: #4b4650 }
-#main .care-water > div, #main .care-diapertrick > div { background: #ecf6fa }
-#main .care-water svg, #main .care-diapertrick svg { width: 100%; height: auto; max-height: 92px; display: block; margin: 0 auto 8px }
-#main .care-facts .hub-iconsteps { margin-bottom: 0 }
-#main .care-facts .care-keynote { margin: 10px 2px 0 }
-#main .care-keynote.is-solo { padding: 12px 16px; margin: 12px 0 0 }
