@@ -1,0 +1,93 @@
+/* Sleep guide pages (Nov 23): show, don't tell. Lavender, white cards, one picture card per page. */
+#main .sv2-head { background: none !important; box-shadow: none !important; padding: 4px 2px 0 !important; margin: 0 0 18px !important; min-height: 0 !important }
+#main .sv2-head::before, #main .sv2-head::after { display: none !important }
+#main .sv2-head .hub-big, #main .sv2-head .dev-area-head-art { display: none !important }
+#main .sv2-head .hub-context { color: #6f63d9 !important; font-size: 13px; font-weight: 750; letter-spacing: .12em; text-transform: uppercase; margin: 0 0 8px }
+#main .sv2-head h1 { color: #241c4a; font-size: 31px; line-height: 1.1; letter-spacing: -.015em; margin: 0 0 10px }
+#main .sv2-head .hub-lead { color: #5d5874; font-size: 16.5px; line-height: 1.45; margin: 0 }
+#main .sv2 { display: flex; flex-direction: column; gap: 14px }
+#main .sv2 > .hub-h2 { margin: 12px 0 -2px; color: #241c4a }
+#main .sv2-vis { background: linear-gradient(160deg, #f1eefd 0%, #f7f5fe 70%, #fdf6ef 100%); border: 1px solid #ebe7f8; border-radius: 26px; padding: 16px 14px 16px }
+#main .sv2-vis > header { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 2px 2px 14px }
+#main .sv2-vis > header em { font-style: normal; font-size: 12.5px; font-weight: 750; letter-spacing: .12em; text-transform: uppercase; color: #5b4fc4 }
+#main .sv2-vis > header span { flex: none; font-size: 13px; font-weight: 650; color: #4b3fb0; background: #fff; border: 1px solid #ddd7f7; border-radius: 999px; padding: 5px 12px }
+#main .sv2-inner { display: flex; gap: 12px; align-items: center; background: #fff; border-radius: 18px; padding: 12px 14px; margin-top: 12px }
+#main .sv2-inner.is-top { margin: 0 0 12px }
+#main .sv2-inner > i, #main .sv2-rows i, #main .sv2-note > i, #main .sv2-pair i, #main .sv2-fade i { flex: none; width: 42px; height: 42px; border-radius: 14px; background: #efecfc; display: grid; place-items: center; font-style: normal }
+#main .sv2 i svg { width: 22px; height: 22px; stroke: #6f63d9 }
+#main .sv2-inner p, #main .sv2-note p { margin: 0; font-size: 15px; line-height: 1.4; color: #3f3a5c } #main .sv2-inner b, #main .sv2-note b { color: #241c4a }
+#main .sv2-cap { margin: 10px 2px 0; font-size: 14px; color: #5d5874; text-align: center } #main .sv2-cap.is-loop { color: #5b4fc4; font-weight: 600 }
+/* two side-by-side cards with a photo */
+#main .sv2-two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px }
+#main .sv2-two > div { border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; padding-bottom: 10px }
+#main .sv2-two > div.is-lav { background: #ece8fb } #main .sv2-two > div.is-sun { background: #fbf1df }
+#main .sv2-two img { width: 100%; aspect-ratio: 1 / .85; object-fit: cover; display: block }
+#main .sv2-two em { font-style: normal; align-self: flex-start; margin: -14px 10px 6px; font-size: 13px; font-weight: 700; border-radius: 999px; padding: 4px 10px; background: #fff; color: #5b4fc4; position: relative }
+#main .sv2-two .is-sun em { color: #94661d }
+#main .sv2-two > div > b { padding: 0 12px; font-size: 15.5px; color: #241c4a } #main .sv2-two > div > small { padding: 2px 12px 0; font-size: 13px; line-height: 1.35; color: #5d5874 }
+#main .sv2-two p { margin: 10px 8px 0; background: #fff; border-radius: 14px; padding: 9px 10px; font-size: 13.5px; line-height: 1.35; color: #3f3a5c }
+#main .sv2-two p b { display: block; color: #5b4fc4; font-size: 14px } #main .sv2-two .is-sun p b { color: #94661d }
+/* the day, drawn to scale */
+#main .sv2-ends { display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; color: #3f3a5c; margin: 0 0 8px }
+#main .sv2-ends span { display: flex; align-items: center; gap: 6px } #main .sv2-ends i { width: 22px; height: 22px; display: grid; place-items: center } #main .sv2-ends i svg { width: 20px; height: 20px }
+#main .sv2-ends span:first-child i svg { stroke: #d9962a }
+#main .sv2-bar { position: relative; height: 22px; margin: 0 2px }
+#main .sv2-bar s, #main .sv2-legend s { position: absolute; top: 0; bottom: 0; border-radius: 11px; text-decoration: none }
+#main .sv2 .is-awake { background: #f5dfaa } #main .sv2 .is-nap { background: linear-gradient(90deg, #a79cf0, #7d70e0) } #main .sv2 .is-cat { background: #c3bbf5 } #main .sv2 .is-night { background: #4b3f9c }
+#main .sv2-bar s.is-ghost { background: none; border: 2px dashed #b4aaf0 }
+#main .sv2-bar-labels { position: relative; height: 40px; margin: 6px 2px 0 }
+#main .sv2-bar-labels span { position: absolute; transform: translateX(-50%); text-align: center; white-space: nowrap; font-size: 13px; font-weight: 650; color: #241c4a; line-height: 1.25 }
+#main .sv2-bar-labels small { font-size: 11.5px; font-weight: 500; color: #5d5874 }
+#main .sv2-legend { display: flex; gap: 14px; flex-wrap: wrap; margin: 12px 2px 0; font-size: 12.5px; color: #5d5874 }
+#main .sv2-legend span { display: flex; align-items: center; gap: 6px } #main .sv2-legend s { position: static; display: inline-block; width: 18px; height: 10px; border-radius: 5px }
+#main .sv2-ba { background: #fff; border-radius: 18px; padding: 12px 12px 2px } #main .sv2-ba.is-after { background: #f4f1fe; border: 1px solid #e3ddf9 }
+#main .sv2-ba > b { display: block; font-size: 15px; color: #241c4a; margin: 0 0 10px } #main .sv2-ba .sv2-bar-labels { height: 24px }
+#main .sv2-ba-arrow { text-align: center; color: #6f63d9; font-weight: 700; margin: 4px 0 }
+/* split night */
+#main .sv2-split { display: flex; gap: 6px; height: 46px } #main .sv2-split s { text-decoration: none; border-radius: 14px; flex: 3 } 
+#main .sv2-split s.is-up { flex: 1.6; background: #f6e2b3; border: 2px dashed #d9a94a; display: grid; place-items: center; font-weight: 700; font-size: 14px; color: #7d5a19 }
+#main .sv2-split s.is-night { background: #7a6bcf }
+#main .sv2-split-l { display: flex; justify-content: space-between; font-size: 13px; color: #5d5874; margin: 6px 2px 0 }
+/* rows */
+#main .sv2-rows { background: #fff; border: 1px solid #ebe7f3; border-radius: 22px; overflow: hidden }
+#main .sv2-row { all: unset; box-sizing: border-box; width: 100%; display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-top: 1px solid #f0edf6 }
+#main .sv2-row:first-child { border-top: 0 } #main button.sv2-row { cursor: pointer }
+#main .sv2-row > span { flex: 1; min-width: 0 } #main .sv2-row b { display: block; font-size: 16.5px; color: #241c4a; line-height: 1.3 } #main .sv2-row small { display: block; font-size: 14px; color: #5d5874; line-height: 1.4; margin-top: 2px }
+#main .sv2-rows i.is-num { border-radius: 50%; width: 38px; height: 38px; font-weight: 700; color: #5b4fc4; font-size: 16px }
+#main .sv2-row u { text-decoration: none; color: #8f86c9; font-size: 22px } #main .sv2-chip { flex: none; font-style: normal; font-size: 12px; font-weight: 650; color: #5b4fc4; background: #f0edfc; border-radius: 999px; padding: 4px 9px }
+#main .sv2-glance { display: grid; grid-template-columns: repeat(3, 1fr); background: #fff; border: 1px solid #ebe7f3; border-radius: 20px; padding: 12px 4px }
+#main .sv2-glance div { text-align: center; display: flex; flex-direction: column } #main .sv2-glance div + div { border-left: 1px solid #ece9f3 }
+#main .sv2-glance b { font-size: 17px; color: #241c4a } #main .sv2-glance small { font-size: 13px; color: #6b6585 }
+#main .sv2-note { display: flex; align-items: center; gap: 14px; background: #efecfc; border: 1px solid #e3ddf9; border-radius: 22px; padding: 16px }
+#main .sv2-note > i { background: #fff !important } #main .sv2-note.is-safe { background: #fdf1e3; border-color: #f4dfc6 } #main .sv2-note.is-safe i svg { stroke: #c5822c }
+#main .sv2-foot { margin: 2px 4px 0; font-size: 13px; color: #8a849c }
+/* sleep training */
+#main .sv2-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px } #main .sv2-pair > div { background: #fff; border-radius: 18px; padding: 14px; display: flex; flex-direction: column; gap: 4px }
+#main .sv2-pair b { font-size: 16px; color: #241c4a; margin-top: 8px } #main .sv2-pair small { font-size: 13.5px; color: #5d5874; line-height: 1.35 }
+#main .sv2-fade { all: unset; box-sizing: border-box; cursor: pointer; display: block; width: 100%; background: #fff; border: 1px solid #ebe7f3; border-radius: 22px; padding: 14px 16px }
+#main .sv2-fade-top { display: flex; align-items: center; gap: 14px } #main .sv2-fade-top > span { flex: 1 } #main .sv2-fade b { display: block; font-size: 16.5px; color: #241c4a } #main .sv2-fade small { font-size: 14px; color: #5d5874 }
+#main .sv2-fade em { font-style: normal; font-size: 12px; font-weight: 650; color: #5b4fc4; background: #f0edfc; border-radius: 999px; padding: 4px 9px }
+#main .sv2-fade-line { display: flex; align-items: center; gap: 8px; margin-top: 12px; background: #f6f4fd; border-radius: 14px; padding: 8px 12px } #main .sv2-fade-line b { font-size: 15px; color: #5b4fc4 } #main .sv2-fade-line s { flex: 1; height: 6px; border-radius: 3px; background: #cfc8f5 }
+#main .sv2-clocks { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px } #main .sv2-clocks > div { background: #fff; border: 1px solid #ebe7f8; border-radius: 18px; padding: 10px 6px 12px; text-align: center; display: flex; flex-direction: column; align-items: center }
+#main .sv2-clocks > div.is-on { background: #ece8fb; border-color: #d6cff6 } #main .sv2-clocks svg { width: 76px; height: 76px } #main .sv2-clocks b { font-size: 21px; color: #241c4a; margin-top: 6px } #main .sv2-clocks small { font-size: 12.5px; color: #5d5874; line-height: 1.3 }
+#main .sv2-loop { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px } #main .sv2-loop > div { background: #fff; border-radius: 18px; overflow: hidden; text-align: center; padding-bottom: 10px; display: flex; flex-direction: column; align-items: center }
+#main .sv2-loop img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block } #main .sv2-loop i { margin-top: -14px; width: 28px; height: 28px; border-radius: 50%; background: #e7e2fb; color: #5b4fc4; font-style: normal; font-weight: 700; display: grid; place-items: center; position: relative; border: 2px solid #fff }
+#main .sv2-loop b { font-size: 14px; color: #241c4a; margin-top: 6px; line-height: 1.2; padding: 0 4px } #main .sv2-loop small { font-size: 12px; color: #5d5874; line-height: 1.25; padding: 2px 6px 0 }
+#main .sv2-map { display: flex; gap: 8px } #main .sv2-map-room { flex: 1; background: #fff; border: 1px solid #e6e1f7; border-radius: 18px; padding: 16px 12px; display: flex; align-items: center; justify-content: space-between; border-right: 3px dashed #c8c0f2 }
+#main .sv2-crib { width: 54px; height: 44px; border-radius: 10px; background: #eeeafc; display: grid; place-items: center } #main .sv2-crib svg { width: 34px !important; height: 34px !important }
+#main .sv2-map i { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; font-style: normal; font-weight: 700; color: #fff }
+#main .sv2-map .is-1 { background: #5b4fc4 } #main .sv2-map .is-2 { background: #7d70e0 } #main .sv2-map .is-3 { background: #9f95ea } #main .sv2-map .is-4 { background: #c1b9f3; color: #3e3490 }
+#main .sv2-map-door { width: 76px; background: #ece8fb; border-radius: 18px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px } #main .sv2-map-door small { font-size: 11.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #5b4fc4 }
+#main .sv2-steps4 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px } #main .sv2-steps4 > div { background: #fff; border-radius: 16px; padding: 10px 12px } #main .sv2-steps4 b { display: block; font-size: 14px; color: #241c4a } #main .sv2-steps4 small { font-size: 13px; color: #5d5874 }
+#main .sv2-waits { display: flex; align-items: center; gap: 4px } #main .sv2-waits > div { flex: 1; border-radius: 16px; padding: 12px 4px; text-align: center; display: flex; flex-direction: column }
+#main .sv2-waits .is-0 { background: #e4dffa } #main .sv2-waits .is-1 { background: #c8bff5 } #main .sv2-waits .is-2 { background: #8f83e6; color: #fff }
+#main .sv2-waits b { font-size: 26px; color: inherit } #main .sv2-waits .is-0 b, #main .sv2-waits .is-1 b { color: #3e3490 } #main .sv2-waits small { font-size: 12.5px; opacity: .85 }
+#main .sv2-waits > span { flex: none; display: flex; flex-direction: column; align-items: center; color: #c08a2c; font-size: 18px; line-height: 1 } #main .sv2-waits > span small { font-size: 11px; margin-top: 2px }
+#main .hub-detail[data-overview="Sleep"] .sv2 .care-calls { margin: 0 }
+#main .hub-detail-head.sv2-head { padding: 4px 0 0 !important; overflow: visible !important }
+#main .sv2-row .sv2-chip { display: inline-block; margin-top: 6px }
+#main .sv2-bar { height: 20px }
+/* The older guide pages, in the same look until each gets its own picture */
+#main .sv2-page .care-tpl-card, #main .sv2-page .hub-card, #main .sv2-page .care-tpl > section:not(.care-calls), #main .sv2-page .ssw-answer, #main .sv2-page .ssw-todo, #main .sv2-page .ssw-seq { background: #fff !important; border: 1px solid #ebe7f3 !important; border-radius: 22px !important; box-shadow: none !important }
+#main .sv2-page .hub-h2 { color: #241c4a }
+#main .sv2-page .ph-grid figure, #main .sv2-page .ssw-vs > div { border-radius: 18px }

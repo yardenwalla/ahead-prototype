@@ -5,9 +5,9 @@
 (function () {
   const C = {
     naps: ['#fff3dc', '#8a6a2a', '#f3d58a', '#fbe6bd'],
-    night: ['#e3e6f6', '#3d4a7a', '#8e9ad0', '#c9cff0'],
-    dusk: ['#f6e8f3', '#7a4f74', '#e3b8cf', '#f4d6c4'],
-    safe: ['#e7effc', '#46638c', '#9fb8df', '#d9e5fc'],
+    night: ['#efecfc', '#4b3fb0', '#a79cf0', '#c9cff0'],
+    dusk: ['#efecfc', '#5b4fc4', '#e3b8cf', '#f4d6c4'],
+    safe: ['#efecfc', '#5b4fc4', '#b4aaf0', '#d9e5fc'],
     train: ['#ece8f8', '#5b4f8a', '#c3b8ea', '#e3b8cf']
   };
   const LANE = l => /tonight/i.test(l) ? 'night' : /nap/i.test(l) ? 'naps' : /routine|bedtime/i.test(l) ? 'dusk' : /safe|safety/i.test(l) ? 'safe' : /training|choice|read ahead/i.test(l) ? 'train' : 'night';

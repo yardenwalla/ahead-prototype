@@ -559,18 +559,16 @@
   const HEAD_ICON = [[/challenge|keeping|rough|hiccup/i, 'heart'], [/swaddl/i, 'swaddle'], [/mattress|crib|safe sleep|rolling/i, 'crib'], [/room|share/i, 'home'],
     [/training|method|fading|cry it out|check-in|pick up/i, 'clock'], [/goodbye/i, 'wave'], [/away|travel|time zone/i, 'plane'], [/your own sleep|yourself/i, 'heart'],
     [/crying|calm/i, 'heart'], [/example day|day with|two naps become|\bnaps?\b/i, 'sun'], [/bedtime|routine|drowsy|settle/i, 'book'], [/night|regression|wak/i, 'moon'], [/./, 'moon']];
+  // Every Sleep guide page opens like the mockups: a plain header (eyebrow, question, one-line answer), no header card.
   function headIcon(main) {
-    const head = main.querySelector('.hub-detail[data-overview="Sleep"] .dev-area-head'); if (!head || head.dataset.sswIcon) return;
-    const t1 = (head.querySelector('h1') || {}).textContent || '', t2 = (head.querySelector('.hub-context') || {}).textContent || '';
-    const ic = (HEAD_ICON.slice(0, -1).find(([re]) => re.test(t1)) || HEAD_ICON.find(([re]) => re.test(t2)))[1];
-    let art = head.querySelector('.dev-area-head-art'); if (!art) { head.insertAdjacentHTML('afterbegin', '<span class="dev-area-head-art"></span>'); art = head.querySelector('.dev-area-head-art'); }
-    art.className = 'dev-area-head-art sf-head-art'; art.setAttribute('aria-hidden', 'true'); art.innerHTML = H().art(ic, 'Sleep');
-    head.style.setProperty('--area', '#efedfb'); head.style.setProperty('--area-ink', '#5b4fc4');
-    const pageEl = head.closest('.hub-detail'); if (pageEl) { pageEl.style.setProperty('--ss-bg', '#f3f1fd'); pageEl.style.setProperty('--ss-ink', '#5b4fc4'); }
-    head.classList.remove('ssw-plainhead'); head.dataset.sswIcon = '1';
+    const head = main.querySelector('.hub-detail[data-overview="Sleep"] .hub-detail-head'); if (!head || head.dataset.sswIcon) return;
+    if (head.closest('.hub-detail').querySelector('.ssw-hero')) return;
+    head.classList.add('sv2-head'); head.classList.remove('ssw-plainhead'); head.dataset.sswIcon = '1';
+    const pageEl = head.closest('.hub-detail'); if (pageEl) pageEl.classList.add('sv2-page');
   }
+
   function dress() {
-    const main = document.querySelector('#main'); if (!main) return;
+    const main = document.querySelector('#main'); if (!main || main.querySelector('.sv2')) return;
     try { headIcon(main); } catch (e) { console.error(e); }
     const pg = (() => { try { return (0, eval)('page'); } catch (e) { return ''; } })();
     if (!/^(topic:Sleep|chg:Sleep)/.test(pg || '')) return;
