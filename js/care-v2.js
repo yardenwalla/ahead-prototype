@@ -895,7 +895,8 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
       rashmore: ['Other rashes', 'Less common at this age', `<h2 class="hub-h2">${F('Which one looks like it?')}</h2>` + rashPick(rest) + rashCalls],
       cord: ['Crust or a little blood on the cord', 'Or a little smell', 'A little crust, smell or a spot of blood is normal while it heals.', ans('What’s normal', [['cord', 'Darkens and dries', 'Crust is normal'], ['drop', 'A spot or two of blood', 'When it falls off'], ['clock', 'Falls off', 'Usually in the first 3 weeks']],
         'A yellow, smelly discharge, redness around it, crying when you touch it, or still on after 3 weeks.')],
-      eyes: ['Sticky eyes or a noisy nose', 'Noisy breathing, sneezing, tear ducts', 'Both are usually normal, and most clear on their own.', ans('Usually normal, and what helps', [['drop', 'Snuffly breathing', 'Usually dried milk or mucus, not a cold'], ['eye', 'A watery eye, not red', 'Often a blocked tear duct'], ['hand', 'Sticky eyes', 'Wipe from the inside corner out'], ['steth', 'A stuffy nose', 'A few saline drops, then gentle suction']],
+      nose: ['A stuffy or noisy nose', 'Snuffly breathing, sneezing', ''],
+      eyes: ['Sticky or watery eyes', 'Goo, or a blocked tear duct', 'Both are usually normal, and most clear on their own.', ans('Usually normal, and what helps', [['drop', 'Snuffly breathing', 'Usually dried milk or mucus, not a cold'], ['eye', 'A watery eye, not red', 'Often a blocked tear duct'], ['hand', 'Sticky eyes', 'Wipe from the inside corner out'], ['steth', 'A stuffy nose', 'A few saline drops, then gentle suction']],
         'A red or swollen eyelid, yellow-green discharge with redness, or a red lump near the inner corner of the eye.', 'Struggling to breathe, or blue lips. Call 911.')
         ],
       yellow: ['Yellow skin', 'Jaundice in the first weeks', 'A little yellow in the first week is common. It’s called jaundice, and your pediatrician checks it at the first visit.', H().tip('Feed often', 'Sunlight doesn’t treat it, so let your pediatrician check.') + ans('What to look for', [['sun', 'Yellow on the face', 'Shows in the first days, then fades'], ['eye', 'On darker skin', 'Check the whites of the eyes and gums']],
@@ -905,8 +906,8 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
       hot: ['Too hot or too cold?', 'Sweaty, flushed, chilly, what to wear', ans('Check and adjust', [['shirt', 'One more layer', 'Than you’re wearing'], ['hand', 'Feel the neck', 'Sweaty: too warm. Cool: add one'], ['home', 'No hat indoors', 'And no puffy coat in the car seat']],
         'Any sunburn before age 1, right away.', 'Hot and flushed and hard to wake, floppy, or not feeding. Cool {o} down and call 911.')]
     };
-    const order = [['poop', 'rash', 'cord', 'yellow', 'eyes'], ['poop', 'rash', 'eyes'], ['gums', 'rash', 'poop', 'eyes'], ['gums', 'rash', 'poop', 'eyes']][now];
-    const LI = { poop: 'diaper', rash: 'drop', cord: 'cord', yellow: 'sun', eyes: 'eye', gums: 'tooth', hot: 'thermo' };
+    const order = [['poop', 'rash', 'cord', 'yellow', 'eyes', 'nose'], ['poop', 'rash', 'eyes', 'nose'], ['gums', 'rash', 'poop', 'nose'], ['gums', 'rash', 'poop', 'nose']][now];
+    const LI = { poop: 'diaper', rash: 'drop', cord: 'cord', yellow: 'sun', eyes: 'eye', nose: 'drops', gums: 'tooth', hot: 'thermo' };
     // Nov 14: a page opened from the list answers first. The list keeps its short subtitle; the page leads with the verdict.
     if (openK && items[openK]) { const it = items[openK], [t, sub] = it, verdict = it.length > 3 ? it[2] : sub, body = it[it.length - 1];
       return page('look', head('look', 'Is this normal?', t, verdict) + body ); }
@@ -1056,7 +1057,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   // Which part of each 4:3 photo stays in the 16:10 frame (0% keeps the top): faces stay whole, and on a look photo the
   // thing to recognize sits above the caption.
   const CT_POS = { 'show-tub': '0%', 'show-gums': '0%', 'show-brush': '10%', 'show-diaper': '15%', 'show-sun': '20%', 'show-crib': '20%', 'show-wriggle': '30%',
-    'rash-newborn': '100%', 'rash-acne': '80%', 'rash-eczema': '60%', 'rash-heat': '75%', 'rash-drool': '75%', 'rash-cradle': '0%', 'look-yellow': '40%', 'look-eyes': '40%', 'look-teething': '30%' };
+    'rash-newborn': '100%', 'rash-acne': '80%', 'rash-eczema': '60%', 'rash-heat': '75%', 'rash-drool': '75%', 'rash-cradle': '0%', 'look-yellow': '40%', 'look-eyes': '40%', 'look-teething': '30%', 'look-nose': '45%' };
   const ctImg = (img, alt) => `<img src="assets/care/${img}.jpg?v=3" alt="${F(alt || '').replace(/"/g, '&quot;')}" loading="lazy" style="object-position:50% ${CT_POS[img] || '35%'}">`;
   const ctHead = (q, kind) => `<header class="ct-head"><p class="ct-eyebrow">${F((val(q.topic) || LABEL[q.k]) + ' · ' + kind)}</p><h1>${F(val(q.title))}</h1>${val(q.why) ? `<p>${F(val(q.why))}</p>` : ''}</header>`;
   const ctPhoto = sh => `<section class="ct-photo-card"><figure class="ct-photo">${ctImg(sh.img, sh.alt)}${(val(sh.tags) || []).map(([l, at]) => `<span class="ct-tag is-${at}"><i></i>${F(l)}</span>`).join('')}</figure>`
@@ -1101,7 +1102,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   const oldCheck = TEMPLATES.check;
   const titles = a => { const v = val(a); return !v ? [] : !Array.isArray(v) ? [v] : v; }; const titlesOf = a => titles(a).filter(Boolean).map(x => Array.isArray(x) ? (x.length === 3 ? x[1] : x[0]) : x);
   TEMPLATES.check = q => { const w = q.where, nq = w && NOT_QUITE[w];
-    const LOOK_CAP = { acne: 'Small bumps on the cheeks and nose', cradle: 'Greasy, yellow flakes on the scalp', eczema: 'Dry, rough patches on the cheeks', heat: 'Tiny red bumps where it’s warm',
+    const LOOK_CAP = { acne: 'Small bumps on the cheeks and nose', cradle: 'Greasy, yellow flakes on the scalp', eczema: 'Dry, rough patches. On darker skin, they can look brown, purple or gray', heat: 'Tiny red bumps where it’s warm',
       newborn: 'Tiny white dots on the nose and cheeks', peeling: 'Dry, flaky skin on the hands and feet', drool: 'Red, chapped skin on the chin' };
     const photo = w && RASH_IMG[w] ? ctLook('rash-' + w, LOOK_CAP[w], RASH[w] && RASH[w].t)
       : (w === 'diaper' || w === 'yeast') ? diaperVs() : q.lookImg ? ctLook(q.lookImg, val(q.lookCap)) : q.figure ? q.figure() : '';
@@ -1537,12 +1538,20 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     calls: { ped: ['A yellow, bad-smelling discharge', 'Red, swollen skin around the base', 'Crying when you touch it', 'Bleeding that doesn’t stop after a few minutes of gentle pressure', 'It’s still on after 3 weeks', 'FEVER'] } });
   Object.assign(TPL['look-cord'], { notice: ['A dark, dry stump', 'A spot of blood as it falls off'], helpsShort: ['Fold the diaper down below it', 'Plain water only if it’s dirty, then pat dry'],
     calls: { ped: ['A yellow, bad-smelling discharge', 'Red, swollen skin around the base', 'Crying when you touch it', 'Bleeding that doesn’t stop after a few minutes of gentle pressure', 'It’s still on after 3 weeks', 'FEVER'] } });
-  Object.assign(TPL['look-eyes'], { notice: ['A watery eye that isn’t red', 'Snuffly breathing, feeding fine'], helpsShort: ['Wipe sticky eyes from the inner corner out, with a clean cotton ball each time', 'Salt-water (saline) nose drops, then a rubber bulb syringe: squeeze, insert, release', 'Feed slowly if a stuffy nose makes it hard'],
-    calls: { ped: ['A red, swollen eyelid or yellow-green goo', 'A stuffy nose that stops {o} feeding', 'FEVER', 'A red eye with goo in the first 2 weeks. Call right away'], now: 'Struggling to breathe: ribs pulling in, nostrils flaring, grunting or pauses. Or lips turning blue.' } });
-  Object.assign(TPL['look-yellow'], { lookCap: 'Press the nose in daylight. Skin looks yellow as you lift? Call', notice: ['It starts on the face, then moves down', 'On darker skin, check the eyes and gums'], helpsShort: ['Feed often. It helps clear the yellow', 'Not sure? Ask for a bilirubin check. Looking can miss it', 'Your pediatrician checks it at newborn visits'],
+  // Nov 22 (Yarden): eyes and nose are two concerns, so two pages, each with its own photo.
+  Object.assign(TPL['look-eyes'], { title: 'Sticky or watery eyes', why: 'Often a blocked tear duct. It usually clears on its own in the first year.',
+    notice: ['A watery eye that isn’t red', 'A little crust after sleep'], helpsShort: ['Wipe from the inner corner out, with warm water', 'A clean cotton ball for each wipe, and each eye', 'Ask about gently massaging the inner corner'],
+    calls: { ped: ['A red, swollen eyelid or yellow-green goo', 'A red lump by the inner corner', 'FEVER', 'A red eye with goo in the first 2 weeks. Call right away'] } });
+  TPL['look-nose'] = { type: 'check', eyebrow: 'Is this normal?', k: 'skin', title: 'A stuffy or noisy nose',
+    why: 'Babies breathe through their noses, so a little mucus or dried milk sounds loud. It’s usually normal.',
+    lookImg: 'look-nose', lookCap: 'A few saline drops first, then the bulb syringe',
+    notice: ['Snuffly breathing, feeding fine', 'Sneezing, which clears the nose'],
+    helpsShort: ['A few salt-water (saline) drops in each nostril', 'Then a rubber bulb syringe: squeeze, insert gently, release', 'Feed slowly if a stuffy nose makes it hard'],
+    calls: { ped: ['A stuffy nose that stops {o} feeding', 'Breathing that seems fast', 'FEVER'], now: 'Struggling to breathe: ribs pulling in, nostrils flaring, grunting or pauses. Or lips turning blue.' } };
+  Object.assign(TPL['look-yellow'], { lookCap: 'Yellow can be hard to see. Only a quick test shows how high it is', notice: ['It starts on the face, then moves down', 'On darker skin, check the eyes and gums'], helpsShort: ['See any yellow? Call your pediatrician. They check it with a quick skin or blood test', 'Feed often. It helps clear the yellow', 'Go to every newborn visit, even if {s} looks fine'],
     calls: { ped: ['Yellow that spreads to the belly or legs, or to the whites of the eyes', 'Fewer than 6 wet diapers a day', 'Yellow past 2 weeks', 'Any yellow in the first 24 hours. Call right away', 'Yellow and hard to wake, or not feeding well. Call right away', 'Pale or chalky poop, or dark pee. Call right away'] } });
   Object.assign(TPL['p:teething'], { notice: ['More drooling and chewing', 'A few fussy days'], helpsShort: ['Rub sore gums with a clean finger', 'A chilled, not frozen, teething ring', 'Skip numbing gels and teething necklaces'],
-    calls: { ped: ['FEVER', 'Diarrhea', '{S} seems unwell'], note: 'Teething doesn’t cause fever, diarrhea or a cold. If you see them, something else is going on.' } });
+    calls: { ped: ['FEVER', 'Diarrhea', 'Seeming unwell'] , note: 'Teething doesn’t cause fever, diarrhea or a cold. If you see them, something else is going on.' } });
   Object.assign(skinCare, { notice: () => stageNow() === 0 ? ['Peeling in the first weeks', 'Spots and blotches that come and go'] : ['Dry patches after baths or in cold weather', 'Redness on the chin from drool'], helpsShort: ['Short baths in plain warm water', 'Pat dry, into the creases', 'Thick, fragrance-free cream on dry patches'],
     calls: { ped: ['A rash that cracks, oozes or spreads', 'FEVER'] } });
   Object.assign(TPL['t:diapers:1'], { notice: ['Soft poop, even days apart', 'Still 6 or more wet diapers a day'], helpsShort: ['Change when wet or dirty', 'Let the skin air out before a fresh one', 'Size up when it leaks'] });
