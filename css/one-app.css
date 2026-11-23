@@ -48,9 +48,10 @@ html body #main .ya-page > .ya-eyebrow, html body #main .mem-page > .eyebrow, ht
   font-size: 12px !important; font-weight: 700 !important; letter-spacing: .05em !important; text-transform: uppercase !important }
 html body #main .he-eyebrow, html body #main .hub-hero .hub-eyebrow, html body #main .dev-hero-eyebrow, html body #main div.eyebrow { letter-spacing: .05em !important }
 /* Nov 22 (one rule for icon rows, Health's): the icon keeps the guide's color; the soft background rotates through
-   the same five tones in every guide (green, blue, yellow, peach, pink). Health, Everyday care and Outings already did. */
-#main :is([data-overview="Sleep"],[data-overview="Childcare"],[data-overview="Safety"]) .hub-list > :nth-child(5n+1) :is(.hub-dot,.oa-dot){background:#e6f5ec!important}
-#main :is([data-overview="Sleep"],[data-overview="Childcare"],[data-overview="Safety"]) .hub-list > :nth-child(5n+2) :is(.hub-dot,.oa-dot){background:#e7effc!important}
-#main :is([data-overview="Sleep"],[data-overview="Childcare"],[data-overview="Safety"]) .hub-list > :nth-child(5n+3) :is(.hub-dot,.oa-dot){background:#fff3dc!important}
-#main :is([data-overview="Sleep"],[data-overview="Childcare"],[data-overview="Safety"]) .hub-list > :nth-child(5n+4) :is(.hub-dot,.oa-dot){background:#fdeee6!important}
-#main :is([data-overview="Sleep"],[data-overview="Childcare"],[data-overview="Safety"]) .hub-list > :nth-child(5n+5) :is(.hub-dot,.oa-dot){background:#fdeef2!important}
+   the same five tones in every guide (green, blue, yellow, peach, pink). Health, Everyday care and Outings already did.
+   Checklists you tick off keep one background, so attention stays on what's done. */
+#main :is([data-overview="Sleep"],[data-overview="Childcare"],[data-overview="Safety"]) .hub-list > :nth-child(5n+1):not(:has([role=checkbox])) :is(.hub-dot,.oa-dot){background:#e6f5ec!important}
+#main :is([data-overview="Sleep"],[data-overview="Childcare"],[data-overview="Safety"]) .hub-list > :nth-child(5n+2):not(:has([role=checkbox])) :is(.hub-dot,.oa-dot){background:#e7effc!important}
+#main :is([data-overview="Sleep"],[data-overview="Childcare"],[data-overview="Safety"]) .hub-list > :nth-child(5n+3):not(:has([role=checkbox])) :is(.hub-dot,.oa-dot){background:#fff3dc!important}
+#main :is([data-overview="Sleep"],[data-overview="Childcare"],[data-overview="Safety"]) .hub-list > :nth-child(5n+4):not(:has([role=checkbox])) :is(.hub-dot,.oa-dot){background:#fdeee6!important}
+#main :is([data-overview="Sleep"],[data-overview="Childcare"],[data-overview="Safety"]) .hub-list > :nth-child(5n+5):not(:has([role=checkbox])) :is(.hub-dot,.oa-dot){background:#fdeef2!important}
