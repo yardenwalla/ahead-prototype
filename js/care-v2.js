@@ -1056,9 +1056,9 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   const ctSent = t => { t = F(val(t) || ''); return !t ? '' : /[.?!]$/.test(t) ? t : t + '.'; };
   // Which part of each 4:3 photo stays in the 16:10 frame (0% keeps the top): faces stay whole, and on a look photo the
   // thing to recognize sits above the caption.
-  const CT_POS = { 'show-tub': '0%', 'show-gums': '0%', 'show-brush': '10%', 'show-diaper': '15%', 'show-sun': '20%', 'show-crib': '20%', 'show-wriggle': '30%',
+  const CT_POS = { 'show-tub': '40%', 'show-paste': '50%', 'show-gums': '0%', 'show-brush': '10%', 'show-diaper': '15%', 'show-sun': '20%', 'show-crib': '20%', 'show-wriggle': '30%',
     'rash-newborn': '100%', 'rash-acne': '80%', 'rash-eczema': '60%', 'rash-heat': '75%', 'rash-drool': '75%', 'rash-cradle': '0%', 'look-yellow': '40%', 'look-eyes': '40%', 'look-teething': '30%', 'look-nose': '45%' };
-  const ctImg = (img, alt) => `<img src="assets/care/${img}.jpg?v=3" alt="${F(alt || '').replace(/"/g, '&quot;')}" loading="lazy" style="object-position:50% ${CT_POS[img] || '35%'}">`;
+  const ctImg = (img, alt) => `<img src="assets/care/${img}.jpg?v=4" alt="${F(alt || '').replace(/"/g, '&quot;')}" loading="lazy" style="object-position:50% ${CT_POS[img] || '35%'}">`;
   const ctHead = (q, kind) => `<header class="ct-head"><p class="ct-eyebrow">${F((val(q.topic) || LABEL[q.k]) + ' · ' + kind)}</p><h1>${F(val(q.title))}</h1>${val(q.why) ? `<p>${F(val(q.why))}</p>` : ''}</header>`;
   const ctPhoto = sh => `<section class="ct-photo-card"><figure class="ct-photo">${ctImg(sh.img, sh.alt)}${(val(sh.tags) || []).map(([l, at]) => `<span class="ct-tag is-${at}"><i></i>${F(l)}</span>`).join('')}</figure>`
     + `<div class="ct-strip"><b>${F('✦ ' + sh.t)}</b><span>${F(val(sh.line))}</span></div></section>`;
@@ -1075,12 +1075,12 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
       return `<path d="M${sx} ${sy} Q${(mx - dy * bend).toFixed(0)} ${(my + dx * bend).toFixed(0)} ${ex} ${ey}" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" marker-end="url(#ctah)" filter="drop-shadow(0 1px 2px rgba(0,0,0,.35))"/>`; }).join('')}</svg>`;
   const ctPhoto2 = sh => { const calls = val(sh.call) || []; return `<figure class="ct-hero">${ctImg(sh.img, sh.alt)}${calls.length ? ctArrows(calls) : ''}${calls.map(([l, at]) => `<span class="ct-callout is-${at}">${F(l)}</span>`).join('')}</figure>`; };
   // "Have nearby" as small icons, the way the mockup shows it.
-  const NEAR_ICON = { 'Towel': 'towel', 'Washcloth': 'folded', 'Warm water': 'basin', 'Bowl of warm water': 'basin', 'Clean diaper': 'diaper', 'Diaper': 'diaper', 'Little tub': 'tub', 'Mild soap': 'soap', 'Clean clothes': 'shirt',
+  const NEAR_ICON = { 'Towel': 'towel', 'Washcloth': 'folded', 'Warm water': 'basin', 'Bowl of warm water': 'basin', 'Clean diaper': 'diaper', 'Diaper': 'diaper', 'Little tub': 'bath', 'Mild soap': 'soap', 'Clean clothes': 'shirt',
     'Non-slip mat': 'mat', 'Unscented wipes': 'folded', 'Wipes': 'folded', 'Zinc diaper cream': 'soap', 'Small toy': 'toy', 'Toy': 'toy', 'Bath toys': 'duck', 'Pull-on diaper': 'diaper', 'Nail clippers or a file': 'nail',
     'Good light': 'idea', 'Soft cloth': 'folded', 'Water': 'drop', 'Soft toothbrush': 'tooth', 'Fluoride toothpaste': 'soap', 'Stroller canopy': 'stroller', 'Light layers': 'shirt', 'Wide-brim hat': 'sun', 'Sunscreen, SPF 30+': 'soap', 'Changing pad': 'mat', 'Diaper cream': 'soap', 'Small nail clippers or a file': 'nail' };
   const ctNear = items => `<div class="ct-near">${items.map(t => `<span><i>${hubArt(NEAR_ICON[t] || 'heart', CAT)}</i><small>${F(t)}</small></span>`).join('')}</div>`;
   // Steps: a small photo of the move where one exists (each shows something the big photo doesn't), else an icon.
-  const ctSteps2 = mv => `<ol class="ct-steps2">${mv.map(([th, t, sub], i) => `<li><span class="ct-th">${/^photo:/.test(th) ? `<img src="assets/${th.slice(6)}.jpg?v=3" alt="" loading="lazy">` : `<i>${hubArt(th, CAT)}</i>`}</span><span class="ct-tx"><b><em>${i + 1}</em>${F(t)}</b>${sub ? `<small>${ctSent(sub)}</small>` : ''}</span></li>`).join('')}</ol>`;
+  const ctSteps2 = mv => `<ol class="ct-steps2">${mv.map(([th, t, sub], i) => `<li><span class="ct-th">${/^photo:/.test(th) ? `<img src="assets/${th.slice(6)}.jpg?v=4" alt="" loading="lazy">` : `<i>${hubArt(th, CAT)}</i>`}</span><span class="ct-tx"><b><em>${i + 1}</em>${F(t)}</b>${sub ? `<small>${ctSent(sub)}</small>` : ''}</span></li>`).join('')}</ol>`;
   const ctRoutine = r => `<section class="ct-routine"><b>${CT_MOON}${F(r.t)}</b><div>${r.items.map(([ic, l], i) => `${i ? '<span class="ct-arr" aria-hidden="true">→</span>' : ''}<span><i>${hubArt(ic, CAT)}</i><small>${F(l)}</small></span>`).join('')}</div></section>`;
   const CT_MOON = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5Z"/></svg>';
   const CT_BULB = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3Z"/></svg>';
@@ -1571,7 +1571,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     [[PH('gm-1'), 'Wet the cloth', 'Plain water, no toothpaste yet'], ['hand', 'Wrap it on a finger', 'A soft edge against the gums'], ['smile', 'Wipe top and bottom', 'Gently, morning and night']]],
    [TPL['p:brush'], [['Soft brush', 'bl', 46, 52]],
     ['Soft toothbrush', 'Fluoride toothpaste'],
-    [[PH('br-1'), 'Add a tiny smear', 'The size of a grain of rice'], ['tooth', 'Brush every tooth', 'Front and back, twice a day. Last thing at night'], [PH('br-3'), 'Skip the rinse', 'Swallowing this tiny amount is fine']]],
+    [[PH('br-1'), 'Add a tiny smear', 'The size of a grain of rice'], ['tooth', 'Brush every tooth', 'Front and back, twice a day. Last thing at night'], [PH('br-3'), 'Skip the rinse', 'Just wipe {p} mouth. Swallowing this tiny amount is fine']]],
    [six, [['Wide-brim hat', 'tr', 74, 30], ['Sunscreen on bare skin', 'bl', 50, 56]],
     ['Sunscreen, SPF 30+', 'Wide-brim hat'],
     [[PH('ss-1'), 'Put it on early', '15–30 minutes before you go out'], ['hand', 'Cover bare skin', 'Cheeks, ears, feet and the back of the neck'], ['clock', 'Put more on', 'Every 2 hours, and after water']]],
@@ -1611,11 +1611,12 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
       [PH('sp-3b'), 'Wash one area at a time', 'Keep the rest of {o} wrapped. Do the hair and diaper area last, then pat dry']],
     good: 'If the cord stump gets wet, just pat it dry. It doesn’t need cleaning.',
     safe: [['hand', 'Keep a hand on {o} the whole time', 'Never step away from a changing table or bed']] });
+  Object.assign(val(TPL['p:tub'].show), { alt: 'A parent bathes a baby wrapped in a thin cloth in a small tub, her forearm behind the baby’s shoulders and her hand behind the head' });
   HT(TPL['p:tub'], { why: 'Once the cord stump falls off and the belly button heals, {s} can have a real bath. Two or three a week is plenty.',
-    call: [['Hand behind {p} head', 'bl', 42, 56], ['Warm washcloth', 'br', 56, 84]],
+    call: [['Arm behind {p} back', 'tl', 30, 34], ['Hand behind {p} head', 'tr', 58, 34]],
     nearby: ['Little tub', 'Towel', 'Washcloth', 'Mild soap'],
     moves: [[PH('tb-1'), 'Fill about 2 inches of water', 'Test it on your wrist. It should feel warm, not hot'],
-      [PH('tb-lower'), 'Lower {o} in, feet first', 'Hold {p} head and neck with one hand the whole time'],
+      ['bath', 'Lower {o} in, feet first', 'Then keep {p} head and neck on your arm, as shown'],
       [PH('tb-5'), 'Wash, then wrap', 'Face first, hair last. Then lift {o} straight into the towel']],
     good: 'Five to 10 minutes is plenty. Lots of babies cry in their first baths, and it gets easier.',
     safe: [['hand', 'Keep a hand on {o} the whole time', 'If you need to step away, take {o} with you'], ['thermo', 'Set your water heater to 120°F or lower', 'So tap water can’t burn']] });
@@ -1674,12 +1675,13 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     moves: [[PH('gm-1'), 'Wet a soft cloth', 'Plain water is all you need. No toothpaste yet'],
       ['hand', 'Wrap it around one finger', 'Keep a smooth, soft part against the gums'],
       ['smile', 'Wipe the top and bottom gums', 'Gently, in the morning and at night']] });
+  Object.assign(val(TPL['p:brush'].show), { img: 'show-paste', alt: 'A tiny smear of toothpaste on a soft toothbrush, next to one grain of rice' });
   HT(TPL['p:brush'], { why: 'As soon as the first tooth shows, brush twice a day with a little fluoride toothpaste.',
-    call: [['Soft brush', 'bl', 46, 52]],
+    call: [['A rice-sized smear', 'tl', 47, 42], ['One grain of rice', 'br', 71, 50]],
     nearby: ['Soft toothbrush', 'Fluoride toothpaste'],
     moves: [[PH('br-1'), 'Add a rice-sized smear', 'Fluoride toothpaste, about the size of one grain of rice'],
-      ['tooth', 'Brush each tooth gently', 'Front and back, twice a day. Do the last brush after the bedtime feed'],
-      [PH('br-3'), 'Skip the rinse', 'Swallowing this tiny amount is fine']],
+      [PH('br-2'), 'Brush each tooth gently', 'Front and back, twice a day. Do the last brush after the bedtime feed'],
+      [PH('br-3'), 'Skip the rinse', 'Just wipe {p} mouth. Swallowing this tiny amount is fine']],
     good: 'Book the first dentist visit after the first tooth, and by {p} first birthday.',
     safe: [['bottle', 'Don’t put {o} to bed with a bottle', 'Milk on teeth overnight causes cavities']] });
   HT(six, { title: 'Add sunscreen from 6 months', why: 'Shade and a hat still come first. Sunscreen covers the skin they can’t.',
@@ -1822,7 +1824,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
       groups: [['Every day', [hasTooth() ? ['teeth', 'Teeth and teething', 'Brush twice a day', 'A rice-grain smear of toothpaste. A chilled ring helps sore gums', 1, 'teething'] : ['teeth', 'Teething', 'Chewing and drool are normal', 'Wipe gums twice a day and pat the chin dry. A chilled ring helps', 1, 'teething'], ['diapers', 'Diapers', 'Keep a hand on {o} at every change', (answers.roll === 'Yes' || ['Tummy to back', 'Back to tummy', 'Both ways', 'Trying to roll'].includes(answers.rollDirection)) ? 'Use the strap, or change {o} on the floor' : 'Rolling can start any day']]],
                ['Each week', [['bath', 'Baths', 'About 3 a week', 'Often part of bedtime'], ['nails', 'Nails', 'Trim once a week', '']]],
                ['Outside', [['sun', 'Sun', careAge() >= 6 ? 'Shade, then SPF 30' : 'Shade first', careAge() >= 6 ? 'Sunscreen from 6 months, on skin you can’t cover' : 'Sunscreen only if there’s no shade', careAge() >= 6 ? 1 : 0]]]] },
-    { title: 'First teeth and the big tub', lead: 'Sunscreen can join shade, brushing starts with the first tooth, and the big tub comes once Maya sits steadily.',
+    { title: 'First teeth and the big tub', lead: 'Brushing starts with the first tooth, the big tub comes once Maya sits steadily, and sunscreen can join shade.',
       groups: [['Every day', [hasTooth() ? ['teeth', 'Teeth', 'Brush twice a day', 'A rice-grain smear of fluoride toothpaste', 1, 'brush'] : ['teeth', 'Teeth', 'Brush from the first tooth', 'Until then, wipe gums twice a day', 1, 'brush'], ['diapers', 'Diaper changes', 'Keep a hand on {o}', 'A toy to hold helps with wriggling', 1], ['feet', 'Feet and shoes', 'Bare feet indoors', 'Soft shoes once walking outside', 1, 'feet']]],
                ['Each week', [['bath', 'Baths', 'About 3 a week', 'The big tub, once sitting steadily', 1], ['nails', 'Nails', 'Trim once a week', '']]],
                ['Outside', [['sun', 'Sun', 'Shade, then SPF 30', 'Again every 2 hours and after water']]]] }
@@ -1837,6 +1839,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     { art: 'roll', t: 'Changes get more hands-on', d: 'Rolling and wriggling make diaper changes trickier.', cta: 'Make changes easier', go: 'h:diapers:2',
       see: [['drool', 'Drool rash', 'rash:drool'], ['teething', 'Sore gums', 'p:teething'], ['eczema', 'Dry, rough patches', 'rash:eczema']] },
     { art: 'tooth', t: 'A tiny tooth, a new routine', d: 'Brushing twice a day starts once the first tooth is in.', cta: 'How to brush', go: 'p:brush',
+      also: { t: 'The big tub, once {s} {sit|sits} steadily', cta: 'How to', go: 't:bath:3', key: 'bath' },
       see: [['teeth9', 'Teething', 'p:teething'], ['solids', 'Poop once solids start', 'look:3:poop'], ['heat', 'Heat rash', 'rash:heat']] }
   ];
   const cgo = r => `openPage('chg:${CAT}:d:${r}')`;
@@ -1860,7 +1863,9 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     let b = `<header class="hub-hero care-hero care-disc fd-life"><p class="hub-eyebrow">${F(EYE)}</p><h1>${F(st.title)}</h1><p class="hub-lead">${F(v === 3 && live() && careAge() >= 9 ? 'More teeth to brush, baths in the big tub, and pulling up makes changes a two-hands job.' : st.lead)}</p>`
       + `<div class="sf-photo fd-life-photo"><img src="assets/care/${LIFE[0]}.jpg?v=1" alt="${F(LIFE[1])}"></div>`
       // Nov 21 design review: one compact strip like Feeding's "Try this" (two lines at most), so the card stays near Feeding's height.
-      + `<button class="care-newbox" onclick="${cgo(N.go)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"/></svg><span><b>${F('New now:')}</b> ${F(N.t)}. <em>${F(N.cta)} ›</em></span></button></header>`;
+      // Nov 23 (Yarden): at 6–12 months both changes in the headline get the same weight, as two lines of one box.
+      + (N.also ? `<div class="care-newbox is-two"><button onclick="${cgo(N.go)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"/></svg><span><b>${F('New now:')}</b> ${F(N.t)}. <em>${F(N.cta)} ›</em></span></button><button onclick="${cgo(N.also.go)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16v3a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4Z"/><path d="M6 12V6a2 2 0 0 1 4 0"/></svg><span><b>${F('Coming up:')}</b> ${F(N.also.t)}. <em>${F(N.also.cta)} ›</em></span></button></div>`
+        : `<button class="care-newbox" onclick="${cgo(N.go)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"/></svg><span><b>${F('New now:')}</b> ${F(N.t)}. <em>${F(N.cta)} ›</em></span></button>`) + `</header>`;
     // Care at a glance (Nov 13): how often, at this age, in the same three-tile card Feeding and Sleep open with.
     { const ICON = { Diapers: 'diaper', 'Wet diapers': 'diaper', 'Sponge baths': 'bath', 'Tub baths': 'tub', Baths: 'tub', 'Nail trims': 'nail', 'Gum wipes': 'tooth', Brushing: 'tooth' };
       const PAL = [['#e3ecf7', '#3f5f8a'], ['#f4e6ee', '#87496a'], ['#e5f0e7', '#3f7350']];
@@ -1882,7 +1887,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
       // Nov 22 (Yarden): only what changes at this stage shows here; everything else lives in All how-tos.
       const ORDER = [['diapers', 'cord', 'nails', 'clothes'], ['skin', 'sun'], ['bath', 'skin'], ['bath', 'diapers', 'sun', ...(!live() || careAge() >= 9 || now < 3 ? ['clothes'] : [])]][v];   // shoes only once walking is near
       const tiled = new Set(SEE.map(x => x[2])), byKey = k => HOWTO[v].find(x => x[0] === k);
-      const rows = ORDER.map(byKey).filter(x => x && x[0] !== NEWKEY && !tiled.has(x[3])).slice(0, 4);   // nothing twice: a tile that opens the same page wins
+      const rows = ORDER.map(byKey).filter(x => x && x[0] !== NEWKEY && !(N.also && x[0] === N.also.key) && !tiled.has(x[3])).slice(0, 4);   // nothing twice: a tile that opens the same page wins
       // Nov 21: each row previews its page with a small real-life photo, like Feeding's guide rows (92px, full row height).
       const THUMB = { diapers: v >= 2 ? 'th-wriggle' : 'th-diaper', cord: 'th-cord', nails: 'th-nails', clothes: 'th-dress', skin: 'th-skin', sun: 'th-sun', bath: v >= 3 ? 'th-bigtub' : v === 2 ? 'th-bath5' : 'th-tub', feet: 'th-feet', teeth: 'th-brush' };
       const prow = (k, t, sub, on) => THUMB[k] ? `<button class="hub-row fd-prow" onclick="${on}"><span class="fd-thumb"><img src="assets/care/${THUMB[k]}.jpg?v=3" alt="" loading="lazy"></span><span class="hub-row-copy"><b>${F(t)}</b><small>${F(sub)}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>` : rowK(k, t, sub, on);

@@ -578,3 +578,8 @@
 #main .ct-safecard { padding: 2px 14px; background: #fffdf9; border: 1px solid var(--ct-line); border-radius: 18px }
 #main .ct-safecard .ct-notes { border-top: 0; padding: 12px 2px }
 #main .ct-stepcard .ct-notes:empty { display: none }
+
+/* Nov 23: two changes in one New now box (6–12 months), split by a hairline. */
+#main .care-disc.fd-life .care-newbox.is-two { display: block; padding: 4px 14px }
+#main .care-newbox.is-two > button { all: unset; box-sizing: border-box; cursor: pointer; display: flex; gap: 10px; align-items: flex-start; width: 100%; padding: 10px 0 }
+#main .care-newbox.is-two > button + button { border-top: 1px solid rgba(42,96,120,.14) }
