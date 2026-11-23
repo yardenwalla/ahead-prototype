@@ -455,7 +455,7 @@
 /* Nov 23 (Yarden's inspiration): Compare your options as one grid. Kinds of care across the top, one row per
    question with its label tile on the left, short facts in the cells. Facts, not scores; nothing marked best. */
 #main .cc-grid { background: #fffdfa; border: 1px solid #efe7d2; border-radius: 22px; padding: 14px 8px 6px; margin-left: -4px; margin-right: -4px; margin: 0 0 14px }
-#main .cc-grid-head, #main .cc-grid-row { display: grid; grid-template-columns: 84px repeat(4, minmax(0, 1fr)); gap: 5px; align-items: stretch }
+#main .cc-grid-head, #main .cc-grid-row { display: grid; grid-template-columns: 92px repeat(4, minmax(0, 1fr)); gap: 5px; align-items: stretch }
 #main .cc-grid-head { margin-bottom: 8px }
 #main .cc-grid-head button { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 0; min-height: 0; font-size: 12.5px; font-weight: 650; line-height: 1.2; color: #2f2b1c; text-align: center }
 #main .cc-grid-head button span { width: 40px; height: 40px; border-radius: 13px; background: #fcf3cf; display: grid; place-items: center }
@@ -463,9 +463,8 @@
 #main .cc-grid-row { padding: 8px 0; border-top: 1px solid #f3ecdb }
 #main .cc-grid-label { background: #fcf3cf; border-radius: 12px; padding: 8px 7px; display: grid; grid-template-columns: 18px 1fr; align-items: center; gap: 6px }
 #main .cc-grid-label svg { width: 18px; height: 18px }
-#main .cc-grid-label b { font-size: 13px; line-height: 1.2; font-weight: 700; color: #2f2b1c }
-#main .cc-grid-row > div:not(.cc-grid-label) { background: #fcf9ee; border-radius: 12px; padding: 8px 4px; display: grid; place-items: center; text-align: center; font-size: 13.5px; line-height: 1.3; color: #3a3527 }
-#main .cc-grid-row > div:not(.cc-grid-label) b { display: block; font-size: 20px; font-weight: 750; line-height: 1.1; color: #2f2b1c }
+#main .cc-grid-label b { font-size: 12.5px; line-height: 1.2; font-weight: 700; color: #2f2b1c }
+#main .cc-grid-row > div:not(.cc-grid-label) { background: #fcf9ee; border-radius: 12px; padding: 8px 4px; display: grid; place-items: center; text-align: center; font-size: 12.5px; line-height: 1.3; color: #3a3527 }
 #main .cc-grid-note { grid-column: 2 / -1; margin: -2px 0 2px; font-size: 12px; line-height: 1.35; color: #7a6f55 }
 #main .cc-grid-foot { display: grid; grid-template-columns: 22px 1fr; gap: 10px; align-items: start; background: #fcf7dd; border-radius: 16px; padding: 12px 14px; font-size: 14px; line-height: 1.4; color: #4e4630; margin: 0 0 16px }
 #main .cc-grid-foot svg { width: 20px; height: 20px }
