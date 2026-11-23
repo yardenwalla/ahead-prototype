@@ -614,7 +614,7 @@
 
     if (id === 'carry') return page3('gear', 'carrier', 'Carrier', 'Keep {p} face in view. A quick check every time keeps {o} breathing easy.',
       (c => `<h2 class="hub-h2">${F('The quick check')}</h2>` + fig3(c[0], c[1], c[2]) + `<p class="oa-psteps-note oa3-under">${F(c[3])}</p>`)(CARRY_AT(m))
-      + `<h2 class="hub-h2">${F('Ways to carry, as {s} {grow|grows}')}</h2><div class="oa3-thumbs">${[['carry-newborn', 'From birth', 'Facing in'], ['carry-out', 'Head steady', 'Facing out, for short awake times'], ['carry-back', 'Sits steadily', 'On your back']].map(([p, w, t]) => `<figure><img src="${PH(p)}" alt="" loading="lazy"><figcaption><b>${F(w)}</b><small>${F(t)}</small></figcaption></figure>`).join('')}</div>`
+      + `<h2 class="hub-h2">${F('Ways to carry, as {s} {grow|grows}')}</h2><div class="oa3-thumbs">${(() => { const opts = [['carry-newborn', 'From birth', 'Facing in', 0], ['carry-out', 'Head steady', 'Facing out, for short awake times', 4], ['carry-back', 'Sits steadily', 'On your back', 9]]; const newest = m >= 4 && m < 6 ? 1 : m >= 9 ? 2 : -1; return opts.map(([p, w, t], i) => `<figure${i === newest ? ' class="is-new"' : ''}><img src="${PH(p)}" alt="" loading="lazy"><figcaption><b>${F(w)}</b><small>${F(t)}</small>${i === newest ? `<em class="oa3-new">${F('An option now')}</em>` : ''}</figcaption></figure>`).join(''); })()}</div>`
       + `<p class="oa-psteps-note">${F('Each within your carrier’s own limits. Its instructions say when.')}</p>`
       + good([['moon', 'Asleep in the carrier', 'Move {o} to a flat bed when you can.'], ['cup', 'Away from the stove', 'And from hot drinks, while {s’s} in the carrier.']]));
 
@@ -639,7 +639,7 @@
     ? ['carry-0', 'A newborn facing in on a parent’s chest in a soft carrier, face turned to the side and clear of the fabric, chin up, knees bent', [['Face in view', 42, 13, 'l'], ['Chin off chest', 43, 30, 'l'], ['Knees up', 42, 82, 'l']], 'Face in view and chin off {p} chest, close enough to kiss. Head supported, knees up in an M.']
     : m < 6
     ? ['carry-2', 'A baby facing in on a parent’s chest in a soft carrier, head turned to the side, face clear, high on the chest', [['Face in view', 60, 23, 'r'], ['Close and high', 56, 38, 'r']], 'Face in view and chin off {p} chest, close enough to kiss. Snug, knees up in an M.']
-    : ['carry-6', 'An older baby facing in on a parent’s chest in a soft carrier, face clear, knees bent up in an M shape', [['Face in view', 60, 18, 'r'], ['Knees up', 68, 82, 'r']], 'Face in view and close enough to kiss. Snug with no slumping, knees up in an M.'];
+    : ['carry-6b', 'An older baby facing in, tummy to tummy, in a soft carrier high on a parent’s chest, face turned out and clear, knees bent up', [['Face in view', 47, 14, 'l'], ['Knees up', 36, 72, 'l']], 'Face in view and close enough to kiss. Snug with no slumping, knees up in an M.'];
   // Three quick checks for any new place (ticks saved on this phone, cleared with Start over).
   const CHECKS_KEY = 'ahead-away-3';
   window.oaCheck3 = i => { let on = []; try { on = JSON.parse(localStorage.getItem(CHECKS_KEY)) || []; } catch (e) {} on = on.includes(i) ? on.filter(x => x !== i) : on.concat(i); try { localStorage.setItem(CHECKS_KEY, JSON.stringify(on)); } catch (e) {} const y = scrollY; render(); scrollTo(0, y); };
