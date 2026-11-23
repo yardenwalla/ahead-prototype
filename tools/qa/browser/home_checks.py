@@ -182,6 +182,20 @@ async def main():
             t = ' '.join(got)
             shows = bool(re.search(r'back to birth weight|Some loss|Day 6|Sponge baths, for now', t))
             check(shows == want, f'{who}: first-weeks lines {"shown" if want else "follow the real age"}')
+        # 9. Nov 23 (audit): Home's "On your radar" and the Guides tab agree on the checkup. Late in month 4 Home still
+        #    said the 4-month checkup was due while Guides had moved on to the 6-month one, and for a week after the
+        #    month birthday Home said "coming up" while Guides said "due now".
+        for n, extra in ((4, 2), (4, 10), (4, 27), (2, 1), (6, 20), (9, 3)):
+            d = months_ago(n) - dt.timedelta(days=extra)
+            await load(pg, d)
+            home = await pg.evaluate("document.querySelector('#main').innerText")
+            await pg.evaluate("navigate('categories')"); await pg.wait_for_timeout(200)
+            guides = await pg.evaluate("document.querySelector('#main').innerText")
+            hm = re.search(r'The (\d+)-month checkup is (due now|coming up)', home)
+            gm = re.search(r'The (\d+)-month checkup is (due now|next|done)', guides)
+            if not hm: continue
+            check(bool(gm) and gm.group(1) == hm.group(1), f'{n} months + {extra} days: Home and Guides name the same checkup')
+            check(bool(gm) and not (hm.group(2) == 'coming up' and gm.group(2) == 'due now') and not (hm.group(2) == 'due now' and gm.group(2) == 'next'), f'{n} months + {extra} days: Home and Guides agree on whether it’s due')
         await b.close()
     print(f'Home browser checks: {passed} passed' + (f', {len(fails)} failed' if fails else ''))
     for f in fails: print('  FAIL', f)

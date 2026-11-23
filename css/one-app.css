@@ -55,3 +55,17 @@ html body #main .he-eyebrow, html body #main .hub-hero .hub-eyebrow, html body #
 #main :is([data-overview="Sleep"],[data-overview="Childcare"],[data-overview="Safety"]) .hub-list > :nth-child(5n+3):not(:has([role=checkbox])) :is(.hub-dot,.oa-dot){background:#fff3dc!important}
 #main :is([data-overview="Sleep"],[data-overview="Childcare"],[data-overview="Safety"]) .hub-list > :nth-child(5n+4):not(:has([role=checkbox])) :is(.hub-dot,.oa-dot){background:#fdeee6!important}
 #main :is([data-overview="Sleep"],[data-overview="Childcare"],[data-overview="Safety"]) .hub-list > :nth-child(5n+5):not(:has([role=checkbox])) :is(.hub-dot,.oa-dot){background:#fdeef2!important}
+
+/* Nov 23 cohesion pass: one section heading across every guide (17px, 650, the app's ink),
+   22px above and 10px below. Everyday care's how-to headings were bolder and bigger, Sleep's were navy
+   with extra space, and Childcare's sat only 4px under the block above. */
+#main .ct-h2 { font-size: 17px !important; font-weight: 650 !important; letter-spacing: -0.4px !important; color: rgb(48, 45, 60) !important; line-height: 1.3 !important }
+#main .sv2 > .hub-h2 { margin: 8px 0 -4px !important; color: rgb(48, 45, 60) !important }
+#main .sv2-page .hub-h2 { color: rgb(48, 45, 60) !important }
+#main .hub-page[data-overview="Childcare"] .hub-h2 { margin-top: 22px !important }
+#main .hub-page[data-overview="Childcare"] .cc-std-hero + .hub-h2, #main .hub-page[data-overview="Childcare"] .hub-detail-head + .hub-h2 { margin-top: 20px !important }
+/* Nov 23 cohesion pass: Childcare's expandable rows used 38px circles; every other guide's rows use the 42px rounded square (circles mean guides). */
+#main .cc-peek summary { grid-template-columns: 42px 1fr 14px !important }
+#main .cc-peek .cc-must { grid-template-columns: 42px 1fr !important }
+#main .cc-peek summary > span, #main .cc-peek .cc-must > span { width: 42px !important; height: 42px !important; border-radius: 13px !important }
+#main .cc-peek p, #main .cc-peek-photo { margin-left: 54px !important }

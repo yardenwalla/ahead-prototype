@@ -205,7 +205,7 @@
       + rows([['thermo', 'blue', 'Take a rectal temperature', 'Four quick steps', "openPage('chg:Health:d:sick-rectal')"]]);
     const help = h2('What helps') + rows([['bottle', 'yellow', 'Offer extra feeds', 'Little and often keeps {o} hydrated'], ['shirt', 'green', 'Dress {o} lightly', 'Extra layers keep a fever up'], ['moon', 'pink', 'Let {o} rest', 'Naps and quiet time']])
       + alert('Before any medicine', u3 ? 'Under 3 months, ask your pediatrician first.' : mo < 6 ? 'Acetaminophen can help. Ask your pediatrician for the dose.' : 'Acetaminophen or ibuprofen can help. Ask your pediatrician for the dose.', 'blue');
-    return page(top('When Maya seems sick', title, lead) + big + check + help + sos());
+    return page(top('When Maya seems sick', title, lead) + big + check + help + H().TPLB.calls({ nowLabel: 'Call 911', now: '{s} struggles to breathe, has blue lips, won’t wake or is floppy, or has a seizure.' }));
   }
   function coldPage() {
     const mo = m();
@@ -214,17 +214,17 @@
       + h2('Before feeds and sleep') + seq
       + `<p class="h2-small">${F('Up to 3 times a day, so {p} nose doesn’t get sore. Not after a feed: it can bring the milk up.')}</p>`
       + h2('Also helps') + rows([['snow', 'blue', 'A cool-mist humidifier', 'In {p} room at night'], ['bottle', 'yellow', 'Smaller, more frequent feeds', 'Easier with a stuffy nose'], ['shield', 'pink', 'Skip cold medicines', 'Not safe for babies. No honey before 1']])
-      + alert('When to call', `A fever of ${feverTemp(mo)} or more, a cold past 10 days, fussing when lying down, or ear fluid.`)
-      + sos());
+      // Nov 23 cohesion pass: the app's one When to call card (was a yellow box plus a separate 911 box).
+      + H().TPLB.calls({ ped: `a fever of ${feverTemp(mo)} or more, a cold past 10 days, fussing when lying down, or ear fluid.`, nowLabel: 'Call 911', now: '{s} struggles to breathe, has blue lips, won’t wake or is floppy, or has a seizure.' }));
   }
   function tummyPage() {
     // Nov 19 review: check how sick the baby is before any reassurance, so the warning signs come first.
     return page(top('When Maya seems sick', 'Keep {p} feeds going', 'First, check for the signs below. Most tummy bugs then pass in a day or two.')
       + h2('What to look for') + pair(['Common', 'Some loose poops or vomits, still feeding.'], ['Time to call', 'Can’t keep feeds down, a dry mouth, or blood in poop.'])
-      + alert('Go to the ER', 'Green or bloody vomit.', 'peach')
       + `<section class="h2-watch">${ic('diaper', 'green')}<div><b>${F('Watch wet diapers')}</b><p>${F('Far fewer than usual, or none in 6 hours, can be a sign of dehydration.')}</p></div></section>`
       + h2('What helps') + rows([['bottle', 'yellow', 'Keep offering milk', 'Smaller feeds, more often'], ['hand', 'green', 'Wash hands after changes', 'Tummy bugs spread easily'], ['steth', 'pink', 'Ask before any medicine', 'Including anti-diarrhea medicine']])
-      + sos());
+      // Nov 23 cohesion pass: ER and 911 together in the app's one When to call card, at the end (was a peach ER box mid-page and a 911 box).
+      + H().TPLB.calls({ er: 'green or bloody vomit.', nowLabel: 'Call 911', now: '{s} struggles to breathe, has blue lips, won’t wake or is floppy, or has a seizure.' }));
   }
   const baseRoute = window.changesRoute;
   window.changesRoute = function (p) {

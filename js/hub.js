@@ -102,7 +102,9 @@
       return h.replace('class="hub-figure hub-iconsteps', 'class="hub-figure hub-iconsteps ph-tiles'); },
     rows: (rows, cat) => { rows = (tval(rows) || []).filter(Boolean); return rows.length ? `<div class="hub-list"${rows.length > 3 ? ' data-over-limit="rows"' : ''}>${rows.map(([icon, t, sub]) => row({ icon, cat, title: t, sub })).join('')}</div>` : ''; },
     calls: c => { c = tval(c); if (!c) return ''; const PH = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h3l2 5-2.5 1.5a11 11 0 0 0 6 6L15 14l5 2v3a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>';
-      return `<h2 class="hub-h2">${F('When to call')}</h2><section class="care-calls is-titled"><span class="care-calls-ico">${PH}</span><div>` + (c.ped ? `<p><b>${F('Call your pediatrician if:')}</b> ${F(tval(c.ped))}</p>` : '') + (c.now ? `<p class="is-urgent"><b>${F((c.nowLabel || 'Call right away') + ' if:')}</b> ${F(tval(c.now))}</p>` : '') + `</div></section>`; },
+      return `<h2 class="hub-h2">${F('When to call')}</h2><section class="care-calls is-titled"><span class="care-calls-ico">${PH}</span><div>` + (c.ped ? `<p><b>${F((c.pedLabel || 'Call your pediatrician') + ' if:')}</b> ${F(tval(c.ped))}</p>` : '') + (c.er ? `<p class="is-urgent"><b>${F('Go to the ER if:')}</b> ${F(tval(c.er))}</p>` : '') + (c.now ? `<p class="is-urgent"><b>${F((c.nowLabel || 'Call right away') + ' if:')}</b> ${F(tval(c.now))}</p>` : '') + `</div></section>`; },
+    // Nov 23 cohesion pass: one "When to call" card everywhere. A line from another page's sentence starts lowercase after "if:".
+    callsFrom: (a, b) => TPLB.calls({ pedLabel: a && a[0], ped: a && a[1] && a[1][0].toLowerCase() + a[1].slice(1), nowLabel: b && b[0], now: b && b[1] && b[1][0].toLowerCase() + b[1].slice(1) }),
 
     /* ---------- Photo blocks (Nov 19, show don't tell). Images are assets/<path>.jpg; every label is drawn by the app, never baked in. ---------- */
     pimg: (src, alt) => `<img src="assets/${src}.jpg" alt="${F(alt).replace(/"/g, '&quot;')}" loading="lazy">`,

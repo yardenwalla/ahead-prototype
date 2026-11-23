@@ -302,8 +302,8 @@
         ['smile', 'Bring up something small', 'A quick, kind word early goes a long way.'],
         ['heart', 'Harder drop-offs', 'Common from about 8 months. Keep goodbyes short and warm.'],
         ['shield', 'Speak up about a real worry', 'Keep {o} home and speak up. At licensed care, you can also report it to your state.']])
-      + callout('steth', `<b>${F('Call your pediatrician')}</b> ${F(m < 3 ? 'right away for a fever of 100.4°F or higher, day or night.' : m < 6 ? 'for a fever of 101°F or higher, or one that lasts more than a day.' : 'for a fever of 103°F or higher, or one that lasts more than a day.')}`)
-      + `<p class="cc-911"><b>${F('Call 911')}</b> ${F('if {s} struggles to breathe, turns blue, won’t wake, or has a seizure.')}</p>`, 'sun');
+      // Nov 23 cohesion pass: the app's one When to call card, in place of a yellow callout and a separate 911 line.
+      + H().TPLB.calls({ ped: m < 3 ? 'a fever of 100.4°F or higher, right away, day or night.' : m < 6 ? 'a fever of 101°F or higher, or one that lasts more than a day.' : 'a fever of 103°F or higher, or one that lasts more than a day.', nowLabel: 'Call 911', now: '{s} struggles to breathe, turns blue, won’t wake, or has a seizure.' }), 'sun');
     // Doulas and help with recovery belong to the first weeks. From 4 months, the same page is about care for the baby.
     if (id === 'help') { const early = m < 4; return sub('help', 'Help now and then', 'Extra help at home', early ? 'Help in the early months isn’t only for when you go back to work.' : 'Help at home isn’t only for when you go back to work.',
       picSteps('Kinds of help', early ? [

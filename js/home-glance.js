@@ -264,14 +264,16 @@
     const go = r[4];
     try {
       const v = /^health-detail:(\d+):/.exec(go); if (v && typeof healthRecord === 'function' && (healthRecord(+v[1]) || {}).status === 'attended') return false;
+      // Nov 23 audit: once the Health guide has moved on to the next checkup, Home stops calling this one "due now" (they disagreed late in month 4).
+      if (v) { const hk = parseInt((guideNow().Health || ''), 10); if (!isNaN(hk) && hk > +v[1]) return false; }
       if (go === 'chg:Sleep:d:swaddleoff' && typeof answers !== 'undefined' && answers.swaddleStopped === 'Yes') return false;
       if (go === 'chg:Feeding:d:signs' && typeof answers !== 'undefined' && answers.solids === 'Yes') return false;
     } catch (e) {}
     return true;
   }).map(r => {
-    // A checkup more than a week past its date isn't "coming up" any more: it's due now.
+    // Once a checkup's date has passed it's due now, in the same words as the Guides tab (Nov 23: they used to disagree for a week).
     const v = /^health-detail:(\d+):/.exec(r[4]); if (!v || !+v[1]) return r;
-    try { const days = (Date.now() - new Date(profile.dob)) / 864e5; if (days > +v[1] * 30.44 + 7) return [r[0].replace('is coming up', 'is due now'), r[1], r[2], r[3], r[4]]; } catch (e) {}
+    try { if (addMonths(parse(profile.dob), +v[1]) < NOW) return [r[0].replace('is coming up', 'is due now'), r[1], r[2], r[3], r[4]]; } catch (e) {}
     return r;
   });
   const RADAR = {
