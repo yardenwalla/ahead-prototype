@@ -985,11 +985,17 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   // Nov 22 (Yarden: match Outings, Health, Feeding, Childcare): steps are Feeding's numbered icon tiles, a few words each,
   // with at most two short notes inside the same card. Old [title, line] steps still render as a list.
   const moves = (mv, notes) => { if (!mv || !mv.length) return ''; notes = (val(notes) || []).map(n => n.length === 2 ? ['', n[0].replace(/,$/, ''), n[1]] : n);
+    // Nov 22 (Yarden): a physical move gets a photo per step, as numbered photo rows; each photo does a different job
+    // from the main one above it (that one shows the hold or setup, these show the movement).
+    if (/^photo:/.test(mv[0][0])) { let n = 0; const rows = H().TPLB.photoRows(mv.map(([ph, t, sub]) => [ph.slice(6), t, sub])).replace('class="ph-rows"', 'class="ph-rows care-photosteps"').replace(/<span class="ph-sign-txt"><b>/g, m => m + `<span class="care-stepn">${++n}</span>`);
+      const ul = notes.length ? `<ul class="tpl-notes">${notes.map(([, t, sub]) => `<li><b style="color:#302d3c">${F(t)}${/[?!.]$/.test(t) ? '' : '.'}</b> ${F(sub)}${/[?!.]$/.test(sub) ? '' : '.'}</li>`).join('')}</ul>` : '';
+      return rows.slice(0, rows.lastIndexOf('</section>')) + ul + '</section>'; }
     return mv[0].length === 3 ? TB.noted(TB.tiles(mv, true), notes) : keySteps(mv.map(m => [null, m[0], m[1]]), null, null, notes.map(n => [n[1], n[2]])); };
   const showPage = q => { const sh = val(q.show); return TB.top(q, q.why)
       + TB.section(val(q.pictureTitle) || 'At a glance', q.picture ? q.picture() : '')
       + TB.section(sh.t, showCard(sh))
       + TB.section(q.movesT || 'Steps', moves(val(q.moves), val(q.movesNotes)))
+      + (q.full ? `<div class="hub-list care-link">${rowK('diapers', 'The full change, step by step', 'Fresh one under, wipe, fasten', `openPage('chg:${CAT}:d:h:diapers:1')`)}</div>` : '')
       + TB.section(q.tipsTitle || 'Keep {o} safe', TB.rows(val(q.tips || q.safe)) + (q.link ? TB.link(val(q.link)) : ''))
       + (q.urgent ? hubUrgent(F(val(q.urgent)), 'Call 911 right away') : '')
       + TB.section('Watch how', TB.video(q.video)); };
@@ -1066,7 +1072,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
         ['tb-5', 'Lift {o} straight into the towel and pat {o} dry, creases too.']],
       sayNotes: [['Is the water right?', 'It should feel warm, not hot, on the inside of your wrist (about 100°F).'], ['How long?', 'Five to 10 minutes is plenty. Lots of babies cry in their first baths, and it gets easier for both of you.']],
       steps: [['photo:care/tb-1', 'Fill about 2 inches of water', 'About 100°F. Towel and washcloth in reach'], ['photo:care/tb-2', 'Wash the face first', 'Plain water, no soap'], ['photo:care/tb-3', 'Wash the body', 'A hand behind {p} head the whole time'], ['photo:care/tb-4', 'Wash the hair last', 'Shampoo 2 or 3 times a week'], ['photo:care/tb-5', 'Lift {o} into a towel', 'Pat dry, into every crease']],
-      safe: [['hand', 'A hand on {o} the whole bath', 'To step away, take {o} with you'], ['thermo', 'Water heater at 120°F or lower', 'So scalds are much less likely']],
+      safe: [['hand', 'A hand on {o} the whole bath', 'To step away, take {o} with you'], ['thermo', 'Water about 100°F', 'Heater set at 120°F or lower']],
       video: ['VsUla1M7eHQ', 'Giving a tub bath', 'Nemours KidsHealth'] },
     'rash:acne': { type: 'check', k: 'skin', eyebrow: 'Is this normal?', title: 'Baby acne', verdict: () => RASH_VERDICT.acne, where: 'acne',
       why: 'It shows up around 2–4 weeks, from pregnancy hormones, and clears on its own by 4–6 months.',
@@ -1214,8 +1220,9 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   Object.assign(TPL['p:tub'], { eyebrow: 'Baths · How to', title: 'Tub baths, with a steady hold',
     show: { t: 'See the hold', img: 'show-tub', alt: 'A parent cradles her baby’s head in one hand in a small tub, a washcloth over the tummy',
       pins: [['Hand behind the head', 30, 60, 'b'], ['Warm washcloth', 50, 88, 'r']],
-      cap: ['Set it all out first:', 'towel, washcloth and clean clothes.'] },
-    moves: [['drop', '2 inches of water', 'Warm on your wrist'], ['hand', 'In feet first', 'A hand behind the head'], ['eye', 'Eyes and face first', 'Then body, hair last']],
+      cap: ['About 2 inches of warm water.', 'Towel, washcloth and clean clothes within reach.'] },
+    movesT: 'The bath, step by step',
+    moves: [['photo:care/tb-lower', 'Lower {o} in feet first', 'Keep supporting the head and neck'], ['photo:care/tb-2', 'Wash face, then body', 'Plain water on the face, hair last'], ['photo:care/tb-5', 'Lift out and wrap up', 'Pat dry, creases too']],
     movesNotes: [['5 to 10 minutes', 'Shampoo just 2 or 3 times a week'], ['Crying at first?', 'Normal. It gets easier']] });
   Object.assign(TPL['t:bath:3'], { eyebrow: 'Baths · What changes', title: 'Moving up to the big tub',
     why: 'Once {s} {sit|sits} steadily, the family tub is fine. A good setup is what keeps it safe.',
@@ -1229,27 +1236,32 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     show: { t: 'See the finger position', img: 'show-nails', alt: 'A parent presses a baby’s finger pad back while clipping the nail',
       pins: [['Pad pressed back', 26, 30, 'r'], ['Just the white tip', 46, 48, 'r']],
       cap: ['Hold the finger steady.', 'Then the clippers only catch nail.'] },
-    moves: [['moon', 'A sleepy moment', 'Asleep or drowsy'], ['hand', 'Pad pressed back', 'Away from the nail'], ['nail', 'Follow the curve', 'Toes go straight across']],
+    // Nov 22: the photo above shows the grip; these two show the moments around it, so no picture repeats.
+    moves: [['photo:care/nl-1', 'Wait for a sleepy moment', 'Asleep or drowsy, hands still'], ['photo:care/nl-3', 'Clip along the curve', 'Then file any sharp corners. Toes go straight across']],
     movesNotes: [['Sharp again already?', 'Normal. A quick file every few days helps']] });
   const diaperShow = cord => ({ t: 'See the setup', img: 'show-diaper', alt: 'A parent keeps one hand on his newborn’s tummy, a fresh diaper open beside them',
     pins: [['Hand on {p} tummy', 57, 40, 'l'], ['Fresh diaper open', 80, 86, 'l']],
-    cap: ['Get it ready first.', 'And keep one hand on {o} the whole time.'] });
+    cap: ['Everything within reach first.', 'Then a hand on {o} the whole time.'] });
   Object.assign(TPL['h:diapers:0'], { eyebrow: 'Diapers · How to', title: 'Diaper changes, start to finish', show: diaperShow(true),
-    moves: [['diaper', 'Clean one under', 'Before you open the dirty one'], ['hand', 'Wipe with its front', 'Then fold it under'], ['drop', 'Wipes, front to back', 'Water or unscented'], ['done', 'Dirty one out', 'Fasten below the stump']],
+    movesT: 'See each move',
+    moves: [['photo:care/dn-under', 'Fresh one under', 'Slide it in before you open the old one'], ['photo:care/dn-2', 'Wipe front to back', 'Old diaper’s front first, then wipes'], ['photo:care/dn-fasten', 'Old one out, fasten', 'Below the cord, two fingers at the waist']],
     // Nov 22: what surprises first-timers in the first weeks, said before they see it.
     movesNotes: () => anatomy() === 'boy' ? [['Little boy?', 'Point the penis down before you fasten'], ['Circumcised?', 'Petroleum jelly on the tip each change, until it heals']]
       : anatomy() === 'girl' ? [['Little girl?', 'A little discharge or a spot of blood in the first weeks is normal']] : [],
     link: rashLinkRow });
   Object.assign(TPL['h:diapers:1'], { eyebrow: 'Diapers · How to', title: 'Diaper changes, start to finish', show: diaperShow(false),
-    moves: [['diaper', 'Clean one under', 'Before you open the dirty one'], ['hand', 'Wipe with its front', 'Then fold it under'], ['drop', 'Wipes, front to back', 'Water or unscented'], ['done', 'Dirty one out', 'Fasten snug, two fingers of room']],
+    movesT: 'See each move',
+    moves: [['photo:care/dn-under', 'Fresh one under', 'Slide it in before you open the old one'], ['photo:care/dn-2', 'Wipe front to back', 'Old diaper’s front first, then wipes'], ['photo:care/dn-fasten', 'Old one out, fasten', 'Snug, two fingers at the waist']],
     movesNotes: () => anatomy() === 'boy' ? [['Little boy?', 'Point the penis down before you fasten']] : [], link: rashLinkRow });
   const wriggleShow = { t: 'See the setup', img: 'show-wriggle', alt: 'A parent keeps a hand on her baby’s tummy while he holds a soft toy',
     pins: [['Toy in hand', 40, 70, 'b'], ['Hand on tummy', 72, 46, 'b']],
     cap: ['Keep one hand on {o}', 'the whole change.'] };
   Object.assign(TPL['h:diapers:2'], { eyebrow: 'Diapers · What changes', title: 'Diaper changes with a wriggler', show: wriggleShow,
-    moves: [['diaper', 'All in reach first', 'Wipes, diaper and cream'], ['toy', 'Something to hold', 'A toy, or the same song'], ['mat', 'Too wriggly?', 'Use a mat on the floor']], link: rashLinkRow });
+    movesT: 'What’s different now', full: true,
+    moves: [['toy', 'Something to hold', 'A toy, or the same song'], ['hand', 'A hand on the tummy', 'Before {s} {roll|rolls} away'], ['mat', 'Too wriggly?', 'Use a mat on the floor']], link: rashLinkRow });
   Object.assign(TPL['h:diapers:3'], { eyebrow: 'Diapers · What changes', title: 'Diaper changes with a wriggler', show: wriggleShow,
-    moves: [['diaper', 'All in reach first', 'Wipes, diaper and cream'], ['toy', 'Something to hold', 'A toy, or the same song'], ['stand', 'Pulling up?', 'Change {o} standing']], link: rashLinkRow });
+    movesT: 'What’s different now', full: true,
+    moves: [['toy', 'Something to hold', 'A toy, or the same song'], ['mat', 'On the floor', 'Nowhere to fall'], ['stand', 'Pulling up?', 'Change {o} standing, in pull-ons']], link: rashLinkRow });
   Object.assign(TPL['t:bath:2'], { eyebrow: 'Baths · Bedtime', show: { t: 'See how it ends', img: 'show-crib', alt: 'A parent lays his drowsy baby on her back in a bare crib, in a sleep sack',
       pins: [['On {p} back', 66, 62, 'l'], ['Bare crib', 24, 84, 'r']],
       cap: ['Drowsy, not asleep.', 'On {p} back, in a bare crib.'] },

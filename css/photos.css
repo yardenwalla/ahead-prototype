@@ -397,3 +397,10 @@
 #main .care-pickgrid .care-pick-map svg { width: 78%; height: 78%; padding: 0 }
 #main .care-pickgrid .care-common-tile > span:not(.care-pick-map) { padding: 10px 26px 12px 12px }
 #main .care-calls-note { margin: 6px 0 0; font-size: 13.5px; color: #6d666d }
+/* Nov 22: photo steps for physical moves (tub, diaper): bigger 4:3 thumbs, a number before each title */
+#main .care-photosteps .ph-row { grid-template-columns: 116px 1fr }
+#main .care-photosteps .ph-row:first-of-type { border-top: 0 }
+#main .care-photosteps .ph-thumb { width: 116px; height: 87px; border-radius: 12px }
+#main .care-photosteps .ph-sign-txt b { font-size: 15.5px }
+#main .care-photosteps .ph-sign-txt b .care-stepn { display: inline; color: #2a6078; font-size: inherit; font-weight: 700; margin-right: 6px }
+#main .care-photosteps .tpl-notes { margin: 2px 0 10px; padding-top: 10px; border-top: 1px solid var(--line) }
