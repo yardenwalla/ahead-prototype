@@ -264,12 +264,16 @@
     const go = r[4];
     try {
       const v = /^health-detail:(\d+):/.exec(go); if (v && typeof healthRecord === 'function' && (healthRecord(+v[1]) || {}).status === 'attended') return false;
-      // Nov 23 audit: once the Health guide has moved on to the next checkup, Home stops calling this one "due now" (they disagreed late in month 4).
-      if (v) { const hk = parseInt((guideNow().Health || ''), 10); if (!isNaN(hk) && hk > +v[1]) return false; }
       if (go === 'chg:Sleep:d:swaddleoff' && typeof answers !== 'undefined' && answers.swaddleStopped === 'Yes') return false;
       if (go === 'chg:Feeding:d:signs' && typeof answers !== 'undefined' && answers.solids === 'Yes') return false;
     } catch (e) {}
     return true;
+  }).map(r => {
+    // Nov 23 audit: once the Health guide has moved on to the next checkup, Home names that one too (they disagreed late
+    // in month 4: Home said the 4-month checkup was due while Guides and Health showed the 6-month one). The card stays.
+    const hv = /^health-detail:(\d+):/.exec(r[4]);
+    if (hv) { try { const hk = parseInt((guideNow().Health || ''), 10); if (!isNaN(hk) && hk > +hv[1]) r = CHK(hk); } catch (e) {} }
+    return r;
   }).map(r => {
     // Once a checkup's date has passed it's due now, in the same words as the Guides tab (Nov 23: they used to disagree for a week).
     const v = /^health-detail:(\d+):/.exec(r[4]); if (!v || !+v[1]) return r;
