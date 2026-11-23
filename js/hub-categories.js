@@ -411,7 +411,8 @@
     2: [0, 4, 1.2, 2.2, 'Smiling', [[0, 'Birth'], [2, '2 mo'], [4, '4 mo']]],
     4: [0, 9, 4, 6, 'Rolling', [[0, 'Birth'], [4, '4 mo'], [6, '6 mo'], [9, '9 mo']]],
     6: [3, 12, 6, 9, 'Sitting alone', [[3, '3 mo'], [6, '6 mo'], [9, '9 mo'], [12, '1 year']]],
-    9: [4, 14, 6, 10, 'Crawling', [[4, '4 mo'], [6, '6 mo'], [10, '10 mo'], [14, '14 mo']]],
+    9: [4, 12, 6, 10, 'Crawling', [[4, '4 mo'], [6, '6 mo'], [10, '10 mo'], [12, '1 year']]],
+    // Nov 22 (Yarden): crawling ends at 1 year, where Ahead ends; walking keeps its range, since first steps mostly come after it.
     12: [8, 18, 12, 15, 'First steps', [[8, '8 mo'], [12, '1 year'], [15, '15 mo'], [18, '18 mo']]]
   };
   // Nov 22: at 6 months, how sitting usually comes together, as three photos (same room, seen from the side so the posture shows).
