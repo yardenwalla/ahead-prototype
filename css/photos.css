@@ -404,3 +404,9 @@
 #main .care-photosteps .ph-sign-txt b { font-size: 15.5px }
 #main .care-photosteps .ph-sign-txt b .care-stepn { display: inline; color: #2a6078; font-size: inherit; font-weight: 700; margin-right: 6px }
 #main .care-photosteps .tpl-notes { margin: 2px 0 10px; padding-top: 10px; border-top: 1px solid var(--line) }
+/* Nov 22 (Yarden's mockups): one how-to order: photo, Have nearby, steps, Good to know, Keep safe */
+#main .care-near-h { margin: 20px 2px 8px; font-size: 11.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--hub-ink, #5b5566) }
+#main .care-near { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 4px }
+#main .care-near span { padding: 7px 12px; border-radius: 999px; background: #fff; border: 1px solid var(--line); font-size: 13.5px; color: #3c3744 }
+#main .care-good { margin: 10px 4px 0; font-size: 14px; line-height: 1.45; color: #5b5566 }
+#main .care-good b { color: #302d3c }
