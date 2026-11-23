@@ -92,7 +92,12 @@
     stove: (c) => `<rect x="4" y="4" width="16" height="16" rx="3" fill="${c.bg}"/><circle cx="8.75" cy="8.75" r="2"/><circle cx="15.25" cy="8.75" r="2"/><circle cx="8.75" cy="15.25" r="2"/><circle cx="15.25" cy="15.25" r="2"/>`,
     pot: (c) => `<path d="M5 10h14v6.5a3.5 3.5 0 0 1-3.5 3.5h-7A3.5 3.5 0 0 1 5 16.5Z" fill="${c.bg}"/><path d="M3 10h18M19 12.5h2.5M10 7.5h4M12 7.5V6"/>`,
     sunrise: (c) => `<path d="M6.5 16a5.5 5.5 0 0 1 11 0Z" fill="${c.bg}"/><path d="M3 16h18M5 19.5h14M12 5v3M5.6 8.6l1.8 1.8M18.4 8.6l-1.8 1.8"/>`,
-    towel: (c) => `<rect x="5" y="3.5" width="14" height="17" rx="2" fill="${c.bg}"/><path d="M5 8h14M5 16h14"/>`
+    towel: (c) => `<rect x="5" y="3.5" width="14" height="17" rx="2" fill="${c.bg}"/><path d="M5 8h14M5 16h14"/>`,
+    // Nov 22: "Have nearby" icons (a basin of water, a folded washcloth, a pump bottle, a duck, a nail file)
+    basin: (c) => `<path d="M3 10h18l-1.6 7.2A2.5 2.5 0 0 1 17 19H7a2.5 2.5 0 0 1-2.4-1.8Z" fill="${c.bg}"/><path d="M6.5 13.5c1.2-.9 2.3-.9 3.5 0s2.3.9 3.5 0 2.3-.9 3.5 0"/><path d="M12 3.5c1.2 1.6 2 2.8 2 3.7a2 2 0 0 1-4 0c0-.9.8-2.1 2-3.7Z"/>`,
+    folded: (c) => `<path d="M4 9.5h16v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z" fill="${c.bg}"/><path d="M4 9.5a2.5 2.5 0 0 1 2.5-2.5h11A2.5 2.5 0 0 1 20 9.5M4 13.5h16"/>`,
+    soap: (c) => `<rect x="7" y="9" width="10" height="11.5" rx="2.5" fill="${c.bg}"/><path d="M10 9V6.5h4V9M12 6.5V4h4M10 14h4"/>`,
+    duck: (c) => `<path d="M6 13h8.5a4.5 4.5 0 0 0 3.6-7.2A3 3 0 0 0 13 8v1H8a3 3 0 0 0-3 3Z" fill="${c.bg}"/><path d="M4 13c0 3.9 3.1 6 7 6h3a6 6 0 0 0 6-6"/><path d="M18 7.5h2.5"/>`
   };
   /* Figures: flat, outline-free scenes on a soft backdrop. Words live in HTML under the picture, in the app's type. */
   const SK = '#f4d6c4', MILK = '#fbecc6', NIP = '#efd08f';

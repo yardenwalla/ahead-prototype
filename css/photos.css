@@ -300,3 +300,286 @@
 #main .fd-safe-card button + button { border-top: 1px solid var(--line, #f0ebe8) }
 #main .fd-safe-card b { flex: 1; font-weight: 650 }
 #main .fd-safe-card span { color: #9b4766; font-size: 18px }
+
+/* Nov 21: Everyday care's top card, built like Feeding's (Development's layout). "New now" sits in the same soft white box as
+   Feeding's "Try this", and opens its page. */
+#main .care-disc.fd-life .care-newbox { all: unset; box-sizing: border-box; display: block; width: 100%; margin-top: 14px; background: rgba(255,255,255,.7); border-radius: 16px; padding: 12px 14px; cursor: pointer; box-shadow: 0 2px 10px #46638c14 }
+#main .care-disc.fd-life .care-newbox { display: flex; gap: 10px; align-items: flex-start }
+#main .care-newbox svg { flex: none; width: 20px; height: 20px; margin-top: 1px; fill: none; stroke: #2a6078; stroke-width: 1.8; stroke-linecap: round }
+#main .care-newbox span { font-size: 15px; line-height: 1.4; color: var(--ink, #2b2732); text-wrap: pretty }
+#main .care-newbox b { color: #2a6078; font-weight: 700 }
+#main .care-newbox em { font-style: normal; font-weight: 650; color: #2a6078; white-space: nowrap }
+#main .care-disc.fd-life .sf-photo.fd-life-photo { box-shadow: 0 6px 18px #46638c24 }
+#main .fd-life .sf-photo.fd-life-photo, #main .fd-life .care-newbox { flex: none }
+#main .fd-plist .fd-thumb { position: relative }
+#main .fd-plist .fd-thumb img { position: absolute; inset: 0 }
+#main .care-hero.care-disc.fd-life { height: auto }
+
+/* Nov 21: "Is this normal?" tiles lead with a real photo of what to recognize, full tile width. */
+#main .care-see button:has(.care-see-photo) { padding: 0 0 12px; overflow: hidden; gap: 10px }
+#main .care-see-art:has(.care-see-photo) { display: block; width: 100%; aspect-ratio: 1; background: #f3ece4 }
+#main .care-see-photo { display: block; width: 100%; height: 100%; object-fit: cover }
+#main .care-see button:has(.care-see-photo) b { padding: 0 8px }
+#main .care-rash-art .care-see-photo { width: 76px; height: 76px; border-radius: 18px }
+#main .care-v2 .care-map:has(.care-map-photo) { grid-template-columns: 120px 1fr }
+#main .care-map .care-map-photo { display: block; width: 120px; height: 120px; flex: none; object-fit: cover; border-radius: 16px }
+/* Nov 22: steps with one key photo, then a numbered list with room for the words */
+#main .care-keysteps { padding: 14px 16px 6px }
+#main .care-keyphoto { margin: 0 0 6px; }
+#main .care-keyphoto img { display: block; width: 100%; aspect-ratio: 16/10; object-fit: cover; border-radius: 16px }
+#main .care-keyphoto figcaption { font-size: 13.5px; color: var(--muted, #6d666d); margin: 8px 2px 4px }
+#main .care-keysteps ol { list-style: none; counter-reset: ks; margin: 0; padding: 0 }
+#main .care-keysteps li { counter-increment: ks; position: relative; padding: 12px 0 12px 40px; border-top: 1px solid #0000000f }
+#main .care-keysteps li:first-child { border-top: 0 }
+#main .care-keysteps li::before { content: counter(ks); position: absolute; left: 0; top: 11px; width: 26px; height: 26px; border-radius: 50%; background: var(--area, #e3f1f7); color: var(--area-ink, #2a6078); font: 700 13.5px/26px Figtree, sans-serif; text-align: center }
+#main .care-keysteps li b { display: block; font-size: 15.5px; font-weight: 600; line-height: 1.3 }
+#main .care-keysteps li span { display: block; font-size: 13.5px; color: var(--muted, #6d666d); margin-top: 2px; line-height: 1.35 }
+#main .care-keysteps ol.is-say li { font-size: 15.5px; line-height: 1.45; color: var(--ink, #2b2732); padding-top: 11px; padding-bottom: 11px }
+#main .care-keysteps ol.is-say li::before { top: 10px }
+#main .care-keyphoto figcaption { font-size: 14px; color: var(--ink, #2b2732); font-weight: 600 }
+#main .care-keysteps .care-keyphoto { margin-bottom: 4px }
+#main .care-keynote { margin: 0; padding: 12px 0 10px; border-top: 1px solid #0000000f; font-size: 14.5px; line-height: 1.45; color: var(--ink2, #4a4550) }
+#main .care-keynote b { color: var(--ink, #2b2732); font-weight: 600 }
+/* Nov 22: show and tell per step: the step's photo on the left, the full sentence on the right */
+#main .care-keysteps ol.is-photo li { display: flex; gap: 14px; align-items: center; padding: 10px 0 10px 0 }
+#main .care-keysteps ol.is-photo li::before { left: 6px; top: 16px; z-index: 1; width: 22px; height: 22px; font-size: 12px; line-height: 22px; box-shadow: 0 1px 3px #0002; background: #fff }
+#main .care-stepph { flex: none; width: 92px; height: 92px; border-radius: 14px; overflow: hidden; background: #eee }
+#main .care-stepph img { width: 100%; height: 100%; object-fit: cover; display: block }
+#main .care-steptx { font-size: 15.5px; line-height: 1.42; color: var(--ink, #2b2732) }
+#main .care-keysteps .care-steptx { color: #2b2732; font-weight: 500 }
+#main .care-stepph { width: 100px; height: 100px }
+#main .care-keysteps ol.no-num li::before { display: none }
+/* Nov 22: show-me how-tos: one big labeled teaching photo, a caption, then short steps */
+#main .care-show { padding: 0; overflow: hidden }
+#main .care-show-photo { position: relative; margin: 0; aspect-ratio: 4 / 3 }
+#main .care-show-photo > img { display: block; width: 100%; height: 100%; object-fit: cover }
+#main .care-show-photo .sf-pin { position: absolute; display: flex; align-items: center; gap: 6px; transform: translate(-50%, -50%) }
+#main .care-show-photo .sf-pin-r { transform: translate(-7px, -50%) }
+#main .care-show-photo .sf-pin-l { flex-direction: row-reverse; transform: translate(calc(-100% + 7px), -50%) }
+#main .care-show-photo .sf-pin-b { flex-direction: column; transform: translate(-50%, -7px) }
+#main .care-show-photo .sf-pin > span { color: #2b2732 }
+#main .care-show-cap { margin: 0; padding: 13px 16px 14px; font-size: 14.5px; line-height: 1.45; color: #4a4550 }
+#main .care-show-cap b { color: #2b2732; font-weight: 650 }
+#main .care-show-cap.is-note { border-top: 1px solid #0000000f; padding-top: 12px }
+/* Nov 22: Is this normal? pages: diaper rash vs yeast side by side, help notes, the look-alike link */
+#main .care-vs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px }
+#main .care-vs-card { margin: 0; background: #fffdfa; border: 1px solid #0000000d; border-radius: 20px; padding: 12px; display: flex; flex-direction: column; gap: 8px }
+#main .care-vs-card svg { width: 100%; height: auto; max-height: 150px; background: #f7efe9; border-radius: 14px }
+#main .care-vs-card figcaption b { display: block; font-size: 15px; font-weight: 650; color: #2b2732 }
+#main .care-vs-card figcaption span { display: block; font-size: 13px; line-height: 1.4; color: #6d666d; margin-top: 3px }
+#main .care-vs-card em { display: inline-block; margin-top: 8px; font-style: normal; font-size: 12px; font-weight: 700; padding: 5px 8px; border-radius: 8px; line-height: 1.25 }
+#main .care-vs-card em.is-ok { background: #e6f5ec; color: #356651 }
+#main .care-vs-card em.is-ask { background: #fbe7dc; color: #9a4a23 }
+#main .care-help-note { margin-top: 10px; padding: 12px 16px }
+#main .care-help-note p { margin: 0; font-size: 14.5px; line-height: 1.45; color: #4a4550 }
+#main .care-help-note b { color: #2b2732 }
+#main .care-notquite { margin-top: 18px }
+#main .care-nq-ic { display: grid; place-items: center; width: 100%; height: 100%; background: #f1ecf7 }
+/* Nov 22: Is this normal? hub: what's common at this age as photo tiles, then a poop color card */
+#main .care-common { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px }
+#main .care-common-tile { position: relative; display: flex; flex-direction: column; text-align: left; padding: 0; border: 1px solid #0000000d; border-radius: 20px; overflow: hidden; background: #fffdfa; cursor: pointer; font: inherit }
+#main .care-common-tile img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover }
+#main .care-common-tile span { display: block; padding: 10px 28px 12px 12px }
+#main .care-common-tile b { display: block; font-size: 15px; font-weight: 650; color: #2b2732; line-height: 1.25 }
+#main .care-common-tile small { display: block; font-size: 13px; color: #6d666d; margin-top: 3px }
+#main .care-common-tile > i { position: absolute; right: 12px; bottom: 14px; font-style: normal; color: #9a929a; font-size: 18px }
+#main .care-poopcard { display: flex; align-items: center; gap: 14px; width: 100%; text-align: left; padding: 14px 16px; border: 1px solid #0000000d; cursor: pointer; font: inherit; margin-bottom: 4px }
+#main .care-poopdots { display: flex; gap: 6px; flex: none; padding: 14px 12px; background: #eef1fa; border-radius: 14px }
+#main .care-poopdots i { width: 18px; height: 18px; border-radius: 50% }
+#main .care-poopcard b { display: block; font-size: 15.5px; font-weight: 650; color: #2b2732 }
+#main .care-poopcard small { display: block; font-size: 13.5px; color: #6d666d; margin-top: 2px }
+#main .care-poopcard .care-chev { margin-left: auto; font-style: normal; color: #9a929a; font-size: 18px }
+/* Nov 22: call card as a short list of signs */
+#main .care-calls.is-list ul { margin: 6px 0 0; padding-left: 18px }
+#main .care-calls.is-list li { font-size: 14.5px; line-height: 1.45; margin: 3px 0 }
+/* Nov 22: rash picker tiles; a drawing stands in where there's no photo, in the same 4:3 box */
+#main .care-pickgrid .care-pick-map { display: flex; align-items: center; justify-content: center; width: 100%; aspect-ratio: 4 / 3; background: #f7efe9 }
+#main .care-pickgrid .care-pick-map svg { width: 78%; height: 78%; padding: 0 }
+#main .care-pickgrid .care-common-tile > span:not(.care-pick-map) { padding: 10px 26px 12px 12px }
+#main .care-calls-note { margin: 6px 0 0; font-size: 13.5px; color: #6d666d }
+/* Nov 22: photo steps for physical moves (tub, diaper): bigger 4:3 thumbs, a number before each title */
+#main .care-photosteps .ph-row { grid-template-columns: 116px 1fr }
+#main .care-photosteps .ph-row:first-of-type { border-top: 0 }
+#main .care-photosteps .ph-thumb { width: 116px; height: 87px; border-radius: 12px }
+#main .care-photosteps .ph-sign-txt b { font-size: 15.5px }
+#main .care-photosteps .ph-sign-txt b .care-stepn { display: inline; color: #2a6078; font-size: inherit; font-weight: 700; margin-right: 6px }
+#main .care-photosteps .tpl-notes { margin: 2px 0 10px; padding-top: 10px; border-top: 1px solid var(--line) }
+/* Nov 22 (Yarden's mockups): one how-to order: photo, Have nearby, steps, Good to know, Keep safe */
+#main .care-near-h { margin: 20px 2px 8px; font-size: 11.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--hub-ink, #5b5566) }
+#main .care-near { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 4px }
+#main .care-near span { padding: 7px 12px; border-radius: 999px; background: #fff; border: 1px solid var(--line); font-size: 13.5px; color: #3c3744 }
+#main .care-good { margin: 10px 4px 0; font-size: 14px; line-height: 1.45; color: #5b5566 }
+#main .care-good b { color: #302d3c }
+/* ===== Nov 22: Everyday care templates, from Yarden's mockups (How to / What to know) ===== */
+#main .ct-page { --ct-ink: #2b2733; --ct-soft: #6b6573; --ct-purple: var(--ss-ink, #46638c); --ct-lav: var(--ss-bg, #e7effc); --ct-line: #ece7e2; padding-bottom: 8px }
+#main .ct-eyebrow { margin: 6px 0 6px; font-size: 11.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--ct-purple) }
+#main .ct-head h1 { margin: 0 0 8px; font-size: 29px; line-height: 1.12; letter-spacing: -.02em; font-weight: 800; color: var(--ct-ink) }
+#main .ct-head p:not(.ct-eyebrow) { margin: 0 0 18px; font-size: 15.5px; line-height: 1.45; color: var(--ct-soft) }
+#main .ct-photo-card { border-radius: 20px; overflow: hidden; background: var(--ct-lav); margin: 0 0 18px }
+#main .ct-photo { position: relative; margin: 0; aspect-ratio: 4 / 3; background: #efe9e3 }
+#main .ct-photo img { display: block; width: 100%; height: 100%; object-fit: cover }
+#main .ct-tag { position: absolute; display: inline-flex; align-items: center; gap: 6px; padding: 6px 11px; border-radius: 999px; background: rgba(255,255,255,.94); box-shadow: 0 2px 8px rgba(0,0,0,.12); font-size: 12.5px; font-weight: 600; color: var(--ct-ink); max-width: 46%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
+#main .ct-tag i { flex: none; width: 7px; height: 7px; border-radius: 50%; background: var(--ct-ink) }
+#main .ct-tag.is-bl { left: 12px; bottom: 12px } #main .ct-tag.is-br { right: 12px; bottom: 12px }
+#main .ct-tag.is-tl { left: 12px; top: 12px } #main .ct-tag.is-tr { right: 12px; top: 12px }
+#main .ct-strip { display: grid; grid-template-columns: 34% 1fr; gap: 12px; align-items: start; padding: 13px 16px 15px }
+#main .ct-strip b { font-size: 12px; line-height: 1.35; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--ct-purple) }
+#main .ct-strip span { font-size: 14.5px; line-height: 1.4; color: var(--ct-ink) }
+#main .ct-label { margin: 4px 2px 9px; font-size: 11.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--ct-purple) }
+#main .ct-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 6px }
+#main .ct-chips span { padding: 8px 14px; border-radius: 999px; background: #fff; border: 1px solid var(--ct-line); font-size: 13.5px; color: var(--ct-ink) }
+#main .ct-h2 { margin: 24px 2px 12px; font-size: 20px; font-weight: 800; letter-spacing: -.01em; color: var(--ct-ink) }
+#main .ct-steps { list-style: none; counter-reset: ct; margin: 0; padding: 4px 16px; background: #fffdf9; border: 1px solid var(--ct-line); border-radius: 20px }
+#main .ct-steps li { counter-increment: ct; position: relative; padding: 15px 0 15px 44px; border-top: 1px solid var(--ct-line) }
+#main .ct-steps li:first-child { border-top: 0 }
+#main .ct-steps li::before { content: counter(ct); position: absolute; left: 0; top: 14px; width: 30px; height: 30px; border-radius: 50%; background: var(--ct-lav); color: var(--ct-purple); font-size: 14px; font-weight: 700; display: grid; place-items: center }
+#main .ct-steps b { display: block; font-size: 16px; line-height: 1.3; color: var(--ct-ink) }
+#main .ct-steps span { display: block; margin-top: 3px; font-size: 14px; line-height: 1.4; color: var(--ct-soft) }
+#main .ct-good { margin: 12px 4px 0; font-size: 14px; line-height: 1.45; color: var(--ct-soft) }
+#main .ct-good b { color: var(--ct-ink) }
+#main .ct-safe { display: flex; gap: 14px; align-items: flex-start; margin: 18px 0 0; padding: 16px; border-radius: 18px; background: #e7f4ee; border: 1px solid #d3eadf }
+#main .ct-safe > i { flex: none; width: 32px; height: 32px; border-radius: 10px; background: #cfe9dc; color: #2f7a57; display: grid; place-items: center }
+#main .ct-safe b { display: block; font-size: 15px; color: var(--ct-ink) }
+#main .ct-safe p { margin: 4px 0 0; font-size: 14px; line-height: 1.4; color: #4b5a52 }
+#main .ct-link { margin-top: 16px }
+#main .ct-page .hub-urgent, #main .ct-page .care-calls { margin-top: 16px }
+/* What to know */
+#main .ct-eyebrow.is-out { margin-top: 10px }
+#main .ct-card { padding: 20px 18px 18px; border-radius: 20px; background: #f7ebe7; margin: 0 0 6px }
+#main .ct-card h1 { margin: 0 0 8px; font-size: 27px; line-height: 1.15; letter-spacing: -.02em; font-weight: 800; color: var(--ct-ink) }
+#main .ct-card p { margin: 0; font-size: 15px; line-height: 1.45; color: var(--ct-soft) }
+#main .ct-chip { all: unset; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; margin-top: 14px; padding: 6px 12px; border-radius: 999px; background: #e2f2e9; color: #2f7a57; font-size: 13px; font-weight: 700 }
+#main .ct-look { position: relative; margin: 0; border-radius: 20px; overflow: hidden; aspect-ratio: 4 / 3; background: #efe9e3 }
+#main .ct-look img { display: block; width: 100%; height: 100%; object-fit: cover }
+#main .ct-look figcaption { position: absolute; left: 0; right: 0; bottom: 0; padding: 40px 16px 14px; background: linear-gradient(to top, rgba(30,24,34,.82), rgba(30,24,34,0)); color: #fff; font-size: 14.5px; font-weight: 600; line-height: 1.35 }
+#main .ct-notice { display: grid; grid-template-columns: 1fr 1fr; gap: 10px }
+#main .ct-notice > div { padding: 14px; border-radius: 16px; background: var(--ct-lav) }
+#main .ct-notice b { display: block; font-size: 14.5px; line-height: 1.35; color: var(--ct-ink) }
+#main .ct-notice span { display: block; margin-top: 3px; font-size: 13px; line-height: 1.35; color: var(--ct-soft) }
+#main .ct-helps { list-style: none; margin: 0; padding: 4px 16px; background: #fffdf9; border: 1px solid var(--ct-line); border-radius: 20px }
+#main .ct-helps li { display: flex; gap: 14px; align-items: center; padding: 13px 0; border-top: 1px solid var(--ct-line) }
+#main .ct-helps li:first-child { border-top: 0 }
+#main .ct-helps li > i { flex: none; width: 34px; height: 34px; border-radius: 10px; background: #e7f4ee; display: grid; place-items: center }
+#main .ct-helps li > i svg { width: 20px; height: 20px }
+#main .ct-helps b { display: block; font-size: 15px; line-height: 1.3; color: var(--ct-ink) }
+#main .ct-helps span { display: block; margin-top: 2px; font-size: 13.5px; line-height: 1.35; color: var(--ct-soft) }
+#main .ct-page .care-calls { background: #fdf2e8; border: 1px solid #f6dfc8 }
+@media (max-width: 360px) { #main .ct-tag { font-size: 11.5px; padding: 5px 9px; gap: 5px; max-width: 48% } #main .ct-tag.is-bl, #main .ct-tag.is-tl { left: 8px } #main .ct-tag.is-br, #main .ct-tag.is-tr { right: 8px } #main .ct-tag.is-bl, #main .ct-tag.is-br { bottom: 8px } #main .ct-tag.is-tl, #main .ct-tag.is-tr { top: 8px } }
+/* Nov 22 (Yarden: "why do these look less pretty"): the mockup's proportions. Smaller type, a 16:10 photo,
+   one-line tiles and helps, a one- or two-line call card. */
+#main .ct-head h1 { font-size: 27px; margin-bottom: 6px }
+#main .ct-head p:not(.ct-eyebrow) { font-size: 14.5px; margin-bottom: 16px }
+#main .ct-photo, #main .ct-look { aspect-ratio: 16 / 10 }
+#main .ct-photo-card { border-radius: 18px; margin-bottom: 16px }
+#main .ct-strip { padding: 12px 14px 13px; gap: 10px }
+#main .ct-strip b { font-size: 11px }
+#main .ct-strip span { font-size: 13.5px }
+#main .ct-chips span { padding: 6px 12px; font-size: 12.5px }
+#main .ct-h2 { font-size: 18px; margin: 22px 2px 10px }
+#main .ct-steps { padding: 2px 14px; border-radius: 18px }
+#main .ct-steps li { padding: 12px 0 12px 40px }
+#main .ct-steps li::before { top: 12px; width: 26px; height: 26px; font-size: 13px }
+#main .ct-steps b { font-size: 15px }
+#main .ct-steps span { font-size: 13px; margin-top: 2px }
+#main .ct-good { font-size: 13px; margin-top: 10px }
+#main .ct-safe { padding: 14px; margin-top: 16px; border-radius: 16px; gap: 12px }
+#main .ct-safe > i { width: 28px; height: 28px; border-radius: 8px }
+#main .ct-safe b { font-size: 14px } #main .ct-safe p { font-size: 13px; margin-top: 3px }
+#main .ct-card { padding: 18px 16px 16px }
+#main .ct-card h1 { font-size: 25px }
+#main .ct-card p { font-size: 13.5px }
+#main .ct-chip { margin-top: 12px; padding: 5px 11px; font-size: 12px }
+#main .ct-look figcaption { font-size: 13.5px; padding: 34px 14px 12px }
+#main .ct-notice > div { padding: 14px 14px 18px; border-radius: 14px; font-size: 13.5px; font-weight: 600; line-height: 1.35; color: var(--ct-ink) }
+#main .ct-helps { padding: 2px 14px; border-radius: 18px }
+#main .ct-helps li { gap: 12px; padding: 12px 0 }
+#main .ct-helps li > i { width: 26px; height: 26px; border-radius: 8px; color: #2f7a57; background: #e7f4ee }
+#main .ct-helps li > i svg { width: 14px; height: 14px }
+#main .ct-helps li > span { font-size: 14px; font-weight: 600; line-height: 1.35; color: var(--ct-ink) }
+#main .ct-page .ct-alt { all: unset; cursor: pointer; display: block; margin: 12px 4px 0; font-size: 13.5px; font-weight: 600; color: var(--ct-purple) }
+#main .ct-call { padding: 14px 16px; border-radius: 16px; background: #fdf2e8; border: 1px solid #f6dfc8 }
+#main .ct-call b { display: block; font-size: 13.5px; color: #8a4b1f }
+#main .ct-call p { margin: 4px 0 0; font-size: 13.5px; line-height: 1.45; color: #6b4a33 }
+#main .ct-call em { font-style: normal; font-weight: 700; color: #8a4b1f }
+#main .ct-page .ct-alt.is-call { margin: 8px 0 0; font-size: 13px; color: #8a4b1f }
+/* ===== Nov 22: how-to, second pass from Yarden's mockup: pointing labels, icon "Have nearby", photo steps ===== */
+#main .ct-hero { position: relative; margin: 0 0 6px; border-radius: 20px; overflow: hidden; aspect-ratio: 4 / 3; background: #efe9e3 }
+#main .ct-hero img { display: block; width: 100%; height: 100%; object-fit: cover }
+#main .ct-arrows { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none }
+#main .ct-callout { position: absolute; max-width: 44%; padding: 7px 12px; border-radius: 14px; background: rgba(255,255,255,.96); box-shadow: 0 2px 10px rgba(0,0,0,.14); font-size: 12.5px; line-height: 1.25; font-weight: 700; color: var(--ct-ink) }
+#main .ct-callout.is-tl { left: 12px; top: 12px } #main .ct-callout.is-tr { right: 12px; top: 12px; text-align: right }
+#main .ct-callout.is-bl { left: 12px; bottom: 12px } #main .ct-callout.is-br { right: 12px; bottom: 12px; text-align: right }
+#main .ct-near { display: flex; gap: 6px; padding: 12px 8px; background: #fffdf9; border: 1px solid var(--ct-line); border-radius: 18px }
+#main .ct-near > span { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center }
+#main .ct-near i { display: grid; place-items: center; width: 40px; height: 40px }
+#main .ct-near i svg { width: 30px; height: 30px }
+#main .ct-near small { font-size: 11.5px; line-height: 1.25; color: var(--ct-ink) }
+#main .ct-steps2 { list-style: none; margin: 0; padding: 4px 12px; background: #fffdf9; border: 1px solid var(--ct-line); border-radius: 18px }
+#main .ct-steps2 li { display: grid; grid-template-columns: 76px 1fr; gap: 12px; align-items: center; padding: 10px 0; border-top: 1px solid var(--ct-line) }
+#main .ct-steps2 li:first-child { border-top: 0 }
+#main .ct-th { width: 76px; height: 58px; border-radius: 12px; overflow: hidden; background: var(--ct-lav); display: grid; place-items: center }
+#main .ct-th img { width: 100%; height: 100%; object-fit: cover; display: block }
+#main .ct-th i svg { width: 30px; height: 30px }
+#main .ct-tx b { display: flex; align-items: center; gap: 8px; font-size: 15px; line-height: 1.25; color: var(--ct-ink) }
+#main .ct-tx b em { flex: none; font-style: normal; width: 22px; height: 22px; border-radius: 50%; background: var(--ct-lav); color: var(--ct-purple); font-size: 12px; font-weight: 700; display: grid; place-items: center }
+#main .ct-tx small { display: block; margin: 3px 0 0 30px; font-size: 13px; line-height: 1.35; color: var(--ct-soft) }
+#main .ct-goodcard { display: flex; gap: 12px; align-items: flex-start; margin: 16px 0 0; padding: 14px 16px; border-radius: 16px; background: var(--ct-lav) }
+#main .ct-goodcard > i { flex: none; color: var(--ct-purple); margin-top: 1px }
+#main .ct-goodcard b { display: block; font-size: 14px; color: var(--ct-ink) }
+#main .ct-goodcard p { margin: 3px 0 0; font-size: 13px; line-height: 1.4; color: #4f4a5c }
+#main .ct-routine { margin: 0 0 4px; padding: 14px 14px 12px; border-radius: 18px; background: var(--ct-lav) }
+#main .ct-routine > b { display: flex; align-items: center; gap: 8px; font-size: 15px; color: var(--ct-ink); margin-bottom: 12px }
+#main .ct-routine > b svg { color: var(--ct-purple) }
+#main .ct-routine > div { display: flex; align-items: flex-start; justify-content: space-between }
+#main .ct-routine > div > span:not(.ct-arr) { display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 52px }
+#main .ct-routine i { width: 44px; height: 44px; border-radius: 50%; background: #fff; display: grid; place-items: center }
+#main .ct-routine i svg { width: 26px; height: 26px }
+#main .ct-routine small { font-size: 12px; color: var(--ct-ink) }
+#main .ct-routine .ct-arr { margin-top: 12px; color: var(--ct-purple); font-size: 15px }
+#main .ct-near i svg, #main .ct-th i svg, #main .ct-routine i svg { stroke: var(--ct-purple); color: var(--ct-purple) }
+
+/* Nov 23: in Ahead's own look. Each page opens with the shared header card in its topic's color; icons sit in soft
+   tiles like Outings' packing list; Good to know is a white card with a tinted icon tile, like every other category. */
+#main .ct-page .dev-area-head { margin-bottom: 14px }
+#main .ct-page.is-howto .ct-hero { margin-top: 2px }
+#main .ct-near { padding: 14px 8px 12px }
+#main .ct-near i { width: 44px; height: 44px; border-radius: 13px; background: var(--ct-lav) }
+#main .ct-near i svg { width: 26px; height: 26px }
+#main .ct-th { background: var(--ct-lav) }
+#main .ct-goodcard { background: #fffdf9; border: 1px solid var(--ct-line) }
+#main .ct-goodcard > i { width: 32px; height: 32px; border-radius: 10px; background: var(--ct-lav); display: grid; place-items: center; margin-top: 0 }
+#main .ct-goodcard > i svg { width: 18px; height: 18px }
+#main .ct-goodcard p { color: var(--ct-soft) }
+
+/* Nov 23: When to call as a short list (a few words a line), the right-away lines apart. */
+#main .ct-call b { margin: 0 0 6px }
+#main .ct-call b.is-now { margin-top: 12px; color: #a33a2a }
+#main .ct-call ul { margin: 0; padding: 0 0 0 18px }
+#main .ct-call li { font-size: 14px; line-height: 1.4; color: #6b4a33; margin: 3px 0 }
+#main .ct-call ul + p { margin-top: 10px; font-size: 13px }
+#main .ct-safe p b { display: inline; font-size: inherit; color: var(--ct-ink) }
+#main .ct-safe p + p { margin-top: 8px }
+#main .ct-goodcard p + p { margin-top: 6px }
+
+/* Nov 23: like Feeding and Sleep. The steps card holds its notes (bold lead + sentence) under a hairline; info icons are
+   round; the call card is the shared care-calls card. */
+#main .ct-stepcard { padding: 4px 12px; background: #fffdf9; border: 1px solid var(--ct-line); border-radius: 18px }
+#main .ct-stepcard .ct-steps2 { padding: 0; background: none; border: 0; border-radius: 0 }
+#main .ct-notes { border-top: 1px solid var(--ct-line); padding: 10px 2px 12px }
+#main .ct-notes p { margin: 0; font-size: 13.5px; line-height: 1.45; color: var(--ct-soft) }
+#main .ct-notes p + p { margin-top: 8px }
+#main .ct-notes b { color: var(--ct-ink); font-weight: 700 }
+#main .ct-near i, #main .ct-th i { border-radius: 50% }
+#main .ct-th:has(i) { background: none }
+#main .ct-th i { width: 48px; height: 48px; background: var(--ct-lav); display: grid; place-items: center }
+#main .care-calls .ct-alt.is-call { margin: 8px 0 0; color: #7a4b2c }
+
+/* Nov 23: Keep her safe is its own section again (template rule), as a plain white card of notes. */
+#main .ct-safecard { padding: 2px 14px; background: #fffdf9; border: 1px solid var(--ct-line); border-radius: 18px }
+#main .ct-safecard .ct-notes { border-top: 0; padding: 12px 2px }
+#main .ct-stepcard .ct-notes:empty { display: none }
+
+/* Nov 23: two changes in one New now box (6–12 months), split by a hairline. */
+#main .care-disc.fd-life .care-newbox.is-two { display: block; padding: 4px 14px }
+#main .care-newbox.is-two > button { all: unset; box-sizing: border-box; cursor: pointer; display: flex; gap: 10px; align-items: flex-start; width: 100%; padding: 10px 0 }
+#main .care-newbox.is-two > button + button { border-top: 1px solid rgba(42,96,120,.14) }
