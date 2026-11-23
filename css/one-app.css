@@ -69,3 +69,16 @@ html body #main .he-eyebrow, html body #main .hub-hero .hub-eyebrow, html body #
 #main .cc-peek .cc-must { grid-template-columns: 42px 1fr !important }
 #main .cc-peek summary > span, #main .cc-peek .cc-must > span { width: 42px !important; height: 42px !important; border-radius: 13px !important }
 #main .cc-peek p, #main .cc-peek-photo { margin-left: 54px !important }
+/* Nov 23: read-ahead signs without photos as plain rows in one white card (was a bulleted list). */
+#main .ya-signs2 { padding: 2px 16px }
+#main .ya-signs2 p { margin: 0; padding: 12px 0; font-size: 15px; line-height: 1.4; color: var(--ink) }
+#main .ya-signs2 p + p { border-top: 1px solid rgba(0,0,0,.06) }
+#main .ya-when .hub-window { margin-top: 6px }
+/* Nov 23: one calm-vs-call pair look. The shared pair (Everyday care, Health, Outings) now matches Feeding's:
+   the calm side green, the call side soft red, and the same type sizes. */
+#main .hub-vs:has(> .is-call) > div:first-child, #main .outings-x .hub-vs:has(> .is-call) > div:first-child { background: #e6f3ec !important }
+#main .hub-vs:has(> .is-call) > div:first-child b { color: #356651 !important }
+#main .hub-vs > div.is-call { background: #fbe6e3 !important }
+#main .hub-vs > div.is-call b { color: #a2402f !important }
+#main .hub-vs:has(> .is-call) b { font-size: 14px; font-weight: 650 }
+#main .hub-vs:has(> .is-call) p { font-size: 13.5px; color: #4c4757 }

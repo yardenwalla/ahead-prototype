@@ -405,8 +405,20 @@
     const when = past ? 'Already behind ' + name() : now ? 'Any time now' : c.start - a <= 1 ? 'Could start any week now' : `In about ${Math.round(c.start - a)} month${Math.round(c.start - a) === 1 ? '' : 's'}`;
     // Nov 23 cohesion pass: where every sign has a real photo, the signs show as Feeding's photo rows (show, don't tell).
     // Nov 14: the signs used to sit at the end of the top card's paragraph. As their own short list they scan at a glance.
-    const look = `<h2 class="hub-h2">${F(c.end <= a ? 'What it looked like' : p.signsTitle || 'Signs it’s close')}</h2>${p.pics ? h.TPLB.photoRows(p.pics) : `<ul class="ya-signs">${p.signs.map(x => `<li>${F(x)}</li>`).join('')}</ul>`}${p.signsNote ? `<p class="ya-signs-note">${F(p.signsNote)}</p>` : ''}`;
-    return h.detail(cat, `${range(c)} · ${when}`, c.title, p.lead,
+    // Nov 23 (Yarden): read-ahead pages use Development's "big question" card: when it usually happens on a bar
+    // with the baby marked, the steps as photos where the app has them, and one plain line. The lead's timing
+    // sentence moves into that card, so the top card says why it matters and nothing repeats.
+    const STEPS = { roll: 4, sit: 6, crawl: 9, steps: 12 };
+    const sents = String(p.lead).split(/(?<=[.!?])\s+/), whenLine = sents.length > 1 ? sents[0] : '', lead = sents.length > 1 ? sents.slice(1).join(' ') : p.lead;
+    const B = p.bar, tick = m => [m, m <= 0 ? 'Birth' : m === 12 ? '12 mo' : `${+m.toFixed(1)} mo`];
+    const ticks = B ? [...new Set([B[0], B[2], B[3], B[1]].map(m => Math.round(m)))].sort((x, y) => x - y).map(tick) : [];
+    const steps = !past && STEPS[id] && window.devBigSteps ? window.devBigSteps(STEPS[id]) : '';
+    const when2 = B && window.hubWindowBar ? `<h2 class="hub-h2">${F(past ? 'When it happened' : 'When it usually happens')}</h2><section class="hub-card dev-bigq ya-when">${steps}`
+      + hubWindowBar({ title: '', from: B[0], to: B[1], zones: [[B[2], B[3], B[4], 'band']], ticks, now: a, cat: cat === 'Daily rhythm' || cat === 'Out and about' ? cat : cat, caption: F(whenLine || c.title) })
+      + (whenLine ? `<p class="dev-bigq-a">${F(whenLine)}</p>` : '') + `</section>` : '';
+    const signsBody = p.pics ? h.TPLB.photoRows(p.pics) : `<div class="hub-card ya-signs2">${p.signs.map(x => `<p>${F(x)}</p>`).join('')}</div>`;
+    const look = when2 + (steps ? '' : `<h2 class="hub-h2">${F(c.end <= a ? 'What it looked like' : p.signsTitle || 'Signs it’s close')}</h2>${signsBody}`) + (p.signsNote ? `<p class="ya-signs-note">${F(p.signsNote)}</p>` : '');
+    return h.detail(cat, `${range(c)} · ${when}`, c.title, lead,
       look
       + h.list('What it changes', p.rows.slice(0, 4).map(([icon, rc, title, sub, go]) => h.row({ icon, cat: rc, title, sub, onclick: go }).replace('<span class="hub-row-copy">', `<span class="hub-row-copy"><small class="hub-row-eyebrow">${F(AREA[rc] || rc)}</small>`)))
       // Nov 23: a tip that's really a call line uses the app's one When to call card.
