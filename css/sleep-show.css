@@ -363,3 +363,39 @@
 #main .ssw-ch-more summary i { font-style: normal; color: #8a84a0; transform: rotate(90deg); transition: transform .2s } #main .ssw-ch-more[open] summary i { transform: rotate(-90deg) }
 #main .ssw-ch-more > .hub-list { margin: 0 10px 10px }
 #main .ssw-why2am { margin-top: 10px }
+/* Nov 22: her day, as a picture, at the top of the glance */
+#main .ssw-day { display: flex; align-items: center; gap: 6px; margin: 2px 0 6px }
+#main .ssw-day-sun, #main .ssw-day-moon { flex: none; width: 26px; height: 26px; display: grid; place-items: center }
+#main .ssw-day-sun svg, #main .ssw-day-moon svg { width: 24px; height: 24px } #main .ssw-day-sun { color: #c08a22 } #main .ssw-day-moon { color: #5a5296 }
+#main .ssw-day-bar { flex: 1; display: flex; align-items: center; height: 34px; border-radius: 999px; background: #fff3dc; padding: 3px; gap: 0 }
+#main .ssw-day-nap { height: 28px; border-radius: 999px; background: #8f86d6; display: grid; place-items: center; min-width: 26px } #main .ssw-day-nap b { font-size: 11.5px; color: #fff; font-weight: 700; white-space: nowrap; overflow: hidden }
+#main .ssw-day-gap { height: 28px }
+#main .ssw-day-caps { display: flex; margin: 0 32px 8px; text-align: center } #main .ssw-day-caps b { display: block; font-size: 12px; color: var(--ink); font-weight: 650 } #main .ssw-day-caps small { display: block; font-size: 11.5px; color: #6b6670 }
+#main .ssw-day-note { margin: 0 2px 10px; font-size: 13px; color: #6b6670; text-align: center }
+#main .ssw-day.is-loop { justify-content: center; gap: 8px } #main .ssw-day.is-loop span { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 70px }
+#main .ssw-day.is-loop i { width: 40px; height: 40px; border-radius: 50%; background: #eef0f8; display: grid; place-items: center; color: #5a5296 } #main .ssw-day.is-loop i svg { width: 22px; height: 22px }
+#main .ssw-day.is-loop b { font-size: 13.5px } #main .ssw-day.is-loop small { font-size: 12px; color: #6b6670 } #main .ssw-day.is-loop em { font-style: normal; color: #9a94a3; font-size: 18px }
+/* problem pages */
+#main .ssw-answer { display: flex; gap: 14px; align-items: center; background: #eef0f8; border-radius: 20px; padding: 16px; margin: 4px 0 6px }
+#main .ssw-answer > i { flex: none; width: 52px; height: 52px; border-radius: 16px; background: #fff; display: grid; place-items: center; color: #5a5296 } #main .ssw-answer > i svg { width: 28px; height: 28px }
+#main .ssw-answer b { display: block; font-size: 16.5px; line-height: 1.3; color: var(--ink) } #main .ssw-answer small { display: block; font-size: 14px; line-height: 1.45; color: #5d5866; margin-top: 4px }
+#main .ssw-seq ol { list-style: none; margin: 0; padding: 0; display: flex; align-items: stretch; gap: 4px }
+#main .ssw-seq li:not(.ssw-seq-arrow) { flex: 1; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 3px; background: #f4f3fb; border-radius: 16px; padding: 12px 6px }
+#main .ssw-seq li:first-child { background: #fff6e2 }
+#main .ssw-seq li i { width: 40px; height: 40px; border-radius: 50%; background: #fff; display: grid; place-items: center; color: #5a5296; margin-bottom: 4px } #main .ssw-seq li i svg { width: 22px; height: 22px }
+#main .ssw-seq li b { font-size: 14px; line-height: 1.25; color: var(--ink) } #main .ssw-seq li small { font-size: 12.5px; line-height: 1.35; color: #6b6670 }
+#main .ssw-seq-arrow { flex: none; align-self: center; color: #8f86d6; font-weight: 700 }
+#main .ssw-rule { margin: 12px 0 0; background: #fff3dc; border-radius: 999px; padding: 9px 14px; font-size: 14px; font-weight: 600; color: #6a4e16; text-align: center } #main .ssw-rule i { font-style: normal; margin-right: 8px; color: #c08a22 }
+#main .ssw-vs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px }
+#main .ssw-vs > div { position: relative; background: #fff; border: 1px solid #ebe7f0; border-radius: 18px; padding: 10px 10px 12px; text-align: center }
+#main .ssw-vs > div.is-best { background: #f1effb; border-color: #d9d4f3 }
+#main .ssw-vs em { position: absolute; z-index: 1; left: 10px; top: 10px; font-style: normal; font-size: 12px; font-weight: 700; color: #4a3fb0; background: #fff; border-radius: 999px; padding: 3px 9px; box-shadow: 0 1px 4px #0001 }
+#main .ssw-vs-pic { display: block; height: 104px; border-radius: 12px; overflow: hidden; margin-bottom: 8px } #main .ssw-vs-pic img { width: 100%; height: 100%; object-fit: cover; display: block }
+#main .ssw-vs b { display: block; font-size: 14.5px; color: var(--ink) } #main .ssw-vs small { display: block; font-size: 13px; line-height: 1.4; color: #6b6670; margin-top: 3px }
+#main .ssw-todo ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px }
+#main .ssw-todo li { display: flex; gap: 12px; align-items: flex-start } #main .ssw-todo li > i { flex: none; width: 30px; height: 30px; border-radius: 50%; background: #eef0f8; color: #4a3fb0; font-style: normal; font-weight: 700; display: grid; place-items: center }
+#main .ssw-todo b { display: block; font-size: 15px; color: var(--ink) } #main .ssw-todo small { display: block; font-size: 13.5px; color: #6b6670; margin-top: 2px }
+#main .ssw-note { margin: 12px 2px 0; font-size: 14px; line-height: 1.45; color: #4d4a5e } #main .ssw-note.is-safe { background: #eef3ec; border-radius: 14px; padding: 10px 12px; color: #35573f }
+#main .ssw-day-caps { display: grid; margin: 2px 30px 8px; gap: 4px }
+#main .ssw-day-caps b { font-size: 12.5px } #main .ssw-day-caps small { line-height: 1.3 }
+#main .ssw-day-nap { height: 26px; background: #8f86d6 }

@@ -172,6 +172,53 @@
   const T = () => H().TPLB, ph = n => 'photo:sleep/' + n;
   const fever = () => { const mo = m(); return mo < 3 ? 'a temperature of 100.4°F or higher (call right away, day or night)' : mo < 6 ? 'a temperature of 101°F or higher' : 'a temperature of 103°F or higher, or a fever lasting more than a day'; };
   const CALL911 = { now: '{s} struggles to breathe or turns blue, won’t wake, or is floppy.', nowLabel: 'Call 911' };
+  // Problem pages (Yarden's Nov 22 mockups): the parent's question as the title, the answer in a card, one picture (a sequence
+  // for "what happens next", or two side by side for a choice), at most three steps, then when to call.
+  const answer = (ic, b, line) => `<section class="ssw-answer"><i aria-hidden="true">${H().art(ic, 'Sleep')}</i><span><b>${F(b)}</b><small>${F(line)}</small></span></section>`;
+  const seq = (items, rule) => `<section class="care-tpl-card ssw-seq"><ol>${items.map(([ic, t, sub], i) => `<li><i aria-hidden="true">${H().art(ic, 'Sleep')}</i><b>${F(t)}</b>${sub ? `<small>${F(sub)}</small>` : ''}</li>`).join('<li class="ssw-seq-arrow" aria-hidden="true">→</li>')}</ol>${rule ? `<p class="ssw-rule"><i aria-hidden="true">✦</i>${F(rule)}</p>` : ''}</section>`;
+  const versus = (a, b) => `<section class="ssw-vs">${[a, b].map(([img, alt, t, line, best], i) => `<div class="${best ? 'is-best' : ''}">${best ? `<em>✓ ${F(best)}</em>` : ''}<span class="ssw-vs-pic"><img src="${IMG + img}" alt="${F(alt)}" loading="lazy"></span><b>${F(t)}</b><small>${F(line)}</small></div>`).join('')}</section>`;
+  const todo = list => `<section class="care-tpl-card ssw-todo"><ol>${list.map(([t, sub], i) => `<li><i>${i + 1}</i><span><b>${F(t)}</b>${sub ? `<small>${F(sub)}</small>` : ''}</span></li>`).join('')}</ol></section>`;
+  const psec = (h, html) => html ? `<h2 class="hub-h2">${F(h)}</h2>${html}` : '';
+  const page = (label, title, body, art) => H().detail('Sleep', label, title, '', `<div class="ssw-topic ssw-prob">${body}</div>`, art);
+  const callsFor = extra => T().calls(Object.assign({ ped: extra }, CALL911));
+  function shortNapProb() {
+    const mo = m();
+    return page('Naps', 'A short nap changes the day', answer('clock', 'The next sleep often needs to come sooner', 'Don’t force the day back to the clock. Bring the next sleep forward a little.')
+      + psec('How to adjust the day', seq([['sun', 'The nap was short', ''], ['clock', 'Next nap earlier', 'By 15–30 minutes'], ['moon', 'Bedtime earlier too', 'If the day stays short']], 'Earlier is usually better than overtired.'))
+      + (mo < 6 ? `<p class="ssw-note"><b>${F('Very common now.')}</b> ${F('Naps of 30–45 minutes are normal at 3–5 months. They get longer with time.')}</p>` : `<p class="ssw-note"><b>${F('Short naps most days?')}</b> ${F('Try the nap 15 minutes earlier or later. A dark room and white noise help.')}</p>`), 'sun');
+  }
+  function skipProb() {
+    return page('Naps', 'What if a nap doesn’t happen?', answer('moon', 'It’s okay, it happens', 'If {s} skips the last nap, an earlier bedtime usually works best, so {s} doesn’t get overtired.')
+      + psec('Two possible evenings', versus(['back.jpg', 'A calm baby asleep in a sleep sack', 'An earlier bedtime', 'Helps {o} catch up, often a calmer night', 'Usually better'], [m() >= 4 ? 'nightwake.jpg' : 'overtired.jpg', 'An overtired baby awake and upset', 'The usual bedtime', 'Often an overtired, harder evening', '']))
+      + psec('What to do', todo([['Move bedtime about 30 minutes earlier', 'Same steps, just sooner'], ['Skipped an earlier nap?', 'Offer the next sleep a little sooner instead']])), 'sun');
+  }
+  function lateProb() {
+    const [, , wl] = WW(m());
+    return page('Naps', 'A nap running close to bedtime?', answer('clock', 'Bedtime comes about one wake window after the last nap', `Right now that’s ${wl}. Tap when the nap ended to see where bedtime lands.`)
+      + `<section class="care-tpl-card ssw-card"><div class="ssw-chips ssw-late-chips" role="group">${ENDS.map(([, l], i) => `<button aria-pressed="${i === 1}" onclick="__sswLate(${i})">${F(l + ' pm')}</button>`).join('')}</div><div id="ssw-late">${lateFig(1)}</div></section>`
+      + psec('Let {o} sleep, or wake {o}?', versus(['nap.jpg', 'A baby napping', 'Let {o} sleep', 'Fine if bedtime still lands by about 8 pm', ''], ['book.jpg', 'A parent reading to a baby at bedtime', 'Wake {o} gently', 'After 30–45 minutes, if bedtime would be very late', ''])), 'sun');
+  }
+  function fightProb() {
+    return page('Naps', 'Fighting a nap?', answer('sun', 'You can’t make a baby sleep. Aim for rest', 'Give it a fair try, then a short break, and try again.')
+      + psec('What to do', seq([['moon', '20–30 minutes', 'Dark and calm'], ['heart', 'A short break', 'Up and cuddles'], ['clock', 'Try again', 'Or wait for the next nap']]))
+      + psec('Next time, look at the timing', versus([m() >= 4 ? 'mattress.jpg' : 'alert.jpg', 'A happy, alert baby', 'Not tired yet', 'Happy and chatty. Try a little later', ''], [m() >= 4 ? 'nightwake.jpg' : 'overtired.jpg', 'An overtired baby awake and upset', 'Overtired', 'Eye rubs, arching. Start earlier', '']))
+      + `<p class="ssw-note"><b>${F('A nap on the go counts.')}</b> ${F('If {s} falls asleep in a car seat or swing, move {o} to a flat, safe space.')}</p>`, 'sun');
+  }
+  function nightProb() {
+    const mo = m(), young = mo < 6;
+    return page('Night sleep', young ? 'Waking at night is normal now' : 'Waking often at night?', answer('moon', young ? 'Most babies under 6 months wake to feed' : 'Everyone wakes between sleep cycles', young ? 'Keep each waking short, dim and quiet.' : 'Many babies settle back in a minute or two, if you give them the chance.')
+      + psec('What to do when {s} stirs', seq([['eye', 'Stirring', 'Grunts, whimpers'], ['clock', 'Pause first', '1–2 minutes'], ['heart', 'Help if needed', 'Feed, change, settle']], 'Feel {p} neck: sweaty means too warm.'))
+      + psec('Why bedtime matters at 2 am', versus(['down.jpg', 'A drowsy baby laid down in a crib', 'Down drowsy', 'Wakes and drifts back on {p} own', 'Easier at night'], [nursing() ? 'feed-nurse.jpg' : 'feed.jpg', 'A baby falling asleep while feeding', 'Asleep on the feed', 'Wakes looking for the feed again', '']))
+      + `<p class="ssw-note"><b>${F(young ? 'Night feeds are normal now.' : 'Something new?')}</b> ${F(young ? 'They drop on their own as {s} grows.' : 'Teeth, a new skill or missing you can bring wakings back for 1–2 weeks.')}</p>`
+      + (callsFor('night waking comes with ' + fever() + ', poor feeding or pain, or {s} snores loudly or pauses in breathing.')), 'moon');
+  }
+  function propsProb() {
+    const mo = m();
+    return page('Falling asleep', mo < 4 ? 'Only sleeps on you?' : 'Only sleeps with bouncing?', answer('heart', mo < 4 ? 'At this age, that’s normal' : 'It works, until it doesn’t', 'You can step back slowly, a few nights at a time.')
+      + psec('Step back, a few nights each', seq([['heart', 'Until drowsy', 'Not fully asleep'], ['crib', 'Into the crib', 'Hand on {p} chest'], ['sofa', 'Sit nearby', 'Then farther away']]))
+      + psec('Laying {o} down', versus(['down.jpg', 'A baby laid down drowsy in a crib', 'Drowsy, then down', 'Learns to finish falling asleep', 'Easier over time'], ['bassinetnap.jpg', 'A baby deeply asleep in a bassinet', 'Deep asleep, then down', 'Wait for limp arms and slow breathing', '']))
+      + `<p class="ssw-note"><b>${F('Feeding to sleep?')}</b> ${F('It doesn’t have to change if it works for you.')}</p><p class="ssw-note is-safe"><b>${F('Getting sleepy holding {o}?')}</b> ${F('Put {o} in the crib, on {p} back. Never sleep with {o} on a sofa or armchair.')}</p>`, 'heart');
+  }
   // Waking at night (one page for "Woke up?" and "Waking often").
   function nightPage() {
     const mo = m(), young = mo < 6;
@@ -236,22 +283,22 @@
     const mo = m();
     const tile = (to, ic, t, sub, tone) => `<button class="ssw-ch-tile is-${tone}" onclick="${go(to)}"><span class="ssw-ch-ic">${H().art(ic, 'Sleep')}</span><b>${F(t)}</b><small>${F(sub)}</small></button>`;
     const W = ['chg:Sleep:d:wakes', 'moon', mo < 3 ? 'Waking at night' : 'Waking often', mo < 3 ? 'To feed, or something else' : 'Every hour or two', 'night'],
-      N = ['chg:Sleep:d:naphelp', 'sun', 'Nap trouble', 'Fighting, skipped or late', 'naps'],
+      N = ['chg:Sleep:d:shortnap', 'sun', 'A short nap', 'The rest of the day shifts', 'naps'], FN = ['chg:Sleep:d:naphelp:fight', 'sun', 'Fighting a nap', 'Crying instead of sleeping', 'bed'],
       P = ['chg:Sleep:d:props', 'heart', mo < 4 ? 'Only sleeps on you' : 'Needs bouncing to sleep', mo < 4 ? 'Wakes when set down' : 'Or rocking, or a feed', 'bed'],
       C = ['chg:Sleep:d:crying', 'heart', 'Crying a lot', 'Hard to settle in the evening', 'safe'],
       E = ['chg:Sleep:d:hiccup:early', 'sunrise', 'Up too early', 'Before 6 am', 'safe'],
       R = ['chg:Sleep:d:regress', 'moon', 'Was sleeping better', 'The 4-month sleep regression', 'safe'],
       S = ['chg:Sleep:d:nightwake', 'moon', 'Standing in the crib', 'Or missing you at night', 'safe'];
-    const four = mo < 3 ? [W, P, C, ['chg:Sleep:d:daynight', 'sunrise', 'Days and nights mixed', 'Awake when you’re not', 'naps']] : mo < 6 ? [W, N, P, R] : mo < 8 ? [W, N, P, E] : [W, N, P, S];
+    P[4] = 'safe'; const four = mo < 3 ? [W, P, C, ['chg:Sleep:d:daynight', 'sunrise', 'Days and nights mixed', 'Awake when you’re not', 'naps']] : [W, N, FN, P];
     const used = four.map(x => x[0]);
     const row = (to, ic, t, sub) => H().row({ cat: 'Sleep', icon: ic, title: t, sub, onclick: go(to) });
-    const other = [mo >= 3 && ['chg:Sleep:d:hiccup:soon', 'clock', 'Up soon after bedtime', 'Often overtired'], mo >= 6 && ['chg:Sleep:d:hiccup:split', 'sunrise', 'Awake for an hour at night', 'Look at the day'],
+    const other = [mo >= 3 && ['chg:Sleep:d:naphelp:skip', 'sun', 'A nap didn’t happen', 'Usually, an earlier bedtime'], mo >= 3 && ['chg:Sleep:d:naphelp:late', 'clock', 'A nap running close to bedtime', 'Let her sleep, or wake her?'], mo >= 3 && mo < 6 && R && ['chg:Sleep:d:regress', 'moon', 'Was sleeping better', 'The 4-month sleep regression'], mo >= 8 && ['chg:Sleep:d:nightwake', 'moon', 'Standing in the crib', 'Or missing you at night'], mo >= 3 && ['chg:Sleep:d:hiccup:soon', 'clock', 'Up soon after bedtime', 'Often overtired'], mo >= 6 && ['chg:Sleep:d:hiccup:split', 'sunrise', 'Awake for an hour at night', 'Look at the day'],
       mo >= 2 && ['chg:Sleep:d:hiccup:bedtime', 'book', 'Fighting bedtime', 'Usually the timing'], mo >= 4 && ['chg:Sleep:d:hiccup:early', 'sunrise', 'Up too early', 'Before 6 am'],
       mo < 3 && ['chg:Sleep:d:crying', 'heart', 'Crying a lot', 'What helps, and when it eases'], mo >= 8 && ['chg:Sleep:d:nightwake', 'moon', 'Night waking comes back', 'New skills, missing you'],
       ['chg:Sleep:d:away', 'plane', 'Traveling, or the clocks change', 'Keeping sleep on track']].filter(x => x && !used.includes(x[0]));
     const body = `<div class="ssw-ch-grid">${four.map(x => tile(...x)).join('')}</div>`
       + row('chg:Sleep:d:yoursleep', 'heart', 'Getting more sleep yourself', 'Shifts, safe night feeds, and you')
-      + `<details class="ssw-ch-more"><summary><span><b>${F('Other sleep hiccups')}</b><small>${F(mo < 3 ? 'Bedtime, travel and more' : 'Bedtime, early mornings, travel and more')}</small></span><i aria-hidden="true">›</i></summary><div class="hub-list">${other.map(x => row(...x)).join('')}</div></details>`
+      + `<details class="ssw-ch-more"><summary><span><b>${F('Other sleep hiccups')}</b><small>${F(mo < 3 ? 'Bedtime, travel and more' : 'Skipped or late naps, early mornings and more')}</small></span><i aria-hidden="true">›</i></summary><div class="hub-list">${other.map(x => row(...x)).join('')}</div></details>`
       + T().calls(Object.assign({ ped: 'sleep changes come with ' + fever() + ', poor feeding or pain, or {s} snores loudly or pauses in breathing.' }, CALL911));
     return H().detail('Sleep', 'Sleep challenges', 'What’s keeping {o} up?', 'Pick what you’re noticing. Most of it is common, and fixable.', body, 'moon');
   }
@@ -422,9 +469,9 @@
     const html = H().detail('Sleep', stage + (now && live ? ' · Right now' : ''), T.name, '', `<div class="ssw-topic">${inner}</div>`, T.art);
     return html.replace('<div class="hub-detail-head">', tabsHtml + '<div class="hub-detail-head ssw-topic-head">');
   }
-  const routes = { 'chg:Sleep:d:routine': routinePage, 'chg:Sleep:d:shortnap': napPage, 'chg:Sleep:d:wakes': nightPage, 'chg:Sleep:d:frequent': nightPage, 'chg:Sleep:d:props': propsPage, 'chg:Sleep:d:yoursleep': yourSleepPage, 'chg:Sleep:d:rough': roughPage, 'chg:Sleep:d:safegrow': safeGrowPage };
+  const routes = { 'chg:Sleep:d:routine': routinePage, 'chg:Sleep:d:shortnap': shortNapProb, 'chg:Sleep:d:wakes': nightProb, 'chg:Sleep:d:frequent': nightProb, 'chg:Sleep:d:props': propsProb, 'chg:Sleep:d:yoursleep': yourSleepPage, 'chg:Sleep:d:rough': roughPage, 'chg:Sleep:d:safegrow': safeGrowPage };
   const baseRoute = window.changesRoute;
-  window.changesRoute = function (p) { if (/^chg:Sleep:d:naphelp/.test(p || '')) return napPage(); const hk = /^chg:Sleep:d:hiccup:(\w+)$/.exec(p || ''); if (hk) return hiccupPage(hk[1]); return routes[p] ? routes[p]() : /^chg:Sleep:t:/.test(p) ? topicPage(p) : baseRoute.apply(this, arguments); };
+  window.changesRoute = function (p) { const nk = /^chg:Sleep:d:naphelp(?::(\w+))?$/.exec(p || ''); if (nk) return ({ skip: skipProb, late: lateProb, short: shortNapProb }[nk[1]] || fightProb)(); const hk = /^chg:Sleep:d:hiccup:(\w+)$/.exec(p || ''); if (hk) return hiccupPage(hk[1]); return routes[p] ? routes[p]() : /^chg:Sleep:t:/.test(p) ? topicPage(p) : baseRoute.apply(this, arguments); };
 
   /* ---------- pages dressed after they draw ---------- */
   const PAGES = {
@@ -547,6 +594,28 @@
     // visible without tapping.
     const glanceEl = main.querySelector('.sl-glance');
     if (glanceEl) glanceEl.querySelectorAll('.sl-gl small').forEach(e => { if (e.textContent.trim() === 'Awake') e.textContent = F('Wake window'); });
+    // Nov 22 (Yarden's "Her day in three naps"): the glance leads with a picture of the day at this stage, numbers underneath.
+    if (glanceEl && hero && !glanceEl.querySelector('.ssw-day')) {
+      const v = +(hero.dataset.sswView || 0), live = /^topic:Sleep|^chg:Sleep$/.test(pg), A = live ? m() : REP_AGE[v];
+      const nap = (t, when, dur, w) => `<span class="ssw-day-nap" style="flex:${w}"></span>`, gap = w => `<span class="ssw-day-gap" style="flex:${w}"></span>`;
+      const cap = (t, when, dur) => `<span><b>${F(t)}</b><small>${F(when)}</small><small>${F(dur)}</small></span>`;
+      const DAY = [
+        { h: '{P} day, around the clock', loop: true },
+        A < 3 ? { h: '{P} day: lots of short naps', naps: [['Nap', '', '', 1], ['Nap', '', '', 1], ['Nap', '', '', 1], ['Nap', '', '', 1], ['Nap', '', '', 1]], note: 'Short naps, 4–5 a day. Any time is fine.' }
+          : { h: '{P} day: naps find their times', naps: [['Nap', '', '', 1.2], ['Nap', '', '', 1.2], ['Nap', '', '', 1.2], ['Nap', '', '', .7]], note: '3–4 naps, starting to land at similar times.' },
+        { h: '{P} day in three naps', naps: [['Nap 1', '~9 am', '1–1½ h', 1.3], ['Nap 2', '~12:30', '1–1½ h', 1.3], ['Catnap', '~4:15', '30–45 min', .6]] },
+        { h: '{P} day in two naps', naps: [['Morning', '~9:30', '1–1½ h', 1.5], ['Afternoon', '~2 pm', '1–1½ h', 1.5]] }][v];
+      const hd = main.querySelector('.sl-gl-h'); if (hd) hd.textContent = F(DAY.h);
+      let pic;
+      if (DAY.loop) pic = `<div class="ssw-day is-loop"><span><i aria-hidden="true">${H().art('bottle', 'Sleep')}</i><b>${F('Feed')}</b></span><em>→</em><span><i aria-hidden="true">${H().art('sun', 'Sleep')}</i><b>${F('Awake')}</b><small>${F('45–60 min')}</small></span><em>→</em><span><i aria-hidden="true">${H().art('moon', 'Sleep')}</i><b>${F('Sleep')}</b></span><em>↻</em></div><p class="ssw-day-note">${F('Round the clock, day and night alike.')}</p>`;
+      else {
+        const parts = [gap(.7)]; DAY.naps.forEach((n, i) => { parts.push(nap(...n)); parts.push(gap(i === DAY.naps.length - 1 ? .9 : .8)); });
+        const caps = DAY.naps.map(n => cap(...n));
+        pic = `<div class="ssw-day"><i class="ssw-day-sun" aria-hidden="true">${H().art('sun', 'Sleep')}</i><div class="ssw-day-bar">${parts.join('')}</div><i class="ssw-day-moon" aria-hidden="true">${H().art('moon', 'Sleep')}</i></div>`
+          + (DAY.naps[0][1] ? `<div class="ssw-day-caps" style="grid-template-columns:repeat(${caps.length},1fr)">${caps.join('')}</div>` : '') + (DAY.note ? `<p class="ssw-day-note">${F(DAY.note)}</p>` : '');
+      }
+      glanceEl.insertAdjacentHTML('afterbegin', pic);
+    }
     if (hero && hero.__sswBand && glanceEl && !glanceEl.querySelector('.ssw-glance-band')) glanceEl.insertAdjacentElement('afterbegin', hero.__sswBand);
     // v4 "Right now for <name>" (Development's pattern): four photo tiles, each a topic plus this stage's guide, opening the
     // guide directly. A safety step that's due takes the Safe sleep tile until it's done. Other guides for this stage stay as
@@ -562,9 +631,9 @@
         () => [['night', 'd:daynight'], ['naps', 'd:steps0'], ['safe', 'd:swaddle'], ['safe', 'd:where']],
         () => A < 3 ? [['night', 'd:stretch'], ['naps', 'd:napsearly'], ['bed', 'd:routine']] : [['night', 'd:regress'], ['naps', 'd:predictable'], ['bed', 'd:settle4'], ['safe', 'd:swaddleoff']],
         () => [['night', 'd:wakes'], ['naps', 'd:shortnap'], ['bed', 'settle'], ['safe', A < 6 ? 'd:rolling' : 'd:mattress']],
-        () => A < 8 ? [['night', 'd:nightfeeds'], ['naps', 'd:catnap'], ['bed', 'd:earlybed']] : [['night', 'd:nightwake'], ['naps', 'd:day:3'], ['bed', 'd:goodbye']]];
-      const SHORT = { 'd:daynight': 'Days and nights', 'd:stretch': 'Longer stretches at night', 'd:regress': 'The 4-month sleep regression', 'd:wakes': 'Woke up? What {s} needs', 'd:nightfeeds': 'Dropping night feeds', 'd:nightwake': 'Night waking comes back',
-        'd:steps0': 'Spot the yawn, then soothe', 'd:napsearly': 'Short naps are normal', 'd:predictable': 'Finding nap times', 'd:shortnap': 'When naps go off plan', 'd:catnap': 'Three naps to two', 'd:day:3': 'A day with two naps',
+        () => A < 8 ? [['night', 'd:nightfeeds'], ['naps', 'd:catnap'], ['bed', 'd:earlybed']] : [['night', 'd:nightwake'], ['bed', 'd:goodbye']]];
+      const SHORT = { 'd:daynight': 'Days and nights', 'd:stretch': 'Longer stretches at night', 'd:regress': 'The 4-month sleep regression', 'd:wakes': 'Waking often at night', 'd:nightfeeds': 'Dropping night feeds', 'd:nightwake': 'Night waking comes back',
+        'd:steps0': 'Spot the yawn, then soothe', 'd:napsearly': 'Short naps are normal', 'd:predictable': 'Finding nap times', 'd:shortnap': 'A short nap changes the day', 'd:catnap': 'Three naps to two', 'd:day:3': 'A day with two naps',
         'd:routine': 'A short bedtime routine', 'd:settle4': 'Down drowsy, once a day', 'settle': 'Sleep training, if you want', 'd:earlybed': 'An earlier bedtime', 'd:goodbye': 'Short, steady goodbyes',
         'd:swaddle': 'How to swaddle', 'd:where': 'Share a room', 'd:swaddleoff': 'Stop swaddling', 'd:rolling': 'Rolling in {p} sleep', 'd:mattress': 'Lower the mattress' };
       const PIC = { 'd:daynight': 'alert.jpg', 'd:stretch': 'night.jpg', 'd:regress': 'back.jpg', 'd:wakes': 'back.jpg', 'd:nightfeeds': nursing() ? 'feed-nurse.jpg' : 'feed.jpg', 'd:nightwake': 'nightwake.jpg',
