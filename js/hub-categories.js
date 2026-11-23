@@ -416,11 +416,20 @@
   };
   // Nov 22: at 6 months, how sitting usually comes together, as three photos (same room, seen from the side so the posture shows).
   const DEV_BIG_STEPS = {
+    4: [['roll-rock', 'A baby on her back on a play mat, rocking onto one side', 'Rocking', 'Side to side on {p} back.'],
+        ['roll-tummy-back', 'A baby rolling from her tummy onto her back', 'Front to back', 'Usually the first roll.'],
+        ['roll-back-tummy', 'A baby on her tummy, propped on her forearms after rolling over', 'Back to front', 'Often a little later.']],
+    9: [['crawl-fours', 'A baby up on hands and knees', 'On all fours', 'Up on hands and knees.'],
+        ['crawl-rock', 'A baby rocking back and forth on hands and knees', 'Rocking', 'Back and forth, getting ready.'],
+        ['crawl-go', 'A baby crawling toward a ball', 'Crawling', 'Off to explore.']],
+    12: [['walk-pull', 'A toddler pulling up to stand at the sofa', 'Pulling up', 'Up to stand at the sofa.'],
+        ['walk-cruise', 'A toddler stepping sideways along the sofa', 'Cruising', 'Steps along furniture.'],
+        ['walk-steps', 'A toddler taking wobbly steps alone, arms out', 'First steps', 'A few on {p} own.']],
     6: [['sit-support', 'A baby sitting on a rug with a parent’s hands holding her hips', 'With support', 'Held at {p} hips.'],
         ['sit-hands', 'A baby sitting and leaning forward, propped on both hands', 'On {p} hands', 'Props {r} up for short stretches.'],
         ['sit-own', 'A baby sitting up straight alone, holding a ring toy in both hands', 'On {p} own', 'Back straight, hands free.']]
   };
-  const devBigSteps = ref => DEV_BIG_STEPS[ref] ? `<p class="dev-bigsteps-lead">${F('Sitting usually comes together in three steps.')}</p><div class="dev-bigsteps">${DEV_BIG_STEPS[ref].map(([img, alt, t, sub]) => `<figure><img src="assets/dev/${img}.jpg?v=2" alt="${alt}" loading="lazy"><figcaption><b>${F(t)}</b><small>${F(sub)}</small></figcaption></figure>`).join('')}</div>` : '';
+  const devBigSteps = ref => DEV_BIG_STEPS[ref] ? `<p class="dev-bigsteps-lead">${F({ 4: 'Rolling usually comes in this order.', 6: 'Sitting usually comes together in three steps.', 9: 'Crawling often builds in three steps.', 12: 'Walking usually comes together in three steps.' }[ref])}</p><div class="dev-bigsteps">${DEV_BIG_STEPS[ref].map(([img, alt, t, sub]) => `<figure><img src="assets/dev/${img}.jpg?v=2" alt="${alt}" loading="lazy"><figcaption><b>${F(t)}</b><small>${F(sub)}</small></figcaption></figure>`).join('')}</div>` : '';
   window.devBigSteps = devBigSteps;
   // An icon that matches each skill's words.
   // Skills whose words would draw the same icon as another skill in the same area get their own.

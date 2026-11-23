@@ -116,3 +116,4 @@
 #main .dev-bigsteps b{margin-top:-13px;position:relative;display:inline-block;white-space:nowrap;font-size:12px;font-weight:700;line-height:1.2;color:#4a3d63;background:#efe9fb;border:2px solid #fff;border-radius:999px;padding:5px 10px}
 #main .dev-bigsteps small{display:block;font-size:12px;line-height:1.35;color:var(--ink,#3b3a40);margin-top:7px}
 @media (max-width:370px){#main .dev-bigsteps{gap:14px}#main .dev-bigsteps b{font-size:11px;padding:4px 7px}#main .dev-bigsteps figure:not(:last-child)::after{right:-12px;font-size:14px}}
+@media (max-width:370px){#main .dev-bigsteps b{font-size:10.5px;padding:4px 6px;letter-spacing:-.01em}}
