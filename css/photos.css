@@ -550,3 +550,13 @@
 #main .ct-goodcard > i { width: 32px; height: 32px; border-radius: 10px; background: var(--ct-lav); display: grid; place-items: center; margin-top: 0 }
 #main .ct-goodcard > i svg { width: 18px; height: 18px }
 #main .ct-goodcard p { color: var(--ct-soft) }
+
+/* Nov 23: When to call as a short list (a few words a line), the right-away lines apart. */
+#main .ct-call b { margin: 0 0 6px }
+#main .ct-call b.is-now { margin-top: 12px; color: #a33a2a }
+#main .ct-call ul { margin: 0; padding: 0 0 0 18px }
+#main .ct-call li { font-size: 14px; line-height: 1.4; color: #6b4a33; margin: 3px 0 }
+#main .ct-call ul + p { margin-top: 10px; font-size: 13px }
+#main .ct-safe p b { display: inline; font-size: inherit; color: var(--ct-ink) }
+#main .ct-safe p + p { margin-top: 8px }
+#main .ct-goodcard p + p { margin-top: 6px }
