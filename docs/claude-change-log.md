@@ -2,6 +2,17 @@
 
 The original changes below were merged in pull request #1. The new pre-beta QA changes are documented in **`docs/beta-readiness-2026-10-22.md`**, with concrete findings, resulting behavior, verification and limits. Review the new PR diff against main rather than reimplementing either list from an older HTML export. Claude's main-branch copy updates through `6b02109a4fba5bdf8829db29f59c14057537ec85` are preserved.
 
+## Show-and-tell pass: carrier, sitting, checkups, Outings, Childcare, icon rows (2026-11-22)
+
+- **Carrier (`js/out-and-about.js`):** the quick-check photo follows Outings' stages (0–2, 2–6, 6–12 months), always facing in, with 2–3 app-drawn labels (Face in view, Chin off chest / Close and high, Knees up). New photos `carry-0`, `carry-2`, `carry-6b`. "Ways to carry" outlines the carry that fits her age (facing in to 4 months, facing out 4–9, on your back from 9), like Everyday care's gear by age. Tried and dropped: "Ready now / Later" tags on the photos, an "An option now" chip.
+- **Sitting (`js/hub-categories.js`, `css/dev-photo.css`):** Movement's 6-month "When will she sit on her own?" card shows three photos of one baby (`sit-support`, `sit-hands`, `sit-own`) with pill labels, arrows and an intro line, above the window bar.
+- **Checkup What to expect (`js/health-pages-v2.js`):** each age has 3 visit steps (measure and examine; a short form for you, the questionnaire or the blood test; shots) and a "You'll also talk about" card of 3 topics.
+- **Health main page:** the checkups path sits under the top card with no heading or box, as a checklist (past checkups ticked by age, the one you're reading ringed). The three visit pages are rows whose lines say what's on each page at that age. Between checkups is three tiles (Fever, Colds, Tummy bugs), each opening its page.
+- **Outings home:** the top card has a photo of this month's change and a button that names it ("See cart and store tips"; new `hero-cart.jpg`). The six places are icon tiles (Outings orange icons on each place's own pale background), so the page has one photo. The two rows below use the same rule.
+- **Childcare Get ready:** "Easing in, step by step" (visit together, a short practice day, a quick warm goodbye; nanny and family versions) replaces the tip card; the lead leads into the steps.
+- **One rule for icon rows (`css/one-app.css`):** the icon keeps the guide's color and the pale background rotates through green, blue, yellow, peach and pink (Health's set). Checklists you tick off keep one background.
+- QA: `node tools/qa/check-all.cjs` passes. Reviewed by Yarden in screenshots, month by month.
+
 ## Timeline baby grows up (2026-11-22)
 
 - **Dragger baby (`assets/home/babies/handle-0..11.webp`):** the clay baby is replaced by one sage-onesie baby with a new pose every month, each matching that month's Home moment: swaddled, kicking at a star, wiggling, tummy time, hugging a bunny, holding her feet, sitting with a spoon, dropping a bowl, peekaboo, crawling to the stacker, pulling up, and a big party hat at 11 months.
