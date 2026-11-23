@@ -1053,7 +1053,11 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
      The same order on every page, so a parent learns it once. */
   const CT_CHECK = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
   const ctSent = t => { t = F(val(t) || ''); return !t ? '' : /[.?!]$/.test(t) ? t : t + '.'; };
-  const ctImg = (img, alt) => `<img src="assets/care/${img}.jpg?v=2" alt="${F(alt || '').replace(/"/g, '&quot;')}" loading="lazy">`;
+  // Which part of each 4:3 photo stays in the 16:10 frame (0% keeps the top): faces stay whole, and on a look photo the
+  // thing to recognize sits above the caption.
+  const CT_POS = { 'show-tub': '0%', 'show-gums': '0%', 'show-brush': '10%', 'show-diaper': '15%', 'show-sun': '20%', 'show-crib': '20%', 'show-wriggle': '30%',
+    'rash-newborn': '100%', 'rash-acne': '80%', 'rash-eczema': '60%', 'rash-heat': '75%', 'rash-drool': '75%', 'rash-cradle': '0%', 'look-yellow': '40%', 'look-eyes': '40%', 'look-teething': '30%' };
+  const ctImg = (img, alt) => `<img src="assets/care/${img}.jpg?v=2" alt="${F(alt || '').replace(/"/g, '&quot;')}" loading="lazy" style="object-position:50% ${CT_POS[img] || '35%'}">`;
   const ctHead = (q, kind) => `<header class="ct-head"><p class="ct-eyebrow">${F((val(q.topic) || LABEL[q.k]) + ' · ' + kind)}</p><h1>${F(val(q.title))}</h1>${val(q.why) ? `<p>${F(val(q.why))}</p>` : ''}</header>`;
   const ctPhoto = sh => `<section class="ct-photo-card"><figure class="ct-photo">${ctImg(sh.img, sh.alt)}${(val(sh.tags) || []).map(([l, at]) => `<span class="ct-tag is-${at}"><i></i>${F(l)}</span>`).join('')}</figure>`
     + `<div class="ct-strip"><b>${F('✦ ' + sh.t)}</b><span>${F(val(sh.line))}</span></div></section>`;
@@ -1061,12 +1065,12 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   const ctGood = g => g ? `<p class="ct-good"><b>${F('Good to know:')}</b> ${ctSent(g)}</p>` : '';
   const ctSafe = rows => { rows = (val(rows) || []).filter(Boolean); return rows.length ? `<section class="ct-safe"><i>${CT_CHECK}</i><div><b>${F('Keep {o} safe')}</b>${rows.map(r => `<p>${ctSent(r[1])} ${ctSent(r[2])}</p>`).join('')}</div></section>` : ''; };
   const ctH2 = t => `<h2 class="ct-h2">${F(t)}</h2>`;
-  const ctFull = `<div class="hub-list care-link ct-link">${rowK('diapers', 'The full change, step by step', 'Fresh one under, wipe, fasten', `openPage('chg:${CAT}:d:h:diapers:1')`)}</div>`;
+  const ctFull = `<button class="ct-alt" onclick="openPage('chg:${CAT}:d:h:diapers:1')">${F('See the full diaper change')} <span aria-hidden="true">›</span></button>`;
   const howtoPage = q => { const sh = val(q.show), mv = val(q.moves) || [], near = val(q.nearby) || [];
     return `<div class="ct-page is-howto">` + ctHead(q, 'How to') + (sh ? ctPhoto(sh) : '')
       + (near.length ? `<p class="ct-label">${F('Have nearby')}</p><div class="ct-chips">${near.map(t => `<span>${F(t)}</span>`).join('')}</div>` : '')
       + (mv.length ? ctH2(q.movesT || 'Do it in a few steps') + ctSteps(mv) : '')
-      + ctGood(q.good) + (q.full ? ctFull : '') + (q.link ? `<div class="ct-link">${TB.link(val(q.link))}</div>` : '')
+      + ctGood(q.good) + (q.full ? ctFull : '') + (q.link ? `<button class="ct-alt" onclick="openPage('chg:${CAT}:d:${val(q.link)[2]}')">${F('Red skin? See diaper rash or yeast')} <span aria-hidden="true">›</span></button>` : '')
       + ctSafe(q.safe) + (q.urgent ? hubUrgent(F(val(q.urgent)), 'Call 911 right away') : '')
       + (q.video ? ctH2('Watch how') + TB.video(q.video) : '') + `</div>`; };
   const ctLook = (img, cap, alt) => `<figure class="ct-look" id="ct-look">${ctImg(img, alt || cap)}<figcaption>${ctSent(cap)}</figcaption></figure>`;
@@ -1074,26 +1078,38 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     peeling: [['Dry, flaky hands and feet'], ['In the first weeks']], diaper: [['Red where the diaper rubs'], ['The skin folds stay clear']], yeast: [['Bright red, deep in the folds'], ['Small spots around the edges']],
     eczema: [['Dry, rough patches that itch'], ['Cheeks, arms and legs']], heat: [['Tiny bumps after getting warm'], ['Fades once {s’s} cool']], newborn: [['White dots on the nose'], ['Blotches that come and go']],
     strawberry: [['A raised red patch'], ['Grows for a few months, then fades']], drool: [['Red, chapped chin and neck'], ['Worse on drooly days']] };
+  // Nov 22 (Yarden: "why do these look less pretty"): the mockup's pages are light because every block is short:
+  // one-line tiles, one-line helps, and the call card is one or two lines, not a list.
+  const lowerFirst = t => /^(I|AAP|OK)\b/.test(t) ? t : t.charAt(0).toLowerCase() + t.slice(1);
+  const joinOr = a => a.length < 2 ? (a[0] || '') : a.slice(0, -1).join(', ') + ', or ' + a[a.length - 1];
+  const ctCalls = c => { c = val(c); if (!c) return ''; const items = (val(c.ped) || []).filter(Boolean); if (!Array.isArray(items)) return callsCard(c);
+    const under3 = !live() || careAge() < 3, urgent = [], plain = [];
+    items.forEach(x => { if (x === 'FEVER') (under3 ? urgent : plain).push(under3 ? 'a fever of 100.4°F or higher' : careAge() < 6 ? 'a fever of 101°F or higher' : 'a fever of 103°F or higher');
+      else if (/\. Call right away$/.test(x)) urgent.push(lowerFirst(x.replace(/\. Call right away$/, ''))); else plain.push(lowerFirst(x)); });
+    const line = plain.length ? joinOr(plain) : '';
+    return ctH2('When to call') + `<section class="ct-call"><b>${F('Call your pediatrician')}</b>${line ? `<p>${F(line.charAt(0).toUpperCase() + line.slice(1))}.</p>` : ''}${urgent.length ? `<p><em>${F('Right away, day or night:')}</em> ${F(joinOr(urgent))}.</p>` : ''}${c.note ? `<p>${F(val(c.note))}</p>` : ''}</section>`
+      + (c.now ? hubUrgent(F(val(c.now)), 'Call 911 right away') : ''); };
   const knowPage = (q, o) => `<div class="ct-page is-know">` + `<p class="ct-eyebrow is-out">${F((val(q.eyebrow) || LABEL[q.k]) + ' · What to know')}</p>`
     + `<header class="ct-card"><h1>${F(val(q.title))}</h1>${val(q.why) ? `<p>${F(val(q.why))}</p>` : ''}${o.photo ? `<button class="ct-chip" onclick="document.getElementById('ct-look')&&document.getElementById('ct-look').scrollIntoView({behavior:'smooth',block:'center'})">${CT_CHECK}${F('What to look for')}</button>` : ''}</header>`
     + (o.photo ? ctH2(o.photoTitle || 'See what it looks like') + o.photo : '')
-    + (o.notice && o.notice.length ? ctH2('What you may notice') + `<div class="ct-notice">${o.notice.map(([t, sub]) => `<div><b>${F(t)}</b>${sub ? `<span>${F(sub)}</span>` : ''}</div>`).join('')}</div>` : '')
-    + (o.mid || '')
-    + (o.helps && o.helps.length ? ctH2(o.helpsTitle || 'What helps') + `<ul class="ct-helps">${o.helps.map(([ic, t, sub]) => `<li><i>${hubArt(ic || 'heart', CAT)}</i><div><b>${F(t)}</b>${sub ? `<span>${ctSent(sub)}</span>` : ''}</div></li>`).join('')}</ul>` : '')
-    + ctGood(o.good) + (o.after || '') + callsCard(q.calls) + `</div>`;
+    + (o.notice && o.notice.length ? ctH2('What you may notice') + `<div class="ct-notice">${o.notice.slice(0, 2).map(t => `<div>${F(t)}</div>`).join('')}</div>` : '')
+    + (o.helps && o.helps.length ? ctH2(o.helpsTitle || 'What helps') + `<ul class="ct-helps">${o.helps.slice(0, 3).map(t => `<li><i>${CT_CHECK}</i><span>${F(t)}</span></li>`).join('')}</ul>` : '')
+    + (o.alt || '') + ctCalls(q.calls) + `</div>`;
   const ctNotes = n => (val(n) || []).filter(Boolean).map(x => x.length === 3 ? ctSent(x[1]) + ' ' + ctSent(x[2]) : ctSent(x[0]) + ' ' + ctSent(x[1])).join(' ');
   TEMPLATES.howto = q => howtoPage(q);
   const oldCheck = TEMPLATES.check;
+  const titles = a => { const v = val(a); return !v ? [] : !Array.isArray(v) ? [v] : v; }; const titlesOf = a => titles(a).filter(Boolean).map(x => Array.isArray(x) ? (x.length === 3 ? x[1] : x[0]) : x);
   TEMPLATES.check = q => { const w = q.where, nq = w && NOT_QUITE[w];
-    const photo = w && RASH_IMG[w] ? ctLook('rash-' + w, LOOKS[w] + '. ' + ZONE_WORDS[w], RASH[w] && RASH[w].t)
+    const LOOK_CAP = { acne: 'Small bumps on the cheeks and nose', cradle: 'Greasy, yellow flakes on the scalp', eczema: 'Dry, rough patches on the cheeks', heat: 'Tiny red bumps where it’s warm',
+      newborn: 'Tiny white dots on the nose and cheeks', peeling: 'Dry, flaky skin on the hands and feet', drool: 'Red, chapped skin on the chin' };
+    const photo = w && RASH_IMG[w] ? ctLook('rash-' + w, LOOK_CAP[w], RASH[w] && RASH[w].t)
       : (w === 'diaper' || w === 'yeast') ? diaperVs() : q.lookImg ? ctLook(q.lookImg, val(q.lookCap)) : q.figure ? q.figure() : '';
-    const notice = (NOTICE[w] || val(q.notice) || (val(q.signs) || val(q.tell) || []).filter(Boolean).map(x => [x[1], x[2]])).map(x => [x[0], x[1]]);
-    const after = nq ? `<div class="hub-list care-link ct-link">${rowK(RASH_IMG[nq[0]] ? 'look' : 'diapers', 'Not quite it? ' + nq[1], nq[2], cgo('rash:' + nq[0]))}</div>` : '';
-    return knowPage(q, { photo, photoTitle: (w === 'diaper' || w === 'yeast') ? 'Spot the difference' : q.lookTitle, notice, helps: val(q.helps), good: ctNotes(q.helpsNotes), after }); };
+    const notice = val(q.notice) || (NOTICE[w] ? NOTICE[w].map(x => x[0]) : titlesOf(q.signs || q.tell));
+    const alt = nq ? `<button class="ct-alt" onclick="${cgo('rash:' + nq[0])}">${F('Not quite it? See ' + nq[1].replace(/^Possible /, '').toLowerCase())} <span aria-hidden="true">›</span></button>` : '';
+    return knowPage(q, { photo, photoTitle: (w === 'diaper' || w === 'yeast') ? 'Spot the difference' : q.lookTitle, notice, helps: val(q.helpsShort) || titlesOf(q.helps), alt }); };
   TEMPLATES.expect = q => { const n = val(q.normal);
     return knowPage(q, { photo: q.lookImg ? ctLook(q.lookImg, val(q.lookCap)) : typeof n === 'string' ? n : '',
-      notice: Array.isArray(n) ? n.map(x => [x[1], x[2]]) : [], helps: val(q.moves) && val(q.moves).length ? val(q.moves) : Array.isArray(q.do) ? q.do : [],
-      helpsTitle: q.helpsTitle, good: ctNotes(q.normalNotes) + (q.doRows ? ' ' + ctNotes(q.doRows) : ''), after: q.extra ? q.extra() : '' }); };
+      notice: val(q.notice) || (Array.isArray(n) ? titlesOf(n) : []), helps: val(q.helpsShort) || titlesOf(val(q.moves) && val(q.moves).length ? q.moves : q.do), helpsTitle: q.helpsTitle, alt: q.extra ? q.extra() : '' }); };
   const tplPage = q => { const c = COL[q.k]; return `<div class="quiet-category hub-page hub-detail care-v2 care-tpl is-${q.type}" data-overview="${CAT}" data-ss="1" style="${yearTheme(CAT)};--ss-bg:${c[0]};--ss-ink:${c[1]}">${detailPageTop(CAT)}${TEMPLATES[q.type](q)}</div>`; };
   const LOOKS = { acne: 'Small red or white bumps. On darker skin, darker bumps', cradle: 'Yellow patches that look greasy or crusty', peeling: 'Dry, flaky skin that peels off',
     diaper: 'Red, sore skin. On darker skin, darker or purple', yeast: 'Bright red, with small spots around the edges', eczema: 'Dry, rough, itchy patches. On darker skin, darker or gray',
@@ -1108,8 +1124,9 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     yeast: ['diaper', 'Diaper rash', 'Red where the diaper rubs, the folds spared'] };
   const diaperVs = () => { const card = (id, t, chip, cls) => `<figure class="care-vs-card">${(rashMap(id).match(/<svg[\s\S]*?<\/svg>/) || [''])[0]}<figcaption><b>${F(t)}</b><span>${F(LOOKS[id])}.</span><em class="${cls}">${F(chip)}</em></figcaption></figure>`;
     return `<div class="care-vs">${card('diaper', 'Diaper rash', 'Usually better with zinc cream', 'is-ok')}${card('yeast', 'Possible yeast rash', 'Ask about an antifungal', 'is-ask')}</div>`; };
-  const rc = ped => ({ calls: { ped, now: RASH_CALLS.now, nowLabel: 'Call 911' } });
-  const RASH_CALLS = { ped: ['A rash that spreads, oozes or blisters', 'FEVER'], now: 'Tiny purple-red dots that don’t fade when you press on them.', nowLabel: 'Call 911' };
+  const rc = ped => ({ calls: { ped } });
+  const RASH_CALLS = { ped: ['A rash that spreads, oozes or blisters', 'FEVER'] };
+  const RASH_911 = 'Tiny purple-red dots that don’t fade when you press on them.';
   const TPL = {
     't:diapers:0': { type: 'expect', k: 'diapers', title: 'Wet diapers go up day by day',
       why: 'From about day 6, six or more a day means {s’s} getting enough milk.',
@@ -1504,14 +1521,35 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   asHowto(nails, CT_PAGES.nails); asHowto(gums, CT_PAGES.gums); asHowto(TPL['p:brush'], CT_PAGES.brush); asHowto(shade, CT_PAGES.shade); asHowto(six, CT_PAGES.six);
   asHowto(dress, CT_PAGES.dress); asHowto(TPL['p:feet'], CT_PAGES.feet);
   // What to know: one photo with the caption on it.
-  Object.assign(TPL.cord, { eyebrow: 'Cord', normalNotes: undefined, lookImg: 'show-cord', lookCap: 'Stump stays in the air, top of the diaper folded down', show: undefined, normal: [['cord', 'A dry, dark stump as it heals'], ['drop', 'A small crust or spot of blood as it comes off']],
+  Object.assign(TPL.cord, { eyebrow: 'Cord', normalNotes: undefined, lookImg: 'show-cord', lookCap: 'Stump in the air, diaper folded down', show: undefined, normal: [['cord', 'A dry, dark stump as it heals'], ['drop', 'A small crust or spot of blood as it comes off']],
     moves: [['diaper', 'Fold the diaper below it'], ['drop', 'If it’s dirty, plain water and pat dry'], ['hand', 'Let it fall off. Don’t pull']] });
-  Object.assign(TPL['look-cord'], { lookImg: 'rash-cord', lookCap: 'Dark, dry and a little crusty. Usually off in 1–3 weeks', figure: undefined });
-  Object.assign(TPL['look-eyes'], { lookImg: 'look-eyes', lookCap: 'A watery eye without redness, wiped from the inner corner out' });
-  Object.assign(TPL['look-yellow'], { lookImg: 'look-yellow', lookCap: 'A yellow tint on the skin, gums or whites of the eyes. Check in daylight' });
+  Object.assign(TPL['look-cord'], { lookImg: 'rash-cord', lookCap: 'Dark, dry and a little crusty', figure: undefined });
+  Object.assign(TPL['look-eyes'], { lookImg: 'look-eyes', lookCap: 'Wipe from the inner corner out' });
+  Object.assign(TPL['look-yellow'], { lookImg: 'look-yellow', lookCap: 'A yellow tint. Check in daylight' });
   Object.assign(TPL['p:teething'], { eyebrow: 'Teeth', lookImg: 'look-teething', lookCap: 'Drool, chewing and a firm teething ring' });
-  Object.assign(skinCare, { eyebrow: 'Skin', lookImg: 'look-skin', lookCap: 'A thick, fragrance-free cream on dry patches' });
+  Object.assign(skinCare, { eyebrow: 'Skin', lookImg: 'look-skin', lookCap: 'Thick, fragrance-free cream on dry patches' });
   TPL.poop.lookTitle = 'Colors at a glance';
+  // Nov 22: one short line per tile and per help, like the mockups.
+  Object.assign(TPL.cord, { notice: ['A dry, dark stump as it heals', 'A crust or spot of blood as it comes off'], helpsShort: ['Fold the diaper below it', 'If it’s dirty, plain water and pat dry', 'Let it fall off. Don’t pull'],
+    calls: { ped: ['A yellow, smelly discharge', 'Spreading redness', 'It’s still on after 3 weeks', 'FEVER'] } });
+  Object.assign(TPL['look-cord'], { notice: ['A dark, dry stump', 'A spot of blood as it falls off'], helpsShort: ['Fold the diaper down below it', 'Plain water only if it’s dirty, then pat dry'],
+    calls: { ped: ['A yellow, smelly discharge', 'Spreading redness', 'It’s still on after 3 weeks', 'FEVER'] } });
+  Object.assign(TPL['look-eyes'], { notice: ['A watery eye that isn’t red', 'Snuffly breathing, without a struggle'], helpsShort: ['Wipe sticky eyes from the inner corner out', 'Saline drops, then gentle suction, for a stuffy nose'],
+    calls: { ped: ['A red or swollen eyelid', 'Yellow-green goo with redness', 'A red lump by the inner corner'], now: 'Struggling to breathe, or lips turning blue.' } });
+  Object.assign(TPL['look-yellow'], { notice: ['Yellow on the face first', 'On darker skin, check the eyes and gums'], helpsShort: ['Feed often. It helps clear the yellow', 'Press the nose in daylight. Yellow as you lift? Call', 'Your pediatrician checks it at newborn visits'],
+    calls: { ped: ['Yellow spreading to the belly or legs', 'Fewer wet diapers', 'Any yellow in the first 24 hours. Call right away', 'Yellow and hard to wake, or not feeding well. Call right away'] } });
+  Object.assign(TPL['p:teething'], { notice: ['More drooling and chewing', 'A few fussy days'], helpsShort: ['Rub sore gums with a clean finger', 'A chilled, not frozen, teething ring', 'Skip numbing gels and teething necklaces'],
+    calls: { ped: ['FEVER', 'Diarrhea or a runny nose'], note: 'Teething doesn’t cause these.' } });
+  Object.assign(skinCare, { notice: ['Peeling in the first weeks', 'Spots and blotches that come and go'], helpsShort: ['Short baths in plain warm water', 'Pat dry, into the creases', 'Thick, fragrance-free cream on dry patches'],
+    calls: { ped: ['A rash that cracks, oozes or spreads', 'FEVER'] } });
+  Object.assign(TPL['t:diapers:1'], { notice: ['Soft poop, even days apart', 'Still 6 or more wet diapers a day'], helpsShort: ['Change when wet or dirty', 'Let the skin air out before a fresh one', 'Size up when it leaks'] });
+  Object.assign(TPL.poop, { notice: () => [tplNow >= 2 ? 'Thicker and smellier after solids' : live() && profile.feed === 'Formula' ? 'A poop most days, on formula' : 'Days apart can be normal if breastfed', 'Straining, if the poop is soft'],
+    helpsShort: () => ['Bicycle {p} legs for gas', tplNow >= 2 ? 'Pears, prunes or peaches for hard poop' : 'Keep feeding as usual. Milk keeps it soft'] });
+  Object.assign(TPL['t:diapers:0'], { helpsShort: ['Feed often, 8–12 times a day', 'Keep a rough count of wet diapers this week'] });
+  Object.assign(TPL['t:diapers:2'], { helpsShort: ['A hand on {o} the whole change', 'Everything in reach first', 'Or change {o} on the floor'] });
+  Object.assign(TPL.after1, { eyebrow: 'After age 1', notice: ['Brushing twice a day, a rice-grain smear', 'About 3 baths a week'], helpsShort: ['A first dentist visit by age 1', 'No bottle in bed. Milk on teeth causes cavities', 'A hand on {o} in the bath, every time'] });
+  Object.assign(TPL['rash:cradle'], { helpsShort: ['Wash with water or a little mild shampoo', 'Leave the flakes alone', 'Stubborn flakes? A little oil, then brush and wash'] });
+
 
   window.changesRoute = function (p) {
     const [, cat, screen, a, b, c] = p.split(':');

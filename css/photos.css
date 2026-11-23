@@ -465,3 +465,39 @@
 #main .ct-helps span { display: block; margin-top: 2px; font-size: 13.5px; line-height: 1.35; color: var(--ct-soft) }
 #main .ct-page .care-calls { background: #fdf2e8; border: 1px solid #f6dfc8 }
 @media (max-width: 360px) { #main .ct-tag { font-size: 11.5px; padding: 5px 9px; gap: 5px; max-width: 48% } #main .ct-tag.is-bl, #main .ct-tag.is-tl { left: 8px } #main .ct-tag.is-br, #main .ct-tag.is-tr { right: 8px } #main .ct-tag.is-bl, #main .ct-tag.is-br { bottom: 8px } #main .ct-tag.is-tl, #main .ct-tag.is-tr { top: 8px } }
+/* Nov 22 (Yarden: "why do these look less pretty"): the mockup's proportions. Smaller type, a 16:10 photo,
+   one-line tiles and helps, a one- or two-line call card. */
+#main .ct-head h1 { font-size: 27px; margin-bottom: 6px }
+#main .ct-head p:not(.ct-eyebrow) { font-size: 14.5px; margin-bottom: 16px }
+#main .ct-photo, #main .ct-look { aspect-ratio: 16 / 10 }
+#main .ct-photo-card { border-radius: 18px; margin-bottom: 16px }
+#main .ct-strip { padding: 12px 14px 13px; gap: 10px }
+#main .ct-strip b { font-size: 11px }
+#main .ct-strip span { font-size: 13.5px }
+#main .ct-chips span { padding: 6px 12px; font-size: 12.5px }
+#main .ct-h2 { font-size: 18px; margin: 22px 2px 10px }
+#main .ct-steps { padding: 2px 14px; border-radius: 18px }
+#main .ct-steps li { padding: 12px 0 12px 40px }
+#main .ct-steps li::before { top: 12px; width: 26px; height: 26px; font-size: 13px }
+#main .ct-steps b { font-size: 15px }
+#main .ct-steps span { font-size: 13px; margin-top: 2px }
+#main .ct-good { font-size: 13px; margin-top: 10px }
+#main .ct-safe { padding: 14px; margin-top: 16px; border-radius: 16px; gap: 12px }
+#main .ct-safe > i { width: 28px; height: 28px; border-radius: 8px }
+#main .ct-safe b { font-size: 14px } #main .ct-safe p { font-size: 13px; margin-top: 3px }
+#main .ct-card { padding: 18px 16px 16px }
+#main .ct-card h1 { font-size: 25px }
+#main .ct-card p { font-size: 13.5px }
+#main .ct-chip { margin-top: 12px; padding: 5px 11px; font-size: 12px }
+#main .ct-look figcaption { font-size: 13.5px; padding: 34px 14px 12px }
+#main .ct-notice > div { padding: 14px 14px 18px; border-radius: 14px; font-size: 13.5px; font-weight: 600; line-height: 1.35; color: var(--ct-ink) }
+#main .ct-helps { padding: 2px 14px; border-radius: 18px }
+#main .ct-helps li { gap: 12px; padding: 12px 0 }
+#main .ct-helps li > i { width: 26px; height: 26px; border-radius: 8px; color: #2f7a57; background: #e7f4ee }
+#main .ct-helps li > i svg { width: 14px; height: 14px }
+#main .ct-helps li > span { font-size: 14px; font-weight: 600; line-height: 1.35; color: var(--ct-ink) }
+#main .ct-page .ct-alt { all: unset; cursor: pointer; display: block; margin: 12px 4px 0; font-size: 13.5px; font-weight: 600; color: #5b4fa3 }
+#main .ct-call { padding: 14px 16px; border-radius: 16px; background: #fdf2e8; border: 1px solid #f6dfc8 }
+#main .ct-call b { display: block; font-size: 13.5px; color: #8a4b1f }
+#main .ct-call p { margin: 4px 0 0; font-size: 13.5px; line-height: 1.45; color: #6b4a33 }
+#main .ct-call em { font-style: normal; font-weight: 700; color: #8a4b1f }
