@@ -1086,13 +1086,13 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   const CT_BULB = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3Z"/></svg>';
   const ctGood2 = g => { g = (Array.isArray(g) ? g : [g]).filter(Boolean); return g.length ? `<section class="ct-goodcard"><i>${CT_BULB}</i><div><b>${F('Good to know')}</b>${g.map(t => `<p>${ctSent(t)}</p>`).join('')}</div></section>` : ''; };
   const CT_GUIDE = ['#e3f1f7', '#2a6078'];
+  const ctNotes2 = n => { n = (n || []).filter(Boolean); return n.length ? `<div class="ct-notes">${n.map(([b, t]) => `<p><b>${ctSent(b)}</b> ${ctSent(t)}</p>`).join('')}</div>` : ''; };
   const ctTop = (k, ctx, t, lead) => head(k, ctx, t, lead).replace(/--area:[^;]+;--area-ink:[^"]+/, `--area:${CT_GUIDE[0]};--area-ink:${CT_GUIDE[1]}`);
   const howtoPage = q => { const sh = val(q.show), mv = val(q.moves) || [], near = val(q.nearby) || [];
     return `<div class="ct-page is-howto">` + ctTop(q.k, (val(q.topic) || LABEL[q.k]) + ' · How to', val(q.title), val(q.why)) + (sh ? ctPhoto2(sh) : '') + (q.routine ? ctRoutine(val(q.routine)) : '')
       + (near.length ? ctH2('Have nearby') + ctNear(near) : '')
-      + (mv.length ? ctH2(q.movesT || 'Do it in a few steps') + ctSteps2(mv) : '')
-      + ctGood2(val(q.good)) + (q.full ? ctFull : '') + (q.link ? `<button class="ct-alt" onclick="openPage('chg:${CAT}:d:${val(q.link)[2]}')">${F('Red skin? See diaper rash or yeast')} <span aria-hidden="true">›</span></button>` : '')
-      + ctSafe(q.safe) + (q.urgent ? hubUrgent(F(val(q.urgent)), 'Call 911 right away') : '')
+      + (mv.length ? ctH2(q.movesT || 'Do it in a few steps') + `<div class="ct-stepcard">${ctSteps2(mv)}${ctNotes2(val(q.notes))}</div>` : '')
+      + (q.full ? ctFull : '') + (q.link ? `<button class="ct-alt" onclick="openPage('chg:${CAT}:d:${val(q.link)[2]}')">${F('Red skin? See diaper rash or yeast')} <span aria-hidden="true">›</span></button>` : '')
       + (q.video ? ctH2('Watch how') + TB.video(q.video) : '') + `</div>`; };
   const ctLook = (img, cap, alt) => `<figure class="ct-look" id="ct-look">${ctImg(img, alt || cap)}<figcaption>${ctSent(cap)}</figcaption></figure>`;
   // The photo caption says where and what; these two tiles add when and how it behaves, so nothing repeats.
@@ -1104,16 +1104,19 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   // one-line tiles, one-line helps, and the call card is one or two lines, not a list.
   const lowerFirst = t => /^(I|AAP|OK)\b/.test(t) ? t : t.charAt(0).toLowerCase() + t.slice(1);
   const joinOr = a => a.length < 2 ? (a[0] || '') : a.slice(0, -1).join(', ') + ', or ' + a[a.length - 1];
-  /* Nov 23 (Yarden: "when to call is too text dense"): a short list, a few words a line, never a run-on sentence.
-     At most 3 lines to call about, and the "right away" lines apart, so the urgent ones stand out. */
-  const ctFever = () => (!live() || careAge() < 3) ? 'A rectal temperature of 100.4°F or higher, or under 97.5°F' : careAge() < 6 ? 'A fever of 101°F or higher' : 'A fever of 103°F or higher';
+  /* Nov 23: When to call is the same card as Feeding and Sleep: the phone icon, "Call your pediatrician if:" and one
+     short line of a few-word signs, then "Call right away if:" and "Call 911 if:" in red, all inside the one card. */
+  const ctFever = () => (!live() || careAge() < 3) ? 'a rectal temperature of 100.4°F or higher, or under 97.5°F' : careAge() < 6 ? 'a fever of 101°F or higher' : 'a fever of 103°F or higher';
   const ctCalls = c => { c = val(c); if (!c) return ''; const items = (val(c.ped) || []).filter(Boolean); if (!Array.isArray(items)) return callsCard(c);
     const under3 = !live() || careAge() < 3, urgent = [], plain = [];
     items.forEach(x => { if (x === 'FEVER') (under3 ? urgent : plain).push(ctFever());
-      else if (/\. Call right away$/.test(x)) urgent.push(x.replace(/\. Call right away$/, '')); else plain.push(x); });
-    const ul = a => `<ul>${a.map(t => `<li>${F(t)}</li>`).join('')}</ul>`;
-    return ctH2('When to call') + `<section class="ct-call">${plain.length ? `<b>${F('Call your pediatrician if you see')}</b>` + ul(plain) : ''}${urgent.length ? `<b class="is-now">${F('Call right away, day or night')}</b>` + ul(urgent) : ''}${c.note ? `<p>${F(val(c.note))}</p>` : ''}${items.includes('FEVER') ? `<button class="ct-alt is-call" onclick="openPage('chg:Health:d:sick-rectal')">${F('How to take {p} temperature')} <span aria-hidden="true">›</span></button>` : ''}</section>`
-      + (c.now ? hubUrgent(F(val(c.now)), 'Call 911 right away') : ''); };
+      else if (/\. Call right away$/.test(x)) urgent.push(lowerFirst(x.replace(/\. Call right away$/, ''))); else plain.push(lowerFirst(x)); });
+    const line = (label, a, cls) => a.length ? `<p${cls ? ` class="${cls}"` : ''}><b>${F(label)}</b> ${F(a)}${/[.?!]$/.test(a) ? '' : '.'}</p>` : '';
+    return ctH2('When to call') + `<section class="care-calls is-titled"><span class="care-calls-ico">${PHONE}</span><div>`
+      + line('Call your pediatrician if:', joinOr(plain)) + line('Call right away if:', joinOr(urgent), 'is-urgent')
+      + (c.now ? line('Call 911 if:', lowerFirst(val(c.now)), 'is-urgent') : '') + (c.note ? `<p>${F(val(c.note))}</p>` : '')
+      + (items.includes('FEVER') ? `<button class="ct-alt is-call" onclick="openPage('chg:Health:d:sick-rectal')">${F('How to take {p} temperature')} <span aria-hidden="true">›</span></button>` : '')
+      + `</div></section>`; };
   const knowPage = (q, o) => `<div class="ct-page is-know">` + ctTop('look', (val(q.eyebrow) || LABEL[q.k]) + ' · What to know', val(q.title), val(q.why))
     + (o.photo ? ctH2(o.photoTitle || 'See what it looks like') + o.photo : '')
     + (o.notice && o.notice.length ? ctH2('What you may notice') + `<div class="ct-notice">${o.notice.slice(0, 2).map(t => `<div>${F(t)}</div>`).join('')}</div>` : '')
@@ -1709,6 +1712,28 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     good: 'Little feet grow fast. Check the fit every month or two.',
     safe: [['shield', 'Skip walkers on wheels', 'They don’t help with walking, and they lead to falls']] });
 
+  // Nov 23: notes in the steps card, at most two, safety first. Each is a bold lead and one short sentence.
+  const NOTES = (q, notes, more) => Object.assign(q, { notes, good: undefined, safe: undefined, urgent: undefined }, more || {});
+  NOTES(TPL['p:sponge'], [['Keep a hand on {o}', 'Never step away from a changing table or bed'], ['Cord stump wet?', 'Just pat it dry. It doesn’t need cleaning']]);
+  NOTES(TPL['p:tub'], [['Keep a hand on {o} the whole time', 'To step away, take {o} with you'], ['Water heater at 120°F or lower', 'So tap water can’t burn']]);
+  NOTES(TPL['t:bath:3'], [['Never leave {o} alone in water', 'Not even for a moment'], ['Skip bath seats', 'They can tip, and they don’t replace your hand']]);
+  TPL['t:bath:3'].moves[2] = ['hand', 'Keep one hand on {o}', 'Wash with your other hand. If {s} {stand|stands}, sit {o} back down'];
+  NOTES(TPL['t:bath:2'], [['Stay within reach in the bath', 'Never leave {o} alone in water']]);
+  [[TPL['h:diapers:0'], true], [TPL['h:diapers:1'], false]].forEach(([q, cord]) => NOTES(q, () => [['Keep a hand on {o}', 'Never step away from a changing table or bed'],
+    anatomy() === 'boy' ? ['Point his penis down', cord ? 'It stops leaks. If he’s circumcised, dab petroleum jelly on the tip until it heals' : 'It stops leaks']
+      : anatomy() === 'girl' && cord ? ['White discharge or a spot of blood?', 'Normal in the first weeks, from pregnancy hormones'] : ['Let the skin air-dry', 'Just for a moment, before the clean diaper goes on']]));
+  NOTES(TPL['h:diapers:2'], [['Never step away from a changing table or bed', '{S} can roll off in a second'], ['Leaks or red marks on the legs?', 'Time for the next size up']]);
+  NOTES(TPL['h:diapers:3'], [['Still wobbly?', 'Change {o} lying down on the floor'], ['Leaks or red marks on the legs?', 'Time for the next size up']]);
+  NOTES(nails, [['A small nick?', 'It happens to everyone. Press a clean cloth on it'], ['Clippers make you nervous?', 'A soft nail file works too']]);
+  NOTES(gums, [['White patches that don’t wipe off?', 'It may be thrush. Call your pediatrician']]);
+  NOTES(TPL['p:brush'], [['No bottle in bed', 'Milk on teeth overnight causes cavities'], ['First dentist visit', 'After the first tooth, and by {p} first birthday']]);
+  NOTES(six, [['Hot, floppy or hard to wake? Call 911', 'Then move {o} to shade and cool {p} skin'], ['Any sunburn before age 1?', 'Call your pediatrician']]);
+  six.moves[0] = [PH('ss-1'), 'Put it on before you go out', 'Broad-spectrum, SPF 30 or more, 15 to 30 minutes ahead. Mineral is gentlest'];
+  NOTES(shade, [['Hot, floppy or hard to wake? Call 911', 'Then move {o} to shade and cool {p} skin'], ['Any sunburn before age 1?', 'Call your pediatrician']]);
+  shade.moves[1] = ['shirt', 'Cover {p} arms and legs', 'Light, loose long sleeves and a wide-brim hat. No shade? A little sunscreen on small spots'];
+  NOTES(dress, [['Snaps or zips only', 'Nothing with strings near the neck'], ['No puffy coats in the car seat', 'Buckle {o} in, then lay a blanket over the straps']]);
+  NOTES(TPL['p:feet'], [['Skip walkers on wheels', 'They don’t help with walking, and they lead to falls'], ['Little feet grow fast', 'Check the fit every month or two']]);
+
   // What to know: one photo with the caption on it.
   Object.assign(TPL.cord, { eyebrow: 'Cord', normalNotes: undefined, lookImg: 'show-cord', lookCap: 'Stump in the air, diaper folded down', show: undefined, normal: [['cord', 'A dry, dark stump as it heals'], ['drop', 'A small crust or spot of blood as it comes off']],
     moves: [['diaper', 'Fold the diaper below it'], ['drop', 'If it’s dirty, plain water and pat dry'], ['hand', 'Let it fall off. Don’t pull']] });
@@ -1720,9 +1745,9 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   TPL.poop.lookTitle = 'Colors at a glance';
   // Nov 22: one short line per tile and per help, like the mockups.
   Object.assign(TPL.cord, { notice: ['A dry, dark stump as it heals', 'A crust or spot of blood as it comes off'], helpsShort: ['Fold the diaper below it', 'If it’s dirty, plain water and pat dry', 'Let it fall off. Don’t pull'],
-    calls: { ped: ['Smelly ooze, or red skin around it', 'Bleeding that won’t stop with pressure', 'Still on after 3 weeks', 'FEVER'] } });
+    calls: { ped: ['Smelly ooze or red skin around it', 'Bleeding that won’t stop with pressure', 'Still on after 3 weeks', 'FEVER'] } });
   Object.assign(TPL['look-cord'], { notice: ['A dark, dry stump', 'A spot of blood as it falls off'], helpsShort: ['Fold the diaper down below it', 'Plain water only if it’s dirty, then pat dry'],
-    calls: { ped: ['Smelly ooze, or red skin around it', 'Bleeding that won’t stop with pressure', 'Still on after 3 weeks', 'FEVER'] } });
+    calls: { ped: ['Smelly ooze or red skin around it', 'Bleeding that won’t stop with pressure', 'Still on after 3 weeks', 'FEVER'] } });
   // Nov 22 (Yarden): eyes and nose are two concerns, so two pages, each with its own photo.
   Object.assign(TPL['look-eyes'], { title: 'Sticky or watery eyes', why: 'Often a blocked tear duct. It usually clears on its own in the first year.',
     notice: ['A watery eye that isn’t red', 'A little crust after sleep'], helpsShort: ['Wipe from the inner corner out, with warm water', 'A clean cotton ball for each wipe, and each eye', 'Ask about gently massaging the inner corner'],
@@ -1747,7 +1772,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   Object.assign(TPL['t:diapers:2'], { helpsShort: ['A hand on {o} the whole change', 'Everything in reach first', 'Or change {o} on the floor'] });
   Object.assign(TPL.after1, { eyebrow: 'After age 1', notice: ['Most toddlers push back on brushing', 'Baths about 3 times a week are plenty'], helpsShort: ['Brush twice a day, a rice-grain smear', 'No dentist visit yet? Book one now', 'A hand on {o} in the bath, every time'] });
   Object.assign(TPL['rash:eczema'], { helpsShort: ['Short, lukewarm baths, then thick cream on damp skin', 'Cream at least once a day, even on good days', 'Fragrance-free soap and laundry detergent'],
-    calls: { ped: ['Cracked or oozing patches', 'Itching that keeps {o} up, even with cream', 'FEVER', 'Yellow crusts, pus or painful blisters. Call right away'] } });
+    calls: { ped: ['Cracked or oozing patches', 'Itching that cream doesn’t help', 'FEVER', 'Yellow crusts, pus or painful blisters. Call right away'] } });
   Object.assign(TPL['rash:peeling'], { helpsShort: ['Keep baths short, in plain water', 'A fragrance-free cream if it cracks'] });
   Object.assign(TPL['rash:newborn'], { helpsShort: ['Nothing to treat. They fade on their own', 'Blue-gray patches there since birth aren’t bruises'], calls: { ped: ['A mark that’s raised, bleeds or grows fast', 'A bruise you can’t explain'] } });
   Object.assign(TPL['rash:acne'], { helpsShort: ['Wash with plain water once a day', 'Leave the bumps alone', 'Skip lotions, oils and acne creams'] });
