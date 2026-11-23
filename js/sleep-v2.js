@@ -22,7 +22,7 @@
   const foot = t => `<p class="sv2-foot">${F(t)}</p>`;
 
   // A day drawn to scale: every block is as long as it really is.
-  const H0 = 7, H1 = 19.25, pct = h => ((h - H0) / (H1 - H0) * 100).toFixed(2) + '%';
+  const H0 = 7, H1 = 20, pct = h => ((h - H0) / (H1 - H0) * 100).toFixed(2) + '%';
   const dayBar = (naps, bed = H1, opts = {}) => {
     const segs = []; let t = H0;
     naps.forEach(([a, b, , kind]) => { segs.push(['awake', t, a]); segs.push([kind || 'nap', a, b]); t = b; });
@@ -98,7 +98,7 @@
       + rows('Good to know', [['clock', 'Same order, not a perfect clock', 'The order is what tells {o} sleep is coming.'], ['moon', 'Nights start to stretch', '{S} gets sleepy around the same time each evening.'], ['sun', 'An earlier bedtime comes later', 'Around 7–8 pm, once naps settle.']])
       + foot('Every baby moves at {p} own pace.')),
     'd:predictable': () => page('Naps', 'Naps start to settle into set times', 'Around 3–4 months, {s} gets sleepy at about the same times each day.',
-      vis('Sleepy at about the same times', 'Example', ends('Wake up 7:00 am', 'Bedtime 7:30 pm') + dayBar([[9, 10.25, '9 am'], [12.5, 13.75, '12:30'], [16, 16.75, '4 pm', 'cat']], 19.5) + legend([['awake', 'Awake'], ['nap', 'Nap']]))
+      vis('Sleepy at about the same times', 'Example', ends('Wake up 7:00 am', 'Bedtime 7:30 pm') + dayBar([[9, 10.25, '9 am'], [12.5, 13.75, '12:30'], [16, 16.75, '4 pm', 'cat']], 19.5) + legend([['awake', 'Awake'], ['nap', 'Nap'], ['night', 'Bedtime']]))
       + rows('How to find {p} times', [['', 'Watch for a few days', 'Jot down when {s} gets sleepy.'], ['', 'Wind down first', 'A few calm, quiet minutes.'], ['', 'Down at those times', 'Most days, give or take.']], true)
       + note('Won’t settle for a nap?', 'If {s} isn’t tired yet, try again a little later.')
       + foot('Times are an example. Every baby moves at {p} own pace.')),
@@ -156,28 +156,28 @@
     // Example days, drawn to scale.
     'd:day:2': () => page('Three naps', 'An example day with three naps', 'Two longer naps and a short catnap, and how they fit together.',
       vis('One possible day', 'Not a fixed schedule', ends('Wake up 7:00 am', 'Bedtime 7:15 pm')
-        + dayBar([[9, 10.25, 'Nap 1<br><small>9:00–10:15</small>'], [12.5, 13.75, 'Nap 2<br><small>12:30–1:45</small>'], [16.25, 16.75, 'Catnap<br><small>4:15–4:45</small>', 'cat']])
-        + legend([['awake', 'Awake'], ['nap', 'Nap'], ['cat', 'Short catnap']]))
+        + dayBar([[9, 10.25, 'Nap 1<br><small>9:00–10:15</small>'], [12.5, 13.75, 'Nap 2<br><small>12:30–1:45</small>'], [16.25, 16.75, 'Catnap<br><small>4:15–4:45</small>', 'cat']], 19.25)
+        + legend([['awake', 'Awake'], ['nap', 'Nap'], ['cat', 'Short catnap'], ['night', 'Bedtime']]))
       + rows('What matters more than the clock', [['moon', 'Two longer naps', 'They do most of the daytime rest.'], ['clock', 'A short last nap', 'Often 30–45 minutes, just enough to reach bedtime.'], ['sun', 'A flexible afternoon', 'If a nap runs short, the rest of the day shifts.', 'd:shortnap']])
       + note('The takeaway:', 'Think of the catnap as a bridge to bedtime, not another full nap.') + foot('Times are an example. Every baby moves at {p} own pace.')),
     'd:day:3': () => page('Two naps', 'An example day with two naps', 'Two longer naps, with longer awake stretches in between.',
       vis('One possible day', 'Longer awake times', ends('Wake up 7:00 am', 'Bedtime 7:15 pm')
-        + dayBar([[9.75, 11, 'Morning nap<br><small>9:45–11:00</small>'], [14.25, 15.5, 'Afternoon nap<br><small>2:15–3:30</small>']])
-        + legend([['awake', 'Awake'], ['nap', 'Nap']]))
+        + dayBar([[9.75, 11, 'Morning nap<br><small>9:45–11:00</small>'], [14.25, 15.5, 'Afternoon nap<br><small>2:15–3:30</small>']], 19.25)
+        + legend([['awake', 'Awake'], ['nap', 'Nap'], ['night', 'Bedtime']]))
       + rows('What feels different', [['moon', 'Just a morning and an afternoon nap', 'Most daytime sleep moves into two longer naps.'], ['clock', 'A longer last awake stretch', 'Bedtime may come a bit earlier while {s} adjusts.', 'd:earlybed'], ['heart', 'A wobbly switch is normal', 'Some days still need a short extra nap.']])
       + note('The takeaway:', 'The catnap’s time goes to longer awake stretches, not a late extra nap.') + foot('Times are an example. Every baby moves at {p} own pace.')),
 
     // Nap transitions: before and after, on the same clock.
     'd:catnap': () => page('Naps', 'Three naps become two', 'Usually between 6 and 9 months, the third nap stops fitting as awake time grows.',
-      vis('The day changes shape', 'Before → After', `<div class="sv2-ba"><b>${F('Three-nap day')}</b>${dayBar([[9, 10.25, 'Nap 1'], [12.5, 13.75, 'Nap 2'], [16.25, 16.75, 'Catnap', 'cat']])}</div><div class="sv2-ba-arrow" aria-hidden="true">↓</div>
-        <div class="sv2-ba is-after"><b>${F('Two-nap day')}</b>${dayBar([[9.5, 11, 'Morning nap'], [14, 15.5, 'Afternoon nap']], 18.75)}</div>
-        <p class="sv2-cap">${F('The catnap’s spot fills with awake time, and bedtime moves a little earlier.')}</p>`)
+      vis('The day changes shape', 'Before → After', `<div class="sv2-ba"><b>${F('Three-nap day')}</b>${dayBar([[9, 10.25, 'Nap 1'], [12.5, 13.75, 'Nap 2'], [16.25, 16.75, 'Catnap', 'cat']], 19)}</div><div class="sv2-ba-arrow" aria-hidden="true">↓</div>
+        <div class="sv2-ba is-after"><b>${F('Two-nap day')}</b>${dayBar([[9.5, 11, 'Morning nap'], [14, 15.5, 'Afternoon nap']], 18.5)}</div>
+        ${legend([['awake', 'Awake'], ['nap', 'Nap'], ['night', 'Bedtime']])}<p class="sv2-cap">${F('The catnap’s spot fills with awake time, and bedtime moves a little earlier.')}</p>`)
       + rows('Signs {s} may be ready', [['moon', 'The third nap is hard to fit', '{S} refuses it, or it pushes bedtime late.'], ['clock', '{S} stays happy awake longer', 'The gaps between naps start to stretch.'], ['sun', 'The first two naps get longer', '{S} may not need the short bridge anymore.']])
       + note('Try this:', 'On days {s} skips the catnap, move bedtime about 30 minutes earlier.') + foot('Ages are typical. Every baby moves at {p} own pace.')),
     'd:after': () => page('Naps', 'Two naps become one', 'This usually happens between 13 and 18 months, not at the first birthday.',
-      vis('The day changes shape', 'Before → After', `<div class="sv2-ba"><b>${F('Two-nap day')}</b>${dayBar([[9.5, 11, 'Morning nap'], [14, 15.5, 'Afternoon nap']])}</div><div class="sv2-ba-arrow" aria-hidden="true">↓</div>
-        <div class="sv2-ba is-after"><b>${F('One-nap day')}</b>${dayBar([[12, 14.5, 'One longer nap']], 18.75)}</div>
-        <p class="sv2-cap">${F('The morning nap slides later until it becomes one nap around lunch.')}</p>`)
+      vis('The day changes shape', 'Before → After', `<div class="sv2-ba"><b>${F('Two-nap day')}</b>${dayBar([[9.5, 11, 'Morning nap'], [14, 15.5, 'Afternoon nap']], 19)}</div><div class="sv2-ba-arrow" aria-hidden="true">↓</div>
+        <div class="sv2-ba is-after"><b>${F('One-nap day')}</b>${dayBar([[12, 14.5, 'One longer nap']], 18.5)}</div>
+        ${legend([['awake', 'Awake'], ['nap', 'Nap'], ['night', 'Bedtime']])}<p class="sv2-cap">${F('The morning nap slides later until it becomes one nap around lunch. Bedtime may come a little earlier for a while.')}</p>`)
       + rows('Signs {s} may be ready', [['sun', 'Fights the morning nap most days', '{S} plays through it, or it takes ages to fall asleep.'], ['clock', 'The afternoon nap shrinks', 'Or bedtime drifts late.'], ['heart', 'Holds up fine until lunch', 'One longer midday nap starts to fit.']])
       + note('Try this:', 'Push the morning nap a bit later every few days, until it lands around lunch.') + foot('Ages are typical. Every baby moves at {p} own pace.')),
 
