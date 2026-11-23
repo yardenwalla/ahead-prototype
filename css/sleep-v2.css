@@ -91,3 +91,9 @@
 #main .sv2-page .care-tpl-card, #main .sv2-page .hub-card, #main .sv2-page .care-tpl > section:not(.care-calls), #main .sv2-page .ssw-answer, #main .sv2-page .ssw-todo, #main .sv2-page .ssw-seq { background: #fff !important; border: 1px solid #ebe7f3 !important; border-radius: 22px !important; box-shadow: none !important }
 #main .sv2-page .hub-h2 { color: #241c4a }
 #main .sv2-page .ph-grid figure, #main .sv2-page .ssw-vs > div { border-radius: 18px }
+#main .hub-detail.sv2-page { --area: #efecfc !important; --area-ink: #5b4fc4 !important; --cat: #5b4fc4 !important; --cat-ink: #5b4fc4 !important; --accent: #5b4fc4 !important; --ss-bg: #f3f1fd; --ss-ink: #5b4fc4 }
+#main .sv2-page .hub-sb-bar i.is-night, #main .sv2-page .hub-sb-key i.is-night { background: #6f63d9 } #main .sv2-page .hub-sb-bar i.is-nap, #main .sv2-page .hub-sb-key i.is-nap { background: #c3bbf5 }
+#main .sv2-page svg [stroke="#3e4f7a"], #main .sv2-page svg [stroke="#46638c"] { stroke: #6f63d9 }
+#main .sv2-page svg [fill="#9fb6e6"], #main .sv2-page svg [fill="#c9d8f2"] { fill: #c3bbf5 }
+#main .sv2-page svg[stroke="#46638c"], #main .sv2-page svg[stroke="#3e4f7a"] { stroke: #6f63d9 }
+#main .sv2-page svg[stroke="#46638c"] [fill]:not([fill="none"]):not([fill="#fff"]) { fill: #ddd7f8 }
