@@ -93,12 +93,14 @@
       steps: [['mouth', 'Let {o} draw it in', 'Touch the nipple to {p} lip'], ['clock', 'Pause every few sucks', 'Tip it down, then let {o} start again'], ['hand', 'Stop when {s’s} done', 'Even if milk is left. Burp every 2–3 oz']],
       stepsNotes: [['', 'Never prop a bottle', 'Always hold {o} and the bottle']],
       tipsTitle: 'Nipples and cleaning', tipsFold: true, tips: [['bottle', 'Start with the slowest flow', 'Go up when {s} {suck|sucks} hard and {get|gets} frustrated. Gulping or coughing means it’s too fast.'], ['eye', 'Wide or narrow?', 'Neither is better. Stick with the one {s} {take|takes} calmly.'], ['drop', 'Clean after every feed', mo() < 4 ? 'Hot, soapy water, and sanitize often in the first months.' : 'Hot, soapy water, or the dishwasher.']] }),
-    formula: () => ({ type: 'howto', label: 'Bottles', art: 'bottle', title: 'Mix formula exactly as the label says',
-      why: 'Extra water or powder changes what {s} {get|gets} from it.',
-      // Nov 19 (review): the water and scoop photos show the measuring itself; the steps match the walkthrough's.
-      steps: [['photo:feeding/formula-1', 'Wash', 'Hands, counter and bottle'], ['photo:feeding/formula-water', 'Water first', realMo() < 2 || early() ? 'Boiled, cooled 5 minutes, to the line the label says' : 'To the line the label says'], ['photo:feeding/formula-scoop', 'Then level scoops', 'Flat, never heaped. Then shake'], ['photo:feeding/formula-4', 'Test on your wrist', 'Warm, never hot']],
-      stepsNotes: [realMo() < 2 || early() ? ['', 'Why hot water?', 'It kills a rare germ in powder. It matters most under 2 months, or if born early'] : ['', 'Water', 'Clean tap or bottled water is fine. Boiled and cooled if {s} has a weak immune system'], ['', 'Which formula?', 'Any standard iron-fortified formula. Ask before a special one']],
-      tipsTitle: 'Mixing with breast milk', tips: breast() ? [['drop', 'Make the formula with water first', 'Breast milk can’t replace the water.'], ['bottle', 'Then add breast milk', 'Or give the breast milk first, then top up with formula.']] : null }),
+    formula: () => ({ type: 'howto', ct: 'howto', label: 'Bottles', art: 'bottle', title: 'Mix formula exactly as the label says',
+      why: 'Extra water or powder changes what {s} {get|gets} from it. Follow the label every time.',
+      photo: 'feeding/formula-scoop', pos: '30%', alt: 'A level scoop of formula over the tin', call: [['Level, never heaped', 'tr', 60, 34]],
+      near: [['Clean bottle', 'bottle'], ['Formula and its scoop', 'cup'], ['Clean water', 'drop']],
+      moves: [['photo:feeding/formula-water', 'Pour the water in first', realMo() < 2 || early() ? 'Boiled, then cooled for 5 minutes, up to the line the label says' : 'Up to the line the label says'], ['photo:feeding/formula-3', 'Add level scoops', 'Flat, never heaped. Then cap it and shake'], ['photo:feeding/formula-4', 'Test a few drops on your wrist', 'It should feel warm, never hot']],
+      tips: [realMo() < 2 || early() ? ['Why boiled water?', 'It kills a rare germ in powder. It matters most under 2 months, or if born early'] : ['Wash your hands first', 'And the bottle and the counter'],
+        breast() ? ['Mixing with breast milk?', 'Make the formula with water first, then add the breast milk'] : ['Which formula?', 'Any standard iron-fortified one. Ask before a special formula']],
+      safe: [['Never add extra water or powder', 'It can make {o} sick'], ['Never warm a bottle in the microwave', 'It heats unevenly and can burn {p} mouth']] }),
     pump: () => { const m = mo();
       if (m < 1.5) return { type: 'howto', label: 'Pumping', art: 'bottle', title: 'Pump 8–12 times a day at first',
         why: 'Including once at night. It tells your body how much milk to make.',
@@ -129,8 +131,13 @@
         ordered: false, steps: [['notepad', 'Label', '{P} name and the date on each bottle'], ['fridge', 'Keep cold', 'Cooler with ice packs, up to 24 hours'], ['bottle', 'Pack to mix', 'Powder and water kept apart']] },
 
     // ---------- Feeding challenges ----------
-    x_gas: () => ({ type: 'expect', label: 'Feeding challenges', art: 'bottle', title: 'Some gassy fussing every day is normal',
-      why: 'It’s often worst in the evening, and a few things help.',
+    x_gas: () => ({ type: 'expect', ct: 'know', label: 'Is this normal?', art: 'eye', title: 'Some gassy fussing every day is normal',
+      photo: 'feeding/gas-hero', pos: '40%', cap: 'Burping partway through a feed often helps',
+      notice: ['Squirming and pulling {p} legs up', 'Fussier in the evening'],
+      helps2: ['Burp {o} midway through a feed, not just at the end', 'Bicycle {p} legs gently while {s’s} on {p} back', 'Tummy time while {s’s} awake and watched'],
+      helpNotes: [['Gas drops and gripe water?', 'Gas drops are safe, but often don’t help. Ask before gripe water']],
+      calls2: () => [['Call your pediatrician if:', 'crying 3 or more hours a day, or grunting with every breath'], realMo() < 3 ? ['Call right away if:', 'a rectal temperature of 100.4°F or higher', 1] : null],
+      why: 'It’s often worst in the evening, and it usually eases by 3–4 months.',
       do: [['photo:feeding/gas-burp', 'Burp mid-feed', 'Not just at the end'], ['photo:feeding/gas-legs', 'Bicycle {p} legs', 'Gently, with {o} on {p} back'], ['photo:feeding/gas-tummy', 'Tummy time', 'Awake and watched']],
       doNotes: [['', 'Gas drops and gripe water', 'Gas drops are safe, but often don’t help. Ask before gripe water']],
       calls: { ped: 'crying 3 or more hours a day, or grunting every time {s} {breathe|breathes}.' } }),
@@ -196,8 +203,13 @@
         why: 'Soften it, and skip the added salt.',
         pictureTitle: 'Ideas from your plate', picture: () => H().TPLB.chips(['Shredded chicken', 'Scrambled egg', 'Squashed beans', 'Soft pasta', 'Banana or ripe pear', 'Soft-cooked veggies']),
         ordered: false, steps: [['plate', 'From your plate', 'Take out {p} portion before adding salt'], ['hand', '{S} {feed|feeds} {o}self', 'Fingers first, and a spoon to practice']] }
-      : { type: 'howto', label: 'How a meal goes', art: 'highchair', title: 'First meals are just a few bites',
-        why: 'Solids are practice for now. Let {o} set the pace.',
+      : { type: 'howto', ct: 'howto', label: 'First meals', art: 'highchair', title: 'First meals are just a few bites',
+        why: 'Solids are practice for now, and milk is still {p} main food. Let {o} set the pace.',
+        photo: 'feeding/first-foods', pos: '45%', alt: 'A baby in a high chair with a bowl of soft food', call: [['Sitting up, strapped in', 'tl', 44, 70], ['A few soft spoonfuls', 'br', 28, 80]],
+        near: [['High chair', 'highchair'], ['Soft food', 'bowl'], ['Small spoon', 'cup'], ['Bib', 'shirt']],
+        moves: [['photo:feeding/meal-1', 'Sit {o} up, facing you', 'Strapped in, at a calm time when {s’s} not too hungry'], ['photo:feeding/meal-2', 'Offer a little', 'A spoonful, or a soft strip {s} can hold'], ['photo:feeding/meal-3', 'Let {o} lead', '{S} {open|opens} up for more, and {turn|turns} away when done']],
+        tips: [['Expect mess', 'Most of it ends up on the tray at first']], linkTo: ['Gagging or choking? Know the difference', 'chg:Feeding:mock:z_gag'],
+        safe: [['Stay with {o} the whole meal', 'And keep {o} sitting up the whole time'], ['Gagging is common and noisy', 'Choking is silent. That’s when to start first aid']],
         steps: [['photo:feeding/meal-1', 'Sit {o} up', 'Strapped in, facing you, at a calm time'], ['photo:feeding/meal-2', 'Offer a little', 'A spoonful, or a soft strip to hold'], ['photo:feeding/meal-3', 'Let {o} lead', 'Opens up for more, turns away when done']],
         stepsNotes: [['', 'Expect mess', 'Funny faces too. Most of it ends up on the tray at first']] },
     // Nov 19: the same three foods at each texture, with this baby's column marked, in the top card.
@@ -296,17 +308,42 @@
     z_signs: 'z_ready', z_setup: 'z_start', z_tray: 'z_start', z_allergy: 'z_plan', z_notyet: 'z_plan', z_water: 'z_milkfood', z_family: 'z_meal', z_appetite: 'z_day' };
   // Each page keeps Feeding's own header: the soft card in the color of what you tapped, with its small picture,
   // taken from the page it replaces, so Feeding looks like Feeding and Sleep looks like Sleep.
+
+  /* Nov 23 (Yarden approved the before/after): making formula, a first meal and gas use Everyday care's page layout.
+     A how-to: one big photo with pointing labels, "Have nearby" icons, three steps with small photos and up to two notes,
+     then "Keep her safe". A what-to-know page: photo with a caption, what you may notice, what helps, the call card. */
+  const CT_START = { tl: [80, 56], tr: [320, 56], bl: [80, 244], br: [320, 244] };
+  const ctBody = q => { const F = H().F, v = x => typeof x === 'function' ? x() : x, A = n => typeof hubArt === 'function' ? hubArt(n, CAT) : '';
+    const sent = t => { t = F(v(t) || ''); return !t ? '' : /[.?!]$/.test(t) ? t : t + '.'; };
+    const h2 = t => `<h2 class="ct-h2">${F(t)}</h2>`;
+    const notes = n => (n = (v(n) || []).filter(Boolean)).length ? `<div class="ct-notes">${n.map(([b, t]) => `<p><b>${sent(b)}</b> ${sent(t)}</p>`).join('')}</div>` : '';
+    const call = v(q.call) || [];
+    const arrows = call.map(([, at, x, y]) => { const [sx, sy] = CT_START[at], ex = x * 4, ey = y * 3, mx = (sx + ex) / 2, my = (sy + ey) / 2, dx = ex - sx, dy = ey - sy, b = at === 'tl' || at === 'br' ? 0.25 : -0.25;
+      return `<path d="M${sx} ${sy} Q${(mx - dy * b).toFixed(0)} ${(my + dx * b).toFixed(0)} ${ex} ${ey}" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" marker-end="url(#fdah)" filter="drop-shadow(0 1px 2px rgba(0,0,0,.35))"/>`; }).join('');
+    const img = (src, alt, pos) => `<img src="assets/${src}.jpg?v=1" alt="${F(alt || '').replace(/"/g, '&quot;')}" loading="lazy" style="object-position:50% ${pos || '40%'}">`;
+    if (q.ct === 'howto') return `<div class="ct-page is-howto">`
+      + `<figure class="ct-hero">${img(q.photo, q.alt, q.pos)}<svg class="ct-arrows" viewBox="0 0 400 300" preserveAspectRatio="none" aria-hidden="true"><defs><marker id="fdah" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#fff"/></marker></defs>${arrows}</svg>${call.map(([l, at]) => `<span class="ct-callout is-${at}">${F(l)}</span>`).join('')}</figure>`
+      + (q.near ? h2('Have nearby') + `<div class="ct-near">${v(q.near).map(([t, i]) => `<span><i>${A(i)}</i><small>${F(t)}</small></span>`).join('')}</div>` : '')
+      + h2('Do it in a few steps') + `<div class="ct-stepcard"><ol class="ct-steps2">${v(q.moves).map(([th, t, sub], k) => `<li><span class="ct-th">${/^photo:/.test(th) ? `<img src="assets/${th.slice(6)}.jpg?v=1" alt="" loading="lazy">` : `<i>${A(th)}</i>`}</span><span class="ct-tx"><b><em>${k + 1}</em>${F(v(t))}</b><small>${sent(sub)}</small></span></li>`).join('')}</ol>${notes(q.tips)}</div>`
+      + (q.linkTo ? `<button class="ct-alt" onclick="openPage('${q.linkTo[1]}')">${F(q.linkTo[0])} <span aria-hidden="true">›</span></button>` : '')
+      + (v(q.safe) ? h2('Keep {o} safe') + `<div class="ct-safecard">${notes(q.safe)}</div>` : '') + `</div>`;
+    const calls = v(q.calls2) || [];
+    return `<div class="ct-page is-know">` + h2('See what it looks like') + `<figure class="ct-look" id="ct-look">${img(q.photo, q.cap, q.pos)}<figcaption>${sent(q.cap)}</figcaption></figure>`
+      + h2('What you may notice') + `<div class="ct-notice">${v(q.notice).map(t => `<div>${F(t)}</div>`).join('')}</div>`
+      + h2('What helps') + `<div class="ct-helpcard"><ul class="ct-helps">${v(q.helps2).map(t => `<li><i><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i><span>${F(t)}</span></li>`).join('')}</ul>${notes(q.helpNotes)}</div>`
+      + h2('When to call') + `<section class="care-calls is-titled"><span class="care-calls-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.6 3.5h2.6l1.3 4-2 1.4a11 11 0 0 0 6.6 6.6l1.4-2 4 1.3v2.6a2 2 0 0 1-2.1 2A16.5 16.5 0 0 1 4.6 5.6a2 2 0 0 1 2-2.1Z"/></svg></span><div>${calls.filter(Boolean).map(([l, t, u]) => `<p${u ? ' class="is-urgent"' : ''}><b>${F(l)}</b> ${sent(t)}</p>`).join('')}</div></section></div>`; };
+  const CT_PINK = ['#f7d9e5', '#884866'];
   const draw = (q, old) => { const h = H(), F = h.F, v = x => typeof x === 'function' ? x() : x;
     const m = typeof old === 'string' ? old.match(/<div class="dev-area-head ss-head" style="--area:(#[0-9a-f]+);--area-ink:(#[0-9a-f]+)">(<span class="dev-area-head-art"[^>]*>[\s\S]*?<\/svg><\/span>)?/i) : null;
-    const bg = m ? m[1] : '#fbe4ec', ink = m ? m[2] : '#9b4766';
+    const bg = q.ct ? CT_PINK[0] : m ? m[1] : '#fbe4ec', ink = q.ct ? CT_PINK[1] : m ? m[2] : '#9b4766';
     // Nov 19: the topic's own icon on a white tile, as on the Safety step pages, in place of the abstract shapes readers found meaningless.
     const art = q.art && typeof hubArt === 'function' ? `<span class="dev-area-head-art sf-head-art">${hubArt(q.art, CAT)}</span>` : (m && m[3] ? m[3] : '');
     const why = v(q.why);
     return `<div class="quiet-category hub-page hub-detail care-v2" data-overview="${CAT}" data-ss="1" style="${typeof yearTheme === 'function' ? yearTheme(CAT) : ''};--ss-bg:${bg};--ss-ink:${ink}">${typeof detailPageTop === 'function' ? detailPageTop(CAT) : ''}`
-      + `<div class="dev-area-head ss-head" style="--area:${bg};--area-ink:${ink}">${art}<p class="hub-context">${F(v(q.label))}</p><h1>${F(v(q.title))}</h1>${why ? `<p class="hub-lead">${F(why)}</p>` : ''}</div>`
+      + `<div class="dev-area-head ss-head" style="--area:${bg};--area-ink:${ink}">${art}<p class="hub-context">${F(v(q.label) + (q.ct === 'howto' ? ' · How to' : q.ct === 'know' ? ' · What to know' : ''))}</p><h1>${F(v(q.title))}</h1>${why ? `<p class="hub-lead">${F(why)}</p>` : ''}</div>`
       // Nov 19: a page's main visual comes first, right under the standard top card (never inside it), so every top card looks the same.
       + (q.hero ? `<div class="ph-first">${q.heroTitle ? `<h2 class="hub-h2">${F(v(q.heroTitle))}</h2>` : ''}${v(q.hero)}</div>` : '')
-      + `<div class="care-tpl is-${q.type}">${h.TPLS[q.type](q, CAT)}</div></div>`; };
+      + (q.ct ? `<div class="care-tpl is-${q.ct}">${ctBody(q)}</div></div>` : `<div class="care-tpl is-${q.type}">${h.TPLS[q.type](q, CAT)}</div></div>`); };
   const base = window.changesRoute;
   window.changesRoute = function (r, ...a) {
     if (window.__fdx && X().oldFeeding) r = X().oldFeeding(r);
