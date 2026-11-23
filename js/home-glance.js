@@ -17,7 +17,7 @@
     solids: 'First foods could start any week', twonaps: 'Three naps are becoming two', crawl: 'Crawling could start any week',
     sit: 'Sitting on {p} own is close', tooth: 'A first tooth could come any week', finger: 'Time for lumpier food and finger foods',
     meals: 'Meals are becoming three a day', carseat: '{P} infant car seat is getting small', sep: 'Goodbyes are about to get harder',
-    pull: 'Pulling up to stand could start any week', words: 'First words are coming', milk: 'Whole milk starts at 12 months', steps: 'First steps could come any week'
+    pull: 'Pulling up to stand could start any week', words: 'First words are coming', milk: 'Whole cow’s milk can start at 12 months', steps: 'First steps could come any week'
   };
   // Changes you live through get "What helps"; changes you can get ahead of get "Before it starts".
   const HELPS = ['crying', 'regress', 'sep', 'tooth', 'nights', 'smile', 'twonaps'];
@@ -287,7 +287,7 @@
     8: [['Finger foods are next.', 'What’s safe to offer, and how to cut it.', 'Feeding', 'avocado', 'chg:Feeding:d:finger']],
     9: [CHK(9)],
     10: [['She can eat what you eat.', 'Mostly. Take out her portion before you add salt.', 'Feeding', 'plate', 'chg:Feeding:d:family']],
-    11: [['Whole milk, at one.', 'How to switch, and how much she needs.', 'Feeding', 'bottle', 'chg:Feeding:d:milk12'], CHK(12)]
+    11: [['Whole cow’s milk, at 12 months.', 'How to start it, and how much {s} needs.', 'Feeding', 'bottle', 'chg:Feeding:d:milk12'], CHK(12)]
   };
 
   function monthCard(M, lead, a, next) {
@@ -315,9 +315,9 @@
           <span class="ms-art" aria-hidden="true"><i class="ms-c2"></i><span class="ms-toys">${window.stCardArt(0)}</span></span></span>
         <span class="ms-foot"><span class="ms-watch"><i><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6z" fill="none" stroke="#fffaf3" stroke-width="2"/></svg></i>${F(P('See what she sees'))}</span><span class="ms-go" aria-hidden="true">→</span></span>
       </button>` : sc ? `<button class="ms-card" onclick="try{localStorage.setItem('ahead-story-seen-${m}','1')}catch(e){};stOpen()" style="${monthTheme(m)};--ms-acc:${mix(c, .1, 30)};--ms-c1:${mix(c, .5)};--ms-c2:${mix(c, .72)}">
-        <span class="ms-body"><span class="ms-copy"><span class="ms-eyebrow">${m === 0 ? F('{P} first weeks') : seen ? F('This month') : F('New this month')}</span><b class="ms-month">${F(m === 0 ? when + '.' : `Month ${m}.`)}</b><b class="ms-name">${F(`${name()}’s story.`)}</b><small>${F(sc.tease)}</small></span>
+        <span class="ms-body"><span class="ms-copy"><span class="ms-eyebrow">${m === 0 ? F('{P} first weeks') : seen ? F('This month') : F('New this month')}</span><b class="ms-month">${F(m === 0 ? when + '.' : `Month ${m}.`)}</b><small>${F(sc.tease).replace(/([.!?]) (?=\S)/g, '$1<br>')}</small></span>
           <span class="ms-art" aria-hidden="true"><i class="ms-c2"></i><span class="ms-toys">${typeof window.stCardArt === 'function' ? window.stCardArt(m) : art}</span></span></span>
-        <span class="ms-foot"><span class="ms-watch"><i><svg viewBox="0 0 24 24"><path d="M9 7.5v9l7.5-4.5z"/></svg></i>${F(m === 0 ? 'Watch {p} story' : P('Watch her month'))}</span><span class="ms-go" aria-hidden="true">→</span></span>
+        <span class="ms-foot"><span class="ms-watch"><i><svg viewBox="0 0 24 24"><path d="M9 7.5v9l7.5-4.5z"/></svg></i>${F(m === 0 ? `${name()}’s story` : `${name()}’s month`)}</span><span class="ms-go" aria-hidden="true">→</span></span>
       </button>`
       : `<section class="he-hero" style="${monthTheme(m)}"><p class="he-eyebrow">${F(when)} · ${F(`Through ${name()}’s eyes`)}</p><div class="he-copy"><h1>${F(P(M.eyes[0]))}</h1><p class="he-lead">${F(P(M.eyes[1]))}</p>${m <= 4 ? `<button class="he-see" onclick="homeEyes(true)"><span aria-hidden="true">👁</span> ${F(`See what ${name()} sees`)}</button>` : ''}</div><span class="he-art" aria-hidden="true">${art}</span></section>`;
     const rr = newLook ? radarRows(m) : [];
@@ -475,7 +475,7 @@
     try {
       const ya = window.__ya, a = ya.ageNow(), done = ya.doneNow();
       // Skip a change in its last month that the parent hasn't marked: "Sitting up, any time now" at 9 months reads as a bug.
-      const ahead = ya.C.filter(c => c.end > a && !done[c.id] && !(a > c.start && a >= c.end - 1)).sort((x, y) => x.start - y.start || x.end - y.end);
+      const ahead = ya.C.filter(c => c.end > a && !done[c.id] && !(a > c.start && a >= c.end - 1) && !(c.id === 'tooth' && a >= 8)).sort((x, y) => x.start - y.start || x.end - y.end);
       const n = ahead[0];  // the same first row the Timeline shows under "Maya now"
       if (n) next = `Next up: ${F(n.title)}, ${F(ya.whenShort(n, a))}`;
     } catch (e) {}

@@ -20,3 +20,164 @@
 /* The month baby picture on the Home card */
 #main .ms-toys .ms-babyimg{position:absolute;left:8%;right:8%;top:12px;bottom:6px;display:flex;align-items:flex-end;justify-content:center}
 #main .ms-toys .ms-babyimg img{max-width:100%;max-height:100%;object-fit:contain;filter:drop-shadow(0 3px 4px rgba(80,50,40,.12))}
+
+/* Nov 21 Home story card: big painted baby anchored bottom-right, cropped by the card's edge, over a soft wash of the month's color.
+   Written with fixed sizes (no percentage heights, no line balancing) so Safari and Chrome lay it out the same way.
+   The card is a <button>: keep it a one-column grid, since Safari lays out block content inside buttons differently. */
+#main .ms-card{position:relative!important;overflow:hidden!important;isolation:isolate;min-height:232px!important;padding:22px 20px 20px!important;
+  display:grid!important;grid-template-columns:minmax(0,1fr)!important;grid-template-rows:auto 1fr!important;justify-items:start!important;align-items:start!important;column-gap:0!important;text-align:left!important}
+#main .ms-card::before{content:"";position:absolute;top:0;right:0;bottom:0;left:0;z-index:-1;opacity:.75;
+  background:radial-gradient(70% 60% at 82% 72%,var(--ms-c2) 0%,rgba(255,255,255,0) 70%),radial-gradient(45% 35% at 60% 95%,var(--ms-c1) 0%,rgba(255,255,255,0) 70%)}
+#main .ms-card .ms-body{display:contents!important}
+#main .ms-card .ms-copy{grid-column:1!important;grid-row:1!important;justify-self:start!important;position:relative;z-index:2;margin:0!important;width:200px!important;max-width:100%!important}
+#main .ms-card .ms-month{white-space:nowrap}
+#main .ms-card .ms-copy small{font-size:16px!important;line-height:1.4!important;color:#3d3a4d!important;margin-top:10px!important;max-width:200px!important;text-wrap:wrap}
+#main .ms-card .ms-foot{grid-column:1!important;grid-row:2!important;align-self:end!important;justify-self:start!important;position:relative;z-index:2;margin-top:18px!important}
+#main .ms-c2{display:none!important}
+/* The baby: a box on the right of the card, width = card minus the text column, from 14px below the top to 16px past the bottom edge. */
+#main .ms-card .ms-art{position:absolute!important;z-index:1;grid-column:auto!important;grid-row:auto!important;margin:0!important;
+  top:14px!important;right:0!important;bottom:-16px!important;left:auto!important;width:calc(100% - 168px)!important;max-width:230px!important;height:calc(100% + 2px)!important;align-self:stretch!important;justify-self:stretch!important;flex:none!important;
+  -webkit-mask-image:linear-gradient(to right,transparent 0,#000 22%);mask-image:linear-gradient(to right,transparent 0,#000 22%)}
+#main .ms-card .ms-art::before{display:none!important}
+#main .ms-card .ms-toys,#main .ms-card .ms-toys .ms-babyimg{position:absolute!important;top:0!important;right:0!important;bottom:0!important;left:0!important;clip-path:none!important;display:block!important}
+#main .ms-card .ms-toys .ms-babyimg img{position:absolute!important;right:0!important;bottom:0!important;width:auto!important;height:auto!important;max-width:100%!important;max-height:100%!important;filter:none!important}
+
+
+/* Nov 22 · Home month-card positioning preview.
+   Scope: the month-story card only. Artwork, copy, CTA, surrounding Home, and
+   shared category styling are unchanged. Lift the illustration into the card's
+   usable space and tune visual weight without shifting the text/CTA hierarchy. */
+#main .ms-card{
+  min-height:222px!important;
+  padding:21px 20px 18px!important;
+  grid-template-rows:minmax(0,1fr) auto!important;
+}
+#main .ms-card .ms-copy{
+  width:204px!important;
+  max-width:100%!important;
+}
+#main .ms-card .ms-eyebrow{margin-bottom:8px!important}
+#main .ms-card .ms-copy small{
+  margin-top:9px!important;
+  max-width:194px!important;
+  line-height:1.35!important;
+}
+#main .ms-card .ms-foot{
+  margin-top:12px!important;
+  align-self:end!important;
+}
+#main .ms-card .ms-art{
+  top:-6px!important;
+  right:-5px!important;
+  bottom:-2px!important;
+  width:calc(100% - 156px)!important;
+  max-width:215px!important;
+  height:auto!important;
+  -webkit-mask-image:linear-gradient(to right,transparent 0%,#000 16%)!important;
+  mask-image:linear-gradient(to right,transparent 0%,#000 16%)!important;
+}
+#main .ms-card .ms-toys .ms-babyimg img{
+  right:-2px!important;
+  bottom:0!important;
+  transform:translateY(-3px) scale(1.10)!important;
+  transform-origin:right bottom!important;
+}
+/* Individually reviewed Home-month compositions.
+   Source: the twelve current art assets, not a shared "crop every limb" rule.
+   Zoom is restrained so the actual action (toy, face-free gesture, motion) stays
+   visible; an edge crop is used only when the pose makes sense there. */
+#main .ms-card .ms-babyimg img{transform-origin:right bottom!important}
+/* Newborn — soften the left edge of the blanket while keeping the feet crisp. */
+#main .ms-card .ms-babyimg img[src*="baby-0.webp"]{
+  right:0!important;bottom:0!important;transform:translateY(-2px) scale(1.04)!important;
+}
+#main .ms-card .ms-art:has(img[src*="baby-0.webp"]){
+  -webkit-mask-image:linear-gradient(to right,transparent 0%,rgba(0,0,0,.35) 22%,#000 55%)!important;
+  mask-image:linear-gradient(to right,transparent 0%,rgba(0,0,0,.35) 22%,#000 55%)!important;
+}
+/* Month 1 — two feet come up from the bottom; keep the whole mobile. */
+#main .ms-card .ms-babyimg img[src*="baby-1.webp"]{
+  right:-3px!important;bottom:-6px!important;transform:scale(1.04)!important;
+}
+/* Month 2 — touching fingertips must remain fully visible; sleeve comes from the right already. */
+#main .ms-card .ms-babyimg img[src*="baby-2.webp"]{
+  right:0!important;bottom:0!important;transform:none!important;
+}
+
+/* Month 5 — deliberate right-edge leg crop, with both feet and ball still readable. */
+#main .ms-card .ms-babyimg img[src*="baby-5.webp"]{
+  right:-17px!important;bottom:-3px!important;transform:translateY(-4px) scale(1.16)!important;
+}
+
+
+/* Month 8 — restore a larger, fuller peekaboo illustration; keep it left and have sleeves emerge from the bottom. */
+#main .ms-card .ms-babyimg img[src*="baby-8.webp"]{
+  right:26px!important;bottom:-3px!important;transform:translateY(22px) scale(1.07)!important;
+}
+/* Months 3, 4, 6, 7 — keep the original main-branch card composition, not just image size. */
+#main .ms-card .ms-babyimg img:is([src*="baby-3.webp"],[src*="baby-4.webp"],[src*="baby-6.webp"],[src*="baby-7.webp"]){
+  right:0!important;bottom:0!important;transform:none!important;
+}
+#main .ms-card:has(img:is([src*="baby-3.webp"],[src*="baby-4.webp"],[src*="baby-6.webp"],[src*="baby-7.webp"])){
+  min-height:232px!important;
+  padding:22px 20px 20px!important;
+  grid-template-rows:auto 1fr!important;
+}
+#main .ms-card:has(img:is([src*="baby-3.webp"],[src*="baby-4.webp"],[src*="baby-6.webp"],[src*="baby-7.webp"])) .ms-copy{
+  width:200px!important;
+}
+#main .ms-card:has(img:is([src*="baby-3.webp"],[src*="baby-4.webp"],[src*="baby-6.webp"],[src*="baby-7.webp"])) .ms-eyebrow{
+  margin-bottom:10px!important;
+}
+#main .ms-card:has(img:is([src*="baby-3.webp"],[src*="baby-4.webp"],[src*="baby-6.webp"],[src*="baby-7.webp"])) .ms-copy small{
+  margin-top:10px!important;line-height:1.4!important;max-width:200px!important;
+}
+#main .ms-card:has(img:is([src*="baby-3.webp"],[src*="baby-4.webp"],[src*="baby-6.webp"],[src*="baby-7.webp"])) .ms-foot{
+  margin-top:18px!important;
+}
+#main .ms-card .ms-art:has(img:is([src*="baby-3.webp"],[src*="baby-4.webp"],[src*="baby-6.webp"],[src*="baby-7.webp"])){
+  top:14px!important;right:0!important;bottom:-16px!important;
+  width:calc(100% - 168px)!important;max-width:230px!important;
+  height:calc(100% + 2px)!important;
+  -webkit-mask-image:linear-gradient(to right,transparent 0%,#000 22%)!important;
+  mask-image:linear-gradient(to right,transparent 0%,#000 22%)!important;
+}
+
+/* Month 9 — restore the original main-branch artwork size and placement. */
+#main .ms-card .ms-babyimg img[src*="baby-9.webp"]{
+  right:0!important;bottom:0!important;transform:none!important;
+}
+#main .ms-card:has(img[src*="baby-9.webp"]){
+  min-height:232px!important;
+  padding:22px 20px 20px!important;
+  grid-template-rows:auto 1fr!important;
+}
+#main .ms-card:has(img[src*="baby-9.webp"]) .ms-copy{width:200px!important}
+#main .ms-card:has(img[src*="baby-9.webp"]) .ms-eyebrow{margin-bottom:10px!important}
+#main .ms-card:has(img[src*="baby-9.webp"]) .ms-copy small{
+  margin-top:10px!important;line-height:1.4!important;max-width:200px!important;
+}
+#main .ms-card:has(img[src*="baby-9.webp"]) .ms-foot{margin-top:18px!important}
+#main .ms-card .ms-art:has(img[src*="baby-9.webp"]){
+  top:14px!important;right:0!important;bottom:-16px!important;
+  width:calc(100% - 168px)!important;max-width:230px!important;
+  height:calc(100% + 2px)!important;
+  -webkit-mask-image:linear-gradient(to right,transparent 0%,#000 22%)!important;
+  mask-image:linear-gradient(to right,transparent 0%,#000 22%)!important;
+}
+/* Month 10 — preserve the pulling-up action and softly fade the left edge of the furniture, like Newborn. */
+#main .ms-card .ms-babyimg img[src*="baby-10.webp"]{
+  right:-2px!important;bottom:0!important;transform:none!important;
+}
+#main .ms-card .ms-art:has(img[src*="baby-10.webp"]){
+  -webkit-mask-image:linear-gradient(to right,transparent 0%,rgba(0,0,0,.35) 22%,#000 55%)!important;
+  mask-image:linear-gradient(to right,transparent 0%,rgba(0,0,0,.35) 22%,#000 55%)!important;
+}
+/* Month 11 — both hands and confetti visible; only wrists meet the lower edge. */
+#main .ms-card .ms-babyimg img[src*="baby-11.webp"]{
+  right:-2px!important;bottom:-5px!important;transform:scale(1.04)!important;
+}
+@media(max-width:355px){
+  #main .ms-card .ms-art{right:-8px!important;width:calc(100% - 144px)!important}
+  #main .ms-card .ms-copy{width:194px!important}
+}
