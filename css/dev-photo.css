@@ -105,3 +105,15 @@
 #main .dev-putaway-row b{display:block;font-size:14.5px;font-weight:650}
 #main .dev-putaway-row small{display:block;font-size:13px;color:var(--ink-2,#6d666d);margin-top:1px}
 #main button.hub-unseen{border:0;font:inherit;cursor:pointer;-webkit-appearance:none;appearance:none}
+/* Nov 22: how sitting comes together, three photos inside the big question (from Yarden's inspiration) */
+#main .dev-bigq .hub-card-head b{font-size:19px}
+#main .dev-bigsteps-lead{margin:2px 0 14px;font-size:14.5px;line-height:1.4;color:var(--ink,#3b3a40)}
+#main .dev-bigsteps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin:0 0 34px}
+#main .dev-bigsteps figure{margin:0;position:relative;display:flex;flex-direction:column;align-items:center;text-align:center}
+#main .dev-bigsteps figure:not(:last-child)::after{content:"→";position:absolute;right:-15px;top:0;margin-top:calc(50% - 12px);font-size:17px;font-weight:600;line-height:1;color:#7b66b3}
+#main .dev-bigsteps img{display:block;width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:16px;box-shadow:0 2px 10px rgba(74,61,99,.10)}
+#main .dev-bigsteps figcaption{display:flex;flex-direction:column;align-items:center;padding:0}
+#main .dev-bigsteps b{margin-top:-13px;position:relative;display:inline-block;white-space:nowrap;font-size:12px;font-weight:700;line-height:1.2;color:#4a3d63;background:#efe9fb;border:2px solid #fff;border-radius:999px;padding:5px 10px}
+#main .dev-bigsteps small{display:block;font-size:12px;line-height:1.35;color:var(--ink,#3b3a40);margin-top:7px}
+@media (max-width:370px){#main .dev-bigsteps{gap:14px}#main .dev-bigsteps b{font-size:11px;padding:4px 7px}#main .dev-bigsteps figure:not(:last-child)::after{right:-12px;font-size:14px}}
+@media (max-width:370px){#main .dev-bigsteps b{font-size:10.5px;padding:4px 6px;letter-spacing:-.01em}}

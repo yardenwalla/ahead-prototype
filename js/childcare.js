@@ -387,7 +387,7 @@
   const CC_STAGES = [
     { label: 'Finding care', age: 'Months before', one: 'Kinds of care, costs and when to start looking', eyebrow: 'Finding care', t: 'Explore your options', lead: 'Infant spots go fast, so it helps to start early. Here’s what each kind of care looks like.',
       worth: ['Worth knowing before you look', 'The best tour question isn’t about activities.', 'Ask how they handle crying and naps, and who covers when someone’s out.'] },
-    { label: 'Care chosen', age: 'Weeks before', one: 'Getting ready for day one, and a backup plan', eyebrow: 'Care chosen', t: 'Make day one familiar', lead: 'Help your caregiver learn Maya’s little routines before the first real goodbye.',
+    { label: 'Care chosen', age: 'Weeks before', one: 'Getting ready for day one, and a backup plan', eyebrow: 'Care chosen', t: 'Make day one familiar', lead: 'Ease in over a week or two, so the first real goodbye isn’t the first time.',
       worth: ['Worth knowing before day one', 'A practice day helps more than a perfect schedule.', 'Visit together first, then let the caregiver take the lead while you’re nearby.'] },
     { label: 'Care started', age: 'Once care starts', one: 'Settling in, each day, and when to speak up', eyebrow: 'Care started', t: 'How is care going?', lead: 'What happens after goodbye matters more than the goodbye itself.',
       worth: ['Worth knowing now', 'Tears at drop-off don’t tell the whole story.', 'Many babies protest the goodbye, then settle. Ask how {s} did after you left.'] }
@@ -463,7 +463,7 @@
     let b = `<nav class="cc-pills" aria-label="${F('Childcare stages')}">${PILL.map((n, i) => `<button class="${i === view ? 'is-on' : ''}${i === cur ? ' is-now' : ''}" aria-current="${i === view ? 'page' : 'false'}" onclick="openPage('chg:${CAT}:s:${i}')">${i === cur ? '<i aria-hidden="true"></i>' : ''}${F(n)}${i === cur ? `<span class="cc-sr">${F(', where you are now')}</span>` : ''}</button>`).join('')}</nav>`
       + (view !== cur ? `<div class="cc-pill-note"><span>${F(view > cur ? 'Just a preview.' : 'A look back.')}</span><button onclick="ccSetStage(${view})">${F(MOVE[view])} →</button></div>` : '');
     b += `<header class="hub-hero cc-hero cc-stage-hero"><div class="cc-stage-media"><img class="cc-stage-photo" src="assets/childcare/stage${view}.jpg" alt=""><svg class="cc-wave" viewBox="0 0 400 40" preserveAspectRatio="none" aria-hidden="true"><path d="M0 22 C 70 4, 140 4, 210 18 S 340 38, 400 14 L 400 40 L 0 40 Z"/></svg></div><div class="cc-stage-copy"><h1>${F(S.t)}</h1><p class="hub-lead">${F(S.lead)}</p></div></header>`
-      + (view !== 1 ? '' : callout('idea', `<b>${F(S.worth[1])}</b>`));
+      ;   // Nov 22: Get ready's tip now lives in the easing-in steps below
     if (view === 0) {
       // Nov 19: the signature visual. Four kinds of regular care side by side, facts not scores; a chip highlights a row
       // and ticks the cell that's strongest on it, but nothing picks a winner for the family (design guide).
@@ -478,9 +478,15 @@
         + homeRow('pay', 'coin', 'Paying for care', 'A pre-tax account, a tax credit and more', 'pay')
         + homeRow('quiz', 'eye', 'Not sure? Take the quick quiz', 'Four taps, and where to look first', 'fit') + `</div></details>`;
     } else if (view === 1) {
+      // Nov 22 (Yarden's inspiration): how easing in goes, on the page itself. The dated countdown stays on Get ready for day one.
+      const ch1 = chosenNow(), k1 = ch1 ? ch1.k : '', home1 = k1 === 'nanny', fam1 = k1 === 'family';
+      const ease = home1 ? [['Meet at home together', 'Let Maya get to know {p} nanny with you there.'], ['A paid trial day', 'You stay home, a room away.'], ['A quick, warm goodbye', 'The same short goodbye each time.']]
+        : fam1 ? [['Spend time together first', 'Let Maya get used to their place and their way.'], ['A practice day', 'A few hours, then a full day.'], ['A quick, warm goodbye', 'The same short goodbye each time.']]
+        : [['Visit together', 'Let Maya explore and meet {p} caregiver.'], ['A short practice day', 'A few hours first, then build up.'], ['A quick, warm goodbye', 'The same short goodbye each time.']];
+      b += `<h2 class="hub-h2">${F('Easing in, step by step')}</h2><ol class="cc-route cc-ease">${ease.map(([t, d], i) => `<li><i>${i + 1}</i><div><b>${F(t)}</b><span>${F(d)}</span></div></li>`).join('')}</ol>`;
       b += careCardButton(card);
       b += `<h2 class="hub-h2">${F('Before day one')}</h2><div class="hub-list">`
-        + homeRow('ready', 'bag', 'Get ready for day one', `Easing in, and packing ${bm0 && fm0 ? 'milk and formula' : bm0 ? 'pumped milk' : 'formula'}`, 'ready')
+        + homeRow('ready', 'bag', 'Get ready for day one', `Your countdown, and packing ${bm0 && fm0 ? 'milk and formula' : bm0 ? 'pumped milk' : 'formula'}`, 'ready')
         + homeRow('backup', 'shield', 'When care falls through', 'Set up your backup now', 'backup') + `</div>`;
     } else {
       // Review (Nov 20): the useful question is how the baby is doing while you're away, so the page shows a good daily

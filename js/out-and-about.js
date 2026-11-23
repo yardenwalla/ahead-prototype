@@ -199,7 +199,7 @@
   function outAndAbout() {
     if (SHOW()) return home3();
     const m = ageNow(), v = stageFor(m), h = H(), n = nowFor(m), nx = nextFor(m);
-    const HERO_PH = { 0: 'town', 2: 'road', 4: 'carry-out', 6: 'highchair', 9: 'seat-infant', 12: 'seat-convertible' };
+  const HERO_PH = { 0: 'town', 2: 'road', 4: 'carry-out', 6: 'highchair', 9: 'seat-infant', 12: 'seat-convertible' };
     let b = `<header class="hub-hero oa-hero${SHOW() ? ' has-photo' : ''}">${SHOW() ? `<img class="oa-hero-img" src="${PH(HERO_PH[n[0]])}" alt="">` : ''}<p class="hub-eyebrow">${F(m < 1 ? 'In the first weeks' : `At ${m} ${m === 1 ? 'month' : 'months'}`)}</p><h1>${F(n[1])}</h1><p class="hub-lead">${F(n[2])}</p><button class="cc-hero-go oa-hero-go" onclick="${open(n[3])}">${F(n[4] ? n[4][2] : ({ errands: 'See around town', road: 'Plan a longer trip' })[n[3]] || 'See the guide')} ›</button></header>`;
     b += places(v) + seasonCard() + gear(v);
     b += h.versus('In the car', ['Every time', 'Look in the back seat before you walk away.'], ['Never', 'Leave Maya alone in the car, even for a minute.']);
@@ -476,15 +476,25 @@
   const plainRows = items => { const it = items.filter(Boolean); return it.length ? `<div class="hub-list">${it.map(([icon, title, s]) => H().row({ icon, cat: CAT, title, sub: s })).join('')}</div>` : ''; };
   const fig3 = (src, alt, pins) => `<section class="oa-photo-card oa3-fig"><figure class="oa-photo"><img src="${PH(src)}" alt="${F(alt)}" loading="lazy">${pinsHtml(pins)}</figure></section>`;
 
+  // Nov 22 (Yarden's inspiration): a real photo of this month's change in the top card, like the other guides.
+    // The button names what the photo shows (Yarden's inspiration: "See cart & store tips").
+  const HERO_CTA = { 0: 'Plan a first walk', 2: 'Plan a longer trip', 4: 'See the carrier guide', 6: 'See cart and store tips', 9: 'See which seat comes next', 12: 'See why it matters' };
+  const HERO_PH = { 0: 'town', 2: 'road', 4: 'carry-out', 6: 'hero-cart', 9: 'car-head', 12: 'car-head' };
   function home3() {
     const m = ageNow(), h = H(), n = nowFor(m), nx = nextFor(m);
     Object.keys(phaseView).forEach(k => delete phaseView[k]); Object.keys(view3).forEach(k => delete view3[k]);
-    let b = `<header class="hub-hero oa-hero oa3-hero"><p class="hub-eyebrow">${F(m < 1 ? 'In the first weeks' : `At ${m} ${m === 1 ? 'month' : 'months'}`)}</p><h1>${F(n[1])}</h1><p class="hub-lead">${F(n[2])}</p>${PLACES.some(([pid]) => pid === n[3]) ? '' : `<button class="cc-hero-go oa-hero-go" onclick="${open(n[3])}">${F(n[4] ? n[4][2] : 'See the guide')} ›</button>`}</header>`;
-    b += `<h2 class="hub-h2">${F('Where are you headed?')}</h2><div class="oa3-places">${PLACES.map(([id, label]) => `<button class="oa3-place" onclick="${open(id)}"><img src="${PH(TILE3[id])}" alt="" loading="lazy"><span><b>${F(label)}</b><i aria-hidden="true">›</i></span></button>`).join('')}</div>`;
+    let b = `<header class="hub-hero oa-hero oa3-hero"><p class="hub-eyebrow">${F(m < 1 ? 'In the first weeks' : `At ${m} ${m === 1 ? 'month' : 'months'}`)}</p><h1>${F(n[1])}</h1><p class="hub-lead">${F(n[2])}</p>${HERO_PH[n[0]] ? `<figure class="oa3-hero-photo"><img src="${PH(HERO_PH[n[0]])}" alt=""></figure>` : ''}<button class="cc-hero-go oa-hero-go oa3-hero-cta" onclick="${open(n[3])}">${F(HERO_CTA[n[0]] || 'See the guide')} →</button></header>`;
+    // Nov 22 (Yarden's inspiration): with a photo in the top card, the places are icon tiles, so the page has one photo.
+    const GLOBE = '<svg viewBox="-2 -2 28 28" aria-hidden="true"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M3.5 12h17M12 3.5c2.6 2.4 3.6 5.3 3.6 8.5s-1 6.1-3.6 8.5c-2.6-2.4-3.6-5.3-3.6-8.5s1-6.1 3.6-8.5Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>';
+    const WAVES = '<svg viewBox="-2 -2 28 28" aria-hidden="true"><path d="M3 10c1.5 0 1.5-1.5 3-1.5S7.5 10 9 10s1.5-1.5 3-1.5S13.5 10 15 10s1.5-1.5 3-1.5S19.5 10 21 10M3 15c1.5 0 1.5-1.5 3-1.5S7.5 15 9 15s1.5-1.5 3-1.5S13.5 15 15 15s1.5-1.5 3-1.5S19.5 15 21 15" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>';
+    const ICON3 = { errands: hubArt('stroller', CAT), road: hubArt('car', CAT), fly: hubArt('plane', CAT), away: hubArt('crib', CAT), abroad: GLOBE, water: WAVES };
+    const SUB3 = { errands: 'Walks and stores', road: 'Stops and naps', fly: 'Airport and plane', away: 'Sleep and setup', abroad: 'Passport and shots', water: 'Sun and water' };
+    b += `<h2 class="hub-h2">${F('Where are you headed?')}</h2><div class="oa3-places is-icons">${PLACES.map(([id, label]) => `<button class="oa3-place" onclick="${open(id)}"><span class="oa3-place-ic" style="background:${PAL[id][0]}">${ICON3[id]}</span><b>${F(label)}</b><small>${F(SUB3[id])}</small></button>`).join('')}</div>`;
     const k = season();
     b += `<div class="hub-list oa3-more">`
-      + h.row({ icon: 'bag', cat: CAT, title: 'Your gear', sub: 'Car seat, stroller, carrier and diaper bag', onclick: open('gear') })
-      + h.row({ icon: k === 'hot' ? 'sun' : 'snow', cat: CAT, title: 'Hot and cold days', sub: k === 'hot' ? 'Shade, sunscreen and the car on hot days' : 'Layers and the car seat on cold days', onclick: open('weather') })
+      // Nov 22: like the place tiles (and Health's rows), Outings orange icons on the background of the page each row opens.
+      + h.row({ icon: 'bag', cat: CAT, title: 'Your gear', sub: 'Car seat, stroller, carrier and diaper bag', onclick: open('gear') }).replace('<span class="hub-dot">', `<span class="hub-dot" style="background:${PAL.gear[0]}">`)
+      + h.row({ icon: k === 'hot' ? 'sun' : 'snow', cat: CAT, title: 'Hot and cold days', sub: k === 'hot' ? 'Shade, sunscreen and the car on hot days' : 'Layers and the car seat on cold days', onclick: open('weather') }).replace('<span class="hub-dot">', `<span class="hub-dot" style="background:${PAL[k][0]}">`)
       + `</div>`;
     if (nx) b += h.next(`Next · around ${nx[0]} months`, nx[1], open(nx[3]), '', { 2: 'Plan a first long drive or flight around feeds.', 4: 'Check your carrier’s limits before facing out.', 6: 'Once {s} {sit|sits} steadily, strapped into the cart’s own seat.', 9: 'Check the height and weight sticker on the car seat.', 12: 'Check the seat’s rear-facing limits on its label.' }[nx[0]] || '');
     return `<div class="quiet-category hub-page" data-overview="${CAT}" style="${yearTheme(CAT)}">${monthlyPageHeader(CAT)}${b}</div>`;
@@ -613,9 +623,8 @@
       + `<h2 class="hub-h2">${F('Installing it')}</h2><div class="hub-list"><button class="hub-row oa-row" style="--hl-bg:${GEAR_C.car[0]};--hl-ink:${GEAR_C.car[1]}" onclick="openPage('chg:Safety:d:step:seat')"><span class="oa-dot">${hubArt('car', CAT)}</span><span class="hub-row-copy"><b>${F('Install it and check the fit')}</b><small>${F('Step by step, in Safety')}</small></span><span class="hub-chev" aria-hidden="true">›</span></button></div>`);
 
     if (id === 'carry') return page3('gear', 'carrier', 'Carrier', 'Keep {p} face in view. A quick check every time keeps {o} breathing easy.',
-      `<h2 class="hub-h2">${F('The quick check')}</h2>` + fig3('carrier', 'A baby facing in on a parent’s chest in a soft carrier, face fully visible, chin up, knees bent in an M shape', CARRY_PINS)
-      + `<p class="oa-psteps-note oa3-under">${F('Face in view and chin off {p} chest. Back supported, knees up in an M.')}</p>`
-      + `<h2 class="hub-h2">${F('Ways to carry, as {s} {grow|grows}')}</h2><div class="oa3-thumbs">${[['carry-newborn', 'From birth', 'Facing in'], ['carry-out', 'Head steady', 'Facing out, for short awake times'], ['carry-back', 'Sits steadily', 'On your back']].map(([p, w, t]) => `<figure><img src="${PH(p)}" alt="" loading="lazy"><figcaption><b>${F(w)}</b><small>${F(t)}</small></figcaption></figure>`).join('')}</div>`
+      (c => `<h2 class="hub-h2">${F('The quick check')}</h2>` + fig3(c[0], c[1], c[2]) + `<p class="oa-psteps-note oa3-under">${F(c[3])}</p>`)(CARRY_AT(m))
+      + `<h2 class="hub-h2">${F('Ways to carry, as {s} {grow|grows}')}</h2><div class="oa3-thumbs">${(() => { const opts = [['carry-newborn', 'From birth', 'Facing in', 0], ['carry-out', 'Head steady', 'Facing out, for short awake times', 4], ['carry-back', 'Sits steadily', 'On your back', 9]]; const now = m >= 9 ? 2 : m >= 4 ? 1 : 0; return opts.map(([p, w, t], i) => `<figure${i === now ? ' class="is-now"' : ''}><img src="${PH(p)}" alt="" loading="lazy"><figcaption><b>${F(w)}</b><small>${F(t)}</small></figcaption></figure>`).join(''); })()}</div>`
       + `<p class="oa-psteps-note">${F('Each within your carrier’s own limits. Its instructions say when.')}</p>`
       + good([['moon', 'Asleep in the carrier', 'Move {o} to a flat bed when you can.'], ['cup', 'Away from the stove', 'And from hot drinks, while {s’s} in the carrier.']]));
 
@@ -634,7 +643,13 @@
     return null;
   }
   const AWAY_PINS = [['Bare play yard', 50, 66, 'r'], ['Bags up high', 82, 8, 'l']];
-  const CARRY_PINS = [];
+  // Nov 22: the carrier photo follows the baby's age (Outings' stages 0–2, 2–6, 6–12). Always facing in, the safest
+  // default at every age; facing out and back carries stay in "Ways to carry". Labels only on what each photo shows clearly.
+  const CARRY_AT = m => m < 2
+    ? ['carry-0', 'A newborn facing in on a parent’s chest in a soft carrier, face turned to the side and clear of the fabric, chin up, knees bent', [['Face in view', 42, 13, 'l'], ['Chin off chest', 43, 30, 'l'], ['Knees up', 42, 82, 'l']], 'Face in view and chin off {p} chest, close enough to kiss. Head supported, knees up in an M.']
+    : m < 6
+    ? ['carry-2', 'A baby facing in on a parent’s chest in a soft carrier, head turned to the side, face clear, high on the chest', [['Face in view', 60, 23, 'r'], ['Close and high', 56, 38, 'r']], 'Face in view and chin off {p} chest, close enough to kiss. Snug, knees up in an M.']
+    : ['carry-6b', 'An older baby facing in, tummy to tummy, in a soft carrier high on a parent’s chest, face turned out and clear, knees bent up', [['Face in view', 47, 14, 'l'], ['Knees up', 36, 72, 'l']], 'Face in view and close enough to kiss. Snug with no slumping, knees up in an M.'];
   // Three quick checks for any new place (ticks saved on this phone, cleared with Start over).
   const CHECKS_KEY = 'ahead-away-3';
   window.oaCheck3 = i => { let on = []; try { on = JSON.parse(localStorage.getItem(CHECKS_KEY)) || []; } catch (e) {} on = on.includes(i) ? on.filter(x => x !== i) : on.concat(i); try { localStorage.setItem(CHECKS_KEY, JSON.stringify(on)); } catch (e) {} const y = scrollY; render(); scrollTo(0, y); };

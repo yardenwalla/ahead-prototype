@@ -1929,3 +1929,4 @@ label:has(> .hub-photo-input:focus-visible) { outline: 2px solid #884866; outlin
 #main .mem-ft.is-more { justify-content: center }
 #main .mem-ft b { -webkit-line-clamp: 3 }
 #main .mem-ft.is-more b { min-height: 0 }
+#main .mem-w.has-spark { white-space: nowrap }

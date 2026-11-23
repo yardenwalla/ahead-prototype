@@ -161,7 +161,7 @@ window.HOME_COPY = {
 "cold-car-seat": "Puffy coats leave straps too loose, so buckle {him} in, then lay the coat on top.",
 "car-seat:t": "Next car seat? Check the height limit",
 "car-seat": "Like most babies, {N} will outgrow the infant seat by height first, and the next seat still faces back.",
-"milk12:t": "Whole milk can start at 12 months",
+"milk12:t": "Whole cow’s milk can start at 12 months",
 "milk12:formula": "Swap formula straight over, about 2 cups a day, with no need for toddler formula.",
 "milk12:breast": "It can join meals, up to 2 cups a day, and nursing continues as long as you like.",
 "milk12": "Swap formula for it, about 2 cups a day, and nursing carries on as long as you like.",
