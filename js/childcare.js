@@ -463,7 +463,7 @@
     let b = `<nav class="cc-pills" aria-label="${F('Childcare stages')}">${PILL.map((n, i) => `<button class="${i === view ? 'is-on' : ''}${i === cur ? ' is-now' : ''}" aria-current="${i === view ? 'page' : 'false'}" onclick="openPage('chg:${CAT}:s:${i}')">${i === cur ? '<i aria-hidden="true"></i>' : ''}${F(n)}${i === cur ? `<span class="cc-sr">${F(', where you are now')}</span>` : ''}</button>`).join('')}</nav>`
       + (view !== cur ? `<div class="cc-pill-note"><span>${F(view > cur ? 'Just a preview.' : 'A look back.')}</span><button onclick="ccSetStage(${view})">${F(MOVE[view])} →</button></div>` : '');
     b += `<header class="hub-hero cc-hero cc-stage-hero"><div class="cc-stage-media"><img class="cc-stage-photo" src="assets/childcare/stage${view}.jpg" alt=""><svg class="cc-wave" viewBox="0 0 400 40" preserveAspectRatio="none" aria-hidden="true"><path d="M0 22 C 70 4, 140 4, 210 18 S 340 38, 400 14 L 400 40 L 0 40 Z"/></svg></div><div class="cc-stage-copy"><h1>${F(S.t)}</h1><p class="hub-lead">${F(S.lead)}</p></div></header>`
-      + (view !== 1 ? '' : callout('idea', `<b>${F(S.worth[1])}</b>`));
+      ;   // Nov 22: Get ready's tip now lives in the easing-in steps below
     if (view === 0) {
       // Nov 19: the signature visual. Four kinds of regular care side by side, facts not scores; a chip highlights a row
       // and ticks the cell that's strongest on it, but nothing picks a winner for the family (design guide).

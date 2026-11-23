@@ -59,6 +59,8 @@
   }
 
   /* ---------- The checkup page (Health's main page) ---------- */
+  // Nov 22: Between checkups as three tiles, each opening its own page in one tap.
+  window.healthSickTiles = () => h2('Between checkups') + `<div class="h2-sick">${[['thermo', 'yellow', 'Fever', 'sick-fever'], ['drop', 'blue', 'Colds', 'cold'], ['bottle', 'pink', 'Tummy bugs', 'sick-tummy']].map(([icon, tone, t, id]) => `<button onclick="openPage('chg:Health:d:${id}')">${ic(icon, tone)}<b>${F(t)}</b></button>`).join('')}</div>`;
   // A real photo of this visit in the top card, with no labels: it sets the scene, the page says the rest.
   window.healthMainPhoto = age => `<figure class="h2-photo h2-main-photo"><img src="assets/health/checkup-${age}.jpg" alt="${e(PHOTO_ALT[age] || '')}"></figure>`;
   // Your visit, at a glance: the three pages as tiles, each with a line you'd want before opening it.
@@ -66,13 +68,14 @@
     const v = window.__hv.VAX[age], d = journeyData(), asked = d.checks['q' + age] || {}, own = d.questions[age] || [];
     const total = healthJourneyQuestions(age).length + own.length, n = Object.keys(asked).filter(k => asked[k] && (!String(k).startsWith('m') || Number(String(k).slice(1)) < own.length)).length;
     const shots = age === 0 ? 'Maybe hepatitis B' : age === 1 ? 'Maybe one' : age === 9 ? 'Catch-up only' : { 2: 'The first round', 4: 'Second doses of the same ones', 6: 'Third doses of the same ones', 12: 'New ones, and boosters' }[age];
-    // Nov 22 (Yarden's inspiration): the three pages as full rows, each with a line that says what's inside.
-    const V = VISIT[age], talk = (V.talk || []).map(x => x[1].toLowerCase());
-    const expectLine = `${V.steps.length} steps` + (talk.length ? `, plus a talk about ${talk.slice(0, -1).join(', ')} and ${talk[talk.length - 1]}` : '');
+    // Nov 22 (Yarden's inspiration): the three pages as full rows, each line saying what's on that page at this age.
+    const EXP = { 0: 'Weight, a jaundice check and the hospital tests', 1: 'Growth, an exam and how feeds are going', 2: 'Growth, an exam and new skills like smiling', 4: 'Growth, new skills and a first talk about solids', 6: 'Growth, sitting, first foods and teeth', 9: 'Growth, a development questionnaire and finger foods', 12: 'Growth, a blood test and moving to cups' };
+    const VAXL = { 0: 'Hepatitis B and RSV protection', 1: 'Maybe a second hepatitis B shot', 2: 'The first big round, and helping {o} after', 4: 'Second doses, and helping {o} after', 6: 'Third doses, and the flu shot in season', 9: 'Usually none, unless one was missed', 12: 'New ones like measles, and boosters' };
+    const ASKL = { 0: 'About feeding, diapers and sleep', 1: 'About feeds, sleep and crying', 2: 'About shots, sleep and feeds', 4: 'About solids, sleep and rolling', 6: 'About first foods, teeth and sleep', 9: 'About finger foods, words and moving', 12: 'About milk, cups and first steps' };
     return h2('Your visit, at a glance') + rows([
-      ['clock', 'green', 'What to expect', expectLine, `openHealthDetail(${age},'expect')`],
-      ['shield', 'blue', 'Vaccines', shots, `openHealthDetail(${age},'vaccines')`],
-      ['notepad', 'yellow', 'Questions', `${n} of ${total} asked`, `openHealthDetail(${age},'questions')`]]);
+      ['clock', 'green', 'What to expect', EXP[age], `openHealthDetail(${age},'expect')`],
+      ['shield', 'blue', 'Vaccines', VAXL[age], `openHealthDetail(${age},'vaccines')`],
+      ['notepad', 'yellow', 'Questions', ASKL[age] + (n ? ` · ${n} of ${total} asked` : ''), `openHealthDetail(${age},'questions')`]]);
   };
   // The year of checkups as a path: done ones ticked, the next one marked, the one you're reading filled in.
   window.healthTracker = function (age, focus) {
@@ -85,8 +88,8 @@
     const when = days > 1 ? `in ${days < 14 ? days + ' days' : Math.round(days / 7) + ' weeks'}` : days >= -14 ? 'now' : '';
     const nodes = WELL_VISITS.map(a => {
       const cls = [a === age ? 'is-on' : '', done(a) ? 'is-done' : '', isLive && a === focus ? 'is-next' : '', isLive && a < focus && !done(a) ? 'is-past' : ''].filter(Boolean).join(' ');
-      const sub = isLive && a === focus ? 'Next' : SHOTS[a] ? 'Shots' : '';   // the top card already gives the date
-      return `<button class="h2-node ${cls}" onclick="openPage('health-visit:${a}')"${a === age ? ' aria-current="page"' : ''}><i>${done(a) ? CHECK : ''}</i><b>${SHORT[a]}</b><small>${sub}</small></button>`;
+      const sub = '';   // Nov 22: the inspiration's path: no sublabels, the top card gives the date
+      return `<button class="h2-node ${cls}" onclick="openPage('health-visit:${a}')"${a === age ? ' aria-current="page"' : ''}><i>${done(a) ? CHECK : a === age ? '<span></span>' : ''}</i><b>${SHORT[a]}</b></button>`;
     }).join('');
     return h2('Your checkups this year') + `<section class="hub-card h2-track"><div class="h2-track-line">${nodes}</div><i class="st-chip" hidden></i></section>`;
   };

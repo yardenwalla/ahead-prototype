@@ -482,7 +482,12 @@
     const m = ageNow(), h = H(), n = nowFor(m), nx = nextFor(m);
     Object.keys(phaseView).forEach(k => delete phaseView[k]); Object.keys(view3).forEach(k => delete view3[k]);
     let b = `<header class="hub-hero oa-hero oa3-hero"><p class="hub-eyebrow">${F(m < 1 ? 'In the first weeks' : `At ${m} ${m === 1 ? 'month' : 'months'}`)}</p><h1>${F(n[1])}</h1><p class="hub-lead">${F(n[2])}</p>${PLACES.some(([pid]) => pid === n[3]) ? '' : `<button class="cc-hero-go oa-hero-go" onclick="${open(n[3])}">${F(n[4] ? n[4][2] : 'See the guide')} ›</button>`}${HERO_PH[n[0]] ? `<figure class="oa3-hero-photo"><img src="${PH(HERO_PH[n[0]])}" alt=""></figure>` : ''}</header>`;
-    b += `<h2 class="hub-h2">${F('Where are you headed?')}</h2><div class="oa3-places">${PLACES.map(([id, label]) => `<button class="oa3-place" onclick="${open(id)}"><img src="${PH(TILE3[id])}" alt="" loading="lazy"><span><b>${F(label)}</b><i aria-hidden="true">›</i></span></button>`).join('')}</div>`;
+    // Nov 22 (Yarden's inspiration): with a photo in the top card, the places are icon tiles, so the page has one photo.
+    const GLOBE = '<svg viewBox="-2 -2 28 28" aria-hidden="true"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M3.5 12h17M12 3.5c2.6 2.4 3.6 5.3 3.6 8.5s-1 6.1-3.6 8.5c-2.6-2.4-3.6-5.3-3.6-8.5s1-6.1 3.6-8.5Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>';
+    const WAVES = '<svg viewBox="-2 -2 28 28" aria-hidden="true"><path d="M3 10c1.5 0 1.5-1.5 3-1.5S7.5 10 9 10s1.5-1.5 3-1.5S13.5 10 15 10s1.5-1.5 3-1.5S19.5 10 21 10M3 15c1.5 0 1.5-1.5 3-1.5S7.5 15 9 15s1.5-1.5 3-1.5S13.5 15 15 15s1.5-1.5 3-1.5S19.5 15 21 15" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>';
+    const ICON3 = { errands: hubArt('stroller', CAT), road: hubArt('car', CAT), fly: hubArt('plane', CAT), away: hubArt('crib', CAT), abroad: GLOBE, water: WAVES };
+    const SUB3 = { errands: 'Walks and stores', road: 'Stops and naps', fly: 'Airport and plane', away: 'Sleep and setup', abroad: 'Passport and shots', water: 'Sun and water' };
+    b += `<h2 class="hub-h2">${F('Where are you headed?')}</h2><div class="oa3-places is-icons">${PLACES.map(([id, label]) => `<button class="oa3-place" onclick="${open(id)}"><span class="oa3-place-ic">${ICON3[id]}</span><b>${F(label)}</b><small>${F(SUB3[id])}</small></button>`).join('')}</div>`;
     const k = season();
     b += `<div class="hub-list oa3-more">`
       + h.row({ icon: 'bag', cat: CAT, title: 'Your gear', sub: 'Car seat, stroller, carrier and diaper bag', onclick: open('gear') })

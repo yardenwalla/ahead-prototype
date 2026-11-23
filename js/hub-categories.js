@@ -383,7 +383,7 @@
     // On every checkup page (Nov 13: it used to show only on the current one). Under 3 months, the fever rule shows right here,
     // with Call 911 under it, because a fever at this age always means calling right away (AAP).
     { const u3 = live() && actualMonth() < 3 && age === focus;
-      b += h.list('Between checkups', [h.row({ icon: 'thermo', cat: 'Health', title: 'Symptoms and when to get help', sub: 'Fever, colds and tummy bugs', onclick: "openPage('chg:Health:d:sick')" })])
+      b += (SHOW && window.healthSickTiles ? window.healthSickTiles() : h.list('Between checkups', [h.row({ icon: 'thermo', cat: 'Health', title: 'Symptoms and when to get help', sub: 'Fever, colds and tummy bugs', onclick: "openPage('chg:Health:d:sick')" })]))
         + (u3 ? `<section class="hub-card hub-callout"><b>${F('A fever under 3 months')}</b><p>${F('100.4°F or higher: call your pediatrician right away, day or night.')}</p></section>` + hubCall911() : ''); }
     const nx = WELL_VISITS[WELL_VISITS.indexOf(age) + 1];
     if (nx != null) b += h.next(`Next · at ${nx} month${nx === 1 ? '' : 's'}`, healthJourneyLabel(nx), `openPage('health-visit:${nx}')`, '', { 1: 'A short visit, with a check-in on you.', 2: 'The first main round of shots. Plan a quiet day after.', 4: 'Bring your questions about starting solids.', 6: 'The talk moves from milk to first foods.', 9: 'A closer look at development: jot down what you see.', 12: 'Ask about cow’s milk, and moving off bottles.' }[nx] || '');   // the concept's 'Looking ahead' line: what's different about the next one
