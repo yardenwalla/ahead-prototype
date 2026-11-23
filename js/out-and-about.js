@@ -489,7 +489,7 @@
     const WAVES = '<svg viewBox="-2 -2 28 28" aria-hidden="true"><path d="M3 10c1.5 0 1.5-1.5 3-1.5S7.5 10 9 10s1.5-1.5 3-1.5S13.5 10 15 10s1.5-1.5 3-1.5S19.5 10 21 10M3 15c1.5 0 1.5-1.5 3-1.5S7.5 15 9 15s1.5-1.5 3-1.5S13.5 15 15 15s1.5-1.5 3-1.5S19.5 15 21 15" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>';
     const ICON3 = { errands: hubArt('stroller', CAT), road: hubArt('car', CAT), fly: hubArt('plane', CAT), away: hubArt('crib', CAT), abroad: GLOBE, water: WAVES };
     const SUB3 = { errands: 'Walks and stores', road: 'Stops and naps', fly: 'Airport and plane', away: 'Sleep and setup', abroad: 'Passport and shots', water: 'Sun and water' };
-    b += `<h2 class="hub-h2">${F('Where are you headed?')}</h2><div class="oa3-places is-icons">${PLACES.map(([id, label]) => `<button class="oa3-place" onclick="${open(id)}"><span class="oa3-place-ic">${ICON3[id]}</span><b>${F(label)}</b><small>${F(SUB3[id])}</small></button>`).join('')}</div>`;
+    b += `<h2 class="hub-h2">${F('Where are you headed?')}</h2><div class="oa3-places is-icons">${PLACES.map(([id, label]) => `<button class="oa3-place" onclick="${open(id)}"><span class="oa3-place-ic" style="background:${PAL[id][0]};color:${PAL[id][1]}">${ICON3[id].replace(/#8a4a2c/gi, PAL[id][1]).replace(/#fde3d3/gi, PAL[id][2])}</span><b>${F(label)}</b><small>${F(SUB3[id])}</small></button>`).join('')}</div>`;
     const k = season();
     b += `<div class="hub-list oa3-more">`
       + h.row({ icon: 'bag', cat: CAT, title: 'Your gear', sub: 'Car seat, stroller, carrier and diaper bag', onclick: open('gear') })
