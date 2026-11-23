@@ -492,8 +492,9 @@
     b += `<h2 class="hub-h2">${F('Where are you headed?')}</h2><div class="oa3-places is-icons">${PLACES.map(([id, label]) => `<button class="oa3-place" onclick="${open(id)}"><span class="oa3-place-ic" style="background:${PAL[id][0]}">${ICON3[id]}</span><b>${F(label)}</b><small>${F(SUB3[id])}</small></button>`).join('')}</div>`;
     const k = season();
     b += `<div class="hub-list oa3-more">`
-      + h.row({ icon: 'bag', cat: CAT, title: 'Your gear', sub: 'Car seat, stroller, carrier and diaper bag', onclick: open('gear') })
-      + h.row({ icon: k === 'hot' ? 'sun' : 'snow', cat: CAT, title: 'Hot and cold days', sub: k === 'hot' ? 'Shade, sunscreen and the car on hot days' : 'Layers and the car seat on cold days', onclick: open('weather') })
+      // Nov 22: like the place tiles (and Health's rows), Outings orange icons on the background of the page each row opens.
+      + h.row({ icon: 'bag', cat: CAT, title: 'Your gear', sub: 'Car seat, stroller, carrier and diaper bag', onclick: open('gear') }).replace('<span class="hub-dot">', `<span class="hub-dot" style="background:${PAL.gear[0]}">`)
+      + h.row({ icon: k === 'hot' ? 'sun' : 'snow', cat: CAT, title: 'Hot and cold days', sub: k === 'hot' ? 'Shade, sunscreen and the car on hot days' : 'Layers and the car seat on cold days', onclick: open('weather') }).replace('<span class="hub-dot">', `<span class="hub-dot" style="background:${PAL[k][0]}">`)
       + `</div>`;
     if (nx) b += h.next(`Next · around ${nx[0]} months`, nx[1], open(nx[3]), '', { 2: 'Plan a first long drive or flight around feeds.', 4: 'Check your carrier’s limits before facing out.', 6: 'Once {s} {sit|sits} steadily, strapped into the cart’s own seat.', 9: 'Check the height and weight sticker on the car seat.', 12: 'Check the seat’s rear-facing limits on its label.' }[nx[0]] || '');
     return `<div class="quiet-category hub-page" data-overview="${CAT}" style="${yearTheme(CAT)}">${monthlyPageHeader(CAT)}${b}</div>`;
