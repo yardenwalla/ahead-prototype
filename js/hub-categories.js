@@ -367,12 +367,14 @@
     const HEALTH_ART = "<svg viewBox=\"0 0 300 103\" aria-hidden=\"true\"><ellipse cx=\"146\" cy=\"90\" rx=\"107\" ry=\"7\" fill=\"#d5e5d6\"/><rect x=\"31\" y=\"63\" width=\"229\" height=\"23\" rx=\"11\" fill=\"#bed5c1\"/><circle cx=\"95\" cy=\"45\" r=\"26\" fill=\"#e8b89f\"/><path d=\"M78 40q7-21 29-15\" fill=\"none\" stroke=\"#9d735f\" stroke-width=\"5\" stroke-linecap=\"round\"/><path d=\"M85 48q4 4 8 0m7 0q4 4 8 0\" stroke=\"#916959\" stroke-width=\"2\" fill=\"none\"/><path d=\"M123 65q31-27 74 0l13 13h-92z\" fill=\"#a9c9ae\"/><path d=\"M148 66q24-19 49-26\" fill=\"none\" stroke=\"#e8b89f\" stroke-width=\"11\" stroke-linecap=\"round\"/><circle cx=\"202\" cy=\"40\" r=\"7\" fill=\"#e8b89f\"/><rect x=\"246\" y=\"15\" width=\"19\" height=\"29\" rx=\"4\" fill=\"#fafdf9\" stroke=\"#a0bda5\"/><path d=\"M256 22v15m-7-7h14\" stroke=\"#89b093\" stroke-width=\"3\" stroke-linecap=\"round\"/><path d=\"M277 48h15M285 40v16\" stroke=\"#9ebeaa\" stroke-width=\"2.5\" stroke-linecap=\"round\"/></svg>";
     let b = `<style>#main .hl-art{display:grid;place-items:center;margin:10px 0 2px}#main .hl-art svg{width:100%;max-width:260px;height:auto}#main .hl-worth{border-radius:20px;background:#eef0f7;padding:14px 16px;margin:0 0 14px;color:#3e4766}#main .hl-worth small{display:block;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#5e6890;margin-bottom:5px}#main .hl-worth b{display:block;font-size:16px;line-height:1.3;color:var(--ink,#302d3c)}#main .hl-worth p{margin:5px 0 0;font-size:14px;line-height:1.45;color:#5d6276}</style>`
       + h.hero({ eyebrow: eyebrow2, title, lead: LEAD(age) }).replace(/<\/header>\s*$/, SHOW && window.healthMainPhoto ? `${window.healthMainPhoto(age)}</header>` : `<div class="hl-art">${HEALTH_ART}</div></header>`)
+      // Nov 22 (Yarden's inspiration): the year's checkups sit right under the top card, with no heading.
+      + (SHOW && window.healthTracker ? window.healthTracker(age, focus).replace(/^<h2[^>]*>.*?<\/h2>/, '').replace('h2-track"', 'h2-track is-top"') : '')
       + (WORTH && !done ? `<section class="hl-worth"><small>${F('Worth knowing before you go')}</small><b>${F(WORTH[0])}</b><p>${F(WORTH[1])}</p></section>` : '')
       // Nov 14 (Yarden): parents look for a way to tick a checkup off. One quiet link once it's close or past, never a question.
       + (live() && !done && age <= focus && dueDays <= 3 ? `<div class="hub-browse hl-done-link"><button class="hub-link" onclick="hubVisitYes(${age})">${F('Been to this checkup? Mark it done')} ›</button></div>` : '');
     // "Booked for later? Save the date" is gone (Nov 10): Health moves on by age, so a saved date isn't needed.
     // The banner at the top already has "Back to your next checkup", so it isn't repeated here.
-    if (SHOW && window.healthGlance) b += window.healthGlance(age) + window.healthTracker(age, focus);
+    if (SHOW && window.healthGlance) b += window.healthGlance(age);
     else b += h.list('Your visit, at a glance', [
       h.row({ icon: 'clock', cat: 'Health', title: 'What to expect', sub: EXPECT[age], onclick: `openHealthDetail(${age},'expect')` }),
       `<span id="health-vaccines"></span>` + h.row({ icon: 'shield', cat: 'Health', title: 'Vaccines', sub: age === 0 ? 'Hepatitis B, and protection against RSV, a common winter virus' : ({ 1: 'Second hepatitis B shot (some offices give it at 2 months instead)', 2: 'The first main round: whooping cough, polio and more', 4: 'Second doses of the 2-month shots', 6: 'More doses of the same shots' + ([8, 9, 10, 11, 0, 1, 2].includes(NOW.getMonth()) ? ', plus {p} first flu shot' : ''), 9: 'Usually catch-up only' + ([8, 9, 10, 11, 0, 1, 2].includes(NOW.getMonth()) ? ', plus a flu shot' : ''), 12: 'Measles, mumps and rubella (MMR), chickenpox, hepatitis A and boosters' })[age] || 'What’s due at this checkup', onclick: `openHealthDetail(${age},'vaccines')` }),
@@ -383,7 +385,7 @@
     // On every checkup page (Nov 13: it used to show only on the current one). Under 3 months, the fever rule shows right here,
     // with Call 911 under it, because a fever at this age always means calling right away (AAP).
     { const u3 = live() && actualMonth() < 3 && age === focus;
-      b += h.list('Between checkups', [h.row({ icon: 'thermo', cat: 'Health', title: 'Symptoms and when to get help', sub: 'Fever, colds and tummy bugs', onclick: "openPage('chg:Health:d:sick')" })])
+      b += (SHOW && window.healthSickTiles ? window.healthSickTiles() : h.list('Between checkups', [h.row({ icon: 'thermo', cat: 'Health', title: 'Symptoms and when to get help', sub: 'Fever, colds and tummy bugs', onclick: "openPage('chg:Health:d:sick')" })]))
         + (u3 ? `<section class="hub-card hub-callout"><b>${F('A fever under 3 months')}</b><p>${F('100.4°F or higher: call your pediatrician right away, day or night.')}</p></section>` + hubCall911() : ''); }
     const nx = WELL_VISITS[WELL_VISITS.indexOf(age) + 1];
     if (nx != null) b += h.next(`Next · at ${nx} month${nx === 1 ? '' : 's'}`, healthJourneyLabel(nx), `openPage('health-visit:${nx}')`, '', { 1: 'A short visit, with a check-in on you.', 2: 'The first main round of shots. Plan a quiet day after.', 4: 'Bring your questions about starting solids.', 6: 'The talk moves from milk to first foods.', 9: 'A closer look at development: jot down what you see.', 12: 'Ask about cow’s milk, and moving off bottles.' }[nx] || '');   // the concept's 'Looking ahead' line: what's different about the next one
@@ -408,10 +410,28 @@
   const DEV_BIG_BAR = {
     2: [0, 4, 1.2, 2.2, 'Smiling', [[0, 'Birth'], [2, '2 mo'], [4, '4 mo']]],
     4: [0, 9, 4, 6, 'Rolling', [[0, 'Birth'], [4, '4 mo'], [6, '6 mo'], [9, '9 mo']]],
-    6: [3, 12, 6, 9, 'Sitting alone', [[3, '3 mo'], [6, '6 mo'], [9, '9 mo'], [12, '1 year']]],
-    9: [4, 14, 6, 10, 'Crawling', [[4, '4 mo'], [6, '6 mo'], [10, '10 mo'], [14, '14 mo']]],
-    12: [8, 18, 12, 15, 'First steps', [[8, '8 mo'], [12, '1 year'], [15, '15 mo'], [18, '18 mo']]]
+    6: [3, 12, 6, 9, 'Sitting alone', [[3, '3 mo'], [6, '6 mo'], [9, '9 mo'], [12, '12 mo']]],
+    9: [4, 12, 6, 10, 'Crawling', [[4, '4 mo'], [6, '6 mo'], [10, '10 mo'], [12, '12 mo']]],
+    // Nov 22 (Yarden): crawling ends at 1 year, where Ahead ends; walking keeps its range, since first steps mostly come after it.
+    12: [8, 18, 12, 15, 'First steps', [[8, '8 mo'], [12, '12 mo'], [15, '15 mo'], [18, '18 mo']]]
   };
+  // Nov 22: at 6 months, how sitting usually comes together, as three photos (same room, seen from the side so the posture shows).
+  const DEV_BIG_STEPS = {
+    4: [['roll-rock', 'A baby on her back on a play mat, rocking onto one side', 'Rocking', 'Side to side on {p} back.'],
+        ['roll-tummy-back', 'A baby rolling from her tummy onto her back', 'Front to back', 'Usually the first roll.'],
+        ['roll-back-tummy', 'A baby on her tummy, propped on her forearms after rolling over', 'Back to front', 'Often a little later.']],
+    9: [['crawl-fours', 'A baby up on hands and knees', 'On all fours', 'Up on hands and knees.'],
+        ['crawl-rock', 'A baby rocking back and forth on hands and knees', 'Rocking', 'Back and forth, getting ready.'],
+        ['crawl-go', 'A baby crawling toward a ball', 'Crawling', 'Off to explore.']],
+    12: [['walk-pull', 'A toddler pulling up to stand at the sofa', 'Pulling up', 'Up to stand at the sofa.'],
+        ['walk-cruise', 'A toddler stepping sideways along the sofa', 'Cruising', 'Steps along furniture.'],
+        ['walk-steps', 'A toddler taking wobbly steps alone, arms out', 'First steps', 'A few on {p} own.']],
+    6: [['sit-support', 'A baby sitting on a rug with a parent’s hands holding her hips', 'With support', 'Held at {p} hips.'],
+        ['sit-hands', 'A baby sitting and leaning forward, propped on both hands', 'On {p} hands', 'Props {r} up for short stretches.'],
+        ['sit-own', 'A baby sitting up straight alone, holding a ring toy in both hands', 'On {p} own', 'Back straight, hands free.']]
+  };
+  const devBigSteps = ref => DEV_BIG_STEPS[ref] ? `<p class="dev-bigsteps-lead">${F({ 4: 'Rolling usually comes in this order.', 6: 'Sitting usually comes together in three steps.', 9: 'Crawling often builds in three steps.', 12: 'Walking usually comes together in three steps.' }[ref])}</p><div class="dev-bigsteps">${DEV_BIG_STEPS[ref].map(([img, alt, t, sub]) => `<figure><img src="assets/dev/${img}.jpg?v=2" alt="${alt}" loading="lazy"><figcaption><b>${F(t)}</b><small>${F(sub)}</small></figcaption></figure>`).join('')}</div>` : '';
+  window.devBigSteps = devBigSteps;
   // An icon that matches each skill's words.
   // Skills whose words would draw the same icon as another skill in the same area get their own.
   const SKILL_OWN = [[/arms and (both )?legs/i, 'wave'], [/glad to see/i, 'heart'], [/looks at a toy/i, 'toy'], [/swipes/i, 'ball'], [/chuckles/i, 'heart'], [/keep your attention/i, 'chat'],
@@ -489,7 +509,7 @@
       return `<div class="hub-tick is-habit dev-skill${DEV_FOCUS === key ? ' is-focus' : ''}" id="sk-${key}"><span class="hub-tick-art">${h.art(SKILL_ICON(l), 'Development')}</span><span class="hub-row-copy"><b>${(window.hubBabyify || (x => x))(F(clearMilestone(l) === 'Closes lips to show they don’t want more food' ? 'Shows when they’re full' : clearMilestone(l)))}</b>${desc ? `<small>${desc}</small>` : ''}${see}</span>${rec ? (rec.reported ? `<span class="hub-chip is-done">${F('Seen')} ✓</span>` : `<button class="hub-chip is-done hub-unseen" onclick="hubUnseen('${key}')" aria-label="${F('Seen')}. ${F('Tap to undo')}">${F('Seen')} ✓</button>`) : `<button class="hub-seen" onclick="hubSeen('${key}')">${F('Seen it')}</button>`}${see ? (media ? `<div class="dev-media">${media}</div>` : `<div class="dev-media" hidden></div>`) : ''}</div>`; }).join('');
     // The big question, only on the area it's about.
     const W = DEV_BIG_BAR[ref], nowMo = live() ? (NOW - parse(profile.early && profile.due && developmentMonth(actualMonth()) !== actualMonth() ? profile.due : profile.dob)) / 2629746e3 : null;
-    const big = DEV_BIG[ref] && DEV_BIG[ref][0] === domain ? `<section class="hub-card dev-bigq"><span class="hub-card-head"><b>${F(DEV_BIG[ref][1])}</b></span>${W && window.hubWindowBar ? hubWindowBar({ title: '', from: W[0], to: W[1], zones: [[W[2], W[3], W[4], 'band']], ticks: W[5], now: nowMo, cat: 'Development', caption: F(DEV_BIG[ref][2]) }) : ''}<p class="dev-bigq-a">${F(ref === 6 && earlyBday() ? 'Most babies sit without support by about 9 months. Born early, Maya can get there closer to 9 months adjusted.' : DEV_BIG[ref][2])}</p></section>` : '';
+    const big = DEV_BIG[ref] && DEV_BIG[ref][0] === domain ? `<section class="hub-card dev-bigq"><span class="hub-card-head"><b>${F(DEV_BIG[ref][1])}</b></span>${devBigSteps(ref)}${W && window.hubWindowBar ? hubWindowBar({ title: '', from: W[0], to: W[1], zones: [[W[2], W[3], W[4], 'band']], ticks: W[5], now: nowMo, cat: 'Development', caption: F(DEV_BIG[ref][2]) }) : ''}<p class="dev-bigq-a">${F(ref === 6 && earlyBday() ? 'Most babies sit without support by about 9 months. Born early, Maya can get there closer to 9 months adjusted.' : DEV_BIG[ref][2])}</p></section>` : '';
     // Try this together: on Movement, the idea that helps with the big question; elsewhere, an idea for one of these skills.
     const move = domain === 'Movement' && window.devMoveIdea ? devMoveIdea(ref) : null;
     const act = !move && devAreaIdea(ref, domain);

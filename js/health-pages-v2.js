@@ -33,14 +33,16 @@
   /* ---------- What to expect ---------- */
   // The visit, in order. Each step says what happens at this age (AAP Bright Futures; mood checks at 1, 2, 4 and 6 months).
   const MEASURE = ['steth', 'green', 'Measure and examine', 'Growth, then a head-to-toe exam'];
+  // Nov 22: the steps are what happens at the visit; the topics you'll talk through sit under them as one row.
+  const FORM = ['heart', 'pink', 'A short form for you', 'How you’re feeling since the birth'];
   const VISIT = {
-    0: { lead: 'Feeding, weight and a jaundice check.', steps: [['steth', 'green', 'Weigh and examine', 'Weight and a jaundice check'], ['bottle', 'yellow', 'Talk about feeding', 'Feeds, diapers and your recovery'], ['ear', 'peach', 'Go over the hospital tests', 'Hearing, heart and blood tests']], before: 'Pick clothes that come off quickly. Feeding during the visit is fine.' },
-    1: { lead: 'A short visit about feeding and growth.', steps: [MEASURE, ['bottle', 'yellow', 'Talk about feeding', 'How feeds are going, and if anything hurts'], ['smile', 'blue', 'Talk about new skills', 'How {s} {move|moves} and {react|reacts} to people and sounds'], ['heart', 'pink', 'Check in on you', 'A short form on how you’re feeling']], before: 'Pick clothes that come off quickly.' },
-    2: { lead: 'A full checkup and the first round of shots.', steps: [MEASURE, ['smile', 'pink', 'Talk about new skills', 'How {s} {hold|holds} {p} head and {smile|smiles} at you'], ['bottle', 'yellow', 'Feeding and sleep', 'How feeds and nights are going'], ['heart', 'pink', 'Check in on you', 'A short form on how you’re feeling']], before: 'Pick clothes that come off easily.', shotsLast: true },
-    4: { lead: 'Like 2 months, plus a first solids talk.', steps: [MEASURE, ['roll', 'blue', 'Talk about new skills', 'Head control, reaching and smiles'], ['bowl', 'yellow', 'Feeding and sleep', 'Vitamin D, solids readiness and night waking'], ['heart', 'pink', 'Check in on you', 'A short form on how you’re feeling']], before: 'Bring your solids questions.', shotsLast: true },
-    6: { lead: 'Growth, sitting and teeth, and how first foods are going.', steps: [MEASURE, ['sit', 'blue', 'Talk about new skills', 'Sitting, reaching and babbling'], ['tooth', 'yellow', 'Feeding and teeth', 'First foods, iron and fluoride'], ['heart', 'pink', 'Check in on you', 'A short form on how you’re feeling']], before: 'Bring your questions about first foods.', shotsLast: true },
-    9: { lead: 'A short questionnaire about development, plus growth and teeth.', steps: [MEASURE, ['star', 'blue', 'A development questionnaire', 'Questions you answer about talking and play'], ['bowl', 'yellow', 'Feeding and teeth', 'Textures, finger foods and brushing'], ['ear', 'peach', 'Hearing and vision', 'Anything you’ve noticed at home']] },
-    12: { lead: 'New shots, a quick blood test and a talk about milk.', steps: [MEASURE, ['wave', 'blue', 'Talk about new skills', 'Gestures, first words and first steps'], ['cup', 'yellow', 'Milk and cups', 'Bottles, cups and how much milk'], ['drop', 'peach', 'A quick blood test', 'A finger prick for iron, often lead']], before: 'It’s a longer visit, so pack a snack.', shotsLast: true }
+    0: { lead: 'Feeding, weight and a jaundice check.', steps: [['steth', 'green', 'Weigh and examine', 'Weight and a jaundice check'], ['ear', 'peach', 'Go over the hospital tests', 'Hearing, heart and blood tests']], talk: [['bottle', 'Feeding', 'Feeds and diapers'], ['moon', 'Sleep', 'Where and how {s} {sleep|sleeps}'], ['heart', 'You', 'Your recovery']], before: 'Pick clothes that come off quickly. Feeding during the visit is fine.' },
+    1: { lead: 'A short visit about feeding and growth.', steps: [MEASURE, FORM], talk: [['bottle', 'Feeding', 'How feeds are going'], ['smile', 'New skills', 'Moving and reacting'], ['moon', 'Sleep', 'Nights so far']], before: 'Pick clothes that come off quickly.' },
+    2: { lead: 'A full checkup and the first round of shots.', steps: [MEASURE, FORM], talk: [['smile', 'New skills', 'Head control, smiles'], ['bottle', 'Feeding', 'Feeds and growth'], ['moon', 'Sleep', 'How nights are going']], before: 'Pick clothes that come off easily.' },
+    4: { lead: 'Like 2 months, plus a first solids talk.', steps: [MEASURE, FORM], talk: [['roll', 'New skills', 'Reaching, rolling'], ['bowl', 'Feeding', 'Vitamin D, solids'], ['moon', 'Sleep', 'Night waking']], before: 'Bring your solids questions.' },
+    6: { lead: 'Growth, sitting and teeth, and how first foods are going.', steps: [MEASURE, FORM], talk: [['sit', 'New skills', 'Sitting, babbling'], ['bowl', 'Feeding', 'First foods, iron'], ['tooth', 'Teeth', 'Fluoride, brushing']], before: 'Bring your questions about first foods.' },
+    9: { lead: 'A short questionnaire about development, plus growth and teeth.', steps: [MEASURE, ['star', 'blue', 'A development questionnaire', 'Questions you answer about talking and play']], talk: [['bowl', 'Feeding', 'Textures, finger foods'], ['tooth', 'Teeth', 'Brushing'], ['ear', 'Eyes and ears', 'Anything you notice']] },
+    12: { lead: 'New shots, a quick blood test and a talk about milk.', steps: [MEASURE, ['drop', 'peach', 'A quick blood test', 'A finger prick for iron, often lead']], talk: [['wave', 'New skills', 'Words, first steps'], ['cup', 'Milk and cups', 'Moving off bottles'], ['tooth', 'Teeth', 'Brushing, the dentist']], before: 'It’s a longer visit, so pack a snack.' }
   };
   // Shots are the last step of every visit (Nov 19 review), not a footnote.
   const SHOTS_STEP = { 0: 'Hepatitis B, if not given at birth', 1: 'Maybe one hepatitis B shot', 2: 'Usually last. The first big round', 4: 'Usually last. Second doses of the same ones', 6: 'Usually last. Third doses', 9: 'Often none, unless one was missed', 12: 'Usually last. New ones, boosters' };
@@ -51,24 +53,29 @@
     const jaundice = age === 0 ? h2('Yellow skin at home') + pair(['Common', 'A little yellow on the face, feeding well.'], ['Time to call', 'Yellow belly or eyes, feeding poorly, or extra sleepy.']) : '';
     return page(top(hv.label(age), 'What to expect', V.lead)
       + h2('The visit, step by step') + steps(V.steps, 'Some offices do things in a different order.')
+      + (V.talk ? `<section class="hub-card h2-talk"><b class="h2-talk-h">${F('You’ll also talk about')}</b><div class="h2-talk-row">${V.talk.map(([icon, t, d], i) => `<div>${ic(icon, ['yellow', 'peach', 'pink'][i])}<b>${F(t)}</b><small>${F(d)}</small></div>`).join('')}</div></section>` : '')
       + jaundice
       + (V.before ? `<section class="h2-before">${ic('notepad', 'yellow')}<div><b>${F('Before you go')}</b><p>${F(V.before)}</p></div></section>` : ''));
   }
 
   /* ---------- The checkup page (Health's main page) ---------- */
+  // Nov 22: Between checkups as three tiles, each opening its own page in one tap.
+  window.healthSickTiles = () => h2('Between checkups') + `<div class="h2-sick">${[['thermo', 'yellow', 'Fever', 'sick-fever'], ['drop', 'blue', 'Colds', 'cold'], ['bottle', 'pink', 'Tummy bugs', 'sick-tummy']].map(([icon, tone, t, id]) => `<button onclick="openPage('chg:Health:d:${id}')">${ic(icon, tone)}<b>${F(t)}</b></button>`).join('')}</div>`;
   // A real photo of this visit in the top card, with no labels: it sets the scene, the page says the rest.
   window.healthMainPhoto = age => `<figure class="h2-photo h2-main-photo"><img src="assets/health/checkup-${age}.jpg" alt="${e(PHOTO_ALT[age] || '')}"></figure>`;
   // Your visit, at a glance: the three pages as tiles, each with a line you'd want before opening it.
   window.healthGlance = function (age) {
     const v = window.__hv.VAX[age], d = journeyData(), asked = d.checks['q' + age] || {}, own = d.questions[age] || [];
     const total = healthJourneyQuestions(age).length + own.length, n = Object.keys(asked).filter(k => asked[k] && (!String(k).startsWith('m') || Number(String(k).slice(1)) < own.length)).length;
-    const shots = age === 0 ? 'Maybe hepatitis B' : age === 1 ? 'Maybe one' : age === 9 ? 'Catch-up only' : { 2: 'First round', 4: 'Second doses', 6: 'Third doses', 12: 'Mostly new' }[age];
-    const tile = (icon, tone, t, d2, go, mark) => `<button class="h2-tile" onclick="${go}">${ic(icon, tone)}<b>${F(t)}</b><small>${F(d2)}</small>${mark || ''}</button>`;
-    return h2('Your visit, at a glance') + `<div class="h2-tiles">`
-      + tile('clock', 'green', 'What to expect', `${VISIT[age].steps.length} steps`, `openHealthDetail(${age},'expect')`)
-      + tile('shield', 'blue', 'Vaccines', shots, `openHealthDetail(${age},'vaccines')`)
-      + tile('notepad', 'yellow', 'Questions', `${n} of ${total} asked`, `openHealthDetail(${age},'questions')`)
-      + `</div>`;
+    const shots = age === 0 ? 'Maybe hepatitis B' : age === 1 ? 'Maybe one' : age === 9 ? 'Catch-up only' : { 2: 'The first round', 4: 'Second doses of the same ones', 6: 'Third doses of the same ones', 12: 'New ones, and boosters' }[age];
+    // Nov 22 (Yarden's inspiration): the three pages as full rows, each line saying what's on that page at this age.
+    const EXP = { 0: 'Weight, a jaundice check and the hospital tests', 1: 'Growth, an exam and how feeds are going', 2: 'Growth, an exam and new skills like smiling', 4: 'Growth, new skills and a first talk about solids', 6: 'Growth, sitting, first foods and teeth', 9: 'Growth, a development questionnaire and finger foods', 12: 'Growth, a blood test and moving to cups' };
+    const VAXL = { 0: 'Hepatitis B and RSV protection', 1: 'Maybe a second hepatitis B shot', 2: 'The first big round, and helping {o} after', 4: 'Second doses, and helping {o} after', 6: 'Third doses, and the flu shot in season', 9: 'Usually none, unless one was missed', 12: 'New ones like measles, and boosters' };
+    const ASKL = { 0: 'About feeding, diapers and sleep', 1: 'About feeds, sleep and crying', 2: 'About shots, sleep and feeds', 4: 'About solids, sleep and rolling', 6: 'About first foods, teeth and sleep', 9: 'About finger foods, words and moving', 12: 'About milk, cups and first steps' };
+    return h2('Your visit, at a glance') + rows([
+      ['clock', 'green', 'What to expect', EXP[age], `openHealthDetail(${age},'expect')`],
+      ['shield', 'blue', 'Vaccines', VAXL[age], `openHealthDetail(${age},'vaccines')`],
+      ['notepad', 'yellow', 'Questions', ASKL[age] + (n ? ` · ${n} of ${total} asked` : ''), `openHealthDetail(${age},'questions')`]]);
   };
   // The year of checkups as a path: done ones ticked, the next one marked, the one you're reading filled in.
   window.healthTracker = function (age, focus) {
@@ -80,9 +87,11 @@
     const days = Math.round((due(focus) - NOW) / 864e5);
     const when = days > 1 ? `in ${days < 14 ? days + ' days' : Math.round(days / 7) + ' weeks'}` : days >= -14 ? 'now' : '';
     const nodes = WELL_VISITS.map(a => {
-      const cls = [a === age ? 'is-on' : '', done(a) ? 'is-done' : '', isLive && a === focus ? 'is-next' : '', isLive && a < focus && !done(a) ? 'is-past' : ''].filter(Boolean).join(' ');
-      const sub = isLive && a === focus ? 'Next' : SHOTS[a] ? 'Shots' : '';   // the top card already gives the date
-      return `<button class="h2-node ${cls}" onclick="openPage('health-visit:${a}')"${a === age ? ' aria-current="page"' : ''}><i>${done(a) ? CHECK : ''}</i><b>${SHORT[a]}</b><small>${sub}</small></button>`;
+      // Nov 22 (Yarden: "a checklist of where you are"): checkups behind her by age are ticked, the one you're reading is ringed.
+      const behind = done(a) || (isLive && a < focus);
+      const cls = [a === age ? 'is-on' : '', behind ? 'is-done' : '', isLive && a === focus ? 'is-next' : ''].filter(Boolean).join(' ');
+      const sub = '';   // Nov 22: the inspiration's path: no sublabels, the top card gives the date
+      return `<button class="h2-node ${cls}" onclick="openPage('health-visit:${a}')"${a === age ? ' aria-current="page"' : ''}><i>${(done(a) || (isLive && a < focus)) && a !== age ? CHECK : a === age ? '<span></span>' : CHECK}</i><b>${SHORT[a]}</b></button>`;
     }).join('');
     return h2('Your checkups this year') + `<section class="hub-card h2-track"><div class="h2-track-line">${nodes}</div><i class="st-chip" hidden></i></section>`;
   };

@@ -443,3 +443,5 @@
 #main .cc-photo-peek .cc-peek-photo { margin: 8px 0 0 }
 #main .cc-911 { background: #fbe4dc; color: #6e2f1c; border-radius: 14px; padding: 12px 16px; margin: 0 0 8px; font-size: 14.5px; line-height: 1.45 }
 #main .cc-911 b { color: #a3341b }
+/* Nov 22: easing in, three numbered steps on the Get ready stage (Find care's route look) */
+#main .cc-ease{margin:0 0 18px}
