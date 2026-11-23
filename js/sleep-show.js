@@ -20,7 +20,7 @@
 
   /* ---------- a day (or a night) as a band of time ---------- */
   // segs: [from, to, 'nap'|'night'] in hours; night: [from, to] hours that are dark; caps: [hour, text]; moon/sun: hours.
-  const COL = { day: '#fff1cc', dusk: '#f3dfe6', night: '#d9dbf3', nap: '#8f84dd', deep: '#5a5296' };
+  const COL = { day: '#fff1cc', dusk: '#f3dfe6', night: '#dbe4f6', nap: '#8f84dd', deep: '#46638c' };
   function band(o) {
     const S = o.start, E = o.end, X = h => 8 + (h - S) / (E - S) * 304, pc = h => ((h - S) / (E - S) * 100);
     const dark = o.dark || [];
@@ -120,9 +120,9 @@
     return `<nav class="ssw-tabs" aria-label="${F('Sleep stages')}">${STAGES.map(([l], i) => `<button class="${i === view ? 'is-on' : ''} ${live && i === cur ? 'is-now' : ''}" onclick="${i === cur && live ? `openPage('topic:Sleep')` : `chgGo('chg:Sleep:s:${i}')`}" ${i === view ? 'aria-current="step"' : ''}>${F(l)}</button>`).join('')}</nav>`; };
 
   /* ---------- photo blocks ---------- */
-  const photoRows = rows => `<ol class="ssw-photorows">${rows.map(([img, alt, t, s, tag, tone]) => `<li><span class="ssw-ph"><img src="${IMG + img}" alt="${F(alt)}" loading="lazy"></span><span class="ssw-copy">${tag ? `<em class="ssw-tag ${tone || ''}">${F(tag)}</em>` : ''}<b>${F(t)}</b><small>${F(s)}</small></span></li>`).join('')}</ol>`;
-  const pinPhoto = (img, alt, pins, cls = '') => `<figure class="ssw-pinphoto ${cls}"><img src="${IMG + img}" alt="${F(alt)}">${pins.map(([l, x, y, side]) => `<span class="ssw-pin is-${side}" style="left:${x}%;top:${y}%"><i></i><span>${F(l)}</span></span>`).join('')}</figure>`;
-  const pair = (a, b) => `<div class="ssw-pair">${[a, b].map(([img, alt, label, line, tone]) => `<figure><figcaption class="${tone || ''}">${F(label)}</figcaption><span class="ssw-ph"><img src="${IMG + img}" alt="${F(alt)}" loading="lazy"></span><small>${F(line)}</small></figure>`).join('')}</div>`;
+  const photoRows = rows => `<ol class="ssw-photorows">${rows.map(([img, alt, t, s, tag, tone]) => `<li><span class="ssw-ph"><img src="${IMG + (PHOTO_OF[img] || img)}" alt="${F(alt)}" loading="lazy"></span><span class="ssw-copy">${tag ? `<em class="ssw-tag ${tone || ''}">${F(tag)}</em>` : ''}<b>${F(t)}</b><small>${F(s)}</small></span></li>`).join('')}</ol>`;
+  const pinPhoto = (img, alt, pins, cls = '') => `<figure class="ssw-pinphoto ${cls}"><img src="${IMG + (PHOTO_OF[img] || img)}" alt="${F(alt)}">${pins.map(([l, x, y, side]) => `<span class="ssw-pin is-${side}" style="left:${x}%;top:${y}%"><i></i><span>${F(l)}</span></span>`).join('')}</figure>`;
+  const pair = (a, b) => `<div class="ssw-pair">${[a, b].map(([img, alt, label, line, tone]) => `<figure><figcaption class="${tone || ''}">${F(label)}</figcaption><span class="ssw-ph"><img src="${IMG + (PHOTO_OF[img] || img)}" alt="${F(alt)}" loading="lazy"></span><small>${F(line)}</small></figure>`).join('')}</div>`;
   const notes = list => H().TPLB.ul(list);
 
   /* ---------- pages built here ---------- */
@@ -135,7 +135,7 @@
       ['book.jpg', 'A parent reading a board book to a baby on their lap', 'Book or song', 'The same one most nights'],
       ['down.jpg', 'A parent laying a drowsy baby on their back in a bare crib', 'Down to sleep', 'Sleepy but awake, on {p} back']
     ];
-    const photos = `<section class="care-tpl-card ssw-photosteps"><ol>${S.map(([img, alt, t, s], i) => `<li><span class="ssw-ph"><img src="${IMG + img}" alt="${F(alt)}" loading="lazy"></span><span class="ssw-copy"><i>${i + 1}</i><b>${F(t)}</b><small>${F(s)}</small></span></li>`).join('')}</ol>`
+    const photos = `<section class="care-tpl-card ssw-photosteps"><ol>${S.map(([img, alt, t, s], i) => `<li><span class="ssw-ph"><img src="${IMG + (PHOTO_OF[img] || img)}" alt="${F(alt)}" loading="lazy"></span><span class="ssw-copy"><i>${i + 1}</i><b>${F(t)}</b><small>${F(s)}</small></span></li>`).join('')}</ol>`
       + notes([['', 'Same order, not a perfect clock', 'The order is what tells {o} sleep is coming'], ['', '15–20 minutes is plenty', 'Short enough to do every night']]) + `</section>`;
     const tips = mo < 3
       ? [['clock', 'Nights start to stretch', 'And {s} {get|gets} sleepy around the same time each evening.'], ['moon', 'An earlier bedtime comes later', 'Around 7–8 pm, once naps settle.']]
@@ -180,10 +180,7 @@
   const versus = (a, b) => `<section class="ssw-vs">${[a, b].map(([img, alt, t, line, best], i) => `<div class="${best ? 'is-best' : ''}"><em class="${best ? '' : 'is-blank'}">${best ? '✓ ' + F(best) : '&nbsp;'}</em><span class="ssw-vs-pic"><img src="${IMG + (PHOTO_OF[img] || img)}" alt="${F(alt)}" loading="lazy"></span><b>${F(t)}</b><small>${F(line)}</small></div>`).join('')}</section>`;
   const todo = list => `<section class="care-tpl-card ssw-todo"><ol>${list.map(([t, sub, ic], i) => `<li><i>${i + 1}</i><span><b>${F(t)}</b>${sub ? `<small>${F(sub)}</small>` : ''}</span>${ic ? `<u aria-hidden="true">${H().art(ic, 'Sleep')}</u>` : ''}</li>`).join('')}</ol></section>`;
   const psec = (h, html) => html ? `<h2 class="hub-h2">${F(h)}</h2>${html}` : '';
-  // The short answer is the header's lead, like every other page in the app; the picture and steps below explain it.
-  const page = (label, title, body, art) => { const ans = /<section class="ssw-answer">[\s\S]*?<b>([\s\S]*?)<\/b>[\s\S]*?<\/section>/.exec(body), lead = ans ? [ans[1], (/<small>([\s\S]*?)<\/small>/.exec(ans[0]) || [])[1] || ''].map(t => t.trim().replace(/[^.?!]$/, '$&.')).join(' ').trim() : '';
-    if (ans) body = body.replace(ans[0], '');
-    return H().detail('Sleep', STAGES[Math.max(0, stageNow())] ? STAGES[Math.max(0, stageNow())][0] : label, title, lead, `<div class="ssw-topic ssw-prob">${body}</div>`, art); };
+  const page = (label, title, body, art) => H().detail('Sleep', STAGES[Math.max(0, stageNow())] ? STAGES[Math.max(0, stageNow())][0] : label, title, '', `<div class="ssw-topic ssw-prob">${body}</div>`, art);
   const callsFor = extra => T().calls(Object.assign({ ped: extra }, CALL911));
   function shortNapProb() {
     const mo = m();
@@ -525,7 +522,7 @@
       ['swaddle-lay.jpg', 'A newborn on their back on the blanket, shoulders just below the fold', 'Baby on {p} back', 'Shoulders just below the fold'],
       ['swaddle-side.jpg', 'A newborn with one side of the blanket wrapped across the chest and tucked under', 'One side across first', 'Arm straight, tucked under {p} other side'],
       ['swaddle-3.jpg', 'A newborn fully swaddled, snug at the chest and loose at the hips', 'Other side across, bottom loose', 'Arm down, wrap and tuck. Fold the bottom up loosely']];
-    const rows = S.map(([img, alt, t, sub], i) => `<li><span class="ssw-ph"><img src="${IMG + img}" alt="${F(alt)}" loading="lazy"></span><span class="ssw-copy"><i>${i + 1}</i><b>${F(t)}</b><small>${F(sub)}</small></span></li>`).join('')
+    const rows = S.map(([img, alt, t, sub], i) => `<li><span class="ssw-ph"><img src="${IMG + (PHOTO_OF[img] || img)}" alt="${F(alt)}" loading="lazy"></span><span class="ssw-copy"><i>${i + 1}</i><b>${F(t)}</b><small>${F(sub)}</small></span></li>`).join('')
       + `<li class="is-check"><span class="ssw-ph ssw-ph-check" aria-hidden="true">✓</span><span class="ssw-copy"><i>5</i><b>${F('Check the fit')}</b><small>${F('Room for two fingers at the chest. Legs free to bend up and out, like a frog.')}</small></span></li>`;
     const fig = panels.closest('figure');
     fig.outerHTML = `<section class="care-tpl-card ssw-photosteps is-square"><ol>${rows}</ol></section>`;
@@ -566,12 +563,10 @@
     const head = main.querySelector('.hub-detail[data-overview="Sleep"] .dev-area-head'); if (!head || head.dataset.sswIcon) return;
     const t1 = (head.querySelector('h1') || {}).textContent || '', t2 = (head.querySelector('.hub-context') || {}).textContent || '';
     const ic = (HEAD_ICON.slice(0, -1).find(([re]) => re.test(t1)) || HEAD_ICON.find(([re]) => re.test(t2)))[1];
-    const TONE = { sun: ['#fff3dc', '#8a6a2a'], moon: ['#e3e6f6', '#3d4a7a'], book: ['#f6e8f3', '#7a4f74'], crib: ['#e7effc', '#46638c'], swaddle: ['#e7effc', '#46638c'], home: ['#e7effc', '#46638c'],
-      clock: ['#ece8f8', '#5b4f8a'], heart: ['#ece8f8', '#5b4f8a'], wave: ['#f6e8f3', '#7a4f74'], plane: ['#e7effc', '#46638c'] }[ic];
-    const pageEl = head.closest('.hub-detail');
-    if (TONE && !head.closest('.care-v2')) { head.style.setProperty('--area', TONE[0]); head.style.setProperty('--area-ink', TONE[1]); if (pageEl) { pageEl.style.setProperty('--ss-bg', TONE[0]); pageEl.style.setProperty('--ss-ink', TONE[1]); } }
     let art = head.querySelector('.dev-area-head-art'); if (!art) { head.insertAdjacentHTML('afterbegin', '<span class="dev-area-head-art"></span>'); art = head.querySelector('.dev-area-head-art'); }
     art.className = 'dev-area-head-art sf-head-art'; art.setAttribute('aria-hidden', 'true'); art.innerHTML = H().art(ic, 'Sleep');
+    head.style.setProperty('--area', '#e7effc'); head.style.setProperty('--area-ink', '#46638c');
+    const pageEl = head.closest('.hub-detail'); if (pageEl) { pageEl.style.setProperty('--ss-bg', '#edf2fe'); pageEl.style.setProperty('--ss-ink', '#46638c'); }
     head.classList.remove('ssw-plainhead'); head.dataset.sswIcon = '1';
   }
   function dress() {
@@ -634,7 +629,7 @@
       glanceEl.insertAdjacentHTML('afterbegin', `<div class="ssw-dc"><div class="ssw-dc-sky${DAY.loop ? ' is-loop' : ''}"><i class="ssw-dc-sun" aria-hidden="true">${H().art('sun', 'Sleep')}</i><div class="ssw-dc-row">${tiles}</div><i class="ssw-dc-moon" aria-hidden="true">${H().art('moon', 'Sleep')}</i></div><div class="ssw-dc-stats">${stats}</div></div>`);
       glanceEl.classList.add('ssw-dc-card');
       // See how it all works together (nap stages): one short nap shifts the rest of the day.
-      if (v >= 2 && !main.querySelector('.ssw-works')) glanceEl.insertAdjacentHTML('afterend', `<h2 class="hub-h2">${F('See how it all works together')}</h2><button class="ssw-works" onclick="${go('chg:Sleep:d:shortnap')}"><span class="ssw-works-pic"><img src="${IMG + (v === 2 ? 'mattress.jpg' : 'hero-1.jpg')}" alt="" loading="lazy"><em>${F('If a nap is shorter')}</em></span><span class="ssw-works-r"><em>${F('Then the rest of the day shifts')}</em><span class="ssw-works-strip"><i></i><b></b><i></i><b></b><i class="is-short"></i><b class="is-moved"></b><i></i></span><small>${F('Move the next nap earlier, or plan for an earlier bedtime.')}</small></span></button>`);
+      if (v >= 2 && !main.querySelector('.ssw-works')) glanceEl.insertAdjacentHTML('afterend', `<h2 class="hub-h2">${F('See how it all works together')}</h2><button class="ssw-works" onclick="${go('chg:Sleep:d:shortnap')}"><span class="ssw-works-pic"><img src="${IMG + (v === 2 ? 'mattress.jpg' : 'standing.jpg')}" alt="" loading="lazy"><em>${F('If a nap is shorter')}</em></span><span class="ssw-works-r"><em>${F('Then the rest of the day shifts')}</em><span class="ssw-works-strip"><i></i><b></b><i></i><b></b><i class="is-short"></i><b class="is-moved"></b><i></i></span><small>${F('Move the next nap earlier, or plan for an earlier bedtime.')}</small></span></button>`);
     }
     if (hero && hero.__sswBand && glanceEl && !glanceEl.querySelector('.ssw-glance-band')) glanceEl.insertAdjacentElement('afterbegin', hero.__sswBand);
     // v4 "Right now for <name>" (Development's pattern): four photo tiles, each a topic plus this stage's guide, opening the
@@ -722,6 +717,36 @@
         + `<div class="ssw-key"><span><i class="k-awake"></i>${F('Awake')}</span><span><i class="k-nap"></i>${F('Nap')}</span><span><i class="k-night"></i>${F('Night sleep')}</span></div>`;
     }
   }
+
+  // Nov 22 (Yarden): the stage page as simple as the mockup, read top to bottom. Stage pills; the day as the headline;
+  // one card for the day; one card for how it fits together; then at most three quiet rows (what's new now, a safety step
+  // if one is due, and rough days). No header photo, no tip, no photo list, no Next card.
+  function simplify() {
+    const main = document.querySelector('#main'); if (!main) return;
+    const hero = main.querySelector('.ssw-hero'); if (!hero || hero.dataset.simple) return;
+    const gh = main.querySelector('.sl-gl-h'), sub = main.querySelector('.ssw-dc-sub'), rows = main.querySelector('.ssw-now-tiles');
+    if (!gh || !rows) return;
+    hero.dataset.simple = '1'; hero.classList.add('ssw-simple-head');
+    const h1 = hero.querySelector('h1'), lead = hero.querySelector('.hub-lead');
+    if (h1) h1.textContent = gh.textContent; if (lead) lead.textContent = sub ? sub.textContent : '';
+    hero.querySelectorAll('.ssw-hero-photo, .ssw-tip, .sl-aha, figure').forEach(e => e.remove());
+    (gh.parentElement && gh.parentElement !== main ? gh.parentElement : gh).remove(); if (sub) sub.remove();
+    main.querySelectorAll('.ssw-dc-card .sl-every').forEach(e => e.remove());
+    const pick = [...rows.querySelectorAll('.fd-prow')];
+    const safety = pick.find(r => r.querySelector('.hub-chip')), guides = pick.filter(r => r !== safety);
+    const chosen = guides.slice(0, 2);
+    const rough = main.querySelector('.hub-rough-card');
+    const ICONS = [[/swaddl/i, 'swaddle'], [/mattress|crib|room/i, 'crib'], [/training|drowsy|settle|routine|bedtime|goodbye/i, 'moon'], [/nap|yawn/i, 'clock'], [/night|regression|day/i, 'moon'], [/./, 'moon']];
+    const row = (on, t, sm, chip, ic) => `<button class="ssw-simple-row" onclick="${on}"><i aria-hidden="true">${H().art(ic, 'Sleep')}</i><span><b>${t}</b>${sm ? `<small>${sm}</small>` : ''}${chip || ''}</span><span class="hub-chev" aria-hidden="true">›</span></button>`;
+    const html = chosen.map(r => { const t = (r.querySelector('b') || {}).innerHTML || '', sm = (r.querySelector('.hub-row-copy small') || {}).innerHTML || '', chip = r.querySelector('.hub-chip');
+      return row(r.getAttribute('onclick'), t, sm, chip ? chip.outerHTML : '', ICONS.find(([re]) => re.test(t))[1]); }).join('')
+      + (safety ? (() => { const t = (safety.querySelector('b') || {}).innerHTML || '', chip = safety.querySelector('.hub-chip'); return row(safety.getAttribute('onclick'), t, '', chip ? chip.outerHTML : '', ICONS.find(([re]) => re.test(t))[1]); })()
+        : row("openPage('chg:Sleep:safe')", F('Safe sleep, every sleep'), F('On {p} back, in {p} own bare crib'), '', 'crib'))
+      + (rough ? row(rough.getAttribute('onclick'), (rough.querySelector('b') || {}).innerHTML || '', (rough.querySelector('small') || {}).innerHTML || '', '', 'heart') : '');
+    const rh = [...main.querySelectorAll('h2.hub-h2')].find(h => /^Right now/.test(h.textContent.trim()));
+    rows.insertAdjacentHTML('beforebegin', `<div class="ssw-simple-rows">${html}</div>`);
+    [rh, rows, rough, main.querySelector('.hub-next'), main.querySelector('.hub-foot')].forEach(e => e && e.remove());
+  }
   // Stage tabs sit above the top card. Other scripts redraw the page after this one, so keep them in place on every change.
   function ensureTabs() {
     const hr = document.querySelector('#main .ssw-hero'); if (!hr || hr.dataset.sswView == null) return;
@@ -731,5 +756,5 @@
   let queued = false;
   const watch = () => { const mn = document.querySelector('#main'); if (!mn || mn.__sswObs) return; mn.__sswObs = new MutationObserver(() => { if (queued) return; queued = true; Promise.resolve().then(() => { queued = false; try { ensureTabs(); } catch (e) { console.error(e); } }); }); mn.__sswObs.observe(mn, { childList: true, subtree: true }); };
   const base = window.render;
-  window.render = render = function (...a) { const r = base.apply(this, a); try { dress(); watch(); ensureTabs(); } catch (e) { console.error(e); } return r; };
+  window.render = render = function (...a) { const r = base.apply(this, a); try { dress(); simplify(); watch(); ensureTabs(); } catch (e) { console.error(e); } return r; };
 })();

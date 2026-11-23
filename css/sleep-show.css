@@ -28,7 +28,7 @@
 #main .ssw-key i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px }
 #main .ssw-key .k-awake { background: #fff1cc; border: 1px solid #ecd9a2 }
 #main .ssw-key .k-nap { background: #8f84dd }
-#main .ssw-key .k-night { background: #5a5296 }
+#main .ssw-key .k-night { background: #46638c }
 
 /* Section cards */
 #main .ssw-card { background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: 12px }
@@ -43,7 +43,7 @@
 #main .ssw-copy { display: block }
 #main .ssw-copy b { display: block; font-size: 16px; line-height: 1.25; color: var(--ink) }
 #main .ssw-copy small { display: block; margin-top: 3px; font-size: 14px; line-height: 1.4; color: #6b6670 }
-#main .ssw-copy i { font-style: normal; display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: #ece9fa; color: #5a5296; font-size: 12px; font-weight: 700; margin-bottom: 4px }
+#main .ssw-copy i { font-style: normal; display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: #ece9fa; color: #46638c; font-size: 12px; font-weight: 700; margin-bottom: 4px }
 #main .ssw-tag { display: inline-block; font-style: normal; font-size: 11px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; padding: 3px 8px; border-radius: 999px; margin-bottom: 5px; background: #f1eef9; color: #5e5a86 }
 #main .ssw-tag.is-day { background: #fdf2d3; color: #7a5b16 }
 #main .ssw-tag.is-go { background: #e3f3e8; color: #2f6a47 }
@@ -76,7 +76,7 @@
 #main .ssw-ask { margin: 2px 4px 8px; font-size: 14px; font-weight: 700; color: #4d4a66 }
 #main .ssw-chips { display: flex; gap: 6px; flex-wrap: wrap; margin: 0 0 10px }
 #main .ssw-chips button { border: 1px solid #dcd8ef; background: #fff; color: #4d4a66; font: inherit; font-size: 13.5px; font-weight: 700; padding: 7px 12px; border-radius: 999px; min-height: 0 }
-#main .ssw-chips button[aria-pressed="true"] { background: #5a5296; border-color: #5a5296; color: #fff }
+#main .ssw-chips button[aria-pressed="true"] { background: #46638c; border-color: #46638c; color: #fff }
 
 
 
@@ -96,7 +96,7 @@
 #main details.ssw-video summary b { display: block; font-size: 15.5px; color: var(--ink) }
 #main details.ssw-video summary small { display: block; font-size: 13px; color: #6b6670 }
 #main .ssw-play { width: 40px; height: 40px; border-radius: 50%; background: #ece9fa; position: relative }
-#main .ssw-play::after { content: ""; position: absolute; left: 16px; top: 13px; border-left: 11px solid #5a5296; border-top: 7px solid transparent; border-bottom: 7px solid transparent }
+#main .ssw-play::after { content: ""; position: absolute; left: 16px; top: 13px; border-left: 11px solid #46638c; border-top: 7px solid transparent; border-bottom: 7px solid transparent }
 #main details.ssw-video[open] .hub-chev { transform: rotate(90deg) }
 #main details.ssw-video > figure { margin: 0 12px 12px }
 #main .ssw-rowcard { padding: 0; overflow: hidden }
@@ -136,7 +136,7 @@
 #main .ssw-gt small { display: block; font-size: 13px; line-height: 1.35; color: #6b6670; margin-top: 4px }
 
 #main .ssw-pair.has-arrow { position: relative }
-#main .ssw-pair.has-arrow::after { content: "›"; position: absolute; left: 50%; top: 46%; transform: translate(-50%, -50%); width: 30px; height: 30px; border-radius: 50%; background: #fff; box-shadow: 0 2px 8px #0002; display: grid; place-items: center; font-size: 20px; font-weight: 800; color: #5a5296; line-height: 30px; text-align: center }
+#main .ssw-pair.has-arrow::after { content: "›"; position: absolute; left: 50%; top: 46%; transform: translate(-50%, -50%); width: 30px; height: 30px; border-radius: 50%; background: #fff; box-shadow: 0 2px 8px #0002; display: grid; place-items: center; font-size: 20px; font-weight: 800; color: #46638c; line-height: 30px; text-align: center }
 #main .ssw-check .tpl-notes { list-style: none; padding: 0; margin: 2px 4px }
 #main .ssw-check .tpl-notes li { padding-left: 0 }
 #main .ssw-check .tpl-notes li::before, #main .ssw-check .tpl-notes li::marker { content: none }
@@ -157,8 +157,8 @@
 #main .ssw-hero-pic img { width: 100%; height: 100%; object-fit: cover; display: block }
 #main .ssw-hero.ssw-has-pic .ssw-band { position: relative; background: #fff; box-shadow: 0 2px 10px #46638c14 }
 /* Worth knowing under the top card, with a bulb */
-#main .sl-aha.ssw-aha { position: relative; display: block; background: #eef0f8; box-shadow: none; border-radius: 20px; margin: 14px 0 0; padding: 14px 16px 14px 52px }
-#main .ssw-bulb { position: absolute; left: 16px; top: 15px; width: 24px; height: 24px; color: #5a5296 }
+#main .sl-aha.ssw-aha { position: relative; display: block; background: #edf2fe; box-shadow: none; border-radius: 20px; margin: 14px 0 0; padding: 14px 16px 14px 52px }
+#main .ssw-bulb { position: absolute; left: 16px; top: 15px; width: 24px; height: 24px; color: #46638c }
 #main .ssw-bulb svg { width: 24px; height: 24px }
 
 /* Topic tiles: photo, icon on the photo, name, what it opens */
@@ -173,10 +173,10 @@
 
 /* Night waking: a moment first, then two branches */
 #main .ssw-flow { background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: 14px }
-#main .ssw-flow-first { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: start; background: #eef0f8; border-radius: 16px; padding: 12px 14px }
+#main .ssw-flow-first { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: start; background: #edf2fe; border-radius: 16px; padding: 12px 14px }
 #main .ssw-flow-first b, #main .ssw-flow-two b { display: block; font-size: 15.5px; line-height: 1.3; color: var(--ink) }
 #main .ssw-flow-first small, #main .ssw-flow-two small { display: block; font-size: 14px; line-height: 1.4; color: #5f5b68; margin-top: 3px }
-#main .ssw-flow-first em { font-style: normal; font-size: 12.5px; font-weight: 700; color: #5a5296; background: #fff; border-radius: 999px; padding: 4px 9px; white-space: nowrap }
+#main .ssw-flow-first em { font-style: normal; font-size: 12.5px; font-weight: 700; color: #46638c; background: #fff; border-radius: 999px; padding: 4px 9px; white-space: nowrap }
 #main .ssw-flow-split { display: block; width: 100%; height: 22px }
 #main .ssw-flow-two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px }
 #main .ssw-flow-two > div { border-radius: 16px; padding: 12px }
@@ -224,9 +224,9 @@
 #main .ssw-rh-bar svg { width: 15px; height: 15px }
 #main .ssw-rhythm .is-wake .ssw-rh-bar { background: #fbeec8; color: #d9a531 }
 #main .ssw-rhythm .is-nap .ssw-rh-bar, #main .ssw-rhythm .is-sleep .ssw-rh-bar { background: #d9d4f4; color: #fff }
-#main .ssw-rhythm .is-cat .ssw-rh-bar { background: #e6e2f8; color: #fff; width: 70% }
+#main .ssw-rhythm .is-cat .ssw-rh-bar { background: #e3ebfb; color: #fff; width: 70% }
 #main .ssw-rhythm .is-more .ssw-rh-bar { background: none; color: #8f84dd }
-#main .ssw-rhythm .is-bed .ssw-rh-bar { width: 24px; background: #5a5296; color: #fff }
+#main .ssw-rhythm .is-bed .ssw-rh-bar { width: 24px; background: #46638c; color: #fff }
 #main .ssw-rhythm .is-bed .ssw-rh-bar svg { width: 13px; height: 13px }
 #main .ssw-rhythm b { display: block; margin-top: 6px; font-size: 11.5px; line-height: 1.2; font-weight: 700; color: #3f3b5c; white-space: nowrap }
 #main .ssw-rhythm small { display: block; font-size: 11px; line-height: 1.2; color: #6b6782; white-space: nowrap }
@@ -235,7 +235,7 @@
 #main .ssw-guides.is-photo .ssw-tile-pic { height: 104px }
 /* As she grows: when, then what */
 #main .ssw-grow li { padding: 7px 0 }
-#main .ssw-grow li small { display: block; font-size: 12.5px; font-weight: 700; color: #5a5296; line-height: 1.3 }
+#main .ssw-grow li small { display: block; font-size: 12.5px; font-weight: 700; color: #46638c; line-height: 1.3 }
 #main .ssw-grow li b { display: block; font-size: 14.5px; font-weight: 500; color: #3f3b48; line-height: 1.4; margin-top: 1px }
 #main .ssw-grow li::before { top: 12px }
 #main .ssw-hero .ssw-rhythm { padding: 12px 8px 10px !important; width: auto !important; max-width: none !important }
@@ -254,12 +254,12 @@
 #main .ssw-topics i { width: 30px; height: 30px; display: grid; place-items: center }
 #main .ssw-topics i svg { width: 28px; height: 28px }
 #main .ssw-topics b { font-size: 13.5px; line-height: 1.2; font-weight: 700; color: var(--ink) }
-#main .ssw-topics .is-night { background: #ecebf8 } #main .ssw-topics .is-night i { color: #5a5296 }
+#main .ssw-topics .is-night { background: #ecebf8 } #main .ssw-topics .is-night i { color: #46638c }
 #main .ssw-topics .is-naps { background: #fff3dc } #main .ssw-topics .is-naps i { color: #b0812a }
 #main .ssw-topics .is-bed { background: #e7effc } #main .ssw-topics .is-bed i { color: #46638c }
 #main .ssw-topics .is-safe { background: #e5f0e7 } #main .ssw-topics .is-safe i { color: #3f7350 }
 #main .ssw-topic-head .hub-big { display: none }
-#main .ssw-topic .ssw-at { position: relative; display: block; background: #eef0f8; border-radius: 20px; margin: 4px 0 6px; padding: 14px 16px 14px 56px }
+#main .ssw-topic .ssw-at { position: relative; display: block; background: #edf2fe; border-radius: 20px; margin: 4px 0 6px; padding: 14px 16px 14px 56px }
 #main .ssw-topic .ssw-at .ssw-bulb { left: 14px; top: 14px; width: 30px; height: 30px }
 #main .ssw-topic .ssw-at .ssw-bulb svg { width: 28px; height: 28px }
 #main .ssw-topic .ssw-at small { display: block; font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: #5e6890; margin-bottom: 4px }
@@ -267,21 +267,21 @@
 #main .ssw-topic .ssw-at span { display: block; font-size: 14px; line-height: 1.45; color: #6d666d; margin-top: 3px }
 #main .ssw-figtip { margin: 8px 2px 0; font-size: 13px; line-height: 1.45; color: #6b6670 }
 #main .ssw-figlink { display: inline-block; margin: 8px 2px 0 }
-#main .ssw-always .hub-row { background: #f6f4fb }
+#main .ssw-always .hub-row { background: #f3f6fd }
 #main .ssw-topic-head .dev-area-head-art { display: none }
 #main .ssw-topic-head { padding-top: 18px !important; padding-bottom: 18px !important }
 /* Bedtime: how the evening fits together */
 #main .ssw-evening { list-style: none; margin: 4px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); position: relative }
 #main .ssw-evening::before { content: ""; position: absolute; left: 16.6%; right: 16.6%; top: 25px; height: 2px; background: #dcdcf0 }
 #main .ssw-evening li { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 2px }
-#main .ssw-evening i { width: 50px; height: 50px; border-radius: 50%; display: grid; place-items: center; background: #eeeef9; color: #5a5296; box-shadow: 0 0 0 4px #fff, 0 0 0 5px #e4e2f2; margin-bottom: 8px }
+#main .ssw-evening i { width: 50px; height: 50px; border-radius: 50%; display: grid; place-items: center; background: #eeeef9; color: #46638c; box-shadow: 0 0 0 4px #fff, 0 0 0 5px #e4e2f2; margin-bottom: 8px }
 #main .ssw-evening i svg { width: 26px; height: 26px }
 #main .ssw-evening .is-sun i { background: #fff1cc; color: #b0812a }
 #main .ssw-evening .is-moon i { background: #e3e4f6 }
 #main .ssw-evening b { font-size: 15.5px; color: var(--ink) }
 #main .ssw-evening span { font-size: 13px; color: #6b6670 }
 #main .ssw-evetip { position: relative; margin: 14px 0 0; padding: 11px 12px 11px 36px; background: #f1f0fa; border-radius: 14px; font-size: 13.5px; line-height: 1.45; color: #4d4a5e }
-#main .ssw-evetip i { position: absolute; left: 13px; top: 10px; font-style: normal; color: #5a5296 }
+#main .ssw-evetip i { position: absolute; left: 13px; top: 10px; font-style: normal; color: #46638c }
 /* Nov 21: Worth knowing sits inside the top card as one tip (Yarden's inspiration); no timeline up top */
 #main .ssw-hero .sl-aha.ssw-aha.ssw-tip { position: relative; z-index: 2; margin: 16px 0 0 !important; padding: 11px 14px 11px 46px !important; background: rgba(255,255,255,.88); border-radius: 16px; box-shadow: 0 2px 10px rgba(40,40,80,.08); backdrop-filter: blur(4px) }
 #main .ssw-hero .ssw-tip small { display: none }
@@ -307,7 +307,7 @@
 #main .ssw-nt-copy em i { width: 18px; height: 18px; display: inline-grid; place-items: center } #main .ssw-nt-copy em i svg { width: 17px; height: 17px }
 #main .ssw-nt-copy b { font-size: 13px; line-height: 1.35; font-weight: 500; color: #5d5866 }
 #main .ssw-nt-go { position: absolute; right: 10px; bottom: 12px; color: #9a94a3; font-size: 18px }
-#main .ssw-nt.is-night { background: #f1effb } #main .ssw-nt.is-night em { color: #5a5296 }
+#main .ssw-nt.is-night { background: #edf2fe } #main .ssw-nt.is-night em { color: #46638c }
 #main .ssw-nt.is-naps { background: #fff7e6 } #main .ssw-nt.is-naps em { color: #9a6d1c }
 #main .ssw-nt.is-bed { background: #edf3fc } #main .ssw-nt.is-bed em { color: #3f5f8c }
 #main .ssw-nt.is-safe { background: #ecf5ee } #main .ssw-nt.is-safe em { color: #3f7350 }
@@ -366,46 +366,46 @@
 /* Nov 22: her day, as a picture, at the top of the glance */
 #main .ssw-day { display: flex; align-items: center; gap: 6px; margin: 2px 0 6px }
 #main .ssw-day-sun, #main .ssw-day-moon { flex: none; width: 26px; height: 26px; display: grid; place-items: center }
-#main .ssw-day-sun svg, #main .ssw-day-moon svg { width: 24px; height: 24px } #main .ssw-day-sun { color: #c08a22 } #main .ssw-day-moon { color: #5a5296 }
+#main .ssw-day-sun svg, #main .ssw-day-moon svg { width: 24px; height: 24px } #main .ssw-day-sun { color: #c08a22 } #main .ssw-day-moon { color: #46638c }
 #main .ssw-day-bar { flex: 1; display: flex; align-items: center; height: 34px; border-radius: 999px; background: #fff3dc; padding: 3px; gap: 0 }
-#main .ssw-day-nap { height: 28px; border-radius: 999px; background: #8f86d6; display: grid; place-items: center; min-width: 26px } #main .ssw-day-nap b { font-size: 11.5px; color: #fff; font-weight: 700; white-space: nowrap; overflow: hidden }
+#main .ssw-day-nap { height: 28px; border-radius: 999px; background: #7f9bc6; display: grid; place-items: center; min-width: 26px } #main .ssw-day-nap b { font-size: 11.5px; color: #fff; font-weight: 700; white-space: nowrap; overflow: hidden }
 #main .ssw-day-gap { height: 28px }
 #main .ssw-day-caps { display: flex; margin: 0 32px 8px; text-align: center } #main .ssw-day-caps b { display: block; font-size: 12px; color: var(--ink); font-weight: 650 } #main .ssw-day-caps small { display: block; font-size: 11.5px; color: #6b6670 }
 #main .ssw-day-note { margin: 0 2px 10px; font-size: 13px; color: #6b6670; text-align: center }
 #main .ssw-day.is-loop { justify-content: center; gap: 8px } #main .ssw-day.is-loop span { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 70px }
-#main .ssw-day.is-loop i { width: 40px; height: 40px; border-radius: 50%; background: #eef0f8; display: grid; place-items: center; color: #5a5296 } #main .ssw-day.is-loop i svg { width: 22px; height: 22px }
+#main .ssw-day.is-loop i { width: 40px; height: 40px; border-radius: 50%; background: #edf2fe; display: grid; place-items: center; color: #46638c } #main .ssw-day.is-loop i svg { width: 22px; height: 22px }
 #main .ssw-day.is-loop b { font-size: 13.5px } #main .ssw-day.is-loop small { font-size: 12px; color: #6b6670 } #main .ssw-day.is-loop em { font-style: normal; color: #9a94a3; font-size: 18px }
 /* problem pages */
-#main .ssw-answer { display: flex; gap: 14px; align-items: center; background: #eef0f8; border-radius: 20px; padding: 16px; margin: 4px 0 6px }
-#main .ssw-answer > i { flex: none; width: 52px; height: 52px; border-radius: 16px; background: #fff; display: grid; place-items: center; color: #5a5296 } #main .ssw-answer > i svg { width: 28px; height: 28px }
+#main .ssw-answer { display: flex; gap: 14px; align-items: center; background: #edf2fe; border-radius: 20px; padding: 16px; margin: 4px 0 6px }
+#main .ssw-answer > i { flex: none; width: 52px; height: 52px; border-radius: 16px; background: #fff; display: grid; place-items: center; color: #46638c } #main .ssw-answer > i svg { width: 28px; height: 28px }
 #main .ssw-answer b { display: block; font-size: 16.5px; line-height: 1.3; color: var(--ink) } #main .ssw-answer small { display: block; font-size: 14px; line-height: 1.45; color: #5d5866; margin-top: 4px }
 #main .ssw-seq ol { list-style: none; margin: 0; padding: 0; display: flex; align-items: stretch; gap: 4px }
-#main .ssw-seq li:not(.ssw-seq-arrow) { flex: 1; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 3px; background: #f4f3fb; border-radius: 16px; padding: 12px 6px }
+#main .ssw-seq li:not(.ssw-seq-arrow) { flex: 1; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 3px; background: #f3f6fd; border-radius: 16px; padding: 12px 6px }
 #main .ssw-seq li:first-child { background: #fff6e2 }
-#main .ssw-seq li i { width: 40px; height: 40px; border-radius: 50%; background: #fff; display: grid; place-items: center; color: #5a5296; margin-bottom: 4px } #main .ssw-seq li i svg { width: 22px; height: 22px }
+#main .ssw-seq li i { width: 40px; height: 40px; border-radius: 50%; background: #fff; display: grid; place-items: center; color: #46638c; margin-bottom: 4px } #main .ssw-seq li i svg { width: 22px; height: 22px }
 #main .ssw-seq li b { font-size: 14px; line-height: 1.25; color: var(--ink) } #main .ssw-seq li small { font-size: 12.5px; line-height: 1.35; color: #6b6670 }
-#main .ssw-seq-arrow { flex: none; align-self: center; color: #8f86d6; font-weight: 700 }
+#main .ssw-seq-arrow { flex: none; align-self: center; color: #7f9bc6; font-weight: 700 }
 #main .ssw-rule { margin: 12px 0 0; background: #fff3dc; border-radius: 999px; padding: 9px 14px; font-size: 14px; font-weight: 600; color: #6a4e16; text-align: center } #main .ssw-rule i { font-style: normal; margin-right: 8px; color: #c08a22 }
 #main .ssw-vs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px }
 #main .ssw-vs > div { position: relative; background: #fff; border: 1px solid #ebe7f0; border-radius: 18px; padding: 10px 10px 12px; text-align: center }
-#main .ssw-vs > div.is-best { background: #f1effb; border-color: #d9d4f3 }
-#main .ssw-vs em { position: absolute; z-index: 1; left: 10px; top: 10px; font-style: normal; font-size: 12px; font-weight: 700; color: #4a3fb0; background: #fff; border-radius: 999px; padding: 3px 9px; box-shadow: 0 1px 4px #0001 }
+#main .ssw-vs > div.is-best { background: #edf2fe; border-color: #c9d6ee }
+#main .ssw-vs em { position: absolute; z-index: 1; left: 10px; top: 10px; font-style: normal; font-size: 12px; font-weight: 700; color: #46638c; background: #fff; border-radius: 999px; padding: 3px 9px; box-shadow: 0 1px 4px #0001 }
 #main .ssw-vs-pic { display: block; height: 104px; border-radius: 12px; overflow: hidden; margin-bottom: 8px } #main .ssw-vs-pic img { width: 100%; height: 100%; object-fit: cover; display: block }
 #main .ssw-vs b { display: block; font-size: 14.5px; color: var(--ink) } #main .ssw-vs small { display: block; font-size: 13px; line-height: 1.4; color: #6b6670; margin-top: 3px }
 #main .ssw-todo ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px }
-#main .ssw-todo li { display: flex; gap: 12px; align-items: flex-start } #main .ssw-todo li > i { flex: none; width: 30px; height: 30px; border-radius: 50%; background: #eef0f8; color: #4a3fb0; font-style: normal; font-weight: 700; display: grid; place-items: center }
+#main .ssw-todo li { display: flex; gap: 12px; align-items: flex-start } #main .ssw-todo li > i { flex: none; width: 30px; height: 30px; border-radius: 50%; background: #edf2fe; color: #46638c; font-style: normal; font-weight: 700; display: grid; place-items: center }
 #main .ssw-todo b { display: block; font-size: 15px; color: var(--ink) } #main .ssw-todo small { display: block; font-size: 13.5px; color: #6b6670; margin-top: 2px }
 #main .ssw-note { margin: 12px 2px 0; font-size: 14px; line-height: 1.45; color: #4d4a5e } #main .ssw-note.is-safe { background: #eef3ec; border-radius: 14px; padding: 10px 12px; color: #35573f }
 #main .ssw-day-caps { display: grid; margin: 2px 30px 8px; gap: 4px }
 #main .ssw-day-caps b { font-size: 12.5px } #main .ssw-day-caps small { line-height: 1.3 }
-#main .ssw-day-nap { height: 26px; background: #8f86d6 }
+#main .ssw-day-nap { height: 26px; background: #7f9bc6 }
 /* ===== Nov 22 v2: closer to Yarden's mockups ===== */
 #main .ssw-dc-sub { margin: -4px 2px 10px; font-size: 14.5px; line-height: 1.45; color: #5d5866 }
 #main .sl-glance.ssw-dc-card { padding: 0 !important; overflow: hidden; background: #fff; border-radius: 24px }
-#main .ssw-dc-sky { position: relative; display: flex; align-items: flex-start; gap: 4px; padding: 18px 10px 14px; background: linear-gradient(180deg, #f6f4fd 0%, #efecfb 60%, #e6e2f8 100%) }
-#main .ssw-dc-sky::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 44px; background: radial-gradient(120% 90px at 20% 100%, #e2ddf6 60%, transparent 61%), radial-gradient(120% 80px at 85% 100%, #dcd6f4 60%, transparent 61%); pointer-events: none }
+#main .ssw-dc-sky { position: relative; display: flex; align-items: flex-start; gap: 4px; padding: 18px 10px 14px; background: linear-gradient(180deg, #f3f6fd 0%, #edf2fe 60%, #e3ebfb 100%) }
+#main .ssw-dc-sky::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 44px; background: radial-gradient(120% 90px at 20% 100%, #e3ebfb 60%, transparent 61%), radial-gradient(120% 80px at 85% 100%, #e3ebfb 60%, transparent 61%); pointer-events: none }
 #main .ssw-dc-sun, #main .ssw-dc-moon { position: relative; z-index: 1; flex: none; width: 30px; height: 30px; display: grid; place-items: center; margin-top: 28px } #main .ssw-dc-sun svg, #main .ssw-dc-moon svg { width: 28px; height: 28px }
-#main .ssw-dc-sun { color: #e6a92c } #main .ssw-dc-moon { color: #7f74d6 }
+#main .ssw-dc-sun { color: #e6a92c } #main .ssw-dc-moon { color: #46638c }
 #main .ssw-dc-row { position: relative; z-index: 1; flex: 1; display: flex; align-items: flex-start; justify-content: center; gap: 0 }
 #main .ssw-dc-row figure { margin: 0; flex: 1 1 0; max-width: 96px; display: flex; flex-direction: column; align-items: center; gap: 6px }
 #main .ssw-dc-pic { position: relative; display: block; width: 100%; aspect-ratio: 1; border-radius: 18px; overflow: hidden; border: 3px solid #fff; box-shadow: 0 4px 12px rgba(80,70,150,.15) }
@@ -413,53 +413,53 @@
 #main .ssw-dc-pic em { position: absolute; left: 50%; bottom: 6px; transform: translateX(-50%); font-style: normal; white-space: nowrap; background: rgba(255,255,255,.94); color: #2b2732; font-size: 12px; font-weight: 700; padding: 3px 9px; border-radius: 999px }
 #main .ssw-dc-row figcaption { font-size: 12.5px; line-height: 1.3; color: #5d5866; text-align: center }
 #main .ssw-dc-awake { flex: 0 0 14px; height: 18px; margin-top: 34px; background: #fbe3b0; border-radius: 6px }
-#main .ssw-dc-arrow { flex: none; font-style: normal; color: #8f86d6; font-size: 18px; margin: 32px 2px 0 }
-#main .ssw-dc-more { flex: none; align-self: flex-start; margin-top: 30px; font-size: 13px; font-weight: 700; color: #6b62c0; background: #fff; border-radius: 999px; padding: 4px 8px }
+#main .ssw-dc-arrow { flex: none; font-style: normal; color: #7f9bc6; font-size: 18px; margin: 32px 2px 0 }
+#main .ssw-dc-more { flex: none; align-self: flex-start; margin-top: 30px; font-size: 13px; font-weight: 700; color: #46638c; background: #fff; border-radius: 999px; padding: 4px 8px }
 #main .ssw-dc-stats { display: grid; grid-template-columns: repeat(3, 1fr); padding: 14px 10px 6px }
 #main .ssw-dc-stats > div { display: flex; align-items: center; gap: 8px; padding: 0 6px } #main .ssw-dc-stats > div + div { border-left: 1px solid #ece8f2 }
-#main .ssw-dc-stats i { flex: none; width: 34px; height: 34px; border-radius: 10px; background: #f1effb; color: #6b62c0; display: grid; place-items: center } #main .ssw-dc-stats i svg { width: 20px; height: 20px }
+#main .ssw-dc-stats i { flex: none; width: 34px; height: 34px; border-radius: 10px; background: #edf2fe; color: #46638c; display: grid; place-items: center } #main .ssw-dc-stats i svg { width: 20px; height: 20px }
 #main .ssw-dc-stats b { display: block; font-size: 15px; line-height: 1.15; color: var(--ink); font-weight: 750 } #main .ssw-dc-stats small { display: block; font-size: 11.5px; color: #6b6670; line-height: 1.2 }
 #main .ssw-dc-card .sl-every { display: block; padding: 6px 16px 14px }
 #main .ssw-works { all: unset; box-sizing: border-box; cursor: pointer; display: grid; grid-template-columns: 42% 1fr; gap: 0; width: 100%; background: #fff; border-radius: 22px; overflow: hidden; box-shadow: 0 1px 0 #ece8f2, 0 4px 14px rgba(60,60,100,.06); margin-bottom: 16px }
-#main .ssw-works-pic { position: relative; display: block; min-height: 150px; background: #efecfb } #main .ssw-works-pic img { width: 100%; height: 100%; object-fit: cover; display: block }
+#main .ssw-works-pic { position: relative; display: block; min-height: 150px; background: #edf2fe } #main .ssw-works-pic img { width: 100%; height: 100%; object-fit: cover; display: block }
 #main .ssw-works-pic em, #main .ssw-works-r > em { font-style: normal; font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase }
-#main .ssw-works-pic em { position: absolute; left: 10px; top: 10px; right: 10px; color: #3d3570; background: rgba(255,255,255,.9); border-radius: 10px; padding: 4px 8px }
+#main .ssw-works-pic em { position: absolute; left: 10px; top: 10px; right: 10px; color: #2f4366; background: rgba(255,255,255,.9); border-radius: 10px; padding: 4px 8px }
 #main .ssw-works-r { display: flex; flex-direction: column; justify-content: center; gap: 10px; padding: 14px; background: #fff8ea } #main .ssw-works-r > em { color: #8a6a2a }
-#main .ssw-works-strip { display: flex; align-items: center; gap: 3px } #main .ssw-works-strip i { flex: 1; height: 12px; border-radius: 6px; background: #fbe3b0 } #main .ssw-works-strip b { flex: 1.4; height: 20px; border-radius: 8px; background: #8f86d6 }
-#main .ssw-works-strip i.is-short { flex: .6 } #main .ssw-works-strip b.is-moved { background: transparent; border: 2px dashed #8f86d6 }
+#main .ssw-works-strip { display: flex; align-items: center; gap: 3px } #main .ssw-works-strip i { flex: 1; height: 12px; border-radius: 6px; background: #fbe3b0 } #main .ssw-works-strip b { flex: 1.4; height: 20px; border-radius: 8px; background: #7f9bc6 }
+#main .ssw-works-strip i.is-short { flex: .6 } #main .ssw-works-strip b.is-moved { background: transparent; border: 2px dashed #7f9bc6 }
 #main .ssw-works-r small { font-size: 13px; line-height: 1.4; color: #6b5a3a }
 /* problem pages: plain header like the mockups */
 #main .ssw-plainhead { background: none !important; box-shadow: none !important; padding: 6px 2px 0 !important; min-height: 0 !important }
 #main .ssw-plainhead .dev-area-head-art { display: none !important }
 #main .ssw-plainhead h1 { font-size: 30px !important; line-height: 1.12 !important }
-#main .ssw-answer { gap: 0; padding: 16px; background: #efedfb }
+#main .ssw-answer { gap: 0; padding: 16px; background: #edf2fe }
 #main .ssw-answer > i { width: 60px; height: 60px; border-radius: 18px; background: #e3dff8; color: #5a4fc0; margin-right: 14px } #main .ssw-answer > i svg { width: 30px; height: 30px }
 #main .ssw-answer > span { border-left: 1.5px solid #d6d1f1; padding-left: 14px }
 #main .ssw-answer em { display: block; font-style: normal; font-size: 11.5px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: #5a4fc0; margin-bottom: 3px }
 #main .ssw-seq { padding: 0 !important; overflow: hidden }
 #main .ssw-seq-sky { position: relative; height: 74px; background: linear-gradient(90deg, #fff4dc 0%, #f3effc 45%, #e7e2f9 100%) }
-#main .ssw-seq-sky .is-sun, #main .ssw-seq-sky .is-moon { position: absolute; top: 8px; width: 30px; height: 30px; display: grid; place-items: center } #main .ssw-seq-sky .is-sun { left: 18px; color: #e6a92c } #main .ssw-seq-sky .is-moon { right: 18px; color: #7f74d6 } #main .ssw-seq-sky i svg { width: 28px; height: 28px }
+#main .ssw-seq-sky .is-sun, #main .ssw-seq-sky .is-moon { position: absolute; top: 8px; width: 30px; height: 30px; display: grid; place-items: center } #main .ssw-seq-sky .is-sun { left: 18px; color: #e6a92c } #main .ssw-seq-sky .is-moon { right: 18px; color: #46638c } #main .ssw-seq-sky i svg { width: 28px; height: 28px }
 #main .ssw-seq-line { position: absolute; left: 10px; right: 10px; bottom: 10px; display: flex; align-items: center; justify-content: space-between }
 #main .ssw-seq-line::before { content: ""; position: absolute; left: 70px; right: 70px; top: 50%; height: 3px; background: #d6d1f1; border-radius: 2px }
 #main .ssw-seq-line em { position: relative; font-style: normal; font-size: 11.5px; color: #5d5866; background: #fff; border-radius: 999px; padding: 3px 9px }
-#main .ssw-seq-line b { position: relative; width: 12px; height: 12px; border-radius: 50%; background: #7f74d6; box-shadow: 0 0 0 3px #fff }
+#main .ssw-seq-line b { position: relative; width: 12px; height: 12px; border-radius: 50%; background: #46638c; box-shadow: 0 0 0 3px #fff }
 #main .ssw-seq ol { padding: 12px 10px 4px }
-#main .ssw-seq li:not(.ssw-seq-arrow) { padding: 14px 6px; background: #f1effb; border-radius: 18px; min-height: 150px; justify-content: flex-start }
+#main .ssw-seq li:not(.ssw-seq-arrow) { padding: 14px 6px; background: #edf2fe; border-radius: 18px; min-height: 150px; justify-content: flex-start }
 #main .ssw-seq li.is-first { background: #fff4dc }
 #main .ssw-seq li i { width: 56px; height: 56px; background: #fff; margin-bottom: 8px } #main .ssw-seq li i svg { width: 30px; height: 30px }
 #main .ssw-seq-pic { display: block; width: 68px; height: 68px; border-radius: 50%; overflow: hidden; margin-bottom: 8px; border: 3px solid #fff } #main .ssw-seq-pic img { width: 100%; height: 100%; object-fit: cover }
 #main .ssw-seq li b { font-size: 15px; line-height: 1.25 }
 #main .ssw-rule { margin: 12px 10px 12px; display: flex; align-items: center; justify-content: center; gap: 10px; border-radius: 999px; padding: 10px 14px; font-size: 14.5px }
 #main .ssw-rule i { margin: 0; width: 24px; height: 24px; display: grid; place-items: center; color: #d9962a } #main .ssw-rule i svg { width: 22px; height: 22px }
-#main .ssw-vs > div { padding: 12px 10px 14px; border-radius: 22px } #main .ssw-vs > div.is-best { background: #efedfb; border-color: #e3dff8 }
+#main .ssw-vs > div { padding: 12px 10px 14px; border-radius: 22px } #main .ssw-vs > div.is-best { background: #edf2fe; border-color: #e3dff8 }
 #main .ssw-vs-pic { height: 120px; border-radius: 16px }
 #main .ssw-vs em { left: 16px; top: 16px; font-size: 12.5px; padding: 4px 10px }
 #main .ssw-vs b { font-size: 16px; margin-top: 4px } #main .ssw-vs small { font-size: 13.5px }
 #main .ssw-todo { padding: 4px 16px !important }
 #main .ssw-todo ol { gap: 0 } #main .ssw-todo li { align-items: center; padding: 14px 0 } #main .ssw-todo li + li { border-top: 1px solid #ece8f2 }
-#main .ssw-todo li > i { width: 36px; height: 36px; background: #efedfb; font-size: 16px }
+#main .ssw-todo li > i { width: 36px; height: 36px; background: #edf2fe; font-size: 16px }
 #main .ssw-todo li > span { flex: 1 } #main .ssw-todo b { font-size: 16px }
-#main .ssw-todo u { flex: none; text-decoration: none; width: 32px; height: 32px; display: grid; place-items: center; color: #7f74d6 } #main .ssw-todo u svg { width: 26px; height: 26px }
+#main .ssw-todo u { flex: none; text-decoration: none; width: 32px; height: 32px; display: grid; place-items: center; color: #46638c } #main .ssw-todo u svg { width: 26px; height: 26px }
 #main .ssw-prob .hub-h2 { font-size: 20px; margin-top: 22px }
 #main .ssw-dc-sky::after { display: none }
 #main .ssw-dc-sky { padding: 18px 8px 16px; border-bottom: 1px solid #ece8f2 }
@@ -471,7 +471,7 @@
 #main .ssw-dc-stats i { width: 28px; height: 28px; border-radius: 9px } #main .ssw-dc-stats i svg { width: 17px; height: 17px }
 #main .ssw-dc-stats b { font-size: 13.5px; white-space: nowrap } #main .ssw-dc-stats small { font-size: 11px }
 #main .ssw-works-pic em { top: auto; bottom: 10px }
-#main .ssw-plainhead .hub-eyebrow, #main .ssw-plainhead small:first-child { color: #6b62c0 !important }
+#main .ssw-plainhead .hub-eyebrow, #main .ssw-plainhead small:first-child { color: #46638c !important }
 /* Nov 22: soft illustrations, like the mockups */
 #main .ssw-seq-sky { height: 86px; background: url(../assets/sleep/ill/sky.jpg) center 62% / cover no-repeat }
 #main .ssw-seq-sky .is-sun, #main .ssw-seq-sky .is-moon { display: none }
@@ -489,45 +489,66 @@
 #main .ssw-dc-sky { background: linear-gradient(rgba(255,255,255,.38), rgba(255,255,255,.38)), url(../assets/sleep/ill/sky.jpg) center 70% / cover no-repeat }
 #main .ssw-seq-sky { background: linear-gradient(rgba(255,255,255,.25), rgba(255,255,255,.25)), url(../assets/sleep/ill/sky.jpg) center 62% / cover no-repeat }
 
-/* ===== Nov 22 v3: one look with the rest of the app (Feeding, Development, Safety) =====
-   White cards with a thin line, the category tint only on icon chips, real photos, no painted skies or cartoons. */
-#main .hub-detail[data-overview="Sleep"] .sf-head-art svg { stroke: var(--area-ink) }
-#main .hub-detail[data-overview="Sleep"] .sf-head-art svg [fill]:not([fill="none"]) { fill: var(--area) }
-/* Right now: Feeding's photo rows */
-#main .ssw-now-tiles.fd-plist { display: grid; grid-template-columns: 1fr; gap: 8px; margin: 0 0 12px }
-#main .ssw-now-tiles .fd-prow .hub-chip { margin-top: 4px; align-self: flex-start }
-#main .ssw-now-tiles .fd-prow .hub-row-copy { display: flex; flex-direction: column }
-/* Her day: a plain white card, photos on a soft tint, no sky */
-#main .sl-glance.ssw-dc-card { border: 1px solid var(--line); box-shadow: none; border-radius: 22px }
-#main .ssw-dc-sky, #main .ssw-dc-sky.is-loop { background: #f6f4fb !important; padding: 16px 10px 14px }
-#main .ssw-dc-sky::after, #main .ssw-dc-sky::before { display: none !important }
-#main .ssw-dc-pic { border: 0; box-shadow: none; border-radius: 16px }
-#main .ssw-dc-pic em { box-shadow: none; font-weight: 650 }
-#main .ssw-dc-sun, #main .ssw-dc-moon { opacity: .9 }
-#main .ssw-dc-stats { padding: 12px 10px 4px; border-top: 1px solid var(--line) }
-#main .ssw-dc-awake { background: #f1e4c6 }
-/* See how it all works together: same card as the rest */
-#main .ssw-works { border: 1px solid var(--line); box-shadow: none !important; border-radius: 22px }
-#main .ssw-works-r { background: #fff }
-#main .ssw-works-pic em { box-shadow: none }
-/* Problem pages: the answer in a white card with an icon chip; steps as icons in soft circles; photos side by side */
-#main .ssw-answer { background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: 14px 16px; margin: 0 0 6px }
-#main .ssw-answer > i { width: 44px; height: 44px; border-radius: 14px; background: var(--ss-bg, #eef0f8); color: var(--ss-ink, #5a5296) }
-#main .ssw-answer > i svg { width: 24px; height: 24px; stroke: var(--ss-ink, #5a5296) }
-#main .ssw-answer em { display: block; font-style: normal; font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--ss-ink, #5a5296); margin-bottom: 2px }
+/* ===== Nov 22 v4: simple, like Yarden's mockup, top to bottom ===== */
 #main .ssw-seq.is-plain { background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: 14px 10px; box-shadow: none }
 #main .ssw-seq.is-plain li:not(.ssw-seq-arrow), #main .ssw-seq.is-plain li:first-child { background: none; padding: 4px 2px }
-#main .ssw-seq.is-plain li i { width: 52px; height: 52px; background: var(--ss-bg, #eef0f8); color: var(--ss-ink, #5a5296) }
-#main .ssw-seq.is-plain li i svg { width: 26px; height: 26px; stroke: var(--ss-ink, #5a5296) }
+#main .ssw-seq.is-plain li i { width: 52px; height: 52px; background: var(--ss-bg, #edf2fe); color: var(--ss-ink, #46638c) }
+#main .ssw-seq.is-plain li i svg { width: 26px; height: 26px; stroke: var(--ss-ink, #46638c) }
 #main .ssw-seq.is-plain .ssw-seq-arrow { color: #b9b3cc; font-weight: 400 }
-#main .ssw-rule { border-radius: 14px; background: #f6f4fb; color: var(--ink); font-weight: 500; text-align: left; display: flex; gap: 8px; align-items: center }
+#main .ssw-rule { border-radius: 14px; background: #f3f6fd; color: var(--ink); font-weight: 500; text-align: left; display: flex; gap: 8px; align-items: center }
 #main .ssw-rule i svg { width: 18px; height: 18px }
-#main .ssw-vs > div, #main .ssw-vs > div.is-best { background: #fff; border: 1px solid var(--line); padding: 0 0 12px; overflow: hidden; text-align: left }
-#main .ssw-vs > div.is-best { border-color: var(--ss-ink, #5a5296); box-shadow: 0 0 0 1px var(--ss-ink, #5a5296) inset }
-#main .ssw-vs-pic { height: 120px; border-radius: 0; margin: 0 0 10px }
-#main .ssw-vs b, #main .ssw-vs small { padding: 0 12px }
-#main .ssw-vs em { box-shadow: none; color: var(--ss-ink, #5a5296) }
-#main .ssw-vs em.is-blank { display: none }
-#main .ssw-todo { background: #fff; border: 1px solid var(--line); box-shadow: none }
-#main .ssw-todo li > i { background: var(--ss-bg, #eef0f8); color: var(--ss-ink, #4a3fb0) }
-#main .ssw-todo u svg { stroke: var(--ss-ink, #5a5296) }
+#main .ssw-seq.is-plain li i { background: #edf2fe; color: #46638c } #main .ssw-seq.is-plain li i svg { stroke: #46638c }
+/* stage pills */
+#main .ssw-tabs { gap: 8px; margin: 4px 0 18px; overflow-x: auto; scrollbar-width: none }
+#main .ssw-tabs button { flex: 0 0 auto; padding: 9px 16px; background: #fff; border: 1px solid #e3e8f0; color: #46638c; font-weight: 500 }
+#main .ssw-tabs button.is-on { background: #46638c; border-color: #46638c; color: #fff }
+#main .ssw-tabs button.is-now:not(.is-on)::after { background: #46638c }
+/* plain headline, no card */
+/* the quiet rows (the mockup's "Sleep training is an option now") */
+#main .ssw-simple-rows { display: grid; gap: 10px; margin: 18px 0 24px }
+#main .ssw-simple-row { all: unset; box-sizing: border-box; cursor: pointer; display: flex; align-items: center; gap: 14px; width: 100%; background: #edf2fe; border-radius: 22px; padding: 14px 14px 14px 14px }
+#main .ssw-simple-row > i { flex: none; width: 50px; height: 50px; border-radius: 16px; background: #d9e5fc; display: grid; place-items: center; position: relative; margin-right: 6px }
+#main .ssw-simple-row > i::after { content: ""; position: absolute; right: -11px; top: 4px; bottom: 4px; width: 1px; background: #c9d6ee }
+#main .ssw-simple-row > i svg { width: 26px; height: 26px; stroke: #46638c }
+#main .ssw-simple-row > span:not(.hub-chev) { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px }
+#main .ssw-simple-row b { font-size: 17px; line-height: 1.25; color: #2b2a33; font-weight: 700 }
+#main .ssw-simple-row small { font-size: 14px; line-height: 1.4; color: #5d6170 }
+#main .ssw-simple-row .hub-chip { align-self: flex-start; margin-top: 4px }
+#main .ssw-simple-row .hub-chev { color: #46638c; font-size: 22px }
+#main .ssw-tabs { gap: 6px }
+#main .ssw-tabs button { flex: 1 1 auto; padding: 8px 10px; font-size: 14px; white-space: nowrap }
+#main .ssw-dc-sky { background: linear-gradient(rgba(255,255,255,.62), rgba(255,255,255,.62)), url(../assets/sleep/ill/sky.jpg) center 70% / cover no-repeat !important }
+#main .ssw-dc-row figcaption { background: none !important; box-shadow: none !important; padding: 0 !important; font-size: 13.5px; color: #46638c }
+#main .ssw-dc-pic em { font-size: 12.5px }
+#main .ssw-tabs { gap: 5px }
+#main .ssw-tabs button { padding: 7px 8px; font-size: 13px }
+#main .ssw-plainhead::before, #main .ssw-plainhead::after { display: none !important }
+#main .ssw-todo { background: #fff !important; border: 1px solid #ece8f2; border-radius: 22px; padding: 6px 16px !important }
+#main .ssw-todo li { padding: 12px 0; border-top: 1px solid #f0edf5 } #main .ssw-todo li:first-child { border-top: 0 }
+#main .ssw-todo ol { gap: 0 }
+/* Nov 22: the app's visual language — Sleep blue, white cards with a thin line, no painted sky */
+#main .ssw-hero.ssw-simple-head { padding-bottom: 20px !important; margin-bottom: 14px !important }
+#main .ssw-dc-sky, #main .ssw-dc-sky.is-loop { background: #fff !important; padding: 16px 10px 6px }
+#main .ssw-dc-sky::after, #main .ssw-dc-sky::before { display: none !important }
+#main .sl-glance.ssw-dc-card { border: 1px solid var(--line); box-shadow: none !important; border-radius: 22px }
+#main .ssw-dc-pic { border: 0 !important; box-shadow: none !important; border-radius: 16px }
+#main .ssw-dc-stats { border-top: 1px solid var(--line) }
+#main .ssw-dc-sun, #main .ssw-dc-moon { color: #46638c } #main .ssw-dc-sun svg, #main .ssw-dc-moon svg { stroke: #46638c }
+#main .ssw-works { border: 1px solid var(--line); box-shadow: none !important; border-radius: 22px }
+#main .ssw-works-r { background: #f3f6fd } #main .ssw-works-r > em { color: #46638c } #main .ssw-works-r small { color: #4a5266 }
+#main .ssw-works-strip i { background: #d9e5fc } #main .ssw-works-strip b { background: #46638c }
+#main .ssw-simple-row { background: #fff; border: 1px solid var(--line) }
+#main .ssw-simple-row > i { background: #e7effc } #main .ssw-simple-row > i::after { background: var(--line) }
+#main .ssw-simple-row b { color: var(--ink) } #main .ssw-simple-row small { color: var(--muted, #6b6670) }
+#main .ssw-tabs button.is-on { background: #46638c; border-color: #46638c }
+#main .hub-detail[data-overview="Sleep"] .sf-head-art svg { stroke: var(--area-ink) }
+#main .hub-detail[data-overview="Sleep"] .sf-head-art svg [fill]:not([fill="none"]) { fill: var(--area) }
+#main .ssw-answer { background: #fff; border: 1px solid var(--line) }
+#main .ssw-answer > i { background: #e7effc; color: #46638c } #main .ssw-answer > i svg { stroke: #46638c }
+#main .ssw-vs > div { background: #fff; border: 1px solid var(--line); padding: 0 0 12px; overflow: hidden }
+#main .ssw-vs > div.is-best { background: #fff; border: 1.5px solid #46638c }
+#main .ssw-vs-pic { height: 118px; border-radius: 0; margin: 0 0 10px }
+#main .ssw-vs b, #main .ssw-vs small { padding: 0 10px }
+#main .ssw-vs em { box-shadow: none; color: #46638c } #main .ssw-vs em.is-blank { display: none }
+#main .ssw-todo li > i { background: #e7effc; color: #46638c }
+#main .ssw-rule { background: #f3f6fd; color: var(--ink) }
