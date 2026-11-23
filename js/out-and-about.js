@@ -476,10 +476,12 @@
   const plainRows = items => { const it = items.filter(Boolean); return it.length ? `<div class="hub-list">${it.map(([icon, title, s]) => H().row({ icon, cat: CAT, title, sub: s })).join('')}</div>` : ''; };
   const fig3 = (src, alt, pins) => `<section class="oa-photo-card oa3-fig"><figure class="oa-photo"><img src="${PH(src)}" alt="${F(alt)}" loading="lazy">${pinsHtml(pins)}</figure></section>`;
 
+  // Nov 22 (Yarden's inspiration): a real photo of this month's change in the top card, like the other guides.
+  const HERO_PH = { 0: 'town', 2: 'road', 4: 'carry-out', 6: 'hero-cart', 9: 'car-head', 12: 'car-head' };
   function home3() {
     const m = ageNow(), h = H(), n = nowFor(m), nx = nextFor(m);
     Object.keys(phaseView).forEach(k => delete phaseView[k]); Object.keys(view3).forEach(k => delete view3[k]);
-    let b = `<header class="hub-hero oa-hero oa3-hero"><p class="hub-eyebrow">${F(m < 1 ? 'In the first weeks' : `At ${m} ${m === 1 ? 'month' : 'months'}`)}</p><h1>${F(n[1])}</h1><p class="hub-lead">${F(n[2])}</p>${PLACES.some(([pid]) => pid === n[3]) ? '' : `<button class="cc-hero-go oa-hero-go" onclick="${open(n[3])}">${F(n[4] ? n[4][2] : 'See the guide')} ›</button>`}</header>`;
+    let b = `<header class="hub-hero oa-hero oa3-hero"><p class="hub-eyebrow">${F(m < 1 ? 'In the first weeks' : `At ${m} ${m === 1 ? 'month' : 'months'}`)}</p><h1>${F(n[1])}</h1><p class="hub-lead">${F(n[2])}</p>${PLACES.some(([pid]) => pid === n[3]) ? '' : `<button class="cc-hero-go oa-hero-go" onclick="${open(n[3])}">${F(n[4] ? n[4][2] : 'See the guide')} ›</button>`}${HERO_PH[n[0]] ? `<figure class="oa3-hero-photo"><img src="${PH(HERO_PH[n[0]])}" alt=""></figure>` : ''}</header>`;
     b += `<h2 class="hub-h2">${F('Where are you headed?')}</h2><div class="oa3-places">${PLACES.map(([id, label]) => `<button class="oa3-place" onclick="${open(id)}"><img src="${PH(TILE3[id])}" alt="" loading="lazy"><span><b>${F(label)}</b><i aria-hidden="true">›</i></span></button>`).join('')}</div>`;
     const k = season();
     b += `<div class="hub-list oa3-more">`
@@ -614,7 +616,7 @@
 
     if (id === 'carry') return page3('gear', 'carrier', 'Carrier', 'Keep {p} face in view. A quick check every time keeps {o} breathing easy.',
       (c => `<h2 class="hub-h2">${F('The quick check')}</h2>` + fig3(c[0], c[1], c[2]) + `<p class="oa-psteps-note oa3-under">${F(c[3])}</p>`)(CARRY_AT(m))
-      + `<h2 class="hub-h2">${F('Ways to carry, as {s} {grow|grows}')}</h2><div class="oa3-thumbs">${(() => { const opts = [['carry-newborn', 'From birth', 'Facing in', 0], ['carry-out', 'Head steady', 'Facing out, for short awake times', 4], ['carry-back', 'Sits steadily', 'On your back', 9]]; const newest = m >= 4 && m < 6 ? 1 : m >= 9 ? 2 : -1; return opts.map(([p, w, t], i) => `<figure${i === newest ? ' class="is-new"' : ''}><img src="${PH(p)}" alt="" loading="lazy"><figcaption><b>${F(w)}</b><small>${F(t)}</small>${i === newest ? `<em class="oa3-new">${F('An option now')}</em>` : ''}</figcaption></figure>`).join(''); })()}</div>`
+      + `<h2 class="hub-h2">${F('Ways to carry, as {s} {grow|grows}')}</h2><div class="oa3-thumbs">${(() => { const opts = [['carry-newborn', 'From birth', 'Facing in', 0], ['carry-out', 'Head steady', 'Facing out, for short awake times', 4], ['carry-back', 'Sits steadily', 'On your back', 9]]; const now = m >= 9 ? 2 : m >= 4 ? 1 : 0; return opts.map(([p, w, t], i) => `<figure${i === now ? ' class="is-now"' : ''}><img src="${PH(p)}" alt="" loading="lazy"><figcaption><b>${F(w)}</b><small>${F(t)}</small></figcaption></figure>`).join(''); })()}</div>`
       + `<p class="oa-psteps-note">${F('Each within your carrier’s own limits. Its instructions say when.')}</p>`
       + good([['moon', 'Asleep in the carrier', 'Move {o} to a flat bed when you can.'], ['cup', 'Away from the stove', 'And from hot drinks, while {s’s} in the carrier.']]));
 

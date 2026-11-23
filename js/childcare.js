@@ -478,9 +478,15 @@
         + homeRow('pay', 'coin', 'Paying for care', 'A pre-tax account, a tax credit and more', 'pay')
         + homeRow('quiz', 'eye', 'Not sure? Take the quick quiz', 'Four taps, and where to look first', 'fit') + `</div></details>`;
     } else if (view === 1) {
+      // Nov 22 (Yarden's inspiration): how easing in goes, on the page itself. The dated countdown stays on Get ready for day one.
+      const ch1 = chosenNow(), k1 = ch1 ? ch1.k : '', home1 = k1 === 'nanny', fam1 = k1 === 'family';
+      const ease = home1 ? [['Meet at home together', 'Let Maya get to know {p} nanny with you there.'], ['A paid trial day', 'You stay home, a room away.'], ['A quick, warm goodbye', 'The same short goodbye each time.']]
+        : fam1 ? [['Spend time together first', 'Let Maya get used to their place and their way.'], ['A practice day', 'A few hours, then a full day.'], ['A quick, warm goodbye', 'The same short goodbye each time.']]
+        : [['Visit together', 'Let Maya explore and meet {p} caregiver.'], ['A short practice day', 'A few hours first, then build up.'], ['A quick, warm goodbye', 'The same short goodbye each time.']];
+      b += `<h2 class="hub-h2">${F('Easing in, step by step')}</h2><ol class="cc-route cc-ease">${ease.map(([t, d], i) => `<li><i>${i + 1}</i><div><b>${F(t)}</b><span>${F(d)}</span></div></li>`).join('')}</ol>`;
       b += careCardButton(card);
       b += `<h2 class="hub-h2">${F('Before day one')}</h2><div class="hub-list">`
-        + homeRow('ready', 'bag', 'Get ready for day one', `Easing in, and packing ${bm0 && fm0 ? 'milk and formula' : bm0 ? 'pumped milk' : 'formula'}`, 'ready')
+        + homeRow('ready', 'bag', 'Get ready for day one', `Your countdown, and packing ${bm0 && fm0 ? 'milk and formula' : bm0 ? 'pumped milk' : 'formula'}`, 'ready')
         + homeRow('backup', 'shield', 'When care falls through', 'Set up your backup now', 'backup') + `</div>`;
     } else {
       // Review (Nov 20): the useful question is how the baby is doing while you're away, so the page shows a good daily

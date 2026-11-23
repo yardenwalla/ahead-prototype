@@ -248,5 +248,10 @@
 @media (max-width:370px){ #main .oa-ba .oa-pin span{font-size:11px;padding:5px 7px} }
 #main .oa-ba figure { display:flex; flex-direction:column } #main .oa-ba .oa-ba-img { margin-top:auto }
 #main .oa3 .oa3-fig .oa-photo:has(img[src*="away-room"]) { aspect-ratio: 4 / 3 }
-/* Nov 22: the newest way to carry she's ready for gets one quiet marker under its caption */
-#main .oa3-new{display:inline-block;margin-top:5px;font-style:normal;font-size:11.5px;font-weight:700;color:#356651;background:#e6f5ec;border-radius:999px;padding:3px 8px}
+/* Nov 22: the way to carry that fits her age is outlined, like Everyday care's gear by age */
+#main .oa3-thumbs figure{border:1px solid transparent;border-radius:18px;padding:5px}
+#main .oa3-thumbs figure.is-now{border:2px solid var(--ss-ink,#9a5a3c);padding:4px;background:#fff}
+#main .oa3-thumbs figure img{border-radius:13px}
+/* Nov 22: this month's photo in the Outings top card */
+#main .oa3-hero-photo{margin:16px 0 0;border-radius:18px;overflow:hidden;aspect-ratio:16/10;box-shadow:0 4px 14px rgba(60,40,30,.10)}
+#main .oa3-hero-photo img{display:block;width:100%;height:100%;object-fit:cover}

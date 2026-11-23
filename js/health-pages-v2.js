@@ -65,13 +65,14 @@
   window.healthGlance = function (age) {
     const v = window.__hv.VAX[age], d = journeyData(), asked = d.checks['q' + age] || {}, own = d.questions[age] || [];
     const total = healthJourneyQuestions(age).length + own.length, n = Object.keys(asked).filter(k => asked[k] && (!String(k).startsWith('m') || Number(String(k).slice(1)) < own.length)).length;
-    const shots = age === 0 ? 'Maybe hepatitis B' : age === 1 ? 'Maybe one' : age === 9 ? 'Catch-up only' : { 2: 'First round', 4: 'Second doses', 6: 'Third doses', 12: 'Mostly new' }[age];
-    const tile = (icon, tone, t, d2, go, mark) => `<button class="h2-tile" onclick="${go}">${ic(icon, tone)}<b>${F(t)}</b><small>${F(d2)}</small>${mark || ''}</button>`;
-    return h2('Your visit, at a glance') + `<div class="h2-tiles">`
-      + tile('clock', 'green', 'What to expect', `${VISIT[age].steps.length} steps`, `openHealthDetail(${age},'expect')`)
-      + tile('shield', 'blue', 'Vaccines', shots, `openHealthDetail(${age},'vaccines')`)
-      + tile('notepad', 'yellow', 'Questions', `${n} of ${total} asked`, `openHealthDetail(${age},'questions')`)
-      + `</div>`;
+    const shots = age === 0 ? 'Maybe hepatitis B' : age === 1 ? 'Maybe one' : age === 9 ? 'Catch-up only' : { 2: 'The first round', 4: 'Second doses of the same ones', 6: 'Third doses of the same ones', 12: 'New ones, and boosters' }[age];
+    // Nov 22 (Yarden's inspiration): the three pages as full rows, each with a line that says what's inside.
+    const V = VISIT[age], talk = (V.talk || []).map(x => x[1].toLowerCase());
+    const expectLine = `${V.steps.length} steps` + (talk.length ? `, plus a talk about ${talk.slice(0, -1).join(', ')} and ${talk[talk.length - 1]}` : '');
+    return h2('Your visit, at a glance') + rows([
+      ['clock', 'green', 'What to expect', expectLine, `openHealthDetail(${age},'expect')`],
+      ['shield', 'blue', 'Vaccines', shots, `openHealthDetail(${age},'vaccines')`],
+      ['notepad', 'yellow', 'Questions', `${n} of ${total} asked`, `openHealthDetail(${age},'questions')`]]);
   };
   // The year of checkups as a path: done ones ticked, the next one marked, the one you're reading filled in.
   window.healthTracker = function (age, focus) {
