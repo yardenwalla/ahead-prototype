@@ -613,8 +613,7 @@
       + `<h2 class="hub-h2">${F('Installing it')}</h2><div class="hub-list"><button class="hub-row oa-row" style="--hl-bg:${GEAR_C.car[0]};--hl-ink:${GEAR_C.car[1]}" onclick="openPage('chg:Safety:d:step:seat')"><span class="oa-dot">${hubArt('car', CAT)}</span><span class="hub-row-copy"><b>${F('Install it and check the fit')}</b><small>${F('Step by step, in Safety')}</small></span><span class="hub-chev" aria-hidden="true">›</span></button></div>`);
 
     if (id === 'carry') return page3('gear', 'carrier', 'Carrier', 'Keep {p} face in view. A quick check every time keeps {o} breathing easy.',
-      `<h2 class="hub-h2">${F('The quick check')}</h2>` + fig3('carrier', 'A baby facing in on a parent’s chest in a soft carrier, face fully visible, chin up, knees bent in an M shape', CARRY_PINS)
-      + `<p class="oa-psteps-note oa3-under">${F('Face in view and chin off {p} chest. Back supported, knees up in an M.')}</p>`
+      (c => `<h2 class="hub-h2">${F('The quick check')}</h2>` + fig3(c[0], c[1], c[2]) + `<p class="oa-psteps-note oa3-under">${F(c[3])}</p>`)(CARRY_AT(m))
       + `<h2 class="hub-h2">${F('Ways to carry, as {s} {grow|grows}')}</h2><div class="oa3-thumbs">${[['carry-newborn', 'From birth', 'Facing in'], ['carry-out', 'Head steady', 'Facing out, for short awake times'], ['carry-back', 'Sits steadily', 'On your back']].map(([p, w, t]) => `<figure><img src="${PH(p)}" alt="" loading="lazy"><figcaption><b>${F(w)}</b><small>${F(t)}</small></figcaption></figure>`).join('')}</div>`
       + `<p class="oa-psteps-note">${F('Each within your carrier’s own limits. Its instructions say when.')}</p>`
       + good([['moon', 'Asleep in the carrier', 'Move {o} to a flat bed when you can.'], ['cup', 'Away from the stove', 'And from hot drinks, while {s’s} in the carrier.']]));
@@ -634,7 +633,13 @@
     return null;
   }
   const AWAY_PINS = [['Bare play yard', 50, 66, 'r'], ['Bags up high', 82, 8, 'l']];
-  const CARRY_PINS = [];
+  // Nov 22: the carrier photo follows the baby's age (Outings' stages 0–2, 2–6, 6–12). Always facing in, the safest
+  // default at every age; facing out and back carries stay in "Ways to carry". Labels only on what each photo shows clearly.
+  const CARRY_AT = m => m < 2
+    ? ['carry-0', 'A newborn facing in on a parent’s chest in a soft carrier, face turned to the side and clear of the fabric, chin up, knees bent', [['Face in view', 42, 13, 'l'], ['Chin off chest', 43, 30, 'l'], ['Knees up', 42, 82, 'l']], 'Face in view and chin off {p} chest, close enough to kiss. Head supported, knees up in an M.']
+    : m < 6
+    ? ['carry-2', 'A baby facing in on a parent’s chest in a soft carrier, head turned to the side, face clear, high on the chest', [['Face in view', 60, 23, 'r'], ['Close and high', 56, 38, 'r']], 'Face in view and chin off {p} chest, close enough to kiss. Snug, knees up in an M.']
+    : ['carry-6', 'An older baby facing in on a parent’s chest in a soft carrier, face clear, knees bent up in an M shape', [['Face in view', 60, 18, 'r'], ['Knees up', 68, 82, 'r']], 'Face in view and close enough to kiss. Snug with no slumping, knees up in an M.'];
   // Three quick checks for any new place (ticks saved on this phone, cleared with Start over).
   const CHECKS_KEY = 'ahead-away-3';
   window.oaCheck3 = i => { let on = []; try { on = JSON.parse(localStorage.getItem(CHECKS_KEY)) || []; } catch (e) {} on = on.includes(i) ? on.filter(x => x !== i) : on.concat(i); try { localStorage.setItem(CHECKS_KEY, JSON.stringify(on)); } catch (e) {} const y = scrollY; render(); scrollTo(0, y); };

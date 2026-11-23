@@ -412,6 +412,14 @@
     9: [4, 14, 6, 10, 'Crawling', [[4, '4 mo'], [6, '6 mo'], [10, '10 mo'], [14, '14 mo']]],
     12: [8, 18, 12, 15, 'First steps', [[8, '8 mo'], [12, '1 year'], [15, '15 mo'], [18, '18 mo']]]
   };
+  // Nov 22: at 6 months, how sitting usually comes together, as three photos (same room, seen from the side so the posture shows).
+  const DEV_BIG_STEPS = {
+    6: [['sit-support', 'A baby sitting on a rug with a parent’s hands holding her hips', 'With support', 'Your hands at {p} hips'],
+        ['sit-hands', 'A baby sitting and leaning forward, propped on both hands', 'Leaning on hands', 'Propped up for short stretches'],
+        ['sit-own', 'A baby sitting up straight alone, holding a ring toy in both hands', 'On {p} own', 'Back straight, hands free']]
+  };
+  const devBigSteps = ref => DEV_BIG_STEPS[ref] ? `<div class="dev-bigsteps">${DEV_BIG_STEPS[ref].map(([img, alt, t, sub]) => `<figure><img src="assets/dev/${img}.jpg?v=1" alt="${alt}" loading="lazy"><figcaption><b>${F(t)}</b><small>${F(sub)}</small></figcaption></figure>`).join('')}</div>` : '';
+  window.devBigSteps = devBigSteps;
   // An icon that matches each skill's words.
   // Skills whose words would draw the same icon as another skill in the same area get their own.
   const SKILL_OWN = [[/arms and (both )?legs/i, 'wave'], [/glad to see/i, 'heart'], [/looks at a toy/i, 'toy'], [/swipes/i, 'ball'], [/chuckles/i, 'heart'], [/keep your attention/i, 'chat'],
@@ -489,7 +497,7 @@
       return `<div class="hub-tick is-habit dev-skill${DEV_FOCUS === key ? ' is-focus' : ''}" id="sk-${key}"><span class="hub-tick-art">${h.art(SKILL_ICON(l), 'Development')}</span><span class="hub-row-copy"><b>${(window.hubBabyify || (x => x))(F(clearMilestone(l) === 'Closes lips to show they don’t want more food' ? 'Shows when they’re full' : clearMilestone(l)))}</b>${desc ? `<small>${desc}</small>` : ''}${see}</span>${rec ? (rec.reported ? `<span class="hub-chip is-done">${F('Seen')} ✓</span>` : `<button class="hub-chip is-done hub-unseen" onclick="hubUnseen('${key}')" aria-label="${F('Seen')}. ${F('Tap to undo')}">${F('Seen')} ✓</button>`) : `<button class="hub-seen" onclick="hubSeen('${key}')">${F('Seen it')}</button>`}${see ? (media ? `<div class="dev-media">${media}</div>` : `<div class="dev-media" hidden></div>`) : ''}</div>`; }).join('');
     // The big question, only on the area it's about.
     const W = DEV_BIG_BAR[ref], nowMo = live() ? (NOW - parse(profile.early && profile.due && developmentMonth(actualMonth()) !== actualMonth() ? profile.due : profile.dob)) / 2629746e3 : null;
-    const big = DEV_BIG[ref] && DEV_BIG[ref][0] === domain ? `<section class="hub-card dev-bigq"><span class="hub-card-head"><b>${F(DEV_BIG[ref][1])}</b></span>${W && window.hubWindowBar ? hubWindowBar({ title: '', from: W[0], to: W[1], zones: [[W[2], W[3], W[4], 'band']], ticks: W[5], now: nowMo, cat: 'Development', caption: F(DEV_BIG[ref][2]) }) : ''}<p class="dev-bigq-a">${F(ref === 6 && earlyBday() ? 'Most babies sit without support by about 9 months. Born early, Maya can get there closer to 9 months adjusted.' : DEV_BIG[ref][2])}</p></section>` : '';
+    const big = DEV_BIG[ref] && DEV_BIG[ref][0] === domain ? `<section class="hub-card dev-bigq"><span class="hub-card-head"><b>${F(DEV_BIG[ref][1])}</b></span>${devBigSteps(ref)}${W && window.hubWindowBar ? hubWindowBar({ title: '', from: W[0], to: W[1], zones: [[W[2], W[3], W[4], 'band']], ticks: W[5], now: nowMo, cat: 'Development', caption: F(DEV_BIG[ref][2]) }) : ''}<p class="dev-bigq-a">${F(ref === 6 && earlyBday() ? 'Most babies sit without support by about 9 months. Born early, Maya can get there closer to 9 months adjusted.' : DEV_BIG[ref][2])}</p></section>` : '';
     // Try this together: on Movement, the idea that helps with the big question; elsewhere, an idea for one of these skills.
     const move = domain === 'Movement' && window.devMoveIdea ? devMoveIdea(ref) : null;
     const act = !move && devAreaIdea(ref, domain);
