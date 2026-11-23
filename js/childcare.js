@@ -441,17 +441,19 @@
     el.addEventListener('touchend', e => { if (x0 == null) return; const dx = e.changedTouches[0].clientX - x0; x0 = null; if (Math.abs(dx) > 50) ccTopic(cmpAt + (dx < 0 ? 1 : -1)); }, { passive: true }); };
   // Nov 23 (Yarden's inspiration): every kind of care side by side, so comparing is looking across a row, not tapping
   // four tabs and remembering. Facts, not scores (design guide); each column opens that kind of care.
+  // Nov 23 (Yarden's mockup): calendar / people / heart / coins on the rows; building / house / person / people on top.
   const GRID_ROWS = [
-    ['clock', 'Hours', { center: 'Set hours', home: 'Set, often flexible', nanny: 'Your schedule', family: 'Flexible' }],
-    ['blocks', 'Babies per adult', { center: '3 babies', home: '2 babies', nanny: '1, or 2 if shared', family: 'Usually 1' }, 'Recommended limits. Your state’s rules may allow more, so ask.'],
-    ['thermo', 'When {s’s} sick', { center: 'Stays home', home: 'Stays home; may close', nanny: 'Usually still on', family: 'Usually still on' }],
-    ['coin', 'What you pay', { center: 'Monthly tuition', home: 'Tuition, often similar', nanny: 'Salary + taxes', family: 'What you agree' }]
+    ['calendar', 'Hours', { center: 'Set hours', home: 'Set, often flexible', nanny: 'Your schedule', family: 'Flexible' }],
+    ['people', 'Babies per adult', { center: '3 babies', home: '2 babies', nanny: '1', family: '1 usually' }, 'Recommended limits. Your state’s rules may allow more, so ask.'],
+    ['heart', 'When {s’s} sick', { center: 'Stays home', home: 'Stays home; may close', nanny: 'Usually still on', family: 'Usually still on' }],
+    ['coins', 'What you pay', { center: 'Monthly tuition', home: 'Tuition, often similar', nanny: 'Salary + taxes', family: 'What you agree' }]
   ];
+  const GRID_ICON = { center: 'school', home: 'home', nanny: 'person', family: 'people' };
   const GRID_COL = { center: 'Daycare', home: 'Home daycare', nanny: 'Nanny', family: 'Family' };
   function comparePage() {
-    const head = `<div class="cc-grid-head"><span></span>${COLS.map(([k]) => `<button onclick="openPage('chg:${CAT}:d:${k}')" aria-label="${F(CMP_NAME[k])}"><span>${hubArt(TYPES[k].icon, CAT)}</span>${F(GRID_COL[k])}</button>`).join('')}</div>`;
+    const head = `<div class="cc-grid-head"><span></span>${COLS.map(([k]) => `<button onclick="openPage('chg:${CAT}:d:${k}')" aria-label="${F(CMP_NAME[k])}"><span>${hubArt(GRID_ICON[k], CAT)}</span>${F(GRID_COL[k])}</button>`).join('')}</div>`;
     const rows = GRID_ROWS.map(([ic, label, cells, note]) => `<div class="cc-grid-row"><div class="cc-grid-label">${hubArt(ic, CAT)}<b>${F(label)}</b></div>${COLS.map(([k]) => `<div>${F(cells[k])}</div>`).join('')}${note ? `<p class="cc-grid-note">${F(note)}</p>` : ''}</div>`).join('');
-    const foot = `<p class="cc-grid-foot">${hubArt('idea', CAT)}<span>${F('Prices vary a lot by city, so ask each place for the full cost, including fees and closed days.')}</span></p>`;
+    const foot = `<p class="cc-grid-foot">${hubArt('info', CAT)}<span>${F('Prices vary a lot by city, so ask each place for the full cost, including fees and closed days.')}</span></p>`;
     return sub('compare', 'Kinds of care', 'Compare your options', 'The same four questions, across each kind of care.', `<section class="cc-grid">${head}${rows}</section>${foot}`, 'blocks');
   }
   function childcare() {
