@@ -107,7 +107,7 @@
       + rows('', [['eye', 'Follow {p} cues', 'Bring the next sleep forward a little.'], ['moon', 'Earlier is better than overtired', 'An early bedtime is fine on short-nap days.', 'd:earlybed']])
       + note('Very common now.', 'Naps of 30–45 minutes are normal at 3–5 months. They get longer with time.') + foot('Every baby moves at {p} own pace.')),
     'd:regress': () => page('Night sleep', 'The 4‑month sleep regression is normal', '{P} sleep cycles are maturing, so {s} wakes more for a few weeks.',
-      vis('Wakings in one night', 'A few weeks', tally('One waking', [['Before', 2, '1–2 wakings'], ['During', 6, 'Up every 1–2 hours'], ['A few weeks later', 2, '1–2 wakings again']], [null, 3, 5.5]))
+      vis('Wakings in one night', 'A few weeks', tally('One waking', [['Before', 2, '1–2 wakings'], ['During', 6, 'Up to 6 wakings'], ['A few weeks later', 2, '1–2 wakings again']], [null, 3, 5.5]))
       + rows('What helps', [['clock', 'Wait a minute or two', 'Many cries settle on their own.'], ['moon', 'Dark and quiet', 'Keep visits brief.'], ['heart', 'A feed if hungry', 'Comfort the way you always do.']])
       + note('No need to sleep train.', 'Keep doing what works, and it passes.') + calls('waking comes with ' + fever() + ', poor feeding or pain.') + foot('Ages are typical. Every baby moves at {p} own pace.')),
     'd:settle4': () => page('Bedtime', 'Try putting {o} down drowsy, once a day', 'From about 4 months, many babies can learn to fall asleep on their own.',
