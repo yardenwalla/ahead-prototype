@@ -439,15 +439,20 @@
   window.ccTopic = i => { cmpAt = (i + TOPICS_CMP.length) % TOPICS_CMP.length; rerender(); };
   window.ccSwipe = (el) => { let x0 = null; el.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, { passive: true });
     el.addEventListener('touchend', e => { if (x0 == null) return; const dx = e.changedTouches[0].clientX - x0; x0 = null; if (Math.abs(dx) > 50) ccTopic(cmpAt + (dx < 0 ? 1 : -1)); }, { passive: true }); };
+  // Nov 23 (Yarden's inspiration): every kind of care side by side, so comparing is looking across a row, not tapping
+  // four tabs and remembering. Facts, not scores (design guide); each column opens that kind of care.
+  const GRID_ROWS = [
+    ['clock', 'Hours', { center: 'Set hours', home: 'Set, often flexible', nanny: 'Your schedule', family: 'Flexible' }],
+    ['blocks', 'Babies per adult', { center: '3 babies', home: '2 babies', nanny: '1, or 2 if shared', family: 'Usually 1' }, 'Recommended limits. Your state’s rules may allow more, so ask.'],
+    ['thermo', 'When {s’s} sick', { center: 'Stays home', home: 'Stays home; may close', nanny: 'Usually still on', family: 'Usually still on' }],
+    ['coin', 'What you pay', { center: 'Monthly tuition', home: 'Tuition, often similar', nanny: 'Salary + taxes', family: 'What you agree' }]
+  ];
+  const GRID_COL = { center: 'Daycare', home: 'Home daycare', nanny: 'Nanny', family: 'Family' };
   function comparePage() {
-    const [id, , icon, q, why, ans, ask] = TOPICS_CMP[cmpAt];
-    const tabs = `<div class="cc-tabs-row" role="tablist">${TOPICS_CMP.map(([k, n], i) => `<button class="cc-tab${i === cmpAt ? ' is-on' : ''}" role="tab" aria-selected="${i === cmpAt}" onclick="ccTopic(${i})">${F(n)}</button>`).join('')}</div>`;
-    const top = `<section class="cc-topic"><h2>${F(q)}</h2><p>${F(why)}</p><span class="cc-topic-art">${hubArt(icon, CAT)}</span></section>`;
-    const rows = H().list('', COLS.map(([k]) => H().row({ icon: TYPES[k].icon, cat: CAT, title: CMP_NAME[k], sub: ans[k], onclick: `openPage('chg:${CAT}:d:${k}')` })));
-    const askCard = `<section class="cc-ask-card"><span>${hubArt('chat', CAT)}</span><div><b>${F('What to ask')}</b><p>${F('“' + ask + '”')}</p></div></section>`;
-    const dots = `<div class="cc-dots-nav" aria-hidden="true">${TOPICS_CMP.map((_, i) => `<i class="${i === cmpAt ? 'on' : ''}"></i>`).join('')}</div>`;
-    setTimeout(() => { const el = document.querySelector('.cc-swipe'); if (el && !el.__sw) { el.__sw = 1; ccSwipe(el); } }, 0);
-    return sub('compare', 'Kinds of care', 'Compare your options', '', tabs + `<div class="cc-swipe" data-topic="${id}">${top}${rows}${askCard}</div>`, 'blocks');
+    const head = `<div class="cc-grid-head"><span></span>${COLS.map(([k]) => `<button onclick="openPage('chg:${CAT}:d:${k}')" aria-label="${F(CMP_NAME[k])}"><span>${hubArt(TYPES[k].icon, CAT)}</span>${F(GRID_COL[k])}</button>`).join('')}</div>`;
+    const rows = GRID_ROWS.map(([ic, label, cells, note]) => `<div class="cc-grid-row"><div class="cc-grid-label">${hubArt(ic, CAT)}<b>${F(label)}</b></div>${COLS.map(([k]) => `<div>${F(cells[k])}</div>`).join('')}${note ? `<p class="cc-grid-note">${F(note)}</p>` : ''}</div>`).join('');
+    const foot = `<p class="cc-grid-foot">${hubArt('idea', CAT)}<span>${F('Prices vary a lot by city, so ask each place for the full cost, including fees and closed days.')}</span></p>`;
+    return sub('compare', 'Kinds of care', 'Compare your options', 'The same four questions, across each kind of care.', `<section class="cc-grid">${head}${rows}</section>${foot}`, 'blocks');
   }
   function childcare() {
     const card = load('ahead-carecard', {}), list = shortlist(), am = typeof actualMonth === 'function' ? actualMonth() : 0, fd0 = feedNow(), bm0 = fd0 !== 'Formula', fm0 = fd0 !== 'Breast milk';
