@@ -25,7 +25,8 @@
   const alert = (t, d, tone = 'yellow') => `<section class="h2-alert is-${tone}"><i aria-hidden="true">!</i><div><b>${F(t)}</b><p>${F(d)}</p></div></section>`;
   const sos = () => `<section class="h2-sos"><b>${F('Call 911 for emergency signs')}</b><p>${F('Struggling to breathe, blue lips, won’t wake or is floppy, or a seizure.')}</p></section>`;
   // Two tiles side by side: what's common, and when to call.
-  const pair = (a, b) => `<div class="h2-pair"><div class="is-calm">${ic('', 'blue', SMILE)}<b>${F(a[0])}</b><p>${F(a[1])}</p></div><div class="is-call">${ic('', 'yellow', PHONE)}<b>${F(b[0])}</b><p>${F(b[1])}</p></div></div>`;
+  // Nov 23: Health's calm-vs-act pair uses the app's shared pair (green calm side, soft red call side).
+  const pair = (a, b) => H().versus('', a, b);
   // The top card: the guide's soft green card, with a photo when the page is about a moment you'll see.
   const top = (eyebrow, title, lead, photo, alt, cap) => `<div class="hub-detail-head h2-head${photo ? ' has-photo' : ''}"><p class="hub-context">${F(eyebrow)}</p><h1>${F(title)}</h1>${lead ? `<p class="hub-lead">${F(lead)}</p>` : ''}${photo ? `<figure class="h2-photo"><img src="assets/health/${photo}" alt="${e(alt)}"></figure>${cap ? `<p class="h2-cap">${F(cap)}</p>` : ''}` : ''}</div>`;
   const page = inner => `<div class="quiet-category hub-page hub-detail h2-page" data-overview="Health" style="${yearTheme('Health')}">${detailPageTop('Health')}${inner}</div>`;
@@ -190,7 +191,7 @@
       + rows([['thermo', 'yellow', 'A fever', 'How to check, and when to call', "openPage('chg:Health:d:sick-fever')"],
         ['drop', 'blue', 'A cold or stuffy nose', 'Clear the nose so feeds go easier', "openPage('chg:Health:d:cold')"],
         ['bottle', 'pink', 'Vomiting or diarrhea', 'Keep feeds going, watch diapers', "openPage('chg:Health:d:sick-tummy')"]])
-      + sos() + `<p class="h2-small is-center">${F('Not sure? Call your pediatrician’s office, day or night.')}</p>`);
+      + H().TPLB.calls({ nowLabel: 'Call 911', now: '{s} struggles to breathe, has blue lips, won’t wake or is floppy, or has a seizure.' }) + `<p class="h2-small is-center">${F('Not sure? Call your pediatrician’s office, day or night.')}</p>`);
   }
   function feverPage() {
     const mo = m(), u3 = mo < 3;
@@ -205,7 +206,7 @@
       + rows([['thermo', 'blue', 'Take a rectal temperature', 'Four quick steps', "openPage('chg:Health:d:sick-rectal')"]]);
     const help = h2('What helps') + rows([['bottle', 'yellow', 'Offer extra feeds', 'Little and often keeps {o} hydrated'], ['shirt', 'green', 'Dress {o} lightly', 'Extra layers keep a fever up'], ['moon', 'pink', 'Let {o} rest', 'Naps and quiet time']])
       + alert('Before any medicine', u3 ? 'Under 3 months, ask your pediatrician first.' : mo < 6 ? 'Acetaminophen can help. Ask your pediatrician for the dose.' : 'Acetaminophen or ibuprofen can help. Ask your pediatrician for the dose.', 'blue');
-    return page(top('When Maya seems sick', title, lead) + big + check + help + sos());
+    return page(top('When Maya seems sick', title, lead) + big + check + help + H().TPLB.calls({ nowLabel: 'Call 911', now: '{s} struggles to breathe, has blue lips, won’t wake or is floppy, or has a seizure.' }));
   }
   function coldPage() {
     const mo = m();
@@ -214,17 +215,18 @@
       + h2('Before feeds and sleep') + seq
       + `<p class="h2-small">${F('Up to 3 times a day, so {p} nose doesn’t get sore. Not after a feed: it can bring the milk up.')}</p>`
       + h2('Also helps') + rows([['snow', 'blue', 'A cool-mist humidifier', 'In {p} room at night'], ['bottle', 'yellow', 'Smaller, more frequent feeds', 'Easier with a stuffy nose'], ['shield', 'pink', 'Skip cold medicines', 'Not safe for babies. No honey before 1']])
-      + alert('When to call', `A fever of ${feverTemp(mo)} or more, a cold past 10 days, fussing when lying down, or ear fluid.`)
-      + sos());
+      // Nov 23 cohesion pass: the app's one When to call card (was a yellow box plus a separate 911 box).
+      + H().TPLB.calls({ ped: `a fever of ${feverTemp(mo)} or more, a cold past 10 days, fussing when lying down, or ear fluid.`, nowLabel: 'Call 911', now: '{s} struggles to breathe, has blue lips, won’t wake or is floppy, or has a seizure.' }));
   }
   function tummyPage() {
     // Nov 19 review: check how sick the baby is before any reassurance, so the warning signs come first.
     return page(top('When Maya seems sick', 'Keep {p} feeds going', 'First, check for the signs below. Most tummy bugs then pass in a day or two.')
-      + h2('What to look for') + pair(['Common', 'Some loose poops or vomits, still feeding.'], ['Time to call', 'Can’t keep feeds down, a dry mouth, or blood in poop.'])
-      + alert('Go to the ER', 'Green or bloody vomit.', 'peach')
-      + `<section class="h2-watch">${ic('diaper', 'green')}<div><b>${F('Watch wet diapers')}</b><p>${F('Far fewer than usual, or none in 6 hours, can be a sign of dehydration.')}</p></div></section>`
+      // Nov 23: the app's shared calm-vs-act pair (Feeding, Everyday care), and the wet-diaper sign joins the call side
+      // instead of a separate green box, so the page has one look and one place for each kind of call.
+      + H().versus('How to tell', ['Common', 'Some loose poops or vomits, still feeding.'], ['Call your pediatrician', 'Can’t keep feeds down, a dry mouth, blood in poop, or far fewer wet diapers (none in 6 hours).'])
       + h2('What helps') + rows([['bottle', 'yellow', 'Keep offering milk', 'Smaller feeds, more often'], ['hand', 'green', 'Wash hands after changes', 'Tummy bugs spread easily'], ['steth', 'pink', 'Ask before any medicine', 'Including anti-diarrhea medicine']])
-      + sos());
+      // Nov 23 cohesion pass: ER and 911 together in the app's one When to call card, at the end (was a peach ER box mid-page and a 911 box).
+      + H().TPLB.calls({ er: 'green or bloody vomit.', nowLabel: 'Call 911', now: '{s} struggles to breathe, has blue lips, won’t wake or is floppy, or has a seizure.' }));
   }
   const baseRoute = window.changesRoute;
   window.changesRoute = function (p) {

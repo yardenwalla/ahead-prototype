@@ -242,7 +242,7 @@
     const hinted = (() => { try { return !!localStorage.getItem('ahead-tl-dragged'); } catch (e) { return true; } })();
     const pct = Math.max(0, Math.min(100, a / 12 * 100));
     const grad = (w, to) => typeof window.monthColor === 'function' ? `linear-gradient(90deg,${[...Array(12)].map((_, i) => `${window.monthColor(i, w, to)} ${Math.round((i + 0.5) / 12 * 100)}%`).join(',')})` : '';
-    let h = `<div class="ya-page tl-track" style="${theme(a)};--tlp:${pct}%;--tla:${pct}%;--tlg:${grad(.86)};--tlf:${grad(.42)}"><div class="tl-top"><h1 class="yt-h1">${F(`${nm}’s first year`)}</h1></div><p class="tl-sub">${F('What’s coming, one little leap at a time.')}</p>`;
+    let h = `<div class="ya-page tl-track" style="${theme(a)};--tlp:${pct}%;--tla:${pct}%;--tlg:${grad(.86)};--tlf:${grad(.42)}"><p class="eyebrow tl-eyebrow">${F('Timeline')}</p><div class="tl-top"><h1 class="yt-h1">${F(`${nm}’s year ahead`)}</h1></div>`;
     h += `<div class="tl-prog${hinted ? '' : ' tl-hint'}"><div class="tl-ride"><span class="tl-baby" role="slider" tabindex="0" aria-label="${F(`Drag ${nm} to see another age`)}" aria-valuemin="0" aria-valuemax="12" aria-valuenow="${a.toFixed(1)}" aria-valuetext="${F(ageTxt(a))}" onkeydown="tlKey(event)" style="${theme(a)}">${art(a)}<em class="tl-tip">${F(hinted ? ageTxt(a) : 'Drag me')}</em></span><span class="tl-flag" aria-hidden="true"><img class="tl-cakeimg" src="assets/home/babies/cake.webp" alt=""></span></div><div class="tl-bar"><i></i><button class="tl-nowmark" onclick="tlScrub(null)" aria-label="${F('Back to today')}"></button></div><div class="tl-ticks" aria-hidden="true">${[[0, 'Birth'], [12, 'First birthday']].map(([v, l]) => `<span style="left:${v / 12 * 100}%">${F(l)}</span>`).join('')}${hinted ? '' : `<em class="tl-hintline">${F(`Drag ${nm} to peek ahead`)}</em>`}</div><div class="tl-ends">${ends(a)}</div></div>`;
     const gvars = x => typeof window.monthColor === 'function' ? `--g-bg:${window.monthColor(Math.max(0, Math.min(11, Math.floor(x))), .86)};--g-ink:${window.monthColor(Math.max(0, Math.min(11, Math.floor(x))), .45, 30)}` : '';
     window.__tl.gvars = gvars;
@@ -346,7 +346,7 @@
   const PAGES = {
     crying: { lead: 'From about 2 weeks, many babies cry more, often in the late afternoon and evening. It peaks around 6–8 weeks and eases by 3–4 months.', bar: [0, 4, 0.5, 3, 'Peaks at 6–8 weeks'], signsTitle: 'What it can look like', signs: ['Fussier evenings', 'Crying that’s hard to settle, even after a feed', 'Pulling up legs or going red in the face'],
       rows: [['heart', 'Sleep', 'When the crying won’t stop', 'What helps, and when it eases', "openPage('chg:Sleep:d:crying')"], ['heart', 'Health', 'Looking after you', 'It’s OK to put {o} down safely and step away', "openPage('chg:Health:d:you')"]],
-      tip: ['Crying with a fever, poor feeding, or a cry that sounds different?', 'Call your pediatrician. Under 3 months, a temperature of 100.4°F or higher means calling right away.'] },
+      calls: { ped: 'crying comes with a fever or poor feeding, or the cry sounds different.', now: 'under 3 months, a temperature of 100.4°F or higher.', nowLabel: 'Call right away' } },
     smile: { lead: 'Around 6–8 weeks, most babies start smiling back at you. It’s the first real back-and-forth between you.', bar: [0, 4, 1.4, 2.1, 'Smiling back'], signs: ['Watching your face closely', 'Calming at your voice', 'Little coos when you talk'],
       rows: [['smile', 'Development', 'Lots of face-to-face time', 'Close up, where {s} can see you best', "openPage('development-domain:2:Social')"], ['chat', 'Development', 'Talk back to {p} sounds', 'Pause, and give {o} a turn', "openPage('development-domain:2:Talking')"]],
       tip: ['Not smiling back by 2 months?', 'Some babies take a little longer. Mention it at the 2-month checkup.'] },
@@ -355,11 +355,11 @@
       tip: ['Still waking every 2–3 hours?', 'That’s normal for many babies this age, especially breastfed babies. Stretches grow over months, not nights.'] },
     regress: { lead: 'Around 4 months, sleep cycles mature, and many babies wake more for a few weeks. It’s a step forward, not backward.', bar: [1, 7, 3, 5, 'Often here'], signs: ['More night waking than a few weeks ago', 'Naps of 30–45 minutes', 'Harder to put down asleep'],
       rows: [['moon', 'Sleep', 'What helps during the regression', 'Wait a minute before going in', "openPage('chg:Sleep:d:regress')"], ['moon', 'Sleep', 'Rough day or night? Quick fixes', 'Waking a lot, short naps, up too early', "openPage('chg:Sleep:d:rough')"], ['heart', 'Health', 'Looking after you', 'Broken sleep is hard. Your rest matters too', "openPage('chg:Health:d:you')"]],
-      tip: ['Waking with a fever, poor feeding or pain?', 'That’s not the regression. Call your pediatrician.'] },
+      calls: { ped: 'waking comes with a fever, poor feeding or pain. That’s not the regression.' } },
     roll: { lead: 'Rolling usually starts at 4–6 months. It changes how {s} sleeps and where {s} can go.', bar: [2, 8, 4, 6, 'Rolling'], signs: ['Rocking side to side on {p} back', 'Pushing up on straight arms in tummy time', 'Rolling onto {p} side'],
       rows: [['sack', 'Sleep', 'Stop swaddling at the first signs of trying to roll', 'Then a sleep sack, arms free', "openPage('chg:Sleep:d:swaddleoff')"], ['coin', 'Safety', 'Clear {p} play space', 'Small things go straight in the mouth', "openPage('chg:Safety:d:step:small')"], ['shield', 'Safety', 'Beds and sofas are off-limits', 'Even for a second', "openPage('safety-stage:reaching')"], ['mat', 'Development', 'Tummy time to practice', 'A toy just to one side helps', "openPage('development-domain:6:Movement')"]],
       tip: ['Rolled onto {p} tummy in sleep?', 'Always put {o} down on {p} back. Once {s} rolls both ways on {p} own, {s} can stay how {s} lands.'] },
-    sit: { lead: 'Most babies sit on their own by about 9 months. First comes sitting propped on their hands.', bar: [4, 12, 6, 9, 'Sitting up'], signs: ['Sitting propped on {p} hands', 'A steady head and back', 'Reaching for toys while sitting'],
+    sit: { pics: [['dev/m6-leans-on-hands', 'Sits propped on {p} hands', 'Leaning forward for balance'], ['feeding/sign-sits', 'A steady head and back', 'Upright, with a little support'], ['dev/play-toy-beside-knee', 'Reaches while sitting', 'For a toy just beside {o}']], lead: 'Most babies sit on their own by about 9 months. First comes sitting propped on their hands.', bar: [4, 12, 6, 9, 'Sitting up'], signs: ['Sitting propped on {p} hands', 'A steady head and back', 'Reaching for toys while sitting'],
       rows: [['crib', 'Sleep', 'Lower the crib mattress', 'Before {s} can sit on {p} own', "openPage('chg:Sleep:d:mattress')"], ['mat', 'Safety', 'Time to retire the bouncer', 'Once {s} sits up or tries to climb out', "openPage('chg:Safety:d:gear')"], ['sit', 'Development', 'A toy beside your knee', 'Reaching while sitting builds balance', "openPage('development-domain:6:Movement')"]],
       tip: ['Not sitting by 9 months?', 'Mention it at the 9-month checkup.'] },
     twonaps: { lead: 'Usually between 6 and 9 months, the late-afternoon catnap drops and days settle into two naps.', bar: [4, 12, 6, 9, 'Two naps'], signs: ['Skipping the catnap most days', 'The catnap pushes bedtime late', 'Fine until bedtime without it'],
@@ -368,10 +368,10 @@
     tooth: { lead: 'Most babies get their first tooth between 6 and 12 months, usually a bottom front tooth.', bar: [3, 15, 6, 12, 'First tooth'], signs: ['More drooling and chewing', 'Swollen or tender gums', 'A little fussier than usual'],
       rows: [['tooth', 'Daily rhythm', 'Start brushing', 'A rice-grain smear of fluoride toothpaste', "openPage('chg:Daily rhythm:d:teeth')"], ['tooth', 'Daily rhythm', 'Soothing sore gums', 'A clean finger or a chilled teething ring', "openPage('chg:Daily rhythm:d:gums')"], ['thermo', 'Health', 'Teething doesn’t cause a high fever', 'A fever means checking for something else', "openPage('chg:Health:d:sick')"]],
       tip: ['No tooth yet?', 'Some babies get their first tooth later. Ask at a checkup if you don’t see any by 18 months.'] },
-    crawl: { lead: 'Most babies start moving between 6 and 10 months. Some scoot or roll instead, and some skip crawling altogether.', bar: [4, 12, 6, 10, 'Crawling'], signs: ['Rocking on hands and knees', 'Pushing up high during tummy time', 'Pivoting in circles on {p} tummy'],
+    crawl: { pics: [['dev/crawl-rock', 'Rocks on hands and knees', 'Back and forth, not moving yet'], ['dev/m6-straight-arms', 'Pushes up high', 'On straight arms in tummy time'], ['dev/reaching-6', 'Pivots on {p} tummy', 'Turning to reach a toy']], lead: 'Most babies start moving between 6 and 10 months. Some scoot or roll instead, and some skip crawling altogether.', bar: [4, 12, 6, 10, 'Crawling'], signs: ['Rocking on hands and knees', 'Pushing up high during tummy time', 'Pivoting in circles on {p} tummy'],
       rows: [['shield', 'Safety', 'Babyproof before {s} moves', 'Stair gates, cabinet locks and outlet covers', "openPage('safety-stage:rolling')"], ['crib', 'Sleep', 'Lower the crib mattress', 'Before {s} can sit on {p} own', "openPage('chg:Sleep:d:mattress')"], ['crawl', 'Development', 'Lots of floor time to practice', 'A toy just out of reach helps', "openPage('development-domain:9:Movement')"], ['stroller', 'Out and about', 'Outings get busier', 'A blanket won’t keep {o} put for long', "openPage('topic:Out and about')"]],
       tip: ['Not crawling by 10 months?', 'Many babies skip crawling and go straight to pulling up. If Maya isn’t moving around at all, mention it at the 9-month checkup.'] },
-    solids: { lead: 'Around 6 months, food joins milk. It starts with a few bites a day, and milk stays the main food for months.', bar: [4, 9, 5.4, 7, 'About 6 months'], signsTitle: 'Signs {s’s} ready', signs: ['Holds {p} head steady on {p} own', 'Sits with a little support', 'Leans in when food comes {p} way', 'Swallows food instead of pushing it out'],
+    solids: { pics: [['feeding/sign-head', 'Steady head', 'Holds it up on {p} own'], ['feeding/sign-sits', 'Sits with support', 'In a high chair, or on your lap'], ['feeding/sign-interest2', 'Leans in for food', 'Watches you eat, leans in'], ['feeding/sign-spoon', 'Swallows, not pushes out', 'Food goes down, not back out']], lead: 'Around 6 months, food joins milk. It starts with a few bites a day, and milk stays the main food for months.', bar: [4, 9, 5.4, 7, 'About 6 months'], signsTitle: 'Signs {s’s} ready', signs: ['Holds {p} head steady on {p} own', 'Sits with a little support', 'Leans in when food comes {p} way', 'Swallows food instead of pushing it out'],
       rows: [['highchair', 'Feeding', 'Get set up for the first bite', 'A high chair, a soft spoon and a bib', "openPage('chg:Feeding:d:setup')"], ['shield', 'Safety', 'Learn infant choking first aid', 'And how gagging is different', "openPage('chg:Feeding:safe')"], ['bowl', 'Feeding', 'Decide how you’d like to start', 'Spoon-feeding, finger foods or a bit of both', "openPage('chg:Feeding:d:approach')"], ['steth', 'Health', 'Ask about allergens at the checkup', 'The 6-month checkup is a good time', "openPage('health-visit:6')"]],
       tip: ['No need to rush', 'Around 6 months is the usual start, never before 4. Until then, milk gives Maya everything {s} {need|needs}.'] },
     finger: { lead: 'Around 7–9 months, food moves past smooth purées to soft lumps, and pieces {s} can pick up. Meals get messier, and that’s how {s} learns.', bar: [5, 11, 7, 9, 'Textures'], signs: ['Moving food around {p} mouth to chew', 'Raking food toward {o} with {p} fingers', 'Reaching for the spoon'],
@@ -405,7 +405,7 @@
   const VSTART = { tl: [80, 56], tr: [320, 56], bl: [80, 244], br: [320, 244] };
   const vPhoto = (img, call, cap, pos) => { const src = img.includes('/') ? img : 'timeline/' + img; const arr = (call || []).map(([, at, x, y]) => { const [sx, sy] = VSTART[at], ex = x * 4, ey = y * 3, mx = (sx + ex) / 2, my = (sy + ey) / 2, dx = ex - sx, dy = ey - sy, b = at === 'tl' || at === 'br' ? 0.25 : -0.25;
       return `<path d="M${sx} ${sy} Q${(mx - dy * b).toFixed(0)} ${(my + dx * b).toFixed(0)} ${ex} ${ey}" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" marker-end="url(#yaah)" filter="drop-shadow(0 1px 2px rgba(0,0,0,.35))"/>`; }).join('');
-    return `<figure class="ct-hero ya-photo"><img src="assets/${src}.jpg?v=1" alt="${F(cap).replace(/"/g, '&quot;')}" loading="lazy" style="object-position:50% ${pos || '40%'}"><svg class="ct-arrows" viewBox="0 0 400 300" preserveAspectRatio="none" aria-hidden="true"><defs><marker id="yaah" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#fff"/></marker></defs>${arr}</svg>${(call || []).map(([l, at]) => `<span class="ct-callout is-${at}">${F(l)}</span>`).join('')}</figure><p class="ya-cap">${F(cap)}</p>`; };
+    return `<figure class="ct-hero ya-photo"><img src="assets/${src}.jpg?v=1" alt="${F(cap || (call && call[0] && call[0][0]) || '').replace(/"/g, '&quot;')}" loading="lazy" style="object-position:50% ${pos || '40%'}"><svg class="ct-arrows" viewBox="0 0 400 300" preserveAspectRatio="none" aria-hidden="true"><defs><marker id="yaah" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#fff"/></marker></defs>${arr}</svg>${(call || []).map(([l, at]) => `<span class="ct-callout is-${at}">${F(l)}</span>`).join('')}</figure>${cap ? `<p class="ya-cap">${F(cap)}</p>` : ''}`; };
   // Shared with other guides' pages (Health's rectal temperature, Feeding's vitamin D): one photo, pointing labels, a caption.
   window.aheadFig = vPhoto;
   const vH2 = t => `<h2 class="hub-h2">${F(t)}</h2>`;
@@ -420,36 +420,52 @@
   // A sequence: what comes first, next, then.
   const vSteps = (title, items) => vH2(title) + `<ol class="ya-steps">${items.map(([icon, t, sub]) => `<li><i>${typeof hubArt === 'function' ? hubArt(icon, 'Development & play') : ''}</i><b>${F(t)}</b><small>${F(sub)}</small></li>`).join('')}</ol>`;
   const VIS = {
-    crying: () => vCurve('How the crying usually goes', 'L0 112 C40 104 60 60 95 22 C120 4 150 10 175 40 C205 78 250 104 320 110 L320 118 Z', [[6, 'About 2 weeks', 'It starts'], [42, 'Peaks', 'at 6–8 weeks'], [82, 'Eases', 'by 3–4 months']]),
     smile: () => vPhoto('smile', [['Smiling back at you', 'tr', 62, 50]], 'The first real smiles come in answer to yours.', '40%'),
     nights: () => vBars('The longest sleep, month by month', [['Newborn weeks', 25, '2–4 hrs'], ['3–4 months', 45, '5+ hrs'], ['Around 6 months', 66, '6–8 hrs'], ['9–12 months', 100, '10–12 hrs']]),
     regress: () => vDots('Night wakings, before and after', [['Before', 2, '1–2 wakings'], ['For a few weeks', 6, 'Up to 6'], ['After', 2, '1–2 again']]),
-    roll: () => vPhoto('roll', [['Onto {p} side first', 'tr', 50, 50]], 'Rocking side to side often comes just before the first roll.', '45%'),
-    sit: () => vPhoto('sit', [['Propped on {p} hands', 'br', 48, 70]], 'First comes sitting propped forward. Sitting hands-free comes later.', '45%'),
     twonaps: () => vDays('An example day, before and after', [['Three naps', [[9, 10], [12.5, 14], [16.3, 16.9]]], ['Two naps', [[9.5, 10.8], [13.8, 15.3]]]]),
     tooth: () => vPhoto('tooth', [['Two little bottom teeth', 'br', 52, 60]], 'The two bottom front teeth usually come first.', '35%'),
-    crawl: () => vPhoto('crawl', [['Rocking on hands and knees', 'tl', 45, 55]], 'Rocking back and forth often comes just before crawling.', '45%'),
-    solids: () => vH2('Ready when you see these') + (H().TPLB ? '<div class="ya-grid4">' + H().TPLB.photoGrid([['feeding/sign-head', 'Steady head', 'Holds it up on {p} own'], ['feeding/sign-sits', 'Sits with support', 'In a high chair or on your lap'], ['feeding/sign-interest2', 'Leans in', 'When food comes {p} way'], ['feeding/sign-spoon', 'Swallows', 'Instead of pushing food out']]) + '</div>' : ''),
     finger: () => vH2('One food, three textures') + (H().TPLB ? '<div class="ya-tex">' + H().TPLB.photoAges([['feeding/tx-avo-1', 'Around 6 months', 'Smooth', ''], ['feeding/tx-avo-2', '7–8 months', 'Lumpy', ''], ['feeding/tx-avo-3', '9 months on', 'Soft pieces', '']]) + '</div>' : ''),
-    carseat: () => vPhoto('carseat', [['Less than an inch to the top', 'tr', 50, 20]], 'When {p} head is within an inch of the top of the shell, it’s time for the next seat.', '30%'),
-    sep: () => vPhoto('sep', [['Reaching for you', 'tr', 55, 45]], 'It means {s} knows you, and knows when you’re gone.', '40%'),
+    carseat: () => vPhoto('carseat', [['Less than an inch to the top', 'tr', 50, 20]], '', '30%'),
+    sep: () => vPhoto('sep', [['Reaching for you', 'tr', 55, 45]], 'Often strongest with new people, or at bedtime.', '40%'),
     pull: () => vPhoto('pull', [['Holding on to stand', 'tl', 55, 40]], 'Next comes cruising: stepping sideways while holding on.', '40%'),
     words: () => vSteps('How talking builds', [['chat', 'Coos', 'By about 2 months'], ['music', 'Babbles “ba-ba”', 'By about 6 months'], ['heart', '“Mama” or “dada”', 'For a parent, around 12 months']]),
     milk: () => vSteps('Moving to whole milk', [['bottle', 'Breast milk or formula', 'Until 12 months'], ['cup', 'Cup practice', 'From about 6 months'], ['cup', 'Whole milk in a cup', 'From 12 months']]),
-    steps: () => vPhoto('steps', [['Arms up for balance', 'tl', 40, 35]], 'First steps are wobbly, with arms held high for balance.', '40%'),
     onenap: () => vDays('An example day, before and after', [['Two naps', [[9.5, 10.8], [13.8, 15.3]]], ['One nap', [[12.3, 14.8]]]])
   };
   function changePage(id) {
     const h = H(), c = C.find(x => x.id === id), p = PAGES[id]; if (!c || !p) return null;
     const a = ageNow(), cat = c.cat, past = c.end <= a, now = c.start <= a && c.end > a;
     const when = past ? 'Already behind ' + name() : now ? 'Any time now' : c.start - a <= 1 ? 'Could start any week now' : `In about ${Math.round(c.start - a)} month${Math.round(c.start - a) === 1 ? '' : 's'}`;
+    // Nov 23 cohesion pass: where every sign has a real photo, the signs show as Feeding's photo rows (show, don't tell).
     // Nov 14: the signs used to sit at the end of the top card's paragraph. As their own short list they scan at a glance.
-    const look = `<h2 class="hub-h2">${F(c.end <= a ? 'What it looked like' : p.signsTitle || 'Signs it’s close')}</h2><ul class="ya-signs">${p.signs.map(x => `<li>${F(x)}</li>`).join('')}</ul>${p.signsNote ? `<p class="ya-signs-note">${F(p.signsNote)}</p>` : ''}`;
-    const vis = VIS[id] ? VIS[id]() : '', shown = id === 'solids';
-    return h.detail(cat, `${range(c)} · ${when}`, c.title, p.lead,
-      vis + (shown ? '' : look)
+    // Nov 23 (Yarden): read-ahead pages use Development's "big question" card: when it usually happens on a bar
+    // with the baby marked, the steps as photos where the app has them, and one plain line. The lead's timing
+    // sentence moves into that card, so the top card says why it matters and nothing repeats.
+    const STEPS = { roll: 4, sit: 6, crawl: 9, steps: 12 };
+    const sents = String(p.lead).split(/(?<=[.!?])\s+/), whenLine = sents.length > 1 ? sents[0] : '', lead = sents.length > 1 ? sents.slice(1).join(' ') : p.lead;
+    const B = p.bar, tick = m => [m, m <= 0 ? 'Birth' : m === 12 ? '12 mo' : `${+m.toFixed(1)} mo`];
+    const ticks = B ? [...new Set([B[0], B[2], B[3], B[1]].map(m => Math.round(m)))].sort((x, y) => x - y).map(tick) : [];
+    const steps = !past && STEPS[id] && window.devBigSteps ? window.devBigSteps(STEPS[id]) : '';
+    const when2 = B && window.hubWindowBar ? `<h2 class="hub-h2">${F(past ? 'When it happened' : 'When it usually happens')}</h2><section class="hub-card dev-bigq ya-when">${steps}`
+      + hubWindowBar({ title: '', from: B[0], to: B[1], zones: [[B[2], B[3], B[4], 'band']], ticks, now: a, cat: cat === 'Daily rhythm' || cat === 'Out and about' ? cat : cat, caption: F(whenLine || c.title) })
+      + (whenLine ? `<p class="dev-bigq-a">${F(whenLine)}</p>` : '') + `</section>` : '';
+    const signsBody = p.pics ? h.TPLB.photoRows(p.pics) : `<div class="hub-card ya-signs2">${p.signs.map(x => `<p>${F(x)}</p>`).join('')}</div>`;
+    // Nov 23: the page's own visual (a photo, a small chart or a strip) sits between the timing card and the signs.
+    const vis = VIS[id] ? VIS[id]() : '';
+    const look = when2 + vis + (steps ? '' : `<h2 class="hub-h2">${F(c.end <= a ? 'What it looked like' : p.signsTitle || 'Signs it’s close')}</h2>${signsBody}`) + (p.signsNote ? `<p class="ya-signs-note">${F(p.signsNote)}</p>` : '');
+    return h.detail(cat, `${range(c)} · ${when}`, c.title, lead,
+      look
       + h.list('What it changes', p.rows.slice(0, 4).map(([icon, rc, title, sub, go]) => h.row({ icon, cat: rc, title, sub, onclick: go }).replace('<span class="hub-row-copy">', `<span class="hub-row-copy"><small class="hub-row-eyebrow">${F(AREA[rc] || rc)}</small>`)))
-      + h.tip(p.tip[0], p.tip[1]), c.icon);
+      // Nov 23: a tip that's really a call line uses the app's one When to call card.
+      + (p.calls ? h.TPLB.calls(p.calls) : h.tip(p.tip[0], p.tip[1])), c.icon)
+      // Nov 23 cohesion pass: Feeding, Everyday care and Outings changes opened on a bare header (no card), unlike
+      // Development and Sleep. Give them the same header card every guide page uses: the guide's soft color, its icon on a white tile.
+      .replace(/<div class="hub-detail-head">\s*<span class="hub-big">/, m => {
+        const pal = (typeof YEAR_PALETTES !== 'undefined' && YEAR_PALETTES[cat]) || null;
+        if (!pal || /^(Development|Sleep)$/.test(cat)) return m;
+        return `<div class="hub-detail-head dev-area-head ss-head ya-chg-head" style="--area:color-mix(in srgb, ${pal.bg} 50%, ${pal.pale});--area-ink:${pal.ink}"><span class="dev-area-head-art sf-head-art">`;
+      });
   }
   const base = window.changesRoute;
   window.changesRoute = function (p) { const m = /^chg:Timeline:c:(\w+)$/.exec(p); if (m) { const pg = changePage(m[1]); if (pg) return pg; } return base(p); };

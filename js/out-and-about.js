@@ -273,7 +273,7 @@
   // The same timeline as Road trips' example drive, with words ("When you book") where the drive has clock times.
   const timeline = (title, items, caption) => { const c = YEAR_PALETTES[CAT]; return `<figure class="hub-figure hub-daymarks oa-timeline" role="img" aria-label="${F(caption)}" style="--ink:${c.ink};--bg:${c.bg};--pale:${c.pale}"><b class="hub-fig-title">${F(title)}</b><ol class="hub-daymarks-list">${items.filter(Boolean).map(([when, icon, text]) => `<li><i>${hubArt(icon, CAT)}</i><time>${F(when)}</time><span>${F(text)}</span></li>`).join('')}</ol></figure>`; };
   const good = (rows, heading = 'Good to know') => { const r = rows.filter(Boolean).slice(0, 3); return r.length ? H().list(heading, r.map(([icon, title, s]) => H().row({ icon, cat: CAT, title, sub: s }))) : ''; };
-  const calls = (a, b) => H().versus('When to call', a, b);
+  const calls = (a, b) => H().TPLB.callsFrom(a, b);   // Nov 23: the app's one When to call card (was two side-by-side boxes)
 
   /* Every place page follows one layout, modeled on Road trips, so the tab reads as one piece:
        header → "Plan your …" (an example plan, in order) → "Pack for this" (only the extras on top of the everyday bag)

@@ -5,6 +5,13 @@
      one soft tint fill for depth. No faces, no sparkles. */
   const BOWL = (t) => `<path d="M3 11h18c0 4.4-4 8-9 8s-9-3.6-9-8Z" fill="${t}"/>`;
   const ART = {
+    // Nov 23 (Yarden's compare mockup): care types and row labels.
+    school: (c) => `<path d="M4 20.5V11l8-5 8 5v9.5Z" fill="${c.bg}"/><path d="M12 6V2.5h3.5v2H12M10 20.5v-4.5h4v4.5M2.5 20.5h19"/>`,
+    person: (c) => `<circle cx="12" cy="8" r="3.8" fill="${c.bg}"/><path d="M5 20.5c0-4 3.1-6.8 7-6.8s7 2.8 7 6.8"/>`,
+    people: (c) => `<circle cx="9" cy="8.5" r="3.3" fill="${c.bg}"/><circle cx="16.5" cy="9.5" r="2.6"/><path d="M3 19.5c0-3.5 2.7-6 6-6s6 2.5 6 6M15 13.6c3.3-.6 6 1.6 6 5"/>`,
+    calendar: (c) => `<rect x="3.5" y="5" width="17" height="15.5" rx="2.5" fill="${c.bg}"/><path d="M3.5 10h17M8 3v4M16 3v4"/>`,
+    coins: (c) => `<ellipse cx="9" cy="7" rx="5.5" ry="2.3" fill="${c.bg}"/><path d="M3.5 7v8c0 1.3 2.5 2.3 5.5 2.3M14.5 7v3.5"/><path d="M3.5 11c0 1.3 2.5 2.3 5.5 2.3"/><ellipse cx="15" cy="13" rx="5.5" ry="2.3" fill="${c.bg}"/><path d="M9.5 13v5c0 1.3 2.5 2.3 5.5 2.3s5.5-1 5.5-2.3v-5"/>`,
+    info: (c) => `<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.8" r=".6" fill="${c.ink}"/>`,
     head: (c) => `<circle cx="12" cy="8.5" r="4" fill="${c.bg}"/><path d="M5 20.5c0-3.9 3.1-6.5 7-6.5s7 2.6 7 6.5"/>`,
     sit: (c) => `<circle cx="12" cy="5.5" r="2.5" fill="${c.bg}"/><path d="M8.6 10h6.8l1 7H7.6Z" fill="${c.bg}"/><path d="M4.5 20.5h15"/>`,
     mouth: (c) => `<path d="M4.5 10.5c2.5 6 12.5 6 15 0Z" fill="${c.bg}"/><path d="M4.5 10.5c2.6-1.6 4.8-1.2 7.5 0 2.7-1.2 4.9-1.6 7.5 0"/>`,
