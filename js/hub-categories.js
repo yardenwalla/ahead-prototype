@@ -403,7 +403,7 @@
     2: ['Social', 'When will {s} smile at me?', 'Most babies smile back by about 6–8 weeks.'],
     4: ['Movement', 'Should {s} be rolling yet?', 'Not yet is normal. Rolling usually shows up between 4 and 6 months, so it could be any time.'],
     6: ['Movement', 'When will {s} sit on {p} own?', 'Most babies sit without support by about 9 months. Sitting propped on {p} hands is right on track.'],
-    9: ['Movement', 'What about crawling?', 'Many babies skip crawling. Some scoot or roll instead. What matters is that Maya finds a way to move.'],
+    9: ['Movement', 'What about crawling?', 'Many babies skip crawling. Some scoot or roll instead. What matters is that {s} {find|finds} a way to move.'],
     12: ['Movement', 'Should {s} be walking?', 'Not yet for most babies. First steps often come between 12 and 15 months.']
   };
   // [from, to, band start, band end, band label, ticks] in months, for the big question's picture.

@@ -425,6 +425,17 @@
     pull: () => vPhoto('pull', [['Standing while holding on', 'tl', 55, 40]], '', '40%'),
     milk: () => vSteps('Getting ready', [['bottle', 'Breast milk or formula', 'Until 12 months'], ['cup', 'Cup practice', 'From 6 months, with a little water'], ['cup', 'Whole milk in a cup', 'From 12 months. No juice needed']]),
   };
+  // [the parent's question, the answer under the bar (else the lead's timing sentence), 1 = the lead keeps its timing sentence]
+  const ASK = {
+    crying: ['When does the crying peak?', 'Around 6–8 weeks. It eases by 3–4 months.', 1], smile: ['When will {s} smile at me?'], nights: ['When will nights get longer?', 'Little by little, not overnight. Night feeds often carry on for a while.'],
+    regress: ['When does the regression happen?'], roll: ['Should {s} be rolling yet?', 'Not yet is normal. It could be any time from 4 to 6 months.'],
+    sit: ['When will {s} sit on {p} own?', 'Sitting propped on {p} hands comes first, and that’s right on track.', 1],
+    twonaps: ['When do three naps become two?', 'Often once the catnap starts pushing bedtime later.'], tooth: ['When will the first tooth come?', 'Later is normal too. Some babies get theirs after the first birthday.'],
+    crawl: ['What about crawling?', 'Many babies skip crawling. Some scoot or roll instead. What matters is that {s} {find|finds} a way to move.', 1],
+    solids: ['When can {s} start solids?'], finger: ['When do lumpier textures start?'], carseat: ['When will {s} outgrow it?'],
+    sep: ['When does separation anxiety start?'], pull: ['When will {s} pull up to stand?', 'Getting up on {p} knees often comes first.'], words: ['When will {s} say “mama” or “dada”?'],
+    milk: ['When can {s} have whole milk?'], steps: ['Should {s} be walking?', 'Some walk a little earlier, some later. Both are normal.', 1], onenap: ['When do two naps become one?', 'For most babies, not until after the first birthday.']
+  };
   function changePage(id) {
     const h = H(), c = C.find(x => x.id === id), p = PAGES[id]; if (!c || !p) return null;
     const a = ageNow(), cat = c.cat, past = c.end <= a, now = c.start <= a && c.end > a;
@@ -439,9 +450,12 @@
     const B = p.bar, tick = m => [m, m <= 0 ? 'Birth' : m === 12 ? '12 mo' : `${+m.toFixed(1)} mo`];
     const ticks = B ? [...new Set([B[0], B[2], B[3], B[1]].map(m => Math.round(m)))].sort((x, y) => x - y).map(tick) : [];
     const steps = !past && STEPS[id] && window.devBigSteps ? window.devBigSteps(STEPS[id]) : '';
-    const when2 = B && window.hubWindowBar ? `<h2 class="hub-h2">${F(past ? 'When it happened' : 'When it usually happens')}</h2><section class="hub-card dev-bigq ya-when">${steps}`
-      + hubWindowBar({ title: '', from: B[0], to: B[1], zones: [[B[2], B[3], B[4], 'band']], ticks, now: a, cat: cat === 'Daily rhythm' || cat === 'Out and about' ? cat : cat, caption: F(whenLine || c.title) })
-      + (whenLine ? `<p class="dev-bigq-a">${F(whenLine)}</p>` : '') + `</section>` : '';
+    // Nov 23 (Yarden): the timing card asks the parent's own question, like Development's Movement page
+    // ("What about crawling?"): the question, step photos where they exist, the age bar, then a one-line answer.
+    const Q = ASK[id], ans = Q && Q[1] ? Q[1] : whenLine;
+    const when2 = B && window.hubWindowBar ? `<section class="hub-card dev-bigq ya-when"><span class="hub-card-head"><b>${F(past ? 'When it happened' : Q ? Q[0] : 'When it usually happens')}</b></span>${steps}`
+      + hubWindowBar({ title: '', from: B[0], to: B[1], zones: [[B[2], B[3], B[4], 'band']], ticks, now: a, cat, caption: F(ans || c.title) })
+      + (ans ? `<p class="dev-bigq-a">${F(ans)}</p>` : '') + `</section>` : '';
     // Nov 23 (Yarden): a visual replaces the words it shows, it doesn't add to them.
     const SHOWN = { milk: 'all', carseat: [0], pull: [2] }, cut = VIS[id] && SHOWN[id];
     const sg = !cut ? p.signs : cut === 'all' ? [] : p.signs.filter((x, k) => !cut.includes(k));
@@ -450,7 +464,7 @@
     // (Yarden: the timing card stays on read-ahead pages.)
     const vis = VIS[id] ? VIS[id]() : '';
     const look = when2 + vis + (steps || !sg.length ? '' : `<h2 class="hub-h2">${F(c.end <= a ? 'What it looked like' : p.signsTitle || 'Signs it’s close')}</h2>${signsBody}`) + (p.signsNote ? `<p class="ya-signs-note">${F(p.signsNote)}</p>` : '');
-    return h.detail(cat, `${range(c)} · ${when}`, c.title, lead,
+    return h.detail(cat, `${range(c)} · ${when}`, c.title, Q && Q[2] === 1 ? whenLine : lead,
       look
       + h.list('What it changes', p.rows.slice(0, 4).map(([icon, rc, title, sub, go]) => h.row({ icon, cat: rc, title, sub, onclick: go }).replace('<span class="hub-row-copy">', `<span class="hub-row-copy"><small class="hub-row-eyebrow">${F(AREA[rc] || rc)}</small>`)))
       // Nov 23: a tip that's really a call line uses the app's one When to call card.
