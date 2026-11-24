@@ -346,7 +346,7 @@
   const earlyMo = () => { try { return profile.early && profile.due ? Math.max(0, Math.round((new Date(profile.due + 'T12:00:00') - new Date(profile.dob + 'T12:00:00')) / 864e5 / 30.44)) : 0; } catch (e) { return 0; } };
   const solidsLead = () => earlyMo() > 0 ? 'Milk is still all Ari needs. Most babies start solids around 6 months adjusted, about ' + (6 + earlyMo()) + ' months after birth for Ari.' : 'Milk is still all Ari needs. Most babies start solids around 6 months, once they show the signs.';
   // Fever rule for the baby's age (AAP): under 3 months 100.4°F, 3–6 months 101°F, 6 months on 103°F or a fever lasting over a day.
-  const fever = (day = true) => { const m = typeof actualMonth === 'function' ? actualMonth() : ageMo(); return m < 3 ? 'a fever of 100.4°F or higher' + (day ? ', day or night' : '') : m < 6 ? 'a fever of 101°F or higher' : 'a fever of 103°F or higher, or one that lasts more than a day'; };
+  const fever = (day = true) => { const m = typeof actualMonth === 'function' ? actualMonth() : ageMo(); return m < 3 ? 'a fever of 100.4°F or higher' + (day ? ', day or night' : '') : m < 6 ? 'a fever of 101°F or higher' : 'a fever that lasts more than a day or reaches 103°F'; };
   const poopGo = (min = 0) => { let v = 1; try { const d = (NOW - new Date(profile.dob + 'T12:00:00')) / 864e5, m = typeof hubAgeFor === 'function' ? hubAgeFor('care', actualMonth()) : developmentMonth(actualMonth()); v = d < 28 ? 0 : m < 4 ? 1 : m < 7 ? 2 : 3; } catch (e) {} v = Math.max(v, min); return `openPage('chg:Daily rhythm:d:look:${v}:poop')`; };
   const formulaFam = () => fd() !== 'Breast milk' && fd() !== 'Prefer not to say';
   const ctx = (c) => c;
@@ -2344,7 +2344,7 @@
       + xKnow('Dozing off mid-feed?', 'Switching sides wakes him a little. Squeezing gently behind the nipple keeps milk flowing.')
       + xNote('Good to know:', 'a little spit-up with a burp is common, and hiccups are harmless.') + (!bot ? xNote('A first bottle?', 'Around 3–4 weeks, once nursing is going well. Have someone else offer it, before he’s very hungry.') : ''))
     : xPage('feed', 'x_burp', 'Burp him every 2–3 oz, and at the end', 'Less air in means less fussing after. Use whichever hold is comfortable.',
-      illGrid([[ILL.shoulder(PALT), 'Over your shoulder', 'Chin on a burp cloth'], [ILL.sitting(PALT), 'Sitting on your lap', 'Support chin and chest'], [ILL.tummy(PALT), 'Tummy-down', 'Across your lap']])
+      illGrid([[ILL.shoulder(PALT), 'Over your shoulder', 'Chin on a cloth. Pat or rub his back'], [ILL.sitting(PALT), 'Sitting on your lap', 'Your hand under his chin, not his throat'], [ILL.tummy(PALT), 'Tummy-down', 'Across your lap. Rub his back']])
       + xDo('What to do', ['Pause every 2–3 oz, and at the end.', 'Firm pats or slow circles on his back.', 'No burp after a minute or two? Carry on.'])
       + xKnow('Good to know', 'A little spit-up with a burp is common, and hiccups are harmless.')); };
 
@@ -2466,9 +2466,9 @@
       + xFix('If it’s not going smoothly', [['Clicking or pinching', 'Break the seal with a finger, and try again.'], ['Gulping or coughing', 'Lean back, so he feeds against gravity.'], ['Too sleepy to latch', 'Hand express a few drops of colostrum onto a spoon.'], ['Breast very full and firm', 'Hand express a little first, so he can latch.']])
       + latchVideo() + xNote('Worth a call:', 'most feeds hurt. A lactation consultant can help, and check for tongue-tie.'));
   P.x_burp = () => { const b = isBreast(), bot = isBottle(), nurse = nurses();
-    const holds = illGrid([[ILL.shoulder(PALT), 'Over your shoulder', 'Chin on a burp cloth'], [ILL.sitting(PALT), 'Sitting on your lap', 'Support chin and chest'], [ILL.tummy(PALT), 'Tummy-down', 'Across your lap']]);
+    const holds = illGrid([[ILL.shoulder(PALT), 'Over your shoulder', 'Chin on a cloth. Pat or rub his back'], [ILL.sitting(PALT), 'Sitting on your lap', 'Your hand under his chin, not his throat'], [ILL.tummy(PALT), 'Tummy-down', 'Across your lap. Rub his back']]);
     return nurse ? xPage('feed', 'x_burp', 'When he slows, burp him and offer the other side', 'Watch him, not the clock. Some feeds take one side, some both.',
-      holds + xDo('What to do', ['When sucking slows, burp him.', 'Then offer the other side.', 'Start the next feed on the last side.'])
+      holds + xDo('What to do', ['When sucking slows, burp him for a minute or two. No burp is fine too.', 'Then offer the other side.', 'Start the next feed on the last side.'])
       + xFix('If it’s not going smoothly', [['Dozing off', 'Switch sides, or squeeze gently behind the nipple.'], ['Spit-up or hiccups', 'Common, and harmless.']])
       + (!bot ? xNote('A first bottle?', 'Around 3–4 weeks, once nursing is going well.') : ''))
     : xPage('feed', 'x_burp', 'Burp him every 2–3 oz, and at the end', 'Less air in means less fussing after.',
@@ -3124,8 +3124,8 @@
   // "Rolling · 3–6 months". Ranges sit inside the stage pills' ranges (Milk feeds 6 weeks–4 months, First foods 6–9 months).
   const EYE = (n, base) => (base || '') + ' · ' + ['0–6 weeks', '6 weeks–3 months', '3–4 months', '4–6 months', '6–7 months', '7–9 months', '9–12 months'][n];
   const DISC = () => { const v = stg(), m = ageMo(), bot = isBottle() && !nurses();
-    if (v === 0) return [0, 'Feeds come often', 'His stomach is tiny. Evenings are busiest, and it eases by 6–8 weeks.', 'Feed him when you see early cues, before he cries.'];
-    if (v === 1 && m < 3) return [1, 'He’s getting good at this', 'Over the first few months, feeds get quicker. That’s not less milk.', 'Let him stop when he shows he’s full: slowing down, turning away, relaxed hands.'];
+    if (v === 0) return [0, 'Feeds come often', 'His stomach is tiny, so feeds are small and often. Busy evenings ease by 6–8 weeks.', 'Feed him when you see early cues, before he cries.'];
+    if (v === 1 && m < 3) return [1, 'He’s getting good at this', 'Feeds get quicker as he gets stronger. He’s still getting just as much milk.', 'Let him stop when he shows he’s full: slowing down, turning away, relaxed hands.'];
     if (v === 1) return [2, 'The world is interrupting his feeds', 'He notices everything. Distracted isn’t the same as full.', 'Feed somewhere quiet and dim, and offer again after a short pause.'];
     if (v === 2 && m >= 7) return [3, 'A good time to start', 'Iron matters more after 6 months. Bring your feeding questions to the checkup.', 'If he sits with support and swallows well, offer a soft, iron-rich food once a day.'];
     if (v === 2) return [3, 'Eating starts before the first bite', 'He’s watching, reaching, and learning what food is for.', 'Let him join you at meals and watch you eat.'];
@@ -3415,10 +3415,10 @@
       // "Every day" in one short line (Nov 11): what to give, with the how one tap away.
       if (typeof h === 'string' && /^chg:Feeding:mock:dirD(:\d)?$/.test(String(r))) { const v = stg(), br = isBreast(), only = formulaFam() && !br;
         const L = (t, id) => `<button class="hub-link" style="display:inline;padding:0;font:inherit;font-weight:650" onclick="${go(id)}">${F(t)}</button>`;
-        const vd = only ? L('vitamin D drops', 'nb_vitd') + F(', under 32 oz a day') : L('vitamin D', 'nb_vitd');
+        const vd = only ? L('vitamin D drops', 'nb_vitd') + F(' until {s} {take|takes} about 32 oz a day') : L('vitamin D', 'nb_vitd');
         // Breast milk and formula: iron drops only if most of the milk is breast milk (AAP; Nov 14 QA).
-        const dI = formulaFam() && br ? `${L('vitamin D drops', 'nb_vitd')}${F(', and')} ${L('iron', 'z_iron')} ${F('if mostly breast milk')}` : `${L('vitamin D', 'nb_vitd')} ${F('and')} ${L('iron', 'z_iron')} ${F('drops')}`;
-        const line = v <= 1 ? (only ? vd : L('vitamin D drops', 'nb_vitd')) : v === 2 ? (br ? dI : vd) : `${F('iron-rich food,')} ${br ? (v === 3 ? dI : L('vitamin D drops', 'nb_vitd')) : vd}`;
+        const dI = formulaFam() && br ? `${L('vitamin D drops', 'nb_vitd')}${F('. Mostly breast milk? Ask about')} ${L('iron', 'z_iron')}` : `${L('vitamin D', 'nb_vitd')} ${F('and')} ${L('iron', 'z_iron')} ${F('drops')}`;
+        const line = v <= 1 ? (only ? vd : L('vitamin D drops', 'nb_vitd')) : v === 2 ? (br ? dI : vd) : `${F('iron-rich food,')} ${br ? L('vitamin D drops', 'nb_vitd') : vd}`;
         h = h.replace(/<span class="hub-card-note"><b>Every day<\/b>[\s\S]*?<\/span>(?:<button class="hub-link"[^>]*>[^<]*<\/button>)*/, `<span class="hub-card-note fd-every"><b>${F('Every day:')}</b> ${line}</span>`);
         // Families who pump or store breast milk: how long the baby's milk keeps, one quiet link, at every stage (Nov 14).
         // Bottle how-tos (Nov 16): one quiet line on the stage page, since these pages no longer link to each other at the bottom.

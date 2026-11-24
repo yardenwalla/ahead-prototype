@@ -101,8 +101,10 @@
       h = h.replace(/<span class="hub-iconstep-art"[^>]*>[\s\S]*?<\/svg><\/span>/g, m => { const t = items[i++]; return t && /^photo:/.test(t[0]) ? `<span class="ph-tile">${TPLB.pimg(t[0].slice(6), t[1])}</span>` : m; });
       return h.replace('class="hub-figure hub-iconsteps', 'class="hub-figure hub-iconsteps ph-tiles'); },
     rows: (rows, cat) => { rows = (tval(rows) || []).filter(Boolean); return rows.length ? `<div class="hub-list"${rows.length > 3 ? ' data-over-limit="rows"' : ''}>${rows.map(([icon, t, sub]) => row({ icon, cat, title: t, sub })).join('')}</div>` : ''; },
-    calls: c => { c = tval(c); if (!c) return ''; const PH = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h3l2 5-2.5 1.5a11 11 0 0 0 6 6L15 14l5 2v3a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>';
-      return `<h2 class="hub-h2">${F('When to call')}</h2><section class="care-calls is-titled"><span class="care-calls-ico">${PH}</span><div>` + (c.ped ? `<p><b>${F((c.pedLabel || 'Call your pediatrician') + ' if:')}</b> ${F(tval(c.ped))}</p>` : '') + (c.er ? `<p class="is-urgent"><b>${F('Go to the ER if:')}</b> ${F(tval(c.er))}</p>` : '') + (c.now ? `<p class="is-urgent"><b>${F((c.nowLabel || 'Call right away') + ' if:')}</b> ${F(tval(c.now))}</p>` : '') + `</div></section>`; },
+    calls: c => { c = tval(c); if (!c) return '';
+      // Nov 23 (round 3): under 3 months a fever is its own "Call right away" row on every guide, never folded into the routine row.
+      { const FV = /(,? or has )?a temperature of 100\.4°F or higher \(call right away, day or night\)(, )?/; const p0 = tval(c.ped); if (typeof p0 === 'string' && FV.test(p0)) c = Object.assign({}, c, { ped: p0.replace(FV, (m, has, comma) => has ? '' : ''), right: c.right || 'a rectal temperature of 100.4°F or higher' }); } const PH = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h3l2 5-2.5 1.5a11 11 0 0 0 6 6L15 14l5 2v3a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>';
+      return `<h2 class="hub-h2">${F('When to call')}</h2><section class="care-calls is-titled"><span class="care-calls-ico">${PH}</span><div>` + (c.ped ? `<p><b>${F((c.pedLabel || 'Call your pediatrician') + ' if:')}</b> ${F(tval(c.ped))}</p>` : '') + (c.right ? `<p class="is-urgent"><b>${F('Call right away if:')}</b> ${F(tval(c.right))}</p>` : '') + (c.er ? `<p class="is-urgent"><b>${F('Go to the ER if:')}</b> ${F(tval(c.er))}</p>` : '') + (c.now ? `<p class="is-urgent"><b>${F((c.nowLabel || 'Call right away') + ' if:')}</b> ${F(tval(c.now))}</p>` : '') + `</div></section>`; },
     // Nov 23 cohesion pass: one "When to call" card everywhere. A line from another page's sentence starts lowercase after "if:".
     callsFrom: (a, b) => TPLB.calls({ pedLabel: a && a[0], ped: a && a[1] && a[1][0].toLowerCase() + a[1].slice(1), nowLabel: b && b[0], now: b && b[1] && b[1][0].toLowerCase() + b[1].slice(1) }),
 
@@ -157,7 +159,9 @@
     // When it's urgent: how to tell, what to do, then the call card last, with 911 directly under the pediatrician line.
     urgent: (q, cat) => TPLB.sec(tval(q.tellTitle) || 'How to tell', TPLB.noted(q.figure ? q.figure() : TPLB.tiles(q.signs, cat), q.tell))
       + TPLB.sec(tval(q.doTitle) || 'What to do now', q.doFig ? TPLB.noted(q.doFig(), q.doNotes) : !q.do ? '' : Array.isArray(tval(q.do)) ? TPLB.noted(TPLB.tiles(q.do, cat, q.doOrdered), q.doNotes) : TPLB.card(q.do, q.doNotes))
-      + (q.video ? `<div class="ph-video">${hubEmbed(...q.video)}</div>` : '') + (q.link ? TPLB.link(...q.link) : '') + TPLB.calls(q.calls),
+      + (q.video ? `<div class="ph-video">${hubEmbed(...q.video)}</div>` : '') + (q.link ? TPLB.link(...q.link) : '')
+      // Nov 23 (round 4): a page in the app the parent may need next, such as infant CPR from the choking page.
+      + (q.go ? `<div class="hub-list care-link">${row({ icon: q.go[0], cat, title: tval(q.go[1]), sub: tval(q.go[2]), onclick: `openPage('${q.go[3]}')` })}</div>` : '') + TPLB.calls(q.calls),
     expect: (q, cat) => { const n = tval(q.normal); return TPLB.sec(tval(q.normalTitle) || 'What’s normal', TPLB.noted(Array.isArray(n) ? TPLB.tiles(n, cat, q.normalOrdered) : n, q.normalNotes))
       + (q.more ? TPLB.sec(tval(q.moreTitle), q.moreNotes ? TPLB.noted(tval(q.more), q.moreNotes) : tval(q.more)) : '')
       + TPLB.sec(tval(q.doTitle) || 'What to do', q.doFig ? TPLB.noted(q.doFig(), q.doNotes) : Array.isArray(tval(q.do)) ? TPLB.noted(TPLB.tiles(q.do, cat, q.doOrdered), q.doNotes) : TPLB.card(q.do, q.doNotes))
@@ -182,7 +186,7 @@
   const m = () => C().ageNow();
   // Sleep follows adjusted age for a baby born early, but fever numbers follow the AAP's age bands by birthday age, the same as Health.
   const sleepAdj = () => !!(profile.early && profile.due && typeof actualMonth === 'function' && m() !== actualMonth());
-  const sleepFever = () => { const a = actualMonth(); return a < 3 ? 'a temperature of 100.4°F or higher' : a < 6 ? 'a fever of 101°F or higher' : 'a fever of 103°F or higher, or one that lasts more than a day'; };
+  const sleepFever = () => { const a = actualMonth(); return a < 3 ? 'a temperature of 100.4°F or higher' : a < 6 ? 'a fever that lasts more than a day or reaches 101°F' : 'a fever that lasts more than a day or reaches 103°F'; };
   const meth = () => C().method();
   const nursing = () => meth() === 'nurse';
   // One list of choking risks, used wherever foods come up (AAP).
@@ -797,10 +801,10 @@
     const T = [
       [['Naps', 'Any time', 'No pattern yet'], ['Awake', '45–60 min', 'Between sleeps'], ['Longest sleep', '2–4 hrs', 'Day or night']],
       [['Naps', '4–5', 'Short ones'], ['Awake', '1–1½ hrs', 'Between sleeps'], ['Longest sleep', '3–5 hrs', 'Moving to the night']],
-      [['Naps', '3–4', 'Finding set times'], ['Awake', '1½–2½ hrs', 'Between sleeps'], ['Longest sleep', '5+ hrs', 'Often from bedtime']],
-      [['Naps', '3', 'Last one short'], ['Awake', '2–2½ hrs', 'Between sleeps'], ['Longest sleep', age >= 6 ? '6–8 hrs' : '5–6 hrs', 'After a 7–8 pm bedtime']],
-      [['Naps', '2', 'Morning, afternoon'], ['Awake', '2½–3½ hrs', 'Between sleeps'], ['Longest sleep', '6–8 hrs', 'After a 7–8 pm bedtime']],
-      [['Naps', '2', 'Morning, afternoon'], ['Awake', '2½–4 hrs', 'Between sleeps'], ['Longest sleep', '10–12 hrs', 'After a 7–8 pm bedtime']]][st];
+      [['Naps', '3–4', 'Finding set times'], ['Awake', '1½–2½ hrs', 'Between sleeps'], ['Longest sleep', '4–5 hrs', 'Often from bedtime']],
+      [['Naps', '3', 'Last one short'], ['Awake', '2–2½ hrs', 'Between sleeps'], ['Sleep', '12–16 hrs', 'A day, naps included']],
+      [['Naps', '2', 'Morning, afternoon'], ['Awake', '2½–4 hrs', 'Between sleeps'], ['Sleep', '12–16 hrs', 'A day, naps included']],
+      [['Naps', '2', 'Morning, afternoon'], ['Awake', '2½–4 hrs', 'Between sleeps'], ['Sleep', '12–16 hrs', 'A day, naps included']]][st];
     const C = [['#fff3dc', '#8a6a2a'], ['#e7effc', '#46638c'], ['#e3e6f6', '#3d4a7a']];
     // Tap the tiles (or Example day) for a typical day at this age.
     // Newborn weeks and Longer nights have no set day yet, so only nap stages link to one.
@@ -887,7 +891,7 @@
         stretch: () => ({ type: 'expect', label: 'Night sleep', art: 'moon', title: '{P} longest night sleep grows over months',
           why: 'As {s} {need|needs} fewer night feeds, one stretch of sleep gets longer.',
           normal: () => unmarkT(sleepLengths({ title: '', rows: [['Newborn weeks', 3, '2–4 hours', mo < 2], ['By 3–4 months', 5, '5 hours or more', mo >= 2 && mo < 5], ['Around 6 months', 7, '6–8 hours', mo >= 5 && mo < 9], ['By 9–12 months', 10.5, '10–12 hours, some wake once', mo >= 9]], caption: 'The longest stretch at night: 2 to 4 hours as a newborn, 5 hours or more by 3 to 4 months, 6 to 8 hours around 6 months, and 10 to 12 hours by 9 to 12 months, though some still wake once.' })),
-          normalNotes: [['', 'A few rough nights are normal', 'New skills, teething or a cold, then the stretch comes back']],
+          normalNotes: [['', 'Not there yet?', 'Many healthy babies don’t sleep 6 hours straight at 6 months, or even at 1']],
           do: mo < 1 ? 'Once {s’s} back to birth weight, let {o} sleep as long as {s} {want|wants}.' : 'Let {o} sleep as long as {s} {want|wants}.' + (mo < 3 ? '' : ' An early bedtime and a dark room help the stretch grow.') }),
         regress: () => ({ type: 'expect', label: '4-month sleep regression', art: 'moon', title: 'Waking more is the 4-month sleep regression',
           why: 'Between 3 and 5 months, sleep cycles mature, so {s} {wake|wakes} more between them for a few weeks.',
@@ -899,7 +903,7 @@
         nightwake: () => ({ type: 'expect', label: 'Night sleep', art: 'moon', title: 'Night waking often comes back for a while',
           why: 'Babies who were sleeping well start waking again, and it usually settles in a week or two.',
           normal: [['stand', 'A new skill', 'Like rolling or sitting up'], ['heart', 'Missing you', sep ? 'Crying when you leave the room' : 'Wanting you close at night'], ['tooth', 'Teeth or a cold', 'For a few nights']],
-          do: [['clock', 'Wait or go in', 'Whatever feels right to you'], ['moon', 'Brief, dark and boring', 'Then back down'], ['heart', 'Comfort {o} when sick', 'Back to your usual routine once better']],
+          do: [['clock', 'Wait or go in', 'Whatever feels right to you'], ['moon', 'Keep it brief and dark', 'Then back to bed'], ['heart', 'Comfort {o} when sick', 'Back to your usual routine once better']],
           doNotes: [['', 'Waking from hunger or habit?', 'Ask your pediatrician if night feeds are still needed']] }),
         method: a => { const x = METH[Number(a)]; if (!x) return null; const g = GLANCE[x.name], n = NIGHTS[x.name];
           return { type: 'option', label: 'Sleep training', art: 'moon', title: x.name, why: x.title,
@@ -990,7 +994,7 @@
           steps: [['clock', 'Shift it a little', 'Every few nights, 15 minutes earlier'], ['moon', 'The same routine', 'Just a little sooner'], ['crib', 'Stop around 7–8 pm', 'When {s} {fall|falls} asleep easily']] }),
         nightfeeds: () => ({ type: 'expect', label: 'Night sleep', art: 'bottle', title: 'Night feeds drop as days get fuller',
           why: 'Many babies still feed once or twice a night, and that’s fine.',
-          normal: () => hubStageStrip({ title: '', items: [['bottle', '2–3 a night', 'Around 3 months'], ['bottle', '1–2 a night', 'Around 6 months'], ['moon', '0–1 a night', 'Later in the first year']], nowIndex: va == null ? (mo < 4 ? 0 : mo < 9 ? 1 : 2) : -1, cat, caption: 'About 2 to 3 night feeds around 3 months, 1 to 2 around 6 months, 0 to 1 later in the first year.' }),
+          normal: () => hubStageStrip({ title: '', items: [['bottle', 'Still common', 'Around 3 months'], ['bottle', 'Often fewer', 'Around 6 months'], ['moon', 'Often none', 'Later in the first year']], nowIndex: va == null ? (mo < 4 ? 0 : mo < 9 ? 1 : 2) : -1, cat, caption: 'About 2 to 3 night feeds around 3 months, 1 to 2 around 6 months, 0 to 1 later in the first year.' }),
           normalNotes: [['', 'Ready to drop one?', 'Often when {s’s} growing well and {start|starts} sleeping through a feed on {p} own'], ['', 'Last to go', 'Usually the feed closest to morning']],
           doOrdered: true,
           do: mo >= 5 ? [['steth', 'Ask first', 'Your pediatrician can say if {s’s} ready'], ['clock', 'Go slowly', 'A little shorter or smaller every few nights'], ['sun', 'More by day', 'Full feeds while {s’s} awake'], ['heart', 'Someone else goes in', 'Breastfed babies often settle more easily for a partner']] : 'Feed {o} when {s} {wake|wakes} hungry. Check with your pediatrician before dropping a night feed on purpose.',
@@ -1049,7 +1053,7 @@
           [[W, 'New skills and missing you can wake babies who were sleeping well.'], [D, 'Wait a few minutes or go straight in, whichever feels right. Keep it brief, dark and boring.'], [K, sep ? 'It starts around a new skill, or {s} {cry|cries} when you leave the room.' : 'It starts around a new skill, like rolling or sitting.']],
           `<h2 class="hub-h2">${F('Common reasons')}</h2>` + hubIconSteps([['stand', 'New skills', 'Usually settles in a week or two'], ['heart', 'Missing you', sep ? 'See Bedtime goodbyes' : 'A quick cuddle, then back down'], ['tooth', 'Teeth or a cold', 'Comfort now, then back to your routine once {s’s} better'], ['bottle', 'Hunger or habit', 'Ask your pediatrician if night feeds are still needed']], cat, 'New skills: usually settles in a week or two. Missing you: ' + (sep ? 'see Bedtime goodbyes.' : 'a quick cuddle.') + ' Teeth or a cold: comfort now. Hunger or habit: ask about night feeds.', false)
           + more('Ready to drop a night feed?', "openPage('chg:Sleep:d:nightfeeds')") + more('Sleep training, if you choose it', "openPage('chg:Sleep:settle')")); },
-        nightfeeds: () => page('Night sleep', 'Night feeds drop as days get fuller', [['bottle', '2–3 a night', 'Around 3 months'], ['bottle', '1–2 a night', 'Around 6 months'], ['moon', '0–1 a night', 'Later in the first year']], mo < 4 ? 0 : mo < 9 ? 1 : 2,
+        nightfeeds: () => page('Night sleep', 'Night feeds drop as days get fuller', [['bottle', 'Still common', 'Around 3 months'], ['bottle', 'Often fewer', 'Around 6 months'], ['moon', 'Often none', 'Later in the first year']], mo < 4 ? 0 : mo < 9 ? 1 : 2,
           [[W, 'Many babies still feed once or twice a night, and that’s fine.'], [D, mo >= 5 ? 'Feed {o} when {s} {wake|wakes} hungry.' : 'Feed {o} when {s} {wake|wakes} hungry. Check with your pediatrician before dropping a night feed on purpose.'], [K, 'Maya is growing well, takes full feeds by day, and starts sleeping through a feed on {p} own.']],
           // Nov 13: night weaning, gently (AAP: many babies can go without a night feed by 6–9 months if growing well; ask first).
           mo >= 5 ? `<h2 class="hub-h2">${F('If you decide to drop one')}</h2>` + hubIconSteps([['steth', 'Ask first', 'Your pediatrician can say if {s’s} ready'], ['clock', 'Go slowly', 'A little shorter or smaller every few nights'], ['sun', 'More by day', 'Full feeds while {s’s} awake'], ['heart', 'Someone else goes in', 'Breastfed babies often settle more easily for a partner']], cat, 'Ask your pediatrician first, then go slowly: a little shorter or smaller every few nights, full feeds by day, and someone else going in.')

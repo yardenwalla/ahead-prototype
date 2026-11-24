@@ -350,7 +350,7 @@
           { t: 'reveal', c: 'lav', setup: 'This month, she might discover…', payoff: 'Her feet!', lead: 'Lots of babies grab their toes around now, and try to taste them.', vis: ['feet'] },
           { t: 'follow', key: 'roll' },
           { t: 'topic', c: 'peach', kicker: 'New sound unlocked', title: 'Pbbbt!', body: 'Raspberries and squeals are on the way. Blow one back and you’ve got a conversation.', vis: ['raspberry'] },
-          { t: 'topic', c: 'butter', kicker: 'Getting ready for food', title: 'Watch for the signs.', chips: ['holds her head steady', 'sits with support', 'opens up for your spoon'], body: 'When you see all three, she’s ready. For most babies that’s around 6 months, not before 4.' }],
+          { t: 'topic', c: 'butter', kicker: 'Getting ready for food', title: 'Watch for the signs.', chips: ['holds her head steady', 'sits with support', 'leans in for food'], body: 'When you see all three, she’s ready. For most babies that’s around 6 months, not before 4.' }],
         sum: ['Found her feet', 'Rolling', 'Signs she’s ready for food'] },
     6: { cover: ['Halfway to one!', 'Six months down. Look how much has changed.'], half: true, screens: [
           { t: 'reveal', c: 'lav', setup: 'This month, she might try…', payoff: 'Her first foods!', lead: 'It’s mostly practice. Milk is still her main food for months.', vis: ['spoon'] },
@@ -386,7 +386,7 @@
           { t: 'thennow', c: 'lav', kicker: 'Then and now', head: ['Newborn', 'Now'], rows: [['Saw you clearly up close', 'Spots you across the room'], ['Hands in tight fists', 'Picks up tiny things'], ['Talked by crying', 'Babbles and waves bye-bye']] },
           { t: 'beat', c: 'butter', words: ['Fill.', 'Dump.', 'Again.'], line: 'Putting things in and tipping them out is her new favorite game.', vis: ['fill'] },
           { t: 'topic', c: 'pink', kicker: 'Her favorite game', title: 'Give and take.', body: 'She hands you things and wants them right back. It’s one of her first back-and-forths.', vis: ['give'] },
-          { t: 'topic', c: 'peach', kicker: 'At meals', title: 'Getting ready for whole milk.', body: 'Around her first birthday, cow’s milk can replace formula. Her pediatrician will talk it through at the 1-year checkup.', vis: ['tilt'] }],
+          { t: 'topic', c: 'peach', kicker: 'At meals', title: 'Getting ready for whole milk.', body: 'Around her first birthday, whole milk from a cup joins her meals. Her pediatrician will talk it through at the 12-month checkup.', vis: ['tilt'] }],
         sum: ['Then and now', 'Fill and dump', 'Whole milk coming'] }
   };
   function nextUp(p, m) {
