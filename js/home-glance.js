@@ -261,7 +261,13 @@
   // Each month lists only what's time-sensitive: one row most months, two when two things really land together.
   const CHK = (n, extra) => [`The ${n}-month checkup is coming up.`, extra || 'See what to expect and what to ask.', 'Health', 'steth', `health-detail:${n}:expect`];
   // Hide anything the parent has already told Ahead is done: a logged checkup, the swaddle off, solids started.
-  const radarRows = m => (RADAR[m] || []).filter(r => {
+  // Nov 24 (Yarden): checkups and shots go by birthday age, even for a baby born early, so a checkup row comes from
+  // the birthday month; everything else on the radar follows the adjusted month, like the rest of Home.
+  const radarFor = m => { const isChk = r => /^health-detail:/.test(r[4]); let am = m;
+    try { if (profile.early && typeof actualMonth === 'function') am = Math.min(11, actualMonth()); } catch (e) {}
+    if (am === m) return RADAR[m] || [];
+    return [...(RADAR[am] || []).filter(isChk), ...(RADAR[m] || []).filter(r => !isChk(r))]; };
+  const radarRows = m => radarFor(m).filter(r => {
     const go = r[4];
     try {
       const v = /^health-detail:(\d+):/.exec(go); if (v && typeof healthRecord === 'function' && (healthRecord(+v[1]) || {}).status === 'attended') return false;
@@ -275,6 +281,10 @@
     const hv = /^health-detail:(\d+):/.exec(r[4]);
     if (hv) { try { const hk = parseInt((guideNow().Health || ''), 10); if (!isNaN(hk) && hk > +hv[1]) r = CHK(hk); } catch (e) {} }
     return r;
+  }).filter(r => {
+    // Nov 24: no checkup homework more than five weeks out (the remap above can name one two months away).
+    const v = /^health-detail:(\d+):/.exec(r[4]); if (!v) return true;
+    try { return (addMonths(parse(profile.dob), +v[1]) - NOW) / 864e5 <= 35; } catch (e) { return true; }
   }).map(r => {
     // Once a checkup's date has passed it's due now, in the same words as the Guides tab (Nov 23: they used to disagree for a week).
     const v = /^health-detail:(\d+):/.exec(r[4]); if (!v || !+v[1]) return r;
@@ -332,12 +342,9 @@
       </button>`
       : `<section class="he-hero" style="${monthTheme(m)}"><p class="he-eyebrow">${F(when)} · ${F(`Through ${name()}’s eyes`)}</p><div class="he-copy"><h1>${F(P(M.eyes[0]))}</h1><p class="he-lead">${F(P(M.eyes[1]))}</p>${m <= 4 ? `<button class="he-see" onclick="homeEyes(true)"><span aria-hidden="true">👁</span> ${F(`See what ${name()} sees`)}</button>` : ''}</div><span class="he-art" aria-hidden="true">${art}</span></section>`;
     const rr = newLook ? radarRows(m) : [];
-    // Nov 23: rows about eating food wait until solids have started (by the parent's answer, or by age once it's past due).
-    const SOLIDS_ROWS = ['Her poop will change with solids', 'She gags on new textures', 'There’s food in her poop'];
-    const notices = M.notice.filter(r => !(SOLIDS_ROWS.includes(r[0]) && typeof foodStage === 'function' && foodStage() === 'preparing'));
     return hero + (rr.length ? `<section class="rd-card"><p class="rd-eyebrow">${F('On your radar')}</p>${rr.map(([t, why, , , go]) => `<button class="rd-item" onclick="openPage('${go}')"><span><b>${F(P(t))}</b><small>${F(P(why))}</small></span><i aria-hidden="true">›</i></button>`).join('')}</section>` : '') + `
-      ${!notices.length ? '' : newLook ? `<div class="hub-list hg-rows rd-list"><p class="rd-eyebrow rd-in">${F('You might notice')}</p>${notices.map(row).join('')}</div>` : `<h2 class="hub-h2">${F('You might notice…')}</h2>
-      <div class="hub-list hg-rows">${notices.map(row).join('')}</div>`}
+      ${newLook ? `<div class="hub-list hg-rows rd-list"><p class="rd-eyebrow rd-in">${F('You might notice')}</p>${M.notice.map(row).join('')}</div>` : `<h2 class="hub-h2">${F('You might notice…')}</h2>
+      <div class="hub-list hg-rows">${M.notice.map(row).join('')}</div>`}
       ` + guidesCard();
   }
 
@@ -467,7 +474,7 @@
     // "New", and it says what changed. One guide opens it; several open Guides with those tiles glowing.
     // Then a slim timeline card in the same style, naming what's actually next for her.
     // Skip guide news the radar card above already gives (one home per fact): same guide, same month.
-    const m = homeMonth(), nm = name(), onRadar = (RADAR[m] || []).map(r => r[2]);
+    const m = homeMonth(), nm = name(), onRadar = radarFor(m).map(r => r[2]);
     const moved = window.guideMoves().filter(q => !(typeof window.stCover === 'function' && window.stCover(m) && onRadar.includes(q.cat)));
     const wks = Math.max(1, Math.round(Y().ageNow() * 4.35)), age = m < 2 ? `${wks} week${wks === 1 ? '' : 's'}` : `${m} months`;
     const label = c => typeof displayTopic === 'function' ? displayTopic(c) : c;
