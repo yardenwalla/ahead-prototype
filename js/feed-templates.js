@@ -184,7 +184,7 @@
     x_spit: () => ({ type: 'expect', ct: 'know', label: 'Feeding challenges', art: 'drop', title: 'Spit-up is common, and usually fine',
       photo: 'feeding/spit-up', pos: '45%', cap: 'A tablespoon or two looks like a lot once it spreads',
       notice: ['A little milk after most feeds', 'Comfortable, and still growing'],
-      helps2: ['Hold {o} upright for 20–30 minutes after feeds', 'Smaller feeds, a little more often', 'Stop when {s} {slow|slows} down. No need to finish'],
+      helps2: [['', 'Hold {o} upright after feeds', 'For 20–30 minutes'], ['', 'Smaller feeds', 'A little more often'], ['', 'Stop when {s} {slow|slows} down', 'No need to finish']],
       helpNotes: [['For sleep', 'Flat on {p} back, even with spit-up, and no wedges']],
       calls2: () => [['Call your pediatrician if:', 'it’s forceful, {s} {cry|cries} and {arch|arches} at most feeds, or {s’s} not gaining weight'], ['Call right away if:', 'green or bloody vomit', 1]],
       why: () => mo() >= 12 ? 'Spit-up this late is worth a mention at the next checkup.' : mo() < 5 ? 'It peaks around 4 months, and it’s usually gone by the first birthday.' : 'It’s past the peak, and it’s usually gone by the first birthday.',
@@ -204,7 +204,7 @@
       why: 'A little tenderness in the first week is common. Pain all feed long usually means a shallow latch.',
       do: [['hand', 'Re-latch', 'Break the seal with a clean finger, then try again'], ['heart', 'Line {o} up', 'Nose to nipple, so {p} mouth opens wide'], ['steth', 'Get it checked', 'A lactation consultant can check the latch']],
       // Nov 19: holds shown without the baby latched, so parents can copy the position.
-      helpTop: () => H().TPLB.photoGrid([['feeding/hold-cradle', 'Cradle', 'Baby across your lap, tummy to tummy'], ['feeding/hold-laidback', 'Laid-back', 'Lean back. Baby lies on you, tummy down']]),
+      helpTop: () => H().TPLB.photoGrid([['feeding/cradle-real', 'Cradle', 'Baby across your lap, tummy to tummy'], ['feeding/laidback-feed', 'Laid-back', 'Lean back. Baby lies on you, tummy down']]),
       // Nov 19: a latch has to be seen, and AI tools won't draw breastfeeding, so a trusted video shows it.
       video: ['wjt-Ashodw8', 'How a deep latch looks', 'Global Health Media'],
       calls: { ped: 'pain at most feeds after the first week, {s} {seem|seems} hungry after most feeds, or clicking and long feeds with slow gain.' } }),
@@ -219,7 +219,7 @@
     x_refuse: () => ({ type: 'expect', ct: 'know', label: 'Feeding challenges', art: nurse() ? 'heart' : 'bottle', notice: ['Pulling off and fussing', 'Arching or turning away mid-feed'], title: 'Pulling off at feeds? Usually a small fix',
       why: 'It’s often air, a fast flow, or a stuffy nose.',
       // Nov 24 (Feeding E): physical steps get a photo each, in Everyday care's step card.
-      doFig: () => window.ctPhotoSteps([['photo:feeding/burp-shoulder', 'Burp, then retry', 'Trapped air can feel like being full'], nurse() ? ['photo:feeding/hold-laidback', 'Lean back as you feed', 'It slows milk that comes fast'] : ['photo:feeding/pace-step-2', 'Check the nipple', 'Gulping means too fast. Frustrated means too slow'], ['photo:health/cold-saline', 'Clear {p} nose', 'A few saline drops, then gentle suction']],
+      doFig: () => window.ctPhotoSteps([['photo:feeding/burp-shoulder', 'Burp, then retry', 'Trapped air can feel like being full'], nurse() ? ['photo:feeding/laidback-feed', 'Lean back as you feed', 'It slows milk that comes fast'] : ['photo:feeding/pace-step-2', 'Check the nipple', 'Gulping means too fast. Frustrated means too slow'], ['photo:health/cold-saline', 'Clear {p} nose', 'A few saline drops, then gentle suction']],
         mo() >= 3 ? [['Distracted?', 'Feed somewhere quiet and dim']] : null),
       calls: () => fevCalls(['too sleepy to feed', 'refusing several feeds in a row']) }),
 
@@ -393,7 +393,7 @@
     const hl = v(q.helps2) || v(q.do) || v(q.helps) || [];
     return `<div class="ct-page is-know">` + (q.look ? h2('See what it looks like') + v(q.look) : q.photo ? h2('See what it looks like') + `<figure class="ct-look" id="ct-look">${img(q.photo, q.cap, q.pos)}<figcaption>${sent(q.cap)}</figcaption></figure>` : '')
       + (v(q.notice) ? h2('What you may notice') + `<div class="ct-notice">${v(q.notice).map(t => `<div>${F(t)}</div>`).join('')}</div>` : '')
-      + h2('What helps') + (q.helpTop ? v(q.helpTop) : '') + (q.helpMoves ? ctPhotoSteps(v(q.helpMoves), hn) : q.doFig ? q.doFig() : `<div class="ct-helpcard"><ul class="ct-helps">${hl.filter(Boolean).map(t => `<li><i><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i><span>${Array.isArray(t) ? `<b>${F(t[1])}.</b> <span style="font-weight:400;color:#6b6573">${sent(t[2])}</span>` : F(t)}</span></li>`).join('')}</ul>${notes(hn)}</div>`)
+      + h2('What helps') + (q.helpTop ? v(q.helpTop) : '') + (q.helpMoves ? ctPhotoSteps(v(q.helpMoves), hn) : q.doFig ? q.doFig() : `<div class="ct-helpcard"><ul class="ct-helps">${hl.filter(Boolean).map(t => `<li><i><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i><span class="ct-hl"><b>${F(Array.isArray(t) ? t[1] : t)}</b>${Array.isArray(t) && t[2] ? `<small>${sent(t[2])}</small>` : ''}</span></li>`).join('')}</ul>${notes(hn)}</div>`)
       + (q.video ? h2('Watch how') + `<div class="ph-video">${hubEmbed(...q.video)}</div>` : '')
       + h2('When to call') + `<section class="care-calls is-titled"><span class="care-calls-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.6 3.5h2.6l1.3 4-2 1.4a11 11 0 0 0 6.6 6.6l1.4-2 4 1.3v2.6a2 2 0 0 1-2.1 2A16.5 16.5 0 0 1 4.6 5.6a2 2 0 0 1 2-2.1Z"/></svg></span><div>${calls.filter(Boolean).map(([l, t, u]) => `<p${u ? ' class="is-urgent"' : ''}><b>${F(l)}</b> ${sent(t)}</p>`).join('')}</div></section></div>`; };
   const CT_PINK = ['#f7d9e5', '#884866'];

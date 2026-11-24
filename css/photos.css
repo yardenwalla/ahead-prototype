@@ -589,3 +589,8 @@
 #main .ct-helpcard .ct-helps { border: 0; background: none; margin: 0 }
 #main .ct-helpcard .ct-notes { margin: 0 14px }
 
+/* Nov 24 (Yarden): "What helps" rows read like the photo step card: same title and line sizes, Feeding's pink tick. */
+#main .ct-helps li > span.ct-hl { font-weight: 400 }
+#main .ct-helps .ct-hl b { display: block; font-size: 15px; line-height: 1.25; font-weight: 700; color: var(--ct-ink) }
+#main .ct-helps .ct-hl small { display: block; margin-top: 3px; font-size: 13px; line-height: 1.35; color: var(--ct-soft) }
+#main .care-v2 .ct-helps li > i { background: var(--ct-lav, #f9e4ec); color: var(--ct-purple, #884866) }
