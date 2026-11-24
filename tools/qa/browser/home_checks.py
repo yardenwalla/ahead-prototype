@@ -129,12 +129,13 @@ async def main():
         p2 = prof((T - due2).days)
         t = await page_text(p2, 'home') + await page_text(p2, 'categories')
         check(not re.search(r'2-month checkup is (coming up|next)', t), 'Two weeks past its date, the 2-month checkup is "due now"')
-        # Born 8 weeks early, a few days old: Home's month card draws without an error, and says the age is adjusted.
+        # Born 8 weeks early, a few days old: Home's month card draws without an error, with no "adjusted" on it (Nov 23).
         errors.clear()
         born = (T - dt.timedelta(days=3)).isoformat()
         t = await page_text(dict(name='', pronouns='he', dob=born, due=(T + dt.timedelta(days=53)).isoformat(), early=True, feed='Breast milk', feedHow='Pumping', example=False, id='hc', joined=born), 'home')
         check(await pg.evaluate("!!document.querySelector('.hg-page')") and not errors, f'Born early, days old: Home draws its month card {errors[:1]}')
-        check('ADJUSTED' in t.upper().split('THROUGH')[0], 'Born early: Home\'s month card says the age is adjusted')
+        # Nov 23 (Yarden): no "adjusted" on Home's main card; the guides' headers still show both ages.
+        check('ADJUSTED' not in t.upper().split('THROUGH')[0], 'Born early: Home\'s month card doesn\'t say "adjusted"')
         # 8. Nov 14 fixes, round 2: mark a checkup done, both ages for babies born early, Home names its news, childcare by age.
         dob45 = (T - dt.timedelta(days=137)).isoformat()
         p45 = dict(name='Leo', pronouns='he', dob=dob45, due='', early=False, feed='Both', feedHow='Nursing', example=False, id='hc', joined=dob45)
