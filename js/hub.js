@@ -172,7 +172,7 @@
     howto: (q, cat) => { const pic = TPLB.sec(tval(q.pictureTitle) || 'At a glance', q.picture ? q.picture() : ''), steps = TPLB.sec(tval(q.stepsTitle) || (q.ordered === false ? 'What to do' : 'Steps'), TPLB.noted(q.stepsFig ? q.stepsFig() : TPLB.tiles(q.steps, cat, q.ordered !== false), q.stepsNotes)) + (q.action ? q.action() : '');
       return (q.pictureAfter ? steps + pic : pic + steps)
       // Nov 19: secondary detail (q.tipsFold) folds behind one row, so the page is the picture and the steps.
-      + (q.tipsFold && tval(q.tips) ? TPLB.fold(tval(q.tipsTitle), TPLB.rows(q.tips, cat)) : TPLB.sec(q.tipsTitle || 'Keep {o} safe', TPLB.rows(q.tips, cat))) + TPLB.sec('Watch how', q.video ? hubEmbed(...q.video) : ''); },
+      + (q.tipsFold && tval(q.tips) ? TPLB.fold(tval(q.tipsTitle), TPLB.rows(q.tips, cat)) : TPLB.sec(q.tipsTitle || 'Keep {o} safe', TPLB.rows(q.tips, cat))) + TPLB.sec('Watch how', q.video ? hubEmbed(...q.video) : '') + (q.calls ? TPLB.calls(q.calls) : ''); },
     // Nov 19 (Yarden: "this part feels dense"): under a chart, the tell lines are small icon tiles side by side, not sentences.
     check: (q, cat) => TPLB.sec(tval(q.tellTitle) || 'How to tell', q.figure && q.tellTiles ? TPLB.minis(q.figure(), q.tell, cat) : TPLB.noted(q.figure ? q.figure() : TPLB.tiles(q.signs, cat), q.tell))
       + TPLB.sec('What helps', TPLB.noted(TPLB.tiles(q.helps, cat, q.ordered), q.helpsNotes)) + TPLB.calls(q.calls),

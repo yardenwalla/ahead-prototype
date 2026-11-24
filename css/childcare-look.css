@@ -476,3 +476,8 @@
 #main .cc-pills button.is-on { background: #6b5a0e; border-color: #6b5a0e; color: #fff }
 #main .cc-pills button i { display: none }
 #main .cc-pills button.is-now:not(.is-on)::after { content: ""; position: absolute; top: 5px; right: 7px; width: 6px; height: 6px; border-radius: 50%; background: #6b5a0e }
+
+/* Nov 24 flag 7: the Nanny / Nanny share toggle is pills too. */
+#main .cc-seg { gap: 8px; background: none; border: 0; border-radius: 0; padding: 0; margin: 2px 0 14px }
+#main .cc-seg button { flex: none; padding: 8px 15px; border-radius: 999px; background: var(--card, #fffdf9); border: 1px solid var(--line, #ebe6e1); font-size: 13.5px; font-weight: 600; color: #6b5a0e }
+#main .cc-seg button.is-on { background: #6b5a0e; border-color: #6b5a0e; color: #fff }

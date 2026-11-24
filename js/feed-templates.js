@@ -16,7 +16,8 @@
     // ---------- Milk: is it going well? ----------
     nb_enough: () => ({ type: 'expect', label: 'Getting enough', art: 'diaper', title: 'Wet diapers are the best everyday sign',
       why: 'You don’t need to measure feeds. Diapers every day, and weight at checkups, tell you.',
-      normalTitle: 'Wet diapers and poop, day by day',
+      // Nov 24 flag 12: "day by day" only where the days are shown (the first month).
+      normalTitle: () => realMo() < 1 ? 'Wet diapers and poop, day by day' : 'What to look for',
       normal: () => realMo() < 1 ? X().pron(X().firstCard(X().xBody(X().P.x_enough))) : realMo() >= 1 ? H().TPLB.tiles([['diaper', '6 or more', 'Wet diapers a day'], ['steth', 'Steady gain', 'At each weight check']], CAT) : window.hubStageStrip({ title: '', cat: CAT, items: [['diaper', 'Days 1–2', '1–2'], ['diaper', 'Days 3–4', '3–4'], ['diaper', 'Day 5', 'About 5'], ['diaper', 'Day 6 on', '6 or more']], caption: 'Wet diapers a day: 1 to 2 on days 1 and 2, 3 to 4 on days 3 and 4, about 5 on day 5, then 6 or more.' }),
       moreTitle: '{P} weight', more: () => realMo() < 1 ? X().pron(X().weightViz()) : '',
       normalNotes: [nurse() ? ['', 'Good signs during feeds', 'Long sucks, and swallows you can hear'] : null, ['', 'After most feeds', '{S’s} content for a while']],
@@ -43,7 +44,7 @@
     m2_night: () => ({ type: 'expect', label: 'Evenings and nights', art: 'moon', title: 'Night feeds are common for a while',
       why: 'Many babies still feed once or twice a night. Feeding {o} back to sleep is fine.',
       normal: [['moon', 'A night feed or two', 'Still common'], ['sun', 'Busy days', 'Distracted daytime feeds can mean more at night']],
-      do: 'Feed {o} when {s} {wake|wakes}. Ask about dropping night feeds at {p} 4-month checkup.' }),
+      do: 'Feed {o} when {s} {wake|wakes}. Ask about dropping night feeds at {p} ' + (mo() < 4 ? 4 : mo() < 6 ? 6 : mo() < 9 ? 9 : 12) + '-month checkup.' }),
     m2_distract: () => ({ type: 'expect', label: 'Distracted feeds', art: 'eye', title: 'Short daytime feeds are perfectly okay',
       why: '{S} may gulp, pop off and look around. {S} still {get|gets} enough over the day.',
       do: [['moon', 'Feed when {s’s} drowsy', 'Just waking, or before sleep'], ['hand', 'Let {o} hold on', 'Your finger, or a soft toy'], ['chat', 'Talk later', 'Chatting pulls {p} attention away']],
@@ -254,7 +255,8 @@
       why: 'Start around 6 months. Ask first if {s} has severe eczema or an egg allergy.',
       pictureAfter: true, pictureTitle: 'Keep track', picture: () => X().pron(window.__alCard()),
       ordered: false, steps: [['peanut', 'One allergen at a time', 'At home, earlier in the day, so you can watch'], ['egg', 'In a safe form', 'Thinned peanut butter, egg well cooked'], ['plate', 'Keep it going', 'A few times a week once {s’ve} had it']],
-      tipsTitle: 'If there’s a reaction', tips: [['steth', 'A few hives, or vomiting', 'Call your pediatrician.'], ['alarm', 'Call 911', 'Trouble breathing, swelling of the lips or face, hives all over, hives with vomiting, or very sleepy or floppy.']] }),
+      // Nov 24 flag 10: the reaction signs use the standard When to call card, like every other page.
+      calls: { ped: 'a few hives, or vomiting, after a new food.', nowLabel: 'Call 911', now: 'trouble breathing, swelling of the lips or face, hives all over, hives with vomiting, or {s’s} very sleepy or floppy.' } }),
     z_plan: () => ({ type: 'expect', label: 'Foods to wait on', art: 'plate', title: 'Honey waits until age 1, some foods until 4',
       why: 'A few foods aren’t safe for babies yet, even once solids are going well.',
       // Nov 19: photos, so a parent recognizes the food at a glance; a red cross marks each one.

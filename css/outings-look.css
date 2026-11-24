@@ -266,3 +266,8 @@
 #main .oa3-places.is-icons .oa3-place .oa3-place-ic svg{width:30px!important;height:30px!important;max-width:none!important}
 #main .oa3-places.is-icons .oa3-place .oa3-place-ic{padding:0;justify-content:center}
 #main .oa3-hero .oa3-hero-cta{margin-top:14px}
+
+/* Nov 24 flag 7 (Yarden): Outings' toggles are pills, like the stage pills in every other guide. */
+#main .hub-detail[data-overview="Out and about"] .oa-seg { display: flex; gap: 8px; background: none !important; border: 0; border-radius: 0; padding: 0; margin: 2px 0 14px; box-shadow: none }
+#main .hub-detail[data-overview="Out and about"] .oa-seg button { flex: none; min-height: 0; padding: 8px 15px !important; border-radius: 999px; background: var(--card, #fffdf9) !important; border: 1px solid var(--line, #ebe6e1); font-size: 13.5px; font-weight: 600; color: var(--ss-ink, #2a6078) !important; box-shadow: none !important }
+#main .hub-detail[data-overview="Out and about"] .oa-seg button.is-on { background: var(--ss-ink, #2a6078) !important; border-color: var(--ss-ink, #2a6078); color: #fff !important }

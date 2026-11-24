@@ -20,6 +20,9 @@
   // Rows: an icon tile, a title and one line. Rows that don't open anything get no chevron.
   const rows = items => `<section class="hub-card h2-rows">${items.map(([icon, tone, t, d, go]) => `<${go ? `button onclick="${go}"` : 'div'} class="h2-row${go ? ' is-go' : ''}">${ic(icon, tone)}<span><b>${F(t)}</b>${d ? `<small>${F(d)}</small>` : ''}</span>${go ? CHEV : ''}</${go ? 'button' : 'div'}>`).join('')}</section>`;
   // Numbered steps, for things that really happen in order.
+  // Nov 24 flag 6 (Yarden: if it's steps, use images): Everyday care's photo step card, in Health's colors.
+  const photoSteps = (items, note) => { const pal = (typeof YEAR_PALETTES !== 'undefined' && YEAR_PALETTES.Health) || {};
+    return `<div class="ct-stepcard" style="--ct-ink:#2b2733;--ct-soft:#6b6573;--ct-purple:${pal.ink || '#a8573a'};--ct-lav:${pal.pale || '#fdeee6'};--ct-line:#ece7e2"><ol class="ct-steps2">${items.map(([src, t, d], k) => `<li><span class="ct-th"><img src="assets/${src}.jpg?v=1" alt="" loading="lazy"></span><span class="ct-tx"><b><em>${k + 1}</em>${F(t)}</b>${d ? `<small>${F(d)}.</small>` : ''}</span></li>`).join('')}</ol>${note ? `<div class="ct-notes"><p>${F(note)}</p></div>` : ''}</div>`; };
   const steps = (items, note) => `<section class="hub-card h2-steps"><ol>${items.map(([icon, tone, t, d]) => `<li>${ic(icon, tone)}<span><b>${F(t)}</b>${d ? `<small>${F(d)}</small>` : ''}</span></li>`).join('')}</ol>${note ? `<p class="h2-foot">${F(note)}</p>` : ''}</section>`;
   // "When to call" and other heads-ups: soft yellow, never red.
   const alert = (t, d, tone = 'yellow') => `<section class="h2-alert is-${tone}"><i aria-hidden="true">!</i><div><b>${F(t)}</b><p>${F(d)}</p></div></section>`;
@@ -211,12 +214,11 @@
   function medicinePage() {
     const mo = m();
     return page(top('When Maya seems sick', 'Giving medicine, the safe way', 'The right dose depends on {p} weight and the product. Ask your pediatrician or pharmacist, then measure exactly.')
-      + (window.aheadFig ? window.aheadFig('health/medicine', [['The syringe it came with', 'tl', 40, 38], ['Aim inside the cheek', 'br', 48, 46]], 'Hold {o} semi-upright and squirt a little at a time inside the cheek, never at the back of the throat.', '30%') : '')
       + (mo < 3 ? alert('Under 3 months', 'Ask your pediatrician before any medicine, even acetaminophen.', 'pink') : mo < 6 ? alert('Under 6 months', 'Acetaminophen only, at the dose your pediatrician gives. No ibuprofen until 6 months.') : '')
-      + h2('Step by step') + steps([['info', 'green', 'Check the dose', 'From your pediatrician or pharmacist, for {p} weight'],
-        ['drop', 'blue', 'Use the syringe that came with it', 'Never a kitchen spoon. Measure in mL'],
-        ['hand', 'yellow', 'Hold {o} semi-upright', 'Squirt slowly inside {p} cheek, not at the back of the throat'],
-        ['notepad', 'pink', 'Write down the time and amount', 'So no one gives a second dose by mistake']])
+      + h2('Step by step') + photoSteps([['health/med-dose', 'Check the dose', 'From your pediatrician or pharmacist, for {p} weight'],
+        ['health/med-measure', 'Measure with the syringe it came with', 'Never a kitchen spoon. Measure in mL'],
+        ['health/medicine', 'Hold {o} semi-upright', 'Squirt a little at a time inside {p} cheek, never at the back of the throat'],
+        ['health/med-log', 'Write down the time and amount', 'So no one gives a second dose by mistake']])
       + alert('Skip these', 'Cough and cold medicines, aspirin, and any medicine made for adults.', 'blue')
       + H().TPLB.calls({ pedLabel: 'Call Poison Help, 1-800-222-1222', ped: 'you gave too much, or the wrong medicine.', nowLabel: 'Call 911', now: 'trouble breathing, swelling of the lips or face, or {s} won’t wake.' }));
   }
@@ -279,8 +281,7 @@
         if (a === 'cold') return coldPage();
         if (a === 'you') return youPage();
         if (a === 'sick-rectal') return page(top('A fever', 'A rectal temperature, step by step', 'The most accurate reading for babies. It’s quick, and safe done gently.')
-          + (window.aheadFig ? window.aheadFig('health/temp-position', [['Knees toward {p} chest', 'tr', 62, 55]], 'On {p} back with knees up, or tummy down across your lap.', '45%') : '')
-          + h2('Step by step') + steps([['hand', 'green', 'Turn it on, clean the tip', 'Soap and water, then a little petroleum jelly'], ['thermo', 'yellow', 'Slide it in gently', 'About ½ to 1 inch, never forcing it'], ['heart', 'pink', 'Hold until it beeps, then read it', 'Steady, your hand cupping {p} bottom. Note the number and time']])
+          + h2('Step by step') + photoSteps([['health/thermometer', 'Turn it on, clean the tip', 'Soap and water, then a little petroleum jelly'], ['health/temp-position', 'Knees up, then slide it in gently', 'On {p} back, about ½ to 1 inch, never forcing it'], ['health/temp-read', 'Hold until it beeps, then read it', 'Steady, your hand cupping {p} bottom. Note the number and time']])
           + alert('Keep it just for this', 'Wash it after each use, and label it so it’s never used in a mouth.', 'blue'));
         if (a === 'sick-tummy') return tummyPage();
         if (a === 'cpr') return cprPage();

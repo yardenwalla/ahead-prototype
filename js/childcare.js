@@ -692,7 +692,7 @@
       `<section class="hub-card cc-form"><label class="cc-field"><span>${F(t.who === 'place' ? 'Name of the place' : 'Their name')}</span><input id="ccName" value="${esc3(c.name)}" placeholder="${esc3(t.who === 'place' ? 'For example, Little Oaks' : 'For example, Sam')}" autocomplete="off"></label>
         <label class="cc-field"><span>${F('Phone or email (optional)')}</span><input id="ccContact" value="${esc3(c.contact)}" autocomplete="off"></label></section>`
       + `<h2 class="hub-h2">${F('After your call or visit')}</h2><section class="hub-card cc-form">`
-      + note('ccLiked', 'What stood out', t.who === 'place' ? 'For example, calm room, teachers on the floor' : 'For example, got right down to Maya’s level', c.liked != null ? c.liked : c.notes)
+      + note('ccLiked', 'What stood out', t.who === 'place' ? 'For example, calm room, teachers on the floor' : 'For example, got right down to ' + (typeof name === 'function' ? name() : 'the baby') + '’s level', c.liked != null ? c.liked : c.notes)
       + note('ccWorry', 'Anything that worried you', 'For example, a TV on in the background', c.worry)
       + note('ccConfirm', 'Still to confirm', 'For example, the sick-day policy, in writing', c.confirm) + `</section>`
       + `<details class="hub-card cc-more cc-fullcheck"${done ? ' open' : ''}><summary><span>${hubArt('notepad', CAT)}</span><div><b>${F('The full checklist')}</b><small>${F(`${done} of ${Qs.length} ticked. Optional`)}</small></div></summary><div class="cc-checkwrap">${checks.replace(/(<div class="cc-cstep")/, '<section class="cc-checks">$1').replace(/$/, '</section>')}</div></details>`

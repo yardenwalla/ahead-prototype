@@ -286,11 +286,11 @@
     const W = ['chg:Sleep:d:wakes', 'moon', mo < 3 ? 'Waking at night' : 'Waking often', mo < 3 ? 'To feed, or something else' : 'Every hour or two', 'night'],
       N = ['chg:Sleep:d:shortnap', 'sun', 'A short nap', 'The rest of the day shifts', 'naps'], FN = ['chg:Sleep:d:naphelp:fight', 'sun', 'Fighting a nap', 'Crying instead of sleeping', 'bed'],
       P = ['chg:Sleep:d:props', 'heart', mo < 4 ? 'Only sleeps on you' : 'Needs bouncing to sleep', mo < 4 ? 'Wakes when set down' : 'Or rocking, or a feed', 'bed'],
-      C = ['chg:Sleep:d:crying', 'heart', 'Crying a lot', 'Hard to settle in the evening', 'safe'],
+      C = ['chg:Sleep:d:crying', 'heart', 'Crying a lot', 'Hard to settle in the evening', 'bed'],
       E = ['chg:Sleep:d:hiccup:early', 'sunrise', 'Up too early', 'Before 6 am', 'safe'],
       R = ['chg:Sleep:d:regress', 'moon', 'Was sleeping better', 'The 4-month sleep regression', 'safe'],
       S = ['chg:Sleep:d:nightwake', 'moon', 'Standing in the crib', 'Or missing you at night', 'safe'];
-    P[4] = 'safe'; const four = mo < 3 ? [W, P, C, ['chg:Sleep:d:daynight', 'sunrise', 'Days and nights mixed', 'Awake when you’re not', 'naps']] : [W, N, FN, P];
+    P[4] = 'soothe'; const four = mo < 3 ? [W, P, C, ['chg:Sleep:d:daynight', 'sunrise', 'Days and nights mixed', 'Awake when you’re not', 'naps']] : [W, N, FN, P];
     const used = four.map(x => x[0]);
     const row = (to, ic, t, sub) => H().row({ cat: 'Sleep', icon: ic, title: t, sub, onclick: go(to) });
     const other = [mo >= 3 && ['chg:Sleep:d:naphelp:skip', 'sun', 'A nap didn’t happen', 'Usually, an earlier bedtime'], mo >= 3 && ['chg:Sleep:d:naphelp:late', 'clock', 'A nap running close to bedtime', 'Let her sleep, or wake her?'], mo >= 3 && mo < 6 && R && ['chg:Sleep:d:regress', 'moon', 'Was sleeping better', 'The 4-month sleep regression'], mo >= 8 && ['chg:Sleep:d:nightwake', 'moon', 'Standing in the crib', 'Or missing you at night'], mo >= 3 && ['chg:Sleep:d:hiccup:soon', 'clock', 'Up soon after bedtime', 'Often overtired'], mo >= 6 && ['chg:Sleep:d:hiccup:split', 'sunrise', 'Awake for an hour at night', 'Look at the day'],
