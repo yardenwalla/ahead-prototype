@@ -100,7 +100,7 @@
     const backTxt = cat === 'Health' ? 'your next checkup' : `where ${nm()} is now`;
     const changeable = on.change && CHANGEABLE.includes(cat);
     const icon = typeof catIcon === 'function' ? catIcon(cat) : '';
-    const html = `<section class="hub-preview st-banner${changeable ? ' has-make' : ''}" aria-label="${what}"><div class="st-banner-top"><span class="st-banner-icon" aria-hidden="true">${icon}</span><div class="st-banner-copy"><small>${what}</small><b>${esc(stage)}${when ? ` <i>· ${esc(when)}</i>` : ''}</b></div>${changeable ? '' : `<button class="st-btn st-btn-back" onclick="${topicGo(cat)}">Back to ${backTxt}</button>`}</div>${changeable ? `<div class="st-banner-actions"><button class="st-btn st-btn-back" onclick="${topicGo(cat)}">Back to ${backTxt}</button><button class="st-btn st-btn-make" onclick="${on.change}">This fits ${nm()}</button></div>` : ''}</section>`;
+    const html = `<section class="hub-preview st-banner${changeable ? ' has-make' : ''}" aria-label="${what}"><div class="st-banner-top"><span class="st-banner-icon" aria-hidden="true">${icon}</span><div class="st-banner-copy"><small>${what}</small><b>${esc(stage)}${when ? ` <i>· ${esc(when)}</i>` : ''}</b></div></div><div class="st-banner-actions${changeable ? '' : ' is-one'}"><button class="st-btn st-btn-back" onclick="${topicGo(cat)}">Back to ${backTxt}</button>${changeable ? `<button class="st-btn st-btn-make" onclick="${on.change}">This fits ${nm()}</button>` : ''}</div></section>`;
     if (old) old.outerHTML = html; else if (hero) hero.insertAdjacentHTML('beforebegin', html);
   };
   if (typeof activeNavigationTab === 'function') {

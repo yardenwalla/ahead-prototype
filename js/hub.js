@@ -37,6 +37,9 @@
     // No onclick: a row that's complete on its own (an idea to try), with no page behind it.
     // Nov 24 (Yarden): the icon box takes the row's own category color, like the icon itself (a Health row on a Feeding page is green).
     const pal = typeof YEAR_PALETTES !== 'undefined' && cat && YEAR_PALETTES[cat], dot = pal ? ` style="background:${pal.pale}"` : '';
+    // Nov 24 (Feeding G): a row can show a small photo in its box ('photo:folder/file'), as the stage rows do.
+    if (/^photo:/.test(icon || '')) { const img = `<img src="assets/${icon.slice(6)}.jpg" alt="" loading="lazy" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;display:block">`;
+      return `<div class="hub-row is-static"><span class="hub-dot" style="overflow:hidden;padding:0">${img}</span><span class="hub-row-copy"><b>${F(title)}</b>${sub ? `<small>${F(sub)}</small>` : ''}</span></div>`; }
     if (!onclick) return `<div class="hub-row is-static"><span class="hub-dot"${dot}>${art(icon, cat)}</span><span class="hub-row-copy"><b>${F(title)}</b>${sub ? `<small>${F(sub)}</small>` : ''}${chip(chipText, chipTone)}</span></div>`;
     return `<button class="hub-row" onclick="${onclick}"><span class="hub-dot"${dot}>${art(icon, cat)}</span><span class="hub-row-copy"><b>${F(title)}</b>${sub ? `<small>${F(sub)}</small>` : ''}${chip(chipText, chipTone)}</span>${chev}</button>`;
   }

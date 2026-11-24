@@ -56,3 +56,5 @@
 #main .st-pills button { all: unset; cursor: pointer; flex: none; white-space: nowrap; padding: 8px 15px; border-radius: 999px; background: var(--card, #fffdf9); border: 1px solid var(--line, #ebe6e1); font-size: 13.5px; font-weight: 600; color: var(--year-ink, #5b4e8f); position: relative }
 #main .st-pills button.is-on { background: var(--year-ink, #5b4e8f); border-color: var(--year-ink, #5b4e8f); color: #fff }
 #main .st-pills button.is-now:not(.is-on)::after { content: ""; position: absolute; top: 5px; right: 7px; width: 6px; height: 6px; border-radius: 50%; background: var(--year-ink, #5b4e8f) }
+/* Nov 24 (Feeding C): one layout for every Previewing / Looking back card: what you're reading on one line, the buttons below. */
+#main .st-banner-actions.is-one { grid-template-columns: 1fr }
