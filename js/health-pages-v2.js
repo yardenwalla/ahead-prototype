@@ -239,7 +239,7 @@
         if (a === 'you') return youPage();
         if (a === 'sick-rectal') return page(top('A fever', 'A rectal temperature, step by step', 'The most accurate reading for babies. It’s quick, and safe done gently.')
           + (window.aheadFig ? window.aheadFig('health/temp-position', [['Knees toward {p} chest', 'tr', 62, 55]], 'On {p} back with knees up, or tummy down across your lap.', '45%') : '')
-          + h2('Step by step') + steps([['hand', 'green', 'Get it ready', 'Wash the tip, add petroleum jelly'], ['moon', 'blue', 'Position {o}', 'On {p} back, knees to chest, or across your lap'], ['thermo', 'yellow', 'Slide it in gently', 'About ½ to 1 inch, never forcing it'], ['heart', 'pink', 'Hold until it beeps', 'Keep it steady, your hand cupping {p} bottom']])
+          + h2('Step by step') + steps([['hand', 'green', 'Get it ready', 'Wash the tip, add petroleum jelly'], ['thermo', 'yellow', 'Slide it in gently', 'About ½ to 1 inch, never forcing it'], ['heart', 'pink', 'Hold until it beeps', 'Keep it steady, your hand cupping {p} bottom']])
           + alert('Keep it just for this', 'Wash it after each use, and label it so it’s never used in a mouth.', 'blue'));
         if (a === 'sick-tummy') return tummyPage();
       }

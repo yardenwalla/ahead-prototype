@@ -420,18 +420,10 @@
   // A sequence: what comes first, next, then.
   const vSteps = (title, items) => vH2(title) + `<ol class="ya-steps">${items.map(([icon, t, sub]) => `<li><i>${typeof hubArt === 'function' ? hubArt(icon, 'Development & play') : ''}</i><b>${F(t)}</b><small>${F(sub)}</small></li>`).join('')}</ol>`;
   const VIS = {
-    smile: () => vPhoto('smile', [['Smiling back at you', 'tr', 62, 50]], 'The first real smiles come in answer to yours.', '40%'),
-    nights: () => vBars('The longest sleep, month by month', [['Newborn weeks', 25, '2–4 hrs'], ['3–4 months', 45, '5+ hrs'], ['Around 6 months', 66, '6–8 hrs'], ['9–12 months', 100, '10–12 hrs']]),
-    regress: () => vDots('Night wakings, before and after', [['Before', 2, '1–2 wakings'], ['For a few weeks', 6, 'Up to 6'], ['After', 2, '1–2 again']]),
-    twonaps: () => vDays('An example day, before and after', [['Three naps', [[9, 10], [12.5, 14], [16.3, 16.9]]], ['Two naps', [[9.5, 10.8], [13.8, 15.3]]]]),
     tooth: () => vPhoto('tooth', [['Two little bottom teeth', 'br', 52, 60]], 'The two bottom front teeth usually come first.', '35%'),
-    finger: () => vH2('One food, three textures') + (H().TPLB ? '<div class="ya-tex">' + H().TPLB.photoAges([['feeding/tx-avo-1', 'Around 6 months', 'Smooth', ''], ['feeding/tx-avo-2', '7–8 months', 'Lumpy', ''], ['feeding/tx-avo-3', '9 months on', 'Soft pieces', '']]) + '</div>' : ''),
     carseat: () => vPhoto('carseat', [['Less than an inch to the top', 'tr', 50, 20]], '', '30%'),
-    sep: () => vPhoto('sep', [['Reaching for you', 'tr', 55, 45]], 'Often strongest with new people, or at bedtime.', '40%'),
-    pull: () => vPhoto('pull', [['Holding on to stand', 'tl', 55, 40]], 'Next comes cruising: stepping sideways while holding on.', '40%'),
-    words: () => vSteps('How talking builds', [['chat', 'Coos', 'By about 2 months'], ['music', 'Babbles “ba-ba”', 'By about 6 months'], ['heart', '“Mama” or “dada”', 'For a parent, around 12 months']]),
-    milk: () => vSteps('Moving to whole milk', [['bottle', 'Breast milk or formula', 'Until 12 months'], ['cup', 'Cup practice', 'From about 6 months'], ['cup', 'Whole milk in a cup', 'From 12 months']]),
-    onenap: () => vDays('An example day, before and after', [['Two naps', [[9.5, 10.8], [13.8, 15.3]]], ['One nap', [[12.3, 14.8]]]])
+    pull: () => vPhoto('pull', [['Standing while holding on', 'tl', 55, 40]], '', '40%'),
+    milk: () => vSteps('Getting ready', [['bottle', 'Breast milk or formula', 'Until 12 months'], ['cup', 'Cup practice', 'From 6 months, with a little water'], ['cup', 'Whole milk in a cup', 'From 12 months. No juice needed']]),
   };
   function changePage(id) {
     const h = H(), c = C.find(x => x.id === id), p = PAGES[id]; if (!c || !p) return null;
@@ -450,11 +442,14 @@
     const when2 = B && window.hubWindowBar ? `<h2 class="hub-h2">${F(past ? 'When it happened' : 'When it usually happens')}</h2><section class="hub-card dev-bigq ya-when">${steps}`
       + hubWindowBar({ title: '', from: B[0], to: B[1], zones: [[B[2], B[3], B[4], 'band']], ticks, now: a, cat: cat === 'Daily rhythm' || cat === 'Out and about' ? cat : cat, caption: F(whenLine || c.title) })
       + (whenLine ? `<p class="dev-bigq-a">${F(whenLine)}</p>` : '') + `</section>` : '';
-    const signsBody = p.pics ? h.TPLB.photoRows(p.pics) : `<div class="hub-card ya-signs2">${p.signs.map(x => `<p>${F(x)}</p>`).join('')}</div>`;
+    // Nov 23 (Yarden): a visual replaces the words it shows, it doesn't add to them.
+    const SHOWN = { milk: 'all', carseat: [0], pull: [2] }, cut = VIS[id] && SHOWN[id];
+    const sg = !cut ? p.signs : cut === 'all' ? [] : p.signs.filter((x, k) => !cut.includes(k));
+    const signsBody = p.pics ? h.TPLB.photoRows(p.pics) : `<div class="hub-card ya-signs2">${sg.map(x => `<p>${F(x)}</p>`).join('')}</div>`;
     // Nov 23: the page's own visual (a photo, a small chart or a strip) sits between the timing card and the signs.
     // (Yarden: the timing card stays on read-ahead pages.)
     const vis = VIS[id] ? VIS[id]() : '';
-    const look = when2 + vis + (steps ? '' : `<h2 class="hub-h2">${F(c.end <= a ? 'What it looked like' : p.signsTitle || 'Signs it’s close')}</h2>${signsBody}`) + (p.signsNote ? `<p class="ya-signs-note">${F(p.signsNote)}</p>` : '');
+    const look = when2 + vis + (steps || !sg.length ? '' : `<h2 class="hub-h2">${F(c.end <= a ? 'What it looked like' : p.signsTitle || 'Signs it’s close')}</h2>${signsBody}`) + (p.signsNote ? `<p class="ya-signs-note">${F(p.signsNote)}</p>` : '');
     return h.detail(cat, `${range(c)} · ${when}`, c.title, lead,
       look
       + h.list('What it changes', p.rows.slice(0, 4).map(([icon, rc, title, sub, go]) => h.row({ icon, cat: rc, title, sub, onclick: go }).replace('<span class="hub-row-copy">', `<span class="hub-row-copy"><small class="hub-row-eyebrow">${F(AREA[rc] || rc)}</small>`)))
