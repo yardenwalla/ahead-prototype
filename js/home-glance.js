@@ -323,7 +323,7 @@
       </button>` : sc ? `<button class="ms-card" onclick="try{localStorage.setItem('ahead-story-seen-${m}','1')}catch(e){};stOpen()" style="${monthTheme(m)};--ms-acc:${mix(c, .1, 30)};--ms-c1:${mix(c, .5)};--ms-c2:${mix(c, .72)}">
         <span class="ms-body"><span class="ms-copy"><span class="ms-eyebrow">${m === 0 ? F('{P} first weeks') : seen ? F('This month') : F('New this month')}</span><b class="ms-month">${F(m === 0 ? when + '.' : `Month ${m}.`)}</b><small>${F(sc.tease).replace(/([.!?]) (?=\S)/g, '$1<br>')}</small></span>
           <span class="ms-art" aria-hidden="true"><i class="ms-c2"></i><span class="ms-toys">${typeof window.stCardArt === 'function' ? window.stCardArt(m) : art}</span></span></span>
-        <span class="ms-foot"><span class="ms-watch"><i><svg viewBox="0 0 24 24"><path d="M9 7.5v9l7.5-4.5z"/></svg></i>${F(m === 0 ? `${name()}’s story` : `${name()}’s month`)}</span><span class="ms-go" aria-hidden="true">→</span></span>
+        <span class="ms-foot"><span class="ms-watch"><i><svg viewBox="0 0 24 24"><path d="M9 7.5v9l7.5-4.5z"/></svg></i>${F(m === 0 ? `${Name()}’s story` : `${Name()}’s month`)}</span><span class="ms-go" aria-hidden="true">→</span></span>
       </button>`
       : `<section class="he-hero" style="${monthTheme(m)}"><p class="he-eyebrow">${F(when)} · ${F(`Through ${name()}’s eyes`)}</p><div class="he-copy"><h1>${F(P(M.eyes[0]))}</h1><p class="he-lead">${F(P(M.eyes[1]))}</p>${m <= 4 ? `<button class="he-see" onclick="homeEyes(true)"><span aria-hidden="true">👁</span> ${F(`See what ${name()} sees`)}</button>` : ''}</div><span class="he-art" aria-hidden="true">${art}</span></section>`;
     const rr = newLook ? radarRows(m) : [];

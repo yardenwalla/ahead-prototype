@@ -451,7 +451,7 @@
     var st = STORIES[Math.max(0, Math.min(11, m))] || STORIES[1], wk = Math.max(1, Math.round(days / 7));
     var list = [{ id: 'cover', bg: '#2B2840', ink: '#fffaf3', dur: 3800, html:
         '<i class="st-sun"></i><i class="st-star">★</i><i class="st-dotc"></i>' +
-        '<p class="st-kicker st-in" style="--d:.05s">' + E(n) + (m === 0 ? '’s first weeks' : '’s month') + '</p>' +
+        '<p class="st-kicker st-in" style="--d:.05s">' + E(n.charAt(0).toUpperCase() + n.slice(1)) + (m === 0 ? '’s first weeks' : '’s month') + '</p>' +
         '<div class="st-giant st-pop" style="--d:.15s">' + (m === 0 ? wk + '<small class="st-giant-u">' + (wk === 1 ? 'week' : 'weeks') + '</small>' : st.half ? '<span class="st-halfwrap">' + V.halfring() + '<b>' + m + '</b></span>' : m) + '</div>' +
         '<div class="st-title st-cover-t st-in" style="--d:.45s">' + E(Pp(st.cover[0])) + '</div>' +
         '<p class="st-lead st-in" style="--d:.75s">' + E(Pp(st.cover[1])) + '</p>' +

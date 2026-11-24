@@ -120,11 +120,13 @@
         safe: [['Wash every part after each use', 'Hot, soapy water, then air-dry on a clean towel'], ['Fresh milk keeps 4 hours out, 4 days in the fridge', 'Then freeze it. Best used within 6 months']] };
       if (m < 8.5) return { type: 'howto', label: 'Pumping', art: 'bottle', title: 'Pumping a little less often is normal now',
         why: 'Once your supply settles, fewer sessions is fine.',
-        ordered: false, steps: [['clock', 'Fewer sessions', 'Spaced through the day'], ['moon', 'The night pump', 'Ask before dropping it'], ['bottle', 'About 24–30 oz a day', 'What {s} {need|needs} until solids']],
+        pictureTitle: 'How pumping changes', picture: () => (typeof hubStageStrip === 'function' ? hubStageStrip({ title: '', items: [['clock', 'First weeks', '8–12 a day'], ['moon', 'Supply settles', 'Fewer, spaced out'], ['bowl', 'Meals grow', 'Drop one at a time']], nowIndex: 1, cat: 'Feeding', caption: 'Pumping goes from 8 to 12 times a day in the first weeks, to fewer sessions once your supply settles, to dropping one at a time as meals grow.' }) : ''),
+                ordered: false, steps: [['clock', 'Fewer sessions', 'Spaced through the day'], ['moon', 'The night pump', 'Ask before dropping it'], ['bottle', 'About 24–30 oz a day', 'What {s} {need|needs} until solids']],
         stepsNotes: fam() ? [['', 'With formula too?', 'Pump what feels sustainable. Any amount of breast milk helps']] : null };
       return { type: 'howto', label: 'Pumping', art: 'bottle', title: 'Pump a little less as meals grow',
         why: 'As solids grow, {s} {need|needs} a little less milk, and you can pump a little less.',
-        ordered: false, steps: [['clock', 'Drop one session at a time', 'One every few days, so you stay comfortable'], ['bottle', 'Less milk over time', 'About 3–4 milk bottles a day by 9–12 months'], ['heart', 'Keep going, or wind down', 'Both are fine']] }; },
+        pictureTitle: 'How pumping changes', picture: () => (typeof hubStageStrip === 'function' ? hubStageStrip({ title: '', items: [['clock', 'First weeks', '8–12 a day'], ['moon', 'Supply settles', 'Fewer, spaced out'], ['bowl', 'Meals grow', 'Drop one at a time']], nowIndex: 2, cat: 'Feeding', caption: 'Pumping goes from 8 to 12 times a day in the first weeks, to fewer sessions once your supply settles, to dropping one at a time as meals grow.' }) : ''),
+                ordered: false, steps: [['clock', 'Drop one session at a time', 'One every few days, so you stay comfortable'], ['bottle', 'Less milk over time', 'About 3–4 milk bottles a day by 9–12 months'], ['heart', 'Keep going, or wind down', 'Both are fine']] }; },
     m1_apart: () => nurse()
       ? { type: 'howto', label: 'Time apart', art: 'bottle', title: 'A first bottle goes best from someone else',
         why: 'A bottle lets a partner, a sitter or a caregiver feed {o}.',
@@ -162,7 +164,7 @@
     x_allergy: () => ({ type: 'check', label: 'Feeding challenges', art: 'steth', title: 'A milk allergy is uncommon, and treatable',
       why: 'Most gas, fussing and spit-up isn’t an allergy at all.',
       figure: () => H().TPLB.versus(['Usually not an allergy', 'Gas, fussing or spit-up, in a baby who’s growing well.'], ['Could be an allergy', 'Blood or mucus in poop, a rash, or vomiting after most feeds.']),
-      helps: [['notepad', 'Take a photo', 'Of the diaper or the rash'], nurse() ? ['heart', 'Keep nursing', 'Your pediatrician will say if anything should change'] : ['bottle', fam() ? 'Keep {p} milk the same' : 'Keep the same formula', 'Ask your pediatrician before changing it']],
+      helps: [['notepad', 'Take a photo', 'Of the diaper or the rash'], nurse() ? ['heart', 'Keep nursing', 'Your pediatrician will say if anything should change'] : ['bottle', !breast() ? 'Keep the same formula' : !fam() ? 'Keep giving breast milk' : 'Keep {p} milk the same', 'Ask your pediatrician before changing it']],
       calls: { ped: 'blood or mucus in poop, a rash, vomiting after most feeds, or slow gain.' } }),
     x_gain: () => ({ type: 'check', label: 'Feeding challenges', art: 'steth', title: 'Slow gain? Watch swallows and diapers',
       why: 'Some babies are just smaller. {P} growth curve matters more than one weigh-in.',
@@ -299,7 +301,8 @@
       return { type: 'urgent', label: 'Gagging or choking', art: 'mouth', title: 'Gagging is normal. Choking isn’t.',
         why: 'Gagging is how {s} {learn|learns} to eat. Loud coughing means air is getting through.',
         tellTitle: 'How to tell them apart', figure: () => T.versus(['Gagging: stay close', 'Loud coughing or gagging, red face, watery eyes. Let {o} work it out.'], ['Choking: act now', 'Can’t cry or cough, or only a weak cough or high-pitched sound. Lips may turn blue.']),
-        doTitle: 'If {s’s} choking', doFig: () => T.numbered([['Get help', 'Have someone call 911, or call on speaker'], ['5 back blows', 'Face down on your forearm, jaw supported. Firm, between the shoulder blades'], ['5 chest thrusts', 'Face up, heel of one hand mid-chest'], ['Repeat', 'Until it’s out. If {s} {stop|stops} responding, start CPR']], 'stop'),
+        // Nov 23 (Yarden: show and tell, real photos first): the two holds, on a training manikin, above the steps.
+        doTitle: 'If {s’s} choking', doFig: () => H().TPLB.photoGrid([['feeding/choke-back', '5 back blows', 'Face down on your forearm, head low, jaw supported'], ['feeding/choke-chest', '5 chest thrusts', 'Face up, head low. Heel of one hand, center of the chest']]) + T.numbered([['Get help', 'Have someone call 911, or call on speaker'], ['5 back blows', 'Face down on your forearm, jaw supported. Firm, between the shoulder blades'], ['5 chest thrusts', 'Face up, head low. Heel of one hand, center of the chest'], ['Repeat', 'Until it’s out. If {s} {stop|stops} responding, start CPR']], 'stop'),
         doNotes: [['', 'Never sweep {p} mouth with a finger', 'It can push food further in']],
         video: ['ShaNuST_58A', 'Choking first aid for babies under 1', 'American Red Cross'],
         go: ['heart', 'Infant CPR, step by step', 'If {s} stops responding', 'chg:Health:d:cpr'],
