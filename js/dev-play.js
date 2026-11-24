@@ -25,13 +25,14 @@
     'stack-pair': { adapt: 'Hold the bottom block steady. Knocking the tower down is still play.' },
     'feed-teddy': { notice: 'Baby may bring the spoon near teddy or explore the spoon on {p} own.' },
     // Nov 23 review: plainer steps and leads.
-    'pretend-cup': { explain: 'Copying a sip is one of the first kinds of make-believe.', how: 'Pretend to drink from an empty baby-safe cup. Then hand it to baby to play with or copy.' },
-    'put-in': { explain: 'A bowl to drop things into gives letting go a purpose.', how: 'Drop one large baby-safe block into a wide, light bowl. Then hand baby a block and let them try.' },
+    'pretend-cup': { how: 'Pretend to drink from an empty baby-safe cup. Then hand it to baby to play with or copy.' },
+    'put-in': { how: 'Drop one large baby-safe block into a wide, light bowl. Then hand baby a block and let them try.' },
     'sock-puppet': { how: 'Hold a sock puppet on your hand or a baby-safe soft toy where baby can see it. Make it say a short hello, then pause for a look or reply. Put the puppet away afterward, out of their reach.' },
     'bold-picture': { how: 'Hold a black-and-white picture about 8–12 inches from baby’s face, where they can see it. Keep it still and let them look.' },
-    'leaf-watch': { how: 'Hold baby in the shade where they can see leaves moving. Point to one branch and tell them what it’s doing: “Up, and down.”' },
     // One page for "A picture at floor level": the Movement card's three steps, with this idea's "What to notice".
-    'tummy-picture': { how: 'During tummy time, prop a bold picture where baby can see it. Lie down facing them and talk about it. Move it a little to one side so they turn to look.' }
+    'tummy-picture': { how: 'During tummy time, prop a bold picture where baby can see it. Lie down facing them and talk about it. Move it a little to one side so they turn to look.' },
+    // Restore pass: the same for "A toy beside your knee", so the merged page keeps all three of the Movement card's steps.
+    'supported-reach': { how: 'Sit baby on the floor, supported around their chest as needed. Hold a toy close beside your knee. Let them lean and reach for it.' }
   };
   const all = () => { const o = {}; for (let m = 0; m <= 12; m++) { const x = playStageModel(m); [...(x.primary || []), ...(x.more || [])].forEach(a => { if (!o[a.id]) o[a.id] = a; }); } return o; };
   const ctxFor = a => Object.assign({}, (typeof PLAY_CONTEXT !== 'undefined' && PLAY_CONTEXT[a.id]) || {}, FIX[a.id] || {});
@@ -82,7 +83,7 @@
   window.devMediaHTML = function (key, title) {
     const m = (typeof DEV_EXAMPLE_LINKS !== 'undefined' ? DEV_EXAMPLE_LINKS : {})[key];
     if (OWN_PHOTO[key]) return `<figure class="dev-photo is-own"><img src="assets/dev/${OWN_PHOTO[key]}.jpg?v=2" alt="${title || ''}" loading="lazy"></figure>`;
-    if (m && m.type === 'video') { const id = (m.href.match(/[?&]v=([\w-]{11})/) || [])[1]; return id ? hubEmbed(id, title || 'What it looks like', 'CDC').replace(/<small>Video · CDC · [\s\S]*?<\/small>/, '<small>Video · CDC</small>') : ''; }
+    if (m && m.type === 'video') { const id = (m.href.match(/[?&]v=([\w-]{11})/) || [])[1]; return id ? hubEmbed(id, title || 'What it looks like', 'CDC') : ''; }
     if (m) return `<figure class="dev-photo"><img src="${m.href}" alt="${title || ''}" loading="lazy"><figcaption>Photo · CDC</figcaption></figure>`;
     return '';
   };
@@ -108,8 +109,7 @@
   }
   function ideasPage(ref) {
     const live = typeof isCurrent !== 'function' || isCurrent(), m = live ? developmentMonth(actualMonth()) : ref, h = H();
-    // Nov 23: one lead for every age. Awake time lives in Sleep.
-    const lead = 'A few minutes of any of these is plenty. Pick one that suits the moment.', own = devRef(m) === ref;
+    const own = devRef(m) === ref, lead = live && own ? `Maya is usually awake for ${WAKE(m)} at a time. A few minutes of any of these is plenty.` : 'A few minutes of any of these is plenty. Pick one that suits the moment.';
     const pics = stageIdeas(ref), shown = new Set(pics.map(a => a.id));
     // Six more ideas per stage, picked for variety (a book, a song, outside, moving, everyday things), in one collapsed list.
     const MORE = { 2: ['smile-pause', 'change-chat', 'book-voices', 'outside-pause', 'slow-song', 'floor-company'], 4: ['sock-puppet', 'page-pat', 'barefoot-kicks', 'lap-sway', 'follow-toy', 'touch-rhyme'], 6: ['mirror-faces', 'roll-interest', 'rhyming-page', 'leaf-watch', 'sound-side', 'feet-discovery'], 9: ['lift-flap', 'knock-stack', 'peek-corner', 'roll-ball', 'song-pause', 'spoon-bowl'], 12: ['feed-teddy', 'open-close', 'body-song', 'put-in', 'follow-point', 'stir-bowl'] };
@@ -145,9 +145,8 @@
     const a = find(id), h = H();
     if (!a) return ideasPage(ref);
     const ctx = ctxFor(a), steps = (typeof playInstructionSteps === 'function' ? playInstructionSteps(a.how) : [a.how]).map(s => B(s));
-    // A single step reads as a plain sentence, without a "1".
     return frame(B(a.title), eyebrow(ref), B(ctx.explain || a.why || ''),
-      (photo(a.id) ? `<figure class="dev-idea-hero is-photo">${photo(a.id)}</figure>` : devPlayArt(a.id) ? `<figure class="dev-idea-hero">${devPlayArt(a.id)}</figure>` : '') + (steps.length === 1 ? `<div class="hub-card"><p style="margin:0;color:var(--ink)">${F(steps[0])}</p></div>` : h.steps(steps)) + (ctx.notice ? h.tip('What to notice', B(ctx.notice)) : '')
+      (photo(a.id) ? `<figure class="dev-idea-hero is-photo">${photo(a.id)}</figure>` : devPlayArt(a.id) ? `<figure class="dev-idea-hero">${devPlayArt(a.id)}</figure>` : '') + h.steps(steps) + (ctx.notice ? h.tip('What to notice', B(ctx.notice)) : '')
       + h.note('Stay close, and stop when Maya looks away or fusses. That’s {p} way of saying “enough for now.”'));
   }
   const baseRoute = window.changesRoute;
@@ -156,12 +155,10 @@
     if ((cat === 'Development' || cat === 'Daily rhythm') && screen === 'd' && a === 'more') return ideasPage(devRef(Number(b)));
     // All milestones for an age, the four areas on one page (Nov 11). Each area opens its own page to mark what Maya does.
     if (cat === 'Development' && screen === 'd' && a === 'all') { const ref = DEV_STAGES[b] ? Number(b) : devRef(Number(b)), seen = window.devSkillSeen || (() => false), hb = window.hubBabyify || (x => x);
-      // Nov 23: the same area names, skill names and order as the area pages. No empty circles (it isn't a checklist):
-      // a "Seen ✓" chip on what's been marked, and the area's name opens its page.
-      const NAMES = window.devAreaNames || {}, order = window.devAreaOrder || ((r, d) => DEVELOPMENT_DOMAINS[r][d] || []), title = window.devSkillTitle || (l => l);
-      const body = Object.keys(DEV_DOMAINS).map(d => { const L = order(ref, d);
-        return `<h2 class="hub-h2"><button style="all:unset;cursor:pointer" onclick="openPage('development-domain:${ref}:${d}')">${F(NAMES[d] || d)} ›</button></h2><div class="hub-card" style="padding:4px 16px">${L.map((l, i) => `<p style="display:flex;gap:10px;align-items:center;justify-content:space-between;margin:0;padding:10px 0;${i < L.length - 1 ? 'border-bottom:1px solid var(--line,#f0ebe8);' : ''}font-size:14.5px"><span>${hb(title(l))}</span>${seen(l) ? `<span class="hub-chip is-done">${F('Seen')} ✓</span>` : ''}</p>`).join('')}</div>`; }).join('');
-      return frame(`All ${Object.values(DEVELOPMENT_DOMAINS[ref]).flat().length} milestones`, `By ${ref} months`, 'Notice what Maya is doing. There’s no score, and every baby gets there at their own pace.', body); }
+      const NAMES = { Social: 'Social and feelings', Talking: 'Talking and listening', Thinking: 'Thinking and learning', Movement: 'Movement' };
+      const body = Object.keys(DEV_DOMAINS).map(d => { const L = DEVELOPMENT_DOMAINS[ref][d] || [], c = window.devTileColors ? devTileColors(d) : ['#f1ecfa', '#5b4f8a'];
+        return `<h2 class="hub-h2">${F(NAMES[d] || d)}</h2><div class="hub-card" style="padding:4px 16px">${L.map(l => `<p style="display:flex;gap:10px;align-items:center;margin:0;padding:10px 0;border-bottom:1px solid var(--line,#f0ebe8);font-size:14.5px"><span style="width:20px;height:20px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:12px;${seen(l) ? `background:${c[1]};color:#fff` : `border:1.5px solid ${c[1]}`}">${seen(l) ? '✓' : ''}</span>${hb(F(l))}</p>`).join('')}<button class="hub-link" style="display:block;padding:10px 0" onclick="openPage('development-domain:${ref}:${d}')">${F('Mark what Maya does')} ›</button></div>`; }).join('');
+      return frame('All milestones', `By ${ref === 12 ? '12 months' : ref + ' months'}`, 'Notice what Maya is doing. There’s no score to complete, and every baby gets there at their own pace.', body); }
     if (cat === 'Development' && screen === 'd' && a === 'move') return movePage(DEV_STAGES[b] ? Number(b) : devRef(Number(b)));
     if (cat === 'Development' && screen === 'd' && a === 'idea') return ideaPage(DEV_STAGES[b] ? Number(b) : devRef(Number(b)), c);
     return baseRoute(p);

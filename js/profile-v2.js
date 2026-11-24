@@ -28,7 +28,7 @@
       const pick = (cat, title, nowI, labels) => `<div class="hub-where-row" style="${yearTheme(cat)}"><span class="hub-dot" style="${yearTheme(cat)}">${catIcon(cat)}</span><div class="hub-where-copy"><b>${title}</b><div class="hub-where-chips" role="group" aria-label="${title} stage">${labels.map((l, i) => { const on = i === nowI, ok = on || stageCanChange(cat, i, nowI); return `<button class="${on ? 'is-on' : ''}" ${on ? `aria-pressed="true" onclick="hubToast('Already set','${esc2(title)} already shows ${esc2(l)}. Tap another stage to change it.')"` : ok ? `onclick="hubProfileStage('${cat}',${i})"` : 'disabled'}>${esc2(l)}</button>`; }).join('')}</div></div></div>`;
       const twoAges = profile.early && profile.due && adjustedMonth(actualMonth()) !== actualMonth();
       // Born early: say which age each one follows, since there are two.
-      const fixed = (cat, title, label, basis) => `<div class="hub-where-row"><span class="hub-dot" style="${yearTheme(cat)}">${catIcon(cat)}</span><div class="hub-where-copy"><b>${title}</b><small>${esc2(label)}${twoAges ? ' · ' + (basis === 'birthday' ? `by ${nm}’s birthday age` : `by ${basis === 'dev' ? (ageMode('dev') === 'birthday' ? 'birthday' : 'adjusted') : (ageMode('care') === 'birthday' ? 'birthday' : 'adjusted')} age`) : ''}</small></div></div>`;
+      const fixed = (cat, title, label, basis) => `<div class="hub-where-row"><span class="hub-dot" style="${yearTheme(cat)}">${catIcon(cat)}</span><div class="hub-where-copy"><b>${title}</b><small>${esc2(label)} · ${twoAges ? (basis === 'birthday' ? `by ${nm}’s birthday age` : `by ${basis === 'dev' ? (ageMode('dev') === 'birthday' ? 'birthday' : 'adjusted') : (ageMode('care') === 'birthday' ? 'birthday' : 'adjusted')} age`) : `changes as ${nm} grows`}</small></div></div>`;
       const careRail = ['Newborn', '1–3 months', '4–6 months', '7–12 months'];   // Nov 23: STAGES.md ages
       const careNow = (() => { const d = (NOW - parse(profile.dob)) / 864e5, mm = hubAgeFor('care', actualMonth()); return careRail[d < 21 ? 0 : mm < 4 ? 1 : mm < 7 ? 2 : 3]; })();
       const chips = (opts, on, fn) => `<div class="hub-where-chips">${opts.map(([v, l]) => `<button class="${on === v ? 'is-on' : ''}" aria-pressed="${on === v}" onclick="${fn(v)}">${esc2(l)}</button>`).join('')}</div>`;
@@ -50,8 +50,9 @@
         + fixed('Daily rhythm', 'Everyday care', careNow, 'care')
         + fixed('Health', 'Health', 'Next: ' + healthJourneyLabel(healthJourneyFocus()), 'birthday')
         + `</section>`;
+      b += `<button class="you-link" onclick="openPage('trust')">How we choose guidance ›</button>`;
       b += h.note(window.AHEAD_STORAGE_PERSISTS === false ? 'This viewer can’t keep your entries after you close it. Open Ahead in your phone’s browser to keep them.' : 'Your answers, notes and photos stay on this phone.');
-      return `<div class="quiet-category hub-page hub-detail" style="${yearTheme('You')}">${hubPageTop(`${esc2(name())}’s details`).replace(/<p>[^<]*<\/p>/, '')}${b}</div>`;
+      return `<div class="quiet-category hub-page hub-detail" style="${yearTheme('You')}">${hubPageTop(`${esc2(name())}’s details`)}${b}</div>`;
     };
   // Editing: same two short steps, worded as editing
   const baseRender = window.render;

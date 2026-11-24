@@ -81,7 +81,7 @@
   // birth; a second-season dose only for some higher-risk babies 8–19 months. Flu every fall from 6 months.
   // COVID-19 recommended for all babies 6–23 months. Under 6 months, flu and COVID-19 are "coming later".
   const SEASON = age => [
-    age < 8 ? ['RSV antibody', 'Protects against RSV, a common winter virus', [['RSV season', 'Usually October to March'], ['Already had it?', 'Many babies get it at birth. One shot covers the season'], ['Not needed if', 'The RSV vaccine was given in pregnancy, at least 2 weeks before birth']]]
+    age < 8 ? ['RSV antibody', 'One shot for {p} first RSV season', [['RSV season', 'Usually October to March'], ['Already had it?', 'Many babies get it at birth. One shot covers the season'], ['Not needed if', 'The RSV vaccine was given in pregnancy, at least 2 weeks before birth']]]
       : ['RSV antibody', 'Only for some higher-risk babies'],
     ...(age >= 6 ? [['Flu', 'Every fall. 2 doses the first time', [['The first time', '2 doses, at least 4 weeks apart']]], ['COVID-19', 'For all babies 6 to 23 months', [['How many doses', 'Your pediatrician will say']]]] : [])
   ];

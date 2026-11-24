@@ -41,7 +41,7 @@
       tip: ['When to stop using a bouncer', 'Once {s} can sit up on {p} own or {try|tries} to climb out, even under the weight limit.'],
       tip2: ['Stay close', 'Keep {o} within sight, and keep older kids and pets from rocking or pushing it.'] },
     swaddle: { t: 'Stop swaddling at the first try to roll', get s() { return sleepAge() >= 4 ? 'Then a sleep sack' : 'Some babies try at 2 months'; }, i: 'sack', c: 'sleep' },
-    bassinet: { rt: 'Move to the crib', t: 'Move from the bassinet to the crib', s: 'At the first try to roll, or at its weight limit', i: 'crib', c: 'sleep' },
+    bassinet: { rt: 'Move to the crib', t: 'Move from the bassinet to the crib', s: 'Once {s} {try|tries} to roll or push up, or at its weight limit', i: 'crib', c: 'sleep' },
     small: { t: 'Clear {p} play space', s: 'Coins, batteries and small parts', i: 'coin', c: 'floor',
       fig: 'tube', tiles: [['mat', 'A firm play mat', 'On the floor, away from edges and cords'], ['eye', 'Floor check', 'Coins, magnets, older kids’ toys'], ['battery', 'Battery covers screwed shut', 'On remotes, key fobs and musical toys']],
       why: 'Rolling brings the floor within reach, and everything {s} {find|finds} goes in {p} mouth.',
@@ -75,7 +75,7 @@
       why: 'Babies use furniture as a handhold to pull up, and dressers, bookcases and TVs can tip over onto them.',
       steps: ['Fit anti-tip straps to dressers, bookcases and other tall furniture {s} could pull on.', 'Mount TVs on the wall, or strap them to the furniture they stand on.', 'Do it any time before {s} {pull|pulls} up. Many families do it while babyproofing for crawling.'],
       links: [['Anchor it · CPSC', cpsc]] },
-    windows: { hi: 'stand', t: 'Add window stops', s: 'So windows open 4 inches at most', i: 'window', c: 'car',
+    windows: { hi: 'stand', t: 'Add window stops', s: 'Window stops and cordless blinds', i: 'window', c: 'car',
       tiles: [['window', 'Window stops', 'Open 4 inches at most'], ['home', 'One way out', 'One window per room an adult can open fully, for a fire'], ['cord', 'Cordless blinds', 'Tied-up cords can still be reached'], ['dresser', 'Furniture away', 'Nothing to climb near a window']],
       why: 'Standing puts windows and blind cords within reach. A screen keeps bugs out, not babies in.',
       steps: ['Fit window stops, small locks that keep windows from opening more than 4 inches. Screens don’t stop falls.', 'Keep at least one window in each room that an adult can open fully in a fire.', 'Swap corded blinds and shades for cordless ones. Tying up the pull cord isn’t enough: inner cords and loops can still be reached, from the floor or from furniture.', 'Move furniture {s} could climb away from windows.'],
@@ -128,8 +128,7 @@
     const ph = SF_PHOTO[key];
     const pins = ph.spots.map(([id, label, x, y, side]) => { const done = status(id) === 'done';
       return `<button class="sf-pin sf-pin-${side}${done ? ' is-done' : ''}" style="left:${x}%;top:${y}%" onclick="${open(id)}" aria-label="${label}: ${STEP[id].t}${done ? ', done' : ''}"><i></i><span>${done ? '✓ ' : ''}${label}</span></button>`; }).join('');
-    // Nov 23: no labels on the photo; the checklist right under it names the same things.
-    return `<figure class="sf-photo"><img src="${ph.src}" alt="${ph.alt}"></figure>`;
+    return `<figure class="sf-photo"><img src="${ph.src}" alt="${ph.alt}">${pins}</figure>`;
   }
   const group = k => k === 'moving' ? 'rolling' : k;
   const stageOf = id => STAGES.find(st => st.ids.includes(id));
@@ -174,8 +173,7 @@
     const look = LOOK[st.key];
     let b = `<header class="hub-hero sf-hero sf-disc"><p class="hub-eyebrow">${st.label} · ${st.age}</p><h1>${F(sfPhotoOn(st.key) ? SF_PHOTO[st.key].title : st.title)}</h1><p class="hub-lead">${F(sfPhotoOn(st.key) ? SF_PHOTO[st.key].lead : st.lead)}</p>${sfPhoto(st.key) || `<div class="sf-art">${SF_ART[st.key] || ""}</div>`}${look && !sfPhotoOn(st.key) ? `<div class="sf-look"><small>${F("Look from {p} height")}</small><b>${F(sfPhotoOn(st.key) && SF_PHOTO[st.key].look ? SF_PHOTO[st.key].look : look[0])}</b><span>${F(look[1])}</span></div>` : ""}</header>`;
     b += `<div class="sf-head"><h2 class="hub-h2">${F(!window.__sfPhotoOff ? 'Your safety checklist' : i < nowI && live ? 'Done these yet?' : i > nowI && live ? 'Get ready for this' : 'Do these now')}</h2><span class="sf-count">${of ? `${done} of ${of} done` : 'None apply'}</span></div><div class="hub-list sf-list">${rows}</div>`;
-    // Nov 23: no look card at first setup (car advice doesn't fit it) or rolling (the floor check is on "Clear his play space").
-    if (look && sfPhotoOn(st.key) && st.key !== 'setup' && st.key !== 'reaching') b += `<div class="sf-look sf-look-after"><small>${F("Look from {p} height")}</small><b>${F(SF_PHOTO[st.key].look || look[0])}</b><span>${F(SF_PHOTO[st.key].lookLine || look[1])}</span></div>`;
+    if (look && sfPhotoOn(st.key)) b += `<div class="sf-look sf-look-after"><small>${F("Look from {p} height")}</small><b>${F(SF_PHOTO[st.key].look || look[0])}</b><span>${F(SF_PHOTO[st.key].lookLine || look[1])}</span></div>`;
     // Joined later, or skipped a stage? One quiet line back to the earliest stage with steps still open.
     if (live && i === nowI) {
       // Only stages that started while the parent was using Ahead: a parent who joins later has done the earlier steps.
@@ -190,7 +188,7 @@
     else b += h.versus('If something goes wrong', ['Poison Help', 'Call 1-800-222-1222 if Maya swallows something that could be harmful.'], ['Call 911', 'If {s} can’t breathe or won’t wake. A swallowed battery or magnet means the ER right away.']);
     // Choking first aid lives in Feeding; the safety net links to it.
     if (window.__sfPhotoOff) b += `<div class="hub-browse"><button class="hub-link" onclick="${chokeLink[1]}">${F(chokeLink[0])} ›</button></div>`;
-    if (nx) b += h.next(`Next · from about ${nx.age.replace(/\D.*$/, '')} months`, nx.label, `openPage('safety-stage:${nx.key}')`, '', { reaching: 'Clear the floor of small things and batteries.', rolling: 'Gates, latches and anchors, before {s} {crawl|crawls}', pulling: 'Window stops and the stove.' }[nx.key] || '');
+    if (nx) b += h.next(`Next · from about ${nx.age.replace(/\D.*$/, '')} months`, nx.label, `openPage('safety-stage:${nx.key}')`, '', { reaching: 'Clear the floor of small things and batteries.', rolling: 'Gates, latches, furniture straps and water.', pulling: 'Window stops and the stove.' }[nx.key] || '');
     b += h.note('Ages are typical. Every baby moves at their own pace.');
     return `<div class="quiet-category hub-page" data-overview="Safety" data-safety-stage="${key}" style="${yearTheme('Safety')}">${typeof monthlyPageHeader === 'function' ? monthlyPageHeader('Safety') : ''}${pills}${b}</div>`;
   };
@@ -208,15 +206,16 @@
   const FIX = {
     seat: {
       ba: [[PH('seat-before'), 'A baby in a rear-facing car seat with loose straps and the chest clip down on the belly', ['✕ Clip too low', 59, 65, 'b']], [PH('seat-after'), 'The same baby with snug straps and the chest clip at armpit level', ['✓ Armpit level', 51, 43, 'b']]],
-      baFix: [['shield', 'Chest clip at the armpits', 'Not down on the belly'], ['back', 'Facing the back', 'As long as the seat allows. Straps at or below {p} shoulders.'], ['lock', 'In the back seat, installed tight', 'Never in front of an airbag. Set the recline to the seat’s line.']],
+      baFix: [['hand', 'No slack you can pinch', 'At {p} collarbone'], ['shield', 'Chest clip at the armpits', 'Not down on the belly'], ['back', 'Facing the back', 'As long as the seat allows. Straps at or below {p} shoulders.'], ['lock', 'In the back seat, installed tight', 'Never in front of an airbag. Check the recline line']],
       notes: [['', 'No puffy coats under the straps', 'Buckle {o} in, then add a blanket on top']],
       checkTitle: 'Check the fit', checks: ['Pinch the strap at {p} collarbone. You shouldn’t be able to grab any slack.', 'Tug the seat where it’s attached to the car. It should move less than 1 inch.'],
       more: ['Which seat, and when', 'car', 'Car seats as {s} {grow|grows}', 'And on trips, in Outings', "openPage('chg:Out and about:d:car')"] },
     sleep: {
       ba: [[PH('sleep-before'), 'A crib with a bumper, a quilt, a pillow and stuffed toys', null], [PH('sleep-after'), 'The same crib, bare, with just a fitted sheet', null]],
       baFix: [['crib', 'A fitted sheet, nothing else', 'No bumpers, pillows, blankets or toys'], ['shield', 'A firm, flat mattress', 'That fits with no gaps at the sides'], ['sack', 'A sleep sack for warmth', 'In place of a blanket']],
-      notes: [['', 'Skip loungers and wedges', 'Anything inclined or weighted isn’t safe for sleep either']],
-      checks: ['Press the middle of the mattress. It should spring right back, not hold your handprint.', 'Push the mattress to one side. The gap shouldn’t fit two fingers.'] },
+      notes: [['', 'Skip loungers and wedges', 'And anything inclined or weighted']],
+      checks: ['Press the middle of the mattress. It should spring right back, not hold your handprint.', 'Push the mattress to one side. The gap shouldn’t fit two fingers.'],
+      more: ['The rest of safe sleep', 'moon', 'Safe sleep', 'On {p} back, every sleep, in Sleep', "openPage('chg:Sleep:safe')"] },
     swaddle: {
       ba: [[PH('swaddle-before'), 'A baby asleep on their back in a crib, swaddled with arms in', null], [PH('swaddle-after'), 'The same baby on their back in a sleep sack, arms free', null]],
       baFix: [['sack', 'A sleep sack, arms free', 'So {s} can push up if {s} {roll|rolls}'], ['shield', 'Light and unweighted', 'No weighted sacks or swaddles']],
@@ -225,15 +224,16 @@
     bassinet: {
       ba: [[PH('bassinet-before'), 'A bassinet beside a bed', null], [PH('bassinet-after'), 'The same bedroom with a bare crib in place of the bassinet', null]],
       baFix: [['crib', 'Set it up bare', 'Like the bassinet: a fitted sheet, nothing else'], ['home', 'Still in your room', 'Until at least 6 months']],
-      checks: ['Shake the crib gently. It shouldn’t wobble, and every side should stay locked in place.', 'Check the label. Skip drop-side cribs, and any crib made before June 2011.'] },
+      checks: ['Shake the crib gently. It shouldn’t wobble, and every side should stay locked in place.', 'Check the label. Skip drop-side cribs, and any crib made before June 2011.'],
+      more: ['When to do it', 'clock', 'Signs it’s time', 'In Sleep',  "openPage('chg:Sleep:d:crib')"] },
     mattress: {
       ba: [[PH('mattress-before'), 'A crib with the mattress on its highest setting, near the top of the rail', null], [PH('mattress-after'), 'The same crib with the mattress lowered one step', null]],
-      baFix: [['notepad', 'Check the manual', 'For your crib’s height settings'], ['crib', 'One step down', 'From the highest setting'], ['toy', 'Mobile down', 'Nothing hanging over the crib']],
+      baFix: [['notepad', 'Check the manual', 'For your crib’s height settings'], ['crib', 'One step down', 'Then check it sits firmly'], ['toy', 'Mobile down', 'Nothing hanging over the crib']],
       checks: ['Push down on each corner. The mattress shouldn’t shift or tilt.'],
       more: ['When to do it', 'clock', 'Signs it’s time', 'Before {s} can sit up, in Sleep', "openPage('chg:Sleep:d:mattress')"] },
     mattress2: {
       ba: [[PH('mattress-after'), 'A crib with the mattress one step down', null], [PH('mattress2-after'), 'The same crib with the mattress on its lowest setting', null]],
-      baFix: [['crib', 'All the way down', 'To the lowest setting'], ['toy', 'Nothing to climb on', 'No bumpers or big stuffed toys, and furniture away from the rail']],
+      baFix: [['crib', 'All the way down', 'To the lowest setting'], ['toy', 'Nothing to climb on', 'No toys in the crib, and furniture away from the rail']],
       checks: ['Push down on each corner. The mattress shouldn’t shift or tilt.'],
       more: ['When to do it', 'clock', 'Signs it’s time', 'Before {s} can pull up, in Sleep', "openPage('chg:Sleep:d:mattress')"] },
     cribspot: {
@@ -287,7 +287,7 @@
       fix: [['shield', 'Sliding outlet covers', 'They snap shut when you unplug'], ['lock', 'Best: tamper-resistant outlets', 'Built-in shutters, nothing to pull out'], ['plug', 'Cords out of reach', 'Lamps and chargers behind furniture']],
       checks: ['Try to open a cover with your fingertips. It should stay shut.', 'Crawl past lamps and chargers. No cord should hang within reach.'] },
     anchor: {
-      ba: [[PH('anchor-before'), 'A baby pulling up on a tall dresser that isn’t fixed to the wall', null], [PH('anchor-after'), 'The same dresser with an anti-tip strap to the wall', null]],
+      ba: [[PH('anchor-before'), 'A baby pulling up on a tall dresser that isn’t fixed to the wall', null], [PH('anchor-after'), 'The same dresser with an anti-tip strap to the wall', ['Anti-tip strap', 86, 22, 'bl']]],
       spotPhoto: [PH('anchor-risk'), 'A baby pulling up on a tall dresser, with a TV on a low stand behind her', [['TV can tip', 17, 40, 'b'], ['Dresser can tip', 90, 74, 'bl']]],
       spotLine: 'Bookcases, and anything tall {s} could pull on, count too.',
       fixPhoto: [PH('anchor-fix'), 'A dresser held to the wall by an anti-tip strap, shown close up', [['Anti-tip strap', 60, 66, 'b']], 'tall'],
@@ -297,8 +297,8 @@
       ba: [[PH('windows-before'), 'A window swung wide open', null], [PH('windows-after'), 'The same window held a few inches open by a window stop', ['Window stop', 67, 50, 'l']]],
       spotPhoto: [PH('windows-risk'), 'A window with a hanging blind cord, near a low TV stand', [['Opens all the way', 14, 38, 'r'], ['Blind cord', 40, 80, 'r']]],
       spotLine: 'A screen keeps bugs out, not babies in.',
-      fix: [['window', 'Window stops', 'So windows open 4 inches at most'], ['home', 'One window you can open fully', 'In each room, for a way out in a fire'], ['dresser', 'Furniture away', 'Nothing to climb near a window']],
-      checks: ['Open each window with a stop. It should stop at 4 inches.'] },
+      fix: [['window', 'Window stops', 'So windows open 4 inches at most'], ['home', 'One window you can open fully', 'In each room, for a way out in a fire'], ['cord', 'Cordless blinds', 'No cords or loops to reach'], ['dresser', 'Furniture away', 'Nothing to climb near a window']],
+      checks: ['Open each window with a stop. It should stop at 4 inches.', 'Kneel by each blind. No cord or loop should be within reach.'] },
     kitchen: {
       ba: [[PH('kitchen-before'), 'A stove with bare knobs and a pot handle sticking out', null], [PH('kitchen-after'), 'The same stove with knob covers, an oven lock and the pot handle turned in', ['Oven lock', 18, 57, 'r']]],
       spotTiles: [['stove', 'Stove knobs', 'Right at standing height'], ['thermo', 'The oven door', 'Hot glass, and a handle to pull'], ['hand', 'Pot handles', 'Sticking out over the edge']],
@@ -316,9 +316,9 @@
     seat: 'Snug straps keep {o} still in a sudden stop. Check them before every drive.',
     sleep: 'A bare crib or bassinet is the safest place for {o} to sleep, from the first night.',
     swaddle: 'Once {s} {try|tries} to roll, {s} {need|needs} {p} arms free to push up.',
-    bassinet: 'Move {o} at the first try to roll, or at the bassinet’s weight limit, whichever comes first.',
+    bassinet: 'Have the crib ready before {s} {need|needs} it.',
     mattress: 'Before {s} can sit, lower it so {s} can’t lean over the rail.',
-    mattress2: 'Go all the way down, so {s} can’t climb out once {s} {pull|pulls} up.',
+    mattress2: 'Before {s} can pull up, go all the way down so {s} can’t climb out.',
     cribspot: 'A cord in reach can wrap around a baby’s neck, even in the first weeks.',
     changing: 'Falls from changing tables are among the most common early injuries.',
     gear: 'Keep them on the floor, and stop once {s} can sit up on {p} own.',

@@ -197,7 +197,7 @@
         ['She sucks on her hands', 'It’s one of her first ways to calm herself, not always hunger.', 'Development', 'mouth', '']] },
     4: { eyes: ['Her eyes work as a team now', 'Both eyes now move together, so she sees depth and can judge how far away a toy is.'],
       notice: [['Her naps are short', 'Naps of about 30 minutes are common now. Longer ones come later.', 'Sleep', 'clock', 'chg:Sleep:d:predictable'],
-        ['She grabs your hair and glasses', 'Reaching is brand new, so anything close gets grabbed.', 'Development', 'hand', '']] },
+        ['She grabs your hair and glasses', 'Reaching is brand new. She grabs whatever is close, not on purpose.', 'Development', 'hand', '']] },
     5: { eyes: ['The world is within reach', 'She’s getting better at judging distance, so her reaching suddenly looks much more intentional.'],
       notice: [['She’s fussy after two hours awake', 'Many babies this age manage about two hours awake before the next nap.', 'Sleep', 'clock', 'chg:Sleep:d:day:2'],
         ['Everything goes in her mouth', 'Mouthing is how she learns what things feel like, taste like and do.', 'Development', 'mouth', '']] },
@@ -259,9 +259,7 @@
   // On your radar: the one thing to get ahead of this month, opening the page that helps. Checkup months lead with the
   // checkup (watched on the month birthday, it's days away); the rest name one thing to prepare. Nothing the story says.
   // Each month lists only what's time-sensitive: one row most months, two when two things really land together.
-  // What's in each visit, so the subtitle says something ("See what to expect and what to ask" was filler).
-  const VISIT_WHY = { 1: 'A short visit about feeding and growth.', 2: 'The first big round of shots. Plan a quiet day after.', 4: 'It includes a first talk about starting solids.', 6: 'More shots, and a check on growth and new skills.', 9: 'Growth, new skills and a developmental check.', 12: 'A few new shots, and a quick blood test for iron and lead.' };
-  const CHK = (n, extra) => [`The ${n}-month checkup is coming up.`, extra || VISIT_WHY[n] || 'What happens, and questions to bring.', 'Health', 'steth', `health-detail:${n}:expect`];
+  const CHK = (n, extra) => [`The ${n}-month checkup is coming up.`, extra || 'See what to expect and what to ask.', 'Health', 'steth', `health-detail:${n}:expect`];
   // Hide anything the parent has already told Ahead is done: a logged checkup, the swaddle off, solids started.
   const radarRows = m => (RADAR[m] || []).filter(r => {
     const go = r[4];
@@ -284,18 +282,18 @@
     return r;
   });
   const RADAR = {
-    0: [(() => { try { if ((Date.now() - new Date(profile.dob)) / 864e5 > 7) return ['The 1-month checkup is coming up.', VISIT_WHY[1], 'Health', 'steth', 'health-detail:1:expect']; } catch (e) {} return ['Her first checkups are coming up.', 'One in the first few days, then at 1 month.', 'Health', 'steth', 'health-detail:0:expect']; })()],
+    0: [(() => { try { if ((Date.now() - new Date(profile.dob)) / 864e5 > 7) return ['The 1-month checkup is coming up.', 'A short visit about feeding and growth. See what to expect and what to ask.', 'Health', 'steth', 'health-detail:1:expect']; } catch (e) {} return ['Her first checkups are coming up.', 'One in the first few days, then at 1 month. See what to expect and what to ask.', 'Health', 'steth', 'health-detail:0:expect']; })()],
     1: [CHK(1)],
-    2: [CHK(2),
+    2: [CHK(2, 'Her first big round of vaccines. See what to expect and what to ask.'),
         ['Swaddling ends soon.', 'Once she starts trying to roll, it’s time to stop. Here’s what to look for.', 'Sleep', 'swaddle', 'chg:Sleep:d:swaddleoff']],
     3: [['Her sleep is about to change.', 'Around 4 months, sleep cycles mature. Rougher nights for a few weeks are common.', 'Sleep', 'moon', 'chg:Sleep:d:regress']],
-    4: [CHK(4)],
+    4: [CHK(4, 'Including a first chat about solids. See what to expect and what to ask.')],
     5: [['First foods, around 6 months.', 'The signs she’s ready, and what you’ll need.', 'Feeding', 'highchair', 'chg:Feeding:d:signs']],
-    6: [CHK(6), ['Offer common allergens early', 'If she has bad eczema or an egg allergy, ask your pediatrician first.', 'Feeding', 'egg', 'chg:Feeding:d:allergens']],
+    6: [CHK(6), ['Common allergens, early.', 'If she has bad eczema or an egg allergy, ask your pediatrician first.', 'Feeding', 'egg', 'chg:Feeding:d:allergens']],
     7: [['She’ll be on the move soon.', 'Babyproof before she crawls. Start with the room she’s in most.', 'Safety', 'gate', 'topic:Safety']],
     8: [['Finger foods are next.', 'What’s safe to offer, and how to cut it.', 'Feeding', 'avocado', 'chg:Feeding:d:finger']],
     9: [CHK(9)],
-    10: [['She can eat most of what you eat', 'Set her portion aside before you add salt.', 'Feeding', 'plate', 'chg:Feeding:d:family']],
+    10: [['She can eat what you eat.', 'Mostly. Take out her portion before you add salt.', 'Feeding', 'plate', 'chg:Feeding:d:family']],
     11: [['Whole cow’s milk, at 12 months.', 'How to start it, and how much {s} needs.', 'Feeding', 'bottle', 'chg:Feeding:d:milk12'], CHK(12)]
   };
 
@@ -328,16 +326,16 @@
           <span class="ms-art" aria-hidden="true"><i class="ms-c2"></i><span class="ms-toys">${window.stCardArt(0)}</span></span></span>
         <span class="ms-foot"><span class="ms-watch"><i><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6z" fill="none" stroke="#fffaf3" stroke-width="2"/></svg></i>${F(P('See what she sees'))}</span><span class="ms-go" aria-hidden="true">→</span></span>
       </button>` : sc ? `<button class="ms-card" onclick="try{localStorage.setItem('ahead-story-seen-${m}','1')}catch(e){};stOpen()" style="${monthTheme(m)};--ms-acc:${mix(c, .1, 30)};--ms-c1:${mix(c, .5)};--ms-c2:${mix(c, .72)}">
-        <span class="ms-body"><span class="ms-copy"><span class="ms-eyebrow">${m === 0 && chap === 0 ? F('{P} first weeks') : F('What matters now')}</span><b class="ms-month">${F(m === 0 && chap === 0 ? when : `Month ${chap}`)}</b><small>${F(m === 0 && chap > 0 ? `${Name()} is still curling up small, like a newborn.` : sc.tease).replace(/([.!?]) (?=\S)/g, '$1<br>')}</small></span>
+        <span class="ms-body"><span class="ms-copy"><span class="ms-eyebrow">${m === 0 && chap === 0 ? F('{P} first weeks') : seen ? F('This month') : F('New this month')}</span><b class="ms-month">${F(m === 0 && chap === 0 ? when + '.' : `Month ${chap}.`)}</b><small>${F(m === 0 && chap > 0 ? `${Name()} is still curling up small, like a newborn.` : sc.tease).replace(/([.!?]) (?=\S)/g, '$1<br>')}</small></span>
           <span class="ms-art" aria-hidden="true"><i class="ms-c2"></i><span class="ms-toys">${typeof window.stCardArt === 'function' ? window.stCardArt(m) : art}</span></span></span>
-        <span class="ms-foot"><span class="ms-watch"><i><svg viewBox="0 0 24 24"><path d="M9 7.5v9l7.5-4.5z"/></svg></i>${F(`${Name()}’s month`)}</span><span class="ms-go" aria-hidden="true">→</span></span>
+        <span class="ms-foot"><span class="ms-watch"><i><svg viewBox="0 0 24 24"><path d="M9 7.5v9l7.5-4.5z"/></svg></i>${F(m === 0 && chap === 0 ? `${Name()}’s story` : `${Name()}’s month`)}</span><span class="ms-go" aria-hidden="true">→</span></span>
       </button>`
       : `<section class="he-hero" style="${monthTheme(m)}"><p class="he-eyebrow">${F(when)} · ${F(`Through ${name()}’s eyes`)}</p><div class="he-copy"><h1>${F(P(M.eyes[0]))}</h1><p class="he-lead">${F(P(M.eyes[1]))}</p>${m <= 4 ? `<button class="he-see" onclick="homeEyes(true)"><span aria-hidden="true">👁</span> ${F(`See what ${name()} sees`)}</button>` : ''}</div><span class="he-art" aria-hidden="true">${art}</span></section>`;
     const rr = newLook ? radarRows(m) : [];
     // Nov 23: rows about eating food wait until solids have started (by the parent's answer, or by age once it's past due).
     const SOLIDS_ROWS = ['Her poop will change with solids', 'She gags on new textures', 'There’s food in her poop'];
     const notices = M.notice.filter(r => !(SOLIDS_ROWS.includes(r[0]) && typeof foodStage === 'function' && foodStage() === 'preparing'));
-    return hero + (rr.length ? `<section class="rd-card"><p class="rd-eyebrow">${F('On your radar')}</p>${rr.map(([t, why, , , go]) => `<button class="rd-item" onclick="openPage('${go}')"><span><b>${F(P(t)).replace(/\.$/, '')}</b><small>${F(P(why))}</small></span><i aria-hidden="true">›</i></button>`).join('')}</section>` : '') + `
+    return hero + (rr.length ? `<section class="rd-card"><p class="rd-eyebrow">${F('On your radar')}</p>${rr.map(([t, why, , , go]) => `<button class="rd-item" onclick="openPage('${go}')"><span><b>${F(P(t))}</b><small>${F(P(why))}</small></span><i aria-hidden="true">›</i></button>`).join('')}</section>` : '') + `
       ${!notices.length ? '' : newLook ? `<div class="hub-list hg-rows rd-list"><p class="rd-eyebrow rd-in">${F('You might notice')}</p>${notices.map(row).join('')}</div>` : `<h2 class="hub-h2">${F('You might notice…')}</h2>
       <div class="hub-list hg-rows">${notices.map(row).join('')}</div>`}
       ` + guidesCard();
@@ -443,8 +441,8 @@
   // The line under each guide on the Guides tab: one plain, personal sentence about where she is (she/her; P() swaps).
   // Guides tab lines (Nov 17): say what's inside the guide right now, as topics, never as something she's already doing.
   const TILE = {
-    Feeding: { Newborn: 'Hunger cues and how often she feeds', 'Milk feeds': 'Feeds, spit-up and growth', 'Ready for solids': 'Signs of readiness, and what you need', new: 'First tastes and allergens', textures: 'Lumps, finger foods and cups', established: 'Meals, finger foods and milk' },
-    Sleep: { 'Round-the-clock sleep': 'Safe sleep and newborn rhythms', 'Longer nights': 'Day and night, and a first bedtime', 'Three naps': 'Naps, bedtime and night waking', 'Two naps': 'Nap changes, bedtime and nights' },
+    Feeding: { Newborn: 'Hunger cues, feeds and diapers', 'Milk feeds': 'Feeds, spit-up and growth', 'Ready for solids': 'Signs of readiness, and what you need', new: 'First tastes and allergens', textures: 'Lumps, finger foods and cups', established: 'Meals, finger foods and milk' },
+    Sleep: { 'Round-the-clock sleep': 'Safe sleep and newborn rhythms', 'Longer nights': 'Day vs. night, and a first bedtime', 'Three naps': 'Naps, bedtime and night waking', 'Two naps': 'Nap changes, bedtime and nights' },
     Development: { 'By 2 months': 'Smiles, sounds and tummy time', 'By 4 months': 'Grabbing, cooing and play ideas', 'By 6 months': 'Reaching, rolling and games to try', 'By 9 months': 'Sitting, babbling and peekaboo', 'By 12 months': 'First words, standing and games' },
     Safety: { 'First setup': 'Car seat, crib and home setup', Rolling: 'Swaddle, floor and changing table', Crawling: 'Gates, locks and covers', 'Pulling up': 'Furniture, the stove and water' },
     Health: k => { if (k === 'First week') return 'The first-week checkup'; const a = parseInt(k, 10), past = !isNaN(a) && addMonths(parse(profile.dob), a) < NOW, rec = !isNaN(a) && typeof healthRecord === 'function' && healthRecord(a); return `The ${k.replace(/ months?$/, '-month')} checkup ${rec && rec.status === 'attended' ? 'is done' : past ? 'is due now' : 'is next'}`; },

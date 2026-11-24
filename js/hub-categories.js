@@ -83,14 +83,14 @@
     // the age's big question, the four areas with progress, and what's coming into view. One home for each fact.
     const IN = {
       2: { t: '{S’s} learning that you answer {o}', lead: 'Each time you answer, {s} {learn|learns} that reaching out to you works.', idea: 'close-face', w: 'Hold {o} close, smile, then pause for {o}',
-        n: [['Talking', 'Cooing softly', 'Soft coos may come in calm, awake moments.', 'Makes sounds beyond crying'], ['Thinking', 'Gazing at a toy', '{S} may stop and study it, instead of glancing past.', 'Looks at a toy for a few seconds'], ['Movement', 'Lifting {p} head', 'A small head lift gives {o} a new view.', 'Lifts head during tummy time'], ['Social', 'Settling to your voice', '', 'Settles with your voice or touch']] },
-      4: { t: 'Now it feels like a conversation', lead: '{S} {coo|coos}, {wait|waits}, and {watch|watches} to see what you’ll do next.', idea: 'sound-answer', w: 'Answer once, then wait for a look or kick',
-        n: [['Social', 'Chuckling during play', 'A silly face or a tickle may get a little laugh.', 'Chuckles during play'], ['Thinking', 'Studying {p} hands', '{P} fingers can be as interesting as any toy.', 'Studies their hands'], ['Movement', 'Swiping at toys', '{S} may bat at a toy, or hold one you put in {p} hand.', 'Swipes at toys'], ['Talking', 'Cooing when you talk', '', 'Coos']] },
+        n: [['Talking', 'Cooing softly', 'Soft coos may come in calm, awake moments.', 'Makes sounds beyond crying'], ['Thinking', 'Gazing at a toy', '{S} may stop and study it, instead of glancing past.', 'Looks at a toy for a few seconds'], ['Movement', 'Lifting {p} head', 'A small head lift gives {o} a new view.', 'Lifts head during tummy time'], ['Social', 'Calming to your voice', '', 'Settles with your voice or touch']] },
+      4: { t: 'Now it feels like a conversation', lead: '{S} {coo|coos}, {wait|waits}, and {watch|watches} to see what you’ll do next.', idea: 'sound-answer', w: 'Coo back, then wait for {p} reply',
+        n: [['Social', 'Chuckling at you', 'A silly face or a tickle may get a little laugh.', 'Chuckles during play'], ['Thinking', 'Studying {p} hands', '{P} fingers can be as interesting as any toy.', 'Studies their hands'], ['Movement', 'Swiping at toys', '{S} may bat at a toy, or hold one you put in {p} hand.', 'Swipes at toys'], ['Talking', 'Cooing when you talk', '', 'Coos']] },
       6: { t: '{S’s} finding out what {p} hands can do', lead: '{S} {spot|spots} something, {reach|reaches} for it, and {find|finds} out what it does.', idea: 'floor-drum', w: 'Tap a bowl, then let {o} have a turn',
         n: [['Social', 'Laughing out loud', 'A game, a funny face or your voice can set it off.', 'Laughs'], ['Talking', 'Taking turns with sounds', '{S} {make|makes} a noise, {wait|waits}, and may answer you again.', 'Takes turns making sounds with you'], ['Movement', 'Rolling tummy to back', 'The world looks different from there.', 'Rolls tummy to back'], ['Thinking', 'Mouthing everything', '', 'Puts things in mouth to explore']] },
       9: { t: '{S} {know|knows} hidden things still exist', lead: 'A toy drops and {s} looks for it. To {o}, gone now means somewhere else.', idea: 'hidden-toy', w: 'Hide a toy under a cloth while {s} {watch|watches}',
         n: [['Social', 'Turning to {p} name', '{S} {know|knows} it’s {o}, even from across the room.', 'Looks when you call their name'], ['Talking', 'Babbling “mamama”', 'Listen for strings like “mamama” or “bababa”.', 'Makes repeated babbles'], ['Movement', 'Passing hand to hand', '{S} may sit on {p} own and pass a toy from hand to hand.', 'Passes objects between hands'], ['Thinking', 'Banging toys together', '', 'Bangs objects together']] },
-      12: { t: '{S’s} running {p} own little experiments', lead: '{S} {drop|drops} things in a cup, {tip|tips} it all out and {start|starts} again, just to see what happens.', idea: 'put-in', w: 'Drop a block in a bowl, then hand {o} one',
+      12: { t: '{S’s} running {p} own little experiments', lead: 'In the cup, out, and in again. {S’s} testing what happens.', idea: 'put-in', w: 'Drop a block in a bowl, then hand {o} one',
         n: [['Social', 'Joining in pat-a-cake', '{S} may join in with pat-a-cake or peekaboo.', 'Joins games like pat-a-cake'], ['Talking', 'Waving bye-bye', '{S} may wave bye-bye, or have a name for you.', 'Waves goodbye'], ['Movement', 'Cruising along the sofa', '{S} may pull up to stand and step along the furniture.', 'Steps while holding furniture'], ['Thinking', 'Finding hidden toys', '', 'Looks for something you hide']] }
     }[ref] || { t: st.title, lead: st.body, n: [] };
     const hb = window.hubBabyify || (x => x), T = x => hb(F(x));
@@ -363,7 +363,7 @@
       9: ['The questionnaire is routine, not a test', 'Answer from what you see at home. Some offices send it ahead, so check your messages.'],
       12: SHOW ? null : ['A quick blood test is common now', 'A finger or heel prick checks for iron and, in many places, lead.']   // Nov 19: What to expect now explains the blood test, and the lead names it
     }[age];
-    const LEAD = a => ({ 0: 'The first visit after the hospital, 3 to 5 days after birth.', 1: 'A short visit, and a check on how you’re doing too.', 2: 'One of the bigger visits, so plan a quiet day after.', 4: 'Much like the 2-month visit, plus a first talk about solids.', 6: 'The talk moves from milk to first foods.', 9: 'This one takes a closer look at development.', 12: 'A longer visit, so bring a snack and a favorite toy.' })[a] || conceptHealthSummary(a);   // the gist; the rows below hold the details
+    const LEAD = a => ({ 0: 'The first visit after the hospital, usually 3 to 5 days after birth.', 1: 'A short visit, and a check on how you’re doing too.', 2: 'One of the bigger visits, with the first main round of vaccines.', 4: 'Mostly the same shots as at 2 months, so this time you know what to expect.', 6: 'The talk moves from milk to first foods.', 9: 'This one takes a closer look at development.', 12: 'A busy one: new shots, a quick blood test, and the move to whole milk.' })[a] || conceptHealthSummary(a);   // the gist; the rows below hold the details
     const ASK = { 0: 'How will we know feeding is going well?', 1: 'Is {p} weight gain on track?', 2: 'What’s normal after {p} shots?', 4: 'When should we think about solids?', 6: 'Should we watch {p} iron now that solids are starting?', 9: 'Is {s} on track with sitting and babbling?', 12: 'How do we switch to whole milk?' }[age];
     const HEALTH_ART = "<svg viewBox=\"0 0 300 103\" aria-hidden=\"true\"><ellipse cx=\"146\" cy=\"90\" rx=\"107\" ry=\"7\" fill=\"#d5e5d6\"/><rect x=\"31\" y=\"63\" width=\"229\" height=\"23\" rx=\"11\" fill=\"#bed5c1\"/><circle cx=\"95\" cy=\"45\" r=\"26\" fill=\"#e8b89f\"/><path d=\"M78 40q7-21 29-15\" fill=\"none\" stroke=\"#9d735f\" stroke-width=\"5\" stroke-linecap=\"round\"/><path d=\"M85 48q4 4 8 0m7 0q4 4 8 0\" stroke=\"#916959\" stroke-width=\"2\" fill=\"none\"/><path d=\"M123 65q31-27 74 0l13 13h-92z\" fill=\"#a9c9ae\"/><path d=\"M148 66q24-19 49-26\" fill=\"none\" stroke=\"#e8b89f\" stroke-width=\"11\" stroke-linecap=\"round\"/><circle cx=\"202\" cy=\"40\" r=\"7\" fill=\"#e8b89f\"/><rect x=\"246\" y=\"15\" width=\"19\" height=\"29\" rx=\"4\" fill=\"#fafdf9\" stroke=\"#a0bda5\"/><path d=\"M256 22v15m-7-7h14\" stroke=\"#89b093\" stroke-width=\"3\" stroke-linecap=\"round\"/><path d=\"M277 48h15M285 40v16\" stroke=\"#9ebeaa\" stroke-width=\"2.5\" stroke-linecap=\"round\"/></svg>";
     let b = `<style>#main .hl-art{display:grid;place-items:center;margin:10px 0 2px}#main .hl-art svg{width:100%;max-width:260px;height:auto}#main .hl-worth{border-radius:20px;background:#eef0f7;padding:14px 16px;margin:0 0 14px;color:#3e4766}#main .hl-worth small{display:block;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#5e6890;margin-bottom:5px}#main .hl-worth b{display:block;font-size:16px;line-height:1.3;color:var(--ink,#302d3c)}#main .hl-worth p{margin:5px 0 0;font-size:14px;line-height:1.45;color:#5d6276}</style>`
@@ -373,7 +373,7 @@
       + (WORTH && !done ? `<section class="hl-worth"><small>${F('Worth knowing before you go')}</small><b>${F(WORTH[0])}</b><p>${F(WORTH[1])}</p></section>` : '')
       // Nov 14 (Yarden): parents look for a way to tick a checkup off. One quiet link once it's close or past, never a question.
       // Nov 23: only on the current checkup; earlier ones already show as done on the strip above.
-      + (live() && !done && age === focus && dueDays <= 3 ?`<div class="hub-browse hl-done-link"><button class="hub-link" onclick="hubVisitYes(${age})">${F('Been to this checkup? Mark it done')} ›</button></div>` : '');
+      + (live() && !done && age <= focus && dueDays <= 3 ? `<div class="hub-browse hl-done-link"><button class="hub-link" onclick="hubVisitYes(${age})">${F('Been to this checkup? Mark it done')} ›</button></div>` : '');
     // "Booked for later? Save the date" is gone (Nov 10): Health moves on by age, so a saved date isn't needed.
     // The banner at the top already has "Back to your next checkup", so it isn't repeated here.
     if (SHOW && window.healthGlance) b += window.healthGlance(age);
@@ -402,16 +402,17 @@
   };
   // The big question at each checkpoint, on the area it's about.
   const DEV_BIG = {
-    // Nov 23: no 2-month card. The timing sits in the "Smiles back at you" line, so it's said once.
+    2: ['Social', 'When will {s} smile at me?', 'Most babies smile back by about 6–8 weeks.'],
     4: ['Movement', 'Should {s} be rolling yet?', 'Not yet is normal. Rolling usually shows up between 4 and 6 months, so it could be any time.'],
-    6: ['Movement', 'When will {s} sit on {p} own?', 'Most babies sit without support by about 9 months.'],
+    6: ['Movement', 'When will {s} sit on {p} own?', 'Most babies sit without support by about 9 months. Sitting propped on {p} hands is right on track.'],
     9: ['Movement', 'What about crawling?', 'Many babies skip crawling. Some scoot or roll instead. What matters is that Maya finds a way to move.'],
-    12: ['Movement', 'Should {s} be walking?', 'Lots of babies aren’t walking at 12 months, and that’s normal. First steps often come between 12 and 15 months.']
+    12: ['Movement', 'Should {s} be walking?', 'Not yet for most babies. First steps often come between 12 and 15 months.']
   };
   // Pass 2: on an age that isn't the baby's, the question is about babies ("Should she be rolling yet?" read wrong at 10 months).
   const DEV_BIG_ANY = {
+    2: ['Social', 'When do babies smile back?', 'Most babies smile back by about 6–8 weeks.'],
     4: ['Movement', 'When do babies roll?', 'Rolling usually shows up between 4 and 6 months.'],
-    6: ['Movement', 'When do babies sit on their own?', 'Most babies sit without support by about 9 months.'],
+    6: ['Movement', 'When do babies sit on their own?', 'Most babies sit without support by about 9 months. Sitting propped on their hands is right on track.'],
     9: ['Movement', 'What about crawling?', 'Many babies skip crawling. Some scoot or roll instead. What matters is finding a way to move.'],
     12: ['Movement', 'When do babies walk?', 'Lots of babies aren’t walking at 12 months, and that’s normal. First steps often come between 12 and 15 months.']
   };
@@ -464,30 +465,29 @@
       Talking: ['Talking to {o} is how {s} {learn|learns} to talk', 'Chatting through your day, even about nothing much, fills {p} world with words.'],
       Thinking: ['At first, eyes do the exploring', 'Before a baby can reach, being carried from room to room gives plenty to take in.'],
       Movement: ['Tummy time works in short bits', 'Work up to 15–30 minutes a day by 7 weeks, a few minutes at a time.'] },
-    4: { Social: ['A smile means “keep going”', 'When {s} {smile|smiles} and {wiggle|wiggles}, {s} {want|wants} more. Looking away means {s} {need|needs} a break.'],
-      Talking: ['It’s not too early for books', 'Naming the pictures in a book helps {o} learn the sounds of words.'],
-      Thinking: ['{S} {know|knows} what comes next', 'Familiar routines let {o} guess what’s coming. That’s one of {p} first predictions.'],
-      Movement: ['The floor is the best place to play', 'A blanket on the floor gives {o} more room to push, kick and reach than a seat does.'] },
+    4: { Social: ['A smile means “keep going”', 'When {s} {smile|smiles} and {wiggle|wiggles} at you, {s} {want|wants} more. Looking away means {s} {need|needs} a pause.'],
+      Talking: ['It’s not too early for books', 'Looking at pictures together and naming each one helps {o} learn the sounds of words.'],
+      Thinking: ['{S} {know|knows} what comes next', 'Expecting a feed when the bottle or breast comes close is one of {p} first predictions.'],
+      Movement: ['The floor is the best place to play', 'A blanket on the floor gives {o} room to push, kick and reach, more than a seat or swing does.'] },
     6: { Social: ['You’re {p} favorite toy', 'Games with you, like peekaboo and tickles, teach {o} more than any toy or gadget.'],
       Talking: ['Words come from people, not screens', '{S} {learn|learns} to talk from you talking with {o}. Video calls with family are the exception.'],
       Thinking: ['Simple things are the best puzzles', 'A cup, a spoon and a soft ball give {o} plenty to turn over and figure out.'],
       Movement: ['Each move builds the next one', 'Rolling and pushing up build the strength for sitting.'] },
     9: { Social: ['A quick goodbye works best', 'A cheerful goodbye beats slipping out. {S} {learn|learns} that you leave, and that you come back.'],
-      Talking: ['Sing-song talk helps {o} listen', 'A slow, sing-song voice holds {p} attention and helps {o} pick out sounds.'],
+      Talking: ['Sing-song talk helps {o} listen', 'A slow, sing-song voice with real words holds {p} attention and helps {o} pick out sounds.'],
       Thinking: ['Wait a moment before you help', 'When {s’s} stuck on a toy, a little struggle is how {s} {learn|learns}. Step in if {s} {get|gets} upset.'],
-      Movement: ['Steady sitting frees {p} hands', 'Floor time with a few toys around {o} is all the practice {s} {need|needs}.'] },
-    12: { Social: ['Routines help {o} feel secure', 'The same songs at bath time and the same bedtime steps help {o} know what’s next.'],
+      Movement: ['Sitting comes first, then getting there', 'Sitting when you place {o} comes first. Pushing up to sit on {p} own comes next.'] },
+    12: { Social: ['Routines help {o} feel secure', 'The same songs at bath time and the same steps at bedtime help {o} know what comes next.'],
       Talking: ['Save “no” for what matters', 'At this age, moving {o} away or offering something else works better than saying no.'],
       Thinking: ['Show {o} once, then let {o} try', '{S} {learn|learns} by copying. Do it slowly, then hand it over and let {o} have a go.'],
       Movement: ['Bare feet help {o} learn to walk', 'Indoors, bare feet let {o} feel the floor and grip as {s} {step|steps}. Shoes are for outside.'] }
   };
   // Nov 18 (Safety's pattern: show, don't tell): each area page opens with a photo set in its top card, pins on what she's doing. Each pin opens its milestone.
   const AREA_PHOTO = { 6: {
-    // Nov 23: no caption pins. Each one repeated the skill listed right below the photo.
-    Social: { src: 'area-6-social', alt: 'A mom tickling her laughing baby', pins: [] },
-    Talking: { src: 'area-6-talking', alt: 'A mom and baby face to face, the baby cooing back', pins: [] },
-    Thinking: { src: 'area-6-thinking', alt: 'A baby mouthing a wooden teething ring', pins: [] },
-    Movement: { src: 'area-6-movement', alt: 'A baby rolling from tummy onto his side', pins: [] } } };
+    Social: { src: 'area-6-social', alt: 'A mom tickling her laughing baby', pins: [{ t: 'Laughs out loud', x: 80, y: 72, side: 'b', k: 'laughs' }] },
+    Talking: { src: 'area-6-talking', alt: 'A mom and baby face to face, the baby cooing back', pins: [{ t: 'Answers your sounds', x: 70, y: 87, side: 'l', k: 'takes-turns-making-sounds-with-you' }] },
+    Thinking: { src: 'area-6-thinking', alt: 'A baby mouthing a wooden teething ring', pins: [{ t: 'Mouths to explore', x: 53, y: 44, side: 'r', k: 'puts-things-in-mouth-to-explore' }] },
+    Movement: { src: 'area-6-movement', alt: 'A baby rolling from tummy onto his side', pins: [{ t: 'Rolls tummy to back', x: 46, y: 50, side: 'r', k: 'rolls-tummy-to-back' }] } } };
   const areaPhoto = (ref, domain) => { const ph = AREA_PHOTO[ref] && AREA_PHOTO[ref][domain]; if (!ph) return ''; const hb = window.hubBabyify || (x => x);
     return `<div class="sf-photo dev-area-photo"><img src="assets/dev/${ph.src}.jpg?v=3" alt="${ph.alt}">${ph.pins.map(q => `<button class="sf-pin sf-pin-${q.side}" style="left:${q.x}%;top:${q.y}%" onclick="devPinOpen('${q.k}')"><i></i><span>${hb(F(q.t))}</span></button>`).join('')}</div>`; };
   const devAreaHead = (ref, domain, meta, age) => {
@@ -502,7 +502,7 @@
   const devAnyBaby = t => String(t).replace(/\bbaby(’s)?\b/g, 'a baby$1').replace(/^Baby’s /, 'A baby’s ').replace(/^Baby (\w)/, (m, c) => c.toUpperCase());
   // Whom to call, said once, with the age the guide uses everywhere ("by 12 months").
   // Pass 2: an age still ahead has no "not all of these" line (a 4-month-old isn't expected to pull up yet).
-  const devCall = ref => `<p class="dev-call">${F(live() && ref > devNow() ? 'If Maya stops doing something {s} could do before, call your pediatrician.' : earlyBday() ? 'Maya was born early, so it’s normal to reach these closer to {p} adjusted age. If Maya stops doing something {s} could do before, call your pediatrician.' : `Not all of these by ${ref} months? Mention it at {p} next checkup. If Maya stops doing something {s} could do before, call your pediatrician.`)}</p>`;
+  const devCall = ref => `<p class="dev-call">${F(live() && ref > devNow() ? 'If Maya stops doing something {s} could do before, call your pediatrician.' : earlyBday() ? 'Maya was born early, so it’s normal to reach these closer to {p} adjusted age. Call sooner if Maya loses a skill {s} had.' : `Not all of these by ${ref >= 12 ? 'the first birthday' : ref + ' months'}? Mention it at {p} next checkup. Call sooner if Maya loses a skill {s} had.`)}</p>`;
   // The area page's skill names and order, so the all-milestones list matches it word for word.
   const devSkillTitle = l => F(clearMilestone(l) === 'Closes lips to show they don’t want more food' ? 'Shows when they’re full' : clearMilestone(l));
   const devAreaOrder = (ref, domain) => { const labels = DEVELOPMENT_DOMAINS[ref]?.[domain] || [], hl = (window.DEV_HEADLINE || {})[ref]?.[domain];
@@ -518,7 +518,7 @@
       : `<section class="hub-card dev-try"><span class="hub-card-head"><b>${F('Try this together')}</b></span><button class="dev-try-row" onclick="openPage('chg:Development:d:signs')"><span class="dev-idea-art dev-signs-art"><img class="dev-idea-photo" src="assets/dev/play-signs.jpg?v=1" alt=""></span><span class="hub-row-copy"><b>${F('Teach a few simple signs')}</b><small>${F('More, eat, milk and all done, so Maya can tell you before {s} can say it')}</small></span><span class="hub-chev" aria-hidden="true">›</span></button></section>`;
     const call = devCall(ref);
     const credit = rows.includes('dev-see') ? `<p class="dev-credit">${F('Photos and videos: Source CDC, free at cdc.gov. The CDC doesn’t endorse Ahead.')}</p>` : '';
-    return `<div class="quiet-category hub-page hub-detail dev-area-page is-${domain}" data-overview="Development" style="${yearTheme('Development')}${tc ? `;--area:${tc[0]};--area-ink:${tc[1]}` : ''}">${detailPageTop('Development')}<div class="dev-area-head${areaPhoto(ref, domain) ? ' has-photo' : ''}">${devAreaHead(ref, domain, meta, age)}${areaPhoto(ref, domain)}</div>${devSubHead(ref)}<div class="hub-ticks">${rows}</div>${big}${tryCard}${call}${credit}</div>`;
+    return `<div class="quiet-category hub-page hub-detail dev-area-page is-${domain}" data-overview="Development" style="${yearTheme('Development')}${tc ? `;--area:${tc[0]};--area-ink:${tc[1]}` : ''}">${detailPageTop('Development')}<div class="dev-area-head${areaPhoto(ref, domain) ? ' has-photo' : ''}">${window.devTileArt ? `<span class="dev-area-head-art">${devTileArt(domain, ref)}</span>` : ''}${devAreaHead(ref, domain, meta, age)}${areaPhoto(ref, domain)}</div>${devSubHead(ref)}<div class="hub-ticks">${rows}</div>${big}${tryCard}${call}${credit}</div>`;
   }
   window.developmentDomainPage = developmentDomainPage = function (ref, domain) {
     const meta = DEV_DOMAINS[domain], labels = DEVELOPMENT_DOMAINS[ref]?.[domain];
@@ -538,7 +538,7 @@
     // The big question, only on the area it's about.
     const W = DEV_BIG_BAR[ref], nowMo = live() ? (NOW - parse(profile.early && profile.due && developmentMonth(actualMonth()) !== actualMonth() ? profile.due : profile.dob)) / 2629746e3 : null;
     const BQ = own ? DEV_BIG[ref] : (DEV_BIG_ANY[ref] || DEV_BIG[ref]), nb = t => own ? t : `<!--nb-->${t}<!--/nb-->`;
-    const big = BQ && BQ[0] === domain ? `<section class="hub-card dev-bigq"><span class="hub-card-head"><b>${nb(F(BQ[1]))}</b></span>${ref === 12 ? '' : devBigSteps(ref)}${W && window.hubWindowBar ? hubWindowBar({ title: '', from: W[0], to: W[1], zones: [[W[2], W[3], W[4], 'band']], ticks: W[5], now: nowMo, cat: 'Development', caption: F(BQ[2]) }) : ''}<p class="dev-bigq-a">${nb(F(own && ref === 6 && earlyBday() ? 'Most babies sit without support by about 9 months. Born early, Maya can get there closer to 9 months adjusted.' : BQ[2]))}</p></section>` : '';
+    const big = BQ && BQ[0] === domain ? `<section class="hub-card dev-bigq"><span class="hub-card-head"><b>${nb(F(BQ[1]))}</b></span>${devBigSteps(ref)}${W && window.hubWindowBar ? hubWindowBar({ title: '', from: W[0], to: W[1], zones: [[W[2], W[3], W[4], 'band']], ticks: W[5], now: nowMo, cat: 'Development', caption: F(BQ[2]) }) : ''}<p class="dev-bigq-a">${nb(F(own && ref === 6 && earlyBday() ? 'Most babies sit without support by about 9 months. Born early, Maya can get there closer to 9 months adjusted.' : BQ[2]))}</p></section>` : '';
     // Try this together: on Movement, the idea that helps with the big question; elsewhere, an idea for one of these skills.
     const move = domain === 'Movement' && window.devMoveIdea ? devMoveIdea(ref) : null;
     const act = !move && devAreaIdea(ref, domain);
@@ -552,7 +552,7 @@
     const tryCard = move || act ? `<section class="hub-card dev-try"><span class="hub-card-head"><b>${F('Try this together')}</b></span><button class="dev-try-row" onclick="openPage('${move ? `chg:Development:d:move:${ref}` : `chg:Development:d:idea:${ref}:${act.id}`}')">${pic ? `<span class="dev-idea-art">${pic}</span>` : ''}<span class="hub-row-copy"><b>${F(move ? move.title : act.title)}</b><small>${move ? F(move.sub || move.why) : act.id === 'bang-two' ? F('Tap yours together first, then hand {o} two') : playLine(act)}</small></span><span class="hub-chev" aria-hidden="true">›</span></button></section>` : '';
     const call = devCall(ref);
     const credit = rows.includes('dev-see') ? `<p class="dev-credit">${F('Photos and videos: Source CDC, free at cdc.gov. The CDC doesn’t endorse Ahead.')}</p>` : '';
-    return `<div class="quiet-category hub-page hub-detail dev-area-page is-${domain}" data-overview="Development" style="${yearTheme('Development')}${tc ? `;--area:${tc[0]};--area-ink:${tc[1]}` : ''}">${detailPageTop('Development')}<div class="dev-area-head${areaPhoto(ref, domain) ? ' has-photo' : ''}">${devAreaHead(ref, domain, meta, age)}${areaPhoto(ref, domain)}</div>${devSubHead(ref)}<div class="hub-ticks">${rows}</div>${big}${tryCard}${call}${credit}</div>`;
+    return `<div class="quiet-category hub-page hub-detail dev-area-page is-${domain}" data-overview="Development" style="${yearTheme('Development')}${tc ? `;--area:${tc[0]};--area-ink:${tc[1]}` : ''}">${detailPageTop('Development')}<div class="dev-area-head${areaPhoto(ref, domain) ? ' has-photo' : ''}">${window.devTileArt ? `<span class="dev-area-head-art">${devTileArt(domain, ref)}</span>` : ''}${devAreaHead(ref, domain, meta, age)}${areaPhoto(ref, domain)}</div>${devSubHead(ref)}<div class="hub-ticks">${rows}</div>${big}${tryCard}${call}${credit}</div>`;
   };
 
   /* ---------- small detail screens for these categories ---------- */
@@ -644,11 +644,11 @@
   const baseRoute = window.changesRoute;
   window.changesRoute = function (p) {
     const [, cat, screen, a, b] = p.split(':');
-    if (cat === 'Development' && screen === 'd' && a === 'signs') return detailFrame('Development', 'Try together · by 9 months', 'Try a few baby signs', 'A few simple signs let Maya tell you what {s} {want|wants} before {s} can say it.',
+    if (cat === 'Development' && screen === 'd' && a === 'signs') return detailFrame('Development', 'Development & play', 'Try a few baby signs', 'A few simple signs let Maya tell you what {s} {want|wants} before {s} can say it. Tap one to watch it.',
       // "When" is a question, so it's an answer card first; the tips aren't an order, so they're tiles.
       H().qa([['When will {s} sign back?', 'Around 8–12 months', earlyBday() ? 'Babies born early often sign back a bit later. Signing won’t slow down {p} talking.' : 'Signing won’t slow down {p} talking.']])
       + (window.hubSigns ? hubSigns() : '')
-      + `<h2 class="hub-h2">${F('What helps')}</h2>` + hubIconSteps([['star', 'Start with 2 or 3', 'Pick ones you’ll use every day'], ['chat', 'Say it as you sign', '“More?” with the sign for more'], ['heart', 'Cheer {p} version', 'It won’t look like yours at first']], 'Development', F('Start with two or three signs, say the word as you sign it, and cheer the baby’s version.'), false));
+      + `<h2 class="hub-h2">${F('What helps')}</h2>` + hubIconSteps([['star', 'Start with 2 or 3', 'Ones you’ll use every day'], ['chat', 'Say it as you sign', '“More?”'], ['heart', 'Cheer {p} version', 'Even if it looks different']], 'Development', F('Start with two or three signs, say the word as you sign it, and cheer the baby’s version.'), false));
     if (cat === 'Development' && screen === 'd' && a === 'faq') { const ref = DEV_STAGES[b] ? Number(b) : devRef(); return detailFrame('Development', DEV_STAGES[ref].title, 'What other parents ask', '', devCommonQuestions(ref).replace('<h2>Common questions</h2>', '').replace('class="common-questions"', 'class="common-questions hub-faq"')); }
     // Colds and stuffy noses: saline and suction, a cool-mist humidifier, no cold medicines, and when to call (AAP).
     if (cat === 'Health' && screen === 'd' && a === 'cold') return detailFrame('Health', 'When Maya seems sick', 'A cold or stuffy nose', 'Several colds in the first year are normal. Most clear up in 7–10 days.',

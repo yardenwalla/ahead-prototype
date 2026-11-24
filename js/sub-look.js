@@ -21,9 +21,9 @@
   function pick(cat, text) {
     if (cat === 'Health' && /Infant CPR|After a fall/i.test(text)) return ['green', null];   // Nov 23 review: no calendar shape on the first-aid pages
     if (cat === 'Health') return /sick|fever|symptom|vomit|cold|stuffy/i.test(text) ? ['peach', 'sick'] : /how are you|you’re doing|your health/i.test(text) ? ['pink', 'you'] : ['green', 'visit'];
-    // Nov 23 review: every play idea is pink (Movement ones too), the all-milestones list (every area) is Development's purple,
-    // and no decorative shapes: the color says enough.
-    if (cat === 'Development') return /sign/i.test(text) ? ['yellow', null] : /all \d+ milestones/i.test(text) ? ['purple', null] : /reach|move|cruise|roll|floor|knee/i.test(text) && !/ideas to try|try together/i.test(text) ? ['blue', null] : ['pink', null];
+    // Nov 23 review: every play idea is pink (Movement ones too), and the all-milestones list (every area) is Development's purple.
+    // Restore pass: the header shapes stay, as on main.
+    if (cat === 'Development') return /sign/i.test(text) ? ['yellow', 'signs'] : /all \d+ milestones/i.test(text) ? ['purple', 'play'] : /reach|move|cruise|roll|floor|knee/i.test(text) && !/ideas to try|try together/i.test(text) ? ['blue', 'move'] : ['pink', 'play'];
     return null;
   }
   function dress() {

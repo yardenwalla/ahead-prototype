@@ -242,7 +242,7 @@
     return `<section class="hub-card hub-ages"><div class="hub-tiles">${tile('Birthday age', monthLabel(birthdayAge()), 'Checkups')}${tile('Adjusted age', monthLabel(adjustedMonth(actualMonth())), 'From the due date')}</div>`
       + `<div class="hub-agemode-row"><span><b>Development & play</b><small>${esc2(monthLabel(developmentMonth(actualMonth())))}</small></span>${seg('dev')}</div>`
       + `<div class="hub-agemode-row"><span><b>Safety</b><small>${esc2(monthLabel(safetyMonth(actualMonth())))}</small></span>${seg('safety')}</div>`
-      + `<div class="hub-agemode-row"><span><b>Feeding, sleep and care</b><small>${esc2(monthLabel(hubAgeFor('care', actualMonth())))}</small></span>${seg('care')}</div></section>`;
+      + `<div class="hub-agemode-row"><span><b>Feeding, sleep, care</b><small>${esc2(monthLabel(hubAgeFor('care', actualMonth())))}</small></span>${seg('care')}</div></section>`;
   };
   window.hubAgePage = function () {
     const nm = esc2(name());
@@ -707,7 +707,7 @@
     const baseCategories = journeyCategories;
     window.journeyCategories = journeyCategories = function () {
       // Search sits at the top; there is no separate Resources section (outside links live inside each guide).
-      const search = `<div class="hub-search hub-cat-search"><input class="search" type="search" placeholder="Try ‘Is 100.6°F a fever?’ or ‘first foods’" aria-label="Search guidance" oninput="searchGuides(this.value)" value="${esc2(query || '')}"><div id="results" class="hub-list hub-results" ${query ? '' : 'hidden'}></div></div>`;
+      const search = `<div class="hub-search hub-cat-search"><input class="search" type="search" placeholder="Try: teething, short naps, fever…" aria-label="Search guidance" oninput="searchGuides(this.value)" value="${esc2(query || '')}"><div id="results" class="hub-list hub-results" ${query ? '' : 'hidden'}></div></div>`;
       if (query) setTimeout(() => { if (document.querySelector('.hub-cat-search')) searchGuides(query); }, 0);
       return baseCategories().replace(/<div class="journey-utility-links">[\s\S]*<\/div>$/, '').replace(/(<h1>Categories<\/h1>)/, '$1' + search);
     };
