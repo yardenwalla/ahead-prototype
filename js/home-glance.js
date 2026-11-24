@@ -328,7 +328,7 @@
           <span class="ms-art" aria-hidden="true"><i class="ms-c2"></i><span class="ms-toys">${window.stCardArt(0)}</span></span></span>
         <span class="ms-foot"><span class="ms-watch"><i><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6z" fill="none" stroke="#fffaf3" stroke-width="2"/></svg></i>${F(P('See what she sees'))}</span><span class="ms-go" aria-hidden="true">→</span></span>
       </button>` : sc ? `<button class="ms-card" onclick="try{localStorage.setItem('ahead-story-seen-${m}','1')}catch(e){};stOpen()" style="${monthTheme(m)};--ms-acc:${mix(c, .1, 30)};--ms-c1:${mix(c, .5)};--ms-c2:${mix(c, .72)}">
-        <span class="ms-body"><span class="ms-copy"><span class="ms-eyebrow">${m === 0 ? F('{P} first weeks') : F('What matters now')}</span><b class="ms-month">${F(m === 0 ? when : `Month ${chap}`)}</b><small>${F(m === 0 && chap > 0 ? `${Name()} is still curling up small, like a newborn.` : sc.tease).replace(/([.!?]) (?=\S)/g, '$1<br>')}</small></span>
+        <span class="ms-body"><span class="ms-copy"><span class="ms-eyebrow">${m === 0 && chap === 0 ? F('{P} first weeks') : F('What matters now')}</span><b class="ms-month">${F(m === 0 && chap === 0 ? when : `Month ${chap}`)}</b><small>${F(m === 0 && chap > 0 ? `${Name()} is still curling up small, like a newborn.` : sc.tease).replace(/([.!?]) (?=\S)/g, '$1<br>')}</small></span>
           <span class="ms-art" aria-hidden="true"><i class="ms-c2"></i><span class="ms-toys">${typeof window.stCardArt === 'function' ? window.stCardArt(m) : art}</span></span></span>
         <span class="ms-foot"><span class="ms-watch"><i><svg viewBox="0 0 24 24"><path d="M9 7.5v9l7.5-4.5z"/></svg></i>${F(`${Name()}’s month`)}</span><span class="ms-go" aria-hidden="true">→</span></span>
       </button>`
@@ -491,7 +491,7 @@
     try {
       const ya = window.__ya, a = ya.ageNow(), done = ya.doneNow();
       // Skip a change in its last month that the parent hasn't marked: "Sitting up, any time now" at 9 months reads as a bug.
-      const ahead = ya.C.filter(c => c.end > a && !done[c.id] && !(a > c.start && a >= c.end - 1) && !(c.id === 'tooth' && a >= 8) && !(c.id === 'crying' && a >= 1.5) && !(c.id === 'regress' && (RADAR[m] || []).some(r => r[4] === 'chg:Sleep:d:regress'))).sort((x, y) => x.start - y.start || x.end - y.end);
+      const ahead = ya.C.filter(c => c.end > a && !done[c.id] && !(a > c.start && a >= c.end - 1) && !(c.id === 'tooth' && a >= 8) && !(c.id === 'crying' && a >= 1.5) && !(c.id === 'nights' && a >= 2) &&!(c.id === 'regress' && (RADAR[m] || []).some(r => r[4] === 'chg:Sleep:d:regress'))).sort((x, y) => x.start - y.start || x.end - y.end);
       const n = ahead[0];  // the same first row the Timeline shows under "Maya now"
       if (n) next = `Next up: ${F(n.title)}, ${F(ya.whenShort(n, a))}`;
     } catch (e) {}

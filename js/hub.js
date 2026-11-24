@@ -954,7 +954,7 @@
           normalNotes: [['', 'No rush after 6 months', 'Plenty of families room-share longer']],
           do: [['thermo', 'About 68–72°F', 'Comfortable for you in a light T-shirt'], ['sack', 'One layer more', 'A sleep sack over pajamas'], ['music', 'White noise, low', 'Across the room, not by the crib'], ['moon', 'Dark for night', 'A dim light for feeds']],
           doNotes: [['', 'Moving to {p} own room?', 'Try naps there first, and keep the same bedtime steps and a bare crib']] }),
-        crib: () => ({ type: 'howto', label: 'Room and crib', art: 'crib', title: 'Move to the crib at the first try to roll',
+        crib: () => ({ type: 'howto', label: 'Room and crib', art: 'crib', title: 'When to move to the crib',
           why: 'Rolling or pushing up can tip a bassinet.',
           pictureTitle: 'When to move', picture: () => TPLB.noted(TPLB.tiles([['clock', 'At the weight limit', 'Usually 15–20 lb: check the bassinet’s label'], ['roll', 'At the first try to roll', 'Even if it’s under the weight limit']], 'Sleep'), [['', 'The first nights', 'Keep the same bedtime and bedtime steps, just in a new place']]),
           action: () => TPLB.sec('How to set it up', list('', [row({ icon: 'crib', cat, title: 'Set up the crib', sub: 'Step by step, in Safety', onclick: "openPage('chg:Safety:d:step:bassinet')" })])) + `<div class="hub-actions">${answers.inCrib === 'Yes' ? `<p class="hub-done">${F('Maya sleeps in the crib now')} ✓</p>` : `<button class="hub-button" onclick="setAnswer('inCrib','Yes')">${F('Done: Maya’s in the crib')}</button>`}</div>` }),
@@ -1012,7 +1012,7 @@
           doOrdered: true, do: [['clock', 'Push the first nap later', 'A little later every few days'], ['sun', 'Until it lands around lunch', 'Now it’s one longer nap'], ['moon', 'Bedtime a bit earlier', 'While {s} {get|gets} used to it']] }),
         lovey: () => ({ type: 'expect', label: 'Safe sleep', art: 'toy', title: 'After 1, a small lovey can join the crib',
           why: 'After 12 months, the risk of SIDS is much lower, and a familiar toy can help {o} settle.',
-          normalTitle: 'What’s fine after 1', normal: [['toy', 'A small lovey', 'Small and soft, no loose parts'], ['folded', 'Or a light blanket', 'Thin, not heavy']],
+          normalTitle: 'What’s fine after 1', normal: [['toy', 'One soft toy', 'Small, with no loose parts'], ['folded', 'Or a light blanket', 'Thin, not heavy']],
           doTitle: 'Keep the rest bare', do: 'No pillows, bumpers or big stuffed animals.' }),
         away: () => ({ type: 'howto', label: 'Sleep help', art: 'sun', title: 'New places throw sleep off for a few days',
           why: 'A new time zone can too. A safe spot and your usual steps help most.',
@@ -1142,7 +1142,7 @@
         // In the order it happens: an age, a short title, one line. Her current step gets a filled dot.
         + (() => { const mo = m(), steps = [
             [0, 'Newborn', 'Swaddle until the first try to roll', 'Arms in, hips loose', 'chg:Sleep:d:swaddle'],
-            [2, '2–4 months', 'Stop swaddling', 'At the first try to roll, switch to a sleep sack', 'chg:Sleep:d:swaddleoff', 'sleep-rolling'],
+            [2, '2–4 months', 'Stop swaddling', 'Switch to a sleep sack', 'chg:Sleep:d:swaddleoff', 'sleep-rolling'],
             [3, 'First try to roll', 'Bassinet to crib','Or at its weight limit, whichever comes first', 'chg:Sleep:d:crib'],
             [4, 'Rolls both ways', 'Let {o} stay on {p} tummy', 'Still put {o} down on {p} back each time', 'chg:Sleep:d:rolling'],
             [5, 'Before {s} {sit|sits}', 'Lower the crib mattress', 'Then lowest before {s} {pull|pulls} up', 'chg:Sleep:d:mattress', 'sleep-crib-height'],

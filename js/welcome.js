@@ -38,7 +38,7 @@
     bottle: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2.8h4M10.5 2.8v2.4h3V2.8M9 5.2h6l.8 2.3v12a1.8 1.8 0 0 1-1.8 1.8h-4a1.8 1.8 0 0 1-1.8-1.8v-12zM8.4 11h3M8.4 14h3"/></svg>',
     both: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 6c2.2 2.6 4 5 4 7.3a4 4 0 0 1-8 0C4.5 11 6.3 8.6 8.5 6zM15.5 6c2.2 2.6 4 5 4 7.3a4 4 0 0 1-8 0"/></svg>'
   };
-  const HOW = [['Nursing', 'Nursing'], ['Pumping', 'Pumping'], ['Both', 'Both'], ['Stored', 'Stored milk only']];
+  const HOW = [['Nursing', 'Nursing'], ['Pumping', 'Pumping'], ['Both', 'Nursing and pumping'], ['Stored', 'Stored milk only']];
 
   function seg(cls, items, value, label) {
     return `<div class="ob-seg ${cls}" role="radiogroup" aria-label="${label}">${items.map(([v, t]) => `<button type="button" role="radio" data-v="${v}" aria-checked="${v === value}">${t}</button>`).join('')}</div>`;

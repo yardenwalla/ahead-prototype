@@ -128,6 +128,6 @@ for (const [cat, route, i] of [['Safety', 'safety-stage:reaching', 1], ['Sleep',
   a.run("navigate('home')");
   check(/hub-agechip/.test(a.html()) && !/connected-age-note/.test(a.html()), 'Home shows the adjusted age next to the age, once');
   a.run("openPage('age-context')");
-  check(/Ari has two ages/.test(a.html()) && /Development and play/.test(a.html()) && /hubSetAgeMode\('safety'/.test(a.html()), 'About age explains both ages and lets you switch which one each area follows');
+  check(/Ari has two ages/.test(a.html()) && /Development (and|&amp;|&) play/.test(a.html()) && /hubSetAgeMode\('safety'/.test(a.html()), 'About age explains both ages and lets you switch which one each area follows');
 }
 console.log(JSON.stringify({ suite: 'stage-rules', checks, status: 'passed' }, null, 2));

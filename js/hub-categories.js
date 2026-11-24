@@ -336,7 +336,7 @@
     const pastDue = live() && !done && !planned && dueDays < -14, farAhead = !done && !planned && dueDays > 14;
     // One line on a phone (Nov 10, Yarden): a short date, "Due Oct 25", not "Was due around October 25".
     const shortDate = d => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-    const eyebrow2 = live() && age < focus && !done ? `Around ${shortDate(dueAt)}` : pastDue || (live() && !done && !planned && dueDays < -3) ? `Was due ${shortDate(dueAt)}` : String(eyebrow).replace(/^Due around .+$/, () => `Due ${shortDate(dueAt)}`);
+    const eyebrow2 = live() && age < focus && !done ? `Around ${shortDate(dueAt)}` : pastDue || (live() && !done && !planned && dueDays < -3) ? `Was due ${shortDate(dueAt)}` : String(eyebrow).replace(/^Due (around|in about) .+$/, () => `Due ${shortDate(dueAt)}`);   // pass 2: always a date, never "in about 2 days"
     // A past checkup that was never confirmed doesn't vanish: one quiet line on the current checkup.
     let missedLine = '';
     if (live() && age === focus) {   // a missed checkup shows here too, so it isn't missed by parents who skip Home
@@ -356,14 +356,14 @@
     const WORTH = {
       0: ['Bring the hospital discharge papers', 'They list {p} birth weight, the tests {s} had, and any first vaccines.'],
       1: ['Ask to see {p} growth curve', 'The trend over several visits matters more than any one weight.'],
-      2: SHOW ? ['Several shots in one visit is safe', 'Spacing them out leaves {o} unprotected for longer, and means more visits.'] : ['Several shots at once is normal', 'Feeding or holding {o} close during and after helps. A fussy, sleepy day afterward is common.'],
+      2: SHOW ? ['Several shots in one visit is safe', 'Spacing the shots out leaves {o} unprotected for longer, and means more visits.'] : ['Several shots at once is normal', 'Feeding or holding {o} close during and after helps. A fussy, sleepy day afterward is common.'],
       // Nov 19 (show, don't tell): how to help with shots is now a photo on the Vaccines page, so 4 months has no heads-up here.
       4: SHOW ? null : ['Shots go more easily with a feed', (profile.feed === 'Formula' ? 'Offer a bottle' : profile.feed === 'Breast milk' && profile.feedHow === 'Nursing' ? 'Nurse {o}' : 'Offer the breast or a bottle') + ' during or right after. Sucking soothes.'],
       6: flu ? ['Flu shots start with two doses', 'Babies getting it for the first time need two doses, at least 4 weeks apart.'] : ['Ask about fluoride varnish', 'Many offices start painting it on once the first tooth comes in. It helps prevent cavities.'],
       9: ['The questionnaire is routine, not a test', 'Answer from what you see at home. Some offices send it ahead, so check your messages.'],
       12: SHOW ? null : ['A quick blood test is common now', 'A finger or heel prick checks for iron and, in many places, lead.']   // Nov 19: What to expect now explains the blood test, and the lead names it
     }[age];
-    const LEAD = a => ({ 0: 'The first visit after the hospital, 3 to 5 days after birth.', 1: 'A short visit, and a check on how you’re doing too.', 2: 'One of the bigger visits, so plan a quiet day after.', 4: 'Growth, new skills and a first talk about starting solids.', 6: 'The talk moves from milk to first foods.', 9: 'This one takes a closer look at development.', 12: 'A busy one: new shots, a quick blood test, and the move to cow’s milk from a cup.' })[a] || conceptHealthSummary(a);   // the gist; the rows below hold the details
+    const LEAD = a => ({ 0: 'The first visit after the hospital, 3 to 5 days after birth.', 1: 'A short visit, and a check on how you’re doing too.', 2: 'One of the bigger visits, so plan a quiet day after.', 4: 'Much like the 2-month visit, plus a first talk about solids.', 6: 'The talk moves from milk to first foods.', 9: 'This one takes a closer look at development.', 12: 'A longer visit, so bring a snack and a favorite toy.' })[a] || conceptHealthSummary(a);   // the gist; the rows below hold the details
     const ASK = { 0: 'How will we know feeding is going well?', 1: 'Is {p} weight gain on track?', 2: 'What’s normal after {p} shots?', 4: 'When should we think about solids?', 6: 'Should we watch {p} iron now that solids are starting?', 9: 'Is {s} on track with sitting and babbling?', 12: 'How do we switch to whole milk?' }[age];
     const HEALTH_ART = "<svg viewBox=\"0 0 300 103\" aria-hidden=\"true\"><ellipse cx=\"146\" cy=\"90\" rx=\"107\" ry=\"7\" fill=\"#d5e5d6\"/><rect x=\"31\" y=\"63\" width=\"229\" height=\"23\" rx=\"11\" fill=\"#bed5c1\"/><circle cx=\"95\" cy=\"45\" r=\"26\" fill=\"#e8b89f\"/><path d=\"M78 40q7-21 29-15\" fill=\"none\" stroke=\"#9d735f\" stroke-width=\"5\" stroke-linecap=\"round\"/><path d=\"M85 48q4 4 8 0m7 0q4 4 8 0\" stroke=\"#916959\" stroke-width=\"2\" fill=\"none\"/><path d=\"M123 65q31-27 74 0l13 13h-92z\" fill=\"#a9c9ae\"/><path d=\"M148 66q24-19 49-26\" fill=\"none\" stroke=\"#e8b89f\" stroke-width=\"11\" stroke-linecap=\"round\"/><circle cx=\"202\" cy=\"40\" r=\"7\" fill=\"#e8b89f\"/><rect x=\"246\" y=\"15\" width=\"19\" height=\"29\" rx=\"4\" fill=\"#fafdf9\" stroke=\"#a0bda5\"/><path d=\"M256 22v15m-7-7h14\" stroke=\"#89b093\" stroke-width=\"3\" stroke-linecap=\"round\"/><path d=\"M277 48h15M285 40v16\" stroke=\"#9ebeaa\" stroke-width=\"2.5\" stroke-linecap=\"round\"/></svg>";
     let b = `<style>#main .hl-art{display:grid;place-items:center;margin:10px 0 2px}#main .hl-art svg{width:100%;max-width:260px;height:auto}#main .hl-worth{border-radius:20px;background:#eef0f7;padding:14px 16px;margin:0 0 14px;color:#3e4766}#main .hl-worth small{display:block;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#5e6890;margin-bottom:5px}#main .hl-worth b{display:block;font-size:16px;line-height:1.3;color:var(--ink,#302d3c)}#main .hl-worth p{margin:5px 0 0;font-size:14px;line-height:1.45;color:#5d6276}</style>`
@@ -407,6 +407,13 @@
     6: ['Movement', 'When will {s} sit on {p} own?', 'Most babies sit without support by about 9 months.'],
     9: ['Movement', 'What about crawling?', 'Many babies skip crawling. Some scoot or roll instead. What matters is that Maya finds a way to move.'],
     12: ['Movement', 'Should {s} be walking?', 'Lots of babies aren’t walking at 12 months, and that’s normal. First steps often come between 12 and 15 months.']
+  };
+  // Pass 2: on an age that isn't the baby's, the question is about babies ("Should she be rolling yet?" read wrong at 10 months).
+  const DEV_BIG_ANY = {
+    4: ['Movement', 'When do babies roll?', 'Rolling usually shows up between 4 and 6 months.'],
+    6: ['Movement', 'When do babies sit on their own?', 'Most babies sit without support by about 9 months.'],
+    9: ['Movement', 'What about crawling?', 'Many babies skip crawling. Some scoot or roll instead. What matters is finding a way to move.'],
+    12: ['Movement', 'When do babies walk?', 'Lots of babies aren’t walking at 12 months, and that’s normal. First steps often come between 12 and 15 months.']
   };
   // [from, to, band start, band end, band label, ticks] in months, for the big question's picture.
   const DEV_BIG_BAR = {
@@ -455,7 +462,7 @@
   const AREA_HEAD = {
     2: { Social: ['You can’t spoil a baby this young', 'Picking {o} up when {s} {cry|cries} helps {o} feel safe. It won’t create bad habits.'],
       Talking: ['Talking to {o} is how {s} {learn|learns} to talk', 'Chatting through your day, even about nothing much, fills {p} world with words.'],
-      Thinking: ['{P} eyes do the exploring for now', '{S} can’t reach yet, so carrying {o} from room to room gives {o} plenty to take in.'],
+      Thinking: ['At first, eyes do the exploring', 'Before a baby can reach, being carried from room to room gives plenty to take in.'],
       Movement: ['Tummy time works in short bits', 'Work up to 15–30 minutes a day by 7 weeks, a few minutes at a time.'] },
     4: { Social: ['A smile means “keep going”', 'When {s} {smile|smiles} and {wiggle|wiggles}, {s} {want|wants} more. Looking away means {s} {need|needs} a break.'],
       Talking: ['It’s not too early for books', 'Naming the pictures in a book helps {o} learn the sounds of words.'],
@@ -464,7 +471,7 @@
     6: { Social: ['You’re {p} favorite toy', 'Games with you, like peekaboo and tickles, teach {o} more than any toy or gadget.'],
       Talking: ['Words come from people, not screens', '{S} {learn|learns} to talk from you talking with {o}. Video calls with family are the exception.'],
       Thinking: ['Simple things are the best puzzles', 'A cup, a spoon and a soft ball give {o} plenty to turn over and figure out.'],
-      Movement: ['Each move builds the next one', 'Rolling and pushing up build the strength {s}’ll need to sit.'] },
+      Movement: ['Each move builds the next one', 'Rolling and pushing up build the strength for sitting.'] },
     9: { Social: ['A quick goodbye works best', 'A cheerful goodbye beats slipping out. {S} {learn|learns} that you leave, and that you come back.'],
       Talking: ['Sing-song talk helps {o} listen', 'A slow, sing-song voice holds {p} attention and helps {o} pick out sounds.'],
       Thinking: ['Wait a moment before you help', 'When {s’s} stuck on a toy, a little struggle is how {s} {learn|learns}. Step in if {s} {get|gets} upset.'],
@@ -494,7 +501,8 @@
   const devSubHead = ref => `<p class="dev-sub">${F(devOwnAge(ref) ? 'What you might see' : 'What most babies do')}</p>`;
   const devAnyBaby = t => String(t).replace(/\bbaby(’s)?\b/g, 'a baby$1').replace(/^Baby’s /, 'A baby’s ').replace(/^Baby (\w)/, (m, c) => c.toUpperCase());
   // Whom to call, said once, with the age the guide uses everywhere ("by 12 months").
-  const devCall = ref => `<p class="dev-call">${F(earlyBday() ? 'Maya was born early, so it’s normal to reach these closer to {p} adjusted age. If Maya stops doing something {s} could do before, call your pediatrician.' : `Not all of these by ${ref} months? Mention it at {p} next checkup. If Maya stops doing something {s} could do before, call your pediatrician.`)}</p>`;
+  // Pass 2: an age still ahead has no "not all of these" line (a 4-month-old isn't expected to pull up yet).
+  const devCall = ref => `<p class="dev-call">${F(live() && ref > devNow() ? 'If Maya stops doing something {s} could do before, call your pediatrician.' : earlyBday() ? 'Maya was born early, so it’s normal to reach these closer to {p} adjusted age. If Maya stops doing something {s} could do before, call your pediatrician.' : `Not all of these by ${ref} months? Mention it at {p} next checkup. If Maya stops doing something {s} could do before, call your pediatrician.`)}</p>`;
   // The area page's skill names and order, so the all-milestones list matches it word for word.
   const devSkillTitle = l => F(clearMilestone(l) === 'Closes lips to show they don’t want more food' ? 'Shows when they’re full' : clearMilestone(l));
   const devAreaOrder = (ref, domain) => { const labels = DEVELOPMENT_DOMAINS[ref]?.[domain] || [], hl = (window.DEV_HEADLINE || {})[ref]?.[domain];
@@ -529,7 +537,8 @@
       return `<div class="hub-tick is-habit dev-skill${DEV_FOCUS === key ? ' is-focus' : ''}" id="sk-${key}"><span class="hub-tick-art">${h.art(SKILL_ICON(l), 'Development')}</span><span class="hub-row-copy"><b>${own ? (window.hubBabyify || (x => x))(devSkillTitle(l)) : `<!--nb-->${devSkillTitle(l)}<!--/nb-->`}</b>${desc ? `<small>${desc}</small>` : ''}${see}</span>${rec ? (rec.reported ? `<span class="hub-chip is-done">${F('Seen')} ✓</span>` : `<button class="hub-chip is-done hub-unseen" onclick="hubUnseen('${key}')" aria-label="${F('Seen')}. ${F('Tap to undo')}">${F('Seen')} ✓</button>`) : `<button class="hub-seen" onclick="hubSeen('${key}')">${F('Seen it')}</button>`}${see ? (media ? `<div class="dev-media">${media}</div>` : `<div class="dev-media" hidden></div>`) : ''}</div>`; }).join('');
     // The big question, only on the area it's about.
     const W = DEV_BIG_BAR[ref], nowMo = live() ? (NOW - parse(profile.early && profile.due && developmentMonth(actualMonth()) !== actualMonth() ? profile.due : profile.dob)) / 2629746e3 : null;
-    const big = DEV_BIG[ref] && DEV_BIG[ref][0] === domain ? `<section class="hub-card dev-bigq"><span class="hub-card-head"><b>${F(DEV_BIG[ref][1])}</b></span>${ref === 12 ? '' : devBigSteps(ref)}${W && window.hubWindowBar ? hubWindowBar({ title: '', from: W[0], to: W[1], zones: [[W[2], W[3], W[4], 'band']], ticks: W[5], now: nowMo, cat: 'Development', caption: F(DEV_BIG[ref][2]) }) : ''}<p class="dev-bigq-a">${F(ref === 6 && earlyBday() ? 'Most babies sit without support by about 9 months. Born early, Maya can get there closer to 9 months adjusted.' : DEV_BIG[ref][2])}</p></section>` : '';
+    const BQ = own ? DEV_BIG[ref] : (DEV_BIG_ANY[ref] || DEV_BIG[ref]), nb = t => own ? t : `<!--nb-->${t}<!--/nb-->`;
+    const big = BQ && BQ[0] === domain ? `<section class="hub-card dev-bigq"><span class="hub-card-head"><b>${nb(F(BQ[1]))}</b></span>${ref === 12 ? '' : devBigSteps(ref)}${W && window.hubWindowBar ? hubWindowBar({ title: '', from: W[0], to: W[1], zones: [[W[2], W[3], W[4], 'band']], ticks: W[5], now: nowMo, cat: 'Development', caption: F(BQ[2]) }) : ''}<p class="dev-bigq-a">${nb(F(own && ref === 6 && earlyBday() ? 'Most babies sit without support by about 9 months. Born early, Maya can get there closer to 9 months adjusted.' : BQ[2]))}</p></section>` : '';
     // Try this together: on Movement, the idea that helps with the big question; elsewhere, an idea for one of these skills.
     const move = domain === 'Movement' && window.devMoveIdea ? devMoveIdea(ref) : null;
     const act = !move && devAreaIdea(ref, domain);

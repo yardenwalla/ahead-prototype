@@ -187,7 +187,7 @@
       + rows('Choose how to comfort {o}', [['hand', 'Pick up, put down', 'Comfort in your arms, then put {o} back.', 'd:method:2', 'Some crying'], ['sofa', 'Chair method', 'Sit nearby, moving farther away over time.', 'd:method:1', 'Some crying'], ['clock', 'Timed check-ins', 'Leave, then come back for short check-ins.', 'd:method:0', 'More crying'], ['moon', 'Cry it out', 'Say goodnight and don’t go back in, except to feed or if {s}’s unwell.', 'd:method:3', 'Most crying']])
       + (() => { const a = window.__chg.ageNow(); const when = a < 4 ? 'It’s usually considered from 4–6 months.' : a <= 6 ? 'Many families consider it around 4–6 months.' : 'It can work at any age from here.';
         return rows('Before you start', [['steth', 'Check with your pediatrician first', when]]); })()
-      + note('Pick one and stick with it.', 'Give it 1–2 weeks, the same way for every caregiver.') + foot('Night feeds may still be needed. Ask your pediatrician.')),
+      + note('Pick one and stick with it.', 'Give it 1⁠–⁠2 weeks, the same way for every caregiver.') + foot('Night feeds may still be needed. Ask your pediatrician.')),
     'd:method:4': () => page('Sleep training', 'Bedtime fading', 'Bedtime starts late, then moves earlier a little at a time.',
       vis('An example', '', `<div class="sv2-clocks">${[[8, 30, '8:30', 'Natural sleepy time'], [8, 15, '8:15', 'A few nights later'], [8, 0, '8:00', 'Closer to your goal']].map(([h, mn, t, s], i) => `<div class="${i === 2 ? 'is-on' : ''}">${clock(h, mn)}<b>${t}</b><small>${F(s)}</small></div>`).join('')}</div>
         <div class="sv2-inner"><i>${art('moon')}</i><p><b>${F('Same bedtime routine.')}</b> ${F('Only the time moves.')}</p></div>`)
@@ -201,7 +201,7 @@
       + note('Safe sleep, every time:', 'On {p} back, in {p} own bare crib.', 'crib', 'is-safe') + foot('Some babies move faster, some more slowly.')),
     'd:method:1': () => page('Sleep training', 'The chair method', 'Stay close at first, then move toward the door over a few nights.',
       vis('Watch where you move', 'From crib toward door', `<div class="sv2-map"><div class="sv2-map-room"><span class="sv2-crib" aria-hidden="true">${art('crib')}</span>${[1, 2, 3].map(n => `<i class="is-${n}">${n}</i>`).join('')}</div><div class="sv2-map-door"><small>${F('Outside')}</small><i class="is-4">4</i></div></div>
-        <div class="sv2-steps4">${[['About nights 1–3', 'Right by the crib'], ['About nights 4–6', 'Halfway to the door'], ['About nights 7–9', 'In the doorway'], ['Then', 'Goodnight from outside']].map(([t, s], i) => `<div><b>${i + 1} · ${F(t)}</b><small>${F(s)}</small></div>`).join('')}</div>`)
+        <div class="sv2-steps4">${[['About nights 1⁠–⁠3', 'Right by the crib'], ['About nights 4⁠–⁠6', 'Halfway to the door'], ['About nights 7⁠–⁠9', 'In the doorway'], ['Then', 'Goodnight from outside']].map(([t, s], i) => `<div><b>${i + 1} · ${F(t)}</b><small>${F(s)}</small></div>`).join('')}</div>`)
       + glance([['Some crying', ''], ['In the room at first', ''], ['Often works in 1–2 weeks', '']])
       + rows('What you do each night', [['heart', 'Sit quietly in that night’s spot', 'Comfort with your voice or a pat, less each night.'], ['moon', 'If {s} wakes', 'Go back to the same spot. Feed if it’s time for a feed.'], ['clock', 'Move when {s} {settle|settles} easily', 'Stay longer at a spot if {s} {need|needs} it.']])
       + foot('Some babies move faster, some more slowly.')),

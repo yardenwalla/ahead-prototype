@@ -163,7 +163,8 @@
   const WW = mo => mo < 1.5 ? [.75, 1, '45–60 min'] : mo < 3 ? [1, 1.5, '1–1½ hrs'] : mo < 5 ? [1.5, 2.5, '1½–2½ hrs'] : mo < 7 ? [2, 2.5, '2–2½ hrs'] : mo < 9 ? [2.5, 3.5, '2½–3½ hrs'] : [2.5, 4, '2½–4 hrs'];
   const ENDS = [[15.5, '3:30'], [16.5, '4:30'], [17.25, '5:15'], [18, '6:00']];
   function lateFig(i) {
-    const [end] = ENDS[i], [lo, hi] = WW(m()), b0 = end + lo, b1 = end + hi, late = b0 > 20.5;
+    // Nov 23: the window's far end stops at 8 pm, so it never runs past the usual 7–8 pm bedtime.
+    const [end] = ENDS[i], [lo, hi] = WW(m()), b0 = end + lo, b1 = b0 < 20 ? Math.min(end + hi, 20) : end + hi, late = b0 > 20.5;
     return band({ label: `The last nap ends at ${clock(end)}, so bedtime lands between ${clock(b0)} and ${clock(b1)}.`, start: 13, end: 22.5, dark: [[Math.min(b0, 22.4), 22.5]], moon: [Math.min(b0, 22.3)],
       segs: [[end - 1, end, 'nap']], gap: 36, caps: [[end - .5, `Ends ${clock(end)}`], [Math.min(b0, 21.6), `Bedtime around ${clock(b0)}`]] })
       // Nov 23: the usual bedtime is 7–8 pm on every page; an earlier one is fine on a day like this.
@@ -509,7 +510,7 @@
       fig.outerHTML = pinPhoto('crib.jpg', 'A baby asleep on their back in a sleep sack, arms out, in a bare crib with a fitted sheet', [], 'ssw-crib');
       const [sh, sb] = sec('Setting up the crib'); if (sh) { sb.remove(); sh.remove(); }
       const check = (t, sub, ic) => `<li><i aria-hidden="true">${H().art(ic, 'Sleep')}</i><span><b>${F(t)}</b><small>${F(sub)}</small></span></li>`;
-      const sack = m() >= 3 || answers.roll === 'Yes' || !!answers.rollDirection ? ['', 'A sleep sack, arms free', 'No swaddle once rolling starts'] : ['', 'A swaddle or a sleep sack', 'No swaddle once rolling starts'];
+      const sack = m() >= 3 || answers.roll === 'Yes' || !!answers.rollDirection ? ['', 'A sleep sack, arms free', 'No swaddle from the first try to roll'] : ['', 'A swaddle or a sleep sack', 'No swaddle from the first try to roll'];
       if (tiles) tiles.outerHTML = card('Check every sleep', `<ul class="ssw-checks">${check('On {p} back', 'For naps and night sleep', 'back')}${check('Own sleep space', 'Crib, bassinet or play yard. Not a sofa, bed, swing or car seat', 'crib')}${check('Nothing else in the crib', 'A firm, flat mattress and a fitted sheet. No pillows, blankets, bumpers or toys', 'shield')}</ul>`
         + notes([['', 'A cool, smoke-free room', 'A too-warm room is less safe. Use a sleep sack, not a blanket'], sack,['', 'A pacifier, if you like', 'Once feeding is going well']]), 'ssw-check');
       const acc = $('.hub-accs'); if (acc) acc.outerHTML = card('As ' + nm() + ' grows', `<button class="hub-row" onclick="${go('chg:Sleep:d:safegrow')}"><span class="hub-row-copy"><b>${F('What changes, and when')}</b><small>${F('Swaddle, crib, mattress and more, by age')}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`, 'ssw-rowcard');
@@ -736,7 +737,7 @@
     const nurse = nursing();
     const S = [
       { h: '{P} day, around the clock', lead: 'Feed, a little awake time, then sleep. Day and night look similar for now.', pic: 'bassinetnap.jpg' },   // Nov 23: not a parent dozing in an armchair
-      { h: '{P} nights start to stretch out', lead: 'Between 6 weeks and 4 months, days and nights start to sort out.', pic: 'back.jpg' },
+      { h: '{P} nights start to stretch out', lead: 'Between 6 weeks and 5 months, days and nights start to sort out.', pic: 'back.jpg' },
       { h: '{P} day in three naps', lead: 'Two longer naps, and a short catnap to get {o} to bedtime.', pic: 'nap.jpg', day: 'd:day:2' },
       { h: '{P} day in two naps', lead: 'A morning and an afternoon nap, with longer awake time before bed.', pic: 'standing.jpg', day: 'd:day:3' }][v];
     const h1 = hero.querySelector('h1'), lead = hero.querySelector('.hub-lead');

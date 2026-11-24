@@ -14,7 +14,13 @@
     'peek-face': { explain: 'Your face going away and coming back is the whole game, and it never gets old.' },
     'bang-two': { notice: 'Baby may tap the toys together, tap yours or explore each one on its own.' },
     'hidden-toy': { explain: 'Watching a toy disappear and finding it again is the whole fun of it.' },
-    'empty-basket': { how: 'Put three large baby-safe toys in a shallow open basket. Let baby take the toys out, tip the basket or choose one to keep.' },
+    // Pass 2: step 2 no longer lists what "What to notice" lists right below it.
+    'empty-basket': { how: 'Put three large baby-safe toys in a shallow open basket. Let baby explore it their own way.' },
+    'knock-stack': { how: 'Stack two large lightweight baby blocks on the floor. Let baby have a go, then rebuild if they want.' },
+    'spoon-bowl': { explain: 'A spoon and a bowl make all kinds of new sounds.', how: 'Offer a large baby-safe spoon and a sturdy lightweight bowl during floor play. Let baby explore them any way they like.' },
+    'roll-interest': { how: 'On a firm floor mat, show baby a favorite toy, then hold it slightly to one side. Wait, and let them choose what to do.' },
+    'song-pause': { how: 'Sing a familiar song, then pause before a favorite sound. Wait a moment before you carry on.' },
+    'sound-answer': { how: 'When baby makes a sound, answer it once. Then wait quietly for their reply.' },
     'hello-wave': { explain: 'Waving the same way every time helps baby learn what a wave means.' },
     'stack-pair': { adapt: 'Hold the bottom block steady. Knocking the tower down is still play.' },
     'feed-teddy': { notice: 'Baby may bring the spoon near teddy or explore the spoon on {p} own.' },
@@ -121,7 +127,7 @@
       6: { lead: '{S} {reach|reaches}, {bang|bangs} and {mouth|mouths} everything, so pick toys that are safe to chew.', all: 'By 6 months, babies reach, bang and mouth everything, so pick toys that are safe to chew.', now: [['toy-rattle', 'Ball rattle'], ['toy-bowl', 'Pot and spoon'], ['toy-books', 'Board books']] },
       9: { lead: '{S’s} learning that things go in, out and under. Stacking and hiding toys fit now.', all: 'By 9 months, babies love putting things in, out and under, so stacking and hiding toys fit.', now: [['toy-cups', 'Stacking cups'], ['toy-ball', 'Soft ball'], ['toy-flap', 'Lift-the-flap books']] },
       12: { lead: '{S’s} cruising and copying you, so pushing and pretend play fit now.', all: 'By 12 months, most babies cruise and copy you, so push toys and pretend play fit.', now: [['toy-push', 'Push toy'], ['toy-sorter', 'Shape sorter'], ['toy-pretend', 'Cup, spoon and teddy']] } }[ref];
-    const toys = TOYS ? `<section class="dev-toys"><h2 class="hub-h2">${F('Toys that fit now')}</h2><p class="dev-toys-lead">${F(own ? TOYS.lead : TOYS.all)}</p>`
+    const toys = TOYS ? `<section class="dev-toys"><h2 class="hub-h2">${F(own ? 'Toys that fit now' : 'Toys that fit')}</h2><p class="dev-toys-lead">${F(own ? TOYS.lead : TOYS.all)}</p>`
       + `<div class="dev-toy-grid">${TOYS.now.map(([img, t]) => `<div class="dev-toy"><img src="assets/dev/${img}.jpg?v=2" alt=""><b>${F(t)}</b></div>`).join('')}</div></section>` : '';
     return frame('Ideas to try together', `By ${ref} months`, lead, `<div class="dev-ideas is-grid">${pics.map(a => tile(a, ref)).join('')}</div>${more}${toys}`);
   }

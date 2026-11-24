@@ -46,7 +46,7 @@
     12: { lead: 'New shots, a quick blood test and a talk about milk.', steps: [MEASURE, ['drop', 'peach', 'A quick blood test', 'A finger prick for iron, often lead']], talk: [['wave', 'New skills', 'Words, first steps'], ['cup', 'Milk and cups', 'Moving off bottles'], ['tooth', 'Teeth', 'Brushing, the dentist']], before: 'It’s a longer visit, so pack a snack.' }
   };
   // Shots are the last step of every visit (Nov 19 review), not a footnote.
-  const SHOTS_STEP = { 0: 'Hepatitis B, if not given at birth', 1: 'Maybe a second hepatitis B shot', 2: 'At the end. The first big round', 4: 'Second doses of the same shots, at the end of the visit', 6: 'At the end. Third doses', 9: 'Often none, unless one was missed', 12: 'At the end. New ones, boosters' };
+  const SHOTS_STEP = { 0: 'Hepatitis B, if not given at birth', 1: 'Maybe a second hepatitis B shot', 2: 'The first big round, at the end of the visit', 4: 'Second doses of the same shots, at the end of the visit', 6: 'Third doses, at the end of the visit', 9: 'Usually none, unless one was missed', 12: 'New ones and boosters, at the end of the visit' };
   Object.keys(VISIT).forEach(a => VISIT[a].steps.push(['shield', 'blue', 'Shots', SHOTS_STEP[a]]));
   const PHOTO_ALT = { 0: 'A pediatrician checking a newborn on a baby scale', 1: 'A pediatrician listening to a baby’s chest', 2: 'A baby on the exam table lifting her head, the pediatrician smiling back', 4: 'A baby reaching for a rattle the pediatrician holds', 6: 'A smiling baby sitting on the exam table beside the pediatrician', 9: 'A dad filling in a questionnaire with his baby on his lap', 12: 'A toddler standing at a bench as the pediatrician holds out her hands' };
   function expectPage(age) {
@@ -71,9 +71,10 @@
     const total = healthJourneyQuestions(age).length + own.length, n = Object.keys(asked).filter(k => asked[k] && (!String(k).startsWith('m') || Number(String(k).slice(1)) < own.length)).length;
     const shots = age === 0 ? 'Maybe hepatitis B' : age === 1 ? 'Maybe one' : age === 9 ? 'Catch-up only' : { 2: 'The first round', 4: 'Second doses of the same ones', 6: 'Third doses of the same ones', 12: 'New ones, and boosters' }[age];
     // Nov 22 (Yarden's inspiration): the three pages as full rows, each line saying what's on that page at this age.
-    const EXP = { 0: 'Weight, a jaundice check and the hospital tests', 1: 'Growth, an exam and how feeds are going', 2: 'Growth, an exam and new skills like smiling', 4: 'Growth and a head-to-toe exam', 6: 'Growth, sitting, first foods and teeth', 9: 'Growth, a development questionnaire and finger foods', 12: 'Growth, a blood test and moving to cups' };
+    // Pass 2: each row says something the top card and the other rows don't.
+    const EXP = { 0: 'Weight, a jaundice check and the hospital tests', 1: 'Growth and a head-to-toe exam', 2: 'Growth, an exam and new skills like smiling', 4: 'Growth and a head-to-toe exam', 6: 'Growth, an exam and new skills like sitting', 9: 'Growth, an exam and a short questionnaire', 12: 'Growth, an exam and a quick blood test' };
     const VAXL = { 0: 'Usually none, unless {s} missed one in the hospital', 1: 'Maybe a second hepatitis B shot', 2: 'The first big round, and helping {o} after', 4: 'What {s} {get|gets}, and helping {o} after', 6: 'Third doses, and the flu shot in season', 9: 'Usually none, unless one was missed', 12: 'New ones like measles, and boosters' };
-    const ASKL = { 0: 'About feeding, diapers and sleep', 1: 'About feeds, sleep and crying', 2: 'About shots, sleep and feeds', 4: 'About solids, sleep and rolling', 6: 'About first foods, teeth and sleep', 9: 'About finger foods, words and moving', 12: 'About milk, cups and first steps' };
+    const ASKL = { 0: 'About feeding, diapers and sleep', 1: 'About feeds, sleep and crying', 2: 'About sleep, feeds and crying', 4: 'About sleep, rolling and reaching', 6: 'About iron, teeth and sleep', 9: 'About finger foods, words and moving', 12: 'About milk, cups and first steps' };
     return h2('Your visit, at a glance') + rows([
       ['clock', 'green', 'What to expect', EXP[age], `openHealthDetail(${age},'expect')`],
       ['shield', 'blue', 'Vaccines', VAXL[age], `openHealthDetail(${age},'vaccines')`],
@@ -179,8 +180,7 @@
   function youPage() {
     const mo = m();
     return page(top('Looking after you', 'How are you doing?', 'A new baby is a lot, for every parent. Asking for help is part of caring for Maya.')
-      + (mo >= 2 ? ''   // Nov 23 review: the Get help box says this
-        : hubWindowBar({ title: 'How long low feelings usually last', from: 0, to: 8, zones: [[0, 2, 'Common', 'band'], [2, 8, 'Still there? Get help', 'alert']], ticks: [[0, 'Birth'], [2, '2 weeks'], [4, '4 weeks'], [8, '8 weeks']], cat: 'Health', caption: 'Feeling weepy or overwhelmed is common in the first two weeks. If it lasts longer than that, get help.' }))
+      // Pass 2: no "How long low feelings last" bar; its Common / Get help zones repeated the two boxes below.
       + h2('Common, or time to get help?') + pair(mo < 1 ? ['Common in the first two weeks', 'Weepy or overwhelmed, with good moments too.'] : ['Common', 'Feeling worn out or snappy. Rest and an extra pair of hands usually help.'], ['Get help', 'Low mood or worry most days for over 2 weeks, or feeling you can’t cope.'])
       + `<section class="h2-before h2-line">${ic('', 'pink', PHONE)}<div><b>${F('Talk to someone today')}</b><p>${F('National Maternal Mental Health Hotline: call or text, free, any time.')}</p><a class="h2-save" href="tel:18338526262">${F('Call 1-833-852-6262')}</a></div></section>`
       + h2('What helps') + rows([['steth', 'green', 'Tell your own doctor or midwife how you feel', 'It’s common, and it’s treatable'], ['heart', 'pink', 'Take the help', 'Name one thing, like a meal or a nap'], mo < 1 ? ['notepad', 'yellow', 'Your postpartum checkup', 'If you gave birth, go even if you feel fine'] : ['moon', 'blue', 'Get one longer sleep', 'Someone else takes a feed']])
@@ -255,7 +255,7 @@
   }
   function coldPage() {
     const mo = m();
-    const seq = `<section class="hub-card h2-seq">${[['cold-saline.jpg', 'Saline drops', '2 per nostril, wait a minute'], ['cold-bulb.jpg', 'Gentle suction', 'Squeeze, tip in, then let go slowly'], ['cold-feed.jpg', 'Then feed', 'Right away, while it’s clear']].map(([src, t, d], i) => `${i ? '<span class="h2-arrow" aria-hidden="true">›</span>' : ''}<figure><img src="assets/health/${src}" alt=""><figcaption><b>${F(t)}</b><small>${F(d)}</small></figcaption></figure>`).join('')}</section>`;
+    const seq = `<section class="hub-card h2-seq">${[['cold-saline.jpg', 'Saline drops', '2 per nostril, wait a minute'], ['cold-bulb.jpg', 'Gentle suction', 'Squeeze, tip in, then let go slowly'], [profile.feed === 'Breast milk' && (profile.feedHow || 'Nursing') === 'Nursing' ? 'cold-nurse.jpg' : 'cold-feed.jpg', 'Then feed', 'Right away, while it’s clear']].map(([src, t, d], i) => `${i ? '<span class="h2-arrow" aria-hidden="true">›</span>' : ''}<figure><img src="assets/health/${src}" alt=""><figcaption><b>${F(t)}</b><small>${F(d)}</small></figcaption></figure>`).join('')}</section>`;
     return page(top('When Maya seems sick', 'A clear nose makes feeds easier', 'Colds are common in the first year, and most clear in 7–10 days.')
       + h2('Before feeds and sleep') + seq
       + `<p class="h2-small">${F('Up to 3 times a day, so {p} nose doesn’t get sore.')}</p>`

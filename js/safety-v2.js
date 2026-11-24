@@ -237,7 +237,7 @@
       checks: ['Push down on each corner. The mattress shouldn’t shift or tilt.'],
       more: ['When to do it', 'clock', 'Signs it’s time', 'Before {s} can pull up, in Sleep', "openPage('chg:Sleep:d:mattress')"] },
     cribspot: {
-      ba: [[PH('cribspot-before'), 'A crib under a window with a corded blind, its cord hanging beside the crib', ['Blind cord', 43, 60, 'r']], [PH('cribspot-after'), 'The same crib with a cordless shade on the window', ['Cordless shade', 32, 9, 'b']]],
+      ba: [[PH('cribspot-before'), 'A crib under a window with a corded blind, its cord hanging beside the crib', ['Blind cord', 43, 60, 'r']], [PH('cribspot-after'), 'The crib moved against an inside wall, away from the window, cords and lamps. The window now has a cordless shade', ['Cordless shade', 32, 9, 'b']]],
       spotTiles: [['window', 'A window', 'Under or right beside the crib'], ['cord', 'Corded blinds', 'Loops can reach into the crib'], ['plug', 'Monitor cords', 'Often plugged in right beside it']],
       fixPhoto: [PH('cribspot-fix'), 'A crib against an inside wall, away from a window with a cordless shade', [['Cordless shade', 20, 12, 'r']]],
       fix: [['window', 'Cordless blinds and shades', 'Tying up the cord isn’t enough'], ['plug', 'Monitor cords 3 feet away', 'From the crib or bassinet'], ['crib', 'Crib away from windows', 'Not under or right beside one']],
@@ -318,7 +318,7 @@
     swaddle: 'Once {s} {try|tries} to roll, {s} {need|needs} {p} arms free to push up.',
     bassinet: 'Move {o} at the first try to roll, or at the bassinet’s weight limit, whichever comes first.',
     mattress: 'Before {s} can sit, lower it so {s} can’t lean over the rail.',
-    mattress2: 'Before {s} can pull up, go all the way down so {s} can’t climb out.',
+    mattress2: 'Go all the way down, so {s} can’t climb out once {s} {pull|pulls} up.',
     cribspot: 'A cord in reach can wrap around a baby’s neck, even in the first weeks.',
     changing: 'Falls from changing tables are among the most common early injuries.',
     gear: 'Keep them on the floor, and stop once {s} can sit up on {p} own.',

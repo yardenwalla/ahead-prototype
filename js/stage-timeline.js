@@ -16,7 +16,7 @@
       { label: 'Round-the-clock sleep', age: '0–6 weeks', setUntil: 3 },   // swaddling advice: not once a baby can roll
       { label: 'Longer nights', age: '6 weeks–5 months' },
       { label: 'Three naps', age: '5–7 months' },
-      { label: 'Two naps', age: '6–12 months' }   // Nov 12: clear age windows (Taking Cara Babies' nap guide), so Sleep moves on by age
+      { label: 'Two naps', age: '7–12 months' }   // Nov 12: clear age windows (Taking Cara Babies' nap guide), so Sleep moves on by age
     ] },
     Feeding: { kind: 'pattern', stages: [
       { label: 'Newborn', age: '0–6 weeks', setUntil: 3 },

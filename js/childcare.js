@@ -184,7 +184,7 @@
     if (id === 'plan') return sub('plan', 'Before you choose', 'Plan your care', 'Four steps, from waitlists to day one.',
       `<section class="cc-two"><h2>${F('Start with two things')}</h2><p>${F('They narrow every choice that follows.')}</p><div>${[['clock', 'Your schedule', 'Days and hours you need'], ['coin', 'Your budget', 'What works each month']].map(([i, t, d]) => `<div><span>${hubArt(i, CAT)}</span><b>${F(t)}</b><small>${F(d)}</small></div>`).join('')}</div></section>`
       + `<h2 class="hub-h2">${F('Your path to care')}</h2><p class="cc-h2sub">${F('Timing varies by kind of care and where you live.')}</p>`
-      + `<ol class="cc-route">${[['Now', 'Join a few daycare waitlists.', 'Infant spots fill first.'], ['About 3 months before care starts', 'Tour daycares, or meet nannies.'], ['6–8 weeks before', 'Check references, and choose.'], ['2 weeks before', 'Get ready for day one.']].map(([t, d, x], i) => `<li class="${i ? '' : 'is-first'}"><i>${i + 1}</i><div><b>${F(t)}</b><span>${F(d)}</span>${x ? `<small>${F(x)}</small>` : ''}</div></li>`).join('')}</ol>`
+      + `<ol class="cc-route">${[['Now', 'Join a few daycare waitlists.', 'Infant spots fill first.'], ['About 3 months before care starts', 'Tour daycares, or meet nannies.'], ['6–8 weeks before', 'Check references, and choose.'], ['About a month before', 'Get ready for day one.']].map(([t, d, x], i) => `<li class="${i ? '' : 'is-first'}"><i>${i + 1}</i><div><b>${F(t)}</b><span>${F(d)}</span>${x ? `<small>${F(x)}</small>` : ''}</div></li>`).join('')}</ol>`
       + `<details class="hub-card cc-more"><summary><span>${hubArt('chat', CAT)}</span><div><b>${F('If plans change')}</b><small>${F('Short on time, odd hours, or nothing fits yet')}</small></div></summary>`
       + `<ul>${[['Short on time?', 'Your local child care referral agency is free and knows who has openings.'], ['Hours outside 9 to 5', 'Home daycares and nannies often stretch further than centers.'], ['Nothing feels right', 'Keep looking. Family or a sitter can fill the gap, and a mix is common.']].map(([t, d]) => `<li><b>${F(t)}</b><small>${F(d)}</small></li>`).join('')}</ul></details>`
       + (typeof profile !== 'undefined' && profile.early ? h.tip('Born early?', 'Ask your pediatrician when, and what kind of care, makes sense for {o}.') : '')
@@ -781,7 +781,7 @@
   // A good daily update, as an example (Care started).
   const dailyUpdate = m => `<h2 class="hub-h2">${F('A good daily update')}</h2><p class="cc-h2sub">${F('Ask your caregiver what Maya’s day looked like.')}</p>`
     + `<section class="hub-card cc-update"><header><span>${hubArt('chat', CAT)}</span><div><b>${F('Today with Maya')}</b><small>${F('Example update')}</small></div></header><dl>`
-    + [['bottle', 'Feeds', m >= 7 ? 'Two bottles and lunch, ate well' : 'Three bottles, fed comfortably'], ['moon', 'Naps', m >= 9 ? 'A morning nap and an afternoon nap' : 'Two naps, one shorter than usual'], ['smile', 'How {s} settled', 'Upset at drop-off, then enjoyed floor play']]
+    + [['bottle', 'Feeds', m >= 7 ? 'Two bottles and lunch, ate well' : 'Three bottles, fed comfortably'], ['moon', 'Naps', m >= 7 ? 'A morning nap and an afternoon nap' : m >= 5 ? 'Three naps, one shorter than usual' : 'Short naps between feeds'], ['smile', 'How {s} settled', 'Upset at drop-off, then enjoyed floor play']]
         .map(([i, t, d]) => `<div><dt>${hubArt(i, CAT)}${F(t)}</dt><dd>${F(d)}</dd></div>`).join('') + `</dl></section>`;
   function secSummary(k, c) {
     const P = babyPronouns();

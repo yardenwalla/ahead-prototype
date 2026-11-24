@@ -40,7 +40,7 @@
   // Each subpage header gets a small picture, like Sleep and Everyday care
   const HEADART = { 'Your milk': () => ART.drops(4), 'Nursing and formula': () => ART.drops(4), 'Your milk and formula': () => ART.drops(4), 'Feeds': () => ART.often(5), 'Tummy': () => ART.bottle(.45), 'Support': () => ART.often(3), 'Cups': () => ART.bottle(.3), 'Bottles': () => ART.bottle(.55), 'Cups': () => ART.bottle(.3), 'Every day': () => ART.drops(2), 'Food': () => `<svg viewBox="0 0 120 40">${[0, 1].map(i => `<path d="M${8 + i * 36} 16 h28 q0 14 -14 14 q-14 0 -14 -14Z" fill="#356651" fill-opacity=".7"/>`).join('')}</svg>`, 'Getting enough': () => ART.diapers(4), 'Feeds now': () => ART.often(5), 'Common now': () => ART.often(4), 'Coming up': () => ART.often(3), 'Tough feed?': () => ART.often(3), 'Show me how': () => ART.often(4), 'Feeding': () => ART.often(4) };
   // Nov 19: the challenges menu gets a topic icon on a white tile, like the templated pages.
-  const HEADICON = { 'Feeding challenges': 'heart', 'Bottles, start to finish': 'bottle', 'Example day': 'clock' };
+  const HEADICON = { 'Feeding challenges': 'heart', 'Bottles, start to finish': 'bottle', 'Example day': 'clock', 'A feed, step by step': 'hand' };
   const head = (ctx, title, lead, c = C.pink) => `<div class="dev-area-head ss-head" style="--area:${c[0]};--area-ink:${c[1]}">${HEADICON[ctx] && typeof hubArt === 'function' ? `<span class="dev-area-head-art sf-head-art" aria-hidden="true">${hubArt(HEADICON[ctx], 'Feeding')}</span>` : HEADART[ctx] ? `<span class="dev-area-head-art" aria-hidden="true">${HEADART[ctx]().replace(/#(46638c|9b4766|d98a6a|c9a24a|356651)/gi, c[1])}</span>` : ''}<p class="hub-context">${F(ctx)}</p><h1>${F(title)}</h1>${lead ? `<p class="hub-lead">${F(lead)}</p>` : ''}</div>`;
   // Subpages use the shared subpage look (data-ss): icons, tips and cards take the page's own color.
   // Runs of short notes are gathered into one quiet card so pages don't end in a wall of small text.
@@ -3191,7 +3191,7 @@
       if (ml && me) out.splice(1, 0, { ...ml, v: ml.v.replace(' milk feeds', ' feeds').replace(/^Fewer feeds$/, '3–4 feeds') });
       if (wa) out.push({ ...wa, v: '4–8 oz', s: /Sips/.test(wa.v) ? F('A day at most, from a cup') : wa.s });
     }
-    out.forEach(x => { const bm = /^(\d+–\d+) bottles$/.exec(x.v); if (bm) { x.v = bm[1]; x.s = F('Bottles, ') + x.s.replace(/ a day in all$/, ' a day'); } });
+    out.forEach(x => { const bm = /^(\d+–\d+) bottles$/.exec(x.v); if (bm) { x.v = bm[1]; x.s = F('Bottles, ') + x.s.replace(/ a day in all$/, ' a day').replace(/^Around/, 'around'); } });
     if (out.length < 3) return h;
     const tiles = out.slice(0, 3).map(x => { const st = `style="--sm-bg:${x.bg};--sm-ink:${x.ink}"`;
       const inner = `<small>${x.l}</small><b>${x.v}</b><span>${x.s}${x.go ? ' ›' : ''}</span>`;
