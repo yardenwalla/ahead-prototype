@@ -117,3 +117,5 @@
 #main .dev-bigsteps small{display:block;font-size:12px;line-height:1.35;color:var(--ink,#3b3a40);margin-top:7px}
 @media (max-width:370px){#main .dev-bigsteps{gap:14px}#main .dev-bigsteps b{font-size:11px;padding:4px 7px}#main .dev-bigsteps figure:not(:last-child)::after{right:-12px;font-size:14px}}
 @media (max-width:370px){#main .dev-bigsteps b{font-size:10.5px;padding:4px 6px;letter-spacing:-.01em}}
+/* Nov 23: Development headers have no decorative shapes, so the text needs its own top space */
+#main .dev-area-page .dev-area-head,#main .hub-detail[data-overview="Development"] > .ss-head{padding-top:20px}

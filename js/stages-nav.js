@@ -12,17 +12,17 @@
   const LEAD = {
     Sleep: 'Sleep changes in steps. Tap one to see what to expect.',
     Feeding: 'From milk to first foods to family meals. Tap one to see what to expect.',
-    Safety: 'Each new skill brings a few things to change at home, before your baby can reach them.',
+    Safety: 'Each new skill brings a few things to change at home, before Maya can reach them.',
     Development: 'What most babies do by each age. Tap one to see what to look for.',
     'Daily rhythm': 'How everyday care changes through the first year.',
-    Health: 'Seven checkups in the first year. Tap one to see what happens.',
+    Health: 'Seven checkups in the first year.',
     Childcare: 'Childcare moves with your plans, not your baby’s age.'
   };
   // One line per stage: what changes there. Kept to what each stage page already says.
   const ONE = {
     Sleep: ['Short sleeps around the clock, waking to feed', 'Days and nights sort out, and one sleep stretches longer', 'Naps settle into set times, with a regular bedtime', 'A morning and an afternoon nap, and longer nights'],
     Feeding: ['Lots of feeds, day and night, while Maya learns to eat', 'Feeds get quicker and further apart', 'Milk is still everything, and the signs for solids show up', 'First tastes, textures and lots of mess', 'Three meals a day, and milk still matters'],
-    Safety: ['Car seat, crib and changing spot, set up once', 'Swaddle off, and small things off the floor', 'Gates, locks and covers before Maya moves', 'Furniture anchored, and water and the stove out of reach'],
+    Safety: ['Car seat, crib and changing spot, set up once', 'Swaddle off, and small things off the floor', 'Gates, latches, outlets, anchoring and water', 'Window stops, the stove and the lowest mattress'],
     Development: ['First looks and smiles', 'Smiles, little sounds and swiping at toys', 'Reaching, laughing and rolling', 'Sitting up, babbling and finding things', 'Waving, copying and pulling up'],
     'Daily rhythm': ['The cord, diapers and first sponge baths', 'Tub baths start, and care settles into a rhythm', 'Drool, teething and more fun at bath time', 'Brushing starts with the first tooth'],
     Health: ['Feeding, weight and a jaundice check', 'Growth, feeding and how you’re doing', 'The first main round of vaccines', 'Movement, feeding and sleep questions, and vaccines', 'First foods and teeth, and vaccines', 'A short development questionnaire', 'Anemia and lead checks, milk and cups, and vaccines']
@@ -53,8 +53,8 @@
       if (cat === 'Health' && ci >= 0 && i < ci) { try { const r = typeof healthRecord === 'function' ? healthRecord(WELL_VISITS[i]) : null; if (r && r.status === 'attended') age = 'Done'; } catch (e) {} }
       return `<li class="st-item ${cls}"><span class="st-node" aria-hidden="true">${it.now && typeof catIcon === 'function' ? catIcon(cat) : ''}</span><button class="st-card" onclick="${it.now ? topicGo(cat) : it.onclick}">${it.now ? `<span class="st-tag">${nowTag(cat)}</span>` : ''}<b>${esc(it.label)}</b>${age ? `<small class="st-age">${esc(age)}</small>` : ''}<span class="st-one">${esc(fill((ONE[cat] || [])[i] || ''))}</span><span class="st-chev" aria-hidden="true">›</span></button></li>`;
     }).join('');
-    const foot = cat === 'Health' ? `Checkups follow ${nm()}’s birthday.` : cat === 'Childcare' ? `Open the one that fits and tap “This fits ${nm()}”.` : CHANGEABLE.includes(cat) ? `Ages are typical. If another one fits ${nm()} better, open it and tap “This fits ${nm()}”.` : 'Ages are typical. Every baby moves at their own pace.';
-    return `<div class="quiet-category hub-page hub-detail" style="${yearTheme(cat)}">${hubPageTop(TITLE[cat] || 'Stages')}<p class="st-lead">${esc(LEAD[cat] || '')}</p><ol class="st-list">${list}</ol><p class="st-foot">${foot}</p></div>`;
+    const foot = cat === 'Health' ? `Checkups follow ${nm()}’s birthday.` : cat === 'Childcare' ? `Open the one that fits and tap “Move ${nm()} here”.` : cat === 'Sleep' || cat === 'Safety' ? `Ages are typical. You can change ${nm()}’s stage from the timeline.` : CHANGEABLE.includes(cat) ? `Ages are typical. If another one fits ${nm()} better, open it and tap “This fits ${nm()}”.` : 'Ages are typical. Every baby moves at their own pace.';
+    return `<div class="quiet-category hub-page hub-detail" style="${yearTheme(cat)}">${hubPageTop(TITLE[cat] || 'Stages')}<p class="st-lead">${esc(fill(LEAD[cat] || ''))}</p><ol class="st-list">${list}</ol><p class="st-foot">${foot}</p></div>`;
   }
 
   const baseRender = window.render;
@@ -100,7 +100,7 @@
     const backTxt = cat === 'Health' ? 'your next checkup' : `where ${nm()} is now`;
     const changeable = on.change && CHANGEABLE.includes(cat);
     const icon = typeof catIcon === 'function' ? catIcon(cat) : '';
-    const html = `<section class="hub-preview st-banner${changeable ? ' has-make' : ''}" aria-label="${what}"><div class="st-banner-top"><span class="st-banner-icon" aria-hidden="true">${icon}</span><div class="st-banner-copy"><small>${what}</small><b>${esc(stage)}${when ? ` <i>· ${esc(when)}</i>` : ''}</b></div>${changeable ? '' : `<button class="st-btn st-btn-back" onclick="${topicGo(cat)}">Back to ${backTxt}</button>`}</div>${changeable ? `<div class="st-banner-actions"><button class="st-btn st-btn-back" onclick="${topicGo(cat)}">Back to ${backTxt}</button><button class="st-btn st-btn-make" onclick="${on.change}">This fits ${nm()}</button></div>` : ''}</section>`;
+    const html = `<section class="hub-preview st-banner${changeable ? ' has-make' : ''}" aria-label="${what}"><div class="st-banner-top"><span class="st-banner-icon" aria-hidden="true">${icon}</span><div class="st-banner-copy"><small>${what}</small></div>${changeable ? '' : `<button class="st-btn st-btn-back" onclick="${topicGo(cat)}">Back to ${backTxt}</button>`}</div>${changeable ? `<div class="st-banner-actions"><button class="st-btn st-btn-back" onclick="${topicGo(cat)}">Back to ${backTxt}</button><button class="st-btn st-btn-make" onclick="${on.change}">Move ${nm()} here</button></div>` : ''}</section>`;
     if (old) old.outerHTML = html; else if (hero) hero.insertAdjacentHTML('beforebegin', html);
   };
   if (typeof activeNavigationTab === 'function') {

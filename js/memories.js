@@ -160,7 +160,7 @@
       // her balloon card on the right, then Change photo and Share card side by side. With no photo yet, one button adds it.
       const nmB = name(), lab = m === 0 ? 'newborn' : m === 12 ? 'first-birthday' : m + '-month';
       const title = m === 0 ? `Hello, ${nmB}!` : m === 12 ? `${Name()} is one!` : m === now ? `${Name()} is ${m} month${m === 1 ? '' : 's'}!` : `${Name()} at ${m} month${m === 1 ? '' : 's'}`;
-      const LINES = ['The very first one. The start of everything.', 'One month of getting to know each other.', 'Two months of you, and we’re finding our rhythm.', 'Three months of you. Every day a little more you.',
+      const LINES = [`This is where ${nmB}’s story starts.`,'One month of getting to know each other.', 'Two months of you, and we’re finding our rhythm.', 'Three months of you. Every day a little more you.',
         'Four months of you, and so much personality.', 'Five months of you. Look how far we’ve come.', 'Half a year of you. So much growing, learning and discovering.', 'Seven months of you. The best kind of busy.',
         'Eight months of you. Our days are fuller, and louder.', 'Nine months in, nine months out. You’ve been here as long as you were on the way.', 'Ten months of you. Almost a whole year of firsts.', 'Eleven months of you. One more, and it’s a whole year.', 'One whole year of you. Happy birthday.'];
       // Her photo itself is the picture here, as a big taped polaroid, with the month's foil balloon tucked beside it.
@@ -210,7 +210,7 @@
       const addFirst = `window.__firstMonth=${m};openPage('chg:Timeline:milestone')`;
       // Same heading in every state. With nothing saved, one dashed bar: Add a first, and a short line under it.
       const P2 = typeof babyPronouns === 'function' ? babyPronouns() : { p: 'their' };
-      const emptyLine = m === now ? `Or tap Seen it in Development.` : `Nothing saved for ${m === 0 ? "the newborn month" : WORDS[m].toLowerCase()}.`;
+      const emptyLine = m === now ? `Or tap Seen it in Development & play.` : `Nothing saved for ${m === 0 ? "the newborn month" : WORDS[m].toLowerCase()}.`;
       const what = `<div class="mem-list-head"><h3>${esc2(m === now ? 'Firsts this month' : 'Firsts that month')}</h3>${all.length ? `<button class="mem-list-add" onclick="${addFirst}">＋ Add a first</button>` : ''}</div>`
         + (all.length ? `<div class="mem-fts">${shown.map(tileFor).join('')}${moreTile}</div>${more ? listAll : ''}`
           : `<button class="mem-empty-bar" onclick="${addFirst}"><span class="mem-empty-plus" aria-hidden="true">＋</span><span><b>Add a first</b><small>${esc2(emptyLine)}</small></span></button>`);
@@ -224,7 +224,7 @@
     // The month card holds the month; the memory book (with Save a first) sits under it, as its own cover.
     b += (year ? `<div class="mem-year-wrap">${year}</div>` : '') + picker + Array.from({ length: now + 1 }, (_, m) => monthCard(m)).join('');
     // Checkups live in Health, never in the memory book.
-    b += `<p class="hub-foot">Photos and entries stay on this device.</p></div>`;
+    b += `<p class="hub-foot">Your answers, notes and photos stay on this phone.</p></div>`;
     return `<div class="quiet-category hub-page hub-timeline-page" style="${yearTheme('Memories')}">${b}</div>`;
   };
 

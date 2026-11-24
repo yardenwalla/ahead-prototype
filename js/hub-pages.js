@@ -41,7 +41,8 @@
     t = t.replace(/\b([Tt]hem)\b/g, (m, w) => capFirst(p.o, w));
     return t;
   }
-  const babyifyHtml = html => html.replace(/>([^<]+)</g, (m, t) => '>' + babyify(t) + '<');
+  // Text between <!--nb--> and <!--/nb--> is about babies in general (another age's milestones), so it keeps "a baby".
+  const babyifyHtml = html => html.split(/(<!--nb-->[\s\S]*?<!--\/nb-->)/).map((part, i) => i % 2 ? part : part.replace(/>([^<]+)</g, (m, t) => '>' + babyify(t) + '<')).join('');
   window.hubBabyify = babyify;
 
   if (typeof playActivityPage === 'function') {
@@ -273,8 +274,8 @@
       const twoAges = profile.early && profile.due && adjustedMonth(actualMonth()) !== actualMonth();
       // Born early: say which age each one follows, since there are two.
       const fixed = (cat, title, label, basis) => `<div class="hub-where-row"><span class="hub-dot" style="${yearTheme(cat)}">${catIcon(cat)}</span><div class="hub-where-copy"><b>${title}</b><small>${esc2(label)} · ${twoAges ? (basis === 'birthday' ? `by ${nm}’s birthday age` : `by ${basis === 'dev' ? (ageMode('dev') === 'birthday' ? 'birthday' : 'adjusted') : (ageMode('care') === 'birthday' ? 'birthday' : 'adjusted')} age`) : `changes as ${nm} grows`}</small></div></div>`;
-      const careRail = ['Newborn', '1–3 months', '4–6 months', '6–12 months'];
-      const careNow = (() => { const d = (NOW - parse(profile.dob)) / 864e5, mm = hubAgeFor('care', actualMonth()); return careRail[d < 21 ? 0 : mm < 4 ? 1 : mm < 6 ? 2 : 3]; })();
+      const careRail = ['Newborn', '1–3 months', '4–6 months', '7–12 months'];   // Nov 23: STAGES.md ages
+      const careNow = (() => { const d = (NOW - parse(profile.dob)) / 864e5, mm = hubAgeFor('care', actualMonth()); return careRail[d < 21 ? 0 : mm < 4 ? 1 : mm < 7 ? 2 : 3]; })();
       const safeI = STAGE_TABLE.Safety.stages.findIndex(p => p.key === safetyGroup(safetyStageNow()));
       b += `<h2 class="hub-h2">Where ${nm} is now</h2><p class="hub-where-lead">This sets what each guide shows. Tap to change it if it’s not quite right.</p><section class="hub-card hub-where">`
         + pick('Feeding', 'Feeding', feedGroup(chgStageIndex('Feeding')), STAGE_TABLE.Feeding.stages.map(x => x.label))
@@ -429,7 +430,7 @@
   // One place to save any first, whatever it's about. Ideas follow the baby's age and only fill in the field.
   function saveFirstPage() {
     const a = developmentMonth(actualMonth()), ideas = a < 2 ? ['First smile', 'First bath', 'First outing', 'Lifted head on tummy'] : a < 5 ? ['First laugh', 'Held head up', 'Rolled over', 'Grabbed a toy'] : a < 8 ? ['Sat up', 'First taste of food', 'First tooth', 'Rolled over'] : a < 11 ? ['Crawled', 'Pulled up', 'First tooth', 'Waved bye-bye'] : ['First word', 'First steps', 'Waved bye-bye', 'Clapped'];
-    return detailPage('Development', 'Firsts', 'Save a first', 'What did Maya do? It goes in Memories.',
+    return detailPage('Development', 'Firsts', 'Save a first', 'What did Maya do?',
       `<section class="hub-card hub-own-first"><label for="firstTitle">${F('What happened')}</label><input id="firstTitle" class="search" maxlength="80" placeholder="${F('For example, ' + ideas[0].charAt(0).toLowerCase() + ideas[0].slice(1))}"><p class="hub-own-ideas">${F('Ideas')}</p><div class="hub-choice-chips">${ideas.map(t => `<button onclick="hubFirstFill('${t}')">${t}</button>`).join('')}</div><p class="hub-own-ideas">${F('Which month?')}</p>${memMonthChips(window.__firstMonth != null ? window.__firstMonth : actualMonth(), 'hubFirstMonth')}<button class="hub-button" onclick="hubSaveFirst()">${F('Save to Memories')}</button></section>`, 'star');
   }
   function detailPage(cat, context, title, lead, inner, artName) { return H().detail(cat, context, title, lead, inner, artName); }
@@ -706,7 +707,7 @@
     const baseCategories = journeyCategories;
     window.journeyCategories = journeyCategories = function () {
       // Search sits at the top; there is no separate Resources section (outside links live inside each guide).
-      const search = `<div class="hub-search hub-cat-search"><input class="search" type="search" placeholder="Try: teething, short naps, fever…" aria-label="Search guidance" oninput="searchGuides(this.value)" value="${esc2(query || '')}"><div id="results" class="hub-list hub-results" ${query ? '' : 'hidden'}></div></div>`;
+      const search = `<div class="hub-search hub-cat-search"><input class="search" type="search" placeholder="Try ‘Is 100.6°F a fever?’ or ‘first foods’" aria-label="Search guidance" oninput="searchGuides(this.value)" value="${esc2(query || '')}"><div id="results" class="hub-list hub-results" ${query ? '' : 'hidden'}></div></div>`;
       if (query) setTimeout(() => { if (document.querySelector('.hub-cat-search')) searchGuides(query); }, 0);
       return baseCategories().replace(/<div class="journey-utility-links">[\s\S]*<\/div>$/, '').replace(/(<h1>Categories<\/h1>)/, '$1' + search);
     };
@@ -722,7 +723,7 @@
     window.healthJourneyFocus = healthJourneyFocus = function () {
       if (!isCurrent()) return visitForMonth().age;
       const planned = journeyData().records.filter(r => r.type === 'visit' && r.status === 'planned').sort((a, b) => a.date.localeCompare(b.date));
-      const next = WELL_VISITS.find(a => healthRecord(a)?.status !== 'attended' && (daysTo(a) >= (a === 0 ? -7 : -17) || healthRecord(a)?.status === 'planned')) ?? 12;
+      const next = WELL_VISITS.find(a => healthRecord(a)?.status !== 'attended' && (daysTo(a) >= (a === 0 ? -2 : -17) || healthRecord(a)?.status === 'planned')) ?? 12;
       return planned.length && planned[0].visitAge != null && planned[0].visitAge < next ? planned[0].visitAge : next;
     };
   }

@@ -20,7 +20,7 @@
   // Rows: an icon tile, a title and one line. Rows that don't open anything get no chevron.
   const rows = items => `<section class="hub-card h2-rows">${items.map(([icon, tone, t, d, go]) => `<${go ? `button onclick="${go}"` : 'div'} class="h2-row${go ? ' is-go' : ''}">${ic(icon, tone)}<span><b>${F(t)}</b>${d ? `<small>${F(d)}</small>` : ''}</span>${go ? CHEV : ''}</${go ? 'button' : 'div'}>`).join('')}</section>`;
   // Numbered steps, for things that really happen in order.
-  const steps = (items, note) => `<section class="hub-card h2-steps"><ol>${items.map(([icon, tone, t, d]) => `<li>${ic(icon, tone)}<span><b>${F(t)}</b>${d ? `<small>${F(d)}</small>` : ''}</span></li>`).join('')}</ol>${note ? `<p class="h2-foot">${F(note)}</p>` : ''}</section>`;
+  const steps = (items, note) => `<section class="hub-card h2-steps"><ol>${items.map(([icon, tone, t, d, raw]) => `<li>${ic(icon, tone, raw)}<span><b>${F(t)}</b>${d ? `<small>${F(d)}</small>` : ''}</span></li>`).join('')}</ol>${note ? `<p class="h2-foot">${F(note)}</p>` : ''}</section>`;
   // "When to call" and other heads-ups: soft yellow, never red.
   const alert = (t, d, tone = 'yellow') => `<section class="h2-alert is-${tone}"><i aria-hidden="true">!</i><div><b>${F(t)}</b><p>${F(d)}</p></div></section>`;
   const sos = () => `<section class="h2-sos"><b>${F('Call 911 for emergency signs')}</b><p>${F('Struggling to breathe, blue lips, won’t wake or is floppy, or a seizure.')}</p></section>`;
@@ -35,18 +35,18 @@
   // The visit, in order. Each step says what happens at this age (AAP Bright Futures; mood checks at 1, 2, 4 and 6 months).
   const MEASURE = ['steth', 'green', 'Measure and examine', 'Growth, then a head-to-toe exam'];
   // Nov 22: the steps are what happens at the visit; the topics you'll talk through sit under them as one row.
-  const FORM = ['heart', 'pink', 'A short form for you', 'How you’re feeling since the birth'];
+  const FORM = ['heart', 'pink', 'A short form for you', 'How you’ve been feeling lately'];
   const VISIT = {
     0: { lead: 'Feeding, weight and a jaundice check.', steps: [['steth', 'green', 'Weigh and examine', 'Weight and a jaundice check'], ['ear', 'peach', 'Go over the hospital tests', 'Hearing, heart and blood tests']], talk: [['bottle', 'Feeding', 'Feeds and diapers'], ['moon', 'Sleep', 'Where and how {s} {sleep|sleeps}'], ['heart', 'Your recovery', 'And how you feel']], before: 'Pick clothes that come off quickly. Feeding during the visit is fine.' },
     1: { lead: 'A short visit about feeding and growth.', steps: [MEASURE, FORM], talk: [['bottle', 'Feeding', 'How feeds are going'], ['smile', 'New skills', 'Moving and reacting'], ['moon', 'Sleep', 'Nights so far']], before: 'Pick clothes that come off quickly.' },
     2: { lead: 'A full checkup and the first round of shots.', steps: [MEASURE, FORM], talk: [['smile', 'New skills', 'Head control, smiles'], ['bottle', 'Feeding', 'Feeds and growth'], ['moon', 'Sleep', 'How nights are going']], before: 'Pick clothes that come off easily.' },
-    4: { lead: 'Much like the 2-month visit, plus a first talk about solids.', steps: [MEASURE, FORM], talk: [['roll', 'New skills', 'Reaching, rolling'], ['bowl', 'Feeding', 'Vitamin D, and starting solids'], ['moon', 'Sleep', 'Night waking']], before: 'Bring your solids questions.' },
+    4: { lead: 'Much like the 2-month visit, with a few new topics.', steps: [MEASURE, FORM], talk: [['roll', 'New skills', 'Reaching, rolling'], ['bowl', 'Feeding', 'Vitamin D, and starting solids'], ['moon', 'Sleep', 'Night waking']], before: 'Jot down a few questions in Notes before you go.' },
     6: { lead: 'Growth, sitting and teeth, and how first foods are going.', steps: [MEASURE, FORM], talk: [['sit', 'New skills', 'Sitting, babbling'], ['bowl', 'Feeding', 'First foods, iron'], ['tooth', 'Teeth', 'Brushing, and a fluoride coating for new teeth']], before: 'Bring your questions about first foods.' },
     9: { lead: 'A short questionnaire about development, plus growth and teeth.', steps: [MEASURE, ['star', 'blue', 'A development questionnaire', 'Questions you answer about talking and play']], talk: [['bowl', 'Feeding', 'Textures, finger foods'], ['tooth', 'Teeth', 'Brushing'], ['ear', 'Eyes and ears', 'How {s} {see|sees} and {hear|hears}']] },
     12: { lead: 'New shots, a quick blood test and a talk about milk.', steps: [MEASURE, ['drop', 'peach', 'A quick blood test', 'A finger prick for iron, often lead']], talk: [['wave', 'New skills', 'Words, first steps'], ['cup', 'Milk and cups', 'Moving off bottles'], ['tooth', 'Teeth', 'Brushing, the dentist']], before: 'It’s a longer visit, so pack a snack.' }
   };
   // Shots are the last step of every visit (Nov 19 review), not a footnote.
-  const SHOTS_STEP = { 0: 'Hepatitis B, if not given at birth', 1: 'Maybe one hepatitis B shot', 2: 'At the end. The first big round', 4: 'At the end. Second doses of the same ones', 6: 'At the end. Third doses', 9: 'Often none, unless one was missed', 12: 'At the end. New ones, boosters' };
+  const SHOTS_STEP = { 0: 'Hepatitis B, if not given at birth', 1: 'Maybe a second hepatitis B shot', 2: 'At the end. The first big round', 4: 'Second doses of the same shots, at the end of the visit', 6: 'At the end. Third doses', 9: 'Often none, unless one was missed', 12: 'At the end. New ones, boosters' };
   Object.keys(VISIT).forEach(a => VISIT[a].steps.push(['shield', 'blue', 'Shots', SHOTS_STEP[a]]));
   const PHOTO_ALT = { 0: 'A pediatrician checking a newborn on a baby scale', 1: 'A pediatrician listening to a baby’s chest', 2: 'A baby on the exam table lifting her head, the pediatrician smiling back', 4: 'A baby reaching for a rattle the pediatrician holds', 6: 'A smiling baby sitting on the exam table beside the pediatrician', 9: 'A dad filling in a questionnaire with his baby on his lap', 12: 'A toddler standing at a bench as the pediatrician holds out her hands' };
   function expectPage(age) {
@@ -61,7 +61,8 @@
 
   /* ---------- The checkup page (Health's main page) ---------- */
   // Nov 22: Between checkups as three tiles, each opening its own page in one tap.
-  window.healthSickTiles = () => h2('Between checkups') + `<div class="h2-sick">${[['thermo', 'yellow', 'Fever', 'sick-fever'], ['drop', 'blue', 'Colds', 'cold'], ['bottle', 'pink', 'Tummy bugs', 'sick-tummy']].map(([icon, tone, t, id]) => `<button onclick="openPage('chg:Health:d:${id}')">${ic(icon, tone)}<b>${F(t)}</b></button>`).join('')}</div>`;
+  // Nov 23 review: one row to the sick hub, so falls, medicine and CPR are reachable from Health too.
+  window.healthSickTiles = () => h2('Between checkups') + rows([['thermo', 'yellow', 'When Maya seems sick', 'Fever, colds, tummy bugs, falls and first aid', "openPage('chg:Health:d:sick')"]]);
   // A real photo of this visit in the top card, with no labels: it sets the scene, the page says the rest.
   window.healthMainPhoto = age => `<figure class="h2-photo h2-main-photo"><img src="assets/health/checkup-${age}.jpg" alt="${e(PHOTO_ALT[age] || '')}"></figure>`;
   // Your visit, at a glance: the three pages as tiles, each with a line you'd want before opening it.
@@ -70,8 +71,8 @@
     const total = healthJourneyQuestions(age).length + own.length, n = Object.keys(asked).filter(k => asked[k] && (!String(k).startsWith('m') || Number(String(k).slice(1)) < own.length)).length;
     const shots = age === 0 ? 'Maybe hepatitis B' : age === 1 ? 'Maybe one' : age === 9 ? 'Catch-up only' : { 2: 'The first round', 4: 'Second doses of the same ones', 6: 'Third doses of the same ones', 12: 'New ones, and boosters' }[age];
     // Nov 22 (Yarden's inspiration): the three pages as full rows, each line saying what's on that page at this age.
-    const EXP = { 0: 'Weight, a jaundice check and the hospital tests', 1: 'Growth, an exam and how feeds are going', 2: 'Growth, an exam and new skills like smiling', 4: 'Growth, new skills and a first talk about solids', 6: 'Growth, sitting, first foods and teeth', 9: 'Growth, a development questionnaire and finger foods', 12: 'Growth, a blood test and moving to cups' };
-    const VAXL = { 0: 'Hepatitis B and RSV protection', 1: 'Maybe a second hepatitis B shot', 2: 'The first big round, and helping {o} after', 4: 'Second doses, and helping {o} after', 6: 'Third doses, and the flu shot in season', 9: 'Usually none, unless one was missed', 12: 'New ones like measles, and boosters' };
+    const EXP = { 0: 'Weight, a jaundice check and the hospital tests', 1: 'Growth, an exam and how feeds are going', 2: 'Growth, an exam and new skills like smiling', 4: 'Growth and a head-to-toe exam', 6: 'Growth, sitting, first foods and teeth', 9: 'Growth, a development questionnaire and finger foods', 12: 'Growth, a blood test and moving to cups' };
+    const VAXL = { 0: 'Usually none, unless {s} missed one in the hospital', 1: 'Maybe a second hepatitis B shot', 2: 'The first big round, and helping {o} after', 4: 'What {s} {get|gets}, and helping {o} after', 6: 'Third doses, and the flu shot in season', 9: 'Usually none, unless one was missed', 12: 'New ones like measles, and boosters' };
     const ASKL = { 0: 'About feeding, diapers and sleep', 1: 'About feeds, sleep and crying', 2: 'About shots, sleep and feeds', 4: 'About solids, sleep and rolling', 6: 'About first foods, teeth and sleep', 9: 'About finger foods, words and moving', 12: 'About milk, cups and first steps' };
     return h2('Your visit, at a glance') + rows([
       ['clock', 'green', 'What to expect', EXP[age], `openHealthDetail(${age},'expect')`],
@@ -170,17 +171,19 @@
 
   /* ---------- When Maya seems sick ---------- */
   const m = () => actualMonth();
+  // The app's one call card, 911 row only, with no heading: it sits right under the age's fever rule.
+  const call911 = () => H().TPLB.calls({ nowLabel: 'Call 911', now: '{s} {struggle|struggles} to breathe, {have|has} blue lips, won’t wake or {are|is} floppy, or {have|has} a seizure.' }).replace(/^<h2[^>]*>[\s\S]*?<\/h2>/, '');
   const feverLine = mo => mo < 3 ? ['At this age, any fever needs a call', 'Under 3 months: 100.4°F (38°C) or higher? Call your pediatrician right away, day or night.']
     : mo < 6 ? ['At this age, call about a fever', '3 to 6 months: 101°F (38.3°C) or higher, or any fever lasting more than a day.']
     : ['When a fever needs a call', 'From 6 months: 103°F (39.4°C) or higher, or any fever lasting more than a day.'];
   function youPage() {
     const mo = m();
     return page(top('Looking after you', 'How are you doing?', 'A new baby is a lot, for every parent. Asking for help is part of caring for Maya.')
-      + (mo >= 2 ? alert('Low for more than 2 weeks?', 'Feeling low or anxious most days, at any point this year, is worth telling your doctor.', 'blue')
+      + (mo >= 2 ? ''   // Nov 23 review: the Get help box says this
         : hubWindowBar({ title: 'How long low feelings usually last', from: 0, to: 8, zones: [[0, 2, 'Common', 'band'], [2, 8, 'Still there? Get help', 'alert']], ticks: [[0, 'Birth'], [2, '2 weeks'], [4, '4 weeks'], [8, '8 weeks']], cat: 'Health', caption: 'Feeling weepy or overwhelmed is common in the first two weeks. If it lasts longer than that, get help.' }))
-      + h2('Common, or time to get help?') + pair(mo < 1 ? ['Common in the first two weeks', 'Weepy or overwhelmed, with good moments too.'] : ['Common', 'Worn out or snappy. Rest and help work.'], ['Get help', 'Low mood or worry most days, or feeling you can’t cope.'])
-      + `<section class="h2-before h2-line">${ic('heart', 'pink')}<div><b>${F('Talk to someone today')}</b><p>${F('National Maternal Mental Health Hotline: call or text, free, any time.')}</p><a class="h2-save" href="tel:18338526262">${F('Call 1-833-852-6262')}</a></div></section>`
-      + h2('What helps') + rows([['steth', 'green', 'Tell your doctor how you feel', 'It’s common, and it’s treatable'], ['heart', 'pink', 'Take the help', 'Name one thing, like a meal or a nap'], mo < 1 ? ['notepad', 'yellow', 'Your postpartum checkup', 'If you gave birth, go even if you feel fine'] : ['moon', 'blue', 'Get one longer sleep', 'Someone else takes a feed']])
+      + h2('Common, or time to get help?') + pair(mo < 1 ? ['Common in the first two weeks', 'Weepy or overwhelmed, with good moments too.'] : ['Common', 'Feeling worn out or snappy. Rest and an extra pair of hands usually help.'], ['Get help', 'Low mood or worry most days for over 2 weeks, or feeling you can’t cope.'])
+      + `<section class="h2-before h2-line">${ic('', 'pink', PHONE)}<div><b>${F('Talk to someone today')}</b><p>${F('National Maternal Mental Health Hotline: call or text, free, any time.')}</p><a class="h2-save" href="tel:18338526262">${F('Call 1-833-852-6262')}</a></div></section>`
+      + h2('What helps') + rows([['steth', 'green', 'Tell your own doctor or midwife how you feel', 'It’s common, and it’s treatable'], ['heart', 'pink', 'Take the help', 'Name one thing, like a meal or a nap'], mo < 1 ? ['notepad', 'yellow', 'Your postpartum checkup', 'If you gave birth, go even if you feel fine'] : ['moon', 'blue', 'Get one longer sleep', 'Someone else takes a feed']])
       + `<section class="h2-sos"><b>${F('If you’re thinking about harming yourself or Maya')}</b><p>${F('Call or text 988, or call 911, right now.')}</p><a class="h2-sos-btn" href="tel:988">${F('Call 988')}</a></section>`);
   }
 
@@ -188,86 +191,85 @@
   // with the heel of one hand, about 1½ inches (2025 AHA/AAP: the two-finger method is no longer taught); 2 breaths; 2 minutes before leaving to call if alone); HealthyChildren (AAP) Head Injury;
   // HealthyChildren Using Liquid Medicines (the dosing tool that comes with it, never a kitchen spoon).
   function cprPage() {
-    return page(top('Emergencies', 'Infant CPR, step by step', 'For a baby who won’t wake and isn’t breathing normally. Start right away, and keep going until help arrives.')
+    return page(top('Emergencies', 'Infant CPR, step by step', 'For a baby who won’t wake and isn’t breathing normally. Start right away.')
       // Nov 23 (show and tell): where your hands go (heel of one hand), on a training manikin.
-      + (window.aheadFig ? window.aheadFig('health/cpr', [['Heel of one hand, center of the chest', 'bl', 32, 58], ['Other hand on the forehead', 'tr', 82, 32]], 'The heel of one hand in the center of the chest, just below the nipple line. Your other hand keeps the head tilted back a little.', '50%') : '')
-      + h2('If {s} won’t respond') + steps([['hand', 'pink', 'Tap and shout', 'Tap {p} foot and call {p} name. No response? Start now'],
-        ['alarm', 'pink', 'Get 911 coming', 'Have someone call, or put your phone on speaker. Alone with no phone? Do 2 minutes first'],
-        ['moon', 'blue', 'On {p} back, on something firm', 'The floor or a table'],
+      + (window.aheadFig ? window.aheadFig('health/cpr', [['Push here', 'bl', 32, 58], ['Other hand on the forehead', 'tr', 82, 32]], '', '50%') : '')
+      // Nov 23 review: check breathing too (AHA), and say what a parent alone does after the first 2 minutes.
+      + h2('If {s} won’t respond') + steps([['hand', 'pink', 'Tap and shout', 'Tap {p} foot and call {p} name. No response, and not breathing or only gasping? Start now'],
+        ['', 'pink', 'Get 911 coming', 'Have someone call, or put your phone on speaker. Alone with no phone? Do 2 minutes of CPR, then go call 911 and come back to keep going', PHONE],
+        ['back', 'blue', 'On {p} back, on something firm', 'The floor or a table'],
         ['heart', 'pink', '30 fast pushes', 'Heel of one hand, center of the chest. About 1½ inches deep, about 2 a second'],
-        ['chat', 'blue', '2 small breaths', 'Tilt {p} head back a little. Cover {p} mouth and nose with your mouth, and puff until the chest rises'],
+        ['mouth', 'blue', '2 small breaths', 'Tilt {p} head back a little. Cover {p} mouth and nose with your mouth, and puff until the chest rises'],
         ['clock', 'yellow', 'Keep going', '30 pushes, then 2 breaths, until help arrives or {s} {start|starts} breathing']])
-      + alert('Learn it hands-on', 'A short infant CPR class, often free at hospitals, makes these steps feel natural.', 'blue'));
+      + `<div class="hub-tip"><b>${F('Learn it hands-on')}</b>${F('A short infant CPR class, often free or low-cost at hospitals, makes these steps feel natural.')}</div>`);
   }
   function fallPage() {
-    return page(top('Emergencies', 'After a fall or a bump on the head', 'Most falls from a bed or couch don’t cause lasting harm. Stay calm, check {o}, then watch {o} for the next day.')
-      + (window.aheadFig ? window.aheadFig('health/fall', [], 'Comfort first. Then look over {p} head, arms and legs while {s} settles.', '35%') : '')
-      + h2('Right after') + steps([['heart', 'blue', 'Pause before you pick {o} up', 'Not moving, or knocked out? Leave {o} still and call 911'],
+    return page(top('Emergencies', 'After a fall or a bump on the head', 'Most falls from a bed or couch don’t cause lasting harm.')
+      + (window.aheadFig ? window.aheadFig('health/fall', [], '', '35%') : '')
+      + h2('Right after') + steps([['heart', 'blue', 'Pause before you pick {o} up', 'If {s’s} knocked out or not moving, leave {o} still'],
         ['hand', 'green', 'Comfort {o}, then check', 'Look over {p} head, arms and legs. A cool cloth eases a bump'],
-        ['info', 'yellow', 'Call your pediatrician', 'For anything more than a light bump. Say how high, and what {s} landed on'],
         ['eye', 'pink', 'Watch {o} for a day or two', 'Feeding, waking and acting like {o}self']])
-      + H().TPLB.calls({ ped: 'anything more than a light bump, or you’re not sure.', right: 'vomiting, unusual sleepiness, crying you can’t calm, a bulging soft spot, or {s} isn’t moving an arm or leg', nowLabel: 'Call 911', now: '{s} was knocked out, has a seizure, has trouble breathing, or is bleeding and it won’t stop.' }));
+      + H().TPLB.calls({ ped: 'anything more than a light bump. Say how far {s} fell, and onto what.', right: 'vomiting, unusual sleepiness, crying you can’t calm, a bulging soft spot, or {s} isn’t moving an arm or leg', nowLabel: 'Call 911', now: '{s} {were|was} knocked out, {have|has} a seizure, {have|has} trouble breathing, or {are|is} bleeding and it won’t stop.' }));
   }
   function medicinePage() {
     const mo = m();
-    return page(top('When Maya seems sick', 'Giving medicine, the safe way', 'The right dose depends on {p} weight and the product. Ask your pediatrician or pharmacist, then measure exactly.')
-      + (window.aheadFig ? window.aheadFig('health/medicine', [['The syringe it came with', 'tl', 40, 38], ['Aim inside the cheek', 'br', 48, 46]], 'Hold {o} semi-upright and squirt a little at a time inside the cheek, never at the back of the throat.', '30%') : '')
-      + (mo < 3 ? alert('Under 3 months', 'Ask your pediatrician before any medicine, even acetaminophen.', 'pink') : mo < 6 ? alert('Under 6 months', 'Acetaminophen only, at the dose your pediatrician gives. No ibuprofen until 6 months.') : '')
+    return page(top('When Maya seems sick', 'Giving medicine, the safe way', 'The right dose depends on {p} weight and the product.')
+      // Nov 23 review: the photo shows the action with no labels; the steps carry the words.
+      + (window.aheadFig ? window.aheadFig('health/medicine', [], '', '30%') : '')
+      + (mo < 3 ? alert('Under 3 months', 'Ask your pediatrician before any medicine, even acetaminophen.', 'pink') : mo < 6 ? alert('Under 6 months', 'Acetaminophen only. No ibuprofen until 6 months.') : '')
       + h2('Step by step') + steps([['info', 'green', 'Check the dose', 'From your pediatrician or pharmacist, for {p} weight'],
         ['drop', 'blue', 'Use the syringe that came with it', 'Never a kitchen spoon. Measure in mL'],
-        ['hand', 'yellow', 'Hold {o} semi-upright', 'Squirt slowly inside {p} cheek, not at the back of the throat'],
+        ['hand', 'yellow', 'Hold {o} propped up, like for a feed', 'Squirt slowly inside {p} cheek, not at the back of the throat'],
         ['notepad', 'pink', 'Write down the time and amount', 'So no one gives a second dose by mistake']])
       + alert('Skip these', 'Cough and cold medicines, aspirin, and any medicine made for adults.', 'blue')
       + H().TPLB.calls({ pedLabel: 'Call Poison Help, 1-800-222-1222', ped: 'you gave too much, or the wrong medicine.', nowLabel: 'Call 911', now: 'trouble breathing, swelling of the lips or face, or {s} won’t wake.' }));
   }
   function sickHub() {
     const mo = m(), f = feverLine(mo);
-    return page(top('Between checkups', 'When Maya seems sick', 'Most baby illnesses are mild and pass in a few days. Start with what you’re seeing.')
-      + alert(f[0], f[1])
+    // Nov 23 review: the age's fever rule first, with Call 911 right under it (no separate "When to call" at the end).
+    return page(top('Between checkups', 'When Maya seems sick', 'Most baby illnesses are mild and pass in a few days.')
+      + alert(f[0], f[1]) + call911()
       + h2('What are you seeing?')
       + rows([['thermo', 'yellow', 'A fever', 'How to check, and when to call', "openPage('chg:Health:d:sick-fever')"],
         ['nose', 'blue', 'A cold or stuffy nose', 'Clear the nose so feeds go easier', "openPage('chg:Health:d:cold')"],
         ['bottle', 'pink', 'Vomiting or diarrhea', 'Keep feeds going, watch diapers', "openPage('chg:Health:d:sick-tummy')"],
-        ['heart', 'blue', 'A fall or a bump on the head', 'What to check, and when to call', "openPage('chg:Health:d:fall')"],
+        ['head', 'blue', 'A fall or a bump on the head', 'Right after, and the next day or two', "openPage('chg:Health:d:fall')"],
         ['drop', 'green', 'Giving medicine', 'The right tool, and the right dose', "openPage('chg:Health:d:medicine')"]])
-      + rows([['alarm', 'pink', 'Infant CPR, step by step', 'For a baby who won’t wake and isn’t breathing', "openPage('chg:Health:d:cpr')"]])
-      + H().TPLB.calls({ nowLabel: 'Call 911', now: '{s} struggles to breathe, has blue lips, won’t wake or is floppy, or has a seizure.' }) + `<p class="h2-small is-center">${F('Not sure? Call your pediatrician’s office, day or night.')}</p>`);
+      + rows([['heart', 'pink', 'Infant CPR, step by step', 'For a baby who won’t wake and isn’t breathing', "openPage('chg:Health:d:cpr')"]])
+      + `<p class="h2-small is-center">${F('Not sure? Call your pediatrician’s office, day or night.')}</p>`);
   }
   function feverPage() {
     const mo = m(), u3 = mo < 3;
     const temp = feverTemp(mo), c = { '100.4°F': '38°C', '101°F': '38.3°C', '103°F': '39.4°C' }[temp];
     const title = u3 ? 'A fever at this age needs a call' : 'Most fevers mean the body is fighting a bug';
-    const lead = u3 ? 'Even if {s} seems well otherwise, a fever under 3 months needs to be checked.' : 'How {s} {seem|seems} matters more than the number. Here’s when to call.';
-    const chips = ['Seeming very unwell', 'A rash', 'Fewer wet diapers'].concat(u3 ? [] : ['A fever over a day']).map(t => `<li>${F(t)}</li>`).join('');
+    const lead = u3 ? 'Even if {s} {seem|seems} well otherwise.' : 'How {s} {seem|seems} matters more than the number.';
+    const chips = ['Seeming very unwell', 'A rash', 'Fewer wet diapers'].concat(u3 ? [] : ['Fever lasting over a day']).map(t => `<li>${F(t)}</li>`).join('');
     const early = feverEarlyNote();
     const big = `<section class="h2-big"><div class="h2-big-top"><div><b>${temp.replace('°F', '')}<span>°F</span></b><small>${c} or higher</small></div><p>${F(u3 ? 'Call your pediatrician right away, day or night.' : mo < 6 ? 'Call your pediatrician, day or night.' : 'Call your pediatrician.')}</p></div><div class="h2-big-any"><b>${F('At any temperature, also call for')}</b><ul class="h2-chips">${chips}</ul>${early ? `<p>${F(early.trim())}</p>` : ''}</div></section>`
 
-    const check = h2('Take {p} temperature') + `<section class="hub-card h2-thermo">${ic('thermo', 'blue')}<div><b>${F('Use a digital thermometer')}</b><p>${F(u3 ? 'Rectal is most accurate. Check any high reading that way.' : mo < 6 ? 'Rectal is most accurate. Forehead works well too.' : 'Rectal is most accurate. Forehead or ear work well too.')}</p></div></section>`
-      + rows([['thermo', 'blue', 'Take a rectal temperature', 'Four quick steps', "openPage('chg:Health:d:sick-rectal')"]]);
+    // Nov 23 review: one thermometer row (was a box plus a row saying the same), and the medicine point lives on its row.
+    const check = rows([['thermo', 'blue', 'Take a rectal temperature', u3 ? 'Most accurate at {p} age' : mo < 6 ? 'Most accurate. A forehead thermometer works too' : 'Most accurate. Forehead or ear work too', "openPage('chg:Health:d:sick-rectal')"]]);
     const help = h2('What helps') + rows([['bottle', 'yellow', 'Offer extra feeds', 'Little and often keeps {o} hydrated'], ['shirt', 'green', 'Dress {o} lightly', 'Extra layers keep a fever up'], ['moon', 'pink', 'Let {o} rest', 'Naps and quiet time']])
-      + alert('Before any medicine', u3 ? 'Under 3 months, ask your pediatrician first.' : mo < 6 ? 'Acetaminophen can help. Ask your pediatrician for the dose.' : 'Acetaminophen or ibuprofen can help. Ask your pediatrician for the dose.', 'blue')
-      + rows([['drop', 'green', 'Giving medicine', 'The right tool, and the right dose', "openPage('chg:Health:d:medicine')"]]);
-    return page(top('When Maya seems sick', title, lead) + big + check + help + H().TPLB.calls({ nowLabel: 'Call 911', now: '{s} struggles to breathe, has blue lips, won’t wake or is floppy, or has a seizure.' }));
+      + rows([['drop', 'green', 'Giving medicine', u3 ? 'Under 3 months, ask before any medicine' : mo < 6 ? 'Acetaminophen can help. Ask for the dose' : 'Acetaminophen or ibuprofen. Ask for the dose', "openPage('chg:Health:d:medicine')"]]);
+    return page(top('When Maya seems sick', title, lead) + big + call911() + check + help);
   }
   function coldPage() {
     const mo = m();
     const seq = `<section class="hub-card h2-seq">${[['cold-saline.jpg', 'Saline drops', '2 per nostril, wait a minute'], ['cold-bulb.jpg', 'Gentle suction', 'Squeeze, tip in, then let go slowly'], ['cold-feed.jpg', 'Then feed', 'Right away, while it’s clear']].map(([src, t, d], i) => `${i ? '<span class="h2-arrow" aria-hidden="true">›</span>' : ''}<figure><img src="assets/health/${src}" alt=""><figcaption><b>${F(t)}</b><small>${F(d)}</small></figcaption></figure>`).join('')}</section>`;
     return page(top('When Maya seems sick', 'A clear nose makes feeds easier', 'Colds are common in the first year, and most clear in 7–10 days.')
       + h2('Before feeds and sleep') + seq
-      + `<p class="h2-small">${F('Up to 3 times a day, so {p} nose doesn’t get sore. Not after a feed: it can bring the milk up.')}</p>`
-      + h2('Also helps') + rows([['snow', 'blue', 'A cool-mist humidifier', 'In {p} room at night'], ['bottle', 'yellow', 'Smaller, more frequent feeds', 'Easier with a stuffy nose'], ['shield', 'pink', 'Skip cold medicines', 'Not safe for babies. No honey before 1']])
+      + `<p class="h2-small">${F('Up to 3 times a day, so {p} nose doesn’t get sore.')}</p>`
+      + h2('Also helps') + rows([['snow', 'blue', 'A cool-mist humidifier', 'In {p} room at night'], ['bottle', 'yellow', 'Smaller, more frequent feeds', 'Easier with a stuffy nose'], ['shield', 'pink', 'Skip cold medicines', 'Not safe for babies, and no honey before 12 months']])
       // Nov 23 cohesion pass: the app's one When to call card (was a yellow box plus a separate 911 box).
-      + H().TPLB.calls(mo < 3 ? { ped: 'a cold past 10 days, fussing when lying down, or ear fluid.', right: 'a rectal temperature of 100.4°F or higher', nowLabel: 'Call 911', now: '{s} struggles to breathe, has blue lips, won’t wake or is floppy, or has a seizure.' } : { ped: `a fever that lasts more than a day or reaches ${feverTemp(mo)}, a cold past 10 days, fussing when lying down, or ear fluid.`, nowLabel: 'Call 911', now: '{s} struggles to breathe, has blue lips, won’t wake or is floppy, or has a seizure.' }));
+      + H().TPLB.calls(mo < 3 ? { ped: 'a cold past 10 days, fussing more when lying down, or fluid coming from {p} ear.', right: 'a rectal temperature of 100.4°F or higher', nowLabel: 'Call 911', now: '{s} {struggle|struggles} to breathe, {have|has} blue lips, won’t wake or {are|is} floppy, or {have|has} a seizure.' } : { ped: `a fever that lasts more than a day or reaches ${feverTemp(mo)}, a cold past 10 days, fussing more when lying down, or fluid coming from {p} ear.`, nowLabel: 'Call 911', now: '{s} {struggle|struggles} to breathe, {have|has} blue lips, won’t wake or {are|is} floppy, or {have|has} a seizure.' }));
   }
   function tummyPage() {
     // Nov 19 review: check how sick the baby is before any reassurance, so the warning signs come first.
-    return page(top('When Maya seems sick', 'Keep {p} feeds going', 'First, check for the signs below. Most tummy bugs then pass in a day or two.')
-      // Nov 23: the app's shared calm-vs-act pair (Feeding, Everyday care), and the wet-diaper sign joins the call side
-      // instead of a separate green box, so the page has one look and one place for each kind of call.
-      + H().versus('How to tell', ['Common', 'Some loose poops or vomits, still feeding.'], ['Call your pediatrician', 'Can’t keep feeds down, a dry mouth, blood in poop, or far fewer wet diapers (none in 6 hours).'])
-      + h2('What helps') + rows([['bottle', 'yellow', 'Keep offering milk', 'Smaller feeds, more often'], ['hand', 'green', 'Wash hands after changes', 'Tummy bugs spread easily'], ['steth', 'pink', 'Ask before any medicine', 'Including anti-diarrhea medicine']])
+    // Nov 23 review: one place for every call (pediatrician, ER, 911) in the When to call card; what's common sits in the lead.
+    return page(top('When Maya seems sick', 'Keep {p} feeds going', 'Most tummy bugs pass in a few days. Some loose poops or a few vomits are common if {s’s} still feeding.')
+      + h2('What helps') + rows([['bottle', 'yellow', 'Smaller feeds, more often', 'Easier to keep down'], ['hand', 'green', 'Wash hands after changes', 'Tummy bugs spread easily'], ['steth', 'pink', 'Ask before any medicine', 'Including anti-diarrhea medicine']])
       // Nov 23 cohesion pass: ER and 911 together in the app's one When to call card, at the end (was a peach ER box mid-page and a 911 box).
-      + H().TPLB.calls({ er: 'green or bloody vomit.', nowLabel: 'Call 911', now: '{s} struggles to breathe, has blue lips, won’t wake or is floppy, or has a seizure.' }));
+      + H().TPLB.calls({ ped: 'can’t keep feeds down, a dry mouth, blood in {p} poop, or no wet diaper in 6 hours.', er: 'green or bloody vomit.', nowLabel: 'Call 911', now: '{s} {struggle|struggles} to breathe, {have|has} blue lips, won’t wake or {are|is} floppy, or {have|has} a seizure.' }));
   }
   const baseRoute = window.changesRoute;
   window.changesRoute = function (p) {
@@ -278,10 +280,11 @@
         if (a === 'sick-fever' || a === 'sick-temp' || a === 'sick-care') return feverPage();
         if (a === 'cold') return coldPage();
         if (a === 'you') return youPage();
-        if (a === 'sick-rectal') return page(top('A fever', 'A rectal temperature, step by step', 'The most accurate reading for babies. It’s quick, and safe done gently.')
-          + (window.aheadFig ? window.aheadFig('health/temp-position', [['Knees toward {p} chest', 'tr', 62, 55]], 'On {p} back with knees up, or tummy down across your lap.', '45%') : '')
-          + h2('Step by step') + steps([['hand', 'green', 'Turn it on, clean the tip', 'Soap and water, then a little petroleum jelly'], ['thermo', 'yellow', 'Slide it in gently', 'About ½ to 1 inch, never forcing it'], ['heart', 'pink', 'Hold until it beeps, then read it', 'Steady, your hand cupping {p} bottom. Note the number and time']])
-          + alert('Keep it just for this', 'Wash it after each use, and label it so it’s never used in a mouth.', 'blue'));
+        // Nov 23 review: every physical step (the diaper and the position were missing); the photo carries no words, the steps do.
+        if (a === 'sick-rectal') return page(top('When Maya seems sick', 'A rectal temperature, step by step', 'The most accurate reading for babies. It’s quick, and safe done gently.')
+          + (window.aheadFig ? window.aheadFig('health/temp-position', [], '', '45%') : '')
+          + h2('Step by step') + steps([['thermo', 'green', 'Turn it on, clean the tip', 'Soap and water, then a little petroleum jelly'], ['back', 'blue', 'Undo {p} diaper, knees up', 'On {p} back, knees toward {p} chest, or tummy down across your lap'], ['hand', 'yellow', 'Slide it in gently', 'About ½ to 1 inch, never forcing it'], ['clock', 'pink', 'Hold until it beeps, then read it', 'Your hand cupping {p} bottom. Note the number and time']])
+          + `<div class="hub-tip"><b>${F('Keep it just for this')}</b>${F('Wash it after each use, and label it so it’s never used in a mouth.')}</div>`);
         if (a === 'sick-tummy') return tummyPage();
         if (a === 'cpr') return cprPage();
         if (a === 'fall') return fallPage();

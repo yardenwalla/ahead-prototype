@@ -14,12 +14,12 @@
     ['ready', 4, 6, 'Feeding', 'highchair', 'Ready for solids', 'Watching for the signs, and choosing how to start', "__GO__", '4–6 months'],
     ['solids', 6, 6.5, 'Feeding', 'bowl', 'First foods', 'Food alongside milk, a few bites at first', "__GO__", 'Around 6 months'],
     ['twonaps', 6, 9, 'Sleep', 'sun', 'Three naps become two', 'Two naps a day, and an earlier bedtime', "__GO__"],
-    ['crawl', 6, 10, 'Development', 'crawl', 'Crawling', 'Maya can get around, so babyproof first', "__GO__"],
+    ['crawl', 6, 9, 'Development', 'crawl', 'Crawling', 'Maya can get around, so babyproof first', "__GO__"],
     ['sit', 6, 9, 'Development', 'sit', 'Sitting up', 'Maya sits up without your help', "__GO__"],
     ['tooth', 6, 12, 'Daily rhythm', 'tooth', 'The first tooth', 'Time to start brushing', "__GO__"],
     ['finger', 7, 9, 'Feeding', 'bowl', 'Thicker textures', 'Lumpier food, and pieces to pick up', "__GO__"],
     ['meals', 9, 10, 'Feeding', 'plate', 'Three meals a day', 'Soft pieces of family food, three times a day', "__GO__", 'Around 9 months'],
-    ['carseat', 9, 12, 'Out and about', 'car', 'Outgrowing the infant car seat', 'Most outgrow the infant seat by height', "__GO__", 'When {p} head nears the top of the seat'],
+    ['carseat', 9, 12, 'Out and about', 'car', 'Outgrowing the infant car seat', 'Most outgrow the infant seat by height', "__GO__", 'Usually 9–12 months'],
     ['sep', 8, 10, 'Development', 'heart', 'Separation anxiety', 'Goodbyes and bedtime can get harder', "__GO__"],
     ['pull', 9, 12, 'Development', 'stand', 'Pulling up to stand', 'Maya stands holding furniture, so anchor it', "__GO__"],
     ['words', 10, 14, 'Development', 'chat', 'First words', 'Often “mama” or “dada” for a parent', "__GO__"],
@@ -48,7 +48,7 @@
     steps: 'Everything higher is in reach, and more time on {p} feet.',
     onenap: 'One long midday nap, and a new shape to your days.'
   };
-  const AREA = { Development: 'Play', Feeding: 'Feeding', Sleep: 'Sleep', Health: 'Health', Safety: 'Safety', 'Daily rhythm': 'Everyday care', 'Out and about': 'Outings', Childcare: 'Childcare' };
+  const AREA = { Development: 'Development & play', Feeding: 'Feeding', Sleep: 'Sleep', Health: 'Health', Safety: 'Safety', 'Daily rhythm': 'Everyday care', 'Out and about': 'Outings and travel', Childcare: 'Childcare' };
   const touches = c => { const p = PAGES[c.id]; return p ? [...new Set(p.rows.map(r => r[1]))] : []; };
   const touchPills = c => { const t = touches(c); return t.length > 1 ? `<span class="ya-touch">${t.map(cat => `<span class="ya-touch-pill" style="${yearTheme(cat)}">${typeof catIcon === 'function' ? catIcon(cat) : ''}${F(AREA[cat] || cat)}</span>`).join('')}</span>` : ''; };
   const range = c => c.range.replace(/^(\d+(\.5)?)–/, (m, a) => `${Math.floor(+a)}–`);
@@ -202,7 +202,8 @@
     // Nov 17 · "Around now", then the months ahead. Every change has one permanent home: its typical month.
     // Before that month it waits in the timeline; from that month until its window closes (and unless recorded) it's
     // in "Around now"; after that it's Earlier. So at any moment it appears exactly once.
-    const HOME = { crying: 1.5, smile: 1.5, nights: 3, regress: 4, roll: 5, solids: 6, twonaps: 7, sit: 7, tooth: 7, crawl: 8, sep: 9, carseat: 10, pull: 10, words: 12, milk: 12, steps: 12 };
+    // Nov 23: the crying peak starts at about 2 weeks and rolling at 4 months, so they sit in "Around now" when Home says "any time now".
+    const HOME = { crying: 0.5, smile: 1.5, nights: 3, regress: 4, roll: 4, solids: 6, twonaps: 7, sit: 7, tooth: 7, crawl: 8, sep: 9, carseat: 10, pull: 10, words: 12, milk: 12, steps: 12 };
     const homeOf = s => s.v != null ? s.v - gap : (HOME[s.c.id] != null ? HOME[s.c.id] - shiftFor(s.c.cat) : s.c.start);
     try { const mo0 = Math.max(0, Math.min(11, Math.floor(a))); if (typeof window.monthColor === 'function') YEAR_PALETTES.__tl = { ink: window.monthColor(mo0, .45, 30), bg: window.monthColor(mo0, .88), pale: window.monthColor(mo0, .94), accent: window.monthColor(mo0, .6) }; } catch (e) {}
     const icon = n => hubArt(n, typeof YEAR_PALETTES !== 'undefined' && YEAR_PALETTES.__tl ? '__tl' : 'Development');
@@ -213,15 +214,17 @@
         if ((x >= a && done[s.c.id]) || s.c.end <= x) return 'earlier';
         return homeOf(s) <= x + 0.25 ? 'now' : 'ahead';
       };
-      const TIP = { crying: x >= 2 ? 'Past the worst now' : 'Plan for fussy evenings', smile: 'Lots of face time', nights: 'Start a bedtime routine', regress: 'Line up night help', roll: 'Keep {o} off beds and sofas', solids: 'Get a high chair', twonaps: 'Move bedtime earlier', sit: 'Lower the crib mattress', crawl: 'Babyproof first', tooth: 'Start brushing', sep: 'Keep goodbyes short', pull: 'Anchor furniture', carseat: 'Check its height limit', words: 'Name things all day', milk: 'Offer it in a cup', steps: 'Barefoot indoors' };
-      const line = s => s.v != null ? (where(s) === 'now' ? 'Due now · Book it if you haven’t' : 'Book it a few weeks ahead') : where(s) === 'now' ? `${shortRange(s)}${TIP[s.c.id] ? ' · ' + TIP[s.c.id] : ''}` : `Usually ${shortRange(s)}`;
+      const TIP = { crying: x >= 2 ? 'Past the worst now' : 'Plan for fussy evenings', smile: 'Lots of face time', nights: 'Start a bedtime routine', regress: 'Line up night help', roll: 'Stop swaddling', solids: 'Get a high chair', twonaps: 'Move bedtime earlier', sit: 'Lower the crib mattress', crawl: 'Babyproof first', tooth: 'Start brushing', sep: 'Keep goodbyes short', pull: 'Anchor furniture', carseat: 'Check its height limit', words: 'Name things all day', milk: 'Offer it in a cup', steps: 'Barefoot indoors' };
+      // Checkups give their due date, worded like the Health checkup page ("Due Jan 10", "Was due Nov 10"). Nov 23.
+      const dueLine = v => { const d = addMonths(parse(profile.dob), v), sd = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }); return (d - NOW) / 864e5 < -3 ? `Was due ${sd}` : `Due ${sd}`; };
+      const line = s => s.v != null ? dueLine(s.v) : where(s) === 'now' ? `${shortRange(s)}${TIP[s.c.id] ? ' · ' + TIP[s.c.id] : ''}` : `Usually ${shortRange(s)}`;
       const catOf = s => s.v != null ? 'Health' : s.c.cat;
       const tile = s => `<span class="tl-ic" style="${yearTheme(catOf(s))}">${hubArt(s.v != null ? 'steth' : s.c.icon, catOf(s))}</span>`;
       const row = s => `<li class="tl-gr"><button onclick="${go(s)}">${tile(s)}<span class="tl-t"><b>${F(title(s))}</b><small>${F(line(s))}</small></span><span class="hub-chev" aria-hidden="true">›</span></button></li>`;
       const now = all.filter(s => where(s) === 'now').sort((p, q) => (q.v != null) - (p.v != null) || homeOf(q) - homeOf(p));
       const ahead = all.filter(s => where(s) === 'ahead'), earlier = all.filter(s => where(s) === 'earlier');
-      let h = `<li class="tl-soon"><h2 class="tl-h2">${F('Around now')}</h2><p class="tl-intro">${F(`Little leaps around ${isToday(x) && typeof babyAge === 'function' ? babyAge() : ageTxt(x)}. Every baby moves at {p} own pace.`)}</p>`;
-      h += now.length ? `<ol class="tl-gcard">${now.map(row).join('')}</ol>` : `<p class="tl-quiet">${F(x < 1 ? 'Your first weeks together. Here’s what’s coming first.' : 'A calm stretch. Here’s what’s next.')}</p>`;
+      let h = `<li class="tl-soon"><h2 class="tl-h2">${F('Around now')}</h2>`;
+      h += now.length ? `<ol class="tl-gcard">${now.map(row).join('')}</ol>` : `<p class="tl-quiet">${F('A calm stretch. Here’s what’s next.')}</p>`;
       h += `</li>`;
       // The months ahead: one card per month, each change at its home month.
       const months = [...new Set(ahead.map(s => Math.round(homeOf(s))))].sort((p, q) => p - q);
@@ -242,7 +245,7 @@
     const hinted = (() => { try { return !!localStorage.getItem('ahead-tl-dragged'); } catch (e) { return true; } })();
     const pct = Math.max(0, Math.min(100, a / 12 * 100));
     const grad = (w, to) => typeof window.monthColor === 'function' ? `linear-gradient(90deg,${[...Array(12)].map((_, i) => `${window.monthColor(i, w, to)} ${Math.round((i + 0.5) / 12 * 100)}%`).join(',')})` : '';
-    let h = `<div class="ya-page tl-track" style="${theme(a)};--tlp:${pct}%;--tla:${pct}%;--tlg:${grad(.86)};--tlf:${grad(.42)}"><p class="eyebrow tl-eyebrow">${F('Timeline')}</p><div class="tl-top"><h1 class="yt-h1">${F(`${nm}’s year ahead`)}</h1></div>`;
+    let h = `<div class="ya-page tl-track" style="${theme(a)};--tlp:${pct}%;--tla:${pct}%;--tlg:${grad(.86)};--tlf:${grad(.42)}"><div class="eyebrow">${F('Timeline')}</div><div class="tl-top"><h1 class="yt-h1">${F(`${nm}’s year ahead`)}</h1></div>`;
     h += `<div class="tl-prog${hinted ? '' : ' tl-hint'}"><div class="tl-ride"><span class="tl-baby" role="slider" tabindex="0" aria-label="${F(`Drag ${nm} to see another age`)}" aria-valuemin="0" aria-valuemax="12" aria-valuenow="${a.toFixed(1)}" aria-valuetext="${F(ageTxt(a))}" onkeydown="tlKey(event)" style="${theme(a)}">${art(a)}<em class="tl-tip">${F(hinted ? ageTxt(a) : 'Drag me')}</em></span><span class="tl-flag" aria-hidden="true"><img class="tl-cakeimg" src="assets/home/babies/cake.webp" alt=""></span></div><div class="tl-bar"><i></i><button class="tl-nowmark" onclick="tlScrub(null)" aria-label="${F('Back to today')}"></button></div><div class="tl-ticks" aria-hidden="true">${[[0, 'Birth'], [12, 'First birthday']].map(([v, l]) => `<span style="left:${v / 12 * 100}%">${F(l)}</span>`).join('')}${hinted ? '' : `<em class="tl-hintline">${F(`Drag ${nm} to peek ahead`)}</em>`}</div><div class="tl-ends">${ends(a)}</div></div>`;
     const gvars = x => typeof window.monthColor === 'function' ? `--g-bg:${window.monthColor(Math.max(0, Math.min(11, Math.floor(x))), .86)};--g-ink:${window.monthColor(Math.max(0, Math.min(11, Math.floor(x))), .45, 30)}` : '';
     window.__tl.gvars = gvars;
@@ -346,55 +349,56 @@
   const PAGES = {
     crying: { lead: 'From about 2 weeks, many babies cry more, often in the late afternoon and evening. It peaks around 6–8 weeks and eases by 3–4 months.', bar: [0, 4, 0.5, 3, 'Peaks at 6–8 weeks'], signsTitle: 'What it can look like', signs: ['Fussier evenings', 'Crying that’s hard to settle, even after a feed', 'Pulling up legs or going red in the face'],
       rows: [['heart', 'Sleep', 'When the crying won’t stop', 'What helps, and when it eases', "openPage('chg:Sleep:d:crying')"], ['heart', 'Health', 'Looking after you', 'It’s OK to put {o} down safely and step away', "openPage('chg:Health:d:you')"]],
-      calls: { ped: 'crying comes with a fever or poor feeding, or the cry sounds different.', now: 'under 3 months, a temperature of 100.4°F or higher.', nowLabel: 'Call right away' } },
-    smile: { lead: 'Around 6–8 weeks, most babies start smiling back at you. It’s the first real back-and-forth between you.', bar: [0, 4, 1.4, 2.1, 'Smiling back'], signs: ['Watching your face closely', 'Calming at your voice', 'Little coos when you talk'],
+      calls: { ped: 'crying comes with poor feeding, or the cry sounds different.', now: 'under 3 months, a temperature of 100.4°F or higher.', nowLabel: 'Call right away' } },
+    smile: { lead: 'Around 6–8 weeks, most babies start smiling back at you. It’s the first real back-and-forth between you.', bar: [0, 4, 1.4, 2.1, 'Smiles'], signs: ['Watching your face closely', 'Calming at your voice', 'Little coos when you talk'],
       rows: [['smile', 'Development', 'Lots of face-to-face time', 'Close up, where {s} can see you best', "openPage('development-domain:2:Social')"], ['chat', 'Development', 'Talk back to {p} sounds', 'Pause, and give {o} a turn', "openPage('development-domain:2:Talking')"]],
       tip: ['Not smiling back by 2 months?', 'Some babies take a little longer. Mention it at the 2-month checkup.'] },
-    nights: { lead: 'Somewhere between 6 weeks and 4 months, one sleep at night starts to stretch longer, often to 4–5 hours.', bar: [0, 6, 1.5, 4, 'Nights stretch'], signs: ['More awake during the day', 'The longest sleep moves to the night', 'Sleepy around the same time each evening'],
+    nights: { lead: 'One sleep at night starts to stretch longer, often to 4–5 hours.', bar: [0, 6, 1.5, 4, 'Nights stretch'], signs: ['More awake during the day', 'The longest sleep moves to the night', 'Sleepy around the same time each evening'],
       rows: [['sun', 'Sleep', 'Help {o} tell day from night', 'Bright days, dim and quiet nights', "openPage('chg:Sleep:d:daynight')"], ['book', 'Sleep', 'Start a short bedtime routine', 'From about 6–8 weeks', "openPage('chg:Sleep:d:routine')"], ['moon', 'Sleep', 'How long {s} can sleep at night', 'The longest stretch grows over months', "openPage('chg:Sleep:d:stretch')"]],
       tip: ['Still waking every 2–3 hours?', 'That’s normal for many babies this age, especially breastfed babies. Stretches grow over months, not nights.'] },
-    regress: { lead: 'Around 4 months, sleep cycles mature, and many babies wake more for a few weeks. It’s a step forward, not backward.', bar: [1, 7, 3, 5, 'Often here'], signs: ['More night waking than a few weeks ago', 'Naps of 30–45 minutes', 'Harder to put down asleep'],
+    regress: { lead: 'Around 4 months, sleep cycles mature, and many babies wake more for a few weeks. It’s a step forward, not backward.', bar: [1, 7, 3, 5, 'Often here'], signsTitle: 'How you’ll know it’s here', signs: ['More night waking than a few weeks ago', 'Naps of 30–45 minutes', 'Harder to put down asleep'],
       rows: [['moon', 'Sleep', 'What helps during the regression', 'Wait a minute before going in', "openPage('chg:Sleep:d:regress')"], ['moon', 'Sleep', 'Rough day or night? Quick fixes', 'Waking a lot, short naps, up too early', "openPage('chg:Sleep:d:rough')"], ['heart', 'Health', 'Looking after you', 'Broken sleep is hard. Your rest matters too', "openPage('chg:Health:d:you')"]],
       calls: { ped: 'waking comes with a fever, poor feeding or pain. That’s not the regression.' } },
     roll: { lead: 'Rolling usually starts at 4–6 months. It changes how {s} sleeps and where {s} can go.', bar: [2, 8, 4, 6, 'Rolling'], signs: ['Rocking side to side on {p} back', 'Pushing up on straight arms in tummy time', 'Rolling onto {p} side'],
-      rows: [['sack', 'Sleep', 'Stop swaddling at the first signs of trying to roll', 'Then a sleep sack, arms free', "openPage('chg:Sleep:d:swaddleoff')"], ['coin', 'Safety', 'Clear {p} play space', 'Small things go straight in the mouth', "openPage('chg:Safety:d:step:small')"], ['shield', 'Safety', 'Beds and sofas are off-limits', 'Even for a second', "openPage('safety-stage:reaching')"], ['mat', 'Development', 'Tummy time to practice', 'A toy just to one side helps', "openPage('development-domain:6:Movement')"]],
+      rows: [['sack', 'Sleep', 'Stop swaddling at the first attempt to roll', 'Then a sleep sack, arms free', "openPage('chg:Sleep:d:swaddleoff')"], ['coin', 'Safety', 'Clear {p} play space', 'Small things go straight in the mouth', "openPage('chg:Safety:d:step:small')"], ['shield', 'Safety', 'Beds and sofas are off-limits', 'Even for a second', "openPage('safety-stage:reaching')"], ['mat', 'Development', 'Tummy time to practice', 'A toy just to one side helps', "openPage('development-domain:6:Movement')"]],
       tip: ['Rolled onto {p} tummy in sleep?', 'Always put {o} down on {p} back. Once {s} rolls both ways on {p} own, {s} can stay how {s} lands.'] },
-    sit: { pics: [['dev/m6-leans-on-hands', 'Sits propped on {p} hands', 'Leaning forward for balance'], ['feeding/sign-sits', 'A steady head and back', 'Upright, with a little support'], ['dev/play-toy-beside-knee', 'Reaches while sitting', 'For a toy just beside {o}']], lead: 'Most babies sit on their own by about 9 months. First comes sitting propped on their hands.', bar: [4, 12, 6, 9, 'Sitting up'], signs: ['Sitting propped on {p} hands', 'A steady head and back', 'Reaching for toys while sitting'],
-      rows: [['crib', 'Sleep', 'Lower the crib mattress', 'Before {s} can sit on {p} own', "openPage('chg:Sleep:d:mattress')"], ['mat', 'Safety', 'Time to retire the bouncer', 'Once {s} sits up or tries to climb out', "openPage('chg:Safety:d:gear')"], ['sit', 'Development', 'A toy beside your knee', 'Reaching while sitting builds balance', "openPage('development-domain:6:Movement')"]],
+    sit: { pics: [['dev/m6-leans-on-hands', 'Sits propped on {p} hands', 'Leaning forward for balance'], ['feeding/sign-sits', 'A steady head and back', 'Upright, with a little support'], ['dev/play-toy-beside-knee', 'Reaches while sitting', 'For a toy just beside {o}']], lead: 'It comes in steps, from held at the hips to sitting on {p} own.', bar: [4, 12, 6, 9, 'Sitting up'], signs: ['Sitting propped on {p} hands', 'A steady head and back', 'Reaching for toys while sitting'],
+      rows: [['crib', 'Sleep', 'Lower the crib mattress', 'Before {s} can sit on {p} own', "openPage('chg:Sleep:d:mattress')"], ['mat', 'Safety', 'Time to retire the bouncer', 'Once {s} sits up or tries to climb out', "openPage('chg:Safety:d:step:gear')"], ['sit', 'Development', 'A toy beside your knee', 'Reaching while sitting builds balance', "openPage('development-domain:6:Movement')"]],
       tip: ['Not sitting by 9 months?', 'Mention it at the 9-month checkup.'] },
-    twonaps: { lead: 'Usually between 6 and 9 months, the late-afternoon catnap drops and days settle into two naps.', bar: [4, 12, 6, 9, 'Two naps'], signs: ['Skipping the catnap most days', 'The catnap pushes bedtime late', 'Fine until bedtime without it'],
+    twonaps: { lead: 'The late-afternoon catnap drops, and days settle into two naps.', bar: [4, 12, 6, 9, 'Two naps'], signs: ['Skipping the catnap most days', 'The catnap pushes bedtime late', 'Fine until bedtime without it'],
       rows: [['sun', 'Sleep', 'How to make the switch', 'It takes a week or two', "openPage('chg:Sleep:d:catnap')"], ['book', 'Sleep', 'Bedtime a little earlier', 'While the catnap goes', "openPage('chg:Sleep:d:routine')"], ['stroller', 'Out and about', 'Longer outings between naps', 'More time out of the house', "openPage('topic:Out and about')"]],
       tip: ['Messy days are normal', 'On a day with short naps, a catnap can still help.'] },
-    tooth: { lead: 'Most babies get their first tooth between 6 and 12 months, usually a bottom front tooth.', bar: [3, 15, 6, 12, 'First tooth'], signs: ['More drooling and chewing', 'Swollen or tender gums', 'A little fussier than usual'],
+    tooth: { lead: 'It’s usually one of the bottom front teeth.', bar: [3, 15, 6, 12, 'First tooth'], signs: ['More drooling and chewing', 'Swollen or tender gums', 'A little fussier than usual'],
       rows: [['tooth', 'Daily rhythm', 'Start brushing', 'A rice-grain smear of fluoride toothpaste', "openPage('chg:Daily rhythm:d:teeth')"], ['tooth', 'Daily rhythm', 'Soothing sore gums', 'A clean finger or a chilled teething ring', "openPage('chg:Daily rhythm:d:gums')"], ['thermo', 'Health', 'Teething doesn’t cause a high fever', 'A fever means checking for something else', "openPage('chg:Health:d:sick')"]],
-      tip: ['No tooth yet?', 'Some babies get their first tooth later. Ask at a checkup if you don’t see any by 18 months.'] },
-    crawl: { pics: [['dev/crawl-rock', 'Rocks on hands and knees', 'Back and forth, not moving yet'], ['dev/m6-straight-arms', 'Pushes up high', 'On straight arms in tummy time'], ['dev/reaching-6', 'Pivots on {p} tummy', 'Turning to reach a toy']], lead: 'Most babies start moving between 6 and 10 months. Some scoot or roll instead, and some skip crawling altogether.', bar: [4, 12, 6, 10, 'Crawling'], signs: ['Rocking on hands and knees', 'Pushing up high during tummy time', 'Pivoting in circles on {p} tummy'],
-      rows: [['shield', 'Safety', 'Babyproof before {s} moves', 'Stair gates, cabinet locks and outlet covers', "openPage('safety-stage:rolling')"], ['crib', 'Sleep', 'Lower the crib mattress', 'Before {s} can sit on {p} own', "openPage('chg:Sleep:d:mattress')"], ['crawl', 'Development', 'Lots of floor time to practice', 'A toy just out of reach helps', "openPage('development-domain:9:Movement')"], ['stroller', 'Out and about', 'Outings get busier', 'A blanket won’t keep {o} put for long', "openPage('topic:Out and about')"]],
-      tip: ['Not crawling by 10 months?', 'Many babies skip crawling and go straight to pulling up. If Maya isn’t moving around at all, mention it at the next checkup.'] },
-    solids: { pics: [['feeding/sign-head', 'Steady head', 'Holds it up on {p} own'], ['feeding/sign-sits', 'Sits with support', 'In a high chair, or on your lap'], ['feeding/sign-interest2', 'Leans in for food', 'Reaches for your food, or watches every bite'], ['feeding/sign-spoon', 'Swallows, not pushes out', 'Food goes down, not back out']], lead: 'Around 6 months, food joins milk. It starts with a few bites a day, and milk stays the main food for months.', bar: [4, 9, 5.4, 7, 'About 6 months'], signsTitle: 'Signs {s’s} ready', signs: ['Holds {p} head steady on {p} own', 'Sits with a little support', 'Leans in when food comes {p} way', 'Swallows food instead of pushing it out'],
-      rows: [['highchair', 'Feeding', 'Get set up for the first bite', 'A high chair, a soft spoon and a bib', "openPage('chg:Feeding:d:setup')"], ['shield', 'Safety', 'Learn infant choking first aid', 'And how gagging is different', "openPage('chg:Feeding:safe')"], ['bowl', 'Feeding', 'Decide how you’d like to start', 'Spoon-feeding, finger foods or a bit of both', "openPage('chg:Feeding:d:approach')"], ['steth', 'Health', 'Ask about allergens at the checkup', 'The 6-month checkup is a good time', "openPage('health-visit:6')"]],
-      tip: ['No need to rush', 'Around 6 months is the usual start, never before 4. Until then, milk gives Maya everything {s} {need|needs}.'] },
+      tip: ['No tooth by 18 months?', 'Ask at a checkup.'] },
+    crawl: { pics: [['dev/crawl-rock', 'Rocks on hands and knees', 'Back and forth, not moving yet'], ['dev/m6-straight-arms', 'Pushes up high', 'On straight arms in tummy time'], ['dev/reaching-6', 'Pivots on {p} tummy', 'Turning to reach a toy']], lead: 'Most babies start moving between 6 and 9 months. Some scoot or roll instead, and some skip crawling altogether.', bar: [4, 12, 6, 9, 'Crawling'], signs: ['Rocking on hands and knees', 'Pushing up high during tummy time', 'Pivoting in circles on {p} tummy'],
+      rows: [['shield', 'Safety', 'Babyproof before {s} moves', 'Stair gates, cabinet locks and outlet covers', "openPage('safety-stage:rolling')"], ['crawl', 'Development', 'Lots of floor time to practice', 'A toy just out of reach helps', "openPage('development-domain:9:Movement')"], ['stroller', 'Out and about', 'Outings get busier', 'A blanket won’t keep {o} put for long', "openPage('topic:Out and about')"]],
+      tip: ['Not moving around by 10 months?', 'Mention it at the next checkup.'] },
+    // Nov 23: the readiness signs live on Feeding's readiness page; this page links there instead of copying them.
+    solids: { lead: 'Around 6 months, food joins milk. It starts with a few bites a day, and milk stays the main food for months.', bar: [4, 9, 5.4, 7, 'About 6 months'], signs: [],
+      rows: [['highchair', 'Feeding', 'Is Maya ready?', '4 signs to look for', "openPage('chg:Feeding:d:signs')"], ['highchair', 'Feeding', 'Get set up for the first bite', 'A high chair, a soft spoon and a bib', "openPage('chg:Feeding:d:setup')"], ['shield', 'Safety', 'Learn infant choking first aid', 'And how gagging is different', "openPage('chg:Feeding:safe')"], ['egg', 'Feeding', 'Ask about allergens at a checkup', 'Especially if {s} has eczema', "openPage('chg:Feeding:d:allergens')"]],
+      tip: ['Never before 4 months', 'Until then, milk gives Maya everything {s} {need|needs}.'] },
     finger: { lead: 'Around 7–9 months, food moves past smooth purées to soft lumps, and pieces {s} can pick up. Meals get messier, and that’s how {s} learns.', bar: [5, 11, 7, 9, 'Textures'], signs: ['Moving food around {p} mouth to chew', 'Raking food toward {o} with {p} fingers', 'Reaching for the spoon'],
       rows: [['bowl', 'Feeding', 'Thicker textures, step by step', 'From mashed to soft lumps', "openPage('chg:Feeding:d:lumpy')"], ['bowl', 'Feeding', 'Safe finger food sizes', 'Soft, and cut the right shape', "openPage('chg:Feeding:d:finger')"], ['shield', 'Safety', 'Gagging versus choking', 'Know the difference before you start', "openPage('chg:Feeding:safe')"]],
       tip: ['Lots of gagging at first?', 'It’s noisy and normal while {s} learns to move food around. Choking is different: a weak cough or no sound at all.'] },
-    carseat: { lead: 'Many babies outgrow the infant car seat in the first year, usually by height before weight. The next seat still faces the back.', bar: [4, 14, 8, 12, 'Often here'], signs: ['{P} head is within an inch of the top of the seat', 'Close to the weight limit on the label'], signsNote: 'Feet touching the back seat is fine, and not a reason to switch.',
-      rows: [['car', 'Out and about', 'Which seat comes next', 'Infant seat, then a convertible seat, still rear-facing', "openPage('chg:Out and about:d:car')"]],
+    carseat: { lead: 'Many babies outgrow the infant car seat in the first year, usually by height before weight. Check the height and weight limits on the label.', bar: [4, 14, 8, 12, 'Often here'], signs: ['{P} head is less than an inch from the top of the shell', 'Close to the weight limit on the label'], signsNote: 'Feet touching the back seat is fine, and not a reason to switch.',
+      rows: [['car', 'Out and about', 'Which seat comes next', 'What to look for in a convertible seat', "openPage('chg:Out and about:d:car')"]],
       tip: ['Still facing the back', 'Keep {o} rear-facing as long as the new seat allows, often well past age 2.'] },
-    sep: { lead: 'Around 8–10 months, many babies get upset when you leave. It means {s} knows you, and knows when you’re gone.', bar: [5, 14, 8, 10, 'Often peaks'], signs: ['Crying when you leave the room', 'Clinging around new people', 'Waking at night looking for you'],
-      rows: [['moon', 'Sleep', 'Night waking may come back', 'The same short goodbye helps', "openPage('chg:Sleep:d:nightwake')"], ['home', 'Childcare', 'Settling in with a caregiver', 'A familiar goodbye routine helps', "openPage('topic:Childcare')"], ['smile', 'Development', 'Peekaboo helps', 'Things that go away come back', "openPage('development-domain:9:Social')"]],
+    sep: { lead: 'Around 8–10 months, many babies get upset when you leave. It means {s} knows you, and knows when you’re gone.', bar: [5, 14, 8, 10, 'Peaks'], signsTitle: 'How you’ll know it’s here', signs: ['Crying when you leave the room', 'Clinging around new people', 'Waking at night looking for you'],
+      rows: [['moon', 'Sleep', 'Night waking may come back', 'Keep bedtime the same, and check in briefly', "openPage('chg:Sleep:d:nightwake')"], ['home', 'Childcare', 'Settling in with a caregiver', 'Start with short visits together', "openPage('topic:Childcare')"], ['smile', 'Development', 'Peekaboo helps', 'Things that go away come back', "openPage('development-domain:9:Social')"]],
       tip: ['Short goodbyes work best', 'Say goodbye, then go. Sneaking out makes the next goodbye harder.'] },
-    pull: { lead: 'Between 9 and 12 months, most babies pull up on furniture, then start cruising along it.', bar: [6, 14, 9, 12, 'Pulling up'], signs: ['Getting up on {p} knees', 'Pulling up on your legs or the sofa', 'Standing while holding on'],
+    pull: { lead: 'Most babies pull up on furniture, then start cruising along it.', bar: [6, 14, 9, 12, 'Pulling up'], signs: ['Getting up on {p} knees', 'Pulling up on your legs or the sofa', 'Standing while holding on'],
       rows: [['dresser', 'Safety', 'Check furniture and TVs are strapped down', 'Best done before crawling, so nothing tips when {s} pulls', "openPage('chg:Safety:d:step:anchor')"], ['crib', 'Sleep', 'Crib mattress to its lowest', 'Before {s} pulls up to stand', "openPage('chg:Sleep:d:mattress')"], ['shield', 'Safety', 'Windows, the stove and water', 'Everything higher is in reach', "openPage('safety-stage:pulling')"], ['stand', 'Development', 'Cruise to a toy', 'Steps along the sofa build balance', "openPage('development-domain:12:Movement')"]],
       tip: ['Stuck standing at night?', 'Practice sitting back down by day, then it gets easier at night.'] },
     words: { lead: 'Around the first birthday, many babies say “mama” or “dada” for a parent. Understanding comes before talking.', bar: [6, 16, 10, 14, 'First words'], signs: ['Babbling with lots of sounds', 'Turning when you say {p} name', 'Pointing or waving to tell you something'],
-      rows: [['chat', 'Development', 'Talk about what {s}’s looking at', 'Name it, then pause for {o}', "openPage('development-domain:12:Talking')"], ['signs', 'Development', 'Teach a few simple signs', 'More, eat, milk and all done', "openPage('chg:Development:d:signs')"], ['book', 'Development', 'Ideas for awake time', 'Books, songs and games', "openPage('chg:Development:d:more:12')"]],
+      rows: [['chat', 'Development', 'Talk about what {s}’s looking at', 'Name it, then pause for {o}', "openPage('development-domain:12:Talking')"], ['signs', 'Development', 'Teach a few baby signs', 'More, eat, milk and all done', "openPage('chg:Development:d:signs')"], ['book', 'Development', 'Ideas for awake time', 'Books, songs and games', "openPage('chg:Development:d:more:12')"]],
       tip: ['Not saying “mama” or “dada” yet?', 'Mention it at the 12-month checkup. Gestures like waving count too.'] },
-    milk: { lead: 'At 12 months, whole cow’s milk can replace formula, from a cup. Breastfeeding can carry on as long as you both want.', bar: [9, 15, 12, 12.8, '12 months'], signsTitle: 'Getting ready', signs: ['Practice with an open or straw cup', 'Offer a little water with meals', 'No juice needed'],
+    milk: { lead: 'At 12 months, whole cow’s milk can replace formula, from a cup. Nursing can carry on as long as you both want.', bar: [9, 15, 12, 12.8, '12 mo'], signsTitle: 'Getting ready', signs: ['Practice with an open or straw cup', 'Offer a little water with meals', 'No juice needed'],
       rows: [['cup', 'Feeding', 'The 12-month milk plan', 'How much, and when', "openPage('chg:Feeding:d:milk12')"], ['cup', 'Feeding', 'From bottle to cup', 'One bottle at a time', "openPage('chg:Feeding:d:cup')"], ['steth', 'Health', 'The 12-month checkup', 'An anemia check and milk questions', "openPage('health-visit:12')"]],
       tip: ['How much milk?', 'About 16–24 oz a day after the first birthday. More can crowd out iron-rich food.'] },
     steps: { lead: 'Most babies take their first steps between 12 and 15 months. Some walk earlier, and some later.', bar: [9, 18, 12, 15, 'First steps'], signs: ['Cruising along furniture', 'Standing alone for a moment', 'Walking while holding both your hands'],
-      rows: [['shield', 'Safety', 'Check what {s} can reach standing', 'Windows, the stove and water', "openPage('safety-stage:pulling')"], ['stand', 'Daily rhythm', 'Cruising and first steps', 'Barefoot is best indoors', "openPage('chg:Daily rhythm:d:steps')"], ['stand', 'Development', 'A push toy to walk with', 'Sturdy, and on a flat floor', "openPage('development-domain:12:Movement')"]],
-      tip: ['Not walking at 12 months?', 'Very common. Mention it if {s} isn’t walking on {p} own by 18 months.'] },
+      rows: [['shield', 'Safety', 'Check what {s} can reach standing', 'Tables, counters and anything with a cord', "openPage('safety-stage:pulling')"], ['stand', 'Daily rhythm', 'Cruising and first steps', 'Barefoot is best indoors', "openPage('chg:Daily rhythm:d:steps')"], ['stand', 'Development', 'A push toy to walk with', 'Sturdy, and on a flat floor', "openPage('development-domain:12:Movement')"]],
+      tip: ['Not walking at 12 months?', 'That’s very common. Mention it if {s} isn’t walking on {p} own by 18 months.'] },
     onenap: { lead: 'Usually between 13 and 18 months, two naps become one long midday nap.', bar: [11, 20, 13, 18, 'One nap'], signs: ['Fighting the morning nap', 'Fine until the afternoon without it', 'A short afternoon nap after a long morning one'],
       rows: [['sun', 'Sleep', 'Making the switch', 'Push the first nap later', "openPage('chg:Sleep:d:after')"], ['book', 'Sleep', 'Bedtime a little earlier', 'While {s} adjusts', "openPage('chg:Sleep:d:routine')"]],
       tip: ['No rush', 'Two naps after the first birthday is normal.'] }
@@ -420,15 +424,15 @@
   // A sequence: what comes first, next, then.
   const vSteps = (title, items) => vH2(title) + `<ol class="ya-steps">${items.map(([icon, t, sub]) => `<li><i>${typeof hubArt === 'function' ? hubArt(icon, 'Development & play') : ''}</i><b>${F(t)}</b><small>${F(sub)}</small></li>`).join('')}</ol>`;
   const VIS = {
-    tooth: () => vPhoto('tooth', [['Two little bottom teeth', 'br', 52, 60]], 'The two bottom front teeth usually come first.', '35%'),
-    carseat: () => vPhoto('carseat', [['Less than an inch to the top', 'tr', 50, 20]], '', '30%'),
+    tooth: () => vPhoto('tooth', [['Two little bottom teeth', 'br', 52, 60]], '', '35%'),
+    carseat: () => vPhoto('carseat', [], '', '30%'),
     pull: () => vPhoto('pull', [['Standing while holding on', 'tl', 55, 40]], '', '40%'),
     milk: () => vSteps('Getting ready', [['bottle', 'Breast milk or formula', 'Until 12 months'], ['cup', 'Cup practice', 'From 6 months, with a little water'], ['cup', 'Whole milk in a cup', 'From 12 months. No juice needed']]),
   };
   function changePage(id) {
     const h = H(), c = C.find(x => x.id === id), p = PAGES[id]; if (!c || !p) return null;
     const a = ageNow(), cat = c.cat, past = c.end <= a, now = c.start <= a && c.end > a;
-    const when = past ? 'Already behind ' + name() : now ? 'Any time now' : c.start - a <= 1 ? 'Could start any week now' : `In about ${Math.round(c.start - a)} month${Math.round(c.start - a) === 1 ? '' : 's'}`;
+    const when = past ? 'Already behind ' + name() : now ? 'Any time now' : c.start - a <= 1 ? 'Any week now' : `In about ${Math.round(c.start - a)} month${Math.round(c.start - a) === 1 ? '' : 's'}`;
     // Nov 23 cohesion pass: where every sign has a real photo, the signs show as Feeding's photo rows (show, don't tell).
     // Nov 14: the signs used to sit at the end of the top card's paragraph. As their own short list they scan at a glance.
     // Nov 23 (Yarden): read-ahead pages use Development's "big question" card: when it usually happens on a bar
@@ -441,9 +445,9 @@
     const steps = !past && STEPS[id] && window.devBigSteps ? window.devBigSteps(STEPS[id]) : '';
     const when2 = B && window.hubWindowBar ? `<h2 class="hub-h2">${F(past ? 'When it happened' : 'When it usually happens')}</h2><section class="hub-card dev-bigq ya-when">${steps}`
       + hubWindowBar({ title: '', from: B[0], to: B[1], zones: [[B[2], B[3], B[4], 'band']], ticks, now: a, cat: cat === 'Daily rhythm' || cat === 'Out and about' ? cat : cat, caption: F(whenLine || c.title) })
-      + (whenLine ? `<p class="dev-bigq-a">${F(whenLine)}</p>` : '') + `</section>` : '';
+      + `</section>` : '';   // Nov 23: no timing sentence under the bar; the eyebrow already gives the range.
     // Nov 23 (Yarden): a visual replaces the words it shows, it doesn't add to them.
-    const SHOWN = { milk: 'all', carseat: [0], pull: [2] }, cut = VIS[id] && SHOWN[id];
+    const SHOWN = { milk: 'all', pull: [2] }, cut = VIS[id] && SHOWN[id];
     const sg = !cut ? p.signs : cut === 'all' ? [] : p.signs.filter((x, k) => !cut.includes(k));
     const signsBody = p.pics ? h.TPLB.photoRows(p.pics) : `<div class="hub-card ya-signs2">${sg.map(x => `<p>${F(x)}</p>`).join('')}</div>`;
     // Nov 23: the page's own visual (a photo, a small chart or a strip) sits between the timing card and the signs.
@@ -454,7 +458,8 @@
       look
       + h.list('What it changes', p.rows.slice(0, 4).map(([icon, rc, title, sub, go]) => h.row({ icon, cat: rc, title, sub, onclick: go }).replace('<span class="hub-row-copy">', `<span class="hub-row-copy"><small class="hub-row-eyebrow">${F(AREA[rc] || rc)}</small>`)))
       // Nov 23: a tip that's really a call line uses the app's one When to call card.
-      + (p.calls ? h.TPLB.calls(p.calls) : h.tip(p.tip[0], p.tip[1])), c.icon)
+      // Nov 23: the under-3-months fever rule only shows while it's the baby's rule.
+      + (p.calls ? h.TPLB.calls(id === 'crying' && a >= 3 ? { ped: p.calls.ped } : p.calls) : h.tip(p.tip[0], p.tip[1])), c.icon)
       // Nov 23 cohesion pass: Feeding, Everyday care and Outings changes opened on a bare header (no card), unlike
       // Development and Sleep. Give them the same header card every guide page uses: the guide's soft color, its icon on a white tile.
       .replace(/<div class="hub-detail-head">\s*<span class="hub-big">/, m => {

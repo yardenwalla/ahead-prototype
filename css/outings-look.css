@@ -200,9 +200,11 @@
 #main .oa3-fold-ic svg { width: 20px; height: 20px }
 #main .oa3-fold-ic svg, #main .oa3-fold-ic svg [stroke]:not([stroke="none"]) { stroke: var(--ss-ink) }
 #main .oa3-fold summary b { flex: 1; font-size: 15.5px; font-weight: 650; color: var(--ink) }
-#main .oa3-fold summary i { font-style: normal; font-size: 18px; color: #8b8590; transition: transform .2s }
+#main .oa3-fold summary b small { display: block; margin-top: 2px; font-size: 13px; font-weight: 400; line-height: 1.35; color: #6f6979 }
+#main .oa3-fold summary i { display: grid; font-style: normal; font-size: 18px; color: #8b8590; transition: transform .2s }
 #main .oa3-fold[open] summary i { transform: rotate(180deg) }
 #main .oa3-fold-body { padding: 0 6px 6px }
+#main .oa-bag .oa-packs { grid-template-columns: 1fr }   /* Nov 23 review: one column, like the app's other checklists */
 #main .oa3-fold-body .hub-list { border: 0; box-shadow: none; margin: 0 }
 #main .oa3-hero { padding-bottom: 18px }
 #main .oa3-places { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 0 0 18px }

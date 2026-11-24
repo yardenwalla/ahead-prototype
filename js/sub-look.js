@@ -4,7 +4,8 @@
 (function () {
   const PAL = {
     green: ['#e6f5ec', '#356651', '#bfe3cf', '#f2b8c6'], blue: ['#e7effc', '#46638c', '#9fb8df', '#d9e5fc'],
-    yellow: ['#fff3dc', '#8a6a2a', '#f3d58a', '#fbe6bd'], peach: ['#fdeee6', '#9a5a3c', '#f4c3a8', '#fbe0d0'], pink: ['#fdeef2', '#a24d6a', '#f2b8c6', '#f4d6c4']
+    yellow: ['#fff3dc', '#8a6a2a', '#f3d58a', '#fbe6bd'], peach: ['#fdeee6', '#9a5a3c', '#f4c3a8', '#fbe0d0'], pink: ['#fdeef2', '#a24d6a', '#f2b8c6', '#f4d6c4'],
+    purple: ['#efe9fb', '#5b4f8a', '#d6caf0', '#e6def7']
   };
   const ART = {
     // Health: a thermometer for feeling sick, a drop for colds, a heart-ish pair for you, a calendar for checkups.
@@ -18,8 +19,11 @@
     signs: c => `<svg viewBox="0 0 90 40" aria-hidden="true"><rect x="6" y="8" width="16" height="26" rx="8" fill="${c[2]}"/><rect x="28" y="12" width="16" height="22" rx="8" fill="${c[3]}"/></svg>`
   };
   function pick(cat, text) {
+    if (cat === 'Health' && /Infant CPR|After a fall/i.test(text)) return ['green', null];   // Nov 23 review: no calendar shape on the first-aid pages
     if (cat === 'Health') return /sick|fever|symptom|vomit|cold|stuffy/i.test(text) ? ['peach', 'sick'] : /how are you|you’re doing|your health/i.test(text) ? ['pink', 'you'] : ['green', 'visit'];
-    if (cat === 'Development') return /sign/i.test(text) ? ['yellow', 'signs'] : /reach|move|cruise|roll|floor|knee/i.test(text) && !/ideas to try/i.test(text) ? ['blue', 'move'] : ['pink', 'play'];
+    // Nov 23 review: every play idea is pink (Movement ones too), the all-milestones list (every area) is Development's purple,
+    // and no decorative shapes: the color says enough.
+    if (cat === 'Development') return /sign/i.test(text) ? ['yellow', null] : /all \d+ milestones/i.test(text) ? ['purple', null] : /reach|move|cruise|roll|floor|knee/i.test(text) && !/ideas to try|try together/i.test(text) ? ['blue', null] : ['pink', null];
     return null;
   }
   function dress() {
@@ -32,7 +36,7 @@
     const c = PAL[p[0]];
     head.classList.add('dev-area-head', 'ss-head'); head.style.setProperty('--area', c[0]); head.style.setProperty('--area-ink', c[1]);
     page.style.setProperty('--ss-bg', c[0]); page.style.setProperty('--ss-ink', c[1]);
-    const big = head.querySelector('.hub-big'); const art = `<span class="dev-area-head-art">${ART[p[1]](c)}</span>`;
+    const big = head.querySelector('.hub-big'); const art = p[1] ? `<span class="dev-area-head-art">${ART[p[1]](c)}</span>` : '';
     if (big) big.outerHTML = art; else head.insertAdjacentHTML('afterbegin', art);
   }
   const base = window.render;

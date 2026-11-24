@@ -12,7 +12,7 @@
   const IMG = (src, cls) => `<img class="${cls || ''}" src="${src}" alt="" decoding="async">`;
   function welcomeHtml() {
     return `<section class="welcome aw ob-welcome">
-      <h1><span>What matters now.</span><span>What’s coming next.</span></h1>
+      <h1><span>Know what’s coming,</span><span>before it happens</span></h1>
       <p class="aw-lead">Guidance matched to your baby’s exact age, all through the first year.</p>
       <div class="ob-collage" aria-hidden="true">
         <div class="ob-mini ob-mini-tl"><b>Timeline</b><small>What’s coming up</small><div class="ob-tl"><i></i><span></span><i></i><span></span><i></i><span></span></div></div>
@@ -38,7 +38,7 @@
     bottle: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2.8h4M10.5 2.8v2.4h3V2.8M9 5.2h6l.8 2.3v12a1.8 1.8 0 0 1-1.8 1.8h-4a1.8 1.8 0 0 1-1.8-1.8v-12zM8.4 11h3M8.4 14h3"/></svg>',
     both: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 6c2.2 2.6 4 5 4 7.3a4 4 0 0 1-8 0C4.5 11 6.3 8.6 8.5 6zM15.5 6c2.2 2.6 4 5 4 7.3a4 4 0 0 1-8 0"/></svg>'
   };
-  const HOW = [['Nursing', 'Nursing'], ['Pumping', 'Pumped'], ['Both', 'Nursing + pumped'], ['Stored', 'Freezer stash']];
+  const HOW = [['Nursing', 'Nursing'], ['Pumping', 'Pumping'], ['Both', 'Both'], ['Stored', 'Stored milk only']];
 
   function seg(cls, items, value, label) {
     return `<div class="ob-seg ${cls}" role="radiogroup" aria-label="${label}">${items.map(([v, t]) => `<button type="button" role="radio" data-v="${v}" aria-checked="${v === value}">${t}</button>`).join('')}</div>`;
@@ -60,7 +60,7 @@
   window.submitSetup = submitSetup = function (e) {
     const feed = document.querySelector('#setupForm #feed');
     if (feed && !feed.value && typeof feed.closest === 'function' && document.querySelector('#setupForm .ob-milk')) { e && e.preventDefault(); const form = feed.closest('form'), err = form.querySelector('#formError');
-      if (err) { err.textContent = 'Pick the closest one. You can change it anytime.'; err.hidden = false; }
+      if (err) { err.textContent = 'Pick the closest one.'; err.hidden = false; }
       form.classList.add('ob-need'); const f = form.querySelector('.ob-milk button'); f && f.focus(); return; }
     return baseSubmit.apply(this, arguments);
   };
@@ -93,11 +93,11 @@
       // The due date opens inside the same card, so the two read as one question.
       const due = form.querySelector('#dueBox'), card = document.createElement('div'); card.className = 'ob-early-card';
       l.parentNode.insertBefore(card, l); card.appendChild(l); if (due) { card.appendChild(due);
-        const h = due.querySelector('.hint'); if (h) h.textContent = 'Guidance follows the due date; checkups follow the birthday.'; } }
+        const h = due.querySelector('.hint'); if (h) h.textContent = 'Guides follow the due date. Checkups follow the birthday.'; } }
     // Name: no "Optional" tag; one line says why we ask.
     const nm = form.querySelector('#babyName');
     if (nm) { const l = form.querySelector('label[for="babyName"]'); if (l) { const h = l.querySelector('.hint'); h && h.remove(); }
-      nm.insertAdjacentHTML('afterend', '<p class="ob-help">We’ll use it throughout the app.</p>'); }
+      nm.insertAdjacentHTML('afterend', '<p class="ob-help">Optional. We’ll use it throughout the app.</p>'); }
     // Dates: a calm "Select a date" field with a calendar icon that shows the date in words; the phone's own picker
     // still opens underneath (the real date input sits on top, invisible, so taps reach it).
     form.querySelectorAll('input[type=date]').forEach(inp => {
@@ -111,7 +111,7 @@
     const feed = form.querySelector('#feed');
     if (feed) {
       feed.required = false; feed.classList.add('ob-hidden'); feed.tabIndex = -1; feed.setAttribute('aria-hidden', 'true');
-      const intro = form.querySelector('.hint'); if (intro && /fits your day/.test(intro.textContent)) { intro.className = 'ob-sub'; intro.removeAttribute('style'); intro.textContent = 'So feeding tips fit how you actually feed. Change it anytime.'; }
+      const intro = form.querySelector('.hint'); if (intro && /fits your day/.test(intro.textContent)) { intro.className = 'ob-sub'; intro.removeAttribute('style'); intro.textContent = 'We’ll show feeding tips for how you feed. You can change it anytime.'; }
       form.querySelectorAll('p.hint').forEach(h => /update this anytime/.test(h.textContent) && h.remove());
       const fl = form.querySelector('label[for="feed"]'); if (fl) fl.remove();
       feed.insertAdjacentHTML('afterend', `<div class="ob-milk" role="radiogroup" aria-label="How is your baby fed?">${MILK.map(([v, t, sub, ic]) => `<button type="button" role="radio" data-v="${v}" aria-checked="${feed.value === v}"><span class="ob-milk-ic ob-ic-${ic}">${MILK_ICON[ic]}</span><span class="ob-milk-t"><b>${t}</b>${sub ? `<small>${sub}</small>` : ''}</span><i aria-hidden="true"></i></button>`).join('')}</div>`);

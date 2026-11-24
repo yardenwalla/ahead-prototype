@@ -38,7 +38,7 @@
     ] },
     // Everyday care follows age, so its timeline is for reading only (no Change), like Health.
     'Daily rhythm': { kind: 'calendar', fixed: true, stages: [
-      { label: 'Newborn' }, { label: '1–3 months' }, { label: '4–6 months' }, { label: '6–12 months' }
+      { label: 'Newborn' }, { label: '1–3 months' }, { label: '4–6 months' }, { label: '7–12 months' }
     ] },
     Health: { kind: 'calendar', fixed: true, stages: [0, 1, 2, 4, 6, 9, 12].map(a => ({ key: a, label: a === 0 ? 'First week' : a + (a === 1 ? ' month' : ' months') })) }
   };
