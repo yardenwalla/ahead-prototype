@@ -51,13 +51,15 @@
     // ---------- Every day ----------
     nb_vitd: () => onlyFormula()
       ? { type: 'howto', label: 'Every day', art: 'drop', title: 'Vitamin D drops, every day for now',
+        hero: () => window.aheadFig ? window.aheadFig('feeding/vitd-drop', [['Into the side of {p} mouth', 'bl', 52, 46]], 'Drip it in slowly, inside the cheek.', '35%') : '',
         why: 'Formula covers it once {s} {drink|drinks} about 32 oz a day. Until then, give drops too.',
-        ordered: false, steps: [['drop', 'The label’s dose', 'Using the dropper that comes with them'], ['mouth', 'Inside {p} cheek', 'Drip it in slowly'], ['bottle', 'Or mixed in 1 oz of milk', 'Make sure {s} {finish|finishes} it']],
+        ordered: false, steps: [['drop', 'The label’s dose', 'Using the dropper that comes with them'], ['bottle', 'Or mix it into 1 oz of milk', 'Make sure {s} {finish|finishes} it']],
         stepsNotes: mo() < 6 ? [['', 'No water yet', 'Milk is all {s} {need|needs} until about 6 months, even on hot days']] : null }
       : { type: 'howto', label: 'Every day', art: 'drop', title: 'Vitamin D drops, every single day',
+        hero: () => window.aheadFig ? window.aheadFig('feeding/vitd-drop', [['Into the side of {p} mouth', 'bl', 52, 46]], nurse() ? 'Drip it slowly inside the cheek, or onto the nipple just before a feed.' : 'Drip it in slowly, inside the cheek.', '35%') : '',
         why: 'Vitamin D builds strong bones, and breast milk has very little. A few drops a day fill in the gap.',
         pictureTitle: 'What {s} {need|needs}', picture: () => H().TPLB.tiles([['sun', 'Vitamin D', '400 IU a day, through {p} first year'], ['drop', 'Iron', fam() ? 'Drops from 4 months, if mostly breast milk' : mo() < 4 ? 'Drops usually start at about 4 months' : 'Drops from 4 months, until iron-rich foods are going well']], CAT),
-        ordered: false, steps: [['drop', 'The label’s dose', 'Using the dropper that comes with them'], ['mouth', 'Inside {p} cheek', nurse() ? 'Or on the nipple, just before a feed' : 'Drip it in slowly'], ['bottle', 'Or mixed in 1 oz of milk', 'Make sure {s} {finish|finishes} it']],
+        ordered: false, steps: [['drop', 'The label’s dose', 'Using the dropper that comes with them'], ['bottle', 'Or mix it into 1 oz of milk', 'Make sure {s} {finish|finishes} it']],
         stepsNotes: mo() < 6 ? [['', 'No water yet', 'Milk is all {s} {need|needs} until about 6 months, even on hot days']] : null },
     // Nov 17: AAP clinical report (Pediatrics, July 2026). Exclusively breastfed babies born at term: iron by 4 months,
     // or wait for iron-rich foods at 6. Born early: iron starts in the first weeks, on the pediatrician's plan.

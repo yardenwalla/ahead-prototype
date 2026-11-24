@@ -399,6 +399,32 @@
       rows: [['sun', 'Sleep', 'Making the switch', 'Push the first nap later', "openPage('chg:Sleep:d:after')"], ['book', 'Sleep', 'Bedtime a little earlier', 'While {s} adjusts', "openPage('chg:Sleep:d:routine')"]],
       tip: ['No rush', 'Two naps after the first birthday is normal.'] }
   };
+  /* Nov 23 (Yarden: "it's not just adding images, it's whether a chart or a visual communicates better than words"):
+     each read-ahead page gets the one visual that answers its question fastest. A photo where the change is something
+     you can see, a small chart where it's a pattern over time, a strip where it's a sequence. */
+  const VSTART = { tl: [80, 56], tr: [320, 56], bl: [80, 244], br: [320, 244] };
+  const vPhoto = (img, call, cap, pos) => { const src = img.includes('/') ? img : 'timeline/' + img; const arr = (call || []).map(([, at, x, y]) => { const [sx, sy] = VSTART[at], ex = x * 4, ey = y * 3, mx = (sx + ex) / 2, my = (sy + ey) / 2, dx = ex - sx, dy = ey - sy, b = at === 'tl' || at === 'br' ? 0.25 : -0.25;
+      return `<path d="M${sx} ${sy} Q${(mx - dy * b).toFixed(0)} ${(my + dx * b).toFixed(0)} ${ex} ${ey}" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" marker-end="url(#yaah)" filter="drop-shadow(0 1px 2px rgba(0,0,0,.35))"/>`; }).join('');
+    return `<figure class="ct-hero ya-photo"><img src="assets/${src}.jpg?v=1" alt="${F(cap || (call && call[0] && call[0][0]) || '').replace(/"/g, '&quot;')}" loading="lazy" style="object-position:50% ${pos || '40%'}"><svg class="ct-arrows" viewBox="0 0 400 300" preserveAspectRatio="none" aria-hidden="true"><defs><marker id="yaah" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#fff"/></marker></defs>${arr}</svg>${(call || []).map(([l, at]) => `<span class="ct-callout is-${at}">${F(l)}</span>`).join('')}</figure>${cap ? `<p class="ya-cap">${F(cap)}</p>` : ''}`; };
+  // Shared with other guides' pages (Health's rectal temperature, Feeding's vitamin D): one photo, pointing labels, a caption.
+  window.aheadFig = vPhoto;
+  const vH2 = t => `<h2 class="hub-h2">${F(t)}</h2>`;
+  // A pattern over weeks: one smooth curve with its three moments named under it.
+  const vCurve = (title, pts, marks) => vH2(title) + `<figure class="ya-curve" role="img" aria-label="${F(marks.map(m => m[1]).join(', '))}"><svg viewBox="0 0 320 120" preserveAspectRatio="none" aria-hidden="true"><path d="M0 118 ${pts}" fill="var(--year-pale)" stroke="none"/><path d="${pts.replace(/^L/, 'M')}" fill="none" stroke="var(--year-ink)" stroke-width="3" stroke-linecap="round"/></svg><figcaption>${marks.map(([, t, sub]) => `<span><b>${F(t)}</b>${sub ? F(sub) : ''}</span>`).join('')}</figcaption></figure>`;
+  // How long the longest sleep gets, as bars.
+  const vBars = (title, rows) => vH2(title) + `<section class="ya-bars">${rows.map(([age, w, lbl]) => `<div><small>${F(age)}</small><span><i style="width:${w}%">${F(lbl)}</i></span></div>`).join('')}</section>`;
+  // Night wakings, counted in dots.
+  const vDots = (title, rows) => vH2(title) + `<section class="ya-dots">${rows.map(([t, n, lbl, now]) => `<div class="${now ? 'is-now' : ''}"><b>${F(t)}</b><span>${'<i></i>'.repeat(n)}</span><small>${F(lbl)}</small></div>`).join('')}</section>`;
+  // An example day, 7 am to 7 pm, naps as blocks.
+  const vDays = (title, rows) => vH2(title) + `<section class="ya-days">${rows.map(([t, naps]) => `<div><b>${F(t)}</b><span>${naps.map(([a, z]) => `<i style="left:${(a - 7) / 12 * 100}%;width:${(z - a) / 12 * 100}%"></i>`).join('')}</span></div>`).join('')}<p><span>7 am</span><span>Noon</span><span>7 pm</span></p></section>`;
+  // A sequence: what comes first, next, then.
+  const vSteps = (title, items) => vH2(title) + `<ol class="ya-steps">${items.map(([icon, t, sub]) => `<li><i>${typeof hubArt === 'function' ? hubArt(icon, 'Development & play') : ''}</i><b>${F(t)}</b><small>${F(sub)}</small></li>`).join('')}</ol>`;
+  const VIS = {
+    tooth: () => vPhoto('tooth', [['Two little bottom teeth', 'br', 52, 60]], 'The two bottom front teeth usually come first.', '35%'),
+    carseat: () => vPhoto('carseat', [['Less than an inch to the top', 'tr', 50, 20]], '', '30%'),
+    pull: () => vPhoto('pull', [['Standing while holding on', 'tl', 55, 40]], '', '40%'),
+    milk: () => vSteps('Getting ready', [['bottle', 'Breast milk or formula', 'Until 12 months'], ['cup', 'Cup practice', 'From 6 months, with a little water'], ['cup', 'Whole milk in a cup', 'From 12 months. No juice needed']]),
+  };
   function changePage(id) {
     const h = H(), c = C.find(x => x.id === id), p = PAGES[id]; if (!c || !p) return null;
     const a = ageNow(), cat = c.cat, past = c.end <= a, now = c.start <= a && c.end > a;
@@ -416,8 +442,14 @@
     const when2 = B && window.hubWindowBar ? `<h2 class="hub-h2">${F(past ? 'When it happened' : 'When it usually happens')}</h2><section class="hub-card dev-bigq ya-when">${steps}`
       + hubWindowBar({ title: '', from: B[0], to: B[1], zones: [[B[2], B[3], B[4], 'band']], ticks, now: a, cat: cat === 'Daily rhythm' || cat === 'Out and about' ? cat : cat, caption: F(whenLine || c.title) })
       + (whenLine ? `<p class="dev-bigq-a">${F(whenLine)}</p>` : '') + `</section>` : '';
-    const signsBody = p.pics ? h.TPLB.photoRows(p.pics) : `<div class="hub-card ya-signs2">${p.signs.map(x => `<p>${F(x)}</p>`).join('')}</div>`;
-    const look = when2 + (steps ? '' : `<h2 class="hub-h2">${F(c.end <= a ? 'What it looked like' : p.signsTitle || 'Signs it’s close')}</h2>${signsBody}`) + (p.signsNote ? `<p class="ya-signs-note">${F(p.signsNote)}</p>` : '');
+    // Nov 23 (Yarden): a visual replaces the words it shows, it doesn't add to them.
+    const SHOWN = { milk: 'all', carseat: [0], pull: [2] }, cut = VIS[id] && SHOWN[id];
+    const sg = !cut ? p.signs : cut === 'all' ? [] : p.signs.filter((x, k) => !cut.includes(k));
+    const signsBody = p.pics ? h.TPLB.photoRows(p.pics) : `<div class="hub-card ya-signs2">${sg.map(x => `<p>${F(x)}</p>`).join('')}</div>`;
+    // Nov 23: the page's own visual (a photo, a small chart or a strip) sits between the timing card and the signs.
+    // (Yarden: the timing card stays on read-ahead pages.)
+    const vis = VIS[id] ? VIS[id]() : '';
+    const look = when2 + vis + (steps || !sg.length ? '' : `<h2 class="hub-h2">${F(c.end <= a ? 'What it looked like' : p.signsTitle || 'Signs it’s close')}</h2>${signsBody}`) + (p.signsNote ? `<p class="ya-signs-note">${F(p.signsNote)}</p>` : '');
     return h.detail(cat, `${range(c)} · ${when}`, c.title, lead,
       look
       + h.list('What it changes', p.rows.slice(0, 4).map(([icon, rc, title, sub, go]) => h.row({ icon, cat: rc, title, sub, onclick: go }).replace('<span class="hub-row-copy">', `<span class="hub-row-copy"><small class="hub-row-eyebrow">${F(AREA[rc] || rc)}</small>`)))
