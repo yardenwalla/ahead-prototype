@@ -170,7 +170,7 @@
         ordered: false, steps: [['notepad', 'Label breast milk', '{P} name and the date'], ['fridge', 'Keep it cold', 'In a cooler with ice packs, up to 24 hours'], ['cup', 'Formula to mix there', 'Powder and water kept apart']] },
 
     // ---------- Feeding challenges ----------
-    x_gas: () => ({ type: 'expect', ct: 'know', label: 'Is this normal?', art: 'eye', title: 'Some gassy fussing every day is normal',
+    x_gas: () => ({ type: 'expect', ct: 'know', label: 'Feeding challenges', art: 'eye', title: 'Some gassy fussing every day is normal',
       photo: 'feeding/gas-hero', pos: '40%', cap: () => realMo() < 4 ? 'Most fussy in the evening, legs pulled up' : 'Past the usual peak, it’s less common',
       notice: ['Squirming and pulling {p} legs up', 'Fussier in the evening'],
       helpMoves: () => [['photo:feeding/burp-shoulder', 'Burp {o} mid-feed', 'Not just at the end'], ['photo:feeding/gas-bicycle', 'Bicycle {p} legs', 'Gently, with {o} on {p} back'], ...(realMo() < 6 ? [['photo:feeding/gas-tummy', 'Tummy time', 'While {s’s} awake and watched']] : [])],
@@ -181,7 +181,7 @@
       doNotes: [['', 'Gas drops and gripe water', 'Gas drops are safe, but often don’t help. Ask before gripe water']],
       calls: { ped: 'crying 3 or more hours a day, or grunting every time {s} {breathe|breathes}.' } }),
     // Nov 24 (Feeding F): spit-up on the same "Is this normal?" template as gas, with a picture of what normal looks like.
-    x_spit: () => ({ type: 'expect', ct: 'know', label: 'Is this normal?', art: 'drop', title: 'Spit-up is common, and usually fine',
+    x_spit: () => ({ type: 'expect', ct: 'know', label: 'Feeding challenges', art: 'drop', title: 'Spit-up is common, and usually fine',
       photo: 'feeding/spit-up', pos: '45%', cap: 'A tablespoon or two looks like a lot once it spreads',
       notice: ['A little milk after most feeds', 'Comfortable, and still growing'],
       helps2: ['Hold {o} upright for 20–30 minutes after feeds', 'Smaller feeds, a little more often', 'Stop when {s} {slow|slows} down. No need to finish'],
@@ -275,7 +275,7 @@
     // Nov 19: the squish test in the top card, then sizes by age (this baby's marked), what to try, how to make risky foods safe, and safety while eating.
     z_shapes: () => { const T = H().TPLB, nine = mo() >= 9;
       return { type: 'howto', label: 'Safe finger foods', art: 'hand', title: 'Finger foods should squish when pressed',
-        why: () => mo() >= 9 ? 'Soft, pea-size pieces now, small enough to pinch.' : 'Finger-size strips now, pea-size pieces from 9 months.',
+        why: () => mo() >= 9 ? 'Cut food into soft pieces about the size of a pea, so {s} can pick them up.' : 'Cut food into strips about the size of your finger, so {s} can hold them. Smaller pieces come at 9 months.',
         heroTitle: 'The squish test', hero: () => `<section class="care-tpl-card ph-squish">${T.photoPins('feeding/squish2', 'A thumb and finger squishing a soft cooked sweet potato strip flat', [['Press gently', 38, 42, 'l'], ['It should give way', 47, 68, 'b']], 'is-wide')}</section>`,
         // Nov 19: like the inspiration, three blocks only: the squish test, what to try, and how to keep it safe (icons, not more photos).
         stepsTitle: 'A few foods to try', // Nov 23: from 9 months, one photo of pea-size pieces replaces the three strip photos.
@@ -286,7 +286,7 @@
       why: 'Start around 6 months. Ask first if {s} has severe eczema or an egg allergy.',
       pictureAfter: true, pictureTitle: 'Keep track', picture: () => X().pron(window.__alCard()),
       ordered: false, steps: [['peanut', 'One allergen at a time', 'At home, earlier in the day, so you can watch'], ['egg', 'In a safe form', 'Thinned peanut butter, egg well cooked'], ['plate', 'Keep it going', 'A few times a week once {s’ve} had it']],
-      stepsTitle: 'Peanut, the safe way', stepsFig: () => ctPhotoSteps([['photo:feeding/pb-spoon', 'A little smooth peanut butter', 'About ½ teaspoon, never whole nuts'], ['photo:feeding/pb-thin', 'Thin it', 'Stir in warm water or breast milk until runny'], ['photo:feeding/pb-offer', 'Offer a small taste', 'Then watch for 10 minutes']], [['Egg, too', 'Well cooked, never runny, like scrambled or hard-boiled'], ['One at a time', 'At home, earlier in the day, so you can watch'], ['Then keep it going', 'A few times a week once {s’ve} had it']]),
+      stepsTitle: 'Peanut, the safe way', stepsFig: () => ctPhotoSteps([['photo:feeding/pb-spoon', 'A little smooth peanut butter', 'About ½ teaspoon. Never whole nuts'], ['photo:feeding/pb-thin', 'Thin it', 'With warm water or breast milk, until runny'], ['photo:feeding/pb-offer', 'Offer it at home', 'Early in the day, so you can watch. Then a few times a week']], [['Egg works the same way', 'Well cooked, never runny']]),
       // Nov 24 flag 10: the reaction signs use the standard When to call card, like every other page.
       calls: { ped: 'a few hives, or vomiting, after a new food.', nowLabel: 'Call 911', now: 'trouble breathing, swelling of the lips or face, hives all over, hives with vomiting, or {s’s} very sleepy or floppy.' } }),
     z_plan: () => ({ type: 'expect', label: 'Foods to wait on', art: 'plate', title: mo() >= 12 ? 'Honey is fine now. Some foods wait until 4' : 'Honey waits until age 1, some foods until 4',
@@ -401,7 +401,7 @@
     const art = q.art && typeof hubArt === 'function' ? `<span class="dev-area-head-art sf-head-art">${hubArt(q.art, CAT)}</span>` : (m && m[3] ? m[3] : '');
     const why = v(q.why);
     return `<div class="quiet-category hub-page hub-detail care-v2" data-overview="${CAT}" data-ss="1" style="${typeof yearTheme === 'function' ? yearTheme(CAT) : ''};--ss-bg:${bg};--ss-ink:${ink}">${typeof detailPageTop === 'function' ? detailPageTop(CAT) : ''}`
-      + `<div class="dev-area-head ss-head" style="--area:${bg};--area-ink:${ink}">${art}<p class="hub-context">${F(v(q.label) + (q.ct === 'howto' ? ' · How to' : q.ct === 'know' && v(q.label) !== 'Is this normal?' ? ' · What to know' : ''))}</p><h1>${F(v(q.title))}</h1>${why ? `<p class="hub-lead">${F(why)}</p>` : ''}</div>`
+      + `<div class="dev-area-head ss-head" style="--area:${bg};--area-ink:${ink}">${art}<p class="hub-context">${F(v(q.label) + (q.ct === 'howto' ? ' · How to' : ''))}</p><h1>${F(v(q.title))}</h1>${why ? `<p class="hub-lead">${F(why)}</p>` : ''}</div>`
       // Nov 19: a page's main visual comes first, right under the standard top card (never inside it), so every top card looks the same.
       + ((hero => hero ? `<div class="ph-first">${v(q.heroTitle) ? `<h2 class="hub-h2">${F(v(q.heroTitle))}</h2>` : ''}${hero}</div>` : '')(v(q.hero)))
       + (q.ct ? `<div class="care-tpl is-${q.ct}">${ctBody(q)}</div></div>` : `<div class="care-tpl is-${q.type}">${h.TPLS[q.type](q, CAT)}</div></div>`); };

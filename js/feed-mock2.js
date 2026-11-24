@@ -3445,8 +3445,8 @@
     const cr1 = window.changesRoute; window.changesRoute = function (r, ...a) { const m = /^(chg:Feeding:mock:)xa:r2(?:\.(\d))?$/.exec(String(r)); if (m) r = m[1] + R2[Number(m[2] || 0)]; return cr1.call(this, r, ...a); }; }
   // ---- Feeding challenges as a picker (Nov 19, Yarden's inspiration): the four most common worries as big tiles,
   // weight gain as its own row, the rest folded under "Other concerns". The call advice below stays as it was. ----
-  // Nov 24 (Feeding G): one Feeding tint for all four tiles, with a chevron so they read as tappable.
-  const TT = [0, 1, 2, 3].map(() => ['#fbe4ec', '#884866']);
+  // Nov 24 (Yarden): each worry keeps its own color, with a chevron so the tiles read as tappable.
+  const TT = [['#fff3dc', '#8a6a2a'], ['#f3eaf6', '#7a4f74'], ['#e6f1e8', '#356651'], ['#fdeee6', '#9a5a3c']];
   const tTile = ([id, icon, title, sub, on], k) => `<button class="fdt-tile" style="--t-bg:${TT[k][0]};--t-ink:${TT[k][1]}" onclick="${on || go(id)}"><span class="fdt-ic">${hubArt(icon, CAT).replace('data-art=', 'data-keep=')}</span><b>${F(title)}</b><small>${F(sub)} <span aria-hidden="true">›</span></small></button>`;
   const tRow = ([id, icon, title, sub, on]) => `<button class="fdt-row" onclick="${on || go(id)}"><span class="fdt-ic">${hubArt(icon, CAT).replace('data-art=', 'data-keep=')}</span><span><b>${F(title)}</b><small>${F(sub)}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`;
   const tPicker = (tiles, rows, other, otherSub) => `<div class="fdt-grid">${tiles.map(tTile).join('')}</div>${rows.map(tRow).join('')}`
