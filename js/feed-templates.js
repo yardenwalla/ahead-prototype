@@ -338,6 +338,7 @@
   const CT_START = { tl: [80, 56], tr: [320, 56], bl: [80, 244], br: [320, 244] };
   // Everyday care's step card (photo, number in a circle, title, line), in Feeding's colors.
   const ctPhotoSteps = (moves, notes) => { const F = H().F; return `<div class="ct-stepcard" style="--ct-ink:#2b2733;--ct-soft:#6b6573;--ct-purple:#884866;--ct-lav:#f9e4ec;--ct-line:#ece7e2"><ol class="ct-steps2">${moves.map(([th, t, sub], k) => `<li><span class="ct-th">${/^photo:/.test(th) ? `<img src="assets/${th.slice(6)}.jpg?v=3" alt="" loading="lazy">` : `<i>${typeof hubArt === 'function' ? hubArt(th, 'Feeding') : ''}</i>`}</span><span class="ct-tx"><b><em>${k + 1}</em>${F(t)}</b><small>${F(sub)}.</small></span></li>`).join('')}</ol>${notes ? `<div class="ct-notes">${notes.map(([t, d]) => `<p><b>${F(t)}.</b> ${F(d)}.</p>`).join('')}</div>` : ''}</div>`; };
+  window.ctPhotoSteps = ctPhotoSteps;
   const ctBody = q => { const F = H().F, v = x => typeof x === 'function' ? x() : x, A = n => typeof hubArt === 'function' ? hubArt(n, CAT) : '';
     const sent = t => { t = F(v(t) || ''); return !t ? '' : /[.?!]$/.test(t) ? t : t + '.'; };
     const h2 = t => `<h2 class="ct-h2">${F(t)}</h2>`;
