@@ -205,7 +205,7 @@
   const FIX = {
     seat: {
       ba: [[PH('seat-before'), 'A baby in a rear-facing car seat with loose straps and the chest clip down on the belly', null], [PH('seat-after'), 'The same baby with snug straps and the chest clip at armpit level', null]],
-      baFix: [['hand', 'No slack you can pinch', 'At {p} collarbone'], ['shield', 'Chest clip at the armpits', 'Not down on the belly'], ['back', 'Straps at or below {p} shoulders', 'While {s} {face|faces} the back'], ['lock', 'Installed tight, at the right recline', 'Check the seat’s recline indicator']],
+      baFix: [['hand', 'No slack you can pinch', 'At {p} collarbone'], ['shield', 'Chest clip at the armpits', 'Not down on the belly'], ['back', 'Straps at or below {p} shoulders', 'While {s} {face|faces} the back'], ['lock', 'In the back seat, installed tight', 'Never in front of an airbag. Check the recline line']],
       notes: [['', 'No puffy coats under the straps', 'Buckle {o} in, then add a blanket on top']],
       checkTitle: 'Check the fit', checks: ['Pinch the strap at {p} collarbone. You shouldn’t be able to grab any slack.', 'Tug the seat where it’s attached to the car. It should move less than 1 inch.'],
       more: ['Which seat, and when', 'car', 'Car seats as {s} {grow|grows}', 'And on trips, in Outings', "openPage('chg:Out and about:d:car')"] },

@@ -935,7 +935,7 @@ const PLAY_CONTEXT={
   "hello-wave": {
     "needs": "A familiar person or baby-safe toy to greet.",
     "explain": "Waving hello and goodbye gives a hand movement a meaning.",
-    "notice": "A raised hand, a moving arm or a look is their answer. It needn’t be a real wave.",
+    "notice": "A raised hand, a moving arm or a look is their answer. It doesn’t have to be a real wave.",
     "extend": "Wave for real when someone comes or goes, with the same words."
   },
   "drum-copy": {
@@ -953,7 +953,7 @@ const PLAY_CONTEXT={
   "knock-stack": {
     "needs": "Two large lightweight baby blocks.",
     "explain": "A small tower makes it easy to see what a touch can do.",
-    "notice": "Baby might touch the blocks, push them or watch them go.",
+    "notice": "Baby might touch the blocks, knock the tower over or watch it fall.",
     "extend": "Let them watch you build it again, then see how they want to join in."
   },
   "give-back": {

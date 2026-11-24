@@ -7,7 +7,7 @@
   const IMG = 'assets/sleep/';
   const art = n => H().art(n, 'Sleep');
   const go = r => `openPage('chg:Sleep:${r}')`;
-  const fever = () => { try { const mo = window.__chg.ageNow(); return mo < 3 ? 'a temperature of 100.4°F or higher' : mo < 6 ? 'a temperature of 101°F or higher' : 'a fever of 103°F or higher, or one lasting more than a day'; } catch (e) { return 'a fever'; } };
+  const fever = () => { try { const mo = window.__chg.ageNow(); return mo < 3 ? 'a temperature of 100.4°F or higher (call right away, day or night)' : mo < 6 ? 'a fever that lasts more than a day or reaches 101°F' : 'a fever that lasts more than a day or reaches 103°F'; } catch (e) { return 'a fever'; } };
 
   const nursing = () => { try { return /breast|nurs|both/i.test((JSON.parse(localStorage.getItem('ahead-v2-profile') || '{}').feed) || ''); } catch (e) { return false; } };
   const page = (eyebrow, title, lead, body) => H().detail('Sleep', eyebrow, title, lead, `<div class="sv2">${body}</div>`, 'moon').replace('<div class="hub-detail-head', '<div class="hub-detail-head sv2-head');
@@ -78,9 +78,9 @@
       + rows('What helps', [['clock', 'Go by time awake, not the clock', 'Often about 45–60 minutes awake.'], ['eye', 'Start winding down early', 'At the first yawn or quiet stare.'], ['heart', 'Any nap counts', 'Naps in your arms or a carrier count too.']])
       + note('Dozed off in a car seat or swing?', 'Move {o} to {p} own flat, bare space.', 'crib', 'is-safe') + foot('Every baby moves at {p} own pace.')),
     'd:wakes': () => page('Night sleep', 'Waking at night is normal now', 'Most babies under 6 months wake to feed. Keep each waking short, dim and quiet.',
-      vis('Wakings in one night', 'Normal now', tally('One waking, usually to feed', [['Newborn weeks', 4, '2–4 a night', 2], ['Around 6 months', 2, '1–2 a night', 1]], [0, 5]))
+      vis('Wakings in one night', 'Normal now', tally('One waking, usually to feed', [['Newborn weeks', 4, 'Several a night', 2], ['Around 6 months', 2, 'Fewer, for many', 1]], [0, 5]))
       + rows('When {s} stirs', [['', 'Pause first', 'Grunts and whimpers are normal. Give it 1–2 minutes.'], ['', 'Then help if needed', 'Feed, change or settle, in low light.'], ['', 'Check {s}’s not too warm', 'A sweaty neck means too warm.']], true)
-      + note('Night feeds are normal now.', 'They drop on their own as {s} grows.') + calls('night waking comes with ' + fever() + ', poor feeding or pain, or {s} snores loudly or pauses in breathing.') + foot('Every baby moves at {p} own pace.')),
+      + note('Night feeds are normal now.', 'They drop on their own as {s} grows.') + calls('night waking comes with ' + fever() + ', poor feeding or pain, or {s} snores loudly or has long pauses in breathing.') + foot('Every baby moves at {p} own pace.')),
     'd:props': () => page('Night sleep', 'Only sleeps on you?', 'At this age that’s normal. You can step back slowly, a few nights at a time.',
       vis('Step back, a few nights each', 'Go slowly', photos([['sleepy.jpg', 'Hold until drowsy', 'Not fully asleep'], ['down.jpg', 'Into the crib', 'Hand on {p} chest'], ['goodbye.jpg', 'Sit nearby', 'Then farther away']]))
       + rows('Two ways to lay {o} down', [['moon', 'Drowsy, then down', 'Easier over time: {s} learns to finish falling asleep.'], ['heart', 'Deep asleep, then down', 'Wait for limp arms and slow breathing.']])
@@ -90,9 +90,9 @@
       + rows('What to expect', [['sun', 'More awake by day', 'Once it clicks, often around 6–8 weeks.'], ['moon', 'Longest sleep at night', 'Often about 4–5 hours after bedtime.']])
       + note('Still waking {o} for feeds?', 'Keep going until {s}’s back to birth weight, or as your pediatrician says.') + foot('Every baby moves at {p} own pace.')),
     'd:stretch': () => page('Night sleep', '{P} longest sleep grows month by month', 'As {s} needs fewer night feeds, one stretch of sleep gets longer.',
-      vis('Longest stretch of sleep', 'Typical', grow([['Newborn weeks', 3, '2–4 hrs'], ['3–4 months', 5, '5+ hrs'], ['Around 6 months', 7, '6–8 hrs'], ['9–12 months', 11, '10–12 hrs']], [0, 3, 5, 9]))
+      vis('Longest stretch of sleep', 'Typical', grow([['Newborn weeks', 3, '2–4 hrs'], ['3–4 months', 5, 'Often 4–5 hrs'], ['Around 6 months', 7, '6+ hrs, for many']], [0, 3, 5]))
       + rows('What helps', [['moon', 'Let {o} sleep as long as {s} wants', 'Once your pediatrician says night feeds can wait.'], ['clock', 'Keep the same bedtime steps', 'They tell {o} the long sleep is coming.', 'd:routine']])
-      + note('A few rough nights are normal.', 'New skills, teething or a cold, then the stretch comes back.') + foot('Ages are typical. Every baby moves at {p} own pace.')),
+      + note('Not there yet?', 'Many healthy babies don’t sleep 6 hours straight at 6 months, or even at 1.') + foot('Ages are typical. Every baby moves at {p} own pace.')),
     'd:routine': () => page('Bedtime', 'Do the same bedtime steps every night', 'From about 6–8 weeks, a few calm steps in the same order tell {o} it’s bedtime.',
       vis('Four steps, same order', '15–20 minutes', photos([['pajamas.jpg', 'Pajamas', 'A bath is optional'], [nursing() ? 'feed-nurse.jpg' : 'feed.jpg', 'Feed', 'A calm last feed'], ['book.jpg', 'Book or song', 'The same most nights'], ['down.jpg', 'Down to sleep', 'Sleepy, on {p} back']]))
       + rows('Good to know', [['clock', 'Same order, not a perfect clock', 'The order is what tells {o} sleep is coming.'], ['moon', 'Nights start to stretch', '{S} gets sleepy around the same time each evening.'], ['sun', 'An earlier bedtime comes later', 'Around 7–8 pm, once naps settle.']])
@@ -107,7 +107,7 @@
       + rows('', [['eye', 'Follow {p} cues', 'Bring the next sleep forward a little.'], ['moon', 'Earlier is better than overtired', 'An early bedtime is fine on short-nap days.', 'd:earlybed']])
       + note('Very common now.', 'Naps of 30–45 minutes are normal at 3–5 months. They get longer with time.') + foot('Every baby moves at {p} own pace.')),
     'd:regress': () => page('Night sleep', 'The 4‑month sleep regression is normal', '{P} sleep cycles are maturing, so {s} wakes more for a few weeks.',
-      vis('Wakings in one night', 'A few weeks', tally('One waking', [['Before', 2, '1–2 wakings'], ['During', 6, 'Up to 6 wakings'], ['A few weeks later', 2, '1–2 wakings again']], [null, 3, 5.5]))
+      vis('Wakings in one night', 'A few weeks', tally('One waking', [['Before', 2, 'Your usual nights'], ['During', 6, 'More wakings'], ['A few weeks later', 2, 'Back to usual']], [null, 3, 5.5]))
       + rows('What helps', [['clock', 'Wait a minute or two', 'Many cries settle on their own.'], ['moon', 'Dark and quiet', 'Keep visits brief.'], ['heart', 'A feed if hungry', 'Comfort the way you always do.']])
       + note('No need to sleep train.', 'Keep doing what works, and it passes.') + calls('waking comes with ' + fever() + ', poor feeding or pain.') + foot('Ages are typical. Every baby moves at {p} own pace.')),
     'd:settle4': () => page('Bedtime', 'Try putting {o} down drowsy, once a day', 'From about 4 months, many babies can learn to fall asleep on their own.',
@@ -132,12 +132,12 @@
       + rows('Look for the cause', [['sun', 'Early light', 'Blackout curtains keep the room dark.'], ['moon', 'A late bedtime', 'Overtired babies wake early. Try 15–30 minutes earlier, for a week.'], ['clock', 'A long last nap', 'Cap it, so {s}’s tired enough for a full night.']])
       + calls('sleep changes come with ' + fever() + ', poor feeding or pain.') + foot('Every baby moves at {p} own pace.')),
     'd:nightfeeds': () => page('Night sleep', 'Night feeds drop as days get fuller', 'Many babies still feed once or twice a night, and that’s fine.',
-      vis('Night feeds over the first year', 'Typical', tally('One night feed', [['Around 3 months', 3, '2–3 a night', 1], ['Around 6 months', 2, '1–2 a night', 1], ['Later in the first year', 1, '0–1 a night', 1]], [0, 5, 8]) + `<div class="sv2-inner"><i>${art('sunrise')}</i><p><b>${F('Last to go:')}</b> ${F('usually the feed closest to morning.')}</p></div>`)
+      vis('Night feeds over the first year', 'Typical', tally('One night feed', [['Around 3 months', 3, 'Still common', 1], ['Around 6 months', 2, 'Often fewer', 1], ['Later in the first year', 1, 'Often none', 1]], [0, 5, 8]) + `<div class="sv2-inner"><i>${art('sunrise')}</i><p><b>${F('Last to go:')}</b> ${F('usually the feed closest to morning.')}</p></div>`)
       + rows('Ready to drop one?', [['', 'Ask your pediatrician first', 'They can say if {s}’s growing well enough.'], ['', 'Go slowly', 'A little shorter or smaller every few nights.'], ['', 'More by day', 'Full feeds while {s}’s awake.'], ['', 'Someone else goes in', 'Breastfed babies often settle more easily for a partner.']], true)
       + note('No bottle in bed.', 'Milk pooling on the teeth causes decay.', 'tooth', 'is-safe') + foot('Every baby moves at {p} own pace.')),
     'd:nightwake': () => page('Night sleep', 'Night waking can come back for a while', 'Babies who were sleeping well start waking again. It usually settles in a week or two.',
       vis('Wakings in one night', 'Typical', tally('One waking', [['Before', 1, 'Sleeping well'], ['For a week or two', 3, 'Waking again'], ['Then', 1, 'Settled again']])) + glance([['New skills', 'like pulling up'], ['Missing you', 'at bedtime'], ['Teething', 'or a cold']])
-      + rows('What to do', [['', 'Wait or go in', 'Whatever feels right to you.'], ['', 'Brief, dark and boring', 'Then back down.'], ['', 'Comfort {o} when sick', 'Back to your usual routine once better.']], true)
+      + rows('What to do', [['', 'Wait or go in', 'Whatever feels right to you.'], ['', 'Keep it brief and dark', 'Then back to bed.'], ['', 'Comfort {o} when sick', 'Back to your usual routine once better.']], true)
       + note('Waking from hunger or habit?', 'Ask your pediatrician if night feeds are still needed.') + foot('Every baby moves at {p} own pace.')),
     'd:goodbye': () => page('Bedtime', 'Keep goodnights short and the same', 'Many babies protest when you leave around 8–10 months. It shows how attached {s} is.',
       vis('The same goodbye, every night', '', photos([['book.jpg', 'Your usual steps', 'Same order'], ['goodbye.jpg', 'Same goodnight words', 'Every time'], ['crib.jpg', 'Then leave', 'Even if {s} protests']]) + `<p class="sv2-cap is-loop">↻ ${F('Back briefly if needed: calm and boring')}</p>`)
@@ -198,18 +198,18 @@
     'd:method:4': () => page('Sleep training', 'Bedtime fading', 'Start at the time {s} naturally falls asleep, then move bedtime earlier, a little at a time.',
       vis('Watch bedtime shift', 'Example', `<div class="sv2-clocks">${[[8, 30, '8:30', 'Natural sleepy time'], [8, 15, '8:15', 'A few nights later'], [8, 0, '8:00', 'Closer to your goal']].map(([h, mn, t, s], i) => `<div class="${i === 2 ? 'is-on' : ''}">${clock(h, mn)}<b>${t}</b><small>${F(s)}</small></div>`).join('')}</div>
         <div class="sv2-inner"><i>${art('moon')}</i><p><b>${F('Same bedtime routine.')}</b> ${F('Only the time moves.')}</p></div>`)
-      + glance([['Least', 'crying'], ['As usual', 'your comforting'], ['1–2 weeks', 'often takes']])
+      + glance([['Least', 'crying'], ['As usual', 'how you comfort {o}'], ['1–2 weeks', 'to work, often']])
       + rows('How you do it', [['', 'Start at {p} real sleepy time', 'Notice when {s} actually falls asleep, and start bedtime there.'], ['', 'Keep it there a night or two', 'Until {s}’s falling asleep quickly.'], ['', 'Then move 15 minutes earlier', 'Repeat every couple of nights until you reach your goal.']], true)
       + note('Still wide awake?', 'Stay at the current time a little longer before moving earlier.', 'idea') + foot('Times are an example, not target bedtimes. Some babies adjust faster, some more slowly.')),
     'd:method:2': () => page('Sleep training', 'Pick up, put down', 'Comfort {o} in your arms when {s} cries, then let {o} try again in the crib.',
       vis('One calming loop', 'Repeat as needed', `<div class="sv2-loop">${[['down.jpg', 'Put {o} down', 'Drowsy, on {p} back'], ['sleepy.jpg', 'Pick up if crying', 'Hold until calmer'], ['goodbye.jpg', 'Put back down', 'Before {s}’s fully asleep']].map(([img, t, s], i) => `<div><img src="${IMG + img}" alt=""><i>${i + 1}</i>${lab(t, s)}</div>`).join('')}</div><p class="sv2-cap is-loop">↻ ${F('Repeat the same calm response')}</p>`)
-      + glance([['Some', 'crying'], ['In the room', 'where you are'], ['1–2 weeks', 'often takes']])
+      + glance([['Some', 'crying'], ['In the room', 'where you stay'], ['1–2 weeks', 'to work, often']])
       + rows('What happens at night', [['heart', 'If {s} cries, comfort {o}', 'Pick {o} up until calm, not asleep, then lay {o} back down.'], ['moon', 'Night wakes use the same loop', 'Feed if it’s time for a feed.']])
       + note('Safe sleep, every time:', 'On {p} back, in {p} own bare crib.', 'crib', 'is-safe') + foot('Some babies move faster, some more slowly.')),
     'd:method:1': () => page('Sleep training', 'The chair method', 'Stay close at first, then move toward the door over a few nights.',
       vis('Watch where you move', 'From crib toward door', `<div class="sv2-map"><div class="sv2-map-room"><span class="sv2-crib" aria-hidden="true">${art('crib')}</span>${[1, 2, 3].map(n => `<i class="is-${n}">${n}</i>`).join('')}</div><div class="sv2-map-door"><small>${F('Outside')}</small><i class="is-4">4</i></div></div>
         <div class="sv2-steps4">${[['Nights 1–3', 'Right by the crib'], ['Nights 4–6', 'Halfway to the door'], ['Nights 7–9', 'In the doorway'], ['Then', 'Goodnight from outside']].map(([t, s], i) => `<div><b>${i + 1} · ${F(t)}</b><small>${F(s)}</small></div>`).join('')}</div>`)
-      + glance([['Some', 'crying'], ['In the room', 'at first'], ['1–2 weeks', 'often takes']])
+      + glance([['Some', 'crying'], ['In the room', 'at first'], ['1–2 weeks', 'to work, often']])
       + rows('What you do each night', [['heart', 'Sit quietly in that night’s spot', 'Comfort with your voice or a pat, less each night.'], ['moon', 'If {s} wakes', 'Go back to the same spot. Feed if it’s time for a feed.'], ['clock', 'Move when {s} settles easily', 'Stay longer at a spot if {s} needs it.']])
       + note('The idea:', '{S} learns to fall asleep with you nearby, then with you farther away.') + foot('Some babies move faster, some more slowly.')),
     'd:method:0': () => page('Sleep training', 'Timed check-ins', 'Say goodnight and step out. Come back for short check-ins, waiting longer each time.',
@@ -217,9 +217,16 @@
         <div class="sv2-waits">${[3, 5, 10].map((n, i) => `<div class="is-${i}"><b>${n}</b><small>${F('min wait')}</small></div>`).join(`<span>↪<small>${F('check')}</small></span>`)}</div>
         <p class="sv2-cap is-loop">↻ ${F('Keep the longest wait if crying continues')}</p>
         <div class="sv2-inner"><i>${art('heart')}</i><p><b>${F('During a check (1–2 min):')}</b> ${F('Talk softly or pat, then leave while {s}’s still awake.')}</p></div>`)
-      + glance([['More', 'crying'], ['In and out', 'your role'], ['1–2 weeks', 'often takes']])
+      + glance([['More', 'crying'], ['In and out', 'for short check-ins'], ['1–2 weeks', 'to work, often']])
       + rows('What happens next', [['', 'If {s} settles', 'Stop checking. Let {o} sleep.'], ['', 'If {s} wakes later', 'Feed if it’s time for a feed; otherwise the same check-ins.'], ['', 'Over the next nights', 'Start each wait a few minutes longer than the night before.']], true)
-      + note('Do check-ins wind {o} up?', 'Try longer gaps, or another method.', 'heart') + foot('3, 5 and 10 minutes are an example, not required times. Keep meeting feeding and comfort needs.'))
+      + note('Do check-ins wind {o} up?', 'Try longer gaps, or another method.', 'heart') + foot('3, 5 and 10 minutes are an example, not required times. Keep meeting feeding and comfort needs.')),
+    // Nov 23 (round 3): cry it out on the same layout as the other four methods, so parents can compare them side by side.
+    'd:method:3': () => page('Sleep training', 'Cry it out', 'Say goodnight and leave until morning, except for a planned feed or if {s} seems unwell.',
+      vis('See how a night goes', 'Example', `<div class="sv2-inner is-top"><i>${art('crib')}</i><p><b>${F('Goodnight')}</b> ${F('Your usual routine, then down awake. Leave the room.')}</p></div>
+        <div class="sv2-inner"><i>${art('moon')}</i><p><b>${F('If {s} cries')}</b> ${F('Stay out until morning, unless it’s a planned feed or {s} seems unwell.')}</p></div>`)
+      + glance([['Most', 'crying'], ['Outside', 'where you stay'], ['A few nights', 'to work, often']])
+      + rows('What to expect', [['', 'The first nights', 'Crying can last a while.'], ['', 'By night 3 or 4', 'Most babies cry much less and fall asleep faster.']], true)
+      + note('Want to stay closer?', 'Timed check-ins or the chair method go more slowly, with you nearby.', 'heart') + foot('Keep meeting feeding needs, and check on {o} if {s} seems unwell.'))
   };
 
   const prev = window.changesRoute;

@@ -80,15 +80,15 @@
   // [area, art, from, to, weight, headline (the whole point), one line, page, Timeline change it belongs to, flag]
   // Ages are adjusted age; checkups follow the birthday ('bday').
   const CARDS = [
-    ['Feeding', 'bowl', 0, 1, 3, 'Newborns feed 8–12 times a day', 'Day and night. Bunched-up evening feeds are normal, not a sign of low milk', 'chg:Feeding:d:enough'],
+    ['Feeding', 'bowl', 0, 1, 3, 'Newborns feed 8–12 times a day', 'Day and night. Bunched-up evening feeds are normal, not a sign of low milk', 'chg:Feeding:mock:nb_eve'],
     ['Sleep', 'moon', 0, 1.5, 3, 'Days and nights start out mixed up', 'Most babies sort it out by 6–8 weeks. Bright days and dim nights help', 'chg:Sleep:d:daynight', 'nights'],
-    ['Feeding', 'bowl', 0, 1, 2.5, 'Wet diapers show feeding is working', '6 or more a day from about day 5', 'chg:Feeding:d:enough'],
+    ['Feeding', 'bowl', 0, 1, 2.5, 'Wet diapers show feeding is working', '6 or more a day from about day 5', 'chg:Feeding:mock:nb_enough'],
     ['Feeding', 'bowl', 0, 1.5, 2, 'Nursed babies need vitamin D drops', '400 IU a day, from the first days', 'chg:Feeding:mock:xa:growth', '', 'breast'],
-    ['Feeding', 'bowl', 0.5, 2, 2.5, 'Growth spurts make babies extra hungry', 'Expect a few days of near-constant feeding around 3 and 6 weeks', 'chg:Feeding:d:enough'],
+    ['Feeding', 'bowl', 0.5, 2, 2.5, 'Growth spurts make babies extra hungry', 'Expect a few days of near-constant feeding around 3 and 6 weeks', 'chg:Feeding:mock:m1_now'],
     ['Sleep', 'heart', 0.5, 2.5, 3, 'Crying peaks around 6–8 weeks', 'Then it eases by 3–4 months. Evenings are usually the hardest', 'chg:Sleep:d:crying', 'crying'],
     ['Development', 'smile', 1, 2, 2.5, 'Real smiles arrive around 6–8 weeks', 'The first ones that answer yours, not just in sleep', 'development-domain:2:Social', 'smile'],
     ['Sleep', 'clock', 1.5, 3.5, 2.5, 'Babies this age can only stay awake about an hour', 'Fussing after 60–90 minutes up often means tired, not hungry', 'chg:Sleep:d:cues'],
-    ['Feeding', 'bowl', 2, 4, 2, 'Feeds get much faster', 'Ten minutes can be a full feed now. Quicker isn’t less', 'chg:Feeding:d:enough'],
+    ['Feeding', 'bowl', 2, 4, 2, 'Feeds get much faster', 'Ten minutes can be a full feed now. Quicker isn’t less', 'chg:Feeding:mock:m1_now'],
     ['Development', 'mat', 1.5, 4.5, 2, 'Flat spots are common now', 'Switch which end of the crib {p} head goes, and add awake tummy time', 'chg:Development:d:idea:4:tummy'],
     ['Sleep', 'sun', 2, 4, 2.5, 'Short naps are normal until about 4 months', '30–45 minutes is typical. Naps lengthen as sleep matures', 'chg:Sleep:d:napsearly'],
     ['Daily rhythm', 'tooth', 2.5, 4.5, 2, 'Drool isn’t always teething', 'Lots of drool from 3 months is normal. Teeth usually come later', 'chg:Daily rhythm:d:gums'],
@@ -180,13 +180,13 @@
   const MONTHS = {
     0: { eyes: ['She sees you best up close', 'She focuses best about 8–12 inches away, just about the distance to your face during a feed.'],
       notice: [
-        ['She wants to feed constantly', 'Eight to twelve feeds a day is typical, and long evening feeds are too.', 'Feeding', 'bottle', 'chg:Feeding:d:enough',
+        ['She wants to feed constantly', 'Eight to twelve feeds a day is typical, and long evening feeds are too.', 'Feeding', 'bottle', 'chg:Feeding:mock:nb_eve',
           ['She wants to feed often', 'Six to ten bottles a day is typical, and hungrier days come and go.']],
         ['Her poop keeps changing color', 'Black and sticky at first, then yellow and seedy by the end of week one.', 'Daily rhythm', 'diaper', 'chg:Daily rhythm:d:look:0:poop', ['Her poop keeps changing color', 'Black and sticky at first, then tan to yellow by the end of week one.']]] },
     // Months 1–11: the month card opens her month story, so these rows are the everyday things the story doesn't
     // cover, plus one line on how she sees now (vision isn't in the stories). Nothing here repeats a story screen.
     1: { eyes: ['Faces are her favorite thing', 'She can follow your face for a few seconds as you move, and she studies it closely.'],
-      notice: [['She suddenly wants to feed nonstop', 'Growth spurts around 3 and 6 weeks usually last a few days.', 'Feeding', 'bottle', 'chg:Feeding:d:enough'],
+      notice: [['She suddenly wants to feed nonstop', 'Growth spurts around 3 and 6 weeks usually last a few days.', 'Feeding', 'bottle', 'chg:Feeding:mock:m1_now'],
         ['She grunts and squirms asleep', 'Newborn sleep is noisy and light. She isn’t always waking up.', 'Sleep', 'moon', 'chg:Sleep:d:stretch']] },
     2: { eyes: ['Colors are coming into focus', 'She’s starting to see colors more clearly. Her eyes may cross now and then until about 4 months.'],
       notice: [['She spits up a lot', 'It’s common. It peaks around 4 months and is usually gone by age 1.', 'Feeding', 'drop', 'chg:Feeding:mock:spit'],
@@ -204,16 +204,16 @@
       notice: [['Her poop will change with solids', 'Once she eats food, it gets firmer, smellier, and sometimes colorful.', 'Daily rhythm', 'diaper', 'chg:Daily rhythm:d:look:3:poop'],
         ['She gags on new textures', 'Gagging is loud, and it’s how she learns to move food around.', 'Feeding', 'swallow', 'chg:Feeding:d:lumpy']] },
     7: { eyes: ['Her vision is close to yours', 'She sees nearly as well as you do now, just a little softer at a distance.'],
-      notice: [['She chews on everything hard', 'Pressure soothes sore gums. A cold teether helps more than gels.', 'Daily rhythm', 'tooth', 'chg:Daily rhythm:d:p:teething'],
+      notice: [['She chews on everything hard', 'Pressure soothes sore gums, so a chilled teether or your finger helps.', 'Daily rhythm', 'tooth', 'chg:Daily rhythm:d:p:teething'],
         ['There’s food in her poop', 'Some foods pass through partly whole while her gut gets used to them.', 'Daily rhythm', 'diaper', 'chg:Daily rhythm:d:look:3:poop']] },
     8: { eyes: ['She sees nearly what you see', 'Her eyesight is close to an adult’s now, and she uses it to keep track of you.'],
       notice: [['She’s waking at night again', 'New skills like crawling often bring night waking back for a while.', 'Sleep', 'moon', 'chg:Sleep:d:nightwake'],
         ['She scoots backwards first', 'Lots of babies go backwards before forwards.', 'Development', 'crawl', '']] },
     9: { eyes: ['She follows where you look', 'She’s starting to follow your gaze and gestures, so naming what you’re both looking at lands now.'],
-      notice: [['She turns down new foods', 'Many babies need 10–15 tries before they like a food.', 'Feeding', 'plate', 'chg:Feeding:mock:picky'],
+      notice: [['She turns down new foods', 'Many babies need 10–15 tries before they like a food.', 'Feeding', 'plate', 'chg:Feeding:mock:z_refuse'],
         ['She cries when you leave at bedtime', 'She notices you go now. The same short goodbye each night helps.', 'Sleep', 'moon', 'chg:Sleep:d:goodbye']] },
     10: { eyes: ['She spots tiny details', 'Her eyesight is sharp now, so she notices a crumb on the rug from across the room.'],
-      notice: [['She can’t get down in the crib', 'She can pull up, but sitting back down is a skill she hasn’t got yet.', 'Sleep', 'crib', 'chg:Sleep:d:nightwake'],
+      notice: [['She can’t get down in the crib', 'She can pull up, but hasn’t learned to sit back down yet.', 'Sleep', 'crib', 'chg:Sleep:d:nightwake'],
         ['She throws her food', 'It’s often how she tells you she’s full, before she has words.', 'Feeding', 'toss', '']] },
     11: { eyes: ['She knows faces in photos', 'She may recognize people she knows in pictures now, so family photos make great first books.'],
       notice: [['She’s eating a little less', 'Growth slows toward her first birthday, and so does her appetite.', 'Feeding', 'plate', ''],
@@ -281,7 +281,7 @@
     return r;
   });
   const RADAR = {
-    0: [['Her first checkups are coming up.', 'One in the first few days, then at 1 month. See what to expect and what to ask.', 'Health', 'steth', 'health-detail:0:expect']],
+    0: [(() => { try { if ((Date.now() - new Date(profile.dob)) / 864e5 > 7) return ['The 1-month checkup is coming up.', 'A short visit about feeding and growth. See what to expect and what to ask.', 'Health', 'steth', 'health-detail:1:expect']; } catch (e) {} return ['Her first checkups are coming up.', 'One in the first few days, then at 1 month. See what to expect and what to ask.', 'Health', 'steth', 'health-detail:0:expect']; })()],
     1: [CHK(1)],
     2: [CHK(2, 'Her first big round of vaccines. See what to expect and what to ask.'),
         ['Swaddling ends soon.', 'Once she starts trying to roll, it’s time to stop. Here’s what to look for.', 'Sleep', 'swaddle', 'chg:Sleep:d:swaddleoff']],
@@ -481,7 +481,7 @@
     try {
       const ya = window.__ya, a = ya.ageNow(), done = ya.doneNow();
       // Skip a change in its last month that the parent hasn't marked: "Sitting up, any time now" at 9 months reads as a bug.
-      const ahead = ya.C.filter(c => c.end > a && !done[c.id] && !(a > c.start && a >= c.end - 1) && !(c.id === 'tooth' && a >= 8)).sort((x, y) => x.start - y.start || x.end - y.end);
+      const ahead = ya.C.filter(c => c.end > a && !done[c.id] && !(a > c.start && a >= c.end - 1) && !(c.id === 'tooth' && a >= 8) && !(c.id === 'crying' && a >= 1.5)).sort((x, y) => x.start - y.start || x.end - y.end);
       const n = ahead[0];  // the same first row the Timeline shows under "Maya now"
       if (n) next = `Next up: ${F(n.title)}, ${F(ya.whenShort(n, a))}`;
     } catch (e) {}

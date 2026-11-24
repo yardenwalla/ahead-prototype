@@ -16,7 +16,7 @@
       <p class="aw-lead">Guidance matched to your baby’s exact age, all through the first year.</p>
       <div class="ob-collage" aria-hidden="true">
         <div class="ob-mini ob-mini-tl"><b>Timeline</b><small>What’s coming up</small><div class="ob-tl"><i></i><span></span><i></i><span></span><i></i><span></span></div></div>
-        <div class="ob-mini ob-mini-guides"><b>Guides</b><small>Answers by stage</small><div class="ob-mini-pic">${IMG('assets/feeding/first-foods.jpg')}</div><span class="ob-bar"></span><span class="ob-bar short"></span></div>
+        <div class="ob-mini ob-mini-guides"><b>Guides</b><small>Answers for every age</small><div class="ob-mini-pic">${IMG('assets/feeding/first-foods.jpg')}</div><span class="ob-bar"></span><span class="ob-bar short"></span></div>
         <div class="ob-mini ob-mini-home"><b>Home</b><small>What matters now</small><div class="ob-mini-month">${IMG('assets/dev/hero-12.jpg')}</div><div class="ob-mini-row"><span class="ob-dot">${IMG('assets/dev/toy-gym.jpg')}</span><span class="ob-bar"></span></div><div class="ob-mini-row"><span class="ob-dot">${IMG('assets/dev/toy-soft-rattle.jpg')}</span><span class="ob-bar short"></span></div></div>
       </div>
       <button class="primary aw-start" onclick="startSetup()">Get started</button>

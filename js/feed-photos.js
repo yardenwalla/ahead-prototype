@@ -31,7 +31,10 @@
     main.querySelectorAll('.xa-p').forEach(p => {
       const h1 = p.querySelector('.dev-area-head h1'); if (!h1) return;
       if (/hunger cues/.test(h1.textContent)) tiles(p.querySelector('.hub-strip'), [['cue-1', 'Stirring and turning to look'], ['cue-2', 'Rooting, hands to mouth'], ['cue-3', 'Crying, a late cue']]);
-      else if (/^Burp|burp (her|him|them|.*) and offer/i.test(h1.textContent)) { const ill = p.querySelector('.fd-ill'); if (ill && typeof hubEmbed === 'function') ill.outerHTML = `<div class="ph-video">${hubEmbed('d8tJimekFGo', 'Three ways to burp', 'UNICEF')}</div>`; }
+      else if (/^Burp|burp (her|him|them|.*) and offer/i.test(h1.textContent)) { const ill = p.querySelector('.fd-ill'); // Nov 23 (round 4): keep the three positions on the page, so a parent can burp without playing the video; the video goes under them.
+        // Nov 23: real photos of the three holds, like the hunger cues and the paced bottle (Yarden: "why not real images?").
+        if (ill) tiles(ill, [['burp-shoulder', 'A parent holding a baby over the shoulder on a burp cloth, patting the back'], ['burp-sitting', 'A baby sitting on a lap, the parent’s hand supporting the chin'], ['burp-tummy', 'A baby lying tummy-down across a lap while the parent rubs the back']]);
+        if (ill && typeof hubEmbed === 'function') ill.insertAdjacentHTML('afterend', `<div class="ph-video">${hubEmbed('d8tJimekFGo', 'Three ways to burp', 'UNICEF')}</div>`); }
       else if (/full|done/i.test(h1.textContent) && !/Pace|bottle/i.test(h1.textContent) && !p.querySelector('.ph-photo')) { const m = p.querySelector('.ss-moment, .hub-iconsteps'); if (m) m.insertAdjacentHTML('beforebegin', PH.full()); }
     });
   }

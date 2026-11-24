@@ -204,7 +204,7 @@
         'Child care assistance from your state, and Early Head Start, for families who qualify.')
       + peek('Check at work or tax time', [
         ['notepad', 'A pre-tax care account', m < 1 ? 'Up to $7,500 a year per family (2026). A birth lets you sign up within about 30 days.' : 'Up to $7,500 a year per family (2026). Missed the window after the birth? Sign up at open enrollment.'],
-        ['blocks', 'Can’t count the same costs twice', 'Costs paid from the account can’t also count for the credit.'],
+        ['blocks', 'Use both, for different costs', 'Costs paid from the account can’t also count for the credit.'],
         ['shield', 'A tax credit', '20–50% of up to $3,000 in care costs for one child (2026). Paying a relative can count too.']])
       + callout('idea', `<b>${F('Start here:')}</b> ${F('ask work about a pre-tax care account, and check if you qualify for state help.')}`), 'coin');
 
@@ -304,7 +304,7 @@
         ['heart', 'Harder drop-offs', 'Common from about 8 months. Keep goodbyes short and warm.'],
         ['shield', 'Speak up about a real worry', 'Keep {o} home and speak up. At licensed care, you can also report it to your state.']])
       // Nov 23 cohesion pass: the app's one When to call card, in place of a yellow callout and a separate 911 line.
-      + H().TPLB.calls({ ped: m < 3 ? 'a fever of 100.4°F or higher, right away, day or night.' : m < 6 ? 'a fever of 101°F or higher, or one that lasts more than a day.' : 'a fever of 103°F or higher, or one that lasts more than a day.', nowLabel: 'Call 911', now: '{s} struggles to breathe, turns blue, won’t wake, or has a seizure.' }), 'sun');
+      + H().TPLB.calls({ ped: m < 3 ? '' : m < 6 ? 'a fever of 101°F or higher, or one that lasts more than a day.' : 'a fever of 103°F or higher, or one that lasts more than a day.', right: m < 3 ? 'a rectal temperature of 100.4°F or higher' : '', nowLabel: 'Call 911', now: '{s} struggles to breathe, turns blue, won’t wake, or has a seizure.' }), 'sun');
     // Doulas and help with recovery belong to the first weeks. From 4 months, the same page is about care for the baby.
     if (id === 'help') { const early = m < 4; return sub('help', 'Help now and then', 'Extra help at home', early ? 'Help in the early months isn’t only for when you go back to work.' : 'Help at home isn’t only for when you go back to work.',
       picSteps('Kinds of help', early ? [
@@ -779,7 +779,7 @@
   // A good daily update, as an example (Care started).
   const dailyUpdate = m => `<h2 class="hub-h2">${F('A good daily update')}</h2><p class="cc-h2sub">${F('Ask your caregiver what Maya’s day looked like.')}</p>`
     + `<section class="hub-card cc-update"><header><span>${hubArt('chat', CAT)}</span><div><b>${F('Today with Maya')}</b><small>${F('Example update')}</small></div></header><dl>`
-    + [['bottle', 'Feeds', m >= 7 ? 'Two bottles and lunch, ate well' : 'Three bottles, fed comfortably'], ['moon', 'Naps', m >= 9 ? 'One long nap after lunch' : 'Two naps, one shorter than usual'], ['smile', 'How {s} settled', 'Upset at drop-off, then enjoyed floor play']]
+    + [['bottle', 'Feeds', m >= 7 ? 'Two bottles and lunch, ate well' : 'Three bottles, fed comfortably'], ['moon', 'Naps', m >= 9 ? 'A morning nap and an afternoon nap' : 'Two naps, one shorter than usual'], ['smile', 'How {s} settled', 'Upset at drop-off, then enjoyed floor play']]
         .map(([i, t, d]) => `<div><dt>${hubArt(i, CAT)}${F(t)}</dt><dd>${F(d)}</dd></div>`).join('') + `</dl></section>`;
   function secSummary(k, c) {
     const P = babyPronouns();
