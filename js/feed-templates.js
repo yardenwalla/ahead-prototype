@@ -189,37 +189,37 @@
       calls2: () => [['Call your pediatrician if:', 'it’s forceful, {s} {cry|cries} and {arch|arches} at most feeds, or {s’s} not gaining weight'], ['Call right away if:', 'green or bloody vomit', 1]],
       why: () => mo() >= 12 ? 'Spit-up this late is worth a mention at the next checkup.' : mo() < 5 ? 'It peaks around 4 months, and it’s usually gone by the first birthday.' : 'It’s past the peak, and it’s usually gone by the first birthday.',
       calls: { ped: 'spit-up that’s forceful, or {s’s} not gaining weight.', er: 'green or bloody vomit.' } }),
-    x_allergy: () => ({ type: 'check', label: 'Feeding challenges', art: 'steth', title: 'A milk allergy is uncommon, and treatable',
+    x_allergy: () => ({ type: 'expect', ct: 'know', label: 'Feeding challenges', art: 'steth', title: 'A milk allergy is uncommon, and treatable',
       why: 'Most gas, fussing and spit-up isn’t an allergy at all.',
-      figure: () => H().TPLB.versus(['Usually not an allergy', 'Gas, fussing or spit-up, in a baby who’s growing well.'], ['Could be an allergy', 'Blood or mucus in poop, a rash, or vomiting after most feeds.']),
+      notice: ['Blood or mucus in {p} poop', 'A rash, or vomiting after most feeds'],
       helps: [['notepad', 'Take a photo', 'Of the diaper or the rash'], nurse() ? ['heart', 'Keep nursing', 'Your pediatrician will say if anything should change'] : ['bottle', !breast() ? 'Keep the same formula' : !fam() ? 'Keep giving breast milk' : 'Keep {p} milk the same', 'Ask your pediatrician before changing it']],
-      calls: { ped: 'blood or mucus in poop, a rash, vomiting after most feeds, or slow gain.' } }),
-    x_gain: () => ({ type: 'check', label: 'Feeding challenges', art: 'steth', title: 'Slow gain? Watch swallows and diapers',
+      calls: { ped: 'you see either of these, or {s’s} gaining slowly.' } }),
+    x_gain: () => ({ type: 'expect', ct: 'know', label: 'Feeding challenges', art: 'steth', title: 'Slow gain? Watch swallows and diapers',
       why: 'Some babies are just smaller. {P} growth curve matters more than one weigh-in.',
-      tellTitle: 'What to watch', signs: [['eye', 'Swallows', 'Long sucks and swallows, not just dozing'], ['diaper', 'Wet diapers', '6 or more a day after the first week']],
+      notice: ['Dozing at feeds more than swallowing', 'Fewer than 6 wet diapers a day'],
       helps: [['clock', 'Feed often', mo() < 1 ? '8–12 times a day in the first weeks' : 'On cue, and more often if your pediatrician says'], ['steth', 'Follow your pediatrician’s plan', 'Top-ups or set feed times, if they’re suggested']],
-      calls: { ped: 'fewer wet diapers, or {s’s} hard to wake for feeds' + (realMo() < 1 ? ', or not back to birth weight by 2 weeks.' : '.') } }),
+      calls: { ped: '{s’s} hard to wake for feeds, or diapers stay low for a day' + (realMo() < 1 ? ', or {s’s} not back to birth weight by 2 weeks.' : '.') } }),
     // Nov 24 (Feeding A): nursing pages only for families who nurse; others get the bottle version of pulling off.
-    x_hurt: () => !nurse() ? T.x_refuse() : ({ type: 'expect', label: 'Feeding challenges', art: 'sofa', title: 'Feeds shouldn’t hurt after the first minute',
+    x_hurt: () => !nurse() ? T.x_refuse() : ({ type: 'expect', ct: 'know', label: 'Feeding challenges', notice: ['Pain past the first minute of a feed', 'A flattened or creased nipple after'], art: 'sofa', title: 'Feeds shouldn’t hurt after the first minute',
       why: 'A little tenderness in the first week is common. Pain all feed long usually means a shallow latch.',
-      do: [['hand', 'Re-latch', 'Break the seal with a clean finger, then try again'], ['sofa', 'Try another hold', 'Cradle or laid-back'], ['steth', 'Get it checked', 'A lactation consultant can check the latch']],
+      do: [['hand', 'Re-latch', 'Break the seal with a clean finger, then try again'], ['heart', 'Line {o} up', 'Nose to nipple, so {p} mouth opens wide'], ['steth', 'Get it checked', 'A lactation consultant can check the latch']],
       // Nov 19: holds shown without the baby latched, so parents can copy the position.
-      hero: () => H().TPLB.photoGrid([['feeding/hold-cradle', 'Cradle', 'Baby across your lap, tummy to tummy'], ['feeding/hold-laidback', 'Laid-back', 'Lean back. Baby lies on you, tummy down']]), heroTitle: 'Holds to try',
+      helpTop: () => H().TPLB.photoGrid([['feeding/hold-cradle', 'Cradle', 'Baby across your lap, tummy to tummy'], ['feeding/hold-laidback', 'Laid-back', 'Lean back. Baby lies on you, tummy down']]),
       // Nov 19: a latch has to be seen, and AI tools won't draw breastfeeding, so a trusted video shows it.
       video: ['wjt-Ashodw8', 'How a deep latch looks', 'Global Health Media'],
       calls: { ped: 'pain at most feeds after the first week, {s} {seem|seems} hungry after most feeds, or clicking and long feeds with slow gain.' } }),
-    x_nobottle: () => !nurse() ? T.x_refuse() : mo() >= 11 ? { type: 'expect', label: 'Feeding challenges', art: 'cup', title: 'No bottle? An open cup works now',
+    x_nobottle: () => !nurse() ? T.x_refuse() : mo() >= 11 ? { type: 'expect', ct: 'know', label: 'Feeding challenges', art: 'cup', notice: ['Pushes the bottle away', 'Happy to sip from a cup'], title: 'No bottle? An open cup works now',
       why: 'Bottles phase out between 12 and 18 months anyway, so there’s no need to push one.',
       do: [['cup', 'Milk in an open or straw cup', 'With meals and snacks'], ['heart', 'Keep nursing', 'As much or as little as you both like']],
-      calls: { ped: '{s} {refuse|refuses} most feeds and meals, or {have|has} fewer wet diapers.' } } : ({ type: 'expect', label: 'Feeding challenges', art: 'bottle', title: 'Won’t take a bottle? It often takes practice',
+      calls: { ped: '{s} {refuse|refuses} most feeds and meals, or {have|has} fewer wet diapers.' } } : ({ type: 'expect', ct: 'know', label: 'Feeding challenges', notice: ['Pushes the nipple out, or cries', 'Takes it from others, but not from you'], art: 'bottle', title: 'Won’t take a bottle? It often takes practice',
       why: 'Many babies who nurse refuse a bottle at first, especially from the parent who nurses.',
       do: [['hand', 'Someone else offers', 'Ideally with you out of the room'], ['moon', 'Before {s’s} very hungry', 'Calm and a little sleepy is easiest'], ['bottle', 'Slow-flow nipple', 'Try another shape if {s} {fight|fights} it']],
       doNotes: [['', 'Keep it low-pressure', 'A few minutes once a day. Upset? Stop, and try again tomorrow']],
       calls: { ped: '{s} {refuse|refuses} all feeds, or {have|has} fewer wet diapers.' } }),
-    x_refuse: () => ({ type: 'expect', label: 'Feeding challenges', art: 'bottle', title: 'Pulling off at feeds? Usually a small fix',
+    x_refuse: () => ({ type: 'expect', ct: 'know', label: 'Feeding challenges', art: nurse() ? 'heart' : 'bottle', notice: ['Pulling off and fussing', 'Arching or turning away mid-feed'], title: 'Pulling off at feeds? Usually a small fix',
       why: 'It’s often air, a fast flow, or a stuffy nose.',
       // Nov 24 (Feeding E): physical steps get a photo each, in Everyday care's step card.
-      doTitle: 'What to do', doFig: () => window.ctPhotoSteps([['photo:feeding/burp-shoulder', 'Burp, then retry', 'Trapped air can feel like being full'], nurse() ? ['photo:feeding/hold-laidback', 'Lean back as you feed', 'It slows milk that comes fast'] : ['photo:feeding/pace-step-2', 'Check the nipple', 'Gulping means too fast. Frustrated means too slow'], ['photo:health/cold-saline', 'Clear {p} nose', 'A few saline drops, then gentle suction']],
+      doFig: () => window.ctPhotoSteps([['photo:feeding/burp-shoulder', 'Burp, then retry', 'Trapped air can feel like being full'], nurse() ? ['photo:feeding/hold-laidback', 'Lean back as you feed', 'It slows milk that comes fast'] : ['photo:feeding/pace-step-2', 'Check the nipple', 'Gulping means too fast. Frustrated means too slow'], ['photo:health/cold-saline', 'Clear {p} nose', 'A few saline drops, then gentle suction']],
         mo() >= 3 ? [['Distracted?', 'Feed somewhere quiet and dim']] : null),
       calls: () => fevCalls(['too sleepy to feed', 'refusing several feeds in a row']) }),
 
@@ -275,7 +275,7 @@
     // Nov 19: the squish test in the top card, then sizes by age (this baby's marked), what to try, how to make risky foods safe, and safety while eating.
     z_shapes: () => { const T = H().TPLB, nine = mo() >= 9;
       return { type: 'howto', label: 'Safe finger foods', art: 'hand', title: 'Finger foods should squish when pressed',
-        why: () => mo() >= 9 ? 'Cut food into soft pieces about the size of a pea, so {s} can pick them up.' : 'Cut food into strips about the size of your finger, so {s} can hold them. Smaller pieces come at 9 months.',
+        why: '{P} gums can mash it, no teeth needed.',
         heroTitle: 'The squish test', hero: () => `<section class="care-tpl-card ph-squish">${T.photoPins('feeding/squish2', 'A thumb and finger squishing a soft cooked sweet potato strip flat', [['Press gently', 38, 42, 'l'], ['It should give way', 47, 68, 'b']], 'is-wide')}</section>`,
         // Nov 19: like the inspiration, three blocks only: the squish test, what to try, and how to keep it safe (icons, not more photos).
         stepsTitle: 'A few foods to try', // Nov 23: from 9 months, one photo of pea-size pieces replaces the three strip photos.
@@ -314,23 +314,23 @@
         why: 'Cups are kinder to teeth, and practice now makes the switch easier.',
         do: [['cup', 'Whole milk', 'Not low-fat, until age 2'], ['drop', 'Up to 24 oz a day', b ? 'More crowds out iron-rich food' : 'From a cup. Nursing doesn’t count'], b ? ['bottle', 'Drop one bottle at a time', 'Swap one for a cup each week'] : null].filter(Boolean),
         doNotes: [b ? ['', 'Picky about the taste?', (f ? 'Mix half and half with formula' : 'Mix half and half with breast milk') + ' for a week. Toddler formula isn’t needed'] : null, ['', 'Vitamin D after 1', 'Ask your pediatrician how much {s} {need|needs}']] }; },
-    z_refuse: () => ({ type: 'expect', label: 'Feeding challenges', art: 'plate', title: 'Refusing food is normal, and it passes',
+    z_refuse: () => ({ type: 'expect', ct: 'know', label: 'Feeding challenges', notice: ['Turning away or closing {p} mouth', 'Pushing food off the tray'], art: 'plate', title: 'Refusing food is normal, and it passes',
       why: 'Some days {s}’ll eat a lot, and some days almost nothing.',
       do: [['clock', 'Try again later', 'It can take 10–15 tries'], ['hand', 'Let {o} touch it first', 'Playing is learning'], ['plate', 'Eat together', '{S} {copy|copies} you']],
       doNotes: [['', 'Split the job', 'You choose what. {S} {choose|chooses} how much']],
       calls: { ped: 'refusing most foods for weeks, or fewer wet diapers.' } }),
-    z_teeth: () => ({ type: 'expect', label: 'Feeding challenges', art: 'tooth', title: 'Teething can make feeds short and fussy',
+    z_teeth: () => ({ type: 'expect', ct: 'know', label: 'Feeding challenges', notice: ['Drooling and chewing on {p} hands', 'Pulling off partway through feeds'], art: 'tooth', title: 'Teething can make feeds short and fussy',
       why: 'Sore gums usually settle in a few days.',
       do: [['snow', 'Chill a teether', 'Or a washcloth, to chew on'], mo() >= 6 ? ['bowl', 'Serve chilled food', 'Cool yogurt or mashed fruit soothes gums'] : ['hand', 'Rub {p} gums', 'With a clean finger, for a minute or two'], ['clock', 'Try shorter feeds', 'More often, until {p} gums settle']],
       doNotes: [['', 'Skip numbing gels and amber necklaces', 'Neither is safe for babies']],
       calls: () => mo() < 3 ? { ped: 'refusing to drink.', right: 'a rectal temperature of 100.4°F or higher. Teething doesn’t cause a fever' } : { ped: 'refusing to drink, or ' + fev() + '. Teething doesn’t cause a fever.' } }),
-    z_sick: () => ({ type: 'expect', label: 'Feeding challenges', art: 'thermo', title: 'When {s’s} sick, milk and fluids come first',
+    z_sick: () => ({ type: 'expect', ct: 'know', label: 'Feeding challenges', notice: ['A stuffy nose that makes feeding hard', 'Wanting milk more than food'], art: 'thermo', title: 'When {s’s} sick, milk and fluids come first',
       why: '{S} may eat less for a few days. That’s okay.',
       do: [['bottle', 'Offer milk more often', 'Small feeds stay down better'], ['drop', 'Clear {p} nose first', 'Saline drops, then suction'], ['bowl', 'Let solids wait', 'Milk keeps {o} hydrated for now']],
       calls: { ped: 'fewer wet diapers, refusing milk, or vomiting that keeps happening.' } }),
-    z_reaction: () => ({ type: 'check', label: 'Feeding challenges', art: 'mouth', title: 'Red around the mouth is usually from food',
+    z_reaction: () => ({ type: 'expect', ct: 'know', label: 'Feeding challenges', art: 'mouth', title: 'Red around the mouth is usually from food',
       why: 'Acidic foods can redden the skin they touch. A true reaction looks different.',
-      figure: () => H().TPLB.photoGrid([['feeding/rash-mouth', '✓ Usually fine', 'Red only where food touched, and it fades'], ['feeding/rash-hives', '✕ A true reaction', 'Raised hives that spread, or vomiting']]),
+      look: () => H().TPLB.photoGrid([['feeding/rash-mouth', '✓ Usually fine', 'Red only where food touched, and it fades'], ['feeding/rash-hives', '✕ A true reaction', 'Raised hives that spread, or vomiting']]),
       helps: [['notepad', 'Note it', 'The food, and what happened. A photo helps'], ['clock', 'Hold off on that food', 'Ask before trying it again']],
       calls: { ped: 'hives or vomiting follow a new food. Call the same day.', now: 'trouble breathing, swollen lips or face, or {s’s} very sleepy or floppy.', nowLabel: 'Call 911' } }),
     // Nov 19: the two photo cards in the top card; what to do side by side; the first-aid steps in order, the video right after them, the call card last.
@@ -387,10 +387,14 @@
       + h2('Do it in a few steps') + `<div class="ct-stepcard"><ol class="ct-steps2">${v(q.moves).map(([th, t, sub], k) => `<li><span class="ct-th">${/^photo:/.test(th) ? `<img src="assets/${th.slice(6)}.jpg?v=1" alt="" loading="lazy">` : `<i>${A(th)}</i>`}</span><span class="ct-tx"><b><em>${k + 1}</em>${F(v(t))}</b><small>${sent(sub)}</small></span></li>`).join('')}</ol>${notes(q.tips)}</div>`
       + (q.linkTo ? `<button class="ct-alt" onclick="openPage('${q.linkTo[1]}')">${F(q.linkTo[0])} <span aria-hidden="true">›</span></button>` : '')
       + (v(q.safe) ? h2('Keep {o} safe') + `<div class="ct-safecard">${notes(q.safe)}</div>` : '') + `</div>`;
-    const calls = v(q.calls2) || [];
-    return `<div class="ct-page is-know">` + h2('See what it looks like') + `<figure class="ct-look" id="ct-look">${img(q.photo, q.cap, q.pos)}<figcaption>${sent(q.cap)}</figcaption></figure>`
-      + h2('What you may notice') + `<div class="ct-notice">${v(q.notice).map(t => `<div>${F(t)}</div>`).join('')}</div>`
-      + h2('What helps') + (q.helpMoves ? ctPhotoSteps(v(q.helpMoves), v(q.helpNotes)) : `<div class="ct-helpcard"><ul class="ct-helps">${v(q.helps2).map(t => `<li><i><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i><span>${F(t)}</span></li>`).join('')}</ul>${notes(q.helpNotes)}</div>`)
+    // Nov 24 (Yarden): every Feeding challenge uses this one layout. The picture shows only where there's something to see.
+    const co = v(q.calls) || {}, calls = v(q.calls2) || [co.ped && ['Call your pediatrician if:', co.ped], co.right && ['Call right away if:', co.right, 1], co.er && ['Go to the ER if:', co.er, 1], co.now && [(co.nowLabel || 'Call 911') + ' if:', co.now, 1]];
+    const hn = (v(q.helpNotes) || v(q.doNotes) || v(q.helpsNotes) || []).filter(Boolean).map(n => n.length === 3 ? n.slice(1) : n);
+    const hl = v(q.helps2) || v(q.do) || v(q.helps) || [];
+    return `<div class="ct-page is-know">` + (q.look ? h2('See what it looks like') + v(q.look) : q.photo ? h2('See what it looks like') + `<figure class="ct-look" id="ct-look">${img(q.photo, q.cap, q.pos)}<figcaption>${sent(q.cap)}</figcaption></figure>` : '')
+      + (v(q.notice) ? h2('What you may notice') + `<div class="ct-notice">${v(q.notice).map(t => `<div>${F(t)}</div>`).join('')}</div>` : '')
+      + h2('What helps') + (q.helpTop ? v(q.helpTop) : '') + (q.helpMoves ? ctPhotoSteps(v(q.helpMoves), hn) : q.doFig ? q.doFig() : `<div class="ct-helpcard"><ul class="ct-helps">${hl.filter(Boolean).map(t => `<li><i><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i><span>${Array.isArray(t) ? `<b>${F(t[1])}.</b> <span style="font-weight:400;color:#6b6573">${sent(t[2])}</span>` : F(t)}</span></li>`).join('')}</ul>${notes(hn)}</div>`)
+      + (q.video ? h2('Watch how') + `<div class="ph-video">${hubEmbed(...q.video)}</div>` : '')
       + h2('When to call') + `<section class="care-calls is-titled"><span class="care-calls-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.6 3.5h2.6l1.3 4-2 1.4a11 11 0 0 0 6.6 6.6l1.4-2 4 1.3v2.6a2 2 0 0 1-2.1 2A16.5 16.5 0 0 1 4.6 5.6a2 2 0 0 1 2-2.1Z"/></svg></span><div>${calls.filter(Boolean).map(([l, t, u]) => `<p${u ? ' class="is-urgent"' : ''}><b>${F(l)}</b> ${sent(t)}</p>`).join('')}</div></section></div>`; };
   const CT_PINK = ['#f7d9e5', '#884866'];
   const draw = (q, old) => { const h = H(), F = h.F, v = x => typeof x === 'function' ? x() : x;
