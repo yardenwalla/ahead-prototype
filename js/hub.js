@@ -35,8 +35,10 @@
   }
   function row({ icon, cat, title, sub, chipText, chipTone, onclick }) {
     // No onclick: a row that's complete on its own (an idea to try), with no page behind it.
-    if (!onclick) return `<div class="hub-row is-static"><span class="hub-dot">${art(icon, cat)}</span><span class="hub-row-copy"><b>${F(title)}</b>${sub ? `<small>${F(sub)}</small>` : ''}${chip(chipText, chipTone)}</span></div>`;
-    return `<button class="hub-row" onclick="${onclick}"><span class="hub-dot">${art(icon, cat)}</span><span class="hub-row-copy"><b>${F(title)}</b>${sub ? `<small>${F(sub)}</small>` : ''}${chip(chipText, chipTone)}</span>${chev}</button>`;
+    // Nov 24 (Yarden): the icon box takes the row's own category color, like the icon itself (a Health row on a Feeding page is green).
+    const pal = typeof YEAR_PALETTES !== 'undefined' && cat && YEAR_PALETTES[cat], dot = pal ? ` style="background:${pal.pale}"` : '';
+    if (!onclick) return `<div class="hub-row is-static"><span class="hub-dot"${dot}>${art(icon, cat)}</span><span class="hub-row-copy"><b>${F(title)}</b>${sub ? `<small>${F(sub)}</small>` : ''}${chip(chipText, chipTone)}</span></div>`;
+    return `<button class="hub-row" onclick="${onclick}"><span class="hub-dot"${dot}>${art(icon, cat)}</span><span class="hub-row-copy"><b>${F(title)}</b>${sub ? `<small>${F(sub)}</small>` : ''}${chip(chipText, chipTone)}</span>${chev}</button>`;
   }
   const list = (heading, rows) => rows.filter(Boolean).length ? `${heading ? `<h2 class="hub-h2">${F(heading)}</h2>` : ''}<div class="hub-list">${rows.filter(Boolean).join('')}</div>` : '';
   // checks: what's changing at this stage, as 2–3 short ticks in place of a lead paragraph. Words only; the numbers live in the glance tiles below.
@@ -161,7 +163,7 @@
       + TPLB.sec(tval(q.doTitle) || 'What to do now', q.doFig ? TPLB.noted(q.doFig(), q.doNotes) : !q.do ? '' : Array.isArray(tval(q.do)) ? TPLB.noted(TPLB.tiles(q.do, cat, q.doOrdered), q.doNotes) : TPLB.card(q.do, q.doNotes))
       + (q.video ? `<div class="ph-video">${hubEmbed(...q.video)}</div>` : '') + (q.link ? TPLB.link(...q.link) : '')
       // Nov 23 (round 4): a page in the app the parent may need next, such as infant CPR from the choking page.
-      + (q.go ? `<div class="hub-list care-link">${row({ icon: q.go[0], cat, title: tval(q.go[1]), sub: tval(q.go[2]), onclick: `openPage('${q.go[3]}')` })}</div>` : '') + TPLB.calls(q.calls),
+      + (q.go ? `<div class="hub-list care-link">${(Array.isArray(q.go[0]) ? q.go : [q.go]).map(g => row({ icon: g[0], cat: g[4] || cat, title: tval(g[1]), sub: tval(g[2]), onclick: `openPage('${g[3]}')` })).join('')}</div>` : '') + TPLB.calls(q.calls),
     expect: (q, cat) => { const n = tval(q.normal); return TPLB.sec(tval(q.normalTitle) || 'What’s normal', TPLB.noted(Array.isArray(n) ? TPLB.tiles(n, cat, q.normalOrdered) : n, q.normalNotes))
       + (q.more ? TPLB.sec(tval(q.moreTitle), q.moreNotes ? TPLB.noted(tval(q.more), q.moreNotes) : tval(q.more)) : '')
       + TPLB.sec(tval(q.doTitle) || 'What to do', q.doFig ? TPLB.noted(q.doFig(), q.doNotes) : Array.isArray(tval(q.do)) ? TPLB.noted(TPLB.tiles(q.do, cat, q.doOrdered), q.doNotes) : TPLB.card(q.do, q.doNotes))

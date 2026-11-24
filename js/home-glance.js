@@ -148,7 +148,8 @@
     const b = main.querySelector('.hub-bday');
     // The newborn weeks have no month birthday yet: offer the newborn photo until it's added (or the banner is tapped).
     if (!b) {
-      if (homeMonth() !== 0 || (typeof hubPhotoFor === 'function' && hubPhotoFor(0))) return '';
+      // Keepsakes follow the birthday month (Nov 23: a baby born early got the newborn keepsake at 10 weeks).
+      if (actualMonth() !== 0 || (typeof hubPhotoFor === 'function' && hubPhotoFor(0))) return '';
       try { if (localStorage.getItem('ahead-photo-banner-0')) return ''; } catch (e) {}
       // The "Hello, World!" foil balloon from the newborn page in Memories (there's no number balloon for the newborn weeks).
       const cam = `<img class="hg-banner-img hg-banner-hello" src="assets/home/hello-world.png?v=7" alt="">`;
@@ -299,7 +300,8 @@
   function monthCard(M, lead, a, next) {
     const m = homeMonth(), wk = Math.max(1, Math.round(a * 4.35)), early = profile.early && profile.due && typeof adjustedAge === 'function',
       // Same words as every guide's header (cohesion.js): "1 week", or "10 weeks · 2 weeks adjusted" for a baby born early.
-      when = early ? `${babyAge()} · ${adjustedAge()} adjusted` : m < 2 && typeof babyAge === 'function' ? babyAge() : m < 2 ? `${wk} week${wk === 1 ? '' : 's'}` : `Month ${m}`;
+      // Nov 23: the card's headline is the birthday age only ("10 weeks · 2 weeks adjusted" ran off the card).
+      when = early ? babyAge() : m < 2 && typeof babyAge === 'function' ? babyAge() : m < 2 ? `${wk} week${wk === 1 ? '' : 's'}` : `Month ${m}`;
     const art = typeof homeMonthArt === 'function' ? homeMonthArt(actualMonth()).replace('<svg ', '<svg preserveAspectRatio="xMidYMid meet" ') : '';
     // A row can carry a formula version [title, why] as its sixth item: Feeding gives formula families other numbers.
     const row = ([title, why, cat, icon, go, formula]) => {
@@ -316,20 +318,26 @@
     const newLook = sc || nb;
     const seen = (() => { try { return localStorage.getItem('ahead-story-seen-' + m) === '1'; } catch (e) { return false; } })();
     const c = BALLOON[Math.max(0, Math.min(11, m))];
+    // Nov 23: a baby born early. The card's number is the birthday month (it matches the keepsake and Memories);
+    // what the card says about the baby quietly follows the adjusted month (Yarden: no "adjusted" line on Home's card).
+    const chap = Math.max(0, Math.min(11, typeof actualMonth === 'function' ? actualMonth() : m));
     const hero = nb ? `<button class="ms-card" onclick="homeEyes(true)" style="${monthTheme(m)};--ms-c2:${mix(BALLOON[0], .72)}">
         <span class="ms-body"><span class="ms-copy"><span class="ms-eyebrow">${F(`Welcome, ${name()}`)}</span><b class="ms-month">${F(when + '.')}</b><b class="ms-name">${F('First weeks.')}</b><small>${F(P(M.eyes[0]) + '.')}</small></span>
           <span class="ms-art" aria-hidden="true"><i class="ms-c2"></i><span class="ms-toys">${window.stCardArt(0)}</span></span></span>
         <span class="ms-foot"><span class="ms-watch"><i><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6z" fill="none" stroke="#fffaf3" stroke-width="2"/></svg></i>${F(P('See what she sees'))}</span><span class="ms-go" aria-hidden="true">→</span></span>
       </button>` : sc ? `<button class="ms-card" onclick="try{localStorage.setItem('ahead-story-seen-${m}','1')}catch(e){};stOpen()" style="${monthTheme(m)};--ms-acc:${mix(c, .1, 30)};--ms-c1:${mix(c, .5)};--ms-c2:${mix(c, .72)}">
-        <span class="ms-body"><span class="ms-copy"><span class="ms-eyebrow">${m === 0 ? F('{P} first weeks') : seen ? F('This month') : F('New this month')}</span><b class="ms-month">${F(m === 0 ? when + '.' : `Month ${m}.`)}</b><small>${F(sc.tease).replace(/([.!?]) (?=\S)/g, '$1<br>')}</small></span>
+        <span class="ms-body"><span class="ms-copy"><span class="ms-eyebrow">${m === 0 && chap === 0 ? F('{P} first weeks') : seen ? F('This month') : F('New this month')}</span><b class="ms-month">${F(m === 0 && chap === 0 ? when + '.' : `Month ${chap}.`)}</b><small>${F(m === 0 && chap > 0 ? `${Name()} is still curling up small, like a newborn.` : sc.tease).replace(/([.!?]) (?=\S)/g, '$1<br>')}</small></span>
           <span class="ms-art" aria-hidden="true"><i class="ms-c2"></i><span class="ms-toys">${typeof window.stCardArt === 'function' ? window.stCardArt(m) : art}</span></span></span>
-        <span class="ms-foot"><span class="ms-watch"><i><svg viewBox="0 0 24 24"><path d="M9 7.5v9l7.5-4.5z"/></svg></i>${F(m === 0 ? `${Name()}’s story` : `${Name()}’s month`)}</span><span class="ms-go" aria-hidden="true">→</span></span>
+        <span class="ms-foot"><span class="ms-watch"><i><svg viewBox="0 0 24 24"><path d="M9 7.5v9l7.5-4.5z"/></svg></i>${F(m === 0 && chap === 0 ? `${Name()}’s story` : `${Name()}’s month`)}</span><span class="ms-go" aria-hidden="true">→</span></span>
       </button>`
       : `<section class="he-hero" style="${monthTheme(m)}"><p class="he-eyebrow">${F(when)} · ${F(`Through ${name()}’s eyes`)}</p><div class="he-copy"><h1>${F(P(M.eyes[0]))}</h1><p class="he-lead">${F(P(M.eyes[1]))}</p>${m <= 4 ? `<button class="he-see" onclick="homeEyes(true)"><span aria-hidden="true">👁</span> ${F(`See what ${name()} sees`)}</button>` : ''}</div><span class="he-art" aria-hidden="true">${art}</span></section>`;
     const rr = newLook ? radarRows(m) : [];
+    // Nov 23: rows about eating food wait until solids have started (by the parent's answer, or by age once it's past due).
+    const SOLIDS_ROWS = ['Her poop will change with solids', 'She gags on new textures', 'There’s food in her poop'];
+    const notices = M.notice.filter(r => !(SOLIDS_ROWS.includes(r[0]) && typeof foodStage === 'function' && foodStage() === 'preparing'));
     return hero + (rr.length ? `<section class="rd-card"><p class="rd-eyebrow">${F('On your radar')}</p>${rr.map(([t, why, , , go]) => `<button class="rd-item" onclick="openPage('${go}')"><span><b>${F(P(t))}</b><small>${F(P(why))}</small></span><i aria-hidden="true">›</i></button>`).join('')}</section>` : '') + `
-      ${newLook ? `<div class="hub-list hg-rows rd-list"><p class="rd-eyebrow rd-in">${F('You might notice')}</p>${M.notice.map(row).join('')}</div>` : `<h2 class="hub-h2">${F('You might notice…')}</h2>
-      <div class="hub-list hg-rows">${M.notice.map(row).join('')}</div>`}
+      ${!notices.length ? '' : newLook ? `<div class="hub-list hg-rows rd-list"><p class="rd-eyebrow rd-in">${F('You might notice')}</p>${notices.map(row).join('')}</div>` : `<h2 class="hub-h2">${F('You might notice…')}</h2>
+      <div class="hub-list hg-rows">${notices.map(row).join('')}</div>`}
       ` + guidesCard();
   }
 

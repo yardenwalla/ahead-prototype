@@ -204,7 +204,7 @@
       + (window.aheadFig ? window.aheadFig('health/fall', [], 'Comfort first. Then look over {p} head, arms and legs while {s} settles.', '35%') : '')
       + h2('Right after') + steps([['heart', 'blue', 'Pause before you pick {o} up', 'Not moving, or knocked out? Leave {o} still and call 911'],
         ['hand', 'green', 'Comfort {o}, then check', 'Look over {p} head, arms and legs. A cool cloth eases a bump'],
-        ['info', 'yellow', 'Call your pediatrician', 'For anything more than a light bump. Say how high, and what {s} landed on'],
+        ['info', 'yellow', 'Call your pediatrician', 'Say how high, and what {s} landed on'],
         ['eye', 'pink', 'Watch {o} for a day or two', 'Feeding, waking and acting like {o}self']])
       + H().TPLB.calls({ ped: 'anything more than a light bump, or you’re not sure.', right: 'vomiting, unusual sleepiness, crying you can’t calm, a bulging soft spot, or {s} isn’t moving an arm or leg', nowLabel: 'Call 911', now: '{s} was knocked out, has a seizure, has trouble breathing, or is bleeding and it won’t stop.' }));
   }

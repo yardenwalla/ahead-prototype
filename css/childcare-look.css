@@ -469,3 +469,10 @@
 #main .cc-grid-note { grid-column: 2 / -1; margin: 2px 0 0; font-size: 12px; line-height: 1.35; font-style: italic; color: #7a6f55 }
 #main .cc-grid-foot { display: grid; grid-template-columns: 22px 1fr; gap: 12px; align-items: center; background: #fcf7e4; border-radius: 16px; padding: 12px 14px; font-size: 14px; line-height: 1.4; color: #4e4630; margin: 0 0 16px }
 #main .cc-grid-foot svg { width: 20px; height: 20px }
+
+/* Nov 24 (Yarden): the same pills as every other guide: separate rounded pills, the one you are reading filled, a dot on the stage you are at. */
+#main .cc-pills { gap: 6px; background: none; border: 0; border-radius: 0; padding: 0; margin: 2px 0 14px }
+#main .cc-pills button { flex: none; position: relative; padding: 8px 14px; border-radius: 999px; background: var(--card, #fffdf9); border: 1px solid var(--line, #ebe6e1); font-size: 13px; color: #6b5a0e }
+#main .cc-pills button.is-on { background: #6b5a0e; border-color: #6b5a0e; color: #fff }
+#main .cc-pills button i { display: none }
+#main .cc-pills button.is-now:not(.is-on)::after { content: ""; position: absolute; top: 5px; right: 7px; width: 6px; height: 6px; border-radius: 50%; background: #6b5a0e }
