@@ -447,14 +447,14 @@
     const B = p.bar, tick = m => [m, m <= 0 ? 'Birth' : m === 12 ? '12 mo' : `${+m.toFixed(1)} mo`];
     const ticks = B ? [...new Set([B[0], B[2], B[3], B[1]].map(m => Math.round(m)))].sort((x, y) => x - y).map(tick) : [];
     const steps = !past && STEPS[id] && window.devBigSteps ? window.devBigSteps(STEPS[id]) : '';
-    const when2 = B && window.hubWindowBar ? `<h2 class="hub-h2">${F(past ? 'When it happened' : 'When it usually happens')}</h2><section class="hub-card dev-bigq ya-when">${steps}`
-      + hubWindowBar({ title: '', from: B[0], to: B[1], zones: [[B[2], B[3], B[4], 'band']], ticks, now: a, cat: cat === 'Daily rhythm' || cat === 'Out and about' ? cat : cat, caption: F(whenLine || c.title) })
-      + (whenLine ? `<p class="dev-bigq-a">${F(whenLine)}</p>` : '') + `</section>` : '';
+    // Nov 23 (Yarden): no timing bar on these pages: the age range already sits at the top of the page. The step
+    // photos (rolling, sitting, crawling, first steps) stay, in their own card.
+    const when2 = steps ? `<h2 class="hub-h2">${F(past ? 'How it went' : 'How it usually goes')}</h2><section class="hub-card dev-bigq ya-when">${steps}</section>` : '';
     const signsBody = p.pics ? h.TPLB.photoRows(p.pics) : `<div class="hub-card ya-signs2">${p.signs.map(x => `<p>${F(x)}</p>`).join('')}</div>`;
     // Nov 23: the page's own visual (a photo, a small chart or a strip) sits between the timing card and the signs.
     const vis = VIS[id] ? VIS[id]() : '';
     const look = when2 + vis + (steps ? '' : `<h2 class="hub-h2">${F(c.end <= a ? 'What it looked like' : p.signsTitle || 'Signs it’s close')}</h2>${signsBody}`) + (p.signsNote ? `<p class="ya-signs-note">${F(p.signsNote)}</p>` : '');
-    return h.detail(cat, `${range(c)} · ${when}`, c.title, lead,
+    return h.detail(cat, `${range(c)} · ${when}`, c.title, p.lead,
       look
       + h.list('What it changes', p.rows.slice(0, 4).map(([icon, rc, title, sub, go]) => h.row({ icon, cat: rc, title, sub, onclick: go }).replace('<span class="hub-row-copy">', `<span class="hub-row-copy"><small class="hub-row-eyebrow">${F(AREA[rc] || rc)}</small>`)))
       // Nov 23: a tip that's really a call line uses the app's one When to call card.

@@ -289,7 +289,7 @@
       return { type: 'urgent', label: 'Gagging or choking', art: 'mouth', title: 'Gagging is normal. Choking isn’t.',
         why: 'Gagging is how {s} {learn|learns} to eat. Loud coughing means air is getting through.',
         tellTitle: 'How to tell them apart', figure: () => T.versus(['Gagging: stay close', 'Loud coughing or gagging, red face, watery eyes. Let {o} work it out.'], ['Choking: act now', 'Can’t cry or cough, or only a weak cough or high-pitched sound. Lips may turn blue.']),
-        doTitle: 'If {s’s} choking', doFig: () => `<div class="fd-holds">${[['feeding/choke-back', 'Back blows: face down, head low'], ['feeding/choke-chest', 'Chest thrusts: face up']].map(([src, t]) => `<div>${T.pimg(src, t)}<span>${H().F(t)}</span></div>`).join('')}</div>` + T.numbered([['Get help', 'Have someone call 911, or call on speaker'], ['5 back blows', 'Face down on your forearm, jaw supported. Firm, between the shoulder blades'], ['5 chest thrusts', 'Face up, heel of one hand mid-chest'], ['Repeat', 'Until it’s out. If {s} {stop|stops} responding, start CPR']], 'stop'),
+        doTitle: 'If {s’s} choking', doFig: () => T.numbered([['Get help', 'Have someone call 911, or call on speaker'], ['5 back blows', 'Face down on your forearm, jaw supported. Firm, between the shoulder blades'], ['5 chest thrusts', 'Face up, heel of one hand mid-chest'], ['Repeat', 'Until it’s out. If {s} {stop|stops} responding, start CPR']], 'stop'),
         doNotes: [['', 'Never sweep {p} mouth with a finger', 'It can push food further in']],
         video: ['ShaNuST_58A', 'Choking first aid for babies under 1', 'American Red Cross'],
         calls: { now: '{s} {stop|stops} responding. Start CPR while you wait.', nowLabel: 'Call 911' } }; },
