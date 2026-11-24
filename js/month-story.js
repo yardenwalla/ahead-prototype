@@ -6,6 +6,8 @@
   var on = function () { return true; };
   var E = function (v) { return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
   var nm = function () { try { return profile.name || 'Your baby'; } catch (e) { return 'Your baby'; } };
+  // Nov 23: the same, for the middle of a sentence ("Everything catches your baby’s eye").
+  var nmIn = function () { try { return profile.name || 'your baby'; } catch (e) { return 'your baby'; } };
   var PR = function () {
     var p = (profile && profile.pronouns) || 'she';
     return p === 'he' ? { s: 'he', S: 'He', o: 'him', p: 'his', P: 'His', SS: 'He’s' } : p === 'they' ? { s: 'they', S: 'They', o: 'them', p: 'their', P: 'Their', SS: 'They’re' } : { s: 'she', S: 'She', o: 'her', p: 'her', P: 'Her', SS: 'She’s' };
@@ -451,7 +453,7 @@
     var st = STORIES[Math.max(0, Math.min(11, m))] || STORIES[1], wk = Math.max(1, Math.round(days / 7));
     var list = [{ id: 'cover', bg: '#2B2840', ink: '#fffaf3', dur: 3800, html:
         '<i class="st-sun"></i><i class="st-star">★</i><i class="st-dotc"></i>' +
-        '<p class="st-kicker st-in" style="--d:.05s">' + E(n.charAt(0).toUpperCase() + n.slice(1)) + (m === 0 ? '’s first weeks' : '’s month') + '</p>' +
+        '<p class="st-kicker st-in" style="--d:.05s">' + E(n) + (m === 0 ? '’s first weeks' : '’s month') + '</p>' +
         '<div class="st-giant st-pop" style="--d:.15s">' + (m === 0 ? wk + '<small class="st-giant-u">' + (wk === 1 ? 'week' : 'weeks') + '</small>' : st.half ? '<span class="st-halfwrap">' + V.halfring() + '<b>' + m + '</b></span>' : m) + '</div>' +
         '<div class="st-title st-cover-t st-in" style="--d:.45s">' + E(Pp(st.cover[0])) + '</div>' +
         '<p class="st-lead st-in" style="--d:.75s">' + E(Pp(st.cover[1])) + '</p>' +
@@ -670,7 +672,7 @@
     var TEASE = { 0: '{N} is brand new and loves being snug.', 1: '{N} notices more each day, and kicks with joy.', 2: '{N} smiles on purpose and is starting to coo.', 3: '{N}’s hands are opening, so she can reach for toys.',
       4: 'Everything catches {N}’s eye, even during feeds.', 5: '{N} found her feet, and they’re after that ball.', 6: 'Halfway to one, {N} may be ready for a taste.', 7: '{N} drops it. You pick it up. And she does it again.',
       8: '{N} knows you’re there, even out of sight.', 9: '{N} is figuring out how things fit together.', 10: '{N} may start pulling up on the furniture.', 11: '{N} is almost one, and look how far she’s come.' };
-    return { title: Pp(st.cover[0]), lead: Pp(st.cover[1]), tease: Pp(TEASE[m]).replace('{N}', nm()), sum: st.sum.map(Pp) };
+    return { title: Pp(st.cover[0]), lead: Pp(st.cover[1]), tease: Pp(TEASE[m]).replace(/^\{N\}/, nm()).replace('{N}', nmIn()), sum: st.sum.map(Pp) };
   };
 
   /* ---------- Entry: the month card is the story's cover ---------- */
@@ -681,7 +683,7 @@
     hero.dataset.st = '1';
     var copy = hero.querySelector('.he-copy'); if (!copy) return;
     var b = document.createElement('button'); b.className = 'he-see st-play';
-    b.innerHTML = '<span class="st-play-ring"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7.5v9l7.5-4.5z"/></svg></span>Watch ' + E(nm()) + '’s month';
+    b.innerHTML = '<span class="st-play-ring"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7.5v9l7.5-4.5z"/></svg></span>Watch ' + E(nmIn()) + '’s month';
     b.onclick = function (e) { e.stopPropagation(); open(); };
     var old = copy.querySelector('.he-see'); if (old) old.replaceWith(b); else copy.appendChild(b);
   }
