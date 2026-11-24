@@ -51,10 +51,12 @@
     // ---------- Every day ----------
     nb_vitd: () => onlyFormula()
       ? { type: 'howto', label: 'Every day', art: 'drop', title: 'Vitamin D drops, every day for now',
+        hero: () => window.aheadFig ? window.aheadFig('feeding/vitd-drop', [['Into the side of {p} mouth', 'bl', 52, 46]], 'Drip it in slowly, a little at a time.', '35%') : '',
         why: 'Formula covers it once {s} {drink|drinks} about 32 oz a day. Until then, give drops too.',
         ordered: false, steps: [['drop', 'The label’s dose', 'Using the dropper that comes with them'], ['mouth', 'Inside {p} cheek', 'Drip it in slowly'], ['bottle', 'Or mixed in 1 oz of milk', 'Make sure {s} {finish|finishes} it']],
         stepsNotes: mo() < 6 ? [['', 'No water yet', 'Milk is all {s} {need|needs} until about 6 months, even on hot days']] : null }
       : { type: 'howto', label: 'Every day', art: 'drop', title: 'Vitamin D drops, every single day',
+        hero: () => window.aheadFig ? window.aheadFig('feeding/vitd-drop', [['Into the side of {p} mouth', 'bl', 52, 46]], nurse() ? 'Or let it fall on the nipple just before a feed.' : 'Drip it in slowly, a little at a time.', '35%') : '',
         why: 'Vitamin D builds strong bones, and breast milk has very little. A few drops a day fill in the gap.',
         pictureTitle: 'What {s} {need|needs}', picture: () => H().TPLB.tiles([['sun', 'Vitamin D', '400 IU a day, through {p} first year'], ['drop', 'Iron', fam() ? 'Drops from 4 months, if mostly breast milk' : mo() < 4 ? 'Drops usually start at about 4 months' : 'Drops from 4 months, until iron-rich foods are going well']], CAT),
         ordered: false, steps: [['drop', 'The label’s dose', 'Using the dropper that comes with them'], ['mouth', 'Inside {p} cheek', nurse() ? 'Or on the nipple, just before a feed' : 'Drip it in slowly'], ['bottle', 'Or mixed in 1 oz of milk', 'Make sure {s} {finish|finishes} it']],
@@ -287,7 +289,7 @@
       return { type: 'urgent', label: 'Gagging or choking', art: 'mouth', title: 'Gagging is normal. Choking isn’t.',
         why: 'Gagging is how {s} {learn|learns} to eat. Loud coughing means air is getting through.',
         tellTitle: 'How to tell them apart', figure: () => T.versus(['Gagging: stay close', 'Loud coughing or gagging, red face, watery eyes. Let {o} work it out.'], ['Choking: act now', 'Can’t cry or cough, or only a weak cough or high-pitched sound. Lips may turn blue.']),
-        doTitle: 'If {s’s} choking', doFig: () => T.numbered([['Get help', 'Have someone call 911, or call on speaker'], ['5 back blows', 'Face down on your forearm, jaw supported. Firm, between the shoulder blades'], ['5 chest thrusts', 'Face up, heel of one hand mid-chest'], ['Repeat', 'Until it’s out. If {s} {stop|stops} responding, start CPR']], 'stop'),
+        doTitle: 'If {s’s} choking', doFig: () => `<div class="fd-holds">${[['feeding/choke-back', 'Back blows: face down, head low'], ['feeding/choke-chest', 'Chest thrusts: face up']].map(([src, t]) => `<div>${T.pimg(src, t)}<span>${H().F(t)}</span></div>`).join('')}</div>` + T.numbered([['Get help', 'Have someone call 911, or call on speaker'], ['5 back blows', 'Face down on your forearm, jaw supported. Firm, between the shoulder blades'], ['5 chest thrusts', 'Face up, heel of one hand mid-chest'], ['Repeat', 'Until it’s out. If {s} {stop|stops} responding, start CPR']], 'stop'),
         doNotes: [['', 'Never sweep {p} mouth with a finger', 'It can push food further in']],
         video: ['ShaNuST_58A', 'Choking first aid for babies under 1', 'American Red Cross'],
         calls: { now: '{s} {stop|stops} responding. Start CPR while you wait.', nowLabel: 'Call 911' } }; },

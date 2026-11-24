@@ -377,7 +377,7 @@
     finger: { lead: 'Around 7–9 months, food moves past smooth purées to soft lumps, and pieces {s} can pick up. Meals get messier, and that’s how {s} learns.', bar: [5, 11, 7, 9, 'Textures'], signs: ['Moving food around {p} mouth to chew', 'Raking food toward {o} with {p} fingers', 'Reaching for the spoon'],
       rows: [['bowl', 'Feeding', 'Thicker textures, step by step', 'From mashed to soft lumps', "openPage('chg:Feeding:d:lumpy')"], ['bowl', 'Feeding', 'Safe finger food sizes', 'Soft, and cut the right shape', "openPage('chg:Feeding:d:finger')"], ['shield', 'Safety', 'Gagging versus choking', 'Know the difference before you start', "openPage('chg:Feeding:safe')"]],
       tip: ['Lots of gagging at first?', 'It’s noisy and normal while {s} learns to move food around. Choking is different: a weak cough or no sound at all.'] },
-    carseat: { lead: 'Many babies outgrow the infant car seat in the first year, usually by height before weight. The next seat still faces the back.', bar: [4, 14, 8, 12, 'Often here'], signs: ['{p} head is within an inch of the top of the seat', 'Close to the weight limit on the label'], signsNote: 'Feet touching the back seat is fine, and not a reason to switch.',
+    carseat: { lead: 'Many babies outgrow the infant car seat in the first year, usually by height before weight. The next seat still faces the back.', bar: [4, 14, 8, 12, 'Often here'], signs: ['{P} head is within an inch of the top of the seat', 'Close to the weight limit on the label'], signsNote: 'Feet touching the back seat is fine, and not a reason to switch.',
       rows: [['car', 'Out and about', 'Which seat comes next', 'Infant seat, then a convertible seat, still rear-facing', "openPage('chg:Out and about:d:car')"]],
       tip: ['Still facing the back', 'Keep {o} rear-facing as long as the new seat allows, often well past age 2.'] },
     sep: { lead: 'Around 8–10 months, many babies get upset when you leave. It means {s} knows you, and knows when you’re gone.', bar: [5, 14, 8, 10, 'Often peaks'], signs: ['Crying when you leave the room', 'Clinging around new people', 'Waking at night looking for you'],
@@ -399,14 +399,55 @@
       rows: [['sun', 'Sleep', 'Making the switch', 'Push the first nap later', "openPage('chg:Sleep:d:after')"], ['book', 'Sleep', 'Bedtime a little earlier', 'While {s} adjusts', "openPage('chg:Sleep:d:routine')"]],
       tip: ['No rush', 'Two naps after the first birthday is normal.'] }
   };
+  /* Nov 23 (Yarden: "it's not just adding images, it's whether a chart or a visual communicates better than words"):
+     each read-ahead page gets the one visual that answers its question fastest. A photo where the change is something
+     you can see, a small chart where it's a pattern over time, a strip where it's a sequence. */
+  const VSTART = { tl: [80, 56], tr: [320, 56], bl: [80, 244], br: [320, 244] };
+  const vPhoto = (img, call, cap, pos) => { const src = img.includes('/') ? img : 'timeline/' + img; const arr = (call || []).map(([, at, x, y]) => { const [sx, sy] = VSTART[at], ex = x * 4, ey = y * 3, mx = (sx + ex) / 2, my = (sy + ey) / 2, dx = ex - sx, dy = ey - sy, b = at === 'tl' || at === 'br' ? 0.25 : -0.25;
+      return `<path d="M${sx} ${sy} Q${(mx - dy * b).toFixed(0)} ${(my + dx * b).toFixed(0)} ${ex} ${ey}" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" marker-end="url(#yaah)" filter="drop-shadow(0 1px 2px rgba(0,0,0,.35))"/>`; }).join('');
+    return `<figure class="ct-hero ya-photo"><img src="assets/${src}.jpg?v=1" alt="${F(cap).replace(/"/g, '&quot;')}" loading="lazy" style="object-position:50% ${pos || '40%'}"><svg class="ct-arrows" viewBox="0 0 400 300" preserveAspectRatio="none" aria-hidden="true"><defs><marker id="yaah" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#fff"/></marker></defs>${arr}</svg>${(call || []).map(([l, at]) => `<span class="ct-callout is-${at}">${F(l)}</span>`).join('')}</figure><p class="ya-cap">${F(cap)}</p>`; };
+  // Shared with other guides' pages (Health's rectal temperature, Feeding's vitamin D): one photo, pointing labels, a caption.
+  window.aheadFig = vPhoto;
+  const vH2 = t => `<h2 class="hub-h2">${F(t)}</h2>`;
+  // A pattern over weeks: one smooth curve with its three moments named under it.
+  const vCurve = (title, pts, marks) => vH2(title) + `<figure class="ya-curve" role="img" aria-label="${F(marks.map(m => m[1]).join(', '))}"><svg viewBox="0 0 320 120" preserveAspectRatio="none" aria-hidden="true"><path d="M0 118 ${pts}" fill="var(--year-pale)" stroke="none"/><path d="${pts.replace(/^L/, 'M')}" fill="none" stroke="var(--year-ink)" stroke-width="3" stroke-linecap="round"/></svg><figcaption>${marks.map(([, t, sub]) => `<span><b>${F(t)}</b>${sub ? F(sub) : ''}</span>`).join('')}</figcaption></figure>`;
+  // How long the longest sleep gets, as bars.
+  const vBars = (title, rows) => vH2(title) + `<section class="ya-bars">${rows.map(([age, w, lbl]) => `<div><small>${F(age)}</small><span><i style="width:${w}%">${F(lbl)}</i></span></div>`).join('')}</section>`;
+  // Night wakings, counted in dots.
+  const vDots = (title, rows) => vH2(title) + `<section class="ya-dots">${rows.map(([t, n, lbl, now]) => `<div class="${now ? 'is-now' : ''}"><b>${F(t)}</b><span>${'<i></i>'.repeat(n)}</span><small>${F(lbl)}</small></div>`).join('')}</section>`;
+  // An example day, 7 am to 7 pm, naps as blocks.
+  const vDays = (title, rows) => vH2(title) + `<section class="ya-days">${rows.map(([t, naps]) => `<div><b>${F(t)}</b><span>${naps.map(([a, z]) => `<i style="left:${(a - 7) / 12 * 100}%;width:${(z - a) / 12 * 100}%"></i>`).join('')}</span></div>`).join('')}<p><span>7 am</span><span>Noon</span><span>7 pm</span></p></section>`;
+  // A sequence: what comes first, next, then.
+  const vSteps = (title, items) => vH2(title) + `<ol class="ya-steps">${items.map(([icon, t, sub]) => `<li><i>${typeof hubArt === 'function' ? hubArt(icon, 'Development & play') : ''}</i><b>${F(t)}</b><small>${F(sub)}</small></li>`).join('')}</ol>`;
+  const VIS = {
+    crying: () => vCurve('How the crying usually goes', 'L0 112 C40 104 60 60 95 22 C120 4 150 10 175 40 C205 78 250 104 320 110 L320 118 Z', [[6, 'About 2 weeks', 'It starts'], [42, 'Peaks', 'at 6–8 weeks'], [82, 'Eases', 'by 3–4 months']]),
+    smile: () => vPhoto('smile', [['Smiling back at you', 'tr', 62, 50]], 'The first real smiles come in answer to yours.', '40%'),
+    nights: () => vBars('The longest sleep, month by month', [['Newborn weeks', 25, '2–4 hrs'], ['3–4 months', 45, '5+ hrs'], ['Around 6 months', 66, '6–8 hrs'], ['9–12 months', 100, '10–12 hrs']]),
+    regress: () => vDots('Night wakings, before and after', [['Before', 2, '1–2 wakings'], ['For a few weeks', 6, 'Up to 6'], ['After', 2, '1–2 again']]),
+    roll: () => vPhoto('roll', [['Onto {p} side first', 'tr', 50, 50]], 'Rocking side to side often comes just before the first roll.', '45%'),
+    sit: () => vPhoto('sit', [['Propped on {p} hands', 'br', 48, 70]], 'First comes sitting propped forward. Sitting hands-free comes later.', '45%'),
+    twonaps: () => vDays('An example day, before and after', [['Three naps', [[9, 10], [12.5, 14], [16.3, 16.9]]], ['Two naps', [[9.5, 10.8], [13.8, 15.3]]]]),
+    tooth: () => vPhoto('tooth', [['Two little bottom teeth', 'br', 52, 60]], 'The two bottom front teeth usually come first.', '35%'),
+    crawl: () => vPhoto('crawl', [['Rocking on hands and knees', 'tl', 45, 55]], 'Rocking back and forth often comes just before crawling.', '45%'),
+    solids: () => vH2('Ready when you see these') + (H().TPLB ? '<div class="ya-grid4">' + H().TPLB.photoGrid([['feeding/sign-head', 'Steady head', 'Holds it up on {p} own'], ['feeding/sign-sits', 'Sits with support', 'In a high chair or on your lap'], ['feeding/sign-interest2', 'Leans in', 'When food comes {p} way'], ['feeding/sign-spoon', 'Swallows', 'Instead of pushing food out']]) + '</div>' : ''),
+    finger: () => vH2('One food, three textures') + (H().TPLB ? '<div class="ya-tex">' + H().TPLB.photoAges([['feeding/tx-avo-1', 'Around 6 months', 'Smooth', ''], ['feeding/tx-avo-2', '7–8 months', 'Lumpy', ''], ['feeding/tx-avo-3', '9 months on', 'Soft pieces', '']]) + '</div>' : ''),
+    carseat: () => vPhoto('carseat', [['Less than an inch to the top', 'tr', 50, 20]], 'When {p} head is within an inch of the top of the shell, it’s time for the next seat.', '30%'),
+    sep: () => vPhoto('sep', [['Reaching for you', 'tr', 55, 45]], 'It means {s} knows you, and knows when you’re gone.', '40%'),
+    pull: () => vPhoto('pull', [['Holding on to stand', 'tl', 55, 40]], 'Next comes cruising: stepping sideways while holding on.', '40%'),
+    words: () => vSteps('How talking builds', [['chat', 'Coos', 'By about 2 months'], ['music', 'Babbles “ba-ba”', 'By about 6 months'], ['heart', '“Mama” or “dada”', 'For a parent, around 12 months']]),
+    milk: () => vSteps('Moving to whole milk', [['bottle', 'Breast milk or formula', 'Until 12 months'], ['cup', 'Cup practice', 'From about 6 months'], ['cup', 'Whole milk in a cup', 'From 12 months']]),
+    steps: () => vPhoto('steps', [['Arms up for balance', 'tl', 40, 35]], 'First steps are wobbly, with arms held high for balance.', '40%'),
+    onenap: () => vDays('An example day, before and after', [['Two naps', [[9.5, 10.8], [13.8, 15.3]]], ['One nap', [[12.3, 14.8]]]])
+  };
   function changePage(id) {
     const h = H(), c = C.find(x => x.id === id), p = PAGES[id]; if (!c || !p) return null;
     const a = ageNow(), cat = c.cat, past = c.end <= a, now = c.start <= a && c.end > a;
     const when = past ? 'Already behind ' + name() : now ? 'Any time now' : c.start - a <= 1 ? 'Could start any week now' : `In about ${Math.round(c.start - a)} month${Math.round(c.start - a) === 1 ? '' : 's'}`;
     // Nov 14: the signs used to sit at the end of the top card's paragraph. As their own short list they scan at a glance.
     const look = `<h2 class="hub-h2">${F(c.end <= a ? 'What it looked like' : p.signsTitle || 'Signs it’s close')}</h2><ul class="ya-signs">${p.signs.map(x => `<li>${F(x)}</li>`).join('')}</ul>${p.signsNote ? `<p class="ya-signs-note">${F(p.signsNote)}</p>` : ''}`;
+    const vis = VIS[id] ? VIS[id]() : '', shown = id === 'solids';
     return h.detail(cat, `${range(c)} · ${when}`, c.title, p.lead,
-      look
+      vis + (shown ? '' : look)
       + h.list('What it changes', p.rows.slice(0, 4).map(([icon, rc, title, sub, go]) => h.row({ icon, cat: rc, title, sub, onclick: go }).replace('<span class="hub-row-copy">', `<span class="hub-row-copy"><small class="hub-row-eyebrow">${F(AREA[rc] || rc)}</small>`)))
       + h.tip(p.tip[0], p.tip[1]), c.icon);
   }
