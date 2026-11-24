@@ -590,7 +590,7 @@
         h.list('What’s going on?', [
           h.row({ icon: 'thermo', cat: 'Health', title: 'A fever', sub: u3 ? 'Under 3 months, any fever means calling' : 'How to check, and when to call', onclick: "openPage('chg:Health:d:sick-fever')" }),
           h.row({ icon: 'bottle', cat: 'Health', title: 'Vomiting or diarrhea', sub: 'Keeping feeds going, and when to call', onclick: "openPage('chg:Health:d:sick-tummy')" }),
-          h.row({ icon: 'drop', cat: 'Health', title: 'A cold or stuffy nose', sub: 'Clearing the nose, and when to call', onclick: "openPage('chg:Health:d:cold')" })
+          h.row({ icon: 'nose', cat: 'Health', title: 'A cold or stuffy nose', sub: 'Clearing the nose, and when to call', onclick: "openPage('chg:Health:d:cold')" })
         ])
         + h.note('Not sure? Your pediatrician’s office has someone to talk to day or night. Calling is never a bother.')
         + call911);

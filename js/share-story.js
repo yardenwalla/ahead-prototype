@@ -36,7 +36,7 @@
   const INK = '#23324D';
 
   const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
-  const babyName = () => (typeof name === 'function' ? name() : 'Baby');
+  const babyName = () => (typeof Name === 'function' ? Name() : 'Baby');
   const photoFor = m => (typeof hubPhotoFor === 'function' ? hubPhotoFor(m) : null);
   const cache = {};
   const img = src => cache[src] || (cache[src] = new Promise((ok, no) => { const i = new Image(); i.onload = () => ok(i); i.onerror = () => { delete cache[src]; no(new Error('image')); }; i.src = src; }));

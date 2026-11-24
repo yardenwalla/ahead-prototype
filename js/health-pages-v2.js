@@ -185,20 +185,23 @@
   }
 
   // Nov 23 (round 4, Yarden: "add these"): steps a parent can follow in the moment. Sources: AHA infant CPR (30 compressions
-  // with 2 fingers, about 1½ inches; 2 breaths; 2 minutes before leaving to call if alone); HealthyChildren (AAP) Head Injury;
+  // with the heel of one hand, about 1½ inches (2025 AHA/AAP: the two-finger method is no longer taught); 2 breaths; 2 minutes before leaving to call if alone); HealthyChildren (AAP) Head Injury;
   // HealthyChildren Using Liquid Medicines (the dosing tool that comes with it, never a kitchen spoon).
   function cprPage() {
     return page(top('Emergencies', 'Infant CPR, step by step', 'For a baby who won’t wake and isn’t breathing normally. Start right away, and keep going until help arrives.')
+      // Nov 23 (show and tell): where your hands go (heel of one hand), on a training manikin.
+      + (window.aheadFig ? window.aheadFig('health/cpr', [['Heel of one hand, center of the chest', 'bl', 32, 58], ['Other hand on the forehead', 'tr', 82, 32]], 'The heel of one hand in the center of the chest, just below the nipple line. Your other hand keeps the head tilted back a little.', '50%') : '')
       + h2('If {s} won’t respond') + steps([['hand', 'pink', 'Tap and shout', 'Tap {p} foot and call {p} name. No response? Start now'],
         ['alarm', 'pink', 'Get 911 coming', 'Have someone call, or put your phone on speaker. Alone with no phone? Do 2 minutes first'],
         ['moon', 'blue', 'On {p} back, on something firm', 'The floor or a table'],
-        ['heart', 'pink', '30 fast pushes', 'Two fingers just below the nipple line, about 1½ inches deep, about 2 a second'],
+        ['heart', 'pink', '30 fast pushes', 'Heel of one hand, center of the chest. About 1½ inches deep, about 2 a second'],
         ['chat', 'blue', '2 small breaths', 'Tilt {p} head back a little. Cover {p} mouth and nose with your mouth, and puff until the chest rises'],
         ['clock', 'yellow', 'Keep going', '30 pushes, then 2 breaths, until help arrives or {s} {start|starts} breathing']])
       + alert('Learn it hands-on', 'A short infant CPR class, often free at hospitals, makes these steps feel natural.', 'blue'));
   }
   function fallPage() {
     return page(top('Emergencies', 'After a fall or a bump on the head', 'Most falls from a bed or couch don’t cause lasting harm. Stay calm, check {o}, then watch {o} for the next day.')
+      + (window.aheadFig ? window.aheadFig('health/fall', [], 'Comfort first. Then look over {p} head, arms and legs while {s} settles.', '35%') : '')
       + h2('Right after') + steps([['heart', 'blue', 'Pause before you pick {o} up', 'Not moving, or knocked out? Leave {o} still and call 911'],
         ['hand', 'green', 'Comfort {o}, then check', 'Look over {p} head, arms and legs. A cool cloth eases a bump'],
         ['info', 'yellow', 'Call your pediatrician', 'For anything more than a light bump. Say how high, and what {s} landed on'],
@@ -208,6 +211,7 @@
   function medicinePage() {
     const mo = m();
     return page(top('When Maya seems sick', 'Giving medicine, the safe way', 'The right dose depends on {p} weight and the product. Ask your pediatrician or pharmacist, then measure exactly.')
+      + (window.aheadFig ? window.aheadFig('health/medicine', [['The syringe it came with', 'tl', 40, 38], ['Aim inside the cheek', 'br', 48, 46]], 'Hold {o} semi-upright and squirt a little at a time inside the cheek, never at the back of the throat.', '30%') : '')
       + (mo < 3 ? alert('Under 3 months', 'Ask your pediatrician before any medicine, even acetaminophen.', 'pink') : mo < 6 ? alert('Under 6 months', 'Acetaminophen only, at the dose your pediatrician gives. No ibuprofen until 6 months.') : '')
       + h2('Step by step') + steps([['info', 'green', 'Check the dose', 'From your pediatrician or pharmacist, for {p} weight'],
         ['drop', 'blue', 'Use the syringe that came with it', 'Never a kitchen spoon. Measure in mL'],
@@ -222,7 +226,7 @@
       + alert(f[0], f[1])
       + h2('What are you seeing?')
       + rows([['thermo', 'yellow', 'A fever', 'How to check, and when to call', "openPage('chg:Health:d:sick-fever')"],
-        ['drop', 'blue', 'A cold or stuffy nose', 'Clear the nose so feeds go easier', "openPage('chg:Health:d:cold')"],
+        ['nose', 'blue', 'A cold or stuffy nose', 'Clear the nose so feeds go easier', "openPage('chg:Health:d:cold')"],
         ['bottle', 'pink', 'Vomiting or diarrhea', 'Keep feeds going, watch diapers', "openPage('chg:Health:d:sick-tummy')"],
         ['heart', 'blue', 'A fall or a bump on the head', 'What to check, and when to call', "openPage('chg:Health:d:fall')"],
         ['drop', 'green', 'Giving medicine', 'The right tool, and the right dose', "openPage('chg:Health:d:medicine')"]])
