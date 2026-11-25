@@ -209,7 +209,7 @@
       why: 'Pain all feed long often means a shallow latch.',
       do: [['hand', 'Re-latch', 'Break the seal with a clean finger, then try again'], ['heart', 'Line {o} up', 'Nose to nipple, so {p} mouth opens wide'], ['steth', 'Get it checked', 'A lactation consultant can check the latch']],
       // Nov 19: holds shown without the baby latched, so parents can copy the position.
-      // Nov 24 (Feeding fix): cradle-real showed the baby face up; the drawn hold shows tummy to tummy until a new photo is made.
+      // Nov 25: real cradle-hold photo (baby across the lap, tummy to tummy).
       helpTop: () => H().TPLB.photoGrid([['feeding/hold-cradle', 'Cradle', 'Baby across your lap, tummy to tummy'], ['feeding/laidback-feed', 'Laid-back', 'Lean back. Baby lies on you, tummy down']]),
       // Nov 19: a latch has to be seen, and AI tools won't draw breastfeeding, so a trusted video shows it.
       video: ['wjt-Ashodw8', 'How a deep latch looks', 'Global Health Media'],

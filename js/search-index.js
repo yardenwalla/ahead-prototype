@@ -132,7 +132,7 @@ window.SEARCH_DEEP = [["topic:Development","Development & play","What to look fo
 ["chg:Sleep:d:where","Sleep","Moving to {p} own room?","",8191,0],
 ["chg:Sleep:d:rough","Sleep","Other sleep hiccups Bedtime, travel and more ›","",7,0],
 ["chg:Sleep:d:wakes","","Waking at night","To feed, or something else",7,1],
-["chg:Sleep:d:props","","Only sleeps on you","Wakes when set down",15,1],
+["chg:Sleep:d:props","","Only falls asleep on you","Wakes when set down",15,1],
 ["chg:Sleep:d:crying","","Crying a lot","Hard to settle in the evening",7,1],
 ["chg:Sleep:d:daynight","","Days and nights mixed","Awake when you’re not",7,1],
 ["chg:Sleep:d:yoursleep","","Getting more sleep yourself","Shifts, safe night feeds, and you",8191,1],

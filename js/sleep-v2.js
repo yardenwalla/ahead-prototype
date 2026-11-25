@@ -94,7 +94,7 @@
       vis('Wakings in one night', 'Normal now', tally('One waking', [['Newborn weeks', 4, 'Several a night', 2], ['Around 6 months', 2, 'Fewer, for many', 1]], [0, 5]))
       + rows('When {s} stirs', [['', 'Pause first', 'Grunts and whimpers are normal. Give it 1–2 minutes.'], ['', 'Then help if needed', 'Feed, change or settle, in low light.'], ['', 'Check {s}’s not too warm', 'A sweaty neck means too warm.']], true)
       + note('Hungry, or just stirring?', 'If {s} settles in a minute or two without a feed, it wasn’t hunger.') + calls('night waking comes with ' + fever() + ', poor feeding or pain, or {s} {snore|snores} loudly or {have|has} long pauses in breathing.')),
-    'd:props': () => page('Night sleep', 'Only sleeps on you? That’s normal now', 'If it’s wearing you out, you can step back slowly, a few nights at a time.',
+    'd:props': () => page('Night sleep', 'Only falls asleep on you?', 'That’s common now. Let {o} drift off on you, then move {o} to {p} crib.',
       vis('Step back, a few nights each', 'Go slowly', photos([['sleepy.jpg', 'Hold until sleepy', 'Drowsy or asleep'], ['down.jpg', 'Into the crib', 'Hand on {p} chest'], ['chair-1.jpg', 'Sit nearby', 'Then farther away']]))
       + rows('Two ways to lay {o} down', [['moon', 'Drowsy, then down', 'Easier over time: {s} {learn|learns} to finish falling asleep.'], ['heart', 'Deep asleep, then down', 'Wait for limp arms and slow breathing.']])
       + note('Getting sleepy holding {o}?', 'Put {o} in {p} crib, on {p} back. Never sleep with {o} on a sofa or armchair.', 'crib', 'is-safe') + foot('Feeding to sleep doesn’t have to change if it works for you.')),

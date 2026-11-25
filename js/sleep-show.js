@@ -215,7 +215,7 @@
   }
   function propsProb() {
     const mo = m();
-    return page('Falling asleep', mo < 4 ? 'Only sleeps on you?' : 'Only sleeps with bouncing?', answer('heart', mo < 4 ? 'At this age, that’s normal' : 'It works, until it doesn’t', 'You can step back slowly, a few nights at a time.')
+    return page('Falling asleep', mo < 4 ? 'Only falls asleep on you?' : 'Only sleeps with bouncing?', answer('heart', mo < 4 ? 'Common now. The crib is still where {s} sleeps' : 'It works, until it doesn’t', 'You can step back slowly, a few nights at a time.')
       + psec('Step back, a few nights each', seq([['heart', 'Until drowsy', 'Not fully asleep'], ['crib', 'Into the crib', 'Hand on {p} chest'], ['sofa', 'Sit nearby', 'Then farther away']]))
       + psec('Laying {o} down', versus(['down.jpg', 'A baby laid down drowsy in a crib', 'Drowsy, then down', 'Learns to finish falling asleep', 'Easier over time'], ['bassinetnap.jpg', 'A baby deeply asleep in a bassinet', 'Deep asleep, then down', 'Wait for limp arms and slow breathing', '']))
       + `<p class="ssw-note"><b>${F('Feeding to sleep?')}</b> ${F('It doesn’t have to change if it works for you.')}</p><p class="ssw-note is-safe"><b>${F('Getting sleepy holding {o}?')}</b> ${F('Put {o} in the crib, on {p} back. Never sleep with {o} on a sofa or armchair.')}</p>`, 'heart');
@@ -249,7 +249,7 @@
   // Only sleeps with your help: bouncing, rocking, feeding, or only in your arms.
   function propsPage() {
     const mo = m();
-    return H().tplPage('Sleep', { type: 'check', label: 'Sleep challenges', art: 'heart', title: mo < 4 ? 'Only sleeps on you? Normal now' : 'Bouncing to sleep works, until it doesn’t',
+    return H().tplPage('Sleep', { type: 'check', label: 'Sleep challenges', art: 'heart', title: mo < 4 ? 'Only falls asleep on you?' : 'Bouncing to sleep works, until it doesn’t',
       why: mo < 4 ? 'If it’s wearing you out, you can start stepping back slowly.' : 'You can step back slowly, a few nights at a time.',
       tellTitle: 'Step back, a few nights each',
       figure: () => T().tiles([['heart', 'Bounce till drowsy', 'Not fully asleep'], ['hand', 'Hold still', 'Gentle swaying is fine'], ['crib', 'Into the crib', 'A hand on {p} chest'], ['sofa', 'Sit nearby', 'Then a little farther']], 'Sleep', true),
@@ -285,7 +285,7 @@
     const tile = (to, ic, t, sub, tone) => `<button class="ssw-ch-tile is-${tone}" onclick="${go(to)}"><span class="ssw-ch-ic">${H().art(ic, 'Sleep')}</span><b>${F(t)}</b><small>${F(sub)}</small></button>`;
     const W = ['chg:Sleep:d:wakes', 'moon', mo < 3 ? 'Waking at night' : 'Waking often', mo < 3 ? 'To feed, or something else' : 'Every hour or two', 'night'],
       N = ['chg:Sleep:d:shortnap', 'sun', 'A short nap', 'The rest of the day shifts', 'naps'], FN = ['chg:Sleep:d:naphelp:fight', 'crib', 'Fighting a nap', 'Crying instead of sleeping', 'bed'],
-      P = ['chg:Sleep:d:props', 'heart', mo < 4 ? 'Only sleeps on you' : 'Needs bouncing to sleep', mo < 4 ? 'Wakes when set down' : 'Or rocking, or a feed', 'bed'],
+      P = ['chg:Sleep:d:props', 'heart', mo < 4 ? 'Only falls asleep on you' : 'Needs bouncing to sleep', mo < 4 ? 'Wakes when set down' : 'Or rocking, or a feed', 'bed'],
       C = ['chg:Sleep:d:crying', 'heart', 'Crying a lot', 'Hard to settle in the evening', 'bed'],
       E = ['chg:Sleep:d:hiccup:early', 'sunrise', 'Up too early', 'Before 6 am', 'safe'],
       R = ['chg:Sleep:d:regress', 'moon', 'Was sleeping better', 'The 4-month sleep regression', 'safe'],
