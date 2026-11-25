@@ -366,7 +366,7 @@
       ['d:nightfeeds', 4, '7–8 months', 'Night feeds drop as days get fuller', 'When to drop one, and how', 'bottle'],
       ['d:nightwake', 5, '8–12 months', 'Night waking often comes back for a while', 'New skills, teeth, and missing you', 'stand']] },
     naps: { name: 'Naps', art: 'sun', lead: 'How naps change, from any time at all to two a day.', items: [
-      ['d:steps0', 0, 'First weeks', 'Spot sleepy cues, soothe, then down', 'Sleepy cues, and how to soothe', 'heart'],
+      ['d:steps0', 0, 'First weeks', 'Spot the yawn, soothe, then down', 'Sleepy cues, and how to soothe', 'heart'],
       ['d:napsearly', 1, '6 weeks–3 months', 'Short, frequent naps are normal now', 'Arms, carrier and stroller naps all count', 'carrier'],
       ['d:predictable', 2, '3–5 months', 'Naps start to settle into set times', 'How to find {p} nap times', 'sunrise'],
       ['d:shortnap', null, 'From 3 months', 'When a nap doesn’t go to plan', 'Fighting it, skipped, too late or too short', 'clock'],

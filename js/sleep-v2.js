@@ -82,7 +82,7 @@
 
 
     // ---- Newborn and early months ----
-    'd:steps0': () => page('Naps', 'Spot sleepy cues, soothe, then down', 'Winding down at the first sleepy cue makes settling easier than waiting for tears.',
+    'd:steps0': () => page('Naps', 'Spot the yawn, soothe, then down', 'Winding down at the first sleepy cue makes settling easier than waiting for tears.',
       vis('Alert, sleepy or overtired?', '', photos([['alert.jpg', 'Alert', 'Ready to feed and play'], ['yawn.jpg', 'Getting sleepy', 'Yawning, staring off'], [OT(), 'Overtired', 'Fussing and arching']], 1, true))
       + `<h2 class="hub-h2">${F('At the first sleepy cue')}</h2>` + photos([['sleepy.jpg', 'Soothe', 'Feed, rock, hold or shush'], ['down.jpg', 'Down', 'Drowsy or asleep, on {p} back']])
       + note('You can’t spoil a newborn.', 'Responding quickly helps {o} feel safe.', 'heart') + foot('Look for a few signs together. One yawn on its own can mean lots of things.')),
@@ -126,7 +126,7 @@
     'd:settle4': () => page('Bedtime', 'Try putting {o} down drowsy, once a day', 'From about 4 months, many babies can learn to fall asleep on their own.',
       vis('Practice, once a day', 'Often at bedtime', photos([['book.jpg', 'Your usual steps', 'Same order as always'], ['down.jpg', 'Down drowsy', 'Awake, on {p} back'], ['crib.jpg', 'Wait a minute', 'Before going in']]) + `<p class="sv2-cap is-loop">${F('Still upset? Help {o}, and try again another day.')}</p>`)
       + note('It’s practice, not a test.', 'Feeding or rocking to sleep is still fine.') + foot('Every baby moves at {p} own pace.')),
-    'd:naphelp:fight': () => page('Naps', 'Fighting a nap? Try, rest, then try again', 'You can’t make a baby sleep, so aim for rest instead.',
+    'd:naphelp:fight': () => page('Naps', 'Fighting a nap?', 'You can’t make a baby sleep. Aim for rest: a fair try, a short break, then try again.',
       vis('A fair try, then a break', '', photos([['nap.jpg', 'Try 20–30 min', 'In a dark, calm room'], ['sleepy.jpg', 'Take a break', 'Up for a cuddle'], ['back.jpg', 'Try again', 'Or wait for the next nap']]))
       + `<h2 class="hub-h2">${F('Then check the timing')}</h2>` + two(['sun', 'hero-1.jpg', 'Not tired yet', 'Happy and chatty', '', 'Try a little later', ''], ['lav', OT(), 'Overtired', 'Eye rubs, arching', '', 'Start earlier', ''])
       + note('A nap on the go counts.', 'If {s} falls asleep in a car seat or swing, move {o} to a flat, safe space.', 'crib', 'is-safe') + foot('Every baby moves at {p} own pace.')),
@@ -237,7 +237,7 @@
       + rows('What happens next', [['', 'If {s} settles', 'Stop checking. Let {o} sleep.'], ['', 'If {s} wakes later', 'Feed if it’s time for a feed; otherwise the same check-ins.'], ['', 'Over the next nights', 'Start each wait a few minutes longer than the night before.']], true)
       + note('Do check-ins wind {o} up?', 'Try longer gaps, or another method.', 'heart') + foot('3, 5 and 10 minutes are an example, not required times. Keep meeting feeding and comfort needs.')),
     // Nov 23 (round 3): cry it out on the same layout as the other four methods, so parents can compare them side by side.
-    'd:method:3': () => page('Sleep training', 'Cry it out', 'The fastest method, and the one with the most crying at first.',
+    'd:method:3': () => page('Sleep training', 'Cry it out', 'Say goodnight, then leave the room until morning.',
       vis('See how a night goes', 'Example', `<div class="sv2-inner is-top"><i>${art('crib')}</i><p><b>${F('Goodnight')}</b> ${F('Your usual routine, then down awake. Leave the room.')}</p></div>
         <div class="sv2-inner"><i>${art('moon')}</i><p><b>${F('If {s} cries')}</b> ${F('Stay out until morning, unless it’s a planned feed or {s} seems unwell.')}</p></div>`)
       + mglance([['Crying', 'The most'], ['You', 'Outside'], ['Usually takes', 'A few nights']])
