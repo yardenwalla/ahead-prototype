@@ -21,7 +21,7 @@
     // Nov 24 (Development): steps and notes that each say something new, and ages that match the CDC lists.
     'pretend-cup': { how: 'Pretend to drink from an empty baby-safe cup. Then hand it to baby to play with or copy.', explain: 'Copying how you use everyday things is the start of make-believe.' },
     'stack-pair': { adapt: 'Hold the bottom block steady. Knocking the tower down is still play.', explain: 'Watching you stack is the first step. Knocking the tower down counts as play too.' },
-    'easy-grip': { explain: 'Shaking a rattle shows baby {p} own hands can make a sound.', notice: 'A quick grab, a shake or just watching it all count.' },
+    'easy-grip': { explain: 'Shaking a rattle shows baby their own hands can make a sound.', notice: 'A quick grab, a shake or just watching it all count.' },
     'bold-picture': { how: 'Hold a high-contrast picture 8–12 inches from baby’s face, about where your face is when you hold {o}. Keep it still and let {o} look.' },
     'ball-turns': { how: 'Sit close on the floor with baby supported as needed. Roll a large soft ball to baby, then wait for {o} to touch or push it back.', notice: 'Give it a slow count of five. Any touch is {p} turn, and you can roll it back for {o}.' },
     'sound-answer': { notice: 'Give {o} a slow count of five. Looking away is fine too: {s’s} taking a break.' },
