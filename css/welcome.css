@@ -298,3 +298,5 @@ html:has(#main.is-onboarding), html:has(#main.is-onboarding) body { background: 
 html:has(#main.is-onboarding) #shell, html:has(#main.is-onboarding) #main { background: transparent !important }
 #main.is-onboarding .ob-milk button, #main.is-onboarding .ob-seg, #main.is-onboarding input, #main.is-onboarding .ob-early-card { background: rgba(255,253,251,.9) }
 html:has(#main.is-onboarding):not(:has(#main .ob-welcome)), html:has(#main.is-onboarding):not(:has(#main .ob-welcome)) body { background: radial-gradient(circle 170px at 112% 100%, #f3eaf1 99%, transparent 100%), linear-gradient(180deg, #fbf6f3, #f8f2f0) !important }
+/* Nov 25 (Yarden's iPhone): iOS zooms into any field under 16px and stays zoomed, so every field is 16px. */
+input:not([type=checkbox]):not([type=radio]), select, textarea { font-size: 16px !important }
