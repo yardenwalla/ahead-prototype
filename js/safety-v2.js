@@ -69,13 +69,13 @@
       why: 'Outlets and cords sit right at crawling height.',
       steps: ['Use plug-in outlet covers {s} can’t pull out and that are too big to swallow.', 'Move lamp and charger cords out of reach, or tuck them behind furniture.', 'If you’re replacing outlets, tamper-resistant ones have built-in shutters.'],
       links: [['Childproofing your home · CPSC', cpsc]] },
-    mattress: { t: 'Lower the crib mattress one step', rt: 'Lower the crib mattress', s: 'Before {s} can sit up', i: 'sit', c: 'sleep' },
+    mattress: { t: 'Lower the crib mattress one step', rt: 'Lower the crib mattress', s: 'Before {s} can sit up', i: 'crib', c: 'sleep' },
     anchor: { hi: 'stand', t: 'Strap furniture and TVs to the wall', s: 'So nothing tips if {s} {pull|pulls} on it', i: 'dresser', c: 'body',
       tiles: [['dresser', 'Anti-tip straps', 'On dressers, bookcases and tall furniture'], ['blocks', 'TVs too', 'On the wall, or strapped to their stand'], ['clock', 'When', 'Now, before {s} {pull|pulls} on them']],
       why: 'Babies use furniture as a handhold to pull up, and dressers, bookcases and TVs can tip over onto them.',
       steps: ['Fit anti-tip straps to dressers, bookcases and other tall furniture {s} could pull on.', 'Mount TVs on the wall, or strap them to the furniture they stand on.', 'Do it any time before {s} {pull|pulls} up. Many families do it while babyproofing for crawling.'],
       links: [['Anchor it · CPSC', cpsc]] },
-    windows: { hi: 'stand', t: 'Add window stops', s: 'Window stops and cordless blinds', i: 'window', c: 'car',
+    windows: { hi: 'stand', t: 'Add window stops', s: 'Open 4 inches at most, and no cords', i: 'window', c: 'car',
       tiles: [['window', 'Window stops', 'Open 4 inches at most'], ['home', 'One way out', 'One window per room an adult can open fully, for a fire'], ['cord', 'Cordless blinds', 'Tied-up cords can still be reached'], ['dresser', 'Furniture away', 'Nothing to climb near a window']],
       why: 'Standing puts windows and blind cords within reach. A screen keeps bugs out, not babies in.',
       steps: ['Fit window stops, small locks that keep windows from opening more than 4 inches. Screens don’t stop falls.', 'Keep at least one window in each room that an adult can open fully in a fire.', 'Swap corded blinds and shades for cordless ones. Tying up the pull cord isn’t enough: inner cords and loops can still be reached, from the floor or from furniture.', 'Move furniture {s} could climb away from windows.'],
@@ -86,12 +86,12 @@
       steps: ['Fit knob covers so {s} can’t turn the burners on.', 'Add an oven lock so the door stays shut.', 'Cook on the back burners when you can, with pot handles turned in.'],
       links: [['Childproofing your home · CPSC', cpsc]] },
     pool: { hi: 'stand', t: 'Keep water out of reach', s: 'A toilet lock, a shut bathroom, and a fenced pool', i: 'bath', c: 'home',
-      tiles: [['bath', 'Bathroom shut', 'A toilet-lid lock, and the door closed'], ['drop', 'Empty it', 'Buckets, tubs and wading pools, right after use'], ['shield', 'Fence the pool', 'At least 4 feet high, on all four sides, with a self-latching gate']],
+      tiles: [['bath', 'Bathroom shut', 'A toilet-lid lock, and the door closed'], ['drop', 'Empty it', 'Buckets, tubs and wading pools, right after use'], ['shield', 'Fence the pool', 'At least 4 feet high, on all four sides, with a gate that closes and latches by itself']],
       why: 'Babies can drown in an inch or two of water, quickly and quietly.',
       steps: ['Fit a toilet-lid lock, and keep the bathroom door closed.', 'Empty buckets, tubs and wading pools right after use.', 'If you have a pool or spa, fence it on all sides with a self-closing, self-latching gate. Keep doors to it locked, and close the gate every time.'],
       tip: ['Barriers don’t replace watching', 'Stay within arm’s reach whenever {s’s} near water.'],
       links: [['Pool Safely · CPSC', 'https://www.poolsafely.gov/parents/safety-tips/']] },
-    mattress2: { t: 'Lower the crib mattress all the way', rt: 'Lower the mattress all the way', get s() { return 'Before {s} can pull up'; }, i: 'stand', c: 'sleep' }
+    mattress2: { t: 'Lower the crib mattress all the way', rt: 'Lower the mattress all the way', get s() { return (typeof actualMonth === 'function' && actualMonth() >= 10) || (typeof answers !== 'undefined' && answers.pullUp === 'Yes') ? 'Now that {s’s} pulling up' : 'Before {s} can pull up'; }, i: 'crib', c: 'sleep' }
   };
   const STAGES = [
     { key: 'setup', label: 'First setup', age: 'From birth', title: 'Five things to set up once', lead: 'Before Maya can move, safety is about where {s} {ride|rides}, {sleep|sleeps} and {get|gets} changed.', ids: ['seat', 'sleep', 'cribspot', 'changing', 'gear'] },
@@ -119,9 +119,9 @@
     rolling: { src: 'assets/safety/crawling.jpg', alt: 'A baby crawling across a living room toward open stairs, a low cabinet and a wall outlet',
       get title() { return answers.crawl === 'Yes' ? 'Now {s’s} on the move' : 'Get ahead of crawling'; }, look: 'Crawl the rooms {s’ll} explore', lookLine: 'Open low doors and look under the sofa.', lead: 'Do the low, reachable things first.',
       spots: [['storage', 'Low cabinets', 8, 24, 'r'], ['outlets', 'Outlet', 23, 41, 'l'], ['gates', 'Open stairs', 63, 11, 'l']] },
-    pulling: { src: 'assets/safety/pulling.jpg', alt: 'A baby pulling up to stand on a tall dresser, with a TV on a low stand and a hanging blind cord by the window',
+    pulling: { src: 'assets/safety/pulling-window.jpg', alt: 'A baby standing at a low windowsill, holding on, by a window with a blind',
       get title() { return answers.pullUp === 'Yes' ? 'Now {s’s} pulling up' : 'Get ahead of standing'; }, lead: 'Furniture becomes something to grab.',
-      spots: [['windows', 'Blind cord', 19.6, 47, 'b'], ['anchor', 'TV can tip', 33, 30, 'l'], ['anchor', 'Dresser can tip', 96, 80, 'bl']] } };
+      spots: [['windows', 'Window can open', 78, 40, 'l'], ['windows', 'A sill to climb', 74, 70, 'l']] } };
   const sfPhotoOn = key => SF_PHOTO[key] && !window.__sfPhotoOff;
   function sfPhoto(key) {
     if (!sfPhotoOn(key)) return '';
@@ -180,10 +180,12 @@
       const START = { setup: 0, reaching: 3, rolling: 6, pulling: 9 };
       let joinMo = 0; try { if (profile.joined && profile.dob) joinMo = (parse(profile.joined) - parse(profile.dob)) / 864e5 / 30.44; } catch (e) {}
       const left = STAGES.slice(0, i).filter(s2 => (START[s2.key] ?? 0) >= joinMo - 0.5).map(s2 => [s2, s2.ids.filter(x => !status(x)).length]).filter(x => x[1]);
-      if (left.length) b += `<button class="sf-earlier" onclick="openPage('safety-stage:${left[0][0].key}')">${F(`${left.reduce((t, x) => t + x[1], 0)} ${left.reduce((t, x) => t + x[1], 0) === 1 ? 'earlier step is' : 'earlier steps are'} still open`)} ›</button>`;
+      // Nov 24 (Safety): a catch-up row with an icon and a count, like the rows around it.
+      if (left.length) { const n = left.reduce((t, x) => t + x[1], 0); b += `<div class="hub-list" style="margin:12px 0">${h.row({ icon: 'shield', cat: 'Safety', title: 'Catch up on earlier checks', sub: n === 1 ? '1 left from an earlier stage' : `${n} left from earlier stages`, onclick: `openPage('safety-stage:${left[0][0].key}')` })}</div>`; }
     }
     const chokeLink = [typeof actualMonth === 'function' && actualMonth() >= 12 ? 'Learn choking first aid for a child' : 'Learn infant choking first aid', "openPage('chg:Feeding:safe')"];
-    if (!window.__sfPhotoOff) b += h.versus('If something goes wrong', ['Poison Help', 'If {s} swallows something, call 1‑800‑222‑1222.'], ['Call 911', 'Can’t breathe, won’t wake, or swallowed a battery or magnet.'], chokeLink);
+    if (!window.__sfPhotoOff) b += h.versus('If something goes wrong', ['Poison Help', 'Swallowed medicine, a cleaner or a plant? Call 1‑800‑222‑1222.'], ['Call 911', 'Can’t breathe, won’t wake, or swallowed a battery or magnet.'])
+      + `<div class="hub-list" style="margin-top:10px">${h.row({ icon: 'alarm', cat: 'Safety', title: chokeLink[0].replace(/^Learn /, '').replace(/^./, c => c.toUpperCase()), sub: 'Step by step, in Feeding', onclick: chokeLink[1] })}</div>`;
     else b += h.versus('If something goes wrong', ['Poison Help', 'Call 1-800-222-1222 if Maya swallows something that could be harmful.'], ['Call 911', 'If {s} can’t breathe or won’t wake. A swallowed battery or magnet means the ER right away.']);
     // Choking first aid lives in Feeding; the safety net links to it.
     if (window.__sfPhotoOff) b += `<div class="hub-browse"><button class="hub-link" onclick="${chokeLink[1]}">${F(chokeLink[0])} ›</button></div>`;
@@ -229,7 +231,7 @@
       ba: [[PH('mattress-before'), 'A crib with the mattress on its highest setting, near the top of the rail', null], [PH('mattress-after'), 'The same crib with the mattress lowered one step', null]],
       baFix: [['notepad', 'Check the manual', 'For your crib’s height settings'], ['crib', 'One step down', 'Then check it sits firmly'], ['toy', 'Mobile down', 'Nothing hanging over the crib']],
       checks: ['Push down on each corner. The mattress shouldn’t shift or tilt.'],
-      more: ['When to do it', 'clock', 'Signs it’s time', 'Before {s} can sit up, in Sleep', "openPage('chg:Sleep:d:mattress')"] },
+      more: ['When to do it', 'clock', 'Signs it’s time', 'What to watch for, in Sleep', "openPage('chg:Sleep:d:mattress')"] },
     mattress2: {
       ba: [[PH('mattress-after'), 'A crib with the mattress one step down', null], [PH('mattress2-after'), 'The same crib with the mattress on its lowest setting', null]],
       baFix: [['crib', 'All the way down', 'To the lowest setting'], ['toy', 'Nothing to climb on', 'No toys in the crib, and furniture away from the rail']],
@@ -296,7 +298,7 @@
       ba: [[PH('windows-before'), 'A window swung wide open', null], [PH('windows-after'), 'The same window held a few inches open by a window stop', ['Window stop', 67, 50, 'l']]],
       spotPhoto: [PH('windows-risk'), 'A window with a hanging blind cord, near a low TV stand', [['Opens all the way', 14, 38, 'r'], ['Blind cord', 40, 80, 'r']]],
       spotLine: 'A screen keeps bugs out, not babies in.',
-      fix: [['window', 'Window stops', 'So windows open 4 inches at most'], ['home', 'One window you can open fully', 'In each room, for a way out in a fire'], ['cord', 'Cordless blinds', 'No cords or loops to reach'], ['dresser', 'Furniture away', 'Nothing to climb near a window']],
+      fix: [['window', 'Stops on every window', 'Open 4 inches at most'], ['home', 'One window you can open fully', 'In each room, for a way out in a fire'], ['cord', 'Cordless blinds', 'No cords or loops to reach'], ['dresser', 'Furniture away', 'Nothing to climb near a window']],
       checks: ['Open each window with a stop. It should stop at 4 inches.', 'Kneel by each blind. No cord or loop should be within reach.'] },
     kitchen: {
       ba: [[PH('kitchen-before'), 'A stove with bare knobs and a pot handle sticking out', null], [PH('kitchen-after'), 'The same stove with knob covers, an oven lock and the pot handle turned in', ['Oven lock', 18, 57, 'r']]],
@@ -306,7 +308,7 @@
     pool: {
       ba: [[PH('pool-before'), 'A bathroom with the toilet lid up and a bucket of water on the floor', null], [PH('pool-after'), 'The same bathroom with the toilet lid locked and no bucket', ['Lid lock', 40, 66, 'r']]],
       spotTiles: [['bath', 'The toilet', 'A lid up and a door left open'], ['drop', 'Buckets and tubs', 'An inch or two of water is enough'], ['sun', 'A pool or spa', 'A gap in the fence, or an open gate']],
-      fix: [['lock', 'A toilet-lid lock', 'And keep the bathroom door closed'], ['cup', 'Empty standing water', 'Buckets, tubs and wading pools, right after use'], ['shield', 'Fence the pool', 'At least 4 feet high, on all four sides, with a self-latching gate']],
+      fix: [['lock', 'A toilet-lid lock', 'And keep the bathroom door closed'], ['cup', 'Empty standing water', 'Buckets, tubs and wading pools, right after use'], ['shield', 'Fence the pool', 'At least 4 feet high, on all four sides, with a gate that closes and latches by itself']],
       notes: [['', 'Barriers don’t replace watching', 'Stay within arm’s reach whenever {s’s} near water']],
       checks: ['Pull the toilet lid. The lock should hold.', 'Have a pool? Let the gate go. It should close and latch by itself.'] }
   };

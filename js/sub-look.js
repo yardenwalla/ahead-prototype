@@ -30,6 +30,13 @@
     const text = head.textContent, p = pick(cat, text); if (!p) return;
     page.dataset.ss = '1';
     // Nov 24 (Development): Development's own lavender, and a real icon in place of the placeholder shapes.
+    // Nov 24 (Health): Health's own green and a real icon that matches the page, not the shared placeholder thermometer.
+    if (cat === 'Health' && typeof YEAR_PALETTES !== 'undefined' && YEAR_PALETTES.Health && typeof hubArt === 'function') { const hp = YEAR_PALETTES.Health;
+      const ic = /cpr|won’t wake|emergenc/i.test(text) ? 'alarm' : /fall|bump/i.test(text) ? 'heart' : /medicine|dose/i.test(text) ? 'drop' : /nose|cold/i.test(text) ? 'nose' : /tummy|feeds going|vomit/i.test(text) ? 'bottle' : /fever|temperature/i.test(text) ? 'thermo' : p[1] === 'you' ? 'heart' : p[1] === 'visit' ? 'calendar' : 'steth';
+      page.dataset.ss = '1'; head.classList.add('dev-area-head', 'ss-head'); head.style.setProperty('--area', hp.pale); head.style.setProperty('--area-ink', hp.ink);
+      page.style.setProperty('--ss-bg', hp.pale); page.style.setProperty('--ss-ink', hp.ink);
+      const art = `<span class="dev-area-head-art sf-head-art" aria-hidden="true">${hubArt(ic, 'Health')}</span>`, big = head.querySelector('.hub-big');
+      if (big) big.outerHTML = art; else head.insertAdjacentHTML('afterbegin', art); return; }
     const yp = cat === 'Development' && typeof YEAR_PALETTES !== 'undefined' && YEAR_PALETTES.Development;
     const c = yp ? [yp.pale, yp.ink] : PAL[p[0]];
     if (yp && typeof hubArt === 'function') { const ic = p[1] === 'signs' ? 'signs' : /milestone/i.test(text) ? 'star' : p[1] === 'move' ? 'crawl' : 'blocks';
