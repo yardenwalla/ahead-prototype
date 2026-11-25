@@ -137,3 +137,5 @@
 #main .sv2-grow em { font-style: normal; font-size: 13px; font-weight: 700; color: #fff; padding: 0 10px; white-space: nowrap }
 #main .sv2-tally > div { column-gap: 12px } #main .sv2-tally em { text-align: right }
 #main .sv2-key s.is-maybe { background: #fdf3da; border: 2px dashed #e0ad3f; margin-left: 10px }
+/* Nov 24 (Sleep G): method facts read label first, then the value. */
+#main .sv2-glance.is-labeled small { display: block; margin: 0 0 2px }

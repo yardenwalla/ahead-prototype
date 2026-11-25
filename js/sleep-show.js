@@ -195,9 +195,9 @@
   }
   function lateProb() {
     const [, , wl] = WW(m());
-    return page('Naps', 'A nap running close to bedtime?', answer('clock', 'Bedtime comes about one wake window after the last nap', `That’s how long {s’s} happily awake: ${wl} now. Tap when the nap ended.`)
-      + `<section class="care-tpl-card ssw-card"><div class="ssw-chips ssw-late-chips" role="group">${ENDS.map(([, l], i) => `<button aria-pressed="${i === 1}" onclick="__sswLate(${i})">${F(l + ' pm')}</button>`).join('')}</div><div id="ssw-late">${lateFig(1)}</div></section>`
-      + psec('Let {o} sleep, or wake {o}?', versus(['ill/asleep.jpg', 'A baby napping', 'Let {o} sleep', 'Fine if bedtime still lands in that window', ''], ['ill/happy.jpg', 'A baby awake and happy', 'Wake {o} gently', 'After 30–45 minutes, if bedtime would be very late', ''])), 'sun');
+    return H().detail('Sleep', 'Naps', 'A late nap moves bedtime later', `Bedtime comes about one wake window after the nap: ${wl} for {o} now.`, `<div class="ssw-topic ssw-prob"><h2 class="hub-h2">${F('When did the nap end?')}</h2>`
+      + `<section class="care-tpl-card ssw-card"><div class="ssw-chips ssw-late-chips" role="group" style="flex-wrap:nowrap">${ENDS.map(([, l], i) => `<button aria-pressed="${i === 1}" onclick="__sswLate(${i})">${F(l)}</button>`).join('')}</div><div id="ssw-late">${lateFig(1)}</div></section>`
+      + psec('Let {o} sleep, or wake {o}?', versus(['ill/asleep.jpg', 'A baby napping', 'Let {o} sleep', 'Fine if bedtime still lands in that window', ''], ['ill/happy.jpg', 'A baby awake and happy', 'Wake {o} gently', 'After 30–45 minutes, if bedtime would be very late', ''])) + '</div>', 'sun');
   }
   function fightProb() {
     return page('Naps', 'Fighting a nap?', answer('sun', 'You can’t make a baby sleep', 'Aim for rest: a fair try, a short break, then try again.')
@@ -284,7 +284,7 @@
     const mo = m();
     const tile = (to, ic, t, sub, tone) => `<button class="ssw-ch-tile is-${tone}" onclick="${go(to)}"><span class="ssw-ch-ic">${H().art(ic, 'Sleep')}</span><b>${F(t)}</b><small>${F(sub)}</small></button>`;
     const W = ['chg:Sleep:d:wakes', 'moon', mo < 3 ? 'Waking at night' : 'Waking often', mo < 3 ? 'To feed, or something else' : 'Every hour or two', 'night'],
-      N = ['chg:Sleep:d:shortnap', 'sun', 'A short nap', 'The rest of the day shifts', 'naps'], FN = ['chg:Sleep:d:naphelp:fight', 'sun', 'Fighting a nap', 'Crying instead of sleeping', 'bed'],
+      N = ['chg:Sleep:d:shortnap', 'sun', 'A short nap', 'The rest of the day shifts', 'naps'], FN = ['chg:Sleep:d:naphelp:fight', 'crib', 'Fighting a nap', 'Crying instead of sleeping', 'bed'],
       P = ['chg:Sleep:d:props', 'heart', mo < 4 ? 'Only sleeps on you' : 'Needs bouncing to sleep', mo < 4 ? 'Wakes when set down' : 'Or rocking, or a feed', 'bed'],
       C = ['chg:Sleep:d:crying', 'heart', 'Crying a lot', 'Hard to settle in the evening', 'bed'],
       E = ['chg:Sleep:d:hiccup:early', 'sunrise', 'Up too early', 'Before 6 am', 'safe'],
@@ -298,7 +298,7 @@
       mo < 3 && ['chg:Sleep:d:crying', 'heart', 'Crying a lot', 'What helps, and when it eases'], mo >= 8 && ['chg:Sleep:d:nightwake', 'moon', 'Night waking comes back', 'New skills, missing you'],
       ['chg:Sleep:d:away', 'plane', 'Traveling, or the clocks change', 'Keeping sleep on track']].filter(x => x && !used.includes(x[0]));
     const body = `<div class="ssw-ch-grid">${four.map(x => tile(...x)).join('')}</div>`
-      + row('chg:Sleep:d:yoursleep', 'heart', 'Getting more sleep yourself', 'Shifts, safe night feeds, and you')
+      + `<div class="hub-list">${row('chg:Sleep:d:yoursleep', 'heart', 'Getting more sleep yourself', 'Shifts, safe night feeds, and you')}</div>`
       + `<details class="ssw-ch-more"><summary><span><b>${F('Other sleep hiccups')}</b><small>${F(mo < 3 ? 'Bedtime, travel and more' : 'Skipped or late naps, early mornings and more')}</small></span><i aria-hidden="true">›</i></summary><div class="hub-list">${other.map(x => row(...x)).join('')}</div></details>`
       + T().calls(Object.assign({ ped: 'sleep changes come with ' + fever() + ', poor feeding or pain, or {s} snores loudly or has long pauses in breathing.' }, CALL911));
     return H().detail('Sleep', 'Sleep challenges', 'What’s keeping {o} up?', 'Pick what you’re noticing. Most of it is common, and fixable.', body, 'moon');
@@ -498,7 +498,7 @@
     'chg:Sleep:d:where': () => {
       const mo = m();
       const [nh, nb] = sec('What’s normal'); if (nh && nb && nb.querySelector('.hub-windowbar, .hub-window, [class*=window]')) { nh.remove(); nb.remove(); }
-      const keepNote = mo >= 4 ? notes([['', 'No rush after 6 months', 'Plenty of families room-share longer']]) : '';
+      const keepNote = '';
       top(`<section class="ssw-photo-only">${pinPhoto('room.jpg', 'A parents’ bedroom at night with a bare crib right beside the bed and a dim lamp', [['Own crib, nothing in it', 80, 45, 'l'], ['Right by your bed', 53, 72, 'l']])}</section>`
         + (mo < 9 ? `<h2 class="hub-h2">${F('Moving to the crib')}</h2><section class="ssw-move"><span class="ssw-move-ic">${H().art('crib', 'Sleep')}</span><span><b>${F('At the first try to roll, or the bassinet’s limit')}</b><small>${F('Whichever comes first. Limits differ by model, so check the label.')}</small></span></section>` : '') + keepNote);
     },
@@ -508,8 +508,7 @@
       fig.outerHTML = pinPhoto('crib.jpg', 'A baby asleep on their back in a sleep sack, arms out, in a bare crib with a fitted sheet', [['On {p} back', 56, 31, 'r'], ['Sleep sack, no blanket', 24, 40, 'b'], ['Bare crib, firm mattress', 80, 76, 'l']], 'ssw-crib');
       const [sh, sb] = sec('Setting up the crib'); if (sh) { sb.remove(); sh.remove(); }
       const check = (t, sub) => `<li><i aria-hidden="true">✓</i><span><b>${F(t)}</b><small>${F(sub)}</small></span></li>`;
-      if (tiles) tiles.outerHTML = card('Check every sleep', `<ul class="ssw-checks">${check('On {p} back', 'For naps and night sleep')}${check('Own sleep space', 'Crib, bassinet or play yard. Not a sofa, bed, swing or car seat')}${check('Nothing else in the crib', 'A firm, flat mattress and a fitted sheet. No pillows, blankets, bumpers or toys')}</ul>`
-        + notes([['', 'A cool, smoke-free room', 'A too-warm room is less safe. Use a sleep sack, not a blanket'], ['', 'A swaddle or a sleep sack', 'No swaddle once rolling starts'], ['', 'A pacifier, if you like', 'Once feeding is going well']]), 'ssw-check');
+      if (tiles) tiles.outerHTML = card('Check every sleep', `<ul class="ssw-checks">${check('On {p} back', 'For naps and night sleep')}${check('Own sleep space', 'Crib, bassinet or play yard. Not a sofa, bed, swing or car seat')}${check('Nothing else in the crib', 'A firm, flat mattress and a fitted sheet. No pillows, blankets, bumpers or toys')}${check('A cool, smoke-free room', 'Too warm is less safe')}${m() < 3 && answers.swaddleStopped !== 'Yes' ? check('A swaddle or a sleep sack', 'No swaddle once rolling starts') : ''}${check('A pacifier, if you like', 'Once feeding is going well')}</ul>`, 'ssw-check');
       const acc = $('.hub-accs'); if (acc) acc.outerHTML = card('As ' + nm() + ' grows', `<button class="hub-row" onclick="${go('chg:Sleep:d:safegrow')}"><span class="hub-row-copy"><b>${F('What changes, and when')}</b><small>${F('Swaddle, crib, mattress and more, by age')}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`, 'ssw-rowcard');
     }
   };
@@ -523,7 +522,7 @@
       ['swaddle-side.jpg', 'A newborn with one side of the blanket wrapped across the chest and tucked under', 'One side across first', 'Arm straight, tucked under {p} other side'],
       ['swaddle-3.jpg', 'A newborn fully swaddled, snug at the chest and loose at the hips', 'Other side across, bottom loose', 'Arm down, wrap and tuck. Fold the bottom up loosely']];
     const rows = S.map(([img, alt, t, sub], i) => `<li><span class="ssw-ph"><img src="${IMG + (PHOTO_OF[img] || img)}" alt="${F(alt)}" loading="lazy"></span><span class="ssw-copy"><i>${i + 1}</i><b>${F(t)}</b><small>${F(sub)}</small></span></li>`).join('')
-      + `<li class="is-check"><span class="ssw-ph ssw-ph-check" aria-hidden="true">✓</span><span class="ssw-copy"><i>5</i><b>${F('Check the fit')}</b><small>${F('Room for two fingers at the chest. Legs free to bend up and out, like a frog.')}</small></span></li>`;
+      + `<li><span class="ssw-ph"><img src="${IMG}swaddle-check.jpg" alt="${F('Two fingers slid under the swaddle at the chest, legs bent up and out')}" loading="lazy"></span><span class="ssw-copy"><i>5</i><b>${F('Check the fit')}</b><small>${F('Room for two fingers at the chest. Legs free to bend up and out, like a frog.')}</small></span></li>`;
     const fig = panels.closest('figure');
     fig.outerHTML = `<section class="care-tpl-card ssw-photosteps is-square"><ol>${rows}</ol></section>`;
   };
