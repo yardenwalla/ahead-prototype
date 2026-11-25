@@ -38,7 +38,7 @@
 
 
   // Photo steps (2–4), numbered, optionally one marked as the one to aim for.
-  const photos = (list, aim, plain) => `<div class="sv2-loop is-${list.length}${plain ? ' is-plain' : ''}">${list.map(([img, t, sub], i) => `<div class="${aim === i ? 'is-aim' : ''}">${aim === i ? `<em>${F('Aim for this')}</em>` : ''}<img src="${IMG + img}" alt="">${plain ? '' : `<i>${i + 1}</i>`}${lab(t, sub)}</div>`).join('')}</div>`;
+  const photos = (list, aim, plain) => `<div class="sv2-loop is-${list.length}${plain ? ' is-plain' : ''}">${list.map(([img, t, sub], i) => `<div class="${aim === i ? 'is-aim' : ''}"><img src="${IMG + img}" alt="">${plain ? '' : `<i>${i + 1}</i>`}${lab(t, sub)}${aim === i ? `<em>${F('Aim for this')}</em>` : ''}</div>`).join('')}</div>`;
   window.__sv2photos = list => `<div class="sv2">${photos(list)}</div>`;
   // Nov 24 (Sleep C): photos that match the baby's age, past the newborn months.
   const age = () => { try { return window.__chg.ageNow(); } catch (e) { return 0; } };
@@ -142,7 +142,7 @@
       vis('Night feeds over the first year', 'Typical', tally('One night feed', [['Around 3 months', 3, 'Still common', 1], ['Around 6 months', 2, 'Often fewer', 1], ['Later in the first year', 1, 'Often none', 1]], [0, 5, 8]) + `<div class="sv2-inner"><i>${art('sunrise')}</i><p><b>${F('Last to go:')}</b> ${F('usually the feed closest to morning.')}</p></div>`)
       + rows('Ready to drop one?', [['', 'Ask your pediatrician first', 'They can say if {s}’s growing well enough.'], ['', 'Go slowly', 'A little shorter or smaller every few nights.'], ['', 'More by day', 'Full feeds while {s}’s awake.'], ['', 'Someone else goes in', 'Breastfed babies often settle more easily for a partner.']], true)
       + note('No bottle in bed.', 'Milk pooling on the teeth causes decay.', 'tooth', 'is-safe') + foot('Every baby moves at {p} own pace.')),
-    'd:nightwake': () => page('Night sleep', 'Night waking can come back for a while', 'Parents call it a sleep regression. It usually settles in a week or two.',
+    'd:nightwake': () => page('Night sleep', 'Night waking can come back for a while', 'It’s a sleep regression, and it usually settles in a week or two.',
       vis('Wakings in one night', 'Typical', tally('One waking', [['Before', 1, 'Sleeping well'], ['For a week or two', 3, 'Waking again'], ['Then', 1, 'Settled again']])) + glance([['New skills', 'like pulling up'], ['Missing you', 'at bedtime'], ['Teething', 'or a cold']])
       + rows('What to do', [['clock', 'Give {o} a few minutes', 'Many babies settle back on their own.'], ['moon', 'Keep visits dark and quiet', 'Low light, few words, then out.'], ['heart', 'Sick or teething? Comfort more', 'Back to your usual routine once better.']])
       + note('Waking from hunger or habit?', 'Ask your pediatrician if night feeds are still needed.') + foot('Every baby moves at {p} own pace.')),

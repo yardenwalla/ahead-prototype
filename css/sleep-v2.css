@@ -139,3 +139,5 @@
 #main .sv2-key s.is-maybe { background: #fdf3da; border: 2px dashed #e0ad3f; margin-left: 10px }
 /* Nov 24 (Sleep G): method facts read label first, then the value. */
 #main .sv2-glance.is-labeled small { display: block; margin: 0 0 2px }
+/* Nov 24 (Yarden): "Aim for this" sits under the words, never over the baby's face. */
+#main .sv2-loop > div > em { position: static; transform: none; display: inline-block; margin: 6px auto 0 }
