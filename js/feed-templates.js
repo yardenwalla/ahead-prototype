@@ -44,8 +44,7 @@
       why: 'Evening cluster feeds are normal. Keep night feeds short and sleepy.',
       normalTitle: 'What’s normal', normal: () => window.__sv2clusterFeeds ? window.__sv2clusterFeeds() : '',
       do: [['sunrise', 'In the evening', nurse() ? 'Switch sides often to keep milk flowing' : 'Offer smaller bottles, more often'], ['moon', 'At night', 'Keep it dim, and change only if dirty'], realMo() >= 1 ? null : ['clock', 'Until back to birth weight', 'Wake {o} after 3 hours by day, 4 at night']].filter(Boolean),
-      doNotes: [['', 'Hard to wake?', 'Undress {o} to {p} diaper, or stroke {p} feet']],
-      calls: { ped: '{s’s} too sleepy to feed most times.' } }),
+      doNotes: [['', 'Hard to wake?', 'Undress {o} to {p} diaper, or stroke {p} feet']] }),
     m2_night: () => ({ type: 'expect', label: 'Evenings and nights', art: 'moon', title: 'Night feeds are common for a while',
       why: 'Busy, distracted days can mean more feeds at night. Feeding {o} back to sleep is fine.',
       normalTitle: 'What’s normal', normal: () => window.__sv2nightFeeds ? window.__sv2nightFeeds() : '',
@@ -53,8 +52,7 @@
     m2_distract: () => ({ type: 'expect', label: 'Distracted feeds', art: 'eye', title: 'Short daytime feeds are perfectly okay',
       why: '{S} may gulp, pop off and look around. {S} still {get|gets} enough over the day.',
       do: [['moon', 'Feed when {s’s} drowsy', 'Just waking, or before sleep'], ['hand', 'Let {o} hold on', 'Your finger, or a soft toy'], ['chat', 'Talk later', 'Chatting pulls {p} attention away']],
-      doNotes: [['', 'Pops off?', 'End the feed, and try again a little later. No need to force it']],
-      calls: { ped: 'fewer wet diapers than usual, or feeding much less for more than a few days.' } }),
+      doNotes: [['', 'Pops off?', 'End the feed, and try again a little later. No need to force it']] }),
 
     // ---------- Every day ----------
     nb_vitd: () => onlyFormula()

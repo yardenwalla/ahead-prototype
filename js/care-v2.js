@@ -931,9 +931,12 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
       [['heat', 'Tiny red bumps', 'Heat rash'], ['eczema', 'Dry, rough patches', 'Eczema']]][now];
     const WHEN = ['in the first weeks', 'around 1–3 months', 'around 4–6 months', 'around 6–12 months'][now];
     let b = head('lookhub', 'Is this normal?', 'Most things that look odd are normal', 'Find the one that matches what you see.');
-    b += h2('Common ' + WHEN) + `<div class="care-common">${COMMON.map(([id, t, sub]) => `<button class="care-common-tile" onclick="${cgo('rash:' + id)}"><img src="assets/care/rash-${id}.jpg?v=1" alt="" loading="lazy"><span><b>${F(t)}</b><small>${F(sub)}</small></span><i aria-hidden="true">›</i></button>`).join('')}</div>`;
-    b += `<button class="hub-card care-poopcard" onclick="openPage('chg:${CAT}:d:look:${now}:poop')"><span class="care-poopdots" aria-hidden="true"><i style="background:#d9b13b"></i><i style="background:#7f9a46"></i><i style="background:#8a5a35"></i></span><span><b>${F('Different poop?')}</b><small>${F('What the colors mean, and which ones need a call')}</small></span><i class="care-chev" aria-hidden="true">›</i></button>`;
-    b += h2('Something else?') + `<div class="hub-card care-folds care-lookoff">${order.filter(k => k !== 'poop').map(k => { const [t, sub] = items[k]; return `<button class="care-pick" onclick="openPage('chg:${CAT}:d:${k === 'gums' ? 'p:teething' : `look:${now}:${k}`}')"><span class="care-ico">${hubArt(LI[k], CAT)}</span><span><b>${F(t)}</b><small>${F(sub)}</small></span><i aria-hidden="true">›</i></button>`; }).join('')}</div>`;
+    // Nov 25 (Yarden's mockup): what's common now as photo rows, poop among them in the same style, then the rest as a plain list.
+    const lookGo = k => `openPage('chg:${CAT}:d:${k === 'gums' ? 'p:teething' : `look:${now}:${k}`}')`;
+    const prow = (thumb, t, sub, go) => `<button class="care-prow" onclick="${go}"><span class="care-thumb">${thumb}</span><span><b>${F(t)}</b><small>${F(sub)}</small></span><i aria-hidden="true">›</i></button>`;
+    const dots = `<span class="care-thumb-dots" aria-hidden="true"><i style="background:#d9b13b"></i><i style="background:#7f9a46"></i><i style="background:#8a5a35"></i></span>`;
+    b += h2('Common ' + WHEN) + `<div class="hub-card care-prows">${COMMON.map(([id, t, sub]) => prow(`<img src="assets/care/rash-${id}.jpg?v=1" alt="" loading="lazy">`, t, sub, cgo('rash:' + id))).join('')}${prow(dots, 'Different poop?', 'What the colors mean, and which need a call', lookGo('poop'))}</div>`;
+    b += h2('Something else?') + `<div class="hub-card care-folds care-lookoff">${order.filter(k => k !== 'poop').map(k => { const [t, sub] = items[k]; const lc = COL[{ rash: 'skin', cord: 'cord', yellow: 'sun', breathing: 'diapers', quirks: 'clothes', swelling: 'nails', eyes: 'teeth', nose: 'bath', hearing: 'clothes', head: 'sun', belly: 'skin', crossing: 'teeth', gums: 'teeth', hot: 'sun' }[k] || 'bath']; return `<button class="care-pick" onclick="${lookGo(k)}"><span class="care-ico" style="background:${lc[0]}">${hubArt(LI[k], CAT)}</span><span><b>${F(t)}</b><small>${F(sub)}</small></span><i aria-hidden="true">›</i></button>`; }).join('')}</div>`;
     return page('lookhub', b);
   }
 
@@ -1255,8 +1258,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   const skinCare = { type: 'expect', k: 'skin', title: '{P} skin needs less care, not more',
     why: 'Washing too often, or too many products, can dry it out.',
     normal: [['drop', 'Peeling and dry patches', 'In the first weeks'], ['smile', 'Little spots and bumps', 'Come and go on their own'], ['sun', 'Blotchy when it’s cold', 'It evens out when warm']],
-    do: [['bath', 'Plain warm water', 'About 3 baths a week'], ['towel', 'Pat dry', 'Into the creases'], ['drop', 'Cream on dry patches', 'Thick, fragrance-free'], ['shirt', 'Soft cotton', 'Washed fragrance-free']],
-    calls: RASH_CALLS };
+    do: [['bath', 'Plain warm water', 'About 3 baths a week'], ['towel', 'Pat dry', 'Into the creases'], ['drop', 'Cream on dry patches', 'Thick, fragrance-free'], ['shirt', 'Soft cotton', 'Washed fragrance-free']] };   // Nov 25 (Yarden): warnings live on the rash pages, not on this everyday page
   [0, 1, 2, 3].forEach(v => { TPL[`h:skin:${v}`] = skinCare; });
   const gums = { type: 'howto', k: 'teeth', title: 'Wipe {p} gums morning and night',
     why: 'It makes brushing feel familiar once teeth come in.',
@@ -1424,9 +1426,8 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     normal: [['drop', 'Lots of drool', 'A bib helps'], ['hand', 'Chewing on everything', 'Fingers, toys, even you'], ['clock', 'Fussy for a few days', 'Then it passes']],
     normalNotes: [['', 'First tooth', 'Often around 6 months, anywhere from 4 to 12']],
     do: [['hand', 'A clean finger', 'Rub the sore gums'], ['ring', 'A firm teething ring', 'Chilled, but never frozen'], ['shirt', 'A soft bib', 'Pat the drool dry']],
-    doRows: [['', 'Skip numbing gels, necklaces and tablets', 'Ask your pediatrician before any pain medicine']],
-    extra: () => toothBtn(false),
-    calls: { ped: ['FEVER', 'Diarrhea or a runny nose'], note: 'Teething doesn’t cause these, so something else is going on.' } };
+    doRows: [['', 'Skip numbing gels, necklaces and tablets', 'Ask your pediatrician before any pain medicine'], ['', 'A fever, diarrhea or a runny nose?', 'Teething doesn’t cause those, so check in with your pediatrician']],
+    extra: () => toothBtn(false) };   // Nov 25 (Yarden): an informative page, so one line instead of a When to call card
   const dress = { type: 'expect', k: 'clothes', title: 'Dress {o} in one more layer than you',
     why: 'Babies can’t warm or cool themselves well yet, so they need a little more than you.',
     normal: () => layers(), normalNotes: [['', 'No hats indoors', 'A hat is for going out'], ['', 'For sleep, snug pajamas and a sleep sack', 'No loose clothes, and no blankets']],
@@ -2031,7 +2032,14 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     // One list: this age's how-tos first, then any other topic, so there's no second heading for a card or two.
     const listed = new Set(list.map(x => ({ cord: 'skin' }[x[0]] || x[0])));
     const more = BASICS.filter(([k]) => !listed.has(k));
-    b += h2(v === 0 ? 'Useful in the newborn weeks' : `Useful at ${STAGE[v]}`) + `<div class="hub-list">${list.map(([k, t, sub, r]) => rowK(k, t, val(sub), cgo(r))).join('')}${more.map(([k]) => k === 'teeth' && v < 3 ? rowK(k, 'Wipe {p} gums', 'A soft cloth, twice a day', cgo('h:gums:' + v)) : k === 'skin' ? rowK(k, TASK[k], 'Plain water, and cream for dry patches', cgo('h:skin:' + v)) : rowK(k, TASK[k], TASK_SUB[k], go(k, v))).join('')}</div>`;
+    // Nov 25 (Yarden's mockup): the few that matter most at this age as photo rows, the rest as a quieter icon list.
+    const PIC = r => /sponge/.test(r) ? 'sponge' : /diapers/.test(r) ? 'diaper' : /^cord/.test(r) ? 'cord' : /nails/.test(r) ? 'nails' : /feet/.test(r) ? 'shoes' : /clothes|dress/.test(r) ? 'dress'
+      : /p:tub|bath:1/.test(r) ? 'tub' : /bath:3|bigtub/.test(r) ? 'bigtub' : /bath/.test(r) ? 'bathbed' : /skin/.test(r) ? 'cream' : /teething/.test(r) ? 'teether' : /gums/.test(r) ? 'cloth' : /brush/.test(r) ? 'brush'
+      : /six|sunscreen/.test(r) ? 'sunscreen' : /sun|shade/.test(r) ? 'hat' : /paci/.test(r) ? 'paci' : 'diaper';
+    const all = [...list.map(([k, t, sub, r]) => [k, t, val(sub), r]), ...more.map(([k]) => k === 'teeth' && v < 3 ? [k, 'Wipe {p} gums', 'A soft cloth, twice a day', 'h:gums:' + v] : k === 'skin' ? [k, TASK[k], 'Plain water, and cream for dry patches', 'h:skin:' + v] : [k, TASK[k], TASK_SUB[k], 't:' + k + ':' + v])];
+    const top = all.slice(0, v === 3 ? 3 : 4), rest = all.slice(top.length);
+    b += h2('Most useful now') + `<div class="hub-card care-prows">${top.map(([k, t, sub, r]) => `<button class="care-prow" onclick="${cgo(r)}"><span class="care-thumb"><img src="assets/care/obj-${PIC(r)}.jpg?v=1" alt="" loading="lazy"></span><span><b>${F(t)}</b><small>${F(sub)}</small></span><i aria-hidden="true">›</i></button>`).join('')}</div>`;
+    if (rest.length) b += h2('More care guides') + `<div class="hub-list">${rest.map(([k, t, sub, r]) => rowK(k, t, sub, cgo(r))).join('')}</div>`;
     return page('bath', b);
   };
   window.careRoutine = v => careHow(v);   // the routine is the "How often" glance now

@@ -20,8 +20,8 @@
 
 /* Nov 24: no word sits alone on the last line, anywhere in a page. Headlines balance; body text avoids orphans. */
 #main h1, #main h2, #main h3, #main .hub-lead { text-wrap: pretty }
-#main p, #main li, #main span { text-wrap: pretty }
-#main b, #main strong, #main small, #main em, #main figcaption, #main label { text-wrap: balance }
+/* Nov 25 (Yarden): clarity over the lone-word rule. Card text wraps normally; only headings and leads avoid a lone last word. */
+#main p, #main li, #main span, #main b, #main strong, #main small, #main em, #main figcaption, #main label { text-wrap: wrap }
 #main .fd-fig { padding: 14px 14px 12px; margin: 0 }
 #main .fd-fig svg { display: block; width: 100% }
 #main .fd-fig-cap { margin: 6px 2px 0; font-size: 14px; line-height: 1.4; color: #5c5563 }

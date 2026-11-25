@@ -93,7 +93,7 @@
     'd:wakes': () => page('Night sleep', 'Waking at night is normal now', age() >= 6 ? 'Many still wake once to feed. Keep it short, dim and quiet.' : 'Most babies under 6 months wake to feed. Keep each waking short, dim and quiet.',
       vis('Wakings in one night', 'Normal now', tally('One waking', [['Newborn weeks', 4, 'Several a night', 2], ['Around 6 months', 2, 'Fewer, for many', 1]], [0, 5]))
       + rows('When {s} stirs', [['', 'Pause first', 'Grunts and whimpers are normal. Give it 1–2 minutes.'], ['', 'Then help if needed', 'Feed, change or settle, in low light.'], ['', 'Check {s}’s not too warm', 'A sweaty neck means too warm.']], true)
-      + note('Hungry, or just stirring?', 'If {s} settles in a minute or two without a feed, it wasn’t hunger.') + calls('night waking comes with ' + fever() + ', poor feeding or pain, or {s} {snore|snores} loudly or {have|has} long pauses in breathing.')),
+      + note('Hungry, or just stirring?', 'If {s} settles in a minute or two without a feed, it wasn’t hunger.')),
     'd:props': () => page('Night sleep', 'Only falls asleep on you?', 'That’s common now. Let {o} drift off on you, then move {o} to {p} crib.',
       vis('Step back, a few nights each', 'Go slowly', photos([['sleepy.jpg', 'Hold until sleepy', 'Drowsy or asleep'], ['down.jpg', 'Into the crib', 'Hand on {p} chest'], ['chair-1.jpg', 'Sit nearby', 'Then farther away']]))
       + rows('Two ways to lay {o} down', [['moon', 'Drowsy, then down', 'Easier over time: {s} {learn|learns} to finish falling asleep.'], ['heart', 'Deep asleep, then down', 'Wait for limp arms and slow breathing.']])
@@ -122,7 +122,7 @@
     'd:regress': () => page('Night sleep', 'The 4‑month sleep regression is normal', '{P} sleep cycles are maturing, so {s} wakes more for a few weeks.',
       vis('Wakings in one night', 'A few weeks', tally('One waking', [['Before', 2, 'Your usual nights'], ['During', 6, 'More wakings'], ['A few weeks later', 2, 'Back to usual']], [null, 3, 5.5]))
       + rows('What helps', [['clock', 'Wait a minute or two', 'Many cries settle on their own.'], ['moon', 'Dark and quiet', 'Keep visits brief.'], ['heart', 'A feed if hungry', 'Comfort the way you always do.']])
-      + note('No need to sleep train.', 'Keep doing what works, and it passes.') + calls('waking comes with ' + fever() + ', poor feeding or pain.') + foot('Ages are typical. Every baby moves at {p} own pace.')),
+      + note('No need to sleep train.', 'Keep doing what works, and it passes.') + foot('Ages are typical. Every baby moves at {p} own pace.')),
     'd:settle4': () => page('Bedtime', 'Try putting {o} down drowsy, once a day', 'From about 4 months, many babies can learn to fall asleep on their own.',
       vis('Practice, once a day', 'Often at bedtime', photos([['book.jpg', 'Your usual steps', 'Same order as always'], ['down.jpg', 'Down drowsy', 'Awake, on {p} back'], ['crib.jpg', 'Wait a minute', 'Before going in']]) + `<p class="sv2-cap is-loop">${F('Still upset? Help {o}, and try again another day.')}</p>`)
       + note('It’s practice, not a test.', 'Feeding or rocking to sleep is still fine.') + foot('Every baby moves at {p} own pace.')),

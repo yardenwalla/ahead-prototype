@@ -210,8 +210,7 @@
     return page('Night sleep', young ? 'Waking at night is normal now' : 'Waking often at night?', answer('moon', young ? 'Most babies under 6 months wake to feed' : 'Everyone wakes between sleep cycles', young ? 'Keep each waking short, dim and quiet.' : 'Many babies settle back in a minute or two.')
       + psec('What to do when {s} stirs', seq([['eye', 'Stirring', 'Grunts, whimpers', 'ill/short.jpg'], ['clock', 'Pause first', '1–2 minutes', 'ill/clock.jpg'], ['heart', 'Help if needed', 'Feed, change, settle', 'ill/asleep.jpg']], 'Feel {p} neck: sweaty means too warm.', ['Night', 'Back to sleep']))
       + psec('Why bedtime matters at 2 am', versus(['down.jpg', 'A drowsy baby laid down in a crib', 'Down drowsy', 'Wakes and drifts back on {p} own', 'Easier at night'], [nursing() ? 'feed-nurse.jpg' : 'feed.jpg', 'A baby falling asleep while feeding', 'Asleep on the feed', 'Wakes looking for the feed again', '']))
-      + `<p class="ssw-note"><b>${F(young ? 'Night feeds are normal now.' : 'Something new?')}</b> ${F(young ? 'They drop on their own as {s} grows.' : 'Teeth, a new skill or missing you can bring wakings back for 1–2 weeks.')}</p>`
-      + (callsFor('night waking comes with ' + fever() + ', poor feeding or pain, or {s} {snore|snores} loudly or {have|has} long pauses in breathing.')), 'moon');
+      + `<p class="ssw-note"><b>${F(young ? 'Night feeds are normal now.' : 'Something new?')}</b> ${F(young ? 'They drop on their own as {s} grows.' : 'Teeth, a new skill or missing you can bring wakings back for 1–2 weeks.')}</p>`, 'moon');
   }
   function propsProb() {
     const mo = m();
