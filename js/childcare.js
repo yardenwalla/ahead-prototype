@@ -183,7 +183,7 @@
     const h = H(), m = typeof actualMonth === 'function' ? actualMonth() : 0, fd = feedNow(), bm = fd !== 'Formula', fm = fd !== 'Breast milk';
     // Round 9 (Yarden's inspiration): two things to settle, a numbered path with the first step highlighted, the rest
     // tucked away, one tip, and one button on to the options.
-    if (id === 'plan') return sub('plan', 'Before you choose', 'Most steps start about 3 months ahead', 'Daycare waitlists are the exception. Those start now.',
+    if (id === 'plan') return sub('plan', 'Before you choose', 'Start about 3 months ahead', 'Daycare waitlists are the exception. Those start now.',
       `<section class="cc-two"><h2>${F('Start with two things')}</h2><p>${F('They narrow every choice that follows.')}</p><div>${[['clock', 'Your schedule', 'Days and hours you need'], ['coin', 'Your budget', 'What works each month']].map(([i, t, d]) => `<div><span>${hubArt(i, CAT)}</span><b>${F(t)}</b><small>${F(d)}</small></div>`).join('')}</div></section>`
       + `<h2 class="hub-h2">${F('Your path to care')}</h2><p class="cc-h2sub">${F('Suggested timing. It varies by kind of care and where you live.')}</p>`
       + `<ol class="cc-route">${[['Now', 'Join 2 or 3 daycare waitlists, and check in monthly.'], ['About 3 months before care starts', 'Tour daycares, or meet nannies.'], ['6–8 weeks before', 'Check references, and choose.'], ['2 weeks before', 'Get ready for day one.']].map(([t, d, x], i) => `<li class="${i ? '' : 'is-first'}"><i>${i + 1}</i><div><b>${F(t)}</b><span>${F(d)}</span>${x ? `<small>${F(x)}</small>` : ''}</div></li>`).join('')}</ol>`
