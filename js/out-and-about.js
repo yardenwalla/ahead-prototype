@@ -187,7 +187,7 @@
     [2, 'Ready for a longer trip?', 'As feeds spread out, a long drive or a first flight gets easier.', 'road'],
     [4, 'Ready to face out?', 'Once Maya holds {p} head steady, check your carrier’s limits.', 'carry', ['Ready to face out?', 'Once Maya holds {p} head steady, check your carrier’s limits. Its instructions say when.', 'See the carrier guide']],
     [6, 'A seat in the cart', 'Once {s} {sit|sits} steadily, {s} can ride in the cart’s own seat, strapped in.', 'errands'],
-    [9, 'Outgrowing the infant car seat?', 'Many babies do in the first year. The sticker on the seat says when.', 'car', ['Maya may outgrow the infant car seat soon', 'Many babies do in the first year. The height and weight limits are on a sticker on the seat.', 'See which seat comes next']],
+    [9, 'Head near the top? Time for the next seat', 'Most babies outgrow the infant seat by height first. The next one still faces the back.', 'car', ['Maya may outgrow the infant car seat soon', 'Many babies do in the first year. The height and weight limits are on a sticker on the seat.', 'See which seat comes next']],
     [12, 'Rear-facing after the first birthday, too', 'Keep {o} rear-facing for as long as the seat allows.', 'car', ['Keep Maya rear-facing after the first birthday', 'Until the seat’s rear-facing limits, often age 2 or older. It protects {p} head and neck best.', 'See why it matters']]
   ];
   // For the home screen: the update for this month, or the one coming next month (so trips can be planned ahead).
