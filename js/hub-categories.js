@@ -145,7 +145,7 @@
     const nextRef = devKeys[devKeys.indexOf(ref) + 1];
     // Nov 19: the big question is about what's coming, so it lives inside the Next card instead of beside it (one topic, one card).
     const nextCard = nextRef ? h.next(`Next · by ${nextRef} months`, T(HEAD[nextRef]), `openPage('development-stage:${nextRef}')`, '', NEXT_LINE[ref] ? T(NEXT_LINE[ref]) : '')
-      : h.next('Next · after the first birthday', T('First steps'), `openPage('development-domain:12:Movement')`, '', T('Watch for {p} first few steps on {p} own'));
+      : '';   // Nov 25 (Yarden): no Next card at 12 months. It opened the same Movement page as the tile right above it.
     // Nov 19: the big question already lives on its area page, and "by N months" is in the Next card, so the main page keeps only Next.
     b += nextCard;
     // Nov 18: Development follows age, so its ages show as chips at the top (in place of "All stages").
