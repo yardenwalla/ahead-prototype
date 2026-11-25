@@ -190,7 +190,7 @@
       + (typeof profile !== 'undefined' && profile.early ? h.tip('Born early?', 'Ask your pediatrician when, and what kind of care, makes sense for {o}.') : '')
       + `<p class="cc-worth-tip">${hubArt('idea', CAT)}<span><b>${F('Worth knowing:')}</b> ${F('Waitlists move, so check in every month.')}</span></p>`
       + `<button class="hub-button cc-next2" onclick="openPage('chg:${CAT}:d:compare')">${F('Compare your options')} →</button>`
-      + `<div class="hub-list" style="margin-top:12px">${h.row({ icon: 'eye', cat: CAT, title: 'Not sure which kind fits?', sub: 'A four-tap quiz, and where to look first', onclick: `openPage('chg:${CAT}:d:fit')` })}</div>`, 'notepad');
+      + `<button class="hub-link cc-quizlink" onclick="openPage('chg:${CAT}:d:fit')">${F('Not sure which kind fits? Take the quick quiz')}</button>`, 'notepad');
 
     // Review feedback: three clear groups: what it costs, help paying, and what to check with work or a tax adviser.
     if (id === 'pay') return sub('pay', 'Before you choose', 'Paying for care', 'Care costs a lot, and there’s more help than most parents know.',
