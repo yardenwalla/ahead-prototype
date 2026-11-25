@@ -476,7 +476,7 @@
   const looks = (title, items) => `<div class="hub-card hub-looks"><b class="hub-fig-title">${F(title)}</b><ul>${items.map(t => `<li>${F(t)}</li>`).join('')}</ul></div>`;
   const paste = () => `<figure class="hub-figure hub-paste" role="img" aria-label="Use a smear of toothpaste the size of a grain of rice, not a pea-sized amount."><div class="is-yes"><svg viewBox="0 0 160 60" aria-hidden="true"><rect x="58" y="34" width="96" height="14" rx="7" fill="#cfe3db"/><rect x="8" y="30" width="56" height="20" rx="8" fill="#a9cbbd"/>${Array.from({ length: 9 }, (_, i) => `<rect x="${12 + i * 5.6}" y="16" width="3.4" height="15" rx="1.7" fill="#cfe3db"/>`).join('')}<ellipse cx="34" cy="14" rx="4.5" ry="2.6" fill="#fff" stroke="#7fb0cc" stroke-width="1.3"/></svg><b>✓ ${F('A grain of rice')}</b><small>${F('Under 3 years')}</small></div><div class="is-no"><svg viewBox="0 0 160 60" aria-hidden="true"><rect x="58" y="34" width="96" height="14" rx="7" fill="#cfe3db"/><rect x="8" y="30" width="56" height="20" rx="8" fill="#a9cbbd"/>${Array.from({ length: 9 }, (_, i) => `<rect x="${12 + i * 5.6}" y="16" width="3.4" height="15" rx="1.7" fill="#cfe3db"/>`).join('')}<circle cx="34" cy="8" r="9" fill="#fff" stroke="#7fb0cc" stroke-width="1.3"/></svg><b>${F('Not a pea')}</b><small>${F('That’s from age 3')}</small></div></figure>`;
   const layers = () => `<figure class="hub-figure hub-layers" role="img" aria-label="Dress baby in one more layer than you’re wearing."><div><span>${hubArt('shirt', CAT)}${hubArt('shirt', CAT)}</span><b>${F('You')}</b><small>${F('Comfortable in 2 layers')}</small></div><i aria-hidden="true">+1</i><div class="is-baby"><span>${hubArt('shirt', CAT)}${hubArt('shirt', CAT)}${hubArt('shirt', CAT)}</span><b>${F('Maya')}</b><small>${F('Needs 3')}</small></div></figure>`;
-  const toothBtn = (here) => live() && !hasTooth() ? (here ? `<button class="hub-already" onclick="careSet('hasTooth','Yes')">${F('Got a first tooth? Tap to mark it')}</button>` : `<div class="hub-list">${rowK('teeth', 'Got a first tooth?', 'See how to brush it', `careSet('hasTooth','Yes');openPage('chg:${CAT}:d:p:brush')`)}</div>`) : '';
+  const toothBtn = (here) => live() && !hasTooth() ? (here ? `<button class="hub-already" onclick="careSet('hasTooth','Yes')">${F('Got a first tooth? Tap to mark it')}</button>` : `<div class="hub-list" style="margin-top:14px">${rowK('teeth', 'Got a first tooth?', 'See how to brush it', `careSet('hasTooth','Yes');openPage('chg:${CAT}:d:p:brush')`)}</div>`) : '';
 const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: 'Sun protection by age', items: [['Under 6 months', 'Shade, a hat and long sleeves', 'Sunscreen only on small spots, if there’s no shade'], ['6 months and up', 'Shade + SPF 30', 'Reapply every 2 hours, and after water']], nowIndex: careAge() < 6 ? 0 : 1, cat: CAT, caption: 'Under 6 months, shade, clothes and a hat. From 6 months, shade plus SPF 30 sunscreen, reapplied every 2 hours and after swimming.' }) : '';
   const callTip = t => H().tip('Call your pediatrician', t);
   // Diaper rash: the two things that help as tiles, and when it's more than a rash.
@@ -601,7 +601,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
       do: ['Shade, light long sleeves and a wide-brimmed hat.', 'On hot days, extra milk feeds, and the canopy, not a blanket, over the stroller.', 'No shade at all? Ask your pediatrician about a little sunscreen on the face.'], call: 'Any sunburn.' },
     teething: { k: 'teeth', title: 'Teething', W: 'The first tooth usually comes around 6 months. Anywhere from 4 to 12 is normal.',
       do: ['Rub {p} gums with a clean finger.', 'Offer a firm teething ring, chilled in the fridge, not frozen.', 'Skip numbing gels and teething necklaces.'], N: 'Drool, chewing on everything and extra fussing.', call: 'A fever, diarrhea or a rash: teething doesn’t cause those.' },
-    six: { k: 'sun', title: 'Sunscreen from 6 months', W: 'Shade and a hat still come first.',
+    six: { k: 'sun', title: 'Sunscreen can start at 6 months', W: 'Shade and a hat still come first.',
       do: ['Sunscreen: broad-spectrum, SPF 30 or more, every 2 hours.', 'Mineral is gentlest. Skip sprays.'], call: 'Any sunburn.' },
     brush: { k: 'teeth', title: () => hasTooth() ? 'Brushing' : 'Brushing, from the first tooth', W: () => hasTooth() ? 'Twice a day keeps new teeth healthy.' : 'No tooth yet is normal. Some come close to the first birthday.',
       do: ['A soft baby toothbrush, twice a day, including before bed. No bottle in bed.', 'A rice-grain smear of fluoride toothpaste. No need to rinse.', 'First dental visit by the first birthday.'], vis: () => paste(), extra: () => toothBtn() },
@@ -912,7 +912,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
       belly: ['A bulging belly button', 'Often an umbilical hernia', ''],
       crossing: ['Eyes that cross or wander', now >= 2 ? 'Worth a check after 4 months' : 'Common before 4 months', ''],
       hearing: ['Not reacting to sounds?', 'How {s} {hear|hears}, and when to ask', ''],
-      breathing: ['Pauses in breathing while asleep', 'Then a few quick breaths', ''],
+      breathing: ['Pauses in breathing', 'Then a few quick breaths', ''],
       hot: ['Too hot or too cold?', 'Sweaty, flushed, chilly, what to wear', ans('Check and adjust', [['shirt', 'One more layer', 'Than you’re wearing'], ['hand', 'Feel the neck', 'Sweaty: too warm. Cool: add one'], ['home', 'No hat indoors', 'And no puffy coat in the car seat']],
         'Any sunburn before age 1, right away.', 'Hot and flushed and hard to wake, floppy, or not feeding. Cool {o} down and call 911.')]
     };
@@ -1636,7 +1636,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
       [PH('tb-5'), 'Wash, rinse, then wrap', 'Face first, hair last, rinsing with a cupped hand. Lift {o} straight into the towel and pat the creases dry']],
     good: 'Five to 10 minutes is plenty. Lots of babies cry in their first baths, and it gets easier.',
     safe: [['hand', 'Keep a hand on {o} the whole time', 'If you need to step away, take {o} with you'], ['thermo', 'Set your water heater to 120°F or lower', 'Hotter tap water can scald in seconds']] });
-  HT(TPL['t:bath:3'], { why: 'Sitting steadily is the sign, usually around 6–8 months.',
+  HT(TPL['t:bath:3'], { why: 'Once {s} {sit|sits} steadily on {p} own, {s} can move to the family tub.',
     call: [['Non-slip mat', 'tl', 24, 84], ['A few inches of water', 'br', 62, 66]],
     nearby: ['Non-slip mat', 'Towel', 'Washcloth', 'Bath toys'],
     moves: [[PH('bg-1'), 'Mat down, then the water', 'A few inches, no higher than {p} waist when {s} {sit|sits}'],
@@ -1701,7 +1701,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
       [PH('br-3'), 'Skip the rinse', 'Just wipe {p} mouth. Swallowing this tiny amount is fine']],
     good: 'Book the first dentist visit after the first tooth, and by {p} first birthday.',
     safe: [['bottle', 'Don’t put {o} to bed with a bottle', 'Milk on teeth overnight causes cavities']] });
-  HT(six, { title: 'Use sunscreen and shade', why: 'Shade and a hat still come first. Sunscreen covers the skin those can’t reach.',
+  HT(six, { title: 'Sunscreen can start at 6 months', why: 'Shade and a hat still come first. Sunscreen covers the skin those can’t reach.',
     call: [['Wide-brim hat', 'tr', 74, 30], ['Sunscreen on bare skin', 'bl', 50, 56]],
     nearby: ['Sunscreen, SPF 30+', 'Wide-brim hat'],
     moves: [[PH('ss-1'), 'Put it on before you go out', '15 to 30 minutes ahead, so it has time to work'],
@@ -1808,30 +1808,30 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     helpsShort: ['Offer it after a feed, never in place of one', 'No need to put it back once {s’s} asleep', 'Sterilize it often until 6 months'],
     safe: [['No strings or clips', 'Never around {p} neck or tied to the crib'], ['One piece, never a bottle nipple', 'Replace it if it tears. Nothing sweet on it, and never honey']] };
   // Source: periodic breathing (Cleveland Clinic, KidsHealth): pauses up to 10 seconds, then quick breaths, gone by about 6 months.
-  TPL['look-breathing'] = { type: 'check', eyebrow: 'Is this normal?', lookImg: 'look-breathing', lookCap: 'Chest still for a few seconds, then quick breaths', k: 'skin', title: 'Pauses in breathing while asleep', verdict: ['ok', 'Common in the first months'],
-    why: 'Newborns often breathe unevenly: a pause of up to 10 seconds, then a few quick breaths. It’s called periodic breathing, and it fades as {s} {grow|grows}.',
+  TPL['look-breathing'] = { type: 'check', eyebrow: 'Is this normal?', lookImg: 'look-breathing', lookCap: 'Chest still for a few seconds, then quick breaths', k: 'skin', title: 'Pauses in breathing', verdict: ['ok', 'Common in the first months'],
+    why: 'A pause of up to 10 seconds, then quick breaths, is normal. It fades as {s} {grow|grows}.',
     notice: ['A pause, quick breaths, then steady again', 'Most often in deep sleep'],
     helpsShort: ['Keep every sleep safe: on {p} back, in a bare crib', 'A short pause, then quick breaths, needs nothing from you'],
-    calls: { ped: ['Pauses that are still happening after 6 months', 'Snoring with long pauses', 'A pause longer than 10 seconds. Call right away'], now: 'Blue or gray lips or skin, {s} won’t wake, or {s} isn’t breathing. Start CPR, and never shake {o}.' } };
+    calls: { ped: ['Pauses still happening after 6 months', 'Snoring with long pauses', 'A pause longer than 10 seconds. Call right away'], now: 'Blue or gray lips or skin, {s} won’t wake, or {s} isn’t breathing. Start CPR, and never shake {o}.' } };
   TPL['look-crossing'] = () => ({ type: 'check', eyebrow: 'Is this normal?', lookImg: 'look-crossing', lookCap: 'One eye drifting while the other looks ahead', k: 'skin',
     title: 'Eyes that cross or wander', verdict: tplNow >= 2 || careAge() >= 4 ? ['watch', 'Worth a check now'] : ['ok', 'Common before 4 months'],
     why: tplNow >= 2 || careAge() >= 4 ? 'By about 4 months, eyes usually move together. Crossing or drifting that happens a lot now is worth a check.' : 'Eye muscles are still learning to work together, so eyes that drift now and then are normal at this age.',
     notice: tplNow >= 2 || careAge() >= 4 ? ['One eye turns in or out often', 'Tilting {p} head to look at things'] : ['A drift now and then, often when tired', 'Wide skin over the nose can make eyes look crossed'],
     helpsShort: ['Mention it at {p} next checkup', 'A photo or video of it helps'],
-    calls: { ped: [tplNow >= 2 || careAge() >= 4 ? 'Crossing or drifting that happens regularly' : 'Crossing that’s there all the time', 'A white or grayish pupil, even in a photo', 'Not looking at your face, or seeming not to see'] } });
+    calls: { ped: [tplNow >= 2 || careAge() >= 4 ? 'Crossing that happens often' : 'Crossing all the time', 'A white pupil, even in a photo', 'Not looking at your face'] } });
   TPL['look-hearing'] = () => ({ type: 'check', eyebrow: 'Is this normal?', lookImg: 'look-hearing', lookCap: 'Turning toward a sound shows {s} heard it', k: 'skin',
-    title: 'Most babies hear well, and you can check', verdict: ['ok', 'Easy to check at home'],
+    title: 'Most babies hear well', verdict: ['ok', 'Easy to check at home'],
     why: 'Most babies pass the newborn hearing test. How {s} {react|reacts} to sound as {s} {grow|grows} tells you more.',
     notice: tplNow === 0 ? ['Startles at a loud noise', 'Calms or stills at your voice'] : tplNow === 1 ? ['Startles at a loud noise', 'Starts turning toward your voice'] : tplNow === 2 ? ['Turns toward a new sound', 'Takes turns making sounds with you'] : ['Turns when you say {p} name', 'Babbles “mamama” or “dadada”'],
     helpsShort: tplNow === 0 && careAge() < 1 ? ['Check the hospital hearing result is in', 'Not passed? A retest by 1 month'] : ['Talk and sing to {o} through the day', 'Mention any worry at {p} next checkup'],
-    calls: { ped: tplNow <= 1 ? ['No startle at loud noises by 1 month', 'Not turning toward sounds by 3–4 months', 'Seems to hear some sounds but not others'] : ['Not turning toward sounds', 'Notices you only once {s} {see|sees} you', tplNow === 3 ? 'No “mama” or “dada” by 12–15 months' : 'Seems to hear some sounds but not others'] } });
+    calls: { ped: tplNow <= 1 ? ['No startle at loud noises', 'Not turning to sounds by 4 months'] : ['Not turning toward sounds', tplNow === 3 ? 'No “mama” or “dada” by 15 months' : 'Notices you only once {s} {see|sees} you'] } });
   TPL['look-belly'] = { type: 'check', eyebrow: 'Is this normal?', lookImg: 'look-belly', lookCap: 'Soft, and it pushes out more when {s} {cry|cries}', k: 'cord', title: 'A bulging belly button', verdict: ['ok', 'Usually harmless'],
     why: 'Usually a small gap in the belly muscles, called an umbilical hernia. Most close on their own.',
     notice: ['Bigger when {s} {cry|cries} or {strain|strains}', 'Soft, and goes back in when {s’s} calm'],
     helpsShort: ['Leave it alone. No coins, tape or binders', 'Mention it at the next checkup'],
     calls: { ped: ['It keeps getting bigger', 'It’s hard, swollen or tender, won’t go back in, or comes with vomiting. Call right away'] } };
   Object.assign(TPL['look-yellow'], { lookCap: 'Press the nose. Yellow shows as it pales', notice: ['It starts on the face, then moves down', 'On darker skin, check the eyes and gums'], helpsShort: ['Feed often. It helps clear the yellow', 'Go to every checkup, even if {s} looks fine'],
-    calls: { ped: ['Yellow on the belly, legs or eyes', 'Fewer than 6 wet diapers a day', 'Still yellow after 2 weeks', 'Any yellow in the first 24 hours. Call right away', 'Yellow and very sleepy or not feeding. Call right away', 'Pale, chalky poop. Call right away'] } });
+    calls: { ped: ['Yellow spreading to the belly or legs', 'Still yellow after 2 weeks', 'Any yellow in the first 24 hours. Call right away', 'Yellow and very sleepy or not feeding. Call right away', 'Pale, chalky poop. Call right away'] } });
   Object.assign(TPL['p:teething'], { why: 'It comes and goes, a few days at a time, before each new tooth.', notice: ['More drooling and chewing', 'A few fussy days'], helpsShort: ['Rub sore gums with a clean finger', 'A chilled, not frozen, teething ring', 'Skip numbing gels and teething necklaces'],
     calls: { ped: ['FEVER', 'Diarrhea', 'Very fussy or not feeding'] } });
   Object.assign(skinCare, { notice: () => stageNow() === 0 ? ['Peeling in the first weeks', 'Spots and blotches that come and go'] : ['Dry patches after baths or in cold weather', 'Redness on the chin from drool'], helpsShort: ['Short baths in plain warm water', 'Pat dry, into the creases', 'Thick, fragrance-free cream on dry patches'],
@@ -1977,7 +1977,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     [['bath', 'Give a sponge bath', '2–3 a week, until the cord falls off', 'p:sponge'], ['diapers', 'Change a diaper', '8–12 changes a day at first', 'h:diapers:0'], ['cord', 'Keep the cord stump clean', 'Keep it clean and dry', 'cord'], ['nails', 'Trim tiny nails', 'Check once or twice a week', 't:nails:0'], ['clothes', 'How warm to dress {o}', 'One layer more than you', 't:clothes:0'], ['paci', 'Offer a pacifier', 'At sleep, once feeding is going well', 'p:pacifier']],
     [['bath', 'Give a tub bath', 'About 3 a week, with a safe hold', 'p:tub'], ['diapers', 'Change a diaper', 'About 6–10 changes a day', 'h:diapers:1'], ['skin', '{P} skin needs less care', 'Plain water, and cream for dry patches', 'h:skin:1'], ['nails', 'Trim tiny nails', 'Check once or twice a week', 't:nails:1'], ['teeth', 'Wipe {p} gums', 'A soft cloth, twice a day', 'h:gums:1'], ['sun', 'Keep {o} in the shade', 'Shade and clothing first', 't:sun:1'], ['paci', 'Offer a pacifier', 'Safe at sleep, and your choice', 'p:pacifier']],
     [['diapers', 'Change a wriggler', 'Set up first, and a hand on {o}', 'h:diapers:2'], ['teeth', 'Teething makes gums sore', 'What helps, and what to skip', 'p:teething'], ['bath', 'Bath, then bed', 'About 3 a week, often at bedtime', 't:bath:2'], ['skin', '{P} skin needs less care', 'Plain water, and cream for dry patches', 'h:skin:2'], ['nails', 'Trim tiny nails', 'Check once or twice a week', 't:nails:2'], ['sun', 'Keep {o} in the shade', 'Shade, then sunscreen from 6 months', 't:sun:2']],
-    [['teeth', 'Brush that first tiny tooth', 'Twice a day, a rice-grain smear', 'p:brush'], ['bath', 'Move to the big tub', 'About 3 a week, once {s} {sit|sits} steadily', 't:bath:3'], ['diapers', 'Diaper changes on the move', 'A toy to hold helps', 't:diapers:3'], ['clothes', 'Bare feet first, shoes later', 'Soft shoes once walking outside', 'p:feet'], ['nails', 'Trim tiny nails', 'Check once or twice a week', 't:nails:3'], ['sun', 'Use sunscreen and shade', 'SPF 30, again every 2 hours', 't:sun:3']]
+    [['teeth', 'Brush that first tiny tooth', 'Twice a day, a rice-grain smear', 'p:brush'], ['bath', 'Move to the big tub', 'About 3 a week, once {s} {sit|sits} steadily', 't:bath:3'], ['diapers', 'Diaper changes on the move', 'A toy to hold helps', 't:diapers:3'], ['clothes', 'Bare feet first, shoes later', 'Soft shoes once walking outside', 'p:feet'], ['nails', 'Trim tiny nails', 'Check once or twice a week', 't:nails:3'], ['sun', 'Sunscreen from 6 months', 'SPF 30, again every 2 hours', 't:sun:3']]
   ];
   // How often, at a glance: three tiles in Sleep's glance style, each the same shape (what, how many, per what).
   const OFTEN = [
