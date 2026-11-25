@@ -207,7 +207,7 @@
 
     // Sleep training: a choice, then each method as a picture of what you do.
     settle: () => page('Sleep training', 'Sleep training is a choice, not a must', 'There’s no single right way, and rocking or feeding to sleep is fine too.',
-      rows('Change the timing', [['clock', 'Bedtime fading', 'Start later, then slowly shift earlier.', 'd:method:4', 'Least crying']])
+      `<h2 class="hub-h2">${F('Change the timing')}</h2><button class="sv2-fade" onclick="${go('d:method:4')}"><span class="sv2-fade-top"><i>${art('clock')}</i><span><b>${F('Bedtime fading')}</b><small>${F('Start later, then slowly shift earlier.')}</small></span><em>${F('Least crying')}</em></span><span class="sv2-fade-line"><b>8:30</b><s></s><b>8:15</b><s></s><b>8:00</b></span></button>`
       + rows('Choose how to comfort {o}', [['hand', 'Pick up, put down', 'Comfort in your arms, then put {o} back.', 'd:method:2', 'Some crying'], ['sofa', 'Chair method', 'Sit nearby, moving farther away over time.', 'd:method:1', 'Some crying'], ['clock', 'Timed check-ins', 'Leave, then come back for short check-ins.', 'd:method:0', 'More crying'], ['moon', 'Cry it out', 'Say goodnight and don’t go back in, except to feed or if {s}’s unwell.', 'd:method:3', 'Most crying']])
       + (() => { const a = window.__chg.ageNow(); const when = a < 4 ? 'It’s usually considered from 4–6 months.' : a <= 6 ? 'Many families consider it around 4–6 months.' : 'It can work at any age from here.';
         return rows('Before you start', [['steth', 'Check with your pediatrician first', when]]); })()

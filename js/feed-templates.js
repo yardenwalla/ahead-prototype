@@ -317,10 +317,10 @@
       doNotes: [['', 'Getting enough?', 'Wet diapers, energy, and steady growth at checkups']] }),
     z_milk12: () => { const b = X().isBottle(), f = fam();
       // Nov 24 (Feeding B, J): the headline fits the baby's age, and says why, not the same thing twice.
-      // Nov 24 (Feeding fix): before 9 months it reads ahead; nursing-only families skip the bottle photo.
-      return { type: 'expect', label: mo() < 9 ? 'Read ahead · From about 12 months' : 'Turning 1', art: 'cup', title: mo() >= 12 ? 'Whole milk can start now, from a cup' : mo() < 9 ? 'Whole milk at 12 months, and a cup before then' : 'A cup at meals now, whole milk at 12 months',
-        why: mo() < 6 ? 'Cup practice can start with solids, around 6 months. Cups are kinder to teeth.' : 'Cups are kinder to teeth, and practice now makes the switch easier.',
-        heroTitle: 'From bottle to cup', hero: () => !b ? '' : H().TPLB.photoPins('feeding/bottle-cup', 'A bottle next to an open cup of milk', [['Bottle', 33, 80, 'b'], ['Open cup', 62, 80, 'b']], 'is-wide'),
+      // Nov 25 (Yarden): approved headline kept; nursing-only families see a cup photo instead of the bottle.
+      return { type: 'expect', label: 'Turning 1', art: 'cup', title: mo() >= 12 ? 'Whole milk can start now, from a cup' : 'A cup at meals now, whole milk at 12 months',
+        why: 'Cups are kinder to teeth, and practice now makes the switch easier.',
+        heroTitle: b ? 'From bottle to cup' : 'Milk from a cup', hero: () => !b ? H().TPLB.photoPins('feeding/g-cups', 'An open cup of milk at a meal', [], 'is-wide') : H().TPLB.photoPins('feeding/bottle-cup', 'A bottle next to an open cup of milk', [['Bottle', 33, 80, 'b'], ['Open cup', 62, 80, 'b']], 'is-wide'),
         do: [['cup', 'Whole milk', 'Not low-fat, until age 2'], b ? ['drop', 'Up to 24 oz a day', 'More crowds out iron-rich food'] : ['drop', 'Up to 24 oz of cow’s milk a day', 'From cups. Nurse as usual'], b ? ['bottle', 'Drop one bottle at a time', 'Swap one for a cup each week'] : null].filter(Boolean),
         doNotes: [b ? ['', 'Picky about the taste?', (f ? 'Mix half and half with formula' : 'Mix half and half with breast milk') + ' for a week. Toddler formula isn’t needed'] : null, ['', 'Vitamin D after 1', 'Ask your pediatrician how much {s} {need|needs}']] }; },
     z_refuse: () => ({ type: 'expect', ct: 'know', label: 'Feeding challenges', photo: 'feeding/refuse-turn', pos: '40%', cap: 'Turning away usually means not now, not never', notice: ['Turning away or closing {p} mouth', 'Pushing food off the tray'], art: 'plate', title: 'Refusing food is normal, and it passes',
@@ -451,7 +451,7 @@
       if (T[q[3]]) { const page = T[q[3]](q[4]); if (page) { window.__fdLast = r;
         // Nov 24 (Feeding B): a solids page read before solids is labeled as reading ahead, so "now" never means a 10-week-old.
         try { const id = q[3], am = X().ageMo(), prep = ['z_ready', 'z_signs', 'z_start', 'z_plan', 'z_allergens'].includes(id);
-          const soon = /^z_/.test(id) && !['z_teeth', 'z_sick', 'z_iron', 'z_milk12'].includes(id) && (prep ? am < 4 : am < 5.5) && !(typeof answers !== 'undefined' && answers.solids === 'Yes');
+          const soon = /^z_/.test(id) && !['z_teeth', 'z_sick', 'z_iron'].includes(id) && (prep ? am < 4 : am < 5.5) && !(typeof answers !== 'undefined' && answers.solids === 'Yes');
           if (soon) { const lab = page.label; page.label = () => 'Read ahead · From about 6 months'; page.__lab = lab; } } catch (e) {} return draw(page, base.call(this, 'chg:' + CAT + ':mock:' + q.slice(3).join(':'), ...a)); } }
       if (MENU[q[3]]) return menuTail(base.call(this, r, ...a), MENU[q[3]]());
     }

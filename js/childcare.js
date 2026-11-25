@@ -575,7 +575,7 @@
     else if (g.kind === 'talk') {
       // Review (Nov 20): two groups, and the crib photo sits inside safe sleep, where it teaches something.
       const row = x => { const sleep = /sleep|crib/i.test(x.q) && !x.own;
-        return x.own ? peekRow(iconFor(x.q), esc3(x.q), 'Your own topic') : peekRow(iconFor(x.q), x.q, x.a, sleep ? `<figure class="cc-peek-photo cc-sleep-inline"><img src="assets/childcare/sleep-sack.jpg" alt="A baby asleep on her back in a sleep sack, arms out, in a bare crib" loading="lazy"><figcaption>${F('On the back, in a sleep sack, in a bare crib. No blankets, bumpers or pillows.')}</figcaption></figure>` : ''); };
+        return x.own ? peekRow(iconFor(x.q), esc3(x.q), 'Your own topic') : peekRow(iconFor(x.q), x.q, x.a, sleep ? `<details class="cc-photo-peek"><summary>${F('See it')}</summary><figure class="cc-peek-photo"><img src="assets/childcare/sleep-sack.jpg" alt="A baby asleep on her back in a sleep sack, arms out, in a bare crib" loading="lazy"><figcaption>${F('On the back, in a sleep sack, in a bare crib. No blankets, bumpers or pillows.')}</figcaption></figure></details>` : ''); };
       const safe = g.items.filter(x => !x.own && /sleep|crib|car seat|crying|cpr/i.test(x.q)), rest = g.items.filter(x => !safe.includes(x));
       body += `<h2 class="hub-h2">${F('Agree on safety')}</h2><div class="hub-card cc-peek">${safe.map(row).join('')}</div>`
         + `<h2 class="hub-h2">${F('Share Maya’s routine')}</h2><div class="hub-card cc-peek">${rest.map(row).join('')}</div>`;
@@ -630,7 +630,7 @@
   const PLAN_T = { center: 'Choose a daycare', home: 'Choose a home\u00a0daycare', nanny: 'Hire a nanny', family: 'Talk it through', sitter: 'Find a babysitter' };
   function planPage(k) {
     const t = TYPES[k];
-    const sleepNow = '';   // Nov 24: the decorative family photo is gone; the safe-sleep photo now shows inside the safety card
+    const sleepNow = k === 'family' ? `<figure class="cc-type-photo cc-family-photo"><img src="assets/childcare/family-talk.jpg" alt="A grandmother holding a smiling baby on her lap, talking to him, with the baby’s parent beside them"></figure>` : '';
     return sub(k, t.name, PLAN_T[k], t.talk ? 'Have this talk a few weeks before the first day.' : k === 'sitter' ? 'Two steps, a week or two ahead.' : 'Three steps, starting about 3\u00a0months ahead.', sleepNow + stepsBlock(k, questions(k), Object.assign({ plan: 1 }, t)), t.icon);
   }
   function typePage(k) {
