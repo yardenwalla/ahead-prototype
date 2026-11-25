@@ -29,7 +29,14 @@
     if (!head || head.classList.contains('dev-area-head') || (cat !== 'Health' && cat !== 'Development')) return;
     const text = head.textContent, p = pick(cat, text); if (!p) return;
     page.dataset.ss = '1';
-    const c = PAL[p[0]];
+    // Nov 24 (Development): Development's own lavender, and a real icon in place of the placeholder shapes.
+    const yp = cat === 'Development' && typeof YEAR_PALETTES !== 'undefined' && YEAR_PALETTES.Development;
+    const c = yp ? [yp.pale, yp.ink] : PAL[p[0]];
+    if (yp && typeof hubArt === 'function') { const ic = p[1] === 'signs' ? 'signs' : /milestone/i.test(text) ? 'star' : p[1] === 'move' ? 'crawl' : 'blocks';
+      page.dataset.ss = '1'; head.classList.add('dev-area-head', 'ss-head'); head.style.setProperty('--area', c[0]); head.style.setProperty('--area-ink', c[1]);
+      page.style.setProperty('--ss-bg', c[0]); page.style.setProperty('--ss-ink', c[1]);
+      const art = `<span class="dev-area-head-art sf-head-art" aria-hidden="true">${hubArt(ic, 'Development')}</span>`, big = head.querySelector('.hub-big');
+      if (big) big.outerHTML = art; else head.insertAdjacentHTML('afterbegin', art); return; }
     head.classList.add('dev-area-head', 'ss-head'); head.style.setProperty('--area', c[0]); head.style.setProperty('--area-ink', c[1]);
     page.style.setProperty('--ss-bg', c[0]); page.style.setProperty('--ss-ink', c[1]);
     const big = head.querySelector('.hub-big'); const art = `<span class="dev-area-head-art">${ART[p[1]](c)}</span>`;

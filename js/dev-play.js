@@ -17,7 +17,17 @@
     'empty-basket': { how: 'Put three large baby-safe toys in a shallow open basket. Let baby take the toys out, tip the basket or choose one to keep.' },
     'hello-wave': { explain: 'Waving the same way every time helps baby learn what a wave means.' },
     'stack-pair': { adapt: 'Hold the bottom block steady. Knocking the tower down is still play.' },
-    'feed-teddy': { notice: 'Baby may bring the spoon near teddy or explore the spoon on {p} own.' }
+    'feed-teddy': { notice: 'Baby may bring the spoon near teddy or explore the spoon on {p} own.' },
+    // Nov 24 (Development): steps and notes that each say something new, and ages that match the CDC lists.
+    'pretend-cup': { how: 'Pretend to drink from an empty baby-safe cup. Then hand it to baby to play with or copy.', explain: 'Copying how you use everyday things is the start of make-believe.' },
+    'stack-pair': { adapt: 'Hold the bottom block steady. Knocking the tower down is still play.', explain: 'Watching you stack comes first. Most babies stack two blocks a few months after their first birthday.' },
+    'easy-grip': { explain: 'Shaking a rattle shows baby {p} own hands can make a sound.', notice: 'A quick grab, a shake or just watching it all count.' },
+    'bold-picture': { how: 'Hold a high-contrast picture 8–12 inches from baby’s face, about where your face is when you hold {o}. Keep it still and let {o} look.' },
+    'ball-turns': { how: 'Sit close on the floor with baby supported as needed. Roll a large soft ball to baby, then wait for {o} to touch or push it back.', notice: 'Give it a slow count of five. Any touch is {p} turn, and you can roll it back for {o}.' },
+    'sound-answer': { notice: 'Give {o} a slow count of five. Looking away is fine too: {s’s} taking a break.' },
+    'song-listen': { explain: 'A pause in your song leaves room for baby to join in.', notice: 'Hold the pause a little longer than feels natural. A look or a kick counts.' },
+    'empty-basket': { notice: 'Putting toys back in comes later. For now, out is the whole game.' },
+    'supported-reach': { title: 'Reach while sitting', how: 'On the floor, hold baby around the chest and waist as needed. Put a toy just out to the side and let baby reach if {s} {want|wants}.' }
   };
   const all = () => { const o = {}; for (let m = 0; m <= 12; m++) { const x = playStageModel(m); [...(x.primary || []), ...(x.more || [])].forEach(a => { if (!o[a.id]) o[a.id] = a; }); } return o; };
   const ctxFor = a => Object.assign({}, (typeof PLAY_CONTEXT !== 'undefined' && PLAY_CONTEXT[a.id]) || {}, FIX[a.id] || {});
@@ -31,7 +41,7 @@
     'put-in': 'play-put-in', 'pretend-cup': 'play-pretend-cup', 'stack-pair': 'play-stack-pair', 'action-book': 'play-action-book', 'two-baskets': 'play-two-baskets',
     // Nov 19: the six more ideas for each age.
     'smile-pause': 'play-smile-pause', 'change-chat': 'play-change-chat', 'book-voices': 'play-book-voices', 'outside-pause': 'play-outside-pause', 'slow-song': 'play-slow-song', 'floor-company': 'play-floor-company', 'sock-puppet': 'play-sock-puppet', 'page-pat': 'play-page-pat', 'barefoot-kicks': 'play-barefoot-kicks', 'lap-sway': 'play-lap-sway', 'follow-toy': 'play-follow-toy', 'touch-rhyme': 'play-touch-rhyme', 'mirror-faces': 'play-mirror-faces', 'roll-interest': 'play-roll-interest', 'rhyming-page': 'play-rhyming-page', 'leaf-watch': 'play-leaf-watch', 'sound-side': 'play-sound-side', 'feet-discovery': 'play-feet-discovery', 'lift-flap': 'play-lift-flap', 'knock-stack': 'play-knock-stack', 'peek-corner': 'play-peek-corner', 'roll-ball': 'play-roll-ball', 'song-pause': 'play-song-pause', 'spoon-bowl': 'play-spoon-bowl', 'feed-teddy': 'play-feed-teddy', 'open-close': 'play-open-close', 'body-song': 'play-body-song', 'follow-point': 'play-follow-point', 'stir-bowl': 'play-stir-bowl' };
-  const photo = id => PHOTO[id] ? `<img class="dev-idea-photo" src="assets/dev/${PHOTO[id]}.jpg?v=7" alt="">` : '';
+  const photo = id => PHOTO[id] ? `<img class="dev-idea-photo" src="assets/dev/${PHOTO[id]}.jpg?v=8" alt="">` : '';
   const tile = (a, ref) => `<button class="dev-idea" onclick="openPage('chg:Development:d:idea:${ref}:${a.id}')"><span class="dev-idea-art">${photo(a.id) || devPlayArt(a.id)}</span><b>${F(B(a.title))}</b></button>`;
 
   // Try today, on the summary: two of the stage's ideas, a different pair each day, and the rest one tap away.
@@ -50,7 +60,7 @@
   // On Movement, the idea that answers the big question of the age.
   const MOVE = {
     4: { id: 'tummy-picture', title: 'A picture at floor level', why: 'Turning to look is how rolling starts.', steps: ['During tummy time, prop a bold picture where Maya can see it.', 'Lie down facing {o} and talk about it.', 'Move it a little to one side so {s} turns to look.'] },
-    6: { id: 'supported-reach', title: 'A toy beside your knee', why: 'Reaching while sitting builds the balance {s} needs to sit on {p} own.', steps: ['Sit Maya on the floor, supported around {p} chest as needed.', 'Hold a toy close beside your knee.', 'Let {o} lean and reach for it.'] },
+    6: { id: 'supported-reach', title: 'Reach while sitting', why: 'Reaching while sitting builds the balance {s} needs to sit on {p} own.', steps: ['Sit Maya on the floor, supported around {p} chest as needed.', 'Put a toy just out to {p} side.', 'Let {o} lean and reach for it.'] },
     9: { id: 'toy-reach', hero: 9, title: 'A toy just out of reach', why: 'A reason to move is all most babies need.', steps: ['Put a favorite toy on the floor, a little out of Maya’s reach.', 'Cheer {o} on as {s} scoots, rolls or crawls toward it.', 'If {s} gets frustrated, move it a bit closer.'] },
     12: { id: 'cruise-toy', hero: 12, title: 'Cruise to a toy', why: 'Stepping along furniture comes before first steps.', steps: ['Put a toy at the far end of a sturdy sofa or low table.', 'Let Maya hold on and step sideways to reach it.', 'Clear other toys off the floor so {s} doesn’t trip.'] }
   };
@@ -94,7 +104,7 @@
   }
   function ideasPage(ref) {
     const live = typeof isCurrent !== 'function' || isCurrent(), m = live ? developmentMonth(actualMonth()) : ref, h = H();
-    const lead = live && devRef(m) === ref ? `Maya is usually awake for ${WAKE(m)} at a time. A few minutes of any of these is plenty.` : 'A few minutes of any of these is plenty. Pick one that suits the moment.';
+    const lead = live && devRef(m) === ref ? `Maya is usually awake for ${WAKE(m)} at a time. Pick one that suits the moment.` : 'Pick one that suits the moment.';
     const pics = stageIdeas(ref), shown = new Set(pics.map(a => a.id));
     // Six more ideas per stage, picked for variety (a book, a song, outside, moving, everyday things), in one collapsed list.
     const MORE = { 2: ['smile-pause', 'change-chat', 'book-voices', 'outside-pause', 'slow-song', 'floor-company'], 4: ['sock-puppet', 'page-pat', 'barefoot-kicks', 'lap-sway', 'follow-toy', 'touch-rhyme'], 6: ['mirror-faces', 'roll-interest', 'rhyming-page', 'leaf-watch', 'sound-side', 'feet-discovery'], 9: ['lift-flap', 'knock-stack', 'peek-corner', 'roll-ball', 'song-pause', 'spoon-bowl'], 12: ['feed-teddy', 'open-close', 'body-song', 'put-in', 'follow-point', 'stir-bowl'] };
@@ -113,7 +123,7 @@
       12: { lead: '{S’s} cruising and copying you, so pushing and pretend play fit now.', now: [['toy-push', 'Push toy'], ['toy-sorter', 'Shape sorter'], ['toy-pretend', 'Cup, spoon and teddy']] } }[ref];
     const toys = TOYS ? `<section class="dev-toys"><h2 class="hub-h2">${F('Toys that fit now')}</h2><p class="dev-toys-lead">${F(TOYS.lead)}</p>`
       + `<div class="dev-toy-grid">${TOYS.now.map(([img, t]) => `<div class="dev-toy"><img src="assets/dev/${img}.jpg?v=2" alt=""><b>${F(t)}</b></div>`).join('')}</div></section>` : '';
-    return frame('Ideas to try together', `Play ideas · by ${ref} months`, lead, `<div class="dev-ideas is-grid">${pics.map(a => tile(a, ref)).join('')}</div>${more}${toys}`);
+    return frame('A few minutes is plenty', `Play ideas · by ${ref} months`, lead, `<div class="dev-ideas is-grid">${pics.map(a => tile(a, ref)).join('')}</div>${more}${toys}`);
   }
   window.devPlayPhoto = id => PHOTO[id] || '';
   function movePage(ref) {
@@ -137,8 +147,9 @@
     if (cat === 'Development' && screen === 'd' && a === 'all') { const ref = DEV_STAGES[b] ? Number(b) : devRef(Number(b)), seen = window.devSkillSeen || (() => false), hb = window.hubBabyify || (x => x);
       const NAMES = { Social: 'Social and feelings', Talking: 'Talking and listening', Thinking: 'Thinking and learning', Movement: 'Movement' };
       const body = Object.keys(DEV_DOMAINS).map(d => { const L = DEVELOPMENT_DOMAINS[ref][d] || [], c = window.devTileColors ? devTileColors(d) : ['#f1ecfa', '#5b4f8a'];
-        return `<h2 class="hub-h2">${F(NAMES[d] || d)}</h2><div class="hub-card" style="padding:4px 16px">${L.map(l => `<p style="display:flex;gap:10px;align-items:center;margin:0;padding:10px 0;border-bottom:1px solid var(--line,#f0ebe8);font-size:14.5px"><span style="width:20px;height:20px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:12px;${seen(l) ? `background:${c[1]};color:#fff` : `border:1.5px solid ${c[1]}`}">${seen(l) ? '✓' : ''}</span>${hb(F(l))}</p>`).join('')}<button class="hub-link" style="display:block;padding:10px 0" onclick="openPage('development-domain:${ref}:${d}')">${F('Mark what Maya does')} ›</button></div>`; }).join('');
-      return frame('All milestones', `By ${ref === 12 ? '12 months' : ref + ' months'}`, 'Notice what Maya is doing. There’s no score to complete, and every baby gets there at their own pace.', body); }
+        // Nov 24 (Development): each milestone gets the same "Seen it" pill as the area pages, and there are no loose links.
+        return `<h2 class="hub-h2">${F(NAMES[d] || d)}</h2><div class="hub-card" style="padding:4px 16px">${L.map(l => { const key = typeof journeySkillKey === 'function' ? journeySkillKey(l) : ''; return `<p style="display:flex;gap:10px;align-items:center;justify-content:space-between;margin:0;padding:10px 0;border-bottom:1px solid var(--line,#f0ebe8);font-size:14.5px"><span>${hb(F(l))}</span>${seen(l) ? `<span class="hub-chip is-done" style="flex:none">${F('Seen')} ✓</span>` : `<button class="hub-seen" style="flex:none" onclick="hubSeen('${key}')">${F('Seen it')}</button>`}</p>`; }).join('')}</div>`; }).join('');
+      return frame(`What Maya may do by ${ref === 12 ? '12 months' : ref + ' months'}`, 'All milestones', 'There’s no score to complete, and every baby gets there at their own pace.', body); }
     if (cat === 'Development' && screen === 'd' && a === 'move') return movePage(DEV_STAGES[b] ? Number(b) : devRef(Number(b)));
     if (cat === 'Development' && screen === 'd' && a === 'idea') return ideaPage(DEV_STAGES[b] ? Number(b) : devRef(Number(b)), c);
     return baseRoute(p);
