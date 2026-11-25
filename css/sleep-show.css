@@ -650,3 +650,6 @@
 #main .ssv-photo.is-loop, #main .ssv-photo.is-compare { aspect-ratio: 16 / 11.5 }
 #main .ssv-photo > img { object-position: 50% 35% }
 #main .ssv-compare { padding: 4px 12px } #main .ssv-compare > div { padding: 4px 0 }
+/* Nov 25 (Yarden): a little more room so the overlays don't crowd the photo; still close to the other guides. */
+#main .ssv-photo { aspect-ratio: 16 / 11.5 }
+#main .ssv-photo.is-loop, #main .ssv-photo.is-compare { aspect-ratio: 16 / 13.2 }
