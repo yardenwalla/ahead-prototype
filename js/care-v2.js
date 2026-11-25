@@ -1921,7 +1921,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     const pastCord = live() && v === now && typeof profile !== 'undefined' && profile.early && realDays >= 28 && v <= 1;
     let N = pastCord ? { art: 'bath', t: 'Tub baths, a few a week', d: 'The cord has long since healed, so tub baths are fine now.', cta: 'See how', go: 'p:tub',
       see: [['acne', 'Baby acne', 'rash:acne'], ['cradle', 'Cradle cap', 'rash:cradle'], ['diaper', 'Poop colors', 'look:1:poop']] } : CARE_NEW[v];
-    if (v === 3 && v === now && live() && careAge() >= 9) N = Object.assign({}, N, { t: 'More teeth to brush, twice a day', also: Object.assign({}, N.also, { t: 'Baths in the big tub, a hand on {o}', lbl: 'Also now:' }) });
+    if (v === 3 && v === now && live() && careAge() >= 9) N = Object.assign({}, N, { t: 'More teeth, same rice‑size dab of toothpaste', also: Object.assign({}, N.also, { t: 'Baths in the big tub, a hand on {o}', lbl: 'Also now:' }) });
     const T = STAGE_TABLE[CAT].stages;
     const pills = h.pills('Everyday care by age', T.map((s, i) => ({ label: s.label, age: s.age, on: i === v, now: live() && i === now, onclick: `openPage('chg:${CAT}:s:${i}')` })), CAT);
     const careNote = live() && profile.early && profile.due && ageMonths(parse(profile.due), NOW) !== actualMonth() ? (() => { const adj = careAge() !== actualMonth(); return `<p class="hub-agebasis">${F(adj ? `Following Maya’s adjusted age (${monthsLabel(careAge())}), like Feeding and Sleep.` : `Following Maya’s birthday age (${monthsLabel(actualMonth())}), like Feeding and Sleep.`)} <button onclick="hubSetAgeMode('care','${adj ? 'birthday' : 'adjusted'}')">${adj ? 'Use birthday age' : 'Use adjusted age'}</button></p>`; })() : '';

@@ -869,7 +869,7 @@
       h += napAsk(now, age) + slHero(key, age, 'Two naps') + B + slGlance(key, age, now) + slGuides(key, age, now);
     }
     const D = C().DATA.Sleep, N = D.CH[view + 1], A = D.CH[view].after;
-    if (N) { const a = (STAGE_TABLE.Sleep.stages[view + 1]?.age || '').replace(/^(From|Starts) /, ''), w = /wks/.test(a) ? '6 weeks' : /^\d+$/.test(a.split('–')[0]) ? a.split('–')[0] + ' months' : a.split('–')[0]; h += next(view === 2 && age >= 6 ? 'Next · once Maya is on two naps most days' : `Next · usually from ${w.replace(/^(\d+)$/, '$1 months')}${sleepAdj() ? ' adjusted age' : ''}`, N.rail, `chgGo('chg:Sleep:s:${view + 1}')`, '', ['Watch for one longer stretch, often at night.', 'Watch for longer awake time before naps.', 'Watch for the third nap getting hard to fit in.'][view] || ''); }
+    if (N) { const a = (STAGE_TABLE.Sleep.stages[view + 1]?.age || '').replace(/^(From|Starts) /, ''), w = /wks/.test(a) ? '6 weeks' : /^\d+$/.test(a.split('–')[0]) ? a.split('–')[0] + ' months' : a.split('–')[0]; h += next(view === 2 && age >= 6 ? 'Next · any time now' : `Next · usually from ${w.replace(/^(\d+)$/, '$1 months')}${sleepAdj() ? ' adjusted age' : ''}`, N.rail, `chgGo('chg:Sleep:s:${view + 1}')`, '', ['Watch for one longer stretch, often at night.', 'Watch for longer awake time before naps.', 'Watch for the third nap getting hard to fit in.'][view] || ''); }
     else if (A) h += next('Next · after the first birthday', A[1], go('chg:Sleep:d:after'), '', 'One refused nap is usually just a phase.');
     return frame(cat, view, cur, h);
   }
