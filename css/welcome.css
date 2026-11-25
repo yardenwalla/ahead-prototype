@@ -285,3 +285,11 @@ html:has(#main .ob-welcome), html:has(#main .ob-welcome) body { background: radi
 #main .ob-mini-tl small { white-space: nowrap }
 #main .ob-mini-tl { left: calc(50% - 180px) }
 #main .ob-mini-tl { left: calc(50% - 186px) } #main .ob-mini-tl small { font-size: 10px }
+
+/* Nov 25 (Yarden): the mini Home shows the real month card: month color wash, eyebrow, "Month 4.", the teaser and the baby. */
+#main .ob-mc { background: linear-gradient(160deg, #e6efe6, #f2f7f3) }
+#main .ob-mc img { inset: auto -10px -8px auto; width: 64%; height: auto; object-fit: contain }
+#main .ob-mc span { left: 9px; top: 9px; width: 62%; font-size: 8.5px; line-height: 1.3; color: #4a4a52 }
+#main .ob-mc span small { display: block; margin: 0 0 3px; font-size: 6.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #436144 }
+#main .ob-mc span i { display: block; margin: 0 0 3px; padding: 0; background: none; border-radius: 0; font: 800 15px/1.05 var(--ui-font); color: var(--ink) }
+#main .ob-mc span u { display: inline-block; margin-top: 7px; padding: 3px 7px; border-radius: 99px; background: rgba(255,255,255,.85); text-decoration: none; font-size: 8px; font-weight: 650; color: var(--ink) }
