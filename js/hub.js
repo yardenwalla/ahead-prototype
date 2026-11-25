@@ -961,8 +961,8 @@
           normalNotes: [['', 'No rush after 6 months', 'Plenty of families room-share longer']],
           doFig: () => '<section class="ph-rowcard">' + TPLB.rows([['thermo', 'About 68–72°F', 'Comfortable for you in a light T-shirt'], ['sack', 'One layer more', 'A sleep sack over pajamas'], ['music', 'White noise, low', 'Across the room, not by the crib'], ['moon', 'Dark for night', 'A dim light for feeds']], 'Sleep') + '</section>',
           doNotes: [['', 'Moving to {p} own room?', 'Try naps there first, and keep the same bedtime steps and a bare crib']] }),
-        crib: () => ({ type: 'howto', label: 'Room and crib', art: 'crib', title: 'Move to the crib at the first try to roll',
-          why: 'Or at the bassinet’s weight limit, if that comes first. Rolling or pushing up can tip a bassinet, even under its limit.',
+        crib: () => ({ type: 'howto', label: 'Room and crib', art: 'crib', title: 'Move to the crib once {s} {start|starts} to roll',
+          why: 'Rolling or pushing up can tip a bassinet over.',
           pictureTitle: 'When to move', picture: () => TPLB.noted(TPLB.tiles([['clock', 'At the weight limit', 'Usually 15–20 lb: check the bassinet’s label'], ['roll', 'At the first try to roll', 'Even if it’s under the weight limit']], 'Sleep'), [['', 'The first nights', 'Keep the same bedtime and bedtime steps, just in a new place']]),
           action: () => TPLB.sec('How to set it up', list('', [row({ icon: 'crib', cat, title: 'Set up the crib', sub: 'Step by step, in Safety', onclick: "openPage('chg:Safety:d:step:bassinet')" })])) + `<div class="hub-actions">${answers.inCrib === 'Yes' ? `<p class="hub-done">${F('Maya sleeps in the crib now')} ✓</p>` : `<button class="hub-button" onclick="setAnswer('inCrib','Yes')">${F('Done: Maya’s in the crib')}</button>`}</div>` }),
         mattress: () => { const low = mattressLowestDue() || answers.mattressLowest === 'Yes', nowI = low ? 2 : mattressDue() || answers.mattressLowered === 'Yes' ? 1 : 0;

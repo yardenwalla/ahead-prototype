@@ -40,7 +40,7 @@
       do: 'Gaining well, says your pediatrician? You can stop waking {o}. Still feed {o} when {s} {wake|wakes} hungry.' }),
     nb_eve: () => ({ type: 'expect', label: 'Evenings and nights', art: 'moon', title: 'Busy evenings, then quick and calm nights',
       why: 'Evening cluster feeds are normal. Keep night feeds short and sleepy.',
-      normalTitle: 'What’s normal', normal: () => window.__sv2nightFeeds ? window.__sv2nightFeeds() : '',
+      normalTitle: 'What’s normal', normal: () => window.__sv2clusterFeeds ? window.__sv2clusterFeeds() : '',
       do: [['sunrise', 'In the evening', nurse() ? 'Switch sides often to keep milk flowing' : 'Offer smaller bottles, more often'], ['moon', 'At night', 'Keep it dim, and change only if dirty'], realMo() >= 1 ? null : ['clock', 'Until back to birth weight', 'Wake {o} after 3 hours by day, 4 at night']].filter(Boolean),
       doNotes: [['', 'Hard to wake?', 'Undress {o} to {p} diaper, or stroke {p} feet']],
       calls: { ped: '{s’s} too sleepy to feed most times.' } }),
@@ -91,8 +91,8 @@
         doNotes: [['', 'Darker poop?', 'Iron can cause it. That’s normal']] }
       : { type: 'expect', label: 'Iron', art: 'drop', title: fam() ? 'Mostly breast milk? Plan for iron by 6 months' : 'Breastfed babies need extra iron by 6 months',
         why: 'Iron stores run low from about 4 months, and breast milk has very little.',
-        normalTitle: 'Iron-rich first foods',
-        normal: () => H().TPLB.photoGrid([['feeding/iron-meat', 'Meat', 'Soft, minced or shredded'], ['feeding/iron-lentils', 'Beans or lentils', 'Mashed'], ['feeding/iron-oats', 'Iron-fortified cereal', 'Mixed with milk']]),
+        normalTitle: 'Two ways to get it',
+        normal: () => H().TPLB.photoGrid([['feeding/vitd-drop', 'Iron drops', 'From about 4 months'], ['feeding/iron-meat', 'Iron-rich foods', 'From the first meals']]),
         do: mo() < 4.5 ? 'Ask about iron at the 4-month checkup, and choose drops now or iron-rich foods at 6 months.' : 'Not on drops? Make iron-rich foods part of the first meals.',
         doNotes: [fam() ? ['', 'Mostly formula?', 'Iron-fortified formula has iron. Ask at the checkup if {s} {need|needs} more'] : null, ['', 'Darker poop?', 'Iron can cause it. That’s normal']] },
     // ---------- Bottles ----------
