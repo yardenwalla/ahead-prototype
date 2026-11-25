@@ -351,3 +351,11 @@
 #main .care-v2 .care-verdict svg { width: 20px; height: 20px; flex: none; fill: #fff; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round }
 #main .care-v2 .care-verdict.is-watch { color: #9a5a12 }
 #main .care-v2 .care-verdict + .hub-lead { margin-top: 6px }
+
+/* Nov 24 (Everyday care review): poop tiles on the stage pages use the color-dot graphic, sized like the photo tiles. */
+#main .care-see button:has(.care-see-dots) { padding: 0 0 12px; overflow: hidden; gap: 10px }
+#main .care-see-art.care-see-dots { display: flex; width: 100%; aspect-ratio: 1; align-items: center; justify-content: center; gap: 6px; background: #f3ece4 }
+#main .care-see-dots i { display: block; width: 24%; aspect-ratio: 1; border-radius: 50% }
+#main .care-see button:has(.care-see-dots) b { padding: 0 8px }
+/* The "Red skin under the diaper?" way out is a chevron row, with room above it. */
+#main .care-tpl .ct-rowlink { margin-top: 14px }

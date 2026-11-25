@@ -666,7 +666,7 @@ const PLAY_CONTEXT={
   },
   "bold-picture": {
     "needs": "One high-contrast baby picture or board-book page.",
-    "explain": "Holding the picture still gives baby time to take it in.",
+    "explain": "Bold black-and-white shapes are the easiest thing for baby to see right now.",
     "notice": "Their eyes may settle on the picture for a moment, then look away.",
     "extend": "Slowly move it a little and see if their eyes follow."
   },
@@ -966,7 +966,7 @@ const PLAY_CONTEXT={
   },
   "put-in": {
     "needs": "One large baby-safe block and a wide lightweight open container.",
-    "explain": "Something to drop it into gives letting go a reason.",
+    "explain": "A container to drop into gives baby a reason to let go.",
     "notice": "Baby may hold the block over the opening, drop it nearby or take it out instead.",
     "extend": "Once the first block goes in, offer another. No need to fill it up."
   },
@@ -1851,7 +1851,7 @@ function playMonthlyTheme(dm){return ['A face and a familiar voice','Little look
 function playActivityLibrary(){return [
 ['face-follow','looking','Follow my face','Hold baby comfortably with their head supported. Bring your face into view, then move it slowly a little to one side. Pause before coming back.','Gives baby a favorite face to follow with their eyes.','Keep your face still and nearby if following it feels like too much.'],
 ['sock-puppet','language','A toy that talks','Hold a sock puppet on your hand or a baby-safe soft toy where baby can see it. Make it say a short hello, then pause for a look or reply. Put the puppet away after, so it’s only for playing together.','A silly little friend to watch and listen to.','Keep the puppet still and use your usual quiet voice.'],
-['close-face','connection','Face to face','Hold baby close with their head supported. Smile, then pause so they can look at you.','A familiar face is interesting all on its own.','Try while baby lies comfortably on their back if being held feels too busy.'],
+['close-face','connection','Face to face','Hold baby close with their head supported. Smile, then wait a few quiet seconds.','A familiar face is interesting all on its own.','Try while baby lies comfortably on their back if being held feels too busy.'],
 ['slow-song','music','A song and a slow sway','Support baby’s head and body against you and gently sway while singing one short song.','Baby hears you and feels you move.','Stay still and sing softly if movement isn’t welcome.'],
 ['chest-chat','movement','Tummy time with you','While you’re awake and leaning back, lay baby on your chest for tummy time. Talk where they can see you.','Your face gives them a reason to lift and look.','Keep it really short and stop when baby’s had enough.'],
 ['bold-picture','looking','One bold picture','Hold a high-contrast picture near baby’s face while they are awake. Keep it still and let them look.','Something simple and bold for new eyes to look at.','Use your face instead if the picture doesn’t interest them.'],

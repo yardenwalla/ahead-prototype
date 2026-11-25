@@ -12,22 +12,24 @@
   const fev = () => { const m = mo(); return m < 3 ? 'a fever of 100.4°F or higher, day or night' : m < 6 ? 'a fever that lasts more than a day or reaches 101°F' : 'a fever that lasts more than a day or reaches 103°F'; };
   // Nov 23 (round 3): under 3 months any fever gets its own "Call right away" row, as on Everyday care and Gas.
   const fevCalls = (signs, extra) => mo() < 3 ? Object.assign({ ped: signs.join(', or ').replace(/, or ([^,]*), or /, ', $1, or ') + '.', right: 'a rectal temperature of 100.4°F or higher' }, extra || {}) : Object.assign({ ped: signs.join(', ') + ', or ' + fev() + '.' }, extra || {});
+  // Nov 24 (Feeding fix): a bubbles icon for gas (the icon set has no tummy), in Feeding's pink.
+  const BUBBLES = '<svg viewBox="0 0 24 24" fill="none" stroke="#884866" stroke-width="1.5" aria-hidden="true"><circle cx="9" cy="14" r="5"/><circle cx="17" cy="8" r="3"/><circle cx="17.5" cy="17" r="2"/><path d="M7 12.2a2.2 2.2 0 0 1 2-1.4" stroke-linecap="round"/></svg>';
   const T = {
     // ---------- Milk: is it going well? ----------
     nb_enough: () => ({ type: 'expect', label: 'Getting enough', art: 'diaper', title: 'Wet diapers are the best everyday sign',
       heroTitle: () => realMo() < 1 ? '' : 'What a good wet diaper looks like', hero: () => realMo() < 1 ? '' : `<section class="care-tpl-card">${H().TPLB.photoPins('feeding/wet-diaper', 'A heavy wet diaper beside a dry one', [['Heavy and wet', 27, 78, 'b'], ['Dry', 72, 78, 'b']], 'is-wide')}</section>`,
-      why: 'Count wet diapers each day. Weight checks at checkups confirm it.',
+      why: 'Count wet diapers each day. They’re the easiest sign to track at home.',
       // Nov 24 flag 12: "day by day" only where the days are shown (the first month).
       normalTitle: () => realMo() < 1 ? 'Wet diapers and poop, day by day' : 'What to look for',
       normal: () => realMo() < 1 ? X().pron(X().firstCard(X().xBody(X().P.x_enough))) : realMo() >= 1 ? H().TPLB.tiles([['diaper', '6 or more', 'Wet diapers a day'], ['steth', 'Steady gain', 'At each weight check']], CAT) : window.hubStageStrip({ title: '', cat: CAT, items: [['diaper', 'Days 1–2', '1–2'], ['diaper', 'Days 3–4', '3–4'], ['diaper', 'Day 5', 'About 5'], ['diaper', 'Day 6 on', '6 or more']], caption: 'Wet diapers a day: 1 to 2 on days 1 and 2, 3 to 4 on days 3 and 4, about 5 on day 5, then 6 or more.' }),
       moreTitle: '{P} weight', more: () => realMo() < 1 ? X().pron(X().weightViz()) : '',
       normalNotes: [nurse() ? ['', 'Good signs during feeds', 'Long sucks, and swallows you can hear'] : null, ['', 'After most feeds', '{S’s} content for a while']],
-      do: [['notepad', 'Note feeds and diapers', 'Until things feel settled'], ['steth', 'Go to the weight checks', 'No need to weigh at home']],
+      do: [['notepad', 'Note feeds and diapers', 'Until things feel settled'], ['steth', 'Skip home scales', 'Checkups track {p} weight']],
       calls: { ped: realMo() >= 1 ? 'fewer wet diapers, dark urine, or {s} {seem|seems} hungry after most feeds.' : 'fewer wet diapers, dark urine, black poop after day 5, or not back to birth weight by 2 weeks.' } }),
     enough: () => ({ type: 'expect', label: 'Getting enough', art: 'diaper', title: 'Wet diapers show {s’s} getting enough',
       heroTitle: 'What a good wet diaper looks like', hero: () => `<section class="care-tpl-card">${H().TPLB.photoPins('feeding/wet-diaper', 'A heavy wet diaper beside a dry one', [['Heavy and wet', 27, 78, 'b'], ['Dry', 72, 78, 'b']], 'is-wide')}</section>`,
-      why: mo() >= 6 || onlyFormula() ? 'No need to measure feeds. Your pediatrician checks {p} weight at each checkup.' : 'Fewer poops can be normal after 6 weeks. Wet diapers and growth count most.',
-      normal: [['diaper', '6 or more', 'Wet diapers a day'], ['steth', 'Steady growth', 'Checked at each checkup']],
+      why: onlyFormula() ? 'Follow {p} hunger cues more than the ounces. Your pediatrician checks {p} weight at each checkup.' : mo() >= 6 ? 'No need to measure feeds. Your pediatrician checks {p} weight at each checkup.' : 'Fewer poops can be normal after 6 weeks. Wet diapers and growth count most.',
+      normal: [['diaper', '6 or more', 'Wet diapers a day'], ['steth', 'Steady gain', 'Along {p} own growth curve']],
       calls: { ped: 'dark urine, a dry mouth, or {s’s} feeding much less than usual.' } }),
     m1_now: () => ({ type: 'expect', label: 'Feeds now', art: 'clock', title: 'Hungrier some days? Often a growth spurt',
       why: 'Feeds bunch up for a few days, then settle again.',
@@ -59,13 +61,13 @@
       ? { type: 'howto', label: 'Vitamin D', art: 'drop', title: 'Vitamin D drops, every day for now',
         hero: () => window.aheadFig ? window.aheadFig('feeding/vitd-drop', [['Into the side of {p} mouth', 'bl', 52, 46]], 'Drip it in slowly, inside the cheek.', '35%') : '',
         why: 'Formula covers it once {s} {drink|drinks} about 32 oz a day. Until then, give drops too.',
-        ordered: false, steps: [['drop', 'The label’s dose', 'Using the dropper that comes with them'], ['bottle', 'Or mix it into 1 oz of milk', 'Make sure {s} {finish|finishes} it']],
+        ordered: false, steps: [['dropa', 'Give the dose on the label', 'Using the dropper that comes with them'], ['bottle', 'Or mix it into 1 oz of milk', 'Make sure {s} {finish|finishes} it']],
         stepsNotes: mo() < 6 ? [['', 'No water yet', 'Milk is all {s} {need|needs} until about 6 months, even on hot days']] : null }
       : { type: 'howto', label: 'Vitamin D', art: 'drop', title: 'Vitamin D drops, every single day',
         hero: () => window.aheadFig ? window.aheadFig('feeding/vitd-drop', [['Into the side of {p} mouth', 'bl', 52, 46]], nurse() ? 'Drip it slowly inside the cheek, or onto the nipple just before a feed.' : 'Drip it in slowly, inside the cheek.', '35%') : '',
         why: 'Vitamin D builds strong bones, and breast milk has very little.',
         pictureTitle: 'What {s} {need|needs}', picture: () => H().TPLB.tiles([['sun', 'Vitamin D', '400 IU a day, through {p} first year'], ['drop', 'Iron', fam() ? 'Mostly breast milk? Drops from 4 months, or iron-rich foods at 6' : mo() < 4 ? 'Drops usually start at about 4 months' : 'Drops from 4 months, until iron-rich foods are going well']], CAT),
-        ordered: false, steps: [['drop', 'The label’s dose', 'Using the dropper that comes with them'], ['bottle', 'Or mix it into 1 oz of milk', 'Make sure {s} {finish|finishes} it']],
+        ordered: false, steps: [['dropa', 'Give the dose on the label', 'Using the dropper that comes with them'], ['bottle', 'Or mix it into 1 oz of milk', 'Make sure {s} {finish|finishes} it']],
         stepsNotes: mo() < 6 ? [['', 'No water yet', 'Milk is all {s} {need|needs} until about 6 months, even on hot days']] : null },
     // Nov 17: AAP clinical report (Pediatrics, July 2026). Exclusively breastfed babies born at term: iron by 4 months,
     // or wait for iron-rich foods at 6. Born early: iron starts in the first weeks, on the pediatrician's plan.
@@ -158,7 +160,7 @@
       ? { type: 'howto', label: 'Time apart', art: 'bag', title: mo() >= 9 ? 'Pack a bottle or two, plus {p} meals' : 'Leave about 1–1½ oz for each hour apart',
         why: mo() >= 9 ? 'Meals do more of the work now, so milk away from home can be small.' : 'Small bottles, so little goes to waste.',
         picture: () => H().TPLB.photoPins('feeding/away-bag', 'A small cooler bag with labeled bottles and an ice pack', [['Labeled and cold', 30, 30, 'r']]), pictureTitle: 'What to pack',
-        ordered: false, steps: [['bottle', mo() >= 9 ? '4–6 oz per bottle' : '2–4 oz per bottle', 'So less is wasted'], ['notepad', 'Label each one', '{P} name and the date'], ['fridge', 'Keep it cold', 'In a cooler with ice packs']],
+        ordered: false, steps: [['bottle', mo() >= 9 ? '4–6 oz per bottle' : '2–4 oz per bottle', 'Warm one at a time'], ['notepad', 'Label each one', '{P} name and the date'], ['fridge', 'Keep it cold', 'In a cooler with ice packs']],
         stepsNotes: [['', 'How long it keeps', '4 hours out, 4 days in the fridge. Thawed: 24 hours, never refreeze'], ['', 'Back together?', 'Nurse as usual. Many babies nurse more in the evening after a day apart']] }
       // Nov 24 (Feeding A): formula-only families don't pack milk cold or label whose it is. Mixed families do both.
       : !breast() ? { type: 'howto', label: 'Time apart', art: 'bag', title: 'Pack formula to mix when {s’s} hungry',
@@ -168,12 +170,13 @@
       : { type: 'howto', label: 'Time apart', art: 'bag', title: 'Pack breast milk cold, and formula to mix there',
         why: 'That way both stay safe until the feed.',
         picture: () => H().TPLB.photoPins('feeding/away-bag', 'A small cooler bag with labeled bottles and an ice pack', [['Labeled and cold', 30, 30, 'r']]), pictureTitle: 'What to pack',
-        ordered: false, steps: [['notepad', 'Label breast milk', '{P} name and the date'], ['fridge', 'Keep it cold', 'In a cooler with ice packs, up to 24 hours'], ['cup', 'Formula to mix there', 'Powder and water kept apart']] },
+        ordered: false, steps: [['notepad', 'Label breast milk', '{P} name and the date'], ['fridge', 'Keep it cold', 'In a cooler with ice packs, up to 24 hours'], ['cup', 'Formula to mix there', 'Powder and water kept apart']],
+        stepsNotes: [['', 'How long breast milk keeps', '4 hours out, 4 days in the fridge. Thawed: 24 hours, never refreeze']] },
 
     // ---------- Feeding challenges ----------
-    x_gas: () => ({ type: 'expect', ct: 'know', label: 'Feeding challenges', art: 'eye', title: 'Some gassy fussing every day is normal',
-      photo: 'feeding/gas-hero', pos: '40%', cap: () => realMo() < 4 ? 'Most fussy in the evening, legs pulled up' : 'Past the usual peak, it’s less common',
-      notice: ['Squirming and pulling {p} legs up', 'Fussier in the evening'],
+    x_gas: () => ({ type: 'expect', ct: 'know', label: 'Feeding challenges', art: 'eye', artSvg: BUBBLES, title: 'Some gassy fussing every day is normal',
+      photo: 'feeding/gas-hero', pos: '40%', cap: 'A red, scrunched face often comes with gas',
+      notice: ['Squirming and pulling {p} legs up', 'Passing gas, then settling'],
       helpMoves: () => [['photo:feeding/burp-shoulder', 'Burp {o} mid-feed', 'Not just at the end'], ['photo:feeding/gas-bicycle', 'Bicycle {p} legs', 'Gently, with {o} on {p} back'], ...(realMo() < 6 ? [['photo:feeding/gas-tummy', 'Tummy time', 'While {s’s} awake and watched']] : [])],
       helpNotes: [['Gas drops and gripe water?', 'Gas drops are safe, but often don’t help. Ask before gripe water']],
       calls2: () => [['Call your pediatrician if:', 'crying 3 or more hours a day'], realMo() < 3 ? ['Call right away if:', 'a rectal temperature of 100.4°F or higher', 1] : null, ['Call 911 if:', 'grunting with every breath, ribs pulling in, or blue lips', 1]],
@@ -187,7 +190,7 @@
       notice: ['A little milk after most feeds', 'Comfortable, and still growing'],
       helps2: [['', 'Hold {o} upright after feeds', 'For 20–30 minutes'], ['', 'Smaller feeds', 'A little more often'], ['', 'Stop when {s} {slow|slows} down', 'No need to finish']],
       helpNotes: [['For sleep', 'Flat on {p} back, even with spit-up, and no wedges']],
-      calls2: () => [['Call your pediatrician if:', 'it’s forceful, {s} {cry|cries} and {arch|arches} at most feeds, or {s’s} not gaining weight'], ['Call right away if:', 'green or bloody vomit', 1]],
+      calls2: () => [['Call your pediatrician if:', 'it’s forceful, {s} {cry|cries} and {arch|arches} at most feeds, or {s’s} not gaining weight'], ['Go to the ER if:', 'green or bloody vomit', 1]],
       why: () => mo() >= 12 ? 'Spit-up this late is worth a mention at the next checkup.' : mo() < 5 ? 'It peaks around 4 months, and it’s usually gone by the first birthday.' : 'It’s past the peak, and it’s usually gone by the first birthday.',
       calls: { ped: 'spit-up that’s forceful, or {s’s} not gaining weight.', er: 'green or bloody vomit.' } }),
     x_allergy: () => ({ type: 'expect', ct: 'know', label: 'Feeding challenges', art: 'steth', title: 'A milk allergy is uncommon, and treatable',
@@ -206,15 +209,16 @@
       why: 'Pain all feed long often means a shallow latch.',
       do: [['hand', 'Re-latch', 'Break the seal with a clean finger, then try again'], ['heart', 'Line {o} up', 'Nose to nipple, so {p} mouth opens wide'], ['steth', 'Get it checked', 'A lactation consultant can check the latch']],
       // Nov 19: holds shown without the baby latched, so parents can copy the position.
-      helpTop: () => H().TPLB.photoGrid([['feeding/cradle-real', 'Cradle', 'Baby across your lap, tummy to tummy'], ['feeding/laidback-feed', 'Laid-back', 'Lean back. Baby lies on you, tummy down']]),
+      // Nov 24 (Feeding fix): cradle-real showed the baby face up; the drawn hold shows tummy to tummy until a new photo is made.
+      helpTop: () => H().TPLB.photoGrid([['feeding/hold-cradle', 'Cradle', 'Baby across your lap, tummy to tummy'], ['feeding/laidback-feed', 'Laid-back', 'Lean back. Baby lies on you, tummy down']]),
       // Nov 19: a latch has to be seen, and AI tools won't draw breastfeeding, so a trusted video shows it.
       video: ['wjt-Ashodw8', 'How a deep latch looks', 'Global Health Media'],
       calls: { ped: 'pain at most feeds after the first week, {s} {seem|seems} hungry after most feeds, or clicking and long feeds with slow gain.' } }),
     x_nobottle: () => !nurse() ? T.x_refuse() : mo() >= 11 ? { type: 'expect', ct: 'know', label: 'Feeding challenges', art: 'cup', notice: ['Pushes the bottle away', 'Happy to sip from a cup'], title: 'No bottle? An open cup works now',
       why: 'Bottles phase out between 12 and 18 months anyway, so there’s no need to push one.',
       do: [['cup', 'Milk in an open or straw cup', 'With meals and snacks'], ['heart', 'Keep nursing', 'As much or as little as you both like']],
-      calls: { ped: '{s} {refuse|refuses} most feeds and meals, or {have|has} fewer wet diapers.' } } : ({ type: 'expect', ct: 'know', label: 'Feeding challenges', photo: 'feeding/nobottle-other', pos: '35%', cap: 'Babies often hold out for the breast when the parent who nurses is near', notice: ['Pushes the nipple out, or cries', 'Takes it from others, but not from you'], art: 'bottle', title: 'Won’t take a bottle? It often takes practice',
-      why: 'Many babies who nurse refuse a bottle at first, especially from the parent who nurses.',
+      calls: { ped: '{s} {refuse|refuses} most feeds and meals, or {have|has} fewer wet diapers.' } } : ({ type: 'expect', ct: 'know', label: 'Feeding challenges', photo: 'feeding/nobottle-other', pos: '35%', cap: 'Babies often hold out for the breast when the parent who nurses is near', notice: ['Pushes the nipple out, or cries', 'Turns {p} head away from the bottle'], art: 'bottle', title: 'Won’t take a bottle? It often takes practice',
+      why: 'Many babies who nurse refuse a bottle at first. A little practice usually fixes it.',
       do: [['hand', 'Someone else offers', 'Ideally with you out of the room'], ['moon', 'Before {s’s} very hungry', 'Calm and a little sleepy is easiest'], ['bottle', 'Slow-flow nipple', 'Try another shape if {s} {fight|fights} it']],
       doNotes: [['', 'Keep it low-pressure', 'A few minutes once a day. Upset? Stop, and try again tomorrow']],
       calls: { ped: '{s} {refuse|refuses} all feeds, or {have|has} fewer wet diapers.' } }),
@@ -254,11 +258,11 @@
         ordered: false, steps: [['plate', 'Share from your plate', 'Take out {p} portion before adding salt'], ['hand', '{S} {feed|feeds} {o}self', 'Fingers first, and a spoon to practice']] }
       : { type: 'howto', ct: 'howto', label: 'First meals', art: 'highchair', title: 'First meals are just a few bites',
         why: 'Solids are practice for now, and milk is still {p} main food. Let {o} set the pace.',
-        photo: 'feeding/first-foods', pos: '45%', alt: 'A baby in a high chair with a bowl of soft food', call: [['Sitting up, strapped in', 'tl', 44, 70], ['A few soft spoonfuls', 'br', 28, 80]],
+        photo: 'feeding/first-foods', pos: '45%', alt: 'A baby in a high chair with a bowl of soft food', call: [['Sitting up, strapped in', 'tl', 64, 64], ['A few soft spoonfuls', 'br', 28, 80]],
         near: [['High chair', 'highchair'], ['Soft food', 'bowl'], ['Small spoon', 'cup'], ['Bib', 'shirt']],
         moves: [['photo:feeding/meal-1', 'Sit {o} up, facing you', 'Strapped in, at a calm time when {s’s} not too hungry'], ['photo:feeding/meal-2', 'Offer a little', 'A spoonful, or a soft strip {s} can hold'], ['photo:feeding/meal-3', 'Let {o} lead', '{S} {open|opens} up for more, and {turn|turns} away when done']],
-        tips: [['Expect mess', 'Most of it ends up on the tray at first']], linkTo: ['Gagging or choking? Know the difference', 'chg:Feeding:mock:z_gag'],
-        safe: [['Stay with {o}, sitting up', 'For the whole meal, every time'], ['Gagging is common and noisy', 'Choking is quiet, or only a weak cough. That’s when to start first aid']],
+        tips: [['Expect mess', 'Most of it ends up on the tray at first']],
+        safe: [['Stay with {o}, sitting up', 'For the whole meal, every time']], safeLink: ['Gagging or choking?', 'How to tell, and what to do', 'chg:Feeding:mock:z_gag'],
         steps: [['photo:feeding/meal-1', 'Sit {o} up', 'Strapped in, facing you, at a calm time'], ['photo:feeding/meal-2', 'Offer a little', 'A spoonful, or a soft strip to hold'], ['photo:feeding/meal-3', 'Let {o} lead', 'Opens up for more, turns away when done']],
         stepsNotes: [['', 'Expect mess', 'Funny faces too. Most of it ends up on the tray at first']] },
     // Nov 19: the same three foods at each texture, with this baby's column marked, in the top card.
@@ -269,7 +273,7 @@
           [['Avocado', ['feeding/tx-avo-1', 'feeding/tx-avo-2', 'feeding/tx-avo-3']], ['Banana', ['feeding/tx-ban-1', 'feeding/tx-ban-2', 'feeding/tx-ban-3']], ['Sweet potato', ['feeding/tx-sp-1', 'feeding/tx-sp-2', 'feeding/tx-sp-3']]], now),
         // Nov 19 (fresh read vs the Safety steps): one section of short rows instead of two blocks of three-line tiles.
         doTitle: 'Moving up a texture', doFig: () => '<section class="ph-rowcard">' + T.rows([['bowl', 'Mash with a fork', 'Instead of blending'], ['clock', 'Move on once this one is easy', 'Usually after a week or two'], ['hand', 'Pieces should squish', 'Between your finger and thumb']], 'Feeding') + '</section>',
-        doNotes: [['', 'Go by skills, not the month', 'The ages are only examples'], ['', 'Why not wait', 'Babies still on smooth purées past about 9 months can find lumps harder later']] }; },
+        doNotes: [['', 'Go by skills, not the month', 'The ages are only examples'], ['', 'Don’t wait too long', 'Babies still on smooth purées past about 9 months can find lumps harder later']] }; },
     z_rotate: () => ({ type: 'expect', label: 'Keeping foods in rotation', art: 'peanut', title: 'Once {s’ve} had peanut or egg, keep it coming',
       why: 'Eating it a few times a week helps keep an allergy from starting.',
       doTitle: 'Easy ways to serve them', doFig: () => H().TPLB.photoGrid([['feeding/rot-oats', 'Peanut in oatmeal', 'Stir in thinned peanut butter'], ['feeding/rot-pancake', 'Egg in pancakes', 'Soft strips, well cooked']]),
@@ -281,14 +285,14 @@
         heroTitle: 'The squish test', hero: () => `<section class="care-tpl-card ph-squish">${T.photoPins('feeding/squish2', 'A thumb and finger squishing a soft cooked sweet potato strip flat', [['Press gently', 38, 42, 'l'], ['It should give way', 47, 68, 'b']], 'is-wide')}</section>`,
         // Nov 19: like the inspiration, three blocks only: the squish test, what to try, and how to keep it safe (icons, not more photos).
         stepsTitle: 'A few foods to try', // Nov 23: from 9 months, one photo of pea-size pieces replaces the three strip photos.
-        stepsFig: () => T.photoGridMore(nine ? [['feeding/pieces-9', 'Banana, avocado, egg', 'Soft, pea-size pieces'], ['feeding/opt-broccoli', 'Broccoli', 'Well cooked, stem to hold'], ['feeding/opt-pasta', 'Pasta', 'Soft, well cooked'], ['feeding/nutbutter', 'Toast', 'Nut butter spread thin']]
+        stepsFig: () => T.photoGridMore(nine ? [['feeding/pieces-9', 'Banana, avocado, egg', 'Ripe, or well cooked'], ['feeding/opt-broccoli', 'Broccoli', 'Well cooked, stem to hold'], ['feeding/opt-pasta', 'Pasta', 'Soft, well cooked'], ['feeding/nutbutter', 'Toast', 'Nut butter spread thin']]
           : [['feeding/opt-avocado', 'Avocado', 'Ripe strips'], ['feeding/opt-banana', 'Banana', 'Strips, not rounds'], ['feeding/opt-egg', 'Egg', 'Omelet strips'], ['feeding/nutbutter', 'Toast', 'Nut butter spread thin'], ['feeding/opt-broccoli', 'Broccoli', 'Well cooked, stem to hold'], ['feeding/opt-pasta', 'Pasta', 'Soft, well cooked']], 'See more foods'),
         tips: [nine ? ['hand', 'Small, soft pieces', 'About pea-size, to pinch'] : ['hand', 'Finger-size strips', 'Easy to grip. Small pieces come later'], ['bowl', 'Quarter grapes lengthwise', 'Cherry tomatoes too. No whole nuts'], ['highchair', 'Seated upright, with you', 'Every bite, never on the move']] }; },
     z_allergens: () => ({ type: 'howto', label: 'Common allergens', art: 'peanut', title: 'Try the common allergens early',
       why: 'Start around 6 months. Ask first if {s} has severe eczema or an egg allergy.',
       pictureAfter: true, pictureTitle: 'Keep track', picture: () => X().pron(window.__alCard()),
       ordered: false, steps: [['peanut', 'One allergen at a time', 'At home, earlier in the day, so you can watch'], ['egg', 'In a safe form', 'Thinned peanut butter, egg well cooked'], ['plate', 'Keep it going', 'A few times a week once {s’ve} had it']],
-      stepsTitle: 'Peanut, the safe way', stepsFig: () => ctPhotoSteps([['photo:feeding/pb-spoon', 'A little smooth peanut butter', 'About ½ teaspoon. Never whole nuts'], ['photo:feeding/pb-thin', 'Thin it', 'With warm water or breast milk, until runny'], ['photo:feeding/pb-offer', 'Offer it at home', 'Early in the day, so you can watch. Then a few times a week']], [['Egg works the same way', 'Well cooked, never runny']]),
+      stepsTitle: 'Peanut, the safe way', stepsFig: () => ctPhotoSteps([['photo:feeding/pb-spoon', 'A little smooth peanut butter', 'About ½ teaspoon. Never whole nuts'], ['photo:feeding/pb-thin', 'Thin it', !breast() ? 'With warm water or formula, until runny' : fam() ? 'With warm water, breast milk or formula, until runny' : 'With warm water or breast milk, until runny'], ['photo:feeding/pb-offer', 'Offer it at home', 'Early in the day, so you can watch. Then a few times a week']], [['Egg works the same way', 'Well cooked, never runny']]),
       // Nov 24 flag 10: the reaction signs use the standard When to call card, like every other page.
       calls: { ped: 'a few hives, or vomiting, after a new food.', nowLabel: 'Call 911', now: 'trouble breathing, swelling of the lips or face, hives all over, hives with vomiting, or {s’s} very sleepy or floppy.' } }),
     z_plan: () => ({ type: 'expect', label: 'Foods to wait on', art: 'plate', title: mo() >= 12 ? 'Honey is fine now. Some foods wait until 4' : 'Honey waits until age 1, some foods until 4',
@@ -296,8 +300,8 @@
       // Nov 19: photos, so a parent recognizes the food at a glance; a red cross marks each one.
       // Nov 19 (review): what simply waits, apart from what's fine once it's served differently (with the grape shown both ways).
       // Nov 24 (Feeding B): from the first birthday, honey and whole milk are fine; only the until-4 foods still wait.
-      normalTitle: () => mo() >= 12 ? 'Fine from age 1' : 'Wait until age 1', normal: () => mo() >= 12 ? H().TPLB.photoGridMore([['feeding/no-honey', 'Honey', 'Fine now'], ['feeding/no-milk', 'Whole milk', 'Up to about 16 oz a day, from a cup']], '') : H().TPLB.photoGridMore([['feeding/no-honey', 'Honey', 'Risk of botulism'], ['feeding/no-milk', 'Cow’s milk to drink', 'Fine in cooking'], ['feeding/no-juice', 'Juice', 'Milk and water are all {s} {need|needs}']], '', 'no'),
-      moreTitle: 'Serve these differently until age 4', more: () => H().TPLB.photoPins('feeding/grape', 'A whole grape beside one cut into quarters lengthwise', [['Whole: choking risk', 27, 64, 'b'], ['Quartered: fine', 70, 64, 'b']]) + '<section class="ph-rowcard">' + H().TPLB.rows([['photo:feeding/grape-q', 'Grapes and cherry tomatoes', 'Quarter them lengthwise'], ['photo:feeding/no-hotdog', 'Hot dogs and sausages', 'Never rounds like these. Cut thin strips'], ['photo:feeding/nutbutter', 'Nuts and nut butter', 'No whole nuts. Spread nut butter thin'], ['photo:feeding/carrot', 'Hard raw fruit and veg', 'Cook or grate until soft']], 'Feeding') + '</section>' }),
+      normalTitle: () => mo() >= 12 ? 'Fine from age 1' : 'Wait until age 1', normal: () => mo() >= 12 ? H().TPLB.photoGridMore([['feeding/no-honey', 'Honey', 'Fine now'], ['feeding/no-milk', 'Whole milk', 'Up to about 16 oz a day, from a cup']], '') : H().TPLB.photoGridMore([['feeding/no-honey', 'Honey', 'Risk of botulism'], ['feeding/no-milk', 'Cow’s milk to drink', 'Fine in cooking'], ['feeding/no-juice', 'Juice', mo() < 6 ? 'Milk is all {s} {need|needs} for now' : 'Milk and water are all {s} {need|needs}']], '', 'no'),
+      moreTitle: 'Serve these differently until age 4', more: () => H().TPLB.photoPins('feeding/grape', 'A whole grape beside one cut into quarters lengthwise', [['Whole: choking risk', 27, 64, 'b'], ['Quartered: fine', 70, 64, 'b']]) + '<section class="ph-rowcard">' + H().TPLB.rows([['photo:feeding/grape-q', 'Grapes and cherry tomatoes', 'Quarter them lengthwise'], ['photo:feeding/no-hotdog', 'Hot dogs and sausages', 'Never in rounds. Cut into thin strips'], ['photo:feeding/nutbutter', 'Nuts and nut butter', 'No whole nuts. Spread nut butter thin'], ['photo:feeding/carrot', 'Hard raw fruit and veg', 'Cook or grate until soft']], 'Feeding') + '</section>' }),
     z_milkfood: () => ({ type: 'expect', label: 'Milk and solids', art: 'cup', title: 'No set order for milk and meals',
       why: 'A meal fits in wherever {s’s} awake and happy.',
       heroTitle: 'Milk, water and a meal', hero: () => H().TPLB.photoPins('feeding/g-cups', 'A glass of milk, a cup of water and a bowl of food', [], 'is-wide'),
@@ -313,10 +317,11 @@
       doNotes: [['', 'Getting enough?', 'Wet diapers, energy, and steady growth at checkups']] }),
     z_milk12: () => { const b = X().isBottle(), f = fam();
       // Nov 24 (Feeding B, J): the headline fits the baby's age, and says why, not the same thing twice.
-      return { type: 'expect', label: 'Turning 1', art: 'cup', title: mo() >= 12 ? 'Whole milk can start now, from a cup' : 'A cup at meals now, whole milk at 12 months',
-        why: 'Cups are kinder to teeth, and practice now makes the switch easier.',
-        heroTitle: 'From bottle to cup', hero: () => H().TPLB.photoPins('feeding/bottle-cup', 'A bottle next to an open cup of milk', [['Bottle', 33, 80, 'b'], ['Open cup', 62, 80, 'b']], 'is-wide'),
-        do: [['cup', 'Whole milk', 'Not low-fat, until age 2'], ['drop', 'Up to 24 oz a day', b ? 'More crowds out iron-rich food' : 'From a cup. Nursing doesn’t count'], b ? ['bottle', 'Drop one bottle at a time', 'Swap one for a cup each week'] : null].filter(Boolean),
+      // Nov 24 (Feeding fix): before 9 months it reads ahead; nursing-only families skip the bottle photo.
+      return { type: 'expect', label: mo() < 9 ? 'Read ahead · From about 12 months' : 'Turning 1', art: 'cup', title: mo() >= 12 ? 'Whole milk can start now, from a cup' : mo() < 9 ? 'Whole milk at 12 months, and a cup before then' : 'A cup at meals now, whole milk at 12 months',
+        why: mo() < 6 ? 'Cup practice can start with solids, around 6 months. Cups are kinder to teeth.' : 'Cups are kinder to teeth, and practice now makes the switch easier.',
+        heroTitle: 'From bottle to cup', hero: () => !b ? '' : H().TPLB.photoPins('feeding/bottle-cup', 'A bottle next to an open cup of milk', [['Bottle', 33, 80, 'b'], ['Open cup', 62, 80, 'b']], 'is-wide'),
+        do: [['cup', 'Whole milk', 'Not low-fat, until age 2'], b ? ['drop', 'Up to 24 oz a day', 'More crowds out iron-rich food'] : ['drop', 'Up to 24 oz of cow’s milk a day', 'From cups. Nurse as usual'], b ? ['bottle', 'Drop one bottle at a time', 'Swap one for a cup each week'] : null].filter(Boolean),
         doNotes: [b ? ['', 'Picky about the taste?', (f ? 'Mix half and half with formula' : 'Mix half and half with breast milk') + ' for a week. Toddler formula isn’t needed'] : null, ['', 'Vitamin D after 1', 'Ask your pediatrician how much {s} {need|needs}']] }; },
     z_refuse: () => ({ type: 'expect', ct: 'know', label: 'Feeding challenges', photo: 'feeding/refuse-turn', pos: '40%', cap: 'Turning away usually means not now, not never', notice: ['Turning away or closing {p} mouth', 'Pushing food off the tray'], art: 'plate', title: 'Refusing food is normal, and it passes',
       why: 'Some days {s}’ll eat a lot, and some days almost nothing.',
@@ -336,7 +341,7 @@
       why: 'Acidic foods can redden the skin they touch. A true reaction looks different.',
       look: () => H().TPLB.photoGrid([['feeding/rash-mouth', '✓ Usually fine', 'Red only where food touched, and it fades'], ['feeding/rash-hives', '✕ A true reaction', 'Raised hives that spread, or vomiting']]),
       helps: [['notepad', 'Note it', 'The food, and what happened. A photo helps'], ['clock', 'Hold off on that food', 'Ask before trying it again']],
-      calls: { ped: 'hives or vomiting follow a new food. Call the same day.', now: 'trouble breathing, swollen lips or face, or {s’s} very sleepy or floppy.', nowLabel: 'Call 911' } }),
+      calls: { ped: 'a few hives, or vomiting, after a new food. Call the same day.', now: 'trouble breathing, swelling of the lips or face, hives all over, hives with vomiting, or {s’s} very sleepy or floppy.', nowLabel: 'Call 911' } }),
     // Nov 19: the two photo cards in the top card; what to do side by side; the first-aid steps in order, the video right after them, the call card last.
     z_gag: () => { const T = H().TPLB;
       // Nov 19 (review): no photo of choking (a baby clutching the neck isn't how babies show it), and no "silent":
@@ -357,7 +362,7 @@
   // The two "Does something seem not quite right?" menus keep their list, and end with the shared call card instead of the old boxes.
   const MENU = {
     x_tough: () => fevCalls(['fewer wet diapers', 'too sleepy to feed'], { er: 'green or bloody vomit.' }),
-    z_tough: () => fevCalls(['vomiting or hives after a food', 'fewer wet diapers'], { now: 'trouble breathing, or swollen lips or face.', nowLabel: 'Call 911' })
+    z_tough: () => fevCalls(['a few hives or vomiting after a food', 'fewer wet diapers'], { now: 'trouble breathing, swelling of the lips or face, hives all over, hives with vomiting, or {s’s} very sleepy or floppy.', nowLabel: 'Call 911' })
   };
   const menuTail = (h, calls) => { const i = h.indexOf('<section class="ss-moment"><section class="hub-card hub-versus"'); if (i < 0) return h;
     const tail = h.slice(i), styles = (tail.match(/<style>[\s\S]*?<\/style>/g) || []).join(''), t = tail.replace(/<style>[\s\S]*?<\/style>/g, '');
@@ -365,7 +370,7 @@
     return h.slice(0, i) + `<div class="care-tpl is-urgent">${H().TPLB.calls(calls)}</div>` + styles + '</div>'.repeat(Math.max(0, close - open)); };
 
   // Older Feeding pages that now open one of these.
-  const ALIAS = { y_growth: 'enough', y_nurse: 'm1_now', y_bottle: 'm1_now', y_away: () => (X().stg() === 1 && mo() < 3 ? 'm1_apart' : 'm2_away'), y_night: 'm1_eve', y_evening: 'm1_eve',
+  const ALIAS = { nb_enough: () => (realMo() >= 1.5 ? 'enough' : 'nb_enough'), enough: () => (realMo() < 1.5 ? 'nb_enough' : 'enough'), nb_eve: () => (realMo() < 1.5 ? 'nb_eve' : mo() < 3 ? 'm1_eve' : 'm2_night'), y_growth: () => (realMo() < 1.5 ? 'nb_enough' : 'enough'), y_nurse: 'm1_now', y_bottle: 'm1_now', y_away: () => (X().stg() === 1 && mo() < 3 ? 'm1_apart' : 'm2_away'), y_night: 'm1_eve', y_evening: 'm1_eve',
     z_signs: 'z_ready', z_setup: 'z_start', z_tray: 'z_start', z_allergy: 'z_plan', z_notyet: 'z_plan', z_water: 'z_milkfood', z_family: 'z_meal', z_appetite: 'z_day', picky: 'z_refuse' };
   // Each page keeps Feeding's own header: the soft card in the color of what you tapped, with its small picture,
   // taken from the page it replaces, so Feeding looks like Feeding and Sleep looks like Sleep.
@@ -390,7 +395,7 @@
       + (q.near ? h2('Have nearby') + `<div class="ct-near">${v(q.near).map(([t, i]) => `<span><i>${A(i)}</i><small>${F(t)}</small></span>`).join('')}</div>` : '')
       + h2('Do it in a few steps') + `<div class="ct-stepcard"><ol class="ct-steps2">${v(q.moves).map(([th, t, sub], k) => `<li><span class="ct-th">${/^photo:/.test(th) ? `<img src="assets/${th.slice(6)}.jpg?v=1" alt="" loading="lazy">` : `<i>${A(th)}</i>`}</span><span class="ct-tx"><b><em>${k + 1}</em>${F(v(t))}</b><small>${sent(sub)}</small></span></li>`).join('')}</ol>${notes(q.tips)}</div>`
       + (q.linkTo ? `<button class="ct-alt" onclick="openPage('${q.linkTo[1]}')">${F(q.linkTo[0])} <span aria-hidden="true">›</span></button>` : '')
-      + (v(q.safe) ? h2('Keep {o} safe') + `<div class="ct-safecard">${notes(q.safe)}</div>` : '') + `</div>`;
+      + (v(q.safe) ? h2('Keep {o} safe') + `<div class="ct-safecard">${notes(q.safe)}${q.safeLink ? `<button class="ct-saferow" onclick="openPage('${q.safeLink[2]}')"><span><b>${F(q.safeLink[0])}</b><small>${F(q.safeLink[1])}</small></span><i aria-hidden="true">›</i></button>` : ''}</div>` : '') + `</div>`;
     // Nov 24 (Yarden): every Feeding challenge uses this one layout. The picture shows only where there's something to see.
     const co = v(q.calls) || {}, calls = v(q.calls2) || [co.ped && ['Call your pediatrician if:', co.ped], co.right && ['Call right away if:', co.right, 1], co.er && ['Go to the ER if:', co.er, 1], co.now && [(co.nowLabel || 'Call 911') + ' if:', co.now, 1]];
     const hn = (v(q.helpNotes) || v(q.doNotes) || v(q.helpsNotes) || []).filter(Boolean).map(n => n.length === 3 ? n.slice(1) : n);
@@ -417,7 +422,7 @@
     const path = `M20,150 L${90 - 34},150 ${bump(90 - 16, 58)} L${250 - 34},150 ${bump(250 - 16, 58)} L300,150`;
     return FIG('Feeds over the first months: about the same most days, with two short hungrier spells, around 6 weeks and around 3 months.',
       `<svg viewBox="0 0 320 185" width="100%" aria-hidden="true" style="font:600 11px/1 var(--body-font, system-ui);fill:#6b6170"><path d="M20 150 H300" stroke="#ecd3de" stroke-width="2"/><path d="${path}" fill="#f7d9e5" stroke="#884866" stroke-width="2.5" stroke-linejoin="round"/>`
-      + FT(90, 82, '2–3 hungrier days', 'text-anchor="middle" style="fill:#884866"') + FT(250, 82, 'Another one', 'text-anchor="middle" style="fill:#884866"') + FT(170, 140, 'Calmer weeks', 'text-anchor="middle"')
+      + FT(90, 82, '2–3 hungrier days', 'text-anchor="middle" style="fill:#884866"') + FT(250, 82, 'Another spurt', 'text-anchor="middle" style="fill:#884866"') + FT(170, 140, 'Calmer weeks', 'text-anchor="middle"')
       + FT(20, 172, 'Birth') + FT(90, 172, '6 weeks', 'text-anchor="middle"') + FT(250, 172, '3 months', 'text-anchor="middle"') + FT(20, 24, 'Feeds a day') + `</svg>`); };
   const CT_PINK = ['#f7d9e5', '#884866'];
   const draw = (q, old) => { const h = H(), F = h.F, v = x => typeof x === 'function' ? x() : x;
@@ -425,7 +430,7 @@
     // Nov 24 (Feeding D): every Feeding page wears Feeding's pink, never another guide's blue or yellow.
     const bg = q.ct ? CT_PINK[0] : '#fbe4ec', ink = q.ct ? CT_PINK[1] : '#9b4766';
     // Nov 19: the topic's own icon on a white tile, as on the Safety step pages, in place of the abstract shapes readers found meaningless.
-    const art = q.art && typeof hubArt === 'function' ? `<span class="dev-area-head-art sf-head-art">${hubArt(q.art, CAT)}</span>` : (m && m[3] ? m[3] : '');
+    const art = q.artSvg ? `<span class="dev-area-head-art sf-head-art">${q.artSvg}</span>` : q.art && typeof hubArt === 'function' ? `<span class="dev-area-head-art sf-head-art">${hubArt(q.art, CAT)}</span>` : (m && m[3] ? m[3] : '');
     const why = v(q.why);
     return `<div class="quiet-category hub-page hub-detail care-v2" data-overview="${CAT}" data-ss="1" style="${typeof yearTheme === 'function' ? yearTheme(CAT) : ''};--ss-bg:${bg};--ss-ink:${ink}">${typeof detailPageTop === 'function' ? detailPageTop(CAT) : ''}`
       + `<div class="dev-area-head ss-head" style="--area:${bg};--area-ink:${ink}">${art}<p class="hub-context">${F(v(q.label) + (q.ct === 'howto' ? ' · How to' : ''))}</p><h1>${F(v(q.title))}</h1>${why ? `<p class="hub-lead">${F(why)}</p>` : ''}</div>`
@@ -446,7 +451,7 @@
       if (T[q[3]]) { const page = T[q[3]](q[4]); if (page) { window.__fdLast = r;
         // Nov 24 (Feeding B): a solids page read before solids is labeled as reading ahead, so "now" never means a 10-week-old.
         try { const id = q[3], am = X().ageMo(), prep = ['z_ready', 'z_signs', 'z_start', 'z_plan', 'z_allergens'].includes(id);
-          const soon = /^z_/.test(id) && !['z_teeth', 'z_sick', 'z_iron'].includes(id) && (prep ? am < 4 : am < 5.5) && !(typeof answers !== 'undefined' && answers.solids === 'Yes');
+          const soon = /^z_/.test(id) && !['z_teeth', 'z_sick', 'z_iron', 'z_milk12'].includes(id) && (prep ? am < 4 : am < 5.5) && !(typeof answers !== 'undefined' && answers.solids === 'Yes');
           if (soon) { const lab = page.label; page.label = () => 'Read ahead · From about 6 months'; page.__lab = lab; } } catch (e) {} return draw(page, base.call(this, 'chg:' + CAT + ':mock:' + q.slice(3).join(':'), ...a)); } }
       if (MENU[q[3]]) return menuTail(base.call(this, r, ...a), MENU[q[3]]());
     }

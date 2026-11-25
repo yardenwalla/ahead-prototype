@@ -4,7 +4,8 @@
    Content is unchanged here; the copy lives in hub.js. Charts keep their original darker blues. */
 (function () {
   const C = {
-    naps: ['#fff3dc', '#8a6a2a', '#f3d58a', '#fbe6bd'],
+    // Nov 24 (Sleep fix 7): naps wear Sleep blue like every other Sleep page (yellow is Childcare's color). The sun icon stays.
+    naps: ['#edf2fe', '#46638c', '#f3d58a', '#fbe6bd'],
     night: ['#edf2fe', '#4e678e', '#9fb8df', '#c9cff0'],
     dusk: ['#edf2fe', '#46638c', '#e3b8cf', '#f4d6c4'],
     safe: ['#edf2fe', '#46638c', '#a0b7d9', '#d9e5fc'],

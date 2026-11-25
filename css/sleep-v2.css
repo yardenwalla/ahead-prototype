@@ -141,3 +141,7 @@
 #main .sv2-glance.is-labeled small { display: block; margin: 0 0 2px }
 /* Nov 24 (Yarden): "Aim for this" sits under the words, never over the baby's face. */
 #main .sv2-loop > div > em { position: static; transform: none; display: inline-block; margin: 6px auto 0 }
+/* Nov 24 (Sleep fix 21): the crying page's "Feeling overwhelmed?" safety card sits under the photo steps. */
+#main .sv2-cry-safe { margin-top: 14px }
+/* Nov 24 (Sleep fix 32): the arrow between the rolling photos is a plain arrow, not a button-looking circle (like the after page's ↓). */
+#main .ssw-pair.has-arrow::after { content: "→"; background: none; box-shadow: none; border-radius: 0; font-size: 22px; font-weight: 700; text-shadow: 0 0 4px #fff, 0 0 8px #fff, 0 0 12px #fff }

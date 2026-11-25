@@ -273,3 +273,7 @@
 #main .hub-detail[data-overview="Out and about"] .oa-seg button.is-on { background: var(--ss-ink, #2a6078) !important; border-color: var(--ss-ink, #2a6078); color: #fff !important }
 /* Nov 24 (Yarden): the folds show a chevron, so they read as tappable. */
 #main .oa3-fold summary i::before { content: '›'; display: inline-block; transform: rotate(90deg); font-size: 22px; line-height: 1 }
+/* Nov 24 (reader finding 16): each packing tile shows an empty tick circle, filled when packed, so the list reads as tappable. */
+#main .oa-pack { padding-right: 34px }
+#main .oa-pack i { top: 50%; right: 8px; transform: translateY(-50%); width: 20px; height: 20px; box-sizing: border-box; border-radius: 50%; border: 2px solid #d6cfc6; display: grid; place-items: center; font-size: 11px; line-height: 1; color: transparent; opacity: 1 }
+#main .oa-pack.is-on i { background: var(--ss-ink, #8a4a2c); border-color: var(--ss-ink, #8a4a2c); color: #fff }

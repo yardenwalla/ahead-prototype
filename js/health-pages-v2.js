@@ -31,8 +31,11 @@
   // Nov 23: Health's calm-vs-act pair uses the app's shared pair (green calm side, soft red call side).
   const pair = (a, b) => H().versus('', a, b);
   // The top card: the guide's soft green card, with a photo when the page is about a moment you'll see.
-  const top = (eyebrow, title, lead, photo, alt, cap) => `<div class="hub-detail-head h2-head${photo ? ' has-photo' : ''}"><p class="hub-context">${F(eyebrow)}</p><h1>${F(title)}</h1>${lead ? `<p class="hub-lead">${F(lead)}</p>` : ''}${photo ? `<figure class="h2-photo"><img src="assets/health/${photo}" alt="${e(alt)}"></figure>${cap ? `<p class="h2-cap">${F(cap)}</p>` : ''}` : ''}</div>`;
-  const page = inner => `<div class="quiet-category hub-page hub-detail h2-page" data-overview="Health" style="${yearTheme('Health')}">${detailPageTop('Health')}${inner}</div>`;
+  // Nov 24 (reader fixes): a page can bring its own header icon (CPR, tummy). The header is then dressed here, in Health's
+  // green, and sub-look.js leaves it alone (data-ss), instead of picking an icon from the page's words.
+  const HP = () => (typeof YEAR_PALETTES !== 'undefined' && YEAR_PALETTES.Health) || { pale: '#eef8f1', ink: '#356651' };
+  const top = (eyebrow, title, lead, photo, alt, cap, art) => `<div class="hub-detail-head h2-head${photo ? ' has-photo' : ''}${art ? ` dev-area-head ss-head" style="--area:${HP().pale};--area-ink:${HP().ink}` : ''}">${art ? `<span class="dev-area-head-art sf-head-art" aria-hidden="true">${art}</span>` : ''}<p class="hub-context">${F(eyebrow)}</p><h1>${F(title)}</h1>${lead ? `<p class="hub-lead">${F(lead)}</p>` : ''}${photo ? `<figure class="h2-photo"><img src="assets/health/${photo}" alt="${e(alt)}"></figure>${cap ? `<p class="h2-cap">${F(cap)}</p>` : ''}` : ''}</div>`;
+  const page = (inner, own) => `<div class="quiet-category hub-page hub-detail h2-page" data-overview="Health"${own ? ' data-ss="1"' : ''} style="${yearTheme('Health')}${own ? `;--ss-bg:${HP().pale};--ss-ink:${HP().ink}` : ''}">${detailPageTop('Health')}${inner}</div>`;
 
   /* ---------- What to expect ---------- */
   // The visit, in order. Each step says what happens at this age (AAP Bright Futures; mood checks at 1, 2, 4 and 6 months).
@@ -190,8 +193,11 @@
   // Nov 23 (round 4, Yarden: "add these"): steps a parent can follow in the moment. Sources: AHA infant CPR (30 compressions
   // with the heel of one hand, about 1½ inches (2025 AHA/AAP: the two-finger method is no longer taught); 2 breaths; 2 minutes before leaving to call if alone); HealthyChildren (AAP) Head Injury;
   // HealthyChildren Using Liquid Medicines (the dosing tool that comes with it, never a kitchen spoon).
+  // Nov 24 (reader fixes): CPR's header icon is a heart with a pulse line (the shared alarm icon read as a smoke detector).
+  const cprArt = () => { const c = { ink: HP().ink, bg: HP().bg || '#cfe8d8' };
+    return `<svg viewBox="0 0 24 24" data-art="cpr" fill="none" stroke="${c.ink}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7.5-4.5-7.5-10.2A4.1 4.1 0 0 1 12 7.3a4.1 4.1 0 0 1 7.5 2.5C19.5 15.5 12 20 12 20Z" fill="${c.bg}"/><path d="M5.2 12.6h3.1l1.4-2.6 2.1 4.8 1.5-3 1 .8h4.3"/></svg>`; };
   function cprPage() {
-    return page(top('Emergencies', 'Infant CPR, step by step', 'For a baby who won’t wake and isn’t breathing normally.')
+    return page(top('Emergencies', 'Infant CPR, step by step', 'For a baby who won’t wake and isn’t breathing normally.', '', '', '', cprArt())
       // Nov 23 (show and tell): where your hands go (heel of one hand), on a training manikin.
       + (window.aheadFig ? window.aheadFig('health/cpr', [['Heel of one hand, center of the chest', 'bl', 32, 58], ['Other hand on the forehead', 'tr', 82, 32]], 'Just below the nipple line.', '50%') : '')
       // Nov 24 (Health): CPR is hands-on, so each step gets a photo (on a training manikin).
@@ -201,7 +207,7 @@
         ['health/cpr-4', '30 fast pushes', 'About 1½ inches deep, about 2 a second'],
         ['health/cpr-5', '2 small breaths', 'Tilt {p} head back a little. Cover {p} mouth and nose with your mouth, and puff until the chest rises'],
         ['health/cpr-6', 'Keep going', '30 pushes, then 2 breaths, until help arrives or {s} {start|starts} breathing']])
-      + alert('Learn it hands-on', 'A short infant CPR class, often free at hospitals, makes these steps feel natural.', 'blue'));
+      + alert('Learn it hands-on', 'A short infant CPR class, often free at hospitals, makes these steps feel natural.', 'blue'), true);
   }
   function fallPage() {
     return page(top('Emergencies', 'After a fall or a bump on the head', 'Most falls from a bed or couch don’t cause lasting harm. Stay calm, check {o}, then watch {o} for the next day.')
@@ -234,7 +240,7 @@
         ['heart', 'blue', 'A fall or a bump on the head', 'What to check, and when to call', "openPage('chg:Health:d:fall')"],
         ['drop', 'green', 'Giving medicine', 'The right tool, and the right dose', "openPage('chg:Health:d:medicine')"]])
       + rows([['alarm', 'pink', 'Infant CPR, step by step', 'For a baby who won’t wake and isn’t breathing', "openPage('chg:Health:d:cpr')"]])
-      + H().TPLB.calls({ nowLabel: 'Call 911', now: '{s} struggles to breathe, has blue lips, won’t wake or is floppy, or has a seizure.' }) + `<p class="h2-small is-center">${F('Not sure? Call your pediatrician’s office, day or night.')}</p>`);
+      + H().TPLB.calls({ nowLabel: 'Call 911', now: '{s} {struggle|struggles} to breathe, {have|has} blue lips, won’t wake or {are|is} floppy, or {have|has} a seizure.' }) + `<p class="h2-small is-center">${F('Not sure? Call your pediatrician’s office, day or night.')}</p>`);
   }
   function feverPage() {
     const mo = m(), u3 = mo < 3;
@@ -243,15 +249,17 @@
     const lead = u3 ? 'Babies this young can’t fight infections as well, so even a well-seeming baby needs a check.' : 'How {s} {seem|seems} matters more than the number.';
     const chips = ['Seeming very unwell', 'A rash', 'Fewer wet diapers'].concat(u3 ? [] : ['A fever over a day']).map(t => `<li>${F(t)}</li>`).join('');
     const early = feverEarlyNote();
-    const big = `<section class="h2-big"><div class="h2-big-top"><div><b>${temp.replace('°F', '')}<span>°F</span></b><small>${c} or higher</small></div><p>${F(u3 ? 'Call your pediatrician right away, day or night.' : mo < 6 ? 'Call your pediatrician, day or night.' : 'Call your pediatrician.')}</p></div><div class="h2-big-any"><b>${F('At any temperature, also call for')}</b><ul class="h2-chips">${chips}</ul>${early ? `<p>${F(early.trim())}</p>` : ''}</div></section>`
+    const big = `<section class="h2-big"><div class="h2-big-top"><div><b>${temp.replace('°F', '')}<span>°F</span></b><small>${F('or higher')} (${c})</small></div><p>${F(u3 ? 'Call your pediatrician right away, day or night.' : mo < 6 ? 'Call your pediatrician, day or night.' : 'Call your pediatrician.')}</p></div><div class="h2-big-any"><b>${F('At any temperature, also call for')}</b><ul class="h2-chips">${chips}</ul>${early ? `<p>${F(early.trim())}</p>` : ''}</div></section>`
 
     const check = h2('Take {p} temperature') + `<section class="hub-card h2-thermo">${ic('thermo', 'blue')}<div><b>${F('Use a digital thermometer')}</b><p>${F(u3 ? 'Rectal is most accurate. Check any high reading that way.' : mo < 6 ? 'Rectal is most accurate. Forehead works well too.' : 'Rectal is most accurate. Forehead or ear work well too.')}</p></div></section>`
       + rows([['thermo', 'blue', 'Take a rectal temperature', 'Three quick steps', "openPage('chg:Health:d:sick-rectal')"]]);
-    const help = h2('What helps') + rows([['bottle', 'yellow', 'Offer extra feeds', 'Little and often keeps {o} hydrated'], ['shirt', 'green', 'Dress {o} lightly', 'Extra layers keep a fever up'], ['moon', 'pink', 'Let {o} rest', 'Naps and quiet time']])
+    const help = h2('What helps') + rows([[milkIcon(), 'yellow', 'Offer extra feeds', 'Little and often keeps {o} hydrated'], ['shirt', 'green', 'Dress {o} lightly', 'Extra layers keep a fever up'], ['moon', 'pink', 'Let {o} rest', 'Naps and quiet time']])
       + alert('Before any medicine', u3 ? 'Under 3 months, ask your pediatrician first.' : mo < 6 ? 'Acetaminophen can help. Ask your pediatrician for the dose.' : 'Acetaminophen or ibuprofen can help. Ask your pediatrician for the dose.', 'blue')
       + rows([['drop', 'green', 'Giving medicine', 'The right tool, and the right dose', "openPage('chg:Health:d:medicine')"]]);
-    return page(top('When Maya seems sick', title, lead) + big + check + help + H().TPLB.calls({ nowLabel: 'Call 911', now: '{s} struggles to breathe, has blue lips, won’t wake or is floppy, or has a seizure.' }));
+    return page(top('When Maya seems sick', title, lead) + big + check + help + H().TPLB.calls({ nowLabel: 'Call 911', now: '{s} {struggle|struggles} to breathe, {have|has} blue lips, won’t wake or {are|is} floppy, or {have|has} a seizure.' }));
   }
+  // Nov 24 (reader fixes): the milk icon follows the family's set-up: nursing only gets Feeding's nursing icon, anyone who bottle-feeds the bottle.
+  const milkIcon = () => { try { const p = typeof profile !== 'undefined' ? profile : {}; return p.feed === 'Breast milk' && p.feedHow !== 'Bottle' ? 'drop' : 'bottle'; } catch (e) { return 'bottle'; } };
   const nursesH = () => { try { const p = typeof profile !== 'undefined' ? profile : JSON.parse(localStorage.getItem('ahead-v2-profile') || '{}'); return p.feed !== 'Formula' && (p.feedHow || 'Nursing') !== 'Bottle'; } catch (e) { return false; } };
   function coldPage() {
     const mo = m();
@@ -259,20 +267,20 @@
     return page(top('When Maya seems sick', 'A clear nose makes feeds easier', 'Colds are common in the first year, and most clear in 7–10 days.')
       + h2('Before feeds and sleep') + seq
       + `<p class="h2-small">${F('Up to 3 times a day, so {p} nose doesn’t get sore. Not after a feed: it can bring the milk up.')}</p>`
-      + h2('Also helps') + rows([['snow', 'blue', 'A cool-mist humidifier', 'In {p} room at night'], ['bottle', 'yellow', 'Smaller, more frequent feeds', 'Easier with a stuffy nose'], ['shield', 'pink', 'Skip cold medicines', 'Not safe for babies']])
+      + h2('Also helps') + rows([['snow', 'blue', 'A cool-mist humidifier', 'In {p} room at night'], [milkIcon(), 'yellow', 'Smaller, more frequent feeds', 'Easier with a stuffy nose'], ['shield', 'pink', 'Skip cold medicines', 'Not safe for babies']])
       // Nov 23 cohesion pass: the app's one When to call card (was a yellow box plus a separate 911 box).
-      + H().TPLB.calls(mo < 3 ? { ped: 'a cold past 10 days, pulling at an ear or fussing more lying down, or fluid from an ear.', right: 'a rectal temperature of 100.4°F or higher', nowLabel: 'Call 911', now: '{s} struggles to breathe, has blue lips, won’t wake or is floppy, or has a seizure.' } : { ped: `a fever that lasts more than a day or reaches ${feverTemp(mo)}, a cold past 10 days, pulling at an ear or fussing more lying down, or fluid from an ear.`, nowLabel: 'Call 911', now: '{s} struggles to breathe, has blue lips, won’t wake or is floppy, or has a seizure.' }));
+      + H().TPLB.calls(mo < 3 ? { ped: 'a cold past 10 days, pulling at an ear or fussing more lying down, or fluid from an ear.', right: 'a rectal temperature of 100.4°F or higher', nowLabel: 'Call 911', now: '{s} {struggle|struggles} to breathe, {have|has} blue lips, won’t wake or {are|is} floppy, or {have|has} a seizure.' } : { ped: `a fever that lasts more than a day or reaches ${feverTemp(mo)}, a cold past 10 days, pulling at an ear or fussing more lying down, or fluid from an ear.`, nowLabel: 'Call 911', now: '{s} {struggle|struggles} to breathe, {have|has} blue lips, won’t wake or {are|is} floppy, or {have|has} a seizure.' }));
   }
   function tummyPage() {
     // Nov 19 review: check how sick the baby is before any reassurance, so the warning signs come first.
     const u3 = m() < 3;
-    return page(top('When Maya seems sick', 'Keep {p} feeds going', u3 ? 'Under 3 months, vomiting or diarrhea is worth a call the same day.' : 'Most tummy bugs pass in a day or two. Milk keeps {o} from drying out.')
+    return page(top('When Maya seems sick', 'Keep {p} feeds going', u3 ? 'Under 3 months, vomiting or diarrhea is worth a call the same day.' : 'Most tummy bugs pass in a day or two. Fluids are what matter most.', '', '', '', window.hubArt ? hubArt(milkIcon(), 'Health') : '')
       // Nov 23: the app's shared calm-vs-act pair (Feeding, Everyday care), and the wet-diaper sign joins the call side
       // instead of a separate green box, so the page has one look and one place for each kind of call.
       + H().versus('How to tell', u3 ? ['Common', 'Spit-up after feeds, and soft, seedy poops.'] : ['Common', 'A few loose poops or a vomit or two, still feeding and peeing.'], ['Call your pediatrician', u3 ? 'Any real vomiting or watery poops, a dry mouth, or far fewer wet diapers.' : 'Can’t keep feeds down, a dry mouth, blood in poop, or far fewer wet diapers (none in 6 hours).'])
-      + h2('What helps') + rows([['bottle', 'yellow', 'Keep offering milk', 'Smaller feeds, more often'], ['hand', 'green', 'Wash hands after changes', 'Tummy bugs spread easily'], ['shield', 'pink', 'Skip anti-diarrhea medicine', 'Not safe for babies']])
+      + h2('What helps') + rows([[milkIcon(), 'yellow', 'Smaller feeds, more often', 'Easier to keep down'], ['hand', 'green', 'Wash hands after changes', 'Tummy bugs spread easily'], ['shield', 'pink', 'Skip anti-diarrhea medicine', 'Not safe for babies']])
       // Nov 23 cohesion pass: ER and 911 together in the app's one When to call card, at the end (was a peach ER box mid-page and a 911 box).
-      + H().TPLB.calls({ right: u3 ? 'a rectal temperature of 100.4°F or higher' : '', er: 'green or bloody vomit.', nowLabel: 'Call 911', now: '{s} struggles to breathe, has blue lips, won’t wake or is floppy, or has a seizure.' }));
+      + H().TPLB.calls({ right: u3 ? 'a rectal temperature of 100.4°F or higher' : '', er: 'green or bloody vomit.', nowLabel: 'Call 911', now: '{s} {struggle|struggles} to breathe, {have|has} blue lips, won’t wake or {are|is} floppy, or {have|has} a seizure.' }), true);
   }
   const baseRoute = window.changesRoute;
   window.changesRoute = function (p) {

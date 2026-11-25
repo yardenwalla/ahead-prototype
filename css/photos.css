@@ -594,3 +594,10 @@
 #main .ct-helps .ct-hl b { display: block; font-size: 15px; line-height: 1.25; font-weight: 700; color: var(--ct-ink) }
 #main .ct-helps .ct-hl small { display: block; margin-top: 3px; font-size: 13px; line-height: 1.35; color: var(--ct-soft) }
 #main .care-v2 .ct-helps li > i { background: var(--ct-lav, #f9e4ec); color: var(--ct-purple, #884866) }
+
+/* Nov 24 (Feeding fix): "Gagging or choking?" is a row with a chevron inside the "Keep her safe" card, not a loose link. */
+#main .ct-safecard .ct-saferow { all: unset; box-sizing: border-box; cursor: pointer; display: flex; align-items: center; gap: 10px; width: 100%; padding: 12px 2px; border-top: 1px solid var(--ct-line) }
+#main .ct-safecard .ct-saferow span { flex: 1; display: grid; gap: 2px }
+#main .ct-safecard .ct-saferow b { font-size: 15px; color: var(--ct-ink) }
+#main .ct-safecard .ct-saferow small { font-size: 13.5px; color: var(--ct-soft) }
+#main .ct-safecard .ct-saferow i { font-style: normal; font-size: 20px; color: var(--ct-purple) }

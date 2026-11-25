@@ -144,7 +144,7 @@ window.SEARCH_DEEP = [["topic:Development","Development & play","What to look fo
 ["chg:Health:d:sick-tummy","Health","How to tell","",8191,0],
 ["chg:Health:d:sick-tummy","Health","Common","Some loose poops or vomits, still feeding.",8191,0],
 ["chg:Safety:d:step:swaddle","","Stop swaddling at the first try to roll","Some babies try at 2 months",8191,1],
-["chg:Safety:d:step:bassinet","","Move to the crib","Once {s} tries to roll or push up, or at its weight limit",8191,1],
+["chg:Safety:d:step:bassinet","","Move to the crib","Once {s} {try|tries} to roll or push up, or at its weight limit",8191,1],
 ["chg:Safety:d:step:mattress","","Lower the crib mattress","Before {s} can sit up",8191,1],
 ["chg:Safety:d:step:small","","Clear {p} play space","Coins, batteries and small parts",8191,1],
 ["chg:Safety:d:step:bags","","Give visitors’ bags a place up high","They often hold medicines",8191,1],
