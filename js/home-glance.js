@@ -270,7 +270,7 @@
   // Nov 25 (proactive pass): from about 2 weeks until the month-1 story, a heads-up on the crying peak, before it hits.
   // (Ahead stays about the baby; the parent's own mood lives on the Health page, not on Home.)
   const YOU = ['Crying often peaks around 6 weeks.', 'Fussy evenings are common. Here’s what helps, and when it eases.', 'Sleep', 'heart', 'chg:Sleep:d:crying'];
-  const withYou = rows => { try { const d = (NOW - parse(profile.dob)) / 864e5; return d >= 12 && d < 30 ? [...rows, YOU] : rows; } catch (e) { return rows; } };
+  const withYou = rows => { try { const d = (NOW - parse(profile.early && profile.due ? profile.due : profile.dob)) / 864e5; /* crying follows the due date for a baby born early */ return d >= 12 && d < 30 ? [...rows, YOU] : rows; } catch (e) { return rows; } };
   const radarRows = m => withYou(radarFor(m)).filter(r => {
     const go = r[4];
     try {

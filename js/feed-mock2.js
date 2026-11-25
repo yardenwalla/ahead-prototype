@@ -3317,7 +3317,7 @@
   const GUIDES = () => { const v = stg(), m = ageMo(), nurse = nurses(), bot = isBottle(), done = alGet().length;
     if (v === 0) return [[XC.f1, 'hand', 'A feed, step by step', 'From the first hunger cue to the last burp', nurse ? 'Latch, burps, and when he’s full' : 'Pacing, burps, and when he’s full', 'xa:feed'],
       [XC.routine, 'moon', 'Evenings and nights', 'Busy evenings, then quick and calm nights', 'Cluster feeding, and waking to feed', 'nb_eve'],
-      [XC.growth, 'diaper', 'Is he getting enough?', 'Wet diapers are the best everyday sign', 'How many wet diapers, day by day', 'nb_enough']];
+      [XC.growth, 'diaper', 'Is he getting enough?', 'Wet diapers are the best everyday sign', (() => { try { return (NOW - new Date(profile.dob + 'T12:00:00')) / 864e5 > 21 ? 'Wet diapers and steady growth' : 'How many wet diapers, day by day'; } catch (e) { return 'How many wet diapers, day by day'; } })(), 'nb_enough']];   // Nov 25: born early, the day-by-day chart is behind them (it follows the birthday)
     if (v === 1 && m < 3) return [[XC.f1, nurse ? 'heart' : 'bottle', 'Feeds now', 'Hungrier some days? Often a growth spurt', 'Usually around 6 weeks and 3 months', 'm1_now'],
       [XC.d1, 'moon', 'Evenings and nights', 'Night feeds are normal for now', 'How many, and what’s normal', 'm1_eve'],
       [XC.p1, 'bag', 'Time apart', nurse && !bot ? 'A first bottle goes best from someone else' : 'Anyone can feed him from a bottle', 'Who offers it, and how', 'm1_apart']];
