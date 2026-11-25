@@ -13,7 +13,7 @@ TASKS=r"""async () => {
   let storageOk = true; try { localStorage.setItem('x','1') } catch (e) { storageOk = false }
   log.push(['storage', storageOk ? 'available' : 'blocked', '']);
   await step('welcome shows', async () => {});
-  await step('start setup', async () => { [...document.querySelectorAll('button')].find(b => /Set up/.test(b.innerText)).click() });
+  await step('start setup', async () => { [...document.querySelectorAll('button')].find(b => /Set up|Get started/.test(b.innerText)).click() });
   await step('step 1 filled', async () => { $('#babyName').value = 'Noor'; $('#dob').value = new Date(Date.now()-150*864e5).toISOString().slice(0,10); $('#setupForm').requestSubmit() });
   await step('step 2 filled', async () => { $('#feed').value = 'Both'; $('#feed').dispatchEvent(new Event('change')); $('#setupForm').requestSubmit() });
   await step('home', async () => { navigate('home') });
