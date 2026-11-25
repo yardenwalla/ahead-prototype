@@ -145,3 +145,10 @@
 #main .sv2-cry-safe { margin-top: 14px }
 /* Nov 24 (Sleep fix 32): the arrow between the rolling photos is a plain arrow, not a button-looking circle (like the after page's ↓). */
 #main .ssw-pair.has-arrow::after { content: "→"; background: none; box-shadow: none; border-radius: 0; font-size: 22px; font-weight: 700; text-shadow: 0 0 4px #fff, 0 0 8px #fff, 0 0 12px #fff }
+/* Nov 25 (Yarden): the feed charts Feeding borrows from Sleep wear Feeding's pink there. */
+#main .sv2.is-feed .sv2-vis { background: linear-gradient(160deg, #fcecf1 0%, #fdf5f7 70%, #fdf6ef 100%); border-color: #f4dbe3 }
+#main .sv2.is-feed .sv2-vis > header em { color: #9b4766 }
+#main .sv2.is-feed .sv2-vis > header span { color: #9b4766; border-color: #f2d3de }
+#main .sv2.is-feed .sv2-tally > div.is-on { box-shadow: inset 0 0 0 2px #9b4766 }
+#main .sv2.is-feed .sv2-tally b span { background: #9b4766 }
+#main .sv2.is-feed .sv2-tally em { color: #9b4766 }

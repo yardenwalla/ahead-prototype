@@ -505,7 +505,7 @@
     const ordered0 = hl ? [...labels].sort((x, y) => (hl[1].test(clearMilestone(y)) ? 1 : 0) - (hl[1].test(clearMilestone(x)) ? 1 : 0)) : labels;
     const top = DEV_NOTICED[ref]?.[domain], ordered = top && ordered0.includes(top) ? [top, ...ordered0.filter(l => l !== top)] : ordered0;
     const tc = window.devTileColors ? devTileColors(domain) : null;
-    const firstOpen = !(AREA_PHOTO[ref] && AREA_PHOTO[ref][domain]);
+    const firstOpen = false;   // Nov 25 (Yarden): every photo or video stays closed until a parent taps it.
     const rows = ordered.map((l, i) => { const key = journeySkillKey(l), rec = journeyData().records.find(r => r.type === 'milestone' && r.skillKey === key) || (skillSeen(l) ? { reported: true } : null);
       let see = window.devSeeButton ? devSeeButton(key, clearMilestone(l)) : '';
       const media = see && firstOpen && i === 0 && window.devMediaHTML ? devMediaHTML(key, clearMilestone(l)) : '';

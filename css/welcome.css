@@ -293,3 +293,8 @@ html:has(#main .ob-welcome), html:has(#main .ob-welcome) body { background: radi
 #main .ob-mc span small { display: block; margin: 0 0 3px; font-size: 6.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #436144 }
 #main .ob-mc span i { display: block; margin: 0 0 3px; padding: 0; background: none; border-radius: 0; font: 800 15px/1.05 var(--ui-font); color: var(--ink) }
 #main .ob-mc span u { display: inline-block; margin-top: 7px; padding: 3px 7px; border-radius: 99px; background: rgba(255,255,255,.85); text-decoration: none; font-size: 8px; font-weight: 650; color: var(--ink) }
+/* Nov 25 (Yarden): the setup steps share the welcome's soft blush background. */
+html:has(#main.is-onboarding), html:has(#main.is-onboarding) body { background: radial-gradient(circle 190px at 112% -2%, #f6e6de 99%, transparent 100%), radial-gradient(circle 170px at 112% 100%, #f3eaf1 99%, transparent 100%), linear-gradient(180deg, #fbf6f3, #f8f2f0) !important }
+html:has(#main.is-onboarding) #shell, html:has(#main.is-onboarding) #main { background: transparent !important }
+#main.is-onboarding .ob-milk button, #main.is-onboarding .ob-seg, #main.is-onboarding input, #main.is-onboarding .ob-early-card { background: rgba(255,253,251,.9) }
+html:has(#main.is-onboarding):not(:has(#main .ob-welcome)), html:has(#main.is-onboarding):not(:has(#main .ob-welcome)) body { background: radial-gradient(circle 170px at 112% 100%, #f3eaf1 99%, transparent 100%), linear-gradient(180deg, #fbf6f3, #f8f2f0) !important }
