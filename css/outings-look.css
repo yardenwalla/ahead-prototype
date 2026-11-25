@@ -266,3 +266,14 @@
 #main .oa3-places.is-icons .oa3-place .oa3-place-ic svg{width:30px!important;height:30px!important;max-width:none!important}
 #main .oa3-places.is-icons .oa3-place .oa3-place-ic{padding:0;justify-content:center}
 #main .oa3-hero .oa3-hero-cta{margin-top:14px}
+
+/* Nov 24 flag 7 (Yarden): Outings' toggles are pills, like the stage pills in every other guide. */
+#main .hub-detail[data-overview="Out and about"] .oa-seg { display: flex; gap: 8px; background: none !important; border: 0; border-radius: 0; padding: 0; margin: 2px 0 14px; box-shadow: none }
+#main .hub-detail[data-overview="Out and about"] .oa-seg button { flex: none; min-height: 0; padding: 8px 15px !important; border-radius: 999px; background: var(--card, #fffdf9) !important; border: 1px solid var(--line, #ebe6e1); font-size: 13.5px; font-weight: 600; color: var(--ss-ink, #2a6078) !important; box-shadow: none !important }
+#main .hub-detail[data-overview="Out and about"] .oa-seg button.is-on { background: var(--ss-ink, #2a6078) !important; border-color: var(--ss-ink, #2a6078); color: #fff !important }
+/* Nov 24 (Yarden): the folds show a chevron, so they read as tappable. */
+#main .oa3-fold summary i::before { content: '›'; display: inline-block; transform: rotate(90deg); font-size: 22px; line-height: 1 }
+/* Nov 24 (reader finding 16): each packing tile shows an empty tick circle, filled when packed, so the list reads as tappable. */
+#main .oa-pack { padding-right: 12px; padding-top: 30px }
+#main .oa-pack i { top: 10px; right: 10px; transform: none; width: 20px; height: 20px; box-sizing: border-box; border-radius: 50%; border: 2px solid #d6cfc6; display: grid; place-items: center; font-size: 11px; line-height: 1; color: transparent; opacity: 1 }
+#main .oa-pack.is-on i { background: var(--ss-ink, #8a4a2c); border-color: var(--ss-ink, #8a4a2c); color: #fff }

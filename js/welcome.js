@@ -13,11 +13,12 @@
   function welcomeHtml() {
     return `<section class="welcome aw ob-welcome">
       <h1><span>What matters now.</span><span>What’s coming next.</span></h1>
-      <p class="aw-lead">Guidance matched to your baby’s exact age, all through the first year.</p>
+      <p class="aw-lead">Guidance matched to your baby’s age, all through the first year.</p>
       <div class="ob-collage" aria-hidden="true">
-        <div class="ob-mini ob-mini-tl"><b>Timeline</b><small>What’s coming up</small><div class="ob-tl"><i></i><span></span><i></i><span></span><i></i><span></span></div></div>
-        <div class="ob-mini ob-mini-guides"><b>Guides</b><small>Answers for every age</small><div class="ob-mini-pic">${IMG('assets/feeding/first-foods.jpg')}</div><span class="ob-bar"></span><span class="ob-bar short"></span></div>
-        <div class="ob-mini ob-mini-home"><b>Home</b><small>What matters now</small><div class="ob-mini-month">${IMG('assets/dev/hero-12.jpg')}</div><div class="ob-mini-row"><span class="ob-dot">${IMG('assets/dev/toy-gym.jpg')}</span><span class="ob-bar"></span></div><div class="ob-mini-row"><span class="ob-dot">${IMG('assets/dev/toy-soft-rattle.jpg')}</span><span class="ob-bar short"></span></div></div>
+        <div class="ob-mini ob-mini-tl"><b>Timeline</b><small>What’s coming up</small><div class="ob-tl"><i></i><em>Rolling</em><i></i><em>First foods</em><i></i><em>Crawling</em></div>
+          <div class="ob-mini-mem"><span class="ob-mem-pol">${IMG('assets/onboarding/bunny.jpg')}</span><b>Memories</b></div></div>
+        <div class="ob-mini ob-mini-guides"><b>Guides</b><small>Answers for every age</small><div class="ob-mini-pic">${IMG('assets/feeding/first-foods.jpg')}</div><em class="ob-cap">Solids are coming up</em></div>
+        <div class="ob-mini ob-mini-home"><b>Home</b><small>What matters now</small><div class="ob-mini-month ob-mc"><span><small>New this month</small><i>Month 4.</i>Everything catches her eye.<u>▶ Her month</u></span>${IMG('assets/home/babies/baby-4.webp')}</div><div class="ob-mini-row"><span class="ob-ic ob-ic-p"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5v14M20 5v14M4 9h16M4 16h16M8 9v7M12 9v7M16 9v7"/></svg></span><em>Naps are short now</em><i class="ob-chev">›</i></div><div class="ob-mini-row"><span class="ob-ic ob-ic-l"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="15" cy="9" r="4.5"/><path d="M11.8 12.2 5 19"/><circle cx="5" cy="19" r="1.4"/></svg></span><em>She grabs your hair</em><i class="ob-chev">›</i></div></div>
       </div>
       <button class="primary aw-start" onclick="startSetup()">Get started</button>
       <p class="ob-time">About a minute to set up</p>
@@ -83,9 +84,10 @@
     if (back && top) { top.prepend(back); back.classList.add('ob-back'); }
     const form = main.querySelector('#setupForm'); if (!form) return;
     // Step 1: pronouns as three buttons; the born-early box says why it matters.
+    // Nov 25 (Yarden): nothing is picked for a new baby. Skipping still saves They/them underneath.
     const pro = form.querySelector('#babyPronouns');
     if (pro) { pro.classList.add('ob-hidden'); pro.tabIndex = -1; pro.setAttribute('aria-hidden', 'true');
-      pro.insertAdjacentHTML('afterend', seg('ob-pron', [['they', 'They'], ['he', 'He'], ['she', 'She']], pro.value, 'How should we refer to your baby?'));
+      pro.insertAdjacentHTML('afterend', seg('ob-pron', [['they', 'They'], ['he', 'He'], ['she', 'She']], (typeof editingProfile !== 'undefined' && editingProfile) ? pro.value : '', 'How should we refer to your baby?'));
       const l = form.querySelector('label[for="babyPronouns"]'); if (l) l.removeAttribute('for'); }
     const early = form.querySelector('#early');
     if (early) { const l = early.closest('label'); [...l.childNodes].forEach(n => n.nodeType === 3 && n.remove());

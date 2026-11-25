@@ -12,7 +12,8 @@ const MONTHS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 const dob = m => new Date(TODAY - Math.round(Math.max(m, 0.3) * 30.44) * 864e5).toISOString().slice(0, 10);
 // Two families per age, so lines that only show for one way of feeding are found too.
 const FAMILIES = [{ feed: 'Both', feedHow: 'Pumping' }, { feed: 'Breast milk', feedHow: 'Nursing' }, { feed: 'Formula', feedHow: '' }];
-const ALLOWED = /^(chg:|topic:|stages:|safety-stage:|safety-checklist)/;
+// Nov 24: the old stages list pages are replaced by the pills on each guide, so search never lands on them.
+const ALLOWED = /^(chg:|topic:|safety-stage:|safety-checklist)/;
 
 const EXTRACT = () => {
   const main = document.querySelector('#main');
@@ -47,7 +48,7 @@ const EXTRACT = () => {
     await pg.evaluate(([p, a]) => { localStorage.clear(); localStorage.setItem('ahead-v2-profile', JSON.stringify(p)); localStorage.setItem('ahead-v2-answers', JSON.stringify(a)); }, [profile, answers]);
     await pg.reload(); await pg.waitForTimeout(300);
     const topics = await pg.evaluate('TOPICS.map(t => t[0])');
-    const queue = [...topics.map(t => `openPage('topic:${t}')`), ...['Feeding', 'Sleep', 'Safety'].map(t => `openPage('stages:${t}')`)];
+    const queue = [...topics.map(t => `openPage('topic:${t}')`)];
     const seen = new Set();
     let n = 0;
     while (queue.length && n < 320) {

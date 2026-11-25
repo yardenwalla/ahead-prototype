@@ -6,6 +6,8 @@
   var on = function () { return true; };
   var E = function (v) { return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
   var nm = function () { try { return profile.name || 'Your baby'; } catch (e) { return 'Your baby'; } };
+  // Nov 23: the same, for the middle of a sentence ("Everything catches your baby’s eye").
+  var nmIn = function () { try { return profile.name || 'your baby'; } catch (e) { return 'your baby'; } };
   var PR = function () {
     var p = (profile && profile.pronouns) || 'she';
     return p === 'he' ? { s: 'he', S: 'He', o: 'him', p: 'his', P: 'His', SS: 'He’s' } : p === 'they' ? { s: 'they', S: 'They', o: 'them', p: 'their', P: 'Their', SS: 'They’re' } : { s: 'she', S: 'She', o: 'her', p: 'her', P: 'Her', SS: 'She’s' };
@@ -85,12 +87,15 @@
   /* ---------- What the parent has already shared ---------- */
   var addM = function (d, m) { var x = new Date(d); x.setMonth(x.getMonth() + m); return x; };
   var iso = function (d) { return d.toISOString().slice(0, 10); };
-  function photoNow() { try { return typeof hubPhotoFor === 'function' ? hubPhotoFor(month()) : null; } catch (e) { return null; } }
+  function photoNow() { try { return typeof hubPhotoFor === 'function' ? hubPhotoFor(chapter()) : null; } catch (e) { return null; } }
   var month = function () { try { return homeMonth(); } catch (e) { return 4; } };
+  // Nov 23 (Yarden: a baby born early): the story's chapter is the birthday month, so its number, photo, firsts and day count
+  // match the keepsake and Memories. What the baby is doing (the story's screens) still follows the adjusted month.
+  var chapter = function () { try { return typeof actualMonth === 'function' ? Math.max(0, Math.min(11, actualMonth())) : month(); } catch (e) { return month(); } };
   var NICE = [[/laugh|chuckle/i, 'First laugh'], [/roll/i, 'First roll'], [/smil/i, 'First smile'], [/tooth/i, 'First tooth'], [/sits?|sitting|\bsat\b/i, 'Sitting up'], [/crawl/i, 'First crawl'], [/word|mama|dada/i, 'First word'], [/step|walk/i, 'First steps']];
   function firstsThisMonth() {
     try {
-      var dob = new Date(profile.dob + 'T00:00:00'), m = month(), from = iso(addM(dob, Math.max(0, m - 1))), to = iso(addM(dob, m));
+      var dob = new Date(profile.dob + 'T00:00:00'), m = chapter(), from = iso(addM(dob, Math.max(0, m - 1))), to = iso(addM(dob, m));
       return (journeyData().records || []).filter(function (r) { return r.type === 'milestone' && r.status === 'attended' && r.date >= from && r.date < to && (!window.memIsBig || memIsBig(r)); })
         .map(function (r) { var k = NICE.filter(function (x) { return x[0].test(r.title); })[0]; return k ? k[1] : r.title; })
         .filter(function (t, i, a) { return a.indexOf(t) === i; }).slice(0, 3);
@@ -101,7 +106,7 @@
       { id: 'cover', bg: '#2B2840', ink: '#fffaf3', dur: 3600, html:
         '<i class="st-sun"></i><i class="st-star">★</i><i class="st-dotc"></i>' +
         '<p class="st-kicker st-in" style="--d:.05s">' + E(n) + '’s month</p>' +
-        '<div class="st-giant st-pop" style="--d:.15s">4</div>' +
+        '<div class="st-giant st-pop" style="--d:.15s">' + chapter() + '</div>' +
         '<div class="st-title st-cover-t st-in" style="--d:.45s">' + E(p.SS) + ' done just watching.</div>' +
         '<p class="st-lead st-in" style="--d:.75s">The world is getting a lot more interesting.</p>' +
         '<div class="st-ground">' + cloud('#b9a6e6') + (pic ? '<div class="st-photo"><img src="' + pic + '" alt=""></div>' : '<div class="st-peek">' + bunny() + '</div>') + '</div>' },
@@ -448,11 +453,13 @@
   function slides() {
     var n = nm(), p = PR(), days = daysOld(), pic = photoNow(), firsts = firstsThisMonth(), m = month(), nx = nextUp(p, m);
     if (m === 4) return slides4(n, p, days, pic, firsts, nextUp(p, 4));
-    var st = STORIES[Math.max(0, Math.min(11, m))] || STORIES[1], wk = Math.max(1, Math.round(days / 7));
+    var st = STORIES[Math.max(0, Math.min(11, m))] || STORIES[1], wk = Math.max(1, Math.round(days / 7)), ch = chapter();
+    // "Halfway to one" is about the birthday, so a baby born early at 6 months adjusted gets words about what she's doing.
+    if (m === 6 && ch !== 6) st = Object.assign({}, st, { half: false, cover: ['She’s ready to explore more.', 'Hands, mouth, and maybe a first taste.'] });
     var list = [{ id: 'cover', bg: '#2B2840', ink: '#fffaf3', dur: 3800, html:
         '<i class="st-sun"></i><i class="st-star">★</i><i class="st-dotc"></i>' +
-        '<p class="st-kicker st-in" style="--d:.05s">' + E(n) + (m === 0 ? '’s first weeks' : '’s month') + '</p>' +
-        '<div class="st-giant st-pop" style="--d:.15s">' + (m === 0 ? wk + '<small class="st-giant-u">' + (wk === 1 ? 'week' : 'weeks') + '</small>' : st.half ? '<span class="st-halfwrap">' + V.halfring() + '<b>' + m + '</b></span>' : m) + '</div>' +
+        '<p class="st-kicker st-in" style="--d:.05s">' + E(n) + (ch === 0 ? '’s first weeks' : '’s month') + '</p>' +
+        '<div class="st-giant st-pop" style="--d:.15s">' + (ch === 0 ? wk + '<small class="st-giant-u">' + (wk === 1 ? 'week' : 'weeks') + '</small>' : ch === 6 ? '<span class="st-halfwrap">' + V.halfring() + '<b>' + ch + '</b></span>' : ch) + '</div>' +
         '<div class="st-title st-cover-t st-in" style="--d:.45s">' + E(Pp(st.cover[0])) + '</div>' +
         '<p class="st-lead st-in" style="--d:.75s">' + E(Pp(st.cover[1])) + '</p>' +
         '<div class="st-ground">' + cloud('#b9a6e6') + (pic ? '<div class="st-photo"><img src="' + pic + '" alt=""></div>' : '<div class="st-coverart ms-toys">' + window.stCardArtClay(m) + '</div>') + '</div>' }];
@@ -467,7 +474,7 @@
     '<div class="st-visarea">' + cloud('#e5f1e7') + vis([nx.vis]) + '</div>' }; }
   // A different, true line for each month.
   function daysLine(days) {
-    var m = month(), wk = Math.round(days / 7), hrs = fmt(days * 24), left = Math.max(1, 365 - days);
+    var m = chapter(), wk = Math.round(days / 7), hrs = fmt(days * 24), left = Math.max(1, 365 - days);
     return Pp(({ 0: 'Every single one of them brand new.', 1: 'You’ve been awake for most of them.', 2: 'And she’s smiled at you for some of them.', 3: wk + ' weeks of getting to know each other.',
       4: hrs + ' hours of new things to look at.', 5: 'That’s ' + hrs + ' hours of watching you.', 6: 'Six months of firsts, and counting.',
       7: wk + ' weeks, and every one a little different.', 8: 'And she knows exactly who you are.', 9: 'Almost as long as she spent growing before she was born.',
@@ -668,9 +675,9 @@
     var st = m === 4 ? { cover: ['She’s done just watching.', 'The world is getting a lot more interesting.'], sum: ['Found her hands', 'Distracted feeds', 'Sleep is maturing'] } : STORIES[m];
     if (!st) return null;
     var TEASE = { 0: '{N} is brand new and loves being snug.', 1: '{N} notices more each day, and kicks with joy.', 2: '{N} smiles on purpose and is starting to coo.', 3: '{N}’s hands are opening, so she can reach for toys.',
-      4: 'Everything catches {N}’s eye, even during feeds.', 5: '{N} found her feet, and they’re after that ball.', 6: 'Halfway to one, {N} may be ready for a taste.', 7: '{N} drops it. You pick it up. And she does it again.',
-      8: '{N} knows you’re there, even out of sight.', 9: '{N} is figuring out how things fit together.', 10: '{N} may start pulling up on the furniture.', 11: '{N} is almost one, and look how far she’s come.' };
-    return { title: Pp(st.cover[0]), lead: Pp(st.cover[1]), tease: Pp(TEASE[m]).replace('{N}', nm()), sum: st.sum.map(Pp) };
+      4: 'Everything catches {N}’s eye, even during feeds.', 5: '{N} has found her feet, and reaches for everything.', 6: 'Halfway to one, {N} may be ready for a taste.', 7: '{N} drops things on purpose, to watch you pick them up.',
+      8: '{N} knows you’re there, even out of sight.', 9: '{N} is figuring out how things fit together.', 10: '{N} may start pulling up on the furniture.', 11: '{N} is almost one, and may clap along to songs.' };
+    return { title: Pp(st.cover[0]), lead: Pp(st.cover[1]), tease: Pp(m === 6 && chapter() !== 6 ? '{N} is reaching for more, and may be ready for a taste.' : TEASE[m]).replace(/^\{N\}/, nm()).replace('{N}', nmIn()), sum: st.sum.map(Pp) };
   };
 
   /* ---------- Entry: the month card is the story's cover ---------- */
@@ -681,7 +688,7 @@
     hero.dataset.st = '1';
     var copy = hero.querySelector('.he-copy'); if (!copy) return;
     var b = document.createElement('button'); b.className = 'he-see st-play';
-    b.innerHTML = '<span class="st-play-ring"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7.5v9l7.5-4.5z"/></svg></span>Watch ' + E(nm()) + '’s month';
+    b.innerHTML = '<span class="st-play-ring"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7.5v9l7.5-4.5z"/></svg></span>Watch ' + E(nmIn()) + '’s month';
     b.onclick = function (e) { e.stopPropagation(); open(); };
     var old = copy.querySelector('.he-see'); if (old) old.replaceWith(b); else copy.appendChild(b);
   }

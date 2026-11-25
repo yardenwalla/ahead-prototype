@@ -148,7 +148,8 @@
     const b = main.querySelector('.hub-bday');
     // The newborn weeks have no month birthday yet: offer the newborn photo until it's added (or the banner is tapped).
     if (!b) {
-      if (homeMonth() !== 0 || (typeof hubPhotoFor === 'function' && hubPhotoFor(0))) return '';
+      // Keepsakes follow the birthday month (Nov 23: a baby born early got the newborn keepsake at 10 weeks).
+      if (actualMonth() !== 0 || (typeof hubPhotoFor === 'function' && hubPhotoFor(0))) return '';
       try { if (localStorage.getItem('ahead-photo-banner-0')) return ''; } catch (e) {}
       // The "Hello, World!" foil balloon from the newborn page in Memories (there's no number balloon for the newborn weeks).
       const cam = `<img class="hg-banner-img hg-banner-hello" src="assets/home/hello-world.png?v=7" alt="">`;
@@ -196,13 +197,13 @@
         ['She sucks on her hands', 'It’s one of her first ways to calm herself, not always hunger.', 'Development', 'mouth', '']] },
     4: { eyes: ['Her eyes work as a team now', 'Both eyes now move together, so she sees depth and can judge how far away a toy is.'],
       notice: [['Her naps are short', 'Naps of about 30 minutes are common now. Longer ones come later.', 'Sleep', 'clock', 'chg:Sleep:d:predictable'],
-        ['She grabs your hair and glasses', 'Reaching is brand new. She grabs whatever is close, not on purpose.', 'Development', 'hand', '']] },
+        ['She grabs your hair and glasses', 'Reaching is brand new. She grabs what’s close, and isn’t trying to hurt.', 'Development', 'hand', '']] },
     5: { eyes: ['The world is within reach', 'She’s getting better at judging distance, so her reaching suddenly looks much more intentional.'],
       notice: [['She’s fussy after two hours awake', 'Many babies this age manage about two hours awake before the next nap.', 'Sleep', 'clock', 'chg:Sleep:d:day:2'],
         ['Everything goes in her mouth', 'Mouthing is how she learns what things feel like, taste like and do.', 'Development', 'mouth', '']] },
     6: { eyes: ['She can spot you across the room', 'Her distance vision has sharpened, so she may light up before you even get close.'],
       notice: [['Her poop will change with solids', 'Once she eats food, it gets firmer, smellier, and sometimes colorful.', 'Daily rhythm', 'diaper', 'chg:Daily rhythm:d:look:3:poop'],
-        ['She gags on new textures', 'Gagging is loud, and it’s how she learns to move food around.', 'Feeding', 'swallow', 'chg:Feeding:d:lumpy']] },
+        ['She may gag on first foods', 'Gagging is loud, and it’s how she learns to move food around.', 'Feeding', 'bowl', 'chg:Feeding:mock:z_gag']] },
     7: { eyes: ['Her vision is close to yours', 'She sees nearly as well as you do now, just a little softer at a distance.'],
       notice: [['She chews on everything hard', 'Pressure soothes sore gums, so a chilled teether or your finger helps.', 'Daily rhythm', 'tooth', 'chg:Daily rhythm:d:p:teething'],
         ['There’s food in her poop', 'Some foods pass through partly whole while her gut gets used to them.', 'Daily rhythm', 'diaper', 'chg:Daily rhythm:d:look:3:poop']] },
@@ -213,7 +214,7 @@
       notice: [['She turns down new foods', 'Many babies need 10–15 tries before they like a food.', 'Feeding', 'plate', 'chg:Feeding:mock:z_refuse'],
         ['She cries when you leave at bedtime', 'She notices you go now. The same short goodbye each night helps.', 'Sleep', 'moon', 'chg:Sleep:d:goodbye']] },
     10: { eyes: ['She spots tiny details', 'Her eyesight is sharp now, so she notices a crumb on the rug from across the room.'],
-      notice: [['She can’t get down in the crib', 'She can pull up, but hasn’t learned to sit back down yet.', 'Sleep', 'crib', 'chg:Sleep:d:nightwake'],
+      notice: [['She can’t get down in the crib', 'She can pull up, but hasn’t learned to sit back down yet.', 'Sleep', 'crib', 'chg:Sleep:d:skills'],
         ['She throws her food', 'It’s often how she tells you she’s full, before she has words.', 'Feeding', 'toss', '']] },
     11: { eyes: ['She knows faces in photos', 'She may recognize people she knows in pictures now, so family photos make great first books.'],
       notice: [['She’s eating a little less', 'Growth slows toward her first birthday, and so does her appetite.', 'Feeding', 'plate', ''],
@@ -253,14 +254,24 @@
   };
 
   // The copy is written for "she". Turn it into pronoun tokens so it reads right for every baby.
-  const P = t => String(t).replace(/\bherself\b/g, '{r}').replace(/\b(hold|feed|keeps|to|with|for|give|let|watch|help|tell) her\b/g, '$1 {o}')
+  const P = t => String(t).replace(/\bherself\b/g, '{r}').replace(/\b(hold|feed|keeps|to|with|for|give|let|watch|help|tell|wear) her\b/g, '$1 {o}')
     .replace(/\bher\b/g, '{p}').replace(/\bHer\b/g, '{P}').replace(/\bShe’s\b/g, '{S’s}').replace(/\bshe’s\b/g, '{s’s}').replace(/\bShe\b/g, '{S}').replace(/\bshe\b/g, '{s}');
   // On your radar: the one thing to get ahead of this month, opening the page that helps. Checkup months lead with the
   // checkup (watched on the month birthday, it's days away); the rest name one thing to prepare. Nothing the story says.
   // Each month lists only what's time-sensitive: one row most months, two when two things really land together.
   const CHK = (n, extra) => [`The ${n}-month checkup is coming up.`, extra || 'See what to expect and what to ask.', 'Health', 'steth', `health-detail:${n}:expect`];
   // Hide anything the parent has already told Ahead is done: a logged checkup, the swaddle off, solids started.
-  const radarRows = m => (RADAR[m] || []).filter(r => {
+  // Nov 24 (Yarden): checkups and shots go by birthday age, even for a baby born early, so a checkup row comes from
+  // the birthday month; everything else on the radar follows the adjusted month, like the rest of Home.
+  const radarFor = m => { const isChk = r => /^health-detail:/.test(r[4]); let am = m;
+    try { if (profile.early && typeof actualMonth === 'function') am = Math.min(11, actualMonth()); } catch (e) {}
+    if (am === m) return RADAR[m] || [];
+    return [...(RADAR[am] || []).filter(isChk), ...(RADAR[m] || []).filter(r => !isChk(r))]; };
+  // Nov 25 (proactive pass): from about 2 weeks until the month-1 story, a heads-up on the crying peak, before it hits.
+  // (Ahead stays about the baby; the parent's own mood lives on the Health page, not on Home.)
+  const YOU = ['Crying often peaks around 6 weeks.', 'Fussy evenings are common. Here’s what helps, and when it eases.', 'Sleep', 'heart', 'chg:Sleep:d:crying'];
+  const withYou = rows => { try { const d = (NOW - parse(profile.early && profile.due ? profile.due : profile.dob)) / 864e5; /* crying follows the due date for a baby born early */ return d >= 12 && d < 30 ? [...rows, YOU] : rows; } catch (e) { return rows; } };
+  const radarRows = m => withYou(radarFor(m)).filter(r => {
     const go = r[4];
     try {
       const v = /^health-detail:(\d+):/.exec(go); if (v && typeof healthRecord === 'function' && (healthRecord(+v[1]) || {}).status === 'attended') return false;
@@ -274,6 +285,10 @@
     const hv = /^health-detail:(\d+):/.exec(r[4]);
     if (hv) { try { const hk = parseInt((guideNow().Health || ''), 10); if (!isNaN(hk) && hk > +hv[1]) r = CHK(hk); } catch (e) {} }
     return r;
+  }).filter(r => {
+    // Nov 24: no checkup homework more than five weeks out (the remap above can name one two months away).
+    const v = /^health-detail:(\d+):/.exec(r[4]); if (!v) return true;
+    try { return (addMonths(parse(profile.dob), +v[1]) - NOW) / 864e5 <= 35; } catch (e) { return true; }
   }).map(r => {
     // Once a checkup's date has passed it's due now, in the same words as the Guides tab (Nov 23: they used to disagree for a week).
     const v = /^health-detail:(\d+):/.exec(r[4]); if (!v || !+v[1]) return r;
@@ -287,19 +302,20 @@
         ['Swaddling ends soon.', 'Once she starts trying to roll, it’s time to stop. Here’s what to look for.', 'Sleep', 'swaddle', 'chg:Sleep:d:swaddleoff']],
     3: [['Her sleep is about to change.', 'Around 4 months, sleep cycles mature. Rougher nights for a few weeks are common.', 'Sleep', 'moon', 'chg:Sleep:d:regress']],
     4: [CHK(4, 'Including a first chat about solids. See what to expect and what to ask.')],
-    5: [['First foods, around 6 months.', 'The signs she’s ready, and what you’ll need.', 'Feeding', 'highchair', 'chg:Feeding:d:signs']],
-    6: [CHK(6), ['Common allergens, early.', 'Peanut and egg are best offered early and often, once she’s eating.', 'Feeding', 'egg', 'chg:Feeding:d:allergens']],
+    5: [['First foods start around 6 months.', 'Three signs she’s ready, and when to ask.', 'Feeding', 'highchair', 'chg:Feeding:d:signs']],
+    6: [CHK(6), ['Peanut and egg can start early.', 'Once she’s eating, offer them early and often.', 'Feeding', 'egg', 'chg:Feeding:d:allergens']],
     7: [['She’ll be on the move soon.', 'Babyproof before she crawls. Start with the room she’s in most.', 'Safety', 'gate', 'topic:Safety']],
     8: [['Finger foods are next.', 'What’s safe to offer, and how to cut it.', 'Feeding', 'avocado', 'chg:Feeding:d:finger']],
     9: [CHK(9)],
     10: [['She can eat what you eat.', 'Mostly. Take out her portion before you add salt.', 'Feeding', 'plate', 'chg:Feeding:d:family']],
-    11: [['Whole cow’s milk, at 12 months.', 'How to start it, and how much {s} needs.', 'Feeding', 'bottle', 'chg:Feeding:d:milk12'], CHK(12)]
+    11: [['Whole cow’s milk starts at 12 months.', 'How to start it, and how much {s} needs.', 'Feeding', 'bottle', 'chg:Feeding:d:milk12'], CHK(12)]
   };
 
   function monthCard(M, lead, a, next) {
     const m = homeMonth(), wk = Math.max(1, Math.round(a * 4.35)), early = profile.early && profile.due && typeof adjustedAge === 'function',
       // Same words as every guide's header (cohesion.js): "1 week", or "10 weeks · 2 weeks adjusted" for a baby born early.
-      when = early ? `${babyAge()} · ${adjustedAge()} adjusted` : m < 2 && typeof babyAge === 'function' ? babyAge() : m < 2 ? `${wk} week${wk === 1 ? '' : 's'}` : `Month ${m}`;
+      // Nov 23: the card's headline is the birthday age only ("10 weeks · 2 weeks adjusted" ran off the card).
+      when = early ? babyAge() : m < 2 && typeof babyAge === 'function' ? babyAge() : m < 2 ? `${wk} week${wk === 1 ? '' : 's'}` : `Month ${m}`;
     const art = typeof homeMonthArt === 'function' ? homeMonthArt(actualMonth()).replace('<svg ', '<svg preserveAspectRatio="xMidYMid meet" ') : '';
     // A row can carry a formula version [title, why] as its sixth item: Feeding gives formula families other numbers.
     const row = ([title, why, cat, icon, go, formula]) => {
@@ -316,14 +332,17 @@
     const newLook = sc || nb;
     const seen = (() => { try { return localStorage.getItem('ahead-story-seen-' + m) === '1'; } catch (e) { return false; } })();
     const c = BALLOON[Math.max(0, Math.min(11, m))];
+    // Nov 23: a baby born early. The card's number is the birthday month (it matches the keepsake and Memories);
+    // what the card says about the baby quietly follows the adjusted month (Yarden: no "adjusted" line on Home's card).
+    const chap = Math.max(0, Math.min(11, typeof actualMonth === 'function' ? actualMonth() : m));
     const hero = nb ? `<button class="ms-card" onclick="homeEyes(true)" style="${monthTheme(m)};--ms-c2:${mix(BALLOON[0], .72)}">
         <span class="ms-body"><span class="ms-copy"><span class="ms-eyebrow">${F(`Welcome, ${name()}`)}</span><b class="ms-month">${F(when + '.')}</b><b class="ms-name">${F('First weeks.')}</b><small>${F(P(M.eyes[0]) + '.')}</small></span>
           <span class="ms-art" aria-hidden="true"><i class="ms-c2"></i><span class="ms-toys">${window.stCardArt(0)}</span></span></span>
         <span class="ms-foot"><span class="ms-watch"><i><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6z" fill="none" stroke="#fffaf3" stroke-width="2"/></svg></i>${F(P('See what she sees'))}</span><span class="ms-go" aria-hidden="true">→</span></span>
       </button>` : sc ? `<button class="ms-card" onclick="try{localStorage.setItem('ahead-story-seen-${m}','1')}catch(e){};stOpen()" style="${monthTheme(m)};--ms-acc:${mix(c, .1, 30)};--ms-c1:${mix(c, .5)};--ms-c2:${mix(c, .72)}">
-        <span class="ms-body"><span class="ms-copy"><span class="ms-eyebrow">${m === 0 ? F('{P} first weeks') : seen ? F('This month') : F('New this month')}</span><b class="ms-month">${F(m === 0 ? when + '.' : `Month ${m}.`)}</b><small>${F(sc.tease).replace(/([.!?]) (?=\S)/g, '$1<br>')}</small></span>
+        <span class="ms-body"><span class="ms-copy"><span class="ms-eyebrow">${m === 0 && chap === 0 ? F('{P} first weeks') : seen ? F('This month') : F('New this month')}</span><b class="ms-month">${F(m === 0 && chap === 0 ? when + '.' : `Month ${chap}.`)}</b><small>${F(m === 0 && chap > 0 ? `${Name()} is still curling up small, like a newborn.` : sc.tease).replace(/([.!?]) (?=\S)/g, '$1<br>')}</small></span>
           <span class="ms-art" aria-hidden="true"><i class="ms-c2"></i><span class="ms-toys">${typeof window.stCardArt === 'function' ? window.stCardArt(m) : art}</span></span></span>
-        <span class="ms-foot"><span class="ms-watch"><i><svg viewBox="0 0 24 24"><path d="M9 7.5v9l7.5-4.5z"/></svg></i>${F(m === 0 ? `${name()}’s story` : `${name()}’s month`)}</span><span class="ms-go" aria-hidden="true">→</span></span>
+        <span class="ms-foot"><span class="ms-watch"><i><svg viewBox="0 0 24 24"><path d="M9 7.5v9l7.5-4.5z"/></svg></i>${F(m === 0 && chap === 0 ? `${Name()}’s story` : `${Name()}’s month`)}</span><span class="ms-go" aria-hidden="true">→</span></span>
       </button>`
       : `<section class="he-hero" style="${monthTheme(m)}"><p class="he-eyebrow">${F(when)} · ${F(`Through ${name()}’s eyes`)}</p><div class="he-copy"><h1>${F(P(M.eyes[0]))}</h1><p class="he-lead">${F(P(M.eyes[1]))}</p>${m <= 4 ? `<button class="he-see" onclick="homeEyes(true)"><span aria-hidden="true">👁</span> ${F(`See what ${name()} sees`)}</button>` : ''}</div><span class="he-art" aria-hidden="true">${art}</span></section>`;
     const rr = newLook ? radarRows(m) : [];
@@ -350,7 +369,7 @@
       Crawling: ['She’ll be on the move soon', 'Gates, locks and covers, before she crawls', 'gate'],
       'Pulling up': ['She’ll be pulling up soon', 'Anchor furniture, and keep water and the stove out of reach', 'dresser'] },
     Feeding: { 'Milk feeds': ['Her feeds are getting quicker', 'Fewer, faster feeds are normal now', 'bottle'],
-      'Ready for solids': ['Solids are coming up', 'The signs she’s ready, and what you’ll need', 'highchair'],
+      'Ready for solids': ['Solids are coming up', 'Three signs she’s ready, and when to ask', 'highchair'],
       new: ['She’s starting solids', 'First tastes, and letting her set the pace', 'bowl'],
       textures: ['She’s ready for thicker textures', 'From purées to soft pieces, cut safely', 'pieces'],
       established: ['She’s ready for three meals a day', 'A sample day of meals and milk', 'plate'] },
@@ -459,7 +478,7 @@
     // "New", and it says what changed. One guide opens it; several open Guides with those tiles glowing.
     // Then a slim timeline card in the same style, naming what's actually next for her.
     // Skip guide news the radar card above already gives (one home per fact): same guide, same month.
-    const m = homeMonth(), nm = name(), onRadar = (RADAR[m] || []).map(r => r[2]);
+    const m = homeMonth(), nm = name(), onRadar = radarFor(m).map(r => r[2]);
     const moved = window.guideMoves().filter(q => !(typeof window.stCover === 'function' && window.stCover(m) && onRadar.includes(q.cat)));
     const wks = Math.max(1, Math.round(Y().ageNow() * 4.35)), age = m < 2 ? `${wks} week${wks === 1 ? '' : 's'}` : `${m} months`;
     const label = c => typeof displayTopic === 'function' ? displayTopic(c) : c;
@@ -467,7 +486,7 @@
     const isNew = c => moved.some(q => q.cat === c);
     const marks = set.map(c => `<span class="hg-gtile-mark${moved.length && !isNew(c) ? ' is-quiet' : ''}" style="${yearTheme(c)}">${typeof catIcon === 'function' ? catIcon(c) : ''}</span>`).join('');
     const list = l => l.length < 3 ? l.join(' and ') : l.slice(0, -1).join(', ') + ' and ' + l[l.length - 1];
-    let title = `${nm}’s guides`, line = `Personalized for ${nm} at ${age}`, go = "navigate('categories')";
+    let title = `${nm}’s guides`, line = `What matters at ${age}`, go = "navigate('categories')";
     if (moved.length === 1) {
       const q = moved[0], c = moveCopy(q.cat, q.key);
       title = `New in ${label(q.cat)}`; line = c ? P(c[0]) : `Updated for ${age}`; go = `openPage('topic:${q.cat}')`;
@@ -483,7 +502,7 @@
       // Skip a change in its last month that the parent hasn't marked: "Sitting up, any time now" at 9 months reads as a bug.
       const ahead = ya.C.filter(c => c.end > a && !done[c.id] && !(a > c.start && a >= c.end - 1) && !(c.id === 'tooth' && a >= 8) && !(c.id === 'crying' && a >= 1.5)).sort((x, y) => x.start - y.start || x.end - y.end);
       const n = ahead[0];  // the same first row the Timeline shows under "Maya now"
-      if (n) next = `Next up: ${F(n.title)}, ${F(ya.whenShort(n, a))}`;
+      if (n) next = `Next up: ${F(n.title)}, ${F(n.id === 'crying' || n.start <= a + 1 ? ya.whenShort(n, a) : ya.range(n).replace(/^./, c => c.toLowerCase()))}`;
     } catch (e) {}
     // The end of Home is navigation, not more content: two equal tiles side by side, Guides and Timeline.
     // Same size, same build (mark, title, one line), so they read as a pair and as "where to go next".
@@ -493,7 +512,7 @@
     const top = moved.length ? (newLine(moved[0]) || line) : '';
     // Name what changed, never "plus 1 more" (Nov 14 QA): two changes are both named; with more, the other guides are named.
     const second = moved.length === 2 ? newLine(moved[1]) : '';
-    const gLine = moved.length === 1 ? P(top) : moved.length === 2 && second ? `${P(top)} · ${P(second)}` : moved.length ? `${P(top)} · ${list(moved.slice(1).map(q => label(q.cat)))} too` : `Personalized for ${nm} at ${age}`;
+    const gLine = moved.length === 1 ? P(top) : moved.length === 2 && second ? `${P(top)} · ${P(second)}` : moved.length ? `${P(top)} · ${list(moved.slice(1).map(q => label(q.cat)))} too` : `What matters at ${age}`;
     const gTitle = moved.length === 1 ? label(moved[0].cat) : moved.length ? `${nm}’s guides` : `${nm}’s guides`;
     const path = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="5.5" cy="17.5" r="2"/><circle cx="18.5" cy="6.5" r="2"/><path d="M7.4 16.6c3.2-1.4 1.6-6.2 5-8 1.7-.9 2.6-1.1 4.2-1.3"/></svg>';
     const nextT = (next || '').replace(/^Next up: /, '').replace(/^The /, 'the ');

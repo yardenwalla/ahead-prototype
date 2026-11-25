@@ -1930,3 +1930,15 @@ label:has(> .hub-photo-input:focus-visible) { outline: 2px solid #884866; outlin
 #main .mem-ft b { -webkit-line-clamp: 3 }
 #main .mem-ft.is-more b { min-height: 0 }
 #main .mem-w.has-spark { white-space: nowrap }
+/* Nov 25 (Yarden): the "Seen it" button sits beside the title only, so the description uses the card's full width. */
+#main .dev-area-page .dev-skill { display: grid; grid-template-columns: auto 1fr auto; column-gap: 12px; align-items: start }
+#main .dev-area-page .dev-skill > .hub-tick-art { grid-column: 1; grid-row: 1 / span 3 }
+#main .dev-area-page .dev-skill > .hub-row-copy { display: contents }
+#main .dev-area-page .dev-skill .hub-row-copy > b { grid-column: 2; grid-row: 1; align-self: center }
+#main .dev-area-page .dev-skill > .hub-seen { grid-column: 3; grid-row: 1; align-self: start }
+#main .dev-area-page .dev-skill .hub-row-copy > small { grid-column: 2 / 4; grid-row: 2; margin-top: 4px }
+#main .dev-area-page .dev-skill .dev-see { grid-column: 2 / 4; grid-row: 3; justify-self: start }
+#main .dev-area-page .dev-skill > .dev-media { grid-column: 1 / 4; grid-row: 4 }
+#main .dev-area-page .dev-skill { row-gap: 0 }
+#main .dev-area-page .dev-skill .hub-row-copy > small { margin: 6px 0 0 }
+#main .dev-area-page .dev-skill .dev-see { margin: 8px 0 0 }

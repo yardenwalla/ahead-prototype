@@ -14,7 +14,7 @@ const nav = /^(?:openPage|openGuide|openSection|openHealthDetail|openSafetyStage
 function inspect(a, tag) {
   renders++; const html = a.html(), text = clean(html);
   check(html.length > 250 && /<h[12][ >]/.test(html), tag + ': useful destination');
-  check(!/\bundefined\b|\bNaN\b|\[object Object\]/.test(text), tag + ': complete copy');
+  check(!/\bundefined\b|\bNaN\b|\[object Object\]|\{[a-zA-Z’|]{1,12}\}/.test(text), tag + ': complete copy');
   const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map(x=>x[1]);
   check(new Set(ids).size === ids.length, tag + ': unique element IDs');
   for (const attr of html.matchAll(/(?:onclick|onchange|onsubmit)="([^"]+)"/g)) {
@@ -147,6 +147,13 @@ for (const early of [false,true]) for (let age=0; age<=12; age++) {
     check(ids.filter(x=>previous.includes(x)).length<=1,'Play '+m+': current collection does not repeat last month');
     previous=ids;
     for(const id of ids){check(a.run(`!!PLAY_CONTEXT['${id}']&&!!PLAY_VISUALS['${id}']`),'Play detail and art '+id);a.run(`openPage('play-activity:${m}:${id}')`);inspect(a,'Play '+m+'/'+id);}
+  }
+}
+// Nov 25: Development area pages (milestones and their try-together ideas) show no raw {p}-style placeholders.
+{
+  for (const pr of ['she','he','they']) {
+    const a=boot({name:'Lee',dob:'2026-05-21',early:false,feed:'Both',pronouns:pr});
+    for (const m of [2,4,6,9,12]) for (const area of ['Social','Talking','Thinking','Movement']) { a.run(`openPage('development-domain:${m}:${area}')`); inspect(a,`Development ${m}/${area}/${pr}`); }
   }
 }
 // A previously reported roll does not replace each later month's summary indefinitely.

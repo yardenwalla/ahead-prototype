@@ -269,9 +269,6 @@
 #main .cc-seq b { display: block; font-size: 15.5px; line-height: 1.3; padding-top: 4px; color: #2f2b1c }
 #main .cc-seq small { display: block; font-size: 14px; line-height: 1.45; color: #6d6650; margin-top: 3px }
 /* Round 9: Plan your care (Yarden's inspiration) */
-#main [data-cc-page="plan"] .dev-area-head { background: none !important; padding: 4px 2px 8px; box-shadow: none }
-#main [data-cc-page="plan"] .dev-area-head-art, #main [data-cc-page="plan"] .dev-area-head .hub-context { display: none }
-#main [data-cc-page="plan"] .dev-area-head h1 { font-size: 28px }
 #main .cc-two { background: #fcf3cf; border-radius: 20px; padding: 14px 12px 12px; margin: 4px 0 20px }
 #main .cc-two h2 { font-size: 17px; margin: 0 4px 10px; color: #2f2b1c }
 #main .cc-two > div { display: grid; grid-template-columns: 1fr 1fr; gap: 8px }
@@ -362,11 +359,11 @@
 #main .cc-nudge span { font-size: 13.5px; color: #7a5a35 }
 #main .cc-photo-hero h1 { font-family: inherit; font-size: 24px; font-weight: 700; letter-spacing: -.3px }
 /* Round 11: calmer pages (Yarden's inspiration) */
-#main .hub-detail[data-cc-page]:not([data-cc-page="plan"]) .ss-head { display: grid; grid-template-columns: 60px 1fr; column-gap: 14px; align-items: center; padding: 16px 16px 16px 14px }
-#main .hub-detail[data-cc-page]:not([data-cc-page="plan"]) .ss-head .dev-area-head-art { grid-row: 1 / span 2; width: 60px; height: 60px; margin: 0 }
-#main .hub-detail[data-cc-page]:not([data-cc-page="plan"]) .ss-head .hub-context { display: none }
-#main .hub-detail[data-cc-page]:not([data-cc-page="plan"]) .ss-head h1 { font-size: 24px; line-height: 1.15; margin: 0; align-self: end }
-#main .hub-detail[data-cc-page]:not([data-cc-page="plan"]) .ss-head .hub-lead { font-size: 14.5px; line-height: 1.4; margin: 3px 0 0; align-self: start }
+#main .hub-detail[data-cc-page] .ss-head { display: grid; grid-template-columns: 60px 1fr; column-gap: 14px; align-items: center; padding: 16px 16px 16px 14px }
+#main .hub-detail[data-cc-page] .ss-head .dev-area-head-art { grid-row: 1 / span 2; width: 60px; height: 60px; margin: 0 }
+#main .hub-detail[data-cc-page] .ss-head .hub-context { display: none }
+#main .hub-detail[data-cc-page] .ss-head h1 { font-size: 24px; line-height: 1.15; margin: 0; align-self: end }
+#main .hub-detail[data-cc-page] .ss-head .hub-lead { font-size: 14.5px; line-height: 1.4; margin: 3px 0 0; align-self: start }
 #main .cc-peek { padding: 0 14px; margin: 0 0 16px }
 #main .cc-peek details { border-top: 1px solid rgba(60, 50, 20, .08) }
 #main .cc-peek details:first-child { border-top: 0 }
@@ -469,3 +466,23 @@
 #main .cc-grid-note { grid-column: 2 / -1; margin: 2px 0 0; font-size: 12px; line-height: 1.35; font-style: italic; color: #7a6f55 }
 #main .cc-grid-foot { display: grid; grid-template-columns: 22px 1fr; gap: 12px; align-items: center; background: #fcf7e4; border-radius: 16px; padding: 12px 14px; font-size: 14px; line-height: 1.4; color: #4e4630; margin: 0 0 16px }
 #main .cc-grid-foot svg { width: 20px; height: 20px }
+
+/* Nov 24 (Yarden): the same pills as every other guide: separate rounded pills, the one you are reading filled, a dot on the stage you are at. */
+#main .cc-pills { gap: 6px; background: none; border: 0; border-radius: 0; padding: 0; margin: 2px 0 14px }
+#main .cc-pills button { flex: none; position: relative; padding: 8px 14px; border-radius: 999px; background: var(--card, #fffdf9); border: 1px solid var(--line, #ebe6e1); font-size: 13px; color: #6b5a0e }
+#main .cc-pills button.is-on { background: #6b5a0e; border-color: #6b5a0e; color: #fff }
+#main .cc-pills button i { display: none }
+#main .cc-pills button.is-now:not(.is-on)::after { content: ""; position: absolute; top: 5px; right: 7px; width: 6px; height: 6px; border-radius: 50%; background: #6b5a0e }
+
+/* Nov 24 flag 7: the Nanny / Nanny share toggle is pills too. */
+#main .cc-seg { gap: 8px; background: none; border: 0; border-radius: 0; padding: 0; margin: 2px 0 14px }
+#main .cc-seg button { flex: none; padding: 8px 15px; border-radius: 999px; background: var(--card, #fffdf9); border: 1px solid var(--line, #ebe6e1); font-size: 13.5px; font-weight: 600; color: #6b5a0e }
+#main .cc-seg button.is-on { background: #6b5a0e; border-color: #6b5a0e; color: #fff }
+/* Nov 24 (weak spots): real photos on the all-text Childcare pages. */
+#main .cc-hero { margin: 0 0 18px; border-radius: 22px; overflow: hidden; aspect-ratio: 4 / 3 }
+#main .cc-hero img { width: 100%; height: 100%; object-fit: cover; display: block }
+#main .cc-ph4 { grid-template-columns: 1fr 1fr !important }
+#main .cc-grid-ph { width: 52px !important; height: 52px !important; border-radius: 14px !important; overflow: hidden; display: block; margin: 0 auto 6px; background: none !important; padding: 0 !important }
+#main .cc-grid-ph img { width: 100%; height: 100%; object-fit: cover; display: block }
+/* Nov 24 (reader findings 15, 28): the safe-sleep photo shows inside its row on Talk it through, no "See it" link. */
+#main .cc-peek .cc-must .cc-peek-photo.cc-sleep-inline { margin: 10px 0 4px !important }

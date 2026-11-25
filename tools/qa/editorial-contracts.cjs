@@ -42,12 +42,12 @@ for (let age=0; age<=12; age++) {
     ids.add(idea.id);
     b.run(`openPage('play-activity:${age}:${idea.id}')`);
     // Activity guides were retired: an old link lands on the ideas list, where each idea reads in full.
-    check(b.html().includes('Ideas to try together'), 'An old activity link opens the ideas list for its stage');
+    check(/Ideas to try together|A few minutes is plenty/.test(b.html()), 'An old activity link opens the ideas list for its stage');
   }
 }
 for (const [age,oldID,newID] of [[1,'slow-song','face-follow'],[3,'sound-answer','sock-puppet'],[3,'coo-copy','sock-puppet'],[12,'toy-homes','water-pour']]) {
   a.run(`openPage('play-activity:${age}:${oldID}')`);
-  check(a.html().includes('Ideas to try together'), 'Old monthly links open the ideas list');
+  check(/Ideas to try together|A few minutes is plenty/.test(a.html()), 'Old monthly links open the ideas list');
 }
 for (const value of ['new','textures','established']) {
   const b=family(11);

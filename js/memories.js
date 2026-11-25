@@ -77,7 +77,7 @@
     };
     const inner = `<div class="bk-book">${months.map(pageOf).join('')}</div>`;
     // A header in the same keepsake style: the title, and a little stack of taped polaroids.
-    let head = `<header class="bk-head"><div class="bk-head-copy"><p class="bk-eyebrow">${hubArt('star', 'Development')}<span>Memories</span></p><h1>${esc2(`${name()}’s memory book`)}</h1><p class="bk-count">${esc2(all.length ? `${all.length} moment${all.length === 1 ? '' : 's'} so far.` : 'The big ones will collect here.')}</p>${all.length ? `<p class="bk-hint">${esc2('In the wrong month? Tap any moment to move it.')}</p>` : ''}</div><span class="bk-stack" aria-hidden="true"><span class="bk-stack-back"></span><span class="bk-stack-mid"></span><span class="bk-stack-front"><i></i><svg viewBox="0 0 40 40"><path d="M20 31s-9-5.6-9-12.2A5 5 0 0 1 20 16a5 5 0 0 1 9 2.8C29 25.4 20 31 20 31Z" fill="none" stroke="#f08b72" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span></header>`;
+    let head = `<header class="bk-head"><div class="bk-head-copy"><p class="bk-eyebrow">${hubArt('star', 'Development')}<span>Memories</span></p><h1>${esc2(`${Name()}’s memory book`)}</h1><p class="bk-count">${esc2(all.length ? `${all.length} moment${all.length === 1 ? '' : 's'} so far.` : 'The big ones will collect here.')}</p>${all.length ? `<p class="bk-hint">${esc2('In the wrong month? Tap any moment to move it.')}</p>` : ''}</div><span class="bk-stack" aria-hidden="true"><span class="bk-stack-back"></span><span class="bk-stack-mid"></span><span class="bk-stack-front"><i></i><svg viewBox="0 0 40 40"><path d="M20 31s-9-5.6-9-12.2A5 5 0 0 1 20 16a5 5 0 0 1 9 2.8C29 25.4 20 31 20 31Z" fill="none" stroke="#f08b72" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span></header>`;
     { // The header's polaroid shows the newest real photo, not a placeholder.
       const pm = [12,11,10,9,8,7,6,5,4,3,2,1,0].find(m => typeof hubPhotoFor === 'function' && hubPhotoFor(m));
       if (pm != null) head = head.replace(/<span class="bk-stack-front"><i><\/i><svg[\s\S]*?<\/svg><\/span>/, `<span class="bk-stack-front has-photo"><i></i><img src="${hubPhotoFor(pm)}" alt=""></span>`);
@@ -116,7 +116,7 @@
     const strip = `<div class="mem-stories" tabindex="0" role="region" aria-label="Month by month photos">${months.map(m => card(m)).join('')}</div>`;
     // At the first birthday, the whole year on one page sits above the row, as its own thing.
     const year = designs && now === 12 && Array.from({ length: 12 }, (_, i) => photo(i + 1)).some(Boolean)
-      ? `<button class="mem-yearcard" onclick="storyShare('year')"><span class="mem-yearcard-pic"><img data-story-thumb="year" alt=""></span><span><b>${esc2(`${name()}’s first year`)}</b><small>All twelve months on one page, as a photo or a video.</small></span><span class="mem-row-go" aria-hidden="true">›</span></button>` : '';
+      ? `<button class="mem-yearcard" onclick="storyShare('year')"><span class="mem-yearcard-pic"><img data-story-thumb="year" alt=""></span><span><b>${esc2(`${Name()}’s first year`)}</b><small>All twelve months on one page, as a photo or a video.</small></span><span class="mem-row-go" aria-hidden="true">›</span></button>` : '';
     if (designs) setTimeout(() => window.storyHydrate && storyHydrate(), 0);
     let b = `<div class="mem-page"><div class="eyebrow">Memories</div><h1>${nm}’s first year</h1>`;
     // The memory book: one card that opens it, styled like the book's own cover. Saving a first stays one tap.
@@ -159,7 +159,7 @@
       // The month at the top of its card: words on the left (who she is this month, and one warm line written to her),
       // her balloon card on the right, then Change photo and Share card side by side. With no photo yet, one button adds it.
       const nmB = name(), lab = m === 0 ? 'newborn' : m === 12 ? 'first-birthday' : m + '-month';
-      const title = m === 0 ? `Hello, ${nmB}!` : m === 12 ? `${nmB} is one!` : m === now ? `${nmB} is ${m} month${m === 1 ? '' : 's'}!` : `${nmB} at ${m} month${m === 1 ? '' : 's'}`;
+      const title = m === 0 ? `Hello, ${nmB}!` : m === 12 ? `${Name()} is one!` : m === now ? `${Name()} is ${m} month${m === 1 ? '' : 's'}!` : `${Name()} at ${m} month${m === 1 ? '' : 's'}`;
       const LINES = ['The very first one. The start of everything.', 'One month of getting to know each other.', 'Two months of you, and we’re finding our rhythm.', 'Three months of you. Every day a little more you.',
         'Four months of you, and so much personality.', 'Five months of you. Look how far we’ve come.', 'Half a year of you. So much growing, learning and discovering.', 'Seven months of you. The best kind of busy.',
         'Eight months of you. Our days are fuller, and louder.', 'Nine months in, nine months out. You’ve been here as long as you were on the way.', 'Ten months of you. Almost a whole year of firsts.', 'Eleven months of you. One more, and it’s a whole year.', 'One whole year of you. Happy birthday.'];
