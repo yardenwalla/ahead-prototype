@@ -13,7 +13,7 @@
   function welcomeHtml() {
     return `<section class="welcome aw ob-welcome">
       <h1><span>What matters now.</span><span>What’s coming next.</span></h1>
-      <p class="aw-lead">Guidance matched to your baby’s exact age, all through the first year.</p>
+      <p class="aw-lead">Guidance matched to your baby’s age, all through the first year.</p>
       <div class="ob-collage" aria-hidden="true">
         <div class="ob-mini ob-mini-tl"><b>Timeline</b><small>What’s coming up</small><div class="ob-tl"><i></i><em>Rolling</em><i></i><em>First foods</em><i></i><em>Crawling</em></div>
           <div class="ob-mini-mem"><span class="ob-mem-pol">${IMG('assets/onboarding/bunny.jpg')}</span><b>Memories</b></div></div>
