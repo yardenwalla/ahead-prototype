@@ -259,7 +259,7 @@
       + H().next('Next · once care starts', 'Settle in', 'ccStarted()', '', 'How care is going, and sick days.'), 'bag');
     }
 
-    if (id === 'backup') return sub('backup', 'Backup care', 'When care falls through', 'Every family has days without care. A plan now makes them easier.',
+    if (id === 'backup') return sub('backup', 'Backup care', 'When care falls\u00a0through', 'Every family has days without care. A plan now makes them easier.',
       picSteps('Days you’ll need it', [
         ['thermo', '{S’s} sick', 'Keep {o} home, with you or a backup person.'],
         ['home', 'The caregiver is sick', 'Call your backup, or a sitter you know.'],
@@ -454,7 +454,7 @@
     const head = `<div class="cc-grid-head"><span></span>${COLS.map(([k]) => `<button onclick="openPage('chg:${CAT}:d:${k}')" aria-label="${F(CMP_NAME[k])}"><span>${hubArt(GRID_ICON[k], CAT)}</span>${F(GRID_COL[k])}</button>`).join('')}</div>`;
     const rows = GRID_ROWS.map(([ic, label, cells, note]) => `<div class="cc-grid-row"><div class="cc-grid-label">${hubArt(ic, CAT)}<b>${F(label)}</b></div>${COLS.map(([k]) => `<div>${F(cells[k])}</div>`).join('')}${note ? `<p class="cc-grid-note">${F(note)}</p>` : ''}</div>`).join('');
     const foot = `<p class="cc-grid-foot">${hubArt('info', CAT)}<span>${F('Prices vary a lot by city, so ask each place for the full cost, including fees and closed days.')}</span></p>`;
-    return sub('compare', 'Kinds of care', 'Compare your options', 'The same four questions, across each kind of care.', `<section class="cc-grid">${head}${rows}</section>${foot}`, 'blocks');
+    return sub('compare', 'Kinds of care', 'Compare your\u00a0options', 'The same four questions, across each kind of care.', `<section class="cc-grid">${head}${rows}</section>${foot}`, 'blocks');
   }
   function childcare() {
     const card = load('ahead-carecard', {}), list = shortlist(), am = typeof actualMonth === 'function' ? actualMonth() : 0, fd0 = feedNow(), bm0 = fd0 !== 'Formula', fm0 = fd0 !== 'Breast milk';
@@ -625,11 +625,11 @@
       + (others ? `<h2 class="hub-h2">${F('Explore other options')}</h2><div class="cc-minis">${others}</div>` : ''), t.icon);
     return S.noPhoto ? page : page.replace('<div class="dev-area-head', '<div class="cc-head-hidden dev-area-head');
   }
-  const PLAN_T = { center: 'Choose a daycare', home: 'Choose a home daycare', nanny: 'Hire a nanny', family: 'Talk it through', sitter: 'Find a babysitter' };
+  const PLAN_T = { center: 'Choose a daycare', home: 'Choose a home\u00a0daycare', nanny: 'Hire a nanny', family: 'Talk it through', sitter: 'Find a babysitter' };
   function planPage(k) {
     const t = TYPES[k];
     const sleepNow = k === 'family' ? `<figure class="cc-type-photo cc-family-photo"><img src="assets/childcare/family-talk.jpg" alt="A grandmother holding a smiling baby on her lap, talking to him, with the baby’s parent beside them"></figure>` : '';
-    return sub(k, t.name, PLAN_T[k], t.talk ? 'Have this talk a few weeks before the first day.' : k === 'sitter' ? 'Two steps, a week or two ahead.' : 'Three steps, starting about 3 months ahead.', sleepNow + stepsBlock(k, questions(k), Object.assign({ plan: 1 }, t)), t.icon);
+    return sub(k, t.name, PLAN_T[k], t.talk ? 'Have this talk a few weeks before the first day.' : k === 'sitter' ? 'Two steps, a week or two ahead.' : 'Three steps, starting about 3\u00a0months ahead.', sleepNow + stepsBlock(k, questions(k), Object.assign({ plan: 1 }, t)), t.icon);
   }
   function typePage(k) {
     if (SUMMARY[k]) return summaryPage(k);
