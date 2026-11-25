@@ -27,7 +27,10 @@
     page.dataset.ss = '1';
     const ctx = ((head.querySelector('.hub-context') || {}).textContent || '').trim(), k = LANE(ctx), c = C[k];
     head.classList.add('dev-area-head', 'ss-head'); head.style.setProperty('--area', c[0]); head.style.setProperty('--area-ink', c[1]);
-    const big = head.querySelector('.hub-big'); if (big) big.outerHTML = `<span class="dev-area-head-art">${ART[k](c)}</span>`;
+    // Nov 24: a real icon that matches the page, like every other guide, in place of the placeholder shapes.
+    const ic = /crib|mattress|room|safe/i.test(ctx + head.textContent) ? 'crib' : /nap/i.test(ctx) ? 'sun' : /routine|bedtime/i.test(ctx) ? 'book' : 'moon';
+    const art = typeof hubArt === 'function' ? `<span class="dev-area-head-art sf-head-art" aria-hidden="true">${hubArt(ic, 'Sleep')}</span>` : `<span class="dev-area-head-art">${ART[k](c)}</span>`;
+    const big = head.querySelector('.hub-big'); if (big) big.outerHTML = art; else if (!head.querySelector('.dev-area-head-art')) head.insertAdjacentHTML('afterbegin', art);
     page.style.setProperty('--ss-bg', c[0]); page.style.setProperty('--ss-ink', c[1]);
     // What's happening / What to do / How you'll know: "What to do" becomes the one card that stands out;
     // the explanation sits above it as plain text, and the signs or reasons below it as a small note.

@@ -36,16 +36,17 @@
       doNotes: nurse() ? [['', 'Pulls off and fusses?', 'Burp, then try again. Milk coming fast? Lean back']] : [['', 'Sucks hard and gets frustrated?', 'Try the next nipple size'], ['', 'Gulping or spilling?', 'Stay with the slower one']] }),
     m1_eve: () => ({ type: 'expect', label: 'Evenings and nights', art: 'moon', title: 'Night feeds are normal for now',
       why: 'Some babies sleep one longer stretch by now. Many don’t yet.',
-      normal: [['moon', 'Night feeds', 'Still common now'], ['sunrise', 'Fussy evenings', 'Peak around 6 weeks, ease by 3–4 months']],
+      normalTitle: 'Night feeds over the first year', normal: () => window.__sv2nightFeeds ? window.__sv2nightFeeds() : '',
       do: 'Gaining well, says your pediatrician? You can stop waking {o}. Still feed {o} when {s} {wake|wakes} hungry.' }),
     nb_eve: () => ({ type: 'expect', label: 'Evenings and nights', art: 'moon', title: 'Busy evenings, then quick and calm nights',
-      why: 'Evenings can be feed after feed. Keep night feeds short and sleepy.',
+      why: 'Evening cluster feeds are normal. Keep night feeds short and sleepy.',
+      normalTitle: 'Night feeds over the first year', normal: () => window.__sv2nightFeeds ? window.__sv2nightFeeds() : '',
       do: [['sunrise', 'In the evening', nurse() ? 'Switch sides often to keep milk flowing' : 'Offer smaller bottles, more often'], ['moon', 'At night', 'Keep it dim, and change only if dirty'], realMo() >= 1 ? null : ['clock', 'Until back to birth weight', 'Wake {o} after 3 hours by day, 4 at night']].filter(Boolean),
       doNotes: [['', 'Hard to wake?', 'Undress {o} to {p} diaper, or stroke {p} feet']],
       calls: { ped: '{s’s} too sleepy to feed most times.' } }),
     m2_night: () => ({ type: 'expect', label: 'Evenings and nights', art: 'moon', title: 'Night feeds are common for a while',
-      why: 'Many babies still feed once or twice a night. Feeding {o} back to sleep is fine.',
-      normal: [['moon', 'A night feed or two', 'Still common'], ['sun', 'Busy days', 'Distracted daytime feeds can mean more at night']],
+      why: 'Busy, distracted days can mean more feeds at night. Feeding {o} back to sleep is fine.',
+      normalTitle: 'Night feeds over the first year', normal: () => window.__sv2nightFeeds ? window.__sv2nightFeeds() : '',
       do: 'Feed {o} when {s} {wake|wakes}. Ask about dropping night feeds at {p} ' + (mo() < 4 ? 4 : mo() < 6 ? 6 : mo() < 9 ? 9 : 12) + '-month checkup.' }),
     m2_distract: () => ({ type: 'expect', label: 'Distracted feeds', art: 'eye', title: 'Short daytime feeds are perfectly okay',
       why: '{S} may gulp, pop off and look around. {S} still {get|gets} enough over the day.',
@@ -88,10 +89,10 @@
         normal: () => H().TPLB.photoGrid([['feeding/opt-egg', 'Egg', 'Omelet strips'], ['feeding/iron-oats', 'Iron-fortified oatmeal', 'With fruit, or nut butter'], ['feeding/iron-lentils', 'Beans or lentils', 'Soft, mashed or whole']]),
         do: 'Offer one at most meals. Vitamin C foods, like berries or tomato, help the iron absorb.',
         doNotes: [['', 'Darker poop?', 'Iron can cause it. That’s normal']] }
-      : { type: 'expect', label: 'Iron', art: 'drop', title: 'Breastfed babies need extra iron by 6 months',
+      : { type: 'expect', label: 'Iron', art: 'drop', title: fam() ? 'Mostly breast milk? Plan for iron by 6 months' : 'Breastfed babies need extra iron by 6 months',
         why: 'Iron stores run low from about 4 months, and breast milk has very little.',
-        normalTitle: 'Two ways to get it',
-        normal: () => window.hubStageStrip({ title: '', cat: CAT, items: [['drop', '4 months', 'Iron drops'], ['bowl', 'Or 6 months', 'Iron-rich foods from the first meals']], caption: 'Either iron drops from 4 months, or iron-rich foods from the first meals at about 6 months.' }),
+        normalTitle: 'Iron-rich first foods',
+        normal: () => H().TPLB.photoGrid([['feeding/iron-meat', 'Meat', 'Soft, minced or shredded'], ['feeding/iron-lentils', 'Beans or lentils', 'Mashed'], ['feeding/iron-oats', 'Iron-fortified cereal', 'Mixed with milk']]),
         do: mo() < 4.5 ? 'Ask about iron at the 4-month checkup, and choose drops now or iron-rich foods at 6 months.' : 'Not on drops? Make iron-rich foods part of the first meals.',
         doNotes: [fam() ? ['', 'Mostly formula?', 'Iron-fortified formula has iron. Ask at the checkup if {s} {need|needs} more'] : null, ['', 'Darker poop?', 'Iron can cause it. That’s normal']] },
     // ---------- Bottles ----------
@@ -298,6 +299,7 @@
       moreTitle: 'Serve these differently until age 4', more: () => H().TPLB.photoPins('feeding/grape', 'A whole grape beside one cut into quarters lengthwise', [['Whole: choking risk', 27, 64, 'b'], ['Quartered: fine', 70, 64, 'b']]) + '<section class="ph-rowcard">' + H().TPLB.rows([['photo:feeding/grape-q', 'Grapes and cherry tomatoes', 'Quarter them lengthwise'], ['photo:feeding/no-hotdog', 'Hot dogs and sausages', 'Never rounds like these. Cut thin strips'], ['photo:feeding/nutbutter', 'Nuts and nut butter', 'No whole nuts. Spread nut butter thin'], ['photo:feeding/carrot', 'Hard raw fruit and veg', 'Cook or grate until soft']], 'Feeding') + '</section>' }),
     z_milkfood: () => ({ type: 'expect', label: 'Milk and solids', art: 'cup', title: 'No set order for milk and meals',
       why: 'A meal fits in wherever {s’s} awake and happy.',
+      heroTitle: 'Water from a cup', hero: () => H().TPLB.photoPins('feeding/g-cups', 'An open cup and a straw cup', [], 'is-wide'),
       do: [['bottle', 'Offer milk before or after', 'Either works, so go with {p} mood'], ['cup', 'Water from a cup', 'Open or straw. Hold it for {o}, and let {o} try']],
       doNotes: [['', 'Milk eases off slowly', '{S}’ll drink a little less as meals grow, mostly after 9 months']] }),
     z_day: () => ({ type: 'expect', label: 'Meals and milk', art: 'plate', title: 'Some days {s} {eat|eats} a lot, some days little',
@@ -312,6 +314,7 @@
       // Nov 24 (Feeding B, J): the headline fits the baby's age, and says why, not the same thing twice.
       return { type: 'expect', label: 'Turning 1', art: 'cup', title: mo() >= 12 ? 'Whole milk can start now, from a cup' : 'A cup at meals now, whole milk at 12 months',
         why: 'Cups are kinder to teeth, and practice now makes the switch easier.',
+        heroTitle: 'From bottle to cup', hero: () => H().TPLB.photoPins('feeding/bottle-cup', 'A bottle next to an open cup of milk', [['Bottle', 33, 80, 'b'], ['Open cup', 62, 80, 'b']], 'is-wide'),
         do: [['cup', 'Whole milk', 'Not low-fat, until age 2'], ['drop', 'Up to 24 oz a day', b ? 'More crowds out iron-rich food' : 'From a cup. Nursing doesn’t count'], b ? ['bottle', 'Drop one bottle at a time', 'Swap one for a cup each week'] : null].filter(Boolean),
         doNotes: [b ? ['', 'Picky about the taste?', (f ? 'Mix half and half with formula' : 'Mix half and half with breast milk') + ' for a week. Toddler formula isn’t needed'] : null, ['', 'Vitamin D after 1', 'Ask your pediatrician how much {s} {need|needs}']] }; },
     z_refuse: () => ({ type: 'expect', ct: 'know', label: 'Feeding challenges', notice: ['Turning away or closing {p} mouth', 'Pushing food off the tray'], art: 'plate', title: 'Refusing food is normal, and it passes',
@@ -408,7 +411,12 @@
       + `<div class="dev-area-head ss-head" style="--area:${bg};--area-ink:${ink}">${art}<p class="hub-context">${F(v(q.label) + (q.ct === 'howto' ? ' · How to' : ''))}</p><h1>${F(v(q.title))}</h1>${why ? `<p class="hub-lead">${F(why)}</p>` : ''}</div>`
       // Nov 19: a page's main visual comes first, right under the standard top card (never inside it), so every top card looks the same.
       + ((hero => hero ? `<div class="ph-first">${v(q.heroTitle) ? `<h2 class="hub-h2">${F(v(q.heroTitle))}</h2>` : ''}${hero}</div>` : '')(v(q.hero)))
-      + (q.ct ? `<div class="care-tpl is-${q.ct}">${ctBody(q)}</div></div>` : `<div class="care-tpl is-${q.type}">${h.TPLS[q.type](q, CAT)}</div></div>`); };
+      + (q.ct ? `<div class="care-tpl is-${q.ct}">${ctBody(q)}</div></div>` : `<div class="care-tpl is-${q.type}">${rowsNotCircles(() => h.TPLS[q.type](q, CAT))}</div></div>`); };
+  // Nov 24 (Yarden: Feeding matches Sleep): unnumbered icon tiles read as plain rows, not big icon circles.
+  const rowsNotCircles = fn => { const T = H().TPLB, orig = T.tiles;
+    T.tiles = (items, cat, numbered) => { const it = typeof items === 'function' ? items() : items;
+      return numbered || !Array.isArray(it) || it.some(t => t && /^photo:/.test(t[0])) ? orig(items, cat, numbered) : '<section class="ph-rowcard">' + T.rows(it, cat) + '</section>'; };
+    try { return fn(); } finally { T.tiles = orig; } };
   const base = window.changesRoute;
   window.changesRoute = function (r, ...a) {
     if (window.__fdx && X().oldFeeding) r = X().oldFeeding(r);

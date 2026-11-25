@@ -58,6 +58,8 @@
   const nowOf = ages => { const a = window.__chg.ageNow(); let k = -1; ages.forEach((x, i) => { if (x != null && a >= x) k = i; }); return k; };
   const tally = (unit, list, ages) => { const k = ages ? nowOf(ages) : -1; return `<div class="sv2-tally">${list.map(([l, n, stat, faded], i) => `<div class="${i === k ? 'is-on' : ''}"><b>${F(l)}${i === k ? ` <span>${F('Now')}</span>` : ''}</b><span class="sv2-dots">${Array.from({ length: n }, (_, j) => `<s class="${faded && j >= n - faded ? 'is-maybe' : ''}"></s>`).join('') || `<i>${F('None')}</i>`}</span><em>${F(stat)}</em></div>`).join('')}</div><p class="sv2-key"><s></s>${F(unit)}${list.some(x => x[3]) ? `<s class="is-maybe"></s>${F('Some nights')}` : ''}</p>`; };
   // Bars that grow: length is hours of sleep in one stretch.
+  // Nov 24: Feeding's night pages show the same chart, so both guides answer "how many night feeds" the same way.
+  window.__sv2nightFeeds = () => `<div class="sv2">${vis('Night feeds over the first year', 'Typical', tally('One night feed', [['Newborn weeks', 4, 'Several a night', 1], ['Around 3 months', 3, 'Still common', 1], ['Around 6 months', 2, 'Often fewer', 1], ['Later in the first year', 1, 'Often none', 1]], [0, 2.5, 5, 8]))}</div>`;
   const grow = (list, ages) => { const k = nowOf(ages); return `<div class="sv2-grow">${list.map(([l, h, stat], i) => `<div class="${i === k ? 'is-on' : ''}"><b>${F(l)}${i === k ? ` <span>${F('Now')}</span>` : ''}</b><span><s style="width:${(h / 12 * 100).toFixed(1)}%"><em>${F(stat)}</em></s></span></div>`).join('')}</div>`; };
 
   const clock = (h, mnt) => { const a = (mnt / 60) * 360, hA = ((h % 12) + mnt / 60) * 30, p = (deg, r) => [50 + r * Math.sin(deg * Math.PI / 180), 50 - r * Math.cos(deg * Math.PI / 180)].map(n => n.toFixed(1));
