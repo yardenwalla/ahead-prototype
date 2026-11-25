@@ -220,7 +220,7 @@
         ['health/med-measure', 'Measure with the syringe it came with', 'Never a kitchen spoon. Measure in mL'],
         ['health/medicine', 'Hold {o} semi-upright', 'Squirt a little at a time inside {p} cheek, never at the back of the throat'],
         ['health/med-log', 'Write down the time and amount', 'So no one gives a second dose by mistake']])
-      + alert('Skip these', 'Cough and cold medicines, aspirin, and any medicine made for adults.', 'blue')
+      + alert('Skip these', 'Cough and cold medicines, aspirin, and any medicine made for adults.', 'blue').replace(/^<(\w+) class="/, '<$1 style="margin-top:14px" class="')
       + H().TPLB.calls({ pedLabel: 'Call Poison Help, 1-800-222-1222', ped: 'you gave too much, or the wrong medicine.', nowLabel: 'Call 911', now: 'trouble breathing, swelling of the lips or face, or {s} won’t wake.' }));
   }
   function sickHub() {

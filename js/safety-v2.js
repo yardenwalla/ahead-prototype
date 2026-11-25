@@ -184,8 +184,7 @@
       if (left.length) { const n = left.reduce((t, x) => t + x[1], 0); b += `<div class="hub-list" style="margin:12px 0">${h.row({ icon: 'shield', cat: 'Safety', title: 'Catch up on earlier checks', sub: n === 1 ? '1 left from an earlier stage' : `${n} left from earlier stages`, onclick: `openPage('safety-stage:${left[0][0].key}')` })}</div>`; }
     }
     const chokeLink = [typeof actualMonth === 'function' && actualMonth() >= 12 ? 'Learn choking first aid for a child' : 'Learn infant choking first aid', "openPage('chg:Feeding:safe')"];
-    if (!window.__sfPhotoOff) b += h.versus('If something goes wrong', ['Poison Help', 'Swallowed medicine, a cleaner or a plant? Call 1‑800‑222‑1222.'], ['Call 911', 'Can’t breathe, won’t wake, or swallowed a battery or magnet.'])
-      + `<div class="hub-list" style="margin-top:10px">${h.row({ icon: 'alarm', cat: 'Safety', title: chokeLink[0].replace(/^Learn /, '').replace(/^./, c => c.toUpperCase()), sub: 'Step by step, in Feeding', onclick: chokeLink[1] })}</div>`;
+    if (!window.__sfPhotoOff) b += h.versus('If something goes wrong', ['Poison Help', 'Swallowed medicine, a cleaner or a plant? Call 1‑800‑222‑1222.'], ['Call 911', 'Can’t breathe, won’t wake, or swallowed a battery or magnet.'], chokeLink);
     else b += h.versus('If something goes wrong', ['Poison Help', 'Call 1-800-222-1222 if Maya swallows something that could be harmful.'], ['Call 911', 'If {s} can’t breathe or won’t wake. A swallowed battery or magnet means the ER right away.']);
     // Choking first aid lives in Feeding; the safety net links to it.
     if (window.__sfPhotoOff) b += `<div class="hub-browse"><button class="hub-link" onclick="${chokeLink[1]}">${F(chokeLink[0])} ›</button></div>`;

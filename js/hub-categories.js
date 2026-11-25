@@ -371,7 +371,7 @@
       + (SHOW && window.healthTracker ? window.healthTracker(age, focus).replace(/^<h2[^>]*>.*?<\/h2>/, '').replace('h2-track"', 'h2-track is-top"') : '')
       + (WORTH && !done ? `<section class="hl-worth"><small>${F('Worth knowing before you go')}</small><b>${F(WORTH[0])}</b><p>${F(WORTH[1])}</p></section>` : '')
       // Nov 14 (Yarden): parents look for a way to tick a checkup off. One quiet link once it's close or past, never a question.
-      + (live() && !done && age <= focus && dueDays <= 3 ? `<div class="hub-list" style="margin:12px 0">${H().row({ icon: 'steth', cat: 'Health', title: 'Been to this checkup?', sub: 'Tap to mark it done', onclick: `hubVisitYes(${age})` })}</div>` : '');
+      + (live() && !done && age <= focus && dueDays <= 3 ? `<div class="hub-browse hl-done-link"><button class="hub-link" onclick="hubVisitYes(${age})">${F('Been to this checkup? Mark it done')} ›</button></div>` : '');
     // "Booked for later? Save the date" is gone (Nov 10): Health moves on by age, so a saved date isn't needed.
     // The banner at the top already has "Back to your next checkup", so it isn't repeated here.
     if (SHOW && window.healthGlance) b += window.healthGlance(age);
