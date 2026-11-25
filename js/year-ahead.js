@@ -6,7 +6,7 @@
   const MONTH = 30.4375 * 864e5;
   const ageNow = () => { const from = profile.early && profile.due ? parse(profile.due) : parse(profile.dob); return (NOW - from) / MONTH; };
   const C = [
-    ['crying', 0.5, 4, 'Sleep', 'heart', 'The crying peak', 'Fussy evenings, at their worst around 6–8 weeks', "__GO__", '2 weeks–4 months'],
+    ['crying', 0.5, 4, 'Sleep', 'heart', 'The crying peak', 'Fussy evenings, at their worst around 6–8 weeks', "__GO__", '6–8 weeks'],
     ['smile', 1.5, 2, 'Development', 'smile', 'First smiles', 'Maya starts smiling back when you smile', "__GO__"],
     ['nights', 1.5, 4, 'Sleep', 'moon', 'Longer nights', 'One longer sleep at night, often 4–5 hours', "__GO__", '6 weeks–4 months'],
     ['regress', 3, 5, 'Sleep', 'moon', 'The 4-month sleep regression', 'More night waking, for a few weeks', "__GO__"],
@@ -220,9 +220,9 @@
       const row = s => `<li class="tl-gr"><button onclick="${go(s)}">${tile(s)}<span class="tl-t"><b>${F(title(s))}</b><small>${F(line(s))}</small></span><span class="hub-chev" aria-hidden="true">›</span></button></li>`;
       const now = all.filter(s => where(s) === 'now').sort((p, q) => (q.v != null) - (p.v != null) || homeOf(q) - homeOf(p));
       const ahead = all.filter(s => where(s) === 'ahead'), earlier = all.filter(s => where(s) === 'earlier');
-      let h = `<li class="tl-soon"><h2 class="tl-h2">${F('Around now')}</h2><p class="tl-intro">${F(`Little leaps around ${isToday(x) && typeof babyAge === 'function' ? babyAge() : ageTxt(x)}. Every baby moves at {p} own pace.`)}</p>`;
-      h += now.length ? `<ol class="tl-gcard">${now.map(row).join('')}</ol>` : `<p class="tl-quiet">${F(x < 1 ? 'Your first weeks together. Here’s what’s coming first.' : 'A calm stretch. Here’s what’s next.')}</p>`;
-      h += `</li>`;
+      // Nov 25 (proactive pass): no filler. "Around now" shows only when something is changing now; otherwise the
+      // path starts with what comes next (a sentence naming it only repeated the rows right under it).
+      let h = now.length ? `<li class="tl-soon"><h2 class="tl-h2">${F('Around now')}</h2><ol class="tl-gcard">${now.map(row).join('')}</ol></li>` : '';
       // The months ahead: one card per month, each change at its home month.
       const months = [...new Set(ahead.map(s => Math.round(homeOf(s))))].sort((p, q) => p - q);
       months.forEach(mm => {

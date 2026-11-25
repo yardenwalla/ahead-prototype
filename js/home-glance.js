@@ -203,7 +203,7 @@
         ['Everything goes in her mouth', 'Mouthing is how she learns what things feel like, taste like and do.', 'Development', 'mouth', '']] },
     6: { eyes: ['She can spot you across the room', 'Her distance vision has sharpened, so she may light up before you even get close.'],
       notice: [['Her poop will change with solids', 'Once she eats food, it gets firmer, smellier, and sometimes colorful.', 'Daily rhythm', 'diaper', 'chg:Daily rhythm:d:look:3:poop'],
-        ['She may gag on first foods', 'Gagging is loud, and it’s how she learns to move food around.', 'Feeding', 'bowl', 'chg:Feeding:d:lumpy']] },
+        ['She may gag on first foods', 'Gagging is loud, and it’s how she learns to move food around.', 'Feeding', 'bowl', 'chg:Feeding:mock:z_gag']] },
     7: { eyes: ['Her vision is close to yours', 'She sees nearly as well as you do now, just a little softer at a distance.'],
       notice: [['She chews on everything hard', 'Pressure soothes sore gums, so a chilled teether or your finger helps.', 'Daily rhythm', 'tooth', 'chg:Daily rhythm:d:p:teething'],
         ['There’s food in her poop', 'Some foods pass through partly whole while her gut gets used to them.', 'Daily rhythm', 'diaper', 'chg:Daily rhythm:d:look:3:poop']] },
@@ -214,7 +214,7 @@
       notice: [['She turns down new foods', 'Many babies need 10–15 tries before they like a food.', 'Feeding', 'plate', 'chg:Feeding:mock:z_refuse'],
         ['She cries when you leave at bedtime', 'She notices you go now. The same short goodbye each night helps.', 'Sleep', 'moon', 'chg:Sleep:d:goodbye']] },
     10: { eyes: ['She spots tiny details', 'Her eyesight is sharp now, so she notices a crumb on the rug from across the room.'],
-      notice: [['She can’t get down in the crib', 'She can pull up, but hasn’t learned to sit back down yet.', 'Sleep', 'crib', 'chg:Sleep:d:nightwake'],
+      notice: [['She can’t get down in the crib', 'She can pull up, but hasn’t learned to sit back down yet.', 'Sleep', 'crib', 'chg:Sleep:d:skills'],
         ['She throws her food', 'It’s often how she tells you she’s full, before she has words.', 'Feeding', 'toss', '']] },
     11: { eyes: ['She knows faces in photos', 'She may recognize people she knows in pictures now, so family photos make great first books.'],
       notice: [['She’s eating a little less', 'Growth slows toward her first birthday, and so does her appetite.', 'Feeding', 'plate', ''],
@@ -267,9 +267,10 @@
     try { if (profile.early && typeof actualMonth === 'function') am = Math.min(11, actualMonth()); } catch (e) {}
     if (am === m) return RADAR[m] || [];
     return [...(RADAR[am] || []).filter(isChk), ...(RADAR[m] || []).filter(r => !isChk(r))]; };
-  // Nov 25 (VP review): weeks 2–6 are when the parent's own mood matters most, so Home asks once, quietly.
-  const YOU = ['How are you doing?', 'Weepy days are common in the first weeks. If they don’t lift, help is there.', 'Health', 'heart', 'chg:Health:d:you'];
-  const withYou = rows => { try { const d = (NOW - parse(profile.dob)) / 864e5; return d >= 12 && d <= 45 ? [...rows, YOU] : rows; } catch (e) { return rows; } };
+  // Nov 25 (proactive pass): from about 2 weeks until the month-1 story, a heads-up on the crying peak, before it hits.
+  // (Ahead stays about the baby; the parent's own mood lives on the Health page, not on Home.)
+  const YOU = ['Crying often peaks around 6 weeks.', 'Fussy evenings are common. Here’s what helps, and when it eases.', 'Sleep', 'heart', 'chg:Sleep:d:crying'];
+  const withYou = rows => { try { const d = (NOW - parse(profile.dob)) / 864e5; return d >= 12 && d < 30 ? [...rows, YOU] : rows; } catch (e) { return rows; } };
   const radarRows = m => withYou(radarFor(m)).filter(r => {
     const go = r[4];
     try {
@@ -301,7 +302,7 @@
         ['Swaddling ends soon.', 'Once she starts trying to roll, it’s time to stop. Here’s what to look for.', 'Sleep', 'swaddle', 'chg:Sleep:d:swaddleoff']],
     3: [['Her sleep is about to change.', 'Around 4 months, sleep cycles mature. Rougher nights for a few weeks are common.', 'Sleep', 'moon', 'chg:Sleep:d:regress']],
     4: [CHK(4, 'Including a first chat about solids. See what to expect and what to ask.')],
-    5: [['First foods start around 6 months.', 'The signs she’s ready, and what you’ll need.', 'Feeding', 'highchair', 'chg:Feeding:d:signs']],
+    5: [['First foods start around 6 months.', 'Three signs she’s ready, and when to ask.', 'Feeding', 'highchair', 'chg:Feeding:d:signs']],
     6: [CHK(6), ['Peanut and egg can start early.', 'Once she’s eating, offer them early and often.', 'Feeding', 'egg', 'chg:Feeding:d:allergens']],
     7: [['She’ll be on the move soon.', 'Babyproof before she crawls. Start with the room she’s in most.', 'Safety', 'gate', 'topic:Safety']],
     8: [['Finger foods are next.', 'What’s safe to offer, and how to cut it.', 'Feeding', 'avocado', 'chg:Feeding:d:finger']],
@@ -368,7 +369,7 @@
       Crawling: ['She’ll be on the move soon', 'Gates, locks and covers, before she crawls', 'gate'],
       'Pulling up': ['She’ll be pulling up soon', 'Anchor furniture, and keep water and the stove out of reach', 'dresser'] },
     Feeding: { 'Milk feeds': ['Her feeds are getting quicker', 'Fewer, faster feeds are normal now', 'bottle'],
-      'Ready for solids': ['Solids are coming up', 'The signs she’s ready, and what you’ll need', 'highchair'],
+      'Ready for solids': ['Solids are coming up', 'Three signs she’s ready, and when to ask', 'highchair'],
       new: ['She’s starting solids', 'First tastes, and letting her set the pace', 'bowl'],
       textures: ['She’s ready for thicker textures', 'From purées to soft pieces, cut safely', 'pieces'],
       established: ['She’s ready for three meals a day', 'A sample day of meals and milk', 'plate'] },
