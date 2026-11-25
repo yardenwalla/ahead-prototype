@@ -615,7 +615,7 @@
       return page3(view, view === 'hot' ? 'sun' : 'snow', 'Hot and cold days', view === 'hot' ? 'Babies heat up faster than you do.' : 'Babies lose heat faster than you do.', seg + (view === 'hot' ? hot : cold));
     }
 
-    if (id === 'car' || id === 'bigger' || id === 'after1') return page3('gear', 'car', 'Car seat', 'Rear-facing, for as long as the seat allows. It protects {p} head and neck best.',
+    if (id === 'car' || id === 'bigger' || id === 'after1') return page3('gear', 'car', 'Car seat', 'Rear-facing protects {p} head and neck best.',
       photoSteps('Which seat, and when', [[PH('seat-infant'), 'An infant car seat with a carry handle', 'From birth', 'Infant seat, rear-facing'], [PH('seat-convertible'), 'A bigger convertible car seat', 'Outgrows it', 'Convertible, still rear-facing'], [PH('seat-forward'), 'A convertible car seat set up forward-facing', 'Much later', 'Forward-facing, often past age 2']])
       + `<p class="oa-psteps-note">${F('Move up when the label says, not by age. The limits are on a sticker on the seat.')}</p>`
       + one3('Every time you park, look in the back seat before you walk away.')

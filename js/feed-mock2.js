@@ -2416,7 +2416,7 @@
       + `<section class="ss-moment">` + xVs(['Normal', 'Spit-up, gas, fussy evenings, and feeds that change from day to day.'], ['Call your pediatrician', 'Fewer wet diapers, too sleepy to feed, green or bloody vomit, or ' + fever(false) + '.'])
       + xNote('Who can help:', 'your pediatrician' + (nurse ? ', and a lactation consultant for latching, often covered by insurance.' : '.')) + xNote('How are you doing?', 'If you feel low or overwhelmed most days, tell your doctor, or call or text 1-833-852-6262, any time.') + `</section>`); };
   const xTough = (id, title, lead, body) => qaCss + page(head('Feeding challenges', title, lead, XC.tough) + `<section class="ss-moment">${body}</section>`);
-  P.x_hurt = () => xTough('x_hurt', 'Feeds shouldn’t hurt after the first minute', 'A little tenderness in the first week is common. Pain all feed long usually means a shallow latch.',
+  P.x_hurt = () => xTough('x_hurt', 'Feeds shouldn’t hurt after the first minute', 'Pain all feed long often means a shallow latch.',
       steps([['hand', 'Re-latch', 'Break the seal with a clean finger, then try again'], ['heart', 'Try another hold', 'Football or laid-back often helps'], ['steth', 'Get it checked', 'A lactation consultant can check the latch, and for tongue-tie']], false)
       + xKnow('Signs of tongue-tie', 'Clicking, a heart-shaped tongue tip, or long feeds with slow gain.')
       + xNote('Worth a call:', 'pain at most feeds after the first week, or he seems hungry after most feeds.'));
@@ -2704,7 +2704,7 @@
       + xDo('What to tell caregivers', ['Feed on cue, not the clock.', 'Hold the bottle level, and let him pause.', b ? 'Small bottles, so less is wasted.' : 'Mix right before the feed.'])
       + (b ? xNote('Before you’re apart:', 'build a small freezer stash over a few weeks, and have someone else give a bottle once or twice a week.') : '')); };
   P.y_growth = () => { const b = isBreast();
-    return yPage(XC.g1, 'Growing', b ? 'Wet diapers and growth tell you he’s getting enough' : 'Steady growth at checkups', b ? 'Fewer poops can be normal after about 6 weeks. Wet diapers and growth are what count.' : 'Your pediatrician weighs him at 2 and 4 months.',
+    return yPage(XC.g1, 'Growing', b ? 'Wet diapers and growth tell you he’s getting enough' : 'Steady growth at checkups', b ? 'Fewer poops can be normal after 6 weeks. Wet diapers and growth count most.' : 'Your pediatrician weighs him at 2 and 4 months.',
       xNums('', [['6+', 'Wet diapers a day, still'], ageMo() >= 9 ? ['About 3×', 'His birth weight, by his first birthday'] : ['About 2×', 'His birth weight, by 4–5 months']])
       + xKnow('How you’ll know it’s going well', 'Wet diapers, and he stays on his own growth curve at checkups.')
       + xNote('Worth a call:', 'fewer than 6 wet diapers a day, or feeding much less.')); };
@@ -3416,7 +3416,7 @@
       SAY_ONCE.forEach(([a, b]) => { h = h.split ? (typeof a === 'string' ? h.split(a).join(b) : h.replace(a, b)) : h; });
       // Newborn: "Every day" says how to give the drops, one tap away.
       if (/mock:dirD$|mock:dirD:0$/.test(r) && stg() === 0) h = h.replace(/(<span class="hub-card-note"><b>Every day:?<\/b>[^<]*<\/span>)/, `$1<button class="hub-link" style="display:block;margin:8px 0 0;padding:0" onclick="${go('nb_vitd')}">${F('How to give drops')} ›</button>`);
-      if (ageMo() >= 6) h = h.split(F('Fewer poops can be normal after about 6 weeks. Wet diapers and growth are what count.')).join(F('Wet diapers, and steady growth at checkups, are what count.'));
+      if (ageMo() >= 6) h = h.split(F('Fewer poops can be normal after 6 weeks. Wet diapers and growth count most.')).join(F('Wet diapers, and steady growth at checkups, are what count.'));
       h = h.split('<h1>' + F('Vitamin D and iron are in the formula') + '</h1>').join('<h1>' + F('Vitamin D drops, until about 32 oz a day') + '</h1>')
         .replace(/(She|He|They) needs? vitamin D drops until (she|he|they) drinks? about 32 oz a day\./, (m, A, b) => 'About 32 oz of formula holds a full day’s vitamin D. Until ' + b + ' ' + (b === 'they' ? 'drink' : 'drinks') + ' that much, ' + b + ' ' + (b === 'they' ? 'need' : 'needs') + ' drops too.');
       return h; }; }

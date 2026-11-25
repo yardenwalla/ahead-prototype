@@ -122,7 +122,7 @@
       when: ['A few weeks ahead', 'Enough time to talk through the routine together.'],
       steps: [['Talk it through', 'talk', 'Kindly, before the first day', [['Back to sleep, in a bare crib', 'Even for naps. This advice has changed.'], ['How you’ll stay in touch', 'The hours week to week, and that either of you can say if it isn’t working.'], ['The car seat, every ride', 'Rear-facing, and buckled snugly.'], ['Naps, bedtime and feeds', 'Share {p} care card, so you match.'], ['Crying can wear anyone down', 'Put Maya down safely and take a minute. Never shake a baby.'], ['Infant CPR', 'A short class is worth it.']]]] },
     sitter: { icon: 'moon', name: 'Babysitter', short: 'For a few hours', who: 'person',
-      lead: 'Someone who watches Maya for a few hours, so you can rest or go out.',
+      lead: 'A few hours of care, so you can rest or go out.',
       good: 'You need a few hours of help, not regular care.', mind: 'Keep the first night short, and stay reachable.',
       when: ['A week or two ahead', 'Time for a short first visit while you’re at home, so everyone gets comfortable.'],
       steps: [['Before the sitter comes', 'check', 'Or a call. Listen for:', [['Have you looked after babies this young?', 'Yes, more than once.'], ['Are you trained in infant CPR?', 'Yes, ideally in the last 2 years.'], ['Can I call a family you’ve sat for?', 'Yes, gladly.']]],
@@ -184,7 +184,7 @@
     if (id === 'plan') return sub('plan', 'Before you choose', 'Start about 3 months ahead', 'Infant spots fill first, so join waitlists now.',
       `<section class="cc-two"><h2>${F('Start with two things')}</h2><p>${F('They narrow every choice that follows.')}</p><div>${[['clock', 'Your schedule', 'Days and hours you need'], ['coin', 'Your budget', 'What works each month']].map(([i, t, d]) => `<div><span>${hubArt(i, CAT)}</span><b>${F(t)}</b><small>${F(d)}</small></div>`).join('')}</div></section>`
       + `<h2 class="hub-h2">${F('Your path to care')}</h2><p class="cc-h2sub">${F('Suggested timing. It varies by kind of care and where you live.')}</p>`
-      + `<ol class="cc-route">${[['Now', 'Join a few daycare waitlists.', 'Infant spots fill first.'], ['About 3 months before care starts', 'Tour daycares, or meet nannies.'], ['6–8 weeks before', 'Check references, and choose.'], ['2 weeks before', 'Get ready for day one.']].map(([t, d, x], i) => `<li class="${i ? '' : 'is-first'}"><i>${i + 1}</i><div><b>${F(t)}</b><span>${F(d)}</span>${x ? `<small>${F(x)}</small>` : ''}</div></li>`).join('')}</ol>`
+      + `<ol class="cc-route">${[['Now', 'Join a few daycare waitlists.'], ['About 3 months before care starts', 'Tour daycares, or meet nannies.'], ['6–8 weeks before', 'Check references, and choose.'], ['2 weeks before', 'Get ready for day one.']].map(([t, d, x], i) => `<li class="${i ? '' : 'is-first'}"><i>${i + 1}</i><div><b>${F(t)}</b><span>${F(d)}</span>${x ? `<small>${F(x)}</small>` : ''}</div></li>`).join('')}</ol>`
       + `<details class="hub-card cc-more"><summary><span>${hubArt('chat', CAT)}</span><div><b>${F('If plans change')}</b><small>${F('Short on time, odd hours, or nothing fits yet')}</small></div></summary>`
       + `<ul>${[['Short on time?', 'Your local child care referral agency is free and knows who has openings.'], ['Hours outside 9 to 5', 'Home daycares and nannies often stretch further than centers.'], ['Nothing feels right', 'Keep looking. Family or a sitter can fill the gap, and a mix is common.']].map(([t, d]) => `<li><b>${F(t)}</b><small>${F(d)}</small></li>`).join('')}</ul></details>`
       + (typeof profile !== 'undefined' && profile.early ? h.tip('Born early?', 'Ask your pediatrician when, and what kind of care, makes sense for {o}.') : '')
@@ -688,7 +688,7 @@
     // full checklist is still there, folded away.
     const done = (c.checks || []).filter(x => Qs.some(y => y.key === x)).length;
     const note = (id, label, ph, v) => `<label class="cc-field"><span>${F(label)}</span><textarea id="${id}" class="cc-notes" rows="2" placeholder="${esc3(ph)}">${esc3(v)}</textarea></label>`;
-    return sub(k, t.name, isNew ? `Add a ${noun}` : esc3(c.name), isNew ? 'Keep notes on each one, so you can compare them side by side later.' : '',
+    return sub(k, t.name, isNew ? `Add a ${noun}` : esc3(c.name), isNew ? 'Notes on each one make comparing easy later.' : '',
       `<section class="hub-card cc-form"><label class="cc-field"><span>${F(t.who === 'place' ? 'Name of the place' : 'Their name')}</span><input id="ccName" value="${esc3(c.name)}" placeholder="${esc3(t.who === 'place' ? 'For example, Little Oaks' : 'For example, Sam')}" autocomplete="off"></label>
         <label class="cc-field"><span>${F('Phone or email (optional)')}</span><input id="ccContact" value="${esc3(c.contact)}" autocomplete="off"></label></section>`
       + `<h2 class="hub-h2">${F('After your call or visit')}</h2><section class="hub-card cc-form">`

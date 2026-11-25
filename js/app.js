@@ -750,7 +750,7 @@ const PLAY_CONTEXT={
   },
   "mirror-company": {
     "needs": "A shatterproof baby mirror.",
-    "explain": "Making faces together in the mirror turns looking into a game. Baby won’t know it’s them yet.",
+    "explain": "Faces in the mirror turn looking into a game. Baby won’t know it’s them yet.",
     "notice": "They might look from your face to the mirror and back, or reach for it.",
     "extend": "Make a face in the mirror, then copy theirs."
   },
