@@ -675,8 +675,8 @@
     var st = m === 4 ? { cover: ['She’s done just watching.', 'The world is getting a lot more interesting.'], sum: ['Found her hands', 'Distracted feeds', 'Sleep is maturing'] } : STORIES[m];
     if (!st) return null;
     var TEASE = { 0: '{N} is brand new and loves being snug.', 1: '{N} notices more each day, and kicks with joy.', 2: '{N} smiles on purpose and is starting to coo.', 3: '{N}’s hands are opening, so she can reach for toys.',
-      4: 'Everything catches {N}’s eye, even during feeds.', 5: '{N} found her feet, and they’re after that ball.', 6: 'Halfway to one, {N} may be ready for a taste.', 7: '{N} drops it. You pick it up. And she does it again.',
-      8: '{N} knows you’re there, even out of sight.', 9: '{N} is figuring out how things fit together.', 10: '{N} may start pulling up on the furniture.', 11: '{N} is almost one, and look how far she’s come.' };
+      4: 'Everything catches {N}’s eye, even during feeds.', 5: '{N} has found her feet, and reaches for everything.', 6: 'Halfway to one, {N} may be ready for a taste.', 7: '{N} drops things on purpose, to watch you pick them up.',
+      8: '{N} knows you’re there, even out of sight.', 9: '{N} is figuring out how things fit together.', 10: '{N} may start pulling up on the furniture.', 11: '{N} is almost one, and may clap along to songs.' };
     return { title: Pp(st.cover[0]), lead: Pp(st.cover[1]), tease: Pp(m === 6 && chapter() !== 6 ? '{N} is reaching for more, and may be ready for a taste.' : TEASE[m]).replace(/^\{N\}/, nm()).replace('{N}', nmIn()), sum: st.sum.map(Pp) };
   };
 

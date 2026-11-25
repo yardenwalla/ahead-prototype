@@ -706,7 +706,7 @@
     const baseCategories = journeyCategories;
     window.journeyCategories = journeyCategories = function () {
       // Search sits at the top; there is no separate Resources section (outside links live inside each guide).
-      const search = `<div class="hub-search hub-cat-search"><input class="search" type="search" placeholder="Try: teething, short naps, fever…" aria-label="Search guidance" oninput="searchGuides(this.value)" value="${esc2(query || '')}"><div id="results" class="hub-list hub-results" ${query ? '' : 'hidden'}></div></div>`;
+      const search = `<div class="hub-search hub-cat-search"><input class="search" type="search" placeholder="Try “Is 100.6°F a fever?” or “short naps”" aria-label="Search guidance" oninput="searchGuides(this.value)" value="${esc2(query || '')}"><div id="results" class="hub-list hub-results" ${query ? '' : 'hidden'}></div></div>`;
       if (query) setTimeout(() => { if (document.querySelector('.hub-cat-search')) searchGuides(query); }, 0);
       return baseCategories().replace(/<div class="journey-utility-links">[\s\S]*<\/div>$/, '').replace(/(<h1>Categories<\/h1>)/, '$1' + search);
     };

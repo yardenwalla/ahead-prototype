@@ -213,7 +213,7 @@
         if ((x >= a && done[s.c.id]) || s.c.end <= x) return 'earlier';
         return homeOf(s) <= x + 0.25 ? 'now' : 'ahead';
       };
-      const TIP = { crying: x >= 2 ? 'Past the worst now' : 'Plan for fussy evenings', smile: 'Lots of face time', nights: 'Start a bedtime routine', regress: 'Line up night help', roll: 'Keep {o} off beds and sofas', solids: 'Get a high chair', twonaps: 'Move bedtime earlier', sit: 'Lower the crib mattress', crawl: 'Babyproof first', tooth: 'Start brushing', sep: 'Keep goodbyes short', pull: 'Anchor furniture', carseat: 'Check its height limit', words: 'Name things all day', milk: 'Offer it in a cup', steps: 'Barefoot indoors' };
+      const TIP = { crying: x >= 2 ? 'Past the worst now' : 'Plan for fussy evenings', smile: 'Lots of face time', nights: 'Start a bedtime routine', regress: 'Line up night help', roll: 'Keep {o} off beds and sofas', solids: 'Get a high chair', twonaps: 'Move bedtime earlier', sit: 'Lower the crib mattress', crawl: 'Babyproof first', tooth: 'Start brushing', sep: 'Keep goodbyes short', pull: 'Anchor furniture', carseat: 'Head near the top? Time for the next seat', words: 'Name things all day', milk: 'Offer it in a cup', steps: 'Barefoot indoors' };
       const line = s => s.v != null ? (where(s) === 'now' ? 'Due now · Book it if you haven’t' : 'Book it a few weeks ahead') : where(s) === 'now' ? `${shortRange(s)}${TIP[s.c.id] ? ' · ' + TIP[s.c.id] : ''}` : `Usually ${shortRange(s)}`;
       const catOf = s => s.v != null ? 'Health' : s.c.cat;
       const tile = s => `<span class="tl-ic" style="${yearTheme(catOf(s))}">${hubArt(s.v != null ? 'steth' : s.c.icon, catOf(s))}</span>`;
