@@ -619,3 +619,4 @@
 #main .lasts-card > i { flex: none; width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; background: var(--area, #eef0f6); color: var(--area-ink, #4c4a63) }
 #main .lasts-card b { display: block; font-size: 15px; color: #2b2732 }
 #main .lasts-card p { margin: 3px 0 0; font-size: 14px; line-height: 1.4; color: #5b5560 }
+#main .sv2 > .lasts-card { margin-top: 0 }   /* the Sleep column already spaces cards 14px apart */
