@@ -1963,15 +1963,16 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
         'h:diapers:0': 'Fresh diaper under first, then wipe', 'h:diapers:1': 'Fresh diaper under first, then wipe', 'h:diapers:2': 'Set up first, and a hand on {o}', 't:diapers:3': 'A toy to hold helps',
         'h:skin:1': 'Plain water, and cream for dry patches', 'h:skin:2': 'Plain water, and cream for dry patches', 'p:teething': 'What helps, and what to skip',
         't:bath:2': 'Bath, feed, book, sleep', 't:bath:3': 'Once {s} {sit|sits} steadily', 'p:feet': 'Soft shoes once walking outside', 'h:gums:1': 'A soft cloth on your finger', 't:sun:1': 'A hat, long sleeves and the canopy up', 't:sun:2': 'Shade first, sunscreen from 6 months', 't:sun:3': 'Again every 2 hours, after shade and a hat', 't:clothes:0': 'One layer more than you',
-        't:clothes:0': 'One layer more than you', 'p:brush': 'A rice-grain smear, twice a day' };
+        't:clothes:0': 'One layer more than you', 'p:pacifier': live() && profile.feed === 'Formula' ? 'At naps and bedtime' : 'At sleep, once feeding is going well', 'p:brush': 'A rice-grain smear, twice a day' };
       const nail = r => /^t:nails/.test(r) ? 'While {s} {sleep|sleeps}, with a file or clippers' : null;
       // What matters most at each stage, in order (Nov 13: everything important shows on the page; "All how-tos" only adds the rest).
       // Nov 22 (Yarden): only what changes at this stage shows here; everything else lives in All how-tos.
-      const ORDER = [['diapers', 'cord', 'nails', 'clothes'], ['skin', 'sun'], ['diapers', 'bath'], ['bath', 'sun', ...(!live() || careAge() >= 9 || now < 3 ? ['clothes'] : [])]][v];   // shoes only once walking is near
+      const ORDER = [['diapers', 'cord', 'nails', 'clothes', ...(!live() || profile.feed === 'Formula' || (Date.now() - new Date(profile.dob + 'T12:00:00')) / 864e5 >= 21 ? ['paci'] : [])],   // Nov 25 (Yarden): the pacifier once feeding is going well
+         ['skin', 'sun'], ['diapers', 'bath'], ['bath', 'sun', ...(!live() || careAge() >= 9 || now < 3 ? ['clothes'] : [])]][v];   // shoes only once walking is near
       const tiled = new Set(SEE.map(x => x[2])), byKey = k => HOWTO[v].find(x => x[0] === k);
-      const rows = ORDER.map(byKey).filter(x => x && x[0] !== NEWKEY && !(N.also && x[0] === N.also.key) && !tiled.has(x[3])).slice(0, 4);   // nothing twice: a tile that opens the same page wins
+      const rows = ORDER.map(byKey).filter(x => x && x[0] !== NEWKEY && !(N.also && x[0] === N.also.key) && !tiled.has(x[3])).slice(0, 5);   // Nov 25 (Yarden): everything new and relevant shows   // nothing twice: a tile that opens the same page wins
       // Nov 21: each row previews its page with a small real-life photo, like Feeding's guide rows (92px, full row height).
-      const THUMB = { diapers: v >= 2 ? 'th-wriggle' : 'th-diaper', cord: 'th-cord', nails: 'th-nails', clothes: 'th-dress', skin: 'th-skin', sun: 'th-sun', bath: v >= 3 ? 'th-bigtub' : v === 2 ? 'th-bath5' : 'th-tub', feet: 'th-feet', teeth: 'th-brush' };
+      const THUMB = { paci: 'look-paci', diapers: v >= 2 ? 'th-wriggle' : 'th-diaper', cord: 'th-cord', nails: 'th-nails', clothes: 'th-dress', skin: 'th-skin', sun: 'th-sun', bath: v >= 3 ? 'th-bigtub' : v === 2 ? 'th-bath5' : 'th-tub', feet: 'th-feet', teeth: 'th-brush' };
       const prow = (k, t, sub, on) => THUMB[k] ? `<button class="hub-row fd-prow" onclick="${on}"><span class="fd-thumb"><img src="assets/care/${THUMB[k]}.jpg?v=3" alt="" loading="lazy"></span><span class="hub-row-copy"><b>${F(t)}</b><small>${F(sub)}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>` : rowK(k, t, sub, on);
       b += h2(v === now || !live() ? 'Right now for Maya' : 'At this stage') + `<div class="hub-list fd-plist">${rows.map(([k, t, sub, r]) => prow(r === 'p:feet' ? 'feet' : k, t, HINT[r] || nail(r) || sub, cgo(r))).join('')}</div>`
         + `<div class="hub-list">${rowK('need', 'All how-tos', 'Every step-by-step for this age', cgo('how:' + v))}</div>`; }
