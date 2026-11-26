@@ -20,6 +20,8 @@
   const note = (b, t, ic = 'star', tone = '') => `<div class="sv2-note ${tone}"><i>${art(ic)}</i><p><b>${F(b)}</b> ${F(t)}</p></div>`;
   const calls = ped => H().TPLB.calls({ ped, now: '{s} {struggle|struggles} to breathe or {turn|turns} blue, won’t wake, or {are|is} floppy.', nowLabel: 'Call 911' });
   const foot = t => `<p class="sv2-foot">${F(t)}</p>`;
+  // Nov 25 (Yarden): how long a hard phase lasts, as one simple card.
+  const lasts = t => window.__lastsCard ? window.__lastsCard(t) : '';
 
   // A day drawn to scale: every block is as long as it really is.
   const H0 = 7, H1 = 20, pct = h => ((h - H0) / (H1 - H0) * 100).toFixed(2) + '%';
@@ -118,7 +120,8 @@
     'd:shortnap': () => page('Naps', 'A short nap moves the day earlier', age() < 6 ? 'A 30–45 minute nap is common at this age. Plan the next sleep a little sooner.' : 'Teething or a new skill can cut a nap short. Plan the next sleep a little sooner.',
       vis('When a nap runs short', '', photos([['nap.jpg', 'A short nap', '30–45 minutes'], [YAWN(), 'Sleepy sooner', 'Next nap 15–30 min earlier'], ['book.jpg', 'Earlier bedtime', 'If the day runs short']]))
       + rows('', [['eye', 'Follow {p} cues', 'Sleepy signs matter more than the clock.']])
-      + note(age() < 6 ? 'Naps get longer with time.' : 'Short naps still happen.', 'A dark room and white noise can help a nap last.') + foot('Every baby moves at {p} own pace.')),
+      + (age() < 6 ? lasts('Naps often lengthen around 5–6 months, as sleep matures.') : '')
+      + note(age() < 6 ? 'A dark room helps.' : 'Short naps still happen.', 'White noise can help a nap last, too.') + foot('Every baby moves at {p} own pace.')),
     'd:regress': () => page('Night sleep', 'The 4‑month sleep regression is normal', '{P} sleep cycles are maturing, so {s} wakes more for a few weeks.',
       vis('Wakings in one night', 'A few weeks', tally('One waking', [['Before', 2, 'Your usual nights'], ['During', 6, 'More wakings'], ['A few weeks later', 2, 'Back to usual']], [null, 3, 5.5]))
       + rows('What helps', [['clock', 'Wait a minute or two', 'Many cries settle on their own.'], ['moon', 'Dark and quiet', 'Keep visits brief.'], ['heart', 'A feed if hungry', 'Comfort the way you always do.']])
@@ -155,6 +158,7 @@
     'd:goodbye': () => page('Bedtime', 'Keep goodnights short and the same', 'Many babies protest when you leave around 8–10 months. It shows how attached {s} is.',
       vis('The same goodbye, every night', '', photos([['book.jpg', 'Your usual steps', 'Same order'], ['goodbye.jpg', 'Same goodnight words', 'Every time'], ['crib.jpg', 'Then leave', 'Even if {s} protests']]) + `<p class="sv2-cap is-loop">↻ ${F('Back briefly if needed: calm and boring')}</p>`)
       + rows('What’s normal now', [['heart', 'Crying as you leave', 'Right as you walk out.'], ['star', 'Only you will do', 'Especially at bedtime.'], ['stand', 'Standing up and calling', 'Wanting you to come back.']])
+      + lasts('It often starts around 8–10 months, and comes and goes into toddlerhood.')
       + note('Predictable beats sneaking out.', 'Sneaking out can make {o} watch you more closely.')),
     // Nov 24 (Sleep C): before 1, this is a look ahead; the photos show the change.
     'd:lovey': () => page(age() < 12 ? 'Read ahead · From 12 months' : 'Safe sleep', 'After 1, a small lovey can join the crib', 'By then the risk of sudden infant death is much lower, and a lovey can comfort {o}.',
@@ -191,6 +195,7 @@
         <div class="sv2-ba is-after"><b>${F('Two-nap day')}</b>${dayBar([[9.5, 11, 'Morning nap'], [14, 15.5, 'Afternoon nap']], 18.5)}</div>
         ${legend([['awake', 'Awake'], ['nap', 'Nap'], ['night', 'Bedtime']])}<p class="sv2-cap">${F('The catnap’s spot fills with awake time, and bedtime moves a little earlier.')}</p>`)
       + rows('Signs {s} may be ready', [['moon', 'The third nap is hard to fit', '{S} refuses it, or it pushes bedtime late.'], ['clock', '{S} stays happy awake longer', 'The gaps between naps start to stretch.'], ['sun', 'The first two naps get longer', '{S} may not need the short bridge anymore.']])
+      + lasts('The switch is usually bumpy for 1–2 weeks, then the new rhythm settles.')
       + note('Try this:', 'On days {s} skips the catnap, move bedtime about 30 minutes earlier.') + foot('Ages are typical. Every baby moves at {p} own pace.')),
     'd:after': () => page(age() < 13 ? 'Read ahead · From 13 months' : 'Naps', 'Two naps become one', 'This usually happens between 13 and 18 months, not at the first birthday.',
       vis('The day changes shape', 'Before → After', `<div class="sv2-ba"><b>${F('Two-nap day')}</b>${dayBar([[9.5, 11, 'Morning nap'], [14, 15.5, 'Afternoon nap']], 19)}</div><div class="sv2-ba-arrow" aria-hidden="true">↓</div>
