@@ -1014,12 +1014,18 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   // that's good to know, then how to keep {o} safe.
   const nearby = items => items && items.length ? `<p class="care-near-h">${F('Have nearby')}</p><div class="care-near">${items.map(t => `<span>${F(t)}</span>`).join('')}</div>` : '';
   const goodLine = g => g ? `<p class="care-good"><b>${F('Good to know:')}</b> ${F(g)}</p>` : '';
+  // Nov 25 (Yarden): hard phases say how long they last, as a small timeline: stops along the way, the one now
+  // highlighted, and one line on when it eases.
+  const lastsCard = l => { if (!l) return ''; const now = l.now ? l.now() : 0, t = l.t || 'How long it lasts';
+    const body = `<div class="hub-card care-lasts"><ol>${l.stops.map(([b, a], i) => `<li class="${i === now ? 'is-now' : ''}${i === l.stops.length - 1 ? ' is-end' : ''}"><i></i><b>${F(b)}</b><small>${F(a)}</small></li>`).join('')}</ol><p>${F(l.line)}</p></div>`;
+    return l.h2 ? l.h2(t) + body : TB.section(t, body); };
   const showPage = q => { const sh = val(q.show); return TB.top(q, q.why)
       + TB.section(val(q.pictureTitle) || 'At a glance', q.picture ? q.picture() : '')
       + TB.section(sh.t, showCard(sh))
       + nearby(val(q.nearby))
       + TB.section(q.movesT || 'Do it in a few steps', moves(val(q.moves), val(q.movesNotes)))
       + goodLine(val(q.good))
+      + lastsCard(val(q.lasts))
       + (q.full ? `<div class="hub-list care-link">${rowK('diapers', 'The full change, step by step', 'Fresh one under, wipe, fasten', `openPage('chg:${CAT}:d:h:diapers:1')`)}</div>` : '')
       + TB.section(q.tipsTitle || 'Keep {o} safe', TB.rows(val(q.tips || q.safe)) + (q.link ? TB.link(val(q.link)) : ''))
       + (q.urgent ? hubUrgent(F(val(q.urgent)), 'Call 911 right away') : '')
@@ -1108,6 +1114,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     return `<div class="ct-page is-howto">` + ctTop(q.k, (val(q.topic) || LABEL[q.k]) + ' · How to', val(q.title), val(q.why)) + (sh ? ctPhoto2(sh) : '') + (q.routine ? ctRoutine(val(q.routine)) : '')
       + (near.length ? ctH2('Have nearby') + ctNear(near) : '')
       + (mv.length ? ctH2(q.movesT || 'Do it in a few steps') + `<div class="ct-stepcard">${ctSteps2(mv)}${ctNotes2((val(q.notes) || []).slice(q.safeN || 0))}</div>` : '')
+      + (q.lasts ? lastsCard(Object.assign({}, val(q.lasts), { h2: ctH2 })) : '')
       + (q.full ? ctFull : '') + (q.link && !q.full ? `<div class="hub-list ct-rowlink">${rowK('diapers', 'Red skin under the diaper?', 'Diaper rash or yeast: see the difference', `openPage('chg:${CAT}:d:${val(q.link)[2]}')`)}</div>` : '')
       + ((val(q.notes) || []).slice(0, q.safeN || 0).length ? ctH2('Keep {o} safe') + `<div class="ct-safecard">${ctNotes2(val(q.notes).slice(0, q.safeN))}</div>` : '')
       + (q.video ? ctH2('Watch how') + TB.video(q.video) : '') + `</div>`; };
@@ -1521,6 +1528,8 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
       show: stand ? { img: 'show-stand', alt: 'A toddler stands holding the sofa while a parent kneels beside her with a clean pull-on diaper', tags: [['Holding the sofa', 'bl'], ['Pull-on ready', 'br']], t: 'A new option', line: 'If {s} can stand steadily, change {o} standing, in pull-ons.' }
         : { img: 'show-wriggle', alt: 'A parent keeps a hand on her baby’s tummy while he holds a soft toy', tags: [['Toy to hold', 'bl'], ['Hand on tummy', 'br']], t: 'The trick to see', line: stand ? 'If {s} can stand steadily, change {o} standing, in pull-ons.' : 'Give {o} something to focus on, with everything already in reach.' },
       nearby: stand ? ['Pull-on diaper', 'Wipes', 'Toy'] : ['Diaper', 'Wipes', 'Small toy'],
+      lasts: { stops: [['Rolling', '4–6 months'], ['Crawling', '6–10 months'], ['Standing', '9–12 months']], now: () => stand ? 2 : careAge() >= 7 ? 1 : 0,
+        line: stand ? 'Wriggling doesn’t stop, but changes get quicker once {s} can stand and help.' : 'It doesn’t stop, but it gets easier. Once {s} can stand steadily, you can change {o} standing up. Ages are typical.' },
       moves: stand ? [['Get everything ready', 'If {s’s} wobbly, change {o} lying on the floor instead'], ['Let {o} hold on', 'To the sofa edge, or give {o} a toy'], ['Off, wipe, on', 'Tear the sides of the dirty one, wipe front to back, step {o} into the new one']]
         : [['Hand {o} a toy', 'Or sing the same song each time'], ['A hand on {p} tummy', 'Before {s} {roll|rolls} away'], ['Too wriggly? Use the floor', 'A mat on the floor avoids a fall']],
       good: 'Leaks, or red marks on the legs, mean it’s time for the next size.', full: true,
@@ -1884,18 +1893,18 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   // One card: what care looks like at this age, grouped by how often. Each line opens its basic at this age.
   // A line that changed at this stage carries "New".
   const ROUTINE = () => [
-    { title: 'The busiest weeks for care', lead: 'Lots of diapers and gentle sponge baths. It gets quicker fast.',
+    { title: 'Diapers and sponge baths', lead: 'Lots of diapers, and gentle sponge baths while the cord heals.',
       groups: [['Every day', [['diapers', 'Diapers', '8–12 changes a day', 'At least 6 wet a day by day 6. Wipe front to back, and let the skin dry.', 1, 'newdiapers'], ['cord', 'The cord', 'Keep it clean and dry', 'It falls off in 1–3 weeks', 1], ['teeth', 'Gums', 'Wipe twice a day', 'With a soft, clean cloth', 1, 'gums'], ['clothes', 'Clothes', 'One layer more than you', 'No hat indoors']]],
                ['Each week', [['bath', 'Sponge baths', '2 or 3 a week', 'Until the cord falls off', 1], ['nails', 'Nails', 'Trim once a week', 'They grow fast, and they’re sharp']]]] },
-    { title: 'Care settles into a rhythm', lead: 'Tub baths start once the cord heals, and most days look alike now.',
+    { title: 'Care settles into a rhythm', lead: 'The cord has healed, so tub baths can start.',
       groups: [['Every day', [['diapers', 'Diapers', 'Fewer poops can be normal', 'Keep a hand on {o} at every change', 1], ['skin', 'Skin', 'Plain water on the face', 'Baby acne and cradle cap are common', 1, 'acne'], ['teeth', 'Gums', 'Wipe twice a day', 'With a soft, clean cloth', 0, 'gums'], ['clothes', 'Clothes', 'One layer more than you', 'No hat indoors']]],
                ['Each week', [['bath', 'Tub baths', 'About 3 a week', 'Hair washed in 2 or 3', 1], ['nails', 'Nails', 'Trim once a week', 'Easiest while asleep']]],
                ['Outside', [['sun', 'Sun', 'Shade first', 'Long sleeves and a wide-brimmed hat']]]] },
-    { title: 'Drool and busy hands', lead: 'Teething often starts, rolling begins, and bath time gets more fun.',
+    { title: 'Drool and sore gums', lead: 'Teething often starts, and diaper changes get trickier.',
       groups: [['Every day', [hasTooth() ? ['teeth', 'Teeth and teething', 'Brush twice a day', 'A rice-grain smear of toothpaste. A chilled ring helps sore gums', 1, 'teething'] : ['teeth', 'Teething', 'Chewing and drool are normal', 'Wipe gums twice a day and pat the chin dry. A chilled ring helps', 1, 'teething'], ['diapers', 'Diapers', 'Keep a hand on {o} at every change', (answers.roll === 'Yes' || ['Tummy to back', 'Back to tummy', 'Both ways', 'Trying to roll'].includes(answers.rollDirection)) ? 'Use the strap, or change {o} on the floor' : 'Rolling can start any day']]],
                ['Each week', [['bath', 'Baths', 'About 3 a week', 'Often part of bedtime'], ['nails', 'Nails', 'Trim once a week', '']]],
                ['Outside', [['sun', 'Sun', careAge() >= 6 ? 'Shade, then SPF 30' : 'Shade first', careAge() >= 6 ? 'Sunscreen from 6 months, on skin you can’t cover' : 'Sunscreen only if there’s no shade', careAge() >= 6 ? 1 : 0]]]] },
-    { title: 'First teeth and the big tub', lead: 'From 6 months, sunscreen can join shade on sunny days.',
+    { title: 'First teeth and the big tub', lead: 'Brushing starts with the first tooth, and the big tub once {s} {sit|sits} steadily.',
       groups: [['Every day', [hasTooth() ? ['teeth', 'Teeth', 'Brush twice a day', 'A rice-grain smear of fluoride toothpaste', 1, 'brush'] : ['teeth', 'Teeth', 'Brush from the first tooth', 'Until then, wipe gums twice a day', 1, 'brush'], ['diapers', 'Diaper changes', 'Keep a hand on {o}', 'A toy to hold helps with wriggling', 1], ['feet', 'Feet and shoes', 'Bare feet indoors', 'Soft shoes once walking outside', 1, 'feet']]],
                ['Each week', [['bath', 'Baths', 'About 3 a week', 'The big tub, once sitting steadily', 1], ['nails', 'Nails', 'Trim once a week', '']]],
                ['Outside', [['sun', 'Sun', 'Shade, then SPF 30', 'Again every 2 hours and after water']]]] }
@@ -1903,12 +1912,12 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   // Nov 12 (Yarden's "one home" concept): the main page shows one new change, a few things you may be noticing, and two
   // doors: "How do I…?" (every how-to, plus the care routine one tap down) and "Is this normal?" (start from what you see).
   const CARE_NEW = [
-    { art: 'bath', t: 'Sponge baths until the cord falls off', d: 'Until the cord falls off, which usually takes 1–3 weeks.', cta: 'See how', go: 'p:sponge',
+    { art: 'bath', t: 'Your first sponge bath', d: 'Until the cord falls off, which usually takes 1–3 weeks.', cta: 'See how', go: 'p:sponge',
       see: [['acne', 'Baby acne', 'rash:acne'], ['milia', 'Newborn marks', 'rash:newborn'], ['yellow', 'Yellow skin', 'look:0:yellow']] },
-    { art: 'bath', t: 'Tub baths, a few a week', d: 'The cord has healed, so the little tub is ready.', cta: 'See how', go: 'p:tub',
+    { art: 'bath', t: 'The first tub bath', d: 'The cord has healed, so the little tub is ready.', cta: 'See how', go: 'p:tub',
       see: [['acne', 'Baby acne', 'rash:acne'], ['cradle', 'Cradle cap', 'rash:cradle'], ['diaper', 'Poop colors', 'look:1:poop']] },
     // Nov 25 (Yarden): the New now line matches the stage photo (drool and teething). Change a wriggler leads Right now.
-    { art: 'tooth', t: 'Drool and sore gums', d: 'Teething often starts around now.', cta: 'What helps', go: 'p:teething',
+    { art: 'tooth', t: 'Soothe sore gums', d: 'Teething often starts around now.', cta: 'What helps', go: 'p:teething',
       see: [['drool', 'Drool rash', 'rash:drool'], ['eczema', 'Eczema', 'rash:eczema'], ['diaper', 'Poop colors', 'look:2:poop']] },
     { art: 'tooth', t: 'A tiny tooth, a new routine', d: 'Brushing twice a day starts once the first tooth is in.', cta: 'How to brush', go: 'p:brush',
       // Nov 25 (Yarden): one highlight in the main card at every stage; the big tub lives in the rows below.
@@ -1921,7 +1930,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     // month old by birthday, the cord is long gone, so the first-weeks card becomes the tub-bath one.
     const realDays = typeof profile !== 'undefined' && profile.dob ? Math.floor((NOW - parse(profile.dob)) / 864e5) : 0;
     const pastCord = live() && v === now && typeof profile !== 'undefined' && profile.early && realDays >= 28 && v <= 1;
-    let N = pastCord ? { art: 'bath', t: 'Tub baths, a few a week', d: 'The cord has long since healed, so tub baths are fine now.', cta: 'See how', go: 'p:tub',
+    let N = pastCord ? { art: 'bath', t: 'The first tub bath', d: 'The cord has long since healed, so tub baths are fine now.', cta: 'See how', go: 'p:tub',
       see: [['acne', 'Baby acne', 'rash:acne'], ['cradle', 'Cradle cap', 'rash:cradle'], ['diaper', 'Poop colors', 'look:1:poop']] } : CARE_NEW[v];
     // Nov 25 (Yarden): the shorter "A tiny tooth, a new routine" line stays at every age in 6–12 months.
     const T = STAGE_TABLE[CAT].stages;

@@ -276,7 +276,7 @@
 #main .fd-split .fd-split-top { position: relative; isolation: isolate; background: linear-gradient(160deg,#f9d9e5,#fce9ef 70%,#fdeee6); margin: 0 -20px; aspect-ratio: 1.35 / 1; padding: 0 20px; display: flex; align-items: center; overflow: hidden; border-radius: 24px 24px 0 0 }
 #main .fd-split .fd-split-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: right center; mix-blend-mode: multiply; filter: brightness(1.13) saturate(0.95); -webkit-mask-image: linear-gradient(to right, transparent 0, #000 40%), linear-gradient(to bottom, transparent 0, #000 7%, #000 82%, transparent); -webkit-mask-composite: source-in; mask-image: linear-gradient(to right, transparent 0, #000 40%), linear-gradient(to bottom, transparent 0, #000 7%, #000 82%, transparent); mask-composite: intersect; pointer-events: none }
 #main .fd-split .fd-split-copy { position: relative; width: 47%; z-index: 1 }
-#main .fd-split .fd-split-copy h1, #main .fd-split .fd-split-copy .hub-lead { text-wrap: balance }
+#main .fd-split .fd-split-copy h1, #main .fd-split .fd-split-copy .hub-lead { text-wrap: wrap }
 #main .fd-split .fd-split-copy h1 { font-size: clamp(20px, 5.6vw, 23px); line-height: 1.16; margin: 6px 0 8px }
 #main .fd-split .fd-split-copy .hub-lead { font-size: 14px; line-height: 1.4; margin: 0 }
 #main .fd-split .fd-try.fd-try-in { margin-top: 4px; padding-top: 10px }
@@ -291,7 +291,7 @@
 #main .fd-hero.fd-life { min-height: 0 }
 #main .fd-life .sf-photo.fd-life-photo { aspect-ratio: 16 / 10; margin: 14px 0 0; box-shadow: 0 6px 18px #a6798226 }
 #main .fd-life .fd-try.fd-try-in { margin-top: 14px }
-#main .fd-life h1, #main .fd-life .hub-lead { text-wrap: balance }
+#main .fd-life h1, #main .fd-life .hub-lead { text-wrap: wrap }   /* Nov 25 (Yarden): no wrap rules on main cards */
 
 /* Nov 20 design review: row subtitles never end on one word; the two solids safety links sit in one card. */
 #main .fd-prow small { text-wrap: wrap }
@@ -306,7 +306,7 @@
 #main .care-disc.fd-life .care-newbox { all: unset; box-sizing: border-box; display: block; width: 100%; margin-top: 14px; background: rgba(255,255,255,.7); border-radius: 16px; padding: 12px 14px; cursor: pointer; box-shadow: 0 2px 10px #46638c14 }
 #main .care-disc.fd-life .care-newbox { display: flex; gap: 10px; align-items: flex-start }
 #main .care-newbox svg { flex: none; width: 20px; height: 20px; margin-top: 1px; fill: none; stroke: #2a6078; stroke-width: 1.8; stroke-linecap: round }
-#main .care-newbox span { font-size: 15px; line-height: 1.4; color: var(--ink, #2b2732); text-wrap: pretty }
+#main .care-newbox span { font-size: 15px; line-height: 1.4; color: var(--ink, #2b2732); text-wrap: wrap }
 #main .care-newbox b { color: #2a6078; font-weight: 700 }
 #main .care-newbox em { font-style: normal; font-weight: 650; color: #2a6078; white-space: nowrap }
 #main .care-disc.fd-life .sf-photo.fd-life-photo { box-shadow: 0 6px 18px #46638c24 }
@@ -612,3 +612,15 @@
 #main .care-prow b { font-size: 15.5px; font-weight: 650; color: #2b2732; line-height: 1.25 }
 #main .care-prow small { font-size: 13.5px; color: #6d666d; line-height: 1.35 }
 #main .care-prow > i { font-style: normal; color: #9a929a; font-size: 18px }
+/* Nov 25 (Yarden): how long a hard phase lasts, as a small three-stop timeline. */
+#main .care-lasts { padding: 16px 16px 14px }
+#main .care-lasts ol { display: grid; grid-template-columns: repeat(3, 1fr); margin: 0 0 12px; padding: 0; list-style: none; position: relative }
+#main .care-lasts li { position: relative; padding-top: 22px; padding-right: 6px }
+#main .care-lasts li::before { content: ''; position: absolute; top: 6px; left: 0; right: 0; height: 2px; background: #d6e6ee }
+#main .care-lasts li.is-end::before { right: 50% }
+#main .care-lasts li i { position: absolute; top: 0; left: 0; width: 14px; height: 14px; border-radius: 50%; background: #fff; border: 2px solid #9cc4d6; box-sizing: border-box }
+#main .care-lasts li.is-now i { background: #2a6078; border-color: #2a6078; box-shadow: 0 0 0 4px #e3f1f7 }
+#main .care-lasts b { display: block; font-size: 14px; line-height: 1.25; color: #2b2732 }
+#main .care-lasts small { display: block; margin-top: 2px; font-size: 12.5px; color: #6d666d }
+#main .care-lasts li.is-now b { color: #2a6078 }
+#main .care-lasts p { margin: 0; padding-top: 12px; border-top: 1px solid var(--line); font-size: 14.5px; line-height: 1.4; color: #4a4550 }
