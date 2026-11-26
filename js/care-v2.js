@@ -1016,9 +1016,8 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   const goodLine = g => g ? `<p class="care-good"><b>${F('Good to know:')}</b> ${F(g)}</p>` : '';
   // Nov 25 (Yarden): hard phases say how long they last, as a small timeline: stops along the way, the one now
   // highlighted, and one line on when it eases.
-  const lastsCard = l => { if (!l) return ''; const now = l.now ? l.now() : 0, t = l.t || 'How long it lasts';
-    const body = `<div class="hub-card care-lasts"><ol>${l.stops.map(([b, a], i) => `<li class="${i === now ? 'is-now' : ''}${i === l.stops.length - 1 ? ' is-end' : ''}"><i></i><b>${F(b)}</b><small>${F(a)}</small></li>`).join('')}</ol><p>${F(l.line)}</p></div>`;
-    return l.h2 ? l.h2(t) + body : TB.section(t, body); };
+  // Nov 25 (Yarden): how long a hard phase lasts, as one simple card in the Good to know style.
+  const lastsCard = l => l ? `<section class="ct-goodcard care-lastscard"><i><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg></i><div><b>${F(l.t || 'How long it lasts')}</b><p>${F(l.line)}</p></div></section>` : '';
   const showPage = q => { const sh = val(q.show); return TB.top(q, q.why)
       + TB.section(val(q.pictureTitle) || 'At a glance', q.picture ? q.picture() : '')
       + TB.section(sh.t, showCard(sh))
@@ -1114,7 +1113,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     return `<div class="ct-page is-howto">` + ctTop(q.k, (val(q.topic) || LABEL[q.k]) + ' · How to', val(q.title), val(q.why)) + (sh ? ctPhoto2(sh) : '') + (q.routine ? ctRoutine(val(q.routine)) : '')
       + (near.length ? ctH2('Have nearby') + ctNear(near) : '')
       + (mv.length ? ctH2(q.movesT || 'Do it in a few steps') + `<div class="ct-stepcard">${ctSteps2(mv)}${ctNotes2((val(q.notes) || []).slice(q.safeN || 0))}</div>` : '')
-      + (q.lasts ? lastsCard(Object.assign({}, val(q.lasts), { h2: ctH2 })) : '')
+      + lastsCard(val(q.lasts))
       + (q.full ? ctFull : '') + (q.link && !q.full ? `<div class="hub-list ct-rowlink">${rowK('diapers', 'Red skin under the diaper?', 'Diaper rash or yeast: see the difference', `openPage('chg:${CAT}:d:${val(q.link)[2]}')`)}</div>` : '')
       + ((val(q.notes) || []).slice(0, q.safeN || 0).length ? ctH2('Keep {o} safe') + `<div class="ct-safecard">${ctNotes2(val(q.notes).slice(0, q.safeN))}</div>` : '')
       + (q.video ? ctH2('Watch how') + TB.video(q.video) : '') + `</div>`; };
@@ -1397,11 +1396,11 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     pins: [['Toy in hand', 40, 70, 'b'], ['Hand on tummy', 72, 46, 'b']],
     cap: ['Keep one hand on {o}', 'the whole change.'] };
   Object.assign(TPL['h:diapers:2'], { eyebrow: 'Diapers · What changes', title: 'Diaper changes with a wriggler', show: wriggleShow,
-    movesT: 'What’s different now', full: true,
+    movesT: 'What’s different now',
     moves: [['toy', 'Something to hold', 'A toy, or the same song'], ['hand', 'A hand on the tummy', 'Before {s} {roll|rolls} away'], ['mat', 'Too wriggly?', 'Use a mat on the floor']], good: 'Leaks or red marks on the legs mean it’s time for the next size.',
     tipsTitle: undefined, tips: undefined, safe: [['hand', 'A hand on {o} the whole time', 'Never step away on a raised surface']], link: rashLinkRow });
   Object.assign(TPL['h:diapers:3'], { eyebrow: 'Diapers · What changes', title: 'Diaper changes with a wriggler', show: wriggleShow,
-    movesT: 'What’s different now', full: true,
+    movesT: 'What’s different now',
     moves: [['toy', 'Something to hold', 'A toy, or the same song'], ['mat', 'On the floor', 'Nowhere to fall'], ['stand', 'Pulling up?', 'Change {o} standing, in pull-ons']], good: 'Leaks or red marks on the legs mean it’s time for the next size.',
     tipsTitle: undefined, tips: undefined, safe: [['hand', 'A hand on {o} the whole time', 'Never step away on a raised surface']], link: rashLinkRow });
   Object.assign(TPL['t:bath:2'], { eyebrow: 'Baths · Bedtime', show: { t: 'See how it ends', img: 'show-crib', alt: 'A parent lays his drowsy baby on her back in a bare crib, in a sleep sack',
@@ -1528,11 +1527,10 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
       show: stand ? { img: 'show-stand', alt: 'A toddler stands holding the sofa while a parent kneels beside her with a clean pull-on diaper', tags: [['Holding the sofa', 'bl'], ['Pull-on ready', 'br']], t: 'A new option', line: 'If {s} can stand steadily, change {o} standing, in pull-ons.' }
         : { img: 'show-wriggle', alt: 'A parent keeps a hand on her baby’s tummy while he holds a soft toy', tags: [['Toy to hold', 'bl'], ['Hand on tummy', 'br']], t: 'The trick to see', line: stand ? 'If {s} can stand steadily, change {o} standing, in pull-ons.' : 'Give {o} something to focus on, with everything already in reach.' },
       nearby: stand ? ['Pull-on diaper', 'Wipes', 'Toy'] : ['Diaper', 'Wipes', 'Small toy'],
-      lasts: { stops: [['Rolling', '4–6 months'], ['Crawling', '6–10 months'], ['Standing', '9–12 months']], now: () => stand ? 2 : careAge() >= 7 ? 1 : 0,
-        line: stand ? 'Wriggling doesn’t stop, but changes get quicker once {s} can stand and help.' : 'It doesn’t stop, but it gets easier. Once {s} can stand steadily, you can change {o} standing up. Ages are typical.' },
+      lasts: { line: stand ? 'Wriggling doesn’t stop, but standing changes are quicker once {s} can help.' : 'Usually until {s} can stand steadily, often around 9–12 months. Then you can change {o} standing up.' },
       moves: stand ? [['Get everything ready', 'If {s’s} wobbly, change {o} lying on the floor instead'], ['Let {o} hold on', 'To the sofa edge, or give {o} a toy'], ['Off, wipe, on', 'Tear the sides of the dirty one, wipe front to back, step {o} into the new one']]
         : [['Hand {o} a toy', 'Or sing the same song each time'], ['A hand on {p} tummy', 'Before {s} {roll|rolls} away'], ['Too wriggly? Use the floor', 'A mat on the floor avoids a fall']],
-      good: 'Leaks, or red marks on the legs, mean it’s time for the next size.', full: true,
+      good: 'Leaks, or red marks on the legs, mean it’s time for the next size.',   // Nov 25 (Yarden): no link back to the full change; parents know it by now
       safe: [['hand', 'Never step away on a raised surface', 'Or change {o} on the floor']] }),
     nails: { topic: 'Nails', title: 'Trim tiny nails without a nick', why: 'They grow fast. Check twice a week and trim when they’re sharp.',
       show: { img: 'show-nails', alt: 'A parent presses a baby’s finger pad back while clipping the nail', tags: [['Pad pushed back', 'bl'], ['Just the nail', 'tr']], t: 'See the grip', line: 'Gently press the finger pad away from the nail before clipping.' },
@@ -1576,6 +1574,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   };
   const asHowto = (key, o) => Object.assign(key, { type: 'howto', eyebrow: undefined, picture: undefined, pictureTitle: undefined, steps: undefined, need: undefined, say: undefined, tips: undefined, tipsTitle: undefined, movesT: undefined, movesNotes: undefined, stepsNotes: undefined }, o);
   asHowto(TPL['p:sponge'], CT_PAGES.sponge); asHowto(TPL['p:tub'], CT_PAGES.tub); asHowto(TPL['t:bath:2'], CT_PAGES.bedtime); asHowto(TPL['t:bath:3'], CT_PAGES.bigtub);
+  TPL['h:diapers:2'].link = TPL['h:diapers:3'].link = undefined;   // Nov 25: the wriggler pages stay about wriggling
   asHowto(TPL['h:diapers:0'], CT_PAGES.diaper(true)); asHowto(TPL['h:diapers:1'], CT_PAGES.diaper(false)); asHowto(TPL['h:diapers:2'], CT_PAGES.wriggle(false)); asHowto(TPL['h:diapers:3'], CT_PAGES.wriggle(true));
   asHowto(nails, CT_PAGES.nails); asHowto(gums, CT_PAGES.gums); asHowto(TPL['p:brush'], CT_PAGES.brush); asHowto(shade, CT_PAGES.shade); asHowto(six, CT_PAGES.six);
   asHowto(dress, CT_PAGES.dress); asHowto(TPL['p:feet'], CT_PAGES.feet);
