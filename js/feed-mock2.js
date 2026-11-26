@@ -3329,16 +3329,14 @@
       [XG, 'highchair', 'How to start', 'Start with soft foods rich in iron', 'By spoon, by hand, or both', 'z_start'],
       [XC.p1, 'shield', 'Allergens and foods to avoid', 'Honey waits until 1, some foods until 4', 'Foods to wait on', 'z_plan']];
     // Nov 26 (Yarden's inspiration): six guides grouped into three subjects, each one page with its subjects as sections.
-    if (v === 3) return [[XG, 'avocado', 'Build {p} eating skills', 'Build his eating skills', 'Textures, finger foods and the squish test', 'g_skills'],
-      [XG, 'bowl', 'How a meal goes', 'First meals are just a few bites', 'What to offer, his cues, and milk and water', 'g_meal'],
-      [XC.g1, 'shield', 'Keep meals safe', 'Try allergens early', 'Allergens, gagging or choking, and first aid', 'g_safe']];
+    if (v === 3) return [[XG, 'bowl', 'First foods, step by step', 'First foods, step by step', 'A meal, textures, finger foods, allergens and drinks', 'g_first']];
     return [[XG, 'lentils', 'Feeding himself', 'Most family foods are fine for him now', 'What to soften, and how to serve it', 'z_meal'],
       [XC.g1, 'clock', 'Meals, snacks and milk', 'Some days he eats a lot, some days little', 'Why the week matters most', 'z_day'],
       [XC.d1, 'cup', m >= 12 ? 'Now that he’s 1' : 'Turning 1', m >= 12 ? 'Whole milk can start now, from a cup' : 'A cup at meals now, whole milk at 12 months', nurse && !bot ? 'How much milk, and cups alongside nursing' : 'How much milk, and moving off bottles', 'z_milk12']]; };
   // Nov 19 (Yarden): each guide row previews what's inside with a small photo, and its name reads like the parent's question.
   const GPHOTO = { 'A feed, step by step': 'th-feedstep', 'Evenings and nights': 'g-night', 'Is he getting enough?': 'g-diapers', 'Feeds now': 'th-feedsnow', 'Time apart': () => stg() === 1 && ageMo() >= 3 ? 'g-cooler' : 'pace-photo',
     'Distracted feeds': 'distracted', 'Is he ready?': 'sign-sits', 'How to start': 'tray', 'Foods to wait on': 'grape', 'How a meal goes': 'meal-2', 'Milk and solids together': 'g-cups',
-    'Common allergens': 'nutbutter', 'Beyond purées': 'tx-avo-2', 'Safe finger foods': 'squish2', 'Keeping foods in rotation': 'opt-egg', 'Feeding himself': 'pieces', 'How feeds are changing': 'distracted', 'Build {p} eating skills': 'tx-avo-2', 'Keep meals safe': 'choke-chest', 'Meals, snacks and milk': 'meal-1', 'Turning 1': 'no-milk', 'Now that he’s 1': 'g-cups' };
+    'Common allergens': 'nutbutter', 'Beyond purées': 'tx-avo-2', 'Safe finger foods': 'squish2', 'Keeping foods in rotation': 'opt-egg', 'Feeding himself': 'pieces', 'How feeds are changing': 'distracted', 'First foods, step by step': 'meal-2', 'Meals, snacks and milk': 'meal-1', 'Turning 1': 'no-milk', 'Now that he’s 1': 'g-cups' };
   const gName = eb => eb === 'Allergens and foods to avoid' ? 'Foods to wait on' : eb;
   const gSub = (eb, sub) => eb === 'Allergens and foods to avoid' ? 'Honey, choking risks and more' : eb === 'Feeds now' ? 'Hungrier days, and growth spurts' : sub;
   const gRow = ([c, icon, eb, title, sub, id]) => { const n = gName(eb), g = GPHOTO[n], src = typeof g === 'function' ? g() : g;
@@ -3442,7 +3440,7 @@
           const one = formulaFam() ? ['Bottles, start to finish', 'Make, store and clean', 'xa:prep', 'feeding/formula-water'] : ['How long milk keeps', 'Counter, fridge and freezer', 'basics', 'feeding/pump-4'];
           const row = `<button class="hub-row fd-prow" data-fd-keeps onclick="${go(one[2])}"><span class="fd-thumb"><img src="assets/${one[3]}.jpg" alt="" loading="lazy"></span><span class="hub-row-copy"><b>${F(one[0])}</b><small>${F(one[1])}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`;
           // Once solids start, one photo row for choking safety (first aid, then foods to wait on), in the same list.
-          if (stg() >= 3 && !/data-fd-choke/.test(h) && !/g_safe/.test(h)) h = h.replace(/(<div class="hub-list fd-plist">[\s\S]*?)(<\/div>)/, `$1<button class="hub-row fd-prow" data-fd-choke onclick="${go('z_gag')}"><span class="fd-thumb"><img src="assets/feeding/choke-chest.jpg?v=3" alt="" loading="lazy"></span><span class="hub-row-copy"><b>${F('Choking first aid, step by step')}</b><small>${F('And the foods to wait on')}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>$2`);
+          if (stg() >= 3 && !/data-fd-choke/.test(h) ) h = h.replace(/(<div class="hub-list fd-plist">[\s\S]*?)(<\/div>)/, `$1<button class="hub-row fd-prow" data-fd-choke onclick="${go('z_gag')}"><span class="fd-thumb"><img src="assets/feeding/choke-chest.jpg?v=3" alt="" loading="lazy"></span><span class="hub-row-copy"><b>${F('Choking first aid, step by step')}</b><small>${F('And the foods to wait on')}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>$2`);
           // Nov 25 (proactive pass): first aid is learned before the first bite, so Ready for solids opens it in place of
           // Foods to wait on (that page links on from first aid, so nothing is lost).
           if (stg() === 2 && !/data-fd-choke/.test(h)) h = h.replace(/<button class="hub-row fd-prow"(?:(?!<button)[\s\S])*?Foods to wait on[\s\S]*?<\/button>/, `<button class="hub-row fd-prow" data-fd-choke onclick="${go('z_gag')}"><span class="fd-thumb"><img src="assets/feeding/choke-chest.jpg?v=3" alt="" loading="lazy"></span><span class="hub-row-copy"><b>${F('Choking first aid, step by step')}</b><small>${F('Learn it before the first bite')}</small></span><span class="hub-chev" aria-hidden="true">›</span></button>`);
