@@ -1562,12 +1562,12 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
       moves: [['Apply before going out', 'About 15–30 minutes beforehand'], ['Cover bare skin', 'Cheeks, ears, feet and back of neck'], ['Reapply', 'Every 2 hours, and after water']],
       good: 'Look for “broad-spectrum” on the label. Mineral (zinc oxide) sunscreen is gentlest on young skin. Skip sprays.',
       safe: sunSafe(false), urgent: SUN_911 },
-    dress: { topic: 'Clothes', title: 'How warm to dress {o}', why: 'Use {p} neck or chest, not cold hands, as your clue.',
+    dress: { topic: 'Clothes', title: 'Dress {o} for the weather', why: 'Use {p} neck or chest, not cold hands, as your clue.',
       show: { img: 'show-dress', alt: 'A parent feels the back of an awake baby’s neck; the baby lies on a firm, bare changing pad', tags: [['Light layers', 'bl'], ['Feel the neck', 'tr']], t: 'The simple check', line: 'Feel the back of the neck: sweaty means too warm.' },
       moves: [['One more layer than you', 'Comfy in a T-shirt? Add a light layer for {o}'], ['Check {p} neck', 'Sweaty: take a layer off. Feels cool: add one'], ['At bedtime', 'Sleepwear or a wearable blanket (sleep sack), no loose blankets']],
       good: 'No hats indoors. In the car seat, skip puffy coats under the straps: buckle in, then a blanket on top.',
       safe: [['shirt', 'Snaps or zips', 'Never strings or cords near the neck']] },
-    feet: { topic: 'Clothes', title: 'Bare feet first, shoes later', why: 'Bare feet help {o} sense the floor as {s} {learn|learns} to walk.',
+    feet: { topic: 'Clothes', title: 'Let {o} go barefoot', why: 'Bare feet help {o} sense the floor as {s} {learn|learns} to walk.',
       show: { img: 'show-shoes', alt: 'Soft first-walker shoes beside non-slip socks on a rug', tags: [['Room at the toe', 'tl'], ['Flexible sole', 'bl']], t: 'Look for this', line: 'A soft sole that bends easily and has grip.' },
       moves: [['Barefoot indoors', 'Or non-slip socks when needed'], ['Shoes for outdoors', 'Once {s’s} walking outside'], ['Check the fit', 'While {s} {stand|stands}, press the toe: about a finger’s width of room']],
       good: 'Recheck the fit every month or two. Little feet grow fast.',
@@ -1657,7 +1657,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
       [PH('bigtub-sit'), 'Keep one hand on {o}', 'Wash with your other hand. Drain the tub as soon as {s’s} out']],
     good: 'Bath seats can tip over, so they don’t make baths safer. Your hand does.',
     safe: [['hand', 'Never leave {o} alone in the water', 'Not even for a moment'], ['stand', 'Standing up? Sit {o} back down', 'Most bath falls start that way']] });
-  HT(TPL['t:bath:2'], { title: 'Bath, then bed', why: 'The same calm order each night helps {o} wind down.',
+  HT(TPL['t:bath:2'], { title: 'Make bath part of bedtime', why: 'The same calm order each night helps {o} wind down.',
     call: [['On {p} back', 'tl', 76, 74], ['Nothing else in the crib', 'bl', 30, 84]],
     // Nov 24 (Everyday care): one photo per step, so the routine shows once, in order.
     moves: () => [[PH('bt-1'), 'A short, warm bath', 'Or skip it. Two or three baths a week is enough'],
@@ -1989,10 +1989,10 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   // "How do I…?" (Nov 12): how-tos named as the task ("Give a tub bath"), the ones useful at this age first; then the
   // care routine one tap down; then any other topic.
   const HOWTO = [
-    [['bath', 'Give a sponge bath', '2–3 a week, until the cord falls off', 'p:sponge'], ['diapers', 'Change a diaper', '8–12 changes a day at first', 'h:diapers:0'], ['cord', 'Keep the cord stump clean', 'Diaper folded below it, and let it fall off', 'cord'], ['nails', 'Trim tiny nails', 'Check once or twice a week', 't:nails:0'], ['clothes', 'How warm to dress {o}', 'One layer more than you', 't:clothes:0'], ['paci', 'Offer a pacifier', () => live() && profile.feed === 'Formula' ? 'At naps and bedtime, from the start' : 'At sleep, once feeding is going well', 'p:pacifier']],
+    [['bath', 'Give a sponge bath', '2–3 a week, until the cord falls off', 'p:sponge'], ['diapers', 'Change a diaper', '8–12 changes a day at first', 'h:diapers:0'], ['cord', 'Keep the cord stump clean', 'Diaper folded below it, and let it fall off', 'cord'], ['nails', 'Trim tiny nails', 'Check once or twice a week', 't:nails:0'], ['clothes', 'Dress {o} for the weather', 'One layer more than you', 't:clothes:0'], ['paci', 'Offer a pacifier', () => live() && profile.feed === 'Formula' ? 'At naps and bedtime, from the start' : 'At sleep, once feeding is going well', 'p:pacifier']],
     [['bath', 'Give a tub bath', 'About 3 a week, with a safe hold', 'p:tub'], ['diapers', 'Change a diaper', 'About 6–10 changes a day', 'h:diapers:1'], ['skin', 'Care for {p} skin', 'Plain water, and cream for dry patches', 'h:skin:1'], ['nails', 'Trim tiny nails', 'Check once or twice a week', 't:nails:1'], ['teeth', 'Wipe {p} gums', 'A soft cloth, twice a day', 'h:gums:1'], ['sun', 'Keep {o} in the shade', 'Shade and clothing first', 't:sun:1'], ['paci', 'Offer a pacifier', 'Safe at sleep, and your choice', 'p:pacifier']],
-    [['diapers', 'Change a wriggler', 'Set up first, and a hand on {o}', 'h:diapers:2'], ['teeth', 'Soothe sore gums', 'What helps, and what to skip', 'p:teething'], ['bath', 'Bath, then bed', 'About 3 a week, often at bedtime', 't:bath:2'], ['skin', 'Care for {p} skin', 'Plain water, and cream for dry patches', 'h:skin:2'], ['nails', 'Trim tiny nails', 'Check once or twice a week', 't:nails:2'], ['sun', 'Keep {o} in the shade', 'Shade, then sunscreen from 6 months', 't:sun:2']],
-    [['teeth', 'Brush that first tiny tooth', 'Twice a day, a rice-grain smear', 'p:brush'], ['bath', 'Move to the big tub', 'About 3 a week, once {s} {sit|sits} steadily', 't:bath:3'], ['clothes', 'Bare feet first, shoes later', 'Soft shoes once walking outside', 'p:feet'], ['nails', 'Trim tiny nails', 'Check once or twice a week', 't:nails:3'], ['sun', 'Sunscreen from 6 months', 'SPF 30, again every 2 hours', 't:sun:3']]
+    [['diapers', 'Change a wriggler', 'Set up first, and a hand on {o}', 'h:diapers:2'], ['teeth', 'Soothe sore gums', 'What helps, and what to skip', 'p:teething'], ['bath', 'Make bath part of bedtime', 'About 3 a week, often at bedtime', 't:bath:2'], ['skin', 'Care for {p} skin', 'Plain water, and cream for dry patches', 'h:skin:2'], ['nails', 'Trim tiny nails', 'Check once or twice a week', 't:nails:2'], ['sun', 'Keep {o} in the shade', 'Shade, then sunscreen from 6 months', 't:sun:2']],
+    [['teeth', 'Brush that first tiny tooth', 'Twice a day, a rice-grain smear', 'p:brush'], ['bath', 'Move to the big tub', 'About 3 a week, once {s} {sit|sits} steadily', 't:bath:3'], ['clothes', 'Let {o} go barefoot', 'Soft shoes once walking outside', 'p:feet'], ['nails', 'Trim tiny nails', 'Check once or twice a week', 't:nails:3'], ['sun', 'Add sunscreen from 6 months', 'SPF 30, again every 2 hours', 't:sun:3']]
   ];
   // How often, at a glance: three tiles in Sleep's glance style, each the same shape (what, how many, per what).
   const OFTEN = [
@@ -2002,7 +2002,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     [['Brushing', '2', 'A day'], ['Baths', 'About 3', 'A week'], ['Nail trims', '1', 'A week']]
   ];
   // Every topic named as the task, like the how-tos above it.
-  const TASK = { diapers: 'Change a diaper', bath: 'Give a bath', skin: 'Care for {p} skin', clothes: 'How warm to dress {o}', sun: 'Keep {o} in the shade', teeth: 'Care for gums and teeth', nails: 'Trim nails, clean ears and nose' };
+  const TASK = { diapers: 'Change a diaper', bath: 'Give a bath', skin: 'Care for {p} skin', clothes: 'Dress {o} for the weather', sun: 'Keep {o} in the shade', teeth: 'Care for gums and teeth', nails: 'Trim nails, clean ears and nose' };
   const TASK_SUB = { diapers: 'Wipe front to back, and let it dry', bath: 'About 3 a week', skin: 'Plain water, and moisturizer for dry patches', clothes: 'One layer more than you', sun: 'Shade and clothing first', teeth: 'Wipe gums twice a day', nails: 'Files, clippers and tiny fingers' };
   // Step-by-step pages for the How do I… rows that used to open a chart or a picker: one way to do the task,
   // then a single link to what's normal. Same shape as every other how-to.
