@@ -1932,7 +1932,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     const LIFE = [['cl-newborn', 'A dad giving his newborn a sponge bath on a towel, a hand on the baby'], ['cl-tub', 'A mom lifting her baby out of a first tub bath in a hooded towel'],
       ['cl-drool', 'A mom patting her teething baby’s drooly chin dry'], ['cl-brush', 'A dad brushing his baby’s first teeth']][v];
     const EYE = ['Newborn · first 4 weeks', '1–3 months', '4–6 months', '6–12 months'][v];
-    let b = `<header class="hub-hero care-hero care-disc fd-life"><p class="hub-eyebrow">${F(EYE)}</p><h1>${F(st.title)}</h1><p class="hub-lead">${F(v === 3 && live() && careAge() >= 9 ? 'More teeth to brush, baths in the big tub, and pulling up makes changes a two-hands job.' : st.lead)}</p>`
+    let b = `<header class="hub-hero care-hero care-disc fd-life"><p class="hub-eyebrow">${F(EYE)}</p><h1>${F(st.title)}</h1><p class="hub-lead">${F(v === 3 && live() && careAge() >= 9 ? 'More teeth to brush, and baths in the big tub.' : st.lead)}</p>`
       + `<div class="sf-photo fd-life-photo"><img src="assets/care/${LIFE[0]}.jpg?v=1" alt="${F(LIFE[1])}"></div>`
       // Nov 21 design review: one compact strip like Feeding's "Try this" (two lines at most), so the card stays near Feeding's height.
       // Nov 23 (Yarden): at 6–12 months both changes in the headline get the same weight, as two lines of one box.
@@ -1948,7 +1948,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     // behind a "How do I…?" door. Up to four rows; the one the New now card already opens is left out. Each row's line says how,
     // because how often lives in Care at a glance above.
     const SEE = N.see;
-    { const NEWKEY = ['bath', 'bath', 'diapers', 'teeth'][v];
+    { const NEWKEY = ['bath', 'bath', null, 'teeth'][v];   // Nov 25 (Yarden): at 4–6 months Change a wriggler also leads Right now
       const HINT = { 'p:sponge': 'Face first, diaper area last', 'p:tub': 'A safe hold, and 2 inches of warm water', 'cord': 'Diaper folded below it, and let it fall off',
         'h:diapers:0': 'Fresh diaper under first, then wipe', 'h:diapers:1': 'Fresh diaper under first, then wipe', 'h:diapers:2': 'Set up first, and a hand on {o}', 't:diapers:3': 'A toy to hold helps',
         'h:skin:1': 'Plain water, and cream for dry patches', 'h:skin:2': 'Plain water, and cream for dry patches', 'p:teething': 'What helps, and what to skip',
@@ -1957,7 +1957,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
       const nail = r => /^t:nails/.test(r) ? 'While {s} {sleep|sleeps}, with a file or clippers' : null;
       // What matters most at each stage, in order (Nov 13: everything important shows on the page; "All how-tos" only adds the rest).
       // Nov 22 (Yarden): only what changes at this stage shows here; everything else lives in All how-tos.
-      const ORDER = [['diapers', 'cord', 'nails', 'clothes'], ['skin', 'sun'], ['bath'], ['bath', ...(!live() || careAge() >= 8 ? ['diapers'] : []), 'sun', ...(!live() || careAge() >= 9 || now < 3 ? ['clothes'] : [])]][v];   // shoes only once walking is near
+      const ORDER = [['diapers', 'cord', 'nails', 'clothes'], ['skin', 'sun'], ['diapers', 'bath'], ['bath', 'sun', ...(!live() || careAge() >= 9 || now < 3 ? ['clothes'] : [])]][v];   // shoes only once walking is near
       const tiled = new Set(SEE.map(x => x[2])), byKey = k => HOWTO[v].find(x => x[0] === k);
       const rows = ORDER.map(byKey).filter(x => x && x[0] !== NEWKEY && !(N.also && x[0] === N.also.key) && !tiled.has(x[3])).slice(0, 4);   // nothing twice: a tile that opens the same page wins
       // Nov 21: each row previews its page with a small real-life photo, like Feeding's guide rows (92px, full row height).
@@ -1981,7 +1981,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     [['bath', 'Give a sponge bath', '2–3 a week, until the cord falls off', 'p:sponge'], ['diapers', 'Change a diaper', '8–12 changes a day at first', 'h:diapers:0'], ['cord', 'Keep the cord stump clean', 'Diaper folded below it, and let it fall off', 'cord'], ['nails', 'Trim tiny nails', 'Check once or twice a week', 't:nails:0'], ['clothes', 'How warm to dress {o}', 'One layer more than you', 't:clothes:0'], ['paci', 'Offer a pacifier', () => live() && profile.feed === 'Formula' ? 'At naps and bedtime, from the start' : 'At sleep, once feeding is going well', 'p:pacifier']],
     [['bath', 'Give a tub bath', 'About 3 a week, with a safe hold', 'p:tub'], ['diapers', 'Change a diaper', 'About 6–10 changes a day', 'h:diapers:1'], ['skin', 'Care for {p} skin', 'Plain water, and cream for dry patches', 'h:skin:1'], ['nails', 'Trim tiny nails', 'Check once or twice a week', 't:nails:1'], ['teeth', 'Wipe {p} gums', 'A soft cloth, twice a day', 'h:gums:1'], ['sun', 'Keep {o} in the shade', 'Shade and clothing first', 't:sun:1'], ['paci', 'Offer a pacifier', 'Safe at sleep, and your choice', 'p:pacifier']],
     [['diapers', 'Change a wriggler', 'Set up first, and a hand on {o}', 'h:diapers:2'], ['teeth', 'Soothe sore gums', 'What helps, and what to skip', 'p:teething'], ['bath', 'Bath, then bed', 'About 3 a week, often at bedtime', 't:bath:2'], ['skin', 'Care for {p} skin', 'Plain water, and cream for dry patches', 'h:skin:2'], ['nails', 'Trim tiny nails', 'Check once or twice a week', 't:nails:2'], ['sun', 'Keep {o} in the shade', 'Shade, then sunscreen from 6 months', 't:sun:2']],
-    [['teeth', 'Brush that first tiny tooth', 'Twice a day, a rice-grain smear', 'p:brush'], ['bath', 'Move to the big tub', 'About 3 a week, once {s} {sit|sits} steadily', 't:bath:3'], ['diapers', 'Diaper changes on the move', 'A toy to hold helps', 't:diapers:3'], ['clothes', 'Bare feet first, shoes later', 'Soft shoes once walking outside', 'p:feet'], ['nails', 'Trim tiny nails', 'Check once or twice a week', 't:nails:3'], ['sun', 'Sunscreen from 6 months', 'SPF 30, again every 2 hours', 't:sun:3']]
+    [['teeth', 'Brush that first tiny tooth', 'Twice a day, a rice-grain smear', 'p:brush'], ['bath', 'Move to the big tub', 'About 3 a week, once {s} {sit|sits} steadily', 't:bath:3'], ['clothes', 'Bare feet first, shoes later', 'Soft shoes once walking outside', 'p:feet'], ['nails', 'Trim tiny nails', 'Check once or twice a week', 't:nails:3'], ['sun', 'Sunscreen from 6 months', 'SPF 30, again every 2 hours', 't:sun:3']]
   ];
   // How often, at a glance: three tiles in Sleep's glance style, each the same shape (what, how many, per what).
   const OFTEN = [
@@ -2031,7 +2031,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     // How often lives on each task's own line (one home per fact), not in a separate set of tiles.
     // One list: this age's how-tos first, then any other topic, so there's no second heading for a card or two.
     const listed = new Set(list.map(x => ({ cord: 'skin' }[x[0]] || x[0])));
-    const more = BASICS.filter(([k]) => !listed.has(k));
+    const more = BASICS.filter(([k]) => !listed.has(k) && !(v === 3 && k === 'diapers'));   // Nov 25 (Yarden): by 6 months parents know diapers
     // Nov 25 (Yarden's mockup): the few that matter most at this age as photo rows, the rest as a quieter icon list.
     const PIC = r => /sponge/.test(r) ? 'sponge' : /diapers/.test(r) ? 'diaper' : /^cord/.test(r) ? 'cord' : /nails/.test(r) ? 'nails' : /feet/.test(r) ? 'shoes' : /clothes|dress/.test(r) ? 'dress'
       : /p:tub|bath:1/.test(r) ? 'tub' : /bath:3|bigtub/.test(r) ? 'bigtub' : /bath/.test(r) ? 'bathbed' : /skin/.test(r) ? 'cream' : /teething/.test(r) ? 'teether' : /gums/.test(r) ? 'cloth' : /brush/.test(r) ? 'brush'
