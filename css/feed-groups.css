@@ -1,0 +1,9 @@
+/* Nov 26: grouped Feeding pages (one line under a heading, compact check strips), in Feeding's pink. */
+.fd-group .fd-g-lead{margin:-4px 2px 12px;font-size:15px;line-height:1.45;color:#6b6573}
+.fd-group .fd-g-strip{margin:22px 0 0;padding:16px 18px;border-radius:20px;background:#fbe4ec}
+.fd-group .fd-g-strip + .fd-g-strip{margin-top:12px;background:#fffdfa;border:1px solid #ece7e2}
+.fd-group .fd-g-strip-h{display:block;font-size:16px;line-height:1.3;font-weight:700;color:#2b2733;margin-bottom:10px}
+.fd-group .fd-g-strip ul{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+.fd-group .fd-g-strip li{display:flex;gap:10px;align-items:flex-start;font-size:15px;line-height:1.4;color:#2b2733}
+.fd-group .fd-g-strip li i{flex:none;width:22px;height:22px;border-radius:50%;background:#884866;color:#fff;display:grid;place-items:center;margin-top:-1px}
+.fd-group .fd-g-strip + .fd-g-strip li i{background:#f7d9e5;color:#884866}

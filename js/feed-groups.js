@@ -30,10 +30,22 @@
 
   const G = {
     // Textures and finger foods: the two skills of this stage, then how to keep pieces safe.
-    g_skills: () => { const t = sections('z_textures'), s = sections('z_shapes');
-      return page(head('avocado', 'First foods', 'Build {p} eating skills', 'Lumps teach {o} to chew, and soft finger foods teach {o} to feed {o}self.'),
-        sec('Move through textures', t['One food, three textures']) + sec('Moving up a texture', drop(t['Moving up a texture'], 'Pieces should squish'))
-        + sec('Try safe finger foods', s['A few foods to try']) + sec('The squish test', s['The squish test']) + sec('Keep {o} safe', pick(s, 'Keep her safe', 'Keep him safe', 'Keep them safe'))); },
+    // Nov 26 (Yarden: the stitched version was overwhelming). Built like her inspiration: a short top card, two subjects
+    // each with one line and one picture, then one strip of how-tos and one of safety. Details stay on the full pages.
+    g_skills: () => { const T = H().TPLB, m = window.__fdx ? window.__fdx.ageMo() : 8, now = m < 7 ? 0 : m < 9 ? 1 : 2, nine = m >= 9;
+      const lead = t => `<p class="fd-g-lead">${F(t)}</p>`;
+      const check = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.2 4.2L19 7"/></svg>';
+      const strip = (title, items) => `<section class="fd-g-strip"><b class="fd-g-strip-h">${F(title)}</b><ul>${items.map(t => `<li><i>${check}</i><span>${F(t)}</span></li>`).join('')}</ul></section>`;
+      const foods = nine ? [['feeding/pieces-9', 'Banana, avocado, egg', 'Small, soft pieces'], ['feeding/opt-broccoli', 'Broccoli', 'Well cooked'], ['feeding/opt-pasta', 'Pasta', 'Soft, well cooked'], ['feeding/nutbutter', 'Toast', 'Nut butter spread thin']]
+        : [['feeding/opt-avocado', 'Avocado', 'Ripe strips'], ['feeding/opt-banana', 'Banana', 'Strips, not rounds'], ['feeding/opt-egg', 'Egg', 'Omelet strips'], ['feeding/opt-broccoli', 'Broccoli', 'Well cooked'], ['feeding/opt-pasta', 'Pasta', 'Soft, well cooked'], ['feeding/nutbutter', 'Toast', 'Nut butter spread thin']];
+      return page(head('avocado', 'First foods', 'Build {p} eating skills', 'Lumps teach {o} to chew. Finger foods teach {o} to feed {o}self.'),
+        `<h2 class="hub-h2">${F('Move through textures')}</h2>` + lead('Move on once each one is easy.')
+        + T.photoSwitch([['Smooth', 'Around 6 months'], ['Lumpy', '7–8 months'], ['Soft pieces', '9 months on']],
+          [['Avocado', ['feeding/tx-avo-1', 'feeding/tx-avo-2', 'feeding/tx-avo-3']], ['Banana', ['feeding/tx-ban-1', 'feeding/tx-ban-2', 'feeding/tx-ban-3']], ['Sweet potato', ['feeding/tx-sp-1', 'feeding/tx-sp-2', 'feeding/tx-sp-3']]], now)
+        + `<h2 class="hub-h2">${F('Try safe finger foods')}</h2>` + lead('Soft enough to squish between your finger and thumb.')
+        + T.photoGridMore(foods, 'See more foods')
+        + strip('How to keep building', ['Mash with a fork, not a blender', nine ? 'Small, pea-size pieces {s} can pinch' : 'Finger-size strips {s} can hold', 'Lumps by about 9 months make chewing easier later'])
+        + strip('Keep {o} safe', ['Seated upright, with you, every bite', 'Quarter grapes lengthwise. No whole nuts'])); },
     // A meal, start to finish, then where milk and water fit around it.
     g_meal: () => { const m = sections('z_meal'), k = sections('z_milkfood'), hd = m._head;
       const title = hd && hd.querySelector('h1') ? hd.querySelector('h1').textContent : 'First meals are just a few bites';
