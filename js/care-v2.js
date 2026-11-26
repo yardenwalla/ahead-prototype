@@ -1016,7 +1016,8 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
   const goodLine = g => g ? `<p class="care-good"><b>${F('Good to know:')}</b> ${F(g)}</p>` : '';
   // Nov 25 (Yarden): hard phases say how long they last, as a small timeline: stops along the way, the one now
   // highlighted, and one line on when it eases.
-  // Nov 25 (Yarden): how long a hard phase lasts, as one simple card in the Good to know style.
+  // Nov 25 (Yarden): how long a hard phase lasts, as one simple card in the Good to know style. Shared with Sleep and Feeding.
+  window.__lastsCard = line => `<section class="lasts-card"><i><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg></i><div><b>${F('How long it lasts')}</b><p>${F(line)}</p></div></section>`;
   const lastsCard = l => l ? `<section class="ct-goodcard care-lastscard"><i><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg></i><div><b>${F(l.t || 'How long it lasts')}</b><p>${F(l.line)}</p></div></section>` : '';
   const showPage = q => { const sh = val(q.show); return TB.top(q, q.why)
       + TB.section(val(q.pictureTitle) || 'At a glance', q.picture ? q.picture() : '')

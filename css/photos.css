@@ -613,3 +613,9 @@
 #main .care-prow small { font-size: 13.5px; color: #6d666d; line-height: 1.35 }
 #main .care-prow > i { font-style: normal; color: #9a929a; font-size: 18px }
 #main .care-lastscard { margin-top: 14px }
+
+/* Nov 25 (Yarden): "How long it lasts" in every guide: one quiet card, the guide's own color. */
+#main .lasts-card { display: flex; gap: 12px; align-items: flex-start; margin: 14px 0 0; padding: 14px 16px; border-radius: 16px; background: #fffdfa; border: 1px solid var(--line, #0000000f) }
+#main .lasts-card > i { flex: none; width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; background: var(--area, #eef0f6); color: var(--area-ink, #4c4a63) }
+#main .lasts-card b { display: block; font-size: 15px; color: #2b2732 }
+#main .lasts-card p { margin: 3px 0 0; font-size: 14px; line-height: 1.4; color: #5b5560 }

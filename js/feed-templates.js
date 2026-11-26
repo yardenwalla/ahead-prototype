@@ -42,7 +42,7 @@
       do: 'Gaining well, says your pediatrician? You can stop waking {o}. Still feed {o} when {s} {wake|wakes} hungry.' }),
     nb_eve: () => ({ type: 'expect', label: 'Evenings and nights', art: 'moon', title: 'Busy evenings, then quick and calm nights',
       why: 'Evening cluster feeds are normal. Keep night feeds short and sleepy.',
-      normalTitle: 'What’s normal', normal: () => window.__sv2clusterFeeds ? window.__sv2clusterFeeds() : '',
+      normalTitle: 'What’s normal', normal: () => (window.__sv2clusterFeeds ? window.__sv2clusterFeeds() : '') + (window.__lastsCard ? window.__lastsCard('Busy evenings usually ease by 6–8 weeks.') : ''),
       do: [['sunrise', 'In the evening', nurse() ? 'Switch sides often to keep milk flowing' : 'Offer smaller bottles, more often'], ['moon', 'At night', 'Keep it dim, and change only if dirty'], realMo() >= 1 ? null : ['clock', 'Until back to birth weight', 'Wake {o} after 3 hours by day, 4 at night']].filter(Boolean),
       doNotes: [['', 'Hard to wake?', 'Undress {o} to {p} diaper, or stroke {p} feet']] }),
     m2_night: () => ({ type: 'expect', label: 'Evenings and nights', art: 'moon', title: 'Night feeds are common for a while',
