@@ -1907,8 +1907,9 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
       see: [['acne', 'Baby acne', 'rash:acne'], ['milia', 'Newborn marks', 'rash:newborn'], ['yellow', 'Yellow skin', 'look:0:yellow']] },
     { art: 'bath', t: 'Tub baths, a few a week', d: 'The cord has healed, so the little tub is ready.', cta: 'See how', go: 'p:tub',
       see: [['acne', 'Baby acne', 'rash:acne'], ['cradle', 'Cradle cap', 'rash:cradle'], ['diaper', 'Poop colors', 'look:1:poop']] },
-    { art: 'roll', t: 'Changes get more hands-on', d: 'Rolling and wriggling make diaper changes trickier.', cta: 'Change a wriggler', go: 'h:diapers:2',
-      see: [['drool', 'Drool rash', 'rash:drool'], ['teething', 'Teething', 'p:teething'], ['eczema', 'Eczema', 'rash:eczema']] },
+    // Nov 25 (Yarden): the New now line matches the stage photo (drool and teething). Change a wriggler leads Right now.
+    { art: 'tooth', t: 'Drool and sore gums', d: 'Teething often starts around now.', cta: 'What helps', go: 'p:teething',
+      see: [['drool', 'Drool rash', 'rash:drool'], ['eczema', 'Eczema', 'rash:eczema'], ['diaper', 'Poop colors', 'look:2:poop']] },
     { art: 'tooth', t: 'A tiny tooth, a new routine', d: 'Brushing twice a day starts once the first tooth is in.', cta: 'How to brush', go: 'p:brush',
       // Nov 25 (Yarden): one highlight in the main card at every stage; the big tub lives in the rows below.
       see: [['teeth9', 'Teething', 'p:teething'], ['solids', 'Poop after solids', 'look:3:poop'], ['heat', 'Heat rash', 'rash:heat']] }
@@ -1948,7 +1949,7 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     // behind a "How do I…?" door. Up to four rows; the one the New now card already opens is left out. Each row's line says how,
     // because how often lives in Care at a glance above.
     const SEE = N.see;
-    { const NEWKEY = ['bath', 'bath', null, 'teeth'][v];   // Nov 25 (Yarden): at 4–6 months Change a wriggler also leads Right now
+    { const NEWKEY = ['bath', 'bath', 'teeth', 'teeth'][v];   // Nov 25 (Yarden): at 4–6 months Change a wriggler also leads Right now
       const HINT = { 'p:sponge': 'Face first, diaper area last', 'p:tub': 'A safe hold, and 2 inches of warm water', 'cord': 'Diaper folded below it, and let it fall off',
         'h:diapers:0': 'Fresh diaper under first, then wipe', 'h:diapers:1': 'Fresh diaper under first, then wipe', 'h:diapers:2': 'Set up first, and a hand on {o}', 't:diapers:3': 'A toy to hold helps',
         'h:skin:1': 'Plain water, and cream for dry patches', 'h:skin:2': 'Plain water, and cream for dry patches', 'p:teething': 'What helps, and what to skip',
