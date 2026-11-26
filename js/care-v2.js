@@ -1871,6 +1871,10 @@ const sunAges = () => typeof hubAgeTiles === 'function' ? hubAgeTiles({ title: '
     const [, cat, screen, a, b, c] = p.split(':');
     careWorry = cat === CAT && screen === 'd' && (a === 'look' || a === 'rash' || (a === 't' && (b === 'skin' || (b === 'diapers' && Number(c == null ? stageNow() : c) === 0))));
     if (cat === CAT && screen === 'd') {
+      // Nov 26: older short routes (d:teeth, d:gums, d:steps…) still had their first-version templates, which won over
+      // the redirect below, so links from Timeline, Home and search opened the old pages. Send them to the current pages first.
+      { const NEWR = { teeth: 'p:brush', gums: 'p:teething', steps: 'p:feet', tub: 'p:tub', sponge: 'p:sponge', sun: 't:sun', nails: 't:nails', dress: 't:clothes', skin: 't:skin', bathseat: 't:bath:3' };
+        if (b == null && NEWR[a]) return window.changesRoute(`chg:${CAT}:d:${NEWR[a]}`); }
       { const st = c == null ? stageNow() : Number(c), key = a === 't' || a === 'h' ? `${a}:${b}:${st}` : a === 'look' ? (c === 'poop' ? 'poop' : c ? 'look-' + c : '') : [a, b].filter(x => x != null).join(':'); if (a === 'look') tplNow = Number(b) || 0; else tplNow = st; let q = TPL[key]; if (typeof q === 'function') q = q(); if (q) return tplPage(q); }
       if (a === 'c') { const r = topic3(b, c == null ? stageNow() : Number(c)); if (r) return r; }
       if (a === 'q') { const t = Q2T[b]; const r = t ? (t[0] === 'look' ? lookOff(t[1]) : topic3(t[0], t[1])) : (q2Page(b) || qPage(b)); if (r) return r; }
