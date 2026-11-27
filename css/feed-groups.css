@@ -192,3 +192,9 @@
 .fd-group .fd-cmp-ic{width:40px;height:40px;border-radius:12px;background:#fff;display:grid;place-items:center;margin-bottom:8px}
 .fd-group .fd-cmp-ic svg{width:24px;height:24px}
 .fd-group .fd-cmp b{font-size:16px;color:#302d3c}.fd-group .fd-cmp small{font-size:13.5px;color:#6b6676;line-height:1.35}
+.fd-group .fd-num{display:flex;flex-direction:column;gap:10px;margin:0 0 14px}
+.fd-group .fd-num>div{display:flex;gap:16px;background:#fffdfa;border:1px solid #ece7e2;border-radius:18px;padding:16px}
+.fd-group .fd-num i{font-style:normal;font-weight:700;font-size:17px;color:#b0587a;min-width:24px;padding-top:1px}
+.fd-group .fd-num b{display:block;font-size:16px;color:#2b2733;margin-bottom:4px}.fd-group .fd-num small{display:block;font-size:14px;line-height:1.45;color:#5e5a66}
+#main .fd-group .fd-numic .fd-list-ic{position:relative;overflow:visible}
+#main .fd-group .fd-numic .fd-list-ic i{position:absolute;top:-6px;right:-6px;width:18px;height:18px;border-radius:50%;background:#b0587a;color:#fff;font:700 11px/18px system-ui;text-align:center;font-style:normal}
