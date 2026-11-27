@@ -198,3 +198,22 @@
 .fd-group .fd-num b{display:block;font-size:16px;color:#2b2733;margin-bottom:4px}.fd-group .fd-num small{display:block;font-size:14px;line-height:1.45;color:#5e5a66}
 #main .fd-group .fd-numic .fd-list-ic{position:relative;overflow:visible}
 #main .fd-group .fd-numic .fd-list-ic i{position:absolute;top:-6px;right:-6px;width:18px;height:18px;border-radius:50%;background:#b0587a;color:#fff;font:700 11px/18px system-ui;text-align:center;font-style:normal}
+/* v3 Milk feeds: compact night chart + What helps card */
+#main .fd-group .fd-tally{background:#fff;border-radius:16px;padding:2px 12px}
+#main .fd-group .fd-tally>div{display:grid;grid-template-columns:1.25fr auto 1fr;align-items:center;gap:10px;padding:11px 4px;border-radius:14px}
+#main .fd-group .fd-tally>div+div{border-top:1px solid #f3e8ec}
+#main .fd-group .fd-tally>div.is-on{box-shadow:inset 0 0 0 2px #9b4766;border-top-color:transparent;margin:2px -6px;padding:11px 10px}
+#main .fd-group .fd-tally>div.is-on+div{border-top-color:transparent}
+#main .fd-group .fd-tally b{font-size:14px;color:#2b2733}
+#main .fd-group .fd-tally em{font-style:normal;text-align:right;font-size:13.5px;font-weight:600;color:#9b4766;display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+#main .fd-group .fd-tally em i{font-style:normal;font-size:11px;font-weight:700;color:#fff;background:#9b4766;border-radius:999px;padding:2px 8px}
+#main .fd-group .fd-help{background:#f6f2f8;border-radius:22px;padding:14px 10px 4px;margin:4px 0 16px}
+#main .fd-group .fd-help header{display:flex;align-items:center;gap:10px;padding:0 6px 10px}
+#main .fd-group .fd-help header span{width:34px;height:34px;border-radius:50%;background:#fff;display:grid;place-items:center;color:#9b4766}
+#main .fd-group .fd-help header span svg{width:16px;height:16px}
+#main .fd-group .fd-help header b{font-size:17px;color:#2b2733}
+#main .fd-group .fd-help .fd-list{margin:0 0 6px}
+#main .fd-group .fd-tally>div{grid-template-areas:"l d s";grid-template-columns:minmax(0,1.3fr) auto minmax(0,1fr);row-gap:0}
+#main .fd-group .fd-tally b{grid-area:l;display:block}#main .fd-group .fd-tally .sv2-dots{grid-area:d}#main .fd-group .fd-tally em{grid-area:s}
+#main .fd-group .fd-tally .sv2-dots s{width:16px;height:16px}
+#main .fd-group .fd-tally>div{grid-template-columns:minmax(0,1.2fr) 82px minmax(0,1fr)}#main .fd-group .fd-tally .sv2-dots{justify-self:start}

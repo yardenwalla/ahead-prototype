@@ -137,7 +137,7 @@
   // Nov 27 (Yarden's mockups, v3): the charts come back (they show what words can't), with what sits around them in
   // a few calm cards: a "good signs" card, one card for what to do and when to call, and a pink callout.
   const CLIP = '<svg viewBox="0 0 24 24" fill="none" stroke="#9b4766" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M8.5 10h7M8.5 13.5h7M8.5 17h4"/></svg>';
-  const rowsCard = rows => `<section class="fd-list">${rows.map(([icon, t, x]) => `<div class="fd-list-r"><span class="fd-list-ic">${icon === 'note' ? CLIP : ic(icon)}</span><div><b>${F(t)}</b><span>${F(x)}</span></div></div>`).join('')}</section>`;
+  const rowsCard = rows => `<section class="fd-list">${rows.map(([icon, t, x]) => `<div class="fd-list-r"><span class="fd-list-ic">${icon === 'note' ? CLIP : icon === 'sunset' ? SUNSET : ic(icon)}</span><div><b>${F(t)}</b><span>${F(x)}</span></div></div>`).join('')}</section>`;
   const dropSection = (root, heading) => { const h = [...root.querySelectorAll('h2')].find(x => x.textContent.trim() === F(heading)); if (!h) return; let n = h.nextElementSibling; while (n && !n.matches('h2')) { const nx = n.nextElementSibling; n.remove(); n = nx; } h.remove(); };
   // Nov 27 (Milk feeds pass): two-tile "see the difference" card, and a helper that lifts a card's small-print notes
   // out into a calm card (facts) and a pink callout (a question), so nothing is lost and nothing is small print.
@@ -148,27 +148,37 @@
     ul.remove(); card.insertAdjacentHTML('afterend', (facts.length ? rowsCard(facts) : '') + asks.map(([, t, x]) => callout(t, x)).join('')); };
   const numCard = rows => `<section class="fd-num">${rows.map(([t, x], i) => `<div><i>0${i + 1}</i><span><b>${F(t)}</b><small>${F(x)}</small></span></div>`).join('')}</section>`;
   const numIcons = rows => `<section class="fd-list fd-numic">${rows.map(([svg, t, x], i) => `<div class="fd-list-r"><span class="fd-list-ic">${svg}<i>${i + 1}</i></span><div><b>${F(t)}</b><span>${F(x)}</span></div></div>`).join('')}</section>`;
+  const nursing = () => !!(window.__fdx && window.__fdx.nurses && window.__fdx.nurses());
+  const helpCard = (t, rows) => `<section class="fd-help"><header><span>${SPARK}</span><b>${F(t)}</b></header>${rowsCard(rows)}</section>`;
+  const nightChart = () => { const m = mo(), k = m < 1.5 ? 0 : m < 2.5 ? 1 : m < 5 ? 2 : m < 8 ? 3 : 4;
+    const rows = [['Newborn weeks', 4, 'Several a night'], ['Around 2 months', 3, 'Still common'], ['Around 3 months', 3, 'Often 1–2'], ['Around 6 months', 2, 'Often fewer'], ['Later in the first year', 1, 'Often none']];
+    return `<div class="sv2 is-feed"><section class="sv2-vis"><header><em>${F('Night feeds over the first year')}</em><span>${F('Typical')}</span></header><div class="fd-tally">${rows.map(([l, nn, st], i) => `<div class="${i === k ? 'is-on' : ''}"><b>${F(l)}</b><span class="sv2-dots">${Array.from({ length: nn }, (_, j) => `<s class="${j === nn - 1 ? 'is-maybe' : ''}"></s>`).join('')}</span><em>${i === k ? `<i>${F('Now')}</i>` : ''}${F(st)}</em></div>`).join('')}</div><p class="sv2-key"><s></s>${F('One night feed')}<s class="is-maybe"></s>${F('Some nights')}</p></section></div>`; };
+  const spurtChart = () => { const base = window.__fdSpurtFig ? window.__fdSpurtFig() : ''; if (!base) return '';
+    const bump = c => `L${c - 46},140 C${c - 26},140 ${c - 20},${82} ${c},${82} C${c + 20},82 ${c + 26},140 ${c + 46},140`;
+    const pill = (x, y, t, w, fill, ink) => `<rect x="${x - w / 2}" y="${y - 13}" width="${w}" height="24" rx="12" fill="${fill}"/><text x="${x}" y="${y + 3.5}" text-anchor="middle" style="fill:${ink};font-weight:700;font-size:11.5px">${F(t)}</text>`;
+    const svg = `<svg viewBox="0 0 320 175" width="100%" aria-hidden="true" style="font:600 11px/1 var(--body-font, system-ui);fill:#6b6170"><path d="M14,140 ${bump(88)} ${bump(250)} L306,140" fill="#f7d9e5" stroke="#884866" stroke-width="2.5" stroke-linejoin="round"/>`
+      + pill(88, 58, 'Growth spurt', 92, '#fbe4ec', '#884866') + pill(250, 58, 'Growth spurt', 92, '#fbe4ec', '#884866') + pill(169, 120, 'Calmer weeks', 92, '#efedf8', '#4f4a63')
+      + `<text x="14" y="164">${F('Birth')}</text><text x="88" y="164" text-anchor="middle">${F('6 weeks')}</text><text x="169" y="164" text-anchor="middle">${F('2 months')}</text><text x="250" y="164" text-anchor="middle">${F('3 months')}</text></svg>`;
+    return base.replace(/<svg[\s\S]*<\/svg>/, svg); };
   const cardAfter = (root, heading) => { const h = [...root.querySelectorAll('h2')].find(x => x.textContent.trim() === F(heading)); return h && h.nextElementSibling; };
   const NB = {
-    // v2 (Yarden: "does this match the inspiration?"): numbered cards and one pink callout, the inspiration's shape.
-    m1_eve: () => withPage('m1_eve', root => { asGroup(root); dropSection(root, 'What’s normal');
-      swapSection(root, 'What to do', numCard([['Normal for now', 'Several feeds a night is common in the first weeks.'], ['Gaining well?', 'If your pediatrician says so, you can stop waking {o} for feeds.'], ['When {s} {wake|wakes} hungry', 'Feed {o}. Keep it dim, and change {o} only if dirty.']])
-        + callout('What comes next', 'Night feeds often drop to one or two by 3 months, and fewer by 6.'), 'The important parts'); }),
-    m2_night: () => withPage('m2_night', root => { asGroup(root); dropSection(root, 'What’s normal');
+    // v3 (Yarden: liked the befores; her mockups): the befores, with a tighter night chart, icon rows for what to do,
+    // and the early-weeks-only "hard to wake" callout.
+    m1_eve: () => withPage('m1_eve', root => { asGroup(root); swapSection(root, 'What’s normal', nightChart(), 'What’s normal');
+      swapSection(root, 'What to do', rowsCard([['sunset', 'In the evening', nursing() ? 'Feeds may cluster. Switch sides to keep milk flowing.' : 'Feeds may cluster. Offer smaller bottles, more often.'],
+        ['moon', 'At night', 'Keep it dim and quiet, and change {o} only if dirty.'],
+        ['steth', 'Gaining well?', 'If your pediatrician says so, you can stop waking {o}. Still feed {o} when {s} {wake|wakes} hungry.'],
+        ['clock', 'Looking ahead', 'Many babies drop to one or two night feeds by around 3 months.']])
+        + callout('Hard to wake for a feed?', 'Undress {o} to {p} diaper, or gently stroke {p} feet.'), 'What to do'); }),
+    m2_night: () => withPage('m2_night', root => { asGroup(root); swapSection(root, 'What’s normal', nightChart(), 'What’s normal');
       const m = mo(), ck = m < 4 ? 4 : m < 6 ? 6 : m < 9 ? 9 : 12;
-      swapSection(root, 'What to do', numCard(m < 6 ? [['Still common', 'Once or twice a night is typical around now.'], ['Feeding to sleep', 'Feeding {o} back to sleep is fine. Keep it dim and quiet.'], ['Want to change it?', 'Ask about dropping night feeds at {p} ' + ck + '-month checkup.']]
-          : [['Often fewer now', 'Many babies feed once a night or not at all by now.'], ['Feeding to sleep', 'Feeding {o} back to sleep is fine. Keep it dim and quiet.'], ['Want to change it?', 'Ask about dropping night feeds at {p} ' + ck + '-month checkup.']])
-        + callout('What comes next', m < 6 ? 'Night feeds often ease by 6 months, and many babies stop later in the first year.' : 'Many babies stop night feeds later in the first year.'), 'The important parts'); }),
-    m2_away: () => withPage('m2_away', root => { asGroup(root); dropSection(root, 'What to pack'); const card = cardAfter(root, 'What to do'); if (!card) return;
-      const rows = [...card.querySelectorAll('.hub-row')].map(r => [(r.querySelector('.hub-dot') || {}).innerHTML || '', r.querySelector('b').textContent.trim(), (r.querySelector('small') || {}).textContent || '']);
-      const notes = [...card.querySelectorAll('.tpl-notes li')].map(li => { const b = li.querySelector('b'); return [b.textContent.trim().replace(/\.$/, ''), li.textContent.replace(b.textContent, '').trim()]; });
-      const facts = notes.filter(n => !/\?$/.test(n[0])), asks = notes.filter(n => /\?$/.test(n[0]));
-      swapSection(root, 'What to do', numIcons(rows.concat(facts.map(([t, x]) => [ic('clock'), t, x]))) + asks.map(([t, x]) => callout(t, x)).join(''), 'See how it works'); }),
-    m1_apart: () => !(window.__fdx && window.__fdx.nurses && window.__fdx.nurses()) || (window.__fdx.formulaFam && window.__fdx.formulaFam()) ? withPage('m1_apart', asGroup)
-      : page(head('bottle', 'Time apart', 'A first bottle goes best from someone else', 'A bottle lets a partner, a sitter or a caregiver feed {o}.'),
-        sect('See how it works', '', numIcons([[ic('clock'), 'Choose a calm moment', 'Not too hungry. Start small, about 1–2 oz.'], [ic('heart'), 'Someone else offers it', '{S} may wait for you otherwise.'], [ic('bottle'), 'Keep it slow and level', 'So {s} can pause. Stop when {s} {turn|turns} away.']]))
-        + callout('If {s} {resist|resists}', 'Try again another day, without forcing it. Then a few times a week, so {s} {stay|stays} used to it.')
-        + watch('pace-step-2', 'See a paced bottle', 'A 2-minute video', 'https://www.youtube.com/watch?v=OGPm5SpLxXY'), 'howto'),
+      swapSection(root, 'What to do', rowsCard([['moon', 'At night', 'Feeding {o} back to sleep is fine. Keep it dim and quiet.'],
+        ['steth', 'Want to drop a night feed?', 'Ask at {p} ' + ck + '-month checkup.'],
+        ['clock', 'Looking ahead', m < 6 ? 'Night feeds often get fewer by around 6 months.' : 'Many babies stop night feeds later in the first year.']]), 'What to do'); }),
+    m2_away: () => withPage('m2_away', root => { asGroup(root); liftNotes(cardAfter(root, 'What to do'), ['clock', 'heart']); }),
+    m1_apart: () => withPage('m1_apart', root => { asGroup(root); const h = root.querySelectorAll('h2'); const last = h[h.length - 1]; let c = last; while (c && !c.querySelector('.tpl-notes') && !c.matches('.tpl-notes')) c = c.nextElementSibling;
+      if (c && c.matches('.tpl-notes')) { const w = document.createElement('section'); c.replaceWith(w); w.appendChild(c); c = w; }
+      if (c) { liftNotes(c, ['bottle', 'clock']); if (!c.textContent.trim()) c.remove(); } }),
     nb_enough: () => withPage('nb_enough', root => { asGroup(root);
       const notes = root.querySelector('.tpl-notes'); if (notes) notes.remove();
       const w = [...root.querySelectorAll('h2')].find(x => x.textContent.trim() === F('{P} weight'));
@@ -186,11 +196,9 @@
     // Milk feeds: hungrier days and distracted feeds on one page (the old two-step guide is gone).
     g_change: () => { const n = sections('m1_now'), lead = n['What to do'] ? (() => { const x = document.createElement('div'); x.innerHTML = n['What to do'].html; const p = x.querySelector('p, .hub-card-text, div'); return p ? p.textContent.trim().split('\n')[0] : ''; })() : '';
       return page(head('clock', 'How feeds are changing', 'Feeds change as {s} {grow|grows}', 'Hungrier days come and go, and daytime feeds get shorter. Both are common.'),
-        sect('Hungrier days', '', compare(['lav', 'clock', 'Ordinary days', 'Settled feeds, and stretches between'], ['pink', 'heart', 'Hungrier days', 'Often around 6 weeks and 3 months']))
-        + callout('What helps', (lead || 'Feed more often for a few days, and things settle again.') + ' It passes in 2–3 days.')
+        sect('Hungrier days', lead || 'Feed more often for a few days, and things settle again.', spurtChart())
         + sect('Distracted feeds', 'Short daytime feeds are okay. {S} still {get|gets} enough over the day.',
-          compare(['lav', 'eye', 'Busy room', 'Noise and movement, lots to watch'], ['pink', 'moon', 'Calmer spot', 'Dim and quiet. Save the chatting for later']))
-        + callout('Try this', 'Feed when {s’s} drowsy, and let {o} hold your finger. Pops off? Try again a little later.')); },
+          helpCard('What helps', [['moon', 'Feed when {s’s} drowsy', '{S} may settle in more easily.'], ['hand', 'Let {o} hold your finger', 'It can help {o} stay focused.'], ['chat', 'Save the chatting for later', 'A quiet spot means less to look at.'], ['clock', 'Pops off? Try again a little later', '{S} may just need a short break.']]))); },
     // How to start: the safety rows become one short tips box (no mismatched icons).
     z_start: () => withPage('z_start', root => swapSection(root, 'Keep {o} safe', tips('Keep {o} safe', ['Soft enough to squash easily.', 'Seated upright in a high chair, with you.', 'No added salt or sugar.']))),
     g_tex: () => { const T = H().TPLB, m = mo(), now = m < 7 ? 0 : m < 9 ? 1 : 2, nine = m >= 9;
