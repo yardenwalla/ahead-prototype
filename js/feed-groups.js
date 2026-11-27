@@ -163,6 +163,8 @@
   const doCard = (parts, note) => `<section class="fd-do"><p>${parts.map(([t, bold]) => bold ? `<b>${F(t)}</b>` : F(t)).join(' ')}</p>${note ? `<p class="fd-do-note"><b>${F(note[0])}</b> ${F(note[1])}</p>` : ''}</section>`;
   const photoRows = rows => `<section class="fd-list fd-photorows">${rows.map(([img, t, x]) => `<div class="fd-list-r"><span class="fd-pr-img"><img src="assets/feeding/${img}.jpg" alt="" loading="lazy"></span><div><b>${F(t)}</b><span>${F(x)}</span></div></div>`).join('')}</section>`;
   const checkCard = rows => `<section class="fd-list fd-checks">${rows.map(([t, x]) => `<div class="fd-list-r"><span class="fd-ck">${CHECK}</span><div><b>${F(t)}</b><span>${F(x)}</span></div></div>`).join('')}</section>`;
+  const stageTiles = xs => `<div class="fd-stiles">${xs.map(([img, pill, tone, t, x]) => `<section><span class="fd-st-img"><img src="assets/feeding/${img}.jpg" alt="" loading="lazy"></span><em class="is-${tone}">${F(pill)}</em><b>${F(t)}</b><small>${F(x)}</small></section>`).join('')}</div>`;
+  const textRows = rows => `<section class="fd-list fd-trows">${rows.map(([t, x]) => `<div class="fd-list-r"><div><b>${F(t)}</b><span>${F(x)}</span></div></div>`).join('')}</section>`;
   const cardAfter = (root, heading) => { const h = [...root.querySelectorAll('h2')].find(x => x.textContent.trim() === F(heading)); return h && h.nextElementSibling; };
   const NB = {
     // v3 (Yarden: liked the befores; her mockups): the befores, with a tighter night chart, icon rows for what to do,
@@ -201,17 +203,24 @@
     // How to start: the safety rows become one short tips box (no mismatched icons).
     // Nov 27 (Ready for solids, Yarden's mockups): three ways as photo rows first, the iron-rich foods grid, then one
     // "before the first bite" callout that keeps every safety line from the old tips box.
-    z_start: () => withPage('z_start', root => { asGroup(root); const tpl = root.querySelector('.care-tpl'); if (!tpl) return;
+    // v2 (Yarden's own mockups): three calm pages: photo tiles, one checklist, one callout or plain note.
+    z_start: () => withPage('z_start', root => { asGroup(root); const tpl = root.querySelector('.care-tpl'); if (!tpl) return; const T = H().TPLB;
       const ironH = [...tpl.querySelectorAll('h2')].find(h => /Iron-rich/.test(h.textContent)), grid = ironH && ironH.nextElementSibling;
-      const keep = [ironH, grid].filter(Boolean); tpl.innerHTML = sect('Three ways to start', '', photoRows([['tx-avo-1', 'Spoon-fed', 'Smooth or mashed, then thicker over time'], ['opt-avocado', 'Finger foods', 'Soft strips {s} {feed|feeds} {o}self'], ['way-mix', 'A mix', 'Iron-rich foods by spoon, plus soft strips']]));
-      keep.forEach(n => tpl.appendChild(n));
-      tpl.insertAdjacentHTML('beforeend', callout('Before the first bite', 'Seat {o} upright in a high chair, and stay with {o}. Food soft enough to squash, with no added salt or sugar.')); }),
+      tpl.innerHTML = sect('Three ways to start', '', T.photoGrid([['feeding/tx-avo-1', 'Spoon-fed', 'Smooth or mashed, then thicker'], ['feeding/opt-egg', 'Finger foods', 'Soft strips {s} can hold'], ['feeding/way-mix', 'A mix', 'Try both, at {p} pace']]))
+        + sect('Iron-rich first foods', 'Offer an iron-rich food from the beginning.', '');
+      if (grid) tpl.appendChild(grid);
+      tpl.insertAdjacentHTML('beforeend', sect('Before the first bite', '', checkCard([['Seated upright, with you', 'In a supportive high chair, watched the whole time.'], ['Soft enough to squash', 'In a safe size, shape and texture.']]))
+        + `<p class="fd-lav">${F('Milk is still {p} main food. Start with small tastes, and skip added salt or sugar.')}</p>`); }),
     z_ready: () => withPage('z_ready', root => { asGroup(root); dropSection(root, 'In the first tastes');
-      swapSection(root, 'What to do', tips('Good to know', ['Pushing food out with the tongue is common at first. It fades with practice.', 'In first tastes, {s}’ll open up as the spoon comes, and turn away when {s’s} had enough.', 'Starting early won’t help {o} sleep any longer.']).replace('fd-g-tips', 'fd-g-tips is-plain')
-        + callout('Timing', 'Most babies are ready around 6 months. Once you’ve seen all three, ask at {p} 6-month checkup.')); }),
-    z_iron: () => withPage('z_iron', root => { asGroup(root); const c = cardAfter(root, 'What to do'); if (!c) return;
-      const ps = [...c.querySelectorAll('p, li')].filter(x => !x.querySelector('p, li')), note = ps.find(p => p.querySelector('b')), main = ps.filter(p => p !== note).map(p => p.textContent.trim()).filter(Boolean);
-      swapSection(root, 'What to do', doCard([['Offer an iron-rich food most days, even a small amount.', 1]].concat(main.map(t => [t])), note ? [note.querySelector('b').textContent.trim(), note.textContent.replace(note.querySelector('b').textContent, '').replace('normal', 'common').trim()] : null), 'What to do'); }),
+      swapSection(root, 'What to do', callout('When these signs come together', 'Once you’ve seen all three, ask about starting at {p} 6-month checkup. Starting early won’t help {o} sleep any longer.')); }),
+    z_iron: () => { const X = window.__fdx || {}, br = X.isBreast ? X.isBreast() : true, fam = X.formulaFam ? X.formulaFam() : false;
+      if (!br) return withPage('z_iron', root => { asGroup(root); const c = cardAfter(root, 'What to do'); if (!c) return;
+        const ps = [...c.querySelectorAll('p, li')].filter(x => !x.querySelector('p, li')), note = ps.find(p => p.querySelector('b')), main = ps.filter(p => p !== note).map(p => p.textContent.trim()).filter(Boolean);
+        swapSection(root, 'What to do', doCard([['Offer an iron-rich food most days, even a small amount.', 1]].concat(main.map(t => [t])), note ? [note.querySelector('b').textContent.trim(), note.textContent.replace(note.querySelector('b').textContent, '').replace('normal', 'common').trim()] : null), 'What to do'); });
+      return page(head('drop', 'Iron', 'Iron matters before and after first foods', 'Babies who get mostly breast milk may need iron drops before food gives them enough.'),
+        sect('What changes, and when', '', stageTiles([['vitd-drop', 'Before solids', 'pink', 'Ask about iron drops', 'Often from about 4 months. Timing and amount depend on {p} feeding and birth history.'], ['iron-meat', 'With first foods', 'green', 'Offer iron-rich foods', 'Iron-fortified cereal, soft meat or mashed beans.']]))
+        + callout('Ask about {p} iron needs now', 'Especially if {s} arrived early. {P} pediatrician can tell you whether to give drops, how much, and when to stop.')
+        + sect('Good to know', '', textRows([['Don’t swap drops for a few bites', 'Keep following {p} pediatrician’s plan as foods start.'], fam && ['Also on formula?', 'Iron-fortified formula may already cover {p} needs. Ask if you’re unsure.'], ['Darker poop?', 'Iron can cause it. That’s common.']].filter(Boolean))), 'expect'); },
     z_plan: () => withPage('z_plan', root => { asGroup(root); const h = [...root.querySelectorAll('h2')].find(x => /differently/.test(x.textContent)); if (!h) return;
       const fig = h.nextElementSibling; let n = fig && fig.nextElementSibling; while (n && !n.matches('h2')) { const nx = n.nextElementSibling; n.remove(); n = nx; }
       fig.insertAdjacentHTML('afterend', checkCard([['Grapes and cherry tomatoes', 'Quarter them lengthwise.'], ['Hot dogs and sausages', 'Never in rounds. Cut into thin strips.'], ['Nuts and nut butter', 'No whole nuts. Spread nut butter thin.'], ['Hard raw fruit and veg', 'Cook or grate until soft.']])); }),
@@ -230,7 +239,7 @@
       return page(head('highchair', 'A meal, start to finish', 'First meals are just a few bites', 'Milk is still {p} main food. Let {o} set the pace.'),
         sect('What a meal looks like', '', `<div class="ct-page is-howto">${lead}</div>`)
         + sect('The simple flow', '', T.photoGrid([['feeding/meal-1', '1. Sit {o} up', 'Strapped in, facing you'], ['feeding/meal-2', '2. Offer a little', 'A spoonful, or a soft strip'], ['feeding/meal-3', '3. Let {o} lead', 'Done when {s} {turn|turns} away']]))
-        + tips('Good to know', ['Pick a calm time, not a hungry one.', 'Expect mess. Most lands on the tray.', 'Milk can come before or after the meal.'])); },
+        + tips('Good to know', ['Pushing food out with the tongue is common at first. It fades.', 'Pick a calm time, not a hungry one.', 'Expect mess. Most lands on the tray.', 'Milk can come before or after the meal.'])); },
     g_all: () => { const T = H().TPLB, X = window.__fdx, b = X && X.isBreast ? X.isBreast() : true, f = X && X.formulaFam ? X.formulaFam() : false, thin = !b ? 'formula' : f ? 'breast milk or formula' : 'breast milk';
       return page(head('peanut', 'Common allergens', 'Try the common allergens early', 'Start around 6 months. Ask first if {s} has severe eczema or an egg allergy.'),
         sect('The 9 common allergens', 'Try one at a time. Each photo shows one safe way to serve it.', alPhotos())

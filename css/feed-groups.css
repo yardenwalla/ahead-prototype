@@ -232,3 +232,12 @@
 #main .fd-group .fd-checks .fd-list-r{padding:12px 0}
 #main .fd-group .fd-ck{flex:none;width:26px;height:26px;border-radius:50%;background:#e6f2ea;color:#3f7a55;display:grid;place-items:center;margin-top:1px}
 #main .fd-group .fd-ck svg{width:15px;height:15px}
+#main .fd-group .fd-lav{background:#efedf8;border-radius:18px;padding:14px 16px;font-size:14.5px;line-height:1.5;color:#4f4a63;margin:4px 0 16px}
+#main .fd-group .fd-stiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 14px}
+#main .fd-group .fd-stiles section{background:#fffdfa;border:1px solid #ece7e2;border-radius:18px;padding:8px 8px 14px;display:flex;flex-direction:column;align-items:flex-start;gap:5px}
+#main .fd-group .fd-st-img{width:100%;aspect-ratio:1/.8;border-radius:12px;overflow:hidden;margin-bottom:4px}
+#main .fd-group .fd-st-img img{width:100%;height:100%;object-fit:cover;display:block}
+#main .fd-group .fd-stiles em{font-style:normal;font-size:12px;font-weight:700;border-radius:999px;padding:3px 10px;margin-left:4px}
+#main .fd-group .fd-stiles em.is-pink{background:#fbe4ec;color:#9b4766}#main .fd-group .fd-stiles em.is-green{background:#e6f2ea;color:#3f7a55}
+#main .fd-group .fd-stiles b{font-size:15px;color:#2b2733;padding:0 4px}#main .fd-group .fd-stiles small{font-size:13px;line-height:1.4;color:#5e5a66;padding:0 4px}
+#main .fd-group .fd-trows .fd-list-r{padding:13px 0}
