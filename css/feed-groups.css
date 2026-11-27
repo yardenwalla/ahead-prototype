@@ -112,3 +112,29 @@
 #main .fd-group .fd-watch-copy b{font-size:15px}
 #main .fd-group .fd-banner-img em{right:auto;left:8px;top:8px;transform:none;max-width:none}
 #main .fd-group .fd-banner-img .fd-level{left:4%;right:30%;top:46%}
+/* Nov 27: nursing feed page (Yarden's mockup) */
+#main .fd-group .fd-latch{margin:0 0 12px;border:1px solid #ece7e2;border-radius:20px;background:#fffdfa;overflow:hidden}
+#main .fd-group .fd-latch-img{position:relative;display:block;aspect-ratio:16/10;background:#f3ece6}
+#main .fd-group .fd-latch-img img{width:100%;height:100%;object-fit:cover;display:block}
+#main .fd-group .fd-latch-img em{position:absolute;background:#fff;border-radius:999px;padding:5px 10px;font-style:normal;font-size:12px;font-weight:600;color:#2b2733;box-shadow:0 2px 8px rgba(43,39,51,.12)}
+#main .fd-group .fd-latch figcaption{padding:14px 16px 16px}
+#main .fd-group .fd-latch figcaption b{display:block;font-size:15px;color:#2b2733;margin-bottom:3px}
+#main .fd-group .fd-latch figcaption span{font-size:14px;line-height:1.45;color:#5e5a66}
+#main .fd-group .fd-tug{display:flex;gap:12px;align-items:center;background:#fbe4ec;border-radius:18px;padding:14px 16px;margin:0 0 24px}
+#main .fd-group .fd-tug>span{flex:none;width:32px;height:32px;border-radius:50%;background:#fff;color:#9b4766;display:grid;place-items:center;padding:7px;box-sizing:border-box}
+#main .fd-group .fd-tug>span svg{width:100%;height:100%}
+#main .fd-group .fd-tug b{display:block;font-size:14.5px;color:#2b2733}
+#main .fd-group .fd-tug small{display:block;font-size:13px;line-height:1.4;color:#5e5a66;margin-top:2px}
+#main .fd-group .fd-cols{list-style:none;margin:0 0 24px;padding:0;display:grid;grid-template-columns:repeat(3,1fr);border:1px solid #ece7e2;border-radius:18px;background:#fffdfa;overflow:hidden}
+#main .fd-group .fd-cols li{padding:14px 10px 14px 12px;min-width:0}
+#main .fd-group .fd-cols li+li{border-left:1px solid #ece7e2}
+#main .fd-group .fd-cols i{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:#fbe4ec;color:#9b4766;font-style:normal;font-size:13px;font-weight:700;margin-bottom:10px}
+#main .fd-group .fd-cols b{display:block;font-size:14px;line-height:1.25;color:#2b2733;margin-bottom:4px}
+#main .fd-group .fd-cols span{display:block;font-size:12.5px;line-height:1.4;color:#5e5a66}
+#main .fd-group .fd-after{margin:10px 2px 22px}
+#main .fd-group .fd-note{border-radius:18px;padding:14px 16px;margin:0 0 12px}
+#main .fd-group .fd-note.is-plain{background:#fffdfa;border:1px solid #ece7e2}
+#main .fd-group .fd-note.is-pink{background:#fbe4ec}
+#main .fd-group .fd-note.is-pink b{color:#9b4766}
+#main .fd-group .fd-note b{display:block;font-size:15px;color:#2b2733;margin-bottom:4px}
+#main .fd-group .fd-note p{margin:0;font-size:14px;line-height:1.45;color:#5e5a66}
