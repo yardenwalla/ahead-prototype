@@ -72,6 +72,28 @@
   const swapSection = (root, heading, html) => { const h = [...root.querySelectorAll('h2')].find(x => x.textContent.trim() === F(heading)); if (!h) return;
     let n = h.nextElementSibling; while (n && !n.matches('h2')) { const nx = n.nextElementSibling; n.remove(); n = nx; }
     const frag = document.createElement('div'); frag.innerHTML = html; h.replaceWith(...frag.childNodes); };
+  // Nov 27 (Yarden: the newborn feed "needs a lot of work"; her calmer inspiration): one page instead of four heavy steps.
+  // The feed as four photo steps, then the one technique her family needs (latch or paced bottle), ways to burp, and fixes.
+  const nbFeed = () => { const T = H().TPLB, X = window.__fdx || {}, nurse = X.nurses ? X.nurses() : true;
+    const steps = window.ctPhotoSteps([
+      ['photo:feeding/cue-2', 'Spot early hunger', 'Stirring, rooting, hands to mouth. Crying comes late'],
+      nurse ? ['photo:feeding/hold-cradle', 'Latch on', 'Nose to nipple. Wait for a wide mouth, then chin first']
+        : ['photo:feeding/pace-step-1', 'Pace the bottle', '{S} sits upright, bottle about level. Let {o} draw it in'],
+      nurse ? ['photo:feeding/laidback-feed', 'Burp and switch', 'When sucking slows, burp {o}, then offer the other side']
+        : ['photo:feeding/pace-step-2', 'Pause and burp', 'Every 2–3 oz and at the end. No burp after a minute is fine'],
+      ['photo:feeding/full', 'Stop when {s’s} full', 'Turning away or drifting off ends the feed, even if milk is left']]);
+    const how = nurse
+      ? tips('A good latch', ['It feels like a tug, not a pinch.', 'Lips flared out, like a fish.', 'You hear swallows as {s} {suck|sucks}.', 'Start the next feed on the last side.'])
+      : tips('Pacing a bottle', ['About 2–4 oz, every 3–4 hours.', 'Tip it down every few sucks to pause.', 'Never prop a bottle. Always hold {o}.']);
+    const fixes = nurse
+      ? tips('If it’s not going smoothly', ['Pinching? Break the seal with a finger and try again.', 'Gulping? Lean back, so {s} {feed|feeds} uphill.', 'Dozing off? Try the other side.', 'Most feeds hurt? A lactation consultant can help.'])
+      : tips('If it’s not going smoothly', ['Gulping or coughing? Pause and tip the bottle down.', 'Spit-up and hiccups are common.', 'Fussing after feeds? Burp more often.']);
+    const video = nurse ? T.fold('Watch a good latch', typeof hubEmbed === 'function' ? hubEmbed('y--syZR0u1E', 'A good latch, step by step', 'Global Health Media') : '')
+      : T.fold('Watch how to pace a bottle', typeof hubEmbed === 'function' ? hubEmbed('OGPm5SpLxXY', 'Watch how to pace a bottle', 'Lactation educators (IABLE)') : '');
+    return page(head('heart', 'A feed, start to finish', 'Follow {p} cues, not the clock', 'Feeding before {s} {cry|cries} is easier for you both. Let {o} decide how much.'),
+      sect('How a feed goes', '', steps) + how
+      + sect('Ways to burp', '', T.photoGrid([['feeding/burp-shoulder', 'Over your shoulder', 'Chin on a cloth'], ['feeding/burp-sitting', 'Sitting on your lap', 'Hand under {p} chin'], ['feeding/burp-tummy', 'Tummy-down', 'Across your lap']]))
+      + fixes.replace('fd-g-tips"', 'fd-g-tips is-plain"') + video); };
   const G = {
     // Milk feeds: hungrier days and distracted feeds on one page (the old two-step guide is gone).
     g_change: () => { const n = sections('m1_now'), d = sections('m2_distract'), lead = n['What to do'] ? (() => { const x = document.createElement('div'); x.innerHTML = n['What to do'].html; const p = x.querySelector('p, .hub-card-text, div'); return p ? p.textContent.trim().split('\n')[0] : ''; })() : '';
@@ -106,6 +128,7 @@
   };
   const base = window.changesRoute;
   window.changesRoute = function (r, ...a) { const q = String(r).split(':');
+    if (q[0] === 'chg' && q[1] === CAT && q[2] === 'mock' && q[3] === 'xa' && q[4] === 'feed' && window.__hub && !window.__fdIn) { window.__fdLast = r; return nbFeed(); }
     if (q[0] === 'chg' && q[1] === CAT && q[2] === 'mock' && G[q[3]] && window.__hub && !window.__fdIn) { window.__fdIn = true; let h; try { h = G[q[3]](q[4]); } finally { window.__fdIn = false; } window.__fdLast = r; return h; }
     return base.call(this, r, ...a); };
 })();
