@@ -77,29 +77,30 @@
   // Nov 27 (Yarden: "I preferred the looks of the inspiration", and photos of the holds): a top card with the photo
   // beside the words, the feed as a numbered timeline of five small cards, then the holds (or a paced bottle) as photos.
   const ic = n => typeof hubArt === 'function' ? hubArt(n, CAT) : '';
-  const hero = (eyebrow, title, lead, img) => `<div class="fd-hero"><div class="fd-hero-copy"><p class="fd-hero-eb">${F(eyebrow)}</p><h1>${F(title)}</h1><p>${F(lead)}</p></div><img class="fd-hero-img" src="assets/${img}.jpg?v=1" alt=""></div>`;
+  const hero = (eyebrow, title, lead, img) => `<div class="fd-hero"><div class="fd-hero-copy"><p class="fd-hero-eb">${F(eyebrow)}</p><h1>${F(title)}</h1><p>${F(lead)}</p></div><img class="fd-hero-img" src="assets/feeding/${img.replace(/^feeding\//, '')}.jpg?v=1" alt=""></div>`;
   const timeline = items => `<ol class="fd-tl">${items.map(([icon, t, sub], i) => `<li><span class="fd-tl-n">${i + 1}</span><div class="fd-tl-card"><span class="fd-tl-ic">${ic(icon)}</span><span><b>${F(t)}</b><small>${F(sub)}</small></span></div></li>`).join('')}</ol>`;
-  const nbFeed = () => { const T = H().TPLB, X = window.__fdx || {}, nurse = X.nurses ? X.nurses() : true;
-    const steps = timeline([
-      ['hand', 'Look for hunger cues', 'Stirring, rooting, hands to mouth. Crying comes late.'],
-      nurse ? ['heart', 'Latch on', 'Nose to nipple. Wait for a wide mouth, then chin first.'] : ['bottle', 'Offer the bottle', '{S} sits upright, bottle about level. Let {o} draw it in.'],
-      nurse ? ['clock', 'Pause', 'When sucking slows, take a breather.'] : ['clock', 'Pause', 'Tip the bottle down every few sucks.'],
-      nurse ? ['smile', 'Burp, then switch sides', 'Then start the next feed on the last side.'] : ['smile', 'Burp', 'Every 2–3 oz and at the end. No burp is fine too.'],
-      ['eye', 'Look for fullness cues', 'Slowing down, turning away, relaxed hands. Milk left is fine.']]);
+  // Nov 27, v3 (Yarden: "still a lot going on"; her bottle-feed mockup): the flow as five small photo steps in a row,
+  // one technique card, photo rows with labels only, two short boxes side by side, and the video as one row.
+  const flow = items => `<ol class="fd-flow">${items.map(([img, t, sub], i) => `<li><span class="fd-flow-img"><img src="assets/feeding/${img}.jpg" alt="" loading="lazy"><i>${i + 1}</i></span><b>${F(t)}</b><small>${F(sub)}</small></li>`).join('')}</ol>`;
+  const strip = items => `<div class="fd-strip">${items.map(([img, t]) => `<figure><img src="assets/feeding/${img}.jpg" alt="" loading="lazy"><figcaption>${F(t)}</figcaption></figure>`).join('')}</div>`;
+  const banner = (icon, t, sub, img, pill) => `<div class="fd-banner${img ? '' : ' is-text'}"><span class="fd-banner-ic">${ic(icon)}</span><div class="fd-banner-copy"><b>${F(t)}</b><span>${F(sub)}</span></div>${img ? `<span class="fd-banner-img"><img src="assets/feeding/${img}.jpg" alt="" loading="lazy">${pill ? `<em>${F(pill)}</em>` : ''}</span>` : ''}</div>`;
+  const pair = (a, b) => `<div class="fd-pair">${[a, b].map(([tone, icon, t, xs]) => `<section class="fd-pair-c is-${tone}"><b><span>${ic(icon)}</span>${F(t)}</b><ul>${xs.map(x => `<li>${F(x)}</li>`).join('')}</ul></section>`).join('')}</div>`;
+  const watch = (img, t, sub, url) => `<a class="fd-watch" href="${url}" target="_blank" rel="noopener"><span class="fd-watch-img">${img ? `<img src="assets/feeding/${img}.jpg" alt="" loading="lazy">` : ''}<i><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z"/></svg></i></span><span class="fd-watch-copy"><b>${F(t)}</b><small>${F(sub)}</small></span><span class="hub-chev" aria-hidden="true">›</span></a>`;
+  const nbFeed = () => { const X = window.__fdx || {}, nurse = X.nurses ? X.nurses() : true;
+    const top = hero('Newborn · First 6 weeks', 'A feed, start to finish', nurse ? 'Follow {p} cues, take breaks, and know when {s’s} done.' : 'Follow {p} cues, pace the feed, and know when {s’s} done.', nurse ? 'feeding/laidback-feed' : 'feeding/newborn-bottle');
+    const steps = flow(nurse
+      ? [['cue-2', 'Hunger cues', 'Rooting, hands to mouth'], ['hold-cradle', 'Latch on', 'Wide mouth, chin first'], ['nb-pause', 'Pause', 'When sucking slows'], ['nb-burp', 'Burp', 'Then the other side'], ['full', 'Fullness cues', 'Turning away, relaxed']]
+      : [['cue-2', 'Hunger cues', 'Rooting, hands to mouth'], ['pace-step-1', 'Feed', 'Bottle about level'], ['pace-step-2', 'Pause', 'Tip it down to rest'], ['nb-burp', 'Burp', 'Every 2–3 oz'], ['full', 'Fullness cues', 'Turning away, relaxed']]);
     const how = nurse
-      ? sect('Holds to try', 'Any hold works if you’re both comfortable.', '<div class="fd-two">' + T.photoGrid([['feeding/hold-crosscradle', 'Cross-cradle', 'Easiest to learn on'], ['feeding/hold-cradle2', 'Cradle', 'Once you’re both practiced'], ['feeding/hold-laidback2', 'Laid-back', 'Lean back, {o} on your chest'], ['feeding/hold-sidelying', 'Side-lying', 'For night feeds in bed']]) + '</div>')
-        + tips('A good latch', ['It feels like a tug, not a pinch.', 'Lips flared out, like a fish.', 'You hear swallows as {s} {suck|sucks}.'])
-      : sect('A paced bottle', '', T.photoGrid([['feeding/pace-step-1', 'Upright', 'Bottle about level'], ['feeding/pace-step-2', 'Pause', 'Tip it down to rest'], ['feeding/pace-step-3', 'Stop', 'When {s} {turn|turns} away']]))
-        + tips('Good to know', ['About 2–4 oz, every 3–4 hours.', 'Never prop a bottle. Always hold {o}.']);
-    const fixes = nurse
-      ? tips('If it’s not going smoothly', ['Pinching? Break the seal with a finger and try again.', 'Gulping? Lean back, so {s} {feed|feeds} uphill.', 'Dozing off? Try the other side.', 'Most feeds hurt? A lactation consultant can help.'])
-      : tips('If it’s not going smoothly', ['Gulping or coughing? Pause and tip the bottle down.', 'Spit-up and hiccups are common.', 'Fussing after feeds? Burp more often.']);
-    const video = nurse ? T.fold('Watch a good latch', typeof hubEmbed === 'function' ? hubEmbed('y--syZR0u1E', 'A good latch, step by step', 'Global Health Media') : '')
-      : T.fold('Watch how to pace a bottle', typeof hubEmbed === 'function' ? hubEmbed('OGPm5SpLxXY', 'Watch how to pace a bottle', 'Lactation educators (IABLE)') : '');
-    return page(hero('Newborn · First 6 weeks', 'A feed, start to finish', 'Follow {p} cues, take breaks, and let {o} decide how much.', nurse ? 'feeding/laidback-feed' : 'feeding/newborn-bottle'),
-      steps + how
-      + sect('Ways to burp', '', T.photoGrid([['feeding/burp-shoulder', 'Over your shoulder', 'Chin on a cloth'], ['feeding/burp-sitting', 'Sitting on your lap', 'Hand under {p} chin'], ['feeding/burp-tummy', 'Tummy-down', 'Across your lap']]))
-      + fixes.replace('fd-g-tips"', 'fd-g-tips is-plain"') + video); };
+      ? banner('heart', 'A good latch', 'Wide mouth, lips flared out. It should feel like a tug, not a pinch.')
+        + sect('Holds to try', '', strip([['hold-crosscradle', 'Cross-cradle'], ['hold-cradle2', 'Cradle'], ['hold-laidback2', 'Laid-back'], ['hold-sidelying', 'Side-lying']]))
+      : banner('bottle', 'A paced bottle', 'Keep the bottle about level, let {o} set the pace, and take breaks.', 'pace-photo', 'About level');
+    const notes = nurse
+      ? pair(['pink', 'eye', 'Good to know', ['Feed 8–12 times a day.', 'Start the next feed on the last side.', 'Spit-up and hiccups are common.']], ['plain', 'chat', 'If it’s not going smoothly', ['Pinching? Break the seal and try again.', 'Most feeds hurt? A lactation consultant can help.']])
+      : pair(['pink', 'eye', 'Good to know', ['About 2–4 oz, every 3–4 hours.', 'Never prop a bottle. Always hold {o}.', 'Spit-up and hiccups are common.']], ['plain', 'chat', 'If it’s not going smoothly', ['Gulping or coughing? Pause and tip the bottle down.', 'Fussing after feeds? Burp more often.']]);
+    const vid = nurse ? watch('', 'Watch: A good latch', 'A short step-by-step video.', 'https://www.youtube.com/watch?v=y--syZR0u1E')
+      : watch('pace-step-3', 'Watch: How to pace a bottle', 'A short look at a relaxed, baby-led feed.', 'https://www.youtube.com/watch?v=OGPm5SpLxXY');
+    return page(top, sect('The simple flow', '', steps) + how + sect('Ways to burp', '', strip([['burp-shoulder', 'Over your shoulder'], ['burp-sitting', 'Sitting on your lap'], ['burp-tummy', 'Tummy-down']])) + notes + vid); };
   const G = {
     // Milk feeds: hungrier days and distracted feeds on one page (the old two-step guide is gone).
     g_change: () => { const n = sections('m1_now'), d = sections('m2_distract'), lead = n['What to do'] ? (() => { const x = document.createElement('div'); x.innerHTML = n['What to do'].html; const p = x.querySelector('p, .hub-card-text, div'); return p ? p.textContent.trim().split('\n')[0] : ''; })() : '';
