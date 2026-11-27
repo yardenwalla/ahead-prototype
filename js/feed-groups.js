@@ -134,19 +134,24 @@
   const dayline = rows => `<section class="fd-list is-line">${rows.map(([icon, t, x, y]) => `<div class="fd-list-r"><span class="fd-list-ic">${icon === 'sunset' ? SUNSET : ic(icon)}</span><div><b>${F(t)}</b><span>${F(x)}</span>${y ? `<em>${F(y)}</em>` : ''}</div></div>`).join('')}</section>`;
   const callout = (t, x) => `<section class="fd-callout"><span>${SPARK}</span><div><b>${F(t)}</b><p>${F(x)}</p></div></section>`;
   const dayOfLife = () => { try { const p = JSON.parse(localStorage.getItem('ahead-v2-profile') || '{}'); return Math.floor((Date.now() - new Date(p.dob)) / 864e5) + 1; } catch (e) { return 10; } };
+  // Nov 27 (Yarden's mockups, v3): the charts come back (they show what words can't), with what sits around them in
+  // a few calm cards: a "good signs" card, one card for what to do and when to call, and a pink callout.
+  const CLIP = '<svg viewBox="0 0 24 24" fill="none" stroke="#9b4766" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M8.5 10h7M8.5 13.5h7M8.5 17h4"/></svg>';
+  const rowsCard = rows => `<section class="fd-list">${rows.map(([icon, t, x]) => `<div class="fd-list-r"><span class="fd-list-ic">${icon === 'note' ? CLIP : ic(icon)}</span><div><b>${F(t)}</b><span>${F(x)}</span></div></div>`).join('')}</section>`;
+  const dropSection = (root, heading) => { const h = [...root.querySelectorAll('h2')].find(x => x.textContent.trim() === F(heading)); if (!h) return; let n = h.nextElementSibling; while (n && !n.matches('h2')) { const nx = n.nextElementSibling; n.remove(); n = nx; } h.remove(); };
   const NB = {
-    nb_enough: () => { const X = window.__fdx || {}, nurse = X.nurses ? X.nurses() : true, d = dayOfLife();
-      const wet = d <= 2 ? '1–2 a day for now, then more each day.' : d <= 4 ? '3–4 a day now. From day 6, 6 or more.' : d === 5 ? 'About 5 today. From day 6, 6 or more.' : '6 or more a day, pale and clear.';
-      const poop = d <= 2 ? 'Black and sticky at first. It changes color over the first week.' : d <= 5 ? 'Turning from greenish to yellow this week.' : nurse ? 'Yellow and seedy is typical now.' : 'Tan to yellow is typical now.';
-      return page(head('diaper', 'Getting enough', 'Diapers and growth tell the story', 'You don’t need to measure every drop.'),
-        sect('What to notice', '', listCard([['diaper', 'Wet diapers', wet], ['drop', 'Poop', poop], ['heart', 'After feeds', '{S’s} content for a while after most feeds.'], ['steth', 'Weight', 'Most babies lose a little at first, then are back to birth weight by 2 weeks. Checkups track it, so skip home scales.']]))
-        + callout('When to call', 'Fewer wet diapers, dark urine, black poop after day 5, or not back to birth weight by 2 weeks.')
-        + `<p class="fd-g-lead fd-after">${F('Until things feel settled, it helps to note feeds and diapers.')}</p>`); },
-    nb_eve: () => { const X = window.__fdx || {}, nurse = X.nurses ? X.nurses() : true;
-      return page(head('moon', 'Evenings and nights', 'Busy evenings, calmer nights', 'Feeds often bunch together in the evening. That eases by 6–8 weeks.'),
-        sect('How the day changes', '', dayline([['sun', 'Day', 'Feeds every 2–3 hours.', 'Until back to birth weight, wake {o} after 3 hours.'], ['sunset', 'Evening', 'Cluster feeding: several feeds close together.', nurse ? 'Switch sides often to keep milk flowing.' : 'Offer smaller bottles, more often.'], ['moon', 'Night', 'Often one longer stretch.', 'Keep it dim, and change only if dirty. Until back to birth weight, wake {o} after 4 hours.']]))
-        + `<p class="fd-g-lead fd-after">${F('An example, not a schedule.')}</p>`
-        + callout('Hard to wake for a feed?', 'Undress {o} to {p} diaper, or stroke {p} feet.')); }
+    nb_enough: () => withPage('nb_enough', root => { asGroup(root);
+      const notes = root.querySelector('.tpl-notes'); if (notes) notes.remove();
+      const w = [...root.querySelectorAll('h2')].find(x => x.textContent.trim() === F('{P} weight'));
+      if (w) w.insertAdjacentHTML('beforebegin', rowsCard([['heart', 'Good signs during feeds', 'Long sucks and swallows you can hear, and {s’s} content for a while after most feeds.']]));
+      dropSection(root, 'When to call');
+      swapSection(root, 'What to do', rowsCard([['note', 'What to do', 'Note feeds and diapers until things feel settled. Checkups track {p} weight, so skip home scales.'], ['steth', 'When to call', 'Fewer wet diapers, dark urine, black poop after day 5, or not back to birth weight by 2 weeks.']])); }),
+    nb_eve: () => withPage('nb_eve', root => { asGroup(root);
+      const lead = root.querySelector('.ss-head .hub-lead, .ss-head p:last-child'); if (lead) lead.textContent = F('Evening cluster feeds are common and usually ease by 6–8 weeks.');
+      const long = [...root.querySelectorAll('.hub-card, section, div')].find(e => /^How long it lasts/.test((e.textContent || '').trim()) && e.textContent.length < 160); if (long) long.remove();
+      const todo = [...root.querySelectorAll('h2')].find(x => x.textContent.trim() === F('What to do'));
+      let card = todo && todo.nextElementSibling; const notes = card && card.querySelector('.tpl-notes'); if (notes) notes.remove();
+      if (card) card.insertAdjacentHTML('afterend', callout('Hard to wake for a feed?', 'Undress {o} to {p} diaper, or stroke {p} feet.')); })
   };
   const G = {
     // Milk feeds: hungrier days and distracted feeds on one page (the old two-step guide is gone).
@@ -183,7 +188,7 @@
   const base = window.changesRoute;
   window.changesRoute = function (r, ...a) { const q = String(r).split(':');
     if (q[0] === 'chg' && q[1] === CAT && q[2] === 'mock' && q[3] === 'xa' && q[4] === 'feed' && window.__hub && !window.__fdIn) { window.__fdLast = r; return nbFeed(); }
-    if (q[0] === 'chg' && q[1] === CAT && q[2] === 'mock' && NB[q[3]] && window.__hub && !window.__fdIn) { const h = NB[q[3]](); window.__fdLast = r; return h; }
+    if (q[0] === 'chg' && q[1] === CAT && q[2] === 'mock' && NB[q[3]] && window.__hub && !window.__fdIn) { window.__fdIn = true; let h; try { h = NB[q[3]](); } finally { window.__fdIn = false; } window.__fdLast = r; return h; }
     if (q[0] === 'chg' && q[1] === CAT && q[2] === 'mock' && G[q[3]] && window.__hub && !window.__fdIn) { window.__fdIn = true; let h; try { h = G[q[3]](q[4]); } finally { window.__fdIn = false; } window.__fdLast = r; return h; }
     return base.call(this, r, ...a); };
 })();
