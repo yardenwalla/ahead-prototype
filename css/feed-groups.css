@@ -226,3 +226,9 @@
 #main .fd-group .fd-tally>div{grid-template-columns:minmax(0,1fr) 52px 98px;gap:6px}#main .fd-group .fd-tally b{font-size:13px}#main .fd-group .fd-tally .sv2-dots{gap:2px;min-height:0}#main .fd-group .fd-tally .sv2-dots s{width:12px;height:12px;border-width:1.5px}#main .fd-group .fd-tally em{font-size:12.5px}
 #main .fd-group .fd-tally>div:not(.is-on){border-radius:0}
 #main .fd-group .fd-three-ic{display:grid;place-items:center;width:36px;height:36px;border-radius:12px;background:#fbe4ec;color:#9b4766;margin-bottom:8px}#main .fd-group .fd-three-ic svg{width:20px;height:20px}
+#main .fd-group .fd-photorows .fd-list-r{align-items:center}
+#main .fd-group .fd-pr-img{flex:none;width:64px;height:64px;border-radius:14px;overflow:hidden;background:#f3ede6}
+#main .fd-group .fd-pr-img img{width:100%;height:100%;object-fit:cover;display:block}
+#main .fd-group .fd-checks .fd-list-r{padding:12px 0}
+#main .fd-group .fd-ck{flex:none;width:26px;height:26px;border-radius:50%;background:#e6f2ea;color:#3f7a55;display:grid;place-items:center;margin-top:1px}
+#main .fd-group .fd-ck svg{width:15px;height:15px}

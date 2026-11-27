@@ -161,6 +161,8 @@
       + `<text x="14" y="164">${F('Birth')}</text><text x="88" y="164" text-anchor="middle">${F('6 weeks')}</text><text x="169" y="164" text-anchor="middle">${F('2 months')}</text><text x="250" y="164" text-anchor="middle">${F('3 months')}</text></svg>`;
     return base.replace(/<svg[\s\S]*<\/svg>/, svg); };
   const doCard = (parts, note) => `<section class="fd-do"><p>${parts.map(([t, bold]) => bold ? `<b>${F(t)}</b>` : F(t)).join(' ')}</p>${note ? `<p class="fd-do-note"><b>${F(note[0])}</b> ${F(note[1])}</p>` : ''}</section>`;
+  const photoRows = rows => `<section class="fd-list fd-photorows">${rows.map(([img, t, x]) => `<div class="fd-list-r"><span class="fd-pr-img"><img src="assets/feeding/${img}.jpg" alt="" loading="lazy"></span><div><b>${F(t)}</b><span>${F(x)}</span></div></div>`).join('')}</section>`;
+  const checkCard = rows => `<section class="fd-list fd-checks">${rows.map(([t, x]) => `<div class="fd-list-r"><span class="fd-ck">${CHECK}</span><div><b>${F(t)}</b><span>${F(x)}</span></div></div>`).join('')}</section>`;
   const cardAfter = (root, heading) => { const h = [...root.querySelectorAll('h2')].find(x => x.textContent.trim() === F(heading)); return h && h.nextElementSibling; };
   const NB = {
     // v3 (Yarden: liked the befores; her mockups): the befores, with a tighter night chart, icon rows for what to do,
@@ -197,7 +199,22 @@
         + sect('Distracted feeds', 'Short daytime feeds are okay. {S} still {get|gets} enough over the day.',
           helpCard('What helps', [['moon', 'Feed when {s’s} drowsy', '{S} may settle in more easily.'], ['hand', 'Let {o} hold your finger', 'It can help {o} stay focused.'], ['chat', 'Save the chatting for later', 'A quiet spot means less to look at.'], ['clock', 'Pops off? Try again a little later', '{S} may just need a short break.']]))); },
     // How to start: the safety rows become one short tips box (no mismatched icons).
-    z_start: () => withPage('z_start', root => swapSection(root, 'Keep {o} safe', tips('Keep {o} safe', ['Soft enough to squash easily.', 'Seated upright in a high chair, with you.', 'No added salt or sugar.']))),
+    // Nov 27 (Ready for solids, Yarden's mockups): three ways as photo rows first, the iron-rich foods grid, then one
+    // "before the first bite" callout that keeps every safety line from the old tips box.
+    z_start: () => withPage('z_start', root => { asGroup(root); const tpl = root.querySelector('.care-tpl'); if (!tpl) return;
+      const ironH = [...tpl.querySelectorAll('h2')].find(h => /Iron-rich/.test(h.textContent)), grid = ironH && ironH.nextElementSibling;
+      const keep = [ironH, grid].filter(Boolean); tpl.innerHTML = sect('Three ways to start', '', photoRows([['tx-avo-1', 'Spoon-fed', 'Smooth or mashed, then thicker over time'], ['opt-avocado', 'Finger foods', 'Soft strips {s} {feed|feeds} {o}self'], ['way-mix', 'A mix', 'Iron-rich foods by spoon, plus soft strips']]));
+      keep.forEach(n => tpl.appendChild(n));
+      tpl.insertAdjacentHTML('beforeend', callout('Before the first bite', 'Seat {o} upright in a high chair, and stay with {o}. Food soft enough to squash, with no added salt or sugar.')); }),
+    z_ready: () => withPage('z_ready', root => { asGroup(root); dropSection(root, 'In the first tastes');
+      swapSection(root, 'What to do', tips('Good to know', ['Pushing food out with the tongue is common at first. It fades with practice.', 'In first tastes, {s}’ll open up as the spoon comes, and turn away when {s’s} had enough.', 'Starting early won’t help {o} sleep any longer.']).replace('fd-g-tips', 'fd-g-tips is-plain')
+        + callout('Timing', 'Most babies are ready around 6 months. Once you’ve seen all three, ask at {p} 6-month checkup.')); }),
+    z_iron: () => withPage('z_iron', root => { asGroup(root); const c = cardAfter(root, 'What to do'); if (!c) return;
+      const ps = [...c.querySelectorAll('p, li')].filter(x => !x.querySelector('p, li')), note = ps.find(p => p.querySelector('b')), main = ps.filter(p => p !== note).map(p => p.textContent.trim()).filter(Boolean);
+      swapSection(root, 'What to do', doCard([['Offer an iron-rich food most days, even a small amount.', 1]].concat(main.map(t => [t])), note ? [note.querySelector('b').textContent.trim(), note.textContent.replace(note.querySelector('b').textContent, '').replace('normal', 'common').trim()] : null), 'What to do'); }),
+    z_plan: () => withPage('z_plan', root => { asGroup(root); const h = [...root.querySelectorAll('h2')].find(x => /differently/.test(x.textContent)); if (!h) return;
+      const fig = h.nextElementSibling; let n = fig && fig.nextElementSibling; while (n && !n.matches('h2')) { const nx = n.nextElementSibling; n.remove(); n = nx; }
+      fig.insertAdjacentHTML('afterend', checkCard([['Grapes and cherry tomatoes', 'Quarter them lengthwise.'], ['Hot dogs and sausages', 'Never in rounds. Cut into thin strips.'], ['Nuts and nut butter', 'No whole nuts. Spread nut butter thin.'], ['Hard raw fruit and veg', 'Cook or grate until soft.']])); }),
     g_tex: () => { const T = H().TPLB, m = mo(), now = m < 7 ? 0 : m < 9 ? 1 : 2, nine = m >= 9;
       return page(head('avocado', 'Textures and finger foods', 'Move from smooth food to soft pieces', 'Lumps teach {o} to chew. Soft finger foods teach {o} to feed {o}self.'),
         sect('The texture progression', 'Move on once each one is easy, whatever the month. Aim for lumps by about 9 months.',
