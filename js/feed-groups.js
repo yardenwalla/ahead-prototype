@@ -126,21 +126,26 @@
   const BULB = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.6.5 1.1 1.3 1.1 2.2h5c0-.9.5-1.7 1.1-2.2A6 6 0 0 0 12 3z"/></svg>';
   const colsCard = (xs, feel) => `<section class="fd-card"><ol class="fd-three">${xs.map(([t, x]) => `<li><b>${t}</b><span>${x}</span></li>`).join('')}</ol>${feel ? `<div class="fd-feel"><span>${/\?$/.test(feel[0]) ? BULB : CHECK}</span><div><b>${feel[0]}</b><small>${feel[1]}</small></div></div>` : ''}</section>`;
   const asGroup = root => { root.classList.add('fd-group'); return root; };
+  // Nov 27 (Yarden: "does this look like the inspiration?" No, so rebuilt): the inspiration's shape (one card of three
+  // rows, then one pink callout), with the numbers parents need kept inside the rows instead of in separate charts.
+  const SPARK = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l1.9 6.1 6.1 1.9-6.1 1.9L12 18.5l-1.9-6.1L4 10.5l6.1-1.9z"/></svg>';
+  const listCard = rows => `<section class="fd-list">${rows.map(([icon, t, x, extra]) => `<div class="fd-list-r"><span class="fd-list-ic">${ic(icon)}</span><div><b>${F(t)}</b><span>${F(x)}</span>${extra || ''}</div></div>`).join('')}</section>`;
+  const SUNSET = '<svg viewBox="0 0 24 24" fill="none" stroke="#9b4766" stroke-width="1.8" stroke-linecap="round"><path d="M3 18h18M6 18a6 6 0 0 1 12 0M12 6V3.5M4.9 9.9 3.5 8.5M19.1 9.9l1.4-1.4M7 21h10"/></svg>';
+  const dayline = rows => `<section class="fd-list is-line">${rows.map(([icon, t, x, y]) => `<div class="fd-list-r"><span class="fd-list-ic">${icon === 'sunset' ? SUNSET : ic(icon)}</span><div><b>${F(t)}</b><span>${F(x)}</span>${y ? `<em>${F(y)}</em>` : ''}</div></div>`).join('')}</section>`;
+  const callout = (t, x) => `<section class="fd-callout"><span>${SPARK}</span><div><b>${F(t)}</b><p>${F(x)}</p></div></section>`;
+  const dayOfLife = () => { try { const p = JSON.parse(localStorage.getItem('ahead-v2-profile') || '{}'); return Math.floor((Date.now() - new Date(p.dob)) / 864e5) + 1; } catch (e) { return 10; } };
   const NB = {
-    // Evenings and nights: the day-by-feeds chart stays; "how long it lasts" becomes the line under it; the three
-    // what-to-do rows become one three-column card, with "hard to wake?" as its strip.
-    nb_eve: () => withPage('nb_eve', root => { asGroup(root); const all = sections('nb_eve'), todo = all['What to do'];
-      const long = [...root.querySelectorAll('.hub-card, section, div')].find(e => /^How long it lasts/.test((e.textContent || '').trim()) && e.textContent.length < 160);
-      const line = long ? long.textContent.replace('How long it lasts', '').trim() : '';
-      if (long) long.remove();
-      const h = [...root.querySelectorAll('h2')].find(x => x.textContent.trim() === 'What’s normal'); if (h && line) h.insertAdjacentHTML('afterend', `<p class="fd-g-lead">${line}</p>`);
-      const rows = rowsOf(todo), hard = noteOf(todo);
-      if (rows.length) swapSection(root, 'What to do', `<h2 class="hub-h2">${F('What to do')}</h2>` + colsCard(rows.slice(0, 3), hard)); }),
-    // Getting enough: the diaper table and weight curve stay; the repeated "good signs during feeds" line goes (the feed
-    // page has it); the two rows become one short note.
-    nb_enough: () => withPage('nb_enough', root => { asGroup(root);
-      [...root.querySelectorAll('p, .tpl-notes li')].filter(p => /^Good signs during feeds/.test(p.textContent.trim())).forEach(p => p.remove());
-      swapSection(root, 'What to do', `<section class="fd-note is-plain"><b>${F('Good to know')}</b><p>${F('Note feeds and diapers until things feel settled. Skip home scales: checkups track {p} weight.')}</p></section>`); })
+    nb_enough: () => { const X = window.__fdx || {}, nurse = X.nurses ? X.nurses() : true, d = dayOfLife();
+      const wet = d <= 2 ? '1–2 a day for now, then more each day.' : d <= 4 ? '3–4 a day now. From day 6, 6 or more.' : d === 5 ? 'About 5 today. From day 6, 6 or more.' : '6 or more a day, pale and clear.';
+      const poop = d <= 2 ? 'Black and sticky at first. It changes color over the first week.' : d <= 5 ? 'Turning from greenish to yellow this week.' : nurse ? 'Yellow and seedy is typical now.' : 'Tan to yellow is typical now.';
+      return page(head('diaper', 'Getting enough', 'Diapers and growth tell the story', 'You don’t need to measure every drop.'),
+        sect('What to notice', '', listCard([['diaper', 'Wet diapers', wet], ['drop', 'Poop', poop], ['steth', 'Weight', 'Back to birth weight by 2 weeks, then about 5–7 oz a week. Checkups track it, so skip home scales.']]))
+        + callout('When to call', 'Fewer wet diapers, dark urine, black poop after day 5, or not back to birth weight by 2 weeks.')); },
+    nb_eve: () => { const X = window.__fdx || {}, nurse = X.nurses ? X.nurses() : true;
+      return page(head('moon', 'Evenings and nights', 'Busy evenings, calmer nights', 'Feeds often bunch together in the evening. That eases by 6–8 weeks.'),
+        sect('How the day changes', '', dayline([['sun', 'Day', 'Feeds every 2–3 hours.', 'Until back to birth weight, wake {o} after 3 hours.'], ['sunset', 'Evening', 'Several feeds close together.', nurse ? 'Switch sides often to keep milk flowing.' : 'Offer smaller bottles, more often.'], ['moon', 'Night', 'Often one longer stretch.', 'Keep it dim, and change only if dirty.']]))
+        + `<p class="fd-g-lead fd-after">${F('An example, not a schedule.')}</p>`
+        + callout('Hard to wake for a feed?', 'Undress {o} to {p} diaper, or stroke {p} feet.')); }
   };
   const G = {
     // Milk feeds: hungrier days and distracted feeds on one page (the old two-step guide is gone).
@@ -177,7 +182,7 @@
   const base = window.changesRoute;
   window.changesRoute = function (r, ...a) { const q = String(r).split(':');
     if (q[0] === 'chg' && q[1] === CAT && q[2] === 'mock' && q[3] === 'xa' && q[4] === 'feed' && window.__hub && !window.__fdIn) { window.__fdLast = r; return nbFeed(); }
-    if (q[0] === 'chg' && q[1] === CAT && q[2] === 'mock' && NB[q[3]] && window.__hub && !window.__fdIn) { window.__fdIn = true; let h; try { h = NB[q[3]](); } finally { window.__fdIn = false; } window.__fdLast = r; return h; }
+    if (q[0] === 'chg' && q[1] === CAT && q[2] === 'mock' && NB[q[3]] && window.__hub && !window.__fdIn) { const h = NB[q[3]](); window.__fdLast = r; return h; }
     if (q[0] === 'chg' && q[1] === CAT && q[2] === 'mock' && G[q[3]] && window.__hub && !window.__fdIn) { window.__fdIn = true; let h; try { h = G[q[3]](q[4]); } finally { window.__fdIn = false; } window.__fdLast = r; return h; }
     return base.call(this, r, ...a); };
 })();

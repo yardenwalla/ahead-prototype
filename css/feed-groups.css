@@ -168,3 +168,20 @@
 #main .fd-group .fd-feel b{display:block;font-size:14.5px;color:#9b4766}
 #main .fd-group .fd-feel small{display:block;font-size:13px;line-height:1.4;color:#5e5a66;margin-top:2px}
 #main .fd-group .fd-card .fd-strip figure:first-child:nth-last-child(4) ~ figure figcaption, #main .fd-group .fd-card .fd-strip figure:first-child:nth-last-child(4) figcaption{font-size:12.5px;white-space:nowrap}
+/* Nov 27: inspiration shape, one card of rows and one pink callout */
+#main .fd-group .fd-list{background:#fffdfa;border:1px solid #ece7e2;border-radius:20px;padding:4px 16px;margin:0 0 16px}
+#main .fd-group .fd-list-r{display:flex;gap:14px;align-items:flex-start;padding:14px 0}
+#main .fd-group .fd-list-r+.fd-list-r{border-top:1px solid #ece7e2}
+#main .fd-group .fd-list-ic{flex:none;width:44px;height:44px;border-radius:14px;background:#fbe4ec;display:grid;place-items:center;padding:10px;box-sizing:border-box}
+#main .fd-group .fd-list-ic svg{width:100%;height:100%}
+#main .fd-group .fd-list-r b{display:block;font-size:16px;color:#2b2733;margin:1px 0 3px}
+#main .fd-group .fd-list-r span{display:block;font-size:14px;line-height:1.45;color:#5e5a66}
+#main .fd-group .fd-list-r em{display:block;font-style:normal;font-size:13px;line-height:1.4;color:#9b4766;margin-top:4px}
+#main .fd-group .fd-list.is-line .fd-list-r{position:relative;border-top:0}
+#main .fd-group .fd-list.is-line .fd-list-r+.fd-list-r::before{content:"";position:absolute;left:21px;top:-14px;height:14px;border-left:2px solid #f1d3de}
+#main .fd-group .fd-list.is-line .fd-list-r{padding:12px 0}
+#main .fd-group .fd-callout{display:flex;gap:14px;align-items:flex-start;background:#fbe4ec;border-radius:20px;padding:16px;margin:0 0 12px}
+#main .fd-group .fd-callout>span{flex:none;width:40px;height:40px;border-radius:50%;background:#fff;color:#7d3a57;display:grid;place-items:center;padding:10px;box-sizing:border-box}
+#main .fd-group .fd-callout>span svg{width:100%;height:100%}
+#main .fd-group .fd-callout b{display:block;font-size:16px;color:#7d3a57;margin:2px 0 4px}
+#main .fd-group .fd-callout p{margin:0;font-size:14px;line-height:1.45;color:#5e5a66}
